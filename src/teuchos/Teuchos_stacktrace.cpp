@@ -29,7 +29,6 @@
 
 #include "Teuchos_stacktrace.hpp"
 #include "Teuchos_RCP.hpp"
-#include "Teuchos_VerboseObject.hpp"
 
 
 #ifdef HAVE_TEUCHOS_STACKTRACE
