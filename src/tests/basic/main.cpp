@@ -23,8 +23,10 @@ void test_symbol_hash()
     assert(x != y);
 
     std::hash<Basic> hash_fn;
-    assert(hash_fn(x) != hash_fn(y));
+    // Hashes of x and x2 must be the same:
     assert(hash_fn(x) == hash_fn(x2));
+    // Hashes of x and y can but don't have to be different:
+    if (hash_fn(x) != hash_fn(y)) assert(x != y);
 
 
     std::size_t seed1 = 0;
@@ -35,6 +37,7 @@ void test_symbol_hash()
     hash_combine<Basic>(seed2, x);
     hash_combine<Basic>(seed2, y);
 
+    // This checks that the Symbols are hashed by their strings:
     assert(seed1 == seed2);
 }
 
