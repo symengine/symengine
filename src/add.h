@@ -13,6 +13,7 @@ private:
 
 public:
     Add(std::unordered_map<int, int> &dict);
+    virtual std::size_t __hash__() const;
 };
 
 } // CSymPy

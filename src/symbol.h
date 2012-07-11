@@ -13,6 +13,7 @@ private:
 
 public:
     Symbol(const std::string &name);
+    virtual std::size_t __hash__() const;
 };
 
 } // CSymPy
