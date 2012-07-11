@@ -5,6 +5,11 @@ namespace CSymPy {
 
 class Basic {
 public:
+    // Implements the hash of the given CSymPy class.
+    // Use std::hash to get the hash. Example:
+    //     RCP<Symbol> x = rcp(new Symbol("x"));
+    //     std::hash<Basic> hash_fn;
+    //     std::cout << hash_fn(*x);
     virtual std::size_t __hash__() const = 0;
 };
 
