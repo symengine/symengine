@@ -52,6 +52,7 @@ typedef struct
     }
 } RCPBasicKeyEq;
 
+typedef std::unordered_map<RCP<Basic>, int, RCPBasicHash, RCPBasicKeyEq> Mymap;
 
 int main(int argc, char* argv[])
 {
@@ -62,16 +63,24 @@ int main(int argc, char* argv[])
     RCP<Add> a = rcp(new Add(m));
     */
 
-    std::unordered_map<RCP<Basic>, int, RCPBasicHash, RCPBasicKeyEq> d;
+    Mymap d;
 //    Symbol x = Symbol("x");
 //    RCP<Symbol> x  = rcp(new Symbol("x"));
 //    RCP<Symbol> y  = rcp(new Symbol("y"));
     RCP<Basic> x  = rcp(new Symbol("x"));
     RCP<Basic> x2 = rcp(new Symbol("x"));
+    RCP<Basic> y = rcp(new Symbol("y"));
     std::cout << (x == x2) << std::endl;
     std::cout << (*x == *x2) << std::endl;
 
     d[x] = 2;
+    d[y] = 3;
+
+    for (Mymap::const_iterator it = d.begin(); 
+                    it != d.end(); ++it) 
+                std::cout << " [" << it->first << ", " << it->second <<
+                    "]"; 
+        std::cout << std::endl;
 
     return 0;
 }
