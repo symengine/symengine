@@ -11,27 +11,6 @@ using CSymPy::Basic;
 using CSymPy::Add;
 using CSymPy::Symbol;
 
-namespace std
-{
-    // Specialise std::hash for Basic. We just call Basic.__hash__()
-    template<>
-    class hash<Basic> : public unary_function<Basic, size_t>
-    {
-    public:
-        size_t operator()(const Basic& b)
-        {
-            return b.__hash__();
-        }
-    };
-}
-
-template <class T>
-inline void hash_combine(std::size_t& seed, const T& v)
-{
-    std::hash<T> hasher;
-    seed ^= hasher(v) + 0x9e3779b9 + (seed<<6) + (seed>>2);
-}
-
 void test_symbol_hash()
 {
     RCP<Symbol> x = rcp(new Symbol("x"));
