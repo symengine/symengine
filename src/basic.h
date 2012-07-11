@@ -5,6 +5,12 @@
 
 namespace CSymPy {
 
+/*
+    Any Basic class can be used in a "dictionary", due to the methods:
+        __hash__()
+        __eq__(o)
+    Sublcasses must implement these.
+*/
 class Basic {
 public:
     // Implements the hash of the given CSymPy class.
@@ -13,7 +19,13 @@ public:
     //     std::hash<Basic> hash_fn;
     //     std::cout << hash_fn(*x);
     virtual std::size_t __hash__() const = 0;
+
+    // true if "this" is equal to "o".
     virtual bool __eq__(const Basic &o) const = 0;
+
+    bool operator==(const Basic &o) const {
+        return this->__eq__(o);
+    }
 };
 
 // Returns true if "b" is of type T or any of its subclasses. Example:
