@@ -3,9 +3,11 @@
 
 #include <unordered_map>
 
+#include "basic.h"
+
 namespace CSymPy {
 
-class Add {
+class Add : public Basic {
 private:
     std::unordered_map<int, int> dict;
 
