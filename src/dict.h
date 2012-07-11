@@ -26,7 +26,7 @@ typedef struct
 
 
 typedef std::unordered_map<Teuchos::RCP<Basic>, int, RCPBasicHash,
-        RCPBasicKeyEq> Dict;
+        RCPBasicKeyEq> Dict_int;
 
 } // CSymPy
 

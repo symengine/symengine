@@ -11,7 +11,7 @@ using Teuchos::rcp;
 using CSymPy::Basic;
 using CSymPy::Add;
 using CSymPy::Symbol;
-using CSymPy::Dict;
+using CSymPy::Dict_int;
 
 void test_symbol_hash()
 {
@@ -52,7 +52,7 @@ int main(int argc, char* argv[])
     RCP<Add> a = rcp(new Add(m));
     */
 
-    Dict d;
+    Dict_int d;
 //    Symbol x = Symbol("x");
 //    RCP<Symbol> x  = rcp(new Symbol("x"));
 //    RCP<Symbol> y  = rcp(new Symbol("y"));
@@ -65,7 +65,7 @@ int main(int argc, char* argv[])
     d[x] = 2;
     d[y] = 3;
 
-    for (Dict::const_iterator it = d.begin(); 
+    for (Dict_int::const_iterator it = d.begin(); 
                     it != d.end(); ++it) 
                 std::cout << " [" << it->first << ", " << it->second <<
                     "]"; 
