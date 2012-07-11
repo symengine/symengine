@@ -32,13 +32,10 @@ inline void hash_combine(std::size_t& seed, const T& v)
     seed ^= hasher(v) + 0x9e3779b9 + (seed<<6) + (seed>>2);
 }
 
-int main(int argc, char* argv[])
+void test_symbol_hash()
 {
     RCP<Symbol> x = rcp(new Symbol("x"));
     RCP<Symbol> y = rcp(new Symbol("y"));
-
-    std::unordered_map<int, int> m;
-    RCP<Add> a = rcp(new Add(m));
 
     std::size_t seed1 = 0;
     hash_combine<std::string>(seed1, "x");
@@ -49,6 +46,14 @@ int main(int argc, char* argv[])
     hash_combine<Basic>(seed2, *y);
 
     assert(seed1 == seed2);
+}
+
+int main(int argc, char* argv[])
+{
+    test_symbol_hash();
+
+    std::unordered_map<int, int> m;
+    RCP<Add> a = rcp(new Add(m));
 
     return 0;
 }
