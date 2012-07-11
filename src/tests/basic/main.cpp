@@ -1,21 +1,15 @@
 #include "Teuchos_RCP.hpp"
+#include "add.h"
 
 using Teuchos::RCP;
-using Teuchos::Ptr;
 using Teuchos::rcp;
-using Teuchos::null;
-
-class Mesh {
-    int x, y;
-};
+using CSymPy::Add;
 
 int main(int argc, char* argv[])
 {
 
-    RCP<Mesh> m = rcp(new Mesh());
-    Ptr<Mesh> p = m.ptr();
-    if (m == null) return 1;
-    if (p == null) return 1;
+    std::unordered_map<int, int> m;
+    RCP<Add> a = rcp(new Add(m));
 
     return 0;
 }
