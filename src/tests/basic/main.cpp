@@ -13,8 +13,14 @@ using CSymPy::Symbol;
 
 void test_symbol_hash()
 {
-    RCP<Symbol> x = rcp(new Symbol("x"));
-    RCP<Symbol> y = rcp(new Symbol("y"));
+    RCP<Symbol> x  = rcp(new Symbol("x"));
+    RCP<Symbol> x2 = rcp(new Symbol("x"));
+    RCP<Symbol> y  = rcp(new Symbol("y"));
+
+    std::hash<Basic> hash_fn;
+    assert(hash_fn(*x) != hash_fn(*y));
+    assert(hash_fn(*x) == hash_fn(*x2));
+
 
     std::size_t seed1 = 0;
     hash_combine<std::string>(seed1, "x");
