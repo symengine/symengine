@@ -43,33 +43,32 @@ void test_symbol_hash()
     assert(seed1 == seed2);
 }
 
+void test_symbol_dict()
+{
+    Dict_int d;
+    RCP<Basic> x  = rcp(new Symbol("x"));
+    RCP<Basic> x2 = rcp(new Symbol("x"));
+    RCP<Basic> y  = rcp(new Symbol("y"));
+    assert( x !=  x2);  // The instances are different...
+    assert(*x == *x2);  // ...but equal in the SymPy sense
+
+    d[x] = 2;
+    d[y] = 3;
+
+    for (Dict_int::const_iterator it = d.begin(); it != d.end(); ++it)
+        std::cout << " [" << it->first << ", " << it->second << "]";
+    std::cout << std::endl;
+}
+
 int main(int argc, char* argv[])
 {
     test_symbol_hash();
+    test_symbol_dict();
 
     /*
     std::unordered_map<int, int> m;
     RCP<Add> a = rcp(new Add(m));
     */
-
-    Dict_int d;
-//    Symbol x = Symbol("x");
-//    RCP<Symbol> x  = rcp(new Symbol("x"));
-//    RCP<Symbol> y  = rcp(new Symbol("y"));
-    RCP<Basic> x  = rcp(new Symbol("x"));
-    RCP<Basic> x2 = rcp(new Symbol("x"));
-    RCP<Basic> y = rcp(new Symbol("y"));
-    std::cout << (x == x2) << std::endl;
-    std::cout << (*x == *x2) << std::endl;
-
-    d[x] = 2;
-    d[y] = 3;
-
-    for (Dict_int::const_iterator it = d.begin(); 
-                    it != d.end(); ++it) 
-                std::cout << " [" << it->first << ", " << it->second <<
-                    "]"; 
-        std::cout << std::endl;
 
     return 0;
 }
