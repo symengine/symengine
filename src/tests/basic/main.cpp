@@ -55,9 +55,10 @@ void test_symbol_dict()
     d[x] = 2;
     d[y] = 3;
 
-    for (auto &it: d)
-        std::cout << " [" << it.first << ", " << it.second << "]";
-    std::cout << std::endl;
+    std::cout << "{";
+    for (auto &p: d)
+        std::cout << p.first << ": " << p.second << ", ";
+    std::cout << "}" << std::endl;
 }
 
 int main(int argc, char* argv[])
