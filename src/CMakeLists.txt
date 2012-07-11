@@ -1,5 +1,6 @@
 add_subdirectory(teuchos)
-add_subdirectory(tests)
+
+include_directories(${csympy_SOURCE_DIR}/src/teuchos)
 
 set(SRC
     add.cpp
@@ -7,3 +8,5 @@ set(SRC
 )
 
 add_library(csympy ${SRC})
+
+add_subdirectory(tests)

@@ -3,6 +3,7 @@
 #include "basic.h"
 #include "add.h"
 #include "symbol.h"
+#include "dict.h"
 
 using Teuchos::RCP;
 using Teuchos::rcp;
@@ -10,6 +11,7 @@ using Teuchos::rcp;
 using CSymPy::Basic;
 using CSymPy::Add;
 using CSymPy::Symbol;
+using CSymPy::Dict;
 
 void test_symbol_hash()
 {
@@ -41,22 +43,6 @@ void test_symbol_hash()
     assert(seed1 == seed2);
 }
 
-typedef struct
-{
-    long operator() (const RCP<Basic> &k) const {
-        return k->__hash__();
-    }
-} RCPBasicHash;
-
-typedef struct
-{
-    bool operator() (const RCP<Basic> &x, const RCP<Basic> &y) const {
-        return x->__eq__(*y);
-    }
-} RCPBasicKeyEq;
-
-typedef std::unordered_map<RCP<Basic>, int, RCPBasicHash, RCPBasicKeyEq> Mymap;
-
 int main(int argc, char* argv[])
 {
     test_symbol_hash();
@@ -66,7 +52,7 @@ int main(int argc, char* argv[])
     RCP<Add> a = rcp(new Add(m));
     */
 
-    Mymap d;
+    Dict d;
 //    Symbol x = Symbol("x");
 //    RCP<Symbol> x  = rcp(new Symbol("x"));
 //    RCP<Symbol> y  = rcp(new Symbol("y"));
@@ -79,7 +65,7 @@ int main(int argc, char* argv[])
     d[x] = 2;
     d[y] = 3;
 
-    for (Mymap::const_iterator it = d.begin(); 
+    for (Dict::const_iterator it = d.begin(); 
                     it != d.end(); ++it) 
                 std::cout << " [" << it->first << ", " << it->second <<
                     "]"; 
