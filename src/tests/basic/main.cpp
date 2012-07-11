@@ -1,3 +1,4 @@
+#include <iostream>
 #include "Teuchos_RCP.hpp"
 #include "add.h"
 #include "symbol.h"
@@ -22,6 +23,11 @@ int main(int argc, char* argv[])
 
     std::unordered_map<int, int> m;
     RCP<Add> a = rcp(new Add(m));
+
+    std::size_t seed = 0;
+    hash_combine<std::string>(seed, "x");
+    hash_combine<std::string>(seed, "y");
+    std::cout << seed << std::endl;
 
     return 0;
 }
