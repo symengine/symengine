@@ -38,6 +38,21 @@ void test_symbol_hash()
     assert(seed1 == seed2);
 }
 
+typedef struct
+{
+    long operator() (const RCP<Basic> &k) const {
+        return k->__hash__();
+    }
+} RCPBasicHash;
+
+typedef struct
+{
+    bool operator() (const RCP<Basic> &x, const RCP<Basic> &y) const {
+        return x->__eq__(*y);
+    }
+} RCPBasicKeyEq;
+
+
 int main(int argc, char* argv[])
 {
     test_symbol_hash();
@@ -47,12 +62,16 @@ int main(int argc, char* argv[])
     RCP<Add> a = rcp(new Add(m));
     */
 
-    /*
-    std::unordered_map<Symbol, int> d;
-    RCP<Symbol> x  = rcp(new Symbol("x"));
-    RCP<Symbol> y  = rcp(new Symbol("y"));
-    d[*x] = 2;
-    */
+    std::unordered_map<RCP<Basic>, int, RCPBasicHash, RCPBasicKeyEq> d;
+//    Symbol x = Symbol("x");
+//    RCP<Symbol> x  = rcp(new Symbol("x"));
+//    RCP<Symbol> y  = rcp(new Symbol("y"));
+    RCP<Basic> x  = rcp(new Symbol("x"));
+    RCP<Basic> x2 = rcp(new Symbol("x"));
+    std::cout << (x == x2) << std::endl;
+    std::cout << (*x == *x2) << std::endl;
+
+    d[x] = 2;
 
     return 0;
 }
