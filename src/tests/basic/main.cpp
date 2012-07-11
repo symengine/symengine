@@ -20,6 +20,7 @@ void test_symbol_hash()
     assert(x == x);
     assert(x == x2);
     assert(!(x == y));
+    assert(x != y);
 
     std::hash<Basic> hash_fn;
     assert(hash_fn(x) != hash_fn(y));

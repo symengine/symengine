@@ -26,6 +26,10 @@ public:
     bool operator==(const Basic &o) const {
         return this->__eq__(o);
     }
+
+    bool operator!=(const Basic &o) const {
+        return !(this->__eq__(o));
+    }
 };
 
 // Returns true if "b" is of type T or any of its subclasses. Example:
