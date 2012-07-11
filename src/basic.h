@@ -1,6 +1,8 @@
 #ifndef CSYMPY_BASIC_H
 #define CSYMPY_BASIC_H
 
+#include <cstddef>
+
 namespace CSymPy {
 
 class Basic {
@@ -11,7 +13,16 @@ public:
     //     std::hash<Basic> hash_fn;
     //     std::cout << hash_fn(*x);
     virtual std::size_t __hash__() const = 0;
+    virtual bool __eq__(const Basic &o) const = 0;
 };
+
+// Returns true if "b" is of type T or any of its subclasses. Example:
+//     is_a<Symbol>(b)  // true if "b" is of type Symbol any Symbol's subclass
+template <class T>
+inline bool is_a(const Basic &b)
+{
+    return dynamic_cast<const T *>(&b) != NULL;
+}
 
 } // CSymPy
 
