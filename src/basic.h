@@ -2,6 +2,7 @@
 #define CSYMPY_BASIC_H
 
 #include <cstddef>
+#include <ostream>
 
 namespace CSymPy {
 
@@ -40,7 +41,10 @@ inline bool is_a(const Basic &b)
     return dynamic_cast<const T *>(&b) != NULL;
 }
 
+
 } // CSymPy
+
+std::ostream& operator<<(std::ostream& out, const CSymPy::Basic& p);
 
 namespace std
 {
