@@ -1,12 +1,15 @@
 #ifndef CSYMPY_BASIC_H
 #define CSYMPY_BASIC_H
 
+// Include all C++ headers here:
 #include <typeinfo>
 #include <cstddef>
 #include <iostream>
 #include <sstream>
 #include <unordered_map>
 
+// Include all Teuchos headers here:
+#include "Teuchos_RCP.hpp"
 #include "Teuchos_TypeNameTraits.hpp"
 
 namespace CSymPy {

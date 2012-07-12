@@ -3,8 +3,6 @@
 
 #include "basic.h"
 
-#include "Teuchos_RCP.hpp"
-
 namespace CSymPy {
 
 // This implements a "dictionary" of CSymPy objects:
