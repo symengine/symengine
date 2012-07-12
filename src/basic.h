@@ -2,10 +2,10 @@
 #define CSYMPY_BASIC_H
 
 // Include all C++ headers here:
-#include <typeinfo>
 #include <cstddef>
 #include <iostream>
 #include <sstream>
+#include <typeinfo>
 #include <unordered_map>
 
 // Include all Teuchos headers here:

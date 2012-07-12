@@ -1,9 +1,10 @@
-#include "add.h"
 #include <stdexcept>
+
+#include "add.h"
 
 namespace CSymPy {
 
-Add::Add(std::unordered_map<int, int> &dict)
+Add::Add(Dict_int& dict)
 {
     this->dict = dict;
 }

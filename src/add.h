@@ -8,10 +8,10 @@ namespace CSymPy {
 
 class Add : public Basic {
 private:
-    std::unordered_map<int, int> dict;
+    Dict_int dict;
 
 public:
-    Add(std::unordered_map<int, int> &dict);
+    Add(Dict_int& dict);
     virtual std::size_t __hash__() const;
 };
 
