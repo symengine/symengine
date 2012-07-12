@@ -5,6 +5,7 @@
 #include <cstddef>
 #include <iostream>
 #include <sstream>
+#include <unordered_map>
 
 #include "Teuchos_TypeNameTraits.hpp"
 

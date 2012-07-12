@@ -1,8 +1,6 @@
 #ifndef CSYMPY_ADD_H
 #define CSYMPY_ADD_H
 
-#include <unordered_map>
-
 #include "basic.h"
 
 namespace CSymPy {

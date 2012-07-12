@@ -1,8 +1,6 @@
 #ifndef CSYMPY_SYMBOL_H
 #define CSYMPY_SYMBOL_H
 
-#include <string>
-
 #include "basic.h"
 
 namespace CSymPy {

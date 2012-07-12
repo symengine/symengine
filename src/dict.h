@@ -1,7 +1,8 @@
 #ifndef CSYMPY_DICT_H
 #define CSYMPY_DICT_H
 
-#include <cstddef>
+#include "basic.h"
+
 #include "Teuchos_RCP.hpp"
 
 namespace CSymPy {
@@ -30,5 +31,6 @@ typedef std::unordered_map<Teuchos::RCP<Basic>, int, RCPBasicHash,
 
 } // CSymPy
 
+std::ostream& operator<<(std::ostream& out, const CSymPy::Dict_int& d);
 
 #endif
