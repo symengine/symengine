@@ -2,6 +2,7 @@
 #define CSYMPY_DICT_H
 
 #include "basic.h"
+#include "integer.h"
 
 namespace CSymPy {
 
@@ -24,8 +25,8 @@ typedef struct
 } RCPBasicKeyEq;
 
 
-typedef std::unordered_map<Teuchos::RCP<Basic>, int, RCPBasicHash,
-        RCPBasicKeyEq> Dict_int;
+typedef std::unordered_map<Teuchos::RCP<Basic>, Teuchos::RCP<Integer>,
+        RCPBasicHash, RCPBasicKeyEq> Dict_int;
 
 } // CSymPy
 

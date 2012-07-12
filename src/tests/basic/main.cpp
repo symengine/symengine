@@ -56,8 +56,8 @@ void test_symbol_dict()
     assert( x !=  x2);  // The instances are different...
     assert(*x == *x2);  // ...but equal in the SymPy sense
 
-    d[x] = 2;
-    d[y] = 3;
+    d[x] = rcp(new Integer(2));
+    d[y] = rcp(new Integer(3));
 
     // Test printing:
     std::cout << d << std::endl;
@@ -69,11 +69,11 @@ void test_add()
     Dict_int m;
     RCP<Basic> x  = rcp(new Symbol("x"));
     RCP<Basic> y  = rcp(new Symbol("y"));
-    m[x] = 2;
-    m[y] = 3;
+    m[x] = rcp(new Integer(2));
+    m[y] = rcp(new Integer(3));
 
     RCP<Add> a = rcp(new Add(m));
-    m[x] = -2;
+    m[x] = rcp(new Integer(-2));
     RCP<Add> b = rcp(new Add(m));
     std::cout << *a << std::endl;
     std::cout << *b << std::endl;

@@ -39,7 +39,7 @@ RCP<CSymPy::Basic> add_from_dict(const Dict_int &d)
 
 // Adds (coef*t) to the dict "d"
 // Assumption: "t" does not have any numerical coefficients, those are in "coef"
-void dict_add_term(Dict_int &d, int coef, const RCP<Basic> &t)
+void dict_add_term(Dict_int &d, const RCP<Integer> &coef, const RCP<Basic> &t)
 {
     if (d.find(t) == d.end()) {
         // Not found:
@@ -53,11 +53,12 @@ void dict_add_term(Dict_int &d, int coef, const RCP<Basic> &t)
 
 using CSymPy::Basic;
 using CSymPy::Add;
+using CSymPy::Integer;
 
-void as_coef_term(const RCP<Basic> &self, int *coef, RCP<Basic> *term)
+void as_coef_term(const RCP<Basic> &self, RCP<Integer> *coef, RCP<Basic> *term)
 {
     if (CSymPy::is_a<CSymPy::Symbol>(*self)) {
-        *coef = 1;
+        *coef = rcp(new Integer(1));
         *term = self;
     } else {
         throw std::runtime_error("Not implemented yet.");
@@ -67,7 +68,7 @@ void as_coef_term(const RCP<Basic> &self, int *coef, RCP<Basic> *term)
 RCP<Basic> operator+(const RCP<Basic> &a, const RCP<Basic> &b)
 {
     CSymPy::Dict_int d;
-    int coef;
+    RCP<Integer> coef;
     RCP<Basic> t;
     if (CSymPy::is_a<Add>(*a) && CSymPy::is_a<Add>(*b)) {
         d = (rcp_dynamic_cast<Add>(a))->dict;
