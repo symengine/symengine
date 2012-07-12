@@ -40,8 +40,12 @@ RCP<CSymPy::Basic> add_from_dict(const Dict_int &d)
 // Assumption: "t" does not have any numerical coefficients, those are in "coef"
 void dict_add_term(Dict_int &d, int coef, const RCP<Basic> &t)
 {
-    // FIXME:
-    d[t] = coef;
+    if (d.find(t) == d.end()) {
+        // Not found:
+        d[t] = coef;
+    } else {
+        d[t] = d[t] + coef;
+    }
 }
 
 } // CSymPy
