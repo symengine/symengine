@@ -43,6 +43,15 @@ void test_symbol_hash()
     assert(seed1 == seed2);
 }
 
+std::ostream& operator<<(std::ostream& out, const Dict_int& d)
+{
+    out << "{";
+    for (auto &p: d)
+        out << *(p.first) << ": " << p.second << ", ";
+    out << "}";
+    return out;
+}
+
 void test_symbol_dict()
 {
     Dict_int d;
@@ -55,11 +64,7 @@ void test_symbol_dict()
     d[x] = 2;
     d[y] = 3;
 
-    std::cout << "{";
-    for (auto &p: d)
-        std::cout << p.first << ": " << p.second << ", ";
-    std::cout << "}" << std::endl;
-
+    std::cout << d << std::endl;
     std::cout << *x << std::endl;
 }
 
