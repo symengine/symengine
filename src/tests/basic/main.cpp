@@ -60,13 +60,26 @@ void test_symbol_dict()
     std::cout << *x << std::endl;
 }
 
+void test_symbol_add()
+{
+    Dict_int m;
+    RCP<Basic> x  = rcp(new Symbol("x"));
+    RCP<Basic> y  = rcp(new Symbol("y"));
+    m[x] = 2;
+    m[y] = 3;
+    std::cout << x << std::endl;
+
+    RCP<Add> a = rcp(new Add(m));
+    std::cout << x << std::endl;
+}
+
 int main(int argc, char* argv[])
 {
     test_symbol_hash();
+
     test_symbol_dict();
 
-    Dict_int m;
-    RCP<Add> a = rcp(new Add(m));
+    test_symbol_add();
 
     return 0;
 }
