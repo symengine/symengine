@@ -22,4 +22,9 @@ bool Symbol::__eq__(const Basic &o) const
     return false;
 }
 
+std::string Symbol::__str__() const
+{
+    return this->name;
+}
+
 } // CSymPy
