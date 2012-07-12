@@ -7,8 +7,8 @@
 namespace CSymPy {
 
 class Add : public Basic {
-private:
-    Dict_int dict;
+public:
+    Dict_int dict; // TODO: make this private
 
 public:
     // Constructs Add from a dictionary by copying the contents of the
