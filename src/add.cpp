@@ -28,7 +28,7 @@ std::string Add::__str__() const
 {
     std::ostringstream s;
     for (auto &p: this->dict)
-        s << p.second << *(p.first) << " + ";
+        s << *(p.second) << *(p.first) << " + ";
     return s.str();
 }
 
