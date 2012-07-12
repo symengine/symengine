@@ -5,6 +5,7 @@
 
 using Teuchos::RCP;
 using Teuchos::rcp;
+using Teuchos::rcp_dynamic_cast;
 
 namespace CSymPy {
 
@@ -69,18 +70,15 @@ RCP<Basic> operator+(const RCP<Basic> &a, const RCP<Basic> &b)
     int coef;
     RCP<Basic> t;
     if (CSymPy::is_a<Add>(*a) && CSymPy::is_a<Add>(*b)) {
-        // TODO: Fix these pointer hacks:
-        d = ((Add*) a.get())->dict;
-        for (auto &p: ((Add*) b.get())->dict)
+        d = (rcp_dynamic_cast<Add>(a))->dict;
+        for (auto &p: (rcp_dynamic_cast<Add>(b))->dict)
             dict_add_term(d, p.second, p.first);
     } else if (CSymPy::is_a<Add>(*a)) {
-        // TODO: Fix this pointer hacks:
-        d = ((Add*) a.get())->dict;
+        d = (rcp_dynamic_cast<Add>(a))->dict;
         as_coef_term(b, &coef, &t);
         dict_add_term(d, coef, t);
     } else if (CSymPy::is_a<Add>(*b)) {
-        // TODO: Fix this pointer hacks:
-        d = ((Add*) b.get())->dict;
+        d = (rcp_dynamic_cast<Add>(b))->dict;
         as_coef_term(a, &coef, &t);
         dict_add_term(d, coef, t);
     } else {
