@@ -13,6 +13,7 @@ private:
 public:
     Add(Dict_int& dict);
     virtual std::size_t __hash__() const;
+    virtual bool __eq__(const Basic &o) const;
 };
 
 } // CSymPy

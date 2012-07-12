@@ -65,10 +65,8 @@ int main(int argc, char* argv[])
     test_symbol_hash();
     test_symbol_dict();
 
-    /*
-    std::unordered_map<int, int> m;
+    Dict_int m;
     RCP<Add> a = rcp(new Add(m));
-    */
 
     return 0;
 }
