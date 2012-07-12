@@ -76,7 +76,7 @@ void test_add()
     std::cout << *a << std::endl;
     std::cout << *b << std::endl;
 
-    RCP<Basic> r = x + y + x;
+    RCP<Basic> r = (x + y) + (y + x);
     std::cout << *r << std::endl;
 }
 
