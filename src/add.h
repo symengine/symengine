@@ -11,7 +11,9 @@ private:
     Dict_int dict;
 
 public:
-    Add(Dict_int& dict);
+    // Constructs Add from a dictionary by copying the contents of the
+    // dictionary:
+    Add(const Dict_int& dict);
     virtual std::size_t __hash__() const;
     virtual bool __eq__(const Basic &o) const;
 };

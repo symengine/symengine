@@ -4,7 +4,7 @@
 
 namespace CSymPy {
 
-Add::Add(Dict_int& dict)
+Add::Add(const Dict_int& dict)
 {
     this->dict = dict;
 }
