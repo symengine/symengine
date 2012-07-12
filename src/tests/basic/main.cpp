@@ -86,9 +86,22 @@ void test_integer()
 {
     RCP<Integer> i = rcp(new Integer(5));
     RCP<Integer> j = rcp(new Integer(6));
-    RCP<Integer> k = i + j;
     std::cout << *i << std::endl;
     std::cout << *j << std::endl;
+
+    RCP<Integer> k = i + j;
+    std::cout << *k << std::endl;
+
+    k = i - j;
+    std::cout << *k << std::endl;
+
+    k = i * j;
+    std::cout << *k << std::endl;
+
+    k = i / j;
+    std::cout << *k << std::endl;
+
+    k = -i;
     std::cout << *k << std::endl;
 }
 

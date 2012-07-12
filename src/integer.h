@@ -23,4 +23,15 @@ public:
 Teuchos::RCP<CSymPy::Integer> operator+(const Teuchos::RCP<CSymPy::Integer> &a,
         const Teuchos::RCP<CSymPy::Integer> &b);
 
+Teuchos::RCP<CSymPy::Integer> operator-(const Teuchos::RCP<CSymPy::Integer> &a,
+        const Teuchos::RCP<CSymPy::Integer> &b);
+
+Teuchos::RCP<CSymPy::Integer> operator*(const Teuchos::RCP<CSymPy::Integer> &a,
+        const Teuchos::RCP<CSymPy::Integer> &b);
+
+Teuchos::RCP<CSymPy::Integer> operator/(const Teuchos::RCP<CSymPy::Integer> &a,
+        const Teuchos::RCP<CSymPy::Integer> &b);
+
+Teuchos::RCP<CSymPy::Integer> operator-(const Teuchos::RCP<CSymPy::Integer> &a);
+
 #endif
