@@ -55,6 +55,7 @@ void test_symbol_dict()
     d[x] = 2;
     d[y] = 3;
 
+    // Test printing:
     std::cout << d << std::endl;
     std::cout << *x << std::endl;
 }
