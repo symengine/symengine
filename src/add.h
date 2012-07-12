@@ -21,4 +21,7 @@ public:
 
 } // CSymPy
 
+Teuchos::RCP<CSymPy::Basic> operator+(const Teuchos::RCP<CSymPy::Basic> &a,
+        const Teuchos::RCP<CSymPy::Basic> &b); 
+
 #endif

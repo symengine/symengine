@@ -62,7 +62,7 @@ void test_symbol_dict()
     std::cout << *x << std::endl;
 }
 
-void test_symbol_add()
+void test_add()
 {
     Dict_int m;
     RCP<Basic> x  = rcp(new Symbol("x"));
@@ -75,6 +75,9 @@ void test_symbol_add()
     RCP<Add> b = rcp(new Add(m));
     std::cout << *a << std::endl;
     std::cout << *b << std::endl;
+
+    RCP<Basic> r = x + y;
+    std::cout << *r << std::endl;
 }
 
 int main(int argc, char* argv[])
@@ -85,7 +88,7 @@ int main(int argc, char* argv[])
 
     test_symbol_dict();
 
-    test_symbol_add();
+    test_add();
 
     return 0;
 }
