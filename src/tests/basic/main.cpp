@@ -6,6 +6,7 @@
 #include "add.h"
 #include "symbol.h"
 #include "dict.h"
+#include "integer.h"
 
 using Teuchos::RCP;
 using Teuchos::rcp;
@@ -14,6 +15,7 @@ using CSymPy::Basic;
 using CSymPy::Add;
 using CSymPy::Symbol;
 using CSymPy::Dict_int;
+using CSymPy::Integer;
 
 void test_symbol_hash()
 {
@@ -80,6 +82,16 @@ void test_add()
     std::cout << *r << std::endl;
 }
 
+void test_integer()
+{
+    RCP<Integer> i = rcp(new Integer(5));
+    RCP<Integer> j = rcp(new Integer(6));
+    RCP<Integer> k = i + j;
+    std::cout << *i << std::endl;
+    std::cout << *j << std::endl;
+    std::cout << *k << std::endl;
+}
+
 int main(int argc, char* argv[])
 {
     Teuchos::print_stack_on_segfault();
@@ -89,6 +101,8 @@ int main(int argc, char* argv[])
     test_symbol_dict();
 
     test_add();
+
+    test_integer();
 
     return 0;
 }

@@ -30,3 +30,9 @@ std::string Integer::__str__() const
 }
 
 } // CSymPy
+
+Teuchos::RCP<CSymPy::Integer> operator+(const Teuchos::RCP<CSymPy::Integer> &a,
+        const Teuchos::RCP<CSymPy::Integer> &b)
+{
+    return Teuchos::rcp(new CSymPy::Integer(a->i + b->i));
+}

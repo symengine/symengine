@@ -6,8 +6,9 @@
 namespace CSymPy {
 
 class Integer : public Basic {
-private:
+public:
     // TODO: This needs to big int, but for now we just use int:
+    // TODO: make this private
     long long int i;
 
 public:
@@ -18,5 +19,8 @@ public:
 };
 
 } // CSymPy
+
+Teuchos::RCP<CSymPy::Integer> operator+(const Teuchos::RCP<CSymPy::Integer> &a,
+        const Teuchos::RCP<CSymPy::Integer> &b);
 
 #endif
