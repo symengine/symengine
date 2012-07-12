@@ -1,6 +1,7 @@
 #include <stdexcept>
 
 #include "add.h"
+#include "symbol.h"
 
 using Teuchos::RCP;
 using Teuchos::rcp;
@@ -50,8 +51,12 @@ using CSymPy::Add;
 
 void as_coef_term(const RCP<Basic> &self, int *coef, RCP<Basic> *term)
 {
-    *coef = 1;
-    *term = self;
+    if (CSymPy::is_a<CSymPy::Symbol>(*self)) {
+        *coef = 1;
+        *term = self;
+    } else {
+        throw std::runtime_error("Not implemented yet.");
+    }
 }
 
 RCP<Basic> operator+(const RCP<Basic> &a, const RCP<Basic> &b)
