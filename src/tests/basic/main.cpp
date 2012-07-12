@@ -67,10 +67,12 @@ void test_symbol_add()
     RCP<Basic> y  = rcp(new Symbol("y"));
     m[x] = 2;
     m[y] = 3;
-    std::cout << x << std::endl;
 
     RCP<Add> a = rcp(new Add(m));
-    std::cout << x << std::endl;
+    m[x] = -2;
+    RCP<Add> b = rcp(new Add(m));
+    std::cout << *a << std::endl;
+    std::cout << *b << std::endl;
 }
 
 int main(int argc, char* argv[])

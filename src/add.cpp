@@ -19,4 +19,12 @@ bool Add::__eq__(const Basic &o) const
     throw std::runtime_error("Not implemented yet.");
 }
 
+std::string Add::__str__() const
+{
+    std::ostringstream s;
+    for (auto &p: this->dict)
+        s << p.second << *(p.first) << " + ";
+    return s.str();
+}
+
 } // CSymPy
