@@ -2,7 +2,7 @@
 
 std::ostream& operator<<(std::ostream& out, const CSymPy::Basic& p)
 {
-    out << "Basic()";
+    out << p.__str__();
     return out;
 }
 

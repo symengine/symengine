@@ -59,6 +59,8 @@ void test_symbol_dict()
     for (auto &p: d)
         std::cout << p.first << ": " << p.second << ", ";
     std::cout << "}" << std::endl;
+
+    std::cout << *x << std::endl;
 }
 
 int main(int argc, char* argv[])

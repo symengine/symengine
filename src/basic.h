@@ -1,8 +1,12 @@
 #ifndef CSYMPY_BASIC_H
 #define CSYMPY_BASIC_H
 
+#include <typeinfo>
 #include <cstddef>
-#include <ostream>
+#include <iostream>
+#include <sstream>
+
+#include "Teuchos_TypeNameTraits.hpp"
 
 namespace CSymPy {
 
@@ -24,6 +28,15 @@ public:
     // true if "this" is equal to "o".
     virtual bool __eq__(const Basic &o) const = 0;
 
+    // Returns string representation of self. Subclasses can override this to
+    // provide custom printing.
+    virtual std::string __str__() const {
+        std::ostringstream s;
+        s << "<" << Teuchos::typeName<Basic>(*this)
+            << " instance at " << (const void*)this << ">";
+        return s.str();
+    }
+
     bool operator==(const Basic &o) const {
         return this->__eq__(o);
     }
@@ -44,6 +57,8 @@ inline bool is_a(const Basic &b)
 
 } // CSymPy
 
+// This "<<" overloaded function simply calls p.__str__, so it allows any Basic
+// type to be printed
 std::ostream& operator<<(std::ostream& out, const CSymPy::Basic& p);
 
 namespace std
