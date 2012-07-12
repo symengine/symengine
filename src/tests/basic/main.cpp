@@ -1,5 +1,7 @@
 #include <iostream>
-#include "Teuchos_RCP.hpp"
+
+#include "Teuchos_stacktrace.hpp"
+
 #include "basic.h"
 #include "add.h"
 #include "symbol.h"
@@ -77,6 +79,8 @@ void test_symbol_add()
 
 int main(int argc, char* argv[])
 {
+    Teuchos::print_stack_on_segfault();
+
     test_symbol_hash();
 
     test_symbol_dict();
