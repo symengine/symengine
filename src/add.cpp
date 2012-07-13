@@ -4,6 +4,8 @@
 #include "symbol.h"
 
 using Teuchos::RCP;
+using Teuchos::Ptr;
+using Teuchos::outArg;
 using Teuchos::rcp;
 using Teuchos::rcp_dynamic_cast;
 
@@ -55,11 +57,12 @@ using CSymPy::Basic;
 using CSymPy::Add;
 using CSymPy::Integer;
 
-void as_coef_term(const RCP<Basic> &self, RCP<Integer> &coef, RCP<Basic> &term)
+void as_coef_term(const RCP<Basic> &self, const Ptr<RCP<Integer>> &coef,
+        const Ptr<RCP<Basic>> &term)
 {
     if (CSymPy::is_a<CSymPy::Symbol>(*self)) {
-        coef = rcp(new Integer(1));
-        term = self;
+        *coef = rcp(new Integer(1));
+        *term = self;
     } else {
         throw std::runtime_error("Not implemented yet.");
     }
@@ -76,16 +79,16 @@ RCP<Basic> operator+(const RCP<Basic> &a, const RCP<Basic> &b)
             dict_add_term(d, p.second, p.first);
     } else if (CSymPy::is_a<Add>(*a)) {
         d = (rcp_dynamic_cast<Add>(a))->dict;
-        as_coef_term(b, coef, t);
+        as_coef_term(b, outArg(coef), outArg(t));
         dict_add_term(d, coef, t);
     } else if (CSymPy::is_a<Add>(*b)) {
         d = (rcp_dynamic_cast<Add>(b))->dict;
-        as_coef_term(a, coef, t);
+        as_coef_term(a, outArg(coef), outArg(t));
         dict_add_term(d, coef, t);
     } else {
-        as_coef_term(a, coef, t);
+        as_coef_term(a, outArg(coef), outArg(t));
         d[t] = coef;
-        as_coef_term(b, coef, t);
+        as_coef_term(b, outArg(coef), outArg(t));
         dict_add_term(d, coef, t);
     }
     return CSymPy::add_from_dict(d);
