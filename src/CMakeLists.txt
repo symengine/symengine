@@ -8,6 +8,7 @@ set(SRC
     symbol.cpp
     integer.cpp
     add.cpp
+    mul.cpp
 )
 
 add_library(csympy ${SRC})
