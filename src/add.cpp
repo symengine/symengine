@@ -37,7 +37,7 @@ std::string Add::__str__() const
 
 // Creates the appropriate instance (i.e. Add, Symbol, Integer, Mul) depending
 // on how many (and which) items are in the dictionary "d":
-RCP<Basic> Add::add_from_dict(const Dict_int &d)
+RCP<Basic> Add::from_dict(const Dict_int &d)
 {
     if (d.size() == 0) {
         throw std::runtime_error("Not implemented.");
@@ -117,7 +117,7 @@ RCP<Basic> operator+(const RCP<Basic> &a, const RCP<Basic> &b)
         as_coef_term(b, outArg(coef), outArg(t));
         Add::dict_add_term(d, coef, t);
     }
-    return Add::add_from_dict(d);
+    return Add::from_dict(d);
 }
 
 RCP<Basic> operator-(const RCP<Basic> &a, const RCP<Basic> &b)
