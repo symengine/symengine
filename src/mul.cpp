@@ -54,6 +54,8 @@ void Mul::dict_add_term(Dict_int &d, const RCP<Integer> &coef,
 
 } // CSymPy
 
+namespace {
+
 using CSymPy::Basic;
 using CSymPy::Mul;
 using CSymPy::Integer;
@@ -69,7 +71,9 @@ void as_coef_term(const RCP<Basic> &self, const Ptr<RCP<Integer>> &coef,
     }
 }
 
-RCP<Basic> operator+(const RCP<Basic> &a, const RCP<Basic> &b)
+} // Anonymous
+
+RCP<Basic> operator*(const RCP<Basic> &a, const RCP<Basic> &b)
 {
     CSymPy::Dict_int d;
     RCP<Integer> coef;
@@ -95,8 +99,8 @@ RCP<Basic> operator+(const RCP<Basic> &a, const RCP<Basic> &b)
     return Mul::add_from_dict(d);
 }
 
-RCP<Basic> operator-(const RCP<Basic> &a, const RCP<Basic> &b)
+RCP<Basic> operator/(const RCP<Basic> &a, const RCP<Basic> &b)
 {
-//    return a + (-b);
+//    return a * b**(-1);
     throw std::runtime_error("Not implemented yet.");
 }
