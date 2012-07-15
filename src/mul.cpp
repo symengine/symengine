@@ -41,10 +41,11 @@ RCP<CSymPy::Basic> Mul::add_from_dict(const Dict_int &d)
 
 // Mul (coef*t) to the dict "d"
 // Assumption: "t" does not have any numerical coefficients, those are in "coef"
-void dict_add_term(Dict_int &d, const RCP<Integer> &coef, const RCP<Basic> &t)
+void Mul::dict_add_term(Dict_int &d, const RCP<Integer> &coef,
+        const RCP<Basic> &t)
 {
     if (d.find(t) == d.end()) {
-        // Not found:
+        // "t" not found in "d":
         d[t] = coef;
     } else {
         d[t] = d[t] + coef;
@@ -76,20 +77,20 @@ RCP<Basic> operator+(const RCP<Basic> &a, const RCP<Basic> &b)
     if (CSymPy::is_a<Mul>(*a) && CSymPy::is_a<Mul>(*b)) {
         d = (rcp_dynamic_cast<Mul>(a))->dict;
         for (auto &p: (rcp_dynamic_cast<Mul>(b))->dict)
-            dict_add_term(d, p.second, p.first);
+            Mul::dict_add_term(d, p.second, p.first);
     } else if (CSymPy::is_a<Mul>(*a)) {
         d = (rcp_dynamic_cast<Mul>(a))->dict;
         as_coef_term(b, outArg(coef), outArg(t));
-        dict_add_term(d, coef, t);
+        Mul::dict_add_term(d, coef, t);
     } else if (CSymPy::is_a<Mul>(*b)) {
         d = (rcp_dynamic_cast<Mul>(b))->dict;
         as_coef_term(a, outArg(coef), outArg(t));
-        dict_add_term(d, coef, t);
+        Mul::dict_add_term(d, coef, t);
     } else {
         as_coef_term(a, outArg(coef), outArg(t));
         d[t] = coef;
         as_coef_term(b, outArg(coef), outArg(t));
-        dict_add_term(d, coef, t);
+        Mul::dict_add_term(d, coef, t);
     }
     return Mul::add_from_dict(d);
 }

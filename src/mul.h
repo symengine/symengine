@@ -19,6 +19,8 @@ public:
     virtual std::string __str__() const;
 
     static Teuchos::RCP<Basic> add_from_dict(const Dict_int &d);
+    static void dict_add_term(Dict_int &d,
+            const Teuchos::RCP<Integer> &coef, const Teuchos::RCP<Basic> &t);
 };
 
 } // CSymPy
