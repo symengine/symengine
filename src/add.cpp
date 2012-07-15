@@ -2,6 +2,7 @@
 
 #include "add.h"
 #include "symbol.h"
+#include "mul.h"
 
 using Teuchos::RCP;
 using Teuchos::Ptr;
@@ -34,9 +35,29 @@ std::string Add::__str__() const
     return s.str();
 }
 
-RCP<CSymPy::Basic> Add::add_from_dict(const Dict_int &d)
+// Creates the appropriate instance (i.e. Add, Symbol, Integer, Mul) depending
+// on how many (and which) items are in the dictionary "d":
+RCP<Basic> Add::add_from_dict(const Dict_int &d)
 {
-    return rcp(new Add(d));
+    if (d.size() == 0) {
+        throw std::runtime_error("Not implemented.");
+    } else if (d.size() == 1) {
+        auto p = d.begin();
+        if (is_a<Integer>(*(p->second))) {
+            if ((rcp_dynamic_cast<Integer>(p->second))->i == 1) {
+                // This should be correct, but let's write a test for this
+                // first:
+                //return p->first;
+                throw std::runtime_error("Not implemented.");
+            }
+        }
+        Dict_int m;
+        m[p->first] = rcp(new Integer(1));
+        m[p->second] = rcp(new Integer(1));
+        return rcp(new Mul(m));
+    } else {
+        return rcp(new Add(d));
+    }
 }
 
 // Adds (coef*t) to the dict "d"

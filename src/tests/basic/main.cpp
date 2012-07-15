@@ -82,6 +82,9 @@ void test_add()
 
     RCP<Basic> r = (x + y) + (y + x);
     std::cout << *r << std::endl;
+
+    r = x + x;
+    std::cout << *r << std::endl;
 }
 
 void test_integer()
