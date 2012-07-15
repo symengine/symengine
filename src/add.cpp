@@ -34,14 +34,15 @@ std::string Add::__str__() const
     return s.str();
 }
 
-RCP<CSymPy::Basic> add_from_dict(const Dict_int &d)
+RCP<CSymPy::Basic> Add::add_from_dict(const Dict_int &d)
 {
     return rcp(new Add(d));
 }
 
 // Adds (coef*t) to the dict "d"
 // Assumption: "t" does not have any numerical coefficients, those are in "coef"
-void dict_add_term(Dict_int &d, const RCP<Integer> &coef, const RCP<Basic> &t)
+void Add::dict_add_term(Dict_int &d, const RCP<Integer> &coef,
+        const RCP<Basic> &t)
 {
     if (d.find(t) == d.end()) {
         // Not found:
@@ -52,6 +53,8 @@ void dict_add_term(Dict_int &d, const RCP<Integer> &coef, const RCP<Basic> &t)
 }
 
 } // CSymPy
+
+namespace {
 
 using CSymPy::Basic;
 using CSymPy::Add;
@@ -68,6 +71,8 @@ void as_coef_term(const RCP<Basic> &self, const Ptr<RCP<Integer>> &coef,
     }
 }
 
+} // Anonymous
+
 RCP<Basic> operator+(const RCP<Basic> &a, const RCP<Basic> &b)
 {
     CSymPy::Dict_int d;
@@ -76,22 +81,22 @@ RCP<Basic> operator+(const RCP<Basic> &a, const RCP<Basic> &b)
     if (CSymPy::is_a<Add>(*a) && CSymPy::is_a<Add>(*b)) {
         d = (rcp_dynamic_cast<Add>(a))->dict;
         for (auto &p: (rcp_dynamic_cast<Add>(b))->dict)
-            dict_add_term(d, p.second, p.first);
+            Add::dict_add_term(d, p.second, p.first);
     } else if (CSymPy::is_a<Add>(*a)) {
         d = (rcp_dynamic_cast<Add>(a))->dict;
         as_coef_term(b, outArg(coef), outArg(t));
-        dict_add_term(d, coef, t);
+        Add::dict_add_term(d, coef, t);
     } else if (CSymPy::is_a<Add>(*b)) {
         d = (rcp_dynamic_cast<Add>(b))->dict;
         as_coef_term(a, outArg(coef), outArg(t));
-        dict_add_term(d, coef, t);
+        Add::dict_add_term(d, coef, t);
     } else {
         as_coef_term(a, outArg(coef), outArg(t));
         d[t] = coef;
         as_coef_term(b, outArg(coef), outArg(t));
-        dict_add_term(d, coef, t);
+        Add::dict_add_term(d, coef, t);
     }
-    return CSymPy::add_from_dict(d);
+    return Add::add_from_dict(d);
 }
 
 RCP<Basic> operator-(const RCP<Basic> &a, const RCP<Basic> &b)
