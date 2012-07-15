@@ -50,11 +50,16 @@ RCP<Basic> Add::from_dict(const Dict_int &d)
                 //return p->first;
                 throw std::runtime_error("Not implemented.");
             }
+            Dict_int m;
+            m[p->first] = rcp(new Integer(1));
+            return rcp(new Mul(p->second, m));
         }
+        // TODO: if p->second is a numeric coefficient, it should still be
+        // passed in as the first parameter of Mul()
         Dict_int m;
         m[p->first] = rcp(new Integer(1));
         m[p->second] = rcp(new Integer(1));
-        return rcp(new Mul(m));
+        return rcp(new Mul(rcp(new Integer(1)), m));
     } else {
         return rcp(new Add(d));
     }
@@ -87,7 +92,12 @@ void as_coef_term(const RCP<Basic> &self, const Ptr<RCP<Integer>> &coef,
     if (CSymPy::is_a<CSymPy::Symbol>(*self)) {
         *coef = rcp(new Integer(1));
         *term = self;
+    } else if (CSymPy::is_a<CSymPy::Mul>(*self)) {
+        RCP<Basic> tmp;
+        (rcp_dynamic_cast<CSymPy::Mul>(self))->as_coef_term(outArg(tmp), term);
+        *coef = rcp_dynamic_cast<Integer>(tmp);
     } else {
+        std::cout << *self << std::endl;
         throw std::runtime_error("Not implemented yet.");
     }
 }

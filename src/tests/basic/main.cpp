@@ -118,9 +118,9 @@ void test_mul()
     m[x] = rcp(new Integer(2));
     m[y] = rcp(new Integer(3));
 
-    RCP<Mul> a = rcp(new Mul(m));
+    RCP<Mul> a = rcp(new Mul(rcp(new Integer(1)), m));
     m[x] = rcp(new Integer(-2));
-    RCP<Mul> b = rcp(new Mul(m));
+    RCP<Mul> b = rcp(new Mul(rcp(new Integer(1)), m));
     std::cout << *a << std::endl;
     std::cout << *b << std::endl;
 
