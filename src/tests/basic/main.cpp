@@ -85,6 +85,10 @@ void test_add()
 
     r = x + x;
     std::cout << *r << std::endl;
+
+    r = x + x + y;
+    std::cout << *r << std::endl;
+    std::cout << "----------------------" << std::endl;
 }
 
 void test_integer()
