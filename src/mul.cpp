@@ -34,7 +34,7 @@ std::string Mul::__str__() const
     return s.str();
 }
 
-RCP<CSymPy::Basic> add_from_dict(const Dict_int &d)
+RCP<CSymPy::Basic> Mul::add_from_dict(const Dict_int &d)
 {
     return rcp(new Mul(d));
 }
@@ -91,7 +91,7 @@ RCP<Basic> operator+(const RCP<Basic> &a, const RCP<Basic> &b)
         as_coef_term(b, outArg(coef), outArg(t));
         dict_add_term(d, coef, t);
     }
-    return CSymPy::add_from_dict(d);
+    return Mul::add_from_dict(d);
 }
 
 RCP<Basic> operator-(const RCP<Basic> &a, const RCP<Basic> &b)
