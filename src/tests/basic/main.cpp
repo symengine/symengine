@@ -7,12 +7,14 @@
 #include "symbol.h"
 #include "dict.h"
 #include "integer.h"
+#include "mul.h"
 
 using Teuchos::RCP;
 using Teuchos::rcp;
 
 using CSymPy::Basic;
 using CSymPy::Add;
+using CSymPy::Mul;
 using CSymPy::Symbol;
 using CSymPy::Dict_int;
 using CSymPy::Integer;
@@ -105,6 +107,24 @@ void test_integer()
     std::cout << *k << std::endl;
 }
 
+void test_mul()
+{
+    Dict_int m;
+    RCP<Basic> x  = rcp(new Symbol("x"));
+    RCP<Basic> y  = rcp(new Symbol("y"));
+    m[x] = rcp(new Integer(2));
+    m[y] = rcp(new Integer(3));
+
+    RCP<Mul> a = rcp(new Mul(m));
+    m[x] = rcp(new Integer(-2));
+    RCP<Mul> b = rcp(new Mul(m));
+    std::cout << *a << std::endl;
+    std::cout << *b << std::endl;
+
+    RCP<Basic> r = (x * y) * (y * x);
+    std::cout << *r << std::endl;
+}
+
 int main(int argc, char* argv[])
 {
     Teuchos::print_stack_on_segfault();
@@ -116,6 +136,8 @@ int main(int argc, char* argv[])
     test_add();
 
     test_integer();
+
+    test_mul();
 
     return 0;
 }
