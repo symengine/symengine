@@ -30,7 +30,7 @@ std::string Mul::__str__() const
 {
     std::ostringstream s;
     for (auto &p: this->dict)
-        s << *(p.second) << *(p.first) << " * ";
+        s << *(p.first) << "^" << *(p.second) << " * ";
     return s.str();
 }
 
