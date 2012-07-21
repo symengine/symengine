@@ -1747,8 +1747,10 @@ RCP<ParentT> getInvertedObjOwnershipParent(const RCP<T> &invertedChild);
  *
  * \relates RCP
  */
+/*
 template<class T>
 std::ostream& operator<<( std::ostream& out, const RCP<T>& p );
+*/
 
 
 } // end namespace Teuchos
