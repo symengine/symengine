@@ -91,7 +91,11 @@ void as_base_exp(const RCP<Basic> &self, const Ptr<RCP<Integer>> &exp,
     if (CSymPy::is_a<CSymPy::Symbol>(*self)) {
         *exp = rcp(new Integer(1));
         *base = self;
+    } else if (CSymPy::is_a<CSymPy::Integer>(*self)) {
+        *exp = rcp(new Integer(1));
+        *base = self;
     } else {
+        std::cout << self;
         throw std::runtime_error("Not implemented yet.");
     }
 }
