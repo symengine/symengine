@@ -18,7 +18,8 @@ if (NOT (CMAKE_BUILD_TYPE STREQUAL "Debug" OR
 endif ()
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wno-unused-parameter")
+    set(CMAKE_CXX_FLAGS_DEBUG
+        "${CMAKE_CXX_FLAGS_DEBUG} -Wno-unused-parameter -ggdb")
     set(CMAKE_CXX_FLAGS_RELEASE
         "${CMAKE_CXX_FLAGS_RELEASE} -Wno-unused-parameter")
 endif()
