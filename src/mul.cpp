@@ -48,13 +48,23 @@ RCP<CSymPy::Basic> Mul::from_dict(const Dict_int &d)
                 return p->first;
             }
         }
+        std::cout << p->first << " | " << p->second << std::endl;
         // Otherwise create a Pow() here:
         throw std::runtime_error("Pow() is not implemented yet.");
     } else {
-        // TODO: Make sure there are no numeric "keys" in "d", as those should
-        // go into "coef":
         RCP<Basic> coef = rcp(new Integer(1));
-        return rcp(new Mul(coef, d));
+        CSymPy::Dict_int d2;
+        for (auto &p: d) {
+            if (is_a<Integer>(*(p.first)) && is_a<Integer>(*(p.second))) {
+                RCP<Integer> f = rcp_dynamic_cast<Integer>(p.first);
+                RCP<Integer> s = rcp_dynamic_cast<Integer>(p.second);
+                RCP<Integer> r = rcp(new Integer(pow(f->i, s->i)));
+                coef = rcp_dynamic_cast<Integer>(coef) * r;
+            } else {
+                Mul::dict_add_term(d2, p.second, p.first);
+            }
+        }
+        return rcp(new Mul(coef, d2));
     }
 }
 
