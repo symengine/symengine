@@ -24,15 +24,10 @@ void test_add()
     Dict_int m;
     RCP<Basic> x  = rcp(new Symbol("x"));
     RCP<Basic> y  = rcp(new Symbol("y"));
+    RCP<Basic> i = rcp(new Integer(2));
 
-    RCP<Basic> r = (x + y) + (y + x);
-    std::cout << *r << std::endl;
-
-    r = x + x;
-    std::cout << *r << std::endl;
-
-    r = x + x + y;
-    std::cout << *r << std::endl;
+    RCP<Basic> r = x + x;
+    assert(r == i*x);
 }
 
 
