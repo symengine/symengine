@@ -73,7 +73,7 @@ inline std::ostream& operator<<(std::ostream& out, const CSymPy::Basic& p)
 inline std::ostream& operator<<(std::ostream& out,
         const Teuchos::RCP<CSymPy::Basic>& p)
 {
-    out << (*p).__str__();
+    out << p->__str__();
     return out;
 }
 
