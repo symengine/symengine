@@ -49,7 +49,7 @@ RCP<CSymPy::Basic> Mul::from_dict(const Dict_int &d)
             }
         }
         // Otherwise create a Pow() here:
-        throw std::runtime_error("Not implemented.");
+        throw std::runtime_error("Pow() is not implemented yet.");
     } else {
         // TODO: Make sure there are no numeric "keys" in "d", as those should
         // go into "coef":
