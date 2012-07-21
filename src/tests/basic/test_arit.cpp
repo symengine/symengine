@@ -22,14 +22,15 @@ using CSymPy::Integer;
 void test_add()
 {
     Dict_int m;
-    RCP<Basic> x  = rcp(new Symbol("x"));
-    RCP<Basic> y  = rcp(new Symbol("y"));
+    RCP<Basic> x = rcp(new Symbol("x"));
+    RCP<Basic> y = rcp(new Symbol("y"));
     RCP<Basic> i = rcp(new Integer(2));
 
-    RCP<Basic> r = x + x;
-    std::cout << r << std::endl;
-    std::cout << i*x << std::endl;
-//    assert(r == i*x);
+    RCP<Basic> r1 = x + x;
+    RCP<Basic> r2 = i*x;
+    std::cout << r1 << std::endl;
+    std::cout << r2 << std::endl;
+    assert(r1 == r2);
 }
 
 
