@@ -63,7 +63,7 @@ void test_symbol_dict()
 
     // Test printing:
     std::cout << d << std::endl;
-    std::cout << *x << std::endl;
+    std::cout << x << std::endl;
 }
 
 void test_add()
@@ -77,17 +77,17 @@ void test_add()
     RCP<Add> a = rcp(new Add(m));
     m[x] = rcp(new Integer(-2));
     RCP<Add> b = rcp(new Add(m));
-    std::cout << *a << std::endl;
-    std::cout << *b << std::endl;
+    std::cout << a << std::endl;
+    std::cout << b << std::endl;
 
     RCP<Basic> r = (x + y) + (y + x);
-    std::cout << *r << std::endl;
+    std::cout << r << std::endl;
 
     r = x + x;
-    std::cout << *r << std::endl;
+    std::cout << r << std::endl;
 
     r = x + x + y;
-    std::cout << *r << std::endl;
+    std::cout << r << std::endl;
     std::cout << "----------------------" << std::endl;
 }
 
@@ -95,23 +95,23 @@ void test_integer()
 {
     RCP<Integer> i = rcp(new Integer(5));
     RCP<Integer> j = rcp(new Integer(6));
-    std::cout << *i << std::endl;
-    std::cout << *j << std::endl;
+    std::cout << i << std::endl;
+    std::cout << j << std::endl;
 
     RCP<Integer> k = i + j;
-    std::cout << *k << std::endl;
+    std::cout << k << std::endl;
 
     k = i - j;
-    std::cout << *k << std::endl;
+    std::cout << k << std::endl;
 
     k = i * j;
-    std::cout << *k << std::endl;
+    std::cout << k << std::endl;
 
     k = i / j;
-    std::cout << *k << std::endl;
+    std::cout << k << std::endl;
 
     k = -i;
-    std::cout << *k << std::endl;
+    std::cout << k << std::endl;
 }
 
 void test_mul()
@@ -125,11 +125,11 @@ void test_mul()
     RCP<Mul> a = rcp(new Mul(rcp(new Integer(1)), m));
     m[x] = rcp(new Integer(-2));
     RCP<Mul> b = rcp(new Mul(rcp(new Integer(1)), m));
-    std::cout << *a << std::endl;
-    std::cout << *b << std::endl;
+    std::cout << a << std::endl;
+    std::cout << b << std::endl;
 
     RCP<Basic> r = (x * y) * (y * x);
-    std::cout << *r << std::endl;
+    std::cout << r << std::endl;
 }
 
 int main(int argc, char* argv[])
