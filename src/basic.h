@@ -62,8 +62,12 @@ inline bool is_a(const Basic &b)
 } // CSymPy
 
 // This "<<" overloaded function simply calls p.__str__, so it allows any Basic
-// type to be printed
+// type to be printed.
+// This prints using: std::cout << *x;
 std::ostream& operator<<(std::ostream& out, const CSymPy::Basic& p);
+// This prints using: std::cout << x;
+std::ostream& operator<<(std::ostream& out,
+        const Teuchos::RCP<CSymPy::Basic>& p);
 
 namespace std
 {
