@@ -51,7 +51,7 @@ public:
 };
 
 // Returns true if "b" is of type T or any of its subclasses. Example:
-//     is_a<Symbol>(b)  // true if "b" is of type Symbol any Symbol's subclass
+//   is_a<Symbol>(b)  // true if "b" is of type Symbol or any Symbol's subclass
 template <class T>
 inline bool is_a(const Basic &b)
 {
