@@ -20,9 +20,7 @@
 /* #undef HAVE_FPU_CONTROL_H */
 
 /* define if the compiler supports abi::__cxa_demangle(...) */
-#ifdef HAVE_CXXABI
 #define HAVE_GCC_ABI_DEMANGLE
-#endif
 
 /* define if we want to use MPI */
 /* #undef HAVE_MPI */
@@ -120,3 +118,5 @@
 #define HAVE_TEUCHOS_LINK
 
 #define HAVE_TEUCHOS_BFD
+
+#define HAVE_TEUCHOS_STACKTRACE

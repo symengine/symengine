@@ -432,11 +432,9 @@ std::string stacktrace2str(const StacktraceAddresses &stacktrace_addresses)
 
 void loc_segfault_callback_print_stack(int sig_num)
 {
-  const Teuchos::RCP<Teuchos::FancyOStream> out =
-    Teuchos::VerboseObjectBase::getDefaultOStream();
-  *out << "\nSegfault caught. Printing stacktrace:\n\n";
+  std::cout << "\nSegfault caught. Printing stacktrace:\n\n";
   Teuchos::show_stacktrace();
-  *out << "\nDone. Exiting the program.\n";
+  std::cout << "\nDone. Exiting the program.\n";
   // Deregister our abort callback:
   signal(SIGABRT, SIG_DFL);
   abort();
@@ -445,11 +443,9 @@ void loc_segfault_callback_print_stack(int sig_num)
 
 void loc_abort_callback_print_stack(int sig_num)
 {
-  const Teuchos::RCP<Teuchos::FancyOStream> out =
-    Teuchos::VerboseObjectBase::getDefaultOStream();
-  *out << "\nAbort caught. Printing stacktrace:\n\n";
+  std::cout << "\nAbort caught. Printing stacktrace:\n\n";
   Teuchos::show_stacktrace();
-  *out << "\nDone.\n";
+  std::cout << "\nDone.\n";
 }
 
 
@@ -500,10 +496,8 @@ std::string Teuchos::get_stacktrace(int impl_stacktrace_depth)
 
 void Teuchos::show_stacktrace()
 {
-  const Teuchos::RCP<Teuchos::FancyOStream> out =
-    Teuchos::VerboseObjectBase::getDefaultOStream();
   const int impl_stacktrace_depth=1;
-  *out << Teuchos::get_stacktrace(impl_stacktrace_depth);
+  std::cout << Teuchos::get_stacktrace(impl_stacktrace_depth);
 }
 
 
