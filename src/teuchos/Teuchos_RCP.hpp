@@ -934,7 +934,6 @@ Teuchos::getInvertedObjOwnershipParent(const RCP<T> &invertedChild)
 }
 
 
-/*
 template<class T>
 std::ostream& Teuchos::operator<<( std::ostream& out, const RCP<T>& p )
 {
@@ -946,7 +945,6 @@ std::ostream& Teuchos::operator<<( std::ostream& out, const RCP<T>& p )
     <<"}";
   return out;
 }
-*/
 
 
 #endif // TEUCHOS_RCP_HPP
