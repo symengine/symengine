@@ -24,14 +24,16 @@ void test_add()
     Dict_int m;
     RCP<Basic> x = rcp(new Symbol("x"));
     RCP<Basic> y = rcp(new Symbol("y"));
-    RCP<Basic> i = rcp(new Integer(2));
+    RCP<Basic> i2 = rcp(new Integer(2));
+    RCP<Basic> i3 = rcp(new Integer(3));
 
     RCP<Basic> r1 = x + x;
-    RCP<Basic> r2 = i*x;
-    std::cout << r1 << std::endl;
-    std::cout << r2 << std::endl;
-    // FIXME: This fails so far:
-    //assert(r1 == r2);
+    RCP<Basic> r2 = i2*x;
+    RCP<Basic> r3 = i3*x;
+    //std::cout << *r1 << std::endl;
+    //std::cout << *r2 << std::endl;
+    assert(*r1 == *r2);
+    assert(*r1 != *r3);
 }
 
 

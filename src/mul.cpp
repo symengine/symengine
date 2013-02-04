@@ -24,7 +24,13 @@ std::size_t Mul::__hash__() const
 
 bool Mul::__eq__(const Basic &o) const
 {
-    throw std::runtime_error("Not implemented yet.");
+    if (is_a<Mul>(o)) {
+        const Mul &s = static_cast<const Mul &>(o);
+        if (*(this->coef) == *(s.coef)) {
+            return true; // FIXME: this has to be more granular
+        }
+    }
+    return false;
 }
 
 std::string Mul::__str__() const
