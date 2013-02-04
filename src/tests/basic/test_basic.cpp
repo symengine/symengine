@@ -100,18 +100,27 @@ void test_integer()
 
     RCP<Integer> k = i + j;
     std::cout << *k << std::endl;
+    assert(*k == *rcp(new Integer(11)));
+    assert(*k != *rcp(new Integer(12)));
 
     k = i - j;
     std::cout << *k << std::endl;
+    assert(*k == *rcp(new Integer(-1)));
+    assert(*k != *rcp(new Integer(12)));
 
     k = i * j;
     std::cout << *k << std::endl;
+    assert(*k == *rcp(new Integer(30)));
+    assert(*k != *rcp(new Integer(12)));
 
+    // FIXME: this should return a Rational
     k = i / j;
     std::cout << *k << std::endl;
 
     k = -i;
     std::cout << *k << std::endl;
+    assert(*k == *rcp(new Integer(-5)));
+    assert(*k != *rcp(new Integer(12)));
 }
 
 void test_mul()
