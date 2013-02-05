@@ -29,10 +29,11 @@ bool Add::__eq__(const Basic &o) const
 
 std::string Add::__str__() const
 {
-    std::ostringstream s;
+    std::ostringstream o;
     for (auto &p: this->dict)
-        s << *(p.second) << *(p.first) << " + ";
-    return s.str();
+        o << *(p.second) << *(p.first) << " + ";
+    std::string s = o.str();
+    return s.substr(0, s.size()-3);
 }
 
 // Creates the appropriate instance (i.e. Add, Symbol, Integer, Mul) depending
