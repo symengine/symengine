@@ -35,11 +35,12 @@ bool Mul::__eq__(const Basic &o) const
 
 std::string Mul::__str__() const
 {
-    std::ostringstream s;
-    s << *(this->coef);
+    std::ostringstream o;
+    o << *(this->coef);
     for (auto &p: this->dict)
-        s << *(p.first) << "^" << *(p.second) << " * ";
-    return s.str();
+        o << *(p.first) << "^" << *(p.second) << "*";
+    std::string s = o.str();
+    return s.substr(0, s.size()-1);
 }
 
 RCP<CSymPy::Basic> Mul::from_dict(const Dict_int &d)
