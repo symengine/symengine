@@ -27,7 +27,9 @@ bool Mul::__eq__(const Basic &o) const
     if (is_a<Mul>(o)) {
         const Mul &s = static_cast<const Mul &>(o);
         if (*(this->coef) == *(s.coef)) {
-            return true; // FIXME: this has to be more granular
+            if (dicts_equal(this->dict, s.dict)) {
+                return true;
+            }
         }
     }
     return false;
