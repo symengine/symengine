@@ -35,12 +35,12 @@ void test_add()
     assert(*r1 != *r3);
 
     r3 = i2*y;
-    std::cout << *r1 << std::endl;
-    std::cout << *r2 << std::endl;
-    std::cout << *r3 << std::endl;
-
     assert(*r1 != *r3);
     assert(*r2 != *r3);
+
+    std::cout << *r1 << std::endl;
+    std::cout << *r2 << std::endl;
+    std::cout << *(y*x+x*y) << std::endl;
 }
 
 

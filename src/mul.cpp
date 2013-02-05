@@ -19,7 +19,15 @@ Mul::Mul(const Teuchos::RCP<Basic> &coef, const Dict_int& dict)
 
 std::size_t Mul::__hash__() const
 {
-    throw std::runtime_error("Not implemented yet.");
+    std::size_t seed = 0;
+    hash_combine<Basic>(seed, *(this->coef));
+    std::map<RCP<Basic>, RCP<Integer>, RCPBasicKeyLess>
+        ordered(this->dict.begin(), this->dict.end());
+    for (auto &p: ordered) {
+        hash_combine<Basic>(seed, *(p.first));
+        hash_combine<Basic>(seed, *(p.second));
+    }
+    return seed;
 }
 
 bool Mul::__eq__(const Basic &o) const
