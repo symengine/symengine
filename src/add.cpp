@@ -30,8 +30,13 @@ bool Add::__eq__(const Basic &o) const
 std::string Add::__str__() const
 {
     std::ostringstream o;
-    for (auto &p: this->dict)
-        o << *(p.second) << *(p.first) << " + ";
+    for (auto &p: this->dict) {
+        if (*(p.second) == Integer(1))
+            o << *(p.first);
+        else
+            o << *(p.second) << *(p.first);
+        o << " + ";
+    }
     std::string s = o.str();
     return s.substr(0, s.size()-3);
 }

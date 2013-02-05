@@ -39,8 +39,13 @@ std::string Mul::__str__() const
 {
     std::ostringstream o;
     o << *(this->coef);
-    for (auto &p: this->dict)
-        o << *(p.first) << "^" << *(p.second) << "*";
+    for (auto &p: this->dict) {
+        if (*(p.second) == Integer(1))
+            o << *(p.first);
+        else
+            o << *(p.first) << "^" << *(p.second);
+        o << "*";
+    }
     std::string s = o.str();
     return s.substr(0, s.size()-1);
 }
