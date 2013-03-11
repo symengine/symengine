@@ -6,3 +6,14 @@ CSymPy
 
 Experimental `SymPy <http://sympy.org/>`_ core written in C++.
 
+Installation
+------------
+
+Install prereqisites::
+
+    apt-get install binutils-dev
+
+Install csympy::
+
+    cmake .
+    make
