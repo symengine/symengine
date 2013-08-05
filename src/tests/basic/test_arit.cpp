@@ -68,6 +68,10 @@ void test_pow()
     r1 = x*x;
     r2 = rcp(new Pow(x, i2));
     assert(*r1 == *r2);
+
+    r1 = x*x*x;
+    r2 = rcp(new Pow(x, i3));
+    assert(*r1 == *r2);
 }
 
 

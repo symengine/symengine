@@ -126,17 +126,24 @@ namespace {
 
 using CSymPy::Basic;
 using CSymPy::Mul;
+using CSymPy::Pow;
 using CSymPy::Integer;
+using CSymPy::Symbol;
+using CSymPy::is_a;
 
 void as_base_exp(const RCP<Basic> &self, const Ptr<RCP<Integer>> &exp,
         const Ptr<RCP<Basic>> &base)
 {
-    if (CSymPy::is_a<CSymPy::Symbol>(*self)) {
+    if (is_a<Symbol>(*self)) {
         *exp = rcp(new Integer(1));
         *base = self;
-    } else if (CSymPy::is_a<CSymPy::Integer>(*self)) {
+    } else if (is_a<Integer>(*self)) {
         *exp = rcp(new Integer(1));
         *base = self;
+    } else if (is_a<Pow>(*self)) {
+        // NOTE: this will raise an exception if `exp` is not Integer
+        *exp = rcp_dynamic_cast<Integer>(rcp_dynamic_cast<Pow>(self)->exp);
+        *base = rcp_dynamic_cast<Pow>(self)->base;
     } else {
         std::cout << self;
         throw std::runtime_error("Not implemented yet.");
