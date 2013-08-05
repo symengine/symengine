@@ -14,17 +14,34 @@ namespace CSymPy {
 
 Add::Add(const Dict_int& dict)
 {
+    this->coef = rcp(new Integer(1));
     this->dict = dict;
 }
 
 std::size_t Add::__hash__() const
 {
-    throw std::runtime_error("Not implemented yet.");
+    std::size_t seed = 0;
+    hash_combine<Basic>(seed, *(this->coef));
+    std::map<RCP<Basic>, RCP<Integer>, RCPBasicKeyLess>
+        ordered(this->dict.begin(), this->dict.end());
+    for (auto &p: ordered) {
+        hash_combine<Basic>(seed, *(p.first));
+        hash_combine<Basic>(seed, *(p.second));
+    }
+    return seed;
 }
 
 bool Add::__eq__(const Basic &o) const
 {
-    throw std::runtime_error("Not implemented yet.");
+    if (is_a<Add>(o)) {
+        const Add &s = static_cast<const Add &>(o);
+        if (*(this->coef) == *(s.coef)) {
+            if (dicts_equal(this->dict, s.dict)) {
+                return true;
+            }
+        }
+    }
+    return false;
 }
 
 std::string Add::__str__() const

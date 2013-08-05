@@ -7,8 +7,9 @@
 namespace CSymPy {
 
 class Add : public Basic {
-public:
-    Dict_int dict; // TODO: make this private
+public: // TODO: make this private
+    Teuchos::RCP<Basic> coef; // The coefficient (e.g. "2" in 2+x+y)
+    Dict_int dict;
 
 public:
     // Constructs Add from a dictionary by copying the contents of the

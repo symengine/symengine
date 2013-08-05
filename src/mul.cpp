@@ -1,5 +1,6 @@
 #include <stdexcept>
 
+#include "add.h"
 #include "mul.h"
 #include "symbol.h"
 #include "pow.h"
@@ -125,6 +126,7 @@ void Mul::as_coef_term(const Teuchos::Ptr<Teuchos::RCP<Basic>> &coef,
 namespace {
 
 using CSymPy::Basic;
+using CSymPy::Add;
 using CSymPy::Mul;
 using CSymPy::Pow;
 using CSymPy::Integer;
@@ -144,6 +146,9 @@ void as_base_exp(const RCP<Basic> &self, const Ptr<RCP<Integer>> &exp,
         // NOTE: this will raise an exception if `exp` is not Integer
         *exp = rcp_dynamic_cast<Integer>(rcp_dynamic_cast<Pow>(self)->exp);
         *base = rcp_dynamic_cast<Pow>(self)->base;
+    } else if (is_a<Add>(*self)) {
+        *exp = rcp(new Integer(1));
+        *base = self;
     } else {
         std::cout << self;
         throw std::runtime_error("Not implemented yet.");
