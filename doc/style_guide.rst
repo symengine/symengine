@@ -36,6 +36,10 @@ Initialize as follows (this is the only place where you use ``new``)::
 Declare functions with two input arguments (and one return value) as follows::
 
     RCP<Basic> multiply(const RCP<Basic> &a, const RCP<Basic> &b)
+    {
+        ...
+        return rcp(new Integer(1));
+    }
 
 Functions with one input and two output arguments are declared::
 
@@ -56,9 +60,9 @@ and used as follows::
 
 You can use dynamic cast as follows::
 
-        RCP<Basic> tmp;
-        RCP<Integer> coef;
-        coef = rcp_dynamic_cast<Integer>(tmp);
+    RCP<Basic> tmp;
+    RCP<Integer> coef;
+    coef = rcp_dynamic_cast<Integer>(tmp);
 
 
 References
