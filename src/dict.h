@@ -16,13 +16,24 @@ typedef struct
     }
 } RCPBasicHash;
 
-// Our comparison:
+// Our comparison (==):
 typedef struct
 {
     bool operator() (const Teuchos::RCP<Basic> &x, const Teuchos::RCP<Basic> &y) const {
         return x->__eq__(*y);
     }
 } RCPBasicKeyEq;
+
+// Our less operator (<):
+typedef struct
+{
+    // true if x < y, false otherwise
+    bool operator() (const Teuchos::RCP<Basic> &x, const Teuchos::RCP<Basic> &y) const {
+        if (x->__eq__(*y)) return false;
+        // Just compare pointer memory values (platform dependent):
+        return x.getRawPtr() < y.getRawPtr();
+    }
+} RCPBasicKeyLess;
 
 
 typedef std::unordered_map<Teuchos::RCP<Basic>, Teuchos::RCP<Integer>,
