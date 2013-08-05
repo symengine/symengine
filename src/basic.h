@@ -22,6 +22,10 @@ namespace CSymPy {
 */
 class Basic {
 public:
+    // Destructor must be explicitly defined as virtual here to avoid problems
+    // with undefined behavior while deallocating derived classes.
+    virtual ~Basic() {}
+
     // Implements the hash of the given CSymPy class.
     // Use std::hash to get the hash. Example:
     //     RCP<Symbol> x = rcp(new Symbol("x"));
