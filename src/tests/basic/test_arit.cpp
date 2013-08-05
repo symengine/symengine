@@ -41,6 +41,7 @@ void test_add()
     std::cout << *r1 << std::endl;
     std::cout << *r2 << std::endl;
     std::cout << *(y*x+x*y) << std::endl;
+    std::cout << *(y*x+i2*x*y) << std::endl;
 }
 
 
