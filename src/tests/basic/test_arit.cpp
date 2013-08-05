@@ -27,6 +27,7 @@ void test_add()
     RCP<Basic> z = rcp(new Symbol("z"));
     RCP<Basic> i2 = rcp(new Integer(2));
     RCP<Basic> i3 = rcp(new Integer(3));
+    RCP<Basic> i4 = rcp(new Integer(4));
 
     RCP<Basic> r1 = x + x;
     RCP<Basic> r2 = i2*x;
@@ -40,6 +41,14 @@ void test_add()
 
     r1 = y*x+i2*x*y;
     r2 = i3*x*y;
+    assert(*r1 == *r2);
+
+    r1 = x + x + x;
+    r2 = i3 * x;
+    assert(*r1 == *r2);
+
+    r1 = x + x + x;
+    r2 = x * i3;
     assert(*r1 == *r2);
 }
 
