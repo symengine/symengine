@@ -59,35 +59,45 @@ std::string Mul::__str__() const
     return s.substr(0, s.size()-1);
 }
 
-RCP<CSymPy::Basic> Mul::from_dict(const Dict_int &d)
+RCP<CSymPy::Basic> Mul::from_dict(const RCP<Basic> &coef, const Dict_int &d)
 {
     if (d.size() == 0) {
         throw std::runtime_error("Not implemented.");
     } else if (d.size() == 1) {
         auto p = d.begin();
-        if (is_a<Integer>(*(p->second))) {
-            if ((rcp_dynamic_cast<Integer>(p->second))->i == 1) {
-                // For x^1 we simply return "x":
-                return p->first;
+        if (is_a<Integer>(*(p->second)) && is_a<Integer>(*coef)) {
+            if (rcp_dynamic_cast<Integer>(coef)->i == 1) {
+                if ((rcp_dynamic_cast<Integer>(p->second))->i == 1) {
+                    // For x^1 we simply return "x":
+                    return p->first;
+                }
+            } else {
+                if ((rcp_dynamic_cast<Integer>(p->second))->i == 1) {
+                    // For coef*x^1 we simply return "coef*x":
+                    return rcp(new Mul(coef, d));
+                }
+                std::cout << "DEBUG: " << coef << " " << d << std::endl;
+                throw std::runtime_error("Not implemented.");
             }
         }
         std::cout << p->first << " | " << p->second << std::endl;
         // Otherwise create a Pow() here:
         throw std::runtime_error("Pow() is not implemented yet.");
     } else {
-        RCP<Basic> coef = rcp(new Integer(1));
         CSymPy::Dict_int d2;
+        // TODO: handle non-integer coefs like sqrt(2) here:
+        RCP<Integer> coef2 = rcp_dynamic_cast<Integer>(coef);
         for (auto &p: d) {
             if (is_a<Integer>(*(p.first)) && is_a<Integer>(*(p.second))) {
                 RCP<Integer> f = rcp_dynamic_cast<Integer>(p.first);
                 RCP<Integer> s = rcp_dynamic_cast<Integer>(p.second);
                 RCP<Integer> r = rcp(new Integer(pow(f->i, s->i)));
-                coef = rcp_dynamic_cast<Integer>(coef) * r;
+                coef2 = coef2 * r;
             } else {
                 Mul::dict_add_term(d2, p.second, p.first);
             }
         }
-        return rcp(new Mul(coef, d2));
+        return rcp(new Mul(coef2, d2));
     }
 }
 
@@ -107,7 +117,7 @@ void Mul::as_coef_term(const Teuchos::Ptr<Teuchos::RCP<Basic>> &coef,
             const Teuchos::Ptr<Teuchos::RCP<Basic>> &term)
 {
     *coef = this->coef;
-    *term = this->from_dict(this->dict);
+    *term = this->from_dict(rcp(new Integer(1)), this->dict);
 }
 
 } // CSymPy
@@ -140,11 +150,13 @@ RCP<Basic> operator*(const RCP<Basic> &a, const RCP<Basic> &b)
     CSymPy::Dict_int d;
     RCP<Integer> exp;
     RCP<Basic> t;
+    RCP<Basic> coef = rcp(new Integer(1));
     if (CSymPy::is_a<Mul>(*a) && CSymPy::is_a<Mul>(*b)) {
         d = (rcp_dynamic_cast<Mul>(a))->dict;
         for (auto &p: (rcp_dynamic_cast<Mul>(b))->dict)
             Mul::dict_add_term(d, p.second, p.first);
     } else if (CSymPy::is_a<Mul>(*a)) {
+        coef = (rcp_dynamic_cast<Mul>(a))->coef;
         d = (rcp_dynamic_cast<Mul>(a))->dict;
         as_base_exp(b, outArg(exp), outArg(t));
         Mul::dict_add_term(d, exp, t);
@@ -158,7 +170,7 @@ RCP<Basic> operator*(const RCP<Basic> &a, const RCP<Basic> &b)
         as_base_exp(b, outArg(exp), outArg(t));
         Mul::dict_add_term(d, exp, t);
     }
-    return Mul::from_dict(d);
+    return Mul::from_dict(coef, d);
 }
 
 RCP<Basic> operator/(const RCP<Basic> &a, const RCP<Basic> &b)

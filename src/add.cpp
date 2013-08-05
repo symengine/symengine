@@ -56,6 +56,10 @@ RCP<Basic> Add::from_dict(const Dict_int &d)
                 //return p->first;
                 throw std::runtime_error("Not implemented.");
             }
+            if (is_a<Mul>(*(p->first))) {
+                return Mul::from_dict(p->second,
+                        rcp_dynamic_cast<Mul>(p->first)->dict);
+            }
             Dict_int m;
             m[p->first] = rcp(new Integer(1));
             return rcp(new Mul(p->second, m));

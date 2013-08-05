@@ -22,7 +22,8 @@ public:
     void as_coef_term(const Teuchos::Ptr<Teuchos::RCP<Basic>> &coef,
             const Teuchos::Ptr<Teuchos::RCP<Basic>> &term);
     // Performs canonicalization first:
-    static Teuchos::RCP<Basic> from_dict(const Dict_int &d);
+    static Teuchos::RCP<Basic> from_dict(const Teuchos::RCP<Basic> &coef,
+            const Dict_int &d);
     static void dict_add_term(Dict_int &d,
             const Teuchos::RCP<Integer> &coef, const Teuchos::RCP<Basic> &t);
 };
