@@ -19,12 +19,18 @@ namespace CSymPy {
 
 bool dicts_equal(const Dict_int &a, const Dict_int &b)
 {
-    // TODO: figure out how to do this most efficiently
+    // This follows the same algorithm as Python's dictionary comparison
+    // (a==b), which is implemented by "dict_equal" function in
+    // Objects/dictobject.c.
+
+    // Can't be equal if # of entries differ:
     if (a.size() != b.size()) return false;
+    // Loop over keys in "a":
     for (auto &p: a) {
+        // O(1) lookup of the key in "b":
         auto f = b.find(p.first);
         if (f == b.end()) return false; // no such element in "b"
-        if (*(p.second) != *(f->second)) return false; // coefs not equal
+        if (*(p.second) != *(f->second)) return false; // values not equal
     }
     return true;
 }
