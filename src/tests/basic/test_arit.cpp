@@ -8,6 +8,7 @@
 #include "dict.h"
 #include "integer.h"
 #include "mul.h"
+#include "pow.h"
 
 using Teuchos::RCP;
 using Teuchos::rcp;
@@ -15,13 +16,13 @@ using Teuchos::rcp;
 using CSymPy::Basic;
 using CSymPy::Add;
 using CSymPy::Mul;
+using CSymPy::Pow;
 using CSymPy::Symbol;
 using CSymPy::Dict_int;
 using CSymPy::Integer;
 
 void test_add()
 {
-    Dict_int m;
     RCP<Basic> x = rcp(new Symbol("x"));
     RCP<Basic> y = rcp(new Symbol("y"));
     RCP<Basic> z = rcp(new Symbol("z"));
@@ -52,12 +53,30 @@ void test_add()
     assert(*r1 == *r2);
 }
 
+void test_pow()
+{
+    RCP<Basic> x = rcp(new Symbol("x"));
+    RCP<Basic> y = rcp(new Symbol("y"));
+    RCP<Basic> z = rcp(new Symbol("z"));
+    RCP<Basic> i2 = rcp(new Integer(2));
+    RCP<Basic> i3 = rcp(new Integer(3));
+    RCP<Basic> i4 = rcp(new Integer(4));
+
+    RCP<Basic> r1;
+    RCP<Basic> r2;
+
+    r1 = x*x;
+    r2 = rcp(new Pow(x, i2));
+    assert(*r1 == *r2);
+}
+
 
 int main(int argc, char* argv[])
 {
     Teuchos::print_stack_on_segfault();
 
     test_add();
+    test_pow();
 
     return 0;
 }

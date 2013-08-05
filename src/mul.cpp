@@ -2,6 +2,7 @@
 
 #include "mul.h"
 #include "symbol.h"
+#include "pow.h"
 
 using Teuchos::RCP;
 using Teuchos::Ptr;
@@ -80,9 +81,8 @@ RCP<CSymPy::Basic> Mul::from_dict(const RCP<Basic> &coef, const Dict_int &d)
                 throw std::runtime_error("Not implemented.");
             }
         }
-        std::cout << p->first << " | " << p->second << std::endl;
         // Otherwise create a Pow() here:
-        throw std::runtime_error("Pow() is not implemented yet.");
+        return rcp(new Pow(p->first, p->second));
     } else {
         CSymPy::Dict_int d2;
         // TODO: handle non-integer coefs like sqrt(2) here:

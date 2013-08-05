@@ -9,6 +9,7 @@ set(SRC
     integer.cpp
     add.cpp
     mul.cpp
+    pow.cpp
 )
 
 add_library(csympy ${SRC})
