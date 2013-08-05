@@ -17,6 +17,9 @@ public:
 
 };
 
+
+void multinomial_coefficients(int m, int n);
+
 } // CSymPy
 
 #endif

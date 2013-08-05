@@ -20,6 +20,7 @@ using CSymPy::Pow;
 using CSymPy::Symbol;
 using CSymPy::Dict_int;
 using CSymPy::Integer;
+using CSymPy::multinomial_coefficients;
 
 void test_add()
 {
@@ -86,6 +87,11 @@ void test_pow()
     assert(*r1 == *r2);
 }
 
+void test_multinomial()
+{
+    multinomial_coefficients(3, 2);
+}
+
 
 int main(int argc, char* argv[])
 {
@@ -93,6 +99,7 @@ int main(int argc, char* argv[])
 
     test_add();
     test_pow();
+    test_multinomial();
 
     return 0;
 }
