@@ -49,7 +49,8 @@ std::string Pow::__str__() const
 void multinomial_coefficients(int m, int n, map_vec_int &r)
 {
     vec_int t;
-    int j, tj, start, v, k;
+    int j, tj, start, k;
+    long long int v;
     if (m < 2)
         throw std::runtime_error("multinomial_coefficients: m >= 2 must hold.");
     if (n < 0)

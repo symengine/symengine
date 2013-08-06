@@ -43,7 +43,7 @@ typedef std::unordered_map<Teuchos::RCP<Basic>, Teuchos::RCP<Integer>,
 bool dicts_equal(const Dict_int &a, const Dict_int &b);
 
 typedef std::vector<int> vec_int;
-typedef std::map<vec_int, int> map_vec_int;
+typedef std::map<vec_int, long long int> map_vec_int;
 
 } // CSymPy
 
