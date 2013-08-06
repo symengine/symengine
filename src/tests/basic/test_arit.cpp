@@ -1,4 +1,5 @@
 #include <iostream>
+#include <chrono>
 
 #include "Teuchos_stacktrace.hpp"
 
@@ -91,8 +92,12 @@ void test_pow()
 void test_multinomial()
 {
     map_vec_int r;
-    multinomial_coefficients(2, 4, r);
-    std::cout << r << std::endl;
+    auto t1 = std::chrono::high_resolution_clock::now();
+    multinomial_coefficients(4, 40, r);
+    auto t2 = std::chrono::high_resolution_clock::now();
+    std::cout
+        << std::chrono::duration_cast<std::chrono::milliseconds>(t2-t1).count()
+        << "ms" << std::endl;
 }
 
 
