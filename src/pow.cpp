@@ -110,15 +110,16 @@ RCP<Basic> expand(const RCP<Pow> &self)
             for (auto &p: r) {
                 auto power = p.first.begin();
                 auto i2 = base->dict.begin();
-                RCP<Basic> term = rcp(new Integer(p.second));
+                Dict_int d;
                 for (; power != p.first.end(); ++power, ++i2) {
                     if (*power > 0) {
-                        RCP<Basic> exp = rcp(new Integer(*power));
+                        RCP<Integer> exp = rcp(new Integer(*power));
                         RCP<Basic> base = i2->first;
-                        RCP<Basic> factor = rcp(new Pow(base, exp));
-                        term = term * factor;
+                        d[base] = exp;
                     }
                 }
+                RCP<Basic> term = Mul::from_dict(rcp(new Integer(p.second)),
+                        d);
                 result = result + term;
             }
             return result;
