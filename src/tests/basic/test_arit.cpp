@@ -109,7 +109,7 @@ void test_expand()
     RCP<Basic> w = rcp(new Symbol("w"));
     RCP<Basic> i2 = rcp(new Integer(2));
     RCP<Basic> i3 = rcp(new Integer(3));
-    RCP<Basic> i4 = rcp(new Integer(4));
+    RCP<Basic> i4 = rcp(new Integer(40));
 
     RCP<Basic> r1;
     RCP<Basic> r2;
@@ -125,6 +125,8 @@ void test_expand()
         << std::chrono::duration_cast<std::chrono::milliseconds>(t2-t1).count()
         << "ms" << std::endl;
     //std::cout << r2 << std::endl;
+    std::cout << "number of terms: "
+        << rcp_dynamic_cast<Add>(r2)->dict.size() << std::endl;
 }
 
 
