@@ -2,6 +2,7 @@
 #define CSYMPY_POW_H
 
 #include "basic.h"
+#include "dict.h"
 
 namespace CSymPy {
 
@@ -18,7 +19,7 @@ public:
 };
 
 
-void multinomial_coefficients(int m, int n);
+void multinomial_coefficients(int m, int n, map_vec_int &r);
 
 } // CSymPy
 

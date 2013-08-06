@@ -42,8 +42,13 @@ typedef std::unordered_map<Teuchos::RCP<Basic>, Teuchos::RCP<Integer>,
 // Return true if the two dictionaries 'a' and 'b' are equal. Otherwise false.
 bool dicts_equal(const Dict_int &a, const Dict_int &b);
 
+typedef std::vector<int> vec_int;
+typedef std::map<vec_int, int> map_vec_int;
+
 } // CSymPy
 
 std::ostream& operator<<(std::ostream& out, const CSymPy::Dict_int& d);
+std::ostream& operator<<(std::ostream& out, const CSymPy::vec_int& d);
+std::ostream& operator<<(std::ostream& out, const CSymPy::map_vec_int& d);
 
 #endif

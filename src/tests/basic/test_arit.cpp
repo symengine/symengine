@@ -19,6 +19,7 @@ using CSymPy::Mul;
 using CSymPy::Pow;
 using CSymPy::Symbol;
 using CSymPy::Dict_int;
+using CSymPy::map_vec_int;
 using CSymPy::Integer;
 using CSymPy::multinomial_coefficients;
 
@@ -89,7 +90,9 @@ void test_pow()
 
 void test_multinomial()
 {
-    multinomial_coefficients(3, 2);
+    map_vec_int r;
+    multinomial_coefficients(2, 4, r);
+    std::cout << r << std::endl;
 }
 
 

@@ -44,39 +44,20 @@ std::string Pow::__str__() const
     return o.str();
 }
 
-typedef std::vector<int> vec_int;
-// TODO: this "int" needs to be converted to Integer
-typedef std::map<vec_int, int> multi_dict;
-
-std::ostream& operator<<(std::ostream& out, const vec_int& d)
+// TODO: m, n should stay ints, but the calculted coefficients should be
+// converted from int to Integers
+void multinomial_coefficients(int m, int n, map_vec_int &r)
 {
-    out << "[";
-    for (auto &p: d)
-        //out << p->__str__() << ", ";
-        out << p << ", ";
-    out << "]";
-    return out;
-}
-
-std::ostream& operator<<(std::ostream& out, const multi_dict& d)
-{
-    out << "{";
-    for (auto &p: d)
-        out << (p.first) << ": " << (p.second) << ", ";
-    out << "}";
-    return out;
-}
-
-// TODO: m, n should stay ints, but the calculted coefficients must be
-// Integers
-void multinomial_coefficients(int m, int n)
-{
-    multi_dict r;
     vec_int t;
     int j, tj, start, v, k;
+    if (m < 2)
+        throw std::runtime_error("multinomial_coefficients: m >= 2 must hold.");
+    if (n < 0)
+        throw std::runtime_error("multinomial_coefficients: n >= 0 must hold.");
     t.assign(m, 0);
     t[0] = n;
     r[t] = 1;
+    if (n == 0) return;
     j = 0;
     while (j < m - 1) {
         tj = t[j];
@@ -105,7 +86,6 @@ void multinomial_coefficients(int m, int n)
         t[0] -= 1;
         r[t] = (v*tj) / (n-t[0]);
     }
-    std::cout << r << std::endl;
 }
 
 } // CSymPy
