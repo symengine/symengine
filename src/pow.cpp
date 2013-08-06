@@ -104,9 +104,10 @@ RCP<Basic> expand(const RCP<Pow> &self)
             int n = rcp_dynamic_cast<Integer>(self->exp)->i;
 
             RCP<Add> base = rcp_dynamic_cast<Add>(self->base);
+            RCP<Integer> one = rcp(new Integer(1));
             int m = base->dict.size();
             multinomial_coefficients(m, n, r);
-            RCP<Basic> result = rcp(new Integer(0));
+            Dict_int rd;
             for (auto &p: r) {
                 auto power = p.first.begin();
                 auto i2 = base->dict.begin();
@@ -118,10 +119,10 @@ RCP<Basic> expand(const RCP<Pow> &self)
                         d[base] = exp;
                     }
                 }
-                RCP<Basic> term = Mul::from_dict(rcp(new Integer(p.second)),
-                        d);
-                result = result + term;
+                RCP<Basic> term = Mul::from_dict(one, d);
+                rd[term] = rcp(new Integer(p.second));
             }
+            RCP<Basic> result = Add::from_dict(rd);
             return result;
         }
     }
