@@ -13,6 +13,7 @@
 
 using Teuchos::RCP;
 using Teuchos::rcp;
+using Teuchos::rcp_dynamic_cast;
 
 using CSymPy::Basic;
 using CSymPy::Add;
@@ -100,6 +101,32 @@ void test_multinomial()
         << "ms" << std::endl;
 }
 
+void test_expand()
+{
+    RCP<Basic> x = rcp(new Symbol("x"));
+    RCP<Basic> y = rcp(new Symbol("y"));
+    RCP<Basic> z = rcp(new Symbol("z"));
+    RCP<Basic> w = rcp(new Symbol("w"));
+    RCP<Basic> i2 = rcp(new Integer(2));
+    RCP<Basic> i3 = rcp(new Integer(3));
+    RCP<Basic> i4 = rcp(new Integer(4));
+
+    RCP<Basic> r1;
+    RCP<Basic> r2;
+
+    r1 = rcp(new Pow(x+y+z+w, i4));
+
+    std::cout << r1 << std::endl;
+
+    auto t1 = std::chrono::high_resolution_clock::now();
+    r2 = expand(rcp_dynamic_cast<Pow>(r1));
+    auto t2 = std::chrono::high_resolution_clock::now();
+    std::cout
+        << std::chrono::duration_cast<std::chrono::milliseconds>(t2-t1).count()
+        << "ms" << std::endl;
+    //std::cout << r2 << std::endl;
+}
+
 
 int main(int argc, char* argv[])
 {
@@ -108,6 +135,7 @@ int main(int argc, char* argv[])
     test_add();
     test_pow();
     test_multinomial();
+    test_expand();
 
     return 0;
 }

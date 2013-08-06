@@ -1,6 +1,8 @@
 #include <stdexcept>
 
 #include "pow.h"
+#include "add.h"
+#include "mul.h"
 #include "symbol.h"
 #include "integer.h"
 
@@ -40,7 +42,12 @@ bool Pow::__eq__(const Basic &o) const
 std::string Pow::__str__() const
 {
     std::ostringstream o;
-    o << *(this->base) << "^" << *(this->exp);
+    if (is_a<Add>(*this->base)) {
+        o << "(" << *(this->base) << ")";
+    } else {
+        o << *(this->base);
+    }
+    o << "^" << *(this->exp);
     return o.str();
 }
 
@@ -87,6 +94,37 @@ void multinomial_coefficients(int m, int n, map_vec_int &r)
         t[0] -= 1;
         r[t] = (v*tj) / (n-t[0]);
     }
+}
+
+RCP<Basic> expand(const RCP<Pow> &self)
+{
+    if (is_a<Integer>(*self->exp)) {
+        if (is_a<Add>(*self->base)) {
+            map_vec_int r;
+            int n = rcp_dynamic_cast<Integer>(self->exp)->i;
+
+            RCP<Add> base = rcp_dynamic_cast<Add>(self->base);
+            int m = base->dict.size();
+            multinomial_coefficients(m, n, r);
+            RCP<Basic> result = rcp(new Integer(0));
+            for (auto &p: r) {
+                auto power = p.first.begin();
+                auto i2 = base->dict.begin();
+                RCP<Basic> term = rcp(new Integer(p.second));
+                for (; power != p.first.end(); ++power, ++i2) {
+                    if (*power > 0) {
+                        RCP<Basic> exp = rcp(new Integer(*power));
+                        RCP<Basic> base = i2->first;
+                        RCP<Basic> factor = rcp(new Pow(base, exp));
+                        term = term * factor;
+                    }
+                }
+                result = result + term;
+            }
+            return result;
+        }
+    }
+    return self;
 }
 
 } // CSymPy

@@ -3,6 +3,7 @@
 #include "add.h"
 #include "symbol.h"
 #include "mul.h"
+#include "pow.h"
 
 using Teuchos::RCP;
 using Teuchos::Ptr;
@@ -68,10 +69,7 @@ RCP<Basic> Add::from_dict(const Dict_int &d)
         auto p = d.begin();
         if (is_a<Integer>(*(p->second))) {
             if ((rcp_dynamic_cast<Integer>(p->second))->i == 1) {
-                // This should be correct, but let's write a test for this
-                // first:
-                //return p->first;
-                throw std::runtime_error("Not implemented.");
+                return p->first;
             }
             if (is_a<Mul>(*(p->first))) {
                 return Mul::from_dict(p->second,
@@ -98,9 +96,10 @@ void Add::dict_add_term(Dict_int &d, const RCP<Integer> &coef,
         const RCP<Basic> &t)
 {
     if (d.find(t) == d.end()) {
-        // Not found:
-        d[t] = coef;
+        // Not found, add it in if it is nonzero:
+        if (coef->i != 0) d[t] = coef;
     } else {
+        // TODO: remove the item if d[t] + coef is zero:
         d[t] = d[t] + coef;
     }
 }
@@ -123,6 +122,12 @@ void as_coef_term(const RCP<Basic> &self, const Ptr<RCP<Integer>> &coef,
         RCP<Basic> tmp;
         (rcp_dynamic_cast<CSymPy::Mul>(self))->as_coef_term(outArg(tmp), term);
         *coef = rcp_dynamic_cast<Integer>(tmp);
+    } else if (CSymPy::is_a<CSymPy::Integer>(*self)) {
+        *coef = rcp_dynamic_cast<CSymPy::Integer>(self);
+        *term = rcp(new Integer(1));
+    } else if (CSymPy::is_a<CSymPy::Pow>(*self)) {
+        *coef = rcp(new Integer(1));
+        *term = self;
     } else {
         std::cout << *self << std::endl;
         throw std::runtime_error("Not implemented yet.");
@@ -150,7 +155,7 @@ RCP<Basic> operator+(const RCP<Basic> &a, const RCP<Basic> &b)
         Add::dict_add_term(d, coef, t);
     } else {
         as_coef_term(a, outArg(coef), outArg(t));
-        d[t] = coef;
+        Add::dict_add_term(d, coef, t);
         as_coef_term(b, outArg(coef), outArg(t));
         Add::dict_add_term(d, coef, t);
     }

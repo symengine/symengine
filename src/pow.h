@@ -21,6 +21,8 @@ public:
 
 void multinomial_coefficients(int m, int n, map_vec_int &r);
 
+Teuchos::RCP<Basic> expand(const Teuchos::RCP<Pow> &self);
+
 } // CSymPy
 
 #endif
