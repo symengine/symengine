@@ -103,6 +103,7 @@ void multinomial_coefficients(int m, int n, map_vec_int &r)
     }
 }
 
+// Slower, but returns exact (possibly large) integers (as mpz)
 void multinomial_coefficients_mpz(int m, int n, map_vec_mpz &r)
 {
     vec_int t;
@@ -150,13 +151,13 @@ RCP<Basic> expand(const RCP<Pow> &self)
 {
     if (is_a<Integer>(*self->exp)) {
         if (is_a<Add>(*self->base)) {
-            map_vec_int r;
+            map_vec_mpz r;
             int n = rcp_dynamic_cast<Integer>(self->exp)->as_int();
 
             RCP<Add> base = rcp_dynamic_cast<Add>(self->base);
             RCP<Integer> one = rcp(new Integer(1));
             int m = base->dict.size();
-            multinomial_coefficients(m, n, r);
+            multinomial_coefficients_mpz(m, n, r);
             Dict_int rd;
             for (auto &p: r) {
                 auto power = p.first.begin();
