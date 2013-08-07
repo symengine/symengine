@@ -1,15 +1,17 @@
 #ifndef CSYMPY_INTEGER_H
 #define CSYMPY_INTEGER_H
 
+#include <gmpxx.h>
+
 #include "basic.h"
 
 namespace CSymPy {
 
 class Integer : public Basic {
 public:
-    // TODO: This needs to big int, but for now we just use int:
     // TODO: make this private
     long long int i;
+    mpz_class ii;
 
 public:
     Integer(int i);
