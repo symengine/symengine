@@ -121,18 +121,6 @@ void Mul::as_coef_term(const Teuchos::Ptr<Teuchos::RCP<Basic>> &coef,
     *term = this->from_dict(rcp(new Integer(1)), this->dict);
 }
 
-} // CSymPy
-
-namespace {
-
-using CSymPy::Basic;
-using CSymPy::Add;
-using CSymPy::Mul;
-using CSymPy::Pow;
-using CSymPy::Integer;
-using CSymPy::Symbol;
-using CSymPy::is_a;
-
 void as_base_exp(const RCP<Basic> &self, const Ptr<RCP<Integer>> &exp,
         const Ptr<RCP<Basic>> &base)
 {
@@ -155,9 +143,7 @@ void as_base_exp(const RCP<Basic> &self, const Ptr<RCP<Integer>> &exp,
     }
 }
 
-} // Anonymous
-
-RCP<Basic> operator*(const RCP<Basic> &a, const RCP<Basic> &b)
+RCP<Basic> mul(const RCP<Basic> &a, const RCP<Basic> &b)
 {
     CSymPy::Dict_int d;
     RCP<Integer> exp;
@@ -183,6 +169,26 @@ RCP<Basic> operator*(const RCP<Basic> &a, const RCP<Basic> &b)
         Mul::dict_add_term(d, exp, t);
     }
     return Mul::from_dict(coef, d);
+}
+
+} // CSymPy
+
+namespace {
+
+using CSymPy::Basic;
+using CSymPy::Add;
+using CSymPy::Mul;
+using CSymPy::Pow;
+using CSymPy::Integer;
+using CSymPy::Symbol;
+using CSymPy::is_a;
+
+
+} // Anonymous
+
+RCP<Basic> operator*(const RCP<Basic> &a, const RCP<Basic> &b)
+{
+    return mul(a, b);
 }
 
 RCP<Basic> operator/(const RCP<Basic> &a, const RCP<Basic> &b)

@@ -28,6 +28,9 @@ public:
             const Teuchos::RCP<Integer> &coef, const Teuchos::RCP<Basic> &t);
 };
 
+Teuchos::RCP<Basic> mul(const Teuchos::RCP<Basic> &a,
+        const Teuchos::RCP<Basic> &b);
+
 } // CSymPy
 
 Teuchos::RCP<CSymPy::Basic> operator*(const Teuchos::RCP<CSymPy::Basic> &a,
