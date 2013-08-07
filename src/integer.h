@@ -26,12 +26,47 @@ inline Teuchos::RCP<Integer> addint(const Teuchos::RCP<Integer> &self,
     return Teuchos::rcp(new CSymPy::Integer(self->i + other->i));
 }
 
+inline Teuchos::RCP<Integer> subint(const Teuchos::RCP<Integer> &self,
+    const Teuchos::RCP<Integer> &other)
+{
+    return Teuchos::rcp(new CSymPy::Integer(self->i - other->i));
+}
+
+inline Teuchos::RCP<Integer> mulint(const Teuchos::RCP<Integer> &self,
+    const Teuchos::RCP<Integer> &other)
+{
+    return Teuchos::rcp(new CSymPy::Integer(self->i * other->i));
+}
+
+inline Teuchos::RCP<Integer> divint(const Teuchos::RCP<Integer> &self,
+    const Teuchos::RCP<Integer> &other)
+{
+    return Teuchos::rcp(new CSymPy::Integer(self->i / other->i));
+}
+
 inline void iaddint(const Teuchos::Ptr<Teuchos::RCP<Integer>> &self,
     const Teuchos::RCP<Integer> &other)
 {
     *self = addint(*self, other);
 }
 
+inline void isubint(const Teuchos::Ptr<Teuchos::RCP<Integer>> &self,
+    const Teuchos::RCP<Integer> &other)
+{
+    *self = subint(*self, other);
+}
+
+inline void imulint(const Teuchos::Ptr<Teuchos::RCP<Integer>> &self,
+    const Teuchos::RCP<Integer> &other)
+{
+    *self = mulint(*self, other);
+}
+
+inline void idivint(const Teuchos::Ptr<Teuchos::RCP<Integer>> &self,
+    const Teuchos::RCP<Integer> &other)
+{
+    *self = divint(*self, other);
+}
 
 
 } // CSymPy
