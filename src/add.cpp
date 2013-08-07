@@ -157,11 +157,6 @@ RCP<Basic> add(const RCP<Basic> &a, const RCP<Basic> &b)
 
 using CSymPy::Basic;
 
-RCP<Basic> operator+(const RCP<Basic> &a, const RCP<Basic> &b)
-{
-    return add(a, b);
-}
-
 RCP<Basic> operator-(const RCP<Basic> &a, const RCP<Basic> &b)
 {
 //    return a + (-b);

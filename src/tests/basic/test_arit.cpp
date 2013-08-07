@@ -34,7 +34,7 @@ void test_add()
     RCP<Basic> i3 = rcp(new Integer(3));
     RCP<Basic> i4 = rcp(new Integer(4));
 
-    RCP<Basic> r1 = x + x;
+    RCP<Basic> r1 = add(x, x);
     RCP<Basic> r2 = i2*x;
     RCP<Basic> r3 = i3*x;
     assert(*r1 == *r2);
@@ -44,15 +44,15 @@ void test_add()
     assert(*r1 != *r3);
     assert(*r2 != *r3);
 
-    r1 = y*x+i2*x*y;
+    r1 = add(y*x, i2*x*y);
     r2 = i3*x*y;
     assert(*r1 == *r2);
 
-    r1 = x + x + x;
+    r1 = add(add(x, x), x);
     r2 = i3 * x;
     assert(*r1 == *r2);
 
-    r1 = x + x + x;
+    r1 = add(add(x, x), x);
     r2 = x * i3;
     assert(*r1 == *r2);
 }
@@ -81,12 +81,12 @@ void test_pow()
     r2 = rcp(new Pow(x, i4));
     assert(*r1 == *r2);
 
-    r1 = (x+y) * (x+y) * (x+y);
-    r2 = rcp(new Pow(x+y, i3));
+    r1 = add(x, y) * add(x, y) * add(x, y);
+    r2 = rcp(new Pow(add(x, y), i3));
     assert(*r1 == *r2);
 
-    r1 = (x+y) * (y+x) * (x+y);
-    r2 = rcp(new Pow(x+y, i3));
+    r1 = add(x, y) * add(y, x) * add(x, y);
+    r2 = rcp(new Pow(add(x, y), i3));
     assert(*r1 == *r2);
 }
 
@@ -114,7 +114,7 @@ void test_expand()
     RCP<Basic> r1;
     RCP<Basic> r2;
 
-    r1 = rcp(new Pow(x+y+z+w, i4));
+    r1 = rcp(new Pow(add(add(add(x, y), z), w), i4));
 
     std::cout << r1 << std::endl;
 

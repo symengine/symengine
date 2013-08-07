@@ -80,13 +80,13 @@ void test_add()
     std::cout << *a << std::endl;
     std::cout << *b << std::endl;
 
-    RCP<Basic> r = (x + y) + (y + x);
+    RCP<Basic> r = add(add(x, y), add(y, x));
     std::cout << *r << std::endl;
 
-    r = x + x;
+    r = add(x, x);
     std::cout << *r << std::endl;
 
-    r = x + x + y;
+    r = add(add(x, x), y);
     std::cout << *r << std::endl;
     std::cout << "----------------------" << std::endl;
 }
