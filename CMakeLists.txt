@@ -29,6 +29,16 @@ find_package(GMP REQUIRED)
 include_directories(${GMP_INCLUDE_DIRS})
 set(LIBS ${LIBS} ${GMP_LIBRARIES})
 
+# BFD
+set(WITH_BFD yes
+    CACHE BOOL "Build with BFD (binutils-dev) support")
+
+if (WITH_BFD)
+    find_package(BFD REQUIRED)
+    include_directories(${BFD_INCLUDE_DIRS})
+    set(LIBS ${LIBS} ${BFD_LIBRARIES})
+endif()
+
 
 enable_testing()
 add_subdirectory(src)
@@ -47,3 +57,9 @@ message("Installation prefix: ${CMAKE_INSTALL_PREFIX}")
 
 message("GMP_INCLUDE_DIRS: ${GMP_INCLUDE_DIRS}")
 message("GMP_LIBRARIES: ${GMP_LIBRARIES}")
+
+message("WITH_BFD: ${WITH_BFD}")
+if (WITH_BFD)
+    message("BFD_INCLUDE_DIRS: ${BFD_INCLUDE_DIRS}")
+    message("BFD_LIBRARIES: ${BFD_LIBRARIES}")
+endif()
