@@ -117,7 +117,7 @@ void test_integer()
     k = divint(i, j);
     std::cout << *k << std::endl;
 
-    k = -i;
+    k = negint(i);
     std::cout << *k << std::endl;
     assert(*k == *rcp(new Integer(-5)));
     assert(*k != *rcp(new Integer(12)));

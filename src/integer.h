@@ -68,9 +68,11 @@ inline void idivint(const Teuchos::Ptr<Teuchos::RCP<Integer>> &self,
     *self = divint(*self, other);
 }
 
+inline Teuchos::RCP<Integer> negint(const Teuchos::RCP<Integer> &self)
+{
+    return Teuchos::rcp(new CSymPy::Integer(-(self->i)));
+}
 
 } // CSymPy
-
-Teuchos::RCP<CSymPy::Integer> operator-(const Teuchos::RCP<CSymPy::Integer> &a);
 
 #endif
