@@ -121,10 +121,10 @@ void test_expand()
     auto t1 = std::chrono::high_resolution_clock::now();
     r2 = expand(rcp_dynamic_cast<Pow>(r1));
     auto t2 = std::chrono::high_resolution_clock::now();
+    std::cout << *r2 << std::endl;
     std::cout
         << std::chrono::duration_cast<std::chrono::milliseconds>(t2-t1).count()
         << "ms" << std::endl;
-    //std::cout << *r2 << std::endl;
     std::cout << "number of terms: "
         << rcp_dynamic_cast<Add>(r2)->dict.size() << std::endl;
 }
