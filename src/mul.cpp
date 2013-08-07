@@ -68,13 +68,13 @@ RCP<CSymPy::Basic> Mul::from_dict(const RCP<Basic> &coef, const Dict_int &d)
     } else if (d.size() == 1) {
         auto p = d.begin();
         if (is_a<Integer>(*(p->second)) && is_a<Integer>(*coef)) {
-            if (rcp_dynamic_cast<Integer>(coef)->i == 1) {
-                if ((rcp_dynamic_cast<Integer>(p->second))->i == 1) {
+            if (rcp_dynamic_cast<Integer>(coef)->is_one()) {
+                if ((rcp_dynamic_cast<Integer>(p->second))->is_one()) {
                     // For x^1 we simply return "x":
                     return p->first;
                 }
             } else {
-                if ((rcp_dynamic_cast<Integer>(p->second))->i == 1) {
+                if ((rcp_dynamic_cast<Integer>(p->second))->is_one()) {
                     // For coef*x^1 we simply return "coef*x":
                     return rcp(new Mul(coef, d));
                 }
