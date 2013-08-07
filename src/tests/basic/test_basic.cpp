@@ -108,13 +108,13 @@ void test_integer()
     assert(*k == *rcp(new Integer(-1)));
     assert(*k != *rcp(new Integer(12)));
 
-    k = i * j;
+    k = mulint(i, j);
     std::cout << *k << std::endl;
     assert(*k == *rcp(new Integer(30)));
     assert(*k != *rcp(new Integer(12)));
 
     // FIXME: this should return a Rational
-    k = i / j;
+    k = divint(i, j);
     std::cout << *k << std::endl;
 
     k = -i;
