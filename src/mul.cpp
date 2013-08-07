@@ -172,22 +172,3 @@ RCP<Basic> mul(const RCP<Basic> &a, const RCP<Basic> &b)
 }
 
 } // CSymPy
-
-namespace {
-
-using CSymPy::Basic;
-using CSymPy::Add;
-using CSymPy::Mul;
-using CSymPy::Pow;
-using CSymPy::Integer;
-using CSymPy::Symbol;
-using CSymPy::is_a;
-
-
-} // Anonymous
-
-RCP<Basic> operator/(const RCP<Basic> &a, const RCP<Basic> &b)
-{
-//    return a * b**(-1);
-    throw std::runtime_error("Not implemented yet.");
-}
