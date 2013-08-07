@@ -104,13 +104,6 @@ void Add::dict_add_term(Dict_int &d, const RCP<Integer> &coef,
     }
 }
 
-} // CSymPy
-
-namespace {
-
-using CSymPy::Basic;
-using CSymPy::Add;
-using CSymPy::Integer;
 
 void as_coef_term(const RCP<Basic> &self, const Ptr<RCP<Integer>> &coef,
         const Ptr<RCP<Basic>> &term)
@@ -134,9 +127,7 @@ void as_coef_term(const RCP<Basic> &self, const Ptr<RCP<Integer>> &coef,
     }
 }
 
-} // Anonymous
-
-RCP<Basic> operator+(const RCP<Basic> &a, const RCP<Basic> &b)
+RCP<Basic> add(const RCP<Basic> &a, const RCP<Basic> &b)
 {
     CSymPy::Dict_int d;
     RCP<Integer> coef;
@@ -160,6 +151,15 @@ RCP<Basic> operator+(const RCP<Basic> &a, const RCP<Basic> &b)
         Add::dict_add_term(d, coef, t);
     }
     return Add::from_dict(d);
+}
+
+} // CSymPy
+
+using CSymPy::Basic;
+
+RCP<Basic> operator+(const RCP<Basic> &a, const RCP<Basic> &b)
+{
+    return add(a, b);
 }
 
 RCP<Basic> operator-(const RCP<Basic> &a, const RCP<Basic> &b)
