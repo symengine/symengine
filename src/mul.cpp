@@ -186,11 +186,6 @@ using CSymPy::is_a;
 
 } // Anonymous
 
-RCP<Basic> operator*(const RCP<Basic> &a, const RCP<Basic> &b)
-{
-    return mul(a, b);
-}
-
 RCP<Basic> operator/(const RCP<Basic> &a, const RCP<Basic> &b)
 {
 //    return a * b**(-1);

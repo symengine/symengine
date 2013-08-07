@@ -35,25 +35,25 @@ void test_add()
     RCP<Basic> i4 = rcp(new Integer(4));
 
     RCP<Basic> r1 = add(x, x);
-    RCP<Basic> r2 = i2*x;
-    RCP<Basic> r3 = i3*x;
+    RCP<Basic> r2 = mul(i2, x);
+    RCP<Basic> r3 = mul(i3, x);
     assert(*r1 == *r2);
     assert(*r1 != *r3);
 
-    r3 = i2*y;
+    r3 = mul(i2, y);
     assert(*r1 != *r3);
     assert(*r2 != *r3);
 
-    r1 = add(y*x, i2*x*y);
-    r2 = i3*x*y;
+    r1 = add(mul(y, x), mul(mul(i2, x), y));
+    r2 = mul(mul(i3, x), y);
     assert(*r1 == *r2);
 
     r1 = add(add(x, x), x);
-    r2 = i3 * x;
+    r2 = mul(i3, x);
     assert(*r1 == *r2);
 
     r1 = add(add(x, x), x);
-    r2 = x * i3;
+    r2 = mul(x, i3);
     assert(*r1 == *r2);
 }
 
@@ -69,23 +69,23 @@ void test_pow()
     RCP<Basic> r1;
     RCP<Basic> r2;
 
-    r1 = x*x;
+    r1 = mul(x, x);
     r2 = rcp(new Pow(x, i2));
     assert(*r1 == *r2);
 
-    r1 = x*x*x;
+    r1 = mul(mul(x, x), x);
     r2 = rcp(new Pow(x, i3));
     assert(*r1 == *r2);
 
-    r1 = x*x*x*x;
+    r1 = mul(mul(mul(x, x), x), x);
     r2 = rcp(new Pow(x, i4));
     assert(*r1 == *r2);
 
-    r1 = add(x, y) * add(x, y) * add(x, y);
+    r1 = mul(mul(add(x, y), add(x, y)), add(x, y));
     r2 = rcp(new Pow(add(x, y), i3));
     assert(*r1 == *r2);
 
-    r1 = add(x, y) * add(y, x) * add(x, y);
+    r1 = mul(mul(add(x, y), add(y, x)), add(x, y));
     r2 = rcp(new Pow(add(x, y), i3));
     assert(*r1 == *r2);
 }

@@ -137,7 +137,7 @@ void test_mul()
     std::cout << *a << std::endl;
     std::cout << *b << std::endl;
 
-    RCP<Basic> r = (x * y) * (y * x);
+    RCP<Basic> r = mul(mul(x, y), mul(y, x));
     std::cout << *r << std::endl;
 }
 
