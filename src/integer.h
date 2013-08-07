@@ -9,7 +9,6 @@ namespace CSymPy {
 
 class Integer : public Basic {
 public:
-    // TODO: make this private
     long long int i;
     mpz_class ii;
 
