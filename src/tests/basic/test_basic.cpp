@@ -98,7 +98,7 @@ void test_integer()
     std::cout << *i << std::endl;
     std::cout << *j << std::endl;
 
-    RCP<Integer> k = i + j;
+    RCP<Integer> k = addint(i, j);
     std::cout << *k << std::endl;
     assert(*k == *rcp(new Integer(11)));
     assert(*k != *rcp(new Integer(12)));

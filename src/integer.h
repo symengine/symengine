@@ -20,10 +20,21 @@ public:
     virtual std::string __str__() const;
 };
 
-} // CSymPy
+inline Teuchos::RCP<Integer> addint(const Teuchos::RCP<Integer> &self,
+    const Teuchos::RCP<Integer> &other)
+{
+    return Teuchos::rcp(new CSymPy::Integer(self->i + other->i));
+}
 
-Teuchos::RCP<CSymPy::Integer> operator+(const Teuchos::RCP<CSymPy::Integer> &a,
-        const Teuchos::RCP<CSymPy::Integer> &b);
+inline void iaddint(const Teuchos::Ptr<Teuchos::RCP<Integer>> &self,
+    const Teuchos::RCP<Integer> &other)
+{
+    *self = addint(*self, other);
+}
+
+
+
+} // CSymPy
 
 Teuchos::RCP<CSymPy::Integer> operator-(const Teuchos::RCP<CSymPy::Integer> &a,
         const Teuchos::RCP<CSymPy::Integer> &b);

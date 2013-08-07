@@ -110,7 +110,7 @@ void Mul::dict_add_term(Dict_int &d, const RCP<Integer> &exp,
         // "t" not found in "d":
         d[t] = exp;
     } else {
-        d[t] = d[t] + exp;
+        iaddint(outArg(d[t]), exp);
     }
 }
 

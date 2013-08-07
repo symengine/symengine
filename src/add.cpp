@@ -100,7 +100,7 @@ void Add::dict_add_term(Dict_int &d, const RCP<Integer> &coef,
         if (coef->i != 0) d[t] = coef;
     } else {
         // TODO: remove the item if d[t] + coef is zero:
-        d[t] = d[t] + coef;
+        iaddint(outArg(d[t]), coef);
     }
 }
 
