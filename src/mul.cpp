@@ -83,7 +83,7 @@ RCP<CSymPy::Basic> Mul::from_dict(const RCP<Basic> &coef, const Dict_int &d)
             }
         }
         // Otherwise create a Pow() here:
-        return rcp(new Pow(p->first, p->second));
+        return pow(p->first, p->second);
     } else {
         CSymPy::Dict_int d2;
         // TODO: handle non-integer coefs like sqrt(2) here:
