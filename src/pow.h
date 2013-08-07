@@ -18,6 +18,9 @@ public:
 
 };
 
+Teuchos::RCP<Basic> pow(const Teuchos::RCP<Basic> &a,
+        const Teuchos::RCP<Basic> &b);
+
 
 void multinomial_coefficients(int m, int n, map_vec_int &r);
 

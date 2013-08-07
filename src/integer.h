@@ -44,6 +44,12 @@ inline Teuchos::RCP<Integer> divint(const Teuchos::RCP<Integer> &self,
     return Teuchos::rcp(new CSymPy::Integer(self->i / other->i));
 }
 
+inline Teuchos::RCP<Integer> powint(const Teuchos::RCP<Integer> &self,
+    const Teuchos::RCP<Integer> &other)
+{
+    return Teuchos::rcp(new CSymPy::Integer(std::pow(self->i, other->i)));
+}
+
 inline void iaddint(const Teuchos::Ptr<Teuchos::RCP<Integer>> &self,
     const Teuchos::RCP<Integer> &other)
 {
@@ -66,6 +72,12 @@ inline void idivint(const Teuchos::Ptr<Teuchos::RCP<Integer>> &self,
     const Teuchos::RCP<Integer> &other)
 {
     *self = divint(*self, other);
+}
+
+inline void ipowint(const Teuchos::Ptr<Teuchos::RCP<Integer>> &self,
+    const Teuchos::RCP<Integer> &other)
+{
+    *self = powint(*self, other);
 }
 
 inline Teuchos::RCP<Integer> negint(const Teuchos::RCP<Integer> &self)

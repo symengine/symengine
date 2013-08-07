@@ -92,7 +92,7 @@ RCP<CSymPy::Basic> Mul::from_dict(const RCP<Basic> &coef, const Dict_int &d)
             if (is_a<Integer>(*(p.first)) && is_a<Integer>(*(p.second))) {
                 RCP<Integer> f = rcp_dynamic_cast<Integer>(p.first);
                 RCP<Integer> s = rcp_dynamic_cast<Integer>(p.second);
-                RCP<Integer> r = rcp(new Integer(pow(f->i, s->i)));
+                RCP<Integer> r = powint(f, s);
                 imulint(outArg(coef2), r);
             } else {
                 Mul::dict_add_term(d2, p.second, p.first);

@@ -51,6 +51,12 @@ std::string Pow::__str__() const
     return o.str();
 }
 
+RCP<Basic> pow(const RCP<Basic> &a, const RCP<Basic> &b)
+{
+    // TODO: implement simplifiations like x^0, x^1, 0^x, or 1^x here:
+    return rcp(new Pow(a, b));
+}
+
 // TODO: m, n should stay ints, but the calculted coefficients should be
 // converted from int to Integers
 void multinomial_coefficients(int m, int n, map_vec_int &r)
