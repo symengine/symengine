@@ -103,7 +103,7 @@ void test_integer()
     assert(*k == *rcp(new Integer(11)));
     assert(*k != *rcp(new Integer(12)));
 
-    k = i - j;
+    k = subint(i, j);
     std::cout << *k << std::endl;
     assert(*k == *rcp(new Integer(-1)));
     assert(*k != *rcp(new Integer(12)));
