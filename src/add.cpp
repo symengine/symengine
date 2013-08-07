@@ -68,7 +68,7 @@ RCP<Basic> Add::from_dict(const Dict_int &d)
     } else if (d.size() == 1) {
         auto p = d.begin();
         if (is_a<Integer>(*(p->second))) {
-            if ((rcp_dynamic_cast<Integer>(p->second))->i == 1) {
+            if ((rcp_dynamic_cast<Integer>(p->second))->is_one()) {
                 return p->first;
             }
             if (is_a<Mul>(*(p->first))) {
@@ -97,7 +97,7 @@ void Add::dict_add_term(Dict_int &d, const RCP<Integer> &coef,
 {
     if (d.find(t) == d.end()) {
         // Not found, add it in if it is nonzero:
-        if (coef->i != 0) d[t] = coef;
+        if (!(coef->is_zero())) d[t] = coef;
     } else {
         // TODO: remove the item if d[t] + coef is zero:
         iaddint(outArg(d[t]), coef);

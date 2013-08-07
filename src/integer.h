@@ -18,6 +18,9 @@ public:
     virtual std::size_t __hash__() const;
     virtual bool __eq__(const Basic &o) const;
     virtual std::string __str__() const;
+
+    inline bool is_zero() { return this->i == 0; }
+    inline bool is_one() { return this->i == 1; }
 };
 
 inline Teuchos::RCP<Integer> addint(const Teuchos::RCP<Integer> &self,
