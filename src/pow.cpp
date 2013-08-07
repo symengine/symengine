@@ -107,7 +107,7 @@ RCP<Basic> expand(const RCP<Pow> &self)
     if (is_a<Integer>(*self->exp)) {
         if (is_a<Add>(*self->base)) {
             map_vec_int r;
-            int n = rcp_dynamic_cast<Integer>(self->exp)->i;
+            int n = rcp_dynamic_cast<Integer>(self->exp)->as_int();
 
             RCP<Add> base = rcp_dynamic_cast<Add>(self->base);
             RCP<Integer> one = rcp(new Integer(1));

@@ -29,4 +29,15 @@ std::string Integer::__str__() const
     return s.str();
 }
 
+int Integer::as_int()
+{
+    if (this->i > std::numeric_limits<int>::max()) {
+        throw std::runtime_error("as_int: Integer larger than int");
+    }
+    if (this->i < std::numeric_limits<int>::min()) {
+        throw std::runtime_error("as_int: Integer larger than int");
+    }
+    return this->i;
+}
+
 } // CSymPy

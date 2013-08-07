@@ -19,6 +19,7 @@ public:
     virtual bool __eq__(const Basic &o) const;
     virtual std::string __str__() const;
 
+    int as_int(); // Convert to "int", raise an exception if it is too large
     inline bool is_zero() { return this->i == 0; }
     inline bool is_one() { return this->i == 1; }
 };
