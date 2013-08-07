@@ -9,11 +9,11 @@ namespace CSymPy {
 
 class Integer : public Basic {
 public:
-    long long int i;
-    mpz_class ii;
+    mpz_class i;
 
 public:
     Integer(int i);
+    Integer(mpz_class i);
     virtual std::size_t __hash__() const;
     virtual bool __eq__(const Basic &o) const;
     virtual std::string __str__() const;
@@ -50,7 +50,11 @@ inline Teuchos::RCP<Integer> divint(const Teuchos::RCP<Integer> &self,
 inline Teuchos::RCP<Integer> powint(const Teuchos::RCP<Integer> &self,
     const Teuchos::RCP<Integer> &other)
 {
-    return Teuchos::rcp(new CSymPy::Integer(std::pow(self->i, other->i)));
+    if (!(other->i.fits_ulong_p()))
+        throw std::runtime_error("powint: other too large.");
+    mpz_class tmp;
+    mpz_pow_ui(tmp.get_mpz_t(), self->i.get_mpz_t(), other->i.get_ui());
+    return Teuchos::rcp(new CSymPy::Integer(tmp));
 }
 
 inline void iaddint(const Teuchos::Ptr<Teuchos::RCP<Integer>> &self,
