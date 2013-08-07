@@ -70,23 +70,23 @@ void test_pow()
     RCP<Basic> r2;
 
     r1 = mul(x, x);
-    r2 = rcp(new Pow(x, i2));
+    r2 = pow(x, i2);
     assert(*r1 == *r2);
 
     r1 = mul(mul(x, x), x);
-    r2 = rcp(new Pow(x, i3));
+    r2 = pow(x, i3);
     assert(*r1 == *r2);
 
     r1 = mul(mul(mul(x, x), x), x);
-    r2 = rcp(new Pow(x, i4));
+    r2 = pow(x, i4);
     assert(*r1 == *r2);
 
     r1 = mul(mul(add(x, y), add(x, y)), add(x, y));
-    r2 = rcp(new Pow(add(x, y), i3));
+    r2 = pow(add(x, y), i3);
     assert(*r1 == *r2);
 
     r1 = mul(mul(add(x, y), add(y, x)), add(x, y));
-    r2 = rcp(new Pow(add(x, y), i3));
+    r2 = pow(add(x, y), i3);
     assert(*r1 == *r2);
 }
 
@@ -114,7 +114,7 @@ void test_expand()
     RCP<Basic> r1;
     RCP<Basic> r2;
 
-    r1 = rcp(new Pow(add(add(add(x, y), z), w), i4));
+    r1 = pow(add(add(add(x, y), z), w), i4);
 
     std::cout << r1 << std::endl;
 
