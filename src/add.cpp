@@ -154,11 +154,3 @@ RCP<Basic> add(const RCP<Basic> &a, const RCP<Basic> &b)
 }
 
 } // CSymPy
-
-using CSymPy::Basic;
-
-RCP<Basic> operator-(const RCP<Basic> &a, const RCP<Basic> &b)
-{
-//    return a + (-b);
-    throw std::runtime_error("Not implemented yet.");
-}
