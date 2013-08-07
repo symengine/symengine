@@ -24,6 +24,12 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
         "${CMAKE_CXX_FLAGS_RELEASE} -Wno-unused-parameter")
 endif()
 
+# GMP
+find_package(GMP REQUIRED)
+include_directories(${GMP_INCLUDE_DIRS})
+set(LIBS ${LIBS} ${GMP_LIBRARIES})
+
+
 enable_testing()
 add_subdirectory(src)
 
@@ -38,3 +44,6 @@ else ()
     message("C++ compiler flags: ${CMAKE_CXX_FLAGS_RELEASE}")
 endif ()
 message("Installation prefix: ${CMAKE_INSTALL_PREFIX}")
+
+message("GMP_INCLUDE_DIRS: ${GMP_INCLUDE_DIRS}")
+message("GMP_LIBRARIES: ${GMP_LIBRARIES}")
