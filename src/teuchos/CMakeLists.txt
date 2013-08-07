@@ -15,4 +15,8 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL GNU)
     )
 endif()
 
+# Configure Teuchos using our CMake options:
+set(HAVE_TEUCHOS_BFD ${WITH_BFD})
+configure_file(Teuchos_config.h.in Teuchos_config.h)
+
 add_library(teuchos ${SRC})
