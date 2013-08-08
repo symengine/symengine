@@ -75,7 +75,9 @@ void test_expand()
 
     std::cout << *e << std::endl;
     std::cout << *f1 << std::endl;
+    std::cout << P1 << std::endl;
     std::cout << *f2 << std::endl;
+    std::cout << P2 << std::endl;
 }
 
 int main(int argc, char* argv[])
