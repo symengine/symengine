@@ -129,6 +129,23 @@ void test_expand()
         << rcp_dynamic_cast<Add>(r2)->dict.size() << std::endl;
 }
 
+void test_expand2()
+{
+    RCP<Basic> x = rcp(new Symbol("x"));
+    RCP<Basic> y = rcp(new Symbol("y"));
+    RCP<Basic> z = rcp(new Symbol("z"));
+    RCP<Basic> w = rcp(new Symbol("w"));
+
+    RCP<Basic> r1;
+    RCP<Basic> r2;
+
+    r1 = mul(w, add(add(x, y), z)); // w*(x+y+z)
+    std::cout << *r1 << std::endl;
+
+    r2 = mul_expand(rcp_dynamic_cast<Mul>(r1));
+    std::cout << *r2 << std::endl;
+}
+
 
 int main(int argc, char* argv[])
 {
@@ -138,6 +155,7 @@ int main(int argc, char* argv[])
     test_pow();
     test_multinomial();
     test_expand();
+    test_expand2();
 
     return 0;
 }
