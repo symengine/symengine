@@ -1,11 +1,18 @@
 language: python
 python:
   - 2.7
+env:
+  # Debug build:
+  - BUILD_TYPE="Debug" WITH_BFD="yes"
+  # Debug build with BFD off:
+  - BUILD_TYPE="Debug" WITH_BFD="no"
+  # Release build:
+  - BUILD_TYPE="Release" WITH_BFD="yes"
 before_install:
   - sudo apt-get update
   - sudo apt-get install libgmp-dev binutils-dev
 before_script:
-  - cmake .
+  - cmake -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DWITH_BFD=${WITH_BFD} .
   - make
 script:
   - ctest
