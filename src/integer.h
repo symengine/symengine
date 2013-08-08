@@ -20,6 +20,7 @@ public:
 
     // Convert to "int", raise an exception if it does not fit
     signed long int as_int();
+    inline mpz_class as_mpz() { return this->i; }
     inline bool is_zero() { return this->i == 0; }
     inline bool is_one() { return this->i == 1; }
 };
