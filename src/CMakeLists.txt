@@ -13,6 +13,8 @@ set(SRC
     add.cpp
     mul.cpp
     pow.cpp
+    monomials.cpp
+    rings.cpp
 )
 
 add_library(csympy ${SRC})

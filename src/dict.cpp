@@ -27,6 +27,15 @@ std::ostream& operator<<(std::ostream& out, const CSymPy::map_vec_int& d)
     return out;
 }
 
+std::ostream& operator<<(std::ostream& out, const CSymPy::map_vec_mpz& d)
+{
+    out << "{";
+    for (auto &p: d)
+        out << (p.first) << ": " << (p.second) << ", ";
+    out << "}";
+    return out;
+}
+
 
 using Teuchos::RCP;
 using Teuchos::Ptr;
