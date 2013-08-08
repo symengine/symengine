@@ -15,7 +15,7 @@ namespace CSymPy {
 
 Add::Add(const Dict_int& dict)
 {
-    this->coef = rcp(new Integer(1));
+    this->coef = one;
     this->dict = dict;
 }
 
@@ -49,7 +49,7 @@ std::string Add::__str__() const
 {
     std::ostringstream o;
     for (auto &p: this->dict) {
-        if (eq(p.second, rcp(new Integer(1))))
+        if (eq(p.second, one))
             o << *(p.first);
         else
             o << *(p.second) << *(p.first);
@@ -76,15 +76,15 @@ RCP<Basic> Add::from_dict(const Dict_int &d)
                         rcp_dynamic_cast<Mul>(p->first)->dict);
             }
             Dict_int m;
-            m[p->first] = rcp(new Integer(1));
+            m[p->first] = one;
             return rcp(new Mul(p->second, m));
         }
         // TODO: if p->second is a numeric coefficient, it should still be
         // passed in as the first parameter of Mul()
         Dict_int m;
-        m[p->first] = rcp(new Integer(1));
-        m[p->second] = rcp(new Integer(1));
-        return rcp(new Mul(rcp(new Integer(1)), m));
+        m[p->first] = one;
+        m[p->second] = one;
+        return rcp(new Mul(one, m));
     } else {
         return rcp(new Add(d));
     }
@@ -109,7 +109,7 @@ void as_coef_term(const RCP<Basic> &self, const Ptr<RCP<Integer>> &coef,
         const Ptr<RCP<Basic>> &term)
 {
     if (CSymPy::is_a<CSymPy::Symbol>(*self)) {
-        *coef = rcp(new Integer(1));
+        *coef = one;
         *term = self;
     } else if (CSymPy::is_a<CSymPy::Mul>(*self)) {
         RCP<Basic> tmp;
@@ -117,9 +117,9 @@ void as_coef_term(const RCP<Basic> &self, const Ptr<RCP<Integer>> &coef,
         *coef = rcp_dynamic_cast<Integer>(tmp);
     } else if (CSymPy::is_a<CSymPy::Integer>(*self)) {
         *coef = rcp_dynamic_cast<CSymPy::Integer>(self);
-        *term = rcp(new Integer(1));
+        *term = one;
     } else if (CSymPy::is_a<CSymPy::Pow>(*self)) {
-        *coef = rcp(new Integer(1));
+        *coef = one;
         *term = self;
     } else {
         std::cout << *self << std::endl;
