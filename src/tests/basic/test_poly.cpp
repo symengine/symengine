@@ -31,6 +31,22 @@ using CSymPy::expr2poly;
 using CSymPy::vec_int;
 using CSymPy::monomial_mul;
 
+void test_monomial_mul()
+{
+    vec_int a, b, c, d;
+    a = {1, 2, 3, 4};
+    b = {2, 3, 2, 5};
+    c = {0, 0, 0, 0};
+
+    monomial_mul(a, b, c);
+
+    d = {3, 5, 5, 9};
+    assert(c == d);
+    d = {5, 6, 5, 5};
+    assert(c != d);
+
+}
+
 void test_expand()
 {
     RCP<Basic> x = rcp(new Symbol("x"));
@@ -67,7 +83,8 @@ int main(int argc, char* argv[])
 {
     Teuchos::print_stack_on_segfault();
 
-    test_expand();
+    test_monomial_mul();
+    //test_expand();
 
     return 0;
 }
