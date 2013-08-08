@@ -7,7 +7,7 @@
 namespace CSymPy {
 
 // Multiply two polynomials
-void poly_mul(const map_vec_mpz &p1, const map_vec_mpz &p2, map_vec_mpz &r);
+void poly_mul(const map_vec_mpz &A, const map_vec_mpz &B, map_vec_mpz &C);
 
 } // CSymPy
 

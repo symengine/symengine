@@ -12,8 +12,17 @@ using Teuchos::rcp_static_cast;
 
 namespace CSymPy {
 
-void poly_mul(const map_vec_mpz &p1, const map_vec_mpz &p2, map_vec_mpz &r)
+void poly_mul(const map_vec_mpz &A, const map_vec_mpz &B, map_vec_mpz &C)
 {
+    vec_int exp;
+    int n = (A.begin()->first).size();
+    exp.assign(n, 0); // Initialize to [0]*n
+    for (auto &a: A) {
+        for (auto &b: B) {
+            monomial_mul(a.first, b.first, exp);
+            C[exp] = a.second*b.second;
+        }
+    }
 }
 
 } // CSymPy
