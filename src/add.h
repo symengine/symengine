@@ -27,6 +27,8 @@ public:
 Teuchos::RCP<Basic> add(const Teuchos::RCP<Basic> &a,
         const Teuchos::RCP<Basic> &b);
 
+Teuchos::RCP<Basic> add_expand(const Teuchos::RCP<Add> &self);
+
 } // CSymPy
 
 #endif

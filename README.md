@@ -4,6 +4,13 @@
 
 Experimental [SymPy](http://sympy.org/) core written in C++.
 
+## License
+
+All files are licensed under MIT license, see the
+[LICENSE](https://raw.github.com/certik/csympy/master/LICENSE) for more
+information. The `src/teuchos` directory is licensed under the Trilinos BSD
+license (see the LICENSE file).
+
 ## Installation
 
 Install prerequisites::

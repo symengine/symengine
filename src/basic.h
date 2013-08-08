@@ -69,6 +69,8 @@ inline bool is_a(const Basic &b)
 }
 
 
+Teuchos::RCP<Basic> expand(const Teuchos::RCP<Basic> &self);
+
 } // CSymPy
 
 // This "<<" overloaded function simply calls p.__str__, so it allows any Basic
