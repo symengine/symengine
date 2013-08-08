@@ -101,7 +101,7 @@ void test_multinomial()
         << "ms" << std::endl;
 }
 
-void test_expand()
+void test_expand1()
 {
     RCP<Basic> x = rcp(new Symbol("x"));
     RCP<Basic> y = rcp(new Symbol("y"));
@@ -119,7 +119,7 @@ void test_expand()
     std::cout << *r1 << std::endl;
 
     auto t1 = std::chrono::high_resolution_clock::now();
-    r2 = expand(rcp_dynamic_cast<Pow>(r1));
+    r2 = expand(r1);
     auto t2 = std::chrono::high_resolution_clock::now();
     //std::cout << *r2 << std::endl;
     std::cout
@@ -129,6 +129,60 @@ void test_expand()
         << rcp_dynamic_cast<Add>(r2)->dict.size() << std::endl;
 }
 
+void test_expand2()
+{
+    RCP<Basic> x = rcp(new Symbol("x"));
+    RCP<Basic> y = rcp(new Symbol("y"));
+    RCP<Basic> z = rcp(new Symbol("z"));
+    RCP<Basic> w = rcp(new Symbol("w"));
+
+    RCP<Basic> r1;
+    RCP<Basic> r2;
+
+    r1 = mul(w, add(add(x, y), z)); // w*(x+y+z)
+    std::cout << *r1 << std::endl;
+
+    r2 = expand(r1);
+    std::cout << *r2 << std::endl;
+
+    assert( eq(r2, add(add(mul(w, x), mul(w, y)), mul(w, z))));
+    assert(neq(r2, add(add(mul(w, x), mul(w, w)), mul(w, z))));
+
+    r1 = mul(add(x, y), add(z, w)); // (x+y)*(z+w)
+    std::cout << *r1 << std::endl;
+
+    r2 = expand(r1);
+    std::cout << *r2 << std::endl;
+
+    assert( eq(r2, add(add(add(mul(x, z), mul(y, z)), mul(x, w)), mul(y, w))));
+    assert(neq(r2, add(add(add(mul(y, z), mul(y, z)), mul(x, w)), mul(y, w))));
+}
+
+void test_expand3()
+{
+    RCP<Basic> x = rcp(new Symbol("x"));
+    RCP<Basic> y = rcp(new Symbol("y"));
+    RCP<Basic> z = rcp(new Symbol("z"));
+    RCP<Basic> w = rcp(new Symbol("w"));
+    RCP<Basic> i4 = rcp(new Integer(2));
+
+    RCP<Basic> e, f, r;
+
+    e = pow(add(add(add(x, y), z), w), i4);
+    f = mul(e, add(e, w));
+
+    std::cout << *f << std::endl;
+
+    auto t1 = std::chrono::high_resolution_clock::now();
+    r = expand(f);
+    auto t2 = std::chrono::high_resolution_clock::now();
+    std::cout << *r << std::endl;
+    std::cout
+        << std::chrono::duration_cast<std::chrono::milliseconds>(t2-t1).count()
+        << "ms" << std::endl;
+    std::cout << "number of terms: "
+        << rcp_dynamic_cast<Add>(r)->dict.size() << std::endl;
+}
 
 int main(int argc, char* argv[])
 {
@@ -137,7 +191,9 @@ int main(int argc, char* argv[])
     test_add();
     test_pow();
     test_multinomial();
-    test_expand();
+    test_expand1();
+    test_expand2();
+    test_expand3();
 
     return 0;
 }

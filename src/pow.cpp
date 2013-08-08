@@ -53,7 +53,10 @@ std::string Pow::__str__() const
 
 RCP<Basic> pow(const RCP<Basic> &a, const RCP<Basic> &b)
 {
-    // TODO: implement simplifiations like x^0, x^1, 0^x, or 1^x here:
+    if (eq(b, zero)) return one;
+    if (eq(b, one)) return a;
+    if (eq(a, zero)) return zero;
+    if (eq(a, one)) return one;
     return rcp(new Pow(a, b));
 }
 
@@ -147,7 +150,7 @@ void multinomial_coefficients_mpz(int m, int n, map_vec_mpz &r)
     }
 }
 
-RCP<Basic> expand(const RCP<Pow> &self)
+RCP<Basic> pow_expand(const RCP<Pow> &self)
 {
     if (is_a<Integer>(*self->exp)) {
         if (is_a<Add>(*self->base)) {

@@ -27,6 +27,6 @@ before_script:
   - cmake -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DWITH_BFD=${WITH_BFD} ${SOURCE_DIR}
   - make
 script:
-  - ctest
+  - ctest --output-on-failure
 notifications:
   email: false
