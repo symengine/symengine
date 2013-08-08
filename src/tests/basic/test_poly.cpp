@@ -72,9 +72,14 @@ void test_expand()
 
     expr2poly(f1, syms, P1);
     expr2poly(f2, syms, P2);
+    std::cout << "poly_mul start" << std::endl;
+    auto t1 = std::chrono::high_resolution_clock::now();
     poly_mul(P1, P2, C);
+    auto t2 = std::chrono::high_resolution_clock::now();
+    std::cout << "poly_mul stop" << std::endl;
 
 
+    /*
     std::cout << *e << std::endl;
     std::cout << *f1 << std::endl;
     std::cout << P1 << std::endl;
@@ -82,6 +87,10 @@ void test_expand()
     std::cout << P2 << std::endl;
     std::cout << "RESULT:" << std::endl;
     std::cout << C << std::endl;
+    */
+    std::cout
+        << std::chrono::duration_cast<std::chrono::milliseconds>(t2-t1).count()
+        << "ms" << std::endl;
 }
 
 int main(int argc, char* argv[])
