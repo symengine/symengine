@@ -18,6 +18,7 @@ using CSymPy::Mul;
 using CSymPy::Symbol;
 using CSymPy::Dict_int;
 using CSymPy::Integer;
+using CSymPy::one;
 
 void test_symbol_hash()
 {
@@ -131,9 +132,9 @@ void test_mul()
     m[x] = rcp(new Integer(2));
     m[y] = rcp(new Integer(3));
 
-    RCP<Mul> a = rcp(new Mul(rcp(new Integer(1)), m));
+    RCP<Mul> a = rcp(new Mul(one, m));
     m[x] = rcp(new Integer(-2));
-    RCP<Mul> b = rcp(new Mul(rcp(new Integer(1)), m));
+    RCP<Mul> b = rcp(new Mul(one, m));
     std::cout << *a << std::endl;
     std::cout << *b << std::endl;
 

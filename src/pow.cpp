@@ -155,7 +155,6 @@ RCP<Basic> expand(const RCP<Pow> &self)
             int n = rcp_dynamic_cast<Integer>(self->exp)->as_int();
 
             RCP<Add> base = rcp_dynamic_cast<Add>(self->base);
-            RCP<Integer> one = rcp(new Integer(1));
             int m = base->dict.size();
             multinomial_coefficients_mpz(m, n, r);
             Dict_int rd;
