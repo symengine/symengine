@@ -3,6 +3,7 @@
 #include "add.h"
 #include "mul.h"
 #include "pow.h"
+#include "symbol.h"
 #include "rings.h"
 #include "monomials.h"
 
@@ -37,6 +38,10 @@ void expr2poly(const RCP<Basic> &p, Dict_int &syms, map_vec_mpz &P)
                 RCP<Basic> exp_ = rcp_static_cast<Pow>(p.first)->exp;
                 int i = syms[sym]->as_int();
                 exp[i] = rcp_dynamic_cast<Integer>(exp_)->as_int();
+            } else if (is_a<Symbol>(*p.first)) {
+                RCP<Basic> sym = p.first;
+                int i = syms[sym]->as_int();
+                exp[i] = 1;
             } else {
                 throw std::runtime_error("Not implemented.");
             }
