@@ -193,17 +193,15 @@ RCP<Basic> mul_expand_two(const RCP<Basic> &a, const RCP<Basic> &b)
         return mul_expand_two(b, a);
     } else if (is_a<Add>(*b)) {
         Dict_int d;
-        RCP<Basic> coef;
-        RCP<Basic> tmp, tmp2, t;
+        RCP<Basic> coef, tmp;
         for (auto &p: (rcp_dynamic_cast<Add>(b))->dict) {
             tmp = mul(a, p.first);
             if (!is_a<Mul>(*tmp)) throw std::runtime_error("Not implemented.");
-            rcp_dynamic_cast<Mul>(tmp)->as_coef_term(outArg(coef),
-                    outArg(tmp2));
+            rcp_dynamic_cast<Mul>(tmp)->as_coef_term(outArg(coef), outArg(tmp));
             if (!is_a<Integer>(*coef))
                 throw std::runtime_error("Not implemented.");
             Add::dict_add_term(d,
-                    mulint(p.second, rcp_dynamic_cast<Integer>(coef)), tmp2);
+                    mulint(p.second, rcp_dynamic_cast<Integer>(coef)), tmp);
         }
         return Add::from_dict(d);
     }
