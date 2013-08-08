@@ -37,8 +37,13 @@ if (WITH_BFD)
     find_package(BFD REQUIRED)
     include_directories(${BFD_INCLUDE_DIRS})
     set(LIBS ${LIBS} ${BFD_LIBRARIES})
+    set(HAVE_TEUCHOS_BFD yes)
 endif()
 
+if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+    set(HAVE_TEUCHOS_DEBUG yes)
+    set(HAVE_TEUCHOS_DEBUG_RCP_NODE_TRACING yes)
+endif()
 
 enable_testing()
 add_subdirectory(src)
