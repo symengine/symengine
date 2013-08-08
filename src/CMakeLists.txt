@@ -1,6 +1,9 @@
 add_subdirectory(teuchos)
 
-include_directories(${csympy_SOURCE_DIR}/src/teuchos)
+# Include Teuchos headers:
+include_directories(${teuchos_SOURCE_DIR})
+# Include Teuchos config file (generated per build):
+include_directories(${teuchos_BINARY_DIR})
 
 set(SRC
     basic.cpp
