@@ -159,23 +159,28 @@ void as_base_exp(const RCP<Basic> &self, const Ptr<RCP<Integer>> &exp,
 RCP<Basic> mul(const RCP<Basic> &a, const RCP<Basic> &b)
 {
     CSymPy::Dict_int d;
-    RCP<Integer> exp;
-    RCP<Basic> t;
     RCP<Basic> coef = one;
     if (CSymPy::is_a<Mul>(*a) && CSymPy::is_a<Mul>(*b)) {
-        d = (rcp_dynamic_cast<Mul>(a))->dict;
-        for (auto &p: (rcp_dynamic_cast<Mul>(b))->dict)
+        d = (rcp_static_cast<Mul>(a))->dict;
+        for (auto &p: (rcp_static_cast<Mul>(b))->dict)
             Mul::dict_add_term(d, p.second, p.first);
     } else if (CSymPy::is_a<Mul>(*a)) {
-        coef = (rcp_dynamic_cast<Mul>(a))->coef;
-        d = (rcp_dynamic_cast<Mul>(a))->dict;
+        RCP<Integer> exp;
+        RCP<Basic> t;
+        coef = (rcp_static_cast<Mul>(a))->coef;
+        d = (rcp_static_cast<Mul>(a))->dict;
         as_base_exp(b, outArg(exp), outArg(t));
         Mul::dict_add_term(d, exp, t);
     } else if (CSymPy::is_a<Mul>(*b)) {
-        d = (rcp_dynamic_cast<Mul>(b))->dict;
+        RCP<Integer> exp;
+        RCP<Basic> t;
+        coef = (rcp_static_cast<Mul>(b))->coef;
+        d = (rcp_static_cast<Mul>(b))->dict;
         as_base_exp(a, outArg(exp), outArg(t));
         Mul::dict_add_term(d, exp, t);
     } else {
+        RCP<Integer> exp;
+        RCP<Basic> t;
         as_base_exp(a, outArg(exp), outArg(t));
         d[t] = exp;
         as_base_exp(b, outArg(exp), outArg(t));
