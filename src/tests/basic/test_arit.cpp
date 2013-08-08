@@ -147,6 +147,15 @@ void test_expand2()
 
     assert( eq(r2, add(add(mul(w, x), mul(w, y)), mul(w, z))));
     assert(neq(r2, add(add(mul(w, x), mul(w, w)), mul(w, z))));
+
+    r1 = mul(add(x, y), add(z, w)); // (x+y)*(z+w)
+    std::cout << *r1 << std::endl;
+
+    r2 = mul_expand(rcp_dynamic_cast<Mul>(r1));
+    std::cout << *r2 << std::endl;
+
+    assert( eq(r2, add(add(add(mul(x, z), mul(y, z)), mul(x, w)), mul(y, w))));
+    assert(neq(r2, add(add(add(mul(y, z), mul(y, z)), mul(x, w)), mul(y, w))));
 }
 
 
