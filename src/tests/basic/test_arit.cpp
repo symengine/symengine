@@ -101,7 +101,7 @@ void test_multinomial()
         << "ms" << std::endl;
 }
 
-void test_expand()
+void test_expand1()
 {
     RCP<Basic> x = rcp(new Symbol("x"));
     RCP<Basic> y = rcp(new Symbol("y"));
@@ -119,7 +119,7 @@ void test_expand()
     std::cout << *r1 << std::endl;
 
     auto t1 = std::chrono::high_resolution_clock::now();
-    r2 = pow_expand(rcp_dynamic_cast<Pow>(r1));
+    r2 = expand(r1);
     auto t2 = std::chrono::high_resolution_clock::now();
     //std::cout << *r2 << std::endl;
     std::cout
@@ -142,7 +142,7 @@ void test_expand2()
     r1 = mul(w, add(add(x, y), z)); // w*(x+y+z)
     std::cout << *r1 << std::endl;
 
-    r2 = mul_expand(rcp_dynamic_cast<Mul>(r1));
+    r2 = expand(r1);
     std::cout << *r2 << std::endl;
 
     assert( eq(r2, add(add(mul(w, x), mul(w, y)), mul(w, z))));
@@ -151,7 +151,7 @@ void test_expand2()
     r1 = mul(add(x, y), add(z, w)); // (x+y)*(z+w)
     std::cout << *r1 << std::endl;
 
-    r2 = mul_expand(rcp_dynamic_cast<Mul>(r1));
+    r2 = expand(r1);
     std::cout << *r2 << std::endl;
 
     assert( eq(r2, add(add(add(mul(x, z), mul(y, z)), mul(x, w)), mul(y, w))));
@@ -166,7 +166,7 @@ int main(int argc, char* argv[])
     test_add();
     test_pow();
     test_multinomial();
-    test_expand();
+    test_expand1();
     test_expand2();
 
     return 0;
