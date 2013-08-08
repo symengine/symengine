@@ -150,7 +150,7 @@ void multinomial_coefficients_mpz(int m, int n, map_vec_mpz &r)
     }
 }
 
-RCP<Basic> expand(const RCP<Pow> &self)
+RCP<Basic> pow_expand(const RCP<Pow> &self)
 {
     if (is_a<Integer>(*self->exp)) {
         if (is_a<Add>(*self->base)) {

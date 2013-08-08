@@ -119,7 +119,7 @@ void test_expand()
     std::cout << *r1 << std::endl;
 
     auto t1 = std::chrono::high_resolution_clock::now();
-    r2 = expand(rcp_dynamic_cast<Pow>(r1));
+    r2 = pow_expand(rcp_dynamic_cast<Pow>(r1));
     auto t2 = std::chrono::high_resolution_clock::now();
     //std::cout << *r2 << std::endl;
     std::cout
