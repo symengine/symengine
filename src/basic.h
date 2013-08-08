@@ -54,6 +54,16 @@ public:
     }
 };
 
+inline bool eq(const Teuchos::RCP<Basic> &a,
+        const Teuchos::RCP<Basic> &b) {
+    return a->__eq__(*b);
+}
+
+inline bool neq(const Teuchos::RCP<Basic> &a,
+        const Teuchos::RCP<Basic> &b) {
+    return !(a->__eq__(*b));
+}
+
 // Returns true if "b" is of type T or any of its subclasses. Example:
 //   is_a<Symbol>(b)  // true if "b" is of type Symbol or any Symbol's subclass
 template <class T>
