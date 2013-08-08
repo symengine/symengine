@@ -153,4 +153,23 @@ RCP<Basic> add(const RCP<Basic> &a, const RCP<Basic> &b)
     return Add::from_dict(d);
 }
 
+RCP<Basic> add_expand(const RCP<Add> &self)
+{
+    Dict_int d;
+    RCP<Basic> coef, tmp;
+    for (auto &p: self->dict) {
+        tmp = expand(p.first);
+        if (is_a<Mul>(*tmp)) {
+            rcp_dynamic_cast<Mul>(tmp)->as_coef_term(outArg(coef), outArg(tmp));
+        } else {
+            coef = one;
+        }
+        if (!is_a<Integer>(*coef))
+            throw std::runtime_error("Not implemented.");
+        Add::dict_add_term(d,
+                mulint(p.second, rcp_dynamic_cast<Integer>(coef)), tmp);
+    }
+    return Add::from_dict(d);
+}
+
 } // CSymPy
