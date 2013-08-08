@@ -51,10 +51,11 @@ std::string Mul::__str__() const
     if (neq(this->coef, one))
         o << *(this->coef);
     for (auto &p: this->dict) {
-        if (eq(p.second, one))
-            o << *(p.first);
-        else
-            o << *(p.first) << "^" << *(p.second);
+        if (is_a<Add>(*p.first)) o << "(";
+        o << *(p.first);
+        if (is_a<Add>(*p.first)) o << ")";
+        if (neq(p.second, one))
+            o << "^" << *(p.second);
         o << "*";
     }
     std::string s = o.str();
