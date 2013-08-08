@@ -188,20 +188,10 @@ RCP<Basic> mul_expand_two(const RCP<Basic> &a, const RCP<Basic> &b)
     // Both a and b are assumed to be expanded
     if (is_a<Add>(*a) && is_a<Add>(*b)) {
         Dict_int d;
-        RCP<Basic> coef, tmp;
         for (auto &p: (rcp_dynamic_cast<Add>(a))->dict) {
             for (auto &q: (rcp_dynamic_cast<Add>(b))->dict) {
-                tmp = mul(p.first, q.first);
-                if (is_a<Mul>(*tmp)) {
-                    rcp_dynamic_cast<Mul>(tmp)->as_coef_term(outArg(coef),
-                            outArg(tmp));
-                } else {
-                    coef = one;
-                }
-                if (!is_a<Integer>(*coef))
-                    throw std::runtime_error("Not implemented.");
-                Add::dict_add_term(d, mulint(mulint(p.second, q.second),
-                            rcp_dynamic_cast<Integer>(coef)), tmp);
+                Add::dict_add_term(d, mulint(p.second, q.second),
+                        mul(p.first, q.first));
             }
         }
         return Add::from_dict(d);
