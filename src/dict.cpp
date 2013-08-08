@@ -49,7 +49,7 @@ bool dicts_equal(const Dict_int &a, const Dict_int &b)
         // O(1) lookup of the key in "b":
         auto f = b.find(p.first);
         if (f == b.end()) return false; // no such element in "b"
-        if (*(p.second) != *(f->second)) return false; // values not equal
+        if (neq(p.second, f->second)) return false; // values not equal
     }
     return true;
 }

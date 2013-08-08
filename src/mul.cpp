@@ -48,7 +48,7 @@ bool Mul::__eq__(const Basic &o) const
 std::string Mul::__str__() const
 {
     std::ostringstream o;
-    if (*(this->coef) != Integer(1))
+    if (neq(this->coef, rcp(new Integer(1))))
         o << *(this->coef);
     for (auto &p: this->dict) {
         if (*(p.second) == Integer(1))

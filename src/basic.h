@@ -36,6 +36,10 @@ public:
     // true if "this" is equal to "o".
     virtual bool __eq__(const Basic &o) const = 0;
 
+    inline bool __neq__(const Basic &o) {
+        return !(this->__eq__(o));
+    }
+
     // Returns string representation of self. Subclasses can override this to
     // provide custom printing.
     virtual std::string __str__() const {
@@ -47,10 +51,6 @@ public:
 
     bool operator==(const Basic &o) const {
         return this->__eq__(o);
-    }
-
-    bool operator!=(const Basic &o) const {
-        return !(this->__eq__(o));
     }
 };
 

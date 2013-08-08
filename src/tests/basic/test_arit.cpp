@@ -38,11 +38,11 @@ void test_add()
     RCP<Basic> r2 = mul(i2, x);
     RCP<Basic> r3 = mul(i3, x);
     assert(*r1 == *r2);
-    assert(*r1 != *r3);
+    assert(neq(r1, r3));
 
     r3 = mul(i2, y);
-    assert(*r1 != *r3);
-    assert(*r2 != *r3);
+    assert(neq(r1, r3));
+    assert(neq(r2, r3));
 
     r1 = add(mul(y, x), mul(mul(i2, x), y));
     r2 = mul(mul(i3, x), y);

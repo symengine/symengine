@@ -28,13 +28,13 @@ void test_symbol_hash()
     assert(x == x);
     assert(x == x2);
     assert(!(x == y));
-    assert(x != y);
+    assert(x.__neq__(y));
 
     std::hash<Basic> hash_fn;
     // Hashes of x and x2 must be the same:
     assert(hash_fn(x) == hash_fn(x2));
     // Hashes of x and y can but don't have to be different:
-    if (hash_fn(x) != hash_fn(y)) assert(x != y);
+    if (hash_fn(x) != hash_fn(y)) assert(x.__neq__(y));
 
 
     std::size_t seed1 = 0;
@@ -101,17 +101,17 @@ void test_integer()
     RCP<Integer> k = addint(i, j);
     std::cout << *k << std::endl;
     assert(*k == *rcp(new Integer(11)));
-    assert(*k != *rcp(new Integer(12)));
+    assert(neq(k, rcp(new Integer(12))));
 
     k = subint(i, j);
     std::cout << *k << std::endl;
     assert(*k == *rcp(new Integer(-1)));
-    assert(*k != *rcp(new Integer(12)));
+    assert(neq(k, rcp(new Integer(12))));
 
     k = mulint(i, j);
     std::cout << *k << std::endl;
     assert(*k == *rcp(new Integer(30)));
-    assert(*k != *rcp(new Integer(12)));
+    assert(neq(k, rcp(new Integer(12))));
 
     // FIXME: this should return a Rational
     k = divint(i, j);
@@ -120,7 +120,7 @@ void test_integer()
     k = negint(i);
     std::cout << *k << std::endl;
     assert(*k == *rcp(new Integer(-5)));
-    assert(*k != *rcp(new Integer(12)));
+    assert(neq(k, rcp(new Integer(12))));
 }
 
 void test_mul()
