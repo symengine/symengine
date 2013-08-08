@@ -55,7 +55,7 @@ void test_expand()
     vec_int a, b, c;
 
     //expr2poly(f1, syms, P);
-    //monomial_mul(a, b, c);
+    monomial_mul(a, b, c);
 
 
     std::cout << *e << std::endl;

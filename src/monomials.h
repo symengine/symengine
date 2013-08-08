@@ -5,7 +5,7 @@
 
 namespace CSymPy {
 
-void monomial_mul(const vec_int &A, const vec_int &B, const vec_int &C);
+void monomial_mul(const vec_int &A, const vec_int &B, vec_int &C);
 
 } // CSymPy
 
