@@ -120,3 +120,13 @@
 #cmakedefine HAVE_TEUCHOS_BFD
 
 #define HAVE_TEUCHOS_STACKTRACE
+
+/* These git commits to binutils (which change bfd/bfd-in.h):
+ * e7420e5cdfcb8e4d6b47e3a8e9441361c3c4d22a
+ * b14203619115958913f1d1188e9b16a010a5b8dd
+ * 
+ * cause the generated bfd.h to require that either PACKAGE or PACKAGE_VERSION
+ * is defined before bfd.h is included. This is typically defined in config.h,
+ * so we define PACKAGE here to allow compilation to proceed.
+ */
+#define PACKAGE
