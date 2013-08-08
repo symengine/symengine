@@ -74,9 +74,9 @@
 /* #undef HAVE_TEUCHOS_LONG_LONG_INT */
 
 /* Define if want to build teuchos-debug */
-#define HAVE_TEUCHOS_DEBUG
+#cmakedefine HAVE_TEUCHOS_DEBUG
 
-#define HAVE_TEUCHOS_DEBUG_RCP_NODE_TRACING
+#cmakedefine HAVE_TEUCHOS_DEBUG_RCP_NODE_TRACING
 
 /* #undef HAS_TEUCHOS_BOOST_IS_POLYMORPHIC */
 
@@ -117,6 +117,6 @@
 
 #define HAVE_TEUCHOS_LINK
 
-#define HAVE_TEUCHOS_BFD
+#cmakedefine HAVE_TEUCHOS_BFD
 
 #define HAVE_TEUCHOS_STACKTRACE
