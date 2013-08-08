@@ -46,6 +46,26 @@ typedef std::vector<int> vec_int;
 typedef std::map<vec_int, long long int> map_vec_int;
 typedef std::map<vec_int, mpz_class> map_vec_mpz;
 
+
+// Part of umap_vec_mpz:
+typedef struct
+{
+    long operator() (const vec_int &k) const {
+        // TODO: Calculate some good hash here:
+        return 5;
+    }
+} vec_int_hash;
+
+typedef struct
+{
+    bool operator() (const vec_int &x, const vec_int &y) const {
+        return x == y;
+    }
+} vec_int_eq;
+
+typedef std::unordered_map<vec_int, mpz_class,
+        vec_int_hash, vec_int_eq> umap_vec_mpz;
+
 } // CSymPy
 
 std::ostream& operator<<(std::ostream& out, const CSymPy::Dict_int& d);

@@ -31,6 +31,7 @@ using CSymPy::expr2poly;
 using CSymPy::vec_int;
 using CSymPy::monomial_mul;
 using CSymPy::poly_mul;
+using CSymPy::umap_vec_mpz;
 
 void test_monomial_mul()
 {
@@ -46,6 +47,8 @@ void test_monomial_mul()
     d = {5, 6, 5, 5};
     assert(c != d);
 
+    umap_vec_mpz m;
+    m[a] = 4;
 }
 
 void test_expand()
