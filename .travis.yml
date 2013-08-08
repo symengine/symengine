@@ -2,7 +2,7 @@ language: python
 python:
   - 2.7
 env:
-  #### Out of the tree builds (default):
+  #### Out of tree builds (default):
   # Debug build:
   - BUILD_TYPE="Debug" WITH_BFD="yes" TEST_IN_TREE="no"
   # Debug build with BFD off:
@@ -10,7 +10,7 @@ env:
   # Release build:
   - BUILD_TYPE="Release" WITH_BFD="yes" TEST_IN_TREE="no"
 
-  #### In the tree builds (just to check that it works):
+  #### In-tree builds (just to check that it works):
   # Debug build:
   - BUILD_TYPE="Debug" WITH_BFD="yes" TEST_IN_TREE="yes"
 before_install:
