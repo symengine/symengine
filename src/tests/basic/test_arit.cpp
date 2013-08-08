@@ -37,7 +37,7 @@ void test_add()
     RCP<Basic> r1 = add(x, x);
     RCP<Basic> r2 = mul(i2, x);
     RCP<Basic> r3 = mul(i3, x);
-    assert(*r1 == *r2);
+    assert(eq(r1, r2));
     assert(neq(r1, r3));
 
     r3 = mul(i2, y);
@@ -46,15 +46,15 @@ void test_add()
 
     r1 = add(mul(y, x), mul(mul(i2, x), y));
     r2 = mul(mul(i3, x), y);
-    assert(*r1 == *r2);
+    assert(eq(r1, r2));
 
     r1 = add(add(x, x), x);
     r2 = mul(i3, x);
-    assert(*r1 == *r2);
+    assert(eq(r1, r2));
 
     r1 = add(add(x, x), x);
     r2 = mul(x, i3);
-    assert(*r1 == *r2);
+    assert(eq(r1, r2));
 }
 
 void test_pow()
@@ -71,23 +71,23 @@ void test_pow()
 
     r1 = mul(x, x);
     r2 = pow(x, i2);
-    assert(*r1 == *r2);
+    assert(eq(r1, r2));
 
     r1 = mul(mul(x, x), x);
     r2 = pow(x, i3);
-    assert(*r1 == *r2);
+    assert(eq(r1, r2));
 
     r1 = mul(mul(mul(x, x), x), x);
     r2 = pow(x, i4);
-    assert(*r1 == *r2);
+    assert(eq(r1, r2));
 
     r1 = mul(mul(add(x, y), add(x, y)), add(x, y));
     r2 = pow(add(x, y), i3);
-    assert(*r1 == *r2);
+    assert(eq(r1, r2));
 
     r1 = mul(mul(add(x, y), add(y, x)), add(x, y));
     r2 = pow(add(x, y), i3);
-    assert(*r1 == *r2);
+    assert(eq(r1, r2));
 }
 
 void test_multinomial()

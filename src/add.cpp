@@ -36,7 +36,7 @@ bool Add::__eq__(const Basic &o) const
 {
     if (is_a<Add>(o)) {
         const Add &s = static_cast<const Add &>(o);
-        if (*(this->coef) == *(s.coef)) {
+        if (eq(this->coef, s.coef)) {
             if (dicts_equal(this->dict, s.dict)) {
                 return true;
             }
@@ -49,7 +49,7 @@ std::string Add::__str__() const
 {
     std::ostringstream o;
     for (auto &p: this->dict) {
-        if (*(p.second) == Integer(1))
+        if (eq(p.second, rcp(new Integer(1))))
             o << *(p.first);
         else
             o << *(p.second) << *(p.first);

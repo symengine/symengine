@@ -25,9 +25,9 @@ void test_symbol_hash()
     Symbol x2 = Symbol("x");
     Symbol y  = Symbol("y");
 
-    assert(x == x);
-    assert(x == x2);
-    assert(!(x == y));
+    assert(x.__eq__(x));
+    assert(x.__eq__(x2));
+    assert(!(x.__eq__(y)));
     assert(x.__neq__(y));
 
     std::hash<Basic> hash_fn;
@@ -56,7 +56,7 @@ void test_symbol_dict()
     RCP<Basic> x2 = rcp(new Symbol("x"));
     RCP<Basic> y  = rcp(new Symbol("y"));
     assert( x !=  x2);  // The instances are different...
-    assert(*x == *x2);  // ...but equal in the SymPy sense
+    assert(eq(x, x2));  // ...but equal in the SymPy sense
 
     d[x] = rcp(new Integer(2));
     d[y] = rcp(new Integer(3));
@@ -100,17 +100,17 @@ void test_integer()
 
     RCP<Integer> k = addint(i, j);
     std::cout << *k << std::endl;
-    assert(*k == *rcp(new Integer(11)));
+    assert(eq(k, rcp(new Integer(11))));
     assert(neq(k, rcp(new Integer(12))));
 
     k = subint(i, j);
     std::cout << *k << std::endl;
-    assert(*k == *rcp(new Integer(-1)));
+    assert(eq(k, rcp(new Integer(-1))));
     assert(neq(k, rcp(new Integer(12))));
 
     k = mulint(i, j);
     std::cout << *k << std::endl;
-    assert(*k == *rcp(new Integer(30)));
+    assert(eq(k, rcp(new Integer(30))));
     assert(neq(k, rcp(new Integer(12))));
 
     // FIXME: this should return a Rational
@@ -119,7 +119,7 @@ void test_integer()
 
     k = negint(i);
     std::cout << *k << std::endl;
-    assert(*k == *rcp(new Integer(-5)));
+    assert(eq(k, rcp(new Integer(-5))));
     assert(neq(k, rcp(new Integer(12))));
 }
 

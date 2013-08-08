@@ -32,7 +32,7 @@ bool Pow::__eq__(const Basic &o) const
 {
     if (is_a<Pow>(o)) {
         const Pow &s = static_cast<const Pow &>(o);
-        if (*(this->base) == *(s.base) && *(this->exp) == *(s.exp)) {
+        if (eq(this->base, s.base) && eq(this->exp, s.exp)) {
             return true;
         }
     }

@@ -36,7 +36,7 @@ bool Mul::__eq__(const Basic &o) const
 {
     if (is_a<Mul>(o)) {
         const Mul &s = static_cast<const Mul &>(o);
-        if (*(this->coef) == *(s.coef)) {
+        if (eq(this->coef, (s.coef))) {
             if (dicts_equal(this->dict, s.dict)) {
                 return true;
             }
@@ -51,7 +51,7 @@ std::string Mul::__str__() const
     if (neq(this->coef, rcp(new Integer(1))))
         o << *(this->coef);
     for (auto &p: this->dict) {
-        if (*(p.second) == Integer(1))
+        if (eq(p.second, rcp(new Integer(1))))
             o << *(p.first);
         else
             o << *(p.first) << "^" << *(p.second);

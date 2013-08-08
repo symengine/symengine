@@ -48,10 +48,6 @@ public:
             << " instance at " << (const void*)this << ">";
         return s.str();
     }
-
-    bool operator==(const Basic &o) const {
-        return this->__eq__(o);
-    }
 };
 
 inline bool eq(const Teuchos::RCP<Basic> &a,
