@@ -48,10 +48,10 @@ bool Mul::__eq__(const Basic &o) const
 std::string Mul::__str__() const
 {
     std::ostringstream o;
-    if (neq(this->coef, rcp(new Integer(1))))
+    if (neq(this->coef, one))
         o << *(this->coef);
     for (auto &p: this->dict) {
-        if (eq(p.second, rcp(new Integer(1))))
+        if (eq(p.second, one))
             o << *(p.first);
         else
             o << *(p.first) << "^" << *(p.second);
@@ -118,24 +118,24 @@ void Mul::as_coef_term(const Teuchos::Ptr<Teuchos::RCP<Basic>> &coef,
             const Teuchos::Ptr<Teuchos::RCP<Basic>> &term)
 {
     *coef = this->coef;
-    *term = this->from_dict(rcp(new Integer(1)), this->dict);
+    *term = this->from_dict(one, this->dict);
 }
 
 void as_base_exp(const RCP<Basic> &self, const Ptr<RCP<Integer>> &exp,
         const Ptr<RCP<Basic>> &base)
 {
     if (is_a<Symbol>(*self)) {
-        *exp = rcp(new Integer(1));
+        *exp = one;
         *base = self;
     } else if (is_a<Integer>(*self)) {
-        *exp = rcp(new Integer(1));
+        *exp = one;
         *base = self;
     } else if (is_a<Pow>(*self)) {
         // NOTE: this will raise an exception if `exp` is not Integer
         *exp = rcp_dynamic_cast<Integer>(rcp_dynamic_cast<Pow>(self)->exp);
         *base = rcp_dynamic_cast<Pow>(self)->base;
     } else if (is_a<Add>(*self)) {
-        *exp = rcp(new Integer(1));
+        *exp = one;
         *base = self;
     } else {
         std::cout << self;
@@ -148,7 +148,7 @@ RCP<Basic> mul(const RCP<Basic> &a, const RCP<Basic> &b)
     CSymPy::Dict_int d;
     RCP<Integer> exp;
     RCP<Basic> t;
-    RCP<Basic> coef = rcp(new Integer(1));
+    RCP<Basic> coef = one;
     if (CSymPy::is_a<Mul>(*a) && CSymPy::is_a<Mul>(*b)) {
         d = (rcp_dynamic_cast<Mul>(a))->dict;
         for (auto &p: (rcp_dynamic_cast<Mul>(b))->dict)

@@ -92,6 +92,12 @@ inline Teuchos::RCP<Integer> negint(const Teuchos::RCP<Integer> &self)
     return Teuchos::rcp(new CSymPy::Integer(-(self->i)));
 }
 
+
+// Integers 0 and 1 are created only once in integer.cpp and reused everywhere
+// (faster than creating them all the time):
+extern Teuchos::RCP<Integer> zero;
+extern Teuchos::RCP<Integer> one;
+
 } // CSymPy
 
 #endif
