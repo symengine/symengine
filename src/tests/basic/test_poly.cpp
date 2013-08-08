@@ -54,7 +54,7 @@ void test_expand()
     map_vec_mpz P;
     vec_int a, b, c;
 
-    //expr2poly(f1, syms, P);
+    expr2poly(f1, syms, P);
     monomial_mul(a, b, c);
 
 

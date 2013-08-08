@@ -7,7 +7,7 @@
 namespace CSymPy {
 
 // Converts expression "p" into a polynomial P, with symbols 'sym'
-void expr2poly(const Teuchos::RCP<Basic> &p, const Dict_int &syms,
+void expr2poly(const Teuchos::RCP<Basic> &p, Dict_int &syms,
         map_vec_mpz &P);
 
 // Multiply two polynomials: C = A*B
