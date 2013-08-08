@@ -226,10 +226,8 @@ RCP<Basic> mul_expand(const RCP<Mul> &self)
 {
     RCP<Basic> a, b;
     self->as_two_terms(outArg(a), outArg(b));
-    // TODO: add single dispatch of expand() to basic.h, rename expand to
-    // pow_expand
-    //a = expand(a);
-    //b = expand(b);
+    a = expand(a);
+    b = expand(b);
     return mul_expand_two(a, b);
 }
 
