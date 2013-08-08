@@ -73,13 +73,6 @@ inline std::ostream& operator<<(std::ostream& out, const CSymPy::Basic& p)
     out << p.__str__();
     return out;
 }
-// This prints using: std::cout << x;
-inline std::ostream& operator<<(std::ostream& out,
-        const Teuchos::RCP<CSymPy::Basic>& p)
-{
-    out << p->__str__();
-    return out;
-}
 
 namespace std
 {

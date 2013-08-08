@@ -68,7 +68,7 @@ RCP<Basic> Add::from_dict(const Dict_int &d)
     } else if (d.size() == 1) {
         auto p = d.begin();
         if (is_a<Integer>(*(p->second))) {
-            if ((rcp_dynamic_cast<Integer>(p->second))->i == 1) {
+            if ((rcp_dynamic_cast<Integer>(p->second))->is_one()) {
                 return p->first;
             }
             if (is_a<Mul>(*(p->first))) {
@@ -97,20 +97,13 @@ void Add::dict_add_term(Dict_int &d, const RCP<Integer> &coef,
 {
     if (d.find(t) == d.end()) {
         // Not found, add it in if it is nonzero:
-        if (coef->i != 0) d[t] = coef;
+        if (!(coef->is_zero())) d[t] = coef;
     } else {
         // TODO: remove the item if d[t] + coef is zero:
-        d[t] = d[t] + coef;
+        iaddint(outArg(d[t]), coef);
     }
 }
 
-} // CSymPy
-
-namespace {
-
-using CSymPy::Basic;
-using CSymPy::Add;
-using CSymPy::Integer;
 
 void as_coef_term(const RCP<Basic> &self, const Ptr<RCP<Integer>> &coef,
         const Ptr<RCP<Basic>> &term)
@@ -134,9 +127,7 @@ void as_coef_term(const RCP<Basic> &self, const Ptr<RCP<Integer>> &coef,
     }
 }
 
-} // Anonymous
-
-RCP<Basic> operator+(const RCP<Basic> &a, const RCP<Basic> &b)
+RCP<Basic> add(const RCP<Basic> &a, const RCP<Basic> &b)
 {
     CSymPy::Dict_int d;
     RCP<Integer> coef;
@@ -162,8 +153,4 @@ RCP<Basic> operator+(const RCP<Basic> &a, const RCP<Basic> &b)
     return Add::from_dict(d);
 }
 
-RCP<Basic> operator-(const RCP<Basic> &a, const RCP<Basic> &b)
-{
-//    return a + (-b);
-    throw std::runtime_error("Not implemented yet.");
-}
+} // CSymPy

@@ -80,13 +80,13 @@ void test_add()
     std::cout << *a << std::endl;
     std::cout << *b << std::endl;
 
-    RCP<Basic> r = (x + y) + (y + x);
+    RCP<Basic> r = add(add(x, y), add(y, x));
     std::cout << *r << std::endl;
 
-    r = x + x;
+    r = add(x, x);
     std::cout << *r << std::endl;
 
-    r = x + x + y;
+    r = add(add(x, x), y);
     std::cout << *r << std::endl;
     std::cout << "----------------------" << std::endl;
 }
@@ -98,26 +98,26 @@ void test_integer()
     std::cout << *i << std::endl;
     std::cout << *j << std::endl;
 
-    RCP<Integer> k = i + j;
+    RCP<Integer> k = addint(i, j);
     std::cout << *k << std::endl;
     assert(*k == *rcp(new Integer(11)));
     assert(*k != *rcp(new Integer(12)));
 
-    k = i - j;
+    k = subint(i, j);
     std::cout << *k << std::endl;
     assert(*k == *rcp(new Integer(-1)));
     assert(*k != *rcp(new Integer(12)));
 
-    k = i * j;
+    k = mulint(i, j);
     std::cout << *k << std::endl;
     assert(*k == *rcp(new Integer(30)));
     assert(*k != *rcp(new Integer(12)));
 
     // FIXME: this should return a Rational
-    k = i / j;
+    k = divint(i, j);
     std::cout << *k << std::endl;
 
-    k = -i;
+    k = negint(i);
     std::cout << *k << std::endl;
     assert(*k == *rcp(new Integer(-5)));
     assert(*k != *rcp(new Integer(12)));
@@ -137,7 +137,7 @@ void test_mul()
     std::cout << *a << std::endl;
     std::cout << *b << std::endl;
 
-    RCP<Basic> r = (x * y) * (y * x);
+    RCP<Basic> r = mul(mul(x, y), mul(y, x));
     std::cout << *r << std::endl;
 }
 

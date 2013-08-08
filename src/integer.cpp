@@ -7,10 +7,17 @@ Integer::Integer(int i)
     this->i = i;
 }
 
+Integer::Integer(mpz_class i)
+{
+    this->i = i;
+}
+
 std::size_t Integer::__hash__() const
 {
     std::hash<long long int> hash_fn;
-    return hash_fn(this->i);
+    // only the least significant bits that fit into "signed long int" are
+    // hashed:
+    return hash_fn(this->i.get_si());
 }
 
 bool Integer::__eq__(const Basic &o) const
@@ -29,33 +36,12 @@ std::string Integer::__str__() const
     return s.str();
 }
 
+int Integer::as_int()
+{
+    if (!(this->i.fits_sint_p())) {
+        throw std::runtime_error("as_int: Integer larger than int");
+    }
+    return this->i.get_si();
+}
+
 } // CSymPy
-
-Teuchos::RCP<CSymPy::Integer> operator+(const Teuchos::RCP<CSymPy::Integer> &a,
-        const Teuchos::RCP<CSymPy::Integer> &b)
-{
-    return Teuchos::rcp(new CSymPy::Integer(a->i + b->i));
-}
-
-Teuchos::RCP<CSymPy::Integer> operator-(const Teuchos::RCP<CSymPy::Integer> &a,
-        const Teuchos::RCP<CSymPy::Integer> &b)
-{
-    return Teuchos::rcp(new CSymPy::Integer(a->i - b->i));
-}
-
-Teuchos::RCP<CSymPy::Integer> operator*(const Teuchos::RCP<CSymPy::Integer> &a,
-        const Teuchos::RCP<CSymPy::Integer> &b)
-{
-    return Teuchos::rcp(new CSymPy::Integer(a->i * b->i));
-}
-
-Teuchos::RCP<CSymPy::Integer> operator/(const Teuchos::RCP<CSymPy::Integer> &a,
-        const Teuchos::RCP<CSymPy::Integer> &b)
-{
-    return Teuchos::rcp(new CSymPy::Integer(a->i / b->i));
-}
-
-Teuchos::RCP<CSymPy::Integer> operator-(const Teuchos::RCP<CSymPy::Integer> &a)
-{
-    return Teuchos::rcp(new CSymPy::Integer(- (a->i)));
-}
