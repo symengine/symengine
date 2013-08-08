@@ -26,10 +26,15 @@ public:
             const Dict_int &d);
     static void dict_add_term(Dict_int &d,
             const Teuchos::RCP<Integer> &coef, const Teuchos::RCP<Basic> &t);
+    void as_two_terms(const Teuchos::Ptr<Teuchos::RCP<Basic>> &a,
+            const Teuchos::Ptr<Teuchos::RCP<Basic>> &b);
 };
 
 Teuchos::RCP<Basic> mul(const Teuchos::RCP<Basic> &a,
         const Teuchos::RCP<Basic> &b);
+
+
+Teuchos::RCP<Basic> mul_expand(const Teuchos::RCP<Mul> &self);
 
 } // CSymPy
 

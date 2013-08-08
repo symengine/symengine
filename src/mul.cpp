@@ -121,6 +121,17 @@ void Mul::as_coef_term(const Teuchos::Ptr<Teuchos::RCP<Basic>> &coef,
     *term = this->from_dict(one, this->dict);
 }
 
+void Mul::as_two_terms(const Teuchos::Ptr<RCP<Basic>> &a,
+            const Teuchos::Ptr<RCP<Basic>> &b)
+{
+    // Example: if this=3*x^2*y^2*z^2, then a=x^2 and b=3*y^2*z^2
+    auto p = this->dict.begin();
+    *a = pow(p->first, p->second);
+    Dict_int d = this->dict;
+    d.erase(p);
+    *b = Mul::from_dict(this->coef, d);
+}
+
 void as_base_exp(const RCP<Basic> &self, const Ptr<RCP<Integer>> &exp,
         const Ptr<RCP<Basic>> &base)
 {
@@ -169,6 +180,43 @@ RCP<Basic> mul(const RCP<Basic> &a, const RCP<Basic> &b)
         Mul::dict_add_term(d, exp, t);
     }
     return Mul::from_dict(coef, d);
+}
+
+RCP<Basic> mul_expand_two(const RCP<Basic> &a, const RCP<Basic> &b)
+{
+    // Both a and b are assumed to be expanded
+    if (is_a<Add>(*a) && is_a<Add>(*b)) {
+        throw std::runtime_error("Not implemented.");
+    } else if (is_a<Add>(*a)) {
+        throw std::runtime_error("Not implemented.");
+    } else if (is_a<Add>(*b)) {
+        Dict_int d;
+        RCP<Basic> coef;
+        RCP<Basic> tmp, tmp2, t;
+        for (auto &p: (rcp_dynamic_cast<Add>(b))->dict) {
+            tmp = mul(a, p.first);
+            if (!is_a<Mul>(*tmp)) throw std::runtime_error("Not implemented.");
+            rcp_dynamic_cast<Mul>(tmp)->as_coef_term(outArg(coef),
+                    outArg(tmp2));
+            if (!is_a<Integer>(*coef))
+                throw std::runtime_error("Not implemented.");
+            Add::dict_add_term(d,
+                    mulint(p.second, rcp_dynamic_cast<Integer>(coef)), tmp2);
+        }
+        return Add::from_dict(d);
+    }
+    return mul(a, b);
+}
+
+RCP<Basic> mul_expand(const RCP<Mul> &self)
+{
+    RCP<Basic> a, b;
+    self->as_two_terms(outArg(a), outArg(b));
+    // TODO: add single dispatch of expand() to basic.h, rename expand to
+    // pow_expand
+    //a = expand(a);
+    //b = expand(b);
+    return mul_expand_two(a, b);
 }
 
 } // CSymPy
