@@ -1,3 +1,5 @@
+project(teuchos)
+
 set(SRC
     Teuchos_dyn_cast.cpp
     Teuchos_Ptr.cpp
@@ -17,5 +19,7 @@ endif()
 
 # Configure Teuchos using our CMake options:
 configure_file(Teuchos_config.h.in Teuchos_config.h)
+# Include the config file:
+include_directories(${teuchos_BINARY_DIR})
 
 add_library(teuchos ${SRC})
