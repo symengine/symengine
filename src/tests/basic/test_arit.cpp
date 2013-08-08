@@ -144,6 +144,9 @@ void test_expand2()
 
     r2 = mul_expand(rcp_dynamic_cast<Mul>(r1));
     std::cout << *r2 << std::endl;
+
+    assert( eq(r2, add(add(mul(w, x), mul(w, y)), mul(w, z))));
+    assert(neq(r2, add(add(mul(w, x), mul(w, w)), mul(w, z))));
 }
 
 

@@ -129,7 +129,7 @@ void Mul::as_two_terms(const Teuchos::Ptr<RCP<Basic>> &a,
     auto p = this->dict.begin();
     *a = pow(p->first, p->second);
     Dict_int d = this->dict;
-    d.erase(p);
+    d.erase(p->first);
     *b = Mul::from_dict(this->coef, d);
 }
 
@@ -187,9 +187,10 @@ RCP<Basic> mul_expand_two(const RCP<Basic> &a, const RCP<Basic> &b)
 {
     // Both a and b are assumed to be expanded
     if (is_a<Add>(*a) && is_a<Add>(*b)) {
+        std::cout << *a << " | " << *b << std::endl;
         throw std::runtime_error("Not implemented.");
     } else if (is_a<Add>(*a)) {
-        throw std::runtime_error("Not implemented.");
+        return mul_expand_two(b, a);
     } else if (is_a<Add>(*b)) {
         Dict_int d;
         RCP<Basic> coef;
