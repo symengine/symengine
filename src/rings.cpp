@@ -14,8 +14,7 @@ using Teuchos::rcp_static_cast;
 
 namespace CSymPy {
 
-void expr2poly(const Teuchos::RCP<Basic> &p, Dict_int &syms,
-        map_vec_mpz &P)
+void expr2poly(const RCP<Basic> &p, Dict_int &syms, map_vec_mpz &P)
 {
     if (is_a<Add>(*p)) {
         int n = syms.size();
