@@ -30,6 +30,7 @@ using CSymPy::map_vec_mpz;
 using CSymPy::expr2poly;
 using CSymPy::vec_int;
 using CSymPy::monomial_mul;
+using CSymPy::poly_mul;
 
 void test_monomial_mul()
 {
@@ -67,10 +68,11 @@ void test_expand()
     syms[z] = rcp(new Integer(2));
     syms[w] = rcp(new Integer(3));
 
-    map_vec_mpz P1, P2;
+    map_vec_mpz P1, P2, C;
 
     expr2poly(f1, syms, P1);
     expr2poly(f2, syms, P2);
+    poly_mul(P1, P2, C);
 
 
     std::cout << *e << std::endl;
@@ -78,6 +80,8 @@ void test_expand()
     std::cout << P1 << std::endl;
     std::cout << *f2 << std::endl;
     std::cout << P2 << std::endl;
+    std::cout << "RESULT:" << std::endl;
+    std::cout << C << std::endl;
 }
 
 int main(int argc, char* argv[])
