@@ -1,0 +1,12 @@
+#ifndef CSYMPY_MONOMIALS_H
+#define CSYMPY_MONOMIALS_H
+
+#include "dict.h"
+
+namespace CSymPy {
+
+void monomial_mul(const vec_int &A, const vec_int &B, const vec_int &C);
+
+} // CSymPy
+
+#endif
