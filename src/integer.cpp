@@ -39,8 +39,11 @@ std::string Integer::__str__() const
     return s.str();
 }
 
-int Integer::as_int()
+signed long int Integer::as_int()
 {
+    // get_si() returns "signed long int", so that's what we return from
+    // "as_int()" and we leave it to the user to do any possible further integer
+    // conversions.
     if (!(this->i.fits_sint_p())) {
         throw std::runtime_error("as_int: Integer larger than int");
     }
