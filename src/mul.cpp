@@ -190,6 +190,7 @@ RCP<Basic> mul_expand_two(const RCP<Basic> &a, const RCP<Basic> &b)
         Dict_int d;
         for (auto &p: (rcp_dynamic_cast<Add>(a))->dict) {
             for (auto &q: (rcp_dynamic_cast<Add>(b))->dict) {
+                // The main bottleneck here is the mul(p.first, q.first) command
                 Add::dict_add_term(d, mulint(p.second, q.second),
                         mul(p.first, q.first));
             }
