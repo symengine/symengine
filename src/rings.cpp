@@ -61,12 +61,7 @@ void poly_mul(const map_vec_mpz &A, const map_vec_mpz &B, map_vec_mpz &C)
     for (auto &a: A) {
         for (auto &b: B) {
             monomial_mul(a.first, b.first, exp);
-            auto e = C.find(exp);
-            if (e == C.end()) {
-                C[exp] = a.second*b.second;
-            } else {
-                (e->second) += a.second*b.second;
-            }
+            C[exp] += a.second*b.second;
         }
     }
 }
