@@ -36,6 +36,10 @@ find_package(GMP REQUIRED)
 include_directories(${GMP_INCLUDE_DIRS})
 set(LIBS ${LIBS} ${GMP_LIBRARIES})
 
+# Python
+set(WITH_PYTHON no
+    CACHE BOOL "Build with Python wrappers")
+
 # BFD
 set(WITH_BFD yes
     CACHE BOOL "Build with BFD (binutils-dev) support")
@@ -54,6 +58,16 @@ endif()
 
 enable_testing()
 add_subdirectory(src)
+
+if (WITH_PYTHON)
+    # We need to execute the find_package() commands here, so that the
+    # variables like ${PYTHON_INSTALL_PATH} are defined here and in all cmake
+    # files (as opposed to just subset of cmake files).
+    find_package(Python REQUIRED)
+    find_package(Cython REQUIRED)
+    add_subdirectory(csympy)
+endif ()
+
 
 message("\n")
 message("Configuration results")
@@ -75,3 +89,6 @@ if (WITH_BFD)
     message("BFD_INCLUDE_DIRS: ${BFD_INCLUDE_DIRS}")
     message("BFD_LIBRARIES: ${BFD_LIBRARIES}")
 endif()
+if (WITH_PYTHON)
+    message("Python install path: ${PYTHON_INSTALL_PATH}")
+endif ()
