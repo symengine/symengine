@@ -63,6 +63,8 @@ macro(CYTHON_ADD_MODULE_PYX name)
     else(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${name}.pxd)
         set(DEPENDS ${name}.pyx)
     endif(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${name}.pxd)
+    # Allow the user to specify dependencies as optional arguments
+    set(DEPENDS ${DEPENDS} ${ARGN})
     add_custom_command(
         OUTPUT ${name}.cpp
         COMMAND ${CYTHON_BIN}
