@@ -5,7 +5,7 @@ set(SRC
 include_directories(${PYTHON_INCLUDE_PATH})
 include_directories(${csympy_BINARY_DIR}/src ${teuchos_BINARY_DIR})
 
-cython_add_module_pyx(csympy_wrapper)
+cython_add_module_pyx(csympy_wrapper csympy.pxd)
 add_python_library(csympy_wrapper ${SRC})
 target_link_libraries(csympy_wrapper csympy teuchos ${LIBS})
 
