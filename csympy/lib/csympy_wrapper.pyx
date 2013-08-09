@@ -25,6 +25,11 @@ cdef class Basic(object):
     def __richcmp__(Basic self not None, Basic other not None, int op):
         if (op == 2):
             return csympy.eq(self.thisptr, other.thisptr)
+        elif (op == 3):
+            return csympy.neq(self.thisptr, other.thisptr)
+        else:
+            raise Exception("Operation not implemented.")
+
 
 cdef class Symbol(Basic):
 
