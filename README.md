@@ -38,6 +38,11 @@ Here are some of the `CMake` options that you can use to configure the build:
         .
 
 `CMake` prints the value of its options at the end of the run.
+If you want to use a different compiler, do:
+
+    CXX=clang cmake .
+
+and check that CMake picked it up.
 
 ## Developer Documentation
 
