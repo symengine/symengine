@@ -1,6 +1,6 @@
 from nose.tools import raises
 
-from csympy import Symbol, Integer
+from csympy import Symbol, Integer, Add, Pow
 
 def test_arit1():
     x = Symbol("x")
@@ -21,6 +21,9 @@ def test_arit2():
     assert x+x+x == 3*x
     assert x+y+x+x == 3*x+y
 
+    assert not x+x == 3*x
+    assert not x+x != 2*x
+
 @raises(TypeError)
 def test_arit3():
     x = Symbol("x")
@@ -39,6 +42,9 @@ def test_arit5():
     x = Symbol("x")
     y = Symbol("y")
     e = (x+y)**2
+    f = e.expand()
     assert e == (x+y)**2
     assert e != x**2 + 2*x*y + y**2
-    assert e.expand() == x**2 + 2*x*y + y**2
+    assert isinstance(e, Pow)
+    assert f == x**2 + 2*x*y + y**2
+    assert isinstance(f, Add)
