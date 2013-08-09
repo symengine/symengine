@@ -16,7 +16,7 @@ using Teuchos::rcp_static_cast;
 
 namespace CSymPy {
 
-void expr2poly(const RCP<Basic> &p, Dict_int &syms, map_vec_mpz &P)
+void expr2poly(const RCP<Basic> &p, Dict_int &syms, umap_vec_mpz &P)
 {
     if (is_a<Add>(*p)) {
         int n = syms.size();
@@ -53,17 +53,35 @@ void expr2poly(const RCP<Basic> &p, Dict_int &syms, map_vec_mpz &P)
     }
 }
 
-void poly_mul(const map_vec_mpz &A, const map_vec_mpz &B, map_vec_mpz &C)
+void poly_mul(const umap_vec_mpz &A, const umap_vec_mpz &B, umap_vec_mpz &C)
 {
     vec_int exp;
     int n = (A.begin()->first).size();
     exp.assign(n, 0); // Initialize to [0]*n
+    /*
+    std::cout << "A: " << A.load_factor() << " " << A.bucket_count() << " " << A.size() << " "
+        << A.max_bucket_count() << std::endl;
+    std::cout << "B: " << B.load_factor() << " " << B.bucket_count() << " " << B.size() << " "
+        << B.max_bucket_count() << std::endl;
+    std::cout << "C: " << C.load_factor() << " " << C.bucket_count() << " " << C.size() << " "
+        << C.max_bucket_count() << std::endl;
+        */
     for (auto &a: A) {
         for (auto &b: B) {
             monomial_mul(a.first, b.first, exp);
             C[exp] += a.second*b.second;
         }
     }
+    /*
+    std::cout << "C: " << C.load_factor() << " " << C.bucket_count() << " " << C.size() << " "
+        << C.max_bucket_count() << std::endl;
+    for (std::size_t n=0; n < C.bucket_count(); n++) {
+        std::cout << n << ": " << C.bucket_size(n) << "|";
+        for (auto it = C.begin(n); it != C.end(n); ++it)
+            std::cout << " " << it->first << myhash2(it->first) % C.bucket_count();
+        std::cout << std::endl;
+    }
+    */
 }
 
 } // CSymPy
