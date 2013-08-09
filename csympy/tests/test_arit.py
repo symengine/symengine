@@ -34,3 +34,10 @@ def test_arit4():
     assert x*y == y*x
     assert x*x*x == x**3
     assert x*y*x*x == x**3*y
+
+def test_arit5():
+    x = Symbol("x")
+    y = Symbol("y")
+    e = (x+y)**2
+    assert e == (x+y)**2
+    assert e != x**2 + 2*x*y + y**2
