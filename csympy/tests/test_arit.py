@@ -1,3 +1,5 @@
+from nose.tools import raises
+
 from csympy import Symbol, Integer
 
 def test_arit1():
@@ -14,3 +16,9 @@ def test_arit2():
     assert x+x == Integer(2) * x
     assert x+x != Integer(3) * x
     assert x+x == 2 * x
+
+@raises(TypeError)
+def test_arit3():
+    x = Symbol("x")
+    y = Symbol("y")
+    e = "x"*x
