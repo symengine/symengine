@@ -1,1 +1,1 @@
-from lib.csympy_wrapper import Symbol, Integer, sympify
+from lib.csympy_wrapper import Symbol, Integer, sympify, SympifyError

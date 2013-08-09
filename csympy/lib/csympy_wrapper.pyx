@@ -2,6 +2,9 @@ from cython.operator cimport dereference as deref
 cimport csympy
 from csympy cimport rcp, RCP
 
+class SympifyError(Exception):
+    pass
+
 cdef c2py(RCP[csympy.Basic] o):
     cdef Basic r
     if (csympy.is_a_Add(deref(o))):
@@ -20,7 +23,7 @@ def sympify(a, raise_error=True):
         return Integer(a)
     else:
         if raise_error:
-            raise Exception("Cannot convert '%r' to a csympy type." % a)
+            raise SympifyError("Cannot convert '%r' to a csympy type." % a)
 
 cdef class Basic(object):
     cdef RCP[csympy.Basic] thisptr
