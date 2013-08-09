@@ -19,8 +19,9 @@ cdef extern from "basic.h" namespace "CSymPy":
     bool eq(RCP[Basic] &a, RCP[Basic] &b) nogil except +
     bool neq(RCP[Basic] &a, RCP[Basic] &b) nogil except +
 
-    bool is_a_Add "CSymPy::is_a<CSymPy::Add>"(const Basic &b)
-    bool is_a_Mul "CSymPy::is_a<CSymPy::Mul>"(const Basic &b)
+    bool is_a_Add "CSymPy::is_a<CSymPy::Add>"(const Basic &b) nogil
+    bool is_a_Mul "CSymPy::is_a<CSymPy::Mul>"(const Basic &b) nogil
+    bool is_a_Pow "CSymPy::is_a<CSymPy::Pow>"(const Basic &b) nogil
 
 
 cdef extern from "symbol.h" namespace "CSymPy":
@@ -45,6 +46,12 @@ cdef extern from "mul.h" namespace "CSymPy":
     cdef RCP[Basic] mul(RCP[Basic] &a, RCP[Basic] &b) nogil except+
 
     cdef cppclass Mul(Basic):
+        pass
+
+cdef extern from "pow.h" namespace "CSymPy":
+    cdef RCP[Basic] pow(RCP[Basic] &a, RCP[Basic] &b) nogil except+
+
+    cdef cppclass Pow(Basic):
         pass
 
 
