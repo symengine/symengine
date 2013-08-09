@@ -11,6 +11,9 @@ cdef class Symbol(Basic):
     def __cinit__(self, name):
         self.thisptr = rcp(new csympy.Symbol(name))
 
+    def __dealloc__(self):
+        self.thisptr.reset()
+
     def __str__(self):
         return deref(self.thisptr).__str__()
 
@@ -19,6 +22,9 @@ cdef class Integer(Basic):
 
     def __cinit__(self, name):
         self.thisptr = rcp(new csympy.Integer(name))
+
+    def __dealloc__(self):
+        self.thisptr.reset()
 
     def __str__(self):
         return deref(self.thisptr).__str__()
