@@ -22,6 +22,10 @@ cdef class Basic(object):
     def __mul__(Basic self not None, Basic other not None):
         return c2py(csympy.mul(self.thisptr, other.thisptr))
 
+    def __richcmp__(Basic self not None, Basic other not None, int op):
+        if (op == 2):
+            return csympy.eq(self.thisptr, other.thisptr)
+
 cdef class Symbol(Basic):
 
     def __cinit__(self, name):

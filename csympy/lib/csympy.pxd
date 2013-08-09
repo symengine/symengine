@@ -16,6 +16,8 @@ cdef extern from "basic.h" namespace "CSymPy":
     cdef cppclass Basic:
         string __str__() nogil except +
 
+    bool eq(RCP[Basic] &a, RCP[Basic] &b) nogil except +
+
     bool is_a_Add "CSymPy::is_a<CSymPy::Add>"(const Basic &b)
     bool is_a_Mul "CSymPy::is_a<CSymPy::Mul>"(const Basic &b)
 
