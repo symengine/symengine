@@ -9,12 +9,12 @@ namespace CSymPy {
 class Add : public Basic {
 public: // TODO: make this private
     Teuchos::RCP<Basic> coef; // The coefficient (e.g. "2" in 2+x+y)
-    Dict_int dict;
+    Dict_int dict; // the dictionary of the rest (e.g. "x+y" in 2+x+y)
 
 public:
     // Constructs Add from a dictionary by copying the contents of the
     // dictionary:
-    Add(const Dict_int& dict);
+    Add(const Teuchos::RCP<Basic> &coef, const Dict_int& dict);
     virtual std::size_t __hash__() const;
     virtual bool __eq__(const Basic &o) const;
     virtual std::string __str__() const;
