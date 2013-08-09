@@ -75,5 +75,6 @@ std::ostream& operator<<(std::ostream& out, const CSymPy::Dict_int& d);
 std::ostream& operator<<(std::ostream& out, const CSymPy::vec_int& d);
 std::ostream& operator<<(std::ostream& out, const CSymPy::map_vec_int& d);
 std::ostream& operator<<(std::ostream& out, const CSymPy::map_vec_mpz& d);
+std::ostream& operator<<(std::ostream& out, const CSymPy::umap_vec_mpz& d);
 
 #endif
