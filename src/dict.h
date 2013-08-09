@@ -46,11 +46,35 @@ typedef std::vector<int> vec_int;
 typedef std::map<vec_int, long long int> map_vec_int;
 typedef std::map<vec_int, mpz_class> map_vec_mpz;
 
+
+// Part of umap_vec_mpz:
+typedef struct
+{
+    inline std::size_t operator() (const vec_int &k) const {
+        std::size_t h = 0;
+        for (auto &p: k) {
+            h = (h << 4) + p;
+        }
+        return h;
+    }
+} vec_int_hash;
+
+typedef struct
+{
+    inline bool operator() (const vec_int &x, const vec_int &y) const {
+        return x == y;
+    }
+} vec_int_eq;
+
+typedef std::unordered_map<vec_int, mpz_class,
+        vec_int_hash, vec_int_eq> umap_vec_mpz;
+
 } // CSymPy
 
 std::ostream& operator<<(std::ostream& out, const CSymPy::Dict_int& d);
 std::ostream& operator<<(std::ostream& out, const CSymPy::vec_int& d);
 std::ostream& operator<<(std::ostream& out, const CSymPy::map_vec_int& d);
 std::ostream& operator<<(std::ostream& out, const CSymPy::map_vec_mpz& d);
+std::ostream& operator<<(std::ostream& out, const CSymPy::umap_vec_mpz& d);
 
 #endif
