@@ -4,6 +4,7 @@ def test_symbol():
     x = Symbol("x")
     assert str(x) == "x"
     assert str(x) != "y"
+    assert repr(x) == str(x)
 
 def test_var():
     var("z")

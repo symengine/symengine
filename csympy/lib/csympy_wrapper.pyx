@@ -33,6 +33,9 @@ cdef class Basic(object):
     def __str__(self):
         return deref(self.thisptr).__str__()
 
+    def __repr__(self):
+        return self.__str__()
+
     def __add__(Basic self not None, Basic other not None):
         return c2py(csympy.add(self.thisptr, other.thisptr))
 
