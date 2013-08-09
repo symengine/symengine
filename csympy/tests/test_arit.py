@@ -41,3 +41,4 @@ def test_arit5():
     e = (x+y)**2
     assert e == (x+y)**2
     assert e != x**2 + 2*x*y + y**2
+    assert e.expand() == x**2 + 2*x*y + y**2

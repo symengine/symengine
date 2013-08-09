@@ -23,6 +23,8 @@ cdef extern from "basic.h" namespace "CSymPy":
     bool is_a_Mul "CSymPy::is_a<CSymPy::Mul>"(const Basic &b) nogil
     bool is_a_Pow "CSymPy::is_a<CSymPy::Pow>"(const Basic &b) nogil
 
+    RCP[Basic] expand(const RCP[Basic] &o) nogil except +
+
 
 cdef extern from "symbol.h" namespace "CSymPy":
     cdef cppclass Symbol(Basic):

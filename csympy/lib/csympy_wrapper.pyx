@@ -54,6 +54,9 @@ cdef class Basic(object):
         else:
             raise Exception("Operation not implemented.")
 
+    def expand(Basic self not None):
+        return c2py(csympy.expand(self.thisptr))
+
 
 cdef class Symbol(Basic):
 
