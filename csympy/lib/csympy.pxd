@@ -50,5 +50,5 @@ cdef extern from "mul.h" namespace "CSymPy":
 
 cdef extern from "basic.h" namespace "Teuchos":
     # We need to specialize these for our classes:
-    cdef RCP[Basic] rcp(Symbol *p) nogil
-    cdef RCP[Basic] rcp(Integer *p) nogil
+    RCP[Basic] rcp(Symbol *p) nogil
+    RCP[Basic] rcp(Integer *p) nogil
