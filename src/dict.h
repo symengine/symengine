@@ -50,10 +50,10 @@ typedef std::map<vec_int, mpz_class> map_vec_mpz;
 // Part of umap_vec_mpz:
 typedef struct
 {
-    long operator() (const vec_int &k) const {
+    inline std::size_t operator() (const vec_int &k) const {
         std::size_t h = 0;
         for (auto &p: k) {
-            h = 30*h + p;
+            h = (h << 4) + p;
         }
         return h;
     }
@@ -61,7 +61,7 @@ typedef struct
 
 typedef struct
 {
-    bool operator() (const vec_int &x, const vec_int &y) const {
+    inline bool operator() (const vec_int &x, const vec_int &y) const {
         return x == y;
     }
 } vec_int_eq;
