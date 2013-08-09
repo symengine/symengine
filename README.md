@@ -28,6 +28,25 @@ Run tests:
 
     ctest
 
+### Python Wrappers
+
+The optional Python wrappers can be turned on by
+
+    cmake -DWITH_PYTHON=yes .
+    make
+
+Use CSymPy from Python as follows:
+
+    >>> from csympy import var
+    >>> var("x y z")
+    (x, y, z)
+    >>> e = (x+y+z)**2
+    >>> e.expand()
+    2x*z + x^2 + 2y*x + 2y*z + z^2 + y^2
+
+You can read Python tests in `csympy/tests` to see what features are
+implemented.
+
 ### CMake Options
 
 Here are some of the `CMake` options that you can use to configure the build:
@@ -35,6 +54,7 @@ Here are some of the `CMake` options that you can use to configure the build:
     cmake -DCMAKE_INSTALL_PREFIX:PATH="$ARTIFACT" \   # Installation prefix
         -DCMAKE_BUILD_TYPE:STRING="Release" \         # Type of build, one of: Debug or Release
         -DWITH_BFD:BOOL=ON \                          # Install with BFD library (requires binutils-dev)
+        -DWITH_PYTHON:BOOL=ON \                       # Build Python wrappers
         .
 
 `CMake` prints the value of its options at the end of the run.
