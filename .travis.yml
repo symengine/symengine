@@ -18,6 +18,8 @@ env:
 before_install:
   - sudo apt-get update
   - sudo apt-get install libgmp-dev binutils-dev
+install:
+  - pip install cython --use-mirrors
 before_script:
   - if [ "${TEST_IN_TREE}" == "yes" ]; then
         export SOURCE_DIR=.;
