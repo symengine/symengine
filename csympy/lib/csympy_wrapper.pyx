@@ -3,18 +3,24 @@ cimport csympy
 from csympy cimport rcp, RCP
 
 cdef c2py(RCP[csympy.Basic] o):
-    cdef Add r
+    cdef Basic r
     if (csympy.is_a_Add(deref(o))):
         r = Add.__new__(Add)
-        r.thisptr = o
-        return r
-    raise Exception("Unsupported CSymPy class.")
+    elif (csympy.is_a_Mul(deref(o))):
+        r = Mul.__new__(Mul)
+    else:
+        raise Exception("Unsupported CSymPy class.")
+    r.thisptr = o
+    return r
 
 cdef class Basic(object):
     cdef RCP[csympy.Basic] thisptr
 
     def __add__(Basic self not None, Basic other not None):
         return c2py(csympy.add(self.thisptr, other.thisptr))
+
+    def __mul__(Basic self not None, Basic other not None):
+        return c2py(csympy.mul(self.thisptr, other.thisptr))
 
 cdef class Symbol(Basic):
 
@@ -39,6 +45,14 @@ cdef class Integer(Basic):
         return deref(self.thisptr).__str__()
 
 cdef class Add(Basic):
+
+    def __dealloc__(self):
+        self.thisptr.reset()
+
+    def __str__(self):
+        return deref(self.thisptr).__str__()
+
+cdef class Mul(Basic):
 
     def __dealloc__(self):
         self.thisptr.reset()

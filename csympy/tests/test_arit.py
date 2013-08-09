@@ -4,3 +4,4 @@ def test_arit():
     x = Symbol("x")
     y = Symbol("y")
     e = x + y
+    e = x * y

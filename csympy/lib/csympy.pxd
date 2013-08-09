@@ -17,6 +17,7 @@ cdef extern from "basic.h" namespace "CSymPy":
         string __str__() nogil except +
 
     bool is_a_Add "CSymPy::is_a<CSymPy::Add>"(const Basic &b)
+    bool is_a_Mul "CSymPy::is_a<CSymPy::Mul>"(const Basic &b)
 
 
 cdef extern from "symbol.h" namespace "CSymPy":
@@ -37,8 +38,14 @@ cdef extern from "add.h" namespace "CSymPy":
     cdef cppclass Add(Basic):
         pass
 
+cdef extern from "mul.h" namespace "CSymPy":
+    cdef RCP[Basic] mul(RCP[Basic] &a, RCP[Basic] &b) nogil except+
+
+    cdef cppclass Mul(Basic):
+        pass
+
 
 cdef extern from "basic.h" namespace "Teuchos":
     # We need to specialize these for our classes:
-    cdef RCP[Basic] rcp(Symbol *p)
-    cdef RCP[Basic] rcp(Integer *p)
+    cdef RCP[Basic] rcp(Symbol *p) nogil
+    cdef RCP[Basic] rcp(Integer *p) nogil
