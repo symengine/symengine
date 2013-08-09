@@ -48,3 +48,15 @@ def test_arit5():
     assert isinstance(e, Pow)
     assert f == x**2 + 2*x*y + y**2
     assert isinstance(f, Add)
+
+def test_arit6():
+    x = Symbol("x")
+    y = Symbol("y")
+    e = x + y
+    assert str(e) == "x + y" or "y + x"
+    e = x * y
+    assert str(e) == "x*y" or "y*x"
+    e = Integer(2)*x
+    assert str(e) == "2x"
+    e = 2*x
+    assert str(e) == "2x"
