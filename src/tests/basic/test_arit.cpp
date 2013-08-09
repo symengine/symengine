@@ -94,7 +94,7 @@ void test_multinomial()
 {
     map_vec_int r;
     auto t1 = std::chrono::high_resolution_clock::now();
-    multinomial_coefficients(4, 40, r);
+    multinomial_coefficients(4, 20, r);
     auto t2 = std::chrono::high_resolution_clock::now();
     std::cout
         << std::chrono::duration_cast<std::chrono::milliseconds>(t2-t1).count()
@@ -109,7 +109,7 @@ void test_expand1()
     RCP<Basic> w = rcp(new Symbol("w"));
     RCP<Basic> i2 = rcp(new Integer(2));
     RCP<Basic> i3 = rcp(new Integer(3));
-    RCP<Basic> i4 = rcp(new Integer(40));
+    RCP<Basic> i4 = rcp(new Integer(10));
 
     RCP<Basic> r1;
     RCP<Basic> r2;
