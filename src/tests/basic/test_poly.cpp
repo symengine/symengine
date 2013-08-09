@@ -71,7 +71,7 @@ void test_expand()
     syms[z] = rcp(new Integer(2));
     syms[w] = rcp(new Integer(3));
 
-    map_vec_mpz P1, P2, C;
+    umap_vec_mpz P1, P2, C;
 
     expr2poly(f1, syms, P1);
     expr2poly(f2, syms, P2);

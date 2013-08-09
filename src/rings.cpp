@@ -16,7 +16,7 @@ using Teuchos::rcp_static_cast;
 
 namespace CSymPy {
 
-void expr2poly(const RCP<Basic> &p, Dict_int &syms, map_vec_mpz &P)
+void expr2poly(const RCP<Basic> &p, Dict_int &syms, umap_vec_mpz &P)
 {
     if (is_a<Add>(*p)) {
         int n = syms.size();
@@ -53,7 +53,7 @@ void expr2poly(const RCP<Basic> &p, Dict_int &syms, map_vec_mpz &P)
     }
 }
 
-void poly_mul(const map_vec_mpz &A, const map_vec_mpz &B, map_vec_mpz &C)
+void poly_mul(const umap_vec_mpz &A, const umap_vec_mpz &B, umap_vec_mpz &C)
 {
     vec_int exp;
     int n = (A.begin()->first).size();
