@@ -51,12 +51,9 @@ typedef std::map<vec_int, mpz_class> map_vec_mpz;
 typedef struct
 {
     long operator() (const vec_int &k) const {
-        std::size_t h = 0, highorder;
+        std::size_t h = 0;
         for (auto &p: k) {
-            highorder = h & 0xf8000000;
-            h = h << 5;
-            h = h ^ (highorder >> 27);
-            h = h ^ p;
+            h = 30*h + p;
         }
         return h;
     }
