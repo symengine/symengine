@@ -31,9 +31,12 @@ cdef extern from "integer.h" namespace "CSymPy":
 cdef extern from "add.h" namespace "CSymPy":
     cdef RCP[Basic] add(RCP[Basic] &a, RCP[Basic] &b) nogil except+
 
+    cdef cppclass Add(Basic):
+        pass
+
 
 cdef extern from "basic.h" namespace "Teuchos":
     # We need to specialize these for our classes:
-    cdef RCP[Symbol] rcp(Symbol *p)
-    cdef RCP[Integer] rcp(Integer *p)
+    cdef RCP[Basic] rcp(Symbol *p)
+    cdef RCP[Basic] rcp(Integer *p)
 

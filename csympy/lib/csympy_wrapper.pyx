@@ -2,20 +2,19 @@ from cython.operator cimport dereference as deref
 cimport csympy
 from csympy cimport rcp, RCP
 
-cdef class Basic(object):
+cdef c2py(RCP[csympy.Basic] o):
+    # TODO: We need to determine the correct type:
+    cdef Add r = Add.__new__(Add)
+    r.thisptr = o
+    return r
 
-    cdef RCP[csympy.Basic] getptr(self):
-        pass
+cdef class Basic(object):
+    cdef RCP[csympy.Basic] thisptr
 
     def __add__(Basic self not None, Basic other not None):
-        cdef RCP[csympy.Basic] a = self.getptr()
-        cdef RCP[csympy.Basic] b = other.getptr()
-        cdef RCP[csympy.Basic] c = csympy.add(a, b)
-        s = deref(c).__str__()
-        return s
+        return c2py(csympy.add(self.thisptr, other.thisptr))
 
 cdef class Symbol(Basic):
-    cdef RCP[csympy.Symbol] thisptr
 
     def __cinit__(self, name):
         self.thisptr = rcp(new csympy.Symbol(name))
@@ -23,17 +22,21 @@ cdef class Symbol(Basic):
     def __dealloc__(self):
         self.thisptr.reset()
 
-    cdef RCP[csympy.Basic] getptr(self):
-        return <RCP[csympy.Basic]>self.thisptr
-
     def __str__(self):
         return deref(self.thisptr).__str__()
 
 cdef class Integer(Basic):
-    cdef RCP[csympy.Integer] thisptr
 
     def __cinit__(self, name):
         self.thisptr = rcp(new csympy.Integer(name))
+
+    def __dealloc__(self):
+        self.thisptr.reset()
+
+    def __str__(self):
+        return deref(self.thisptr).__str__()
+
+cdef class Add(Basic):
 
     def __dealloc__(self):
         self.thisptr.reset()
