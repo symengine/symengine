@@ -51,8 +51,11 @@ typedef std::map<vec_int, mpz_class> map_vec_mpz;
 typedef struct
 {
     long operator() (const vec_int &k) const {
-        // TODO: Calculate some good hash here:
-        return 5;
+        std::size_t seed = 0;
+        for (auto &p: k) {
+            hash_combine<int>(seed, p);
+        }
+        return seed;
     }
 } vec_int_hash;
 
