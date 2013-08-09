@@ -1,3 +1,4 @@
+from libcpp cimport bool
 from libcpp.string cimport string
 
 cdef extern from "basic.h" namespace "Teuchos":
@@ -14,6 +15,8 @@ cdef extern from "basic.h" namespace "Teuchos":
 cdef extern from "basic.h" namespace "CSymPy":
     cdef cppclass Basic:
         string __str__() nogil except +
+
+    bool is_a_Add "CSymPy::is_a<CSymPy::Add>"(const Basic &b)
 
 
 cdef extern from "symbol.h" namespace "CSymPy":
@@ -39,4 +42,3 @@ cdef extern from "basic.h" namespace "Teuchos":
     # We need to specialize these for our classes:
     cdef RCP[Basic] rcp(Symbol *p)
     cdef RCP[Basic] rcp(Integer *p)
-

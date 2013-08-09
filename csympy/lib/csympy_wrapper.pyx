@@ -3,10 +3,12 @@ cimport csympy
 from csympy cimport rcp, RCP
 
 cdef c2py(RCP[csympy.Basic] o):
-    # TODO: We need to determine the correct type:
-    cdef Add r = Add.__new__(Add)
-    r.thisptr = o
-    return r
+    cdef Add r
+    if (csympy.is_a_Add(deref(o))):
+        r = Add.__new__(Add)
+        r.thisptr = o
+        return r
+    raise Exception("Unsupported CSymPy class.")
 
 cdef class Basic(object):
     cdef RCP[csympy.Basic] thisptr
