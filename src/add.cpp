@@ -13,9 +13,9 @@ using Teuchos::rcp_dynamic_cast;
 
 namespace CSymPy {
 
-Add::Add(const Dict_int& dict)
+Add::Add(const RCP<Basic> &coef, const Dict_int& dict)
 {
-    this->coef = one;
+    this->coef = coef;
     this->dict = dict;
 }
 
@@ -86,7 +86,7 @@ RCP<Basic> Add::from_dict(const Dict_int &d)
         m[p->second] = one;
         return rcp(new Mul(one, m));
     } else {
-        return rcp(new Add(d));
+        return rcp(new Add(zero, d));
     }
 }
 

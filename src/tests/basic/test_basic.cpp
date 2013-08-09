@@ -19,6 +19,7 @@ using CSymPy::Symbol;
 using CSymPy::Dict_int;
 using CSymPy::Integer;
 using CSymPy::one;
+using CSymPy::zero;
 
 void test_symbol_hash()
 {
@@ -75,9 +76,9 @@ void test_add()
     m[x] = rcp(new Integer(2));
     m[y] = rcp(new Integer(3));
 
-    RCP<Add> a = rcp(new Add(m));
+    RCP<Add> a = rcp(new Add(zero, m));
     m[x] = rcp(new Integer(-2));
-    RCP<Add> b = rcp(new Add(m));
+    RCP<Add> b = rcp(new Add(zero, m));
     std::cout << *a << std::endl;
     std::cout << *b << std::endl;
 
