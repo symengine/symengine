@@ -13,14 +13,24 @@ cdef c2py(RCP[csympy.Basic] o):
     r.thisptr = o
     return r
 
+def sympify(a):
+    if isinstance(a, Basic):
+        return a
+    elif isinstance(a, (int, long)):
+        return Integer(a)
+    else:
+        raise Exception("Cannot convert '%r' to a csympy type." % a)
+
 cdef class Basic(object):
     cdef RCP[csympy.Basic] thisptr
 
     def __add__(Basic self not None, Basic other not None):
         return c2py(csympy.add(self.thisptr, other.thisptr))
 
-    def __mul__(Basic self not None, Basic other not None):
-        return c2py(csympy.mul(self.thisptr, other.thisptr))
+    def __mul__(a, b):
+        cdef Basic A = sympify(a)
+        cdef Basic B = sympify(b)
+        return c2py(csympy.mul(A.thisptr, B.thisptr))
 
     def __richcmp__(Basic self not None, Basic other not None, int op):
         if (op == 2):
