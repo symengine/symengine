@@ -6,6 +6,7 @@ using Teuchos::rcp;
 using Teuchos::null;
 
 class Mesh {
+public:
     int x, y;
 };
 
