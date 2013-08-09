@@ -6,6 +6,8 @@ cdef extern from "symbol.h" namespace "CSymPy":
         Symbol(string name)
         string __str__()
 
+cdef extern from "integer.h" namespace "CSymPy":
+
     cdef cppclass Integer:
         Integer(int i)
         string __str__()
