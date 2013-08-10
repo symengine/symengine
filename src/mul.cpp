@@ -15,17 +15,16 @@ using Teuchos::rcp_static_cast;
 namespace CSymPy {
 
 Mul::Mul(const Teuchos::RCP<Basic> &coef, const Dict_int& dict)
+    : coef_{coef}, dict_{dict}
 {
-    this->coef = coef;
-    this->dict = dict;
 }
 
 std::size_t Mul::__hash__() const
 {
     std::size_t seed = 0;
-    hash_combine<Basic>(seed, *(this->coef));
+    hash_combine<Basic>(seed, *coef_);
     std::map<RCP<Basic>, RCP<Integer>, RCPBasicKeyLess>
-        ordered(this->dict.begin(), this->dict.end());
+        ordered(dict_.begin(), dict_.end());
     for (auto &p: ordered) {
         hash_combine<Basic>(seed, *(p.first));
         hash_combine<Basic>(seed, *(p.second));
@@ -35,23 +34,20 @@ std::size_t Mul::__hash__() const
 
 bool Mul::__eq__(const Basic &o) const
 {
-    if (is_a<Mul>(o)) {
-        const Mul &s = static_cast<const Mul &>(o);
-        if (eq(this->coef, (s.coef))) {
-            if (dicts_equal(this->dict, s.dict)) {
-                return true;
-            }
-        }
-    }
+    if (is_a<Mul>(o) &&
+        eq(coef_, static_cast<const Mul &>(o).coef_) &&
+        dicts_equal(dict_, static_cast<const Mul &>(o).dict_))
+        return true;
+
     return false;
 }
 
 std::string Mul::__str__() const
 {
     std::ostringstream o;
-    if (neq(this->coef, one))
-        o << *(this->coef);
-    for (auto &p: this->dict) {
+    if (neq(coef_, one))
+        o << *coef_;
+    for (auto &p: dict_) {
         if (is_a<Add>(*p.first)) o << "(";
         o << *(p.first);
         if (is_a<Add>(*p.first)) o << ")";
@@ -119,19 +115,19 @@ void Mul::dict_add_term(Dict_int &d, const RCP<Integer> &exp,
 void Mul::as_coef_term(const Teuchos::Ptr<Teuchos::RCP<Basic>> &coef,
             const Teuchos::Ptr<Teuchos::RCP<Basic>> &term)
 {
-    *coef = this->coef;
-    *term = this->from_dict(one, this->dict);
+    *coef = coef_;
+    *term = from_dict(one, dict_);
 }
 
 void Mul::as_two_terms(const Teuchos::Ptr<RCP<Basic>> &a,
             const Teuchos::Ptr<RCP<Basic>> &b)
 {
     // Example: if this=3*x^2*y^2*z^2, then a=x^2 and b=3*y^2*z^2
-    auto p = this->dict.begin();
+    auto p = dict_.begin();
     *a = pow(p->first, p->second);
-    Dict_int d = this->dict;
+    Dict_int d = dict_;
     d.erase(p->first);
-    *b = Mul::from_dict(this->coef, d);
+    *b = Mul::from_dict(coef_, d);
 }
 
 void as_base_exp(const RCP<Basic> &self, const Ptr<RCP<Integer>> &exp,
@@ -145,8 +141,8 @@ void as_base_exp(const RCP<Basic> &self, const Ptr<RCP<Integer>> &exp,
         *base = self;
     } else if (is_a<Pow>(*self)) {
         // NOTE: this will raise an exception if `exp` is not Integer
-        *exp = rcp_dynamic_cast<Integer>(rcp_dynamic_cast<Pow>(self)->exp);
-        *base = rcp_dynamic_cast<Pow>(self)->base;
+        *exp = rcp_dynamic_cast<Integer>(rcp_dynamic_cast<Pow>(self)->exp_);
+        *base = rcp_dynamic_cast<Pow>(self)->base_;
     } else if (is_a<Add>(*self)) {
         *exp = one;
         *base = self;
@@ -161,21 +157,21 @@ RCP<Basic> mul(const RCP<Basic> &a, const RCP<Basic> &b)
     CSymPy::Dict_int d;
     RCP<Basic> coef = one;
     if (CSymPy::is_a<Mul>(*a) && CSymPy::is_a<Mul>(*b)) {
-        d = (rcp_static_cast<Mul>(a))->dict;
-        for (auto &p: (rcp_static_cast<Mul>(b))->dict)
+        d = (rcp_static_cast<Mul>(a))->dict_;
+        for (auto &p: (rcp_static_cast<Mul>(b))->dict_)
             Mul::dict_add_term(d, p.second, p.first);
     } else if (CSymPy::is_a<Mul>(*a)) {
         RCP<Integer> exp;
         RCP<Basic> t;
-        coef = (rcp_static_cast<Mul>(a))->coef;
-        d = (rcp_static_cast<Mul>(a))->dict;
+        coef = (rcp_static_cast<Mul>(a))->coef_;
+        d = (rcp_static_cast<Mul>(a))->dict_;
         as_base_exp(b, outArg(exp), outArg(t));
         Mul::dict_add_term(d, exp, t);
     } else if (CSymPy::is_a<Mul>(*b)) {
         RCP<Integer> exp;
         RCP<Basic> t;
-        coef = (rcp_static_cast<Mul>(b))->coef;
-        d = (rcp_static_cast<Mul>(b))->dict;
+        coef = (rcp_static_cast<Mul>(b))->coef_;
+        d = (rcp_static_cast<Mul>(b))->dict_;
         as_base_exp(a, outArg(exp), outArg(t));
         Mul::dict_add_term(d, exp, t);
     } else {
@@ -194,8 +190,8 @@ RCP<Basic> mul_expand_two(const RCP<Basic> &a, const RCP<Basic> &b)
     // Both a and b are assumed to be expanded
     if (is_a<Add>(*a) && is_a<Add>(*b)) {
         Dict_int d;
-        for (auto &p: (rcp_dynamic_cast<Add>(a))->dict) {
-            for (auto &q: (rcp_dynamic_cast<Add>(b))->dict) {
+        for (auto &p: (rcp_dynamic_cast<Add>(a))->dict_) {
+            for (auto &q: (rcp_dynamic_cast<Add>(b))->dict_) {
                 // The main bottleneck here is the mul(p.first, q.first) command
                 Add::dict_add_term(d, mulint(p.second, q.second),
                         mul(p.first, q.first));
@@ -207,7 +203,7 @@ RCP<Basic> mul_expand_two(const RCP<Basic> &a, const RCP<Basic> &b)
     } else if (is_a<Add>(*b)) {
         Dict_int d;
         RCP<Basic> coef, tmp;
-        for (auto &p: (rcp_dynamic_cast<Add>(b))->dict) {
+        for (auto &p: (rcp_dynamic_cast<Add>(b))->dict_) {
             tmp = mul(a, p.first);
             if (is_a<Mul>(*tmp)) {
                 rcp_dynamic_cast<Mul>(tmp)->as_coef_term(outArg(coef),
