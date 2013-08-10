@@ -36,8 +36,11 @@ cdef class Basic(object):
     def __repr__(self):
         return self.__str__()
 
-    def __add__(Basic self not None, Basic other not None):
-        return c2py(csympy.add(self.thisptr, other.thisptr))
+    def __add__(a, b):
+        cdef Basic A = sympify(a, False)
+        cdef Basic B = sympify(b, False)
+        if A is None or B is None: return NotImplemented
+        return c2py(csympy.add(A.thisptr, B.thisptr))
 
     def __mul__(a, b):
         cdef Basic A = sympify(a, False)
