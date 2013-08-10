@@ -7,7 +7,7 @@ namespace CSymPy {
 
 class Symbol : public Basic {
 private:
-    std::string name;
+    std::string name_;
 
 public:
     Symbol(const std::string &name);

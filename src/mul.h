@@ -8,8 +8,8 @@ namespace CSymPy {
 
 class Mul : public Basic {
 public: // TODO: make this private
-    Teuchos::RCP<Basic> coef; // The coefficient (e.g. "2" in 2*x*y)
-    Dict_int dict;   // the dictionary of the rest (e.g. "x*y" in 2*x*y)
+    Teuchos::RCP<Basic> coef_; // The coefficient (e.g. "2" in 2*x*y)
+    Dict_int dict_;   // the dictionary of the rest (e.g. "x*y" in 2*x*y)
 
 public:
     // Constructs Mul from a dictionary by copying the contents of the

@@ -14,17 +14,16 @@ using Teuchos::rcp_dynamic_cast;
 namespace CSymPy {
 
 Add::Add(const RCP<Basic> &coef, const Dict_int& dict)
+    : coef_{coef}, dict_{dict}
 {
-    this->coef = coef;
-    this->dict = dict;
 }
 
 std::size_t Add::__hash__() const
 {
     std::size_t seed = 0;
-    hash_combine<Basic>(seed, *(this->coef));
+    hash_combine<Basic>(seed, *coef_);
     std::map<RCP<Basic>, RCP<Integer>, RCPBasicKeyLess>
-        ordered(this->dict.begin(), this->dict.end());
+        ordered(dict_.begin(), dict_.end());
     for (auto &p: ordered) {
         hash_combine<Basic>(seed, *(p.first));
         hash_combine<Basic>(seed, *(p.second));
@@ -34,21 +33,18 @@ std::size_t Add::__hash__() const
 
 bool Add::__eq__(const Basic &o) const
 {
-    if (is_a<Add>(o)) {
-        const Add &s = static_cast<const Add &>(o);
-        if (eq(this->coef, s.coef)) {
-            if (dicts_equal(this->dict, s.dict)) {
-                return true;
-            }
-        }
-    }
+    if (is_a<Add>(o) &&
+        eq(coef_, static_cast<const Add &>(o).coef_) &&
+        dicts_equal(dict_, static_cast<const Add &>(o).dict_))
+        return true;
+
     return false;
 }
 
 std::string Add::__str__() const
 {
     std::ostringstream o;
-    for (auto &p: this->dict) {
+    for (auto &p: dict_) {
         if (eq(p.second, one))
             o << *(p.first);
         else
@@ -73,7 +69,7 @@ RCP<Basic> Add::from_dict(const Dict_int &d)
             }
             if (is_a<Mul>(*(p->first))) {
                 return Mul::from_dict(p->second,
-                        rcp_dynamic_cast<Mul>(p->first)->dict);
+                        rcp_dynamic_cast<Mul>(p->first)->dict_);
             }
             Dict_int m;
             m[p->first] = one;
@@ -133,15 +129,15 @@ RCP<Basic> add(const RCP<Basic> &a, const RCP<Basic> &b)
     RCP<Integer> coef;
     RCP<Basic> t;
     if (CSymPy::is_a<Add>(*a) && CSymPy::is_a<Add>(*b)) {
-        d = (rcp_dynamic_cast<Add>(a))->dict;
-        for (auto &p: (rcp_dynamic_cast<Add>(b))->dict)
+        d = (rcp_dynamic_cast<Add>(a))->dict_;
+        for (auto &p: (rcp_dynamic_cast<Add>(b))->dict_)
             Add::dict_add_term(d, p.second, p.first);
     } else if (CSymPy::is_a<Add>(*a)) {
-        d = (rcp_dynamic_cast<Add>(a))->dict;
+        d = (rcp_dynamic_cast<Add>(a))->dict_;
         as_coef_term(b, outArg(coef), outArg(t));
         Add::dict_add_term(d, coef, t);
     } else if (CSymPy::is_a<Add>(*b)) {
-        d = (rcp_dynamic_cast<Add>(b))->dict;
+        d = (rcp_dynamic_cast<Add>(b))->dict_;
         as_coef_term(a, outArg(coef), outArg(t));
         Add::dict_add_term(d, coef, t);
     } else {
@@ -157,10 +153,10 @@ RCP<Basic> add_expand(const RCP<Add> &self)
 {
     Dict_int d;
     RCP<Basic> coef, tmp, tmp2;
-    for (auto &p: self->dict) {
+    for (auto &p: self->dict_) {
         tmp = expand(p.first);
         if (is_a<Add>(*tmp)) {
-            for (auto &q: (rcp_dynamic_cast<Add>(tmp))->dict) {
+            for (auto &q: (rcp_dynamic_cast<Add>(tmp))->dict_) {
                 tmp2 = q.first;
                 if (is_a<Mul>(*tmp2)) {
                     rcp_dynamic_cast<Mul>(tmp2)->as_coef_term(outArg(coef),

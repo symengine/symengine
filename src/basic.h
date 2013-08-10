@@ -86,10 +86,9 @@ namespace std
 {
     // Specialise std::hash for Basic. We just call Basic.__hash__()
     template<>
-    class hash<CSymPy::Basic> : public unary_function<CSymPy::Basic, size_t>
+    struct hash<CSymPy::Basic>
     {
-    public:
-        size_t operator()(const CSymPy::Basic& b)
+        std::size_t operator()(const CSymPy::Basic& b) const
         {
             return b.__hash__();
         }
