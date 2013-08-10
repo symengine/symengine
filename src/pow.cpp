@@ -15,39 +15,37 @@ using Teuchos::rcp_dynamic_cast;
 namespace CSymPy {
 
 Pow::Pow(const Teuchos::RCP<Basic> &base, const Teuchos::RCP<Basic> &exp)
+    : base_{base}, exp_{exp}
 {
-    this->base = base;
-    this->exp = exp;
 }
 
 std::size_t Pow::__hash__() const
 {
     std::size_t seed = 0;
-    hash_combine<Basic>(seed, *(this->base));
-    hash_combine<Basic>(seed, *(this->exp));
+    hash_combine<Basic>(seed, *base_);
+    hash_combine<Basic>(seed, *exp_);
     return seed;
 }
 
 bool Pow::__eq__(const Basic &o) const
 {
-    if (is_a<Pow>(o)) {
-        const Pow &s = static_cast<const Pow &>(o);
-        if (eq(this->base, s.base) && eq(this->exp, s.exp)) {
+    if (is_a<Pow>(o) &&
+        eq(base_, static_cast<const Pow &>(o).base_) &&
+        eq(exp_, static_cast<const Pow &>(o).exp_))
             return true;
-        }
-    }
+
     return false;
 }
 
 std::string Pow::__str__() const
 {
     std::ostringstream o;
-    if (is_a<Add>(*this->base)) {
-        o << "(" << *(this->base) << ")";
+    if (is_a<Add>(*base_)) {
+        o << "(" << *base_ << ")";
     } else {
-        o << *(this->base);
+        o << *base_;
     }
-    o << "^" << *(this->exp);
+    o << "^" << *exp_;
     return o.str();
 }
 
@@ -152,18 +150,18 @@ void multinomial_coefficients_mpz(int m, int n, map_vec_mpz &r)
 
 RCP<Basic> pow_expand(const RCP<Pow> &self)
 {
-    if (is_a<Integer>(*self->exp)) {
-        if (is_a<Add>(*self->base)) {
+    if (is_a<Integer>(*self->exp_)) {
+        if (is_a<Add>(*self->base_)) {
             map_vec_mpz r;
-            int n = rcp_dynamic_cast<Integer>(self->exp)->as_int();
+            int n = rcp_dynamic_cast<Integer>(self->exp_)->as_int();
 
-            RCP<Add> base = rcp_dynamic_cast<Add>(self->base);
-            int m = base->dict.size();
+            RCP<Add> base = rcp_dynamic_cast<Add>(self->base_);
+            int m = base->dict_.size();
             multinomial_coefficients_mpz(m, n, r);
             Dict_int rd;
             for (auto &p: r) {
                 auto power = p.first.begin();
-                auto i2 = base->dict.begin();
+                auto i2 = base->dict_.begin();
                 Dict_int d;
                 for (; power != p.first.end(); ++power, ++i2) {
                     if (*power > 0) {

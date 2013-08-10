@@ -8,7 +8,7 @@ namespace CSymPy {
 
 class Pow : public Basic {
 public: // TODO: make this private
-    Teuchos::RCP<Basic> base, exp; // base^exp
+    Teuchos::RCP<Basic> base_, exp_; // base^exp
 
 public:
     Pow(const Teuchos::RCP<Basic> &base, const Teuchos::RCP<Basic> &exp);

@@ -20,22 +20,22 @@ void expr2poly(const RCP<Basic> &p, Dict_int &syms, umap_vec_mpz &P)
 {
     if (is_a<Add>(*p)) {
         int n = syms.size();
-        Dict_int &d = rcp_static_cast<Add>(p)->dict;
+        Dict_int &d = rcp_static_cast<Add>(p)->dict_;
         vec_int exp;
         mpz_class coef;
         for (auto &p: d) {
             coef = p.second->as_mpz();
             exp.assign(n, 0); // Initialize to [0]*n
             if (is_a<Mul>(*p.first)) {
-                Dict_int &term = rcp_static_cast<Mul>(p.first)->dict;
+                Dict_int &term = rcp_static_cast<Mul>(p.first)->dict_;
                 for (auto &q: term) {
                     RCP<Basic> sym = q.first;
                     int i = syms[sym]->as_int();
                     exp[i] = q.second->as_int();
                 }
             } else if (is_a<Pow>(*p.first)) {
-                RCP<Basic> sym = rcp_static_cast<Pow>(p.first)->base;
-                RCP<Basic> exp_ = rcp_static_cast<Pow>(p.first)->exp;
+                RCP<Basic> sym = rcp_static_cast<Pow>(p.first)->base_;
+                RCP<Basic> exp_ = rcp_static_cast<Pow>(p.first)->exp_;
                 int i = syms[sym]->as_int();
                 exp[i] = rcp_dynamic_cast<Integer>(exp_)->as_int();
             } else if (is_a<Symbol>(*p.first)) {
