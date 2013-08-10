@@ -9,6 +9,8 @@ def test_arit1():
     e = x * y
     e = Integer(2)*x
     e = 2*x
+    e = x + 1
+    e = 1 + x
 
 def test_arit2():
     x = Symbol("x")
