@@ -8,6 +8,13 @@ include_directories(${csympy_BINARY_DIR}/src ${teuchos_BINARY_DIR})
 cython_add_module_pyx(csympy_wrapper csympy.pxd)
 add_python_library(csympy_wrapper ${SRC})
 target_link_libraries(csympy_wrapper csympy teuchos ${LIBS})
+if (CMAKE_CXX_COMPILER_ID STREQUAL GNU)
+  # Must suppress strick aliasing warnings for this file
+  set_source_files_properties(
+    csympy_wrapper.cpp
+    PROPERTIES COMPILE_FLAGS -fno-strict-aliasing
+    )
+endif()
 
 add_custom_target(cython
     COMMAND cython csympy_wrapper.pyx

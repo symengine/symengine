@@ -51,6 +51,10 @@ if (WITH_BFD)
     set(HAVE_TEUCHOS_BFD yes)
 endif()
 
+# CSYMPY_ASSERT
+set(WITH_CSYMPY_ASSERT no
+    CACHE BOOL "Enable CSYMPY_ASSERT macro")
+
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(HAVE_TEUCHOS_DEBUG yes)
     set(HAVE_TEUCHOS_DEBUG_RCP_NODE_TRACING yes)
@@ -81,6 +85,8 @@ else ()
     message("C++ compiler flags: ${CMAKE_CXX_FLAGS_RELEASE}")
 endif ()
 message("Installation prefix: ${CMAKE_INSTALL_PREFIX}")
+
+message("WITH_CSYMPY_ASSERT: ${WITH_CSYMPY_ASSERT}")
 
 message("GMP_INCLUDE_DIRS: ${GMP_INCLUDE_DIRS}")
 message("GMP_LIBRARIES: ${GMP_LIBRARIES}")

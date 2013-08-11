@@ -17,6 +17,11 @@ set(SRC
     rings.cpp
 )
 
+# Configure CSymPy using our CMake options:
+configure_file(csympy_config.h.in csympy_config.h)
+# Include the config file:
+include_directories(${csympy_BINARY_DIR}/src)
+
 add_library(csympy ${SRC})
 
 add_subdirectory(tests)
