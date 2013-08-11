@@ -102,11 +102,11 @@ RCP<CSymPy::Basic> Mul::from_dict(const RCP<Basic> &coef, const map_basic_int &d
 void Mul::dict_add_term(map_basic_int &d, const RCP<Integer> &exp,
         const RCP<Basic> &t)
 {
-    if (d.find(t) == d.end()) {
-        // "t" not found in "d":
+    auto it = d.find(t);
+    if (it == d.end()) {
         d[t] = exp;
     } else {
-        iaddint(outArg(d[t]), exp);
+        iaddint(outArg(it->second), exp);
     }
 }
 
