@@ -81,20 +81,7 @@ RCP<CSymPy::Basic> Mul::from_dict(const RCP<Basic> &coef, const map_basic_int &d
         // Otherwise create a Pow() here:
         return pow(p->first, p->second);
     } else {
-        CSymPy::map_basic_int d2;
-        // TODO: handle non-integer coefs like sqrt(2) here:
-        RCP<Integer> coef2 = rcp_dynamic_cast<Integer>(coef);
-        for (auto &p: d) {
-            if (is_a<Integer>(*(p.first)) && is_a<Integer>(*(p.second))) {
-                RCP<Integer> f = rcp_dynamic_cast<Integer>(p.first);
-                RCP<Integer> s = rcp_dynamic_cast<Integer>(p.second);
-                RCP<Integer> r = powint(f, s);
-                imulint(outArg(coef2), r);
-            } else {
-                Mul::dict_add_term(d2, p.second, p.first);
-            }
-        }
-        return rcp(new Mul(coef2, d2));
+        return rcp(new Mul(coef, d));
     }
 }
 
@@ -179,6 +166,20 @@ RCP<Basic> mul(const RCP<Basic> &a, const RCP<Basic> &b)
         d[t] = exp;
         as_base_exp(b, outArg(exp), outArg(t));
         Mul::dict_add_term(d, exp, t);
+
+        CSymPy::map_basic_int d2;
+        RCP<Integer> coef2 = rcp_dynamic_cast<Integer>(coef);
+        for (auto &p: d) {
+            if (is_a<Integer>(*(p.first)) && is_a<Integer>(*(p.second))) {
+                RCP<Integer> f = rcp_dynamic_cast<Integer>(p.first);
+                RCP<Integer> s = rcp_dynamic_cast<Integer>(p.second);
+                RCP<Integer> r = powint(f, s);
+                imulint(outArg(coef2), r);
+            } else {
+                Mul::dict_add_term(d2, p.second, p.first);
+            }
+        }
+        return Mul::from_dict(coef2, d2);
     }
     return Mul::from_dict(coef, d);
 }
