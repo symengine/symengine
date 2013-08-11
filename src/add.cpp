@@ -91,12 +91,13 @@ RCP<Basic> Add::from_dict(const umap_basic_int &d)
 void Add::dict_add_term(umap_basic_int &d, const RCP<Integer> &coef,
         const RCP<Basic> &t)
 {
-    if (d.find(t) == d.end()) {
+    auto it = d.find(t);
+    if (it == d.end()) {
         // Not found, add it in if it is nonzero:
         if (!(coef->is_zero())) d[t] = coef;
     } else {
         // TODO: remove the item if d[t] + coef is zero:
-        iaddint(outArg(d[t]), coef);
+        iaddint(outArg(it->second), coef);
     }
 }
 
