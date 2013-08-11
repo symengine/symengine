@@ -71,13 +71,13 @@ RCP<Basic> Add::from_dict(const Dict_int &d)
                 return Mul::from_dict(p->second,
                         rcp_dynamic_cast<Mul>(p->first)->dict_);
             }
-            Dict_int m;
+            map_basic_int m;
             m[p->first] = one;
             return rcp(new Mul(p->second, m));
         }
         // TODO: if p->second is a numeric coefficient, it should still be
         // passed in as the first parameter of Mul()
-        Dict_int m;
+        map_basic_int m;
         m[p->first] = one;
         m[p->second] = one;
         return rcp(new Mul(one, m));

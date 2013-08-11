@@ -14,7 +14,7 @@ using Teuchos::rcp_static_cast;
 
 namespace CSymPy {
 
-Mul::Mul(const Teuchos::RCP<Basic> &coef, const Dict_int& dict)
+Mul::Mul(const Teuchos::RCP<Basic> &coef, const map_basic_int& dict)
     : coef_{coef}, dict_{dict}
 {
 }
@@ -23,9 +23,7 @@ std::size_t Mul::__hash__() const
 {
     std::size_t seed = 0;
     hash_combine<Basic>(seed, *coef_);
-    std::map<RCP<Basic>, RCP<Integer>, RCPBasicKeyLess>
-        ordered(dict_.begin(), dict_.end());
-    for (auto &p: ordered) {
+    for (auto &p: dict_) {
         hash_combine<Basic>(seed, *(p.first));
         hash_combine<Basic>(seed, *(p.second));
     }
@@ -36,7 +34,7 @@ bool Mul::__eq__(const Basic &o) const
 {
     if (is_a<Mul>(o) &&
         eq(coef_, static_cast<const Mul &>(o).coef_) &&
-        dicts_equal(dict_, static_cast<const Mul &>(o).dict_))
+        map_basic_int_equal(dict_, static_cast<const Mul &>(o).dict_))
         return true;
 
     return false;
@@ -59,7 +57,7 @@ std::string Mul::__str__() const
     return s.substr(0, s.size()-1);
 }
 
-RCP<CSymPy::Basic> Mul::from_dict(const RCP<Basic> &coef, const Dict_int &d)
+RCP<CSymPy::Basic> Mul::from_dict(const RCP<Basic> &coef, const map_basic_int &d)
 {
     if (d.size() == 0) {
         throw std::runtime_error("Not implemented.");
@@ -83,7 +81,7 @@ RCP<CSymPy::Basic> Mul::from_dict(const RCP<Basic> &coef, const Dict_int &d)
         // Otherwise create a Pow() here:
         return pow(p->first, p->second);
     } else {
-        CSymPy::Dict_int d2;
+        CSymPy::map_basic_int d2;
         // TODO: handle non-integer coefs like sqrt(2) here:
         RCP<Integer> coef2 = rcp_dynamic_cast<Integer>(coef);
         for (auto &p: d) {
@@ -101,7 +99,7 @@ RCP<CSymPy::Basic> Mul::from_dict(const RCP<Basic> &coef, const Dict_int &d)
 }
 
 // Mul (t^exp) to the dict "d"
-void Mul::dict_add_term(Dict_int &d, const RCP<Integer> &exp,
+void Mul::dict_add_term(map_basic_int &d, const RCP<Integer> &exp,
         const RCP<Basic> &t)
 {
     if (d.find(t) == d.end()) {
@@ -125,7 +123,7 @@ void Mul::as_two_terms(const Teuchos::Ptr<RCP<Basic>> &a,
     // Example: if this=3*x^2*y^2*z^2, then a=x^2 and b=3*y^2*z^2
     auto p = dict_.begin();
     *a = pow(p->first, p->second);
-    Dict_int d = dict_;
+    map_basic_int d = dict_;
     d.erase(p->first);
     *b = Mul::from_dict(coef_, d);
 }
@@ -154,7 +152,7 @@ void as_base_exp(const RCP<Basic> &self, const Ptr<RCP<Integer>> &exp,
 
 RCP<Basic> mul(const RCP<Basic> &a, const RCP<Basic> &b)
 {
-    CSymPy::Dict_int d;
+    CSymPy::map_basic_int d;
     RCP<Basic> coef = one;
     if (CSymPy::is_a<Mul>(*a) && CSymPy::is_a<Mul>(*b)) {
         d = (rcp_static_cast<Mul>(a))->dict_;

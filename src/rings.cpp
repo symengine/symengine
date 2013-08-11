@@ -27,7 +27,7 @@ void expr2poly(const RCP<Basic> &p, Dict_int &syms, umap_vec_mpz &P)
             coef = p.second->as_mpz();
             exp.assign(n, 0); // Initialize to [0]*n
             if (is_a<Mul>(*p.first)) {
-                Dict_int &term = rcp_static_cast<Mul>(p.first)->dict_;
+                map_basic_int &term = rcp_static_cast<Mul>(p.first)->dict_;
                 for (auto &q: term) {
                     RCP<Basic> sym = q.first;
                     int i = syms[sym]->as_int();
