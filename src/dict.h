@@ -45,6 +45,8 @@ bool dicts_equal(const Dict_int &a, const Dict_int &b);
 typedef std::vector<int> vec_int;
 typedef std::map<vec_int, long long int> map_vec_int;
 typedef std::map<vec_int, mpz_class> map_vec_mpz;
+typedef std::map<Teuchos::RCP<Basic>, Teuchos::RCP<Integer>,
+        RCPBasicKeyLess> map_basic_int;
 
 
 // Part of umap_vec_mpz:
