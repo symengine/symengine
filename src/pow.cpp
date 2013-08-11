@@ -158,11 +158,11 @@ RCP<Basic> pow_expand(const RCP<Pow> &self)
             RCP<Add> base = rcp_dynamic_cast<Add>(self->base_);
             int m = base->dict_.size();
             multinomial_coefficients_mpz(m, n, r);
-            Dict_int rd;
+            umap_basic_int rd;
             for (auto &p: r) {
                 auto power = p.first.begin();
                 auto i2 = base->dict_.begin();
-                Dict_int d;
+                map_basic_int d;
                 for (; power != p.first.end(); ++power, ++i2) {
                     if (*power > 0) {
                         RCP<Integer> exp = rcp(new Integer(*power));

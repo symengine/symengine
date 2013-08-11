@@ -16,7 +16,8 @@ using CSymPy::Basic;
 using CSymPy::Add;
 using CSymPy::Mul;
 using CSymPy::Symbol;
-using CSymPy::Dict_int;
+using CSymPy::umap_basic_int;
+using CSymPy::map_basic_int;
 using CSymPy::Integer;
 using CSymPy::one;
 using CSymPy::zero;
@@ -53,7 +54,7 @@ void test_symbol_hash()
 
 void test_symbol_dict()
 {
-    Dict_int d;
+    umap_basic_int d;
     RCP<Basic> x  = rcp(new Symbol("x"));
     RCP<Basic> x2 = rcp(new Symbol("x"));
     RCP<Basic> y  = rcp(new Symbol("y"));
@@ -70,7 +71,7 @@ void test_symbol_dict()
 
 void test_add()
 {
-    Dict_int m;
+    umap_basic_int m;
     RCP<Basic> x  = rcp(new Symbol("x"));
     RCP<Basic> y  = rcp(new Symbol("y"));
     m[x] = rcp(new Integer(2));
@@ -127,7 +128,7 @@ void test_integer()
 
 void test_mul()
 {
-    Dict_int m;
+    map_basic_int m;
     RCP<Basic> x  = rcp(new Symbol("x"));
     RCP<Basic> y  = rcp(new Symbol("y"));
     m[x] = rcp(new Integer(2));

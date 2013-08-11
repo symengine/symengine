@@ -70,7 +70,7 @@ References
 
 You can use C++ references as follows (see the first argument)::
 
-    void Add::dict_add_term(Dict_int &d, const RCP<Integer> &coef,
+    void Add::dict_add_term(umap_basic_int &d, const RCP<Integer> &coef,
             const RCP<Basic> &t)
     {
         if (d.find(t) == d.end()) {
