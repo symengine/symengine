@@ -60,12 +60,12 @@ inline bool neq(const Teuchos::RCP<Basic> &a,
     return !(a->__eq__(*b));
 }
 
-// Returns true if "b" is of type T or any of its subclasses. Example:
-//   is_a<Symbol>(b)  // true if "b" is of type Symbol or any Symbol's subclass
+// Returns true if "b" is exactly of type T. Example:
+//   is_a<Symbol>(b)  // true if "b" is of type Symbol
 template <class T>
 inline bool is_a(const Basic &b)
 {
-    return dynamic_cast<const T *>(&b) != NULL;
+    return typeid(T) == typeid(b);
 }
 
 
