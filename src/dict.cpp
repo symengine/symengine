@@ -49,7 +49,7 @@ std::ostream& operator<<(std::ostream& out, const CSymPy::map_basic_int& d)
 {
     out << "{";
     for (auto &p: d)
-        out << (p.first) << ": " << (p.second) << ", ";
+        out << *(p.first) << ": " << *(p.second) << ", ";
     out << "}";
     return out;
 }
