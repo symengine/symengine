@@ -16,11 +16,11 @@ using Teuchos::rcp_static_cast;
 
 namespace CSymPy {
 
-void expr2poly(const RCP<Basic> &p, Dict_int &syms, umap_vec_mpz &P)
+void expr2poly(const RCP<Basic> &p, umap_basic_int &syms, umap_vec_mpz &P)
 {
     if (is_a<Add>(*p)) {
         int n = syms.size();
-        Dict_int &d = rcp_static_cast<Add>(p)->dict_;
+        umap_basic_int &d = rcp_static_cast<Add>(p)->dict_;
         vec_int exp;
         mpz_class coef;
         for (auto &p: d) {

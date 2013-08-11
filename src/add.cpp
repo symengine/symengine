@@ -13,7 +13,7 @@ using Teuchos::rcp_dynamic_cast;
 
 namespace CSymPy {
 
-Add::Add(const RCP<Basic> &coef, const Dict_int& dict)
+Add::Add(const RCP<Basic> &coef, const umap_basic_int& dict)
     : coef_{coef}, dict_{dict}
 {
 }
@@ -57,7 +57,7 @@ std::string Add::__str__() const
 
 // Creates the appropriate instance (i.e. Add, Symbol, Integer, Mul) depending
 // on how many (and which) items are in the dictionary "d":
-RCP<Basic> Add::from_dict(const Dict_int &d)
+RCP<Basic> Add::from_dict(const umap_basic_int &d)
 {
     if (d.size() == 0) {
         throw std::runtime_error("Not implemented.");
@@ -88,7 +88,7 @@ RCP<Basic> Add::from_dict(const Dict_int &d)
 
 // Adds (coef*t) to the dict "d"
 // Assumption: "t" does not have any numerical coefficients, those are in "coef"
-void Add::dict_add_term(Dict_int &d, const RCP<Integer> &coef,
+void Add::dict_add_term(umap_basic_int &d, const RCP<Integer> &coef,
         const RCP<Basic> &t)
 {
     if (d.find(t) == d.end()) {
@@ -125,7 +125,7 @@ void as_coef_term(const RCP<Basic> &self, const Ptr<RCP<Integer>> &coef,
 
 RCP<Basic> add(const RCP<Basic> &a, const RCP<Basic> &b)
 {
-    CSymPy::Dict_int d;
+    CSymPy::umap_basic_int d;
     RCP<Integer> coef;
     RCP<Basic> t;
     if (CSymPy::is_a<Add>(*a) && CSymPy::is_a<Add>(*b)) {
@@ -151,7 +151,7 @@ RCP<Basic> add(const RCP<Basic> &a, const RCP<Basic> &b)
 
 RCP<Basic> add_expand(const RCP<Add> &self)
 {
-    Dict_int d;
+    umap_basic_int d;
     RCP<Basic> coef, tmp, tmp2;
     for (auto &p: self->dict_) {
         tmp = expand(p.first);

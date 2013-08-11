@@ -37,7 +37,7 @@ typedef struct
 
 
 typedef std::unordered_map<Teuchos::RCP<Basic>, Teuchos::RCP<Integer>,
-        RCPBasicHash, RCPBasicKeyEq> Dict_int;
+        RCPBasicHash, RCPBasicKeyEq> umap_basic_int;
 
 typedef std::vector<int> vec_int;
 typedef std::map<vec_int, long long int> map_vec_int;
@@ -46,7 +46,7 @@ typedef std::map<Teuchos::RCP<Basic>, Teuchos::RCP<Integer>,
         RCPBasicKeyLess> map_basic_int;
 
 // Return true if the two dictionaries 'a' and 'b' are equal. Otherwise false.
-bool dicts_equal(const Dict_int &a, const Dict_int &b);
+bool dicts_equal(const umap_basic_int &a, const umap_basic_int &b);
 bool map_basic_int_equal(const map_basic_int &a, const map_basic_int &b);
 
 
@@ -75,7 +75,7 @@ typedef std::unordered_map<vec_int, mpz_class,
 
 } // CSymPy
 
-std::ostream& operator<<(std::ostream& out, const CSymPy::Dict_int& d);
+std::ostream& operator<<(std::ostream& out, const CSymPy::umap_basic_int& d);
 std::ostream& operator<<(std::ostream& out, const CSymPy::vec_int& d);
 std::ostream& operator<<(std::ostream& out, const CSymPy::map_vec_int& d);
 std::ostream& operator<<(std::ostream& out, const CSymPy::map_vec_mpz& d);

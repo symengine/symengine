@@ -187,7 +187,7 @@ RCP<Basic> mul_expand_two(const RCP<Basic> &a, const RCP<Basic> &b)
 {
     // Both a and b are assumed to be expanded
     if (is_a<Add>(*a) && is_a<Add>(*b)) {
-        Dict_int d;
+        umap_basic_int d;
         for (auto &p: (rcp_dynamic_cast<Add>(a))->dict_) {
             for (auto &q: (rcp_dynamic_cast<Add>(b))->dict_) {
                 // The main bottleneck here is the mul(p.first, q.first) command
@@ -199,7 +199,7 @@ RCP<Basic> mul_expand_two(const RCP<Basic> &a, const RCP<Basic> &b)
     } else if (is_a<Add>(*a)) {
         return mul_expand_two(b, a);
     } else if (is_a<Add>(*b)) {
-        Dict_int d;
+        umap_basic_int d;
         RCP<Basic> coef, tmp;
         for (auto &p: (rcp_dynamic_cast<Add>(b))->dict_) {
             tmp = mul(a, p.first);
