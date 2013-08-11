@@ -16,6 +16,8 @@ public:
     virtual bool __eq__(const Basic &o) const;
     virtual std::string __str__() const;
 
+    bool check_canonical(const Teuchos::RCP<Basic> &base,
+            const Teuchos::RCP<Basic> &exp);
 };
 
 Teuchos::RCP<Basic> pow(const Teuchos::RCP<Basic> &a,
