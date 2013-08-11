@@ -12,6 +12,9 @@
 #include "Teuchos_RCP.hpp"
 #include "Teuchos_TypeNameTraits.hpp"
 
+#include "csympy_config.h"
+#include "csympy_assert.h"
+
 namespace CSymPy {
 
 /*

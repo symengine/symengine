@@ -1,0 +1,2 @@
+/* Define if want to enable ASSERT testing in CSymPy */
+#cmakedefine WITH_CSYMPY_ASSERT
