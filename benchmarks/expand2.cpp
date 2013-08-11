@@ -33,16 +33,17 @@ int main(int argc, char* argv[])
     RCP<Basic> y = rcp(new Symbol("y"));
     RCP<Basic> z = rcp(new Symbol("z"));
     RCP<Basic> w = rcp(new Symbol("w"));
-    RCP<Basic> i15 = rcp(new Integer(60));
+    RCP<Basic> i15 = rcp(new Integer(15));
 
-    RCP<Basic> e, r;
+    RCP<Basic> e, f, r;
 
     e = pow(add(add(add(x, y), z), w), i15);
+    f = mul(e, add(e, w));
 
-    std::cout << "Expanding: " << *e << std::endl;
+    std::cout << "Expanding: " << *f << std::endl;
 
     auto t1 = std::chrono::high_resolution_clock::now();
-    r = expand(e);
+    r = expand(f);
     auto t2 = std::chrono::high_resolution_clock::now();
     //std::cout << *r << std::endl;
     std::cout
