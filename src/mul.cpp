@@ -17,6 +17,36 @@ namespace CSymPy {
 Mul::Mul(const Teuchos::RCP<Basic> &coef, const map_basic_int& dict)
     : coef_{coef}, dict_{dict}
 {
+    CSYMPY_ASSERT(check_canonical(coef, dict))
+}
+
+bool Mul::check_canonical(const Teuchos::RCP<Basic> &coef,
+        const map_basic_int& dict)
+{
+    // e.g. 0*x*y
+    if (is_a<Integer>(*coef) && rcp_static_cast<Integer>(coef)->is_zero())
+        return false;
+    if (dict.size() == 0) return false;
+    if (dict.size() == 1) {
+        // e.g. 1*x, 1*x^2
+        if (is_a<Integer>(*coef) && rcp_static_cast<Integer>(coef)->is_one())
+            return false;
+    }
+    // Check that each term in 'dict' is in canonical form
+    for (auto &p: dict) {
+        // e.g. 2^3
+        if (is_a<Integer>(*p.first) && is_a<Integer>(*p.second))
+            return false;
+        // e.g. 0^x
+        if (is_a<Integer>(*p.first) &&
+                rcp_static_cast<Integer>(p.first)->is_zero())
+            return false;
+        // e.g. x^0
+        if (is_a<Integer>(*p.second) &&
+                rcp_static_cast<Integer>(p.second)->is_zero())
+            return false;
+    }
+    return true;
 }
 
 std::size_t Mul::__hash__() const

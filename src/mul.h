@@ -28,6 +28,10 @@ public:
             const Teuchos::RCP<Integer> &coef, const Teuchos::RCP<Basic> &t);
     void as_two_terms(const Teuchos::Ptr<Teuchos::RCP<Basic>> &a,
             const Teuchos::Ptr<Teuchos::RCP<Basic>> &b);
+
+    // Returns true if both 'coef' and 'dict' are in canonical form
+    bool check_canonical(const Teuchos::RCP<Basic> &coef,
+            const map_basic_int& dict);
 };
 
 Teuchos::RCP<Basic> mul(const Teuchos::RCP<Basic> &a,
