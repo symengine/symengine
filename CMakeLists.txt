@@ -58,6 +58,7 @@ endif()
 
 enable_testing()
 add_subdirectory(src)
+add_subdirectory(benchmarks)
 
 if (WITH_PYTHON)
     # We need to execute the find_package() commands here, so that the
