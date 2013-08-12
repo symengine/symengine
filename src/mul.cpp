@@ -17,10 +17,10 @@ namespace CSymPy {
 Mul::Mul(const Teuchos::RCP<Basic> &coef, const map_basic_int& dict)
     : coef_{coef}, dict_{dict}
 {
-    CSYMPY_ASSERT(check_canonical(coef, dict))
+    CSYMPY_ASSERT(is_canonical(coef, dict))
 }
 
-bool Mul::check_canonical(const Teuchos::RCP<Basic> &coef,
+bool Mul::is_canonical(const Teuchos::RCP<Basic> &coef,
         const map_basic_int& dict)
 {
     // e.g. 0*x*y

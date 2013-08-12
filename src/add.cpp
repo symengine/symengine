@@ -17,10 +17,10 @@ namespace CSymPy {
 Add::Add(const RCP<Basic> &coef, const umap_basic_int& dict)
     : coef_{coef}, dict_{dict}
 {
-    CSYMPY_ASSERT(check_canonical(coef, dict))
+    CSYMPY_ASSERT(is_canonical(coef, dict))
 }
 
-bool Add::check_canonical(const Teuchos::RCP<Basic> &coef,
+bool Add::is_canonical(const Teuchos::RCP<Basic> &coef,
         const umap_basic_int& dict)
 {
     if (dict.size() == 0) return false;

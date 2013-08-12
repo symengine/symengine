@@ -18,10 +18,10 @@ namespace CSymPy {
 Pow::Pow(const Teuchos::RCP<Basic> &base, const Teuchos::RCP<Basic> &exp)
     : base_{base}, exp_{exp}
 {
-    CSYMPY_ASSERT(check_canonical(base, exp))
+    CSYMPY_ASSERT(is_canonical(base, exp))
 }
 
-bool Pow::check_canonical(const RCP<Basic> &base, const RCP<Basic> &exp)
+bool Pow::is_canonical(const RCP<Basic> &base, const RCP<Basic> &exp)
 {
     // e.g. 0^x
     if (is_a<Integer>(*base) && rcp_static_cast<Integer>(base)->is_zero())
