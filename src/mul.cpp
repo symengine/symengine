@@ -97,7 +97,7 @@ std::string Mul::__str__() const
 RCP<CSymPy::Basic> Mul::from_dict(const RCP<Basic> &coef, const map_basic_basic &d)
 {
     if (d.size() == 0) {
-        throw std::runtime_error("Not implemented.");
+        return coef;
     } else if (d.size() == 1) {
         auto p = d.begin();
         if (is_a<Integer>(*(p->second)) && is_a<Integer>(*coef)) {
