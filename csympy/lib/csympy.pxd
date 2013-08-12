@@ -22,6 +22,8 @@ cdef extern from "basic.h" namespace "CSymPy":
     bool is_a_Add "CSymPy::is_a<CSymPy::Add>"(const Basic &b) nogil
     bool is_a_Mul "CSymPy::is_a<CSymPy::Mul>"(const Basic &b) nogil
     bool is_a_Pow "CSymPy::is_a<CSymPy::Pow>"(const Basic &b) nogil
+    bool is_a_Integer "CSymPy::is_a<CSymPy::Integer>"(const Basic &b) nogil
+    bool is_a_Symbol "CSymPy::is_a<CSymPy::Symbol>"(const Basic &b) nogil
 
     RCP[Basic] expand(const RCP[Basic] &o) nogil except +
 
@@ -38,6 +40,7 @@ cdef extern from "integer.h" namespace "CSymPy":
 
 cdef extern from "add.h" namespace "CSymPy":
     cdef RCP[Basic] add(RCP[Basic] &a, RCP[Basic] &b) nogil except+
+    cdef RCP[Basic] sub(RCP[Basic] &a, RCP[Basic] &b) nogil except+
 
     cdef cppclass Add(Basic):
         pass

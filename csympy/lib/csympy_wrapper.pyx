@@ -13,6 +13,12 @@ cdef c2py(RCP[csympy.Basic] o):
         r = Mul.__new__(Mul)
     elif (csympy.is_a_Pow(deref(o))):
         r = Pow.__new__(Pow)
+    elif (csympy.is_a_Integer(deref(o))):
+        # TODO: figure out how to bypass the __init__() completely:
+        r = Integer.__new__(Integer, -99999)
+    elif (csympy.is_a_Symbol(deref(o))):
+        # TODO: figure out how to bypass the __init__() completely:
+        r = Symbol.__new__(Symbol, "null")
     else:
         raise Exception("Unsupported CSymPy class.")
     r.thisptr = o
@@ -42,6 +48,12 @@ cdef class Basic(object):
         if A is None or B is None: return NotImplemented
         return c2py(csympy.add(A.thisptr, B.thisptr))
 
+    def __sub__(a, b):
+        cdef Basic A = sympify(a, False)
+        cdef Basic B = sympify(b, False)
+        if A is None or B is None: return NotImplemented
+        return c2py(csympy.sub(A.thisptr, B.thisptr))
+
     def __mul__(a, b):
         cdef Basic A = sympify(a, False)
         cdef Basic B = sympify(b, False)
@@ -55,13 +67,16 @@ cdef class Basic(object):
         if A is None or B is None: return NotImplemented
         return c2py(csympy.pow(A.thisptr, B.thisptr))
 
-    def __richcmp__(Basic self not None, Basic other not None, int op):
+    def __richcmp__(a, b, int op):
+        cdef Basic A = sympify(a, False)
+        cdef Basic B = sympify(b, False)
+        if A is None or B is None: return NotImplemented
         if (op == 2):
-            return csympy.eq(self.thisptr, other.thisptr)
+            return csympy.eq(A.thisptr, B.thisptr)
         elif (op == 3):
-            return csympy.neq(self.thisptr, other.thisptr)
+            return csympy.neq(A.thisptr, B.thisptr)
         else:
-            raise Exception("Operation not implemented.")
+            return NotImplemented
 
     def expand(Basic self not None):
         return c2py(csympy.expand(self.thisptr))
@@ -77,8 +92,8 @@ cdef class Symbol(Basic):
 
 cdef class Integer(Basic):
 
-    def __cinit__(self, name):
-        self.thisptr = rcp(new csympy.Integer(name))
+    def __cinit__(self, i):
+        self.thisptr = rcp(new csympy.Integer(i))
 
     def __dealloc__(self):
         self.thisptr.reset()
