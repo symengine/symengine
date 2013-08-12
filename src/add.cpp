@@ -32,8 +32,11 @@ bool Add::is_canonical(const Teuchos::RCP<Basic> &coef,
     // Check that each term in 'dict' is in canonical form
     for (auto &p: dict) {
         // e.g. 2*3
+        /*
+        // This currently fails a test:
         if (is_a<Integer>(*p.first) && is_a<Integer>(*p.second))
             return false;
+        */
         // e.g. 0*x
         if (is_a<Integer>(*p.first) &&
                 rcp_static_cast<Integer>(p.first)->is_zero())
