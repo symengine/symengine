@@ -71,7 +71,7 @@ def test_arit7():
     assert 2*x - x == x
     assert 3*x - x == 2*x
 
-    #assert 2*x*y - x*y == x*y
+    assert 2*x*y - x*y == x*y
 
 def test_arit8():
     x = Symbol("x")
@@ -79,4 +79,4 @@ def test_arit8():
     z = Symbol("z")
     assert x**y * x**x == x**(x+y)
     assert x**y * x**x * x**z == x**(x+y+z)
-    #assert x**y - x**y == 0
+    assert x**y - x**y == 0
