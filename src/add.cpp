@@ -10,12 +10,40 @@ using Teuchos::Ptr;
 using Teuchos::outArg;
 using Teuchos::rcp;
 using Teuchos::rcp_dynamic_cast;
+using Teuchos::rcp_static_cast;
 
 namespace CSymPy {
 
 Add::Add(const RCP<Basic> &coef, const umap_basic_int& dict)
     : coef_{coef}, dict_{dict}
 {
+    CSYMPY_ASSERT(check_canonical(coef, dict))
+}
+
+bool Add::check_canonical(const Teuchos::RCP<Basic> &coef,
+        const umap_basic_int& dict)
+{
+    if (dict.size() == 0) return false;
+    if (dict.size() == 1) {
+        // e.g. 0 + x, 0 + 2x
+        if (is_a<Integer>(*coef) && rcp_static_cast<Integer>(coef)->is_zero())
+            return false;
+    }
+    // Check that each term in 'dict' is in canonical form
+    for (auto &p: dict) {
+        // e.g. 2*3
+        if (is_a<Integer>(*p.first) && is_a<Integer>(*p.second))
+            return false;
+        // e.g. 0*x
+        if (is_a<Integer>(*p.first) &&
+                rcp_static_cast<Integer>(p.first)->is_zero())
+            return false;
+        // e.g. x*0
+        if (is_a<Integer>(*p.second) &&
+                rcp_static_cast<Integer>(p.second)->is_zero())
+            return false;
+    }
+    return true;
 }
 
 std::size_t Add::__hash__() const

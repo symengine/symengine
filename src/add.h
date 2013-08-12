@@ -22,6 +22,9 @@ public:
     static Teuchos::RCP<Basic> from_dict(const umap_basic_int &d);
     static void dict_add_term(umap_basic_int &d,
             const Teuchos::RCP<Integer> &coef, const Teuchos::RCP<Basic> &t);
+
+    bool check_canonical(const Teuchos::RCP<Basic> &coef,
+            const umap_basic_int& dict);
 };
 
 Teuchos::RCP<Basic> add(const Teuchos::RCP<Basic> &a,
