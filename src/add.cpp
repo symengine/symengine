@@ -14,13 +14,13 @@ using Teuchos::rcp_static_cast;
 
 namespace CSymPy {
 
-Add::Add(const RCP<Basic> &coef, const umap_basic_int& dict)
+Add::Add(const RCP<Integer> &coef, const umap_basic_int& dict)
     : coef_{coef}, dict_{dict}
 {
     CSYMPY_ASSERT(is_canonical(coef, dict))
 }
 
-bool Add::is_canonical(const Teuchos::RCP<Basic> &coef,
+bool Add::is_canonical(const Teuchos::RCP<Integer> &coef,
         const umap_basic_int& dict)
 {
     if (coef == Teuchos::null) return false;
@@ -95,7 +95,7 @@ std::string Add::__str__() const
 // If d.size() > 1 then it just returns Add. This means that the dictionary
 // must be in canonical form already. For d.size == 1, it returns Mul, Pow,
 // Symbol or Integer, depending on the expression.
-RCP<Basic> Add::from_dict(const RCP<Basic> &coef, const umap_basic_int &d)
+RCP<Basic> Add::from_dict(const RCP<Integer> &coef, const umap_basic_int &d)
 {
     if (d.size() == 0) {
         return coef;
@@ -151,9 +151,9 @@ void as_coef_term(const RCP<Basic> &self, const Ptr<RCP<Integer>> &coef,
         *coef = one;
         *term = self;
     } else if (CSymPy::is_a<CSymPy::Mul>(*self)) {
-        RCP<Basic> tmp;
+        RCP<Integer> tmp;
         (rcp_dynamic_cast<CSymPy::Mul>(self))->as_coef_term(outArg(tmp), term);
-        *coef = rcp_dynamic_cast<Integer>(tmp);
+        *coef = tmp;
     } else if (CSymPy::is_a<CSymPy::Integer>(*self)) {
         *coef = rcp_dynamic_cast<CSymPy::Integer>(self);
         *term = one;
@@ -208,7 +208,8 @@ RCP<Basic> sub(const RCP<Basic> &a, const RCP<Basic> &b)
 RCP<Basic> add_expand(const RCP<Add> &self)
 {
     umap_basic_int d;
-    RCP<Basic> coef, tmp, tmp2;
+    RCP<Integer> coef;
+    RCP<Basic> tmp, tmp2;
     for (auto &p: self->dict_) {
         tmp = expand(p.first);
         if (is_a<Add>(*tmp)) {
