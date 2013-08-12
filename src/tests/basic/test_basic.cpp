@@ -17,7 +17,7 @@ using CSymPy::Add;
 using CSymPy::Mul;
 using CSymPy::Symbol;
 using CSymPy::umap_basic_int;
-using CSymPy::map_basic_int;
+using CSymPy::map_basic_basic;
 using CSymPy::Integer;
 using CSymPy::one;
 using CSymPy::zero;
@@ -128,7 +128,7 @@ void test_integer()
 
 void test_mul()
 {
-    map_basic_int m;
+    map_basic_basic m;
     RCP<Basic> x  = rcp(new Symbol("x"));
     RCP<Basic> y  = rcp(new Symbol("y"));
     m[x] = rcp(new Integer(2));

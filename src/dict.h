@@ -44,10 +44,13 @@ typedef std::map<vec_int, long long int> map_vec_int;
 typedef std::map<vec_int, mpz_class> map_vec_mpz;
 typedef std::map<Teuchos::RCP<Basic>, Teuchos::RCP<Integer>,
         RCPBasicKeyLess> map_basic_int;
+typedef std::map<Teuchos::RCP<Basic>, Teuchos::RCP<Basic>,
+        RCPBasicKeyLess> map_basic_basic;
 
 // Return true if the two dictionaries 'a' and 'b' are equal. Otherwise false.
 bool dicts_equal(const umap_basic_int &a, const umap_basic_int &b);
 bool map_basic_int_equal(const map_basic_int &a, const map_basic_int &b);
+bool map_basic_basic_equal(const map_basic_basic &a, const map_basic_basic &b);
 
 
 
@@ -81,5 +84,6 @@ std::ostream& operator<<(std::ostream& out, const CSymPy::map_vec_int& d);
 std::ostream& operator<<(std::ostream& out, const CSymPy::map_vec_mpz& d);
 std::ostream& operator<<(std::ostream& out, const CSymPy::umap_vec_mpz& d);
 std::ostream& operator<<(std::ostream& out, const CSymPy::map_basic_int& d);
+std::ostream& operator<<(std::ostream& out, const CSymPy::map_basic_basic& d);
 
 #endif

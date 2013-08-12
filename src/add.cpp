@@ -23,6 +23,7 @@ Add::Add(const RCP<Basic> &coef, const umap_basic_int& dict)
 bool Add::is_canonical(const Teuchos::RCP<Basic> &coef,
         const umap_basic_int& dict)
 {
+    if (coef == Teuchos::null) return false;
     if (dict.size() == 0) return false;
     if (dict.size() == 1) {
         // e.g. 0 + x, 0 + 2x
@@ -31,6 +32,8 @@ bool Add::is_canonical(const Teuchos::RCP<Basic> &coef,
     }
     // Check that each term in 'dict' is in canonical form
     for (auto &p: dict) {
+        if (p.first == Teuchos::null) return false;
+        if (p.second == Teuchos::null) return false;
         // e.g. 2*3
         if (is_a<Integer>(*p.first) && is_a<Integer>(*p.second))
             return false;
@@ -95,7 +98,7 @@ std::string Add::__str__() const
 RCP<Basic> Add::from_dict(const RCP<Basic> &coef, const umap_basic_int &d)
 {
     if (d.size() == 0) {
-        throw std::runtime_error("Not implemented.");
+        return coef;
     } else if (d.size() == 1 && is_a<Integer>(*coef) &&
             rcp_static_cast<Integer>(coef)->is_zero()) {
         auto p = d.begin();
@@ -107,13 +110,13 @@ RCP<Basic> Add::from_dict(const RCP<Basic> &coef, const umap_basic_int &d)
                 return Mul::from_dict(p->second,
                         rcp_static_cast<Mul>(p->first)->dict_);
             }
-            map_basic_int m;
+            map_basic_basic m;
             m[p->first] = one;
             return rcp(new Mul(p->second, m));
         }
         // TODO: if p->second is a numeric coefficient, it should still be
         // passed in as the first parameter of Mul()
-        map_basic_int m;
+        map_basic_basic m;
         m[p->first] = one;
         m[p->second] = one;
         return rcp(new Mul(one, m));

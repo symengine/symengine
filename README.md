@@ -55,6 +55,7 @@ Here are some of the `CMake` options that you can use to configure the build:
         -DCMAKE_BUILD_TYPE:STRING="Release" \         # Type of build, one of: Debug or Release
         -DWITH_BFD:BOOL=ON \                          # Install with BFD library (requires binutils-dev)
         -DWITH_PYTHON:BOOL=ON \                       # Build Python wrappers
+        -DWITH_CSYMPY_ASSERT:BOOL=OFF \               # Test all CSYMPY_ASSERT statements in the code
         .
 
 `CMake` prints the value of its options at the end of the run.

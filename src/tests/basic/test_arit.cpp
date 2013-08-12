@@ -60,6 +60,46 @@ void test_add()
     r1 = add(x, one);
     r2 = add(one, x);
     assert(eq(r1, r2));
+
+    r1 = add(pow(x, y), z);
+    r2 = add(z, pow(x, y));
+    assert(eq(r1, r2));
+}
+
+void test_mul()
+{
+    RCP<Basic> x = rcp(new Symbol("x"));
+    RCP<Basic> y = rcp(new Symbol("y"));
+    RCP<Basic> z = rcp(new Symbol("z"));
+    RCP<Basic> i2 = rcp(new Integer(2));
+    RCP<Basic> i3 = rcp(new Integer(3));
+    RCP<Basic> i4 = rcp(new Integer(4));
+
+    RCP<Basic> r1, r2;
+
+    r1 = mul(pow(x, y), z);
+    r2 = mul(z, pow(x, y));
+    assert(eq(r1, r2));
+
+    r1 = mul(mul(x, y), mul(y, x));
+    r2 = mul(pow(x, i2), pow(y, i2));
+    assert(eq(r1, r2));
+
+    r1 = mul(pow(x, add(y, z)), z);
+    r2 = mul(z, pow(x, add(z, y)));
+    assert(eq(r1, r2));
+
+    r1 = mul(pow(x, y), pow(x, z));
+    r2 = pow(x, add(y, z));
+    assert(eq(r1, r2));
+
+    r1 = mul(mul(pow(x, y), pow(x, z)), pow(x, x));
+    r2 = pow(x, add(add(x, y), z));
+    assert(eq(r1, r2));
+
+    r1 = mul(mul(mul(pow(x, y), pow(x, z)), pow(x, x)), y);
+    r2 = mul(pow(x, add(add(x, y), z)), y);
+    assert(eq(r1, r2));
 }
 
 void test_pow()
@@ -194,6 +234,7 @@ int main(int argc, char* argv[])
     Teuchos::print_stack_on_segfault();
 
     test_add();
+    test_mul();
     test_pow();
     test_multinomial();
     test_expand1();
