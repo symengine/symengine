@@ -230,7 +230,7 @@ RCP<Basic> mul_expand_two(const RCP<Basic> &a, const RCP<Basic> &b)
                         mul(p.first, q.first));
             }
         }
-        return Add::from_dict(d);
+        return Add::from_dict(zero, d);
     } else if (is_a<Add>(*a)) {
         return mul_expand_two(b, a);
     } else if (is_a<Add>(*b)) {
@@ -249,7 +249,7 @@ RCP<Basic> mul_expand_two(const RCP<Basic> &a, const RCP<Basic> &b)
             Add::dict_add_term(d,
                     mulint(p.second, rcp_dynamic_cast<Integer>(coef)), tmp);
         }
-        return Add::from_dict(d);
+        return Add::from_dict(zero, d);
     }
     return mul(a, b);
 }

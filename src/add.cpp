@@ -98,11 +98,12 @@ std::string Add::__str__() const
 // If d.size() > 1 then it just returns Add. This means that the dictionary
 // must be in canonical form already. For d.size == 1, it returns Mul, Pow,
 // Symbol or Integer, depending on the expression.
-RCP<Basic> Add::from_dict(const umap_basic_int &d)
+RCP<Basic> Add::from_dict(const RCP<Basic> &coef, const umap_basic_int &d)
 {
     if (d.size() == 0) {
         throw std::runtime_error("Not implemented.");
-    } else if (d.size() == 1) {
+    } else if (d.size() == 1 && is_a<Integer>(*coef) &&
+            rcp_static_cast<Integer>(coef)->is_zero()) {
         auto p = d.begin();
         if (is_a<Integer>(*(p->second))) {
             if (rcp_static_cast<Integer>(p->second)->is_one()) {
@@ -123,7 +124,7 @@ RCP<Basic> Add::from_dict(const umap_basic_int &d)
         m[p->second] = one;
         return rcp(new Mul(one, m));
     } else {
-        return rcp(new Add(zero, d));
+        return rcp(new Add(coef, d));
     }
 }
 
@@ -188,7 +189,7 @@ RCP<Basic> add(const RCP<Basic> &a, const RCP<Basic> &b)
         as_coef_term(b, outArg(coef), outArg(t));
         Add::dict_add_term(d, coef, t);
     }
-    return Add::from_dict(d);
+    return Add::from_dict(zero, d);
 }
 
 RCP<Basic> add_expand(const RCP<Add> &self)
@@ -224,7 +225,7 @@ RCP<Basic> add_expand(const RCP<Add> &self)
                     mulint(p.second, rcp_dynamic_cast<Integer>(coef)), tmp);
         }
     }
-    return Add::from_dict(d);
+    return Add::from_dict(zero, d);
 }
 
 } // CSymPy

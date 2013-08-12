@@ -195,7 +195,7 @@ RCP<Basic> pow_expand(const RCP<Pow> &self)
                 RCP<Basic> term = Mul::from_dict(one, d);
                 rd[term] = rcp(new Integer(p.second));
             }
-            RCP<Basic> result = Add::from_dict(rd);
+            RCP<Basic> result = Add::from_dict(zero, rd);
             return result;
         }
     }

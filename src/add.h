@@ -19,7 +19,7 @@ public:
     virtual bool __eq__(const Basic &o) const;
     virtual std::string __str__() const;
 
-    static Teuchos::RCP<Basic> from_dict(const umap_basic_int &d);
+    static Teuchos::RCP<Basic> from_dict(const Teuchos::RCP<Basic> &coef, const umap_basic_int &d);
     static void dict_add_term(umap_basic_int &d,
             const Teuchos::RCP<Integer> &coef, const Teuchos::RCP<Basic> &t);
 
