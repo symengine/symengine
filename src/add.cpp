@@ -221,6 +221,7 @@ RCP<Basic> sub(const RCP<Basic> &a, const RCP<Basic> &b)
 RCP<Basic> add_expand(const RCP<Add> &self)
 {
     umap_basic_int d;
+    RCP<Integer> coef_overall = self->coef_;
     RCP<Integer> coef;
     RCP<Basic> tmp, tmp2;
     for (auto &p: self->dict_) {
@@ -237,6 +238,7 @@ RCP<Basic> add_expand(const RCP<Add> &self)
                 Add::dict_add_term(d,
                         mulint(mulint(p.second, q.second), coef), tmp2);
             }
+            iaddint(outArg(coef_overall), rcp_static_cast<Add>(tmp)->coef_);
         } else {
             if (is_a<Mul>(*tmp)) {
                 rcp_static_cast<Mul>(tmp)->as_coef_term(outArg(coef),
@@ -247,7 +249,7 @@ RCP<Basic> add_expand(const RCP<Add> &self)
             Add::dict_add_term(d, mulint(p.second, coef), tmp);
         }
     }
-    return Add::from_dict(zero, d);
+    return Add::from_dict(coef_overall, d);
 }
 
 } // CSymPy
