@@ -41,6 +41,10 @@ bool Mul::is_canonical(const Teuchos::RCP<Basic> &coef,
         if (is_a<Integer>(*p.first) &&
                 rcp_static_cast<Integer>(p.first)->is_zero())
             return false;
+        // e.g. 1^x
+        if (is_a<Integer>(*p.first) &&
+                rcp_static_cast<Integer>(p.first)->is_one())
+            return false;
         // e.g. x^0
         if (is_a<Integer>(*p.second) &&
                 rcp_static_cast<Integer>(p.second)->is_zero())
