@@ -14,24 +14,23 @@ using Teuchos::rcp_static_cast;
 
 namespace CSymPy {
 
-Mul::Mul(const Teuchos::RCP<Basic> &coef, const map_basic_basic& dict)
+Mul::Mul(const Teuchos::RCP<Integer> &coef, const map_basic_basic& dict)
     : coef_{coef}, dict_{dict}
 {
     CSYMPY_ASSERT(is_canonical(coef, dict))
 }
 
-bool Mul::is_canonical(const Teuchos::RCP<Basic> &coef,
+bool Mul::is_canonical(const Teuchos::RCP<Integer> &coef,
         const map_basic_basic& dict)
 {
     if (coef == Teuchos::null) return false;
     // e.g. 0*x*y
-    if (is_a<Integer>(*coef) && rcp_static_cast<Integer>(coef)->is_zero())
+    if (coef->is_zero())
         return false;
     if (dict.size() == 0) return false;
     if (dict.size() == 1) {
         // e.g. 1*x, 1*x^2
-        if (is_a<Integer>(*coef) && rcp_static_cast<Integer>(coef)->is_one())
-            return false;
+        if (coef->is_one()) return false;
     }
     // Check that each term in 'dict' is in canonical form
     for (auto &p: dict) {
@@ -94,28 +93,27 @@ std::string Mul::__str__() const
     return s.substr(0, s.size()-1);
 }
 
-RCP<CSymPy::Basic> Mul::from_dict(const RCP<Basic> &coef, const map_basic_basic &d)
+RCP<CSymPy::Basic> Mul::from_dict(const RCP<Integer> &coef, const map_basic_basic &d)
 {
     if (d.size() == 0) {
         return coef;
     } else if (d.size() == 1) {
         auto p = d.begin();
-        if (is_a<Integer>(*(p->second)) && is_a<Integer>(*coef)) {
-            if (rcp_dynamic_cast<Integer>(coef)->is_one()) {
-                if ((rcp_dynamic_cast<Integer>(p->second))->is_one()) {
+        if (is_a<Integer>(*(p->second))) {
+            if (coef->is_one()) {
+                if ((rcp_static_cast<Integer>(p->second))->is_one()) {
                     // For x^1 we simply return "x":
                     return p->first;
                 }
             } else {
-                if ((rcp_dynamic_cast<Integer>(p->second))->is_one()) {
+                if ((rcp_static_cast<Integer>(p->second))->is_one()) {
                     // For coef*x^1 we simply return "coef*x":
                     return rcp(new Mul(coef, d));
                 }
-                std::cout << "DEBUG: " << coef << " " << d << std::endl;
                 throw std::runtime_error("Not implemented.");
             }
         }
-        if (is_a<Integer>(*coef) && rcp_static_cast<Integer>(coef)->is_one()) {
+        if (coef->is_one()) {
             // Create a Pow() here:
             return pow(p->first, p->second);
         } else {
@@ -146,7 +144,7 @@ void Mul::dict_add_term(map_basic_basic &d, const RCP<Basic> &exp,
     }
 }
 
-void Mul::as_coef_term(const Teuchos::Ptr<Teuchos::RCP<Basic>> &coef,
+void Mul::as_coef_term(const Teuchos::Ptr<Teuchos::RCP<Integer>> &coef,
             const Teuchos::Ptr<Teuchos::RCP<Basic>> &term)
 {
     *coef = coef_;
@@ -174,8 +172,8 @@ void as_base_exp(const RCP<Basic> &self, const Ptr<RCP<Basic>> &exp,
         *exp = one;
         *base = self;
     } else if (is_a<Pow>(*self)) {
-        *exp = rcp_dynamic_cast<Pow>(self)->exp_;
-        *base = rcp_dynamic_cast<Pow>(self)->base_;
+        *exp = rcp_static_cast<Pow>(self)->exp_;
+        *base = rcp_static_cast<Pow>(self)->base_;
     } else if (is_a<Add>(*self)) {
         *exp = one;
         *base = self;
@@ -188,7 +186,7 @@ void as_base_exp(const RCP<Basic> &self, const Ptr<RCP<Basic>> &exp,
 RCP<Basic> mul(const RCP<Basic> &a, const RCP<Basic> &b)
 {
     CSymPy::map_basic_basic d;
-    RCP<Basic> coef = one;
+    RCP<Integer> coef = one;
     if (CSymPy::is_a<Mul>(*a) && CSymPy::is_a<Mul>(*b)) {
         d = (rcp_static_cast<Mul>(a))->dict_;
         for (auto &p: (rcp_static_cast<Mul>(b))->dict_)
@@ -199,7 +197,7 @@ RCP<Basic> mul(const RCP<Basic> &a, const RCP<Basic> &b)
         coef = (rcp_static_cast<Mul>(a))->coef_;
         d = (rcp_static_cast<Mul>(a))->dict_;
         if (is_a<Integer>(*b)) {
-            coef = mul(coef, b);
+            imulint(outArg(coef), rcp_static_cast<Integer>(b));
         } else {
             as_base_exp(b, outArg(exp), outArg(t));
             Mul::dict_add_term(d, exp, t);
@@ -210,7 +208,7 @@ RCP<Basic> mul(const RCP<Basic> &a, const RCP<Basic> &b)
         coef = (rcp_static_cast<Mul>(b))->coef_;
         d = (rcp_static_cast<Mul>(b))->dict_;
         if (is_a<Integer>(*a)) {
-            coef = mul(coef, a);
+            imulint(outArg(coef), rcp_static_cast<Integer>(a));
         } else {
             as_base_exp(a, outArg(exp), outArg(t));
             Mul::dict_add_term(d, exp, t);
@@ -224,20 +222,17 @@ RCP<Basic> mul(const RCP<Basic> &a, const RCP<Basic> &b)
         Mul::dict_add_term(d, exp, t);
 
         CSymPy::map_basic_basic d2;
-        if (!is_a<Integer>(*coef))
-            throw std::runtime_error("Not implemented.");
-        RCP<Integer> coef2 = rcp_static_cast<Integer>(coef);
         for (auto &p: d) {
             if (is_a<Integer>(*(p.first)) && is_a<Integer>(*(p.second))) {
                 RCP<Integer> f = rcp_static_cast<Integer>(p.first);
                 RCP<Integer> s = rcp_static_cast<Integer>(p.second);
                 RCP<Integer> r = powint(f, s);
-                imulint(outArg(coef2), r);
+                imulint(outArg(coef), r);
             } else {
                 Mul::dict_add_term(d2, p.second, p.first);
             }
         }
-        return Mul::from_dict(coef2, d2);
+        return Mul::from_dict(coef, d2);
     }
     return Mul::from_dict(coef, d);
 }
@@ -247,8 +242,8 @@ RCP<Basic> mul_expand_two(const RCP<Basic> &a, const RCP<Basic> &b)
     // Both a and b are assumed to be expanded
     if (is_a<Add>(*a) && is_a<Add>(*b)) {
         umap_basic_int d;
-        for (auto &p: (rcp_dynamic_cast<Add>(a))->dict_) {
-            for (auto &q: (rcp_dynamic_cast<Add>(b))->dict_) {
+        for (auto &p: (rcp_static_cast<Add>(a))->dict_) {
+            for (auto &q: (rcp_static_cast<Add>(b))->dict_) {
                 // The main bottleneck here is the mul(p.first, q.first) command
                 Add::dict_add_term(d, mulint(p.second, q.second),
                         mul(p.first, q.first));
@@ -259,19 +254,18 @@ RCP<Basic> mul_expand_two(const RCP<Basic> &a, const RCP<Basic> &b)
         return mul_expand_two(b, a);
     } else if (is_a<Add>(*b)) {
         umap_basic_int d;
-        RCP<Basic> coef, tmp;
-        for (auto &p: (rcp_dynamic_cast<Add>(b))->dict_) {
+        RCP<Integer> coef;
+        RCP<Basic> tmp;
+        for (auto &p: (rcp_static_cast<Add>(b))->dict_) {
             tmp = mul(a, p.first);
             if (is_a<Mul>(*tmp)) {
-                rcp_dynamic_cast<Mul>(tmp)->as_coef_term(outArg(coef),
+                rcp_static_cast<Mul>(tmp)->as_coef_term(outArg(coef),
                         outArg(tmp));
             } else {
                 coef = one;
             }
-            if (!is_a<Integer>(*coef))
-                throw std::runtime_error("Not implemented.");
             Add::dict_add_term(d,
-                    mulint(p.second, rcp_dynamic_cast<Integer>(coef)), tmp);
+                    mulint(p.second, coef), tmp);
         }
         return Add::from_dict(zero, d);
     }
