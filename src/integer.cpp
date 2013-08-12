@@ -50,8 +50,10 @@ signed long int Integer::as_int()
     return this->i.get_si();
 }
 
-// Initialize (declare) the integers 0 and 1 (those are exposed in integer.h):
+// Initialize (declare) the integers -1, 0 and 1 (those are exposed in
+// integer.h):
 RCP<Integer> zero = rcp(new Integer(0));
 RCP<Integer> one = rcp(new Integer(1));
+RCP<Integer> minus_one = rcp(new Integer(-1));
 
 } // CSymPy

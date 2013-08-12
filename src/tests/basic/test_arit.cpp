@@ -25,6 +25,7 @@ using CSymPy::map_vec_int;
 using CSymPy::Integer;
 using CSymPy::multinomial_coefficients;
 using CSymPy::one;
+using CSymPy::zero;
 
 void test_add()
 {
@@ -102,6 +103,42 @@ void test_mul()
     assert(eq(r1, r2));
 }
 
+void test_sub()
+{
+    RCP<Basic> x = rcp(new Symbol("x"));
+    RCP<Basic> y = rcp(new Symbol("y"));
+    RCP<Basic> z = rcp(new Symbol("z"));
+    RCP<Basic> i2 = rcp(new Integer(2));
+    RCP<Basic> i3 = rcp(new Integer(3));
+    RCP<Basic> i4 = rcp(new Integer(4));
+
+    RCP<Basic> r1, r2;
+
+    r1 = sub(i3, i2);
+    r2 = one;
+    assert(eq(r1, r2));
+
+    r1 = sub(x, x);
+    r2 = zero;
+    assert(eq(r1, r2));
+
+    r1 = sub(mul(i2, x), x);
+    r2 = x;
+    assert(eq(r1, r2));
+
+    r1 = add(mul(mul(i2, x), y), mul(x, y));
+    r2 = mul(i3, mul(x, y));
+    assert(eq(r1, r2));
+
+    r1 = add(mul(mul(i2, x), y), mul(x, y));
+    r2 = mul(mul(x, y), i3);
+    assert(eq(r1, r2));
+
+    r1 = sub(mul(mul(i2, x), y), mul(x, y));
+    r2 = mul(x, y);
+    assert(eq(r1, r2));
+}
+
 void test_pow()
 {
     RCP<Basic> x = rcp(new Symbol("x"));
@@ -132,6 +169,10 @@ void test_pow()
 
     r1 = mul(mul(add(x, y), add(y, x)), add(x, y));
     r2 = pow(add(x, y), i3);
+    assert(eq(r1, r2));
+
+    r1 = sub(pow(x, y), pow(x, y));
+    r2 = zero;
     assert(eq(r1, r2));
 }
 
@@ -236,6 +277,7 @@ int main(int argc, char* argv[])
     test_add();
     test_mul();
     test_pow();
+    test_sub();
     test_multinomial();
     test_expand1();
     test_expand2();

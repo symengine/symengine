@@ -62,3 +62,21 @@ def test_arit6():
     assert str(e) == "2x"
     e = 2*x
     assert str(e) == "2x"
+
+def test_arit7():
+    x = Symbol("x")
+    y = Symbol("y")
+    assert x - x == 0
+    assert x - y != y - x
+    assert 2*x - x == x
+    assert 3*x - x == 2*x
+
+    assert 2*x*y - x*y == x*y
+
+def test_arit8():
+    x = Symbol("x")
+    y = Symbol("y")
+    z = Symbol("z")
+    assert x**y * x**x == x**(x+y)
+    assert x**y * x**x * x**z == x**(x+y+z)
+    assert x**y - x**y == 0
