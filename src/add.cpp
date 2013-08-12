@@ -32,22 +32,16 @@ bool Add::is_canonical(const Teuchos::RCP<Basic> &coef,
     // Check that each term in 'dict' is in canonical form
     for (auto &p: dict) {
         // e.g. 2*3
-        /*
-        // This currently fails a test:
         if (is_a<Integer>(*p.first) && is_a<Integer>(*p.second))
             return false;
-        */
         // e.g. 0*x
         if (is_a<Integer>(*p.first) &&
                 rcp_static_cast<Integer>(p.first)->is_zero())
             return false;
         // e.g. 1*x (={1:x}), this should rather be just x (={x:1})
-        /*
-        // This currently fails a test
         if (is_a<Integer>(*p.first) &&
                 rcp_static_cast<Integer>(p.first)->is_one())
             return false;
-        */
         // e.g. x*0
         if (is_a<Integer>(*p.second) &&
                 rcp_static_cast<Integer>(p.second)->is_zero())
@@ -188,6 +182,14 @@ RCP<Basic> add(const RCP<Basic> &a, const RCP<Basic> &b)
         Add::dict_add_term(d, coef, t);
         as_coef_term(b, outArg(coef), outArg(t));
         Add::dict_add_term(d, coef, t);
+        auto it = d.find(one);
+        if (it == d.end()) {
+            coef = zero;
+        } else {
+            coef = it->second;
+            d.erase(it);
+        }
+        return Add::from_dict(coef, d);
     }
     return Add::from_dict(zero, d);
 }
