@@ -1,0 +1,109 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 8.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       157,          7]
+NotebookDataLength[      2445,         99]
+NotebookOptionsPosition[      1924,         75]
+NotebookOutlinePosition[      2262,         90]
+CellTagsIndexPosition[      2219,         87]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[BoxData[
+ RowBox[{"e", " ", "=", 
+  RowBox[{
+   RowBox[{"(", 
+    RowBox[{"y", "+", "x", "+", "z", "+", "w"}], ")"}], "^", 
+   "15"}]}]], "Input",
+ CellChangeTimes->{{3.5853210932731457`*^9, 3.5853211055605173`*^9}}],
+
+Cell[BoxData[
+ SuperscriptBox[
+  RowBox[{"(", 
+   RowBox[{"w", "+", "x", "+", "y", "+", "z"}], ")"}], "15"]], "Output",
+ CellChangeTimes->{3.585321106954556*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"f", " ", "=", " ", 
+  RowBox[{"e", "*", 
+   RowBox[{"(", 
+    RowBox[{"e", "+", "w"}], ")"}]}]}]], "Input",
+ CellChangeTimes->{{3.585321108560689*^9, 3.585321112806696*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  SuperscriptBox[
+   RowBox[{"(", 
+    RowBox[{"w", "+", "x", "+", "y", "+", "z"}], ")"}], "15"], " ", 
+  RowBox[{"(", 
+   RowBox[{"w", "+", 
+    SuperscriptBox[
+     RowBox[{"(", 
+      RowBox[{"w", "+", "x", "+", "y", "+", "z"}], ")"}], "15"]}], 
+   ")"}]}]], "Output",
+ CellChangeTimes->{3.585321113813676*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Timing", "[", 
+  RowBox[{
+   RowBox[{"g", "=", 
+    RowBox[{"Expand", "[", "f", "]"}]}], ";"}], "]"}]], "Input",
+ CellChangeTimes->{{3.585321121374816*^9, 3.5853211329822598`*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"2.380149`", ",", "Null"}], "}"}]], "Output",
+ CellChangeTimes->{3.585321136069125*^9}]
+}, Open  ]]
+},
+WindowSize->{740, 867},
+WindowMargins->{{142, Automatic}, {Automatic, 24}},
+FrontEndVersion->"8.0 for Linux x86 (64-bit) (February 23, 2011)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[579, 22, 221, 6, 30, "Input"],
+Cell[803, 30, 161, 4, 30, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[1001, 39, 197, 5, 30, "Input"],
+Cell[1201, 46, 337, 11, 33, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[1575, 62, 204, 5, 30, "Input"],
+Cell[1782, 69, 126, 3, 30, "Output"]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)
+
