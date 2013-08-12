@@ -22,6 +22,22 @@ namespace CSymPy {
         __hash__()
         __eq__(o)
     Sublcasses must implement these.
+
+    Classes like Add, Mul, Pow are initialzied through their constructor using
+    their internal representation. Add, Mul have a 'coeff' and 'dict', while
+    Pow hase 'base' and 'exp'. There are restrictions on what 'coeff' and
+    'dict' can be (for example 'coeff' cannot be zero in Mul, and if Mul is
+    used inside Add, then Mul's coeff must be one, etc.). All these
+    restrictions are checked when CSYMPY_ASSERT is enabled inside the
+    constructors using the is_canonical() method. That way, you don't have to
+    worry about creating Add/Mul/Pow with wrong arguments, as it will be caught
+    be the tests. In the Release mode no checks are done, so you can construct
+    Add/Mul/Pow very quickly. The idea is that depending on the algorithm, you
+    sometimes know that things are already canonical, so you simply pass it
+    directly to Add/Mul/Pow and you avoid expensive type checking and
+    canonicalization. At the same time, you need to make sure that tests are
+    still running with CSYMPY_ASSERT enabled, so that Add/Mul/Pow are never in
+    an inconsistent state.
 */
 class Basic {
 public:
