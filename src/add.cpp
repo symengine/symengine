@@ -105,12 +105,12 @@ RCP<Basic> Add::from_dict(const umap_basic_int &d)
     } else if (d.size() == 1) {
         auto p = d.begin();
         if (is_a<Integer>(*(p->second))) {
-            if ((rcp_dynamic_cast<Integer>(p->second))->is_one()) {
+            if (rcp_static_cast<Integer>(p->second)->is_one()) {
                 return p->first;
             }
             if (is_a<Mul>(*(p->first))) {
                 return Mul::from_dict(p->second,
-                        rcp_dynamic_cast<Mul>(p->first)->dict_);
+                        rcp_static_cast<Mul>(p->first)->dict_);
             }
             map_basic_int m;
             m[p->first] = one;
