@@ -95,10 +95,11 @@ inline Teuchos::RCP<Integer> negint(const Teuchos::RCP<Integer> &self)
 }
 
 
-// Integers 0 and 1 are created only once in integer.cpp and reused everywhere
-// (faster than creating them all the time):
+// Integers -1, 0 and 1 are created only once in integer.cpp and reused
+// everywhere (faster than creating them all the time):
 extern Teuchos::RCP<Integer> zero;
 extern Teuchos::RCP<Integer> one;
+extern Teuchos::RCP<Integer> minus_one;
 
 } // CSymPy
 
