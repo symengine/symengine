@@ -197,6 +197,11 @@ RCP<Basic> add(const RCP<Basic> &a, const RCP<Basic> &b)
     return Add::from_dict(zero, d);
 }
 
+RCP<Basic> sub(const RCP<Basic> &a, const RCP<Basic> &b)
+{
+    return add(a, mul(minus_one, b));
+}
+
 RCP<Basic> add_expand(const RCP<Add> &self)
 {
     umap_basic_int d;
