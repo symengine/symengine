@@ -201,18 +201,31 @@ RCP<Basic> pow_expand(const RCP<Pow> &self)
                         RCP<Basic> base = i2->first;
                         if (is_a<Integer>(*base)) {
                             imulint(outArg(overall_coeff),
-                                    rcp_static_cast<Integer>(base));
+                                powint(rcp_static_cast<Integer>(base), exp));
                         } else {
                             d[base] = exp;
+                        }
+                        if (!(i2->second->is_one())) {
+                            imulint(outArg(overall_coeff),
+                                powint(i2->second, exp));
                         }
                     }
                 }
                 RCP<Basic> term = Mul::from_dict(overall_coeff, d);
+                RCP<Integer> coef2 = rcp(new Integer(p.second));
                 if (is_a<Integer>(*term)) {
                     iaddint(outArg(add_overall_coeff),
-                            rcp_static_cast<Integer>(term));
+                        mulint(rcp_static_cast<Integer>(term), coef2));
                 } else {
-                    rd[term] = rcp(new Integer(p.second));
+                    if (is_a<Mul>(*term) &&
+                            !(rcp_static_cast<Mul>(term)->coef_->is_one())) {
+                        // Tidy up things like {2x: 3} -> {x: 6}
+                        imulint(outArg(coef2),
+                                rcp_static_cast<Mul>(term)->coef_);
+                        term = Mul::from_dict(one,
+                                rcp_static_cast<Mul>(term)->dict_);
+                    }
+                    rd[term] = coef2;
                 }
             }
             RCP<Basic> result = Add::from_dict(add_overall_coeff, rd);
