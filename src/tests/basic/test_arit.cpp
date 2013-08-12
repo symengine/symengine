@@ -60,6 +60,10 @@ void test_add()
     r1 = add(x, one);
     r2 = add(one, x);
     assert(eq(r1, r2));
+
+    r1 = add(pow(x, y), z);
+    r2 = add(z, pow(x, y));
+    assert(eq(r1, r2));
 }
 
 void test_pow()
