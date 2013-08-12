@@ -238,6 +238,13 @@ void test_expand2()
     RCP<Basic> im1 = rcp(new Integer(-1));
     RCP<Basic> im2 = rcp(new Integer(-2));
     RCP<Basic> i2 = rcp(new Integer(2));
+    RCP<Basic> i3 = rcp(new Integer(3));
+    RCP<Basic> i4 = rcp(new Integer(4));
+    RCP<Basic> i5 = rcp(new Integer(5));
+    RCP<Basic> i6 = rcp(new Integer(6));
+    RCP<Basic> i9 = rcp(new Integer(9));
+    RCP<Basic> i25 = rcp(new Integer(25));
+    RCP<Basic> i30 = rcp(new Integer(30));
 
     RCP<Basic> r1;
     RCP<Basic> r2;
@@ -263,6 +270,26 @@ void test_expand2()
     r1 = mul(im1, add(x, i2));
     r1 = expand(r1);
     r2 = add(mul(im1, x), im2);
+    assert(eq(r1, r2));
+
+    r1 = pow(add(x, one), i2);
+    r1 = expand(r1);
+    r2 = add(add(pow(x, i2), mul(i2, x)), one);
+    assert(eq(r1, r2));
+
+    r1 = pow(add(x, i2), i2);
+    r1 = expand(r1);
+    r2 = add(add(pow(x, i2), mul(i4, x)), i4);
+    assert(eq(r1, r2));
+
+    r1 = pow(add(x, i3), i2);
+    r1 = expand(r1);
+    r2 = add(add(pow(x, i2), mul(i6, x)), i9);
+    assert(eq(r1, r2));
+
+    r1 = pow(add(mul(i3, x), i5), i2);
+    r1 = expand(r1);
+    r2 = add(add(mul(i9, pow(x, i2)), mul(i30, x)), i25);
     assert(eq(r1, r2));
 }
 
