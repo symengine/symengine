@@ -108,6 +108,7 @@ void test_sub()
     RCP<Basic> x = rcp(new Symbol("x"));
     RCP<Basic> y = rcp(new Symbol("y"));
     RCP<Basic> z = rcp(new Symbol("z"));
+    RCP<Basic> im1 = rcp(new Integer(-1));
     RCP<Basic> i2 = rcp(new Integer(2));
     RCP<Basic> i3 = rcp(new Integer(3));
     RCP<Basic> i4 = rcp(new Integer(4));
@@ -144,6 +145,11 @@ void test_sub()
 
     r1 = add(add(x, one), add(x, i2));
     r2 = add(mul(i2, x), i3);
+    assert(eq(r1, r2));
+
+    r1 = sub(add(x, one), add(x, i2));
+    r1 = expand(r1);
+    r2 = im1;
     assert(eq(r1, r2));
 }
 

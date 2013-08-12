@@ -238,7 +238,8 @@ RCP<Basic> add_expand(const RCP<Add> &self)
                 Add::dict_add_term(d,
                         mulint(mulint(p.second, q.second), coef), tmp2);
             }
-            iaddint(outArg(coef_overall), rcp_static_cast<Add>(tmp)->coef_);
+            iaddint(outArg(coef_overall), mulint(p.second,
+                        rcp_static_cast<Add>(tmp)->coef_));
         } else {
             if (is_a<Mul>(*tmp)) {
                 rcp_static_cast<Mul>(tmp)->as_coef_term(outArg(coef),
