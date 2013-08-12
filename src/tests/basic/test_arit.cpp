@@ -153,6 +153,51 @@ void test_sub()
     assert(eq(r1, r2));
 }
 
+void test_div()
+{
+    RCP<Basic> x = rcp(new Symbol("x"));
+    RCP<Basic> y = rcp(new Symbol("y"));
+    RCP<Basic> z = rcp(new Symbol("z"));
+    RCP<Basic> im1 = rcp(new Integer(-1));
+    RCP<Basic> i2 = rcp(new Integer(2));
+    RCP<Basic> i3 = rcp(new Integer(3));
+    RCP<Basic> i4 = rcp(new Integer(4));
+
+    RCP<Basic> r1, r2;
+
+    r1 = div(i4, i2);
+    r2 = i2;
+    assert(eq(r1, r2));
+
+    r1 = div(x, x);
+    r2 = one;
+    assert(eq(r1, r2));
+
+    r1 = div(mul(i2, x), x);
+    r2 = i2;
+    assert(eq(r1, r2));
+
+    r1 = div(pow(x, i2), x);
+    r2 = x;
+    assert(eq(r1, r2));
+
+    r1 = div(mul(mul(i2, x), y), mul(x, y));
+    r2 = i2;
+    assert(eq(r1, r2));
+
+    r1 = div(mul(mul(y, x), i2), mul(x, y));
+    r2 = i2;
+    assert(eq(r1, r2));
+
+    r1 = div(mul(x, i2), x);
+    r2 = i2;
+    assert(eq(r1, r2));
+
+    r1 = div(mul(x, i4), mul(x, i2));
+    r2 = i2;
+    assert(eq(r1, r2));
+}
+
 void test_pow()
 {
     RCP<Basic> x = rcp(new Symbol("x"));
@@ -327,6 +372,7 @@ int main(int argc, char* argv[])
     test_mul();
     test_pow();
     test_sub();
+//    test_div();
     test_multinomial();
     test_expand1();
     test_expand2();
