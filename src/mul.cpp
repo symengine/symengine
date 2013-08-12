@@ -106,11 +106,8 @@ RCP<CSymPy::Basic> Mul::from_dict(const RCP<Integer> &coef, const map_basic_basi
                     return p->first;
                 }
             } else {
-                if ((rcp_static_cast<Integer>(p->second))->is_one()) {
-                    // For coef*x^1 we simply return "coef*x":
-                    return rcp(new Mul(coef, d));
-                }
-                throw std::runtime_error("Not implemented.");
+                // For coef*x or coef*x^3 we simply return Mul:
+                return rcp(new Mul(coef, d));
             }
         }
         if (coef->is_one()) {

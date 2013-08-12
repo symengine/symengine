@@ -48,6 +48,11 @@ bool Add::is_canonical(const Teuchos::RCP<Integer> &coef,
         if (is_a<Integer>(*p.second) &&
                 rcp_static_cast<Integer>(p.second)->is_zero())
             return false;
+
+        // e.g. {3x: 2}, this should rather be just {x: 6}
+        if (is_a<Mul>(*p.first) &&
+                !(rcp_static_cast<Mul>(p.first)->coef_->is_one()))
+            return false;
     }
     return true;
 }
