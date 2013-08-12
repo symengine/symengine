@@ -78,6 +78,8 @@ bool Add::__eq__(const Basic &o) const
 std::string Add::__str__() const
 {
     std::ostringstream o;
+    if (neq(coef_, zero))
+        o << *coef_ << " + ";
     for (auto &p: dict_) {
         if (eq(p.second, one))
             o << *(p.first);
