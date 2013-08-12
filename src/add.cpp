@@ -27,8 +27,7 @@ bool Add::is_canonical(const Teuchos::RCP<Integer> &coef,
     if (dict.size() == 0) return false;
     if (dict.size() == 1) {
         // e.g. 0 + x, 0 + 2x
-        if (is_a<Integer>(*coef) && rcp_static_cast<Integer>(coef)->is_zero())
-            return false;
+        if (coef->is_zero()) return false;
     }
     // Check that each term in 'dict' is in canonical form
     for (auto &p: dict) {
@@ -99,8 +98,7 @@ RCP<Basic> Add::from_dict(const RCP<Integer> &coef, const umap_basic_int &d)
 {
     if (d.size() == 0) {
         return coef;
-    } else if (d.size() == 1 && is_a<Integer>(*coef) &&
-            rcp_static_cast<Integer>(coef)->is_zero()) {
+    } else if (d.size() == 1 && coef->is_zero()) {
         auto p = d.begin();
         if (is_a<Integer>(*(p->second))) {
             if (rcp_static_cast<Integer>(p->second)->is_zero()) {
@@ -151,9 +149,8 @@ void as_coef_term(const RCP<Basic> &self, const Ptr<RCP<Integer>> &coef,
         *coef = one;
         *term = self;
     } else if (CSymPy::is_a<CSymPy::Mul>(*self)) {
-        RCP<Integer> tmp;
-        (rcp_dynamic_cast<CSymPy::Mul>(self))->as_coef_term(outArg(tmp), term);
-        *coef = tmp;
+        (rcp_dynamic_cast<CSymPy::Mul>(self))->
+            as_coef_term(outArg(*coef), term);
     } else if (CSymPy::is_a<CSymPy::Integer>(*self)) {
         *coef = rcp_dynamic_cast<CSymPy::Integer>(self);
         *term = one;
@@ -221,10 +218,8 @@ RCP<Basic> add_expand(const RCP<Add> &self)
                 } else {
                     coef = one;
                 }
-                if (!is_a<Integer>(*coef))
-                    throw std::runtime_error("Not implemented.");
-                Add::dict_add_term(d, mulint(mulint(p.second, q.second),
-                            rcp_dynamic_cast<Integer>(coef)), tmp2);
+                Add::dict_add_term(d,
+                        mulint(mulint(p.second, q.second), coef), tmp2);
             }
         } else {
             if (is_a<Mul>(*tmp)) {
@@ -233,10 +228,7 @@ RCP<Basic> add_expand(const RCP<Add> &self)
             } else {
                 coef = one;
             }
-            if (!is_a<Integer>(*coef))
-                throw std::runtime_error("Not implemented.");
-            Add::dict_add_term(d,
-                    mulint(p.second, rcp_dynamic_cast<Integer>(coef)), tmp);
+            Add::dict_add_term(d, mulint(p.second, coef), tmp);
         }
     }
     return Add::from_dict(zero, d);
