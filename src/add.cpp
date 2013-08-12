@@ -138,8 +138,8 @@ void Add::dict_add_term(umap_basic_int &d, const RCP<Integer> &coef,
         // Not found, add it in if it is nonzero:
         if (!(coef->is_zero())) d[t] = coef;
     } else {
-        // TODO: remove the item if d[t] + coef is zero:
         iaddint(outArg(it->second), coef);
+        if (it->second->is_zero()) d.erase(it);
     }
 }
 
@@ -171,17 +171,31 @@ RCP<Basic> add(const RCP<Basic> &a, const RCP<Basic> &b)
     RCP<Integer> coef;
     RCP<Basic> t;
     if (CSymPy::is_a<Add>(*a) && CSymPy::is_a<Add>(*b)) {
+        coef = (rcp_static_cast<Add>(a))->coef_;
         d = (rcp_static_cast<Add>(a))->dict_;
         for (auto &p: (rcp_static_cast<Add>(b))->dict_)
             Add::dict_add_term(d, p.second, p.first);
+        iaddint(outArg(coef), rcp_static_cast<Add>(b)->coef_);
     } else if (CSymPy::is_a<Add>(*a)) {
+        coef = (rcp_static_cast<Add>(a))->coef_;
         d = (rcp_static_cast<Add>(a))->dict_;
-        as_coef_term(b, outArg(coef), outArg(t));
-        Add::dict_add_term(d, coef, t);
+        if (is_a<Integer>(*b)) {
+            iaddint(outArg(coef), rcp_static_cast<Integer>(b));
+        } else {
+            RCP<Integer> coef2;
+            as_coef_term(b, outArg(coef2), outArg(t));
+            Add::dict_add_term(d, coef2, t);
+        }
     } else if (CSymPy::is_a<Add>(*b)) {
+        coef = (rcp_static_cast<Add>(b))->coef_;
         d = (rcp_static_cast<Add>(b))->dict_;
-        as_coef_term(a, outArg(coef), outArg(t));
-        Add::dict_add_term(d, coef, t);
+        if (is_a<Integer>(*a)) {
+            iaddint(outArg(coef), rcp_static_cast<Integer>(a));
+        } else {
+            RCP<Integer> coef2;
+            as_coef_term(a, outArg(coef2), outArg(t));
+            Add::dict_add_term(d, coef2, t);
+        }
     } else {
         as_coef_term(a, outArg(coef), outArg(t));
         Add::dict_add_term(d, coef, t);
@@ -196,7 +210,7 @@ RCP<Basic> add(const RCP<Basic> &a, const RCP<Basic> &b)
         }
         return Add::from_dict(coef, d);
     }
-    return Add::from_dict(zero, d);
+    return Add::from_dict(coef, d);
 }
 
 RCP<Basic> sub(const RCP<Basic> &a, const RCP<Basic> &b)
