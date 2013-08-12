@@ -23,6 +23,8 @@ Pow::Pow(const Teuchos::RCP<Basic> &base, const Teuchos::RCP<Basic> &exp)
 
 bool Pow::is_canonical(const RCP<Basic> &base, const RCP<Basic> &exp)
 {
+    if (base == Teuchos::null) return false;
+    if (exp == Teuchos::null) return false;
     // e.g. 0^x
     if (is_a<Integer>(*base) && rcp_static_cast<Integer>(base)->is_zero())
         return false;

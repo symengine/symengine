@@ -23,6 +23,7 @@ Add::Add(const RCP<Basic> &coef, const umap_basic_int& dict)
 bool Add::is_canonical(const Teuchos::RCP<Basic> &coef,
         const umap_basic_int& dict)
 {
+    if (coef == Teuchos::null) return false;
     if (dict.size() == 0) return false;
     if (dict.size() == 1) {
         // e.g. 0 + x, 0 + 2x
@@ -31,6 +32,8 @@ bool Add::is_canonical(const Teuchos::RCP<Basic> &coef,
     }
     // Check that each term in 'dict' is in canonical form
     for (auto &p: dict) {
+        if (p.first == Teuchos::null) return false;
+        if (p.second == Teuchos::null) return false;
         // e.g. 2*3
         if (is_a<Integer>(*p.first) && is_a<Integer>(*p.second))
             return false;

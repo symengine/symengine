@@ -23,6 +23,7 @@ Mul::Mul(const Teuchos::RCP<Basic> &coef, const map_basic_int& dict)
 bool Mul::is_canonical(const Teuchos::RCP<Basic> &coef,
         const map_basic_int& dict)
 {
+    if (coef == Teuchos::null) return false;
     // e.g. 0*x*y
     if (is_a<Integer>(*coef) && rcp_static_cast<Integer>(coef)->is_zero())
         return false;
@@ -34,6 +35,8 @@ bool Mul::is_canonical(const Teuchos::RCP<Basic> &coef,
     }
     // Check that each term in 'dict' is in canonical form
     for (auto &p: dict) {
+        if (p.first == Teuchos::null) return false;
+        if (p.second == Teuchos::null) return false;
         // e.g. 2^3
         if (is_a<Integer>(*p.first) && is_a<Integer>(*p.second))
             return false;
