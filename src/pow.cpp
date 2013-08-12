@@ -23,6 +23,8 @@ Pow::Pow(const Teuchos::RCP<Basic> &base, const Teuchos::RCP<Basic> &exp)
 
 bool Pow::is_canonical(const RCP<Basic> &base, const RCP<Basic> &exp)
 {
+    if (base == Teuchos::null) return false;
+    if (exp == Teuchos::null) return false;
     // e.g. 0^x
     if (is_a<Integer>(*base) && rcp_static_cast<Integer>(base)->is_zero())
         return false;
@@ -184,7 +186,7 @@ RCP<Basic> pow_expand(const RCP<Pow> &self)
             for (auto &p: r) {
                 auto power = p.first.begin();
                 auto i2 = base->dict_.begin();
-                map_basic_int d;
+                map_basic_basic d;
                 for (; power != p.first.end(); ++power, ++i2) {
                     if (*power > 0) {
                         RCP<Integer> exp = rcp(new Integer(*power));

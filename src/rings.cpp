@@ -27,11 +27,15 @@ void expr2poly(const RCP<Basic> &p, umap_basic_int &syms, umap_vec_mpz &P)
             coef = p.second->as_mpz();
             exp.assign(n, 0); // Initialize to [0]*n
             if (is_a<Mul>(*p.first)) {
-                map_basic_int &term = rcp_static_cast<Mul>(p.first)->dict_;
+                map_basic_basic &term = rcp_static_cast<Mul>(p.first)->dict_;
                 for (auto &q: term) {
                     RCP<Basic> sym = q.first;
                     int i = syms[sym]->as_int();
-                    exp[i] = q.second->as_int();
+                    if (is_a<Integer>(*q.second)) {
+                        exp[i] = rcp_static_cast<Integer>(q.second)->as_int();
+                    } else {
+                        throw std::runtime_error("Cannot convert symbolic exponents to sparse polynomials with integer exponents.");
+                    }
                 }
             } else if (is_a<Pow>(*p.first)) {
                 RCP<Basic> sym = rcp_static_cast<Pow>(p.first)->base_;
