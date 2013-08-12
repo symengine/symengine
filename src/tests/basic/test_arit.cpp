@@ -24,6 +24,7 @@ using CSymPy::umap_basic_int;
 using CSymPy::map_vec_int;
 using CSymPy::Integer;
 using CSymPy::multinomial_coefficients;
+using CSymPy::one;
 
 void test_add()
 {
@@ -54,6 +55,10 @@ void test_add()
 
     r1 = add(add(x, x), x);
     r2 = mul(x, i3);
+    assert(eq(r1, r2));
+
+    r1 = add(x, one);
+    r2 = add(one, x);
     assert(eq(r1, r2));
 }
 
