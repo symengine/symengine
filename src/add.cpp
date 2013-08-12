@@ -98,7 +98,7 @@ std::string Add::__str__() const
 RCP<Basic> Add::from_dict(const RCP<Basic> &coef, const umap_basic_int &d)
 {
     if (d.size() == 0) {
-        throw std::runtime_error("Not implemented.");
+        return coef;
     } else if (d.size() == 1 && is_a<Integer>(*coef) &&
             rcp_static_cast<Integer>(coef)->is_zero()) {
         auto p = d.begin();
