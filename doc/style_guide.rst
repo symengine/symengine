@@ -38,31 +38,31 @@ Declare functions with two input arguments (and one return value) as follows::
     RCP<Basic> multiply(const RCP<Basic> &a, const RCP<Basic> &b)
     {
         ...
-        return rcp(new Integer(1));
+        return rcp(new Rational(1));
     }
 
 Functions with one input and two output arguments are declared::
 
-    void as_coef_term(const RCP<Basic> &self, const Ptr<RCP<Integer>> &coef,
+    void as_coef_term(const RCP<Basic> &self, const Ptr<RCP<Rational>> &coef,
             const Ptr<RCP<Basic>> &term)
     {
         ...
-        *coef = rcp(new Integer(1));
+        *coef = rcp(new Rational(1));
         *term = self
         ...
     }
 
 and used as follows::
 
-    RCP<Integer> coef;
+    RCP<Rational> coef;
     RCP<Basic> t;
     as_coef_term(b, outArg(coef), outArg(t));
 
 You can use dynamic cast as follows::
 
     RCP<Basic> tmp;
-    RCP<Integer> coef;
-    coef = rcp_dynamic_cast<Integer>(tmp);
+    RCP<Rational> coef;
+    coef = rcp_dynamic_cast<Rational>(tmp);
 
 
 References
@@ -70,7 +70,7 @@ References
 
 You can use C++ references as follows (see the first argument)::
 
-    void Add::dict_add_term(umap_basic_int &d, const RCP<Integer> &coef,
+    void Add::dict_add_term(umap_basic_int &d, const RCP<Rational> &coef,
             const RCP<Basic> &t)
     {
         if (d.find(t) == d.end()) {

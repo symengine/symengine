@@ -18,7 +18,7 @@ using CSymPy::Mul;
 using CSymPy::Symbol;
 using CSymPy::umap_basic_int;
 using CSymPy::map_basic_basic;
-using CSymPy::Integer;
+using CSymPy::Rational;
 using CSymPy::one;
 using CSymPy::zero;
 
@@ -61,8 +61,8 @@ void test_symbol_dict()
     assert( x !=  x2);  // The instances are different...
     assert(eq(x, x2));  // ...but equal in the SymPy sense
 
-    d[x] = rcp(new Integer(2));
-    d[y] = rcp(new Integer(3));
+    d[x] = rcp(new Rational(2));
+    d[y] = rcp(new Rational(3));
 
     // Test printing:
     std::cout << d << std::endl;
@@ -74,11 +74,11 @@ void test_add()
     umap_basic_int m;
     RCP<Basic> x  = rcp(new Symbol("x"));
     RCP<Basic> y  = rcp(new Symbol("y"));
-    m[x] = rcp(new Integer(2));
-    m[y] = rcp(new Integer(3));
+    m[x] = rcp(new Rational(2));
+    m[y] = rcp(new Rational(3));
 
     RCP<Add> a = rcp(new Add(zero, m));
-    m[x] = rcp(new Integer(-2));
+    m[x] = rcp(new Rational(-2));
     RCP<Add> b = rcp(new Add(zero, m));
     std::cout << *a << std::endl;
     std::cout << *b << std::endl;
@@ -96,25 +96,25 @@ void test_add()
 
 void test_integer()
 {
-    RCP<Integer> i = rcp(new Integer(5));
-    RCP<Integer> j = rcp(new Integer(6));
+    RCP<Rational> i = rcp(new Rational(5));
+    RCP<Rational> j = rcp(new Rational(6));
     std::cout << *i << std::endl;
     std::cout << *j << std::endl;
 
-    RCP<Integer> k = addint(i, j);
+    RCP<Rational> k = addint(i, j);
     std::cout << *k << std::endl;
-    assert(eq(k, rcp(new Integer(11))));
-    assert(neq(k, rcp(new Integer(12))));
+    assert(eq(k, rcp(new Rational(11))));
+    assert(neq(k, rcp(new Rational(12))));
 
     k = subint(i, j);
     std::cout << *k << std::endl;
-    assert(eq(k, rcp(new Integer(-1))));
-    assert(neq(k, rcp(new Integer(12))));
+    assert(eq(k, rcp(new Rational(-1))));
+    assert(neq(k, rcp(new Rational(12))));
 
     k = mulint(i, j);
     std::cout << *k << std::endl;
-    assert(eq(k, rcp(new Integer(30))));
-    assert(neq(k, rcp(new Integer(12))));
+    assert(eq(k, rcp(new Rational(30))));
+    assert(neq(k, rcp(new Rational(12))));
 
     // FIXME: this should return a Rational
     k = divint(i, j);
@@ -122,8 +122,8 @@ void test_integer()
 
     k = negint(i);
     std::cout << *k << std::endl;
-    assert(eq(k, rcp(new Integer(-5))));
-    assert(neq(k, rcp(new Integer(12))));
+    assert(eq(k, rcp(new Rational(-5))));
+    assert(neq(k, rcp(new Rational(12))));
 }
 
 void test_mul()
@@ -131,11 +131,11 @@ void test_mul()
     map_basic_basic m;
     RCP<Basic> x  = rcp(new Symbol("x"));
     RCP<Basic> y  = rcp(new Symbol("y"));
-    m[x] = rcp(new Integer(2));
-    m[y] = rcp(new Integer(3));
+    m[x] = rcp(new Rational(2));
+    m[y] = rcp(new Rational(3));
 
     RCP<Mul> a = rcp(new Mul(one, m));
-    m[x] = rcp(new Integer(-2));
+    m[x] = rcp(new Rational(-2));
     RCP<Mul> b = rcp(new Mul(one, m));
     std::cout << *a << std::endl;
     std::cout << *b << std::endl;

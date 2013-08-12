@@ -7,13 +7,13 @@
 
 namespace CSymPy {
 
-class Integer : public Basic {
+class Rational : public Basic {
 public:
     mpz_class i;
 
 public:
-    Integer(int i);
-    Integer(mpz_class i);
+    Rational(int i);
+    Rational(mpz_class i);
     virtual std::size_t __hash__() const;
     virtual bool __eq__(const Basic &o) const;
     virtual std::string __str__() const;
@@ -25,81 +25,81 @@ public:
     inline bool is_one() { return this->i == 1; }
 };
 
-inline Teuchos::RCP<Integer> addint(const Teuchos::RCP<Integer> &self,
-    const Teuchos::RCP<Integer> &other)
+inline Teuchos::RCP<Rational> addint(const Teuchos::RCP<Rational> &self,
+    const Teuchos::RCP<Rational> &other)
 {
-    return Teuchos::rcp(new CSymPy::Integer(self->i + other->i));
+    return Teuchos::rcp(new CSymPy::Rational(self->i + other->i));
 }
 
-inline Teuchos::RCP<Integer> subint(const Teuchos::RCP<Integer> &self,
-    const Teuchos::RCP<Integer> &other)
+inline Teuchos::RCP<Rational> subint(const Teuchos::RCP<Rational> &self,
+    const Teuchos::RCP<Rational> &other)
 {
-    return Teuchos::rcp(new CSymPy::Integer(self->i - other->i));
+    return Teuchos::rcp(new CSymPy::Rational(self->i - other->i));
 }
 
-inline Teuchos::RCP<Integer> mulint(const Teuchos::RCP<Integer> &self,
-    const Teuchos::RCP<Integer> &other)
+inline Teuchos::RCP<Rational> mulint(const Teuchos::RCP<Rational> &self,
+    const Teuchos::RCP<Rational> &other)
 {
-    return Teuchos::rcp(new CSymPy::Integer(self->i * other->i));
+    return Teuchos::rcp(new CSymPy::Rational(self->i * other->i));
 }
 
-inline Teuchos::RCP<Integer> divint(const Teuchos::RCP<Integer> &self,
-    const Teuchos::RCP<Integer> &other)
+inline Teuchos::RCP<Rational> divint(const Teuchos::RCP<Rational> &self,
+    const Teuchos::RCP<Rational> &other)
 {
-    return Teuchos::rcp(new CSymPy::Integer(self->i / other->i));
+    return Teuchos::rcp(new CSymPy::Rational(self->i / other->i));
 }
 
-inline Teuchos::RCP<Integer> powint(const Teuchos::RCP<Integer> &self,
-    const Teuchos::RCP<Integer> &other)
+inline Teuchos::RCP<Rational> powint(const Teuchos::RCP<Rational> &self,
+    const Teuchos::RCP<Rational> &other)
 {
     if (!(other->i.fits_ulong_p()))
         throw std::runtime_error("powint: 'exp' does not fit unsigned int.");
     mpz_class tmp;
     mpz_pow_ui(tmp.get_mpz_t(), self->i.get_mpz_t(), other->i.get_ui());
-    return Teuchos::rcp(new CSymPy::Integer(tmp));
+    return Teuchos::rcp(new CSymPy::Rational(tmp));
 }
 
-inline void iaddint(const Teuchos::Ptr<Teuchos::RCP<Integer>> &self,
-    const Teuchos::RCP<Integer> &other)
+inline void iaddint(const Teuchos::Ptr<Teuchos::RCP<Rational>> &self,
+    const Teuchos::RCP<Rational> &other)
 {
     *self = addint(*self, other);
 }
 
-inline void isubint(const Teuchos::Ptr<Teuchos::RCP<Integer>> &self,
-    const Teuchos::RCP<Integer> &other)
+inline void isubint(const Teuchos::Ptr<Teuchos::RCP<Rational>> &self,
+    const Teuchos::RCP<Rational> &other)
 {
     *self = subint(*self, other);
 }
 
-inline void imulint(const Teuchos::Ptr<Teuchos::RCP<Integer>> &self,
-    const Teuchos::RCP<Integer> &other)
+inline void imulint(const Teuchos::Ptr<Teuchos::RCP<Rational>> &self,
+    const Teuchos::RCP<Rational> &other)
 {
     *self = mulint(*self, other);
 }
 
-inline void idivint(const Teuchos::Ptr<Teuchos::RCP<Integer>> &self,
-    const Teuchos::RCP<Integer> &other)
+inline void idivint(const Teuchos::Ptr<Teuchos::RCP<Rational>> &self,
+    const Teuchos::RCP<Rational> &other)
 {
     *self = divint(*self, other);
 }
 
-inline void ipowint(const Teuchos::Ptr<Teuchos::RCP<Integer>> &self,
-    const Teuchos::RCP<Integer> &other)
+inline void ipowint(const Teuchos::Ptr<Teuchos::RCP<Rational>> &self,
+    const Teuchos::RCP<Rational> &other)
 {
     *self = powint(*self, other);
 }
 
-inline Teuchos::RCP<Integer> negint(const Teuchos::RCP<Integer> &self)
+inline Teuchos::RCP<Rational> negint(const Teuchos::RCP<Rational> &self)
 {
-    return Teuchos::rcp(new CSymPy::Integer(-(self->i)));
+    return Teuchos::rcp(new CSymPy::Rational(-(self->i)));
 }
 
 
-// Integers -1, 0 and 1 are created only once in integer.cpp and reused
+// Rationals -1, 0 and 1 are created only once in integer.cpp and reused
 // everywhere (faster than creating them all the time):
-extern Teuchos::RCP<Integer> zero;
-extern Teuchos::RCP<Integer> one;
-extern Teuchos::RCP<Integer> minus_one;
+extern Teuchos::RCP<Rational> zero;
+extern Teuchos::RCP<Rational> one;
+extern Teuchos::RCP<Rational> minus_one;
 
 } // CSymPy
 

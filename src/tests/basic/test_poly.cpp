@@ -24,7 +24,7 @@ using CSymPy::Pow;
 using CSymPy::Symbol;
 using CSymPy::umap_basic_int;
 using CSymPy::map_vec_int;
-using CSymPy::Integer;
+using CSymPy::Rational;
 using CSymPy::multinomial_coefficients;
 using CSymPy::map_vec_mpz;
 using CSymPy::expr2poly;
@@ -57,7 +57,7 @@ void test_expand()
     RCP<Basic> y = rcp(new Symbol("y"));
     RCP<Basic> z = rcp(new Symbol("z"));
     RCP<Basic> w = rcp(new Symbol("w"));
-    RCP<Basic> i4 = rcp(new Integer(2));
+    RCP<Basic> i4 = rcp(new Rational(2));
 
     RCP<Basic> e, f1, f2, r;
 
@@ -66,10 +66,10 @@ void test_expand()
     f2 = expand(add(e, w));
 
     umap_basic_int syms;
-    syms[x] = rcp(new Integer(0));
-    syms[y] = rcp(new Integer(1));
-    syms[z] = rcp(new Integer(2));
-    syms[w] = rcp(new Integer(3));
+    syms[x] = rcp(new Rational(0));
+    syms[y] = rcp(new Rational(1));
+    syms[z] = rcp(new Rational(2));
+    syms[w] = rcp(new Rational(3));
 
     umap_vec_mpz P1, P2, C;
 

@@ -13,9 +13,9 @@ cdef c2py(RCP[csympy.Basic] o):
         r = Mul.__new__(Mul)
     elif (csympy.is_a_Pow(deref(o))):
         r = Pow.__new__(Pow)
-    elif (csympy.is_a_Integer(deref(o))):
+    elif (csympy.is_a_Rational(deref(o))):
         # TODO: figure out how to bypass the __init__() completely:
-        r = Integer.__new__(Integer, -99999)
+        r = Rational.__new__(Rational, -99999)
     elif (csympy.is_a_Symbol(deref(o))):
         # TODO: figure out how to bypass the __init__() completely:
         r = Symbol.__new__(Symbol, "null")
@@ -28,7 +28,7 @@ def sympify(a, raise_error=True):
     if isinstance(a, Basic):
         return a
     elif isinstance(a, (int, long)):
-        return Integer(a)
+        return Rational(a)
     else:
         if raise_error:
             raise SympifyError("Cannot convert '%r' to a csympy type." % a)
@@ -90,10 +90,10 @@ cdef class Symbol(Basic):
     def __dealloc__(self):
         self.thisptr.reset()
 
-cdef class Integer(Basic):
+cdef class Rational(Basic):
 
     def __cinit__(self, i):
-        self.thisptr = rcp(new csympy.Integer(i))
+        self.thisptr = rcp(new csympy.Rational(i))
 
     def __dealloc__(self):
         self.thisptr.reset()
