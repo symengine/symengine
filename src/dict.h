@@ -2,7 +2,7 @@
 #define CSYMPY_DICT_H
 
 #include "basic.h"
-#include "integer.h"
+#include "rational.h"
 
 namespace CSymPy {
 

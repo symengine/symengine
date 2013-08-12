@@ -1,4 +1,4 @@
-#include "integer.h"
+#include "rational.h"
 
 using Teuchos::RCP;
 using Teuchos::rcp;

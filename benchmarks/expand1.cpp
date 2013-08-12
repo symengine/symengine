@@ -7,7 +7,6 @@
 #include "add.h"
 #include "symbol.h"
 #include "dict.h"
-#include "integer.h"
 #include "mul.h"
 #include "pow.h"
 

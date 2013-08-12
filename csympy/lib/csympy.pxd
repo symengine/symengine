@@ -33,7 +33,7 @@ cdef extern from "symbol.h" namespace "CSymPy":
         Symbol(string name) nogil
 
 
-cdef extern from "integer.h" namespace "CSymPy":
+cdef extern from "rational.h" namespace "CSymPy":
     cdef cppclass Rational(Basic):
         Rational(int i) nogil
 

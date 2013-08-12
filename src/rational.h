@@ -1,5 +1,5 @@
-#ifndef CSYMPY_INTEGER_H
-#define CSYMPY_INTEGER_H
+#ifndef CSYMPY_RATIONAL_H
+#define CSYMPY_RATIONAL_H
 
 #include <gmpxx.h>
 
