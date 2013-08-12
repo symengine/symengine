@@ -103,6 +103,9 @@ RCP<Basic> Add::from_dict(const RCP<Basic> &coef, const umap_basic_int &d)
             rcp_static_cast<Integer>(coef)->is_zero()) {
         auto p = d.begin();
         if (is_a<Integer>(*(p->second))) {
+            if (rcp_static_cast<Integer>(p->second)->is_zero()) {
+                return zero;
+            }
             if (rcp_static_cast<Integer>(p->second)->is_one()) {
                 return p->first;
             }
