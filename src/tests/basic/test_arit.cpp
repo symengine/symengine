@@ -264,6 +264,11 @@ void test_expand2()
     r1 = expand(r1);
     r2 = add(mul(im1, x), im2);
     assert(eq(r1, r2));
+
+    r1 = pow(add(x, one), i2);
+    r1 = expand(r1);
+    r2 = add(add(pow(x, i2), mul(i2, x)), one);
+    assert(eq(r1, r2));
 }
 
 void test_expand3()

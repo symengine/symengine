@@ -180,24 +180,42 @@ RCP<Basic> pow_expand(const RCP<Pow> &self)
             int n = rcp_static_cast<Integer>(self->exp_)->as_int();
 
             RCP<Add> base = rcp_static_cast<Add>(self->base_);
-            int m = base->dict_.size();
+            umap_basic_int base_dict = base->dict_;
+            if (! (base->coef_->is_zero())) {
+                // Add the numerical coefficient into the dictionary. This
+                // allows a little bit easier treatment below.
+                base_dict[base->coef_] = one;
+            }
+            int m = base_dict.size();
             multinomial_coefficients_mpz(m, n, r);
             umap_basic_int rd;
+            RCP<Integer> add_overall_coeff=zero;
             for (auto &p: r) {
                 auto power = p.first.begin();
-                auto i2 = base->dict_.begin();
+                auto i2 = base_dict.begin();
                 map_basic_basic d;
+                RCP<Integer> overall_coeff=one;
                 for (; power != p.first.end(); ++power, ++i2) {
                     if (*power > 0) {
                         RCP<Integer> exp = rcp(new Integer(*power));
                         RCP<Basic> base = i2->first;
-                        d[base] = exp;
+                        if (is_a<Integer>(*base)) {
+                            imulint(outArg(overall_coeff),
+                                    rcp_static_cast<Integer>(base));
+                        } else {
+                            d[base] = exp;
+                        }
                     }
                 }
-                RCP<Basic> term = Mul::from_dict(one, d);
-                rd[term] = rcp(new Integer(p.second));
+                RCP<Basic> term = Mul::from_dict(overall_coeff, d);
+                if (is_a<Integer>(*term)) {
+                    iaddint(outArg(add_overall_coeff),
+                            rcp_static_cast<Integer>(term));
+                } else {
+                    rd[term] = rcp(new Integer(p.second));
+                }
             }
-            RCP<Basic> result = Add::from_dict(zero, rd);
+            RCP<Basic> result = Add::from_dict(add_overall_coeff, rd);
             return result;
         }
     }
