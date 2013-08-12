@@ -170,6 +170,10 @@ void test_pow()
     r1 = mul(mul(add(x, y), add(y, x)), add(x, y));
     r2 = pow(add(x, y), i3);
     assert(eq(r1, r2));
+
+    r1 = sub(pow(x, y), pow(x, y));
+    r2 = zero;
+    assert(eq(r1, r2));
 }
 
 void test_multinomial()

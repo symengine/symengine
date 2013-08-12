@@ -115,8 +115,12 @@ RCP<CSymPy::Basic> Mul::from_dict(const RCP<Basic> &coef, const map_basic_basic 
                 throw std::runtime_error("Not implemented.");
             }
         }
-        // Otherwise create a Pow() here:
-        return pow(p->first, p->second);
+        if (is_a<Integer>(*coef) && rcp_static_cast<Integer>(coef)->is_one()) {
+            // Create a Pow() here:
+            return pow(p->first, p->second);
+        } else {
+            return rcp(new Mul(coef, d));
+        }
     } else {
         return rcp(new Mul(coef, d));
     }
@@ -220,11 +224,13 @@ RCP<Basic> mul(const RCP<Basic> &a, const RCP<Basic> &b)
         Mul::dict_add_term(d, exp, t);
 
         CSymPy::map_basic_basic d2;
-        RCP<Integer> coef2 = rcp_dynamic_cast<Integer>(coef);
+        if (!is_a<Integer>(*coef))
+            throw std::runtime_error("Not implemented.");
+        RCP<Integer> coef2 = rcp_static_cast<Integer>(coef);
         for (auto &p: d) {
             if (is_a<Integer>(*(p.first)) && is_a<Integer>(*(p.second))) {
-                RCP<Integer> f = rcp_dynamic_cast<Integer>(p.first);
-                RCP<Integer> s = rcp_dynamic_cast<Integer>(p.second);
+                RCP<Integer> f = rcp_static_cast<Integer>(p.first);
+                RCP<Integer> s = rcp_static_cast<Integer>(p.second);
                 RCP<Integer> r = powint(f, s);
                 imulint(outArg(coef2), r);
             } else {
