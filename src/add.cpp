@@ -93,8 +93,11 @@ std::string Add::__str__() const
     return s.substr(0, s.size()-3);
 }
 
-// Creates the appropriate instance (i.e. Add, Symbol, Integer, Mul) depending
-// on how many (and which) items are in the dictionary "d":
+// Very quickly (!) creates the appropriate instance (i.e. Add, Symbol,
+// Integer, Mul) depending on the size of the dictionary 'd'.
+// If d.size() > 1 then it just returns Add. This means that the dictionary
+// must be in canonical form already. For d.size == 1, it returns Mul, Pow,
+// Symbol or Integer, depending on the expression.
 RCP<Basic> Add::from_dict(const umap_basic_int &d)
 {
     if (d.size() == 0) {
