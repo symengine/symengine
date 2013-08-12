@@ -41,7 +41,9 @@ void expr2poly(const RCP<Basic> &p, umap_basic_int &syms, umap_vec_mpz &P)
                 RCP<Basic> sym = rcp_static_cast<Pow>(p.first)->base_;
                 RCP<Basic> exp_ = rcp_static_cast<Pow>(p.first)->exp_;
                 int i = syms[sym]->as_int();
-                exp[i] = rcp_dynamic_cast<Integer>(exp_)->as_int();
+                if (!is_a<Integer>(*exp_))
+                    throw std::runtime_error("Not implemented.");
+                exp[i] = rcp_static_cast<Integer>(exp_)->as_int();
             } else if (is_a<Symbol>(*p.first)) {
                 RCP<Basic> sym = p.first;
                 int i = syms[sym]->as_int();

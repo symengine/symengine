@@ -177,9 +177,9 @@ RCP<Basic> pow_expand(const RCP<Pow> &self)
     if (is_a<Integer>(*self->exp_)) {
         if (is_a<Add>(*self->base_)) {
             map_vec_mpz r;
-            int n = rcp_dynamic_cast<Integer>(self->exp_)->as_int();
+            int n = rcp_static_cast<Integer>(self->exp_)->as_int();
 
-            RCP<Add> base = rcp_dynamic_cast<Add>(self->base_);
+            RCP<Add> base = rcp_static_cast<Add>(self->base_);
             int m = base->dict_.size();
             multinomial_coefficients_mpz(m, n, r);
             umap_basic_int rd;

@@ -14,21 +14,20 @@ using Teuchos::rcp_static_cast;
 
 namespace CSymPy {
 
-Add::Add(const RCP<Basic> &coef, const umap_basic_int& dict)
+Add::Add(const RCP<Integer> &coef, const umap_basic_int& dict)
     : coef_{coef}, dict_{dict}
 {
     CSYMPY_ASSERT(is_canonical(coef, dict))
 }
 
-bool Add::is_canonical(const Teuchos::RCP<Basic> &coef,
+bool Add::is_canonical(const Teuchos::RCP<Integer> &coef,
         const umap_basic_int& dict)
 {
     if (coef == Teuchos::null) return false;
     if (dict.size() == 0) return false;
     if (dict.size() == 1) {
         // e.g. 0 + x, 0 + 2x
-        if (is_a<Integer>(*coef) && rcp_static_cast<Integer>(coef)->is_zero())
-            return false;
+        if (coef->is_zero()) return false;
     }
     // Check that each term in 'dict' is in canonical form
     for (auto &p: dict) {
@@ -95,12 +94,11 @@ std::string Add::__str__() const
 // If d.size() > 1 then it just returns Add. This means that the dictionary
 // must be in canonical form already. For d.size == 1, it returns Mul, Pow,
 // Symbol or Integer, depending on the expression.
-RCP<Basic> Add::from_dict(const RCP<Basic> &coef, const umap_basic_int &d)
+RCP<Basic> Add::from_dict(const RCP<Integer> &coef, const umap_basic_int &d)
 {
     if (d.size() == 0) {
         return coef;
-    } else if (d.size() == 1 && is_a<Integer>(*coef) &&
-            rcp_static_cast<Integer>(coef)->is_zero()) {
+    } else if (d.size() == 1 && coef->is_zero()) {
         auto p = d.begin();
         if (is_a<Integer>(*(p->second))) {
             if (rcp_static_cast<Integer>(p->second)->is_zero()) {
@@ -151,11 +149,10 @@ void as_coef_term(const RCP<Basic> &self, const Ptr<RCP<Integer>> &coef,
         *coef = one;
         *term = self;
     } else if (CSymPy::is_a<CSymPy::Mul>(*self)) {
-        RCP<Basic> tmp;
-        (rcp_dynamic_cast<CSymPy::Mul>(self))->as_coef_term(outArg(tmp), term);
-        *coef = rcp_dynamic_cast<Integer>(tmp);
+        (rcp_static_cast<CSymPy::Mul>(self))->
+            as_coef_term(outArg(*coef), term);
     } else if (CSymPy::is_a<CSymPy::Integer>(*self)) {
-        *coef = rcp_dynamic_cast<CSymPy::Integer>(self);
+        *coef = rcp_static_cast<CSymPy::Integer>(self);
         *term = one;
     } else if (CSymPy::is_a<CSymPy::Pow>(*self)) {
         *coef = one;
@@ -172,15 +169,15 @@ RCP<Basic> add(const RCP<Basic> &a, const RCP<Basic> &b)
     RCP<Integer> coef;
     RCP<Basic> t;
     if (CSymPy::is_a<Add>(*a) && CSymPy::is_a<Add>(*b)) {
-        d = (rcp_dynamic_cast<Add>(a))->dict_;
-        for (auto &p: (rcp_dynamic_cast<Add>(b))->dict_)
+        d = (rcp_static_cast<Add>(a))->dict_;
+        for (auto &p: (rcp_static_cast<Add>(b))->dict_)
             Add::dict_add_term(d, p.second, p.first);
     } else if (CSymPy::is_a<Add>(*a)) {
-        d = (rcp_dynamic_cast<Add>(a))->dict_;
+        d = (rcp_static_cast<Add>(a))->dict_;
         as_coef_term(b, outArg(coef), outArg(t));
         Add::dict_add_term(d, coef, t);
     } else if (CSymPy::is_a<Add>(*b)) {
-        d = (rcp_dynamic_cast<Add>(b))->dict_;
+        d = (rcp_static_cast<Add>(b))->dict_;
         as_coef_term(a, outArg(coef), outArg(t));
         Add::dict_add_term(d, coef, t);
     } else {
@@ -208,34 +205,30 @@ RCP<Basic> sub(const RCP<Basic> &a, const RCP<Basic> &b)
 RCP<Basic> add_expand(const RCP<Add> &self)
 {
     umap_basic_int d;
-    RCP<Basic> coef, tmp, tmp2;
+    RCP<Integer> coef;
+    RCP<Basic> tmp, tmp2;
     for (auto &p: self->dict_) {
         tmp = expand(p.first);
         if (is_a<Add>(*tmp)) {
-            for (auto &q: (rcp_dynamic_cast<Add>(tmp))->dict_) {
+            for (auto &q: (rcp_static_cast<Add>(tmp))->dict_) {
                 tmp2 = q.first;
                 if (is_a<Mul>(*tmp2)) {
-                    rcp_dynamic_cast<Mul>(tmp2)->as_coef_term(outArg(coef),
+                    rcp_static_cast<Mul>(tmp2)->as_coef_term(outArg(coef),
                             outArg(tmp2));
                 } else {
                     coef = one;
                 }
-                if (!is_a<Integer>(*coef))
-                    throw std::runtime_error("Not implemented.");
-                Add::dict_add_term(d, mulint(mulint(p.second, q.second),
-                            rcp_dynamic_cast<Integer>(coef)), tmp2);
+                Add::dict_add_term(d,
+                        mulint(mulint(p.second, q.second), coef), tmp2);
             }
         } else {
             if (is_a<Mul>(*tmp)) {
-                rcp_dynamic_cast<Mul>(tmp)->as_coef_term(outArg(coef),
+                rcp_static_cast<Mul>(tmp)->as_coef_term(outArg(coef),
                         outArg(tmp));
             } else {
                 coef = one;
             }
-            if (!is_a<Integer>(*coef))
-                throw std::runtime_error("Not implemented.");
-            Add::dict_add_term(d,
-                    mulint(p.second, rcp_dynamic_cast<Integer>(coef)), tmp);
+            Add::dict_add_term(d, mulint(p.second, coef), tmp);
         }
     }
     return Add::from_dict(zero, d);
