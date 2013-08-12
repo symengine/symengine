@@ -186,7 +186,7 @@ RCP<Basic> pow_expand(const RCP<Pow> &self)
             for (auto &p: r) {
                 auto power = p.first.begin();
                 auto i2 = base->dict_.begin();
-                map_basic_int d;
+                map_basic_basic d;
                 for (; power != p.first.end(); ++power, ++i2) {
                     if (*power > 0) {
                         RCP<Integer> exp = rcp(new Integer(*power));

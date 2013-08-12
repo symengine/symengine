@@ -110,13 +110,13 @@ RCP<Basic> Add::from_dict(const RCP<Basic> &coef, const umap_basic_int &d)
                 return Mul::from_dict(p->second,
                         rcp_static_cast<Mul>(p->first)->dict_);
             }
-            map_basic_int m;
+            map_basic_basic m;
             m[p->first] = one;
             return rcp(new Mul(p->second, m));
         }
         // TODO: if p->second is a numeric coefficient, it should still be
         // passed in as the first parameter of Mul()
-        map_basic_int m;
+        map_basic_basic m;
         m[p->first] = one;
         m[p->second] = one;
         return rcp(new Mul(one, m));
