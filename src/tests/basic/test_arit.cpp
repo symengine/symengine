@@ -125,6 +125,18 @@ void test_sub()
     r1 = sub(mul(i2, x), x);
     r2 = x;
     assert(eq(r1, r2));
+
+    r1 = add(mul(mul(i2, x), y), mul(x, y));
+    r2 = mul(i3, mul(x, y));
+    assert(eq(r1, r2));
+
+    r1 = add(mul(mul(i2, x), y), mul(x, y));
+    r2 = mul(mul(x, y), i3);
+    assert(eq(r1, r2));
+
+    r1 = sub(mul(mul(i2, x), y), mul(x, y));
+    r2 = mul(x, y);
+    assert(eq(r1, r2));
 }
 
 void test_pow()

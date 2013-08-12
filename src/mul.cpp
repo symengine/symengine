@@ -194,15 +194,23 @@ RCP<Basic> mul(const RCP<Basic> &a, const RCP<Basic> &b)
         RCP<Basic> t;
         coef = (rcp_static_cast<Mul>(a))->coef_;
         d = (rcp_static_cast<Mul>(a))->dict_;
-        as_base_exp(b, outArg(exp), outArg(t));
-        Mul::dict_add_term(d, exp, t);
+        if (is_a<Integer>(*b)) {
+            coef = mul(coef, b);
+        } else {
+            as_base_exp(b, outArg(exp), outArg(t));
+            Mul::dict_add_term(d, exp, t);
+        }
     } else if (CSymPy::is_a<Mul>(*b)) {
         RCP<Basic> exp;
         RCP<Basic> t;
         coef = (rcp_static_cast<Mul>(b))->coef_;
         d = (rcp_static_cast<Mul>(b))->dict_;
-        as_base_exp(a, outArg(exp), outArg(t));
-        Mul::dict_add_term(d, exp, t);
+        if (is_a<Integer>(*a)) {
+            coef = mul(coef, a);
+        } else {
+            as_base_exp(a, outArg(exp), outArg(t));
+            Mul::dict_add_term(d, exp, t);
+        }
     } else {
         RCP<Basic> exp;
         RCP<Basic> t;
