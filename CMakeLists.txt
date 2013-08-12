@@ -96,6 +96,12 @@ if (WITH_BFD)
     message("BFD_INCLUDE_DIRS: ${BFD_INCLUDE_DIRS}")
     message("BFD_LIBRARIES: ${BFD_LIBRARIES}")
 endif()
+
+message("WITH_PYTHON: ${WITH_PYTHON}")
 if (WITH_PYTHON)
+    message("Python library: ${PYTHON_LIBRARY}")
+    message("Python include path: ${PYTHON_INCLUDE_PATH}")
     message("Python install path: ${PYTHON_INSTALL_PATH}")
+
+    message("Cython path: ${CYTHON_BIN}")
 endif ()

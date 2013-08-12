@@ -17,10 +17,10 @@ namespace CSymPy {
 Mul::Mul(const Teuchos::RCP<Basic> &coef, const map_basic_int& dict)
     : coef_{coef}, dict_{dict}
 {
-    CSYMPY_ASSERT(check_canonical(coef, dict))
+    CSYMPY_ASSERT(is_canonical(coef, dict))
 }
 
-bool Mul::check_canonical(const Teuchos::RCP<Basic> &coef,
+bool Mul::is_canonical(const Teuchos::RCP<Basic> &coef,
         const map_basic_int& dict)
 {
     // e.g. 0*x*y
@@ -40,6 +40,10 @@ bool Mul::check_canonical(const Teuchos::RCP<Basic> &coef,
         // e.g. 0^x
         if (is_a<Integer>(*p.first) &&
                 rcp_static_cast<Integer>(p.first)->is_zero())
+            return false;
+        // e.g. 1^x
+        if (is_a<Integer>(*p.first) &&
+                rcp_static_cast<Integer>(p.first)->is_one())
             return false;
         // e.g. x^0
         if (is_a<Integer>(*p.second) &&
@@ -226,7 +230,7 @@ RCP<Basic> mul_expand_two(const RCP<Basic> &a, const RCP<Basic> &b)
                         mul(p.first, q.first));
             }
         }
-        return Add::from_dict(d);
+        return Add::from_dict(zero, d);
     } else if (is_a<Add>(*a)) {
         return mul_expand_two(b, a);
     } else if (is_a<Add>(*b)) {
@@ -245,7 +249,7 @@ RCP<Basic> mul_expand_two(const RCP<Basic> &a, const RCP<Basic> &b)
             Add::dict_add_term(d,
                     mulint(p.second, rcp_dynamic_cast<Integer>(coef)), tmp);
         }
-        return Add::from_dict(d);
+        return Add::from_dict(zero, d);
     }
     return mul(a, b);
 }

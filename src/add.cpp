@@ -10,12 +10,44 @@ using Teuchos::Ptr;
 using Teuchos::outArg;
 using Teuchos::rcp;
 using Teuchos::rcp_dynamic_cast;
+using Teuchos::rcp_static_cast;
 
 namespace CSymPy {
 
 Add::Add(const RCP<Basic> &coef, const umap_basic_int& dict)
     : coef_{coef}, dict_{dict}
 {
+    CSYMPY_ASSERT(is_canonical(coef, dict))
+}
+
+bool Add::is_canonical(const Teuchos::RCP<Basic> &coef,
+        const umap_basic_int& dict)
+{
+    if (dict.size() == 0) return false;
+    if (dict.size() == 1) {
+        // e.g. 0 + x, 0 + 2x
+        if (is_a<Integer>(*coef) && rcp_static_cast<Integer>(coef)->is_zero())
+            return false;
+    }
+    // Check that each term in 'dict' is in canonical form
+    for (auto &p: dict) {
+        // e.g. 2*3
+        if (is_a<Integer>(*p.first) && is_a<Integer>(*p.second))
+            return false;
+        // e.g. 0*x
+        if (is_a<Integer>(*p.first) &&
+                rcp_static_cast<Integer>(p.first)->is_zero())
+            return false;
+        // e.g. 1*x (={1:x}), this should rather be just x (={x:1})
+        if (is_a<Integer>(*p.first) &&
+                rcp_static_cast<Integer>(p.first)->is_one())
+            return false;
+        // e.g. x*0
+        if (is_a<Integer>(*p.second) &&
+                rcp_static_cast<Integer>(p.second)->is_zero())
+            return false;
+    }
+    return true;
 }
 
 std::size_t Add::__hash__() const
@@ -55,21 +87,25 @@ std::string Add::__str__() const
     return s.substr(0, s.size()-3);
 }
 
-// Creates the appropriate instance (i.e. Add, Symbol, Integer, Mul) depending
-// on how many (and which) items are in the dictionary "d":
-RCP<Basic> Add::from_dict(const umap_basic_int &d)
+// Very quickly (!) creates the appropriate instance (i.e. Add, Symbol,
+// Integer, Mul) depending on the size of the dictionary 'd'.
+// If d.size() > 1 then it just returns Add. This means that the dictionary
+// must be in canonical form already. For d.size == 1, it returns Mul, Pow,
+// Symbol or Integer, depending on the expression.
+RCP<Basic> Add::from_dict(const RCP<Basic> &coef, const umap_basic_int &d)
 {
     if (d.size() == 0) {
         throw std::runtime_error("Not implemented.");
-    } else if (d.size() == 1) {
+    } else if (d.size() == 1 && is_a<Integer>(*coef) &&
+            rcp_static_cast<Integer>(coef)->is_zero()) {
         auto p = d.begin();
         if (is_a<Integer>(*(p->second))) {
-            if ((rcp_dynamic_cast<Integer>(p->second))->is_one()) {
+            if (rcp_static_cast<Integer>(p->second)->is_one()) {
                 return p->first;
             }
             if (is_a<Mul>(*(p->first))) {
                 return Mul::from_dict(p->second,
-                        rcp_dynamic_cast<Mul>(p->first)->dict_);
+                        rcp_static_cast<Mul>(p->first)->dict_);
             }
             map_basic_int m;
             m[p->first] = one;
@@ -82,7 +118,7 @@ RCP<Basic> Add::from_dict(const umap_basic_int &d)
         m[p->second] = one;
         return rcp(new Mul(one, m));
     } else {
-        return rcp(new Add(zero, d));
+        return rcp(new Add(coef, d));
     }
 }
 
@@ -146,8 +182,16 @@ RCP<Basic> add(const RCP<Basic> &a, const RCP<Basic> &b)
         Add::dict_add_term(d, coef, t);
         as_coef_term(b, outArg(coef), outArg(t));
         Add::dict_add_term(d, coef, t);
+        auto it = d.find(one);
+        if (it == d.end()) {
+            coef = zero;
+        } else {
+            coef = it->second;
+            d.erase(it);
+        }
+        return Add::from_dict(coef, d);
     }
-    return Add::from_dict(d);
+    return Add::from_dict(zero, d);
 }
 
 RCP<Basic> add_expand(const RCP<Add> &self)
@@ -183,7 +227,7 @@ RCP<Basic> add_expand(const RCP<Add> &self)
                     mulint(p.second, rcp_dynamic_cast<Integer>(coef)), tmp);
         }
     }
-    return Add::from_dict(d);
+    return Add::from_dict(zero, d);
 }
 
 } // CSymPy

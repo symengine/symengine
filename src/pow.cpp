@@ -11,12 +11,34 @@ using Teuchos::Ptr;
 using Teuchos::outArg;
 using Teuchos::rcp;
 using Teuchos::rcp_dynamic_cast;
+using Teuchos::rcp_static_cast;
 
 namespace CSymPy {
 
 Pow::Pow(const Teuchos::RCP<Basic> &base, const Teuchos::RCP<Basic> &exp)
     : base_{base}, exp_{exp}
 {
+    CSYMPY_ASSERT(is_canonical(base, exp))
+}
+
+bool Pow::is_canonical(const RCP<Basic> &base, const RCP<Basic> &exp)
+{
+    // e.g. 0^x
+    if (is_a<Integer>(*base) && rcp_static_cast<Integer>(base)->is_zero())
+        return false;
+    // e.g. 1^x
+    if (is_a<Integer>(*base) && rcp_static_cast<Integer>(base)->is_one())
+        return false;
+    // e.g. x^0
+    if (is_a<Integer>(*exp) && rcp_static_cast<Integer>(exp)->is_zero())
+        return false;
+    // e.g. x^1
+    if (is_a<Integer>(*exp) && rcp_static_cast<Integer>(exp)->is_one())
+        return false;
+    // e.g. 2^3
+    if (is_a<Integer>(*base) && is_a<Integer>(*exp))
+        return false;
+    return true;
 }
 
 std::size_t Pow::__hash__() const
@@ -173,7 +195,7 @@ RCP<Basic> pow_expand(const RCP<Pow> &self)
                 RCP<Basic> term = Mul::from_dict(one, d);
                 rd[term] = rcp(new Integer(p.second));
             }
-            RCP<Basic> result = Add::from_dict(rd);
+            RCP<Basic> result = Add::from_dict(zero, rd);
             return result;
         }
     }

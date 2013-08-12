@@ -30,7 +30,7 @@ public:
             const Teuchos::Ptr<Teuchos::RCP<Basic>> &b);
 
     // Returns true if both 'coef' and 'dict' are in canonical form
-    bool check_canonical(const Teuchos::RCP<Basic> &coef,
+    bool is_canonical(const Teuchos::RCP<Basic> &coef,
             const map_basic_int& dict);
 };
 
