@@ -229,6 +229,9 @@ void test_expand2()
     RCP<Basic> y = rcp(new Symbol("y"));
     RCP<Basic> z = rcp(new Symbol("z"));
     RCP<Basic> w = rcp(new Symbol("w"));
+    RCP<Basic> im1 = rcp(new Integer(-1));
+    RCP<Basic> im2 = rcp(new Integer(-2));
+    RCP<Basic> i2 = rcp(new Integer(2));
 
     RCP<Basic> r1;
     RCP<Basic> r2;
@@ -250,6 +253,11 @@ void test_expand2()
 
     assert( eq(r2, add(add(add(mul(x, z), mul(y, z)), mul(x, w)), mul(y, w))));
     assert(neq(r2, add(add(add(mul(y, z), mul(y, z)), mul(x, w)), mul(y, w))));
+
+    r1 = mul(im1, add(x, i2));
+    r1 = expand(r1);
+    r2 = add(mul(im1, x), im2);
+    assert(eq(r1, r2));
 }
 
 void test_expand3()
