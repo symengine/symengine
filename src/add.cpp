@@ -149,10 +149,10 @@ void as_coef_term(const RCP<Basic> &self, const Ptr<RCP<Integer>> &coef,
         *coef = one;
         *term = self;
     } else if (CSymPy::is_a<CSymPy::Mul>(*self)) {
-        (rcp_dynamic_cast<CSymPy::Mul>(self))->
+        (rcp_static_cast<CSymPy::Mul>(self))->
             as_coef_term(outArg(*coef), term);
     } else if (CSymPy::is_a<CSymPy::Integer>(*self)) {
-        *coef = rcp_dynamic_cast<CSymPy::Integer>(self);
+        *coef = rcp_static_cast<CSymPy::Integer>(self);
         *term = one;
     } else if (CSymPy::is_a<CSymPy::Pow>(*self)) {
         *coef = one;
@@ -169,15 +169,15 @@ RCP<Basic> add(const RCP<Basic> &a, const RCP<Basic> &b)
     RCP<Integer> coef;
     RCP<Basic> t;
     if (CSymPy::is_a<Add>(*a) && CSymPy::is_a<Add>(*b)) {
-        d = (rcp_dynamic_cast<Add>(a))->dict_;
-        for (auto &p: (rcp_dynamic_cast<Add>(b))->dict_)
+        d = (rcp_static_cast<Add>(a))->dict_;
+        for (auto &p: (rcp_static_cast<Add>(b))->dict_)
             Add::dict_add_term(d, p.second, p.first);
     } else if (CSymPy::is_a<Add>(*a)) {
-        d = (rcp_dynamic_cast<Add>(a))->dict_;
+        d = (rcp_static_cast<Add>(a))->dict_;
         as_coef_term(b, outArg(coef), outArg(t));
         Add::dict_add_term(d, coef, t);
     } else if (CSymPy::is_a<Add>(*b)) {
-        d = (rcp_dynamic_cast<Add>(b))->dict_;
+        d = (rcp_static_cast<Add>(b))->dict_;
         as_coef_term(a, outArg(coef), outArg(t));
         Add::dict_add_term(d, coef, t);
     } else {
@@ -210,10 +210,10 @@ RCP<Basic> add_expand(const RCP<Add> &self)
     for (auto &p: self->dict_) {
         tmp = expand(p.first);
         if (is_a<Add>(*tmp)) {
-            for (auto &q: (rcp_dynamic_cast<Add>(tmp))->dict_) {
+            for (auto &q: (rcp_static_cast<Add>(tmp))->dict_) {
                 tmp2 = q.first;
                 if (is_a<Mul>(*tmp2)) {
-                    rcp_dynamic_cast<Mul>(tmp2)->as_coef_term(outArg(coef),
+                    rcp_static_cast<Mul>(tmp2)->as_coef_term(outArg(coef),
                             outArg(tmp2));
                 } else {
                     coef = one;
@@ -223,7 +223,7 @@ RCP<Basic> add_expand(const RCP<Add> &self)
             }
         } else {
             if (is_a<Mul>(*tmp)) {
-                rcp_dynamic_cast<Mul>(tmp)->as_coef_term(outArg(coef),
+                rcp_static_cast<Mul>(tmp)->as_coef_term(outArg(coef),
                         outArg(tmp));
             } else {
                 coef = one;

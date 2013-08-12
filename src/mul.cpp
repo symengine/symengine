@@ -101,12 +101,12 @@ RCP<CSymPy::Basic> Mul::from_dict(const RCP<Integer> &coef, const map_basic_basi
         auto p = d.begin();
         if (is_a<Integer>(*(p->second))) {
             if (coef->is_one()) {
-                if ((rcp_dynamic_cast<Integer>(p->second))->is_one()) {
+                if ((rcp_static_cast<Integer>(p->second))->is_one()) {
                     // For x^1 we simply return "x":
                     return p->first;
                 }
             } else {
-                if ((rcp_dynamic_cast<Integer>(p->second))->is_one()) {
+                if ((rcp_static_cast<Integer>(p->second))->is_one()) {
                     // For coef*x^1 we simply return "coef*x":
                     return rcp(new Mul(coef, d));
                 }
@@ -172,8 +172,8 @@ void as_base_exp(const RCP<Basic> &self, const Ptr<RCP<Basic>> &exp,
         *exp = one;
         *base = self;
     } else if (is_a<Pow>(*self)) {
-        *exp = rcp_dynamic_cast<Pow>(self)->exp_;
-        *base = rcp_dynamic_cast<Pow>(self)->base_;
+        *exp = rcp_static_cast<Pow>(self)->exp_;
+        *base = rcp_static_cast<Pow>(self)->base_;
     } else if (is_a<Add>(*self)) {
         *exp = one;
         *base = self;
@@ -242,8 +242,8 @@ RCP<Basic> mul_expand_two(const RCP<Basic> &a, const RCP<Basic> &b)
     // Both a and b are assumed to be expanded
     if (is_a<Add>(*a) && is_a<Add>(*b)) {
         umap_basic_int d;
-        for (auto &p: (rcp_dynamic_cast<Add>(a))->dict_) {
-            for (auto &q: (rcp_dynamic_cast<Add>(b))->dict_) {
+        for (auto &p: (rcp_static_cast<Add>(a))->dict_) {
+            for (auto &q: (rcp_static_cast<Add>(b))->dict_) {
                 // The main bottleneck here is the mul(p.first, q.first) command
                 Add::dict_add_term(d, mulint(p.second, q.second),
                         mul(p.first, q.first));
@@ -256,10 +256,10 @@ RCP<Basic> mul_expand_two(const RCP<Basic> &a, const RCP<Basic> &b)
         umap_basic_int d;
         RCP<Integer> coef;
         RCP<Basic> tmp;
-        for (auto &p: (rcp_dynamic_cast<Add>(b))->dict_) {
+        for (auto &p: (rcp_static_cast<Add>(b))->dict_) {
             tmp = mul(a, p.first);
             if (is_a<Mul>(*tmp)) {
-                rcp_dynamic_cast<Mul>(tmp)->as_coef_term(outArg(coef),
+                rcp_static_cast<Mul>(tmp)->as_coef_term(outArg(coef),
                         outArg(tmp));
             } else {
                 coef = one;
