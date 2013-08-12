@@ -229,6 +229,7 @@ RCP<Basic> mul(const RCP<Basic> &a, const RCP<Basic> &b)
                 RCP<Integer> r = powint(f, s);
                 imulint(outArg(coef), r);
             } else {
+                // TODO: this can be spedup
                 Mul::dict_add_term(d2, p.second, p.first);
             }
         }
@@ -254,8 +255,21 @@ RCP<Basic> mul_expand_two(const RCP<Basic> &a, const RCP<Basic> &b)
         return mul_expand_two(b, a);
     } else if (is_a<Add>(*b)) {
         umap_basic_int d;
+        RCP<Integer> coef_overall=rcp_static_cast<Add>(b)->coef_;
         RCP<Integer> coef;
         RCP<Basic> tmp;
+
+        if (!coef_overall->is_zero()) {
+            tmp = mul(a, coef_overall);
+            if (is_a<Mul>(*tmp)) {
+                rcp_static_cast<Mul>(tmp)->as_coef_term(outArg(coef),
+                        outArg(tmp));
+            } else {
+                coef = one;
+            }
+            Add::dict_add_term(d, coef, tmp);
+        }
+
         for (auto &p: (rcp_static_cast<Add>(b))->dict_) {
             tmp = mul(a, p.first);
             if (is_a<Mul>(*tmp)) {
@@ -267,7 +281,30 @@ RCP<Basic> mul_expand_two(const RCP<Basic> &a, const RCP<Basic> &b)
             Add::dict_add_term(d,
                     mulint(p.second, coef), tmp);
         }
-        return Add::from_dict(zero, d);
+
+        auto it = d.find(one);
+        if (it == d.end()) {
+            coef_overall = zero;
+        } else {
+            coef_overall = it->second;
+            d.erase(it);
+        }
+
+        coef_overall = zero;
+        CSymPy::umap_basic_int d2;
+        // TODO: think about speeding this kind of loop up:
+        for (auto &p: d) {
+            if (is_a<Integer>(*(p.first)) && is_a<Integer>(*(p.second))) {
+                RCP<Integer> f = rcp_static_cast<Integer>(p.first);
+                RCP<Integer> s = rcp_static_cast<Integer>(p.second);
+                RCP<Integer> r = mulint(f, s);
+                iaddint(outArg(coef_overall), r);
+            } else {
+                d2[p.first] = p.second;
+            }
+        }
+
+        return Add::from_dict(coef_overall, d2);
     }
     return mul(a, b);
 }

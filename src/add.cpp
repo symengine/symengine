@@ -78,6 +78,8 @@ bool Add::__eq__(const Basic &o) const
 std::string Add::__str__() const
 {
     std::ostringstream o;
+    if (neq(coef_, zero))
+        o << *coef_ << " + ";
     for (auto &p: dict_) {
         if (eq(p.second, one))
             o << *(p.first);
@@ -136,8 +138,8 @@ void Add::dict_add_term(umap_basic_int &d, const RCP<Integer> &coef,
         // Not found, add it in if it is nonzero:
         if (!(coef->is_zero())) d[t] = coef;
     } else {
-        // TODO: remove the item if d[t] + coef is zero:
         iaddint(outArg(it->second), coef);
+        if (it->second->is_zero()) d.erase(it);
     }
 }
 
@@ -169,17 +171,31 @@ RCP<Basic> add(const RCP<Basic> &a, const RCP<Basic> &b)
     RCP<Integer> coef;
     RCP<Basic> t;
     if (CSymPy::is_a<Add>(*a) && CSymPy::is_a<Add>(*b)) {
+        coef = (rcp_static_cast<Add>(a))->coef_;
         d = (rcp_static_cast<Add>(a))->dict_;
         for (auto &p: (rcp_static_cast<Add>(b))->dict_)
             Add::dict_add_term(d, p.second, p.first);
+        iaddint(outArg(coef), rcp_static_cast<Add>(b)->coef_);
     } else if (CSymPy::is_a<Add>(*a)) {
+        coef = (rcp_static_cast<Add>(a))->coef_;
         d = (rcp_static_cast<Add>(a))->dict_;
-        as_coef_term(b, outArg(coef), outArg(t));
-        Add::dict_add_term(d, coef, t);
+        if (is_a<Integer>(*b)) {
+            iaddint(outArg(coef), rcp_static_cast<Integer>(b));
+        } else {
+            RCP<Integer> coef2;
+            as_coef_term(b, outArg(coef2), outArg(t));
+            Add::dict_add_term(d, coef2, t);
+        }
     } else if (CSymPy::is_a<Add>(*b)) {
+        coef = (rcp_static_cast<Add>(b))->coef_;
         d = (rcp_static_cast<Add>(b))->dict_;
-        as_coef_term(a, outArg(coef), outArg(t));
-        Add::dict_add_term(d, coef, t);
+        if (is_a<Integer>(*a)) {
+            iaddint(outArg(coef), rcp_static_cast<Integer>(a));
+        } else {
+            RCP<Integer> coef2;
+            as_coef_term(a, outArg(coef2), outArg(t));
+            Add::dict_add_term(d, coef2, t);
+        }
     } else {
         as_coef_term(a, outArg(coef), outArg(t));
         Add::dict_add_term(d, coef, t);
@@ -194,7 +210,7 @@ RCP<Basic> add(const RCP<Basic> &a, const RCP<Basic> &b)
         }
         return Add::from_dict(coef, d);
     }
-    return Add::from_dict(zero, d);
+    return Add::from_dict(coef, d);
 }
 
 RCP<Basic> sub(const RCP<Basic> &a, const RCP<Basic> &b)
@@ -205,6 +221,7 @@ RCP<Basic> sub(const RCP<Basic> &a, const RCP<Basic> &b)
 RCP<Basic> add_expand(const RCP<Add> &self)
 {
     umap_basic_int d;
+    RCP<Integer> coef_overall = self->coef_;
     RCP<Integer> coef;
     RCP<Basic> tmp, tmp2;
     for (auto &p: self->dict_) {
@@ -221,6 +238,8 @@ RCP<Basic> add_expand(const RCP<Add> &self)
                 Add::dict_add_term(d,
                         mulint(mulint(p.second, q.second), coef), tmp2);
             }
+            iaddint(outArg(coef_overall), mulint(p.second,
+                        rcp_static_cast<Add>(tmp)->coef_));
         } else {
             if (is_a<Mul>(*tmp)) {
                 rcp_static_cast<Mul>(tmp)->as_coef_term(outArg(coef),
@@ -231,7 +250,7 @@ RCP<Basic> add_expand(const RCP<Add> &self)
             Add::dict_add_term(d, mulint(p.second, coef), tmp);
         }
     }
-    return Add::from_dict(zero, d);
+    return Add::from_dict(coef_overall, d);
 }
 
 } // CSymPy
