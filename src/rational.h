@@ -4,10 +4,11 @@
 #include <gmpxx.h>
 
 #include "basic.h"
+#include "number.h"
 
 namespace CSymPy {
 
-class Rational : public Basic {
+class Rational : public Number {
 public:
     mpq_class i;
 
@@ -27,9 +28,53 @@ public:
         return this->i.get_num();
     }
     inline mpq_class as_mpq() { return this->i; }
-    inline bool is_zero() { return this->i == 0; }
-    inline bool is_one() { return this->i == 1; }
+    virtual bool is_zero() const { return this->i == 0; }
+    virtual bool is_one() const { return this->i == 1; }
     inline bool is_int() { return this->i.get_den() == 1; }
+
+    virtual Teuchos::RCP<Number> add(const Number &other) const {
+        if (is_a<Rational>(other)) {
+            return Teuchos::rcp(new Rational(this->i +
+                        static_cast<const Rational&>(other).i));
+        } else {
+            throw std::runtime_error("Not implemented.");
+        }
+    };
+
+    virtual Teuchos::RCP<Number> sub(const Number &other) const {
+        if (is_a<Rational>(other)) {
+            return Teuchos::rcp(new Rational(this->i -
+                        static_cast<const Rational&>(other).i));
+        } else {
+            throw std::runtime_error("Not implemented.");
+        }
+    };
+
+    virtual Teuchos::RCP<Number> mul(const Number &other) const {
+        if (is_a<Rational>(other)) {
+            return Teuchos::rcp(new Rational(this->i *
+                        static_cast<const Rational&>(other).i));
+        } else {
+            throw std::runtime_error("Not implemented.");
+        }
+    };
+
+    virtual Teuchos::RCP<Number> div(const Number &other) const {
+        if (is_a<Rational>(other)) {
+            return Teuchos::rcp(new Rational(this->i /
+                        static_cast<const Rational&>(other).i));
+        } else {
+            throw std::runtime_error("Not implemented.");
+        }
+    };
+
+    virtual Teuchos::RCP<Number> pow(const Number &other) const {
+        if (is_a<Rational>(other)) {
+            throw std::runtime_error("Not implemented.");
+        } else {
+            throw std::runtime_error("Not implemented.");
+        }
+    };
 };
 
 inline Teuchos::RCP<Rational> addint(const Teuchos::RCP<Rational> &self,
