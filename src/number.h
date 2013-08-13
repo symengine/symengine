@@ -23,10 +23,22 @@ inline Teuchos::RCP<Number> addnum(const Teuchos::RCP<Number> &self,
     return self->add(*other);
 }
 
+inline Teuchos::RCP<Number> subnum(const Teuchos::RCP<Number> &self,
+    const Teuchos::RCP<Number> &other)
+{
+    return self->sub(*other);
+}
+
 inline Teuchos::RCP<Number> mulnum(const Teuchos::RCP<Number> &self,
     const Teuchos::RCP<Number> &other)
 {
     return self->mul(*other);
+}
+
+inline Teuchos::RCP<Number> divnum(const Teuchos::RCP<Number> &self,
+    const Teuchos::RCP<Number> &other)
+{
+    return self->div(*other);
 }
 
 inline Teuchos::RCP<Number> pownum(const Teuchos::RCP<Number> &self,
