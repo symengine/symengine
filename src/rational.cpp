@@ -23,7 +23,7 @@ bool Rational::is_canonical(const mpq_class &i)
     return true;
 }
 
-Teuchos::RCP<Basic> Rational::from_two_ints(const Teuchos::RCP<Integer> &n,
+Teuchos::RCP<Number> Rational::from_two_ints(const Teuchos::RCP<Integer> &n,
             const Teuchos::RCP<Integer> &d)
 {
     if (d->i == 0)

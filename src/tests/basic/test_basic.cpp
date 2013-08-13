@@ -24,6 +24,9 @@ using CSymPy::integer;
 using CSymPy::Rational;
 using CSymPy::one;
 using CSymPy::zero;
+using CSymPy::Number;
+
+using CSymPy::mulint;
 
 void test_symbol_hash()
 {
@@ -131,7 +134,7 @@ void test_integer()
 
 void test_rational()
 {
-    RCP<Basic> r1, r2;
+    RCP<Number> r1, r2, r3;
     r1 = Rational::from_two_ints(integer(5), integer(6));
     std::cout << *r1 << std::endl;
     assert(eq(r1, Rational::from_two_ints(integer(5), integer(6))));
@@ -144,6 +147,11 @@ void test_rational()
     r1 = Rational::from_two_ints(integer(4), integer(2));
     r2 = integer(2);
     assert(eq(r1, r2));
+
+    r1 = Rational::from_two_ints(integer(2), integer(3));
+    r2 = Rational::from_two_ints(integer(5), integer(7));
+    r3 = Rational::from_two_ints(integer(10), integer(21));
+    assert(eq(mulint(r1, r2), r3));
 }
 
 void test_mul()

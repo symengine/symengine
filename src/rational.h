@@ -22,7 +22,7 @@ public:
 
     // Constructs Rational as n/d, where n, d can be any Integers. If n/d is an
     // Integer, it will return an Integer instead.
-    static Teuchos::RCP<Basic> from_two_ints(const Teuchos::RCP<Integer> &n,
+    static Teuchos::RCP<Number> from_two_ints(const Teuchos::RCP<Integer> &n,
             const Teuchos::RCP<Integer> &d);
 
     virtual bool is_zero() const { return this->i == 0; }
@@ -74,31 +74,31 @@ public:
     };
 };
 
-inline Teuchos::RCP<Rational> addint(const Teuchos::RCP<Rational> &self,
+inline Teuchos::RCP<Rational> addrat(const Teuchos::RCP<Rational> &self,
     const Teuchos::RCP<Rational> &other)
 {
     return Teuchos::rcp(new CSymPy::Rational(self->i + other->i));
 }
 
-inline Teuchos::RCP<Rational> subint(const Teuchos::RCP<Rational> &self,
+inline Teuchos::RCP<Rational> subrat(const Teuchos::RCP<Rational> &self,
     const Teuchos::RCP<Rational> &other)
 {
     return Teuchos::rcp(new CSymPy::Rational(self->i - other->i));
 }
 
-inline Teuchos::RCP<Rational> mulint(const Teuchos::RCP<Rational> &self,
+inline Teuchos::RCP<Rational> mulrat(const Teuchos::RCP<Rational> &self,
     const Teuchos::RCP<Rational> &other)
 {
     return Teuchos::rcp(new CSymPy::Rational(self->i * other->i));
 }
 
-inline Teuchos::RCP<Rational> divint(const Teuchos::RCP<Rational> &self,
+inline Teuchos::RCP<Rational> divrat(const Teuchos::RCP<Rational> &self,
     const Teuchos::RCP<Rational> &other)
 {
     return Teuchos::rcp(new CSymPy::Rational(self->i / other->i));
 }
 
-inline Teuchos::RCP<Rational> powint(const Teuchos::RCP<Rational> &self,
+inline Teuchos::RCP<Rational> powrat(const Teuchos::RCP<Rational> &self,
     const Teuchos::RCP<Rational> &other)
 {
     if (other->i.get_den() == 1) {
@@ -119,41 +119,6 @@ inline Teuchos::RCP<Rational> powint(const Teuchos::RCP<Rational> &self,
     } else {
         throw std::runtime_error("powint: 'exp' must be an integer.");
     }
-}
-
-inline void iaddint(const Teuchos::Ptr<Teuchos::RCP<Rational>> &self,
-    const Teuchos::RCP<Rational> &other)
-{
-    *self = addint(*self, other);
-}
-
-inline void isubint(const Teuchos::Ptr<Teuchos::RCP<Rational>> &self,
-    const Teuchos::RCP<Rational> &other)
-{
-    *self = subint(*self, other);
-}
-
-inline void imulint(const Teuchos::Ptr<Teuchos::RCP<Rational>> &self,
-    const Teuchos::RCP<Rational> &other)
-{
-    *self = mulint(*self, other);
-}
-
-inline void idivint(const Teuchos::Ptr<Teuchos::RCP<Rational>> &self,
-    const Teuchos::RCP<Rational> &other)
-{
-    *self = divint(*self, other);
-}
-
-inline void ipowint(const Teuchos::Ptr<Teuchos::RCP<Rational>> &self,
-    const Teuchos::RCP<Rational> &other)
-{
-    *self = powint(*self, other);
-}
-
-inline Teuchos::RCP<Rational> negint(const Teuchos::RCP<Rational> &self)
-{
-    return Teuchos::rcp(new CSymPy::Rational(-(self->i)));
 }
 
 } // CSymPy
