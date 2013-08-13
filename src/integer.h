@@ -53,7 +53,7 @@ inline Teuchos::RCP<Integer> powint(const Teuchos::RCP<Integer> &self,
     const Teuchos::RCP<Integer> &other)
 {
     if (!(other->i.fits_ulong_p()))
-        throw std::runtime_error("powint: other too large.");
+        throw std::runtime_error("powint: 'exp' does not fit unsigned int.");
     mpz_class tmp;
     mpz_pow_ui(tmp.get_mpz_t(), self->i.get_mpz_t(), other->i.get_ui());
     return Teuchos::rcp(new CSymPy::Integer(tmp));
