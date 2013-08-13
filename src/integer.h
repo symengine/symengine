@@ -95,6 +95,55 @@ inline Teuchos::RCP<Integer> negint(const Teuchos::RCP<Integer> &self)
     return Teuchos::rcp(new CSymPy::Integer(-(self->i)));
 }
 
+/* ---------------------------------------------- */
+
+
+inline Teuchos::RCP<Number> addint(const Teuchos::RCP<Number> &self,
+    const Teuchos::RCP<Number> &other)
+{
+    if (is_a<Integer>(*self) && is_a<Integer>(*other)) {
+        return addint(Teuchos::rcp_static_cast<Integer>(self),
+            Teuchos::rcp_static_cast<Integer>(other));
+    } else {
+        throw std::runtime_error("Not implemented.");
+    }
+}
+
+inline Teuchos::RCP<Number> mulint(const Teuchos::RCP<Number> &self,
+    const Teuchos::RCP<Number> &other)
+{
+    if (is_a<Integer>(*self) && is_a<Integer>(*other)) {
+        return mulint(Teuchos::rcp_static_cast<Integer>(self),
+            Teuchos::rcp_static_cast<Integer>(other));
+    } else {
+        throw std::runtime_error("Not implemented.");
+    }
+}
+
+inline Teuchos::RCP<Number> powint(const Teuchos::RCP<Number> &self,
+    const Teuchos::RCP<Number> &other)
+{
+    if (is_a<Integer>(*self) && is_a<Integer>(*other)) {
+        return powint(Teuchos::rcp_static_cast<Integer>(self),
+            Teuchos::rcp_static_cast<Integer>(other));
+    } else {
+        throw std::runtime_error("Not implemented.");
+    }
+}
+
+inline void iaddint(const Teuchos::Ptr<Teuchos::RCP<Number>> &self,
+    const Teuchos::RCP<Number> &other)
+{
+    *self = addint(*self, other);
+}
+
+inline void imulint(const Teuchos::Ptr<Teuchos::RCP<Number>> &self,
+    const Teuchos::RCP<Number> &other)
+{
+    *self = mulint(*self, other);
+}
+
+
 
 // Integers -1, 0 and 1 are created only once in integer.cpp and reused
 // everywhere (faster than creating them all the time):
