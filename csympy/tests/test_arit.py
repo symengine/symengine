@@ -1,13 +1,13 @@
 from nose.tools import raises
 
-from csympy import Symbol, Integer, Add, Pow
+from csympy import Symbol, Rational, Add, Pow
 
 def test_arit1():
     x = Symbol("x")
     y = Symbol("y")
     e = x + y
     e = x * y
-    e = Integer(2)*x
+    e = Rational(2)*x
     e = 2*x
     e = x + 1
     e = 1 + x
@@ -15,8 +15,8 @@ def test_arit1():
 def test_arit2():
     x = Symbol("x")
     y = Symbol("y")
-    assert x+x == Integer(2) * x
-    assert x+x != Integer(3) * x
+    assert x+x == Rational(2) * x
+    assert x+x != Rational(3) * x
     assert x+y == y+x
     assert x+x == 2*x
     assert x+x == x*2
@@ -58,7 +58,7 @@ def test_arit6():
     assert str(e) == "x + y" or "y + x"
     e = x * y
     assert str(e) == "x*y" or "y*x"
-    e = Integer(2)*x
+    e = Rational(2)*x
     assert str(e) == "2x"
     e = 2*x
     assert str(e) == "2x"

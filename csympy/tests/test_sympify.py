@@ -1,12 +1,12 @@
 from nose.tools import raises
 
-from csympy import Symbol, Integer, sympify, SympifyError
+from csympy import Symbol, Rational, sympify, SympifyError
 
 def test_sympify1():
-    assert sympify(1) == Integer(1)
-    assert sympify(2) != Integer(1)
-    assert sympify(-5) == Integer(-5)
-    assert sympify(Integer(3)) == Integer(3)
+    assert sympify(1) == Rational(1)
+    assert sympify(2) != Rational(1)
+    assert sympify(-5) == Rational(-5)
+    assert sympify(Rational(3)) == Rational(3)
 
 @raises(SympifyError)
 def test_sympify_error1a():

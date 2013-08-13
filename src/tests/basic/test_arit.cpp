@@ -7,7 +7,7 @@
 #include "add.h"
 #include "symbol.h"
 #include "dict.h"
-#include "integer.h"
+#include "rational.h"
 #include "mul.h"
 #include "pow.h"
 
@@ -22,7 +22,7 @@ using CSymPy::Pow;
 using CSymPy::Symbol;
 using CSymPy::umap_basic_int;
 using CSymPy::map_vec_int;
-using CSymPy::Integer;
+using CSymPy::Rational;
 using CSymPy::multinomial_coefficients;
 using CSymPy::one;
 using CSymPy::zero;
@@ -32,9 +32,9 @@ void test_add()
     RCP<Basic> x = rcp(new Symbol("x"));
     RCP<Basic> y = rcp(new Symbol("y"));
     RCP<Basic> z = rcp(new Symbol("z"));
-    RCP<Basic> i2 = rcp(new Integer(2));
-    RCP<Basic> i3 = rcp(new Integer(3));
-    RCP<Basic> i4 = rcp(new Integer(4));
+    RCP<Basic> i2 = rcp(new Rational(2));
+    RCP<Basic> i3 = rcp(new Rational(3));
+    RCP<Basic> i4 = rcp(new Rational(4));
 
     RCP<Basic> r1 = add(x, x);
     RCP<Basic> r2 = mul(i2, x);
@@ -72,9 +72,9 @@ void test_mul()
     RCP<Basic> x = rcp(new Symbol("x"));
     RCP<Basic> y = rcp(new Symbol("y"));
     RCP<Basic> z = rcp(new Symbol("z"));
-    RCP<Basic> i2 = rcp(new Integer(2));
-    RCP<Basic> i3 = rcp(new Integer(3));
-    RCP<Basic> i4 = rcp(new Integer(4));
+    RCP<Basic> i2 = rcp(new Rational(2));
+    RCP<Basic> i3 = rcp(new Rational(3));
+    RCP<Basic> i4 = rcp(new Rational(4));
 
     RCP<Basic> r1, r2;
 
@@ -108,10 +108,10 @@ void test_sub()
     RCP<Basic> x = rcp(new Symbol("x"));
     RCP<Basic> y = rcp(new Symbol("y"));
     RCP<Basic> z = rcp(new Symbol("z"));
-    RCP<Basic> im1 = rcp(new Integer(-1));
-    RCP<Basic> i2 = rcp(new Integer(2));
-    RCP<Basic> i3 = rcp(new Integer(3));
-    RCP<Basic> i4 = rcp(new Integer(4));
+    RCP<Basic> im1 = rcp(new Rational(-1));
+    RCP<Basic> i2 = rcp(new Rational(2));
+    RCP<Basic> i3 = rcp(new Rational(3));
+    RCP<Basic> i4 = rcp(new Rational(4));
 
     RCP<Basic> r1, r2;
 
@@ -158,10 +158,10 @@ void test_div()
     RCP<Basic> x = rcp(new Symbol("x"));
     RCP<Basic> y = rcp(new Symbol("y"));
     RCP<Basic> z = rcp(new Symbol("z"));
-    RCP<Basic> im1 = rcp(new Integer(-1));
-    RCP<Basic> i2 = rcp(new Integer(2));
-    RCP<Basic> i3 = rcp(new Integer(3));
-    RCP<Basic> i4 = rcp(new Integer(4));
+    RCP<Basic> im1 = rcp(new Rational(-1));
+    RCP<Basic> i2 = rcp(new Rational(2));
+    RCP<Basic> i3 = rcp(new Rational(3));
+    RCP<Basic> i4 = rcp(new Rational(4));
 
     RCP<Basic> r1, r2;
 
@@ -215,9 +215,9 @@ void test_pow()
     RCP<Basic> x = rcp(new Symbol("x"));
     RCP<Basic> y = rcp(new Symbol("y"));
     RCP<Basic> z = rcp(new Symbol("z"));
-    RCP<Basic> i2 = rcp(new Integer(2));
-    RCP<Basic> i3 = rcp(new Integer(3));
-    RCP<Basic> i4 = rcp(new Integer(4));
+    RCP<Basic> i2 = rcp(new Rational(2));
+    RCP<Basic> i3 = rcp(new Rational(3));
+    RCP<Basic> i4 = rcp(new Rational(4));
 
     RCP<Basic> r1;
     RCP<Basic> r2;
@@ -264,9 +264,9 @@ void test_expand1()
     RCP<Basic> y = rcp(new Symbol("y"));
     RCP<Basic> z = rcp(new Symbol("z"));
     RCP<Basic> w = rcp(new Symbol("w"));
-    RCP<Basic> i2 = rcp(new Integer(2));
-    RCP<Basic> i3 = rcp(new Integer(3));
-    RCP<Basic> i4 = rcp(new Integer(10));
+    RCP<Basic> i2 = rcp(new Rational(2));
+    RCP<Basic> i3 = rcp(new Rational(3));
+    RCP<Basic> i4 = rcp(new Rational(10));
 
     RCP<Basic> r1;
     RCP<Basic> r2;
@@ -292,16 +292,16 @@ void test_expand2()
     RCP<Basic> y = rcp(new Symbol("y"));
     RCP<Basic> z = rcp(new Symbol("z"));
     RCP<Basic> w = rcp(new Symbol("w"));
-    RCP<Basic> im1 = rcp(new Integer(-1));
-    RCP<Basic> im2 = rcp(new Integer(-2));
-    RCP<Basic> i2 = rcp(new Integer(2));
-    RCP<Basic> i3 = rcp(new Integer(3));
-    RCP<Basic> i4 = rcp(new Integer(4));
-    RCP<Basic> i5 = rcp(new Integer(5));
-    RCP<Basic> i6 = rcp(new Integer(6));
-    RCP<Basic> i9 = rcp(new Integer(9));
-    RCP<Basic> i25 = rcp(new Integer(25));
-    RCP<Basic> i30 = rcp(new Integer(30));
+    RCP<Basic> im1 = rcp(new Rational(-1));
+    RCP<Basic> im2 = rcp(new Rational(-2));
+    RCP<Basic> i2 = rcp(new Rational(2));
+    RCP<Basic> i3 = rcp(new Rational(3));
+    RCP<Basic> i4 = rcp(new Rational(4));
+    RCP<Basic> i5 = rcp(new Rational(5));
+    RCP<Basic> i6 = rcp(new Rational(6));
+    RCP<Basic> i9 = rcp(new Rational(9));
+    RCP<Basic> i25 = rcp(new Rational(25));
+    RCP<Basic> i30 = rcp(new Rational(30));
 
     RCP<Basic> r1;
     RCP<Basic> r2;
@@ -356,7 +356,7 @@ void test_expand3()
     RCP<Basic> y = rcp(new Symbol("y"));
     RCP<Basic> z = rcp(new Symbol("z"));
     RCP<Basic> w = rcp(new Symbol("w"));
-    RCP<Basic> i4 = rcp(new Integer(2));
+    RCP<Basic> i4 = rcp(new Rational(2));
 
     RCP<Basic> e, f, r;
 

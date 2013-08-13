@@ -1,3 +1,3 @@
-from .lib.csympy_wrapper import (Symbol, Integer, sympify, SympifyError, Add,
+from .lib.csympy_wrapper import (Symbol, Rational, sympify, SympifyError, Add,
         Mul, Pow)
 from .utilities import var

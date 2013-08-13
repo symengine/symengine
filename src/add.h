@@ -8,22 +8,22 @@ namespace CSymPy {
 
 class Add : public Basic {
 public: // TODO: make this private
-    Teuchos::RCP<Integer> coef_; // The coefficient (e.g. "2" in 2+x+y)
+    Teuchos::RCP<Rational> coef_; // The coefficient (e.g. "2" in 2+x+y)
     umap_basic_int dict_; // the dictionary of the rest (e.g. "x+y" in 2+x+y)
 
 public:
     // Constructs Add from a dictionary by copying the contents of the
     // dictionary:
-    Add(const Teuchos::RCP<Integer> &coef, const umap_basic_int& dict);
+    Add(const Teuchos::RCP<Rational> &coef, const umap_basic_int& dict);
     virtual std::size_t __hash__() const;
     virtual bool __eq__(const Basic &o) const;
     virtual std::string __str__() const;
 
-    static Teuchos::RCP<Basic> from_dict(const Teuchos::RCP<Integer> &coef, const umap_basic_int &d);
+    static Teuchos::RCP<Basic> from_dict(const Teuchos::RCP<Rational> &coef, const umap_basic_int &d);
     static void dict_add_term(umap_basic_int &d,
-            const Teuchos::RCP<Integer> &coef, const Teuchos::RCP<Basic> &t);
+            const Teuchos::RCP<Rational> &coef, const Teuchos::RCP<Basic> &t);
 
-    bool is_canonical(const Teuchos::RCP<Integer> &coef,
+    bool is_canonical(const Teuchos::RCP<Rational> &coef,
             const umap_basic_int& dict);
 };
 

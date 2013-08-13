@@ -1,5 +1,5 @@
-from csympy import Integer
+from csympy import Rational
 
 def test_integer():
-    i = Integer(5)
+    i = Rational(5)
     assert str(i) == "5"

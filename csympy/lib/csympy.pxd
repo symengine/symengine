@@ -22,7 +22,7 @@ cdef extern from "basic.h" namespace "CSymPy":
     bool is_a_Add "CSymPy::is_a<CSymPy::Add>"(const Basic &b) nogil
     bool is_a_Mul "CSymPy::is_a<CSymPy::Mul>"(const Basic &b) nogil
     bool is_a_Pow "CSymPy::is_a<CSymPy::Pow>"(const Basic &b) nogil
-    bool is_a_Integer "CSymPy::is_a<CSymPy::Integer>"(const Basic &b) nogil
+    bool is_a_Rational "CSymPy::is_a<CSymPy::Rational>"(const Basic &b) nogil
     bool is_a_Symbol "CSymPy::is_a<CSymPy::Symbol>"(const Basic &b) nogil
 
     RCP[Basic] expand(const RCP[Basic] &o) nogil except +
@@ -33,9 +33,9 @@ cdef extern from "symbol.h" namespace "CSymPy":
         Symbol(string name) nogil
 
 
-cdef extern from "integer.h" namespace "CSymPy":
-    cdef cppclass Integer(Basic):
-        Integer(int i) nogil
+cdef extern from "rational.h" namespace "CSymPy":
+    cdef cppclass Rational(Basic):
+        Rational(int i) nogil
 
 
 cdef extern from "add.h" namespace "CSymPy":
@@ -61,4 +61,4 @@ cdef extern from "pow.h" namespace "CSymPy":
 cdef extern from "basic.h" namespace "Teuchos":
     # We need to specialize these for our classes:
     RCP[Basic] rcp(Symbol *p) nogil
-    RCP[Basic] rcp(Integer *p) nogil
+    RCP[Basic] rcp(Rational *p) nogil

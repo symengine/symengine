@@ -4,7 +4,7 @@
 #include "add.h"
 #include "mul.h"
 #include "symbol.h"
-#include "integer.h"
+#include "rational.h"
 
 using Teuchos::RCP;
 using Teuchos::Ptr;
@@ -26,19 +26,19 @@ bool Pow::is_canonical(const RCP<Basic> &base, const RCP<Basic> &exp)
     if (base == Teuchos::null) return false;
     if (exp == Teuchos::null) return false;
     // e.g. 0^x
-    if (is_a<Integer>(*base) && rcp_static_cast<Integer>(base)->is_zero())
+    if (is_a<Rational>(*base) && rcp_static_cast<Rational>(base)->is_zero())
         return false;
     // e.g. 1^x
-    if (is_a<Integer>(*base) && rcp_static_cast<Integer>(base)->is_one())
+    if (is_a<Rational>(*base) && rcp_static_cast<Rational>(base)->is_one())
         return false;
     // e.g. x^0
-    if (is_a<Integer>(*exp) && rcp_static_cast<Integer>(exp)->is_zero())
+    if (is_a<Rational>(*exp) && rcp_static_cast<Rational>(exp)->is_zero())
         return false;
     // e.g. x^1
-    if (is_a<Integer>(*exp) && rcp_static_cast<Integer>(exp)->is_one())
+    if (is_a<Rational>(*exp) && rcp_static_cast<Rational>(exp)->is_one())
         return false;
     // e.g. 2^3
-    if (is_a<Integer>(*base) && is_a<Integer>(*exp))
+    if (is_a<Rational>(*base) && is_a<Rational>(*exp))
         return false;
     return true;
 }
@@ -174,10 +174,10 @@ void multinomial_coefficients_mpz(int m, int n, map_vec_mpz &r)
 
 RCP<Basic> pow_expand(const RCP<Pow> &self)
 {
-    if (is_a<Integer>(*self->exp_)) {
+    if (is_a<Rational>(*self->exp_)) {
         if (is_a<Add>(*self->base_)) {
             map_vec_mpz r;
-            int n = rcp_static_cast<Integer>(self->exp_)->as_int();
+            int n = rcp_static_cast<Rational>(self->exp_)->as_int();
 
             RCP<Add> base = rcp_static_cast<Add>(self->base_);
             umap_basic_int base_dict = base->dict_;
@@ -189,19 +189,19 @@ RCP<Basic> pow_expand(const RCP<Pow> &self)
             int m = base_dict.size();
             multinomial_coefficients_mpz(m, n, r);
             umap_basic_int rd;
-            RCP<Integer> add_overall_coeff=zero;
+            RCP<Rational> add_overall_coeff=zero;
             for (auto &p: r) {
                 auto power = p.first.begin();
                 auto i2 = base_dict.begin();
                 map_basic_basic d;
-                RCP<Integer> overall_coeff=one;
+                RCP<Rational> overall_coeff=one;
                 for (; power != p.first.end(); ++power, ++i2) {
                     if (*power > 0) {
-                        RCP<Integer> exp = rcp(new Integer(*power));
+                        RCP<Rational> exp = rcp(new Rational(*power));
                         RCP<Basic> base = i2->first;
-                        if (is_a<Integer>(*base)) {
+                        if (is_a<Rational>(*base)) {
                             imulint(outArg(overall_coeff),
-                                powint(rcp_static_cast<Integer>(base), exp));
+                                powint(rcp_static_cast<Rational>(base), exp));
                         } else {
                             d[base] = exp;
                         }
@@ -212,10 +212,10 @@ RCP<Basic> pow_expand(const RCP<Pow> &self)
                     }
                 }
                 RCP<Basic> term = Mul::from_dict(overall_coeff, d);
-                RCP<Integer> coef2 = rcp(new Integer(p.second));
-                if (is_a<Integer>(*term)) {
+                RCP<Rational> coef2 = rcp(new Rational(p.second));
+                if (is_a<Rational>(*term)) {
                     iaddint(outArg(add_overall_coeff),
-                        mulint(rcp_static_cast<Integer>(term), coef2));
+                        mulint(rcp_static_cast<Rational>(term), coef2));
                 } else {
                     if (is_a<Mul>(*term) &&
                             !(rcp_static_cast<Mul>(term)->coef_->is_one())) {

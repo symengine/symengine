@@ -7,7 +7,6 @@
 #include "add.h"
 #include "symbol.h"
 #include "dict.h"
-#include "integer.h"
 #include "mul.h"
 #include "pow.h"
 
@@ -22,7 +21,7 @@ using CSymPy::Pow;
 using CSymPy::Symbol;
 using CSymPy::umap_basic_int;
 using CSymPy::map_vec_int;
-using CSymPy::Integer;
+using CSymPy::Rational;
 using CSymPy::multinomial_coefficients;
 
 int main(int argc, char* argv[])
@@ -33,7 +32,7 @@ int main(int argc, char* argv[])
     RCP<Basic> y = rcp(new Symbol("y"));
     RCP<Basic> z = rcp(new Symbol("z"));
     RCP<Basic> w = rcp(new Symbol("w"));
-    RCP<Basic> i15 = rcp(new Integer(60));
+    RCP<Basic> i15 = rcp(new Rational(60));
 
     RCP<Basic> e, r;
 
