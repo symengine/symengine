@@ -144,6 +144,13 @@ inline void imulint(const Teuchos::Ptr<Teuchos::RCP<Number>> &self,
 }
 
 
+// Returns true if 'b' is a Number of any of its subclasses
+inline bool is_a_Number(const Basic &b)
+{
+    // Currently we enumerate all the subclasses explicitly, from the most
+    // frequent (on the left) to the least frequent (on the right):
+    return is_a<Integer>(b) || is_a<Number>(b);
+}
 
 // Integers -1, 0 and 1 are created only once in integer.cpp and reused
 // everywhere (faster than creating them all the time):

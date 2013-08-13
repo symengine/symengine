@@ -36,8 +36,8 @@ bool Mul::is_canonical(const Teuchos::RCP<Number> &coef,
     for (auto &p: dict) {
         if (p.first == Teuchos::null) return false;
         if (p.second == Teuchos::null) return false;
-        // e.g. 2^3
-        if (is_a<Number>(*p.first) && is_a<Number>(*p.second))
+        // e.g. 2^3, (2/3)^4
+        if (is_a_Number(*p.first) && is_a<Integer>(*p.second))
             return false;
         // e.g. 0^x
         if (is_a<Integer>(*p.first) &&
@@ -130,7 +130,7 @@ void Mul::dict_add_term(map_basic_basic &d, const RCP<Basic> &exp,
         d[t] = exp;
     } else {
         // Very common case, needs to be fast:
-        if (is_a<Number>(*it->second) && is_a<Number>(*exp)) {
+        if (is_a_Number(*it->second) && is_a_Number(*exp)) {
             RCP<Number> tmp = rcp_static_cast<Number>(it->second);
             iaddint(outArg(tmp), rcp_static_cast<Number>(exp));
             it->second = tmp;
@@ -165,7 +165,7 @@ void as_base_exp(const RCP<Basic> &self, const Ptr<RCP<Basic>> &exp,
     if (is_a<Symbol>(*self)) {
         *exp = one;
         *base = self;
-    } else if (is_a<Number>(*self)) {
+    } else if (is_a_Number(*self)) {
         *exp = one;
         *base = self;
     } else if (is_a<Pow>(*self)) {
@@ -193,7 +193,7 @@ RCP<Basic> mul(const RCP<Basic> &a, const RCP<Basic> &b)
         RCP<Basic> t;
         coef = (rcp_static_cast<Mul>(a))->coef_;
         d = (rcp_static_cast<Mul>(a))->dict_;
-        if (is_a<Number>(*b)) {
+        if (is_a_Number(*b)) {
             imulint(outArg(coef), rcp_static_cast<Number>(b));
         } else {
             as_base_exp(b, outArg(exp), outArg(t));
@@ -204,7 +204,7 @@ RCP<Basic> mul(const RCP<Basic> &a, const RCP<Basic> &b)
         RCP<Basic> t;
         coef = (rcp_static_cast<Mul>(b))->coef_;
         d = (rcp_static_cast<Mul>(b))->dict_;
-        if (is_a<Number>(*a)) {
+        if (is_a_Number(*a)) {
             imulint(outArg(coef), rcp_static_cast<Number>(a));
         } else {
             as_base_exp(a, outArg(exp), outArg(t));
@@ -220,7 +220,7 @@ RCP<Basic> mul(const RCP<Basic> &a, const RCP<Basic> &b)
 
         CSymPy::map_basic_basic d2;
         for (auto &p: d) {
-            if (is_a<Number>(*(p.first)) && is_a<Number>(*(p.second))) {
+            if (is_a_Number(*(p.first)) && is_a_Number(*(p.second))) {
                 RCP<Number> f = rcp_static_cast<Number>(p.first);
                 RCP<Number> s = rcp_static_cast<Number>(p.second);
                 RCP<Number> r = powint(f, s);
@@ -296,7 +296,7 @@ RCP<Basic> mul_expand_two(const RCP<Basic> &a, const RCP<Basic> &b)
         CSymPy::umap_basic_int d2;
         // TODO: think about speeding this kind of loop up:
         for (auto &p: d) {
-            if (is_a<Number>(*(p.first)) && is_a<Number>(*(p.second))) {
+            if (is_a_Number(*(p.first)) && is_a_Number(*(p.second))) {
                 RCP<Number> f = rcp_static_cast<Number>(p.first);
                 RCP<Number> s = rcp_static_cast<Number>(p.second);
                 RCP<Number> r = mulint(f, s);

@@ -37,8 +37,8 @@ bool Pow::is_canonical(const RCP<Basic> &base, const RCP<Basic> &exp)
     // e.g. x^1
     if (is_a<Integer>(*exp) && rcp_static_cast<Integer>(exp)->is_one())
         return false;
-    // e.g. 2^3
-    if (is_a<Integer>(*base) && is_a<Integer>(*exp))
+    // e.g. 2^3, (2/3)^4
+    if (is_a_Number(*base) && is_a<Integer>(*exp))
         return false;
     return true;
 }
@@ -215,7 +215,7 @@ RCP<Basic> pow_expand(const RCP<Pow> &self)
                 }
                 RCP<Basic> term = Mul::from_dict(overall_coeff, d);
                 RCP<Number> coef2 = rcp(new Integer(p.second));
-                if (is_a<Number>(*term)) {
+                if (is_a_Number(*term)) {
                     iaddint(outArg(add_overall_coeff),
                         mulint(rcp_static_cast<Number>(term), coef2));
                 } else {

@@ -34,7 +34,7 @@ bool Add::is_canonical(const Teuchos::RCP<Number> &coef,
         if (p.first == Teuchos::null) return false;
         if (p.second == Teuchos::null) return false;
         // e.g. 2*3
-        if (is_a<Number>(*p.first) && is_a<Number>(*p.second))
+        if (is_a_Number(*p.first) && is_a_Number(*p.second))
             return false;
         // e.g. 0*x
         if (is_a<Integer>(*p.first) &&
@@ -158,7 +158,7 @@ void as_coef_term(const RCP<Basic> &self, const Ptr<RCP<Number>> &coef,
     } else if (is_a<Mul>(*self)) {
         (rcp_static_cast<Mul>(self))->
             as_coef_term(outArg(*coef), term);
-    } else if (is_a<Number>(*self)) {
+    } else if (is_a_Number(*self)) {
         *coef = rcp_static_cast<Number>(self);
         *term = one;
     } else if (is_a<Pow>(*self)) {
@@ -184,7 +184,7 @@ RCP<Basic> add(const RCP<Basic> &a, const RCP<Basic> &b)
     } else if (CSymPy::is_a<Add>(*a)) {
         coef = (rcp_static_cast<Add>(a))->coef_;
         d = (rcp_static_cast<Add>(a))->dict_;
-        if (is_a<Number>(*b)) {
+        if (is_a_Number(*b)) {
             iaddint(outArg(coef), rcp_static_cast<Number>(b));
         } else {
             RCP<Number> coef2;
@@ -194,7 +194,7 @@ RCP<Basic> add(const RCP<Basic> &a, const RCP<Basic> &b)
     } else if (CSymPy::is_a<Add>(*b)) {
         coef = (rcp_static_cast<Add>(b))->coef_;
         d = (rcp_static_cast<Add>(b))->dict_;
-        if (is_a<Number>(*a)) {
+        if (is_a_Number(*a)) {
             iaddint(outArg(coef), rcp_static_cast<Number>(a));
         } else {
             RCP<Number> coef2;
