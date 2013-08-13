@@ -24,6 +24,55 @@ public:
     inline mpz_class as_mpz() { return this->i; }
     inline virtual bool is_zero() const { return this->i == 0; }
     inline virtual bool is_one() const { return this->i == 1; }
+
+    virtual Teuchos::RCP<Number> add(const Number &other) const {
+        if (is_a<Integer>(other)) {
+            return Teuchos::rcp(new Integer(this->i +
+                        static_cast<const Integer&>(other).i));
+        } else {
+            throw std::runtime_error("Not implemented.");
+        }
+    };
+
+    virtual Teuchos::RCP<Number> sub(const Number &other) const {
+        if (is_a<Integer>(other)) {
+            return Teuchos::rcp(new Integer(this->i -
+                        static_cast<const Integer&>(other).i));
+        } else {
+            throw std::runtime_error("Not implemented.");
+        }
+    };
+
+    virtual Teuchos::RCP<Number> mul(const Number &other) const {
+        if (is_a<Integer>(other)) {
+            return Teuchos::rcp(new Integer(this->i *
+                        static_cast<const Integer&>(other).i));
+        } else {
+            throw std::runtime_error("Not implemented.");
+        }
+    };
+
+    virtual Teuchos::RCP<Number> div(const Number &other) const {
+        if (is_a<Integer>(other)) {
+            return Teuchos::rcp(new Integer(this->i /
+                        static_cast<const Integer&>(other).i));
+        } else {
+            throw std::runtime_error("Not implemented.");
+        }
+    };
+
+    virtual Teuchos::RCP<Number> pow(const Number &other) const {
+        if (is_a<Integer>(other)) {
+            const Integer o = static_cast<const Integer&>(other);
+            if (!(o.i.fits_ulong_p()))
+                throw std::runtime_error("powint: 'exp' does not fit unsigned int.");
+            mpz_class tmp;
+            mpz_pow_ui(tmp.get_mpz_t(), this->i.get_mpz_t(), o.i.get_ui());
+            return Teuchos::rcp(new CSymPy::Integer(tmp));
+        } else {
+            throw std::runtime_error("Not implemented.");
+        }
+    };
 };
 
 inline Teuchos::RCP<Integer> addint(const Teuchos::RCP<Integer> &self,
@@ -93,54 +142,6 @@ inline void ipowint(const Teuchos::Ptr<Teuchos::RCP<Integer>> &self,
 inline Teuchos::RCP<Integer> negint(const Teuchos::RCP<Integer> &self)
 {
     return Teuchos::rcp(new CSymPy::Integer(-(self->i)));
-}
-
-/* ---------------------------------------------- */
-
-
-inline Teuchos::RCP<Number> addint(const Teuchos::RCP<Number> &self,
-    const Teuchos::RCP<Number> &other)
-{
-    if (is_a<Integer>(*self) && is_a<Integer>(*other)) {
-        return addint(Teuchos::rcp_static_cast<Integer>(self),
-            Teuchos::rcp_static_cast<Integer>(other));
-    } else {
-        throw std::runtime_error("Not implemented.");
-    }
-}
-
-inline Teuchos::RCP<Number> mulint(const Teuchos::RCP<Number> &self,
-    const Teuchos::RCP<Number> &other)
-{
-    if (is_a<Integer>(*self) && is_a<Integer>(*other)) {
-        return mulint(Teuchos::rcp_static_cast<Integer>(self),
-            Teuchos::rcp_static_cast<Integer>(other));
-    } else {
-        throw std::runtime_error("Not implemented.");
-    }
-}
-
-inline Teuchos::RCP<Number> powint(const Teuchos::RCP<Number> &self,
-    const Teuchos::RCP<Number> &other)
-{
-    if (is_a<Integer>(*self) && is_a<Integer>(*other)) {
-        return powint(Teuchos::rcp_static_cast<Integer>(self),
-            Teuchos::rcp_static_cast<Integer>(other));
-    } else {
-        throw std::runtime_error("Not implemented.");
-    }
-}
-
-inline void iaddint(const Teuchos::Ptr<Teuchos::RCP<Number>> &self,
-    const Teuchos::RCP<Number> &other)
-{
-    *self = addint(*self, other);
-}
-
-inline void imulint(const Teuchos::Ptr<Teuchos::RCP<Number>> &self,
-    const Teuchos::RCP<Number> &other)
-{
-    *self = mulint(*self, other);
 }
 
 
