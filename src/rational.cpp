@@ -17,6 +17,15 @@ Rational::Rational(mpz_class num, mpz_class den)
     this->i.canonicalize();
 }
 
+bool Rational::is_canonical(const mpq_class &i)
+{
+    mpq_class x = i;
+    x.canonicalize();
+    // If 'x' is an integer, it should not be Rational:
+    if (x.get_den() == 1) return false;
+    return true;
+}
+
 std::size_t Rational::__hash__() const
 {
     // only the least significant bits that fit into "signed long int" are

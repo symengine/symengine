@@ -18,6 +18,7 @@ public:
     virtual std::size_t __hash__() const;
     virtual bool __eq__(const Basic &o) const;
     virtual std::string __str__() const;
+    bool is_canonical(const mpq_class &i);
 
     virtual bool is_zero() const { return this->i == 0; }
     virtual bool is_one() const { return this->i == 1; }
