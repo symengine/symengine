@@ -7,6 +7,7 @@
 #include "symbol.h"
 #include "dict.h"
 #include "integer.h"
+#include "rational.h"
 #include "mul.h"
 
 using Teuchos::RCP;
@@ -19,6 +20,7 @@ using CSymPy::Symbol;
 using CSymPy::umap_basic_int;
 using CSymPy::map_basic_basic;
 using CSymPy::Integer;
+using CSymPy::Rational;
 using CSymPy::one;
 using CSymPy::zero;
 
@@ -126,6 +128,14 @@ void test_integer()
     assert(neq(k, rcp(new Integer(12))));
 }
 
+void test_rational()
+{
+    RCP<Integer> i = rcp(new Integer(5));
+    RCP<Integer> j = rcp(new Integer(6));
+    RCP<Rational> r = Rational::from_two_ints(i, j);
+    std::cout << *r << std::endl;
+}
+
 void test_mul()
 {
     map_basic_basic m;
@@ -155,6 +165,8 @@ int main(int argc, char* argv[])
     test_add();
 
     test_integer();
+
+    test_rational();
 
     test_mul();
 

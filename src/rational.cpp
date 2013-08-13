@@ -20,6 +20,13 @@ bool Rational::is_canonical(const mpq_class &i)
     return true;
 }
 
+Teuchos::RCP<Rational> Rational::from_two_ints(const Teuchos::RCP<Integer> &n,
+            const Teuchos::RCP<Integer> &d)
+{
+    mpq_class q(n->i, d->i);
+    return rcp(new Rational(q));
+}
+
 std::size_t Rational::__hash__() const
 {
     // only the least significant bits that fit into "signed long int" are

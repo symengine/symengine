@@ -5,6 +5,7 @@
 
 #include "basic.h"
 #include "number.h"
+#include "integer.h"
 
 namespace CSymPy {
 
@@ -18,6 +19,10 @@ public:
     virtual bool __eq__(const Basic &o) const;
     virtual std::string __str__() const;
     bool is_canonical(const mpq_class &i);
+
+    // Constructs Rational as n/d, where n, d can be any Integers.
+    static Teuchos::RCP<Rational> from_two_ints(const Teuchos::RCP<Integer> &n,
+            const Teuchos::RCP<Integer> &d);
 
     virtual bool is_zero() const { return this->i == 0; }
     virtual bool is_one() const { return this->i == 1; }
