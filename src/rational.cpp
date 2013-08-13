@@ -23,15 +23,12 @@ bool Rational::is_canonical(const mpq_class &i)
     return true;
 }
 
-Teuchos::RCP<Number> Rational::from_two_ints(const Teuchos::RCP<Integer> &n,
-            const Teuchos::RCP<Integer> &d)
+Teuchos::RCP<Number> Rational::from_mpq(const mpq_class i)
 {
-    if (d->i == 0)
-        throw std::runtime_error("Rational: Division by zero.");
-    mpq_class q(n->i, d->i);
+    mpq_class q = i;
 
-    // This is potentially slow, but has to be done, since 'n' and 'd' might
-    // have some common divisors:
+    // This is potentially slow, but has to be done, since 'i' might not be in
+    // canonical form.
     q.canonicalize();
 
     // If the result is an Integer, return an Integer:
@@ -40,6 +37,14 @@ Teuchos::RCP<Number> Rational::from_two_ints(const Teuchos::RCP<Integer> &n,
     } else {
         return rcp(new Rational(q));
     }
+}
+
+Teuchos::RCP<Number> Rational::from_two_ints(const Teuchos::RCP<Integer> &n,
+            const Teuchos::RCP<Integer> &d)
+{
+    if (d->i == 0)
+        throw std::runtime_error("Rational: Division by zero.");
+    return Rational::from_mpq(mpq_class(n->i, d->i));
 }
 
 std::size_t Rational::__hash__() const
