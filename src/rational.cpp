@@ -6,15 +6,9 @@ using Teuchos::rcp;
 namespace CSymPy {
 
 Rational::Rational(mpq_class i)
+    : i{i}
 {
-    this->i = i;
-}
-
-Rational::Rational(mpz_class num, mpz_class den)
-{
-    this->i = mpq_class(num, den);
-    // TODO: investigate if this is needed here:
-    this->i.canonicalize();
+    CSYMPY_ASSERT(is_canonical(this->i))
 }
 
 bool Rational::is_canonical(const mpq_class &i)

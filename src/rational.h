@@ -14,7 +14,6 @@ public:
 
 public:
     Rational(mpq_class i);
-    Rational(mpz_class num, mpz_class den);
     virtual std::size_t __hash__() const;
     virtual bool __eq__(const Basic &o) const;
     virtual std::string __str__() const;
@@ -108,7 +107,8 @@ inline Teuchos::RCP<Rational> powint(const Teuchos::RCP<Rational> &self,
             mpz_class tmp2;
             mpz_pow_ui(tmp2.get_mpz_t(), self->i.get_den().get_mpz_t(),
                     other->i.get_num().get_ui());
-            return Teuchos::rcp(new CSymPy::Rational(tmp, tmp2));
+            mpq_class q(tmp, tmp2);
+            return Teuchos::rcp(new CSymPy::Rational(q));
         }
     } else {
         throw std::runtime_error("powint: 'exp' must be an integer.");
