@@ -20,6 +20,7 @@ using CSymPy::Symbol;
 using CSymPy::umap_basic_int;
 using CSymPy::map_basic_basic;
 using CSymPy::Integer;
+using CSymPy::integer;
 using CSymPy::Rational;
 using CSymPy::one;
 using CSymPy::zero;
@@ -130,9 +131,7 @@ void test_integer()
 
 void test_rational()
 {
-    RCP<Integer> i = rcp(new Integer(5));
-    RCP<Integer> j = rcp(new Integer(6));
-    RCP<Rational> r = Rational::from_two_ints(i, j);
+    RCP<Rational> r = Rational::from_two_ints(integer(5), integer(6));
     std::cout << *r << std::endl;
 }
 

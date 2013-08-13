@@ -75,6 +75,11 @@ public:
     };
 };
 
+inline Teuchos::RCP<Integer> integer(int i)
+{
+    return Teuchos::rcp(new Integer(i));
+}
+
 inline Teuchos::RCP<Integer> addint(const Teuchos::RCP<Integer> &self,
     const Teuchos::RCP<Integer> &other)
 {
