@@ -143,7 +143,7 @@ void Add::dict_add_term(umap_basic_int &d, const RCP<Number> &coef,
         // Not found, add it in if it is nonzero:
         if (!(coef->is_zero())) d[t] = coef;
     } else {
-        iaddint(outArg(it->second), coef);
+        iaddnum(outArg(it->second), coef);
         if (it->second->is_zero()) d.erase(it);
     }
 }
@@ -180,12 +180,12 @@ RCP<Basic> add(const RCP<Basic> &a, const RCP<Basic> &b)
         d = (rcp_static_cast<Add>(a))->dict_;
         for (auto &p: (rcp_static_cast<Add>(b))->dict_)
             Add::dict_add_term(d, p.second, p.first);
-        iaddint(outArg(coef), rcp_static_cast<Add>(b)->coef_);
+        iaddnum(outArg(coef), rcp_static_cast<Add>(b)->coef_);
     } else if (CSymPy::is_a<Add>(*a)) {
         coef = (rcp_static_cast<Add>(a))->coef_;
         d = (rcp_static_cast<Add>(a))->dict_;
         if (is_a_Number(*b)) {
-            iaddint(outArg(coef), rcp_static_cast<Number>(b));
+            iaddnum(outArg(coef), rcp_static_cast<Number>(b));
         } else {
             RCP<Number> coef2;
             as_coef_term(b, outArg(coef2), outArg(t));
@@ -195,7 +195,7 @@ RCP<Basic> add(const RCP<Basic> &a, const RCP<Basic> &b)
         coef = (rcp_static_cast<Add>(b))->coef_;
         d = (rcp_static_cast<Add>(b))->dict_;
         if (is_a_Number(*a)) {
-            iaddint(outArg(coef), rcp_static_cast<Number>(a));
+            iaddnum(outArg(coef), rcp_static_cast<Number>(a));
         } else {
             RCP<Number> coef2;
             as_coef_term(a, outArg(coef2), outArg(t));
@@ -241,9 +241,9 @@ RCP<Basic> add_expand(const RCP<Add> &self)
                     coef = one;
                 }
                 Add::dict_add_term(d,
-                        mulint(mulint(p.second, q.second), coef), tmp2);
+                        mulnum(mulnum(p.second, q.second), coef), tmp2);
             }
-            iaddint(outArg(coef_overall), mulint(p.second,
+            iaddnum(outArg(coef_overall), mulnum(p.second,
                         rcp_static_cast<Add>(tmp)->coef_));
         } else {
             if (is_a<Mul>(*tmp)) {
@@ -252,7 +252,7 @@ RCP<Basic> add_expand(const RCP<Add> &self)
             } else {
                 coef = one;
             }
-            Add::dict_add_term(d, mulint(p.second, coef), tmp);
+            Add::dict_add_term(d, mulnum(p.second, coef), tmp);
         }
     }
     return Add::from_dict(coef_overall, d);

@@ -132,7 +132,7 @@ void Mul::dict_add_term(map_basic_basic &d, const RCP<Basic> &exp,
         // Very common case, needs to be fast:
         if (is_a_Number(*it->second) && is_a_Number(*exp)) {
             RCP<Number> tmp = rcp_static_cast<Number>(it->second);
-            iaddint(outArg(tmp), rcp_static_cast<Number>(exp));
+            iaddnum(outArg(tmp), rcp_static_cast<Number>(exp));
             it->second = tmp;
         } else {
             // General case:
@@ -194,7 +194,7 @@ RCP<Basic> mul(const RCP<Basic> &a, const RCP<Basic> &b)
         coef = (rcp_static_cast<Mul>(a))->coef_;
         d = (rcp_static_cast<Mul>(a))->dict_;
         if (is_a_Number(*b)) {
-            imulint(outArg(coef), rcp_static_cast<Number>(b));
+            imulnum(outArg(coef), rcp_static_cast<Number>(b));
         } else {
             as_base_exp(b, outArg(exp), outArg(t));
             Mul::dict_add_term(d, exp, t);
@@ -205,7 +205,7 @@ RCP<Basic> mul(const RCP<Basic> &a, const RCP<Basic> &b)
         coef = (rcp_static_cast<Mul>(b))->coef_;
         d = (rcp_static_cast<Mul>(b))->dict_;
         if (is_a_Number(*a)) {
-            imulint(outArg(coef), rcp_static_cast<Number>(a));
+            imulnum(outArg(coef), rcp_static_cast<Number>(a));
         } else {
             as_base_exp(a, outArg(exp), outArg(t));
             Mul::dict_add_term(d, exp, t);
@@ -223,8 +223,8 @@ RCP<Basic> mul(const RCP<Basic> &a, const RCP<Basic> &b)
             if (is_a_Number(*(p.first)) && is_a_Number(*(p.second))) {
                 RCP<Number> f = rcp_static_cast<Number>(p.first);
                 RCP<Number> s = rcp_static_cast<Number>(p.second);
-                RCP<Number> r = powint(f, s);
-                imulint(outArg(coef), r);
+                RCP<Number> r = pownum(f, s);
+                imulnum(outArg(coef), r);
             } else {
                 // TODO: this can be spedup
                 Mul::dict_add_term(d2, p.second, p.first);
@@ -248,7 +248,7 @@ RCP<Basic> mul_expand_two(const RCP<Basic> &a, const RCP<Basic> &b)
         for (auto &p: (rcp_static_cast<Add>(a))->dict_) {
             for (auto &q: (rcp_static_cast<Add>(b))->dict_) {
                 // The main bottleneck here is the mul(p.first, q.first) command
-                Add::dict_add_term(d, mulint(p.second, q.second),
+                Add::dict_add_term(d, mulnum(p.second, q.second),
                         mul(p.first, q.first));
             }
         }
@@ -281,7 +281,7 @@ RCP<Basic> mul_expand_two(const RCP<Basic> &a, const RCP<Basic> &b)
                 coef = one;
             }
             Add::dict_add_term(d,
-                    mulint(p.second, coef), tmp);
+                    mulnum(p.second, coef), tmp);
         }
 
         auto it = d.find(one);
@@ -299,8 +299,8 @@ RCP<Basic> mul_expand_two(const RCP<Basic> &a, const RCP<Basic> &b)
             if (is_a_Number(*(p.first)) && is_a_Number(*(p.second))) {
                 RCP<Number> f = rcp_static_cast<Number>(p.first);
                 RCP<Number> s = rcp_static_cast<Number>(p.second);
-                RCP<Number> r = mulint(f, s);
-                iaddint(outArg(coef_overall), r);
+                RCP<Number> r = mulnum(f, s);
+                iaddnum(outArg(coef_overall), r);
             } else {
                 d2[p.first] = p.second;
             }

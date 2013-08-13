@@ -151,7 +151,7 @@ void test_rational()
     r1 = Rational::from_two_ints(integer(2), integer(3));
     r2 = Rational::from_two_ints(integer(5), integer(7));
     r3 = Rational::from_two_ints(integer(10), integer(21));
-    assert(eq(mulint(r1, r2), r3));
+    assert(eq(mulnum(r1, r2), r3));
 }
 
 void test_mul()

@@ -17,34 +17,34 @@ public:
     virtual Teuchos::RCP<Number> pow(const Number &other) const = 0;
 };
 
-inline Teuchos::RCP<Number> addint(const Teuchos::RCP<Number> &self,
+inline Teuchos::RCP<Number> addnum(const Teuchos::RCP<Number> &self,
     const Teuchos::RCP<Number> &other)
 {
     return self->add(*other);
 }
 
-inline Teuchos::RCP<Number> mulint(const Teuchos::RCP<Number> &self,
+inline Teuchos::RCP<Number> mulnum(const Teuchos::RCP<Number> &self,
     const Teuchos::RCP<Number> &other)
 {
     return self->mul(*other);
 }
 
-inline Teuchos::RCP<Number> powint(const Teuchos::RCP<Number> &self,
+inline Teuchos::RCP<Number> pownum(const Teuchos::RCP<Number> &self,
     const Teuchos::RCP<Number> &other)
 {
     return self->pow(*other);
 }
 
-inline void iaddint(const Teuchos::Ptr<Teuchos::RCP<Number>> &self,
+inline void iaddnum(const Teuchos::Ptr<Teuchos::RCP<Number>> &self,
     const Teuchos::RCP<Number> &other)
 {
-    *self = addint(*self, other);
+    *self = addnum(*self, other);
 }
 
-inline void imulint(const Teuchos::Ptr<Teuchos::RCP<Number>> &self,
+inline void imulnum(const Teuchos::Ptr<Teuchos::RCP<Number>> &self,
     const Teuchos::RCP<Number> &other)
 {
-    *self = mulint(*self, other);
+    *self = mulnum(*self, other);
 }
 
 
