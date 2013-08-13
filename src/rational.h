@@ -32,11 +32,11 @@ public:
     inline bool is_int() { return this->i.get_den() == 1; }
 
     inline Teuchos::RCP<Number> addrat(const Rational &other) const {
-        return Teuchos::rcp(new Rational(this->i + other.i));
+        return from_mpq(this->i + other.i);
     }
 
     inline Teuchos::RCP<Number> subrat(const Rational &other) const {
-        return Teuchos::rcp(new Rational(this->i - other.i));
+        return from_mpq(this->i - other.i);
     }
 
     inline Teuchos::RCP<Number> mulrat(const Rational &other) const {
@@ -44,7 +44,7 @@ public:
     }
 
     inline Teuchos::RCP<Number> divrat(const Rational &other) const {
-        return Teuchos::rcp(new Rational(this->i / other.i));
+        return from_mpq(this->i / other.i);
     }
 
     inline Teuchos::RCP<Number> powrat(const Rational &other) const {
