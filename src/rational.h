@@ -20,8 +20,9 @@ public:
     virtual std::string __str__() const;
     bool is_canonical(const mpq_class &i);
 
-    // Constructs Rational as n/d, where n, d can be any Integers.
-    static Teuchos::RCP<Rational> from_two_ints(const Teuchos::RCP<Integer> &n,
+    // Constructs Rational as n/d, where n, d can be any Integers. If n/d is an
+    // Integer, it will return an Integer instead.
+    static Teuchos::RCP<Basic> from_two_ints(const Teuchos::RCP<Integer> &n,
             const Teuchos::RCP<Integer> &d);
 
     virtual bool is_zero() const { return this->i == 0; }

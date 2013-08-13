@@ -131,14 +131,18 @@ void test_integer()
 
 void test_rational()
 {
-    RCP<Rational> r = Rational::from_two_ints(integer(5), integer(6));
-    std::cout << *r << std::endl;
-    assert(eq(r, Rational::from_two_ints(integer(5), integer(6))));
-    assert(neq(r, Rational::from_two_ints(integer(5), integer(7))));
+    RCP<Basic> r1, r2;
+    r1 = Rational::from_two_ints(integer(5), integer(6));
+    std::cout << *r1 << std::endl;
+    assert(eq(r1, Rational::from_two_ints(integer(5), integer(6))));
+    assert(neq(r1, Rational::from_two_ints(integer(5), integer(7))));
 
-    RCP<Rational> r1, r2;
     r1 = Rational::from_two_ints(integer(2), integer(4));
     r2 = Rational::from_two_ints(integer(1), integer(2));
+    assert(eq(r1, r2));
+
+    r1 = Rational::from_two_ints(integer(4), integer(2));
+    r2 = integer(2);
     assert(eq(r1, r2));
 }
 
