@@ -17,6 +17,9 @@ bool Rational::is_canonical(const mpq_class &i)
     x.canonicalize();
     // If 'x' is an integer, it should not be Rational:
     if (x.get_den() == 1) return false;
+    // if 'i' is not in canonical form:
+    if (x.get_num() != i.get_num()) return false;
+    if (x.get_den() != i.get_den()) return false;
     return true;
 }
 
@@ -24,6 +27,9 @@ Teuchos::RCP<Rational> Rational::from_two_ints(const Teuchos::RCP<Integer> &n,
             const Teuchos::RCP<Integer> &d)
 {
     mpq_class q(n->i, d->i);
+    // This is potentially slow, but has to be done, since 'n' and 'd' might
+    // have some common divisors:
+    q.canonicalize();
     return rcp(new Rational(q));
 }
 
