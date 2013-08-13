@@ -152,16 +152,16 @@ void Add::dict_add_term(umap_basic_int &d, const RCP<Number> &coef,
 void as_coef_term(const RCP<Basic> &self, const Ptr<RCP<Number>> &coef,
         const Ptr<RCP<Basic>> &term)
 {
-    if (CSymPy::is_a<CSymPy::Symbol>(*self)) {
+    if (is_a<Symbol>(*self)) {
         *coef = one;
         *term = self;
-    } else if (CSymPy::is_a<CSymPy::Mul>(*self)) {
-        (rcp_static_cast<CSymPy::Mul>(self))->
+    } else if (is_a<Mul>(*self)) {
+        (rcp_static_cast<Mul>(self))->
             as_coef_term(outArg(*coef), term);
-    } else if (CSymPy::is_a<CSymPy::Number>(*self)) {
-        *coef = rcp_static_cast<CSymPy::Number>(self);
+    } else if (is_a<Number>(*self)) {
+        *coef = rcp_static_cast<Number>(self);
         *term = one;
-    } else if (CSymPy::is_a<CSymPy::Pow>(*self)) {
+    } else if (is_a<Pow>(*self)) {
         *coef = one;
         *term = self;
     } else {
