@@ -13,21 +13,12 @@ public:
     mpq_class i;
 
 public:
-    Rational(int i);
-    Rational(mpz_class i);
     Rational(mpq_class i);
     Rational(mpz_class num, mpz_class den);
     virtual std::size_t __hash__() const;
     virtual bool __eq__(const Basic &o) const;
     virtual std::string __str__() const;
 
-    // Convert to "int", raise an exception if it does not fit
-    signed long int as_int();
-    inline mpz_class as_mpz() {
-        if (!(this->is_int())) throw std::runtime_error("Not an integer.");
-        return this->i.get_num();
-    }
-    inline mpq_class as_mpq() { return this->i; }
     virtual bool is_zero() const { return this->i == 0; }
     virtual bool is_one() const { return this->i == 1; }
     inline bool is_int() { return this->i.get_den() == 1; }

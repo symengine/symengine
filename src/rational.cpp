@@ -5,16 +5,6 @@ using Teuchos::rcp;
 
 namespace CSymPy {
 
-Rational::Rational(int i)
-{
-    this->i = i;
-}
-
-Rational::Rational(mpz_class i)
-{
-    this->i = i;
-}
-
 Rational::Rational(mpq_class i)
 {
     this->i = i;
@@ -51,18 +41,6 @@ std::string Rational::__str__() const
     std::ostringstream s;
     s << this->i;
     return s.str();
-}
-
-signed long int Rational::as_int()
-{
-    // get_si() returns "signed long int", so that's what we return from
-    // "as_int()" and we leave it to the user to do any possible further integer
-    // conversions.
-    mpz_class i = this->as_mpz();
-    if (!(i.fits_sint_p())) {
-        throw std::runtime_error("as_int: Rational larger than int");
-    }
-    return i.get_si();
 }
 
 } // CSymPy
