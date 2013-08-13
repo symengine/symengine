@@ -14,13 +14,13 @@ using Teuchos::rcp_static_cast;
 
 namespace CSymPy {
 
-Add::Add(const RCP<Integer> &coef, const umap_basic_int& dict)
+Add::Add(const RCP<Number> &coef, const umap_basic_int& dict)
     : coef_{coef}, dict_{dict}
 {
     CSYMPY_ASSERT(is_canonical(coef, dict))
 }
 
-bool Add::is_canonical(const Teuchos::RCP<Integer> &coef,
+bool Add::is_canonical(const Teuchos::RCP<Number> &coef,
         const umap_basic_int& dict)
 {
     if (coef == Teuchos::null) return false;
@@ -34,7 +34,7 @@ bool Add::is_canonical(const Teuchos::RCP<Integer> &coef,
         if (p.first == Teuchos::null) return false;
         if (p.second == Teuchos::null) return false;
         // e.g. 2*3
-        if (is_a<Integer>(*p.first) && is_a<Integer>(*p.second))
+        if (is_a<Number>(*p.first) && is_a<Number>(*p.second))
             return false;
         // e.g. 0*x
         if (is_a<Integer>(*p.first) &&
@@ -61,7 +61,7 @@ std::size_t Add::__hash__() const
 {
     std::size_t seed = 0;
     hash_combine<Basic>(seed, *coef_);
-    std::map<RCP<Basic>, RCP<Integer>, RCPBasicKeyLess>
+    std::map<RCP<Basic>, RCP<Number>, RCPBasicKeyLess>
         ordered(dict_.begin(), dict_.end());
     for (auto &p: ordered) {
         hash_combine<Basic>(seed, *(p.first));
@@ -101,7 +101,7 @@ std::string Add::__str__() const
 // If d.size() > 1 then it just returns Add. This means that the dictionary
 // must be in canonical form already. For d.size == 1, it returns Mul, Pow,
 // Symbol or Integer, depending on the expression.
-RCP<Basic> Add::from_dict(const RCP<Integer> &coef, const umap_basic_int &d)
+RCP<Basic> Add::from_dict(const RCP<Number> &coef, const umap_basic_int &d)
 {
     if (d.size() == 0) {
         return coef;
@@ -135,7 +135,7 @@ RCP<Basic> Add::from_dict(const RCP<Integer> &coef, const umap_basic_int &d)
 
 // Adds (coef*t) to the dict "d"
 // Assumption: "t" does not have any numerical coefficients, those are in "coef"
-void Add::dict_add_term(umap_basic_int &d, const RCP<Integer> &coef,
+void Add::dict_add_term(umap_basic_int &d, const RCP<Number> &coef,
         const RCP<Basic> &t)
 {
     auto it = d.find(t);
@@ -149,7 +149,7 @@ void Add::dict_add_term(umap_basic_int &d, const RCP<Integer> &coef,
 }
 
 
-void as_coef_term(const RCP<Basic> &self, const Ptr<RCP<Integer>> &coef,
+void as_coef_term(const RCP<Basic> &self, const Ptr<RCP<Number>> &coef,
         const Ptr<RCP<Basic>> &term)
 {
     if (CSymPy::is_a<CSymPy::Symbol>(*self)) {
@@ -158,8 +158,8 @@ void as_coef_term(const RCP<Basic> &self, const Ptr<RCP<Integer>> &coef,
     } else if (CSymPy::is_a<CSymPy::Mul>(*self)) {
         (rcp_static_cast<CSymPy::Mul>(self))->
             as_coef_term(outArg(*coef), term);
-    } else if (CSymPy::is_a<CSymPy::Integer>(*self)) {
-        *coef = rcp_static_cast<CSymPy::Integer>(self);
+    } else if (CSymPy::is_a<CSymPy::Number>(*self)) {
+        *coef = rcp_static_cast<CSymPy::Number>(self);
         *term = one;
     } else if (CSymPy::is_a<CSymPy::Pow>(*self)) {
         *coef = one;
@@ -173,7 +173,7 @@ void as_coef_term(const RCP<Basic> &self, const Ptr<RCP<Integer>> &coef,
 RCP<Basic> add(const RCP<Basic> &a, const RCP<Basic> &b)
 {
     CSymPy::umap_basic_int d;
-    RCP<Integer> coef;
+    RCP<Number> coef;
     RCP<Basic> t;
     if (CSymPy::is_a<Add>(*a) && CSymPy::is_a<Add>(*b)) {
         coef = (rcp_static_cast<Add>(a))->coef_;
@@ -184,20 +184,20 @@ RCP<Basic> add(const RCP<Basic> &a, const RCP<Basic> &b)
     } else if (CSymPy::is_a<Add>(*a)) {
         coef = (rcp_static_cast<Add>(a))->coef_;
         d = (rcp_static_cast<Add>(a))->dict_;
-        if (is_a<Integer>(*b)) {
-            iaddint(outArg(coef), rcp_static_cast<Integer>(b));
+        if (is_a<Number>(*b)) {
+            iaddint(outArg(coef), rcp_static_cast<Number>(b));
         } else {
-            RCP<Integer> coef2;
+            RCP<Number> coef2;
             as_coef_term(b, outArg(coef2), outArg(t));
             Add::dict_add_term(d, coef2, t);
         }
     } else if (CSymPy::is_a<Add>(*b)) {
         coef = (rcp_static_cast<Add>(b))->coef_;
         d = (rcp_static_cast<Add>(b))->dict_;
-        if (is_a<Integer>(*a)) {
-            iaddint(outArg(coef), rcp_static_cast<Integer>(a));
+        if (is_a<Number>(*a)) {
+            iaddint(outArg(coef), rcp_static_cast<Number>(a));
         } else {
-            RCP<Integer> coef2;
+            RCP<Number> coef2;
             as_coef_term(a, outArg(coef2), outArg(t));
             Add::dict_add_term(d, coef2, t);
         }
@@ -226,8 +226,8 @@ RCP<Basic> sub(const RCP<Basic> &a, const RCP<Basic> &b)
 RCP<Basic> add_expand(const RCP<Add> &self)
 {
     umap_basic_int d;
-    RCP<Integer> coef_overall = self->coef_;
-    RCP<Integer> coef;
+    RCP<Number> coef_overall = self->coef_;
+    RCP<Number> coef;
     RCP<Basic> tmp, tmp2;
     for (auto &p: self->dict_) {
         tmp = expand(p.first);

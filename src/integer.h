@@ -4,10 +4,11 @@
 #include <gmpxx.h>
 
 #include "basic.h"
+#include "number.h"
 
 namespace CSymPy {
 
-class Integer : public Basic {
+class Integer : public Number {
 public:
     mpz_class i;
 
@@ -21,8 +22,8 @@ public:
     // Convert to "int", raise an exception if it does not fit
     signed long int as_int();
     inline mpz_class as_mpz() { return this->i; }
-    inline bool is_zero() { return this->i == 0; }
-    inline bool is_one() { return this->i == 1; }
+    inline virtual bool is_zero() const { return this->i == 0; }
+    inline virtual bool is_one() const { return this->i == 1; }
 };
 
 inline Teuchos::RCP<Integer> addint(const Teuchos::RCP<Integer> &self,

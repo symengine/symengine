@@ -189,33 +189,35 @@ RCP<Basic> pow_expand(const RCP<Pow> &self)
             int m = base_dict.size();
             multinomial_coefficients_mpz(m, n, r);
             umap_basic_int rd;
-            RCP<Integer> add_overall_coeff=zero;
+            RCP<Number> add_overall_coeff=zero;
             for (auto &p: r) {
                 auto power = p.first.begin();
                 auto i2 = base_dict.begin();
                 map_basic_basic d;
-                RCP<Integer> overall_coeff=one;
+                RCP<Number> overall_coeff=one;
                 for (; power != p.first.end(); ++power, ++i2) {
                     if (*power > 0) {
                         RCP<Integer> exp = rcp(new Integer(*power));
                         RCP<Basic> base = i2->first;
                         if (is_a<Integer>(*base)) {
                             imulint(outArg(overall_coeff),
-                                powint(rcp_static_cast<Integer>(base), exp));
+                                rcp_static_cast<Number>(
+                                powint(rcp_static_cast<Integer>(base), exp)));
                         } else {
                             d[base] = exp;
                         }
                         if (!(i2->second->is_one())) {
                             imulint(outArg(overall_coeff),
-                                powint(i2->second, exp));
+                                powint(i2->second,
+                                    rcp_static_cast<Number>(exp)));
                         }
                     }
                 }
                 RCP<Basic> term = Mul::from_dict(overall_coeff, d);
-                RCP<Integer> coef2 = rcp(new Integer(p.second));
-                if (is_a<Integer>(*term)) {
+                RCP<Number> coef2 = rcp(new Integer(p.second));
+                if (is_a<Number>(*term)) {
                     iaddint(outArg(add_overall_coeff),
-                        mulint(rcp_static_cast<Integer>(term), coef2));
+                        mulint(rcp_static_cast<Number>(term), coef2));
                 } else {
                     if (is_a<Mul>(*term) &&
                             !(rcp_static_cast<Mul>(term)->coef_->is_one())) {
