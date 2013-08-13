@@ -145,7 +145,7 @@ inline Teuchos::RCP<Integer> negint(const Teuchos::RCP<Integer> &self)
 }
 
 
-// Returns true if 'b' is a Number of any of its subclasses
+// Returns true if 'b' is a Number or any of its subclasses
 inline bool is_a_Number(const Basic &b)
 {
     // Currently we enumerate all the subclasses explicitly, from the most
