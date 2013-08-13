@@ -48,21 +48,19 @@ public:
         return from_mpq(this->i / other.i);
     }
 
-    inline Teuchos::RCP<Number> powrat(const Rational &other) const {
-        if (!(other.i.get_num().fits_ulong_p()))
-            throw std::runtime_error("powint: 'exp' does not fit unsigned int.");
-        mpz_class tmp;
-        mpz_pow_ui(tmp.get_mpz_t(), this->i.get_num().get_mpz_t(),
-                other.i.get_num().get_ui());
-        if (this->i.get_den() == 1) {
-            return integer(tmp);
-        } else {
-            mpz_class tmp2;
-            mpz_pow_ui(tmp2.get_mpz_t(), this->i.get_den().get_mpz_t(),
-                    other.i.get_num().get_ui());
-            mpq_class q(tmp, tmp2);
-            return Teuchos::rcp(new Rational(q));
-        }
+    inline Teuchos::RCP<Number> powrat(const Integer &other) const {
+        if (!(other.i.fits_ulong_p()))
+            throw std::runtime_error("powrat: 'exp' does not fit unsigned int.");
+        unsigned long exp = other.i.get_ui();
+        mpz_class num;
+        mpz_pow_ui(num.get_mpz_t(), this->i.get_num().get_mpz_t(), exp);
+
+        mpz_class den;
+        mpz_pow_ui(den.get_mpz_t(), this->i.get_den().get_mpz_t(), exp);
+
+        // Since 'this' is in canonical form, so is this**other, so we simply
+        // pass num/den into the constructor directly:
+        return Teuchos::rcp(new Rational(mpq_class(num, den)));
     }
 
 
@@ -99,8 +97,8 @@ public:
     };
 
     virtual Teuchos::RCP<Number> pow(const Number &other) const {
-        if (is_a<Rational>(other)) {
-            return powrat(static_cast<const Rational&>(other));
+        if (is_a<Integer>(other)) {
+            return powrat(static_cast<const Integer&>(other));
         } else {
             throw std::runtime_error("Not implemented.");
         }

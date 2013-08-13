@@ -176,6 +176,16 @@ void test_rational()
     r2 = Rational::from_two_ints(integer(1), integer(3));
     r3 = Rational::from_two_ints(integer(1), integer(2));
     assert(eq(divnum(r1, r2), r3));
+
+    r1 = Rational::from_two_ints(integer(2), integer(3));
+    r2 = integer(2);
+    r3 = Rational::from_two_ints(integer(4), integer(9));
+    assert(eq(pownum(r1, r2), r3));
+
+    r1 = Rational::from_two_ints(integer(2), integer(3));
+    r2 = integer(3);
+    r3 = Rational::from_two_ints(integer(8), integer(27));
+    assert(eq(pownum(r1, r2), r3));
 }
 
 void test_mul()
