@@ -26,6 +26,7 @@ cdef extern from "basic.h" namespace "CSymPy":
     bool is_a_Mul "CSymPy::is_a<CSymPy::Mul>"(const Basic &b) nogil
     bool is_a_Pow "CSymPy::is_a<CSymPy::Pow>"(const Basic &b) nogil
     bool is_a_Integer "CSymPy::is_a<CSymPy::Integer>"(const Basic &b) nogil
+    bool is_a_Rational "CSymPy::is_a<CSymPy::Rational>"(const Basic &b) nogil
     bool is_a_Symbol "CSymPy::is_a<CSymPy::Symbol>"(const Basic &b) nogil
     bool is_a_Sin "CSymPy::is_a<CSymPy::Sin>"(const Basic &b) nogil
     bool is_a_Cos "CSymPy::is_a<CSymPy::Cos>"(const Basic &b) nogil
@@ -41,6 +42,10 @@ cdef extern from "symbol.h" namespace "CSymPy":
 cdef extern from "integer.h" namespace "CSymPy":
     cdef cppclass Integer(Basic):
         Integer(int i) nogil
+
+cdef extern from "rational.h" namespace "CSymPy":
+    cdef cppclass Rational(Basic):
+        pass
 
 
 cdef extern from "add.h" namespace "CSymPy":
@@ -60,6 +65,7 @@ cdef extern from "mul.h" namespace "CSymPy":
 
 cdef extern from "pow.h" namespace "CSymPy":
     cdef RCP[Basic] pow(RCP[Basic] &a, RCP[Basic] &b) nogil except+
+    cdef RCP[Basic] sqrt(RCP[Basic] &x) nogil except+
 
     cdef cppclass Pow(Basic):
         pass

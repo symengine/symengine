@@ -10,6 +10,7 @@
 #include "integer.h"
 #include "mul.h"
 #include "pow.h"
+#include "functions.h"
 
 using Teuchos::RCP;
 using Teuchos::rcp;
@@ -27,6 +28,7 @@ using CSymPy::integer;
 using CSymPy::multinomial_coefficients;
 using CSymPy::one;
 using CSymPy::zero;
+using CSymPy::sin;
 
 void test_add()
 {
@@ -220,7 +222,7 @@ void test_div()
 
 void test_pow()
 {
-    RCP<Basic> x = rcp(new Symbol("x"));
+    RCP<Symbol> x = rcp(new Symbol("x"));
     RCP<Basic> y = rcp(new Symbol("y"));
     RCP<Basic> z = rcp(new Symbol("z"));
     RCP<Basic> im1 = rcp(new Integer(-1));
@@ -284,6 +286,15 @@ void test_pow()
     r1 = pow(mul(i3, mul(pow(x, i2), pow(y, im1))), i3);
     r2 = mul(i27, mul(pow(x, i6), pow(y, im3)));
     assert(eq(r1, r2));
+
+    /*    */
+    r1 = sqrt(x);
+    r1 = r1->diff(x)->diff(x);
+    r2 = mul(div(im1, i4), pow(x, div(im3, i2)));
+    assert(eq(r1, r2));
+
+    // Just test that it works:
+    r2 = sin(r1)->diff(x)->diff(x);
 }
 
 void test_multinomial()
