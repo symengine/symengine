@@ -80,3 +80,16 @@ def test_arit8():
     assert x**y * x**x == x**(x+y)
     assert x**y * x**x * x**z == x**(x+y+z)
     assert x**y - x**y == 0
+
+    assert x**2 / x == x
+    assert y*x**2 / (x*y) == x
+    assert (2 * x**3 * y**2 * z)**3 / 8 == x**9 * y**6 * z**3
+
+def test_expand1():
+    x = Symbol("x")
+    y = Symbol("y")
+    z = Symbol("z")
+    assert ((2*x+y)**2).expand() == 4*x**2 + 4*x*y + y**2
+    assert (x**2)**3 == x**6
+    assert ((2*x**2+3*y)**2).expand() == 4*x**4 + 12*x**2*y + 9*y**2
+    assert ((2*x/3+y/4)**2).expand() == 4*x**2/9 + x*y/3 + y**2/16

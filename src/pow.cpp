@@ -41,8 +41,11 @@ bool Pow::is_canonical(const RCP<Basic> &base, const RCP<Basic> &exp)
     // e.g. 2^3, (2/3)^4
     if (is_a_Number(*base) && is_a<Integer>(*exp))
         return false;
-    // e.g. (x*y)^2, should rather by x^2*y^2
+    // e.g. (x*y)^2, should rather be x^2*y^2
     if (is_a<Mul>(*base))
+        return false;
+    // e.g. x^2^y, should rather be x^(2*y)
+    if (is_a<Pow>(*base))
         return false;
     return true;
 }
@@ -87,6 +90,10 @@ RCP<Basic> pow(const RCP<Basic> &a, const RCP<Basic> &b)
         return pownum(rcp_static_cast<Number>(a), rcp_static_cast<Integer>(b));
     if (is_a<Mul>(*a))
         return rcp_static_cast<Mul>(a)->power_all_terms(b);
+    if (is_a<Pow>(*a)) {
+        RCP<Pow> A = rcp_static_cast<Pow>(a);
+        return pow(A->base_, mul(A->exp_, b));
+    }
     return rcp(new Pow(a, b));
 }
 
@@ -211,8 +218,13 @@ RCP<Basic> pow_expand(const RCP<Pow> &self)
                             imulnum(outArg(overall_coeff),
                                 rcp_static_cast<Number>(
                                 rcp_static_cast<Integer>(base)->powint(*exp)));
-                        } else {
+                        } else if (is_a<Symbol>(*base)) {
                             d[base] = exp;
+                        } else {
+                            RCP<Basic> exp2, t, tmp;
+                            tmp = pow(base, exp);
+                            Mul::as_base_exp(tmp, outArg(exp2), outArg(t));
+                            Mul::dict_add_term(d, exp2, t);
                         }
                         if (!(i2->second->is_one())) {
                             imulnum(outArg(overall_coeff),

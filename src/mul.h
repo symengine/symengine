@@ -26,6 +26,9 @@ public:
             const map_basic_basic &d);
     static void dict_add_term(map_basic_basic &d,
             const Teuchos::RCP<Basic> &coef, const Teuchos::RCP<Basic> &t);
+    static void as_base_exp(const Teuchos::RCP<Basic> &self,
+            const Teuchos::Ptr<Teuchos::RCP<Basic>> &exp,
+            const Teuchos::Ptr<Teuchos::RCP<Basic>> &base);
     void as_two_terms(const Teuchos::Ptr<Teuchos::RCP<Basic>> &a,
             const Teuchos::Ptr<Teuchos::RCP<Basic>> &b);
     Teuchos::RCP<Basic> power_all_terms(const Teuchos::RCP<Basic> &exp);
