@@ -131,6 +131,10 @@ RCP<Basic> Add::from_dict(const RCP<Number> &coef, const umap_basic_int &d)
         }
         map_basic_basic m;
         if (is_a_Number(*p->second)) {
+            if (is_a<Mul>(*(p->first))) {
+                return Mul::from_dict(p->second,
+                        rcp_static_cast<Mul>(p->first)->dict_);
+            }
             if (is_a<Pow>(*p->first)) {
                 m[rcp_static_cast<Pow>(p->first)->base_] =
                     rcp_static_cast<Pow>(p->first)->exp_;
