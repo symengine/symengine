@@ -26,8 +26,6 @@ using CSymPy::one;
 using CSymPy::zero;
 using CSymPy::Number;
 
-using CSymPy::mulint;
-
 void test_symbol_hash()
 {
     Symbol x  = Symbol("x");
@@ -107,23 +105,23 @@ void test_integer()
     std::cout << *i << std::endl;
     std::cout << *j << std::endl;
 
-    RCP<Integer> k = addint(i, j);
+    RCP<Number> k = addnum(i, j);
     std::cout << *k << std::endl;
     assert(eq(k, rcp(new Integer(11))));
     assert(neq(k, rcp(new Integer(12))));
 
-    k = subint(i, j);
+    k = subnum(i, j);
     std::cout << *k << std::endl;
     assert(eq(k, rcp(new Integer(-1))));
     assert(neq(k, rcp(new Integer(12))));
 
-    k = mulint(i, j);
+    k = mulnum(i, j);
     std::cout << *k << std::endl;
     assert(eq(k, rcp(new Integer(30))));
     assert(neq(k, rcp(new Integer(12))));
 
     // FIXME: this should return a Rational
-    k = divint(i, j);
+    k = divnum(i, j);
     std::cout << *k << std::endl;
 
     k = negint(i);
