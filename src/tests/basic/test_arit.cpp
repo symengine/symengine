@@ -164,6 +164,12 @@ void test_div()
     RCP<Basic> i3 = rcp(new Integer(3));
     RCP<Basic> i4 = rcp(new Integer(4));
 
+    assert(integer(2)->is_positive());
+    assert(integer(0)->is_zero());
+    assert(integer(1)->is_one());
+    assert(!(integer(-1)->is_positive()));
+    assert(integer(-1)->is_negative());
+
     RCP<Basic> r1, r2;
 
     r1 = pow(i3, i2);
