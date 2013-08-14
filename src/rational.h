@@ -43,6 +43,9 @@ public:
     inline Teuchos::RCP<Number> mulrat(const Rational &other) const {
         return from_mpq(this->i * other.i);
     }
+    inline Teuchos::RCP<Number> mulrat(const Integer &other) const {
+        return from_mpq(this->i * other.i);
+    }
 
     inline Teuchos::RCP<Number> divrat(const Rational &other) const {
         return from_mpq(this->i / other.i);
@@ -89,6 +92,8 @@ public:
     virtual Teuchos::RCP<Number> mul(const Number &other) const {
         if (is_a<Rational>(other)) {
             return mulrat(static_cast<const Rational&>(other));
+        } else if (is_a<Integer>(other)) {
+            return mulrat(static_cast<const Integer&>(other));
         } else {
             throw std::runtime_error("Not implemented.");
         }
@@ -110,6 +115,15 @@ public:
         }
     };
 };
+
+// Returns true if 'b' is a Number or any of its subclasses
+inline bool is_a_Number(const Basic &b)
+{
+    // Currently we enumerate all the subclasses explicitly, from the most
+    // frequent (on the left) to the least frequent (on the right):
+    return is_a<Integer>(b) || is_a<Rational>(b) || is_a<Number>(b);
+}
+
 
 } // CSymPy
 

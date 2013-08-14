@@ -176,11 +176,9 @@ void test_div()
     r2 = integer(9);
     assert(eq(r1, r2));
 
-    /*
     r1 = div(i4, i2);
     r2 = i2;
     assert(eq(r1, r2));
-    */
 
     r1 = div(x, x);
     r2 = one;

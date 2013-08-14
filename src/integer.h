@@ -84,7 +84,7 @@ public:
         if (is_a<Integer>(other)) {
             return mulint(static_cast<const Integer&>(other));
         } else {
-            throw std::runtime_error("Not implemented.");
+            return other.mul(*this);
         }
     };
 
@@ -113,15 +113,6 @@ inline Teuchos::RCP<Integer> integer(int i)
 inline Teuchos::RCP<Integer> integer(mpz_class i)
 {
     return Teuchos::rcp(new Integer(i));
-}
-
-
-// Returns true if 'b' is a Number or any of its subclasses
-inline bool is_a_Number(const Basic &b)
-{
-    // Currently we enumerate all the subclasses explicitly, from the most
-    // frequent (on the left) to the least frequent (on the right):
-    return is_a<Integer>(b) || is_a<Number>(b);
 }
 
 // Integers -1, 0 and 1 are created only once in integer.cpp and reused
