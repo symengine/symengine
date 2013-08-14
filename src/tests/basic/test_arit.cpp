@@ -216,9 +216,14 @@ void test_pow()
     RCP<Basic> x = rcp(new Symbol("x"));
     RCP<Basic> y = rcp(new Symbol("y"));
     RCP<Basic> z = rcp(new Symbol("z"));
+    RCP<Basic> im1 = rcp(new Integer(-1));
     RCP<Basic> i2 = rcp(new Integer(2));
     RCP<Basic> i3 = rcp(new Integer(3));
+    RCP<Basic> im3 = rcp(new Integer(-3));
     RCP<Basic> i4 = rcp(new Integer(4));
+    RCP<Basic> i6 = rcp(new Integer(6));
+    RCP<Basic> i9 = rcp(new Integer(9));
+    RCP<Basic> i27 = rcp(new Integer(27));
 
     RCP<Basic> r1;
     RCP<Basic> r2;
@@ -245,6 +250,32 @@ void test_pow()
 
     r1 = sub(pow(x, y), pow(x, y));
     r2 = zero;
+    assert(eq(r1, r2));
+
+    /* Test (x*y)^2 -> x^2*y^2 type of simplifications */
+
+    r1 = pow(mul(x, y), i2);
+    r2 = mul(pow(x, i2), pow(y, i2));
+    assert(eq(r1, r2));
+
+    r1 = pow(mul(i2, mul(x, y)), i2);
+    r2 = mul(i4, mul(pow(x, i2), pow(y, i2)));
+    assert(eq(r1, r2));
+
+    r1 = pow(mul(i3, mul(x, y)), i2);
+    r2 = mul(i9, mul(pow(x, i2), pow(y, i2)));
+    assert(eq(r1, r2));
+
+    r1 = pow(mul(i3, mul(x, y)), im1);
+    r2 = mul(div(one, i3), mul(pow(x, im1), pow(y, im1)));
+    assert(eq(r1, r2));
+
+    r1 = pow(mul(i3, mul(pow(x, i2), pow(y, i3))), i2);
+    r2 = mul(i9, mul(pow(x, i4), pow(y, i6)));
+    assert(eq(r1, r2));
+
+    r1 = pow(mul(i3, mul(pow(x, i2), pow(y, im1))), i3);
+    r2 = mul(i27, mul(pow(x, i6), pow(y, im3)));
     assert(eq(r1, r2));
 }
 
