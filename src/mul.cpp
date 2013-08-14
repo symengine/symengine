@@ -56,6 +56,10 @@ bool Mul::is_canonical(const Teuchos::RCP<Number> &coef,
         //     (={x:2, y:2})
         if (is_a<Mul>(*p.first))
             return false;
+        // e.g. x^2^y (={x^2:y}), which should be represented as x^(2y)
+        //     (={x:2y})
+        if (is_a<Pow>(*p.first))
+            return false;
     }
     return true;
 }
