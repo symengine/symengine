@@ -35,6 +35,9 @@ public:
     inline Teuchos::RCP<Number> addrat(const Rational &other) const {
         return from_mpq(this->i + other.i);
     }
+    inline Teuchos::RCP<Number> addrat(const Integer &other) const {
+        return from_mpq(this->i + other.i);
+    }
 
     inline Teuchos::RCP<Number> subrat(const Rational &other) const {
         return from_mpq(this->i - other.i);
@@ -76,6 +79,8 @@ public:
     virtual Teuchos::RCP<Number> add(const Number &other) const {
         if (is_a<Rational>(other)) {
             return addrat(static_cast<const Rational&>(other));
+        } else if (is_a<Integer>(other)) {
+            return addrat(static_cast<const Integer&>(other));
         } else {
             throw std::runtime_error("Not implemented.");
         }

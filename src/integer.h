@@ -68,7 +68,7 @@ public:
         if (is_a<Integer>(other)) {
             return addint(static_cast<const Integer&>(other));
         } else {
-            throw std::runtime_error("Not implemented.");
+            return other.add(*this);
         }
     };
 
