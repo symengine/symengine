@@ -41,6 +41,9 @@ bool Pow::is_canonical(const RCP<Basic> &base, const RCP<Basic> &exp)
     // e.g. 2^3, (2/3)^4
     if (is_a_Number(*base) && is_a<Integer>(*exp))
         return false;
+    // e.g. (x*y)^2, should rather by x^2*y^2
+    if (is_a<Mul>(*base))
+        return false;
     return true;
 }
 

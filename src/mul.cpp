@@ -52,6 +52,10 @@ bool Mul::is_canonical(const Teuchos::RCP<Number> &coef,
         if (is_a<Integer>(*p.second) &&
                 rcp_static_cast<Integer>(p.second)->is_zero())
             return false;
+        // e.g. (x*y)^2 (={xy:2}), which should be represented as x^2*y^2
+        //     (={x:2, y:2})
+        if (is_a<Mul>(*p.first))
+            return false;
     }
     return true;
 }
