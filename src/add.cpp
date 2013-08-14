@@ -5,6 +5,7 @@
 #include "mul.h"
 #include "pow.h"
 #include "rational.h"
+#include "functions.h"
 
 using Teuchos::RCP;
 using Teuchos::Ptr;
@@ -163,6 +164,9 @@ void as_coef_term(const RCP<Basic> &self, const Ptr<RCP<Number>> &coef,
         *coef = rcp_static_cast<Number>(self);
         *term = one;
     } else if (is_a<Pow>(*self)) {
+        *coef = one;
+        *term = self;
+    } else if (is_a_sub<Function>(*self)) {
         *coef = one;
         *term = self;
     } else {
