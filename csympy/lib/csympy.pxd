@@ -11,10 +11,13 @@ cdef extern from "basic.h" namespace "Teuchos":
 #        RCP[T]& operator=(RCP[T] &r_ptr) nogil except +
         void reset() nogil except +
 
+    RCP[Symbol] rcp_static_cast_Symbol "Teuchos::rcp_static_cast<CSymPy::Symbol>"(const RCP[Basic] &b) nogil
+
 
 cdef extern from "basic.h" namespace "CSymPy":
     cdef cppclass Basic:
         string __str__() nogil except +
+        RCP[Basic] diff(const RCP[Symbol] &x) nogil except +
 
     bool eq(RCP[Basic] &a, RCP[Basic] &b) nogil except +
     bool neq(RCP[Basic] &a, RCP[Basic] &b) nogil except +

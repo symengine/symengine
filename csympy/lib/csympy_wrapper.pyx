@@ -87,6 +87,10 @@ cdef class Basic(object):
     def expand(Basic self not None):
         return c2py(csympy.expand(self.thisptr))
 
+    def diff(Basic self not None, Symbol x not None):
+        cdef RCP[csympy.Symbol] X = csympy.rcp_static_cast_Symbol(x.thisptr)
+        return c2py(deref(self.thisptr).diff(X))
+
 
 cdef class Symbol(Basic):
 
