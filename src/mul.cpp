@@ -5,6 +5,7 @@
 #include "symbol.h"
 #include "pow.h"
 #include "rational.h"
+#include "functions.h"
 
 using Teuchos::RCP;
 using Teuchos::Ptr;
@@ -104,6 +105,7 @@ std::string Mul::__str__() const
 
 RCP<CSymPy::Basic> Mul::from_dict(const RCP<Number> &coef, const map_basic_basic &d)
 {
+    if (coef->is_zero()) return zero;
     if (d.size() == 0) {
         return coef;
     } else if (d.size() == 1) {
@@ -191,6 +193,9 @@ void Mul::as_base_exp(const RCP<Basic> &self, const Ptr<RCP<Basic>> &exp,
     } else if (is_a<Add>(*self)) {
         *exp = one;
         *base = self;
+    } else if (is_a_sub<Function>(*self)) {
+        *exp = one;
+        *base = self;
     } else {
         std::cout << "as_base_exp: " << *self << std::endl;
         throw std::runtime_error("Not implemented yet.");
@@ -263,6 +268,11 @@ RCP<Basic> mul(const RCP<Basic> &a, const RCP<Basic> &b)
 RCP<Basic> div(const RCP<Basic> &a, const RCP<Basic> &b)
 {
     return mul(a, pow(b, minus_one));
+}
+
+RCP<Basic> neg(const RCP<Basic> &a)
+{
+    return mul(minus_one, a);
 }
 
 RCP<Basic> mul_expand_two(const RCP<Basic> &a, const RCP<Basic> &b)
@@ -362,6 +372,35 @@ Teuchos::RCP<Basic> Mul::power_all_terms(const Teuchos::RCP<Basic> &exp)
         // TODO: this can be made faster probably:
         return mul(new_coef, Mul::from_dict(one, d));
     }
+}
+
+RCP<Basic> Mul::diff(const Teuchos::RCP<Symbol> &x) const
+{
+    RCP<Basic> r=zero;
+    for (auto &p: dict_) {
+        RCP<Number> coef = coef_;
+        RCP<Basic> factor = pow(p.first, p.second)->diff(x);
+        if (is_a<Integer>(*factor) &&
+                rcp_static_cast<Integer>(factor)->is_zero()) continue;
+        map_basic_basic d = dict_;
+        d.erase(p.first);
+        if (is_a_Number(*factor)) {
+            imulnum(outArg(coef), rcp_static_cast<Number>(factor));
+        } else if (is_a<Mul>(*factor)) {
+            RCP<Mul> tmp = rcp_static_cast<Mul>(factor);
+            imulnum(outArg(coef), tmp->coef_);
+            for (auto &q: tmp->dict_) {
+                Mul::dict_add_term(d, q.second, q.first);
+            }
+        } else {
+            RCP<Basic> exp, t;
+            Mul::as_base_exp(factor, outArg(exp), outArg(t));
+            Mul::dict_add_term(d, exp, t);
+        }
+        // TODO: speed this up:
+        r = add(r, Mul::from_dict(coef, d));
+    }
+    return r;
 }
 
 } // CSymPy

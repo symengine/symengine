@@ -262,4 +262,11 @@ RCP<Basic> pow_expand(const RCP<Pow> &self)
     return self;
 }
 
+RCP<Basic> Pow::diff(const Teuchos::RCP<Symbol> &x) const
+{
+    if (is_a_Number(*exp_))
+        return mul(mul(exp_, pow(base_, sub(exp_, one))), base_->diff(x));
+    throw std::runtime_error("Not implemented.");
+}
+
 } // CSymPy
