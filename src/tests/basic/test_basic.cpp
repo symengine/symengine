@@ -218,6 +218,13 @@ void test_rational()
     r3 = Rational::from_two_ints(integer(11), integer(3));
     assert(eq(addnum(r1, r2), r3));
     assert(eq(addnum(r2, r1), r3));
+
+    r1 = Rational::from_two_ints(integer(2), integer(3));
+    r2 = integer(3);
+    r3 = Rational::from_two_ints(integer(-7), integer(3));
+    assert(eq(subnum(r1, r2), r3));
+    r3 = Rational::from_two_ints(integer(7), integer(3));
+    assert(eq(subnum(r2, r1), r3));
 }
 
 void test_mul()

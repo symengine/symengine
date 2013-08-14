@@ -42,6 +42,12 @@ public:
     inline Teuchos::RCP<Number> subrat(const Rational &other) const {
         return from_mpq(this->i - other.i);
     }
+    inline Teuchos::RCP<Number> subrat(const Integer &other) const {
+        return from_mpq(this->i - other.i);
+    }
+    inline Teuchos::RCP<Number> rsubrat(const Integer &other) const {
+        return from_mpq(other.i - this->i);
+    }
 
     inline Teuchos::RCP<Number> mulrat(const Rational &other) const {
         return from_mpq(this->i * other.i);
@@ -89,6 +95,16 @@ public:
     virtual Teuchos::RCP<Number> sub(const Number &other) const {
         if (is_a<Rational>(other)) {
             return subrat(static_cast<const Rational&>(other));
+        } else if (is_a<Integer>(other)) {
+            return subrat(static_cast<const Integer&>(other));
+        } else {
+            throw std::runtime_error("Not implemented.");
+        }
+    };
+
+    virtual Teuchos::RCP<Number> rsub(const Number &other) const {
+        if (is_a<Integer>(other)) {
+            return rsubrat(static_cast<const Integer&>(other));
         } else {
             throw std::runtime_error("Not implemented.");
         }

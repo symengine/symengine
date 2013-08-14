@@ -76,8 +76,12 @@ public:
         if (is_a<Integer>(other)) {
             return subint(static_cast<const Integer&>(other));
         } else {
-            throw std::runtime_error("Not implemented.");
+            return other.rsub(*this);
         }
+    };
+
+    virtual Teuchos::RCP<Number> rsub(const Number &other) const {
+        throw std::runtime_error("Not implemented.");
     };
 
     virtual Teuchos::RCP<Number> mul(const Number &other) const {
