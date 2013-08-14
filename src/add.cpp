@@ -121,7 +121,12 @@ RCP<Basic> Add::from_dict(const RCP<Number> &coef, const umap_basic_int &d)
                         rcp_static_cast<Mul>(p->first)->dict_);
             }
             map_basic_basic m;
-            m[p->first] = one;
+            if (is_a<Pow>(*(p->first))) {
+                m[rcp_static_cast<Pow>(p->first)->base_] =
+                    rcp_static_cast<Pow>(p->first)->exp_;
+            } else {
+                m[p->first] = one;
+            }
             return rcp(new Mul(p->second, m));
         }
         // TODO: if p->second is a numeric coefficient, it should still be
