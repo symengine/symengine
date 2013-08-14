@@ -87,6 +87,10 @@ RCP<Basic> pow(const RCP<Basic> &a, const RCP<Basic> &b)
         return pownum(rcp_static_cast<Number>(a), rcp_static_cast<Integer>(b));
     if (is_a<Mul>(*a))
         return rcp_static_cast<Mul>(a)->power_all_terms(b);
+    if (is_a<Pow>(*a)) {
+        RCP<Pow> A = rcp_static_cast<Pow>(a);
+        return pow(A->base_, mul(A->exp_, b));
+    }
     return rcp(new Pow(a, b));
 }
 
