@@ -58,8 +58,16 @@ void test_sin()
     r2 = cos(x);
     assert(eq(r1, r2));
 
+    r1 = mul(i2,x)->diff(x);
+    r2 = i2;
+    std::cout << *r1 << std::endl;
+    std::cout << *r2 << std::endl;
+    assert(eq(r1, r2));
+
     r1 = sin(mul(i2,x))->diff(x);
     r2 = mul(i2, cos(mul(i2,x)));
+    std::cout << *r1 << std::endl;
+    std::cout << *r2 << std::endl;
     assert(eq(r1, r2));
 }
 
