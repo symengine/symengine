@@ -25,6 +25,8 @@ public:
 
     bool is_canonical(const Teuchos::RCP<Number> &coef,
             const umap_basic_int& dict);
+
+    virtual Teuchos::RCP<Basic> diff(const Teuchos::RCP<Symbol> &x) const;
 };
 
 Teuchos::RCP<Basic> add(const Teuchos::RCP<Basic> &a,

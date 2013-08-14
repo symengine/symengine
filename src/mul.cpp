@@ -386,6 +386,12 @@ RCP<Basic> Mul::diff(const Teuchos::RCP<Symbol> &x) const
         d.erase(p.first);
         if (is_a_Number(*factor)) {
             imulnum(outArg(coef), rcp_static_cast<Number>(factor));
+        } else if (is_a<Mul>(*factor)) {
+            RCP<Mul> tmp = rcp_static_cast<Mul>(factor);
+            imulnum(outArg(coef), tmp->coef_);
+            for (auto &q: tmp->dict_) {
+                Mul::dict_add_term(d, q.second, q.first);
+            }
         } else {
             RCP<Basic> exp, t;
             Mul::as_base_exp(factor, outArg(exp), outArg(t));

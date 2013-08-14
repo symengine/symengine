@@ -263,4 +263,15 @@ RCP<Basic> add_expand(const RCP<Add> &self)
     return Add::from_dict(coef_overall, d);
 }
 
+RCP<Basic> Add::diff(const Teuchos::RCP<Symbol> &x) const
+{
+    RCP<Basic> r=zero;
+    for (auto &p: dict_) {
+        RCP<Basic> term = mul(p.first, p.second)->diff(x);
+        // TODO: speed this up:
+        r = add(r, term);
+    }
+    return r;
+}
+
 } // CSymPy
