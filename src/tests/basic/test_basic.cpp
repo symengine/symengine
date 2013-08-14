@@ -124,7 +124,15 @@ void test_integer()
     assert(eq(k, Rational::from_two_ints(integer(5), integer(6))));
     std::cout << *k << std::endl;
 
-    k = i->negint();
+    k = pownum(i, j);
+    assert(eq(k, integer(15625)));
+    std::cout << *k << std::endl;
+
+    k = pownum(i, j->neg());
+    assert(eq(k, Rational::from_two_ints(integer(1), integer(15625))));
+    std::cout << *k << std::endl;
+
+    k = i->neg();
     std::cout << *k << std::endl;
     assert(eq(k, rcp(new Integer(-5))));
     assert(neq(k, rcp(new Integer(12))));
