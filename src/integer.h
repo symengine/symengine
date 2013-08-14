@@ -26,6 +26,22 @@ public:
     inline virtual bool is_one() const { return this->i == 1; }
 
 
+    /* These are very fast methods for add/sub/mul/div/pow on Integers only */
+
+    inline Teuchos::RCP<Integer> addint(const Integer &other) const {
+        return Teuchos::rcp(new Integer(this->i + other.i));
+    }
+
+    inline Teuchos::RCP<Integer> subint(const Integer &other) const {
+        return Teuchos::rcp(new Integer(this->i - other.i));
+    }
+
+    inline Teuchos::RCP<Integer> mulint(const Integer &other) const {
+        return Teuchos::rcp(new Integer(this->i * other.i));
+    }
+
+    Teuchos::RCP<Number> divint(const Integer &other) const;
+
     inline Teuchos::RCP<Integer> powint(const Integer &other) const {
         if (!(other.i.fits_ulong_p()))
             throw std::runtime_error("powint: 'exp' does not fit unsigned int.");
@@ -38,11 +54,12 @@ public:
         return Teuchos::rcp(new Integer(-i));
     }
 
+    /* These are general methods, overriden from the Number class, that need to
+     * check types to decide what operation to do, and so are a bit slower. */
 
     virtual Teuchos::RCP<Number> add(const Number &other) const {
         if (is_a<Integer>(other)) {
-            return Teuchos::rcp(new Integer(this->i +
-                        static_cast<const Integer&>(other).i));
+            return addint(static_cast<const Integer&>(other));
         } else {
             throw std::runtime_error("Not implemented.");
         }
@@ -50,8 +67,7 @@ public:
 
     virtual Teuchos::RCP<Number> sub(const Number &other) const {
         if (is_a<Integer>(other)) {
-            return Teuchos::rcp(new Integer(this->i -
-                        static_cast<const Integer&>(other).i));
+            return subint(static_cast<const Integer&>(other));
         } else {
             throw std::runtime_error("Not implemented.");
         }
@@ -59,8 +75,7 @@ public:
 
     virtual Teuchos::RCP<Number> mul(const Number &other) const {
         if (is_a<Integer>(other)) {
-            return Teuchos::rcp(new Integer(this->i *
-                        static_cast<const Integer&>(other).i));
+            return mulint(static_cast<const Integer&>(other));
         } else {
             throw std::runtime_error("Not implemented.");
         }
@@ -68,8 +83,7 @@ public:
 
     virtual Teuchos::RCP<Number> div(const Number &other) const {
         if (is_a<Integer>(other)) {
-            return Teuchos::rcp(new Integer(this->i /
-                        static_cast<const Integer&>(other).i));
+            return divint(static_cast<const Integer&>(other));
         } else {
             throw std::runtime_error("Not implemented.");
         }

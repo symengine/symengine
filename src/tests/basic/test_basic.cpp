@@ -120,8 +120,8 @@ void test_integer()
     assert(eq(k, rcp(new Integer(30))));
     assert(neq(k, rcp(new Integer(12))));
 
-    // FIXME: this should return a Rational
     k = divnum(i, j);
+    assert(eq(k, Rational::from_two_ints(integer(5), integer(6))));
     std::cout << *k << std::endl;
 
     k = i->negint();
