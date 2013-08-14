@@ -160,3 +160,7 @@ def sin(x):
 def cos(x):
     cdef Basic X = sympify(x)
     return c2py(csympy.cos(X.thisptr))
+
+def sqrt(x):
+    cdef Basic X = sympify(x)
+    return c2py(csympy.sqrt(X.thisptr))
