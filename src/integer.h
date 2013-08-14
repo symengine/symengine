@@ -24,6 +24,7 @@ public:
     inline mpz_class as_mpz() { return this->i; }
     inline virtual bool is_zero() const { return this->i == 0; }
     inline virtual bool is_one() const { return this->i == 1; }
+    inline virtual bool is_positive() const { return this->i > 0; }
 
 
     /* These are very fast methods for add/sub/mul/div/pow on Integers only */
