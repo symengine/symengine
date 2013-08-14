@@ -41,6 +41,9 @@ bool Pow::is_canonical(const RCP<Basic> &base, const RCP<Basic> &exp)
     // e.g. 2^3, (2/3)^4
     if (is_a_Number(*base) && is_a<Integer>(*exp))
         return false;
+    // e.g. (x*y)^2, should rather by x^2*y^2
+    if (is_a<Mul>(*base))
+        return false;
     return true;
 }
 
@@ -82,6 +85,8 @@ RCP<Basic> pow(const RCP<Basic> &a, const RCP<Basic> &b)
     if (eq(a, one)) return one;
     if (is_a_Number(*a) && is_a<Integer>(*b))
         return pownum(rcp_static_cast<Number>(a), rcp_static_cast<Integer>(b));
+    if (is_a<Mul>(*a))
+        return rcp_static_cast<Mul>(a)->power_all_terms(b);
     return rcp(new Pow(a, b));
 }
 

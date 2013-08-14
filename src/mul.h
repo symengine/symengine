@@ -28,6 +28,7 @@ public:
             const Teuchos::RCP<Basic> &coef, const Teuchos::RCP<Basic> &t);
     void as_two_terms(const Teuchos::Ptr<Teuchos::RCP<Basic>> &a,
             const Teuchos::Ptr<Teuchos::RCP<Basic>> &b);
+    Teuchos::RCP<Basic> power_all_terms(const Teuchos::RCP<Basic> &exp);
 
     // Returns true if both 'coef' and 'dict' are in canonical form
     bool is_canonical(const Teuchos::RCP<Number> &coef,

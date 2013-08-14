@@ -52,6 +52,10 @@ bool Mul::is_canonical(const Teuchos::RCP<Number> &coef,
         if (is_a<Integer>(*p.second) &&
                 rcp_static_cast<Integer>(p.second)->is_zero())
             return false;
+        // e.g. (x*y)^2 (={xy:2}), which should be represented as x^2*y^2
+        //     (={x:2, y:2})
+        if (is_a<Mul>(*p.first))
+            return false;
     }
     return true;
 }
@@ -190,8 +194,16 @@ RCP<Basic> mul(const RCP<Basic> &a, const RCP<Basic> &b)
     CSymPy::map_basic_basic d;
     RCP<Number> coef = one;
     if (CSymPy::is_a<Mul>(*a) && CSymPy::is_a<Mul>(*b)) {
-        d = (rcp_static_cast<Mul>(a))->dict_;
-        for (auto &p: (rcp_static_cast<Mul>(b))->dict_)
+        RCP<Mul> A = rcp_static_cast<Mul>(a);
+        RCP<Mul> B = rcp_static_cast<Mul>(b);
+        // This is important optimization, as coef=1 if Mul is inside an Add.
+        // To further speed this up, the upper level code could tell us that we
+        // are inside an Add, then we don't even have can simply skip the
+        // following two lines.
+        if (!(A->coef_->is_one()) || !(B->coef_->is_one()))
+            coef = mulnum(A->coef_, B->coef_);
+        d = A->dict_;
+        for (auto &p: B->dict_)
             Mul::dict_add_term(d, p.second, p.first);
     } else if (CSymPy::is_a<Mul>(*a)) {
         RCP<Basic> exp;
@@ -323,6 +335,25 @@ RCP<Basic> mul_expand(const RCP<Mul> &self)
     a = expand(a);
     b = expand(b);
     return mul_expand_two(a, b);
+}
+
+Teuchos::RCP<Basic> Mul::power_all_terms(const Teuchos::RCP<Basic> &exp)
+{
+    CSymPy::map_basic_basic d;
+    RCP<Basic> new_coef = pow(coef_, exp);
+    RCP<Basic> new_exp;
+    for (auto &p: dict_) {
+        new_exp = mul(p.second, exp);
+        if (is_a<Integer>(*new_exp) &&
+                rcp_static_cast<Integer>(new_exp)->is_zero()) continue;
+        Mul::dict_add_term(d, new_exp, p.first);
+    }
+    if (is_a<Number>(*new_coef)) {
+        return Mul::from_dict(rcp_static_cast<Number>(new_coef), d);
+    } else {
+        // TODO: this can be made faster probably:
+        return mul(new_coef, Mul::from_dict(one, d));
+    }
 }
 
 } // CSymPy
