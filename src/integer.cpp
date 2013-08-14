@@ -3,6 +3,7 @@
 
 using Teuchos::RCP;
 using Teuchos::rcp;
+using Teuchos::rcp_static_cast;
 
 namespace CSymPy {
 
@@ -61,6 +62,16 @@ Teuchos::RCP<Number> Integer::divint(const Integer &other) const {
     q.canonicalize();
 
     return Rational::from_mpq(q);
+}
+
+Teuchos::RCP<Number> Integer::pow_negint(const Integer &other) const {
+    RCP<Number> tmp = powint(*other.neg());
+    if (is_a<Integer>(*tmp)) {
+        mpq_class q(1, rcp_static_cast<Integer>(tmp)->i);
+        return rcp(new Rational(q));
+    } else {
+        throw std::runtime_error("powint returned non-integer");
+    }
 }
 
 // Initialize (declare) the integers -1, 0 and 1 (those are exposed in

@@ -5,6 +5,7 @@
 #include "mul.h"
 #include "symbol.h"
 #include "integer.h"
+#include "rational.h"
 
 using Teuchos::RCP;
 using Teuchos::Ptr;
@@ -79,6 +80,8 @@ RCP<Basic> pow(const RCP<Basic> &a, const RCP<Basic> &b)
     if (eq(b, one)) return a;
     if (eq(a, zero)) return zero;
     if (eq(a, one)) return one;
+    if (is_a_Number(*a) && is_a<Integer>(*b))
+        return pownum(rcp_static_cast<Number>(a), rcp_static_cast<Integer>(b));
     return rcp(new Pow(a, b));
 }
 

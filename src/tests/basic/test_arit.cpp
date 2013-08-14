@@ -23,6 +23,7 @@ using CSymPy::Symbol;
 using CSymPy::umap_basic_int;
 using CSymPy::map_vec_int;
 using CSymPy::Integer;
+using CSymPy::integer;
 using CSymPy::multinomial_coefficients;
 using CSymPy::one;
 using CSymPy::zero;
@@ -163,23 +164,29 @@ void test_div()
     RCP<Basic> i3 = rcp(new Integer(3));
     RCP<Basic> i4 = rcp(new Integer(4));
 
+    assert(integer(2)->is_positive());
+    assert(integer(0)->is_zero());
+    assert(integer(1)->is_one());
+    assert(!(integer(-1)->is_positive()));
+    assert(integer(-1)->is_negative());
+
     RCP<Basic> r1, r2;
 
-    /*
+    r1 = pow(i3, i2);
+    r2 = integer(9);
+    assert(eq(r1, r2));
+
     r1 = div(i4, i2);
     r2 = i2;
     assert(eq(r1, r2));
-    */
 
     r1 = div(x, x);
     r2 = one;
     assert(eq(r1, r2));
 
-    /*
     r1 = div(mul(i2, x), x);
     r2 = i2;
     assert(eq(r1, r2));
-    */
 
     r1 = div(pow(x, i2), x);
     r2 = x;
@@ -197,11 +204,9 @@ void test_div()
     assert(eq(r1, r2));
     */
 
-    /*
     r1 = div(mul(x, i2), x);
     r2 = i2;
     assert(eq(r1, r2));
-    */
 
     /*
     r1 = div(mul(x, i4), mul(x, i2));
