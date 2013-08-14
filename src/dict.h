@@ -36,13 +36,13 @@ typedef struct
 } RCPBasicKeyLess;
 
 
-typedef std::unordered_map<Teuchos::RCP<Basic>, Teuchos::RCP<Integer>,
+typedef std::unordered_map<Teuchos::RCP<Basic>, Teuchos::RCP<Number>,
         RCPBasicHash, RCPBasicKeyEq> umap_basic_int;
 
 typedef std::vector<int> vec_int;
 typedef std::map<vec_int, long long int> map_vec_int;
 typedef std::map<vec_int, mpz_class> map_vec_mpz;
-typedef std::map<Teuchos::RCP<Basic>, Teuchos::RCP<Integer>,
+typedef std::map<Teuchos::RCP<Basic>, Teuchos::RCP<Number>,
         RCPBasicKeyLess> map_basic_int;
 typedef std::map<Teuchos::RCP<Basic>, Teuchos::RCP<Basic>,
         RCPBasicKeyLess> map_basic_basic;

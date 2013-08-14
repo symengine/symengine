@@ -10,6 +10,7 @@ set(SRC
     dict.cpp
     symbol.cpp
     integer.cpp
+    rational.cpp
     add.cpp
     mul.cpp
     pow.cpp

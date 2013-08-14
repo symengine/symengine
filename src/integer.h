@@ -4,10 +4,11 @@
 #include <gmpxx.h>
 
 #include "basic.h"
+#include "number.h"
 
 namespace CSymPy {
 
-class Integer : public Basic {
+class Integer : public Number {
 public:
     mpz_class i;
 
@@ -21,79 +22,86 @@ public:
     // Convert to "int", raise an exception if it does not fit
     signed long int as_int();
     inline mpz_class as_mpz() { return this->i; }
-    inline bool is_zero() { return this->i == 0; }
-    inline bool is_one() { return this->i == 1; }
+    inline virtual bool is_zero() const { return this->i == 0; }
+    inline virtual bool is_one() const { return this->i == 1; }
+
+
+    inline Teuchos::RCP<Integer> powint(const Integer &other) const {
+        if (!(other.i.fits_ulong_p()))
+            throw std::runtime_error("powint: 'exp' does not fit unsigned int.");
+        mpz_class tmp;
+        mpz_pow_ui(tmp.get_mpz_t(), this->i.get_mpz_t(), other.i.get_ui());
+        return Teuchos::rcp(new Integer(tmp));
+    }
+
+    inline Teuchos::RCP<Integer> negint() const {
+        return Teuchos::rcp(new Integer(-i));
+    }
+
+
+    virtual Teuchos::RCP<Number> add(const Number &other) const {
+        if (is_a<Integer>(other)) {
+            return Teuchos::rcp(new Integer(this->i +
+                        static_cast<const Integer&>(other).i));
+        } else {
+            throw std::runtime_error("Not implemented.");
+        }
+    };
+
+    virtual Teuchos::RCP<Number> sub(const Number &other) const {
+        if (is_a<Integer>(other)) {
+            return Teuchos::rcp(new Integer(this->i -
+                        static_cast<const Integer&>(other).i));
+        } else {
+            throw std::runtime_error("Not implemented.");
+        }
+    };
+
+    virtual Teuchos::RCP<Number> mul(const Number &other) const {
+        if (is_a<Integer>(other)) {
+            return Teuchos::rcp(new Integer(this->i *
+                        static_cast<const Integer&>(other).i));
+        } else {
+            throw std::runtime_error("Not implemented.");
+        }
+    };
+
+    virtual Teuchos::RCP<Number> div(const Number &other) const {
+        if (is_a<Integer>(other)) {
+            return Teuchos::rcp(new Integer(this->i /
+                        static_cast<const Integer&>(other).i));
+        } else {
+            throw std::runtime_error("Not implemented.");
+        }
+    };
+
+    virtual Teuchos::RCP<Number> pow(const Number &other) const {
+        if (is_a<Integer>(other)) {
+            return powint(static_cast<const Integer&>(other));
+        } else {
+            throw std::runtime_error("Not implemented.");
+        }
+    };
 };
 
-inline Teuchos::RCP<Integer> addint(const Teuchos::RCP<Integer> &self,
-    const Teuchos::RCP<Integer> &other)
+inline Teuchos::RCP<Integer> integer(int i)
 {
-    return Teuchos::rcp(new CSymPy::Integer(self->i + other->i));
+    return Teuchos::rcp(new Integer(i));
 }
 
-inline Teuchos::RCP<Integer> subint(const Teuchos::RCP<Integer> &self,
-    const Teuchos::RCP<Integer> &other)
+inline Teuchos::RCP<Integer> integer(mpz_class i)
 {
-    return Teuchos::rcp(new CSymPy::Integer(self->i - other->i));
+    return Teuchos::rcp(new Integer(i));
 }
 
-inline Teuchos::RCP<Integer> mulint(const Teuchos::RCP<Integer> &self,
-    const Teuchos::RCP<Integer> &other)
-{
-    return Teuchos::rcp(new CSymPy::Integer(self->i * other->i));
-}
 
-inline Teuchos::RCP<Integer> divint(const Teuchos::RCP<Integer> &self,
-    const Teuchos::RCP<Integer> &other)
+// Returns true if 'b' is a Number or any of its subclasses
+inline bool is_a_Number(const Basic &b)
 {
-    return Teuchos::rcp(new CSymPy::Integer(self->i / other->i));
+    // Currently we enumerate all the subclasses explicitly, from the most
+    // frequent (on the left) to the least frequent (on the right):
+    return is_a<Integer>(b) || is_a<Number>(b);
 }
-
-inline Teuchos::RCP<Integer> powint(const Teuchos::RCP<Integer> &self,
-    const Teuchos::RCP<Integer> &other)
-{
-    if (!(other->i.fits_ulong_p()))
-        throw std::runtime_error("powint: 'exp' does not fit unsigned int.");
-    mpz_class tmp;
-    mpz_pow_ui(tmp.get_mpz_t(), self->i.get_mpz_t(), other->i.get_ui());
-    return Teuchos::rcp(new CSymPy::Integer(tmp));
-}
-
-inline void iaddint(const Teuchos::Ptr<Teuchos::RCP<Integer>> &self,
-    const Teuchos::RCP<Integer> &other)
-{
-    *self = addint(*self, other);
-}
-
-inline void isubint(const Teuchos::Ptr<Teuchos::RCP<Integer>> &self,
-    const Teuchos::RCP<Integer> &other)
-{
-    *self = subint(*self, other);
-}
-
-inline void imulint(const Teuchos::Ptr<Teuchos::RCP<Integer>> &self,
-    const Teuchos::RCP<Integer> &other)
-{
-    *self = mulint(*self, other);
-}
-
-inline void idivint(const Teuchos::Ptr<Teuchos::RCP<Integer>> &self,
-    const Teuchos::RCP<Integer> &other)
-{
-    *self = divint(*self, other);
-}
-
-inline void ipowint(const Teuchos::Ptr<Teuchos::RCP<Integer>> &self,
-    const Teuchos::RCP<Integer> &other)
-{
-    *self = powint(*self, other);
-}
-
-inline Teuchos::RCP<Integer> negint(const Teuchos::RCP<Integer> &self)
-{
-    return Teuchos::rcp(new CSymPy::Integer(-(self->i)));
-}
-
 
 // Integers -1, 0 and 1 are created only once in integer.cpp and reused
 // everywhere (faster than creating them all the time):

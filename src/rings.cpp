@@ -24,13 +24,17 @@ void expr2poly(const RCP<Basic> &p, umap_basic_int &syms, umap_vec_mpz &P)
         vec_int exp;
         mpz_class coef;
         for (auto &p: d) {
-            coef = p.second->as_mpz();
+            if (!is_a<Integer>(*p.second))
+                    throw std::runtime_error("Not implemented.");
+            coef = rcp_static_cast<Integer>(p.second)->as_mpz();
             exp.assign(n, 0); // Initialize to [0]*n
             if (is_a<Mul>(*p.first)) {
                 map_basic_basic &term = rcp_static_cast<Mul>(p.first)->dict_;
                 for (auto &q: term) {
                     RCP<Basic> sym = q.first;
-                    int i = syms[sym]->as_int();
+                    if (!is_a<Integer>(*syms[sym]))
+                            throw std::runtime_error("Not implemented.");
+                    int i = rcp_static_cast<Integer>(syms[sym])->as_int();
                     if (is_a<Integer>(*q.second)) {
                         exp[i] = rcp_static_cast<Integer>(q.second)->as_int();
                     } else {
@@ -40,13 +44,17 @@ void expr2poly(const RCP<Basic> &p, umap_basic_int &syms, umap_vec_mpz &P)
             } else if (is_a<Pow>(*p.first)) {
                 RCP<Basic> sym = rcp_static_cast<Pow>(p.first)->base_;
                 RCP<Basic> exp_ = rcp_static_cast<Pow>(p.first)->exp_;
-                int i = syms[sym]->as_int();
+                if (!is_a<Integer>(*syms[sym]))
+                        throw std::runtime_error("Not implemented.");
+                int i = rcp_static_cast<Integer>(syms[sym])->as_int();
                 if (!is_a<Integer>(*exp_))
                     throw std::runtime_error("Not implemented.");
                 exp[i] = rcp_static_cast<Integer>(exp_)->as_int();
             } else if (is_a<Symbol>(*p.first)) {
                 RCP<Basic> sym = p.first;
-                int i = syms[sym]->as_int();
+                if (!is_a<Integer>(*syms[sym]))
+                        throw std::runtime_error("Not implemented.");
+                int i = rcp_static_cast<Integer>(syms[sym])->as_int();
                 exp[i] = 1;
             } else {
                 throw std::runtime_error("Not implemented.");

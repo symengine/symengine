@@ -7,6 +7,7 @@
 #include "symbol.h"
 #include "dict.h"
 #include "integer.h"
+#include "rational.h"
 #include "mul.h"
 
 using Teuchos::RCP;
@@ -19,8 +20,11 @@ using CSymPy::Symbol;
 using CSymPy::umap_basic_int;
 using CSymPy::map_basic_basic;
 using CSymPy::Integer;
+using CSymPy::integer;
+using CSymPy::Rational;
 using CSymPy::one;
 using CSymPy::zero;
+using CSymPy::Number;
 
 void test_symbol_hash()
 {
@@ -101,29 +105,85 @@ void test_integer()
     std::cout << *i << std::endl;
     std::cout << *j << std::endl;
 
-    RCP<Integer> k = addint(i, j);
+    RCP<Number> k = addnum(i, j);
     std::cout << *k << std::endl;
     assert(eq(k, rcp(new Integer(11))));
     assert(neq(k, rcp(new Integer(12))));
 
-    k = subint(i, j);
+    k = subnum(i, j);
     std::cout << *k << std::endl;
     assert(eq(k, rcp(new Integer(-1))));
     assert(neq(k, rcp(new Integer(12))));
 
-    k = mulint(i, j);
+    k = mulnum(i, j);
     std::cout << *k << std::endl;
     assert(eq(k, rcp(new Integer(30))));
     assert(neq(k, rcp(new Integer(12))));
 
     // FIXME: this should return a Rational
-    k = divint(i, j);
+    k = divnum(i, j);
     std::cout << *k << std::endl;
 
-    k = negint(i);
+    k = i->negint();
     std::cout << *k << std::endl;
     assert(eq(k, rcp(new Integer(-5))));
     assert(neq(k, rcp(new Integer(12))));
+}
+
+void test_rational()
+{
+    RCP<Number> r1, r2, r3;
+    r1 = Rational::from_two_ints(integer(5), integer(6));
+    std::cout << *r1 << std::endl;
+    assert(eq(r1, Rational::from_two_ints(integer(5), integer(6))));
+    assert(neq(r1, Rational::from_two_ints(integer(5), integer(7))));
+
+    r1 = Rational::from_two_ints(integer(2), integer(4));
+    r2 = Rational::from_two_ints(integer(1), integer(2));
+    assert(eq(r1, r2));
+
+    r1 = Rational::from_two_ints(integer(4), integer(2));
+    r2 = integer(2);
+    assert(eq(r1, r2));
+
+    r1 = Rational::from_two_ints(integer(2), integer(3));
+    r2 = Rational::from_two_ints(integer(5), integer(7));
+    r3 = Rational::from_two_ints(integer(10), integer(21));
+    assert(eq(mulnum(r1, r2), r3));
+
+    r1 = Rational::from_two_ints(integer(2), integer(3));
+    r2 = Rational::from_two_ints(integer(1), integer(2));
+    r3 = Rational::from_two_ints(integer(1), integer(3));
+    assert(eq(mulnum(r1, r2), r3));
+
+    r1 = Rational::from_two_ints(integer(2), integer(3));
+    r2 = Rational::from_two_ints(integer(9), integer(2));
+    r3 = integer(3);
+    assert(eq(mulnum(r1, r2), r3));
+
+    r1 = Rational::from_two_ints(integer(1), integer(2));
+    r2 = integer(1);
+    assert(eq(addnum(r1, r1), r2));
+
+    r1 = Rational::from_two_ints(integer(1), integer(2));
+    r2 = Rational::from_two_ints(integer(1), integer(3));
+    r3 = Rational::from_two_ints(integer(1), integer(6));
+    assert(eq(subnum(r1, r2), r3));
+
+    r1 = Rational::from_two_ints(integer(1), integer(6));
+    r2 = Rational::from_two_ints(integer(1), integer(3));
+    r3 = Rational::from_two_ints(integer(1), integer(2));
+    assert(eq(divnum(r1, r2), r3));
+
+    r1 = Rational::from_two_ints(integer(2), integer(3));
+    r2 = integer(2);
+    r3 = Rational::from_two_ints(integer(4), integer(9));
+    assert(eq(pownum(r1, r2), r3));
+
+    r1 = Rational::from_two_ints(integer(2), integer(3));
+    r2 = integer(3);
+    r3 = Rational::from_two_ints(integer(8), integer(27));
+    assert(eq(pownum(r1, r2), r3));
 }
 
 void test_mul()
@@ -155,6 +215,8 @@ int main(int argc, char* argv[])
     test_add();
 
     test_integer();
+
+    test_rational();
 
     test_mul();
 
