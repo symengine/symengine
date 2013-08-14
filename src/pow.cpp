@@ -37,8 +37,8 @@ bool Pow::is_canonical(const RCP<Basic> &base, const RCP<Basic> &exp)
     // e.g. x^1
     if (is_a<Integer>(*exp) && rcp_static_cast<Integer>(exp)->is_one())
         return false;
-    // e.g. 2^3
-    if (is_a<Integer>(*base) && is_a<Integer>(*exp))
+    // e.g. 2^3, (2/3)^4
+    if (is_a_Number(*base) && is_a<Integer>(*exp))
         return false;
     return true;
 }
@@ -189,38 +189,40 @@ RCP<Basic> pow_expand(const RCP<Pow> &self)
             int m = base_dict.size();
             multinomial_coefficients_mpz(m, n, r);
             umap_basic_int rd;
-            RCP<Integer> add_overall_coeff=zero;
+            RCP<Number> add_overall_coeff=zero;
             for (auto &p: r) {
                 auto power = p.first.begin();
                 auto i2 = base_dict.begin();
                 map_basic_basic d;
-                RCP<Integer> overall_coeff=one;
+                RCP<Number> overall_coeff=one;
                 for (; power != p.first.end(); ++power, ++i2) {
                     if (*power > 0) {
                         RCP<Integer> exp = rcp(new Integer(*power));
                         RCP<Basic> base = i2->first;
                         if (is_a<Integer>(*base)) {
-                            imulint(outArg(overall_coeff),
-                                powint(rcp_static_cast<Integer>(base), exp));
+                            imulnum(outArg(overall_coeff),
+                                rcp_static_cast<Number>(
+                                rcp_static_cast<Integer>(base)->powint(*exp)));
                         } else {
                             d[base] = exp;
                         }
                         if (!(i2->second->is_one())) {
-                            imulint(outArg(overall_coeff),
-                                powint(i2->second, exp));
+                            imulnum(outArg(overall_coeff),
+                                pownum(i2->second,
+                                    rcp_static_cast<Number>(exp)));
                         }
                     }
                 }
                 RCP<Basic> term = Mul::from_dict(overall_coeff, d);
-                RCP<Integer> coef2 = rcp(new Integer(p.second));
-                if (is_a<Integer>(*term)) {
-                    iaddint(outArg(add_overall_coeff),
-                        mulint(rcp_static_cast<Integer>(term), coef2));
+                RCP<Number> coef2 = rcp(new Integer(p.second));
+                if (is_a_Number(*term)) {
+                    iaddnum(outArg(add_overall_coeff),
+                        mulnum(rcp_static_cast<Number>(term), coef2));
                 } else {
                     if (is_a<Mul>(*term) &&
                             !(rcp_static_cast<Mul>(term)->coef_->is_one())) {
                         // Tidy up things like {2x: 3} -> {x: 6}
-                        imulint(outArg(coef2),
+                        imulnum(outArg(coef2),
                                 rcp_static_cast<Mul>(term)->coef_);
                         term = Mul::from_dict(one,
                                 rcp_static_cast<Mul>(term)->dict_);
