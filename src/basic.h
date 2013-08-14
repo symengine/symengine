@@ -38,6 +38,12 @@ namespace CSymPy {
     canonicalization. At the same time, you need to make sure that tests are
     still running with CSYMPY_ASSERT enabled, so that Add/Mul/Pow are never in
     an inconsistent state.
+
+    Summary: always try to construct the expressions Add/Mul/Pow directly using
+    their constructors and all the knowledge that you have for the given
+    algorithm, that way things will be very fast. If you want slower but
+    simpler code, you can use the add(), mul(), pow() functions that peform
+    general and possibly slow canonicalization first.
 */
 class Basic {
 public:
