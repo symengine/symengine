@@ -2,6 +2,7 @@
 #include "symbol.h"
 #include "add.h"
 #include "integer.h"
+#include "rational.h"
 #include "mul.h"
 #include "pow.h"
 

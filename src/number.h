@@ -12,8 +12,10 @@ public:
 
     virtual Teuchos::RCP<Number> add(const Number &other) const = 0;
     virtual Teuchos::RCP<Number> sub(const Number &other) const = 0;
+    virtual Teuchos::RCP<Number> rsub(const Number &other) const = 0;
     virtual Teuchos::RCP<Number> mul(const Number &other) const = 0;
     virtual Teuchos::RCP<Number> div(const Number &other) const = 0;
+    virtual Teuchos::RCP<Number> rdiv(const Number &other) const = 0;
     virtual Teuchos::RCP<Number> pow(const Number &other) const = 0;
 };
 

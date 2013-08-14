@@ -4,6 +4,7 @@
 #include "symbol.h"
 #include "mul.h"
 #include "pow.h"
+#include "rational.h"
 
 using Teuchos::RCP;
 using Teuchos::Ptr;

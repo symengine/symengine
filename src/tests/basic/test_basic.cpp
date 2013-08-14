@@ -124,7 +124,15 @@ void test_integer()
     assert(eq(k, Rational::from_two_ints(integer(5), integer(6))));
     std::cout << *k << std::endl;
 
-    k = i->negint();
+    k = pownum(i, j);
+    assert(eq(k, integer(15625)));
+    std::cout << *k << std::endl;
+
+    k = pownum(i, j->neg());
+    assert(eq(k, Rational::from_two_ints(integer(1), integer(15625))));
+    std::cout << *k << std::endl;
+
+    k = i->neg();
     std::cout << *k << std::endl;
     assert(eq(k, rcp(new Integer(-5))));
     assert(neq(k, rcp(new Integer(12))));
@@ -140,6 +148,10 @@ void test_rational()
 
     r1 = Rational::from_two_ints(integer(2), integer(4));
     r2 = Rational::from_two_ints(integer(1), integer(2));
+    assert(eq(r1, r2));
+
+    r1 = Rational::from_two_ints(integer(-2), integer(3));
+    r2 = Rational::from_two_ints(integer(2), integer(-3));
     assert(eq(r1, r2));
 
     r1 = Rational::from_two_ints(integer(4), integer(2));
@@ -181,9 +193,45 @@ void test_rational()
     assert(eq(pownum(r1, r2), r3));
 
     r1 = Rational::from_two_ints(integer(2), integer(3));
+    r2 = integer(-2);
+    r3 = Rational::from_two_ints(integer(9), integer(4));
+    assert(eq(pownum(r1, r2), r3));
+
+    r1 = Rational::from_two_ints(integer(2), integer(3));
     r2 = integer(3);
     r3 = Rational::from_two_ints(integer(8), integer(27));
     assert(eq(pownum(r1, r2), r3));
+
+    r1 = Rational::from_two_ints(integer(2), integer(3));
+    r2 = integer(-3);
+    r3 = Rational::from_two_ints(integer(27), integer(8));
+    assert(eq(pownum(r1, r2), r3));
+
+    r1 = Rational::from_two_ints(integer(2), integer(3));
+    r2 = integer(3);
+    r3 = integer(2);
+    assert(eq(mulnum(r1, r2), r3));
+    assert(eq(mulnum(r2, r1), r3));
+
+    r1 = Rational::from_two_ints(integer(2), integer(3));
+    r2 = integer(3);
+    r3 = Rational::from_two_ints(integer(11), integer(3));
+    assert(eq(addnum(r1, r2), r3));
+    assert(eq(addnum(r2, r1), r3));
+
+    r1 = Rational::from_two_ints(integer(2), integer(3));
+    r2 = integer(3);
+    r3 = Rational::from_two_ints(integer(-7), integer(3));
+    assert(eq(subnum(r1, r2), r3));
+    r3 = Rational::from_two_ints(integer(7), integer(3));
+    assert(eq(subnum(r2, r1), r3));
+
+    r1 = Rational::from_two_ints(integer(2), integer(3));
+    r2 = integer(3);
+    r3 = Rational::from_two_ints(integer(2), integer(9));
+    assert(eq(divnum(r1, r2), r3));
+    r3 = Rational::from_two_ints(integer(9), integer(2));
+    assert(eq(divnum(r2, r1), r3));
 }
 
 void test_mul()
