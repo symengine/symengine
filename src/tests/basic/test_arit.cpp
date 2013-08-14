@@ -73,9 +73,11 @@ void test_mul()
     RCP<Basic> x = rcp(new Symbol("x"));
     RCP<Basic> y = rcp(new Symbol("y"));
     RCP<Basic> z = rcp(new Symbol("z"));
+    RCP<Basic> im2 = rcp(new Integer(-2));
     RCP<Basic> i2 = rcp(new Integer(2));
     RCP<Basic> i3 = rcp(new Integer(3));
     RCP<Basic> i4 = rcp(new Integer(4));
+    RCP<Basic> i6 = rcp(new Integer(6));
 
     RCP<Basic> r1, r2;
 
@@ -101,6 +103,11 @@ void test_mul()
 
     r1 = mul(mul(mul(pow(x, y), pow(x, z)), pow(x, x)), y);
     r2 = mul(pow(x, add(add(x, y), z)), y);
+    assert(eq(r1, r2));
+
+    r1 = mul(mul(i2, pow(y, mul(im2, pow(x, i2)))),
+             mul(i3, pow(y, mul(i2, pow(x, i2)))));
+    r2 = i6;
     assert(eq(r1, r2));
 }
 
