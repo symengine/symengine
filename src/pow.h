@@ -3,6 +3,8 @@
 
 #include "basic.h"
 #include "dict.h"
+#include "mul.h"
+#include "integer.h"
 
 namespace CSymPy {
 
@@ -29,6 +31,10 @@ Teuchos::RCP<Basic> pow(const Teuchos::RCP<Basic> &a,
 void multinomial_coefficients(int m, int n, map_vec_int &r);
 
 Teuchos::RCP<Basic> pow_expand(const Teuchos::RCP<Pow> &self);
+
+inline Teuchos::RCP<Basic> sqrt(const Teuchos::RCP<Basic> &x) {
+    return pow(x, div(one, integer(2)));
+}
 
 } // CSymPy
 
