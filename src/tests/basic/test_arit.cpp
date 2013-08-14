@@ -204,11 +204,9 @@ void test_div()
     assert(eq(r1, r2));
     */
 
-    /*
     r1 = div(mul(x, i2), x);
     r2 = i2;
     assert(eq(r1, r2));
-    */
 
     /*
     r1 = div(mul(x, i4), mul(x, i2));
