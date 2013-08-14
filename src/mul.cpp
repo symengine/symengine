@@ -150,8 +150,8 @@ void Mul::dict_add_term(map_basic_basic &d, const RCP<Basic> &exp,
         } else {
             // General case:
             it->second = add(it->second, exp);
-            if (is_a_Number(*it->second) &&
-                    rcp_static_cast<Number>(it->second)->is_zero()) {
+            if (is_a<Integer>(*it->second) &&
+                    rcp_static_cast<Integer>(it->second)->is_zero()) {
                 d.erase(it);
             }
         }
