@@ -96,8 +96,12 @@ public:
         if (is_a<Integer>(other)) {
             return divint(static_cast<const Integer&>(other));
         } else {
-            throw std::runtime_error("Not implemented.");
+            return other.rdiv(*this);
         }
+    };
+
+    virtual Teuchos::RCP<Number> rdiv(const Number &other) const {
+        throw std::runtime_error("Not implemented.");
     };
 
     virtual Teuchos::RCP<Number> pow(const Number &other) const {

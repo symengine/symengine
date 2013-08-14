@@ -59,6 +59,12 @@ public:
     inline Teuchos::RCP<Number> divrat(const Rational &other) const {
         return from_mpq(this->i / other.i);
     }
+    inline Teuchos::RCP<Number> divrat(const Integer &other) const {
+        return from_mpq(this->i / other.i);
+    }
+    inline Teuchos::RCP<Number> rdivrat(const Integer &other) const {
+        return from_mpq(other.i / this->i);
+    }
 
     inline Teuchos::RCP<Number> powrat(const Integer &other) const {
         bool neg = other.is_negative();
@@ -123,6 +129,16 @@ public:
     virtual Teuchos::RCP<Number> div(const Number &other) const {
         if (is_a<Rational>(other)) {
             return divrat(static_cast<const Rational&>(other));
+        } else if (is_a<Integer>(other)) {
+            return divrat(static_cast<const Integer&>(other));
+        } else {
+            throw std::runtime_error("Not implemented.");
+        }
+    };
+
+    virtual Teuchos::RCP<Number> rdiv(const Number &other) const {
+        if (is_a<Integer>(other)) {
+            return rdivrat(static_cast<const Integer&>(other));
         } else {
             throw std::runtime_error("Not implemented.");
         }
