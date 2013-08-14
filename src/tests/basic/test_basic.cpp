@@ -150,6 +150,10 @@ void test_rational()
     r2 = Rational::from_two_ints(integer(1), integer(2));
     assert(eq(r1, r2));
 
+    r1 = Rational::from_two_ints(integer(-2), integer(3));
+    r2 = Rational::from_two_ints(integer(2), integer(-3));
+    assert(eq(r1, r2));
+
     r1 = Rational::from_two_ints(integer(4), integer(2));
     r2 = integer(2);
     assert(eq(r1, r2));
