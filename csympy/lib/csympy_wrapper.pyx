@@ -60,6 +60,12 @@ cdef class Basic(object):
         if A is None or B is None: return NotImplemented
         return c2py(csympy.mul(A.thisptr, B.thisptr))
 
+    def __div__(a, b):
+        cdef Basic A = sympify(a, False)
+        cdef Basic B = sympify(b, False)
+        if A is None or B is None: return NotImplemented
+        return c2py(csympy.div(A.thisptr, B.thisptr))
+
     # What is the purpose of "c" here?
     def __pow__(a, b, c):
         cdef Basic A = sympify(a, False)

@@ -80,3 +80,7 @@ def test_arit8():
     assert x**y * x**x == x**(x+y)
     assert x**y * x**x * x**z == x**(x+y+z)
     assert x**y - x**y == 0
+
+    assert x**2 / x == x
+    assert y*x**2 / (x*y) == x
+    assert (2 * x**3 * y**2 * z)**3 / 8 == x**9 * y**6 * z**3
