@@ -218,8 +218,13 @@ RCP<Basic> pow_expand(const RCP<Pow> &self)
                             imulnum(outArg(overall_coeff),
                                 rcp_static_cast<Number>(
                                 rcp_static_cast<Integer>(base)->powint(*exp)));
-                        } else {
+                        } else if (is_a<Symbol>(*base)) {
                             d[base] = exp;
+                        } else {
+                            RCP<Basic> exp2, t, tmp;
+                            tmp = pow(base, exp);
+                            Mul::as_base_exp(tmp, outArg(exp2), outArg(t));
+                            Mul::dict_add_term(d, exp2, t);
                         }
                         if (!(i2->second->is_one())) {
                             imulnum(outArg(overall_coeff),

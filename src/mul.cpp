@@ -172,7 +172,7 @@ void Mul::as_two_terms(const Teuchos::Ptr<RCP<Basic>> &a,
     *b = Mul::from_dict(coef_, d);
 }
 
-void as_base_exp(const RCP<Basic> &self, const Ptr<RCP<Basic>> &exp,
+void Mul::as_base_exp(const RCP<Basic> &self, const Ptr<RCP<Basic>> &exp,
         const Ptr<RCP<Basic>> &base)
 {
     if (is_a<Symbol>(*self)) {
@@ -217,7 +217,7 @@ RCP<Basic> mul(const RCP<Basic> &a, const RCP<Basic> &b)
         if (is_a_Number(*b)) {
             imulnum(outArg(coef), rcp_static_cast<Number>(b));
         } else {
-            as_base_exp(b, outArg(exp), outArg(t));
+            Mul::as_base_exp(b, outArg(exp), outArg(t));
             Mul::dict_add_term(d, exp, t);
         }
     } else if (CSymPy::is_a<Mul>(*b)) {
@@ -228,15 +228,15 @@ RCP<Basic> mul(const RCP<Basic> &a, const RCP<Basic> &b)
         if (is_a_Number(*a)) {
             imulnum(outArg(coef), rcp_static_cast<Number>(a));
         } else {
-            as_base_exp(a, outArg(exp), outArg(t));
+            Mul::as_base_exp(a, outArg(exp), outArg(t));
             Mul::dict_add_term(d, exp, t);
         }
     } else {
         RCP<Basic> exp;
         RCP<Basic> t;
-        as_base_exp(a, outArg(exp), outArg(t));
+        Mul::as_base_exp(a, outArg(exp), outArg(t));
         d[t] = exp;
-        as_base_exp(b, outArg(exp), outArg(t));
+        Mul::as_base_exp(b, outArg(exp), outArg(t));
         Mul::dict_add_term(d, exp, t);
 
         CSymPy::map_basic_basic d2;
