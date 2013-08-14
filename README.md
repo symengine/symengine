@@ -15,9 +15,23 @@ license (see the LICENSE file).
 
 Install prerequisites::
 
+For Debian based systems (Ubuntu etc.)
+
     apt-get install cmake libgmp-dev binutils-dev
 
-The `binutils-dev` is optional, but recommended for stacktrace support.
+For RPM based systems (Fedora etc.)
+
+    yum install cmake gmp-devel binutils-devel
+
+The `binutils-dev`(`binutils-devel`) is optional, but recommended for stacktrace support.
+
+Not installing `binutils-dev` may generate an error during the installation process. This
+is because `BFD` in `binutils-dev`(`binutils-devel`) is used for stacktracing. However, 
+you can avoid this error by disabling `BFD` while installing.
+
+    cmake -DWITH_BFD=no .
+
+This will disable stacktrace support and not recommended if you are interested in development.
 
 Install csympy::
 
