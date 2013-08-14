@@ -189,8 +189,18 @@ void test_rational()
     assert(eq(pownum(r1, r2), r3));
 
     r1 = Rational::from_two_ints(integer(2), integer(3));
+    r2 = integer(-2);
+    r3 = Rational::from_two_ints(integer(9), integer(4));
+    assert(eq(pownum(r1, r2), r3));
+
+    r1 = Rational::from_two_ints(integer(2), integer(3));
     r2 = integer(3);
     r3 = Rational::from_two_ints(integer(8), integer(27));
+    assert(eq(pownum(r1, r2), r3));
+
+    r1 = Rational::from_two_ints(integer(2), integer(3));
+    r2 = integer(-3);
+    r3 = Rational::from_two_ints(integer(27), integer(8));
     assert(eq(pownum(r1, r2), r3));
 }
 

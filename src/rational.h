@@ -49,9 +49,12 @@ public:
     }
 
     inline Teuchos::RCP<Number> powrat(const Integer &other) const {
-        if (!(other.i.fits_ulong_p()))
+        bool neg = other.is_negative();
+        mpz_class exp_ = other.i;
+        if (neg) exp_ = -exp_;
+        if (!(exp_.fits_ulong_p()))
             throw std::runtime_error("powrat: 'exp' does not fit unsigned int.");
-        unsigned long exp = other.i.get_ui();
+        unsigned long exp = exp_.get_ui();
         mpz_class num;
         mpz_pow_ui(num.get_mpz_t(), this->i.get_num().get_mpz_t(), exp);
 
@@ -60,7 +63,10 @@ public:
 
         // Since 'this' is in canonical form, so is this**other, so we simply
         // pass num/den into the constructor directly:
-        return Teuchos::rcp(new Rational(mpq_class(num, den)));
+        if (!neg)
+            return Teuchos::rcp(new Rational(mpq_class(num, den)));
+        else
+            return Teuchos::rcp(new Rational(mpq_class(den, num)));
     }
 
 
