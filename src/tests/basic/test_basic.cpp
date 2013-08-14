@@ -17,6 +17,7 @@ using CSymPy::Basic;
 using CSymPy::Add;
 using CSymPy::Mul;
 using CSymPy::Symbol;
+using CSymPy::symbol;
 using CSymPy::umap_basic_int;
 using CSymPy::map_basic_basic;
 using CSymPy::Integer;
@@ -252,6 +253,19 @@ void test_mul()
     std::cout << *r << std::endl;
 }
 
+void test_diff()
+{
+    RCP<Basic> r1, r2;
+    RCP<Symbol> x  = symbol("x");
+    r1 = integer(5);
+    r2 = r1->diff(x);
+    assert(eq(r2, zero));
+
+    r1 = Rational::from_two_ints(integer(2), integer(3));
+    r2 = r1->diff(x);
+    assert(eq(r2, zero));
+}
+
 int main(int argc, char* argv[])
 {
     Teuchos::print_stack_on_segfault();
@@ -267,6 +281,8 @@ int main(int argc, char* argv[])
     test_rational();
 
     test_mul();
+
+    test_diff();
 
     return 0;
 }

@@ -9,6 +9,7 @@ set(SRC
     basic.cpp
     dict.cpp
     symbol.cpp
+    number.cpp
     integer.cpp
     rational.cpp
     add.cpp
