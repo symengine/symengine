@@ -16,6 +16,11 @@ public:
     virtual std::string __str__() const;
 };
 
+inline Teuchos::RCP<Symbol> symbol(const std::string &name)
+{
+    return Teuchos::rcp(new Symbol(name));
+}
+
 } // CSymPy
 
 #endif

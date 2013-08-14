@@ -14,6 +14,7 @@ set(SRC
     add.cpp
     mul.cpp
     pow.cpp
+    functions.cpp
     monomials.cpp
     rings.cpp
 )
