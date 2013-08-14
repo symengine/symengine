@@ -16,6 +16,8 @@ cdef c2py(RCP[csympy.Basic] o):
     elif (csympy.is_a_Integer(deref(o))):
         # TODO: figure out how to bypass the __init__() completely:
         r = Integer.__new__(Integer, -99999)
+    elif (csympy.is_a_Rational(deref(o))):
+        r = Rational.__new__(Rational)
     elif (csympy.is_a_Symbol(deref(o))):
         # TODO: figure out how to bypass the __init__() completely:
         r = Symbol.__new__(Symbol, "null")
@@ -107,10 +109,18 @@ cdef class Symbol(Basic):
     def __dealloc__(self):
         self.thisptr.reset()
 
-cdef class Integer(Basic):
+cdef class Number(Basic):
+    pass
+
+cdef class Integer(Number):
 
     def __cinit__(self, i):
         self.thisptr = rcp(new csympy.Integer(i))
+
+    def __dealloc__(self):
+        self.thisptr.reset()
+
+cdef class Rational(Number):
 
     def __dealloc__(self):
         self.thisptr.reset()
