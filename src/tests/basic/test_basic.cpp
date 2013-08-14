@@ -9,6 +9,7 @@
 #include "integer.h"
 #include "rational.h"
 #include "mul.h"
+#include "pow.h"
 
 using Teuchos::RCP;
 using Teuchos::rcp;
@@ -26,6 +27,7 @@ using CSymPy::Rational;
 using CSymPy::one;
 using CSymPy::zero;
 using CSymPy::Number;
+using CSymPy::pow;
 
 void test_symbol_hash()
 {
@@ -257,6 +259,9 @@ void test_diff()
 {
     RCP<Basic> r1, r2;
     RCP<Symbol> x  = symbol("x");
+    RCP<Symbol> y  = symbol("y");
+    RCP<Basic> i2  = integer(2);
+    RCP<Basic> i3  = integer(3);
     r1 = integer(5);
     r2 = r1->diff(x);
     assert(eq(r2, zero));
@@ -264,6 +269,14 @@ void test_diff()
     r1 = Rational::from_two_ints(integer(2), integer(3));
     r2 = r1->diff(x);
     assert(eq(r2, zero));
+
+    r1 = pow(x, i3)->diff(x);
+    r2 = mul(i3, pow(x, i2));
+    assert(eq(r1, r2));
+
+    r1 = pow(add(x, y), i2)->diff(x);
+    r2 = mul(i2, add(x, y));
+    assert(eq(r1, r2));
 }
 
 int main(int argc, char* argv[])
