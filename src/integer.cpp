@@ -1,4 +1,5 @@
 #include "integer.h"
+#include "rational.h"
 
 using Teuchos::RCP;
 using Teuchos::rcp;
@@ -48,6 +49,18 @@ signed long int Integer::as_int()
         throw std::runtime_error("as_int: Integer larger than int");
     }
     return this->i.get_si();
+}
+
+Teuchos::RCP<Number> Integer::divint(const Integer &other) const {
+    if (other.i == 0)
+        throw std::runtime_error("Rational: Division by zero.");
+    mpq_class q(this->i, other.i);
+
+    // This is potentially slow, but has to be done, since q might not
+    // be in canonical form.
+    q.canonicalize();
+
+    return Rational::from_mpq(q);
 }
 
 // Initialize (declare) the integers -1, 0 and 1 (those are exposed in

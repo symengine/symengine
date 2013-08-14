@@ -40,9 +40,7 @@ public:
         return Teuchos::rcp(new Integer(this->i * other.i));
     }
 
-    inline Teuchos::RCP<Integer> divint(const Integer &other) const {
-        return Teuchos::rcp(new Integer(this->i / other.i));
-    }
+    Teuchos::RCP<Number> divint(const Integer &other) const;
 
     inline Teuchos::RCP<Integer> powint(const Integer &other) const {
         if (!(other.i.fits_ulong_p()))
