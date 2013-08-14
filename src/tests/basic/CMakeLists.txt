@@ -13,3 +13,7 @@ add_test(test_arit ${PROJECT_BINARY_DIR}/test_arit)
 add_executable(test_poly test_poly.cpp)
 target_link_libraries(test_poly csympy teuchos ${LIBS})
 add_test(test_poly ${PROJECT_BINARY_DIR}/test_poly)
+
+add_executable(test_functions test_functions.cpp)
+target_link_libraries(test_functions csympy teuchos ${LIBS})
+add_test(test_functions ${PROJECT_BINARY_DIR}/test_functions)

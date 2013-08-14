@@ -19,6 +19,10 @@ cdef c2py(RCP[csympy.Basic] o):
     elif (csympy.is_a_Symbol(deref(o))):
         # TODO: figure out how to bypass the __init__() completely:
         r = Symbol.__new__(Symbol, "null")
+    elif (csympy.is_a_Sin(deref(o))):
+        r = Sin.__new__(Sin)
+    elif (csympy.is_a_Cos(deref(o))):
+        r = Cos.__new__(Cos)
     else:
         raise Exception("Unsupported CSymPy class.")
     r.thisptr = o
@@ -73,6 +77,9 @@ cdef class Basic(object):
         if A is None or B is None: return NotImplemented
         return c2py(csympy.pow(A.thisptr, B.thisptr))
 
+    def __neg__(Basic self not None):
+        return c2py(csympy.neg(self.thisptr))
+
     def __richcmp__(a, b, int op):
         cdef Basic A = sympify(a, False)
         cdef Basic B = sympify(b, False)
@@ -86,6 +93,10 @@ cdef class Basic(object):
 
     def expand(Basic self not None):
         return c2py(csympy.expand(self.thisptr))
+
+    def diff(Basic self not None, Symbol x not None):
+        cdef RCP[csympy.Symbol] X = csympy.rcp_static_cast_Symbol(x.thisptr)
+        return c2py(deref(self.thisptr).diff(X))
 
 
 cdef class Symbol(Basic):
@@ -118,3 +129,24 @@ cdef class Pow(Basic):
 
     def __dealloc__(self):
         self.thisptr.reset()
+
+cdef class Function(Basic):
+    pass
+
+cdef class Sin(Function):
+
+    def __dealloc__(self):
+        self.thisptr.reset()
+
+cdef class Cos(Function):
+
+    def __dealloc__(self):
+        self.thisptr.reset()
+
+def sin(x):
+    cdef Basic X = sympify(x)
+    return c2py(csympy.sin(X.thisptr))
+
+def cos(x):
+    cdef Basic X = sympify(x)
+    return c2py(csympy.cos(X.thisptr))

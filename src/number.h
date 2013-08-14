@@ -17,6 +17,8 @@ public:
     virtual Teuchos::RCP<Number> div(const Number &other) const = 0;
     virtual Teuchos::RCP<Number> rdiv(const Number &other) const = 0;
     virtual Teuchos::RCP<Number> pow(const Number &other) const = 0;
+
+    virtual Teuchos::RCP<Basic> diff(const Teuchos::RCP<Symbol> &x) const;
 };
 
 inline Teuchos::RCP<Number> addnum(const Teuchos::RCP<Number> &self,

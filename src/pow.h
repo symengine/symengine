@@ -18,6 +18,8 @@ public:
 
     bool is_canonical(const Teuchos::RCP<Basic> &base,
             const Teuchos::RCP<Basic> &exp);
+
+    virtual Teuchos::RCP<Basic> diff(const Teuchos::RCP<Symbol> &x) const;
 };
 
 Teuchos::RCP<Basic> pow(const Teuchos::RCP<Basic> &a,

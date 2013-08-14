@@ -5,6 +5,7 @@
 #include "mul.h"
 #include "pow.h"
 #include "rational.h"
+#include "functions.h"
 
 using Teuchos::RCP;
 using Teuchos::Ptr;
@@ -165,6 +166,9 @@ void as_coef_term(const RCP<Basic> &self, const Ptr<RCP<Number>> &coef,
     } else if (is_a<Pow>(*self)) {
         *coef = one;
         *term = self;
+    } else if (is_a_sub<Function>(*self)) {
+        *coef = one;
+        *term = self;
     } else {
         std::cout << *self << std::endl;
         throw std::runtime_error("Not implemented yet.");
@@ -257,6 +261,17 @@ RCP<Basic> add_expand(const RCP<Add> &self)
         }
     }
     return Add::from_dict(coef_overall, d);
+}
+
+RCP<Basic> Add::diff(const Teuchos::RCP<Symbol> &x) const
+{
+    RCP<Basic> r=zero;
+    for (auto &p: dict_) {
+        RCP<Basic> term = mul(p.first, p.second)->diff(x);
+        // TODO: speed this up:
+        r = add(r, term);
+    }
+    return r;
 }
 
 } // CSymPy

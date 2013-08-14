@@ -14,7 +14,14 @@ public:
     virtual std::size_t __hash__() const;
     virtual bool __eq__(const Basic &o) const;
     virtual std::string __str__() const;
+
+    virtual Teuchos::RCP<Basic> diff(const Teuchos::RCP<Symbol> &x) const;
 };
+
+inline Teuchos::RCP<Symbol> symbol(const std::string &name)
+{
+    return Teuchos::rcp(new Symbol(name));
+}
 
 } // CSymPy
 

@@ -9,11 +9,13 @@ set(SRC
     basic.cpp
     dict.cpp
     symbol.cpp
+    number.cpp
     integer.cpp
     rational.cpp
     add.cpp
     mul.cpp
     pow.cpp
+    functions.cpp
     monomials.cpp
     rings.cpp
 )

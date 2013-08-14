@@ -1,4 +1,7 @@
 #include "symbol.h"
+#include "integer.h"
+
+using Teuchos::RCP;
 
 namespace CSymPy {
 
@@ -23,6 +26,14 @@ bool Symbol::__eq__(const Basic &o) const
 std::string Symbol::__str__() const
 {
     return name_;
+}
+
+RCP<Basic> Symbol::diff(const Teuchos::RCP<Symbol> &x) const
+{
+    if (x->name_ == this->name_)
+        return one;
+    else
+        return zero;
 }
 
 } // CSymPy
