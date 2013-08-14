@@ -194,10 +194,16 @@ RCP<Basic> mul(const RCP<Basic> &a, const RCP<Basic> &b)
     CSymPy::map_basic_basic d;
     RCP<Number> coef = one;
     if (CSymPy::is_a<Mul>(*a) && CSymPy::is_a<Mul>(*b)) {
-        coef = mulnum((rcp_static_cast<Mul>(a))->coef_,
-                (rcp_static_cast<Mul>(b))->coef_);
-        d = (rcp_static_cast<Mul>(a))->dict_;
-        for (auto &p: (rcp_static_cast<Mul>(b))->dict_)
+        RCP<Mul> A = rcp_static_cast<Mul>(a);
+        RCP<Mul> B = rcp_static_cast<Mul>(b);
+        // This is important optimization, as coef=1 if Mul is inside an Add.
+        // To further speed this up, the upper level code could tell us that we
+        // are inside an Add, then we don't even have can simply skip the
+        // following two lines.
+        if (!(A->coef_->is_one()) || !(B->coef_->is_one()))
+            coef = mulnum(A->coef_, B->coef_);
+        d = A->dict_;
+        for (auto &p: B->dict_)
             Mul::dict_add_term(d, p.second, p.first);
     } else if (CSymPy::is_a<Mul>(*a)) {
         RCP<Basic> exp;
