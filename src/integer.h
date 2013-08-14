@@ -77,12 +77,7 @@ public:
 
     virtual Teuchos::RCP<Number> pow(const Number &other) const {
         if (is_a<Integer>(other)) {
-            const Integer o = static_cast<const Integer&>(other);
-            if (!(o.i.fits_ulong_p()))
-                throw std::runtime_error("powint: 'exp' does not fit unsigned int.");
-            mpz_class tmp;
-            mpz_pow_ui(tmp.get_mpz_t(), this->i.get_mpz_t(), o.i.get_ui());
-            return Teuchos::rcp(new CSymPy::Integer(tmp));
+            return powint(static_cast<const Integer&>(other));
         } else {
             throw std::runtime_error("Not implemented.");
         }
