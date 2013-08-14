@@ -105,4 +105,15 @@ RCP<Basic> cos(const RCP<Basic> &arg)
     return rcp(new Cos(arg));
 }
 
+
+RCP<Basic> Sin::diff(const Teuchos::RCP<Symbol> &x) const
+{
+    return mul(cos(arg_), arg_->diff(x));
+}
+
+RCP<Basic> Cos::diff(const Teuchos::RCP<Symbol> &x) const
+{
+    return mul(mul(minus_one, sin(arg_)), arg_->diff(x));
+}
+
 } // CSymPy

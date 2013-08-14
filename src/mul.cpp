@@ -5,6 +5,7 @@
 #include "symbol.h"
 #include "pow.h"
 #include "rational.h"
+#include "functions.h"
 
 using Teuchos::RCP;
 using Teuchos::Ptr;
@@ -191,6 +192,9 @@ void Mul::as_base_exp(const RCP<Basic> &self, const Ptr<RCP<Basic>> &exp,
     } else if (is_a<Add>(*self)) {
         *exp = one;
         *base = self;
+    } else if (is_a_sub<Function>(*self)) {
+        *exp = one;
+        *base = self;
     } else {
         std::cout << "as_base_exp: " << *self << std::endl;
         throw std::runtime_error("Not implemented yet.");
@@ -362,6 +366,12 @@ Teuchos::RCP<Basic> Mul::power_all_terms(const Teuchos::RCP<Basic> &exp)
         // TODO: this can be made faster probably:
         return mul(new_coef, Mul::from_dict(one, d));
     }
+}
+
+RCP<Basic> Mul::diff(const Teuchos::RCP<Symbol> &x) const
+{
+    // TODO:
+    return integer(2);
 }
 
 } // CSymPy

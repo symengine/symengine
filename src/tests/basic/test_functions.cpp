@@ -34,9 +34,9 @@ using CSymPy::cos;
 
 void test_sin()
 {
-    RCP<Basic> x = symbol("x");
-    RCP<Basic> y = symbol("x");
-    RCP<Basic> z = symbol("x");
+    RCP<Symbol> x = symbol("x");
+    RCP<Symbol> y = symbol("y");
+    RCP<Symbol> z = symbol("z");
     RCP<Basic> im1 = integer(-1);
     RCP<Basic> i2 = integer(2);
 
@@ -53,13 +53,21 @@ void test_sin()
     r1 = sin(zero);
     r2 = zero;
     assert(eq(r1, r2));
+
+    r1 = sin(x)->diff(x);
+    r2 = cos(x);
+    assert(eq(r1, r2));
+
+    r1 = sin(mul(i2,x))->diff(x);
+    r2 = mul(i2, cos(mul(i2,x)));
+    assert(eq(r1, r2));
 }
 
 void test_cos()
 {
-    RCP<Basic> x = symbol("x");
-    RCP<Basic> y = symbol("x");
-    RCP<Basic> z = symbol("x");
+    RCP<Symbol> x = symbol("x");
+    RCP<Symbol> y = symbol("y");
+    RCP<Symbol> z = symbol("z");
     RCP<Basic> im1 = integer(-1);
     RCP<Basic> i2 = integer(2);
 
@@ -75,6 +83,12 @@ void test_cos()
 
     r1 = cos(zero);
     r2 = one;
+    assert(eq(r1, r2));
+
+    r1 = cos(x)->diff(x);
+    r2 = mul(im1, sin(x));
+    std::cout << *r1 << std::endl;
+    std::cout << *r2 << std::endl;
     assert(eq(r1, r2));
 }
 

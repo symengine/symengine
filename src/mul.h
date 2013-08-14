@@ -36,6 +36,8 @@ public:
     // Returns true if both 'coef' and 'dict' are in canonical form
     bool is_canonical(const Teuchos::RCP<Number> &coef,
             const map_basic_basic& dict);
+
+    virtual Teuchos::RCP<Basic> diff(const Teuchos::RCP<Symbol> &x) const;
 };
 
 Teuchos::RCP<Basic> mul(const Teuchos::RCP<Basic> &a,

@@ -17,6 +17,8 @@
 
 namespace CSymPy {
 
+class Symbol;
+
 /*
     Any Basic class can be used in a "dictionary", due to the methods:
         __hash__()
@@ -73,6 +75,11 @@ public:
             << " instance at " << (const void*)this << ">";
         return s.str();
     }
+
+    // Returns the derivative of self
+    virtual Teuchos::RCP<Basic> diff(const Teuchos::RCP<Symbol> &x) const {
+        throw std::runtime_error("Not implemented.");
+    }
 };
 
 inline bool eq(const Teuchos::RCP<Basic> &a,
@@ -92,6 +99,15 @@ inline bool is_a(const Basic &b)
 {
     return typeid(T) == typeid(b);
 }
+
+// Returns true if "b" is of type T or any of its subclasses. Example:
+//   is_a_sub<Symbol>(b)  // true if "b" is of type Symbol or any Symbol's subclass
+template <class T>
+inline bool is_a_sub(const Basic &b)
+{
+    return dynamic_cast<const T *>(&b) != NULL;
+}
+
 
 
 Teuchos::RCP<Basic> expand(const Teuchos::RCP<Basic> &self);

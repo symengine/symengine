@@ -21,6 +21,8 @@ public:
     virtual std::string __str__() const;
 
     bool is_canonical(const Teuchos::RCP<Basic> &arg);
+
+    virtual Teuchos::RCP<Basic> diff(const Teuchos::RCP<Symbol> &x) const;
 };
 
 // This uses canonicalize:
@@ -38,6 +40,8 @@ public:
     virtual std::string __str__() const;
 
     bool is_canonical(const Teuchos::RCP<Basic> &arg);
+
+    virtual Teuchos::RCP<Basic> diff(const Teuchos::RCP<Symbol> &x) const;
 };
 
 // This uses canonicalize:
