@@ -1,4 +1,4 @@
-from csympy import Symbol, sin, cos
+from csympy import Symbol, sin, cos, sqrt, Add
 
 def test_sin():
     x = Symbol("x")
@@ -8,3 +8,8 @@ def test_sin():
 
     assert sin(x).diff(x) == cos(x)
     assert cos(x).diff(x) == -sin(x)
+
+    e = sqrt(x).diff(x).diff(x)
+    f = sin(e)
+    g = f.diff(x).diff(x)
+    assert isinstance(g, Add)
