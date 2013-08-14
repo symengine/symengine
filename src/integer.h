@@ -26,14 +26,18 @@ public:
     inline virtual bool is_one() const { return this->i == 1; }
 
 
-    inline Teuchos::RCP<Integer> powint(const Integer &other) const
-    {
+    inline Teuchos::RCP<Integer> powint(const Integer &other) const {
         if (!(other.i.fits_ulong_p()))
             throw std::runtime_error("powint: 'exp' does not fit unsigned int.");
         mpz_class tmp;
         mpz_pow_ui(tmp.get_mpz_t(), this->i.get_mpz_t(), other.i.get_ui());
-        return Teuchos::rcp(new CSymPy::Integer(tmp));
+        return Teuchos::rcp(new Integer(tmp));
     }
+
+    inline Teuchos::RCP<Integer> negint() const {
+        return Teuchos::rcp(new Integer(-i));
+    }
+
 
     virtual Teuchos::RCP<Number> add(const Number &other) const {
         if (is_a<Integer>(other)) {
@@ -93,11 +97,6 @@ inline Teuchos::RCP<Integer> integer(int i)
 inline Teuchos::RCP<Integer> integer(mpz_class i)
 {
     return Teuchos::rcp(new Integer(i));
-}
-
-inline Teuchos::RCP<Integer> negint(const Teuchos::RCP<Integer> &self)
-{
-    return Teuchos::rcp(new CSymPy::Integer(-(self->i)));
 }
 
 

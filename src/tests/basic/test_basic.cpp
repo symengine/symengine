@@ -124,7 +124,7 @@ void test_integer()
     k = divnum(i, j);
     std::cout << *k << std::endl;
 
-    k = negint(i);
+    k = i->negint();
     std::cout << *k << std::endl;
     assert(eq(k, rcp(new Integer(-5))));
     assert(neq(k, rcp(new Integer(12))));
