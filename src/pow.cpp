@@ -219,6 +219,11 @@ RCP<Basic> pow_expand(const RCP<Pow> &self)
                                 rcp_static_cast<Number>(
                                 rcp_static_cast<Integer>(base)->powint(*exp)));
                         } else if (is_a<Symbol>(*base)) {
+                            // If this ever fails:
+                            CSYMPY_ASSERT(d.find(base) == d.end())
+                            // Then we need to use
+                            //Mul::dict_add_term(d, exp, base);
+                            // Instead of:
                             d[base] = exp;
                         } else {
                             RCP<Basic> exp2, t, tmp;
@@ -247,7 +252,7 @@ RCP<Basic> pow_expand(const RCP<Pow> &self)
                         term = Mul::from_dict(one,
                                 rcp_static_cast<Mul>(term)->dict_);
                     }
-                    rd[term] = coef2;
+                    Add::dict_add_term(rd, coef2, term);
                 }
             }
             RCP<Basic> result = Add::from_dict(add_overall_coeff, rd);

@@ -387,6 +387,14 @@ void test_expand2()
     r2 = add(add(mul(i4, pow(x, i4)), mul(i12, mul(pow(x, i2), y))),
             mul(i9, pow(y, i2)));
     assert(eq(r1, r2));
+
+    r1 = pow(add(add(pow(x, i3), pow(x, i2)), x), i2);
+    r1 = expand(r1);
+    r2 = add(add(add(add(pow(x, i6), mul(i2, pow(x, i5))),
+                mul(i3, pow(x, i4))), mul(i2, pow(x, i3))), pow(x, i2));
+    std::cout << *r1 << std::endl;
+    std::cout << *r2 << std::endl;
+    assert(eq(r1, r2));
 }
 
 void test_expand3()
