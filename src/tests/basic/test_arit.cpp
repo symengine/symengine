@@ -192,27 +192,23 @@ void test_div()
     r2 = x;
     assert(eq(r1, r2));
 
-    /*
     r1 = div(mul(mul(i2, x), y), mul(x, y));
     r2 = i2;
+    std::cout << "r1: " << *r1 << std::endl;
+    std::cout << "r2: " << *r2 << std::endl;
     assert(eq(r1, r2));
-    */
 
-    /*
     r1 = div(mul(mul(y, x), i2), mul(x, y));
     r2 = i2;
     assert(eq(r1, r2));
-    */
 
     r1 = div(mul(x, i2), x);
     r2 = i2;
     assert(eq(r1, r2));
 
-    /*
     r1 = div(mul(x, i4), mul(x, i2));
     r2 = i2;
     assert(eq(r1, r2));
-    */
 }
 
 void test_pow()

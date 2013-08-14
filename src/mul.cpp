@@ -194,6 +194,8 @@ RCP<Basic> mul(const RCP<Basic> &a, const RCP<Basic> &b)
     CSymPy::map_basic_basic d;
     RCP<Number> coef = one;
     if (CSymPy::is_a<Mul>(*a) && CSymPy::is_a<Mul>(*b)) {
+        coef = mulnum((rcp_static_cast<Mul>(a))->coef_,
+                (rcp_static_cast<Mul>(b))->coef_);
         d = (rcp_static_cast<Mul>(a))->dict_;
         for (auto &p: (rcp_static_cast<Mul>(b))->dict_)
             Mul::dict_add_term(d, p.second, p.first);
@@ -327,6 +329,25 @@ RCP<Basic> mul_expand(const RCP<Mul> &self)
     a = expand(a);
     b = expand(b);
     return mul_expand_two(a, b);
+}
+
+Teuchos::RCP<Basic> Mul::power_all_terms(const Teuchos::RCP<Basic> &exp)
+{
+    CSymPy::map_basic_basic d;
+    RCP<Basic> new_coef = pow(coef_, exp);
+    RCP<Basic> new_exp;
+    for (auto &p: dict_) {
+        new_exp = mul(p.second, exp);
+        if (is_a<Integer>(*new_exp) &&
+                rcp_static_cast<Integer>(new_exp)->is_zero()) continue;
+        Mul::dict_add_term(d, new_exp, p.first);
+    }
+    if (is_a<Number>(*new_coef)) {
+        return Mul::from_dict(rcp_static_cast<Number>(new_coef), d);
+    } else {
+        // TODO: this can be made faster probably:
+        return mul(new_coef, Mul::from_dict(one, d));
+    }
 }
 
 } // CSymPy
