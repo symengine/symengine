@@ -202,7 +202,7 @@ RCP<Basic> pow_expand(const RCP<Pow> &self)
                         if (is_a<Integer>(*base)) {
                             imulnum(outArg(overall_coeff),
                                 rcp_static_cast<Number>(
-                                powint(rcp_static_cast<Integer>(base), exp)));
+                                rcp_static_cast<Integer>(base)->powint(*exp)));
                         } else {
                             d[base] = exp;
                         }
