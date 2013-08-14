@@ -25,13 +25,15 @@ For RPM based systems (Fedora etc.)
 
 The `binutils-dev`(`binutils-devel`) is optional, but recommended for stacktrace support.
 
-Not installing `binutils-dev` may generate an error during the installation process. This
-is because `BFD` in `binutils-dev`(`binutils-devel`) is used for stacktracing. However, 
-you can avoid this error by disabling `BFD` while installing.
+Not installing `binutils-dev` may generate an error during the installation
+process. This is because `BFD` in `binutils-dev`(`binutils-devel`) is used for
+stacktracing. However, you can avoid this error by disabling `BFD` while
+installing.
 
     cmake -DWITH_BFD=no .
 
-This will disable stacktrace support and not recommended if you are interested in development.
+This will disable stacktrace support and is not recommended if you are
+interested in development.
 
 Install csympy::
 
