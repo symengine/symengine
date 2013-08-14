@@ -27,6 +27,23 @@ public:
 Teuchos::RCP<Basic> sin(const Teuchos::RCP<Basic> &arg);
 
 
+class Cos : public Function {
+private:
+    Teuchos::RCP<Basic> arg_; // The 'arg' in sin(arg)
+
+public:
+    Cos(const Teuchos::RCP<Basic> &arg);
+    virtual std::size_t __hash__() const;
+    virtual bool __eq__(const Basic &o) const;
+    virtual std::string __str__() const;
+
+    bool is_canonical(const Teuchos::RCP<Basic> &arg);
+};
+
+// This uses canonicalize:
+Teuchos::RCP<Basic> cos(const Teuchos::RCP<Basic> &arg);
+
+
 } // CSymPy
 
 #endif

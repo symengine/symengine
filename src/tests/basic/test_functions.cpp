@@ -30,6 +30,7 @@ using CSymPy::multinomial_coefficients;
 using CSymPy::one;
 using CSymPy::zero;
 using CSymPy::sin;
+using CSymPy::cos;
 
 void test_sin()
 {
@@ -54,12 +55,36 @@ void test_sin()
     assert(eq(r1, r2));
 }
 
+void test_cos()
+{
+    RCP<Basic> x = symbol("x");
+    RCP<Basic> y = symbol("x");
+    RCP<Basic> z = symbol("x");
+    RCP<Basic> im1 = integer(-1);
+    RCP<Basic> i2 = integer(2);
+
+    RCP<Basic> r1;
+    RCP<Basic> r2;
+
+    r1 = cos(x);
+    r2 = cos(x);
+    std::cout << *r1 << std::endl;
+
+    assert(eq(r1, r2));
+    assert(neq(r1, zero));
+
+    r1 = cos(zero);
+    r2 = one;
+    assert(eq(r1, r2));
+}
+
 
 int main(int argc, char* argv[])
 {
     Teuchos::print_stack_on_segfault();
 
     test_sin();
+    test_cos();
 
     return 0;
 }
