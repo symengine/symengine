@@ -47,6 +47,7 @@ cdef extern from "add.h" namespace "CSymPy":
 
 cdef extern from "mul.h" namespace "CSymPy":
     cdef RCP[Basic] mul(RCP[Basic] &a, RCP[Basic] &b) nogil except+
+    cdef RCP[Basic] div(RCP[Basic] &a, RCP[Basic] &b) nogil except+
 
     cdef cppclass Mul(Basic):
         pass
