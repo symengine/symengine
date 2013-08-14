@@ -46,6 +46,8 @@ Teuchos::RCP<Basic> mul(const Teuchos::RCP<Basic> &a,
 Teuchos::RCP<Basic> div(const Teuchos::RCP<Basic> &a,
         const Teuchos::RCP<Basic> &b);
 
+Teuchos::RCP<Basic> neg(const Teuchos::RCP<Basic> &a);
+
 
 Teuchos::RCP<Basic> mul_expand(const Teuchos::RCP<Mul> &self);
 

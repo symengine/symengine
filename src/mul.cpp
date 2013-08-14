@@ -270,6 +270,11 @@ RCP<Basic> div(const RCP<Basic> &a, const RCP<Basic> &b)
     return mul(a, pow(b, minus_one));
 }
 
+RCP<Basic> neg(const RCP<Basic> &a)
+{
+    return mul(minus_one, a);
+}
+
 RCP<Basic> mul_expand_two(const RCP<Basic> &a, const RCP<Basic> &b)
 {
     // Both a and b are assumed to be expanded
