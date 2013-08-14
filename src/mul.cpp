@@ -134,7 +134,11 @@ void Mul::dict_add_term(map_basic_basic &d, const RCP<Basic> &exp,
         if (is_a_Number(*it->second) && is_a_Number(*exp)) {
             RCP<Number> tmp = rcp_static_cast<Number>(it->second);
             iaddnum(outArg(tmp), rcp_static_cast<Number>(exp));
-            it->second = tmp;
+            if (tmp->is_zero()) {
+                d.erase(it);
+            } else {
+                it->second = tmp;
+            }
         } else {
             // General case:
             it->second = add(it->second, exp);
