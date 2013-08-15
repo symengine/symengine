@@ -347,6 +347,12 @@ void test_compare()
     cmp = r1->__cmp__(*r2);
     assert(cmp != 0);
     assert(r2->__cmp__(*r1) == -cmp);
+
+    r1 = mul(x, pow(z, x));
+    r2 = mul(x, z);
+    cmp = r1->__cmp__(*r2);
+    assert(cmp != 0);
+    assert(r2->__cmp__(*r1) == -cmp);
 }
 
 int main(int argc, char* argv[])

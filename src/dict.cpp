@@ -117,9 +117,9 @@ int map_basic_basic_compare(const map_basic_basic &A, const map_basic_basic &B)
     auto b = B.begin();
     int cmp;
     for (; a != A.end(); ++a, ++b) {
-        cmp = a->first->compare(*b->first);
+        cmp = a->first->__cmp__(*b->first);
         if (cmp != 0) return cmp;
-        cmp = a->second->compare(*b->second);
+        cmp = a->second->__cmp__(*b->second);
         if (cmp != 0) return cmp;
     }
     return 0;
