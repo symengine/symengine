@@ -72,9 +72,9 @@ int Pow::compare(const Basic &o) const
 {
     CSYMPY_ASSERT(is_a<Pow>(o))
     const Pow &s = static_cast<const Pow &>(o);
-    int base_cmp = base_->compare(*s.base_);
+    int base_cmp = base_->__cmp__(*s.base_);
     if (base_cmp == 0)
-        return exp_->compare(*s.exp_);
+        return exp_->__cmp__(*s.exp_);
     else
         return base_cmp;
 }
