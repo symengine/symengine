@@ -333,6 +333,20 @@ void test_compare()
     r2 = pow(x, x);
     assert(r1->compare(*r2) == 1);
     assert(r2->compare(*r1) == -1);
+
+    // These are compiler implementation specific, so we just make sure that if
+    // x < y, then y > x.
+    r1 = add(x, z);
+    r2 = mul(x, y);
+    int cmp = r1->__cmp__(*r2);
+    assert(cmp != 0);
+    assert(r2->__cmp__(*r1) == -cmp);
+
+    r1 = mul(x, pow(z, x));
+    r2 = mul(x, y);
+    cmp = r1->__cmp__(*r2);
+    assert(cmp != 0);
+    assert(r2->__cmp__(*r1) == -cmp);
 }
 
 int main(int argc, char* argv[])
