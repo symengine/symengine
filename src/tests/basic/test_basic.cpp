@@ -286,6 +286,7 @@ void test_compare()
     RCP<Symbol> y  = symbol("y");
     RCP<Symbol> z  = symbol("z");
     RCP<Basic> i2  = integer(2);
+    RCP<Basic> im2  = integer(-2);
     RCP<Basic> i3  = integer(3);
     assert(x->compare(*x) == 0);
     assert(x->compare(*y) == -1);
@@ -333,6 +334,21 @@ void test_compare()
     r2 = pow(x, x);
     assert(r1->compare(*r2) == 1);
     assert(r2->compare(*r1) == -1);
+
+    r1 = add(add(x, y), z);
+    r2 = add(x, y);
+    assert(r1->compare(*r2) == 1);
+    assert(r2->compare(*r1) == -1);
+
+    r1 = add(add(x, y), i2);
+    r2 = add(x, y);
+    assert(r1->compare(*r2) == 1);
+    assert(r2->compare(*r1) == -1);
+
+    r1 = add(add(x, y), im2);
+    r2 = add(x, y);
+    assert(r1->compare(*r2) == -1);
+    assert(r2->compare(*r1) == 1);
 
     // These are compiler implementation specific, so we just make sure that if
     // x < y, then y > x.
