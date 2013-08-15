@@ -47,6 +47,14 @@ bool Sin::__eq__(const Basic &o) const
     return false;
 }
 
+int Sin::compare(const Basic &o) const
+{
+    CSYMPY_ASSERT(is_a<Sin>(o))
+    const Sin &s = static_cast<const Sin &>(o);
+    return arg_->compare(s);
+}
+
+
 std::string Sin::__str__() const
 {
     std::ostringstream o;
