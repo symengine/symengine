@@ -82,6 +82,25 @@ bool Add::__eq__(const Basic &o) const
     return false;
 }
 
+int Add::compare(const Basic &o) const
+{
+    CSYMPY_ASSERT(is_a<Add>(o))
+    const Add &s = static_cast<const Add &>(o);
+    // # of elements
+    if (dict_.size() != s.dict_.size())
+        return (dict_.size() < s.dict_.size()) ? -1 : 1;
+
+    // coef
+    int cmp = coef_->compare(*s.coef_);
+    if (cmp != 0)
+        return cmp;
+
+    // Compare dictionaries:
+    // TODO: implement this:
+    // return dicts_compare(dict_, s.dict_);
+    throw std::runtime_error("Not implemented");
+}
+
 std::string Add::__str__() const
 {
     std::ostringstream o;
