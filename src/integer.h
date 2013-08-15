@@ -17,6 +17,7 @@ public:
     Integer(mpz_class i);
     virtual std::size_t __hash__() const;
     virtual bool __eq__(const Basic &o) const;
+    virtual int compare(const Basic &o) const;
     virtual std::string __str__() const;
 
     // Convert to "int", raise an exception if it does not fit
