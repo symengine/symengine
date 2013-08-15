@@ -17,6 +17,7 @@ public:
     Mul(const Teuchos::RCP<Number> &coef, const map_basic_basic& dict);
     virtual std::size_t __hash__() const;
     virtual bool __eq__(const Basic &o) const;
+    virtual int compare(const Basic &o) const;
     virtual std::string __str__() const;
 
     void as_coef_term(const Teuchos::Ptr<Teuchos::RCP<Number>> &coef,

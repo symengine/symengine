@@ -279,6 +279,131 @@ void test_diff()
     assert(eq(r1, r2));
 }
 
+void test_compare()
+{
+    RCP<Basic> r1, r2;
+    RCP<Symbol> x  = symbol("x");
+    RCP<Symbol> y  = symbol("y");
+    RCP<Symbol> z  = symbol("z");
+    RCP<Basic> i2  = integer(2);
+    RCP<Basic> im2  = integer(-2);
+    RCP<Basic> i3  = integer(3);
+    assert(x->compare(*x) == 0);
+    assert(x->compare(*y) == -1);
+    assert(x->compare(*z) == -1);
+    assert(y->compare(*x) == 1);
+    assert(y->compare(*z) == -1);
+    assert(z->compare(*x) == 1);
+    assert(z->compare(*y) == 1);
+
+    assert(i2->compare(*i2) == 0);
+    assert(i2->compare(*i3) == -1);
+    assert(i3->compare(*i2) == 1);
+
+    r1 = mul(x, y);
+    r2 = mul(x, y);
+    assert(r1->compare(*r2) == 0);
+    assert(r2->compare(*r1) == 0);
+
+    r1 = mul(x, y);
+    r2 = mul(x, z);
+    assert(r1->compare(*r2) == -1);
+    assert(r2->compare(*r1) == 1);
+
+    r1 = mul(y, x);
+    r2 = mul(x, z);
+    assert(r1->compare(*r2) == -1);
+    assert(r2->compare(*r1) == 1);
+
+    r1 = mul(mul(y, x), z);
+    r2 = mul(x, z);
+    assert(r1->compare(*r2) == 1);
+    assert(r2->compare(*r1) == -1);
+
+    r1 = add(add(y, x), z);
+    r2 = add(x, z);
+    assert(r1->compare(*r2) == 1);
+    assert(r2->compare(*r1) == -1);
+
+    r1 = pow(x, z);
+    r2 = pow(y, x);
+    assert(r1->compare(*r2) == -1);
+    assert(r2->compare(*r1) == 1);
+
+    r1 = pow(x, z);
+    r2 = pow(x, x);
+    assert(r1->compare(*r2) == 1);
+    assert(r2->compare(*r1) == -1);
+
+    r1 = add(add(x, y), z);
+    r2 = add(x, y);
+    assert(r1->compare(*r2) == 1);
+    assert(r2->compare(*r1) == -1);
+
+    r1 = add(add(x, y), i2);
+    r2 = add(x, y);
+    assert(r1->compare(*r2) == 1);
+    assert(r2->compare(*r1) == -1);
+
+    r1 = add(add(x, y), im2);
+    r2 = add(x, y);
+    assert(r1->compare(*r2) == -1);
+    assert(r2->compare(*r1) == 1);
+
+    r1 = add(x, y);
+    r2 = add(x, z);
+    assert(r1->compare(*r2) == -1);
+    assert(r2->compare(*r1) == 1);
+
+    r1 = add(x, y);
+    r2 = add(x, y);
+    assert(r1->compare(*r2) == 0);
+    assert(r2->compare(*r1) == 0);
+
+    r1 = add(add(x, y), z);
+    r2 = add(add(x, z), y);
+    assert(r1->compare(*r2) == 0);
+    assert(r2->compare(*r1) == 0);
+
+    // These are compiler implementation specific, so we just make sure that if
+    // x < y, then y > x.
+    r1 = add(x, z);
+    r2 = mul(x, y);
+    int cmp = r1->__cmp__(*r2);
+    assert(cmp != 0);
+    assert(r2->__cmp__(*r1) == -cmp);
+
+    r1 = mul(x, pow(z, x));
+    r2 = mul(x, y);
+    cmp = r1->__cmp__(*r2);
+    assert(cmp != 0);
+    assert(r2->__cmp__(*r1) == -cmp);
+
+    r1 = mul(x, pow(z, x));
+    r2 = mul(x, z);
+    cmp = r1->__cmp__(*r2);
+    assert(cmp != 0);
+    assert(r2->__cmp__(*r1) == -cmp);
+
+    r1 = pow(z, x);
+    r2 = pow(z, pow(x, y));
+    cmp = r1->__cmp__(*r2);
+    assert(cmp != 0);
+    assert(r2->__cmp__(*r1) == -cmp);
+
+    r1 = div(mul(x, y), i2);
+    r2 = mul(x, y);
+    cmp = r1->__cmp__(*r2);
+    assert(cmp != 0);
+    assert(r2->__cmp__(*r1) == -cmp);
+
+    r1 = add(x, pow(z, x));
+    r2 = add(x, y);
+    cmp = r1->__cmp__(*r2);
+    assert(cmp != 0);
+    assert(r2->__cmp__(*r1) == -cmp);
+}
+
 int main(int argc, char* argv[])
 {
     Teuchos::print_stack_on_segfault();
@@ -296,6 +421,8 @@ int main(int argc, char* argv[])
     test_mul();
 
     test_diff();
+
+    test_compare();
 
     return 0;
 }
