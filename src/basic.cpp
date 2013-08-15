@@ -11,6 +11,18 @@ using Teuchos::rcp_static_cast;
 
 namespace CSymPy {
 
+int Basic::__cmp__(const Basic &o) const
+{
+    auto &a = typeid(*this);
+    auto &b = typeid(o);
+    if (a == b) {
+        return this->compare(o);
+    } else {
+        // This order is compiler implementation specific:
+        return a.before(b) ? -1 : 1;
+    }
+}
+
 RCP<Basic> expand(const RCP<Basic> &self)
 {
     if (is_a<Symbol>(*self)) return self;

@@ -23,6 +23,14 @@ bool Symbol::__eq__(const Basic &o) const
     return false;
 }
 
+int Symbol::compare(const Basic &o) const
+{
+    CSYMPY_ASSERT(is_a<Symbol>(o))
+    const Symbol &s = static_cast<const Symbol &>(o);
+    if (name_ == s.name_) return 0;
+    return name_ < s.name_ ? -1 : 1;
+}
+
 std::string Symbol::__str__() const
 {
     return name_;

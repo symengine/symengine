@@ -56,6 +56,10 @@ bool map_basic_basic_equal(const map_basic_basic &a, const map_basic_basic &b);
 bool umap_basic_basic_equal(const umap_basic_basic &a,
         const umap_basic_basic &b);
 
+// Return -1, 0, 1 for a < b, a == b, a > b
+int map_basic_basic_compare(const map_basic_basic &a, const map_basic_basic &b);
+int map_basic_int_compare(const map_basic_int &a, const map_basic_int &b);
+
 
 
 // Part of umap_vec_mpz:

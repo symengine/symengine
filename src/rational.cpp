@@ -66,6 +66,14 @@ bool Rational::__eq__(const Basic &o) const
     return false;
 }
 
+int Rational::compare(const Basic &o) const
+{
+    CSYMPY_ASSERT(is_a<Rational>(o))
+    const Rational &s = static_cast<const Rational &>(o);
+    if (i == s.i) return 0;
+    return i < s.i ? -1 : 1;
+}
+
 std::string Rational::__str__() const
 {
     std::ostringstream s;

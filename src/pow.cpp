@@ -68,6 +68,18 @@ bool Pow::__eq__(const Basic &o) const
     return false;
 }
 
+int Pow::compare(const Basic &o) const
+{
+    CSYMPY_ASSERT(is_a<Pow>(o))
+    const Pow &s = static_cast<const Pow &>(o);
+    int base_cmp = base_->__cmp__(*s.base_);
+    if (base_cmp == 0)
+        return exp_->__cmp__(*s.exp_);
+    else
+        return base_cmp;
+}
+
+
 std::string Pow::__str__() const
 {
     std::ostringstream o;

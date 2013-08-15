@@ -34,6 +34,15 @@ bool Integer::__eq__(const Basic &o) const
     return false;
 }
 
+int Integer::compare(const Basic &o) const
+{
+    CSYMPY_ASSERT(is_a<Integer>(o))
+    const Integer &s = static_cast<const Integer &>(o);
+    if (i == s.i) return 0;
+    return i < s.i ? -1 : 1;
+}
+
+
 std::string Integer::__str__() const
 {
     std::ostringstream s;

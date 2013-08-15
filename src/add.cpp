@@ -63,8 +63,7 @@ std::size_t Add::__hash__() const
 {
     std::size_t seed = 0;
     hash_combine<Basic>(seed, *coef_);
-    std::map<RCP<Basic>, RCP<Number>, RCPBasicKeyLess>
-        ordered(dict_.begin(), dict_.end());
+    map_basic_int ordered(dict_.begin(), dict_.end());
     for (auto &p: ordered) {
         hash_combine<Basic>(seed, *(p.first));
         hash_combine<Basic>(seed, *(p.second));
@@ -80,6 +79,27 @@ bool Add::__eq__(const Basic &o) const
         return true;
 
     return false;
+}
+
+int Add::compare(const Basic &o) const
+{
+    CSYMPY_ASSERT(is_a<Add>(o))
+    const Add &s = static_cast<const Add &>(o);
+    // # of elements
+    if (dict_.size() != s.dict_.size())
+        return (dict_.size() < s.dict_.size()) ? -1 : 1;
+
+    // coef
+    int cmp = coef_->__cmp__(*s.coef_);
+    if (cmp != 0)
+        return cmp;
+
+    // Compare dictionaries:
+    // NOTE: This is slow. Add should cache this map_basic_int representation
+    // once it is computed.
+    map_basic_int adict(dict_.begin(), dict_.end());
+    map_basic_int bdict(s.dict_.begin(), s.dict_.end());
+    return map_basic_int_compare(adict, bdict);
 }
 
 std::string Add::__str__() const

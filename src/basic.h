@@ -66,6 +66,12 @@ public:
     inline bool __neq__(const Basic &o) {
         return !(this->__eq__(o));
     }
+    int __cmp__(const Basic &o) const;
+    // Returns -1, 0, 1 for this < o, this == o, this > o. This method is used
+    // when you want to sort things like x+y+z into canonical order. This
+    // function assumes that 'o' is the same type as 'this'. Use __cmp__ if you
+    // want general comparison.
+    virtual int compare(const Basic &o) const = 0;
 
     // Returns string representation of self. Subclasses can override this to
     // provide custom printing.
