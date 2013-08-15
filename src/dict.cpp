@@ -125,6 +125,22 @@ int map_basic_basic_compare(const map_basic_basic &A, const map_basic_basic &B)
     return 0;
 }
 
+int map_basic_int_compare(const map_basic_int &A, const map_basic_int &B)
+{
+    if (A.size() != B.size())
+        return (A.size() < B.size()) ? -1 : 1;
+    auto a = A.begin();
+    auto b = B.begin();
+    int cmp;
+    for (; a != A.end(); ++a, ++b) {
+        cmp = a->first->__cmp__(*b->first);
+        if (cmp != 0) return cmp;
+        cmp = a->second->__cmp__(*b->second);
+        if (cmp != 0) return cmp;
+    }
+    return 0;
+}
+
 bool dicts_equal(const umap_basic_int &a, const umap_basic_int &b)
 {
     // This follows the same algorithm as Python's dictionary comparison
