@@ -297,6 +297,7 @@ RCP<Basic> mul_expand_two(const RCP<Basic> &a, const RCP<Basic> &b)
     // Both a and b are assumed to be expanded
     if (is_a<Add>(*a) && is_a<Add>(*b)) {
         umap_basic_int d;
+        // Expand dicts first:
         for (auto &p: (rcp_static_cast<Add>(a))->dict_) {
             for (auto &q: (rcp_static_cast<Add>(b))->dict_) {
                 // The main bottleneck here is the mul(p.first, q.first) command
@@ -304,7 +305,19 @@ RCP<Basic> mul_expand_two(const RCP<Basic> &a, const RCP<Basic> &b)
                         mul(p.first, q.first));
             }
         }
-        return Add::from_dict(zero, d);
+        RCP<Basic> tmp = Add::from_dict(zero, d);
+        // Handle the coefficients separately:
+        // TODO: coef_ is a Number, so just quickly multiply the coefficients
+        // in dict_ and add it to 'd'.
+        tmp = add(tmp, mul_expand_two(rcp_static_cast<Add>(a)->coef_,
+            Add::from_dict(zero, rcp_static_cast<Add>(b)->dict_)));
+        tmp = add(tmp, mul_expand_two(rcp_static_cast<Add>(b)->coef_,
+            Add::from_dict(zero, rcp_static_cast<Add>(a)->dict_)));
+        // TODO: this will be the overall coefficient 'coef_overall':
+        tmp = add(tmp, mulnum(rcp_static_cast<Add>(a)->coef_,
+            rcp_static_cast<Add>(b)->coef_));
+        // TODO: just call Add::from_dict(coef_overall, d)
+        return tmp;
     } else if (is_a<Add>(*a)) {
         return mul_expand_two(b, a);
     } else if (is_a<Add>(*b)) {
