@@ -86,6 +86,23 @@ bool Mul::__eq__(const Basic &o) const
     return false;
 }
 
+int Mul::compare(const Basic &o) const
+{
+    CSYMPY_ASSERT(is_a<Mul>(o))
+    const Mul &s = static_cast<const Mul &>(o);
+    // # of elements
+    if (dict_.size() != s.dict_.size())
+        return (dict_.size() < s.dict_.size()) ? -1 : 1;
+
+    // coef
+    int cmp = coef_->compare(*s.coef_);
+    if (cmp != 0)
+        return cmp;
+
+    // Compare dictionaries:
+    return map_basic_basic_compare(dict_, s.dict_);
+}
+
 std::string Mul::__str__() const
 {
     std::ostringstream o;
