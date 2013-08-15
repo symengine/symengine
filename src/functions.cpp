@@ -100,6 +100,13 @@ bool Cos::__eq__(const Basic &o) const
     return false;
 }
 
+int Cos::compare(const Basic &o) const
+{
+    CSYMPY_ASSERT(is_a<Cos>(o))
+    const Cos &s = static_cast<const Cos &>(o);
+    return arg_->compare(s);
+}
+
 std::string Cos::__str__() const
 {
     std::ostringstream o;
