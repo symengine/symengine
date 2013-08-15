@@ -91,7 +91,7 @@ int Add::compare(const Basic &o) const
         return (dict_.size() < s.dict_.size()) ? -1 : 1;
 
     // coef
-    int cmp = coef_->compare(*s.coef_);
+    int cmp = coef_->__cmp__(*s.coef_);
     if (cmp != 0)
         return cmp;
 

@@ -51,7 +51,7 @@ int Sin::compare(const Basic &o) const
 {
     CSYMPY_ASSERT(is_a<Sin>(o))
     const Sin &s = static_cast<const Sin &>(o);
-    return arg_->compare(s);
+    return arg_->__cmp__(s);
 }
 
 
@@ -104,7 +104,7 @@ int Cos::compare(const Basic &o) const
 {
     CSYMPY_ASSERT(is_a<Cos>(o))
     const Cos &s = static_cast<const Cos &>(o);
-    return arg_->compare(s);
+    return arg_->__cmp__(s);
 }
 
 std::string Cos::__str__() const
