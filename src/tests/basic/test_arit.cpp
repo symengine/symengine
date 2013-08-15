@@ -111,6 +111,14 @@ void test_mul()
              mul(i3, pow(y, mul(i2, pow(x, i2)))));
     r2 = i6;
     assert(eq(r1, r2));
+
+    r1 = mul(mul(mul(mul(div(i3, i2), pow(cos(pow(x, i2)), im2)), x),
+           sin(pow(x, i2))), cos(div(mul(i3, x), i4)));
+    r2 = mul(mul(mul(mul(div(i3, i2), pow(cos(pow(x, i2)), im2)), x),
+           sin(pow(x, i2))), cos(div(mul(i3, x), i4)));
+    std::cout << *r1 << std::endl;
+    std::cout << *r2 << std::endl;
+    assert(eq(r1, r2));
 }
 
 void test_sub()
