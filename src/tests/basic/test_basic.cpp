@@ -279,6 +279,62 @@ void test_diff()
     assert(eq(r1, r2));
 }
 
+void test_compare()
+{
+    RCP<Basic> r1, r2;
+    RCP<Symbol> x  = symbol("x");
+    RCP<Symbol> y  = symbol("y");
+    RCP<Symbol> z  = symbol("z");
+    RCP<Basic> i2  = integer(2);
+    RCP<Basic> i3  = integer(3);
+    assert(x->compare(*x) == 0);
+    assert(x->compare(*y) == -1);
+    assert(x->compare(*z) == -1);
+    assert(y->compare(*x) == 1);
+    assert(y->compare(*z) == -1);
+    assert(z->compare(*x) == 1);
+    assert(z->compare(*y) == 1);
+
+    assert(i2->compare(*i2) == 0);
+    assert(i2->compare(*i3) == -1);
+    assert(i3->compare(*i2) == 1);
+
+    r1 = mul(x, y);
+    r2 = mul(x, y);
+    assert(r1->compare(*r2) == 0);
+    assert(r2->compare(*r1) == 0);
+
+    r1 = mul(x, y);
+    r2 = mul(x, z);
+    assert(r1->compare(*r2) == -1);
+    assert(r2->compare(*r1) == 1);
+
+    r1 = mul(y, x);
+    r2 = mul(x, z);
+    assert(r1->compare(*r2) == -1);
+    assert(r2->compare(*r1) == 1);
+
+    r1 = mul(mul(y, x), z);
+    r2 = mul(x, z);
+    assert(r1->compare(*r2) == 1);
+    assert(r2->compare(*r1) == -1);
+
+    r1 = add(add(y, x), z);
+    r2 = add(x, z);
+    assert(r1->compare(*r2) == 1);
+    assert(r2->compare(*r1) == -1);
+
+    r1 = pow(x, z);
+    r2 = pow(y, x);
+    assert(r1->compare(*r2) == -1);
+    assert(r2->compare(*r1) == 1);
+
+    r1 = pow(x, z);
+    r2 = pow(x, x);
+    assert(r1->compare(*r2) == 1);
+    assert(r2->compare(*r1) == -1);
+}
+
 int main(int argc, char* argv[])
 {
     Teuchos::print_stack_on_segfault();
@@ -296,6 +352,8 @@ int main(int argc, char* argv[])
     test_mul();
 
     test_diff();
+
+    test_compare();
 
     return 0;
 }
