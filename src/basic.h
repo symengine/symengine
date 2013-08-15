@@ -48,7 +48,10 @@ class Symbol;
     general and possibly slow canonicalization first.
 */
 class Basic {
+private:
+    mutable std::size_t hash_; // This holds the hash value
 public:
+    Basic() : hash_{0} {}
     // Destructor must be explicitly defined as virtual here to avoid problems
     // with undefined behavior while deallocating derived classes.
     virtual ~Basic() {}
@@ -59,6 +62,12 @@ public:
     //     std::hash<Basic> hash_fn;
     //     std::cout << hash_fn(*x);
     virtual std::size_t __hash__() const = 0;
+
+    // This caches the hash:
+    inline std::size_t hash() const {
+        if (hash_ == 0) hash_ = __hash__();
+        return hash_;
+    }
 
     // true if "this" is equal to "o".
     virtual bool __eq__(const Basic &o) const = 0;
@@ -137,7 +146,7 @@ namespace std
     {
         std::size_t operator()(const CSymPy::Basic& b) const
         {
-            return b.__hash__();
+            return b.hash();
         }
     };
 }
