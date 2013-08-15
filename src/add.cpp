@@ -95,9 +95,11 @@ int Add::compare(const Basic &o) const
         return cmp;
 
     // Compare dictionaries:
-    // TODO: implement this:
-    // return dicts_compare(dict_, s.dict_);
-    throw std::runtime_error("Not implemented");
+    // NOTE: This is slow. Add should cache this map_basic_int representation
+    // once it is computed.
+    map_basic_int adict(dict_.begin(), dict_.end());
+    map_basic_int bdict(s.dict_.begin(), s.dict_.end());
+    return map_basic_int_compare(adict, bdict);
 }
 
 std::string Add::__str__() const
