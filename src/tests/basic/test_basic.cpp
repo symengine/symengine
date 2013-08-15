@@ -350,6 +350,21 @@ void test_compare()
     assert(r1->compare(*r2) == -1);
     assert(r2->compare(*r1) == 1);
 
+    r1 = add(x, y);
+    r2 = add(x, z);
+    assert(r1->compare(*r2) == -1);
+    assert(r2->compare(*r1) == 1);
+
+    r1 = add(x, y);
+    r2 = add(x, y);
+    assert(r1->compare(*r2) == 0);
+    assert(r2->compare(*r1) == 0);
+
+    r1 = add(add(x, y), z);
+    r2 = add(add(x, z), y);
+    assert(r1->compare(*r2) == 0);
+    assert(r2->compare(*r1) == 0);
+
     // These are compiler implementation specific, so we just make sure that if
     // x < y, then y > x.
     r1 = add(x, z);
@@ -378,6 +393,12 @@ void test_compare()
 
     r1 = div(mul(x, y), i2);
     r2 = mul(x, y);
+    cmp = r1->__cmp__(*r2);
+    assert(cmp != 0);
+    assert(r2->__cmp__(*r1) == -cmp);
+
+    r1 = add(x, pow(z, x));
+    r2 = add(x, y);
     cmp = r1->__cmp__(*r2);
     assert(cmp != 0);
     assert(r2->__cmp__(*r1) == -cmp);
