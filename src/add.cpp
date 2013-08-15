@@ -63,8 +63,7 @@ std::size_t Add::__hash__() const
 {
     std::size_t seed = 0;
     hash_combine<Basic>(seed, *coef_);
-    std::map<RCP<Basic>, RCP<Number>, RCPBasicKeyLess>
-        ordered(dict_.begin(), dict_.end());
+    map_basic_int ordered(dict_.begin(), dict_.end());
     for (auto &p: ordered) {
         hash_combine<Basic>(seed, *(p.first));
         hash_combine<Basic>(seed, *(p.second));
