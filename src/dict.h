@@ -12,7 +12,7 @@ namespace CSymPy {
 typedef struct
 {
     long operator() (const Teuchos::RCP<Basic> &k) const {
-        return k->__hash__();
+        return k->hash();
     }
 } RCPBasicHash;
 
@@ -29,7 +29,7 @@ typedef struct
 {
     // true if x < y, false otherwise
     bool operator() (const Teuchos::RCP<Basic> &x, const Teuchos::RCP<Basic> &y) const {
-        std::size_t xh=x->__hash__(), yh=y->__hash__();
+        std::size_t xh=x->hash(), yh=y->hash();
         if (xh != yh) return xh < yh;
         if (x->__eq__(*y)) return false;
         return x->__cmp__(*y) == -1;

@@ -8,7 +8,6 @@ namespace CSymPy {
 class Symbol : public Basic {
 private:
     std::string name_;
-    std::size_t hash_;
 
 public:
     Symbol(const std::string &name);
