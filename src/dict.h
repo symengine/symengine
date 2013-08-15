@@ -29,9 +29,10 @@ typedef struct
 {
     // true if x < y, false otherwise
     bool operator() (const Teuchos::RCP<Basic> &x, const Teuchos::RCP<Basic> &y) const {
+        std::size_t xh=x->__hash__(), yh=y->__hash__();
+        if (xh != yh) return xh < yh;
         if (x->__eq__(*y)) return false;
-        // Just compare pointer memory values (platform dependent):
-        return x.getRawPtr() < y.getRawPtr();
+        return x->__cmp__(*y) == -1;
     }
 } RCPBasicKeyLess;
 
