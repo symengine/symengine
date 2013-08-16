@@ -421,6 +421,13 @@ void test_expand2()
     std::cout << *r1 << std::endl;
     std::cout << *r2 << std::endl;
     assert(eq(r1, r2));
+
+    r1 = mul(add(i2, x), add(i3, y));
+    r1 = expand(r1);
+    r2 = add(add(add(i6, mul(i2, y)), mul(i3, x)), mul(x, y));
+    std::cout << *r1 << std::endl;
+    std::cout << *r2 << std::endl;
+    assert(eq(r1, r2));
 }
 
 void test_expand3()

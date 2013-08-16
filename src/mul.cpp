@@ -297,14 +297,25 @@ RCP<Basic> mul_expand_two(const RCP<Basic> &a, const RCP<Basic> &b)
     // Both a and b are assumed to be expanded
     if (is_a<Add>(*a) && is_a<Add>(*b)) {
         umap_basic_int d;
+        // Expand dicts first:
         for (auto &p: (rcp_static_cast<Add>(a))->dict_) {
             for (auto &q: (rcp_static_cast<Add>(b))->dict_) {
                 // The main bottleneck here is the mul(p.first, q.first) command
                 Add::dict_add_term(d, mulnum(p.second, q.second),
                         mul(p.first, q.first));
             }
+            Add::dict_add_term(d,
+                    mulnum(rcp_static_cast<Add>(b)->coef_, p.second),
+                    p.first);
         }
-        return Add::from_dict(zero, d);
+        // Handle the coefficient of "a":
+        for (auto &q: (rcp_static_cast<Add>(b))->dict_) {
+            Add::dict_add_term(d,
+                    mulnum(rcp_static_cast<Add>(a)->coef_, q.second),
+                    q.first);
+        }
+        return Add::from_dict(mulnum(rcp_static_cast<Add>(a)->coef_,
+            rcp_static_cast<Add>(b)->coef_), d);
     } else if (is_a<Add>(*a)) {
         return mul_expand_two(b, a);
     } else if (is_a<Add>(*b)) {
