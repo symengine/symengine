@@ -304,16 +304,14 @@ RCP<Basic> mul_expand_two(const RCP<Basic> &a, const RCP<Basic> &b)
                 Add::dict_add_term(d, mulnum(p.second, q.second),
                         mul(p.first, q.first));
             }
+            Add::dict_add_term(d,
+                    mulnum(rcp_static_cast<Add>(b)->coef_, p.second),
+                    p.first);
         }
-        // Handle the coefficients separately:
+        // Handle the coefficient of "a":
         for (auto &q: (rcp_static_cast<Add>(b))->dict_) {
             Add::dict_add_term(d,
                     mulnum(rcp_static_cast<Add>(a)->coef_, q.second),
-                    q.first);
-        }
-        for (auto &q: (rcp_static_cast<Add>(a))->dict_) {
-            Add::dict_add_term(d,
-                    mulnum(rcp_static_cast<Add>(b)->coef_, q.second),
                     q.first);
         }
         return Add::from_dict(mulnum(rcp_static_cast<Add>(a)->coef_,
