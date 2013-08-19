@@ -15,6 +15,7 @@ cdef extern from "basic.h" namespace "Teuchos":
         T& operator*() nogil except +
 
     RCP[Symbol] rcp_static_cast_Symbol "Teuchos::rcp_static_cast<CSymPy::Symbol>"(const RCP[Basic] &b) nogil
+    RCP[Add] rcp_static_cast_Add "Teuchos::rcp_static_cast<CSymPy::Add>"(const RCP[Basic] &b) nogil
     RCP[Mul] rcp_static_cast_Mul "Teuchos::rcp_static_cast<CSymPy::Mul>"(const RCP[Basic] &b) nogil
     RCP[Pow] rcp_static_cast_Pow "Teuchos::rcp_static_cast<CSymPy::Pow>"(const RCP[Basic] &b) nogil
     Ptr[RCP[Basic]] outArg(RCP[Basic] &arg) nogil
@@ -60,7 +61,7 @@ cdef extern from "add.h" namespace "CSymPy":
     cdef RCP[Basic] sub(RCP[Basic] &a, RCP[Basic] &b) nogil except+
 
     cdef cppclass Add(Basic):
-        pass
+        void as_two_terms(const Ptr[RCP[Basic]] &a, const Ptr[RCP[Basic]] &b)
 
 cdef extern from "mul.h" namespace "CSymPy":
     cdef RCP[Basic] mul(RCP[Basic] &a, RCP[Basic] &b) nogil except+
