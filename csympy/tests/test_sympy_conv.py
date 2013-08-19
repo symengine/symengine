@@ -33,6 +33,15 @@ def test_conv2():
     e = x*y*z
     assert e._sympy_() == sympy.Symbol("x")*sympy.Symbol("y")*sympy.Symbol("z")
 
+def test_conv2b():
+    x = sympy.Symbol("x")
+    y = sympy.Symbol("y")
+    z = sympy.Symbol("z")
+    e = x*y
+    assert sympify(e) == Symbol("x")*Symbol("y")
+    e = x*y*z
+    assert sympify(e) == Symbol("x")*Symbol("y")*Symbol("z")
+
 def test_conv3():
     x = Symbol("x")
     y = Symbol("y")

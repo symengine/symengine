@@ -31,9 +31,17 @@ cdef c2py(RCP[csympy.Basic] o):
     return r
 
 def sympy2csympy(a):
+    """
+    Converts 'a' from SymPy to CSymPy.
+
+    Returns None if the expression cannot be converted.
+    """
     import sympy
     if isinstance(a, sympy.Symbol):
         return Symbol(a.name)
+    elif isinstance(a, sympy.Mul):
+        x, y = a.as_two_terms()
+        return sympy2csympy(x) * sympy2csympy(y)
 
 def sympify(a, raise_error=True):
     if isinstance(a, Basic):
