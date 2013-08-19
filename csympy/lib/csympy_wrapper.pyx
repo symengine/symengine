@@ -48,6 +48,10 @@ def sympy2csympy(a):
     elif isinstance(a, sympy.Pow):
         x, y = a.as_base_exp()
         return sympy2csympy(x) ** sympy2csympy(y)
+    elif isinstance(a, sympy.Integer):
+        return Integer(a.p)
+    elif isinstance(a, sympy.Rational):
+        return Integer(a.p) / Integer(a.q)
 
 def sympify(a, raise_error=True):
     if isinstance(a, Basic):

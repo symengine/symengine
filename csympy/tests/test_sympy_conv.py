@@ -84,6 +84,12 @@ def test_conv5():
     assert x._sympy_() == sympy.Integer(5)
     assert (x/y)._sympy_() == sympy.Integer(5) / sympy.Integer(6)
 
+def test_conv5b():
+    x = sympy.Integer(5)
+    y = sympy.Integer(6)
+    assert sympify(x) == Integer(5)
+    assert sympify(x/y) == Integer(5) / Integer(6)
+
 def test_conv6():
     x = Symbol("x")
     y = Symbol("y")
