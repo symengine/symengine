@@ -18,6 +18,8 @@ cdef extern from "basic.h" namespace "Teuchos":
     RCP[Add] rcp_static_cast_Add "Teuchos::rcp_static_cast<CSymPy::Add>"(const RCP[Basic] &b) nogil
     RCP[Mul] rcp_static_cast_Mul "Teuchos::rcp_static_cast<CSymPy::Mul>"(const RCP[Basic] &b) nogil
     RCP[Pow] rcp_static_cast_Pow "Teuchos::rcp_static_cast<CSymPy::Pow>"(const RCP[Basic] &b) nogil
+    RCP[Sin] rcp_static_cast_Sin "Teuchos::rcp_static_cast<CSymPy::Sin>"(const RCP[Basic] &b) nogil
+    RCP[Cos] rcp_static_cast_Cos "Teuchos::rcp_static_cast<CSymPy::Cos>"(const RCP[Basic] &b) nogil
     Ptr[RCP[Basic]] outArg(RCP[Basic] &arg) nogil
 
 
@@ -93,7 +95,7 @@ cdef extern from "functions.h" namespace "CSymPy":
         pass
 
     cdef cppclass Sin(Function):
-        pass
+        RCP[Basic] get_arg() nogil
 
     cdef cppclass Cos(Function):
-        pass
+        RCP[Basic] get_arg() nogil

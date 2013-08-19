@@ -180,10 +180,22 @@ cdef class Sin(Function):
     def __dealloc__(self):
         self.thisptr.reset()
 
+    def _sympy_(self):
+        cdef RCP[csympy.Sin] X = csympy.rcp_static_cast_Sin(self.thisptr)
+        arg = c2py(deref(X).get_arg())._sympy_()
+        import sympy
+        return sympy.sin(arg)
+
 cdef class Cos(Function):
 
     def __dealloc__(self):
         self.thisptr.reset()
+
+    def _sympy_(self):
+        cdef RCP[csympy.Cos] X = csympy.rcp_static_cast_Cos(self.thisptr)
+        arg = c2py(deref(X).get_arg())._sympy_()
+        import sympy
+        return sympy.cos(arg)
 
 def sin(x):
     cdef Basic X = sympify(x)

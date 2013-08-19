@@ -20,6 +20,9 @@ public:
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
     virtual std::string __str__() const;
+    inline Teuchos::RCP<Basic> get_arg() const {
+        return arg_;
+    }
 
     bool is_canonical(const Teuchos::RCP<Basic> &arg);
 
@@ -40,6 +43,9 @@ public:
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
     virtual std::string __str__() const;
+    inline Teuchos::RCP<Basic> get_arg() const {
+        return arg_;
+    }
 
     bool is_canonical(const Teuchos::RCP<Basic> &arg);
 

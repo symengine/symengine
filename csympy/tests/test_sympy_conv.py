@@ -1,4 +1,4 @@
-from csympy import Symbol, Integer, sympify, SympifyError
+from csympy import Symbol, Integer, sympify, SympifyError, sin, cos
 import sympy
 
 def test_conv1():
@@ -50,3 +50,10 @@ def test_conv6():
     assert (3+x)._sympy_() == 3+sympy.Symbol("x")
     assert (3-x)._sympy_() == 3-sympy.Symbol("x")
     assert (x/y)._sympy_() == sympy.Symbol("x") / sympy.Symbol("y")
+
+def test_conv7():
+    x = Symbol("x")
+    y = Symbol("y")
+    assert sin(x/3)._sympy_() == sympy.sin(sympy.Symbol("x") / 3)
+    assert sin(x/3)._sympy_() != sympy.cos(sympy.Symbol("x") / 3)
+    assert cos(x/3)._sympy_() == sympy.cos(sympy.Symbol("x") / 3)
