@@ -2,7 +2,9 @@
 
 [![Build Status](https://travis-ci.org/certik/csympy.png?branch=master)](https://travis-ci.org/certik/csympy)
 
-Experimental [SymPy](http://sympy.org/) core written in C++.
+CSymPy is a standalone fast C++ symbolic manipulation library.
+Optional thin Python wrappers allow easy usage from Python and
+integration with [SymPy](http://sympy.org/).
 
 ## License
 
