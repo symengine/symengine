@@ -45,7 +45,7 @@ def test_conv5():
 def test_conv6():
     x = Symbol("x")
     y = Symbol("y")
-    #assert sympy.sympify(x/3) == sympy.Symbol("x") / 3
+    assert (x/3)._sympy_() == sympy.Symbol("x") / 3
     #assert sympy.sympify(3*x) == 3*sympy.Symbol("x")
     assert sympy.sympify(3+x) == 3+sympy.Symbol("x")
     #assert sympy.sympify(3-x) == 3-sympy.Symbol("x")

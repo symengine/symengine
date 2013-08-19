@@ -130,6 +130,10 @@ cdef class Rational(Number):
     def __dealloc__(self):
         self.thisptr.reset()
 
+    def _sympy_(self):
+        import sympy
+        return sympy.Rational(deref(self.thisptr).__str__())
+
 cdef class Add(Basic):
 
     def __dealloc__(self):
