@@ -42,6 +42,9 @@ def sympy2csympy(a):
     elif isinstance(a, sympy.Mul):
         x, y = a.as_two_terms()
         return sympy2csympy(x) * sympy2csympy(y)
+    elif isinstance(a, sympy.Add):
+        x, y = a.as_two_terms()
+        return sympy2csympy(x) + sympy2csympy(y)
 
 def sympify(a, raise_error=True):
     if isinstance(a, Basic):
