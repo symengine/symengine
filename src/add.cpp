@@ -311,4 +311,14 @@ RCP<Basic> Add::diff(const Teuchos::RCP<Symbol> &x) const
     return r;
 }
 
+void Add::as_two_terms(const Teuchos::Ptr<RCP<Basic>> &a,
+            const Teuchos::Ptr<RCP<Basic>> &b)
+{
+    auto p = dict_.begin();
+    *a = mul(p->first, p->second);
+    umap_basic_int d = dict_;
+    d.erase(p->first);
+    *b = Add::from_dict(coef_, d);
+}
+
 } // CSymPy
