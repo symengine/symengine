@@ -35,7 +35,7 @@ installing.
 This will disable stacktrace support and is not recommended if you are
 interested in development.
 
-Install csympy::
+Install csympy:
 
     cmake .
     make
