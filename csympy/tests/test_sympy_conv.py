@@ -16,6 +16,14 @@ def test_conv1():
     assert x._sympy_() != sympy.Symbol("x")
     assert x._sympy_() == sympy.Symbol("y")
 
+def test_conv1b():
+    x = sympy.Symbol("x")
+    assert sympify(x) == Symbol("x")
+    assert sympify(x) != Symbol("y")
+    x = sympy.Symbol("y")
+    assert sympify(x) != Symbol("x")
+    assert sympify(x) == Symbol("y")
+
 def test_conv2():
     x = Symbol("x")
     y = Symbol("y")

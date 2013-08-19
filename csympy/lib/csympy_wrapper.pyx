@@ -30,12 +30,24 @@ cdef c2py(RCP[csympy.Basic] o):
     r.thisptr = o
     return r
 
+def sympy2csympy(a):
+    import sympy
+    if isinstance(a, sympy.Symbol):
+        return Symbol(a.name)
+
 def sympify(a, raise_error=True):
     if isinstance(a, Basic):
         return a
     elif isinstance(a, (int, long)):
         return Integer(a)
     else:
+        try:
+            e = sympy2csympy(a)
+            if e is not None:
+                return e
+        except ImportError:
+            pass
+
         if raise_error:
             raise SympifyError("Cannot convert '%r' to a csympy type." % a)
 
