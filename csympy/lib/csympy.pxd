@@ -20,6 +20,7 @@ cdef extern from "basic.h" namespace "Teuchos":
     RCP[Pow] rcp_static_cast_Pow "Teuchos::rcp_static_cast<CSymPy::Pow>"(const RCP[Basic] &b) nogil
     RCP[Sin] rcp_static_cast_Sin "Teuchos::rcp_static_cast<CSymPy::Sin>"(const RCP[Basic] &b) nogil
     RCP[Cos] rcp_static_cast_Cos "Teuchos::rcp_static_cast<CSymPy::Cos>"(const RCP[Basic] &b) nogil
+    RCP[FunctionSymbol] rcp_static_cast_FunctionSymbol "Teuchos::rcp_static_cast<CSymPy::FunctionSymbol>"(const RCP[Basic] &b) nogil
     Ptr[RCP[Basic]] outArg(RCP[Basic] &arg) nogil
 
 
@@ -39,6 +40,7 @@ cdef extern from "basic.h" namespace "CSymPy":
     bool is_a_Symbol "CSymPy::is_a<CSymPy::Symbol>"(const Basic &b) nogil
     bool is_a_Sin "CSymPy::is_a<CSymPy::Sin>"(const Basic &b) nogil
     bool is_a_Cos "CSymPy::is_a<CSymPy::Cos>"(const Basic &b) nogil
+    bool is_a_FunctionSymbol "CSymPy::is_a<CSymPy::FunctionSymbol>"(const Basic &b) nogil
 
     RCP[Basic] expand(const RCP[Basic] &o) nogil except +
 
@@ -90,6 +92,7 @@ cdef extern from "basic.h" namespace "Teuchos":
 cdef extern from "functions.h" namespace "CSymPy":
     cdef RCP[Basic] sin(RCP[Basic] &arg) nogil except+
     cdef RCP[Basic] cos(RCP[Basic] &arg) nogil except+
+    cdef RCP[Basic] function_symbol(string name, RCP[Basic] &arg) nogil except+
 
     cdef cppclass Function(Basic):
         pass
@@ -98,4 +101,8 @@ cdef extern from "functions.h" namespace "CSymPy":
         RCP[Basic] get_arg() nogil
 
     cdef cppclass Cos(Function):
+        RCP[Basic] get_arg() nogil
+
+    cdef cppclass FunctionSymbol(Function):
+        string get_name() nogil
         RCP[Basic] get_arg() nogil

@@ -1,4 +1,5 @@
-from csympy import Symbol, Integer, sympify, SympifyError, sin, cos
+from csympy import (Symbol, Integer, sympify, SympifyError, sin, cos,
+        function_symbol)
 import sympy
 
 # Note: We test _sympy_() for CSymPy -> SymPy conversion, as those are methods
@@ -121,3 +122,16 @@ def test_conv7b():
     assert sympify(sympy.sin(x/3)) == sin(Symbol("x") / 3)
     assert sympify(sympy.sin(x/3)) != cos(Symbol("x") / 3)
     assert sympify(sympy.cos(x/3)) == cos(Symbol("x") / 3)
+
+def test_conv8():
+    e1 = sympy.Function("f")(sympy.Symbol("x"))
+    e2 = function_symbol("f", Symbol("x"))
+    assert e2._sympy_() == e1
+    assert sympify(e1) == e2
+
+    e3 = sympy.Function("q")(sympy.Symbol("t"))
+    e4 = function_symbol("q", Symbol("t"))
+    assert e4._sympy_() == e3
+    assert e4._sympy_() != e1
+    assert sympify(e3) == e4
+    assert sympify(e3) != e2

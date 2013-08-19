@@ -1,4 +1,4 @@
-from csympy import Symbol, sin, cos, sqrt, Add
+from csympy import Symbol, sin, cos, sqrt, Add, function_symbol
 
 def test_sin():
     x = Symbol("x")
@@ -13,3 +13,17 @@ def test_sin():
     f = sin(e)
     g = f.diff(x).diff(x)
     assert isinstance(g, Add)
+
+def test_f():
+    x = Symbol("x")
+    y = Symbol("y")
+    f = function_symbol("f", x)
+    g = function_symbol("g", x)
+    assert f != g
+
+    f = function_symbol("f", x)
+    g = function_symbol("f", x)
+    assert f == g
+
+    f = function_symbol("f", x)
+    assert f.diff(y) == 0

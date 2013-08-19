@@ -66,6 +66,9 @@ public:
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
     virtual std::string __str__() const;
+    inline std::string get_name() const {
+        return name_;
+    }
     inline Teuchos::RCP<Basic> get_arg() const {
         return arg_;
     }

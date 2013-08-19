@@ -25,6 +25,8 @@ cdef c2py(RCP[csympy.Basic] o):
         r = Sin.__new__(Sin)
     elif (csympy.is_a_Cos(deref(o))):
         r = Cos.__new__(Cos)
+    elif (csympy.is_a_FunctionSymbol(deref(o))):
+        r = FunctionSymbol.__new__(FunctionSymbol)
     else:
         raise Exception("Unsupported CSymPy class.")
     r.thisptr = o
@@ -56,8 +58,12 @@ def sympy2csympy(a, raise_error=False):
         return sin(a.args[0])
     elif isinstance(a, sympy.cos):
         return cos(a.args[0])
+    elif isinstance(a, sympy.Function):
+        name = str(a.func)
+        arg = a.args[0]
+        return function_symbol(name, sympy2csympy(arg, True))
     if raise_error:
-        raise SympifyError("sympy2csympy2: Cannot convert '%r' to a csympy type." % a)
+        raise SympifyError("sympy2csympy: Cannot convert '%r' to a csympy type." % a)
 
 def sympify(a, raise_error=True):
     if isinstance(a, Basic):
@@ -233,6 +239,19 @@ cdef class Cos(Function):
         import sympy
         return sympy.cos(arg)
 
+cdef class FunctionSymbol(Function):
+
+    def __dealloc__(self):
+        self.thisptr.reset()
+
+    def _sympy_(self):
+        cdef RCP[csympy.FunctionSymbol] X = \
+            csympy.rcp_static_cast_FunctionSymbol(self.thisptr)
+        name = deref(X).get_name()
+        arg = c2py(deref(X).get_arg())._sympy_()
+        import sympy
+        return sympy.Function(name)(arg)
+
 def sin(x):
     cdef Basic X = sympify(x)
     return c2py(csympy.sin(X.thisptr))
@@ -240,6 +259,10 @@ def sin(x):
 def cos(x):
     cdef Basic X = sympify(x)
     return c2py(csympy.cos(X.thisptr))
+
+def function_symbol(name, x):
+    cdef Basic X = sympify(x)
+    return c2py(csympy.function_symbol(name, X.thisptr))
 
 def sqrt(x):
     cdef Basic X = sympify(x)
