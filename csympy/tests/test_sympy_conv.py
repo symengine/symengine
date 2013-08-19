@@ -32,7 +32,7 @@ def test_conv4():
     y = Symbol("y")
     z = Symbol("z")
     e = x**y
-    assert sympy.sympify(e) == sympy.Symbol("x")**sympy.Symbol("y")
+    assert e._sympy_() == sympy.Symbol("x")**sympy.Symbol("y")
     e = (x+y)**z
     assert sympy.sympify(e) == (sympy.Symbol("x")+sympy.Symbol("y"))**sympy.Symbol("z")
 
