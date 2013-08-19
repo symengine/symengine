@@ -23,6 +23,8 @@ public:
     static Teuchos::RCP<Basic> from_dict(const Teuchos::RCP<Number> &coef, const umap_basic_int &d);
     static void dict_add_term(umap_basic_int &d,
             const Teuchos::RCP<Number> &coef, const Teuchos::RCP<Basic> &t);
+    void as_two_terms(const Teuchos::Ptr<Teuchos::RCP<Basic>> &a,
+            const Teuchos::Ptr<Teuchos::RCP<Basic>> &b);
 
     bool is_canonical(const Teuchos::RCP<Number> &coef,
             const umap_basic_int& dict);

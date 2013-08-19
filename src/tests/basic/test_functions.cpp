@@ -31,6 +31,7 @@ using CSymPy::one;
 using CSymPy::zero;
 using CSymPy::sin;
 using CSymPy::cos;
+using CSymPy::function_symbol;
 
 void test_sin()
 {
@@ -118,6 +119,46 @@ void test_cos()
     assert(eq(r1, r2));
 }
 
+void test_f()
+{
+    RCP<Symbol> x = symbol("x");
+    RCP<Symbol> y = symbol("y");
+    RCP<Symbol> z = symbol("z");
+    RCP<Basic> im1 = integer(-1);
+    RCP<Basic> i2 = integer(2);
+
+    RCP<Basic> r1;
+    RCP<Basic> r2;
+
+    r1 = function_symbol("f", x);
+    r2 = function_symbol("f", x);
+    std::cout << *r1 << std::endl;
+
+    assert(eq(r1, r2));
+    assert(neq(r1, zero));
+
+    r1 = function_symbol("f", x);
+    r2 = function_symbol("g", x);
+    assert(neq(r1, r2));
+
+    r1 = function_symbol("f", x);
+    r2 = function_symbol("f", y);
+    assert(neq(r1, r2));
+
+    r1 = function_symbol("f", zero);
+    r2 = one;
+    assert(neq(r1, r2));
+
+    r1 = function_symbol("f", x)->diff(y);
+    r2 = zero;
+    assert(eq(r1, r2));
+
+    r1 = mul(i2, pow(function_symbol("f", add(add(x, y), z)), i2));
+    r2 = mul(i2, pow(function_symbol("f", add(add(y, z), x)), i2));
+    std::cout << *r1 << std::endl;
+    std::cout << *r2 << std::endl;
+    assert(eq(r1, r2));
+}
 
 int main(int argc, char* argv[])
 {
@@ -125,6 +166,7 @@ int main(int argc, char* argv[])
 
     test_sin();
     test_cos();
+    test_f();
 
     return 0;
 }
