@@ -140,6 +140,12 @@ cdef class Mul(Basic):
     def __dealloc__(self):
         self.thisptr.reset()
 
+    def _sympy_(self):
+        cdef RCP[csympy.Mul] X = csympy.rcp_static_cast_Mul(self.thisptr)
+        cdef RCP[csympy.Basic] a, b
+        deref(X).as_two_terms(csympy.outArg(a), csympy.outArg(b))
+        return c2py(a)._sympy_() * c2py(b)._sympy_()
+
 cdef class Pow(Basic):
 
     def __dealloc__(self):

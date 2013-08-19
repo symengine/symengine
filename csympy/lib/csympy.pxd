@@ -11,7 +11,12 @@ cdef extern from "basic.h" namespace "Teuchos":
 #        RCP[T]& operator=(RCP[T] &r_ptr) nogil except +
         void reset() nogil except +
 
+    cdef cppclass Ptr[T]:
+        T& operator*() nogil except +
+
     RCP[Symbol] rcp_static_cast_Symbol "Teuchos::rcp_static_cast<CSymPy::Symbol>"(const RCP[Basic] &b) nogil
+    RCP[Mul] rcp_static_cast_Mul "Teuchos::rcp_static_cast<CSymPy::Mul>"(const RCP[Basic] &b) nogil
+    Ptr[RCP[Basic]] outArg(RCP[Basic] &arg) nogil
 
 
 cdef extern from "basic.h" namespace "CSymPy":
@@ -62,7 +67,7 @@ cdef extern from "mul.h" namespace "CSymPy":
     cdef RCP[Basic] neg(RCP[Basic] &a) nogil except+
 
     cdef cppclass Mul(Basic):
-        pass
+        void as_two_terms(const Ptr[RCP[Basic]] &a, const Ptr[RCP[Basic]] &b)
 
 cdef extern from "pow.h" namespace "CSymPy":
     cdef RCP[Basic] pow(RCP[Basic] &a, RCP[Basic] &b) nogil except+
