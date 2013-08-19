@@ -30,7 +30,7 @@ cdef c2py(RCP[csympy.Basic] o):
     r.thisptr = o
     return r
 
-def sympy2csympy(a):
+def sympy2csympy(a, raise_error=False):
     """
     Converts 'a' from SymPy to CSymPy.
 
@@ -41,17 +41,19 @@ def sympy2csympy(a):
         return Symbol(a.name)
     elif isinstance(a, sympy.Mul):
         x, y = a.as_two_terms()
-        return sympy2csympy(x) * sympy2csympy(y)
+        return sympy2csympy(x, True) * sympy2csympy(y, True)
     elif isinstance(a, sympy.Add):
         x, y = a.as_two_terms()
-        return sympy2csympy(x) + sympy2csympy(y)
+        return sympy2csympy(x, True) + sympy2csympy(y, True)
     elif isinstance(a, sympy.Pow):
         x, y = a.as_base_exp()
-        return sympy2csympy(x) ** sympy2csympy(y)
+        return sympy2csympy(x, True) ** sympy2csympy(y, True)
     elif isinstance(a, sympy.Integer):
         return Integer(a.p)
     elif isinstance(a, sympy.Rational):
         return Integer(a.p) / Integer(a.q)
+    if raise_error:
+        raise SympifyError("sympy2csympy2: Cannot convert '%r' to a csympy type." % a)
 
 def sympify(a, raise_error=True):
     if isinstance(a, Basic):
