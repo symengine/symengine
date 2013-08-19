@@ -1,6 +1,13 @@
 from csympy import Symbol, Integer, sympify, SympifyError, sin, cos
 import sympy
 
+# Note: We test _sympy_() for CSymPy -> SymPy conversion, as those are methods
+# that are implemented in this library. Users can simply use sympy.sympify(...)
+# to do this conversion, as this function will call our _sympy_() methods under
+# the hood.
+#
+# For SymPy -> CSymPy, we test csympy.sympify(...) which does the conversion.
+
 def test_conv1():
     x = Symbol("x")
     assert x._sympy_() == sympy.Symbol("x")
