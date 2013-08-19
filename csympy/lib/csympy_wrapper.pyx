@@ -52,6 +52,10 @@ def sympy2csympy(a, raise_error=False):
         return Integer(a.p)
     elif isinstance(a, sympy.Rational):
         return Integer(a.p) / Integer(a.q)
+    elif isinstance(a, sympy.sin):
+        return sin(a.args[0])
+    elif isinstance(a, sympy.cos):
+        return cos(a.args[0])
     if raise_error:
         raise SympifyError("sympy2csympy2: Cannot convert '%r' to a csympy type." % a)
 

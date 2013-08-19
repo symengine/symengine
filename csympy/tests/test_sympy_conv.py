@@ -118,6 +118,6 @@ def test_conv7():
 def test_conv7b():
     x = sympy.Symbol("x")
     y = sympy.Symbol("y")
-    assert sympify(sin(x/3)) == sin(Symbol("x") / 3)
-    assert sympify(sin(x/3)) != cos(Symbol("x") / 3)
-    assert sympify(cos(x/3)) == cos(Symbol("x") / 3)
+    assert sympify(sympy.sin(x/3)) == sin(Symbol("x") / 3)
+    assert sympify(sympy.sin(x/3)) != cos(Symbol("x") / 3)
+    assert sympify(sympy.cos(x/3)) == cos(Symbol("x") / 3)
