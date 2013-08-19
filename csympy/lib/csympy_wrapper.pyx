@@ -25,10 +25,45 @@ cdef c2py(RCP[csympy.Basic] o):
         r = Sin.__new__(Sin)
     elif (csympy.is_a_Cos(deref(o))):
         r = Cos.__new__(Cos)
+    elif (csympy.is_a_FunctionSymbol(deref(o))):
+        r = FunctionSymbol.__new__(FunctionSymbol)
     else:
         raise Exception("Unsupported CSymPy class.")
     r.thisptr = o
     return r
+
+def sympy2csympy(a, raise_error=False):
+    """
+    Converts 'a' from SymPy to CSymPy.
+
+    Returns None if the expression cannot be converted.
+    """
+    import sympy
+    if isinstance(a, sympy.Symbol):
+        return Symbol(a.name)
+    elif isinstance(a, sympy.Mul):
+        x, y = a.as_two_terms()
+        return sympy2csympy(x, True) * sympy2csympy(y, True)
+    elif isinstance(a, sympy.Add):
+        x, y = a.as_two_terms()
+        return sympy2csympy(x, True) + sympy2csympy(y, True)
+    elif isinstance(a, sympy.Pow):
+        x, y = a.as_base_exp()
+        return sympy2csympy(x, True) ** sympy2csympy(y, True)
+    elif isinstance(a, sympy.Integer):
+        return Integer(a.p)
+    elif isinstance(a, sympy.Rational):
+        return Integer(a.p) / Integer(a.q)
+    elif isinstance(a, sympy.sin):
+        return sin(a.args[0])
+    elif isinstance(a, sympy.cos):
+        return cos(a.args[0])
+    elif isinstance(a, sympy.Function):
+        name = str(a.func)
+        arg = a.args[0]
+        return function_symbol(name, sympy2csympy(arg, True))
+    if raise_error:
+        raise SympifyError("sympy2csympy: Cannot convert '%r' to a csympy type." % a)
 
 def sympify(a, raise_error=True):
     if isinstance(a, Basic):
@@ -36,6 +71,13 @@ def sympify(a, raise_error=True):
     elif isinstance(a, (int, long)):
         return Integer(a)
     else:
+        try:
+            e = sympy2csympy(a)
+            if e is not None:
+                return e
+        except ImportError:
+            pass
+
         if raise_error:
             raise SympifyError("Cannot convert '%r' to a csympy type." % a)
 
@@ -109,6 +151,11 @@ cdef class Symbol(Basic):
     def __dealloc__(self):
         self.thisptr.reset()
 
+    def _sympy_(self):
+        cdef RCP[csympy.Symbol] X = csympy.rcp_static_cast_Symbol(self.thisptr)
+        import sympy
+        return sympy.Symbol(deref(X).get_name())
+
 cdef class Number(Basic):
     pass
 
@@ -120,25 +167,52 @@ cdef class Integer(Number):
     def __dealloc__(self):
         self.thisptr.reset()
 
+    def _sympy_(self):
+        import sympy
+        return sympy.Integer(deref(self.thisptr).__str__())
+
 cdef class Rational(Number):
 
     def __dealloc__(self):
         self.thisptr.reset()
+
+    def _sympy_(self):
+        import sympy
+        return sympy.Rational(deref(self.thisptr).__str__())
 
 cdef class Add(Basic):
 
     def __dealloc__(self):
         self.thisptr.reset()
 
+    def _sympy_(self):
+        cdef RCP[csympy.Add] X = csympy.rcp_static_cast_Add(self.thisptr)
+        cdef RCP[csympy.Basic] a, b
+        deref(X).as_two_terms(csympy.outArg(a), csympy.outArg(b))
+        return c2py(a)._sympy_() + c2py(b)._sympy_()
+
 cdef class Mul(Basic):
 
     def __dealloc__(self):
         self.thisptr.reset()
 
+    def _sympy_(self):
+        cdef RCP[csympy.Mul] X = csympy.rcp_static_cast_Mul(self.thisptr)
+        cdef RCP[csympy.Basic] a, b
+        deref(X).as_two_terms(csympy.outArg(a), csympy.outArg(b))
+        return c2py(a)._sympy_() * c2py(b)._sympy_()
+
 cdef class Pow(Basic):
 
     def __dealloc__(self):
         self.thisptr.reset()
+
+    def _sympy_(self):
+        cdef RCP[csympy.Pow] X = csympy.rcp_static_cast_Pow(self.thisptr)
+        cdef RCP[csympy.Basic] base, exp
+        base = deref(X).base_
+        exp = deref(X).exp_
+        return c2py(base)._sympy_() ** c2py(exp)._sympy_()
 
 cdef class Function(Basic):
     pass
@@ -148,10 +222,35 @@ cdef class Sin(Function):
     def __dealloc__(self):
         self.thisptr.reset()
 
+    def _sympy_(self):
+        cdef RCP[csympy.Sin] X = csympy.rcp_static_cast_Sin(self.thisptr)
+        arg = c2py(deref(X).get_arg())._sympy_()
+        import sympy
+        return sympy.sin(arg)
+
 cdef class Cos(Function):
 
     def __dealloc__(self):
         self.thisptr.reset()
+
+    def _sympy_(self):
+        cdef RCP[csympy.Cos] X = csympy.rcp_static_cast_Cos(self.thisptr)
+        arg = c2py(deref(X).get_arg())._sympy_()
+        import sympy
+        return sympy.cos(arg)
+
+cdef class FunctionSymbol(Function):
+
+    def __dealloc__(self):
+        self.thisptr.reset()
+
+    def _sympy_(self):
+        cdef RCP[csympy.FunctionSymbol] X = \
+            csympy.rcp_static_cast_FunctionSymbol(self.thisptr)
+        name = deref(X).get_name()
+        arg = c2py(deref(X).get_arg())._sympy_()
+        import sympy
+        return sympy.Function(name)(arg)
 
 def sin(x):
     cdef Basic X = sympify(x)
@@ -160,6 +259,10 @@ def sin(x):
 def cos(x):
     cdef Basic X = sympify(x)
     return c2py(csympy.cos(X.thisptr))
+
+def function_symbol(name, x):
+    cdef Basic X = sympify(x)
+    return c2py(csympy.function_symbol(name, X.thisptr))
 
 def sqrt(x):
     cdef Basic X = sympify(x)
