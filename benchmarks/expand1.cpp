@@ -33,11 +33,11 @@ int main(int argc, char* argv[])
     RCP<Basic> y = rcp(new Symbol("y"));
     RCP<Basic> z = rcp(new Symbol("z"));
     RCP<Basic> w = rcp(new Symbol("w"));
-    RCP<Basic> i15 = rcp(new Integer(60));
+    RCP<Basic> i60 = rcp(new Integer(60));
 
     RCP<Basic> e, r;
 
-    e = pow(add(add(add(x, y), z), w), i15);
+    e = pow(add(add(add(x, y), z), w), i60);
 
     std::cout << "Expanding: " << *e << std::endl;
 
