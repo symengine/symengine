@@ -109,6 +109,11 @@ cdef class Symbol(Basic):
     def __dealloc__(self):
         self.thisptr.reset()
 
+    def _sympy_(self):
+        cdef RCP[csympy.Symbol] X = csympy.rcp_static_cast_Symbol(self.thisptr)
+        import sympy
+        return sympy.Symbol(deref(X).get_name())
+
 cdef class Number(Basic):
     pass
 

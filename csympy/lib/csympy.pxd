@@ -37,6 +37,7 @@ cdef extern from "basic.h" namespace "CSymPy":
 cdef extern from "symbol.h" namespace "CSymPy":
     cdef cppclass Symbol(Basic):
         Symbol(string name) nogil
+        string get_name() nogil
 
 
 cdef extern from "integer.h" namespace "CSymPy":
