@@ -69,6 +69,15 @@ def test_conv4():
     e = (x+y)**z
     assert e._sympy_() == (sympy.Symbol("x")+sympy.Symbol("y"))**sympy.Symbol("z")
 
+def test_conv4b():
+    x = sympy.Symbol("x")
+    y = sympy.Symbol("y")
+    z = sympy.Symbol("z")
+    e = x**y
+    assert sympify(e) == Symbol("x")**Symbol("y")
+    e = (x+y)**z
+    assert sympify(e) == (Symbol("x")+Symbol("y"))**Symbol("z")
+
 def test_conv5():
     x = Integer(5)
     y = Integer(6)
