@@ -99,9 +99,25 @@ def test_conv6():
     assert (3-x)._sympy_() == 3-sympy.Symbol("x")
     assert (x/y)._sympy_() == sympy.Symbol("x") / sympy.Symbol("y")
 
+def test_conv6b():
+    x = sympy.Symbol("x")
+    y = sympy.Symbol("y")
+    assert sympify(x/3) == Symbol("x") / 3
+    assert sympify(3*x) == 3*Symbol("x")
+    assert sympify(3+x) == 3+Symbol("x")
+    assert sympify(3-x) == 3-Symbol("x")
+    assert sympify(x/y) == Symbol("x") / Symbol("y")
+
 def test_conv7():
     x = Symbol("x")
     y = Symbol("y")
     assert sin(x/3)._sympy_() == sympy.sin(sympy.Symbol("x") / 3)
     assert sin(x/3)._sympy_() != sympy.cos(sympy.Symbol("x") / 3)
     assert cos(x/3)._sympy_() == sympy.cos(sympy.Symbol("x") / 3)
+
+def test_conv7b():
+    x = sympy.Symbol("x")
+    y = sympy.Symbol("y")
+    assert sympify(sin(x/3)) == sin(Symbol("x") / 3)
+    assert sympify(sin(x/3)) != cos(Symbol("x") / 3)
+    assert sympify(cos(x/3)) == cos(Symbol("x") / 3)
