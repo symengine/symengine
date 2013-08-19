@@ -16,6 +16,7 @@ cdef extern from "basic.h" namespace "Teuchos":
 
     RCP[Symbol] rcp_static_cast_Symbol "Teuchos::rcp_static_cast<CSymPy::Symbol>"(const RCP[Basic] &b) nogil
     RCP[Mul] rcp_static_cast_Mul "Teuchos::rcp_static_cast<CSymPy::Mul>"(const RCP[Basic] &b) nogil
+    RCP[Pow] rcp_static_cast_Pow "Teuchos::rcp_static_cast<CSymPy::Pow>"(const RCP[Basic] &b) nogil
     Ptr[RCP[Basic]] outArg(RCP[Basic] &arg) nogil
 
 
@@ -74,7 +75,8 @@ cdef extern from "pow.h" namespace "CSymPy":
     cdef RCP[Basic] sqrt(RCP[Basic] &x) nogil except+
 
     cdef cppclass Pow(Basic):
-        pass
+        RCP[Basic] base_
+        RCP[Basic] exp_
 
 
 cdef extern from "basic.h" namespace "Teuchos":

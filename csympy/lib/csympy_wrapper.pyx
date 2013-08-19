@@ -151,6 +151,13 @@ cdef class Pow(Basic):
     def __dealloc__(self):
         self.thisptr.reset()
 
+    def _sympy_(self):
+        cdef RCP[csympy.Pow] X = csympy.rcp_static_cast_Pow(self.thisptr)
+        cdef RCP[csympy.Basic] base, exp
+        base = deref(X).base_
+        exp = deref(X).exp_
+        return c2py(base)._sympy_() ** c2py(exp)._sympy_()
+
 cdef class Function(Basic):
     pass
 
