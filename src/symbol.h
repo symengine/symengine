@@ -10,6 +10,7 @@ private:
     std::string name_;
 
 public:
+    const static TypeID type_code_id = SYMBOL;
     Symbol(const std::string &name);
     virtual std::size_t __hash__() const;
     virtual bool __eq__(const Basic &o) const;

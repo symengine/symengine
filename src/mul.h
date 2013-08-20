@@ -12,6 +12,7 @@ public: // TODO: make this private
     map_basic_basic dict_;   // the dictionary of the rest (e.g. "x*y" in 2*x*y)
 
 public:
+    const static TypeID type_code_id = MUL;
     // Constructs Mul from a dictionary by copying the contents of the
     // dictionary:
     Mul(const Teuchos::RCP<Number> &coef, const map_basic_basic& dict);
