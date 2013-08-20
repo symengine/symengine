@@ -19,6 +19,7 @@ namespace CSymPy {
 Pow::Pow(const Teuchos::RCP<Basic> &base, const Teuchos::RCP<Basic> &exp)
     : base_{base}, exp_{exp}
 {
+    type_code = POW;
     CSYMPY_ASSERT(is_canonical(base, exp))
 }
 

@@ -13,6 +13,7 @@ public:
     mpz_class i;
 
 public:
+    const static TypeID type_code_id = INTEGER;
     Integer(int i);
     Integer(mpz_class i);
     virtual std::size_t __hash__() const;

@@ -15,6 +15,7 @@ private:
     Teuchos::RCP<Basic> arg_; // The 'arg' in sin(arg)
 
 public:
+    const static TypeID type_code_id = SIN;
     Sin(const Teuchos::RCP<Basic> &arg);
     virtual std::size_t __hash__() const;
     virtual bool __eq__(const Basic &o) const;
@@ -38,6 +39,7 @@ private:
     Teuchos::RCP<Basic> arg_; // The 'arg' in sin(arg)
 
 public:
+    const static TypeID type_code_id = COS;
     Cos(const Teuchos::RCP<Basic> &arg);
     virtual std::size_t __hash__() const;
     virtual bool __eq__(const Basic &o) const;
@@ -61,6 +63,7 @@ private:
     Teuchos::RCP<Basic> arg_; // The 'x+y' in f(x+y)
 
 public:
+    const static TypeID type_code_id = FUNCTIONSYMBOL;
     FunctionSymbol(std::string name, const Teuchos::RCP<Basic> &arg);
     virtual std::size_t __hash__() const;
     virtual bool __eq__(const Basic &o) const;

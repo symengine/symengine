@@ -10,11 +10,13 @@ namespace CSymPy {
 Integer::Integer(int i)
 {
     this->i = i;
+    type_code = INTEGER;
 }
 
 Integer::Integer(mpz_class i)
 {
     this->i = i;
+    type_code = INTEGER;
 }
 
 std::size_t Integer::__hash__() const

@@ -14,6 +14,7 @@ public:
     mpq_class i;
 
 public:
+    const static TypeID type_code_id = RATIONAL;
     Rational(mpq_class i);
     // 'i' must already be in mpq_class canonical form, this function returns
     // Integer or Rational depending on denumerator.

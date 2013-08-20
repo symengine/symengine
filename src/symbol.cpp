@@ -8,6 +8,7 @@ namespace CSymPy {
 Symbol::Symbol(const std::string &name)
     : name_{name}
 {
+    type_code = SYMBOL;
 }
 
 std::size_t Symbol::__hash__() const

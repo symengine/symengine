@@ -47,9 +47,16 @@ class Symbol;
     simpler code, you can use the add(), mul(), pow() functions that peform
     general and possibly slow canonicalization first.
 */
+
+enum TypeID {
+    SYMBOL, MUL, ADD, POW, INTEGER, RATIONAL, SIN, COS, FUNCTIONSYMBOL
+};
+
 class Basic {
 private:
     mutable std::size_t hash_; // This holds the hash value
+public:
+    TypeID type_code;
 public:
     Basic() : hash_{0} {}
     // Destructor must be explicitly defined as virtual here to avoid problems
@@ -112,7 +119,7 @@ inline bool neq(const Teuchos::RCP<Basic> &a,
 template <class T>
 inline bool is_a(const Basic &b)
 {
-    return typeid(T) == typeid(b);
+    return T::type_code_id == b.type_code;
 }
 
 // Returns true if "b" is of type T or any of its subclasses. Example:

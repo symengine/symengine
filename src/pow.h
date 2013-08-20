@@ -13,6 +13,7 @@ public: // TODO: make this private
     Teuchos::RCP<Basic> base_, exp_; // base^exp
 
 public:
+    const static TypeID type_code_id = POW;
     Pow(const Teuchos::RCP<Basic> &base, const Teuchos::RCP<Basic> &exp);
     virtual std::size_t __hash__() const;
     virtual bool __eq__(const Basic &o) const;

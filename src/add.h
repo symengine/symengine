@@ -12,6 +12,7 @@ public: // TODO: make this private
     umap_basic_int dict_; // the dictionary of the rest (e.g. "x+y" in 2+x+y)
 
 public:
+    const static TypeID type_code_id = ADD;
     // Constructs Add from a dictionary by copying the contents of the
     // dictionary:
     Add(const Teuchos::RCP<Number> &coef, const umap_basic_int& dict);
