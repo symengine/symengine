@@ -119,7 +119,7 @@ inline bool neq(const Teuchos::RCP<Basic> &a,
 template <class T>
 inline bool is_a(const Basic &b)
 {
-    return typeid(T) == typeid(b);
+    return T::type_code_id == b.type_code;
 }
 
 // Returns true if "b" is of type T or any of its subclasses. Example:
