@@ -8,6 +8,7 @@ namespace CSymPy {
 Rational::Rational(mpq_class i)
     : i{i}
 {
+    type_code = RATIONAL;
     CSYMPY_ASSERT(is_canonical(this->i))
 }
 

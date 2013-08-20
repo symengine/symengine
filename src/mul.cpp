@@ -19,6 +19,7 @@ namespace CSymPy {
 Mul::Mul(const Teuchos::RCP<Number> &coef, const map_basic_basic& dict)
     : coef_{coef}, dict_{dict}
 {
+    type_code = MUL;
     CSYMPY_ASSERT(is_canonical(coef, dict))
 }
 

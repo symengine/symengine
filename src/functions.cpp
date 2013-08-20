@@ -19,6 +19,7 @@ namespace CSymPy {
 Sin::Sin(const Teuchos::RCP<Basic> &arg)
     : arg_{arg}
 {
+    type_code = SIN;
     CSYMPY_ASSERT(is_canonical(arg))
 }
 
@@ -72,6 +73,7 @@ RCP<Basic> sin(const RCP<Basic> &arg)
 Cos::Cos(const Teuchos::RCP<Basic> &arg)
     : arg_{arg}
 {
+    type_code = COS;
     CSYMPY_ASSERT(is_canonical(arg))
 }
 
@@ -136,6 +138,7 @@ RCP<Basic> Cos::diff(const Teuchos::RCP<Symbol> &x) const
 FunctionSymbol::FunctionSymbol(std::string name, const Teuchos::RCP<Basic> &arg)
     : name_{name}, arg_{arg}
 {
+    type_code = FUNCTIONSYMBOL;
     CSYMPY_ASSERT(is_canonical(arg))
 }
 

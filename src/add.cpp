@@ -19,6 +19,7 @@ namespace CSymPy {
 Add::Add(const RCP<Number> &coef, const umap_basic_int& dict)
     : coef_{coef}, dict_{dict}
 {
+    type_code = ADD;
     CSYMPY_ASSERT(is_canonical(coef, dict))
 }
 

@@ -47,9 +47,16 @@ class Symbol;
     simpler code, you can use the add(), mul(), pow() functions that peform
     general and possibly slow canonicalization first.
 */
+
+enum TypeID {
+    SYMBOL, MUL, ADD, POW, INTEGER, RATIONAL, SIN, COS, FUNCTIONSYMBOL
+};
+
 class Basic {
 private:
     mutable std::size_t hash_; // This holds the hash value
+public:
+    TypeID type_code;
 public:
     Basic() : hash_{0} {}
     // Destructor must be explicitly defined as virtual here to avoid problems
