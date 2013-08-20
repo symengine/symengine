@@ -159,7 +159,7 @@ inline bool is_a_Number(const Basic &b)
 {
     // Currently we enumerate all the subclasses explicitly, from the most
     // frequent (on the left) to the least frequent (on the right):
-    return is_a<Integer>(b) || is_a<Rational>(b) || is_a<Number>(b);
+    return is_a<Integer>(b) || is_a<Rational>(b);
 }
 
 
