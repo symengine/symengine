@@ -394,7 +394,7 @@ Teuchos::RCP<Basic> Mul::power_all_terms(const Teuchos::RCP<Basic> &exp)
                 rcp_static_cast<Integer>(new_exp)->is_zero()) continue;
         Mul::dict_add_term(d, new_exp, p.first);
     }
-    if (is_a<Number>(*new_coef)) {
+    if (is_a_Number(*new_coef)) {
         return Mul::from_dict(rcp_static_cast<Number>(new_coef), d);
     } else {
         // TODO: this can be made faster probably:
