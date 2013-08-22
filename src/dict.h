@@ -50,6 +50,13 @@ typedef std::map<RCP<Basic>, RCP<Number>,
 typedef std::map<RCP<Basic>, RCP<Basic>,
         RCPBasicKeyLess> map_basic_basic;
 
+// insert(m, first, second) is equivalent to m[first] = second, just faster,
+// because no default constructor is called on the "second" type.
+template<typename T1, typename T2, typename T3> inline
+void insert(T1 &m, const T2 &first, const T3 &second) {
+    m.insert(std::pair<T2, T3>(first, second));
+}
+
 // Return true if the two dictionaries 'a' and 'b' are equal. Otherwise false.
 bool dicts_equal(const umap_basic_int &a, const umap_basic_int &b);
 bool map_basic_int_equal(const map_basic_int &a, const map_basic_int &b);
