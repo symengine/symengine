@@ -39,8 +39,8 @@ void test_sin()
     RCP<Basic> im1 = integer(-1);
     RCP<Basic> i2 = integer(2);
 
-    RCP<Basic> r1;
-    RCP<Basic> r2;
+    RCP<Basic> r1 = zero;
+    RCP<Basic> r2 = zero;
 
     r1 = sin(x);
     r2 = sin(x);
@@ -96,8 +96,8 @@ void test_cos()
     RCP<Basic> im1 = integer(-1);
     RCP<Basic> i2 = integer(2);
 
-    RCP<Basic> r1;
-    RCP<Basic> r2;
+    RCP<Basic> r1 = zero;
+    RCP<Basic> r2 = zero;
 
     r1 = cos(x);
     r2 = cos(x);
@@ -125,8 +125,8 @@ void test_f()
     RCP<Basic> im1 = integer(-1);
     RCP<Basic> i2 = integer(2);
 
-    RCP<Basic> r1;
-    RCP<Basic> r2;
+    RCP<Basic> r1 = zero;
+    RCP<Basic> r2 = zero;
 
     r1 = function_symbol("f", x);
     r2 = function_symbol("f", x);

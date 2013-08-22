@@ -19,7 +19,6 @@ Add::Add(const RCP<Number> &coef, const umap_basic_int& dict)
 bool Add::is_canonical(const RCP<Number> &coef,
         const umap_basic_int& dict)
 {
-    if (coef == null) return false;
     if (dict.size() == 0) return false;
     if (dict.size() == 1) {
         // e.g. 0 + x, 0 + 2x
@@ -27,8 +26,6 @@ bool Add::is_canonical(const RCP<Number> &coef,
     }
     // Check that each term in 'dict' is in canonical form
     for (auto &p: dict) {
-        if (p.first == null) return false;
-        if (p.second == null) return false;
         // e.g. 2*3
         if (is_a_Number(*p.first) && is_a_Number(*p.second))
             return false;
@@ -209,8 +206,8 @@ void as_coef_term(const RCP<Basic> &self, const Ptr<RCP<Number>> &coef,
 RCP<Basic> add(const RCP<Basic> &a, const RCP<Basic> &b)
 {
     CSymPy::umap_basic_int d;
-    RCP<Number> coef;
-    RCP<Basic> t;
+    RCP<Number> coef = zero;
+    RCP<Basic> t = zero;
     if (CSymPy::is_a<Add>(*a) && CSymPy::is_a<Add>(*b)) {
         coef = (rcp_static_cast<Add>(a))->coef_;
         d = (rcp_static_cast<Add>(a))->dict_;
@@ -223,7 +220,7 @@ RCP<Basic> add(const RCP<Basic> &a, const RCP<Basic> &b)
         if (is_a_Number(*b)) {
             iaddnum(outArg(coef), rcp_static_cast<Number>(b));
         } else {
-            RCP<Number> coef2;
+            RCP<Number> coef2 = zero;
             as_coef_term(b, outArg(coef2), outArg(t));
             Add::dict_add_term(d, coef2, t);
         }
@@ -233,7 +230,7 @@ RCP<Basic> add(const RCP<Basic> &a, const RCP<Basic> &b)
         if (is_a_Number(*a)) {
             iaddnum(outArg(coef), rcp_static_cast<Number>(a));
         } else {
-            RCP<Number> coef2;
+            RCP<Number> coef2 = zero;
             as_coef_term(a, outArg(coef2), outArg(t));
             Add::dict_add_term(d, coef2, t);
         }
@@ -263,8 +260,8 @@ RCP<Basic> add_expand(const RCP<Add> &self)
 {
     umap_basic_int d;
     RCP<Number> coef_overall = self->coef_;
-    RCP<Number> coef;
-    RCP<Basic> tmp, tmp2;
+    RCP<Number> coef = zero;
+    RCP<Basic> tmp = zero, tmp2 = zero;
     for (auto &p: self->dict_) {
         tmp = expand(p.first);
         if (is_a<Add>(*tmp)) {

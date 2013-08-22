@@ -79,7 +79,7 @@ void test_mul()
     RCP<Basic> i4 = rcp(new Integer(4));
     RCP<Basic> i6 = rcp(new Integer(6));
 
-    RCP<Basic> r1, r2;
+    RCP<Basic> r1=zero, r2=zero;
 
     r1 = mul(pow(x, y), z);
     r2 = mul(z, pow(x, y));
@@ -129,7 +129,7 @@ void test_sub()
     RCP<Basic> i3 = rcp(new Integer(3));
     RCP<Basic> i4 = rcp(new Integer(4));
 
-    RCP<Basic> r1, r2;
+    RCP<Basic> r1=zero, r2=zero;
 
     r1 = sub(i3, i2);
     r2 = one;
@@ -185,7 +185,7 @@ void test_div()
     assert(!(integer(-1)->is_positive()));
     assert(integer(-1)->is_negative());
 
-    RCP<Basic> r1, r2;
+    RCP<Basic> r1=zero, r2=zero;
 
     r1 = pow(i3, i2);
     r2 = integer(9);
@@ -240,8 +240,8 @@ void test_pow()
     RCP<Basic> i9 = rcp(new Integer(9));
     RCP<Basic> i27 = rcp(new Integer(27));
 
-    RCP<Basic> r1;
-    RCP<Basic> r2;
+    RCP<Basic> r1 = zero;
+    RCP<Basic> r2 = zero;
 
     r1 = mul(x, x);
     r2 = pow(x, i2);
@@ -324,8 +324,8 @@ void test_expand1()
     RCP<Basic> i3 = rcp(new Integer(3));
     RCP<Basic> i4 = rcp(new Integer(10));
 
-    RCP<Basic> r1;
-    RCP<Basic> r2;
+    RCP<Basic> r1 = zero;
+    RCP<Basic> r2 = zero;
 
     r1 = pow(add(add(add(x, y), z), w), i4);
 
@@ -360,8 +360,8 @@ void test_expand2()
     RCP<Basic> i25 = rcp(new Integer(25));
     RCP<Basic> i30 = rcp(new Integer(30));
 
-    RCP<Basic> r1;
-    RCP<Basic> r2;
+    RCP<Basic> r1 = zero;
+    RCP<Basic> r2 = zero;
 
     r1 = mul(w, add(add(x, y), z)); // w*(x+y+z)
     std::cout << *r1 << std::endl;
@@ -436,7 +436,7 @@ void test_expand3()
     RCP<Basic> w = rcp(new Symbol("w"));
     RCP<Basic> i4 = rcp(new Integer(2));
 
-    RCP<Basic> e, f, r;
+    RCP<Basic> e=zero, f=zero, r=zero;
 
     e = pow(add(add(add(x, y), z), w), i4);
     f = mul(e, add(e, w));

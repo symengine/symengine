@@ -17,8 +17,6 @@ Pow::Pow(const RCP<Basic> &base, const RCP<Basic> &exp)
 
 bool Pow::is_canonical(const RCP<Basic> &base, const RCP<Basic> &exp)
 {
-    if (base == null) return false;
-    if (exp == null) return false;
     // e.g. 0^x
     if (is_a<Integer>(*base) && rcp_static_cast<Integer>(base)->is_zero())
         return false;
@@ -231,7 +229,7 @@ RCP<Basic> pow_expand(const RCP<Pow> &self)
                             // Instead of:
                             insert(d, base, exp);
                         } else {
-                            RCP<Basic> exp2, t, tmp;
+                            RCP<Basic> exp2=zero, t=zero, tmp=zero;
                             tmp = pow(base, exp);
                             Mul::as_base_exp(tmp, outArg(exp2), outArg(t));
                             Mul::dict_add_term(d, exp2, t);
