@@ -227,8 +227,8 @@ RCP<Basic> mul(const RCP<Basic> &a, const RCP<Basic> &b)
         for (auto &p: B->dict_)
             Mul::dict_add_term(d, p.second, p.first);
     } else if (CSymPy::is_a<Mul>(*a)) {
-        RCP<Basic> exp;
-        RCP<Basic> t;
+        RCP<Basic> exp = zero;
+        RCP<Basic> t = zero;
         coef = (rcp_static_cast<Mul>(a))->coef_;
         d = (rcp_static_cast<Mul>(a))->dict_;
         if (is_a_Number(*b)) {
@@ -238,8 +238,8 @@ RCP<Basic> mul(const RCP<Basic> &a, const RCP<Basic> &b)
             Mul::dict_add_term(d, exp, t);
         }
     } else if (CSymPy::is_a<Mul>(*b)) {
-        RCP<Basic> exp;
-        RCP<Basic> t;
+        RCP<Basic> exp = zero;
+        RCP<Basic> t = zero;
         coef = (rcp_static_cast<Mul>(b))->coef_;
         d = (rcp_static_cast<Mul>(b))->dict_;
         if (is_a_Number(*a)) {
@@ -249,8 +249,8 @@ RCP<Basic> mul(const RCP<Basic> &a, const RCP<Basic> &b)
             Mul::dict_add_term(d, exp, t);
         }
     } else {
-        RCP<Basic> exp;
-        RCP<Basic> t;
+        RCP<Basic> exp = zero;
+        RCP<Basic> t = zero;
         Mul::as_base_exp(a, outArg(exp), outArg(t));
         insert(d, t, exp);
         Mul::as_base_exp(b, outArg(exp), outArg(t));
@@ -312,8 +312,8 @@ RCP<Basic> mul_expand_two(const RCP<Basic> &a, const RCP<Basic> &b)
     } else if (is_a<Add>(*b)) {
         umap_basic_int d;
         RCP<Number> coef_overall=rcp_static_cast<Add>(b)->coef_;
-        RCP<Number> coef;
-        RCP<Basic> tmp;
+        RCP<Number> coef = zero;
+        RCP<Basic> tmp = zero;
 
         if (!coef_overall->is_zero()) {
             tmp = mul(a, coef_overall);
@@ -367,7 +367,7 @@ RCP<Basic> mul_expand_two(const RCP<Basic> &a, const RCP<Basic> &b)
 
 RCP<Basic> mul_expand(const RCP<Mul> &self)
 {
-    RCP<Basic> a, b;
+    RCP<Basic> a = zero, b = zero;
     self->as_two_terms(outArg(a), outArg(b));
     a = expand(a);
     b = expand(b);
@@ -378,7 +378,7 @@ RCP<Basic> Mul::power_all_terms(const RCP<Basic> &exp)
 {
     CSymPy::map_basic_basic d;
     RCP<Basic> new_coef = pow(coef_, exp);
-    RCP<Basic> new_exp;
+    RCP<Basic> new_exp = zero;
     for (auto &p: dict_) {
         new_exp = mul(p.second, exp);
         if (is_a<Integer>(*new_exp) &&
@@ -412,7 +412,7 @@ RCP<Basic> Mul::diff(const RCP<Symbol> &x) const
                 Mul::dict_add_term(d, q.second, q.first);
             }
         } else {
-            RCP<Basic> exp, t;
+            RCP<Basic> exp = zero, t = zero;
             Mul::as_base_exp(factor, outArg(exp), outArg(t));
             Mul::dict_add_term(d, exp, t);
         }

@@ -19,6 +19,7 @@ using CSymPy::Symbol;
 using CSymPy::umap_basic_int;
 using CSymPy::map_vec_int;
 using CSymPy::Integer;
+using CSymPy::zero;
 using CSymPy::multinomial_coefficients;
 using CSymPy::RCP;
 using CSymPy::rcp;
@@ -34,7 +35,7 @@ int main(int argc, char* argv[])
     RCP<Basic> w = rcp(new Symbol("w"));
     RCP<Basic> i15 = rcp(new Integer(15));
 
-    RCP<Basic> e, f, r;
+    RCP<Basic> e=zero, f=zero, r=zero;
 
     e = pow(add(add(add(x, y), z), w), i15);
     f = mul(e, add(e, w));

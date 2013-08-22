@@ -140,7 +140,7 @@ void test_integer()
 
 void test_rational()
 {
-    RCP<Number> r1, r2, r3;
+    RCP<Number> r1=zero, r2=zero, r3=zero;
     r1 = Rational::from_two_ints(integer(5), integer(6));
     std::cout << *r1 << std::endl;
     assert(eq(r1, Rational::from_two_ints(integer(5), integer(6))));
@@ -254,7 +254,7 @@ void test_mul()
 
 void test_diff()
 {
-    RCP<Basic> r1, r2;
+    RCP<Basic> r1=zero, r2=zero;
     RCP<Symbol> x  = symbol("x");
     RCP<Symbol> y  = symbol("y");
     RCP<Basic> i2  = integer(2);
@@ -278,7 +278,7 @@ void test_diff()
 
 void test_compare()
 {
-    RCP<Basic> r1, r2;
+    RCP<Basic> r1=zero, r2=zero;
     RCP<Symbol> x  = symbol("x");
     RCP<Symbol> y  = symbol("y");
     RCP<Symbol> z  = symbol("z");
