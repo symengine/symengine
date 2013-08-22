@@ -1,8 +1,6 @@
 #include <iostream>
 #include <chrono>
 
-#include "Teuchos_stacktrace.hpp"
-
 #include "basic.h"
 #include "add.h"
 #include "symbol.h"
@@ -11,10 +9,6 @@
 #include "mul.h"
 #include "pow.h"
 #include "functions.h"
-
-using Teuchos::RCP;
-using Teuchos::rcp;
-using Teuchos::rcp_dynamic_cast;
 
 using CSymPy::Basic;
 using CSymPy::Add;
@@ -32,6 +26,10 @@ using CSymPy::zero;
 using CSymPy::sin;
 using CSymPy::cos;
 using CSymPy::function_symbol;
+using CSymPy::RCP;
+using CSymPy::rcp;
+using CSymPy::rcp_dynamic_cast;
+using CSymPy::print_stack_on_segfault;
 
 void test_sin()
 {
@@ -162,7 +160,7 @@ void test_f()
 
 int main(int argc, char* argv[])
 {
-    Teuchos::print_stack_on_segfault();
+    print_stack_on_segfault();
 
     test_sin();
     test_cos();

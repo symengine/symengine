@@ -1,8 +1,6 @@
 #include <iostream>
 #include <chrono>
 
-#include "Teuchos_stacktrace.hpp"
-
 #include "basic.h"
 #include "add.h"
 #include "symbol.h"
@@ -12,10 +10,6 @@
 #include "pow.h"
 #include "rings.h"
 #include "monomials.h"
-
-using Teuchos::RCP;
-using Teuchos::rcp;
-using Teuchos::rcp_dynamic_cast;
 
 using CSymPy::Basic;
 using CSymPy::Add;
@@ -32,6 +26,10 @@ using CSymPy::vec_int;
 using CSymPy::monomial_mul;
 using CSymPy::poly_mul;
 using CSymPy::umap_vec_mpz;
+using CSymPy::RCP;
+using CSymPy::rcp;
+using CSymPy::rcp_dynamic_cast;
+using CSymPy::print_stack_on_segfault;
 
 void test_monomial_mul()
 {
@@ -98,7 +96,7 @@ void test_expand()
 
 int main(int argc, char* argv[])
 {
-    Teuchos::print_stack_on_segfault();
+    print_stack_on_segfault();
 
     test_monomial_mul();
     test_expand();

@@ -1,7 +1,7 @@
 from libcpp cimport bool
 from libcpp.string cimport string
 
-cdef extern from "basic.h" namespace "Teuchos":
+cdef extern from "csympy_rcp.h" namespace "CSymPy":
     cdef enum ENull:
         null
 
@@ -14,13 +14,13 @@ cdef extern from "basic.h" namespace "Teuchos":
     cdef cppclass Ptr[T]:
         T& operator*() nogil except +
 
-    RCP[Symbol] rcp_static_cast_Symbol "Teuchos::rcp_static_cast<CSymPy::Symbol>"(const RCP[Basic] &b) nogil
-    RCP[Add] rcp_static_cast_Add "Teuchos::rcp_static_cast<CSymPy::Add>"(const RCP[Basic] &b) nogil
-    RCP[Mul] rcp_static_cast_Mul "Teuchos::rcp_static_cast<CSymPy::Mul>"(const RCP[Basic] &b) nogil
-    RCP[Pow] rcp_static_cast_Pow "Teuchos::rcp_static_cast<CSymPy::Pow>"(const RCP[Basic] &b) nogil
-    RCP[Sin] rcp_static_cast_Sin "Teuchos::rcp_static_cast<CSymPy::Sin>"(const RCP[Basic] &b) nogil
-    RCP[Cos] rcp_static_cast_Cos "Teuchos::rcp_static_cast<CSymPy::Cos>"(const RCP[Basic] &b) nogil
-    RCP[FunctionSymbol] rcp_static_cast_FunctionSymbol "Teuchos::rcp_static_cast<CSymPy::FunctionSymbol>"(const RCP[Basic] &b) nogil
+    RCP[Symbol] rcp_static_cast_Symbol "CSymPy::rcp_static_cast<CSymPy::Symbol>"(const RCP[Basic] &b) nogil
+    RCP[Add] rcp_static_cast_Add "CSymPy::rcp_static_cast<CSymPy::Add>"(const RCP[Basic] &b) nogil
+    RCP[Mul] rcp_static_cast_Mul "CSymPy::rcp_static_cast<CSymPy::Mul>"(const RCP[Basic] &b) nogil
+    RCP[Pow] rcp_static_cast_Pow "CSymPy::rcp_static_cast<CSymPy::Pow>"(const RCP[Basic] &b) nogil
+    RCP[Sin] rcp_static_cast_Sin "CSymPy::rcp_static_cast<CSymPy::Sin>"(const RCP[Basic] &b) nogil
+    RCP[Cos] rcp_static_cast_Cos "CSymPy::rcp_static_cast<CSymPy::Cos>"(const RCP[Basic] &b) nogil
+    RCP[FunctionSymbol] rcp_static_cast_FunctionSymbol "CSymPy::rcp_static_cast<CSymPy::FunctionSymbol>"(const RCP[Basic] &b) nogil
     Ptr[RCP[Basic]] outArg(RCP[Basic] &arg) nogil
 
 
@@ -84,7 +84,7 @@ cdef extern from "pow.h" namespace "CSymPy":
         RCP[Basic] exp_
 
 
-cdef extern from "basic.h" namespace "Teuchos":
+cdef extern from "basic.h" namespace "CSymPy":
     # We need to specialize these for our classes:
     RCP[Basic] rcp(Symbol *p) nogil
     RCP[Basic] rcp(Integer *p) nogil

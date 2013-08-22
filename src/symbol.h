@@ -19,12 +19,12 @@ public:
         return name_;
     }
 
-    virtual Teuchos::RCP<Basic> diff(const Teuchos::RCP<Symbol> &x) const;
+    virtual RCP<Basic> diff(const RCP<Symbol> &x) const;
 };
 
-inline Teuchos::RCP<Symbol> symbol(const std::string &name)
+inline RCP<Symbol> symbol(const std::string &name)
 {
-    return Teuchos::rcp(new Symbol(name));
+    return rcp(new Symbol(name));
 }
 
 } // CSymPy

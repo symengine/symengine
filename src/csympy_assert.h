@@ -4,7 +4,6 @@
 
 #if !defined(CSYMPY_ASSERT)
 #if defined(WITH_CSYMPY_ASSERT)
-#include <cassert>
 #define CSYMPY_ASSERT(cond) assert(cond);
 #else
 #define CSYMPY_ASSERT(cond)

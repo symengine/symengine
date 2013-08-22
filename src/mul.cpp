@@ -7,25 +7,19 @@
 #include "rational.h"
 #include "functions.h"
 
-using Teuchos::RCP;
-using Teuchos::Ptr;
-using Teuchos::outArg;
-using Teuchos::rcp;
-using Teuchos::rcp_dynamic_cast;
-using Teuchos::rcp_static_cast;
 
 namespace CSymPy {
 
-Mul::Mul(const Teuchos::RCP<Number> &coef, const map_basic_basic& dict)
+Mul::Mul(const RCP<Number> &coef, const map_basic_basic& dict)
     : coef_{coef}, dict_{dict}
 {
     CSYMPY_ASSERT(is_canonical(coef, dict))
 }
 
-bool Mul::is_canonical(const Teuchos::RCP<Number> &coef,
+bool Mul::is_canonical(const RCP<Number> &coef,
         const map_basic_basic& dict)
 {
-    if (coef == Teuchos::null) return false;
+    if (coef == null) return false;
     // e.g. 0*x*y
     if (coef->is_zero())
         return false;
@@ -36,8 +30,8 @@ bool Mul::is_canonical(const Teuchos::RCP<Number> &coef,
     }
     // Check that each term in 'dict' is in canonical form
     for (auto &p: dict) {
-        if (p.first == Teuchos::null) return false;
-        if (p.second == Teuchos::null) return false;
+        if (p.first == null) return false;
+        if (p.second == null) return false;
         // e.g. 2^3, (2/3)^4
         if (is_a_Number(*p.first) && is_a<Integer>(*p.second))
             return false;
@@ -177,15 +171,15 @@ void Mul::dict_add_term(map_basic_basic &d, const RCP<Basic> &exp,
     }
 }
 
-void Mul::as_coef_term(const Teuchos::Ptr<Teuchos::RCP<Number>> &coef,
-            const Teuchos::Ptr<Teuchos::RCP<Basic>> &term)
+void Mul::as_coef_term(const Ptr<RCP<Number>> &coef,
+            const Ptr<RCP<Basic>> &term)
 {
     *coef = coef_;
     *term = from_dict(one, dict_);
 }
 
-void Mul::as_two_terms(const Teuchos::Ptr<RCP<Basic>> &a,
-            const Teuchos::Ptr<RCP<Basic>> &b)
+void Mul::as_two_terms(const Ptr<RCP<Basic>> &a,
+            const Ptr<RCP<Basic>> &b)
 {
     // Example: if this=3*x^2*y^2*z^2, then a=x^2 and b=3*y^2*z^2
     auto p = dict_.begin();
@@ -383,7 +377,7 @@ RCP<Basic> mul_expand(const RCP<Mul> &self)
     return mul_expand_two(a, b);
 }
 
-Teuchos::RCP<Basic> Mul::power_all_terms(const Teuchos::RCP<Basic> &exp)
+RCP<Basic> Mul::power_all_terms(const RCP<Basic> &exp)
 {
     CSymPy::map_basic_basic d;
     RCP<Basic> new_coef = pow(coef_, exp);
@@ -402,7 +396,7 @@ Teuchos::RCP<Basic> Mul::power_all_terms(const Teuchos::RCP<Basic> &exp)
     }
 }
 
-RCP<Basic> Mul::diff(const Teuchos::RCP<Symbol> &x) const
+RCP<Basic> Mul::diff(const RCP<Symbol> &x) const
 {
     RCP<Basic> r=zero;
     for (auto &p: dict_) {

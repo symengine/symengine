@@ -12,56 +12,56 @@ class Function : public Basic {
 
 class Sin : public Function {
 private:
-    Teuchos::RCP<Basic> arg_; // The 'arg' in sin(arg)
+    RCP<Basic> arg_; // The 'arg' in sin(arg)
 
 public:
-    Sin(const Teuchos::RCP<Basic> &arg);
+    Sin(const RCP<Basic> &arg);
     virtual std::size_t __hash__() const;
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
     virtual std::string __str__() const;
-    inline Teuchos::RCP<Basic> get_arg() const {
+    inline RCP<Basic> get_arg() const {
         return arg_;
     }
 
-    bool is_canonical(const Teuchos::RCP<Basic> &arg);
+    bool is_canonical(const RCP<Basic> &arg);
 
-    virtual Teuchos::RCP<Basic> diff(const Teuchos::RCP<Symbol> &x) const;
+    virtual RCP<Basic> diff(const RCP<Symbol> &x) const;
 };
 
 // This uses canonicalize:
-Teuchos::RCP<Basic> sin(const Teuchos::RCP<Basic> &arg);
+RCP<Basic> sin(const RCP<Basic> &arg);
 
 
 class Cos : public Function {
 private:
-    Teuchos::RCP<Basic> arg_; // The 'arg' in sin(arg)
+    RCP<Basic> arg_; // The 'arg' in sin(arg)
 
 public:
-    Cos(const Teuchos::RCP<Basic> &arg);
+    Cos(const RCP<Basic> &arg);
     virtual std::size_t __hash__() const;
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
     virtual std::string __str__() const;
-    inline Teuchos::RCP<Basic> get_arg() const {
+    inline RCP<Basic> get_arg() const {
         return arg_;
     }
 
-    bool is_canonical(const Teuchos::RCP<Basic> &arg);
+    bool is_canonical(const RCP<Basic> &arg);
 
-    virtual Teuchos::RCP<Basic> diff(const Teuchos::RCP<Symbol> &x) const;
+    virtual RCP<Basic> diff(const RCP<Symbol> &x) const;
 };
 
 // This uses canonicalize:
-Teuchos::RCP<Basic> cos(const Teuchos::RCP<Basic> &arg);
+RCP<Basic> cos(const RCP<Basic> &arg);
 
 class FunctionSymbol : public Function {
 private:
     std::string name_; // The 'f' in f(x+y)
-    Teuchos::RCP<Basic> arg_; // The 'x+y' in f(x+y)
+    RCP<Basic> arg_; // The 'x+y' in f(x+y)
 
 public:
-    FunctionSymbol(std::string name, const Teuchos::RCP<Basic> &arg);
+    FunctionSymbol(std::string name, const RCP<Basic> &arg);
     virtual std::size_t __hash__() const;
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
@@ -69,17 +69,17 @@ public:
     inline std::string get_name() const {
         return name_;
     }
-    inline Teuchos::RCP<Basic> get_arg() const {
+    inline RCP<Basic> get_arg() const {
         return arg_;
     }
 
-    bool is_canonical(const Teuchos::RCP<Basic> &arg);
+    bool is_canonical(const RCP<Basic> &arg);
 
-    virtual Teuchos::RCP<Basic> diff(const Teuchos::RCP<Symbol> &x) const;
+    virtual RCP<Basic> diff(const RCP<Symbol> &x) const;
 };
 
-Teuchos::RCP<Basic> function_symbol(std::string name,
-        const Teuchos::RCP<Basic> &arg);
+RCP<Basic> function_symbol(std::string name,
+        const RCP<Basic> &arg);
 
 } // CSymPy
 

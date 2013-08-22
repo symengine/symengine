@@ -11,7 +11,7 @@ namespace CSymPy {
 // Our hash:
 typedef struct
 {
-    long operator() (const Teuchos::RCP<Basic> &k) const {
+    long operator() (const RCP<Basic> &k) const {
         return k->hash();
     }
 } RCPBasicHash;
@@ -19,7 +19,7 @@ typedef struct
 // Our comparison (==):
 typedef struct
 {
-    bool operator() (const Teuchos::RCP<Basic> &x, const Teuchos::RCP<Basic> &y) const {
+    bool operator() (const RCP<Basic> &x, const RCP<Basic> &y) const {
         return x->__eq__(*y);
     }
 } RCPBasicKeyEq;
@@ -28,7 +28,7 @@ typedef struct
 typedef struct
 {
     // true if x < y, false otherwise
-    bool operator() (const Teuchos::RCP<Basic> &x, const Teuchos::RCP<Basic> &y) const {
+    bool operator() (const RCP<Basic> &x, const RCP<Basic> &y) const {
         std::size_t xh=x->hash(), yh=y->hash();
         if (xh != yh) return xh < yh;
         if (x->__eq__(*y)) return false;
@@ -37,17 +37,17 @@ typedef struct
 } RCPBasicKeyLess;
 
 
-typedef std::unordered_map<Teuchos::RCP<Basic>, Teuchos::RCP<Number>,
+typedef std::unordered_map<RCP<Basic>, RCP<Number>,
         RCPBasicHash, RCPBasicKeyEq> umap_basic_int;
-typedef std::unordered_map<Teuchos::RCP<Basic>, Teuchos::RCP<Basic>,
+typedef std::unordered_map<RCP<Basic>, RCP<Basic>,
         RCPBasicHash, RCPBasicKeyEq> umap_basic_basic;
 
 typedef std::vector<int> vec_int;
 typedef std::map<vec_int, long long int> map_vec_int;
 typedef std::map<vec_int, mpz_class> map_vec_mpz;
-typedef std::map<Teuchos::RCP<Basic>, Teuchos::RCP<Number>,
+typedef std::map<RCP<Basic>, RCP<Number>,
         RCPBasicKeyLess> map_basic_int;
-typedef std::map<Teuchos::RCP<Basic>, Teuchos::RCP<Basic>,
+typedef std::map<RCP<Basic>, RCP<Basic>,
         RCPBasicKeyLess> map_basic_basic;
 
 // Return true if the two dictionaries 'a' and 'b' are equal. Otherwise false.

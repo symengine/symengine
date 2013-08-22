@@ -1,7 +1,5 @@
 #include <iostream>
 
-#include "Teuchos_stacktrace.hpp"
-
 #include "basic.h"
 #include "add.h"
 #include "symbol.h"
@@ -10,9 +8,6 @@
 #include "rational.h"
 #include "mul.h"
 #include "pow.h"
-
-using Teuchos::RCP;
-using Teuchos::rcp;
 
 using CSymPy::Basic;
 using CSymPy::Add;
@@ -28,6 +23,8 @@ using CSymPy::one;
 using CSymPy::zero;
 using CSymPy::Number;
 using CSymPy::pow;
+using CSymPy::RCP;
+using CSymPy::print_stack_on_segfault;
 
 void test_symbol_hash()
 {
@@ -406,7 +403,7 @@ void test_compare()
 
 int main(int argc, char* argv[])
 {
-    Teuchos::print_stack_on_segfault();
+    print_stack_on_segfault();
 
     test_symbol_hash();
 

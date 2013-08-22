@@ -11,9 +11,6 @@
 #include "mul.h"
 #include "pow.h"
 
-using Teuchos::RCP;
-using Teuchos::rcp;
-using Teuchos::rcp_dynamic_cast;
 
 using CSymPy::Basic;
 using CSymPy::Add;
@@ -24,6 +21,9 @@ using CSymPy::umap_basic_int;
 using CSymPy::map_vec_int;
 using CSymPy::Integer;
 using CSymPy::multinomial_coefficients;
+using CSymPy::RCP;
+using CSymPy::rcp;
+using CSymPy::rcp_dynamic_cast;
 
 int main(int argc, char* argv[])
 {
