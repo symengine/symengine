@@ -140,7 +140,9 @@ template<class T>
 class Ptr {
 public:
     inline Ptr( ENull null_in = null ) : ptr_(NULL) {}
-    inline explicit Ptr( T *ptr ) : ptr_(ptr) {}
+    inline explicit Ptr( T *ptr ) : ptr_(ptr) {
+        CSYMPY_ASSERT(ptr_ != NULL)
+    }
     inline Ptr(const Ptr<T>& ptr) : ptr_(ptr.ptr_) {}
     template<class T2> inline Ptr(const Ptr<T2>& ptr) : ptr_(ptr.get()) {}
     Ptr<T>& operator=(const Ptr<T>& ptr) { ptr_ = ptr.get(); return *this; }
