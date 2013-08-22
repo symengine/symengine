@@ -72,9 +72,14 @@ endif()
 set(WITH_CSYMPY_ASSERT no
     CACHE BOOL "Enable CSYMPY_ASSERT macro")
 
+# CSYMPY_RCP
+set(WITH_CSYMPY_RCP no
+    CACHE BOOL "Enable CSYMPY_RCP support")
+
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(HAVE_TEUCHOS_DEBUG yes)
     set(HAVE_TEUCHOS_DEBUG_RCP_NODE_TRACING yes)
+    set(HAVE_CSYMPY_RCP yes)
 endif()
 
 enable_testing()
@@ -104,6 +109,7 @@ endif ()
 message("Installation prefix: ${CMAKE_INSTALL_PREFIX}")
 
 message("WITH_CSYMPY_ASSERT: ${WITH_CSYMPY_ASSERT}")
+message("WITH_CSYMPY_RCP: ${WITH_CSYMPY_RCP}")
 
 message("GMP_INCLUDE_DIRS: ${GMP_INCLUDE_DIRS}")
 message("GMP_LIBRARIES: ${GMP_LIBRARIES}")

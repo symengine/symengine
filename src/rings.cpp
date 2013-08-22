@@ -7,13 +7,6 @@
 #include "rings.h"
 #include "monomials.h"
 
-using Teuchos::RCP;
-using Teuchos::Ptr;
-using Teuchos::outArg;
-using Teuchos::rcp;
-using Teuchos::rcp_dynamic_cast;
-using Teuchos::rcp_static_cast;
-
 namespace CSymPy {
 
 void expr2poly(const RCP<Basic> &p, umap_basic_int &syms, umap_vec_mpz &P)

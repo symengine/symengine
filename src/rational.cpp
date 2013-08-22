@@ -1,8 +1,5 @@
 #include "rational.h"
 
-using Teuchos::RCP;
-using Teuchos::rcp;
-
 namespace CSymPy {
 
 Rational::Rational(mpq_class i)
@@ -23,7 +20,7 @@ bool Rational::is_canonical(const mpq_class &i)
     return true;
 }
 
-Teuchos::RCP<Number> Rational::from_mpq(const mpq_class i)
+RCP<Number> Rational::from_mpq(const mpq_class i)
 {
     // If the result is an Integer, return an Integer:
     if (i.get_den() == 1) {
@@ -33,8 +30,8 @@ Teuchos::RCP<Number> Rational::from_mpq(const mpq_class i)
     }
 }
 
-Teuchos::RCP<Number> Rational::from_two_ints(const Teuchos::RCP<Integer> &n,
-            const Teuchos::RCP<Integer> &d)
+RCP<Number> Rational::from_two_ints(const RCP<Integer> &n,
+            const RCP<Integer> &d)
 {
     if (d->i == 0)
         throw std::runtime_error("Rational: Division by zero.");

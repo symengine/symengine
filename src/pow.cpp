@@ -7,16 +7,9 @@
 #include "integer.h"
 #include "rational.h"
 
-using Teuchos::RCP;
-using Teuchos::Ptr;
-using Teuchos::outArg;
-using Teuchos::rcp;
-using Teuchos::rcp_dynamic_cast;
-using Teuchos::rcp_static_cast;
-
 namespace CSymPy {
 
-Pow::Pow(const Teuchos::RCP<Basic> &base, const Teuchos::RCP<Basic> &exp)
+Pow::Pow(const RCP<Basic> &base, const RCP<Basic> &exp)
     : base_{base}, exp_{exp}
 {
     CSYMPY_ASSERT(is_canonical(base, exp))
@@ -24,8 +17,8 @@ Pow::Pow(const Teuchos::RCP<Basic> &base, const Teuchos::RCP<Basic> &exp)
 
 bool Pow::is_canonical(const RCP<Basic> &base, const RCP<Basic> &exp)
 {
-    if (base == Teuchos::null) return false;
-    if (exp == Teuchos::null) return false;
+    if (base == null) return false;
+    if (exp == null) return false;
     // e.g. 0^x
     if (is_a<Integer>(*base) && rcp_static_cast<Integer>(base)->is_zero())
         return false;
@@ -274,7 +267,7 @@ RCP<Basic> pow_expand(const RCP<Pow> &self)
     return self;
 }
 
-RCP<Basic> Pow::diff(const Teuchos::RCP<Symbol> &x) const
+RCP<Basic> Pow::diff(const RCP<Symbol> &x) const
 {
     if (is_a_Number(*exp_))
         return mul(mul(exp_, pow(base_, sub(exp_, one))), base_->diff(x));

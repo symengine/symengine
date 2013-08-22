@@ -3,17 +3,18 @@
 
 // Include all C++ headers here:
 #include <cstddef>
+#include <stdexcept>
 #include <iostream>
 #include <sstream>
 #include <typeinfo>
+#include <map>
+#include <vector>
 #include <unordered_map>
-
-// Include all Teuchos headers here:
-#include "Teuchos_RCP.hpp"
-#include "Teuchos_TypeNameTraits.hpp"
+#include <cassert>
 
 #include "csympy_config.h"
 #include "csympy_assert.h"
+#include "csympy_rcp.h"
 
 namespace CSymPy {
 
@@ -50,8 +51,16 @@ class Symbol;
 class Basic {
 private:
     mutable std::size_t hash_; // This holds the hash value
+#if defined(WITH_CSYMPY_RCP)
 public:
-    Basic() : hash_{0} {}
+    unsigned int refcount_; // reference counter
+#endif
+public:
+    Basic() : hash_{0}
+#if defined(WITH_CSYMPY_RCP)
+        , refcount_(0)
+#endif
+        {}
     // Destructor must be explicitly defined as virtual here to avoid problems
     // with undefined behavior while deallocating derived classes.
     virtual ~Basic() {}
@@ -86,24 +95,24 @@ public:
     // provide custom printing.
     virtual std::string __str__() const {
         std::ostringstream s;
-        s << "<" << Teuchos::typeName<Basic>(*this)
+        s << "<" << typeName<Basic>(*this)
             << " instance at " << (const void*)this << ">";
         return s.str();
     }
 
     // Returns the derivative of self
-    virtual Teuchos::RCP<Basic> diff(const Teuchos::RCP<Symbol> &x) const {
+    virtual RCP<Basic> diff(const RCP<Symbol> &x) const {
         throw std::runtime_error("Not implemented.");
     }
 };
 
-inline bool eq(const Teuchos::RCP<Basic> &a,
-        const Teuchos::RCP<Basic> &b) {
+inline bool eq(const RCP<Basic> &a,
+        const RCP<Basic> &b) {
     return a->__eq__(*b);
 }
 
-inline bool neq(const Teuchos::RCP<Basic> &a,
-        const Teuchos::RCP<Basic> &b) {
+inline bool neq(const RCP<Basic> &a,
+        const RCP<Basic> &b) {
     return !(a->__eq__(*b));
 }
 
@@ -125,7 +134,7 @@ inline bool is_a_sub(const Basic &b)
 
 
 
-Teuchos::RCP<Basic> expand(const Teuchos::RCP<Basic> &self);
+RCP<Basic> expand(const RCP<Basic> &self);
 
 } // CSymPy
 

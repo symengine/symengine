@@ -7,22 +7,16 @@
 #include "rational.h"
 #include "functions.h"
 
-using Teuchos::RCP;
-using Teuchos::Ptr;
-using Teuchos::outArg;
-using Teuchos::rcp;
-using Teuchos::rcp_dynamic_cast;
-using Teuchos::rcp_static_cast;
 
 namespace CSymPy {
 
-Sin::Sin(const Teuchos::RCP<Basic> &arg)
+Sin::Sin(const RCP<Basic> &arg)
     : arg_{arg}
 {
     CSYMPY_ASSERT(is_canonical(arg))
 }
 
-bool Sin::is_canonical(const Teuchos::RCP<Basic> &arg)
+bool Sin::is_canonical(const RCP<Basic> &arg)
 {
     // e.g. sin(0)
     if (is_a<Integer>(*arg) &&
@@ -69,13 +63,13 @@ RCP<Basic> sin(const RCP<Basic> &arg)
 }
 
 
-Cos::Cos(const Teuchos::RCP<Basic> &arg)
+Cos::Cos(const RCP<Basic> &arg)
     : arg_{arg}
 {
     CSYMPY_ASSERT(is_canonical(arg))
 }
 
-bool Cos::is_canonical(const Teuchos::RCP<Basic> &arg)
+bool Cos::is_canonical(const RCP<Basic> &arg)
 {
     // e.g. cos(0)
     if (is_a<Integer>(*arg) &&
@@ -121,25 +115,25 @@ RCP<Basic> cos(const RCP<Basic> &arg)
 }
 
 
-RCP<Basic> Sin::diff(const Teuchos::RCP<Symbol> &x) const
+RCP<Basic> Sin::diff(const RCP<Symbol> &x) const
 {
     return mul(cos(arg_), arg_->diff(x));
 }
 
-RCP<Basic> Cos::diff(const Teuchos::RCP<Symbol> &x) const
+RCP<Basic> Cos::diff(const RCP<Symbol> &x) const
 {
     return mul(mul(minus_one, sin(arg_)), arg_->diff(x));
 }
 
 /* ---------------------------- */
 
-FunctionSymbol::FunctionSymbol(std::string name, const Teuchos::RCP<Basic> &arg)
+FunctionSymbol::FunctionSymbol(std::string name, const RCP<Basic> &arg)
     : name_{name}, arg_{arg}
 {
     CSYMPY_ASSERT(is_canonical(arg))
 }
 
-bool FunctionSymbol::is_canonical(const Teuchos::RCP<Basic> &arg)
+bool FunctionSymbol::is_canonical(const RCP<Basic> &arg)
 {
     return true;
 }
@@ -179,7 +173,7 @@ std::string FunctionSymbol::__str__() const
     return o.str();
 }
 
-RCP<Basic> FunctionSymbol::diff(const Teuchos::RCP<Symbol> &x) const
+RCP<Basic> FunctionSymbol::diff(const RCP<Symbol> &x) const
 {
     if (eq(arg_->diff(x), zero))
         return zero;

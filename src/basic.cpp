@@ -6,8 +6,6 @@
 #include "mul.h"
 #include "pow.h"
 
-using Teuchos::RCP;
-using Teuchos::rcp_static_cast;
 
 namespace CSymPy {
 
