@@ -22,7 +22,7 @@ namespace CSymPy {
 
 /* RCP */
 
-enum ENull { null };
+// RCP is always pointing to a valid object (can never be NULL).
 
 template<class T>
 class RCP {
@@ -31,24 +31,14 @@ public:
         CSYMPY_ASSERT(p != NULL)
         (ptr_->refcount_)++;
     }
-    RCP(const RCP<T> &rp) : ptr_(rp.ptr_) {
-        // TODO: remove the is_null() condition
-        if (!is_null()) (ptr_->refcount_)++;
-    }
+    RCP(const RCP<T> &rp) : ptr_(rp.ptr_) { (ptr_->refcount_)++; }
     template<class T2> RCP(const RCP<T2>& r_ptr) : ptr_(r_ptr.get()) {
-        // TODO: remove the is_null() condition
-        if (!is_null()) (ptr_->refcount_)++;
+        (ptr_->refcount_)++;
     }
-    ~RCP() {
-        // TODO: remove the ptr_ != 0 condition
-        if (ptr_ != NULL)
-        if (--(ptr_->refcount_) == 0) delete ptr_;
-    }
+    ~RCP() { if (--(ptr_->refcount_) == 0) delete ptr_; }
     T* operator->() const { return ptr_; }
     T& operator*() const { return *ptr_; }
     T* get() const { return ptr_; }
-    // Remove the is_null() condition
-    bool is_null() const { return ptr_ == NULL; }
     template<class T2> bool operator==(const RCP<T2> &p2) {
         return ptr_ == p2.ptr_;
     }
@@ -57,22 +47,10 @@ public:
     }
     RCP<T>& operator=(const RCP<T> &r_ptr) {
         T *r_ptr_ptr_ = r_ptr.ptr_;
-        // TODO: remove the is_null() condition
-        if (!r_ptr.is_null())
         (r_ptr_ptr_->refcount_)++;
-        // TODO: remove the is_null() condition
-        if (!is_null())
         if (--(ptr_->refcount_) == 0) delete ptr_;
         ptr_ = r_ptr_ptr_;
         return *this;
-    }
-    // TODO: Remove this:
-    RCP<T>& operator=(ENull) { reset(); return *this; }
-    // TODO: Remove this:
-    void reset() {
-        if (!is_null())
-        if (--(ptr_->refcount_) == 0) delete ptr_;
-        ptr_ = 0;
     }
 private:
     T *ptr_;
@@ -92,32 +70,17 @@ inline RCP<T2> rcp_static_cast(const RCP<T1>& p1)
     return RCP<T2>(check);
 }
 
-template<class T>
-inline bool is_null(const RCP<T> &p)
-{
-    return p.is_null();
-}
-
 
 template<class T2, class T1>
 inline RCP<T2> rcp_dynamic_cast(const RCP<T1>& p1)
 {
-    if (!is_null(p1)) {
-        T2 *p = NULL;
-        // Make the compiler check if the conversion is legal
-        p = dynamic_cast<T2*>(p1.get());
-        if (p) {
-            return RCP<T2>(p);
-        }
+    T2 *p = NULL;
+    // Make the compiler check if the conversion is legal
+    p = dynamic_cast<T2*>(p1.get());
+    if (p) {
+        return RCP<T2>(p);
     }
     throw std::runtime_error("rcp_dynamic_cast: cannot convert.");
-}
-
-
-template<class T>
-inline bool operator==(const RCP<T> &p, ENull)
-{
-  return p.get() == NULL;
 }
 
 
