@@ -136,10 +136,11 @@ inline void print_stack_on_segfault()
 
 /* Ptr */
 
+// Ptr is always pointing to a valid object (can never be NULL).
+
 template<class T>
 class Ptr {
 public:
-    inline Ptr( ENull null_in = null ) : ptr_(NULL) {}
     inline explicit Ptr( T *ptr ) : ptr_(ptr) {
         CSYMPY_ASSERT(ptr_ != NULL)
     }
