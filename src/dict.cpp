@@ -73,12 +73,6 @@ std::ostream& operator<<(std::ostream& out, const CSymPy::umap_basic_basic& d)
 }
 
 
-using Teuchos::RCP;
-using Teuchos::Ptr;
-using Teuchos::outArg;
-using Teuchos::rcp;
-using Teuchos::rcp_dynamic_cast;
-
 namespace CSymPy {
 
 bool map_basic_int_equal(const map_basic_int &A, const map_basic_int &B)

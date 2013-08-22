@@ -1,8 +1,6 @@
 #include "symbol.h"
 #include "integer.h"
 
-using Teuchos::RCP;
-
 namespace CSymPy {
 
 Symbol::Symbol(const std::string &name)
@@ -36,7 +34,7 @@ std::string Symbol::__str__() const
     return name_;
 }
 
-RCP<Basic> Symbol::diff(const Teuchos::RCP<Symbol> &x) const
+RCP<Basic> Symbol::diff(const RCP<Symbol> &x) const
 {
     if (x->name_ == this->name_)
         return one;

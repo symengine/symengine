@@ -7,12 +7,6 @@
 #include "rational.h"
 #include "functions.h"
 
-using Teuchos::RCP;
-using Teuchos::Ptr;
-using Teuchos::outArg;
-using Teuchos::rcp;
-using Teuchos::rcp_dynamic_cast;
-using Teuchos::rcp_static_cast;
 
 namespace CSymPy {
 
@@ -22,10 +16,10 @@ Add::Add(const RCP<Number> &coef, const umap_basic_int& dict)
     CSYMPY_ASSERT(is_canonical(coef, dict))
 }
 
-bool Add::is_canonical(const Teuchos::RCP<Number> &coef,
+bool Add::is_canonical(const RCP<Number> &coef,
         const umap_basic_int& dict)
 {
-    if (coef == Teuchos::null) return false;
+    if (coef == null) return false;
     if (dict.size() == 0) return false;
     if (dict.size() == 1) {
         // e.g. 0 + x, 0 + 2x
@@ -33,8 +27,8 @@ bool Add::is_canonical(const Teuchos::RCP<Number> &coef,
     }
     // Check that each term in 'dict' is in canonical form
     for (auto &p: dict) {
-        if (p.first == Teuchos::null) return false;
-        if (p.second == Teuchos::null) return false;
+        if (p.first == null) return false;
+        if (p.second == null) return false;
         // e.g. 2*3
         if (is_a_Number(*p.first) && is_a_Number(*p.second))
             return false;
@@ -300,7 +294,7 @@ RCP<Basic> add_expand(const RCP<Add> &self)
     return Add::from_dict(coef_overall, d);
 }
 
-RCP<Basic> Add::diff(const Teuchos::RCP<Symbol> &x) const
+RCP<Basic> Add::diff(const RCP<Symbol> &x) const
 {
     RCP<Basic> r=zero;
     for (auto &p: dict_) {
@@ -311,8 +305,8 @@ RCP<Basic> Add::diff(const Teuchos::RCP<Symbol> &x) const
     return r;
 }
 
-void Add::as_two_terms(const Teuchos::Ptr<RCP<Basic>> &a,
-            const Teuchos::Ptr<RCP<Basic>> &b)
+void Add::as_two_terms(const Ptr<RCP<Basic>> &a,
+            const Ptr<RCP<Basic>> &b)
 {
     auto p = dict_.begin();
     *a = mul(p->first, p->second);

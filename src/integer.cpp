@@ -1,10 +1,6 @@
 #include "integer.h"
 #include "rational.h"
 
-using Teuchos::RCP;
-using Teuchos::rcp;
-using Teuchos::rcp_static_cast;
-
 namespace CSymPy {
 
 Integer::Integer(int i)
@@ -61,7 +57,7 @@ signed long int Integer::as_int()
     return this->i.get_si();
 }
 
-Teuchos::RCP<Number> Integer::divint(const Integer &other) const {
+RCP<Number> Integer::divint(const Integer &other) const {
     if (other.i == 0)
         throw std::runtime_error("Rational: Division by zero.");
     mpq_class q(this->i, other.i);
@@ -73,7 +69,7 @@ Teuchos::RCP<Number> Integer::divint(const Integer &other) const {
     return Rational::from_mpq(q);
 }
 
-Teuchos::RCP<Number> Integer::pow_negint(const Integer &other) const {
+RCP<Number> Integer::pow_negint(const Integer &other) const {
     RCP<Number> tmp = powint(*other.neg());
     if (is_a<Integer>(*tmp)) {
         mpq_class q(1, rcp_static_cast<Integer>(tmp)->i);
