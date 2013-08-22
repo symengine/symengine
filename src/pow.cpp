@@ -209,6 +209,9 @@ RCP<Basic> pow_expand(const RCP<Pow> &self)
             int m = base_dict.size();
             multinomial_coefficients_mpz(m, n, r);
             umap_basic_int rd;
+            // This speeds up overall expansion. For example for the benchmark
+            // (y + x + z + w)^60 it improves the timing from 135ms to 124ms.
+            rd.reserve(2*r.size());
             RCP<Number> add_overall_coeff=zero;
             for (auto &p: r) {
                 auto power = p.first.begin();

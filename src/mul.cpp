@@ -291,6 +291,9 @@ RCP<Basic> mul_expand_two(const RCP<Basic> &a, const RCP<Basic> &b)
     // Both a and b are assumed to be expanded
     if (is_a<Add>(*a) && is_a<Add>(*b)) {
         umap_basic_int d;
+        // Improves (x+1)^3(x+2)^3...(x+350)^3 expansion from 0.97s to 0.93s:
+        d.reserve((rcp_static_cast<Add>(a))->dict_.size()*
+            (rcp_static_cast<Add>(b))->dict_.size());
         // Expand dicts first:
         for (auto &p: (rcp_static_cast<Add>(a))->dict_) {
             for (auto &q: (rcp_static_cast<Add>(b))->dict_) {
