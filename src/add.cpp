@@ -136,10 +136,10 @@ RCP<Basic> Add::from_dict(const RCP<Number> &coef, const umap_basic_int &d)
             }
             map_basic_basic m;
             if (is_a<Pow>(*(p->first))) {
-                m[rcp_static_cast<Pow>(p->first)->base_] =
-                    rcp_static_cast<Pow>(p->first)->exp_;
+                insert(m, rcp_static_cast<Pow>(p->first)->base_,
+                    rcp_static_cast<Pow>(p->first)->exp_);
             } else {
-                m[p->first] = one;
+                insert(m, p->first, one);
             }
             return rcp(new Mul(p->second, m));
         }
@@ -150,15 +150,15 @@ RCP<Basic> Add::from_dict(const RCP<Number> &coef, const umap_basic_int &d)
                         rcp_static_cast<Mul>(p->first)->dict_);
             }
             if (is_a<Pow>(*p->first)) {
-                m[rcp_static_cast<Pow>(p->first)->base_] =
-                    rcp_static_cast<Pow>(p->first)->exp_;
+                insert(m, rcp_static_cast<Pow>(p->first)->base_,
+                    rcp_static_cast<Pow>(p->first)->exp_);
             } else {
-                m[p->first] = one;
+                insert(m, p->first, one);
             }
             return rcp(new Mul(p->second, m));
         } else {
-            m[p->first] = one;
-            m[p->second] = one;
+            insert(m, p->first, one);
+            insert(m, p->second, one);
             return rcp(new Mul(one, m));
         }
     } else {
@@ -174,7 +174,7 @@ void Add::dict_add_term(umap_basic_int &d, const RCP<Number> &coef,
     auto it = d.find(t);
     if (it == d.end()) {
         // Not found, add it in if it is nonzero:
-        if (!(coef->is_zero())) d[t] = coef;
+        if (!(coef->is_zero())) insert(d, t, coef);
     } else {
         iaddnum(outArg(it->second), coef);
         if (it->second->is_zero()) d.erase(it);

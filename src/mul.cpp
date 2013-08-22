@@ -149,7 +149,7 @@ void Mul::dict_add_term(map_basic_basic &d, const RCP<Basic> &exp,
 {
     auto it = d.find(t);
     if (it == d.end()) {
-        d[t] = exp;
+        insert(d, t, exp);
     } else {
         // Very common case, needs to be fast:
         if (is_a_Number(*it->second) && is_a_Number(*exp)) {
@@ -255,7 +255,7 @@ RCP<Basic> mul(const RCP<Basic> &a, const RCP<Basic> &b)
         RCP<Basic> exp;
         RCP<Basic> t;
         Mul::as_base_exp(a, outArg(exp), outArg(t));
-        d[t] = exp;
+        insert(d, t, exp);
         Mul::as_base_exp(b, outArg(exp), outArg(t));
         Mul::dict_add_term(d, exp, t);
 
@@ -359,7 +359,7 @@ RCP<Basic> mul_expand_two(const RCP<Basic> &a, const RCP<Basic> &b)
                 RCP<Number> r = mulnum(f, s);
                 iaddnum(outArg(coef_overall), r);
             } else {
-                d2[p.first] = p.second;
+                insert(d2, p.first, p.second);
             }
         }
 

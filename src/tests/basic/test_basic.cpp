@@ -65,8 +65,8 @@ void test_symbol_dict()
     assert( x !=  x2);  // The instances are different...
     assert(eq(x, x2));  // ...but equal in the SymPy sense
 
-    d[x] = rcp(new Integer(2));
-    d[y] = rcp(new Integer(3));
+    insert(d, x, rcp(new Integer(2)));
+    insert(d, y, rcp(new Integer(3)));
 
     // Test printing:
     std::cout << d << std::endl;
@@ -78,11 +78,11 @@ void test_add()
     umap_basic_int m;
     RCP<Basic> x  = rcp(new Symbol("x"));
     RCP<Basic> y  = rcp(new Symbol("y"));
-    m[x] = rcp(new Integer(2));
-    m[y] = rcp(new Integer(3));
+    insert(m, x, rcp(new Integer(2)));
+    insert(m, y, rcp(new Integer(3)));
 
     RCP<Add> a = rcp(new Add(zero, m));
-    m[x] = rcp(new Integer(-2));
+    insert(m, x, rcp(new Integer(-2)));
     RCP<Add> b = rcp(new Add(zero, m));
     std::cout << *a << std::endl;
     std::cout << *b << std::endl;
@@ -239,11 +239,11 @@ void test_mul()
     map_basic_basic m;
     RCP<Basic> x  = rcp(new Symbol("x"));
     RCP<Basic> y  = rcp(new Symbol("y"));
-    m[x] = rcp(new Integer(2));
-    m[y] = rcp(new Integer(3));
+    insert(m, x, rcp(new Integer(2)));
+    insert(m, y, rcp(new Integer(3)));
 
     RCP<Mul> a = rcp(new Mul(one, m));
-    m[x] = rcp(new Integer(-2));
+    insert(m, x, rcp(new Integer(-2)));
     RCP<Mul> b = rcp(new Mul(one, m));
     std::cout << *a << std::endl;
     std::cout << *b << std::endl;
