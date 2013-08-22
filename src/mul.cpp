@@ -19,7 +19,6 @@ Mul::Mul(const RCP<Number> &coef, const map_basic_basic& dict)
 bool Mul::is_canonical(const RCP<Number> &coef,
         const map_basic_basic& dict)
 {
-    if (coef == null) return false;
     // e.g. 0*x*y
     if (coef->is_zero())
         return false;
@@ -30,8 +29,6 @@ bool Mul::is_canonical(const RCP<Number> &coef,
     }
     // Check that each term in 'dict' is in canonical form
     for (auto &p: dict) {
-        if (p.first == null) return false;
-        if (p.second == null) return false;
         // e.g. 2^3, (2/3)^4
         if (is_a_Number(*p.first) && is_a<Integer>(*p.second))
             return false;

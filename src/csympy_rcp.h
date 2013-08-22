@@ -172,7 +172,6 @@ using Teuchos::rcp;
 using Teuchos::rcp_dynamic_cast;
 using Teuchos::rcp_static_cast;
 using Teuchos::typeName;
-using Teuchos::null;
 using Teuchos::print_stack_on_segfault;
 
 #endif
