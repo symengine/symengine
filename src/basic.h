@@ -8,12 +8,9 @@
 #include <typeinfo>
 #include <unordered_map>
 
-// Include all Teuchos headers here:
-#include "Teuchos_RCP.hpp"
-#include "Teuchos_TypeNameTraits.hpp"
-
 #include "csympy_config.h"
 #include "csympy_assert.h"
+#include "csympy_rcp.h"
 
 namespace CSymPy {
 
