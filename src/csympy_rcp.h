@@ -27,9 +27,6 @@ enum ENull { null };
 template<class T>
 class RCP {
 public:
-    // TODO: remove this default constructor to ensure that RCP is never null.
-    // Also go over this class and remove all checks for ptr_ == 0 or NULL
-    RCP(ENull null_arg = null) : ptr_(NULL) {}
     explicit RCP(T *p) : ptr_(p) {
         CSYMPY_ASSERT(p != NULL)
         (ptr_->refcount_)++;
