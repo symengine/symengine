@@ -3,10 +3,13 @@
 
 // Include all C++ headers here:
 #include <cstddef>
+#include <stdexcept>
 #include <iostream>
 #include <sstream>
 #include <typeinfo>
+#include <map>
 #include <unordered_map>
+#include <cassert>
 
 #include "csympy_config.h"
 #include "csympy_assert.h"
