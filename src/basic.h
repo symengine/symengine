@@ -83,24 +83,24 @@ public:
     // provide custom printing.
     virtual std::string __str__() const {
         std::ostringstream s;
-        s << "<" << Teuchos::typeName<Basic>(*this)
+        s << "<" << typeName<Basic>(*this)
             << " instance at " << (const void*)this << ">";
         return s.str();
     }
 
     // Returns the derivative of self
-    virtual Teuchos::RCP<Basic> diff(const Teuchos::RCP<Symbol> &x) const {
+    virtual RCP<Basic> diff(const RCP<Symbol> &x) const {
         throw std::runtime_error("Not implemented.");
     }
 };
 
-inline bool eq(const Teuchos::RCP<Basic> &a,
-        const Teuchos::RCP<Basic> &b) {
+inline bool eq(const RCP<Basic> &a,
+        const RCP<Basic> &b) {
     return a->__eq__(*b);
 }
 
-inline bool neq(const Teuchos::RCP<Basic> &a,
-        const Teuchos::RCP<Basic> &b) {
+inline bool neq(const RCP<Basic> &a,
+        const RCP<Basic> &b) {
     return !(a->__eq__(*b));
 }
 
@@ -122,7 +122,7 @@ inline bool is_a_sub(const Basic &b)
 
 
 
-Teuchos::RCP<Basic> expand(const Teuchos::RCP<Basic> &self);
+RCP<Basic> expand(const RCP<Basic> &self);
 
 } // CSymPy
 

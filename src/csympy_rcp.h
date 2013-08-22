@@ -14,6 +14,21 @@
 
 namespace CSymPy {
 
+
+#if defined(WITH_CSYMPY_RCP)
+
+#else
+
+using Teuchos::RCP;
+using Teuchos::Ptr;
+using Teuchos::outArg;
+using Teuchos::rcp;
+using Teuchos::rcp_dynamic_cast;
+using Teuchos::rcp_static_cast;
+using Teuchos::typeName;
+
+#endif
+
 } // CSymPy
 
 
