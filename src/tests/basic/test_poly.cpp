@@ -64,10 +64,10 @@ void test_expand()
     f2 = expand(add(e, w));
 
     umap_basic_int syms;
-    syms[x] = rcp(new Integer(0));
-    syms[y] = rcp(new Integer(1));
-    syms[z] = rcp(new Integer(2));
-    syms[w] = rcp(new Integer(3));
+    insert(syms, x, rcp(new Integer(0)));
+    insert(syms, y, rcp(new Integer(1)));
+    insert(syms, z, rcp(new Integer(2)));
+    insert(syms, w, rcp(new Integer(3)));
 
     umap_vec_mpz P1, P2, C;
 

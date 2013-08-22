@@ -113,7 +113,7 @@ inline RCP<T2> rcp_dynamic_cast(const RCP<T1>& p1)
             return RCP<T2>(p);
         }
     }
-    return null;
+    throw std::runtime_error("rcp_dynamic_cast: cannot convert.");
 }
 
 
@@ -136,11 +136,14 @@ inline void print_stack_on_segfault()
 
 /* Ptr */
 
+// Ptr is always pointing to a valid object (can never be NULL).
+
 template<class T>
 class Ptr {
 public:
-    inline Ptr( ENull null_in = null ) : ptr_(NULL) {}
-    inline explicit Ptr( T *ptr ) : ptr_(ptr) {}
+    inline explicit Ptr( T *ptr ) : ptr_(ptr) {
+        CSYMPY_ASSERT(ptr_ != NULL)
+    }
     inline Ptr(const Ptr<T>& ptr) : ptr_(ptr.ptr_) {}
     template<class T2> inline Ptr(const Ptr<T2>& ptr) : ptr_(ptr.get()) {}
     Ptr<T>& operator=(const Ptr<T>& ptr) { ptr_ = ptr.get(); return *this; }

@@ -204,7 +204,7 @@ RCP<Basic> pow_expand(const RCP<Pow> &self)
             if (! (base->coef_->is_zero())) {
                 // Add the numerical coefficient into the dictionary. This
                 // allows a little bit easier treatment below.
-                base_dict[base->coef_] = one;
+                insert(base_dict, base->coef_, one);
             }
             int m = base_dict.size();
             multinomial_coefficients_mpz(m, n, r);
@@ -229,7 +229,7 @@ RCP<Basic> pow_expand(const RCP<Pow> &self)
                             // Then we need to use
                             //Mul::dict_add_term(d, exp, base);
                             // Instead of:
-                            d[base] = exp;
+                            insert(d, base, exp);
                         } else {
                             RCP<Basic> exp2, t, tmp;
                             tmp = pow(base, exp);
