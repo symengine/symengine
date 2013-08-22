@@ -1,6 +1,9 @@
 #ifndef CSYMPY_RCP_H
 #define CSYMPY_RCP_H
 
+#include "csympy_config.h"
+#include "csympy_assert.h"
+
 
 #if defined(WITH_CSYMPY_RCP)
 
