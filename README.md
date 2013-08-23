@@ -53,7 +53,9 @@ Use CSymPy from Python as follows:
     2x*z + x^2 + 2y*x + 2y*z + z^2 + y^2
 
 You can read Python tests in `csympy/tests` to see what features are
-implemented.
+implemented. Supported versions of Python are: 2.6, 2.7, 3.2, 3.3.
+You need Cython >= 0.19.1 in order to compile the wrappers. CMake
+will report at configure time if the Cython version is too old.
 
 ### Development
 
