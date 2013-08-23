@@ -19,6 +19,19 @@ env:
   - BUILD_TYPE="Debug" WITH_BFD="yes" TEST_IN_TREE="yes" WITH_PYTHON="yes" WITH_CSYMPY_ASSERT="no" WITH_CSYMPY_RCP="no"
   # Python build with our own RCP
   - BUILD_TYPE="Debug" WITH_BFD="yes" TEST_IN_TREE="yes" WITH_PYTHON="yes" WITH_CSYMPY_ASSERT="yes" WITH_CSYMPY_RCP="yes"
+  # Python release build
+  - BUILD_TYPE="Release" WITH_BFD="no" TEST_IN_TREE="yes" WITH_PYTHON="yes" WITH_CSYMPY_ASSERT="no" WITH_CSYMPY_RCP="yes"
+matrix:
+  include:
+    - python: 2.6
+      env:
+        - BUILD_TYPE="Release" WITH_BFD="no" TEST_IN_TREE="yes" WITH_PYTHON="yes" WITH_CSYMPY_ASSERT="no" WITH_CSYMPY_RCP="yes"
+    - python: 3.2
+      env:
+        - BUILD_TYPE="Release" WITH_BFD="no" TEST_IN_TREE="yes" WITH_PYTHON="yes" WITH_CSYMPY_ASSERT="no" WITH_CSYMPY_RCP="yes"
+    - python: 3.3
+      env:
+        - BUILD_TYPE="Release" WITH_BFD="no" TEST_IN_TREE="yes" WITH_PYTHON="yes" WITH_CSYMPY_ASSERT="no" WITH_CSYMPY_RCP="yes"
 before_install:
   - sudo apt-get update
   - sudo apt-get install libgmp-dev
