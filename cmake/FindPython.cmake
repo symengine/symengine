@@ -1,5 +1,5 @@
 execute_process(
-	COMMAND python -c "from distutils.sysconfig import get_python_inc; print get_python_inc()"
+	COMMAND python -c "from distutils.sysconfig import get_python_inc; print(get_python_inc())"
 	OUTPUT_VARIABLE PYTHON_SYS_PATH
 	)
 string(STRIP ${PYTHON_SYS_PATH} PYTHON_SYS_PATH)
@@ -10,13 +10,13 @@ FIND_PATH(PYTHON_INCLUDE_PATH Python.h
     )
 
 execute_process(
-	COMMAND python -c "from distutils.sysconfig import get_config_var; print get_config_var('LIBDIR')"
+	COMMAND python -c "from distutils.sysconfig import get_config_var; print(get_config_var('LIBDIR'))"
 	OUTPUT_VARIABLE PYTHON_LIB_PATH
 	)
 string(STRIP ${PYTHON_LIB_PATH} PYTHON_LIB_PATH)
 
 execute_process(
-	COMMAND python -c "import sys; print '%s.%s' % sys.version_info[:2]"
+	COMMAND python -c "import sys; print('%s.%s' % sys.version_info[:2])"
     OUTPUT_VARIABLE PYTHON_VERSION
 	)
 string(STRIP ${PYTHON_VERSION} PYTHON_VERSION)
@@ -29,7 +29,7 @@ FIND_LIBRARY(PYTHON_LIBRARY NAMES python${PYTHON_VERSION}
     )
 
 execute_process(
-	COMMAND python -c "from distutils.sysconfig import get_python_lib; print get_python_lib()"
+	COMMAND python -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())"
 	OUTPUT_VARIABLE PYTHON_INSTALL_PATH_tmp
 	)
 string(STRIP ${PYTHON_INSTALL_PATH_tmp} PYTHON_INSTALL_PATH_tmp)
