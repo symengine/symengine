@@ -108,7 +108,7 @@ cdef class Basic(object):
         if A is None or B is None: return NotImplemented
         return c2py(csympy.mul(A.thisptr, B.thisptr))
 
-    def __div__(a, b):
+    def __truediv__(a, b):
         cdef Basic A = sympify(a, False)
         cdef Basic B = sympify(b, False)
         if A is None or B is None: return NotImplemented
