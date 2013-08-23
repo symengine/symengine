@@ -73,7 +73,7 @@ set(WITH_CSYMPY_ASSERT no
     CACHE BOOL "Enable CSYMPY_ASSERT macro")
 
 # CSYMPY_RCP
-set(WITH_CSYMPY_RCP no
+set(WITH_CSYMPY_RCP yes
     CACHE BOOL "Enable CSYMPY_RCP support")
 
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
