@@ -3,6 +3,7 @@ from numpy cimport ndarray
 
 # Test that libcpp module is present:
 from libcpp.vector cimport vector
+from libcpp.string cimport string
 
 # Test the math library:
 from libc.math cimport sin, cos, atan2
@@ -44,3 +45,41 @@ cdef extern from "electrostatics.h":
         void set_boundary_markers_derivative(vector[int] &bdy_markers_der)
         void set_boundary_derivatives(vector[double] &bc_der)
         bool calculate(Solution* phi)
+
+cdef extern from "csympy_rcp.h" namespace "CSymPy":
+    cdef enum ENull:
+        null
+
+    cdef cppclass RCP[T]:
+        T& operator*() nogil except +
+        void reset() nogil except +
+
+    cdef cppclass Ptr[T]:
+        T& operator*() nogil except +
+
+    RCP[Symbol] rcp_static_cast_Symbol "CSymPy::rcp_static_cast<CSymPy::Symbol>"(const RCP[Basic] &b) nogil
+    RCP[Add] rcp_static_cast_Add "CSymPy::rcp_static_cast<CSymPy::Add>"(const RCP[Basic] &b) nogil
+
+
+cdef extern from "basic.h" namespace "CSymPy":
+    cdef cppclass Basic:
+        string __str__() nogil except +
+        RCP[Basic] diff(const RCP[Symbol] &x) nogil except +
+
+    bool eq(RCP[Basic] &a, RCP[Basic] &b) nogil except +
+    bool neq(RCP[Basic] &a, RCP[Basic] &b) nogil except +
+
+    bool is_a_Add "CSymPy::is_a<CSymPy::Add>"(const Basic &b) nogil
+    bool is_a_Mul "CSymPy::is_a<CSymPy::Mul>"(const Basic &b) nogil
+
+cdef extern from "symbol.h" namespace "CSymPy":
+    cdef cppclass Symbol(Basic):
+        Symbol(string name) nogil
+        string get_name() nogil
+
+cdef extern from "add.h" namespace "CSymPy":
+    cdef RCP[Basic] add(RCP[Basic] &a, RCP[Basic] &b) nogil except+
+    cdef RCP[Basic] sub(RCP[Basic] &a, RCP[Basic] &b) nogil except+
+
+    cdef cppclass Add(Basic):
+        void as_two_terms(const Ptr[RCP[Basic]] &a, const Ptr[RCP[Basic]] &b)
