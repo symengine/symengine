@@ -85,7 +85,7 @@ cdef class Basic(object):
     cdef RCP[csympy.Basic] thisptr
 
     def __str__(self):
-        return deref(self.thisptr).__str__()
+        return deref(self.thisptr).__str__().decode("utf-8")
 
     def __repr__(self):
         return self.__str__()
@@ -146,7 +146,7 @@ cdef class Basic(object):
 cdef class Symbol(Basic):
 
     def __cinit__(self, name):
-        self.thisptr = rcp(new csympy.Symbol(name))
+        self.thisptr = rcp(new csympy.Symbol(name.encode("utf-8")))
 
     def __dealloc__(self):
         self.thisptr.reset()
@@ -154,7 +154,7 @@ cdef class Symbol(Basic):
     def _sympy_(self):
         cdef RCP[csympy.Symbol] X = csympy.rcp_static_cast_Symbol(self.thisptr)
         import sympy
-        return sympy.Symbol(deref(X).get_name())
+        return sympy.Symbol(deref(X).get_name().decode("utf-8"))
 
 cdef class Number(Basic):
     pass
@@ -169,7 +169,7 @@ cdef class Integer(Number):
 
     def _sympy_(self):
         import sympy
-        return sympy.Integer(deref(self.thisptr).__str__())
+        return sympy.Integer(deref(self.thisptr).__str__().decode("utf-8"))
 
 cdef class Rational(Number):
 
@@ -178,7 +178,7 @@ cdef class Rational(Number):
 
     def _sympy_(self):
         import sympy
-        return sympy.Rational(deref(self.thisptr).__str__())
+        return sympy.Rational(deref(self.thisptr).__str__().decode("utf-8"))
 
 cdef class Add(Basic):
 
@@ -247,7 +247,7 @@ cdef class FunctionSymbol(Function):
     def _sympy_(self):
         cdef RCP[csympy.FunctionSymbol] X = \
             csympy.rcp_static_cast_FunctionSymbol(self.thisptr)
-        name = deref(X).get_name()
+        name = deref(X).get_name().decode("utf-8")
         arg = c2py(deref(X).get_arg())._sympy_()
         import sympy
         return sympy.Function(name)(arg)
@@ -262,7 +262,7 @@ def cos(x):
 
 def function_symbol(name, x):
     cdef Basic X = sympify(x)
-    return c2py(csympy.function_symbol(name, X.thisptr))
+    return c2py(csympy.function_symbol(name.encode("utf-8"), X.thisptr))
 
 def sqrt(x):
     cdef Basic X = sympify(x)
