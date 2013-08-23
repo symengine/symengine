@@ -158,7 +158,7 @@ cdef class Symbol(Basic):
     def _sympy_(self):
         cdef RCP[csympy.Symbol] X = csympy.rcp_static_cast_Symbol(self.thisptr)
         import sympy
-        return sympy.Symbol(deref(X).get_name().decode("utf-8"))
+        return sympy.Symbol(str(deref(X).get_name().decode("utf-8")))
 
 cdef class Number(Basic):
     pass
