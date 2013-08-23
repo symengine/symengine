@@ -6,6 +6,7 @@ include_directories(${teuchos_SOURCE_DIR})
 include_directories(${teuchos_BINARY_DIR})
 
 set(SRC
+    csympy_rcp.cpp
     basic.cpp
     dict.cpp
     symbol.cpp
