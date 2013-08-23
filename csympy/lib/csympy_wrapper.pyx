@@ -114,6 +114,10 @@ cdef class Basic(object):
         if A is None or B is None: return NotImplemented
         return c2py(csympy.div(A.thisptr, B.thisptr))
 
+    # This is for Python 2.7 compatibility only:
+    def __div__(a, b):
+        return a.__truediv__(b)
+
     # What is the purpose of "c" here?
     def __pow__(a, b, c):
         cdef Basic A = sympify(a, False)
