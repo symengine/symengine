@@ -37,7 +37,7 @@ installing.
 This will disable stacktrace support and is not recommended if you are
 interested in development.
 
-Install csympy:
+Install csympy in Release mode (default):
 
     cmake .
     make
@@ -74,6 +74,7 @@ Here are some of the `CMake` options that you can use to configure the build:
         -DWITH_BFD:BOOL=ON \                          # Install with BFD library (requires binutils-dev)
         -DWITH_PYTHON:BOOL=ON \                       # Build Python wrappers
         -DWITH_CSYMPY_ASSERT:BOOL=OFF \               # Test all CSYMPY_ASSERT statements in the code
+        -DWITH_CSYMPY_RCP:BOOL=OFF \                  # Use our faster special implementation of RCP
         .
 
 `CMake` prints the value of its options at the end of the run.
