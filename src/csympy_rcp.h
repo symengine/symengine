@@ -130,9 +130,7 @@ std::string typeName(const T &t)
     return "RCP<>";
 }
 
-inline void print_stack_on_segfault()
-{
-}
+void print_stack_on_segfault();
 
 /* Ptr */
 
