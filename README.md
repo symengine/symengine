@@ -15,32 +15,22 @@ license (see the LICENSE file).
 
 ## Installation
 
-Install prerequisites::
+Install prerequisites.
+For Debian based systems (Ubuntu etc.):
 
-For Debian based systems (Ubuntu etc.)
+    apt-get install cmake libgmp-dev
 
-    apt-get install cmake libgmp-dev binutils-dev
+For RPM based systems (Fedora etc.):
 
-For RPM based systems (Fedora etc.)
+    yum install cmake gmp-devel
 
-    yum install cmake gmp-devel binutils-devel
-
-The `binutils-dev`(`binutils-devel`) is optional, but recommended for stacktrace support.
-
-Not installing `binutils-dev` may generate an error during the installation
-process. This is because `BFD` in `binutils-dev`(`binutils-devel`) is used for
-stacktracing. However, you can avoid this error by disabling `BFD` while
-installing.
-
-    cmake -DWITH_BFD=no .
-
-This will disable stacktrace support and is not recommended if you are
-interested in development.
-
-Install csympy in Release mode (default):
+Install csympy:
 
     cmake .
     make
+
+This will configure and build CSymPy in the default Release mode with all code
+and compiler optimizations on.
 
 Run tests:
 
@@ -65,16 +55,40 @@ Use CSymPy from Python as follows:
 You can read Python tests in `csympy/tests` to see what features are
 implemented.
 
+### Development
+
+The Travis-CI checks the code in both Release and Debug mode with all possible
+checks, so just sending a GitHub pull request is enough and you can use any
+mode you want to develop it. However, the best way to develop CSymPy is to use
+the Debug mode, turn assertions on and turn `BFD` support on (prints very nice
+stacktraces on exceptions, segfaults or assert errors):
+
+    cmake -DCMAKE_BUILD_TYPE=Debug \
+        -DWITH_CSYMPY_ASSERT=yes \
+        -DWITH_BFD=yes \
+        .
+
+To make `WITH_BFD=yes` work, you need to install `binutils-dev` first,
+otherwise you will get a `CMake` error during configuring.
+For Debian based systems (Ubuntu etc.)
+
+    apt-get install binutils-dev
+
+For RPM based systems (Fedora etc.)
+
+    yum install binutils-devel
+
 ### CMake Options
 
-Here are some of the `CMake` options that you can use to configure the build:
+Here are all the `CMake` options that you can use to configure the build, with
+their default values indicated below:
 
-    cmake -DCMAKE_INSTALL_PREFIX:PATH="$ARTIFACT" \   # Installation prefix
+    cmake -DCMAKE_INSTALL_PREFIX:PATH="/usr/local" \  # Installation prefix
         -DCMAKE_BUILD_TYPE:STRING="Release" \         # Type of build, one of: Debug or Release
-        -DWITH_BFD:BOOL=ON \                          # Install with BFD library (requires binutils-dev)
-        -DWITH_PYTHON:BOOL=ON \                       # Build Python wrappers
+        -DWITH_BFD:BOOL=OFF \                         # Install with BFD library (requires binutils-dev)
+        -DWITH_PYTHON:BOOL=OFF \                      # Build Python wrappers
         -DWITH_CSYMPY_ASSERT:BOOL=OFF \               # Test all CSYMPY_ASSERT statements in the code
-        -DWITH_CSYMPY_RCP:BOOL=OFF \                  # Use our faster special implementation of RCP
+        -DWITH_CSYMPY_RCP:BOOL=ON \                   # Use our faster special implementation of RCP
         .
 
 `CMake` prints the value of its options at the end of the run.
@@ -123,3 +137,12 @@ in this mode, the program can segfault if you access memory incorrectly. This
 segfault however would be prevented if `CMAKE_BUILD_TYPE=Debug`, so always use
 the Debug build to test your code, only when all tests pass you can enable
 Release mode.
+
+The Trilinos RCP pointers as described above are only used when
+`WITH_CSYMPY_RCP=OFF` is set in `CMake`. The default option is
+`WITH_CSYMPY_RCP=ON`, which uses our own implementation of `RCP` (see
+`src/csympy_rcp.h`). Our implementation is faster, but it only implements a
+subset of all the functinoality and it requires all our objects to have a
+`refcount_` variable. Otherwise the usage of our RCP is identical to
+`Teuchos::RCP`, and Travis-CI tests both implementations of RCP to make sure
+the code works with both.
