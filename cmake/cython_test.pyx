@@ -3,6 +3,7 @@ from numpy cimport ndarray
 
 # Test that libcpp module is present:
 from libcpp.vector cimport vector
+from libcpp.string cimport string
 
 # Test the math library:
 from libc.math cimport sin, cos, atan2
