@@ -41,7 +41,7 @@ set(WITH_PYTHON no
     CACHE BOOL "Build with Python wrappers")
 
 # BFD
-set(WITH_BFD yes
+set(WITH_BFD no
     CACHE BOOL "Build with BFD (binutils-dev) support")
 
 if (WITH_BFD)
