@@ -21,7 +21,10 @@ env:
   - BUILD_TYPE="Debug" WITH_BFD="yes" TEST_IN_TREE="yes" WITH_PYTHON="yes" WITH_CSYMPY_ASSERT="yes" WITH_CSYMPY_RCP="yes"
 before_install:
   - sudo apt-get update
-  - sudo apt-get install libgmp-dev binutils-dev
+  - sudo apt-get install libgmp-dev
+  - if [ "${WITH_BFD}" == "yes" ]; then
+        sudo apt-get install binutils-dev;
+    fi
 install:
   - if [ "${WITH_PYTHON}" == "yes" ]; then
         pip install cython sympy --use-mirrors;
