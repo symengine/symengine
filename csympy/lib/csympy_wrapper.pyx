@@ -252,6 +252,8 @@ cdef class FunctionSymbol(Function):
         cdef RCP[csympy.FunctionSymbol] X = \
             csympy.rcp_static_cast_FunctionSymbol(self.thisptr)
         name = deref(X).get_name().decode("utf-8")
+        # In Python 2.7, function names cannot be unicode:
+        name = str(name)
         arg = c2py(deref(X).get_arg())._sympy_()
         import sympy
         return sympy.Function(name)(arg)
