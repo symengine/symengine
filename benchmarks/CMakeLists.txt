@@ -11,5 +11,8 @@ target_link_libraries(expand1 csympy teuchos ${LIBS})
 add_executable(expand2 expand2.cpp)
 target_link_libraries(expand2 csympy teuchos ${LIBS})
 
+add_executable(expand2b expand2b.cpp)
+target_link_libraries(expand2b csympy teuchos ${LIBS})
+
 add_executable(expand3 expand3.cpp)
 target_link_libraries(expand3 csympy teuchos ${LIBS})
