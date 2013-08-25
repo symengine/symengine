@@ -104,6 +104,10 @@ public:
     virtual RCP<Basic> diff(const RCP<Symbol> &x) const {
         throw std::runtime_error("Not implemented.");
     }
+    // Returns the derivative of self
+    virtual RCP<Basic> subs(const map_basic_basic &subs_dict) const {
+        throw std::runtime_error("Not implemented.");
+    }
 };
 
 inline bool eq(const RCP<Basic> &a,
