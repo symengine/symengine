@@ -76,6 +76,35 @@ void test_add()
     assert(eq(r1->subs(d), r2));
 }
 
+void test_mul()
+{
+    RCP<Basic> x = rcp(new Symbol("x"));
+    RCP<Basic> y = rcp(new Symbol("y"));
+    RCP<Basic> z = rcp(new Symbol("z"));
+    RCP<Basic> w = rcp(new Symbol("w"));
+    RCP<Basic> i2 = rcp(new Integer(2));
+    RCP<Basic> i3 = rcp(new Integer(3));
+    RCP<Basic> i4 = rcp(new Integer(4));
+
+    RCP<Basic> r1 = mul(x, y);
+    RCP<Basic> r2 = pow(y, i2);
+    map_basic_basic d;
+    d[x] = y;
+    assert(eq(r1->subs(d), r2));
+
+    d[x] = z;
+    d[y] = w;
+    r1 = mul(x, y);
+    r2 = mul(z, w);
+    assert(eq(r1->subs(d), r2));
+
+    d.clear();
+    d[mul(x, y)] = z;
+    r1 = mul(x, y);
+    r2 = z;
+    assert(eq(r1->subs(d), r2));
+}
+
 
 int main(int argc, char* argv[])
 {
@@ -83,6 +112,7 @@ int main(int argc, char* argv[])
 
     test_symbol();
     test_add();
+    test_mul();
 
     return 0;
 }
