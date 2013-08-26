@@ -441,7 +441,7 @@ RCP<Basic> Mul::subs(const map_basic_basic &subs_dict) const
         // TODO: speed this up:
         r = mul(r, term);
     }
-    return r;
+    return mul(coef_, r);
 }
 
 } // CSymPy

@@ -115,6 +115,12 @@ void test_mul()
     r1 = mul(x, y);
     r2 = z;
     assert(eq(r1->subs(d), r2));
+
+    d.clear();
+    d[pow(x, y)] = z;
+    r1 = mul(i2, pow(x, y));
+    r2 = mul(i2, z);
+    assert(eq(r1->subs(d), r2));
 }
 
 void test_pow()
