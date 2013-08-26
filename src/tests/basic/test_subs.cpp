@@ -74,6 +74,14 @@ void test_add()
     r1 = add(x, y);
     r2 = z;
     assert(eq(r1->subs(d), r2));
+
+    d.clear();
+    d[pow(x, y)] = z;
+    d[pow(x, i2)] = y;
+    d[pow(i2, y)] = x;
+    r1 = add(add(pow(x, y), pow(x, i2)), pow(i2, y));
+    r2 = add(add(x, y), z);
+    assert(eq(r1->subs(d), r2));
 }
 
 void test_mul()
