@@ -34,6 +34,7 @@ void test_subs_symbol()
     RCP<Basic> x = rcp(new Symbol("x"));
     RCP<Basic> y = rcp(new Symbol("y"));
     RCP<Basic> z = rcp(new Symbol("z"));
+    RCP<Basic> w = rcp(new Symbol("w"));
     RCP<Basic> i2 = rcp(new Integer(2));
     RCP<Basic> i3 = rcp(new Integer(3));
     RCP<Basic> i4 = rcp(new Integer(4));
@@ -45,11 +46,15 @@ void test_subs_symbol()
     assert(eq(r1->subs(d), r2));
     assert(neq(r1->subs(d), r1));
 
-    /*
     r1 = add(x, y);
     r2 = mul(i2, y);
     assert(eq(r1->subs(d), r2));
-    */
+
+    d[x] = z;
+    d[y] = w;
+    r1 = add(x, y);
+    r2 = add(z, w);
+    assert(eq(r1->subs(d), r2));
 }
 
 

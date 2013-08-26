@@ -30,6 +30,7 @@ public:
             const umap_basic_int& dict);
 
     virtual RCP<Basic> diff(const RCP<Symbol> &x) const;
+    virtual RCP<Basic> subs(const map_basic_basic &subs_dict) const;
 };
 
 RCP<Basic> add(const RCP<Basic> &a,
