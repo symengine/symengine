@@ -90,6 +90,9 @@ cdef class Basic(object):
     def __repr__(self):
         return self.__str__()
 
+    def __hash__(self):
+        return deref(self.thisptr).hash()
+
     def __add__(a, b):
         cdef Basic A = sympify(a, False)
         cdef Basic B = sympify(b, False)

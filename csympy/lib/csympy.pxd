@@ -29,6 +29,7 @@ cdef extern from "basic.h" namespace "CSymPy":
     ctypedef map[RCP[Basic], RCP[Basic]] map_basic_basic
     cdef cppclass Basic:
         string __str__() nogil except +
+        unsigned int hash() nogil except +
         RCP[Basic] diff(const RCP[Symbol] &x) nogil except +
         RCP[Basic] subs(const map_basic_basic &x) nogil except +
 
