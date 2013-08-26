@@ -298,6 +298,7 @@ RCP<Basic> Add::diff(const RCP<Symbol> &x) const
 {
     RCP<Basic> r=zero;
     for (auto &p: dict_) {
+        // TODO: speed this up:
         RCP<Basic> term = mul(p.first, p.second)->diff(x);
         // TODO: speed this up:
         r = add(r, term);
@@ -313,6 +314,22 @@ void Add::as_two_terms(const Ptr<RCP<Basic>> &a,
     umap_basic_int d = dict_;
     d.erase(p->first);
     *b = Add::from_dict(coef_, d);
+}
+
+RCP<Basic> Add::subs(const map_basic_basic &subs_dict) const
+{
+    RCP<Add> self = rcp_const_cast<Add>(rcp(this));
+    auto it = subs_dict.find(self);
+    if (it != subs_dict.end())
+        return it->second;
+    RCP<Basic> r=zero;
+    for (auto &p: dict_) {
+        // TODO: speed this up:
+        RCP<Basic> term = mul(p.first, p.second)->subs(subs_dict);
+        // TODO: speed this up:
+        r = add(r, term);
+    }
+    return add(coef_, r);
 }
 
 } // CSymPy

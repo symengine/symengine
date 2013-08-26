@@ -125,6 +125,24 @@ RCP<Basic> Cos::diff(const RCP<Symbol> &x) const
     return mul(mul(minus_one, sin(arg_)), arg_->diff(x));
 }
 
+RCP<Basic> Sin::subs(const map_basic_basic &subs_dict) const
+{
+    RCP<Sin> self = rcp_const_cast<Sin>(rcp(this));
+    auto it = subs_dict.find(self);
+    if (it != subs_dict.end())
+        return it->second;
+    return sin(arg_->subs(subs_dict));
+}
+
+RCP<Basic> Cos::subs(const map_basic_basic &subs_dict) const
+{
+    RCP<Cos> self = rcp_const_cast<Cos>(rcp(this));
+    auto it = subs_dict.find(self);
+    if (it != subs_dict.end())
+        return it->second;
+    return cos(arg_->subs(subs_dict));
+}
+
 /* ---------------------------- */
 
 FunctionSymbol::FunctionSymbol(std::string name, const RCP<Basic> &arg)

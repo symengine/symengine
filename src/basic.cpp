@@ -21,6 +21,14 @@ int Basic::__cmp__(const Basic &o) const
     }
 }
 
+std::string Basic::__str__() const
+{
+    std::ostringstream s;
+    s << "<" << typeName<Basic>(*this)
+        << " instance at " << (const void*)this << ">";
+    return s.str();
+}
+
 RCP<Basic> expand(const RCP<Basic> &self)
 {
     if (is_a<Symbol>(*self)) return self;
@@ -29,6 +37,16 @@ RCP<Basic> expand(const RCP<Basic> &self)
     if (is_a<Mul>(*self)) return mul_expand(rcp_static_cast<Mul>(self));
     if (is_a<Pow>(*self)) return pow_expand(rcp_static_cast<Pow>(self));
     return self;
+}
+
+RCP<Basic> Basic::subs(const map_basic_basic &subs_dict) const
+{
+    RCP<Basic> self = rcp_const_cast<Basic>(rcp(this));
+    auto it = subs_dict.find(self);
+    if (it == subs_dict.end())
+        return self;
+    else
+        return it->second;
 }
 
 } // CSymPy

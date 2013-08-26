@@ -1,40 +1,15 @@
 #ifndef CSYMPY_DICT_H
 #define CSYMPY_DICT_H
 
-#include "basic.h"
-#include "integer.h"
+#include <gmpxx.h>
 
 namespace CSymPy {
 
-// This implements a "dictionary" of CSymPy objects:
-
-// Our hash:
-typedef struct
-{
-    long operator() (const RCP<Basic> &k) const {
-        return k->hash();
-    }
-} RCPBasicHash;
-
-// Our comparison (==):
-typedef struct
-{
-    bool operator() (const RCP<Basic> &x, const RCP<Basic> &y) const {
-        return x->__eq__(*y);
-    }
-} RCPBasicKeyEq;
-
-// Our less operator (<):
-typedef struct
-{
-    // true if x < y, false otherwise
-    bool operator() (const RCP<Basic> &x, const RCP<Basic> &y) const {
-        std::size_t xh=x->hash(), yh=y->hash();
-        if (xh != yh) return xh < yh;
-        if (x->__eq__(*y)) return false;
-        return x->__cmp__(*y) == -1;
-    }
-} RCPBasicKeyLess;
+class Basic;
+class Number;
+class RCPBasicHash;
+class RCPBasicKeyEq;
+class RCPBasicKeyLess;
 
 
 typedef std::unordered_map<RCP<Basic>, RCP<Number>,
