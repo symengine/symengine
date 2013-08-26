@@ -149,7 +149,7 @@ cdef class Basic(object):
         cdef RCP[csympy.Symbol] X = csympy.rcp_static_cast_Symbol(x.thisptr)
         return c2py(deref(self.thisptr).diff(X))
 
-    def subs(Basic self not None, subs_dict):
+    def subs_dict(Basic self not None, subs_dict):
         cdef csympy.map_basic_basic d
         cdef Basic K, V
         for k in subs_dict:
@@ -157,6 +157,18 @@ cdef class Basic(object):
             V = sympify(subs_dict[k])
             d[K.thisptr] = V.thisptr
         return c2py(deref(self.thisptr).subs(d))
+
+    def subs_oldnew(Basic self not None, old, new):
+        return self.subs_dict({old: new})
+
+    def subs(Basic self not None, *args):
+        if len(args) == 1:
+            return self.subs_dict(args[0])
+        elif len(args) == 2:
+            return self.subs_oldnew(args[0], args[1])
+        else:
+            raise TypeError("subs() takes one or two arguments (%d given)" % \
+                    len(args))
 
 
 cdef class Symbol(Basic):
