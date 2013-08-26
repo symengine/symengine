@@ -329,7 +329,7 @@ RCP<Basic> Add::subs(const map_basic_basic &subs_dict) const
         // TODO: speed this up:
         r = add(r, term);
     }
-    return r;
+    return add(coef_, r);
 }
 
 } // CSymPy

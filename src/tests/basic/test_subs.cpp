@@ -82,6 +82,10 @@ void test_add()
     r1 = add(add(pow(x, y), pow(x, i2)), pow(i2, y));
     r2 = add(add(x, y), z);
     assert(eq(r1->subs(d), r2));
+
+    r1 = add(add(add(add(pow(x, y), pow(x, i2)), pow(i2, y)), x), i3);
+    r2 = add(add(add(mul(i2, x), y), z), i3);
+    assert(eq(r1->subs(d), r2));
 }
 
 void test_mul()
