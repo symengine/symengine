@@ -153,8 +153,8 @@ cdef class Basic(object):
         cdef csympy.map_basic_basic d
         cdef Basic K, V
         for k in subs_dict:
-            K = k
-            V = subs_dict[k]
+            K = sympify(k)
+            V = sympify(subs_dict[k])
             d[K.thisptr] = V.thisptr
         return c2py(deref(self.thisptr).subs(d))
 

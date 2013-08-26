@@ -14,6 +14,9 @@ def test_sin():
     assert e.subs({x: y}) == sin(y)
     assert e.subs({x: y}) != sin(x)
 
+    e = cos(x)
+    assert e.subs({x: 0}) == 1
+
 def test_f():
     x = Symbol("x")
     y = Symbol("y")
