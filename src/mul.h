@@ -39,6 +39,7 @@ public:
             const map_basic_basic& dict);
 
     virtual RCP<Basic> diff(const RCP<Symbol> &x) const;
+    virtual RCP<Basic> subs(const map_basic_basic &subs_dict) const;
 };
 
 RCP<Basic> mul(const RCP<Basic> &a,

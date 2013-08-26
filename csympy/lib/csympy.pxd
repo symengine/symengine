@@ -1,5 +1,6 @@
 from libcpp cimport bool
 from libcpp.string cimport string
+from libcpp.map cimport map
 
 cdef extern from "csympy_rcp.h" namespace "CSymPy":
     cdef enum ENull:
@@ -25,9 +26,12 @@ cdef extern from "csympy_rcp.h" namespace "CSymPy":
 
 
 cdef extern from "basic.h" namespace "CSymPy":
+    ctypedef map[RCP[Basic], RCP[Basic]] map_basic_basic
     cdef cppclass Basic:
         string __str__() nogil except +
+        unsigned int hash() nogil except +
         RCP[Basic] diff(const RCP[Symbol] &x) nogil except +
+        RCP[Basic] subs(const map_basic_basic &x) nogil except +
 
     bool eq(RCP[Basic] &a, RCP[Basic] &b) nogil except +
     bool neq(RCP[Basic] &a, RCP[Basic] &b) nogil except +

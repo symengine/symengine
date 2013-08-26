@@ -1,7 +1,7 @@
 #ifndef CSYMPY_MONOMIALS_H
 #define CSYMPY_MONOMIALS_H
 
-#include "dict.h"
+#include "basic.h"
 
 namespace CSymPy {
 
