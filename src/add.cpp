@@ -318,6 +318,10 @@ void Add::as_two_terms(const Ptr<RCP<Basic>> &a,
 
 RCP<Basic> Add::subs(const map_basic_basic &subs_dict) const
 {
+    RCP<Add> self = rcp_const_cast<Add>(rcp(this));
+    auto it = subs_dict.find(self);
+    if (it != subs_dict.end())
+        return it->second;
     RCP<Basic> r=zero;
     for (auto &p: dict_) {
         // TODO: speed this up:

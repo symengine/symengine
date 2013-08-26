@@ -55,6 +55,12 @@ void test_subs_symbol()
     r1 = add(x, y);
     r2 = add(z, w);
     assert(eq(r1->subs(d), r2));
+
+    d.clear();
+    d[add(x, y)] = z;
+    r1 = add(x, y);
+    r2 = z;
+    assert(eq(r1->subs(d), r2));
 }
 
 
