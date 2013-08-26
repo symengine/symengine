@@ -23,6 +23,7 @@ public:
             const RCP<Basic> &exp);
 
     virtual RCP<Basic> diff(const RCP<Symbol> &x) const;
+    virtual RCP<Basic> subs(const map_basic_basic &subs_dict) const;
 };
 
 RCP<Basic> pow(const RCP<Basic> &a,

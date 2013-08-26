@@ -277,4 +277,13 @@ RCP<Basic> Pow::diff(const RCP<Symbol> &x) const
     throw std::runtime_error("Not implemented.");
 }
 
+RCP<Basic> Pow::subs(const map_basic_basic &subs_dict) const
+{
+    RCP<Pow> self = rcp_const_cast<Pow>(rcp(this));
+    auto it = subs_dict.find(self);
+    if (it != subs_dict.end())
+        return it->second;
+    return pow(base_->subs(subs_dict), exp_->subs(subs_dict));
+}
+
 } // CSymPy
