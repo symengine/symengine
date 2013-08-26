@@ -102,6 +102,14 @@ inline RCP<T2> rcp_dynamic_cast(const RCP<T1>& p1)
     throw std::runtime_error("rcp_dynamic_cast: cannot convert.");
 }
 
+template<class T2, class T1>
+inline RCP<T2> rcp_const_cast(const RCP<T1>& p1)
+{
+  // Make the compiler check if the conversion is legal
+  T2 *check = const_cast<T2*>(p1.get());
+  return RCP<T2>(check);
+}
+
 
 template<class T>
 inline bool operator==(const RCP<T> &p, ENull)
