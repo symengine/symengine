@@ -146,6 +146,15 @@ cdef class Basic(object):
         cdef RCP[csympy.Symbol] X = csympy.rcp_static_cast_Symbol(x.thisptr)
         return c2py(deref(self.thisptr).diff(X))
 
+    def subs(Basic self not None, subs_dict):
+        cdef csympy.map_basic_basic d
+        cdef Basic K, V
+        for k in subs_dict:
+            K = k
+            V = subs_dict[k]
+            d[K.thisptr] = V.thisptr
+        return c2py(deref(self.thisptr).subs(d))
+
 
 cdef class Symbol(Basic):
 
