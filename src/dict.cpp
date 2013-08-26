@@ -1,4 +1,5 @@
-#include "dict.h"
+#include "basic.h"
+#include "integer.h"
 
 std::ostream& operator<<(std::ostream& out, const CSymPy::umap_basic_int& d)
 {

@@ -21,6 +21,14 @@ int Basic::__cmp__(const Basic &o) const
     }
 }
 
+std::string Basic::__str__() const
+{
+    std::ostringstream s;
+    s << "<" << typeName<Basic>(*this)
+        << " instance at " << (const void*)this << ">";
+    return s.str();
+}
+
 RCP<Basic> expand(const RCP<Basic> &self)
 {
     if (is_a<Symbol>(*self)) return self;

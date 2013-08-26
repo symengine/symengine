@@ -15,6 +15,7 @@
 #include "csympy_config.h"
 #include "csympy_assert.h"
 #include "csympy_rcp.h"
+#include "dict.h"
 
 namespace CSymPy {
 
@@ -93,12 +94,7 @@ public:
 
     // Returns string representation of self. Subclasses can override this to
     // provide custom printing.
-    virtual std::string __str__() const {
-        std::ostringstream s;
-        s << "<" << typeName<Basic>(*this)
-            << " instance at " << (const void*)this << ">";
-        return s.str();
-    }
+    virtual std::string __str__() const;
 
     // Returns the derivative of self
     virtual RCP<Basic> diff(const RCP<Symbol> &x) const {
@@ -109,6 +105,32 @@ public:
         throw std::runtime_error("Not implemented.");
     }
 };
+
+// Our hash:
+struct RCPBasicHash {
+    long operator() (const RCP<Basic> &k) const {
+        return k->hash();
+    }
+};
+
+// Our comparison (==):
+struct RCPBasicKeyEq {
+    bool operator() (const RCP<Basic> &x, const RCP<Basic> &y) const {
+        return x->__eq__(*y);
+    }
+};
+
+// Our less operator (<):
+struct RCPBasicKeyLess {
+    // true if x < y, false otherwise
+    bool operator() (const RCP<Basic> &x, const RCP<Basic> &y) const {
+        std::size_t xh=x->hash(), yh=y->hash();
+        if (xh != yh) return xh < yh;
+        if (x->__eq__(*y)) return false;
+        return x->__cmp__(*y) == -1;
+    }
+};
+
 
 inline bool eq(const RCP<Basic> &a,
         const RCP<Basic> &b) {
