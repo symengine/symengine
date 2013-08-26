@@ -1,6 +1,9 @@
 #ifndef CSYMPY_RCP_H
 #define CSYMPY_RCP_H
 
+#include <cstddef>
+#include <stdexcept>
+
 #include "csympy_config.h"
 #include "csympy_assert.h"
 
@@ -19,6 +22,35 @@ namespace CSymPy {
 
 
 #if defined(WITH_CSYMPY_RCP)
+
+
+/* Ptr */
+
+// Ptr is always pointing to a valid object (can never be NULL).
+
+template<class T>
+class Ptr {
+public:
+    inline explicit Ptr( T *ptr ) : ptr_(ptr) {
+        CSYMPY_ASSERT(ptr_ != NULL)
+    }
+    inline Ptr(const Ptr<T>& ptr) : ptr_(ptr.ptr_) {}
+    template<class T2> inline Ptr(const Ptr<T2>& ptr) : ptr_(ptr.get()) {}
+    Ptr<T>& operator=(const Ptr<T>& ptr) { ptr_ = ptr.get(); return *this; }
+    inline T* operator->() const { return ptr_; }
+    inline T& operator*() const { return *ptr_; }
+    inline T* get() const { return ptr_; }
+    inline T* getRawPtr() const { return get(); }
+    inline const Ptr<T> ptr() const { return *this; }
+private:
+    T *ptr_;
+};
+
+template<typename T> inline
+Ptr<T> outArg( T& arg )
+{
+    return Ptr<T>(&arg);
+}
 
 /* RCP */
 
@@ -52,6 +84,7 @@ public:
         return *ptr_;
     }
     T* get() const { return ptr_; }
+    Ptr<T> ptr() const { return Ptr<T>(get()); }
     bool is_null() const { return ptr_ == NULL; }
     template<class T2> bool operator==(const RCP<T2> &p2) {
         return ptr_ == p2.ptr_;
@@ -125,34 +158,6 @@ std::string typeName(const T &t)
 }
 
 void print_stack_on_segfault();
-
-/* Ptr */
-
-// Ptr is always pointing to a valid object (can never be NULL).
-
-template<class T>
-class Ptr {
-public:
-    inline explicit Ptr( T *ptr ) : ptr_(ptr) {
-        CSYMPY_ASSERT(ptr_ != NULL)
-    }
-    inline Ptr(const Ptr<T>& ptr) : ptr_(ptr.ptr_) {}
-    template<class T2> inline Ptr(const Ptr<T2>& ptr) : ptr_(ptr.get()) {}
-    Ptr<T>& operator=(const Ptr<T>& ptr) { ptr_ = ptr.get(); return *this; }
-    inline T* operator->() const { return ptr_; }
-    inline T& operator*() const { return *ptr_; }
-    inline T* get() const { return ptr_; }
-    inline T* getRawPtr() const { return get(); }
-    inline const Ptr<T> ptr() const { return *this; }
-private:
-    T *ptr_;
-};
-
-template<typename T> inline
-Ptr<T> outArg( T& arg )
-{
-    return Ptr<T>(&arg);
-}
 
 
 #else
