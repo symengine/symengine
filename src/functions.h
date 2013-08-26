@@ -27,6 +27,7 @@ public:
     bool is_canonical(const RCP<Basic> &arg);
 
     virtual RCP<Basic> diff(const RCP<Symbol> &x) const;
+    virtual RCP<Basic> subs(const map_basic_basic &subs_dict) const;
 };
 
 // This uses canonicalize:
@@ -50,6 +51,7 @@ public:
     bool is_canonical(const RCP<Basic> &arg);
 
     virtual RCP<Basic> diff(const RCP<Symbol> &x) const;
+    virtual RCP<Basic> subs(const map_basic_basic &subs_dict) const;
 };
 
 // This uses canonicalize:
