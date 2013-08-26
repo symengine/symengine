@@ -52,10 +52,16 @@ class Symbol;
 class Basic {
 private:
     mutable std::size_t hash_; // This holds the hash value
+#if defined(WITH_CSYMPY_RCP)
 public:
     mutable unsigned int refcount_; // reference counter
-    Basic() : hash_{0}, refcount_(0) {}
-
+#endif
+public:
+    Basic() : hash_{0}
+#if defined(WITH_CSYMPY_RCP)
+        , refcount_(0)
+#endif
+        {}
     // Destructor must be explicitly defined as virtual here to avoid problems
     // with undefined behavior while deallocating derived classes.
     virtual ~Basic() {}
