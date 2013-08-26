@@ -42,4 +42,11 @@ RCP<Basic> Symbol::diff(const RCP<Symbol> &x) const
         return zero;
 }
 
+RCP<Basic> Symbol::subs(const map_basic_basic &subs_dict) const
+{
+    RCP<Symbol> self = rcp_const_cast<Symbol>(rcp(this));
+//    auto it = subs_dict.find(
+    return self;
+}
+
 } // CSymPy
