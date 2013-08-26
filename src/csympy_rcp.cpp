@@ -6,14 +6,9 @@
 
 namespace CSymPy {
 
-#if defined(WITH_CSYMPY_RCP)
-
-
 void print_stack_on_segfault()
 {
     Teuchos::print_stack_on_segfault();
 }
-
-#endif
 
 } // CSymPy
