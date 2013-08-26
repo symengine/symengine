@@ -102,9 +102,7 @@ public:
     }
 
     // Substitutes 'subs_dict' into 'self'.
-    virtual RCP<Basic> subs(const map_basic_basic &subs_dict) const {
-        throw std::runtime_error("Not implemented.");
-    }
+    virtual RCP<Basic> subs(const map_basic_basic &subs_dict) const;
 };
 
 // Our hash:

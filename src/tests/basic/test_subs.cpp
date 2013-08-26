@@ -145,6 +145,10 @@ void test_pow()
     r2 = pow(z, w);
     assert(eq(r1->subs(d), r2));
 
+    r1 = pow(x, i2);
+    r2 = pow(z, i2);
+    assert(eq(r1->subs(d), r2));
+
     d.clear();
     d[pow(x, y)] = z;
     r1 = pow(x, y);

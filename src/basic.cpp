@@ -39,4 +39,14 @@ RCP<Basic> expand(const RCP<Basic> &self)
     return self;
 }
 
+RCP<Basic> Basic::subs(const map_basic_basic &subs_dict) const
+{
+    RCP<Basic> self = rcp_const_cast<Basic>(rcp(this));
+    auto it = subs_dict.find(self);
+    if (it == subs_dict.end())
+        return self;
+    else
+        return it->second;
+}
+
 } // CSymPy
