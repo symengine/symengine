@@ -54,7 +54,7 @@ private:
     mutable std::size_t hash_; // This holds the hash value
 #if defined(WITH_CSYMPY_RCP)
 public:
-    unsigned int refcount_; // reference counter
+    mutable unsigned int refcount_; // reference counter
 #endif
 public:
     Basic() : hash_{0}
