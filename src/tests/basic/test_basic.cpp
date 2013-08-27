@@ -259,6 +259,8 @@ void test_diff()
     RCP<Symbol> y  = symbol("y");
     RCP<Basic> i2  = integer(2);
     RCP<Basic> i3  = integer(3);
+    RCP<Basic> i5  = integer(5);
+    RCP<Basic> i10  = integer(10);
     r1 = integer(5);
     r2 = r1->diff(x);
     assert(eq(r2, zero));
@@ -274,6 +276,10 @@ void test_diff()
     r1 = pow(add(x, y), i2)->diff(x);
     r2 = mul(i2, add(x, y));
     assert(eq(r1, r2));
+
+    r1 = add(add(i2, mul(i3, x)), mul(i5, pow(x, i2)));
+    assert(eq(r1->diff(x), add(i3, mul(i10, x))));
+    assert(eq(r1->diff(x)->diff(x), i10));
 }
 
 void test_compare()
