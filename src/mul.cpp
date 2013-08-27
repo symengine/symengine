@@ -254,9 +254,9 @@ RCP<Basic> mul(const RCP<Basic> &a, const RCP<Basic> &b)
 
         CSymPy::map_basic_basic d2;
         for (auto &p: d) {
-            if (is_a_Number(*(p.first)) && is_a_Number(*(p.second))) {
+            if (is_a_Number(*(p.first)) && is_a<Integer>(*(p.second))) {
                 RCP<Number> f = rcp_static_cast<Number>(p.first);
-                RCP<Number> s = rcp_static_cast<Number>(p.second);
+                RCP<Integer> s = rcp_static_cast<Integer>(p.second);
                 RCP<Number> r = pownum(f, s);
                 imulnum(outArg(coef), r);
             } else {
