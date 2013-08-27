@@ -322,57 +322,30 @@ RCP<Basic> mul_expand_two(const RCP<Basic> &a, const RCP<Basic> &b)
     } else if (is_a<Add>(*a)) {
         return mul_expand_two(b, a);
     } else if (is_a<Add>(*b)) {
+        RCP<Number> a_coef;
+        RCP<Basic> a_term;
+        Add::as_coef_term(a, outArg(a_coef), outArg(a_term));
+
+        RCP<Number> coef = zero;
         umap_basic_int d;
-        RCP<Number> coef_overall=rcp_static_cast<Add>(b)->coef_;
-        RCP<Number> coef;
-        RCP<Basic> tmp;
-
-        if (!coef_overall->is_zero()) {
-            tmp = mul(a, coef_overall);
-            if (is_a<Mul>(*tmp)) {
-                rcp_static_cast<Mul>(tmp)->as_coef_term(outArg(coef),
-                        outArg(tmp));
+        d.reserve((rcp_static_cast<Add>(b))->dict_.size());
+        for (auto &q: (rcp_static_cast<Add>(b))->dict_) {
+            RCP<Basic> term = mul(a_term, q.first);
+            if (is_a_Number(*term)) {
+                iaddnum(outArg(coef), rcp_static_cast<Number>(term));
             } else {
-                coef = one;
+                Add::dict_add_term(d, mulnum(a_coef, q.second), term);
             }
-            Add::dict_add_term(d, coef, tmp);
         }
-
-        for (auto &p: (rcp_static_cast<Add>(b))->dict_) {
-            tmp = mul(a, p.first);
-            if (is_a<Mul>(*tmp)) {
-                rcp_static_cast<Mul>(tmp)->as_coef_term(outArg(coef),
-                        outArg(tmp));
-            } else {
-                coef = one;
-            }
-            Add::dict_add_term(d,
-                    mulnum(p.second, coef), tmp);
-        }
-
-        auto it = d.find(one);
-        if (it == d.end()) {
-            coef_overall = zero;
+        if (eq(a_term, one)) {
+            iaddnum(outArg(coef),
+                mulnum(rcp_static_cast<Add>(b)->coef_, a_coef));
         } else {
-            coef_overall = it->second;
-            d.erase(it);
+            Add::dict_add_term(d,
+                    mulnum(rcp_static_cast<Add>(b)->coef_, a_coef),
+                    a_term);
         }
-
-        coef_overall = zero;
-        CSymPy::umap_basic_int d2;
-        // TODO: think about speeding this kind of loop up:
-        for (auto &p: d) {
-            if (is_a_Number(*(p.first)) && is_a_Number(*(p.second))) {
-                RCP<Number> f = rcp_static_cast<Number>(p.first);
-                RCP<Number> s = rcp_static_cast<Number>(p.second);
-                RCP<Number> r = mulnum(f, s);
-                iaddnum(outArg(coef_overall), r);
-            } else {
-                insert(d2, p.first, p.second);
-            }
-        }
-
-        return Add::from_dict(coef_overall, d2);
+        return Add::from_dict(coef, d);
     }
     return mul(a, b);
 }
