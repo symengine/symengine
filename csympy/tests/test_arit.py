@@ -100,3 +100,13 @@ def test_arit9():
     y = Symbol("y")
     assert 1/x == 1/x
     assert 1/x != 1/y
+
+def test_expand2():
+    y = Symbol("y")
+    z = Symbol("z")
+    assert ((1/(y*z) - y*z)*y*z).expand() == 1-(y*z)**2
+
+def test_expand3():
+    x = Symbol("x")
+    y = Symbol("y")
+    assert ((1/(x*y) - x*y+2)*(1+x*y)).expand() == 3 + 1/(x*y) + x*y - (x*y)**2
