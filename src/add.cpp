@@ -320,7 +320,10 @@ RCP<Basic> Add::subs(const map_basic_basic &subs_dict) const
     RCP<Basic> t;
     for (auto &p: dict_) {
         RCP<Basic> term = p.first->subs(subs_dict);
-        if (is_a<Integer>(*term) && rcp_static_cast<Integer>(term)->is_zero()) {
+        if (term == p.first) {
+            Add::dict_add_term(d, p.second, p.first);
+        } else if (is_a<Integer>(*term) &&
+                rcp_static_cast<Integer>(term)->is_zero()) {
             continue;
         } else if (is_a_Number(*term)) {
             iaddnum(outArg(coef),
