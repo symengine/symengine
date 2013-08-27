@@ -104,8 +104,18 @@ std::string Add::__str__() const
     for (auto &p: dict_) {
         if (eq(p.second, one))
             o << *(p.first);
-        else
-            o << *(p.second) << *(p.first);
+        else {
+            if (eq(p.second, minus_one))
+                o << "-";
+            else
+                o << *(p.second);
+            if (is_a<Add>(*p.first)) {
+                if (!eq(p.second, minus_one)) o << "*";
+                o << "(";
+            }
+            o << *(p.first);
+            if (is_a<Add>(*p.first)) o << ")";
+        }
         o << " + ";
     }
     std::string s = o.str();
