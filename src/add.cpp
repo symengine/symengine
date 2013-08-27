@@ -139,8 +139,9 @@ std::string Add::__str__() const
         o << " + ";
         counter++;
     }
+    o.seekp(-3, std::ios_base::cur);
     std::string s = o.str();
-    return s.substr(0, s.size()-3);
+    return s.substr(0, o.tellp());
 }
 
 // Very quickly (!) creates the appropriate instance (i.e. Add, Symbol,
