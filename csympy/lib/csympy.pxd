@@ -24,6 +24,8 @@ cdef extern from "csympy_rcp.h" namespace "CSymPy":
     RCP[FunctionSymbol] rcp_static_cast_FunctionSymbol "CSymPy::rcp_static_cast<CSymPy::FunctionSymbol>"(const RCP[Basic] &b) nogil
     Ptr[RCP[Basic]] outArg(RCP[Basic] &arg) nogil
 
+    void print_stack_on_segfault() nogil
+
 
 cdef extern from "basic.h" namespace "CSymPy":
     ctypedef map[RCP[Basic], RCP[Basic]] map_basic_basic

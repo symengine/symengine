@@ -300,3 +300,6 @@ def function_symbol(name, x):
 def sqrt(x):
     cdef Basic X = sympify(x)
     return c2py(csympy.sqrt(X.thisptr))
+
+# Turn on nice stacktraces:
+csympy.print_stack_on_segfault()
