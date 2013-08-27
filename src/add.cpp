@@ -334,14 +334,27 @@ RCP<Basic> Add::subs(const map_basic_basic &subs_dict) const
     auto it = subs_dict.find(self);
     if (it != subs_dict.end())
         return it->second;
-    RCP<Basic> r=zero;
+
+    CSymPy::umap_basic_int d;
+    RCP<Number> coef=coef_, coef2;
+    RCP<Basic> t;
     for (auto &p: dict_) {
-        // TODO: speed this up:
-        RCP<Basic> term = mul(p.first, p.second)->subs(subs_dict);
-        // TODO: speed this up:
-        r = add(r, term);
+        RCP<Basic> term = p.first->subs(subs_dict);
+        if (is_a<Integer>(*term) && rcp_static_cast<Integer>(term)->is_zero()) {
+            continue;
+        } else if (is_a_Number(*term)) {
+            iaddnum(outArg(coef),
+                    mulnum(p.second, rcp_static_cast<Number>(term)));
+        } else if (is_a<Add>(*term)) {
+            for (auto &q: (rcp_static_cast<Add>(term))->dict_)
+                Add::dict_add_term(d, q.second, q.first);
+            iaddnum(outArg(coef), rcp_static_cast<Add>(term)->coef_);
+        } else {
+            as_coef_term(mul(p.second, term), outArg(coef2), outArg(t));
+            Add::dict_add_term(d, coef2, t);
+        }
     }
-    return add(coef_, r);
+    return Add::from_dict(coef, d);
 }
 
 } // CSymPy
