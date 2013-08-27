@@ -185,24 +185,15 @@ void Add::dict_add_term(umap_basic_int &d, const RCP<Number> &coef,
 void Add::as_coef_term(const RCP<Basic> &self,
         const Ptr<RCP<Number>> &coef, const Ptr<RCP<Basic>> &term)
 {
-    if (is_a<Symbol>(*self)) {
-        *coef = one;
-        *term = self;
-    } else if (is_a<Mul>(*self)) {
-        (rcp_static_cast<Mul>(self))->
-            as_coef_term(outArg(*coef), term);
+    if (is_a<Mul>(*self)) {
+        *coef = (rcp_static_cast<Mul>(self))->coef_;
+        *term = Mul::from_dict(one, (rcp_static_cast<Mul>(self))->dict_);
     } else if (is_a_Number(*self)) {
         *coef = rcp_static_cast<Number>(self);
         *term = one;
-    } else if (is_a<Pow>(*self)) {
-        *coef = one;
-        *term = self;
-    } else if (is_a_sub<Function>(*self)) {
-        *coef = one;
-        *term = self;
     } else {
-        std::cout << *self << std::endl;
-        throw std::runtime_error("Not implemented yet.");
+        *coef = one;
+        *term = self;
     }
 }
 
@@ -269,25 +260,14 @@ RCP<Basic> add_expand(const RCP<Add> &self)
         tmp = expand(p.first);
         if (is_a<Add>(*tmp)) {
             for (auto &q: (rcp_static_cast<Add>(tmp))->dict_) {
-                tmp2 = q.first;
-                if (is_a<Mul>(*tmp2)) {
-                    rcp_static_cast<Mul>(tmp2)->as_coef_term(outArg(coef),
-                            outArg(tmp2));
-                } else {
-                    coef = one;
-                }
+                Add::as_coef_term(q.first, outArg(coef), outArg(tmp2));
                 Add::dict_add_term(d,
                         mulnum(mulnum(p.second, q.second), coef), tmp2);
             }
             iaddnum(outArg(coef_overall), mulnum(p.second,
                         rcp_static_cast<Add>(tmp)->coef_));
         } else {
-            if (is_a<Mul>(*tmp)) {
-                rcp_static_cast<Mul>(tmp)->as_coef_term(outArg(coef),
-                        outArg(tmp));
-            } else {
-                coef = one;
-            }
+            Add::as_coef_term(tmp, outArg(coef), outArg(tmp));
             Add::dict_add_term(d, mulnum(p.second, coef), tmp);
         }
     }
