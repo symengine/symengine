@@ -296,14 +296,22 @@ RCP<Basic> add_expand(const RCP<Add> &self)
 
 RCP<Basic> Add::diff(const RCP<Symbol> &x) const
 {
-    RCP<Basic> r=zero;
+    CSymPy::umap_basic_int d;
+    RCP<Number> coef=zero, coef2;
+    RCP<Basic> t;
     for (auto &p: dict_) {
-        // TODO: speed this up:
-        RCP<Basic> term = mul(p.first, p.second)->diff(x);
-        // TODO: speed this up:
-        r = add(r, term);
+        RCP<Basic> term = p.first->diff(x);
+        if (eq(term, zero)) continue;
+        if (is_a<Add>(*term)) {
+            for (auto &q: (rcp_static_cast<Add>(term))->dict_)
+                Add::dict_add_term(d, q.second, q.first);
+            iaddnum(outArg(coef), rcp_static_cast<Add>(term)->coef_);
+        } else {
+            as_coef_term(mul(p.second, term), outArg(coef2), outArg(t));
+            Add::dict_add_term(d, coef2, t);
+        }
     }
-    return r;
+    return Add::from_dict(coef, d);
 }
 
 void Add::as_two_terms(const Ptr<RCP<Basic>> &a,
