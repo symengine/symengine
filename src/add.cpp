@@ -182,8 +182,8 @@ void Add::dict_add_term(umap_basic_int &d, const RCP<Number> &coef,
 }
 
 
-void as_coef_term(const RCP<Basic> &self, const Ptr<RCP<Number>> &coef,
-        const Ptr<RCP<Basic>> &term)
+void Add::as_coef_term(const RCP<Basic> &self,
+        const Ptr<RCP<Number>> &coef, const Ptr<RCP<Basic>> &term)
 {
     if (is_a<Symbol>(*self)) {
         *coef = one;
@@ -224,7 +224,7 @@ RCP<Basic> add(const RCP<Basic> &a, const RCP<Basic> &b)
             iaddnum(outArg(coef), rcp_static_cast<Number>(b));
         } else {
             RCP<Number> coef2;
-            as_coef_term(b, outArg(coef2), outArg(t));
+            Add::as_coef_term(b, outArg(coef2), outArg(t));
             Add::dict_add_term(d, coef2, t);
         }
     } else if (CSymPy::is_a<Add>(*b)) {
@@ -234,13 +234,13 @@ RCP<Basic> add(const RCP<Basic> &a, const RCP<Basic> &b)
             iaddnum(outArg(coef), rcp_static_cast<Number>(a));
         } else {
             RCP<Number> coef2;
-            as_coef_term(a, outArg(coef2), outArg(t));
+            Add::as_coef_term(a, outArg(coef2), outArg(t));
             Add::dict_add_term(d, coef2, t);
         }
     } else {
-        as_coef_term(a, outArg(coef), outArg(t));
+        Add::as_coef_term(a, outArg(coef), outArg(t));
         Add::dict_add_term(d, coef, t);
-        as_coef_term(b, outArg(coef), outArg(t));
+        Add::as_coef_term(b, outArg(coef), outArg(t));
         Add::dict_add_term(d, coef, t);
         auto it = d.find(one);
         if (it == d.end()) {
@@ -311,7 +311,7 @@ RCP<Basic> Add::diff(const RCP<Symbol> &x) const
                 Add::dict_add_term(d, q.second, q.first);
             iaddnum(outArg(coef), rcp_static_cast<Add>(term)->coef_);
         } else {
-            as_coef_term(mul(p.second, term), outArg(coef2), outArg(t));
+            Add::as_coef_term(mul(p.second, term), outArg(coef2), outArg(t));
             Add::dict_add_term(d, coef2, t);
         }
     }
@@ -350,7 +350,7 @@ RCP<Basic> Add::subs(const map_basic_basic &subs_dict) const
                 Add::dict_add_term(d, q.second, q.first);
             iaddnum(outArg(coef), rcp_static_cast<Add>(term)->coef_);
         } else {
-            as_coef_term(mul(p.second, term), outArg(coef2), outArg(t));
+            Add::as_coef_term(mul(p.second, term), outArg(coef2), outArg(t));
             Add::dict_add_term(d, coef2, t);
         }
     }
