@@ -171,6 +171,7 @@ void Mul::dict_add_term(map_basic_basic &d, const RCP<Basic> &exp,
     }
 }
 
+// TODO: move this method completely into Add::as_coef_term().
 void Mul::as_coef_term(const Ptr<RCP<Number>> &coef,
             const Ptr<RCP<Basic>> &term)
 {
