@@ -283,7 +283,12 @@ RCP<Basic> Pow::subs(const map_basic_basic &subs_dict) const
     auto it = subs_dict.find(self);
     if (it != subs_dict.end())
         return it->second;
-    return pow(base_->subs(subs_dict), exp_->subs(subs_dict));
+    RCP<Basic> base_new = base_->subs(subs_dict);
+    RCP<Basic> exp_new = exp_->subs(subs_dict);
+    if (base_new == base_ && exp_new == exp_)
+        return self;
+    else
+        return pow(base_new, exp_new);
 }
 
 } // CSymPy
