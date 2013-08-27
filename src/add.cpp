@@ -303,6 +303,9 @@ RCP<Basic> Add::diff(const RCP<Symbol> &x) const
         RCP<Basic> term = p.first->diff(x);
         if (is_a<Integer>(*term) && rcp_static_cast<Integer>(term)->is_zero()) {
             continue;
+        } else if (is_a_Number(*term)) {
+            iaddnum(outArg(coef),
+                    mulnum(p.second, rcp_static_cast<Number>(term)));
         } else if (is_a<Add>(*term)) {
             for (auto &q: (rcp_static_cast<Add>(term))->dict_)
                 Add::dict_add_term(d, q.second, q.first);
