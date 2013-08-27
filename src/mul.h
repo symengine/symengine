@@ -20,8 +20,6 @@ public:
     virtual int compare(const Basic &o) const;
     virtual std::string __str__() const;
 
-    void as_coef_term(const Ptr<RCP<Number>> &coef,
-            const Ptr<RCP<Basic>> &term);
     // Performs canonicalization first:
     static RCP<Basic> from_dict(const RCP<Number> &coef,
             const map_basic_basic &d);

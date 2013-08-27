@@ -25,6 +25,8 @@ public:
             const RCP<Number> &coef, const RCP<Basic> &t);
     void as_two_terms(const Ptr<RCP<Basic>> &a,
             const Ptr<RCP<Basic>> &b);
+    static void as_coef_term(const RCP<Basic> &self,
+        const Ptr<RCP<Number>> &coef, const Ptr<RCP<Basic>> &term);
 
     bool is_canonical(const RCP<Number> &coef,
             const umap_basic_int& dict);

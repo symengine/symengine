@@ -119,7 +119,10 @@ cdef class Basic(object):
 
     # This is for Python 2.7 compatibility only:
     def __div__(a, b):
-        return a.__truediv__(b)
+        cdef Basic A = sympify(a, False)
+        cdef Basic B = sympify(b, False)
+        if A is None or B is None: return NotImplemented
+        return c2py(csympy.div(A.thisptr, B.thisptr))
 
     # What is the purpose of "c" here?
     def __pow__(a, b, c):
@@ -297,3 +300,6 @@ def function_symbol(name, x):
 def sqrt(x):
     cdef Basic X = sympify(x)
     return c2py(csympy.sqrt(X.thisptr))
+
+# Turn on nice stacktraces:
+csympy.print_stack_on_segfault()
