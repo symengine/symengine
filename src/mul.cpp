@@ -434,14 +434,29 @@ RCP<Basic> Mul::subs(const map_basic_basic &subs_dict) const
     auto it = subs_dict.find(self);
     if (it != subs_dict.end())
         return it->second;
-    RCP<Basic> r=one;
+
+    RCP<Number> coef = coef_;
+    map_basic_basic d;
     for (auto &p: dict_) {
-        // TODO: speed this up:
-        RCP<Basic> term = pow(p.first, p.second)->subs(subs_dict);
-        // TODO: speed this up:
-        r = mul(r, term);
+        RCP<Basic> factor = pow(p.first, p.second)->subs(subs_dict);
+        if (is_a<Integer>(*factor) &&
+                rcp_static_cast<Integer>(factor)->is_zero()) {
+            return zero;
+        } else if (is_a_Number(*factor)) {
+            imulnum(outArg(coef), rcp_static_cast<Number>(factor));
+        } else if (is_a<Mul>(*factor)) {
+            RCP<Mul> tmp = rcp_static_cast<Mul>(factor);
+            imulnum(outArg(coef), tmp->coef_);
+            for (auto &q: tmp->dict_) {
+                Mul::dict_add_term(d, q.second, q.first);
+            }
+        } else {
+            RCP<Basic> exp, t;
+            Mul::as_base_exp(factor, outArg(exp), outArg(t));
+            Mul::dict_add_term(d, exp, t);
+        }
     }
-    return mul(coef_, r);
+    return Mul::from_dict(coef, d);
 }
 
 } // CSymPy
