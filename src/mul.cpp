@@ -409,8 +409,11 @@ RCP<Basic> Mul::subs(const map_basic_basic &subs_dict) const
     RCP<Number> coef = coef_;
     map_basic_basic d;
     for (auto &p: dict_) {
-        RCP<Basic> factor = pow(p.first, p.second)->subs(subs_dict);
-        if (is_a<Integer>(*factor) &&
+        RCP<Basic> factor_old = pow(p.first, p.second);
+        RCP<Basic> factor = factor_old->subs(subs_dict);
+        if (factor == factor_old) {
+            Mul::dict_add_term(d, p.second, p.first);
+        } else if (is_a<Integer>(*factor) &&
                 rcp_static_cast<Integer>(factor)->is_zero()) {
             return zero;
         } else if (is_a_Number(*factor)) {
