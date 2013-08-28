@@ -81,7 +81,12 @@ std::string Pow::__str__() const
     } else {
         o << *base_;
     }
-    o << "^" << *exp_;
+    o << "^";
+    if (is_a<Add>(*exp_) || is_a<Pow>(*exp_)) {
+        o << "(" << *exp_ << ")";
+    } else {
+        o << *exp_;
+    }
     return o.str();
 }
 

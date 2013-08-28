@@ -101,15 +101,47 @@ std::string Add::__str__() const
     std::ostringstream o;
     if (neq(coef_, zero))
         o << *coef_ << " + ";
+    int counter = 0;
     for (auto &p: dict_) {
         if (eq(p.second, one))
             o << *(p.first);
-        else
-            o << *(p.second) << *(p.first);
+        else {
+            // TODO: extend this for Rationals as well:
+            if (is_a<Integer>(*p.second) &&
+                    rcp_static_cast<Integer>(p.second)->is_negative()
+                    && o.tellp() >= 3)
+                o.seekp(-3, std::ios_base::cur);
+            if (eq(p.second, minus_one)) {
+                if (counter >= 1)
+                    o << " - ";
+                else
+                    o << "-";
+            } else {
+                // TODO: extend this for Rationals as well:
+                if (is_a<Integer>(*p.second) &&
+                        rcp_static_cast<Integer>(p.second)->is_negative()) {
+                    if (counter >= 1)
+                        o << " - ";
+                    else
+                        o << "-";
+                    o << -(rcp_static_cast<Integer>(p.second))->i;
+                } else {
+                    o << *(p.second);
+                }
+            }
+            if (is_a<Add>(*p.first)) {
+                if (!eq(p.second, minus_one)) o << "*";
+                o << "(";
+            }
+            o << *(p.first);
+            if (is_a<Add>(*p.first)) o << ")";
+        }
         o << " + ";
+        counter++;
     }
+    o.seekp(-3, std::ios_base::cur);
     std::string s = o.str();
-    return s.substr(0, s.size()-3);
+    return s.substr(0, o.tellp());
 }
 
 // Very quickly (!) creates the appropriate instance (i.e. Add, Symbol,
