@@ -16,8 +16,10 @@ std::size_t Symbol::__hash__() const
 
 bool Symbol::__eq__(const Basic &o) const
 {
-    if (is_a<Symbol>(o))
+    if (is_a<Symbol>(o)) {
+        if (this == &o) return true;
         return name_ == static_cast<const Symbol &>(o).name_;
+    }
     return false;
 }
 
@@ -25,6 +27,7 @@ int Symbol::compare(const Basic &o) const
 {
     CSYMPY_ASSERT(is_a<Symbol>(o))
     const Symbol &s = static_cast<const Symbol &>(o);
+    if (this == &o) return 0;
     if (name_ == s.name_) return 0;
     return name_ < s.name_ ? -1 : 1;
 }
