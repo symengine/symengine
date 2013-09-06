@@ -50,3 +50,4 @@ RCP<Basic> Basic::subs(const map_basic_basic &subs_dict) const
 }
 
 } // CSymPy
+

@@ -74,18 +74,15 @@ public:
     virtual std::size_t __hash__() const = 0;
 
     // This caches the hash:
-    inline std::size_t hash() const {
-        if (hash_ == 0) hash_ = __hash__();
-        return hash_;
-    }
+    std::size_t hash() const;
 
     // true if "this" is equal to "o".
     virtual bool __eq__(const Basic &o) const = 0;
 
-    inline bool __neq__(const Basic &o) {
-        return !(this->__eq__(o));
-    }
+    bool __neq__(const Basic &o) const;
+
     int __cmp__(const Basic &o) const;
+
     // Returns -1, 0, 1 for this < o, this == o, this > o. This method is used
     // when you want to sort things like x+y+z into canonical order. This
     // function assumes that 'o' is the same type as 'this'. Use __cmp__ if you
@@ -130,34 +127,18 @@ struct RCPBasicKeyLess {
     }
 };
 
-
-inline bool eq(const RCP<Basic> &a,
-        const RCP<Basic> &b) {
-    return a->__eq__(*b);
-}
-
-inline bool neq(const RCP<Basic> &a,
-        const RCP<Basic> &b) {
-    return !(a->__eq__(*b));
-}
+// Convenience functions
+bool eq(const RCP<Basic> &a, const RCP<Basic> &b);
+bool neq(const RCP<Basic> &a, const RCP<Basic> &b);
 
 // Returns true if "b" is exactly of type T. Example:
 //   is_a<Symbol>(b)  // true if "b" is of type Symbol
-template <class T>
-inline bool is_a(const Basic &b)
-{
-    return typeid(T) == typeid(b);
-}
+template <class T> bool is_a(const Basic &b);
 
 // Returns true if "b" is of type T or any of its subclasses. Example:
 //   is_a_sub<Symbol>(b)  // true if "b" is of type Symbol or any Symbol's subclass
 template <class T>
-inline bool is_a_sub(const Basic &b)
-{
-    return dynamic_cast<const T *>(&b) != NULL;
-}
-
-
+bool is_a_sub(const Basic &b);
 
 RCP<Basic> expand(const RCP<Basic> &self);
 
@@ -166,23 +147,11 @@ RCP<Basic> expand(const RCP<Basic> &self);
 // This "<<" overloaded function simply calls p.__str__, so it allows any Basic
 // type to be printed.
 // This prints using: std::cout << *x;
-inline std::ostream& operator<<(std::ostream& out, const CSymPy::Basic& p)
-{
-    out << p.__str__();
-    return out;
-}
+std::ostream& operator<<(std::ostream& out, const CSymPy::Basic& p);
 
-namespace std
-{
-    // Specialise std::hash for Basic. We just call Basic.__hash__()
-    template<>
-    struct hash<CSymPy::Basic>
-    {
-        std::size_t operator()(const CSymPy::Basic& b) const
-        {
-            return b.hash();
-        }
-    };
+// Specialise std::hash for Basic.
+namespace std {
+    template<> struct hash<CSymPy::Basic>;
 }
 
 // Standard hash_combine() function. Example of usage:
@@ -200,12 +169,10 @@ namespace std
 //    hash_combine<Basic>(seed2, *y);
 //
 template <class T>
-inline void hash_combine(std::size_t& seed, const T& v)
-{
-    std::hash<T> hasher;
-    seed ^= hasher(v) + 0x9e3779b9 + (seed<<6) + (seed>>2);
-}
+void hash_combine(std::size_t& seed, const T& v);
 
-
+// Inline members and functions
+#include "basic-inl.h"
 
 #endif
+
