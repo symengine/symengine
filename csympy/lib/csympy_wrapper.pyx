@@ -197,12 +197,19 @@ cdef class Integer(Number):
         cdef int i_
         cdef csympy.mpz_class i__
         cdef string tmp
-        if isinstance(i, int):
+        try:
+            # Try to convert "i" to int
             i_ = i
-            self.thisptr = rcp(new csympy.Integer(i_))
-        else:
+            int_ok = True
+        except OverflowError:
+            # Too big, need to use mpz
+            int_ok = False
             tmp = str(i)
             i__ = csympy.mpz_class(tmp, 10)
+        # Note: all other exceptions are left intact
+        if int_ok:
+            self.thisptr = rcp(new csympy.Integer(i_))
+        else:
             self.thisptr = rcp(new csympy.Integer(i__))
 
     def __dealloc__(self):
