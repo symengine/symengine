@@ -204,7 +204,7 @@ cdef class Integer(Number):
         except OverflowError:
             # Too big, need to use mpz
             int_ok = False
-            tmp = str(i)
+            tmp = str(i).encode("utf-8")
             i__ = csympy.mpz_class(tmp, 10)
         # Note: all other exceptions are left intact
         if int_ok:
