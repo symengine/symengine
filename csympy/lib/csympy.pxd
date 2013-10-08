@@ -2,6 +2,15 @@ from libcpp cimport bool
 from libcpp.string cimport string
 from libcpp.map cimport map
 
+cdef extern from 'gmpxx.h':
+    cdef cppclass mpz_class:
+        mpz_class()
+        mpz_class(int i)
+        mpz_class(mpz_class)
+        mpz_class(const string &s, int base) except +
+    cdef cppclass mpq_class:
+        mpq_class()
+
 cdef extern from "csympy_rcp.h" namespace "CSymPy":
     cdef enum ENull:
         null
@@ -60,6 +69,7 @@ cdef extern from "symbol.h" namespace "CSymPy":
 cdef extern from "integer.h" namespace "CSymPy":
     cdef cppclass Integer(Basic):
         Integer(int i) nogil
+        Integer(mpz_class i) nogil
 
 cdef extern from "rational.h" namespace "CSymPy":
     cdef cppclass Rational(Basic):
