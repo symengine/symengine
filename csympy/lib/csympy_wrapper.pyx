@@ -1,6 +1,7 @@
 from cython.operator cimport dereference as deref
 cimport csympy
 from csympy cimport rcp, RCP
+from libcpp.string cimport string
 
 class SympifyError(Exception):
     pass
@@ -193,7 +194,16 @@ cdef class Number(Basic):
 cdef class Integer(Number):
 
     def __cinit__(self, i):
-        self.thisptr = rcp(new csympy.Integer(i))
+        cdef int i_
+        cdef csympy.mpz_class i__
+        cdef string tmp
+        if isinstance(i, int):
+            i_ = i
+            self.thisptr = rcp(new csympy.Integer(i_))
+        else:
+            tmp = str(i)
+            i__ = csympy.mpz_class(tmp, 10)
+            self.thisptr = rcp(new csympy.Integer(i__))
 
     def __dealloc__(self):
         self.thisptr.reset()
