@@ -232,12 +232,7 @@ RCP<Basic> pow_expand(const RCP<Pow> &self)
                                 rcp_static_cast<Number>(
                                 rcp_static_cast<Integer>(base)->powint(*exp)));
                         } else if (is_a<Symbol>(*base)) {
-                            // If this ever fails:
-                            CSYMPY_ASSERT(d.find(base) == d.end())
-                            // Then we need to use
-                            //Mul::dict_add_term(d, exp, base);
-                            // Instead of:
-                            insert(d, base, exp);
+                            Mul::dict_add_term(d, exp, base);
                         } else {
                             RCP<Basic> exp2, t, tmp;
                             tmp = pow(base, exp);
