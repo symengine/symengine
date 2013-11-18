@@ -356,6 +356,7 @@ void test_expand2()
     RCP<Basic> i5 = rcp(new Integer(5));
     RCP<Basic> i6 = rcp(new Integer(6));
     RCP<Basic> i9 = rcp(new Integer(9));
+    RCP<Basic> i10 = rcp(new Integer(10));
     RCP<Basic> i12 = rcp(new Integer(12));
     RCP<Basic> i25 = rcp(new Integer(25));
     RCP<Basic> i30 = rcp(new Integer(30));
@@ -416,6 +417,13 @@ void test_expand2()
     r1 = expand(r1);
     r2 = add(add(add(add(pow(x, i6), mul(i2, pow(x, i5))),
                 mul(i3, pow(x, i4))), mul(i2, pow(x, i3))), pow(x, i2));
+    std::cout << *r1 << std::endl;
+    std::cout << *r2 << std::endl;
+    assert(eq(r1, r2));
+
+    r1 = pow(add(x, pow(x, i5)), i2);
+    r1 = expand(r1);
+    r2 = add(add(pow(x, i10), mul(i2, pow(x, i6))), pow(x, i2));
     std::cout << *r1 << std::endl;
     std::cout << *r2 << std::endl;
     assert(eq(r1, r2));
