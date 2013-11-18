@@ -53,6 +53,7 @@ before_script:
   - cmake -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DWITH_BFD=${WITH_BFD} -DWITH_PYTHON=${WITH_PYTHON} -DWITH_CSYMPY_ASSERT=${WITH_CSYMPY_ASSERT} -DWITH_CSYMPY_RCP=${WITH_CSYMPY_RCP} ${SOURCE_DIR}
   - make
 script:
+  - set -e
   - if [ "${WITH_CSYMPY_RCP}" == "yes" ]; then
         ctest --output-on-failure;
         if [ "${WITH_PYTHON}" == "yes" ]; then
