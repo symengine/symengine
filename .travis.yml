@@ -35,15 +35,15 @@ matrix:
 before_install:
   - sudo apt-get update
   - sudo apt-get install libgmp-dev
-  - if [ "${WITH_BFD}" == "yes" ]; then
+  - if [[ "${WITH_BFD}" == "yes" ]]; then
         sudo apt-get install binutils-dev;
     fi
 install:
-  - if [ "${WITH_PYTHON}" == "yes" ]; then
+  - if [[ "${WITH_PYTHON}" == "yes" ]]; then
         pip install cython sympy --use-mirrors;
     fi
 before_script:
-  - if [ "${TEST_IN_TREE}" == "yes" ]; then
+  - if [[ "${TEST_IN_TREE}" == "yes" ]]; then
         export SOURCE_DIR=.;
     else
         mkdir build;
@@ -53,11 +53,6 @@ before_script:
   - cmake -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DWITH_BFD=${WITH_BFD} -DWITH_PYTHON=${WITH_PYTHON} -DWITH_CSYMPY_ASSERT=${WITH_CSYMPY_ASSERT} -DWITH_CSYMPY_RCP=${WITH_CSYMPY_RCP} ${SOURCE_DIR}
   - make
 script:
-  - if [ "${WITH_CSYMPY_RCP}" == "yes" ]; then
-        ctest --output-on-failure;
-        if [ "${WITH_PYTHON}" == "yes" ]; then
-            nosetests -v;
-        fi
-    fi
+  - $SOURCE_DIR/bin/test_travis.sh
 notifications:
   email: false
