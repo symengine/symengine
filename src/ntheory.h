@@ -12,8 +12,10 @@ namespace CSymPy {
 inline RCP<Integer> gcd(Integer a, Integer b)
 {
     mpz_class c;
-    mpz_gcd(c.get_mpz_t(), static_cast<const mpz_class>(a).get_mpz_t(), static_cast<const mpz_class>(b).get_mpz_t());
+
+    mpz_gcd(c.get_mpz_t(), a.as_mpz().get_mpz_t(), b.as_mpz().get_mpz_t());
     return rcp(new Integer(c));
 }
 
 }
+#endif
