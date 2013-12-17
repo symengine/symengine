@@ -1,7 +1,6 @@
 #include <iostream>
-#include <chrono>
 
-#include "basic.h"
+//#include "basic.h"
 #include "ntheory.h"
 #include "integer.h"
 
