@@ -1,6 +1,5 @@
 #include <iostream>
 
-//#include "basic.h"
 #include "ntheory.h"
 #include "integer.h"
 
@@ -16,15 +15,15 @@ void test_gcd_lcm()
     Integer i4 (4);
     Integer i6 (6);
 
-    assert(eq(gcd(i2, i4), rcp(i2)));
-    assert(eq(gcd(i2, i3), rcp(i1)));
-    assert(eq(gcd(i2, i6), rcp(i2)));
-    assert(eq(gcd(i3, i6), rcp(i3)));
+    assert(eq(gcd(i2, i4), rcp(new Integer(2))));
+    assert(eq(gcd(i2, i3), rcp(new Integer(1))));
+    assert(eq(gcd(i2, i6), rcp(new Integer(2))));
+    assert(eq(gcd(i3, i6), rcp(new Integer(3))));
 
-    assert(eq(lcm(i2, i4), rcp(i4)));
-    assert(eq(lcm(i2, i3), rcp(i6)));
-    assert(eq(lcm(i2, i6), rcp(i6)));
-    assert(eq(lcm(i3, i6), rcp(i6)));
+    assert(eq(lcm(i2, i4), rcp(new Integer(4))));
+    assert(eq(lcm(i2, i3), rcp(new Integer(6))));
+    assert(eq(lcm(i2, i6), rcp(new Integer(6))));
+    assert(eq(lcm(i3, i6), rcp(new Integer(6))));
 }
 
 int main(int argc, char* argv[])

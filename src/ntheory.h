@@ -2,7 +2,6 @@
 #define CSYMPY_NTHEORY_H
 
 #include <gmpxx.h>
-#include <initializer_list>
 
 #include "number.h"
 #include "integer.h"
