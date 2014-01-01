@@ -26,11 +26,35 @@ void test_gcd_lcm()
     assert(eq(lcm(i3, i6), rcp(new Integer(6))));
 }
 
+void test_nextprime()
+{
+    Integer i1 (1);
+    Integer i5 (5);
+    Integer i6 (6);
+
+    assert(eq(nextprime(i1), rcp(new Integer(2))));
+    assert(eq(nextprime(i5), rcp(new Integer(7))));
+    assert(eq(nextprime(i6), rcp(new Integer(7))));
+}
+
+void test_probab_prime_p()
+{
+    Integer i1 (1);
+    Integer i5 (5);
+    Integer i6 (6);
+
+    assert(eq(probab_prime_p(i1), rcp(new Integer(0))));
+    assert(eq(probab_prime_p(i5), rcp(new Integer(2))));
+    assert(eq(probab_prime_p(i6), rcp(new Integer(0))));
+}
+
 int main(int argc, char* argv[])
 {
     print_stack_on_segfault();
 
     test_gcd_lcm();
+    test_nextprime();
+    test_probab_prime_p();
 
     return 0;
 }
