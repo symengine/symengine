@@ -19,6 +19,7 @@ set(SRC
     functions.cpp
     monomials.cpp
     rings.cpp
+    ntheory.cpp
 )
 
 # Configure CSymPy using our CMake options:
