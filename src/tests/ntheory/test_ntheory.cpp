@@ -43,9 +43,9 @@ void test_probab_prime_p()
     Integer i5 (5);
     Integer i6 (6);
 
-    assert(eq(probab_prime_p(i1), rcp(new Integer(0))));
-    assert(eq(probab_prime_p(i5), rcp(new Integer(2))));
-    assert(eq(probab_prime_p(i6), rcp(new Integer(0))));
+    assert(probab_prime_p(i1) == 0);
+    assert(probab_prime_p(i5) == 2);
+    assert(probab_prime_p(i6) == 0);
 }
 
 int main(int argc, char* argv[])

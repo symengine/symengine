@@ -30,9 +30,9 @@ inline RCP<Integer> lcm(const Integer &a, const Integer &b)
     return integer(c);
 }
 
-inline RCP<Integer> probab_prime_p(const Integer &a, int reps = 25)
+inline int probab_prime_p(const Integer &a, int reps = 25)
 {
-    return integer(mpz_probab_prime_p(a.as_mpz().get_mpz_t(), reps));
+    return mpz_probab_prime_p(a.as_mpz().get_mpz_t(), reps);
 }
 
 inline RCP<Integer> nextprime(const Integer &a)
