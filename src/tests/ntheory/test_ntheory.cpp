@@ -15,7 +15,10 @@ void test_gcd_lcm()
     RCP<Integer> i3 = integer(3);
     RCP<Integer> i4 = integer(4);
     RCP<Integer> i6 = integer(6);
-
+    RCP<Integer> g = integer(2);
+    RCP<Integer> s = integer(2);
+    RCP<Integer> t = integer(3);
+    
     assert(eq(gcd(*i2, *i4), integer(2)));
     assert(eq(gcd(*i2, *i3), integer(1)));
     assert(eq(gcd(*i2, *i6), integer(2)));
@@ -25,6 +28,14 @@ void test_gcd_lcm()
     assert(eq(lcm(*i2, *i3), integer(6)));
     assert(eq(lcm(*i2, *i6), integer(6)));
     assert(eq(lcm(*i3, *i6), integer(6)));
+    
+    gcd_ext(*i2, *i3, outArg(g), outArg(s), outArg(t));
+    assert(eq(g, integer(1)));
+    assert(eq(g, integer(i2->i * s->i + i3->i * t->i))); // check if g = i2*s + i3*t
+    
+    gcd_ext(*i3, *i6, outArg(g), outArg(s), outArg(t));
+    assert(eq(g, integer(3)));
+    assert(eq(g, integer(i3->i * s->i + i6->i * t->i))); // check if g = i3*s + i6*t
 }
 
 void test_nextprime()
