@@ -9,11 +9,14 @@
 
 namespace CSymPy {
 
-RCP<Integer> gcd(const Integer &a, const Integer &b);
-RCP<Integer> lcm(const Integer &a, const Integer &b);
 int probab_prime_p(const Integer &a, int reps = 25);
 RCP<Integer> nextprime(const Integer &a);
+
+RCP<Integer> gcd(const Integer &a, const Integer &b);
+RCP<Integer> lcm(const Integer &a, const Integer &b);
 void gcd_ext(const Integer &a, const Integer &b, const Ptr<RCP<Integer>> &g,
                         const Ptr<RCP<Integer>> &s, const Ptr<RCP<Integer>> &t);
+
+int mod_inverse(const Integer &a, const Integer &m, const Ptr<RCP<Integer>> &b);
 }
 #endif

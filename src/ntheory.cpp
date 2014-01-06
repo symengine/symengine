@@ -37,6 +37,18 @@ RCP<Integer> lcm(const Integer &a, const Integer &b)
     return integer(c);
 }
 
+int mod_inverse(const Integer &a, const Integer &m, const Ptr<RCP<Integer>> &b)
+{
+    int ret_val;
+    mpz_t inv;
+    mpz_init(inv);
+    
+    ret_val = mpz_invert(inv, a.as_mpz().get_mpz_t(), m.as_mpz().get_mpz_t());
+    *b = integer(mpz_class(inv));
+    
+    return ret_val;
+}
+
 int probab_prime_p(const Integer &a, int reps)
 {
     return mpz_probab_prime_p(a.as_mpz().get_mpz_t(), reps);

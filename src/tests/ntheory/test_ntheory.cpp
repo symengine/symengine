@@ -60,6 +60,24 @@ void test_probab_prime_p()
     assert(probab_prime_p(*i6) == 0);
 }
 
+void test_modular_inverse()
+{
+    RCP<Integer> i5 = integer(5);
+    RCP<Integer> i3 = integer(3);
+    RCP<Integer> i8 = integer(8);
+    RCP<Integer> i11 = integer(11);
+    RCP<Integer> b;
+    
+    assert(mod_inverse(*i3, *i5, outArg(b)) != 0);
+    assert(eq(b, integer(2)));
+    
+    assert(mod_inverse(*i3, *i8, outArg(b)) != 0);
+    assert(eq(b, integer(3)));
+    
+    assert(mod_inverse(*i3, *i11, outArg(b)) != 0);
+    assert(eq(b, integer(4)));    
+}
+
 int main(int argc, char* argv[])
 {
     print_stack_on_segfault();
@@ -67,6 +85,7 @@ int main(int argc, char* argv[])
     test_gcd_lcm();
     test_nextprime();
     test_probab_prime_p();
+    test_modular_inverse();
 
     return 0;
 }
