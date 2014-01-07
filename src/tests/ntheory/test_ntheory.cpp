@@ -2,6 +2,8 @@
 
 #include "ntheory.h"
 #include "integer.h"
+#include "add.h"
+#include "mul.h"
 
 using CSymPy::Integer;
 using CSymPy::print_stack_on_segfault;
@@ -31,11 +33,11 @@ void test_gcd_lcm()
     
     gcd_ext(*i2, *i3, outArg(g), outArg(s), outArg(t));
     assert(eq(g, integer(1)));
-    assert(eq(g, integer(i2->i * s->i + i3->i * t->i))); // check if g = i2*s + i3*t
+    assert(eq(g, add(mul(i2, s), mul(i3, t)))); // check if g = i2*s + i3*t
     
     gcd_ext(*i3, *i6, outArg(g), outArg(s), outArg(t));
     assert(eq(g, integer(3)));
-    assert(eq(g, integer(i3->i * s->i + i6->i * t->i))); // check if g = i3*s + i6*t
+    assert(eq(g, add(mul(i3, s), mul(i6, t)))); // check if g = i3*s + i6*t
 }
 
 void test_nextprime()
