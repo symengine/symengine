@@ -125,6 +125,7 @@ inline RCP<Integer> integer(mpz_class i)
 }
 
 RCP<Integer> isqrt(const Integer &n);
+RCP<Integer> iabs(const Integer &n);
 
 // Integers -1, 0 and 1 are created only once in integer.cpp and reused
 // everywhere (faster than creating them all the time):
