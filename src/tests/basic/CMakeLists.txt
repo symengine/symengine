@@ -21,3 +21,7 @@ add_test(test_functions ${PROJECT_BINARY_DIR}/test_functions)
 add_executable(test_subs test_subs.cpp)
 target_link_libraries(test_subs csympy teuchos ${LIBS})
 add_test(test_subs ${PROJECT_BINARY_DIR}/test_subs)
+
+add_executable(test_integer test_integer.cpp)
+target_link_libraries(test_integer csympy teuchos ${LIBS})
+add_test(test_integer ${PROJECT_BINARY_DIR}/test_integer)

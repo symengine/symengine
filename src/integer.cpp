@@ -79,6 +79,16 @@ RCP<Number> Integer::pow_negint(const Integer &other) const {
     }
 }
 
+RCP<Integer> isqrt(const Integer &n)
+{
+    mpz_t m;
+    mpz_init(m);
+    
+    mpz_sqrt(m, n.as_mpz().get_mpz_t());
+    
+    return integer(mpz_class(m));
+}
+
 // Initialize (declare) the integers -1, 0 and 1 (those are exposed in
 // integer.h):
 RCP<Integer> zero = rcp(new Integer(0));
