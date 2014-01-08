@@ -1,5 +1,3 @@
-#include <iostream>
-
 #include "ntheory.h"
 #include "integer.h"
 #include "add.h"
@@ -7,7 +5,6 @@
 
 using CSymPy::Integer;
 using CSymPy::print_stack_on_segfault;
-using CSymPy::rcp;
 using CSymPy::RCP;
 using CSymPy::integer;
 
