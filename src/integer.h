@@ -125,6 +125,12 @@ inline RCP<Integer> integer(mpz_class i)
 }
 
 RCP<Integer> isqrt(const Integer &n);
+int i_nth_root(const Integer &a, unsigned long int n,
+                                                    const Ptr<RCP<Integer>> &r);
+
+int perfect_square(const Integer &n);
+int perfect_power(const Integer &n);
+
 RCP<Integer> iabs(const Integer &n);
 
 // Integers -1, 0 and 1 are created only once in integer.cpp and reused
