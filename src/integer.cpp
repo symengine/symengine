@@ -115,6 +115,16 @@ int i_nth_root(const Integer &a, unsigned long int n,
     return ret_val;
 }
 
+int perfect_square(const Integer &n)
+{
+    return mpz_perfect_square_p(n.as_mpz().get_mpz_t());
+}
+
+int perfect_power(const Integer &n)
+{
+    return mpz_perfect_power_p(n.as_mpz().get_mpz_t());
+}
+
 // Initialize (declare) the integers -1, 0 and 1 (those are exposed in
 // integer.h):
 RCP<Integer> zero = rcp(new Integer(0));

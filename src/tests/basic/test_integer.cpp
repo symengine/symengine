@@ -37,6 +37,23 @@ void test_i_nth_root()
     assert(eq(r, integer(3)));
 }
 
+void test_perfect_power_square()
+{
+    RCP<Integer> i7 = integer(7);
+    RCP<Integer> i8 = integer(8);
+    RCP<Integer> i9 = integer(9);
+    RCP<Integer> i10 = integer(10);
+    
+    assert(perfect_square(*i7) == 0);
+    assert(perfect_power(*i7) == 0);
+    assert(perfect_square(*i8) == 0);
+    assert(perfect_power(*i8) != 0);
+    assert(perfect_square(*i9) != 0);
+    assert(perfect_power(*i9) != 0);
+    assert(perfect_square(*i10) == 0);
+    assert(perfect_power(*i10) == 0);
+}
+
 void test_iabs()
 {
     RCP<Integer> _i5 = integer(-5);
@@ -54,6 +71,7 @@ int main(int argc, char *argv[])
     
     test_isqrt();
     test_i_nth_root();
+    test_perfect_power_square();
     test_iabs();
     
     return 0;
