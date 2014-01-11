@@ -22,7 +22,7 @@ public:
 
     // Convert to "int", raise an exception if it does not fit
     signed long int as_int();
-    inline mpz_class as_mpz() { return this->i; }
+    inline mpz_class as_mpz() const { return this->i; }
     inline virtual bool is_zero() const { return this->i == 0; }
     inline virtual bool is_one() const { return this->i == 1; }
     inline virtual bool is_positive() const { return this->i > 0; }
@@ -123,6 +123,15 @@ inline RCP<Integer> integer(mpz_class i)
 {
     return rcp(new Integer(i));
 }
+
+RCP<Integer> isqrt(const Integer &n);
+int i_nth_root(const Integer &a, unsigned long int n,
+                                                    const Ptr<RCP<Integer>> &r);
+
+int perfect_square(const Integer &n);
+int perfect_power(const Integer &n);
+
+RCP<Integer> iabs(const Integer &n);
 
 // Integers -1, 0 and 1 are created only once in integer.cpp and reused
 // everywhere (faster than creating them all the time):

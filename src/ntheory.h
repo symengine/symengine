@@ -5,47 +5,18 @@
 #ifndef CSYMPY_NTHEORY_H
 #define CSYMPY_NTHEORY_H
 
-#include <gmpxx.h>
-
-#include "number.h"
 #include "integer.h"
 
 namespace CSymPy {
 
-inline RCP<Integer> gcd(const Integer &a, const Integer &b)
-{
-    mpz_class g;
-    
-    mpz_gcd(g.get_mpz_t(), static_cast<Integer>(a).as_mpz().get_mpz_t(), 
-                                  static_cast<Integer>(b).as_mpz().get_mpz_t());
+int probab_prime_p(const Integer &a, int reps = 25);
+RCP<Integer> nextprime(const Integer &a);
 
-    return rcp(new Integer(g));
-}
+RCP<Integer> gcd(const Integer &a, const Integer &b);
+RCP<Integer> lcm(const Integer &a, const Integer &b);
+void gcd_ext(const Integer &a, const Integer &b, const Ptr<RCP<Integer>> &g,
+                        const Ptr<RCP<Integer>> &s, const Ptr<RCP<Integer>> &t);
 
-inline RCP<Integer> lcm(const Integer &a, const Integer &b)
-{
-    mpz_class c;
-
-    mpz_lcm(c.get_mpz_t(), static_cast<Integer>(a).as_mpz().get_mpz_t(),
-                                 static_cast<Integer>(b).as_mpz().get_mpz_t());
-
-    return rcp(new Integer(c));
-}
-
-inline RCP<Integer> probab_prime_p(const Integer &a, int reps = 25)
-{
-    return rcp(new Integer(mpz_probab_prime_p(
-                         static_cast<Integer>(a).as_mpz().get_mpz_t(), reps)));
-}
-
-inline RCP<Integer> nextprime(const Integer &a)
-{
-    mpz_class c;
-
-    mpz_nextprime(c.get_mpz_t(), static_cast<Integer>(a).as_mpz().get_mpz_t());
-
-    return rcp(new Integer(c));
-}
-
+int mod_inverse(const Integer &a, const Integer &m, const Ptr<RCP<Integer>> &b);
 }
 #endif
