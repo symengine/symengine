@@ -81,20 +81,28 @@ RCP<Number> Integer::pow_negint(const Integer &other) const {
 
 RCP<Integer> isqrt(const Integer &n)
 {
-    mpz_t m;
-    mpz_init(m);
+    mpz_class m;
+    mpz_t m_t;
     
-    mpz_sqrt(m, n.as_mpz().get_mpz_t());
+    mpz_init(m_t);
+    mpz_sqrt(m_t, n.as_mpz().get_mpz_t());
+    m = mpz_class(m_t);
     
-    return integer(mpz_class(m));
+    mpz_clear(m_t);
+    
+    return integer(m);
 }
 
 RCP<Integer> iabs(const Integer &n)
 {
-    mpz_t m;
-    mpz_init(m);
+    mpz_class m;
+    mpz_t m_t;
     
-    mpz_abs(m, n.as_mpz().get_mpz_t());
+    mpz_init(m_t);
+    mpz_abs(m_t, n.as_mpz().get_mpz_t());
+    m = mpz_class(m_t);
+    
+    mpz_clear(m_t);
     
     return integer(mpz_class(m));
 }
@@ -111,6 +119,8 @@ int i_nth_root(const Integer &a, unsigned long int n,
     
     ret_val = mpz_root(t, a.as_mpz().get_mpz_t(), n);
     *r = integer(mpz_class(t));
+    
+    mpz_clear(t);
     
     return ret_val;
 }
