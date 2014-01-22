@@ -1,5 +1,4 @@
 #include "ntheory.h"
-#include "ecm.h"
 
 namespace CSymPy {
 
