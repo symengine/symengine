@@ -77,6 +77,15 @@ void test_modular_inverse()
     assert(eq(b, integer(4)));    
 }
 
+void test_factor()
+{
+    RCP<Integer> i6 = integer(6);
+    RCP<Integer> f;
+    
+    assert(factor(outArg(f), *i6));
+    assert(eq(f, integer(2)));
+}
+
 int main(int argc, char* argv[])
 {
     print_stack_on_segfault();
@@ -85,6 +94,7 @@ int main(int argc, char* argv[])
     test_nextprime();
     test_probab_prime_p();
     test_modular_inverse();
-
+    test_factor();
+    
     return 0;
 }
