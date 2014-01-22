@@ -39,6 +39,7 @@ before_install:
         sudo apt-get install binutils-dev;
     fi
   - if [[ "${WITH_ECM}" == "yes" ]]; then
+        sudo apt-fet install libecm0;
         sudo apt-get install libecm-dev;
     fi
 install:
