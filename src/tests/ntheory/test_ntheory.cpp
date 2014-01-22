@@ -82,6 +82,7 @@ void test_factor()
     RCP<Integer> i6 = integer(6);
     RCP<Integer> f;
     
+    // More tests should be added
     assert(factor(outArg(f), *i6));
     assert(eq(f, integer(2)));
 }

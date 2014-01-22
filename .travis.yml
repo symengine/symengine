@@ -25,18 +25,21 @@ matrix:
   include:
     - python: 2.6
       env:
-        - BUILD_TYPE="Release" WITH_BFD="no" TEST_IN_TREE="yes" WITH_PYTHON="yes" WITH_CSYMPY_ASSERT="no" WITH_CSYMPY_RCP="yes"
+        - BUILD_TYPE="Release" WITH_BFD="no" TEST_IN_TREE="yes" WITH_PYTHON="yes" WITH_CSYMPY_ASSERT="no" WITH_CSYMPY_RCP="yes" WITH_ECM="yes"
     - python: 3.2
       env:
-        - BUILD_TYPE="Release" WITH_BFD="no" TEST_IN_TREE="yes" WITH_PYTHON="yes" WITH_CSYMPY_ASSERT="no" WITH_CSYMPY_RCP="yes"
+        - BUILD_TYPE="Release" WITH_BFD="no" TEST_IN_TREE="yes" WITH_PYTHON="yes" WITH_CSYMPY_ASSERT="no" WITH_CSYMPY_RCP="yes" WITH_ECM="yes"
     - python: 3.3
       env:
-        - BUILD_TYPE="Release" WITH_BFD="no" TEST_IN_TREE="yes" WITH_PYTHON="yes" WITH_CSYMPY_ASSERT="no" WITH_CSYMPY_RCP="yes"
+        - BUILD_TYPE="Release" WITH_BFD="no" TEST_IN_TREE="yes" WITH_PYTHON="yes" WITH_CSYMPY_ASSERT="no" WITH_CSYMPY_RCP="yes" WITH_ECM="yes"
 before_install:
   - sudo apt-get update
   - sudo apt-get install libgmp-dev
   - if [[ "${WITH_BFD}" == "yes" ]]; then
         sudo apt-get install binutils-dev;
+    fi
+  - if [[ "${WITH_ECM}" == "yes" ]]; then
+        sudo apt-get install libecm-dev;
     fi
 install:
   - if [[ "${WITH_PYTHON}" == "yes" ]]; then
