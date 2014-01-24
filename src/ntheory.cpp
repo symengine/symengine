@@ -75,6 +75,7 @@ RCP<Integer> nextprime(const Integer &a)
 // Factorization
 int factor(const Ptr<RCP<Integer>> &f, const Integer &n)
 {
+#ifdef HAVE_CSYMPY_ECM
     int ret_val;
     double B1 = 1;
     mpz_t _f;
@@ -90,6 +91,9 @@ int factor(const Ptr<RCP<Integer>> &f, const Integer &n)
     ecm_clear(p);
     
     return ret_val;
+#else
+    throw std::runtime_error("CSymPy was compiled without ECM support.");
+#endif // HAVE_CSYMPY_ECM
 }
 
 } // CSymPy
