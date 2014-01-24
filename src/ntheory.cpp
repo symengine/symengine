@@ -1,5 +1,10 @@
 #include "ntheory.h"
 
+#ifdef HAVE_CSYMPY_ECM
+#  include <ecm.h>
+#endif // HAVE_CSYMPY_ECM
+
+
 namespace CSymPy {
 
 // Basic number theoretic functions

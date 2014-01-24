@@ -3,10 +3,6 @@
 
 #include <gmpxx.h>
 
-#ifdef HAVE_CSYMPY_ECM
-#  include <ecm.h>
-#endif // HAVE_CSYMPY_ECM
-
 #include "basic.h"
 #include "number.h"
 
