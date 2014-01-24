@@ -44,6 +44,7 @@ if (WITH_ECM)
     find_package(ECM REQUIRED)
     include_directories(${ECM_INCLUDE_DIRS})
     set(LIBS ${LIBS} ${ECM_LIBRARY})
+    set(HAVE_CSYMPY_ECM yes)
 endif()
 
 # Python
