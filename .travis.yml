@@ -4,34 +4,34 @@ python:
 env:
   #### Out of tree builds (default):
   # Debug build:
-  - BUILD_TYPE="Debug" WITH_BFD="yes" TEST_IN_TREE="no" WITH_PYTHON="no" WITH_CSYMPY_ASSERT="no" WITH_CSYMPY_RCP="yes"
+  - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_CSYMPY_RCP="yes"
   # Debug build with CSYMPY_ASSERT on
-  - BUILD_TYPE="Debug" WITH_BFD="yes" TEST_IN_TREE="no" WITH_PYTHON="no" WITH_CSYMPY_ASSERT="yes" WITH_CSYMPY_RCP="yes"
+  - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_CSYMPY_ASSERT="yes" WITH_CSYMPY_RCP="yes"
   # Debug build with BFD off:
-  - BUILD_TYPE="Debug" WITH_BFD="no" TEST_IN_TREE="no" WITH_PYTHON="no" WITH_CSYMPY_ASSERT="no" WITH_CSYMPY_RCP="yes"
+  - BUILD_TYPE="Debug" WITH_CSYMPY_RCP="yes"
   # Release build:
-  - BUILD_TYPE="Release" WITH_BFD="yes" TEST_IN_TREE="no" WITH_PYTHON="no" WITH_CSYMPY_ASSERT="no" WITH_CSYMPY_RCP="yes"
+  - BUILD_TYPE="Release" WITH_BFD="yes" WITH_CSYMPY_RCP="yes"
   # Debug build with Teuchos::RCP (just to test that it compiles)
-  - BUILD_TYPE="Debug" WITH_BFD="yes" TEST_IN_TREE="no" WITH_PYTHON="no" WITH_CSYMPY_ASSERT="yes" WITH_CSYMPY_RCP="no"
+  - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_CSYMPY_ASSERT="yes"
 
   #### In-tree builds:
   # Debug build (just to check that it works):
-  - BUILD_TYPE="Debug" WITH_BFD="yes" TEST_IN_TREE="yes" WITH_PYTHON="no" WITH_CSYMPY_ASSERT="no" WITH_CSYMPY_RCP="yes"
+  - BUILD_TYPE="Debug" WITH_BFD="yes" TEST_IN_TREE="yes" WITH_CSYMPY_RCP="yes"
   # Python build (currently only works in-tree):
   - BUILD_TYPE="Debug" WITH_BFD="yes" TEST_IN_TREE="yes" WITH_PYTHON="yes" WITH_CSYMPY_ASSERT="yes" WITH_CSYMPY_RCP="yes"
   # Python release build
-  - BUILD_TYPE="Release" WITH_BFD="no" TEST_IN_TREE="yes" WITH_PYTHON="yes" WITH_CSYMPY_ASSERT="no" WITH_CSYMPY_RCP="yes"
+  - BUILD_TYPE="Release" WITH_BFD="no" TEST_IN_TREE="yes" WITH_PYTHON="yes" WITH_CSYMPY_RCP="yes"
 matrix:
   include:
     - python: 2.6
       env:
-        - BUILD_TYPE="Release" WITH_BFD="no" TEST_IN_TREE="yes" WITH_PYTHON="yes" WITH_CSYMPY_ASSERT="no" WITH_CSYMPY_RCP="yes" WITH_ECM="yes"
+        - BUILD_TYPE="Release" TEST_IN_TREE="yes" WITH_PYTHON="yes" WITH_CSYMPY_RCP="yes" WITH_ECM="yes"
     - python: 3.2
       env:
-        - BUILD_TYPE="Release" WITH_BFD="no" TEST_IN_TREE="yes" WITH_PYTHON="yes" WITH_CSYMPY_ASSERT="no" WITH_CSYMPY_RCP="yes" WITH_ECM="yes"
+        - BUILD_TYPE="Release" TEST_IN_TREE="yes" WITH_PYTHON="yes" WITH_CSYMPY_RCP="yes" WITH_ECM="yes"
     - python: 3.3
       env:
-        - BUILD_TYPE="Release" WITH_BFD="no" TEST_IN_TREE="yes" WITH_PYTHON="yes" WITH_CSYMPY_ASSERT="no" WITH_CSYMPY_RCP="yes" WITH_ECM="yes"
+        - BUILD_TYPE="Release" TEST_IN_TREE="yes" WITH_PYTHON="yes" WITH_CSYMPY_RCP="yes" WITH_ECM="yes"
 before_install:
   - sudo apt-get update
   - sudo apt-get install libgmp-dev
