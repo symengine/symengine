@@ -37,9 +37,14 @@ include_directories(${GMP_INCLUDE_DIRS})
 set(LIBS ${LIBS} ${GMP_LIBRARIES})
 
 #ECM
-find_package(ECM)
-include_directories(${ECM_INCLUDE_DIRS})
-set(LIBS ${LIBS} ${ECM_LIBRARY})
+set(WITH_ECM no
+    CACHE BOOL "Build with ECM (libecm-dev) support")
+
+if (WITH_ECM)
+    find_package(ECM REQUIRED)
+    include_directories(${ECM_INCLUDE_DIRS})
+    set(LIBS ${LIBS} ${ECM_LIBRARY})
+endif()
 
 # Python
 set(WITH_PYTHON no
