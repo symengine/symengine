@@ -2,7 +2,10 @@
 #define CSYMPY_INTEGER_H
 
 #include <gmpxx.h>
-#include <ecm.h>
+
+#ifdef HAVE_CSYMPY_ECM
+#  include <ecm.h>
+#endif // HAVE_CSYMPY_ECM
 
 #include "basic.h"
 #include "number.h"
