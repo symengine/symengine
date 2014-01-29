@@ -1,9 +1,11 @@
+#include "integer.h"
 #include "ntheory.h"
+#include "add.h"
+#include "mul.h"
 
 #ifdef HAVE_CSYMPY_ECM
 #  include <ecm.h>
 #endif // HAVE_CSYMPY_ECM
-
 
 namespace CSymPy {
 
@@ -78,30 +80,54 @@ RCP<Integer> nextprime(const Integer &a)
 }
 
 // Factorization
-int factor(const Ptr<RCP<Integer>> &f, const Integer &n)
+int factor(const Ptr<RCP<Integer>> &f, const Integer &n, double B1)
 {
-#ifdef HAVE_CSYMPY_ECM
-    int ret_val;
-    double B1 = 1;
-    mpz_t _f;
-    ecm_params p;
-    
-    ecm_init(p);
-    mpz_init(_f);
+    int ret_val = 0;
+    mpz_t n_t, f_t;;
+
+    mpz_init(n_t); mpz_init(f_t);
+    mpz_set(n_t, n.as_mpz().get_mpz_t());
         
-    ret_val = ecm_factor(_f, n.as_mpz().get_mpz_t(), B1, p);
-    *f = integer(mpz_class(_f));
+#ifdef HAVE_CSYMPY_ECM       
+    ret_val = ecm_factor(f_t, n_t, 100, NULL);  
+#else
+    // B1 is discarded if gmp-ecm is not installed
+    ret_val = _factor_trial_division(f_t, n_t);
+#endif // HAVE_CSYMPY_ECM
+    *f = integer(mpz_class(f_t));
     
-    mpz_clear(_f);
-    ecm_clear(p);
+    mpz_clear(n_t); mpz_clear(f_t);  
     
     return ret_val;
-#else
-    // FIXME: Implement a slow but simple algorithm for factorization here,
-    // instead of this hack to satisfy tests:
-    *f = integer(2);
-    return 1;
-#endif // HAVE_CSYMPY_ECM
+}
+
+// Factoring by Trial division: should not be used, helper function for factor
+int _factor_trial_division(mpz_t rop, const mpz_t op)
+{
+    mpz_t i, limit, q, r;
+    
+    mpz_init(i); mpz_init(limit); mpz_init(q); mpz_init(r);
+    
+    mpz_set_ui(i, 2);
+    mpz_sqrt(limit, op);
+    
+    while(mpz_cmp(i, limit) <= 0)
+    {
+        mpz_tdiv_qr(q, r, op, i);
+        
+        if (mpz_cmp_ui(r, 0) == 0) {
+            mpz_set(rop, i);
+            break;
+        }
+        mpz_add_ui(i, i, 1);
+    }
+    // 'op' is prime
+    if (mpz_cmp(i, limit) > 0)
+        mpz_set(rop, op);
+
+    mpz_clear(i); mpz_clear(limit); mpz_clear(q); mpz_clear(r);
+    
+    return 1; // Return 1 since this method always find a factor
 }
 
 } // CSymPy

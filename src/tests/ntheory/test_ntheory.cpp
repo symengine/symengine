@@ -79,12 +79,20 @@ void test_modular_inverse()
 
 void test_factor()
 {
+    RCP<Integer> i2 = integer(2);
+    RCP<Integer> i3 = integer(3);
     RCP<Integer> i6 = integer(6);
+    RCP<Integer> i121 = integer(121);
+    RCP<Integer> i122 = integer(122);
+    RCP<Integer> i1001 = integer(1001);
     RCP<Integer> f;
     
-    // More tests should be added
-    assert(factor(outArg(f), *i6));
-    assert(eq(f, integer(2)));
+    assert(factor(outArg(f), *i2) > 0);
+    assert(factor(outArg(f), *i3) > 0);
+    assert(factor(outArg(f), *i6) > 0);
+    assert(factor(outArg(f), *i121) > 0);
+    assert(factor(outArg(f), *i122) > 0);
+    assert(factor(outArg(f), *i1001) > 0);
 }
 
 int main(int argc, char* argv[])

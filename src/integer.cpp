@@ -46,7 +46,7 @@ std::string Integer::__str__() const
     return s.str();
 }
 
-signed long int Integer::as_int()
+signed long int Integer::as_int() const
 {
     // get_si() returns "signed long int", so that's what we return from
     // "as_int()" and we leave it to the user to do any possible further integer

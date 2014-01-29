@@ -21,7 +21,7 @@ public:
     virtual std::string __str__() const;
 
     // Convert to "int", raise an exception if it does not fit
-    signed long int as_int();
+    signed long int as_int() const;
     inline mpz_class as_mpz() const { return this->i; }
     inline virtual bool is_zero() const { return this->i == 0; }
     inline virtual bool is_one() const { return this->i == 1; }

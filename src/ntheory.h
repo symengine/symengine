@@ -21,9 +21,8 @@ void gcd_ext(const Integer &a, const Integer &b, const Ptr<RCP<Integer>> &g,
 
 int mod_inverse(const Integer &a, const Integer &m, const Ptr<RCP<Integer>> &b);
 
-// Factorization
-// Interface should be changed
-int factor(const Ptr<RCP<Integer>> &f, const Integer &n);
+// Factorization, parameter B1 only used when `n` is factored using gmp-ecm
+int factor(const Ptr<RCP<Integer>> &f, const Integer &n, double B1 = 100);
 
 }
 #endif
