@@ -89,7 +89,7 @@ int factor(const Ptr<RCP<Integer>> &f, const Integer &n, double B1)
     mpz_set(n_t, n.as_mpz().get_mpz_t());
         
 #ifdef HAVE_CSYMPY_ECM       
-    ret_val = ecm_factor(f_t, n_t, 100, NULL);  
+    ret_val = ecm_factor(f_t, n_t, B1, NULL);  
 #else
     // B1 is discarded if gmp-ecm is not installed
     ret_val = _factor_trial_division(f_t, n_t);
