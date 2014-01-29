@@ -1,7 +1,4 @@
-#include "integer.h"
 #include "ntheory.h"
-#include "add.h"
-#include "mul.h"
 
 #ifdef HAVE_CSYMPY_ECM
 #  include <ecm.h>
