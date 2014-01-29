@@ -21,8 +21,11 @@ void gcd_ext(const Integer &a, const Integer &b, const Ptr<RCP<Integer>> &g,
 
 int mod_inverse(const Integer &a, const Integer &m, const Ptr<RCP<Integer>> &b);
 
-// Factorization, parameter B1 only used when `n` is factored using gmp-ecm
+// Factorization 
+// parameter B1 only used when `n` is factored using gmp-ecm
 int factor(const Ptr<RCP<Integer>> &f, const Integer &n, double B1 = 100);
+// should not invoke below function directly
+int _factor_trial_division(mpz_t rop, const mpz_t op);
 
 }
 #endif
