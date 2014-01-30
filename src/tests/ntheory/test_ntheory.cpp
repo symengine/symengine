@@ -78,7 +78,7 @@ void test_modular_inverse()
     assert(eq(b, integer(4)));
 }
 
-// Returns true if b divides a without reminder
+// Returns true if `b` divides `a` without reminder
 bool divides(const RCP<Integer> &a, const RCP<Integer> &b)
 {
     return is_a<Integer>(*div(a, b));
