@@ -76,28 +76,6 @@ RCP<Integer> nextprime(const Integer &a)
     return integer(c);
 }
 
-// Factorization
-int factor(const Ptr<RCP<Integer>> &f, const Integer &n, double B1)
-{
-    int ret_val = 0;
-    mpz_t n_t, f_t;;
-
-    mpz_init(n_t); mpz_init(f_t);
-    mpz_set(n_t, n.as_mpz().get_mpz_t());
-        
-#ifdef HAVE_CSYMPY_ECM       
-    ret_val = ecm_factor(f_t, n_t, B1, NULL);  
-#else
-    // B1 is discarded if gmp-ecm is not installed
-    ret_val = _factor_trial_division(f_t, n_t);
-#endif // HAVE_CSYMPY_ECM
-    *f = integer(mpz_class(f_t));
-    
-    mpz_clear(n_t); mpz_clear(f_t);  
-    
-    return ret_val;
-}
-
 // Factoring by Trial division: should not be used, helper function for factor
 int _factor_trial_division(mpz_t rop, const mpz_t op)
 {
@@ -125,6 +103,28 @@ int _factor_trial_division(mpz_t rop, const mpz_t op)
     mpz_clear(i); mpz_clear(limit); mpz_clear(q); mpz_clear(r);
     
     return 1; // Return 1 since this method always find a factor
+}
+
+// Factorization
+int factor(const Ptr<RCP<Integer>> &f, const Integer &n, double B1)
+{
+    int ret_val = 0;
+    mpz_t n_t, f_t;;
+
+    mpz_init(n_t); mpz_init(f_t);
+    mpz_set(n_t, n.as_mpz().get_mpz_t());
+        
+#ifdef HAVE_CSYMPY_ECM       
+    ret_val = ecm_factor(f_t, n_t, B1, NULL);  
+#else
+    // B1 is discarded if gmp-ecm is not installed
+    ret_val = _factor_trial_division(f_t, n_t);
+#endif // HAVE_CSYMPY_ECM
+    *f = integer(mpz_class(f_t));
+    
+    mpz_clear(n_t); mpz_clear(f_t);  
+    
+    return ret_val;
 }
 
 } // CSymPy
