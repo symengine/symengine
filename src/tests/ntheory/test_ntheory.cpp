@@ -17,7 +17,7 @@ void test_gcd_lcm()
     RCP<Integer> g = integer(2);
     RCP<Integer> s = integer(2);
     RCP<Integer> t = integer(3);
-    
+
     assert(eq(gcd(*i2, *i4), integer(2)));
     assert(eq(gcd(*i2, *i3), integer(1)));
     assert(eq(gcd(*i2, *i6), integer(2)));
@@ -27,11 +27,11 @@ void test_gcd_lcm()
     assert(eq(lcm(*i2, *i3), integer(6)));
     assert(eq(lcm(*i2, *i6), integer(6)));
     assert(eq(lcm(*i3, *i6), integer(6)));
-    
+
     gcd_ext(*i2, *i3, outArg(g), outArg(s), outArg(t));
     assert(eq(g, integer(1)));
     assert(eq(g, add(mul(i2, s), mul(i3, t)))); // check if g = i2*s + i3*t
-    
+
     gcd_ext(*i3, *i6, outArg(g), outArg(s), outArg(t));
     assert(eq(g, integer(3)));
     assert(eq(g, add(mul(i3, s), mul(i6, t)))); // check if g = i3*s + i6*t
@@ -66,15 +66,15 @@ void test_modular_inverse()
     RCP<Integer> i8 = integer(8);
     RCP<Integer> i11 = integer(11);
     RCP<Integer> b;
-    
+
     assert(mod_inverse(*i3, *i5, outArg(b)) != 0);
     assert(eq(b, integer(2)));
-    
+
     assert(mod_inverse(*i3, *i8, outArg(b)) != 0);
     assert(eq(b, integer(3)));
-    
+
     assert(mod_inverse(*i3, *i11, outArg(b)) != 0);
-    assert(eq(b, integer(4)));    
+    assert(eq(b, integer(4)));
 }
 
 void test_factor()
@@ -86,7 +86,7 @@ void test_factor()
     RCP<Integer> i122 = integer(122);
     RCP<Integer> i1001 = integer(1001);
     RCP<Integer> f;
-    
+
     assert(factor(outArg(f), *i2) > 0);
     assert(factor(outArg(f), *i3) > 0);
     assert(factor(outArg(f), *i6) > 0);
@@ -104,6 +104,6 @@ int main(int argc, char* argv[])
     test_probab_prime_p();
     test_modular_inverse();
     test_factor();
-    
+
     return 0;
 }
