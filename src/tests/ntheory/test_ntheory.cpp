@@ -7,6 +7,7 @@ using CSymPy::Integer;
 using CSymPy::print_stack_on_segfault;
 using CSymPy::RCP;
 using CSymPy::integer;
+using CSymPy::is_a;
 
 void test_gcd_lcm()
 {
@@ -77,6 +78,12 @@ void test_modular_inverse()
     assert(eq(b, integer(4)));
 }
 
+// Returns true if b divides a without reminder
+bool divides(const RCP<Integer> &a, const RCP<Integer> &b)
+{
+    return is_a<Integer>(*div(a, b));
+}
+
 void test_factor()
 {
     RCP<Integer> i2 = integer(2);
@@ -88,11 +95,18 @@ void test_factor()
     RCP<Integer> f;
 
     assert(factor(outArg(f), *i2) > 0);
+    assert(divides(i2, f));
     assert(factor(outArg(f), *i3) > 0);
+    assert(divides(i3, f));
     assert(factor(outArg(f), *i6) > 0);
+    assert(divides(i6, f));
     assert(factor(outArg(f), *i121) > 0);
+    assert(divides(i121, f));
     assert(factor(outArg(f), *i122) > 0);
+    assert(divides(i122, f));
     assert(factor(outArg(f), *i1001) > 0);
+    assert(divides(i1001, f));
+    assert(!divides(i1001, i6));
 }
 
 int main(int argc, char* argv[])
