@@ -210,8 +210,28 @@ int factor(const Ptr<RCP<Integer>> &f, const Integer &n, double B1)
     mpz_init(n_t); mpz_init(f_t);
     mpz_set(n_t, n.as_mpz().get_mpz_t());
         
-#ifdef HAVE_CSYMPY_ECM       
-    ret_val = ecm_factor(f_t, n_t, B1, NULL);  
+#ifdef HAVE_CSYMPY_ECM
+    if (mpz_perfect_power_p(n_t)) {
+        
+        unsigned long int i = 1;
+        mpz_t m, rem;
+        mpz_init_set_ui(rem, 1); // Any non zero number
+        mpz_init_set_ui(m, 2); // set `m` to 2**i, i = 1 at the begining
+        
+        // calculate log2n, this can be improved
+        for (; mpz_cmp(m, n_t) < 0; i++)
+            mpz_mul_ui(m, m, 2);
+        
+        // eventually `rem` = 0 zero as `n` is a perfect square. `f_t` will
+        // be set to a factor of `n` when that happens
+        while(i > 1 && mpz_cmp_ui(rem, 0)) {
+            mpz_rootrem(f_t, rem, n_t, i);
+        }
+        
+        ret_val = 1;
+    }
+    else
+        ret_val = ecm_factor(f_t, n_t, B1, NULL);  
 #else
     // B1 is discarded if gmp-ecm is not installed
     if (mpz_cmp_ui(n_t, 21) <= 0)
