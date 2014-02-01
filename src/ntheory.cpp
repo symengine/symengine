@@ -77,16 +77,21 @@ RCP<Integer> nextprime(const Integer &a)
 }
 
 // Factoring by Trial division: should not be used, helper function for factor
-int _factor_trial_division(mpz_t rop, const mpz_t op)
+// Look for factors of `op` below `limit`
+int _factor_trial_division(mpz_t rop, const mpz_t op, const mpz_t limit)
 {
-    mpz_t i, limit, q, r;
+    mpz_t i, l, q, r;
+    int ret_val;
     
-    mpz_init(i); mpz_init(limit); mpz_init(q); mpz_init(r);
+    mpz_inits(i, l, q, r);
     
     mpz_set_ui(i, 2);
-    mpz_sqrt(limit, op);
+    mpz_sqrt(l, op);
     
-    while(mpz_cmp(i, limit) <= 0)
+    if (mpz_cmp(limit, l) < 0)
+        mpz_set(l, limit);
+   
+    while(mpz_cmp(i, l) <= 0)
     {
         mpz_tdiv_qr(q, r, op, i);
         
@@ -96,13 +101,81 @@ int _factor_trial_division(mpz_t rop, const mpz_t op)
         }
         mpz_add_ui(i, i, 1);
     }
-    // 'op' is prime
-    if (mpz_cmp(i, limit) > 0)
-        mpz_set(rop, op);
 
-    mpz_clear(i); mpz_clear(limit); mpz_clear(q); mpz_clear(r);
+    mpz_clears(q, r);
+
+    if (mpz_cmp(i, l) <= 0)      // We found a factor  
+        ret_val = 1;
+    else
+        ret_val = 0;
+
+    mpz_clears(i, l); 
     
-    return 1; // Return 1 since this method always find a factor
+    return ret_val;
+}
+
+// Factoring by Lehman method, shouldn't be used directly, helper function for
+// factor
+int _factor_lehman_method(mpz_t rop, const mpz_t n)
+{
+    int ret_val;
+    mpz_t u_bound;
+    mpz_init(u_bound);
+    
+    mpz_root(u_bound, n, 3);
+    mpz_add_ui(u_bound, u_bound, 1);
+    
+    ret_val = _factor_trial_division(rop, n, u_bound);
+    
+    if (!ret_val){
+    
+        mpz_t k, a, b, l, kn; 
+        mpz_inits(k, a, b, l, kn);
+        mpz_set_ui(k, 1);
+        
+        mpf_t t; 
+        mpf_inits(t);
+        
+        mpz_set_f(a, t);
+        
+        while (mpz_cmp(k, u_bound) <= 0) {
+            
+            mpz_mul(kn, k, n);
+            mpf_set_z(t, kn);
+            mpf_sqrt(t, t);
+            mpf_mul_ui(t, t, 2);
+            mpz_set_f(a, t);
+            
+            // below calculations should be done with mpfr library as gmp
+            //doesn't provide floating point root functions
+            mpz_root(b, n, 6);
+            mpz_root(l, k, 4);
+            mpz_tdiv_q(b, b, l);
+            mpz_add(b, b, a);
+            
+            mpz_mul_ui(kn, kn, 4);
+            
+            while (mpz_cmp(a, b) <= 0) {
+                mpz_mul(l, a, a);
+                mpz_sub(l, l, kn);
+                if (mpz_perfect_square_p(l)){
+                    mpz_add(a, a, b);
+                    mpz_gcd(rop, n, a);
+                    ret_val = 1;
+                    break;
+                }
+            }
+            
+            if (ret_val){
+                mpz_clears(k, n, a, b, l, kn);
+                mpf_clears(t);
+                
+                break;
+            }
+        }
+    }
+    
+    return ret_val;
 }
 
 // Factorization
@@ -118,7 +191,7 @@ int factor(const Ptr<RCP<Integer>> &f, const Integer &n, double B1)
     ret_val = ecm_factor(f_t, n_t, B1, NULL);  
 #else
     // B1 is discarded if gmp-ecm is not installed
-    ret_val = _factor_trial_division(f_t, n_t);
+    ret_val = _factor_lehman_method(f_t, n_t);
 #endif // HAVE_CSYMPY_ECM
     *f = integer(mpz_class(f_t));
     
