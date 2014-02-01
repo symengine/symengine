@@ -226,12 +226,18 @@ int factor(const Ptr<RCP<Integer>> &f, const Integer &n, double B1)
         // be set to a factor of `n` when that happens
         while(i > 1 && mpz_cmp_ui(rem, 0)) {
             mpz_rootrem(f_t, rem, n_t, i);
+            i--;
         }
         
         ret_val = 1;
     }
-    else
+    else {
         ret_val = ecm_factor(f_t, n_t, B1, NULL);  
+        
+        // if ecm found a trivial factor
+        if (mpz_cmp(f_t, n_t) == 0)
+            ret_val = 0;
+    }
 #else
     // B1 is discarded if gmp-ecm is not installed
     if (mpz_cmp_ui(n_t, 21) <= 0)
