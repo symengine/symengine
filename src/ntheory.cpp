@@ -80,13 +80,14 @@ RCP<Integer> nextprime(const Integer &a)
 // Look for factors of `op` below `limit`
 int _factor_trial_division(mpz_t rop, const mpz_t op, const mpz_t limit)
 {
-    mpz_t i, l, q, r;
     int ret_val;
+    mpz_t i, l, q, r;
     
     mpz_init(i);
     mpz_init(l);
     mpz_init(q);
     mpz_init(r);
+//    mpz_inits(i, l, q, r);
     
     mpz_set_ui(i, 2);
     mpz_sqrt(l, op);
@@ -107,6 +108,7 @@ int _factor_trial_division(mpz_t rop, const mpz_t op, const mpz_t limit)
 
     mpz_clear(q);
     mpz_clear(r);
+//    mpz_clears(q, r);
     
     if (mpz_cmp(i, l) <= 0)      // We found a factor  
         ret_val = 1;
@@ -115,6 +117,7 @@ int _factor_trial_division(mpz_t rop, const mpz_t op, const mpz_t limit)
 
     mpz_clear(i);
     mpz_clear(l);
+//    mpz_clears(i, l);
     
     return ret_val;
 }
@@ -135,11 +138,17 @@ int _factor_lehman_method(mpz_t rop, const mpz_t n)
     if (!ret_val){
     
         mpz_t k, a, b, l, kn; 
-        mpz_inits(k, a, b, l, kn);
+        mpz_init(k);
+        mpz_init(a);
+        mpz_init(b);
+        mpz_init(l);
+        mpz_init(kn);
+//        mpz_inits(k, a, b, l, kn);
+                                        
         mpz_set_ui(k, 1);
         
         mpf_t t; 
-        mpf_inits(t);
+        mpf_init(t);
         
         mpz_set_f(a, t);
         
@@ -174,8 +183,14 @@ int _factor_lehman_method(mpz_t rop, const mpz_t n)
             }
             
             if (ret_val){
-                mpz_clears(k, n, a, b, l, kn);
-                mpf_clears(t);
+                mpz_clear(k);
+                mpz_clear(a);
+                mpz_clear(b);
+                mpz_clear(l);
+                mpz_clear(kn);
+//                mpz_clears(k, a, b, l, kn);
+
+                mpf_clear(t);
                 
                 break;
             }
@@ -202,12 +217,14 @@ int factor(const Ptr<RCP<Integer>> &f, const Integer &n, double B1)
     if (mpz_cmp_ui(n_t, 21) <= 0)
         ret_val = _factor_trial_division(f_t, n_t, n_t);
     else
-        ret_val = _factor_trial_division(f_t, n_t, n_t);
+        ret_val = _factor_lehman_method(f_t, n_t);
 #endif // HAVE_CSYMPY_ECM
     *f = integer(mpz_class(f_t));
     
-    mpz_clear(n_t); mpz_clear(f_t);  
-    
+    mpz_clear(n_t); 
+    mpz_clear(f_t);  
+//    mpz_clears(n_t, f_t);
+        
     return ret_val;
 }
 
