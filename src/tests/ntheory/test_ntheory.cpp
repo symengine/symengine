@@ -94,10 +94,10 @@ void test_factor()
     RCP<Integer> i1001 = integer(1001);
     RCP<Integer> f;
 
-    assert(factor(outArg(f), *i2) > 0);
-    assert(divides(i2, f));
-    assert(factor(outArg(f), *i3) > 0);
-    assert(divides(i3, f));
+    assert(factor(outArg(f), *i2) == 0);
+    //assert(divides(i2, f));
+    assert(factor(outArg(f), *i3) == 0);
+    //assert(divides(i3, f));
     assert(factor(outArg(f), *i6) > 0);
     assert(divides(i6, f));
     assert(factor(outArg(f), *i121) > 0);

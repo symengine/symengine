@@ -83,7 +83,10 @@ int _factor_trial_division(mpz_t rop, const mpz_t op, const mpz_t limit)
     mpz_t i, l, q, r;
     int ret_val;
     
-    mpz_inits(i, l, q, r);
+    mpz_init(i);
+    mpz_init(l);
+    mpz_init(q);
+    mpz_init(r);
     
     mpz_set_ui(i, 2);
     mpz_sqrt(l, op);
@@ -102,14 +105,16 @@ int _factor_trial_division(mpz_t rop, const mpz_t op, const mpz_t limit)
         mpz_add_ui(i, i, 1);
     }
 
-    mpz_clears(q, r);
-
+    mpz_clear(q);
+    mpz_clear(r);
+    
     if (mpz_cmp(i, l) <= 0)      // We found a factor  
         ret_val = 1;
     else
         ret_val = 0;
 
-    mpz_clears(i, l); 
+    mpz_clear(i);
+    mpz_clear(l);
     
     return ret_val;
 }
@@ -158,12 +163,14 @@ int _factor_lehman_method(mpz_t rop, const mpz_t n)
             while (mpz_cmp(a, b) <= 0) {
                 mpz_mul(l, a, a);
                 mpz_sub(l, l, kn);
+                
                 if (mpz_perfect_square_p(l)){
                     mpz_add(a, a, b);
                     mpz_gcd(rop, n, a);
                     ret_val = 1;
                     break;
                 }
+                mpz_add_ui(a, a, 1);
             }
             
             if (ret_val){
@@ -172,6 +179,7 @@ int _factor_lehman_method(mpz_t rop, const mpz_t n)
                 
                 break;
             }
+            mpz_add_ui(k, k, 1);
         }
     }
     
@@ -191,7 +199,10 @@ int factor(const Ptr<RCP<Integer>> &f, const Integer &n, double B1)
     ret_val = ecm_factor(f_t, n_t, B1, NULL);  
 #else
     // B1 is discarded if gmp-ecm is not installed
-    ret_val = _factor_lehman_method(f_t, n_t);
+    if (mpz_cmp_ui(n_t, 21) <= 0)
+        ret_val = _factor_trial_division(f_t, n_t, n_t);
+    else
+        ret_val = _factor_trial_division(f_t, n_t, n_t);
 #endif // HAVE_CSYMPY_ECM
     *f = integer(mpz_class(f_t));
     
