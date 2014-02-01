@@ -94,6 +94,7 @@ void test_factor()
     RCP<Integer> i121 = integer(121);
     RCP<Integer> i122 = integer(122);
     RCP<Integer> i1001 = integer(1001);
+    RCP<Integer> i900 = integer(900);
     RCP<Integer> f;
 
     assert(factor(outArg(f), *i2) == 0);
@@ -110,6 +111,8 @@ void test_factor()
     assert(factor(outArg(f), *i1001) > 0);
     assert(divides(i1001, f));
     assert(!divides(i1001, i6));
+    assert(factor(outArg(f), *i900) > 0);
+    assert(divides(i900, f));
 }
 
 int main(int argc, char* argv[])
