@@ -25,5 +25,12 @@ int mod_inverse(const Integer &a, const Integer &m, const Ptr<RCP<Integer>> &b);
 // parameter B1 is only used when `n` is factored using gmp-ecm
 int factor(const Ptr<RCP<Integer>> &f, const Integer &n, double B1 = 1.0);
 
+// Returns all primes up to the `limit` (excluding). The vector `primes` should
+// be empty on input and it will be filled with the primes.
+// The implementation is a very basic Eratosthenes sieve, but the code should
+// be quite optimized. For limit=1e8, it is about 50x slower than the
+// `primesieve` library (1498ms vs 28.29ms).
+void eratosthenes_sieve(unsigned limit, std::vector<unsigned> &primes);
+
 }
 #endif

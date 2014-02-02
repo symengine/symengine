@@ -1,3 +1,5 @@
+#include <chrono>
+
 #include "ntheory.h"
 #include "integer.h"
 #include "add.h"
@@ -115,6 +117,20 @@ void test_factor()
     assert(divides(i900, f));
 }
 
+void test_sieve()
+{
+    const int MAX=100000;
+    std::vector<unsigned> v;
+    auto t1 = std::chrono::high_resolution_clock::now();
+    CSymPy::eratosthenes_sieve(MAX, v);
+    auto t2 = std::chrono::high_resolution_clock::now();
+    std::cout
+        << std::chrono::duration_cast<std::chrono::milliseconds>(t2-t1).count()
+        << "ms" << std::endl;
+    std::cout << "Number of primes up to " << MAX << ": " << v.size() << std::endl;
+    assert(v.size() == 9592);
+}
+
 int main(int argc, char* argv[])
 {
     print_stack_on_segfault();
@@ -124,6 +140,7 @@ int main(int argc, char* argv[])
     test_probab_prime_p();
     test_modular_inverse();
     test_factor();
+    test_sieve();
 
     return 0;
 }
