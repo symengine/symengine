@@ -36,6 +36,17 @@ find_package(GMP REQUIRED)
 include_directories(${GMP_INCLUDE_DIRS})
 set(LIBS ${LIBS} ${GMP_LIBRARIES})
 
+#ECM
+set(WITH_ECM no
+    CACHE BOOL "Build with ECM (libecm-dev) support")
+
+if (WITH_ECM)
+    find_package(ECM REQUIRED)
+    include_directories(${ECM_INCLUDE_DIRS})
+    set(LIBS ${LIBS} ${ECM_LIBRARY})
+    set(HAVE_CSYMPY_ECM yes)
+endif()
+
 # Python
 set(WITH_PYTHON no
     CACHE BOOL "Build with Python wrappers")
@@ -128,3 +139,9 @@ if (WITH_PYTHON)
 
     message("Cython path: ${CYTHON_BIN}")
 endif ()
+
+message("WITH_ECM: ${WITH_ECM}")
+if (WITH_ECM)
+    message("ECM_INCLUDE_DIRS: ${ECM_INCLUDE_DIRS}")
+    message("ECM_LIBRARIES: ${ECM_LIBRARY}")
+endif()

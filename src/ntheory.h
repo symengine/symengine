@@ -9,14 +9,21 @@
 
 namespace CSymPy {
 
+// Prime Functions
 int probab_prime_p(const Integer &a, int reps = 25);
 RCP<Integer> nextprime(const Integer &a);
 
+// Basic Number-theoretic functions
 RCP<Integer> gcd(const Integer &a, const Integer &b);
 RCP<Integer> lcm(const Integer &a, const Integer &b);
 void gcd_ext(const Integer &a, const Integer &b, const Ptr<RCP<Integer>> &g,
                         const Ptr<RCP<Integer>> &s, const Ptr<RCP<Integer>> &t);
 
 int mod_inverse(const Integer &a, const Integer &m, const Ptr<RCP<Integer>> &b);
+
+// Factorization 
+// parameter B1 is only used when `n` is factored using gmp-ecm
+int factor(const Ptr<RCP<Integer>> &f, const Integer &n, double B1 = 1.0);
+
 }
 #endif

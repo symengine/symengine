@@ -1,5 +1,8 @@
-/* Define if want to enable ASSERT testing in CSymPy */
+/* Define if you want to enable ASSERT testing in CSymPy */
 #cmakedefine WITH_CSYMPY_ASSERT
 
-/* Define if want to enable CSYMPY_RCP support in CSymPy */
+/* Define if you want to enable CSYMPY_RCP support in CSymPy */
 #cmakedefine WITH_CSYMPY_RCP
+
+/* Define if you want to enable ECM support in CSymPy */
+#cmakedefine HAVE_CSYMPY_ECM
