@@ -124,6 +124,24 @@ int _factor_trial_division(mpz_t rop, const mpz_t op, const mpz_t limit)
     return ret_val;
 }
 
+// Factoring by Trial division using primes only
+int _factor_trial_division_sieve(mpz_class &factor, const mpz_class &N)
+{
+    mpz_class sqrtN;
+    sqrtN = sqrt(N);
+    if (!(sqrtN.fits_uint_p()))
+        throw std::runtime_error("N too large to factor");
+    unsigned limit = sqrtN.get_ui()+1;
+    std::vector<unsigned> primes;
+    eratosthenes_sieve(limit, primes);
+    for (auto &p: primes)
+        if (N % p == 0) {
+            factor = p;
+            return 1;
+        }
+    return 0;
+}
+
 // Factoring by Lehman method, shouldn't be used directly, helper function for
 // factor
 int _factor_lehman_method(mpz_t rop, const mpz_t n)
@@ -253,6 +271,15 @@ int factor(const Ptr<RCP<Integer>> &f, const Integer &n, double B1)
     mpz_clear(f_t);  
 //    mpz_clears(n_t, f_t);
         
+    return ret_val;
+}
+
+int factor_trial_division(const Ptr<RCP<Integer>> &f, const Integer &n)
+{
+    int ret_val;
+    mpz_class factor;
+    ret_val =_factor_trial_division_sieve(factor, n.as_mpz());
+    if (ret_val == 1) *f = integer(factor);
     return ret_val;
 }
 
