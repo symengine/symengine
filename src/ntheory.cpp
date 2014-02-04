@@ -239,11 +239,10 @@ int factor(const Ptr<RCP<Integer>> &f, const Integer &n, double B1)
         }
         else {
 
-            int i;
-            for (i = 0; i < 10 && !ret_val; i++)
+            for (int i = 0; i < 10 && !ret_val; i++)
                 ret_val = ecm_factor(f_t, n_t, B1, NULL);
 
-            if (i == 10)
+            if (!ret_val)
                 throw std::runtime_error("ECM failed to factor the given number");
         }
     }
