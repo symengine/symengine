@@ -233,7 +233,7 @@ int factor(const Ptr<RCP<Integer>> &f, const Integer &n, double B1)
     }
     else {
 
-        if (mpz_probab_prime_p(n_t, 25) == 2) { // n is a prime
+        if (mpz_probab_prime_p(n_t, 25) > 0) { // most probably, n is a prime
             ret_val = 0;
             mpz_set(f_t, n_t);
         }
