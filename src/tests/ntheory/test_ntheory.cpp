@@ -103,7 +103,7 @@ void test_factor()
     assert(factor(outArg(f), *i3) == 0);
     assert(factor(outArg(f), *i17) == 0);
     assert(factor(outArg(f), *i31) == 0);
-    
+
     assert(factor(outArg(f), *i6) > 0);
     assert(divides(i6, f));
     assert(factor(outArg(f), *i121) > 0);
