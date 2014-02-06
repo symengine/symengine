@@ -312,7 +312,6 @@ void eratosthenes_sieve(unsigned limit, std::vector<unsigned> &primes)
             primes.push_back(n);
 }
 
-//int factor(const Ptr<RCP<Integer>> &f, const Integer &n, double B1 = 1.0);
 void primefactors(const Integer &n, std::vector<Integer> &primes)
 {
     RCP<Integer> _n = integer(n.as_mpz());
