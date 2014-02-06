@@ -4,7 +4,7 @@
 
 #ifndef CSYMPY_NTHEORY_H
 #define CSYMPY_NTHEORY_H
-#include <map>
+
 #include "integer.h"
 
 namespace CSymPy {
