@@ -28,20 +28,20 @@ using CSymPy::print_stack_on_segfault;
 
 void test_symbol_hash()
 {
-    Symbol x  = Symbol("x");
-    Symbol x2 = Symbol("x");
-    Symbol y  = Symbol("y");
+    RCP<Symbol> x  = rcp(new Symbol("x"));
+    RCP<Symbol> x2 = rcp(new Symbol("x"));
+    RCP<Symbol> y  = rcp(new Symbol("y"));
 
-    assert(x.__eq__(x));
-    assert(x.__eq__(x2));
-    assert(!(x.__eq__(y)));
-    assert(x.__neq__(y));
+    assert(x->__eq__(*x));
+    assert(x->__eq__(*x2));
+    assert(!(x->__eq__(*y)));
+    assert(x->__neq__(*y));
 
     std::hash<Basic> hash_fn;
     // Hashes of x and x2 must be the same:
-    assert(hash_fn(x) == hash_fn(x2));
+    assert(hash_fn(*x) == hash_fn(*x2));
     // Hashes of x and y can but don't have to be different:
-    if (hash_fn(x) != hash_fn(y)) assert(x.__neq__(y));
+    if (hash_fn(*x) != hash_fn(*y)) assert(x->__neq__(*y));
 
 
     std::size_t seed1 = 0;
@@ -49,8 +49,8 @@ void test_symbol_hash()
     hash_combine<std::string>(seed1, "y");
 
     std::size_t seed2 = 0;
-    hash_combine<Basic>(seed2, x);
-    hash_combine<Basic>(seed2, y);
+    hash_combine<Basic>(seed2, *x);
+    hash_combine<Basic>(seed2, *y);
 
     // This checks that the Symbols are hashed by their strings:
     assert(seed1 == seed2);
