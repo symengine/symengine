@@ -4,7 +4,7 @@
 
 #ifndef CSYMPY_NTHEORY_H
 #define CSYMPY_NTHEORY_H
-
+#include <map>
 #include "integer.h"
 
 namespace CSymPy {
@@ -20,9 +20,9 @@ void gcd_ext(const Integer &a, const Integer &b, const Ptr<RCP<Integer>> &g,
                         const Ptr<RCP<Integer>> &s, const Ptr<RCP<Integer>> &t);
 
 int mod_inverse(const Integer &a, const Integer &m, const Ptr<RCP<Integer>> &b);
+bool divides(const RCP<Integer> &a, const RCP<Integer> &b);
 
-// Factorization 
-// parameter B1 is only used when `n` is factored using gmp-ecm
+// Factorization
 int factor(const Ptr<RCP<Integer>> &f, const Integer &n, double B1 = 1.0);
 // Factor using trial division. Returns 1 if a non-trivial factor is found,
 // otherwise 0.
@@ -34,6 +34,9 @@ int factor_trial_division(const Ptr<RCP<Integer>> &f, const Integer &n);
 // be quite optimized. For limit=1e8, it is about 50x slower than the
 // `primesieve` library (1498ms vs 28.29ms).
 void eratosthenes_sieve(unsigned limit, std::vector<unsigned> &primes);
+// Find prime factors of `n`
+void primefactors(const Integer &n, std::vector<Integer> &primes);
 
 }
 #endif
+

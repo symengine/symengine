@@ -1,7 +1,7 @@
 #include <cmath>
 
 #include "ntheory.h"
-
+#include "mul.h"
 #ifdef HAVE_CSYMPY_ECM
 #  include <ecm.h>
 #endif // HAVE_CSYMPY_ECM
@@ -61,6 +61,12 @@ int mod_inverse(const Integer &a, const Integer &m, const Ptr<RCP<Integer>> &b)
     mpz_clear(inv_t);
 
     return ret_val;
+}
+
+// Returns true if `b` divides `a` without reminder
+bool divides(const RCP<Integer> &a, const RCP<Integer> &b)
+{
+    return is_a<Integer>(*div(a, b));
 }
 
 // Prime functions
@@ -242,7 +248,7 @@ int factor(const Ptr<RCP<Integer>> &f, const Integer &n, double B1)
         for (; mpz_cmp(m, n_t) < 0; i++)
             mpz_mul_ui(m, m, 2);
 
-        // eventually `rem` = 0 zero as `n` is a perfect square. `f_t` will
+        // eventually `rem` = 0 zero as `n` is a perfect power. `f_t` will
         // be set to a factor of `n` when that happens
         while(i > 1 && mpz_cmp_ui(rem, 0)) {
             mpz_rootrem(f_t, rem, n_t, i);
@@ -306,4 +312,30 @@ void eratosthenes_sieve(unsigned limit, std::vector<unsigned> &primes)
             primes.push_back(n);
 }
 
+//int factor(const Ptr<RCP<Integer>> &f, const Integer &n, double B1 = 1.0);
+void primefactors(const Integer &n, std::vector<Integer> &primes)
+{
+    RCP<Integer> _n = integer(n.as_mpz());
+    RCP<Integer> f;
+
+    while (!eq(_n, one)) {
+        factor(outArg(f), *_n);
+
+        if (probab_prime_p(*f)) {
+            primes.push_back(*f);
+            while (divides(_n, f)) {
+                _n = rcp_dynamic_cast<Integer>(div(_n, f));
+            }
+        }
+        else {
+            primefactors(*f, primes);
+            _n = rcp_dynamic_cast<Integer>(div(_n, f));
+            while(!eq(gcd(*_n, *f), one)) {
+                _n = rcp_dynamic_cast<Integer>(div(_n, gcd(*_n, *f)));
+            }
+        }
+    }
+}
+
 } // CSymPy
+

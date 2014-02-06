@@ -80,12 +80,6 @@ void test_modular_inverse()
     assert(eq(b, integer(4)));
 }
 
-// Returns true if `b` divides `a` without reminder
-bool divides(const RCP<Integer> &a, const RCP<Integer> &b)
-{
-    return is_a<Integer>(*div(a, b));
-}
-
 void test_factor()
 {
     RCP<Integer> i2 = integer(2);
@@ -162,6 +156,39 @@ void test_sieve()
     assert(v.size() == 9592);
 }
 
+// helper function for test_primefactors
+void _test_primefactors(const Integer &a, unsigned size)
+{
+    std::vector<Integer> primes;
+    std::vector<Integer>::iterator it;
+
+    primefactors(a, primes);
+    assert(primes.size() == size);
+
+    for (it = primes.begin(); it != primes.end(); ++it) {
+        assert(divides(integer(a.as_mpz()), integer((*it).as_mpz())) == true);
+        assert(probab_prime_p(*it) > 0);
+    }
+}
+
+void test_primefactors()
+{
+    RCP<Integer> i5 = integer(5);
+    RCP<Integer> i6 = integer(6);
+    RCP<Integer> i12 = integer(12);
+    RCP<Integer> i36 = integer(36);
+    RCP<Integer> i125 = integer(125);
+    RCP<Integer> i1001 = integer(1001);
+
+    _test_primefactors(*i5, 1);
+    _test_primefactors(*i6, 2);
+    _test_primefactors(*i12, 2);
+    _test_primefactors(*i36, 2);
+    _test_primefactors(*i125, 1);
+    _test_primefactors(*i1001, 3);
+
+}
+
 int main(int argc, char* argv[])
 {
     print_stack_on_segfault();
@@ -173,6 +200,8 @@ int main(int argc, char* argv[])
     test_factor();
     test_factor_trial_division();
     test_sieve();
+    test_primefactors();
 
     return 0;
 }
+
