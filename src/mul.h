@@ -29,8 +29,8 @@ public:
             const Ptr<RCP<const Basic>> &exp,
             const Ptr<RCP<const Basic>> &base);
     void as_two_terms(const Ptr<RCP<const Basic>> &a,
-            const Ptr<RCP<const Basic>> &b);
-    RCP<const Basic> power_all_terms(const RCP<const Basic> &exp);
+            const Ptr<RCP<const Basic>> &b) const;
+    RCP<const Basic> power_all_terms(const RCP<const Basic> &exp) const;
 
     // Returns true if both 'coef' and 'dict' are in canonical form
     bool is_canonical(const RCP<const Number> &coef,

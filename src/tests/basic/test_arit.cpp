@@ -339,7 +339,7 @@ void test_expand1()
         << std::chrono::duration_cast<std::chrono::milliseconds>(t2-t1).count()
         << "ms" << std::endl;
     std::cout << "number of terms: "
-        << rcp_dynamic_cast<Add>(r2)->dict_.size() << std::endl;
+        << rcp_dynamic_cast<const Add>(r2)->dict_.size() << std::endl;
 }
 
 void test_expand2()
@@ -459,7 +459,7 @@ void test_expand3()
         << std::chrono::duration_cast<std::chrono::milliseconds>(t2-t1).count()
         << "ms" << std::endl;
     std::cout << "number of terms: "
-        << rcp_dynamic_cast<Add>(r)->dict_.size() << std::endl;
+        << rcp_dynamic_cast<const Add>(r)->dict_.size() << std::endl;
 }
 
 int main(int argc, char* argv[])

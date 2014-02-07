@@ -24,7 +24,7 @@ public:
     static void dict_add_term(umap_basic_int &d,
             const RCP<const Number> &coef, const RCP<const Basic> &t);
     void as_two_terms(const Ptr<RCP<const Basic>> &a,
-            const Ptr<RCP<const Basic>> &b);
+            const Ptr<RCP<const Basic>> &b) const;
     static void as_coef_term(const RCP<const Basic> &self,
         const Ptr<RCP<const Number>> &coef, const Ptr<RCP<const Basic>> &term);
 

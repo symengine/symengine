@@ -20,7 +20,7 @@ bool Sin::is_canonical(const RCP<const Basic> &arg)
 {
     // e.g. sin(0)
     if (is_a<Integer>(*arg) &&
-            rcp_static_cast<Integer>(arg)->is_zero())
+            rcp_static_cast<const Integer>(arg)->is_zero())
         return false;
     // TODO: add things like sin(k*pi) etc.
     return true;
@@ -73,7 +73,7 @@ bool Cos::is_canonical(const RCP<const Basic> &arg)
 {
     // e.g. cos(0)
     if (is_a<Integer>(*arg) &&
-            rcp_static_cast<Integer>(arg)->is_zero())
+            rcp_static_cast<const Integer>(arg)->is_zero())
         return false;
     // TODO: add things like cos(k*pi) etc.
     return true;

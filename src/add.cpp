@@ -34,20 +34,20 @@ bool Add::is_canonical(const RCP<const Number> &coef,
             return false;
         // e.g. 0*x
         if (is_a<Integer>(*p.first) &&
-                rcp_static_cast<Integer>(p.first)->is_zero())
+                rcp_static_cast<const Integer>(p.first)->is_zero())
             return false;
         // e.g. 1*x (={1:x}), this should rather be just x (={x:1})
         if (is_a<Integer>(*p.first) &&
-                rcp_static_cast<Integer>(p.first)->is_one())
+                rcp_static_cast<const Integer>(p.first)->is_one())
             return false;
         // e.g. x*0
         if (is_a<Integer>(*p.second) &&
-                rcp_static_cast<Integer>(p.second)->is_zero())
+                rcp_static_cast<const Integer>(p.second)->is_zero())
             return false;
 
         // e.g. {3x: 2}, this should rather be just {x: 6}
         if (is_a<Mul>(*p.first) &&
-                !(rcp_static_cast<Mul>(p.first)->coef_->is_one()))
+                !(rcp_static_cast<const Mul>(p.first)->coef_->is_one()))
             return false;
     }
     return true;
@@ -108,7 +108,7 @@ std::string Add::__str__() const
         else {
             // TODO: extend this for Rationals as well:
             if (is_a<Integer>(*p.second) &&
-                    rcp_static_cast<Integer>(p.second)->is_negative()
+                    rcp_static_cast<const Integer>(p.second)->is_negative()
                     && o.tellp() >= 3)
                 o.seekp(-3, std::ios_base::cur);
             if (eq(p.second, minus_one)) {
@@ -119,12 +119,12 @@ std::string Add::__str__() const
             } else {
                 // TODO: extend this for Rationals as well:
                 if (is_a<Integer>(*p.second) &&
-                        rcp_static_cast<Integer>(p.second)->is_negative()) {
+                        rcp_static_cast<const Integer>(p.second)->is_negative()) {
                     if (counter >= 1)
                         o << " - ";
                     else
                         o << "-";
-                    o << -(rcp_static_cast<Integer>(p.second))->i;
+                    o << -(rcp_static_cast<const Integer>(p.second))->i;
                 } else {
                     o << *(p.second);
                 }
@@ -156,20 +156,20 @@ RCP<const Basic> Add::from_dict(const RCP<const Number> &coef, const umap_basic_
     } else if (d.size() == 1 && coef->is_zero()) {
         auto p = d.begin();
         if (is_a<Integer>(*(p->second))) {
-            if (rcp_static_cast<Integer>(p->second)->is_zero()) {
+            if (rcp_static_cast<const Integer>(p->second)->is_zero()) {
                 return zero;
             }
-            if (rcp_static_cast<Integer>(p->second)->is_one()) {
+            if (rcp_static_cast<const Integer>(p->second)->is_one()) {
                 return p->first;
             }
             if (is_a<Mul>(*(p->first))) {
                 return Mul::from_dict(p->second,
-                        rcp_static_cast<Mul>(p->first)->dict_);
+                        rcp_static_cast<const Mul>(p->first)->dict_);
             }
             map_basic_basic m;
             if (is_a<Pow>(*(p->first))) {
-                insert(m, rcp_static_cast<Pow>(p->first)->base_,
-                    rcp_static_cast<Pow>(p->first)->exp_);
+                insert(m, rcp_static_cast<const Pow>(p->first)->base_,
+                    rcp_static_cast<const Pow>(p->first)->exp_);
             } else {
                 insert(m, p->first, one);
             }
@@ -179,11 +179,11 @@ RCP<const Basic> Add::from_dict(const RCP<const Number> &coef, const umap_basic_
         if (is_a_Number(*p->second)) {
             if (is_a<Mul>(*(p->first))) {
                 return Mul::from_dict(p->second,
-                        rcp_static_cast<Mul>(p->first)->dict_);
+                        rcp_static_cast<const Mul>(p->first)->dict_);
             }
             if (is_a<Pow>(*p->first)) {
-                insert(m, rcp_static_cast<Pow>(p->first)->base_,
-                    rcp_static_cast<Pow>(p->first)->exp_);
+                insert(m, rcp_static_cast<const Pow>(p->first)->base_,
+                    rcp_static_cast<const Pow>(p->first)->exp_);
             } else {
                 insert(m, p->first, one);
             }
@@ -218,10 +218,10 @@ void Add::as_coef_term(const RCP<const Basic> &self,
         const Ptr<RCP<const Number>> &coef, const Ptr<RCP<const Basic>> &term)
 {
     if (is_a<Mul>(*self)) {
-        *coef = (rcp_static_cast<Mul>(self))->coef_;
-        *term = Mul::from_dict(one, (rcp_static_cast<Mul>(self))->dict_);
+        *coef = (rcp_static_cast<const Mul>(self))->coef_;
+        *term = Mul::from_dict(one, (rcp_static_cast<const Mul>(self))->dict_);
     } else if (is_a_Number(*self)) {
-        *coef = rcp_static_cast<Number>(self);
+        *coef = rcp_static_cast<const Number>(self);
         *term = one;
     } else {
         *coef = one;
@@ -235,26 +235,26 @@ RCP<const Basic> add(const RCP<const Basic> &a, const RCP<const Basic> &b)
     RCP<const Number> coef;
     RCP<const Basic> t;
     if (CSymPy::is_a<Add>(*a) && CSymPy::is_a<Add>(*b)) {
-        coef = (rcp_static_cast<Add>(a))->coef_;
-        d = (rcp_static_cast<Add>(a))->dict_;
-        for (auto &p: (rcp_static_cast<Add>(b))->dict_)
+        coef = (rcp_static_cast<const Add>(a))->coef_;
+        d = (rcp_static_cast<const Add>(a))->dict_;
+        for (auto &p: (rcp_static_cast<const Add>(b))->dict_)
             Add::dict_add_term(d, p.second, p.first);
-        iaddnum(outArg(coef), rcp_static_cast<Add>(b)->coef_);
+        iaddnum(outArg(coef), rcp_static_cast<const Add>(b)->coef_);
     } else if (CSymPy::is_a<Add>(*a)) {
-        coef = (rcp_static_cast<Add>(a))->coef_;
-        d = (rcp_static_cast<Add>(a))->dict_;
+        coef = (rcp_static_cast<const Add>(a))->coef_;
+        d = (rcp_static_cast<const Add>(a))->dict_;
         if (is_a_Number(*b)) {
-            iaddnum(outArg(coef), rcp_static_cast<Number>(b));
+            iaddnum(outArg(coef), rcp_static_cast<const Number>(b));
         } else {
             RCP<const Number> coef2;
             Add::as_coef_term(b, outArg(coef2), outArg(t));
             Add::dict_add_term(d, coef2, t);
         }
     } else if (CSymPy::is_a<Add>(*b)) {
-        coef = (rcp_static_cast<Add>(b))->coef_;
-        d = (rcp_static_cast<Add>(b))->dict_;
+        coef = (rcp_static_cast<const Add>(b))->coef_;
+        d = (rcp_static_cast<const Add>(b))->dict_;
         if (is_a_Number(*a)) {
-            iaddnum(outArg(coef), rcp_static_cast<Number>(a));
+            iaddnum(outArg(coef), rcp_static_cast<const Number>(a));
         } else {
             RCP<const Number> coef2;
             Add::as_coef_term(a, outArg(coef2), outArg(t));
@@ -291,13 +291,13 @@ RCP<const Basic> add_expand(const RCP<const Add> &self)
     for (auto &p: self->dict_) {
         tmp = expand(p.first);
         if (is_a<Add>(*tmp)) {
-            for (auto &q: (rcp_static_cast<Add>(tmp))->dict_) {
+            for (auto &q: (rcp_static_cast<const Add>(tmp))->dict_) {
                 Add::as_coef_term(q.first, outArg(coef), outArg(tmp2));
                 Add::dict_add_term(d,
                         mulnum(mulnum(p.second, q.second), coef), tmp2);
             }
             iaddnum(outArg(coef_overall), mulnum(p.second,
-                        rcp_static_cast<Add>(tmp)->coef_));
+                        rcp_static_cast<const Add>(tmp)->coef_));
         } else {
             Add::as_coef_term(tmp, outArg(coef), outArg(tmp));
             Add::dict_add_term(d, mulnum(p.second, coef), tmp);
@@ -313,15 +313,15 @@ RCP<const Basic> Add::diff(const RCP<const Symbol> &x) const
     RCP<const Basic> t;
     for (auto &p: dict_) {
         RCP<const Basic> term = p.first->diff(x);
-        if (is_a<Integer>(*term) && rcp_static_cast<Integer>(term)->is_zero()) {
+        if (is_a<Integer>(*term) && rcp_static_cast<const Integer>(term)->is_zero()) {
             continue;
         } else if (is_a_Number(*term)) {
             iaddnum(outArg(coef),
-                    mulnum(p.second, rcp_static_cast<Number>(term)));
+                    mulnum(p.second, rcp_static_cast<const Number>(term)));
         } else if (is_a<Add>(*term)) {
-            for (auto &q: (rcp_static_cast<Add>(term))->dict_)
+            for (auto &q: (rcp_static_cast<const Add>(term))->dict_)
                 Add::dict_add_term(d, q.second, q.first);
-            iaddnum(outArg(coef), rcp_static_cast<Add>(term)->coef_);
+            iaddnum(outArg(coef), rcp_static_cast<const Add>(term)->coef_);
         } else {
             Add::as_coef_term(mul(p.second, term), outArg(coef2), outArg(t));
             Add::dict_add_term(d, coef2, t);
@@ -331,7 +331,7 @@ RCP<const Basic> Add::diff(const RCP<const Symbol> &x) const
 }
 
 void Add::as_two_terms(const Ptr<RCP<const Basic>> &a,
-            const Ptr<RCP<const Basic>> &b)
+            const Ptr<RCP<const Basic>> &b) const
 {
     auto p = dict_.begin();
     *a = mul(p->first, p->second);
@@ -355,15 +355,15 @@ RCP<const Basic> Add::subs(const map_basic_basic &subs_dict) const
         if (term == p.first) {
             Add::dict_add_term(d, p.second, p.first);
         } else if (is_a<Integer>(*term) &&
-                rcp_static_cast<Integer>(term)->is_zero()) {
+                rcp_static_cast<const Integer>(term)->is_zero()) {
             continue;
         } else if (is_a_Number(*term)) {
             iaddnum(outArg(coef),
-                    mulnum(p.second, rcp_static_cast<Number>(term)));
+                    mulnum(p.second, rcp_static_cast<const Number>(term)));
         } else if (is_a<Add>(*term)) {
-            for (auto &q: (rcp_static_cast<Add>(term))->dict_)
+            for (auto &q: (rcp_static_cast<const Add>(term))->dict_)
                 Add::dict_add_term(d, q.second, q.first);
-            iaddnum(outArg(coef), rcp_static_cast<Add>(term)->coef_);
+            iaddnum(outArg(coef), rcp_static_cast<const Add>(term)->coef_);
         } else {
             Add::as_coef_term(mul(p.second, term), outArg(coef2), outArg(t));
             Add::dict_add_term(d, coef2, t);

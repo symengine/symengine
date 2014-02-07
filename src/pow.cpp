@@ -20,16 +20,16 @@ bool Pow::is_canonical(const RCP<const Basic> &base, const RCP<const Basic> &exp
     if (base == null) return false;
     if (exp == null) return false;
     // e.g. 0^x
-    if (is_a<Integer>(*base) && rcp_static_cast<Integer>(base)->is_zero())
+    if (is_a<Integer>(*base) && rcp_static_cast<const Integer>(base)->is_zero())
         return false;
     // e.g. 1^x
-    if (is_a<Integer>(*base) && rcp_static_cast<Integer>(base)->is_one())
+    if (is_a<Integer>(*base) && rcp_static_cast<const Integer>(base)->is_one())
         return false;
     // e.g. x^0
-    if (is_a<Integer>(*exp) && rcp_static_cast<Integer>(exp)->is_zero())
+    if (is_a<Integer>(*exp) && rcp_static_cast<const Integer>(exp)->is_zero())
         return false;
     // e.g. x^1
-    if (is_a<Integer>(*exp) && rcp_static_cast<Integer>(exp)->is_one())
+    if (is_a<Integer>(*exp) && rcp_static_cast<const Integer>(exp)->is_one())
         return false;
     // e.g. 2^3, (2/3)^4
     if (is_a_Number(*base) && is_a<Integer>(*exp))
@@ -97,11 +97,11 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
     if (eq(a, zero)) return zero;
     if (eq(a, one)) return one;
     if (is_a_Number(*a) && is_a<Integer>(*b))
-        return pownum(rcp_static_cast<Number>(a), rcp_static_cast<Integer>(b));
+        return pownum(rcp_static_cast<const Number>(a), rcp_static_cast<const Integer>(b));
     if (is_a<Mul>(*a))
-        return rcp_static_cast<Mul>(a)->power_all_terms(b);
+        return rcp_static_cast<const Mul>(a)->power_all_terms(b);
     if (is_a<Pow>(*a)) {
-        RCP<const Pow> A = rcp_static_cast<Pow>(a);
+        RCP<const Pow> A = rcp_static_cast<const Pow>(a);
         return pow(A->base_, mul(A->exp_, b));
     }
     return rcp(new Pow(a, b));
@@ -202,9 +202,9 @@ RCP<const Basic> pow_expand(const RCP<const Pow> &self)
     if (is_a<Integer>(*self->exp_)) {
         if (is_a<Add>(*self->base_)) {
             map_vec_mpz r;
-            int n = rcp_static_cast<Integer>(self->exp_)->as_int();
+            int n = rcp_static_cast<const Integer>(self->exp_)->as_int();
 
-            RCP<const Add> base = rcp_static_cast<Add>(self->base_);
+            RCP<const Add> base = rcp_static_cast<const Add>(self->base_);
             umap_basic_int base_dict = base->dict_;
             if (! (base->coef_->is_zero())) {
                 // Add the numerical coefficient into the dictionary. This
@@ -229,8 +229,8 @@ RCP<const Basic> pow_expand(const RCP<const Pow> &self)
                         RCP<const Basic> base = i2->first;
                         if (is_a<Integer>(*base)) {
                             imulnum(outArg(overall_coeff),
-                                rcp_static_cast<Number>(
-                                rcp_static_cast<Integer>(base)->powint(*exp)));
+                                rcp_static_cast<const Number>(
+                                rcp_static_cast<const Integer>(base)->powint(*exp)));
                         } else if (is_a<Symbol>(*base)) {
                             Mul::dict_add_term(d, exp, base);
                         } else {
@@ -242,7 +242,7 @@ RCP<const Basic> pow_expand(const RCP<const Pow> &self)
                         if (!(i2->second->is_one())) {
                             imulnum(outArg(overall_coeff),
                                 pownum(i2->second,
-                                    rcp_static_cast<Number>(exp)));
+                                    rcp_static_cast<const Number>(exp)));
                         }
                     }
                 }
@@ -250,15 +250,15 @@ RCP<const Basic> pow_expand(const RCP<const Pow> &self)
                 RCP<const Number> coef2 = rcp(new Integer(p.second));
                 if (is_a_Number(*term)) {
                     iaddnum(outArg(add_overall_coeff),
-                        mulnum(rcp_static_cast<Number>(term), coef2));
+                        mulnum(rcp_static_cast<const Number>(term), coef2));
                 } else {
                     if (is_a<Mul>(*term) &&
-                            !(rcp_static_cast<Mul>(term)->coef_->is_one())) {
+                            !(rcp_static_cast<const Mul>(term)->coef_->is_one())) {
                         // Tidy up things like {2x: 3} -> {x: 6}
                         imulnum(outArg(coef2),
-                                rcp_static_cast<Mul>(term)->coef_);
+                                rcp_static_cast<const Mul>(term)->coef_);
                         term = Mul::from_dict(one,
-                                rcp_static_cast<Mul>(term)->dict_);
+                                rcp_static_cast<const Mul>(term)->dict_);
                     }
                     Add::dict_add_term(rd, coef2, term);
                 }
