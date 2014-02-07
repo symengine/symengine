@@ -113,10 +113,7 @@ public:
     }
     // Move assignment
     RCP<T>& operator=(RCP<T> &&r_ptr) {
-        T *tmp;
-        tmp = r_ptr.ptr_;
-        r_ptr.ptr_ = ptr_;
-        ptr_ = tmp;
+        std::swap(ptr_, r_ptr.ptr_);
         return *this;
     }
     void reset() {
