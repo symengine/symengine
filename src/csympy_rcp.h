@@ -82,7 +82,7 @@ public:
     }
     // Move constructor
     template<class T2> RCP(RCP<T2>&& r_ptr) : ptr_(r_ptr.get()) {
-        r_ptr.set_null();
+        r_ptr._set_null();
     }
     ~RCP() {
         if (ptr_ != NULL && --(ptr_->refcount_) == 0) delete ptr_;
@@ -98,7 +98,6 @@ public:
     T* get() const { return ptr_; }
     Ptr<T> ptr() const { return Ptr<T>(get()); }
     bool is_null() const { return ptr_ == NULL; }
-    void set_null() { ptr_ = NULL; }
     template<class T2> bool operator==(const RCP<T2> &p2) {
         return ptr_ == p2.ptr_;
     }
@@ -122,6 +121,8 @@ public:
         if (!is_null() && --(ptr_->refcount_) == 0) delete ptr_;
         ptr_ = NULL;
     }
+    // Don't use this function directly:
+    void _set_null() { ptr_ = NULL; }
 private:
     T *ptr_;
 };
