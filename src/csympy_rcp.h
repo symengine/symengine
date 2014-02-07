@@ -66,11 +66,21 @@ public:
         CSYMPY_ASSERT(ptr_ != NULL)
         (ptr_->refcount_)++;
     }
+    // Copy constructor
     RCP(const RCP<T> &rp) : ptr_(rp.ptr_) {
         if (!is_null()) (ptr_->refcount_)++;
     }
+    // Copy constructor
     template<class T2> RCP(const RCP<T2>& r_ptr) : ptr_(r_ptr.get()) {
         if (!is_null()) (ptr_->refcount_)++;
+    }
+    // Move constructor
+    RCP(RCP<T> &&rp) : ptr_(rp.ptr_) {
+        rp.ptr_ = NULL;
+    }
+    // Move constructor
+    template<class T2> RCP(RCP<T2>&& r_ptr) : ptr_(r_ptr.get()) {
+        r_ptr.set_null();
     }
     ~RCP() {
         if (ptr_ != NULL && --(ptr_->refcount_) == 0) delete ptr_;
@@ -86,12 +96,14 @@ public:
     T* get() const { return ptr_; }
     Ptr<T> ptr() const { return Ptr<T>(get()); }
     bool is_null() const { return ptr_ == NULL; }
+    void set_null() { ptr_ = NULL; }
     template<class T2> bool operator==(const RCP<T2> &p2) {
         return ptr_ == p2.ptr_;
     }
     template<class T2> bool operator!=(const RCP<T2> &p2) {
         return ptr_ != p2.ptr_;
     }
+    // Copy assignment
     RCP<T>& operator=(const RCP<T> &r_ptr) {
         T *r_ptr_ptr_ = r_ptr.ptr_;
         if (!r_ptr.is_null()) (r_ptr_ptr_->refcount_)++;
