@@ -28,13 +28,13 @@ int main(int argc, char* argv[])
 {
     Teuchos::print_stack_on_segfault();
 
-    RCP<Basic> x = rcp(new Symbol("x"));
-    RCP<Basic> y = rcp(new Symbol("y"));
-    RCP<Basic> z = rcp(new Symbol("z"));
-    RCP<Basic> w = rcp(new Symbol("w"));
-    RCP<Basic> i100 = rcp(new Integer(100));
+    RCP<const Basic> x = rcp(new Symbol("x"));
+    RCP<const Basic> y = rcp(new Symbol("y"));
+    RCP<const Basic> z = rcp(new Symbol("z"));
+    RCP<const Basic> w = rcp(new Symbol("w"));
+    RCP<const Basic> i100 = rcp(new Integer(100));
 
-    RCP<Basic> e, r;
+    RCP<const Basic> e, r;
 
     e = pow(add(add(pow(x, y), pow(y, x)), pow(z, x)), i100);
 
@@ -48,7 +48,7 @@ int main(int argc, char* argv[])
         << std::chrono::duration_cast<std::chrono::milliseconds>(t2-t1).count()
         << "ms" << std::endl;
     std::cout << "number of terms: "
-        << rcp_dynamic_cast<Add>(r)->dict_.size() << std::endl;
+        << rcp_dynamic_cast<const Add>(r)->dict_.size() << std::endl;
 
     return 0;
 }
