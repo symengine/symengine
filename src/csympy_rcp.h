@@ -111,6 +111,14 @@ public:
         ptr_ = r_ptr_ptr_;
         return *this;
     }
+    // Move assignment
+    RCP<T>& operator=(RCP<T> &&r_ptr) {
+        T *tmp;
+        tmp = r_ptr.ptr_;
+        r_ptr.ptr_ = ptr_;
+        ptr_ = tmp;
+        return *this;
+    }
     void reset() {
         if (!is_null() && --(ptr_->refcount_) == 0) delete ptr_;
         ptr_ = NULL;
