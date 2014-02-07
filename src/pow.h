@@ -10,31 +10,31 @@ namespace CSymPy {
 
 class Pow : public Basic {
 public: // TODO: make this private
-    RCP<Basic> base_, exp_; // base^exp
+    RCP<const Basic> base_, exp_; // base^exp
 
 public:
-    Pow(const RCP<Basic> &base, const RCP<Basic> &exp);
+    Pow(const RCP<const Basic> &base, const RCP<const Basic> &exp);
     virtual std::size_t __hash__() const;
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
     virtual std::string __str__() const;
 
-    bool is_canonical(const RCP<Basic> &base,
-            const RCP<Basic> &exp);
+    bool is_canonical(const RCP<const Basic> &base,
+            const RCP<const Basic> &exp);
 
-    virtual RCP<Basic> diff(const RCP<Symbol> &x) const;
-    virtual RCP<Basic> subs(const map_basic_basic &subs_dict) const;
+    virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
+    virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
 };
 
-RCP<Basic> pow(const RCP<Basic> &a,
-        const RCP<Basic> &b);
+RCP<const Basic> pow(const RCP<const Basic> &a,
+        const RCP<const Basic> &b);
 
 
 void multinomial_coefficients(int m, int n, map_vec_int &r);
 
-RCP<Basic> pow_expand(const RCP<Pow> &self);
+RCP<const Basic> pow_expand(const RCP<const Pow> &self);
 
-inline RCP<Basic> sqrt(const RCP<Basic> &x) {
+inline RCP<const Basic> sqrt(const RCP<const Basic> &x) {
     return pow(x, div(one, integer(2)));
 }
 

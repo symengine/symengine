@@ -57,7 +57,7 @@ signed long int Integer::as_int() const
     return this->i.get_si();
 }
 
-RCP<Number> Integer::divint(const Integer &other) const {
+RCP<const Number> Integer::divint(const Integer &other) const {
     if (other.i == 0)
         throw std::runtime_error("Rational: Division by zero.");
     mpq_class q(this->i, other.i);
@@ -69,8 +69,8 @@ RCP<Number> Integer::divint(const Integer &other) const {
     return Rational::from_mpq(q);
 }
 
-RCP<Number> Integer::pow_negint(const Integer &other) const {
-    RCP<Number> tmp = powint(*other.neg());
+RCP<const Number> Integer::pow_negint(const Integer &other) const {
+    RCP<const Number> tmp = powint(*other.neg());
     if (is_a<Integer>(*tmp)) {
         mpq_class q(1, rcp_static_cast<Integer>(tmp)->i);
         return rcp(new Rational(q));
@@ -79,7 +79,7 @@ RCP<Number> Integer::pow_negint(const Integer &other) const {
     }
 }
 
-RCP<Integer> isqrt(const Integer &n)
+RCP<const Integer> isqrt(const Integer &n)
 {
     mpz_class m;
     mpz_t m_t;
@@ -93,7 +93,7 @@ RCP<Integer> isqrt(const Integer &n)
     return integer(m);
 }
 
-RCP<Integer> iabs(const Integer &n)
+RCP<const Integer> iabs(const Integer &n)
 {
     mpz_class m;
     mpz_t m_t;
@@ -108,7 +108,7 @@ RCP<Integer> iabs(const Integer &n)
 }
 
 int i_nth_root(const Integer &a, unsigned long int n,
-                                                    const Ptr<RCP<Integer>> &r)
+                                                    const Ptr<RCP<const Integer>> &r)
 {
     if (n == 0)
         throw std::runtime_error("i_nth_root: Can not find Zeroth root");
@@ -137,8 +137,8 @@ int perfect_power(const Integer &n)
 
 // Initialize (declare) the integers -1, 0 and 1 (those are exposed in
 // integer.h):
-RCP<Integer> zero = rcp(new Integer(0));
-RCP<Integer> one = rcp(new Integer(1));
-RCP<Integer> minus_one = rcp(new Integer(-1));
+RCP<const Integer> zero = rcp(new Integer(0));
+RCP<const Integer> one = rcp(new Integer(1));
+RCP<const Integer> minus_one = rcp(new Integer(-1));
 
 } // CSymPy

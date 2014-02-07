@@ -18,7 +18,7 @@ public:
 int main(int argc, char* argv[])
 {
 
-    RCP<Mesh> m = rcp(new Mesh());
+    RCP<const Mesh> m = rcp(new Mesh());
     Ptr<Mesh> p = m.ptr();
     if (m == null) return 1;
     if (p->refcount_ != 1) return 1;

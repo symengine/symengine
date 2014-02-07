@@ -12,17 +12,17 @@ class RCPBasicKeyEq;
 class RCPBasicKeyLess;
 
 
-typedef std::unordered_map<RCP<Basic>, RCP<Number>,
+typedef std::unordered_map<RCP<const Basic>, RCP<const Number>,
         RCPBasicHash, RCPBasicKeyEq> umap_basic_int;
-typedef std::unordered_map<RCP<Basic>, RCP<Basic>,
+typedef std::unordered_map<RCP<const Basic>, RCP<const Basic>,
         RCPBasicHash, RCPBasicKeyEq> umap_basic_basic;
 
 typedef std::vector<int> vec_int;
 typedef std::map<vec_int, long long int> map_vec_int;
 typedef std::map<vec_int, mpz_class> map_vec_mpz;
-typedef std::map<RCP<Basic>, RCP<Number>,
+typedef std::map<RCP<const Basic>, RCP<const Number>,
         RCPBasicKeyLess> map_basic_int;
-typedef std::map<RCP<Basic>, RCP<Basic>,
+typedef std::map<RCP<const Basic>, RCP<const Basic>,
         RCPBasicKeyLess> map_basic_basic;
 
 // insert(m, first, second) is equivalent to m[first] = second, just faster,

@@ -9,13 +9,13 @@
 
 namespace CSymPy {
 
-Pow::Pow(const RCP<Basic> &base, const RCP<Basic> &exp)
+Pow::Pow(const RCP<const Basic> &base, const RCP<const Basic> &exp)
     : base_{base}, exp_{exp}
 {
     CSYMPY_ASSERT(is_canonical(base, exp))
 }
 
-bool Pow::is_canonical(const RCP<Basic> &base, const RCP<Basic> &exp)
+bool Pow::is_canonical(const RCP<const Basic> &base, const RCP<const Basic> &exp)
 {
     if (base == null) return false;
     if (exp == null) return false;
@@ -90,7 +90,7 @@ std::string Pow::__str__() const
     return o.str();
 }
 
-RCP<Basic> pow(const RCP<Basic> &a, const RCP<Basic> &b)
+RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
 {
     if (eq(b, zero)) return one;
     if (eq(b, one)) return a;
@@ -101,7 +101,7 @@ RCP<Basic> pow(const RCP<Basic> &a, const RCP<Basic> &b)
     if (is_a<Mul>(*a))
         return rcp_static_cast<Mul>(a)->power_all_terms(b);
     if (is_a<Pow>(*a)) {
-        RCP<Pow> A = rcp_static_cast<Pow>(a);
+        RCP<const Pow> A = rcp_static_cast<Pow>(a);
         return pow(A->base_, mul(A->exp_, b));
     }
     return rcp(new Pow(a, b));
@@ -197,14 +197,14 @@ void multinomial_coefficients_mpz(int m, int n, map_vec_mpz &r)
     }
 }
 
-RCP<Basic> pow_expand(const RCP<Pow> &self)
+RCP<const Basic> pow_expand(const RCP<const Pow> &self)
 {
     if (is_a<Integer>(*self->exp_)) {
         if (is_a<Add>(*self->base_)) {
             map_vec_mpz r;
             int n = rcp_static_cast<Integer>(self->exp_)->as_int();
 
-            RCP<Add> base = rcp_static_cast<Add>(self->base_);
+            RCP<const Add> base = rcp_static_cast<Add>(self->base_);
             umap_basic_int base_dict = base->dict_;
             if (! (base->coef_->is_zero())) {
                 // Add the numerical coefficient into the dictionary. This
@@ -217,16 +217,16 @@ RCP<Basic> pow_expand(const RCP<Pow> &self)
             // This speeds up overall expansion. For example for the benchmark
             // (y + x + z + w)^60 it improves the timing from 135ms to 124ms.
             rd.reserve(2*r.size());
-            RCP<Number> add_overall_coeff=zero;
+            RCP<const Number> add_overall_coeff=zero;
             for (auto &p: r) {
                 auto power = p.first.begin();
                 auto i2 = base_dict.begin();
                 map_basic_basic d;
-                RCP<Number> overall_coeff=one;
+                RCP<const Number> overall_coeff=one;
                 for (; power != p.first.end(); ++power, ++i2) {
                     if (*power > 0) {
-                        RCP<Integer> exp = rcp(new Integer(*power));
-                        RCP<Basic> base = i2->first;
+                        RCP<const Integer> exp = rcp(new Integer(*power));
+                        RCP<const Basic> base = i2->first;
                         if (is_a<Integer>(*base)) {
                             imulnum(outArg(overall_coeff),
                                 rcp_static_cast<Number>(
@@ -234,7 +234,7 @@ RCP<Basic> pow_expand(const RCP<Pow> &self)
                         } else if (is_a<Symbol>(*base)) {
                             Mul::dict_add_term(d, exp, base);
                         } else {
-                            RCP<Basic> exp2, t, tmp;
+                            RCP<const Basic> exp2, t, tmp;
                             tmp = pow(base, exp);
                             Mul::as_base_exp(tmp, outArg(exp2), outArg(t));
                             Mul::dict_add_term(d, exp2, t);
@@ -246,8 +246,8 @@ RCP<Basic> pow_expand(const RCP<Pow> &self)
                         }
                     }
                 }
-                RCP<Basic> term = Mul::from_dict(overall_coeff, d);
-                RCP<Number> coef2 = rcp(new Integer(p.second));
+                RCP<const Basic> term = Mul::from_dict(overall_coeff, d);
+                RCP<const Number> coef2 = rcp(new Integer(p.second));
                 if (is_a_Number(*term)) {
                     iaddnum(outArg(add_overall_coeff),
                         mulnum(rcp_static_cast<Number>(term), coef2));
@@ -263,28 +263,28 @@ RCP<Basic> pow_expand(const RCP<Pow> &self)
                     Add::dict_add_term(rd, coef2, term);
                 }
             }
-            RCP<Basic> result = Add::from_dict(add_overall_coeff, rd);
+            RCP<const Basic> result = Add::from_dict(add_overall_coeff, rd);
             return result;
         }
     }
     return self;
 }
 
-RCP<Basic> Pow::diff(const RCP<Symbol> &x) const
+RCP<const Basic> Pow::diff(const RCP<const Symbol> &x) const
 {
     if (is_a_Number(*exp_))
         return mul(mul(exp_, pow(base_, sub(exp_, one))), base_->diff(x));
     throw std::runtime_error("Not implemented.");
 }
 
-RCP<Basic> Pow::subs(const map_basic_basic &subs_dict) const
+RCP<const Basic> Pow::subs(const map_basic_basic &subs_dict) const
 {
-    RCP<Pow> self = rcp_const_cast<Pow>(rcp(this));
+    RCP<const Pow> self = rcp_const_cast<Pow>(rcp(this));
     auto it = subs_dict.find(self);
     if (it != subs_dict.end())
         return it->second;
-    RCP<Basic> base_new = base_->subs(subs_dict);
-    RCP<Basic> exp_new = exp_->subs(subs_dict);
+    RCP<const Basic> base_new = base_->subs(subs_dict);
+    RCP<const Basic> exp_new = exp_->subs(subs_dict);
     if (base_new == base_ && exp_new == exp_)
         return self;
     else

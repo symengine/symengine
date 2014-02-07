@@ -34,7 +34,7 @@ std::string Symbol::__str__() const
     return name_;
 }
 
-RCP<Basic> Symbol::diff(const RCP<Symbol> &x) const
+RCP<const Basic> Symbol::diff(const RCP<const Symbol> &x) const
 {
     if (x->name_ == this->name_)
         return one;

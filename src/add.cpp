@@ -10,13 +10,13 @@
 
 namespace CSymPy {
 
-Add::Add(const RCP<Number> &coef, const umap_basic_int& dict)
+Add::Add(const RCP<const Number> &coef, const umap_basic_int& dict)
     : coef_{coef}, dict_{dict}
 {
     CSYMPY_ASSERT(is_canonical(coef, dict))
 }
 
-bool Add::is_canonical(const RCP<Number> &coef,
+bool Add::is_canonical(const RCP<const Number> &coef,
         const umap_basic_int& dict)
 {
     if (coef == null) return false;
@@ -149,7 +149,7 @@ std::string Add::__str__() const
 // If d.size() > 1 then it just returns Add. This means that the dictionary
 // must be in canonical form already. For d.size == 1, it returns Mul, Pow,
 // Symbol or Integer, depending on the expression.
-RCP<Basic> Add::from_dict(const RCP<Number> &coef, const umap_basic_int &d)
+RCP<const Basic> Add::from_dict(const RCP<const Number> &coef, const umap_basic_int &d)
 {
     if (d.size() == 0) {
         return coef;
@@ -200,8 +200,8 @@ RCP<Basic> Add::from_dict(const RCP<Number> &coef, const umap_basic_int &d)
 
 // Adds (coef*t) to the dict "d"
 // Assumption: "t" does not have any numerical coefficients, those are in "coef"
-void Add::dict_add_term(umap_basic_int &d, const RCP<Number> &coef,
-        const RCP<Basic> &t)
+void Add::dict_add_term(umap_basic_int &d, const RCP<const Number> &coef,
+        const RCP<const Basic> &t)
 {
     auto it = d.find(t);
     if (it == d.end()) {
@@ -214,8 +214,8 @@ void Add::dict_add_term(umap_basic_int &d, const RCP<Number> &coef,
 }
 
 
-void Add::as_coef_term(const RCP<Basic> &self,
-        const Ptr<RCP<Number>> &coef, const Ptr<RCP<Basic>> &term)
+void Add::as_coef_term(const RCP<const Basic> &self,
+        const Ptr<RCP<const Number>> &coef, const Ptr<RCP<const Basic>> &term)
 {
     if (is_a<Mul>(*self)) {
         *coef = (rcp_static_cast<Mul>(self))->coef_;
@@ -229,11 +229,11 @@ void Add::as_coef_term(const RCP<Basic> &self,
     }
 }
 
-RCP<Basic> add(const RCP<Basic> &a, const RCP<Basic> &b)
+RCP<const Basic> add(const RCP<const Basic> &a, const RCP<const Basic> &b)
 {
     CSymPy::umap_basic_int d;
-    RCP<Number> coef;
-    RCP<Basic> t;
+    RCP<const Number> coef;
+    RCP<const Basic> t;
     if (CSymPy::is_a<Add>(*a) && CSymPy::is_a<Add>(*b)) {
         coef = (rcp_static_cast<Add>(a))->coef_;
         d = (rcp_static_cast<Add>(a))->dict_;
@@ -246,7 +246,7 @@ RCP<Basic> add(const RCP<Basic> &a, const RCP<Basic> &b)
         if (is_a_Number(*b)) {
             iaddnum(outArg(coef), rcp_static_cast<Number>(b));
         } else {
-            RCP<Number> coef2;
+            RCP<const Number> coef2;
             Add::as_coef_term(b, outArg(coef2), outArg(t));
             Add::dict_add_term(d, coef2, t);
         }
@@ -256,7 +256,7 @@ RCP<Basic> add(const RCP<Basic> &a, const RCP<Basic> &b)
         if (is_a_Number(*a)) {
             iaddnum(outArg(coef), rcp_static_cast<Number>(a));
         } else {
-            RCP<Number> coef2;
+            RCP<const Number> coef2;
             Add::as_coef_term(a, outArg(coef2), outArg(t));
             Add::dict_add_term(d, coef2, t);
         }
@@ -277,17 +277,17 @@ RCP<Basic> add(const RCP<Basic> &a, const RCP<Basic> &b)
     return Add::from_dict(coef, d);
 }
 
-RCP<Basic> sub(const RCP<Basic> &a, const RCP<Basic> &b)
+RCP<const Basic> sub(const RCP<const Basic> &a, const RCP<const Basic> &b)
 {
     return add(a, mul(minus_one, b));
 }
 
-RCP<Basic> add_expand(const RCP<Add> &self)
+RCP<const Basic> add_expand(const RCP<const Add> &self)
 {
     umap_basic_int d;
-    RCP<Number> coef_overall = self->coef_;
-    RCP<Number> coef;
-    RCP<Basic> tmp, tmp2;
+    RCP<const Number> coef_overall = self->coef_;
+    RCP<const Number> coef;
+    RCP<const Basic> tmp, tmp2;
     for (auto &p: self->dict_) {
         tmp = expand(p.first);
         if (is_a<Add>(*tmp)) {
@@ -306,13 +306,13 @@ RCP<Basic> add_expand(const RCP<Add> &self)
     return Add::from_dict(coef_overall, d);
 }
 
-RCP<Basic> Add::diff(const RCP<Symbol> &x) const
+RCP<const Basic> Add::diff(const RCP<const Symbol> &x) const
 {
     CSymPy::umap_basic_int d;
-    RCP<Number> coef=zero, coef2;
-    RCP<Basic> t;
+    RCP<const Number> coef=zero, coef2;
+    RCP<const Basic> t;
     for (auto &p: dict_) {
-        RCP<Basic> term = p.first->diff(x);
+        RCP<const Basic> term = p.first->diff(x);
         if (is_a<Integer>(*term) && rcp_static_cast<Integer>(term)->is_zero()) {
             continue;
         } else if (is_a_Number(*term)) {
@@ -330,8 +330,8 @@ RCP<Basic> Add::diff(const RCP<Symbol> &x) const
     return Add::from_dict(coef, d);
 }
 
-void Add::as_two_terms(const Ptr<RCP<Basic>> &a,
-            const Ptr<RCP<Basic>> &b)
+void Add::as_two_terms(const Ptr<RCP<const Basic>> &a,
+            const Ptr<RCP<const Basic>> &b)
 {
     auto p = dict_.begin();
     *a = mul(p->first, p->second);
@@ -340,18 +340,18 @@ void Add::as_two_terms(const Ptr<RCP<Basic>> &a,
     *b = Add::from_dict(coef_, d);
 }
 
-RCP<Basic> Add::subs(const map_basic_basic &subs_dict) const
+RCP<const Basic> Add::subs(const map_basic_basic &subs_dict) const
 {
-    RCP<Add> self = rcp_const_cast<Add>(rcp(this));
+    RCP<const Add> self = rcp_const_cast<Add>(rcp(this));
     auto it = subs_dict.find(self);
     if (it != subs_dict.end())
         return it->second;
 
     CSymPy::umap_basic_int d;
-    RCP<Number> coef=coef_, coef2;
-    RCP<Basic> t;
+    RCP<const Number> coef=coef_, coef2;
+    RCP<const Basic> t;
     for (auto &p: dict_) {
-        RCP<Basic> term = p.first->subs(subs_dict);
+        RCP<const Basic> term = p.first->subs(subs_dict);
         if (term == p.first) {
             Add::dict_add_term(d, p.second, p.first);
         } else if (is_a<Integer>(*term) &&

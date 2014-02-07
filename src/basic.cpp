@@ -29,7 +29,7 @@ std::string Basic::__str__() const
     return s.str();
 }
 
-RCP<Basic> expand(const RCP<Basic> &self)
+RCP<const Basic> expand(const RCP<const Basic> &self)
 {
     if (is_a<Symbol>(*self)) return self;
     if (is_a_Number(*self)) return self;
@@ -39,9 +39,9 @@ RCP<Basic> expand(const RCP<Basic> &self)
     return self;
 }
 
-RCP<Basic> Basic::subs(const map_basic_basic &subs_dict) const
+RCP<const Basic> Basic::subs(const map_basic_basic &subs_dict) const
 {
-    RCP<Basic> self = rcp_const_cast<Basic>(rcp(this));
+    RCP<const Basic> self = rcp_const_cast<Basic>(rcp(this));
     auto it = subs_dict.find(self);
     if (it == subs_dict.end())
         return self;
