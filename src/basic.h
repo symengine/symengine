@@ -66,6 +66,14 @@ public:
     // with undefined behavior while deallocating derived classes.
     virtual ~Basic() {}
 
+    // Delete the copy constructor and assignment
+    Basic(const Basic&) = delete;
+    Basic& operator=(const Basic&) = delete;
+
+    // Delete the move constructor and assignment
+    Basic(Basic&&) = delete;
+    Basic& operator=(Basic&&) = delete;
+
     // Implements the hash of the given CSymPy class.
     // Use std::hash to get the hash. Example:
     //     RCP<Symbol> x = rcp(new Symbol("x"));
