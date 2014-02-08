@@ -319,23 +319,11 @@ void primefactors(const RCP<const Integer> &n,
     RCP<const Integer> f;
     if (eq(n, zero)) return;
 
-    while (!eq(_n, one)) {
-        factor(outArg(f), *_n);
-
-        if (probab_prime_p(*f)) {
-            primes.push_back(f);
-            while (divides(_n, f)) {
-                _n = rcp_dynamic_cast<const Integer>(div(_n, f));
-            }
-        }
-        else {
-            primefactors(f, primes);
-            _n = rcp_dynamic_cast<const Integer>(div(_n, f));
-            while(!eq(gcd(*_n, *f), one)) {
-                _n = rcp_dynamic_cast<const Integer>(div(_n, gcd(*_n, *f)));
-            }
-        }
+    while (factor_trial_division(outArg(f), *_n) == 1) {
+        primes.push_back(f);
+        _n = rcp_dynamic_cast<const Integer>(div(_n, f));
     }
+    primes.push_back(_n);
 }
 
 } // CSymPy
