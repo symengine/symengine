@@ -312,7 +312,7 @@ void eratosthenes_sieve(unsigned limit, std::vector<unsigned> &primes)
             primes.push_back(n);
 }
 
-void primefactors(const Integer &n, std::vector<Integer> &primes)
+void primefactors(const Integer &n, std::vector<RCP<const Integer>> &primes)
 {
     RCP<const Integer> _n = integer(n.as_mpz());
     RCP<const Integer> f;
@@ -321,7 +321,7 @@ void primefactors(const Integer &n, std::vector<Integer> &primes)
         factor(outArg(f), *_n);
 
         if (probab_prime_p(*f)) {
-            primes.push_back(*f);
+            primes.push_back(f);
             while (divides(_n, f)) {
                 _n = rcp_dynamic_cast<const Integer>(div(_n, f));
             }

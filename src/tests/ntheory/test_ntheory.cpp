@@ -159,8 +159,7 @@ void test_sieve()
 // helper function for test_primefactors
 void _test_primefactors(const Integer &a, unsigned size)
 {
-    std::vector<Integer> primes;
-    std::vector<Integer>::iterator it;
+    std::vector<RCP<const Integer>> primes;
 
     primefactors(a, primes);
     assert(primes.size() == size);
