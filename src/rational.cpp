@@ -20,7 +20,7 @@ bool Rational::is_canonical(const mpq_class &i)
     return true;
 }
 
-RCP<Number> Rational::from_mpq(const mpq_class i)
+RCP<const Number> Rational::from_mpq(const mpq_class i)
 {
     // If the result is an Integer, return an Integer:
     if (i.get_den() == 1) {
@@ -30,8 +30,8 @@ RCP<Number> Rational::from_mpq(const mpq_class i)
     }
 }
 
-RCP<Number> Rational::from_two_ints(const RCP<Integer> &n,
-            const RCP<Integer> &d)
+RCP<const Number> Rational::from_two_ints(const RCP<const Integer> &n,
+            const RCP<const Integer> &d)
 {
     if (d->i == 0)
         throw std::runtime_error("Rational: Division by zero.");

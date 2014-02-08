@@ -33,14 +33,14 @@ using CSymPy::print_stack_on_segfault;
 
 void test_sin()
 {
-    RCP<Symbol> x = symbol("x");
-    RCP<Symbol> y = symbol("y");
-    RCP<Symbol> z = symbol("z");
-    RCP<Basic> im1 = integer(-1);
-    RCP<Basic> i2 = integer(2);
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    RCP<const Symbol> z = symbol("z");
+    RCP<const Basic> im1 = integer(-1);
+    RCP<const Basic> i2 = integer(2);
 
-    RCP<Basic> r1;
-    RCP<Basic> r2;
+    RCP<const Basic> r1;
+    RCP<const Basic> r2;
 
     r1 = sin(x);
     r2 = sin(x);
@@ -90,14 +90,14 @@ void test_sin()
 
 void test_cos()
 {
-    RCP<Symbol> x = symbol("x");
-    RCP<Symbol> y = symbol("y");
-    RCP<Symbol> z = symbol("z");
-    RCP<Basic> im1 = integer(-1);
-    RCP<Basic> i2 = integer(2);
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    RCP<const Symbol> z = symbol("z");
+    RCP<const Basic> im1 = integer(-1);
+    RCP<const Basic> i2 = integer(2);
 
-    RCP<Basic> r1;
-    RCP<Basic> r2;
+    RCP<const Basic> r1;
+    RCP<const Basic> r2;
 
     r1 = cos(x);
     r2 = cos(x);
@@ -119,14 +119,14 @@ void test_cos()
 
 void test_f()
 {
-    RCP<Symbol> x = symbol("x");
-    RCP<Symbol> y = symbol("y");
-    RCP<Symbol> z = symbol("z");
-    RCP<Basic> im1 = integer(-1);
-    RCP<Basic> i2 = integer(2);
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    RCP<const Symbol> z = symbol("z");
+    RCP<const Basic> im1 = integer(-1);
+    RCP<const Basic> i2 = integer(2);
 
-    RCP<Basic> r1;
-    RCP<Basic> r2;
+    RCP<const Basic> r1;
+    RCP<const Basic> r2;
 
     r1 = function_symbol("f", x);
     r2 = function_symbol("f", x);

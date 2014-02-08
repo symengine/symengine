@@ -25,13 +25,13 @@ using CSymPy::print_stack_on_segfault;
 int main(int argc, char* argv[])
 {
     print_stack_on_segfault();
-    RCP<Basic> x = rcp(new Symbol("x"));
-    RCP<Basic> y = rcp(new Symbol("y"));
-    RCP<Basic> z = rcp(new Symbol("z"));
-    RCP<Basic> w = rcp(new Symbol("w"));
-    RCP<Basic> i15 = rcp(new Integer(15));
+    RCP<const Basic> x = rcp(new Symbol("x"));
+    RCP<const Basic> y = rcp(new Symbol("y"));
+    RCP<const Basic> z = rcp(new Symbol("z"));
+    RCP<const Basic> w = rcp(new Symbol("w"));
+    RCP<const Basic> i15 = rcp(new Integer(15));
 
-    RCP<Basic> e, f1, f2, r;
+    RCP<const Basic> e, f1, f2, r;
 
     e = pow(add(add(add(x, y), z), w), i15);
     f1 = expand(e);

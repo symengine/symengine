@@ -31,16 +31,16 @@ using CSymPy::print_stack_on_segfault;
 
 void test_symbol()
 {
-    RCP<Basic> x = rcp(new Symbol("x"));
-    RCP<Basic> y = rcp(new Symbol("y"));
-    RCP<Basic> z = rcp(new Symbol("z"));
-    RCP<Basic> w = rcp(new Symbol("w"));
-    RCP<Basic> i2 = rcp(new Integer(2));
-    RCP<Basic> i3 = rcp(new Integer(3));
-    RCP<Basic> i4 = rcp(new Integer(4));
+    RCP<const Basic> x = rcp(new Symbol("x"));
+    RCP<const Basic> y = rcp(new Symbol("y"));
+    RCP<const Basic> z = rcp(new Symbol("z"));
+    RCP<const Basic> w = rcp(new Symbol("w"));
+    RCP<const Basic> i2 = rcp(new Integer(2));
+    RCP<const Basic> i3 = rcp(new Integer(3));
+    RCP<const Basic> i4 = rcp(new Integer(4));
 
-    RCP<Basic> r1 = x;
-    RCP<Basic> r2 = y;
+    RCP<const Basic> r1 = x;
+    RCP<const Basic> r2 = y;
     map_basic_basic d;
     d[x] = y;
     assert(eq(r1->subs(d), r2));
@@ -49,16 +49,16 @@ void test_symbol()
 
 void test_add()
 {
-    RCP<Basic> x = rcp(new Symbol("x"));
-    RCP<Basic> y = rcp(new Symbol("y"));
-    RCP<Basic> z = rcp(new Symbol("z"));
-    RCP<Basic> w = rcp(new Symbol("w"));
-    RCP<Basic> i2 = rcp(new Integer(2));
-    RCP<Basic> i3 = rcp(new Integer(3));
-    RCP<Basic> i4 = rcp(new Integer(4));
+    RCP<const Basic> x = rcp(new Symbol("x"));
+    RCP<const Basic> y = rcp(new Symbol("y"));
+    RCP<const Basic> z = rcp(new Symbol("z"));
+    RCP<const Basic> w = rcp(new Symbol("w"));
+    RCP<const Basic> i2 = rcp(new Integer(2));
+    RCP<const Basic> i3 = rcp(new Integer(3));
+    RCP<const Basic> i4 = rcp(new Integer(4));
 
-    RCP<Basic> r1 = add(x, y);
-    RCP<Basic> r2 = mul(i2, y);
+    RCP<const Basic> r1 = add(x, y);
+    RCP<const Basic> r2 = mul(i2, y);
     map_basic_basic d;
     d[x] = y;
     assert(eq(r1->subs(d), r2));
@@ -90,16 +90,16 @@ void test_add()
 
 void test_mul()
 {
-    RCP<Basic> x = rcp(new Symbol("x"));
-    RCP<Basic> y = rcp(new Symbol("y"));
-    RCP<Basic> z = rcp(new Symbol("z"));
-    RCP<Basic> w = rcp(new Symbol("w"));
-    RCP<Basic> i2 = rcp(new Integer(2));
-    RCP<Basic> i3 = rcp(new Integer(3));
-    RCP<Basic> i4 = rcp(new Integer(4));
+    RCP<const Basic> x = rcp(new Symbol("x"));
+    RCP<const Basic> y = rcp(new Symbol("y"));
+    RCP<const Basic> z = rcp(new Symbol("z"));
+    RCP<const Basic> w = rcp(new Symbol("w"));
+    RCP<const Basic> i2 = rcp(new Integer(2));
+    RCP<const Basic> i3 = rcp(new Integer(3));
+    RCP<const Basic> i4 = rcp(new Integer(4));
 
-    RCP<Basic> r1 = mul(x, y);
-    RCP<Basic> r2 = pow(y, i2);
+    RCP<const Basic> r1 = mul(x, y);
+    RCP<const Basic> r2 = pow(y, i2);
     map_basic_basic d;
     d[x] = y;
     assert(eq(r1->subs(d), r2));
@@ -125,16 +125,16 @@ void test_mul()
 
 void test_pow()
 {
-    RCP<Basic> x = rcp(new Symbol("x"));
-    RCP<Basic> y = rcp(new Symbol("y"));
-    RCP<Basic> z = rcp(new Symbol("z"));
-    RCP<Basic> w = rcp(new Symbol("w"));
-    RCP<Basic> i2 = rcp(new Integer(2));
-    RCP<Basic> i3 = rcp(new Integer(3));
-    RCP<Basic> i4 = rcp(new Integer(4));
+    RCP<const Basic> x = rcp(new Symbol("x"));
+    RCP<const Basic> y = rcp(new Symbol("y"));
+    RCP<const Basic> z = rcp(new Symbol("z"));
+    RCP<const Basic> w = rcp(new Symbol("w"));
+    RCP<const Basic> i2 = rcp(new Integer(2));
+    RCP<const Basic> i3 = rcp(new Integer(3));
+    RCP<const Basic> i4 = rcp(new Integer(4));
 
-    RCP<Basic> r1 = pow(x, y);
-    RCP<Basic> r2 = pow(y, y);
+    RCP<const Basic> r1 = pow(x, y);
+    RCP<const Basic> r2 = pow(y, y);
     map_basic_basic d;
     d[x] = y;
     assert(eq(r1->subs(d), r2));
@@ -158,16 +158,16 @@ void test_pow()
 
 void test_trig()
 {
-    RCP<Basic> x = rcp(new Symbol("x"));
-    RCP<Basic> y = rcp(new Symbol("y"));
-    RCP<Basic> z = rcp(new Symbol("z"));
-    RCP<Basic> w = rcp(new Symbol("w"));
-    RCP<Basic> i2 = rcp(new Integer(2));
-    RCP<Basic> i3 = rcp(new Integer(3));
-    RCP<Basic> i4 = rcp(new Integer(4));
+    RCP<const Basic> x = rcp(new Symbol("x"));
+    RCP<const Basic> y = rcp(new Symbol("y"));
+    RCP<const Basic> z = rcp(new Symbol("z"));
+    RCP<const Basic> w = rcp(new Symbol("w"));
+    RCP<const Basic> i2 = rcp(new Integer(2));
+    RCP<const Basic> i3 = rcp(new Integer(3));
+    RCP<const Basic> i4 = rcp(new Integer(4));
 
-    RCP<Basic> r1 = sin(x);
-    RCP<Basic> r2 = zero;
+    RCP<const Basic> r1 = sin(x);
+    RCP<const Basic> r2 = zero;
     map_basic_basic d;
     d[x] = zero;
     assert(eq(r1->subs(d), r2));

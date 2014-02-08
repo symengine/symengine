@@ -8,9 +8,9 @@ using CSymPy::isqrt;
 
 void test_isqrt()
 {
-    RCP<Integer> i10 = integer(10);
-    RCP<Integer> i19 = integer(19);
-    RCP<Integer> i25 = integer(25);
+    RCP<const Integer> i10 = integer(10);
+    RCP<const Integer> i19 = integer(19);
+    RCP<const Integer> i25 = integer(25);
     
     assert(eq(isqrt(*i10), integer(3)));
     assert(eq(isqrt(*i19), integer(4)));
@@ -19,10 +19,10 @@ void test_isqrt()
 
 void test_i_nth_root()
 {
-    RCP<Integer> i7 = integer(7);
-    RCP<Integer> i9 = integer(9);
-    RCP<Integer> i10 = integer(10);
-    RCP<Integer> r;
+    RCP<const Integer> i7 = integer(7);
+    RCP<const Integer> i9 = integer(9);
+    RCP<const Integer> i10 = integer(10);
+    RCP<const Integer> r;
     
     assert(i_nth_root(*i7, 2, outArg(r)) == 0);
     assert(eq(r, integer(2)));
@@ -39,10 +39,10 @@ void test_i_nth_root()
 
 void test_perfect_power_square()
 {
-    RCP<Integer> i7 = integer(7);
-    RCP<Integer> i8 = integer(8);
-    RCP<Integer> i9 = integer(9);
-    RCP<Integer> i10 = integer(10);
+    RCP<const Integer> i7 = integer(7);
+    RCP<const Integer> i8 = integer(8);
+    RCP<const Integer> i9 = integer(9);
+    RCP<const Integer> i10 = integer(10);
     
     assert(perfect_square(*i7) == 0);
     assert(perfect_power(*i7) == 0);
@@ -56,9 +56,9 @@ void test_perfect_power_square()
 
 void test_iabs()
 {
-    RCP<Integer> _i5 = integer(-5);
-    RCP<Integer> _i9 = integer(-9);
-    RCP<Integer> i12 =  integer(12);
+    RCP<const Integer> _i5 = integer(-5);
+    RCP<const Integer> _i9 = integer(-9);
+    RCP<const Integer> i12 =  integer(12);
     
     assert(eq(iabs(*_i5), integer(5)));
     assert(eq(iabs(*_i9), integer(9)));

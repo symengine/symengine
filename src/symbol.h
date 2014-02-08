@@ -19,10 +19,10 @@ public:
         return name_;
     }
 
-    virtual RCP<Basic> diff(const RCP<Symbol> &x) const;
+    virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
 };
 
-inline RCP<Symbol> symbol(const std::string &name)
+inline RCP<const Symbol> symbol(const std::string &name)
 {
     return rcp(new Symbol(name));
 }

@@ -10,17 +10,17 @@
 
 namespace CSymPy {
 
-Sin::Sin(const RCP<Basic> &arg)
+Sin::Sin(const RCP<const Basic> &arg)
     : arg_{arg}
 {
     CSYMPY_ASSERT(is_canonical(arg))
 }
 
-bool Sin::is_canonical(const RCP<Basic> &arg)
+bool Sin::is_canonical(const RCP<const Basic> &arg)
 {
     // e.g. sin(0)
     if (is_a<Integer>(*arg) &&
-            rcp_static_cast<Integer>(arg)->is_zero())
+            rcp_static_cast<const Integer>(arg)->is_zero())
         return false;
     // TODO: add things like sin(k*pi) etc.
     return true;
@@ -56,24 +56,24 @@ std::string Sin::__str__() const
     return o.str();
 }
 
-RCP<Basic> sin(const RCP<Basic> &arg)
+RCP<const Basic> sin(const RCP<const Basic> &arg)
 {
     if (eq(arg, zero)) return zero;
     return rcp(new Sin(arg));
 }
 
 
-Cos::Cos(const RCP<Basic> &arg)
+Cos::Cos(const RCP<const Basic> &arg)
     : arg_{arg}
 {
     CSYMPY_ASSERT(is_canonical(arg))
 }
 
-bool Cos::is_canonical(const RCP<Basic> &arg)
+bool Cos::is_canonical(const RCP<const Basic> &arg)
 {
     // e.g. cos(0)
     if (is_a<Integer>(*arg) &&
-            rcp_static_cast<Integer>(arg)->is_zero())
+            rcp_static_cast<const Integer>(arg)->is_zero())
         return false;
     // TODO: add things like cos(k*pi) etc.
     return true;
@@ -108,43 +108,43 @@ std::string Cos::__str__() const
     return o.str();
 }
 
-RCP<Basic> cos(const RCP<Basic> &arg)
+RCP<const Basic> cos(const RCP<const Basic> &arg)
 {
     if (eq(arg, zero)) return one;
     return rcp(new Cos(arg));
 }
 
 
-RCP<Basic> Sin::diff(const RCP<Symbol> &x) const
+RCP<const Basic> Sin::diff(const RCP<const Symbol> &x) const
 {
     return mul(cos(arg_), arg_->diff(x));
 }
 
-RCP<Basic> Cos::diff(const RCP<Symbol> &x) const
+RCP<const Basic> Cos::diff(const RCP<const Symbol> &x) const
 {
     return mul(mul(minus_one, sin(arg_)), arg_->diff(x));
 }
 
-RCP<Basic> Sin::subs(const map_basic_basic &subs_dict) const
+RCP<const Basic> Sin::subs(const map_basic_basic &subs_dict) const
 {
-    RCP<Sin> self = rcp_const_cast<Sin>(rcp(this));
+    RCP<const Sin> self = rcp_const_cast<Sin>(rcp(this));
     auto it = subs_dict.find(self);
     if (it != subs_dict.end())
         return it->second;
-    RCP<Basic> arg = arg_->subs(subs_dict);
+    RCP<const Basic> arg = arg_->subs(subs_dict);
     if (arg == arg_)
         return self;
     else
         return sin(arg);
 }
 
-RCP<Basic> Cos::subs(const map_basic_basic &subs_dict) const
+RCP<const Basic> Cos::subs(const map_basic_basic &subs_dict) const
 {
-    RCP<Cos> self = rcp_const_cast<Cos>(rcp(this));
+    RCP<const Cos> self = rcp_const_cast<Cos>(rcp(this));
     auto it = subs_dict.find(self);
     if (it != subs_dict.end())
         return it->second;
-    RCP<Basic> arg = arg_->subs(subs_dict);
+    RCP<const Basic> arg = arg_->subs(subs_dict);
     if (arg == arg_)
         return self;
     else
@@ -153,13 +153,13 @@ RCP<Basic> Cos::subs(const map_basic_basic &subs_dict) const
 
 /* ---------------------------- */
 
-FunctionSymbol::FunctionSymbol(std::string name, const RCP<Basic> &arg)
+FunctionSymbol::FunctionSymbol(std::string name, const RCP<const Basic> &arg)
     : name_{name}, arg_{arg}
 {
     CSYMPY_ASSERT(is_canonical(arg))
 }
 
-bool FunctionSymbol::is_canonical(const RCP<Basic> &arg)
+bool FunctionSymbol::is_canonical(const RCP<const Basic> &arg)
 {
     return true;
 }
@@ -199,7 +199,7 @@ std::string FunctionSymbol::__str__() const
     return o.str();
 }
 
-RCP<Basic> FunctionSymbol::diff(const RCP<Symbol> &x) const
+RCP<const Basic> FunctionSymbol::diff(const RCP<const Symbol> &x) const
 {
     if (eq(arg_->diff(x), zero))
         return zero;
@@ -207,7 +207,7 @@ RCP<Basic> FunctionSymbol::diff(const RCP<Symbol> &x) const
         throw std::runtime_error("f(x).diff(x) not implemented yet.");
 }
 
-RCP<Basic> function_symbol(std::string name, const RCP<Basic> &arg)
+RCP<const Basic> function_symbol(std::string name, const RCP<const Basic> &arg)
 {
     return rcp(new FunctionSymbol(name, arg));
 }

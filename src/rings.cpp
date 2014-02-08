@@ -9,45 +9,45 @@
 
 namespace CSymPy {
 
-void expr2poly(const RCP<Basic> &p, umap_basic_int &syms, umap_vec_mpz &P)
+void expr2poly(const RCP<const Basic> &p, umap_basic_int &syms, umap_vec_mpz &P)
 {
     if (is_a<Add>(*p)) {
         int n = syms.size();
-        umap_basic_int &d = rcp_static_cast<Add>(p)->dict_;
+        const umap_basic_int &d = rcp_static_cast<const Add>(p)->dict_;
         vec_int exp;
         mpz_class coef;
         for (auto &p: d) {
             if (!is_a<Integer>(*p.second))
                     throw std::runtime_error("Not implemented.");
-            coef = rcp_static_cast<Integer>(p.second)->as_mpz();
+            coef = rcp_static_cast<const Integer>(p.second)->as_mpz();
             exp.assign(n, 0); // Initialize to [0]*n
             if (is_a<Mul>(*p.first)) {
-                map_basic_basic &term = rcp_static_cast<Mul>(p.first)->dict_;
+                const map_basic_basic &term = rcp_static_cast<const Mul>(p.first)->dict_;
                 for (auto &q: term) {
-                    RCP<Basic> sym = q.first;
+                    RCP<const Basic> sym = q.first;
                     if (!is_a<Integer>(*syms.at(sym)))
                             throw std::runtime_error("Not implemented.");
-                    int i = rcp_static_cast<Integer>(syms.at(sym))->as_int();
+                    int i = rcp_static_cast<const Integer>(syms.at(sym))->as_int();
                     if (is_a<Integer>(*q.second)) {
-                        exp[i] = rcp_static_cast<Integer>(q.second)->as_int();
+                        exp[i] = rcp_static_cast<const Integer>(q.second)->as_int();
                     } else {
                         throw std::runtime_error("Cannot convert symbolic exponents to sparse polynomials with integer exponents.");
                     }
                 }
             } else if (is_a<Pow>(*p.first)) {
-                RCP<Basic> sym = rcp_static_cast<Pow>(p.first)->base_;
-                RCP<Basic> exp_ = rcp_static_cast<Pow>(p.first)->exp_;
+                RCP<const Basic> sym = rcp_static_cast<const Pow>(p.first)->base_;
+                RCP<const Basic> exp_ = rcp_static_cast<const Pow>(p.first)->exp_;
                 if (!is_a<Integer>(*syms.at(sym)))
                         throw std::runtime_error("Not implemented.");
-                int i = rcp_static_cast<Integer>(syms.at(sym))->as_int();
+                int i = rcp_static_cast<const Integer>(syms.at(sym))->as_int();
                 if (!is_a<Integer>(*exp_))
                     throw std::runtime_error("Not implemented.");
-                exp[i] = rcp_static_cast<Integer>(exp_)->as_int();
+                exp[i] = rcp_static_cast<const Integer>(exp_)->as_int();
             } else if (is_a<Symbol>(*p.first)) {
-                RCP<Basic> sym = p.first;
+                RCP<const Basic> sym = p.first;
                 if (!is_a<Integer>(*syms.at(sym)))
                         throw std::runtime_error("Not implemented.");
-                int i = rcp_static_cast<Integer>(syms.at(sym))->as_int();
+                int i = rcp_static_cast<const Integer>(syms.at(sym))->as_int();
                 exp[i] = 1;
             } else {
                 throw std::runtime_error("Not implemented.");

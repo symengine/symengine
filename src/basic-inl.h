@@ -15,12 +15,12 @@ inline bool Basic::__neq__(const Basic &o) const
     return !(this->__eq__(o));
 }
 
-inline bool eq(const RCP<Basic> &a, const RCP<Basic> &b)
+inline bool eq(const RCP<const Basic> &a, const RCP<const Basic> &b)
 {
     return a->__eq__(*b);
 }
 
-inline bool neq(const RCP<Basic> &a, const RCP<Basic> &b)
+inline bool neq(const RCP<const Basic> &a, const RCP<const Basic> &b)
 {
     return !(a->__eq__(*b));
 }

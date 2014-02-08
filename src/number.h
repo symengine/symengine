@@ -10,55 +10,55 @@ public:
     virtual bool is_zero() const = 0;
     virtual bool is_one() const = 0;
 
-    virtual RCP<Number> add(const Number &other) const = 0;
-    virtual RCP<Number> sub(const Number &other) const = 0;
-    virtual RCP<Number> rsub(const Number &other) const = 0;
-    virtual RCP<Number> mul(const Number &other) const = 0;
-    virtual RCP<Number> div(const Number &other) const = 0;
-    virtual RCP<Number> rdiv(const Number &other) const = 0;
-    virtual RCP<Number> pow(const Number &other) const = 0;
+    virtual RCP<const Number> add(const Number &other) const = 0;
+    virtual RCP<const Number> sub(const Number &other) const = 0;
+    virtual RCP<const Number> rsub(const Number &other) const = 0;
+    virtual RCP<const Number> mul(const Number &other) const = 0;
+    virtual RCP<const Number> div(const Number &other) const = 0;
+    virtual RCP<const Number> rdiv(const Number &other) const = 0;
+    virtual RCP<const Number> pow(const Number &other) const = 0;
 
-    virtual RCP<Basic> diff(const RCP<Symbol> &x) const;
+    virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
 };
 
-inline RCP<Number> addnum(const RCP<Number> &self,
-    const RCP<Number> &other)
+inline RCP<const Number> addnum(const RCP<const Number> &self,
+    const RCP<const Number> &other)
 {
     return self->add(*other);
 }
 
-inline RCP<Number> subnum(const RCP<Number> &self,
-    const RCP<Number> &other)
+inline RCP<const Number> subnum(const RCP<const Number> &self,
+    const RCP<const Number> &other)
 {
     return self->sub(*other);
 }
 
-inline RCP<Number> mulnum(const RCP<Number> &self,
-    const RCP<Number> &other)
+inline RCP<const Number> mulnum(const RCP<const Number> &self,
+    const RCP<const Number> &other)
 {
     return self->mul(*other);
 }
 
-inline RCP<Number> divnum(const RCP<Number> &self,
-    const RCP<Number> &other)
+inline RCP<const Number> divnum(const RCP<const Number> &self,
+    const RCP<const Number> &other)
 {
     return self->div(*other);
 }
 
-inline RCP<Number> pownum(const RCP<Number> &self,
-    const RCP<Number> &other)
+inline RCP<const Number> pownum(const RCP<const Number> &self,
+    const RCP<const Number> &other)
 {
     return self->pow(*other);
 }
 
-inline void iaddnum(const Ptr<RCP<Number>> &self,
-    const RCP<Number> &other)
+inline void iaddnum(const Ptr<RCP<const Number>> &self,
+    const RCP<const Number> &other)
 {
     *self = addnum(*self, other);
 }
 
-inline void imulnum(const Ptr<RCP<Number>> &self,
-    const RCP<Number> &other)
+inline void imulnum(const Ptr<RCP<const Number>> &self,
+    const RCP<const Number> &other)
 {
     *self = mulnum(*self, other);
 }

@@ -30,16 +30,16 @@ using CSymPy::print_stack_on_segfault;
 
 void test_add()
 {
-    RCP<Basic> x = rcp(new Symbol("x"));
-    RCP<Basic> y = rcp(new Symbol("y"));
-    RCP<Basic> z = rcp(new Symbol("z"));
-    RCP<Basic> i2 = rcp(new Integer(2));
-    RCP<Basic> i3 = rcp(new Integer(3));
-    RCP<Basic> i4 = rcp(new Integer(4));
+    RCP<const Basic> x = rcp(new Symbol("x"));
+    RCP<const Basic> y = rcp(new Symbol("y"));
+    RCP<const Basic> z = rcp(new Symbol("z"));
+    RCP<const Basic> i2 = rcp(new Integer(2));
+    RCP<const Basic> i3 = rcp(new Integer(3));
+    RCP<const Basic> i4 = rcp(new Integer(4));
 
-    RCP<Basic> r1 = add(x, x);
-    RCP<Basic> r2 = mul(i2, x);
-    RCP<Basic> r3 = mul(i3, x);
+    RCP<const Basic> r1 = add(x, x);
+    RCP<const Basic> r2 = mul(i2, x);
+    RCP<const Basic> r3 = mul(i3, x);
     assert(eq(r1, r2));
     assert(neq(r1, r3));
 
@@ -70,16 +70,16 @@ void test_add()
 
 void test_mul()
 {
-    RCP<Basic> x = rcp(new Symbol("x"));
-    RCP<Basic> y = rcp(new Symbol("y"));
-    RCP<Basic> z = rcp(new Symbol("z"));
-    RCP<Basic> im2 = rcp(new Integer(-2));
-    RCP<Basic> i2 = rcp(new Integer(2));
-    RCP<Basic> i3 = rcp(new Integer(3));
-    RCP<Basic> i4 = rcp(new Integer(4));
-    RCP<Basic> i6 = rcp(new Integer(6));
+    RCP<const Basic> x = rcp(new Symbol("x"));
+    RCP<const Basic> y = rcp(new Symbol("y"));
+    RCP<const Basic> z = rcp(new Symbol("z"));
+    RCP<const Basic> im2 = rcp(new Integer(-2));
+    RCP<const Basic> i2 = rcp(new Integer(2));
+    RCP<const Basic> i3 = rcp(new Integer(3));
+    RCP<const Basic> i4 = rcp(new Integer(4));
+    RCP<const Basic> i6 = rcp(new Integer(6));
 
-    RCP<Basic> r1, r2;
+    RCP<const Basic> r1, r2;
 
     r1 = mul(pow(x, y), z);
     r2 = mul(z, pow(x, y));
@@ -121,15 +121,15 @@ void test_mul()
 
 void test_sub()
 {
-    RCP<Basic> x = rcp(new Symbol("x"));
-    RCP<Basic> y = rcp(new Symbol("y"));
-    RCP<Basic> z = rcp(new Symbol("z"));
-    RCP<Basic> im1 = rcp(new Integer(-1));
-    RCP<Basic> i2 = rcp(new Integer(2));
-    RCP<Basic> i3 = rcp(new Integer(3));
-    RCP<Basic> i4 = rcp(new Integer(4));
+    RCP<const Basic> x = rcp(new Symbol("x"));
+    RCP<const Basic> y = rcp(new Symbol("y"));
+    RCP<const Basic> z = rcp(new Symbol("z"));
+    RCP<const Basic> im1 = rcp(new Integer(-1));
+    RCP<const Basic> i2 = rcp(new Integer(2));
+    RCP<const Basic> i3 = rcp(new Integer(3));
+    RCP<const Basic> i4 = rcp(new Integer(4));
 
-    RCP<Basic> r1, r2;
+    RCP<const Basic> r1, r2;
 
     r1 = sub(i3, i2);
     r2 = one;
@@ -171,13 +171,13 @@ void test_sub()
 
 void test_div()
 {
-    RCP<Basic> x = rcp(new Symbol("x"));
-    RCP<Basic> y = rcp(new Symbol("y"));
-    RCP<Basic> z = rcp(new Symbol("z"));
-    RCP<Basic> im1 = rcp(new Integer(-1));
-    RCP<Basic> i2 = rcp(new Integer(2));
-    RCP<Basic> i3 = rcp(new Integer(3));
-    RCP<Basic> i4 = rcp(new Integer(4));
+    RCP<const Basic> x = rcp(new Symbol("x"));
+    RCP<const Basic> y = rcp(new Symbol("y"));
+    RCP<const Basic> z = rcp(new Symbol("z"));
+    RCP<const Basic> im1 = rcp(new Integer(-1));
+    RCP<const Basic> i2 = rcp(new Integer(2));
+    RCP<const Basic> i3 = rcp(new Integer(3));
+    RCP<const Basic> i4 = rcp(new Integer(4));
 
     assert(integer(2)->is_positive());
     assert(integer(0)->is_zero());
@@ -185,7 +185,7 @@ void test_div()
     assert(!(integer(-1)->is_positive()));
     assert(integer(-1)->is_negative());
 
-    RCP<Basic> r1, r2;
+    RCP<const Basic> r1, r2;
 
     r1 = pow(i3, i2);
     r2 = integer(9);
@@ -228,20 +228,20 @@ void test_div()
 
 void test_pow()
 {
-    RCP<Symbol> x = rcp(new Symbol("x"));
-    RCP<Basic> y = rcp(new Symbol("y"));
-    RCP<Basic> z = rcp(new Symbol("z"));
-    RCP<Basic> im1 = rcp(new Integer(-1));
-    RCP<Basic> i2 = rcp(new Integer(2));
-    RCP<Basic> i3 = rcp(new Integer(3));
-    RCP<Basic> im3 = rcp(new Integer(-3));
-    RCP<Basic> i4 = rcp(new Integer(4));
-    RCP<Basic> i6 = rcp(new Integer(6));
-    RCP<Basic> i9 = rcp(new Integer(9));
-    RCP<Basic> i27 = rcp(new Integer(27));
+    RCP<const Symbol> x = rcp(new Symbol("x"));
+    RCP<const Basic> y = rcp(new Symbol("y"));
+    RCP<const Basic> z = rcp(new Symbol("z"));
+    RCP<const Basic> im1 = rcp(new Integer(-1));
+    RCP<const Basic> i2 = rcp(new Integer(2));
+    RCP<const Basic> i3 = rcp(new Integer(3));
+    RCP<const Basic> im3 = rcp(new Integer(-3));
+    RCP<const Basic> i4 = rcp(new Integer(4));
+    RCP<const Basic> i6 = rcp(new Integer(6));
+    RCP<const Basic> i9 = rcp(new Integer(9));
+    RCP<const Basic> i27 = rcp(new Integer(27));
 
-    RCP<Basic> r1;
-    RCP<Basic> r2;
+    RCP<const Basic> r1;
+    RCP<const Basic> r2;
 
     r1 = mul(x, x);
     r2 = pow(x, i2);
@@ -316,16 +316,16 @@ void test_multinomial()
 
 void test_expand1()
 {
-    RCP<Basic> x = rcp(new Symbol("x"));
-    RCP<Basic> y = rcp(new Symbol("y"));
-    RCP<Basic> z = rcp(new Symbol("z"));
-    RCP<Basic> w = rcp(new Symbol("w"));
-    RCP<Basic> i2 = rcp(new Integer(2));
-    RCP<Basic> i3 = rcp(new Integer(3));
-    RCP<Basic> i4 = rcp(new Integer(10));
+    RCP<const Basic> x = rcp(new Symbol("x"));
+    RCP<const Basic> y = rcp(new Symbol("y"));
+    RCP<const Basic> z = rcp(new Symbol("z"));
+    RCP<const Basic> w = rcp(new Symbol("w"));
+    RCP<const Basic> i2 = rcp(new Integer(2));
+    RCP<const Basic> i3 = rcp(new Integer(3));
+    RCP<const Basic> i4 = rcp(new Integer(10));
 
-    RCP<Basic> r1;
-    RCP<Basic> r2;
+    RCP<const Basic> r1;
+    RCP<const Basic> r2;
 
     r1 = pow(add(add(add(x, y), z), w), i4);
 
@@ -339,30 +339,30 @@ void test_expand1()
         << std::chrono::duration_cast<std::chrono::milliseconds>(t2-t1).count()
         << "ms" << std::endl;
     std::cout << "number of terms: "
-        << rcp_dynamic_cast<Add>(r2)->dict_.size() << std::endl;
+        << rcp_dynamic_cast<const Add>(r2)->dict_.size() << std::endl;
 }
 
 void test_expand2()
 {
-    RCP<Basic> x = rcp(new Symbol("x"));
-    RCP<Basic> y = rcp(new Symbol("y"));
-    RCP<Basic> z = rcp(new Symbol("z"));
-    RCP<Basic> w = rcp(new Symbol("w"));
-    RCP<Basic> im1 = rcp(new Integer(-1));
-    RCP<Basic> im2 = rcp(new Integer(-2));
-    RCP<Basic> i2 = rcp(new Integer(2));
-    RCP<Basic> i3 = rcp(new Integer(3));
-    RCP<Basic> i4 = rcp(new Integer(4));
-    RCP<Basic> i5 = rcp(new Integer(5));
-    RCP<Basic> i6 = rcp(new Integer(6));
-    RCP<Basic> i9 = rcp(new Integer(9));
-    RCP<Basic> i10 = rcp(new Integer(10));
-    RCP<Basic> i12 = rcp(new Integer(12));
-    RCP<Basic> i25 = rcp(new Integer(25));
-    RCP<Basic> i30 = rcp(new Integer(30));
+    RCP<const Basic> x = rcp(new Symbol("x"));
+    RCP<const Basic> y = rcp(new Symbol("y"));
+    RCP<const Basic> z = rcp(new Symbol("z"));
+    RCP<const Basic> w = rcp(new Symbol("w"));
+    RCP<const Basic> im1 = rcp(new Integer(-1));
+    RCP<const Basic> im2 = rcp(new Integer(-2));
+    RCP<const Basic> i2 = rcp(new Integer(2));
+    RCP<const Basic> i3 = rcp(new Integer(3));
+    RCP<const Basic> i4 = rcp(new Integer(4));
+    RCP<const Basic> i5 = rcp(new Integer(5));
+    RCP<const Basic> i6 = rcp(new Integer(6));
+    RCP<const Basic> i9 = rcp(new Integer(9));
+    RCP<const Basic> i10 = rcp(new Integer(10));
+    RCP<const Basic> i12 = rcp(new Integer(12));
+    RCP<const Basic> i25 = rcp(new Integer(25));
+    RCP<const Basic> i30 = rcp(new Integer(30));
 
-    RCP<Basic> r1;
-    RCP<Basic> r2;
+    RCP<const Basic> r1;
+    RCP<const Basic> r2;
 
     r1 = mul(w, add(add(x, y), z)); // w*(x+y+z)
     std::cout << *r1 << std::endl;
@@ -438,13 +438,13 @@ void test_expand2()
 
 void test_expand3()
 {
-    RCP<Basic> x = rcp(new Symbol("x"));
-    RCP<Basic> y = rcp(new Symbol("y"));
-    RCP<Basic> z = rcp(new Symbol("z"));
-    RCP<Basic> w = rcp(new Symbol("w"));
-    RCP<Basic> i4 = rcp(new Integer(2));
+    RCP<const Basic> x = rcp(new Symbol("x"));
+    RCP<const Basic> y = rcp(new Symbol("y"));
+    RCP<const Basic> z = rcp(new Symbol("z"));
+    RCP<const Basic> w = rcp(new Symbol("w"));
+    RCP<const Basic> i4 = rcp(new Integer(2));
 
-    RCP<Basic> e, f, r;
+    RCP<const Basic> e, f, r;
 
     e = pow(add(add(add(x, y), z), w), i4);
     f = mul(e, add(e, w));
@@ -459,7 +459,7 @@ void test_expand3()
         << std::chrono::duration_cast<std::chrono::milliseconds>(t2-t1).count()
         << "ms" << std::endl;
     std::cout << "number of terms: "
-        << rcp_dynamic_cast<Add>(r)->dict_.size() << std::endl;
+        << rcp_dynamic_cast<const Add>(r)->dict_.size() << std::endl;
 }
 
 int main(int argc, char* argv[])

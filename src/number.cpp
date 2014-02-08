@@ -9,7 +9,7 @@
 
 namespace CSymPy {
 
-RCP<Basic> Number::diff(const RCP<Symbol> &x) const
+RCP<const Basic> Number::diff(const RCP<const Symbol> &x) const
 {
     return zero;
 }
