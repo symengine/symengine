@@ -64,7 +64,7 @@ int mod_inverse(const Integer &a, const Integer &m, const Ptr<RCP<const Integer>
 }
 
 // Returns true if `b` divides `a` without reminder
-bool divides(const RCP<Integer> &a, const RCP<Integer> &b)
+bool divides(const RCP<const Integer> &a, const RCP<const Integer> &b)
 {
     return is_a<Integer>(*div(a, b));
 }
@@ -314,8 +314,8 @@ void eratosthenes_sieve(unsigned limit, std::vector<unsigned> &primes)
 
 void primefactors(const Integer &n, std::vector<Integer> &primes)
 {
-    RCP<Integer> _n = integer(n.as_mpz());
-    RCP<Integer> f;
+    RCP<const Integer> _n = integer(n.as_mpz());
+    RCP<const Integer> f;
 
     while (!eq(_n, one)) {
         factor(outArg(f), *_n);
@@ -323,14 +323,14 @@ void primefactors(const Integer &n, std::vector<Integer> &primes)
         if (probab_prime_p(*f)) {
             primes.push_back(*f);
             while (divides(_n, f)) {
-                _n = rcp_dynamic_cast<Integer>(div(_n, f));
+                _n = rcp_dynamic_cast<const Integer>(div(_n, f));
             }
         }
         else {
             primefactors(*f, primes);
-            _n = rcp_dynamic_cast<Integer>(div(_n, f));
+            _n = rcp_dynamic_cast<const Integer>(div(_n, f));
             while(!eq(gcd(*_n, *f), one)) {
-                _n = rcp_dynamic_cast<Integer>(div(_n, gcd(*_n, *f)));
+                _n = rcp_dynamic_cast<const Integer>(div(_n, gcd(*_n, *f)));
             }
         }
     }
