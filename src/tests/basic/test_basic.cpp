@@ -28,20 +28,20 @@ using CSymPy::print_stack_on_segfault;
 
 void test_symbol_hash()
 {
-    Symbol x  = Symbol("x");
-    Symbol x2 = Symbol("x");
-    Symbol y  = Symbol("y");
+    RCP<const Symbol> x  = rcp(new Symbol("x"));
+    RCP<const Symbol> x2 = rcp(new Symbol("x"));
+    RCP<const Symbol> y  = rcp(new Symbol("y"));
 
-    assert(x.__eq__(x));
-    assert(x.__eq__(x2));
-    assert(!(x.__eq__(y)));
-    assert(x.__neq__(y));
+    assert(x->__eq__(*x));
+    assert(x->__eq__(*x2));
+    assert(!(x->__eq__(*y)));
+    assert(x->__neq__(*y));
 
     std::hash<Basic> hash_fn;
     // Hashes of x and x2 must be the same:
-    assert(hash_fn(x) == hash_fn(x2));
+    assert(hash_fn(*x) == hash_fn(*x2));
     // Hashes of x and y can but don't have to be different:
-    if (hash_fn(x) != hash_fn(y)) assert(x.__neq__(y));
+    if (hash_fn(*x) != hash_fn(*y)) assert(x->__neq__(*y));
 
 
     std::size_t seed1 = 0;
@@ -49,8 +49,8 @@ void test_symbol_hash()
     hash_combine<std::string>(seed1, "y");
 
     std::size_t seed2 = 0;
-    hash_combine<Basic>(seed2, x);
-    hash_combine<Basic>(seed2, y);
+    hash_combine<Basic>(seed2, *x);
+    hash_combine<Basic>(seed2, *y);
 
     // This checks that the Symbols are hashed by their strings:
     assert(seed1 == seed2);
@@ -59,9 +59,9 @@ void test_symbol_hash()
 void test_symbol_dict()
 {
     umap_basic_int d;
-    RCP<Basic> x  = rcp(new Symbol("x"));
-    RCP<Basic> x2 = rcp(new Symbol("x"));
-    RCP<Basic> y  = rcp(new Symbol("y"));
+    RCP<const Basic> x  = rcp(new Symbol("x"));
+    RCP<const Basic> x2 = rcp(new Symbol("x"));
+    RCP<const Basic> y  = rcp(new Symbol("y"));
     assert( x !=  x2);  // The instances are different...
     assert(eq(x, x2));  // ...but equal in the SymPy sense
 
@@ -76,18 +76,18 @@ void test_symbol_dict()
 void test_add()
 {
     umap_basic_int m;
-    RCP<Basic> x  = rcp(new Symbol("x"));
-    RCP<Basic> y  = rcp(new Symbol("y"));
+    RCP<const Basic> x  = rcp(new Symbol("x"));
+    RCP<const Basic> y  = rcp(new Symbol("y"));
     insert(m, x, rcp(new Integer(2)));
     insert(m, y, rcp(new Integer(3)));
 
-    RCP<Add> a = rcp(new Add(zero, m));
+    RCP<const Add> a = rcp(new Add(zero, m));
     insert(m, x, rcp(new Integer(-2)));
-    RCP<Add> b = rcp(new Add(zero, m));
+    RCP<const Add> b = rcp(new Add(zero, m));
     std::cout << *a << std::endl;
     std::cout << *b << std::endl;
 
-    RCP<Basic> r = add(add(x, y), add(y, x));
+    RCP<const Basic> r = add(add(x, y), add(y, x));
     std::cout << *r << std::endl;
 
     r = add(x, x);
@@ -100,12 +100,12 @@ void test_add()
 
 void test_integer()
 {
-    RCP<Integer> i = rcp(new Integer(5));
-    RCP<Integer> j = rcp(new Integer(6));
+    RCP<const Integer> i = rcp(new Integer(5));
+    RCP<const Integer> j = rcp(new Integer(6));
     std::cout << *i << std::endl;
     std::cout << *j << std::endl;
 
-    RCP<Number> k = addnum(i, j);
+    RCP<const Number> k = addnum(i, j);
     std::cout << *k << std::endl;
     assert(eq(k, rcp(new Integer(11))));
     assert(neq(k, rcp(new Integer(12))));
@@ -140,7 +140,7 @@ void test_integer()
 
 void test_rational()
 {
-    RCP<Number> r1, r2, r3;
+    RCP<const Number> r1, r2, r3;
     r1 = Rational::from_two_ints(integer(5), integer(6));
     std::cout << *r1 << std::endl;
     assert(eq(r1, Rational::from_two_ints(integer(5), integer(6))));
@@ -237,30 +237,30 @@ void test_rational()
 void test_mul()
 {
     map_basic_basic m;
-    RCP<Basic> x  = rcp(new Symbol("x"));
-    RCP<Basic> y  = rcp(new Symbol("y"));
+    RCP<const Basic> x  = rcp(new Symbol("x"));
+    RCP<const Basic> y  = rcp(new Symbol("y"));
     insert(m, x, rcp(new Integer(2)));
     insert(m, y, rcp(new Integer(3)));
 
-    RCP<Mul> a = rcp(new Mul(one, m));
+    RCP<const Mul> a = rcp(new Mul(one, m));
     insert(m, x, rcp(new Integer(-2)));
-    RCP<Mul> b = rcp(new Mul(one, m));
+    RCP<const Mul> b = rcp(new Mul(one, m));
     std::cout << *a << std::endl;
     std::cout << *b << std::endl;
 
-    RCP<Basic> r = mul(mul(x, y), mul(y, x));
+    RCP<const Basic> r = mul(mul(x, y), mul(y, x));
     std::cout << *r << std::endl;
 }
 
 void test_diff()
 {
-    RCP<Basic> r1, r2;
-    RCP<Symbol> x  = symbol("x");
-    RCP<Symbol> y  = symbol("y");
-    RCP<Basic> i2  = integer(2);
-    RCP<Basic> i3  = integer(3);
-    RCP<Basic> i5  = integer(5);
-    RCP<Basic> i10  = integer(10);
+    RCP<const Basic> r1, r2;
+    RCP<const Symbol> x  = symbol("x");
+    RCP<const Symbol> y  = symbol("y");
+    RCP<const Basic> i2  = integer(2);
+    RCP<const Basic> i3  = integer(3);
+    RCP<const Basic> i5  = integer(5);
+    RCP<const Basic> i10  = integer(10);
     r1 = integer(5);
     r2 = r1->diff(x);
     assert(eq(r2, zero));
@@ -284,13 +284,13 @@ void test_diff()
 
 void test_compare()
 {
-    RCP<Basic> r1, r2;
-    RCP<Symbol> x  = symbol("x");
-    RCP<Symbol> y  = symbol("y");
-    RCP<Symbol> z  = symbol("z");
-    RCP<Basic> i2  = integer(2);
-    RCP<Basic> im2  = integer(-2);
-    RCP<Basic> i3  = integer(3);
+    RCP<const Basic> r1, r2;
+    RCP<const Symbol> x  = symbol("x");
+    RCP<const Symbol> y  = symbol("y");
+    RCP<const Symbol> z  = symbol("z");
+    RCP<const Basic> i2  = integer(2);
+    RCP<const Basic> im2  = integer(-2);
+    RCP<const Basic> i3  = integer(3);
     assert(x->compare(*x) == 0);
     assert(x->compare(*y) == -1);
     assert(x->compare(*z) == -1);

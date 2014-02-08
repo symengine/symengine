@@ -8,48 +8,48 @@ namespace CSymPy {
 
 class Mul : public Basic {
 public: // TODO: make this private
-    RCP<Number> coef_; // The coefficient (e.g. "2" in 2*x*y)
+    RCP<const Number> coef_; // The coefficient (e.g. "2" in 2*x*y)
     map_basic_basic dict_;   // the dictionary of the rest (e.g. "x*y" in 2*x*y)
 
 public:
     // Constructs Mul from a dictionary by copying the contents of the
     // dictionary:
-    Mul(const RCP<Number> &coef, const map_basic_basic& dict);
+    Mul(const RCP<const Number> &coef, const map_basic_basic& dict);
     virtual std::size_t __hash__() const;
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
     virtual std::string __str__() const;
 
     // Performs canonicalization first:
-    static RCP<Basic> from_dict(const RCP<Number> &coef,
+    static RCP<const Basic> from_dict(const RCP<const Number> &coef,
             const map_basic_basic &d);
     static void dict_add_term(map_basic_basic &d,
-            const RCP<Basic> &coef, const RCP<Basic> &t);
-    static void as_base_exp(const RCP<Basic> &self,
-            const Ptr<RCP<Basic>> &exp,
-            const Ptr<RCP<Basic>> &base);
-    void as_two_terms(const Ptr<RCP<Basic>> &a,
-            const Ptr<RCP<Basic>> &b);
-    RCP<Basic> power_all_terms(const RCP<Basic> &exp);
+            const RCP<const Basic> &coef, const RCP<const Basic> &t);
+    static void as_base_exp(const RCP<const Basic> &self,
+            const Ptr<RCP<const Basic>> &exp,
+            const Ptr<RCP<const Basic>> &base);
+    void as_two_terms(const Ptr<RCP<const Basic>> &a,
+            const Ptr<RCP<const Basic>> &b) const;
+    RCP<const Basic> power_all_terms(const RCP<const Basic> &exp) const;
 
     // Returns true if both 'coef' and 'dict' are in canonical form
-    bool is_canonical(const RCP<Number> &coef,
+    bool is_canonical(const RCP<const Number> &coef,
             const map_basic_basic& dict);
 
-    virtual RCP<Basic> diff(const RCP<Symbol> &x) const;
-    virtual RCP<Basic> subs(const map_basic_basic &subs_dict) const;
+    virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
+    virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
 };
 
-RCP<Basic> mul(const RCP<Basic> &a,
-        const RCP<Basic> &b);
+RCP<const Basic> mul(const RCP<const Basic> &a,
+        const RCP<const Basic> &b);
 
-RCP<Basic> div(const RCP<Basic> &a,
-        const RCP<Basic> &b);
+RCP<const Basic> div(const RCP<const Basic> &a,
+        const RCP<const Basic> &b);
 
-RCP<Basic> neg(const RCP<Basic> &a);
+RCP<const Basic> neg(const RCP<const Basic> &a);
 
 
-RCP<Basic> mul_expand(const RCP<Mul> &self);
+RCP<const Basic> mul_expand(const RCP<const Mul> &self);
 
 } // CSymPy
 

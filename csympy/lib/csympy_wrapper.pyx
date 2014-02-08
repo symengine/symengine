@@ -6,7 +6,7 @@ from libcpp.string cimport string
 class SympifyError(Exception):
     pass
 
-cdef c2py(RCP[csympy.Basic] o):
+cdef c2py(RCP[const csympy.Basic] o):
     cdef Basic r
     if (csympy.is_a_Add(deref(o))):
         r = Add.__new__(Add)
@@ -83,7 +83,7 @@ def sympify(a, raise_error=True):
             raise SympifyError("Cannot convert '%r' to a csympy type." % a)
 
 cdef class Basic(object):
-    cdef RCP[csympy.Basic] thisptr
+    cdef RCP[const csympy.Basic] thisptr
 
     def __str__(self):
         return deref(self.thisptr).__str__().decode("utf-8")
@@ -150,7 +150,7 @@ cdef class Basic(object):
         return c2py(csympy.expand(self.thisptr))
 
     def diff(Basic self not None, Symbol x not None):
-        cdef RCP[csympy.Symbol] X = csympy.rcp_static_cast_Symbol(x.thisptr)
+        cdef RCP[const csympy.Symbol] X = csympy.rcp_static_cast_Symbol(x.thisptr)
         return c2py(deref(self.thisptr).diff(X))
 
     def subs_dict(Basic self not None, subs_dict):
@@ -184,7 +184,7 @@ cdef class Symbol(Basic):
         self.thisptr.reset()
 
     def _sympy_(self):
-        cdef RCP[csympy.Symbol] X = csympy.rcp_static_cast_Symbol(self.thisptr)
+        cdef RCP[const csympy.Symbol] X = csympy.rcp_static_cast_Symbol(self.thisptr)
         import sympy
         return sympy.Symbol(str(deref(X).get_name().decode("utf-8")))
 
@@ -234,8 +234,8 @@ cdef class Add(Basic):
         self.thisptr.reset()
 
     def _sympy_(self):
-        cdef RCP[csympy.Add] X = csympy.rcp_static_cast_Add(self.thisptr)
-        cdef RCP[csympy.Basic] a, b
+        cdef RCP[const csympy.Add] X = csympy.rcp_static_cast_Add(self.thisptr)
+        cdef RCP[const csympy.Basic] a, b
         deref(X).as_two_terms(csympy.outArg(a), csympy.outArg(b))
         return c2py(a)._sympy_() + c2py(b)._sympy_()
 
@@ -245,8 +245,8 @@ cdef class Mul(Basic):
         self.thisptr.reset()
 
     def _sympy_(self):
-        cdef RCP[csympy.Mul] X = csympy.rcp_static_cast_Mul(self.thisptr)
-        cdef RCP[csympy.Basic] a, b
+        cdef RCP[const csympy.Mul] X = csympy.rcp_static_cast_Mul(self.thisptr)
+        cdef RCP[const csympy.Basic] a, b
         deref(X).as_two_terms(csympy.outArg(a), csympy.outArg(b))
         return c2py(a)._sympy_() * c2py(b)._sympy_()
 
@@ -256,11 +256,10 @@ cdef class Pow(Basic):
         self.thisptr.reset()
 
     def _sympy_(self):
-        cdef RCP[csympy.Pow] X = csympy.rcp_static_cast_Pow(self.thisptr)
-        cdef RCP[csympy.Basic] base, exp
-        base = deref(X).base_
-        exp = deref(X).exp_
-        return c2py(base)._sympy_() ** c2py(exp)._sympy_()
+        cdef RCP[const csympy.Pow] X = csympy.rcp_static_cast_Pow(self.thisptr)
+        base = c2py(deref(X).get_base())
+        exp = c2py(deref(X).get_exp())
+        return base._sympy_() ** exp._sympy_()
 
 cdef class Function(Basic):
     pass
@@ -271,7 +270,7 @@ cdef class Sin(Function):
         self.thisptr.reset()
 
     def _sympy_(self):
-        cdef RCP[csympy.Sin] X = csympy.rcp_static_cast_Sin(self.thisptr)
+        cdef RCP[const csympy.Sin] X = csympy.rcp_static_cast_Sin(self.thisptr)
         arg = c2py(deref(X).get_arg())._sympy_()
         import sympy
         return sympy.sin(arg)
@@ -282,7 +281,7 @@ cdef class Cos(Function):
         self.thisptr.reset()
 
     def _sympy_(self):
-        cdef RCP[csympy.Cos] X = csympy.rcp_static_cast_Cos(self.thisptr)
+        cdef RCP[const csympy.Cos] X = csympy.rcp_static_cast_Cos(self.thisptr)
         arg = c2py(deref(X).get_arg())._sympy_()
         import sympy
         return sympy.cos(arg)
@@ -293,7 +292,7 @@ cdef class FunctionSymbol(Function):
         self.thisptr.reset()
 
     def _sympy_(self):
-        cdef RCP[csympy.FunctionSymbol] X = \
+        cdef RCP[const csympy.FunctionSymbol] X = \
             csympy.rcp_static_cast_FunctionSymbol(self.thisptr)
         name = deref(X).get_name().decode("utf-8")
         # In Python 2.7, function names cannot be unicode:

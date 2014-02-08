@@ -51,13 +51,13 @@ void test_monomial_mul()
 
 void test_expand()
 {
-    RCP<Basic> x = rcp(new Symbol("x"));
-    RCP<Basic> y = rcp(new Symbol("y"));
-    RCP<Basic> z = rcp(new Symbol("z"));
-    RCP<Basic> w = rcp(new Symbol("w"));
-    RCP<Basic> i4 = rcp(new Integer(2));
+    RCP<const Basic> x = rcp(new Symbol("x"));
+    RCP<const Basic> y = rcp(new Symbol("y"));
+    RCP<const Basic> z = rcp(new Symbol("z"));
+    RCP<const Basic> w = rcp(new Symbol("w"));
+    RCP<const Basic> i4 = rcp(new Integer(2));
 
-    RCP<Basic> e, f1, f2, r;
+    RCP<const Basic> e, f1, f2, r;
 
     e = pow(add(add(add(x, y), z), w), i4);
     f1 = expand(e);

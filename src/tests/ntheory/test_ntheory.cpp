@@ -13,13 +13,13 @@ using CSymPy::is_a;
 
 void test_gcd_lcm()
 {
-    RCP<Integer> i2 = integer(2);
-    RCP<Integer> i3 = integer(3);
-    RCP<Integer> i4 = integer(4);
-    RCP<Integer> i6 = integer(6);
-    RCP<Integer> g = integer(2);
-    RCP<Integer> s = integer(2);
-    RCP<Integer> t = integer(3);
+    RCP<const Integer> i2 = integer(2);
+    RCP<const Integer> i3 = integer(3);
+    RCP<const Integer> i4 = integer(4);
+    RCP<const Integer> i6 = integer(6);
+    RCP<const Integer> g = integer(2);
+    RCP<const Integer> s = integer(2);
+    RCP<const Integer> t = integer(3);
 
     assert(eq(gcd(*i2, *i4), integer(2)));
     assert(eq(gcd(*i2, *i3), integer(1)));
@@ -42,9 +42,9 @@ void test_gcd_lcm()
 
 void test_nextprime()
 {
-    RCP<Integer> i1 = integer(1);
-    RCP<Integer> i5 = integer(5);
-    RCP<Integer> i6 = integer(6);
+    RCP<const Integer> i1 = integer(1);
+    RCP<const Integer> i5 = integer(5);
+    RCP<const Integer> i6 = integer(6);
 
     assert(eq(nextprime(*i1), integer(2)));
     assert(eq(nextprime(*i5), integer(7)));
@@ -53,9 +53,9 @@ void test_nextprime()
 
 void test_probab_prime_p()
 {
-    RCP<Integer> i1 = integer(1);
-    RCP<Integer> i5 = integer(5);
-    RCP<Integer> i6 = integer(6);
+    RCP<const Integer> i1 = integer(1);
+    RCP<const Integer> i5 = integer(5);
+    RCP<const Integer> i6 = integer(6);
 
     assert(probab_prime_p(*i1) == 0);
     assert(probab_prime_p(*i5) == 2);
@@ -64,11 +64,11 @@ void test_probab_prime_p()
 
 void test_modular_inverse()
 {
-    RCP<Integer> i5 = integer(5);
-    RCP<Integer> i3 = integer(3);
-    RCP<Integer> i8 = integer(8);
-    RCP<Integer> i11 = integer(11);
-    RCP<Integer> b;
+    RCP<const Integer> i5 = integer(5);
+    RCP<const Integer> i3 = integer(3);
+    RCP<const Integer> i8 = integer(8);
+    RCP<const Integer> i11 = integer(11);
+    RCP<const Integer> b;
 
     assert(mod_inverse(*i3, *i5, outArg(b)) != 0);
     assert(eq(b, integer(2)));
@@ -82,16 +82,16 @@ void test_modular_inverse()
 
 void test_factor()
 {
-    RCP<Integer> i2 = integer(2);
-    RCP<Integer> i3 = integer(3);
-    RCP<Integer> i6 = integer(6);
-    RCP<Integer> i17 = integer(17);
-    RCP<Integer> i31 = integer(31);
-    RCP<Integer> i121 = integer(121);
-    RCP<Integer> i122 = integer(122);
-    RCP<Integer> i1001 = integer(1001);
-    RCP<Integer> i900 = integer(900);
-    RCP<Integer> f;
+    RCP<const Integer> i2 = integer(2);
+    RCP<const Integer> i3 = integer(3);
+    RCP<const Integer> i6 = integer(6);
+    RCP<const Integer> i17 = integer(17);
+    RCP<const Integer> i31 = integer(31);
+    RCP<const Integer> i121 = integer(121);
+    RCP<const Integer> i122 = integer(122);
+    RCP<const Integer> i1001 = integer(1001);
+    RCP<const Integer> i900 = integer(900);
+    RCP<const Integer> f;
 
     assert(factor(outArg(f), *i2) == 0);
     assert(factor(outArg(f), *i3) == 0);
@@ -113,16 +113,16 @@ void test_factor()
 
 void test_factor_trial_division()
 {
-    RCP<Integer> i2 = integer(2);
-    RCP<Integer> i3 = integer(3);
-    RCP<Integer> i6 = integer(6);
-    RCP<Integer> i17 = integer(17);
-    RCP<Integer> i31 = integer(31);
-    RCP<Integer> i121 = integer(121);
-    RCP<Integer> i122 = integer(122);
-    RCP<Integer> i1001 = integer(1001);
-    RCP<Integer> i900 = integer(900);
-    RCP<Integer> f;
+    RCP<const Integer> i2 = integer(2);
+    RCP<const Integer> i3 = integer(3);
+    RCP<const Integer> i6 = integer(6);
+    RCP<const Integer> i17 = integer(17);
+    RCP<const Integer> i31 = integer(31);
+    RCP<const Integer> i121 = integer(121);
+    RCP<const Integer> i122 = integer(122);
+    RCP<const Integer> i1001 = integer(1001);
+    RCP<const Integer> i900 = integer(900);
+    RCP<const Integer> f;
 
     assert(factor_trial_division(outArg(f), *i2) == 0);
     assert(factor_trial_division(outArg(f), *i3) == 0);

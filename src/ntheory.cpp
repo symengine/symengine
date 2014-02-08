@@ -9,7 +9,7 @@
 namespace CSymPy {
 
 // Basic number theoretic functions
-RCP<Integer> gcd(const Integer &a, const Integer &b)
+RCP<const Integer> gcd(const Integer &a, const Integer &b)
 {
     mpz_class g;
 
@@ -18,8 +18,8 @@ RCP<Integer> gcd(const Integer &a, const Integer &b)
     return integer(g);
 }
 
-void gcd_ext(const Integer &a, const Integer &b, const Ptr<RCP<Integer>> &g,
-                         const Ptr<RCP<Integer>> &s, const Ptr<RCP<Integer>> &t)
+void gcd_ext(const Integer &a, const Integer &b, const Ptr<RCP<const Integer>> &g,
+                         const Ptr<RCP<const Integer>> &s, const Ptr<RCP<const Integer>> &t)
 {
     mpz_t g_t;
     mpz_t s_t;
@@ -39,7 +39,7 @@ void gcd_ext(const Integer &a, const Integer &b, const Ptr<RCP<Integer>> &g,
     mpz_clear(t_t);
 }
 
-RCP<Integer> lcm(const Integer &a, const Integer &b)
+RCP<const Integer> lcm(const Integer &a, const Integer &b)
 {
     mpz_class c;
 
@@ -48,7 +48,7 @@ RCP<Integer> lcm(const Integer &a, const Integer &b)
     return integer(c);
 }
 
-int mod_inverse(const Integer &a, const Integer &m, const Ptr<RCP<Integer>> &b)
+int mod_inverse(const Integer &a, const Integer &m, const Ptr<RCP<const Integer>> &b)
 {
     int ret_val;
     mpz_t inv_t;
@@ -75,7 +75,7 @@ int probab_prime_p(const Integer &a, int reps)
     return mpz_probab_prime_p(a.as_mpz().get_mpz_t(), reps);
 }
 
-RCP<Integer> nextprime(const Integer &a)
+RCP<const Integer> nextprime(const Integer &a)
 {
     mpz_class c;
 
@@ -228,7 +228,7 @@ int _factor_lehman_method(mpz_t rop, const mpz_t n)
 }
 
 // Factorization
-int factor(const Ptr<RCP<Integer>> &f, const Integer &n, double B1)
+int factor(const Ptr<RCP<const Integer>> &f, const Integer &n, double B1)
 {
     int ret_val = 0;
     mpz_t n_t, f_t;;
@@ -288,7 +288,7 @@ int factor(const Ptr<RCP<Integer>> &f, const Integer &n, double B1)
     return ret_val;
 }
 
-int factor_trial_division(const Ptr<RCP<Integer>> &f, const Integer &n)
+int factor_trial_division(const Ptr<RCP<const Integer>> &f, const Integer &n)
 {
     int ret_val;
     mpz_class factor;

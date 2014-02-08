@@ -17,7 +17,7 @@ public:
     Rational(mpq_class i);
     // 'i' must already be in mpq_class canonical form, this function returns
     // Integer or Rational depending on denumerator.
-    static RCP<Number> from_mpq(const mpq_class i);
+    static RCP<const Number> from_mpq(const mpq_class i);
     virtual std::size_t __hash__() const;
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
@@ -26,48 +26,48 @@ public:
 
     // Constructs Rational as n/d, where n, d can be any Integers. If n/d is an
     // Integer, it will return an Integer instead.
-    static RCP<Number> from_two_ints(const RCP<Integer> &n,
-            const RCP<Integer> &d);
+    static RCP<const Number> from_two_ints(const RCP<const Integer> &n,
+            const RCP<const Integer> &d);
 
     virtual bool is_zero() const { return this->i == 0; }
     virtual bool is_one() const { return this->i == 1; }
     inline bool is_int() { return this->i.get_den() == 1; }
 
-    inline RCP<Number> addrat(const Rational &other) const {
+    inline RCP<const Number> addrat(const Rational &other) const {
         return from_mpq(this->i + other.i);
     }
-    inline RCP<Number> addrat(const Integer &other) const {
+    inline RCP<const Number> addrat(const Integer &other) const {
         return from_mpq(this->i + other.i);
     }
 
-    inline RCP<Number> subrat(const Rational &other) const {
+    inline RCP<const Number> subrat(const Rational &other) const {
         return from_mpq(this->i - other.i);
     }
-    inline RCP<Number> subrat(const Integer &other) const {
+    inline RCP<const Number> subrat(const Integer &other) const {
         return from_mpq(this->i - other.i);
     }
-    inline RCP<Number> rsubrat(const Integer &other) const {
+    inline RCP<const Number> rsubrat(const Integer &other) const {
         return from_mpq(other.i - this->i);
     }
 
-    inline RCP<Number> mulrat(const Rational &other) const {
+    inline RCP<const Number> mulrat(const Rational &other) const {
         return from_mpq(this->i * other.i);
     }
-    inline RCP<Number> mulrat(const Integer &other) const {
+    inline RCP<const Number> mulrat(const Integer &other) const {
         return from_mpq(this->i * other.i);
     }
 
-    inline RCP<Number> divrat(const Rational &other) const {
+    inline RCP<const Number> divrat(const Rational &other) const {
         return from_mpq(this->i / other.i);
     }
-    inline RCP<Number> divrat(const Integer &other) const {
+    inline RCP<const Number> divrat(const Integer &other) const {
         return from_mpq(this->i / other.i);
     }
-    inline RCP<Number> rdivrat(const Integer &other) const {
+    inline RCP<const Number> rdivrat(const Integer &other) const {
         return from_mpq(other.i / this->i);
     }
 
-    inline RCP<Number> powrat(const Integer &other) const {
+    inline RCP<const Number> powrat(const Integer &other) const {
         bool neg = other.is_negative();
         mpz_class exp_ = other.i;
         if (neg) exp_ = -exp_;
@@ -89,7 +89,7 @@ public:
     }
 
 
-    virtual RCP<Number> add(const Number &other) const {
+    virtual RCP<const Number> add(const Number &other) const {
         if (is_a<Rational>(other)) {
             return addrat(static_cast<const Rational&>(other));
         } else if (is_a<Integer>(other)) {
@@ -99,7 +99,7 @@ public:
         }
     };
 
-    virtual RCP<Number> sub(const Number &other) const {
+    virtual RCP<const Number> sub(const Number &other) const {
         if (is_a<Rational>(other)) {
             return subrat(static_cast<const Rational&>(other));
         } else if (is_a<Integer>(other)) {
@@ -109,7 +109,7 @@ public:
         }
     };
 
-    virtual RCP<Number> rsub(const Number &other) const {
+    virtual RCP<const Number> rsub(const Number &other) const {
         if (is_a<Integer>(other)) {
             return rsubrat(static_cast<const Integer&>(other));
         } else {
@@ -117,7 +117,7 @@ public:
         }
     };
 
-    virtual RCP<Number> mul(const Number &other) const {
+    virtual RCP<const Number> mul(const Number &other) const {
         if (is_a<Rational>(other)) {
             return mulrat(static_cast<const Rational&>(other));
         } else if (is_a<Integer>(other)) {
@@ -127,7 +127,7 @@ public:
         }
     };
 
-    virtual RCP<Number> div(const Number &other) const {
+    virtual RCP<const Number> div(const Number &other) const {
         if (is_a<Rational>(other)) {
             return divrat(static_cast<const Rational&>(other));
         } else if (is_a<Integer>(other)) {
@@ -137,7 +137,7 @@ public:
         }
     };
 
-    virtual RCP<Number> rdiv(const Number &other) const {
+    virtual RCP<const Number> rdiv(const Number &other) const {
         if (is_a<Integer>(other)) {
             return rdivrat(static_cast<const Integer&>(other));
         } else {
@@ -145,7 +145,7 @@ public:
         }
     };
 
-    virtual RCP<Number> pow(const Number &other) const {
+    virtual RCP<const Number> pow(const Number &other) const {
         if (is_a<Integer>(other)) {
             return powrat(static_cast<const Integer&>(other));
         } else {
