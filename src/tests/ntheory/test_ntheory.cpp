@@ -165,8 +165,8 @@ void _test_primefactors(const Integer &a, unsigned size)
     primefactors(a, primes);
     assert(primes.size() == size);
 
-    for (it = primes.begin(); it != primes.end(); ++it) {
-        assert(divides(integer(a.as_mpz()), integer((*it).as_mpz())) == true);
+    for (auto &it: primes) {
+        assert(divides(integer(a.as_mpz()), it) == true);
         assert(probab_prime_p(*it) > 0);
     }
 }
