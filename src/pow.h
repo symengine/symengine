@@ -21,6 +21,8 @@ public:
 
     bool is_canonical(const RCP<const Basic> &base,
             const RCP<const Basic> &exp);
+    inline RCP<const Basic> get_base() const { return base_; }
+    inline RCP<const Basic> get_exp() const { return exp_; }
 
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
     virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
