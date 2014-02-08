@@ -317,6 +317,7 @@ void primefactors(const RCP<const Integer> &n,
 {
     RCP<const Integer> _n = n;
     RCP<const Integer> f;
+    if (eq(n, zero)) return;
 
     while (!eq(_n, one)) {
         factor(outArg(f), *_n);
