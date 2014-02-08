@@ -157,15 +157,15 @@ void test_sieve()
 }
 
 // helper function for test_primefactors
-void _test_primefactors(const Integer &a, unsigned size)
+void _test_primefactors(const RCP<const Integer> &a, unsigned size)
 {
     std::vector<RCP<const Integer>> primes;
 
-    primefactors(a, primes);
+    primefactors(*a, primes);
     assert(primes.size() == size);
 
     for (auto &it: primes) {
-        assert(divides(integer(a.as_mpz()), it) == true);
+        assert(divides(a, it) == true);
         assert(probab_prime_p(*it) > 0);
     }
 }
@@ -179,12 +179,12 @@ void test_primefactors()
     RCP<const Integer> i125 = integer(125);
     RCP<const Integer> i1001 = integer(1001);
 
-    _test_primefactors(*i5, 1);
-    _test_primefactors(*i6, 2);
-    _test_primefactors(*i12, 2);
-    _test_primefactors(*i36, 2);
-    _test_primefactors(*i125, 1);
-    _test_primefactors(*i1001, 3);
+    _test_primefactors(i5, 1);
+    _test_primefactors(i6, 2);
+    _test_primefactors(i12, 2);
+    _test_primefactors(i36, 2);
+    _test_primefactors(i125, 1);
+    _test_primefactors(i1001, 3);
 
 }
 
