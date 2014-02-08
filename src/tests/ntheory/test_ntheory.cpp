@@ -161,7 +161,7 @@ void _test_primefactors(const RCP<const Integer> &a, unsigned size)
 {
     std::vector<RCP<const Integer>> primes;
 
-    primefactors(*a, primes);
+    primefactors(a, primes);
     assert(primes.size() == size);
 
     for (auto &it: primes) {

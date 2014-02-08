@@ -35,7 +35,8 @@ int factor_trial_division(const Ptr<RCP<const Integer>> &f, const Integer &n);
 // `primesieve` library (1498ms vs 28.29ms).
 void eratosthenes_sieve(unsigned limit, std::vector<unsigned> &primes);
 // Find prime factors of `n`
-void primefactors(const Integer &n, std::vector<RCP<const Integer>> &primes);
+void primefactors(const RCP<const Integer> &n,
+        std::vector<RCP<const Integer>> &primes);
 
 }
 #endif
