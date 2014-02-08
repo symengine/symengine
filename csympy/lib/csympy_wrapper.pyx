@@ -257,11 +257,9 @@ cdef class Pow(Basic):
 
     def _sympy_(self):
         cdef RCP[const csympy.Pow] X = csympy.rcp_static_cast_Pow(self.thisptr)
-        cdef RCP[const csympy.Basic] base \
-            = <RCP[const csympy.Basic]>deref(X).base_
-        cdef RCP[const csympy.Basic] exp \
-            = <RCP[const csympy.Basic]>deref(X).exp_
-        return c2py(base)._sympy_() ** c2py(exp)._sympy_()
+        base = c2py(deref(X).get_base())
+        exp = c2py(deref(X).get_exp())
+        return base._sympy_() ** exp._sympy_()
 
 cdef class Function(Basic):
     pass

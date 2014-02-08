@@ -96,8 +96,8 @@ cdef extern from "pow.h" namespace "CSymPy":
     cdef RCP[const Basic] sqrt(RCP[const Basic] &x) nogil except+
 
     cdef cppclass Pow(Basic):
-        RCP[const Basic] base_
-        RCP[const Basic] exp_
+        RCP[const Basic] get_base() nogil
+        RCP[const Basic] get_exp() nogil
 
 
 cdef extern from "basic.h" namespace "CSymPy":
