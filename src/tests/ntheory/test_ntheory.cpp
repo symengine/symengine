@@ -13,6 +13,7 @@ using CSymPy::integer;
 using CSymPy::is_a;
 using CSymPy::map_integer_uint;
 using CSymPy::get_map_integer_uint;
+using CSymPy::rcp_dynamic_cast;
 
 void test_gcd_lcm()
 {
@@ -202,15 +203,46 @@ void test_prime_factors()
     _test_primefactors(_i37, 1);
 }
 
+void _test_prime_factor_multiplicities(const RCP<const Integer> &a)
+{
+    unsigned multiplicity;
+    RCP<const Integer> _a = a;
+    std::vector<RCP<const Integer>> primes;
+    map_integer_uint prime_mul;
+
+    prime_factors(a, primes);
+    prime_factor_multiplicities(a, prime_mul);
+
+    for (auto &it: primes) {
+        multiplicity = get_map_integer_uint(prime_mul, it);
+        while(multiplicity) {
+            _a = rcp_dynamic_cast<const Integer>(div(_a, it));
+            multiplicity--;
+        }
+    }
+
+    assert(eq(_a, integer(1)));
+}
+
 void test_prime_factor_multiplicities()
 {
+    RCP<const Integer> i2 = integer(2);
+    RCP<const Integer> i3 = integer(3);
+    RCP<const Integer> i6 = integer(6);
+    RCP<const Integer> i12 = integer(12);
     RCP<const Integer> i36 = integer(36);
+    RCP<const Integer> i125 = integer(125);
+    RCP<const Integer> i2357 = integer(2357);
 
     map_integer_uint primes;
 
-    prime_factor_multiplicities(i36, primes);
-    assert(get_map_integer_uint(primes, integer(2)) == 2);
-    assert(get_map_integer_uint(primes, integer(3)) == 2);
+    _test_prime_factor_multiplicities(i2);
+    _test_prime_factor_multiplicities(i3);
+    _test_prime_factor_multiplicities(i6);
+    _test_prime_factor_multiplicities(i12);
+    _test_prime_factor_multiplicities(i36);
+    _test_prime_factor_multiplicities(i125);
+    _test_prime_factor_multiplicities(i2357);
 }
 
 int main(int argc, char* argv[])
