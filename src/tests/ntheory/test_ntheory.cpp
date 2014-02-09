@@ -234,8 +234,6 @@ void test_prime_factor_multiplicities()
     RCP<const Integer> i125 = integer(125);
     RCP<const Integer> i2357 = integer(2357);
 
-    map_integer_uint primes;
-
     _test_prime_factor_multiplicities(i2);
     _test_prime_factor_multiplicities(i3);
     _test_prime_factor_multiplicities(i6);
