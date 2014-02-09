@@ -161,7 +161,7 @@ void _test_primefactors(const RCP<const Integer> &a, unsigned size)
 {
     std::vector<RCP<const Integer>> primes;
 
-    primefactors(a, primes);
+    prime_factors(a, primes);
     assert(primes.size() == size);
 
     for (auto &it: primes) {
@@ -170,7 +170,7 @@ void _test_primefactors(const RCP<const Integer> &a, unsigned size)
     }
 }
 
-void test_primefactors()
+void test_prime_factors()
 {
     RCP<const Integer> i0 = integer(0);
     RCP<const Integer> i1 = integer(1);
@@ -210,7 +210,7 @@ int main(int argc, char* argv[])
     test_factor();
     test_factor_trial_division();
     test_sieve();
-    test_primefactors();
+    test_prime_factors();
 
     return 0;
 }
