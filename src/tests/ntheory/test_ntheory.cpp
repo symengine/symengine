@@ -12,6 +12,7 @@ using CSymPy::RCP;
 using CSymPy::integer;
 using CSymPy::is_a;
 using CSymPy::map_integer_uint;
+using CSymPy::get_map_integer_uint;
 
 void test_gcd_lcm()
 {
@@ -208,6 +209,8 @@ void test_prime_factor_multiplicities()
     map_integer_uint primes;
 
     prime_factor_multiplicities(i36, primes);
+    assert(get_map_integer_uint(primes, integer(2)) == 2);
+    assert(get_map_integer_uint(primes, integer(3)) == 2);
 }
 
 int main(int argc, char* argv[])

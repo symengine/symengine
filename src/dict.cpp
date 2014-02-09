@@ -173,4 +173,11 @@ bool umap_basic_basic_equal(const umap_basic_basic &a,
     return true;
 }
 
+unsigned get_map_integer_uint(map_integer_uint &m, const RCP<const Integer> &k)
+{
+    auto f = m.find(k);
+    return f->second;
 }
+
+}
+
