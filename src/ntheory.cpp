@@ -5,6 +5,7 @@
 #ifdef HAVE_CSYMPY_ECM
 #  include <ecm.h>
 #endif // HAVE_CSYMPY_ECM
+#include "dict.h"
 
 namespace CSymPy {
 
@@ -326,6 +327,26 @@ void prime_factors(const RCP<const Integer> &n,
     }
     if (!eq(_n, one))
         primes.push_back(_n);
+}
+
+void prime_factor_multiplicities(const RCP<const Integer> &n,
+        map_integer_uint &primes)
+{
+    unsigned count;
+    RCP<const Integer> _n = iabs(*n);
+    RCP<const Integer> f;
+    if (eq(_n, zero)) return;
+
+    while (factor_trial_division(outArg(f), *_n) == 1 && !eq(_n, one)) {
+        count = 0;
+        while(divides(_n, f)){
+            _n = rcp_dynamic_cast<const Integer>(div(_n, f));
+            count++;
+        }
+        insert(primes, f, count);
+    }
+    if (!eq(_n, one))
+        insert(primes, _n, 1);
 }
 
 } // CSymPy

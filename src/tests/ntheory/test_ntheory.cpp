@@ -4,12 +4,14 @@
 #include "integer.h"
 #include "add.h"
 #include "mul.h"
+#include "dict.h"
 
 using CSymPy::Integer;
 using CSymPy::print_stack_on_segfault;
 using CSymPy::RCP;
 using CSymPy::integer;
 using CSymPy::is_a;
+using CSymPy::map_integer_uint;
 
 void test_gcd_lcm()
 {
@@ -199,6 +201,15 @@ void test_prime_factors()
     _test_primefactors(_i37, 1);
 }
 
+void test_prime_factor_multiplicities()
+{
+    RCP<const Integer> i36 = integer(36);
+
+    map_integer_uint primes;
+
+    prime_factor_multiplicities(i36, primes);
+}
+
 int main(int argc, char* argv[])
 {
     print_stack_on_segfault();
@@ -211,6 +222,7 @@ int main(int argc, char* argv[])
     test_factor_trial_division();
     test_sieve();
     test_prime_factors();
+    test_prime_factor_multiplicities();
 
     return 0;
 }

@@ -27,7 +27,6 @@ int factor(const Ptr<RCP<const Integer>> &f, const Integer &n, double B1 = 1.0);
 // Factor using trial division. Returns 1 if a non-trivial factor is found,
 // otherwise 0.
 int factor_trial_division(const Ptr<RCP<const Integer>> &f, const Integer &n);
-
 // Returns all primes up to the `limit` (excluding). The vector `primes` should
 // be empty on input and it will be filled with the primes.
 // The implementation is a very basic Eratosthenes sieve, but the code should
@@ -37,7 +36,9 @@ void eratosthenes_sieve(unsigned limit, std::vector<unsigned> &primes);
 // Find prime factors of `n`
 void prime_factors(const RCP<const Integer> &n,
         std::vector<RCP<const Integer>> &primes);
-
+// Find multiplicities of prime factors of `n`
+void prime_factor_multiplicities(const RCP<const Integer> &n,
+        map_integer_uint &primes);
 }
 #endif
 
