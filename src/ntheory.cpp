@@ -315,9 +315,9 @@ void eratosthenes_sieve(unsigned limit, std::vector<unsigned> &primes)
 void primefactors(const RCP<const Integer> &n,
         std::vector<RCP<const Integer>> &primes)
 {
-    RCP<const Integer> _n = n;
+    RCP<const Integer> _n = iabs(*n);
     RCP<const Integer> f;
-    if (eq(n, zero)) return;
+    if (eq(_n, zero) || eq(_n, one)) return;
 
     while (factor_trial_division(outArg(f), *_n) == 1) {
         primes.push_back(f);

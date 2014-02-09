@@ -172,6 +172,8 @@ void _test_primefactors(const RCP<const Integer> &a, unsigned size)
 
 void test_primefactors()
 {
+    RCP<const Integer> i0 = integer(0);
+    RCP<const Integer> i1 = integer(1);
     RCP<const Integer> i5 = integer(5);
     RCP<const Integer> i6 = integer(6);
     RCP<const Integer> i12 = integer(12);
@@ -179,6 +181,12 @@ void test_primefactors()
     RCP<const Integer> i125 = integer(125);
     RCP<const Integer> i1001 = integer(1001);
 
+    RCP<const Integer> _i1 = integer(-1);
+    RCP<const Integer> _i36 = integer(-36);
+    RCP<const Integer> _i37 = integer(-37);
+
+    _test_primefactors(i0, 0);
+    _test_primefactors(i1, 0);
     _test_primefactors(i5, 1);
     _test_primefactors(i6, 2);
     _test_primefactors(i12, 3);
@@ -186,6 +194,9 @@ void test_primefactors()
     _test_primefactors(i125, 3);
     _test_primefactors(i1001, 3);
 
+    _test_primefactors(_i1, 0);
+    _test_primefactors(_i36, 4);
+    _test_primefactors(_i37, 1);
 }
 
 int main(int argc, char* argv[])
