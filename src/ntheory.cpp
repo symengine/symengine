@@ -317,13 +317,15 @@ void primefactors(const RCP<const Integer> &n,
 {
     RCP<const Integer> _n = iabs(*n);
     RCP<const Integer> f;
-    if (eq(_n, zero) || eq(_n, one)) return;
+    if (eq(_n, zero)) return;
 
-    while (factor_trial_division(outArg(f), *_n) == 1) {
+    while (factor_trial_division(outArg(f), *_n) == 1 && !eq(_n, one)) {
         primes.push_back(f);
-        _n = rcp_dynamic_cast<const Integer>(div(_n, f));
+        while(divides(_n, f))
+            _n = rcp_dynamic_cast<const Integer>(div(_n, f));
     }
-    primes.push_back(_n);
+    if (!eq(_n, one))
+        primes.push_back(_n);
 }
 
 } // CSymPy

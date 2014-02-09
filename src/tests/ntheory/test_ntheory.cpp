@@ -189,13 +189,13 @@ void test_primefactors()
     _test_primefactors(i1, 0);
     _test_primefactors(i5, 1);
     _test_primefactors(i6, 2);
-    _test_primefactors(i12, 3);
-    _test_primefactors(i36, 4);
-    _test_primefactors(i125, 3);
+    _test_primefactors(i12, 2);
+    _test_primefactors(i36, 2);
+    _test_primefactors(i125, 1);
     _test_primefactors(i1001, 3);
 
     _test_primefactors(_i1, 0);
-    _test_primefactors(_i36, 4);
+    _test_primefactors(_i36, 2);
     _test_primefactors(_i37, 1);
 }
 
