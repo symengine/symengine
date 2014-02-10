@@ -321,9 +321,12 @@ void prime_factors(const RCP<const Integer> &n,
     if (eq(_n, zero)) return;
 
     while (factor_trial_division(outArg(f), *_n) == 1 && !eq(_n, one)) {
-        primes.push_back(f);
-        while(divides(_n, f))
-            _n = rcp_dynamic_cast<const Integer>(div(_n, f));
+        RCP<const Basic> d = div(_n, f);
+        while (is_a<Integer>(*d)) { // when a prime factor is found, we divide
+            primes.push_back(f);         // _n by that prime as much as we can
+            _n = rcp_dynamic_cast<const Integer>(d);
+            d = div(_n, f);
+        }
     }
     if (!eq(_n, one))
         primes.push_back(_n);
@@ -339,11 +342,14 @@ void prime_factor_multiplicities(const RCP<const Integer> &n,
 
     while (factor_trial_division(outArg(f), *_n) == 1 && !eq(_n, one)) {
         count = 0;
-        while(divides(_n, f)){
-            _n = rcp_dynamic_cast<const Integer>(div(_n, f));
-            count++;
+        RCP<const Basic> d = div(_n, f);
+        while (is_a<Integer>(*d)) { // when a prime factor is found, we divide
+            count++;                     // _n by that prime as much as we can
+            _n = rcp_dynamic_cast<const Integer>(d);
+            d = div(_n, f);
         }
-        insert(primes, f, count);
+        if (count > 0)
+            insert(primes, f, count);
     }
     if (!eq(_n, one))
         insert(primes, _n, 1);

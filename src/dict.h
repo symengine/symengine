@@ -46,9 +46,6 @@ bool umap_basic_basic_equal(const umap_basic_basic &a,
 int map_basic_basic_compare(const map_basic_basic &a, const map_basic_basic &b);
 int map_basic_int_compare(const map_basic_int &a, const map_basic_int &b);
 
-// get the value of the key `k` in dict `m` of type `map_integer_uint`
-unsigned get_map_integer_uint(map_integer_uint &m, const RCP<const Integer> &k);
-
 // Part of umap_vec_mpz:
 typedef struct
 {

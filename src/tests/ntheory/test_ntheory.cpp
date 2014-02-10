@@ -12,7 +12,6 @@ using CSymPy::RCP;
 using CSymPy::integer;
 using CSymPy::is_a;
 using CSymPy::map_integer_uint;
-using CSymPy::get_map_integer_uint;
 using CSymPy::rcp_dynamic_cast;
 
 void test_gcd_lcm()
@@ -193,13 +192,13 @@ void test_prime_factors()
     _test_primefactors(i1, 0);
     _test_primefactors(i5, 1);
     _test_primefactors(i6, 2);
-    _test_primefactors(i12, 2);
-    _test_primefactors(i36, 2);
-    _test_primefactors(i125, 1);
+    _test_primefactors(i12, 3);
+    _test_primefactors(i36, 4);
+    _test_primefactors(i125, 3);
     _test_primefactors(i1001, 3);
 
     _test_primefactors(_i1, 0);
-    _test_primefactors(_i36, 2);
+    _test_primefactors(_i36, 4);
     _test_primefactors(_i37, 1);
 }
 
@@ -210,13 +209,12 @@ void _test_prime_factor_multiplicities(const RCP<const Integer> &a)
     std::vector<RCP<const Integer>> primes;
     map_integer_uint prime_mul;
 
-    prime_factors(a, primes);
     prime_factor_multiplicities(a, prime_mul);
 
-    for (auto &it: primes) {
-        multiplicity = get_map_integer_uint(prime_mul, it);
+    for (auto it : prime_mul) {
+        multiplicity = it.second;
         while(multiplicity) {
-            _a = rcp_dynamic_cast<const Integer>(div(_a, it));
+            _a = rcp_dynamic_cast<const Integer>(div(_a, it.first));
             multiplicity--;
         }
     }
