@@ -78,52 +78,6 @@ RCP<const Integer> nextprime(const Integer &a)
     return integer(c);
 }
 
-// Factoring by Trial division: should not be used, helper function for factor
-// Look for factors of `op` below `limit`
-int _factor_trial_division(mpz_t rop, const mpz_t op, const mpz_t limit)
-{
-    int ret_val;
-    mpz_t i, l, q, r;
-
-    mpz_init(i);
-    mpz_init(l);
-    mpz_init(q);
-    mpz_init(r);
-//    mpz_inits(i, l, q, r);
-
-    mpz_set_ui(i, 2);
-    mpz_sqrt(l, op);
-
-    if (mpz_cmp(limit, l) < 0)
-        mpz_set(l, limit);
-
-    while(mpz_cmp(i, l) <= 0)
-    {
-        mpz_tdiv_qr(q, r, op, i);
-
-        if (mpz_cmp_ui(r, 0) == 0) {
-            mpz_set(rop, i);
-            break;
-        }
-        mpz_add_ui(i, i, 1);
-    }
-
-    mpz_clear(q);
-    mpz_clear(r);
-//    mpz_clears(q, r);
-
-    if (mpz_cmp(i, l) <= 0)      // We found a factor
-        ret_val = 1;
-    else
-        ret_val = 0;
-
-    mpz_clear(i);
-    mpz_clear(l);
-//    mpz_clears(i, l);
-
-    return ret_val;
-}
-
 // Factoring by Trial division using primes only
 int _factor_trial_division_sieve(mpz_class &factor, const mpz_class &N)
 {
@@ -142,79 +96,53 @@ int _factor_trial_division_sieve(mpz_class &factor, const mpz_class &N)
     return 0;
 }
 
-// Factoring by Lehman method, shouldn't be used directly, helper function for
-// factor
-int _factor_lehman_method(mpz_t rop, const mpz_t n)
+int _factor_lehman_method(mpz_class &rop, const mpz_class &n)
 {
-    int ret_val;
-    mpz_t u_bound;
-    mpz_init(u_bound);
+    if (n < 21)
+        throw std::runtime_error("Require n >= 21 to use lehman method");
 
-    mpz_root(u_bound, n, 3);
-    mpz_add_ui(u_bound, u_bound, 1);
+    int ret_val = 0;
+    mpz_class u_bound;
 
-    ret_val = _factor_trial_division(rop, n, u_bound);
+    mpz_root(u_bound.get_mpz_t(), n.get_mpz_t(), 3);
+    u_bound = u_bound + 1;
+
+    for(mpz_class i = 2; i <= u_bound; i++)
+        if (n % i == 0) {
+            rop = n / i;
+            ret_val = 1;
+            break;
+        }
 
     if (!ret_val){
 
-        mpz_t k, a, b, l, kn;
-        mpz_init(k);
-        mpz_init(a);
-        mpz_init(b);
-        mpz_init(l);
-        mpz_init(kn);
-//        mpz_inits(k, a, b, l, kn);
+        mpz_class k, a, b, l;
+        mpf_class t;
 
-        mpz_set_ui(k, 1);
+        k = 1;
 
-        mpf_t t;
-        mpf_init(t);
+        while (k <= u_bound) {
+            t = 2 * sqrt(k * n);
+            mpz_set_f(a.get_mpz_t(), t.get_mpf_t());
 
-        mpz_set_f(a, t);
+            mpz_root(b.get_mpz_t(), n.get_mpz_t(), 6);
+            mpz_root(l.get_mpz_t(), k.get_mpz_t(), 4);
+            b = b / l;
+            b = b + a;
 
-        while (mpz_cmp(k, u_bound) <= 0) {
-
-            mpz_mul(kn, k, n);
-            mpf_set_z(t, kn);
-            mpf_sqrt(t, t);
-            mpf_mul_ui(t, t, 2);
-            mpz_set_f(a, t);
-
-            // below calculations should be done with mpfr library as gmp
-            //doesn't provide floating point root functions
-            mpz_root(b, n, 6);
-            mpz_root(l, k, 4);
-            mpz_tdiv_q(b, b, l);
-            mpz_add(b, b, a);
-
-            mpz_mul_ui(kn, kn, 4);
-
-            while (mpz_cmp(a, b) <= 0) {
-                mpz_mul(l, a, a);
-                mpz_sub(l, l, kn);
-
-                if (mpz_perfect_square_p(l)){
-                    mpz_add(a, a, b);
-                    mpz_gcd(rop, n, a);
+            while (a <= b) {
+                l = a * a - 4 * k * n;
+                if (mpz_perfect_square_p(l.get_mpz_t())) {
+                    a = a + b;
+                    mpz_gcd(rop.get_mpz_t(), n.get_mpz_t(), a.get_mpz_t());
                     ret_val = 1;
                     break;
                 }
-                mpz_add_ui(a, a, 1);
+                a = a + 1;
             }
-
-            if (ret_val){
-                mpz_clear(k);
-                mpz_clear(a);
-                mpz_clear(b);
-                mpz_clear(l);
-                mpz_clear(kn);
-//                mpz_clears(k, a, b, l, kn);
-
-                mpf_clear(t);
-
+            if (ret_val)
                 break;
-            }
-            mpz_add_ui(k, k, 1);
+            k = k + 1;
         }
     }
 
@@ -268,16 +196,12 @@ int factor(const Ptr<RCP<const Integer>> &f, const Integer &n, double B1)
     }
 #else
     // B1 is discarded if gmp-ecm is not installed
-    if (mpz_cmp_ui(n_t, 21) <= 0)
-        ret_val = _factor_trial_division(f_t, n_t, n_t);
-    else
-        ret_val = _factor_lehman_method(f_t, n_t);
+    ret_val = _factor_trial_division_sieve(f_t, n_t);
 #endif // HAVE_CSYMPY_ECM
     *f = integer(mpz_class(f_t));
 
     mpz_clear(n_t);
     mpz_clear(f_t);
-//    mpz_clears(n_t, f_t);
 
     return ret_val;
 }
@@ -306,4 +230,3 @@ void eratosthenes_sieve(unsigned limit, std::vector<unsigned> &primes)
             primes.push_back(n);
 }
 
-} // CSymPy

@@ -5,11 +5,15 @@
 #include "add.h"
 #include "mul.h"
 
+// To test _factor_lehman_method()
+#include "ntheory.cpp"
+
 using CSymPy::Integer;
 using CSymPy::print_stack_on_segfault;
 using CSymPy::RCP;
 using CSymPy::integer;
 using CSymPy::is_a;
+using CSymPy::_factor_lehman_method;
 
 void test_gcd_lcm()
 {
@@ -117,35 +121,24 @@ void test_factor()
     assert(divides(i900, f));
 }
 
-void test_factor_trial_division()
+void test_factor_lehman_method()
 {
-    RCP<const Integer> i2 = integer(2);
-    RCP<const Integer> i3 = integer(3);
-    RCP<const Integer> i6 = integer(6);
-    RCP<const Integer> i17 = integer(17);
-    RCP<const Integer> i31 = integer(31);
-    RCP<const Integer> i121 = integer(121);
-    RCP<const Integer> i122 = integer(122);
-    RCP<const Integer> i1001 = integer(1001);
-    RCP<const Integer> i900 = integer(900);
-    RCP<const Integer> f;
+    mpz_class f;
 
-    assert(factor_trial_division(outArg(f), *i2) == 0);
-    assert(factor_trial_division(outArg(f), *i3) == 0);
-    assert(factor_trial_division(outArg(f), *i17) == 0);
-    assert(factor_trial_division(outArg(f), *i31) == 0);
+    assert(_factor_lehman_method(f, 23) == 0);
+    assert(_factor_lehman_method(f, 31) == 0);
+    assert(_factor_lehman_method(f, 47) == 0);
 
-    assert(factor_trial_division(outArg(f), *i6) > 0);
-    assert(divides(i6, f));
-    assert(factor_trial_division(outArg(f), *i121) > 0);
-    assert(divides(i121, f));
-    assert(factor_trial_division(outArg(f), *i122) > 0);
-    assert(divides(i122, f));
-    assert(factor_trial_division(outArg(f), *i1001) > 0);
-    assert(divides(i1001, f));
-    assert(!divides(i1001, i6));
-    assert(factor_trial_division(outArg(f), *i900) > 0);
-    assert(divides(i900, f));
+    assert(_factor_lehman_method(f, 21) > 0);
+    assert((21 % f) == 0);
+    assert(_factor_lehman_method(f, 121) > 0);
+    assert((121 % f) == 0);
+    assert(_factor_lehman_method(f, 122) > 0);
+    assert((122 % f) == 0);
+    assert(_factor_lehman_method(f, 1001) > 0);
+    assert((1001 % f) == 0);
+    assert(_factor_lehman_method(f, 900) > 0);
+    assert((900 % f) == 0);
 }
 
 void test_sieve()
@@ -171,8 +164,9 @@ int main(int argc, char* argv[])
     test_probab_prime_p();
     test_modular_inverse();
     test_factor();
-    test_factor_trial_division();
+    test_factor_lehman_method();
     test_sieve();
 
     return 0;
 }
+
