@@ -36,4 +36,5 @@ int factor_trial_division(const Ptr<RCP<const Integer>> &f, const Integer &n);
 void eratosthenes_sieve(unsigned limit, std::vector<unsigned> &primes);
 
 }
+#endif
 

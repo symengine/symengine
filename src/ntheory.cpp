@@ -153,27 +153,26 @@ int _factor_lehman_method(mpz_class &rop, const mpz_class &n)
 int factor(const Ptr<RCP<const Integer>> &f, const Integer &n, double B1)
 {
     int ret_val = 0;
-    mpz_t n_t, f_t;;
+    mpz_class _n, _f;
 
-    mpz_init(n_t); mpz_init(f_t);
-    mpz_set(n_t, n.as_mpz().get_mpz_t());
+    _n = n.as_mpz();
 
 #ifdef HAVE_CSYMPY_ECM
-    if (mpz_perfect_power_p(n_t)) {
+    if (mpz_perfect_power_p(_n.get_mpz_t())) {
 
         unsigned long int i = 1;
-        mpz_t m, rem;
-        mpz_init_set_ui(rem, 1); // Any non zero number
-        mpz_init_set_ui(m, 2); // set `m` to 2**i, i = 1 at the begining
+        mpz_class m, rem;
+        rem = 1; // Any non zero number
+        m = 2; // set `m` to 2**i, i = 1 at the begining
 
         // calculate log2n, this can be improved
-        for (; mpz_cmp(m, n_t) < 0; i++)
-            mpz_mul_ui(m, m, 2);
+        for (; m < _n; i++)
+            m = m * 2;
 
-        // eventually `rem` = 0 zero as `n` is a perfect square. `f_t` will
+        // eventually `rem` = 0 zero as `n` is a perfect square. `_f` will
         // be set to a factor of `n` when that happens
-        while(i > 1 && mpz_cmp_ui(rem, 0)) {
-            mpz_rootrem(f_t, rem, n_t, i);
+        while(i > 1 && rem != 0) {
+            mpz_rootrem(_f.get_mpz_t(), rem.get_mpz_t(), _n.get_mpz_t(), i);
             i--;
         }
 
@@ -181,27 +180,23 @@ int factor(const Ptr<RCP<const Integer>> &f, const Integer &n, double B1)
     }
     else {
 
-        if (mpz_probab_prime_p(n_t, 25) > 0) { // most probably, n is a prime
+        if (mpz_probab_prime_p(_n.get_mpz_t(), 25) > 0) { // most probably, n is a prime
             ret_val = 0;
-            mpz_set(f_t, n_t);
+            _f = _n;
         }
         else {
 
             for (int i = 0; i < 10 && !ret_val; i++)
-                ret_val = ecm_factor(f_t, n_t, B1, NULL);
-
+                ret_val = ecm_factor(_f.get_mpz_t(), _n.get_mpz_t(), B1, NULL);
             if (!ret_val)
                 throw std::runtime_error("ECM failed to factor the given number");
         }
     }
 #else
     // B1 is discarded if gmp-ecm is not installed
-    ret_val = _factor_trial_division_sieve(f_t, n_t);
+    ret_val = _factor_trial_division_sieve(_f, _n);
 #endif // HAVE_CSYMPY_ECM
-    *f = integer(mpz_class(f_t));
-
-    mpz_clear(n_t);
-    mpz_clear(f_t);
+    *f = integer(_f);
 
     return ret_val;
 }
@@ -229,4 +224,6 @@ void eratosthenes_sieve(unsigned limit, std::vector<unsigned> &primes)
         if (is_prime[n])
             primes.push_back(n);
 }
+
+} // CSymPy
 
