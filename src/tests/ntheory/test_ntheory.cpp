@@ -4,12 +4,15 @@
 #include "integer.h"
 #include "add.h"
 #include "mul.h"
+#include "dict.h"
 
 using CSymPy::Integer;
 using CSymPy::print_stack_on_segfault;
 using CSymPy::RCP;
 using CSymPy::integer;
 using CSymPy::is_a;
+using CSymPy::map_integer_uint;
+using CSymPy::rcp_dynamic_cast;
 
 void test_gcd_lcm()
 {
@@ -78,12 +81,6 @@ void test_modular_inverse()
 
     assert(mod_inverse(*i3, *i11, outArg(b)) != 0);
     assert(eq(b, integer(4)));
-}
-
-// Returns true if `b` divides `a` without reminder
-bool divides(const RCP<const Integer> &a, const RCP<const Integer> &b)
-{
-    return is_a<Integer>(*div(a, b));
 }
 
 void test_factor()
@@ -162,6 +159,88 @@ void test_sieve()
     assert(v.size() == 9592);
 }
 
+// helper function for test_primefactors
+void _test_primefactors(const RCP<const Integer> &a, unsigned size)
+{
+    std::vector<RCP<const Integer>> primes;
+
+    prime_factors(a, primes);
+    assert(primes.size() == size);
+
+    for (auto &it: primes) {
+        assert(divides(a, it) == true);
+        assert(probab_prime_p(*it) > 0);
+    }
+}
+
+void test_prime_factors()
+{
+    RCP<const Integer> i0 = integer(0);
+    RCP<const Integer> i1 = integer(1);
+    RCP<const Integer> i5 = integer(5);
+    RCP<const Integer> i6 = integer(6);
+    RCP<const Integer> i12 = integer(12);
+    RCP<const Integer> i36 = integer(36);
+    RCP<const Integer> i125 = integer(125);
+    RCP<const Integer> i1001 = integer(1001);
+
+    RCP<const Integer> _i1 = integer(-1);
+    RCP<const Integer> _i36 = integer(-36);
+    RCP<const Integer> _i37 = integer(-37);
+
+    _test_primefactors(i0, 0);
+    _test_primefactors(i1, 0);
+    _test_primefactors(i5, 1);
+    _test_primefactors(i6, 2);
+    _test_primefactors(i12, 3);
+    _test_primefactors(i36, 4);
+    _test_primefactors(i125, 3);
+    _test_primefactors(i1001, 3);
+
+    _test_primefactors(_i1, 0);
+    _test_primefactors(_i36, 4);
+    _test_primefactors(_i37, 1);
+}
+
+void _test_prime_factor_multiplicities(const RCP<const Integer> &a)
+{
+    unsigned multiplicity;
+    RCP<const Integer> _a = a;
+    std::vector<RCP<const Integer>> primes;
+    map_integer_uint prime_mul;
+
+    prime_factor_multiplicities(a, prime_mul);
+
+    for (auto it : prime_mul) {
+        multiplicity = it.second;
+        while(multiplicity) {
+            _a = rcp_dynamic_cast<const Integer>(div(_a, it.first));
+            multiplicity--;
+        }
+    }
+
+    assert(eq(_a, integer(1)));
+}
+
+void test_prime_factor_multiplicities()
+{
+    RCP<const Integer> i2 = integer(2);
+    RCP<const Integer> i3 = integer(3);
+    RCP<const Integer> i6 = integer(6);
+    RCP<const Integer> i12 = integer(12);
+    RCP<const Integer> i36 = integer(36);
+    RCP<const Integer> i125 = integer(125);
+    RCP<const Integer> i2357 = integer(2357);
+
+    _test_prime_factor_multiplicities(i2);
+    _test_prime_factor_multiplicities(i3);
+    _test_prime_factor_multiplicities(i6);
+    _test_prime_factor_multiplicities(i12);
+    _test_prime_factor_multiplicities(i36);
+    _test_prime_factor_multiplicities(i125);
+    _test_prime_factor_multiplicities(i2357);
+}
+
 int main(int argc, char* argv[])
 {
     print_stack_on_segfault();
@@ -173,6 +252,9 @@ int main(int argc, char* argv[])
     test_factor();
     test_factor_trial_division();
     test_sieve();
+    test_prime_factors();
+    test_prime_factor_multiplicities();
 
     return 0;
 }
+

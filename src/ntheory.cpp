@@ -1,10 +1,11 @@
 #include <cmath>
 
 #include "ntheory.h"
-
+#include "mul.h"
 #ifdef HAVE_CSYMPY_ECM
 #  include <ecm.h>
 #endif // HAVE_CSYMPY_ECM
+#include "dict.h"
 
 namespace CSymPy {
 
@@ -61,6 +62,12 @@ int mod_inverse(const Integer &a, const Integer &m, const Ptr<RCP<const Integer>
     mpz_clear(inv_t);
 
     return ret_val;
+}
+
+// Returns true if `b` divides `a` without reminder
+bool divides(const RCP<const Integer> &a, const RCP<const Integer> &b)
+{
+    return is_a<Integer>(*div(a, b));
 }
 
 // Prime functions
@@ -242,7 +249,7 @@ int factor(const Ptr<RCP<const Integer>> &f, const Integer &n, double B1)
         for (; mpz_cmp(m, n_t) < 0; i++)
             mpz_mul_ui(m, m, 2);
 
-        // eventually `rem` = 0 zero as `n` is a perfect square. `f_t` will
+        // eventually `rem` = 0 zero as `n` is a perfect power. `f_t` will
         // be set to a factor of `n` when that happens
         while(i > 1 && mpz_cmp_ui(rem, 0)) {
             mpz_rootrem(f_t, rem, n_t, i);
@@ -306,4 +313,47 @@ void eratosthenes_sieve(unsigned limit, std::vector<unsigned> &primes)
             primes.push_back(n);
 }
 
+void prime_factors(const RCP<const Integer> &n,
+        std::vector<RCP<const Integer>> &primes)
+{
+    RCP<const Integer> _n = iabs(*n);
+    RCP<const Integer> f;
+    if (eq(_n, zero)) return;
+
+    while (factor_trial_division(outArg(f), *_n) == 1 && !eq(_n, one)) {
+        RCP<const Basic> d = div(_n, f);
+        while (is_a<Integer>(*d)) { // when a prime factor is found, we divide
+            primes.push_back(f);         // _n by that prime as much as we can
+            _n = rcp_dynamic_cast<const Integer>(d);
+            d = div(_n, f);
+        }
+    }
+    if (!eq(_n, one))
+        primes.push_back(_n);
+}
+
+void prime_factor_multiplicities(const RCP<const Integer> &n,
+        map_integer_uint &primes)
+{
+    unsigned count;
+    RCP<const Integer> _n = iabs(*n);
+    RCP<const Integer> f;
+    if (eq(_n, zero)) return;
+
+    while (factor_trial_division(outArg(f), *_n) == 1 && !eq(_n, one)) {
+        count = 0;
+        RCP<const Basic> d = div(_n, f);
+        while (is_a<Integer>(*d)) { // when a prime factor is found, we divide
+            count++;                     // _n by that prime as much as we can
+            _n = rcp_dynamic_cast<const Integer>(d);
+            d = div(_n, f);
+        }
+        if (count > 0)
+            insert(primes, f, count);
+    }
+    if (!eq(_n, one))
+        insert(primes, _n, 1);
+}
+
 } // CSymPy
+

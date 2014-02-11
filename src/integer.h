@@ -114,6 +114,18 @@ public:
     };
 };
 
+// less operator (<) for Integers
+struct RCPIntegerKeyLess
+{
+    bool operator()(const RCP<const Integer> &a,
+            const RCP<const Integer> &b) const
+    {
+        if(mpz_cmp(b->as_mpz().get_mpz_t(), a->as_mpz().get_mpz_t()) == 1)
+            return true;
+        return false;
+    }
+};
+
 inline RCP<const Integer> integer(int i)
 {
     return rcp(new Integer(i));
@@ -142,3 +154,4 @@ extern RCP<const Integer> minus_one;
 } // CSymPy
 
 #endif
+
