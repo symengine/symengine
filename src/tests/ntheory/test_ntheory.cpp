@@ -70,13 +70,13 @@ void test_modular_inverse()
     RCP<const Integer> i11 = integer(11);
     RCP<const Integer> b;
 
-    assert(mod_inverse(*i3, *i5, outArg(b)) != 0);
+    assert(mod_inverse(outArg(b), *i3, *i5) != 0);
     assert(eq(b, integer(2)));
 
-    assert(mod_inverse(*i3, *i8, outArg(b)) != 0);
+    assert(mod_inverse(outArg(b), *i3, *i8) != 0);
     assert(eq(b, integer(3)));
 
-    assert(mod_inverse(*i3, *i11, outArg(b)) != 0);
+    assert(mod_inverse(outArg(b), *i3, *i11) != 0);
     assert(eq(b, integer(4)));
 }
 
