@@ -7,10 +7,11 @@ namespace CSymPy {
 
 class Basic;
 class Number;
+class Integer;
 class RCPBasicHash;
 class RCPBasicKeyEq;
 class RCPBasicKeyLess;
-
+class RCPIntegerKeyLess;
 
 typedef std::unordered_map<RCP<const Basic>, RCP<const Number>,
         RCPBasicHash, RCPBasicKeyEq> umap_basic_int;
@@ -24,6 +25,8 @@ typedef std::map<RCP<const Basic>, RCP<const Number>,
         RCPBasicKeyLess> map_basic_int;
 typedef std::map<RCP<const Basic>, RCP<const Basic>,
         RCPBasicKeyLess> map_basic_basic;
+typedef std::map<RCP<const Integer>, unsigned,
+        RCPIntegerKeyLess> map_integer_uint;
 
 // insert(m, first, second) is equivalent to m[first] = second, just faster,
 // because no default constructor is called on the "second" type.
@@ -42,8 +45,6 @@ bool umap_basic_basic_equal(const umap_basic_basic &a,
 // Return -1, 0, 1 for a < b, a == b, a > b
 int map_basic_basic_compare(const map_basic_basic &a, const map_basic_basic &b);
 int map_basic_int_compare(const map_basic_int &a, const map_basic_int &b);
-
-
 
 // Part of umap_vec_mpz:
 typedef struct
@@ -79,3 +80,4 @@ std::ostream& operator<<(std::ostream& out, const CSymPy::map_basic_basic& d);
 std::ostream& operator<<(std::ostream& out, const CSymPy::umap_basic_basic& d);
 
 #endif
+
