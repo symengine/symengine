@@ -16,8 +16,8 @@ RCP<const Integer> nextprime(const Integer &a);
 // Basic Number-theoretic functions
 RCP<const Integer> gcd(const Integer &a, const Integer &b);
 RCP<const Integer> lcm(const Integer &a, const Integer &b);
-void gcd_ext(const Integer &a, const Integer &b, const Ptr<RCP<const Integer>> &g,
-        const Ptr<RCP<const Integer>> &s, const Ptr<RCP<const Integer>> &t);
+void gcd_ext(const Ptr<RCP<const Integer>> &g, const Ptr<RCP<const Integer>> &s,
+        const Ptr<RCP<const Integer>> &t, const Integer &a, const Integer &b);
 
 int mod_inverse(const Integer &a, const Integer &m, const Ptr<RCP<const Integer>> &b);
 

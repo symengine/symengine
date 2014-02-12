@@ -31,11 +31,11 @@ void test_gcd_lcm()
     assert(eq(lcm(*i2, *i6), integer(6)));
     assert(eq(lcm(*i3, *i6), integer(6)));
 
-    gcd_ext(*i2, *i3, outArg(g), outArg(s), outArg(t));
+    gcd_ext(outArg(g), outArg(s), outArg(t), *i2, *i3);
     assert(eq(g, integer(1)));
     assert(eq(g, add(mul(i2, s), mul(i3, t)))); // check if g = i2*s + i3*t
 
-    gcd_ext(*i3, *i6, outArg(g), outArg(s), outArg(t));
+    gcd_ext(outArg(g), outArg(s), outArg(t), *i3, *i6);
     assert(eq(g, integer(3)));
     assert(eq(g, add(mul(i3, s), mul(i6, t)))); // check if g = i3*s + i6*t
 }

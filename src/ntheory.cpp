@@ -18,8 +18,8 @@ RCP<const Integer> gcd(const Integer &a, const Integer &b)
     return integer(g);
 }
 
-void gcd_ext(const Integer &a, const Integer &b, const Ptr<RCP<const Integer>> &g,
-                         const Ptr<RCP<const Integer>> &s, const Ptr<RCP<const Integer>> &t)
+void gcd_ext(const Ptr<RCP<const Integer>> &g, const Ptr<RCP<const Integer>> &s,
+        const Ptr<RCP<const Integer>> &t, const Integer &a, const Integer &b)
 {
     mpz_t g_t;
     mpz_t s_t;
