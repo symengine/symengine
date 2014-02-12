@@ -34,11 +34,11 @@ void test_gcd_lcm()
     assert(eq(lcm(*i2, *i6), integer(6)));
     assert(eq(lcm(*i3, *i6), integer(6)));
 
-    gcd_ext(*i2, *i3, outArg(g), outArg(s), outArg(t));
+    gcd_ext(outArg(g), outArg(s), outArg(t), *i2, *i3);
     assert(eq(g, integer(1)));
     assert(eq(g, add(mul(i2, s), mul(i3, t)))); // check if g = i2*s + i3*t
 
-    gcd_ext(*i3, *i6, outArg(g), outArg(s), outArg(t));
+    gcd_ext(outArg(g), outArg(s), outArg(t), *i3, *i6);
     assert(eq(g, integer(3)));
     assert(eq(g, add(mul(i3, s), mul(i6, t)))); // check if g = i3*s + i6*t
 }
@@ -73,13 +73,13 @@ void test_modular_inverse()
     RCP<const Integer> i11 = integer(11);
     RCP<const Integer> b;
 
-    assert(mod_inverse(*i3, *i5, outArg(b)) != 0);
+    assert(mod_inverse(outArg(b), *i3, *i5) != 0);
     assert(eq(b, integer(2)));
 
-    assert(mod_inverse(*i3, *i8, outArg(b)) != 0);
+    assert(mod_inverse(outArg(b), *i3, *i8) != 0);
     assert(eq(b, integer(3)));
 
-    assert(mod_inverse(*i3, *i11, outArg(b)) != 0);
+    assert(mod_inverse(outArg(b), *i3, *i11) != 0);
     assert(eq(b, integer(4)));
 }
 
@@ -114,35 +114,32 @@ void test_factor()
     assert(divides(i900, f));
 }
 
-void test_factor_trial_division()
+void test_factor_lehman_method()
 {
-    RCP<const Integer> i2 = integer(2);
-    RCP<const Integer> i3 = integer(3);
-    RCP<const Integer> i6 = integer(6);
-    RCP<const Integer> i17 = integer(17);
+    RCP<const Integer> i21 = integer(21);
+    RCP<const Integer> i23 = integer(23);
     RCP<const Integer> i31 = integer(31);
+    RCP<const Integer> i47 = integer(47);
     RCP<const Integer> i121 = integer(121);
     RCP<const Integer> i122 = integer(122);
-    RCP<const Integer> i1001 = integer(1001);
     RCP<const Integer> i900 = integer(900);
+    RCP<const Integer> i1001 = integer(1001);
     RCP<const Integer> f;
 
-    assert(factor_trial_division(outArg(f), *i2) == 0);
-    assert(factor_trial_division(outArg(f), *i3) == 0);
-    assert(factor_trial_division(outArg(f), *i17) == 0);
-    assert(factor_trial_division(outArg(f), *i31) == 0);
+    assert(factor_lehman_method(outArg(f), *i23) == 0);
+    assert(factor_lehman_method(outArg(f), *i31) == 0);
+    assert(factor_lehman_method(outArg(f), *i47) == 0);
 
-    assert(factor_trial_division(outArg(f), *i6) > 0);
-    assert(divides(i6, f));
-    assert(factor_trial_division(outArg(f), *i121) > 0);
+    assert(factor_lehman_method(outArg(f), *i21) > 0);
+    assert(divides(i21, f));
+    assert(factor_lehman_method(outArg(f), *i121) > 0);
     assert(divides(i121, f));
-    assert(factor_trial_division(outArg(f), *i122) > 0);
+    assert(factor_lehman_method(outArg(f), *i122) > 0);
     assert(divides(i122, f));
-    assert(factor_trial_division(outArg(f), *i1001) > 0);
-    assert(divides(i1001, f));
-    assert(!divides(i1001, i6));
-    assert(factor_trial_division(outArg(f), *i900) > 0);
+    assert(factor_lehman_method(outArg(f), *i900) > 0);
     assert(divides(i900, f));
+    assert(factor_lehman_method(outArg(f), *i1001) > 0);
+    assert(divides(i1001, f));
 }
 
 void test_sieve()
@@ -184,10 +181,6 @@ void test_prime_factors()
     RCP<const Integer> i125 = integer(125);
     RCP<const Integer> i1001 = integer(1001);
 
-    RCP<const Integer> _i1 = integer(-1);
-    RCP<const Integer> _i36 = integer(-36);
-    RCP<const Integer> _i37 = integer(-37);
-
     _test_primefactors(i0, 0);
     _test_primefactors(i1, 0);
     _test_primefactors(i5, 1);
@@ -196,10 +189,6 @@ void test_prime_factors()
     _test_primefactors(i36, 4);
     _test_primefactors(i125, 3);
     _test_primefactors(i1001, 3);
-
-    _test_primefactors(_i1, 0);
-    _test_primefactors(_i36, 4);
-    _test_primefactors(_i37, 1);
 }
 
 void _test_prime_factor_multiplicities(const RCP<const Integer> &a)
@@ -250,7 +239,7 @@ int main(int argc, char* argv[])
     test_probab_prime_p();
     test_modular_inverse();
     test_factor();
-    test_factor_trial_division();
+    test_factor_lehman_method();
     test_sieve();
     test_prime_factors();
     test_prime_factor_multiplicities();
