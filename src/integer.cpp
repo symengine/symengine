@@ -83,13 +83,13 @@ RCP<const Integer> isqrt(const Integer &n)
 {
     mpz_class m;
     mpz_t m_t;
-    
+
     mpz_init(m_t);
     mpz_sqrt(m_t, n.as_mpz().get_mpz_t());
     m = mpz_class(m_t);
-    
+
     mpz_clear(m_t);
-    
+
     return integer(m);
 }
 
@@ -97,31 +97,31 @@ RCP<const Integer> iabs(const Integer &n)
 {
     mpz_class m;
     mpz_t m_t;
-    
+
     mpz_init(m_t);
     mpz_abs(m_t, n.as_mpz().get_mpz_t());
     m = mpz_class(m_t);
-    
+
     mpz_clear(m_t);
-    
+
     return integer(mpz_class(m));
 }
 
-int i_nth_root(const Ptr<RCP<const Integer>> &r, const Integer &a, 
+int i_nth_root(const Ptr<RCP<const Integer>> &r, const Integer &a,
         unsigned long int n)
 {
     if (n == 0)
         throw std::runtime_error("i_nth_root: Can not find Zeroth root");
-    
+
     int ret_val;
     mpz_t t;
     mpz_init(t);
-    
+
     ret_val = mpz_root(t, a.as_mpz().get_mpz_t(), n);
     *r = integer(mpz_class(t));
-    
+
     mpz_clear(t);
-    
+
     return ret_val;
 }
 
@@ -142,3 +142,4 @@ RCP<const Integer> one = rcp(new Integer(1));
 RCP<const Integer> minus_one = rcp(new Integer(-1));
 
 } // CSymPy
+

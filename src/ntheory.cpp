@@ -48,7 +48,7 @@ RCP<const Integer> lcm(const Integer &a, const Integer &b)
     return integer(c);
 }
 
-int mod_inverse(const Ptr<RCP<const Integer>> &b, const Integer &a, 
+int mod_inverse(const Ptr<RCP<const Integer>> &b, const Integer &a,
         const Integer &m)
 {
     int ret_val;

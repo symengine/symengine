@@ -125,7 +125,7 @@ inline RCP<const Integer> integer(mpz_class i)
 }
 
 RCP<const Integer> isqrt(const Integer &n);
-int i_nth_root(const Ptr<RCP<const Integer>> &r, const Integer &a, 
+int i_nth_root(const Ptr<RCP<const Integer>> &r, const Integer &a,
         unsigned long int n);
 
 int perfect_square(const Integer &n);
@@ -142,3 +142,4 @@ extern RCP<const Integer> minus_one;
 } // CSymPy
 
 #endif
+
