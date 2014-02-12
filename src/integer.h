@@ -125,8 +125,8 @@ inline RCP<const Integer> integer(mpz_class i)
 }
 
 RCP<const Integer> isqrt(const Integer &n);
-int i_nth_root(const Integer &a, unsigned long int n,
-                                                    const Ptr<RCP<const Integer>> &r);
+int i_nth_root(const Ptr<RCP<const Integer>> &r, const Integer &a, 
+        unsigned long int n);
 
 int perfect_square(const Integer &n);
 int perfect_power(const Integer &n);

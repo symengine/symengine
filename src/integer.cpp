@@ -107,8 +107,8 @@ RCP<const Integer> iabs(const Integer &n)
     return integer(mpz_class(m));
 }
 
-int i_nth_root(const Integer &a, unsigned long int n,
-                                                    const Ptr<RCP<const Integer>> &r)
+int i_nth_root(const Ptr<RCP<const Integer>> &r, const Integer &a, 
+        unsigned long int n)
 {
     if (n == 0)
         throw std::runtime_error("i_nth_root: Can not find Zeroth root");

@@ -24,16 +24,16 @@ void test_i_nth_root()
     RCP<const Integer> i10 = integer(10);
     RCP<const Integer> r;
     
-    assert(i_nth_root(*i7, 2, outArg(r)) == 0);
+    assert(i_nth_root(outArg(r), *i7, 2) == 0);
     assert(eq(r, integer(2)));
     
-    assert(i_nth_root(*i9, 2, outArg(r)) != 0);
+    assert(i_nth_root(outArg(r), *i9, 2) != 0);
     assert(eq(r, integer(3)));
     
-    assert(i_nth_root(*i9, 3, outArg(r)) == 0);
+    assert(i_nth_root(outArg(r), *i9, 3) == 0);
     assert(eq(r, integer(2)));
 
-    assert(i_nth_root(*i10, 2, outArg(r)) == 0);
+    assert(i_nth_root(outArg(r), *i10, 2) == 0);
     assert(eq(r, integer(3)));
 }
 
