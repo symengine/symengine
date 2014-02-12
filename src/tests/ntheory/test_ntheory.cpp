@@ -181,10 +181,6 @@ void test_prime_factors()
     RCP<const Integer> i125 = integer(125);
     RCP<const Integer> i1001 = integer(1001);
 
-    RCP<const Integer> _i1 = integer(-1);
-    RCP<const Integer> _i36 = integer(-36);
-    RCP<const Integer> _i37 = integer(-37);
-
     _test_primefactors(i0, 0);
     _test_primefactors(i1, 0);
     _test_primefactors(i5, 1);
@@ -193,10 +189,6 @@ void test_prime_factors()
     _test_primefactors(i36, 4);
     _test_primefactors(i125, 3);
     _test_primefactors(i1001, 3);
-
-    _test_primefactors(_i1, 0);
-    _test_primefactors(_i36, 4);
-    _test_primefactors(_i37, 1);
 }
 
 void _test_prime_factor_multiplicities(const RCP<const Integer> &a)

@@ -247,7 +247,7 @@ void eratosthenes_sieve(unsigned limit, std::vector<unsigned> &primes)
 void prime_factors(const RCP<const Integer> &n,
         std::vector<RCP<const Integer>> &primes)
 {
-    RCP<const Integer> _n = iabs(*n);
+    RCP<const Integer> _n = n;
     RCP<const Integer> f;
     if (eq(_n, zero)) return;
 
@@ -267,7 +267,7 @@ void prime_factor_multiplicities(const RCP<const Integer> &n,
         map_integer_uint &primes)
 {
     unsigned count;
-    RCP<const Integer> _n = iabs(*n);
+    RCP<const Integer> _n = n;
     RCP<const Integer> f;
     if (eq(_n, zero)) return;
 
