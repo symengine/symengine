@@ -96,6 +96,7 @@ int _factor_trial_division_sieve(mpz_class &factor, const mpz_class &N)
     return 0;
 }
 
+// Factor using lehman method.
 int _factor_lehman_method(mpz_class &rop, const mpz_class &n)
 {
     if (n < 21)
@@ -146,6 +147,16 @@ int _factor_lehman_method(mpz_class &rop, const mpz_class &n)
         }
     }
 
+    return ret_val;
+}
+
+int factor_lehman_method(const Ptr<RCP<const Integer>> &f, const Integer &n)
+{
+    int ret_val;
+    mpz_class rop;
+
+    ret_val = _factor_lehman_method(rop, n.as_mpz());
+    *f = integer(rop);
     return ret_val;
 }
 

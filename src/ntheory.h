@@ -24,6 +24,7 @@ int mod_inverse(const Integer &a, const Integer &m, const Ptr<RCP<const Integer>
 // Factorization
 // parameter B1 is only used when `n` is factored using gmp-ecm
 int factor(const Ptr<RCP<const Integer>> &f, const Integer &n, double B1 = 1.0);
+
 // Factor using trial division. Returns 1 if a non-trivial factor is found,
 // otherwise 0.
 int factor_trial_division(const Ptr<RCP<const Integer>> &f, const Integer &n);
@@ -34,6 +35,9 @@ int factor_trial_division(const Ptr<RCP<const Integer>> &f, const Integer &n);
 // be quite optimized. For limit=1e8, it is about 50x slower than the
 // `primesieve` library (1498ms vs 28.29ms).
 void eratosthenes_sieve(unsigned limit, std::vector<unsigned> &primes);
+
+// Factor using lehman's methods
+int factor_lehman_method(const Ptr<RCP<const Integer>> &f, const Integer &n);
 
 }
 #endif
