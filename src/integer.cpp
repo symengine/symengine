@@ -42,11 +42,7 @@ int Integer::compare(const Basic &o) const
 std::string Integer::__str__() const
 {
     std::ostringstream s;
-    if (i == -1) {
-        s << '-';
-    } else {
-        s << this->i;
-    }
+    s << this->i;
     return s.str();
 }
 
