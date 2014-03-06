@@ -100,7 +100,9 @@ int Mul::compare(const Basic &o) const
 std::string Mul::__str__() const
 {
     std::ostringstream o;
-    if (neq(coef_, one))
+    if (eq(coef_, minus_one))
+        o << "-";
+    else if (neq(coef_, one))
         o << *coef_;
     for (auto &p: dict_) {
         if (is_a<Add>(*p.first)) o << "(";
