@@ -102,7 +102,7 @@ and check that CMake picked it up.
 
 ## Developer Documentation
 
-Please follow the [C++ Style Guide](doc/style_guide.rst) when developing.
+Please follow the [C++ Style Guide](doc/style_guide.md) when developing.
 
 The design decisions are documented in [Design](doc/design.md).
 
@@ -110,7 +110,7 @@ Memory management is handled by RCP (reference counted pointers) from
 `Trilinos` (module `Teuchos`). We have copied the relevant files into
 `src/teuchos`, so no external dependency is needed.  Brief code snippets of the
 most frequent operations are given in our [C++ Style
-Guide](doc/style_guide.rst), this is useful to consult if you are unsure about
+Guide](doc/style_guide.md), this is useful to consult if you are unsure about
 the syntax.  In order to understand how it works under the hood, read
 [Teuchos::RCP Beginner's
 Guide](http://trilinos.sandia.gov/RefCountPtrBeginnersGuideSAND.pdf) (pdf).
