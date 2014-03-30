@@ -1,3 +1,9 @@
+/**
+ *  \file basic.h
+ *  Includes the base class
+ *
+ **/
+
 #ifndef CSYMPY_BASIC_H
 #define CSYMPY_BASIC_H
 
@@ -21,7 +27,7 @@ namespace CSymPy {
 
 class Symbol;
 
-/*
+/*!
     Any Basic class can be used in a "dictionary", due to the methods:
         __hash__()
         __eq__(o)
@@ -51,82 +57,88 @@ class Symbol;
 */
 class Basic {
 private:
+    //! Private variables
     mutable std::size_t hash_; // This holds the hash value
 #if defined(WITH_CSYMPY_RCP)
 public:
+    //! Public variables if defined with CSYMY_RCP
     mutable unsigned int refcount_; // reference counter
 #endif
 public:
+    //! Constructor
     Basic() : hash_{0}
 #if defined(WITH_CSYMPY_RCP)
         , refcount_(0)
 #endif
         {}
-    // Destructor must be explicitly defined as virtual here to avoid problems
-    // with undefined behavior while deallocating derived classes.
+    //! Destructor must be explicitly defined as virtual here to avoid problems
+    //! with undefined behavior while deallocating derived classes.
     virtual ~Basic() {}
 
-    // Delete the copy constructor and assignment
+    //! Delete the copy constructor and assignment
     Basic(const Basic&) = delete;
     Basic& operator=(const Basic&) = delete;
 
-    // Delete the move constructor and assignment
+    //! Delete the move constructor and assignment
     Basic(Basic&&) = delete;
     Basic& operator=(Basic&&) = delete;
 
-    // Implements the hash of the given CSymPy class.
-    // Use std::hash to get the hash. Example:
-    //     RCP<const Symbol> x = rcp(new Symbol("x"));
-    //     std::hash<Basic> hash_fn;
-    //     std::cout << hash_fn(*x);
+    /*!  Implements the hash of the given CSymPy class.
+         Use `std::hash` to get the hash. Example:
+             RCP<const Symbol> x = rcp(new Symbol("x"));
+             std::hash<Basic> hash_fn;
+             std::cout << hash_fn(*x);
+    */
     virtual std::size_t __hash__() const = 0;
 
-    // This caches the hash:
+    //! This caches the hash:
     std::size_t hash() const;
 
-    // true if "this" is equal to "o".
+    //! true if "this" is equal to "o".
     virtual bool __eq__(const Basic &o) const = 0;
 
     bool __neq__(const Basic &o) const;
 
     int __cmp__(const Basic &o) const;
 
-    // Returns -1, 0, 1 for this < o, this == o, this > o. This method is used
-    // when you want to sort things like x+y+z into canonical order. This
-    // function assumes that 'o' is the same type as 'this'. Use __cmp__ if you
-    // want general comparison.
+    /*! Returns -1, 0, 1 for `this < o, this == o, this > o`. This method is used
+     when you want to sort things like `x+y+z` into canonical order. This
+     function assumes that `o` is the same type as `this`. Use ` __cmp__` if you
+     want general comparison.
+     */
     virtual int compare(const Basic &o) const = 0;
 
-    // Returns string representation of self. Subclasses can override this to
-    // provide custom printing.
+    /*! Returns string representation of `self`. Subclasses can override this to
+     provide custom printing.
+     */
     virtual std::string __str__() const;
 
-    // Returns the derivative of self
+    //! Returns the derivative of self
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const {
         throw std::runtime_error("Not implemented.");
     }
 
-    // Substitutes 'subs_dict' into 'self'.
+    //! Substitutes 'subs_dict' into 'self'.
     virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
 };
 
-// Our hash:
+//! Our hash:
 struct RCPBasicHash {
     long operator() (const RCP<const Basic> &k) const {
         return k->hash();
     }
 };
 
-// Our comparison (==):
+//! Our comparison `(==)`
 struct RCPBasicKeyEq {
     bool operator() (const RCP<const Basic> &x, const RCP<const Basic> &y) const {
         return x->__eq__(*y);
     }
 };
 
-// Our less operator (<):
+//! Our less operator `(<)`:
 struct RCPBasicKeyLess {
-    // true if x < y, false otherwise
+    //! true if `x < y`, false otherwise
     bool operator() (const RCP<const Basic> &x, const RCP<const Basic> &y) const {
         std::size_t xh=x->hash(), yh=y->hash();
         if (xh != yh) return xh < yh;
@@ -135,12 +147,13 @@ struct RCPBasicKeyLess {
     }
 };
 
-// Convenience functions
+//! Convenience functions
 bool eq(const RCP<const Basic> &a, const RCP<const Basic> &b);
 bool neq(const RCP<const Basic> &a, const RCP<const Basic> &b);
 
-// Returns true if "b" is exactly of type T. Example:
-//   is_a<Symbol>(b)  // true if "b" is of type Symbol
+/*! Returns true if `b` is exactly of type `T`. Example:
+  `is_a<Symbol>(b)` : true if "b" is of type Symbol
+*/
 template <class T> bool is_a(const Basic &b);
 
 // Returns true if "b" is of type T or any of its subclasses. Example:
