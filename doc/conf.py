@@ -277,4 +277,6 @@ breathe_projects = {
         "csympy" : "doxyxml"
         }
 breathe_default_project = "csympy"
-
+breathe_projects_source = {
+        "csympy" : "../src/"
+        }
