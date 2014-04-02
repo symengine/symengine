@@ -1,3 +1,9 @@
+/**
+ *  \file integer.h
+ *  Class to implement Integers
+ *
+ **/
+
 #ifndef CSYMPY_INTEGER_H
 #define CSYMPY_INTEGER_H
 

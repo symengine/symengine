@@ -1,5 +1,5 @@
-Basic Class :  Namespace CSymPy
-===============================
+basic
+=====
 
 .. autodoxygenindex:: basic.h
-   :source: csympy
+    :source: basic

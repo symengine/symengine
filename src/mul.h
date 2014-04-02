@@ -1,3 +1,8 @@
+/**
+ *  \file mul.h
+ *  Multiplication class
+ *
+ **/
 #ifndef CSYMPY_MUL_H
 #define CSYMPY_MUL_H
 

@@ -1,3 +1,9 @@
+/**
+ *  \file monomials.h
+ *  Monomial Multiplication
+ *
+ **/
+ 
 #ifndef CSYMPY_MONOMIALS_H
 #define CSYMPY_MONOMIALS_H
 

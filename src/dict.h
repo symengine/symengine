@@ -1,3 +1,10 @@
+/**
+ *  \file dict.h
+ *  Dictionary implementation
+ *
+ **/
+
+
 #ifndef CSYMPY_DICT_H
 #define CSYMPY_DICT_H
 

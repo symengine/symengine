@@ -1,3 +1,9 @@
+/**
+ *  \file functions.h
+ *  Includes various trignometric functions
+ *
+ **/
+
 #ifndef CSYMPY_FUNCTIONS_H
 #define CSYMPY_FUNCTIONS_H
 
@@ -12,7 +18,7 @@ class Function : public Basic {
 
 class Sin : public Function {
 private:
-    RCP<const Basic> arg_; // The 'arg' in sin(arg)
+    RCP<const Basic> arg_; //! The 'arg' in sin(arg)
 
 public:
     Sin(const RCP<const Basic> &arg);
@@ -30,13 +36,13 @@ public:
     virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
 };
 
-// This uses canonicalize:
+//! This uses canonicalize:
 RCP<const Basic> sin(const RCP<const Basic> &arg);
 
 
 class Cos : public Function {
 private:
-    RCP<const Basic> arg_; // The 'arg' in sin(arg)
+    RCP<const Basic> arg_; //! The 'arg' in sin(arg)
 
 public:
     Cos(const RCP<const Basic> &arg);
@@ -54,13 +60,13 @@ public:
     virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
 };
 
-// This uses canonicalize:
+//! This uses canonicalize:
 RCP<const Basic> cos(const RCP<const Basic> &arg);
 
 class FunctionSymbol : public Function {
 private:
-    std::string name_; // The 'f' in f(x+y)
-    RCP<const Basic> arg_; // The 'x+y' in f(x+y)
+    std::string name_; //! The `f` in `f(x+y)`
+    RCP<const Basic> arg_; //! The 'x+y' in `f(x+y)`
 
 public:
     FunctionSymbol(std::string name, const RCP<const Basic> &arg);

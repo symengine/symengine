@@ -278,5 +278,19 @@ breathe_projects = {
         }
 breathe_default_project = "csympy"
 breathe_projects_source = {
-        "csympy" : "../src/"
+        "csympy" : "../src/",
+        "symbol" : "../src/",
+        "rings" : "../src/",
+        "rational" : "../src/",
+        "pow" : "../src/",
+        "number" : "../src/",
+        "ntheory" : "../src/",
+        "mul" : "../src/",
+        "monomials" : "../src/",
+        "integer" : "../src/",
+        "functions" : "../src/",
+        "dict" : "../src/",
+        "basic-inl" : "../src/",
+        "basic" : "../src/",
+        "add" : "../src/"
         }

@@ -1,3 +1,8 @@
+/**
+ *  \file symbol.h
+ *  Class Symbol
+ *
+ **/
 #ifndef CSYMPY_SYMBOL_H
 #define CSYMPY_SYMBOL_H
 

@@ -1,3 +1,8 @@
+/**
+ *  \file pow.h
+ *  Power Class 
+ *
+ **/
 #ifndef CSYMPY_POW_H
 #define CSYMPY_POW_H
 

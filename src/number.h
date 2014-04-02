@@ -1,3 +1,9 @@
+/**
+ *  \file number.h
+ *  Basic Number class.
+ *
+ **/
+ 
 #ifndef CSYMPY_NUMBER_H
 #define CSYMPY_NUMBER_H
 

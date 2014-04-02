@@ -1,3 +1,8 @@
+/**
+ *  \file rings.h
+ *  Polynomial Manipulation
+ *
+ **/
 #ifndef CSYMPY_RINGS_H
 #define CSYMPY_RINGS_H
 

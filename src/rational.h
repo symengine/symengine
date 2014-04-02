@@ -1,3 +1,8 @@
+/**
+ *  \file rational.h
+ *  Class for Rationals built on top of Number class
+ *
+ **/
 #ifndef CSYMPY_RATIONAL_H
 #define CSYMPY_RATIONAL_H
 

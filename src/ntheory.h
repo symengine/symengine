@@ -1,3 +1,8 @@
+/**
+ *  \file ntheory.h
+ *  Basic Ntheory Functions
+ *
+ **/
 // Following number theoretic functions just make use of GMP's number theoretic
 // function implementations. Please refer the following manual:
 // https://gmplib.org/manual/Number-Theoretic-Functions.html
