@@ -1,5 +1,5 @@
 monomials
 =========
 
-.. autodoxygenindex:: monomials.h
-    :source: monomials
+.. doxygenfile:: monomials.h
+    :project: csympy

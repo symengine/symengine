@@ -1,5 +1,5 @@
 ntheory
 =======
 
-.. autodoxygenindex:: ntheory.h
-    :source: ntheory
+.. doxygenfile:: ntheory.h
+    :project: csympy

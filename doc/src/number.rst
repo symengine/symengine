@@ -1,5 +1,5 @@
 number
 ======
 
-.. autodoxygenindex:: number.h
-    :source: number
+.. doxygenfile:: number.h
+    :project: csympy

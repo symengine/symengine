@@ -1,5 +1,5 @@
 basic
 =====
 
-.. autodoxygenindex:: basic.h
-    :source: basic
+.. doxygenfile:: basic.h
+    :project: csympy

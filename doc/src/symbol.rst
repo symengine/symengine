@@ -1,5 +1,5 @@
 symbol
 ======
 
-.. autodoxygenindex:: symbol.h
-    :source: symbol
+.. doxygenfile:: symbol.h
+    :project: csympy

@@ -1,5 +1,5 @@
 basic-inl
 =========
 
-.. autodoxygenindex:: basic-inl.h
-    :source: basic-inl
+.. doxygenfile:: basic-inl.h
+    :project: csympy

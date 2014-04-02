@@ -1,5 +1,5 @@
 add
 ===
 
-.. autodoxygenindex:: add.h
-    :source: add
+.. doxygenfile:: add.h
+    :project: csympy

@@ -1,5 +1,5 @@
 functions
 =========
 
-.. autodoxygenindex:: functions.h
-    :source: functions
+.. doxygenfile:: functions.h
+    :project: csympy

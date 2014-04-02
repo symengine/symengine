@@ -1,5 +1,5 @@
 rings
 =====
 
-.. autodoxygenindex:: rings.h
-    :source: rings
+.. doxygenfile:: rings.h
+    :project: csympy

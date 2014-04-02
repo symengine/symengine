@@ -1,5 +1,5 @@
 mul
 ===
 
-.. autodoxygenindex:: mul.h
-    :source: mul
+.. doxygenfile:: mul.h
+    :project: csympy

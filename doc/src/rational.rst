@@ -1,5 +1,5 @@
 rational
 ========
 
-.. autodoxygenindex:: rational.h
-    :source: rational
+.. doxygenfile:: rational.h
+    :project: csympy

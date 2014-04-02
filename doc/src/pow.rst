@@ -1,5 +1,5 @@
 pow
 ===
 
-.. autodoxygenindex:: pow.h
-    :source: pow
+.. doxygenfile:: pow.h
+    :project: csympy

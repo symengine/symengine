@@ -1,5 +1,5 @@
 dict
 ====
 
-.. autodoxygenindex:: dict.h
-    :source: dict
+.. doxygenfile:: dict.h
+    :project: csympy
