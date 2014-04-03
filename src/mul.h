@@ -28,7 +28,7 @@ public:
      * */
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
-    //! \return stringify version of `self`s
+    //! \return stringify version of `self`
     virtual std::string __str__() const;
 
     // Performs canonicalization first:
@@ -54,7 +54,7 @@ public:
     //! \return true if both `coef` and `dict` are in canonical form
     bool is_canonical(const RCP<const Number> &coef,
             const map_basic_basic& dict);
-	//! Differentaite w.r.t Symbol `x`
+	//! Differentiate w.r.t Symbol `x`
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
     virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
 };

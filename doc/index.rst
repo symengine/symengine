@@ -10,8 +10,7 @@ Contents:
 
 .. toctree::
    :maxdepth: 2
-
-   src/basic-inl  
+ 
    src/basic  
    src/dict
    src/functions
