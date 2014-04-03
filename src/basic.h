@@ -171,7 +171,7 @@ template <class T> bool is_a(const Basic &b);
  * Example:
      
         is_a_sub<Symbol>(b)  // true if `b` is of type `Symbol` or any Symbol's subclass 
-    */
+*/
 template <class T>
 bool is_a_sub(const Basic &b);
 
