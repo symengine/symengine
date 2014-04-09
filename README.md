@@ -1,6 +1,6 @@
 # CSymPy
 
-[![Build Status](https://travis-ci.org/certik/csympy.png?branch=master)](https://travis-ci.org/certik/csympy)
+[![Build Status](https://travis-ci.org/sympy/csympy.png?branch=master)](https://travis-ci.org/sympy/csympy)
 
 CSymPy is a standalone fast C++ symbolic manipulation library.
 Optional thin Python wrappers allow easy usage from Python and
