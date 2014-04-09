@@ -64,10 +64,7 @@ mode you want to develop it. However, the best way to develop CSymPy is to use
 the Debug mode, turn assertions on and turn `BFD` support on (prints very nice
 stacktraces on exceptions, segfaults or assert errors):
 
-    cmake -DCMAKE_BUILD_TYPE=Debug \
-        -DWITH_CSYMPY_ASSERT=yes \
-        -DWITH_BFD=yes \
-        .
+    cmake -DCMAKE_BUILD_TYPE=Debug -DWITH_CSYMPY_ASSERT=yes -DWITH_BFD=yes .
 
 To make `WITH_BFD=yes` work, you need to install `binutils-dev` first,
 otherwise you will get a `CMake` error during configuring.
