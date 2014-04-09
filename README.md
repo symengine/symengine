@@ -13,6 +13,12 @@ All files are licensed under MIT license, see the
 information. The `src/teuchos` directory is licensed under the Trilinos BSD
 license (see the LICENSE file).
 
+## Mailinglist, Chat
+
+We use the SymPy mailinglist: http://groups.google.com/group/sympy
+
+Chat (Gitter): https://gitter.im/sympy/csympy
+
 ## Installation
 
 Install prerequisites.
