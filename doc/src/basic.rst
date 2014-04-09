@@ -1,6 +1,5 @@
-Basic Class :  Namespace CSymPy
-===============================
+basic
+=====
 
-.. doxygenclass:: CSymPy::Basic
-   :project: csympy
-   :members:
+.. doxygenfile:: basic.h
+    :project: csympy

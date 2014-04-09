@@ -29,11 +29,13 @@ class Symbol;
 
 /*!
     Any Basic class can be used in a "dictionary", due to the methods:
+        
         __hash__()
         __eq__(o)
     Sublcasses must implement these.
 
-    Classes like Add, Mul, Pow are initialzied through their constructor using
+*/
+/*    Classes like Add, Mul, Pow are initialzied through their constructor using
     their internal representation. Add, Mul have a 'coeff' and 'dict', while
     Pow hase 'base' and 'exp'. There are restrictions on what 'coeff' and
     'dict' can be (for example 'coeff' cannot be zero in Mul, and if Mul is
@@ -77,10 +79,12 @@ public:
 
     //! Delete the copy constructor and assignment
     Basic(const Basic&) = delete;
+    //! Assignment operator in continuation with above
     Basic& operator=(const Basic&) = delete;
 
     //! Delete the move constructor and assignment
     Basic(Basic&&) = delete;
+    //! Assignment operator in continuation with above
     Basic& operator=(Basic&&) = delete;
 
     /*!  Implements the hash of the given CSymPy class.
@@ -94,11 +98,13 @@ public:
     //! This caches the hash:
     std::size_t hash() const;
 
-    //! true if "this" is equal to "o".
+    //! true if `this` is equal to `o`.
     virtual bool __eq__(const Basic &o) const = 0;
 
+    //! true if `this` is not equal to `o`.
     bool __neq__(const Basic &o) const;
-
+    
+    //! Comparison operator.
     int __cmp__(const Basic &o) const;
 
     /*! Returns -1, 0, 1 for `this < o, this == o, this > o`. This method is used
@@ -124,6 +130,7 @@ public:
 
 //! Our hash:
 struct RCPBasicHash {
+    //! Returns the hashed value.
     long operator() (const RCP<const Basic> &k) const {
         return k->hash();
     }
@@ -131,6 +138,7 @@ struct RCPBasicHash {
 
 //! Our comparison `(==)`
 struct RCPBasicKeyEq {
+    //! Comparison Operator `==`
     bool operator() (const RCP<const Basic> &x, const RCP<const Basic> &y) const {
         return x->__eq__(*y);
     }
@@ -147,8 +155,11 @@ struct RCPBasicKeyLess {
     }
 };
 
-//! Convenience functions
+// Convenience functions
+//! Checks equality for `a` and `b` 
 bool eq(const RCP<const Basic> &a, const RCP<const Basic> &b);
+
+//! Checks inequality for `a` and `b` 
 bool neq(const RCP<const Basic> &a, const RCP<const Basic> &b);
 
 /*! Returns true if `b` is exactly of type `T`. Example:
@@ -156,43 +167,50 @@ bool neq(const RCP<const Basic> &a, const RCP<const Basic> &b);
 */
 template <class T> bool is_a(const Basic &b);
 
-// Returns true if "b" is of type T or any of its subclasses. Example:
-//   is_a_sub<Symbol>(b)  // true if "b" is of type Symbol or any Symbol's subclass
+/*! Returns true if `b` is of type T or any of its subclasses. 
+ * Example:
+     
+        is_a_sub<Symbol>(b)  // true if `b` is of type `Symbol` or any Symbol's subclass 
+*/
 template <class T>
 bool is_a_sub(const Basic &b);
 
+//! Expands `self`
 RCP<const Basic> expand(const RCP<const Basic> &self);
 
 } // CSymPy
 
-// This "<<" overloaded function simply calls p.__str__, so it allows any Basic
-// type to be printed.
-// This prints using: std::cout << *x;
+/*! This `<<` overloaded function simply calls `p.__str__`, so it allows any Basic
+    type to be printed.
+
+    This prints using: `std::cout << *x;`
+*/
 std::ostream& operator<<(std::ostream& out, const CSymPy::Basic& p);
 
-// Specialise std::hash for Basic.
+//! Specialise `std::hash` for Basic.
 namespace std {
     template<> struct hash<CSymPy::Basic>;
 }
 
-// Standard hash_combine() function. Example of usage:
-//
-//    std::size_t seed1 = 0;
-//    hash_combine<std::string>(seed1, "x");
-//    hash_combine<std::string>(seed1, "y");
-//
-// You can use it with any CSymPy class:
-//
-//    RCP<const Symbol> x = rcp(new Symbol("x"));
-//    RCP<const Symbol> y = rcp(new Symbol("y"));
-//    std::size_t seed2 = 0;
-//    hash_combine<Basic>(seed2, *x);
-//    hash_combine<Basic>(seed2, *y);
-//
+/*! Standard `hash_combine()` function. Example of usage:
+
+        std::size_t seed1 = 0;
+        hash_combine<std::string>(seed1, "x");
+        hash_combine<std::string>(seed1, "y");
+
+     You can use it with any CSymPy class:
+
+        
+        RCP<const Symbol> x = rcp(new Symbol("x"));
+        RCP<const Symbol> y = rcp(new Symbol("y"));
+        std::size_t seed2 = 0;
+        hash_combine<Basic>(seed2, *x);
+        hash_combine<Basic>(seed2, *y);
+*/
 template <class T>
 void hash_combine(std::size_t& seed, const T& v);
 
-// Inline members and functions
+//! Inline members and functions
 #include "basic-inl.h"
 
 #endif

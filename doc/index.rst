@@ -10,8 +10,20 @@ Contents:
 
 .. toctree::
    :maxdepth: 2
-
-   src/basic
+ 
+   src/basic  
+   src/dict
+   src/functions
+   src/number
+   src/integer
+   src/rational
+   src/add
+   src/mul
+   src/ntheory
+   src/pow
+   src/symbol
+   src/monomials
+   src/rings  
 
 
 Indices and tables

@@ -1,3 +1,8 @@
+/**
+ *  \file rational.h
+ *  Class for Rationals built on top of Number class
+ *
+ **/
 #ifndef CSYMPY_RATIONAL_H
 #define CSYMPY_RATIONAL_H
 
@@ -8,65 +13,101 @@
 #include "integer.h"
 
 namespace CSymPy {
-
+//! Rational Class
 class Rational : public Number {
 public:
+	//! `i` : object of `mpz_class`
     mpq_class i;
 
 public:
+	//! Constructor of Rational class
     Rational(mpq_class i);
-    // 'i' must already be in mpq_class canonical form, this function returns
-    // Integer or Rational depending on denumerator.
+    /*! \param `i` must already be in mpq_class canonical form
+    *   \return Integer or Rational depending on denumerator.
+    * */
     static RCP<const Number> from_mpq(const mpq_class i);
+    //! \return size of the hash
     virtual std::size_t __hash__() const;
+    /*! Equality comparator
+     * \param o - Object to be compared with
+     * \return whether the 2 objects are equal
+     * */
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
+    //! \return stringify version of `self`s
     virtual std::string __str__() const;
+    //! \return true if canonical
     bool is_canonical(const mpq_class &i);
 
-    // Constructs Rational as n/d, where n, d can be any Integers. If n/d is an
-    // Integer, it will return an Integer instead.
+    /*! Constructs Rational as n/d, where n, d can be any Integers. If n/d is an
+    *   Integer, it will return an Integer instead.
+    * */
     static RCP<const Number> from_two_ints(const RCP<const Integer> &n,
             const RCP<const Integer> &d);
-
+	//! \return `true` if `0`
     virtual bool is_zero() const { return this->i == 0; }
+    //! \return `true` if `1`
     virtual bool is_one() const { return this->i == 1; }
+    //! \return `true` if denominator is `1`
     inline bool is_int() { return this->i.get_den() == 1; }
 
+	/*! Add Rationals
+	 * \param other of type Rational
+	 * */
     inline RCP<const Number> addrat(const Rational &other) const {
         return from_mpq(this->i + other.i);
     }
+    /*! Add Rationals
+	 * \param other of type Integer
+	 * */
     inline RCP<const Number> addrat(const Integer &other) const {
         return from_mpq(this->i + other.i);
     }
-
+	/*! Subtract Rationals
+	 * \param other of type Rational
+	 * */
     inline RCP<const Number> subrat(const Rational &other) const {
         return from_mpq(this->i - other.i);
     }
+    /*! Subtract Rationals
+	 * \param other of type Integer
+	 * */
     inline RCP<const Number> subrat(const Integer &other) const {
         return from_mpq(this->i - other.i);
     }
     inline RCP<const Number> rsubrat(const Integer &other) const {
         return from_mpq(other.i - this->i);
     }
-
+	/*! Multiply Rationals
+	 * \param other of type Rational
+	 * */
     inline RCP<const Number> mulrat(const Rational &other) const {
         return from_mpq(this->i * other.i);
     }
+    /*! Multiply Rationals
+	 * \param other of type Integer
+	 * */
     inline RCP<const Number> mulrat(const Integer &other) const {
         return from_mpq(this->i * other.i);
     }
-
+	/*! Divide Rationals
+	 * \param other of type Rational
+	 * */
     inline RCP<const Number> divrat(const Rational &other) const {
         return from_mpq(this->i / other.i);
     }
+    /*! Divide Rationals
+	 * \param other of type Integer
+	 * */
     inline RCP<const Number> divrat(const Integer &other) const {
         return from_mpq(this->i / other.i);
     }
     inline RCP<const Number> rdivrat(const Integer &other) const {
         return from_mpq(other.i / this->i);
     }
-
+	/*! Raise Rationals to power `other`
+	 * \param other power to be raised
+	 * */
     inline RCP<const Number> powrat(const Integer &other) const {
         bool neg = other.is_negative();
         mpz_class exp_ = other.i;
@@ -88,7 +129,7 @@ public:
             return rcp(new Rational(mpq_class(den, num)));
     }
 
-
+	//! Converts the param `other` appropriately and then calls `addrat`
     virtual RCP<const Number> add(const Number &other) const {
         if (is_a<Rational>(other)) {
             return addrat(static_cast<const Rational&>(other));
@@ -98,7 +139,7 @@ public:
             throw std::runtime_error("Not implemented.");
         }
     };
-
+	//! Converts the param `other` appropriately and then calls `subrat`
     virtual RCP<const Number> sub(const Number &other) const {
         if (is_a<Rational>(other)) {
             return subrat(static_cast<const Rational&>(other));
@@ -108,7 +149,7 @@ public:
             throw std::runtime_error("Not implemented.");
         }
     };
-
+	//! Converts the param `other` appropriately and then calls `rsubrat`
     virtual RCP<const Number> rsub(const Number &other) const {
         if (is_a<Integer>(other)) {
             return rsubrat(static_cast<const Integer&>(other));
@@ -116,7 +157,7 @@ public:
             throw std::runtime_error("Not implemented.");
         }
     };
-
+	//! Converts the param `other` appropriately and then calls `mulrat`
     virtual RCP<const Number> mul(const Number &other) const {
         if (is_a<Rational>(other)) {
             return mulrat(static_cast<const Rational&>(other));
@@ -126,7 +167,7 @@ public:
             throw std::runtime_error("Not implemented.");
         }
     };
-
+	//! Converts the param `other` appropriately and then calls `divrat`
     virtual RCP<const Number> div(const Number &other) const {
         if (is_a<Rational>(other)) {
             return divrat(static_cast<const Rational&>(other));
@@ -136,7 +177,7 @@ public:
             throw std::runtime_error("Not implemented.");
         }
     };
-
+	//! Converts the param `other` appropriately and then calls `rdivrat`
     virtual RCP<const Number> rdiv(const Number &other) const {
         if (is_a<Integer>(other)) {
             return rdivrat(static_cast<const Integer&>(other));
@@ -144,7 +185,7 @@ public:
             throw std::runtime_error("Not implemented.");
         }
     };
-
+	//! Converts the param `other` appropriately and then calls `powrat`
     virtual RCP<const Number> pow(const Number &other) const {
         if (is_a<Integer>(other)) {
             return powrat(static_cast<const Integer&>(other));
@@ -154,7 +195,7 @@ public:
     };
 };
 
-// Returns true if 'b' is a Number or any of its subclasses
+//! \return true if 'b' is a Number or any of its subclasses
 inline bool is_a_Number(const Basic &b)
 {
     // Currently we enumerate all the subclasses explicitly, from the most
