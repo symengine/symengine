@@ -69,7 +69,7 @@ bool Add::__eq__(const Basic &o) const
 {
     if (is_a<Add>(o) &&
         eq(coef_, static_cast<const Add &>(o).coef_) &&
-        dicts_equal(dict_, static_cast<const Add &>(o).dict_))
+        umap_basic_int_equal(dict_, static_cast<const Add &>(o).dict_))
         return true;
 
     return false;

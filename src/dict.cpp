@@ -145,7 +145,7 @@ int map_basic_int_compare(const map_basic_int &A, const map_basic_int &B)
     return 0;
 }
 
-bool dicts_equal(const umap_basic_int &a, const umap_basic_int &b)
+bool umap_basic_int_equal(const umap_basic_int &a, const umap_basic_int &b)
 {
     // This follows the same algorithm as Python's dictionary comparison
     // (a==b), which is implemented by "dict_equal" function in

@@ -44,7 +44,7 @@ void insert(T1 &m, const T2 &first, const T3 &second) {
 }
 
 //! \return true if the two dictionaries `a` and `b` are equal. Otherwise false.
-bool dicts_equal(const umap_basic_int &a, const umap_basic_int &b);
+bool umap_basic_int_equal(const umap_basic_int &a, const umap_basic_int &b);
 //! \return true if the two dictionaries `a` and `b` are equal. Otherwise false.
 bool map_basic_int_equal(const map_basic_int &a, const map_basic_int &b);
 //! \return true if the two dictionaries `a` and `b` are equal. Otherwise false.
