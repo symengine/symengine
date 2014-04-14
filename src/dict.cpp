@@ -73,6 +73,15 @@ std::ostream& operator<<(std::ostream& out, const CSymPy::umap_basic_basic& d)
     return out;
 }
 
+std::ostream& operator<<(std::ostream& out, const CSymPy::vec_basic& d)
+{
+    out << "[";
+    for (auto &p: d)
+        out << *p << ", ";
+    out << "]";
+    return out;
+}
+
 
 namespace CSymPy {
 
@@ -171,6 +180,31 @@ bool umap_basic_basic_equal(const umap_basic_basic &a,
         if (neq(p.second, f->second)) return false; // values not equal
     }
     return true;
+}
+
+bool vecs_equal(const vec_basic &a, const vec_basic &b)
+{
+    // Can't be equal if # of entries differ:
+    if (a.size() != b.size()) return false;
+    // Loop over elements in "a" and "b":
+    for (size_t i=0; i < a.size(); i++) {
+        if (neq(a[i], b[i])) return false; // values not equal
+    }
+    return true;
+}
+
+int vec_basic_compare(const vec_basic &A, const vec_basic &B)
+{
+    if (A.size() != B.size())
+        return (A.size() < B.size()) ? -1 : 1;
+    auto a = A.begin();
+    auto b = B.begin();
+    int cmp;
+    for (; a != A.end(); ++a, ++b) {
+        cmp = (*a)->__cmp__(**b);
+        if (cmp != 0) return cmp;
+    }
+    return 0;
 }
 
 }
