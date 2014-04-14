@@ -54,13 +54,15 @@ bool umap_basic_basic_eq(const umap_basic_basic &a,
         const umap_basic_basic &b);
 //! \return true if the two vectors `a` and `b` are equal. Otherwise false.
 bool vec_basic_eq(const vec_basic &a, const vec_basic &b);
-int vec_basic_compare(const vec_basic &A, const vec_basic &B);
 
 
 //! \return -1, 0, 1 for a < b, a == b, a > b
 int map_basic_basic_compare(const map_basic_basic &a, const map_basic_basic &b);
 //! \return -1, 0, 1 for a < b, a == b, a > b
 int map_basic_int_compare(const map_basic_int &a, const map_basic_int &b);
+//! \return -1, 0, 1 for a < b, a == b, a > b
+int vec_basic_compare(const vec_basic &a, const vec_basic &b);
+
 
 //! Part of umap_vec_mpz:
 typedef struct
