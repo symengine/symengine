@@ -28,6 +28,8 @@ cdef c2py(RCP[const csympy.Basic] o):
         r = Cos.__new__(Cos)
     elif (csympy.is_a_FunctionSymbol(deref(o))):
         r = FunctionSymbol.__new__(FunctionSymbol)
+    elif (csympy.is_a_Derivative(deref(o))):
+        r = Derivative.__new__(Derivative)
     else:
         raise Exception("Unsupported CSymPy class.")
     r.thisptr = o
@@ -300,6 +302,18 @@ cdef class FunctionSymbol(Function):
         arg = c2py(deref(X).get_arg())._sympy_()
         import sympy
         return sympy.Function(name)(arg)
+
+cdef class Derivative(Basic):
+
+    def __dealloc__(self):
+        self.thisptr.reset()
+
+    def _sympy_(self):
+        cdef RCP[const csympy.Derivative] X = \
+            csympy.rcp_static_cast_Derivative(self.thisptr)
+        arg = c2py(deref(X).get_arg())._sympy_()
+        import sympy
+        return sympy.Derivative(arg, Symbol("x"))
 
 def sin(x):
     cdef Basic X = sympify(x)
