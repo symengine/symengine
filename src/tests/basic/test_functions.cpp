@@ -181,6 +181,13 @@ void test_Derivative()
     std::cout << *r1 << std::endl;
     std::cout << *r2 << std::endl;
     std::cout << *r3 << std::endl;
+
+    r1 = f->diff(x)->diff(x);
+    t1.clear();
+    t1.push_back(x);
+    t1.push_back(x);
+    r2 = rcp(new Derivative(f, t1));
+    assert(eq(r1, r2));
 }
 
 int main(int argc, char* argv[])

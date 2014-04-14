@@ -138,7 +138,7 @@ public:
         return arg_;
     }
     bool is_canonical(const RCP<const Basic> &arg);
-    //virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
+    virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
 };
 
 } // CSymPy

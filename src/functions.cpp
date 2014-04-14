@@ -276,4 +276,11 @@ std::string Derivative::__str__() const
     return o.str();
 }
 
+RCP<const Basic> Derivative::diff(const RCP<const Symbol> &x) const
+{
+    std::vector<RCP<const Symbol>> t = x_;
+    t.push_back(x);
+    return rcp(new Derivative(arg_, t));
+}
+
 } // CSymPy
