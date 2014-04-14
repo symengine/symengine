@@ -162,16 +162,25 @@ void test_f()
 void test_Derivative()
 {
     RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
     RCP<const Basic> f = function_symbol("f", x);
 
-    RCP<const Basic> r1;
-    RCP<const Basic> r2;
+    RCP<const Basic> r1, r2, r3;
 
     r1 = f->diff(x);
-    std::vector<RCP<const Symbol>> t;
-    t.push_back(x);
-    r2 = rcp(new Derivative(f, t));
+    std::vector<RCP<const Symbol>> t1;
+    t1.push_back(x);
+    r2 = rcp(new Derivative(f, t1));
+    std::vector<RCP<const Symbol>> t2;
+    t2.push_back(y);
+    r3 = rcp(new Derivative(f, t2));
     assert(eq(r1, r2));
+    assert(neq(r1, r3));
+    assert(neq(r2, r3));
+
+    std::cout << *r1 << std::endl;
+    std::cout << *r2 << std::endl;
+    std::cout << *r3 << std::endl;
 }
 
 int main(int argc, char* argv[])
