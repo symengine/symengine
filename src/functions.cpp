@@ -212,4 +212,65 @@ RCP<const Basic> function_symbol(std::string name, const RCP<const Basic> &arg)
     return rcp(new FunctionSymbol(name, arg));
 }
 
+/* ---------------------------- */
+
+Derivative::Derivative(const RCP<const Basic> &arg,
+            const std::vector<RCP<const Symbol>> &x)
+    : arg_{arg}, x_{x}
+{
+    //TODO: make 'x' canonical here too
+    CSYMPY_ASSERT(is_canonical(arg))
+}
+
+bool Derivative::is_canonical(const RCP<const Basic> &arg)
+{
+    return true;
+}
+
+std::size_t Derivative::__hash__() const
+{
+    std::size_t seed = 0;
+    hash_combine<Basic>(seed, *arg_);
+    for(size_t i=0; i < x_.size(); i++)
+        hash_combine<Basic>(seed, *x_[i]);
+    return seed;
+}
+
+// FIXME: This is just type conversion, that should not be necessary. But the
+// code below doesn't compile without it...
+vec_basic s2b(const std::vector<RCP<const Symbol>> x)
+{
+    vec_basic y;
+    for (auto &t: x)
+        y.push_back(t);
+    return y;
+}
+
+bool Derivative::__eq__(const Basic &o) const
+{
+    if (is_a<Derivative>(o) &&
+            eq(arg_, static_cast<const Derivative &>(o).arg_) &&
+            vec_basic_eq(s2b(x_), s2b(static_cast<const Derivative &>(o).x_)))
+        return true;
+    return false;
+}
+
+int Derivative::compare(const Basic &o) const
+{
+    CSYMPY_ASSERT(is_a<Derivative>(o))
+    const Derivative &s = static_cast<const Derivative &>(o);
+    int cmp = arg_->__cmp__(*(s.arg_));
+    if (cmp != 0) return cmp;
+    cmp = vec_basic_compare(s2b(x_), s2b(s.x_));
+    return cmp;
+}
+
+
+std::string Derivative::__str__() const
+{
+    std::ostringstream o;
+    o << "D" << s2b(x_) << "(" << *arg_ << ")";
+    return o.str();
+}
+
 } // CSymPy
