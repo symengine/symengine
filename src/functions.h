@@ -114,7 +114,7 @@ public:
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
 };
 
-//! Canonicalize FunctionSymbol :
+//! Create a new FunctionSymbol instance:
 RCP<const Basic> function_symbol(std::string name,
         const RCP<const Basic> &arg);
 
