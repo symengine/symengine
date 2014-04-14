@@ -186,7 +186,7 @@ int FunctionSymbol::compare(const Basic &o) const
     CSYMPY_ASSERT(is_a<FunctionSymbol>(o))
     const FunctionSymbol &s = static_cast<const FunctionSymbol &>(o);
     if (name_ == s.name_)
-        return arg_->__cmp__(s);
+        return arg_->__cmp__(*(s.arg_));
     else
         return name_ < s.name_ ? -1 : 1;
 }
