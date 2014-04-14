@@ -1,85 +1,102 @@
 #include "basic.h"
 #include "integer.h"
 
-std::ostream& operator<<(std::ostream& out, const CSymPy::umap_basic_int& d)
+namespace CSymPy {
+
+template<class T>
+inline std::ostream& print_map(std::ostream& out, T& d)
 {
     out << "{";
-    for (auto &p: d)
-        out << *(p.first) << ": " << *(p.second) << ", ";
+    for (auto p = d.begin(); p != d.end(); p++) {
+        if (p != d.begin()) out << ", ";
+        out << (p->first) << ": " << (p->second);
+    }
     out << "}";
     return out;
+}
+
+template<class T>
+inline std::ostream& print_map_rcp(std::ostream& out, T& d)
+{
+    out << "{";
+    for (auto p = d.begin(); p != d.end(); p++) {
+        if (p != d.begin()) out << ", ";
+        out << *(p->first) << ": " << *(p->second);
+    }
+    out << "}";
+    return out;
+}
+
+template<class T>
+inline std::ostream& print_vec(std::ostream& out, T& d)
+{
+    out << "[";
+    for (auto p = d.begin(); p != d.end(); p++) {
+        if (p != d.begin()) out << ", ";
+        out << *p;
+    }
+    out << "]";
+    return out;
+}
+
+template<class T>
+inline std::ostream& print_vec_rcp(std::ostream& out, T& d)
+{
+    out << "[";
+    for (auto p = d.begin(); p != d.end(); p++) {
+        if (p != d.begin()) out << ", ";
+        out << **p;
+    }
+    out << "]";
+    return out;
+}
+
+} // CSymPy
+
+
+std::ostream& operator<<(std::ostream& out, const CSymPy::umap_basic_int& d)
+{
+    return print_map_rcp(out, d);
 }
 
 std::ostream& operator<<(std::ostream& out, const CSymPy::vec_int& d)
 {
-    out << "[";
-    for (auto &p: d)
-        out << p << ", ";
-    out << "]";
-    return out;
+    return CSymPy::print_vec(out, d);
 }
 
 std::ostream& operator<<(std::ostream& out, const CSymPy::map_vec_int& d)
 {
-    out << "{";
-    for (auto &p: d)
-        out << (p.first) << ": " << (p.second) << ", ";
-    out << "}";
-    return out;
+    return CSymPy::print_map(out, d);
 }
 
 std::ostream& operator<<(std::ostream& out, const CSymPy::map_vec_mpz& d)
 {
-    out << "{";
-    for (auto &p: d)
-        out << (p.first) << ": " << (p.second) << ", ";
-    out << "}";
-    return out;
+    return CSymPy::print_map(out, d);
 }
 
 std::ostream& operator<<(std::ostream& out, const CSymPy::umap_vec_mpz& d)
 {
-    out << "{";
-    for (auto &p: d)
-        out << (p.first) << ": " << (p.second) << ", ";
-    out << "}";
-    return out;
+    return print_map(out, d);
 }
 
 std::ostream& operator<<(std::ostream& out, const CSymPy::map_basic_int& d)
 {
-    out << "{";
-    for (auto &p: d)
-        out << *(p.first) << ": " << *(p.second) << ", ";
-    out << "}";
-    return out;
+    return print_map_rcp(out, d);
 }
 
 std::ostream& operator<<(std::ostream& out, const CSymPy::map_basic_basic& d)
 {
-    out << "{";
-    for (auto &p: d)
-        out << *(p.first) << ": " << *(p.second) << ", ";
-    out << "}";
-    return out;
+    return print_map_rcp(out, d);
 }
 
 std::ostream& operator<<(std::ostream& out, const CSymPy::umap_basic_basic& d)
 {
-    out << "{";
-    for (auto &p: d)
-        out << *(p.first) << ": " << *(p.second) << ", ";
-    out << "}";
-    return out;
+    return print_map_rcp(out, d);
 }
 
 std::ostream& operator<<(std::ostream& out, const CSymPy::vec_basic& d)
 {
-    out << "[";
-    for (auto &p: d)
-        out << *p << ", ";
-    out << "]";
-    return out;
+    return print_vec_rcp(out, d);
 }
 
 
