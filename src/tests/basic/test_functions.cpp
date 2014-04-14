@@ -26,6 +26,7 @@ using CSymPy::zero;
 using CSymPy::sin;
 using CSymPy::cos;
 using CSymPy::function_symbol;
+using CSymPy::Derivative;
 using CSymPy::RCP;
 using CSymPy::rcp;
 using CSymPy::rcp_dynamic_cast;
@@ -158,6 +159,21 @@ void test_f()
     assert(eq(r1, r2));
 }
 
+void test_Derivative()
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Basic> f = function_symbol("f", x);
+
+    RCP<const Basic> r1;
+    RCP<const Basic> r2;
+
+    r1 = f->diff(x);
+    std::vector<RCP<const Symbol>> t;
+    t.push_back(x);
+    r2 = rcp(new Derivative(f, t));
+    assert(eq(r1, r2));
+}
+
 int main(int argc, char* argv[])
 {
     print_stack_on_segfault();
@@ -165,6 +181,7 @@ int main(int argc, char* argv[])
     test_sin();
     test_cos();
     test_f();
+    test_Derivative();
 
     return 0;
 }
