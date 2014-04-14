@@ -74,7 +74,7 @@ bool Mul::__eq__(const Basic &o) const
 {
     if (is_a<Mul>(o) &&
         eq(coef_, static_cast<const Mul &>(o).coef_) &&
-        map_basic_basic_equal(dict_, static_cast<const Mul &>(o).dict_))
+        map_basic_basic_eq(dict_, static_cast<const Mul &>(o).dict_))
         return true;
 
     return false;

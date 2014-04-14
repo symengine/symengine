@@ -44,16 +44,16 @@ void insert(T1 &m, const T2 &first, const T3 &second) {
 }
 
 //! \return true if the two dictionaries `a` and `b` are equal. Otherwise false.
-bool umap_basic_int_equal(const umap_basic_int &a, const umap_basic_int &b);
+bool umap_basic_int_eq(const umap_basic_int &a, const umap_basic_int &b);
 //! \return true if the two dictionaries `a` and `b` are equal. Otherwise false.
-bool map_basic_int_equal(const map_basic_int &a, const map_basic_int &b);
+bool map_basic_int_eq(const map_basic_int &a, const map_basic_int &b);
 //! \return true if the two dictionaries `a` and `b` are equal. Otherwise false.
-bool map_basic_basic_equal(const map_basic_basic &a, const map_basic_basic &b);
+bool map_basic_basic_eq(const map_basic_basic &a, const map_basic_basic &b);
 //! \return true if the two dictionaries `a` and `b` are equal. Otherwise false.
-bool umap_basic_basic_equal(const umap_basic_basic &a,
+bool umap_basic_basic_eq(const umap_basic_basic &a,
         const umap_basic_basic &b);
 //! \return true if the two vectors `a` and `b` are equal. Otherwise false.
-bool vec_basic_equal(const vec_basic &a, const vec_basic &b);
+bool vec_basic_eq(const vec_basic &a, const vec_basic &b);
 int vec_basic_compare(const vec_basic &A, const vec_basic &B);
 
 

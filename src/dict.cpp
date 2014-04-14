@@ -85,7 +85,7 @@ std::ostream& operator<<(std::ostream& out, const CSymPy::vec_basic& d)
 
 namespace CSymPy {
 
-bool map_basic_int_equal(const map_basic_int &A, const map_basic_int &B)
+bool map_basic_int_eq(const map_basic_int &A, const map_basic_int &B)
 {
     // Can't be equal if # of entries differ:
     if (A.size() != B.size()) return false;
@@ -99,7 +99,7 @@ bool map_basic_int_equal(const map_basic_int &A, const map_basic_int &B)
     return true;
 }
 
-bool map_basic_basic_equal(const map_basic_basic &A, const map_basic_basic &B)
+bool map_basic_basic_eq(const map_basic_basic &A, const map_basic_basic &B)
 {
     // Can't be equal if # of entries differ:
     if (A.size() != B.size()) return false;
@@ -145,7 +145,7 @@ int map_basic_int_compare(const map_basic_int &A, const map_basic_int &B)
     return 0;
 }
 
-bool umap_basic_int_equal(const umap_basic_int &a, const umap_basic_int &b)
+bool umap_basic_int_eq(const umap_basic_int &a, const umap_basic_int &b)
 {
     // This follows the same algorithm as Python's dictionary comparison
     // (a==b), which is implemented by "dict_equal" function in
@@ -163,7 +163,7 @@ bool umap_basic_int_equal(const umap_basic_int &a, const umap_basic_int &b)
     return true;
 }
 
-bool umap_basic_basic_equal(const umap_basic_basic &a,
+bool umap_basic_basic_eq(const umap_basic_basic &a,
         const umap_basic_basic &b)
 {
     // This follows the same algorithm as Python's dictionary comparison
@@ -182,7 +182,7 @@ bool umap_basic_basic_equal(const umap_basic_basic &a,
     return true;
 }
 
-bool vec_basic_equal(const vec_basic &a, const vec_basic &b)
+bool vec_basic_eq(const vec_basic &a, const vec_basic &b)
 {
     // Can't be equal if # of entries differ:
     if (a.size() != b.size()) return false;
