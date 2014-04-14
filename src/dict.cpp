@@ -182,7 +182,7 @@ bool umap_basic_basic_equal(const umap_basic_basic &a,
     return true;
 }
 
-bool vecs_equal(const vec_basic &a, const vec_basic &b)
+bool vec_basic_equal(const vec_basic &a, const vec_basic &b)
 {
     // Can't be equal if # of entries differ:
     if (a.size() != b.size()) return false;

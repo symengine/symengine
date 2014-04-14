@@ -53,7 +53,7 @@ bool map_basic_basic_equal(const map_basic_basic &a, const map_basic_basic &b);
 bool umap_basic_basic_equal(const umap_basic_basic &a,
         const umap_basic_basic &b);
 //! \return true if the two vectors `a` and `b` are equal. Otherwise false.
-bool vecs_equal(const vec_basic &a, const vec_basic &b);
+bool vec_basic_equal(const vec_basic &a, const vec_basic &b);
 int vec_basic_compare(const vec_basic &A, const vec_basic &B);
 
 
