@@ -203,8 +203,11 @@ RCP<const Basic> FunctionSymbol::diff(const RCP<const Symbol> &x) const
 {
     if (eq(arg_->diff(x), zero))
         return zero;
-    else
-        throw std::runtime_error("f(x).diff(x) not implemented yet.");
+    else {
+        std::vector<RCP<const Symbol>> t;
+        t.push_back(x);
+        return rcp(new Derivative(rcp(this), t));
+    }
 }
 
 RCP<const Basic> function_symbol(std::string name, const RCP<const Basic> &arg)
