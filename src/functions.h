@@ -125,8 +125,13 @@ RCP<const Basic> function_symbol(std::string name,
 class Derivative : public Basic {
 private:
     RCP<const Basic> arg_; //! The expression to be differentiated
-    // The symbols are declared as Basic, to avoid issues with converting
-    // vector<Symbol> to vector<Basic>, see [1], [2].
+    // The symbols are declared as Basic (and checked by is_canonical() below),
+    // to avoid issues with converting vector<RCP<Symbol>> to
+    // vector<RCP<Basic>>, see [1], [2]. The problem is that even though Symbol
+    // inherits from Basic, vector<RCP<Symbol>> does not inherit from
+    // vector<RCP<Basic>>, so the compiler can't cast the derived type to the
+    // base type when calling functions like vec_basic_eq() that are only
+    // defined for the base type vector<RCP<Basic>>.
     // [1] http://stackoverflow.com/questions/14964909/how-to-cast-a-vector-of-shared-ptrs-of-a-derived-class-to-a-vector-of-share-ptrs
     // [2] http://stackoverflow.com/questions/114819/getting-a-vectorderived-into-a-function-that-expects-a-vectorbase
     std::vector<RCP<const Basic>> x_; //! x, y, ...
