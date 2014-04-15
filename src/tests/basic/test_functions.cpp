@@ -199,6 +199,7 @@ void test_Derivative()
     RCP<const Derivative> r4 = rcp(new Derivative(f, {x}));
     assert(r4->is_canonical(x, {x}));
     assert(r4->is_canonical(x, {y}));
+    assert(r4->is_canonical(x, {x, y, x, x}));
     assert(!(r4->is_canonical(x, {pow(x, integer(2))})));
 }
 
