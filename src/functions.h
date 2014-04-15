@@ -134,11 +134,10 @@ private:
     // defined for the base type vector<RCP<Basic>>.
     // [1] http://stackoverflow.com/questions/14964909/how-to-cast-a-vector-of-shared-ptrs-of-a-derived-class-to-a-vector-of-share-ptrs
     // [2] http://stackoverflow.com/questions/114819/getting-a-vectorderived-into-a-function-that-expects-a-vectorbase
-    std::vector<RCP<const Basic>> x_; //! x, y, ...
+    vec_basic x_; //! x, y, ...
 
 public:
-    Derivative(const RCP<const Basic> &arg,
-            const std::vector<RCP<const Basic>> &x);
+    Derivative(const RCP<const Basic> &arg, const vec_basic &x);
     virtual std::size_t __hash__() const;
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
@@ -146,11 +145,10 @@ public:
     inline RCP<const Basic> get_arg() const {
         return arg_;
     }
-    inline std::vector<RCP<const Basic>> get_symbols() const {
+    inline vec_basic get_symbols() const {
         return x_;
     }
-    bool is_canonical(const RCP<const Basic> &arg,
-            const std::vector<RCP<const Basic>> &x) const;
+    bool is_canonical(const RCP<const Basic> &arg, const vec_basic &x) const;
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
 };
 

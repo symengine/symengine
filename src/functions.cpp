@@ -204,7 +204,7 @@ RCP<const Basic> FunctionSymbol::diff(const RCP<const Symbol> &x) const
     if (eq(arg_->diff(x), zero))
         return zero;
     else {
-        std::vector<RCP<const Basic>> t;
+        vec_basic t;
         t.push_back(x);
         return rcp(new Derivative(rcp(this), t));
     }
@@ -217,15 +217,14 @@ RCP<const Basic> function_symbol(std::string name, const RCP<const Basic> &arg)
 
 /* ---------------------------- */
 
-Derivative::Derivative(const RCP<const Basic> &arg,
-            const std::vector<RCP<const Basic>> &x)
+Derivative::Derivative(const RCP<const Basic> &arg, const vec_basic &x)
     : arg_{arg}, x_{x}
 {
     CSYMPY_ASSERT(is_canonical(arg, x))
 }
 
 bool Derivative::is_canonical(const RCP<const Basic> &arg,
-            const std::vector<RCP<const Basic>> &x) const
+        const vec_basic &x) const
 {
     // After we implement the Subs class, we will require simplifications like
     // f(x^2).diff(x) -> 2*x*Subs(Derivative(f(_xi_1), _xi_1), _xi_1, x**2).
@@ -278,7 +277,7 @@ std::string Derivative::__str__() const
 
 RCP<const Basic> Derivative::diff(const RCP<const Symbol> &x) const
 {
-    std::vector<RCP<const Basic>> t = x_;
+    vec_basic t = x_;
     t.push_back(x);
     return rcp(new Derivative(arg_, t));
 }
