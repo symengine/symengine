@@ -26,6 +26,7 @@ typedef std::unordered_map<RCP<const Basic>, RCP<const Basic>,
         RCPBasicHash, RCPBasicKeyEq> umap_basic_basic;
 
 typedef std::vector<int> vec_int;
+typedef std::vector<RCP<const Basic>> vec_basic;
 typedef std::map<vec_int, long long int> map_vec_int;
 typedef std::map<vec_int, mpz_class> map_vec_mpz;
 typedef std::map<RCP<const Basic>, RCP<const Number>,
@@ -43,20 +44,25 @@ void insert(T1 &m, const T2 &first, const T3 &second) {
 }
 
 //! \return true if the two dictionaries `a` and `b` are equal. Otherwise false.
-bool dicts_equal(const umap_basic_int &a, const umap_basic_int &b);
+bool umap_basic_int_eq(const umap_basic_int &a, const umap_basic_int &b);
 //! \return true if the two dictionaries `a` and `b` are equal. Otherwise false.
-bool map_basic_int_equal(const map_basic_int &a, const map_basic_int &b);
+bool map_basic_int_eq(const map_basic_int &a, const map_basic_int &b);
 //! \return true if the two dictionaries `a` and `b` are equal. Otherwise false.
-bool map_basic_basic_equal(const map_basic_basic &a, const map_basic_basic &b);
+bool map_basic_basic_eq(const map_basic_basic &a, const map_basic_basic &b);
 //! \return true if the two dictionaries `a` and `b` are equal. Otherwise false.
-bool umap_basic_basic_equal(const umap_basic_basic &a,
+bool umap_basic_basic_eq(const umap_basic_basic &a,
         const umap_basic_basic &b);
+//! \return true if the two vectors `a` and `b` are equal. Otherwise false.
+bool vec_basic_eq(const vec_basic &a, const vec_basic &b);
 
 
 //! \return -1, 0, 1 for a < b, a == b, a > b
 int map_basic_basic_compare(const map_basic_basic &a, const map_basic_basic &b);
 //! \return -1, 0, 1 for a < b, a == b, a > b
 int map_basic_int_compare(const map_basic_int &a, const map_basic_int &b);
+//! \return -1, 0, 1 for a < b, a == b, a > b
+int vec_basic_compare(const vec_basic &a, const vec_basic &b);
+
 
 //! Part of umap_vec_mpz:
 typedef struct
@@ -92,6 +98,7 @@ std::ostream& operator<<(std::ostream& out, const CSymPy::umap_vec_mpz& d);
 std::ostream& operator<<(std::ostream& out, const CSymPy::map_basic_int& d);
 std::ostream& operator<<(std::ostream& out, const CSymPy::map_basic_basic& d);
 std::ostream& operator<<(std::ostream& out, const CSymPy::umap_basic_basic& d);
+std::ostream& operator<<(std::ostream& out, const CSymPy::vec_basic& d);
 
 #endif
 
