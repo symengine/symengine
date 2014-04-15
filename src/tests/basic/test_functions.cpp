@@ -203,6 +203,14 @@ void test_Derivative()
     // become 2*x*Subs(Derivative(f(_xi_1), _xi_1), _xi_1, x**2). For now we
     // don't simplify things:
     assert(eq(r1, rcp(new Derivative(f, t1))));
+
+    // Test is_canonical()
+    RCP<const Derivative> r4 = rcp(new Derivative(f, t1));
+    assert(r4->is_canonical(x, t1));
+    assert(r4->is_canonical(x, t2));
+    t2.clear();
+    t2.push_back(pow(x, integer(2)));
+    assert(!(r4->is_canonical(x, t2)));
 }
 
 int main(int argc, char* argv[])

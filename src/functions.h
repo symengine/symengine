@@ -150,7 +150,7 @@ public:
         return x_;
     }
     bool is_canonical(const RCP<const Basic> &arg,
-            const std::vector<RCP<const Basic>> &x);
+            const std::vector<RCP<const Basic>> &x) const;
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
 };
 

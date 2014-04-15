@@ -225,7 +225,7 @@ Derivative::Derivative(const RCP<const Basic> &arg,
 }
 
 bool Derivative::is_canonical(const RCP<const Basic> &arg,
-            const std::vector<RCP<const Basic>> &x)
+            const std::vector<RCP<const Basic>> &x) const
 {
     // After we implement the Subs class, we will require simplifications like
     // f(x^2).diff(x) -> 2*x*Subs(Derivative(f(_xi_1), _xi_1), _xi_1, x**2).
