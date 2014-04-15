@@ -168,10 +168,10 @@ void test_Derivative()
     RCP<const Basic> r1, r2, r3;
 
     r1 = f->diff(x);
-    std::vector<RCP<const Symbol>> t1;
+    std::vector<RCP<const Basic>> t1;
     t1.push_back(x);
     r2 = rcp(new Derivative(f, t1));
-    std::vector<RCP<const Symbol>> t2;
+    std::vector<RCP<const Basic>> t2;
     t2.push_back(y);
     r3 = rcp(new Derivative(f, t2));
     assert(eq(r1, r2));

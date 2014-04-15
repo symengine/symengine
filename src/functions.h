@@ -125,11 +125,15 @@ RCP<const Basic> function_symbol(std::string name,
 class Derivative : public Basic {
 private:
     RCP<const Basic> arg_; //! The expression to be differentiated
-    std::vector<RCP<const Symbol>> x_; //! x, y, ...
+    // The symbols are declared as Basic, to avoid issues with converting
+    // vector<Symbol> to vector<Basic>, see [1], [2].
+    // [1] http://stackoverflow.com/questions/14964909/how-to-cast-a-vector-of-shared-ptrs-of-a-derived-class-to-a-vector-of-share-ptrs
+    // [2] http://stackoverflow.com/questions/114819/getting-a-vectorderived-into-a-function-that-expects-a-vectorbase
+    std::vector<RCP<const Basic>> x_; //! x, y, ...
 
 public:
     Derivative(const RCP<const Basic> &arg,
-            const std::vector<RCP<const Symbol>> &x);
+            const std::vector<RCP<const Basic>> &x);
     virtual std::size_t __hash__() const;
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
@@ -137,10 +141,11 @@ public:
     inline RCP<const Basic> get_arg() const {
         return arg_;
     }
-    inline std::vector<RCP<const Symbol>> get_symbols() const {
+    inline std::vector<RCP<const Basic>> get_symbols() const {
         return x_;
     }
-    bool is_canonical(const RCP<const Basic> &arg);
+    bool is_canonical(const RCP<const Basic> &arg,
+            const std::vector<RCP<const Basic>> &x);
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
 };
 

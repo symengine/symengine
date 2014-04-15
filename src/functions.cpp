@@ -204,7 +204,7 @@ RCP<const Basic> FunctionSymbol::diff(const RCP<const Symbol> &x) const
     if (eq(arg_->diff(x), zero))
         return zero;
     else {
-        std::vector<RCP<const Symbol>> t;
+        std::vector<RCP<const Basic>> t;
         t.push_back(x);
         return rcp(new Derivative(rcp(this), t));
     }
@@ -218,15 +218,23 @@ RCP<const Basic> function_symbol(std::string name, const RCP<const Basic> &arg)
 /* ---------------------------- */
 
 Derivative::Derivative(const RCP<const Basic> &arg,
-            const std::vector<RCP<const Symbol>> &x)
+            const std::vector<RCP<const Basic>> &x)
     : arg_{arg}, x_{x}
 {
-    //TODO: make 'x' canonical here too
-    CSYMPY_ASSERT(is_canonical(arg))
+    CSYMPY_ASSERT(is_canonical(arg, x))
 }
 
-bool Derivative::is_canonical(const RCP<const Basic> &arg)
+bool Derivative::is_canonical(const RCP<const Basic> &arg,
+            const std::vector<RCP<const Basic>> &x)
 {
+    // After we implement the Subs class, we will require simplifications like
+    // f(x^2).diff(x) -> 2*x*Subs(Derivative(f(_xi_1), _xi_1), _xi_1, x**2).
+    // This will be checked here for 'args'.
+
+    // Check that 'x' are Symbols:
+    for(auto &a: x)
+        if (!is_a<Symbol>(*a)) return false;
+
     return true;
 }
 
@@ -239,19 +247,11 @@ std::size_t Derivative::__hash__() const
     return seed;
 }
 
-// FIXME: This is just type conversion, that should not be necessary. But the
-// code below doesn't compile without it...
-vec_basic s2b(const std::vector<RCP<const Symbol>> x)
-{
-    vec_basic y(x.begin(), x.end());
-    return y;
-}
-
 bool Derivative::__eq__(const Basic &o) const
 {
     if (is_a<Derivative>(o) &&
             eq(arg_, static_cast<const Derivative &>(o).arg_) &&
-            vec_basic_eq(s2b(x_), s2b(static_cast<const Derivative &>(o).x_)))
+            vec_basic_eq(x_, static_cast<const Derivative &>(o).x_))
         return true;
     return false;
 }
@@ -262,7 +262,7 @@ int Derivative::compare(const Basic &o) const
     const Derivative &s = static_cast<const Derivative &>(o);
     int cmp = arg_->__cmp__(*(s.arg_));
     if (cmp != 0) return cmp;
-    cmp = vec_basic_compare(s2b(x_), s2b(s.x_));
+    cmp = vec_basic_compare(x_, s.x_);
     return cmp;
 }
 
@@ -270,7 +270,7 @@ int Derivative::compare(const Basic &o) const
 std::string Derivative::__str__() const
 {
     std::ostringstream o, tmp;
-    tmp << s2b(x_);
+    tmp << x_;
     std::string vars = tmp.str();
     o << "Derivative(" << *arg_ << ", " << vars.substr(1, vars.size()-2) << ")";
     return o.str();
@@ -278,7 +278,7 @@ std::string Derivative::__str__() const
 
 RCP<const Basic> Derivative::diff(const RCP<const Symbol> &x) const
 {
-    std::vector<RCP<const Symbol>> t = x_;
+    std::vector<RCP<const Basic>> t = x_;
     t.push_back(x);
     return rcp(new Derivative(arg_, t));
 }
