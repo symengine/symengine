@@ -243,9 +243,7 @@ std::size_t Derivative::__hash__() const
 // code below doesn't compile without it...
 vec_basic s2b(const std::vector<RCP<const Symbol>> x)
 {
-    vec_basic y;
-    for (auto &t: x)
-        y.push_back(t);
+    vec_basic y(x.begin(), x.end());
     return y;
 }
 
