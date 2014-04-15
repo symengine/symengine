@@ -193,6 +193,16 @@ void test_Derivative()
     assert(eq(r1, r2));
     std::cout << *r1 << std::endl;
     assert(r1->__str__() == "Derivative(f(x), x, x)");
+
+    f = function_symbol("f", pow(x, integer(2)));
+    r1 = f->diff(x);
+    std::cout << *f << " " << *r1 << std::endl;
+    t1.clear();
+    t1.push_back(x);
+    // NOTE: After we implement the Subs class, then f(x^2).diff(x) should
+    // become 2*x*Subs(Derivative(f(_xi_1), _xi_1), _xi_1, x**2). For now we
+    // don't simplify things:
+    assert(eq(r1, rcp(new Derivative(f, t1))));
 }
 
 int main(int argc, char* argv[])
