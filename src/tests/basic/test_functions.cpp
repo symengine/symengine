@@ -18,7 +18,6 @@ using CSymPy::Symbol;
 using CSymPy::symbol;
 using CSymPy::umap_basic_int;
 using CSymPy::map_vec_int;
-using CSymPy::vec_basic;
 using CSymPy::Integer;
 using CSymPy::integer;
 using CSymPy::multinomial_coefficients;
@@ -169,12 +168,8 @@ void test_Derivative()
     RCP<const Basic> r1, r2, r3;
 
     r1 = f->diff(x);
-    vec_basic t1;
-    t1.push_back(x);
-    r2 = rcp(new Derivative(f, t1));
-    vec_basic t2;
-    t2.push_back(y);
-    r3 = rcp(new Derivative(f, t2));
+    r2 = rcp(new Derivative(f, {x}));
+    r3 = rcp(new Derivative(f, {y}));
     assert(eq(r1, r2));
     assert(neq(r1, r3));
     assert(neq(r2, r3));
@@ -187,10 +182,7 @@ void test_Derivative()
     assert(r3->__str__() == "Derivative(f(x), y)");
 
     r1 = f->diff(x)->diff(x);
-    t1.clear();
-    t1.push_back(x);
-    t1.push_back(x);
-    r2 = rcp(new Derivative(f, t1));
+    r2 = rcp(new Derivative(f, {x, x}));
     assert(eq(r1, r2));
     std::cout << *r1 << std::endl;
     assert(r1->__str__() == "Derivative(f(x), x, x)");
@@ -198,20 +190,16 @@ void test_Derivative()
     f = function_symbol("f", pow(x, integer(2)));
     r1 = f->diff(x);
     std::cout << *f << " " << *r1 << std::endl;
-    t1.clear();
-    t1.push_back(x);
     // NOTE: After we implement the Subs class, then f(x^2).diff(x) should
     // become 2*x*Subs(Derivative(f(_xi_1), _xi_1), _xi_1, x**2). For now we
     // don't simplify things:
-    assert(eq(r1, rcp(new Derivative(f, t1))));
+    assert(eq(r1, rcp(new Derivative(f, {x}))));
 
     // Test is_canonical()
-    RCP<const Derivative> r4 = rcp(new Derivative(f, t1));
-    assert(r4->is_canonical(x, t1));
-    assert(r4->is_canonical(x, t2));
-    t2.clear();
-    t2.push_back(pow(x, integer(2)));
-    assert(!(r4->is_canonical(x, t2)));
+    RCP<const Derivative> r4 = rcp(new Derivative(f, {x}));
+    assert(r4->is_canonical(x, {x}));
+    assert(r4->is_canonical(x, {y}));
+    assert(!(r4->is_canonical(x, {pow(x, integer(2))})));
 }
 
 int main(int argc, char* argv[])
