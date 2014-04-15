@@ -199,75 +199,73 @@ void multinomial_coefficients_mpz(int m, int n, map_vec_mpz &r)
 
 RCP<const Basic> pow_expand(const RCP<const Pow> &self)
 {
-    if (is_a<Integer>(*self->exp_)) {
-        if (is_a<Add>(*self->base_)) {
-            map_vec_mpz r;
-            int n = rcp_static_cast<const Integer>(self->exp_)->as_int();
+    if (! is_a<Integer>(*self->exp_) || ! is_a<Add>(*self->base_))
+        return self;
 
-            RCP<const Add> base = rcp_static_cast<const Add>(self->base_);
-            umap_basic_int base_dict = base->dict_;
-            if (! (base->coef_->is_zero())) {
-                // Add the numerical coefficient into the dictionary. This
-                // allows a little bit easier treatment below.
-                insert(base_dict, base->coef_, one);
-            }
-            int m = base_dict.size();
-            multinomial_coefficients_mpz(m, n, r);
-            umap_basic_int rd;
-            // This speeds up overall expansion. For example for the benchmark
-            // (y + x + z + w)^60 it improves the timing from 135ms to 124ms.
-            rd.reserve(2*r.size());
-            RCP<const Number> add_overall_coeff=zero;
-            for (auto &p: r) {
-                auto power = p.first.begin();
-                auto i2 = base_dict.begin();
-                map_basic_basic d;
-                RCP<const Number> overall_coeff=one;
-                for (; power != p.first.end(); ++power, ++i2) {
-                    if (*power > 0) {
-                        RCP<const Integer> exp = rcp(new Integer(*power));
-                        RCP<const Basic> base = i2->first;
-                        if (is_a<Integer>(*base)) {
-                            imulnum(outArg(overall_coeff),
-                                rcp_static_cast<const Number>(
-                                rcp_static_cast<const Integer>(base)->powint(*exp)));
-                        } else if (is_a<Symbol>(*base)) {
-                            Mul::dict_add_term(d, exp, base);
-                        } else {
-                            RCP<const Basic> exp2, t, tmp;
-                            tmp = pow(base, exp);
-                            Mul::as_base_exp(tmp, outArg(exp2), outArg(t));
-                            Mul::dict_add_term(d, exp2, t);
-                        }
-                        if (!(i2->second->is_one())) {
-                            imulnum(outArg(overall_coeff),
-                                pownum(i2->second,
-                                    rcp_static_cast<const Number>(exp)));
-                        }
-                    }
-                }
-                RCP<const Basic> term = Mul::from_dict(overall_coeff, d);
-                RCP<const Number> coef2 = rcp(new Integer(p.second));
-                if (is_a_Number(*term)) {
-                    iaddnum(outArg(add_overall_coeff),
-                        mulnum(rcp_static_cast<const Number>(term), coef2));
+    map_vec_mpz r;
+    int n = rcp_static_cast<const Integer>(self->exp_)->as_int();
+
+    RCP<const Add> base = rcp_static_cast<const Add>(self->base_);
+    umap_basic_int base_dict = base->dict_;
+    if (! (base->coef_->is_zero())) {
+        // Add the numerical coefficient into the dictionary. This
+        // allows a little bit easier treatment below.
+        insert(base_dict, base->coef_, one);
+    }
+    int m = base_dict.size();
+    multinomial_coefficients_mpz(m, n, r);
+    umap_basic_int rd;
+    // This speeds up overall expansion. For example for the benchmark
+    // (y + x + z + w)^60 it improves the timing from 135ms to 124ms.
+    rd.reserve(2*r.size());
+    RCP<const Number> add_overall_coeff=zero;
+    for (auto &p: r) {
+        auto power = p.first.begin();
+        auto i2 = base_dict.begin();
+        map_basic_basic d;
+        RCP<const Number> overall_coeff=one;
+        for (; power != p.first.end(); ++power, ++i2) {
+            if (*power > 0) {
+                RCP<const Integer> exp = rcp(new Integer(*power));
+                RCP<const Basic> base = i2->first;
+                if (is_a<Integer>(*base)) {
+                    imulnum(outArg(overall_coeff),
+                        rcp_static_cast<const Number>(
+                        rcp_static_cast<const Integer>(base)->powint(*exp)));
+                } else if (is_a<Symbol>(*base)) {
+                    Mul::dict_add_term(d, exp, base);
                 } else {
-                    if (is_a<Mul>(*term) &&
-                            !(rcp_static_cast<const Mul>(term)->coef_->is_one())) {
-                        // Tidy up things like {2x: 3} -> {x: 6}
-                        imulnum(outArg(coef2),
-                                rcp_static_cast<const Mul>(term)->coef_);
-                        term = Mul::from_dict(one,
-                                rcp_static_cast<const Mul>(term)->dict_);
-                    }
-                    Add::dict_add_term(rd, coef2, term);
+                    RCP<const Basic> exp2, t, tmp;
+                    tmp = pow(base, exp);
+                    Mul::as_base_exp(tmp, outArg(exp2), outArg(t));
+                    Mul::dict_add_term(d, exp2, t);
+                }
+                if (!(i2->second->is_one())) {
+                    imulnum(outArg(overall_coeff),
+                        pownum(i2->second,
+                            rcp_static_cast<const Number>(exp)));
                 }
             }
-            RCP<const Basic> result = Add::from_dict(add_overall_coeff, rd);
-            return result;
+        }
+        RCP<const Basic> term = Mul::from_dict(overall_coeff, d);
+        RCP<const Number> coef2 = rcp(new Integer(p.second));
+        if (is_a_Number(*term)) {
+            iaddnum(outArg(add_overall_coeff),
+                mulnum(rcp_static_cast<const Number>(term), coef2));
+        } else {
+            if (is_a<Mul>(*term) &&
+                    !(rcp_static_cast<const Mul>(term)->coef_->is_one())) {
+                // Tidy up things like {2x: 3} -> {x: 6}
+                imulnum(outArg(coef2),
+                        rcp_static_cast<const Mul>(term)->coef_);
+                term = Mul::from_dict(one,
+                        rcp_static_cast<const Mul>(term)->dict_);
+            }
+            Add::dict_add_term(rd, coef2, term);
         }
     }
-    return self;
+    RCP<const Basic> result = Add::from_dict(add_overall_coeff, rd);
+    return result;
 }
 
 RCP<const Basic> Pow::diff(const RCP<const Symbol> &x) const
