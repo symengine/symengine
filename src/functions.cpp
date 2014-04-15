@@ -204,8 +204,7 @@ RCP<const Basic> FunctionSymbol::diff(const RCP<const Symbol> &x) const
     if (eq(arg_->diff(x), zero))
         return zero;
     else {
-        vec_basic t;
-        t.push_back(x);
+        vec_basic t = {x};
         return rcp(new Derivative(rcp(this), t));
     }
 }
