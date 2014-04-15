@@ -271,8 +271,10 @@ int Derivative::compare(const Basic &o) const
 
 std::string Derivative::__str__() const
 {
-    std::ostringstream o;
-    o << "D" << s2b(x_) << "(" << *arg_ << ")";
+    std::ostringstream o, tmp;
+    tmp << s2b(x_);
+    std::string vars = tmp.str();
+    o << "Derivative(" << *arg_ << ", " << vars.substr(1, vars.size()-2) << ")";
     return o.str();
 }
 
