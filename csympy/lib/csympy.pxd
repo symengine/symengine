@@ -128,4 +128,4 @@ cdef extern from "functions.h" namespace "CSymPy":
 
     cdef cppclass Derivative(Basic):
         RCP[const Basic] get_arg() nogil
-        vector[RCP[Basic]] get_symbols() nogil
+        vector[RCP[Symbol]] get_symbols() nogil

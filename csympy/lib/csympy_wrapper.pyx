@@ -2,6 +2,7 @@ from cython.operator cimport dereference as deref
 cimport csympy
 from csympy cimport rcp, RCP
 from libcpp.string cimport string
+from libcpp.vector cimport vector
 
 class SympifyError(Exception):
     pass
@@ -312,8 +313,13 @@ cdef class Derivative(Basic):
         cdef RCP[const csympy.Derivative] X = \
             csympy.rcp_static_cast_Derivative(self.thisptr)
         arg = c2py(deref(X).get_arg())._sympy_()
+        cdef RCP[const csympy.Basic] Y
+        s = []
+        for i in range(deref(X).get_symbols().size()):
+            Y = <RCP[const csympy.Basic]>(deref(X).get_symbols()[i])
+            s.append(c2py(Y)._sympy_())
         import sympy
-        return sympy.Derivative(arg, Symbol("x"))
+        return sympy.Derivative(arg, *s)
 
 def sin(x):
     cdef Basic X = sympify(x)

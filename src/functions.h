@@ -137,6 +137,9 @@ public:
     inline RCP<const Basic> get_arg() const {
         return arg_;
     }
+    inline std::vector<RCP<const Symbol>> get_symbols() const {
+        return x_;
+    }
     bool is_canonical(const RCP<const Basic> &arg);
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
 };
