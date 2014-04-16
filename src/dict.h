@@ -15,10 +15,10 @@ namespace CSymPy {
 class Basic;
 class Number;
 class Integer;
-class RCPBasicHash;
-class RCPBasicKeyEq;
-class RCPBasicKeyLess;
-class RCPIntegerKeyLess;
+struct RCPBasicHash;
+struct RCPBasicKeyEq;
+struct RCPBasicKeyLess;
+struct RCPIntegerKeyLess;
 
 typedef std::unordered_map<RCP<const Basic>, RCP<const Number>,
         RCPBasicHash, RCPBasicKeyEq> umap_basic_int;
