@@ -186,7 +186,7 @@ int FunctionSymbol::compare(const Basic &o) const
     CSYMPY_ASSERT(is_a<FunctionSymbol>(o))
     const FunctionSymbol &s = static_cast<const FunctionSymbol &>(o);
     if (name_ == s.name_)
-        return arg_->__cmp__(s);
+        return arg_->__cmp__(*(s.arg_));
     else
         return name_ < s.name_ ? -1 : 1;
 }
@@ -204,12 +204,79 @@ RCP<const Basic> FunctionSymbol::diff(const RCP<const Symbol> &x) const
     if (eq(arg_->diff(x), zero))
         return zero;
     else
-        throw std::runtime_error("f(x).diff(x) not implemented yet.");
+        return rcp(new Derivative(rcp(this), {x}));
 }
 
 RCP<const Basic> function_symbol(std::string name, const RCP<const Basic> &arg)
 {
     return rcp(new FunctionSymbol(name, arg));
+}
+
+/* ---------------------------- */
+
+Derivative::Derivative(const RCP<const Basic> &arg, const vec_basic &x)
+    : arg_{arg}, x_{x}
+{
+    CSYMPY_ASSERT(is_canonical(arg, x))
+}
+
+bool Derivative::is_canonical(const RCP<const Basic> &arg,
+        const vec_basic &x) const
+{
+    // After we implement the Subs class, we will require simplifications like
+    // f(x^2).diff(x) -> 2*x*Subs(Derivative(f(_xi_1), _xi_1), _xi_1, x**2).
+    // This will be checked here for 'args'.
+
+    // Check that 'x' are Symbols:
+    for(auto &a: x)
+        if (!is_a<Symbol>(*a)) return false;
+
+    return true;
+}
+
+std::size_t Derivative::__hash__() const
+{
+    std::size_t seed = 0;
+    hash_combine<Basic>(seed, *arg_);
+    for(size_t i=0; i < x_.size(); i++)
+        hash_combine<Basic>(seed, *x_[i]);
+    return seed;
+}
+
+bool Derivative::__eq__(const Basic &o) const
+{
+    if (is_a<Derivative>(o) &&
+            eq(arg_, static_cast<const Derivative &>(o).arg_) &&
+            vec_basic_eq(x_, static_cast<const Derivative &>(o).x_))
+        return true;
+    return false;
+}
+
+int Derivative::compare(const Basic &o) const
+{
+    CSYMPY_ASSERT(is_a<Derivative>(o))
+    const Derivative &s = static_cast<const Derivative &>(o);
+    int cmp = arg_->__cmp__(*(s.arg_));
+    if (cmp != 0) return cmp;
+    cmp = vec_basic_compare(x_, s.x_);
+    return cmp;
+}
+
+
+std::string Derivative::__str__() const
+{
+    std::ostringstream o, tmp;
+    tmp << x_;
+    std::string vars = tmp.str();
+    o << "Derivative(" << *arg_ << ", " << vars.substr(1, vars.size()-2) << ")";
+    return o.str();
+}
+
+RCP<const Basic> Derivative::diff(const RCP<const Symbol> &x) const
+{
+    vec_basic t = x_;
+    t.push_back(x);
+    return rcp(new Derivative(arg_, t));
 }
 
 } // CSymPy

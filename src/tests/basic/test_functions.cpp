@@ -26,6 +26,7 @@ using CSymPy::zero;
 using CSymPy::sin;
 using CSymPy::cos;
 using CSymPy::function_symbol;
+using CSymPy::Derivative;
 using CSymPy::RCP;
 using CSymPy::rcp;
 using CSymPy::rcp_dynamic_cast;
@@ -158,6 +159,50 @@ void test_f()
     assert(eq(r1, r2));
 }
 
+void test_Derivative()
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    RCP<const Basic> f = function_symbol("f", x);
+
+    RCP<const Basic> r1, r2, r3;
+
+    r1 = f->diff(x);
+    r2 = rcp(new Derivative(f, {x}));
+    r3 = rcp(new Derivative(f, {y}));
+    assert(eq(r1, r2));
+    assert(neq(r1, r3));
+    assert(neq(r2, r3));
+
+    std::cout << *r1 << std::endl;
+    std::cout << *r2 << std::endl;
+    std::cout << *r3 << std::endl;
+    assert(r1->__str__() == "Derivative(f(x), x)");
+    assert(r2->__str__() == "Derivative(f(x), x)");
+    assert(r3->__str__() == "Derivative(f(x), y)");
+
+    r1 = f->diff(x)->diff(x);
+    r2 = rcp(new Derivative(f, {x, x}));
+    assert(eq(r1, r2));
+    std::cout << *r1 << std::endl;
+    assert(r1->__str__() == "Derivative(f(x), x, x)");
+
+    f = function_symbol("f", pow(x, integer(2)));
+    r1 = f->diff(x);
+    std::cout << *f << " " << *r1 << std::endl;
+    // NOTE: After we implement the Subs class, then f(x^2).diff(x) should
+    // become 2*x*Subs(Derivative(f(_xi_1), _xi_1), _xi_1, x**2). For now we
+    // don't simplify things:
+    assert(eq(r1, rcp(new Derivative(f, {x}))));
+
+    // Test is_canonical()
+    RCP<const Derivative> r4 = rcp(new Derivative(f, {x}));
+    assert(r4->is_canonical(x, {x}));
+    assert(r4->is_canonical(x, {y}));
+    assert(r4->is_canonical(x, {x, y, x, x}));
+    assert(!(r4->is_canonical(x, {pow(x, integer(2))})));
+}
+
 int main(int argc, char* argv[])
 {
     print_stack_on_segfault();
@@ -165,6 +210,7 @@ int main(int argc, char* argv[])
     test_sin();
     test_cos();
     test_f();
+    test_Derivative();
 
     return 0;
 }

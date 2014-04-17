@@ -118,6 +118,40 @@ public:
 RCP<const Basic> function_symbol(std::string name,
         const RCP<const Basic> &arg);
 
+/*! Derivative operator
+ *  Derivative(f, [x, y, ...]) represents a derivative of `f` with respect to
+ *  `x`, `y`, and so on.
+ * */
+class Derivative : public Basic {
+private:
+    RCP<const Basic> arg_; //! The expression to be differentiated
+    // The symbols are declared as Basic (and checked by is_canonical() below),
+    // to avoid issues with converting vector<RCP<Symbol>> to
+    // vector<RCP<Basic>>, see [1], [2]. The problem is that even though Symbol
+    // inherits from Basic, vector<RCP<Symbol>> does not inherit from
+    // vector<RCP<Basic>>, so the compiler can't cast the derived type to the
+    // base type when calling functions like vec_basic_eq() that are only
+    // defined for the base type vector<RCP<Basic>>.
+    // [1] http://stackoverflow.com/questions/14964909/how-to-cast-a-vector-of-shared-ptrs-of-a-derived-class-to-a-vector-of-share-ptrs
+    // [2] http://stackoverflow.com/questions/114819/getting-a-vectorderived-into-a-function-that-expects-a-vectorbase
+    vec_basic x_; //! x, y, ...
+
+public:
+    Derivative(const RCP<const Basic> &arg, const vec_basic &x);
+    virtual std::size_t __hash__() const;
+    virtual bool __eq__(const Basic &o) const;
+    virtual int compare(const Basic &o) const;
+    virtual std::string __str__() const;
+    inline RCP<const Basic> get_arg() const {
+        return arg_;
+    }
+    inline vec_basic get_symbols() const {
+        return x_;
+    }
+    bool is_canonical(const RCP<const Basic> &arg, const vec_basic &x) const;
+    virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
+};
+
 } // CSymPy
 
 #endif
