@@ -3,6 +3,7 @@
 
 #include <cstddef>
 #include <stdexcept>
+#include <string>
 
 #include "csympy_config.h"
 #include "csympy_assert.h"
