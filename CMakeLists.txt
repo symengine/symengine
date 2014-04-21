@@ -57,9 +57,11 @@ set(WITH_BFD no
 
 if (WITH_BFD)
     find_package(BFD REQUIRED)
-    include_directories(${BFD_INCLUDE_DIRS})
+    find_package(LINKH REQUIRED)
+    include_directories(${BFD_INCLUDE_DIRS} ${LINKH_INCLUDE_DIRS})
     set(LIBS ${LIBS} ${BFD_LIBRARIES})
     set(HAVE_TEUCHOS_BFD yes)
+    set(HAVE_TEUCHOS_LINK yes)
 endif()
 
 # Doxygen
@@ -129,6 +131,7 @@ message("WITH_BFD: ${WITH_BFD}")
 if (WITH_BFD)
     message("BFD_INCLUDE_DIRS: ${BFD_INCLUDE_DIRS}")
     message("BFD_LIBRARIES: ${BFD_LIBRARIES}")
+    message("LINKH_INCLUDE_DIRS: ${LINKH_INCLUDE_DIRS}")
 endif()
 
 message("WITH_PYTHON: ${WITH_PYTHON}")
