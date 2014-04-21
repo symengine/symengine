@@ -60,6 +60,7 @@ if (WITH_BFD)
     include_directories(${BFD_INCLUDE_DIRS})
     set(LIBS ${LIBS} ${BFD_LIBRARIES})
     set(HAVE_TEUCHOS_BFD yes)
+    set(HAVE_TEUCHOS_LINK yes)
 endif()
 
 # Doxygen
