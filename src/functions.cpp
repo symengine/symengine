@@ -115,6 +115,58 @@ RCP<const Basic> cos(const RCP<const Basic> &arg)
 }
 
 
+Tan::Tan(const RCP<const Basic> &arg)
+    : arg_{arg}
+{
+    CSYMPY_ASSERT(is_canonical(arg))
+}
+
+bool Tan::is_canonical(const RCP<const Basic> &arg)
+{
+    // e.g. tan(0), extend it further to tan(k*pi)
+    if (is_a<Integer>(*arg) &&
+            rcp_static_cast<const Integer>(arg)->is_zero())
+        return false;
+    return true;
+}
+
+std::size_t Tan::__hash__() const
+{
+    std::size_t seed = 0;
+    hash_combine<Basic>(seed, *arg_);
+    return seed;
+}
+
+bool Tan::__eq__(const Basic &o) const
+{
+    if (is_a<Tan>(o) &&
+        eq(arg_, static_cast<const Tan &>(o).arg_))
+        return true;
+    return false;
+}
+
+int Tan::compare(const Basic &o) const
+{
+    CSYMPY_ASSERT(is_a<Tan>(o))
+    const Tan &s = static_cast<const Tan &>(o);
+    return arg_->__cmp__(s);
+}
+
+
+std::string Tan::__str__() const
+{
+    std::ostringstream o;
+    o << "tan(" << *arg_ << ")";
+    return o.str();
+}
+
+RCP<const Basic> tan(const RCP<const Basic> &arg)
+{
+    if (eq(arg, zero)) return zero;
+    return rcp(new Tan(arg));
+}
+
+
 RCP<const Basic> Sin::diff(const RCP<const Symbol> &x) const
 {
     return mul(cos(arg_), arg_->diff(x));
@@ -123,6 +175,11 @@ RCP<const Basic> Sin::diff(const RCP<const Symbol> &x) const
 RCP<const Basic> Cos::diff(const RCP<const Symbol> &x) const
 {
     return mul(mul(minus_one, sin(arg_)), arg_->diff(x));
+}
+
+RCP<const Basic> Tan::diff(const RCP<const Symbol> &x) const
+{
+    return mul(div(one,mul(cos(arg_), cos(arg_))), arg_->diff(x));
 }
 
 RCP<const Basic> Sin::subs(const map_basic_basic &subs_dict) const
@@ -151,6 +208,18 @@ RCP<const Basic> Cos::subs(const map_basic_basic &subs_dict) const
         return cos(arg);
 }
 
+RCP<const Basic> Tan::subs(const map_basic_basic &subs_dict) const
+{
+    RCP<const Tan> self = rcp_const_cast<Tan>(rcp(this));
+    auto it = subs_dict.find(self);
+    if (it != subs_dict.end())
+        return it->second;
+    RCP<const Basic> arg = arg_->subs(subs_dict);
+    if (arg == arg_)
+        return self;
+    else
+        return tan(arg);
+}
 /* ---------------------------- */
 
 FunctionSymbol::FunctionSymbol(std::string name, const RCP<const Basic> &arg)
