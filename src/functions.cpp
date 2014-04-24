@@ -181,7 +181,7 @@ RCP<const Basic> Cos::diff(const RCP<const Symbol> &x) const
 RCP<const Basic> Tan::diff(const RCP<const Symbol> &x) const
 {
     RCP<const Integer> two = rcp(new Integer(2));
-    return mul(add(one,pow(tan(arg_), two)), arg_->diff(x));
+    return mul(add(one, pow(tan(arg_), two)), arg_->diff(x));
 }
 
 RCP<const Basic> Sin::subs(const map_basic_basic &subs_dict) const
