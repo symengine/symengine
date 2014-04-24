@@ -62,6 +62,7 @@ RCP<const Basic> sin(const RCP<const Basic> &arg)
     return rcp(new Sin(arg));
 }
 
+/* ---------------------------- */
 
 Cos::Cos(const RCP<const Basic> &arg)
     : arg_{arg}
@@ -114,6 +115,7 @@ RCP<const Basic> cos(const RCP<const Basic> &arg)
     return rcp(new Cos(arg));
 }
 
+/* ---------------------------- */
 
 Tan::Tan(const RCP<const Basic> &arg)
     : arg_{arg}
@@ -167,6 +169,60 @@ RCP<const Basic> tan(const RCP<const Basic> &arg)
     return rcp(new Tan(arg));
 }
 
+/* ---------------------------- */
+
+Cot::Cot(const RCP<const Basic> &arg)
+    : arg_{arg}
+{
+    CSYMPY_ASSERT(is_canonical(arg))
+}
+
+bool Cot::is_canonical(const RCP<const Basic> &arg)
+{
+    // e.g. tan(0), extend it further to tan(k*pi)
+    if (is_a<Integer>(*arg) &&
+            rcp_static_cast<const Integer>(arg)->is_zero())
+        return false;
+    return true;
+}
+
+std::size_t Cot::__hash__() const
+{
+    std::size_t seed = 0;
+    hash_combine<Basic>(seed, *arg_);
+    return seed;
+}
+
+bool Cot::__eq__(const Basic &o) const
+{
+    if (is_a<Cot>(o) &&
+        eq(arg_, static_cast<const Cot &>(o).arg_))
+        return true;
+    else
+        return false;
+}
+
+int Cot::compare(const Basic &o) const
+{
+    CSYMPY_ASSERT(is_a<Cot>(o))
+    const Cot &s = static_cast<const Cot &>(o);
+    return arg_->__cmp__(s);
+}
+
+
+std::string Cot::__str__() const
+{
+    std::ostringstream o;
+    o << "cot(" << *arg_ << ")";
+    return o.str();
+}
+
+RCP<const Basic> cot(const RCP<const Basic> &arg)
+{
+    //Add further checks for +inf -inf cases
+    return rcp(new Cot(arg));
+}
+
 
 RCP<const Basic> Sin::diff(const RCP<const Symbol> &x) const
 {
@@ -182,6 +238,12 @@ RCP<const Basic> Tan::diff(const RCP<const Symbol> &x) const
 {
     RCP<const Integer> two = rcp(new Integer(2));
     return mul(add(one, pow(tan(arg_), two)), arg_->diff(x));
+}
+
+RCP<const Basic> Cot::diff(const RCP<const Symbol> &x) const
+{
+    RCP<const Integer> two = rcp(new Integer(2));
+    return mul(mul(add(one, pow(cot(arg_), two)), minus_one), arg_->diff(x));
 }
 
 RCP<const Basic> Sin::subs(const map_basic_basic &subs_dict) const
@@ -221,6 +283,19 @@ RCP<const Basic> Tan::subs(const map_basic_basic &subs_dict) const
         return self;
     else
         return tan(arg);
+}
+
+RCP<const Basic> Cot::subs(const map_basic_basic &subs_dict) const
+{
+    RCP<const Cot> self = rcp_const_cast<Cot>(rcp(this));
+    auto it = subs_dict.find(self);
+    if (it != subs_dict.end())
+        return it->second;
+    RCP<const Basic> arg = arg_->subs(subs_dict);
+    if (arg == arg_)
+        return self;
+    else
+        return cot(arg);
 }
 /* ---------------------------- */
 

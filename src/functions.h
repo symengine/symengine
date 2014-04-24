@@ -111,9 +111,40 @@ public:
     //! Substitute with `subs_dict`
     virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
 };
-
 //! Canonicalize Tan:
 RCP<const Basic> tan(const RCP<const Basic> &arg);
+
+class Cot : public Function {
+private:
+    RCP<const Basic> arg_; //! The `arg` in `cot(arg)`
+
+public:
+    //! Cot Constructor
+    Cot(const RCP<const Basic> &arg);
+    //! \return Size of the hash
+    virtual std::size_t __hash__() const;
+    /*! Equality comparator
+     * \param o - Object to be compared with
+     * \return whether the 2 objects are equal
+     * */
+    virtual bool __eq__(const Basic &o) const;
+    
+    virtual int compare(const Basic &o) const;
+    //! \return stringify version
+    virtual std::string __str__() const;
+    //! \return `arg_`
+    inline RCP<const Basic> get_arg() const {
+        return arg_;
+    }
+    //! \return `true` if canonical
+    bool is_canonical(const RCP<const Basic> &arg);
+    //! Differentiate w.r.t Symbol `x`
+    virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
+    //! Substitute with `subs_dict`
+    virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
+};
+//! Canonicalize Cot:
+RCP<const Basic> cot(const RCP<const Basic> &arg);
 
 
 class FunctionSymbol : public Function {

@@ -26,6 +26,7 @@ using CSymPy::zero;
 using CSymPy::sin;
 using CSymPy::cos;
 using CSymPy::tan;
+using CSymPy::cot;
 using CSymPy::function_symbol;
 using CSymPy::Derivative;
 using CSymPy::RCP;
@@ -160,6 +161,45 @@ void test_tan()
 
 }
 
+void test_cot()
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    RCP<const Symbol> z = symbol("z");
+    RCP<const Basic> im1 = integer(-1);
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> i1 = integer(1);
+
+    RCP<const Basic> r1;
+    RCP<const Basic> r2;
+
+    r1 = cot(x);
+    r2 = cot(x);
+    std::cout << *r1 << std::endl;
+
+    assert(eq(r1, r2));
+    assert(neq(r1, zero));
+
+    r1 = cot(x)->diff(x);
+    r2 = mul(im1, add(pow(cot(x), i2), i1));
+    std::cout << *r1 << std::endl;
+    std::cout << *r2 << std::endl;
+    assert(eq(r1, r2));
+
+    r1 = cot(mul(i2, x))->diff(x);
+    r2 = mul(integer(-2), add(pow(cot(mul(i2, x)), i2), i1));
+    std::cout << *r1 << std::endl;
+    std::cout << *r2 << std::endl;
+    assert(eq(r1, r2));
+
+    r1 = mul(x, cot(x))->diff(x);
+    r2 = add(cot(x), mul(x, mul(add(pow(cot(x), i2), i1), im1)));
+    std::cout << *r1 << std::endl;
+    std::cout << *r2 << std::endl;
+    assert(eq(r1, r2));
+
+}
+
 void test_f()
 {
     RCP<const Symbol> x = symbol("x");
@@ -248,12 +288,13 @@ void test_Derivative()
 int main(int argc, char* argv[])
 {
     print_stack_on_segfault();
-
-    test_sin();
+    test_cot();
+    /*test_sin();
     test_cos();
     test_tan();
+    test_cot();
     test_f();
-    test_Derivative();
+    test_Derivative();*/
 
     return 0;
 }
