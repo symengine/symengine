@@ -125,7 +125,8 @@ Tan::Tan(const RCP<const Basic> &arg)
 
 bool Tan::is_canonical(const RCP<const Basic> &arg)
 {
-    // e.g. tan(0), extend it further to tan(k*pi)
+    // TODO: Add further checks for +inf -inf cases 
+    // and extend to tan(k*pi)
     if (is_a<Integer>(*arg) &&
             rcp_static_cast<const Integer>(arg)->is_zero())
         return false;
@@ -165,6 +166,7 @@ std::string Tan::__str__() const
 
 RCP<const Basic> tan(const RCP<const Basic> &arg)
 {
+    // TODO: Add further checks for +inf -inf cases
     if (eq(arg, zero)) return zero;
     return rcp(new Tan(arg));
 }
@@ -179,7 +181,8 @@ Cot::Cot(const RCP<const Basic> &arg)
 
 bool Cot::is_canonical(const RCP<const Basic> &arg)
 {
-    // e.g. tan(0), extend it further to tan(k*pi)
+    // TODO: Add further checks for +inf -inf cases 
+    // and extend to cot(k*pi) 
     if (is_a<Integer>(*arg) &&
             rcp_static_cast<const Integer>(arg)->is_zero())
         return false;
@@ -219,7 +222,7 @@ std::string Cot::__str__() const
 
 RCP<const Basic> cot(const RCP<const Basic> &arg)
 {
-    //Add further checks for +inf -inf cases
+    // TODO: Add further checks for +inf -inf cases
     return rcp(new Cot(arg));
 }
 
