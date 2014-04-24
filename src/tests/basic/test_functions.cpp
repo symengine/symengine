@@ -126,6 +126,7 @@ void test_tan()
     RCP<const Symbol> z = symbol("z");
     RCP<const Basic> im1 = integer(-1);
     RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> i1 = integer(1);
     RCP<const Basic> im2 = integer(-2);
 
     RCP<const Basic> r1;
@@ -143,26 +144,26 @@ void test_tan()
     assert(eq(r1, r2));
 
     r1 = tan(x)->diff(x);
-    r2 = pow(cos(x),im2);
+    r2 = add(pow(tan(x), i2),i1);
     assert(eq(r1, r2));
 
     r1 = tan(mul(i2,x))->diff(x);
-    r2 = mul(i2, pow(cos(mul(i2,x)),im2));
+    r2 = mul(i2, add(pow(tan(mul(i2,x)), i2),i1));
     std::cout << *r1 << std::endl;
     std::cout << *r2 << std::endl;
     assert(eq(r1, r2));
 
     r1 = mul(x, tan(x))->diff(x);
-    r2 = add(tan(x), mul(x, pow(cos(x),im2)));
+    r2 = add(tan(x), mul(x, add(pow(tan(x), i2),i1)));
     std::cout << *r1 << std::endl;
     std::cout << *r2 << std::endl;
     assert(eq(r1, r2));
 
-    r1 = mul(tan(x), cos(x))->diff(x);
-    r2 = sin(x)->diff(x);
+    r1 = tan(x);
+    r2 = mul(pow(cos(x),im1),sin(x));
     std::cout << *r1 << std::endl;
     std::cout << *r2 << std::endl;
-    //assert(eq(r1, r2));
+    assert(eq(r1,r2));
 }
 
 void test_f()

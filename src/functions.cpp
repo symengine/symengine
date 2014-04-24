@@ -142,7 +142,27 @@ bool Tan::__eq__(const Basic &o) const
     if (is_a<Tan>(o) &&
         eq(arg_, static_cast<const Tan &>(o).arg_))
         return true;
-    return false;
+    //checks for sin/cos form
+    else if(is_a<Mul>(o))
+    {
+        for (auto &p: static_cast<const Mul &>(o).dict_) {
+            //checks for sin
+            if (is_a<Sin>(*p.first) && eq(arg_, static_cast<const Sin &>(*p.first).get_arg())
+                )
+                continue;
+            //checks for 1/cos
+            else if(is_a<Cos>(*p.first) 
+                && eq(arg_, static_cast<const Cos &>(*p.first).get_arg())
+                && !(Integer(-1).compare(static_cast<const Integer &>(*p.second)))
+                )
+                continue;
+            else
+                return false;
+        }
+        return true;
+    }
+    else
+        return false;
 }
 
 int Tan::compare(const Basic &o) const
@@ -179,7 +199,8 @@ RCP<const Basic> Cos::diff(const RCP<const Symbol> &x) const
 
 RCP<const Basic> Tan::diff(const RCP<const Symbol> &x) const
 {
-    return mul(div(one,mul(cos(arg_), cos(arg_))), arg_->diff(x));
+    RCP<const Integer> two = rcp(new Integer(2));
+    return mul(add(one,pow(tan(arg_), two)), arg_->diff(x));
 }
 
 RCP<const Basic> Sin::subs(const map_basic_basic &subs_dict) const
