@@ -25,6 +25,7 @@ using CSymPy::one;
 using CSymPy::zero;
 using CSymPy::sin;
 using CSymPy::cos;
+using CSymPy::tan;
 using CSymPy::function_symbol;
 using CSymPy::Derivative;
 using CSymPy::RCP;
@@ -118,6 +119,52 @@ void test_cos()
     assert(eq(r1, r2));
 }
 
+void test_tan()
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    RCP<const Symbol> z = symbol("z");
+    RCP<const Basic> im1 = integer(-1);
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> im2 = integer(-2);
+
+    RCP<const Basic> r1;
+    RCP<const Basic> r2;
+
+    r1 = tan(x);
+    r2 = tan(x);
+    std::cout << *r1 << std::endl;
+
+    assert(eq(r1, r2));
+    assert(neq(r1, zero));
+
+    r1 = tan(zero);
+    r2 = zero;
+    assert(eq(r1, r2));
+
+    r1 = tan(x)->diff(x);
+    r2 = pow(cos(x),im2);
+    assert(eq(r1, r2));
+
+    r1 = tan(mul(i2,x))->diff(x);
+    r2 = mul(i2, pow(cos(mul(i2,x)),im2));
+    std::cout << *r1 << std::endl;
+    std::cout << *r2 << std::endl;
+    assert(eq(r1, r2));
+
+    r1 = mul(x, tan(x))->diff(x);
+    r2 = add(tan(x), mul(x, pow(cos(x),im2)));
+    std::cout << *r1 << std::endl;
+    std::cout << *r2 << std::endl;
+    assert(eq(r1, r2));
+
+    r1 = mul(tan(x), cos(x))->diff(x);
+    r2 = sin(x)->diff(x);
+    std::cout << *r1 << std::endl;
+    std::cout << *r2 << std::endl;
+    //assert(eq(r1, r2));
+}
+
 void test_f()
 {
     RCP<const Symbol> x = symbol("x");
@@ -209,6 +256,7 @@ int main(int argc, char* argv[])
 
     test_sin();
     test_cos();
+    test_tan();
     test_f();
     test_Derivative();
 
