@@ -158,12 +158,7 @@ void test_tan()
     std::cout << *r1 << std::endl;
     std::cout << *r2 << std::endl;
     assert(eq(r1, r2));
-
-    r1 = tan(x);
-    r2 = mul(pow(cos(x),im1),sin(x));
-    std::cout << *r1 << std::endl;
-    std::cout << *r2 << std::endl;
-    assert(eq(r1,r2));
+    
 }
 
 void test_f()
