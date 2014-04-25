@@ -368,7 +368,7 @@ void test_Derivative()
 int main(int argc, char* argv[])
 {
     print_stack_on_segfault();
-    
+
     test_sin();
     test_cos();
     test_tan();
