@@ -273,7 +273,7 @@ std::string Csc::__str__() const
     return o.str();
 }
 
-RCP<const Basic> Csc(const RCP<const Basic> &arg)
+RCP<const Basic> csc(const RCP<const Basic> &arg)
 {
     if (eq(arg, zero)) return one;
     return rcp(new Csc(arg));
@@ -304,7 +304,7 @@ RCP<const Basic> Cot::diff(const RCP<const Symbol> &x) const
 
 RCP<const Basic> Csc::diff(const RCP<const Symbol> &x) const
 {
-    return mul(mul(cot(arg_), csc(arg_)), minus_one);
+    return mul(mul(mul(cot(arg_), csc(arg_)), minus_one), arg_->diff(x));
 }
 
 RCP<const Basic> Sin::subs(const map_basic_basic &subs_dict) const

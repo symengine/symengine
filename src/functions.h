@@ -176,7 +176,7 @@ public:
     virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
 };
 //! Canonicalize Csc:
-RCP<const Basic> Csc(const RCP<const Basic> &arg);
+RCP<const Basic> csc(const RCP<const Basic> &arg);
 
 class FunctionSymbol : public Function {
 private:
