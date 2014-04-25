@@ -226,7 +226,60 @@ RCP<const Basic> cot(const RCP<const Basic> &arg)
     return rcp(new Cot(arg));
 }
 
+/* ---------------------------- */
 
+Csc::Csc(const RCP<const Basic> &arg)
+    : arg_{arg}
+{
+    CSYMPY_ASSERT(is_canonical(arg))
+}
+
+bool Csc::is_canonical(const RCP<const Basic> &arg)
+{
+    // e.g. Csc(0)
+    if (is_a<Integer>(*arg) &&
+            rcp_static_cast<const Integer>(arg)->is_zero())
+        return false;
+    // TODO: add things like Csc(k*pi) etc.
+    // Update for +inf/-inf constraints
+    return true;
+}
+
+std::size_t Csc::__hash__() const
+{
+    std::size_t seed = 0;
+    hash_combine<Basic>(seed, *arg_);
+    return seed;
+}
+
+bool Csc::__eq__(const Basic &o) const
+{
+    if (is_a<Csc>(o) &&
+        eq(arg_, static_cast<const Csc &>(o).arg_))
+        return true;
+    return false;
+}
+
+int Csc::compare(const Basic &o) const
+{    CSYMPY_ASSERT(is_a<Csc>(o))
+    const Csc &s = static_cast<const Csc &>(o);
+    return arg_->__cmp__(s);
+}
+
+std::string Csc::__str__() const
+{
+    std::ostringstream o;
+    o << "Csc(" << *arg_ << ")";
+    return o.str();
+}
+
+RCP<const Basic> Csc(const RCP<const Basic> &arg)
+{
+    if (eq(arg, zero)) return one;
+    return rcp(new Csc(arg));
+}
+
+/* ---------------------------- */
 RCP<const Basic> Sin::diff(const RCP<const Symbol> &x) const
 {
     return mul(cos(arg_), arg_->diff(x));
@@ -247,6 +300,11 @@ RCP<const Basic> Cot::diff(const RCP<const Symbol> &x) const
 {
     RCP<const Integer> two = rcp(new Integer(2));
     return mul(mul(add(one, pow(cot(arg_), two)), minus_one), arg_->diff(x));
+}
+
+RCP<const Basic> Csc::diff(const RCP<const Symbol> &x) const
+{
+    return mul(mul(cot(arg_), csc(arg_)), minus_one);
 }
 
 RCP<const Basic> Sin::subs(const map_basic_basic &subs_dict) const
@@ -299,6 +357,19 @@ RCP<const Basic> Cot::subs(const map_basic_basic &subs_dict) const
         return self;
     else
         return cot(arg);
+}
+
+RCP<const Basic> Csc::subs(const map_basic_basic &subs_dict) const
+{
+    RCP<const Csc> self = rcp_const_cast<Csc>(rcp(this));
+    auto it = subs_dict.find(self);
+    if (it != subs_dict.end())
+        return it->second;
+    RCP<const Basic> arg = arg_->subs(subs_dict);
+    if (arg == arg_)
+        return self;
+    else
+        return csc(arg);
 }
 /* ---------------------------- */
 
