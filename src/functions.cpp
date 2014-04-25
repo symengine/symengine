@@ -261,7 +261,8 @@ bool Csc::__eq__(const Basic &o) const
 }
 
 int Csc::compare(const Basic &o) const
-{    CSYMPY_ASSERT(is_a<Csc>(o))
+{    
+    CSYMPY_ASSERT(is_a<Csc>(o))
     const Csc &s = static_cast<const Csc &>(o);
     return arg_->__cmp__(s);
 }
