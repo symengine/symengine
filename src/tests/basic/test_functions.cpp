@@ -28,6 +28,7 @@ using CSymPy::cos;
 using CSymPy::tan;
 using CSymPy::cot;
 using CSymPy::csc;
+using CSymPy::sec;
 using CSymPy::function_symbol;
 using CSymPy::Derivative;
 using CSymPy::RCP;
@@ -240,6 +241,45 @@ void test_csc()
 
 }
 
+void test_sec()
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    RCP<const Symbol> z = symbol("z");
+    RCP<const Basic> im1 = integer(-1);
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> i1 = integer(1);
+
+    RCP<const Basic> r1;
+    RCP<const Basic> r2;
+
+    r1 = sec(x);
+    r2 = sec(x);
+    std::cout << *r1 << std::endl;
+
+    assert(eq(r1, r2));
+    assert(neq(r1, zero));
+
+    r1 = sec(x)->diff(x);
+    r2 = mul(tan(x), sec(x));
+    std::cout << *r1 << std::endl;
+    std::cout << *r2 << std::endl;
+    assert(eq(r1, r2));
+
+    r1 = sec(mul(i2, x))->diff(x);
+    r2 = mul(i2, mul(tan(mul(i2, x)), sec(mul(i2, x))));
+    std::cout << *r1 << std::endl;
+    std::cout << *r2 << std::endl;
+    assert(eq(r1, r2));
+
+    r1 = mul(x, sec(x))->diff(x);
+    r2 = add(sec(x), mul(x, mul(tan(x), sec(x))));
+    std::cout << *r1 << std::endl;
+    std::cout << *r2 << std::endl;
+    assert(eq(r1, r2));
+
+}
+
 void test_f()
 {
     RCP<const Symbol> x = symbol("x");
@@ -334,6 +374,7 @@ int main(int argc, char* argv[])
     test_tan();
     test_cot();
     test_csc();
+    test_sec();
     test_f();
     test_Derivative();
 
