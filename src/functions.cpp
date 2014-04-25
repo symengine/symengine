@@ -62,6 +62,7 @@ RCP<const Basic> sin(const RCP<const Basic> &arg)
     return rcp(new Sin(arg));
 }
 
+/* ---------------------------- */
 
 Cos::Cos(const RCP<const Basic> &arg)
     : arg_{arg}
@@ -114,6 +115,224 @@ RCP<const Basic> cos(const RCP<const Basic> &arg)
     return rcp(new Cos(arg));
 }
 
+/* ---------------------------- */
+
+Tan::Tan(const RCP<const Basic> &arg)
+    : arg_{arg}
+{
+    CSYMPY_ASSERT(is_canonical(arg))
+}
+
+bool Tan::is_canonical(const RCP<const Basic> &arg)
+{
+    // TODO: Add further checks for +inf -inf cases 
+    // and extend to tan(k*pi)
+    if (is_a<Integer>(*arg) &&
+            rcp_static_cast<const Integer>(arg)->is_zero())
+        return false;
+    return true;
+}
+
+std::size_t Tan::__hash__() const
+{
+    std::size_t seed = 0;
+    hash_combine<Basic>(seed, *arg_);
+    return seed;
+}
+
+bool Tan::__eq__(const Basic &o) const
+{
+    if (is_a<Tan>(o) &&
+        eq(arg_, static_cast<const Tan &>(o).arg_))
+        return true;
+    else
+        return false;
+}
+
+int Tan::compare(const Basic &o) const
+{
+    CSYMPY_ASSERT(is_a<Tan>(o))
+    const Tan &s = static_cast<const Tan &>(o);
+    return arg_->__cmp__(s);
+}
+
+
+std::string Tan::__str__() const
+{
+    std::ostringstream o;
+    o << "tan(" << *arg_ << ")";
+    return o.str();
+}
+
+RCP<const Basic> tan(const RCP<const Basic> &arg)
+{
+    // TODO: Add further checks for +inf -inf cases
+    if (eq(arg, zero)) return zero;
+    return rcp(new Tan(arg));
+}
+
+/* ---------------------------- */
+
+Cot::Cot(const RCP<const Basic> &arg)
+    : arg_{arg}
+{
+    CSYMPY_ASSERT(is_canonical(arg))
+}
+
+bool Cot::is_canonical(const RCP<const Basic> &arg)
+{
+    // TODO: Add further checks for +inf -inf cases 
+    // and extend to cot(k*pi) 
+    if (is_a<Integer>(*arg) &&
+            rcp_static_cast<const Integer>(arg)->is_zero())
+        return false;
+    return true;
+}
+
+std::size_t Cot::__hash__() const
+{
+    std::size_t seed = 0;
+    hash_combine<Basic>(seed, *arg_);
+    return seed;
+}
+
+bool Cot::__eq__(const Basic &o) const
+{
+    if (is_a<Cot>(o) &&
+        eq(arg_, static_cast<const Cot &>(o).arg_))
+        return true;
+    else
+        return false;
+}
+
+int Cot::compare(const Basic &o) const
+{
+    CSYMPY_ASSERT(is_a<Cot>(o))
+    const Cot &s = static_cast<const Cot &>(o);
+    return arg_->__cmp__(s);
+}
+
+
+std::string Cot::__str__() const
+{
+    std::ostringstream o;
+    o << "cot(" << *arg_ << ")";
+    return o.str();
+}
+
+RCP<const Basic> cot(const RCP<const Basic> &arg)
+{
+    // TODO: Add further checks for +inf -inf cases
+    return rcp(new Cot(arg));
+}
+
+/* ---------------------------- */
+
+Csc::Csc(const RCP<const Basic> &arg)
+    : arg_{arg}
+{
+    CSYMPY_ASSERT(is_canonical(arg))
+}
+
+bool Csc::is_canonical(const RCP<const Basic> &arg)
+{
+    // e.g. Csc(0)
+    if (is_a<Integer>(*arg) &&
+            rcp_static_cast<const Integer>(arg)->is_zero())
+        return false;
+    // TODO: add things like Csc(k*pi) etc.
+    // Update for +inf/-inf constraints
+    return true;
+}
+
+std::size_t Csc::__hash__() const
+{
+    std::size_t seed = 0;
+    hash_combine<Basic>(seed, *arg_);
+    return seed;
+}
+
+bool Csc::__eq__(const Basic &o) const
+{
+    if (is_a<Csc>(o) &&
+        eq(arg_, static_cast<const Csc &>(o).arg_))
+        return true;
+    return false;
+}
+
+int Csc::compare(const Basic &o) const
+{    
+    CSYMPY_ASSERT(is_a<Csc>(o))
+    const Csc &s = static_cast<const Csc &>(o);
+    return arg_->__cmp__(s);
+}
+
+std::string Csc::__str__() const
+{
+    std::ostringstream o;
+    o << "csc(" << *arg_ << ")";
+    return o.str();
+}
+
+RCP<const Basic> csc(const RCP<const Basic> &arg)
+{
+    return rcp(new Csc(arg));
+}
+
+/* ---------------------------- */
+
+Sec::Sec(const RCP<const Basic> &arg)
+    : arg_{arg}
+{
+    CSYMPY_ASSERT(is_canonical(arg))
+}
+
+bool Sec::is_canonical(const RCP<const Basic> &arg)
+{
+    // e.g. Sec(0)
+    if (is_a<Integer>(*arg) &&
+            rcp_static_cast<const Integer>(arg)->is_zero())
+        return false;
+    // TODO: add things like Sec(k*pi) etc.
+    // Update for +inf/-inf constraints
+    return true;
+}
+
+std::size_t Sec::__hash__() const
+{
+    std::size_t seed = 0;
+    hash_combine<Basic>(seed, *arg_);
+    return seed;
+}
+
+bool Sec::__eq__(const Basic &o) const
+{
+    if (is_a<Sec>(o) &&
+        eq(arg_, static_cast<const Sec &>(o).arg_))
+        return true;
+    return false;
+}
+
+int Sec::compare(const Basic &o) const
+{    CSYMPY_ASSERT(is_a<Sec>(o))
+    const Sec &s = static_cast<const Sec &>(o);
+    return arg_->__cmp__(s);
+}
+
+std::string Sec::__str__() const
+{
+    std::ostringstream o;
+    o << "sec(" << *arg_ << ")";
+    return o.str();
+}
+
+RCP<const Basic> sec(const RCP<const Basic> &arg)
+{
+    if (eq(arg, zero)) return one;
+    return rcp(new Sec(arg));
+}
+
+/* ---------------------------- */
 
 RCP<const Basic> Sin::diff(const RCP<const Symbol> &x) const
 {
@@ -123,6 +342,28 @@ RCP<const Basic> Sin::diff(const RCP<const Symbol> &x) const
 RCP<const Basic> Cos::diff(const RCP<const Symbol> &x) const
 {
     return mul(mul(minus_one, sin(arg_)), arg_->diff(x));
+}
+
+RCP<const Basic> Tan::diff(const RCP<const Symbol> &x) const
+{
+    RCP<const Integer> two = rcp(new Integer(2));
+    return mul(add(one, pow(tan(arg_), two)), arg_->diff(x));
+}
+
+RCP<const Basic> Cot::diff(const RCP<const Symbol> &x) const
+{
+    RCP<const Integer> two = rcp(new Integer(2));
+    return mul(mul(add(one, pow(cot(arg_), two)), minus_one), arg_->diff(x));
+}
+
+RCP<const Basic> Csc::diff(const RCP<const Symbol> &x) const
+{
+    return mul(mul(mul(cot(arg_), csc(arg_)), minus_one), arg_->diff(x));
+}
+
+RCP<const Basic> Sec::diff(const RCP<const Symbol> &x) const
+{
+    return mul(mul(tan(arg_), sec(arg_)), arg_->diff(x));
 }
 
 RCP<const Basic> Sin::subs(const map_basic_basic &subs_dict) const
@@ -151,6 +392,57 @@ RCP<const Basic> Cos::subs(const map_basic_basic &subs_dict) const
         return cos(arg);
 }
 
+RCP<const Basic> Tan::subs(const map_basic_basic &subs_dict) const
+{
+    RCP<const Tan> self = rcp_const_cast<Tan>(rcp(this));
+    auto it = subs_dict.find(self);
+    if (it != subs_dict.end())
+        return it->second;
+    RCP<const Basic> arg = arg_->subs(subs_dict);
+    if (arg == arg_)
+        return self;
+    else
+        return tan(arg);
+}
+
+RCP<const Basic> Cot::subs(const map_basic_basic &subs_dict) const
+{
+    RCP<const Cot> self = rcp_const_cast<Cot>(rcp(this));
+    auto it = subs_dict.find(self);
+    if (it != subs_dict.end())
+        return it->second;
+    RCP<const Basic> arg = arg_->subs(subs_dict);
+    if (arg == arg_)
+        return self;
+    else
+        return cot(arg);
+}
+
+RCP<const Basic> Csc::subs(const map_basic_basic &subs_dict) const
+{
+    RCP<const Csc> self = rcp_const_cast<Csc>(rcp(this));
+    auto it = subs_dict.find(self);
+    if (it != subs_dict.end())
+        return it->second;
+    RCP<const Basic> arg = arg_->subs(subs_dict);
+    if (arg == arg_)
+        return self;
+    else
+        return csc(arg);
+}
+
+RCP<const Basic> Sec::subs(const map_basic_basic &subs_dict) const
+{
+    RCP<const Sec> self = rcp_const_cast<Sec>(rcp(this));
+    auto it = subs_dict.find(self);
+    if (it != subs_dict.end())
+        return it->second;
+    RCP<const Basic> arg = arg_->subs(subs_dict);
+    if (arg == arg_)
+        return self;
+    else
+        return sec(arg);
+}
 /* ---------------------------- */
 
 FunctionSymbol::FunctionSymbol(std::string name, const RCP<const Basic> &arg)

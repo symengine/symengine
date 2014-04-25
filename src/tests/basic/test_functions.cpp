@@ -25,6 +25,10 @@ using CSymPy::one;
 using CSymPy::zero;
 using CSymPy::sin;
 using CSymPy::cos;
+using CSymPy::tan;
+using CSymPy::cot;
+using CSymPy::csc;
+using CSymPy::sec;
 using CSymPy::function_symbol;
 using CSymPy::Derivative;
 using CSymPy::RCP;
@@ -118,6 +122,164 @@ void test_cos()
     assert(eq(r1, r2));
 }
 
+void test_tan()
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    RCP<const Symbol> z = symbol("z");
+    RCP<const Basic> im1 = integer(-1);
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> i1 = integer(1);
+
+    RCP<const Basic> r1;
+    RCP<const Basic> r2;
+
+    r1 = tan(x);
+    r2 = tan(x);
+    std::cout << *r1 << std::endl;
+
+    assert(eq(r1, r2));
+    assert(neq(r1, zero));
+
+    r1 = tan(zero);
+    r2 = zero;
+    assert(eq(r1, r2));
+
+    r1 = tan(x)->diff(x);
+    r2 = add(pow(tan(x), i2), i1);
+    assert(eq(r1, r2));
+
+    r1 = tan(mul(i2, x))->diff(x);
+    r2 = mul(i2, add(pow(tan(mul(i2, x)), i2), i1));
+    std::cout << *r1 << std::endl;
+    std::cout << *r2 << std::endl;
+    assert(eq(r1, r2));
+
+    r1 = mul(x, tan(x))->diff(x);
+    r2 = add(tan(x), mul(x, add(pow(tan(x), i2), i1)));
+    std::cout << *r1 << std::endl;
+    std::cout << *r2 << std::endl;
+    assert(eq(r1, r2));
+
+}
+
+void test_cot()
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    RCP<const Symbol> z = symbol("z");
+    RCP<const Basic> im1 = integer(-1);
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> i1 = integer(1);
+
+    RCP<const Basic> r1;
+    RCP<const Basic> r2;
+
+    r1 = cot(x);
+    r2 = cot(x);
+    std::cout << *r1 << std::endl;
+
+    assert(eq(r1, r2));
+    assert(neq(r1, zero));
+
+    r1 = cot(x)->diff(x);
+    r2 = mul(im1, add(pow(cot(x), i2), i1));
+    std::cout << *r1 << std::endl;
+    std::cout << *r2 << std::endl;
+    assert(eq(r1, r2));
+
+    r1 = cot(mul(i2, x))->diff(x);
+    r2 = mul(integer(-2), add(pow(cot(mul(i2, x)), i2), i1));
+    std::cout << *r1 << std::endl;
+    std::cout << *r2 << std::endl;
+    assert(eq(r1, r2));
+
+    r1 = mul(x, cot(x))->diff(x);
+    r2 = add(cot(x), mul(x, mul(add(pow(cot(x), i2), i1), im1)));
+    std::cout << *r1 << std::endl;
+    std::cout << *r2 << std::endl;
+    assert(eq(r1, r2));
+
+}
+
+void test_csc()
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    RCP<const Symbol> z = symbol("z");
+    RCP<const Basic> im1 = integer(-1);
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> i1 = integer(1);
+
+    RCP<const Basic> r1;
+    RCP<const Basic> r2;
+
+    r1 = csc(x);
+    r2 = csc(x);
+    std::cout << *r1 << std::endl;
+
+    assert(eq(r1, r2));
+    assert(neq(r1, zero));
+
+    r1 = csc(x)->diff(x);
+    r2 = mul(im1, mul(cot(x), csc(x)));
+    std::cout << *r1 << std::endl;
+    std::cout << *r2 << std::endl;
+    assert(eq(r1, r2));
+
+    r1 = csc(mul(i2, x))->diff(x);
+    r2 = mul(integer(-2), mul(cot(mul(i2, x)), csc(mul(i2, x))));
+    std::cout << *r1 << std::endl;
+    std::cout << *r2 << std::endl;
+    assert(eq(r1, r2));
+
+    r1 = mul(x, csc(x))->diff(x);
+    r2 = add(csc(x), mul(x, mul(im1, mul(cot(x), csc(x)))));
+    std::cout << *r1 << std::endl;
+    std::cout << *r2 << std::endl;
+    assert(eq(r1, r2));
+
+}
+
+void test_sec()
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    RCP<const Symbol> z = symbol("z");
+    RCP<const Basic> im1 = integer(-1);
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> i1 = integer(1);
+
+    RCP<const Basic> r1;
+    RCP<const Basic> r2;
+
+    r1 = sec(x);
+    r2 = sec(x);
+    std::cout << *r1 << std::endl;
+
+    assert(eq(r1, r2));
+    assert(neq(r1, zero));
+
+    r1 = sec(x)->diff(x);
+    r2 = mul(tan(x), sec(x));
+    std::cout << *r1 << std::endl;
+    std::cout << *r2 << std::endl;
+    assert(eq(r1, r2));
+
+    r1 = sec(mul(i2, x))->diff(x);
+    r2 = mul(i2, mul(tan(mul(i2, x)), sec(mul(i2, x))));
+    std::cout << *r1 << std::endl;
+    std::cout << *r2 << std::endl;
+    assert(eq(r1, r2));
+
+    r1 = mul(x, sec(x))->diff(x);
+    r2 = add(sec(x), mul(x, mul(tan(x), sec(x))));
+    std::cout << *r1 << std::endl;
+    std::cout << *r2 << std::endl;
+    assert(eq(r1, r2));
+
+}
+
 void test_f()
 {
     RCP<const Symbol> x = symbol("x");
@@ -209,6 +371,10 @@ int main(int argc, char* argv[])
 
     test_sin();
     test_cos();
+    test_tan();
+    test_cot();
+    test_csc();
+    test_sec();
     test_f();
     test_Derivative();
 
