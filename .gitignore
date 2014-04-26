@@ -1,0 +1,22 @@
+# CMake 
+CMakeCache.txt
+CMakeFiles
+Makefile
+cmake_install.cmake
+CTestTestfile.cmake
+
+# Compiled Object Files, Static/Dynamic Libraries
+*.so
+*.a
+*.o
+
+Testing
+
+# Documentation
+doc/_build
+doc/doxyxml
+doc/html
+
+# Config Files
+src/csympy_config.h
+src/teuchos/Teuchos_config.h
