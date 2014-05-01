@@ -10,6 +10,31 @@
 
 namespace CSymPy {
 
+RCP<const Basic> i2 = rcp(new Integer(2));
+RCP<const Basic> i3 = rcp(new Integer(3));
+
+RCP<const Basic> sq3 = isqrt(*rcp_static_cast<const Integer>(i3));
+RCP<const Basic> sq2 = isqrt(*rcp_static_cast<const Integer>(i2));
+
+RCP<const Basic> C0 = div(sub(sq3, one), mul(i2, sq2));
+RCP<const Basic> C1 = div(one, i2);
+RCP<const Basic> C2 = div(sq2, i2);
+RCP<const Basic> C3 = div(sq3, i2);
+RCP<const Basic> C4 = div(sub(sq3, one), mul(i2, sq2));
+
+RCP<const Basic> mC0 = mul(minus_one, C0);
+RCP<const Basic> mC1 = mul(minus_one, C1);
+RCP<const Basic> mC2 = mul(minus_one, C2);
+RCP<const Basic> mC3 = mul(minus_one, C3);
+RCP<const Basic> mC4 = mul(minus_one, C4);
+
+// sin_table[n] represents the value of sin(2*pi*n/24) for n = 0..23
+RCP<const Basic> sin_table[] = {
+        zero, C0, C1, C2, C3, C4, one, C4, C3, C2, C1, C0,
+        zero, mC0, mC1, mC2, mC3, mC4, minus_one, mC4, mC3, mC2, mC1, mC0
+    };
+
+
 Sin::Sin(const RCP<const Basic> &arg)
     : arg_{arg}
 {
