@@ -42,4 +42,7 @@ RCP<const Basic> Symbol::diff(const RCP<const Symbol> &x) const
         return zero;
 }
 
+// Initialize the special symbols.
+RCP<const Symbol> pi = rcp(new Symbol("pi"));
+
 } // CSymPy
