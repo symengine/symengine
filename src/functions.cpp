@@ -13,6 +13,7 @@ namespace CSymPy {
 RCP<const Basic> i2 = rcp(new Integer(2));
 RCP<const Basic> i3 = rcp(new Integer(3));
 
+// TODO: Update to actual sqrt from integer sqrt.
 RCP<const Basic> sq3 = isqrt(*rcp_static_cast<const Integer>(i3));
 RCP<const Basic> sq2 = isqrt(*rcp_static_cast<const Integer>(i2));
 
@@ -34,6 +35,10 @@ RCP<const Basic> sin_table[] = {
         zero, mC0, mC1, mC2, mC3, mC4, minus_one, mC4, mC3, mC2, mC1, mC0
     };
 
+RCP<const Integer> get_pi_shift(const RCP<const Basic> &arg)
+{
+  // it should return n if arg = n*pi/12
+}
 
 Sin::Sin(const RCP<const Basic> &arg)
     : arg_{arg}
