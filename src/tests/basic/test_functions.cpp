@@ -31,6 +31,7 @@ using CSymPy::csc;
 using CSymPy::sec;
 using CSymPy::function_symbol;
 using CSymPy::Derivative;
+using CSymPy::pi;
 using CSymPy::RCP;
 using CSymPy::rcp;
 using CSymPy::rcp_dynamic_cast;
@@ -365,10 +366,33 @@ void test_Derivative()
     assert(!(r4->is_canonical(x, {pow(x, integer(2))})));
 }
 
+void test_get_pi_shift()
+{
+    RCP<const Basic> im1 = integer(-1);
+    RCP<const Basic> i12 = integer(12);
+
+
+    bool b;
+    RCP<const Basic> r;
+    RCP<const Integer> r1;
+
+
+    r = mul(pi, div(one, i12));
+    get_pi_shift(r, r1);
+    assert(eq(r1, one));
+
+    r = mul(pi, div(integer(2), integer(3)));
+    b = get_pi_shift(r, r1);
+    assert(eq(r1, integer(8)) && (b == true));
+
+    r = mul(pi, div(integer(2), integer(5)));
+    b = get_pi_shift(r, r1);
+    assert(b == false);
+}
+
 int main(int argc, char* argv[])
 {
-    print_stack_on_segfault();
-
+    print_stack_on_segfault();    
     test_sin();
     test_cos();
     test_tan();
@@ -377,6 +401,7 @@ int main(int argc, char* argv[])
     test_sec();
     test_f();
     test_Derivative();
+    test_get_pi_shift();
 
     return 0;
 }
