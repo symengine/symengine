@@ -16,6 +16,10 @@ namespace CSymPy {
 class Function : public Basic {
 };
 
+//! \return `n` if `arg` is of form `n*pi/12`
+bool get_pi_shift(const RCP<const Basic> &arg,
+     RCP<const Integer> &n);
+
 class Sin : public Function {
 private:
     RCP<const Basic> arg_; //! The `arg` in `sin(arg)`

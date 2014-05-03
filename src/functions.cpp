@@ -35,9 +35,25 @@ RCP<const Basic> sin_table[] = {
         zero, mC0, mC1, mC2, mC3, mC4, minus_one, mC4, mC3, mC2, mC1, mC0
     };
 
-RCP<const Integer> get_pi_shift(const RCP<const Basic> &arg)
+bool get_pi_shift(const RCP<const Basic> &arg,
+     RCP<const Integer> &n)
 {
-  // it should return n if arg = n*pi/12
+    // it should return n if arg = n*pi/12
+    if(is_a<Mul>(*arg)){
+        
+        RCP<const Basic> coef_ = static_cast<const Mul &>(*arg).coef_;
+        coef_ = mul(coef_, integer(12));
+
+        if(is_a<Integer>(*coef_)){
+            n = rcp_dynamic_cast<const Integer>(coef_);
+            return true;    
+        }
+        else
+            return false;
+               
+    }
+    else
+        return false;
 }
 
 Sin::Sin(const RCP<const Basic> &arg)
