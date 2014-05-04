@@ -36,6 +36,8 @@ using CSymPy::RCP;
 using CSymPy::rcp;
 using CSymPy::rcp_dynamic_cast;
 using CSymPy::print_stack_on_segfault;
+using CSymPy::isqrt;
+using CSymPy::rcp_static_cast;
 
 void test_sin()
 {
@@ -369,25 +371,83 @@ void test_Derivative()
 void test_get_pi_shift()
 {
     RCP<const Basic> im1 = integer(-1);
-    RCP<const Basic> i12 = integer(12);
-
+    RCP<const Basic> i2 = integer(2);
 
     bool b;
     RCP<const Basic> r;
     RCP<const Integer> r1;
 
-
-    r = mul(pi, div(one, i12));
+    r = mul(pi, div(one, integer(12)));
     get_pi_shift(r, r1);
     assert(eq(r1, one));
 
-    r = mul(pi, div(integer(2), integer(3)));
+    r = mul(pi, div(i2, integer(3)));
     b = get_pi_shift(r, r1);
     assert(eq(r1, integer(8)) && (b == true));
 
-    r = mul(pi, div(integer(2), integer(5)));
+    r = mul(pi, div(i2, integer(5)));
     b = get_pi_shift(r, r1);
     assert(b == false);
+
+    r = mul(pow(pi, i2), div(i2, integer(3)));
+    b = get_pi_shift(r, r1);
+    assert(b == false);
+
+    r = mul(mul(pi, symbol("s")), div(i2, integer(3)));
+    b = get_pi_shift(r, r1);
+    assert(b == false);
+}
+
+void test_sin_table()
+{
+    RCP<const Basic> r1;
+    RCP<const Basic> r2;
+
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> i3 = integer(3);
+    RCP<const Basic> i12 = integer(12);
+
+    RCP<const Basic> sq3 = isqrt(*rcp_static_cast<const Integer>(i3));
+    RCP<const Basic> sq2 = isqrt(*rcp_static_cast<const Integer>(i2));
+
+    // sin(2pi + pi/6) = 1/2
+    r1 = sin(add(mul(pi, i2), mul(div(pi, i12), i2)));
+    r2 = div(one, i2);
+    assert(eq(r1,r2));
+
+    // sin(n*pi + pi/6) = 1/2
+    r1 = sin(add(mul(pi, integer(10)), mul(div(pi, i12), i2)));
+    r2 = div(one, i2);
+    assert(eq(r1,r2));
+
+    // sin(n*pi) = 0
+    r1 = sin(mul(pi, i12));
+    assert(eq(r1,zero));
+
+    // sin(2pi + pi/2) = 1
+    r1 = sin(add(mul(pi, i2), div(pi, i2)));
+    assert(eq(r1, one));
+
+    // sin(pi/3) = sqrt(3)/2
+    r1 = sin(div(pi, integer(3)));
+    r2 = div(sq3, i2);
+    assert(eq(r1, r2));
+
+    // sin(pi/4) = 1/sqrt(2)
+    r1 = sin(div(pi, integer(4)));
+    r2 = div(sq2, i2);
+    assert(eq(r1, r2));
+
+    // sin(pi/12) = (sqrt(3) - 1)/(2*sqrt(2))
+    r1 = sin(div(pi, i12));
+    r2 = div(sub(sq3, one), mul(i2, sq2));
+    assert(eq(r1, r2));
+
+    // sin(5*pi/12) = (sqrt(3) + 1)/(2*sqrt(2))
+    r1 = sin(mul(div(pi, i12), integer(5)));
+    r2 = div(add(sq3, one), mul(i2, sq2));
+    assert(eq(r1, r2));
+
 }
 
 int main(int argc, char* argv[])
@@ -402,6 +462,7 @@ int main(int argc, char* argv[])
     test_f();
     test_Derivative();
     test_get_pi_shift();
+    test_sin_table();
 
     return 0;
 }

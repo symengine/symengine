@@ -21,7 +21,7 @@ RCP<const Basic> C0 = div(sub(sq3, one), mul(i2, sq2));
 RCP<const Basic> C1 = div(one, i2);
 RCP<const Basic> C2 = div(sq2, i2);
 RCP<const Basic> C3 = div(sq3, i2);
-RCP<const Basic> C4 = div(sub(sq3, one), mul(i2, sq2));
+RCP<const Basic> C4 = div(add(sq3, one), mul(i2, sq2));
 
 RCP<const Basic> mC0 = mul(minus_one, C0);
 RCP<const Basic> mC1 = mul(minus_one, C1);
