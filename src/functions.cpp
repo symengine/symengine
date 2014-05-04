@@ -39,18 +39,24 @@ bool get_pi_shift(const RCP<const Basic> &arg,
      RCP<const Integer> &n)
 {
     // it should return n if arg = n*pi/12
-    if(is_a<Mul>(*arg)){
+    if (is_a<Mul>(*arg)) {
         
-        RCP<const Basic> coef_ = static_cast<const Mul &>(*arg).coef_;
-        coef_ = mul(coef_, integer(12));
+        const Mul &s = static_cast<const Mul &>(*arg);
+        RCP<const Basic> coef = s.coef_;
+        coef = mul(coef, integer(12));
+        auto p = s.dict_.begin();
+        // dict should contain symbol `pi` only
+        // and coeff should be a multiple of 12
+        if (s.dict_.size() == 1 && is_a<Symbol>(*p->first) &&
+                eq(rcp_static_cast<const Symbol>(p->first), pi) &&
+                eq(rcp_static_cast<const Number>(p->second), one) &&
+                is_a<Integer>(*coef)) {
 
-        if(is_a<Integer>(*coef_)){
-            n = rcp_dynamic_cast<const Integer>(coef_);
+            n = rcp_dynamic_cast<const Integer>(coef);
             return true;    
         }
         else
             return false;
-               
     }
     else
         return false;
@@ -68,7 +74,12 @@ bool Sin::is_canonical(const RCP<const Basic> &arg)
     if (is_a<Integer>(*arg) &&
             rcp_static_cast<const Integer>(arg)->is_zero())
         return false;
-    // TODO: add things like sin(k*pi) etc.
+
+    RCP<const Integer> r;
+    bool b = get_pi_shift(arg, r);
+    if (b)
+        return false;
+
     return true;
 }
 
@@ -105,7 +116,16 @@ std::string Sin::__str__() const
 RCP<const Basic> sin(const RCP<const Basic> &arg)
 {
     if (eq(arg, zero)) return zero;
-    return rcp(new Sin(arg));
+    RCP<const Integer> r;
+    bool check;
+    check = get_pi_shift(arg, r);
+    if (check) {
+        int index;
+        index = r->as_int();
+        return sin_table[index % 24];
+    }
+    else
+        return rcp(new Sin(arg));
 }
 
 /* ---------------------------- */
