@@ -52,16 +52,16 @@ before_script:
         mkdir build;
         cd build;
         export SOURCE_DIR=..;
-    fi
-  - cmake -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DWITH_BFD=${WITH_BFD} -DWITH_PYTHON=${WITH_PYTHON} -DWITH_CSYMPY_ASSERT=${WITH_CSYMPY_ASSERT} -DWITH_CSYMPY_RCP=${WITH_CSYMPY_RCP} -DWITH_ECM=${WITH_ECM} ${SOURCE_DIR}
-  - make
+    fi;
+    cmake -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DWITH_BFD=${WITH_BFD} -DWITH_PYTHON=${WITH_PYTHON} -DWITH_CSYMPY_ASSERT=${WITH_CSYMPY_ASSERT} -DWITH_CSYMPY_RCP=${WITH_CSYMPY_RCP} -DWITH_ECM=${WITH_ECM} ${SOURCE_DIR};
+    make
 script:
   - if [[ "${TEST_IN_TREE}" == "yes" ]]; then
         export SOURCE_DIR=.;
     else
         cd build;
         export SOURCE_DIR=..;
-    fi
-  - $SOURCE_DIR/bin/test_travis.sh
+    fi;
+    $SOURCE_DIR/bin/test_travis.sh
 notifications:
   email: false
