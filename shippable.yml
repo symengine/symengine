@@ -45,22 +45,7 @@ install:
   - if [[ "${WITH_PYTHON}" == "yes" ]]; then
         pip install cython sympy --use-mirrors;
     fi
-before_script:
-  - if [[ "${TEST_IN_TREE}" == "yes" ]]; then
-        cmake -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DWITH_BFD=${WITH_BFD} -DWITH_PYTHON=${WITH_PYTHON} -DWITH_CSYMPY_ASSERT=${WITH_CSYMPY_ASSERT} -DWITH_CSYMPY_RCP=${WITH_CSYMPY_RCP} -DWITH_ECM=${WITH_ECM} .;
-        make;
-    else
-        mkdir build;
-        cd build;
-        cmake -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DWITH_BFD=${WITH_BFD} -DWITH_PYTHON=${WITH_PYTHON} -DWITH_CSYMPY_ASSERT=${WITH_CSYMPY_ASSERT} -DWITH_CSYMPY_RCP=${WITH_CSYMPY_RCP} -DWITH_ECM=${WITH_ECM} ..;
-        make;
-    fi;
 script:
-  - if [[ "${TEST_IN_TREE}" == "yes" ]]; then
-        ./bin/test_travis.sh;
-    else
-        cd build;
-        ../bin/test_travis.sh;
-    fi;
+  - bin/test_travis.sh
 notifications:
   email: false
