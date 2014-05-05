@@ -47,21 +47,20 @@ install:
     fi
 before_script:
   - if [[ "${TEST_IN_TREE}" == "yes" ]]; then
-        export SOURCE_DIR=.;
+        cmake -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DWITH_BFD=${WITH_BFD} -DWITH_PYTHON=${WITH_PYTHON} -DWITH_CSYMPY_ASSERT=${WITH_CSYMPY_ASSERT} -DWITH_CSYMPY_RCP=${WITH_CSYMPY_RCP} -DWITH_ECM=${WITH_ECM} .;
+        make
     else
         mkdir build;
         cd build;
-        export SOURCE_DIR=..;
+        cmake -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DWITH_BFD=${WITH_BFD} -DWITH_PYTHON=${WITH_PYTHON} -DWITH_CSYMPY_ASSERT=${WITH_CSYMPY_ASSERT} -DWITH_CSYMPY_RCP=${WITH_CSYMPY_RCP} -DWITH_ECM=${WITH_ECM} ..;
+        make
     fi;
-    cmake -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DWITH_BFD=${WITH_BFD} -DWITH_PYTHON=${WITH_PYTHON} -DWITH_CSYMPY_ASSERT=${WITH_CSYMPY_ASSERT} -DWITH_CSYMPY_RCP=${WITH_CSYMPY_RCP} -DWITH_ECM=${WITH_ECM} ${SOURCE_DIR};
-    make
 script:
   - if [[ "${TEST_IN_TREE}" == "yes" ]]; then
-        export SOURCE_DIR=.;
+        ./bin/test_travis.sh
     else
         cd build;
-        export SOURCE_DIR=..;
+        ../bin/test_travis.sh
     fi;
-    $SOURCE_DIR/bin/test_travis.sh
 notifications:
   email: false
