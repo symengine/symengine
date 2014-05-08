@@ -36,7 +36,7 @@ using CSymPy::RCP;
 using CSymPy::rcp;
 using CSymPy::rcp_dynamic_cast;
 using CSymPy::print_stack_on_segfault;
-using CSymPy::isqrt;
+using CSymPy::sqrt;
 using CSymPy::rcp_static_cast;
 
 void test_sin()
@@ -407,8 +407,8 @@ void test_sin_table()
     RCP<const Basic> i3 = integer(3);
     RCP<const Basic> i12 = integer(12);
 
-    RCP<const Basic> sq3 = isqrt(*rcp_static_cast<const Integer>(i3));
-    RCP<const Basic> sq2 = isqrt(*rcp_static_cast<const Integer>(i2));
+    RCP<const Basic> sq3 = sqrt(i3);
+    RCP<const Basic> sq2 = sqrt(i2);
 
     // sin(2pi + pi/6) = 1/2
     r1 = sin(add(mul(pi, i2), mul(div(pi, i12), i2)));

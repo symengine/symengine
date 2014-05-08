@@ -13,9 +13,14 @@ namespace CSymPy {
 RCP<const Basic> i2 = rcp(new Integer(2));
 RCP<const Basic> i3 = rcp(new Integer(3));
 
+RCP<const Basic> sqrt(RCP<const Basic>& arg)
+{
+	return pow(arg, div(one, i2));
+}
+
 // TODO: Update to actual sqrt from integer sqrt.
-RCP<const Basic> sq3 = isqrt(*rcp_static_cast<const Integer>(i3));
-RCP<const Basic> sq2 = isqrt(*rcp_static_cast<const Integer>(i2));
+RCP<const Basic> sq3 = sqrt(i3);
+RCP<const Basic> sq2 = sqrt(i2);
 
 RCP<const Basic> C0 = div(sub(sq3, one), mul(i2, sq2));
 RCP<const Basic> C1 = div(one, i2);
