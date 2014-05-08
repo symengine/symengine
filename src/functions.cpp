@@ -18,7 +18,6 @@ RCP<const Basic> sqrt(RCP<const Basic>& arg)
 	return pow(arg, div(one, i2));
 }
 
-// TODO: Update to actual sqrt from integer sqrt.
 RCP<const Basic> sq3 = sqrt(i3);
 RCP<const Basic> sq2 = sqrt(i2);
 
