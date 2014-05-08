@@ -78,7 +78,7 @@ bool Sin::is_canonical(const RCP<const Basic> &arg)
     if (is_a<Integer>(*arg) &&
             rcp_static_cast<const Integer>(arg)->is_zero())
         return false;
-
+	// e.g sin(k*pi/12)
     RCP<const Integer> r;
     bool b = get_pi_shift(arg, r);
     if (b)
@@ -146,7 +146,11 @@ bool Cos::is_canonical(const RCP<const Basic> &arg)
     if (is_a<Integer>(*arg) &&
             rcp_static_cast<const Integer>(arg)->is_zero())
         return false;
-    // TODO: add things like cos(k*pi) etc.
+    // e.g cos(k*pi/12)
+    RCP<const Integer> r;
+    bool b = get_pi_shift(arg, r);
+    if (b)
+        return false;
     return true;
 }
 
@@ -182,7 +186,16 @@ std::string Cos::__str__() const
 RCP<const Basic> cos(const RCP<const Basic> &arg)
 {
     if (eq(arg, zero)) return one;
-    return rcp(new Cos(arg));
+    bool check;
+    RCP<const Integer> r;
+    check = get_pi_shift(arg, r);
+    if (check) {
+        int index;
+        index = r->as_int();
+        return sin_table[(index + 6) % 24];
+    }
+    else
+        return rcp(new Cos(arg));
 }
 
 /* ---------------------------- */
@@ -196,9 +209,13 @@ Tan::Tan(const RCP<const Basic> &arg)
 bool Tan::is_canonical(const RCP<const Basic> &arg)
 {
     // TODO: Add further checks for +inf -inf cases 
-    // and extend to tan(k*pi)
     if (is_a<Integer>(*arg) &&
             rcp_static_cast<const Integer>(arg)->is_zero())
+        return false;
+	// e.g tan(k*pi/12)
+    RCP<const Integer> r;
+    bool b = get_pi_shift(arg, r);
+    if (b)
         return false;
     return true;
 }
@@ -238,7 +255,16 @@ RCP<const Basic> tan(const RCP<const Basic> &arg)
 {
     // TODO: Add further checks for +inf -inf cases
     if (eq(arg, zero)) return zero;
-    return rcp(new Tan(arg));
+    bool check;
+    RCP<const Integer> r;
+    check = get_pi_shift(arg, r);
+    if (check) {
+        int index;
+        index = r->as_int();
+        return div(sin_table[index % 24], sin_table[(index + 6) % 24]);
+    }
+    else
+        return rcp(new Tan(arg));
 }
 
 /* ---------------------------- */
@@ -252,9 +278,13 @@ Cot::Cot(const RCP<const Basic> &arg)
 bool Cot::is_canonical(const RCP<const Basic> &arg)
 {
     // TODO: Add further checks for +inf -inf cases 
-    // and extend to cot(k*pi) 
     if (is_a<Integer>(*arg) &&
             rcp_static_cast<const Integer>(arg)->is_zero())
+        return false;
+    // e.g cot(k*pi/12)
+    RCP<const Integer> r;
+    bool b = get_pi_shift(arg, r);
+    if (b)
         return false;
     return true;
 }
@@ -293,7 +323,16 @@ std::string Cot::__str__() const
 RCP<const Basic> cot(const RCP<const Basic> &arg)
 {
     // TODO: Add further checks for +inf -inf cases
-    return rcp(new Cot(arg));
+    bool check;
+    RCP<const Integer> r;
+    check = get_pi_shift(arg, r);
+    if (check) {
+        int index;
+        index = r->as_int();
+        return div(sin_table[(index + 6) % 24], sin_table[index % 24]);
+    }
+    else
+       return rcp(new Cot(arg));
 }
 
 /* ---------------------------- */
@@ -310,8 +349,12 @@ bool Csc::is_canonical(const RCP<const Basic> &arg)
     if (is_a<Integer>(*arg) &&
             rcp_static_cast<const Integer>(arg)->is_zero())
         return false;
-    // TODO: add things like Csc(k*pi) etc.
     // Update for +inf/-inf constraints
+    // e.g csc(k*pi/12)
+    RCP<const Integer> r;
+    bool b = get_pi_shift(arg, r);
+    if (b)
+        return false;
     return true;
 }
 
@@ -346,7 +389,16 @@ std::string Csc::__str__() const
 
 RCP<const Basic> csc(const RCP<const Basic> &arg)
 {
-    return rcp(new Csc(arg));
+    bool check;
+    RCP<const Integer> r;
+    check = get_pi_shift(arg, r);
+    if (check) {
+        int index;
+        index = r->as_int();
+        return div(one, sin_table[index % 24]);
+    }
+    else
+		return rcp(new Csc(arg));
 }
 
 /* ---------------------------- */
@@ -363,8 +415,12 @@ bool Sec::is_canonical(const RCP<const Basic> &arg)
     if (is_a<Integer>(*arg) &&
             rcp_static_cast<const Integer>(arg)->is_zero())
         return false;
-    // TODO: add things like Sec(k*pi) etc.
-    // Update for +inf/-inf constraints
+    // TODO: Update for +inf/-inf constraints
+    // e.g sec(k*pi/12)
+    RCP<const Integer> r;
+    bool b = get_pi_shift(arg, r);
+    if (b)
+        return false;
     return true;
 }
 
@@ -399,6 +455,15 @@ std::string Sec::__str__() const
 RCP<const Basic> sec(const RCP<const Basic> &arg)
 {
     if (eq(arg, zero)) return one;
+    bool check;
+    RCP<const Integer> r;
+    check = get_pi_shift(arg, r);
+    if (check) {
+        int index;
+        index = r->as_int();
+        return div(one, sin_table[(index + 6) % 24]);
+    }
+    else
     return rcp(new Sec(arg));
 }
 
