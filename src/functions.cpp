@@ -75,16 +75,17 @@ bool test_shift(const RCP<const Basic> &arg,
         int size = s.dict_.size();
         if(size == 2) {
 			bool check_pi = false;
+			RCP<const Basic> temp;
 			for (auto &p: s.dict_) {
+				 temp = mul(p.second, integer(12));
 				if (is_a<Symbol>(*p.first) &&
-					eq(rcp_static_cast<const Symbol>(p.first), pi) &&
-					is_a<Integer>(*p.second)) {
+					eq(rcp_static_cast<const Symbol>(p.first), pi) 
+					&& is_a<Integer>(*temp)) {
 					check_pi = true;
-					n = rcp_dynamic_cast<const Integer>(coef);
+					n = rcp_dynamic_cast<const Integer>(temp);
 				}
 				else {
 					x = add( mul(p.first, p.second), coef);
-					std::cout<<"x is " << *x <<std::endl;
 				} 		
 			}
 			if (check_pi)
