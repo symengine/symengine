@@ -65,7 +65,75 @@ bool get_pi_shift(const RCP<const Basic> &arg,
     else
         return false;
 }
+bool test_shift(const RCP<const Basic> &arg,
+			  RCP<const Integer> &n,
+			  RCP<const Basic> &x)
+{
+	if (is_a<Add>(*arg)) {
+		const Add &s = static_cast<const Add &>(*arg);
+        RCP<const Basic> coef = s.coef_;
+        int size = s.dict_.size();
+        if(size == 2) {
+			bool check_pi = false;
+			for (auto &p: s.dict_) {
+				if (is_a<Symbol>(*p.first) &&
+					eq(rcp_static_cast<const Symbol>(p.first), pi) &&
+					is_a<Integer>(*p.second)) {
+					check_pi = true;
+					n = rcp_dynamic_cast<const Integer>(coef);
+				}
+				else {
+					x = add( mul(p.first, p.second), coef);
+					std::cout<<"x is " << *x <<std::endl;
+				} 		
+			}
+			if (check_pi)
+				return true;
+			else
+				return false;		
+		}
+		else if (size == 1) {
+			auto p = s.dict_.begin();
+			RCP<const Basic> temp = mul(p->second, integer(12));
+			if (is_a<Symbol>(*p->first) &&
+					eq(rcp_static_cast<const Symbol>(p->first), pi) &&
+					is_a<Integer>(*temp)) {
+				
+				n = rcp_dynamic_cast<const Integer>(temp);
+				x = coef;
+				return true;		
+			}
+			else 
+				return false;	
+		}
+		else
+			return false;
+	}
+	else if (is_a<Mul>(*arg)) {
+        
+        const Mul &s = static_cast<const Mul &>(*arg);
+        RCP<const Basic> coef = s.coef_;
+        coef = mul(coef, integer(12));
+        auto p = s.dict_.begin();
+        // dict should contain symbol `pi` only
+        // and coeff should be a multiple of 12
+        if (s.dict_.size() == 1 && is_a<Symbol>(*p->first) &&
+                eq(rcp_static_cast<const Symbol>(p->first), pi) &&
+                eq(rcp_static_cast<const Number>(p->second), one) &&
+                is_a<Integer>(*coef)) {
 
+            n = rcp_dynamic_cast<const Integer>(coef);
+            x = zero;
+            return true;    
+        }
+        else
+            return false;
+    }
+    
+    else
+        return false;
+	
+}
 Sin::Sin(const RCP<const Basic> &arg)
     : arg_{arg}
 {

@@ -22,7 +22,9 @@ bool get_pi_shift(const RCP<const Basic> &arg,
 
 //! \return `sqrt` of the `arg`
 RCP<const Basic> sqrt(const RCP<const Basic> &arg);
-
+bool test_shift(const RCP<const Basic> &arg,
+			  RCP<const Integer> &n,
+			  RCP<const Basic> &x);
 class Sin : public Function {
 private:
     RCP<const Basic> arg_; //! The `arg` in `sin(arg)`
