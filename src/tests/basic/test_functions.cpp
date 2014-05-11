@@ -38,7 +38,6 @@ using CSymPy::rcp_dynamic_cast;
 using CSymPy::print_stack_on_segfault;
 using CSymPy::sqrt;
 using CSymPy::rcp_static_cast;
-
 void test_sin()
 {
     RCP<const Symbol> x = symbol("x");
@@ -370,32 +369,94 @@ void test_Derivative()
 
 void test_get_pi_shift()
 {
-    RCP<const Basic> im1 = integer(-1);
-    RCP<const Basic> i2 = integer(2);
-
+	RCP<const Basic> r;
+	RCP<const Basic> r1;
+    RCP<const Integer> n;
     bool b;
-    RCP<const Basic> r;
-    RCP<const Integer> r1;
+    
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> i3 = integer(3);
+    RCP<const Basic> i12 = integer(12);
 
+    RCP<const Basic> sq3 = sqrt(i3);
+    RCP<const Basic> sq2 = sqrt(i2);
+    
+    RCP<const Symbol> x = symbol("x");
+    
+    // arg = k + n*pi
+    r = add(i3, mul(i2, pi));
+    b = get_pi_shift(r, n, r1);
+    assert(b == true);
+    assert(eq(n, integer(24)));
+    assert(eq(r1, i3)); 
+    
+    // arg = n*pi/12
     r = mul(pi, div(one, integer(12)));
-    get_pi_shift(r, r1);
-    assert(eq(r1, one));
-
+    get_pi_shift(r, n, r1);
+    assert(eq(n, one));
+    assert(eq(r1, zero)); 
+    
+    // arg = n*pi/12
     r = mul(pi, div(i2, integer(3)));
-    b = get_pi_shift(r, r1);
-    assert(eq(r1, integer(8)) && (b == true));
+    b = get_pi_shift(r, n, r1);
+    assert(eq(n, integer(8)) && (b == true) && eq(r1, zero));
 
+	// arg neq n*pi/12 , n not an integer
     r = mul(pi, div(i2, integer(5)));
-    b = get_pi_shift(r, r1);
+    b = get_pi_shift(r, n, r1);
     assert(b == false);
 
+	// arg neq theta + n*pi/12 (no pi symbol, pi as pow)
     r = mul(pow(pi, i2), div(i2, integer(3)));
-    b = get_pi_shift(r, r1);
+    b = get_pi_shift(r, n, r1);
     assert(b == false);
 
-    r = mul(mul(pi, symbol("s")), div(i2, integer(3)));
-    b = get_pi_shift(r, r1);
+	// arg neq theta + n*pi/12 (no pi symbol, pi as mul form)
+    r = mul(mul(pi, x), div(i2, integer(3)));
+    b = get_pi_shift(r, n, r1);
     assert(b == false);
+    
+    // arg = theta + n*pi/12 (theta is just another symbol)
+    r = add(mul(i2, x), mul(pi, div(i2, integer(3))));
+    b = get_pi_shift(r, n, r1);
+    assert(b == true); 
+    assert(eq(n, integer(8)));
+    assert(eq(r1, mul(i2, x)));
+
+    // arg = theta + n*pi/12 (theta is constant plus a symbol)
+    r = add(i2, add(x, mul(pi, div(i2, integer(3)))));
+    b = get_pi_shift(r, n, r1);
+    assert(b == true); 
+    assert(eq(n, integer(8)));
+    assert(eq(r1, add(i2, x)));
+    
+    // arg = theta + n*pi/12 (theta is an expression)
+    r = add(i2, add(mul(x, i2), mul(pi, div(i2, integer(3)))));
+    b = get_pi_shift(r, n, r1);
+    assert(b == true); 
+    assert(eq(n, integer(8)));
+    assert(eq(r1, add(i2, mul(x, i2))));
+   
+    // arg neq n*pi/12 (n is not integer)
+    r = mul(pi, div(i2, integer(5)));
+    b = get_pi_shift(r, n, r1);
+    assert(b == false);
+
+	// arg neq n*pi/12 (pi is not in form of symbol)
+    r = mul(pow(pi, i2), div(i2, integer(3)));
+    b = get_pi_shift(r, n, r1);
+    assert(b == false);
+    
+    // arg = pi (it is neither of form add nor mul, just a symbol)
+    b = get_pi_shift(pi, n, r1);
+    assert((b == true) && eq(n, integer(12)) && eq(r1, zero)) ;
+    
+    // arg = theta + n*pi/12 (theta is an expression of >1 symbols)
+    r = add(add(mul(i2, x), mul(i2, symbol("y"))), mul(pi, div(i2, integer(3))));
+    b = get_pi_shift(r, n, r1);
+    assert(b == true); 
+    assert(eq(n, integer(8)));
+    assert(eq(r1, add(mul(i2, x), mul(i2, symbol("y")))));
 }
 
 void test_sin_table()

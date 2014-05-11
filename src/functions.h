@@ -16,15 +16,16 @@ namespace CSymPy {
 class Function : public Basic {
 };
 
-//! \return `n` if `arg` is of form `n*pi/12`
+/*! \return `true` if `arg` is of form `theta + n*pi/12`
+ * `n` is the n in `n*pi/12`
+ * `x` is `theta`
+ * */
 bool get_pi_shift(const RCP<const Basic> &arg,
-     RCP<const Integer> &n);
+			  RCP<const Integer> &n,
+			  RCP<const Basic> &x);
 
 //! \return `sqrt` of the `arg`
 RCP<const Basic> sqrt(const RCP<const Basic> &arg);
-bool test_shift(const RCP<const Basic> &arg,
-			  RCP<const Integer> &n,
-			  RCP<const Basic> &x);
 class Sin : public Function {
 private:
     RCP<const Basic> arg_; //! The `arg` in `sin(arg)`
