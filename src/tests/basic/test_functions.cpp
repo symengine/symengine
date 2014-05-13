@@ -369,8 +369,8 @@ void test_Derivative()
 
 void test_get_pi_shift()
 {
-	RCP<const Basic> r;
-	RCP<const Basic> r1;
+    RCP<const Basic> r;
+    RCP<const Basic> r1;
     RCP<const Integer> n;
     bool b;
     

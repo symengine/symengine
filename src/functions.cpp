@@ -120,10 +120,18 @@ bool get_pi_shift(const RCP<const Basic> &arg,
 	else
 		return false;
 }
+
+std::size_t TrigFunction::__hash__() const
+{
+    std::size_t seed = 0;
+    hash_combine<Basic>(seed, *arg_);
+    return seed;
+}
+
 Sin::Sin(const RCP<const Basic> &arg)
-    : arg_{arg}
 {
     CSYMPY_ASSERT(is_canonical(arg))
+    set_arg(arg);
 }
 
 bool Sin::is_canonical(const RCP<const Basic> &arg)
@@ -142,13 +150,6 @@ bool Sin::is_canonical(const RCP<const Basic> &arg)
     return true;
 }
 
-std::size_t Sin::__hash__() const
-{
-    std::size_t seed = 0;
-    hash_combine<Basic>(seed, *arg_);
-    return seed;
-}
-
 bool Sin::__eq__(const Basic &o) const
 {
     if (is_a<Sin>(o) &&
@@ -163,7 +164,6 @@ int Sin::compare(const Basic &o) const
     const Sin &s = static_cast<const Sin &>(o);
     return arg_->__cmp__(s);
 }
-
 
 std::string Sin::__str__() const
 {
@@ -191,9 +191,9 @@ RCP<const Basic> sin(const RCP<const Basic> &arg)
 /* ---------------------------- */
 
 Cos::Cos(const RCP<const Basic> &arg)
-    : arg_{arg}
 {
     CSYMPY_ASSERT(is_canonical(arg))
+    set_arg(arg);
 }
 
 bool Cos::is_canonical(const RCP<const Basic> &arg)
@@ -209,13 +209,6 @@ bool Cos::is_canonical(const RCP<const Basic> &arg)
     if (b)
         return false;
     return true;
-}
-
-std::size_t Cos::__hash__() const
-{
-    std::size_t seed = 0;
-    hash_combine<Basic>(seed, *arg_);
-    return seed;
 }
 
 bool Cos::__eq__(const Basic &o) const
@@ -259,9 +252,9 @@ RCP<const Basic> cos(const RCP<const Basic> &arg)
 /* ---------------------------- */
 
 Tan::Tan(const RCP<const Basic> &arg)
-    : arg_{arg}
 {
     CSYMPY_ASSERT(is_canonical(arg))
+    set_arg(arg);
 }
 
 bool Tan::is_canonical(const RCP<const Basic> &arg)
@@ -277,13 +270,6 @@ bool Tan::is_canonical(const RCP<const Basic> &arg)
     if (b)
         return false;
     return true;
-}
-
-std::size_t Tan::__hash__() const
-{
-    std::size_t seed = 0;
-    hash_combine<Basic>(seed, *arg_);
-    return seed;
 }
 
 bool Tan::__eq__(const Basic &o) const
@@ -330,9 +316,9 @@ RCP<const Basic> tan(const RCP<const Basic> &arg)
 /* ---------------------------- */
 
 Cot::Cot(const RCP<const Basic> &arg)
-    : arg_{arg}
 {
     CSYMPY_ASSERT(is_canonical(arg))
+    set_arg(arg);
 }
 
 bool Cot::is_canonical(const RCP<const Basic> &arg)
@@ -348,13 +334,6 @@ bool Cot::is_canonical(const RCP<const Basic> &arg)
     if (b)
         return false;
     return true;
-}
-
-std::size_t Cot::__hash__() const
-{
-    std::size_t seed = 0;
-    hash_combine<Basic>(seed, *arg_);
-    return seed;
 }
 
 bool Cot::__eq__(const Basic &o) const
@@ -400,9 +379,9 @@ RCP<const Basic> cot(const RCP<const Basic> &arg)
 /* ---------------------------- */
 
 Csc::Csc(const RCP<const Basic> &arg)
-    : arg_{arg}
 {
     CSYMPY_ASSERT(is_canonical(arg))
+    set_arg(arg);
 }
 
 bool Csc::is_canonical(const RCP<const Basic> &arg)
@@ -419,13 +398,6 @@ bool Csc::is_canonical(const RCP<const Basic> &arg)
     if (b)
         return false;
     return true;
-}
-
-std::size_t Csc::__hash__() const
-{
-    std::size_t seed = 0;
-    hash_combine<Basic>(seed, *arg_);
-    return seed;
 }
 
 bool Csc::__eq__(const Basic &o) const
@@ -468,9 +440,9 @@ RCP<const Basic> csc(const RCP<const Basic> &arg)
 /* ---------------------------- */
 
 Sec::Sec(const RCP<const Basic> &arg)
-    : arg_{arg}
 {
     CSYMPY_ASSERT(is_canonical(arg))
+    set_arg(arg);
 }
 
 bool Sec::is_canonical(const RCP<const Basic> &arg)
@@ -487,13 +459,6 @@ bool Sec::is_canonical(const RCP<const Basic> &arg)
     if (b)
         return false;
     return true;
-}
-
-std::size_t Sec::__hash__() const
-{
-    std::size_t seed = 0;
-    hash_combine<Basic>(seed, *arg_);
-    return seed;
 }
 
 bool Sec::__eq__(const Basic &o) const

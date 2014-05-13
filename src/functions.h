@@ -16,6 +16,22 @@ namespace CSymPy {
 class Function : public Basic {
 };
 
+class TrigFunction : public Function {
+
+public:
+    RCP<const Basic> arg_; //! The `arg` in `trigclass(arg)`
+public:
+	//! \return `arg_`
+    inline RCP<const Basic> get_arg() const {
+        return arg_;
+    }
+    //! sets the argument
+    void set_arg(RCP<const Basic> arg) {
+		arg_ = arg;
+	}
+	//! \return Size of the hash
+    virtual std::size_t __hash__() const;
+};
 /*! \return `true` if `arg` is of form `theta + n*pi/12`
  * `n` is the n in `n*pi/12`
  * `x` is `theta`
@@ -26,31 +42,23 @@ bool get_pi_shift(const RCP<const Basic> &arg,
 
 //! \return `sqrt` of the `arg`
 RCP<const Basic> sqrt(const RCP<const Basic> &arg);
-class Sin : public Function {
-private:
-    RCP<const Basic> arg_; //! The `arg` in `sin(arg)`
+class Sin : public TrigFunction {
 
 public:
 	//! Sin Constructor
     Sin(const RCP<const Basic> &arg);
-    //! \return Size of the hash
-    virtual std::size_t __hash__() const;
     /*! Equality comparator
      * \param o - Object to be compared with
      * \return whether the 2 objects are equal
      * */
     virtual bool __eq__(const Basic &o) const;
     
-    virtual int compare(const Basic &o) const;
+    virtual int compare(const Basic &o) const; 
     //! \return stringify version
     virtual std::string __str__() const;
-    //! \return `arg_`
-    inline RCP<const Basic> get_arg() const {
-        return arg_;
-    }
-	//! \return `true` if canonical
+    //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &arg);
-	//! Differentiate w.r.t Symbol `x`
+    //! Differentiate w.r.t Symbol `x`
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
     //! Substitute with `subs_dict`
     virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
@@ -60,15 +68,11 @@ public:
 RCP<const Basic> sin(const RCP<const Basic> &arg);
 
 
-class Cos : public Function {
-private:
-    RCP<const Basic> arg_; //! The `arg` in `cos(arg)`
+class Cos : public TrigFunction {
 
 public:
 	//! Cos Constructor
     Cos(const RCP<const Basic> &arg);
-    //! \return Size of the hash
-    virtual std::size_t __hash__() const;
     /*! Equality comparator
      * \param o  Object to be compared with
      * \return whether the 2 objects are equal
@@ -77,10 +81,6 @@ public:
     virtual int compare(const Basic &o) const;
     //! \return stringify version
     virtual std::string __str__() const;
-    //! \return `arg_`
-    inline RCP<const Basic> get_arg() const {
-        return arg_;
-    }
 	//! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &arg);
 	//! Differentiate w.r.t Symbol `x`
@@ -92,15 +92,11 @@ public:
 //! Canonicalize Cos:
 RCP<const Basic> cos(const RCP<const Basic> &arg);
 
-class Tan : public Function {
-private:
-    RCP<const Basic> arg_; //! The `arg` in `tan(arg)`
+class Tan : public TrigFunction {
 
 public:
     //! Tan Constructor
     Tan(const RCP<const Basic> &arg);
-    //! \return Size of the hash
-    virtual std::size_t __hash__() const;
     /*! Equality comparator
      * \param o - Object to be compared with
      * \return whether the 2 objects are equal
@@ -110,10 +106,6 @@ public:
     virtual int compare(const Basic &o) const;
     //! \return stringify version
     virtual std::string __str__() const;
-    //! \return `arg_`
-    inline RCP<const Basic> get_arg() const {
-        return arg_;
-    }
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &arg);
     //! Differentiate w.r.t Symbol `x`
@@ -124,15 +116,11 @@ public:
 //! Canonicalize Tan:
 RCP<const Basic> tan(const RCP<const Basic> &arg);
 
-class Cot : public Function {
-private:
-    RCP<const Basic> arg_; //! The `arg` in `cot(arg)`
+class Cot : public TrigFunction {
 
 public:
     //! Cot Constructor
     Cot(const RCP<const Basic> &arg);
-    //! \return Size of the hash
-    virtual std::size_t __hash__() const;
     /*! Equality comparator
      * \param o - Object to be compared with
      * \return whether the 2 objects are equal
@@ -142,10 +130,6 @@ public:
     virtual int compare(const Basic &o) const;
     //! \return stringify version
     virtual std::string __str__() const;
-    //! \return `arg_`
-    inline RCP<const Basic> get_arg() const {
-        return arg_;
-    }
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &arg);
     //! Differentiate w.r.t Symbol `x`
@@ -156,15 +140,11 @@ public:
 //! Canonicalize Cot:
 RCP<const Basic> cot(const RCP<const Basic> &arg);
 
-class Csc: public Function {
-private:
-    RCP<const Basic> arg_; //! The `arg` in `Csc(arg)`
+class Csc: public TrigFunction {
 
 public:
     //! Csc Constructor
     Csc(const RCP<const Basic> &arg);
-    //! \return Size of the hash
-    virtual std::size_t __hash__() const;
     /*! Equality comparator
      * \param o - Object to be compared with
      * \return whether the 2 objects are equal
@@ -174,10 +154,6 @@ public:
     virtual int compare(const Basic &o) const;
     //! \return stringify version
     virtual std::string __str__() const;
-    //! \return `arg_`
-    inline RCP<const Basic> get_arg() const {
-        return arg_;
-    }
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &arg);
     //! Differentiate w.r.t Symbol `x`
@@ -188,15 +164,11 @@ public:
 //! Canonicalize Csc:
 RCP<const Basic> csc(const RCP<const Basic> &arg);
 
-class Sec: public Function {
-private:
-    RCP<const Basic> arg_; //! The `arg` in `sec(arg)`
+class Sec: public TrigFunction {
 
 public:
     //! Sec Constructor
     Sec(const RCP<const Basic> &arg);
-    //! \return Size of the hash
-    virtual std::size_t __hash__() const;
     /*! Equality comparator
      * \param o - Object to be compared with
      * \return whether the 2 objects are equal
@@ -206,10 +178,6 @@ public:
     virtual int compare(const Basic &o) const;
     //! \return stringify version
     virtual std::string __str__() const;
-    //! \return `arg_`
-    inline RCP<const Basic> get_arg() const {
-        return arg_;
-    }
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &arg);
     //! Differentiate w.r.t Symbol `x`
@@ -243,11 +211,7 @@ public:
     inline std::string get_name() const {
         return name_;
     }
-    //! \return `arg_`
-    inline RCP<const Basic> get_arg() const {
-        return arg_;
-    }
-	//! \return `true` if canonical
+    //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &arg);
 	//! Differentiate w.r.t Symbol `x`
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
