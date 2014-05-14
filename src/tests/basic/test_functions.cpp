@@ -371,12 +371,13 @@ void test_get_pi_shift()
 {
     RCP<const Basic> r;
     RCP<const Basic> r1;
-    int n;
+    RCP<const Integer> n;
     bool b;
     
     RCP<const Basic> i2 = integer(2);
     RCP<const Basic> i3 = integer(3);
     RCP<const Basic> i12 = integer(12);
+    RCP<const Basic> i8 = integer(8);
 
     RCP<const Basic> sq3 = sqrt(i3);
     RCP<const Basic> sq2 = sqrt(i2);
@@ -385,77 +386,77 @@ void test_get_pi_shift()
     
     // arg = k + n*pi
     r = add(i3, mul(i2, pi));
-    b = get_pi_shift(r, n, outArg(r1));
+    b = get_pi_shift(r, outArg(n), outArg(r1));
     assert(b == true);
-    assert(n == 24);
+    assert(eq(n, integer(24)));
     assert(eq(r1, i3)); 
     
     // arg = n*pi/12
     r = mul(pi, div(one, integer(12)));
-    get_pi_shift(r, n, outArg(r1));
-    assert(n == 1);
+    get_pi_shift(r, outArg(n), outArg(r1));
+    assert(eq(n, one));
     assert(eq(r1, zero)); 
     
     // arg = n*pi/12
     r = mul(pi, div(i2, integer(3)));
-    b = get_pi_shift(r, n, outArg(r1));
-    assert((n == 8) && (b == true) && eq(r1, zero));
+    b = get_pi_shift(r, outArg(n), outArg(r1));
+    assert(eq(n, i8) && (b == true) && eq(r1, zero));
 
 	// arg neq n*pi/12 , n not an integer
     r = mul(pi, div(i2, integer(5)));
-    b = get_pi_shift(r, n, outArg(r1));
+    b = get_pi_shift(r, outArg(n), outArg(r1));
     assert(b == false);
 
 	// arg neq theta + n*pi/12 (no pi symbol, pi as pow)
     r = mul(pow(pi, i2), div(i2, integer(3)));
-    b = get_pi_shift(r, n, outArg(r1));
+    b = get_pi_shift(r, outArg(n), outArg(r1));
     assert(b == false);
 
 	// arg neq theta + n*pi/12 (no pi symbol, pi as mul form)
     r = mul(mul(pi, x), div(i2, integer(3)));
-    b = get_pi_shift(r, n, outArg(r1));
+    b = get_pi_shift(r, outArg(n), outArg(r1));
     assert(b == false);
     
     // arg = theta + n*pi/12 (theta is just another symbol)
     r = add(mul(i2, x), mul(pi, div(i2, integer(3))));
-    b = get_pi_shift(r, n, outArg(r1));
+    b = get_pi_shift(r, outArg(n), outArg(r1));
     assert(b == true); 
-    assert(n == 8);
+    assert(eq(n, i8));
     assert(eq(r1, mul(i2, x)));
 
     // arg = theta + n*pi/12 (theta is constant plus a symbol)
     r = add(i2, add(x, mul(pi, div(i2, integer(3)))));
-    b = get_pi_shift(r, n, outArg(r1));
+    b = get_pi_shift(r, outArg(n), outArg(r1));
     assert(b == true); 
-    assert(n == 8);
+    assert(eq(n, i8));
     assert(eq(r1, add(i2, x)));
     
     // arg = theta + n*pi/12 (theta is an expression)
     r = add(i2, add(mul(x, i2), mul(pi, div(i2, integer(3)))));
-    b = get_pi_shift(r, n, outArg(r1));
+    b = get_pi_shift(r, outArg(n), outArg(r1));
     assert(b == true); 
-    assert(n == 8);
+    assert(eq(n, i8));
     assert(eq(r1, add(i2, mul(x, i2))));
    
     // arg neq n*pi/12 (n is not integer)
     r = mul(pi, div(i2, integer(5)));
-    b = get_pi_shift(r, n, outArg(r1));
+    b = get_pi_shift(r, outArg(n), outArg(r1));
     assert(b == false);
 
 	// arg neq n*pi/12 (pi is not in form of symbol)
     r = mul(pow(pi, i2), div(i2, integer(3)));
-    b = get_pi_shift(r, n, outArg(r1));
+    b = get_pi_shift(r, outArg(n), outArg(r1));
     assert(b == false);
     
     // arg = pi (it is neither of form add nor mul, just a symbol)
-    b = get_pi_shift(pi, n, outArg(r1));
-    assert((b == true) && (n == 12) && eq(r1, zero)) ;
+    b = get_pi_shift(pi, outArg(n), outArg(r1));
+    assert((b == true) && eq(n, i12) && eq(r1, zero)) ;
     
     // arg = theta + n*pi/12 (theta is an expression of >1 symbols)
     r = add(add(mul(i2, x), mul(i2, symbol("y"))), mul(pi, div(i2, integer(3))));
-    b = get_pi_shift(r, n, outArg(r1));
+    b = get_pi_shift(r, outArg(n), outArg(r1));
     assert(b == true); 
-    assert(n == 8);
+    assert(eq(n, i8));
     assert(eq(r1, add(mul(i2, x), mul(i2, symbol("y")))));
 }
 

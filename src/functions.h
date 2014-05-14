@@ -26,7 +26,7 @@ public:
         return arg_;
     }
     //! sets the argument
-    void set_arg(RCP<const Basic> arg) {
+    void set_arg(const RCP<const Basic>& arg) {
 		arg_ = arg;
 	}
 	//! \return Size of the hash
@@ -38,7 +38,7 @@ public:
  * `x` is `theta`
  * */
 bool get_pi_shift(const RCP<const Basic> &arg,
-			  int &n,
+			  const Ptr<RCP<const Integer>> &n,
 			  const Ptr<RCP<const Basic>> &x);
 
 //! \return `sqrt` of the `arg`

@@ -40,7 +40,7 @@ RCP<const Basic> sin_table[] = {
     };
 
 bool get_pi_shift(const RCP<const Basic> &arg,
-			  int &n,
+			  const Ptr<RCP<const Integer>> &n,
 			  const Ptr<RCP<const Basic>> &x)
 {
 	if (is_a<Add>(*arg)) {
@@ -60,7 +60,7 @@ bool get_pi_shift(const RCP<const Basic> &arg,
 					eq(rcp_static_cast<const Symbol>(p.first), pi) 
 					&& is_a<Integer>(*temp)) {
 					check_pi = true;
-					n = (rcp_dynamic_cast<const Integer>(temp))->as_int();
+					*n = rcp_dynamic_cast<const Integer>(temp);
 				}
 				else {
 					*x = add( mul(p.first, p.second), *x);
@@ -80,7 +80,7 @@ bool get_pi_shift(const RCP<const Basic> &arg,
 					eq(rcp_static_cast<const Symbol>(p->first), pi) &&
 					is_a<Integer>(*temp)) {
 				
-				n = (rcp_dynamic_cast<const Integer>(temp))->as_int();
+				*n = rcp_dynamic_cast<const Integer>(temp);
 				*x = coef;
 				return true;		
 			}
@@ -104,7 +104,7 @@ bool get_pi_shift(const RCP<const Basic> &arg,
                 eq(rcp_static_cast<const Number>(p->second), one) &&
                 is_a<Integer>(*coef)) {
 
-            n = (rcp_dynamic_cast<const Integer>(coef))->as_int();
+            *n = rcp_dynamic_cast<const Integer>(coef);
             *x = zero;
             return true;    
         }
@@ -113,7 +113,7 @@ bool get_pi_shift(const RCP<const Basic> &arg,
     }
     else if (is_a<Symbol>(*arg) &&
 			eq(rcp_static_cast<const Symbol>(arg), pi)) {
-		n = 12;
+		*n = integer(12);
 		*x = zero;
 		return true;
 	}
@@ -141,9 +141,9 @@ bool Sin::is_canonical(const RCP<const Basic> &arg)
             rcp_static_cast<const Integer>(arg)->is_zero())
         return false;
 	// e.g sin(k*pi/12)
-    int index;
+    RCP<const Integer> n;
     RCP<const Basic> r;
-    bool b = get_pi_shift(arg, index, outArg(r));
+    bool b = get_pi_shift(arg, outArg(n), outArg(r));
     if (b)
         return false;
 
@@ -176,10 +176,12 @@ RCP<const Basic> sin(const RCP<const Basic> &arg)
 {
     if (eq(arg, zero)) return zero;
     bool check;
-    int index;
+    RCP<const Integer> n;
     RCP<const Basic> r;
-    check = get_pi_shift(arg, index, outArg(r));
+    check = get_pi_shift(arg, outArg(n), outArg(r));
     if (check) {
+        int index;
+        index = n->as_int();
         return sin_table[index % 24];
     }
     else
@@ -201,9 +203,9 @@ bool Cos::is_canonical(const RCP<const Basic> &arg)
             rcp_static_cast<const Integer>(arg)->is_zero())
         return false;
     // e.g cos(k*pi/12)
-    int index;
+    RCP<const Integer> n;
     RCP<const Basic> r;
-    bool b = get_pi_shift(arg, index, outArg(r));
+    bool b = get_pi_shift(arg, outArg(n), outArg(r));
     if (b)
         return false;
     return true;
@@ -235,10 +237,12 @@ RCP<const Basic> cos(const RCP<const Basic> &arg)
 {
     if (eq(arg, zero)) return one;
     bool check;
-    int index;
+    RCP<const Integer> n;
     RCP<const Basic> r;
-    check = get_pi_shift(arg, index, outArg(r));
+    check = get_pi_shift(arg, outArg(n), outArg(r));
     if (check) {
+        int index;
+        index = n->as_int();
         return sin_table[(index + 6) % 24];
     }
     else
@@ -260,9 +264,9 @@ bool Tan::is_canonical(const RCP<const Basic> &arg)
             rcp_static_cast<const Integer>(arg)->is_zero())
         return false;
 	// e.g tan(k*pi/12)
-    int index;
+    RCP<const Integer> n;
     RCP<const Basic> r;
-    bool b = get_pi_shift(arg, index, outArg(r));
+    bool b = get_pi_shift(arg, outArg(n), outArg(r));
     if (b)
         return false;
     return true;
@@ -297,10 +301,12 @@ RCP<const Basic> tan(const RCP<const Basic> &arg)
     // TODO: Add further checks for +inf -inf cases
     if (eq(arg, zero)) return zero;
     bool check;
-    int index;
+    RCP<const Integer> n;
     RCP<const Basic> r;
-    check = get_pi_shift(arg, index, outArg(r));
+    check = get_pi_shift(arg, outArg(n), outArg(r));
     if (check) {
+        int index;
+        index = n->as_int();
         return div(sin_table[index % 24], sin_table[(index + 6) % 24]);
     }
     else
@@ -322,9 +328,9 @@ bool Cot::is_canonical(const RCP<const Basic> &arg)
             rcp_static_cast<const Integer>(arg)->is_zero())
         return false;
     // e.g cot(k*pi/12)
-    int index;
+    RCP<const Integer> n;
     RCP<const Basic> r;
-    bool b = get_pi_shift(arg, index, outArg(r));
+    bool b = get_pi_shift(arg, outArg(n), outArg(r));
     if (b)
         return false;
     return true;
@@ -358,10 +364,12 @@ RCP<const Basic> cot(const RCP<const Basic> &arg)
 {
     // TODO: Add further checks for +inf -inf cases
     bool check;
-    int index;
+    RCP<const Integer> n;
     RCP<const Basic> r;
-    check = get_pi_shift(arg, index, outArg(r));
+    check = get_pi_shift(arg, outArg(n), outArg(r));
     if (check) {
+        int index;
+        index = n->as_int();
         return div(sin_table[(index + 6) % 24], sin_table[index % 24]);
     }
     else
@@ -384,9 +392,9 @@ bool Csc::is_canonical(const RCP<const Basic> &arg)
         return false;
     // Update for +inf/-inf constraints
     // e.g csc(k*pi/12)
-    int index;
+    RCP<const Integer> n;
     RCP<const Basic> r;
-    bool b = get_pi_shift(arg, index, outArg(r));
+    bool b = get_pi_shift(arg, outArg(n), outArg(r));
     if (b)
         return false;
     return true;
@@ -417,10 +425,12 @@ std::string Csc::__str__() const
 RCP<const Basic> csc(const RCP<const Basic> &arg)
 {
     bool check;
-    int index;
+    RCP<const Integer> n;
     RCP<const Basic> r;
-    check = get_pi_shift(arg, index, outArg(r));
+    check = get_pi_shift(arg, outArg(n), outArg(r));
     if (check) {
+        int index;
+        index = n->as_int();
         return div(one, sin_table[index % 24]);
     }
     else
@@ -443,9 +453,9 @@ bool Sec::is_canonical(const RCP<const Basic> &arg)
         return false;
     // TODO: Update for +inf/-inf constraints
     // e.g sec(k*pi/12)
-    int index;
+    RCP<const Integer> n;
     RCP<const Basic> r;
-    bool b = get_pi_shift(arg, index, outArg(r));
+    bool b = get_pi_shift(arg, outArg(n), outArg(r));
     if (b)
         return false;
     return true;
@@ -476,10 +486,12 @@ RCP<const Basic> sec(const RCP<const Basic> &arg)
 {
     if (eq(arg, zero)) return one;
     bool check;
-    int index;
+    RCP<const Integer> n;
     RCP<const Basic> r;
-    check = get_pi_shift(arg, index, outArg(r));
+    check = get_pi_shift(arg, outArg(n), outArg(r));
     if (check) {
+        int index;
+        index = n->as_int();
         return div(one, sin_table[(index + 6) % 24]);
     }
     else
