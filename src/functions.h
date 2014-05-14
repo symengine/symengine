@@ -212,6 +212,10 @@ public:
     inline std::string get_name() const {
         return name_;
     }
+    //! \return `arg_`
+    inline RCP<const Basic> get_arg() const {
+        return arg_;
+    }
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &arg);
 	//! Differentiate w.r.t Symbol `x`
