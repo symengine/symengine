@@ -58,6 +58,7 @@ void test_sin()
 
     r1 = sin(zero);
     r2 = zero;
+    std::cout << *r1 << std::endl;
     assert(eq(r1, r2));
 
     r1 = sin(x)->diff(x);

@@ -206,8 +206,9 @@ bool eval(const RCP<const Basic> &arg, int period, bool odd, //input
         }
     }
     else {
-        *rarg = r;
+        *rarg = arg;
         index = -1;
+        sign = 1;
         return false;
     }
         
@@ -265,20 +266,33 @@ std::string Sin::__str__() const
     return o.str();
 }
 
-RCP<const Basic> sin(const RCP<const Basic> &arg)
+RCP<const Basic> sin(const RCP<const Basic> &arg) 
 {
     if (eq(arg, zero)) return zero;
-    bool check;
-    RCP<const Integer> n;
-    RCP<const Basic> r;
-    check = get_pi_shift(arg, outArg(n), outArg(r));
-    if (check) {
-        int index;
-        index = n->as_int();
-        return sin_table[index % 24];
+    RCP<const Basic> ret_arg;
+    int index;
+    int sign;
+    bool conjugate =  eval(arg, 2, 1, //input 
+                      outArg(ret_arg), index, sign); //output
+    
+    if (conjugate) {
+        // cos has to be returned
+        if (sign == 1)
+            return rcp(new Cos(ret_arg));
+        else
+            return mul(minus_one, rcp(new Cos(ret_arg)));
     }
-    else
-        return rcp(new Sin(arg));
+    else {
+        if (eq(ret_arg, zero)) {
+            return mul(integer(sign), sin_table[index]);
+        }
+        else {
+            if (sign == 1) 
+                return rcp(new Sin(ret_arg));
+            else
+                return mul(minus_one, rcp(new Sin(ret_arg)));
+        }
+    }
 }
 
 /* ---------------------------- */
