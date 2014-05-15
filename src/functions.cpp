@@ -121,6 +121,99 @@ bool get_pi_shift(const RCP<const Basic> &arg,
 		return false;
 }
 
+bool could_extract_minus(const RCP<const Basic> &arg)
+{
+    if (is_a<Mul>(*arg)) {
+        const Mul &s = static_cast<const Mul &>(*arg);
+        RCP<const Basic> coef = s.coef_;
+        if (is_a<Integer>(*coef) &&
+              rcp_static_cast<const Integer>(coef)->is_negative())
+            return true;
+        
+        else if (is_a<Rational>(*coef) &&
+              rcp_static_cast<const Rational>(coef)->is_negative())
+            return true;
+        
+        else
+            return false;
+    }
+    else if (is_a<Add>(*arg)) {
+        const Add &s = static_cast<const Add &>(*arg);
+        for (auto &p: s.dict_) {
+            if (is_a<Integer>(*p.second)) {
+                if (!(rcp_static_cast<const Integer>(p.second)->is_negative()))
+                    return false;
+            }
+            else if (is_a<Rational>(*p.second)) {
+                if (!(rcp_static_cast<const Rational>(p.second)->is_negative()))
+                    return false;
+            }
+        
+            else
+                return false;   
+        }
+        return true;
+
+    }
+    else
+        return false;
+}
+
+RCP<const Basic> handle_minus(const RCP<const Basic> &arg, bool odd)
+{
+    if (could_extract_minus(arg))
+        return mul(minus_one, arg);
+    else
+        return arg;
+}
+
+// \return true of conjugate has to be returned finally else false
+bool eval(const RCP<const Basic> &arg, int period, bool odd, //input 
+                      const Ptr<RCP<const Basic>>& rarg,int& index, int& sign) //output
+{
+    bool check;
+    RCP<const Integer> n;
+    RCP<const Basic> r;
+    check = get_pi_shift(arg, outArg(n), outArg(r));
+    if (check) {
+        int m = n->as_int();
+        m = m % (12*period);
+        sign = 1;
+        if (eq(r, zero)) {
+            index = m;
+            *rarg = zero;
+            return false; 
+        }
+        else if ((m % (12*period)) == 0) {
+            index = 0;
+            *rarg = handle_minus(r, odd);
+            if (!odd) 
+                sign = -1;
+            return false;
+        }
+        else if ((m % 6) == 0) {
+            if (m == 6)
+                sign = 1;
+            else
+                sign = -1;
+            *rarg = r;
+            return true;
+        }
+        else {
+            *rarg = r;
+            index = -1;
+            return false;
+        }
+    }
+    else {
+        *rarg = r;
+        index = -1;
+        return false;
+    }
+        
+}
+
+
 std::size_t TrigFunction::__hash__() const
 {
     std::size_t seed = 0;

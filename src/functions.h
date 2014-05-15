@@ -41,6 +41,13 @@ bool get_pi_shift(const RCP<const Basic> &arg,
 			  const Ptr<RCP<const Integer>> &n,
 			  const Ptr<RCP<const Basic>> &x);
 
+//! \return `true` if `arg` contains a negative sign.
+bool could_extract_minus(const RCP<const Basic> &arg);
+
+RCP<const Basic> handle_minus(const RCP<const Basic> &arg, 
+                                    bool odd);
+
+
 //! \return `sqrt` of the `arg`
 RCP<const Basic> sqrt(const RCP<const Basic> &arg);
 class Sin : public TrigFunction {

@@ -512,6 +512,42 @@ void test_sin_table()
 
 }
 
+void test_could_extract_minus()
+{
+    RCP<const Basic> x = rcp(new Symbol("x"));
+    RCP<const Basic> y = rcp(new Symbol("y"));
+    
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> im1 = integer(-1);
+    RCP<const Basic> r;
+    bool b;
+
+    r = add(mul(im1, x), mul(im1, mul(i2, y)));
+    b = could_extract_minus(r);
+    assert(b == true); 
+
+    r = add(mul(im1, x), mul(i2, y));
+    b = could_extract_minus(r);
+    assert(b == false); 
+
+    r = mul(mul(x,integer(-10)), y);
+    b = could_extract_minus(r);
+    assert(b == true); 
+
+    r = mul(mul(x,i2), y);
+    b = could_extract_minus(r);
+    assert(b == false);  
+
+    r = add(mul(im1, x), mul(im1, div(mul(i2, y), integer(3))));
+    b = could_extract_minus(r);
+    assert(b == true);    
+
+    r = mul(div(x,i2), y);
+    b = could_extract_minus(r);
+    assert(b == false);  
+
+}
+
 int main(int argc, char* argv[])
 {
     print_stack_on_segfault();    
@@ -525,6 +561,7 @@ int main(int argc, char* argv[])
     test_Derivative();
     test_get_pi_shift();
     test_sin_table();
+    test_could_extract_minus();
 
     return 0;
 }
