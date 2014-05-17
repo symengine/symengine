@@ -47,6 +47,9 @@ bool could_extract_minus(const RCP<const Basic> &arg);
 bool handle_minus(const RCP<const Basic> &arg,
             const Ptr<RCP<const Basic>> &rarg);
 
+// \return true of conjugate has to be returned finally else false
+bool eval(const RCP<const Basic> &arg, int period, bool odd, bool conj_odd, //input 
+            const Ptr<RCP<const Basic>>& rarg,int& index, int& sign); //output
 
 //! \return `sqrt` of the `arg`
 RCP<const Basic> sqrt(const RCP<const Basic> &arg);

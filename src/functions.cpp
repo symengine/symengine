@@ -173,8 +173,8 @@ bool handle_minus(const RCP<const Basic> &arg,
 }
 
 // \return true of conjugate has to be returned finally else false
-bool eval(const RCP<const Basic> &arg, int period, bool odd, //input 
-                      const Ptr<RCP<const Basic>>& rarg,int& index, int& sign) //output
+bool eval(const RCP<const Basic> &arg, int period, bool odd, bool conj_odd, //input 
+            const Ptr<RCP<const Basic>>& rarg,int& index, int& sign) //output
 {
     bool check;
     RCP<const Integer> n;
@@ -212,7 +212,10 @@ bool eval(const RCP<const Basic> &arg, int period, bool odd, //input
                 sign = 1;
             else
                 sign = -1;
-            *rarg = r;
+            bool b = handle_minus(r, outArg(ret_arg));
+            *rarg = ret_arg;
+            if (!b && conj_odd)
+                sign = -sign;
             return true;
         }
         else {
@@ -292,17 +295,15 @@ RCP<const Basic> sin(const RCP<const Basic> &arg)
     RCP<const Basic> ret_arg;
     int index;
     int sign;
-    bool conjugate =  eval(arg, 2, 1, //input 
+    bool conjugate =  eval(arg, 2, 1, 0, //input 
                       outArg(ret_arg), index, sign); //output
     
     if (conjugate) {
         // cos has to be returned
-        RCP<const Basic> r_arg;
-        bool b = handle_minus(ret_arg, outArg(r_arg));
         if (sign == 1) 
-            return rcp(new Cos(r_arg));
+            return rcp(new Cos(ret_arg));
         else
-            return mul(minus_one, rcp(new Cos(r_arg)));
+            return mul(minus_one, rcp(new Cos(ret_arg)));
     }
     else {
         if (eq(ret_arg, zero)) {
@@ -362,20 +363,33 @@ std::string Cos::__str__() const
     return o.str();
 }
 
-RCP<const Basic> cos(const RCP<const Basic> &arg)
+RCP<const Basic> cos(const RCP<const Basic> &arg) 
 {
     if (eq(arg, zero)) return one;
-    bool check;
-    RCP<const Integer> n;
-    RCP<const Basic> r;
-    check = get_pi_shift(arg, outArg(n), outArg(r));
-    if (check) {
-        int index;
-        index = n->as_int();
-        return sin_table[(index + 6) % 24];
+    RCP<const Basic> ret_arg;
+    int index;
+    int sign;
+    bool conjugate =  eval(arg, 2, 0, 1, //input 
+                      outArg(ret_arg), index, sign); //output
+    
+    if (conjugate) {
+        // cos has to be returned
+        if (sign == 1) 
+            return rcp(new Sin(ret_arg));
+        else
+            return mul(minus_one, rcp(new Sin(ret_arg)));
     }
-    else
-        return rcp(new Cos(arg));
+    else {
+        if (eq(ret_arg, zero)) {
+            return mul(integer(sign), sin_table[(index + 6) % 24]);
+        }
+        else {
+            if (sign == 1) 
+                return rcp(new Cos(ret_arg));
+            else
+                return mul(minus_one, rcp(new Cos(ret_arg)));
+        }
+    }
 }
 
 /* ---------------------------- */
@@ -425,21 +439,34 @@ std::string Tan::__str__() const
     return o.str();
 }
 
-RCP<const Basic> tan(const RCP<const Basic> &arg)
+RCP<const Basic> tan(const RCP<const Basic> &arg) 
 {
-    // TODO: Add further checks for +inf -inf cases
     if (eq(arg, zero)) return zero;
-    bool check;
-    RCP<const Integer> n;
-    RCP<const Basic> r;
-    check = get_pi_shift(arg, outArg(n), outArg(r));
-    if (check) {
-        int index;
-        index = n->as_int();
-        return div(sin_table[index % 24], sin_table[(index + 6) % 24]);
+    RCP<const Basic> ret_arg;
+    int index;
+    int sign;
+    bool conjugate =  eval(arg, 1, 1, 1, //input 
+                      outArg(ret_arg), index, sign); //output
+    
+    if (conjugate) {
+        // cos has to be returned
+        if (sign == 1) 
+            return rcp(new Cot(ret_arg));
+        else
+            return mul(minus_one, rcp(new Cot(ret_arg)));
     }
-    else
-        return rcp(new Tan(arg));
+    else {
+        if (eq(ret_arg, zero)) {
+            return mul(integer(sign), 
+                   div(sin_table[index], sin_table[(index + 6) % 24]));
+        }
+        else {
+            if (sign == 1) 
+                return rcp(new Tan(ret_arg));
+            else
+                return mul(minus_one, rcp(new Tan(ret_arg)));
+        }
+    }
 }
 
 /* ---------------------------- */

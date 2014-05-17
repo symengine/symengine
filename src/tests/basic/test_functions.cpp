@@ -144,7 +144,6 @@ void test_sin()
 
     // sin(12*pi - y + pi/2) = cos(y)
     r1 = sin(add(sub(mul(i12, pi), y), div(pi, i2)));
-    std::cout << *r1 << std::endl;
     r2 = cos(y);
     assert(eq(r1, r2));
 }
@@ -156,6 +155,8 @@ void test_cos()
     RCP<const Symbol> z = symbol("z");
     RCP<const Basic> im1 = integer(-1);
     RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> i3 = integer(3);
+    RCP<const Basic> i12 = integer(12);
 
     RCP<const Basic> r1;
     RCP<const Basic> r2;
@@ -176,6 +177,56 @@ void test_cos()
     std::cout << *r1 << std::endl;
     std::cout << *r2 << std::endl;
     assert(eq(r1, r2));
+
+    // cos(-y) = cos(y)
+    r1 = cos(mul(im1, y));
+    r2 = cos(y);
+    assert(eq(r1, r2));
+
+    // cos(pi - y) = -cos(y)
+    r1 = cos(sub(pi, y));
+    r2 = mul(im1, cos(y));
+    assert(eq(r1, r2));
+
+    // cos(pi + y) = -cos(y)
+    r1 = cos(add(pi, y));
+    r2 = mul(im1, cos(y));
+    assert(eq(r1, r2));
+
+    // cos(2*pi - y) = cos(y)
+    r1 = cos(sub(mul(i2, pi), y));
+    r2 = cos(y);
+    assert(eq(r1, r2));
+
+    // cos(12*pi + y) = cos(y)
+    r1 = cos(add(mul(i12, pi), y));
+    r2 = cos(y);
+    assert(eq(r1, r2));
+
+    // cos(3*pi - y) = -cos(y)
+    r1 = cos(sub(mul(i3, pi), y));
+    r2 = mul(im1, cos(y));
+    assert(eq(r1, r2));
+
+    // cos(pi/2 + y) = -sin(y)
+    r1 = cos(add(div(pi, i2), y));
+    r2 = mul(im1, sin(y));
+    assert(eq(r1, r2));
+
+    // cos(pi/2 - y) = sin(y)
+    r1 = cos(sub(div(pi, i2), y));
+    r2 = sin(y);
+    assert(eq(r1, r2));
+
+    // cos(12*pi + y + pi/2) = -sin(y)
+    r1 = cos(add(add(mul(i12, pi), y), div(pi, i2)));
+    r2 = mul(im1, sin(y));
+    assert(eq(r1, r2));
+
+    // cos(12*pi - y + pi/2) = sin(y)
+    r1 = cos(add(sub(mul(i12, pi), y), div(pi, i2)));
+    r2 = sin(y);
+    assert(eq(r1, r2));
 }
 
 void test_tan()
@@ -186,6 +237,9 @@ void test_tan()
     RCP<const Basic> im1 = integer(-1);
     RCP<const Basic> i2 = integer(2);
     RCP<const Basic> i1 = integer(1);
+    RCP<const Basic> i3 = integer(3);
+    RCP<const Basic> i12 = integer(12);
+
 
     RCP<const Basic> r1;
     RCP<const Basic> r2;
@@ -215,6 +269,56 @@ void test_tan()
     r2 = add(tan(x), mul(x, add(pow(tan(x), i2), i1)));
     std::cout << *r1 << std::endl;
     std::cout << *r2 << std::endl;
+    assert(eq(r1, r2));
+
+    // tan(-y) = -tan(y)
+    r1 = tan(mul(im1, y));
+    r2 = mul(im1, tan(y));
+    assert(eq(r1, r2));
+
+    // tan(pi - y) = -tan(y)
+    r1 = tan(sub(pi, y));
+    r2 = mul(im1, tan(y));
+    assert(eq(r1, r2));
+
+    // tan(pi + y) = -tan(y)
+    r1 = tan(add(pi, y));
+    r2 = tan(y);
+    assert(eq(r1, r2));
+
+    // tan(2*pi - y) = -tan(y)
+    r1 = tan(sub(mul(i2, pi), y));
+    r2 = mul(im1, tan(y));
+    assert(eq(r1, r2));
+
+    // tan(12*pi + y) = tan(y)
+    r1 = tan(add(mul(i12, pi), y));
+    r2 = tan(y);
+    assert(eq(r1, r2));
+
+    // tan(3*pi - y) = -tan(y)
+    r1 = tan(sub(mul(i3, pi), y));
+    r2 = mul(im1, tan(y));
+    assert(eq(r1, r2));
+
+    // tan(pi/2 + y) = -cot(y)
+    r1 = tan(add(div(pi, i2), y));
+    r2 = mul(im1, cot(y));
+    assert(eq(r1, r2));
+
+    // tan(pi/2 - y) = cot(y)
+    r1 = tan(sub(div(pi, i2), y));
+    r2 = cot(y);
+    assert(eq(r1, r2));
+
+    // tan(12*pi + y + pi/2) = -cot(y)
+    r1 = tan(add(add(mul(i12, pi), y), div(pi, i2)));
+    r2 = mul(im1, cot(y));
+    assert(eq(r1, r2));
+
+    // tan(12*pi - y + pi/2) = cot(y)
+    r1 = tan(add(sub(mul(i12, pi), y), div(pi, i2)));
+    r2 = cot(y);
     assert(eq(r1, r2));
 
 }
