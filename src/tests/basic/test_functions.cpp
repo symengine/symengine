@@ -34,17 +34,19 @@ using CSymPy::Derivative;
 using CSymPy::pi;
 using CSymPy::RCP;
 using CSymPy::rcp;
-using CSymPy::rcp_dynamic_cast;
 using CSymPy::print_stack_on_segfault;
 using CSymPy::sqrt;
-using CSymPy::rcp_static_cast;
+
 void test_sin()
 {
     RCP<const Symbol> x = symbol("x");
     RCP<const Symbol> y = symbol("y");
     RCP<const Symbol> z = symbol("z");
+
     RCP<const Basic> im1 = integer(-1);
     RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> i3 = integer(3);
+    RCP<const Basic> i12 = integer(12);
 
     RCP<const Basic> r1;
     RCP<const Basic> r2;
@@ -93,6 +95,57 @@ void test_sin()
     r2 = sub(pow(cos(x), i2), pow(sin(x), i2));
     std::cout << *r1 << std::endl;
     std::cout << *r2 << std::endl;
+    assert(eq(r1, r2));
+
+    // sin(-y) = -sin(y)
+    r1 = sin(mul(im1, y));
+    r2 = mul(im1, sin(y));
+    assert(eq(r1, r2));
+
+    // sin(pi - y) = sin(y)
+    r1 = sin(sub(pi, y));
+    r2 = sin(y);
+    assert(eq(r1, r2));
+
+    // sin(pi + y) = -sin(y)
+    r1 = sin(add(pi, y));
+    r2 = mul(im1, sin(y));
+    assert(eq(r1, r2));
+
+    // sin(2*pi - y) = -sin(y)
+    r1 = sin(sub(mul(i2, pi), y));
+    r2 = mul(im1, sin(y));
+    assert(eq(r1, r2));
+
+    // sin(12*pi + y) = sin(y)
+    r1 = sin(add(mul(i12, pi), y));
+    r2 = sin(y);
+    assert(eq(r1, r2));
+
+    // sin(3*pi - y) = sin(y)
+    r1 = sin(sub(mul(i3, pi), y));
+    r2 = sin(y);
+    assert(eq(r1, r2));
+
+    // sin(pi/2 + y) = cos(y)
+    r1 = sin(add(div(pi, i2), y));
+    r2 = cos(y);
+    assert(eq(r1, r2));
+
+    // sin(pi/2 - y) = cos(y)
+    r1 = sin(sub(div(pi, i2), y));
+    r2 = cos(y);
+    assert(eq(r1, r2));
+
+    // sin(12*pi + y + pi/2) = cos(y)
+    r1 = sin(add(add(mul(i12, pi), y), div(pi, i2)));
+    r2 = cos(y);
+    assert(eq(r1, r2));
+
+    // sin(12*pi - y + pi/2) = cos(y)
+    r1 = sin(add(sub(mul(i12, pi), y), div(pi, i2)));
+    std::cout << *r1 << std::endl;
+    r2 = cos(y);
     assert(eq(r1, r2));
 }
 
@@ -469,6 +522,10 @@ void test_sin_table()
     RCP<const Basic> i2 = integer(2);
     RCP<const Basic> i3 = integer(3);
     RCP<const Basic> i12 = integer(12);
+    RCP<const Basic> im1 = integer(-1);
+
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
 
     RCP<const Basic> sq3 = sqrt(i3);
     RCP<const Basic> sq2 = sqrt(i2);

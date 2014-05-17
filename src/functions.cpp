@@ -159,12 +159,17 @@ bool could_extract_minus(const RCP<const Basic> &arg)
         return false;
 }
 
-RCP<const Basic> handle_minus(const RCP<const Basic> &arg, bool odd)
+bool handle_minus(const RCP<const Basic> &arg, 
+                const Ptr<RCP<const Basic>> &rarg)
 {
-    if (could_extract_minus(arg))
-        return mul(minus_one, arg);
-    else
-        return arg;
+    if (could_extract_minus(arg)) {
+        *rarg = mul(minus_one, arg);
+        return true; 
+    }
+    else {
+        *rarg = arg;
+        return false;
+    }
 }
 
 // \return true of conjugate has to be returned finally else false
@@ -174,6 +179,7 @@ bool eval(const RCP<const Basic> &arg, int period, bool odd, //input
     bool check;
     RCP<const Integer> n;
     RCP<const Basic> r;
+    RCP<const Basic> ret_arg;
     check = get_pi_shift(arg, outArg(n), outArg(r));
     if (check) {
         int m = n->as_int();
@@ -186,10 +192,20 @@ bool eval(const RCP<const Basic> &arg, int period, bool odd, //input
         }
         else if ((m % (12*period)) == 0) {
             index = 0;
-            *rarg = handle_minus(r, odd);
-            if (!odd) 
+            bool b = handle_minus(r, outArg(ret_arg));
+            *rarg = ret_arg;
+            if (odd && b) 
                 sign = -1;
             return false;
+        }
+        else if ((m % 12) == 0) {
+            sign = -1;
+            bool b = handle_minus(r, outArg(ret_arg));
+            *rarg = ret_arg;
+            if (odd && b) 
+                sign = -1*sign;
+            return false;
+
         }
         else if ((m % 6) == 0) {
             if (m == 6)
@@ -206,9 +222,13 @@ bool eval(const RCP<const Basic> &arg, int period, bool odd, //input
         }
     }
     else {
-        *rarg = arg;
+        bool b = handle_minus(arg, outArg(ret_arg));
+        *rarg = ret_arg;
         index = -1;
-        sign = 1;
+        if (odd && b) 
+            sign = -1;
+        else
+            sign = 1;
         return false;
     }
         
@@ -277,10 +297,12 @@ RCP<const Basic> sin(const RCP<const Basic> &arg)
     
     if (conjugate) {
         // cos has to be returned
-        if (sign == 1)
-            return rcp(new Cos(ret_arg));
+        RCP<const Basic> r_arg;
+        bool b = handle_minus(ret_arg, outArg(r_arg));
+        if (sign == 1) 
+            return rcp(new Cos(r_arg));
         else
-            return mul(minus_one, rcp(new Cos(ret_arg)));
+            return mul(minus_one, rcp(new Cos(r_arg)));
     }
     else {
         if (eq(ret_arg, zero)) {
