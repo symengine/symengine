@@ -31,18 +31,22 @@ using CSymPy::csc;
 using CSymPy::sec;
 using CSymPy::function_symbol;
 using CSymPy::Derivative;
+using CSymPy::pi;
 using CSymPy::RCP;
 using CSymPy::rcp;
-using CSymPy::rcp_dynamic_cast;
 using CSymPy::print_stack_on_segfault;
+using CSymPy::sqrt;
 
 void test_sin()
 {
     RCP<const Symbol> x = symbol("x");
     RCP<const Symbol> y = symbol("y");
     RCP<const Symbol> z = symbol("z");
+
     RCP<const Basic> im1 = integer(-1);
     RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> i3 = integer(3);
+    RCP<const Basic> i12 = integer(12);
 
     RCP<const Basic> r1;
     RCP<const Basic> r2;
@@ -56,6 +60,7 @@ void test_sin()
 
     r1 = sin(zero);
     r2 = zero;
+    std::cout << *r1 << std::endl;
     assert(eq(r1, r2));
 
     r1 = sin(x)->diff(x);
@@ -91,6 +96,56 @@ void test_sin()
     std::cout << *r1 << std::endl;
     std::cout << *r2 << std::endl;
     assert(eq(r1, r2));
+
+    // sin(-y) = -sin(y)
+    r1 = sin(mul(im1, y));
+    r2 = mul(im1, sin(y));
+    assert(eq(r1, r2));
+
+    // sin(pi - y) = sin(y)
+    r1 = sin(sub(pi, y));
+    r2 = sin(y);
+    assert(eq(r1, r2));
+
+    // sin(pi + y) = -sin(y)
+    r1 = sin(add(pi, y));
+    r2 = mul(im1, sin(y));
+    assert(eq(r1, r2));
+
+    // sin(2*pi - y) = -sin(y)
+    r1 = sin(sub(mul(i2, pi), y));
+    r2 = mul(im1, sin(y));
+    assert(eq(r1, r2));
+
+    // sin(12*pi + y) = sin(y)
+    r1 = sin(add(mul(i12, pi), y));
+    r2 = sin(y);
+    assert(eq(r1, r2));
+
+    // sin(3*pi - y) = sin(y)
+    r1 = sin(sub(mul(i3, pi), y));
+    r2 = sin(y);
+    assert(eq(r1, r2));
+
+    // sin(pi/2 + y) = cos(y)
+    r1 = sin(add(div(pi, i2), y));
+    r2 = cos(y);
+    assert(eq(r1, r2));
+
+    // sin(pi/2 - y) = cos(y)
+    r1 = sin(sub(div(pi, i2), y));
+    r2 = cos(y);
+    assert(eq(r1, r2));
+
+    // sin(12*pi + y + pi/2) = cos(y)
+    r1 = sin(add(add(mul(i12, pi), y), div(pi, i2)));
+    r2 = cos(y);
+    assert(eq(r1, r2));
+
+    // sin(12*pi - y + pi/2) = cos(y)
+    r1 = sin(add(sub(mul(i12, pi), y), div(pi, i2)));
+    r2 = cos(y);
+    assert(eq(r1, r2));
 }
 
 void test_cos()
@@ -100,6 +155,8 @@ void test_cos()
     RCP<const Symbol> z = symbol("z");
     RCP<const Basic> im1 = integer(-1);
     RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> i3 = integer(3);
+    RCP<const Basic> i12 = integer(12);
 
     RCP<const Basic> r1;
     RCP<const Basic> r2;
@@ -120,6 +177,56 @@ void test_cos()
     std::cout << *r1 << std::endl;
     std::cout << *r2 << std::endl;
     assert(eq(r1, r2));
+
+    // cos(-y) = cos(y)
+    r1 = cos(mul(im1, y));
+    r2 = cos(y);
+    assert(eq(r1, r2));
+
+    // cos(pi - y) = -cos(y)
+    r1 = cos(sub(pi, y));
+    r2 = mul(im1, cos(y));
+    assert(eq(r1, r2));
+
+    // cos(pi + y) = -cos(y)
+    r1 = cos(add(pi, y));
+    r2 = mul(im1, cos(y));
+    assert(eq(r1, r2));
+
+    // cos(2*pi - y) = cos(y)
+    r1 = cos(sub(mul(i2, pi), y));
+    r2 = cos(y);
+    assert(eq(r1, r2));
+
+    // cos(12*pi + y) = cos(y)
+    r1 = cos(add(mul(i12, pi), y));
+    r2 = cos(y);
+    assert(eq(r1, r2));
+
+    // cos(3*pi - y) = -cos(y)
+    r1 = cos(sub(mul(i3, pi), y));
+    r2 = mul(im1, cos(y));
+    assert(eq(r1, r2));
+
+    // cos(pi/2 + y) = -sin(y)
+    r1 = cos(add(div(pi, i2), y));
+    r2 = mul(im1, sin(y));
+    assert(eq(r1, r2));
+
+    // cos(pi/2 - y) = sin(y)
+    r1 = cos(sub(div(pi, i2), y));
+    r2 = sin(y);
+    assert(eq(r1, r2));
+
+    // cos(12*pi + y + pi/2) = -sin(y)
+    r1 = cos(add(add(mul(i12, pi), y), div(pi, i2)));
+    r2 = mul(im1, sin(y));
+    assert(eq(r1, r2));
+
+    // cos(12*pi - y + pi/2) = sin(y)
+    r1 = cos(add(sub(mul(i12, pi), y), div(pi, i2)));
+    r2 = sin(y);
+    assert(eq(r1, r2));
 }
 
 void test_tan()
@@ -130,6 +237,9 @@ void test_tan()
     RCP<const Basic> im1 = integer(-1);
     RCP<const Basic> i2 = integer(2);
     RCP<const Basic> i1 = integer(1);
+    RCP<const Basic> i3 = integer(3);
+    RCP<const Basic> i12 = integer(12);
+
 
     RCP<const Basic> r1;
     RCP<const Basic> r2;
@@ -161,6 +271,56 @@ void test_tan()
     std::cout << *r2 << std::endl;
     assert(eq(r1, r2));
 
+    // tan(-y) = -tan(y)
+    r1 = tan(mul(im1, y));
+    r2 = mul(im1, tan(y));
+    assert(eq(r1, r2));
+
+    // tan(pi - y) = -tan(y)
+    r1 = tan(sub(pi, y));
+    r2 = mul(im1, tan(y));
+    assert(eq(r1, r2));
+
+    // tan(pi + y) = -tan(y)
+    r1 = tan(add(pi, y));
+    r2 = tan(y);
+    assert(eq(r1, r2));
+
+    // tan(2*pi - y) = -tan(y)
+    r1 = tan(sub(mul(i2, pi), y));
+    r2 = mul(im1, tan(y));
+    assert(eq(r1, r2));
+
+    // tan(12*pi + y) = tan(y)
+    r1 = tan(add(mul(i12, pi), y));
+    r2 = tan(y);
+    assert(eq(r1, r2));
+
+    // tan(3*pi - y) = -tan(y)
+    r1 = tan(sub(mul(i3, pi), y));
+    r2 = mul(im1, tan(y));
+    assert(eq(r1, r2));
+
+    // tan(pi/2 + y) = -cot(y)
+    r1 = tan(add(div(pi, i2), y));
+    r2 = mul(im1, cot(y));
+    assert(eq(r1, r2));
+
+    // tan(pi/2 - y) = cot(y)
+    r1 = tan(sub(div(pi, i2), y));
+    r2 = cot(y);
+    assert(eq(r1, r2));
+
+    // tan(12*pi + y + pi/2) = -cot(y)
+    r1 = tan(add(add(mul(i12, pi), y), div(pi, i2)));
+    r2 = mul(im1, cot(y));
+    assert(eq(r1, r2));
+
+    // tan(12*pi - y + pi/2) = cot(y)
+    r1 = tan(add(sub(mul(i12, pi), y), div(pi, i2)));
+    r2 = cot(y);
+    assert(eq(r1, r2));
+
 }
 
 void test_cot()
@@ -171,6 +331,8 @@ void test_cot()
     RCP<const Basic> im1 = integer(-1);
     RCP<const Basic> i2 = integer(2);
     RCP<const Basic> i1 = integer(1);
+    RCP<const Basic> i3 = integer(3);
+    RCP<const Basic> i12 = integer(12);
 
     RCP<const Basic> r1;
     RCP<const Basic> r2;
@@ -200,6 +362,57 @@ void test_cot()
     std::cout << *r2 << std::endl;
     assert(eq(r1, r2));
 
+    // cot(-y) = -cot(y)
+    r1 = cot(mul(im1, y));
+    r2 = mul(im1, cot(y));
+    assert(eq(r1, r2));
+
+    // cot(pi - y) = -cot(y)
+    r1 = cot(sub(pi, y));
+    r2 = mul(im1, cot(y));
+    assert(eq(r1, r2));
+
+    // cot(pi + y) = -cot(y)
+    r1 = cot(add(pi, y));
+    r2 = cot(y);
+    assert(eq(r1, r2));
+
+    // cot(2*pi - y) = -cot(y)
+    r1 = cot(sub(mul(i2, pi), y));
+    r2 = mul(im1, cot(y));
+    assert(eq(r1, r2));
+
+    // cot(12*pi + y) = cot(y)
+    r1 = cot(add(mul(i12, pi), y));
+    r2 = cot(y);
+    assert(eq(r1, r2));
+
+    // cot(3*pi - y) = -cot(y)
+    r1 = cot(sub(mul(i3, pi), y));
+    r2 = mul(im1, cot(y));
+    assert(eq(r1, r2));
+
+    // cot(pi/2 + y) = -tan(y)
+    r1 = cot(add(div(pi, i2), y));
+    r2 = mul(im1, tan(y));
+    assert(eq(r1, r2));
+
+    // cot(pi/2 - y) = cot(y)
+    r1 = cot(sub(div(pi, i2), y));
+    r2 = tan(y);
+    assert(eq(r1, r2));
+
+    // cot(12*pi + y + pi/2) = -tan(y)
+    r1 = cot(add(add(mul(i12, pi), y), div(pi, i2)));
+    r2 = mul(im1, tan(y));
+    assert(eq(r1, r2));
+
+    // cot(12*pi - y + pi/2) = tan(y)
+    r1 = cot(add(sub(mul(i12, pi), y), div(pi, i2)));
+    r2 = tan(y);
+    assert(eq(r1, r2));
+
+
 }
 
 void test_csc()
@@ -210,6 +423,8 @@ void test_csc()
     RCP<const Basic> im1 = integer(-1);
     RCP<const Basic> i2 = integer(2);
     RCP<const Basic> i1 = integer(1);
+    RCP<const Basic> i3 = integer(3);
+    RCP<const Basic> i12 = integer(12);
 
     RCP<const Basic> r1;
     RCP<const Basic> r2;
@@ -239,6 +454,56 @@ void test_csc()
     std::cout << *r2 << std::endl;
     assert(eq(r1, r2));
 
+    // csc(-y) = -csc(y)
+    r1 = csc(mul(im1, y));
+    r2 = mul(im1, csc(y));
+    assert(eq(r1, r2));
+
+    // csc(pi - y) = csc(y)
+    r1 = csc(sub(pi, y));
+    r2 = csc(y);
+    assert(eq(r1, r2));
+
+    // csc(pi + y) = -csc(y)
+    r1 = csc(add(pi, y));
+    r2 = mul(im1, csc(y));
+    assert(eq(r1, r2));
+
+    // csc(2*pi - y) = -csc(y)
+    r1 = csc(sub(mul(i2, pi), y));
+    r2 = mul(im1, csc(y));
+    assert(eq(r1, r2));
+
+    // csc(12*pi + y) = csc(y)
+    r1 = csc(add(mul(i12, pi), y));
+    r2 = csc(y);
+    assert(eq(r1, r2));
+
+    // csc(3*pi - y) = csc(y)
+    r1 = csc(sub(mul(i3, pi), y));
+    r2 = csc(y);
+    assert(eq(r1, r2));
+
+    // csc(pi/2 + y) = sec(y)
+    r1 = csc(add(div(pi, i2), y));
+    r2 = sec(y);
+    assert(eq(r1, r2));
+
+    // csc(pi/2 - y) = sec(y)
+    r1 = csc(sub(div(pi, i2), y));
+    r2 = sec(y);
+    assert(eq(r1, r2));
+
+    // csc(12*pi + y + pi/2) = sec(y)
+    r1 = csc(add(add(mul(i12, pi), y), div(pi, i2)));
+    r2 = sec(y);
+    assert(eq(r1, r2));
+
+    // csc(12*pi - y + pi/2) = sec(y)
+    r1 = csc(add(sub(mul(i12, pi), y), div(pi, i2)));
+    r2 = sec(y);
+    assert(eq(r1, r2));
+
 }
 
 void test_sec()
@@ -249,6 +514,8 @@ void test_sec()
     RCP<const Basic> im1 = integer(-1);
     RCP<const Basic> i2 = integer(2);
     RCP<const Basic> i1 = integer(1);
+    RCP<const Basic> i3 = integer(3);
+    RCP<const Basic> i12 = integer(12);
 
     RCP<const Basic> r1;
     RCP<const Basic> r2;
@@ -278,6 +545,55 @@ void test_sec()
     std::cout << *r2 << std::endl;
     assert(eq(r1, r2));
 
+    // sec(-y) = sec(y)
+    r1 = sec(mul(im1, y));
+    r2 = sec(y);
+    assert(eq(r1, r2));
+
+    // sec(pi - y) = -sec(y)
+    r1 = sec(sub(pi, y));
+    r2 = mul(im1, sec(y));
+    assert(eq(r1, r2));
+
+    // sec(pi + y) = -sec(y)
+    r1 = sec(add(pi, y));
+    r2 = mul(im1, sec(y));
+    assert(eq(r1, r2));
+
+    // sec(2*pi - y) = sec(y)
+    r1 = sec(sub(mul(i2, pi), y));
+    r2 = sec(y);
+    assert(eq(r1, r2));
+
+    // sec(12*pi + y) = sec(y)
+    r1 = sec(add(mul(i12, pi), y));
+    r2 = sec(y);
+    assert(eq(r1, r2));
+
+    // sec(3*pi - y) = -sec(y)
+    r1 = sec(sub(mul(i3, pi), y));
+    r2 = mul(im1, sec(y));
+    assert(eq(r1, r2));
+
+    // sec(pi/2 + y) = -csc(y)
+    r1 = sec(add(div(pi, i2), y));
+    r2 = mul(im1, csc(y));
+    assert(eq(r1, r2));
+
+    // sec(pi/2 - y) = csc(y)
+    r1 = sec(sub(div(pi, i2), y));
+    r2 = csc(y);
+    assert(eq(r1, r2));
+
+    // sec(12*pi + y + pi/2) = -csc(y)
+    r1 = sec(add(add(mul(i12, pi), y), div(pi, i2)));
+    r2 = mul(im1, csc(y));
+    assert(eq(r1, r2));
+
+    // sec(12*pi - y + pi/2) = csc(y)
+    r1 = sec(add(sub(mul(i12, pi), y), div(pi, i2)));
+    r2 = csc(y);
+    assert(eq(r1, r2));
 }
 
 void test_f()
@@ -365,10 +681,194 @@ void test_Derivative()
     assert(!(r4->is_canonical(x, {pow(x, integer(2))})));
 }
 
+void test_get_pi_shift()
+{
+    RCP<const Basic> r;
+    RCP<const Basic> r1;
+    RCP<const Integer> n;
+    bool b;
+    
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> i3 = integer(3);
+    RCP<const Basic> i12 = integer(12);
+    RCP<const Basic> i8 = integer(8);
+
+    RCP<const Basic> sq3 = sqrt(i3);
+    RCP<const Basic> sq2 = sqrt(i2);
+    
+    RCP<const Symbol> x = symbol("x");
+    
+    // arg = k + n*pi
+    r = add(i3, mul(i2, pi));
+    b = get_pi_shift(r, outArg(n), outArg(r1));
+    assert(b == true);
+    assert(eq(n, integer(24)));
+    assert(eq(r1, i3)); 
+    
+    // arg = n*pi/12
+    r = mul(pi, div(one, integer(12)));
+    get_pi_shift(r, outArg(n), outArg(r1));
+    assert(eq(n, one));
+    assert(eq(r1, zero)); 
+    
+    // arg = n*pi/12
+    r = mul(pi, div(i2, integer(3)));
+    b = get_pi_shift(r, outArg(n), outArg(r1));
+    assert(eq(n, i8) && (b == true) && eq(r1, zero));
+
+	// arg neq n*pi/12 , n not an integer
+    r = mul(pi, div(i2, integer(5)));
+    b = get_pi_shift(r, outArg(n), outArg(r1));
+    assert(b == false);
+
+	// arg neq theta + n*pi/12 (no pi symbol, pi as pow)
+    r = mul(pow(pi, i2), div(i2, integer(3)));
+    b = get_pi_shift(r, outArg(n), outArg(r1));
+    assert(b == false);
+
+	// arg neq theta + n*pi/12 (no pi symbol, pi as mul form)
+    r = mul(mul(pi, x), div(i2, integer(3)));
+    b = get_pi_shift(r, outArg(n), outArg(r1));
+    assert(b == false);
+    
+    // arg = theta + n*pi/12 (theta is just another symbol)
+    r = add(mul(i2, x), mul(pi, div(i2, integer(3))));
+    b = get_pi_shift(r, outArg(n), outArg(r1));
+    assert(b == true); 
+    assert(eq(n, i8));
+    assert(eq(r1, mul(i2, x)));
+
+    // arg = theta + n*pi/12 (theta is constant plus a symbol)
+    r = add(i2, add(x, mul(pi, div(i2, integer(3)))));
+    b = get_pi_shift(r, outArg(n), outArg(r1));
+    assert(b == true); 
+    assert(eq(n, i8));
+    assert(eq(r1, add(i2, x)));
+    
+    // arg = theta + n*pi/12 (theta is an expression)
+    r = add(i2, add(mul(x, i2), mul(pi, div(i2, integer(3)))));
+    b = get_pi_shift(r, outArg(n), outArg(r1));
+    assert(b == true); 
+    assert(eq(n, i8));
+    assert(eq(r1, add(i2, mul(x, i2))));
+   
+    // arg neq n*pi/12 (n is not integer)
+    r = mul(pi, div(i2, integer(5)));
+    b = get_pi_shift(r, outArg(n), outArg(r1));
+    assert(b == false);
+
+	// arg neq n*pi/12 (pi is not in form of symbol)
+    r = mul(pow(pi, i2), div(i2, integer(3)));
+    b = get_pi_shift(r, outArg(n), outArg(r1));
+    assert(b == false);
+    
+    // arg = pi (it is neither of form add nor mul, just a symbol)
+    b = get_pi_shift(pi, outArg(n), outArg(r1));
+    assert((b == true) && eq(n, i12) && eq(r1, zero)) ;
+    
+    // arg = theta + n*pi/12 (theta is an expression of >1 symbols)
+    r = add(add(mul(i2, x), mul(i2, symbol("y"))), mul(pi, div(i2, integer(3))));
+    b = get_pi_shift(r, outArg(n), outArg(r1));
+    assert(b == true); 
+    assert(eq(n, i8));
+    assert(eq(r1, add(mul(i2, x), mul(i2, symbol("y")))));
+}
+
+void test_sin_table()
+{
+    RCP<const Basic> r1;
+    RCP<const Basic> r2;
+
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> i3 = integer(3);
+    RCP<const Basic> i12 = integer(12);
+    RCP<const Basic> im1 = integer(-1);
+
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+
+    RCP<const Basic> sq3 = sqrt(i3);
+    RCP<const Basic> sq2 = sqrt(i2);
+
+    // sin(2pi + pi/6) = 1/2
+    r1 = sin(add(mul(pi, i2), mul(div(pi, i12), i2)));
+    r2 = div(one, i2);
+    assert(eq(r1, r2));
+
+    // sin(n*pi + pi/6) = 1/2
+    r1 = sin(add(mul(pi, integer(10)), mul(div(pi, i12), i2)));
+    r2 = div(one, i2);
+    assert(eq(r1, r2));
+
+    // sin(n*pi) = 0
+    r1 = sin(mul(pi, i12));
+    assert(eq(r1, zero));
+
+    // sin(2pi + pi/2) = 1
+    r1 = sin(add(mul(pi, i2), div(pi, i2)));
+    assert(eq(r1, one));
+
+    // sin(pi/3) = sqrt(3)/2
+    r1 = sin(div(pi, integer(3)));
+    r2 = div(sq3, i2);
+    assert(eq(r1, r2));
+
+    // sin(pi/4) = 1/sqrt(2)
+    r1 = sin(div(pi, integer(4)));
+    r2 = div(sq2, i2);
+    assert(eq(r1, r2));
+
+    // sin(pi/12) = (sqrt(3) - 1)/(2*sqrt(2))
+    r1 = sin(div(pi, i12));
+    r2 = div(sub(sq3, one), mul(i2, sq2));
+    assert(eq(r1, r2));
+
+    // sin(5*pi/12) = (sqrt(3) + 1)/(2*sqrt(2))
+    r1 = sin(mul(div(pi, i12), integer(5)));
+    r2 = div(add(sq3, one), mul(i2, sq2));
+    assert(eq(r1, r2));
+
+}
+
+void test_could_extract_minus()
+{
+    RCP<const Basic> x = rcp(new Symbol("x"));
+    RCP<const Basic> y = rcp(new Symbol("y"));
+    
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> im1 = integer(-1);
+    RCP<const Basic> r;
+    bool b;
+
+    r = add(mul(im1, x), mul(im1, mul(i2, y)));
+    b = could_extract_minus(r);
+    assert(b == true); 
+
+    r = add(mul(im1, x), mul(i2, y));
+    b = could_extract_minus(r);
+    assert(b == false); 
+
+    r = mul(mul(x, integer(-10)), y);
+    b = could_extract_minus(r);
+    assert(b == true); 
+
+    r = mul(mul(x, i2), y);
+    b = could_extract_minus(r);
+    assert(b == false);  
+
+    r = add(mul(im1, x), mul(im1, div(mul(i2, y), integer(3))));
+    b = could_extract_minus(r);
+    assert(b == true);    
+
+    r = mul(div(x, i2), y);
+    b = could_extract_minus(r);
+    assert(b == false);  
+
+}
+
 int main(int argc, char* argv[])
 {
-    print_stack_on_segfault();
-
+    print_stack_on_segfault();    
     test_sin();
     test_cos();
     test_tan();
@@ -377,6 +877,9 @@ int main(int argc, char* argv[])
     test_sec();
     test_f();
     test_Derivative();
+    test_get_pi_shift();
+    test_sin_table();
+    test_could_extract_minus();
 
     return 0;
 }

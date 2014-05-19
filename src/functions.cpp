@@ -10,10 +10,245 @@
 
 namespace CSymPy {
 
+RCP<const Basic> i2 = rcp(new Integer(2));
+RCP<const Basic> i3 = rcp(new Integer(3));
+
+RCP<const Basic> sqrt(RCP<const Basic>& arg)
+{
+	return pow(arg, div(one, i2));
+}
+
+RCP<const Basic> sq3 = sqrt(i3);
+RCP<const Basic> sq2 = sqrt(i2);
+
+RCP<const Basic> C0 = div(sub(sq3, one), mul(i2, sq2));
+RCP<const Basic> C1 = div(one, i2);
+RCP<const Basic> C2 = div(sq2, i2);
+RCP<const Basic> C3 = div(sq3, i2);
+RCP<const Basic> C4 = div(add(sq3, one), mul(i2, sq2));
+
+RCP<const Basic> mC0 = mul(minus_one, C0);
+RCP<const Basic> mC1 = mul(minus_one, C1);
+RCP<const Basic> mC2 = mul(minus_one, C2);
+RCP<const Basic> mC3 = mul(minus_one, C3);
+RCP<const Basic> mC4 = mul(minus_one, C4);
+
+// sin_table[n] represents the value of sin(2*pi*n/24) for n = 0..23
+RCP<const Basic> sin_table[] = {
+        zero, C0, C1, C2, C3, C4, one, C4, C3, C2, C1, C0,
+        zero, mC0, mC1, mC2, mC3, mC4, minus_one, mC4, mC3, mC2, mC1, mC0
+    };
+
+bool get_pi_shift(const RCP<const Basic> &arg,
+			  const Ptr<RCP<const Integer>> &n,
+			  const Ptr<RCP<const Basic>> &x)
+{
+	if (is_a<Add>(*arg)) {
+		const Add &s = static_cast<const Add &>(*arg);
+        RCP<const Basic> coef = s.coef_;
+        int size = s.dict_.size();
+        if(size > 1) {
+			// arg should be of form `theta + n*pi/12`
+			// `n` is an integer
+			// `theta` is an `Expression`
+			bool check_pi = false;
+			RCP<const Basic> temp;
+			*x = coef;
+			for (auto &p: s.dict_) {
+				temp = mul(p.second, integer(12));
+				if (is_a<Symbol>(*p.first) &&
+					eq(rcp_static_cast<const Symbol>(p.first), pi) 
+					&& is_a<Integer>(*temp)) {
+					check_pi = true;
+					*n = rcp_dynamic_cast<const Integer>(temp);
+				}
+				else {
+					*x = add( mul(p.first, p.second), *x);
+				} 		
+			}
+			if (check_pi)
+				return true;
+			else // No term with `pi` found
+				return false;		
+		}
+		else if (size == 1) {
+			// arg should be of form `a + n*pi/12` 
+			// where `a` is a `Number`.
+			auto p = s.dict_.begin();
+			RCP<const Basic> temp = mul(p->second, integer(12));
+			if (is_a<Symbol>(*p->first) &&
+					eq(rcp_static_cast<const Symbol>(p->first), pi) &&
+					is_a<Integer>(*temp)) {
+				
+				*n = rcp_dynamic_cast<const Integer>(temp);
+				*x = coef;
+				return true;		
+			}
+			else 
+				return false;	
+		}
+		else // Should never reach here though!
+			 // Dict of size < 1
+			return false;
+	}
+	else if (is_a<Mul>(*arg)) {
+        // `arg` is of the form `k*pi/12`
+        const Mul &s = static_cast<const Mul &>(*arg);
+        RCP<const Basic> coef = s.coef_;
+        coef = mul(coef, integer(12));
+        auto p = s.dict_.begin();
+        // dict should contain symbol `pi` only
+        // and coeff should be a multiple of 12
+        if (s.dict_.size() == 1 && is_a<Symbol>(*p->first) &&
+                eq(rcp_static_cast<const Symbol>(p->first), pi) &&
+                eq(rcp_static_cast<const Number>(p->second), one) &&
+                is_a<Integer>(*coef)) {
+
+            *n = rcp_dynamic_cast<const Integer>(coef);
+            *x = zero;
+            return true;    
+        }
+        else
+            return false;
+    }
+    else if (is_a<Symbol>(*arg) &&
+			eq(rcp_static_cast<const Symbol>(arg), pi)) {
+		*n = integer(12);
+		*x = zero;
+		return true;
+	}
+	else
+		return false;
+}
+
+bool could_extract_minus(const RCP<const Basic> &arg)
+{
+    if (is_a<Mul>(*arg)) {
+        const Mul &s = static_cast<const Mul &>(*arg);
+        RCP<const Basic> coef = s.coef_;
+        if (is_a<Integer>(*coef) &&
+              rcp_static_cast<const Integer>(coef)->is_negative())
+            return true;
+        
+        else if (is_a<Rational>(*coef) &&
+              rcp_static_cast<const Rational>(coef)->is_negative())
+            return true;
+        
+        else
+            return false;
+    }
+    else if (is_a<Add>(*arg)) {
+        const Add &s = static_cast<const Add &>(*arg);
+        for (auto &p: s.dict_) {
+            if (is_a<Integer>(*p.second)) {
+                if (!(rcp_static_cast<const Integer>(p.second)->is_negative()))
+                    return false;
+            }
+            else if (is_a<Rational>(*p.second)) {
+                if (!(rcp_static_cast<const Rational>(p.second)->is_negative()))
+                    return false;
+            }
+        
+            else
+                return false;   
+        }
+        return true;
+
+    }
+    else
+        return false;
+}
+
+bool handle_minus(const RCP<const Basic> &arg, 
+                const Ptr<RCP<const Basic>> &rarg)
+{
+    if (could_extract_minus(arg)) {
+        *rarg = mul(minus_one, arg);
+        return true; 
+    }
+    else {
+        *rarg = arg;
+        return false;
+    }
+}
+
+// \return true of conjugate has to be returned finally else false
+bool eval(const RCP<const Basic> &arg, int period, bool odd, bool conj_odd, //input
+            const Ptr<RCP<const Basic>>& rarg,int& index, int& sign) //output
+{
+    bool check;
+    RCP<const Integer> n;
+    RCP<const Basic> r;
+    RCP<const Basic> ret_arg;
+    check = get_pi_shift(arg, outArg(n), outArg(r));
+    if (check) {
+        int m = n->as_int();
+        m = m % (12*period);
+        sign = 1;
+        if (eq(r, zero)) {
+            index = m;
+            *rarg = zero;
+            return false; 
+        }
+        else if ((m % (12*period)) == 0) {
+            index = 0;
+            bool b = handle_minus(r, outArg(ret_arg));
+            *rarg = ret_arg;
+            if (odd && b) 
+                sign = -1;
+            return false;
+        }
+        else if ((m % 12) == 0) {
+            sign = -1;
+            bool b = handle_minus(r, outArg(ret_arg));
+            *rarg = ret_arg;
+            if (odd && b) 
+                sign = -1*sign;
+            return false;
+
+        }
+        else if ((m % 6) == 0) {
+            if (m == 6)
+                sign = 1;
+            else
+                sign = -1;
+            bool b = handle_minus(r, outArg(ret_arg));
+            *rarg = ret_arg;
+            if (!b && conj_odd)
+                sign = -sign;
+            return true;
+        }
+        else {
+            *rarg = r;
+            index = -1;
+            return false;
+        }
+    }
+    else {
+        bool b = handle_minus(arg, outArg(ret_arg));
+        *rarg = ret_arg;
+        index = -1;
+        if (odd && b) 
+            sign = -1;
+        else
+            sign = 1;
+        return false;
+    }
+        
+}
+
+
+std::size_t TrigFunction::__hash__() const
+{
+    std::size_t seed = 0;
+    hash_combine<Basic>(seed, *arg_);
+    return seed;
+}
+
 Sin::Sin(const RCP<const Basic> &arg)
-    : arg_{arg}
 {
     CSYMPY_ASSERT(is_canonical(arg))
+    set_arg(arg);
 }
 
 bool Sin::is_canonical(const RCP<const Basic> &arg)
@@ -22,15 +257,14 @@ bool Sin::is_canonical(const RCP<const Basic> &arg)
     if (is_a<Integer>(*arg) &&
             rcp_static_cast<const Integer>(arg)->is_zero())
         return false;
-    // TODO: add things like sin(k*pi) etc.
-    return true;
-}
+	// e.g sin(k*pi/12)
+    RCP<const Integer> n;
+    RCP<const Basic> r;
+    bool b = get_pi_shift(arg, outArg(n), outArg(r));
+    if (b)
+        return false;
 
-std::size_t Sin::__hash__() const
-{
-    std::size_t seed = 0;
-    hash_combine<Basic>(seed, *arg_);
-    return seed;
+    return true;
 }
 
 bool Sin::__eq__(const Basic &o) const
@@ -48,7 +282,6 @@ int Sin::compare(const Basic &o) const
     return arg_->__cmp__(s);
 }
 
-
 std::string Sin::__str__() const
 {
     std::ostringstream o;
@@ -59,15 +292,38 @@ std::string Sin::__str__() const
 RCP<const Basic> sin(const RCP<const Basic> &arg)
 {
     if (eq(arg, zero)) return zero;
-    return rcp(new Sin(arg));
+    RCP<const Basic> ret_arg;
+    int index;
+    int sign;
+    bool conjugate =  eval(arg, 2, 1, 0, //input
+                      outArg(ret_arg), index, sign); //output
+
+    if (conjugate) {
+        // cos has to be returned
+        if (sign == 1)
+            return rcp(new Cos(ret_arg));
+        else
+            return mul(minus_one, rcp(new Cos(ret_arg)));
+    }
+    else {
+        if (eq(ret_arg, zero)) {
+            return mul(integer(sign), sin_table[index]);
+        }
+        else {
+            if (sign == 1)
+                return rcp(new Sin(ret_arg));
+            else
+                return mul(minus_one, rcp(new Sin(ret_arg)));
+        }
+    }
 }
 
 /* ---------------------------- */
 
 Cos::Cos(const RCP<const Basic> &arg)
-    : arg_{arg}
 {
     CSYMPY_ASSERT(is_canonical(arg))
+    set_arg(arg);
 }
 
 bool Cos::is_canonical(const RCP<const Basic> &arg)
@@ -76,15 +332,13 @@ bool Cos::is_canonical(const RCP<const Basic> &arg)
     if (is_a<Integer>(*arg) &&
             rcp_static_cast<const Integer>(arg)->is_zero())
         return false;
-    // TODO: add things like cos(k*pi) etc.
+    // e.g cos(k*pi/12)
+    RCP<const Integer> n;
+    RCP<const Basic> r;
+    bool b = get_pi_shift(arg, outArg(n), outArg(r));
+    if (b)
+        return false;
     return true;
-}
-
-std::size_t Cos::__hash__() const
-{
-    std::size_t seed = 0;
-    hash_combine<Basic>(seed, *arg_);
-    return seed;
 }
 
 bool Cos::__eq__(const Basic &o) const
@@ -112,32 +366,53 @@ std::string Cos::__str__() const
 RCP<const Basic> cos(const RCP<const Basic> &arg)
 {
     if (eq(arg, zero)) return one;
-    return rcp(new Cos(arg));
+    RCP<const Basic> ret_arg;
+    int index;
+    int sign;
+    bool conjugate =  eval(arg, 2, 0, 1, //input
+                      outArg(ret_arg), index, sign); //output
+
+    if (conjugate) {
+        // cos has to be returned
+        if (sign == 1)
+            return rcp(new Sin(ret_arg));
+        else
+            return mul(minus_one, rcp(new Sin(ret_arg)));
+    }
+    else {
+        if (eq(ret_arg, zero)) {
+            return mul(integer(sign), sin_table[(index + 6) % 24]);
+        }
+        else {
+            if (sign == 1)
+                return rcp(new Cos(ret_arg));
+            else
+                return mul(minus_one, rcp(new Cos(ret_arg)));
+        }
+    }
 }
 
 /* ---------------------------- */
 
 Tan::Tan(const RCP<const Basic> &arg)
-    : arg_{arg}
 {
     CSYMPY_ASSERT(is_canonical(arg))
+    set_arg(arg);
 }
 
 bool Tan::is_canonical(const RCP<const Basic> &arg)
 {
     // TODO: Add further checks for +inf -inf cases 
-    // and extend to tan(k*pi)
     if (is_a<Integer>(*arg) &&
             rcp_static_cast<const Integer>(arg)->is_zero())
         return false;
+	// e.g tan(k*pi/12)
+    RCP<const Integer> n;
+    RCP<const Basic> r;
+    bool b = get_pi_shift(arg, outArg(n), outArg(r));
+    if (b)
+        return false;
     return true;
-}
-
-std::size_t Tan::__hash__() const
-{
-    std::size_t seed = 0;
-    hash_combine<Basic>(seed, *arg_);
-    return seed;
 }
 
 bool Tan::__eq__(const Basic &o) const
@@ -166,34 +441,55 @@ std::string Tan::__str__() const
 
 RCP<const Basic> tan(const RCP<const Basic> &arg)
 {
-    // TODO: Add further checks for +inf -inf cases
     if (eq(arg, zero)) return zero;
-    return rcp(new Tan(arg));
+    RCP<const Basic> ret_arg;
+    int index;
+    int sign;
+    bool conjugate =  eval(arg, 1, 1, 1, //input
+                      outArg(ret_arg), index, sign); //output
+
+    if (conjugate) {
+        // cos has to be returned
+        if (sign == 1)
+            return rcp(new Cot(ret_arg));
+        else
+            return mul(minus_one, rcp(new Cot(ret_arg)));
+    }
+    else {
+        if (eq(ret_arg, zero)) {
+            return mul(integer(sign),
+                   div(sin_table[index], sin_table[(index + 6) % 24]));
+        }
+        else {
+            if (sign == 1)
+                return rcp(new Tan(ret_arg));
+            else
+                return mul(minus_one, rcp(new Tan(ret_arg)));
+        }
+    }
 }
 
 /* ---------------------------- */
 
 Cot::Cot(const RCP<const Basic> &arg)
-    : arg_{arg}
 {
     CSYMPY_ASSERT(is_canonical(arg))
+    set_arg(arg);
 }
 
 bool Cot::is_canonical(const RCP<const Basic> &arg)
 {
     // TODO: Add further checks for +inf -inf cases 
-    // and extend to cot(k*pi) 
     if (is_a<Integer>(*arg) &&
             rcp_static_cast<const Integer>(arg)->is_zero())
         return false;
+    // e.g cot(k*pi/12)
+    RCP<const Integer> n;
+    RCP<const Basic> r;
+    bool b = get_pi_shift(arg, outArg(n), outArg(r));
+    if (b)
+        return false;
     return true;
-}
-
-std::size_t Cot::__hash__() const
-{
-    std::size_t seed = 0;
-    hash_combine<Basic>(seed, *arg_);
-    return seed;
 }
 
 bool Cot::__eq__(const Basic &o) const
@@ -222,16 +518,39 @@ std::string Cot::__str__() const
 
 RCP<const Basic> cot(const RCP<const Basic> &arg)
 {
-    // TODO: Add further checks for +inf -inf cases
-    return rcp(new Cot(arg));
+    RCP<const Basic> ret_arg;
+    int index;
+    int sign;
+    bool conjugate =  eval(arg, 1, 1, 1, //input
+                      outArg(ret_arg), index, sign); //output
+
+    if (conjugate) {
+        // cos has to be returned
+        if (sign == 1)
+            return rcp(new Tan(ret_arg));
+        else
+            return mul(minus_one, rcp(new Tan(ret_arg)));
+    }
+    else {
+        if (eq(ret_arg, zero)) {
+            return mul(integer(sign),
+                   div(sin_table[(index + 6) % 24], sin_table[index]));
+        }
+        else {
+            if (sign == 1)
+                return rcp(new Cot(ret_arg));
+            else
+                return mul(minus_one, rcp(new Cot(ret_arg)));
+        }
+    }
 }
 
 /* ---------------------------- */
 
 Csc::Csc(const RCP<const Basic> &arg)
-    : arg_{arg}
 {
     CSYMPY_ASSERT(is_canonical(arg))
+    set_arg(arg);
 }
 
 bool Csc::is_canonical(const RCP<const Basic> &arg)
@@ -240,16 +559,14 @@ bool Csc::is_canonical(const RCP<const Basic> &arg)
     if (is_a<Integer>(*arg) &&
             rcp_static_cast<const Integer>(arg)->is_zero())
         return false;
-    // TODO: add things like Csc(k*pi) etc.
     // Update for +inf/-inf constraints
+    // e.g csc(k*pi/12)
+    RCP<const Integer> n;
+    RCP<const Basic> r;
+    bool b = get_pi_shift(arg, outArg(n), outArg(r));
+    if (b)
+        return false;
     return true;
-}
-
-std::size_t Csc::__hash__() const
-{
-    std::size_t seed = 0;
-    hash_combine<Basic>(seed, *arg_);
-    return seed;
 }
 
 bool Csc::__eq__(const Basic &o) const
@@ -276,15 +593,40 @@ std::string Csc::__str__() const
 
 RCP<const Basic> csc(const RCP<const Basic> &arg)
 {
-    return rcp(new Csc(arg));
+    RCP<const Basic> ret_arg;
+    int index;
+    int sign;
+    bool conjugate =  eval(arg, 2, 1, 0, //input
+                      outArg(ret_arg), index, sign); //output
+
+    if (conjugate) {
+        // cos has to be returned
+        if (sign == 1)
+            return rcp(new Sec(ret_arg));
+        else
+            return mul(minus_one, rcp(new Sec(ret_arg)));
+    }
+    else {
+        if (eq(ret_arg, zero)) {
+            return mul(integer(sign),
+                   div(one, sin_table[index]));
+        }
+        else {
+            if (sign == 1)
+                return rcp(new Csc(ret_arg));
+            else
+                return mul(minus_one, rcp(new Csc(ret_arg)));
+        }
+    }
 }
+
 
 /* ---------------------------- */
 
 Sec::Sec(const RCP<const Basic> &arg)
-    : arg_{arg}
 {
     CSYMPY_ASSERT(is_canonical(arg))
+    set_arg(arg);
 }
 
 bool Sec::is_canonical(const RCP<const Basic> &arg)
@@ -293,16 +635,14 @@ bool Sec::is_canonical(const RCP<const Basic> &arg)
     if (is_a<Integer>(*arg) &&
             rcp_static_cast<const Integer>(arg)->is_zero())
         return false;
-    // TODO: add things like Sec(k*pi) etc.
-    // Update for +inf/-inf constraints
+    // TODO: Update for +inf/-inf constraints
+    // e.g sec(k*pi/12)
+    RCP<const Integer> n;
+    RCP<const Basic> r;
+    bool b = get_pi_shift(arg, outArg(n), outArg(r));
+    if (b)
+        return false;
     return true;
-}
-
-std::size_t Sec::__hash__() const
-{
-    std::size_t seed = 0;
-    hash_combine<Basic>(seed, *arg_);
-    return seed;
 }
 
 bool Sec::__eq__(const Basic &o) const
@@ -328,8 +668,31 @@ std::string Sec::__str__() const
 
 RCP<const Basic> sec(const RCP<const Basic> &arg)
 {
-    if (eq(arg, zero)) return one;
-    return rcp(new Sec(arg));
+    RCP<const Basic> ret_arg;
+    int index;
+    int sign;
+    bool conjugate =  eval(arg, 2, 0, 1, //input
+                      outArg(ret_arg), index, sign); //output
+
+    if (conjugate) {
+        // cos has to be returned
+        if (sign == 1)
+            return rcp(new Csc(ret_arg));
+        else
+            return mul(minus_one, rcp(new Csc(ret_arg)));
+    }
+    else {
+        if (eq(ret_arg, zero)) {
+            return mul(integer(sign),
+                   div(one, sin_table[(index + 6)% 24]));
+        }
+        else {
+            if (sign == 1)
+                return rcp(new Sec(ret_arg));
+            else
+                return mul(minus_one, rcp(new Sec(ret_arg)));
+        }
+    }
 }
 
 /* ---------------------------- */
