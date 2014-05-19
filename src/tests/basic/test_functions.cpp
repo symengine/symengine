@@ -793,16 +793,16 @@ void test_sin_table()
     // sin(2pi + pi/6) = 1/2
     r1 = sin(add(mul(pi, i2), mul(div(pi, i12), i2)));
     r2 = div(one, i2);
-    assert(eq(r1,r2));
+    assert(eq(r1, r2));
 
     // sin(n*pi + pi/6) = 1/2
     r1 = sin(add(mul(pi, integer(10)), mul(div(pi, i12), i2)));
     r2 = div(one, i2);
-    assert(eq(r1,r2));
+    assert(eq(r1, r2));
 
     // sin(n*pi) = 0
     r1 = sin(mul(pi, i12));
-    assert(eq(r1,zero));
+    assert(eq(r1, zero));
 
     // sin(2pi + pi/2) = 1
     r1 = sin(add(mul(pi, i2), div(pi, i2)));
@@ -848,11 +848,11 @@ void test_could_extract_minus()
     b = could_extract_minus(r);
     assert(b == false); 
 
-    r = mul(mul(x,integer(-10)), y);
+    r = mul(mul(x, integer(-10)), y);
     b = could_extract_minus(r);
     assert(b == true); 
 
-    r = mul(mul(x,i2), y);
+    r = mul(mul(x, i2), y);
     b = could_extract_minus(r);
     assert(b == false);  
 
@@ -860,7 +860,7 @@ void test_could_extract_minus()
     b = could_extract_minus(r);
     assert(b == true);    
 
-    r = mul(div(x,i2), y);
+    r = mul(div(x, i2), y);
     b = could_extract_minus(r);
     assert(b == false);  
 
