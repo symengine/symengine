@@ -246,9 +246,9 @@ std::size_t TrigFunction::__hash__() const
 }
 
 Sin::Sin(const RCP<const Basic> &arg)
+    : TrigFunction(arg)
 {
     CSYMPY_ASSERT(is_canonical(arg))
-    set_arg(arg);
 }
 
 bool Sin::is_canonical(const RCP<const Basic> &arg)
@@ -321,9 +321,9 @@ RCP<const Basic> sin(const RCP<const Basic> &arg)
 /* ---------------------------- */
 
 Cos::Cos(const RCP<const Basic> &arg)
+    : TrigFunction(arg)
 {
     CSYMPY_ASSERT(is_canonical(arg))
-    set_arg(arg);
 }
 
 bool Cos::is_canonical(const RCP<const Basic> &arg)
@@ -395,9 +395,9 @@ RCP<const Basic> cos(const RCP<const Basic> &arg)
 /* ---------------------------- */
 
 Tan::Tan(const RCP<const Basic> &arg)
+    : TrigFunction(arg)
 {
     CSYMPY_ASSERT(is_canonical(arg))
-    set_arg(arg);
 }
 
 bool Tan::is_canonical(const RCP<const Basic> &arg)
@@ -472,9 +472,9 @@ RCP<const Basic> tan(const RCP<const Basic> &arg)
 /* ---------------------------- */
 
 Cot::Cot(const RCP<const Basic> &arg)
+    : TrigFunction(arg)
 {
     CSYMPY_ASSERT(is_canonical(arg))
-    set_arg(arg);
 }
 
 bool Cot::is_canonical(const RCP<const Basic> &arg)
@@ -548,9 +548,9 @@ RCP<const Basic> cot(const RCP<const Basic> &arg)
 /* ---------------------------- */
 
 Csc::Csc(const RCP<const Basic> &arg)
+    : TrigFunction(arg)
 {
     CSYMPY_ASSERT(is_canonical(arg))
-    set_arg(arg);
 }
 
 bool Csc::is_canonical(const RCP<const Basic> &arg)
@@ -624,9 +624,9 @@ RCP<const Basic> csc(const RCP<const Basic> &arg)
 /* ---------------------------- */
 
 Sec::Sec(const RCP<const Basic> &arg)
+    : TrigFunction(arg)
 {
     CSYMPY_ASSERT(is_canonical(arg))
-    set_arg(arg);
 }
 
 bool Sec::is_canonical(const RCP<const Basic> &arg)
