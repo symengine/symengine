@@ -26,6 +26,10 @@ public:
         :arg_{arg} {};
     //! \return Size of the hash
     virtual std::size_t __hash__() const;
+    //! \return `arg_`
+    inline RCP<const Basic> get_arg() const {
+        return arg_;
+    }
 };
 
 /*! \return `true` if `arg` is of form `theta + n*pi/12`
