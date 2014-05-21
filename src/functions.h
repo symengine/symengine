@@ -18,7 +18,7 @@ class Function : public Basic {
 
 class TrigFunction : public Function {
 
-public:
+private:
     RCP<const Basic> arg_; //! The `arg` in `trigclass(arg)`
 public:
     //! Constructor
