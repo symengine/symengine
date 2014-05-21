@@ -21,16 +21,15 @@ class TrigFunction : public Function {
 public:
     RCP<const Basic> arg_; //! The `arg` in `trigclass(arg)`
 public:
-	//! \return `arg_`
+    //! Constructor
+    TrigFunction(RCP<const Basic> arg)
+        :arg_{arg} {};
+    //! \return Size of the hash
+    virtual std::size_t __hash__() const;
+    //! \return `arg_`
     inline RCP<const Basic> get_arg() const {
         return arg_;
     }
-    //! sets the argument
-    void set_arg(const RCP<const Basic>& arg) {
-		arg_ = arg;
-	}
-	//! \return Size of the hash
-    virtual std::size_t __hash__() const;
 };
 
 /*! \return `true` if `arg` is of form `theta + n*pi/12`
