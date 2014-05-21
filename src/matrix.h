@@ -1,80 +1,91 @@
-#ifndef CSYMPY_INTEGER_H
-#define CSYMPY_INTEGER_H
+#ifndef CSYMPY_MATRIX_H
+#define CSYMPY_MATRIX_H
 
 #include "basic.h"
 
 namespace CSymPy {
 
+// Forward declaration
+class SparseMatrix;
+
 // Base class for matrices
-class MatrixBase {
+class MatrixBase: public Basic {
 public:
     MatrixBase(unsigned row, unsigned col)
         : row_{row}, col_{col} {};
 
-    // These functions create a new instance of either DenseMatrix or
-    // SparseMatrix and return a reference to the result
-    virtual RCP<const MatrixBase> add_matrix(const MatrixBase &other) const = 0;
-    virtual RCP<const MatrixBase> mul_matrix(const MatrixBase &other) const = 0;
-    virtual RCP<const MatrixBase> add_basic(const Basic &other) const = 0;
-    virtual RCP<const MatrixBase> mul_basic(const Basic &other) const = 0;
+    // Below methods should be implemented by the derived classes. If not
+    // applicable, raise an exception
 
-    // To get the values of row and col
-    unsigned nrows() {
-        return row_;
-    };
-
-    unsigned ncols() {
-        return col_;
-    };
-
-    // These should be implemented by the derived classes. If not applicable,
-    // raise an exception
+    // Get and set elements
     virtual RCP<const Basic>get(unsigned i) const = 0;
-    virtual void set(unsigned i, RCP<Basic> &e) const = 0;
+    virtual void set(unsigned i, RCP<const Basic> &e) = 0;
+
     virtual unsigned rank() const = 0;
     virtual RCP<const Basic> det() const = 0;
     virtual RCP<const MatrixBase> inv() const = 0;
 
-public:
+    // These functions create a new instance of either DenseMatrix or
+    // SparseMatrix and return a reference to the result
+    virtual RCP<const MatrixBase> add_matrix(const MatrixBase &other) const = 0;
+
+protected:
     // Stores the dimension of the Matrix
     unsigned row_;
     unsigned col_;
 };
 
+// ----------------------------- Dense Matrix --------------------------------//
+
 class DenseMatrix: public MatrixBase {
 public:
     // Constructors
-    DenseMatrix(unsigned row, unsigned column);
-    DenseMatrix(unsigned row, unsigned column, std::vector<RCP<Basic>> &l);
+    DenseMatrix(unsigned row, unsigned col);
+    DenseMatrix(unsigned row, unsigned col, std::vector<RCP<const Basic>> &l);
+
+    // Virtual functions inherited from Basic class
+    virtual std::size_t __hash__() const;
+    virtual bool __eq__(const Basic &o) const;
+    virtual int compare(const Basic &o) const;
 
     // Should implement all the virtual methods from MatrixBase
     // and throw an exception if a method is not applicable.
     // add_matrix, mul_matrix will have to find the correct function
     // to call depending on the `other` argument.
 
-    // Get and Set elements
-    RCP<const Basic> get(unsigned i) const {
-        return m_[i];
-    }
-    void set(unsigned i, RCP<Basic> &e) {
-        m_[i] = e;
-    }
+    // Get and set elements
+    virtual RCP<const Basic> get(unsigned i) const;
+    virtual void set(unsigned i, RCP<const Basic> &e);
 
-    unsigned rank() const;
-    RCP<const Basic> det() const;
-    RCP<const MatrixBase> inv() const;
+    virtual unsigned rank() const;
+    virtual RCP<const Basic> det() const;
+    virtual RCP<const MatrixBase> inv() const;
 
-private:
+    // Matrix addition
+    virtual RCP<const MatrixBase> add_matrix(const MatrixBase &other) const;
+    friend RCP<const DenseMatrix> add_dense_dense(const DenseMatrix &A,
+            const DenseMatrix &B);
+    friend RCP<const DenseMatrix> add_sparse_dense(const SparseMatrix &A,
+            const DenseMatrix &B);
+
+protected:
     // Matrix elements are sotred in row-major order
-    std::vector<RCP<Basic>> m_;
+    std::vector<RCP<const Basic>> m_;
 };
+
+// ----------------------------- Sparse Matrix -------------------------------//
 
 class SparseMatrix: public MatrixBase {
 public:
     // Constructors
-    SparseMatrix(unsigned row, unsigned column);
-    SparseMatrix(unsigned row, unsigned column,
-        std::map<int, RCP<Basic>> &l);
+    SparseMatrix(unsigned row, unsigned col);
+    SparseMatrix(unsigned row, unsigned col,
+            std::map<int, RCP<Basic>> &l);
+
+    // Virtual functions inherited from Basic class
+    virtual std::size_t __hash__() const;
+    virtual bool __eq__(const Basic &o) const;
+    virtual int compare(const Basic &o) const;
 
     // Should implement all the virtual methods from MatrixBase
     // and throw an exception if a method is not applicable.
@@ -82,23 +93,29 @@ public:
     // to call depending on the `other` argument.
 
     // Get and Set elements
-    RCP<const Basic> get(unsigned i) const;
-    void set(unsigned i, RCP<Basic> &e);
+    virtual RCP<const Basic> get(unsigned i) const;
+    virtual void set(unsigned i, RCP<Basic> &e);
 
-    unsigned rank() const;
-    RCP<const Basic> det() const;
-    RCP<const MatrixBase> inv() const;
+    virtual unsigned rank() const;
+    virtual RCP<const Basic> det() const;
+    virtual RCP<const MatrixBase> inv() const;
 
-private:
+    // Matrix addition
+    virtual RCP<const MatrixBase> add_matrix(const MatrixBase &other) const;
+    friend RCP<const SparseMatrix> add_sparse_sparse(const SparseMatrix &A,
+            const SparseMatrix &B);
+    friend RCP<const DenseMatrix> add_sparse_dense(const SparseMatrix &A,
+            const DenseMatrix &B);
+
+protected:
     std::map<int, RCP<Basic>> m_;
 };
 
-RCP<const DenseMatrix> mul_dense_dense(const DenseMatrix &A, const DenseMatrix &B);
-RCP<const DenseMatrix> add_dense_dense(const DenseMatrix &A, const DenseMatrix &B);
-RCP<const SparseMatrix> mul_sparse_sparse(const SparseMatrix &A, const SparseMatrix &B);
-RCP<const SparseMatrix> add_sparse_sparse(const SparseMatrix &A, const SparseMatrix &B);
-RCP<const DenseMatrix> mul_sparse_dense(const SparseMatrix &A, const DenseMatrix &B);
-RCP<const DenseMatrix> add_sparse_dense(const SparseMatrix &A, const DenseMatrix &B);
+inline RCP<const DenseMatrix> densematrix(unsigned row, unsigned col,
+        std::vector<RCP<const Basic>> &l)
+{
+    return rcp(new DenseMatrix(row, col, l));
+}
 
 } // CSymPy
 
