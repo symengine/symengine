@@ -270,7 +270,7 @@ bool Sin::is_canonical(const RCP<const Basic> &arg)
 bool Sin::__eq__(const Basic &o) const
 {
     if (is_a<Sin>(o) &&
-        eq(arg_, static_cast<const Sin &>(o).arg_))
+        eq(get_arg(), static_cast<const Sin &>(o).get_arg()))
         return true;
     return false;
 }
@@ -279,13 +279,13 @@ int Sin::compare(const Basic &o) const
 {
     CSYMPY_ASSERT(is_a<Sin>(o))
     const Sin &s = static_cast<const Sin &>(o);
-    return arg_->__cmp__(s);
+    return get_arg()->__cmp__(s);
 }
 
 std::string Sin::__str__() const
 {
     std::ostringstream o;
-    o << "sin(" << *arg_ << ")";
+    o << "sin(" << *get_arg() << ")";
     return o.str();
 }
 
@@ -344,7 +344,7 @@ bool Cos::is_canonical(const RCP<const Basic> &arg)
 bool Cos::__eq__(const Basic &o) const
 {
     if (is_a<Cos>(o) &&
-        eq(arg_, static_cast<const Cos &>(o).arg_))
+        eq(get_arg(), static_cast<const Cos &>(o).get_arg()))
         return true;
     return false;
 }
@@ -353,13 +353,13 @@ int Cos::compare(const Basic &o) const
 {
     CSYMPY_ASSERT(is_a<Cos>(o))
     const Cos &s = static_cast<const Cos &>(o);
-    return arg_->__cmp__(s);
+    return get_arg()->__cmp__(s);
 }
 
 std::string Cos::__str__() const
 {
     std::ostringstream o;
-    o << "cos(" << *arg_ << ")";
+    o << "cos(" << *get_arg() << ")";
     return o.str();
 }
 
@@ -418,7 +418,7 @@ bool Tan::is_canonical(const RCP<const Basic> &arg)
 bool Tan::__eq__(const Basic &o) const
 {
     if (is_a<Tan>(o) &&
-        eq(arg_, static_cast<const Tan &>(o).arg_))
+        eq(get_arg(), static_cast<const Tan &>(o).get_arg()))
         return true;
     else
         return false;
@@ -428,14 +428,14 @@ int Tan::compare(const Basic &o) const
 {
     CSYMPY_ASSERT(is_a<Tan>(o))
     const Tan &s = static_cast<const Tan &>(o);
-    return arg_->__cmp__(s);
+    return get_arg()->__cmp__(s);
 }
 
 
 std::string Tan::__str__() const
 {
     std::ostringstream o;
-    o << "tan(" << *arg_ << ")";
+    o << "tan(" << *get_arg() << ")";
     return o.str();
 }
 
@@ -495,7 +495,7 @@ bool Cot::is_canonical(const RCP<const Basic> &arg)
 bool Cot::__eq__(const Basic &o) const
 {
     if (is_a<Cot>(o) &&
-        eq(arg_, static_cast<const Cot &>(o).arg_))
+        eq(get_arg(), static_cast<const Cot &>(o).get_arg()))
         return true;
     else
         return false;
@@ -505,14 +505,14 @@ int Cot::compare(const Basic &o) const
 {
     CSYMPY_ASSERT(is_a<Cot>(o))
     const Cot &s = static_cast<const Cot &>(o);
-    return arg_->__cmp__(s);
+    return get_arg()->__cmp__(s);
 }
 
 
 std::string Cot::__str__() const
 {
     std::ostringstream o;
-    o << "cot(" << *arg_ << ")";
+    o << "cot(" << *get_arg() << ")";
     return o.str();
 }
 
@@ -572,7 +572,7 @@ bool Csc::is_canonical(const RCP<const Basic> &arg)
 bool Csc::__eq__(const Basic &o) const
 {
     if (is_a<Csc>(o) &&
-        eq(arg_, static_cast<const Csc &>(o).arg_))
+        eq(get_arg(), static_cast<const Csc &>(o).get_arg()))
         return true;
     return false;
 }
@@ -581,13 +581,13 @@ int Csc::compare(const Basic &o) const
 {    
     CSYMPY_ASSERT(is_a<Csc>(o))
     const Csc &s = static_cast<const Csc &>(o);
-    return arg_->__cmp__(s);
+    return get_arg()->__cmp__(s);
 }
 
 std::string Csc::__str__() const
 {
     std::ostringstream o;
-    o << "csc(" << *arg_ << ")";
+    o << "csc(" << *get_arg() << ")";
     return o.str();
 }
 
@@ -648,7 +648,7 @@ bool Sec::is_canonical(const RCP<const Basic> &arg)
 bool Sec::__eq__(const Basic &o) const
 {
     if (is_a<Sec>(o) &&
-        eq(arg_, static_cast<const Sec &>(o).arg_))
+        eq(get_arg(), static_cast<const Sec &>(o).get_arg()))
         return true;
     return false;
 }
@@ -656,13 +656,13 @@ bool Sec::__eq__(const Basic &o) const
 int Sec::compare(const Basic &o) const
 {    CSYMPY_ASSERT(is_a<Sec>(o))
     const Sec &s = static_cast<const Sec &>(o);
-    return arg_->__cmp__(s);
+    return get_arg()->__cmp__(s);
 }
 
 std::string Sec::__str__() const
 {
     std::ostringstream o;
-    o << "sec(" << *arg_ << ")";
+    o << "sec(" << *get_arg() << ")";
     return o.str();
 }
 
@@ -699,34 +699,34 @@ RCP<const Basic> sec(const RCP<const Basic> &arg)
 
 RCP<const Basic> Sin::diff(const RCP<const Symbol> &x) const
 {
-    return mul(cos(arg_), arg_->diff(x));
+    return mul(cos(get_arg()), get_arg()->diff(x));
 }
 
 RCP<const Basic> Cos::diff(const RCP<const Symbol> &x) const
 {
-    return mul(mul(minus_one, sin(arg_)), arg_->diff(x));
+    return mul(mul(minus_one, sin(get_arg())), get_arg()->diff(x));
 }
 
 RCP<const Basic> Tan::diff(const RCP<const Symbol> &x) const
 {
     RCP<const Integer> two = rcp(new Integer(2));
-    return mul(add(one, pow(tan(arg_), two)), arg_->diff(x));
+    return mul(add(one, pow(tan(get_arg()), two)), get_arg()->diff(x));
 }
 
 RCP<const Basic> Cot::diff(const RCP<const Symbol> &x) const
 {
     RCP<const Integer> two = rcp(new Integer(2));
-    return mul(mul(add(one, pow(cot(arg_), two)), minus_one), arg_->diff(x));
+    return mul(mul(add(one, pow(cot(get_arg()), two)), minus_one), get_arg()->diff(x));
 }
 
 RCP<const Basic> Csc::diff(const RCP<const Symbol> &x) const
 {
-    return mul(mul(mul(cot(arg_), csc(arg_)), minus_one), arg_->diff(x));
+    return mul(mul(mul(cot(get_arg()), csc(get_arg())), minus_one), get_arg()->diff(x));
 }
 
 RCP<const Basic> Sec::diff(const RCP<const Symbol> &x) const
 {
-    return mul(mul(tan(arg_), sec(arg_)), arg_->diff(x));
+    return mul(mul(tan(get_arg()), sec(get_arg())), get_arg()->diff(x));
 }
 
 RCP<const Basic> Sin::subs(const map_basic_basic &subs_dict) const
@@ -735,8 +735,8 @@ RCP<const Basic> Sin::subs(const map_basic_basic &subs_dict) const
     auto it = subs_dict.find(self);
     if (it != subs_dict.end())
         return it->second;
-    RCP<const Basic> arg = arg_->subs(subs_dict);
-    if (arg == arg_)
+    RCP<const Basic> arg = get_arg()->subs(subs_dict);
+    if (arg == get_arg())
         return self;
     else
         return sin(arg);
@@ -748,8 +748,8 @@ RCP<const Basic> Cos::subs(const map_basic_basic &subs_dict) const
     auto it = subs_dict.find(self);
     if (it != subs_dict.end())
         return it->second;
-    RCP<const Basic> arg = arg_->subs(subs_dict);
-    if (arg == arg_)
+    RCP<const Basic> arg = get_arg()->subs(subs_dict);
+    if (arg == get_arg())
         return self;
     else
         return cos(arg);
@@ -761,8 +761,8 @@ RCP<const Basic> Tan::subs(const map_basic_basic &subs_dict) const
     auto it = subs_dict.find(self);
     if (it != subs_dict.end())
         return it->second;
-    RCP<const Basic> arg = arg_->subs(subs_dict);
-    if (arg == arg_)
+    RCP<const Basic> arg = get_arg()->subs(subs_dict);
+    if (arg == get_arg())
         return self;
     else
         return tan(arg);
@@ -774,8 +774,8 @@ RCP<const Basic> Cot::subs(const map_basic_basic &subs_dict) const
     auto it = subs_dict.find(self);
     if (it != subs_dict.end())
         return it->second;
-    RCP<const Basic> arg = arg_->subs(subs_dict);
-    if (arg == arg_)
+    RCP<const Basic> arg = get_arg()->subs(subs_dict);
+    if (arg == get_arg())
         return self;
     else
         return cot(arg);
@@ -787,8 +787,8 @@ RCP<const Basic> Csc::subs(const map_basic_basic &subs_dict) const
     auto it = subs_dict.find(self);
     if (it != subs_dict.end())
         return it->second;
-    RCP<const Basic> arg = arg_->subs(subs_dict);
-    if (arg == arg_)
+    RCP<const Basic> arg = get_arg()->subs(subs_dict);
+    if (arg == get_arg())
         return self;
     else
         return csc(arg);
@@ -800,8 +800,8 @@ RCP<const Basic> Sec::subs(const map_basic_basic &subs_dict) const
     auto it = subs_dict.find(self);
     if (it != subs_dict.end())
         return it->second;
-    RCP<const Basic> arg = arg_->subs(subs_dict);
-    if (arg == arg_)
+    RCP<const Basic> arg = get_arg()->subs(subs_dict);
+    if (arg == get_arg())
         return self;
     else
         return sec(arg);
