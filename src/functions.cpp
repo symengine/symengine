@@ -10,31 +10,31 @@
 
 namespace CSymPy {
 
-RCP<const Basic> i2 = rcp(new Integer(2));
-RCP<const Basic> i3 = rcp(new Integer(3));
+static RCP<const Basic> i2 = rcp(new Integer(2));
+static RCP<const Basic> i3 = rcp(new Integer(3));
 
 RCP<const Basic> sqrt(RCP<const Basic>& arg)
 {
 	return pow(arg, div(one, i2));
 }
 
-RCP<const Basic> sq3 = sqrt(i3);
-RCP<const Basic> sq2 = sqrt(i2);
+static RCP<const Basic> sq3 = sqrt(i3);
+static RCP<const Basic> sq2 = sqrt(i2);
 
-RCP<const Basic> C0 = div(sub(sq3, one), mul(i2, sq2));
-RCP<const Basic> C1 = div(one, i2);
-RCP<const Basic> C2 = div(sq2, i2);
-RCP<const Basic> C3 = div(sq3, i2);
-RCP<const Basic> C4 = div(add(sq3, one), mul(i2, sq2));
+static RCP<const Basic> C0 = div(sub(sq3, one), mul(i2, sq2));
+static RCP<const Basic> C1 = div(one, i2);
+static RCP<const Basic> C2 = div(sq2, i2);
+static RCP<const Basic> C3 = div(sq3, i2);
+static RCP<const Basic> C4 = div(add(sq3, one), mul(i2, sq2));
 
-RCP<const Basic> mC0 = mul(minus_one, C0);
-RCP<const Basic> mC1 = mul(minus_one, C1);
-RCP<const Basic> mC2 = mul(minus_one, C2);
-RCP<const Basic> mC3 = mul(minus_one, C3);
-RCP<const Basic> mC4 = mul(minus_one, C4);
+static RCP<const Basic> mC0 = mul(minus_one, C0);
+static RCP<const Basic> mC1 = mul(minus_one, C1);
+static RCP<const Basic> mC2 = mul(minus_one, C2);
+static RCP<const Basic> mC3 = mul(minus_one, C3);
+static RCP<const Basic> mC4 = mul(minus_one, C4);
 
 // sin_table[n] represents the value of sin(2*pi*n/24) for n = 0..23
-RCP<const Basic> sin_table[] = {
+static RCP<const Basic> sin_table[] = {
         zero, C0, C1, C2, C3, C4, one, C4, C3, C2, C1, C0,
         zero, mC0, mC1, mC2, mC3, mC4, minus_one, mC4, mC3, mC2, mC1, mC0
     };
@@ -257,7 +257,7 @@ bool Sin::is_canonical(const RCP<const Basic> &arg)
     if (is_a<Integer>(*arg) &&
             rcp_static_cast<const Integer>(arg)->is_zero())
         return false;
-	// e.g sin(k*pi/12)
+    // e.g sin(k*pi/12)
     RCP<const Integer> n;
     RCP<const Basic> r;
     bool b = get_pi_shift(arg, outArg(n), outArg(r));
@@ -295,8 +295,8 @@ RCP<const Basic> sin(const RCP<const Basic> &arg)
     RCP<const Basic> ret_arg;
     int index;
     int sign;
-    bool conjugate =  eval(arg, 2, 1, 0, //input
-                      outArg(ret_arg), index, sign); //output
+    bool conjugate = eval(arg, 2, 1, 0, //input
+                          outArg(ret_arg), index, sign); //output
 
     if (conjugate) {
         // cos has to be returned
