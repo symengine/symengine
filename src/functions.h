@@ -37,8 +37,8 @@ public:
  * `x` is `theta`
  * */
 bool get_pi_shift(const RCP<const Basic> &arg,
-			  const Ptr<RCP<const Integer>> &n,
-			  const Ptr<RCP<const Basic>> &x);
+        const Ptr<RCP<const Integer>> &n,
+        const Ptr<RCP<const Basic>> &x);
 
 //! \return `true` if `arg` contains a negative sign.
 bool could_extract_minus(const RCP<const Basic> &arg);
@@ -47,7 +47,7 @@ bool handle_minus(const RCP<const Basic> &arg,
             const Ptr<RCP<const Basic>> &rarg);
 
 // \return true of conjugate has to be returned finally else false
-bool eval(const RCP<const Basic> &arg, int period, bool odd, bool conj_odd, //input 
+bool eval(const RCP<const Basic> &arg, int period, bool odd, bool conj_odd, //input
             const Ptr<RCP<const Basic>>& rarg,int& index, int& sign); //output
 
 //! \return `sqrt` of the `arg`
@@ -55,15 +55,15 @@ RCP<const Basic> sqrt(const RCP<const Basic> &arg);
 class Sin : public TrigFunction {
 
 public:
-	//! Sin Constructor
+    //! Sin Constructor
     Sin(const RCP<const Basic> &arg);
     /*! Equality comparator
      * \param o - Object to be compared with
      * \return whether the 2 objects are equal
      * */
     virtual bool __eq__(const Basic &o) const;
-    
-    virtual int compare(const Basic &o) const; 
+
+    virtual int compare(const Basic &o) const;
     //! \return stringify version
     virtual std::string __str__() const;
     //! \return `true` if canonical
@@ -81,7 +81,7 @@ RCP<const Basic> sin(const RCP<const Basic> &arg);
 class Cos : public TrigFunction {
 
 public:
-	//! Cos Constructor
+  //! Cos Constructor
     Cos(const RCP<const Basic> &arg);
     /*! Equality comparator
      * \param o  Object to be compared with
@@ -91,9 +91,9 @@ public:
     virtual int compare(const Basic &o) const;
     //! \return stringify version
     virtual std::string __str__() const;
-	//! \return `true` if canonical
+    //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &arg);
-	//! Differentiate w.r.t Symbol `x`
+    //! Differentiate w.r.t Symbol `x`
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
     //! Substitute with `subs_dict`
     virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
@@ -112,7 +112,7 @@ public:
      * \return whether the 2 objects are equal
      * */
     virtual bool __eq__(const Basic &o) const;
-    
+
     virtual int compare(const Basic &o) const;
     //! \return stringify version
     virtual std::string __str__() const;
@@ -136,7 +136,7 @@ public:
      * \return whether the 2 objects are equal
      * */
     virtual bool __eq__(const Basic &o) const;
-    
+
     virtual int compare(const Basic &o) const;
     //! \return stringify version
     virtual std::string __str__() const;
@@ -160,7 +160,7 @@ public:
      * \return whether the 2 objects are equal
      * */
     virtual bool __eq__(const Basic &o) const;
-    
+
     virtual int compare(const Basic &o) const;
     //! \return stringify version
     virtual std::string __str__() const;
@@ -184,7 +184,7 @@ public:
      * \return whether the 2 objects are equal
      * */
     virtual bool __eq__(const Basic &o) const;
-    
+
     virtual int compare(const Basic &o) const;
     //! \return stringify version
     virtual std::string __str__() const;
@@ -205,7 +205,7 @@ private:
     RCP<const Basic> arg_; //! The `x+y` in `f(x+y)`
 
 public:
-	//! FunctionSymbol Constructor
+    //! FunctionSymbol Constructor
     FunctionSymbol(std::string name, const RCP<const Basic> &arg);
     //! \return Size of the hash
     virtual std::size_t __hash__() const;
@@ -227,7 +227,7 @@ public:
     }
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &arg);
-	//! Differentiate w.r.t Symbol `x`
+    //! Differentiate w.r.t Symbol `x`
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
 };
 
