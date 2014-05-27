@@ -17,6 +17,10 @@ public:
     // Below methods should be implemented by the derived classes. If not
     // applicable, raise an exception
 
+    // Get the # of rows and # of columns
+    unsigned nrows() const { return row_; }
+    unsigned ncols() const { return col_; }
+
     // Get and set elements
     virtual RCP<const Basic>get(unsigned i) const = 0;
     virtual void set(unsigned i, RCP<const Basic> &e) = 0;
@@ -28,6 +32,7 @@ public:
     // These functions create a new instance of either DenseMatrix or
     // SparseMatrix and return a reference to the result
     virtual RCP<const MatrixBase> add_matrix(const MatrixBase &other) const = 0;
+    virtual RCP<const MatrixBase> mul_matrix(const MatrixBase &other) const = 0;
 
 protected:
     // Stores the dimension of the Matrix
@@ -65,11 +70,21 @@ public:
     virtual RCP<const MatrixBase> add_matrix(const MatrixBase &other) const;
     friend RCP<const DenseMatrix> add_dense_dense(const DenseMatrix &A,
             const DenseMatrix &B);
-    friend RCP<const DenseMatrix> add_sparse_dense(const SparseMatrix &A,
+    friend RCP<const DenseMatrix> add_dense_scalar(const DenseMatrix &A,
+            RCP<const Basic> &k);
+
+    // Matrix multiplication
+    virtual RCP<const MatrixBase> mul_matrix(const MatrixBase &other) const;
+    friend RCP<const DenseMatrix> mul_dense_dense(const DenseMatrix &A,
             const DenseMatrix &B);
+    friend RCP<const DenseMatrix> mul_dense_scalar(const DenseMatrix &A,
+            RCP<const Basic> &k);
+
+    // Gaussian elimination
+    friend RCP<const DenseMatrix> gaussian_elimination(const DenseMatrix &A);
 
 protected:
-    // Matrix elements are sotred in row-major order
+    // Matrix elements are stored in row-major order
     std::vector<RCP<const Basic>> m_;
 };
 
@@ -102,10 +117,9 @@ public:
 
     // Matrix addition
     virtual RCP<const MatrixBase> add_matrix(const MatrixBase &other) const;
-    friend RCP<const SparseMatrix> add_sparse_sparse(const SparseMatrix &A,
-            const SparseMatrix &B);
-    friend RCP<const DenseMatrix> add_sparse_dense(const SparseMatrix &A,
-            const DenseMatrix &B);
+
+    // Matrix Multiplication
+    virtual RCP<const MatrixBase> mul_matrix(const MatrixBase &other) const;
 
 protected:
     std::map<int, RCP<Basic>> m_;
