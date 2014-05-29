@@ -10,88 +10,90 @@
 
 namespace CSymPy {
 
-RCP<const Basic> i2 = rcp(new Integer(2));
-RCP<const Basic> i3 = rcp(new Integer(3));
+static RCP<const Basic> i2 = rcp(new Integer(2));
+static RCP<const Basic> i3 = rcp(new Integer(3));
 
 RCP<const Basic> sqrt(RCP<const Basic>& arg)
 {
-	return pow(arg, div(one, i2));
+  return pow(arg, div(one, i2));
 }
 
-RCP<const Basic> sq3 = sqrt(i3);
-RCP<const Basic> sq2 = sqrt(i2);
+static RCP<const Basic> sq3 = sqrt(i3);
+static RCP<const Basic> sq2 = sqrt(i2);
 
-RCP<const Basic> C0 = div(sub(sq3, one), mul(i2, sq2));
-RCP<const Basic> C1 = div(one, i2);
-RCP<const Basic> C2 = div(sq2, i2);
-RCP<const Basic> C3 = div(sq3, i2);
-RCP<const Basic> C4 = div(add(sq3, one), mul(i2, sq2));
+static RCP<const Basic> C0 = div(sub(sq3, one), mul(i2, sq2));
+static RCP<const Basic> C1 = div(one, i2);
+static RCP<const Basic> C2 = div(sq2, i2);
+static RCP<const Basic> C3 = div(sq3, i2);
+static RCP<const Basic> C4 = div(add(sq3, one), mul(i2, sq2));
 
-RCP<const Basic> mC0 = mul(minus_one, C0);
-RCP<const Basic> mC1 = mul(minus_one, C1);
-RCP<const Basic> mC2 = mul(minus_one, C2);
-RCP<const Basic> mC3 = mul(minus_one, C3);
-RCP<const Basic> mC4 = mul(minus_one, C4);
+static RCP<const Basic> mC0 = mul(minus_one, C0);
+static RCP<const Basic> mC1 = mul(minus_one, C1);
+static RCP<const Basic> mC2 = mul(minus_one, C2);
+static RCP<const Basic> mC3 = mul(minus_one, C3);
+static RCP<const Basic> mC4 = mul(minus_one, C4);
 
 // sin_table[n] represents the value of sin(2*pi*n/24) for n = 0..23
-RCP<const Basic> sin_table[] = {
+static RCP<const Basic> sin_table[] = {
         zero, C0, C1, C2, C3, C4, one, C4, C3, C2, C1, C0,
         zero, mC0, mC1, mC2, mC3, mC4, minus_one, mC4, mC3, mC2, mC1, mC0
     };
 
 bool get_pi_shift(const RCP<const Basic> &arg,
-			  const Ptr<RCP<const Integer>> &n,
-			  const Ptr<RCP<const Basic>> &x)
+        const Ptr<RCP<const Integer>> &n,
+        const Ptr<RCP<const Basic>> &x)
 {
-	if (is_a<Add>(*arg)) {
-		const Add &s = static_cast<const Add &>(*arg);
+    if (is_a<Add>(*arg)) {
+        const Add &s = static_cast<const Add &>(*arg);
         RCP<const Basic> coef = s.coef_;
         int size = s.dict_.size();
-        if(size > 1) {
-			// arg should be of form `theta + n*pi/12`
-			// `n` is an integer
-			// `theta` is an `Expression`
-			bool check_pi = false;
-			RCP<const Basic> temp;
-			*x = coef;
-			for (auto &p: s.dict_) {
-				temp = mul(p.second, integer(12));
-				if (is_a<Symbol>(*p.first) &&
-					eq(rcp_static_cast<const Symbol>(p.first), pi) 
-					&& is_a<Integer>(*temp)) {
-					check_pi = true;
-					*n = rcp_dynamic_cast<const Integer>(temp);
-				}
-				else {
-					*x = add( mul(p.first, p.second), *x);
-				} 		
-			}
-			if (check_pi)
-				return true;
-			else // No term with `pi` found
-				return false;		
-		}
-		else if (size == 1) {
-			// arg should be of form `a + n*pi/12` 
-			// where `a` is a `Number`.
-			auto p = s.dict_.begin();
-			RCP<const Basic> temp = mul(p->second, integer(12));
-			if (is_a<Symbol>(*p->first) &&
-					eq(rcp_static_cast<const Symbol>(p->first), pi) &&
-					is_a<Integer>(*temp)) {
-				
-				*n = rcp_dynamic_cast<const Integer>(temp);
-				*x = coef;
-				return true;		
-			}
-			else 
-				return false;	
-		}
-		else // Should never reach here though!
-			 // Dict of size < 1
-			return false;
-	}
-	else if (is_a<Mul>(*arg)) {
+        if (size > 1) {
+            // arg should be of form `theta + n*pi/12`
+            // `n` is an integer
+            // `theta` is an `Expression`
+            bool check_pi = false;
+            RCP<const Basic> temp;
+            *x = coef;
+            for (auto &p: s.dict_) {
+                temp = mul(p.second, integer(12));
+                if (is_a<Symbol>(*p.first) &&
+                    eq(rcp_static_cast<const Symbol>(p.first), pi)
+                    && is_a<Integer>(*temp)) {
+                    check_pi = true;
+                    *n = rcp_dynamic_cast<const Integer>(temp);
+                }
+                else {
+                    *x = add( mul(p.first, p.second), *x);
+                }
+            }
+            if (check_pi)
+                return true;
+            else // No term with `pi` found
+                return false;
+        }
+        else if (size == 1) {
+            // arg should be of form `a + n*pi/12`
+            // where `a` is a `Number`.
+            auto p = s.dict_.begin();
+            RCP<const Basic> temp = mul(p->second, integer(12));
+            if (is_a<Symbol>(*p->first) &&
+                eq(rcp_static_cast<const Symbol>(p->first), pi) &&
+                is_a<Integer>(*temp)) {
+
+                *n = rcp_dynamic_cast<const Integer>(temp);
+                *x = coef;
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+        else { // Should never reach here though!
+            // Dict of size < 1
+            return false;
+        }
+    }
+    else if (is_a<Mul>(*arg)) {
         // `arg` is of the form `k*pi/12`
         const Mul &s = static_cast<const Mul &>(*arg);
         RCP<const Basic> coef = s.coef_;
@@ -106,19 +108,21 @@ bool get_pi_shift(const RCP<const Basic> &arg,
 
             *n = rcp_dynamic_cast<const Integer>(coef);
             *x = zero;
-            return true;    
+            return true;
         }
-        else
+        else {
             return false;
+        }
     }
     else if (is_a<Symbol>(*arg) &&
-			eq(rcp_static_cast<const Symbol>(arg), pi)) {
-		*n = integer(12);
-		*x = zero;
-		return true;
-	}
-	else
-		return false;
+             eq(rcp_static_cast<const Symbol>(arg), pi)) {
+        *n = integer(12);
+        *x = zero;
+        return true;
+    }
+    else {
+        return false;
+    }
 }
 
 bool could_extract_minus(const RCP<const Basic> &arg)
@@ -129,11 +133,10 @@ bool could_extract_minus(const RCP<const Basic> &arg)
         if (is_a<Integer>(*coef) &&
               rcp_static_cast<const Integer>(coef)->is_negative())
             return true;
-        
+
         else if (is_a<Rational>(*coef) &&
               rcp_static_cast<const Rational>(coef)->is_negative())
             return true;
-        
         else
             return false;
     }
@@ -148,23 +151,21 @@ bool could_extract_minus(const RCP<const Basic> &arg)
                 if (!(rcp_static_cast<const Rational>(p.second)->is_negative()))
                     return false;
             }
-        
             else
-                return false;   
+                return false;
         }
         return true;
-
     }
     else
         return false;
 }
 
-bool handle_minus(const RCP<const Basic> &arg, 
+bool handle_minus(const RCP<const Basic> &arg,
                 const Ptr<RCP<const Basic>> &rarg)
 {
     if (could_extract_minus(arg)) {
         *rarg = mul(minus_one, arg);
-        return true; 
+        return true;
     }
     else {
         *rarg = arg;
@@ -188,13 +189,13 @@ bool eval(const RCP<const Basic> &arg, int period, bool odd, bool conj_odd, //in
         if (eq(r, zero)) {
             index = m;
             *rarg = zero;
-            return false; 
+            return false;
         }
         else if ((m % (12*period)) == 0) {
             index = 0;
             bool b = handle_minus(r, outArg(ret_arg));
             *rarg = ret_arg;
-            if (odd && b) 
+            if (odd && b)
                 sign = -1;
             return false;
         }
@@ -202,10 +203,9 @@ bool eval(const RCP<const Basic> &arg, int period, bool odd, bool conj_odd, //in
             sign = -1;
             bool b = handle_minus(r, outArg(ret_arg));
             *rarg = ret_arg;
-            if (odd && b) 
+            if (odd && b)
                 sign = -1*sign;
             return false;
-
         }
         else if ((m % 6) == 0) {
             if (m == 6)
@@ -228,13 +228,12 @@ bool eval(const RCP<const Basic> &arg, int period, bool odd, bool conj_odd, //in
         bool b = handle_minus(arg, outArg(ret_arg));
         *rarg = ret_arg;
         index = -1;
-        if (odd && b) 
+        if (odd && b)
             sign = -1;
         else
             sign = 1;
         return false;
     }
-        
 }
 
 
@@ -257,13 +256,12 @@ bool Sin::is_canonical(const RCP<const Basic> &arg)
     if (is_a<Integer>(*arg) &&
             rcp_static_cast<const Integer>(arg)->is_zero())
         return false;
-	// e.g sin(k*pi/12)
+    // e.g sin(k*pi/12)
     RCP<const Integer> n;
     RCP<const Basic> r;
     bool b = get_pi_shift(arg, outArg(n), outArg(r));
     if (b)
         return false;
-
     return true;
 }
 
@@ -295,8 +293,8 @@ RCP<const Basic> sin(const RCP<const Basic> &arg)
     RCP<const Basic> ret_arg;
     int index;
     int sign;
-    bool conjugate =  eval(arg, 2, 1, 0, //input
-                      outArg(ret_arg), index, sign); //output
+    bool conjugate = eval(arg, 2, 1, 0, //input
+                          outArg(ret_arg), index, sign); //output
 
     if (conjugate) {
         // cos has to be returned
@@ -402,11 +400,11 @@ Tan::Tan(const RCP<const Basic> &arg)
 
 bool Tan::is_canonical(const RCP<const Basic> &arg)
 {
-    // TODO: Add further checks for +inf -inf cases 
+    // TODO: Add further checks for +inf -inf cases
     if (is_a<Integer>(*arg) &&
             rcp_static_cast<const Integer>(arg)->is_zero())
         return false;
-	// e.g tan(k*pi/12)
+  // e.g tan(k*pi/12)
     RCP<const Integer> n;
     RCP<const Basic> r;
     bool b = get_pi_shift(arg, outArg(n), outArg(r));
@@ -479,7 +477,7 @@ Cot::Cot(const RCP<const Basic> &arg)
 
 bool Cot::is_canonical(const RCP<const Basic> &arg)
 {
-    // TODO: Add further checks for +inf -inf cases 
+    // TODO: Add further checks for +inf -inf cases
     if (is_a<Integer>(*arg) &&
             rcp_static_cast<const Integer>(arg)->is_zero())
         return false;
@@ -578,7 +576,7 @@ bool Csc::__eq__(const Basic &o) const
 }
 
 int Csc::compare(const Basic &o) const
-{    
+{
     CSYMPY_ASSERT(is_a<Csc>(o))
     const Csc &s = static_cast<const Csc &>(o);
     return get_arg()->__cmp__(s);
