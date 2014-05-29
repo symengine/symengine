@@ -15,7 +15,7 @@ RCP<const Basic> i3 = rcp(new Integer(3));
 
 RCP<const Basic> sqrt(RCP<const Basic>& arg)
 {
-	return pow(arg, div(one, i2));
+    return pow(arg, div(one, i2));
 }
 
 RCP<const Basic> sq3 = sqrt(i3);
@@ -40,58 +40,58 @@ RCP<const Basic> sin_table[] = {
     };
 
 bool get_pi_shift(const RCP<const Basic> &arg,
-			  const Ptr<RCP<const Integer>> &n,
-			  const Ptr<RCP<const Basic>> &x)
+              const Ptr<RCP<const Integer>> &n,
+              const Ptr<RCP<const Basic>> &x)
 {
-	if (is_a<Add>(*arg)) {
-		const Add &s = static_cast<const Add &>(*arg);
+    if (is_a<Add>(*arg)) {
+        const Add &s = static_cast<const Add &>(*arg);
         RCP<const Basic> coef = s.coef_;
         int size = s.dict_.size();
         if(size > 1) {
-			// arg should be of form `theta + n*pi/12`
-			// `n` is an integer
-			// `theta` is an `Expression`
-			bool check_pi = false;
-			RCP<const Basic> temp;
-			*x = coef;
-			for (auto &p: s.dict_) {
-				temp = mul(p.second, integer(12));
-				if (is_a<Symbol>(*p.first) &&
-					eq(rcp_static_cast<const Symbol>(p.first), pi) 
-					&& is_a<Integer>(*temp)) {
-					check_pi = true;
-					*n = rcp_dynamic_cast<const Integer>(temp);
-				}
-				else {
-					*x = add( mul(p.first, p.second), *x);
-				} 		
-			}
-			if (check_pi)
-				return true;
-			else // No term with `pi` found
-				return false;		
-		}
-		else if (size == 1) {
-			// arg should be of form `a + n*pi/12` 
-			// where `a` is a `Number`.
-			auto p = s.dict_.begin();
-			RCP<const Basic> temp = mul(p->second, integer(12));
-			if (is_a<Symbol>(*p->first) &&
-					eq(rcp_static_cast<const Symbol>(p->first), pi) &&
-					is_a<Integer>(*temp)) {
-				
-				*n = rcp_dynamic_cast<const Integer>(temp);
-				*x = coef;
-				return true;		
-			}
-			else 
-				return false;	
-		}
-		else // Should never reach here though!
-			 // Dict of size < 1
-			return false;
-	}
-	else if (is_a<Mul>(*arg)) {
+            // arg should be of form `theta + n*pi/12`
+            // `n` is an integer
+            // `theta` is an `Expression`
+            bool check_pi = false;
+            RCP<const Basic> temp;
+            *x = coef;
+            for (auto &p: s.dict_) {
+                temp = mul(p.second, integer(12));
+                if (is_a<Symbol>(*p.first) &&
+                    eq(rcp_static_cast<const Symbol>(p.first), pi) 
+                    && is_a<Integer>(*temp)) {
+                    check_pi = true;
+                    *n = rcp_dynamic_cast<const Integer>(temp);
+                }
+                else {
+                    *x = add( mul(p.first, p.second), *x);
+                }         
+            }
+            if (check_pi)
+                return true;
+            else // No term with `pi` found
+                return false;        
+        }
+        else if (size == 1) {
+            // arg should be of form `a + n*pi/12` 
+            // where `a` is a `Number`.
+            auto p = s.dict_.begin();
+            RCP<const Basic> temp = mul(p->second, integer(12));
+            if (is_a<Symbol>(*p->first) &&
+                    eq(rcp_static_cast<const Symbol>(p->first), pi) &&
+                    is_a<Integer>(*temp)) {
+                
+                *n = rcp_dynamic_cast<const Integer>(temp);
+                *x = coef;
+                return true;        
+            }
+            else 
+                return false;    
+        }
+        else // Should never reach here though!
+             // Dict of size < 1
+            return false;
+    }
+    else if (is_a<Mul>(*arg)) {
         // `arg` is of the form `k*pi/12`
         const Mul &s = static_cast<const Mul &>(*arg);
         RCP<const Basic> coef = s.coef_;
@@ -112,13 +112,13 @@ bool get_pi_shift(const RCP<const Basic> &arg,
             return false;
     }
     else if (is_a<Symbol>(*arg) &&
-			eq(rcp_static_cast<const Symbol>(arg), pi)) {
-		*n = integer(12);
-		*x = zero;
-		return true;
-	}
-	else
-		return false;
+            eq(rcp_static_cast<const Symbol>(arg), pi)) {
+        *n = integer(12);
+        *x = zero;
+        return true;
+    }
+    else
+        return false;
 }
 
 bool could_extract_minus(const RCP<const Basic> &arg)
@@ -257,7 +257,7 @@ bool Sin::is_canonical(const RCP<const Basic> &arg)
     if (is_a<Integer>(*arg) &&
             rcp_static_cast<const Integer>(arg)->is_zero())
         return false;
-	// e.g sin(k*pi/12)
+    // e.g sin(k*pi/12)
     RCP<const Integer> n;
     RCP<const Basic> r;
     bool b = get_pi_shift(arg, outArg(n), outArg(r));
@@ -406,7 +406,7 @@ bool Tan::is_canonical(const RCP<const Basic> &arg)
     if (is_a<Integer>(*arg) &&
             rcp_static_cast<const Integer>(arg)->is_zero())
         return false;
-	// e.g tan(k*pi/12)
+    // e.g tan(k*pi/12)
     RCP<const Integer> n;
     RCP<const Basic> r;
     bool b = get_pi_shift(arg, outArg(n), outArg(r));
@@ -696,6 +696,53 @@ RCP<const Basic> sec(const RCP<const Basic> &arg)
 }
 
 /* ---------------------------- */
+ASin::ASin(const RCP<const Basic> &arg)
+    : TrigFunction(arg)
+{
+    CSYMPY_ASSERT(is_canonical(arg))
+}
+
+bool ASin::is_canonical(const RCP<const Basic> &arg)
+{
+    // TODO: Add further checks for +inf -inf cases 
+    if (eq(arg, zero) || eq(arg, one) || eq(arg, minus_one))
+        return false;
+    return true;
+}
+
+bool ASin::__eq__(const Basic &o) const
+{
+    if (is_a<ASin>(o) &&
+        eq(get_arg(), static_cast<const ASin &>(o).get_arg()))
+        return true;
+    else
+        return false;
+}
+
+int ASin::compare(const Basic &o) const
+{
+    CSYMPY_ASSERT(is_a<ASin>(o))
+    const ASin &s = static_cast<const ASin &>(o);
+    return get_arg()->__cmp__(s);
+}
+
+
+std::string ASin::__str__() const
+{
+    std::ostringstream o;
+    o << "asin(" << *get_arg() << ")";
+    return o.str();
+}
+
+RCP<const Basic> asin(const RCP<const Basic> &arg)
+{
+    if (eq(arg, zero)) return zero;
+    else if (eq(arg, one)) return div(pi, i2);
+    else if (eq(arg, minus_one)) return mul(minus_one, div(pi, i2));
+    return rcp(new ASin(arg));
+}
+
+/* ---------------------------- */
 
 RCP<const Basic> Sin::diff(const RCP<const Symbol> &x) const
 {
@@ -727,6 +774,11 @@ RCP<const Basic> Csc::diff(const RCP<const Symbol> &x) const
 RCP<const Basic> Sec::diff(const RCP<const Symbol> &x) const
 {
     return mul(mul(tan(get_arg()), sec(get_arg())), get_arg()->diff(x));
+}
+
+RCP<const Basic> ASin::diff(const RCP<const Symbol> &x) const
+{
+    return mul(div(one, sqrt(sub(one, pow(get_arg(), i2)))), get_arg()->diff(x));
 }
 
 RCP<const Basic> Sin::subs(const map_basic_basic &subs_dict) const
@@ -805,6 +857,19 @@ RCP<const Basic> Sec::subs(const map_basic_basic &subs_dict) const
         return self;
     else
         return sec(arg);
+}
+
+RCP<const Basic> ASin::subs(const map_basic_basic &subs_dict) const
+{
+    RCP<const ASin> self = rcp_const_cast<ASin>(rcp(this));
+    auto it = subs_dict.find(self);
+    if (it != subs_dict.end())
+        return it->second;
+    RCP<const Basic> arg = get_arg()->subs(subs_dict);
+    if (arg == get_arg())
+        return self;
+    else
+        return asin(arg);
 }
 /* ---------------------------- */
 

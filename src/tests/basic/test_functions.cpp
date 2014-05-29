@@ -29,6 +29,7 @@ using CSymPy::tan;
 using CSymPy::cot;
 using CSymPy::csc;
 using CSymPy::sec;
+using CSymPy::asin;
 using CSymPy::function_symbol;
 using CSymPy::Derivative;
 using CSymPy::pi;
@@ -866,6 +867,29 @@ void test_could_extract_minus()
 
 }
 
+void test_asin()
+{
+    RCP<const Basic> im1 = integer(-1);
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> i3 = integer(3);
+    RCP<const Basic> im2 = integer(-2);
+
+    RCP<const Basic> r1;
+    RCP<const Basic> r2;
+
+    r1 = asin(im1);
+    r2 = div(pi, im2);
+    std::cout<< *r1 << std::endl;
+    std::cout<< *r2 << std::endl;
+    //assert(eq(r1, r2));
+
+    r1 = mul(div(i3, i2), im1);
+    r2 = div(i3, im2);
+    std::cout<< *r1 << std::endl;
+    std::cout<< *r2 << std::endl;
+    assert(eq(r1, r2));
+}
+
 int main(int argc, char* argv[])
 {
     print_stack_on_segfault();    
@@ -880,6 +904,6 @@ int main(int argc, char* argv[])
     test_get_pi_shift();
     test_sin_table();
     test_could_extract_minus();
-
+    test_asin();
     return 0;
 }
