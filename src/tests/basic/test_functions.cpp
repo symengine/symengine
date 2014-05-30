@@ -878,13 +878,7 @@ void test_asin()
     RCP<const Basic> r2;
 
     r1 = asin(im1);
-    r2 = div(pi, im2);
-    std::cout<< *r1 << std::endl;
-    std::cout<< *r2 << std::endl;
-    //assert(eq(r1, r2));
-
-    r1 = mul(div(i3, i2), im1);
-    r2 = div(i3, im2);
+    r2 = mul(im1, div(pi, i2));
     std::cout<< *r1 << std::endl;
     std::cout<< *r2 << std::endl;
     assert(eq(r1, r2));

@@ -37,8 +37,8 @@ public:
  * `x` is `theta`
  * */
 bool get_pi_shift(const RCP<const Basic> &arg,
-              const Ptr<RCP<const Integer>> &n,
-              const Ptr<RCP<const Basic>> &x);
+        const Ptr<RCP<const Integer>> &n,
+        const Ptr<RCP<const Basic>> &x);
 
 //! \return `true` if `arg` contains a negative sign.
 bool could_extract_minus(const RCP<const Basic> &arg);
@@ -47,7 +47,7 @@ bool handle_minus(const RCP<const Basic> &arg,
             const Ptr<RCP<const Basic>> &rarg);
 
 // \return true of conjugate has to be returned finally else false
-bool eval(const RCP<const Basic> &arg, int period, bool odd, bool conj_odd, //input 
+bool eval(const RCP<const Basic> &arg, int period, bool odd, bool conj_odd, //input
             const Ptr<RCP<const Basic>>& rarg,int& index, int& sign); //output
 
 //! \return `sqrt` of the `arg`
@@ -62,8 +62,8 @@ public:
      * \return whether the 2 objects are equal
      * */
     virtual bool __eq__(const Basic &o) const;
-    
-    virtual int compare(const Basic &o) const; 
+
+    virtual int compare(const Basic &o) const;
     //! \return stringify version
     virtual std::string __str__() const;
     //! \return `true` if canonical
@@ -112,7 +112,7 @@ public:
      * \return whether the 2 objects are equal
      * */
     virtual bool __eq__(const Basic &o) const;
-    
+
     virtual int compare(const Basic &o) const;
     //! \return stringify version
     virtual std::string __str__() const;
@@ -136,7 +136,7 @@ public:
      * \return whether the 2 objects are equal
      * */
     virtual bool __eq__(const Basic &o) const;
-    
+
     virtual int compare(const Basic &o) const;
     //! \return stringify version
     virtual std::string __str__() const;
@@ -160,7 +160,7 @@ public:
      * \return whether the 2 objects are equal
      * */
     virtual bool __eq__(const Basic &o) const;
-    
+
     virtual int compare(const Basic &o) const;
     //! \return stringify version
     virtual std::string __str__() const;
@@ -184,7 +184,7 @@ public:
      * \return whether the 2 objects are equal
      * */
     virtual bool __eq__(const Basic &o) const;
-    
+
     virtual int compare(const Basic &o) const;
     //! \return stringify version
     virtual std::string __str__() const;
