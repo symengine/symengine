@@ -273,6 +273,8 @@ RCP<const Basic> mul(const RCP<const Basic> &a, const RCP<const Basic> &b)
 
 RCP<const Basic> div(const RCP<const Basic> &a, const RCP<const Basic> &b)
 {
+    if (eq(b, one) || eq(b, minus_one))
+        return mul(a, b);
     return mul(a, pow(b, minus_one));
 }
 
