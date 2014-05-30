@@ -150,7 +150,7 @@ void test_dense_dense_multiplication()
     };
     C = densematrix(3, 1, n);
 
-    //assert(eq(mul_dense_dense(*A, *B), C));
+    assert(eq(mul_dense_dense(*A, *B), C));
 }
 
 void test_mul_matrix()
