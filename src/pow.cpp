@@ -96,6 +96,8 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
     if (eq(b, one)) return a;
     if (eq(a, zero)) return zero;
     if (eq(a, one)) return one;
+    if (eq(a, minus_one) && is_a<Integer>(*b))
+        return is_a<Integer>(*div(b, integer(2))) ? one : minus_one;
     if (is_a_Number(*a) && is_a<Integer>(*b))
         return pownum(rcp_static_cast<const Number>(a), rcp_static_cast<const Integer>(b));
     if (is_a<Mul>(*a))
