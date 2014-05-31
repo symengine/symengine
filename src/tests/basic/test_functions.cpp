@@ -870,8 +870,10 @@ void test_could_extract_minus()
 void test_asin()
 {
     RCP<const Basic> im1 = integer(-1);
+    RCP<const Basic> i1 = integer(1);
     RCP<const Basic> i2 = integer(2);
     RCP<const Basic> i3 = integer(3);
+    RCP<const Basic> i5 = integer(5);
     RCP<const Basic> im2 = integer(-2);
 
     RCP<const Basic> r1;
@@ -879,25 +881,45 @@ void test_asin()
 
     r1 = asin(im1);
     r2 = mul(im1, div(pi, i2));
-    std::cout<< *r1 << std::endl;
-    std::cout<< *r2 << std::endl;
     assert(eq(r1, r2));
+
+    r1 = asin(div(im1, i2));
+    r2 = div(pi, mul(im2, i3));
+    assert(eq(r1, r2));
+
+    r1 = asin(div(sqrt(i2), i2));
+    r2 = div(pi, mul(i2, i2));
+    assert(eq(r1, r2));
+
+    r1 = asin(div(add(sqrt(i3), i1), mul(i2, sqrt(i2))));
+    r2 = div(pi, mul(i3, pow(i2, i2)));
+    assert(eq(r1, r2));
+
+    r1 = asin(div(sqrt(sub(i5, sqrt(i5))), integer(8)));
+    r2 = div(pi, i5);
+    assert(eq(r1, r2));
+
+    r1 = asin(mul(div(sub(sqrt(i5), i1), integer(4)), im1));
+    r2 = div(pi, mul(im2, i5));
+    assert(eq(r1, r2));
+
+
 }
 
 int main(int argc, char* argv[])
 {
     print_stack_on_segfault();    
-    test_sin();
-    test_cos();
-    test_tan();
-    test_cot();
-    test_csc();
-    test_sec();
-    test_f();
-    test_Derivative();
-    test_get_pi_shift();
-    test_sin_table();
-    test_could_extract_minus();
+    // test_sin();
+    // test_cos();
+    // test_tan();
+    // test_cot();
+    // test_csc();
+    // test_sec();
+    // test_f();
+    // test_Derivative();
+    // test_get_pi_shift();
+    // test_sin_table();
+    // test_could_extract_minus();
     test_asin();
     return 0;
 }

@@ -260,6 +260,18 @@ bool eval(const RCP<const Basic> &arg, int period, bool odd, bool conj_odd, //in
     }
 }
 
+bool inverse_lookup(umap_basic_basic &d, const RCP<const Basic> &t,
+                   const Ptr<RCP<const Basic>>& index)
+{
+    auto it = d.find(t);
+    if (it == d.end()) {
+        // Not found in lookup
+        return false;   
+    } else {
+        *index = (it->second);
+        return true;
+    }
+}
 
 std::size_t TrigFunction::__hash__() const
 {
@@ -761,7 +773,14 @@ RCP<const Basic> asin(const RCP<const Basic> &arg)
     if (eq(arg, zero)) return zero;
     else if (eq(arg, one)) return div(pi, i2);
     else if (eq(arg, minus_one)) return mul(minus_one, div(pi, i2));
-    return rcp(new ASin(arg));
+
+    RCP<const Basic> index;
+    bool b = inverse_lookup(inverse_cst, arg, outArg(index));
+    if (b) {
+        return div(pi, index);
+    } else {
+        return rcp(new ASin(arg));
+    }
 }
 
 /* ---------------------------- */
