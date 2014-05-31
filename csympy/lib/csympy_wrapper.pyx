@@ -2,6 +2,7 @@ from cython.operator cimport dereference as deref
 cimport csympy
 from csympy cimport rcp, RCP
 from libcpp.string cimport string
+from libcpp.vector cimport vector
 
 class SympifyError(Exception):
     pass
@@ -28,6 +29,8 @@ cdef c2py(RCP[const csympy.Basic] o):
         r = Cos.__new__(Cos)
     elif (csympy.is_a_FunctionSymbol(deref(o))):
         r = FunctionSymbol.__new__(FunctionSymbol)
+    elif (csympy.is_a_Derivative(deref(o))):
+        r = Derivative.__new__(Derivative)
     else:
         raise Exception("Unsupported CSymPy class.")
     r.thisptr = o
@@ -300,6 +303,23 @@ cdef class FunctionSymbol(Function):
         arg = c2py(deref(X).get_arg())._sympy_()
         import sympy
         return sympy.Function(name)(arg)
+
+cdef class Derivative(Basic):
+
+    def __dealloc__(self):
+        self.thisptr.reset()
+
+    def _sympy_(self):
+        cdef RCP[const csympy.Derivative] X = \
+            csympy.rcp_static_cast_Derivative(self.thisptr)
+        arg = c2py(deref(X).get_arg())._sympy_()
+        cdef RCP[const csympy.Basic] Y
+        s = []
+        for i in range(deref(X).get_symbols().size()):
+            Y = <RCP[const csympy.Basic]>(deref(X).get_symbols()[i])
+            s.append(c2py(Y)._sympy_())
+        import sympy
+        return sympy.Derivative(arg, *s)
 
 def sin(x):
     cdef Basic X = sympify(x)

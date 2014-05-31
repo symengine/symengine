@@ -42,8 +42,8 @@ public:
     static void as_base_exp(const RCP<const Basic> &self,
             const Ptr<RCP<const Basic>> &exp,
             const Ptr<RCP<const Basic>> &base);
-    //! Rewrite as 2 terms 
-    /*! 
+    //! Rewrite as 2 terms
+    /*!
 		Example: if this=3*x^2*y^2*z^2`, then `a=x^2` and `b=3*y^2*z^2`
 	* */
     void as_two_terms(const Ptr<RCP<const Basic>> &a,
