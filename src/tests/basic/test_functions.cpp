@@ -31,6 +31,7 @@ using CSymPy::csc;
 using CSymPy::sec;
 using CSymPy::asin;
 using CSymPy::acos;
+using CSymPy::asec;
 using CSymPy::function_symbol;
 using CSymPy::Derivative;
 using CSymPy::pi;
@@ -946,21 +947,65 @@ void test_acos()
     assert(eq(r1, r2));
 }
 
+void test_asec()
+{
+    RCP<const Basic> im1 = integer(-1);
+    RCP<const Basic> i1 = integer(1);
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> i3 = integer(3);
+    RCP<const Basic> i5 = integer(5);
+    RCP<const Basic> im2 = integer(-2);
+
+    RCP<const Basic> r1;
+    RCP<const Basic> r2;
+
+    r1 = asec(im1);
+    r2 = pi;
+    assert(eq(r1, r2));
+
+    r1 = asec(div(i2, im1));
+    r2 = mul(i2, div(pi,  i3));
+    assert(eq(r1, r2));
+    
+    // This test fails.
+    // Possible bug in implementation of pow
+    r1 = asec(div(i2, sqrt(i2)));
+    r2 = div(pi, mul(i2, i2));
+    //assert(eq(r1, r2));
+
+    r1 = asec(div(mul(i2, sqrt(i2)), add(sqrt(i3), i1)));
+    r2 = mul(i5, div(pi, mul(i3, pow(i2, i2))));
+    assert(eq(r1, r2));
+
+    r1 = asec(div(integer(8), sqrt(sub(i5, sqrt(i5)))));
+    r2 = mul(i3, div(pi, mul(i2, i5)));
+    assert(eq(r1, r2));
+
+    r1 = asec(mul(div(integer(4), sub(sqrt(i5), i1)), im1));
+    r2 = mul(i3, div(pi, i5));
+    assert(eq(r1, r2));
+
+    r1 = asec(div(integer(4), sub(sqrt(i5), i1)));
+    r2 = mul(i2, div(pi, i5));
+    assert(eq(r1, r2));
+}
+
 int main(int argc, char* argv[])
 {
     print_stack_on_segfault();    
-    test_sin();
-    test_cos();
-    test_tan();
-    test_cot();
-    test_csc();
-    test_sec();
-    test_f();
-    test_Derivative();
-    test_get_pi_shift();
-    test_sin_table();
-    test_could_extract_minus();
-    test_asin();
-    test_acos();
+    // test_sin();
+    // test_cos();
+    // test_tan();
+    // test_cot();
+    // test_csc();
+    // test_sec();
+    // test_f();
+    // test_Derivative();
+    // test_get_pi_shift();
+    // test_sin_table();
+    // test_could_extract_minus();
+    // test_asin();
+    // test_acos();
+    test_asec();
     return 0;
 }

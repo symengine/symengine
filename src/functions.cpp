@@ -852,6 +852,67 @@ RCP<const Basic> acos(const RCP<const Basic> &arg)
     }
 }
 
+ASec::ASec(const RCP<const Basic> &arg)
+    : TrigFunction(arg)
+{
+    CSYMPY_ASSERT(is_canonical(arg))
+}
+
+bool ASec::is_canonical(const RCP<const Basic> &arg)
+{
+    // TODO: Add further checks for +inf -inf cases 
+    if (eq(arg, one) || eq(arg, minus_one))
+        return false;
+    RCP<const Basic> index;
+    bool b = inverse_lookup(inverse_cst, div(one, get_arg()), outArg(index));
+    if (b)
+        return false;
+    else
+        return true;
+}
+
+bool ASec::__eq__(const Basic &o) const
+{
+    if (is_a<ASec>(o) &&
+        eq(get_arg(), static_cast<const ASec &>(o).get_arg()))
+        return true;
+    else
+        return false;
+}
+
+int ASec::compare(const Basic &o) const
+{
+    CSYMPY_ASSERT(is_a<ASec>(o))
+    const ASec &s = static_cast<const ASec &>(o);
+    return get_arg()->__cmp__(s);
+}
+
+
+std::string ASec::__str__() const
+{
+    std::ostringstream o;
+    o << "asec(" << *get_arg() << ")";
+    return o.str();
+}
+
+RCP<const Basic> asec(const RCP<const Basic> &arg)
+{
+    if (eq(arg, one)) return zero;
+    else if (eq(arg, minus_one)) return pi;
+
+    RCP<const Basic> index;
+    bool b = inverse_lookup(inverse_cst, div(one, arg), outArg(index));
+    if (b) {
+        if (could_extract_minus(index)) {
+            return add(pi, div(pi, index)); 
+        } 
+        else {
+            return sub(div(pi, i2), div(pi, index));
+        }
+    } else {
+        return rcp(new ASec(arg));
+    }
+}
 /* ---------------------------- */
 
 RCP<const Basic> Sin::diff(const RCP<const Symbol> &x) const
@@ -894,6 +955,11 @@ RCP<const Basic> ASin::diff(const RCP<const Symbol> &x) const
 RCP<const Basic> ACos::diff(const RCP<const Symbol> &x) const
 {
     return mul(div(minus_one, sqrt(sub(one, pow(get_arg(), i2)))), get_arg()->diff(x));
+}
+
+RCP<const Basic> ASec::diff(const RCP<const Symbol> &x) const
+{
+    return mul(div(minus_one, mul(get_arg(), sqrt(sub(pow(get_arg(), i2), one)))), get_arg()->diff(x));
 }
 
 RCP<const Basic> Sin::subs(const map_basic_basic &subs_dict) const
@@ -998,6 +1064,19 @@ RCP<const Basic> ACos::subs(const map_basic_basic &subs_dict) const
         return self;
     else
         return acos(arg);
+}
+
+RCP<const Basic> ASec::subs(const map_basic_basic &subs_dict) const
+{
+    RCP<const ASec> self = rcp_const_cast<ASec>(rcp(this));
+    auto it = subs_dict.find(self);
+    if (it != subs_dict.end())
+        return it->second;
+    RCP<const Basic> arg = get_arg()->subs(subs_dict);
+    if (arg == get_arg())
+        return self;
+    else
+        return asec(arg);
 }
 /* ---------------------------- */
 
