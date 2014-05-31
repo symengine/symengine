@@ -47,6 +47,12 @@ bool could_extract_minus(const RCP<const Basic> &arg);
 bool handle_minus(const RCP<const Basic> &arg,
             const Ptr<RCP<const Basic>> &rarg);
 
+/*! returns `true` if the given argument `t` is found in the
+*   lookup table `d`. It also returns the value in `index`
+**/
+bool inverse_lookup(umap_basic_basic &d, const RCP<const Basic> &t,
+                   const Ptr<RCP<const Basic>>& index);
+
 // \return true of conjugate has to be returned finally else false
 bool eval(const RCP<const Basic> &arg, int period, bool odd, bool conj_odd, //input
             const Ptr<RCP<const Basic>>& rarg,int& index, int& sign); //output

@@ -741,7 +741,12 @@ bool ASin::is_canonical(const RCP<const Basic> &arg)
     // TODO: Add further checks for +inf -inf cases 
     if (eq(arg, zero) || eq(arg, one) || eq(arg, minus_one))
         return false;
-    return true;
+    RCP<const Basic> index;
+    bool b = inverse_lookup(inverse_cst, get_arg(), outArg(index));
+    if (b)
+        return false;
+    else
+        return true;
 }
 
 bool ASin::__eq__(const Basic &o) const
