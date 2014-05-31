@@ -10,6 +10,7 @@
 #include <gmpxx.h>
 
 #include "basic.h"
+#include "dict.h"
 
 namespace CSymPy {
 

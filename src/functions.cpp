@@ -12,6 +12,10 @@ namespace CSymPy {
 
 static RCP<const Basic> i2 = rcp(new Integer(2));
 static RCP<const Basic> i3 = rcp(new Integer(3));
+static RCP<const Basic> i5 = rcp(new Integer(5));
+static RCP<const Basic> im2 = rcp(new Integer(-2));
+static RCP<const Basic> im3 = rcp(new Integer(-3));
+static RCP<const Basic> im5 = rcp(new Integer(-5));
 
 RCP<const Basic> sqrt(RCP<const Basic>& arg)
 {
@@ -20,24 +24,44 @@ RCP<const Basic> sqrt(RCP<const Basic>& arg)
 
 static RCP<const Basic> sq3 = sqrt(i3);
 static RCP<const Basic> sq2 = sqrt(i2);
+static RCP<const Basic> sq5 = sqrt(i5);
 
 static RCP<const Basic> C0 = div(sub(sq3, one), mul(i2, sq2));
 static RCP<const Basic> C1 = div(one, i2);
 static RCP<const Basic> C2 = div(sq2, i2);
 static RCP<const Basic> C3 = div(sq3, i2);
 static RCP<const Basic> C4 = div(add(sq3, one), mul(i2, sq2));
+static RCP<const Basic> C5 = div(sqrt(sub(i5, sqrt(i5))), integer(8));
+static RCP<const Basic> C6 = div(sub(sqrt(i5), one), integer(4));
 
 static RCP<const Basic> mC0 = mul(minus_one, C0);
 static RCP<const Basic> mC1 = mul(minus_one, C1);
 static RCP<const Basic> mC2 = mul(minus_one, C2);
 static RCP<const Basic> mC3 = mul(minus_one, C3);
 static RCP<const Basic> mC4 = mul(minus_one, C4);
+static RCP<const Basic> mC5 = mul(minus_one, C5);
+static RCP<const Basic> mC6 = mul(minus_one, C6);
 
 // sin_table[n] represents the value of sin(2*pi*n/24) for n = 0..23
 static RCP<const Basic> sin_table[] = {
         zero, C0, C1, C2, C3, C4, one, C4, C3, C2, C1, C0,
         zero, mC0, mC1, mC2, mC3, mC4, minus_one, mC4, mC3, mC2, mC1, mC0
     };
+
+static umap_basic_basic inverse_cst = {
+    {C3, i3},
+    {mC3, im3},
+    {C2, mul(i2, i2)},
+    {mC2, mul(im2, i2)},
+    {C4, integer(12)},
+    {mC4, integer(-12)},
+    {C5, i5},
+    {mC5, im5},
+    {C6, integer(10)},
+    {mC6, integer(-10)},
+    {div(one, i2), integer(6)},
+    {div(minus_one, i2), integer(-6)},
+};
 
 bool get_pi_shift(const RCP<const Basic> &arg,
         const Ptr<RCP<const Integer>> &n,
