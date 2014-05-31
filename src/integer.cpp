@@ -72,7 +72,7 @@ RCP<const Number> Integer::divint(const Integer &other) const {
 RCP<const Number> Integer::pow_negint(const Integer &other) const {
     RCP<const Number> tmp = powint(*other.neg());
     if (is_a<Integer>(*tmp)) {
-        mpq_class q(1, rcp_static_cast<const Integer>(tmp)->i);
+        mpq_class q(sgn(rcp_static_cast<const Integer>(tmp)->i), abs(rcp_static_cast<const Integer>(tmp)->i));
         return rcp(new Rational(q));
     } else {
         throw std::runtime_error("powint returned non-integer");
