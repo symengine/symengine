@@ -325,6 +325,30 @@ public:
 //! Canonicalize ATan:
 RCP<const Basic> atan(const RCP<const Basic> &arg);
 
+class ACot : public TrigFunction {
+
+public:
+    //! ACot Constructor
+    ACot(const RCP<const Basic> &arg);
+    /*! Equality comparator
+     * \param o - Object to be compared with
+     * \return whether the 2 objects are equal
+     * */
+    virtual bool __eq__(const Basic &o) const;
+    virtual int compare(const Basic &o) const;
+    //! \return stringify version
+    virtual std::string __str__() const;
+    //! \return `true` if canonical
+    bool is_canonical(const RCP<const Basic> &arg);
+    //! Differentiate w.r.t Symbol `x`
+    virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
+    //! Substitute with `subs_dict
+    virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
+};
+
+//! Canonicalize ACot:
+RCP<const Basic> acot(const RCP<const Basic> &arg);
+
 class FunctionSymbol : public Function {
 private:
     std::string name_; //! The `f` in `f(x+y)`

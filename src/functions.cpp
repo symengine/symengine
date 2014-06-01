@@ -1043,6 +1043,70 @@ RCP<const Basic> atan(const RCP<const Basic> &arg)
         return rcp(new ATan(arg));
     }
 }
+
+ACot::ACot(const RCP<const Basic> &arg)
+    : TrigFunction(arg)
+{
+    CSYMPY_ASSERT(is_canonical(arg))
+}
+
+bool ACot::is_canonical(const RCP<const Basic> &arg)
+{
+    // TODO: Add further checks for +inf -inf cases
+    if (eq(arg, zero) || eq(arg, one) || eq(arg, minus_one))
+        return false;
+    RCP<const Basic> index;
+    bool b = inverse_lookup(inverse_cst, get_arg(), outArg(index));
+    if (b)
+        return false;
+    else
+        return true;
+}
+
+bool ACot::__eq__(const Basic &o) const
+{
+    if (is_a<ACot>(o) &&
+        eq(get_arg(), static_cast<const ACot &>(o).get_arg()))
+        return true;
+    else
+        return false;
+}
+
+int ACot::compare(const Basic &o) const
+{
+    CSYMPY_ASSERT(is_a<ACot>(o))
+    const ACot &s = static_cast<const ACot &>(o);
+    return get_arg()->__cmp__(s);
+}
+
+
+std::string ACot::__str__() const
+{
+    std::ostringstream o;
+    o << "acot(" << *get_arg() << ")";
+    return o.str();
+}
+
+RCP<const Basic> acot(const RCP<const Basic> &arg)
+{
+    if (eq(arg, zero)) return div(pi, i2);
+    else if (eq(arg, one)) return div(pi, mul(i2, i2));
+    else if (eq(arg, minus_one)) return mul(i3, div(pi, mul(i2, i2)));
+
+    RCP<const Basic> index;
+    bool b = inverse_lookup(inverse_tct, arg, outArg(index));
+    if (b) {
+        if (could_extract_minus(index)) {
+            return add(pi, div(pi, index));
+        }
+        else {
+            return sub(div(pi, i2), div(pi, index));
+        }
+    } else {
+        return rcp(new ACot(arg));
+    }
+}
+
 /* ---------------------------- */
 
 RCP<const Basic> Sin::diff(const RCP<const Symbol> &x) const
@@ -1100,6 +1164,11 @@ RCP<const Basic> ACsc::diff(const RCP<const Symbol> &x) const
 RCP<const Basic> ATan::diff(const RCP<const Symbol> &x) const
 {
     return mul(div(one, add(one, pow(get_arg(), i2))), get_arg()->diff(x));
+}
+
+RCP<const Basic> ACot::diff(const RCP<const Symbol> &x) const
+{
+    return mul(div(minus_one, add(one, pow(get_arg(), i2))), get_arg()->diff(x));
 }
 
 RCP<const Basic> Sin::subs(const map_basic_basic &subs_dict) const
@@ -1243,6 +1312,19 @@ RCP<const Basic> ATan::subs(const map_basic_basic &subs_dict) const
         return self;
     else
         return atan(arg);
+}
+
+RCP<const Basic> ACot::subs(const map_basic_basic &subs_dict) const
+{
+    RCP<const ACot> self = rcp_const_cast<ACot>(rcp(this));
+    auto it = subs_dict.find(self);
+    if (it != subs_dict.end())
+        return it->second;
+    RCP<const Basic> arg = get_arg()->subs(subs_dict);
+    if (arg == get_arg())
+        return self;
+    else
+        return acot(arg);
 }
 /* ---------------------------- */
 
