@@ -63,6 +63,21 @@ static umap_basic_basic inverse_cst = {
     {div(minus_one, i2), integer(-6)},
 };
 
+static umap_basic_basic inverse_tct = {
+    {div(one, sq3), mul(i2, i3)},
+    {div(minus_one, sq3), mul(im2, i3)},
+    {sq3, i3},
+    {mul(minus_one, sq3), im3},
+    {add(one, sq2), div(pow(i2, i3), i3)},
+    {mul(minus_one, add(one, sq2)), div(pow(i2, i3), im3)},
+    {sub(sq2, one), pow(i2, i3)},
+    {sub(one, sq2), pow(im2, i3)},
+    {sub(i2, sq3), mul(mul(i2,i2), i3)},
+    {sub(sq3, i2), mul(mul(im2,i2), i3)},
+    {sqrt(add(i5, mul(i2, sqrt(i5)))), div(i5, i2)},
+    {mul(minus_one, sqrt(add(i5, mul(i2, sqrt(i5))))), div(im5, i2)},
+};
+
 bool get_pi_shift(const RCP<const Basic> &arg,
         const Ptr<RCP<const Integer>> &n,
         const Ptr<RCP<const Basic>> &x)
