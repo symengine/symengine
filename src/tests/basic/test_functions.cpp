@@ -32,6 +32,7 @@ using CSymPy::sec;
 using CSymPy::asin;
 using CSymPy::acos;
 using CSymPy::asec;
+using CSymPy::acsc;
 using CSymPy::function_symbol;
 using CSymPy::Derivative;
 using CSymPy::pi;
@@ -990,22 +991,60 @@ void test_asec()
     assert(eq(r1, r2));
 }
 
+void test_acsc()
+{
+    RCP<const Basic> im1 = integer(-1);
+    RCP<const Basic> i1 = integer(1);
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> i3 = integer(3);
+    RCP<const Basic> i5 = integer(5);
+    RCP<const Basic> im2 = integer(-2);
+
+    RCP<const Basic> r1;
+    RCP<const Basic> r2;
+
+    r1 = acsc(im1);
+    r2 = mul(im1, div(pi, i2));
+    assert(eq(r1, r2));
+
+    r1 = acsc(im2);
+    r2 = div(pi, mul(im2, i3));
+    assert(eq(r1, r2));
+
+    r1 = acsc(div(i2, sqrt(i2)));
+    r2 = div(pi, mul(i2, i2));
+    //assert(eq(r1, r2));
+
+    r1 = acsc(div(mul(i2, sqrt(i2)), add(sqrt(i3), i1)));
+    r2 = div(pi, mul(i3, pow(i2, i2)));
+    assert(eq(r1, r2));
+
+    r1 = acsc(div(integer(8), sqrt(sub(i5, sqrt(i5)))));
+    r2 = div(pi, i5);
+    assert(eq(r1, r2));
+
+    r1 = acsc(mul(div(integer(4), sub(sqrt(i5), i1)), im1));
+    r2 = div(pi, mul(im2, i5));
+    assert(eq(r1, r2));
+}
+
 int main(int argc, char* argv[])
 {
     print_stack_on_segfault();    
-    // test_sin();
-    // test_cos();
-    // test_tan();
-    // test_cot();
-    // test_csc();
-    // test_sec();
-    // test_f();
-    // test_Derivative();
-    // test_get_pi_shift();
-    // test_sin_table();
-    // test_could_extract_minus();
-    // test_asin();
-    // test_acos();
+    test_sin();
+    test_cos();
+    test_tan();
+    test_cot();
+    test_csc();
+    test_sec();
+    test_f();
+    test_Derivative();
+    test_get_pi_shift();
+    test_sin_table();
+    test_could_extract_minus();
+    test_asin();
+    test_acos();
     test_asec();
+    test_acsc();
     return 0;
 }

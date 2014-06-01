@@ -266,7 +266,7 @@ bool inverse_lookup(umap_basic_basic &d, const RCP<const Basic> &t,
     auto it = d.find(t);
     if (it == d.end()) {
         // Not found in lookup
-        return false;   
+        return false;
     } else {
         *index = (it->second);
         return true;
@@ -738,7 +738,7 @@ ASin::ASin(const RCP<const Basic> &arg)
 
 bool ASin::is_canonical(const RCP<const Basic> &arg)
 {
-    // TODO: Add further checks for +inf -inf cases 
+    // TODO: Add further checks for +inf -inf cases
     if (eq(arg, zero) || eq(arg, one) || eq(arg, minus_one))
         return false;
     RCP<const Basic> index;
@@ -797,7 +797,7 @@ ACos::ACos(const RCP<const Basic> &arg)
 
 bool ACos::is_canonical(const RCP<const Basic> &arg)
 {
-    // TODO: Add further checks for +inf -inf cases 
+    // TODO: Add further checks for +inf -inf cases
     if (eq(arg, zero) || eq(arg, one) || eq(arg, minus_one))
         return false;
     RCP<const Basic> index;
@@ -842,8 +842,8 @@ RCP<const Basic> acos(const RCP<const Basic> &arg)
     bool b = inverse_lookup(inverse_cst, arg, outArg(index));
     if (b) {
         if (could_extract_minus(index)) {
-            return add(pi, div(pi, index)); 
-        } 
+            return add(pi, div(pi, index));
+        }
         else {
             return sub(div(pi, i2), div(pi, index));
         }
@@ -860,7 +860,7 @@ ASec::ASec(const RCP<const Basic> &arg)
 
 bool ASec::is_canonical(const RCP<const Basic> &arg)
 {
-    // TODO: Add further checks for +inf -inf cases 
+    // TODO: Add further checks for +inf -inf cases
     if (eq(arg, one) || eq(arg, minus_one))
         return false;
     RCP<const Basic> index;
@@ -904,13 +904,70 @@ RCP<const Basic> asec(const RCP<const Basic> &arg)
     bool b = inverse_lookup(inverse_cst, div(one, arg), outArg(index));
     if (b) {
         if (could_extract_minus(index)) {
-            return add(pi, div(pi, index)); 
-        } 
+            return add(pi, div(pi, index));
+        }
         else {
             return sub(div(pi, i2), div(pi, index));
         }
     } else {
         return rcp(new ASec(arg));
+    }
+}
+
+ACsc::ACsc(const RCP<const Basic> &arg)
+    : TrigFunction(arg)
+{
+    CSYMPY_ASSERT(is_canonical(arg))
+}
+
+bool ACsc::is_canonical(const RCP<const Basic> &arg)
+{
+    // TODO: Add further checks for +inf -inf cases
+    if (eq(arg, one) || eq(arg, minus_one))
+        return false;
+    RCP<const Basic> index;
+    bool b = inverse_lookup(inverse_cst, div(one, get_arg()), outArg(index));
+    if (b)
+        return false;
+    else
+        return true;
+}
+
+bool ACsc::__eq__(const Basic &o) const
+{
+    if (is_a<ACsc>(o) &&
+        eq(get_arg(), static_cast<const ASec &>(o).get_arg()))
+        return true;
+    else
+        return false;
+}
+
+int ACsc::compare(const Basic &o) const
+{
+    CSYMPY_ASSERT(is_a<ACsc>(o))
+    const ACsc &s = static_cast<const ACsc &>(o);
+    return get_arg()->__cmp__(s);
+}
+
+
+std::string ACsc::__str__() const
+{
+    std::ostringstream o;
+    o << "acsc(" << *get_arg() << ")";
+    return o.str();
+}
+
+RCP<const Basic> acsc(const RCP<const Basic> &arg)
+{
+    if (eq(arg, one)) return div(pi, i2);
+    else if (eq(arg, minus_one)) return div(pi, im2);
+
+    RCP<const Basic> index;
+    bool b = inverse_lookup(inverse_cst, div(one, arg), outArg(index));
+    if (b) {
+        return div(pi, index);
+    } else {
+        return rcp(new ACsc(arg));
     }
 }
 /* ---------------------------- */
@@ -956,8 +1013,13 @@ RCP<const Basic> ACos::diff(const RCP<const Symbol> &x) const
 {
     return mul(div(minus_one, sqrt(sub(one, pow(get_arg(), i2)))), get_arg()->diff(x));
 }
-
+// TODO: Use abs(get_arg())
 RCP<const Basic> ASec::diff(const RCP<const Symbol> &x) const
+{
+    return mul(div(one, mul(get_arg(), sqrt(sub(pow(get_arg(), i2), one)))), get_arg()->diff(x));
+}
+// TODO: Use abs(get_arg())
+RCP<const Basic> ACsc::diff(const RCP<const Symbol> &x) const
 {
     return mul(div(minus_one, mul(get_arg(), sqrt(sub(pow(get_arg(), i2), one)))), get_arg()->diff(x));
 }
@@ -1077,6 +1139,19 @@ RCP<const Basic> ASec::subs(const map_basic_basic &subs_dict) const
         return self;
     else
         return asec(arg);
+}
+
+RCP<const Basic> ACsc::subs(const map_basic_basic &subs_dict) const
+{
+    RCP<const ACsc> self = rcp_const_cast<ACsc>(rcp(this));
+    auto it = subs_dict.find(self);
+    if (it != subs_dict.end())
+        return it->second;
+    RCP<const Basic> arg = get_arg()->subs(subs_dict);
+    if (arg == get_arg())
+        return self;
+    else
+        return acsc(arg);
 }
 /* ---------------------------- */
 
