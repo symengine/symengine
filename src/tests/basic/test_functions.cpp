@@ -33,6 +33,7 @@ using CSymPy::asin;
 using CSymPy::acos;
 using CSymPy::asec;
 using CSymPy::acsc;
+using CSymPy::atan;
 using CSymPy::function_symbol;
 using CSymPy::Derivative;
 using CSymPy::pi;
@@ -1028,6 +1029,48 @@ void test_acsc()
     assert(eq(r1, r2));
 }
 
+void test_atan()
+{
+    RCP<const Basic> im1 = integer(-1);
+    RCP<const Basic> i1 = integer(1);
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> i3 = integer(3);
+    RCP<const Basic> i5 = integer(5);
+    RCP<const Basic> im2 = integer(-2);
+
+    RCP<const Basic> r1;
+    RCP<const Basic> r2;
+
+    r1 = atan(i1);
+    r2 = div(pi, integer(4));
+    assert(eq(r1, r2));
+
+    r1 = atan(im1);
+    r2 = div(pi, integer(-4));
+    assert(eq(r1, r2));
+
+    r1 = atan(div(one,sqrt(i3)));
+    r2 = div(pi, integer(6));
+    assert(eq(r1, r2));
+
+    r1 = atan(mul(im1, add(one, sqrt(i2))));
+    r2 = div(mul(pi, i3), integer(-8));
+    assert(eq(r1, r2));
+
+    r1 = atan(sub(sqrt(i2), one));
+    r2 = div(pi, integer(8));
+    assert(eq(r1, r2));
+
+    r1 = atan(sub(i2, sqrt(i3)));
+    r2 = div(pi, integer(12));
+    assert(eq(r1, r2));
+
+    r1 = atan(mul(im1, sqrt(add(i5, mul(i2, sqrt(i5))))));
+    r2 = div(mul(pi, im2), i5);
+    assert(eq(r1, r2));
+
+}
+
 int main(int argc, char* argv[])
 {
     print_stack_on_segfault();    
@@ -1046,5 +1089,6 @@ int main(int argc, char* argv[])
     test_acos();
     test_asec();
     test_acsc();
+    test_atan();
     return 0;
 }

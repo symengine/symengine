@@ -985,6 +985,64 @@ RCP<const Basic> acsc(const RCP<const Basic> &arg)
         return rcp(new ACsc(arg));
     }
 }
+
+ATan::ATan(const RCP<const Basic> &arg)
+    : TrigFunction(arg)
+{
+    CSYMPY_ASSERT(is_canonical(arg))
+}
+
+bool ATan::is_canonical(const RCP<const Basic> &arg)
+{
+    // TODO: Add further checks for +inf -inf cases
+    if (eq(arg, zero) || eq(arg, one) || eq(arg, minus_one))
+        return false;
+    RCP<const Basic> index;
+    bool b = inverse_lookup(inverse_tct, get_arg(), outArg(index));
+    if (b)
+        return false;
+    else
+        return true;
+}
+
+bool ATan::__eq__(const Basic &o) const
+{
+    if (is_a<ATan>(o) &&
+        eq(get_arg(), static_cast<const ATan &>(o).get_arg()))
+        return true;
+    else
+        return false;
+}
+
+int ATan::compare(const Basic &o) const
+{
+    CSYMPY_ASSERT(is_a<ATan>(o))
+    const ATan &s = static_cast<const ATan &>(o);
+    return get_arg()->__cmp__(s);
+}
+
+
+std::string ATan::__str__() const
+{
+    std::ostringstream o;
+    o << "atan(" << *get_arg() << ")";
+    return o.str();
+}
+
+RCP<const Basic> atan(const RCP<const Basic> &arg)
+{
+    if (eq(arg, zero)) return zero;
+    else if (eq(arg, one)) return div(pi, mul(i2, i2));
+    else if (eq(arg, minus_one)) return mul(minus_one, div(pi, mul(i2, i2)));
+
+    RCP<const Basic> index;
+    bool b = inverse_lookup(inverse_tct, arg, outArg(index));
+    if (b) {
+        return div(pi, index);
+    } else {
+        return rcp(new ATan(arg));
+    }
+}
 /* ---------------------------- */
 
 RCP<const Basic> Sin::diff(const RCP<const Symbol> &x) const
@@ -1037,6 +1095,11 @@ RCP<const Basic> ASec::diff(const RCP<const Symbol> &x) const
 RCP<const Basic> ACsc::diff(const RCP<const Symbol> &x) const
 {
     return mul(div(minus_one, mul(get_arg(), sqrt(sub(pow(get_arg(), i2), one)))), get_arg()->diff(x));
+}
+
+RCP<const Basic> ATan::diff(const RCP<const Symbol> &x) const
+{
+    return mul(div(one, add(one, pow(get_arg(), i2))), get_arg()->diff(x));
 }
 
 RCP<const Basic> Sin::subs(const map_basic_basic &subs_dict) const
@@ -1167,6 +1230,19 @@ RCP<const Basic> ACsc::subs(const map_basic_basic &subs_dict) const
         return self;
     else
         return acsc(arg);
+}
+
+RCP<const Basic> ATan::subs(const map_basic_basic &subs_dict) const
+{
+    RCP<const ATan> self = rcp_const_cast<ATan>(rcp(this));
+    auto it = subs_dict.find(self);
+    if (it != subs_dict.end())
+        return it->second;
+    RCP<const Basic> arg = get_arg()->subs(subs_dict);
+    if (arg == get_arg())
+        return self;
+    else
+        return atan(arg);
 }
 /* ---------------------------- */
 
