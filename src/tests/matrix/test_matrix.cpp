@@ -205,6 +205,7 @@ void test_add_dense_scalar()
 
 void test_gaussian_elimination()
 {
+    // These test cases are verified with SymPy
     std::vector<RCP<const Basic>> l, m;
     RCP<const DenseMatrix> A, B;
 
@@ -257,6 +258,22 @@ void test_gaussian_elimination()
     m = {integer(1), integer(0), integer(0), integer(1), integer(0),
         integer(0)};
     B = densematrix(3, 2, m);
+
+    assert(eq(gaussian_elimination(*A), B));
+
+    l = {symbol("a"), symbol("b"), symbol("c"), symbol("d")};
+    A = densematrix(2, 2, l);
+
+    m = {integer(1), integer(0), integer(0), integer(1)};
+    B = densematrix(2, 2, m);
+
+    assert(eq(gaussian_elimination(*A), B));
+
+    l = {symbol("a"), integer(0), symbol("c"), integer(0)};
+    A = densematrix(2, 2, l);
+
+    m = {integer(1), integer(0), integer(0), integer(0)};
+    B = densematrix(2, 2, m);
 
     assert(eq(gaussian_elimination(*A), B));
 }
