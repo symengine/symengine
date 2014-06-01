@@ -1,82 +1,108 @@
 #include "basic.h"
 #include "integer.h"
 
-std::ostream& operator<<(std::ostream& out, const CSymPy::umap_basic_int& d)
+namespace CSymPy {
+
+template<class T>
+inline std::ostream& print_map(std::ostream& out, T& d)
 {
     out << "{";
-    for (auto &p: d)
-        out << *(p.first) << ": " << *(p.second) << ", ";
+    for (auto p = d.begin(); p != d.end(); p++) {
+        if (p != d.begin()) out << ", ";
+        out << (p->first) << ": " << (p->second);
+    }
     out << "}";
     return out;
 }
 
-std::ostream& operator<<(std::ostream& out, const CSymPy::vec_int& d)
+template<class T>
+inline std::ostream& print_map_rcp(std::ostream& out, T& d)
+{
+    out << "{";
+    for (auto p = d.begin(); p != d.end(); p++) {
+        if (p != d.begin()) out << ", ";
+        out << *(p->first) << ": " << *(p->second);
+    }
+    out << "}";
+    return out;
+}
+
+template<class T>
+inline std::ostream& print_vec(std::ostream& out, T& d)
 {
     out << "[";
-    for (auto &p: d)
-        out << p << ", ";
+    for (auto p = d.begin(); p != d.end(); p++) {
+        if (p != d.begin()) out << ", ";
+        out << *p;
+    }
     out << "]";
     return out;
 }
 
+template<class T>
+inline std::ostream& print_vec_rcp(std::ostream& out, T& d)
+{
+    out << "[";
+    for (auto p = d.begin(); p != d.end(); p++) {
+        if (p != d.begin()) out << ", ";
+        out << **p;
+    }
+    out << "]";
+    return out;
+}
+
+} // CSymPy
+
+
+std::ostream& operator<<(std::ostream& out, const CSymPy::umap_basic_int& d)
+{
+    return print_map_rcp(out, d);
+}
+
+std::ostream& operator<<(std::ostream& out, const CSymPy::vec_int& d)
+{
+    return CSymPy::print_vec(out, d);
+}
+
 std::ostream& operator<<(std::ostream& out, const CSymPy::map_vec_int& d)
 {
-    out << "{";
-    for (auto &p: d)
-        out << (p.first) << ": " << (p.second) << ", ";
-    out << "}";
-    return out;
+    return CSymPy::print_map(out, d);
 }
 
 std::ostream& operator<<(std::ostream& out, const CSymPy::map_vec_mpz& d)
 {
-    out << "{";
-    for (auto &p: d)
-        out << (p.first) << ": " << (p.second) << ", ";
-    out << "}";
-    return out;
+    return CSymPy::print_map(out, d);
 }
 
 std::ostream& operator<<(std::ostream& out, const CSymPy::umap_vec_mpz& d)
 {
-    out << "{";
-    for (auto &p: d)
-        out << (p.first) << ": " << (p.second) << ", ";
-    out << "}";
-    return out;
+    return print_map(out, d);
 }
 
 std::ostream& operator<<(std::ostream& out, const CSymPy::map_basic_int& d)
 {
-    out << "{";
-    for (auto &p: d)
-        out << *(p.first) << ": " << *(p.second) << ", ";
-    out << "}";
-    return out;
+    return print_map_rcp(out, d);
 }
 
 std::ostream& operator<<(std::ostream& out, const CSymPy::map_basic_basic& d)
 {
-    out << "{";
-    for (auto &p: d)
-        out << *(p.first) << ": " << *(p.second) << ", ";
-    out << "}";
-    return out;
+    return print_map_rcp(out, d);
 }
 
 std::ostream& operator<<(std::ostream& out, const CSymPy::umap_basic_basic& d)
 {
-    out << "{";
-    for (auto &p: d)
-        out << *(p.first) << ": " << *(p.second) << ", ";
-    out << "}";
-    return out;
+    return print_map_rcp(out, d);
+}
+
+std::ostream& operator<<(std::ostream& out, const CSymPy::vec_basic& d)
+{
+    return print_vec_rcp(out, d);
 }
 
 
 namespace CSymPy {
 
-bool map_basic_int_equal(const map_basic_int &A, const map_basic_int &B)
+bool map_basic_int_eq(const map_basic_int &A, const map_basic_int &B)
 {
     // Can't be equal if # of entries differ:
     if (A.size() != B.size()) return false;
@@ -90,7 +116,7 @@ bool map_basic_int_equal(const map_basic_int &A, const map_basic_int &B)
     return true;
 }
 
-bool map_basic_basic_equal(const map_basic_basic &A, const map_basic_basic &B)
+bool map_basic_basic_eq(const map_basic_basic &A, const map_basic_basic &B)
 {
     // Can't be equal if # of entries differ:
     if (A.size() != B.size()) return false;
@@ -136,7 +162,7 @@ int map_basic_int_compare(const map_basic_int &A, const map_basic_int &B)
     return 0;
 }
 
-bool dicts_equal(const umap_basic_int &a, const umap_basic_int &b)
+bool umap_basic_int_eq(const umap_basic_int &a, const umap_basic_int &b)
 {
     // This follows the same algorithm as Python's dictionary comparison
     // (a==b), which is implemented by "dict_equal" function in
@@ -154,7 +180,7 @@ bool dicts_equal(const umap_basic_int &a, const umap_basic_int &b)
     return true;
 }
 
-bool umap_basic_basic_equal(const umap_basic_basic &a,
+bool umap_basic_basic_eq(const umap_basic_basic &a,
         const umap_basic_basic &b)
 {
     // This follows the same algorithm as Python's dictionary comparison
@@ -171,6 +197,31 @@ bool umap_basic_basic_equal(const umap_basic_basic &a,
         if (neq(p.second, f->second)) return false; // values not equal
     }
     return true;
+}
+
+bool vec_basic_eq(const vec_basic &a, const vec_basic &b)
+{
+    // Can't be equal if # of entries differ:
+    if (a.size() != b.size()) return false;
+    // Loop over elements in "a" and "b":
+    for (size_t i=0; i < a.size(); i++) {
+        if (neq(a[i], b[i])) return false; // values not equal
+    }
+    return true;
+}
+
+int vec_basic_compare(const vec_basic &A, const vec_basic &B)
+{
+    if (A.size() != B.size())
+        return (A.size() < B.size()) ? -1 : 1;
+    auto a = A.begin();
+    auto b = B.begin();
+    int cmp;
+    for (; a != A.end(); ++a, ++b) {
+        cmp = (*a)->__cmp__(**b);
+        if (cmp != 0) return cmp;
+    }
+    return 0;
 }
 
 }

@@ -224,6 +224,18 @@ void test_div()
     r1 = div(mul(x, i4), mul(x, i2));
     r2 = i2;
     assert(eq(r1, r2));
+
+    r1 = div(i2, div(i3, mul(i2, im1)));
+    r2 = mul(im1, div(i4, i3));
+    assert(eq(r1, r2));
+
+    r1 = div(i4, mul(im1, i2));
+    r2 = mul(im1, i2);
+    assert(eq(r1, r2));
+
+    r1 = div(i4, im1);
+    r2 = mul(im1, i4);
+    assert(eq(r1, r2));
 }
 
 void test_pow()

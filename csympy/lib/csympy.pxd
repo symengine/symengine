@@ -1,6 +1,7 @@
 from libcpp cimport bool
 from libcpp.string cimport string
 from libcpp.map cimport map
+from libcpp.vector cimport vector
 
 cdef extern from 'gmpxx.h':
     cdef cppclass mpz_class:
@@ -31,6 +32,7 @@ cdef extern from "csympy_rcp.h" namespace "CSymPy":
     RCP[const Sin] rcp_static_cast_Sin "CSymPy::rcp_static_cast<const CSymPy::Sin>"(RCP[const Basic] &b) nogil
     RCP[const Cos] rcp_static_cast_Cos "CSymPy::rcp_static_cast<const CSymPy::Cos>"(RCP[const Basic] &b) nogil
     RCP[const FunctionSymbol] rcp_static_cast_FunctionSymbol "CSymPy::rcp_static_cast<const CSymPy::FunctionSymbol>"(RCP[const Basic] &b) nogil
+    RCP[const Derivative] rcp_static_cast_Derivative "CSymPy::rcp_static_cast<const CSymPy::Derivative>"(RCP[const Basic] &b) nogil
     Ptr[RCP[Basic]] outArg(RCP[const Basic] &arg) nogil
 
     void print_stack_on_segfault() nogil
@@ -56,6 +58,7 @@ cdef extern from "basic.h" namespace "CSymPy":
     bool is_a_Sin "CSymPy::is_a<CSymPy::Sin>"(const Basic &b) nogil
     bool is_a_Cos "CSymPy::is_a<CSymPy::Cos>"(const Basic &b) nogil
     bool is_a_FunctionSymbol "CSymPy::is_a<CSymPy::FunctionSymbol>"(const Basic &b) nogil
+    bool is_a_Derivative "CSymPy::is_a<CSymPy::Derivative>"(const Basic &b) nogil
 
     RCP[const Basic] expand(RCP[const Basic] &o) nogil except +
 
@@ -122,3 +125,7 @@ cdef extern from "functions.h" namespace "CSymPy":
     cdef cppclass FunctionSymbol(Function):
         string get_name() nogil
         RCP[const Basic] get_arg() nogil
+
+    cdef cppclass Derivative(Basic):
+        RCP[const Basic] get_arg() nogil
+        vector[RCP[Basic]] get_symbols() nogil

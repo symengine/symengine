@@ -50,6 +50,14 @@ public:
     virtual bool is_one() const { return this->i == 1; }
     //! \return `true` if denominator is `1`
     inline bool is_int() { return this->i.get_den() == 1; }
+    //! \return `true` if positive
+    inline virtual bool is_positive() const { 
+        return ((this->i.get_den() > 0) && (this->i.get_num() > 0)) || 
+                ((this->i.get_den() < 0) && (this->i.get_num() < 0)) ; } 
+    //! \return `true` if negative
+    inline virtual bool is_negative() const { 
+        return ((this->i.get_den() < 0) && (this->i.get_num() > 0)) || 
+                ((this->i.get_den() > 0) && (this->i.get_num() < 0)) ; } 
 
 	/*! Add Rationals
 	 * \param other of type Rational
@@ -124,9 +132,9 @@ public:
         // Since 'this' is in canonical form, so is this**other, so we simply
         // pass num/den into the constructor directly:
         if (!neg)
-            return rcp(new Rational(mpq_class(num, den)));
+            return rcp(new Rational(mpq_class(num*sgn(den), abs(den))));
         else
-            return rcp(new Rational(mpq_class(den, num)));
+            return rcp(new Rational(mpq_class(den*sgn(num), abs(num))));
     }
 
 	//! Converts the param `other` appropriately and then calls `addrat`
