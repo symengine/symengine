@@ -150,7 +150,7 @@ void test_dense_dense_multiplication()
     };
     C = densematrix(3, 1, n);
 
-    //assert(eq(mul_dense_dense(*A, *B), C));
+    assert(eq(mul_dense_dense(*A, *B), C));
 }
 
 void test_mul_matrix()
@@ -205,13 +205,77 @@ void test_add_dense_scalar()
 
 void test_gaussian_elimination()
 {
-    std::vector<RCP<const Basic>> l;
-    RCP<const DenseMatrix> A;
+    // These test cases are verified with SymPy
+    std::vector<RCP<const Basic>> l, m;
+    RCP<const DenseMatrix> A, B;
 
     l = {integer(1), integer(2), integer(3), integer(4)};
     A = densematrix(2, 2, l);
 
-    //RCP<const DenseMatrix> B = gaussian_elimination(*A);
+    m = {integer(1), integer(0), integer(0), integer(1)};
+    B = densematrix(2, 2, m);
+
+    assert(eq(gaussian_elimination(*A), B));
+
+    l = {integer(1), integer(2), integer(2), integer(4)};
+    A = densematrix(2, 2, l);
+
+    m = {integer(1), integer(2), integer(0), integer(0)};
+    B = densematrix(2, 2, m);
+
+    assert(eq(gaussian_elimination(*A), B));
+
+    l = {integer(1), integer(0), integer(0), integer(0)};
+    A = densematrix(2, 2, l);
+
+    m = {integer(1), integer(0), integer(0), integer(0)};
+    B = densematrix(2, 2, m);
+
+    assert(eq(gaussian_elimination(*A), B));
+
+    l = {integer(0), integer(0), integer(0), integer(0)};
+    A = densematrix(2, 2, l);
+
+    m = {integer(0), integer(0), integer(0), integer(0)};
+    B = densematrix(2, 2, m);
+
+    assert(eq(gaussian_elimination(*A), B));
+
+    l = {integer(1), integer(2), integer(3), integer(-1), integer(7),
+        integer(6), integer(4), integer(5), integer(2)};
+    A = densematrix(3, 3, l);
+
+    m = {integer(1), integer(0), integer(0), integer(0), integer(1),
+        integer(0), integer(0), integer(0), integer(1)};
+    B = densematrix(3, 3, m);
+
+    assert(eq(gaussian_elimination(*A), B));
+
+    l = {integer(-9), integer(4), integer(3), integer(-1), integer(7),
+        integer(6)};
+    A = densematrix(3, 2, l);
+
+    m = {integer(1), integer(0), integer(0), integer(1), integer(0),
+        integer(0)};
+    B = densematrix(3, 2, m);
+
+    assert(eq(gaussian_elimination(*A), B));
+
+    l = {symbol("a"), symbol("b"), symbol("c"), symbol("d")};
+    A = densematrix(2, 2, l);
+
+    m = {integer(1), integer(0), integer(0), integer(1)};
+    B = densematrix(2, 2, m);
+
+    assert(eq(gaussian_elimination(*A), B));
+
+    l = {symbol("a"), integer(0), symbol("c"), integer(0)};
+    A = densematrix(2, 2, l);
+
+    m = {integer(1), integer(0), integer(0), integer(0)};
+    B = densematrix(2, 2, m);
+
+    assert(eq(gaussian_elimination(*A), B));
 }
 
 int main(int argc, char* argv[])

@@ -263,7 +263,6 @@ RCP<const DenseMatrix> gaussian_elimination(const DenseMatrix &A)
         }
 
         scale = t[pivots*col + i];
-
         for (l = 0; l < col; l++)
             t[pivots*col + l] = div(t[pivots*col + l], scale);
 
