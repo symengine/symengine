@@ -46,7 +46,7 @@ class DenseMatrix: public MatrixBase {
 public:
     // Constructors
     DenseMatrix(unsigned row, unsigned col);
-    DenseMatrix(unsigned row, unsigned col, std::vector<RCP<const Basic>> &l);
+    DenseMatrix(unsigned row, unsigned col, const std::vector<RCP<const Basic>> &l);
 
     // Virtual functions inherited from Basic class
     virtual std::size_t __hash__() const;
@@ -126,7 +126,7 @@ protected:
 };
 
 inline RCP<const DenseMatrix> densematrix(unsigned row, unsigned col,
-        std::vector<RCP<const Basic>> &l)
+        const std::vector<RCP<const Basic>> &l)
 {
     return rcp(new DenseMatrix(row, col, l));
 }
