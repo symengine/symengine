@@ -236,6 +236,9 @@ void test_div()
     r1 = div(i4, im1);
     r2 = mul(im1, i4);
     assert(eq(r1, r2));
+
+    r1 = div(integer(5), div(integer(1), integer(3)));
+    assert(eq(r1, integer(15)));
 }
 
 void test_pow()
