@@ -1150,15 +1150,15 @@ RCP<const Basic> ACos::diff(const RCP<const Symbol> &x) const
 {
     return mul(div(minus_one, sqrt(sub(one, pow(get_arg(), i2)))), get_arg()->diff(x));
 }
-// TODO: Use abs(get_arg())
+
 RCP<const Basic> ASec::diff(const RCP<const Symbol> &x) const
 {
-    return mul(div(one, mul(get_arg(), sqrt(sub(pow(get_arg(), i2), one)))), get_arg()->diff(x));
+    return mul(div(one, mul(pow(get_arg(), i2), sqrt(sub(one, div(one, pow(get_arg(), i2)))))), get_arg()->diff(x));
 }
-// TODO: Use abs(get_arg())
+
 RCP<const Basic> ACsc::diff(const RCP<const Symbol> &x) const
 {
-    return mul(div(minus_one, mul(get_arg(), sqrt(sub(pow(get_arg(), i2), one)))), get_arg()->diff(x));
+    return mul(div(minus_one, mul(pow(get_arg(), i2), sqrt(sub(one, div(one, pow(get_arg(), i2)))))), get_arg()->diff(x));
 }
 
 RCP<const Basic> ATan::diff(const RCP<const Symbol> &x) const
