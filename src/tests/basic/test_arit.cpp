@@ -187,6 +187,12 @@ void test_div()
 
     RCP<const Basic> r1, r2;
 
+    r1 = div(i4, integer(1));
+    r2 = mul(integer(1), i4);
+    std::cout << "r1: " << *r1 << std::endl;
+    std::cout << "r2: " << *r2 << std::endl;
+    assert(eq(r1, r2));
+
     r1 = pow(i3, i2);
     r2 = integer(9);
     assert(eq(r1, r2));

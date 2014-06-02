@@ -10,6 +10,7 @@
 #include <gmpxx.h>
 
 #include "basic.h"
+#include "dict.h"
 
 namespace CSymPy {
 
@@ -46,6 +47,12 @@ bool could_extract_minus(const RCP<const Basic> &arg);
 bool handle_minus(const RCP<const Basic> &arg,
             const Ptr<RCP<const Basic>> &rarg);
 
+/*! returns `true` if the given argument `t` is found in the
+*   lookup table `d`. It also returns the value in `index`
+**/
+bool inverse_lookup(umap_basic_basic &d, const RCP<const Basic> &t,
+                   const Ptr<RCP<const Basic>>& index);
+
 // \return true of conjugate has to be returned finally else false
 bool eval(const RCP<const Basic> &arg, int period, bool odd, bool conj_odd, //input
             const Ptr<RCP<const Basic>>& rarg,int& index, int& sign); //output
@@ -81,7 +88,7 @@ RCP<const Basic> sin(const RCP<const Basic> &arg);
 class Cos : public TrigFunction {
 
 public:
-  //! Cos Constructor
+    //! Cos Constructor
     Cos(const RCP<const Basic> &arg);
     /*! Equality comparator
      * \param o  Object to be compared with
@@ -198,6 +205,149 @@ public:
 //! Canonicalize Sec:
 RCP<const Basic> sec(const RCP<const Basic> &arg);
 
+class ASin : public TrigFunction {
+
+public:
+    //! ASin Constructor
+    ASin(const RCP<const Basic> &arg);
+    /*! Equality comparator
+     * \param o - Object to be compared with
+     * \return whether the 2 objects are equal
+     * */
+    virtual bool __eq__(const Basic &o) const;
+    virtual int compare(const Basic &o) const;
+    //! \return stringify version
+    virtual std::string __str__() const;
+    //! \return `true` if canonical
+    bool is_canonical(const RCP<const Basic> &arg);
+    //! Differentiate w.r.t Symbol `x`
+    virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
+    //! Substitute with `subs_dict`
+    virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
+};
+
+//! Canonicalize ASin:
+RCP<const Basic> asin(const RCP<const Basic> &arg);
+
+class ACos : public TrigFunction {
+
+public:
+    //! ACos Constructor
+    ACos(const RCP<const Basic> &arg);
+    /*! Equality comparator
+     * \param o - Object to be compared with
+     * \return whether the 2 objects are equal
+     * */
+    virtual bool __eq__(const Basic &o) const;
+    virtual int compare(const Basic &o) const;
+    //! \return stringify version
+    virtual std::string __str__() const;
+    //! \return `true` if canonical
+    bool is_canonical(const RCP<const Basic> &arg);
+    //! Differentiate w.r.t Symbol `x`
+    virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
+    //! Substitute with `subs_dict`
+    virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
+};
+
+//! Canonicalize ACos:
+RCP<const Basic> acos(const RCP<const Basic> &arg);
+
+class ASec : public TrigFunction {
+
+public:
+    //! ASec Constructor
+    ASec(const RCP<const Basic> &arg);
+    /*! Equality comparator
+     * \param o - Object to be compared with
+     * \return whether the 2 objects are equal
+     * */
+    virtual bool __eq__(const Basic &o) const;
+    virtual int compare(const Basic &o) const;
+    //! \return stringify version
+    virtual std::string __str__() const;
+    //! \return `true` if canonical
+    bool is_canonical(const RCP<const Basic> &arg);
+    //! Differentiate w.r.t Symbol `x`
+    virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
+    //! Substitute with `subs_dict`
+    virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
+};
+
+//! Canonicalize ASec:
+RCP<const Basic> asec(const RCP<const Basic> &arg);
+
+class ACsc : public TrigFunction {
+
+public:
+    //! ACsc Constructor
+    ACsc(const RCP<const Basic> &arg);
+    /*! Equality comparator
+     * \param o - Object to be compared with
+     * \return whether the 2 objects are equal
+     * */
+    virtual bool __eq__(const Basic &o) const;
+    virtual int compare(const Basic &o) const;
+    //! \return stringify version
+    virtual std::string __str__() const;
+    //! \return `true` if canonical
+    bool is_canonical(const RCP<const Basic> &arg);
+    //! Differentiate w.r.t Symbol `x`
+    virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
+    //! Substitute with `subs_dict
+    virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
+};
+
+//! Canonicalize ACsc:
+RCP<const Basic> acsc(const RCP<const Basic> &arg);
+
+class ATan : public TrigFunction {
+
+public:
+    //! ATan Constructor
+    ATan(const RCP<const Basic> &arg);
+    /*! Equality comparator
+     * \param o - Object to be compared with
+     * \return whether the 2 objects are equal
+     * */
+    virtual bool __eq__(const Basic &o) const;
+    virtual int compare(const Basic &o) const;
+    //! \return stringify version
+    virtual std::string __str__() const;
+    //! \return `true` if canonical
+    bool is_canonical(const RCP<const Basic> &arg);
+    //! Differentiate w.r.t Symbol `x`
+    virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
+    //! Substitute with `subs_dict
+    virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
+};
+
+//! Canonicalize ATan:
+RCP<const Basic> atan(const RCP<const Basic> &arg);
+
+class ACot : public TrigFunction {
+
+public:
+    //! ACot Constructor
+    ACot(const RCP<const Basic> &arg);
+    /*! Equality comparator
+     * \param o - Object to be compared with
+     * \return whether the 2 objects are equal
+     * */
+    virtual bool __eq__(const Basic &o) const;
+    virtual int compare(const Basic &o) const;
+    //! \return stringify version
+    virtual std::string __str__() const;
+    //! \return `true` if canonical
+    bool is_canonical(const RCP<const Basic> &arg);
+    //! Differentiate w.r.t Symbol `x`
+    virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
+    //! Substitute with `subs_dict
+    virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
+};
+
+//! Canonicalize ACot:
+RCP<const Basic> acot(const RCP<const Basic> &arg);
 
 class FunctionSymbol : public Function {
 private:
