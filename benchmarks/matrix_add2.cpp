@@ -6,7 +6,7 @@
 #include "basic.h"
 #include "integer.h"
 #include "matrix.h"
-
+#include "symbol.h"
 
 using CSymPy::Basic;
 using CSymPy::Integer;
@@ -15,6 +15,7 @@ using CSymPy::rcp;
 using CSymPy::integer;
 using CSymPy::DenseMatrix;
 using CSymPy::densematrix;
+using CSymPy::symbol;
 
 int main(int argc, char* argv[])
 {
@@ -22,15 +23,11 @@ int main(int argc, char* argv[])
 
     RCP<const DenseMatrix> A, B, C;
 
-    A = densematrix(4, 4, {integer(1), integer(2), integer(3), integer(4),
-        integer(5), integer(6), integer(7), integer(8), integer(9), integer(10),
-        integer(11), integer(12), integer(13), integer(14), integer(15),
-        integer(16)});
+    A = densematrix(3, 3, {symbol("a"), symbol("b"), symbol("c"), symbol("d"), 
+        symbol("e"), symbol("f"), symbol("g"), symbol("h"), symbol("i")});
 
-    B = densematrix(4, 4, {integer(1), integer(2), integer(3), integer(4),
-        integer(5), integer(6), integer(7), integer(8), integer(9), integer(10),
-        integer(11), integer(12), integer(13), integer(14), integer(15),
-        integer(16)});
+    B = densematrix(3, 3, {symbol("x"), symbol("y"), symbol("z"), symbol("p"), 
+        symbol("q"), symbol("r"), symbol("u"), symbol("v"), symbol("w")});
 
     std::cout << "Adding Two Matrices; matrix dimensions: 4 x 4" << std::endl;
 

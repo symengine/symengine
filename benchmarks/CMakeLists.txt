@@ -20,6 +20,9 @@ target_link_libraries(expand3 csympy teuchos ${LIBS})
 add_executable(matrix_add1 matrix_add1.cpp)
 target_link_libraries(matrix_add1 csympy teuchos ${LIBS})
 
+add_executable(matrix_add2 matrix_add2.cpp)
+target_link_libraries(matrix_add2 csympy teuchos ${LIBS})
+
 add_executable(matrix_mul1 matrix_mul1.cpp)
 target_link_libraries(matrix_mul1 csympy teuchos ${LIBS})
 
