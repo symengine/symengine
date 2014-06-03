@@ -187,6 +187,12 @@ void test_div()
 
     RCP<const Basic> r1, r2;
 
+    r1 = div(i4, integer(1));
+    r2 = mul(integer(1), i4);
+    std::cout << "r1: " << *r1 << std::endl;
+    std::cout << "r2: " << *r2 << std::endl;
+    assert(eq(r1, r2));
+
     r1 = pow(i3, i2);
     r2 = integer(9);
     assert(eq(r1, r2));
@@ -236,6 +242,9 @@ void test_div()
     r1 = div(i4, im1);
     r2 = mul(im1, i4);
     assert(eq(r1, r2));
+
+    r1 = div(integer(5), div(integer(1), integer(3)));
+    assert(eq(r1, integer(15)));
 }
 
 void test_pow()

@@ -54,7 +54,7 @@ int DenseMatrix::compare(const Basic &o) const
 DenseMatrix::DenseMatrix(unsigned row, unsigned col)
         : MatrixBase(row, col) {}
 
-DenseMatrix::DenseMatrix(unsigned row, unsigned col, std::vector<RCP<const Basic>> &l)
+DenseMatrix::DenseMatrix(unsigned row, unsigned col, const std::vector<RCP<const Basic>> &l)
         : MatrixBase(row, col), m_{l}
 {
     CSYMPY_ASSERT(m_.size() == row*col)

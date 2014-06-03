@@ -12,32 +12,71 @@ namespace CSymPy {
 
 static RCP<const Basic> i2 = rcp(new Integer(2));
 static RCP<const Basic> i3 = rcp(new Integer(3));
+static RCP<const Basic> i5 = rcp(new Integer(5));
+static RCP<const Basic> im2 = rcp(new Integer(-2));
+static RCP<const Basic> im3 = rcp(new Integer(-3));
+static RCP<const Basic> im5 = rcp(new Integer(-5));
 
 RCP<const Basic> sqrt(RCP<const Basic>& arg)
 {
-  return pow(arg, div(one, i2));
+    return pow(arg, div(one, i2));
 }
 
 static RCP<const Basic> sq3 = sqrt(i3);
 static RCP<const Basic> sq2 = sqrt(i2);
+static RCP<const Basic> sq5 = sqrt(i5);
 
 static RCP<const Basic> C0 = div(sub(sq3, one), mul(i2, sq2));
 static RCP<const Basic> C1 = div(one, i2);
 static RCP<const Basic> C2 = div(sq2, i2);
 static RCP<const Basic> C3 = div(sq3, i2);
 static RCP<const Basic> C4 = div(add(sq3, one), mul(i2, sq2));
+static RCP<const Basic> C5 = div(sqrt(sub(i5, sqrt(i5))), integer(8));
+static RCP<const Basic> C6 = div(sub(sqrt(i5), one), integer(4));
 
 static RCP<const Basic> mC0 = mul(minus_one, C0);
 static RCP<const Basic> mC1 = mul(minus_one, C1);
 static RCP<const Basic> mC2 = mul(minus_one, C2);
 static RCP<const Basic> mC3 = mul(minus_one, C3);
 static RCP<const Basic> mC4 = mul(minus_one, C4);
+static RCP<const Basic> mC5 = mul(minus_one, C5);
+static RCP<const Basic> mC6 = mul(minus_one, C6);
 
 // sin_table[n] represents the value of sin(2*pi*n/24) for n = 0..23
 static RCP<const Basic> sin_table[] = {
         zero, C0, C1, C2, C3, C4, one, C4, C3, C2, C1, C0,
         zero, mC0, mC1, mC2, mC3, mC4, minus_one, mC4, mC3, mC2, mC1, mC0
     };
+
+static umap_basic_basic inverse_cst = {
+    {C3, i3},
+    {mC3, im3},
+    {C2, mul(i2, i2)},
+    {mC2, mul(im2, i2)},
+    {C4, integer(12)},
+    {mC4, integer(-12)},
+    {C5, i5},
+    {mC5, im5},
+    {C6, integer(10)},
+    {mC6, integer(-10)},
+    {div(one, i2), integer(6)},
+    {div(minus_one, i2), integer(-6)},
+};
+
+static umap_basic_basic inverse_tct = {
+    {div(one, sq3), mul(i2, i3)},
+    {div(minus_one, sq3), mul(im2, i3)},
+    {sq3, i3},
+    {mul(minus_one, sq3), im3},
+    {add(one, sq2), div(pow(i2, i3), i3)},
+    {mul(minus_one, add(one, sq2)), div(pow(i2, i3), im3)},
+    {sub(sq2, one), pow(i2, i3)},
+    {sub(one, sq2), pow(im2, i3)},
+    {sub(i2, sq3), mul(mul(i2,i2), i3)},
+    {sub(sq3, i2), mul(mul(im2,i2), i3)},
+    {sqrt(add(i5, mul(i2, sqrt(i5)))), div(i5, i2)},
+    {mul(minus_one, sqrt(add(i5, mul(i2, sqrt(i5))))), div(im5, i2)},
+};
 
 bool get_pi_shift(const RCP<const Basic> &arg,
         const Ptr<RCP<const Integer>> &n,
@@ -236,6 +275,18 @@ bool eval(const RCP<const Basic> &arg, int period, bool odd, bool conj_odd, //in
     }
 }
 
+bool inverse_lookup(umap_basic_basic &d, const RCP<const Basic> &t,
+                   const Ptr<RCP<const Basic>>& index)
+{
+    auto it = d.find(t);
+    if (it == d.end()) {
+        // Not found in lookup
+        return false;
+    } else {
+        *index = (it->second);
+        return true;
+    }
+}
 
 std::size_t TrigFunction::__hash__() const
 {
@@ -404,7 +455,7 @@ bool Tan::is_canonical(const RCP<const Basic> &arg)
     if (is_a<Integer>(*arg) &&
             rcp_static_cast<const Integer>(arg)->is_zero())
         return false;
-  // e.g tan(k*pi/12)
+    // e.g tan(k*pi/12)
     RCP<const Integer> n;
     RCP<const Basic> r;
     bool b = get_pi_shift(arg, outArg(n), outArg(r));
@@ -694,6 +745,369 @@ RCP<const Basic> sec(const RCP<const Basic> &arg)
 }
 
 /* ---------------------------- */
+ASin::ASin(const RCP<const Basic> &arg)
+    : TrigFunction(arg)
+{
+    CSYMPY_ASSERT(is_canonical(arg))
+}
+
+bool ASin::is_canonical(const RCP<const Basic> &arg)
+{
+    // TODO: Add further checks for +inf -inf cases
+    if (eq(arg, zero) || eq(arg, one) || eq(arg, minus_one))
+        return false;
+    RCP<const Basic> index;
+    bool b = inverse_lookup(inverse_cst, get_arg(), outArg(index));
+    if (b)
+        return false;
+    else
+        return true;
+}
+
+bool ASin::__eq__(const Basic &o) const
+{
+    if (is_a<ASin>(o) &&
+        eq(get_arg(), static_cast<const ASin &>(o).get_arg()))
+        return true;
+    else
+        return false;
+}
+
+int ASin::compare(const Basic &o) const
+{
+    CSYMPY_ASSERT(is_a<ASin>(o))
+    const ASin &s = static_cast<const ASin &>(o);
+    return get_arg()->__cmp__(s);
+}
+
+
+std::string ASin::__str__() const
+{
+    std::ostringstream o;
+    o << "asin(" << *get_arg() << ")";
+    return o.str();
+}
+
+RCP<const Basic> asin(const RCP<const Basic> &arg)
+{
+    if (eq(arg, zero)) return zero;
+    else if (eq(arg, one)) return div(pi, i2);
+    else if (eq(arg, minus_one)) return mul(minus_one, div(pi, i2));
+
+    RCP<const Basic> index;
+    bool b = inverse_lookup(inverse_cst, arg, outArg(index));
+    if (b) {
+        return div(pi, index);
+    } else {
+        return rcp(new ASin(arg));
+    }
+}
+
+
+ACos::ACos(const RCP<const Basic> &arg)
+    : TrigFunction(arg)
+{
+    CSYMPY_ASSERT(is_canonical(arg))
+}
+
+bool ACos::is_canonical(const RCP<const Basic> &arg)
+{
+    // TODO: Add further checks for +inf -inf cases
+    if (eq(arg, zero) || eq(arg, one) || eq(arg, minus_one))
+        return false;
+    RCP<const Basic> index;
+    bool b = inverse_lookup(inverse_cst, get_arg(), outArg(index));
+    if (b)
+        return false;
+    else
+        return true;
+}
+
+bool ACos::__eq__(const Basic &o) const
+{
+    if (is_a<ACos>(o) &&
+        eq(get_arg(), static_cast<const ACos &>(o).get_arg()))
+        return true;
+    else
+        return false;
+}
+
+int ACos::compare(const Basic &o) const
+{
+    CSYMPY_ASSERT(is_a<ACos>(o))
+    const ACos &s = static_cast<const ACos &>(o);
+    return get_arg()->__cmp__(s);
+}
+
+
+std::string ACos::__str__() const
+{
+    std::ostringstream o;
+    o << "acos(" << *get_arg() << ")";
+    return o.str();
+}
+
+RCP<const Basic> acos(const RCP<const Basic> &arg)
+{
+    if (eq(arg, zero)) return div(pi, i2);
+    else if (eq(arg, one)) return zero;
+    else if (eq(arg, minus_one)) return pi;
+
+    RCP<const Basic> index;
+    bool b = inverse_lookup(inverse_cst, arg, outArg(index));
+    if (b) {
+        if (could_extract_minus(index)) {
+            return add(pi, div(pi, index));
+        }
+        else {
+            return sub(div(pi, i2), div(pi, index));
+        }
+    } else {
+        return rcp(new ACos(arg));
+    }
+}
+
+ASec::ASec(const RCP<const Basic> &arg)
+    : TrigFunction(arg)
+{
+    CSYMPY_ASSERT(is_canonical(arg))
+}
+
+bool ASec::is_canonical(const RCP<const Basic> &arg)
+{
+    // TODO: Add further checks for +inf -inf cases
+    if (eq(arg, one) || eq(arg, minus_one))
+        return false;
+    RCP<const Basic> index;
+    bool b = inverse_lookup(inverse_cst, div(one, get_arg()), outArg(index));
+    if (b)
+        return false;
+    else
+        return true;
+}
+
+bool ASec::__eq__(const Basic &o) const
+{
+    if (is_a<ASec>(o) &&
+        eq(get_arg(), static_cast<const ASec &>(o).get_arg()))
+        return true;
+    else
+        return false;
+}
+
+int ASec::compare(const Basic &o) const
+{
+    CSYMPY_ASSERT(is_a<ASec>(o))
+    const ASec &s = static_cast<const ASec &>(o);
+    return get_arg()->__cmp__(s);
+}
+
+
+std::string ASec::__str__() const
+{
+    std::ostringstream o;
+    o << "asec(" << *get_arg() << ")";
+    return o.str();
+}
+
+RCP<const Basic> asec(const RCP<const Basic> &arg)
+{
+    if (eq(arg, one)) return zero;
+    else if (eq(arg, minus_one)) return pi;
+
+    RCP<const Basic> index;
+    bool b = inverse_lookup(inverse_cst, div(one, arg), outArg(index));
+    if (b) {
+        if (could_extract_minus(index)) {
+            return add(pi, div(pi, index));
+        }
+        else {
+            return sub(div(pi, i2), div(pi, index));
+        }
+    } else {
+        return rcp(new ASec(arg));
+    }
+}
+
+ACsc::ACsc(const RCP<const Basic> &arg)
+    : TrigFunction(arg)
+{
+    CSYMPY_ASSERT(is_canonical(arg))
+}
+
+bool ACsc::is_canonical(const RCP<const Basic> &arg)
+{
+    // TODO: Add further checks for +inf -inf cases
+    if (eq(arg, one) || eq(arg, minus_one))
+        return false;
+    RCP<const Basic> index;
+    bool b = inverse_lookup(inverse_cst, div(one, get_arg()), outArg(index));
+    if (b)
+        return false;
+    else
+        return true;
+}
+
+bool ACsc::__eq__(const Basic &o) const
+{
+    if (is_a<ACsc>(o) &&
+        eq(get_arg(), static_cast<const ASec &>(o).get_arg()))
+        return true;
+    else
+        return false;
+}
+
+int ACsc::compare(const Basic &o) const
+{
+    CSYMPY_ASSERT(is_a<ACsc>(o))
+    const ACsc &s = static_cast<const ACsc &>(o);
+    return get_arg()->__cmp__(s);
+}
+
+
+std::string ACsc::__str__() const
+{
+    std::ostringstream o;
+    o << "acsc(" << *get_arg() << ")";
+    return o.str();
+}
+
+RCP<const Basic> acsc(const RCP<const Basic> &arg)
+{
+    if (eq(arg, one)) return div(pi, i2);
+    else if (eq(arg, minus_one)) return div(pi, im2);
+
+    RCP<const Basic> index;
+    bool b = inverse_lookup(inverse_cst, div(one, arg), outArg(index));
+    if (b) {
+        return div(pi, index);
+    } else {
+        return rcp(new ACsc(arg));
+    }
+}
+
+ATan::ATan(const RCP<const Basic> &arg)
+    : TrigFunction(arg)
+{
+    CSYMPY_ASSERT(is_canonical(arg))
+}
+
+bool ATan::is_canonical(const RCP<const Basic> &arg)
+{
+    // TODO: Add further checks for +inf -inf cases
+    if (eq(arg, zero) || eq(arg, one) || eq(arg, minus_one))
+        return false;
+    RCP<const Basic> index;
+    bool b = inverse_lookup(inverse_tct, get_arg(), outArg(index));
+    if (b)
+        return false;
+    else
+        return true;
+}
+
+bool ATan::__eq__(const Basic &o) const
+{
+    if (is_a<ATan>(o) &&
+        eq(get_arg(), static_cast<const ATan &>(o).get_arg()))
+        return true;
+    else
+        return false;
+}
+
+int ATan::compare(const Basic &o) const
+{
+    CSYMPY_ASSERT(is_a<ATan>(o))
+    const ATan &s = static_cast<const ATan &>(o);
+    return get_arg()->__cmp__(s);
+}
+
+
+std::string ATan::__str__() const
+{
+    std::ostringstream o;
+    o << "atan(" << *get_arg() << ")";
+    return o.str();
+}
+
+RCP<const Basic> atan(const RCP<const Basic> &arg)
+{
+    if (eq(arg, zero)) return zero;
+    else if (eq(arg, one)) return div(pi, mul(i2, i2));
+    else if (eq(arg, minus_one)) return mul(minus_one, div(pi, mul(i2, i2)));
+
+    RCP<const Basic> index;
+    bool b = inverse_lookup(inverse_tct, arg, outArg(index));
+    if (b) {
+        return div(pi, index);
+    } else {
+        return rcp(new ATan(arg));
+    }
+}
+
+ACot::ACot(const RCP<const Basic> &arg)
+    : TrigFunction(arg)
+{
+    CSYMPY_ASSERT(is_canonical(arg))
+}
+
+bool ACot::is_canonical(const RCP<const Basic> &arg)
+{
+    // TODO: Add further checks for +inf -inf cases
+    if (eq(arg, zero) || eq(arg, one) || eq(arg, minus_one))
+        return false;
+    RCP<const Basic> index;
+    bool b = inverse_lookup(inverse_cst, get_arg(), outArg(index));
+    if (b)
+        return false;
+    else
+        return true;
+}
+
+bool ACot::__eq__(const Basic &o) const
+{
+    if (is_a<ACot>(o) &&
+        eq(get_arg(), static_cast<const ACot &>(o).get_arg()))
+        return true;
+    else
+        return false;
+}
+
+int ACot::compare(const Basic &o) const
+{
+    CSYMPY_ASSERT(is_a<ACot>(o))
+    const ACot &s = static_cast<const ACot &>(o);
+    return get_arg()->__cmp__(s);
+}
+
+
+std::string ACot::__str__() const
+{
+    std::ostringstream o;
+    o << "acot(" << *get_arg() << ")";
+    return o.str();
+}
+
+RCP<const Basic> acot(const RCP<const Basic> &arg)
+{
+    if (eq(arg, zero)) return div(pi, i2);
+    else if (eq(arg, one)) return div(pi, mul(i2, i2));
+    else if (eq(arg, minus_one)) return mul(i3, div(pi, mul(i2, i2)));
+
+    RCP<const Basic> index;
+    bool b = inverse_lookup(inverse_tct, arg, outArg(index));
+    if (b) {
+        if (could_extract_minus(index)) {
+            return add(pi, div(pi, index));
+        }
+        else {
+            return sub(div(pi, i2), div(pi, index));
+        }
+    } else {
+        return rcp(new ACot(arg));
+    }
+}
+
+/* ---------------------------- */
 
 RCP<const Basic> Sin::diff(const RCP<const Symbol> &x) const
 {
@@ -725,6 +1139,36 @@ RCP<const Basic> Csc::diff(const RCP<const Symbol> &x) const
 RCP<const Basic> Sec::diff(const RCP<const Symbol> &x) const
 {
     return mul(mul(tan(get_arg()), sec(get_arg())), get_arg()->diff(x));
+}
+
+RCP<const Basic> ASin::diff(const RCP<const Symbol> &x) const
+{
+    return mul(div(one, sqrt(sub(one, pow(get_arg(), i2)))), get_arg()->diff(x));
+}
+
+RCP<const Basic> ACos::diff(const RCP<const Symbol> &x) const
+{
+    return mul(div(minus_one, sqrt(sub(one, pow(get_arg(), i2)))), get_arg()->diff(x));
+}
+
+RCP<const Basic> ASec::diff(const RCP<const Symbol> &x) const
+{
+    return mul(div(one, mul(pow(get_arg(), i2), sqrt(sub(one, div(one, pow(get_arg(), i2)))))), get_arg()->diff(x));
+}
+
+RCP<const Basic> ACsc::diff(const RCP<const Symbol> &x) const
+{
+    return mul(div(minus_one, mul(pow(get_arg(), i2), sqrt(sub(one, div(one, pow(get_arg(), i2)))))), get_arg()->diff(x));
+}
+
+RCP<const Basic> ATan::diff(const RCP<const Symbol> &x) const
+{
+    return mul(div(one, add(one, pow(get_arg(), i2))), get_arg()->diff(x));
+}
+
+RCP<const Basic> ACot::diff(const RCP<const Symbol> &x) const
+{
+    return mul(div(minus_one, add(one, pow(get_arg(), i2))), get_arg()->diff(x));
 }
 
 RCP<const Basic> Sin::subs(const map_basic_basic &subs_dict) const
@@ -803,6 +1247,84 @@ RCP<const Basic> Sec::subs(const map_basic_basic &subs_dict) const
         return self;
     else
         return sec(arg);
+}
+
+RCP<const Basic> ASin::subs(const map_basic_basic &subs_dict) const
+{
+    RCP<const ASin> self = rcp_const_cast<ASin>(rcp(this));
+    auto it = subs_dict.find(self);
+    if (it != subs_dict.end())
+        return it->second;
+    RCP<const Basic> arg = get_arg()->subs(subs_dict);
+    if (arg == get_arg())
+        return self;
+    else
+        return asin(arg);
+}
+
+RCP<const Basic> ACos::subs(const map_basic_basic &subs_dict) const
+{
+    RCP<const ACos> self = rcp_const_cast<ACos>(rcp(this));
+    auto it = subs_dict.find(self);
+    if (it != subs_dict.end())
+        return it->second;
+    RCP<const Basic> arg = get_arg()->subs(subs_dict);
+    if (arg == get_arg())
+        return self;
+    else
+        return acos(arg);
+}
+
+RCP<const Basic> ASec::subs(const map_basic_basic &subs_dict) const
+{
+    RCP<const ASec> self = rcp_const_cast<ASec>(rcp(this));
+    auto it = subs_dict.find(self);
+    if (it != subs_dict.end())
+        return it->second;
+    RCP<const Basic> arg = get_arg()->subs(subs_dict);
+    if (arg == get_arg())
+        return self;
+    else
+        return asec(arg);
+}
+
+RCP<const Basic> ACsc::subs(const map_basic_basic &subs_dict) const
+{
+    RCP<const ACsc> self = rcp_const_cast<ACsc>(rcp(this));
+    auto it = subs_dict.find(self);
+    if (it != subs_dict.end())
+        return it->second;
+    RCP<const Basic> arg = get_arg()->subs(subs_dict);
+    if (arg == get_arg())
+        return self;
+    else
+        return acsc(arg);
+}
+
+RCP<const Basic> ATan::subs(const map_basic_basic &subs_dict) const
+{
+    RCP<const ATan> self = rcp_const_cast<ATan>(rcp(this));
+    auto it = subs_dict.find(self);
+    if (it != subs_dict.end())
+        return it->second;
+    RCP<const Basic> arg = get_arg()->subs(subs_dict);
+    if (arg == get_arg())
+        return self;
+    else
+        return atan(arg);
+}
+
+RCP<const Basic> ACot::subs(const map_basic_basic &subs_dict) const
+{
+    RCP<const ACot> self = rcp_const_cast<ACot>(rcp(this));
+    auto it = subs_dict.find(self);
+    if (it != subs_dict.end())
+        return it->second;
+    RCP<const Basic> arg = get_arg()->subs(subs_dict);
+    if (arg == get_arg())
+        return self;
+    else
+        return acot(arg);
 }
 /* ---------------------------- */
 

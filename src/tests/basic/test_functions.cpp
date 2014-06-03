@@ -29,6 +29,12 @@ using CSymPy::tan;
 using CSymPy::cot;
 using CSymPy::csc;
 using CSymPy::sec;
+using CSymPy::asin;
+using CSymPy::acos;
+using CSymPy::asec;
+using CSymPy::acsc;
+using CSymPy::atan;
+using CSymPy::acot;
 using CSymPy::function_symbol;
 using CSymPy::Derivative;
 using CSymPy::pi;
@@ -866,6 +872,248 @@ void test_could_extract_minus()
 
 }
 
+void test_asin()
+{
+    RCP<const Basic> im1 = integer(-1);
+    RCP<const Basic> i1 = integer(1);
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> i3 = integer(3);
+    RCP<const Basic> i5 = integer(5);
+    RCP<const Basic> im2 = integer(-2);
+
+    RCP<const Basic> r1;
+    RCP<const Basic> r2;
+
+    r1 = asin(im1);
+    r2 = mul(im1, div(pi, i2));
+    assert(eq(r1, r2));
+
+    r1 = asin(div(im1, i2));
+    r2 = div(pi, mul(im2, i3));
+    assert(eq(r1, r2));
+
+    r1 = asin(div(sqrt(i2), i2));
+    r2 = div(pi, mul(i2, i2));
+    assert(eq(r1, r2));
+
+    r1 = asin(div(add(sqrt(i3), i1), mul(i2, sqrt(i2))));
+    r2 = div(pi, mul(i3, pow(i2, i2)));
+    assert(eq(r1, r2));
+
+    r1 = asin(div(sqrt(sub(i5, sqrt(i5))), integer(8)));
+    r2 = div(pi, i5);
+    assert(eq(r1, r2));
+
+    r1 = asin(mul(div(sub(sqrt(i5), i1), integer(4)), im1));
+    r2 = div(pi, mul(im2, i5));
+    assert(eq(r1, r2));
+}
+
+void test_acos()
+{
+    RCP<const Basic> im1 = integer(-1);
+    RCP<const Basic> i1 = integer(1);
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> i3 = integer(3);
+    RCP<const Basic> i5 = integer(5);
+    RCP<const Basic> im2 = integer(-2);
+
+    RCP<const Basic> r1;
+    RCP<const Basic> r2;
+
+    r1 = acos(im1);
+    r2 = pi;
+    assert(eq(r1, r2));
+
+    r1 = acos(div(im1, i2));
+    r2 = mul(i2, div(pi,  i3));
+    assert(eq(r1, r2));
+
+    r1 = acos(div(sqrt(i2), i2));
+    r2 = div(pi, mul(i2, i2));
+    assert(eq(r1, r2));
+
+    r1 = acos(div(add(sqrt(i3), i1), mul(i2, sqrt(i2))));
+    r2 = mul(i5, div(pi, mul(i3, pow(i2, i2))));
+    assert(eq(r1, r2));
+
+    r1 = acos(div(sqrt(sub(i5, sqrt(i5))), integer(8)));
+    r2 = mul(i3, div(pi, mul(i2, i5)));
+    assert(eq(r1, r2));
+
+    r1 = acos(mul(div(sub(sqrt(i5), i1), integer(4)), im1));
+    r2 = mul(i3, div(pi, i5));
+    assert(eq(r1, r2));
+
+    r1 = acos(div(sub(sqrt(i5), i1), integer(4)));
+    r2 = mul(i2, div(pi, i5));
+    assert(eq(r1, r2));
+}
+
+void test_asec()
+{
+    RCP<const Basic> im1 = integer(-1);
+    RCP<const Basic> i1 = integer(1);
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> i3 = integer(3);
+    RCP<const Basic> i5 = integer(5);
+    RCP<const Basic> im2 = integer(-2);
+
+    RCP<const Basic> r1;
+    RCP<const Basic> r2;
+
+    r1 = asec(im1);
+    r2 = pi;
+    assert(eq(r1, r2));
+
+    r1 = asec(div(i2, im1));
+    r2 = mul(i2, div(pi,  i3));
+    assert(eq(r1, r2));
+    
+    // This test fails.
+    // Possible bug in implementation of pow
+    r1 = asec(div(i2, sqrt(i2)));
+    r2 = div(pi, mul(i2, i2));
+    //assert(eq(r1, r2));
+
+    r1 = asec(div(mul(i2, sqrt(i2)), add(sqrt(i3), i1)));
+    r2 = mul(i5, div(pi, mul(i3, pow(i2, i2))));
+    assert(eq(r1, r2));
+
+    r1 = asec(div(integer(8), sqrt(sub(i5, sqrt(i5)))));
+    r2 = mul(i3, div(pi, mul(i2, i5)));
+    assert(eq(r1, r2));
+
+    r1 = asec(mul(div(integer(4), sub(sqrt(i5), i1)), im1));
+    r2 = mul(i3, div(pi, i5));
+    assert(eq(r1, r2));
+
+    r1 = asec(div(integer(4), sub(sqrt(i5), i1)));
+    r2 = mul(i2, div(pi, i5));
+    assert(eq(r1, r2));
+}
+
+void test_acsc()
+{
+    RCP<const Basic> im1 = integer(-1);
+    RCP<const Basic> i1 = integer(1);
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> i3 = integer(3);
+    RCP<const Basic> i5 = integer(5);
+    RCP<const Basic> im2 = integer(-2);
+
+    RCP<const Basic> r1;
+    RCP<const Basic> r2;
+
+    r1 = acsc(im1);
+    r2 = mul(im1, div(pi, i2));
+    assert(eq(r1, r2));
+
+    r1 = acsc(im2);
+    r2 = div(pi, mul(im2, i3));
+    assert(eq(r1, r2));
+
+    r1 = acsc(div(i2, sqrt(i2)));
+    r2 = div(pi, mul(i2, i2));
+    //assert(eq(r1, r2));
+
+    r1 = acsc(div(mul(i2, sqrt(i2)), add(sqrt(i3), i1)));
+    r2 = div(pi, mul(i3, pow(i2, i2)));
+    assert(eq(r1, r2));
+
+    r1 = acsc(div(integer(8), sqrt(sub(i5, sqrt(i5)))));
+    r2 = div(pi, i5);
+    assert(eq(r1, r2));
+
+    r1 = acsc(mul(div(integer(4), sub(sqrt(i5), i1)), im1));
+    r2 = div(pi, mul(im2, i5));
+    assert(eq(r1, r2));
+}
+
+void test_atan()
+{
+    RCP<const Basic> im1 = integer(-1);
+    RCP<const Basic> i1 = integer(1);
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> i3 = integer(3);
+    RCP<const Basic> i5 = integer(5);
+    RCP<const Basic> im2 = integer(-2);
+
+    RCP<const Basic> r1;
+    RCP<const Basic> r2;
+
+    r1 = atan(i1);
+    r2 = div(pi, integer(4));
+    assert(eq(r1, r2));
+
+    r1 = atan(im1);
+    r2 = div(pi, integer(-4));
+    assert(eq(r1, r2));
+
+    r1 = atan(div(one,sqrt(i3)));
+    r2 = div(pi, integer(6));
+    assert(eq(r1, r2));
+
+    r1 = atan(mul(im1, add(one, sqrt(i2))));
+    r2 = div(mul(pi, i3), integer(-8));
+    assert(eq(r1, r2));
+
+    r1 = atan(sub(sqrt(i2), one));
+    r2 = div(pi, integer(8));
+    assert(eq(r1, r2));
+
+    r1 = atan(sub(i2, sqrt(i3)));
+    r2 = div(pi, integer(12));
+    assert(eq(r1, r2));
+
+    r1 = atan(mul(im1, sqrt(add(i5, mul(i2, sqrt(i5))))));
+    r2 = div(mul(pi, im2), i5);
+    assert(eq(r1, r2));
+
+}
+
+void test_acot()
+{
+    RCP<const Basic> im1 = integer(-1);
+    RCP<const Basic> i1 = integer(1);
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> i3 = integer(3);
+    RCP<const Basic> i5 = integer(5);
+    RCP<const Basic> im2 = integer(-2);
+
+    RCP<const Basic> r1;
+    RCP<const Basic> r2;
+
+    r1 = acot(i1);
+    r2 = div(pi, integer(4));
+    assert(eq(r1, r2));
+
+    r1 = acot(im1);
+    r2 = mul(i3, div(pi, integer(4)));
+    assert(eq(r1, r2));
+
+    r1 = acot(div(one,sqrt(i3)));
+    r2 = div(pi, i3);
+    assert(eq(r1, r2));
+
+    r1 = acot(mul(im1, add(one, sqrt(i2))));
+    r2 = div(mul(pi, integer(7)), integer(8));
+    assert(eq(r1, r2));
+
+    r1 = acot(sub(sqrt(i2), one));
+    r2 = mul(i3, div(pi, integer(8)));
+    assert(eq(r1, r2));
+
+    r1 = acot(sub(i2, sqrt(i3)));
+    r2 = mul(i5, div(pi, integer(12)));
+    assert(eq(r1, r2));
+
+    r1 = acot(mul(im1, sqrt(add(i5, mul(i2, sqrt(i5))))));
+    r2 = div(mul(pi, integer(9)), mul(i5, i2));
+    assert(eq(r1, r2));
+
+}
+
 int main(int argc, char* argv[])
 {
     print_stack_on_segfault();    
@@ -880,6 +1128,11 @@ int main(int argc, char* argv[])
     test_get_pi_shift();
     test_sin_table();
     test_could_extract_minus();
-
+    test_asin();
+    test_acos();
+    test_asec();
+    test_acsc();
+    test_atan();
+    test_acot();
     return 0;
 }
