@@ -124,9 +124,7 @@ public:
         }
     };
 
-    virtual RCP<const Number> rdiv(const Number &other) const {
-        throw std::runtime_error("Not implemented.");
-    };
+    virtual RCP<const Number> rdiv(const Number &other) const ;
 
 	//! Slower power evaluation
     virtual RCP<const Number> pow(const Number &other) const {

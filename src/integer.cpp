@@ -69,6 +69,23 @@ RCP<const Number> Integer::divint(const Integer &other) const {
     return Rational::from_mpq(q);
 }
 
+RCP<const Number> Integer::rdiv(const Number &other) const
+{
+    if (is_a<Integer>(other)) {
+        if (this->i == 0)
+            throw std::runtime_error("Rational: Division by zero.");
+        mpq_class q((static_cast<const Integer&>(other)).i, this->i);
+
+        // This is potentially slow, but has to be done, since q might not
+        // be in canonical form.
+        q.canonicalize();
+
+        return Rational::from_mpq(q);
+    } else {
+        throw std::runtime_error("Not implemented.");
+    }
+};
+
 RCP<const Number> Integer::pow_negint(const Integer &other) const {
     RCP<const Number> tmp = powint(*other.neg());
     if (is_a<Integer>(*tmp)) {
