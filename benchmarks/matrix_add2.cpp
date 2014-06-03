@@ -23,10 +23,10 @@ int main(int argc, char* argv[])
 
     RCP<const DenseMatrix> A, B, C;
 
-    A = densematrix(3, 3, {symbol("a"), symbol("b"), symbol("c"), symbol("d"), 
+    A = densematrix(3, 3, {symbol("a"), symbol("b"), symbol("c"), symbol("d"),
         symbol("e"), symbol("f"), symbol("g"), symbol("h"), symbol("i")});
 
-    B = densematrix(3, 3, {symbol("x"), symbol("y"), symbol("z"), symbol("p"), 
+    B = densematrix(3, 3, {symbol("x"), symbol("y"), symbol("z"), symbol("p"),
         symbol("q"), symbol("r"), symbol("u"), symbol("v"), symbol("w")});
 
     std::cout << "Adding Two Matrices; matrix dimensions: 4 x 4" << std::endl;
