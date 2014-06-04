@@ -98,15 +98,24 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
     if (eq(a, one)) return one;
     if (eq(a, minus_one) && is_a<Integer>(*b))
         return is_a<Integer>(*div(b, integer(2))) ? one : minus_one;
-    if (is_a_Number(*a) && is_a<Integer>(*b)) {
+    if (is_a_Number(*a) && is_a_Number(*b)) {
         RCP<const Number> exp_new = rcp_static_cast<const Number>(b);
         if(exp_new->is_negative()) {
             exp_new = exp_new->mul(*(rcp_static_cast<const Number>(minus_one)));
-            return pownum(rcp_static_cast<const Number>(a)->rdiv(*rcp_static_cast<const Number>(one)),
+            if (is_a<Integer>(*b)) {
+                return pownum(rcp_static_cast<const Number>(a)->rdiv(*rcp_static_cast<const Number>(one)),
                 rcp_static_cast<const Integer>(b)->mul(*rcp_static_cast<const Number>(minus_one)));
+            }
+            else if (is_a<Rational>(*b)) {
+                return rcp(new Pow(rcp_static_cast<const Number>(a)->rdiv(*rcp_static_cast<const Number>(one)),
+                rcp_static_cast<const Integer>(b)->mul(*rcp_static_cast<const Number>(minus_one))));
+            }
         }
         else {
-            return pownum(rcp_static_cast<const Number>(a), rcp_static_cast<const Number>(b));
+            if (is_a<Integer>(*b))
+                return pownum(rcp_static_cast<const Number>(a), rcp_static_cast<const Number>(b));
+            else
+                return rcp(new Pow(a, b));
         }
     }
     if (is_a<Mul>(*a))
