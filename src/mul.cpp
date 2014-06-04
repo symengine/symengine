@@ -360,9 +360,18 @@ RCP<const Basic> Mul::power_all_terms(const RCP<const Basic> &exp) const
     RCP<const Basic> new_exp;
     for (auto &p: dict_) {
         new_exp = mul(p.second, exp);
-        if (is_a<Integer>(*new_exp) &&
-                rcp_static_cast<const Integer>(new_exp)->is_zero()) continue;
-        Mul::dict_add_term(d, new_exp, p.first);
+        if (is_a_Number(*new_exp)) {
+            if (rcp_static_cast<const Number>(new_exp)->is_zero()) continue;
+            else if (rcp_static_cast<const Number>(new_exp)->is_negative()) {
+                Mul::dict_add_term(d, mul(minus_one, new_exp), div(one, p.first));
+            }
+            else {
+                Mul::dict_add_term(d, new_exp, p.first);
+            }
+        }
+        else{
+            Mul::dict_add_term(d, new_exp, p.first);
+        } 
     }
     if (is_a_Number(*new_coef)) {
         return Mul::from_dict(rcp_static_cast<const Number>(new_coef), d);
