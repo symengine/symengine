@@ -295,17 +295,23 @@ RCP<const DenseMatrix> diagonal_solve(const DenseMatrix &A,
     std::vector<RCP<const Basic>> t(row*col + row);
     std::vector<RCP<const Basic>> solutions(row);
 
-    // Create the augmented matrix
+    // Create the augmented matrix combinning A and b
     for (unsigned i = 0; i < row; i++) {
         for (unsigned j = 0; j < col; j++)
-            t[i*col + j] = A.m_[i*col + j];
-        t[i*col + col + 1] = b.m_[i];
+            t[i*col + i + j] = A.m_[i*col + j];
+        t[i*col + i + col] = b.m_[i];
     }
 
-    RCP<const DenseMatrix> B = gaussian_elimination(A);
+    RCP<const DenseMatrix> B = gaussian_elimination(*densematrix(row, col + 1, t));
 
-    for (unsigned i = 0; i < row; i++)
-        solutions[i] = div(B->get(i*(col+1) + i), B->get((i+1)*(col+1)));
+    for (unsigned i = 0; i < col; i++)
+        solutions[i] = div(B->get(i*col + i + col), B->get(i*(col+1) + i));
+
+    for (unsigned i = 0; i < row*col + row; i++)
+        std::cout << *t[i] << std:: endl;
+
+    for (unsigned i = 0; i < row*col + row; i++)
+        std::cout << *B->get(i) << std:: endl;
 
     return densematrix(row, 1, solutions);
 }
