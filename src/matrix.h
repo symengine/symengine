@@ -83,6 +83,10 @@ public:
     // Gaussian elimination
     friend RCP<const DenseMatrix> gaussian_elimination(const DenseMatrix &A);
 
+    // Linear Solve
+    friend RCP<const DenseMatrix> diagonal_solve(const DenseMatrix &A,
+        const DenseMatrix &b);
+
 protected:
     // Matrix elements are stored in row-major order
     std::vector<RCP<const Basic>> m_;
