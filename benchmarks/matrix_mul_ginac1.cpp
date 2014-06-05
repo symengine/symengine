@@ -1,7 +1,7 @@
 // To complie on a debian system you need to install libginac-dev first
 // $ sudo apt-get install libginac-dev
 // Then compile with the following command,
-// $ g++ -o simple -Wl,--no-as-needed `pkg-config --cflags --libs ginac` matrix_mul_ginac1.cpp
+// $ g++ -o matrix_mul_ginac1 -Wl,--no-as-needed `pkg-config --cflags --libs ginac` matrix_mul_ginac1.cpp
 // See this SO answer: http://stackoverflow.com/a/18696743/1895353
 
 #include <iostream>
