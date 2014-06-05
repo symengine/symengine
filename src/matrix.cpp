@@ -7,52 +7,12 @@ namespace CSymPy {
 
 // ----------------------------- Dense Matrix --------------------------------//
 
-// Virtual functions inherited from Basic class
-std::size_t DenseMatrix::__hash__() const
-{
-    std::size_t seed = 0;
-    for (auto &p: m_) {
-        hash_combine<Basic>(seed, *p);
-    }
-    return seed;
-}
-
-bool DenseMatrix::__eq__(const Basic &o) const
-{
-    const DenseMatrix &o_ = static_cast<const DenseMatrix &>(o);
-
-    if (is_a<DenseMatrix>(o)) {
-        if (row_ != o_.row_ || col_ != o_.col_)
-            return false;
-
-        std::vector<RCP<const Basic>>::const_iterator oit = o_.m_.begin();
-        std::vector<RCP<const Basic>>::const_iterator it = m_.begin();
-
-        for (unsigned i = 0; i < row_*col_; i++) {
-            if (neq(*oit, *it))
-                return false;
-            it++;
-            oit++;
-        }
-        return true;
-    }
-    return false;
-}
-
-int DenseMatrix::compare(const Basic &o) const
-{
-    CSYMPY_ASSERT(is_a<DenseMatrix>(o))
-    const DenseMatrix &o_ = static_cast<const DenseMatrix &>(o);
-    // # of elements
-    if (m_.size() != o_.m_.size())
-        return (m_.size() < o_.m_.size()) ? -1 : 1;
-
-    return 0;
-}
-
 // Constructors
 DenseMatrix::DenseMatrix(unsigned row, unsigned col)
-        : MatrixBase(row, col) {}
+        : MatrixBase(row, col)
+{
+    m_ = std::vector<RCP<const Basic>>(row*col);
+}
 
 DenseMatrix::DenseMatrix(unsigned row, unsigned col, const std::vector<RCP<const Basic>> &l)
         : MatrixBase(row, col), m_{l}
@@ -87,18 +47,18 @@ RCP<const MatrixBase> DenseMatrix::inv() const
 }
 
 // Matrix addition
-RCP<const MatrixBase> DenseMatrix::add_matrix(const MatrixBase &other) const
-{
-    if (is_a<DenseMatrix>(other))
-        return add_dense_dense(*this, static_cast<const DenseMatrix &>(other));
-}
+//RCP<const MatrixBase> DenseMatrix::add_matrix(const MatrixBase &other) const
+//{
+//    if (is_a<DenseMatrix>(other))
+//        return add_dense_dense(*this, static_cast<const DenseMatrix &>(other));
+//}
 
-// Matrix multiplication
-RCP<const MatrixBase> DenseMatrix::mul_matrix(const MatrixBase &other) const
-{
-    if (is_a<DenseMatrix>(other))
-        return mul_dense_dense(*this, static_cast<const DenseMatrix &>(other));
-}
+//// Matrix multiplication
+//RCP<const MatrixBase> DenseMatrix::mul_matrix(const MatrixBase &other) const
+//{
+//    if (is_a<DenseMatrix>(other))
+//        return mul_dense_dense(*this, static_cast<const DenseMatrix &>(other));
+//}
 
 // ----------------------------- Sparse Matrix -------------------------------//
 
@@ -131,7 +91,7 @@ RCP<const Basic> SparseMatrix::get(unsigned i) const
     throw std::runtime_error("Not implemented.");
 }
 
-void SparseMatrix::set(unsigned i, RCP<Basic> &e)
+void SparseMatrix::set(unsigned i, RCP<const Basic> &e)
 {
     throw std::runtime_error("Not implemented.");
 }
@@ -164,75 +124,71 @@ RCP<const MatrixBase> SparseMatrix::mul_matrix(const MatrixBase &other) const
 }
 
 // ------------------------------- Matrix Addition ---------------------------//
-RCP<const DenseMatrix> add_dense_dense(const DenseMatrix &A,
-        const DenseMatrix &B)
+void add_dense_dense(const DenseMatrix &A, const DenseMatrix &B, DenseMatrix &C)
 {
-    unsigned row = A.row_;
-    unsigned col = A.col_;
-
-    CSYMPY_ASSERT(row == B.row_ && col == B.col_)
-
-    std::vector<RCP<const Basic>> sum(row*col);
+    CSYMPY_ASSERT(A.row_ == B.row_ && A.col_ == B.col_ && A.row_ == C.row_ && A.col- == C.col_);
 
     std::vector<RCP<const Basic>>::const_iterator ait = A.m_.begin();
     std::vector<RCP<const Basic>>::const_iterator bit = B.m_.begin();
+    std::vector<RCP<const Basic>>::iterator cit = C.m_.begin();
 
-    for(auto &it: sum) {
-        it = add(*ait, *bit);
+    while(ait != A.m_.end()) {
+        *cit = add(*ait, *bit);
+        ait++;
+        bit++;
+        cit++;
+    }
+}
+
+void add_dense_scalar(const DenseMatrix &A, RCP<const Basic> &k, DenseMatrix &B)
+{
+    CSYMPY_ASSERT(A.row_ == B.row_ && A.col_ == B.col_);
+
+    std::vector<RCP<const Basic>>::const_iterator ait = A.m_.begin();
+    std::vector<RCP<const Basic>>::iterator bit = B.m_.begin();
+
+    while (ait != A.m_.end()) {
+        *bit = add(*ait, k);
         ait++;
         bit++;
     }
-
-    return rcp(new DenseMatrix(row, col, sum));
-}
-
-RCP<const DenseMatrix> add_dense_scalar(const DenseMatrix &A,
-    RCP<const Basic> &k)
-{
-    std::vector<RCP<const Basic>> scalar_add(A.row_*A.col_);
-
-    for (unsigned i = 0; i < A.row_*A.col_; i++)
-        scalar_add[i] = add(A.m_[i], k);
-
-    return rcp(new DenseMatrix(A.row_, A.col_, scalar_add));
 }
 
 // ------------------------------- Matrix Multiplication ---------------------//
-RCP<const DenseMatrix> mul_dense_dense(const DenseMatrix &A,
-        const DenseMatrix &B)
+void mul_dense_dense(const DenseMatrix &A, const DenseMatrix &B,
+        DenseMatrix &C)
 {
     unsigned row = A.row_;
-    unsigned col = A.col_;
+    unsigned col = B.col_;
 
-    CSYMPY_ASSERT(col == B.row_)
-
-    std::vector<RCP<const Basic>> prod(row*B.col_);
+    CSYMPY_ASSERT(A.col_ == B.row_ && C.row_ == row && C.col_ == col);
 
     for (unsigned r = 0; r<row; r++) {
-        for (unsigned c = 0; c<B.col_; c++) {
-            prod[r*B.col_ + c] = zero; // Integer Zero
-            for (unsigned k = 0; k<col; k++)
-                prod[r*B.col_ + c] = add(prod[r*B.col_ + c],
-                        mul(A.m_[r*col + k], B.m_[k*B.col_ + c]));
+        for (unsigned c = 0; c<col; c++) {
+            C.m_[r*col + c] = zero; // Integer Zero
+            for (unsigned k = 0; k<A.col_; k++)
+                C.m_[r*col + c] = add(C.m_[r*col + c],
+                        mul(A.m_[r*A.col_ + k], B.m_[k*col + c]));
         }
     }
-
-    return rcp(new DenseMatrix(row, B.col_, prod));
 }
 
-RCP<const DenseMatrix> mul_dense_scalar(const DenseMatrix &A,
-        RCP<const Basic> &k)
+void mul_dense_scalar(const DenseMatrix &A, RCP<const Basic> &k, DenseMatrix& B)
 {
-    std::vector<RCP<const Basic>> scalar_mul(A.row_*A.col_);
+    CSYMPY_ASSERT(A.col_ == B.col_ && A.row_ == B.row_);
 
-    for (unsigned i = 0; i < A.row_*A.col_; i++)
-        scalar_mul[i] = mul(A.m_[i], k);
+    std::vector<RCP<const Basic>>::const_iterator ait = A.m_.begin();
+    std::vector<RCP<const Basic>>::iterator bit = B.m_.begin();
 
-    return rcp(new DenseMatrix(A.row_, A.col_, scalar_mul));
+    while (ait != A.m_.end()){
+         *bit = mul(*ait, k);
+         ait++;
+         bit++;
+    }
 }
 
 // ------------------------------ Gaussian Elimination -----------------------//
-RCP<const DenseMatrix> gaussian_elimination(const DenseMatrix &A)
+void gaussian_elimination(const DenseMatrix &A, DenseMatrix &B)
 {
     unsigned row = A.row_;
     unsigned col = A.col_;
@@ -278,8 +234,6 @@ RCP<const DenseMatrix> gaussian_elimination(const DenseMatrix &A)
 
         pivots++;
     }
-
-    return densematrix(row, col, t);
 }
 
 } // CSymPy
