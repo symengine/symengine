@@ -9,6 +9,9 @@
 using CSymPy::Integer;
 using CSymPy::print_stack_on_segfault;
 using CSymPy::RCP;
+using CSymPy::fibonacci;
+using CSymPy::lucas;
+using CSymPy::factorial;
 using CSymPy::integer;
 using CSymPy::is_a;
 using CSymPy::map_integer_uint;
@@ -81,6 +84,60 @@ void test_modular_inverse()
 
     assert(mod_inverse(outArg(b), *i3, *i11) != 0);
     assert(eq(b, integer(4)));
+}
+
+void test_fibonacci_lucas()
+{
+    RCP<const Integer> g;
+    RCP<const Integer> s;
+
+    assert(eq(fibonacci(1), integer(1)));
+    assert(eq(fibonacci(2), integer(1)));
+    assert(eq(fibonacci(3), integer(2)));
+    assert(eq(fibonacci(5), integer(5)));
+
+    assert(eq(lucas(1), integer(1)));
+    assert(eq(lucas(2), integer(3)));
+    assert(eq(lucas(3), integer(4)));
+    assert(eq(lucas(5), integer(11)));
+
+    fibonacci2(outArg(g), outArg(s), 10);
+    assert(eq(g, integer(55)));
+    assert(eq(s, integer(34)));
+
+    lucas2(outArg(g), outArg(s), 10);
+    assert(eq(g, integer(123)));
+    assert(eq(s, integer(76)));
+	
+}
+
+void test_binomial()
+{
+    RCP<const Integer> i10=integer(10);
+    RCP<const Integer> i5=integer(5);
+    RCP<const Integer> i0=integer(0);
+    RCP<const Integer> m10=integer(-10);
+
+    assert(eq(binomial(*i10,1), i10));
+    assert(eq(binomial(*i5,2), i10));
+    assert(eq(binomial(*i5,10), i0));
+    assert(eq(binomial(*i10,11), i0));
+    assert(eq(binomial(*i10,2), integer(45)));
+
+    assert(eq(binomial(*m10,3), integer(-220)));
+    assert(eq(binomial(*m10,2), integer(55)));
+	
+}
+
+void test_factorial()
+{
+    RCP<const Integer> i1=integer(1);
+
+    assert(eq(factorial(1), i1));
+    assert(eq(factorial(0), i1));
+    assert(eq(factorial(5), integer(120)));
+    assert(eq(factorial(9), integer(362880)));
+	
 }
 
 void test_factor()
@@ -238,6 +295,9 @@ int main(int argc, char* argv[])
     test_nextprime();
     test_probab_prime_p();
     test_modular_inverse();
+    test_fibonacci_lucas();
+    test_binomial();
+    test_factorial();
     test_factor();
     test_factor_lehman_method();
     test_sieve();
