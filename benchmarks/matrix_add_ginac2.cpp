@@ -34,6 +34,3 @@ int main()
         << std::chrono::duration_cast<std::chrono::microseconds>(t2-t1).count()/N
         << " microseconds" << std::endl;
 }
-
-//g++ -o simple -Wl,--no-as-needed `pkg-config --cflags --libs ginac` matrix_add_ginac.cpp
-
