@@ -1,3 +1,9 @@
+// To complie on a debian system you need to install libginac-dev first
+// $ sudo apt-get install libginac-dev
+// Then compile with the following command,
+// $ g++ -o simple -Wl,--no-as-needed `pkg-config --cflags --libs ginac` matrix_add_ginac1.cpp
+// See this SO answer: http://stackoverflow.com/a/18696743/1895353
+
 #include <iostream>
 #include <chrono>
 
@@ -13,14 +19,14 @@ int main()
         5, 6, 7, 8,
         9, 10, 11, 12,
         13, 14, 15, 16;
-    
+
     B = 1, 2, 3, 4,
         5, 6, 7, 8,
         9, 10, 11, 12,
         13, 14, 15, 16;
-        
+
     unsigned N = 10000;
-    
+
     auto t1 = std::chrono::high_resolution_clock::now();
     for (unsigned i = 0; i < N; i++)
         C = A.add(B);;
@@ -28,8 +34,5 @@ int main()
 
     std::cout
         << std::chrono::duration_cast<std::chrono::microseconds>(t2-t1).count()/N
-        << " microseconds" << std::endl;   
+        << " microseconds" << std::endl;
 }
-
-//g++ -o simple -Wl,--no-as-needed `pkg-config --cflags --libs ginac` matrix_add_ginac.cpp 
-
