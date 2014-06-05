@@ -72,8 +72,9 @@ RCP<const Number> Integer::divint(const Integer &other) const {
 RCP<const Number> Integer::rdiv(const Number &other) const
 {
     if (is_a<Integer>(other)) {
-        if (this->i == 0)
+        if (this->i == 0) {
             throw std::runtime_error("Rational: Division by zero.");
+        }
         mpq_class q((static_cast<const Integer&>(other)).i, this->i);
 
         // This is potentially slow, but has to be done, since q might not

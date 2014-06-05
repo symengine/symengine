@@ -107,19 +107,20 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
                 rcp_static_cast<const Integer>(b)->mul(*rcp_static_cast<const Number>(minus_one)));
             }
             else if (is_a<Rational>(*b)) {
-                return rcp(new Pow(rcp_static_cast<const Number>(a)->rdiv(*rcp_static_cast<const Number>(one)),
-                rcp_static_cast<const Integer>(b)->mul(*rcp_static_cast<const Number>(minus_one))));
+                return pownum(rcp_static_cast<const Number>(a)->rdiv(*rcp_static_cast<const Number>(one)),
+                rcp_static_cast<const Integer>(b)->mul(*rcp_static_cast<const Number>(minus_one)));
+            }
+        } else {
+            if (is_a<Integer>(*b)) {
+                return pownum(rcp_static_cast<const Number>(a), rcp_static_cast<const Number>(b));
+            } else {
+                return rcp(new Pow(a, b));
             }
         }
-        else {
-            if (is_a<Integer>(*b))
-                return pownum(rcp_static_cast<const Number>(a), rcp_static_cast<const Number>(b));
-            else
-                return rcp(new Pow(a, b));
-        }
     }
-    if (is_a<Mul>(*a))
+    if (is_a<Mul>(*a)) {
         return rcp_static_cast<const Mul>(a)->power_all_terms(b);
+    }
     if (is_a<Pow>(*a)) {
         RCP<const Pow> A = rcp_static_cast<const Pow>(a);
         return pow(A->base_, mul(A->exp_, b));
