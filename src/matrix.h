@@ -50,7 +50,7 @@ public:
 
     // Virtual functions inherited from Basic class
 //    virtual std::size_t __hash__() const;
-//    virtual bool __eq__(const Basic &o) const;
+//    virtual bool __eq__(const MatrixBase &o) const;
 //    virtual int compare(const Basic &o) const;
 
     // Should implement all the virtual methods from MatrixBase
@@ -127,6 +127,21 @@ protected:
 
 void add_dense_dense(const DenseMatrix &A, const DenseMatrix &B, DenseMatrix &C);
 void add_dense_scalar(const DenseMatrix &A, RCP<const Basic> &k, DenseMatrix &B);
+void mul_dense_dense(const DenseMatrix &A, const DenseMatrix &B, DenseMatrix &C);
+void mul_dense_scalar(const DenseMatrix &A, RCP<const Basic> &k, DenseMatrix &C);
+
+
+inline bool operator==(const MatrixBase &lhs, const MatrixBase &rhs)
+{
+    if ((lhs.nrows() != rhs.nrows()) || (lhs.ncols() != rhs.ncols()))
+        return false;
+
+    for (unsigned i = 0; i < lhs.nrows()*lhs.ncols(); i++)
+        if(neq(lhs.get(i), rhs.get(i)))
+            return false;
+
+    return true;
+}
 
 } // CSymPy
 

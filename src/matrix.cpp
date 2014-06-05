@@ -126,7 +126,7 @@ RCP<const MatrixBase> SparseMatrix::mul_matrix(const MatrixBase &other) const
 // ------------------------------- Matrix Addition ---------------------------//
 void add_dense_dense(const DenseMatrix &A, const DenseMatrix &B, DenseMatrix &C)
 {
-    CSYMPY_ASSERT(A.row_ == B.row_ && A.col_ == B.col_ && A.row_ == C.row_ && A.col- == C.col_);
+    CSYMPY_ASSERT(A.row_ == B.row_ && A.col_ == B.col_ && A.row_ == C.row_ && A.col_ == C.col_);
 
     std::vector<RCP<const Basic>>::const_iterator ait = A.m_.begin();
     std::vector<RCP<const Basic>>::const_iterator bit = B.m_.begin();
@@ -196,20 +196,20 @@ void gaussian_elimination(const DenseMatrix &A, DenseMatrix &B)
 
     RCP<const Basic> tmp, scale;
 
-    std::vector<RCP<const Basic>> t = A.m_;
+    B.m_ = A.m_;
 
     for (i = 0; i < col; i++) {
         if (pivots == row)
             break;
 
-        if (eq(t[pivots*col + i], zero)) {
+        if (eq(B.m_[pivots*col + i], zero)) {
 
             for (k = pivots; k < row; k++)
-                if (!eq(t[k*col + i], zero)) {
+                if (!eq(B.m_[k*col + i], zero)) {
                     for (l = 0; l < col; l++) {
-                        tmp = t[k*col + l];
-                        t[k*col + l] = t[pivots*col + l];
-                        t[pivots*col + l] = tmp;
+                        tmp = B.m_[k*col + l];
+                        B.m_[k*col + l] = B.m_[pivots*col + l];
+                        B.m_[pivots*col + l] = tmp;
                     }
                     break;
                 }
@@ -218,18 +218,18 @@ void gaussian_elimination(const DenseMatrix &A, DenseMatrix &B)
                 continue;
         }
 
-        scale = t[pivots*col + i];
+        scale = B.m_[pivots*col + i];
         for (l = 0; l < col; l++)
-            t[pivots*col + l] = div(t[pivots*col + l], scale);
+            B.m_[pivots*col + l] = div(B.m_[pivots*col + l], scale);
 
 
         for (unsigned j = 0; j < row; j++) {
             if (j == pivots)
                 continue;
 
-            scale = t[j*col + i];
+            scale = B.m_[j*col + i];
             for(l = 0; l < col; l++)
-                t[j*col + l] = sub(t[j*col + l], mul(scale, t[pivots*col + l]));
+                B.m_[j*col + l] = sub(B.m_[j*col + l], mul(scale, B.m_[pivots*col + l]));
         }
 
         pivots++;
