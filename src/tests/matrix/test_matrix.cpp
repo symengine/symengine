@@ -205,6 +205,14 @@ void test_diagonal_solve()
 
     assert(eq(diagonal_solve(*A, *b), C));
 
+    A = densematrix(2, 2, {integer(5), integer(-4), integer(8), integer(1)});
+    b = densematrix(2, 1, {integer(7), integer(26)});
+    C = densematrix(2, 1, {integer(3), integer(2)});
+
+    assert(eq(diagonal_solve(*A, *b), C));
+
+    // below two sets produce the correct matrix but the results are not
+    // simplified. See: https://github.com/sympy/csympy/issues/183
     A = densematrix(2, 2, {symbol("a"), symbol("b"), symbol("b"), symbol("a")});
     b = densematrix(2, 1, {add(pow(symbol("a"), integer(2)), pow(symbol("b"), integer(2))),
         mul(integer(2), mul(symbol("a"), symbol("b")))});
@@ -217,10 +225,6 @@ void test_diagonal_solve()
     C = densematrix(2, 1, {symbol("a"), symbol("b")});
 
 //    assert(eq(diagonal_solve(*A, *b), C));
-
-    C = diagonal_solve(*A, *b);
-    for (unsigned i = 0; i < C->nrows()*C->ncols(); i++)
-        std::cout << *C->get(i) << std::endl;
 }
 
 int main(int argc, char* argv[])

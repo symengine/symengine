@@ -304,14 +304,9 @@ RCP<const DenseMatrix> diagonal_solve(const DenseMatrix &A,
 
     RCP<const DenseMatrix> B = gaussian_elimination(*densematrix(row, col + 1, t));
 
+    // No checks are done to see if the diagonal entries are zero
     for (unsigned i = 0; i < col; i++)
         solutions[i] = div(B->get(i*col + i + col), B->get(i*(col+1) + i));
-
-    for (unsigned i = 0; i < row*col + row; i++)
-        std::cout << *t[i] << std:: endl;
-
-    for (unsigned i = 0; i < row*col + row; i++)
-        std::cout << *B->get(i) << std:: endl;
 
     return densematrix(row, 1, solutions);
 }
