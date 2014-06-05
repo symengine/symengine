@@ -191,8 +191,19 @@ void Mul::as_base_exp(const RCP<const Basic> &self, const Ptr<RCP<const Basic>> 
         *exp = one;
         *base = self;
     } else if (is_a_Number(*self)) {
-        *exp = one;
-        *base = self;
+        if (is_a<Rational>(*self)) {
+            RCP<const Rational> self_new = rcp_static_cast<const Rational>(self);
+            if ((self_new->i.get_num() == 1) && (abs(self_new->i.get_den()) != 1)) {
+                *exp = minus_one;
+                *base = self_new->rdiv(*rcp_static_cast<const Number>(one));
+            } else {
+                *exp = one;
+                *base = self;
+            }
+        } else {
+            *exp = one;
+            *base = self;
+        }
     } else if (is_a<Pow>(*self)) {
         *exp = rcp_static_cast<const Pow>(self)->exp_;
         *base = rcp_static_cast<const Pow>(self)->base_;
@@ -362,7 +373,8 @@ RCP<const Basic> Mul::power_all_terms(const RCP<const Basic> &exp) const
         new_exp = mul(p.second, exp);
         if (is_a_Number(*new_exp)) {
             if (rcp_static_cast<const Number>(new_exp)->is_zero()) continue;
-            else if (rcp_static_cast<const Number>(new_exp)->is_negative()) {
+            else if (rcp_static_cast<const Number>(new_exp)->is_negative() &&
+                    is_a_Number(*p.first)) {
                 Mul::dict_add_term(d, mul(minus_one, new_exp), div(one, p.first));
             }
             else {
