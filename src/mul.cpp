@@ -56,6 +56,7 @@ bool Mul::is_canonical(const RCP<const Number> &coef,
         if (is_a<Pow>(*p.first))
             return false;
     }
+
     return true;
 }
 
@@ -151,7 +152,22 @@ void Mul::dict_add_term(map_basic_basic &d, const RCP<const Basic> &exp,
 {
     auto it = d.find(t);
     if (it == d.end()) {
-        insert(d, t, exp);
+        if (is_a_Number(*t)) {
+            RCP<const Number> t_new = rcp_static_cast<const Number>(t);
+            if (!(t_new->is_zero()) && !(t_new->is_one())) {
+                it = d.find(t_new->rdiv(*rcp_static_cast<const Number>(one)));
+                if (it == d.end()) {
+                    insert(d, t, exp);
+                } else {
+                    dict_add_term(d, mul(minus_one, exp), t_new->rdiv(*rcp_static_cast<const Number>(one)));
+                }
+            } else {
+                insert(d, t, exp);
+            }
+
+        } else {
+            insert(d, t, exp);
+        }
     } else {
         // Very common case, needs to be fast:
         if (is_a_Number(*it->second) && is_a_Number(*exp)) {
