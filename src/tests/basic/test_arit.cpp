@@ -25,6 +25,7 @@ using CSymPy::zero;
 using CSymPy::sin;
 using CSymPy::RCP;
 using CSymPy::rcp;
+using CSymPy::sqrt;
 using CSymPy::rcp_dynamic_cast;
 using CSymPy::print_stack_on_segfault;
 
@@ -322,7 +323,15 @@ void test_pow()
 
     // Just test that it works:
     r2 = sin(r1)->diff(x)->diff(x);
-}
+
+    r1 = div(one, sqrt(i2));
+    r2 = mul(pow(i2, pow(i2, im1)), pow(i2, im1));
+    assert(eq(r1, r2));
+
+    r1 = div(one, sqrt(i2));
+    r2 = div(sqrt(i2), i2);
+    assert(eq(r1, r2));
+ }
 
 void test_multinomial()
 {
