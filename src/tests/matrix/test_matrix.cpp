@@ -57,18 +57,6 @@ void test_dense_dense_addition()
         add(symbol("a"), symbol("c")), add(symbol("b"), symbol("d"))}));
 }
 
-void test_add_matrix()
-{
-    // Just want to check whether the member method works
-//    RCP<const DenseMatrix> A, B, C;
-
-//    A = densematrix(2, 2, {integer(1), integer(2), integer(3), integer(4)});
-//    B = densematrix(2, 2, {integer(1), integer(2), integer(3), integer(4)});
-//    C = densematrix(2, 2, {integer(2), integer(4), integer(6), integer(8)});
-
-//    assert(eq(A->add_matrix(*B), C));
-}
-
 void test_add_dense_scalar()
 {
     // More tests should be added
@@ -117,18 +105,6 @@ void test_dense_dense_multiplication()
         add(add(mul(symbol("p"), symbol("x")), mul(symbol("q"), symbol("y"))),
         mul(symbol("r"), symbol("z"))), add(add(mul(symbol("u"), symbol("x")),
         mul(symbol("v"), symbol("y"))), mul(symbol("w"), symbol("z")))}));
-}
-
-void test_mul_matrix()
-{
-//    // Just want to check whether the member method works
-//    RCP<const DenseMatrix> A, B, C;
-
-//    A = densematrix(2, 2, {integer(1), integer(0), integer(0), integer(1)});
-//    B = densematrix(2, 2, {integer(1), integer(2), integer(3), integer(4)});
-//    C = densematrix(2, 2, {integer(1), integer(2), integer(3), integer(4)});
-
-//    assert(eq(A->mul_matrix(*B), C));
 }
 
 void test_mul_dense_scalar()
@@ -199,11 +175,9 @@ int main(int argc, char* argv[])
     print_stack_on_segfault();
 
     test_dense_dense_addition();
-    test_add_matrix();
     test_add_dense_scalar();
 
     test_dense_dense_multiplication();
-    test_mul_matrix();
     test_mul_dense_scalar();
 
     test_gaussian_elimination();

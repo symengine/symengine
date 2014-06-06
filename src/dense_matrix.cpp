@@ -5,8 +5,6 @@
 
 namespace CSymPy {
 
-// ----------------------------- Dense Matrix --------------------------------//
-
 // Constructors
 DenseMatrix::DenseMatrix(unsigned row, unsigned col)
         : MatrixBase(row, col)
@@ -46,79 +44,12 @@ RCP<const MatrixBase> DenseMatrix::inv() const
     throw std::runtime_error("Not implemented.");
 }
 
-// Matrix addition
-//RCP<const MatrixBase> DenseMatrix::add_matrix(const MatrixBase &other) const
-//{
-//    if (is_a<DenseMatrix>(other))
-//        return add_dense_dense(*this, static_cast<const DenseMatrix &>(other));
-//}
-
-//// Matrix multiplication
-//RCP<const MatrixBase> DenseMatrix::mul_matrix(const MatrixBase &other) const
-//{
-//    if (is_a<DenseMatrix>(other))
-//        return mul_dense_dense(*this, static_cast<const DenseMatrix &>(other));
-//}
-
-// ----------------------------- Sparse Matrix -------------------------------//
-
-// Virtual functions inherited from Basic class
-std::size_t SparseMatrix::__hash__() const
+MatrixBase& DenseMatrix::add_matrix(const MatrixBase &other) const
 {
     throw std::runtime_error("Not implemented.");
 }
 
-bool SparseMatrix::__eq__(const Basic &o) const
-{
-    throw std::runtime_error("Not implemented.");
-}
-
-int SparseMatrix::compare(const Basic &o) const
-{
-    throw std::runtime_error("Not implemented.");
-}
-
-//Constructors
-SparseMatrix::SparseMatrix(unsigned row, unsigned col)
-        : MatrixBase(row, col) {}
-
-SparseMatrix::SparseMatrix(unsigned row, unsigned col,
-        std::map<int, RCP<Basic>> &l): MatrixBase(row, col), m_{l} {}
-
-// Get and set elements
-RCP<const Basic> SparseMatrix::get(unsigned i) const
-{
-    throw std::runtime_error("Not implemented.");
-}
-
-void SparseMatrix::set(unsigned i, RCP<const Basic> &e)
-{
-    throw std::runtime_error("Not implemented.");
-}
-
-unsigned SparseMatrix::rank() const
-{
-    throw std::runtime_error("Not implemented.");
-}
-
-RCP<const Basic> SparseMatrix::det() const
-{
-    throw std::runtime_error("Not implemented.");
-}
-
-RCP<const MatrixBase> SparseMatrix::inv() const
-{
-    throw std::runtime_error("Not implemented.");
-}
-
-// Matrix addition
-RCP<const MatrixBase> SparseMatrix::add_matrix(const MatrixBase &other) const
-{
-    throw std::runtime_error("Not implemented.");
-}
-
-// Matrix multiplication
-RCP<const MatrixBase> SparseMatrix::mul_matrix(const MatrixBase &other) const
+MatrixBase& DenseMatrix::mul_matrix(const MatrixBase &other) const
 {
     throw std::runtime_error("Not implemented.");
 }
