@@ -56,7 +56,6 @@ bool Mul::is_canonical(const RCP<const Number> &coef,
         if (is_a<Pow>(*p.first))
             return false;
     }
-
     return true;
 }
 
