@@ -69,7 +69,7 @@ RCP<const Integer> fibonacci(unsigned long n)
 {
     mpz_class f;
 
-    mpz_fib_ui(f.get_mpz_t(),n);
+    mpz_fib_ui(f.get_mpz_t(), n);
     
     return integer(f);
 }
@@ -83,8 +83,7 @@ void fibonacci2(const Ptr<RCP<const Integer>> &g, const Ptr<RCP<const Integer>> 
     mpz_init(g_t);
     mpz_init(s_t);
 	
-    mpz_fib2_ui(g_t,s_t,n);
-    
+    mpz_fib2_ui(g_t, s_t, n);
     *g = integer(mpz_class(g_t));
     *s = integer(mpz_class(s_t));
 
@@ -96,7 +95,7 @@ RCP<const Integer> lucas(unsigned long n)
 {
     mpz_class f;
 
-    mpz_lucnum_ui(f.get_mpz_t(),n);
+    mpz_lucnum_ui(f.get_mpz_t(), n);
     
     return integer(f);
 }
@@ -110,8 +109,7 @@ void lucas2(const Ptr<RCP<const Integer>> &g, const Ptr<RCP<const Integer>> &s,
     mpz_init(g_t);
     mpz_init(s_t);
 	
-    mpz_lucnum2_ui(g_t,s_t,n);
-    
+    mpz_lucnum2_ui(g_t, s_t, n);
     *g = integer(mpz_class(g_t));
     *s = integer(mpz_class(s_t));
 
@@ -119,22 +117,22 @@ void lucas2(const Ptr<RCP<const Integer>> &g, const Ptr<RCP<const Integer>> &s,
     mpz_clear(s_t);
 }
 
-//! Binomial Coefficient
-RCP<const Integer> binomial(const Integer &n, unsigned long k){
-
+// Binomial Coefficient
+RCP<const Integer> binomial(const Integer &n, unsigned long k)
+{
     mpz_class f;
 
-    mpz_bin_ui(f.get_mpz_t(),n.as_mpz().get_mpz_t(),k);
+    mpz_bin_ui(f.get_mpz_t(), n.as_mpz().get_mpz_t(), k);
     
     return integer(f);
 }
 
-//! Factorial
+// Factorial
 RCP<const Integer> factorial(unsigned long n)
 {
     mpz_class f;
 
-    mpz_fac_ui(f.get_mpz_t(),n);
+    mpz_fac_ui(f.get_mpz_t(), n);
     
     return integer(f);
 }

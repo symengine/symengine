@@ -108,36 +108,33 @@ void test_fibonacci_lucas()
     lucas2(outArg(g), outArg(s), 10);
     assert(eq(g, integer(123)));
     assert(eq(s, integer(76)));
-	
 }
 
 void test_binomial()
 {
-    RCP<const Integer> i10=integer(10);
-    RCP<const Integer> i5=integer(5);
-    RCP<const Integer> i0=integer(0);
-    RCP<const Integer> m10=integer(-10);
+    RCP<const Integer> i10 = integer(10);
+    RCP<const Integer> i5 = integer(5);
+    RCP<const Integer> i0 = integer(0);
+    RCP<const Integer> m10 = integer(-10);
 
-    assert(eq(binomial(*i10,1), i10));
-    assert(eq(binomial(*i5,2), i10));
-    assert(eq(binomial(*i5,10), i0));
-    assert(eq(binomial(*i10,11), i0));
-    assert(eq(binomial(*i10,2), integer(45)));
+    assert(eq(binomial(*i10, 1), i10));
+    assert(eq(binomial(*i5, 2), i10));
+    assert(eq(binomial(*i5, 10), i0));
+    assert(eq(binomial(*i10, 11), i0));
+    assert(eq(binomial(*i10, 2), integer(45)));
 
-    assert(eq(binomial(*m10,3), integer(-220)));
-    assert(eq(binomial(*m10,2), integer(55)));
-	
+    assert(eq(binomial(*m10, 3), integer(-220)));
+    assert(eq(binomial(*m10, 2), integer(55)));
 }
 
 void test_factorial()
 {
-    RCP<const Integer> i1=integer(1);
+    RCP<const Integer> i1 = integer(1);
 
     assert(eq(factorial(1), i1));
     assert(eq(factorial(0), i1));
     assert(eq(factorial(5), integer(120)));
     assert(eq(factorial(9), integer(362880)));
-	
 }
 
 void test_factor()
