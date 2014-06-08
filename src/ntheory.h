@@ -31,6 +31,27 @@ void gcd_ext(const Ptr<RCP<const Integer>> &g, const Ptr<RCP<const Integer>> &s,
 //! inverse modulo
 int mod_inverse(const Ptr<RCP<const Integer>> &b, const Integer &a,
         const Integer &m);
+
+//! Fibonacci number
+RCP<const Integer> fibonacci(unsigned long n);
+
+//! Fibonacci n and n-1
+void fibonacci2(const Ptr<RCP<const Integer>> &g, const Ptr<RCP<const Integer>> &s,
+        unsigned long n);
+
+//! Lucas number
+RCP<const Integer> lucas(unsigned long n);
+
+//! Lucas number n and n-1
+void lucas2(const Ptr<RCP<const Integer>> &g, const Ptr<RCP<const Integer>> &s,
+        unsigned long n);
+
+//! Binomial Coefficient
+RCP<const Integer> binomial(const Integer &n,unsigned long k);
+
+//! Factorial
+RCP<const Integer> factorial(unsigned long n);
+
 //! \return true of `a` divides `b`
 bool divides(const RCP<const Integer> &a, const RCP<const Integer> &b);
 
