@@ -191,8 +191,21 @@ void Mul::as_base_exp(const RCP<const Basic> &self, const Ptr<RCP<const Basic>> 
         *exp = one;
         *base = self;
     } else if (is_a_Number(*self)) {
-        *exp = one;
-        *base = self;
+        // Always ensure it is of form |num| > |den|
+        // in case of Integers den = 1
+        if (is_a<Rational>(*self)) {
+            RCP<const Rational> self_new = rcp_static_cast<const Rational>(self);
+            if (abs(self_new->i.get_num()) < abs(self_new->i.get_den())) {
+                *exp = minus_one;
+                *base = self_new->rdiv(*rcp_static_cast<const Number>(one));
+            } else {
+                *exp = one;
+                *base = self;
+            }
+        } else {
+            *exp = one;
+            *base = self;
+        }
     } else if (is_a<Pow>(*self)) {
         *exp = rcp_static_cast<const Pow>(self)->exp_;
         *base = rcp_static_cast<const Pow>(self)->base_;
@@ -360,9 +373,18 @@ RCP<const Basic> Mul::power_all_terms(const RCP<const Basic> &exp) const
     RCP<const Basic> new_exp;
     for (auto &p: dict_) {
         new_exp = mul(p.second, exp);
-        if (is_a<Integer>(*new_exp) &&
-                rcp_static_cast<const Integer>(new_exp)->is_zero()) continue;
-        Mul::dict_add_term(d, new_exp, p.first);
+        if (is_a_Number(*new_exp)) {
+            // No need for additional dict checks here.
+            // The dict should be of standard form before this is
+            // called.
+            if (rcp_static_cast<const Number>(new_exp)->is_zero()) {
+                continue;
+            }  else {
+                Mul::dict_add_term(d, new_exp, p.first);
+            }
+        } else{
+            Mul::dict_add_term(d, new_exp, p.first);
+        } 
     }
     if (is_a_Number(*new_coef)) {
         return Mul::from_dict(rcp_static_cast<const Number>(new_coef), d);
