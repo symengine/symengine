@@ -365,7 +365,7 @@ public:
     //! \return stringify version
     virtual std::string __str__() const;
     //! \return `true` if canonical
-    bool is_canonical(const RCP<const Basic> &arg);
+    bool is_canonical(const RCP<const Basic> &num, const RCP<const Basic> &den);
     //! \return Size of the hash
     virtual std::size_t __hash__() const;
     //! \return `y` in atan2(y/x)
@@ -378,8 +378,6 @@ public:
     }
     //! Differentiate w.r.t Symbol `x`
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
-    //! Substitute with `subs_dict
-    virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
 };
 
 //! Canonicalize ATan2:

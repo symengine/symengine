@@ -1107,6 +1107,60 @@ RCP<const Basic> acot(const RCP<const Basic> &arg)
     }
 }
 
+ATan2::ATan2(const RCP<const Basic> &num, const RCP<const Basic> &den)
+    : num_{num}, den_{den}
+{
+    CSYMPY_ASSERT(is_canonical(num) && is_canonical(den))
+}
+
+bool ATan2::is_canonical(const RCP<const Basic> &num,
+                        const RCP<const Basic> &den)
+{
+    if (eq(num, zero) || eq(num, den) || eq(num, mul(minus_one, den))
+        return false;
+    RCP<const Basic> index;
+    bool b = inverse_lookup(inverse_tct, div(num, den), outArg(index));
+    if (b)
+        return false;
+    else
+        return true;
+}
+
+bool ATan2::__eq__(const Basic &o) const
+{
+    if (is_a<ATan2>(o) {
+        const ATan2 &s = static_cast<const ATan2 &>(o);
+        if(eq(num_, s.get_num()) && eq(den_, s.get_den()))
+            return true;
+        else
+            return false;
+    } else
+        return false;
+}
+
+int ATan2::compare(const Basic &o) const
+{
+    CSYMPY_ASSERT(is_a<ATan2>(o))
+    const ATan2 &s = static_cast<const ATan2 &>(o);
+    return div(num_, den_)->__cmp__(div(s.get_num(), s.get_den()));
+}
+
+
+std::string ATan2::__str__() const
+{
+    std::ostringstream o;
+    o << "atan2(" << *num_ << "/" << *den_ << ")";
+    return o.str();
+}
+
+std::size_t ATan2::__hash__() const
+{
+    std::size_t seed = 0;
+    hash_combine<Basic>(seed, *num_);
+    hash_combine<Basic>(seed, *den_);
+    return seed;
+}
+
 /* ---------------------------- */
 
 RCP<const Basic> Sin::diff(const RCP<const Symbol> &x) const
