@@ -54,6 +54,34 @@ MatrixBase& DenseMatrix::mul_matrix(const MatrixBase &other) const
     throw std::runtime_error("Not implemented.");
 }
 
+// ----------------------------- Matrix Transpose ----------------------------//
+void transpose_dense(const DenseMatrix &A, DenseMatrix &B)
+{
+    unsigned row = A.row_;
+    unsigned col = A.col_;
+
+    CSYMPY_ASSERT(B.row_ == row && B.col_ == col);
+
+    for (unsigned i = 0; i < row; i++)
+        for (unsigned j = 0; j < col; j++)
+            B.m_[j*col + i] = A.m_[i*col + j];
+}
+
+// ------------------------------- Submatrix ---------------------------------//
+void submatrix_dense(const DenseMatrix &A, unsigned row_start, unsigned row_end,
+        unsigned col_start, unsigned col_end, DenseMatrix &B)
+{
+    unsigned row = B.row_;
+    unsigned col = B.col_;
+
+    CSYMPY_ASSERT(row_end > row_start && col_end > col_start);
+    CSYMPY_ASSERT(row == row_end - row_start + 1 && col == col_end - col_start + 1);
+
+    for (unsigned i = 0; i < row; i++)
+        for (unsigned j = 0; j < col; j++)
+            B.m_[i*col + j] = A.m_[(row_start + i - 1)*A.col_ + col_start - 1 + j];
+}
+
 // ------------------------------- Matrix Addition ---------------------------//
 void add_dense_dense(const DenseMatrix &A, const DenseMatrix &B, DenseMatrix &C)
 {

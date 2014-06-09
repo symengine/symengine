@@ -170,6 +170,45 @@ void test_gaussian_elimination()
     integer(0), integer(0)}));
 }
 
+void test_transpose_dense()
+{
+    DenseMatrix A = DenseMatrix(2, 2, {integer(1), integer(2), integer(3), integer(4)});
+    DenseMatrix B = DenseMatrix(2, 2);
+    transpose_dense(A, B);
+
+    assert(B == DenseMatrix(2, 2, {integer(1), integer(3), integer(2), integer(4)}));
+
+    A = DenseMatrix(3, 3, {symbol("a"), symbol("b"), symbol("c"), symbol("p"),
+        symbol("q"), symbol("r"), symbol("u"), symbol("v"), symbol("w")});
+    B = DenseMatrix(3, 3);
+    transpose_dense(A, B);
+
+    assert(B == DenseMatrix(3, 3, {symbol("a"), symbol("p"), symbol("u"), symbol("b"),
+        symbol("q"), symbol("v"), symbol("c"), symbol("r"), symbol("w")}));
+}
+
+void test_submatrix_dense()
+{
+    DenseMatrix A = DenseMatrix(3, 3, {symbol("a"), symbol("b"), symbol("c"),
+        symbol("p"), symbol("q"), symbol("r"), symbol("u"), symbol("v"), symbol("w")});
+    DenseMatrix B = DenseMatrix(3, 2);
+    submatrix_dense(A, 1, 3, 2, 3, B);
+
+    assert(B == DenseMatrix(3, 2, {symbol("b"), symbol("c"), symbol("q"),
+        symbol("r"), symbol("v"), symbol("w")}));
+
+    A = DenseMatrix(4, 4, {integer(1), integer(2), integer(3),
+        integer(4), integer(5), integer(6), integer(7), integer(8), integer(9),
+        integer(10), integer(11), integer(12), integer(13), integer(14),
+        integer(15), integer(16)});
+    B = DenseMatrix(3, 3);
+    submatrix_dense(A, 2, 4, 2, 4, B);
+
+    assert(B == DenseMatrix(3, 3, {integer(6), integer(7), integer(8), integer(10),
+        integer(11), integer(12), integer(14), integer(15), integer(16)}));
+
+}
+
 int main(int argc, char* argv[])
 {
     print_stack_on_segfault();
@@ -181,6 +220,9 @@ int main(int argc, char* argv[])
     test_mul_dense_scalar();
 
     test_gaussian_elimination();
+
+    test_transpose_dense();
+    test_submatrix_dense();
 
     return 0;
 }

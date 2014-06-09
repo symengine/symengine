@@ -73,6 +73,9 @@ public:
         DenseMatrix &C);
     friend void mul_dense_scalar(const DenseMatrix &A, RCP<const Basic> &k,
         DenseMatrix &C);
+    friend void transpose_dense(const DenseMatrix &A, DenseMatrix &B);
+    friend void submatrix_dense(const DenseMatrix &A, unsigned row_start,
+        unsigned row_end, unsigned col_start, unsigned col_end, DenseMatrix &B);
 
     // Gaussian elimination
     friend void gaussian_elimination(const DenseMatrix &A, DenseMatrix &B);
@@ -121,7 +124,7 @@ void add_dense_dense(const DenseMatrix &A, const DenseMatrix &B, DenseMatrix &C)
 void add_dense_scalar(const DenseMatrix &A, RCP<const Basic> &k, DenseMatrix &B);
 void mul_dense_dense(const DenseMatrix &A, const DenseMatrix &B, DenseMatrix &C);
 void mul_dense_scalar(const DenseMatrix &A, RCP<const Basic> &k, DenseMatrix &C);
-
+void transpose_dense(const DenseMatrix &A, DenseMatrix &B);
 
 inline bool operator==(const MatrixBase &lhs, const MatrixBase &rhs)
 {
