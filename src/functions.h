@@ -351,8 +351,8 @@ RCP<const Basic> acot(const RCP<const Basic> &arg);
 
 class ATan2 : public Function {
 private:
-    RCP<const Basic> num_; //! The `y` in `atan2(y/x)`
-    RCP<const Basic> den_; //! The `x` in `atan2(y/x)`
+    RCP<const Basic> num_; //! The `y` in `atan2(y, x)`
+    RCP<const Basic> den_; //! The `x` in `atan2(y, x)`
 public:
     //! ATan2 Constructor
     ATan2(const RCP<const Basic> &num, const RCP<const Basic> &den);
@@ -368,11 +368,11 @@ public:
     bool is_canonical(const RCP<const Basic> &num, const RCP<const Basic> &den);
     //! \return Size of the hash
     virtual std::size_t __hash__() const;
-    //! \return `y` in atan2(y/x)
+    //! \return `y` in `atan2(y, x)`
     inline RCP<const Basic> get_num() const {
         return num_;
     }
-    //! \return `x` in atan2(y/x)
+    //! \return `x` in `atan2(y, x)`
     inline RCP<const Basic> get_den() const {
         return den_;
     }
