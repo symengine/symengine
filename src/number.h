@@ -17,6 +17,10 @@ public:
     virtual bool is_zero() const = 0;
     //! \return true if `1`
     virtual bool is_one() const = 0;
+
+    virtual bool is_negative() const = 0;
+
+    virtual bool is_positive() const = 0;
 	//! Addition
     virtual RCP<const Number> add(const Number &other) const = 0;
     //! Subtraction

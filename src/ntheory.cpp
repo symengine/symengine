@@ -65,6 +65,78 @@ int mod_inverse(const Ptr<RCP<const Integer>> &b, const Integer &a,
     return ret_val;
 }
 
+RCP<const Integer> fibonacci(unsigned long n)
+{
+    mpz_class f;
+
+    mpz_fib_ui(f.get_mpz_t(), n);
+    
+    return integer(f);
+}
+
+void fibonacci2(const Ptr<RCP<const Integer>> &g, const Ptr<RCP<const Integer>> &s,
+        unsigned long n)
+{
+    mpz_t g_t;
+    mpz_t s_t;
+
+    mpz_init(g_t);
+    mpz_init(s_t);
+	
+    mpz_fib2_ui(g_t, s_t, n);
+    *g = integer(mpz_class(g_t));
+    *s = integer(mpz_class(s_t));
+
+    mpz_clear(g_t);
+    mpz_clear(s_t);
+}
+
+RCP<const Integer> lucas(unsigned long n)
+{
+    mpz_class f;
+
+    mpz_lucnum_ui(f.get_mpz_t(), n);
+    
+    return integer(f);
+}
+
+void lucas2(const Ptr<RCP<const Integer>> &g, const Ptr<RCP<const Integer>> &s,
+        unsigned long n)
+{
+    mpz_t g_t;
+    mpz_t s_t;
+
+    mpz_init(g_t);
+    mpz_init(s_t);
+	
+    mpz_lucnum2_ui(g_t, s_t, n);
+    *g = integer(mpz_class(g_t));
+    *s = integer(mpz_class(s_t));
+
+    mpz_clear(g_t);
+    mpz_clear(s_t);
+}
+
+// Binomial Coefficient
+RCP<const Integer> binomial(const Integer &n, unsigned long k)
+{
+    mpz_class f;
+
+    mpz_bin_ui(f.get_mpz_t(), n.as_mpz().get_mpz_t(), k);
+    
+    return integer(f);
+}
+
+// Factorial
+RCP<const Integer> factorial(unsigned long n)
+{
+    mpz_class f;
+
+    mpz_fac_ui(f.get_mpz_t(), n);
+    
+    return integer(f);
+}
+
 // Returns true if `b` divides `a` without reminder
 bool divides(const RCP<const Integer> &a, const RCP<const Integer> &b)
 {

@@ -5,6 +5,7 @@
 #include "symbol.h"
 #include "add.h"
 #include "mul.h"
+#include "pow.h"
 
 using CSymPy::print_stack_on_segfault;
 using CSymPy::RCP;
@@ -15,6 +16,7 @@ using CSymPy::symbol;
 using CSymPy::is_a;
 using CSymPy::Add;
 using CSymPy::add_dense_dense;
+using CSymPy::pow;
 
 void test_dense_dense_addition()
 {
@@ -119,44 +121,44 @@ void test_mul_dense_scalar()
     assert(B == DenseMatrix(2, 2, {integer(2), integer(4), integer(6), integer(8)}));
 }
 
-void test_gaussian_elimination()
+void test_gauss_jordan_elimination()
 {
     // These test cases are verified with SymPy
     DenseMatrix A = DenseMatrix(2, 2, {integer(1), integer(2), integer(3), integer(4)});
     DenseMatrix B = DenseMatrix(2, 2);
-    gaussian_elimination(A, B);
+    gauss_jordan_elimination(A, B);
 
     assert(B == DenseMatrix(2, 2, {integer(1), integer(0), integer(0), integer(1)}));
 
     A = DenseMatrix(2, 2, {integer(1), integer(2), integer(2), integer(4)});
-    gaussian_elimination(A, B);
+    gauss_jordan_elimination(A, B);
 
     assert(B == DenseMatrix(2, 2, {integer(1), integer(2), integer(0), integer(0)}));
 
     A = DenseMatrix(2, 2, {integer(1), integer(0), integer(0), integer(0)});
-    gaussian_elimination(A, B);
+    gauss_jordan_elimination(A, B);
 
     assert(B == DenseMatrix(2, 2, {integer(1), integer(0), integer(0), integer(0)}));
 
     A = DenseMatrix(2, 2, {integer(0), integer(0), integer(0), integer(0)});
-    gaussian_elimination(A, B);
+    gauss_jordan_elimination(A, B);
 
     assert(B == DenseMatrix(2, 2, {integer(0), integer(0), integer(0), integer(0)}));
 
     A = DenseMatrix(2, 2, {symbol("a"), symbol("b"), symbol("c"), symbol("d")});
-    gaussian_elimination(A, B);
+    gauss_jordan_elimination(A, B);
 
     assert(B == DenseMatrix(2, 2, {integer(1), integer(0), integer(0), integer(1)}));
 
     A = DenseMatrix(2, 2, {symbol("a"), integer(0), symbol("c"), integer(0)});
-    gaussian_elimination(A, B);
+    gauss_jordan_elimination(A, B);
 
     assert(B == DenseMatrix(2, 2, {integer(1), integer(0), integer(0), integer(0)}));
 
     A = DenseMatrix(3, 3, {integer(1), integer(2), integer(3), integer(-1),
         integer(7), integer(6), integer(4), integer(5), integer(2)});
     B = DenseMatrix(3, 3);
-    gaussian_elimination(A, B);
+    gauss_jordan_elimination(A, B);
 
     assert(B == DenseMatrix(3, 3, {integer(1), integer(0), integer(0), integer(0),
         integer(1), integer(0), integer(0), integer(0), integer(1)}));
@@ -164,10 +166,44 @@ void test_gaussian_elimination()
     A = DenseMatrix(3, 2, {integer(-9), integer(4), integer(3), integer(-1),
         integer(7), integer(6)});
     B = DenseMatrix(3, 2);
-    gaussian_elimination(A, B);
+    gauss_jordan_elimination(A, B);
 
     assert(B == DenseMatrix(3, 2, {integer(1), integer(0), integer(0), integer(1),
     integer(0), integer(0)}));
+}
+
+void test_diagonal_solve()
+{
+    DenseMatrix A = DenseMatrix(2, 2, {integer(1), integer(0), integer(0), integer(1)});
+    DenseMatrix b = DenseMatrix(2, 1, {integer(1), integer(1)});
+    DenseMatrix C = DenseMatrix(2, 1);
+    diagonal_solve(A, b, C);
+
+    assert(C == DenseMatrix(2, 1, {integer(1), integer(1)}));
+
+    A = DenseMatrix(2, 2, {integer(5), integer(-4), integer(8), integer(1)});
+    b = DenseMatrix(2, 1, {integer(7), integer(26)});
+    C = DenseMatrix(2, 1);
+    diagonal_solve(A, b, C);
+
+    assert(C == DenseMatrix(2, 1, {integer(3), integer(2)}));
+
+    // below two sets produce the correct matrix but the results are not
+    // simplified. See: https://github.com/sympy/csympy/issues/183
+    A = DenseMatrix(2, 2, {symbol("a"), symbol("b"), symbol("b"), symbol("a")});
+    b = DenseMatrix(2, 1, {add(pow(symbol("a"), integer(2)), pow(symbol("b"), integer(2))),
+        mul(integer(2), mul(symbol("a"), symbol("b")))});
+    C = DenseMatrix(2, 1);
+    diagonal_solve(A, b, C);
+
+//    assert(C == DenseMatrix(2, 1, {symbol("a"), symbol("b")}));
+
+    A = DenseMatrix(2, 2, {integer(1), integer(1), integer(1), integer(-1)});
+    b = DenseMatrix(2, 1, {add(symbol("a"), symbol("b")), sub(symbol("a"), symbol("b"))});
+    C = DenseMatrix(2, 1, {symbol("a"), symbol("b")});
+    diagonal_solve(A, b, C);
+
+//    assert(C == DenseMatrix(2, 1, {symbol("a"), symbol("b")}));
 }
 
 void test_transpose_dense()
@@ -238,13 +274,12 @@ void test_fraction_free_gaussian_elimination()
         integer(3), integer(4), integer(9), integer(8), integer(7), integer(6)});
     B = DenseMatrix(4, 4);
     fraction_free_gaussian_elimination(A, B);
-    for (unsigned i = 0; i < 16; i++)
-        std::cout << *B.get(i) << std::endl;
 
     assert(B == DenseMatrix(4, 4, {integer(1), integer(2), integer(3), integer(4),
         integer(0), integer(-2), integer(-3), integer(-4), integer(0), integer(0),
         integer(3), integer(4), integer(0), integer(0), integer(0), integer(20)}));
 }
+
 
 int main(int argc, char* argv[])
 {
@@ -258,7 +293,9 @@ int main(int argc, char* argv[])
 
     test_mul_dense_scalar();
 
-    test_gaussian_elimination();
+    test_gauss_jordan_elimination();
+
+    test_diagonal_solve();
 
     test_transpose_dense();
 

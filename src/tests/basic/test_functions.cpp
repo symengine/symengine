@@ -970,14 +970,14 @@ void test_asec()
     r2 = mul(i2, div(pi,  i3));
     assert(eq(r1, r2));
     
-    // This test fails.
-    // Possible bug in implementation of pow
     r1 = asec(div(i2, sqrt(i2)));
     r2 = div(pi, mul(i2, i2));
-    //assert(eq(r1, r2));
+    assert(eq(r1, r2));
 
     r1 = asec(div(mul(i2, sqrt(i2)), add(sqrt(i3), i1)));
     r2 = mul(i5, div(pi, mul(i3, pow(i2, i2))));
+    std::cout<<*r1<<std::endl;
+    std::cout<<*r2<<std::endl;
     assert(eq(r1, r2));
 
     r1 = asec(div(integer(8), sqrt(sub(i5, sqrt(i5)))));
@@ -1015,7 +1015,7 @@ void test_acsc()
 
     r1 = acsc(div(i2, sqrt(i2)));
     r2 = div(pi, mul(i2, i2));
-    //assert(eq(r1, r2));
+    assert(eq(r1, r2));
 
     r1 = acsc(div(mul(i2, sqrt(i2)), add(sqrt(i3), i1)));
     r2 = div(pi, mul(i3, pow(i2, i2)));
@@ -1111,7 +1111,6 @@ void test_acot()
     r1 = acot(mul(im1, sqrt(add(i5, mul(i2, sqrt(i5))))));
     r2 = div(mul(pi, integer(9)), mul(i5, i2));
     assert(eq(r1, r2));
-
 }
 
 int main(int argc, char* argv[])

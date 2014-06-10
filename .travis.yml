@@ -13,6 +13,8 @@ env:
   - BUILD_TYPE="Release" WITH_BFD="yes" WITH_CSYMPY_RCP="yes"
   # Debug build with Teuchos::RCP (just to test that it compiles)
   - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_CSYMPY_ASSERT="yes"
+  # Debug build with Python on:
+  - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_PYTHON="yes" WITH_CSYMPY_RCP="yes"
 
   #### In-tree builds:
   # Debug build (just to check that it works):

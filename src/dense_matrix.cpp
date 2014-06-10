@@ -139,7 +139,7 @@ void mul_dense_scalar(const DenseMatrix &A, RCP<const Basic> &k, DenseMatrix& B)
     std::vector<RCP<const Basic>>::const_iterator ait = A.m_.begin();
     std::vector<RCP<const Basic>>::iterator bit = B.m_.begin();
 
-    while (ait != A.m_.end()){
+    while (ait != A.m_.end()) {
          *bit = mul(*ait, k);
          ait++;
          bit++;
@@ -157,14 +157,15 @@ void fraction_free_gaussian_elimination(const DenseMatrix &A, DenseMatrix &B)
     B.m_ = A.m_;
 
     for (unsigned i = 0; i < n - 1; i++)
-        for (unsigned j = i + 1; j < n; j++){
+        for (unsigned j = i + 1; j < n; j++) {
             for (unsigned k = i + 1; k < n; k++)
-                B.m_[j*n + k] = sub(mul(B.m_[i*n + i], B.m_[j*n + k]), mul(B.m_[j*n + i], B.m_[i*n + k]));
+                B.m_[j*n + k] = sub(mul(B.m_[i*n + i], B.m_[j*n + k]),
+                    mul(B.m_[j*n + i], B.m_[i*n + k]));
             B.m_[j*n + i] = zero;
         }
 }
 
-void gaussian_elimination(const DenseMatrix &A, DenseMatrix &B)
+void gauss_jordan_elimination(const DenseMatrix &A, DenseMatrix &B)
 {
     unsigned row = A.row_;
     unsigned col = A.col_;
@@ -210,6 +211,38 @@ void gaussian_elimination(const DenseMatrix &A, DenseMatrix &B)
 
         pivots++;
     }
+}
+
+// --------------------------- Solve Ax = b  ---------------------------------//
+void augment_dense(const DenseMatrix &A, const DenseMatrix &b, DenseMatrix &C)
+{
+    CSYMPY_ASSERT(A.row_ == b.row_ && A.row_ == C.row_);
+    unsigned col = A.col_ + b.col_;
+    CSYMPY_ASSERT(C.col_ == col);
+
+    for (unsigned i = 0; i < A.row_; i++) {
+        for (unsigned j = 0; j < A.col_; j++)
+            C.m_[i*col + j] = A.m_[i*A.col_ + j];
+        for (unsigned j = 0; j < b.col_; j++)
+            C.m_[i*col + A.col_ + j] = b.m_[i*b.col_ + j];
+    }
+}
+
+void diagonal_solve(const DenseMatrix &A, const DenseMatrix &b, DenseMatrix &C)
+{
+    CSYMPY_ASSERT(b.col_ == 1);
+    CSYMPY_ASSERT(A.row_ == b.row_);
+    CSYMPY_ASSERT(C.row_ == A.col_ && C.col_ == 1);
+
+    DenseMatrix B = DenseMatrix(A.row_, A.col_ + 1);
+    DenseMatrix D = DenseMatrix(A.row_, A.col_ + 1);
+
+    augment_dense(A, b, B);
+    gauss_jordan_elimination(B, D);
+
+    // No checks are done to see if the diagonal entries are zero
+    for (unsigned i = 0; i < A.col_; i++)
+        C.m_[i] = div(D.get(i*A.col_ + i + A.col_), D.get(i*(A.col_ + 1) + i));
 }
 
 } // CSymPy

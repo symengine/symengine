@@ -79,7 +79,13 @@ public:
 
     // Gaussian elimination
     friend void fraction_free_gaussian_elimination(const DenseMatrix &A, DenseMatrix &B);
-    friend void gaussian_elimination(const DenseMatrix &A, DenseMatrix &B);
+    friend void gauss_jordan_elimination(const DenseMatrix &A, DenseMatrix &B);
+
+    // Ax = b
+    friend void augment_dense(const DenseMatrix &A, const DenseMatrix &b,
+        DenseMatrix &C);
+    friend void diagonal_solve(const DenseMatrix &A, const DenseMatrix &b,
+        DenseMatrix &C);
 
 protected:
     // Matrix elements are stored in row-major order
@@ -126,6 +132,12 @@ void add_dense_scalar(const DenseMatrix &A, RCP<const Basic> &k, DenseMatrix &B)
 void mul_dense_dense(const DenseMatrix &A, const DenseMatrix &B, DenseMatrix &C);
 void mul_dense_scalar(const DenseMatrix &A, RCP<const Basic> &k, DenseMatrix &C);
 void transpose_dense(const DenseMatrix &A, DenseMatrix &B);
+void submatrix_dense(const DenseMatrix &A, unsigned row_start, unsigned row_end,
+        unsigned col_start, unsigned col_end, DenseMatrix &B);
+void fraction_free_gaussian_elimination(const DenseMatrix &A, DenseMatrix &B);
+void gauss_jordan_elimination(const DenseMatrix &A, DenseMatrix &B);
+void augment_dense(const DenseMatrix &A, const DenseMatrix &b, DenseMatrix &C);
+void diagonal_solve(const DenseMatrix &A, const DenseMatrix &b, DenseMatrix &C);
 
 inline bool operator==(const MatrixBase &lhs, const MatrixBase &rhs)
 {
