@@ -1112,7 +1112,7 @@ RCP<const Basic> acot(const RCP<const Basic> &arg)
 ATan2::ATan2(const RCP<const Basic> &num, const RCP<const Basic> &den)
     : num_{num}, den_{den}
 {
-    CSYMPY_ASSERT(is_canonical(num) && is_canonical(den))
+    CSYMPY_ASSERT(is_canonical(num, den))
 }
 
 bool ATan2::is_canonical(const RCP<const Basic> &num,
