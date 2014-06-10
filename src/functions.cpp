@@ -1194,6 +1194,15 @@ RCP<const Basic> atan2(const RCP<const Basic> &num, const RCP<const Basic> &den)
     RCP<const Basic> index;
     bool b = inverse_lookup(inverse_tct, div(num, den), outArg(index));
     if (b) {
+        // Ideally the answer should depend on the signs of `num` and `den`
+        // Currently is_positive() and is_negative() is not implemented for
+        // types other than `Number`
+        // Hence this will give exact answers in case when num and den are
+        // numbers in CSymPy sense and when num and den are positive.
+        // for the remaining cases in which we just return the value from
+        // the lookup table.
+        // TODO: update once is_positive() and is_negative() is implemented
+        // in `Basic`
         if (is_a_Number(*den) && is_a_Number(*num)) {
             RCP<const Number> den_new = rcp_static_cast<const Number>(den);
             RCP<const Number> num_new = rcp_static_cast<const Number>(num);
