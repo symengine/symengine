@@ -148,3 +148,6 @@ if (WITH_ECM)
     message("ECM_INCLUDE_DIRS: ${ECM_INCLUDE_DIRS}")
     message("ECM_LIBRARIES: ${ECM_LIBRARY}")
 endif()
+
+message("Copying source of python wrappers into: ${CMAKE_CURRENT_BINARY_DIR}")
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/csympy DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
