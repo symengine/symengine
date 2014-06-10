@@ -382,7 +382,7 @@ public:
 
 //! Canonicalize ATan2:
 RCP<const Basic> atan2(const RCP<const Basic> &num,
-                        const RCP<const Basic> &num);
+                        const RCP<const Basic> &den);
 
 class FunctionSymbol : public Function {
 private:

@@ -76,6 +76,8 @@ static umap_basic_basic inverse_tct = {
     {sub(sq3, i2), mul(mul(im2,i2), i3)},
     {sqrt(add(i5, mul(i2, sqrt(i5)))), div(i5, i2)},
     {mul(minus_one, sqrt(add(i5, mul(i2, sqrt(i5))))), div(im5, i2)},
+    {one, pow(i2, i2)},
+    {minus_one, mul(minus_one, pow(i2, i2))},
 };
 
 bool get_pi_shift(const RCP<const Basic> &arg,
@@ -1116,7 +1118,7 @@ ATan2::ATan2(const RCP<const Basic> &num, const RCP<const Basic> &den)
 bool ATan2::is_canonical(const RCP<const Basic> &num,
                         const RCP<const Basic> &den)
 {
-    if (eq(num, zero) || eq(num, den) || eq(num, mul(minus_one, den))
+    if (eq(num, zero) || eq(num, den) || eq(num, mul(minus_one, den)))
         return false;
     RCP<const Basic> index;
     bool b = inverse_lookup(inverse_tct, div(num, den), outArg(index));
@@ -1128,7 +1130,7 @@ bool ATan2::is_canonical(const RCP<const Basic> &num,
 
 bool ATan2::__eq__(const Basic &o) const
 {
-    if (is_a<ATan2>(o) {
+    if (is_a<ATan2>(o)) {
         const ATan2 &s = static_cast<const ATan2 &>(o);
         if(eq(num_, s.get_num()) && eq(den_, s.get_den()))
             return true;
@@ -1142,7 +1144,7 @@ int ATan2::compare(const Basic &o) const
 {
     CSYMPY_ASSERT(is_a<ATan2>(o))
     const ATan2 &s = static_cast<const ATan2 &>(o);
-    return div(num_, den_)->__cmp__(div(s.get_num(), s.get_den()));
+    return div(num_, den_)->__cmp__(s);
 }
 
 
@@ -1159,6 +1161,54 @@ std::size_t ATan2::__hash__() const
     hash_combine<Basic>(seed, *num_);
     hash_combine<Basic>(seed, *den_);
     return seed;
+}
+
+RCP<const Basic> atan2(const RCP<const Basic> &num, const RCP<const Basic> &den)
+{
+    if (eq(num, zero)) {
+        if (is_a_Number(*den)) {
+            RCP<const Number> den_new = rcp_static_cast<const Number>(den);
+            if (den_new->is_negative())
+                return pi;
+            else if (den_new->is_positive())
+                return zero;
+            // else it is NAN, yet to be implemented
+            else {
+                throw std::runtime_error("Not implemented.");
+            }
+        }
+    }
+    else if (eq(den, zero)) {
+        if (is_a_Number(*num)) {
+            RCP<const Number> num_new = rcp_static_cast<const Number>(num);
+            if (num_new->is_negative())
+                return div(pi, i2);
+            else if (num_new->is_positive())
+                return div(pi, im2);
+            // else it is NAN, yet to be implemented
+            else {
+                throw std::runtime_error("Not implemented.");
+            }
+        }
+    }
+    RCP<const Basic> index;
+    bool b = inverse_lookup(inverse_tct, div(num, den), outArg(index));
+    if (b) {
+        if (is_a_Number(*den) && is_a_Number(*num)) {
+            RCP<const Number> den_new = rcp_static_cast<const Number>(den);
+            RCP<const Number> num_new = rcp_static_cast<const Number>(num);
+
+            if (den_new->is_positive())
+                return div(pi, index);
+            else if (den_new->is_negative()) {
+                if (num_new->is_negative())
+                    return sub(div(pi, index), pi);
+                else
+                    return add(div(pi, index), pi);
+            }
+        }
+    }
+    return rcp(new ATan2(num, den));
 }
 
 /* ---------------------------- */
@@ -1223,6 +1273,12 @@ RCP<const Basic> ATan::diff(const RCP<const Symbol> &x) const
 RCP<const Basic> ACot::diff(const RCP<const Symbol> &x) const
 {
     return mul(div(minus_one, add(one, pow(get_arg(), i2))), get_arg()->diff(x));
+}
+
+RCP<const Basic> ATan2::diff(const RCP<const Symbol> &x) const
+{
+    return mul(div(pow(den_, i2), add(pow(den_, i2), pow(num_, i2))),
+                div(num_, den_)->diff(x));
 }
 
 RCP<const Basic> Sin::subs(const map_basic_basic &subs_dict) const
