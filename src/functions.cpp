@@ -1207,17 +1207,23 @@ RCP<const Basic> atan2(const RCP<const Basic> &num, const RCP<const Basic> &den)
             RCP<const Number> den_new = rcp_static_cast<const Number>(den);
             RCP<const Number> num_new = rcp_static_cast<const Number>(num);
 
-            if (den_new->is_positive())
+            if (den_new->is_positive()) {
                 return div(pi, index);
-            else if (den_new->is_negative()) {
-                if (num_new->is_negative())
+            } else if (den_new->is_negative()) {
+                if (num_new->is_negative()) {
                     return sub(div(pi, index), pi);
-                else
+                } else {
                     return add(div(pi, index), pi);
+                }
+            } else {
+                return div(pi, index);
             }
+        } else {
+            return div(pi, index);
         }
+    } else {
+        return rcp(new ATan2(num, den));
     }
-    return rcp(new ATan2(num, den));
 }
 
 /* ---------------------------- */
