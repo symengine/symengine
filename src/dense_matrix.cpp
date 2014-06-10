@@ -167,4 +167,36 @@ void gaussian_elimination(const DenseMatrix &A, DenseMatrix &B)
     }
 }
 
+// --------------------------- Solve Ax = b  ---------------------------------//
+void augment_dense(const DenseMatrix &A, const DenseMatrix &b, DenseMatrix &C)
+{
+    CSYMPY_ASSERT(A.row_ == b.row_ && A.row_ == C.row_);
+    unsigned col = A.col_ + b.col_;
+    CSYMPY_ASSERT(C.col_ == col);
+
+    for (unsigned i = 0; i < A.row_; i++) {
+        for (unsigned j = 0; j < A.col_; j++)
+            C.m_[i*col + j] = A.m_[i*A.col_ + j];
+        for (unsigned j = 0; j < b.col_; j++)
+            C.m_[i*col + A.col_ + j] = b.m_[i*b.col_ + j];
+    }
+}
+
+void diagonal_solve(const DenseMatrix &A, const DenseMatrix &b, DenseMatrix &C)
+{
+    CSYMPY_ASSERT(b.col_ == 1);
+    CSYMPY_ASSERT(A.row_ == b.row_);
+    CSYMPY_ASSERT(C.row_ == A.col_ && C.col_ == 1);
+
+    DenseMatrix B = DenseMatrix(A.row_, A.col_ + 1);
+    DenseMatrix D = DenseMatrix(A.row_, A.col_ + 1);
+
+    augment_dense(A, b, B);
+    gaussian_elimination(B, D);
+
+    // No checks are done to see if the diagonal entries are zero
+    for (unsigned i = 0; i < A.col_; i++)
+        C.m_[i] = div(D.get(i*A.col_ + i + A.col_), D.get(i*(A.col_ + 1) + i));
+}
+
 } // CSymPy
