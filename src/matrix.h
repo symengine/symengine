@@ -9,7 +9,7 @@ namespace CSymPy {
 class SparseMatrix;
 
 // Base class for matrices
-class MatrixBase: public Basic {
+class MatrixBase {
 public:
     MatrixBase(unsigned row, unsigned col)
         : row_{row}, col_{col} {};
@@ -29,10 +29,11 @@ public:
     virtual RCP<const Basic> det() const = 0;
     virtual RCP<const MatrixBase> inv() const = 0;
 
-    // These functions create a new instance of either DenseMatrix or
-    // SparseMatrix and return a reference to the result
-    virtual RCP<const MatrixBase> add_matrix(const MatrixBase &other) const = 0;
-    virtual RCP<const MatrixBase> mul_matrix(const MatrixBase &other) const = 0;
+    // Matrix addition
+    virtual MatrixBase& add_matrix(const MatrixBase &other) const = 0;
+
+    // Matrix Multiplication
+    virtual MatrixBase& mul_matrix(const MatrixBase &other) const = 0;
 
 protected:
     // Stores the dimension of the Matrix
@@ -48,15 +49,8 @@ public:
     DenseMatrix(unsigned row, unsigned col);
     DenseMatrix(unsigned row, unsigned col, const std::vector<RCP<const Basic>> &l);
 
-    // Virtual functions inherited from Basic class
-    virtual std::size_t __hash__() const;
-    virtual bool __eq__(const Basic &o) const;
-    virtual int compare(const Basic &o) const;
-
     // Should implement all the virtual methods from MatrixBase
     // and throw an exception if a method is not applicable.
-    // add_matrix, mul_matrix will have to find the correct function
-    // to call depending on the `other` argument.
 
     // Get and set elements
     virtual RCP<const Basic> get(unsigned i) const;
@@ -67,21 +61,21 @@ public:
     virtual RCP<const MatrixBase> inv() const;
 
     // Matrix addition
-    virtual RCP<const MatrixBase> add_matrix(const MatrixBase &other) const;
-    friend RCP<const DenseMatrix> add_dense_dense(const DenseMatrix &A,
-            const DenseMatrix &B);
-    friend RCP<const DenseMatrix> add_dense_scalar(const DenseMatrix &A,
-            RCP<const Basic> &k);
+    virtual MatrixBase& add_matrix(const MatrixBase &other) const;
+    friend void add_dense_dense(const DenseMatrix &A, const DenseMatrix &B,
+        DenseMatrix &C);
+    friend void add_dense_scalar(const DenseMatrix &A, RCP<const Basic> &k,
+        DenseMatrix &B );
 
     // Matrix multiplication
-    virtual RCP<const MatrixBase> mul_matrix(const MatrixBase &other) const;
-    friend RCP<const DenseMatrix> mul_dense_dense(const DenseMatrix &A,
-            const DenseMatrix &B);
-    friend RCP<const DenseMatrix> mul_dense_scalar(const DenseMatrix &A,
-            RCP<const Basic> &k);
+    virtual MatrixBase& mul_matrix(const MatrixBase &other) const;
+    friend void mul_dense_dense(const DenseMatrix &A, const DenseMatrix &B,
+        DenseMatrix &C);
+    friend void mul_dense_scalar(const DenseMatrix &A, RCP<const Basic> &k,
+        DenseMatrix &C);
 
     // Gaussian elimination
-    friend RCP<const DenseMatrix> gaussian_elimination(const DenseMatrix &A);
+    friend void gaussian_elimination(const DenseMatrix &A, DenseMatrix &B);
 
 protected:
     // Matrix elements are stored in row-major order
@@ -104,31 +98,41 @@ public:
 
     // Should implement all the virtual methods from MatrixBase
     // and throw an exception if a method is not applicable.
-    // add_matrix and mul_matrix will have to find the correct function
-    // to call depending on the `other` argument.
 
     // Get and Set elements
     virtual RCP<const Basic> get(unsigned i) const;
-    virtual void set(unsigned i, RCP<Basic> &e);
+    virtual void set(unsigned i, RCP<const Basic> &e);
 
     virtual unsigned rank() const;
     virtual RCP<const Basic> det() const;
     virtual RCP<const MatrixBase> inv() const;
 
     // Matrix addition
-    virtual RCP<const MatrixBase> add_matrix(const MatrixBase &other) const;
+    virtual MatrixBase& add_matrix(const MatrixBase &other) const;
 
     // Matrix Multiplication
-    virtual RCP<const MatrixBase> mul_matrix(const MatrixBase &other) const;
+    virtual MatrixBase& mul_matrix(const MatrixBase &other) const;
 
 protected:
     std::map<int, RCP<Basic>> m_;
 };
 
-inline RCP<const DenseMatrix> densematrix(unsigned row, unsigned col,
-        const std::vector<RCP<const Basic>> &l)
+void add_dense_dense(const DenseMatrix &A, const DenseMatrix &B, DenseMatrix &C);
+void add_dense_scalar(const DenseMatrix &A, RCP<const Basic> &k, DenseMatrix &B);
+void mul_dense_dense(const DenseMatrix &A, const DenseMatrix &B, DenseMatrix &C);
+void mul_dense_scalar(const DenseMatrix &A, RCP<const Basic> &k, DenseMatrix &C);
+
+
+inline bool operator==(const MatrixBase &lhs, const MatrixBase &rhs)
 {
-    return rcp(new DenseMatrix(row, col, l));
+    if (lhs.nrows() != rhs.nrows() || lhs.ncols() != rhs.ncols())
+        return false;
+
+    for (unsigned i = 0; i < lhs.nrows()*lhs.ncols(); i++)
+        if(neq(lhs.get(i), rhs.get(i)))
+            return false;
+
+    return true;
 }
 
 } // CSymPy

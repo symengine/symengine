@@ -20,7 +20,8 @@ set(SRC
     monomials.cpp
     rings.cpp
     ntheory.cpp
-    matrix.cpp
+    dense_matrix.cpp
+    sparse_matrix.cpp
 )
 
 # Configure CSymPy using our CMake options:
