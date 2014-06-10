@@ -147,6 +147,23 @@ void mul_dense_scalar(const DenseMatrix &A, RCP<const Basic> &k, DenseMatrix& B)
 }
 
 // ------------------------------ Gaussian Elimination -----------------------//
+void fraction_free_gaussian_elimination(const DenseMatrix &A, DenseMatrix &B)
+{
+    unsigned n = A.row_;
+
+    CSYMPY_ASSERT(A.row_ == A.col_)
+    CSYMPY_ASSERT(n == B.row_ && n == B.col_);
+
+    B.m_ = A.m_;
+
+    for (unsigned i = 0; i < n - 1; i++)
+        for (unsigned j = i + 1; j < n; j++){
+            for (unsigned k = i + 1; k < n; k++)
+                B.m_[j*n + k] = sub(mul(B.m_[i*n + i], B.m_[j*n + k]), mul(B.m_[j*n + i], B.m_[i*n + k]));
+            B.m_[j*n + i] = zero;
+        }
+}
+
 void gaussian_elimination(const DenseMatrix &A, DenseMatrix &B)
 {
     unsigned row = A.row_;

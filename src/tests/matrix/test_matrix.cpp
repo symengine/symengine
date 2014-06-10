@@ -209,20 +209,62 @@ void test_submatrix_dense()
 
 }
 
+void test_fraction_free_gaussian_elimination()
+{
+    DenseMatrix A = DenseMatrix(2, 2, {integer(1), integer(2), integer(3), integer(4)});
+    DenseMatrix B = DenseMatrix(2, 2);
+    fraction_free_gaussian_elimination(A, B);
+
+    assert(B == DenseMatrix(2, 2, {integer(1), integer(2), integer(0), integer(-2)}));
+
+    A = DenseMatrix(2, 2, {integer(1), integer(2), integer(2), integer(4)});
+    fraction_free_gaussian_elimination(A, B);
+
+    assert(B == DenseMatrix(2, 2, {integer(1), integer(2), integer(0), integer(0)}));
+
+    A = DenseMatrix(2, 2, {integer(1), integer(0), integer(0), integer(0)});
+    fraction_free_gaussian_elimination(A, B);
+
+    assert(B == DenseMatrix(2, 2, {integer(1), integer(0), integer(0), integer(0)}));
+
+    A = DenseMatrix(2, 2, {symbol("a"), symbol("b"), symbol("c"), symbol("d")});
+    fraction_free_gaussian_elimination(A, B);
+
+    assert(B == DenseMatrix(2, 2, {symbol("a"), symbol("b"), integer(0),
+        sub(mul(symbol("a"), symbol("d")), mul(symbol("b"), symbol("c")))}));
+
+    A = DenseMatrix(4, 4, {integer(1), integer(2), integer(3), integer(4),
+        integer(2), integer(2), integer(3), integer(4), integer(3), integer(3),
+        integer(3), integer(4), integer(9), integer(8), integer(7), integer(6)});
+    B = DenseMatrix(4, 4);
+    fraction_free_gaussian_elimination(A, B);
+    for (unsigned i = 0; i < 16; i++)
+        std::cout << *B.get(i) << std::endl;
+
+    assert(B == DenseMatrix(4, 4, {integer(1), integer(2), integer(3), integer(4),
+        integer(0), integer(-2), integer(-3), integer(-4), integer(0), integer(0),
+        integer(3), integer(4), integer(0), integer(0), integer(0), integer(20)}));
+}
+
 int main(int argc, char* argv[])
 {
     print_stack_on_segfault();
 
     test_dense_dense_addition();
+
     test_add_dense_scalar();
 
     test_dense_dense_multiplication();
+
     test_mul_dense_scalar();
 
     test_gaussian_elimination();
 
     test_transpose_dense();
+
     test_submatrix_dense();
+
+    test_fraction_free_gaussian_elimination();
 
     return 0;
 }

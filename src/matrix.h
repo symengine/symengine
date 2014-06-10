@@ -78,6 +78,7 @@ public:
         unsigned row_end, unsigned col_start, unsigned col_end, DenseMatrix &B);
 
     // Gaussian elimination
+    friend void fraction_free_gaussian_elimination(const DenseMatrix &A, DenseMatrix &B);
     friend void gaussian_elimination(const DenseMatrix &A, DenseMatrix &B);
 
 protected:
