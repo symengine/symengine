@@ -4,6 +4,7 @@
 #include "integer.h"
 #include "symbol.h"
 #include "add.h"
+#include "pow.h"
 #include "mul.h"
 
 using CSymPy::print_stack_on_segfault;
@@ -15,6 +16,9 @@ using CSymPy::Basic;
 using CSymPy::symbol;
 using CSymPy::is_a;
 using CSymPy::Add;
+using CSymPy::pow;
+using CSymPy::rcp_static_cast;
+using CSymPy::Mul;
 
 void test_dense_dense_addition()
 {
@@ -191,6 +195,38 @@ void test_gaussian_elimination()
     assert(eq(gaussian_elimination(*A), B));
 }
 
+void test_diagonal_solve()
+{
+    RCP<const DenseMatrix> A, b, C;
+
+    A = densematrix(2, 2, {integer(1), integer(0), integer(0), integer(1)});
+    b = densematrix(2, 1, {integer(1), integer(1)});
+    C = densematrix(2, 1, {integer(1), integer(1)});
+
+    assert(eq(diagonal_solve(*A, *b), C));
+
+    A = densematrix(2, 2, {integer(5), integer(-4), integer(8), integer(1)});
+    b = densematrix(2, 1, {integer(7), integer(26)});
+    C = densematrix(2, 1, {integer(3), integer(2)});
+
+    assert(eq(diagonal_solve(*A, *b), C));
+
+    // below two sets produce the correct matrix but the results are not
+    // simplified. See: https://github.com/sympy/csympy/issues/183
+    A = densematrix(2, 2, {symbol("a"), symbol("b"), symbol("b"), symbol("a")});
+    b = densematrix(2, 1, {add(pow(symbol("a"), integer(2)), pow(symbol("b"), integer(2))),
+        mul(integer(2), mul(symbol("a"), symbol("b")))});
+    C = densematrix(2, 1, {symbol("a"), symbol("b")});
+
+//    assert(eq(diagonal_solve(*A, *b), C));
+
+    A = densematrix(2, 2, {integer(1), integer(1), integer(1), integer(-1)});
+    b = densematrix(2, 1, {add(symbol("a"), symbol("b")), sub(symbol("a"), symbol("b"))});
+    C = densematrix(2, 1, {symbol("a"), symbol("b")});
+
+//    assert(eq(diagonal_solve(*A, *b), C));
+}
+
 int main(int argc, char* argv[])
 {
     print_stack_on_segfault();
@@ -205,6 +241,7 @@ int main(int argc, char* argv[])
     test_add_dense_scalar();
 
     test_gaussian_elimination();
+    test_diagonal_solve();
 
     return 0;
 }

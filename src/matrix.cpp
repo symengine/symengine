@@ -282,4 +282,33 @@ RCP<const DenseMatrix> gaussian_elimination(const DenseMatrix &A)
     return densematrix(row, col, t);
 }
 
+//--------------------------------- Diagonal solve ---------------------------//
+RCP<const DenseMatrix> diagonal_solve(const DenseMatrix &A,
+    const DenseMatrix &b)
+{
+    CSYMPY_ASSERT(b.col_ == 1);
+    CSYMPY_ASSERT(A.row_ == b.row_);
+
+    unsigned row = A.row_;
+    unsigned col = A.col_;
+
+    std::vector<RCP<const Basic>> t(row*col + row);
+    std::vector<RCP<const Basic>> solutions(row);
+
+    // Create the augmented matrix combinning A and b
+    for (unsigned i = 0; i < row; i++) {
+        for (unsigned j = 0; j < col; j++)
+            t[i*col + i + j] = A.m_[i*col + j];
+        t[i*col + i + col] = b.m_[i];
+    }
+
+    RCP<const DenseMatrix> B = gaussian_elimination(*densematrix(row, col + 1, t));
+
+    // No checks are done to see if the diagonal entries are zero
+    for (unsigned i = 0; i < col; i++)
+        solutions[i] = div(B->get(i*col + i + col), B->get(i*(col+1) + i));
+
+    return densematrix(row, 1, solutions);
+}
+
 } // CSymPy
