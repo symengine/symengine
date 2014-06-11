@@ -325,7 +325,7 @@ RCP<const Basic> mul_expand_two(const RCP<const Basic> &a, const RCP<const Basic
                     mulnum(rcp_static_cast<const Add>(a)->coef_, q.second),
                     q.first);
         }
-        return Add::from_dict(coef, d);
+        return Add::from_dict(coef, std::move(d));
     } else if (is_a<Add>(*a)) {
         return mul_expand_two(b, a);
     } else if (is_a<Add>(*b)) {
@@ -352,7 +352,7 @@ RCP<const Basic> mul_expand_two(const RCP<const Basic> &a, const RCP<const Basic
                     mulnum(rcp_static_cast<const Add>(b)->coef_, a_coef),
                     a_term);
         }
-        return Add::from_dict(coef, d);
+        return Add::from_dict(coef, std::move(d));
     }
     return mul(a, b);
 }

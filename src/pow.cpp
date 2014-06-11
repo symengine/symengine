@@ -296,7 +296,7 @@ RCP<const Basic> pow_expand(const RCP<const Pow> &self)
             Add::dict_add_term(rd, coef2, term);
         }
     }
-    RCP<const Basic> result = Add::from_dict(add_overall_coeff, rd);
+    RCP<const Basic> result = Add::from_dict(add_overall_coeff, std::move(rd));
     return result;
 }
 

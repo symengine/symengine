@@ -10,8 +10,8 @@
 
 namespace CSymPy {
 
-Add::Add(const RCP<const Number> &coef, const umap_basic_int& dict)
-    : coef_{coef}, dict_{dict}
+Add::Add(const RCP<const Number> &coef, umap_basic_int&& dict)
+    : coef_{coef}, dict_{std::move(dict)}
 {
     CSYMPY_ASSERT(is_canonical(coef, dict))
 }
@@ -149,7 +149,7 @@ std::string Add::__str__() const
 // If d.size() > 1 then it just returns Add. This means that the dictionary
 // must be in canonical form already. For d.size == 1, it returns Mul, Pow,
 // Symbol or Integer, depending on the expression.
-RCP<const Basic> Add::from_dict(const RCP<const Number> &coef, const umap_basic_int &d)
+RCP<const Basic> Add::from_dict(const RCP<const Number> &coef, umap_basic_int &&d)
 {
     if (d.size() == 0) {
         return coef;
@@ -194,7 +194,7 @@ RCP<const Basic> Add::from_dict(const RCP<const Number> &coef, const umap_basic_
             return rcp(new Mul(one, m));
         }
     } else {
-        return rcp(new Add(coef, d));
+        return rcp(new Add(coef, std::move(d)));
     }
 }
 
@@ -272,9 +272,9 @@ RCP<const Basic> add(const RCP<const Basic> &a, const RCP<const Basic> &b)
             coef = it->second;
             d.erase(it);
         }
-        return Add::from_dict(coef, d);
+        return Add::from_dict(coef, std::move(d));
     }
-    return Add::from_dict(coef, d);
+    return Add::from_dict(coef, std::move(d));
 }
 
 RCP<const Basic> sub(const RCP<const Basic> &a, const RCP<const Basic> &b)
@@ -303,7 +303,7 @@ RCP<const Basic> add_expand(const RCP<const Add> &self)
             Add::dict_add_term(d, mulnum(p.second, coef), tmp);
         }
     }
-    return Add::from_dict(coef_overall, d);
+    return Add::from_dict(coef_overall, std::move(d));
 }
 
 RCP<const Basic> Add::diff(const RCP<const Symbol> &x) const
@@ -327,7 +327,7 @@ RCP<const Basic> Add::diff(const RCP<const Symbol> &x) const
             Add::dict_add_term(d, coef2, t);
         }
     }
-    return Add::from_dict(coef, d);
+    return Add::from_dict(coef, std::move(d));
 }
 
 void Add::as_two_terms(const Ptr<RCP<const Basic>> &a,
@@ -337,7 +337,7 @@ void Add::as_two_terms(const Ptr<RCP<const Basic>> &a,
     *a = mul(p->first, p->second);
     umap_basic_int d = dict_;
     d.erase(p->first);
-    *b = Add::from_dict(coef_, d);
+    *b = Add::from_dict(coef_, std::move(d));
 }
 
 RCP<const Basic> Add::subs(const map_basic_basic &subs_dict) const
@@ -369,7 +369,7 @@ RCP<const Basic> Add::subs(const map_basic_basic &subs_dict) const
             Add::dict_add_term(d, coef2, t);
         }
     }
-    return Add::from_dict(coef, d);
+    return Add::from_dict(coef, std::move(d));
 }
 
 } // CSymPy
