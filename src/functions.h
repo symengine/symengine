@@ -349,6 +349,41 @@ public:
 //! Canonicalize ACot:
 RCP<const Basic> acot(const RCP<const Basic> &arg);
 
+class ATan2 : public Function {
+private:
+    RCP<const Basic> num_; //! The `y` in `atan2(y, x)`
+    RCP<const Basic> den_; //! The `x` in `atan2(y, x)`
+public:
+    //! ATan2 Constructor
+    ATan2(const RCP<const Basic> &num, const RCP<const Basic> &den);
+    /*! Equality comparator
+     * \param o - Object to be compared with
+     * \return whether the 2 objects are equal
+     * */
+    virtual bool __eq__(const Basic &o) const;
+    virtual int compare(const Basic &o) const;
+    //! \return stringify version
+    virtual std::string __str__() const;
+    //! \return `true` if canonical
+    bool is_canonical(const RCP<const Basic> &num, const RCP<const Basic> &den);
+    //! \return Size of the hash
+    virtual std::size_t __hash__() const;
+    //! \return `y` in `atan2(y, x)`
+    inline RCP<const Basic> get_num() const {
+        return num_;
+    }
+    //! \return `x` in `atan2(y, x)`
+    inline RCP<const Basic> get_den() const {
+        return den_;
+    }
+    //! Differentiate w.r.t Symbol `x`
+    virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
+};
+
+//! Canonicalize ATan2:
+RCP<const Basic> atan2(const RCP<const Basic> &num,
+                        const RCP<const Basic> &den);
+
 class FunctionSymbol : public Function {
 private:
     std::string name_; //! The `f` in `f(x+y)`
