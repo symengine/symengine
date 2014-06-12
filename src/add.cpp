@@ -13,7 +13,7 @@ namespace CSymPy {
 Add::Add(const RCP<const Number> &coef, umap_basic_int&& dict)
     : coef_{coef}, dict_{std::move(dict)}
 {
-    CSYMPY_ASSERT(is_canonical(coef, dict))
+    CSYMPY_ASSERT(is_canonical(coef, dict_))
 }
 
 bool Add::is_canonical(const RCP<const Number> &coef,
