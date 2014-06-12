@@ -278,6 +278,31 @@ void test_fraction_free_gaussian_elimination()
     assert(B == DenseMatrix(4, 4, {integer(1), integer(2), integer(3), integer(4),
         integer(0), integer(-2), integer(-3), integer(-4), integer(0), integer(0),
         integer(3), integer(4), integer(0), integer(0), integer(0), integer(20)}));
+
+    A = DenseMatrix(3, 3, {integer(1), integer(2), integer(-1), integer(1),
+        integer(0), integer(1), integer(2), integer(-1), integer(4)});
+    B = DenseMatrix(3, 3);
+    fraction_free_gaussian_elimination(A, B);
+
+    assert(B == DenseMatrix(3, 3, {integer(1), integer(2), integer(-1),
+        integer(0), integer(-2), integer(2), integer(0), integer(0), integer(-2)}));
+
+    A = DenseMatrix(3, 4, {integer(1), integer(2), integer(3), integer(4),
+        integer(-1), integer(0), integer(1), integer(0), integer(3), integer(5),
+        integer(6), integer(9)});
+    B = DenseMatrix(3, 4);
+    fraction_free_gaussian_elimination(A, B);
+
+    for (unsigned i = 0; i < 12; i++)
+        std::cout << *B.get(i) << std::endl;
+
+    A = DenseMatrix(3, 3, {integer(1), integer(1), integer(1), integer(2),
+        integer(2), integer(5), integer(4), integer(6), integer(8)});
+    B = DenseMatrix(3, 3);
+    fraction_free_gaussian_elimination(A, B);
+
+    for (unsigned i = 0; i < 9; i++)
+        std::cout << *B.get(i) << std::endl;
 }
 
 
