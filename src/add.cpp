@@ -173,7 +173,7 @@ RCP<const Basic> Add::from_dict(const RCP<const Number> &coef, umap_basic_int &&
             } else {
                 insert(m, p->first, one);
             }
-            return rcp(new Mul(p->second, m));
+            return rcp(new Mul(p->second, std::move(m)));
         }
         map_basic_basic m;
         if (is_a_Number(*p->second)) {
@@ -187,11 +187,11 @@ RCP<const Basic> Add::from_dict(const RCP<const Number> &coef, umap_basic_int &&
             } else {
                 insert(m, p->first, one);
             }
-            return rcp(new Mul(p->second, m));
+            return rcp(new Mul(p->second, std::move(m)));
         } else {
             insert(m, p->first, one);
             insert(m, p->second, one);
-            return rcp(new Mul(one, m));
+            return rcp(new Mul(one, std::move(m)));
         }
     } else {
         return rcp(new Add(coef, std::move(d)));

@@ -279,7 +279,7 @@ RCP<const Basic> pow_expand(const RCP<const Pow> &self)
                 }
             }
         }
-        RCP<const Basic> term = Mul::from_dict(overall_coeff, d);
+        RCP<const Basic> term = Mul::from_dict(overall_coeff, std::move(d));
         RCP<const Number> coef2 = rcp(new Integer(p.second));
         if (is_a_Number(*term)) {
             iaddnum(outArg(add_overall_coeff),
