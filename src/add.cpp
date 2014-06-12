@@ -163,8 +163,14 @@ RCP<const Basic> Add::from_dict(const RCP<const Number> &coef, umap_basic_int &&
                 return p->first;
             }
             if (is_a<Mul>(*(p->first))) {
-                return Mul::from_dict(p->second,
-                        rcp_static_cast<const Mul>(p->first)->dict_);
+                const map_basic_basic &d2 =
+                    rcp_static_cast<const Mul>(p->first)->dict_;
+                // Cast away const'ness, so that we can move 'dict_', since
+                // 'p->first' will be destroyed when 'd' is at the end of this
+                // function, so we "steal" its dict_ to avoid an unnecessary
+                // copy.
+                map_basic_basic &d3 = const_cast<map_basic_basic &>(d2);
+                return Mul::from_dict(p->second, std::move(d3));
             }
             map_basic_basic m;
             if (is_a<Pow>(*(p->first))) {
@@ -178,8 +184,14 @@ RCP<const Basic> Add::from_dict(const RCP<const Number> &coef, umap_basic_int &&
         map_basic_basic m;
         if (is_a_Number(*p->second)) {
             if (is_a<Mul>(*(p->first))) {
-                return Mul::from_dict(p->second,
-                        rcp_static_cast<const Mul>(p->first)->dict_);
+                const map_basic_basic &d2 =
+                    rcp_static_cast<const Mul>(p->first)->dict_;
+                // Cast away const'ness, so that we can move 'dict_', since
+                // 'p->first' will be destroyed when 'd' is at the end of this
+                // function, so we "steal" its dict_ to avoid an unnecessary
+                // copy.
+                map_basic_basic &d3 = const_cast<map_basic_basic &>(d2);
+                return Mul::from_dict(p->second, std::move(d3));
             }
             if (is_a<Pow>(*p->first)) {
                 insert(m, rcp_static_cast<const Pow>(p->first)->base_,
@@ -219,7 +231,9 @@ void Add::as_coef_term(const RCP<const Basic> &self,
 {
     if (is_a<Mul>(*self)) {
         *coef = (rcp_static_cast<const Mul>(self))->coef_;
-        *term = Mul::from_dict(one, (rcp_static_cast<const Mul>(self))->dict_);
+        // We need to copy our 'dict_' here, as 'term' has to have its own.
+        map_basic_basic d2 = (rcp_static_cast<const Mul>(self))->dict_;
+        *term = Mul::from_dict(one, std::move(d2));
     } else if (is_a_Number(*self)) {
         *coef = rcp_static_cast<const Number>(self);
         *term = one;
