@@ -304,6 +304,13 @@ RCP<const Basic> Pow::diff(const RCP<const Symbol> &x) const
 {
     if (is_a_Number(*exp_))
         return mul(mul(exp_, pow(base_, sub(exp_, one))), base_->diff(x));
+    // Once `log` is implemented, this condition should be refactored
+    // as: diff(a^x, x) = log(a)*a^x . As `log(e) = 1`, this will be
+    // a more general case
+    if (is_a<Symbol>(*base_) &&
+        (rcp_static_cast<const Symbol>(base_)->get_name() == "E")) {
+        return mul(pow(E, exp_), exp_->diff(x));
+    }
     throw std::runtime_error("Not implemented.");
 }
 

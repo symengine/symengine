@@ -26,6 +26,8 @@ using CSymPy::sin;
 using CSymPy::RCP;
 using CSymPy::rcp;
 using CSymPy::sqrt;
+using CSymPy::E;
+using CSymPy::exp;
 using CSymPy::rcp_dynamic_cast;
 using CSymPy::print_stack_on_segfault;
 
@@ -330,6 +332,11 @@ void test_pow()
 
     r1 = div(one, sqrt(i2));
     r2 = div(sqrt(i2), i2);
+    assert(eq(r1, r2));
+
+    r1 = exp(pow(x, i3));
+    r1 = r1->diff(x);
+    r2 = mul(mul(i3, exp(pow(x, i3))), pow(x, i2));
     assert(eq(r1, r2));
  }
 
