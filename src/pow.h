@@ -46,17 +46,6 @@ public:
 RCP<const Basic> pow(const RCP<const Basic> &a,
         const RCP<const Basic> &b);
 
-class Exp : public Pow {
-public:
-    RCP<const Basic> exp_; //! E^exp
-
-public:
-    //! Exp Constructor
-    Exp(const RCP<const Basic> &exp);
-    //! Differentiate w.r.t Symbol `x`
-    virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
-};
-
 //! \return Pow from `E` and `e`
 RCP<const Basic> exp(const RCP<const Basic> &e);
 

@@ -321,18 +321,6 @@ RCP<const Basic> Pow::subs(const map_basic_basic &subs_dict) const
         return pow(base_new, exp_new);
 }
 
-Exp::Exp(const RCP<const Basic> &exp)
-    : Pow(E, exp)
-{
-    CSYMPY_ASSERT(is_canonical(E, exp))
-}
-
-RCP<const Basic> Exp::diff(const RCP<const Symbol> &x) const
-{
-    return mul(pow(E, exp_), exp_->diff(x));
-
-}
-
 RCP<const Basic> exp(const RCP<const Basic> &e)
 {
     return pow(E, e);
