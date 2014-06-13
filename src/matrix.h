@@ -84,11 +84,12 @@ public:
         RCP<const Basic> &c);
 
     // Gaussian elimination
+    friend void pivoted_gaussian_elimination(const DenseMatrix &A, DenseMatrix &B);
     friend void fraction_free_gaussian_elimination(const DenseMatrix &A,
         DenseMatrix &B);
-    friend void gauss_jordan_elimination(const DenseMatrix &A, DenseMatrix &B);
     friend void pivoted_fraction_free_gaussian_elimination(const DenseMatrix &A,
         DenseMatrix &B);
+    friend void pivoted_gauss_jordan_elimination(const DenseMatrix &A, DenseMatrix &B);
     friend unsigned pivot(DenseMatrix &B, unsigned r, unsigned c);
 
     // Ax = b
@@ -137,8 +138,9 @@ protected:
     std::map<int, RCP<Basic>> m_;
 };
 
-// DenseMatrix related functions
+// ------------------ DenseMatrix related functions --------------------------//
 
+// Matrix operations
 void add_dense_dense(const DenseMatrix &A, const DenseMatrix &B, DenseMatrix &C);
 
 void add_dense_scalar(const DenseMatrix &A, RCP<const Basic> &k, DenseMatrix &B);
@@ -152,6 +154,9 @@ void transpose_dense(const DenseMatrix &A, DenseMatrix &B);
 void submatrix_dense(const DenseMatrix &A, unsigned row_start, unsigned row_end,
         unsigned col_start, unsigned col_end, DenseMatrix &B);
 
+void augment_dense(const DenseMatrix &A, const DenseMatrix &b, DenseMatrix &C);
+
+// Row operations
 void row_exchange_dense(DenseMatrix &A , unsigned i, unsigned j);
 
 void row_mul_scalar_dense(DenseMatrix &A, unsigned i, RCP<const Basic> &c);
@@ -159,13 +164,19 @@ void row_mul_scalar_dense(DenseMatrix &A, unsigned i, RCP<const Basic> &c);
 void row_add_row_dense(DenseMatrix &A, unsigned i, unsigned j,
     RCP<const Basic> &c);
 
+// Gaussian elimination
+void pivoted_gaussian_elimination(const DenseMatrix &A, DenseMatrix &B);
+
 void fraction_free_gaussian_elimination(const DenseMatrix &A, DenseMatrix &B);
 
-void gauss_jordan_elimination(const DenseMatrix &A, DenseMatrix &B);
+void pivoted_fraction_free_gaussian_elimination(const DenseMatrix &A, DenseMatrix &B);
 
-void augment_dense(const DenseMatrix &A, const DenseMatrix &b, DenseMatrix &C);
+void pivoted_gauss_jordan_elimination(const DenseMatrix &A, DenseMatrix &B);
 
+// Solve Ax = b
 void diagonal_solve(const DenseMatrix &A, const DenseMatrix &b, DenseMatrix &C);
+
+// ------------------------ Common functions ---------------------------------//
 
 // Test two matrices for equality
 inline bool operator==(const MatrixBase &lhs, const MatrixBase &rhs)

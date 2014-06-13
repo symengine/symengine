@@ -122,44 +122,44 @@ void test_mul_dense_scalar()
 }
 
 // Update tests
-void test_gauss_jordan_elimination()
+void test_pivoted_gauss_jordan_elimination()
 {
     // These test cases are verified with SymPy
     DenseMatrix A = DenseMatrix(2, 2, {integer(1), integer(2), integer(3), integer(4)});
     DenseMatrix B = DenseMatrix(2, 2);
-    gauss_jordan_elimination(A, B);
+    pivoted_gauss_jordan_elimination(A, B);
 
     assert(B == DenseMatrix(2, 2, {integer(1), integer(0), integer(0), integer(1)}));
 
     A = DenseMatrix(2, 2, {integer(1), integer(2), integer(2), integer(4)});
-    gauss_jordan_elimination(A, B);
+    pivoted_gauss_jordan_elimination(A, B);
 
     assert(B == DenseMatrix(2, 2, {integer(1), integer(2), integer(0), integer(0)}));
 
     A = DenseMatrix(2, 2, {integer(1), integer(0), integer(0), integer(0)});
-    gauss_jordan_elimination(A, B);
+    pivoted_gauss_jordan_elimination(A, B);
 
     assert(B == DenseMatrix(2, 2, {integer(1), integer(0), integer(0), integer(0)}));
 
     A = DenseMatrix(2, 2, {integer(0), integer(0), integer(0), integer(0)});
-    gauss_jordan_elimination(A, B);
+    pivoted_gauss_jordan_elimination(A, B);
 
     assert(B == DenseMatrix(2, 2, {integer(0), integer(0), integer(0), integer(0)}));
 
     A = DenseMatrix(2, 2, {symbol("a"), symbol("b"), symbol("c"), symbol("d")});
-    gauss_jordan_elimination(A, B);
+    pivoted_gauss_jordan_elimination(A, B);
 
     assert(B == DenseMatrix(2, 2, {integer(1), integer(0), integer(0), integer(1)}));
 
     A = DenseMatrix(2, 2, {symbol("a"), integer(0), symbol("c"), integer(0)});
-    gauss_jordan_elimination(A, B);
+    pivoted_gauss_jordan_elimination(A, B);
 
     assert(B == DenseMatrix(2, 2, {integer(1), integer(0), integer(0), integer(0)}));
 
     A = DenseMatrix(3, 3, {integer(1), integer(2), integer(3), integer(-1),
         integer(7), integer(6), integer(4), integer(5), integer(2)});
     B = DenseMatrix(3, 3);
-    gauss_jordan_elimination(A, B);
+    pivoted_gauss_jordan_elimination(A, B);
 
     assert(B == DenseMatrix(3, 3, {integer(1), integer(0), integer(0), integer(0),
         integer(1), integer(0), integer(0), integer(0), integer(1)}));
@@ -167,7 +167,7 @@ void test_gauss_jordan_elimination()
     A = DenseMatrix(3, 2, {integer(-9), integer(4), integer(3), integer(-1),
         integer(7), integer(6)});
     B = DenseMatrix(3, 2);
-    gauss_jordan_elimination(A, B);
+    pivoted_gauss_jordan_elimination(A, B);
 
     assert(B == DenseMatrix(3, 2, {integer(1), integer(0), integer(0), integer(1),
     integer(0), integer(0)}));
@@ -383,7 +383,7 @@ int main(int argc, char* argv[])
 
     test_mul_dense_scalar();
 
-    test_gauss_jordan_elimination();
+    test_pivoted_gauss_jordan_elimination();
 
     test_diagonal_solve();
 
