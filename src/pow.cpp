@@ -335,9 +335,7 @@ RCP<const Basic> Exp::diff(const RCP<const Symbol> &x) const
 
 RCP<const Basic> exp(const RCP<const Basic> &e)
 {
-    if (eq(e, zero)) return one;
-    else if (eq(e, one)) return E;
-    else return Exp(e);
+    return pow(E, e);
 }
 
 } // CSymPy
