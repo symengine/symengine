@@ -121,6 +121,7 @@ void test_mul_dense_scalar()
     assert(B == DenseMatrix(2, 2, {integer(2), integer(4), integer(6), integer(8)}));
 }
 
+// Update tests
 void test_gauss_jordan_elimination()
 {
     // These test cases are verified with SymPy
@@ -269,6 +270,9 @@ void test_fraction_free_gaussian_elimination()
     assert(B == DenseMatrix(2, 2, {symbol("a"), symbol("b"), integer(0),
         sub(mul(symbol("a"), symbol("d")), mul(symbol("b"), symbol("c")))}));
 
+    // Test case taken from :
+    // Fraction-Free Algorithms for Linear and Polynomial Equations, George C Nakos,
+    // Peter R Turner et. al.
     A = DenseMatrix(4, 4, {integer(1), integer(2), integer(3), integer(4),
         integer(2), integer(2), integer(3), integer(4), integer(3), integer(3),
         integer(3), integer(4), integer(9), integer(8), integer(7), integer(6)});
@@ -277,8 +281,23 @@ void test_fraction_free_gaussian_elimination()
 
     assert(B == DenseMatrix(4, 4, {integer(1), integer(2), integer(3), integer(4),
         integer(0), integer(-2), integer(-3), integer(-4), integer(0), integer(0),
-        integer(3), integer(4), integer(0), integer(0), integer(0), integer(20)}));
+        integer(3), integer(4), integer(0), integer(0), integer(0), integer(-10)}));
 
+    // Test case taken from :
+    // A SIMPLIFIED FRACTION-FREE INTEGER GAUSS ELIMINATION ALGORITHM
+    // Peter R. Turner
+    A = DenseMatrix(4, 4, {integer(8), integer(7), integer(4), integer(1),
+        integer(4), integer(6), integer(7), integer(3), integer(6), integer(3),
+        integer(4), integer(6), integer(4), integer(5), integer(8), integer(2)});
+    B = DenseMatrix(4, 4);
+    fraction_free_gaussian_elimination(A, B);
+
+    assert(B == DenseMatrix(4, 4, {integer(8), integer(7), integer(4), integer(1),
+    integer(0), integer(20), integer(40), integer(20), integer(0), integer(0),
+    integer(110), integer(150), integer(0), integer(0), integer(0), integer(-450)}));
+
+    // Below two test cases are taken from:
+    // http://www.mathworks.in/help/symbolic/mupad_ref/linalg-gausselim.html
     A = DenseMatrix(3, 3, {integer(1), integer(2), integer(-1), integer(1),
         integer(0), integer(1), integer(2), integer(-1), integer(4)});
     B = DenseMatrix(3, 3);
@@ -293,18 +312,64 @@ void test_fraction_free_gaussian_elimination()
     B = DenseMatrix(3, 4);
     fraction_free_gaussian_elimination(A, B);
 
-    for (unsigned i = 0; i < 12; i++)
-        std::cout << *B.get(i) << std::endl;
+    assert(B == DenseMatrix(3, 4, {integer(1), integer(2), integer(3), integer(4),
+        integer(0), integer(2), integer(4), integer(4), integer(0), integer(0),
+        integer(-2), integer(-2)}));
+}
+
+void test_pivoted_fraction_free_gaussian_elimination()
+{
+    DenseMatrix A = DenseMatrix(2, 2, {integer(1), integer(2), integer(3), integer(4)});
+    DenseMatrix B = DenseMatrix(2, 2);
+    pivoted_fraction_free_gaussian_elimination(A, B);
+
+    assert(B == DenseMatrix(2, 2, {integer(1), integer(2), integer(0), integer(-2)}));
+
+    A = DenseMatrix(4, 4, {integer(1), integer(2), integer(3), integer(4),
+        integer(2), integer(2), integer(3), integer(4), integer(3), integer(3),
+        integer(3), integer(4), integer(9), integer(8), integer(7), integer(6)});
+    B = DenseMatrix(4, 4);
+    pivoted_fraction_free_gaussian_elimination(A, B);
+
+    assert(B == DenseMatrix(4, 4, {integer(1), integer(2), integer(3), integer(4),
+        integer(0), integer(-2), integer(-3), integer(-4), integer(0), integer(0),
+        integer(3), integer(4), integer(0), integer(0), integer(0), integer(-10)}));
+
+    A = DenseMatrix(3, 4, {integer(1), integer(2), integer(3), integer(4),
+        integer(-1), integer(0), integer(1), integer(0), integer(3), integer(5),
+        integer(6), integer(9)});
+    B = DenseMatrix(3, 4);
+    pivoted_fraction_free_gaussian_elimination(A, B);
+
+    assert(B == DenseMatrix(3, 4, {integer(1), integer(2), integer(3), integer(4),
+        integer(0), integer(2), integer(4), integer(4), integer(0), integer(0),
+        integer(-2), integer(-2)}));
+
+    A = DenseMatrix(3, 3, {integer(1), integer(1), integer(1), integer(2),
+        integer(2), integer(2), integer(3), integer(3), integer(3)});
+    B = DenseMatrix(3, 3);
+    pivoted_fraction_free_gaussian_elimination(A, B);
+
+    assert(B == DenseMatrix(3, 3, {integer(1), integer(1), integer(1), integer(0),
+        integer(0), integer(0), integer(0), integer(0), integer(0)}));
+
+    // These tests won't work with fraction_free_gaussian_elimination
+    A = DenseMatrix(3, 3, {integer(1), integer(1), integer(1), integer(2),
+        integer(2), integer(2), integer(3), integer(4), integer(3)});
+    B = DenseMatrix(3, 3);
+    pivoted_fraction_free_gaussian_elimination(A, B);
+
+    assert(B == DenseMatrix(3, 3, {integer(1), integer(1), integer(1), integer(0),
+        integer(1), integer(0), integer(0), integer(0), integer(0)}));
 
     A = DenseMatrix(3, 3, {integer(1), integer(1), integer(1), integer(2),
         integer(2), integer(5), integer(4), integer(6), integer(8)});
     B = DenseMatrix(3, 3);
-    fraction_free_gaussian_elimination(A, B);
+    pivoted_fraction_free_gaussian_elimination(A, B);
 
-    for (unsigned i = 0; i < 9; i++)
-        std::cout << *B.get(i) << std::endl;
+    assert(B == DenseMatrix(3, 3, {integer(1), integer(1), integer(1), integer(0),
+        integer(2), integer(4), integer(0), integer(0), integer(6)}));
 }
-
 
 int main(int argc, char* argv[])
 {
@@ -327,6 +392,8 @@ int main(int argc, char* argv[])
     test_submatrix_dense();
 
     test_fraction_free_gaussian_elimination();
+
+    test_pivoted_fraction_free_gaussian_elimination();
 
     return 0;
 }

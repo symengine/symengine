@@ -77,9 +77,19 @@ public:
     friend void submatrix_dense(const DenseMatrix &A, unsigned row_start,
         unsigned row_end, unsigned col_start, unsigned col_end, DenseMatrix &B);
 
+    // Row operations
+    friend void row_exchange_dense(DenseMatrix &A , unsigned i, unsigned j);
+    friend void row_mul_scalar_dense(DenseMatrix &A, unsigned i, RCP<const Basic> &c);
+    friend void row_add_row_dense(DenseMatrix &A, unsigned i, unsigned j,
+        RCP<const Basic> &c);
+
     // Gaussian elimination
-    friend void fraction_free_gaussian_elimination(const DenseMatrix &A, DenseMatrix &B);
+    friend void fraction_free_gaussian_elimination(const DenseMatrix &A,
+        DenseMatrix &B);
     friend void gauss_jordan_elimination(const DenseMatrix &A, DenseMatrix &B);
+    friend void pivoted_fraction_free_gaussian_elimination(const DenseMatrix &A,
+        DenseMatrix &B);
+    friend unsigned pivot(DenseMatrix &B, unsigned r, unsigned c);
 
     // Ax = b
     friend void augment_dense(const DenseMatrix &A, const DenseMatrix &b,
@@ -127,18 +137,37 @@ protected:
     std::map<int, RCP<Basic>> m_;
 };
 
+// DenseMatrix related functions
+
 void add_dense_dense(const DenseMatrix &A, const DenseMatrix &B, DenseMatrix &C);
+
 void add_dense_scalar(const DenseMatrix &A, RCP<const Basic> &k, DenseMatrix &B);
+
 void mul_dense_dense(const DenseMatrix &A, const DenseMatrix &B, DenseMatrix &C);
+
 void mul_dense_scalar(const DenseMatrix &A, RCP<const Basic> &k, DenseMatrix &C);
+
 void transpose_dense(const DenseMatrix &A, DenseMatrix &B);
+
 void submatrix_dense(const DenseMatrix &A, unsigned row_start, unsigned row_end,
         unsigned col_start, unsigned col_end, DenseMatrix &B);
+
+void row_exchange_dense(DenseMatrix &A , unsigned i, unsigned j);
+
+void row_mul_scalar_dense(DenseMatrix &A, unsigned i, RCP<const Basic> &c);
+
+void row_add_row_dense(DenseMatrix &A, unsigned i, unsigned j,
+    RCP<const Basic> &c);
+
 void fraction_free_gaussian_elimination(const DenseMatrix &A, DenseMatrix &B);
+
 void gauss_jordan_elimination(const DenseMatrix &A, DenseMatrix &B);
+
 void augment_dense(const DenseMatrix &A, const DenseMatrix &b, DenseMatrix &C);
+
 void diagonal_solve(const DenseMatrix &A, const DenseMatrix &b, DenseMatrix &C);
 
+// Test two matrices for equality
 inline bool operator==(const MatrixBase &lhs, const MatrixBase &rhs)
 {
     if (lhs.nrows() != rhs.nrows() || lhs.ncols() != rhs.ncols())

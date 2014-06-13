@@ -146,7 +146,82 @@ void mul_dense_scalar(const DenseMatrix &A, RCP<const Basic> &k, DenseMatrix& B)
     }
 }
 
+// -------------------------------- Row Operations ---------------------------//
+void row_exchange_dense(DenseMatrix &A , unsigned i, unsigned j)
+{
+    CSYMPY_ASSERT(i != j && i < A.row_ && j < A.row_);
+
+    unsigned col = A.col_;
+
+    for (unsigned k = 0; k < A.col_; k++)
+        std::swap(A.m_[i*col + k], A.m_[j*col + k]);
+}
+
+void row_mul_scalar_dense(DenseMatrix &A, unsigned i, RCP<const Basic> &c)
+{
+    CSYMPY_ASSERT(i < A.row_);
+
+    unsigned col = A.col_;
+
+    for (unsigned j = 0; j < A.col_; j++)
+        A.m_[i*col + j] = mul(c, A.m_[i*col + j]);
+}
+
+void row_add_row_dense(DenseMatrix &A, unsigned i, unsigned j,
+    RCP<const Basic> &c)
+{
+    CSYMPY_ASSERT(i != j && i < A.row_ && j < A.row_);
+
+    unsigned col = A.col_;
+
+    for (unsigned k = 0; k < A.col_; k++)
+        A.m_[i*col + k] = add(A.m_[i*col + k], mul(c, A.m_[j*col + k]));
+}
+
 // ------------------------------ Gaussian Elimination -----------------------//
+//void gaussian_eliminataion()
+//{
+//    unsigned row = A.row_;
+//    unsigned col = A.col_;
+//    unsigned pivots = 0, i, k, l, j;
+
+//    RCP<const Basic> tmp, scale;
+
+//    B.m_ = A.m_;
+
+//    for (i = 0; i < col - 1; i++) {
+//        if (pivots == row)
+//            break;
+
+//        if (eq(B.m_[pivots*col + i], zero)) {
+//            for (k = pivots; k < row; k++)
+//                if (!eq(B.m_[k*col + i], zero)) {
+//                    row_exchange_dense(B, k, pivots);
+//                    break;
+//                }
+
+//            if (k == row)
+//                continue;
+//        }
+
+//        scale = B.m_[pivots*col + i];
+//        for (l = 0; l < col; l++)
+//            B.m_[pivots*col + l] = div(B.m_[pivots*col + l], scale);
+
+
+//        for (j = i + 1; j < row; j++) {
+//            if (j == pivots)
+//                continue;
+
+//            scale = B.m_[j*col + i];
+//            for(l = i + 1; l < col; l++)
+//                B.m_[j*col + l] = sub(B.m_[j*col + l], mul(scale, B.m_[pivots*col + l]));
+//        }
+
+//        pivots++;
+//    }
+//}
+
 void fraction_free_gaussian_elimination(const DenseMatrix &A, DenseMatrix &B)
 {
     unsigned col = A.col_;
@@ -155,61 +230,102 @@ void fraction_free_gaussian_elimination(const DenseMatrix &A, DenseMatrix &B)
 
     B.m_ = A.m_;
 
-    for (unsigned i = 0; i < col; i++)
+    for (unsigned i = 0; i < col - 1; i++)
         for (unsigned j = i + 1; j < A.row_; j++) {
-            for (unsigned k = i + 1; k < col; k++)
+            for (unsigned k = i + 1; k < col; k++) {
                 B.m_[j*col + k] = sub(mul(B.m_[i*col + i], B.m_[j*col + k]),
                     mul(B.m_[j*col + i], B.m_[i*col + k]));
+                if (i)
+                    B.m_[j*col + k] = div(B.m_[j*col + k], B.m_[i*col - col + i - 1]);
+            }
             B.m_[j*col + i] = zero;
         }
+}
+
+void pivoted_fraction_free_gaussian_elimination(const DenseMatrix &A, DenseMatrix &B)
+{
+    unsigned col = A.col_;
+
+    CSYMPY_ASSERT(A.row_ == B.row_ && A.col_ == B.col_);
+
+    unsigned pivots = 0, k = 0, j = 0;
+    B.m_ = A.m_;
+
+    for (unsigned i = 0; i < col - 1; i++) {
+        if (pivots == A.row_)
+            break;
+
+        if (eq(B.m_[pivots*col + i], zero)) {
+            for (k = pivots; k < A.row_; k++)
+                if (neq(B.m_[k*col + i], zero)) {
+                    row_exchange_dense(B, k, pivots);
+                    break;
+                }
+
+            if (k == A.row_)
+                continue;
+        }
+
+        for (j = i + 1; j < A.row_; j++) {
+            for (k = i + 1; k < col; k++) {
+                B.m_[j*col + k] = sub(mul(B.m_[i*col + i], B.m_[j*col + k]),
+                    mul(B.m_[j*col + i], B.m_[i*col + k]));
+                if (i)
+                    B.m_[j*col + k] = div(B.m_[j*col + k], B.m_[i*col - col + i - 1]);
+            }
+            B.m_[j*col + i] = zero;
+        }
+
+        pivots++;
+    }
 }
 
 void gauss_jordan_elimination(const DenseMatrix &A, DenseMatrix &B)
 {
     unsigned row = A.row_;
     unsigned col = A.col_;
-    unsigned pivots = 0, i, k, l;
 
-    RCP<const Basic> tmp, scale;
+    CSYMPY_ASSERT(row == B.row_ && col == B.col_);
 
+    unsigned index = 0, i, j, k;
     B.m_ = A.m_;
 
+    RCP<const Basic> scale;
+
     for (i = 0; i < col; i++) {
-        if (pivots == row)
+        if (index == row)
             break;
 
-        if (eq(B.m_[pivots*col + i], zero)) {
+        k = pivot(B, index, i);
+        if (k == row)
+            continue;
+        if (k != index)
+            row_exchange_dense(B, k, index);
 
-            for (k = pivots; k < row; k++)
-                if (!eq(B.m_[k*col + i], zero)) {
-                    for (l = 0; l < col; l++) {
-                        tmp = B.m_[k*col + l];
-                        B.m_[k*col + l] = B.m_[pivots*col + l];
-                        B.m_[pivots*col + l] = tmp;
-                    }
-                    break;
-                }
+        scale = div(one, B.m_[index*col + i]);
+        row_mul_scalar_dense(B, index, scale);
 
-            if (k == row)
-                continue;
-        }
-
-        scale = B.m_[pivots*col + i];
-        for (l = 0; l < col; l++)
-            B.m_[pivots*col + l] = div(B.m_[pivots*col + l], scale);
-
-
-        for (unsigned j = 0; j < row; j++) {
-            if (j == pivots)
+        for (j = 0; j < row; j++) {
+            if (j == index)
                 continue;
 
-            scale = B.m_[j*col + i];
-            for(l = 0; l < col; l++)
-                B.m_[j*col + l] = sub(B.m_[j*col + l], mul(scale, B.m_[pivots*col + l]));
+            scale = mul(minus_one, B.m_[j*col + i]);
+            row_add_row_dense(B, j, index, scale);
         }
 
-        pivots++;
+        index++;
     }
+}
+
+unsigned pivot(DenseMatrix &B, unsigned r, unsigned c)
+{
+    unsigned k = r;
+    
+    if (eq(B.m_[r*B.col_ + c], zero))
+        for (k = r; k < B.row_; k++)
+            if (!eq(B.m_[k*B.col_ + c], zero))
+                break;
+    return k;
 }
 
 // --------------------------- Solve Ax = b  ---------------------------------//
@@ -241,7 +357,7 @@ void diagonal_solve(const DenseMatrix &A, const DenseMatrix &b, DenseMatrix &C)
 
     // No checks are done to see if the diagonal entries are zero
     for (unsigned i = 0; i < A.col_; i++)
-        C.m_[i] = div(D.get(i*A.col_ + i + A.col_), D.get(i*(A.col_ + 1) + i));
+        C.m_[i] = div(D.get(i*A.col_ + i + A.col_), D.get(i*A.col_ + 2*i));
 }
 
 } // CSymPy
