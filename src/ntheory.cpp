@@ -336,26 +336,34 @@ void prime_factors(const RCP<const Integer> &n,
 }
 
 void prime_factor_multiplicities(const RCP<const Integer> &n,
-        map_integer_uint &primes)
+        map_integer_uint &primes_mul)
 {
-    unsigned count;
+    mpz_class sqrtN;
     RCP<const Integer> _n = n;
-    RCP<const Integer> f;
-    if (eq(_n, zero)) return;
-
-    while (factor_trial_division(outArg(f), *_n) == 1 && !eq(_n, one)) {
-        count = 0;
-        RCP<const Basic> d = div(_n, f);
+    unsigned count;
+    sqrtN = sqrt((*_n).as_mpz());
+    if (!(sqrtN.fits_uint_p()))
+        throw std::runtime_error("N too large to factor");
+    unsigned limit = sqrtN.get_ui() + 1;
+    std::vector<unsigned> primes;
+    eratosthenes_sieve(limit, primes);
+    
+    for (auto &p: primes)
+    {
+        count=0;
+        RCP<const Integer> _p = integer(p);
+        RCP<const Basic> d = div(_n, _p);
         while (is_a<Integer>(*d)) { // when a prime factor is found, we divide
             count++;                     // _n by that prime as much as we can
             _n = rcp_dynamic_cast<const Integer>(d);
-            d = div(_n, f);
+            d = div(_n, _p);
         }
         if (count > 0)
-            insert(primes, f, count);
+            insert(primes_mul, _p, count);
+        if(eq(_n, one)) break;
     }
     if (!eq(_n, one))
-        insert(primes, _n, 1);
+        insert(primes_mul, _n, 1);
 }
 
 } // CSymPy
