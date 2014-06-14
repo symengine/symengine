@@ -389,4 +389,20 @@ RCP<const Basic> Log::diff(const RCP<const Symbol> &x) const
     return mul(div(one, arg_), arg_->diff(x));
 }
 
+RCP<const Basic> log(const RCP<const Basic> &arg)
+{
+    if (eq(arg, zero)) {
+        throw std::runtime_error("log(0) is complex infinity. Yet to be implemented");
+    }
+    if (eq(arg, one)) return zero;
+    if (eq(arg, E)) return one;
+    if (is_a<Rational>(*arg)) {
+        RCP<const Rational> arg_new = rcp_static_cast<const Rational>(arg);
+        RCP<const Integer> num;
+        RCP<const Integer> den;
+        get_num_den(arg_new, outArg(num), outArg(den));
+        return sub(log(num), log(den));
+    }
+    return rcp(new Log(arg));
+}
 } // CSymPy
