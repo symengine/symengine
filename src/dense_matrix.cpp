@@ -205,10 +205,10 @@ void pivoted_gaussian_elimination(const DenseMatrix &A, DenseMatrix &B)
         row_mul_scalar_dense(B, index, scale);
 
         for (j = i + 1; j < row; j++) {
-            for (k = i + 1; k < col; k++) {
+            for (k = i + 1; k < col; k++)
                 B.m_[j*col + k] = sub(B.m_[j*col + k],
                     mul(B.m_[j*col + i], B.m_[index*col + k]));
-            }
+            B.m_[j*col + i] = zero;
         }
 
         index++;

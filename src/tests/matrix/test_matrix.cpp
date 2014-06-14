@@ -17,6 +17,13 @@ using CSymPy::is_a;
 using CSymPy::Add;
 using CSymPy::add_dense_dense;
 using CSymPy::pow;
+using CSymPy::minus_one;
+
+void print_matrix(const DenseMatrix &B)
+{
+    for (unsigned i = 0; i < B.nrows()*B.ncols(); i++)
+        std::cout << *B.get(i) << std::endl;
+}
 
 void test_dense_dense_addition()
 {
@@ -371,6 +378,45 @@ void test_pivoted_fraction_free_gaussian_elimination()
         integer(2), integer(4), integer(0), integer(0), integer(6)}));
 }
 
+void test_pivoted_gaussian_elimination()
+{
+    DenseMatrix A = DenseMatrix(2, 2, {integer(1), integer(2), integer(3), integer(4)});
+    DenseMatrix B = DenseMatrix(2, 2);
+    pivoted_gaussian_elimination(A, B);
+
+    assert(B == DenseMatrix(2, 2, {integer(1), integer(2), integer(0), integer(-2)}));
+
+    A = DenseMatrix(2, 2, {integer(2), integer(3), integer(3), integer(4)});
+    B = DenseMatrix(2, 2);
+    pivoted_gaussian_elimination(A, B);
+
+    assert(B == DenseMatrix(2, 2, {integer(1), div(integer(3), integer(2)), 
+        integer(0), div(minus_one, integer(2))}));
+
+    A = DenseMatrix(2, 2, {symbol("a"), symbol("b"), symbol("c"), symbol("d")});
+    B = DenseMatrix(2, 2);
+    pivoted_gaussian_elimination(A, B);
+
+    assert(B == DenseMatrix(2, 2, {integer(1), div(symbol("b"), symbol("a")), 
+        integer(0), sub(symbol("d"), mul(symbol("c"), div(symbol("b"), symbol("a"))))}));
+
+    A = DenseMatrix(3, 3, {integer(1), integer(1), integer(1), integer(2),
+        integer(2), integer(2), integer(3), integer(4), integer(3)});
+    B = DenseMatrix(3, 3);
+    pivoted_fraction_free_gaussian_elimination(A, B);
+
+    assert(B == DenseMatrix(3, 3, {integer(1), integer(1), integer(1), integer(0),
+        integer(1), integer(0), integer(0), integer(0), integer(0)}));
+
+    A = DenseMatrix(3, 3, {integer(1), integer(1), integer(1), integer(2),
+        integer(2), integer(5), integer(4), integer(6), integer(8)});
+    B = DenseMatrix(3, 3);
+    pivoted_fraction_free_gaussian_elimination(A, B);
+
+    assert(B == DenseMatrix(3, 3, {integer(1), integer(1), integer(1), integer(0),
+        integer(2), integer(4), integer(0), integer(0), integer(6)}));
+}
+
 int main(int argc, char* argv[])
 {
     print_stack_on_segfault();
@@ -394,6 +440,8 @@ int main(int argc, char* argv[])
     test_fraction_free_gaussian_elimination();
 
     test_pivoted_fraction_free_gaussian_elimination();
+
+    test_pivoted_gaussian_elimination();
 
     return 0;
 }
