@@ -90,8 +90,13 @@ public:
     friend void pivoted_fraction_free_gaussian_elimination(const DenseMatrix &A,
         DenseMatrix &B);
     friend void pivoted_gauss_jordan_elimination(const DenseMatrix &A, DenseMatrix &B);
+    friend void fraction_free_gauss_jordan_elimination(const DenseMatrix &A, 
+        DenseMatrix &B);
     friend unsigned pivot(DenseMatrix &B, unsigned r, unsigned c);
 
+    // Matrix Decomposition
+    friend void fraction_free_LU(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &U);
+    
     // Ax = b
     friend void augment_dense(const DenseMatrix &A, const DenseMatrix &b,
         DenseMatrix &C);
@@ -172,6 +177,11 @@ void fraction_free_gaussian_elimination(const DenseMatrix &A, DenseMatrix &B);
 void pivoted_fraction_free_gaussian_elimination(const DenseMatrix &A, DenseMatrix &B);
 
 void pivoted_gauss_jordan_elimination(const DenseMatrix &A, DenseMatrix &B);
+
+void fraction_free_gauss_jordan_elimination(const DenseMatrix &A, DenseMatrix &B);
+
+// Matrix Decomposition
+void fraction_free_LU(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &U);
 
 // Solve Ax = b
 void diagonal_solve(const DenseMatrix &A, const DenseMatrix &b, DenseMatrix &C);

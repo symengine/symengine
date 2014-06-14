@@ -18,6 +18,7 @@ using CSymPy::Add;
 using CSymPy::add_dense_dense;
 using CSymPy::pow;
 using CSymPy::minus_one;
+using CSymPy::fraction_free_gauss_jordan_elimination;
 
 void print_matrix(const DenseMatrix &B)
 {
@@ -417,6 +418,44 @@ void test_pivoted_gaussian_elimination()
         integer(2), integer(4), integer(0), integer(0), integer(6)}));
 }
 
+void test_fraction_free_gauss_jordan_elimination()
+{
+    DenseMatrix A = DenseMatrix(2, 2, {integer(1), integer(2), integer(3), integer(4)});
+    DenseMatrix B = DenseMatrix(2, 2);
+    fraction_free_gauss_jordan_elimination(A, B);
+
+    assert(B == DenseMatrix(2, 2, {integer(-2), integer(0), integer(0), integer(-2)}));
+    
+    A = DenseMatrix(4, 4, {integer(1), integer(2), integer(3), integer(4),
+        integer(2), integer(2), integer(3), integer(4), integer(3), integer(3),
+        integer(3), integer(4), integer(9), integer(8), integer(7), integer(6)});
+    B = DenseMatrix(4, 4);
+    fraction_free_gauss_jordan_elimination(A, B);
+
+    assert(B == DenseMatrix(4, 4, {integer(-10), integer(0), integer(0), integer(0),
+        integer(0), integer(-10), integer(0), integer(0), integer(0), integer(0),
+        integer(-10), integer(0), integer(0), integer(0), integer(0), integer(-10)}));
+}
+
+void test_fraction_free_LU()
+{
+    
+    DenseMatrix A = DenseMatrix(4, 4, {integer(1), integer(2), integer(3), integer(4),
+        integer(2), integer(2), integer(3), integer(4), integer(3), integer(3),
+        integer(3), integer(4), integer(9), integer(8), integer(7), integer(6)});
+    DenseMatrix L = DenseMatrix(4, 4);
+    DenseMatrix U = DenseMatrix(4, 4);
+    fraction_free_LU(A, L, U);
+    
+    assert(L == DenseMatrix(4, 4, {integer(1), integer(0), integer(0), integer(0), 
+        integer(2), integer(-2), integer(0), integer(0), integer(3), integer(-3),
+        integer(3), integer(0), integer(9), integer(-10), integer(10), integer(-10)}));
+    
+    assert(U == DenseMatrix(4, 4, {integer(1), integer(2), integer(3), integer(4),
+        integer(0), integer(-2), integer(-3), integer(-4), integer(0), integer(0),
+        integer(3), integer(4), integer(0), integer(0), integer(0), integer(-10)}));
+}
+
 int main(int argc, char* argv[])
 {
     print_stack_on_segfault();
@@ -442,6 +481,10 @@ int main(int argc, char* argv[])
     test_pivoted_fraction_free_gaussian_elimination();
 
     test_pivoted_gaussian_elimination();
+    
+    //test_fraction_free_gauss_jordan_elimination();
+    
+    test_fraction_free_LU();
 
     return 0;
 }

@@ -278,9 +278,9 @@ void pivoted_gauss_jordan_elimination(const DenseMatrix &A, DenseMatrix &B)
     CSYMPY_ASSERT(row == B.row_ && col == B.col_);
 
     unsigned index = 0, i, j, k;
-    B.m_ = A.m_;
-
     RCP<const Basic> scale;
+
+    B.m_ = A.m_;
 
     for (i = 0; i < col; i++) {
         if (index == row)
@@ -307,6 +307,32 @@ void pivoted_gauss_jordan_elimination(const DenseMatrix &A, DenseMatrix &B)
     }
 }
 
+void fraction_free_gauss_jordan_elimination(const DenseMatrix &A, DenseMatrix &B)
+{
+    unsigned row = A.row_;
+    unsigned col = A.col_;
+
+    CSYMPY_ASSERT(row == B.row_ && col == B.col_);
+
+    unsigned i, j, k;
+    RCP<const Basic> d;
+
+    B.m_ = A.m_;
+
+    for (i = 0; i < col; i++) {
+        if (i)
+            d = B.m_[i*col - col + i - 1];
+        for (j = 0; j < row; j++)
+            if (j != i)
+                for (k = 0; k < col; k++) {
+                    B.m_[j*col + k] = sub(mul(B.m_[i*col + i], B.m_[j*col + k]),
+                        mul(B.m_[j*col + i], B.m_[i*col + k]));
+                    if (i)
+                        B.m_[j*col + k] = div(B.m_[j*col + k], d);
+                }
+    }
+}
+
 unsigned pivot(DenseMatrix &B, unsigned r, unsigned c)
 {
     unsigned k = r;
@@ -316,6 +342,37 @@ unsigned pivot(DenseMatrix &B, unsigned r, unsigned c)
             if (!eq(B.m_[k*B.col_ + c], zero))
                 break;
     return k;
+}
+
+// --------------------------- Matrix Decomposition --------------------------//
+void fraction_free_LU(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &U)
+{
+    CSYMPY_ASSERT(A.row_ == A.col_ && L.row_ == L.col_ && U.row_ == U.col_);
+    CSYMPY_ASSERT(A.row_ == L.row_ && A.row_ == U.row_);
+    
+    unsigned n = A.row_;
+    unsigned i, j, k;
+    
+    U.m_ = A.m_;
+
+    for (i = 0; i < n - 1; i++)
+        for (j = i + 1; j < n; j++)
+            for (k = i + 1; k < n; k++) {
+                U.m_[j*n + k] = sub(mul(U.m_[i*n + i], U.m_[j*n + k]),
+                    mul(U.m_[j*n + i], U.m_[i*n + k]));
+                if (i)
+                    U.m_[j*n + k] = div(U.m_[j*n + k], U.m_[i*n - n + i - 1]);
+            }
+    
+    for(i = 0; i < n; i++) {
+        for(j = 0; j < i; j++) {
+            L.m_[i*n + j] = U.m_[i*n + j];
+            U.m_[i*n + j] = zero;
+        }
+        L.m_[i*n + i] = U.m_[i*n + i];
+        for (j = i + 1; j < n; j++)
+            L.m_[i*n + j] = zero; // Integer Zero
+    }
 }
 
 // --------------------------- Solve Ax = b  ---------------------------------//
