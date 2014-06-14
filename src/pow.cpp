@@ -333,4 +333,60 @@ RCP<const Basic> exp(const RCP<const Basic> &e)
     return pow(E, e);
 }
 
+Log::Log(const RCP<const Basic> &arg)
+    : arg_{arg}
+{
+    CSYMPY_ASSERT(is_canonical(arg))
+}
+
+bool Log::is_canonical(const RCP<const Basic> &arg)
+{
+    if (arg == null) return false;
+    //  log(0)
+    if (is_a<Integer>(*arg) && rcp_static_cast<const Integer>(arg)->is_zero())
+        return false;
+    //  log(1)
+    if (is_a<Integer>(*arg) && rcp_static_cast<const Integer>(arg)->is_one())
+        return false;
+    // log(E)
+    if (is_a<Symbol>(*arg) && rcp_static_cast<const Symbol>(arg)->get_name() == "E")
+        return false;
+    return true;
+}
+
+std::size_t Log::__hash__() const
+{
+    std::size_t seed = 0;
+    hash_combine<Basic>(seed, *arg_);
+    return seed;
+}
+
+bool Log::__eq__(const Basic &o) const
+{
+    if (is_a<Log>(o) &&
+        eq(arg_, static_cast<const Log &>(o).get_arg()))
+            return true;
+
+    return false;
+}
+
+int Log::compare(const Basic &o) const
+{
+    CSYMPY_ASSERT(is_a<Log>(o))
+    const Log &s = static_cast<const Log &>(o);
+    return arg_->__cmp__(s);
+}
+
+std::string Log::__str__() const
+{
+    std::ostringstream o;
+    o << "log(" << *get_arg() << ")";
+    return o.str();
+}
+
+RCP<const Basic> Log::diff(const RCP<const Symbol> &x) const
+{
+    return mul(div(one, arg_), arg_->diff(x));
+}
+
 } // CSymPy

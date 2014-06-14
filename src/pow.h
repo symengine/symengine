@@ -57,6 +57,34 @@ inline RCP<const Basic> sqrt(const RCP<const Basic> &x) {
     return pow(x, div(one, integer(2)));
 }
 
+class Log : public Basic {
+private:
+    RCP<const Basic> arg_; //! The `arg` in `log(arg)`
+
+public:
+    //! Log Constructor
+    Log(const RCP<const Basic> &arg);
+    //! \return Size of the hash
+    virtual std::size_t __hash__() const;
+    /*! Equality comparator
+     * \param o - Object to be compared with
+     * \return whether the 2 objects are equal
+     * */
+    virtual bool __eq__(const Basic &o) const;
+    virtual int compare(const Basic &o) const;
+    //! \return stringify version
+    virtual std::string __str__() const;
+    //! \return `true` if canonical
+    bool is_canonical(const RCP<const Basic> &arg);
+    //! \return `arg` of `log(arg)`
+    inline RCP<const Basic> get_arg() const { return arg_; }
+    //! Differentiate w.r.t Symbol `x`
+    virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
+};
+
+//! \return Log from argument `arg
+RCP<const Basic> log(const RCP<const Basic> &arg);
+
 } // CSymPy
 
 #endif
