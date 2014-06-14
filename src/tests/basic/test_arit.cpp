@@ -340,6 +340,21 @@ void test_pow()
     r1 = r1->diff(x);
     r2 = mul(mul(i3, exp(pow(x, i3))), pow(x, i2));
     assert(eq(r1, r2));
+
+    r1 = pow(x, x);
+    r1 = r1->diff(x);
+    r2 = mul(pow(x, x), add(log(x), one));
+    assert(eq(r1, r2));
+
+    r1 = pow(x, y);
+    r1 = r1->diff(x);
+    r2 = mul(pow(x, sub(y, one)), y);
+    assert(eq(r1, r2));
+
+    r1 = pow(y, x);
+    r1 = r1->diff(x);
+    r2 = mul(pow(y, x), log(y));
+    assert(eq(r1, r2));
  }
 
  void test_log()
