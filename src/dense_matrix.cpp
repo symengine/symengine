@@ -349,10 +349,10 @@ void fraction_free_LU(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &U)
 {
     CSYMPY_ASSERT(A.row_ == A.col_ && L.row_ == L.col_ && U.row_ == U.col_);
     CSYMPY_ASSERT(A.row_ == L.row_ && A.row_ == U.row_);
-    
+
     unsigned n = A.row_;
     unsigned i, j, k;
-    
+
     U.m_ = A.m_;
 
     for (i = 0; i < n - 1; i++)
@@ -363,7 +363,7 @@ void fraction_free_LU(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &U)
                 if (i)
                     U.m_[j*n + k] = div(U.m_[j*n + k], U.m_[i*n - n + i - 1]);
             }
-    
+
     for(i = 0; i < n; i++) {
         for(j = 0; j < i; j++) {
             L.m_[i*n + j] = U.m_[i*n + j];
