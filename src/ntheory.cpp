@@ -342,7 +342,7 @@ void prime_factor_multiplicities(const RCP<const Integer> &n,
     RCP<const Integer> _n = n;
     unsigned count;
     sqrtN = sqrt((*_n).as_mpz());
-    if (!(sqrtN.fits_uint_p()))
+    if (!sqrtN.fits_uint_p())
         throw std::runtime_error("N too large to factor");
     unsigned limit = sqrtN.get_ui() + 1;
     std::vector<unsigned> primes;
@@ -350,7 +350,7 @@ void prime_factor_multiplicities(const RCP<const Integer> &n,
     
     for (auto &p: primes)
     {
-        count=0;
+        count = 0;
         RCP<const Integer> _p = integer(p);
         RCP<const Basic> d = div(_n, _p);
         while (is_a<Integer>(*d)) { // when a prime factor is found, we divide
@@ -360,10 +360,60 @@ void prime_factor_multiplicities(const RCP<const Integer> &n,
         }
         if (count > 0)
             insert(primes_mul, _p, count);
-        if(eq(_n, one)) break;
+        if (eq(_n, one)) break;
     }
     if (!eq(_n, one))
         insert(primes_mul, _n, 1);
+}
+
+// Factor using Pollard rho
+int _factor_pollard_rho_method(mpz_class &rop, const mpz_class &n, const mpz_class &a, const mpz_class &s, unsigned steps = 1000)
+{
+    if (n < 5)
+        throw std::runtime_error("Require n >= 4 to use pollard-rho method");
+
+    mpz_class u, v, g, m;    
+    u = s;
+    v = s;
+    g = 1;
+
+    for(unsigned i = 0; i < steps; i++){
+        u = (u*u + a) % n;
+        v = (v*v + a) % n;
+        v = (v*v + a) % n;
+        m = u - v;
+        mpz_gcd(g.get_mpz_t(), m.get_mpz_t(), n.get_mpz_t());
+
+        if (g == n)
+            return 0;
+        if (g == 1)
+            continue;
+        rop = g;
+        return 1;
+    }
+    return 0;
+}
+
+int factor_pollard_rho_method(const Ptr<RCP<const Integer>> &f, const Integer &n, unsigned retries)
+{
+    int ret_val = 0;
+    mpz_class rop, m, a, s;
+    gmp_randstate_t state;
+    
+    gmp_randinit_mt(state);  //initialize state variable to Mersenne Twister algorithm
+    m = n.as_mpz() - 1;
+    mpz_urandomm(a.get_mpz_t(), state, m.get_mpz_t());
+    m -= 3;
+    mpz_urandomm(s.get_mpz_t(), state, m.get_mpz_t());
+    s = s + 1;
+
+    for(unsigned i = 0; i < retries &&ret_val == 0; i++){
+        ret_val = _factor_pollard_rho_method(rop, n.as_mpz(), a, s);
+    }
+    
+    if(ret_val != 0)
+        *f = integer(rop);
+    return ret_val;
 }
 
 } // CSymPy
