@@ -304,7 +304,8 @@ RCP<const Basic> Pow::diff(const RCP<const Symbol> &x) const
 {
     if (is_a_Number(*exp_))
         return mul(mul(exp_, pow(base_, sub(exp_, one))), base_->diff(x));
-    throw std::runtime_error("Not implemented.");
+    else
+        return mul(pow(base_, exp_), mul(exp_, log(base_))->diff(x));
 }
 
 RCP<const Basic> Pow::subs(const map_basic_basic &subs_dict) const
@@ -321,4 +322,94 @@ RCP<const Basic> Pow::subs(const map_basic_basic &subs_dict) const
         return pow(base_new, exp_new);
 }
 
+RCP<const Basic> exp(const RCP<const Basic> &x)
+{
+    return pow(E, x);
+}
+
+Log::Log(const RCP<const Basic> &arg)
+    : arg_{arg}
+{
+    CSYMPY_ASSERT(is_canonical(arg))
+}
+
+bool Log::is_canonical(const RCP<const Basic> &arg)
+{
+    if (arg == null) return false;
+    //  log(0)
+    if (is_a<Integer>(*arg) && rcp_static_cast<const Integer>(arg)->is_zero())
+        return false;
+    //  log(1)
+    if (is_a<Integer>(*arg) && rcp_static_cast<const Integer>(arg)->is_one())
+        return false;
+    // log(E)
+    if (eq(arg, E))
+        return false;
+    // Currently not implemented, however should be expanded as `-ipi + log(-arg)`
+    if (is_a_Number(*arg) && rcp_static_cast<const Number>(arg)->is_negative())
+        return false;
+    // log(num/den) = log(num) - log(den)
+    if (is_a<Rational>(*arg))
+        return false;
+    return true;
+}
+
+std::size_t Log::__hash__() const
+{
+    std::size_t seed = 0;
+    hash_combine<Basic>(seed, *arg_);
+    return seed;
+}
+
+bool Log::__eq__(const Basic &o) const
+{
+    if (is_a<Log>(o) &&
+        eq(arg_, static_cast<const Log &>(o).get_arg()))
+            return true;
+
+    return false;
+}
+
+int Log::compare(const Basic &o) const
+{
+    CSYMPY_ASSERT(is_a<Log>(o))
+    const Log &s = static_cast<const Log &>(o);
+    return arg_->__cmp__(s);
+}
+
+std::string Log::__str__() const
+{
+    std::ostringstream o;
+    o << "log(" << *get_arg() << ")";
+    return o.str();
+}
+
+RCP<const Basic> Log::diff(const RCP<const Symbol> &x) const
+{
+    return mul(div(one, arg_), arg_->diff(x));
+}
+
+RCP<const Basic> log(const RCP<const Basic> &arg)
+{
+    if (eq(arg, zero)) {
+        throw std::runtime_error("log(0) is complex infinity. Yet to be implemented");
+    }
+    if (eq(arg, one)) return zero;
+    if (eq(arg, E)) return one;
+    if (is_a_Number(*arg) &&
+        rcp_static_cast<const Number>(arg)->is_negative()) {
+        throw std::runtime_error("Imaginary Result. Yet to be implemented");
+    }
+    if (is_a<Rational>(*arg)) {
+        RCP<const Integer> num, den;
+        get_num_den(rcp_static_cast<const Rational>(arg), outArg(num), outArg(den));
+        return sub(log(num), log(den));
+    }
+    return rcp(new Log(arg));
+}
+
+RCP<const Basic> log(const RCP<const Basic> &arg, const RCP<const Basic> &base)
+{
+    return div(log(arg), log(base));
+}
 } // CSymPy

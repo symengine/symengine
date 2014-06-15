@@ -78,4 +78,11 @@ std::string Rational::__str__() const
     return s.str();
 }
 
+void get_num_den(const RCP<const Rational> &rat,
+            const Ptr<RCP<const Integer>> &num,
+            const Ptr<RCP<const Integer>> &den)
+{
+    *num = integer(rat->i.get_num());
+    *den = integer(rat->i.get_den());
+}
 } // CSymPy

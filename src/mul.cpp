@@ -212,6 +212,9 @@ void Mul::as_base_exp(const RCP<const Basic> &self, const Ptr<RCP<const Basic>> 
     } else if (is_a<Add>(*self)) {
         *exp = one;
         *base = self;
+    } else if (is_a<Log>(*self)) {
+        *exp = one;
+        *base = self;
     } else if (is_a_sub<Function>(*self)) {
         *exp = one;
         *base = self;
