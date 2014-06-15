@@ -75,15 +75,16 @@ void test_symbol_dict()
 
 void test_add()
 {
-    umap_basic_int m;
+    umap_basic_int m, m2;
     RCP<const Basic> x  = rcp(new Symbol("x"));
     RCP<const Basic> y  = rcp(new Symbol("y"));
     insert(m, x, rcp(new Integer(2)));
     insert(m, y, rcp(new Integer(3)));
 
-    RCP<const Add> a = rcp(new Add(zero, m));
+    m2 = m;
+    RCP<const Add> a = rcp(new Add(zero, std::move(m2)));
     insert(m, x, rcp(new Integer(-2)));
-    RCP<const Add> b = rcp(new Add(zero, m));
+    RCP<const Add> b = rcp(new Add(zero, std::move(m)));
     std::cout << *a << std::endl;
     std::cout << *b << std::endl;
 
@@ -236,15 +237,16 @@ void test_rational()
 
 void test_mul()
 {
-    map_basic_basic m;
+    map_basic_basic m, m2;
     RCP<const Basic> x  = rcp(new Symbol("x"));
     RCP<const Basic> y  = rcp(new Symbol("y"));
     insert(m, x, rcp(new Integer(2)));
     insert(m, y, rcp(new Integer(3)));
 
-    RCP<const Mul> a = rcp(new Mul(one, m));
+    m2 = m;
+    RCP<const Mul> a = rcp(new Mul(one, std::move(m2)));
     insert(m, x, rcp(new Integer(-2)));
-    RCP<const Mul> b = rcp(new Mul(one, m));
+    RCP<const Mul> b = rcp(new Mul(one, std::move(m)));
     std::cout << *a << std::endl;
     std::cout << *b << std::endl;
 

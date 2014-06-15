@@ -19,7 +19,7 @@ public: // TODO: make this private
 public:
     //! Constructs Mul from a dictionary by copying the contents of the
     //! dictionary:
-    Mul(const RCP<const Number> &coef, const map_basic_basic& dict);
+    Mul(const RCP<const Number> &coef, map_basic_basic&& dict);
     //! \return size of the hash
     virtual std::size_t __hash__() const;
     /*! Equality comparator
@@ -34,7 +34,7 @@ public:
     // Performs canonicalization first:
     //! Create a Mul from a dict
     static RCP<const Basic> from_dict(const RCP<const Number> &coef,
-            const map_basic_basic &d);
+            map_basic_basic &&d);
     //! Add terms to dict
     static void dict_add_term(map_basic_basic &d,
             const RCP<const Basic> &coef, const RCP<const Basic> &t);

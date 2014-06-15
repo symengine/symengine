@@ -279,7 +279,7 @@ RCP<const Basic> pow_expand(const RCP<const Pow> &self)
                 }
             }
         }
-        RCP<const Basic> term = Mul::from_dict(overall_coeff, d);
+        RCP<const Basic> term = Mul::from_dict(overall_coeff, std::move(d));
         RCP<const Number> coef2 = rcp(new Integer(p.second));
         if (is_a_Number(*term)) {
             iaddnum(outArg(add_overall_coeff),
@@ -290,13 +290,19 @@ RCP<const Basic> pow_expand(const RCP<const Pow> &self)
                 // Tidy up things like {2x: 3} -> {x: 6}
                 imulnum(outArg(coef2),
                         rcp_static_cast<const Mul>(term)->coef_);
-                term = Mul::from_dict(one,
-                        rcp_static_cast<const Mul>(term)->dict_);
+                const map_basic_basic &d2 =
+                    rcp_static_cast<const Mul>(term)->dict_;
+                // Cast away const'ness, so that we can move 'dict_', since
+                // 'term' will be destroyed when we assign a new value to
+                // 'term' below, so we "steal" its dict_ to avoid an
+                // unnecessary copy.
+                map_basic_basic &d3 = const_cast<map_basic_basic &>(d2);
+                term = Mul::from_dict(one, std::move(d3));
             }
             Add::dict_add_term(rd, coef2, term);
         }
     }
-    RCP<const Basic> result = Add::from_dict(add_overall_coeff, rd);
+    RCP<const Basic> result = Add::from_dict(add_overall_coeff, std::move(rd));
     return result;
 }
 
