@@ -188,7 +188,7 @@ int _factor_lehman_method(mpz_class &rop, const mpz_class &n)
     mpz_root(u_bound.get_mpz_t(), n.get_mpz_t(), 3);
     u_bound = u_bound + 1;
 
-    for(mpz_class i = 2; i <= u_bound; i++)
+    for (mpz_class i = 2; i <= u_bound; i++)
         if (n % i == 0) {
             rop = n / i;
             ret_val = 1;
@@ -237,6 +237,58 @@ int factor_lehman_method(const Ptr<RCP<const Integer>> &f, const Integer &n)
 
     ret_val = _factor_lehman_method(rop, n.as_mpz());
     *f = integer(rop);
+    return ret_val;
+}
+
+// Factor using Pollard's rho method
+int _factor_pollard_rho_method(mpz_class &rop, const mpz_class &n, 
+        const mpz_class &a, const mpz_class &s, unsigned steps = 10000)
+{
+    if (n < 5)
+        throw std::runtime_error("Require n > 4 to use pollard's-rho method");
+
+    mpz_class u, v, g, m;
+    u = s;
+    v = s;
+
+    for (unsigned i = 0; i < steps; i++) {
+        u = (u*u + a) % n;
+        v = (v*v + a) % n;
+        v = (v*v + a) % n;
+        m = u - v;
+        mpz_gcd(g.get_mpz_t(), m.get_mpz_t(), n.get_mpz_t());
+
+        if (g == n)
+            return 0;
+        if (g == 1)
+            continue;
+        rop = g;
+        return 1;
+    }
+    return 0;
+}
+
+int factor_pollard_rho_method(const Ptr<RCP<const Integer>> &f, 
+        const Integer &n, unsigned retries)
+{
+    int ret_val = 0;
+    mpz_class rop, nm1, nm4, a, s;
+    gmp_randstate_t state;
+    
+    gmp_randinit_default(state);
+    gmp_randseed_ui(state, retries);
+    nm1 = n.as_mpz() - 1;
+    nm4 = n.as_mpz() - 4;
+
+    for (unsigned i = 0; i < retries && ret_val == 0; i++) {
+        mpz_urandomm(a.get_mpz_t(), state, nm1.get_mpz_t());
+        mpz_urandomm(s.get_mpz_t(), state, nm4.get_mpz_t());
+        s = s + 1;
+        ret_val = _factor_pollard_rho_method(rop, n.as_mpz(), a, s);
+    }
+    
+    if (ret_val != 0)
+        *f = integer(rop);
     return ret_val;
 }
 
@@ -339,9 +391,10 @@ void prime_factor_multiplicities(const RCP<const Integer> &n,
         map_integer_uint &primes_mul)
 {
     mpz_class sqrtN;
-    RCP<const Integer> _n = n;
+    mpz_class _n = (*n).as_mpz();
     unsigned count;
-    sqrtN = sqrt((*_n).as_mpz());
+    if (_n == 0) return;
+    sqrtN = sqrt(_n);
     if (!sqrtN.fits_uint_p())
         throw std::runtime_error("N too large to factor");
     unsigned limit = sqrtN.get_ui() + 1;
@@ -351,69 +404,17 @@ void prime_factor_multiplicities(const RCP<const Integer> &n,
     for (auto &p: primes)
     {
         count = 0;
-        RCP<const Integer> _p = integer(p);
-        RCP<const Basic> d = div(_n, _p);
-        while (is_a<Integer>(*d)) { // when a prime factor is found, we divide
+        while (_n % p == 0) { // when a prime factor is found, we divide
             count++;                     // _n by that prime as much as we can
-            _n = rcp_dynamic_cast<const Integer>(d);
-            d = div(_n, _p);
+            _n = _n / p;
         }
-        if (count > 0)
-            insert(primes_mul, _p, count);
-        if (eq(_n, one)) break;
+        if (count > 0) {
+            insert(primes_mul, integer(p), count);
+            if (_n == 1) break;
+        }
     }
-    if (!eq(_n, one))
-        insert(primes_mul, _n, 1);
-}
-
-// Factor using Pollard rho
-int _factor_pollard_rho_method(mpz_class &rop, const mpz_class &n, const mpz_class &a, const mpz_class &s, unsigned steps = 1000)
-{
-    if (n < 5)
-        throw std::runtime_error("Require n >= 4 to use pollard-rho method");
-
-    mpz_class u, v, g, m;    
-    u = s;
-    v = s;
-    g = 1;
-
-    for(unsigned i = 0; i < steps; i++){
-        u = (u*u + a) % n;
-        v = (v*v + a) % n;
-        v = (v*v + a) % n;
-        m = u - v;
-        mpz_gcd(g.get_mpz_t(), m.get_mpz_t(), n.get_mpz_t());
-
-        if (g == n)
-            return 0;
-        if (g == 1)
-            continue;
-        rop = g;
-        return 1;
-    }
-    return 0;
-}
-
-int factor_pollard_rho_method(const Ptr<RCP<const Integer>> &f, const Integer &n, unsigned retries)
-{
-    int ret_val = 0;
-    mpz_class rop, m, a, s;
-    gmp_randstate_t state;
-    
-    gmp_randinit_mt(state);  //initialize state variable to Mersenne Twister algorithm
-    m = n.as_mpz() - 1;
-    mpz_urandomm(a.get_mpz_t(), state, m.get_mpz_t());
-    m -= 3;
-    mpz_urandomm(s.get_mpz_t(), state, m.get_mpz_t());
-    s = s + 1;
-
-    for(unsigned i = 0; i < retries &&ret_val == 0; i++){
-        ret_val = _factor_pollard_rho_method(rop, n.as_mpz(), a, s);
-    }
-    
-    if(ret_val != 0)
-        *f = integer(rop);
-    return ret_val;
+    if (!(_n == 1))
+        insert(primes_mul, integer(_n), 1);
 }
 
 } // CSymPy
