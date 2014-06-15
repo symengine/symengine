@@ -82,8 +82,11 @@ public:
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
 };
 
-//! \return Log from argument `arg
+//! \return Log from argument `arg`
 RCP<const Basic> log(const RCP<const Basic> &arg);
+//! \return Log from argument `arg` wrt base `b`
+RCP<const Basic> log(const RCP<const Basic> &arg,
+                    const RCP<const Basic> &b);
 
 } // CSymPy
 

@@ -376,6 +376,10 @@ void test_pow()
     r1 = log(div(i2, i3));
     r2 = sub(log(i2), log(i3));
     assert(eq(r1, r2));
+
+    r1 = log(E, i2);
+    r2 = div(one, log(i2));
+    assert(eq(r1, r2));
  }
 
 void test_multinomial()

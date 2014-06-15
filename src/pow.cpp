@@ -399,4 +399,9 @@ RCP<const Basic> log(const RCP<const Basic> &arg)
     }
     return rcp(new Log(arg));
 }
+
+RCP<const Basic> log(const RCP<const Basic> &arg, const RCP<const Basic> &base)
+{
+    return div(log(arg), log(base));
+}
 } // CSymPy
