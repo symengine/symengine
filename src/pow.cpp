@@ -322,9 +322,9 @@ RCP<const Basic> Pow::subs(const map_basic_basic &subs_dict) const
         return pow(base_new, exp_new);
 }
 
-RCP<const Basic> exp(const RCP<const Basic> &e)
+RCP<const Basic> exp(const RCP<const Basic> &x)
 {
-    return pow(E, e);
+    return pow(E, x);
 }
 
 Log::Log(const RCP<const Basic> &arg)
@@ -343,7 +343,13 @@ bool Log::is_canonical(const RCP<const Basic> &arg)
     if (is_a<Integer>(*arg) && rcp_static_cast<const Integer>(arg)->is_one())
         return false;
     // log(E)
-    if (is_a<Symbol>(*arg) && rcp_static_cast<const Symbol>(arg)->get_name() == "E")
+    if (eq(arg, E))
+        return false;
+    // Currently not implemented, however should be expanded as `-ipi + log(-arg)`
+    if (is_a_Number(*arg) && rcp_static_cast<const Number>(arg)->is_negative())
+        return false;
+    // log(num/den) = log(num) - log(den)
+    if (is_a<Rational>(*arg))
         return false;
     return true;
 }
@@ -390,11 +396,13 @@ RCP<const Basic> log(const RCP<const Basic> &arg)
     }
     if (eq(arg, one)) return zero;
     if (eq(arg, E)) return one;
+    if (is_a_Number(*arg) &&
+        rcp_static_cast<const Number>(arg)->is_negative()) {
+        throw std::runtime_error("Imaginary Result. Yet to be implemented");
+    }
     if (is_a<Rational>(*arg)) {
-        RCP<const Rational> arg_new = rcp_static_cast<const Rational>(arg);
-        RCP<const Integer> num;
-        RCP<const Integer> den;
-        get_num_den(arg_new, outArg(num), outArg(den));
+        RCP<const Integer> num, den;
+        get_num_den(rcp_static_cast<const Rational>(arg), outArg(num), outArg(den));
         return sub(log(num), log(den));
     }
     return rcp(new Log(arg));

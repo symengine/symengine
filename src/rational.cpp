@@ -84,7 +84,5 @@ void get_num_den(const RCP<const Rational> &rat,
 {
     *num = integer(rat->i.get_num());
     *den = integer(rat->i.get_den());
-    return;
 }
-
 } // CSymPy

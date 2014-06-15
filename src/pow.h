@@ -46,8 +46,8 @@ public:
 RCP<const Basic> pow(const RCP<const Basic> &a,
         const RCP<const Basic> &b);
 
-//! \return Pow from `E` and `e`
-RCP<const Basic> exp(const RCP<const Basic> &e);
+//! Returns the natural exponential function `E^x = pow(E, x)`
+RCP<const Basic> exp(const RCP<const Basic> &x);
 
 void multinomial_coefficients(int m, int n, map_vec_int &r);
 //! Expand the power expression
@@ -58,6 +58,9 @@ inline RCP<const Basic> sqrt(const RCP<const Basic> &x) {
 }
 
 class Log : public Basic {
+// Logarithms are taken with the natural base, `e`. To get
+// a logarithm of a different base `b`, use `log(x, b)`,
+// which is essentially short-hand for `log(x)/log(b)`.
 private:
     RCP<const Basic> arg_; //! The `arg` in `log(arg)`
 
@@ -82,7 +85,7 @@ public:
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
 };
 
-//! \return Log from argument `arg`
+//! Returns the Natural Logarithm from argument `arg`
 RCP<const Basic> log(const RCP<const Basic> &arg);
 //! \return Log from argument `arg` wrt base `b`
 RCP<const Basic> log(const RCP<const Basic> &arg,
