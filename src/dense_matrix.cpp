@@ -222,7 +222,9 @@ void pivoted_gaussian_elimination(const DenseMatrix &A, DenseMatrix &B,
     }
 }
 
-
+// Algorithm 1, page 12, Nakos, G. C., Turner, P. R., Williams, R. M. (1997).
+// Fraction-free algorithms for linear and polynomial equations.
+// ACM SIGSAM Bulletin, 31(3), 11–19. doi:10.1145/271130.271133.
 void fraction_free_gaussian_elimination(const DenseMatrix &A, DenseMatrix &B)
 {
     unsigned col = A.col_;
@@ -243,6 +245,7 @@ void fraction_free_gaussian_elimination(const DenseMatrix &A, DenseMatrix &B)
         }
 }
 
+// Pivoted version of `fraction_free_gaussian_elimination`
 void pivoted_fraction_free_gaussian_elimination(const DenseMatrix &A,
     DenseMatrix &B, std::vector<unsigned> &pivotlist)
 {
@@ -327,6 +330,9 @@ void pivoted_gauss_jordan_elimination(const DenseMatrix &A, DenseMatrix &B,
     }
 }
 
+// Algorithm 2, page 13, Nakos, G. C., Turner, P. R., Williams, R. M. (1997).
+// Fraction-free algorithms for linear and polynomial equations.
+// ACM SIGSAM Bulletin, 31(3), 11–19. doi:10.1145/271130.271133.
 void fraction_free_gauss_jordan_elimination(const DenseMatrix &A, DenseMatrix &B)
 {
     unsigned row = A.row_;
@@ -340,14 +346,14 @@ void fraction_free_gauss_jordan_elimination(const DenseMatrix &A, DenseMatrix &B
     B.m_ = A.m_;
 
     for (i = 0; i < col; i++) {
-        if (i)
+        if (i > 0)
             d = B.m_[i*col - col + i - 1];
         for (j = 0; j < row; j++)
             if (j != i)
                 for (k = 0; k < col; k++) {
                     B.m_[j*col + k] = sub(mul(B.m_[i*col + i], B.m_[j*col + k]),
                         mul(B.m_[j*col + i], B.m_[i*col + k]));
-                    if (i)
+                    if (i > 0)
                         B.m_[j*col + k] = div(B.m_[j*col + k], d);
                 }
     }
