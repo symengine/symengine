@@ -24,11 +24,27 @@ set(SRC
     sparse_matrix.cpp
 )
 
+# Needed for "make install"
+set(HEADERS
+    add.h        csympy_assert.h  functions.h  monomials.h  number.h    rings.h
+    basic.h      csympy_rcp.h     integer.h    mul.h        pow.h
+    symbol.h
+    basic-inl.h  dict.h           matrix.h     ntheory.h    rational.h
+)
+
 # Configure CSymPy using our CMake options:
 configure_file(csympy_config.h.in csympy_config.h)
 # Include the config file:
 include_directories(${csympy_BINARY_DIR}/src)
 
 add_library(csympy ${SRC})
+
+install(TARGETS csympy
+            RUNTIME DESTINATION bin
+            ARCHIVE DESTINATION lib
+            LIBRARY DESTINATION lib
+        )
+install(FILES ${HEADERS} "${csympy_BINARY_DIR}/src/csympy_config.h"
+    DESTINATION include)
 
 add_subdirectory(tests)
