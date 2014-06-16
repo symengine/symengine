@@ -442,25 +442,15 @@ void test_fraction_free_gauss_jordan_elimination()
     assert(B == DenseMatrix(4, 4, {integer(-10), integer(0), integer(0), integer(0),
         integer(0), integer(-10), integer(0), integer(0), integer(0), integer(0),
         integer(-10), integer(0), integer(0), integer(0), integer(0), integer(-10)}));
-}
 
-void test_fraction_free_LU()
-{
-    
-    DenseMatrix A = DenseMatrix(4, 4, {integer(1), integer(2), integer(3), integer(4),
-        integer(2), integer(2), integer(3), integer(4), integer(3), integer(3),
-        integer(3), integer(4), integer(9), integer(8), integer(7), integer(6)});
-    DenseMatrix L = DenseMatrix(4, 4);
-    DenseMatrix U = DenseMatrix(4, 4);
-    fraction_free_LU(A, L, U);
-    
-    assert(L == DenseMatrix(4, 4, {integer(1), integer(0), integer(0), integer(0), 
-        integer(2), integer(-2), integer(0), integer(0), integer(3), integer(-3),
-        integer(3), integer(0), integer(9), integer(-10), integer(10), integer(-10)}));
-    
-    assert(U == DenseMatrix(4, 4, {integer(1), integer(2), integer(3), integer(4),
-        integer(0), integer(-2), integer(-3), integer(-4), integer(0), integer(0),
-        integer(3), integer(4), integer(0), integer(0), integer(0), integer(-10)}));
+    A = DenseMatrix(4, 4, {integer(1), integer(7), integer(5), integer(4), 
+        integer(7), integer(2), integer(2), integer(4), integer(3), integer(6), 
+        integer(3), integer(4), integer(9), integer(5), integer(7), integer(5)});
+    fraction_free_gauss_jordan_elimination(A, B);
+
+    assert(B == DenseMatrix(4, 4, {integer(-139), integer(0), integer(0), integer(0),
+        integer(0), integer(-139), integer(0), integer(0), integer(0), integer(0),
+        integer(-139), integer(0), integer(0), integer(0), integer(0), integer(-139)}));
 }
 
 int main(int argc, char* argv[])
@@ -490,8 +480,6 @@ int main(int argc, char* argv[])
     test_pivoted_gaussian_elimination();
     
 //    test_fraction_free_gauss_jordan_elimination();
-    
-    test_fraction_free_LU();
 
     return 0;
 }
