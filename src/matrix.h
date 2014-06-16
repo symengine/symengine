@@ -84,12 +84,14 @@ public:
         RCP<const Basic> &c);
 
     // Gaussian elimination
-    friend void pivoted_gaussian_elimination(const DenseMatrix &A, DenseMatrix &B);
+    friend void pivoted_gaussian_elimination(const DenseMatrix &A,
+        DenseMatrix &B, std::vector<unsigned> &pivotlist);
     friend void fraction_free_gaussian_elimination(const DenseMatrix &A,
         DenseMatrix &B);
     friend void pivoted_fraction_free_gaussian_elimination(const DenseMatrix &A,
-        DenseMatrix &B);
-    friend void pivoted_gauss_jordan_elimination(const DenseMatrix &A, DenseMatrix &B);
+        DenseMatrix &B, std::vector<unsigned> &pivotlist);
+    friend void pivoted_gauss_jordan_elimination(const DenseMatrix &A,
+        DenseMatrix &B, std::vector<unsigned> &pivotlist);
     friend void fraction_free_gauss_jordan_elimination(const DenseMatrix &A,
         DenseMatrix &B);
     friend unsigned pivot(DenseMatrix &B, unsigned r, unsigned c);
@@ -170,13 +172,16 @@ void row_add_row_dense(DenseMatrix &A, unsigned i, unsigned j,
     RCP<const Basic> &c);
 
 // Gaussian elimination
-void pivoted_gaussian_elimination(const DenseMatrix &A, DenseMatrix &B);
+void pivoted_gaussian_elimination(const DenseMatrix &A, DenseMatrix &B,
+    std::vector<unsigned> &pivotlist);
 
 void fraction_free_gaussian_elimination(const DenseMatrix &A, DenseMatrix &B);
 
-void pivoted_fraction_free_gaussian_elimination(const DenseMatrix &A, DenseMatrix &B);
+void pivoted_fraction_free_gaussian_elimination(const DenseMatrix &A,
+    DenseMatrix &B, std::vector<unsigned> &pivotlist);
 
-void pivoted_gauss_jordan_elimination(const DenseMatrix &A, DenseMatrix &B);
+void pivoted_gauss_jordan_elimination(const DenseMatrix &A, DenseMatrix &B,
+    std::vector<unsigned> &pivotlist);
 
 void fraction_free_gauss_jordan_elimination(const DenseMatrix &A, DenseMatrix &B);
 

@@ -133,41 +133,43 @@ void test_mul_dense_scalar()
 void test_pivoted_gauss_jordan_elimination()
 {
     // These test cases are verified with SymPy
+    auto pivotlist = std::vector<unsigned>(2);
     DenseMatrix A = DenseMatrix(2, 2, {integer(1), integer(2), integer(3), integer(4)});
     DenseMatrix B = DenseMatrix(2, 2);
-    pivoted_gauss_jordan_elimination(A, B);
+    pivoted_gauss_jordan_elimination(A, B, pivotlist);
 
     assert(B == DenseMatrix(2, 2, {integer(1), integer(0), integer(0), integer(1)}));
 
     A = DenseMatrix(2, 2, {integer(1), integer(2), integer(2), integer(4)});
-    pivoted_gauss_jordan_elimination(A, B);
+    pivoted_gauss_jordan_elimination(A, B, pivotlist);
 
     assert(B == DenseMatrix(2, 2, {integer(1), integer(2), integer(0), integer(0)}));
 
     A = DenseMatrix(2, 2, {integer(1), integer(0), integer(0), integer(0)});
-    pivoted_gauss_jordan_elimination(A, B);
+    pivoted_gauss_jordan_elimination(A, B, pivotlist);
 
     assert(B == DenseMatrix(2, 2, {integer(1), integer(0), integer(0), integer(0)}));
 
     A = DenseMatrix(2, 2, {integer(0), integer(0), integer(0), integer(0)});
-    pivoted_gauss_jordan_elimination(A, B);
+    pivoted_gauss_jordan_elimination(A, B, pivotlist);
 
     assert(B == DenseMatrix(2, 2, {integer(0), integer(0), integer(0), integer(0)}));
 
     A = DenseMatrix(2, 2, {symbol("a"), symbol("b"), symbol("c"), symbol("d")});
-    pivoted_gauss_jordan_elimination(A, B);
+    pivoted_gauss_jordan_elimination(A, B, pivotlist);
 
     assert(B == DenseMatrix(2, 2, {integer(1), integer(0), integer(0), integer(1)}));
 
     A = DenseMatrix(2, 2, {symbol("a"), integer(0), symbol("c"), integer(0)});
-    pivoted_gauss_jordan_elimination(A, B);
+    pivoted_gauss_jordan_elimination(A, B, pivotlist);
 
     assert(B == DenseMatrix(2, 2, {integer(1), integer(0), integer(0), integer(0)}));
 
+    pivotlist = std::vector<unsigned>(3);
     A = DenseMatrix(3, 3, {integer(1), integer(2), integer(3), integer(-1),
         integer(7), integer(6), integer(4), integer(5), integer(2)});
     B = DenseMatrix(3, 3);
-    pivoted_gauss_jordan_elimination(A, B);
+    pivoted_gauss_jordan_elimination(A, B, pivotlist);
 
     assert(B == DenseMatrix(3, 3, {integer(1), integer(0), integer(0), integer(0),
         integer(1), integer(0), integer(0), integer(0), integer(1)}));
@@ -175,7 +177,7 @@ void test_pivoted_gauss_jordan_elimination()
     A = DenseMatrix(3, 2, {integer(-9), integer(4), integer(3), integer(-1),
         integer(7), integer(6)});
     B = DenseMatrix(3, 2);
-    pivoted_gauss_jordan_elimination(A, B);
+    pivoted_gauss_jordan_elimination(A, B, pivotlist);
 
     assert(B == DenseMatrix(3, 2, {integer(1), integer(0), integer(0), integer(1),
     integer(0), integer(0)}));
@@ -327,27 +329,30 @@ void test_fraction_free_gaussian_elimination()
 
 void test_pivoted_fraction_free_gaussian_elimination()
 {
+    auto pivotlist = std::vector<unsigned>(2);
     DenseMatrix A = DenseMatrix(2, 2, {integer(1), integer(2), integer(3), integer(4)});
     DenseMatrix B = DenseMatrix(2, 2);
-    pivoted_fraction_free_gaussian_elimination(A, B);
+    pivoted_fraction_free_gaussian_elimination(A, B, pivotlist);
 
     assert(B == DenseMatrix(2, 2, {integer(1), integer(2), integer(0), integer(-2)}));
 
+    pivotlist = std::vector<unsigned>(4);
     A = DenseMatrix(4, 4, {integer(1), integer(2), integer(3), integer(4),
         integer(2), integer(2), integer(3), integer(4), integer(3), integer(3),
         integer(3), integer(4), integer(9), integer(8), integer(7), integer(6)});
     B = DenseMatrix(4, 4);
-    pivoted_fraction_free_gaussian_elimination(A, B);
+    pivoted_fraction_free_gaussian_elimination(A, B, pivotlist);
 
     assert(B == DenseMatrix(4, 4, {integer(1), integer(2), integer(3), integer(4),
         integer(0), integer(-2), integer(-3), integer(-4), integer(0), integer(0),
         integer(3), integer(4), integer(0), integer(0), integer(0), integer(-10)}));
 
+    pivotlist = std::vector<unsigned>(3);
     A = DenseMatrix(3, 4, {integer(1), integer(2), integer(3), integer(4),
         integer(-1), integer(0), integer(1), integer(0), integer(3), integer(5),
         integer(6), integer(9)});
     B = DenseMatrix(3, 4);
-    pivoted_fraction_free_gaussian_elimination(A, B);
+    pivoted_fraction_free_gaussian_elimination(A, B, pivotlist);
 
     assert(B == DenseMatrix(3, 4, {integer(1), integer(2), integer(3), integer(4),
         integer(0), integer(2), integer(4), integer(4), integer(0), integer(0),
@@ -356,7 +361,7 @@ void test_pivoted_fraction_free_gaussian_elimination()
     A = DenseMatrix(3, 3, {integer(1), integer(1), integer(1), integer(2),
         integer(2), integer(2), integer(3), integer(3), integer(3)});
     B = DenseMatrix(3, 3);
-    pivoted_fraction_free_gaussian_elimination(A, B);
+    pivoted_fraction_free_gaussian_elimination(A, B, pivotlist);
 
     assert(B == DenseMatrix(3, 3, {integer(1), integer(1), integer(1), integer(0),
         integer(0), integer(0), integer(0), integer(0), integer(0)}));
@@ -365,7 +370,7 @@ void test_pivoted_fraction_free_gaussian_elimination()
     A = DenseMatrix(3, 3, {integer(1), integer(1), integer(1), integer(2),
         integer(2), integer(2), integer(3), integer(4), integer(3)});
     B = DenseMatrix(3, 3);
-    pivoted_fraction_free_gaussian_elimination(A, B);
+    pivoted_fraction_free_gaussian_elimination(A, B, pivotlist);
 
     assert(B == DenseMatrix(3, 3, {integer(1), integer(1), integer(1), integer(0),
         integer(1), integer(0), integer(0), integer(0), integer(0)}));
@@ -373,7 +378,7 @@ void test_pivoted_fraction_free_gaussian_elimination()
     A = DenseMatrix(3, 3, {integer(1), integer(1), integer(1), integer(2),
         integer(2), integer(5), integer(4), integer(6), integer(8)});
     B = DenseMatrix(3, 3);
-    pivoted_fraction_free_gaussian_elimination(A, B);
+    pivoted_fraction_free_gaussian_elimination(A, B, pivotlist);
 
     assert(B == DenseMatrix(3, 3, {integer(1), integer(1), integer(1), integer(0),
         integer(2), integer(4), integer(0), integer(0), integer(6)}));
@@ -381,30 +386,32 @@ void test_pivoted_fraction_free_gaussian_elimination()
 
 void test_pivoted_gaussian_elimination()
 {
+    auto pivotlist = std::vector<unsigned>(2);
     DenseMatrix A = DenseMatrix(2, 2, {integer(1), integer(2), integer(3), integer(4)});
     DenseMatrix B = DenseMatrix(2, 2);
-    pivoted_gaussian_elimination(A, B);
+    pivoted_gaussian_elimination(A, B, pivotlist);
 
     assert(B == DenseMatrix(2, 2, {integer(1), integer(2), integer(0), integer(-2)}));
 
     A = DenseMatrix(2, 2, {integer(2), integer(3), integer(3), integer(4)});
     B = DenseMatrix(2, 2);
-    pivoted_gaussian_elimination(A, B);
+    pivoted_gaussian_elimination(A, B, pivotlist);
 
     assert(B == DenseMatrix(2, 2, {integer(1), div(integer(3), integer(2)), 
         integer(0), div(minus_one, integer(2))}));
 
     A = DenseMatrix(2, 2, {symbol("a"), symbol("b"), symbol("c"), symbol("d")});
     B = DenseMatrix(2, 2);
-    pivoted_gaussian_elimination(A, B);
+    pivoted_gaussian_elimination(A, B, pivotlist);
 
     assert(B == DenseMatrix(2, 2, {integer(1), div(symbol("b"), symbol("a")), 
         integer(0), sub(symbol("d"), mul(symbol("c"), div(symbol("b"), symbol("a"))))}));
-
+    
+    pivotlist = std::vector<unsigned>(3);
     A = DenseMatrix(3, 3, {integer(1), integer(1), integer(1), integer(2),
         integer(2), integer(2), integer(3), integer(4), integer(3)});
     B = DenseMatrix(3, 3);
-    pivoted_fraction_free_gaussian_elimination(A, B);
+    pivoted_gaussian_elimination(A, B, pivotlist);
 
     assert(B == DenseMatrix(3, 3, {integer(1), integer(1), integer(1), integer(0),
         integer(1), integer(0), integer(0), integer(0), integer(0)}));
@@ -412,10 +419,10 @@ void test_pivoted_gaussian_elimination()
     A = DenseMatrix(3, 3, {integer(1), integer(1), integer(1), integer(2),
         integer(2), integer(5), integer(4), integer(6), integer(8)});
     B = DenseMatrix(3, 3);
-    pivoted_fraction_free_gaussian_elimination(A, B);
+    pivoted_gaussian_elimination(A, B, pivotlist);
 
     assert(B == DenseMatrix(3, 3, {integer(1), integer(1), integer(1), integer(0),
-        integer(2), integer(4), integer(0), integer(0), integer(6)}));
+        integer(1), integer(2), integer(0), integer(0), integer(3)}));
 }
 
 void test_fraction_free_gauss_jordan_elimination()
@@ -482,7 +489,7 @@ int main(int argc, char* argv[])
 
     test_pivoted_gaussian_elimination();
     
-    //test_fraction_free_gauss_jordan_elimination();
+//    test_fraction_free_gauss_jordan_elimination();
     
     test_fraction_free_LU();
 

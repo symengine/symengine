@@ -179,15 +179,20 @@ void row_add_row_dense(DenseMatrix &A, unsigned i, unsigned j,
 }
 
 // ------------------------------ Gaussian Elimination -----------------------//
-void pivoted_gaussian_elimination(const DenseMatrix &A, DenseMatrix &B)
+void pivoted_gaussian_elimination(const DenseMatrix &A, DenseMatrix &B,
+    std::vector<unsigned> &pivotlist)
 {
     unsigned row = A.row_;
     unsigned col = A.col_;
 
     CSYMPY_ASSERT(row == B.row_ && col == B.col_);
+    CSYMPY_ASSERT(pivotlist.size() == row);
 
     unsigned index = 0, i, j, k;
     B.m_ = A.m_;
+
+    for (i = 0; i < row; i++)
+        pivotlist[i] = i;
 
     RCP<const Basic> scale;
 
@@ -198,8 +203,10 @@ void pivoted_gaussian_elimination(const DenseMatrix &A, DenseMatrix &B)
         k = pivot(B, index, i);
         if (k == row)
             continue;
-        if (k != index)
+        if (k != index) {
             row_exchange_dense(B, k, index);
+            std::swap(pivotlist[k], pivotlist[index]);
+        }
 
         scale = div(one, B.m_[index*col + i]);
         row_mul_scalar_dense(B, index, scale);
@@ -236,15 +243,20 @@ void fraction_free_gaussian_elimination(const DenseMatrix &A, DenseMatrix &B)
         }
 }
 
-void pivoted_fraction_free_gaussian_elimination(const DenseMatrix &A, DenseMatrix &B)
+void pivoted_fraction_free_gaussian_elimination(const DenseMatrix &A,
+    DenseMatrix &B, std::vector<unsigned> &pivotlist)
 {
     unsigned col = A.col_;
     unsigned row = A.row_;
 
     CSYMPY_ASSERT(A.row_ == B.row_ && A.col_ == B.col_);
+    CSYMPY_ASSERT(pivotlist.size() == row);
 
     unsigned index = 0, i, k, j;
     B.m_ = A.m_;
+
+    for (i = 0; i < row; i++)
+        pivotlist[i] = i;
 
     for (i = 0; i < col - 1; i++) {
         if (index == row)
@@ -253,8 +265,10 @@ void pivoted_fraction_free_gaussian_elimination(const DenseMatrix &A, DenseMatri
         k = pivot(B, index, i);
         if (k == row)
             continue;
-        if (k != index)
+        if (k != index) {
             row_exchange_dense(B, k, index);
+            std::swap(pivotlist[k], pivotlist[index]);
+        }
 
         for (j = i + 1; j < row; j++) {
             for (k = i + 1; k < col; k++) {
@@ -270,17 +284,21 @@ void pivoted_fraction_free_gaussian_elimination(const DenseMatrix &A, DenseMatri
     }
 }
 
-void pivoted_gauss_jordan_elimination(const DenseMatrix &A, DenseMatrix &B)
+void pivoted_gauss_jordan_elimination(const DenseMatrix &A, DenseMatrix &B,
+    std::vector<unsigned> &pivotlist)
 {
     unsigned row = A.row_;
     unsigned col = A.col_;
 
     CSYMPY_ASSERT(row == B.row_ && col == B.col_);
+    CSYMPY_ASSERT(pivotlist.size() == row);
 
     unsigned index = 0, i, j, k;
     RCP<const Basic> scale;
-
     B.m_ = A.m_;
+
+    for (i = 0; i < row; i++)
+        pivotlist[i] = i;
 
     for (i = 0; i < col; i++) {
         if (index == row)
@@ -289,8 +307,10 @@ void pivoted_gauss_jordan_elimination(const DenseMatrix &A, DenseMatrix &B)
         k = pivot(B, index, i);
         if (k == row)
             continue;
-        if (k != index)
+        if (k != index) {
             row_exchange_dense(B, k, index);
+            std::swap(pivotlist[k], pivotlist[index]);
+        }
 
         scale = div(one, B.m_[index*col + i]);
         row_mul_scalar_dense(B, index, scale);
@@ -398,9 +418,10 @@ void diagonal_solve(const DenseMatrix &A, const DenseMatrix &b, DenseMatrix &C)
 
     DenseMatrix B = DenseMatrix(A.row_, A.col_ + 1);
     DenseMatrix D = DenseMatrix(A.row_, A.col_ + 1);
+    std::vector<unsigned> pivotlist(A.row_);
 
     augment_dense(A, b, B);
-    pivoted_gauss_jordan_elimination(B, D);
+    pivoted_gauss_jordan_elimination(B, D, pivotlist);
 
     // No checks are done to see if the diagonal entries are zero
     for (unsigned i = 0; i < A.col_; i++)
