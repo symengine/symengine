@@ -21,7 +21,9 @@ pwd
 echo "Running make:"
 make
 
-if [[ "${WITH_CSYMPY_RCP}" == "yes" ]]; then
+if [[ "${WITH_CSYMPY_RCP}" == "no" ]]; then
+    echo "CSymPy successfully built with Teuchos::RCP. No tests being run."
+else
     ctest --output-on-failure
     if [[ "${WITH_PYTHON}" == "yes" ]]; then
         nosetests -v

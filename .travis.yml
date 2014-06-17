@@ -2,38 +2,46 @@ language: python
 python:
   - 2.7
 env:
-  #### Out of tree builds (default):
-  # Debug build:
-  - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_CSYMPY_RCP="yes"
-  # Debug build with CSYMPY_ASSERT on
-  - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_CSYMPY_ASSERT="yes" WITH_CSYMPY_RCP="yes"
-  # Debug build with BFD off:
-  - BUILD_TYPE="Debug" WITH_CSYMPY_RCP="yes"
-  # Release build:
-  - BUILD_TYPE="Release" WITH_BFD="yes" WITH_CSYMPY_RCP="yes"
-  # Debug build with Teuchos::RCP (just to test that it compiles)
-  - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_CSYMPY_ASSERT="yes"
-  # Debug build with Python on:
-  - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_PYTHON="yes" WITH_CSYMPY_RCP="yes"
+  ## All these variables are sent into the bin/test_travis.sh script. See this
+  ## script to know how they are used. Most of them are just passed to cmake,
+  ## so if they are not set, cmake will use a default value. For the rest, the
+  ## bin/test_travis.sh script usually checks for either "yes" or "no" in an if
+  ## statement, so if the variable is not set, the other if branch will get
+  ## executed.
 
-  #### In-tree builds:
-  # Debug build (just to check that it works):
-  - BUILD_TYPE="Debug" WITH_BFD="yes" TEST_IN_TREE="yes" WITH_CSYMPY_RCP="yes"
-  # Python build (currently only works in-tree):
-  - BUILD_TYPE="Debug" WITH_BFD="yes" TEST_IN_TREE="yes" WITH_PYTHON="yes" WITH_CSYMPY_ASSERT="yes" WITH_CSYMPY_RCP="yes"
-  # Python release build
-  - BUILD_TYPE="Release" WITH_BFD="no" TEST_IN_TREE="yes" WITH_PYTHON="yes" WITH_CSYMPY_RCP="yes"
+  ## Out of tree builds (default):
+  # Debug build
+  - BUILD_TYPE="Debug"
+  # Debug build (with BFD and CSYMPY_ASSERT)
+  - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_CSYMPY_ASSERT="yes"
+  # Debug build (with BFD and CSYMPY_ASSERT) with ECM
+  - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_CSYMPY_ASSERT="yes" WITH_ECM="yes"
+  # Debug build (with BFD and CSYMPY_ASSERT) with Python 2.7
+  - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_CSYMPY_ASSERT="yes" WITH_PYTHON="yes"
+  # Debug build with Teuchos::RCP (just to test that it compiles)
+  - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_CSYMPY_RCP="no"
+  # Release build (with BFD)
+  - BUILD_TYPE="Release" WITH_BFD="yes"
+
+  ## In-tree builds (we just check a few configurations to make sure they work):
+  # Debug build without Python:
+  - BUILD_TYPE="Debug" WITH_BFD="yes" TEST_IN_TREE="yes"
+  # Debug build with Python 2.7:
+  - BUILD_TYPE="Debug" WITH_BFD="yes" TEST_IN_TREE="yes" WITH_PYTHON="yes" WITH_CSYMPY_ASSERT="yes"
+  # Release build with Python 2.7:
+  - BUILD_TYPE="Release" TEST_IN_TREE="yes" WITH_PYTHON="yes"
 matrix:
   include:
+    # These test the default Release build with other Python versions
     - python: 2.6
       env:
-        - BUILD_TYPE="Release" TEST_IN_TREE="yes" WITH_PYTHON="yes" WITH_CSYMPY_RCP="yes" WITH_ECM="yes"
+        - BUILD_TYPE="Release" TEST_IN_TREE="yes" WITH_PYTHON="yes"
     - python: 3.2
       env:
-        - BUILD_TYPE="Release" TEST_IN_TREE="yes" WITH_PYTHON="yes" WITH_CSYMPY_RCP="yes" WITH_ECM="yes"
+        - BUILD_TYPE="Release" TEST_IN_TREE="yes" WITH_PYTHON="yes"
     - python: 3.3
       env:
-        - BUILD_TYPE="Release" TEST_IN_TREE="yes" WITH_PYTHON="yes" WITH_CSYMPY_RCP="yes" WITH_ECM="yes"
+        - BUILD_TYPE="Release" TEST_IN_TREE="yes" WITH_PYTHON="yes"
 before_install:
   - sudo apt-get update
   - sudo apt-get install cmake libgmp-dev
