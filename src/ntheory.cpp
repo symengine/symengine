@@ -1,4 +1,5 @@
 #include <cmath>
+#include <valarray>
 
 #include "ntheory.h"
 #include "mul.h"
@@ -355,17 +356,22 @@ int factor_trial_division(const Ptr<RCP<const Integer>> &f, const Integer &n)
 
 void eratosthenes_sieve(unsigned limit, std::vector<unsigned> &primes)
 {
-    std::vector<bool> is_prime(limit, true);
-    const unsigned sqrt_limit = static_cast<unsigned>(std::sqrt(limit));
-    for (unsigned n = 2; n <= sqrt_limit; ++n)
-        if (is_prime[n]) {
-            primes.push_back(n);
-            for (unsigned k = n*n, ulim = limit; k < ulim; k += n)
-                is_prime[k] = false;
+    std::valarray<bool> is_prime(true, limit / 2); 
+    if (limit > 2)
+        primes.push_back(2);
+    //considering only odd integers. An odd number n corresponds to n/2 in the array.
+    const unsigned sqrt_limit = static_cast<unsigned>(std::sqrt(limit - 1));
+    for (unsigned n = 3; n <= sqrt_limit; n += 2) {
+        if (is_prime[n / 2]) {
+            std::slice sl = std::slice((n * n )/ 2, 1 + (limit - 1 - n * n) / (2 * n), n); 
+            //starting from n*n, all the odd multiples of n are marked not prime. 
+            is_prime[sl] = false;
         }
-    for (unsigned n = sqrt_limit + 1; n < limit; ++n)
+    }
+    for (unsigned n = 1; n < limit / 2; n++) {
         if (is_prime[n])
-            primes.push_back(n);
+	    primes.push_back(2 * n + 1);
+    }
 }
 
 void prime_factors(const RCP<const Integer> &n,
