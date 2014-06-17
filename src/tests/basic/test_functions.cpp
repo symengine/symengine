@@ -36,6 +36,9 @@ using CSymPy::acsc;
 using CSymPy::atan;
 using CSymPy::acot;
 using CSymPy::atan2;
+using CSymPy::lambertw;
+using CSymPy::log;
+using CSymPy::exp;
 using CSymPy::function_symbol;
 using CSymPy::Derivative;
 using CSymPy::pi;
@@ -1173,6 +1176,37 @@ void test_atan2()
     assert(eq(r1, r2));
 }
 
+void test_lambertw()
+{
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> im1 = integer(-1);
+    RCP<const Basic> im2 = integer(-2);
+    RCP<const Symbol> y = symbol("y");
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Basic> r1;
+    RCP<const Basic> r2;
+
+    r1 = lambertw(zero);
+    r2 = zero;
+    assert(eq(r1, r2));
+
+    r1 = lambertw(exp(im1));
+    r2 = im1;
+    assert(eq(r1, r2));
+
+    r1 = lambertw(div(log(i2), im2));
+    r2 = log(div(one, i2));
+    assert(eq(r1, r2));
+
+    r1 = lambertw(x)->diff(y);
+    r2 = zero;
+    assert(eq(r1, r2));
+
+    r1 = lambertw(mul(i2, x))->diff(x);
+    r2 = div(lambertw(mul(i2, x)), mul(x, add(lambertw(mul(i2, x)), one)));
+    assert(eq(r1, r2));
+}
+
 int main(int argc, char* argv[])
 {
     print_stack_on_segfault();    
@@ -1194,5 +1228,6 @@ int main(int argc, char* argv[])
     test_atan();
     test_acot();
     test_atan2();
+    test_lambertw();
     return 0;
 }
