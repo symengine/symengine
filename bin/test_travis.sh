@@ -6,11 +6,11 @@ set -e
 set -x
 
 if [[ "${TEST_IN_TREE}" == "yes" ]]; then
-    export SOURCE_DIR=.;
+    export SOURCE_DIR=.
 else
-    mkdir build;
-    cd build;
-    export SOURCE_DIR=..;
+    mkdir build
+    cd build
+    export SOURCE_DIR=..
 fi
 echo "Current directory:"
 pwd
