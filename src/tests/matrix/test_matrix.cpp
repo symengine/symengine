@@ -170,6 +170,67 @@ void test_gaussian_elimination()
     integer(0), integer(0)}));
 }
 
+void test_fraction_free_LU()
+{
+    // Example 3, page 14, Nakos, G. C., Turner, P. R., Williams, R. M. (1997).
+    // Fraction-free algorithms for linear and polynomial equations.
+    // ACM SIGSAM Bulletin, 31(3), 11–19. doi:10.1145/271130.271133.
+    DenseMatrix A = DenseMatrix(4, 4, {integer(1), integer(2), integer(3), integer(4),
+        integer(2), integer(2), integer(3), integer(4), integer(3), integer(3),
+        integer(3), integer(4), integer(9), integer(8), integer(7), integer(6)});
+    DenseMatrix L = DenseMatrix(4, 4);
+    DenseMatrix U = DenseMatrix(4, 4);
+    fraction_free_LU(A, L, U);
+
+    assert(L == DenseMatrix(4, 4, {integer(1), integer(0), integer(0), integer(0),
+        integer(2), integer(-2), integer(0), integer(0), integer(3), integer(-3),
+        integer(3), integer(0), integer(9), integer(-10), integer(10), integer(-10)}));
+
+    assert(U == DenseMatrix(4, 4, {integer(1), integer(2), integer(3), integer(4),
+        integer(0), integer(-2), integer(-3), integer(-4), integer(0), integer(0),
+        integer(3), integer(4), integer(0), integer(0), integer(0), integer(-10)}));
+}
+
+void test_LU()
+{
+    DenseMatrix A = DenseMatrix(3, 3, {integer(1), integer(3), integer(5),
+        integer(2), integer(5), integer(6), integer(8), integer(3), integer(1)});
+    DenseMatrix L = DenseMatrix(3, 3);
+    DenseMatrix U = DenseMatrix(3, 3);
+    LU(A, L, U);
+
+    assert(L == DenseMatrix(3, 3, {integer(1), integer(0), integer(0),
+        integer(2), integer(1), integer(0), integer(8), integer(21), integer(1)}));
+    assert(U == DenseMatrix(3, 3, {integer(1), integer(3), integer(5),
+        integer(0), integer(-1), integer(-4), integer(0), integer(0), integer(45)}));
+
+    A = DenseMatrix(4, 4, {integer(1), integer(2), integer(6), integer(3),
+        integer(3), integer(5), integer(6), integer(-5), integer(2), integer(4),
+        integer(5), integer(6), integer(6), integer(-10), integer(2),
+        integer(-30)});
+    L = DenseMatrix(4, 4);
+    U = DenseMatrix(4, 4);
+    LU(A, L, U);
+
+    assert(L == DenseMatrix(4, 4, {integer(1), integer(0), integer(0), integer(0),
+        integer(3), integer(1), integer(0), integer(0), integer(2), integer(0),
+        integer(1), integer(0), integer(6), integer(22), div(integer(-230),
+        integer(7)), integer(1)}));
+    assert(U == DenseMatrix(4, 4, {integer(1), integer(2), integer(6),
+        integer(3), integer(0), integer(-1), integer(-12), integer(-14),
+        integer(0), integer(0), integer(-7), integer(0), integer(0), integer(0),
+        integer(0), integer(260)}));
+
+    A = DenseMatrix(2, 2, {symbol("a"), symbol("b"), symbol("c"), symbol("d")});
+    L = DenseMatrix(2, 2);
+    U = DenseMatrix(2, 2);
+    DenseMatrix B = DenseMatrix(2, 2);
+    LU(A, L, U);
+    mul_dense_dense(L, U, B);
+
+    assert(A == B);
+}
+
 int main(int argc, char* argv[])
 {
     print_stack_on_segfault();
@@ -181,6 +242,10 @@ int main(int argc, char* argv[])
     test_mul_dense_scalar();
 
     test_gaussian_elimination();
+
+    test_fraction_free_LU();
+
+    test_LU();
 
     return 0;
 }
