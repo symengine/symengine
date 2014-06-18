@@ -77,6 +77,11 @@ public:
     // Gaussian elimination
     friend void gaussian_elimination(const DenseMatrix &A, DenseMatrix &B);
 
+    // Matrix Decomposition
+    friend void fraction_free_LU(const DenseMatrix &A, DenseMatrix &L,
+        DenseMatrix &U);
+    friend void LU(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &U);
+
 protected:
     // Matrix elements are stored in row-major order
     std::vector<RCP<const Basic>> m_;
@@ -122,6 +127,10 @@ void add_dense_scalar(const DenseMatrix &A, RCP<const Basic> &k, DenseMatrix &B)
 void mul_dense_dense(const DenseMatrix &A, const DenseMatrix &B, DenseMatrix &C);
 void mul_dense_scalar(const DenseMatrix &A, RCP<const Basic> &k, DenseMatrix &C);
 
+// Matrix Decomposition
+void fraction_free_LU(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &U);
+
+void LU(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &U);
 
 inline bool operator==(const MatrixBase &lhs, const MatrixBase &rhs)
 {
