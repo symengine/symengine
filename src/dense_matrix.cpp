@@ -208,7 +208,8 @@ void fraction_free_LU(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &U)
 // with no pivoting
 void LU(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &U)
 {
-    CSYMPY_ASSERT(A.row_ == A.col_);
+    CSYMPY_ASSERT(A.row_ == A.col_ && L.row_ == L.col_ && U.row_ == U.col_);
+    CSYMPY_ASSERT(A.row_ == L.row_ && A.row_ == U.row_);
 
     unsigned n = A.row_;
     unsigned i, j, k;
@@ -243,6 +244,53 @@ void LU(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &U)
         for (j = i + 1; j < n; j++)
             L.m_[i*n + j] = zero; // Integer zero
     }
+}
+
+// SymPy's fraction free LU decomposition, without pivoting
+// sympy.matrices.matrices.MatrixBase.LUdecompositionFF
+// W. Zhou & D.J. Jeffrey, "Fraction-free matrix factors: new forms for LU and QR factors".
+// Frontiers in Computer Science in China, Vol 2, no. 1, pp. 67-80, 2008.
+void fraction_free_LU(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &D,
+        DenseMatrix &U)
+{
+    CSYMPY_ASSERT(A.row_ == L.row_ && A.row_ == U.row_);
+    CSYMPY_ASSERT(A.col_ == L.col_ && A.col_ == U.col_);
+
+    unsigned row = A.row_, col = A.col_;
+    unsigned i, j, k;
+    RCP<const Basic> old = integer(1);
+
+    U.m_ = A.m_;
+
+    // Initialize L
+    for (i = 0; i < row; i++)
+        for (j = 0; j < row; j++)
+            if (i != j)
+                L.m_[i*col + j] = zero;
+            else
+                L.m_[i*col + i] = one;
+
+    // Initialize D
+    for (i = 0; i < row; i++)
+        for (j = 0; j < row; j++)
+            D.m_[i*col + j] = zero; // Integer zero
+
+    for (k = 0; k < row - 1; k++) {
+        L.m_[k*col + k] = U.m_[k*col + k];
+        D.m_[k*col + k] = mul(old, U.m_[k*col + k]);
+
+        for (i = k + 1; i < row; i++) {
+            L.m_[i*col + k] = U.m_[i*col + k];
+            for (j = k + 1; j < col; j++)
+                U.m_[i*col + j] = div(sub(mul(U.m_[k*col + k], U.m_[i*col + j]),
+                    mul(U.m_[k*col + j], U.m_[i*col + k])), old);
+            U.m_[i*col + k] = zero; // Integer zero
+        }
+
+        old = U.m_[k*col + k];
+    }
+
+    D.m_[row*col - col + row - 1] = old;
 }
 
 } // CSymPy

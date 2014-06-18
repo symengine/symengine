@@ -5,6 +5,7 @@
 #include "symbol.h"
 #include "add.h"
 #include "mul.h"
+#include "pow.h"
 
 using CSymPy::print_stack_on_segfault;
 using CSymPy::RCP;
@@ -15,6 +16,7 @@ using CSymPy::symbol;
 using CSymPy::is_a;
 using CSymPy::Add;
 using CSymPy::add_dense_dense;
+using CSymPy::pow;
 
 void test_dense_dense_addition()
 {
@@ -231,6 +233,60 @@ void test_LU()
     assert(A == B);
 }
 
+void test_fraction_free_LU_SymPy()
+{
+    DenseMatrix A = DenseMatrix(3, 3);
+    DenseMatrix L = DenseMatrix(3, 3);
+    DenseMatrix D = DenseMatrix(3, 3);
+    DenseMatrix U = DenseMatrix(3, 3);
+
+    A = DenseMatrix(3, 3, {integer(1), integer(2), integer(3), integer(5),
+        integer(-3), integer(2), integer(6), integer(2), integer(1)});
+    fraction_free_LU(A, L, D, U);
+
+    assert(L == DenseMatrix(3, 3, {integer(1), integer(0), integer(0),
+        integer(5), integer(-13), integer(0), integer(6), integer(-10), integer(1)}));
+    assert(D == DenseMatrix(3, 3, {integer(1), integer(0), integer(0), integer(0),
+        integer(-13), integer(0), integer(0), integer(0), integer(-13)}));
+    assert(U == DenseMatrix(3, 3, {integer(1), integer(2), integer(3), integer(0),
+        integer(-13), integer(-13), integer(0), integer(0), integer(91)}));
+
+    A = DenseMatrix(3, 3, {integer(1), integer(2), mul(integer(3), symbol("a")),
+        integer(5), mul(integer(-3), symbol("a")), mul(integer(2), symbol("a")),
+        mul(integer(6), symbol("a")), mul(integer(2), symbol("b")), integer(1)});
+    fraction_free_LU(A, L, D, U);
+
+    assert(L == DenseMatrix(3, 3, {integer(1), integer(0), integer(0), integer(5),
+        sub(mul(integer(-3), symbol("a")), integer(10)), integer(0),
+        mul(integer(6), symbol("a")), add(mul(integer(-12), symbol("a")),
+        mul(integer(2), symbol("b"))), integer(1)}));
+    assert(D == DenseMatrix(3, 3, {integer(1), integer(0), integer(0), integer(0),
+        sub(mul(integer(-3), symbol("a")), integer(10)), integer(0), integer(0),
+        integer(0), sub(mul(integer(-3), symbol("a")), integer(10))}));
+    assert(U == DenseMatrix(3, 3, {integer(1), integer(2),
+        mul(integer(3), symbol("a")), integer(0),
+        sub(mul(integer(-3), symbol("a")), integer(10)),
+        mul(integer(-13), symbol("a")), integer(0), integer(0),
+        add(
+            mul(mul(integer(13), symbol("a")),
+                add(mul(integer(-12), symbol("a")), mul(integer(2), symbol("b")))),
+            mul(sub(mul(integer(-3), symbol("a")), integer(10)),
+                add(mul(integer(-18), pow(symbol("a"), integer(2))), integer(1)))
+            )
+        }));
+
+    A = DenseMatrix(3, 3, {integer(5), integer(3), integer(1), integer(-1),
+        integer(4), integer(6), integer(-10), integer(-2), integer(9)});
+    fraction_free_LU(A, L, D, U);
+
+    assert(L == DenseMatrix(3, 3, {integer(5), integer(0), integer(0), integer(-1),
+        integer(23), integer(0), integer(-10), integer(20), integer(1)}));
+    assert(D == DenseMatrix(3, 3, {integer(5), integer(0), integer(0), integer(0),
+        integer(115), integer(0), integer(0), integer(0), integer(23)}));
+    assert(U == DenseMatrix(3, 3, {integer(5), integer(3), integer(1), integer(0),
+        integer(23), integer(31), integer(0), integer(0), integer(129)}));
+}
+
 int main(int argc, char* argv[])
 {
     print_stack_on_segfault();
@@ -246,6 +302,8 @@ int main(int argc, char* argv[])
     test_fraction_free_LU();
 
     test_LU();
+
+    test_fraction_free_LU_SymPy();
 
     return 0;
 }

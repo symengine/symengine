@@ -81,6 +81,8 @@ public:
     friend void fraction_free_LU(const DenseMatrix &A, DenseMatrix &L,
         DenseMatrix &U);
     friend void LU(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &U);
+    friend void fraction_free_LU(const DenseMatrix &A, DenseMatrix &L,
+        DenseMatrix &D, DenseMatrix &U);
 
 protected:
     // Matrix elements are stored in row-major order
@@ -132,6 +134,10 @@ void fraction_free_LU(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &U);
 
 void LU(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &U);
 
+void fraction_free_LU(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &D,
+    DenseMatrix &U);
+
+// Common functions
 inline bool operator==(const MatrixBase &lhs, const MatrixBase &rhs)
 {
     if (lhs.nrows() != rhs.nrows() || lhs.ncols() != rhs.ncols())
