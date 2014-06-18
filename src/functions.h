@@ -489,6 +489,46 @@ public:
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
 };
 
+class HyperbolicFunction : public Function {
+
+private:
+    RCP<const Basic> arg_; //! The `arg` in `hyperbolicclass(arg)`
+public:
+    //! Constructor
+    HyperbolicFunction(RCP<const Basic> arg)
+        :arg_{arg} {};
+    //! \return Size of the hash
+    virtual std::size_t __hash__() const;
+    //! \return `arg_`
+    inline RCP<const Basic> get_arg() const {
+        return arg_;
+    }
+};
+
+class Sinh : public HyperbolicFunction {
+
+public:
+    //! Sinh Constructor
+    Sinh(const RCP<const Basic> &arg);
+    /*! Equality comparator
+     * \param o - Object to be compared with
+     * \return whether the 2 objects are equal
+     * */
+    virtual bool __eq__(const Basic &o) const;
+    virtual int compare(const Basic &o) const;
+    //! \return stringify version
+    virtual std::string __str__() const;
+    //! \return `true` if canonical
+    bool is_canonical(const RCP<const Basic> &arg);
+    //! Differentiate w.r.t Symbol `x`
+    virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
+    //! Substitute with `subs_dict
+    virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
+};
+
+//! Canonicalize Sinh:
+RCP<const Basic> sinh(const RCP<const Basic> &arg);
+
 } // CSymPy
 
 #endif

@@ -1639,4 +1639,75 @@ RCP<const Basic> Derivative::diff(const RCP<const Symbol> &x) const
     return rcp(new Derivative(arg_, t));
 }
 
+std::size_t HyperbolicFunction::__hash__() const
+{
+    std::size_t seed = 0;
+    hash_combine<Basic>(seed, *arg_);
+    return seed;
+}
+
+Sinh::Sinh(const RCP<const Basic> &arg)
+    : HyperbolicFunction(arg)
+{
+    CSYMPY_ASSERT(is_canonical(arg))
+}
+
+bool Sinh::is_canonical(const RCP<const Basic> &arg)
+{
+    // TODO: Add further checks for +inf -inf cases
+    if (eq(arg, zero))
+        return false;
+    return true;
+}
+
+bool Sinh::__eq__(const Basic &o) const
+{
+    if (is_a<Sinh>(o) &&
+        eq(get_arg(), static_cast<const Sinh &>(o).get_arg()))
+        return true;
+    else
+        return false;
+}
+
+int Sinh::compare(const Basic &o) const
+{
+    CSYMPY_ASSERT(is_a<Sinh>(o))
+    const Sinh &s = static_cast<const Sinh &>(o);
+    return get_arg()->__cmp__(s);
+}
+
+
+std::string Sinh::__str__() const
+{
+    std::ostringstream o;
+    o << "sinh(" << *get_arg() << ")";
+    return o.str();
+}
+
+RCP<const Basic> sinh(const RCP<const Basic> &arg)
+{
+    if (eq(arg, zero)) return zero;
+    return rcp(new Sinh(arg));
+}
+
+RCP<const Basic> Sinh::subs(const map_basic_basic &subs_dict) const
+{
+    RCP<const Sinh> self = rcp_const_cast<Sinh>(rcp(this));
+    auto it = subs_dict.find(self);
+    if (it != subs_dict.end())
+        return it->second;
+    RCP<const Basic> arg = get_arg()->subs(subs_dict);
+    if (arg == get_arg())
+        return self;
+    else
+        return sinh(arg);
+}
+
+// cosh is yet to be implemented
+RCP<const Basic> Sinh::diff(const RCP<const Symbol> &x) const
+{
+    throw std::runtime_error("Not implemented.");
+    // return mul(cosh(get_arg()), get_arg()->diff(x));
+}
+
 } // CSymPy
