@@ -1646,6 +1646,16 @@ std::size_t HyperbolicFunction::__hash__() const
     return seed;
 }
 
+RCP<const Basic> HyperbolicFunction::expand_as_exp() const
+{
+    if (is_a<Sinh>(*rcp(this))) {
+        RCP<const Sinh> self = rcp_static_cast<const Sinh>(rcp(this));
+        return self->expand_as_exp();
+    }
+    throw std::runtime_error("Not implemented.");
+
+}
+
 Sinh::Sinh(const RCP<const Basic> &arg)
     : HyperbolicFunction(arg)
 {
@@ -1657,6 +1667,10 @@ bool Sinh::is_canonical(const RCP<const Basic> &arg)
     // TODO: Add further checks for +inf -inf cases
     if (eq(arg, zero))
         return false;
+    if (is_a_Number(*arg) &&
+        rcp_static_cast<const Number>(arg)->is_negative()) {
+        return false;
+    }
     return true;
 }
 
@@ -1687,6 +1701,10 @@ std::string Sinh::__str__() const
 RCP<const Basic> sinh(const RCP<const Basic> &arg)
 {
     if (eq(arg, zero)) return zero;
+    if (is_a_Number(*arg) &&
+        rcp_static_cast<const Number>(arg)->is_negative()) {
+        return mul(minus_one, sinh(mul(minus_one, arg)));
+    }
     return rcp(new Sinh(arg));
 }
 
@@ -1703,6 +1721,10 @@ RCP<const Basic> Sinh::subs(const map_basic_basic &subs_dict) const
         return sinh(arg);
 }
 
+RCP<const Basic>  Sinh::expand_as_exp() const
+{
+    return div(sub(exp(get_arg()), exp(mul(get_arg(), minus_one))), i2);
+}
 // cosh is yet to be implemented
 RCP<const Basic> Sinh::diff(const RCP<const Symbol> &x) const
 {

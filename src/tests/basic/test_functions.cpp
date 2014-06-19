@@ -46,6 +46,9 @@ using CSymPy::RCP;
 using CSymPy::rcp;
 using CSymPy::print_stack_on_segfault;
 using CSymPy::sqrt;
+using CSymPy::sinh;
+using CSymPy::rcp_static_cast;
+using CSymPy::HyperbolicFunction;
 
 void test_sin()
 {
@@ -1207,6 +1210,30 @@ void test_lambertw()
     assert(eq(r1, r2));
 }
 
+void test_sinh()
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Basic> im1 = integer(-1);
+    RCP<const Basic> i2 = integer(2);
+
+    RCP<const Basic> r1;
+    RCP<const Basic> r2;
+
+    r1 = sinh(zero);
+    r2 = zero;
+    assert(eq(r1, r2));
+
+    r1 = sinh(im1);
+    r2 = mul(im1, sinh(one));
+    assert(eq(r1, r2));
+
+    r1 = sinh(x);
+    r1 = rcp_static_cast<const HyperbolicFunction>(r1)->expand_as_exp();
+    r2 = div(add(exp(x), mul(im1, exp(mul(im1, x)))), i2);
+    assert(eq(r1, r2));
+
+}
+
 int main(int argc, char* argv[])
 {
     print_stack_on_segfault();    
@@ -1229,5 +1256,6 @@ int main(int argc, char* argv[])
     test_acot();
     test_atan2();
     test_lambertw();
+    test_sinh();
     return 0;
 }
