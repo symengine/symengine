@@ -256,6 +256,10 @@ void test_div()
 
     r1 = mul(integer(12), pow(integer(196), div(integer(1), integer(2))));
     std::cout << *r1 << std::endl;
+
+    r1 = mul(integer(23), mul(pow(integer(5), div(integer(1), integer(2))),
+        pow(integer(7), div(integer(1), integer(2)))));
+    std::cout << *r1 << std::endl;
 }
 
 void test_pow()

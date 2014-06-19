@@ -104,15 +104,21 @@ std::string Mul::__str__() const
         o << "-";
     else if (neq(coef_, one))
         o << *coef_;
-    for (auto &p: dict_) {
-        if (is_a<Add>(*p.first)) o << "(";
-        if (is_a_Number(*p.first)) o << "*";
-        o << *(p.first);
-        if (is_a<Add>(*p.first)) o << ")";
-        if (neq(p.second, one))
-            o << "^" << *(p.second);
-        o << "*";
+
+    if (!dict_.empty()) {
+        auto p = dict_.begin();
+        if (is_a_Number(*p->first)) o << "*";
+
+        for (; p != dict_.end(); p++) {
+            if (is_a<Add>(*p->first)) o << "(";
+            o << *(p->first);
+            if (is_a<Add>(*p->first)) o << ")";
+            if (neq(p->second, one))
+                o << "^" << *(p->second);
+            o << "*";
+        }
     }
+
     std::string s = o.str();
     return s.substr(0, s.size()-1);
 }
@@ -388,7 +394,7 @@ RCP<const Basic> Mul::power_all_terms(const RCP<const Basic> &exp) const
             }
         } else{
             Mul::dict_add_term(d, new_exp, p.first);
-        } 
+        }
     }
     if (is_a_Number(*new_coef)) {
         return Mul::from_dict(rcp_static_cast<const Number>(new_coef),
