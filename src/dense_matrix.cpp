@@ -2,6 +2,7 @@
 #include "add.h"
 #include "mul.h"
 #include "integer.h"
+#include "pow.h"
 
 namespace CSymPy {
 
@@ -271,9 +272,8 @@ void fraction_free_LU(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &D,
                 L.m_[i*col + i] = one;
 
     // Initialize D
-    for (i = 0; i < row; i++)
-        for (j = 0; j < row; j++)
-            D.m_[i*col + j] = zero; // Integer zero
+    for (i = 0; i < row*row; i++)
+        D.m_[i] = zero; // Integer zero
 
     for (k = 0; k < row - 1; k++) {
         L.m_[k*col + k] = U.m_[k*col + k];
@@ -291,6 +291,64 @@ void fraction_free_LU(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &D,
     }
 
     D.m_[row*col - col + row - 1] = old;
+}
+
+// SymPy's QRecomposition in sympy.matrices.matrices.MatrixBase.QRdecomposition
+// Rank check is not performed
+void QR(const DenseMatrix &A, DenseMatrix &Q, DenseMatrix &R)
+{
+    unsigned row = A.row_;
+    unsigned col = A.col_;
+
+    CSYMPY_ASSERT(Q.row_ == row && Q.col_ == col && R.row_ == col && R.col_ == col);
+
+    unsigned i, j, k;
+    RCP<const Basic> t;
+    std::vector<RCP<const Basic>> tmp (row);
+
+    // Initialize Q
+    for (i = 0; i < row*col; i++)
+        Q.m_[i] = zero;
+
+    // Initialize R
+    for (i = 0; i < col*col; i++)
+        R.m_[i] = zero;
+
+    for (j = 0; j < col; j++) {
+        // Use submatrix for this
+        for (k = 0; k < row; k++)
+            tmp[k] = A.m_[k*col + j];
+
+//for (unsigned l = 0; l < row; l++)
+//    std::cout << j << "= " << *tmp[l] << std::endl;
+
+        for (i = 0; i < j; i++) {
+            t = zero;
+            for (k = 0; k < row; k++)
+                t = add(t, mul(A.m_[k*col + j], Q.m_[k*col + i]));
+            std::cout << "(" << j << "," << i << ") " << *t << std::endl;
+            for (k = 0; k < row; k++)
+                tmp[k] = expand(sub(tmp[k], mul(Q.m_[k*col + i], t)));
+        }
+
+        // calculate norm
+        t = zero;
+        for (k = 0; k < row; k++)
+            t = add(t, pow(tmp[k], integer(2)));
+
+        t = pow(t, div(one, integer(2)));
+
+        R.m_[j*col + j] = t;
+        for (k = 0; k < row; k++)
+            Q.m_[k*col + j] = div(tmp[k], t);
+
+        for (i = 0; i < j; i++) {
+            t = zero;
+            for (k = 0; k < row; k++)
+                t = add(t, mul(Q.m_[k*col + i], A.m_[k*col + j]));
+            R.m_[i*col + j] = t;
+        }
+    }
 }
 
 } // CSymPy
