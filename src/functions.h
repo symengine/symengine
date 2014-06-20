@@ -506,7 +506,7 @@ public:
 };
 
 class Sinh : public HyperbolicFunction {
-
+//! The hyperbolic sine function, `\frac{e^x - e^{-x}}{2}`.
 public:
     //! Sinh Constructor
     Sinh(const RCP<const Basic> &arg);
@@ -530,6 +530,32 @@ public:
 
 //! Canonicalize Sinh:
 RCP<const Basic> sinh(const RCP<const Basic> &arg);
+
+class Cosh : public HyperbolicFunction {
+//! The hyperbolic cosine function, `\frac{e^x + e^{-x}}{2}`.
+public:
+    //! Cosh Constructor
+    Cosh(const RCP<const Basic> &arg);
+    /*! Equality comparator
+     * \param o - Object to be compared with
+     * \return whether the 2 objects are equal
+     * */
+    virtual bool __eq__(const Basic &o) const;
+    virtual int compare(const Basic &o) const;
+    //! \return stringify version
+    virtual std::string __str__() const;
+    //! \return `true` if canonical
+    bool is_canonical(const RCP<const Basic> &arg);
+    //! Differentiate w.r.t Symbol `x`
+    virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
+    //! Substitute with `subs_dict
+    virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
+    //! expands cosh in terms of exp function
+    virtual RCP<const Basic> expand_as_exp() const;
+};
+
+//! Canonicalize Cosh:
+RCP<const Basic> cosh(const RCP<const Basic> &arg);
 
 } // CSymPy
 

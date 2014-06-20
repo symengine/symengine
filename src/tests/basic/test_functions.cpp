@@ -47,7 +47,7 @@ using CSymPy::rcp;
 using CSymPy::print_stack_on_segfault;
 using CSymPy::sqrt;
 using CSymPy::sinh;
-using CSymPy::HyperbolicFunction;
+using CSymPy::cosh;
 
 void test_sin()
 {
@@ -1226,10 +1226,38 @@ void test_sinh()
     r2 = mul(im1, sinh(one));
     assert(eq(r1, r2));
 
-    r1 = sinh(x);
-    r1 = r1->expand_as_exp();
+    r1 = sinh(x)->expand_as_exp();
     r2 = div(add(exp(x), mul(im1, exp(mul(im1, x)))), i2);
     assert(eq(r1, r2));
+    // tests cosh(-x) = cosh(x) and sinh(x)->diff(x) = cosh(x)
+    r1 = sinh(mul(im1, x))->diff(x);
+    r2 = mul(im1, cosh(x));
+
+}
+
+void test_cosh()
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Basic> im1 = integer(-1);
+    RCP<const Basic> i2 = integer(2);
+
+    RCP<const Basic> r1;
+    RCP<const Basic> r2;
+
+    r1 = cosh(zero);
+    r2 = one;
+    assert(eq(r1, r2));
+
+    r1 = cosh(im1);
+    r2 = cosh(one);
+    assert(eq(r1, r2));
+
+    r1 = cosh(x)->expand_as_exp();
+    r2 = div(add(exp(x), exp(mul(im1, x))), i2);
+    assert(eq(r1, r2));
+    // tests sinh(-x) = -sinh(x) and cosh(x)->diff(x) = sinh(x)
+    r1 = cosh(mul(im1, x))->diff(x);
+    r2 = sinh(mul(im1, x));
 
 }
 
@@ -1256,5 +1284,6 @@ int main(int argc, char* argv[])
     test_atan2();
     test_lambertw();
     test_sinh();
+    test_cosh();
     return 0;
 }

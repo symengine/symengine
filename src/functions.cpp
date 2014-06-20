@@ -1715,11 +1715,85 @@ RCP<const Basic>  Sinh::expand_as_exp() const
 {
     return div(sub(exp(get_arg()), exp(mul(get_arg(), minus_one))), i2);
 }
-// cosh is yet to be implemented
+
 RCP<const Basic> Sinh::diff(const RCP<const Symbol> &x) const
 {
-    throw std::runtime_error("Not implemented.");
-    // return mul(cosh(get_arg()), get_arg()->diff(x));
+    return mul(cosh(get_arg()), get_arg()->diff(x));
+}
+
+Cosh::Cosh(const RCP<const Basic> &arg)
+    : HyperbolicFunction(arg)
+{
+    CSYMPY_ASSERT(is_canonical(arg))
+}
+
+bool Cosh::is_canonical(const RCP<const Basic> &arg)
+{
+    // TODO: Add further checks for +inf -inf cases
+    if (eq(arg, zero))
+        return false;
+    if (is_a_Number(*arg) &&
+        rcp_static_cast<const Number>(arg)->is_negative()) {
+        return false;
+    }
+    return true;
+}
+
+bool Cosh::__eq__(const Basic &o) const
+{
+    if (is_a<Cosh>(o) &&
+        eq(get_arg(), static_cast<const Cosh &>(o).get_arg()))
+        return true;
+    else
+        return false;
+}
+
+int Cosh::compare(const Basic &o) const
+{
+    CSYMPY_ASSERT(is_a<Cosh>(o))
+    const Cosh &s = static_cast<const Cosh &>(o);
+    return get_arg()->__cmp__(s);
+}
+
+
+std::string Cosh::__str__() const
+{
+    std::ostringstream o;
+    o << "cosh(" << *get_arg() << ")";
+    return o.str();
+}
+
+RCP<const Basic> cosh(const RCP<const Basic> &arg)
+{
+    if (eq(arg, zero)) return one;
+    if (is_a_Number(*arg) &&
+        rcp_static_cast<const Number>(arg)->is_negative()) {
+        return cosh(mul(minus_one, arg));
+    }
+    return rcp(new Cosh(arg));
+}
+
+RCP<const Basic> Cosh::subs(const map_basic_basic &subs_dict) const
+{
+    RCP<const Cosh> self = rcp_const_cast<Cosh>(rcp(this));
+    auto it = subs_dict.find(self);
+    if (it != subs_dict.end())
+        return it->second;
+    RCP<const Basic> arg = get_arg()->subs(subs_dict);
+    if (arg == get_arg())
+        return self;
+    else
+        return cosh(arg);
+}
+
+RCP<const Basic>  Cosh::expand_as_exp() const
+{
+    return div(add(exp(get_arg()), exp(mul(get_arg(), minus_one))), i2);
+}
+
+RCP<const Basic> Cosh::diff(const RCP<const Symbol> &x) const
+{
+    return mul(sinh(get_arg()), get_arg()->diff(x));
 }
 
 } // CSymPy
