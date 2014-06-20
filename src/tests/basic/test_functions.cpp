@@ -47,6 +47,7 @@ using CSymPy::rcp;
 using CSymPy::print_stack_on_segfault;
 using CSymPy::sqrt;
 using CSymPy::sinh;
+using CSymPy::Sinh;
 using CSymPy::rcp_static_cast;
 using CSymPy::HyperbolicFunction;
 
@@ -1228,7 +1229,7 @@ void test_sinh()
     assert(eq(r1, r2));
 
     r1 = sinh(x);
-    r1 = rcp_static_cast<const HyperbolicFunction>(r1)->expand_as_exp();
+    r1 = rcp_static_cast<const Sinh>(r1)->expand_as_exp();
     r2 = div(add(exp(x), mul(im1, exp(mul(im1, x)))), i2);
     assert(eq(r1, r2));
 

@@ -503,8 +503,6 @@ public:
     inline RCP<const Basic> get_arg() const {
         return arg_;
     }
-    //! expands the hyperbolic function in terms of exp function
-    RCP<const Basic> expand_as_exp() const;
 };
 
 class Sinh : public HyperbolicFunction {

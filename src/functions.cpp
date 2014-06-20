@@ -1646,16 +1646,6 @@ std::size_t HyperbolicFunction::__hash__() const
     return seed;
 }
 
-RCP<const Basic> HyperbolicFunction::expand_as_exp() const
-{
-    if (is_a<Sinh>(*rcp(this))) {
-        RCP<const Sinh> self = rcp_static_cast<const Sinh>(rcp(this));
-        return self->expand_as_exp();
-    }
-    throw std::runtime_error("Not implemented.");
-
-}
-
 Sinh::Sinh(const RCP<const Basic> &arg)
     : HyperbolicFunction(arg)
 {

@@ -126,6 +126,11 @@ public:
 
     //! Substitutes 'subs_dict' into 'self'.
     virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
+
+    //! expands the special function in terms of exp function
+    virtual RCP<const Basic> expand_as_exp() const {
+        throw std::runtime_error("Not implemented.");
+    }
 };
 
 //! Our hash:
