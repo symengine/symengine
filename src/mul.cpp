@@ -106,14 +106,20 @@ std::string Mul::__str__() const
         o << *coef_;
 
     auto p = dict_.begin();
-    if (is_a_Number(*p->first)) o << "*";
+    if (is_a_Number(*(p->first))) o << "*";
 
     for (; p != dict_.end(); p++) {
-        if (is_a<Add>(*p->first)) o << "(";
+        if (is_a<Add>(*(p->first))) o << "(";
         o << *(p->first);
-        if (is_a<Add>(*p->first)) o << ")";
-        if (neq(p->second, one))
-            o << "^" << *(p->second);
+        if (is_a<Add>(*(p->first))) o << ")";
+        if (neq(p->second, one)) {
+            o << "^";
+            if (!is_a<Integer>(*(p->second)) && !is_a<Symbol>(*(p->second)))
+                o << "(";
+            o << *(p->second);
+            if (!is_a<Integer>(*(p->second)) && !is_a<Symbol>(*(p->second)))
+                o << ")";
+        }
         o << "*";
     }
 
