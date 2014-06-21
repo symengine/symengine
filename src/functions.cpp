@@ -1661,6 +1661,8 @@ bool Sinh::is_canonical(const RCP<const Basic> &arg)
         rcp_static_cast<const Number>(arg)->is_negative()) {
         return false;
     }
+    if (could_extract_minus(arg))
+        return false;
     return true;
 }
 
@@ -1693,6 +1695,9 @@ RCP<const Basic> sinh(const RCP<const Basic> &arg)
     if (eq(arg, zero)) return zero;
     if (is_a_Number(*arg) &&
         rcp_static_cast<const Number>(arg)->is_negative()) {
+        return mul(minus_one, sinh(mul(minus_one, arg)));
+    }
+    if (could_extract_minus(arg)) {
         return mul(minus_one, sinh(mul(minus_one, arg)));
     }
     return rcp(new Sinh(arg));
@@ -1736,6 +1741,8 @@ bool Cosh::is_canonical(const RCP<const Basic> &arg)
         rcp_static_cast<const Number>(arg)->is_negative()) {
         return false;
     }
+    if (could_extract_minus(arg))
+        return false;
     return true;
 }
 
@@ -1770,6 +1777,9 @@ RCP<const Basic> cosh(const RCP<const Basic> &arg)
         rcp_static_cast<const Number>(arg)->is_negative()) {
         return cosh(mul(minus_one, arg));
     }
+    if (could_extract_minus(arg)) {
+        return cosh(mul(minus_one, arg));
+    }
     return rcp(new Cosh(arg));
 }
 
@@ -1794,6 +1804,88 @@ RCP<const Basic>  Cosh::expand_as_exp() const
 RCP<const Basic> Cosh::diff(const RCP<const Symbol> &x) const
 {
     return mul(sinh(get_arg()), get_arg()->diff(x));
+}
+
+Tanh::Tanh(const RCP<const Basic> &arg)
+    : HyperbolicFunction(arg)
+{
+    CSYMPY_ASSERT(is_canonical(arg))
+}
+
+bool Tanh::is_canonical(const RCP<const Basic> &arg)
+{
+    // TODO: Add further checks for +inf -inf cases
+    if (eq(arg, zero))
+        return false;
+    if (is_a_Number(*arg) &&
+        rcp_static_cast<const Number>(arg)->is_negative()) {
+        return false;
+    }
+    if (could_extract_minus(arg))
+        return false;
+    return true;
+}
+
+bool Tanh::__eq__(const Basic &o) const
+{
+    if (is_a<Tanh>(o) &&
+        eq(get_arg(), static_cast<const Tanh &>(o).get_arg()))
+        return true;
+    else
+        return false;
+}
+
+int Tanh::compare(const Basic &o) const
+{
+    CSYMPY_ASSERT(is_a<Tanh>(o))
+    const Tanh &s = static_cast<const Tanh &>(o);
+    return get_arg()->__cmp__(s);
+}
+
+
+std::string Tanh::__str__() const
+{
+    std::ostringstream o;
+    o << "tanh(" << *get_arg() << ")";
+    return o.str();
+}
+
+RCP<const Basic> tanh(const RCP<const Basic> &arg)
+{
+    if (eq(arg, zero)) return zero;
+    if (is_a_Number(*arg) &&
+        rcp_static_cast<const Number>(arg)->is_negative()) {
+        return mul(minus_one, tanh(mul(minus_one, arg)));
+    }
+    if (could_extract_minus(arg)) {
+        return mul(minus_one, sinh(mul(minus_one, arg)));
+    }
+    return rcp(new Tanh(arg));
+}
+
+RCP<const Basic> Tanh::subs(const map_basic_basic &subs_dict) const
+{
+    RCP<const Tanh> self = rcp_const_cast<Tanh>(rcp(this));
+    auto it = subs_dict.find(self);
+    if (it != subs_dict.end())
+        return it->second;
+    RCP<const Basic> arg = get_arg()->subs(subs_dict);
+    if (arg == get_arg())
+        return self;
+    else
+        return tanh(arg);
+}
+
+RCP<const Basic>  Tanh::expand_as_exp() const
+{
+    RCP<const Basic> pos_exp = exp(get_arg());
+    RCP<const Basic> neg_exp = exp(mul(minus_one, get_arg()));
+    return div(sub(pos_exp, neg_exp), add(pos_exp, neg_exp));
+}
+
+RCP<const Basic> Tanh::diff(const RCP<const Symbol> &x) const
+{
+    return mul(sub(one, pow(tan(get_arg()), i2)), get_arg()->diff(x));
 }
 
 } // CSymPy

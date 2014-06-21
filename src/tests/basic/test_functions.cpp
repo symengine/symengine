@@ -48,6 +48,7 @@ using CSymPy::print_stack_on_segfault;
 using CSymPy::sqrt;
 using CSymPy::sinh;
 using CSymPy::cosh;
+using CSymPy::tanh;
 
 void test_sin()
 {
@@ -1232,6 +1233,7 @@ void test_sinh()
     // tests cosh(-x) = cosh(x) and sinh(x)->diff(x) = cosh(x)
     r1 = sinh(mul(im1, x))->diff(x);
     r2 = mul(im1, cosh(x));
+    assert(eq(r1, r2));
 
 }
 
@@ -1257,7 +1259,34 @@ void test_cosh()
     assert(eq(r1, r2));
     // tests sinh(-x) = -sinh(x) and cosh(x)->diff(x) = sinh(x)
     r1 = cosh(mul(im1, x))->diff(x);
-    r2 = sinh(mul(im1, x));
+    r2 = mul(im1, sinh(mul(im1, x)));
+    assert(eq(r1, r2));
+}
+
+void test_tanh()
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Basic> im1 = integer(-1);
+    RCP<const Basic> i2 = integer(2);
+
+    RCP<const Basic> r1;
+    RCP<const Basic> r2;
+
+    r1 = tanh(zero);
+    r2 = zero;
+    assert(eq(r1, r2));
+
+    r1 = tanh(im1);
+    r2 = mul(im1, tanh(one));
+    assert(eq(r1, r2));
+
+    r1 = tanh(x)->expand_as_exp();
+    r2 = div(sub(exp(x), exp(mul(im1, x))), add(exp(x), exp(mul(im1, x))));
+    assert(eq(r1, r2));
+    // tests sinh(-x) = -sinh(x) and cosh(x)->diff(x) = sinh(x)
+    r1 = tanh(mul(im1, x))->diff(x);
+    r2 = add(pow(tanh(x), i2), im1);
+    assert(eq(r1, r2));
 
 }
 
