@@ -49,6 +49,7 @@ using CSymPy::sqrt;
 using CSymPy::sinh;
 using CSymPy::cosh;
 using CSymPy::tanh;
+using CSymPy::coth;
 
 void test_sin()
 {
@@ -1283,11 +1284,34 @@ void test_tanh()
     r1 = tanh(x)->expand_as_exp();
     r2 = div(sub(exp(x), exp(mul(im1, x))), add(exp(x), exp(mul(im1, x))));
     assert(eq(r1, r2));
-    // tests sinh(-x) = -sinh(x) and cosh(x)->diff(x) = sinh(x)
+
     r1 = tanh(mul(im1, x))->diff(x);
     r2 = add(pow(tanh(x), i2), im1);
+    std::cout<<*r1<<std::endl;
+    std::cout<<*r2<<std::endl;
+    // assert(eq(r1, r2));
+}
+
+void test_coth()
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Basic> im1 = integer(-1);
+    RCP<const Basic> im2 = integer(-2);
+
+    RCP<const Basic> r1;
+    RCP<const Basic> r2;
+
+    r1 = coth(im1);
+    r2 = mul(im1, coth(one));
     assert(eq(r1, r2));
 
+    r1 = coth(x)->expand_as_exp();
+    r2 = div(add(exp(x), exp(mul(im1, x))), sub(exp(x), exp(mul(im1, x))));
+    assert(eq(r1, r2));
+
+    r1 = coth(mul(im1, x))->diff(x);
+    r2 = pow(sinh(x), im2);
+    assert(eq(r1, r2));
 }
 
 int main(int argc, char* argv[])
@@ -1314,5 +1338,7 @@ int main(int argc, char* argv[])
     test_lambertw();
     test_sinh();
     test_cosh();
+    test_tanh();
+    test_coth();
     return 0;
 }

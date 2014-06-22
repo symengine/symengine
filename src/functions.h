@@ -576,12 +576,38 @@ public:
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
     //! Substitute with `subs_dict
     virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
-    //! expands cosh in terms of exp function
+    //! expands tanh in terms of exp function
     virtual RCP<const Basic> expand_as_exp() const;
 };
 
 //! Canonicalize Tanh:
 RCP<const Basic> tanh(const RCP<const Basic> &arg);
+
+class Coth : public HyperbolicFunction {
+//! The hyperbolic tangent function, `\frac{\cosh(x)}{\sinh(x)}`.
+public:
+    //! Coth Constructor
+    Coth(const RCP<const Basic> &arg);
+    /*! Equality comparator
+     * \param o - Object to be compared with
+     * \return whether the 2 objects are equal
+     * */
+    virtual bool __eq__(const Basic &o) const;
+    virtual int compare(const Basic &o) const;
+    //! \return stringify version
+    virtual std::string __str__() const;
+    //! \return `true` if canonical
+    bool is_canonical(const RCP<const Basic> &arg);
+    //! Differentiate w.r.t Symbol `x`
+    virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
+    //! Substitute with `subs_dict
+    virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
+    //! expands coth in terms of exp function
+    virtual RCP<const Basic> expand_as_exp() const;
+};
+
+//! Canonicalize Coth:
+RCP<const Basic> coth(const RCP<const Basic> &arg);
 } // CSymPy
 
 #endif
