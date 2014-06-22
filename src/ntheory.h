@@ -73,8 +73,13 @@ void eratosthenes_sieve(unsigned limit, std::vector<unsigned> &primes);
 //! Factor using lehman's methods
 int factor_lehman_method(const Ptr<RCP<const Integer>> &f, const Integer &n);
 
+//! Factor using Pollard's p-1 method
+int factor_pollard_pm1_method(const Ptr<RCP<const Integer>> &f, const Integer &n, 
+        unsigned B = 10, unsigned retries = 5);
+
 //! Factor using Pollard's rho methods
-int factor_pollard_rho_method(const Ptr<RCP<const Integer>> &f, const Integer &n, unsigned retries = 5);
+int factor_pollard_rho_method(const Ptr<RCP<const Integer>> &f, const Integer &n, 
+        unsigned retries = 5);
 
 //! Find prime factors of `n`
 void prime_factors(const RCP<const Integer> &n,

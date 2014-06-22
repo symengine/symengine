@@ -206,17 +206,17 @@ int _factor_lehman_method(mpz_class &rop, const mpz_class &n)
         while (k <= u_bound) {
             t = 2 * sqrt(k * n);
             mpz_set_f(a.get_mpz_t(), t.get_mpf_t());
-
             mpz_root(b.get_mpz_t(), n.get_mpz_t(), 6);
-            mpz_root(l.get_mpz_t(), k.get_mpz_t(), 4);
-            b = b / l;
+            mpz_root(l.get_mpz_t(), k.get_mpz_t(), 2);
+            b = b / (4 * l);
             b = b + a;
-
+            
             while (a <= b) {
                 l = a * a - 4 * k * n;
                 if (mpz_perfect_square_p(l.get_mpz_t())) {
-                    a = a + b;
-                    mpz_gcd(rop.get_mpz_t(), n.get_mpz_t(), a.get_mpz_t());
+                    mpz_sqrt(b.get_mpz_t(), l.get_mpz_t());
+                    b = a + b;
+                    mpz_gcd(rop.get_mpz_t(), n.get_mpz_t(), b.get_mpz_t());
                     ret_val = 1;
                     break;
                 }
@@ -227,7 +227,7 @@ int _factor_lehman_method(mpz_class &rop, const mpz_class &n)
             k = k + 1;
         }
     }
-
+    
     return ret_val;
 }
 
@@ -238,6 +238,59 @@ int factor_lehman_method(const Ptr<RCP<const Integer>> &f, const Integer &n)
 
     ret_val = _factor_lehman_method(rop, n.as_mpz());
     *f = integer(rop);
+    return ret_val;
+}
+
+// Factor using Pollard's p-1 method
+int _factor_pollard_pm1_method(mpz_class &rop, const mpz_class &n, 
+        const mpz_class &c, unsigned B)
+{
+    if (n < 4 || B < 3)
+        throw std::runtime_error("Require n > 3 and B > 2 to use Pollard's p-1 method");
+    
+    std::vector<unsigned> primes;
+    eratosthenes_sieve(B + 1, primes);
+    mpz_class m, g, _c;
+    _c = c;
+
+    for (auto &p: primes){
+        m = 1;
+        // calculate log(m, B), this can be improved
+        while(m <= B / p){
+            m = m * p;
+        }
+        mpz_powm(g.get_mpz_t(), _c.get_mpz_t(), m.get_mpz_t(), n.get_mpz_t());
+        mpz_set(_c.get_mpz_t(), g.get_mpz_t());
+    }
+    _c = _c - 1;
+    mpz_gcd(rop.get_mpz_t(), _c.get_mpz_t(), n.get_mpz_t());
+    
+    if(rop == 1 || rop == n)
+        return 0;
+    else
+        return 1;
+}
+
+int factor_pollard_pm1_method(const Ptr<RCP<const Integer>> &f, const Integer &n, 
+        unsigned B, unsigned retries)
+{
+    int ret_val = 0;
+    mpz_class rop, nm4, c;
+    gmp_randstate_t state;
+    
+    gmp_randinit_default(state);
+    gmp_randseed_ui(state, retries);
+    nm4 = n.as_mpz() - 4;
+
+    for (unsigned i = 0; i < retries && ret_val == 0; i++) {
+        mpz_urandomm(c.get_mpz_t(), state, nm4.get_mpz_t());
+        c = c + 2;
+        ret_val = _factor_pollard_pm1_method(rop, n.as_mpz(), c, B);
+    }
+    
+    if (ret_val != 0)
+        *f = integer(rop);
+    
     return ret_val;
 }
 
