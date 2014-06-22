@@ -384,6 +384,41 @@ public:
 RCP<const Basic> atan2(const RCP<const Basic> &num,
                         const RCP<const Basic> &den);
 
+class LambertW : public Function {
+// Lambert W function, defined as the inverse function of
+// x*exp(x). This function represents the principal branch
+// of this inverse function, which is multivalued.
+// For more information, see:
+// http://en.wikipedia.org/wiki/Lambert_W_function
+private:
+    RCP<const Basic> arg_;
+
+public:
+    //! LambertW Constructor
+    LambertW(const RCP<const Basic> &arg);
+    //! \return Size of the hash
+    virtual std::size_t __hash__() const;
+    /*! Equality comparator
+     * \param o  Object to be compared with
+     * \return whether the 2 objects are equal
+     * */
+    virtual bool __eq__(const Basic &o) const;
+    virtual int compare(const Basic &o) const;
+    //! \return stringify version
+    virtual std::string __str__() const;
+    //! \return `arg_`
+    inline RCP<const Basic> get_arg() const {
+        return arg_;
+    }
+    //! \return `true` if canonical
+    bool is_canonical(const RCP<const Basic> &arg);
+    //! Differentiate w.r.t Symbol `x`
+    virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
+};
+
+//! Create a new LambertW instance:
+RCP<const Basic> lambertw(const RCP<const Basic> &arg);
+
 class FunctionSymbol : public Function {
 private:
     std::string name_; //! The `f` in `f(x+y)`
