@@ -5,6 +5,7 @@
 #include "mul.h"
 #include "pow.h"
 #include "symbol.h"
+#include "add.h"
 
 using CSymPy::RCP;
 using CSymPy::Basic;
@@ -14,6 +15,7 @@ using CSymPy::mul;
 using CSymPy::integer;
 using CSymPy::print_stack_on_segfault;
 using CSymPy::symbol;
+using CSymPy::add;
 
 void test_printing()
 {
@@ -34,11 +36,11 @@ void test_printing()
     
     r1 = mul(integer(12), pow(integer(196), div(integer(-1), integer(2))));
     r2 = mul(integer(294), pow(integer(196), div(integer(-1), integer(2))));
-    r = mul(r1, r2);
-    std::cout << "r1 : " << *r1 << " r2: " << *r2 << std::endl;
-    std::cout << "mul(r1, r2): " << *r << std::endl;
-    assert(r->__str__() == "3528*(1/196)");
-
+    r = add(integer(-51), mul(r1, r2));
+    std::cout << "r1: " << *r1 << " r2: " << *r2 << std::endl;
+    std::cout << "mul(r1, r2): " << *mul(r1, r2) << std::endl;
+    std::cout << "r: " << *r << std::endl;
+    assert(r->__str__() == "-51 + 3528*(1/196)");
 }
 
 int main(int argc, char* argv[])
