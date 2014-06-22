@@ -428,22 +428,28 @@ void eratosthenes_sieve(unsigned limit, std::vector<unsigned> &primes)
 }
 
 void prime_factors(const RCP<const Integer> &n,
-        std::vector<RCP<const Integer>> &primes)
+        std::vector<RCP<const Integer>> &prime_list)
 {
-    RCP<const Integer> _n = n;
-    RCP<const Integer> f;
-    if (eq(_n, zero)) return;
-
-    while (factor_trial_division(outArg(f), *_n) == 1 && !eq(_n, one)) {
-        RCP<const Basic> d = div(_n, f);
-        while (is_a<Integer>(*d)) { // when a prime factor is found, we divide
-            primes.push_back(f);         // _n by that prime as much as we can
-            _n = rcp_dynamic_cast<const Integer>(d);
-            d = div(_n, f);
+    mpz_class sqrtN;
+    mpz_class _n = (*n).as_mpz();
+    if (_n == 0) return;
+    sqrtN = sqrt(_n);
+    if (!sqrtN.fits_uint_p())
+        throw std::runtime_error("N too large to factor");
+    unsigned limit = sqrtN.get_ui() + 1;
+    std::vector<unsigned> primes;
+    eratosthenes_sieve(limit, primes);
+    
+    for (auto &p: primes)
+    {
+        while (_n % p == 0) {
+            prime_list.push_back(integer(p)); 
+            _n = _n / p;
         }
+        if (_n == 1) break;
     }
-    if (!eq(_n, one))
-        primes.push_back(_n);
+    if (!(_n == 1))
+        prime_list.push_back(integer(_n));
 }
 
 void prime_factor_multiplicities(const RCP<const Integer> &n,
