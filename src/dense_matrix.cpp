@@ -214,7 +214,7 @@ void pivoted_gaussian_elimination(const DenseMatrix &A, DenseMatrix &B,
         for (j = i + 1; j < row; j++) {
             for (k = i + 1; k < col; k++)
                 B.m_[j*col + k] = sub(B.m_[j*col + k],
-                    mul(B.m_[j*col + i], B.m_[index*col + k]));
+                    mul(B.m_[j*col + i], B.m_[i*col + k]));
             B.m_[j*col + i] = zero;
         }
 
@@ -238,7 +238,7 @@ void fraction_free_gaussian_elimination(const DenseMatrix &A, DenseMatrix &B)
             for (unsigned k = i + 1; k < col; k++) {
                 B.m_[j*col + k] = sub(mul(B.m_[i*col + i], B.m_[j*col + k]),
                     mul(B.m_[j*col + i], B.m_[i*col + k]));
-                if (i)
+                if (i > 0)
                     B.m_[j*col + k] = div(B.m_[j*col + k], B.m_[i*col - col + i - 1]);
             }
             B.m_[j*col + i] = zero;
@@ -277,7 +277,7 @@ void pivoted_fraction_free_gaussian_elimination(const DenseMatrix &A,
             for (k = i + 1; k < col; k++) {
                 B.m_[j*col + k] = sub(mul(B.m_[i*col + i], B.m_[j*col + k]),
                     mul(B.m_[j*col + i], B.m_[i*col + k]));
-                if (i)
+                if (i > 0)
                     B.m_[j*col + k] = div(B.m_[j*col + k], B.m_[i*col - col + i - 1]);
             }
             B.m_[j*col + i] = zero;
@@ -351,11 +351,67 @@ void fraction_free_gauss_jordan_elimination(const DenseMatrix &A, DenseMatrix &B
         for (j = 0; j < row; j++)
             if (j != i)
                 for (k = 0; k < col; k++) {
-                    B.m_[j*col + k] = sub(mul(B.m_[i*col + i], B.m_[j*col + k]),
-                        mul(B.m_[j*col + i], B.m_[i*col + k]));
-                    if (i > 0)
-                        B.m_[j*col + k] = div(B.m_[j*col + k], d);
+                    if (k != i) {
+                        B.m_[j*col + k] = sub(mul(B.m_[i*col + i], B.m_[j*col + k]),
+                            mul(B.m_[j*col + i], B.m_[i*col + k]));
+                        if (i > 0)
+                            B.m_[j*col + k] = div(B.m_[j*col + k], d);
+                    }
                 }
+        for (j = 0; j < row; j++)
+            if (j != i)
+                B.m_[j*col + i] = zero;
+    }
+}
+
+void pivoted_fraction_free_gauss_jordan_elimination(const DenseMatrix &A,
+        DenseMatrix &B, std::vector<unsigned> &pivotlist)
+{
+    unsigned row = A.row_;
+    unsigned col = A.col_;
+
+    CSYMPY_ASSERT(A.row_ == B.row_ && A.col_ == B.col_);
+    CSYMPY_ASSERT(pivotlist.size() == row);
+
+    unsigned index = 0, i, k, j;
+    RCP<const Basic> d;
+
+    B.m_ = A.m_;
+
+    for (i = 0; i < row; i++)
+        pivotlist[i] = i;
+
+    for (i = 0; i < col; i++) {
+        if (index == row)
+            break;
+
+        k = pivot(B, index, i);
+        if (k == row)
+            continue;
+        if (k != index) {
+            row_exchange_dense(B, k, index);
+            std::swap(pivotlist[k], pivotlist[index]);
+        }
+
+        if (i > 0)
+            d = B.m_[i*col - col + i - 1];
+        for (j = 0; j < row; j++) {
+            if (j != i)
+                for (k = 0; k < col; k++) {
+                    if (k != i) {
+                        B.m_[j*col + k] = sub(mul(B.m_[i*col + i], B.m_[j*col + k]),
+                            mul(B.m_[j*col + i], B.m_[i*col + k]));
+                        if (i > 0)
+                            B.m_[j*col + k] = div(B.m_[j*col + k], d);
+                    }
+                }
+        }
+
+        for (j = 0; j < row; j++)
+            if (j != i)
+                B.m_[j*col + i] = zero;
+
+        index++;
     }
 }
 
@@ -385,11 +441,11 @@ void augment_dense(const DenseMatrix &A, const DenseMatrix &b, DenseMatrix &C)
     }
 }
 
-void diagonal_solve(const DenseMatrix &A, const DenseMatrix &b, DenseMatrix &C)
+void diagonal_solve(const DenseMatrix &A, const DenseMatrix &b, DenseMatrix &x)
 {
     CSYMPY_ASSERT(b.col_ == 1);
     CSYMPY_ASSERT(A.row_ == b.row_);
-    CSYMPY_ASSERT(C.row_ == A.col_ && C.col_ == 1);
+    CSYMPY_ASSERT(x.row_ == A.col_ && x.col_ == 1);
 
     DenseMatrix B = DenseMatrix(A.row_, A.col_ + 1);
     DenseMatrix D = DenseMatrix(A.row_, A.col_ + 1);
@@ -400,7 +456,108 @@ void diagonal_solve(const DenseMatrix &A, const DenseMatrix &b, DenseMatrix &C)
 
     // No checks are done to see if the diagonal entries are zero
     for (unsigned i = 0; i < A.col_; i++)
-        C.m_[i] = div(D.get(i*A.col_ + i + A.col_), D.get(i*A.col_ + 2*i));
+        x.m_[i] = div(D.get(i*A.col_ + i + A.col_), D.get(i*A.col_ + 2*i));
+}
+
+// Assuming U is an Upper square matrix
+void back_substitution(const DenseMatrix &U, const DenseMatrix &b,
+    DenseMatrix &x)
+{
+    CSYMPY_ASSERT(U.row_ == U.col_);
+    CSYMPY_ASSERT(b.col_ == 1  && b.row_ == U.row_);
+    CSYMPY_ASSERT(x.row_ == U.col_ && x.col_ == 1);
+
+    int i, j, col = U.col_;
+
+    DenseMatrix b_ = DenseMatrix(b.row_, 1, b.m_);
+
+    for (i = 0; i < col; i++)
+        x.m_[i] = zero; // Integer zero;
+
+    for (i = col - 1; i >= 0; i--) {
+        for (j = i + 1; j < col; j++)
+            b_.m_[i] = sub(b_.m_[i], mul(U.m_[i*col + j], x.m_[j]));
+        x.m_[i] = div(b_.m_[i], U.m_[i*col + i]);
+    }
+}
+
+void fraction_free_gaussian_elimination_solve(const DenseMatrix &A,
+    const DenseMatrix &b, DenseMatrix &x)
+{
+    CSYMPY_ASSERT(A.row_ == A.col_);
+    CSYMPY_ASSERT(b.row_ == A.row_ && b.col_ == 1);
+    CSYMPY_ASSERT(x.row_ == A.col_ && x.col_ == 1);
+
+    int i, j, col = A.col_;
+    DenseMatrix A_ = DenseMatrix(A.row_, A.col_, A.m_);
+    DenseMatrix b_ = DenseMatrix(b.row_, 1, b.m_);
+
+    for (i = 0; i < col - 1; i++)
+        for (j = i + 1; j < col; j++) {
+            b_.m_[j] = sub(mul(A_.m_[i*col + i], b_.m_[j]),
+                mul(A_.m_[j*col + i], b_.m_[i]));
+            if(i > 0)
+                b_.m_[j] = div(b_.m_[j], A_.m_[i*col - col + i - 1]);
+
+            for (int k = i + 1; k < col; k++) {
+                A_.m_[j*col + k] = sub(mul(A_.m_[i*col + i], A_.m_[j*col + k]),
+                    mul(A_.m_[j*col + i], A_.m_[i*col + k]));
+                if (i> 0)
+                    A_.m_[j*col + k] = div(A_.m_[j*col + k], A_.m_[i*col - col + i - 1]);
+            }
+            A_.m_[j*col + i] = zero;
+        }
+
+    for (i = 0; i < col; i++)
+        x.m_[i] = zero; // Integer zero;
+
+    for (i = col - 1; i >= 0; i--) {
+        for (j = i + 1; j < col; j++)
+            b_.m_[i] = sub(b_.m_[i], mul(A_.m_[i*col + j], x.m_[j]));
+        x.m_[i] = div(b_.m_[i], A_.m_[i*col + i]);
+    }
+}
+
+void fraction_free_gauss_jordan_solve(const DenseMatrix &A, const DenseMatrix &b,
+    DenseMatrix &x)
+{
+    CSYMPY_ASSERT(A.row_ == A.col_);
+    CSYMPY_ASSERT(b.row_ == A.row_ && b.col_ == 1);
+    CSYMPY_ASSERT(x.row_ == A.col_ && x.col_ == 1);
+
+    unsigned i, j, col = A.col_;
+    RCP<const Basic> d;
+    DenseMatrix A_ = DenseMatrix(A.row_, A.col_, A.m_);
+    DenseMatrix b_ = DenseMatrix(b.row_, 1, b.m_);
+
+    for (i = 0; i < col; i++) {
+        if (i > 0)
+            d = A_.m_[i*col - col + i - 1];
+        for (j = 0; j < col; j++)
+            if (j != i) {
+                b_.m_[j] = sub(mul(A_.m_[i*col + i], b_.m_[j]),
+                    mul(A_.m_[j*col + i], b_.m_[i]));
+                if (i > 0)
+                    b_.m_[j] = div(b_.m_[j], d);
+
+                for (unsigned k = 0; k < col; k++) {
+                    if (k != i) {
+                        A_.m_[j*col + k] = sub(mul(A_.m_[i*col + i], A_.m_[j*col + k]),
+                            mul(A_.m_[j*col + i], A_.m_[i*col + k]));
+                        if (i > 0)
+                            A_.m_[j*col + k] = div(A_.m_[j*col + k], d);
+                    }
+                }
+            }
+
+        for (j = 0; j < col; j++)
+            if (j != i)
+                A_.m_[j*col + i] = zero;
+    }
+
+    // No checks are done to see if the diagonal entries are zero
+    for (i = 0; i < col; i++)
+        x.m_[i] = div(b_.m_[i], A_.m_[i*col + i]);
 }
 
 } // CSymPy

@@ -94,6 +94,8 @@ public:
         DenseMatrix &B, std::vector<unsigned> &pivotlist);
     friend void fraction_free_gauss_jordan_elimination(const DenseMatrix &A,
         DenseMatrix &B);
+    friend void pivoted_fraction_free_gauss_jordan_elimination(const DenseMatrix &A,
+        DenseMatrix &B, std::vector<unsigned> &pivotlist);
     friend unsigned pivot(DenseMatrix &B, unsigned r, unsigned c);
 
     // Matrix Decomposition
@@ -103,7 +105,13 @@ public:
     friend void augment_dense(const DenseMatrix &A, const DenseMatrix &b,
         DenseMatrix &C);
     friend void diagonal_solve(const DenseMatrix &A, const DenseMatrix &b,
-        DenseMatrix &C);
+        DenseMatrix &x);
+    friend void back_substitution(const DenseMatrix &U, const DenseMatrix &b,
+        DenseMatrix &x);
+    friend void fraction_free_gaussian_elimination_solve(const DenseMatrix &A,
+        const DenseMatrix &b, DenseMatrix &x);
+    friend void fraction_free_gauss_jordan_solve(const DenseMatrix &A,
+        const DenseMatrix &b, DenseMatrix &x);
 
 protected:
     // Matrix elements are stored in row-major order
@@ -185,11 +193,23 @@ void pivoted_gauss_jordan_elimination(const DenseMatrix &A, DenseMatrix &B,
 
 void fraction_free_gauss_jordan_elimination(const DenseMatrix &A, DenseMatrix &B);
 
+void pivoted_fraction_free_gauss_jordan_elimination(const DenseMatrix &A,
+    DenseMatrix &B, std::vector<unsigned> &pivotlist);
+
 // Matrix Decomposition
 void fraction_free_LU(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &U);
 
 // Solve Ax = b
-void diagonal_solve(const DenseMatrix &A, const DenseMatrix &b, DenseMatrix &C);
+void diagonal_solve(const DenseMatrix &A, const DenseMatrix &b, DenseMatrix &x);
+
+void back_substitution(const DenseMatrix &U, const DenseMatrix &b,
+    DenseMatrix &x);
+
+void fraction_free_gaussian_elimination_solve(const DenseMatrix &A,
+    const DenseMatrix &b, DenseMatrix &x);
+
+void fraction_free_gauss_jordan_solve(const DenseMatrix &A, const DenseMatrix &b,
+    DenseMatrix &x);
 
 // ------------------------ Common functions ---------------------------------//
 
