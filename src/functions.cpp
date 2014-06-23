@@ -1973,4 +1973,81 @@ RCP<const Basic> Coth::diff(const RCP<const Symbol> &x) const
     return mul(div(minus_one, pow(sinh(get_arg()), i2)), get_arg()->diff(x));
 }
 
+ASinh::ASinh(const RCP<const Basic> &arg)
+    : HyperbolicFunction(arg)
+{
+    CSYMPY_ASSERT(is_canonical(arg))
+}
+
+bool ASinh::is_canonical(const RCP<const Basic> &arg)
+{
+    // TODO: Add further checks for +inf -inf cases
+    if (eq(arg, zero) || eq(arg, one) || eq(arg, minus_one))
+        return false;
+    if (is_a_Number(*arg) &&
+        rcp_static_cast<const Number>(arg)->is_negative()) {
+        return false;
+    }
+    if (could_extract_minus(arg))
+        return false;
+    return true;
+}
+
+bool ASinh::__eq__(const Basic &o) const
+{
+    if (is_a<ASinh>(o) &&
+        eq(get_arg(), static_cast<const ASinh &>(o).get_arg()))
+        return true;
+    else
+        return false;
+}
+
+int ASinh::compare(const Basic &o) const
+{
+    CSYMPY_ASSERT(is_a<ASinh>(o))
+    const ASinh &s = static_cast<const ASinh &>(o);
+    return get_arg()->__cmp__(s);
+}
+
+
+std::string ASinh::__str__() const
+{
+    std::ostringstream o;
+    o << "asinh(" << *get_arg() << ")";
+    return o.str();
+}
+
+RCP<const Basic> asinh(const RCP<const Basic> &arg)
+{
+    if (eq(arg, zero)) return zero;
+    if (eq(arg, one)) return log(add(one, sq2));
+    if (eq(arg, minus_one)) return log(sub(sq2, one));
+    if (is_a_Number(*arg) &&
+        rcp_static_cast<const Number>(arg)->is_negative()) {
+        return mul(minus_one, asinh(mul(minus_one, arg)));
+    }
+    if (could_extract_minus(arg)) {
+        return mul(minus_one, asinh(mul(minus_one, arg)));
+    }
+    return rcp(new ASinh(arg));
+}
+
+RCP<const Basic> ASinh::subs(const map_basic_basic &subs_dict) const
+{
+    RCP<const ASinh> self = rcp_const_cast<ASinh>(rcp(this));
+    auto it = subs_dict.find(self);
+    if (it != subs_dict.end())
+        return it->second;
+    RCP<const Basic> arg = get_arg()->subs(subs_dict);
+    if (arg == get_arg())
+        return self;
+    else
+        return asinh(arg);
+}
+
+RCP<const Basic> ASinh::diff(const RCP<const Symbol> &x) const
+{
+    return mul(div(one, add(pow(x, i2), one)), get_arg()->diff(x));
+}
+
 } // CSymPy
