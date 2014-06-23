@@ -1,11 +1,12 @@
 // ============================================================================
-// 
+//
 //         Author:  Dale Lukas Peterson (dlp), hazelnusse@gmail.com
-// 
+//
 //    Description:  Quick expansion test
-// 
+//
 // ============================================================================
 #include <iostream>
+#include <chrono>
 #include <ginac/ginac.h>
 using namespace GiNaC;
 
@@ -31,6 +32,12 @@ int main()
     std::cout << e << std::endl;
     std::cout << f << std::endl;
 
+    auto t1 = std::chrono::high_resolution_clock::now();
     ex g = f.expand();
+    auto t2 = std::chrono::high_resolution_clock::now();
+    std::cout
+        << std::chrono::duration_cast<std::chrono::milliseconds>(t2-t1).count()
+        << "ms" << std::endl;
 
+    return 0;
 }
