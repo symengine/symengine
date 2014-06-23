@@ -1452,6 +1452,66 @@ RCP<const Basic> ACot::subs(const map_basic_basic &subs_dict) const
         return acot(arg);
 }
 /* ---------------------------- */
+LambertW::LambertW(const RCP<const Basic> &arg)
+    : arg_{arg}
+{
+    CSYMPY_ASSERT(is_canonical(arg))
+}
+
+bool LambertW::is_canonical(const RCP<const Basic> &arg)
+{
+    if (eq(arg, zero)) return false;
+    if (eq(arg, E)) return false;
+    if (eq(arg, div(one, E))) return false;
+    if (eq(arg, div(log(i2), im2))) return false;
+    return true;
+}
+
+std::size_t LambertW::__hash__() const
+{
+    std::size_t seed = 0;
+    hash_combine<Basic>(seed, *arg_);
+    return seed;
+}
+
+bool LambertW::__eq__(const Basic &o) const
+{
+    if (is_a<LambertW>(o) &&
+        eq(arg_, static_cast<const LambertW &>(o).arg_))
+        return true;
+    return false;
+}
+
+int LambertW::compare(const Basic &o) const
+{
+    CSYMPY_ASSERT(is_a<LambertW>(o))
+    return arg_->__cmp__(*(static_cast<const LambertW &>(o).arg_));
+}
+
+
+std::string LambertW::__str__() const
+{
+    std::ostringstream o;
+    o<< "lambertw(" << *arg_ << ")";
+    return o.str();
+}
+
+RCP<const Basic> LambertW::diff(const RCP<const Symbol> &x) const
+{
+    // check http://en.wikipedia.org/wiki/Lambert_W_function#Derivative
+    // for the equation
+    RCP<const Basic> lambertw_val = lambertw(arg_);
+    return mul(div(lambertw_val, mul(arg_, add(lambertw_val, one))), arg_->diff(x));
+}
+
+RCP<const Basic> lambertw(const RCP<const Basic> &arg)
+{
+    if (eq(arg, zero)) return zero;
+    if (eq(arg, E)) return one;
+    if (eq(arg, div(one, E))) return minus_one;
+    if (eq(arg, div(log(i2), im2))) return mul(minus_one, log(i2));
+    return rcp(new LambertW(arg));
+}
 
 FunctionSymbol::FunctionSymbol(std::string name, const RCP<const Basic> &arg)
     : name_{name}, arg_{arg}
