@@ -53,6 +53,7 @@ using CSymPy::coth;
 using CSymPy::asinh;
 using CSymPy::acosh;
 using CSymPy::atanh;
+using CSymPy::acoth;
 
 void test_sin()
 {
@@ -1383,6 +1384,24 @@ void test_atanh()
     assert(eq(r1, r2));
 }
 
+void test_acoth()
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Basic> im1 = integer(-1);
+    RCP<const Basic> i2 = integer(2);
+
+    RCP<const Basic> r1;
+    RCP<const Basic> r2;
+
+    r1 = acoth(mul(im1, x))->diff(x);
+    r2 = div(im1, sub(one, pow(x, i2)));
+    assert(eq(r1, r2));
+
+    r1 = acoth(mul(im1, x));
+    r2 = mul(im1, acoth(x));
+    assert(eq(r1, r2));
+}
+
 int main(int argc, char* argv[])
 {
     print_stack_on_segfault();    
@@ -1412,5 +1431,6 @@ int main(int argc, char* argv[])
     test_asinh();
     test_acosh();
     test_atanh();
+    test_acoth();
     return 0;
 }

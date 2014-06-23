@@ -680,6 +680,30 @@ public:
 
 //! Canonicalize ATanh:
 RCP<const Basic> atanh(const RCP<const Basic> &arg);
+
+class ACoth: public HyperbolicFunction {
+//! The inverse hyperbolic cotangent function.
+public:
+    //! ACoth Constructor
+    ACoth(const RCP<const Basic> &arg);
+    /*! Equality comparator
+     * \param o - Object to be compared with
+     * \return whether the 2 objects are equal
+     * */
+    virtual bool __eq__(const Basic &o) const;
+    virtual int compare(const Basic &o) const;
+    //! \return stringify version
+    virtual std::string __str__() const;
+    //! \return `true` if canonical
+    bool is_canonical(const RCP<const Basic> &arg);
+    //! Differentiate w.r.t Symbol `x`
+    virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
+    //! Substitute with `subs_dict
+    virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
+};
+
+//! Canonicalize ACoth:
+RCP<const Basic> acoth(const RCP<const Basic> &arg);
 } // CSymPy
 
 #endif
