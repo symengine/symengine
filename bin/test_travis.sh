@@ -54,6 +54,10 @@ else
 
     echo "Running tests using installed csympy:"
     cd $SOURCE_DIR/src/tests/basic/
-    g++ -std=c++0x -I$our_install_dir/include/ -L$our_install_dir/lib test_basic.cpp -lcsympy -lgmpxx -lgmp -lteuchos -lbfd
+    extra_libs=""
+    if [[ "${WITH_BFD}" != "" ]]; then
+        extra_libs="$extra_libs -lbfd"
+    fi
+    g++ -std=c++0x -I$our_install_dir/include/ -L$our_install_dir/lib test_basic.cpp -lcsympy -lgmpxx -lgmp -lteuchos $extra_libs
     ./a.out
 fi
