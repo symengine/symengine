@@ -5,12 +5,10 @@ set -e
 # Echo each command
 set -x
 
-if [[ "${TEST_IN_TREE}" == "yes" ]]; then
-    export SOURCE_DIR=.
-else
+export SOURCE_DIR=`pwd`
+if [[ "${TEST_IN_TREE}" != "yes" ]]; then
     mkdir build
     cd build
-    export SOURCE_DIR=..
 fi
 echo "Current directory:"
 pwd
