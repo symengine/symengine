@@ -2114,4 +2114,78 @@ RCP<const Basic> ACosh::diff(const RCP<const Symbol> &x) const
     return mul(div(one, sqrt(sub(pow(x, i2), one))), get_arg()->diff(x));
 }
 
+ATanh::ATanh(const RCP<const Basic> &arg)
+    : HyperbolicFunction(arg)
+{
+    CSYMPY_ASSERT(is_canonical(arg))
+}
+
+bool ATanh::is_canonical(const RCP<const Basic> &arg)
+{
+    // TODO: Add further checks for +inf -inf cases
+    if (eq(arg, zero))
+        return false;
+    if (is_a_Number(*arg) &&
+        rcp_static_cast<const Number>(arg)->is_negative()) {
+        return false;
+    }
+    if (could_extract_minus(arg))
+        return false;
+    return true;
+}
+
+bool ATanh::__eq__(const Basic &o) const
+{
+    if (is_a<ATanh>(o) &&
+        eq(get_arg(), static_cast<const ATanh &>(o).get_arg()))
+        return true;
+    else
+        return false;
+}
+
+int ATanh::compare(const Basic &o) const
+{
+    CSYMPY_ASSERT(is_a<ATanh>(o))
+    const ATanh &s = static_cast<const ATanh &>(o);
+    return get_arg()->__cmp__(s);
+}
+
+
+std::string ATanh::__str__() const
+{
+    std::ostringstream o;
+    o << "atanh(" << *get_arg() << ")";
+    return o.str();
+}
+
+RCP<const Basic> atanh(const RCP<const Basic> &arg)
+{
+    if (eq(arg, zero)) return zero;
+    if (is_a_Number(*arg) &&
+        rcp_static_cast<const Number>(arg)->is_negative()) {
+        return mul(minus_one, atanh(mul(minus_one, arg)));
+    }
+    if (could_extract_minus(arg)) {
+        return mul(minus_one, atanh(mul(minus_one, arg)));
+    }
+    return rcp(new ATanh(arg));
+}
+
+RCP<const Basic> ATanh::subs(const map_basic_basic &subs_dict) const
+{
+    RCP<const ATanh> self = rcp_const_cast<ATanh>(rcp(this));
+    auto it = subs_dict.find(self);
+    if (it != subs_dict.end())
+        return it->second;
+    RCP<const Basic> arg = get_arg()->subs(subs_dict);
+    if (arg == get_arg())
+        return self;
+    else
+        return atanh(arg);
+}
+
+RCP<const Basic> ATanh::diff(const RCP<const Symbol> &x) const
+{
+    return mul(div(one, sub(one, pow(x, i2))), get_arg()->diff(x));
+}
 } // CSymPy
