@@ -5,6 +5,8 @@ set -e
 # Echo each command
 set -x
 
+git clean -dfx
+
 export SOURCE_DIR=`pwd`
 if [[ "${TEST_IN_TREE}" != "yes" ]]; then
     mkdir build
