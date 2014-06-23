@@ -56,6 +56,6 @@ else
 
     echo "Running tests using installed csympy:"
     cd $SOURCE_DIR/src/tests/basic/
-    g++ -std=c++11 -I$our_install_dir/include/ -L$our_install_dir/lib test_basic.cpp -lcsympy -lgmpxx -lgmp -lteuchos -lbfd
+    g++ -std=c++0x -I$our_install_dir/include/ -L$our_install_dir/lib test_basic.cpp -lcsympy -lgmpxx -lgmp -lteuchos -lbfd
     ./a.out
 fi
