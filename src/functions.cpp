@@ -2047,7 +2047,71 @@ RCP<const Basic> ASinh::subs(const map_basic_basic &subs_dict) const
 
 RCP<const Basic> ASinh::diff(const RCP<const Symbol> &x) const
 {
-    return mul(div(one, add(pow(x, i2), one)), get_arg()->diff(x));
+    return mul(div(one, sqrt(add(pow(x, i2), one))), get_arg()->diff(x));
+}
+
+ACosh::ACosh(const RCP<const Basic> &arg)
+    : HyperbolicFunction(arg)
+{
+    CSYMPY_ASSERT(is_canonical(arg))
+}
+
+bool ACosh::is_canonical(const RCP<const Basic> &arg)
+{
+    // TODO: Add further checks for +inf -inf cases
+    // TODO: Lookup into a cst table once complex is implemented
+    if (eq(arg, one))
+        return false;
+    return true;
+}
+
+bool ACosh::__eq__(const Basic &o) const
+{
+    if (is_a<ACosh>(o) &&
+        eq(get_arg(), static_cast<const ACosh &>(o).get_arg()))
+        return true;
+    else
+        return false;
+}
+
+int ACosh::compare(const Basic &o) const
+{
+    CSYMPY_ASSERT(is_a<ACosh>(o))
+    const ACosh &s = static_cast<const ACosh &>(o);
+    return get_arg()->__cmp__(s);
+}
+
+
+std::string ACosh::__str__() const
+{
+    std::ostringstream o;
+    o << "acosh(" << *get_arg() << ")";
+    return o.str();
+}
+
+RCP<const Basic> acosh(const RCP<const Basic> &arg)
+{
+    // TODO: Lookup into a cst table once complex is implemented
+    if (eq(arg, one)) return zero;
+    return rcp(new ACosh(arg));
+}
+
+RCP<const Basic> ACosh::subs(const map_basic_basic &subs_dict) const
+{
+    RCP<const ACosh> self = rcp_const_cast<ACosh>(rcp(this));
+    auto it = subs_dict.find(self);
+    if (it != subs_dict.end())
+        return it->second;
+    RCP<const Basic> arg = get_arg()->subs(subs_dict);
+    if (arg == get_arg())
+        return self;
+    else
+        return acosh(arg);
+}
+
+RCP<const Basic> ACosh::diff(const RCP<const Symbol> &x) const
+{
+    return mul(div(one, sqrt(sub(pow(x, i2), one))), get_arg()->diff(x));
 }
 
 } // CSymPy

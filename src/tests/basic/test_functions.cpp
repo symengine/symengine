@@ -51,6 +51,7 @@ using CSymPy::cosh;
 using CSymPy::tanh;
 using CSymPy::coth;
 using CSymPy::asinh;
+using CSymPy::acosh;
 
 void test_sin()
 {
@@ -1337,9 +1338,26 @@ void test_asinh()
     assert(eq(r1, r2));
 
     r1 = asinh(mul(im1, x))->diff(x);
-    r2 = div(im1, add(pow(x, i2), one));
+    r2 = div(im1, sqrt(add(pow(x, i2), one)));
+    assert(eq(r1, r2));
+}
+
+void test_acosh()
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Basic> im1 = integer(-1);
+    RCP<const Basic> i2 = integer(2);
+
+    RCP<const Basic> r1;
+    RCP<const Basic> r2;
+
+    r1 = acosh(one);
+    r2 = zero;
     assert(eq(r1, r2));
 
+    r1 = acosh(mul(im1, x))->diff(x);
+    r2 = div(im1, sqrt(add(pow(x, i2), im1)));
+    assert(eq(r1, r2));
 }
 
 int main(int argc, char* argv[])
@@ -1369,5 +1387,6 @@ int main(int argc, char* argv[])
     test_tanh();
     test_coth();
     test_asinh();
+    test_acosh();
     return 0;
 }
