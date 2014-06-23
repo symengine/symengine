@@ -5,6 +5,9 @@ set -e
 # Echo each command
 set -x
 
+# Shippable currently does not clean the directory after previous builds
+# (https://github.com/Shippable/support/issues/238), so
+# we need to do it ourselves.
 git clean -dfx
 
 export SOURCE_DIR=`pwd`
