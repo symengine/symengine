@@ -44,7 +44,7 @@ public:
     * */
     static RCP<const Number> from_two_ints(const RCP<const Integer> &n,
             const RCP<const Integer> &d);
-	//! \return `true` if `0`
+    //! \return `true` if `0`
     virtual bool is_zero() const { return this->i == 0; }
     //! \return `true` if `1`
     virtual bool is_one() const { return this->i == 1; }
@@ -217,6 +217,10 @@ inline bool is_a_Number(const Basic &b)
     return is_a<Integer>(b) || is_a<Rational>(b);
 }
 
+//! returns the `num` and `den` of rational `rat` as `rcp Integer`
+void get_num_den(const RCP<const Rational> &rat,
+        const Ptr<RCP<const Integer>> &num,
+        const Ptr<RCP<const Integer>> &den);
 
 } // CSymPy
 

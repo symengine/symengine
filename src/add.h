@@ -21,7 +21,7 @@ public:
     /*! Constructs Add from a dictionary by copying the contents of the
  dictionary
     */
-    Add(const RCP<const Number> &coef, const umap_basic_int& dict);
+    Add(const RCP<const Number> &coef, umap_basic_int&& dict);
     //! \return Size of the hash
     virtual std::size_t __hash__() const;
     /*! Equality comparator
@@ -39,7 +39,7 @@ public:
     /*! Creates appropriate instance (i.e Add , Symbol, Integer,
     * Mul) depending on the size of dictionary `d`.
     */
-    static RCP<const Basic> from_dict(const RCP<const Number> &coef, const umap_basic_int &d);
+    static RCP<const Basic> from_dict(const RCP<const Number> &coef, umap_basic_int &&d);
     /*!
     * Adds `(coeff*t)` to the dict `d`
     */

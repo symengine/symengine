@@ -23,3 +23,9 @@ configure_file(Teuchos_config.h.in Teuchos_config.h)
 include_directories(${teuchos_BINARY_DIR})
 
 add_library(teuchos ${SRC})
+
+install(TARGETS teuchos
+            RUNTIME DESTINATION bin
+            ARCHIVE DESTINATION lib
+            LIBRARY DESTINATION lib
+        )

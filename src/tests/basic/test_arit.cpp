@@ -14,6 +14,7 @@ using CSymPy::Basic;
 using CSymPy::Add;
 using CSymPy::Mul;
 using CSymPy::Pow;
+using CSymPy::Log;
 using CSymPy::Symbol;
 using CSymPy::umap_basic_int;
 using CSymPy::map_vec_int;
@@ -26,6 +27,9 @@ using CSymPy::sin;
 using CSymPy::RCP;
 using CSymPy::rcp;
 using CSymPy::sqrt;
+using CSymPy::E;
+using CSymPy::exp;
+using CSymPy::sub;
 using CSymPy::rcp_dynamic_cast;
 using CSymPy::print_stack_on_segfault;
 
@@ -331,6 +335,51 @@ void test_pow()
     r1 = div(one, sqrt(i2));
     r2 = div(sqrt(i2), i2);
     assert(eq(r1, r2));
+
+    r1 = exp(pow(x, i3));
+    r1 = r1->diff(x);
+    r2 = mul(mul(i3, exp(pow(x, i3))), pow(x, i2));
+    assert(eq(r1, r2));
+
+    r1 = pow(x, x);
+    r1 = r1->diff(x);
+    r2 = mul(pow(x, x), add(log(x), one));
+    assert(eq(r1, r2));
+
+    r1 = pow(x, y);
+    r1 = r1->diff(x);
+    r2 = mul(pow(x, sub(y, one)), y);
+    assert(eq(r1, r2));
+
+    r1 = pow(y, x);
+    r1 = r1->diff(x);
+    r2 = mul(pow(y, x), log(y));
+    assert(eq(r1, r2));
+ }
+
+ void test_log()
+ {
+    RCP<const Basic> i2 = rcp(new Integer(2));
+    RCP<const Basic> i3 = rcp(new Integer(3));
+
+    RCP<const Basic> r1;
+    RCP<const Basic> r2;
+
+    r1 = log(E);
+    r2 = one;
+    assert(eq(r1, r2));
+
+    r1 = log(one);
+    r2 = zero;
+    assert(eq(r1, r2));
+
+    r1 = log(div(i2, i3));
+    r2 = sub(log(i2), log(i3));
+    assert(eq(r1, r2));
+
+    r1 = log(E, i2);
+    r2 = div(one, log(i2));
+    assert(eq(r1, r2));
  }
 
 void test_multinomial()
@@ -499,6 +548,7 @@ int main(int argc, char* argv[])
     test_add();
     test_mul();
     test_pow();
+    test_log();
     test_sub();
     test_div();
     test_multinomial();

@@ -10,10 +10,10 @@
 
 namespace CSymPy {
 
-Mul::Mul(const RCP<const Number> &coef, const map_basic_basic& dict)
-    : coef_{coef}, dict_{dict}
+Mul::Mul(const RCP<const Number> &coef, map_basic_basic&& dict)
+    : coef_{coef}, dict_{std::move(dict)}
 {
-    CSYMPY_ASSERT(is_canonical(coef, dict))
+    CSYMPY_ASSERT(is_canonical(coef, dict_))
 }
 
 bool Mul::is_canonical(const RCP<const Number> &coef,
@@ -104,19 +104,30 @@ std::string Mul::__str__() const
         o << "-";
     else if (neq(coef_, one))
         o << *coef_;
-    for (auto &p: dict_) {
-        if (is_a<Add>(*p.first)) o << "(";
-        o << *(p.first);
-        if (is_a<Add>(*p.first)) o << ")";
-        if (neq(p.second, one))
-            o << "^" << *(p.second);
+
+    auto p = dict_.begin();
+    if (is_a_Number(*(p->first))) o << "*";
+
+    for (; p != dict_.end(); p++) {
+        if (is_a<Add>(*(p->first))) o << "(";
+        o << *(p->first);
+        if (is_a<Add>(*(p->first))) o << ")";
+        if (neq(p->second, one)) {
+            o << "^";
+            if (!is_a<Integer>(*(p->second)) && !is_a<Symbol>(*(p->second)))
+                o << "(";
+            o << *(p->second);
+            if (!is_a<Integer>(*(p->second)) && !is_a<Symbol>(*(p->second)))
+                o << ")";
+        }
         o << "*";
     }
+
     std::string s = o.str();
     return s.substr(0, s.size()-1);
 }
 
-RCP<const CSymPy::Basic> Mul::from_dict(const RCP<const Number> &coef, const map_basic_basic &d)
+RCP<const CSymPy::Basic> Mul::from_dict(const RCP<const Number> &coef, map_basic_basic &&d)
 {
     if (coef->is_zero()) return zero;
     if (d.size() == 0) {
@@ -131,17 +142,17 @@ RCP<const CSymPy::Basic> Mul::from_dict(const RCP<const Number> &coef, const map
                 }
             } else {
                 // For coef*x or coef*x^3 we simply return Mul:
-                return rcp(new Mul(coef, d));
+                return rcp(new Mul(coef, std::move(d)));
             }
         }
         if (coef->is_one()) {
             // Create a Pow() here:
             return pow(p->first, p->second);
         } else {
-            return rcp(new Mul(coef, d));
+            return rcp(new Mul(coef, std::move(d)));
         }
     } else {
-        return rcp(new Mul(coef, d));
+        return rcp(new Mul(coef, std::move(d)));
     }
 }
 
@@ -181,7 +192,7 @@ void Mul::as_two_terms(const Ptr<RCP<const Basic>> &a,
     *a = pow(p->first, p->second);
     map_basic_basic d = dict_;
     d.erase(p->first);
-    *b = Mul::from_dict(coef_, d);
+    *b = Mul::from_dict(coef_, std::move(d));
 }
 
 void Mul::as_base_exp(const RCP<const Basic> &self, const Ptr<RCP<const Basic>> &exp,
@@ -210,6 +221,9 @@ void Mul::as_base_exp(const RCP<const Basic> &self, const Ptr<RCP<const Basic>> 
         *exp = rcp_static_cast<const Pow>(self)->exp_;
         *base = rcp_static_cast<const Pow>(self)->base_;
     } else if (is_a<Add>(*self)) {
+        *exp = one;
+        *base = self;
+    } else if (is_a<Log>(*self)) {
         *exp = one;
         *base = self;
     } else if (is_a_sub<Function>(*self)) {
@@ -279,9 +293,9 @@ RCP<const Basic> mul(const RCP<const Basic> &a, const RCP<const Basic> &b)
                 Mul::dict_add_term(d2, p.second, p.first);
             }
         }
-        return Mul::from_dict(coef, d2);
+        return Mul::from_dict(coef, std::move(d2));
     }
-    return Mul::from_dict(coef, d);
+    return Mul::from_dict(coef, std::move(d));
 }
 
 RCP<const Basic> div(const RCP<const Basic> &a, const RCP<const Basic> &b)
@@ -325,7 +339,7 @@ RCP<const Basic> mul_expand_two(const RCP<const Basic> &a, const RCP<const Basic
                     mulnum(rcp_static_cast<const Add>(a)->coef_, q.second),
                     q.first);
         }
-        return Add::from_dict(coef, d);
+        return Add::from_dict(coef, std::move(d));
     } else if (is_a<Add>(*a)) {
         return mul_expand_two(b, a);
     } else if (is_a<Add>(*b)) {
@@ -352,7 +366,7 @@ RCP<const Basic> mul_expand_two(const RCP<const Basic> &a, const RCP<const Basic
                     mulnum(rcp_static_cast<const Add>(b)->coef_, a_coef),
                     a_term);
         }
-        return Add::from_dict(coef, d);
+        return Add::from_dict(coef, std::move(d));
     }
     return mul(a, b);
 }
@@ -384,13 +398,14 @@ RCP<const Basic> Mul::power_all_terms(const RCP<const Basic> &exp) const
             }
         } else{
             Mul::dict_add_term(d, new_exp, p.first);
-        } 
+        }
     }
     if (is_a_Number(*new_coef)) {
-        return Mul::from_dict(rcp_static_cast<const Number>(new_coef), d);
+        return Mul::from_dict(rcp_static_cast<const Number>(new_coef),
+                std::move(d));
     } else {
         // TODO: this can be made faster probably:
-        return mul(new_coef, Mul::from_dict(one, d));
+        return mul(new_coef, Mul::from_dict(one, std::move(d)));
     }
 }
 
@@ -418,7 +433,7 @@ RCP<const Basic> Mul::diff(const RCP<const Symbol> &x) const
             Mul::dict_add_term(d, exp, t);
         }
         // TODO: speed this up:
-        r = add(r, Mul::from_dict(coef, d));
+        r = add(r, Mul::from_dict(coef, std::move(d)));
     }
     return r;
 }
@@ -454,7 +469,7 @@ RCP<const Basic> Mul::subs(const map_basic_basic &subs_dict) const
             Mul::dict_add_term(d, exp, t);
         }
     }
-    return Mul::from_dict(coef, d);
+    return Mul::from_dict(coef, std::move(d));
 }
 
 } // CSymPy

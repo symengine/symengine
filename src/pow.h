@@ -46,6 +46,8 @@ public:
 RCP<const Basic> pow(const RCP<const Basic> &a,
         const RCP<const Basic> &b);
 
+//! Returns the natural exponential function `E^x = pow(E, x)`
+RCP<const Basic> exp(const RCP<const Basic> &x);
 
 void multinomial_coefficients(int m, int n, map_vec_int &r);
 //! Expand the power expression
@@ -54,6 +56,40 @@ RCP<const Basic> pow_expand(const RCP<const Pow> &self);
 inline RCP<const Basic> sqrt(const RCP<const Basic> &x) {
     return pow(x, div(one, integer(2)));
 }
+
+class Log : public Basic {
+// Logarithms are taken with the natural base, `e`. To get
+// a logarithm of a different base `b`, use `log(x, b)`,
+// which is essentially short-hand for `log(x)/log(b)`.
+private:
+    RCP<const Basic> arg_; //! The `arg` in `log(arg)`
+
+public:
+    //! Log Constructor
+    Log(const RCP<const Basic> &arg);
+    //! \return Size of the hash
+    virtual std::size_t __hash__() const;
+    /*! Equality comparator
+     * \param o - Object to be compared with
+     * \return whether the 2 objects are equal
+     * */
+    virtual bool __eq__(const Basic &o) const;
+    virtual int compare(const Basic &o) const;
+    //! \return stringify version
+    virtual std::string __str__() const;
+    //! \return `true` if canonical
+    bool is_canonical(const RCP<const Basic> &arg);
+    //! \return `arg` of `log(arg)`
+    inline RCP<const Basic> get_arg() const { return arg_; }
+    //! Differentiate w.r.t Symbol `x`
+    virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
+};
+
+//! Returns the Natural Logarithm from argument `arg`
+RCP<const Basic> log(const RCP<const Basic> &arg);
+//! \return Log from argument `arg` wrt base `b`
+RCP<const Basic> log(const RCP<const Basic> &arg,
+                    const RCP<const Basic> &b);
 
 } // CSymPy
 
