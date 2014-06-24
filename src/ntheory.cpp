@@ -210,7 +210,7 @@ int _factor_lehman_method(mpz_class &rop, const mpz_class &n)
             mpz_root(l.get_mpz_t(), k.get_mpz_t(), 2);
             b = b / (4 * l);
             b = b + a;
-            
+
             while (a <= b) {
                 l = a * a - 4 * k * n;
                 if (mpz_perfect_square_p(l.get_mpz_t())) {
@@ -227,7 +227,7 @@ int _factor_lehman_method(mpz_class &rop, const mpz_class &n)
             k = k + 1;
         }
     }
-    
+
     return ret_val;
 }
 
@@ -247,7 +247,7 @@ int _factor_pollard_pm1_method(mpz_class &rop, const mpz_class &n,
 {
     if (n < 4 || B < 3)
         throw std::runtime_error("Require n > 3 and B > 2 to use Pollard's p-1 method");
-    
+
     std::vector<unsigned> primes;
     eratosthenes_sieve(B + 1, primes);
     mpz_class m, g, _c;
@@ -255,7 +255,7 @@ int _factor_pollard_pm1_method(mpz_class &rop, const mpz_class &n,
 
     for (auto &p: primes){
         m = 1;
-        // calculate log(m, B), this can be improved
+        // calculate log(p, B), this can be improved
         while(m <= B / p){
             m = m * p;
         }
@@ -264,7 +264,7 @@ int _factor_pollard_pm1_method(mpz_class &rop, const mpz_class &n,
     }
     _c = _c - 1;
     mpz_gcd(rop.get_mpz_t(), _c.get_mpz_t(), n.get_mpz_t());
-    
+
     if(rop == 1 || rop == n)
         return 0;
     else
@@ -277,7 +277,7 @@ int factor_pollard_pm1_method(const Ptr<RCP<const Integer>> &f, const Integer &n
     int ret_val = 0;
     mpz_class rop, nm4, c;
     gmp_randstate_t state;
-    
+
     gmp_randinit_default(state);
     gmp_randseed_ui(state, retries);
     nm4 = n.as_mpz() - 4;
@@ -287,10 +287,10 @@ int factor_pollard_pm1_method(const Ptr<RCP<const Integer>> &f, const Integer &n
         c = c + 2;
         ret_val = _factor_pollard_pm1_method(rop, n.as_mpz(), c, B);
     }
-    
+
     if (ret_val != 0)
         *f = integer(rop);
-    
+
     return ret_val;
 }
 
@@ -328,7 +328,7 @@ int factor_pollard_rho_method(const Ptr<RCP<const Integer>> &f,
     int ret_val = 0;
     mpz_class rop, nm1, nm4, a, s;
     gmp_randstate_t state;
-    
+
     gmp_randinit_default(state);
     gmp_randseed_ui(state, retries);
     nm1 = n.as_mpz() - 1;
@@ -340,7 +340,7 @@ int factor_pollard_rho_method(const Ptr<RCP<const Integer>> &f,
         s = s + 1;
         ret_val = _factor_pollard_rho_method(rop, n.as_mpz(), a, s);
     }
-    
+
     if (ret_val != 0)
         *f = integer(rop);
     return ret_val;
@@ -439,7 +439,7 @@ void prime_factors(const RCP<const Integer> &n,
     unsigned limit = sqrtN.get_ui() + 1;
     std::vector<unsigned> primes;
     eratosthenes_sieve(limit, primes);
-    
+
     for (auto &p: primes)
     {
         while (_n % p == 0) {
@@ -465,7 +465,7 @@ void prime_factor_multiplicities(const RCP<const Integer> &n,
     unsigned limit = sqrtN.get_ui() + 1;
     std::vector<unsigned> primes;
     eratosthenes_sieve(limit, primes);
-    
+
     for (auto &p: primes)
     {
         count = 0;
