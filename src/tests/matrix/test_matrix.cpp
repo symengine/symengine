@@ -18,13 +18,19 @@ using CSymPy::Add;
 using CSymPy::add_dense_dense;
 using CSymPy::pow;
 using CSymPy::minus_one;
+using CSymPy::add_dense_dense;
+using CSymPy::add_dense_scalar;
+using CSymPy::mul_dense_dense;
+using CSymPy::mul_dense_scalar;
+using CSymPy::transpose_dense;
+using CSymPy::submatrix_dense;
+using CSymPy::pivoted_gaussian_elimination;
+using CSymPy::fraction_free_gaussian_elimination;
+using CSymPy::pivoted_fraction_free_gaussian_elimination;
+using CSymPy::pivoted_gauss_jordan_elimination;
 using CSymPy::fraction_free_gauss_jordan_elimination;
+using CSymPy::pivoted_fraction_free_gauss_jordan_elimination;
 
-void print_matrix(const DenseMatrix &B)
-{
-    for (unsigned i = 0; i < B.nrows()*B.ncols(); i++)
-        std::cout << *B.get(i) << std::endl;
-}
 
 void test_dense_dense_addition()
 {
@@ -127,40 +133,6 @@ void test_mul_dense_scalar()
     mul_dense_scalar(A, k, B);
 
     assert(B == DenseMatrix(2, 2, {integer(2), integer(4), integer(6), integer(8)}));
-}
-
-void test_diagonal_solve()
-{
-    DenseMatrix A = DenseMatrix(2, 2, {integer(1), integer(0), integer(0), integer(1)});
-    DenseMatrix b = DenseMatrix(2, 1, {integer(1), integer(1)});
-    DenseMatrix C = DenseMatrix(2, 1);
-    diagonal_solve(A, b, C);
-
-    assert(C == DenseMatrix(2, 1, {integer(1), integer(1)}));
-
-    A = DenseMatrix(2, 2, {integer(5), integer(-4), integer(8), integer(1)});
-    b = DenseMatrix(2, 1, {integer(7), integer(26)});
-    C = DenseMatrix(2, 1);
-    diagonal_solve(A, b, C);
-
-    assert(C == DenseMatrix(2, 1, {integer(3), integer(2)}));
-
-    // below two sets produce the correct matrix but the results are not
-    // simplified. See: https://github.com/sympy/csympy/issues/183
-    A = DenseMatrix(2, 2, {symbol("a"), symbol("b"), symbol("b"), symbol("a")});
-    b = DenseMatrix(2, 1, {add(pow(symbol("a"), integer(2)), pow(symbol("b"), integer(2))),
-        mul(integer(2), mul(symbol("a"), symbol("b")))});
-    C = DenseMatrix(2, 1);
-    diagonal_solve(A, b, C);
-
-//    assert(C == DenseMatrix(2, 1, {symbol("a"), symbol("b")}));
-
-    A = DenseMatrix(2, 2, {integer(1), integer(1), integer(1), integer(-1)});
-    b = DenseMatrix(2, 1, {add(symbol("a"), symbol("b")), sub(symbol("a"), symbol("b"))});
-    C = DenseMatrix(2, 1, {symbol("a"), symbol("b")});
-    diagonal_solve(A, b, C);
-
-//    assert(C == DenseMatrix(2, 1, {symbol("a"), symbol("b")}));
 }
 
 void test_transpose_dense()
@@ -436,7 +408,7 @@ void test_pivoted_gauss_jordan_elimination()
         integer(2), integer(5), integer(4), integer(6), integer(8)});
     B = DenseMatrix(3, 3);
     pivoted_gauss_jordan_elimination(A, B, pivotlist);
-    print_matrix(B);
+
     assert(B == DenseMatrix(3, 3, {integer(1), integer(0), integer(0), integer(0),
         integer(1), integer(0), integer(0), integer(0), integer(1)}));
 }
@@ -492,6 +464,37 @@ void test_fraction_free_gaussian_elimination_solve()
 
     assert(x == DenseMatrix(4, 1, {integer(1), integer(1), integer(1),
         integer(1)}));
+
+    A = DenseMatrix(2, 2, {integer(1), integer(0), integer(0), integer(1)});
+    b = DenseMatrix(2, 1, {integer(1), integer(1)});
+    x = DenseMatrix(2, 1);
+    fraction_free_gaussian_elimination_solve(A, b, x);
+
+    assert(x == DenseMatrix(2, 1, {integer(1), integer(1)}));
+
+    A = DenseMatrix(2, 2, {integer(5), integer(-4), integer(8), integer(1)});
+    b = DenseMatrix(2, 1, {integer(7), integer(26)});
+    x = DenseMatrix(2, 1);
+    fraction_free_gaussian_elimination_solve(A, b, x);
+
+    assert(x == DenseMatrix(2, 1, {integer(3), integer(2)}));
+
+    // below two sets produce the correct matrix but the results are not
+    // simplified. See: https://github.com/sympy/csympy/issues/183
+    A = DenseMatrix(2, 2, {symbol("a"), symbol("b"), symbol("b"), symbol("a")});
+    b = DenseMatrix(2, 1, {add(pow(symbol("a"), integer(2)), pow(symbol("b"), integer(2))),
+        mul(integer(2), mul(symbol("a"), symbol("b")))});
+    x = DenseMatrix(2, 1);
+    fraction_free_gaussian_elimination_solve(A, b, x);
+
+//    assert(x == DenseMatrix(2, 1, {symbol("a"), symbol("b")}));
+
+    A = DenseMatrix(2, 2, {integer(1), integer(1), integer(1), integer(-1)});
+    b = DenseMatrix(2, 1, {add(symbol("a"), symbol("b")), sub(symbol("a"), symbol("b"))});
+    x = DenseMatrix(2, 1, {symbol("a"), symbol("b")});
+    fraction_free_gaussian_elimination_solve(A, b, x);
+
+//    assert(x == DenseMatrix(2, 1, {symbol("a"), symbol("b")}));
 }
 
 void test_fraction_free_gauss_jordan_solve()
@@ -526,8 +529,6 @@ int main(int argc, char* argv[])
     test_dense_dense_multiplication();
 
     test_mul_dense_scalar();
-
-    test_diagonal_solve();
 
     test_transpose_dense();
 

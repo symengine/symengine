@@ -57,10 +57,9 @@ MatrixBase& DenseMatrix::mul_matrix(const MatrixBase &other) const
 // ----------------------------- Matrix Transpose ----------------------------//
 void transpose_dense(const DenseMatrix &A, DenseMatrix &B)
 {
-    unsigned row = A.row_;
-    unsigned col = A.col_;
+    CSYMPY_ASSERT(B.row_ == A.row_ && B.col_ == A.col_);
 
-    CSYMPY_ASSERT(B.row_ == row && B.col_ == col);
+    unsigned row = A.row_, col = A.col_;
 
     for (unsigned i = 0; i < row; i++)
         for (unsigned j = 0; j < col; j++)
@@ -71,21 +70,23 @@ void transpose_dense(const DenseMatrix &A, DenseMatrix &B)
 void submatrix_dense(const DenseMatrix &A, unsigned row_start, unsigned row_end,
         unsigned col_start, unsigned col_end, DenseMatrix &B)
 {
-    unsigned row = B.row_;
-    unsigned col = B.col_;
-
     CSYMPY_ASSERT(row_end > row_start && col_end > col_start);
-    CSYMPY_ASSERT(row == row_end - row_start + 1 && col == col_end - col_start + 1);
+    CSYMPY_ASSERT(B.row_ == row_end - row_start + 1 &&
+            B.col_ == col_end - col_start + 1);
+
+    unsigned row = B.row_, col = B.col_;
 
     for (unsigned i = 0; i < row; i++)
         for (unsigned j = 0; j < col; j++)
-            B.m_[i*col + j] = A.m_[(row_start + i - 1)*A.col_ + col_start - 1 + j];
+            B.m_[i*col + j] =
+                A.m_[(row_start + i - 1)*A.col_ + col_start - 1 + j];
 }
 
 // ------------------------------- Matrix Addition ---------------------------//
 void add_dense_dense(const DenseMatrix &A, const DenseMatrix &B, DenseMatrix &C)
 {
-    CSYMPY_ASSERT(A.row_ == B.row_ && A.col_ == B.col_ && A.row_ == C.row_ && A.col_ == C.col_);
+    CSYMPY_ASSERT(A.row_ == B.row_ && A.col_ == B.col_ &&
+        A.row_ == C.row_ && A.col_ == C.col_);
 
     std::vector<RCP<const Basic>>::const_iterator ait = A.m_.begin();
     std::vector<RCP<const Basic>>::const_iterator bit = B.m_.begin();
@@ -117,17 +118,16 @@ void add_dense_scalar(const DenseMatrix &A, RCP<const Basic> &k, DenseMatrix &B)
 void mul_dense_dense(const DenseMatrix &A, const DenseMatrix &B,
         DenseMatrix &C)
 {
-    unsigned row = A.row_;
-    unsigned col = B.col_;
+    CSYMPY_ASSERT(A.col_ == B.row_ && C.row_ == A.row_ && C.col_ == B.col_);
 
-    CSYMPY_ASSERT(A.col_ == B.row_ && C.row_ == row && C.col_ == col);
+    unsigned row = A.row_, col = B.col_;
 
     for (unsigned r = 0; r<row; r++) {
         for (unsigned c = 0; c<col; c++) {
             C.m_[r*col + c] = zero; // Integer Zero
             for (unsigned k = 0; k<A.col_; k++)
                 C.m_[r*col + c] = add(C.m_[r*col + c],
-                        mul(A.m_[r*A.col_ + k], B.m_[k*col + c]));
+                    mul(A.m_[r*A.col_ + k], B.m_[k*col + c]));
         }
     }
 }
@@ -182,12 +182,10 @@ void row_add_row_dense(DenseMatrix &A, unsigned i, unsigned j,
 void pivoted_gaussian_elimination(const DenseMatrix &A, DenseMatrix &B,
     std::vector<unsigned> &pivotlist)
 {
-    unsigned row = A.row_;
-    unsigned col = A.col_;
+    CSYMPY_ASSERT(A.row_ == B.row_ && A.col_ == B.col_);
+    CSYMPY_ASSERT(pivotlist.size() == A.row_);
 
-    CSYMPY_ASSERT(row == B.row_ && col == B.col_);
-    CSYMPY_ASSERT(pivotlist.size() == row);
-
+    unsigned row = A.row_, col = A.col_;
     unsigned index = 0, i, j, k;
     B.m_ = A.m_;
 
@@ -227,10 +225,9 @@ void pivoted_gaussian_elimination(const DenseMatrix &A, DenseMatrix &B,
 // ACM SIGSAM Bulletin, 31(3), 11–19. doi:10.1145/271130.271133.
 void fraction_free_gaussian_elimination(const DenseMatrix &A, DenseMatrix &B)
 {
-    unsigned col = A.col_;
-
     CSYMPY_ASSERT(A.row_ == B.row_ && A.col_ == B.col_);
 
+    unsigned col = A.col_;
     B.m_ = A.m_;
 
     for (unsigned i = 0; i < col - 1; i++)
@@ -239,7 +236,8 @@ void fraction_free_gaussian_elimination(const DenseMatrix &A, DenseMatrix &B)
                 B.m_[j*col + k] = sub(mul(B.m_[i*col + i], B.m_[j*col + k]),
                     mul(B.m_[j*col + i], B.m_[i*col + k]));
                 if (i > 0)
-                    B.m_[j*col + k] = div(B.m_[j*col + k], B.m_[i*col - col + i - 1]);
+                    B.m_[j*col + k] = div(B.m_[j*col + k],
+                        B.m_[i*col - col + i - 1]);
             }
             B.m_[j*col + i] = zero;
         }
@@ -249,12 +247,10 @@ void fraction_free_gaussian_elimination(const DenseMatrix &A, DenseMatrix &B)
 void pivoted_fraction_free_gaussian_elimination(const DenseMatrix &A,
     DenseMatrix &B, std::vector<unsigned> &pivotlist)
 {
-    unsigned col = A.col_;
-    unsigned row = A.row_;
-
     CSYMPY_ASSERT(A.row_ == B.row_ && A.col_ == B.col_);
-    CSYMPY_ASSERT(pivotlist.size() == row);
+    CSYMPY_ASSERT(pivotlist.size() == A.row_);
 
+    unsigned col = A.col_, row = A.row_;
     unsigned index = 0, i, k, j;
     B.m_ = A.m_;
 
@@ -290,12 +286,10 @@ void pivoted_fraction_free_gaussian_elimination(const DenseMatrix &A,
 void pivoted_gauss_jordan_elimination(const DenseMatrix &A, DenseMatrix &B,
     std::vector<unsigned> &pivotlist)
 {
-    unsigned row = A.row_;
-    unsigned col = A.col_;
+    CSYMPY_ASSERT(A.row_ == B.row_ && A.col_ == B.col_);
+    CSYMPY_ASSERT(pivotlist.size() == A.row_);
 
-    CSYMPY_ASSERT(row == B.row_ && col == B.col_);
-    CSYMPY_ASSERT(pivotlist.size() == row);
-
+    unsigned row = A.row_, col = A.col_;
     unsigned index = 0, i, j, k;
     RCP<const Basic> scale;
     B.m_ = A.m_;
@@ -335,11 +329,9 @@ void pivoted_gauss_jordan_elimination(const DenseMatrix &A, DenseMatrix &B,
 // ACM SIGSAM Bulletin, 31(3), 11–19. doi:10.1145/271130.271133.
 void fraction_free_gauss_jordan_elimination(const DenseMatrix &A, DenseMatrix &B)
 {
-    unsigned row = A.row_;
-    unsigned col = A.col_;
+    CSYMPY_ASSERT(A.row_ == B.row_ && A.col_ == B.col_);
 
-    CSYMPY_ASSERT(row == B.row_ && col == B.col_);
-
+    unsigned row = A.row_, col = A.col_;
     unsigned i, j, k;
     RCP<const Basic> d;
 
@@ -367,12 +359,10 @@ void fraction_free_gauss_jordan_elimination(const DenseMatrix &A, DenseMatrix &B
 void pivoted_fraction_free_gauss_jordan_elimination(const DenseMatrix &A,
         DenseMatrix &B, std::vector<unsigned> &pivotlist)
 {
-    unsigned row = A.row_;
-    unsigned col = A.col_;
-
     CSYMPY_ASSERT(A.row_ == B.row_ && A.col_ == B.col_);
-    CSYMPY_ASSERT(pivotlist.size() == row);
+    CSYMPY_ASSERT(pivotlist.size() == A.row_);
 
+    unsigned row = A.row_, col = A.col_;
     unsigned index = 0, i, k, j;
     RCP<const Basic> d;
 
@@ -430,8 +420,9 @@ unsigned pivot(DenseMatrix &B, unsigned r, unsigned c)
 void augment_dense(const DenseMatrix &A, const DenseMatrix &b, DenseMatrix &C)
 {
     CSYMPY_ASSERT(A.row_ == b.row_ && A.row_ == C.row_);
+    CSYMPY_ASSERT(C.col_ == A.col_ + b.col_);
+
     unsigned col = A.col_ + b.col_;
-    CSYMPY_ASSERT(C.col_ == col);
 
     for (unsigned i = 0; i < A.row_; i++) {
         for (unsigned j = 0; j < A.col_; j++)
@@ -441,22 +432,16 @@ void augment_dense(const DenseMatrix &A, const DenseMatrix &b, DenseMatrix &C)
     }
 }
 
+// Assuming A is a diagonal square matrix
 void diagonal_solve(const DenseMatrix &A, const DenseMatrix &b, DenseMatrix &x)
 {
-    CSYMPY_ASSERT(b.col_ == 1);
-    CSYMPY_ASSERT(A.row_ == b.row_);
+    CSYMPY_ASSERT(A.row_ == A.col_);
+    CSYMPY_ASSERT(b.row_ == A.row_ && b.col_ == 1);
     CSYMPY_ASSERT(x.row_ == A.col_ && x.col_ == 1);
-
-    DenseMatrix B = DenseMatrix(A.row_, A.col_ + 1);
-    DenseMatrix D = DenseMatrix(A.row_, A.col_ + 1);
-    std::vector<unsigned> pivotlist(A.row_);
-
-    augment_dense(A, b, B);
-    pivoted_gauss_jordan_elimination(B, D, pivotlist);
 
     // No checks are done to see if the diagonal entries are zero
     for (unsigned i = 0; i < A.col_; i++)
-        x.m_[i] = div(D.get(i*A.col_ + i + A.col_), D.get(i*A.col_ + 2*i));
+        x.m_[i] = div(b.m_[i], A.m_[i]);
 }
 
 // Assuming U is an Upper square matrix
@@ -464,7 +449,7 @@ void back_substitution(const DenseMatrix &U, const DenseMatrix &b,
     DenseMatrix &x)
 {
     CSYMPY_ASSERT(U.row_ == U.col_);
-    CSYMPY_ASSERT(b.col_ == 1  && b.row_ == U.row_);
+    CSYMPY_ASSERT(b.row_ == U.row_ && b.col_ == 1);
     CSYMPY_ASSERT(x.row_ == U.col_ && x.col_ == 1);
 
     int i, j, col = U.col_;
