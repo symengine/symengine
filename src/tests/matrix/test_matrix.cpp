@@ -395,11 +395,11 @@ void test_pivoted_gauss_jordan_elimination()
     assert(B == DenseMatrix(3, 2, {integer(1), integer(0), integer(0), integer(1),
     integer(0), integer(0)}));
 
-    // These tests won't work with fraction_free_gauss_jordan_elimination
+    // These tests won't work with gauss_jordan_elimination
     A = DenseMatrix(3, 3, {integer(1), integer(1), integer(1), integer(2),
         integer(2), integer(2), integer(3), integer(4), integer(3)});
     B = DenseMatrix(3, 3);
-    pivoted_fraction_free_gauss_jordan_elimination(A, B, pivotlist);
+    pivoted_gauss_jordan_elimination(A, B, pivotlist);
 
     assert(B == DenseMatrix(3, 3, {integer(1), integer(0), integer(1), integer(0),
         integer(1), integer(0), integer(0), integer(0), integer(0)}));
@@ -443,6 +443,25 @@ void test_fraction_free_gauss_jordan_elimination()
 
 void test_pivoted_fraction_free_gauss_jordan_elimination()
 {
+    // These tests won't work with fraction_free_gauss_jordan_elimination
+    auto pivotlist = std::vector<unsigned>(3);
+    DenseMatrix A = DenseMatrix(3, 3, {integer(1), integer(1), integer(1), integer(2),
+        integer(2), integer(2), integer(3), integer(4), integer(3)});
+    DenseMatrix B = DenseMatrix(3, 3);
+    pivoted_fraction_free_gauss_jordan_elimination(A, B, pivotlist);
+
+    assert(B == DenseMatrix(3, 3, {integer(1), integer(0), integer(1), integer(0),
+        integer(1), integer(0), integer(0), integer(0), integer(0)}));
+
+    A = DenseMatrix(3, 3, {integer(1), integer(1), integer(1), integer(2),
+        integer(2), integer(5), integer(4), integer(6), integer(8)});
+    B = DenseMatrix(3, 3);
+    pivoted_fraction_free_gauss_jordan_elimination(A, B, pivotlist);
+
+    // Here the diagonal entry is 6 although the det(A) = -6, this because we
+    // have interchanged two rows
+    assert(B == DenseMatrix(3, 3, {integer(6), integer(0), integer(0), integer(0),
+        integer(6), integer(0), integer(0), integer(0), integer(6)}));
 }
 
 void test_fraction_free_gaussian_elimination_solve()
