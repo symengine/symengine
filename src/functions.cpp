@@ -297,7 +297,7 @@ std::size_t TrigFunction::__hash__() const
     return seed;
 }
 
-RCP<const Basic> TrigFunction::construct(RCP<const Basic> arg) const
+RCP<const Basic> TrigFunction::create(RCP<const Basic> arg) const
 {
     throw std::runtime_error("Should be implemented by the inherited class");
 }
@@ -1457,62 +1457,62 @@ RCP<const Basic> ACot::subs(const map_basic_basic &subs_dict) const
         return acot(arg);
 }
 
-RCP<const Basic> Sin::construct(RCP<const Basic> arg) const
+RCP<const Basic> Sin::create(RCP<const Basic> arg) const
 {
     return sin(arg);
 }
 
-RCP<const Basic> Cos::construct(RCP<const Basic> arg) const
+RCP<const Basic> Cos::create(RCP<const Basic> arg) const
 {
     return cos(arg);
 }
 
-RCP<const Basic> Tan::construct(RCP<const Basic> arg) const
+RCP<const Basic> Tan::create(RCP<const Basic> arg) const
 {
     return tan(arg);
 }
 
-RCP<const Basic> Cot::construct(RCP<const Basic> arg) const
+RCP<const Basic> Cot::create(RCP<const Basic> arg) const
 {
     return cot(arg);
 }
 
-RCP<const Basic> Sec::construct(RCP<const Basic> arg) const
+RCP<const Basic> Sec::create(RCP<const Basic> arg) const
 {
     return sec(arg);
 }
 
-RCP<const Basic> Csc::construct(RCP<const Basic> arg) const
+RCP<const Basic> Csc::create(RCP<const Basic> arg) const
 {
     return csc(arg);
 }
 
-RCP<const Basic> ASin::construct(RCP<const Basic> arg) const
+RCP<const Basic> ASin::create(RCP<const Basic> arg) const
 {
     return asin(arg);
 }
 
-RCP<const Basic> ACos::construct(RCP<const Basic> arg) const
+RCP<const Basic> ACos::create(RCP<const Basic> arg) const
 {
     return acos(arg);
 }
 
-RCP<const Basic> ATan::construct(RCP<const Basic> arg) const
+RCP<const Basic> ATan::create(RCP<const Basic> arg) const
 {
     return atan(arg);
 }
 
-RCP<const Basic> ACot::construct(RCP<const Basic> arg) const
+RCP<const Basic> ACot::create(RCP<const Basic> arg) const
 {
     return acot(arg);
 }
 
-RCP<const Basic> ASec::construct(RCP<const Basic> arg) const
+RCP<const Basic> ASec::create(RCP<const Basic> arg) const
 {
     return asec(arg);
 }
 
-RCP<const Basic> ACsc::construct(RCP<const Basic> arg) const
+RCP<const Basic> ACsc::create(RCP<const Basic> arg) const
 {
     return acsc(arg);
 }

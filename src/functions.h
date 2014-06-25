@@ -32,7 +32,7 @@ public:
         return arg_;
     }
     //! Method to construct classes with canonicalization
-    virtual RCP<const Basic> construct(RCP<const Basic> arg) const;
+    virtual RCP<const Basic> create(RCP<const Basic> arg) const;
 };
 
 /*! \return `true` if `arg` is of form `theta + n*pi/12`
@@ -82,7 +82,7 @@ public:
     //! Substitute with `subs_dict`
     virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
     //! \return Canonicalized sin
-    virtual RCP<const Basic> construct(RCP<const Basic> arg) const;
+    virtual RCP<const Basic> create(RCP<const Basic> arg) const;
 };
 
 //! Canonicalize Sin:
@@ -109,7 +109,7 @@ public:
     //! Substitute with `subs_dict`
     virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
     //! \return Canonicalized cos
-    virtual RCP<const Basic> construct(RCP<const Basic> arg) const;
+    virtual RCP<const Basic> create(RCP<const Basic> arg) const;
 
 };
 
@@ -137,7 +137,7 @@ public:
     //! Substitute with `subs_dict`
     virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
     //! \return Canonicalized tan
-    virtual RCP<const Basic> construct(RCP<const Basic> arg) const;
+    virtual RCP<const Basic> create(RCP<const Basic> arg) const;
 };
 //! Canonicalize Tan:
 RCP<const Basic> tan(const RCP<const Basic> &arg);
@@ -163,7 +163,7 @@ public:
     //! Substitute with `subs_dict`
     virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
     //! \return Canonicalized cot
-    virtual RCP<const Basic> construct(RCP<const Basic> arg) const;
+    virtual RCP<const Basic> create(RCP<const Basic> arg) const;
 };
 //! Canonicalize Cot:
 RCP<const Basic> cot(const RCP<const Basic> &arg);
@@ -189,7 +189,7 @@ public:
     //! Substitute with `subs_dict`
     virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
     //! \return Canonicalized csc
-    virtual RCP<const Basic> construct(RCP<const Basic> arg) const;
+    virtual RCP<const Basic> create(RCP<const Basic> arg) const;
 };
 //! Canonicalize Csc:
 RCP<const Basic> csc(const RCP<const Basic> &arg);
@@ -215,7 +215,7 @@ public:
     //! Substitute with `subs_dict`
     virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
     //! \return Canonicalized sec
-    virtual RCP<const Basic> construct(RCP<const Basic> arg) const;
+    virtual RCP<const Basic> create(RCP<const Basic> arg) const;
 };
 //! Canonicalize Sec:
 RCP<const Basic> sec(const RCP<const Basic> &arg);
@@ -240,7 +240,7 @@ public:
     //! Substitute with `subs_dict`
     virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
     //! \return Canonicalized asin
-    virtual RCP<const Basic> construct(RCP<const Basic> arg) const;
+    virtual RCP<const Basic> create(RCP<const Basic> arg) const;
 };
 
 //! Canonicalize ASin:
@@ -266,7 +266,7 @@ public:
     //! Substitute with `subs_dict`
     virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
     //! \return Canonicalized acos
-    virtual RCP<const Basic> construct(RCP<const Basic> arg) const;
+    virtual RCP<const Basic> create(RCP<const Basic> arg) const;
 };
 
 //! Canonicalize ACos:
@@ -292,7 +292,7 @@ public:
     //! Substitute with `subs_dict`
     virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
     //! \return Canonicalized asec
-    virtual RCP<const Basic> construct(RCP<const Basic> arg) const;
+    virtual RCP<const Basic> create(RCP<const Basic> arg) const;
 };
 
 //! Canonicalize ASec:
@@ -318,7 +318,7 @@ public:
     //! Substitute with `subs_dict
     virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
     //! \return Canonicalized acsc
-    virtual RCP<const Basic> construct(RCP<const Basic> arg) const;
+    virtual RCP<const Basic> create(RCP<const Basic> arg) const;
 };
 
 //! Canonicalize ACsc:
@@ -344,7 +344,7 @@ public:
     //! Substitute with `subs_dict
     virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
     //! \return Canonicalized atan
-    virtual RCP<const Basic> construct(RCP<const Basic> arg) const;
+    virtual RCP<const Basic> create(RCP<const Basic> arg) const;
 };
 
 //! Canonicalize ATan:
@@ -370,7 +370,7 @@ public:
     //! Substitute with `subs_dict
     virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
     //! \return Canonicalized acot
-    virtual RCP<const Basic> construct(RCP<const Basic> arg) const;
+    virtual RCP<const Basic> create(RCP<const Basic> arg) const;
 };
 
 //! Canonicalize ACot:
