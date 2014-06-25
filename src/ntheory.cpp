@@ -1,4 +1,5 @@
 #include <cmath>
+#include <valarray>
 
 #include "ntheory.h"
 #include "mul.h"
@@ -188,7 +189,7 @@ int _factor_lehman_method(mpz_class &rop, const mpz_class &n)
     mpz_root(u_bound.get_mpz_t(), n.get_mpz_t(), 3);
     u_bound = u_bound + 1;
 
-    for(mpz_class i = 2; i <= u_bound; i++)
+    for (mpz_class i = 2; i <= u_bound; i++)
         if (n % i == 0) {
             rop = n / i;
             ret_val = 1;
@@ -205,17 +206,17 @@ int _factor_lehman_method(mpz_class &rop, const mpz_class &n)
         while (k <= u_bound) {
             t = 2 * sqrt(k * n);
             mpz_set_f(a.get_mpz_t(), t.get_mpf_t());
-
             mpz_root(b.get_mpz_t(), n.get_mpz_t(), 6);
-            mpz_root(l.get_mpz_t(), k.get_mpz_t(), 4);
-            b = b / l;
+            mpz_root(l.get_mpz_t(), k.get_mpz_t(), 2);
+            b = b / (4 * l);
             b = b + a;
 
             while (a <= b) {
                 l = a * a - 4 * k * n;
                 if (mpz_perfect_square_p(l.get_mpz_t())) {
-                    a = a + b;
-                    mpz_gcd(rop.get_mpz_t(), n.get_mpz_t(), a.get_mpz_t());
+                    mpz_sqrt(b.get_mpz_t(), l.get_mpz_t());
+                    b = a + b;
+                    mpz_gcd(rop.get_mpz_t(), n.get_mpz_t(), b.get_mpz_t());
                     ret_val = 1;
                     break;
                 }
@@ -237,6 +238,111 @@ int factor_lehman_method(const Ptr<RCP<const Integer>> &f, const Integer &n)
 
     ret_val = _factor_lehman_method(rop, n.as_mpz());
     *f = integer(rop);
+    return ret_val;
+}
+
+// Factor using Pollard's p-1 method
+int _factor_pollard_pm1_method(mpz_class &rop, const mpz_class &n, 
+        const mpz_class &c, unsigned B)
+{
+    if (n < 4 || B < 3)
+        throw std::runtime_error("Require n > 3 and B > 2 to use Pollard's p-1 method");
+
+    std::vector<unsigned> primes;
+    eratosthenes_sieve(B + 1, primes);
+    mpz_class m, g, _c;
+    _c = c;
+
+    for (auto &p: primes){
+        m = 1;
+        // calculate log(p, B), this can be improved
+        while(m <= B / p){
+            m = m * p;
+        }
+        mpz_powm(g.get_mpz_t(), _c.get_mpz_t(), m.get_mpz_t(), n.get_mpz_t());
+        mpz_set(_c.get_mpz_t(), g.get_mpz_t());
+    }
+    _c = _c - 1;
+    mpz_gcd(rop.get_mpz_t(), _c.get_mpz_t(), n.get_mpz_t());
+
+    if(rop == 1 || rop == n)
+        return 0;
+    else
+        return 1;
+}
+
+int factor_pollard_pm1_method(const Ptr<RCP<const Integer>> &f, const Integer &n, 
+        unsigned B, unsigned retries)
+{
+    int ret_val = 0;
+    mpz_class rop, nm4, c;
+    gmp_randstate_t state;
+
+    gmp_randinit_default(state);
+    gmp_randseed_ui(state, retries);
+    nm4 = n.as_mpz() - 4;
+
+    for (unsigned i = 0; i < retries && ret_val == 0; i++) {
+        mpz_urandomm(c.get_mpz_t(), state, nm4.get_mpz_t());
+        c = c + 2;
+        ret_val = _factor_pollard_pm1_method(rop, n.as_mpz(), c, B);
+    }
+
+    if (ret_val != 0)
+        *f = integer(rop);
+
+    return ret_val;
+}
+
+// Factor using Pollard's rho method
+int _factor_pollard_rho_method(mpz_class &rop, const mpz_class &n, 
+        const mpz_class &a, const mpz_class &s, unsigned steps = 10000)
+{
+    if (n < 5)
+        throw std::runtime_error("Require n > 4 to use pollard's-rho method");
+
+    mpz_class u, v, g, m;
+    u = s;
+    v = s;
+
+    for (unsigned i = 0; i < steps; i++) {
+        u = (u*u + a) % n;
+        v = (v*v + a) % n;
+        v = (v*v + a) % n;
+        m = u - v;
+        mpz_gcd(g.get_mpz_t(), m.get_mpz_t(), n.get_mpz_t());
+
+        if (g == n)
+            return 0;
+        if (g == 1)
+            continue;
+        rop = g;
+        return 1;
+    }
+    return 0;
+}
+
+int factor_pollard_rho_method(const Ptr<RCP<const Integer>> &f, 
+        const Integer &n, unsigned retries)
+{
+    int ret_val = 0;
+    mpz_class rop, nm1, nm4, a, s;
+    gmp_randstate_t state;
+
+    gmp_randinit_default(state);
+    gmp_randseed_ui(state, retries);
+    nm1 = n.as_mpz() - 1;
+    nm4 = n.as_mpz() - 4;
+
+    for (unsigned i = 0; i < retries && ret_val == 0; i++) {
+        mpz_urandomm(a.get_mpz_t(), state, nm1.get_mpz_t());
+        mpz_urandomm(s.get_mpz_t(), state, nm4.get_mpz_t());
+        s = s + 1;
+        ret_val = _factor_pollard_rho_method(rop, n.as_mpz(), a, s);
+    }
+
+    if (ret_val != 0)
+        *f = integer(rop);
     return ret_val;
 }
 
@@ -303,59 +409,77 @@ int factor_trial_division(const Ptr<RCP<const Integer>> &f, const Integer &n)
 
 void eratosthenes_sieve(unsigned limit, std::vector<unsigned> &primes)
 {
-    std::vector<bool> is_prime(limit, true);
-    const unsigned sqrt_limit = static_cast<unsigned>(std::sqrt(limit));
-    for (unsigned n = 2; n <= sqrt_limit; ++n)
-        if (is_prime[n]) {
-            primes.push_back(n);
-            for (unsigned k = n*n, ulim = limit; k < ulim; k += n)
-                is_prime[k] = false;
+    std::valarray<bool> is_prime(true, limit / 2); 
+    if (limit > 2)
+        primes.push_back(2);
+    //considering only odd integers. An odd number n corresponds to n/2 in the array.
+    const unsigned sqrt_limit = static_cast<unsigned>(std::sqrt(limit - 1));
+    for (unsigned n = 3; n <= sqrt_limit; n += 2) {
+        if (is_prime[n / 2]) {
+            std::slice sl = std::slice((n * n )/ 2, 1 + (limit - 1 - n * n) / (2 * n), n); 
+            //starting from n*n, all the odd multiples of n are marked not prime. 
+            is_prime[sl] = false;
         }
-    for (unsigned n = sqrt_limit + 1; n < limit; ++n)
+    }
+    for (unsigned n = 1; n < limit / 2; n++) {
         if (is_prime[n])
-            primes.push_back(n);
+	    primes.push_back(2 * n + 1);
+    }
 }
 
 void prime_factors(const RCP<const Integer> &n,
-        std::vector<RCP<const Integer>> &primes)
+        std::vector<RCP<const Integer>> &prime_list)
 {
-    RCP<const Integer> _n = n;
-    RCP<const Integer> f;
-    if (eq(_n, zero)) return;
+    mpz_class sqrtN;
+    mpz_class _n = (*n).as_mpz();
+    if (_n == 0) return;
+    sqrtN = sqrt(_n);
+    if (!sqrtN.fits_uint_p())
+        throw std::runtime_error("N too large to factor");
+    unsigned limit = sqrtN.get_ui() + 1;
+    std::vector<unsigned> primes;
+    eratosthenes_sieve(limit, primes);
 
-    while (factor_trial_division(outArg(f), *_n) == 1 && !eq(_n, one)) {
-        RCP<const Basic> d = div(_n, f);
-        while (is_a<Integer>(*d)) { // when a prime factor is found, we divide
-            primes.push_back(f);         // _n by that prime as much as we can
-            _n = rcp_dynamic_cast<const Integer>(d);
-            d = div(_n, f);
+    for (auto &p: primes)
+    {
+        while (_n % p == 0) {
+            prime_list.push_back(integer(p)); 
+            _n = _n / p;
         }
+        if (_n == 1) break;
     }
-    if (!eq(_n, one))
-        primes.push_back(_n);
+    if (!(_n == 1))
+        prime_list.push_back(integer(_n));
 }
 
 void prime_factor_multiplicities(const RCP<const Integer> &n,
-        map_integer_uint &primes)
+        map_integer_uint &primes_mul)
 {
+    mpz_class sqrtN;
+    mpz_class _n = (*n).as_mpz();
     unsigned count;
-    RCP<const Integer> _n = n;
-    RCP<const Integer> f;
-    if (eq(_n, zero)) return;
+    if (_n == 0) return;
+    sqrtN = sqrt(_n);
+    if (!sqrtN.fits_uint_p())
+        throw std::runtime_error("N too large to factor");
+    unsigned limit = sqrtN.get_ui() + 1;
+    std::vector<unsigned> primes;
+    eratosthenes_sieve(limit, primes);
 
-    while (factor_trial_division(outArg(f), *_n) == 1 && !eq(_n, one)) {
+    for (auto &p: primes)
+    {
         count = 0;
-        RCP<const Basic> d = div(_n, f);
-        while (is_a<Integer>(*d)) { // when a prime factor is found, we divide
+        while (_n % p == 0) { // when a prime factor is found, we divide
             count++;                     // _n by that prime as much as we can
-            _n = rcp_dynamic_cast<const Integer>(d);
-            d = div(_n, f);
+            _n = _n / p;
         }
-        if (count > 0)
-            insert(primes, f, count);
+        if (count > 0) {
+            insert(primes_mul, integer(p), count);
+            if (_n == 1) break;
+        }
     }
-    if (!eq(_n, one))
-        insert(primes, _n, 1);
+    if (!(_n == 1))
+        insert(primes_mul, integer(_n), 1);
 }
 
 } // CSymPy
