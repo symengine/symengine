@@ -33,6 +33,8 @@ public:
     }
     //! Method to construct classes with canonicalization
     virtual RCP<const Basic> create(RCP<const Basic> arg) const;
+    //! Substitute with `subs_dict`
+    virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
 };
 
 /*! \return `true` if `arg` is of form `theta + n*pi/12`

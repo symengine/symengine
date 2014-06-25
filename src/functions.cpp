@@ -302,6 +302,18 @@ RCP<const Basic> TrigFunction::create(RCP<const Basic> arg) const
     throw std::runtime_error("Should be implemented by the inherited class");
 }
 
+RCP<const Basic> TrigFunction::subs(const map_basic_basic &subs_dict) const
+{
+    auto it = subs_dict.find(rcp(this));
+    if (it != subs_dict.end())
+        return it->second;
+    RCP<const Basic> arg = arg_->subs(subs_dict);
+    if (arg == arg_)
+        return rcp(this);
+    else
+        return this->create(arg);
+}
+
 Sin::Sin(const RCP<const Basic> &arg)
     : TrigFunction(arg)
 {
