@@ -297,6 +297,11 @@ std::size_t TrigFunction::__hash__() const
     return seed;
 }
 
+RCP<const Basic> TrigFunction::construct(RCP<const Basic> arg) const
+{
+    throw std::runtime_error("Should be implemented by the inherited class");
+}
+
 Sin::Sin(const RCP<const Basic> &arg)
     : TrigFunction(arg)
 {
@@ -1451,6 +1456,67 @@ RCP<const Basic> ACot::subs(const map_basic_basic &subs_dict) const
     else
         return acot(arg);
 }
+
+RCP<const Basic> Sin::construct(RCP<const Basic> arg) const
+{
+    return sin(arg);
+}
+
+RCP<const Basic> Cos::construct(RCP<const Basic> arg) const
+{
+    return cos(arg);
+}
+
+RCP<const Basic> Tan::construct(RCP<const Basic> arg) const
+{
+    return tan(arg);
+}
+
+RCP<const Basic> Cot::construct(RCP<const Basic> arg) const
+{
+    return cot(arg);
+}
+
+RCP<const Basic> Sec::construct(RCP<const Basic> arg) const
+{
+    return sec(arg);
+}
+
+RCP<const Basic> Csc::construct(RCP<const Basic> arg) const
+{
+    return csc(arg);
+}
+
+RCP<const Basic> ASin::construct(RCP<const Basic> arg) const
+{
+    return asin(arg);
+}
+
+RCP<const Basic> ACos::construct(RCP<const Basic> arg) const
+{
+    return acos(arg);
+}
+
+RCP<const Basic> ATan::construct(RCP<const Basic> arg) const
+{
+    return atan(arg);
+}
+
+RCP<const Basic> ACot::construct(RCP<const Basic> arg) const
+{
+    return acot(arg);
+}
+
+RCP<const Basic> ASec::construct(RCP<const Basic> arg) const
+{
+    return asec(arg);
+}
+
+RCP<const Basic> ACsc::construct(RCP<const Basic> arg) const
+{
+    return acsc(arg);
+}
+
 /* ---------------------------- */
 LambertW::LambertW(const RCP<const Basic> &arg)
     : arg_{arg}
