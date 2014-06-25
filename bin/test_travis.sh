@@ -5,19 +5,23 @@ set -e
 # Echo each command
 set -x
 
-if [[ "${TEST_IN_TREE}" == "yes" ]]; then
-    export SOURCE_DIR=.
-else
+# Shippable currently does not clean the directory after previous builds
+# (https://github.com/Shippable/support/issues/238), so
+# we need to do it ourselves.
+git clean -dfx
+
+export SOURCE_DIR=`pwd`
+if [[ "${TEST_IN_TREE}" != "yes" ]]; then
     mkdir build
     cd build
-    export SOURCE_DIR=..
 fi
 echo "Current directory:"
 pwd
 echo "Running cmake:"
 # We build the command line here. If the variable is empty, we skip it,
 # otherwise we pass it to cmake.
-cmake_line=""
+our_install_dir="$SOURCE_DIR/our_usr"
+cmake_line="-DCMAKE_INSTALL_PREFIX=$our_install_dir"
 if [[ "${BUILD_TYPE}" != "" ]]; then
     cmake_line="$cmake_line -DCMAKE_BUILD_TYPE=${BUILD_TYPE}"
 fi
@@ -41,12 +45,24 @@ echo "Current directory:"
 pwd
 echo "Running make:"
 make
+echo "Running make install:"
+make install
 
 if [[ "${WITH_CSYMPY_RCP}" == "no" ]]; then
     echo "CSymPy successfully built with Teuchos::RCP. No tests being run."
 else
+    echo "Running tests in build directory:"
     ctest --output-on-failure
     if [[ "${WITH_PYTHON}" == "yes" ]]; then
         nosetests -v
     fi
+
+    echo "Running tests using installed csympy:"
+    cd $SOURCE_DIR/src/tests/basic/
+    extra_libs=""
+    if [[ "${WITH_BFD}" != "" ]]; then
+        extra_libs="$extra_libs -lbfd"
+    fi
+    g++ -std=c++0x -I$our_install_dir/include/ -L$our_install_dir/lib test_basic.cpp -lcsympy -lgmpxx -lgmp -lteuchos $extra_libs
+    ./a.out
 fi

@@ -489,6 +489,221 @@ public:
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
 };
 
+class HyperbolicFunction : public Function {
+
+private:
+    RCP<const Basic> arg_; //! The `arg` in `hyperbolicclass(arg)`
+public:
+    //! Constructor
+    HyperbolicFunction(RCP<const Basic> arg)
+        :arg_{arg} {};
+    //! \return Size of the hash
+    virtual std::size_t __hash__() const;
+    //! \return `arg_`
+    inline RCP<const Basic> get_arg() const {
+        return arg_;
+    }
+};
+
+class Sinh : public HyperbolicFunction {
+//! The hyperbolic sine function, `\frac{e^x - e^{-x}}{2}`.
+public:
+    //! Sinh Constructor
+    Sinh(const RCP<const Basic> &arg);
+    /*! Equality comparator
+     * \param o - Object to be compared with
+     * \return whether the 2 objects are equal
+     * */
+    virtual bool __eq__(const Basic &o) const;
+    virtual int compare(const Basic &o) const;
+    //! \return stringify version
+    virtual std::string __str__() const;
+    //! \return `true` if canonical
+    bool is_canonical(const RCP<const Basic> &arg);
+    //! Differentiate w.r.t Symbol `x`
+    virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
+    //! Substitute with `subs_dict
+    virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
+    //! expands sinh in terms of exp function
+    virtual RCP<const Basic> expand_as_exp() const;
+};
+
+//! Canonicalize Sinh:
+RCP<const Basic> sinh(const RCP<const Basic> &arg);
+
+class Cosh : public HyperbolicFunction {
+//! The hyperbolic cosine function, `\frac{e^x + e^{-x}}{2}`.
+public:
+    //! Cosh Constructor
+    Cosh(const RCP<const Basic> &arg);
+    /*! Equality comparator
+     * \param o - Object to be compared with
+     * \return whether the 2 objects are equal
+     * */
+    virtual bool __eq__(const Basic &o) const;
+    virtual int compare(const Basic &o) const;
+    //! \return stringify version
+    virtual std::string __str__() const;
+    //! \return `true` if canonical
+    bool is_canonical(const RCP<const Basic> &arg);
+    //! Differentiate w.r.t Symbol `x`
+    virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
+    //! Substitute with `subs_dict
+    virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
+    //! expands cosh in terms of exp function
+    virtual RCP<const Basic> expand_as_exp() const;
+};
+
+//! Canonicalize Cosh:
+RCP<const Basic> cosh(const RCP<const Basic> &arg);
+
+class Tanh : public HyperbolicFunction {
+//! The hyperbolic tangent function, `\frac{\sinh(x)}{\cosh(x)}`.
+public:
+    //! Tanh Constructor
+    Tanh(const RCP<const Basic> &arg);
+    /*! Equality comparator
+     * \param o - Object to be compared with
+     * \return whether the 2 objects are equal
+     * */
+    virtual bool __eq__(const Basic &o) const;
+    virtual int compare(const Basic &o) const;
+    //! \return stringify version
+    virtual std::string __str__() const;
+    //! \return `true` if canonical
+    bool is_canonical(const RCP<const Basic> &arg);
+    //! Differentiate w.r.t Symbol `x`
+    virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
+    //! Substitute with `subs_dict
+    virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
+    //! expands tanh in terms of exp function
+    virtual RCP<const Basic> expand_as_exp() const;
+};
+
+//! Canonicalize Tanh:
+RCP<const Basic> tanh(const RCP<const Basic> &arg);
+
+class Coth : public HyperbolicFunction {
+//! The hyperbolic tangent function, `\frac{\cosh(x)}{\sinh(x)}`.
+public:
+    //! Coth Constructor
+    Coth(const RCP<const Basic> &arg);
+    /*! Equality comparator
+     * \param o - Object to be compared with
+     * \return whether the 2 objects are equal
+     * */
+    virtual bool __eq__(const Basic &o) const;
+    virtual int compare(const Basic &o) const;
+    //! \return stringify version
+    virtual std::string __str__() const;
+    //! \return `true` if canonical
+    bool is_canonical(const RCP<const Basic> &arg);
+    //! Differentiate w.r.t Symbol `x`
+    virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
+    //! Substitute with `subs_dict
+    virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
+    //! expands coth in terms of exp function
+    virtual RCP<const Basic> expand_as_exp() const;
+};
+
+//! Canonicalize Coth:
+RCP<const Basic> coth(const RCP<const Basic> &arg);
+
+class ASinh : public HyperbolicFunction {
+//! The inverse hyperbolic sine function.
+public:
+    //! ASinh Constructor
+    ASinh(const RCP<const Basic> &arg);
+    /*! Equality comparator
+     * \param o - Object to be compared with
+     * \return whether the 2 objects are equal
+     * */
+    virtual bool __eq__(const Basic &o) const;
+    virtual int compare(const Basic &o) const;
+    //! \return stringify version
+    virtual std::string __str__() const;
+    //! \return `true` if canonical
+    bool is_canonical(const RCP<const Basic> &arg);
+    //! Differentiate w.r.t Symbol `x`
+    virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
+    //! Substitute with `subs_dict
+    virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
+};
+
+//! Canonicalize ASinh:
+RCP<const Basic> asinh(const RCP<const Basic> &arg);
+
+class ACosh: public HyperbolicFunction {
+//! The inverse hyperbolic cosine function.
+public:
+    //! ACosh Constructor
+    ACosh(const RCP<const Basic> &arg);
+    /*! Equality comparator
+     * \param o - Object to be compared with
+     * \return whether the 2 objects are equal
+     * */
+    virtual bool __eq__(const Basic &o) const;
+    virtual int compare(const Basic &o) const;
+    //! \return stringify version
+    virtual std::string __str__() const;
+    //! \return `true` if canonical
+    bool is_canonical(const RCP<const Basic> &arg);
+    //! Differentiate w.r.t Symbol `x`
+    virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
+    //! Substitute with `subs_dict
+    virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
+};
+
+//! Canonicalize ACosh:
+RCP<const Basic> acosh(const RCP<const Basic> &arg);
+
+class ATanh: public HyperbolicFunction {
+//! The inverse hyperbolic tangent function.
+public:
+    //! ATanh Constructor
+    ATanh(const RCP<const Basic> &arg);
+    /*! Equality comparator
+     * \param o - Object to be compared with
+     * \return whether the 2 objects are equal
+     * */
+    virtual bool __eq__(const Basic &o) const;
+    virtual int compare(const Basic &o) const;
+    //! \return stringify version
+    virtual std::string __str__() const;
+    //! \return `true` if canonical
+    bool is_canonical(const RCP<const Basic> &arg);
+    //! Differentiate w.r.t Symbol `x`
+    virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
+    //! Substitute with `subs_dict
+    virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
+};
+
+//! Canonicalize ATanh:
+RCP<const Basic> atanh(const RCP<const Basic> &arg);
+
+class ACoth: public HyperbolicFunction {
+//! The inverse hyperbolic cotangent function.
+public:
+    //! ACoth Constructor
+    ACoth(const RCP<const Basic> &arg);
+    /*! Equality comparator
+     * \param o - Object to be compared with
+     * \return whether the 2 objects are equal
+     * */
+    virtual bool __eq__(const Basic &o) const;
+    virtual int compare(const Basic &o) const;
+    //! \return stringify version
+    virtual std::string __str__() const;
+    //! \return `true` if canonical
+    bool is_canonical(const RCP<const Basic> &arg);
+    //! Differentiate w.r.t Symbol `x`
+    virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
+    //! Substitute with `subs_dict
+    virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
+};
+
+//! Canonicalize ACoth:
+RCP<const Basic> acoth(const RCP<const Basic> &arg);
 } // CSymPy
 
 #endif

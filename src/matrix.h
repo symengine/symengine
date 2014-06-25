@@ -73,9 +73,45 @@ public:
         DenseMatrix &C);
     friend void mul_dense_scalar(const DenseMatrix &A, RCP<const Basic> &k,
         DenseMatrix &C);
+    friend void transpose_dense(const DenseMatrix &A, DenseMatrix &B);
+    friend void submatrix_dense(const DenseMatrix &A, unsigned row_start,
+        unsigned row_end, unsigned col_start, unsigned col_end, DenseMatrix &B);
+
+    // Row operations
+    friend void row_exchange_dense(DenseMatrix &A , unsigned i, unsigned j);
+    friend void row_mul_scalar_dense(DenseMatrix &A, unsigned i, RCP<const Basic> &c);
+    friend void row_add_row_dense(DenseMatrix &A, unsigned i, unsigned j,
+        RCP<const Basic> &c);
 
     // Gaussian elimination
-    friend void gaussian_elimination(const DenseMatrix &A, DenseMatrix &B);
+    friend void pivoted_gaussian_elimination(const DenseMatrix &A,
+        DenseMatrix &B, std::vector<unsigned> &pivotlist);
+    friend void fraction_free_gaussian_elimination(const DenseMatrix &A,
+        DenseMatrix &B);
+    friend void pivoted_fraction_free_gaussian_elimination(const DenseMatrix &A,
+        DenseMatrix &B, std::vector<unsigned> &pivotlist);
+    friend void pivoted_gauss_jordan_elimination(const DenseMatrix &A,
+        DenseMatrix &B, std::vector<unsigned> &pivotlist);
+    friend void fraction_free_gauss_jordan_elimination(const DenseMatrix &A,
+        DenseMatrix &B);
+    friend void pivoted_fraction_free_gauss_jordan_elimination(const DenseMatrix &A,
+        DenseMatrix &B, std::vector<unsigned> &pivotlist);
+    friend unsigned pivot(DenseMatrix &B, unsigned r, unsigned c);
+
+    // Matrix Decomposition
+    friend void fraction_free_LU(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &U);
+
+    // Ax = b
+    friend void augment_dense(const DenseMatrix &A, const DenseMatrix &b,
+        DenseMatrix &C);
+    friend void diagonal_solve(const DenseMatrix &A, const DenseMatrix &b,
+        DenseMatrix &x);
+    friend void back_substitution(const DenseMatrix &U, const DenseMatrix &b,
+        DenseMatrix &x);
+    friend void fraction_free_gaussian_elimination_solve(const DenseMatrix &A,
+        const DenseMatrix &b, DenseMatrix &x);
+    friend void fraction_free_gauss_jordan_solve(const DenseMatrix &A,
+        const DenseMatrix &b, DenseMatrix &x);
 
     // Matrix Decomposition
     friend void fraction_free_LU(const DenseMatrix &A, DenseMatrix &L,
@@ -126,9 +162,15 @@ protected:
     std::map<int, RCP<Basic>> m_;
 };
 
+// ------------------ DenseMatrix related functions --------------------------//
+
+// Matrix operations
 void add_dense_dense(const DenseMatrix &A, const DenseMatrix &B, DenseMatrix &C);
+
 void add_dense_scalar(const DenseMatrix &A, RCP<const Basic> &k, DenseMatrix &B);
+
 void mul_dense_dense(const DenseMatrix &A, const DenseMatrix &B, DenseMatrix &C);
+
 void mul_dense_scalar(const DenseMatrix &A, RCP<const Basic> &k, DenseMatrix &C);
 
 // Matrix Decomposition
@@ -144,6 +186,56 @@ void QR(const DenseMatrix &A, DenseMatrix &Q, DenseMatrix &R);
 void LDL(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &D);
 
 // Common functions
+void transpose_dense(const DenseMatrix &A, DenseMatrix &B);
+
+void submatrix_dense(const DenseMatrix &A, unsigned row_start, unsigned row_end,
+        unsigned col_start, unsigned col_end, DenseMatrix &B);
+
+void augment_dense(const DenseMatrix &A, const DenseMatrix &b, DenseMatrix &C);
+
+// Row operations
+void row_exchange_dense(DenseMatrix &A , unsigned i, unsigned j);
+
+void row_mul_scalar_dense(DenseMatrix &A, unsigned i, RCP<const Basic> &c);
+
+void row_add_row_dense(DenseMatrix &A, unsigned i, unsigned j,
+    RCP<const Basic> &c);
+
+// Gaussian elimination
+void pivoted_gaussian_elimination(const DenseMatrix &A, DenseMatrix &B,
+    std::vector<unsigned> &pivotlist);
+
+void fraction_free_gaussian_elimination(const DenseMatrix &A, DenseMatrix &B);
+
+void pivoted_fraction_free_gaussian_elimination(const DenseMatrix &A,
+    DenseMatrix &B, std::vector<unsigned> &pivotlist);
+
+void pivoted_gauss_jordan_elimination(const DenseMatrix &A, DenseMatrix &B,
+    std::vector<unsigned> &pivotlist);
+
+void fraction_free_gauss_jordan_elimination(const DenseMatrix &A, DenseMatrix &B);
+
+void pivoted_fraction_free_gauss_jordan_elimination(const DenseMatrix &A,
+    DenseMatrix &B, std::vector<unsigned> &pivotlist);
+
+// Matrix Decomposition
+void fraction_free_LU(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &U);
+
+// Solve Ax = b
+void diagonal_solve(const DenseMatrix &A, const DenseMatrix &b, DenseMatrix &x);
+
+void back_substitution(const DenseMatrix &U, const DenseMatrix &b,
+    DenseMatrix &x);
+
+void fraction_free_gaussian_elimination_solve(const DenseMatrix &A,
+    const DenseMatrix &b, DenseMatrix &x);
+
+void fraction_free_gauss_jordan_solve(const DenseMatrix &A, const DenseMatrix &b,
+    DenseMatrix &x);
+
+// ------------------------ Common functions ---------------------------------//
+
+// Test two matrices for equality
 inline bool operator==(const MatrixBase &lhs, const MatrixBase &rhs)
 {
     if (lhs.nrows() != rhs.nrows() || lhs.ncols() != rhs.ncols())
