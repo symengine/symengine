@@ -32,7 +32,7 @@ public:
         return arg_;
     }
     //! Method to construct classes with canonicalization
-    virtual RCP<const Basic> create(RCP<const Basic> arg) const;
+    virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
     //! Substitute with `subs_dict`
     virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
 };
@@ -82,7 +82,7 @@ public:
     //! Differentiate w.r.t Symbol `x`
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
     //! \return Canonicalized sin
-    virtual RCP<const Basic> create(RCP<const Basic> arg) const;
+    virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
 };
 
 //! Canonicalize Sin:
@@ -107,7 +107,7 @@ public:
     //! Differentiate w.r.t Symbol `x`
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
     //! \return Canonicalized cos
-    virtual RCP<const Basic> create(RCP<const Basic> arg) const;
+    virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
 
 };
 
@@ -133,7 +133,7 @@ public:
     //! Differentiate w.r.t Symbol `x`
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
     //! \return Canonicalized tan
-    virtual RCP<const Basic> create(RCP<const Basic> arg) const;
+    virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
 };
 //! Canonicalize Tan:
 RCP<const Basic> tan(const RCP<const Basic> &arg);
@@ -157,7 +157,7 @@ public:
     //! Differentiate w.r.t Symbol `x`
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
     //! \return Canonicalized cot
-    virtual RCP<const Basic> create(RCP<const Basic> arg) const;
+    virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
 };
 //! Canonicalize Cot:
 RCP<const Basic> cot(const RCP<const Basic> &arg);
@@ -181,7 +181,7 @@ public:
     //! Differentiate w.r.t Symbol `x`
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
     //! \return Canonicalized csc
-    virtual RCP<const Basic> create(RCP<const Basic> arg) const;
+    virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
 };
 //! Canonicalize Csc:
 RCP<const Basic> csc(const RCP<const Basic> &arg);
@@ -205,7 +205,7 @@ public:
     //! Differentiate w.r.t Symbol `x`
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
     //! \return Canonicalized sec
-    virtual RCP<const Basic> create(RCP<const Basic> arg) const;
+    virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
 };
 //! Canonicalize Sec:
 RCP<const Basic> sec(const RCP<const Basic> &arg);
@@ -228,7 +228,7 @@ public:
     //! Differentiate w.r.t Symbol `x`
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
     //! \return Canonicalized asin
-    virtual RCP<const Basic> create(RCP<const Basic> arg) const;
+    virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
 };
 
 //! Canonicalize ASin:
@@ -252,7 +252,7 @@ public:
     //! Differentiate w.r.t Symbol `x`
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
     //! \return Canonicalized acos
-    virtual RCP<const Basic> create(RCP<const Basic> arg) const;
+    virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
 };
 
 //! Canonicalize ACos:
@@ -276,7 +276,7 @@ public:
     //! Differentiate w.r.t Symbol `x`
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
     //! \return Canonicalized asec
-    virtual RCP<const Basic> create(RCP<const Basic> arg) const;
+    virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
 };
 
 //! Canonicalize ASec:
@@ -300,7 +300,7 @@ public:
     //! Differentiate w.r.t Symbol `x`
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
     //! \return Canonicalized acsc
-    virtual RCP<const Basic> create(RCP<const Basic> arg) const;
+    virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
 };
 
 //! Canonicalize ACsc:
@@ -324,7 +324,7 @@ public:
     //! Differentiate w.r.t Symbol `x`
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
     //! \return Canonicalized atan
-    virtual RCP<const Basic> create(RCP<const Basic> arg) const;
+    virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
 };
 
 //! Canonicalize ATan:
@@ -348,7 +348,7 @@ public:
     //! Differentiate w.r.t Symbol `x`
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
     //! \return Canonicalized acot
-    virtual RCP<const Basic> create(RCP<const Basic> arg) const;
+    virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
 };
 
 //! Canonicalize ACot:
@@ -508,6 +508,10 @@ public:
     inline RCP<const Basic> get_arg() const {
         return arg_;
     }
+    //! Method to construct classes with canonicalization
+    virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
+    //! Substitute with `subs_dict`
+    virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
 };
 
 class Sinh : public HyperbolicFunction {
@@ -527,8 +531,8 @@ public:
     bool is_canonical(const RCP<const Basic> &arg);
     //! Differentiate w.r.t Symbol `x`
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
-    //! Substitute with `subs_dict
-    virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
+    //! \return Canonicalized sinh
+    virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
     //! expands sinh in terms of exp function
     virtual RCP<const Basic> expand_as_exp() const;
 };
@@ -553,8 +557,8 @@ public:
     bool is_canonical(const RCP<const Basic> &arg);
     //! Differentiate w.r.t Symbol `x`
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
-    //! Substitute with `subs_dict
-    virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
+    //! \return Canonicalized cosh
+    virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
     //! expands cosh in terms of exp function
     virtual RCP<const Basic> expand_as_exp() const;
 };
@@ -579,8 +583,8 @@ public:
     bool is_canonical(const RCP<const Basic> &arg);
     //! Differentiate w.r.t Symbol `x`
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
-    //! Substitute with `subs_dict
-    virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
+    //! \return Canonicalized tanh
+    virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
     //! expands tanh in terms of exp function
     virtual RCP<const Basic> expand_as_exp() const;
 };
@@ -605,8 +609,8 @@ public:
     bool is_canonical(const RCP<const Basic> &arg);
     //! Differentiate w.r.t Symbol `x`
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
-    //! Substitute with `subs_dict
-    virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
+    //! \return Canonicalized coth
+    virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
     //! expands coth in terms of exp function
     virtual RCP<const Basic> expand_as_exp() const;
 };
@@ -631,8 +635,8 @@ public:
     bool is_canonical(const RCP<const Basic> &arg);
     //! Differentiate w.r.t Symbol `x`
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
-    //! Substitute with `subs_dict
-    virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
+    //! \return Canonicalized asinh
+    virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
 };
 
 //! Canonicalize ASinh:
@@ -655,8 +659,8 @@ public:
     bool is_canonical(const RCP<const Basic> &arg);
     //! Differentiate w.r.t Symbol `x`
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
-    //! Substitute with `subs_dict
-    virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
+    //! \return Canonicalized acosh
+    virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
 };
 
 //! Canonicalize ACosh:
@@ -679,8 +683,8 @@ public:
     bool is_canonical(const RCP<const Basic> &arg);
     //! Differentiate w.r.t Symbol `x`
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
-    //! Substitute with `subs_dict
-    virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
+    //! \return Canonicalized atanh
+    virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
 };
 
 //! Canonicalize ATanh:
@@ -703,8 +707,8 @@ public:
     bool is_canonical(const RCP<const Basic> &arg);
     //! Differentiate w.r.t Symbol `x`
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
-    //! Substitute with `subs_dict
-    virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
+    //! \return Canonicalized acoth
+    virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
 };
 
 //! Canonicalize ACoth:

@@ -297,7 +297,7 @@ std::size_t TrigFunction::__hash__() const
     return seed;
 }
 
-RCP<const Basic> TrigFunction::create(RCP<const Basic> arg) const
+RCP<const Basic> TrigFunction::create(const RCP<const Basic> &arg) const
 {
     throw std::runtime_error("Should be implemented by the inherited class");
 }
@@ -1313,62 +1313,62 @@ RCP<const Basic> ATan2::diff(const RCP<const Symbol> &x) const
                 div(num_, den_)->diff(x));
 }
 
-RCP<const Basic> Sin::create(RCP<const Basic> arg) const
+RCP<const Basic> Sin::create(const RCP<const Basic> &arg) const
 {
     return sin(arg);
 }
 
-RCP<const Basic> Cos::create(RCP<const Basic> arg) const
+RCP<const Basic> Cos::create(const RCP<const Basic> &arg) const
 {
     return cos(arg);
 }
 
-RCP<const Basic> Tan::create(RCP<const Basic> arg) const
+RCP<const Basic> Tan::create(const RCP<const Basic> &arg) const
 {
     return tan(arg);
 }
 
-RCP<const Basic> Cot::create(RCP<const Basic> arg) const
+RCP<const Basic> Cot::create(const RCP<const Basic> &arg) const
 {
     return cot(arg);
 }
 
-RCP<const Basic> Sec::create(RCP<const Basic> arg) const
+RCP<const Basic> Sec::create(const RCP<const Basic> &arg) const
 {
     return sec(arg);
 }
 
-RCP<const Basic> Csc::create(RCP<const Basic> arg) const
+RCP<const Basic> Csc::create(const RCP<const Basic> &arg) const
 {
     return csc(arg);
 }
 
-RCP<const Basic> ASin::create(RCP<const Basic> arg) const
+RCP<const Basic> ASin::create(const RCP<const Basic> &arg) const
 {
     return asin(arg);
 }
 
-RCP<const Basic> ACos::create(RCP<const Basic> arg) const
+RCP<const Basic> ACos::create(const RCP<const Basic> &arg) const
 {
     return acos(arg);
 }
 
-RCP<const Basic> ATan::create(RCP<const Basic> arg) const
+RCP<const Basic> ATan::create(const RCP<const Basic> &arg) const
 {
     return atan(arg);
 }
 
-RCP<const Basic> ACot::create(RCP<const Basic> arg) const
+RCP<const Basic> ACot::create(const RCP<const Basic> &arg) const
 {
     return acot(arg);
 }
 
-RCP<const Basic> ASec::create(RCP<const Basic> arg) const
+RCP<const Basic> ASec::create(const RCP<const Basic> &arg) const
 {
     return asec(arg);
 }
 
-RCP<const Basic> ACsc::create(RCP<const Basic> arg) const
+RCP<const Basic> ACsc::create(const RCP<const Basic> &arg) const
 {
     return acsc(arg);
 }
@@ -1568,6 +1568,23 @@ std::size_t HyperbolicFunction::__hash__() const
     return seed;
 }
 
+RCP<const Basic> HyperbolicFunction::create(const RCP<const Basic> &arg) const
+{
+    throw std::runtime_error("Should be implemented by the inherited class");
+}
+
+RCP<const Basic> HyperbolicFunction::subs(const map_basic_basic &subs_dict) const
+{
+    auto it = subs_dict.find(rcp(this));
+    if (it != subs_dict.end())
+        return it->second;
+    RCP<const Basic> arg = arg_->subs(subs_dict);
+    if (arg == arg_)
+        return rcp(this);
+    else
+        return this->create(arg);
+}
+
 Sinh::Sinh(const RCP<const Basic> &arg)
     : HyperbolicFunction(arg)
 {
@@ -1625,19 +1642,6 @@ RCP<const Basic> sinh(const RCP<const Basic> &arg)
     return rcp(new Sinh(arg));
 }
 
-RCP<const Basic> Sinh::subs(const map_basic_basic &subs_dict) const
-{
-    RCP<const Sinh> self = rcp_const_cast<Sinh>(rcp(this));
-    auto it = subs_dict.find(self);
-    if (it != subs_dict.end())
-        return it->second;
-    RCP<const Basic> arg = get_arg()->subs(subs_dict);
-    if (arg == get_arg())
-        return self;
-    else
-        return sinh(arg);
-}
-
 RCP<const Basic>  Sinh::expand_as_exp() const
 {
     return div(sub(exp(get_arg()), exp(mul(get_arg(), minus_one))), i2);
@@ -1684,7 +1688,6 @@ int Cosh::compare(const Basic &o) const
     return get_arg()->__cmp__(s);
 }
 
-
 std::string Cosh::__str__() const
 {
     std::ostringstream o;
@@ -1703,19 +1706,6 @@ RCP<const Basic> cosh(const RCP<const Basic> &arg)
         return cosh(mul(minus_one, arg));
     }
     return rcp(new Cosh(arg));
-}
-
-RCP<const Basic> Cosh::subs(const map_basic_basic &subs_dict) const
-{
-    RCP<const Cosh> self = rcp_const_cast<Cosh>(rcp(this));
-    auto it = subs_dict.find(self);
-    if (it != subs_dict.end())
-        return it->second;
-    RCP<const Basic> arg = get_arg()->subs(subs_dict);
-    if (arg == get_arg())
-        return self;
-    else
-        return cosh(arg);
 }
 
 RCP<const Basic>  Cosh::expand_as_exp() const
@@ -1783,19 +1773,6 @@ RCP<const Basic> tanh(const RCP<const Basic> &arg)
         return mul(minus_one, tanh(mul(minus_one, arg)));
     }
     return rcp(new Tanh(arg));
-}
-
-RCP<const Basic> Tanh::subs(const map_basic_basic &subs_dict) const
-{
-    RCP<const Tanh> self = rcp_const_cast<Tanh>(rcp(this));
-    auto it = subs_dict.find(self);
-    if (it != subs_dict.end())
-        return it->second;
-    RCP<const Basic> arg = get_arg()->subs(subs_dict);
-    if (arg == get_arg())
-        return self;
-    else
-        return tanh(arg);
 }
 
 RCP<const Basic>  Tanh::expand_as_exp() const
@@ -1870,19 +1847,6 @@ RCP<const Basic> coth(const RCP<const Basic> &arg)
     return rcp(new Coth(arg));
 }
 
-RCP<const Basic> Coth::subs(const map_basic_basic &subs_dict) const
-{
-    RCP<const Coth> self = rcp_const_cast<Coth>(rcp(this));
-    auto it = subs_dict.find(self);
-    if (it != subs_dict.end())
-        return it->second;
-    RCP<const Basic> arg = get_arg()->subs(subs_dict);
-    if (arg == get_arg())
-        return self;
-    else
-        return coth(arg);
-}
-
 RCP<const Basic>  Coth::expand_as_exp() const
 {
     RCP<const Basic> pos_exp = exp(get_arg());
@@ -1954,19 +1918,6 @@ RCP<const Basic> asinh(const RCP<const Basic> &arg)
     return rcp(new ASinh(arg));
 }
 
-RCP<const Basic> ASinh::subs(const map_basic_basic &subs_dict) const
-{
-    RCP<const ASinh> self = rcp_const_cast<ASinh>(rcp(this));
-    auto it = subs_dict.find(self);
-    if (it != subs_dict.end())
-        return it->second;
-    RCP<const Basic> arg = get_arg()->subs(subs_dict);
-    if (arg == get_arg())
-        return self;
-    else
-        return asinh(arg);
-}
-
 RCP<const Basic> ASinh::diff(const RCP<const Symbol> &x) const
 {
     return mul(div(one, sqrt(add(pow(x, i2), one))), get_arg()->diff(x));
@@ -2016,19 +1967,6 @@ RCP<const Basic> acosh(const RCP<const Basic> &arg)
     // TODO: Lookup into a cst table once complex is implemented
     if (eq(arg, one)) return zero;
     return rcp(new ACosh(arg));
-}
-
-RCP<const Basic> ACosh::subs(const map_basic_basic &subs_dict) const
-{
-    RCP<const ACosh> self = rcp_const_cast<ACosh>(rcp(this));
-    auto it = subs_dict.find(self);
-    if (it != subs_dict.end())
-        return it->second;
-    RCP<const Basic> arg = get_arg()->subs(subs_dict);
-    if (arg == get_arg())
-        return self;
-    else
-        return acosh(arg);
 }
 
 RCP<const Basic> ACosh::diff(const RCP<const Symbol> &x) const
@@ -2093,19 +2031,6 @@ RCP<const Basic> atanh(const RCP<const Basic> &arg)
     return rcp(new ATanh(arg));
 }
 
-RCP<const Basic> ATanh::subs(const map_basic_basic &subs_dict) const
-{
-    RCP<const ATanh> self = rcp_const_cast<ATanh>(rcp(this));
-    auto it = subs_dict.find(self);
-    if (it != subs_dict.end())
-        return it->second;
-    RCP<const Basic> arg = get_arg()->subs(subs_dict);
-    if (arg == get_arg())
-        return self;
-    else
-        return atanh(arg);
-}
-
 RCP<const Basic> ATanh::diff(const RCP<const Symbol> &x) const
 {
     return mul(div(one, sub(one, pow(x, i2))), get_arg()->diff(x));
@@ -2165,21 +2090,48 @@ RCP<const Basic> acoth(const RCP<const Basic> &arg)
     return rcp(new ACoth(arg));
 }
 
-RCP<const Basic> ACoth::subs(const map_basic_basic &subs_dict) const
-{
-    RCP<const ACoth> self = rcp_const_cast<ACoth>(rcp(this));
-    auto it = subs_dict.find(self);
-    if (it != subs_dict.end())
-        return it->second;
-    RCP<const Basic> arg = get_arg()->subs(subs_dict);
-    if (arg == get_arg())
-        return self;
-    else
-        return acoth(arg);
-}
-
 RCP<const Basic> ACoth::diff(const RCP<const Symbol> &x) const
 {
     return mul(div(one, sub(one, pow(x, i2))), get_arg()->diff(x));
+}
+
+RCP<const Basic> Sinh::create(const RCP<const Basic> &arg) const
+{
+    return sinh(arg);
+}
+
+RCP<const Basic> Cosh::create(const RCP<const Basic> &arg) const
+{
+    return cosh(arg);
+}
+
+RCP<const Basic> Tanh::create(const RCP<const Basic> &arg) const
+{
+    return tanh(arg);
+}
+
+RCP<const Basic> Coth::create(const RCP<const Basic> &arg) const
+{
+    return coth(arg);
+}
+
+RCP<const Basic> ASinh::create(const RCP<const Basic> &arg) const
+{
+    return asinh(arg);
+}
+
+RCP<const Basic> ACosh::create(const RCP<const Basic> &arg) const
+{
+    return acosh(arg);
+}
+
+RCP<const Basic> ATanh::create(const RCP<const Basic> &arg) const
+{
+    return atanh(arg);
+}
+
+RCP<const Basic> ACoth::create(const RCP<const Basic> &arg) const
+{
+    return acoth(arg);
 }
 } // CSymPy
