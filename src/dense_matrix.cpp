@@ -319,9 +319,6 @@ void QR(const DenseMatrix &A, DenseMatrix &Q, DenseMatrix &R)
         for (k = 0; k < row; k++)
             tmp[k] = A.m_[k*col + j];
 
-//for (unsigned l = 0; l < row; l++)
-//    std::cout << j << "= " << *tmp[l] << std::endl;
-
         for (i = 0; i < j; i++) {
             t = zero;
             for (k = 0; k < row; k++)
@@ -348,6 +345,44 @@ void QR(const DenseMatrix &A, DenseMatrix &Q, DenseMatrix &R)
                 t = add(t, mul(Q.m_[k*col + i], A.m_[k*col + j]));
             R.m_[i*col + j] = t;
         }
+    }
+}
+
+// SymPy's LDL decomposition, Assuming A is a symmetric square matrix
+void LDL(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &D)
+{
+    CSYMPY_ASSERT(A.row_ == A.col_);
+    CSYMPY_ASSERT(L.row_ == A.row_ && L.col_ == A.row_);
+    CSYMPY_ASSERT(D.row_ == A.row_ && D.col_ == A.row_);
+
+    unsigned col = A.col_;
+    unsigned i, k, j;
+    RCP<const Basic> sum;
+    RCP<const Basic> i2 = integer(2);
+
+    // Initialize D
+    for (i = 0; i < col; i++)
+        for (j = 0; j < col; j++)
+            D.m_[i*col + j] = zero; // Integer zero
+
+    // Initialize L
+    for (i = 0; i < col; i++)
+        for (j = 0; j < col; j++)
+            L.m_[i*col + j] = (i != j) ? zero : one;
+
+    for (i = 0; i < col; i++) {
+        for (j = 0; j < i; j++) {
+            sum = zero;
+            for (k = 0; k < j; k++)
+                sum = add(sum, mul(mul(L.m_[i*col + k], L.m_[j*col + k]),
+                    D.m_[k*col + k]));
+            L.m_[i*col + j] = mul(div(one, D.m_[j*col + j]),
+                sub(A.m_[i*col + j], sum));
+        }
+        sum = zero;
+        for (k = 0; k < i; k++)
+            sum = add(sum, mul(pow(L.m_[i*col + k], i2), D.m_[k*col + k]));
+        D.m_[i*col + i] = sub(A.m_[i*col + i], sum);
     }
 }
 

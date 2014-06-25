@@ -296,31 +296,25 @@ void test_QR()
     A = DenseMatrix(3, 3, {integer(12), integer(-51), integer(4), integer(6),
         integer(167), integer(-68), integer(-4), integer(24), integer(-41)});
     QR(A, Q, R);
-
-    for (unsigned i = 0; i < 9; i+=3)
-        std::cout << *Q.get(i) << std::endl;
-
-//    for (unsigned i = 0; i < 9; i++)
-//        std::cout << *R.get(i) << std::endl;
 }
 
 int main(int argc, char* argv[])
 {
     print_stack_on_segfault();
 
-//    test_dense_dense_addition();
-//    test_add_dense_scalar();
+    test_dense_dense_addition();
+    test_add_dense_scalar();
 
-//    test_dense_dense_multiplication();
-//    test_mul_dense_scalar();
+    test_dense_dense_multiplication();
+    test_mul_dense_scalar();
 
-//    test_gaussian_elimination();
+    test_gaussian_elimination();
 
-//    test_fraction_free_LU();
+    test_fraction_free_LU();
 
-//    test_LU();
+    test_LU();
 
-//    test_fraction_free_LU_SymPy();
+    test_fraction_free_LU_SymPy();
 
     test_QR();
 
