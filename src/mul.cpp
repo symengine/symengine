@@ -132,39 +132,33 @@ RCP<const CSymPy::Basic> Mul::from_dict(const RCP<const Number> &coef, map_basic
     if (coef->is_zero()) return zero;
     if (d.size() == 0) {
         return coef;
-    } else {
-        RCP<const Number> coef_ = coef;
-        CSymPy::map_basic_basic d2;
-        for (auto &p: d) {
-            if (is_a_Number(*(p.first)) && is_a<Integer>(*(p.second))) {
-                RCP<const Number> f = rcp_static_cast<const Number>(p.first);
-                RCP<const Integer> s = rcp_static_cast<const Integer>(p.second);
-                RCP<const Number> r = pownum(f, s);
-                imulnum(outArg(coef_), r);
+    } else if (d.size() == 1) {
+        auto p = d.begin();
+        if (coef->is_one()) {
+            if (is_a<Integer>(*(p->second)) &&
+                    (rcp_static_cast<const Integer>(p->second))->is_one()) {
+                // For x^1 we simply return "x":
+                return p->first;
             } else {
-                // TODO: this can be spedup
-                Mul::dict_add_term(d2, p.second, p.first);
+                // Create a Pow() here:
+                return pow(p->first, p->second);
             }
+        } else if (is_a_Number(*(p->first)) && is_a<Integer>(*(p->second))) {
+            RCP<const Number> coef_ = coef;
+            RCP<const Number> f = rcp_static_cast<const Number>(p->first);
+            RCP<const Integer> s = rcp_static_cast<const Integer>(p->second);
+            RCP<const Number> r = pownum(f, s);
+            imulnum(outArg(coef_), r);
+            std::cout << "AND " << *coef_ << std::endl;
+            if (is_a<Integer>(*coef_))
+                return rcp_static_cast<const Integer>(coef_);
+            else
+                return rcp_static_cast<const Rational>(coef_);
         }
-
-        if (d2.size() == 0 || coef_->is_zero()) {
-            return coef_;
-        } else if (d2.size() == 1) {
-            auto p = d2.begin();
-            if (coef_->is_one()) {
-                if (is_a<Integer>(*(p->second)) &&
-                        (rcp_static_cast<const Integer>(p->second))->is_one()) {
-                    // For x^1 we simply return "x":
-                    return p->first;
-                } else {
-                    // Create a Pow() here:
-                    return pow(p->first, p->second);
-                }
-            }
-        }
-        // For coef*x or coef*x^3 we simply return Mul:
-        return rcp(new Mul(coef_, std::move(d2)));
     }
+    // For coef*x or coef*x^3 we simply return Mul:
+//    std::cout << *coef << " AND " << d << std::endl;
+    return rcp(new Mul(coef, std::move(d)));
 }
 
 // Mul (t^exp) to the dict "d"
@@ -291,6 +285,20 @@ RCP<const Basic> mul(const RCP<const Basic> &a, const RCP<const Basic> &b)
         insert(d, t, exp);
         Mul::as_base_exp(b, outArg(exp), outArg(t));
         Mul::dict_add_term(d, exp, t);
+
+        CSymPy::map_basic_basic d2;
+        for (auto &p: d) {
+            if (is_a_Number(*(p.first)) && is_a<Integer>(*(p.second))) {
+                RCP<const Number> f = rcp_static_cast<const Number>(p.first);
+                RCP<const Integer> s = rcp_static_cast<const Integer>(p.second);
+                RCP<const Number> r = pownum(f, s);
+                imulnum(outArg(coef), r);
+            } else {
+                // TODO: this can be spedup
+                Mul::dict_add_term(d2, p.second, p.first);
+            }
+        }
+        return Mul::from_dict(coef, std::move(d2));
     }
     return Mul::from_dict(coef, std::move(d));
 }
