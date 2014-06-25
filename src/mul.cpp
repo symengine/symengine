@@ -149,7 +149,7 @@ RCP<const CSymPy::Basic> Mul::from_dict(const RCP<const Number> &coef, map_basic
             RCP<const Integer> s = rcp_static_cast<const Integer>(p->second);
             RCP<const Number> r = pownum(f, s);
             imulnum(outArg(coef_), r);
-            std::cout << "AND " << *coef_ << std::endl;
+
             if (is_a<Integer>(*coef_))
                 return rcp_static_cast<const Integer>(coef_);
             else
