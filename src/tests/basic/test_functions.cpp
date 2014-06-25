@@ -36,6 +36,9 @@ using CSymPy::acsc;
 using CSymPy::atan;
 using CSymPy::acot;
 using CSymPy::atan2;
+using CSymPy::lambertw;
+using CSymPy::log;
+using CSymPy::exp;
 using CSymPy::function_symbol;
 using CSymPy::Derivative;
 using CSymPy::pi;
@@ -43,6 +46,14 @@ using CSymPy::RCP;
 using CSymPy::rcp;
 using CSymPy::print_stack_on_segfault;
 using CSymPy::sqrt;
+using CSymPy::sinh;
+using CSymPy::cosh;
+using CSymPy::tanh;
+using CSymPy::coth;
+using CSymPy::asinh;
+using CSymPy::acosh;
+using CSymPy::atanh;
+using CSymPy::acoth;
 
 void test_sin()
 {
@@ -1173,6 +1184,224 @@ void test_atan2()
     assert(eq(r1, r2));
 }
 
+void test_lambertw()
+{
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> im1 = integer(-1);
+    RCP<const Basic> im2 = integer(-2);
+    RCP<const Symbol> y = symbol("y");
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Basic> r1;
+    RCP<const Basic> r2;
+
+    r1 = lambertw(zero);
+    r2 = zero;
+    assert(eq(r1, r2));
+
+    r1 = lambertw(exp(im1));
+    r2 = im1;
+    assert(eq(r1, r2));
+
+    r1 = lambertw(div(log(i2), im2));
+    r2 = log(div(one, i2));
+    assert(eq(r1, r2));
+
+    r1 = lambertw(x)->diff(y);
+    r2 = zero;
+    assert(eq(r1, r2));
+
+    r1 = lambertw(mul(i2, x))->diff(x);
+    r2 = div(lambertw(mul(i2, x)), mul(x, add(lambertw(mul(i2, x)), one)));
+    assert(eq(r1, r2));
+}
+
+void test_sinh()
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Basic> im1 = integer(-1);
+    RCP<const Basic> i2 = integer(2);
+
+    RCP<const Basic> r1;
+    RCP<const Basic> r2;
+
+    r1 = sinh(zero);
+    r2 = zero;
+    assert(eq(r1, r2));
+
+    r1 = sinh(im1);
+    r2 = mul(im1, sinh(one));
+    assert(eq(r1, r2));
+
+    r1 = sinh(x)->expand_as_exp();
+    r2 = div(add(exp(x), mul(im1, exp(mul(im1, x)))), i2);
+    assert(eq(r1, r2));
+    // tests cosh(-x) = cosh(x) and sinh(x)->diff(x) = cosh(x)
+    r1 = sinh(mul(im1, x))->diff(x);
+    r2 = mul(im1, cosh(x));
+    assert(eq(r1, r2));
+
+}
+
+void test_cosh()
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Basic> im1 = integer(-1);
+    RCP<const Basic> i2 = integer(2);
+
+    RCP<const Basic> r1;
+    RCP<const Basic> r2;
+
+    r1 = cosh(zero);
+    r2 = one;
+    assert(eq(r1, r2));
+
+    r1 = cosh(im1);
+    r2 = cosh(one);
+    assert(eq(r1, r2));
+
+    r1 = cosh(x)->expand_as_exp();
+    r2 = div(add(exp(x), exp(mul(im1, x))), i2);
+    assert(eq(r1, r2));
+    // tests sinh(-x) = -sinh(x) and cosh(x)->diff(x) = sinh(x)
+    r1 = cosh(mul(im1, x))->diff(x);
+    r2 = mul(im1, sinh(mul(im1, x)));
+    assert(eq(r1, r2));
+}
+
+void test_tanh()
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Basic> im1 = integer(-1);
+    RCP<const Basic> i2 = integer(2);
+
+    RCP<const Basic> r1;
+    RCP<const Basic> r2;
+
+    r1 = tanh(zero);
+    r2 = zero;
+    assert(eq(r1, r2));
+
+    r1 = tanh(im1);
+    r2 = mul(im1, tanh(one));
+    assert(eq(r1, r2));
+
+    r1 = tanh(x)->expand_as_exp();
+    r2 = div(sub(exp(x), exp(mul(im1, x))), add(exp(x), exp(mul(im1, x))));
+    assert(eq(r1, r2));
+
+    r1 = tanh(mul(im1, x))->diff(x);
+    r2 = add(pow(tanh(x), i2), im1);
+    std::cout<<*r1<<std::endl;
+    std::cout<<*r2<<std::endl;
+    // assert(eq(r1, r2));
+}
+
+void test_coth()
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Basic> im1 = integer(-1);
+    RCP<const Basic> im2 = integer(-2);
+
+    RCP<const Basic> r1;
+    RCP<const Basic> r2;
+
+    r1 = coth(im1);
+    r2 = mul(im1, coth(one));
+    assert(eq(r1, r2));
+
+    r1 = coth(x)->expand_as_exp();
+    r2 = div(add(exp(x), exp(mul(im1, x))), sub(exp(x), exp(mul(im1, x))));
+    assert(eq(r1, r2));
+
+    r1 = coth(mul(im1, x))->diff(x);
+    r2 = pow(sinh(x), im2);
+    assert(eq(r1, r2));
+}
+
+void test_asinh()
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Basic> im1 = integer(-1);
+    RCP<const Basic> i2 = integer(2);
+
+    RCP<const Basic> r1;
+    RCP<const Basic> r2;
+
+    r1 = asinh(zero);
+    r2 = zero;
+    assert(eq(r1, r2));
+
+    r1 = asinh(one);
+    r2 = log(add(sqrt(i2), one));
+    assert(eq(r1, r2));
+
+    r1 = asinh(im1);
+    r2 = log(add(sqrt(i2), im1));
+    assert(eq(r1, r2));
+
+    r1 = asinh(mul(im1, x))->diff(x);
+    r2 = div(im1, sqrt(add(pow(x, i2), one)));
+    assert(eq(r1, r2));
+}
+
+void test_acosh()
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Basic> im1 = integer(-1);
+    RCP<const Basic> i2 = integer(2);
+
+    RCP<const Basic> r1;
+    RCP<const Basic> r2;
+
+    r1 = acosh(one);
+    r2 = zero;
+    assert(eq(r1, r2));
+
+    r1 = acosh(mul(im1, x))->diff(x);
+    r2 = div(im1, sqrt(add(pow(x, i2), im1)));
+    assert(eq(r1, r2));
+}
+
+void test_atanh()
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Basic> im1 = integer(-1);
+    RCP<const Basic> i2 = integer(2);
+
+    RCP<const Basic> r1;
+    RCP<const Basic> r2;
+
+    r1 = atanh(zero);
+    r2 = zero;
+    assert(eq(r1, r2));
+
+    r1 = atanh(mul(im1, x))->diff(x);
+    r2 = div(im1, sub(one, pow(x, i2)));
+    assert(eq(r1, r2));
+
+    r1 = atanh(mul(im1, x));
+    r2 = mul(im1, atanh(x));
+    assert(eq(r1, r2));
+}
+
+void test_acoth()
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Basic> im1 = integer(-1);
+    RCP<const Basic> i2 = integer(2);
+
+    RCP<const Basic> r1;
+    RCP<const Basic> r2;
+
+    r1 = acoth(mul(im1, x))->diff(x);
+    r2 = div(im1, sub(one, pow(x, i2)));
+    assert(eq(r1, r2));
+
+    r1 = acoth(mul(im1, x));
+    r2 = mul(im1, acoth(x));
+    assert(eq(r1, r2));
+}
+
 int main(int argc, char* argv[])
 {
     print_stack_on_segfault();    
@@ -1194,5 +1423,14 @@ int main(int argc, char* argv[])
     test_atan();
     test_acot();
     test_atan2();
+    test_lambertw();
+    test_sinh();
+    test_cosh();
+    test_tanh();
+    test_coth();
+    test_asinh();
+    test_acosh();
+    test_atanh();
+    test_acoth();
     return 0;
 }

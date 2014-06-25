@@ -1452,6 +1452,66 @@ RCP<const Basic> ACot::subs(const map_basic_basic &subs_dict) const
         return acot(arg);
 }
 /* ---------------------------- */
+LambertW::LambertW(const RCP<const Basic> &arg)
+    : arg_{arg}
+{
+    CSYMPY_ASSERT(is_canonical(arg))
+}
+
+bool LambertW::is_canonical(const RCP<const Basic> &arg)
+{
+    if (eq(arg, zero)) return false;
+    if (eq(arg, E)) return false;
+    if (eq(arg, div(one, E))) return false;
+    if (eq(arg, div(log(i2), im2))) return false;
+    return true;
+}
+
+std::size_t LambertW::__hash__() const
+{
+    std::size_t seed = 0;
+    hash_combine<Basic>(seed, *arg_);
+    return seed;
+}
+
+bool LambertW::__eq__(const Basic &o) const
+{
+    if (is_a<LambertW>(o) &&
+        eq(arg_, static_cast<const LambertW &>(o).arg_))
+        return true;
+    return false;
+}
+
+int LambertW::compare(const Basic &o) const
+{
+    CSYMPY_ASSERT(is_a<LambertW>(o))
+    return arg_->__cmp__(*(static_cast<const LambertW &>(o).arg_));
+}
+
+
+std::string LambertW::__str__() const
+{
+    std::ostringstream o;
+    o<< "lambertw(" << *arg_ << ")";
+    return o.str();
+}
+
+RCP<const Basic> LambertW::diff(const RCP<const Symbol> &x) const
+{
+    // check http://en.wikipedia.org/wiki/Lambert_W_function#Derivative
+    // for the equation
+    RCP<const Basic> lambertw_val = lambertw(arg_);
+    return mul(div(lambertw_val, mul(arg_, add(lambertw_val, one))), arg_->diff(x));
+}
+
+RCP<const Basic> lambertw(const RCP<const Basic> &arg)
+{
+    if (eq(arg, zero)) return zero;
+    if (eq(arg, E)) return one;
+    if (eq(arg, div(one, E))) return minus_one;
+    if (eq(arg, div(log(i2), im2))) return mul(minus_one, log(i2));
+    return rcp(new LambertW(arg));
+}
 
 FunctionSymbol::FunctionSymbol(std::string name, const RCP<const Basic> &arg)
     : name_{name}, arg_{arg}
@@ -1579,4 +1639,625 @@ RCP<const Basic> Derivative::diff(const RCP<const Symbol> &x) const
     return rcp(new Derivative(arg_, t));
 }
 
+std::size_t HyperbolicFunction::__hash__() const
+{
+    std::size_t seed = 0;
+    hash_combine<Basic>(seed, *arg_);
+    return seed;
+}
+
+Sinh::Sinh(const RCP<const Basic> &arg)
+    : HyperbolicFunction(arg)
+{
+    CSYMPY_ASSERT(is_canonical(arg))
+}
+
+bool Sinh::is_canonical(const RCP<const Basic> &arg)
+{
+    // TODO: Add further checks for +inf -inf cases
+    if (eq(arg, zero))
+        return false;
+    if (is_a_Number(*arg) &&
+        rcp_static_cast<const Number>(arg)->is_negative()) {
+        return false;
+    }
+    if (could_extract_minus(arg))
+        return false;
+    return true;
+}
+
+bool Sinh::__eq__(const Basic &o) const
+{
+    if (is_a<Sinh>(o) &&
+        eq(get_arg(), static_cast<const Sinh &>(o).get_arg()))
+        return true;
+    else
+        return false;
+}
+
+int Sinh::compare(const Basic &o) const
+{
+    CSYMPY_ASSERT(is_a<Sinh>(o))
+    const Sinh &s = static_cast<const Sinh &>(o);
+    return get_arg()->__cmp__(s);
+}
+
+
+std::string Sinh::__str__() const
+{
+    std::ostringstream o;
+    o << "sinh(" << *get_arg() << ")";
+    return o.str();
+}
+
+RCP<const Basic> sinh(const RCP<const Basic> &arg)
+{
+    if (eq(arg, zero)) return zero;
+    if (is_a_Number(*arg) &&
+        rcp_static_cast<const Number>(arg)->is_negative()) {
+        return mul(minus_one, sinh(mul(minus_one, arg)));
+    }
+    if (could_extract_minus(arg)) {
+        return mul(minus_one, sinh(mul(minus_one, arg)));
+    }
+    return rcp(new Sinh(arg));
+}
+
+RCP<const Basic> Sinh::subs(const map_basic_basic &subs_dict) const
+{
+    RCP<const Sinh> self = rcp_const_cast<Sinh>(rcp(this));
+    auto it = subs_dict.find(self);
+    if (it != subs_dict.end())
+        return it->second;
+    RCP<const Basic> arg = get_arg()->subs(subs_dict);
+    if (arg == get_arg())
+        return self;
+    else
+        return sinh(arg);
+}
+
+RCP<const Basic>  Sinh::expand_as_exp() const
+{
+    return div(sub(exp(get_arg()), exp(mul(get_arg(), minus_one))), i2);
+}
+
+RCP<const Basic> Sinh::diff(const RCP<const Symbol> &x) const
+{
+    return mul(cosh(get_arg()), get_arg()->diff(x));
+}
+
+Cosh::Cosh(const RCP<const Basic> &arg)
+    : HyperbolicFunction(arg)
+{
+    CSYMPY_ASSERT(is_canonical(arg))
+}
+
+bool Cosh::is_canonical(const RCP<const Basic> &arg)
+{
+    // TODO: Add further checks for +inf -inf cases
+    if (eq(arg, zero))
+        return false;
+    if (is_a_Number(*arg) &&
+        rcp_static_cast<const Number>(arg)->is_negative()) {
+        return false;
+    }
+    if (could_extract_minus(arg))
+        return false;
+    return true;
+}
+
+bool Cosh::__eq__(const Basic &o) const
+{
+    if (is_a<Cosh>(o) &&
+        eq(get_arg(), static_cast<const Cosh &>(o).get_arg()))
+        return true;
+    else
+        return false;
+}
+
+int Cosh::compare(const Basic &o) const
+{
+    CSYMPY_ASSERT(is_a<Cosh>(o))
+    const Cosh &s = static_cast<const Cosh &>(o);
+    return get_arg()->__cmp__(s);
+}
+
+
+std::string Cosh::__str__() const
+{
+    std::ostringstream o;
+    o << "cosh(" << *get_arg() << ")";
+    return o.str();
+}
+
+RCP<const Basic> cosh(const RCP<const Basic> &arg)
+{
+    if (eq(arg, zero)) return one;
+    if (is_a_Number(*arg) &&
+        rcp_static_cast<const Number>(arg)->is_negative()) {
+        return cosh(mul(minus_one, arg));
+    }
+    if (could_extract_minus(arg)) {
+        return cosh(mul(minus_one, arg));
+    }
+    return rcp(new Cosh(arg));
+}
+
+RCP<const Basic> Cosh::subs(const map_basic_basic &subs_dict) const
+{
+    RCP<const Cosh> self = rcp_const_cast<Cosh>(rcp(this));
+    auto it = subs_dict.find(self);
+    if (it != subs_dict.end())
+        return it->second;
+    RCP<const Basic> arg = get_arg()->subs(subs_dict);
+    if (arg == get_arg())
+        return self;
+    else
+        return cosh(arg);
+}
+
+RCP<const Basic>  Cosh::expand_as_exp() const
+{
+    return div(add(exp(get_arg()), exp(mul(get_arg(), minus_one))), i2);
+}
+
+RCP<const Basic> Cosh::diff(const RCP<const Symbol> &x) const
+{
+    return mul(sinh(get_arg()), get_arg()->diff(x));
+}
+
+Tanh::Tanh(const RCP<const Basic> &arg)
+    : HyperbolicFunction(arg)
+{
+    CSYMPY_ASSERT(is_canonical(arg))
+}
+
+bool Tanh::is_canonical(const RCP<const Basic> &arg)
+{
+    // TODO: Add further checks for +inf -inf cases
+    if (eq(arg, zero))
+        return false;
+    if (is_a_Number(*arg) &&
+        rcp_static_cast<const Number>(arg)->is_negative()) {
+        return false;
+    }
+    if (could_extract_minus(arg))
+        return false;
+    return true;
+}
+
+bool Tanh::__eq__(const Basic &o) const
+{
+    if (is_a<Tanh>(o) &&
+        eq(get_arg(), static_cast<const Tanh &>(o).get_arg()))
+        return true;
+    else
+        return false;
+}
+
+int Tanh::compare(const Basic &o) const
+{
+    CSYMPY_ASSERT(is_a<Tanh>(o))
+    const Tanh &s = static_cast<const Tanh &>(o);
+    return get_arg()->__cmp__(s);
+}
+
+
+std::string Tanh::__str__() const
+{
+    std::ostringstream o;
+    o << "tanh(" << *get_arg() << ")";
+    return o.str();
+}
+
+RCP<const Basic> tanh(const RCP<const Basic> &arg)
+{
+    if (eq(arg, zero)) return zero;
+    if (is_a_Number(*arg) &&
+        rcp_static_cast<const Number>(arg)->is_negative()) {
+        return mul(minus_one, tanh(mul(minus_one, arg)));
+    }
+    if (could_extract_minus(arg)) {
+        return mul(minus_one, tanh(mul(minus_one, arg)));
+    }
+    return rcp(new Tanh(arg));
+}
+
+RCP<const Basic> Tanh::subs(const map_basic_basic &subs_dict) const
+{
+    RCP<const Tanh> self = rcp_const_cast<Tanh>(rcp(this));
+    auto it = subs_dict.find(self);
+    if (it != subs_dict.end())
+        return it->second;
+    RCP<const Basic> arg = get_arg()->subs(subs_dict);
+    if (arg == get_arg())
+        return self;
+    else
+        return tanh(arg);
+}
+
+RCP<const Basic>  Tanh::expand_as_exp() const
+{
+    RCP<const Basic> pos_exp = exp(get_arg());
+    RCP<const Basic> neg_exp = exp(mul(minus_one, get_arg()));
+    return div(sub(pos_exp, neg_exp), add(pos_exp, neg_exp));
+}
+
+RCP<const Basic> Tanh::diff(const RCP<const Symbol> &x) const
+{
+    return mul(sub(one, pow(tanh(get_arg()), i2)), get_arg()->diff(x));
+}
+
+Coth::Coth(const RCP<const Basic> &arg)
+    : HyperbolicFunction(arg)
+{
+    CSYMPY_ASSERT(is_canonical(arg))
+}
+
+bool Coth::is_canonical(const RCP<const Basic> &arg)
+{
+    // TODO: Add further checks for +inf -inf cases
+    if (eq(arg, zero))
+        return false;
+    if (is_a_Number(*arg) &&
+        rcp_static_cast<const Number>(arg)->is_negative()) {
+        return false;
+    }
+    if (could_extract_minus(arg))
+        return false;
+    return true;
+}
+
+bool Coth::__eq__(const Basic &o) const
+{
+    if (is_a<Coth>(o) &&
+        eq(get_arg(), static_cast<const Coth &>(o).get_arg()))
+        return true;
+    else
+        return false;
+}
+
+int Coth::compare(const Basic &o) const
+{
+    CSYMPY_ASSERT(is_a<Coth>(o))
+    const Coth &s = static_cast<const Coth &>(o);
+    return get_arg()->__cmp__(s);
+}
+
+
+std::string Coth::__str__() const
+{
+    std::ostringstream o;
+    o << "coth(" << *get_arg() << ")";
+    return o.str();
+}
+
+RCP<const Basic> coth(const RCP<const Basic> &arg)
+{
+    if (eq(arg, zero)) {
+        // Answer is infinity. Yet to be implemented in CSymPy
+        throw std::runtime_error("Not implemented.");
+    }
+    if (is_a_Number(*arg) &&
+        rcp_static_cast<const Number>(arg)->is_negative()) {
+        return mul(minus_one, coth(mul(minus_one, arg)));
+    }
+    if (could_extract_minus(arg)) {
+        return mul(minus_one, coth(mul(minus_one, arg)));
+    }
+    return rcp(new Coth(arg));
+}
+
+RCP<const Basic> Coth::subs(const map_basic_basic &subs_dict) const
+{
+    RCP<const Coth> self = rcp_const_cast<Coth>(rcp(this));
+    auto it = subs_dict.find(self);
+    if (it != subs_dict.end())
+        return it->second;
+    RCP<const Basic> arg = get_arg()->subs(subs_dict);
+    if (arg == get_arg())
+        return self;
+    else
+        return coth(arg);
+}
+
+RCP<const Basic>  Coth::expand_as_exp() const
+{
+    RCP<const Basic> pos_exp = exp(get_arg());
+    RCP<const Basic> neg_exp = exp(mul(minus_one, get_arg()));
+    return div(add(pos_exp, neg_exp), sub(pos_exp, neg_exp));
+}
+
+RCP<const Basic> Coth::diff(const RCP<const Symbol> &x) const
+{
+    return mul(div(minus_one, pow(sinh(get_arg()), i2)), get_arg()->diff(x));
+}
+
+ASinh::ASinh(const RCP<const Basic> &arg)
+    : HyperbolicFunction(arg)
+{
+    CSYMPY_ASSERT(is_canonical(arg))
+}
+
+bool ASinh::is_canonical(const RCP<const Basic> &arg)
+{
+    // TODO: Add further checks for +inf -inf cases
+    if (eq(arg, zero) || eq(arg, one) || eq(arg, minus_one))
+        return false;
+    if (is_a_Number(*arg) &&
+        rcp_static_cast<const Number>(arg)->is_negative()) {
+        return false;
+    }
+    if (could_extract_minus(arg))
+        return false;
+    return true;
+}
+
+bool ASinh::__eq__(const Basic &o) const
+{
+    if (is_a<ASinh>(o) &&
+        eq(get_arg(), static_cast<const ASinh &>(o).get_arg()))
+        return true;
+    else
+        return false;
+}
+
+int ASinh::compare(const Basic &o) const
+{
+    CSYMPY_ASSERT(is_a<ASinh>(o))
+    const ASinh &s = static_cast<const ASinh &>(o);
+    return get_arg()->__cmp__(s);
+}
+
+
+std::string ASinh::__str__() const
+{
+    std::ostringstream o;
+    o << "asinh(" << *get_arg() << ")";
+    return o.str();
+}
+
+RCP<const Basic> asinh(const RCP<const Basic> &arg)
+{
+    if (eq(arg, zero)) return zero;
+    if (eq(arg, one)) return log(add(one, sq2));
+    if (eq(arg, minus_one)) return log(sub(sq2, one));
+    if (is_a_Number(*arg) &&
+        rcp_static_cast<const Number>(arg)->is_negative()) {
+        return mul(minus_one, asinh(mul(minus_one, arg)));
+    }
+    if (could_extract_minus(arg)) {
+        return mul(minus_one, asinh(mul(minus_one, arg)));
+    }
+    return rcp(new ASinh(arg));
+}
+
+RCP<const Basic> ASinh::subs(const map_basic_basic &subs_dict) const
+{
+    RCP<const ASinh> self = rcp_const_cast<ASinh>(rcp(this));
+    auto it = subs_dict.find(self);
+    if (it != subs_dict.end())
+        return it->second;
+    RCP<const Basic> arg = get_arg()->subs(subs_dict);
+    if (arg == get_arg())
+        return self;
+    else
+        return asinh(arg);
+}
+
+RCP<const Basic> ASinh::diff(const RCP<const Symbol> &x) const
+{
+    return mul(div(one, sqrt(add(pow(x, i2), one))), get_arg()->diff(x));
+}
+
+ACosh::ACosh(const RCP<const Basic> &arg)
+    : HyperbolicFunction(arg)
+{
+    CSYMPY_ASSERT(is_canonical(arg))
+}
+
+bool ACosh::is_canonical(const RCP<const Basic> &arg)
+{
+    // TODO: Add further checks for +inf -inf cases
+    // TODO: Lookup into a cst table once complex is implemented
+    if (eq(arg, one))
+        return false;
+    return true;
+}
+
+bool ACosh::__eq__(const Basic &o) const
+{
+    if (is_a<ACosh>(o) &&
+        eq(get_arg(), static_cast<const ACosh &>(o).get_arg()))
+        return true;
+    else
+        return false;
+}
+
+int ACosh::compare(const Basic &o) const
+{
+    CSYMPY_ASSERT(is_a<ACosh>(o))
+    const ACosh &s = static_cast<const ACosh &>(o);
+    return get_arg()->__cmp__(s);
+}
+
+
+std::string ACosh::__str__() const
+{
+    std::ostringstream o;
+    o << "acosh(" << *get_arg() << ")";
+    return o.str();
+}
+
+RCP<const Basic> acosh(const RCP<const Basic> &arg)
+{
+    // TODO: Lookup into a cst table once complex is implemented
+    if (eq(arg, one)) return zero;
+    return rcp(new ACosh(arg));
+}
+
+RCP<const Basic> ACosh::subs(const map_basic_basic &subs_dict) const
+{
+    RCP<const ACosh> self = rcp_const_cast<ACosh>(rcp(this));
+    auto it = subs_dict.find(self);
+    if (it != subs_dict.end())
+        return it->second;
+    RCP<const Basic> arg = get_arg()->subs(subs_dict);
+    if (arg == get_arg())
+        return self;
+    else
+        return acosh(arg);
+}
+
+RCP<const Basic> ACosh::diff(const RCP<const Symbol> &x) const
+{
+    return mul(div(one, sqrt(sub(pow(x, i2), one))), get_arg()->diff(x));
+}
+
+ATanh::ATanh(const RCP<const Basic> &arg)
+    : HyperbolicFunction(arg)
+{
+    CSYMPY_ASSERT(is_canonical(arg))
+}
+
+bool ATanh::is_canonical(const RCP<const Basic> &arg)
+{
+    // TODO: Add further checks for +inf -inf cases
+    if (eq(arg, zero))
+        return false;
+    if (is_a_Number(*arg) &&
+        rcp_static_cast<const Number>(arg)->is_negative()) {
+        return false;
+    }
+    if (could_extract_minus(arg))
+        return false;
+    return true;
+}
+
+bool ATanh::__eq__(const Basic &o) const
+{
+    if (is_a<ATanh>(o) &&
+        eq(get_arg(), static_cast<const ATanh &>(o).get_arg()))
+        return true;
+    else
+        return false;
+}
+
+int ATanh::compare(const Basic &o) const
+{
+    CSYMPY_ASSERT(is_a<ATanh>(o))
+    const ATanh &s = static_cast<const ATanh &>(o);
+    return get_arg()->__cmp__(s);
+}
+
+
+std::string ATanh::__str__() const
+{
+    std::ostringstream o;
+    o << "atanh(" << *get_arg() << ")";
+    return o.str();
+}
+
+RCP<const Basic> atanh(const RCP<const Basic> &arg)
+{
+    if (eq(arg, zero)) return zero;
+    if (is_a_Number(*arg) &&
+        rcp_static_cast<const Number>(arg)->is_negative()) {
+        return mul(minus_one, atanh(mul(minus_one, arg)));
+    }
+    if (could_extract_minus(arg)) {
+        return mul(minus_one, atanh(mul(minus_one, arg)));
+    }
+    return rcp(new ATanh(arg));
+}
+
+RCP<const Basic> ATanh::subs(const map_basic_basic &subs_dict) const
+{
+    RCP<const ATanh> self = rcp_const_cast<ATanh>(rcp(this));
+    auto it = subs_dict.find(self);
+    if (it != subs_dict.end())
+        return it->second;
+    RCP<const Basic> arg = get_arg()->subs(subs_dict);
+    if (arg == get_arg())
+        return self;
+    else
+        return atanh(arg);
+}
+
+RCP<const Basic> ATanh::diff(const RCP<const Symbol> &x) const
+{
+    return mul(div(one, sub(one, pow(x, i2))), get_arg()->diff(x));
+}
+
+ACoth::ACoth(const RCP<const Basic> &arg)
+    : HyperbolicFunction(arg)
+{
+    CSYMPY_ASSERT(is_canonical(arg))
+}
+
+bool ACoth::is_canonical(const RCP<const Basic> &arg)
+{
+    // TODO: Add further checks for +inf -inf cases
+    if (is_a_Number(*arg) &&
+        rcp_static_cast<const Number>(arg)->is_negative()) {
+        return false;
+    }
+    if (could_extract_minus(arg))
+        return false;
+    return true;
+}
+
+bool ACoth::__eq__(const Basic &o) const
+{
+    if (is_a<ACoth>(o) &&
+        eq(get_arg(), static_cast<const ACoth &>(o).get_arg()))
+        return true;
+    else
+        return false;
+}
+
+int ACoth::compare(const Basic &o) const
+{
+    CSYMPY_ASSERT(is_a<ACoth>(o))
+    const ACoth &s = static_cast<const ACoth &>(o);
+    return get_arg()->__cmp__(s);
+}
+
+
+std::string ACoth::__str__() const
+{
+    std::ostringstream o;
+    o << "acoth(" << *get_arg() << ")";
+    return o.str();
+}
+
+RCP<const Basic> acoth(const RCP<const Basic> &arg)
+{
+    if (is_a_Number(*arg) &&
+        rcp_static_cast<const Number>(arg)->is_negative()) {
+        return mul(minus_one, acoth(mul(minus_one, arg)));
+    }
+    if (could_extract_minus(arg)) {
+        return mul(minus_one, acoth(mul(minus_one, arg)));
+    }
+    return rcp(new ACoth(arg));
+}
+
+RCP<const Basic> ACoth::subs(const map_basic_basic &subs_dict) const
+{
+    RCP<const ACoth> self = rcp_const_cast<ACoth>(rcp(this));
+    auto it = subs_dict.find(self);
+    if (it != subs_dict.end())
+        return it->second;
+    RCP<const Basic> arg = get_arg()->subs(subs_dict);
+    if (arg == get_arg())
+        return self;
+    else
+        return acoth(arg);
+}
+
+RCP<const Basic> ACoth::diff(const RCP<const Symbol> &x) const
+{
+    return mul(div(one, sub(one, pow(x, i2))), get_arg()->diff(x));
+}
 } // CSymPy
