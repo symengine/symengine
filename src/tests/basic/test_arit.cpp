@@ -84,7 +84,7 @@ void test_mul()
     RCP<const Basic> i4 = rcp(new Integer(4));
     RCP<const Basic> i6 = rcp(new Integer(6));
 
-    RCP<const Basic> r1, r2;
+    RCP<const Basic> r1, r2, mhalf;
 
     r1 = mul(pow(x, y), z);
     r2 = mul(z, pow(x, y));
@@ -122,6 +122,15 @@ void test_mul()
     std::cout << *r1 << std::endl;
     std::cout << *r2 << std::endl;
     assert(eq(r1, r2));
+
+    mhalf = div(integer(-1), i2);
+    r1 = mul(integer(12), pow(integer(196), mhalf));
+    r2 = mul(integer(294), pow(integer(196), mhalf));
+    assert(eq(integer(18), mul(r1, r2)));
+
+    r1 = mul(mul(integer(12), pow(integer(196), mhalf)), pow(i3, mhalf));
+    r2 = mul(mul(integer(294), pow(integer(196), mhalf)), pow(i3, mhalf));
+    assert(eq(i6, mul(r1, r2)));
 }
 
 void test_sub()
