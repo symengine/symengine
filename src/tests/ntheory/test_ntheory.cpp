@@ -170,6 +170,7 @@ void test_factor()
 
 void test_factor_lehman_method()
 {
+    RCP<const Integer> i1 = integer(1);
     RCP<const Integer> i21 = integer(21);
     RCP<const Integer> i23 = integer(23);
     RCP<const Integer> i31 = integer(31);
@@ -185,15 +186,61 @@ void test_factor_lehman_method()
     assert(factor_lehman_method(outArg(f), *i47) == 0);
 
     assert(factor_lehman_method(outArg(f), *i21) > 0);
-    assert(divides(i21, f));
+    assert(divides(i21, f) && !eq(f, i1) && !eq(f, i21));   //Lehman's method returns only a proper divisor when composite
     assert(factor_lehman_method(outArg(f), *i121) > 0);
-    assert(divides(i121, f));
+    assert(divides(i121, f) && !eq(f, i1) && !eq(f, i121));
     assert(factor_lehman_method(outArg(f), *i122) > 0);
-    assert(divides(i122, f));
+    assert(divides(i122, f) && !eq(f, i1) && !eq(f, i122));
     assert(factor_lehman_method(outArg(f), *i900) > 0);
-    assert(divides(i900, f));
+    assert(divides(i900, f) && !eq(f, i1) && !eq(f, i900));
     assert(factor_lehman_method(outArg(f), *i1001) > 0);
-    assert(divides(i1001, f));
+    assert(divides(i1001, f) && !eq(f, i1) && !eq(f, i1001));
+}
+
+void test_factor_pollard_pm1_method()
+{
+    RCP<const Integer> i23 = integer(23);
+    RCP<const Integer> i31 = integer(31);
+    RCP<const Integer> i47 = integer(47);
+    RCP<const Integer> i121 = integer(121);
+    RCP<const Integer> i122 = integer(122);
+    RCP<const Integer> i900 = integer(900);
+    RCP<const Integer> i1001 = integer(1001);
+    RCP<const Integer> i1850 = integer(1850);
+    RCP<const Integer> f;
+
+    assert(factor_pollard_pm1_method(outArg(f), *i23) == 0);
+    assert(factor_pollard_pm1_method(outArg(f), *i31) == 0);
+    assert(factor_pollard_pm1_method(outArg(f), *i47) == 0);
+
+    assert(factor_pollard_pm1_method(outArg(f), *i121) == 0 || divides(i121, f));
+    assert(factor_pollard_pm1_method(outArg(f), *i122) == 0 || divides(i122, f));
+    assert(factor_pollard_pm1_method(outArg(f), *i900) == 0 || divides(i900, f));
+    assert(factor_pollard_pm1_method(outArg(f), *i1001, 20) == 0 || divides(i1001, f));
+    assert(factor_pollard_pm1_method(outArg(f), *i1850) == 0 || divides(i1850, f));
+}
+
+void test_factor_pollard_rho_method()
+{
+    RCP<const Integer> i23 = integer(23);
+    RCP<const Integer> i31 = integer(31);
+    RCP<const Integer> i47 = integer(47);
+    RCP<const Integer> i121 = integer(121);
+    RCP<const Integer> i122 = integer(122);
+    RCP<const Integer> i900 = integer(900);
+    RCP<const Integer> i1001 = integer(1001);
+    RCP<const Integer> i1850 = integer(1850);
+    RCP<const Integer> f;
+
+    assert(factor_pollard_rho_method(outArg(f), *i23) == 0);
+    assert(factor_pollard_rho_method(outArg(f), *i31) == 0);
+    assert(factor_pollard_rho_method(outArg(f), *i47) == 0);
+
+    assert(factor_pollard_rho_method(outArg(f), *i121) == 0 || divides(i121, f));
+    assert(factor_pollard_rho_method(outArg(f), *i122) == 0 || divides(i122, f));
+    assert(factor_pollard_rho_method(outArg(f), *i900) == 0 || divides(i900, f));
+    assert(factor_pollard_rho_method(outArg(f), *i1001) == 0 || divides(i1001, f));
+    assert(factor_pollard_rho_method(outArg(f), *i1850) == 0 || divides(i1850, f));
 }
 
 void test_sieve()
@@ -297,6 +344,8 @@ int main(int argc, char* argv[])
     test_factorial();
     test_factor();
     test_factor_lehman_method();
+    test_factor_pollard_pm1_method();
+    test_factor_pollard_rho_method();
     test_sieve();
     test_prime_factors();
     test_prime_factor_multiplicities();
