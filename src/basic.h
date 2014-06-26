@@ -17,6 +17,7 @@
 #include <vector>
 #include <unordered_map>
 #include <cassert>
+#include <atomic>
 
 #include "csympy_config.h"
 #include "csympy_assert.h"
@@ -64,7 +65,7 @@ private:
 #if defined(WITH_CSYMPY_RCP)
 public:
     //! Public variables if defined with CSYMY_RCP
-    mutable unsigned int refcount_; // reference counter
+    mutable std::atomic<unsigned int> refcount_; // reference counter
 #endif
 public:
     //! Constructor
