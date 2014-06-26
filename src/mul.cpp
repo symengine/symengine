@@ -134,19 +134,26 @@ RCP<const CSymPy::Basic> Mul::from_dict(const RCP<const Number> &coef, map_basic
         return coef;
     } else if (d.size() == 1) {
         auto p = d.begin();
-        if (coef->is_one()) {
-            if (is_a<Integer>(*(p->second)) &&
-                    (rcp_static_cast<const Integer>(p->second))->is_one()) {
-                // For x^1 we simply return "x":
-                return p->first;
+        if (is_a<Integer>(*(p->second))) {
+            if (coef->is_one()) {
+                if ((rcp_static_cast<const Integer>(p->second))->is_one()) {
+                    // For x^1 we simply return "x":
+                    return p->first;
+                }
             } else {
-                // Create a Pow() here:
-                return pow(p->first, p->second);
+                // For coef*x or coef*x^3 we simply return Mul:
+                return rcp(new Mul(coef, std::move(d)));
             }
         }
+        if (coef->is_one()) {
+            // Create a Pow() here:
+            return pow(p->first, p->second);
+        } else {
+            return rcp(new Mul(coef, std::move(d)));
+        }
+    } else {
+        return rcp(new Mul(coef, std::move(d)));
     }
-    // For coef*x or coef*x^3 we simply return Mul:
-    return rcp(new Mul(coef, std::move(d)));
 }
 
 // Mul (t^exp) to the dict "d"
