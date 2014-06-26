@@ -726,7 +726,8 @@ void QR(const DenseMatrix &A, DenseMatrix &Q, DenseMatrix &R)
     }
 }
 
-// SymPy's LDL decomposition, Assuming A is a symmetric square matrix
+// SymPy's LDL decomposition, Assuming A is a symmetric, square, positive
+// definite non singular matrix
 void LDL(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &D)
 {
     CSYMPY_ASSERT(A.row_ == A.col_);
@@ -761,6 +762,40 @@ void LDL(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &D)
         for (k = 0; k < i; k++)
             sum = add(sum, mul(pow(L.m_[i*col + k], i2), D.m_[k*col + k]));
         D.m_[i*col + i] = sub(A.m_[i*col + i], sum);
+    }
+}
+
+// SymPy's cholesky decomposition
+void cholesky(const DenseMatrix &A, DenseMatrix &L)
+{
+    CSYMPY_ASSERT(A.row_ == A.col_);
+    CSYMPY_ASSERT(L.row_ == A.row_ && L.col_ == A.row_);
+
+    unsigned col = A.col_;
+    unsigned i, j, k;
+    RCP<const Basic> sum;
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> half = div(one, i2);
+
+    // Initialize L
+    for (i = 0; i < col; i++)
+        for(j = 0; j < col; j++)
+            L.m_[i*col + j] = zero;
+
+    for (i = 0; i < col; i++) {
+        for (j = 0; j < i; j++) {
+            sum = zero;
+            for(k = 0; k < j; k++)
+                sum = add(sum, mul(L.m_[i*col + k], L.m_[j*col + k]));
+
+            L.m_[i*col + j] = mul(div(one, L.m_[j*col + j]),
+                sub(A.m_[i*col + j], sum));
+        }
+        sum = zero;
+        for (k = 0; k < i; k++)
+            sum = add(sum, pow(L.m_[i*col + k], i2));
+
+        L.m_[i*col + i] = pow(sub(A.m_[i*col + i], sum), half);
     }
 }
 

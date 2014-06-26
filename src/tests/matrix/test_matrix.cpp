@@ -30,6 +30,9 @@ using CSymPy::pivoted_fraction_free_gaussian_elimination;
 using CSymPy::pivoted_gauss_jordan_elimination;
 using CSymPy::fraction_free_gauss_jordan_elimination;
 using CSymPy::pivoted_fraction_free_gauss_jordan_elimination;
+using CSymPy::QR;
+using CSymPy::LDL;
+using CSymPy::cholesky;
 
 void test_dense_dense_addition()
 {
@@ -419,7 +422,7 @@ void test_fraction_free_gauss_jordan_elimination()
     fraction_free_gauss_jordan_elimination(A, B);
 
     assert(B == DenseMatrix(2, 2, {integer(-2), integer(0), integer(0), integer(-2)}));
-    
+
     A = DenseMatrix(4, 4, {integer(1), integer(2), integer(3), integer(4),
         integer(2), integer(2), integer(3), integer(4), integer(3), integer(3),
         integer(3), integer(4), integer(9), integer(8), integer(7), integer(6)});
@@ -430,8 +433,8 @@ void test_fraction_free_gauss_jordan_elimination()
         integer(0), integer(-10), integer(0), integer(0), integer(0), integer(0),
         integer(-10), integer(0), integer(0), integer(0), integer(0), integer(-10)}));
 
-    A = DenseMatrix(4, 4, {integer(1), integer(7), integer(5), integer(4), 
-        integer(7), integer(2), integer(2), integer(4), integer(3), integer(6), 
+    A = DenseMatrix(4, 4, {integer(1), integer(7), integer(5), integer(4),
+        integer(7), integer(2), integer(2), integer(4), integer(3), integer(6),
         integer(3), integer(4), integer(9), integer(5), integer(7), integer(5)});
     fraction_free_gauss_jordan_elimination(A, B);
 
@@ -662,6 +665,45 @@ void test_QR()
     QR(A, Q, R);
 }
 
+void test_LDL()
+{
+    DenseMatrix A = DenseMatrix(3, 3, {integer(4), integer(12), integer(-16),
+        integer(12), integer(37), integer(-43), integer(-16), integer(-43),
+        integer(98)});
+    DenseMatrix L = DenseMatrix(3, 3);
+    DenseMatrix D = DenseMatrix(3, 3);
+
+    LDL(A, L, D);
+
+    assert(L == DenseMatrix(3, 3, {integer(1), integer(0), integer(0), integer(3),
+        integer(1), integer(0), integer(-4), integer(5), integer(1)}));
+    assert(D == DenseMatrix(3, 3, {integer(4), integer(0), integer(0), integer(0),
+        integer(1), integer(0), integer(0), integer(0), integer(9)}));
+
+    A = DenseMatrix(3, 3, {integer(25), integer(15), integer(-5), integer(15),
+        integer(18), integer(0), integer(-5), integer(0), integer(11)});
+    LDL(A, L, D);
+
+    assert(L == DenseMatrix(3, 3, {integer(1), integer(0), integer(0),
+        div(integer(3), integer(5)), integer(1), integer(0),
+        div(integer(-1), integer(5)), div(integer(1), integer(3)), integer(1)}));
+    assert(D == DenseMatrix(3, 3, {integer(25), integer(0), integer(0),
+        integer(0), integer(9), integer(0), integer(0), integer(0), integer(9)}));
+}
+
+void test_cholesky()
+{
+    DenseMatrix A = DenseMatrix(3, 3, {integer(4), integer(12), integer(-16),
+        integer(12), integer(37), integer(-43), integer(-16), integer(-43),
+        integer(98)});
+    DenseMatrix L = DenseMatrix(3, 3);
+
+    cholesky(A, L);
+
+    assert(L == DenseMatrix(3, 3, {integer(1), integer(0), integer(0), integer(3),
+        integer(1), integer(0), integer(-4), integer(5), integer(1)}));
+}
+
 int main(int argc, char* argv[])
 {
     print_stack_on_segfault();
@@ -700,7 +742,11 @@ int main(int argc, char* argv[])
 
     test_fraction_free_LU_SymPy();
 
-    test_QR();
+    // test_QR();
+
+    test_LDL();
+
+    test_cholesky();
 
     return 0;
 }
