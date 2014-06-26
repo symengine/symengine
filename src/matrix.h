@@ -113,6 +113,16 @@ public:
     friend void fraction_free_gauss_jordan_solve(const DenseMatrix &A,
         const DenseMatrix &b, DenseMatrix &x);
 
+    // Matrix Decomposition
+    friend void fraction_free_LU(const DenseMatrix &A, DenseMatrix &L,
+        DenseMatrix &U);
+    friend void LU(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &U);
+    friend void fraction_free_LU(const DenseMatrix &A, DenseMatrix &L,
+        DenseMatrix &D, DenseMatrix &U);
+    friend void QR(const DenseMatrix &A, DenseMatrix &Q, DenseMatrix &R);
+    friend void LDL(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &D);
+    friend void cholesky(const DenseMatrix &A, DenseMatrix &L);
+
 protected:
     // Matrix elements are stored in row-major order
     std::vector<RCP<const Basic>> m_;
@@ -164,6 +174,7 @@ void mul_dense_dense(const DenseMatrix &A, const DenseMatrix &B, DenseMatrix &C)
 
 void mul_dense_scalar(const DenseMatrix &A, RCP<const Basic> &k, DenseMatrix &C);
 
+// Common functions
 void transpose_dense(const DenseMatrix &A, DenseMatrix &B);
 
 void submatrix_dense(const DenseMatrix &A, unsigned row_start, unsigned row_end,
@@ -198,6 +209,17 @@ void pivoted_fraction_free_gauss_jordan_elimination(const DenseMatrix &A,
 
 // Matrix Decomposition
 void fraction_free_LU(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &U);
+
+void LU(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &U);
+
+void fraction_free_LU(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &D,
+    DenseMatrix &U);
+
+void QR(const DenseMatrix &A, DenseMatrix &Q, DenseMatrix &R);
+
+void LDL(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &D);
+
+void cholesky(const DenseMatrix &A, DenseMatrix &L);
 
 // Solve Ax = b
 void diagonal_solve(const DenseMatrix &A, const DenseMatrix &b, DenseMatrix &x);

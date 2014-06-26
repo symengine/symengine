@@ -5,6 +5,7 @@
 #include "mul.h"
 #include "pow.h"
 #include "symbol.h"
+#include "add.h"
 
 using CSymPy::RCP;
 using CSymPy::Basic;
@@ -14,6 +15,7 @@ using CSymPy::mul;
 using CSymPy::integer;
 using CSymPy::print_stack_on_segfault;
 using CSymPy::symbol;
+using CSymPy::add;
 
 void test_printing()
 {
@@ -31,7 +33,6 @@ void test_printing()
 
     r = mul(integer(2), pow(symbol("x"), integer(2)));
     assert(r->__str__() == "2x^2");
-
 }
 
 int main(int argc, char* argv[])
