@@ -178,57 +178,38 @@ void Mul::dict_add_term(map_basic_basic &d, const RCP<const Basic> &exp,
 }
 
 // Mul (t^exp) to the dict "d"
-void Mul::dict_add_term_new(RCP<const Number> &coef, map_basic_basic &d, 
+void Mul::dict_add_term_new(RCP<const Number> &coef, map_basic_basic &d,
     const RCP<const Basic> &exp, const RCP<const Basic> &t)
 {
     auto it = d.find(t);
     if (it == d.end()) {
-        // DOn't check for `exp = 0` here
+        // Don't check for `exp = 0` here
         if (is_a<Integer>(*exp) && is_a_Number(*t)) {
-            imulnum(outArg(coef), rcp_static_cast<const Number>(pow(t, exp)));
+            imulnum(outArg(coef), pownum(rcp_static_cast<const Number>(t),
+                rcp_static_cast<const Number>(exp)));
         } else {
             insert(d, t, exp);
         }
     } else {
         // Very common case, needs to be fast:
-        if (is_a_Number(*it->second) && is_a_Number(*exp)) {
+        if (is_a_Number(*exp) && is_a_Number(*it->second)) {
             RCP<const Number> tmp = rcp_static_cast<const Number>(it->second);
-            iaddnum(outArg(tmp), rcp_static_cast<const Number>(exp));
-            
-            if (is_a<Integer>(*tmp)) {
-                if (is_a_Number(*t)) {
-                    d.erase(it);
-                    if (!tmp->is_zero()) {
-                        // RCP<const Number> coef_ = *coef;
-                        imulnum(outArg(coef), rcp_static_cast<const Number>(pow(t, tmp)));
-                        // *coef = coef_;
-                    } else {
-                        d.erase(it);
-                    }
-                } else if (!tmp->is_zero()) {
-                    it->second = tmp;
-                } else {
-                    d.erase(it);
-                }
-            } else {
-                it->second = tmp;
-            }
-        } else {
-            // General case:
+            iaddnum(outArg(tmp),
+                rcp_static_cast<const Number>(exp));
+            it->second = tmp;
+        }
+        else
             it->second = add(it->second, exp);
-            if (is_a<Integer>(*it->second)) {
-                if (is_a_Number(*t)) {
-                    d.erase(it);
-                    if (!rcp_static_cast<const Integer>(it->second)->is_zero()) {
-                        // RCP<const Number> coef_ = *coef;
-                        imulnum(outArg(coef), rcp_static_cast<const Number>(pow(t, it->second)));
-                        // *coef = coef_;
-                    } else {
-                        d.erase(it);
-                    }
-                } else if (rcp_static_cast<const Integer>(it->second)->is_zero()) {
-                    d.erase(it);
+
+        if (is_a<Integer>(*it->second)) {
+            if (is_a_Number(*t)) {
+                if (!rcp_static_cast<const Integer>(it->second)->is_zero()) {
+                    imulnum(outArg(coef), pownum(rcp_static_cast<const Number>(t),
+                        rcp_static_cast<const Number>(it->second)));
                 }
+                d.erase(it);
+            } else if (rcp_static_cast<const Integer>(it->second)->is_zero()) {
+                d.erase(it);
             }
         }
     }
