@@ -28,5 +28,3 @@ target_link_libraries(matrix_mul1 csympy teuchos ${LIBS})
 
 add_executable(matrix_mul2 matrix_mul2.cpp)
 target_link_libraries(matrix_mul2 csympy teuchos ${LIBS})
-
-
