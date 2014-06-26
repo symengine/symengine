@@ -98,9 +98,6 @@ public:
         DenseMatrix &B, std::vector<unsigned> &pivotlist);
     friend unsigned pivot(DenseMatrix &B, unsigned r, unsigned c);
 
-    // Matrix Decomposition
-    friend void fraction_free_LU(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &U);
-
     // Ax = b
     friend void augment_dense(const DenseMatrix &A, const DenseMatrix &b,
         DenseMatrix &C);
