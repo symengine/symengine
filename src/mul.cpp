@@ -143,17 +143,6 @@ RCP<const CSymPy::Basic> Mul::from_dict(const RCP<const Number> &coef, map_basic
                 // Create a Pow() here:
                 return pow(p->first, p->second);
             }
-        // } else if (is_a_Number(*(p->first)) && is_a<Integer>(*(p->second))) {
-        //     RCP<const Number> coef_ = coef;
-        //     RCP<const Number> f = rcp_static_cast<const Number>(p->first);
-        //     RCP<const Integer> s = rcp_static_cast<const Integer>(p->second);
-        //     RCP<const Number> r = pownum(f, s);
-        //     imulnum(outArg(coef_), r);
-
-        //     if (is_a<Integer>(*coef_))
-        //         return rcp_static_cast<const Integer>(coef_);
-        //     else
-        //         return rcp_static_cast<const Rational>(coef_);
         }
     }
     // For coef*x or coef*x^3 we simply return Mul:
