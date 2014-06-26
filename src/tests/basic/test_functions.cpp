@@ -984,6 +984,7 @@ void test_asec()
     
     r1 = asec(div(i2, sqrt(i2)));
     r2 = div(pi, mul(i2, i2));
+    std::cout << "r1, r2: " << *r1 << ", " << *r2 << std::endl;
     assert(eq(r1, r2));
 
     r1 = asec(div(mul(i2, sqrt(i2)), add(sqrt(i3), i1)));
