@@ -65,8 +65,12 @@ private:
 #if defined(WITH_CSYMPY_RCP)
 public:
     //! Public variables if defined with CSYMY_RCP
+#if defined(WITH_CSYMPY_THREAD_SAFE)
     mutable std::atomic<unsigned int> refcount_; // reference counter
-#endif
+#else
+    mutable unsigned int refcount_; // reference counter
+#endif // WITH_CSYMPY_THREAD_SAFE
+#endif // WITH_CSYMPY_RCP
 public:
     //! Constructor
     Basic() : hash_{0}
