@@ -6,3 +6,6 @@
 
 /* Define if you want to enable ECM support in CSymPy */
 #cmakedefine HAVE_CSYMPY_ECM
+
+/* Define if you want to enable PRIMESIEVE support in CSymPy */
+#cmakedefine HAVE_CSYMPY_PRIMESIEVE

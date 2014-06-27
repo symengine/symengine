@@ -40,6 +40,9 @@ fi
 if [[ "${WITH_ECM}" != "" ]]; then
     cmake_line="$cmake_line -DWITH_ECM=${WITH_ECM}"
 fi
+if [[ "${WITH_PRIMESIEVE}" != "" ]]; then
+    cmake_line="$cmake_line -DWITH_PRIMESIEVE=${WITH_PRIMESIEVE}"
+fi
 cmake $cmake_line ${SOURCE_DIR}
 echo "Current directory:"
 pwd
