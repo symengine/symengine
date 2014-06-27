@@ -54,9 +54,9 @@ before_install:
         sudo apt-get install libecm-dev;
     fi
   - if [[ "${WITH_PRIMESIEVE}" == "yes" ]]; then
-    wget http://dl.bintray.com/kimwalisch/primesieve/primesieve-5.2.tar.gz;
-    tar -xzvf primesieve-5.2.tar.gz;
-    cd primesieve-5.2 && ./configure && make && sudo make install && cd ..;
+        wget http://dl.bintray.com/kimwalisch/primesieve/primesieve-5.2.tar.gz;
+        tar -xzvf primesieve-5.2.tar.gz;
+        cd primesieve-5.2 && ./configure && make && sudo make install && cd ..;
     fi
 install:
   - if [[ "${WITH_PYTHON}" == "yes" ]]; then
