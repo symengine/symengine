@@ -37,13 +37,13 @@ matrix:
     # These test the default Release build with other Python versions
     - python: 2.6
       env:
-        - TEST_IN_TREE="yes" WITH_PYTHON="yes"
+        - WITH_PYTHON="yes"
     - python: 3.2
       env:
-        - TEST_IN_TREE="yes" WITH_PYTHON="yes"
+        - WITH_PYTHON="yes"
     - python: 3.3
       env:
-        - TEST_IN_TREE="yes" WITH_PYTHON="yes"
+        - WITH_PYTHON="yes"
 before_install:
   - sudo apt-get update
   - sudo apt-get install cmake libgmp-dev
