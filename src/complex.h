@@ -26,6 +26,8 @@ public:
 public:
 	//! Constructor of Complex class
     Complex(mpq_class real, mpq_class imaginary);
+    //! \return true if canonical
+    bool is_canonical(const mpq_class &real, const mpq_class &imaginary);
 };
 
 } // CSymPy
