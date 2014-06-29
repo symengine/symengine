@@ -64,7 +64,12 @@ private:
     mutable std::size_t hash_; // This holds the hash value
 #if defined(WITH_CSYMPY_RCP)
 public:
-    //! Public variables if defined with CSYMY_RCP
+    //! Public variables if defined with CSYMPY_RCP
+    // The reference counter is defined either as "unsigned int" (faster, but
+    // not thread safe) or as std::atomic<unsigned int> (slower, but thread
+    // safe). Semantically they are almost equivalent, except that the
+    // pre-decrement operator `operator--()` returns a copy for std::atomic
+    // instead of a reference to itself.
 #if defined(WITH_CSYMPY_THREAD_SAFE)
     mutable std::atomic<unsigned int> refcount_; // reference counter
 #else
