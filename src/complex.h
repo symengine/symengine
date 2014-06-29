@@ -26,6 +26,11 @@ public:
 public:
 	//! Constructor of Complex class
     Complex(mpq_class real, mpq_class imaginary);
+    /*! \param `re` must already be in mpq_class canonical form
+        \param `im` must already be in mpq_class canonical form
+    *   \return Complex or Rational depending on imaginary part.
+    * */
+    static RCP<const Number> from_mpq(const mpq_class re, const mpq_class im);
     //! \return true if canonical
     bool is_canonical(const mpq_class &real, const mpq_class &imaginary);
     //! \return size of the hash
@@ -37,6 +42,12 @@ public:
     virtual bool __eq__(const Basic &o) const;
     //! \return stringify version of `self`s
     virtual std::string __str__() const;
+
+     /*! Constructs Complex from re, im. If im is 0
+    *   it will return a Rational instead.
+    * */
+    static RCP<const Number> from_two_rats(const RCP<const Rational> &re,
+        const RCP<const Rational> &im);
 };
 
 } // CSymPy
