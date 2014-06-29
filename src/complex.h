@@ -28,6 +28,15 @@ public:
     Complex(mpq_class real, mpq_class imaginary);
     //! \return true if canonical
     bool is_canonical(const mpq_class &real, const mpq_class &imaginary);
+    //! \return size of the hash
+    virtual std::size_t __hash__() const;
+    /*! Equality comparator
+     * \param o - Object to be compared with
+     * \return whether the 2 objects are equal
+     * */
+    virtual bool __eq__(const Basic &o) const;
+    //! \return stringify version of `self`s
+    virtual std::string __str__() const;
 };
 
 } // CSymPy

@@ -24,4 +24,41 @@ bool Complex::is_canonical(const mpq_class &real, const mpq_class &imaginary)
 	return true;
 }
 
+std::string Complex::__str__() const
+{
+    std::ostringstream s;
+    s << this->real_;
+    if (((imaginary_.get_den() < 0) && (imaginary_.get_num() > 0)) ||
+                ((imaginary_.get_den() > 0) && (imaginary_.get_num() < 0))) {
+		s << " -i";
+		mpq_class q(imaginary_.get_num()*(-1), imaginary_.get_den());
+		s << q;
+	} else {
+		s << " +i";
+		s << this->imaginary_;
+	}
+    return s.str();
+}
+
+std::size_t Complex::__hash__() const
+{
+    // only the least significant bits that fit into "signed long int" are
+    // hashed:
+    std::size_t seed = 0;
+    hash_combine<long long int>(seed, this->real_.get_num().get_si());
+    hash_combine<long long int>(seed, this->real_.get_den().get_si());
+    hash_combine<long long int>(seed, this->imaginary_.get_num().get_si());
+    hash_combine<long long int>(seed, this->imaginary_.get_den().get_si());
+    return seed;
+}
+
+bool Complex::__eq__(const Basic &o) const
+{
+    if (is_a<Complex>(o)) {
+        const Complex &s = static_cast<const Complex &>(o);
+        return ((this->real_ == s.real_) && (this->imaginary_ == s.imaginary_));
+    }
+    return false;
+}
+
 } // CSymPy
