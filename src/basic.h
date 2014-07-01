@@ -65,7 +65,11 @@ private:
     // in the constructor and then it can be changed in Basic::hash() to the
     // current hash (which is always the same for the given instance). The
     // state of the instance does not change, so we define hash_ as mutable.
+#if defined(WITH_CSYMPY_THREAD_SAFE)
+    mutable std::atomic<std::size_t> hash_; // This holds the hash value
+#else
     mutable std::size_t hash_; // This holds the hash value
+#endif // WITH_CSYMPY_THREAD_SAFE
 #if defined(WITH_CSYMPY_RCP)
 public:
     //! Public variables if defined with CSYMPY_RCP
