@@ -61,6 +61,10 @@ class Symbol;
 class Basic {
 private:
     //! Private variables
+    // The hash_ is defined as mutable, because its value is initialized to 0
+    // in the constructor and then it can be changed in Basic::hash() to the
+    // current hash (which is always the same for the given instance). The
+    // state of the instance does not change, so we define hash_ as mutable.
 #if defined(WITH_CSYMPY_THREAD_SAFE)
     mutable std::atomic<std::size_t> hash_; // This holds the hash value
 #else
@@ -74,6 +78,9 @@ public:
     // safe). Semantically they are almost equivalent, except that the
     // pre-decrement operator `operator--()` returns a copy for std::atomic
     // instead of a reference to itself.
+    // The refcount_ is defined as mutable, because it does not change the
+    // state of the instance, but changes when more copies
+    // of the same instance are made.
 #if defined(WITH_CSYMPY_THREAD_SAFE)
     mutable std::atomic<unsigned int> refcount_; // reference counter
 #else
