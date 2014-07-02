@@ -98,26 +98,37 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
     if (eq(a, one)) return one;
     if (eq(a, minus_one) && is_a<Integer>(*b))
         return is_a<Integer>(*div(b, integer(2))) ? one : minus_one;
+
     if (is_a_Number(*a) && is_a_Number(*b)) {
         if (is_a<Rational>(*a)) {
             RCP<const Rational> exp_new = rcp_static_cast<const Rational>(a);
-            if (abs(exp_new->i.get_num()) < abs(exp_new->i.get_den())) {
-                // Rational is not of form num > den. Make it first and then return.
-                if (is_a<Integer>(*b)) {
-                    return pownum(exp_new->rdiv(*rcp_static_cast<const Number>(one)),
-                                    rcp_static_cast<const Integer>(b)->mul(*rcp_static_cast<const Number>(minus_one)));
-                } else {
-                    // eval pow directly is not implemented in case of rational power
-                    return rcp(new Pow(exp_new->rdiv(*rcp_static_cast<const Number>(one)), b));
-                }
+
+            if (is_a<Integer>(*b)) {
+                return pownum(exp_new, rcp_static_cast<const Integer>(b));
             } else {
-                // Rational is of form num > den
-                if (is_a<Integer>(*b)) {
-                    return pownum(exp_new, rcp_static_cast<const Integer>(b));
-                } else {
-                    // eval pow directly is not implemented in case of rational power
-                    return rcp(new Pow(exp_new, b));
+                // b is a Rational
+                mpz_class q, r, num, den;
+                num = rcp_static_cast<const Rational>(b)->i.get_num();
+                den = rcp_static_cast<const Rational>(b)->i.get_den();
+
+                if (abs(num) > den) {
+                    mpz_cdiv_qr(q.get_mpz_t(), r.get_mpz_t(), num.get_mpz_t(),
+                        den.get_mpz_t());
+
+                    if (r < 0) {
+                        r += den;
+                        q -= 1;
+                    }
+                    // std::cout << q << " " << r << std::endl;
+                    RCP<const Basic> frac =
+                        div(pownum(exp_new, rcp_static_cast<const Number>(integer(q))), rcp_static_cast<const Number>(integer(exp_new->i.get_den())));
+                    RCP<const Basic> surds =
+                        mul(rcp(new Pow(integer(exp_new->i.get_num()), div(integer(r), integer(den)))), 
+                            rcp(new Pow(integer(exp_new->i.get_den()), sub(one, div(integer(r), integer(den))))));
+                    return mul(frac, surds);
                 }
+                else
+                    return rcp(new Pow(exp_new, b));
             }
         } else {
             // a is Integer
@@ -125,7 +136,27 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
             if (is_a<Integer>(*b)) {
                 return pownum(exp_new, rcp_static_cast<const Integer>(b));
             } else {
-                return rcp(new Pow(exp_new, b));
+                // b is a Rational
+                mpz_class q, r, num, den;
+                num = rcp_static_cast<const Rational>(b)->i.get_num();
+                den = rcp_static_cast<const Rational>(b)->i.get_den();
+
+                if (abs(num) > den) {
+                    mpz_cdiv_qr(q.get_mpz_t(), r.get_mpz_t(), num.get_mpz_t(),
+                        den.get_mpz_t());
+
+                    if (r < 0) {
+                        r += den;
+                        q -= 1;
+                    }
+                    // std::cout << q << " TTTT " << r << std::endl;
+                    RCP<const Basic> frac = exp_new->powint(Integer(q));
+                    RCP<const Basic> surd = rcp(new Pow(exp_new, div(integer(r), integer(den))));
+                    // std::cout << *frac << " SSSS " << *surd << std::endl;
+                    return mul(frac, surd);
+                }
+                else
+                    return rcp(new Pow(exp_new, b));
             }
         }
     }
