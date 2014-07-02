@@ -40,6 +40,13 @@ bool Pow::is_canonical(const RCP<const Basic> &base, const RCP<const Basic> &exp
     // e.g. x^2^y, should rather be x^(2*y)
     if (is_a<Pow>(*base))
         return false;
+    // If exp is a rational, it should be between 0  and 1, i.e. we don't
+    // allow things like 2^(-1/2) or 2^(3/2)
+    if (is_a_Number(*base) && is_a<Rational>(*exp) &&
+        (rcp_static_cast<const Rational>(exp)->i < 0 ||
+        rcp_static_cast<const Rational>(exp)->i > 1))
+        return false;
+
     return true;
 }
 
@@ -98,35 +105,56 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
     if (eq(a, one)) return one;
     if (eq(a, minus_one) && is_a<Integer>(*b))
         return is_a<Integer>(*div(b, integer(2))) ? one : minus_one;
+
     if (is_a_Number(*a) && is_a_Number(*b)) {
-        if (is_a<Rational>(*a)) {
-            RCP<const Rational> exp_new = rcp_static_cast<const Rational>(a);
-            if (abs(exp_new->i.get_num()) < abs(exp_new->i.get_den())) {
-                // Rational is not of form num > den. Make it first and then return.
-                if (is_a<Integer>(*b)) {
-                    return pownum(exp_new->rdiv(*rcp_static_cast<const Number>(one)),
-                                    rcp_static_cast<const Integer>(b)->mul(*rcp_static_cast<const Number>(minus_one)));
-                } else {
-                    // eval pow directly is not implemented in case of rational power
-                    return rcp(new Pow(exp_new->rdiv(*rcp_static_cast<const Number>(one)), b));
+        if (is_a<Integer>(*b)) {
+            if (is_a<Rational>(*a)) {
+                RCP<const Rational> exp_new = rcp_static_cast<const Rational>(a);
+                return exp_new->powrat(*rcp_static_cast<const Integer>(b));
+            } else if (is_a<Integer>(*a)) {
+                RCP<const Integer> exp_new = rcp_static_cast<const Integer>(a);
+                return exp_new->powint(*rcp_static_cast<const Integer>(b));
+            } else {
+                throw std::runtime_error("Not implemented");
+            }
+        } else if (is_a<Rational>(*b)) {
+            mpz_class q, r, num, den;
+            num = rcp_static_cast<const Rational>(b)->i.get_num();
+            den = rcp_static_cast<const Rational>(b)->i.get_den();
+
+            if (num > den || num < 0) {
+                mpz_cdiv_qr(q.get_mpz_t(), r.get_mpz_t(), num.get_mpz_t(),
+                    den.get_mpz_t());
+
+                if (r < 0) {
+                    r += den;
+                    q -= 1;
                 }
             } else {
-                // Rational is of form num > den
-                if (is_a<Integer>(*b)) {
-                    return pownum(exp_new, rcp_static_cast<const Integer>(b));
-                } else {
-                    // eval pow directly is not implemented in case of rational power
-                    return rcp(new Pow(exp_new, b));
-                }
+                return rcp(new Pow(a, b));
+            }
+            // Here we make the exponent postive and a fraction between
+            // 0 and 1. We multiply numerator and denominator appropriately
+            // to achieve this
+            if (is_a<Rational>(*a)) {
+                RCP<const Rational> exp_new = rcp_static_cast<const Rational>(a);
+                RCP<const Basic> frac =
+                    div(exp_new->powrat(Integer(q)), integer(exp_new->i.get_den()));
+                RCP<const Basic> surds =
+                    mul(rcp(new Pow(integer(exp_new->i.get_num()), div(integer(r), integer(den)))),
+                        rcp(new Pow(integer(exp_new->i.get_den()), sub(one, div(integer(r), integer(den))))));
+                return mul(frac, surds);
+            } else if (is_a<Integer>(*a)) {
+                RCP<const Integer> exp_new = rcp_static_cast<const Integer>(a);
+                RCP<const Number> frac = exp_new->powint(Integer(q));
+                map_basic_basic surd;
+                surd[exp_new] = div(integer(r), integer(den));
+                return rcp(new Mul(frac, std::move(surd)));
+            } else {
+                throw std::runtime_error("Not implemented");
             }
         } else {
-            // a is Integer
-            RCP<const Integer> exp_new = rcp_static_cast<const Integer>(a);
-            if (is_a<Integer>(*b)) {
-                return pownum(exp_new, rcp_static_cast<const Integer>(b));
-            } else {
-                return rcp(new Pow(exp_new, b));
-            }
+            throw std::runtime_error("Not implemented");
         }
     }
     if (is_a<Mul>(*a)) {
