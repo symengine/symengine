@@ -119,7 +119,7 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
                         r += den;
                         q -= 1;
                     }
-                    // std::cout << q << " " << r << std::endl;
+
                     RCP<const Basic> frac =
                         div(pownum(exp_new, rcp_static_cast<const Number>(integer(q))), rcp_static_cast<const Number>(integer(exp_new->i.get_den())));
                     RCP<const Basic> surds =
@@ -149,10 +149,8 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
                         r += den;
                         q -= 1;
                     }
-                    // std::cout << q << " TTTT " << r << std::endl;
                     RCP<const Basic> frac = exp_new->powint(Integer(q));
                     RCP<const Basic> surd = rcp(new Pow(exp_new, div(integer(r), integer(den))));
-                    // std::cout << *frac << " SSSS " << *surd << std::endl;
                     return mul(frac, surd);
                 }
                 else

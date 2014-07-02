@@ -122,9 +122,6 @@ void test_mul()
     std::cout << *r1 << std::endl;
     std::cout << *r2 << std::endl;
     assert(eq(r1, r2));
-
-    r1 = mul(integer(1), pow(integer(2), integer(3)));
-    std::cout << "CCCC " << *r1 << std::endl;
 }
 
 void test_sub()
