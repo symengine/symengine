@@ -53,8 +53,34 @@ public:
     virtual bool is_zero() const { return ((this->real_ == 0) && (this->imaginary_ == 0)); }
     //! \return `true` if `1`
     virtual bool is_one() const { return ((this->real_ == 1) && (this->imaginary_ == 0)); }
+
+    /*! Add Complex
+     * \param other of type Complex
+     * */
+    inline RCP<const Number> addcomp(const Complex &other) const {
+        return from_mpq(this->real_ + other.real_, this->imaginary_ + other.imaginary_);
+    }
+    /*! Add Complex
+     * \param other of type Rational
+     * */
+    inline RCP<const Number> addcomp(const Rational &other) const {
+        return from_mpq(this->real_ + other.i, this->imaginary_);
+    }   
+    /*! Add Complex
+     * \param other of type Integer
+     * */
+    inline RCP<const Number> addcomp(const Integer &other) const {
+        return from_mpq(this->real_ + other.i, this->imaginary_);
+    }
 };
 
+//! \return true if 'b' is a Number or any of its subclasses
+inline bool is_a_Number(const Basic &b)
+{
+    // Currently we enumerate all the subclasses explicitly, from the most
+    // frequent (on the left) to the least frequent (on the right):
+    return is_a<Integer>(b) || is_a<Rational>(b) || is_a<Complex>(b);
+}
 } // CSymPy
 
 #endif

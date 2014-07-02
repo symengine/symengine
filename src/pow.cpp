@@ -6,6 +6,7 @@
 #include "symbol.h"
 #include "integer.h"
 #include "rational.h"
+#include "complex.h"
 
 namespace CSymPy {
 
