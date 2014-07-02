@@ -982,7 +982,7 @@ void test_asec()
     r2 = mul(i2, div(pi,  i3));
     assert(eq(r1, r2));
     
-    r1 = asec(div(i2, sqrt(i2)));
+    r1 = asec(sqrt(i2));
     r2 = div(pi, mul(i2, i2));
     assert(eq(r1, r2));
 
@@ -1026,7 +1026,7 @@ void test_acsc()
     r2 = div(pi, mul(im2, i3));
     assert(eq(r1, r2));
 
-    r1 = acsc(div(i2, sqrt(i2)));
+    r1 = acsc(sqrt(i2));
     r2 = div(pi, mul(i2, i2));
     assert(eq(r1, r2));
 
