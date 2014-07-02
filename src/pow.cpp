@@ -43,8 +43,8 @@ bool Pow::is_canonical(const RCP<const Basic> &base, const RCP<const Basic> &exp
     // If exp is a rational, if should be between 0  and 1, i.e. we don't
     // allow things like 2^(-1/2) or 2^(3/2)
     if (is_a_Number(*base) && is_a<Rational>(*exp) &&
-        rcp_static_cast<const Rational>(exp)->i > 0 &&
-        rcp_static_cast<const Rational>(exp)->i > 1)
+        (rcp_static_cast<const Rational>(exp)->i < 0 ||
+        rcp_static_cast<const Rational>(exp)->i > 1))
         return false;
 
     return true;
