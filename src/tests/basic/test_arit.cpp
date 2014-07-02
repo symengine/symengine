@@ -395,8 +395,8 @@ void test_pow()
     assert(eq(r1, r2));
 
     r1 = mul(pow(i3, div(i27, i4)), pow(i2, div(integer(-13), i6)));
-    r2 = mul(mul(div(integer(729), integer(8), pow(i3, div(i3, i4)))), 
-        pow(i2, div(i5, i6)));
+    r2 = mul(mul(div(integer(729), integer(8)), pow(i3, div(i3, i4))),
+        pow(i2, div(integer(5), i6)));
     assert(eq(r1, r2));
 
  }

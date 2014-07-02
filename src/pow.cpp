@@ -40,6 +40,11 @@ bool Pow::is_canonical(const RCP<const Basic> &base, const RCP<const Basic> &exp
     // e.g. x^2^y, should rather be x^(2*y)
     if (is_a<Pow>(*base))
         return false;
+
+    if (is_a_Number(*base) && is_a<Rational>(*exp) &&
+        rcp_static_cast<const Rational>(exp)->i.get_den() < abs(rcp_static_cast<const Rational>(exp)->i.get_num()))
+        return false;
+
     return true;
 }
 
@@ -120,6 +125,9 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
                         q -= 1;
                     }
 
+                    // Here we make the exponent postive and a fraction between 
+                    // 0 and 1. We multiply numerator and denominator appropriately
+                    // to achieve this
                     RCP<const Basic> frac =
                         div(exp_new->powrat(*integer(q)), integer(exp_new->i.get_den()));
                     RCP<const Basic> surds =
@@ -149,6 +157,10 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
                         r += den;
                         q -= 1;
                     }
+
+                    // Here we make the exponent postive and a fraction between 
+                    // 0 and 1. We multiply numerator and denominator appropriately
+                    // to achieve this
                     RCP<const Basic> frac = exp_new->powint(Integer(q));
                     RCP<const Basic> surd = rcp(new Pow(exp_new, div(integer(r), integer(den))));
                     return mul(frac, surd);
