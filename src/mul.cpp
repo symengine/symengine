@@ -350,8 +350,7 @@ RCP<const Basic> mul_expand_two(const RCP<const Basic> &a, const RCP<const Basic
                 if (is_a_Number(*term)) {
                     iaddnum(outArg(coef), rcp_static_cast<const Number>(term));
                 } else {
-                    Add::dict_add_term(d,
-                        mulnum(p.second, q.second), term);
+                    Add::dict_add_term(d, mulnum(p.second, q.second), term);
                 }
             }
             Add::dict_add_term(d,
