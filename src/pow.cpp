@@ -270,7 +270,7 @@ RCP<const Basic> pow_expand(const RCP<const Pow> &self)
                     RCP<const Basic> exp2, t, tmp;
                     tmp = pow(base, exp);
                     Mul::as_base_exp(tmp, outArg(exp2), outArg(t));
-                    Mul::dict_add_term(d, exp2, t);
+                    Mul::dict_add_term_new(outArg(overall_coeff), d, exp2, t);
                 }
                 if (!(i2->second->is_one())) {
                     imulnum(outArg(overall_coeff),
