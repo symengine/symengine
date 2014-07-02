@@ -367,7 +367,9 @@ void test_pow()
     r1 = pow(div(i4, i6), i2);
     assert(eq(r1, div(integer(4), integer(9))));
 
-    r1 =  pow(i6, div(integer(1), i2));
+    r1 = pow(i2, div(im1, i2));
+    r2 = div(sqrt(i2), i2);
+    assert(eq(r1, r2));
 
     r1 = pow(div(i3, i2), div(integer(7), i2));
     r2 = mul(div(integer(27), integer(16)), mul(pow(i2, div(integer(1), i2)),
@@ -391,6 +393,12 @@ void test_pow()
     r1 = pow(i6, div(integer(-7), i2));
     r2 = mul(div(one, integer(1296)), pow(i6, div(integer(1), i2)));
     assert(eq(r1, r2));
+
+    r1 = mul(pow(i3, div(i27, i4)), pow(i2, div(integer(-13), i6)));
+    r2 = mul(mul(div(integer(729), integer(8), pow(i3, div(i3, i4)))), 
+        pow(i2, div(i5, i6)));
+    assert(eq(r1, r2));
+
  }
 
  void test_log()
