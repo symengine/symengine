@@ -48,6 +48,11 @@ public:
     * */
     static RCP<const Number> from_two_rats(const RCP<const Rational> &re,
         const RCP<const Rational> &im);
+
+    //! \return `true` if `0`
+    virtual bool is_zero() const { return ((this->real_ == 0) && (this->imaginary_ == 0)); }
+    //! \return `true` if `1`
+    virtual bool is_one() const { return ((this->real_ == 1) && (this->imaginary_ == 0)); }
 };
 
 } // CSymPy
