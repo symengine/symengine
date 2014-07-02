@@ -40,9 +40,11 @@ bool Pow::is_canonical(const RCP<const Basic> &base, const RCP<const Basic> &exp
     // e.g. x^2^y, should rather be x^(2*y)
     if (is_a<Pow>(*base))
         return false;
-
+    // If exp is a rational, if should be between 0  and 1, i.e. we don't
+    // allow things like 2^(-1/2) or 2^(3/2)
     if (is_a_Number(*base) && is_a<Rational>(*exp) &&
-        rcp_static_cast<const Rational>(exp)->i.get_den() < abs(rcp_static_cast<const Rational>(exp)->i.get_num()))
+        rcp_static_cast<const Rational>(exp)->i > 0 &&
+        rcp_static_cast<const Rational>(exp)->i > 1)
         return false;
 
     return true;
@@ -116,7 +118,7 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
                 num = rcp_static_cast<const Rational>(b)->i.get_num();
                 den = rcp_static_cast<const Rational>(b)->i.get_den();
 
-                if (abs(num) > den) {
+                if (num > den || num < 0) {
                     mpz_cdiv_qr(q.get_mpz_t(), r.get_mpz_t(), num.get_mpz_t(),
                         den.get_mpz_t());
 
@@ -149,7 +151,7 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
                 num = rcp_static_cast<const Rational>(b)->i.get_num();
                 den = rcp_static_cast<const Rational>(b)->i.get_den();
 
-                if (abs(num) > den) {
+                if (num > den || num < 0) {
                     mpz_cdiv_qr(q.get_mpz_t(), r.get_mpz_t(), num.get_mpz_t(),
                         den.get_mpz_t());
 
@@ -161,9 +163,10 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
                     // Here we make the exponent postive and a fraction between 
                     // 0 and 1. We multiply numerator and denominator appropriately
                     // to achieve this
-                    RCP<const Basic> frac = exp_new->powint(Integer(q));
-                    RCP<const Basic> surd = rcp(new Pow(exp_new, div(integer(r), integer(den))));
-                    return mul(frac, surd);
+                    RCP<const Number> frac = exp_new->powint(Integer(q));
+                    map_basic_basic surd;
+                    surd[exp_new] = div(integer(r), integer(den));
+                    return rcp(new Mul(frac, std::move(surd)));
                 }
                 else
                     return rcp(new Pow(exp_new, b));

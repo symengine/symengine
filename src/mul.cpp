@@ -147,7 +147,7 @@ RCP<const CSymPy::Basic> Mul::from_dict(const RCP<const Number> &coef, map_basic
         }
         if (coef->is_one()) {
             // Create a Pow() here:
-            return rcp(new Pow(p->first, p->second));
+            return pow(p->first, p->second);
         } else {
             return rcp(new Mul(coef, std::move(d)));
         }
