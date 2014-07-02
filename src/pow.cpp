@@ -121,7 +121,7 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
                     }
 
                     RCP<const Basic> frac =
-                        div(pownum(exp_new, rcp_static_cast<const Number>(integer(q))), rcp_static_cast<const Number>(integer(exp_new->i.get_den())));
+                        div(exp_new->powrat(*integer(q)), integer(exp_new->i.get_den()));
                     RCP<const Basic> surds =
                         mul(rcp(new Pow(integer(exp_new->i.get_num()), div(integer(r), integer(den)))), 
                             rcp(new Pow(integer(exp_new->i.get_den()), sub(one, div(integer(r), integer(den))))));
