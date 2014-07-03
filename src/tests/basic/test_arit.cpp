@@ -402,6 +402,10 @@ void test_pow()
     r1 = div(integer(12), pow(integer(196), div(integer(1), integer(2))));
     r2 = mul(div(i3, integer(49)), sqrt(integer(196)));
     assert(eq(r1, r2));
+
+    r1 = pow(div(sqrt(integer(12)), sqrt(integer(6))), integer(2));
+    r2 = integer(2);
+    assert(eq(r1, r2));
  }
 
  void test_log()
