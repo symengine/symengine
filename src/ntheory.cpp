@@ -171,7 +171,7 @@ int _factor_trial_division_sieve(mpz_class &factor, const mpz_class &N)
         throw std::runtime_error("N too large to factor");
     unsigned limit = sqrtN.get_ui();
     std::vector<unsigned> primes;
-    eratosthenes_sieve(limit, primes);
+    sieve::generate_primes(limit, primes);
     for (auto &p: primes)
         if (N % p == 0) {
             factor = p;
@@ -252,7 +252,7 @@ int _factor_pollard_pm1_method(mpz_class &rop, const mpz_class &n,
         throw std::runtime_error("Require n > 3 and B > 2 to use Pollard's p-1 method");
 
     std::vector<unsigned> primes;
-    eratosthenes_sieve(B, primes);
+    sieve::generate_primes(B, primes);
     mpz_class m, g, _c;
     _c = c;
 
@@ -410,30 +410,6 @@ int factor_trial_division(const Ptr<RCP<const Integer>> &f, const Integer &n)
     return ret_val;
 }
 
-void eratosthenes_sieve(unsigned limit, std::vector<unsigned> &primes)
-{
-#ifdef HAVE_CSYMPY_PRIMESIEVE
-    primesieve::generate_primes(limit, &primes);
-#else
-    std::valarray<bool> is_prime(true, (limit + 1)/ 2);
-    if (limit >= 2)
-        primes.push_back(2);
-    //considering only odd integers. An odd number n corresponds to n/2 in the array.
-    const unsigned sqrt_limit = static_cast<unsigned>(std::sqrt(limit));
-    for (unsigned n = 3; n <= sqrt_limit; n += 2) {
-        if (is_prime[n / 2]) {
-            std::slice sl = std::slice((n * n )/ 2, 1 + (limit - n * n) / (2 * n), n); 
-            //starting from n*n, all the odd multiples of n are marked not prime. 
-            is_prime[sl] = false;
-        }
-    }
-    for (unsigned n = 1; n <= limit/ 2; n++) {
-        if (is_prime[n])
-            primes.push_back(2 * n + 1);
-    }
-#endif
-}
-
 void prime_factors(const RCP<const Integer> &n,
         std::vector<RCP<const Integer>> &prime_list)
 {
@@ -445,7 +421,7 @@ void prime_factors(const RCP<const Integer> &n,
         throw std::runtime_error("N too large to factor");
     unsigned limit = sqrtN.get_ui();
     std::vector<unsigned> primes;
-    eratosthenes_sieve(limit, primes);
+    sieve::generate_primes(limit, primes);
 
     for (auto &p: primes)
     {
@@ -471,7 +447,7 @@ void prime_factor_multiplicities(const RCP<const Integer> &n,
         throw std::runtime_error("N too large to factor");
     unsigned limit = sqrtN.get_ui();
     std::vector<unsigned> primes;
-    eratosthenes_sieve(limit, primes);
+    sieve::generate_primes(limit, primes);
 
     for (auto &p: primes)
     {
@@ -487,6 +463,94 @@ void prime_factor_multiplicities(const RCP<const Integer> &n,
     }
     if (!(_n == 1))
         insert(primes_mul, integer(_n), 1);
+}
+
+#ifndef HAVE_CSYMPY_PRIMESIEVE
+std::vector<unsigned> sieve::_primes={2,3,5,7,11,13,17,19,23,29};
+
+void sieve::_extend(unsigned limit)
+{
+    const unsigned sqrt_limit = static_cast<unsigned>(std::sqrt(limit));
+    unsigned start = _primes.back() + 1;
+    if(sqrt_limit >= start)
+        _extend(sqrt_limit);
+    if(limit <= start)
+        return;
+        
+    std::valarray<bool> is_prime(true, (limit + 1 - start)/2);
+    //considering only odd integers. An odd number n corresponds to n/2 in the array.
+    for (unsigned index = 1; index <= _primes.size() && _primes[index] <= sqrt_limit; ++index) {
+        unsigned n = _primes[index];
+        unsigned multiple = (start / n + 1) * n;
+        if(multiple % 2 == 0)
+            multiple += n;
+        if(multiple > limit)
+            continue;
+        std::slice sl = std::slice((multiple-start)/ 2, 1 + (limit - multiple) / (2 * n), n); 
+        //starting from n*n, all the odd multiples of n are marked not prime. 
+        is_prime[sl] = false;
+    }
+    for (unsigned n = start + 1; n <= limit; n += 2) {
+        if (is_prime[(n - start) / 2])
+            _primes.push_back(n);
+    }
+}
+#endif
+
+void sieve::generate_primes(unsigned limit, std::vector<unsigned> &primes)
+{
+#ifdef HAVE_CSYMPY_PRIMESIEVE
+    primesieve::generate_primes(limit, &primes);
+#else
+    _extend(limit);
+    for (auto &p: _primes)
+    {
+        if(p <= limit)
+            primes.push_back(p);
+        else break;
+    }
+#endif
+}
+
+inline sieve::iterator::iterator(unsigned max)
+{
+#ifdef HAVE_CSYMPY_PRIMESIEVE
+    _pi = primesieve::iterator(max);
+#else
+    _limit = max;
+    _index = 0;
+#endif
+}
+
+inline sieve::iterator::iterator()
+{
+#ifndef HAVE_CSYMPY_PRIMESIEVE
+    _limit = 0;
+    _index = 0;
+#endif
+}
+
+void sieve::clear()
+{
+#ifndef HAVE_CSYMPY_PRIMESIEVE
+    _primes = {2,3,5,7,11,13,17,19,23,29};
+#endif   
+}
+
+unsigned sieve::iterator::next_prime()
+{
+#ifdef HAVE_CSYMPY_PRIMESIEVE
+    return _pi.next_prime();
+#else
+    if (_index >= _primes.size())
+    {
+        unsigned extend_to = _primes[_index-1]*2;
+        if(_limit > 0 && _limit < extend_to)
+            extend_to = _limit;
+        _extend(extend_to);
+    }
+    return CSymPy::sieve::_primes[_index++];
+#endif
 }
 
 } // CSymPy

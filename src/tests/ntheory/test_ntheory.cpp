@@ -248,7 +248,7 @@ void test_sieve()
     const int MAX=100003;
     std::vector<unsigned> v;
     auto t1 = std::chrono::high_resolution_clock::now();
-    CSymPy::eratosthenes_sieve(MAX, v);
+    CSymPy::sieve::generate_primes(MAX, v);
     auto t2 = std::chrono::high_resolution_clock::now();
     std::cout
         << std::chrono::duration_cast<std::chrono::microseconds>(t2-t1).count()
