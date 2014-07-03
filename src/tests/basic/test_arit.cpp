@@ -27,9 +27,13 @@ using CSymPy::sin;
 using CSymPy::RCP;
 using CSymPy::rcp;
 using CSymPy::sqrt;
-using CSymPy::E;
-using CSymPy::exp;
+using CSymPy::pow;
+using CSymPy::add;
+using CSymPy::mul;
+using CSymPy::div;
 using CSymPy::sub;
+using CSymPy::exp;
+using CSymPy::E;
 using CSymPy::rcp_dynamic_cast;
 using CSymPy::print_stack_on_segfault;
 
