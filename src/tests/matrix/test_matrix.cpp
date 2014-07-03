@@ -30,7 +30,9 @@ using CSymPy::pivoted_fraction_free_gaussian_elimination;
 using CSymPy::pivoted_gauss_jordan_elimination;
 using CSymPy::fraction_free_gauss_jordan_elimination;
 using CSymPy::pivoted_fraction_free_gauss_jordan_elimination;
-
+using CSymPy::QR;
+using CSymPy::LDL;
+using CSymPy::cholesky;
 
 void test_dense_dense_addition()
 {
@@ -420,7 +422,7 @@ void test_fraction_free_gauss_jordan_elimination()
     fraction_free_gauss_jordan_elimination(A, B);
 
     assert(B == DenseMatrix(2, 2, {integer(-2), integer(0), integer(0), integer(-2)}));
-    
+
     A = DenseMatrix(4, 4, {integer(1), integer(2), integer(3), integer(4),
         integer(2), integer(2), integer(3), integer(4), integer(3), integer(3),
         integer(3), integer(4), integer(9), integer(8), integer(7), integer(6)});
@@ -431,8 +433,8 @@ void test_fraction_free_gauss_jordan_elimination()
         integer(0), integer(-10), integer(0), integer(0), integer(0), integer(0),
         integer(-10), integer(0), integer(0), integer(0), integer(0), integer(-10)}));
 
-    A = DenseMatrix(4, 4, {integer(1), integer(7), integer(5), integer(4), 
-        integer(7), integer(2), integer(2), integer(4), integer(3), integer(6), 
+    A = DenseMatrix(4, 4, {integer(1), integer(7), integer(5), integer(4),
+        integer(7), integer(2), integer(2), integer(4), integer(3), integer(6),
         integer(3), integer(4), integer(9), integer(5), integer(7), integer(5)});
     fraction_free_gauss_jordan_elimination(A, B);
 
@@ -537,6 +539,171 @@ void test_fraction_free_gauss_jordan_solve()
         integer(1)}));
 }
 
+void test_fraction_free_LU()
+{
+    // Example 3, page 14, Nakos, G. C., Turner, P. R., Williams, R. M. (1997).
+    // Fraction-free algorithms for linear and polynomial equations.
+    // ACM SIGSAM Bulletin, 31(3), 11–19. doi:10.1145/271130.271133.
+    DenseMatrix A = DenseMatrix(4, 4, {integer(1), integer(2), integer(3), integer(4),
+        integer(2), integer(2), integer(3), integer(4), integer(3), integer(3),
+        integer(3), integer(4), integer(9), integer(8), integer(7), integer(6)});
+    DenseMatrix L = DenseMatrix(4, 4);
+    DenseMatrix U = DenseMatrix(4, 4);
+    fraction_free_LU(A, L, U);
+
+    assert(L == DenseMatrix(4, 4, {integer(1), integer(0), integer(0), integer(0),
+        integer(2), integer(-2), integer(0), integer(0), integer(3), integer(-3),
+        integer(3), integer(0), integer(9), integer(-10), integer(10), integer(-10)}));
+
+    assert(U == DenseMatrix(4, 4, {integer(1), integer(2), integer(3), integer(4),
+        integer(0), integer(-2), integer(-3), integer(-4), integer(0), integer(0),
+        integer(3), integer(4), integer(0), integer(0), integer(0), integer(-10)}));
+}
+
+void test_LU()
+{
+    DenseMatrix A = DenseMatrix(3, 3, {integer(1), integer(3), integer(5),
+        integer(2), integer(5), integer(6), integer(8), integer(3), integer(1)});
+    DenseMatrix L = DenseMatrix(3, 3);
+    DenseMatrix U = DenseMatrix(3, 3);
+    LU(A, L, U);
+
+    assert(L == DenseMatrix(3, 3, {integer(1), integer(0), integer(0),
+        integer(2), integer(1), integer(0), integer(8), integer(21), integer(1)}));
+    assert(U == DenseMatrix(3, 3, {integer(1), integer(3), integer(5),
+        integer(0), integer(-1), integer(-4), integer(0), integer(0), integer(45)}));
+
+    A = DenseMatrix(4, 4, {integer(1), integer(2), integer(6), integer(3),
+        integer(3), integer(5), integer(6), integer(-5), integer(2), integer(4),
+        integer(5), integer(6), integer(6), integer(-10), integer(2),
+        integer(-30)});
+    L = DenseMatrix(4, 4);
+    U = DenseMatrix(4, 4);
+    LU(A, L, U);
+
+    assert(L == DenseMatrix(4, 4, {integer(1), integer(0), integer(0), integer(0),
+        integer(3), integer(1), integer(0), integer(0), integer(2), integer(0),
+        integer(1), integer(0), integer(6), integer(22), div(integer(-230),
+        integer(7)), integer(1)}));
+    assert(U == DenseMatrix(4, 4, {integer(1), integer(2), integer(6),
+        integer(3), integer(0), integer(-1), integer(-12), integer(-14),
+        integer(0), integer(0), integer(-7), integer(0), integer(0), integer(0),
+        integer(0), integer(260)}));
+
+    A = DenseMatrix(2, 2, {symbol("a"), symbol("b"), symbol("c"), symbol("d")});
+    L = DenseMatrix(2, 2);
+    U = DenseMatrix(2, 2);
+    DenseMatrix B = DenseMatrix(2, 2);
+    LU(A, L, U);
+    mul_dense_dense(L, U, B);
+
+    assert(A == B);
+}
+
+void test_fraction_free_LU_SymPy()
+{
+    DenseMatrix A = DenseMatrix(3, 3);
+    DenseMatrix L = DenseMatrix(3, 3);
+    DenseMatrix D = DenseMatrix(3, 3);
+    DenseMatrix U = DenseMatrix(3, 3);
+
+    A = DenseMatrix(3, 3, {integer(1), integer(2), integer(3), integer(5),
+        integer(-3), integer(2), integer(6), integer(2), integer(1)});
+    fraction_free_LU(A, L, D, U);
+
+    assert(L == DenseMatrix(3, 3, {integer(1), integer(0), integer(0),
+        integer(5), integer(-13), integer(0), integer(6), integer(-10), integer(1)}));
+    assert(D == DenseMatrix(3, 3, {integer(1), integer(0), integer(0), integer(0),
+        integer(-13), integer(0), integer(0), integer(0), integer(-13)}));
+    assert(U == DenseMatrix(3, 3, {integer(1), integer(2), integer(3), integer(0),
+        integer(-13), integer(-13), integer(0), integer(0), integer(91)}));
+
+    A = DenseMatrix(3, 3, {integer(1), integer(2), mul(integer(3), symbol("a")),
+        integer(5), mul(integer(-3), symbol("a")), mul(integer(2), symbol("a")),
+        mul(integer(6), symbol("a")), mul(integer(2), symbol("b")), integer(1)});
+    fraction_free_LU(A, L, D, U);
+
+    assert(L == DenseMatrix(3, 3, {integer(1), integer(0), integer(0), integer(5),
+        sub(mul(integer(-3), symbol("a")), integer(10)), integer(0),
+        mul(integer(6), symbol("a")), add(mul(integer(-12), symbol("a")),
+        mul(integer(2), symbol("b"))), integer(1)}));
+    assert(D == DenseMatrix(3, 3, {integer(1), integer(0), integer(0), integer(0),
+        sub(mul(integer(-3), symbol("a")), integer(10)), integer(0), integer(0),
+        integer(0), sub(mul(integer(-3), symbol("a")), integer(10))}));
+    assert(U == DenseMatrix(3, 3, {integer(1), integer(2),
+        mul(integer(3), symbol("a")), integer(0),
+        sub(mul(integer(-3), symbol("a")), integer(10)),
+        mul(integer(-13), symbol("a")), integer(0), integer(0),
+        add(
+            mul(mul(integer(13), symbol("a")),
+                add(mul(integer(-12), symbol("a")), mul(integer(2), symbol("b")))),
+            mul(sub(mul(integer(-3), symbol("a")), integer(10)),
+                add(mul(integer(-18), pow(symbol("a"), integer(2))), integer(1)))
+            )
+        }));
+
+    A = DenseMatrix(3, 3, {integer(5), integer(3), integer(1), integer(-1),
+        integer(4), integer(6), integer(-10), integer(-2), integer(9)});
+    fraction_free_LU(A, L, D, U);
+
+    assert(L == DenseMatrix(3, 3, {integer(5), integer(0), integer(0), integer(-1),
+        integer(23), integer(0), integer(-10), integer(20), integer(1)}));
+    assert(D == DenseMatrix(3, 3, {integer(5), integer(0), integer(0), integer(0),
+        integer(115), integer(0), integer(0), integer(0), integer(23)}));
+    assert(U == DenseMatrix(3, 3, {integer(5), integer(3), integer(1), integer(0),
+        integer(23), integer(31), integer(0), integer(0), integer(129)}));
+}
+
+void test_QR()
+{
+    DenseMatrix A = DenseMatrix(3, 3);
+    DenseMatrix Q = DenseMatrix(3, 3);
+    DenseMatrix R = DenseMatrix(3, 3);
+
+    A = DenseMatrix(3, 3, {integer(12), integer(-51), integer(4), integer(6),
+        integer(167), integer(-68), integer(-4), integer(24), integer(-41)});
+    QR(A, Q, R);
+}
+
+void test_LDL()
+{
+    DenseMatrix A = DenseMatrix(3, 3, {integer(4), integer(12), integer(-16),
+        integer(12), integer(37), integer(-43), integer(-16), integer(-43),
+        integer(98)});
+    DenseMatrix L = DenseMatrix(3, 3);
+    DenseMatrix D = DenseMatrix(3, 3);
+
+    LDL(A, L, D);
+
+    assert(L == DenseMatrix(3, 3, {integer(1), integer(0), integer(0), integer(3),
+        integer(1), integer(0), integer(-4), integer(5), integer(1)}));
+    assert(D == DenseMatrix(3, 3, {integer(4), integer(0), integer(0), integer(0),
+        integer(1), integer(0), integer(0), integer(0), integer(9)}));
+
+    A = DenseMatrix(3, 3, {integer(25), integer(15), integer(-5), integer(15),
+        integer(18), integer(0), integer(-5), integer(0), integer(11)});
+    LDL(A, L, D);
+
+    assert(L == DenseMatrix(3, 3, {integer(1), integer(0), integer(0),
+        div(integer(3), integer(5)), integer(1), integer(0),
+        div(integer(-1), integer(5)), div(integer(1), integer(3)), integer(1)}));
+    assert(D == DenseMatrix(3, 3, {integer(25), integer(0), integer(0),
+        integer(0), integer(9), integer(0), integer(0), integer(0), integer(9)}));
+}
+
+void test_cholesky()
+{
+    DenseMatrix A = DenseMatrix(3, 3, {integer(4), integer(12), integer(-16),
+        integer(12), integer(37), integer(-43), integer(-16), integer(-43),
+        integer(98)});
+    DenseMatrix L = DenseMatrix(3, 3);
+
+    cholesky(A, L);
+
+    assert(L == DenseMatrix(3, 3, {integer(1), integer(0), integer(0), integer(3),
+        integer(1), integer(0), integer(-4), integer(5), integer(1)}));
+}
+
 int main(int argc, char* argv[])
 {
     print_stack_on_segfault();
@@ -568,6 +735,18 @@ int main(int argc, char* argv[])
     test_fraction_free_gaussian_elimination_solve();
 
     test_fraction_free_gauss_jordan_solve();
+
+    test_fraction_free_LU();
+
+    test_LU();
+
+    test_fraction_free_LU_SymPy();
+
+    // test_QR();
+
+    test_LDL();
+
+    // test_cholesky();
 
     return 0;
 }

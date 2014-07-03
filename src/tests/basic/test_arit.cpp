@@ -84,8 +84,7 @@ void test_mul()
     RCP<const Basic> i4 = rcp(new Integer(4));
     RCP<const Basic> i6 = rcp(new Integer(6));
 
-    RCP<const Basic> r1, r2;
-
+    RCP<const Basic> r1, r2, mhalf;
     r1 = mul(pow(x, y), z);
     r2 = mul(z, pow(x, y));
     assert(eq(r1, r2));
@@ -122,6 +121,15 @@ void test_mul()
     std::cout << *r1 << std::endl;
     std::cout << *r2 << std::endl;
     assert(eq(r1, r2));
+
+    mhalf = div(integer(-1), i2);
+    r1 = mul(integer(12), pow(integer(196), mhalf));
+    r2 = mul(integer(294), pow(integer(196), mhalf));
+    assert(eq(integer(18), mul(r1, r2)));
+
+    r1 = mul(mul(integer(12), pow(integer(196), mhalf)), pow(i3, mhalf));
+    r2 = mul(mul(integer(294), pow(integer(196), mhalf)), pow(i3, mhalf));
+    assert(eq(i6, mul(r1, r2)));
 }
 
 void test_sub()
@@ -355,6 +363,45 @@ void test_pow()
     r1 = r1->diff(x);
     r2 = mul(pow(y, x), log(y));
     assert(eq(r1, r2));
+
+    r1 = pow(div(i4, i6), i2);
+    assert(eq(r1, div(integer(4), integer(9))));
+
+    r1 = pow(i2, div(im1, i2));
+    r2 = div(sqrt(i2), i2);
+    assert(eq(r1, r2));
+
+    r1 = pow(div(i3, i2), div(integer(7), i2));
+    r2 = mul(div(integer(27), integer(16)), mul(pow(i2, div(integer(1), i2)),
+        pow(i3, div(integer(1), i2))));
+    assert(eq(r1, r2));
+
+    r1 = pow(div(i2, i3), div(integer(7), i2));
+    r2 = mul(div(integer(8), integer(81)), mul(pow(i2, div(integer(1), i2)),
+        pow(i3, div(integer(1), i2))));
+    assert(eq(r1, r2));
+
+    r1 = pow(i6, div(integer(7), i2));
+    r2 = mul(integer(216), pow(i6, div(integer(1), i2)));
+    assert(eq(r1, r2));
+
+    r1 = pow(div(i3, i2), div(integer(-7), i2));
+    r2 = mul(div(integer(8), integer(81)), mul(pow(i2, div(integer(1), i2)),
+        pow(i3, div(integer(1), i2))));
+    assert(eq(r1, r2));
+
+    r1 = pow(i6, div(integer(-7), i2));
+    r2 = mul(div(one, integer(1296)), pow(i6, div(integer(1), i2)));
+    assert(eq(r1, r2));
+
+    r1 = mul(pow(i3, div(i27, i4)), pow(i2, div(integer(-13), i6)));
+    r2 = mul(mul(div(integer(729), integer(8)), pow(i3, div(i3, i4))),
+        pow(i2, div(integer(5), i6)));
+    assert(eq(r1, r2));
+
+    r1 = div(integer(12), pow(integer(196), div(integer(1), integer(2))));
+    r2 = mul(div(i3, integer(49)), sqrt(integer(196)));
+    assert(eq(r1, r2));
  }
 
  void test_log()
@@ -513,6 +560,11 @@ void test_expand2()
     std::cout << *r1 << std::endl;
     std::cout << *r2 << std::endl;
     assert(eq(r1, r2));
+
+    r1 = mul(i3, pow(i5, div(im1, i2)));
+    r2 = mul(i4, pow(i5, div(im1, i2)));
+    r2 = expand(pow(add(add(r1, r2), integer(1)), i2));
+    assert(eq(r2, add(div(integer(54), i5), mul(integer(14), pow(i5, div(im1, i2))))));
 }
 
 void test_expand3()

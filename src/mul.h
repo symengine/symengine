@@ -37,7 +37,9 @@ public:
             map_basic_basic &&d);
     //! Add terms to dict
     static void dict_add_term(map_basic_basic &d,
-            const RCP<const Basic> &coef, const RCP<const Basic> &t);
+        const RCP<const Basic> &exp, const RCP<const Basic> &t);
+    static void dict_add_term_new(const Ptr<RCP<const Number>> &coef, map_basic_basic &d, 
+        const RCP<const Basic> &exp, const RCP<const Basic> &t);
     //! Convert to a base and exponent form
     static void as_base_exp(const RCP<const Basic> &self,
             const Ptr<RCP<const Basic>> &exp,
