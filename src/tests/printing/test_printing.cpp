@@ -19,7 +19,7 @@ using CSymPy::add;
 
 void test_printing()
 {
-    RCP<const Basic> r;
+    RCP<const Basic> r, r1, r2;
 
     r = div(integer(12), pow(integer(196), div(integer(1), integer(2))));
     assert(r->__str__() == "3/49*196^(1/2)");
