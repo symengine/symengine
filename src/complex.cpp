@@ -5,7 +5,7 @@ namespace CSymPy {
 Complex::Complex(mpq_class real, mpq_class imaginary)
     : real_{real}, imaginary_{imaginary}
 {
-    throw std::runtime_error("Yet to implement all virtual functions");
+    CSYMPY_ASSERT(is_canonical(this->real_, this->imaginary_))
 }
 
 bool Complex::is_canonical(const mpq_class &real, const mpq_class &imaginary)

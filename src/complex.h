@@ -72,6 +72,47 @@ public:
     inline RCP<const Number> addcomp(const Integer &other) const {
         return from_mpq(this->real_ + other.i, this->imaginary_);
     }
+
+    /*! Subtract Complex
+     * \param other of type Complex
+     * */
+    inline RCP<const Number> subcomp(const Complex &other) const {
+        return from_mpq(this->real_ - other.real_, this->imaginary_ - other.imaginary_);
+    }
+    /*! Subtract Complex
+     * \param other of type Rational
+     * */
+    inline RCP<const Number> subcomp(const Rational &other) const {
+        return from_mpq(this->real_ - other.i, this->imaginary_);
+    }
+    /*! Subtract Complex
+     * \param other of type Integer
+     * */
+    inline RCP<const Number> subcomp(const Integer &other) const {
+        return from_mpq(this->real_ - other.i, this->imaginary_);
+    }
+
+    /*! Multiply Complex
+     * \param other of type Complex
+     * */
+    inline RCP<const Number> mulcomp(const Complex &other) const {
+        return from_mpq(this->real_ * other.real_ - this->imaginary_ * other.imaginary_,
+            this->real_ * other.imaginary_ + this->imaginary_ * other.real_);
+    }
+    /*! Multiply Complex
+     * \param other of type Rational
+     * */
+    inline RCP<const Number> mulcomp(const Rational &other) const {
+        return from_mpq(this->real_ * other.i, this->imaginary_ * other.i);
+    }
+    /*! Multiply Complex
+     * \param other of type Integer
+     * */
+    inline RCP<const Number> mulcomp(const Integer &other) const {
+        return from_mpq(this->real_ * other.i, this->imaginary_ * other.i);
+    }
+
+
 };
 
 //! \return true if 'b' is a Number or any of its subclasses
