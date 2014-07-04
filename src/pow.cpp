@@ -35,7 +35,7 @@ bool Pow::is_canonical(const RCP<const Basic> &base, const RCP<const Basic> &exp
     if (is_a_Number(*base) && is_a<Integer>(*exp))
         return false;
     // e.g. (x*y)^2, should rather be x^2*y^2
-    if (is_a<Mul>(*base))
+    if (is_a<Mul>(*base) && is_a<Integer>(*exp))
         return false;
     // e.g. (x^y)^2, should rather be x^(2*y)
     if (is_a<Pow>(*base) && is_a<Integer>(*exp))
@@ -157,7 +157,9 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
             throw std::runtime_error("Not implemented");
         }
     }
-    if (is_a<Mul>(*a)) {
+    if (is_a<Mul>(*a) && is_a<Integer>(*b)) {
+        // Convert (x*y)^b = x^b*y^b, where 'b' is an integer. This holds for
+        // any complex 'x', 'y' and integer 'b'.
         return rcp_static_cast<const Mul>(a)->power_all_terms(b);
     }
     if (is_a<Pow>(*a) && is_a<Integer>(*b)) {
