@@ -408,6 +408,7 @@ RCP<const Basic> Mul::power_all_terms(const RCP<const Basic> &exp) const
 {
     CSymPy::map_basic_basic d;
     RCP<const Basic> new_coef = pow(coef_, exp);
+    RCP<const Number> coef_num = one;
     RCP<const Basic> new_exp;
     for (auto &p: dict_) {
         new_exp = mul(p.second, exp);
@@ -417,19 +418,19 @@ RCP<const Basic> Mul::power_all_terms(const RCP<const Basic> &exp) const
             // called.
             if (rcp_static_cast<const Number>(new_exp)->is_zero()) {
                 continue;
-            }  else {
-                Mul::dict_add_term(d, new_exp, p.first);
+            } else {
+                Mul::dict_add_term_new(outArg(coef_num), d, new_exp, p.first);
             }
-        } else{
-            Mul::dict_add_term(d, new_exp, p.first);
+        } else {
+            Mul::dict_add_term_new(outArg(coef_num), d, new_exp, p.first);
         }
     }
     if (is_a_Number(*new_coef)) {
-        return Mul::from_dict(rcp_static_cast<const Number>(new_coef),
-                std::move(d));
+        imulnum(outArg(coef_num), rcp_static_cast<const Number>(new_coef));
+        return Mul::from_dict(coef_num, std::move(d));
     } else {
         // TODO: this can be made faster probably:
-        return mul(new_coef, Mul::from_dict(one, std::move(d)));
+        return mul(mul(new_coef, coef_num), Mul::from_dict(one, std::move(d)));
     }
 }
 
