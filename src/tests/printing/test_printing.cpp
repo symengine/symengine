@@ -19,7 +19,7 @@ using CSymPy::add;
 
 void test_printing()
 {
-    RCP<const Basic> r;
+    RCP<const Basic> r, r1, r2;
 
     r = div(integer(12), pow(integer(196), div(integer(1), integer(2))));
     assert(r->__str__() == "3/49*196^(1/2)");
@@ -33,6 +33,11 @@ void test_printing()
 
     r = mul(integer(2), pow(symbol("x"), integer(2)));
     assert(r->__str__() == "2x^2");
+
+    r1 = mul(integer(12), pow(integer(196), div(integer(-1), integer(2))));
+    r2 = mul(integer(294), pow(integer(196), div(integer(-1), integer(2))));
+    r = add(integer(-51), mul(r1, r2));
+    assert(r->__str__() == "-33");
 }
 
 int main(int argc, char* argv[])
