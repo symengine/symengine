@@ -25,6 +25,20 @@ public:
     virtual RCP<const Basic>get(unsigned i) const = 0;
     virtual void set(unsigned i, RCP<const Basic> &e) = 0;
 
+    // Print Matrix, a very mundane version
+    virtual std::string __str__() const {
+        std::ostringstream o;
+
+        for (unsigned i = 0; i < row_; i++) {
+            o << "[";
+            for (unsigned j = 0; j < col_ - 1; j++)
+                o << *this->get(i*col_ + j) << ", ";
+            o << *this->get(i*col_ + col_ - 1) << "]" << std::endl;
+        }
+
+        return o.str();
+    }
+
     virtual unsigned rank() const = 0;
     virtual RCP<const Basic> det() const = 0;
     virtual RCP<const MatrixBase> inv() const = 0;
@@ -69,6 +83,9 @@ public:
 
     // Matrix multiplication
     virtual MatrixBase& mul_matrix(const MatrixBase &other) const;
+
+
+    // Friend functions related to Matrix Operations
     friend void mul_dense_dense(const DenseMatrix &A, const DenseMatrix &B,
         DenseMatrix &C);
     friend void mul_dense_scalar(const DenseMatrix &A, RCP<const Basic> &k,
@@ -99,26 +116,28 @@ public:
     friend unsigned pivot(DenseMatrix &B, unsigned r, unsigned c);
 
     // Ax = b
-    friend void augment_dense(const DenseMatrix &A, const DenseMatrix &b,
-        DenseMatrix &C);
     friend void diagonal_solve(const DenseMatrix &A, const DenseMatrix &b,
         DenseMatrix &x);
     friend void back_substitution(const DenseMatrix &U, const DenseMatrix &b,
         DenseMatrix &x);
+    friend void forward_substitution(const DenseMatrix &A,
+        const DenseMatrix &b, DenseMatrix &x);
     friend void fraction_free_gaussian_elimination_solve(const DenseMatrix &A,
         const DenseMatrix &b, DenseMatrix &x);
     friend void fraction_free_gauss_jordan_solve(const DenseMatrix &A,
         const DenseMatrix &b, DenseMatrix &x);
 
     // Matrix Decomposition
-    friend void fraction_free_LU(const DenseMatrix &A, DenseMatrix &L,
-        DenseMatrix &U);
+    friend void fraction_free_LU(const DenseMatrix &A, DenseMatrix &LU);
     friend void LU(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &U);
-    friend void fraction_free_LU(const DenseMatrix &A, DenseMatrix &L,
+    friend void fraction_free_LDU(const DenseMatrix &A, DenseMatrix &L,
         DenseMatrix &D, DenseMatrix &U);
     friend void QR(const DenseMatrix &A, DenseMatrix &Q, DenseMatrix &R);
     friend void LDL(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &D);
     friend void cholesky(const DenseMatrix &A, DenseMatrix &L);
+
+    // Matrix Queries
+    friend bool is_symmetric_dense(const DenseMatrix &A);
 
 protected:
     // Matrix elements are stored in row-major order
@@ -171,13 +190,10 @@ void mul_dense_dense(const DenseMatrix &A, const DenseMatrix &B, DenseMatrix &C)
 
 void mul_dense_scalar(const DenseMatrix &A, RCP<const Basic> &k, DenseMatrix &C);
 
-// Common functions
 void transpose_dense(const DenseMatrix &A, DenseMatrix &B);
 
 void submatrix_dense(const DenseMatrix &A, unsigned row_start, unsigned row_end,
         unsigned col_start, unsigned col_end, DenseMatrix &B);
-
-void augment_dense(const DenseMatrix &A, const DenseMatrix &b, DenseMatrix &C);
 
 // Row operations
 void row_exchange_dense(DenseMatrix &A , unsigned i, unsigned j);
@@ -205,11 +221,11 @@ void pivoted_fraction_free_gauss_jordan_elimination(const DenseMatrix &A,
     DenseMatrix &B, std::vector<unsigned> &pivotlist);
 
 // Matrix Decomposition
-void fraction_free_LU(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &U);
+void fraction_free_LU(const DenseMatrix &A, DenseMatrix &LU);
 
 void LU(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &U);
 
-void fraction_free_LU(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &D,
+void fraction_free_LDU(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &D,
     DenseMatrix &U);
 
 void QR(const DenseMatrix &A, DenseMatrix &Q, DenseMatrix &R);
@@ -224,14 +240,26 @@ void diagonal_solve(const DenseMatrix &A, const DenseMatrix &b, DenseMatrix &x);
 void back_substitution(const DenseMatrix &U, const DenseMatrix &b,
     DenseMatrix &x);
 
+void forward_substitution(const DenseMatrix &A,
+    const DenseMatrix &b, DenseMatrix &x);
+
 void fraction_free_gaussian_elimination_solve(const DenseMatrix &A,
     const DenseMatrix &b, DenseMatrix &x);
 
 void fraction_free_gauss_jordan_solve(const DenseMatrix &A, const DenseMatrix &b,
     DenseMatrix &x);
 
-// ------------------------ Common functions ---------------------------------//
+void fraction_free_LU_solve(const DenseMatrix &A, const DenseMatrix &b,
+    DenseMatrix &x);
 
+void LU_solve(const DenseMatrix &A, const DenseMatrix &b, DenseMatrix &x);
+
+void LDL_solve(const DenseMatrix &A, const DenseMatrix &b, DenseMatrix &x);
+
+// Matrix queries
+bool is_symmetric_dense(const DenseMatrix &A);
+
+// ------------------------ Common functions ---------------------------------//
 // Test two matrices for equality
 inline bool operator==(const MatrixBase &lhs, const MatrixBase &rhs)
 {
