@@ -25,20 +25,6 @@ public:
     virtual RCP<const Basic>get(unsigned i) const = 0;
     virtual void set(unsigned i, RCP<const Basic> &e) = 0;
 
-    // Print Matrix, a very mundane version
-    virtual std::string __str__() const {
-        std::ostringstream o;
-
-        for (unsigned i = 0; i < row_; i++) {
-            o << "[";
-            for (unsigned j = 0; j < col_ - 1; j++)
-                o << *this->get(i*col_ + j) << ", ";
-            o << *this->get(i*col_ + col_ - 1) << "]" << std::endl;
-        }
-
-        return o.str();
-    }
-
     virtual unsigned rank() const = 0;
     virtual RCP<const Basic> det() const = 0;
     virtual RCP<const MatrixBase> inv() const = 0;
@@ -259,9 +245,11 @@ void LDL_solve(const DenseMatrix &A, const DenseMatrix &b, DenseMatrix &x);
 // Matrix queries
 bool is_symmetric_dense(const DenseMatrix &A);
 
-// ------------------------ Common functions ---------------------------------//
+} // CSymPy
+
 // Test two matrices for equality
-inline bool operator==(const MatrixBase &lhs, const MatrixBase &rhs)
+inline bool operator==(const CSymPy::MatrixBase &lhs,
+    const CSymPy::MatrixBase &rhs)
 {
     if (lhs.nrows() != rhs.nrows() || lhs.ncols() != rhs.ncols())
         return false;
@@ -273,6 +261,7 @@ inline bool operator==(const MatrixBase &lhs, const MatrixBase &rhs)
     return true;
 }
 
-} // CSymPy
+// Print DenseMatrix
+std::ostream& operator<<(std::ostream& out, const CSymPy::DenseMatrix& A);
 
 #endif
