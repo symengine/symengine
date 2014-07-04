@@ -37,8 +37,8 @@ bool Pow::is_canonical(const RCP<const Basic> &base, const RCP<const Basic> &exp
     // e.g. (x*y)^2, should rather be x^2*y^2
     if (is_a<Mul>(*base))
         return false;
-    // e.g. x^2^y, should rather be x^(2*y)
-    if (is_a<Pow>(*base))
+    // e.g. (x^y)^2, should rather be x^(2*y)
+    if (is_a<Pow>(*base) && is_a<Integer>(*exp))
         return false;
     // If exp is a rational, it should be between 0  and 1, i.e. we don't
     // allow things like 2^(-1/2) or 2^(3/2)
@@ -160,7 +160,7 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
     if (is_a<Mul>(*a)) {
         return rcp_static_cast<const Mul>(a)->power_all_terms(b);
     }
-    if (is_a<Pow>(*a)) {
+    if (is_a<Pow>(*a) && is_a<Integer>(*b)) {
         RCP<const Pow> A = rcp_static_cast<const Pow>(a);
         return pow(A->base_, mul(A->exp_, b));
     }
