@@ -123,6 +123,42 @@ public:
         return from_mpq(this->real_ * other.i, this->imaginary_ * other.i);
     }
 
+    //! Converts the param `other` appropriately and then calls `addcomp`
+    virtual RCP<const Number> add(const Number &other) const {
+        if (is_a<Rational>(other)) {
+            return addcomp(static_cast<const Rational&>(other));
+        } else if (is_a<Integer>(other)) {
+            return addcomp(static_cast<const Integer&>(other));
+        } else if (is_a<Complex>(other)) {
+            return addcomp(static_cast<const Complex&>(other));
+        } else {
+            throw std::runtime_error("Not implemented.");
+        }
+    };
+    //! Converts the param `other` appropriately and then calls `subcomp`
+    virtual RCP<const Number> sub(const Number &other) const {
+        if (is_a<Rational>(other)) {
+            return subcomp(static_cast<const Rational&>(other));
+        } else if (is_a<Integer>(other)) {
+            return subcomp(static_cast<const Integer&>(other));
+        } else if (is_a<Complex>(other)) {
+            return subcomp(static_cast<const Complex&>(other));
+        } else {
+            throw std::runtime_error("Not implemented.");
+        }
+    };
+    //! Converts the param `other` appropriately and then calls `mulcomp`
+    virtual RCP<const Number> sub(const Number &other) const {
+        if (is_a<Rational>(other)) {
+            return mulcomp(static_cast<const Rational&>(other));
+        } else if (is_a<Integer>(other)) {
+            return mulcomp(static_cast<const Integer&>(other));
+        } else if (is_a<Complex>(other)) {
+            return mulcomp(static_cast<const Complex&>(other));
+        } else {
+            throw std::runtime_error("Not implemented.");
+        }
+    };
 
 };
 
