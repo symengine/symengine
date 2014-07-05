@@ -21,7 +21,7 @@ struct RCPBasicKeyLess;
 struct RCPIntegerKeyLess;
 
 typedef std::unordered_map<RCP<const Basic>, RCP<const Number>,
-        RCPBasicHash, RCPBasicKeyEq> umap_basic_int;
+        RCPBasicHash, RCPBasicKeyEq> umap_basic_num;
 typedef std::unordered_map<RCP<const Basic>, RCP<const Basic>,
         RCPBasicHash, RCPBasicKeyEq> umap_basic_basic;
 
@@ -44,7 +44,7 @@ void insert(T1 &m, const T2 &first, const T3 &second) {
 }
 
 //! \return true if the two dictionaries `a` and `b` are equal. Otherwise false.
-bool umap_basic_int_eq(const umap_basic_int &a, const umap_basic_int &b);
+bool umap_basic_num_eq(const umap_basic_num &a, const umap_basic_num &b);
 //! \return true if the two dictionaries `a` and `b` are equal. Otherwise false.
 bool map_basic_int_eq(const map_basic_int &a, const map_basic_int &b);
 //! \return true if the two dictionaries `a` and `b` are equal. Otherwise false.
@@ -90,7 +90,7 @@ typedef std::unordered_map<vec_int, mpz_class,
 } // CSymPy
 
 
-std::ostream& operator<<(std::ostream& out, const CSymPy::umap_basic_int& d);
+std::ostream& operator<<(std::ostream& out, const CSymPy::umap_basic_num& d);
 std::ostream& operator<<(std::ostream& out, const CSymPy::vec_int& d);
 std::ostream& operator<<(std::ostream& out, const CSymPy::map_vec_int& d);
 std::ostream& operator<<(std::ostream& out, const CSymPy::map_vec_mpz& d);

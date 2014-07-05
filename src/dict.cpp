@@ -54,7 +54,7 @@ inline std::ostream& print_vec_rcp(std::ostream& out, T& d)
 } // CSymPy
 
 
-std::ostream& operator<<(std::ostream& out, const CSymPy::umap_basic_int& d)
+std::ostream& operator<<(std::ostream& out, const CSymPy::umap_basic_num& d)
 {
     return print_map_rcp(out, d);
 }
@@ -162,7 +162,7 @@ int map_basic_int_compare(const map_basic_int &A, const map_basic_int &B)
     return 0;
 }
 
-bool umap_basic_int_eq(const umap_basic_int &a, const umap_basic_int &b)
+bool umap_basic_num_eq(const umap_basic_num &a, const umap_basic_num &b)
 {
     // This follows the same algorithm as Python's dictionary comparison
     // (a==b), which is implemented by "dict_equal" function in

@@ -14,7 +14,7 @@ using CSymPy::Add;
 using CSymPy::Mul;
 using CSymPy::Symbol;
 using CSymPy::symbol;
-using CSymPy::umap_basic_int;
+using CSymPy::umap_basic_num;
 using CSymPy::map_basic_basic;
 using CSymPy::Integer;
 using CSymPy::integer;
@@ -58,7 +58,7 @@ void test_symbol_hash()
 
 void test_symbol_dict()
 {
-    umap_basic_int d;
+    umap_basic_num d;
     RCP<const Basic> x  = rcp(new Symbol("x"));
     RCP<const Basic> x2 = rcp(new Symbol("x"));
     RCP<const Basic> y  = rcp(new Symbol("y"));
@@ -75,7 +75,7 @@ void test_symbol_dict()
 
 void test_add()
 {
-    umap_basic_int m, m2;
+    umap_basic_num m, m2;
     RCP<const Basic> x  = rcp(new Symbol("x"));
     RCP<const Basic> y  = rcp(new Symbol("y"));
     insert(m, x, rcp(new Integer(2)));

@@ -16,7 +16,7 @@ using CSymPy::Mul;
 using CSymPy::Pow;
 using CSymPy::Symbol;
 using CSymPy::symbol;
-using CSymPy::umap_basic_int;
+using CSymPy::umap_basic_num;
 using CSymPy::map_vec_int;
 using CSymPy::Integer;
 using CSymPy::integer;
