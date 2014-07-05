@@ -409,24 +409,6 @@ void test_compare()
     assert(r2->__cmp__(*r1) == -cmp);
 }
 
-
-void test_print_minus_one(){
-
-    RCP<const Basic> r1, r2;
-    RCP<const Integer> i = integer(-1);
-    RCP<const Symbol> x  = symbol("x");
-    RCP<const Symbol> y  = symbol("y");
-    
-    
-    r1 = mul(x, i);
-    r2 = mul(r1, y);
-    assert(r1->__str__() == "-x");
-    assert(r1->__str__() != "-1x");
-    assert(r2->__str__() == "-x*y");
-    assert(r2->__str__() != "-1x*y");
-}
-
-
 int main(int argc, char* argv[])
 {
     print_stack_on_segfault();
@@ -446,8 +428,6 @@ int main(int argc, char* argv[])
     test_diff();
 
     test_compare();
-
-    test_print_minus_one();
 
     return 0;
 }
