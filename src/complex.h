@@ -42,6 +42,17 @@ public:
     virtual bool __eq__(const Basic &o) const;
     //! \return stringify version of `self`s
     virtual std::string __str__() const;
+    inline virtual int compare(const Basic &o) const {
+        throw std::runtime_error("Complex Numbers cannot be totally ordered");
+    }
+    //! \return `true` if positive
+    inline virtual bool is_positive() const {
+        throw std::runtime_error("Complex Numbers cannot be totally ordered");
+    }
+    //! \return `true` if negative
+    inline virtual bool is_negative() const {
+        throw std::runtime_error("Complex Numbers cannot be totally ordered");
+    }
 
      /*! Constructs Complex from re, im. If im is 0
     *   it will return a Rational instead.
