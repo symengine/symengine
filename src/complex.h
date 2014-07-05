@@ -123,6 +123,32 @@ public:
         return from_mpq(this->real_ * other.i, this->imaginary_ * other.i);
     }
 
+    /*! Divide Complex
+     * \param other of type Complex
+     * */
+    inline RCP<const Number> divcomp(const Complex &other) const {
+        mpq_class conjugate = other.real_*other.real_ - other.imaginary_*other.imaginary_;
+        if (conjugate.get_num() == 0) {
+            throw std::runtime_error("Divide by zero.");
+        } else {
+            conjugate = conjugate * conjugate;
+            return from_mpq((this->real_ * other.real_ + this->imaginary_ * other.imaginary_)/ conjugate,
+           (- this->real_ * other.imaginary_ + this->imaginary_ * other.real_)/conjugate);
+        }
+    }
+    /*! Divide Complex
+     * \param other of type Rational
+     * */
+    inline RCP<const Number> divcomp(const Rational &other) const {
+        return from_mpq(this->real_ / other.i, this->imaginary_ / other.i);
+    }
+    /*! Divide Complex
+     * \param other of type Integer
+     * */
+    inline RCP<const Number> divcomp(const Integer &other) const {
+        return from_mpq(this->real_ / other.i, this->imaginary_ / other.i);
+    }
+
     //! Converts the param `other` appropriately and then calls `addcomp`
     virtual RCP<const Number> add(const Number &other) const {
         if (is_a<Rational>(other)) {
@@ -148,13 +174,25 @@ public:
         }
     };
     //! Converts the param `other` appropriately and then calls `mulcomp`
-    virtual RCP<const Number> sub(const Number &other) const {
+    virtual RCP<const Number> mul(const Number &other) const {
         if (is_a<Rational>(other)) {
             return mulcomp(static_cast<const Rational&>(other));
         } else if (is_a<Integer>(other)) {
             return mulcomp(static_cast<const Integer&>(other));
         } else if (is_a<Complex>(other)) {
             return mulcomp(static_cast<const Complex&>(other));
+        } else {
+            throw std::runtime_error("Not implemented.");
+        }
+    };
+    //! Converts the param `other` appropriately and then calls `divcomp`
+    virtual RCP<const Number> div(const Number &other) const {
+        if (is_a<Rational>(other)) {
+            return divcomp(static_cast<const Rational&>(other));
+        } else if (is_a<Integer>(other)) {
+            return divcomp(static_cast<const Integer&>(other));
+        } else if (is_a<Complex>(other)) {
+            return divcomp(static_cast<const Complex&>(other));
         } else {
             throw std::runtime_error("Not implemented.");
         }
