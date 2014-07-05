@@ -28,8 +28,9 @@ std::string Complex::__str__() const
 {
     std::ostringstream s;
     s << this->real_;
-    if (((imaginary_.get_den() < 0) && (imaginary_.get_num() > 0)) ||
-                ((imaginary_.get_den() > 0) && (imaginary_.get_num() < 0))) {
+    // Since imaginary_ should be in canonical form,
+    // the denominator is expected to be always positive
+    if (imaginary_.get_num() < 0) {
 		s << " -i";
 		mpq_class q(imaginary_.get_num()*(-1), imaginary_.get_den());
 		s << q;
@@ -65,11 +66,7 @@ RCP<const Number> Complex::from_mpq(const mpq_class re, const mpq_class im)
 {
 	// It is assumed that `re` and `im` are already in canonical form.
 	if (im.get_num() == 0) {
-		if (im.get_den() != 0) {
-			return Rational::from_mpq(re);
-		} else {
-			throw std::runtime_error("Divide by zero. Not implemented yet");
-		}
+		return Rational::from_mpq(re);
 	} else {
 		//return rcp(new Complex(re, im));
 		throw std::runtime_error("Yet to implement all virtual functions");
