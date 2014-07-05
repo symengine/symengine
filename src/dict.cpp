@@ -79,7 +79,7 @@ std::ostream& operator<<(std::ostream& out, const CSymPy::umap_vec_mpz& d)
     return print_map(out, d);
 }
 
-std::ostream& operator<<(std::ostream& out, const CSymPy::map_basic_int& d)
+std::ostream& operator<<(std::ostream& out, const CSymPy::map_basic_num& d)
 {
     return print_map_rcp(out, d);
 }
@@ -102,7 +102,7 @@ std::ostream& operator<<(std::ostream& out, const CSymPy::vec_basic& d)
 
 namespace CSymPy {
 
-bool map_basic_int_eq(const map_basic_int &A, const map_basic_int &B)
+bool map_basic_num_eq(const map_basic_num &A, const map_basic_num &B)
 {
     // Can't be equal if # of entries differ:
     if (A.size() != B.size()) return false;
@@ -146,7 +146,7 @@ int map_basic_basic_compare(const map_basic_basic &A, const map_basic_basic &B)
     return 0;
 }
 
-int map_basic_int_compare(const map_basic_int &A, const map_basic_int &B)
+int map_basic_num_compare(const map_basic_num &A, const map_basic_num &B)
 {
     if (A.size() != B.size())
         return (A.size() < B.size()) ? -1 : 1;
