@@ -410,6 +410,14 @@ void test_pow()
     r1 = pow(div(sqrt(integer(12)), sqrt(integer(6))), integer(2));
     r2 = integer(2);
     assert(eq(r1, r2));
+
+    r1 = pow(pow(x, y), z);
+    r2 = pow(x, mul(y, z));
+    assert(neq(r1, r2));
+
+    r1 = pow(mul(x, y), z);
+    r2 = mul(pow(x, z), pow(y, z));
+    assert(neq(r1, r2));
  }
 
  void test_log()
