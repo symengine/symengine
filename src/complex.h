@@ -17,14 +17,14 @@ namespace CSymPy {
 //! Complex Class
 class Complex : public Number {
 public:
-	//! `real_` : Real part of the complex Number
+    //! `real_` : Real part of the complex Number
     //! `imaginary_` : Imaginary part of the complex Number
     // Complex Number is of the form `real + i(imaginary)`
     mpq_class real_;
     mpq_class imaginary_;
 
 public:
-	//! Constructor of Complex class
+    //! Constructor of Complex class
     Complex(mpq_class real, mpq_class imaginary);
     /*! \param `re` must already be in mpq_class canonical form
         \param `im` must already be in mpq_class canonical form
