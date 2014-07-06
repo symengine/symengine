@@ -270,7 +270,7 @@ RCP<const Basic> pow_expand(const RCP<const Pow> &self)
     int n = rcp_static_cast<const Integer>(self->exp_)->as_int();
 
     RCP<const Add> base = rcp_static_cast<const Add>(self->base_);
-    umap_basic_int base_dict = base->dict_;
+    umap_basic_num base_dict = base->dict_;
     if (! (base->coef_->is_zero())) {
         // Add the numerical coefficient into the dictionary. This
         // allows a little bit easier treatment below.
@@ -278,7 +278,7 @@ RCP<const Basic> pow_expand(const RCP<const Pow> &self)
     }
     int m = base_dict.size();
     multinomial_coefficients_mpz(m, n, r);
-    umap_basic_int rd;
+    umap_basic_num rd;
     // This speeds up overall expansion. For example for the benchmark
     // (y + x + z + w)^60 it improves the timing from 135ms to 124ms.
     rd.reserve(2*r.size());

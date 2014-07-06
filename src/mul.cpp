@@ -338,7 +338,7 @@ RCP<const Basic> mul_expand_two(const RCP<const Basic> &a, const RCP<const Basic
     if (is_a<Add>(*a) && is_a<Add>(*b)) {
         RCP<const Number> coef = mulnum(rcp_static_cast<const Add>(a)->coef_,
             rcp_static_cast<const Add>(b)->coef_);
-        umap_basic_int d;
+        umap_basic_num d;
         // Improves (x+1)^3(x+2)^3...(x+350)^3 expansion from 0.97s to 0.93s:
         d.reserve((rcp_static_cast<const Add>(a))->dict_.size()*
             (rcp_static_cast<const Add>(b))->dict_.size());
@@ -372,7 +372,7 @@ RCP<const Basic> mul_expand_two(const RCP<const Basic> &a, const RCP<const Basic
         Add::as_coef_term(a, outArg(a_coef), outArg(a_term));
 
         RCP<const Number> coef = zero;
-        umap_basic_int d;
+        umap_basic_num d;
         d.reserve((rcp_static_cast<const Add>(b))->dict_.size());
         for (auto &q: (rcp_static_cast<const Add>(b))->dict_) {
             RCP<const Basic> term = mul(a_term, q.first);

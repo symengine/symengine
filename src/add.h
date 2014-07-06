@@ -15,13 +15,13 @@ namespace CSymPy {
 class Add : public Basic {
 public: // TODO: make this private
     RCP<const Number> coef_; //! The coefficient (e.g. `2` in `2+x+y`)
-    umap_basic_int dict_; //! The dictionary of the rest (e.g. `x+y` in `2+x+y`)
+    umap_basic_num dict_; //! The dictionary of the rest (e.g. `x+y` in `2+x+y`)
 
 public:
     /*! Constructs Add from a dictionary by copying the contents of the
  dictionary
     */
-    Add(const RCP<const Number> &coef, umap_basic_int&& dict);
+    Add(const RCP<const Number> &coef, umap_basic_num&& dict);
     //! \return Size of the hash
     virtual std::size_t __hash__() const;
     /*! Equality comparator
@@ -39,11 +39,11 @@ public:
     /*! Creates appropriate instance (i.e Add , Symbol, Integer,
     * Mul) depending on the size of dictionary `d`.
     */
-    static RCP<const Basic> from_dict(const RCP<const Number> &coef, umap_basic_int &&d);
+    static RCP<const Basic> from_dict(const RCP<const Number> &coef, umap_basic_num &&d);
     /*!
     * Adds `(coeff*t)` to the dict `d`
     */
-    static void dict_add_term(umap_basic_int &d,
+    static void dict_add_term(umap_basic_num &d,
             const RCP<const Number> &coef, const RCP<const Basic> &t);
     //! Converts the add dict into two appropriate instances
     void as_two_terms(const Ptr<RCP<const Basic>> &a,
@@ -53,7 +53,7 @@ public:
         const Ptr<RCP<const Number>> &coef, const Ptr<RCP<const Basic>> &term);
     //! \return `true` if it is in canonical form
     bool is_canonical(const RCP<const Number> &coef,
-            const umap_basic_int& dict);
+            const umap_basic_num& dict);
     //! Differentiates w.r.t Symbol `x`
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
     //! Substitutes the dict

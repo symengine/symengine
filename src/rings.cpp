@@ -9,11 +9,11 @@
 
 namespace CSymPy {
 
-void expr2poly(const RCP<const Basic> &p, umap_basic_int &syms, umap_vec_mpz &P)
+void expr2poly(const RCP<const Basic> &p, umap_basic_num &syms, umap_vec_mpz &P)
 {
     if (is_a<Add>(*p)) {
         int n = syms.size();
-        const umap_basic_int &d = rcp_static_cast<const Add>(p)->dict_;
+        const umap_basic_num &d = rcp_static_cast<const Add>(p)->dict_;
         vec_int exp;
         mpz_class coef;
         for (auto &p: d) {
