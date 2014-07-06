@@ -799,4 +799,67 @@ void cholesky(const DenseMatrix &A, DenseMatrix &L)
     }
 }
 
+// Determinant
+RCP<const Basic> det_bareis(const DenseMatrix &A)
+{
+    CSYMPY_ASSERT(A.row_ == A.col_);
+
+    unsigned n = A.row_;
+
+    if (n == 1) {
+        return A.m_[0];
+    } else if(n == 2) {
+        // If A = [[a, b], [c, d]] then det(A) = ad - bc
+        return sub(mul(A.m_[0], A.m_[3]), mul(A.m_[1], A.m_[2]));
+    } else if (n == 3) {
+        // if A = [[a, b, c], [d, e, f], [g, h, i]] then
+        // det(A) = (aei + bfg + cdh) - (ceg + bdi + afh)
+        return  sub(
+                    add(
+                        add(
+                            mul(mul(A.m_[0], A.m_[4]), A.m_[8]),
+                            mul(mul(A.m_[1], A.m_[5]), A.m_[6])
+                        ),
+                        mul(mul(A.m_[2], A.m_[3]), A.m_[7])
+                    ),
+                    add(
+                        add(
+                            mul(mul(A.m_[2], A.m_[4]), A.m_[6]),
+                            mul(mul(A.m_[1], A.m_[3]), A.m_[8])
+                        ),
+                        mul(mul(A.m_[0], A.m_[5]), A.m_[7])
+                    )
+                );
+    } else {
+        DenseMatrix B = DenseMatrix(n, n, A.m_);
+        unsigned i, sign = 1;
+        RCP<const Basic> d;
+
+        for (unsigned k = 0; k < n - 1; k++) {
+            if (eq(B.m_[k*n + k], zero)) {
+                for (i = k + 1; i < n; i++)
+                    if (neq(B.m_[i*n + k], zero)) {
+                        row_exchange_dense(B, i, k);
+                        sign *= -1;
+                        break;
+                    }
+                if (i == n)
+                    return zero;
+            }
+
+            for (i = k + 1; i < n; i++) {
+                for (unsigned j = k + 1; j < n; j++) {
+                    d = sub(mul(B.m_[k*n + k], B.m_[i*n + j]),
+                            mul(B.m_[i*n + k], B.m_[k*n + j]));
+                    if (k > 0)
+                        d = div(d, B.m_[(k-1)*n + k - 1]);
+                    B.m_[i*n + j] = d;
+                }
+            }
+        }
+
+       return (sign == 1) ? B.m_[n*n - 1] : mul(minus_one, B.m_[n*n - 1]);
+    }
+}
+
 } // CSymPy

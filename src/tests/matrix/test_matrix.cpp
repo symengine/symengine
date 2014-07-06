@@ -33,6 +33,7 @@ using CSymPy::pivoted_fraction_free_gauss_jordan_elimination;
 using CSymPy::QR;
 using CSymPy::LDL;
 using CSymPy::cholesky;
+using CSymPy::det_bareis;
 
 void test_dense_dense_addition()
 {
@@ -704,6 +705,69 @@ void test_cholesky()
         integer(1), integer(0), integer(-4), integer(5), integer(1)}));
 }
 
+void test_bareis()
+{
+    // Test cases are taken from SymPy
+    DenseMatrix M = DenseMatrix(1, 1, {integer(1)});
+    assert(eq(det_bareis(M), integer(1)));
+
+    M = DenseMatrix(2, 2, {integer(-3), integer(2), integer(8), integer(-5)});
+    assert(eq(det_bareis(M), integer(-1)));
+
+    M = DenseMatrix(2, 2, {symbol("x"), integer(1), symbol("y"),
+            mul(integer(2), symbol("y"))});
+    assert(eq(det_bareis(M), sub(mul(integer(2), mul(symbol("x"), symbol("y"))),
+            symbol("y"))));
+
+    M = DenseMatrix(3, 3, {integer(1), integer(1), integer(1), integer(1),
+            integer(2), integer(3), integer(1), integer(3), integer(6)});
+    assert(eq(det_bareis(M), integer(1)));
+
+    M = DenseMatrix(4, 4, {integer(3), integer(-2), integer(0), integer(5),
+            integer(-2), integer(1), integer(-2), integer(2), integer(0),
+            integer(-2), integer(5), integer(0), integer(5),  integer(0),
+            integer(3), integer(4)});
+    std::cout << "Thilina" << *det_bareis(M) << std::endl;
+    assert(eq(det_bareis(M), integer(-289)));
+
+    M = DenseMatrix(4, 4, {integer(1), integer(2), integer(3), integer(4),
+            integer(5), integer(6), integer(7), integer(8), integer(9),
+            integer(10), integer(11), integer(12), integer(13), integer(14),
+            integer(15), integer(16)});
+    assert(eq(det_bareis(M), integer(0)));
+
+    M = DenseMatrix(5, 5, {integer(3), integer(2), integer(0), integer(0), integer(0),
+                 integer(0), integer(3), integer(2), integer(0), integer(0),
+                 integer(0), integer(0), integer(3), integer(2), integer(0),
+                 integer(0), integer(0), integer(0), integer(3), integer(2),
+                 integer(2), integer(0), integer(0), integer(0), integer(3)});
+    assert(eq(det_bareis(M), integer(275)));
+
+    M = DenseMatrix(5, 5, {integer(1), integer(0), integer(1), integer(2),
+            integer(12), integer(2), integer(0), integer(1), integer(1),
+            integer(4), integer(2), integer(1), integer(1), integer(-1),
+            integer(3), integer(3), integer(2), integer(-1), integer(1),
+            integer(8), integer(1), integer(1),  integer(1), integer(0),
+            integer(6)});
+    assert(eq(det_bareis(M), integer(-55)));
+
+    M = DenseMatrix(5, 5, {integer(-5), integer(2), integer(3), integer(4),
+            integer(5), integer(1), integer(-4), integer(3), integer(4),
+            integer(5), integer(1), integer(2), integer(-3), integer(4),
+            integer(5), integer(1), integer(2), integer(3), integer(-2),
+            integer(5), integer(1), integer(2), integer(3), integer(4),
+            integer(-1)});
+    assert(eq(det_bareis(M), integer(11664)));
+
+    M = DenseMatrix(5, 5, {integer(2), integer(7), integer(-1), integer(3),
+            integer(2), integer(0), integer(0), integer(1), integer(0),
+            integer(1), integer(-2), integer(0), integer(7), integer(0),
+            integer(2), integer(-3), integer(-2), integer(4), integer(5),
+            integer(3), integer(1), integer(0), integer(0), integer(0),
+            integer(1)});
+    assert(eq(det_bareis(M), integer(123)));
+}
+
 int main(int argc, char* argv[])
 {
     print_stack_on_segfault();
@@ -747,6 +811,8 @@ int main(int argc, char* argv[])
     test_LDL();
 
     // test_cholesky();
+
+    test_bareis();
 
     return 0;
 }

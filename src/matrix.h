@@ -120,6 +120,10 @@ public:
     friend void LDL(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &D);
     friend void cholesky(const DenseMatrix &A, DenseMatrix &L);
 
+    // Determinant
+    friend RCP<const Basic> det_bareis(const DenseMatrix &A);
+    friend RCP<const Basic> det_berkowitz(const DenseMatrix &A);
+
 protected:
     // Matrix elements are stored in row-major order
     std::vector<RCP<const Basic>> m_;
@@ -229,6 +233,10 @@ void fraction_free_gaussian_elimination_solve(const DenseMatrix &A,
 
 void fraction_free_gauss_jordan_solve(const DenseMatrix &A, const DenseMatrix &b,
     DenseMatrix &x);
+
+// Determinant
+RCP<const Basic> det_bareis(const DenseMatrix &A);
+RCP<const Basic> det_berkowitz(const DenseMatrix &A);
 
 // ------------------------ Common functions ---------------------------------//
 
