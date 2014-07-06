@@ -846,18 +846,3 @@ bool is_symmetric_dense(const DenseMatrix &A)
 }
 
 } // CSymPy
-
-// Print Matrix, a very mundane version
-std::ostream& operator<<(std::ostream& out, const CSymPy::DenseMatrix& A)
-{
-    unsigned col = A.ncols();
-
-    for (unsigned i = 0; i < A.nrows(); i++) {
-        out << "[";
-        for (unsigned j = 0; j < col - 1; j++)
-            out << *A.get(i*col + j) << ", ";
-        out << *A.get(i*col + col - 1) << "]" << std::endl;
-    }
-
-    return out;
-}

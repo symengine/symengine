@@ -25,6 +25,21 @@ public:
     virtual RCP<const Basic>get(unsigned i) const = 0;
     virtual void set(unsigned i, RCP<const Basic> &e) = 0;
 
+    // Print Matrix, very mundane version, should be overriden derived
+    // class if better printing is available
+    virtual std::string __str__() const {
+        std::ostringstream o;
+
+        for (unsigned i = 0; i < row_; i++) {
+            o << "[";
+            for (unsigned j = 0; j < col_ - 1; j++)
+                o << *this->get(i*col_ + j) << ", ";
+            o << *this->get(i*col_ + col_ - 1) << "]" << std::endl;
+        }
+
+        return o.str();
+    }
+
     virtual unsigned rank() const = 0;
     virtual RCP<const Basic> det() const = 0;
     virtual RCP<const MatrixBase> inv() const = 0;
@@ -69,7 +84,6 @@ public:
 
     // Matrix multiplication
     virtual MatrixBase& mul_matrix(const MatrixBase &other) const;
-
 
     // Friend functions related to Matrix Operations
     friend void mul_dense_dense(const DenseMatrix &A, const DenseMatrix &B,
@@ -261,7 +275,11 @@ inline bool operator==(const CSymPy::MatrixBase &lhs,
     return true;
 }
 
-// Print DenseMatrix
-std::ostream& operator<<(std::ostream& out, const CSymPy::DenseMatrix& A);
+// Print Matrix
+inline std::ostream& operator<<(std::ostream& out, const CSymPy::MatrixBase& A)
+{
+    out << A.__str__();
+    return out;
+}
 
 #endif

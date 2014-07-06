@@ -6,6 +6,7 @@
 #include "pow.h"
 #include "symbol.h"
 #include "add.h"
+#include "matrix.h"
 
 using CSymPy::RCP;
 using CSymPy::Basic;
@@ -16,6 +17,7 @@ using CSymPy::integer;
 using CSymPy::print_stack_on_segfault;
 using CSymPy::symbol;
 using CSymPy::add;
+using CSymPy::DenseMatrix;
 
 void test_printing()
 {
@@ -35,11 +37,20 @@ void test_printing()
     assert(r->__str__() == "2x^2");
 }
 
+void test_matrix()
+{
+    DenseMatrix A = DenseMatrix(2, 2, {integer(1), integer(0), integer(0),
+        integer(1)});
+    assert(A.__str__() == "[1, 0]\n[0, 1]\n");
+}
+
 int main(int argc, char* argv[])
 {
     print_stack_on_segfault();
 
     test_printing();
+
+    test_matrix();
 
     return 0;
 }
