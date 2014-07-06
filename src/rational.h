@@ -16,11 +16,11 @@ namespace CSymPy {
 //! Rational Class
 class Rational : public Number {
 public:
-	//! `i` : object of `mpz_class`
+    //! `i` : object of `mpz_class`
     mpq_class i;
 
 public:
-	//! Constructor of Rational class
+    //! Constructor of Rational class
     Rational(mpq_class i);
     /*! \param `i` must already be in mpq_class canonical form
     *   \return Integer or Rational depending on denumerator.
@@ -59,63 +59,63 @@ public:
         return ((this->i.get_den() < 0) && (this->i.get_num() > 0)) ||
                 ((this->i.get_den() > 0) && (this->i.get_num() < 0)) ; }
 
-	/*! Add Rationals
-	 * \param other of type Rational
-	 * */
+    /*! Add Rationals
+     * \param other of type Rational
+     * */
     inline RCP<const Number> addrat(const Rational &other) const {
         return from_mpq(this->i + other.i);
     }
     /*! Add Rationals
-	 * \param other of type Integer
-	 * */
+     * \param other of type Integer
+     * */
     inline RCP<const Number> addrat(const Integer &other) const {
         return from_mpq(this->i + other.i);
     }
-	/*! Subtract Rationals
-	 * \param other of type Rational
-	 * */
+    /*! Subtract Rationals
+     * \param other of type Rational
+     * */
     inline RCP<const Number> subrat(const Rational &other) const {
         return from_mpq(this->i - other.i);
     }
     /*! Subtract Rationals
-	 * \param other of type Integer
-	 * */
+     * \param other of type Integer
+     * */
     inline RCP<const Number> subrat(const Integer &other) const {
         return from_mpq(this->i - other.i);
     }
     inline RCP<const Number> rsubrat(const Integer &other) const {
         return from_mpq(other.i - this->i);
     }
-	/*! Multiply Rationals
-	 * \param other of type Rational
-	 * */
+    /*! Multiply Rationals
+     * \param other of type Rational
+     * */
     inline RCP<const Number> mulrat(const Rational &other) const {
         return from_mpq(this->i * other.i);
     }
     /*! Multiply Rationals
-	 * \param other of type Integer
-	 * */
+     * \param other of type Integer
+     * */
     inline RCP<const Number> mulrat(const Integer &other) const {
         return from_mpq(this->i * other.i);
     }
-	/*! Divide Rationals
-	 * \param other of type Rational
-	 * */
+    /*! Divide Rationals
+     * \param other of type Rational
+     * */
     inline RCP<const Number> divrat(const Rational &other) const {
         return from_mpq(this->i / other.i);
     }
     /*! Divide Rationals
-	 * \param other of type Integer
-	 * */
+     * \param other of type Integer
+     * */
     inline RCP<const Number> divrat(const Integer &other) const {
         return from_mpq(this->i / other.i);
     }
     inline RCP<const Number> rdivrat(const Integer &other) const {
         return from_mpq(other.i / this->i);
     }
-	/*! Raise Rationals to power `other`
-	 * \param other power to be raised
-	 * */
+    /*! Raise Rationals to power `other`
+     * \param other power to be raised
+     * */
     inline RCP<const Number> powrat(const Integer &other) const {
         bool neg = other.is_negative();
         mpz_class exp_ = other.i;
@@ -143,7 +143,7 @@ public:
                 return rcp(new Rational(mpq_class(den*sgn(num), abs(num))));
     }
 
-	//! Converts the param `other` appropriately and then calls `addrat`
+    //! Converts the param `other` appropriately and then calls `addrat`
     virtual RCP<const Number> add(const Number &other) const {
         if (is_a<Rational>(other)) {
             return addrat(static_cast<const Rational&>(other));
@@ -153,7 +153,7 @@ public:
             throw std::runtime_error("Not implemented.");
         }
     };
-	//! Converts the param `other` appropriately and then calls `subrat`
+    //! Converts the param `other` appropriately and then calls `subrat`
     virtual RCP<const Number> sub(const Number &other) const {
         if (is_a<Rational>(other)) {
             return subrat(static_cast<const Rational&>(other));
@@ -163,7 +163,7 @@ public:
             throw std::runtime_error("Not implemented.");
         }
     };
-	//! Converts the param `other` appropriately and then calls `rsubrat`
+    //! Converts the param `other` appropriately and then calls `rsubrat`
     virtual RCP<const Number> rsub(const Number &other) const {
         if (is_a<Integer>(other)) {
             return rsubrat(static_cast<const Integer&>(other));
@@ -171,7 +171,7 @@ public:
             throw std::runtime_error("Not implemented.");
         }
     };
-	//! Converts the param `other` appropriately and then calls `mulrat`
+    //! Converts the param `other` appropriately and then calls `mulrat`
     virtual RCP<const Number> mul(const Number &other) const {
         if (is_a<Rational>(other)) {
             return mulrat(static_cast<const Rational&>(other));
@@ -181,7 +181,7 @@ public:
             throw std::runtime_error("Not implemented.");
         }
     };
-	//! Converts the param `other` appropriately and then calls `divrat`
+    //! Converts the param `other` appropriately and then calls `divrat`
     virtual RCP<const Number> div(const Number &other) const {
         if (is_a<Rational>(other)) {
             return divrat(static_cast<const Rational&>(other));
@@ -191,7 +191,7 @@ public:
             throw std::runtime_error("Not implemented.");
         }
     };
-	//! Converts the param `other` appropriately and then calls `rdivrat`
+    //! Converts the param `other` appropriately and then calls `rdivrat`
     virtual RCP<const Number> rdiv(const Number &other) const {
         if (is_a<Integer>(other)) {
             return rdivrat(static_cast<const Integer&>(other));
@@ -199,7 +199,7 @@ public:
             throw std::runtime_error("Not implemented.");
         }
     };
-	//! Converts the param `other` appropriately and then calls `powrat`
+    //! Converts the param `other` appropriately and then calls `powrat`
     virtual RCP<const Number> pow(const Number &other) const {
         if (is_a<Integer>(other)) {
             return powrat(static_cast<const Integer&>(other));

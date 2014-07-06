@@ -77,8 +77,8 @@ typedef struct
 } vec_int_hash;
 
 typedef struct
-{	
-	//! \return true if `x==y`
+{
+    //! \return true if `x==y`
     inline bool operator() (const vec_int &x, const vec_int &y) const {
         return x == y;
     }
