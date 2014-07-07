@@ -46,8 +46,8 @@ public:
             const Ptr<RCP<const Basic>> &base);
     //! Rewrite as 2 terms
     /*!
-		Example: if this=3*x^2*y^2*z^2`, then `a=x^2` and `b=3*y^2*z^2`
-	* */
+        Example: if this=3*x^2*y^2*z^2`, then `a=x^2` and `b=3*y^2*z^2`
+    * */
     void as_two_terms(const Ptr<RCP<const Basic>> &a,
             const Ptr<RCP<const Basic>> &b) const;
     //! Power all terms with the exponent `exp`
@@ -56,7 +56,7 @@ public:
     //! \return true if both `coef` and `dict` are in canonical form
     bool is_canonical(const RCP<const Number> &coef,
             const map_basic_basic& dict);
-	//! Differentiate w.r.t Symbol `x`
+    //! Differentiate w.r.t Symbol `x`
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
     virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
 };
