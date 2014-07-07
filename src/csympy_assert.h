@@ -16,7 +16,6 @@ try \
 { \
 expression; \
 CSYMPY_ERROR("expected exception not thrown");\
-throw 10; \
 } \
 catch(exception &) \
 { \
