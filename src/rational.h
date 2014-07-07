@@ -102,16 +102,28 @@ public:
      * \param other of type Rational
      * */
     inline RCP<const Number> divrat(const Rational &other) const {
-        return from_mpq(this->i / other.i);
+        if (other.i == 0) {
+            throw std::runtime_error("Division by zero");
+        } else {
+            return from_mpq(this->i / other.i);
+        }
     }
     /*! Divide Rationals
      * \param other of type Integer
      * */
     inline RCP<const Number> divrat(const Integer &other) const {
-        return from_mpq(this->i / other.i);
+        if (other.i == 0) {
+            throw std::runtime_error("Division by zero");
+        } else {
+            return from_mpq(this->i / other.i);
+        }
     }
     inline RCP<const Number> rdivrat(const Integer &other) const {
-        return from_mpq(other.i / this->i);
+        if (this->i == 0) {
+            throw std::runtime_error("Division by zero");
+        } else {
+            return from_mpq(other.i / this->i);
+        }
     }
     /*! Raise Rationals to power `other`
      * \param other power to be raised

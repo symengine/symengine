@@ -137,6 +137,8 @@ void test_integer()
     std::cout << *k << std::endl;
     assert(eq(k, rcp(new Integer(-5))));
     assert(neq(k, rcp(new Integer(12))));
+
+    CSYMPY_CHECK_THROW(divnum(i, zero), std::runtime_error)
 }
 
 void test_rational()
@@ -233,6 +235,10 @@ void test_rational()
     assert(eq(divnum(r1, r2), r3));
     r3 = Rational::from_two_ints(integer(9), integer(2));
     assert(eq(divnum(r2, r1), r3));
+
+    r1 = Rational::from_two_ints(integer(2), integer(3));
+    r2 = zero;
+    CSYMPY_CHECK_THROW(divnum(r1, r2), std::runtime_error)
 }
 
 void test_mul()
