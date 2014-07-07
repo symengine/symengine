@@ -102,6 +102,24 @@ public:
     inline RCP<const Number> subcomp(const Integer &other) const {
         return from_mpq(this->real_ - other.i, this->imaginary_);
     }
+    /*! Subtract Complex from other
+     * \param other of type Complex
+     * */
+    inline RCP<const Number> rsubcomp(const Complex &other) const {
+        return from_mpq(other.real_ - this->real_, other.imaginary_ - this->imaginary_);
+    }
+    /*! Subtract Complex from other
+     * \param other of type Rational
+     * */
+    inline RCP<const Number> rsubcomp(const Rational &other) const {
+        return from_mpq(other.i - this->real_, - this->imaginary_);
+    }
+    /*! Subtract Complex from other
+     * \param other of type Integer
+     * */
+    inline RCP<const Number> rsubcomp(const Integer &other) const {
+        return from_mpq(other.i - this->real_, - this->imaginary_);
+    }
 
     /*! Multiply Complex
      * \param other of type Complex
@@ -148,7 +166,13 @@ public:
     inline RCP<const Number> divcomp(const Integer &other) const {
         return from_mpq(this->real_ / other.i, this->imaginary_ / other.i);
     }
-
+     /*! Divide other by the Complex
+     * \param other of type Integer
+     * */
+    inline RCP<const Number> rdivcomp(const Integer &other) const {
+        mpq_class conjugate = this->real_*this->real_ - this->imaginary_*this->imaginary_;
+        return from_mpq((this->real_ * other.i) / conjugate, (this->imaginary_ * (-other.i)) / conjugate);
+    }
     //! Converts the param `other` appropriately and then calls `addcomp`
     virtual RCP<const Number> add(const Number &other) const {
         if (is_a<Rational>(other)) {
@@ -169,6 +193,18 @@ public:
             return subcomp(static_cast<const Integer&>(other));
         } else if (is_a<Complex>(other)) {
             return subcomp(static_cast<const Complex&>(other));
+        } else {
+            throw std::runtime_error("Not implemented.");
+        }
+    };
+    //! Converts the param `other` appropriately and then calls `rsubcomp`
+    virtual RCP<const Number> rsub(const Number &other) const {
+        if (is_a<Rational>(other)) {
+            return rsubcomp(static_cast<const Rational&>(other));
+        } else if (is_a<Integer>(other)) {
+            return rsubcomp(static_cast<const Integer&>(other));
+        } else if (is_a<Complex>(other)) {
+            return rsubcomp(static_cast<const Complex&>(other));
         } else {
             throw std::runtime_error("Not implemented.");
         }
@@ -197,7 +233,23 @@ public:
             throw std::runtime_error("Not implemented.");
         }
     };
-
+	//! Converts the param `other` appropriately and then calls `rdivcomp`
+    virtual RCP<const Number> rdiv(const Number &other) const {
+        if (is_a<Integer>(other)) {
+            return rdivcomp(static_cast<const Integer&>(other));
+        } else {
+            throw std::runtime_error("Not implemented.");
+        }
+    };
+    //! Converts the param `other` appropriately and then calls `powcomp`
+    virtual RCP<const Number> pow(const Number &other) const {
+        if (is_a<Integer>(other)) {
+            // Needs to be implemented
+            throw std::runtime_error("Not implemented.");
+        } else {
+            throw std::runtime_error("Not implemented.");
+        }
+    };
 };
 
 //! \return true if 'b' is a Number or any of its subclasses
