@@ -13,7 +13,7 @@
 
 using CSymPy::Basic;
 using CSymPy::Symbol;
-using CSymPy::umap_basic_int;
+using CSymPy::umap_basic_num;
 using CSymPy::Integer;
 using CSymPy::expr2poly;
 using CSymPy::poly_mul;
@@ -37,7 +37,7 @@ int main(int argc, char* argv[])
     f1 = expand(e);
     f2 = expand(add(e, w));
 
-    umap_basic_int syms;
+    umap_basic_num syms;
     insert(syms, x, rcp(new Integer(0)));
     insert(syms, y, rcp(new Integer(1)));
     insert(syms, z, rcp(new Integer(2)));

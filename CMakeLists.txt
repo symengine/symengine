@@ -47,6 +47,17 @@ if (WITH_ECM)
     set(HAVE_CSYMPY_ECM yes)
 endif()
 
+#PRIMESIEVE
+set(WITH_PRIMESIEVE no
+    CACHE BOOL "Build with primesieve")
+
+if (WITH_PRIMESIEVE)
+    find_package(PRIMESIEVE REQUIRED)
+    include_directories(${PRIMESIEVE_INCLUDE_DIRS})
+    set(LIBS ${LIBS} ${PRIMESIEVE_LIBRARY})
+    set(HAVE_CSYMPY_PRIMESIEVE yes)
+endif()
+
 # Python
 set(WITH_PYTHON no
     CACHE BOOL "Build with Python wrappers")
@@ -89,6 +100,10 @@ set(WITH_CSYMPY_ASSERT no
 set(WITH_CSYMPY_RCP yes
     CACHE BOOL "Enable CSYMPY_RCP support")
 
+# CSYMPY_THREAD_SAFE
+set(WITH_CSYMPY_THREAD_SAFE no
+    CACHE BOOL "Enable CSYMPY_THREAD_SAFE support")
+
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(HAVE_TEUCHOS_DEBUG yes)
     set(HAVE_TEUCHOS_DEBUG_RCP_NODE_TRACING yes)
@@ -123,6 +138,7 @@ message("Installation prefix: ${CMAKE_INSTALL_PREFIX}")
 
 message("WITH_CSYMPY_ASSERT: ${WITH_CSYMPY_ASSERT}")
 message("WITH_CSYMPY_RCP: ${WITH_CSYMPY_RCP}")
+message("WITH_CSYMPY_THREAD_SAFE: ${WITH_CSYMPY_THREAD_SAFE}")
 
 message("GMP_INCLUDE_DIRS: ${GMP_INCLUDE_DIRS}")
 message("GMP_LIBRARIES: ${GMP_LIBRARIES}")
@@ -147,6 +163,12 @@ message("WITH_ECM: ${WITH_ECM}")
 if (WITH_ECM)
     message("ECM_INCLUDE_DIRS: ${ECM_INCLUDE_DIRS}")
     message("ECM_LIBRARIES: ${ECM_LIBRARY}")
+endif()
+
+message("WITH_PRIMESIEVE: ${WITH_PRIMESIEVE}")
+if (WITH_PRIMESIEVE)
+    message("PRIMESIEVE_INCLUDE_DIRS: ${PRIMESIEVE_INCLUDE_DIRS}")
+    message("PRIMESIEVE_LIBRARIES: ${PRIMESIEVE_LIBRARY}")
 endif()
 
 message("Copying source of python wrappers into: ${CMAKE_CURRENT_BINARY_DIR}")

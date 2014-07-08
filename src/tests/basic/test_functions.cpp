@@ -16,7 +16,7 @@ using CSymPy::Mul;
 using CSymPy::Pow;
 using CSymPy::Symbol;
 using CSymPy::symbol;
-using CSymPy::umap_basic_int;
+using CSymPy::umap_basic_num;
 using CSymPy::map_vec_int;
 using CSymPy::Integer;
 using CSymPy::integer;
@@ -734,17 +734,17 @@ void test_get_pi_shift()
     b = get_pi_shift(r, outArg(n), outArg(r1));
     assert(eq(n, i8) && (b == true) && eq(r1, zero));
 
-	// arg neq n*pi/12 , n not an integer
+    // arg neq n*pi/12 , n not an integer
     r = mul(pi, div(i2, integer(5)));
     b = get_pi_shift(r, outArg(n), outArg(r1));
     assert(b == false);
 
-	// arg neq theta + n*pi/12 (no pi symbol, pi as pow)
+    // arg neq theta + n*pi/12 (no pi symbol, pi as pow)
     r = mul(pow(pi, i2), div(i2, integer(3)));
     b = get_pi_shift(r, outArg(n), outArg(r1));
     assert(b == false);
 
-	// arg neq theta + n*pi/12 (no pi symbol, pi as mul form)
+    // arg neq theta + n*pi/12 (no pi symbol, pi as mul form)
     r = mul(mul(pi, x), div(i2, integer(3)));
     b = get_pi_shift(r, outArg(n), outArg(r1));
     assert(b == false);
@@ -775,7 +775,7 @@ void test_get_pi_shift()
     b = get_pi_shift(r, outArg(n), outArg(r1));
     assert(b == false);
 
-	// arg neq n*pi/12 (pi is not in form of symbol)
+    // arg neq n*pi/12 (pi is not in form of symbol)
     r = mul(pow(pi, i2), div(i2, integer(3)));
     b = get_pi_shift(r, outArg(n), outArg(r1));
     assert(b == false);
@@ -982,7 +982,7 @@ void test_asec()
     r2 = mul(i2, div(pi,  i3));
     assert(eq(r1, r2));
     
-    r1 = asec(div(i2, sqrt(i2)));
+    r1 = asec(sqrt(i2));
     r2 = div(pi, mul(i2, i2));
     assert(eq(r1, r2));
 
@@ -1025,7 +1025,7 @@ void test_acsc()
     r2 = div(pi, mul(im2, i3));
     assert(eq(r1, r2));
 
-    r1 = acsc(div(i2, sqrt(i2)));
+    r1 = acsc(sqrt(i2));
     r2 = div(pi, mul(i2, i2));
     assert(eq(r1, r2));
 

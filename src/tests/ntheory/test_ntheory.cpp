@@ -245,16 +245,16 @@ void test_factor_pollard_rho_method()
 
 void test_sieve()
 {
-    const int MAX=100000;
+    const int MAX=100003;
     std::vector<unsigned> v;
     auto t1 = std::chrono::high_resolution_clock::now();
     CSymPy::eratosthenes_sieve(MAX, v);
     auto t2 = std::chrono::high_resolution_clock::now();
     std::cout
-        << std::chrono::duration_cast<std::chrono::milliseconds>(t2-t1).count()
-        << "ms" << std::endl;
+        << std::chrono::duration_cast<std::chrono::microseconds>(t2-t1).count()
+        << "us" << std::endl;
     std::cout << "Number of primes up to " << MAX << ": " << v.size() << std::endl;
-    assert(v.size() == 9592);
+    assert(v.size() == 9593);
 }
 
 // helper function for test_primefactors

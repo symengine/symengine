@@ -2,6 +2,7 @@
 #include "add.h"
 #include "mul.h"
 #include "integer.h"
+#include "pow.h"
 
 namespace CSymPy {
 
@@ -543,6 +544,259 @@ void fraction_free_gauss_jordan_solve(const DenseMatrix &A, const DenseMatrix &b
     // No checks are done to see if the diagonal entries are zero
     for (i = 0; i < col; i++)
         x.m_[i] = div(b_.m_[i], A_.m_[i*col + i]);
+}
+
+// --------------------------- Matrix Decomposition --------------------------//
+
+// Algorithm 3, page 14, Nakos, G. C., Turner, P. R., Williams, R. M. (1997).
+// Fraction-free algorithms for linear and polynomial equations.
+// ACM SIGSAM Bulletin, 31(3), 11–19. doi:10.1145/271130.271133.
+// This algorithms is not a true factorization of the matrix A(i.e. A != LU))
+// but can be used to solve linear systems by forward/backward substitution.
+void fraction_free_LU(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &U)
+{
+    CSYMPY_ASSERT(A.row_ == A.col_ && L.row_ == L.col_ && U.row_ == U.col_);
+    CSYMPY_ASSERT(A.row_ == L.row_ && A.row_ == U.row_);
+
+    unsigned n = A.row_;
+    unsigned i, j, k;
+
+    U.m_ = A.m_;
+
+    for (i = 0; i < n - 1; i++)
+        for (j = i + 1; j < n; j++)
+            for (k = i + 1; k < n; k++) {
+                U.m_[j*n + k] = sub(mul(U.m_[i*n + i], U.m_[j*n + k]),
+                    mul(U.m_[j*n + i], U.m_[i*n + k]));
+                if (i)
+                    U.m_[j*n + k] = div(U.m_[j*n + k], U.m_[i*n - n + i - 1]);
+            }
+
+    for(i = 0; i < n; i++) {
+        for(j = 0; j < i; j++) {
+            L.m_[i*n + j] = U.m_[i*n + j];
+            U.m_[i*n + j] = zero;
+        }
+        L.m_[i*n + i] = U.m_[i*n + i];
+        for (j = i + 1; j < n; j++)
+            L.m_[i*n + j] = zero; // Integer Zero
+    }
+}
+
+// SymPy LUDecomposition algorithm, in sympy.matrices.matrices.Matrix.LUdecomposition
+// with no pivoting
+void LU(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &U)
+{
+    CSYMPY_ASSERT(A.row_ == A.col_ && L.row_ == L.col_ && U.row_ == U.col_);
+    CSYMPY_ASSERT(A.row_ == L.row_ && A.row_ == U.row_);
+
+    unsigned n = A.row_;
+    unsigned i, j, k;
+    RCP<const Basic> scale;
+
+    U.m_ = A.m_;
+
+    for (j = 0; j < n; j++) {
+        for (i = 0; i < j; i++)
+            for (k = 0; k < i; k++)
+                U.m_[i*n + j] = sub(U.m_[i*n + j],
+                    mul(U.m_[i*n + k], U.m_[k*n + j]));
+
+        for (i = j; i < n; i++) {
+            for (k = 0; k < j; k++)
+                U.m_[i*n + j] = sub(U.m_[i*n + j],
+                    mul(U.m_[i*n + k], U.m_[k*n + j]));
+        }
+
+        scale = div(one, U.m_[j*n + j]);
+
+        for (i = j + 1; i < n; i++)
+            U.m_[i*n + j] = mul(U.m_[i*n + j], scale);
+    }
+
+    for(i = 0; i < n; i++) {
+        for(j = 0; j < i; j++) {
+            L.m_[i*n + j] = U.m_[i*n + j];
+            U.m_[i*n + j] = zero; // Integer zero
+        }
+        L.m_[i*n + i] = one; // Integer one
+        for (j = i + 1; j < n; j++)
+            L.m_[i*n + j] = zero; // Integer zero
+    }
+}
+
+// SymPy's fraction free LU decomposition, without pivoting
+// sympy.matrices.matrices.MatrixBase.LUdecompositionFF
+// W. Zhou & D.J. Jeffrey, "Fraction-free matrix factors: new forms for LU and QR factors".
+// Frontiers in Computer Science in China, Vol 2, no. 1, pp. 67-80, 2008.
+void fraction_free_LU(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &D,
+        DenseMatrix &U)
+{
+    CSYMPY_ASSERT(A.row_ == L.row_ && A.row_ == U.row_);
+    CSYMPY_ASSERT(A.col_ == L.col_ && A.col_ == U.col_);
+
+    unsigned row = A.row_, col = A.col_;
+    unsigned i, j, k;
+    RCP<const Basic> old = integer(1);
+
+    U.m_ = A.m_;
+
+    // Initialize L
+    for (i = 0; i < row; i++)
+        for (j = 0; j < row; j++)
+            if (i != j)
+                L.m_[i*col + j] = zero;
+            else
+                L.m_[i*col + i] = one;
+
+    // Initialize D
+    for (i = 0; i < row*row; i++)
+        D.m_[i] = zero; // Integer zero
+
+    for (k = 0; k < row - 1; k++) {
+        L.m_[k*col + k] = U.m_[k*col + k];
+        D.m_[k*col + k] = mul(old, U.m_[k*col + k]);
+
+        for (i = k + 1; i < row; i++) {
+            L.m_[i*col + k] = U.m_[i*col + k];
+            for (j = k + 1; j < col; j++)
+                U.m_[i*col + j] = div(sub(mul(U.m_[k*col + k], U.m_[i*col + j]),
+                    mul(U.m_[k*col + j], U.m_[i*col + k])), old);
+            U.m_[i*col + k] = zero; // Integer zero
+        }
+
+        old = U.m_[k*col + k];
+    }
+
+    D.m_[row*col - col + row - 1] = old;
+}
+
+// SymPy's QRecomposition in sympy.matrices.matrices.MatrixBase.QRdecomposition
+// Rank check is not performed
+void QR(const DenseMatrix &A, DenseMatrix &Q, DenseMatrix &R)
+{
+    unsigned row = A.row_;
+    unsigned col = A.col_;
+
+    CSYMPY_ASSERT(Q.row_ == row && Q.col_ == col && R.row_ == col && R.col_ == col);
+
+    unsigned i, j, k;
+    RCP<const Basic> t;
+    std::vector<RCP<const Basic>> tmp (row);
+
+    // Initialize Q
+    for (i = 0; i < row*col; i++)
+        Q.m_[i] = zero;
+
+    // Initialize R
+    for (i = 0; i < col*col; i++)
+        R.m_[i] = zero;
+
+    for (j = 0; j < col; j++) {
+        // Use submatrix for this
+        for (k = 0; k < row; k++)
+            tmp[k] = A.m_[k*col + j];
+
+        for (i = 0; i < j; i++) {
+            t = zero;
+            for (k = 0; k < row; k++)
+                t = add(t, mul(A.m_[k*col + j], Q.m_[k*col + i]));
+            std::cout << "(" << j << "," << i << ") " << *t << std::endl;
+            for (k = 0; k < row; k++)
+                tmp[k] = expand(sub(tmp[k], mul(Q.m_[k*col + i], t)));
+        }
+
+        // calculate norm
+        t = zero;
+        for (k = 0; k < row; k++)
+            t = add(t, pow(tmp[k], integer(2)));
+
+        t = pow(t, div(one, integer(2)));
+
+        R.m_[j*col + j] = t;
+        for (k = 0; k < row; k++)
+            Q.m_[k*col + j] = div(tmp[k], t);
+
+        for (i = 0; i < j; i++) {
+            t = zero;
+            for (k = 0; k < row; k++)
+                t = add(t, mul(Q.m_[k*col + i], A.m_[k*col + j]));
+            R.m_[i*col + j] = t;
+        }
+    }
+}
+
+// SymPy's LDL decomposition, Assuming A is a symmetric, square, positive
+// definite non singular matrix
+void LDL(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &D)
+{
+    CSYMPY_ASSERT(A.row_ == A.col_);
+    CSYMPY_ASSERT(L.row_ == A.row_ && L.col_ == A.row_);
+    CSYMPY_ASSERT(D.row_ == A.row_ && D.col_ == A.row_);
+
+    unsigned col = A.col_;
+    unsigned i, k, j;
+    RCP<const Basic> sum;
+    RCP<const Basic> i2 = integer(2);
+
+    // Initialize D
+    for (i = 0; i < col; i++)
+        for (j = 0; j < col; j++)
+            D.m_[i*col + j] = zero; // Integer zero
+
+    // Initialize L
+    for (i = 0; i < col; i++)
+        for (j = 0; j < col; j++)
+            L.m_[i*col + j] = (i != j) ? zero : one;
+
+    for (i = 0; i < col; i++) {
+        for (j = 0; j < i; j++) {
+            sum = zero;
+            for (k = 0; k < j; k++)
+                sum = add(sum, mul(mul(L.m_[i*col + k], L.m_[j*col + k]),
+                    D.m_[k*col + k]));
+            L.m_[i*col + j] = mul(div(one, D.m_[j*col + j]),
+                sub(A.m_[i*col + j], sum));
+        }
+        sum = zero;
+        for (k = 0; k < i; k++)
+            sum = add(sum, mul(pow(L.m_[i*col + k], i2), D.m_[k*col + k]));
+        D.m_[i*col + i] = sub(A.m_[i*col + i], sum);
+    }
+}
+
+// SymPy's cholesky decomposition
+void cholesky(const DenseMatrix &A, DenseMatrix &L)
+{
+    CSYMPY_ASSERT(A.row_ == A.col_);
+    CSYMPY_ASSERT(L.row_ == A.row_ && L.col_ == A.row_);
+
+    unsigned col = A.col_;
+    unsigned i, j, k;
+    RCP<const Basic> sum;
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> half = div(one, i2);
+
+    // Initialize L
+    for (i = 0; i < col; i++)
+        for(j = 0; j < col; j++)
+            L.m_[i*col + j] = zero;
+
+    for (i = 0; i < col; i++) {
+        for (j = 0; j < i; j++) {
+            sum = zero;
+            for(k = 0; k < j; k++)
+                sum = add(sum, mul(L.m_[i*col + k], L.m_[j*col + k]));
+
+            L.m_[i*col + j] = mul(div(one, L.m_[j*col + j]),
+                sub(A.m_[i*col + j], sum));
+        }
+        sum = zero;
+        for (k = 0; k < i; k++)
+            sum = add(sum, pow(L.m_[i*col + k], i2));
+
+        L.m_[i*col + i] = pow(sub(A.m_[i*col + i], sum), half);
+    }
 }
 
 } // CSymPy

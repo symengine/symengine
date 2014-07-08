@@ -13,7 +13,7 @@ namespace CSymPy {
 
 class Number : public Basic {
 public:
-	//! \return true if `0`
+    //! \return true if `0`
     virtual bool is_zero() const = 0;
     //! \return true if `1`
     virtual bool is_one() const = 0;
@@ -21,7 +21,7 @@ public:
     virtual bool is_negative() const = 0;
 
     virtual bool is_positive() const = 0;
-	//! Addition
+    //! Addition
     virtual RCP<const Number> add(const Number &other) const = 0;
     //! Subtraction
     virtual RCP<const Number> sub(const Number &other) const = 0;
@@ -33,7 +33,7 @@ public:
     virtual RCP<const Number> rdiv(const Number &other) const = 0;
     //! Power
     virtual RCP<const Number> pow(const Number &other) const = 0;
-	//! Differentiation w.r.t Symbol `x`
+    //! Differentiation w.r.t Symbol `x`
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
 };
 //! Add `self` and `other`

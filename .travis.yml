@@ -14,8 +14,12 @@ env:
   - BUILD_TYPE="Debug"
   # Debug build (with BFD and CSYMPY_ASSERT)
   - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_CSYMPY_ASSERT="yes"
+  # Debug build (with BFD and CSYMPY_ASSERT and CSYMPY_THREAD_SAFE)
+  - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_CSYMPY_ASSERT="yes" WITH_CSYMPY_THREAD_SAFE="yes"
   # Debug build (with BFD and CSYMPY_ASSERT) with ECM
   - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_CSYMPY_ASSERT="yes" WITH_ECM="yes"
+  # Debug build (with BFD and CSYMPY_ASSERT) with PRIMESIEVE
+  - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_CSYMPY_ASSERT="yes" WITH_PRIMESIEVE="yes"
   # Debug build (with BFD and CSYMPY_ASSERT) with Python 2.7
   - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_CSYMPY_ASSERT="yes" WITH_PYTHON="yes"
   # Debug build with Teuchos::RCP (just to test that it compiles)
@@ -35,13 +39,13 @@ matrix:
     # These test the default Release build with other Python versions
     - python: 2.6
       env:
-        - TEST_IN_TREE="yes" WITH_PYTHON="yes"
+        - WITH_PYTHON="yes"
     - python: 3.2
       env:
-        - TEST_IN_TREE="yes" WITH_PYTHON="yes"
+        - WITH_PYTHON="yes"
     - python: 3.3
       env:
-        - TEST_IN_TREE="yes" WITH_PYTHON="yes"
+        - WITH_PYTHON="yes"
 before_install:
   - sudo apt-get update
   - sudo apt-get install cmake libgmp-dev
@@ -50,6 +54,11 @@ before_install:
     fi
   - if [[ "${WITH_ECM}" == "yes" ]]; then
         sudo apt-get install libecm-dev;
+    fi
+  - if [[ "${WITH_PRIMESIEVE}" == "yes" ]]; then
+        wget http://dl.bintray.com/kimwalisch/primesieve/primesieve-5.2.tar.gz;
+        tar -xzvf primesieve-5.2.tar.gz;
+        cd primesieve-5.2 && ./configure && make && sudo make install && cd ..;
     fi
 install:
   - if [[ "${WITH_PYTHON}" == "yes" ]]; then
