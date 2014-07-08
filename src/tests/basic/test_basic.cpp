@@ -458,6 +458,29 @@ void test_complex()
     c2 = Complex::from_two_nums(*r1, *r3);
     assert(eq(addnum(c1, c2), div(one, integer(2))));
 
+    // Checks for complex subtraction
+    r1 = Rational::from_two_ints(integer(2), integer(4));
+    r2 = Rational::from_two_ints(integer(5), integer(7));
+    r3 = Rational::from_two_ints(integer(-5), integer(7));
+
+    c1 = Complex::from_two_nums(*r1, *r2);
+    c2 = Complex::from_two_nums(*r1, *r3);
+    // Final result is int
+    assert(eq(subnum(c1, c1), zero));
+
+    // Final result is rational
+    r3 = Rational::from_two_ints(integer(1), integer(3));
+    c1 = Complex::from_two_nums(*r1, *r2);
+    c2 = Complex::from_two_nums(*r3, *r2);
+    assert(eq(subnum(c1, c2), div(one, integer(6))));
+
+    // Final result is complex
+    r2 = Rational::from_two_ints(integer(1), integer(6));
+    c1 = Complex::from_two_nums(*r1, *r1);
+    c2 = Complex::from_two_nums(*r3, *r3);
+    c3 = Complex::from_two_nums(*r2, *r2);
+    assert(eq(subnum(c1, c2), c3));
+
 }
 
 
