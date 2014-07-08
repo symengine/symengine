@@ -436,8 +436,13 @@ void test_complex()
     r2 = Rational::from_two_ints(integer(5), integer(7));
     r3 = Rational::from_two_ints(integer(-5), integer(7));
 
-    c1 = Complex::from_two_rats(rcp_static_cast<const Rational>(r1), rcp_static_cast<const Rational>(r2));
-    c2 = Complex::from_two_rats(rcp_static_cast<const Rational>(r1), rcp_static_cast<const Rational>(r3));
+    c1 = Complex::from_two_rats(static_cast<const Rational&>(*r1), static_cast<const Rational&>(*r2));
+    c2 = Complex::from_two_rats(static_cast<const Rational&>(*r1), static_cast<const Rational&>(*r3));
+    assert(c1->__str__() == "1/2 + i5/7");
+    assert(c2->__str__() == "1/2 - i5/7");
+
+    c1 = Complex::from_two_nums(*r1, *r2);
+    c2 = Complex::from_two_nums(*r1, *r3);
     assert(c1->__str__() == "1/2 + i5/7");
     assert(c2->__str__() == "1/2 - i5/7");
 }

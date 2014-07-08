@@ -57,8 +57,14 @@ public:
      /*! Constructs Complex from re, im. If im is 0
     *   it will return a Rational instead.
     * */
-    static RCP<const Number> from_two_rats(const RCP<const Rational> &re,
-        const RCP<const Rational> &im);
+    static RCP<const Number> from_two_rats(const Rational &re,
+        const Rational &im);
+
+     /*! Constructs Complex from re, im. If im is 0
+    *   it will return a Rational instead.
+    * */
+    static RCP<const Number> from_two_nums(const Number &re,
+        const Number &im);
 
     //! \return `true` if `0`
     virtual bool is_zero() const { return ((this->real_ == 0) && (this->imaginary_ == 0)); }
