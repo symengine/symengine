@@ -31,11 +31,11 @@ std::string Complex::__str__() const
     // Since imaginary_ should be in canonical form,
     // the denominator is expected to be always positive
     if (imaginary_.get_num() < 0) {
-        s << " -i";
+        s << " - i";
         mpq_class q(imaginary_.get_num()*(-1), imaginary_.get_den());
         s << q;
     } else {
-        s << " +i";
+        s << " + i";
         s << this->imaginary_;
     }
     return s.str();
