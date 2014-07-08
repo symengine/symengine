@@ -10,5 +10,16 @@
 #endif
 #endif
 
+#define CSYMPY_ERROR(description) std::cerr << description; std::cerr << "\n"; abort();
+#define CSYMPY_CHECK_THROW(expression, exception) \
+try \
+{ \
+expression; \
+CSYMPY_ERROR("expected exception not thrown");\
+throw 10; \
+} \
+catch(exception &) \
+{ \
+}
 
 #endif

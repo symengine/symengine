@@ -35,10 +35,10 @@ bool Pow::is_canonical(const RCP<const Basic> &base, const RCP<const Basic> &exp
     if (is_a_Number(*base) && is_a<Integer>(*exp))
         return false;
     // e.g. (x*y)^2, should rather be x^2*y^2
-    if (is_a<Mul>(*base))
+    if (is_a<Mul>(*base) && is_a<Integer>(*exp))
         return false;
-    // e.g. x^2^y, should rather be x^(2*y)
-    if (is_a<Pow>(*base))
+    // e.g. (x^y)^2, should rather be x^(2*y)
+    if (is_a<Pow>(*base) && is_a<Integer>(*exp))
         return false;
     // If exp is a rational, it should be between 0  and 1, i.e. we don't
     // allow things like 2^(-1/2) or 2^(3/2)
@@ -157,10 +157,14 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
             throw std::runtime_error("Not implemented");
         }
     }
-    if (is_a<Mul>(*a)) {
+    if (is_a<Mul>(*a) && is_a<Integer>(*b)) {
+        // Convert (x*y)^b = x^b*y^b, where 'b' is an integer. This holds for
+        // any complex 'x', 'y' and integer 'b'.
         return rcp_static_cast<const Mul>(a)->power_all_terms(b);
     }
-    if (is_a<Pow>(*a)) {
+    if (is_a<Pow>(*a) && is_a<Integer>(*b)) {
+        // Convert (x^y)^b = x^(b*y), where 'b' is an integer. This holds for
+        // any complex 'x', 'y' and integer 'b'.
         RCP<const Pow> A = rcp_static_cast<const Pow>(a);
         return pow(A->base_, mul(A->exp_, b));
     }
@@ -266,7 +270,7 @@ RCP<const Basic> pow_expand(const RCP<const Pow> &self)
     int n = rcp_static_cast<const Integer>(self->exp_)->as_int();
 
     RCP<const Add> base = rcp_static_cast<const Add>(self->base_);
-    umap_basic_int base_dict = base->dict_;
+    umap_basic_num base_dict = base->dict_;
     if (! (base->coef_->is_zero())) {
         // Add the numerical coefficient into the dictionary. This
         // allows a little bit easier treatment below.
@@ -274,7 +278,7 @@ RCP<const Basic> pow_expand(const RCP<const Pow> &self)
     }
     int m = base_dict.size();
     multinomial_coefficients_mpz(m, n, r);
-    umap_basic_int rd;
+    umap_basic_num rd;
     // This speeds up overall expansion. For example for the benchmark
     // (y + x + z + w)^60 it improves the timing from 135ms to 124ms.
     rd.reserve(2*r.size());

@@ -64,7 +64,7 @@ is *not* modified, use `const A &a`:
 
 If it *is* modified, use `A &a` (see the first argument):
 
-    void Add::dict_add_term(umap_basic_int &d, const RCP<Integer> &coef,
+    void Add::dict_add_term(umap_basic_num &d, const RCP<Integer> &coef,
             const RCP<Basic> &t)
     {
         if (d.find(t) == d.end()) {

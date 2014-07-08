@@ -86,7 +86,7 @@ void fibonacci2(const Ptr<RCP<const Integer>> &g, const Ptr<RCP<const Integer>> 
 
     mpz_init(g_t);
     mpz_init(s_t);
-	
+
     mpz_fib2_ui(g_t, s_t, n);
     *g = integer(mpz_class(g_t));
     *s = integer(mpz_class(s_t));
@@ -112,7 +112,7 @@ void lucas2(const Ptr<RCP<const Integer>> &g, const Ptr<RCP<const Integer>> &s,
 
     mpz_init(g_t);
     mpz_init(s_t);
-	
+
     mpz_lucnum2_ui(g_t, s_t, n);
     *g = integer(mpz_class(g_t));
     *s = integer(mpz_class(s_t));
