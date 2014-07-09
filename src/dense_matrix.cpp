@@ -799,7 +799,7 @@ void cholesky(const DenseMatrix &A, DenseMatrix &L)
     }
 }
 
-// Determinant
+// ----------------------------- Determinant ---------------------------------//
 RCP<const Basic> det_bareis(const DenseMatrix &A)
 {
     CSYMPY_ASSERT(A.row_ == A.col_);
@@ -860,6 +860,90 @@ RCP<const Basic> det_bareis(const DenseMatrix &A)
 
        return (sign == 1) ? B.m_[n*n - 1] : mul(minus_one, B.m_[n*n - 1]);
     }
+}
+
+void berkowitz(const DenseMatrix &A, std::vector<DenseMatrix> &polys)
+{
+    CSYMPY_ASSERT(A.row_ == A.col_);
+
+    unsigned col = A.col_;
+    unsigned i, k, l, m;
+
+    std::vector<DenseMatrix> items;
+    std::vector<DenseMatrix> transforms;
+    std::vector<RCP<const Basic>> items_;
+
+    for (unsigned n = col; n > 1; n--) {
+        items.clear();
+        k = n - 1;
+        DenseMatrix T = DenseMatrix(n + 1, n);
+        DenseMatrix C = DenseMatrix(k, 1);
+
+        // Initialize T and C
+        for (i = 0; i < n*(n + 1); i++)
+            T.m_[i] = zero;
+        for (i = 0; i < k; i++)
+            C.m_[i] = A.m_[i*col + k];
+        items.push_back(C);
+
+        for (i = 0; i < n - 2; i++) {
+            DenseMatrix B = DenseMatrix(k, 1);
+            for (l = 0; l < k; l++) {
+                B.m_[l] = zero;
+                for (m = 0; m < k; m++)
+                    B.m_[l] = add(B.m_[l], mul(A.m_[l*col + m], items[i].m_[m]));
+            }
+            items.push_back(B);
+        }
+
+        items_.clear();
+        for (i = 0; i < n - 1; i++) {
+            RCP<const Basic> element = zero;
+            for (l = 0; l < k; l++)
+                element = add(element, mul(A.m_[k*col + l], items[i].m_[l]));
+            items_.push_back(mul(minus_one, element));
+        }
+        items_.insert(items_.begin(), mul(minus_one, A.m_[k*col + k]));
+        items_.insert(items_.begin(), one);
+
+        for (i = 0; i < n; i++) {
+            for (l = 0; l < n - i + 1; l++)
+                T.m_[(i + l)*n + i] = items_[l];
+        }
+
+        transforms.push_back(T);
+    }
+
+    polys.push_back(DenseMatrix(2, 1, {one, mul(A.m_[0], minus_one)}));
+
+    for(i = 0; i < col - 1; i++) {
+        unsigned t_row = transforms[col - 2 - i].nrows();
+        unsigned t_col = transforms[col - 2 - i].ncols();
+        DenseMatrix B = DenseMatrix(t_row, 1);
+
+        for (l = 0; l < t_row; l++) {
+            B.m_[l] = zero;
+            for (m = 0; m < t_col; m++) {
+                B.m_[l] = add(B.m_[l],
+                    mul(transforms[col - 2 - i].m_[l*t_col + m], polys[i].m_[m]));
+                B.m_[l] = expand(B.m_[l]);
+            }
+        }
+        polys.push_back(B);
+    }
+}
+
+RCP<const Basic> det_berkowitz(const DenseMatrix &A)
+{
+    std::vector<DenseMatrix> polys;
+
+    berkowitz(A, polys);
+    DenseMatrix poly = polys[polys.size() - 1];
+
+    if (polys.size() % 2 == 1)
+        return mul(minus_one, poly.get(poly.nrows() - 1));
+
+    return poly.get(poly.nrows() - 1);
 }
 
 } // CSymPy

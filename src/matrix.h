@@ -124,6 +124,8 @@ public:
     friend RCP<const Basic> det_bareis(const DenseMatrix &A);
     friend RCP<const Basic> det_berkowitz(const DenseMatrix &A);
 
+    friend void berkowitz(const DenseMatrix &A, std::vector<DenseMatrix> &polys);
+
 protected:
     // Matrix elements are stored in row-major order
     std::vector<RCP<const Basic>> m_;
@@ -237,6 +239,8 @@ void fraction_free_gauss_jordan_solve(const DenseMatrix &A, const DenseMatrix &b
 // Determinant
 RCP<const Basic> det_bareis(const DenseMatrix &A);
 RCP<const Basic> det_berkowitz(const DenseMatrix &A);
+
+void berkowitz(const DenseMatrix &A, std::vector<DenseMatrix> &polys);
 
 // ------------------------ Common functions ---------------------------------//
 

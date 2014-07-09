@@ -34,6 +34,7 @@ using CSymPy::QR;
 using CSymPy::LDL;
 using CSymPy::cholesky;
 using CSymPy::det_bareis;
+using CSymPy::berkowitz;
 
 void test_dense_dense_addition()
 {
@@ -705,14 +706,16 @@ void test_cholesky()
         integer(1), integer(0), integer(-4), integer(5), integer(1)}));
 }
 
-void test_bareis()
+void test_determinant()
 {
     // Test cases are taken from SymPy
     DenseMatrix M = DenseMatrix(1, 1, {integer(1)});
     assert(eq(det_bareis(M), integer(1)));
+    assert(eq(det_berkowitz(M), integer(1)));
 
     M = DenseMatrix(2, 2, {integer(-3), integer(2), integer(8), integer(-5)});
     assert(eq(det_bareis(M), integer(-1)));
+    assert(eq(det_berkowitz(M), integer(-1)));
 
     M = DenseMatrix(2, 2, {symbol("x"), integer(1), symbol("y"),
             mul(integer(2), symbol("y"))});
@@ -722,19 +725,21 @@ void test_bareis()
     M = DenseMatrix(3, 3, {integer(1), integer(1), integer(1), integer(1),
             integer(2), integer(3), integer(1), integer(3), integer(6)});
     assert(eq(det_bareis(M), integer(1)));
+    assert(eq(det_berkowitz(M), integer(1)));
 
     M = DenseMatrix(4, 4, {integer(3), integer(-2), integer(0), integer(5),
             integer(-2), integer(1), integer(-2), integer(2), integer(0),
             integer(-2), integer(5), integer(0), integer(5),  integer(0),
             integer(3), integer(4)});
-    std::cout << "Thilina" << *det_bareis(M) << std::endl;
     assert(eq(det_bareis(M), integer(-289)));
+    assert(eq(det_berkowitz(M), integer(-289)));
 
     M = DenseMatrix(4, 4, {integer(1), integer(2), integer(3), integer(4),
             integer(5), integer(6), integer(7), integer(8), integer(9),
             integer(10), integer(11), integer(12), integer(13), integer(14),
             integer(15), integer(16)});
     assert(eq(det_bareis(M), integer(0)));
+    assert(eq(det_berkowitz(M), integer(0)));
 
     M = DenseMatrix(5, 5, {integer(3), integer(2), integer(0), integer(0), integer(0),
                  integer(0), integer(3), integer(2), integer(0), integer(0),
@@ -742,6 +747,7 @@ void test_bareis()
                  integer(0), integer(0), integer(0), integer(3), integer(2),
                  integer(2), integer(0), integer(0), integer(0), integer(3)});
     assert(eq(det_bareis(M), integer(275)));
+    assert(eq(det_berkowitz(M), integer(275)));
 
     M = DenseMatrix(5, 5, {integer(1), integer(0), integer(1), integer(2),
             integer(12), integer(2), integer(0), integer(1), integer(1),
@@ -750,6 +756,7 @@ void test_bareis()
             integer(8), integer(1), integer(1),  integer(1), integer(0),
             integer(6)});
     assert(eq(det_bareis(M), integer(-55)));
+    assert(eq(det_berkowitz(M), integer(-55)));
 
     M = DenseMatrix(5, 5, {integer(-5), integer(2), integer(3), integer(4),
             integer(5), integer(1), integer(-4), integer(3), integer(4),
@@ -758,6 +765,7 @@ void test_bareis()
             integer(5), integer(1), integer(2), integer(3), integer(4),
             integer(-1)});
     assert(eq(det_bareis(M), integer(11664)));
+    assert(eq(det_berkowitz(M), integer(11664)));
 
     M = DenseMatrix(5, 5, {integer(2), integer(7), integer(-1), integer(3),
             integer(2), integer(0), integer(0), integer(1), integer(0),
@@ -766,6 +774,53 @@ void test_bareis()
             integer(3), integer(1), integer(0), integer(0), integer(0),
             integer(1)});
     assert(eq(det_bareis(M), integer(123)));
+    assert(eq(det_berkowitz(M), integer(123)));
+}
+
+void test_berkowitz()
+{
+    std::vector<DenseMatrix> polys;
+    RCP<const Basic> x = symbol("x");
+    RCP<const Basic> y = symbol("y");
+    RCP<const Basic> z = symbol("z");
+
+    DenseMatrix M = DenseMatrix(2, 2, {integer(1), integer(0),
+        integer(-1), integer(1)});
+    berkowitz(M, polys);
+
+    assert(polys[1] == DenseMatrix(3, 1, {integer(1), integer(-2),
+        integer(1)}));
+    assert(polys[0] == DenseMatrix(2, 1, {integer(1), integer(-1)}));
+
+    polys.clear();
+
+    M = DenseMatrix(3, 3, {integer(3), integer(4), integer(2), integer(1),
+        integer(6), integer(2), integer(5), integer(9), integer(0)});
+    berkowitz(M, polys);
+
+    polys.clear();
+
+    M = DenseMatrix(3, 3, {x, y, z, integer(1), integer(0), integer(0), y, z, x});
+    berkowitz(M, polys);
+
+    assert(polys[2] ==
+        DenseMatrix(4, 1, {integer(1), mul(integer(-2), x),
+            sub(sub(pow(x, integer(2)), mul(y, z)), y),
+            sub(mul(x, y), pow(z, integer(2)))}));
+    assert(polys[1] == DenseMatrix(3, 1, {integer(1), mul(integer(-1), x),
+        mul(integer(-1), y)}));
+    assert(polys[0] == DenseMatrix(2, 1, {integer(1), mul(integer(-1), x)}));
+
+    polys.clear();
+
+    M = DenseMatrix(3, 3, {integer(1), integer(1), integer(1), integer(1),
+            integer(2), integer(3), integer(1), integer(3), integer(6)});
+    berkowitz(M, polys);
+
+    assert(polys[2] ==
+        DenseMatrix(4, 1, {integer(1), integer(-9), integer(9), integer(-1)}));
+    assert(polys[1] == DenseMatrix(3, 1, {integer(1), integer(-3), integer(1)}));
+    assert(polys[0] == DenseMatrix(2, 1, {integer(1), integer(-1)}));
 }
 
 int main(int argc, char* argv[])
@@ -812,7 +867,9 @@ int main(int argc, char* argv[])
 
     // test_cholesky();
 
-    test_bareis();
+    test_determinant();
+
+    test_berkowitz();
 
     return 0;
 }
