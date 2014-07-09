@@ -470,6 +470,27 @@ void test_complex()
     c3 = Complex::from_two_nums(*r2, *r2);
     assert(eq(subnum(c1, c2), c3));
 
+    // Checks for complex multiplication
+    r1 = Rational::from_two_ints(integer(2), integer(1));
+    r2 = Rational::from_two_ints(integer(1), integer(1));
+    r3 = Rational::from_two_ints(integer(-1), integer(1));
+    // Final result is int
+    c1 = Complex::from_two_nums(*r1, *r2);
+    c2 = Complex::from_two_nums(*r1, *r3);
+    assert(eq(mulnum(c1, c2), integer(5)));
+
+    // Final result is rational
+    r1 = Rational::from_two_ints(integer(1), integer(2));
+    c1 = Complex::from_two_nums(*r1, *r2);
+    c2 = Complex::from_two_nums(*r1, *r3);
+    assert(eq(mulnum(c1, c2), div(integer(5), integer(4))));
+
+    // Final result is complex
+    c1 = Complex::from_two_nums(*r2, *r2);
+    c2 = Complex::from_two_nums(*r3, *r3);
+    c3 = Complex::from_two_nums(*(integer(0)), *(integer(-2)));
+    assert(eq(mulnum(c1, c2), c3));
+
 }
 
 int main(int argc, char* argv[])
