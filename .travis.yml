@@ -39,13 +39,13 @@ matrix:
     # These test the default Release build with other Python versions
     - python: 2.6
       env:
-        - WITH_PYTHON="yes"
+        - PYTHON_INSTALL="yes"
     - python: 3.2
       env:
-        - WITH_PYTHON="yes"
+        - PYTHON_INSTALL="yes"
     - python: 3.3
       env:
-        - WITH_PYTHON="yes"
+        - PYTHON_INSTALL="yes"
 before_install:
   - sudo apt-get update
   - sudo apt-get install cmake libgmp-dev
@@ -62,6 +62,9 @@ before_install:
     fi
 install:
   - if [[ "${WITH_PYTHON}" == "yes" ]]; then
+        pip install cython sympy --use-mirrors;
+    fi
+  - if [[ "${PYTHON_INSTALL}" == "yes" ]]; then
         pip install cython sympy --use-mirrors;
     fi
 script:
