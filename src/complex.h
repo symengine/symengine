@@ -151,11 +151,10 @@ public:
      * \param other of type Complex
      * */
     inline RCP<const Number> divcomp(const Complex &other) const {
-        mpq_class conjugate = other.real_*other.real_ - other.imaginary_*other.imaginary_;
+        mpq_class conjugate = other.real_*other.real_ + other.imaginary_*other.imaginary_;
         if (conjugate.get_num() == 0) {
             throw std::runtime_error("Divide by zero.");
         } else {
-            conjugate = conjugate * conjugate;
             return from_mpq((this->real_ * other.real_ + this->imaginary_ * other.imaginary_)/ conjugate,
            (- this->real_ * other.imaginary_ + this->imaginary_ * other.real_)/conjugate);
         }
