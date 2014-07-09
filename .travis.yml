@@ -39,11 +39,26 @@ matrix:
     # These test the default Release build with other Python versions
     - python: 2.6
       env:
+        - WITH_PYTHON="yes"
+    - python: 3.2
+      env:
+        - WITH_PYTHON="yes"
+    - python: 3.3
+      env:
+        - WITH_PYTHON="yes"
+    - python: 2.6
+      env:
+        - PYTHON_INSTALL="yes"
+    - python: 2.7
+      env:
         - PYTHON_INSTALL="yes"
     - python: 3.2
       env:
         - PYTHON_INSTALL="yes"
     - python: 3.3
+      env:
+        - PYTHON_INSTALL="yes"
+    - python: 3.4
       env:
         - PYTHON_INSTALL="yes"
 before_install:
