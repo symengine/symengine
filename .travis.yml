@@ -48,19 +48,24 @@ matrix:
         - WITH_PYTHON="yes"
     - python: 2.6
       env:
-        - PYTHON_INSTALL="yes"
+        - TEST_IN_TREE="yes" 
+	- PYTHON_INSTALL="yes"
     - python: 2.7
       env:
-        - PYTHON_INSTALL="yes"
+        - TEST_IN_TREE="yes" 
+	- PYTHON_INSTALL="yes"
     - python: 3.2
       env:
-        - PYTHON_INSTALL="yes"
+        - TEST_IN_TREE="yes" 
+	- PYTHON_INSTALL="yes"
     - python: 3.3
       env:
-        - PYTHON_INSTALL="yes"
+        - TEST_IN_TREE="yes" 
+	- PYTHON_INSTALL="yes"
     - python: 3.4
       env:
-        - PYTHON_INSTALL="yes"
+        - TEST_IN_TREE="yes" 
+	- PYTHON_INSTALL="yes"
 before_install:
   - sudo apt-get update
   - sudo apt-get install cmake libgmp-dev

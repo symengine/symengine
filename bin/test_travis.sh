@@ -46,7 +46,7 @@ fi
 if [[ "${WITH_PRIMESIEVE}" != "" ]]; then
     cmake_line="$cmake_line -DWITH_PRIMESIEVE=${WITH_PRIMESIEVE}"
 fi
-if [[ "${PYTHON_INSTALL}" != "" ]]; then
+if [[ "${PYTHON_INSTALL}" == "yes" ]]; then
     git clean -dfx
     python setup.py install
     mkdir empty
