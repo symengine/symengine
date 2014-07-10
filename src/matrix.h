@@ -20,6 +20,7 @@ public:
     // Get the # of rows and # of columns
     unsigned nrows() const { return row_; }
     unsigned ncols() const { return col_; }
+    virtual bool eq(const MatrixBase &other) const;
 
     // Get and set elements
     virtual RCP<const Basic>get(unsigned i) const = 0;
@@ -27,18 +28,7 @@ public:
 
     // Print Matrix, very mundane version, should be overriden derived
     // class if better printing is available
-    virtual std::string __str__() const {
-        std::ostringstream o;
-
-        for (unsigned i = 0; i < row_; i++) {
-            o << "[";
-            for (unsigned j = 0; j < col_ - 1; j++)
-                o << *this->get(i*col_ + j) << ", ";
-            o << *this->get(i*col_ + col_ - 1) << "]" << std::endl;
-        }
-
-        return o.str();
-    }
+    virtual std::string __str__() const;
 
     virtual unsigned rank() const = 0;
     virtual RCP<const Basic> det() const = 0;
@@ -265,21 +255,13 @@ bool is_symmetric_dense(const DenseMatrix &A);
 inline bool operator==(const CSymPy::MatrixBase &lhs,
     const CSymPy::MatrixBase &rhs)
 {
-    if (lhs.nrows() != rhs.nrows() || lhs.ncols() != rhs.ncols())
-        return false;
-
-    for (unsigned i = 0; i < lhs.nrows()*lhs.ncols(); i++)
-        if(neq(lhs.get(i), rhs.get(i)))
-            return false;
-
-    return true;
+    return lhs.eq(rhs);
 }
 
 // Print Matrix
 inline std::ostream& operator<<(std::ostream& out, const CSymPy::MatrixBase& A)
 {
-    out << A.__str__();
-    return out;
+    return out << A.__str__();
 }
 
 #endif

@@ -22,6 +22,7 @@ set(SRC
     ntheory.cpp
     dense_matrix.cpp
     sparse_matrix.cpp
+    matrix.cpp
 )
 
 # Needed for "make install"
