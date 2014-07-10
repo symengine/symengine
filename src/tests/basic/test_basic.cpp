@@ -508,6 +508,15 @@ void test_complex()
     c1 = Complex::from_two_nums(*r2, *r2);
     c2 = Complex::from_two_nums(*r3, *r3);
     assert(eq(divnum(c1, c2), div(integer(1), integer(2))));
+
+    // Explicit division by zero checks
+    CSYMPY_CHECK_THROW(divnum(c1, integer(0)), std::runtime_error);
+
+    r3 = Rational::from_two_ints(integer(0), integer(1));
+    CSYMPY_CHECK_THROW(divnum(c1, r3), std::runtime_error);
+
+    c2 = Complex::from_two_nums(*r3, *r3);
+    CSYMPY_CHECK_THROW(divnum(c1, c2), std::runtime_error);
 }
 
 int main(int argc, char* argv[])

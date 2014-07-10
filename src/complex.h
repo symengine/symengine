@@ -163,20 +163,32 @@ public:
      * \param other of type Rational
      * */
     inline RCP<const Number> divcomp(const Rational &other) const {
-        return from_mpq(this->real_ / other.i, this->imaginary_ / other.i);
+        if (other.is_zero()) {
+            throw std::runtime_error("Divide by zero.");
+        } else {
+            return from_mpq(this->real_ / other.i, this->imaginary_ / other.i);
+        }
     }
     /*! Divide Complex
      * \param other of type Integer
      * */
     inline RCP<const Number> divcomp(const Integer &other) const {
-        return from_mpq(this->real_ / other.i, this->imaginary_ / other.i);
+        if (other.is_zero()) {
+            throw std::runtime_error("Divide by zero.");
+        } else {
+            return from_mpq(this->real_ / other.i, this->imaginary_ / other.i);
+        }
     }
      /*! Divide other by the Complex
      * \param other of type Integer
      * */
     inline RCP<const Number> rdivcomp(const Integer &other) const {
-        mpq_class conjugate = this->real_*this->real_ - this->imaginary_*this->imaginary_;
-        return from_mpq((this->real_ * other.i) / conjugate, (this->imaginary_ * (-other.i)) / conjugate);
+        mpq_class conjugate = this->real_*this->real_ + this->imaginary_*this->imaginary_;
+        if (conjugate.get_num() == 0) {
+            throw std::runtime_error("Divide by zero.");
+        } else {
+            return from_mpq((this->real_ * other.i) / conjugate, (this->imaginary_ * (-other.i)) / conjugate);
+        }
     }
     //! Converts the param `other` appropriately and then calls `addcomp`
     virtual RCP<const Number> add(const Number &other) const {
