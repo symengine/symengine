@@ -509,6 +509,34 @@ void test_complex()
     c2 = Complex::from_two_nums(*r3, *r3);
     assert(eq(divnum(c1, c2), div(integer(1), integer(2))));
 
+    r1 = Rational::from_two_ints(integer(1), integer(2));
+    r2 = Rational::from_two_ints(integer(3), integer(4));
+    c1 = Complex::from_two_nums(*r1, *r2);
+
+    r1 = Rational::from_two_ints(integer(5), integer(6));
+    r2 = Rational::from_two_ints(integer(7), integer(8));
+    c2 = Complex::from_two_nums(*r1, *r2);
+
+    r1 = Rational::from_two_ints(integer(618), integer(841));
+    r2 = Rational::from_two_ints(integer(108), integer(841));
+    c3 = Complex::from_two_nums(*r1, *r2);
+    assert(eq(divnum(c1, c2), c3));
+
+    r1 = Rational::from_two_ints(integer(-23), integer(96));
+    r2 = Rational::from_two_ints(integer(17), integer(16));
+    c3 = Complex::from_two_nums(*r1, *r2);
+    assert(eq(mulnum(c1, c2), c3));
+
+    r1 = Rational::from_two_ints(integer(4), integer(3));
+    r2 = Rational::from_two_ints(integer(13), integer(8));
+    c3 = Complex::from_two_nums(*r1, *r2);
+    assert(eq(addnum(c1, c2), c3));
+
+    r1 = Rational::from_two_ints(integer(-1), integer(3));
+    r2 = Rational::from_two_ints(integer(-1), integer(8));
+    c3 = Complex::from_two_nums(*r1, *r2);
+    assert(eq(subnum(c1, c2), c3));
+
     // Explicit division by zero checks
     CSYMPY_CHECK_THROW(divnum(c1, integer(0)), std::runtime_error);
 
