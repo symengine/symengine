@@ -26,10 +26,11 @@ public:
 public:
     //! Constructor of Complex class
     Complex(mpq_class real, mpq_class imaginary);
-    /*! \param `re` must already be in mpq_class canonical form
-        \param `im` must already be in mpq_class canonical form
-    *   \return Complex or Rational depending on imaginary part.
-    * */
+    /*! Creates an instance of Complex if imaginary part is non-zero
+     * \param `re` must already be in mpq_class canonical form
+     * \param `im` must already be in mpq_class canonical form
+     * \return Complex or Rational depending on imaginary part.
+     * */
     static RCP<const Number> from_mpq(const mpq_class re, const mpq_class im);
     //! \return true if canonical
     bool is_canonical(const mpq_class &real, const mpq_class &imaginary);
@@ -54,15 +55,15 @@ public:
         throw std::runtime_error("Complex Numbers cannot be totally ordered");
     }
 
-     /*! Constructs Complex from re, im. If im is 0
-    *   it will return a Rational instead.
-    * */
+    /*! Constructs Complex from re, im. If im is 0
+     * it will return a Rational instead.
+     * */
     static RCP<const Number> from_two_rats(const Rational &re,
         const Rational &im);
 
-     /*! Constructs Complex from re, im. If im is 0
-    *   it will return a Rational instead.
-    * */
+    /*! Constructs Complex from re, im. If im is 0
+     * it will return a Rational instead.
+     * */
     static RCP<const Number> from_two_nums(const Number &re,
         const Number &im);
 
@@ -179,7 +180,7 @@ public:
             return from_mpq(this->real_ / other.i, this->imaginary_ / other.i);
         }
     }
-     /*! Divide other by the Complex
+    /*! Divide other by the Complex
      * \param other of type Integer
      * */
     inline RCP<const Number> rdivcomp(const Integer &other) const {
@@ -250,7 +251,7 @@ public:
             throw std::runtime_error("Not implemented.");
         }
     };
-	//! Converts the param `other` appropriately and then calls `rdivcomp`
+    //! Converts the param `other` appropriately and then calls `rdivcomp`
     virtual RCP<const Number> rdiv(const Number &other) const {
         if (is_a<Integer>(other)) {
             return rdivcomp(static_cast<const Integer&>(other));
