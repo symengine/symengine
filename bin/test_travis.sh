@@ -51,17 +51,18 @@ if [[ "${PYTHON_INSTALL}" == "yes" ]]; then
     python setup.py install
     mkdir empty
     cd empty
-    nosetests csympy
+    py.test --pyargs csympy
     cd ..
-else
-    cmake $cmake_line ${SOURCE_DIR}
-    echo "Current directory:"
-    pwd
-    echo "Running make:"
-    make
-    echo "Running make install:"
-    make install
+    exit 0
 fi
+
+cmake $cmake_line ${SOURCE_DIR}
+echo "Current directory:"
+pwd
+echo "Running make:"
+make
+echo "Running make install:"
+make install
 
 if [[ "${WITH_CSYMPY_RCP}" == "no" ]]; then
     echo "CSymPy successfully built with Teuchos::RCP. No tests being run."

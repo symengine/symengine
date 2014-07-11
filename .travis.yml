@@ -48,23 +48,23 @@ matrix:
         - WITH_PYTHON="yes"
     - python: 2.6
       env:
-        - TEST_IN_TREE="yes" 
+        - TEST_IN_TREE="yes"
         - PYTHON_INSTALL="yes"
     - python: 2.7
       env:
-        - TEST_IN_TREE="yes" 
+        - TEST_IN_TREE="yes"
         - PYTHON_INSTALL="yes"
     - python: 3.2
       env:
-        - TEST_IN_TREE="yes" 
+        - TEST_IN_TREE="yes"
         - PYTHON_INSTALL="yes"
     - python: 3.3
       env:
-        - TEST_IN_TREE="yes" 
+        - TEST_IN_TREE="yes"
         - PYTHON_INSTALL="yes"
     - python: 3.4
       env:
-        - TEST_IN_TREE="yes" 
+        - TEST_IN_TREE="yes"
         - PYTHON_INSTALL="yes"
 before_install:
   - sudo apt-get update
