@@ -15,26 +15,7 @@ using CSymPy::Basic;
 using CSymPy::symbol;
 using CSymPy::is_a;
 using CSymPy::Add;
-using CSymPy::add_dense_dense;
-using CSymPy::pow;
 using CSymPy::minus_one;
-using CSymPy::add_dense_dense;
-using CSymPy::add_dense_scalar;
-using CSymPy::mul_dense_dense;
-using CSymPy::mul_dense_scalar;
-using CSymPy::transpose_dense;
-using CSymPy::submatrix_dense;
-using CSymPy::pivoted_gaussian_elimination;
-using CSymPy::fraction_free_gaussian_elimination;
-using CSymPy::pivoted_fraction_free_gaussian_elimination;
-using CSymPy::pivoted_gauss_jordan_elimination;
-using CSymPy::fraction_free_gauss_jordan_elimination;
-using CSymPy::pivoted_fraction_free_gauss_jordan_elimination;
-using CSymPy::QR;
-using CSymPy::LDL;
-using CSymPy::cholesky;
-using CSymPy::det_bareis;
-using CSymPy::berkowitz;
 
 void test_dense_dense_addition()
 {

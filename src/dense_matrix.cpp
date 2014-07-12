@@ -862,6 +862,10 @@ RCP<const Basic> det_bareis(const DenseMatrix &A)
     }
 }
 
+// Returns the coefficients of characterisitc polynomials of leading principal
+// minors of Matrix A as elements in `polys`. Principal leading minor of kth
+// order is the submatrix of A obtained by deleting last n-k rows and columns
+// from A. Here `n` is the dimension of the square matrix A.
 void berkowitz(const DenseMatrix &A, std::vector<DenseMatrix> &polys)
 {
     CSYMPY_ASSERT(A.row_ == A.col_);
