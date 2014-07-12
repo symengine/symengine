@@ -177,6 +177,15 @@ cdef class Basic(object):
             raise TypeError("subs() takes one or two arguments (%d given)" % \
                     len(args))
 
+    @property
+    def args(self):
+        cdef RCP[const csympy.Basic] Y
+        s = []
+        for i in range(deref(self.thisptr).get_args().size()):
+            Y = <RCP[const csympy.Basic]>(deref(self.thisptr).get_args()[i])
+            s.append(c2py(Y))
+        return tuple(s)
+
 
 cdef class Symbol(Basic):
 

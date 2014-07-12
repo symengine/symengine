@@ -35,6 +35,8 @@ def test_derivative():
     assert f.diff(x) == function_symbol("f", x).diff(x)
     assert f.diff(x).diff(x) == function_symbol("f", x).diff(x).diff(x)
     assert f.diff(y) == 0
+    assert f.diff(x).args == (f, x)
+    assert f.diff(x).diff(x).args == (f, x, x)
 
     g = function_symbol("f", y)
     assert g.diff(x) == 0
