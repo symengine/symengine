@@ -6,6 +6,7 @@
 #include "dict.h"
 #include "integer.h"
 #include "rational.h"
+#include "complex.h"
 #include "mul.h"
 #include "pow.h"
 
@@ -25,6 +26,7 @@ using CSymPy::Number;
 using CSymPy::pow;
 using CSymPy::RCP;
 using CSymPy::print_stack_on_segfault;
+using CSymPy::Complex;
 
 void test_symbol_hash()
 {
@@ -415,6 +417,136 @@ void test_compare()
     assert(r2->__cmp__(*r1) == -cmp);
 }
 
+void test_complex()
+{
+    RCP<const Number> r1, r2, r3, c1, c2, c3;
+    r1 = Rational::from_two_ints(integer(2), integer(4));
+    r2 = Rational::from_two_ints(integer(5), integer(7));
+    r3 = Rational::from_two_ints(integer(-5), integer(7));
+
+    c1 = Complex::from_two_nums(*r1, *r2);
+    c2 = Complex::from_two_nums(*r1, *r3);
+
+    // Basic check for equality in Complex::from_two_nums and Complex::from_two_rats
+    assert(eq(c1, Complex::from_two_rats(static_cast<const Rational&>(*r1), static_cast<const Rational&>(*r2))));
+    assert(neq(c2, Complex::from_two_rats(static_cast<const Rational&>(*r1), static_cast<const Rational&>(*r2))));
+
+    // Checks for complex addition
+    // Final result is int
+    assert(eq(addnum(c1, c2), one));
+    // Final result is complex
+    r2 = Rational::from_two_ints(integer(1), integer(1));
+    r3 = Rational::from_two_ints(integer(10), integer(7));
+    c3 = Complex::from_two_nums(*r2, *r3);
+    assert(eq(addnum(c1, c1), c3));
+    // Final result is rational
+    r1 = Rational::from_two_ints(integer(1), integer(4));
+    r2 = Rational::from_two_ints(integer(5), integer(7));
+    r3 = Rational::from_two_ints(integer(-5), integer(7));
+    c1 = Complex::from_two_nums(*r1, *r2);
+    c2 = Complex::from_two_nums(*r1, *r3);
+    assert(eq(addnum(c1, c2), div(one, integer(2))));
+
+    // Checks for complex subtraction
+    r1 = Rational::from_two_ints(integer(2), integer(4));
+    r2 = Rational::from_two_ints(integer(5), integer(7));
+    r3 = Rational::from_two_ints(integer(-5), integer(7));
+
+    c1 = Complex::from_two_nums(*r1, *r2);
+    c2 = Complex::from_two_nums(*r1, *r3);
+    // Final result is int
+    assert(eq(subnum(c1, c1), zero));
+
+    // Final result is rational
+    r3 = Rational::from_two_ints(integer(1), integer(3));
+    c1 = Complex::from_two_nums(*r1, *r2);
+    c2 = Complex::from_two_nums(*r3, *r2);
+    assert(eq(subnum(c1, c2), div(one, integer(6))));
+
+    // Final result is complex
+    r2 = Rational::from_two_ints(integer(1), integer(6));
+    c1 = Complex::from_two_nums(*r1, *r1);
+    c2 = Complex::from_two_nums(*r3, *r3);
+    c3 = Complex::from_two_nums(*r2, *r2);
+    assert(eq(subnum(c1, c2), c3));
+
+    // Checks for complex multiplication
+    r1 = Rational::from_two_ints(integer(2), integer(1));
+    r2 = Rational::from_two_ints(integer(1), integer(1));
+    r3 = Rational::from_two_ints(integer(-1), integer(1));
+    // Final result is int
+    c1 = Complex::from_two_nums(*r1, *r2);
+    c2 = Complex::from_two_nums(*r1, *r3);
+    assert(eq(mulnum(c1, c2), integer(5)));
+
+    // Final result is rational
+    r1 = Rational::from_two_ints(integer(1), integer(2));
+    c1 = Complex::from_two_nums(*r1, *r2);
+    c2 = Complex::from_two_nums(*r1, *r3);
+    assert(eq(mulnum(c1, c2), div(integer(5), integer(4))));
+
+    // Final result is complex
+    c1 = Complex::from_two_nums(*r2, *r2);
+    c2 = Complex::from_two_nums(*r3, *r3);
+    c3 = Complex::from_two_nums(*(integer(0)), *(integer(-2)));
+    assert(eq(mulnum(c1, c2), c3));
+
+    // Check for complex division
+    // Final result is complex
+    c1 = Complex::from_two_nums(*r2, *r2);
+    c2 = Complex::from_two_nums(*r2, *r3);
+    c3 = Complex::from_two_nums(*(integer(0)), *(integer(1)));
+    assert(eq(divnum(c1, c2), c3));
+
+    // Final result is integer
+    c1 = Complex::from_two_nums(*r2, *r2);
+    c2 = Complex::from_two_nums(*r2, *r2);
+    assert(eq(divnum(c1, c2), integer(1)));
+
+    // Final result is rational
+    r3 = Rational::from_two_ints(integer(2), integer(1));
+    c1 = Complex::from_two_nums(*r2, *r2);
+    c2 = Complex::from_two_nums(*r3, *r3);
+    assert(eq(divnum(c1, c2), div(integer(1), integer(2))));
+
+    r1 = Rational::from_two_ints(integer(1), integer(2));
+    r2 = Rational::from_two_ints(integer(3), integer(4));
+    c1 = Complex::from_two_nums(*r1, *r2);
+
+    r1 = Rational::from_two_ints(integer(5), integer(6));
+    r2 = Rational::from_two_ints(integer(7), integer(8));
+    c2 = Complex::from_two_nums(*r1, *r2);
+
+    r1 = Rational::from_two_ints(integer(618), integer(841));
+    r2 = Rational::from_two_ints(integer(108), integer(841));
+    c3 = Complex::from_two_nums(*r1, *r2);
+    assert(eq(divnum(c1, c2), c3));
+
+    r1 = Rational::from_two_ints(integer(-23), integer(96));
+    r2 = Rational::from_two_ints(integer(17), integer(16));
+    c3 = Complex::from_two_nums(*r1, *r2);
+    assert(eq(mulnum(c1, c2), c3));
+
+    r1 = Rational::from_two_ints(integer(4), integer(3));
+    r2 = Rational::from_two_ints(integer(13), integer(8));
+    c3 = Complex::from_two_nums(*r1, *r2);
+    assert(eq(addnum(c1, c2), c3));
+
+    r1 = Rational::from_two_ints(integer(-1), integer(3));
+    r2 = Rational::from_two_ints(integer(-1), integer(8));
+    c3 = Complex::from_two_nums(*r1, *r2);
+    assert(eq(subnum(c1, c2), c3));
+
+    // Explicit division by zero checks
+    CSYMPY_CHECK_THROW(divnum(c1, integer(0)), std::runtime_error);
+
+    r3 = Rational::from_two_ints(integer(0), integer(1));
+    CSYMPY_CHECK_THROW(divnum(c1, r3), std::runtime_error);
+
+    c2 = Complex::from_two_nums(*r3, *r3);
+    CSYMPY_CHECK_THROW(divnum(c1, c2), std::runtime_error);
+}
+
 int main(int argc, char* argv[])
 {
     print_stack_on_segfault();
@@ -434,6 +566,8 @@ int main(int argc, char* argv[])
     test_diff();
 
     test_compare();
+
+    test_complex();
 
     return 0;
 }

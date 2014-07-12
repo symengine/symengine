@@ -221,14 +221,6 @@ public:
     };
 };
 
-//! \return true if 'b' is a Number or any of its subclasses
-inline bool is_a_Number(const Basic &b)
-{
-    // Currently we enumerate all the subclasses explicitly, from the most
-    // frequent (on the left) to the least frequent (on the right):
-    return is_a<Integer>(b) || is_a<Rational>(b);
-}
-
 //! returns the `num` and `den` of rational `rat` as `rcp Integer`
 void get_num_den(const RCP<const Rational> &rat,
         const Ptr<RCP<const Integer>> &num,

@@ -4,7 +4,7 @@
 #include "symbol.h"
 #include "mul.h"
 #include "pow.h"
-#include "rational.h"
+#include "complex.h"
 #include "functions.h"
 
 

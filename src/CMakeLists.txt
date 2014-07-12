@@ -13,6 +13,7 @@ set(SRC
     number.cpp
     integer.cpp
     rational.cpp
+    complex.cpp
     add.cpp
     mul.cpp
     pow.cpp
@@ -29,7 +30,7 @@ set(HEADERS
     add.h        csympy_assert.h  functions.h  monomials.h  number.h    rings.h
     basic.h      csympy_rcp.h     integer.h    mul.h        pow.h
     symbol.h
-    basic-inl.h  dict.h           matrix.h     ntheory.h    rational.h
+    basic-inl.h  dict.h           matrix.h     ntheory.h    rational.h complex.h
 )
 
 # Configure CSymPy using our CMake options:
