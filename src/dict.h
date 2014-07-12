@@ -54,6 +54,8 @@ bool umap_basic_basic_eq(const umap_basic_basic &a,
         const umap_basic_basic &b);
 //! \return true if the two vectors `a` and `b` are equal. Otherwise false.
 bool vec_basic_eq(const vec_basic &a, const vec_basic &b);
+//! \return true if the two vectors `a` and `b` are equal up to a permutation. Otherwise false.
+bool vec_basic_eq_perm(const vec_basic &a, const vec_basic &b);
 
 
 //! \return -1, 0, 1 for a < b, a == b, a > b
