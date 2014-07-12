@@ -163,10 +163,19 @@ RCP<const Basic> Add::from_dict(const RCP<const Number> &coef, umap_basic_num &&
                 return p->first;
             }
             if (is_a<Mul>(*(p->first))) {
-                // We need to copy the dictionary:
-                map_basic_basic d2 =
-                    rcp_static_cast<const Mul>(p->first)->dict_;
-                return Mul::from_dict(p->second, std::move(d2));
+                if (rcp_static_cast<const Mul>(p->first)->refcount_ == 1) {
+                    // We can steal the dictionary:
+                    const map_basic_basic &d2 =
+                        rcp_static_cast<const Mul>(p->first)->dict_;
+                    map_basic_basic &d3 = const_cast<map_basic_basic &>(d2);
+                    return Mul::from_dict(p->second, std::move(d3));
+                } else {
+                    // We need to copy the dictionary:
+                    const map_basic_basic &d2 =
+                        rcp_static_cast<const Mul>(p->first)->dict_;
+                    map_basic_basic d3 = d2;
+                    return Mul::from_dict(p->second, std::move(d3));
+                }
             }
             map_basic_basic m;
             if (is_a<Pow>(*(p->first))) {
