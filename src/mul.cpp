@@ -497,4 +497,13 @@ RCP<const Basic> Mul::subs(const map_basic_basic &subs_dict) const
     return Mul::from_dict(coef, std::move(d));
 }
 
+vec_basic Mul::get_args() const {
+    vec_basic args;
+    if (!coef_->is_one()) args.push_back(coef_);
+    for (auto &p: dict_) {
+        args.push_back(Mul::from_dict(one, {{p.first, p.second}}));
+    }
+    return args;
+}
+
 } // CSymPy

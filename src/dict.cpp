@@ -204,9 +204,30 @@ bool vec_basic_eq(const vec_basic &a, const vec_basic &b)
     // Can't be equal if # of entries differ:
     if (a.size() != b.size()) return false;
     // Loop over elements in "a" and "b":
-    for (size_t i=0; i < a.size(); i++) {
+    for (size_t i = 0; i < a.size(); i++) {
         if (neq(a[i], b[i])) return false; // values not equal
     }
+    return true;
+}
+
+bool vec_basic_eq_perm(const vec_basic &a, const vec_basic &b)
+{
+    // Can't be equal if # of entries differ:
+    if (a.size() != b.size()) return false;
+    // Loop over elements in "a"
+    for (size_t i = 0; i < a.size(); i++) {
+        // Find the element a[i] in "b"
+        bool found = false;
+        for (size_t j = 0; j < a.size(); j++) {
+            if (eq(a[i], b[j])) {
+                found = true;
+                break;
+            }
+        }
+        // If not found, then a != b
+        if (!found) return false;
+    }
+    // If all elements were found, then a == b
     return true;
 }
 

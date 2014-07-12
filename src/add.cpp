@@ -386,4 +386,13 @@ RCP<const Basic> Add::subs(const map_basic_basic &subs_dict) const
     return Add::from_dict(coef, std::move(d));
 }
 
+vec_basic Add::get_args() const {
+    vec_basic args;
+    if (!coef_->is_zero()) args.push_back(coef_);
+    for (auto &p: dict_) {
+        args.push_back(Add::from_dict(zero, {{p.first, p.second}}));
+    }
+    return args;
+}
+
 } // CSymPy

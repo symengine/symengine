@@ -110,3 +110,12 @@ def test_expand3():
     x = Symbol("x")
     y = Symbol("y")
     assert ((1/(x*y) - x*y+2)*(1+x*y)).expand() == 3 + 1/(x*y) + x*y - (x*y)**2
+
+def test_args():
+    x = Symbol("x")
+    y = Symbol("y")
+    assert (x**2).args == (x, 2)
+    assert (x**2 + 5).args == (5, x**2)
+    #assert set((x**2 + 2*x*y + 5).args) == set((x**2, 2*x*y, 5))
+    assert (2*x**2).args == (2, x**2)
+    assert set((2*x**2*y).args) == set((2, x**2, y))

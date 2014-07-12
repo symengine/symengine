@@ -152,6 +152,9 @@ public:
     virtual RCP<const Basic> expand_as_exp() const {
         throw std::runtime_error("Not implemented.");
     }
+
+    //! Returns the list of arguments
+    virtual vec_basic get_args() const = 0;
 };
 
 //! Our hash:

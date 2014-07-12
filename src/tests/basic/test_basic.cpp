@@ -99,6 +99,12 @@ void test_add()
     r = add(add(x, x), y);
     std::cout << *r << std::endl;
     std::cout << "----------------------" << std::endl;
+
+    assert(vec_basic_eq_perm(r->get_args(), {mul(integer(2), x), y}));
+    assert(!vec_basic_eq_perm(r->get_args(), {mul(integer(3), x), y}));
+
+    r = add(mul(integer(5), x), integer(5));
+    assert(vec_basic_eq_perm(r->get_args(), {mul(integer(5), x), integer(5)}));
 }
 
 void test_integer()
@@ -260,6 +266,25 @@ void test_mul()
 
     RCP<const Basic> r = mul(mul(x, y), mul(y, x));
     std::cout << *r << std::endl;
+
+    assert(vec_basic_eq_perm(r->get_args(),
+                {pow(x, integer(2)), pow(y, integer(2))}));
+
+    r = mul(mul(pow(x, integer(3)), integer(2)), y);
+    assert(vec_basic_eq_perm(r->get_args(),
+                {integer(2), pow(x, integer(3)), y}));
+
+    r = add(x, x);
+    assert(vec_basic_eq_perm(r->get_args(), {x, integer(2)}));
+
+    r = sub(x, x);
+    assert(vec_basic_eq(r->get_args(), {}));
+
+    r = mul(x, x);
+    assert(vec_basic_eq(r->get_args(), {x, integer(2)}));
+
+    r = div(x, x);
+    assert(vec_basic_eq(r->get_args(), {}));
 }
 
 void test_diff()
