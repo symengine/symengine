@@ -35,6 +35,8 @@ public:
     virtual RCP<const Number> pow(const Number &other) const = 0;
     //! Differentiation w.r.t Symbol `x`
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
+
+    virtual vec_basic get_args() const { return {}; }
 };
 //! Add `self` and `other`
 inline RCP<const Number> addnum(const RCP<const Number> &self,

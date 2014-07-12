@@ -669,6 +669,7 @@ void test_Derivative()
     assert(eq(r1, r2));
     assert(neq(r1, r3));
     assert(neq(r2, r3));
+    assert(vec_basic_eq(r1->get_args(), {f, x}));
 
     std::cout << *r1 << std::endl;
     std::cout << *r2 << std::endl;
@@ -682,6 +683,7 @@ void test_Derivative()
     assert(eq(r1, r2));
     std::cout << *r1 << std::endl;
     assert(r1->__str__() == "Derivative(f(x), x, x)");
+    assert(vec_basic_eq(r1->get_args(), {f, x, x}));
 
     f = function_symbol("f", pow(x, integer(2)));
     r1 = f->diff(x);
@@ -697,6 +699,9 @@ void test_Derivative()
     assert(r4->is_canonical(x, {y}));
     assert(r4->is_canonical(x, {x, y, x, x}));
     assert(!(r4->is_canonical(x, {pow(x, integer(2))})));
+
+    r1 = rcp(new Derivative(pow(x, integer(2)), {x, x, y}));
+    assert(vec_basic_eq(r1->get_args(), {pow(x, integer(2)), x, x, y}));
 }
 
 void test_get_pi_shift()
@@ -1182,6 +1187,9 @@ void test_atan2()
     r1 = atan2(y, x)->diff(y);
     r2 = div(x, add(pow(x, i2), pow(y, i2)));
     assert(eq(r1, r2));
+
+    r1 = atan2(y, x);
+    assert(vec_basic_eq(r1->get_args(), {y, x}));
 }
 
 void test_lambertw()

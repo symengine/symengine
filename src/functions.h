@@ -28,9 +28,8 @@ public:
     //! \return Size of the hash
     virtual std::size_t __hash__() const;
     //! \return `arg_`
-    inline RCP<const Basic> get_arg() const {
-        return arg_;
-    }
+    inline RCP<const Basic> get_arg() const { return arg_; }
+    virtual vec_basic get_args() const { return {arg_}; }
     //! Method to construct classes with canonicalization
     virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
     //! Substitute with `subs_dict`
@@ -383,6 +382,8 @@ public:
     }
     //! Differentiate w.r.t Symbol `x`
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
+
+    virtual vec_basic get_args() const { return {num_, den_}; }
 };
 
 //! Canonicalize ATan2:
@@ -412,9 +413,8 @@ public:
     //! \return stringify version
     virtual std::string __str__() const;
     //! \return `arg_`
-    inline RCP<const Basic> get_arg() const {
-        return arg_;
-    }
+    inline RCP<const Basic> get_arg() const { return arg_; }
+    virtual vec_basic get_args() const { return {arg_}; }
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &arg);
     //! Differentiate w.r.t Symbol `x`
@@ -443,13 +443,10 @@ public:
     //! \return stringify version
     virtual std::string __str__() const;
     //! \return `name_`
-    inline std::string get_name() const {
-        return name_;
-    }
+    inline std::string get_name() const { return name_; }
     //! \return `arg_`
-    inline RCP<const Basic> get_arg() const {
-        return arg_;
-    }
+    inline RCP<const Basic> get_arg() const { return arg_; }
+    virtual vec_basic get_args() const { return {arg_}; }
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &arg);
     //! Differentiate w.r.t Symbol `x`
@@ -490,6 +487,11 @@ public:
     inline vec_basic get_symbols() const {
         return x_;
     }
+    virtual vec_basic get_args() const {
+        vec_basic args = {arg_};
+        args.insert(args.end(), x_.begin(), x_.end());
+        return args;
+    }
     bool is_canonical(const RCP<const Basic> &arg, const vec_basic &x) const;
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
 };
@@ -505,9 +507,8 @@ public:
     //! \return Size of the hash
     virtual std::size_t __hash__() const;
     //! \return `arg_`
-    inline RCP<const Basic> get_arg() const {
-        return arg_;
-    }
+    inline RCP<const Basic> get_arg() const { return arg_; }
+    virtual vec_basic get_args() const { return {arg_}; }
     //! Method to construct classes with canonicalization
     virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
     //! Substitute with `subs_dict`

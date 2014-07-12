@@ -40,6 +40,8 @@ public:
     //! Differentiate w.r.t Symbol `x`
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
     virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
+
+    virtual vec_basic get_args() const;
 };
 
 //! \return Pow from `a` and `b`
@@ -81,6 +83,7 @@ public:
     bool is_canonical(const RCP<const Basic> &arg);
     //! \return `arg` of `log(arg)`
     inline RCP<const Basic> get_arg() const { return arg_; }
+    virtual vec_basic get_args() const { return {arg_}; }
     //! Differentiate w.r.t Symbol `x`
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
 };

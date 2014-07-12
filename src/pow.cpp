@@ -361,6 +361,10 @@ RCP<const Basic> Pow::subs(const map_basic_basic &subs_dict) const
         return pow(base_new, exp_new);
 }
 
+vec_basic Pow::get_args() const {
+    return {base_, exp_};
+}
+
 RCP<const Basic> exp(const RCP<const Basic> &x)
 {
     return pow(E, x);

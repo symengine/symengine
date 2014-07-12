@@ -58,6 +58,8 @@ public:
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
     //! Substitutes the dict
     virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
+
+    virtual vec_basic get_args() const;
 };
 
 //! \return Add made from `a + b`
