@@ -8,6 +8,7 @@
 #include "rational.h"
 #include "complex.h"
 #include "add.h"
+#include "matrix.h"
 
 using CSymPy::RCP;
 using CSymPy::Basic;
@@ -23,6 +24,7 @@ using CSymPy::Number;
 using CSymPy::add;
 using CSymPy::Symbol;
 using CSymPy::Integer;
+using CSymPy::DenseMatrix;
 
 void test_printing()
 {
@@ -76,11 +78,20 @@ void test_printing()
 
 }
 
+void test_matrix()
+{
+    DenseMatrix A = DenseMatrix(2, 2, {integer(1), integer(0), integer(0),
+        integer(1)});
+    assert(A.__str__() == "[1, 0]\n[0, 1]\n");
+}
+
 int main(int argc, char* argv[])
 {
     print_stack_on_segfault();
 
     test_printing();
+
+    test_matrix();
 
     return 0;
 }
