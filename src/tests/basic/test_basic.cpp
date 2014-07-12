@@ -105,6 +105,11 @@ void test_add()
 
     r = add(mul(integer(5), x), integer(5));
     assert(vec_basic_eq_perm(r->get_args(), {mul(integer(5), x), integer(5)}));
+
+    r = add(add(mul(mul(integer(2), x), y), integer(5)), pow(x, integer(2)));
+    assert(vec_basic_eq_perm(r->get_args(),
+                {integer(5), mul(mul(integer(2), x), y), pow(x, integer(2))}));
+    std::cout << *r << std::endl;
 }
 
 void test_integer()
