@@ -180,10 +180,9 @@ RCP<const Basic> Add::from_dict(const RCP<const Number> &coef, umap_basic_num &&
                 {
 #endif
                     // We need to copy the dictionary:
-                    const map_basic_basic &d2 =
+                    map_basic_basic d2 =
                         rcp_static_cast<const Mul>(p->first)->dict_;
-                    map_basic_basic d3 = d2;
-                    return Mul::from_dict(p->second, std::move(d3));
+                    return Mul::from_dict(p->second, std::move(d2));
                 }
             }
             map_basic_basic m;
