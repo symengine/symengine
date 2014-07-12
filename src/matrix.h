@@ -20,10 +20,15 @@ public:
     // Get the # of rows and # of columns
     unsigned nrows() const { return row_; }
     unsigned ncols() const { return col_; }
+    virtual bool eq(const MatrixBase &other) const;
 
     // Get and set elements
     virtual RCP<const Basic>get(unsigned i) const = 0;
     virtual void set(unsigned i, RCP<const Basic> &e) = 0;
+
+    // Print Matrix, very mundane version, should be overriden derived
+    // class if better printing is available
+    virtual std::string __str__() const;
 
     virtual unsigned rank() const = 0;
     virtual RCP<const Basic> det() const = 0;
@@ -69,6 +74,8 @@ public:
 
     // Matrix multiplication
     virtual MatrixBase& mul_matrix(const MatrixBase &other) const;
+
+    // Friend functions related to Matrix Operations
     friend void mul_dense_dense(const DenseMatrix &A, const DenseMatrix &B,
         DenseMatrix &C);
     friend void mul_dense_scalar(const DenseMatrix &A, RCP<const Basic> &k,
@@ -99,31 +106,31 @@ public:
     friend unsigned pivot(DenseMatrix &B, unsigned r, unsigned c);
 
     // Ax = b
-    friend void augment_dense(const DenseMatrix &A, const DenseMatrix &b,
-        DenseMatrix &C);
     friend void diagonal_solve(const DenseMatrix &A, const DenseMatrix &b,
         DenseMatrix &x);
     friend void back_substitution(const DenseMatrix &U, const DenseMatrix &b,
         DenseMatrix &x);
+    friend void forward_substitution(const DenseMatrix &A,
+        const DenseMatrix &b, DenseMatrix &x);
     friend void fraction_free_gaussian_elimination_solve(const DenseMatrix &A,
         const DenseMatrix &b, DenseMatrix &x);
     friend void fraction_free_gauss_jordan_solve(const DenseMatrix &A,
         const DenseMatrix &b, DenseMatrix &x);
 
     // Matrix Decomposition
-    friend void fraction_free_LU(const DenseMatrix &A, DenseMatrix &L,
-        DenseMatrix &U);
+    friend void fraction_free_LU(const DenseMatrix &A, DenseMatrix &LU);
     friend void LU(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &U);
-    friend void fraction_free_LU(const DenseMatrix &A, DenseMatrix &L,
+    friend void fraction_free_LDU(const DenseMatrix &A, DenseMatrix &L,
         DenseMatrix &D, DenseMatrix &U);
     friend void QR(const DenseMatrix &A, DenseMatrix &Q, DenseMatrix &R);
     friend void LDL(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &D);
     friend void cholesky(const DenseMatrix &A, DenseMatrix &L);
 
+    // Matrix queries
+    friend bool is_symmetric_dense(const DenseMatrix &A);
+
     // Determinant
     friend RCP<const Basic> det_bareis(const DenseMatrix &A);
-    friend RCP<const Basic> det_berkowitz(const DenseMatrix &A);
-
     friend void berkowitz(const DenseMatrix &A, std::vector<DenseMatrix> &polys);
 
 protected:
@@ -166,21 +173,29 @@ protected:
     std::map<int, RCP<Basic>> m_;
 };
 
-// ------------------------ Common functions ---------------------------------//
+void fraction_free_LU_solve(const DenseMatrix &A, const DenseMatrix &b,
+    DenseMatrix &x);
 
-// Test two matrices for equality
-inline bool operator==(const MatrixBase &lhs, const MatrixBase &rhs)
-{
-    if (lhs.nrows() != rhs.nrows() || lhs.ncols() != rhs.ncols())
-        return false;
+void LU_solve(const DenseMatrix &A, const DenseMatrix &b, DenseMatrix &x);
 
-    for (unsigned i = 0; i < lhs.nrows()*lhs.ncols(); i++)
-        if(neq(lhs.get(i), rhs.get(i)))
-            return false;
+void LDL_solve(const DenseMatrix &A, const DenseMatrix &b, DenseMatrix &x);
 
-    return true;
-}
+// Determinant
+RCP<const Basic> det_berkowitz(const DenseMatrix &A);
 
 } // CSymPy
+
+// Test two matrices for equality
+inline bool operator==(const CSymPy::MatrixBase &lhs,
+    const CSymPy::MatrixBase &rhs)
+{
+    return lhs.eq(rhs);
+}
+
+// Print Matrix
+inline std::ostream& operator<<(std::ostream& out, const CSymPy::MatrixBase& A)
+{
+    return out << A.__str__();
+}
 
 #endif

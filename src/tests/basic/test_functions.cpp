@@ -734,17 +734,17 @@ void test_get_pi_shift()
     b = get_pi_shift(r, outArg(n), outArg(r1));
     assert(eq(n, i8) && (b == true) && eq(r1, zero));
 
-	// arg neq n*pi/12 , n not an integer
+    // arg neq n*pi/12 , n not an integer
     r = mul(pi, div(i2, integer(5)));
     b = get_pi_shift(r, outArg(n), outArg(r1));
     assert(b == false);
 
-	// arg neq theta + n*pi/12 (no pi symbol, pi as pow)
+    // arg neq theta + n*pi/12 (no pi symbol, pi as pow)
     r = mul(pow(pi, i2), div(i2, integer(3)));
     b = get_pi_shift(r, outArg(n), outArg(r1));
     assert(b == false);
 
-	// arg neq theta + n*pi/12 (no pi symbol, pi as mul form)
+    // arg neq theta + n*pi/12 (no pi symbol, pi as mul form)
     r = mul(mul(pi, x), div(i2, integer(3)));
     b = get_pi_shift(r, outArg(n), outArg(r1));
     assert(b == false);
@@ -775,7 +775,7 @@ void test_get_pi_shift()
     b = get_pi_shift(r, outArg(n), outArg(r1));
     assert(b == false);
 
-	// arg neq n*pi/12 (pi is not in form of symbol)
+    // arg neq n*pi/12 (pi is not in form of symbol)
     r = mul(pow(pi, i2), div(i2, integer(3)));
     b = get_pi_shift(r, outArg(n), outArg(r1));
     assert(b == false);

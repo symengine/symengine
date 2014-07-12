@@ -3,6 +3,7 @@
 #include "add.h"
 #include "integer.h"
 #include "rational.h"
+#include "complex.h"
 #include "mul.h"
 #include "pow.h"
 

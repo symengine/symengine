@@ -418,21 +418,6 @@ unsigned pivot(DenseMatrix &B, unsigned r, unsigned c)
 }
 
 // --------------------------- Solve Ax = b  ---------------------------------//
-void augment_dense(const DenseMatrix &A, const DenseMatrix &b, DenseMatrix &C)
-{
-    CSYMPY_ASSERT(A.row_ == b.row_ && A.row_ == C.row_);
-    CSYMPY_ASSERT(C.col_ == A.col_ + b.col_);
-
-    unsigned col = A.col_ + b.col_;
-
-    for (unsigned i = 0; i < A.row_; i++) {
-        for (unsigned j = 0; j < A.col_; j++)
-            C.m_[i*col + j] = A.m_[i*A.col_ + j];
-        for (unsigned j = 0; j < b.col_; j++)
-            C.m_[i*col + A.col_ + j] = b.m_[i*b.col_ + j];
-    }
-}
-
 // Assuming A is a diagonal square matrix
 void diagonal_solve(const DenseMatrix &A, const DenseMatrix &b, DenseMatrix &x)
 {
@@ -442,10 +427,9 @@ void diagonal_solve(const DenseMatrix &A, const DenseMatrix &b, DenseMatrix &x)
 
     // No checks are done to see if the diagonal entries are zero
     for (unsigned i = 0; i < A.col_; i++)
-        x.m_[i] = div(b.m_[i], A.m_[i]);
+        x.m_[i] = div(b.m_[i], A.m_[i*A.col_ + i]);
 }
 
-// Assuming U is an Upper square matrix
 void back_substitution(const DenseMatrix &U, const DenseMatrix &b,
     DenseMatrix &x)
 {
@@ -453,18 +437,33 @@ void back_substitution(const DenseMatrix &U, const DenseMatrix &b,
     CSYMPY_ASSERT(b.row_ == U.row_ && b.col_ == 1);
     CSYMPY_ASSERT(x.row_ == U.col_ && x.col_ == 1);
 
-    int i, j, col = U.col_;
+    unsigned col = U.col_;
+    x.m_ = b.m_;
 
-    DenseMatrix b_ = DenseMatrix(b.row_, 1, b.m_);
-
-    for (i = 0; i < col; i++)
-        x.m_[i] = zero; // Integer zero;
-
-    for (i = col - 1; i >= 0; i--) {
-        for (j = i + 1; j < col; j++)
-            b_.m_[i] = sub(b_.m_[i], mul(U.m_[i*col + j], x.m_[j]));
-        x.m_[i] = div(b_.m_[i], U.m_[i*col + i]);
+    for (int i = col - 1; i >= 0; i--) {
+        for (unsigned j = i + 1; j < col; j++)
+            x.m_[i] = sub(x.m_[i], mul(U.m_[i*col + j], x.m_[j]));
+        x.m_[i] = div(x.m_[i], U.m_[i*col + i]);
     }
+}
+
+void forward_substitution(const DenseMatrix &A, const DenseMatrix &b,
+    DenseMatrix &x)
+{
+    CSYMPY_ASSERT(A.row_ == A.col_);
+    CSYMPY_ASSERT(b.row_ == A.row_ && b.col_ == 1);
+    CSYMPY_ASSERT(x.row_ == A.col_ && x.col_ == 1);
+
+    unsigned col = A.col_;
+    x.m_ = b.m_;
+
+    for (unsigned i = 0; i < col - 1; i++)
+        for (unsigned j = i + 1; j < col; j++) {
+            x.m_[j] = sub(mul(A.m_[i*col + i], x.m_[j]),
+                mul(A.m_[j*col + i], x.m_[i]));
+            if (i > 0)
+                x.m_[j] = div(x.m_[j], A.m_[i*col - col + i - 1]);
+        }
 }
 
 void fraction_free_gaussian_elimination_solve(const DenseMatrix &A,
@@ -489,7 +488,8 @@ void fraction_free_gaussian_elimination_solve(const DenseMatrix &A,
                 A_.m_[j*col + k] = sub(mul(A_.m_[i*col + i], A_.m_[j*col + k]),
                     mul(A_.m_[j*col + i], A_.m_[i*col + k]));
                 if (i> 0)
-                    A_.m_[j*col + k] = div(A_.m_[j*col + k], A_.m_[i*col - col + i - 1]);
+                    A_.m_[j*col + k] =
+                        div(A_.m_[j*col + k], A_.m_[i*col - col + i - 1]);
             }
             A_.m_[j*col + i] = zero;
         }
@@ -528,8 +528,9 @@ void fraction_free_gauss_jordan_solve(const DenseMatrix &A, const DenseMatrix &b
 
                 for (unsigned k = 0; k < col; k++) {
                     if (k != i) {
-                        A_.m_[j*col + k] = sub(mul(A_.m_[i*col + i], A_.m_[j*col + k]),
-                            mul(A_.m_[j*col + i], A_.m_[i*col + k]));
+                        A_.m_[j*col + k] =
+                            sub(mul(A_.m_[i*col + i], A_.m_[j*col + k]),
+                                    mul(A_.m_[j*col + i], A_.m_[i*col + k]));
                         if (i > 0)
                             A_.m_[j*col + k] = div(A_.m_[j*col + k], d);
                     }
@@ -546,41 +547,69 @@ void fraction_free_gauss_jordan_solve(const DenseMatrix &A, const DenseMatrix &b
         x.m_[i] = div(b_.m_[i], A_.m_[i*col + i]);
 }
 
+void fraction_free_LU_solve(const DenseMatrix &A, const DenseMatrix &b,
+    DenseMatrix &x)
+{
+    DenseMatrix LU = DenseMatrix(A.nrows(), A.ncols());
+    DenseMatrix x_ = DenseMatrix(b.nrows(), 1);
+
+    fraction_free_LU(A, LU);
+    forward_substitution(LU, b, x_);
+    back_substitution(LU, x_, x);
+}
+
+void LU_solve(const DenseMatrix &A, const DenseMatrix &b, DenseMatrix &x)
+{
+    DenseMatrix L = DenseMatrix(A.nrows(), A.ncols());
+    DenseMatrix U = DenseMatrix(A.nrows(), A.ncols());
+    DenseMatrix x_ = DenseMatrix(b.nrows(), 1);
+
+    LU(A, L, U);
+    forward_substitution(L, b, x_);
+    back_substitution(U, x_, x);
+}
+
+void LDL_solve(const DenseMatrix &A, const DenseMatrix &b, DenseMatrix &x)
+{
+    DenseMatrix L = DenseMatrix(A.nrows(), A.ncols());
+    DenseMatrix D = DenseMatrix(A.nrows(), A.ncols());
+    DenseMatrix x_ = DenseMatrix(b.nrows(), 1);
+
+    if (!is_symmetric_dense(A))
+        throw std::runtime_error("Matrix must be symmetric");
+
+    LDL(A, L, D);
+    forward_substitution(L, b, x);
+    diagonal_solve(D, x, x_);
+    transpose_dense(L, D);
+    back_substitution(D, x_, x);
+}
+
 // --------------------------- Matrix Decomposition --------------------------//
 
 // Algorithm 3, page 14, Nakos, G. C., Turner, P. R., Williams, R. M. (1997).
 // Fraction-free algorithms for linear and polynomial equations.
 // ACM SIGSAM Bulletin, 31(3), 11–19. doi:10.1145/271130.271133.
 // This algorithms is not a true factorization of the matrix A(i.e. A != LU))
-// but can be used to solve linear systems by forward/backward substitution.
-void fraction_free_LU(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &U)
+// but can be used to solve linear systems by applying forward and backward
+// substitutions respectively.
+void fraction_free_LU(const DenseMatrix &A, DenseMatrix &LU)
 {
-    CSYMPY_ASSERT(A.row_ == A.col_ && L.row_ == L.col_ && U.row_ == U.col_);
-    CSYMPY_ASSERT(A.row_ == L.row_ && A.row_ == U.row_);
+    CSYMPY_ASSERT(A.row_ == A.col_ && LU.row_ == LU.col_ && A.row_ == LU.row_);
 
     unsigned n = A.row_;
     unsigned i, j, k;
 
-    U.m_ = A.m_;
+    LU.m_ = A.m_;
 
     for (i = 0; i < n - 1; i++)
         for (j = i + 1; j < n; j++)
             for (k = i + 1; k < n; k++) {
-                U.m_[j*n + k] = sub(mul(U.m_[i*n + i], U.m_[j*n + k]),
-                    mul(U.m_[j*n + i], U.m_[i*n + k]));
+                LU.m_[j*n + k] = sub(mul(LU.m_[i*n + i], LU.m_[j*n + k]),
+                    mul(LU.m_[j*n + i], LU.m_[i*n + k]));
                 if (i)
-                    U.m_[j*n + k] = div(U.m_[j*n + k], U.m_[i*n - n + i - 1]);
+                    LU.m_[j*n + k] = div(LU.m_[j*n + k], LU.m_[i*n - n + i - 1]);
             }
-
-    for(i = 0; i < n; i++) {
-        for(j = 0; j < i; j++) {
-            L.m_[i*n + j] = U.m_[i*n + j];
-            U.m_[i*n + j] = zero;
-        }
-        L.m_[i*n + i] = U.m_[i*n + i];
-        for (j = i + 1; j < n; j++)
-            L.m_[i*n + j] = zero; // Integer Zero
-    }
 }
 
 // SymPy LUDecomposition algorithm, in sympy.matrices.matrices.Matrix.LUdecomposition
@@ -629,7 +658,7 @@ void LU(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &U)
 // sympy.matrices.matrices.MatrixBase.LUdecompositionFF
 // W. Zhou & D.J. Jeffrey, "Fraction-free matrix factors: new forms for LU and QR factors".
 // Frontiers in Computer Science in China, Vol 2, no. 1, pp. 67-80, 2008.
-void fraction_free_LU(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &D,
+void fraction_free_LDU(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &D,
         DenseMatrix &U)
 {
     CSYMPY_ASSERT(A.row_ == L.row_ && A.row_ == U.row_);
@@ -701,7 +730,6 @@ void QR(const DenseMatrix &A, DenseMatrix &Q, DenseMatrix &R)
             t = zero;
             for (k = 0; k < row; k++)
                 t = add(t, mul(A.m_[k*col + j], Q.m_[k*col + i]));
-            std::cout << "(" << j << "," << i << ") " << *t << std::endl;
             for (k = 0; k < row; k++)
                 tmp[k] = expand(sub(tmp[k], mul(Q.m_[k*col + i], t)));
         }
@@ -794,9 +822,27 @@ void cholesky(const DenseMatrix &A, DenseMatrix &L)
         sum = zero;
         for (k = 0; k < i; k++)
             sum = add(sum, pow(L.m_[i*col + k], i2));
-
         L.m_[i*col + i] = pow(sub(A.m_[i*col + i], sum), half);
     }
+}
+
+// Matrix Queries
+bool is_symmetric_dense(const DenseMatrix &A)
+{
+    if (A.col_ != A.row_)
+        return false;
+
+    unsigned col = A.col_;
+    bool sym = true;
+
+    for (unsigned i = 0; i < col; i++)
+        for (unsigned j = i + 1; j < col; j++)
+            if (!eq(A.m_[j*col + i], A.m_[i*col + j])) {
+                sym = false;
+                break;
+            }
+
+    return sym;
 }
 
 // ----------------------------- Determinant ---------------------------------//

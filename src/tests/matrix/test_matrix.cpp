@@ -530,17 +530,30 @@ void test_fraction_free_LU()
     DenseMatrix A = DenseMatrix(4, 4, {integer(1), integer(2), integer(3), integer(4),
         integer(2), integer(2), integer(3), integer(4), integer(3), integer(3),
         integer(3), integer(4), integer(9), integer(8), integer(7), integer(6)});
-    DenseMatrix L = DenseMatrix(4, 4);
+    DenseMatrix LU = DenseMatrix(4, 4);
     DenseMatrix U = DenseMatrix(4, 4);
-    fraction_free_LU(A, L, U);
+    fraction_free_LU(A, LU);
 
-    assert(L == DenseMatrix(4, 4, {integer(1), integer(0), integer(0), integer(0),
-        integer(2), integer(-2), integer(0), integer(0), integer(3), integer(-3),
-        integer(3), integer(0), integer(9), integer(-10), integer(10), integer(-10)}));
+    assert(LU == DenseMatrix(4, 4, {integer(1), integer(2), integer(3), integer(4),
+        integer(2), integer(-2), integer(-3), integer(-4), integer(3), integer(-3),
+        integer(3), integer(4), integer(9), integer(-10), integer(10), integer(-10)}));
 
-    assert(U == DenseMatrix(4, 4, {integer(1), integer(2), integer(3), integer(4),
-        integer(0), integer(-2), integer(-3), integer(-4), integer(0), integer(0),
-        integer(3), integer(4), integer(0), integer(0), integer(0), integer(-10)}));
+    DenseMatrix b = DenseMatrix(4, 1, {integer(10), integer(11), integer(13),
+        integer(30)});
+    DenseMatrix x = DenseMatrix(4, 1);
+
+    // To solve the system Ax = b, We call forward substitution algorithm with
+    // LU and b. Then we call backward substitution algorithm with with LU and
+    // modified b from forward substitution. This will find the solutions.
+    forward_substitution(LU, b, x);
+
+    assert(x == DenseMatrix(4, 1, {integer(10), integer(-9), integer(7),
+        integer(-10)}));
+
+    back_substitution(LU, x, b);
+
+    assert(b == DenseMatrix(4, 1, {integer(1), integer(1), integer(1),
+        integer(1)}));
 }
 
 void test_LU()
@@ -583,7 +596,7 @@ void test_LU()
     assert(A == B);
 }
 
-void test_fraction_free_LU_SymPy()
+void test_fraction_free_LDU()
 {
     DenseMatrix A = DenseMatrix(3, 3);
     DenseMatrix L = DenseMatrix(3, 3);
@@ -592,7 +605,7 @@ void test_fraction_free_LU_SymPy()
 
     A = DenseMatrix(3, 3, {integer(1), integer(2), integer(3), integer(5),
         integer(-3), integer(2), integer(6), integer(2), integer(1)});
-    fraction_free_LU(A, L, D, U);
+    fraction_free_LDU(A, L, D, U);
 
     assert(L == DenseMatrix(3, 3, {integer(1), integer(0), integer(0),
         integer(5), integer(-13), integer(0), integer(6), integer(-10), integer(1)}));
@@ -604,7 +617,7 @@ void test_fraction_free_LU_SymPy()
     A = DenseMatrix(3, 3, {integer(1), integer(2), mul(integer(3), symbol("a")),
         integer(5), mul(integer(-3), symbol("a")), mul(integer(2), symbol("a")),
         mul(integer(6), symbol("a")), mul(integer(2), symbol("b")), integer(1)});
-    fraction_free_LU(A, L, D, U);
+    fraction_free_LDU(A, L, D, U);
 
     assert(L == DenseMatrix(3, 3, {integer(1), integer(0), integer(0), integer(5),
         sub(mul(integer(-3), symbol("a")), integer(10)), integer(0),
@@ -627,7 +640,7 @@ void test_fraction_free_LU_SymPy()
 
     A = DenseMatrix(3, 3, {integer(5), integer(3), integer(1), integer(-1),
         integer(4), integer(6), integer(-10), integer(-2), integer(9)});
-    fraction_free_LU(A, L, D, U);
+    fraction_free_LDU(A, L, D, U);
 
     assert(L == DenseMatrix(3, 3, {integer(5), integer(0), integer(0), integer(-1),
         integer(23), integer(0), integer(-10), integer(20), integer(1)}));
@@ -804,6 +817,53 @@ void test_berkowitz()
     assert(polys[0] == DenseMatrix(2, 1, {integer(1), integer(-1)}));
 }
 
+void test_solve_functions()
+{
+    DenseMatrix A = DenseMatrix(4, 4, {integer(1), integer(2), integer(3), integer(4),
+        integer(2), integer(2), integer(3), integer(4), integer(3), integer(3),
+        integer(3), integer(4), integer(9), integer(8), integer(7), integer(6)});
+    DenseMatrix b = DenseMatrix(4, 1, {integer(10), integer(11), integer(13),
+        integer(30)});
+    DenseMatrix x = DenseMatrix(4, 1);
+
+    fraction_free_LU_solve(A, b, x);
+
+    assert(x == DenseMatrix(4, 1, {integer(1), integer(1), integer(1),
+        integer(1)}));
+
+    x = DenseMatrix(4, 1);
+    LU_solve(A, b, x);
+
+    assert(x == DenseMatrix(4, 1, {integer(1), integer(1), integer(1),
+        integer(1)}));
+
+    A = DenseMatrix(2, 2, {integer(5), integer(-4), integer(8), integer(1)});
+    b = DenseMatrix(2, 1, {integer(7), integer(26)});
+    x = DenseMatrix(2, 1);
+    fraction_free_LU_solve(A, b, x);
+
+    assert(x == DenseMatrix(2, 1, {integer(3), integer(2)}));
+
+    x = DenseMatrix(2, 1);
+    LU_solve(A, b, x);
+
+    assert(x == DenseMatrix(2, 1, {integer(3), integer(2)}));
+
+    A = DenseMatrix(2, 2, {integer(5), integer(-4), integer(-4), integer(7)});
+    b = DenseMatrix(2, 1, {integer(24), integer(-23)});
+    x = DenseMatrix(2, 1);
+    LDL_solve(A, b, x);
+
+    assert(x == DenseMatrix(2, 1, {integer(4), integer(-1)}));
+
+    A = DenseMatrix(2, 2, {integer(19), integer(-5), integer(-5), integer(1)});
+    b = DenseMatrix(2, 1, {integer(3), integer(-3)});
+    x = DenseMatrix(2, 1);
+    LDL_solve(A, b, x);
+
+    assert(x == DenseMatrix(2, 1, {integer(2), integer(7)}));
+}
+
 int main(int argc, char* argv[])
 {
     print_stack_on_segfault();
@@ -840,7 +900,7 @@ int main(int argc, char* argv[])
 
     test_LU();
 
-    test_fraction_free_LU_SymPy();
+    test_fraction_free_LDU();
 
     // test_QR();
 
@@ -851,6 +911,8 @@ int main(int argc, char* argv[])
     test_determinant();
 
     test_berkowitz();
+
+    test_solve_functions();
 
     return 0;
 }
