@@ -104,4 +104,8 @@ RCP<const Number> Complex::from_two_nums(const Number &re,
     }
 }
 
+// Initialize the special symbol declared in
+// complex.h:
+RCP<const Number> I = Complex::from_two_nums(*zero, *one);
+
 } // CSymPy

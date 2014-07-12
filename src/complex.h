@@ -277,6 +277,11 @@ inline bool is_a_Number(const Basic &b)
     // frequent (on the left) to the least frequent (on the right):
     return is_a<Integer>(b) || is_a<Rational>(b) || is_a<Complex>(b);
 }
+
+// `I` is created only once in complex.cpp and reused
+// everywhere (faster than creating it all the time):
+extern RCP<const Number> I;
+
 } // CSymPy
 
 #endif
