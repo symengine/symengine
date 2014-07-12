@@ -163,13 +163,22 @@ RCP<const Basic> Add::from_dict(const RCP<const Number> &coef, umap_basic_num &&
                 return p->first;
             }
             if (is_a<Mul>(*(p->first))) {
+#if !defined(WITH_CSYMPY_THREAD_SAFE)
                 if (rcp_static_cast<const Mul>(p->first)->refcount_ == 1) {
                     // We can steal the dictionary:
+                    // Cast away const'ness, so that we can move 'dict_', since
+                    // 'p->first' will be destroyed when 'd' is at the end of
+                    // this function, so we "steal" its dict_ to avoid an
+                    // unnecessary copy. We know the refcount_ is one, so
+                    // nobody else is using the Mul except us.
                     const map_basic_basic &d2 =
                         rcp_static_cast<const Mul>(p->first)->dict_;
                     map_basic_basic &d3 = const_cast<map_basic_basic &>(d2);
                     return Mul::from_dict(p->second, std::move(d3));
                 } else {
+#else
+                {
+#endif
                     // We need to copy the dictionary:
                     const map_basic_basic &d2 =
                         rcp_static_cast<const Mul>(p->first)->dict_;
