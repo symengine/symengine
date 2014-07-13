@@ -996,4 +996,40 @@ RCP<const Basic> det_berkowitz(const DenseMatrix &A)
     return poly.get(poly.nrows() - 1);
 }
 
+void inverse_fraction_free_LU(const DenseMatrix &A, DenseMatrix &B)
+{
+    CSYMPY_ASSERT(A.row_ == A.col_ && B.row_ == B.col_ && B.row_ == A.row_);
+
+    unsigned n = A.row_, i;
+    DenseMatrix LU = DenseMatrix(n, n);
+    DenseMatrix e = DenseMatrix(n, 1);
+    DenseMatrix x = DenseMatrix(n, 1);
+    DenseMatrix x_ = DenseMatrix(n, 1);
+
+    // Initialize matrices
+    for (i = 0; i < n*n; i++) {
+        LU.m_[i] = zero;
+        B.m_[i] = zero;
+    }
+    for (i = 0; i < n; i++) {
+        e.m_[i] = zero;
+        x.m_[i] = zero;
+        x_.m_[i] = zero;
+    }
+
+    fraction_free_LU(A, LU);
+
+    for (unsigned j = 0; j < n; j++) {
+        e.m_[j] = one;
+
+        forward_substitution(LU, e, x_);
+        back_substitution(LU, x_, x);
+
+        for (i = 0; i < n; i++)
+            B.m_[i*n + j] = x.m_[i];
+
+        e.m_[j] = zero;
+    }
+}
+
 } // CSymPy

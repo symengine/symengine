@@ -864,6 +864,41 @@ void test_solve_functions()
     assert(x == DenseMatrix(2, 1, {integer(2), integer(7)}));
 }
 
+void test_inverse()
+{
+    DenseMatrix A =
+        DenseMatrix(4, 4, {integer(1), integer(0), integer(0), integer(0),
+            integer(0), integer(1), integer(0), integer(0),
+            integer(0), integer(0), integer(1), integer(0),
+            integer(0), integer(0), integer(0), integer(1)});
+    DenseMatrix B = DenseMatrix(4, 4);
+
+    inverse_fraction_free_LU(A, B);
+    assert(A == B);
+
+    A = DenseMatrix(3, 3, {integer(2), integer(3), integer(5),
+        integer(3), integer(6), integer(2),
+        integer(8), integer(3), integer(6)});
+    B = DenseMatrix(3, 3);
+    DenseMatrix C = DenseMatrix(3, 3);
+
+    inverse_fraction_free_LU(A, B);
+    mul_dense_dense(A, B, C);
+    assert(C == DenseMatrix(3, 3, {integer(1), integer(0), integer(0),
+            integer(0), integer(1), integer(0),
+            integer(0), integer(0), integer(1)}));
+
+    A = DenseMatrix(3, 3, {integer(48), integer(49), integer(31),
+        integer(9), integer(71), integer(94),
+        integer(59), integer(28), integer(65)});
+
+    inverse_fraction_free_LU(A, B);
+    mul_dense_dense(A, B, C);
+    assert(C == DenseMatrix(3, 3, {integer(1), integer(0), integer(0),
+            integer(0), integer(1), integer(0),
+            integer(0), integer(0), integer(1)}));
+}
+
 int main(int argc, char* argv[])
 {
     print_stack_on_segfault();
@@ -913,6 +948,8 @@ int main(int argc, char* argv[])
     test_berkowitz();
 
     test_solve_functions();
+
+    test_inverse();
 
     return 0;
 }
