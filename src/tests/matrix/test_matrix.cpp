@@ -864,6 +864,42 @@ void test_solve_functions()
     assert(x == DenseMatrix(2, 1, {integer(2), integer(7)}));
 }
 
+void test_char_poly()
+{
+    RCP<const Basic> x = symbol("x");
+    RCP<const Basic> y = symbol("y");
+    RCP<const Basic> z = symbol("z");
+    RCP<const Basic> t = symbol("t");
+
+    DenseMatrix A = DenseMatrix(3, 3, {integer(1), integer(0), integer(0),
+        integer(0), integer(1), integer(0),
+        integer(0), integer(0), integer(1)});
+    DenseMatrix B = DenseMatrix(4, 1);
+    char_poly(A, B);
+
+    assert(B == DenseMatrix(4, 1, {integer(1), integer(-3), integer(3),
+        integer(-1)}));
+
+    A = DenseMatrix(2, 2, {integer(1), integer(3), integer(2), integer(0)});
+    B = DenseMatrix(3, 1);
+    char_poly(A, B);
+
+    assert(B == DenseMatrix(3, 1, {integer(1), integer(-1), integer(-6)}));
+
+    A = DenseMatrix(2, 2, {integer(2), integer(1), integer(-1), integer(0)});
+    B = DenseMatrix(3, 1);
+    char_poly(A, B);
+
+    assert(B == DenseMatrix(3, 1, {integer(1), integer(-2), integer(1)}));
+
+    A = DenseMatrix(2, 2, {x, y, z, t});
+    B = DenseMatrix(3, 1);
+    char_poly(A, B);
+
+    assert(B == DenseMatrix(3, 1, {integer(1), add(mul(integer(-1), t),
+        mul(integer(-1), x)), add(mul(integer(-1), mul(y, z)), mul(t, x))}));
+}
+
 int main(int argc, char* argv[])
 {
     print_stack_on_segfault();
@@ -913,6 +949,8 @@ int main(int argc, char* argv[])
     test_berkowitz();
 
     test_solve_functions();
+
+    test_char_poly();
 
     return 0;
 }

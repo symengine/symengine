@@ -996,4 +996,16 @@ RCP<const Basic> det_berkowitz(const DenseMatrix &A)
     return poly.get(poly.nrows() - 1);
 }
 
+// Characteristic polynomial
+void char_poly(const DenseMatrix &A, DenseMatrix &B)
+{
+    CSYMPY_ASSERT(B.ncols() == 1 && B.nrows() == A.nrows() + 1);
+    CSYMPY_ASSERT(A.nrows() == A.ncols());
+
+    std::vector<DenseMatrix> polys;
+
+    berkowitz(A, polys);
+    B = polys[polys.size() - 1];
+}
+
 } // CSymPy

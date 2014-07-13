@@ -173,6 +173,7 @@ protected:
     std::map<int, RCP<Basic>> m_;
 };
 
+// Solving Ax = b
 void fraction_free_LU_solve(const DenseMatrix &A, const DenseMatrix &b,
     DenseMatrix &x);
 
@@ -182,6 +183,12 @@ void LDL_solve(const DenseMatrix &A, const DenseMatrix &b, DenseMatrix &x);
 
 // Determinant
 RCP<const Basic> det_berkowitz(const DenseMatrix &A);
+
+// Characteristic polynomial
+void char_poly(const DenseMatrix &A, DenseMatrix &B);
+
+// Eigen values
+void eigen_values(const DenseMatrix &A, std::vector<RCP<const Basic>> &roots);
 
 } // CSymPy
 
