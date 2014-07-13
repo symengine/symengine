@@ -46,6 +46,16 @@ fi
 if [[ "${WITH_PRIMESIEVE}" != "" ]]; then
     cmake_line="$cmake_line -DWITH_PRIMESIEVE=${WITH_PRIMESIEVE}"
 fi
+if [[ "${PYTHON_INSTALL}" == "yes" ]]; then
+    git clean -dfx
+    python setup.py install
+    mkdir empty
+    cd empty
+    py.test --pyargs csympy
+    cd ..
+    exit 0
+fi
+
 cmake $cmake_line ${SOURCE_DIR}
 echo "Current directory:"
 pwd
