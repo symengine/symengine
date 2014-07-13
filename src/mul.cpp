@@ -33,7 +33,9 @@ bool Mul::is_canonical(const RCP<const Number> &coef,
         if (p.first == null) return false;
         if (p.second == null) return false;
         // e.g. 2^3, (2/3)^4
-        if (is_a_Number(*p.first) && is_a<Integer>(*p.second))
+        // However for Complex no simplification is done
+        if ((is_a<Integer>(*p.first) || is_a<Rational>(*p.first))
+            && is_a<Integer>(*p.second))
             return false;
         // e.g. 0^x
         if (is_a<Integer>(*p.first) &&
