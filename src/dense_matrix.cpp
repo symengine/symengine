@@ -845,4 +845,155 @@ bool is_symmetric_dense(const DenseMatrix &A)
     return sym;
 }
 
+// ----------------------------- Determinant ---------------------------------//
+RCP<const Basic> det_bareis(const DenseMatrix &A)
+{
+    CSYMPY_ASSERT(A.row_ == A.col_);
+
+    unsigned n = A.row_;
+
+    if (n == 1) {
+        return A.m_[0];
+    } else if(n == 2) {
+        // If A = [[a, b], [c, d]] then det(A) = ad - bc
+        return sub(mul(A.m_[0], A.m_[3]), mul(A.m_[1], A.m_[2]));
+    } else if (n == 3) {
+        // if A = [[a, b, c], [d, e, f], [g, h, i]] then
+        // det(A) = (aei + bfg + cdh) - (ceg + bdi + afh)
+        return  sub(
+                    add(
+                        add(
+                            mul(mul(A.m_[0], A.m_[4]), A.m_[8]),
+                            mul(mul(A.m_[1], A.m_[5]), A.m_[6])
+                        ),
+                        mul(mul(A.m_[2], A.m_[3]), A.m_[7])
+                    ),
+                    add(
+                        add(
+                            mul(mul(A.m_[2], A.m_[4]), A.m_[6]),
+                            mul(mul(A.m_[1], A.m_[3]), A.m_[8])
+                        ),
+                        mul(mul(A.m_[0], A.m_[5]), A.m_[7])
+                    )
+                );
+    } else {
+        DenseMatrix B = DenseMatrix(n, n, A.m_);
+        unsigned i, sign = 1;
+        RCP<const Basic> d;
+
+        for (unsigned k = 0; k < n - 1; k++) {
+            if (eq(B.m_[k*n + k], zero)) {
+                for (i = k + 1; i < n; i++)
+                    if (neq(B.m_[i*n + k], zero)) {
+                        row_exchange_dense(B, i, k);
+                        sign *= -1;
+                        break;
+                    }
+                if (i == n)
+                    return zero;
+            }
+
+            for (i = k + 1; i < n; i++) {
+                for (unsigned j = k + 1; j < n; j++) {
+                    d = sub(mul(B.m_[k*n + k], B.m_[i*n + j]),
+                            mul(B.m_[i*n + k], B.m_[k*n + j]));
+                    if (k > 0)
+                        d = div(d, B.m_[(k-1)*n + k - 1]);
+                    B.m_[i*n + j] = d;
+                }
+            }
+        }
+
+       return (sign == 1) ? B.m_[n*n - 1] : mul(minus_one, B.m_[n*n - 1]);
+    }
+}
+
+// Returns the coefficients of characterisitc polynomials of leading principal
+// minors of Matrix A as elements in `polys`. Principal leading minor of kth
+// order is the submatrix of A obtained by deleting last n-k rows and columns
+// from A. Here `n` is the dimension of the square matrix A.
+void berkowitz(const DenseMatrix &A, std::vector<DenseMatrix> &polys)
+{
+    CSYMPY_ASSERT(A.row_ == A.col_);
+
+    unsigned col = A.col_;
+    unsigned i, k, l, m;
+
+    std::vector<DenseMatrix> items;
+    std::vector<DenseMatrix> transforms;
+    std::vector<RCP<const Basic>> items_;
+
+    for (unsigned n = col; n > 1; n--) {
+        items.clear();
+        k = n - 1;
+        DenseMatrix T = DenseMatrix(n + 1, n);
+        DenseMatrix C = DenseMatrix(k, 1);
+
+        // Initialize T and C
+        for (i = 0; i < n*(n + 1); i++)
+            T.m_[i] = zero;
+        for (i = 0; i < k; i++)
+            C.m_[i] = A.m_[i*col + k];
+        items.push_back(C);
+
+        for (i = 0; i < n - 2; i++) {
+            DenseMatrix B = DenseMatrix(k, 1);
+            for (l = 0; l < k; l++) {
+                B.m_[l] = zero;
+                for (m = 0; m < k; m++)
+                    B.m_[l] = add(B.m_[l], mul(A.m_[l*col + m], items[i].m_[m]));
+            }
+            items.push_back(B);
+        }
+
+        items_.clear();
+        for (i = 0; i < n - 1; i++) {
+            RCP<const Basic> element = zero;
+            for (l = 0; l < k; l++)
+                element = add(element, mul(A.m_[k*col + l], items[i].m_[l]));
+            items_.push_back(mul(minus_one, element));
+        }
+        items_.insert(items_.begin(), mul(minus_one, A.m_[k*col + k]));
+        items_.insert(items_.begin(), one);
+
+        for (i = 0; i < n; i++) {
+            for (l = 0; l < n - i + 1; l++)
+                T.m_[(i + l)*n + i] = items_[l];
+        }
+
+        transforms.push_back(T);
+    }
+
+    polys.push_back(DenseMatrix(2, 1, {one, mul(A.m_[0], minus_one)}));
+
+    for(i = 0; i < col - 1; i++) {
+        unsigned t_row = transforms[col - 2 - i].nrows();
+        unsigned t_col = transforms[col - 2 - i].ncols();
+        DenseMatrix B = DenseMatrix(t_row, 1);
+
+        for (l = 0; l < t_row; l++) {
+            B.m_[l] = zero;
+            for (m = 0; m < t_col; m++) {
+                B.m_[l] = add(B.m_[l],
+                    mul(transforms[col - 2 - i].m_[l*t_col + m], polys[i].m_[m]));
+                B.m_[l] = expand(B.m_[l]);
+            }
+        }
+        polys.push_back(B);
+    }
+}
+
+RCP<const Basic> det_berkowitz(const DenseMatrix &A)
+{
+    std::vector<DenseMatrix> polys;
+
+    berkowitz(A, polys);
+    DenseMatrix poly = polys[polys.size() - 1];
+
+    if (polys.size() % 2 == 1)
+        return mul(minus_one, poly.get(poly.nrows() - 1));
+
+    return poly.get(poly.nrows() - 1);
+}
+
 } // CSymPy

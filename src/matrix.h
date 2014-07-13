@@ -126,8 +126,12 @@ public:
     friend void LDL(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &D);
     friend void cholesky(const DenseMatrix &A, DenseMatrix &L);
 
-    // Matrix Queries
+    // Matrix queries
     friend bool is_symmetric_dense(const DenseMatrix &A);
+
+    // Determinant
+    friend RCP<const Basic> det_bareis(const DenseMatrix &A);
+    friend void berkowitz(const DenseMatrix &A, std::vector<DenseMatrix> &polys);
 
 protected:
     // Matrix elements are stored in row-major order
@@ -169,76 +173,6 @@ protected:
     std::map<int, RCP<Basic>> m_;
 };
 
-// ------------------ DenseMatrix related functions --------------------------//
-
-// Matrix operations
-void add_dense_dense(const DenseMatrix &A, const DenseMatrix &B, DenseMatrix &C);
-
-void add_dense_scalar(const DenseMatrix &A, RCP<const Basic> &k, DenseMatrix &B);
-
-void mul_dense_dense(const DenseMatrix &A, const DenseMatrix &B, DenseMatrix &C);
-
-void mul_dense_scalar(const DenseMatrix &A, RCP<const Basic> &k, DenseMatrix &C);
-
-void transpose_dense(const DenseMatrix &A, DenseMatrix &B);
-
-void submatrix_dense(const DenseMatrix &A, unsigned row_start, unsigned row_end,
-        unsigned col_start, unsigned col_end, DenseMatrix &B);
-
-// Row operations
-void row_exchange_dense(DenseMatrix &A , unsigned i, unsigned j);
-
-void row_mul_scalar_dense(DenseMatrix &A, unsigned i, RCP<const Basic> &c);
-
-void row_add_row_dense(DenseMatrix &A, unsigned i, unsigned j,
-    RCP<const Basic> &c);
-
-// Gaussian elimination
-void pivoted_gaussian_elimination(const DenseMatrix &A, DenseMatrix &B,
-    std::vector<unsigned> &pivotlist);
-
-void fraction_free_gaussian_elimination(const DenseMatrix &A, DenseMatrix &B);
-
-void pivoted_fraction_free_gaussian_elimination(const DenseMatrix &A,
-    DenseMatrix &B, std::vector<unsigned> &pivotlist);
-
-void pivoted_gauss_jordan_elimination(const DenseMatrix &A, DenseMatrix &B,
-    std::vector<unsigned> &pivotlist);
-
-void fraction_free_gauss_jordan_elimination(const DenseMatrix &A, DenseMatrix &B);
-
-void pivoted_fraction_free_gauss_jordan_elimination(const DenseMatrix &A,
-    DenseMatrix &B, std::vector<unsigned> &pivotlist);
-
-// Matrix Decomposition
-void fraction_free_LU(const DenseMatrix &A, DenseMatrix &LU);
-
-void LU(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &U);
-
-void fraction_free_LDU(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &D,
-    DenseMatrix &U);
-
-void QR(const DenseMatrix &A, DenseMatrix &Q, DenseMatrix &R);
-
-void LDL(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &D);
-
-void cholesky(const DenseMatrix &A, DenseMatrix &L);
-
-// Solve Ax = b
-void diagonal_solve(const DenseMatrix &A, const DenseMatrix &b, DenseMatrix &x);
-
-void back_substitution(const DenseMatrix &U, const DenseMatrix &b,
-    DenseMatrix &x);
-
-void forward_substitution(const DenseMatrix &A,
-    const DenseMatrix &b, DenseMatrix &x);
-
-void fraction_free_gaussian_elimination_solve(const DenseMatrix &A,
-    const DenseMatrix &b, DenseMatrix &x);
-
-void fraction_free_gauss_jordan_solve(const DenseMatrix &A, const DenseMatrix &b,
-    DenseMatrix &x);
-
 void fraction_free_LU_solve(const DenseMatrix &A, const DenseMatrix &b,
     DenseMatrix &x);
 
@@ -246,8 +180,8 @@ void LU_solve(const DenseMatrix &A, const DenseMatrix &b, DenseMatrix &x);
 
 void LDL_solve(const DenseMatrix &A, const DenseMatrix &b, DenseMatrix &x);
 
-// Matrix queries
-bool is_symmetric_dense(const DenseMatrix &A);
+// Determinant
+RCP<const Basic> det_berkowitz(const DenseMatrix &A);
 
 } // CSymPy
 
