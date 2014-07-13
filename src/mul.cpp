@@ -193,7 +193,8 @@ void Mul::dict_add_term_new(const Ptr<RCP<const Number>> &coef, map_basic_basic 
     auto it = d.find(t);
     if (it == d.end()) {
         // Don't check for `exp = 0` here
-        if (is_a<Integer>(*exp) && is_a_Number(*t)) {
+        // `pow` for Complex is not expanded by default
+        if (is_a<Integer>(*exp) && (is_a<Integer>(*t) || is_a<Rational>(*t))) {
             imulnum(outArg(*coef), pownum(rcp_static_cast<const Number>(t),
                 rcp_static_cast<const Number>(exp)));
         } else {
@@ -211,7 +212,8 @@ void Mul::dict_add_term_new(const Ptr<RCP<const Number>> &coef, map_basic_basic 
             it->second = add(it->second, exp);
 
         if (is_a<Integer>(*it->second)) {
-            if (is_a_Number(*t)) {
+            // `pow` for Complex is not expanded by default
+            if (is_a<Integer>(*t) || is_a<Rational>(*t) {
                 if (!rcp_static_cast<const Integer>(it->second)->is_zero()) {
                     imulnum(outArg(*coef), pownum(rcp_static_cast<const Number>(t),
                         rcp_static_cast<const Number>(it->second)));
