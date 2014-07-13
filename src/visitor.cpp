@@ -22,5 +22,10 @@ ACCEPT(Function)
 ACCEPT(Log)
 ACCEPT(Derivative)
 
+bool has_symbol(const Basic &b, const RCP<const Symbol> &x) {
+    HasVisitor v;
+    return v.apply(b, x);
+}
+
 } // CSymPy
 

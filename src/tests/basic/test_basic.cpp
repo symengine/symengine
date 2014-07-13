@@ -9,6 +9,8 @@
 #include "complex.h"
 #include "mul.h"
 #include "pow.h"
+#include "functions.h"
+#include "visitor.h"
 
 using CSymPy::Basic;
 using CSymPy::Add;
@@ -27,6 +29,7 @@ using CSymPy::pow;
 using CSymPy::RCP;
 using CSymPy::print_stack_on_segfault;
 using CSymPy::Complex;
+using CSymPy::has_symbol;
 
 void test_symbol_hash()
 {
@@ -577,6 +580,19 @@ void test_complex()
     CSYMPY_CHECK_THROW(divnum(c1, c2), std::runtime_error);
 }
 
+void test_has()
+{
+    RCP<const Basic> r1;
+    RCP<const Symbol> x, y, z;
+    x = symbol("x");
+    y = symbol("y");
+    z = symbol("z");
+    r1 = add(x, pow(y, integer(2)));
+    assert(has_symbol(*r1, x));
+    assert(has_symbol(*r1, y));
+    assert(!has_symbol(*r1, z));
+}
+
 int main(int argc, char* argv[])
 {
     print_stack_on_segfault();
@@ -598,6 +614,8 @@ int main(int argc, char* argv[])
     test_compare();
 
     test_complex();
+
+    test_has();
 
     return 0;
 }
