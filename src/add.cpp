@@ -163,7 +163,7 @@ RCP<const Basic> Add::from_dict(const RCP<const Number> &coef, umap_basic_num &&
                 return p->first;
             }
             if (is_a<Mul>(*(p->first))) {
-#if !defined(WITH_CSYMPY_THREAD_SAFE)
+#if !defined(WITH_CSYMPY_THREAD_SAFE) && defined(WITH_CSYMPY_RCP)
                 if (rcp_static_cast<const Mul>(p->first)->refcount_ == 1) {
                     // We can steal the dictionary:
                     // Cast away const'ness, so that we can move 'dict_', since
@@ -197,7 +197,7 @@ RCP<const Basic> Add::from_dict(const RCP<const Number> &coef, umap_basic_num &&
         map_basic_basic m;
         if (is_a_Number(*p->second)) {
             if (is_a<Mul>(*(p->first))) {
-#if !defined(WITH_CSYMPY_THREAD_SAFE)
+#if !defined(WITH_CSYMPY_THREAD_SAFE) && defined(WITH_CSYMPY_RCP)
                 if (rcp_static_cast<const Mul>(p->first)->refcount_ == 1) {
                     // We can steal the dictionary:
                     // Cast away const'ness, so that we can move 'dict_', since
