@@ -213,7 +213,7 @@ void Mul::dict_add_term_new(const Ptr<RCP<const Number>> &coef, map_basic_basic 
 
         if (is_a<Integer>(*it->second)) {
             // `pow` for Complex is not expanded by default
-            if (is_a<Integer>(*t) || is_a<Rational>(*t) {
+            if (is_a<Integer>(*t) || is_a<Rational>(*t)) {
                 if (!rcp_static_cast<const Integer>(it->second)->is_zero()) {
                     imulnum(outArg(*coef), pownum(rcp_static_cast<const Number>(t),
                         rcp_static_cast<const Number>(it->second)));

@@ -33,7 +33,7 @@ bool Pow::is_canonical(const RCP<const Basic> &base, const RCP<const Basic> &exp
     if (is_a<Integer>(*exp) && rcp_static_cast<const Integer>(exp)->is_one())
         return false;
     // e.g. 2^3, (2/3)^4
-    if (is_a_Number(*base) && is_a<Integer>(*exp))
+    if ((is_a<Integer>(*base) || is_a<Rational>(*base)) && is_a<Integer>(*exp))
         return false;
     // e.g. (x*y)^2, should rather be x^2*y^2
     if (is_a<Mul>(*base) && is_a<Integer>(*exp))
@@ -115,6 +115,8 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
             } else if (is_a<Integer>(*a)) {
                 RCP<const Integer> exp_new = rcp_static_cast<const Integer>(a);
                 return exp_new->powint(*rcp_static_cast<const Integer>(b));
+            } else if (is_a<Complex>(*a)) {
+                return rcp(new Pow(a, b));
             } else {
                 throw std::runtime_error("Not implemented");
             }
@@ -151,9 +153,15 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
                 map_basic_basic surd;
                 surd[exp_new] = div(integer(r), integer(den));
                 return rcp(new Mul(frac, std::move(surd)));
+            } else if (is_a<Complex>(*a)) {
+                // This might raise some issues.
+                return rcp(new Pow(a, b));
             } else {
                 throw std::runtime_error("Not implemented");
             }
+        } else if (is_a<Complex>(*b)) {
+            // No simplification for now, need to update it further.
+            return rcp(new Pow(a, b));
         } else {
             throw std::runtime_error("Not implemented");
         }
