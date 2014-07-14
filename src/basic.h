@@ -159,8 +159,8 @@ public:
 
     virtual void accept(Visitor &v) const = 0;
 
-    virtual void preorder_traversal(Visitor &v) const;
-    virtual void postorder_traversal(Visitor &v) const;
+    void preorder_traversal(Visitor &v) const;
+    void postorder_traversal(Visitor &v) const;
 };
 
 //! Our hash:

@@ -15,14 +15,14 @@ public:
     // It should be possible to simplify this using the approach described at:
     // http://stackoverflow.com/a/11802080/479532
     // http://stackoverflow.com/a/7877397/479532
-    virtual void visit(const Symbol &) = 0;
-    virtual void visit(const Add &) = 0;
-    virtual void visit(const Mul &) = 0;
-    virtual void visit(const Pow &) = 0;
-    virtual void visit(const Number &) = 0;
-    virtual void visit(const Function &) = 0;
-    virtual void visit(const Log &) = 0;
-    virtual void visit(const Derivative &) = 0;
+    virtual void visit(const Symbol &) { };
+    virtual void visit(const Add &) { };
+    virtual void visit(const Mul &) { };
+    virtual void visit(const Pow &) { };
+    virtual void visit(const Number &) { };
+    virtual void visit(const Function &) { };
+    virtual void visit(const Log &) { };
+    virtual void visit(const Derivative &) { };
 };
 
 class HasVisitor : public Visitor {
@@ -32,22 +32,8 @@ private:
 public:
     // TODO: allow to return true/false from the visit() methods, and if it
     // returns false, stop the traversal in pre/postorder_traversal().
-    virtual void visit(const Symbol &x) {
+    void visit(const Symbol &x) {
         if (x_->__eq__(x)) has_ = true;
-    }
-    virtual void visit(const Add &) {
-    }
-    virtual void visit(const Mul &) {
-    }
-    virtual void visit(const Pow &) {
-    }
-    virtual void visit(const Number &) {
-    }
-    virtual void visit(const Function &) {
-    }
-    virtual void visit(const Log &) {
-    }
-    virtual void visit(const Derivative &) {
     }
     bool apply(const Basic &b, const RCP<const Symbol> &x) {
         x_ = x;
