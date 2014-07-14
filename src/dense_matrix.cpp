@@ -1070,7 +1070,7 @@ void inverse_LU(const DenseMatrix &A, DenseMatrix&B)
 
     LU(A, L, U);
 
-    // We solve AX_{i} = e_{i} for i = 1, 2, .. n and combine the row vectors
+    // We solve AX_{i} = e_{i} for i = 1, 2, .. n and combine the column vectors
     // X_{1}, X_{2}, ... X_{n} to form the inverse of A. Here, e_{i}'s are the
     // elements of the standard basis.
     for (unsigned j = 0; j < n; j++) {
@@ -1084,6 +1084,27 @@ void inverse_LU(const DenseMatrix &A, DenseMatrix&B)
 
         e.m_[j] = zero;
     }
+}
+
+void inverse_gauss_jordan(const DenseMatrix &A, DenseMatrix &B)
+{
+    CSYMPY_ASSERT(A.row_ == A.col_ && B.row_ == B.col_ && B.row_ == A.row_);
+
+    unsigned n = A.row_;
+    DenseMatrix e = DenseMatrix(n, n);
+
+    // Initialize matrices
+    for (unsigned i = 0; i < n; i++)
+        for (unsigned j = 0; j < n; j++) {
+            if (i != j) {
+                e.m_[i*n + j] = zero;
+            } else {
+                e.m_[i*n + i] = one;
+            }
+            B.m_[i*n + j] = zero;
+        }
+
+    fraction_free_gauss_jordan_solve(A, e, B);
 }
 
 } // CSymPy

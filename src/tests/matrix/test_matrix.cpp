@@ -897,6 +897,8 @@ void test_inverse()
     assert(A == B);
     inverse_LU(A, B);
     assert(A == B);
+    inverse_gauss_jordan(A, B);
+    assert(A == B);
 
     A = DenseMatrix(3, 3, {integer(2), integer(3), integer(5),
         integer(3), integer(6), integer(2),
@@ -912,6 +914,10 @@ void test_inverse()
     mul_dense_dense(A, B, C);
     assert(C == I3);
 
+    inverse_gauss_jordan(A, B);
+    mul_dense_dense(A, B, C);
+    assert(C == I3);
+
     A = DenseMatrix(3, 3, {integer(48), integer(49), integer(31),
         integer(9), integer(71), integer(94),
         integer(59), integer(28), integer(65)});
@@ -921,6 +927,10 @@ void test_inverse()
     assert(C == I3);
 
     inverse_LU(A, B);
+    mul_dense_dense(A, B, C);
+    assert(C == I3);
+
+    inverse_gauss_jordan(A, B);
     mul_dense_dense(A, B, C);
     assert(C == I3);
 }
