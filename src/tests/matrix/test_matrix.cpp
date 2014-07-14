@@ -866,6 +866,10 @@ void test_solve_functions()
 
 void test_inverse()
 {
+    DenseMatrix I3 = DenseMatrix(3, 3, {integer(1), integer(0), integer(0),
+            integer(0), integer(1), integer(0),
+            integer(0), integer(0), integer(1)});
+
     DenseMatrix A =
         DenseMatrix(4, 4, {integer(1), integer(0), integer(0), integer(0),
             integer(0), integer(1), integer(0), integer(0),
@@ -874,6 +878,8 @@ void test_inverse()
     DenseMatrix B = DenseMatrix(4, 4);
 
     inverse_fraction_free_LU(A, B);
+    assert(A == B);
+    inverse_LU(A, B);
     assert(A == B);
 
     A = DenseMatrix(3, 3, {integer(2), integer(3), integer(5),
@@ -884,9 +890,11 @@ void test_inverse()
 
     inverse_fraction_free_LU(A, B);
     mul_dense_dense(A, B, C);
-    assert(C == DenseMatrix(3, 3, {integer(1), integer(0), integer(0),
-            integer(0), integer(1), integer(0),
-            integer(0), integer(0), integer(1)}));
+    assert(C == I3);
+
+    inverse_LU(A, B);
+    mul_dense_dense(A, B, C);
+    assert(C == I3);
 
     A = DenseMatrix(3, 3, {integer(48), integer(49), integer(31),
         integer(9), integer(71), integer(94),
@@ -894,9 +902,11 @@ void test_inverse()
 
     inverse_fraction_free_LU(A, B);
     mul_dense_dense(A, B, C);
-    assert(C == DenseMatrix(3, 3, {integer(1), integer(0), integer(0),
-            integer(0), integer(1), integer(0),
-            integer(0), integer(0), integer(1)}));
+    assert(C == I3);
+
+    inverse_LU(A, B);
+    mul_dense_dense(A, B, C);
+    assert(C == I3);
 }
 
 int main(int argc, char* argv[])

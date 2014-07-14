@@ -1019,11 +1019,56 @@ void inverse_fraction_free_LU(const DenseMatrix &A, DenseMatrix &B)
 
     fraction_free_LU(A, LU);
 
+    // We solve AX_{i} = e_{i} for i = 1, 2, .. n and combine the row vectors
+    // X_{1}, X_{2}, ... X_{n} to form the inverse of A. Here, e_{i}'s are the
+    // elements of the standard basis.
     for (unsigned j = 0; j < n; j++) {
         e.m_[j] = one;
 
         forward_substitution(LU, e, x_);
         back_substitution(LU, x_, x);
+
+        for (i = 0; i < n; i++)
+            B.m_[i*n + j] = x.m_[i];
+
+        e.m_[j] = zero;
+    }
+}
+
+void inverse_LU(const DenseMatrix &A, DenseMatrix&B)
+{
+    CSYMPY_ASSERT(A.row_ == A.col_ && B.row_ == B.col_ && B.row_ == A.row_);
+
+    unsigned n = A.row_, i;
+    DenseMatrix L = DenseMatrix(n, n);
+    DenseMatrix U = DenseMatrix(n, n);
+    DenseMatrix e = DenseMatrix(n, 1);
+    DenseMatrix x = DenseMatrix(n, 1);
+    DenseMatrix x_ = DenseMatrix(n, 1);
+
+    // Initialize matrices
+    for (i = 0; i < n*n; i++) {
+        L.m_[i] = zero;
+        U.m_[i] = zero;
+        B.m_[i] = zero;
+    }
+
+    for (i = 0; i < n; i++) {
+        e.m_[i] = zero;
+        x.m_[i] = zero;
+        x_.m_[i] = zero;
+    }
+
+    LU(A, L, U);
+
+    // We solve AX_{i} = e_{i} for i = 1, 2, .. n and combine the row vectors
+    // X_{1}, X_{2}, ... X_{n} to form the inverse of A. Here, e_{i}'s are the
+    // elements of the standard basis.
+    for (unsigned j = 0; j < n; j++) {
+        e.m_[j] = one;
+
+        forward_substitution(L, e, x_);
+        back_substitution(U, x_, x);
 
         for (i = 0; i < n; i++)
             B.m_[i*n + j] = x.m_[i];
