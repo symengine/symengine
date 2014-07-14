@@ -45,6 +45,29 @@ public:
 
 bool has_symbol(const Basic &b, const RCP<const Symbol> &x);
 
+class CoeffVisitor : public Visitor {
+private:
+    RCP<const Symbol> x_;
+    RCP<const Integer> n_;
+    RCP<const Basic> coeff_;
+public:
+    void visit(const Add &x) {
+        // TODO: Implement coeff for Add
+        //coeff_ =
+    }
+    RCP<const Basic> apply(const Basic &b, const RCP<const Symbol> &x,
+            const RCP<const Integer> &n) {
+        x_ = x;
+        n_ = n;
+        coeff_ = zero;
+        b.accept(*this);
+        return coeff_;
+    }
+};
+
+RCP<const Basic> coeff(const Basic &b, const RCP<const Symbol> &x,
+        const RCP<const Integer> &n);
+
 } // CSymPy
 
 #endif
