@@ -491,14 +491,22 @@ void test_fraction_free_gaussian_elimination_solve()
     x = DenseMatrix(2, 1);
     fraction_free_gaussian_elimination_solve(A, b, x);
 
-//    assert(x == DenseMatrix(2, 1, {symbol("a"), symbol("b")}));
+    // assert(x == DenseMatrix(2, 1, {symbol("a"), symbol("b")}));
 
     A = DenseMatrix(2, 2, {integer(1), integer(1), integer(1), integer(-1)});
     b = DenseMatrix(2, 1, {add(symbol("a"), symbol("b")), sub(symbol("a"), symbol("b"))});
-    x = DenseMatrix(2, 1, {symbol("a"), symbol("b")});
+    x = DenseMatrix(2, 1);
     fraction_free_gaussian_elimination_solve(A, b, x);
 
-//    assert(x == DenseMatrix(2, 1, {symbol("a"), symbol("b")}));
+    // assert(x == DenseMatrix(2, 1, {symbol("a"), symbol("b")}));
+
+    // Solve two systems at once, Ax = transpose([7, 3]) and Ax = transpose([4, 6])
+    A = DenseMatrix(2, 2, {integer(1), integer(1), integer(1), integer(-1)});
+    b = DenseMatrix(2, 2, {integer(7), integer(4), integer(3), integer(6)});
+    x = DenseMatrix(2, 2);
+    fraction_free_gaussian_elimination_solve(A, b, x);
+
+    assert(x == DenseMatrix(2, 2, {integer(5), integer(5), integer(2), integer(-1)}));
 }
 
 void test_fraction_free_gauss_jordan_solve()
@@ -520,6 +528,14 @@ void test_fraction_free_gauss_jordan_solve()
 
     assert(x == DenseMatrix(4, 1, {integer(1), integer(1), integer(1),
         integer(1)}));
+
+    // Solve two systems at once, Ax = transpose([7, 3]) and Ax = transpose([4, 6])
+    A = DenseMatrix(2, 2, {integer(1), integer(1), integer(1), integer(-1)});
+    b = DenseMatrix(2, 2, {integer(7), integer(4), integer(3), integer(6)});
+    x = DenseMatrix(2, 2);
+    fraction_free_gauss_jordan_solve(A, b, x);
+
+    assert(x == DenseMatrix(2, 2, {integer(5), integer(5), integer(2), integer(-1)}));
 }
 
 void test_fraction_free_LU()

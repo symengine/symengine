@@ -470,21 +470,24 @@ void fraction_free_gaussian_elimination_solve(const DenseMatrix &A,
     const DenseMatrix &b, DenseMatrix &x)
 {
     CSYMPY_ASSERT(A.row_ == A.col_);
-    CSYMPY_ASSERT(b.row_ == A.row_ && b.col_ == 1);
-    CSYMPY_ASSERT(x.row_ == A.col_ && x.col_ == 1);
+    CSYMPY_ASSERT(b.row_ == A.row_ && x.row_ == A.row_);
+    CSYMPY_ASSERT(x.col_ == b.col_);
 
-    int i, j, col = A.col_;
+    int i, j, k, col = A.col_, bcol = b.col_;
     DenseMatrix A_ = DenseMatrix(A.row_, A.col_, A.m_);
-    DenseMatrix b_ = DenseMatrix(b.row_, 1, b.m_);
+    DenseMatrix b_ = DenseMatrix(b.row_, b.col_, b.m_);
 
     for (i = 0; i < col - 1; i++)
         for (j = i + 1; j < col; j++) {
-            b_.m_[j] = sub(mul(A_.m_[i*col + i], b_.m_[j]),
-                mul(A_.m_[j*col + i], b_.m_[i]));
-            if(i > 0)
-                b_.m_[j] = div(b_.m_[j], A_.m_[i*col - col + i - 1]);
+            for (k = 0; k < bcol; k++) {
+                b_.m_[j*bcol + k] = sub(mul(A_.m_[i*col + i], b_.m_[j*bcol + k]),
+                    mul(A_.m_[j*col + i], b_.m_[i*bcol + k]));
+                if(i > 0)
+                    b_.m_[j*bcol + k] = div(b_.m_[j*bcol + k],
+                        A_.m_[i*col - col + i - 1]);
+            }
 
-            for (int k = i + 1; k < col; k++) {
+            for (k = i + 1; k < col; k++) {
                 A_.m_[j*col + k] = sub(mul(A_.m_[i*col + i], A_.m_[j*col + k]),
                     mul(A_.m_[j*col + i], A_.m_[i*col + k]));
                 if (i> 0)
@@ -494,13 +497,16 @@ void fraction_free_gaussian_elimination_solve(const DenseMatrix &A,
             A_.m_[j*col + i] = zero;
         }
 
-    for (i = 0; i < col; i++)
+    for (i = 0; i < col*bcol; i++)
         x.m_[i] = zero; // Integer zero;
 
-    for (i = col - 1; i >= 0; i--) {
-        for (j = i + 1; j < col; j++)
-            b_.m_[i] = sub(b_.m_[i], mul(A_.m_[i*col + j], x.m_[j]));
-        x.m_[i] = div(b_.m_[i], A_.m_[i*col + i]);
+    for (k = 0; k < bcol; k++) {
+        for (i = col - 1; i >= 0; i--) {
+            for (j = i + 1; j < col; j++)
+                b_.m_[i*bcol + k] = sub(b_.m_[i*bcol + k], mul(A_.m_[i*col + j],
+                    x.m_[j*bcol + k]));
+            x.m_[i*bcol + k] = div(b_.m_[i*bcol + k], A_.m_[i*col + i]);
+        }
     }
 }
 
@@ -508,25 +514,27 @@ void fraction_free_gauss_jordan_solve(const DenseMatrix &A, const DenseMatrix &b
     DenseMatrix &x)
 {
     CSYMPY_ASSERT(A.row_ == A.col_);
-    CSYMPY_ASSERT(b.row_ == A.row_ && b.col_ == 1);
-    CSYMPY_ASSERT(x.row_ == A.col_ && x.col_ == 1);
+    CSYMPY_ASSERT(b.row_ == A.row_ && x.row_ == A.row_);
+    CSYMPY_ASSERT(x.col_ = b.col_);
 
-    unsigned i, j, col = A.col_;
+    unsigned i, j, k, col = A.col_, bcol = b.col_;
     RCP<const Basic> d;
     DenseMatrix A_ = DenseMatrix(A.row_, A.col_, A.m_);
-    DenseMatrix b_ = DenseMatrix(b.row_, 1, b.m_);
+    DenseMatrix b_ = DenseMatrix(b.row_, b.col_, b.m_);
 
     for (i = 0; i < col; i++) {
         if (i > 0)
             d = A_.m_[i*col - col + i - 1];
         for (j = 0; j < col; j++)
             if (j != i) {
-                b_.m_[j] = sub(mul(A_.m_[i*col + i], b_.m_[j]),
-                    mul(A_.m_[j*col + i], b_.m_[i]));
-                if (i > 0)
-                    b_.m_[j] = div(b_.m_[j], d);
+                for (k = 0; k < bcol; k++) {
+                    b_.m_[j*bcol + k] = sub(mul(A_.m_[i*col + i], b_.m_[j*bcol + k]),
+                        mul(A_.m_[j*col + i], b_.m_[i*bcol + k]));
+                    if (i > 0)
+                        b_.m_[j*bcol + k] = div(b_.m_[j*bcol + k], d);
+                }
 
-                for (unsigned k = 0; k < col; k++) {
+                for (k = 0; k < col; k++) {
                     if (k != i) {
                         A_.m_[j*col + k] =
                             sub(mul(A_.m_[i*col + i], A_.m_[j*col + k]),
@@ -543,8 +551,9 @@ void fraction_free_gauss_jordan_solve(const DenseMatrix &A, const DenseMatrix &b
     }
 
     // No checks are done to see if the diagonal entries are zero
-    for (i = 0; i < col; i++)
-        x.m_[i] = div(b_.m_[i], A_.m_[i*col + i]);
+    for (k = 0; k < bcol; k++)
+        for (i = 0; i < col; i++)
+            x.m_[i*bcol + k] = div(b_.m_[i*bcol + k], A_.m_[i*col + i]);
 }
 
 void fraction_free_LU_solve(const DenseMatrix &A, const DenseMatrix &b,
