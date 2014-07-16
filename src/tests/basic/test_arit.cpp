@@ -9,6 +9,7 @@
 #include "mul.h"
 #include "pow.h"
 #include "functions.h"
+#include "complex.h"
 
 using CSymPy::Basic;
 using CSymPy::Add;
@@ -34,6 +35,10 @@ using CSymPy::div;
 using CSymPy::sub;
 using CSymPy::exp;
 using CSymPy::E;
+using CSymPy::Rational;
+using CSymPy::Complex;
+using CSymPy::Number;
+using CSymPy::I;
 using CSymPy::rcp_dynamic_cast;
 using CSymPy::print_stack_on_segfault;
 
@@ -75,6 +80,18 @@ void test_add()
     r1 = add(pow(x, y), z);
     r2 = add(z, pow(x, y));
     assert(eq(r1, r2));
+
+    r1 = add(x, I);
+    r2 = add(I, x);
+    assert(eq(r1, r2));
+
+    r1 = mul(x, I);
+    r2 = mul(mul(I, i2), x);
+    r3 = mul(mul(I, i3), x);
+    r2 = add(r1, r2);
+    assert(eq(r3, r2));
+
+
 }
 
 void test_mul()
