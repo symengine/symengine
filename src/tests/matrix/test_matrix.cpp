@@ -491,14 +491,22 @@ void test_fraction_free_gaussian_elimination_solve()
     x = DenseMatrix(2, 1);
     fraction_free_gaussian_elimination_solve(A, b, x);
 
-//    assert(x == DenseMatrix(2, 1, {symbol("a"), symbol("b")}));
+    // assert(x == DenseMatrix(2, 1, {symbol("a"), symbol("b")}));
 
     A = DenseMatrix(2, 2, {integer(1), integer(1), integer(1), integer(-1)});
     b = DenseMatrix(2, 1, {add(symbol("a"), symbol("b")), sub(symbol("a"), symbol("b"))});
-    x = DenseMatrix(2, 1, {symbol("a"), symbol("b")});
+    x = DenseMatrix(2, 1);
     fraction_free_gaussian_elimination_solve(A, b, x);
 
-//    assert(x == DenseMatrix(2, 1, {symbol("a"), symbol("b")}));
+    // assert(x == DenseMatrix(2, 1, {symbol("a"), symbol("b")}));
+
+    // Solve two systems at once, Ax = transpose([7, 3]) and Ax = transpose([4, 6])
+    A = DenseMatrix(2, 2, {integer(1), integer(1), integer(1), integer(-1)});
+    b = DenseMatrix(2, 2, {integer(7), integer(4), integer(3), integer(6)});
+    x = DenseMatrix(2, 2);
+    fraction_free_gaussian_elimination_solve(A, b, x);
+
+    assert(x == DenseMatrix(2, 2, {integer(5), integer(5), integer(2), integer(-1)}));
 }
 
 void test_fraction_free_gauss_jordan_solve()
@@ -520,6 +528,14 @@ void test_fraction_free_gauss_jordan_solve()
 
     assert(x == DenseMatrix(4, 1, {integer(1), integer(1), integer(1),
         integer(1)}));
+
+    // Solve two systems at once, Ax = transpose([7, 3]) and Ax = transpose([4, 6])
+    A = DenseMatrix(2, 2, {integer(1), integer(1), integer(1), integer(-1)});
+    b = DenseMatrix(2, 2, {integer(7), integer(4), integer(3), integer(6)});
+    x = DenseMatrix(2, 2);
+    fraction_free_gauss_jordan_solve(A, b, x);
+
+    assert(x == DenseMatrix(2, 2, {integer(5), integer(5), integer(2), integer(-1)}));
 }
 
 void test_fraction_free_LU()
@@ -900,6 +916,61 @@ void test_char_poly()
         mul(integer(-1), x)), add(mul(integer(-1), mul(y, z)), mul(t, x))}));
 }
 
+void test_inverse()
+{
+    DenseMatrix I3 = DenseMatrix(3, 3, {integer(1), integer(0), integer(0),
+            integer(0), integer(1), integer(0),
+            integer(0), integer(0), integer(1)});
+
+    DenseMatrix A =
+        DenseMatrix(4, 4, {integer(1), integer(0), integer(0), integer(0),
+            integer(0), integer(1), integer(0), integer(0),
+            integer(0), integer(0), integer(1), integer(0),
+            integer(0), integer(0), integer(0), integer(1)});
+    DenseMatrix B = DenseMatrix(4, 4);
+
+    inverse_fraction_free_LU(A, B);
+    assert(A == B);
+    inverse_LU(A, B);
+    assert(A == B);
+    inverse_gauss_jordan(A, B);
+    assert(A == B);
+
+    A = DenseMatrix(3, 3, {integer(2), integer(3), integer(5),
+        integer(3), integer(6), integer(2),
+        integer(8), integer(3), integer(6)});
+    B = DenseMatrix(3, 3);
+    DenseMatrix C = DenseMatrix(3, 3);
+
+    inverse_fraction_free_LU(A, B);
+    mul_dense_dense(A, B, C);
+    assert(C == I3);
+
+    inverse_LU(A, B);
+    mul_dense_dense(A, B, C);
+    assert(C == I3);
+
+    inverse_gauss_jordan(A, B);
+    mul_dense_dense(A, B, C);
+    assert(C == I3);
+
+    A = DenseMatrix(3, 3, {integer(48), integer(49), integer(31),
+        integer(9), integer(71), integer(94),
+        integer(59), integer(28), integer(65)});
+
+    inverse_fraction_free_LU(A, B);
+    mul_dense_dense(A, B, C);
+    assert(C == I3);
+
+    inverse_LU(A, B);
+    mul_dense_dense(A, B, C);
+    assert(C == I3);
+
+    inverse_gauss_jordan(A, B);
+    mul_dense_dense(A, B, C);
+    assert(C == I3);
+}
+
 int main(int argc, char* argv[])
 {
     print_stack_on_segfault();
@@ -951,6 +1022,8 @@ int main(int argc, char* argv[])
     test_solve_functions();
 
     test_char_poly();
+
+    test_inverse();
 
     return 0;
 }
