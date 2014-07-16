@@ -6,9 +6,8 @@
 #ifndef CSYMPY_RATIONAL_H
 #define CSYMPY_RATIONAL_H
 
-#include <gmpxx.h>
-
 #include "basic.h"
+#include <gmpxx.h>
 #include "number.h"
 #include "integer.h"
 

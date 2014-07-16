@@ -6,8 +6,6 @@
 #ifndef CSYMPY_COMPLEX_H
 #define CSYMPY_COMPLEX_H
 
-#include <gmpxx.h>
-
 #include "basic.h"
 #include "number.h"
 #include "integer.h"

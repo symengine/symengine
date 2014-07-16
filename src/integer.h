@@ -7,9 +7,8 @@
 #ifndef CSYMPY_INTEGER_H
 #define CSYMPY_INTEGER_H
 
-#include <gmpxx.h>
-
 #include "basic.h"
+#include <gmpxx.h>
 #include "number.h"
 
 namespace CSymPy {
