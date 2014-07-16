@@ -193,7 +193,7 @@ RCP<const Basic> det_berkowitz(const DenseMatrix &A);
 void char_poly(const DenseMatrix &A, DenseMatrix &B);
 
 // Eigen values
-void eigen_values(const DenseMatrix &A, std::vector<RCP<const Basic>> &roots);
+void eigenvalues(const DenseMatrix &A, std::vector<RCP<const Basic>> &roots);
 
 } // CSymPy
 
