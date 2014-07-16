@@ -133,6 +133,11 @@ public:
     friend RCP<const Basic> det_bareis(const DenseMatrix &A);
     friend void berkowitz(const DenseMatrix &A, std::vector<DenseMatrix> &polys);
 
+    // Inverse
+    friend void inverse_fraction_free_LU(const DenseMatrix &A, DenseMatrix &B);
+    friend void inverse_LU(const DenseMatrix &A, DenseMatrix&B);
+    friend void inverse_gauss_jordan(const DenseMatrix &A, DenseMatrix &B);
+
 protected:
     // Matrix elements are stored in row-major order
     std::vector<RCP<const Basic>> m_;
