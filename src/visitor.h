@@ -25,7 +25,7 @@ public:
     virtual void visit(const Derivative &) { };
 };
 
-class HasVisitor : public Visitor {
+class HasSymbolVisitor : public Visitor {
 private:
     RCP<const Symbol> x_;
     bool has_;

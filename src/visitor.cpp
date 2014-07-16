@@ -24,7 +24,7 @@ ACCEPT(Derivative)
 
 bool has_symbol(const Basic &b, const RCP<const Symbol> &x)
 {
-    HasVisitor v;
+    HasSymbolVisitor v;
     return v.apply(b, x);
 }
 
