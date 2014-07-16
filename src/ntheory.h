@@ -9,6 +9,8 @@
 
 #ifndef CSYMPY_NTHEORY_H
 #define CSYMPY_NTHEORY_H
+
+#include "csympy_config.h"
 #ifdef HAVE_CSYMPY_PRIMESIEVE
 #  include <primesieve.hpp>
 #endif // HAVE_CSYMPY_PRIMESIEVE
@@ -90,29 +92,29 @@ void prime_factors(const RCP<const Integer> &n,
 void prime_factor_multiplicities(const RCP<const Integer> &n,
         map_integer_uint &primes);
 //! Sieve class
-class sieve {
+class Sieve {
 
 private:
     static std::vector<unsigned> _primes;
     static void _extend(unsigned limit);
-    
+
 public:
     static void generate_primes(unsigned limit, std::vector<unsigned> &primes);
     static void clear();
-    
+
     class iterator {
-    
+
     private:
 #ifdef HAVE_CSYMPY_PRIMESIEVE
         primesieve::iterator _pi;
-#else        
+#else
         unsigned _index;
-        unsigned _limit; 
+        unsigned _limit;
 #endif
 
     public:
-        inline iterator(unsigned limit);
-        inline iterator();
+        iterator(unsigned limit);
+        iterator();
         unsigned next_prime();
     };
 };

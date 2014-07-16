@@ -171,7 +171,7 @@ int _factor_trial_division_sieve(mpz_class &factor, const mpz_class &N)
         throw std::runtime_error("N too large to factor");
     unsigned limit = sqrtN.get_ui();
     std::vector<unsigned> primes;
-    sieve::generate_primes(limit, primes);
+    Sieve::generate_primes(limit, primes);
     for (auto &p: primes)
         if (N % p == 0) {
             factor = p;
@@ -252,7 +252,7 @@ int _factor_pollard_pm1_method(mpz_class &rop, const mpz_class &n,
         throw std::runtime_error("Require n > 3 and B > 2 to use Pollard's p-1 method");
 
     std::vector<unsigned> primes;
-    sieve::generate_primes(B, primes);
+    Sieve::generate_primes(B, primes);
     mpz_class m, g, _c;
     _c = c;
 
@@ -421,7 +421,7 @@ void prime_factors(const RCP<const Integer> &n,
         throw std::runtime_error("N too large to factor");
     unsigned limit = sqrtN.get_ui();
     std::vector<unsigned> primes;
-    sieve::generate_primes(limit, primes);
+    Sieve::generate_primes(limit, primes);
 
     for (auto &p: primes)
     {
@@ -447,7 +447,7 @@ void prime_factor_multiplicities(const RCP<const Integer> &n,
         throw std::runtime_error("N too large to factor");
     unsigned limit = sqrtN.get_ui();
     std::vector<unsigned> primes;
-    sieve::generate_primes(limit, primes);
+    Sieve::generate_primes(limit, primes);
 
     for (auto &p: primes)
     {
@@ -466,9 +466,9 @@ void prime_factor_multiplicities(const RCP<const Integer> &n,
 }
 
 #ifndef HAVE_CSYMPY_PRIMESIEVE
-std::vector<unsigned> sieve::_primes={2,3,5,7,11,13,17,19,23,29};
+std::vector<unsigned> Sieve::_primes={2,3,5,7,11,13,17,19,23,29};
 
-void sieve::_extend(unsigned limit)
+void Sieve::_extend(unsigned limit)
 {
     const unsigned sqrt_limit = static_cast<unsigned>(std::sqrt(limit));
     unsigned start = _primes.back() + 1;
@@ -497,7 +497,7 @@ void sieve::_extend(unsigned limit)
 }
 #endif
 
-void sieve::generate_primes(unsigned limit, std::vector<unsigned> &primes)
+void Sieve::generate_primes(unsigned limit, std::vector<unsigned> &primes)
 {
 #ifdef HAVE_CSYMPY_PRIMESIEVE
     primesieve::generate_primes(limit, &primes);
@@ -512,17 +512,17 @@ void sieve::generate_primes(unsigned limit, std::vector<unsigned> &primes)
 #endif
 }
 
-inline sieve::iterator::iterator(unsigned max)
+Sieve::iterator::iterator(unsigned max)
 {
 #ifdef HAVE_CSYMPY_PRIMESIEVE
-    _pi = primesieve::iterator(max);
+    _pi = primesieve::iterator(0, max);
 #else
     _limit = max;
     _index = 0;
 #endif
 }
 
-inline sieve::iterator::iterator()
+Sieve::iterator::iterator()
 {
 #ifndef HAVE_CSYMPY_PRIMESIEVE
     _limit = 0;
@@ -530,14 +530,14 @@ inline sieve::iterator::iterator()
 #endif
 }
 
-void sieve::clear()
+void Sieve::clear()
 {
 #ifndef HAVE_CSYMPY_PRIMESIEVE
     _primes = {2,3,5,7,11,13,17,19,23,29};
 #endif   
 }
 
-unsigned sieve::iterator::next_prime()
+unsigned Sieve::iterator::next_prime()
 {
 #ifdef HAVE_CSYMPY_PRIMESIEVE
     return _pi.next_prime();
@@ -545,11 +545,14 @@ unsigned sieve::iterator::next_prime()
     if (_index >= _primes.size())
     {
         unsigned extend_to = _primes[_index-1]*2;
-        if(_limit > 0 && _limit < extend_to)
-            extend_to = _limit;
-        _extend(extend_to);
+        if(_limit > 0 && _limit < extend_to){
+            _extend(_limit);
+            _primes.push_back(_limit + 1);
+        }
+        else
+            _extend(extend_to);
     }
-    return CSymPy::sieve::_primes[_index++];
+    return CSymPy::Sieve::_primes[_index++];
 #endif
 }
 
