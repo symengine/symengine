@@ -104,6 +104,12 @@ std::string Mul::__str__() const
     std::ostringstream o;
     if (eq(coef_, minus_one))
         o << "-";
+    else if (is_a<Complex>(*coef_)) {
+        if (rcp_static_cast<const Complex>(coef_)->is_non_zero())
+            o << "(" << *coef_ <<")";
+        else
+            o << *coef_;
+    }
     else if (neq(coef_, one))
         o << *coef_;
 

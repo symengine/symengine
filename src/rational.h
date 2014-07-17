@@ -164,7 +164,7 @@ public:
         } else if (is_a<Integer>(other)) {
             return addrat(static_cast<const Integer&>(other));
         } else {
-            throw std::runtime_error("Not implemented.");
+            return other.add(*this);
         }
     };
     //! Converts the param `other` appropriately and then calls `subrat`
@@ -174,7 +174,7 @@ public:
         } else if (is_a<Integer>(other)) {
             return subrat(static_cast<const Integer&>(other));
         } else {
-            throw std::runtime_error("Not implemented.");
+            return other.rsub(*this);
         }
     };
     //! Converts the param `other` appropriately and then calls `rsubrat`
@@ -182,7 +182,7 @@ public:
         if (is_a<Integer>(other)) {
             return rsubrat(static_cast<const Integer&>(other));
         } else {
-            throw std::runtime_error("Not implemented.");
+            return other.sub(*this);
         }
     };
     //! Converts the param `other` appropriately and then calls `mulrat`
@@ -192,7 +192,7 @@ public:
         } else if (is_a<Integer>(other)) {
             return mulrat(static_cast<const Integer&>(other));
         } else {
-            throw std::runtime_error("Not implemented.");
+            return other.mul(*this);
         }
     };
     //! Converts the param `other` appropriately and then calls `divrat`
@@ -202,7 +202,7 @@ public:
         } else if (is_a<Integer>(other)) {
             return divrat(static_cast<const Integer&>(other));
         } else {
-            throw std::runtime_error("Not implemented.");
+            return other.rdiv(*this);
         }
     };
     //! Converts the param `other` appropriately and then calls `rdivrat`
