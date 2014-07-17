@@ -197,6 +197,12 @@ void Mul::dict_add_term_new(const Ptr<RCP<const Number>> &coef, map_basic_basic 
         if (is_a<Integer>(*exp) && (is_a<Integer>(*t) || is_a<Rational>(*t))) {
             imulnum(outArg(*coef), pownum(rcp_static_cast<const Number>(t),
                 rcp_static_cast<const Number>(exp)));
+        } else if (is_a<Integer>(*exp) && is_a<Complex>(*t)) {
+            if (rcp_static_cast<const Integer>(exp)->is_one()) {
+                imulnum(outArg(*coef), rcp_static_cast<const Number>(t));
+            } else if (rcp_static_cast<const Integer>(exp)->is_minus_one()) {
+                idivnum(outArg(*coef), rcp_static_cast<const Number>(t));
+            }
         } else {
             insert(d, t, exp);
         }
@@ -221,6 +227,12 @@ void Mul::dict_add_term_new(const Ptr<RCP<const Number>> &coef, map_basic_basic 
                 d.erase(it);
             } else if (rcp_static_cast<const Integer>(it->second)->is_zero()) {
                 d.erase(it);
+            } else if (is_a<Complex>(*t)) {
+                if (rcp_static_cast<const Integer>(it->second)->is_one()) {
+                    imulnum(outArg(*coef), rcp_static_cast<const Number>(t));
+                } else if (rcp_static_cast<const Integer>(it->second)->is_minus_one()) {
+                    idivnum(outArg(*coef), rcp_static_cast<const Number>(t));
+                }
             }
         }
     }

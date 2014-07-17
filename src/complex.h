@@ -71,6 +71,8 @@ public:
     virtual bool is_zero() const { return ((this->real_ == 0) && (this->imaginary_ == 0)); }
     //! \return `true` if `1`
     virtual bool is_one() const { return ((this->real_ == 1) && (this->imaginary_ == 0)); }
+    //! \return `true` if `-1`
+    virtual bool is_minus_one() const { return ((this->real_ == -1) && (this->imaginary_ == 0)); }
 
     /*! Add Complex
      * \param other of type Complex
