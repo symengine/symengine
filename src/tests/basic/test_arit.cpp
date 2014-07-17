@@ -151,6 +151,30 @@ void test_mul()
     r1 = mul(mul(integer(12), pow(integer(196), mhalf)), pow(i3, mhalf));
     r2 = mul(mul(integer(294), pow(integer(196), mhalf)), pow(i3, mhalf));
     assert(eq(i6, mul(r1, r2)));
+
+    r1 = mul(add(x, mul(y, I)), sub(x, mul(y, I)));
+    r2 = mul(sub(x, mul(y, I)), add(x, mul(y, I)));
+    std::cout << *r1 << std::endl;
+    std::cout << *r2 << std::endl;
+    assert(eq(r1, r2));
+
+    r1 = mul(mul(x, I), mul(y, I));
+    r2 = mul(integer(-1), mul(x, y));
+    assert(eq(r1, r2));
+
+    RCP<const Number> rc1, rc2, c1, c2;
+    rc1 = Rational::from_two_ints(integer(2), integer(1));
+    rc2 = Rational::from_two_ints(integer(3), integer(1));
+    c1 = Complex::from_two_nums(*rc1, *rc2);
+    rc1 = Rational::from_two_ints(integer(-5), integer(1));
+    rc2 = Rational::from_two_ints(integer(12), integer(1));
+    c2 = Complex::from_two_nums(*rc1, *rc2);
+
+    r1 = mul(x, c1);
+    r2 = mul(x, c1);
+    r1 = mul(r1, r2);
+    r2 = mul(pow(x, i2), c2);
+    assert(eq(r1, r2));
 }
 
 void test_sub()
@@ -200,6 +224,20 @@ void test_sub()
     r1 = sub(add(x, one), add(x, i2));
     r1 = expand(r1);
     r2 = im1;
+    assert(eq(r1, r2));
+
+    RCP<const Number> rc1, rc2, rc3, c1, c2;
+    rc1 = Rational::from_two_ints(integer(1), integer(2));
+    rc2 = Rational::from_two_ints(integer(3), integer(4));
+    rc3 = Rational::from_two_ints(integer(-5), integer(6));
+
+    c1 = Complex::from_two_nums(*rc1, *rc2);
+    c2 = Complex::from_two_nums(*rc1, *rc3);
+
+    r1 = mul(x, c1);
+    r2 = mul(x, c2);
+    r1 = sub(r1, r2);
+    r2 = mul(div(mul(I, integer(19)), integer(12)), x);
     assert(eq(r1, r2));
 }
 
