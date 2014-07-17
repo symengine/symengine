@@ -27,16 +27,29 @@ bool Complex::is_canonical(const mpq_class &real, const mpq_class &imaginary)
 std::string Complex::__str__() const
 {
     std::ostringstream s;
-    s << this->real_;
-    // Since imaginary_ should be in canonical form,
-    // the denominator is expected to be always positive
-    if (imaginary_.get_num() < 0) {
-        s << " - i";
-        mpq_class q(imaginary_.get_num()*(-1), imaginary_.get_den());
-        s << q;
+    if (this->real_ != 0) {
+        s << this->real_;
+        // Since imaginary_ should be in canonical form,
+        // the denominator is expected to be always positive
+        if (imaginary_.get_num() < 0) {
+            s << " - i";
+            mpq_class q(imaginary_.get_num()*(-1), imaginary_.get_den());
+            s << q;
+        } else if (imaginary_.get_num() > 0) {
+            s << " + i";
+            s << this->imaginary_;
+        }
     } else {
-        s << " + i";
-        s << this->imaginary_;
+        // Since imaginary_ should be in canonical form,
+        // the denominator is expected to be always positive
+        if (imaginary_.get_num() < 0) {
+            s << "-i";
+            mpq_class q(imaginary_.get_num()*(-1), imaginary_.get_den());
+            s << q;
+        } else if (imaginary_.get_num() > 0) {
+            s << "i";
+            s << this->imaginary_;
+        }
     }
     return s.str();
 }
