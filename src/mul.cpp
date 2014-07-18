@@ -105,7 +105,7 @@ std::string Mul::__str__() const
     if (eq(coef_, minus_one))
         o << "-";
     else if (is_a<Complex>(*coef_)) {
-        if (rcp_static_cast<const Complex>(coef_)->is_non_zero())
+        if (!(rcp_static_cast<const Complex>(coef_)->is_reim_zero()))
             o << "(" << *coef_ <<")";
         else
             o << *coef_;

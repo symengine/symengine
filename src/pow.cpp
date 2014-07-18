@@ -92,6 +92,9 @@ std::string Pow::__str__() const
     o << "^";
     if (is_a<Add>(*exp_) || is_a<Pow>(*exp_)) {
         o << "(" << *exp_ << ")";
+    } else if (is_a<Complex>(*exp_) &&
+                (rcp_static_cast<const Complex>(exp_)->imaginary_)!=0) {
+        o << "(" << *exp_ <<")";
     } else {
         o << *exp_;
     }

@@ -72,6 +72,11 @@ void test_printing()
     assert(c2->__str__() == "1/2 - i5/7");
     assert(r1->__str__() == "(1/2 + i5/7)x");
     assert(r2->__str__() == "(1/2 - i5/7)x");
+    r1 = pow(x, c1);
+    r2 = pow(x, c2);
+    assert(r1->__str__() == "x^(1/2 + i5/7)");
+    assert(r2->__str__() == "x^(1/2 - i5/7)");
+
 
     c1 = Complex::from_two_nums(*rn1, *rn2);
     c2 = Complex::from_two_nums(*rn1, *rn3);
@@ -87,6 +92,11 @@ void test_printing()
     assert(c2->__str__() == "-i5/7");
     assert(r1->__str__() == "i5/7x");
     assert(r2->__str__() == "-i5/7x");
+    r1 = pow(x, c1);
+    r2 = pow(x, c2);
+    assert(r1->__str__() == "x^(i5/7)");
+    assert(r2->__str__() == "x^(-i5/7)");
+
 
 
     c1 = Complex::from_two_nums(*rn2, *rn1);
@@ -97,6 +107,10 @@ void test_printing()
     assert(c2->__str__() == "-5/7");
     assert(r1->__str__() == "5/7x");
     assert(r2->__str__() == "-5/7x");
+    r1 = pow(x, c1);
+    r2 = pow(x, c2);
+    assert(r1->__str__() == "x^5/7");
+    assert(r2->__str__() == "x^-5/7");
 
 }
 

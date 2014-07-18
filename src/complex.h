@@ -73,9 +73,9 @@ public:
     virtual bool is_one() const { return ((this->real_ == 1) && (this->imaginary_ == 0)); }
     //! \return `true` if `-1`
     virtual bool is_minus_one() const { return ((this->real_ == -1) && (this->imaginary_ == 0)); }
-    //! \return `true` if both `real_` and `imaginary_` are non-zero
+    //! \return `true` if both `real_` and `imaginary_` are zero
     // This is needed while printing inside `mul`.
-    inline bool is_non_zero() const { return ((this->real_ != 0) && (this->imaginary_ != 0)); }
+    inline bool is_reim_zero() const { return ((this->real_ == 0) || (this->imaginary_ == 0)); }
     /*! Add Complex
      * \param other of type Complex
      * */
