@@ -157,13 +157,11 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
                 surd[exp_new] = div(integer(r), integer(den));
                 return rcp(new Mul(frac, std::move(surd)));
             } else if (is_a<Complex>(*a)) {
-                // This might raise some issues.
                 return rcp(new Pow(a, b));
             } else {
                 throw std::runtime_error("Not implemented");
             }
         } else if (is_a<Complex>(*b)) {
-            // No simplification for now, need to update it further.
             return rcp(new Pow(a, b));
         } else {
             throw std::runtime_error("Not implemented");
