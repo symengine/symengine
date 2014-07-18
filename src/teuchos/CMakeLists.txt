@@ -20,7 +20,7 @@ endif()
 # Configure Teuchos using our CMake options:
 configure_file(Teuchos_config.h.in Teuchos_config.h)
 # Include the config file:
-include_directories(${teuchos_BINARY_DIR})
+include_directories(BEFORE ${teuchos_BINARY_DIR})
 
 add_library(teuchos ${SRC})
 
