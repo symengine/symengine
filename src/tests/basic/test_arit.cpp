@@ -327,14 +327,12 @@ void test_div()
     c2 = Complex::from_two_nums(*rc1, *rc1);
 
     r1 = div(x, c1);
-    std::cout << *r1 << std::endl;
     r2 = mul(sub(div(integer(8), integer(13)), mul(I, rc3)), x);
     assert(eq(r1, r2));
 
     r1 = mul(c2, div(x, c1));
     rc3 = Rational::from_two_ints(integer(2), integer(13));
     r2 = mul(sub(div(integer(10), integer(13)), mul(I, rc3)), x);
-    std::cout << *r1 << std::endl;
     assert(eq(r1, r2));
 
 }
@@ -493,7 +491,26 @@ void test_pow()
     r1 = pow(mul(x, y), z);
     r2 = mul(pow(x, z), pow(y, z));
     assert(neq(r1, r2));
- }
+
+    RCP<const Number> rc1, rc2, rc3, c1, c2;
+    rc1 = Rational::from_two_ints(integer(1), integer(2));
+    rc2 = Rational::from_two_ints(integer(3), integer(4));
+    rc3 = Rational::from_two_ints(integer(12), integer(13));
+
+    c1 = Complex::from_two_nums(*rc1, *rc2);
+    c2 = Complex::from_two_nums(*rc1, *rc1);
+
+    r1 = pow(x, c1);
+    r2 = mul(pow(x, div(one, i2)), pow(x, mul(I, div(i3, i4))));
+    assert(eq(r1, r2));
+
+    r1 = pow(c1, x);
+    r2 = pow(c1, y);
+    r1 = mul(r1, r2);
+    r2 = pow(c1, add(x, y));
+    assert(eq(r1, r2));
+
+}
 
  void test_log()
  {
