@@ -1,6 +1,8 @@
 #ifndef CSYMPY_MATRIX_H
 #define CSYMPY_MATRIX_H
 
+#include <array>
+
 #include "basic.h"
 
 namespace CSymPy {
@@ -67,15 +69,15 @@ public:
 
     // Matrix addition
     virtual MatrixBase& add_matrix(const MatrixBase &other) const;
-    friend void add_dense_dense(const DenseMatrix &A, const DenseMatrix &B,
-        DenseMatrix &C);
-    friend void add_dense_scalar(const DenseMatrix &A, RCP<const Basic> &k,
-        DenseMatrix &B );
 
     // Matrix multiplication
     virtual MatrixBase& mul_matrix(const MatrixBase &other) const;
 
     // Friend functions related to Matrix Operations
+    friend void add_dense_dense(const DenseMatrix &A, const DenseMatrix &B,
+        DenseMatrix &C);
+    friend void add_dense_scalar(const DenseMatrix &A, RCP<const Basic> &k,
+        DenseMatrix &B );
     friend void mul_dense_dense(const DenseMatrix &A, const DenseMatrix &B,
         DenseMatrix &C);
     friend void mul_dense_scalar(const DenseMatrix &A, RCP<const Basic> &k,
@@ -143,25 +145,15 @@ protected:
     std::vector<RCP<const Basic>> m_;
 };
 
-// ----------------------------- Sparse Matrix -------------------------------//
-
-class SparseMatrix: public MatrixBase {
+// ----------------------------- Sparse Matrices -------------------------------//
+class CSRMatrix: public MatrixBase {
 public:
-    // Constructors
-    SparseMatrix(unsigned row, unsigned col);
-    SparseMatrix(unsigned row, unsigned col,
-            std::map<int, RCP<Basic>> &l);
+    CSRMatrix(unsigned row, unsigned col);
+    CSRMatrix(unsigned row, unsigned col, const unsigned nnz, const unsigned p[],
+        const unsigned j[], const RCP<const Basic> x[]);
 
-    // Virtual functions inherited from Basic class
-    virtual std::size_t __hash__() const;
-    virtual bool __eq__(const Basic &o) const;
-    virtual int compare(const Basic &o) const;
-
-    // Should implement all the virtual methods from MatrixBase
-    // and throw an exception if a method is not applicable.
-
-    // Get and Set elements
-    virtual RCP<const Basic> get(unsigned i) const;
+    // Get and set elements
+    virtual RCP<const Basic>get(unsigned i) const;
     virtual void set(unsigned i, RCP<const Basic> &e);
 
     virtual unsigned rank() const;
@@ -174,10 +166,27 @@ public:
     // Matrix Multiplication
     virtual MatrixBase& mul_matrix(const MatrixBase &other) const;
 
+    friend CSRMatrix from_coo(unsigned row, unsigned col, const unsigned nnz,
+        const unsigned Ai[], const unsigned Aj[], const RCP<const Basic> Ax[]);
+
+    friend void csr_sum_duplicates(CSRMatrix &A);
+    friend bool csr_has_sorted_indices(const CSRMatrix &A);
+    friend bool csr_has_canonical_format(const CSRMatrix &A);
+    friend void csr_sort_indices(CSRMatrix &A);
+    friend void csr_matmat_pass1(const CSRMatrix &A, const CSRMatrix &B,
+        CSRMatrix &C);
+    friend void csr_matmat_pass2(const CSRMatrix &A, const CSRMatrix &B,
+        CSRMatrix &C);
+
 protected:
-    std::map<int, RCP<Basic>> m_;
+    // Stores the dimension of the Matrix
+    unsigned nnz_;
+    std::vector<unsigned> p_;
+    std::vector<unsigned> j_;
+    std::vector<RCP<const Basic>> x_;
 };
 
+// --------------------------- DenseMatrix functions -------------------------//
 void fraction_free_LU_solve(const DenseMatrix &A, const DenseMatrix &b,
     DenseMatrix &x);
 
@@ -187,6 +196,10 @@ void LDL_solve(const DenseMatrix &A, const DenseMatrix &b, DenseMatrix &x);
 
 // Determinant
 RCP<const Basic> det_berkowitz(const DenseMatrix &A);
+
+// --------------------------- CSRMatrix functions ---------------------------//
+CSRMatrix from_coo(unsigned row, unsigned col, const unsigned nnz,
+    const unsigned Ai[], const unsigned Aj[], const RCP<const Basic> Ax[]);
 
 } // CSymPy
 

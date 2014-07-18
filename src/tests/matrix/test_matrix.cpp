@@ -16,6 +16,7 @@ using CSymPy::symbol;
 using CSymPy::is_a;
 using CSymPy::Add;
 using CSymPy::minus_one;
+using CSymPy::CSRMatrix;
 
 void test_dense_dense_addition()
 {
@@ -935,6 +936,38 @@ void test_inverse()
     assert(C == I3);
 }
 
+void test_from_coo()
+{
+    // Example from:
+    // http://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.csr_matrix.html#scipy.sparse.csr_matrix
+    CSRMatrix A = CSRMatrix(3, 3, 6, (unsigned []){0, 2, 3, 6},
+        (unsigned []){0, 2, 2, 0, 1, 2},
+        (RCP<const Basic> []){integer(1), integer(2), integer(3), integer(4),
+            integer(5), integer(6)});
+    CSRMatrix B = from_coo(3, 3, 6, (unsigned[]) {0, 0, 1, 2, 2, 2},
+        (unsigned[]) {0, 2, 2, 0, 1, 2},
+        (RCP<const Basic>[]) {integer(1), integer(2), integer(3), integer(4),
+            integer(5), integer(6)});
+
+    assert(A == B);
+
+    A = CSRMatrix(4, 6, 8, (unsigned []){0, 2, 4, 7, 8},
+        (unsigned []){0, 1, 1, 3, 2, 3, 4, 5},
+        (RCP<const Basic> []){integer(10), integer(20), integer(30), integer(40),
+            integer(50), integer(60), integer(70), integer(80)});
+    B = from_coo(4, 6, 8, (unsigned []){0, 0, 1, 1, 2, 2, 2, 3},
+        (unsigned []){0, 1, 1, 3, 2, 3, 4, 5},
+        (RCP<const Basic> []){integer(10), integer(20), integer(30), integer(40),
+            integer(50), integer(60), integer(70), integer(80)});
+
+    assert(A == B);
+}
+
+void test_CSR_CSR_multiplication()
+{
+
+}
+
 int main(int argc, char* argv[])
 {
     print_stack_on_segfault();
@@ -986,6 +1019,10 @@ int main(int argc, char* argv[])
     test_solve_functions();
 
     test_inverse();
+
+    test_from_coo();
+
+    test_CSR_CSR_multiplication();
 
     return 0;
 }
