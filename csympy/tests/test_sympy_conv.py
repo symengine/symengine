@@ -1,5 +1,5 @@
 from csympy import (Symbol, Integer, sympify, SympifyError, sin, cos,
-        function_symbol)
+        function_symbol, I)
 import sympy
 
 # Note: We test _sympy_() for CSymPy -> SymPy conversion, as those are methods
@@ -135,3 +135,21 @@ def test_conv8():
     assert e4._sympy_() != e1
     assert sympify(e3) == e4
     assert sympify(e3) != e2
+
+def test_conv9():
+    x = Symbol("x")
+    y = Symbol("y")
+    assert (I)._sympy_() == sympy.I
+    assert (2*I+3)._sympy_() == 2*sympy.I+3
+    assert (2*I/5+Integer(3)/5)._sympy_() == 2*sympy.I/5+sympy.S(3)/5
+    assert (x*I+3)._sympy_() == sympy.Symbol("x")*sympy.I + 3
+    assert (x+I*y)._sympy_() == sympy.Symbol("x") + sympy.I*sympy.Symbol("y")
+
+def test_conv9b():
+    x = sympy.Symbol("x")
+    y = sympy.Symbol("y")
+    assert sympify(sympy.I) == I
+    assert sympify(2*sympy.I+3) == 2*I+3
+    assert sympify(2*sympy.I/5+sympy.S(3)/5) == 2*I/5+Integer(3)/5
+    assert sympify(sympy.Symbol("x")*sympy.I + 3) == x*I+3
+    assert sympify(sympy.Symbol("x") + sympy.I*sympy.Symbol("y")) == x+I*y
