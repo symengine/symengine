@@ -16,6 +16,7 @@ using CSymPy::integer;
 using CSymPy::is_a;
 using CSymPy::map_integer_uint;
 using CSymPy::rcp_dynamic_cast;
+using CSymPy::mod;
 
 void test_gcd_lcm()
 {
@@ -84,6 +85,24 @@ void test_modular_inverse()
 
     assert(mod_inverse(outArg(b), *i3, *i11) != 0);
     assert(eq(b, integer(4)));
+}
+
+void test_modulo()
+{
+    RCP<const Integer> i5 = integer(5);
+    RCP<const Integer> i3 = integer(3);
+    RCP<const Integer> i8 = integer(8);
+    RCP<const Integer> i11 = integer(11);
+    RCP<const Integer> b;
+
+    mod(outArg(b), *i5, *i3);
+    assert(eq(b, integer(2)));
+
+    mod(outArg(b), *i11, *i8);
+    assert(eq(b, integer(3)));
+
+    mod(outArg(b), *i11, *i3);
+    assert(eq(b, integer(2)));
 }
 
 void test_fibonacci_lucas()
@@ -349,6 +368,7 @@ int main(int argc, char* argv[])
     test_sieve();
     test_prime_factors();
     test_prime_factor_multiplicities();
+    test_modulo();
 
     return 0;
 }

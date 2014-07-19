@@ -69,6 +69,15 @@ int mod_inverse(const Ptr<RCP<const Integer>> &b, const Integer &a,
     return ret_val;
 }
 
+void mod(const Ptr<RCP<const Integer>> &r, const Integer &n, const Integer &d)
+{
+    mpz_t inv_t;
+    mpz_init(inv_t);
+
+    mpz_mod(inv_t, n.as_mpz().get_mpz_t(), d.as_mpz().get_mpz_t());
+    *r = integer(mpz_class(inv_t));
+}
+
 RCP<const Integer> fibonacci(unsigned long n)
 {
     mpz_class f;
