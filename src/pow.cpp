@@ -86,11 +86,20 @@ std::string Pow::__str__() const
     std::ostringstream o;
     if (is_a<Add>(*base_)) {
         o << "(" << *base_ << ")";
-    } else {
+    } else if ((is_a<Rational>(*base_) || is_a<Integer>(*base_)) &&
+                rcp_static_cast<const Number>(base_)->is_negative()) {
+        o << "(" << *base_ << ")";
+    } else if (is_a<Complex>(*base_) &&
+                (rcp_static_cast<const Complex>(base_)->imaginary_)!=0) {
+        o << "(" << *base_ <<")";
+    }  else {
         o << *base_;
     }
     o << "^";
     if (is_a<Add>(*exp_) || is_a<Pow>(*exp_)) {
+        o << "(" << *exp_ << ")";
+    } else if ((is_a<Rational>(*exp_) || is_a<Integer>(*exp_)) &&
+                rcp_static_cast<const Number>(exp_)->is_negative()) {
         o << "(" << *exp_ << ")";
     } else if (is_a<Complex>(*exp_) &&
                 (rcp_static_cast<const Complex>(exp_)->imaginary_)!=0) {

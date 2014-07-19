@@ -208,6 +208,8 @@ void Mul::dict_add_term_new(const Ptr<RCP<const Number>> &coef, map_basic_basic 
                 imulnum(outArg(*coef), rcp_static_cast<const Number>(t));
             } else if (rcp_static_cast<const Integer>(exp)->is_minus_one()) {
                 idivnum(outArg(*coef), rcp_static_cast<const Number>(t));
+            } else {
+                insert(d, t, exp);
             }
         } else {
             insert(d, t, exp);
@@ -236,8 +238,10 @@ void Mul::dict_add_term_new(const Ptr<RCP<const Number>> &coef, map_basic_basic 
             } else if (is_a<Complex>(*t)) {
                 if (rcp_static_cast<const Integer>(it->second)->is_one()) {
                     imulnum(outArg(*coef), rcp_static_cast<const Number>(t));
+                    d.erase(it);
                 } else if (rcp_static_cast<const Integer>(it->second)->is_minus_one()) {
                     idivnum(outArg(*coef), rcp_static_cast<const Number>(t));
+                    d.erase(it);
                 }
             }
         }
