@@ -538,6 +538,9 @@ void test_pow()
     r2 = mul(im1, I);
     assert(eq(r1, r2));
 
+    r1 = pow(im3, div(integer(9), i6));
+    r2 = mul(mul(im3, I), pow(i3, div(one, i2)));
+    assert(eq(r1, r2));
 
 }
 

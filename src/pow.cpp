@@ -186,11 +186,17 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
             } else if (is_a<Integer>(*a)) {
                 RCP<const Integer> exp_new = rcp_static_cast<const Integer>(a);
                 RCP<const Number> frac = exp_new->powint(Integer(q));
-                if ((exp_new->i == -1) && ((r / den) == 1/2)) {
-                    return mul(frac, I);
-                }
                 map_basic_basic surd;
-                surd[exp_new] = div(integer(r), integer(den));
+                if ((exp_new->is_negative()) && ((r / den) == 1/2)) {
+                    frac = mulnum(frac, I);
+                    exp_new = exp_new->mulint(*minus_one);
+                    // if exp_new is one, no need to add it to dict
+                    if (exp_new->is_one())
+                        return frac;
+                    surd[exp_new] = div(integer(r), integer(den));
+                } else {
+                    surd[exp_new] = div(integer(r), integer(den));
+                }
                 return rcp(new Mul(frac, std::move(surd)));
             } else if (is_a<Complex>(*a)) {
                 return rcp(new Pow(a, b));
