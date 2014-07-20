@@ -69,6 +69,12 @@ else
     if [[ "${WITH_BFD}" != "" ]]; then
         extra_libs="$extra_libs -lbfd"
     fi
+    if [[ "${WITH_ECM}" != "" ]]; then
+        extra_libs="$extra_libs -lecm"
+    fi
+    if [[ "${WITH_PRIMESIEVE}" != "" ]]; then
+        extra_libs="$extra_libs -lprimesieve"
+    fi
     g++ -std=c++0x -I$our_install_dir/include/ -L$our_install_dir/lib test_basic.cpp -lcsympy -lgmpxx -lgmp -lteuchos $extra_libs
     ./a.out
 fi
