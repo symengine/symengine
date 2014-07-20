@@ -525,6 +525,20 @@ void test_pow()
     r1 = pow(mul(I, im3), integer(4));
     r2 = integer(81);
     assert(eq(r1, r2));
+
+    r1 = pow(im1, div(one, i2));
+    r2 = I;
+    assert(eq(r1, r2));
+
+    r1 = pow(im1, div(i6, i4));
+    r2 = mul(im1, I);
+    assert(eq(r1, r2));
+
+    r1 = pow(im1, div(integer(9), i6));
+    r2 = mul(im1, I);
+    assert(eq(r1, r2));
+
+
 }
 
  void test_log()
