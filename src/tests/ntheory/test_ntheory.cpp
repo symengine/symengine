@@ -16,7 +16,9 @@ using CSymPy::integer;
 using CSymPy::is_a;
 using CSymPy::map_integer_uint;
 using CSymPy::rcp_dynamic_cast;
+using CSymPy::mod_inverse;
 using CSymPy::mod;
+using CSymPy::Number;
 
 void test_gcd_lcm()
 {
@@ -93,7 +95,7 @@ void test_modulo()
     RCP<const Integer> i3 = integer(3);
     RCP<const Integer> i8 = integer(8);
     RCP<const Integer> i11 = integer(11);
-    RCP<const Integer> b;
+    RCP<const Number> b;
 
     mod(outArg(b), *i5, *i3);
     assert(eq(b, integer(2)));

@@ -128,7 +128,26 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
                 RCP<const Integer> exp_new = rcp_static_cast<const Integer>(a);
                 return exp_new->powint(*rcp_static_cast<const Integer>(b));
             } else if (is_a<Complex>(*a)) {
-                return rcp(new Pow(a, b));
+                RCP<const Complex> exp_new = rcp_static_cast<const Complex>(a);
+                if (exp_new->is_re_zero()) {
+                    // Imaginary Number  raised to an integer power.
+                    RCP<const Number> im = Rational::from_mpq(exp_new->imaginary_);
+                    RCP<const Integer> pow_new = rcp_static_cast<const Integer>(b);
+                    RCP<const Number> res;
+                    mod(outArg(res), *pow_new, *integer(4));
+                    if (eq(res, zero))
+                        res = one;
+                    else if (eq(res, one))
+                        res = I;
+                    else if (eq(res, integer(2)))
+                        res = minus_one;
+                    else
+                        res = mulnum(I, minus_one);
+                    return mul(im->pow(*pow_new), res);
+                }
+                else {
+                    return rcp(new Pow(a, b));
+                }
             } else {
                 throw std::runtime_error("Not implemented");
             }

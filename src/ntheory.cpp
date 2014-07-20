@@ -69,7 +69,7 @@ int mod_inverse(const Ptr<RCP<const Integer>> &b, const Integer &a,
     return ret_val;
 }
 
-void mod(const Ptr<RCP<const Integer>> &r, const Integer &n, const Integer &d)
+void mod(const Ptr<RCP<const Number>> &r, const Integer &n, const Integer &d)
 {
     mpz_t inv_t;
     mpz_init(inv_t);

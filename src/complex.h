@@ -76,6 +76,8 @@ public:
     //! \return `true` if both `real_` or `imaginary_` are zero
     // This is needed while printing inside `mul`.
     inline bool is_reim_zero() const { return ((this->real_ == 0) || (this->imaginary_ == 0)); }
+    //! \return `true` if `real_`  is zero
+    inline bool is_re_zero() const { return (this->real_ == 0); }
     /*! Add Complex
      * \param other of type Complex
      * */

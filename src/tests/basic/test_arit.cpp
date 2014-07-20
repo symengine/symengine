@@ -510,6 +510,21 @@ void test_pow()
     r2 = pow(c1, add(x, y));
     assert(eq(r1, r2));
 
+    r1 = pow(I, integer(3));
+    r2 = mul(im1, I);
+    assert(eq(r1, r2));
+
+    r1 = pow(mul(I, i2), i2);
+    r2 = mul(im1, i4);
+    assert(eq(r1, r2));
+
+    r1 = pow(mul(I, im3), integer(5));
+    r2 = mul(integer(243), mul(I, im1));
+    assert(eq(r1, r2));
+
+    r1 = pow(mul(I, im3), integer(4));
+    r2 = integer(81);
+    assert(eq(r1, r2));
 }
 
  void test_log()
