@@ -1,8 +1,6 @@
 #ifndef CSYMPY_MATRIX_H
 #define CSYMPY_MATRIX_H
 
-#include <array>
-
 #include "basic.h"
 
 namespace CSymPy {
@@ -149,8 +147,12 @@ protected:
 class CSRMatrix: public MatrixBase {
 public:
     CSRMatrix(unsigned row, unsigned col);
-    CSRMatrix(unsigned row, unsigned col, const unsigned nnz, const unsigned p[],
-        const unsigned j[], const RCP<const Basic> x[]);
+    CSRMatrix(unsigned row, unsigned col, const unsigned nnz,
+        std::vector<unsigned>&& p, std::vector<unsigned>&& j,
+        std::vector<RCP<const Basic>>&& x);
+
+    bool is_canonical(const unsigned row, const std::vector<unsigned>& p,
+        const std::vector<unsigned>& j);
 
     // Get and set elements
     virtual RCP<const Basic>get(unsigned i) const;
@@ -167,8 +169,8 @@ public:
     virtual MatrixBase& mul_matrix(const MatrixBase &other) const;
 
     friend CSRMatrix from_coo(unsigned row, unsigned col, const unsigned nnz,
-        const unsigned Ai[], const unsigned Aj[], const RCP<const Basic> Ax[]);
-
+        const std::vector<unsigned>& i, const std::vector<unsigned>& j,
+        const std::vector<RCP<const Basic>>& x);
     friend void csr_sum_duplicates(CSRMatrix &A);
     friend bool csr_has_sorted_indices(const CSRMatrix &A);
     friend bool csr_has_canonical_format(const CSRMatrix &A);
@@ -199,7 +201,8 @@ RCP<const Basic> det_berkowitz(const DenseMatrix &A);
 
 // --------------------------- CSRMatrix functions ---------------------------//
 CSRMatrix from_coo(unsigned row, unsigned col, const unsigned nnz,
-    const unsigned Ai[], const unsigned Aj[], const RCP<const Basic> Ax[]);
+    const std::vector<unsigned>& i, const std::vector<unsigned>& j,
+    const std::vector<RCP<const Basic>>& x);
 
 } // CSymPy
 

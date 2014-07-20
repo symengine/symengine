@@ -6,36 +6,51 @@
 namespace CSymPy {
 // ----------------------------- CSRMatrix ------------------------------------
 CSRMatrix::CSRMatrix(unsigned row, unsigned col)
-		: MatrixBase(row, col)
+        : MatrixBase(row, col)
 {
 }
 
 CSRMatrix::CSRMatrix(unsigned row, unsigned col, const unsigned nnz,
-	const unsigned p[], const unsigned j[], const RCP<const Basic> x[])
-		: MatrixBase(row, col), nnz_{nnz}
+    std::vector<unsigned>&& p, std::vector<unsigned>&& j,
+    std::vector<RCP<const Basic>>&& x)
+        : MatrixBase(row, col), nnz_{nnz}, p_{std::move(p)}, j_{std::move(j)},
+        x_{std::move(x)}
 {
-	p_ = std::vector<unsigned>(p, p + row + 1);
-	j_ = std::vector<unsigned>(j, j + nnz);
-	x_ = std::vector<RCP<const Basic>>(x, x + nnz);
+    CSYMPY_ASSERT(is_canonical(row, p_, j_));
+}
+
+bool CSRMatrix::is_canonical(const unsigned row, const std::vector<unsigned>& p,
+    const std::vector<unsigned>& j)
+{
+    for (unsigned i = 0; i < row; i++) {
+        if (p[i] > p[i + 1])
+            return false;
+        for (unsigned jj = p[i] + 1; jj < p[i + 1]; jj++) {
+            if (!(j[jj - 1] < j[jj]) ) {
+                return false;
+            }
+        }
+    }
+    return true;
 }
 
 // Get and set elements
 RCP<const Basic> CSRMatrix::get(unsigned i) const
 {
-	unsigned row = i / col_;
-	unsigned col = i - row*col_;
+    unsigned row = i / col_;
+    unsigned col = i - row*col_;
 
-	unsigned row_start = p_[row];
-	unsigned row_end = p_[row + 1] - 1;
+    unsigned row_start = p_[row];
+    unsigned row_end = p_[row + 1] - 1;
 
-	for (unsigned j = row_start; j <= row_end; j++) {
-		if (j_[j] == col)
-			return x_[j];
-		else if (j_[j] > col)
-			break;
-	}
+    for (unsigned j = row_start; j <= row_end; j++) {
+        if (j_[j] == col)
+            return x_[j];
+        else if (j_[j] > col)
+            break;
+    }
 
-	return zero;
+    return zero;
 }
 
 void CSRMatrix::set(unsigned i, RCP<const Basic> &e)
@@ -69,7 +84,8 @@ MatrixBase& CSRMatrix::mul_matrix(const MatrixBase &other) const
 
 // ----------------------- Additional methods --------------------------------//
 CSRMatrix from_coo(unsigned row, unsigned col, const unsigned nnz,
-	const unsigned Ai[], const unsigned Aj[], const RCP<const Basic> Ax[])
+    const std::vector<unsigned>& i, const std::vector<unsigned>& j,
+    const std::vector<RCP<const Basic>>& x)
 {
     //compute number of non-zero entries per row of A
     CSRMatrix B = CSRMatrix(row, col);
@@ -79,7 +95,7 @@ CSRMatrix from_coo(unsigned row, unsigned col, const unsigned nnz,
     B.x_ = std::vector<RCP<const Basic>>(nnz);
 
     for (unsigned n = 0; n < nnz; n++) {
-        B.p_[Ai[n]]++;
+        B.p_[i[n]]++;
     }
 
     //cumsum the nnz per row to get Bp[]
@@ -92,11 +108,11 @@ CSRMatrix from_coo(unsigned row, unsigned col, const unsigned nnz,
 
     //write Aj, Ax into Bj, Bx
     for (unsigned n = 0; n < nnz; n++) {
-        unsigned row  = Ai[n];
+        unsigned row  = i[n];
         unsigned dest = B.p_[row];
 
-        B.j_[dest] = Aj[n];
-        B.x_[dest] = Ax[n];
+        B.j_[dest] = j[n];
+        B.x_[dest] = x[n];
 
         B.p_[row]++;
     }
@@ -113,38 +129,38 @@ CSRMatrix from_coo(unsigned row, unsigned col, const unsigned nnz,
 
 void csr_sum_duplicates(CSRMatrix &A)
 {
-	unsigned nnz = 0;
-	unsigned row_end = 0;
-	for (unsigned i = 0; i < A.row_; i++) {
-		unsigned jj = row_end;
-	    row_end = A.p_[i + 1];
-	    while (jj < row_end) {
-			unsigned j = A.j_[jj];
-	        RCP<const Basic> x = A.x_[jj];
-	        jj++;
+    unsigned nnz = 0;
+    unsigned row_end = 0;
+    for (unsigned i = 0; i < A.row_; i++) {
+        unsigned jj = row_end;
+        row_end = A.p_[i + 1];
+        while (jj < row_end) {
+            unsigned j = A.j_[jj];
+            RCP<const Basic> x = A.x_[jj];
+            jj++;
 
-	        while (jj < row_end && A.j_[jj] == j) {
-	            x = add(x, A.x_[jj]);
-	            jj++;
-	        }
-	        A.j_[nnz] = j;
-	        A.x_[nnz] = x;
-	        nnz++;
-	    }
-	    A.p_[i + 1] = nnz;
-	}
+            while (jj < row_end && A.j_[jj] == j) {
+                x = add(x, A.x_[jj]);
+                jj++;
+            }
+            A.j_[nnz] = j;
+            A.x_[nnz] = x;
+            nnz++;
+        }
+        A.p_[i + 1] = nnz;
+    }
 }
 
 bool csr_has_sorted_indices(const CSRMatrix &A)
 {
-	for (unsigned i = 0; i < A.row_; i++) {
-	  for (unsigned jj = A.p_[i]; jj < A.p_[i + 1] - 1; jj++) {
-	      if (A.j_[jj] > A.j_[jj + 1]) {
-	          return false;
-	      }
-	  }
-	}
-	return true;
+    for (unsigned i = 0; i < A.row_; i++) {
+      for (unsigned jj = A.p_[i]; jj < A.p_[i + 1] - 1; jj++) {
+          if (A.j_[jj] > A.j_[jj + 1]) {
+              return false;
+          }
+      }
+    }
+    return true;
 }
 
 bool csr_has_canonical_format(const CSRMatrix &A)
@@ -221,7 +237,7 @@ void csr_matmat_pass1(const CSRMatrix &A, const CSRMatrix &B, CSRMatrix &C)
         // }
 
         nnz = next_nnz;
-        C.p_[i+1] = nnz;
+        C.p_[i + 1] = nnz;
     }
 }
 
