@@ -242,12 +242,11 @@ cdef class Complex(Number):
 
     def _sympy_(self):
         import sympy
-        # FIXME: this is very fragile. We should request the real and imaginary
-        # parts and construct the sympy expression using those (and using
-        # sympy.I explicitly), rather than relying on the string
-        # representation, replacing "i" -> "I*" and hoping sympy.sympify() will
-        # do the right thing.
-        s = deref(self.thisptr).__str__().decode("utf-8").replace("i", "I*")
+        # FIXME: this is quite fragile. We should request the real and
+        # imaginary parts and construct the sympy expression using those (and
+        # using sympy.I explicitly), rather than relying on the string
+        # representation and hoping sympy.sympify() will do the right thing.
+        s = deref(self.thisptr).__str__().decode("utf-8")
         return sympy.sympify(s)
 
 cdef class Add(Basic):
