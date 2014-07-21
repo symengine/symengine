@@ -43,11 +43,16 @@ bool Pow::is_canonical(const RCP<const Basic> &base, const RCP<const Basic> &exp
         return false;
     // If exp is a rational, it should be between 0  and 1, i.e. we don't
     // allow things like 2^(-1/2) or 2^(3/2)
-    if (is_a_Number(*base) && is_a<Rational>(*exp) &&
+    if ((is_a<Rational>(*base) || is_a<Integer>(*base)) &&
+        is_a<Rational>(*exp) &&
         (rcp_static_cast<const Rational>(exp)->i < 0 ||
         rcp_static_cast<const Rational>(exp)->i > 1))
         return false;
-
+    // Purely Imaginary complex numbers with integral powers are expanded
+    // e.g (2I)^3
+    if (is_a<Complex>(*base) && rcp_static_cast<const Complex>(base)->is_re_zero() &&
+        is_a<Integer>(*exp))
+        return false;
     return true;
 }
 
