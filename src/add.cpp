@@ -129,12 +129,12 @@ std::string Add::__str__() const
                     o << *(p.second);
                 }
             }
-            if (is_a<Add>(*p.first) || is_a<Rational>(*p.first)) {
+            if (is_a<Add>(*p.first) || is_a<Rational>(*p.first) || is_a<Complex>(*p.first)) {
                 if (!eq(p.second, minus_one)) o << "*";
                 o << "(";
             }
             o << *(p.first);
-            if (is_a<Add>(*p.first) || is_a<Rational>(*p.first)) o << ")";
+            if (is_a<Add>(*p.first) || is_a<Rational>(*p.first) || is_a<Complex>(*p.first)) o << ")";
         }
         o << " + ";
         counter++;

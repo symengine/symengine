@@ -116,7 +116,6 @@ std::string Mul::__str__() const
     auto p = dict_.begin();
     if (is_a_Number(*(p->first)) && neq(coef_, minus_one)) o << "*";
     else if (is_a<Complex>(*coef_)) o << "*";
-
     for (; p != dict_.end(); p++) {
         if (is_a<Add>(*(p->first))) o << "(";
         o << *(p->first);
