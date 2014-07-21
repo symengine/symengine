@@ -32,29 +32,40 @@ std::string Complex::__str__() const
         // Since imaginary_ should be in canonical form,
         // the denominator is expected to be always positive
         if (imaginary_.get_num() < 0) {
-            s << " - i";
+            s << " - ";
             if (imaginary_ != -1) {
                 mpq_class q(imaginary_.get_num()*(-1), imaginary_.get_den());
                 s << q;
+                s << "*I";
+            } else {
+                s << "I";
             }
         } else if (imaginary_.get_num() > 0) {
-            s << " + i";
-            if (imaginary_ != 1)
+            s << " + ";
+            if (imaginary_ != 1) {
                 s << this->imaginary_;
+                s << "*I";
+            } else {
+                s << "I";
+            }
         }
     } else {
         // Since imaginary_ should be in canonical form,
         // the denominator is expected to be always positive
         if (imaginary_.get_num() < 0) {
-            s << "-i";
             if (imaginary_ != -1) {
-                mpq_class q(imaginary_.get_num()*(-1), imaginary_.get_den());
-                s << q;
+                s << this->imaginary_;
+                s << "*I";
+            } else {
+                s << "-I";
             }
         } else if (imaginary_.get_num() > 0) {
-            s << "i";
-            if (imaginary_ != 1)
+            if (imaginary_ != 1) {
                 s << this->imaginary_;
+                s << "*I";
+            } else {
+                s << "I";
+            }
         }
     }
     return s.str();

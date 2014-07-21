@@ -70,34 +70,34 @@ void test_printing()
     c2 = Complex::from_two_rats(static_cast<const Rational&>(*rn1), static_cast<const Rational&>(*rn3));
     r1 = mul(c1, x);
     r2 = mul(c2, x);
-    assert(c1->__str__() == "1/2 + i5/7");
-    assert(c2->__str__() == "1/2 - i5/7");
-    assert(r1->__str__() == "(1/2 + i5/7)x");
-    assert(r2->__str__() == "(1/2 - i5/7)x");
+    assert(c1->__str__() == "1/2 + 5/7*I");
+    assert(c2->__str__() == "1/2 - 5/7*I");
+    assert(r1->__str__() == "(1/2 + 5/7*I)*x");
+    assert(r2->__str__() == "(1/2 - 5/7*I)*x");
     r1 = pow(x, c1);
     r2 = pow(x, c2);
-    assert(r1->__str__() == "x^(1/2 + i5/7)");
-    assert(r2->__str__() == "x^(1/2 - i5/7)");
+    assert(r1->__str__() == "x^(1/2 + 5/7*I)");
+    assert(r2->__str__() == "x^(1/2 - 5/7*I)");
 
 
     c1 = Complex::from_two_nums(*rn1, *rn2);
     c2 = Complex::from_two_nums(*rn1, *rn3);
-    assert(c1->__str__() == "1/2 + i5/7");
-    assert(c2->__str__() == "1/2 - i5/7");
+    assert(c1->__str__() == "1/2 + 5/7*I");
+    assert(c2->__str__() == "1/2 - 5/7*I");
 
     rn1 = Rational::from_two_ints(integer(0), integer(4));
     c1 = Complex::from_two_nums(*rn1, *rn2);
     c2 = Complex::from_two_nums(*rn1, *rn3);
     r1 = mul(c1, x);
     r2 = mul(c2, x);
-    assert(c1->__str__() == "i5/7");
-    assert(c2->__str__() == "-i5/7");
-    assert(r1->__str__() == "i5/7x");
-    assert(r2->__str__() == "-i5/7x");
+    assert(c1->__str__() == "5/7*I");
+    assert(c2->__str__() == "-5/7*I");
+    assert(r1->__str__() == "5/7*I*x");
+    assert(r2->__str__() == "-5/7*I*x");
     r1 = pow(x, c1);
     r2 = pow(x, c2);
-    assert(r1->__str__() == "x^(i5/7)");
-    assert(r2->__str__() == "x^(-i5/7)");
+    assert(r1->__str__() == "x^(5/7*I)");
+    assert(r2->__str__() == "x^(-5/7*I)");
 
 
 
@@ -116,10 +116,10 @@ void test_printing()
 
     rn1 = Rational::from_two_ints(integer(1), integer(1));
     c1 = Complex::from_two_nums(*rn2, *rn1);
-    assert(c1->__str__() == "5/7 + i");
+    assert(c1->__str__() == "5/7 + I");
     rn1 = Rational::from_two_ints(integer(-1), integer(1));
     c1 = Complex::from_two_nums(*rn2, *rn1);
-    assert(c1->__str__() == "5/7 - i");
+    assert(c1->__str__() == "5/7 - I");
 
 
 }
