@@ -147,12 +147,10 @@ protected:
 class CSRMatrix: public MatrixBase {
 public:
     CSRMatrix(unsigned row, unsigned col);
-    CSRMatrix(unsigned row, unsigned col, const unsigned nnz,
-        std::vector<unsigned>&& p, std::vector<unsigned>&& j,
-        std::vector<RCP<const Basic>>&& x);
+    CSRMatrix(unsigned row, unsigned col, std::vector<unsigned>&& p,
+        std::vector<unsigned>&& j, std::vector<RCP<const Basic>>&& x);
 
-    bool is_canonical(const unsigned row, const std::vector<unsigned>& p,
-        const std::vector<unsigned>& j);
+    bool is_canonical();
 
     // Get and set elements
     virtual RCP<const Basic>get(unsigned i) const;
@@ -168,7 +166,7 @@ public:
     // Matrix Multiplication
     virtual MatrixBase& mul_matrix(const MatrixBase &other) const;
 
-    friend CSRMatrix from_coo(unsigned row, unsigned col, const unsigned nnz,
+    static CSRMatrix from_coo(unsigned row, unsigned col,
         const std::vector<unsigned>& i, const std::vector<unsigned>& j,
         const std::vector<RCP<const Basic>>& x);
     friend void csr_sum_duplicates(CSRMatrix &A);
@@ -182,7 +180,6 @@ public:
 
 protected:
     // Stores the dimension of the Matrix
-    unsigned nnz_;
     std::vector<unsigned> p_;
     std::vector<unsigned> j_;
     std::vector<RCP<const Basic>> x_;
@@ -198,11 +195,6 @@ void LDL_solve(const DenseMatrix &A, const DenseMatrix &b, DenseMatrix &x);
 
 // Determinant
 RCP<const Basic> det_berkowitz(const DenseMatrix &A);
-
-// --------------------------- CSRMatrix functions ---------------------------//
-CSRMatrix from_coo(unsigned row, unsigned col, const unsigned nnz,
-    const std::vector<unsigned>& i, const std::vector<unsigned>& j,
-    const std::vector<RCP<const Basic>>& x);
 
 } // CSymPy
 

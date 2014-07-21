@@ -10,23 +10,24 @@ CSRMatrix::CSRMatrix(unsigned row, unsigned col)
 {
 }
 
-CSRMatrix::CSRMatrix(unsigned row, unsigned col, const unsigned nnz,
-    std::vector<unsigned>&& p, std::vector<unsigned>&& j,
-    std::vector<RCP<const Basic>>&& x)
-        : MatrixBase(row, col), nnz_{nnz}, p_{std::move(p)}, j_{std::move(j)},
-        x_{std::move(x)}
+CSRMatrix::CSRMatrix(unsigned row, unsigned col, std::vector<unsigned>&& p,
+    std::vector<unsigned>&& j, std::vector<RCP<const Basic>>&& x)
+        : MatrixBase(row, col), p_{std::move(p)}, j_{std::move(j)}, x_{std::move(x)}
 {
-    CSYMPY_ASSERT(is_canonical(row, p_, j_));
+    CSYMPY_ASSERT(is_canonical());
 }
 
-bool CSRMatrix::is_canonical(const unsigned row, const std::vector<unsigned>& p,
-    const std::vector<unsigned>& j)
+bool CSRMatrix::is_canonical()
 {
-    for (unsigned i = 0; i < row; i++) {
-        if (p[i] > p[i + 1])
+	if (p_.size() != row_ + 1 || j_.size() != p_[row_] || x_.size() != p_[row_])
+		return false;
+	// Check if column indices are strictly increasing so we know for sure that
+	// they are sorted and no duplicates
+    for (unsigned i = 0; i < row_; i++) {
+        if (p_[i] > p_[i + 1])
             return false;
-        for (unsigned jj = p[i] + 1; jj < p[i + 1]; jj++) {
-            if (!(j[jj - 1] < j[jj]) ) {
+        for (unsigned jj = p_[i] + 1; jj < p_[i + 1]; jj++) {
+            if (!(j_[jj - 1] < j_[jj]) ) {
                 return false;
             }
         }
@@ -82,51 +83,49 @@ MatrixBase& CSRMatrix::mul_matrix(const MatrixBase &other) const
     throw std::runtime_error("Not implemented.");
 }
 
-// ----------------------- Additional methods --------------------------------//
-CSRMatrix from_coo(unsigned row, unsigned col, const unsigned nnz,
+CSRMatrix CSRMatrix::from_coo(unsigned row, unsigned col,
     const std::vector<unsigned>& i, const std::vector<unsigned>& j,
     const std::vector<RCP<const Basic>>& x)
 {
-    //compute number of non-zero entries per row of A
-    CSRMatrix B = CSRMatrix(row, col);
-    B.nnz_ = nnz;
-    B.p_ = std::vector<unsigned>(B.row_ + 1);
-    B.j_ = std::vector<unsigned>(nnz);
-    B.x_ = std::vector<RCP<const Basic>>(nnz);
+    unsigned nnz = x.size();
+    std::vector<unsigned> p_ = std::vector<unsigned>(row + 1);
+    std::vector<unsigned> j_ = std::vector<unsigned>(nnz);
+    std::vector<RCP<const Basic>> x_ = std::vector<RCP<const Basic>>(nnz);
 
     for (unsigned n = 0; n < nnz; n++) {
-        B.p_[i[n]]++;
+        p_[i[n]]++;
     }
 
-    //cumsum the nnz per row to get Bp[]
-    for (unsigned i = 0, cumsum = 0; i < B.row_; i++) {
-        unsigned temp = B.p_[i];
-        B.p_[i] = cumsum;
+    // cumsum the nnz per row to get p
+    for (unsigned i = 0, cumsum = 0; i < row; i++) {
+        unsigned temp = p_[i];
+        p_[i] = cumsum;
         cumsum += temp;
     }
-    B.p_[B.row_] = nnz;
+    p_[row] = nnz;
 
-    //write Aj, Ax into Bj, Bx
+    // write j, x into j_, x_
     for (unsigned n = 0; n < nnz; n++) {
         unsigned row  = i[n];
-        unsigned dest = B.p_[row];
+        unsigned dest = p_[row];
 
-        B.j_[dest] = j[n];
-        B.x_[dest] = x[n];
+        j_[dest] = j[n];
+        x_[dest] = x[n];
 
-        B.p_[row]++;
+        p_[row]++;
     }
 
-    for (unsigned i = 0, last = 0; i <= B.row_; i++) {
-        unsigned temp = B.p_[i];
-        B.p_[i]  = last;
+    for (unsigned i = 0, last = 0; i <= row; i++) {
+        unsigned temp = p_[i];
+        p_[i]  = last;
         last   = temp;
     }
-    csr_sum_duplicates(B);
-    csr_sort_indices(B);
+
+    CSRMatrix B = CSRMatrix(row, col, std::move(p_), std::move(j_), std::move(x_));
     return B;
 }
 
+// ----------------------- Additional methods --------------------------------//
 void csr_sum_duplicates(CSRMatrix &A)
 {
     unsigned nnz = 0;
@@ -154,11 +153,11 @@ void csr_sum_duplicates(CSRMatrix &A)
 bool csr_has_sorted_indices(const CSRMatrix &A)
 {
     for (unsigned i = 0; i < A.row_; i++) {
-      for (unsigned jj = A.p_[i]; jj < A.p_[i + 1] - 1; jj++) {
-          if (A.j_[jj] > A.j_[jj + 1]) {
-              return false;
-          }
-      }
+        for (unsigned jj = A.p_[i]; jj < A.p_[i + 1] - 1; jj++) {
+            if (A.j_[jj] > A.j_[jj + 1]) {
+                return false;
+            }
+        }
     }
     return true;
 }
