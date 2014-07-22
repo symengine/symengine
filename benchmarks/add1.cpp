@@ -16,7 +16,6 @@ using CSymPy::Add;
 using CSymPy::Mul;
 using CSymPy::Pow;
 using CSymPy::Symbol;
-using CSymPy::umap_basic_int;
 using CSymPy::map_vec_int;
 using CSymPy::integer;
 using CSymPy::multinomial_coefficients;
