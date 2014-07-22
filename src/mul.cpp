@@ -104,6 +104,9 @@ std::string Mul::__str__() const
     std::ostringstream o;
     if (eq(coef_, minus_one))
         o << "-";
+    else if (is_a<Rational>(*coef_) &&
+                !(rcp_static_cast<const Rational>(coef_)->is_int()))
+        o << "(" << *coef_ <<")";
     else if (is_a<Complex>(*coef_)) {
         if (!(rcp_static_cast<const Complex>(coef_)->is_reim_zero()))
             o << "(" << *coef_ <<")";
@@ -114,8 +117,7 @@ std::string Mul::__str__() const
         o << *coef_;
 
     auto p = dict_.begin();
-    if (is_a_Number(*(p->first)) && neq(coef_, minus_one)) o << "*";
-    else if (is_a<Complex>(*coef_)) o << "*";
+    if (neq(coef_, minus_one) && neq(coef_, one)) o << "*";
     for (; p != dict_.end(); p++) {
         if (is_a<Add>(*(p->first))) o << "(";
         o << *(p->first);

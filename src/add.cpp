@@ -129,8 +129,8 @@ std::string Add::__str__() const
                     o << *(p.second);
                 }
             }
+            if (!eq(p.second, minus_one)) o << "*";
             if (is_a<Add>(*p.first) || is_a<Rational>(*p.first) || is_a<Complex>(*p.first)) {
-                if (!eq(p.second, minus_one)) o << "*";
                 o << "(";
             }
             o << *(p.first);

@@ -32,7 +32,7 @@ void test_printing()
     RCP<const Symbol> y  = symbol("y");
 
     r = div(integer(12), pow(integer(196), div(integer(1), integer(2))));
-    assert(r->__str__() == "3/49*196^(1/2)");
+    assert(r->__str__() == "(3/49)*196^(1/2)");
 
     r = mul(integer(12), pow(integer(196), div(integer(1), integer(2))));
     assert(r->__str__() == "12*196^(1/2)");
@@ -42,7 +42,7 @@ void test_printing()
     assert(r->__str__() == "23*5^(1/2)*7^(1/2)");
 
     r = mul(integer(2), pow(symbol("x"), integer(2)));
-    assert(r->__str__() == "2x^2");
+    assert(r->__str__() == "2*x^2");
 
     r1 = mul(integer(12), pow(integer(196), div(integer(-1), integer(2))));
     r2 = mul(integer(294), pow(integer(196), div(integer(-1), integer(2))));
@@ -107,8 +107,8 @@ void test_printing()
     r2 = mul(c2, x);
     assert(c1->__str__() == "5/7");
     assert(c2->__str__() == "-5/7");
-    assert(r1->__str__() == "5/7x");
-    assert(r2->__str__() == "-5/7x");
+    assert(r1->__str__() == "(5/7)*x");
+    assert(r2->__str__() == "(-5/7)*x");
     r1 = pow(x, c1);
     r2 = pow(x, c2);
     assert(r1->__str__() == "x^5/7");
@@ -121,7 +121,17 @@ void test_printing()
     c1 = Complex::from_two_nums(*rn2, *rn1);
     assert(c1->__str__() == "5/7 - I");
 
+    r1 = mul(c1, x);
+    assert(r1->__str__() == "(5/7 - I)*x" );
 
+    r1 = mul(integer(2), x);
+    assert(r1->__str__() == "2*x" );
+
+    r1 = mul(mul(integer(2), pow(symbol("x"), div(integer(2), integer(3)))), y);
+    assert(r1->__str__() == "2*x^(2/3)*y" );
+
+    r1 = mul(x, y);
+    assert(r1->__str__() == "x*y" );
 }
 
 int main(int argc, char* argv[])

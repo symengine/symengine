@@ -51,7 +51,7 @@ public:
     //! \return `true` if `-1`
     virtual bool is_minus_one() const { return this->i == -1; }
     //! \return `true` if denominator is `1`
-    inline bool is_int() { return this->i.get_den() == 1; }
+    inline bool is_int() const { return this->i.get_den() == 1; }
     //! \return `true` if positive
     inline virtual bool is_positive() const {
         return ((this->i.get_den() > 0) && (this->i.get_num() > 0)) ||
