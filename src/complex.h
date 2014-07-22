@@ -194,7 +194,7 @@ public:
         if (conjugate.get_num() == 0) {
             throw std::runtime_error("Divide by zero.");
         } else {
-            return from_mpq((this->real_ * other.i) / conjugate, (this->imaginary_ * (-other.i)) / conjugate);
+            return from_mpq((this->real_ * (-other.i)) / conjugate, (this->imaginary_ * other.i) / conjugate);
         }
     }
     //! Converts the param `other` appropriately and then calls `addcomp`

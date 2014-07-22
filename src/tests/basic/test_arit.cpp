@@ -713,11 +713,11 @@ void test_expand3()
     RCP<const Basic> y = rcp(new Symbol("y"));
     RCP<const Basic> z = rcp(new Symbol("z"));
     RCP<const Basic> w = rcp(new Symbol("w"));
-    RCP<const Basic> i4 = rcp(new Integer(2));
+    RCP<const Basic> i2 = rcp(new Integer(2));
 
     RCP<const Basic> e, f, r;
 
-    e = pow(add(add(add(x, y), z), w), i4);
+    e = pow(add(add(add(x, y), z), w), i2);
     f = mul(e, add(e, w));
 
     std::cout << *f << std::endl;

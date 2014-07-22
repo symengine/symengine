@@ -140,10 +140,12 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
                 return exp_new->powint(*rcp_static_cast<const Integer>(b));
             } else if (is_a<Complex>(*a)) {
                 RCP<const Complex> exp_new = rcp_static_cast<const Complex>(a);
-                if (exp_new->is_re_zero()) {
+                RCP<const Integer> pow_new = rcp_static_cast<const Integer>(b);
+                if (pow_new->is_minus_one()) {
+                    return exp_new->rdivcomp(*pow_new);
+                } else if (exp_new->is_re_zero()) {
                     // Imaginary Number raised to an integer power.
                     RCP<const Number> im = Rational::from_mpq(exp_new->imaginary_);
-                    RCP<const Integer> pow_new = rcp_static_cast<const Integer>(b);
                     RCP<const Number> res;
                     mod(outArg(res), *pow_new, *integer(4));
                     if (eq(res, zero))
@@ -362,9 +364,35 @@ RCP<const Basic> pow_expand(const RCP<const Pow> &self)
                     Mul::dict_add_term_new(outArg(overall_coeff), d, exp2, t);
                 }
                 if (!(i2->second->is_one())) {
-                    imulnum(outArg(overall_coeff),
+                    if (is_a<Integer>(*(i2->second)) || is_a<Rational>(*(i2->second))) {
+                        imulnum(outArg(overall_coeff),
                         pownum(i2->second,
                             rcp_static_cast<const Number>(exp)));
+                    } else if (is_a<Complex>(*(i2->second))) {
+                        if (exp->is_one())
+                            imulnum(outArg(overall_coeff), i2->second);
+                        else if (exp->is_minus_one())
+                            idivnum(outArg(overall_coeff), i2->second);
+                        else if (rcp_static_cast<const Complex>(i2->second)->is_re_zero() &&
+                                is_a<Integer>(*exp)) {
+                            // Imaginary Number raised to an integer power.
+                            RCP<const Number> im = Rational::from_mpq(rcp_static_cast<const Complex>(i2->second)->imaginary_);
+                            RCP<const Integer> pow_new = rcp_static_cast<const Integer>(exp);
+                            RCP<const Number> res;
+                            mod(outArg(res), *pow_new, *integer(4));
+                            if (eq(res, zero))
+                                res = one;
+                            else if (eq(res, one))
+                                res = I;
+                            else if (eq(res, integer(2)))
+                                res = minus_one;
+                            else
+                                res = mulnum(I, minus_one);
+                                imulnum(outArg(overall_coeff), mulnum(im->pow(*pow_new), res));
+                        } else {
+                            Mul::dict_add_term_new(outArg(overall_coeff), d, exp, i2->second);
+                        }
+                    }
                 }
             }
         }
