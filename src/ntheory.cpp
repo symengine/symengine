@@ -465,21 +465,27 @@ void prime_factor_multiplicities(const RCP<const Integer> &n,
         insert(primes_mul, integer(_n), 1);
 }
 
-#ifndef HAVE_CSYMPY_PRIMESIEVE
 std::vector<unsigned> Sieve::_primes={2,3,5,7,11,13,17,19,23,29};
+bool Sieve::set_clear = true;
 
 void Sieve::_extend(unsigned limit)
 {
+#ifdef HAVE_CSYMPY_PRIMESIEVE
+    if (_primes.back() < limit)
+        primesieve::generate_primes(_primes.back() + 1, limit, &_primes);
+#else
     const unsigned sqrt_limit = static_cast<unsigned>(std::sqrt(limit));
     unsigned start = _primes.back() + 1;
-    if(sqrt_limit >= start)
-        _extend(sqrt_limit);
-    if(limit <= start)
+    if (limit <= start)
         return;
-        
+    if (sqrt_limit >= start) {
+        _extend(sqrt_limit);
+        start = _primes.back() + 1;
+    }
+    
     std::valarray<bool> is_prime(true, (limit + 1 - start)/2);
     //considering only odd integers. An odd number n corresponds to n/2 in the array.
-    for (unsigned index = 1; index <= _primes.size() && _primes[index] <= sqrt_limit; ++index) {
+    for (unsigned index = 1; index < _primes.size() && _primes[index] <= sqrt_limit; ++index) {
         unsigned n = _primes[index];
         unsigned multiple = (start / n + 1) * n;
         if(multiple % 2 == 0)
@@ -494,66 +500,51 @@ void Sieve::_extend(unsigned limit)
         if (is_prime[(n - start) / 2])
             _primes.push_back(n);
     }
-}
 #endif
+}
 
 void Sieve::generate_primes(unsigned limit, std::vector<unsigned> &primes)
 {
-#ifdef HAVE_CSYMPY_PRIMESIEVE
-    primesieve::generate_primes(limit, &primes);
-#else
     _extend(limit);
-    for (auto &p: _primes)
-    {
-        if(p <= limit)
-            primes.push_back(p);
-        else break;
-    }
-#endif
+    std::vector<unsigned>::iterator it = std::upper_bound (_primes.begin(), _primes.end(), limit);
+    //find the first position greater than limit and reserve space for the primes
+    primes.reserve(it - _primes.begin());
+    std::copy(_primes.begin(), it,  std::back_inserter( primes ));
 }
 
 Sieve::iterator::iterator(unsigned max)
 {
-#ifdef HAVE_CSYMPY_PRIMESIEVE
-    _pi = primesieve::iterator(0, max);
-#else
     _limit = max;
     _index = 0;
-#endif
 }
 
 Sieve::iterator::iterator()
 {
-#ifndef HAVE_CSYMPY_PRIMESIEVE
     _limit = 0;
     _index = 0;
-#endif
 }
 
 void Sieve::clear()
 {
-#ifndef HAVE_CSYMPY_PRIMESIEVE
-    _primes = {2,3,5,7,11,13,17,19,23,29};
-#endif   
+    if(set_clear){
+        _primes = {2,3,5,7,11,13,17,19,23,29};
+    }
 }
 
 unsigned Sieve::iterator::next_prime()
 {
-#ifdef HAVE_CSYMPY_PRIMESIEVE
-    return _pi.next_prime();
-#else
     if (_index >= _primes.size())
     {
-        unsigned extend_to = _primes[_index-1]*2;
-        if(_limit > 0 && _limit < extend_to){
-            _extend(_limit);
-            _primes.push_back(_limit + 1);
+        unsigned extend_to = _primes[_index - 1] * 2;
+        if (_limit > 0 && _limit < extend_to){
+            extend_to = _limit;
         }
-        else
-            _extend(extend_to);
+        _extend(extend_to);
+        if (_index >= _primes.size()) {     //the next prime is greater than _limit
+            return _limit + 1;
+        }
     }
     return CSymPy::Sieve::_primes[_index++];
-#endif
 }
 
 } // CSymPy

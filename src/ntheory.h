@@ -66,13 +66,6 @@ int factor(const Ptr<RCP<const Integer>> &f, const Integer &n, double B1 = 1.0);
 //! Factor using trial division. 
 //! \return 1 if a non-trivial factor is found, otherwise 0.
 int factor_trial_division(const Ptr<RCP<const Integer>> &f, const Integer &n);
-// Returns all primes up to the `limit` (excluding). The vector `primes` should
-// be empty on input and it will be filled with the primes.
-// The implementation is a very basic Eratosthenes sieve, but the code should
-// be quite optimized. For limit=1e8, it is about 50x slower than the
-// `primesieve` library (1498ms vs 28.29ms).
-//! \param primes: holds all primes up to the `limit` (excluding).
-void eratosthenes_sieve(unsigned limit, std::vector<unsigned> &primes);
 
 //! Factor using lehman's methods
 int factor_lehman_method(const Ptr<RCP<const Integer>> &f, const Integer &n);
@@ -91,7 +84,11 @@ void prime_factors(const RCP<const Integer> &n,
 //! Find multiplicities of prime factors of `n`
 void prime_factor_multiplicities(const RCP<const Integer> &n,
         map_integer_uint &primes);
-//! Sieve class
+// Sieve class stores all the primes upto a limit. When a prime or a list of prime 
+// is requested, if the prime is not there in the sieve, it is extended to hold that 
+// prime. The implementation is a very basic Eratosthenes sieve, but the code should
+// be quite optimized. For limit=1e8, it is about 20x slower than the
+// `primesieve` library (1206ms vs 55.63ms).
 class Sieve {
 
 private:
@@ -99,22 +96,27 @@ private:
     static void _extend(unsigned limit);
 
 public:
+    // Returns all primes up to the `limit` (including). The vector `primes` should
+    // be empty on input and it will be filled with the primes.
+    //! \param primes: holds all primes up to the `limit` (including).
     static void generate_primes(unsigned limit, std::vector<unsigned> &primes);
+    //Clear the array of primes stored if the variable set_clear is set to true
     static void clear();
+    //Variable to set whether the sieve is cleared when clear() is called
+    static bool set_clear;
 
     class iterator {
 
     private:
-#ifdef HAVE_CSYMPY_PRIMESIEVE
-        primesieve::iterator _pi;
-#else
         unsigned _index;
         unsigned _limit;
-#endif
 
     public:
+        //Iterator that generates primes upto limit
         iterator(unsigned limit);
+        //Iterator that generates primes with no limit.
         iterator();
+        //Next prime
         unsigned next_prime();
     };
 };
