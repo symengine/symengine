@@ -170,13 +170,14 @@ int _factor_trial_division_sieve(mpz_class &factor, const mpz_class &N)
     if (!(sqrtN.fits_uint_p()))
         throw std::runtime_error("N too large to factor");
     unsigned limit = sqrtN.get_ui();
-    std::vector<unsigned> primes;
-    Sieve::generate_primes(limit, primes);
-    for (auto &p: primes)
+    Sieve::iterator pi(limit);
+    unsigned p;
+    while ((p = pi.next_prime()) <= limit) {
         if (N % p == 0) {
             factor = p;
             return 1;
         }
+    }
     return 0;
 }
 
@@ -192,14 +193,17 @@ int _factor_lehman_method(mpz_class &rop, const mpz_class &n)
     mpz_root(u_bound.get_mpz_t(), n.get_mpz_t(), 3);
     u_bound = u_bound + 1;
 
-    for (mpz_class i = 2; i <= u_bound; i++)
-        if (n % i == 0) {
-            rop = n / i;
+    Sieve::iterator pi(u_bound.get_ui());
+    unsigned p;
+    while ((p = pi.next_prime()) <= u_bound.get_ui()) {
+        if (n % p == 0) {
+            rop = n / p;
             ret_val = 1;
             break;
         }
+    }
 
-    if (!ret_val){
+    if (!ret_val) {
 
         mpz_class k, a, b, l;
         mpf_class t;
@@ -251,15 +255,16 @@ int _factor_pollard_pm1_method(mpz_class &rop, const mpz_class &n,
     if (n < 4 || B < 3)
         throw std::runtime_error("Require n > 3 and B > 2 to use Pollard's p-1 method");
 
-    std::vector<unsigned> primes;
-    Sieve::generate_primes(B, primes);
     mpz_class m, g, _c;
     _c = c;
 
-    for (auto &p: primes){
+    Sieve::iterator pi(B);
+    unsigned p;
+    while ((p = pi.next_prime()) <= B)
+    {
         m = 1;
         // calculate log(p, B), this can be improved
-        while(m <= B / p){
+        while (m <= B / p) {
             m = m * p;
         }
         mpz_powm(g.get_mpz_t(), _c.get_mpz_t(), m.get_mpz_t(), n.get_mpz_t());
@@ -268,7 +273,7 @@ int _factor_pollard_pm1_method(mpz_class &rop, const mpz_class &n,
     _c = _c - 1;
     mpz_gcd(rop.get_mpz_t(), _c.get_mpz_t(), n.get_mpz_t());
 
-    if(rop == 1 || rop == n)
+    if (rop == 1 || rop == n)
         return 0;
     else
         return 1;
@@ -371,7 +376,7 @@ int factor(const Ptr<RCP<const Integer>> &f, const Integer &n, double B1)
 
         // eventually `rem` = 0 zero as `n` is a perfect power. `f_t` will
         // be set to a factor of `n` when that happens
-        while(i > 1 && rem != 0) {
+        while (i > 1 && rem != 0) {
             mpz_rootrem(_f.get_mpz_t(), rem.get_mpz_t(), _n.get_mpz_t(), i);
             i--;
         }
@@ -420,10 +425,10 @@ void prime_factors(const RCP<const Integer> &n,
     if (!sqrtN.fits_uint_p())
         throw std::runtime_error("N too large to factor");
     unsigned limit = sqrtN.get_ui();
-    std::vector<unsigned> primes;
-    Sieve::generate_primes(limit, primes);
-
-    for (auto &p: primes)
+    Sieve::iterator pi(limit);
+    unsigned p;
+    
+    while ((p = pi.next_prime()) <= limit)
     {
         while (_n % p == 0) {
             prime_list.push_back(integer(p)); 
@@ -446,11 +451,10 @@ void prime_factor_multiplicities(const RCP<const Integer> &n,
     if (!sqrtN.fits_uint_p())
         throw std::runtime_error("N too large to factor");
     unsigned limit = sqrtN.get_ui();
-    std::vector<unsigned> primes;
-    Sieve::generate_primes(limit, primes);
+    Sieve::iterator pi(limit);
 
-    for (auto &p: primes)
-    {
+    unsigned p;
+    while ((p = pi.next_prime()) <= limit) {
         count = 0;
         while (_n % p == 0) { // when a prime factor is found, we divide
             count++;                     // _n by that prime as much as we can
@@ -488,9 +492,9 @@ void Sieve::_extend(unsigned limit)
     for (unsigned index = 1; index < _primes.size() && _primes[index] <= sqrt_limit; ++index) {
         unsigned n = _primes[index];
         unsigned multiple = (start / n + 1) * n;
-        if(multiple % 2 == 0)
+        if (multiple % 2 == 0)
             multiple += n;
-        if(multiple > limit)
+        if (multiple > limit)
             continue;
         std::slice sl = std::slice((multiple-start)/ 2, 1 + (limit - multiple) / (2 * n), n); 
         //starting from n*n, all the odd multiples of n are marked not prime. 
@@ -524,9 +528,13 @@ Sieve::iterator::iterator()
     _index = 0;
 }
 
+Sieve::iterator::~iterator(){
+    Sieve::clear();
+}
+
 void Sieve::clear()
 {
-    if(set_clear){
+    if (set_clear) {
         _primes = {2,3,5,7,11,13,17,19,23,29};
     }
 }
@@ -536,7 +544,7 @@ unsigned Sieve::iterator::next_prime()
     if (_index >= _primes.size())
     {
         unsigned extend_to = _primes[_index - 1] * 2;
-        if (_limit > 0 && _limit < extend_to){
+        if (_limit > 0 && _limit < extend_to) {
             extend_to = _limit;
         }
         _extend(extend_to);

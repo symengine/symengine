@@ -116,6 +116,8 @@ public:
         iterator(unsigned limit);
         //Iterator that generates primes with no limit.
         iterator();
+        //Destructor
+        ~iterator();
         //Next prime
         unsigned next_prime();
     };
