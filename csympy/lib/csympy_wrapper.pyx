@@ -20,6 +20,8 @@ cdef c2py(RCP[const csympy.Basic] o):
         r = Integer.__new__(Integer, -99999)
     elif (csympy.is_a_Rational(deref(o))):
         r = Rational.__new__(Rational)
+    elif (csympy.is_a_Complex(deref(o))):
+        r = Complex.__new__(Complex)
     elif (csympy.is_a_Symbol(deref(o))):
         # TODO: figure out how to bypass the __init__() completely:
         r = Symbol.__new__(Symbol, "null")
@@ -58,6 +60,8 @@ def sympy2csympy(a, raise_error=False):
         return Integer(a.p)
     elif isinstance(a, sympy.Rational):
         return Integer(a.p) / Integer(a.q)
+    elif a is sympy.I:
+        return I
     elif isinstance(a, sympy.sin):
         return sin(a.args[0])
     elif isinstance(a, sympy.cos):
@@ -240,6 +244,20 @@ cdef class Rational(Number):
         import sympy
         return sympy.Rational(deref(self.thisptr).__str__().decode("utf-8"))
 
+cdef class Complex(Number):
+
+    def __dealloc__(self):
+        self.thisptr.reset()
+
+    def _sympy_(self):
+        import sympy
+        # FIXME: this is quite fragile. We should request the real and
+        # imaginary parts and construct the sympy expression using those (and
+        # using sympy.I explicitly), rather than relying on the string
+        # representation and hoping sympy.sympify() will do the right thing.
+        s = deref(self.thisptr).__str__().decode("utf-8")
+        return sympy.sympify(s)
+
 cdef class Add(Basic):
 
     def __dealloc__(self):
@@ -345,6 +363,8 @@ def function_symbol(name, x):
 def sqrt(x):
     cdef Basic X = sympify(x)
     return c2py(csympy.sqrt(X.thisptr))
+
+I = c2py(csympy.I)
 
 # Turn on nice stacktraces:
 csympy.print_stack_on_segfault()

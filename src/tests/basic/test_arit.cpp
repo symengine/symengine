@@ -9,6 +9,7 @@
 #include "mul.h"
 #include "pow.h"
 #include "functions.h"
+#include "complex.h"
 
 using CSymPy::Basic;
 using CSymPy::Add;
@@ -34,6 +35,10 @@ using CSymPy::div;
 using CSymPy::sub;
 using CSymPy::exp;
 using CSymPy::E;
+using CSymPy::Rational;
+using CSymPy::Complex;
+using CSymPy::Number;
+using CSymPy::I;
 using CSymPy::rcp_dynamic_cast;
 using CSymPy::print_stack_on_segfault;
 
@@ -75,6 +80,18 @@ void test_add()
     r1 = add(pow(x, y), z);
     r2 = add(z, pow(x, y));
     assert(eq(r1, r2));
+
+    r1 = add(x, I);
+    r2 = add(I, x);
+    assert(eq(r1, r2));
+
+    r1 = mul(x, I);
+    r2 = mul(mul(I, i2), x);
+    r3 = mul(mul(I, i3), x);
+    r2 = add(r1, r2);
+    assert(eq(r3, r2));
+
+
 }
 
 void test_mul()
@@ -134,6 +151,30 @@ void test_mul()
     r1 = mul(mul(integer(12), pow(integer(196), mhalf)), pow(i3, mhalf));
     r2 = mul(mul(integer(294), pow(integer(196), mhalf)), pow(i3, mhalf));
     assert(eq(i6, mul(r1, r2)));
+
+    r1 = mul(add(x, mul(y, I)), sub(x, mul(y, I)));
+    r2 = mul(sub(x, mul(y, I)), add(x, mul(y, I)));
+    std::cout << *r1 << std::endl;
+    std::cout << *r2 << std::endl;
+    assert(eq(r1, r2));
+
+    r1 = mul(mul(x, I), mul(y, I));
+    r2 = mul(integer(-1), mul(x, y));
+    assert(eq(r1, r2));
+
+    RCP<const Number> rc1, rc2, c1, c2;
+    rc1 = Rational::from_two_ints(integer(2), integer(1));
+    rc2 = Rational::from_two_ints(integer(3), integer(1));
+    c1 = Complex::from_two_nums(*rc1, *rc2);
+    rc1 = Rational::from_two_ints(integer(-5), integer(1));
+    rc2 = Rational::from_two_ints(integer(12), integer(1));
+    c2 = Complex::from_two_nums(*rc1, *rc2);
+
+    r1 = mul(x, c1);
+    r2 = mul(x, c1);
+    r1 = mul(r1, r2);
+    r2 = mul(pow(x, i2), c2);
+    assert(eq(r1, r2));
 }
 
 void test_sub()
@@ -183,6 +224,20 @@ void test_sub()
     r1 = sub(add(x, one), add(x, i2));
     r1 = expand(r1);
     r2 = im1;
+    assert(eq(r1, r2));
+
+    RCP<const Number> rc1, rc2, rc3, c1, c2;
+    rc1 = Rational::from_two_ints(integer(1), integer(2));
+    rc2 = Rational::from_two_ints(integer(3), integer(4));
+    rc3 = Rational::from_two_ints(integer(-5), integer(6));
+
+    c1 = Complex::from_two_nums(*rc1, *rc2);
+    c2 = Complex::from_two_nums(*rc1, *rc3);
+
+    r1 = mul(x, c1);
+    r2 = mul(x, c2);
+    r1 = sub(r1, r2);
+    r2 = mul(div(mul(I, integer(19)), integer(12)), x);
     assert(eq(r1, r2));
 }
 
@@ -262,6 +317,24 @@ void test_div()
 
     r1 = div(integer(5), div(integer(1), integer(3)));
     assert(eq(r1, integer(15)));
+
+    RCP<const Number> rc1, rc2, rc3, c1, c2;
+    rc1 = Rational::from_two_ints(integer(1), integer(2));
+    rc2 = Rational::from_two_ints(integer(3), integer(4));
+    rc3 = Rational::from_two_ints(integer(12), integer(13));
+
+    c1 = Complex::from_two_nums(*rc1, *rc2);
+    c2 = Complex::from_two_nums(*rc1, *rc1);
+
+    r1 = div(x, c1);
+    r2 = mul(sub(div(integer(8), integer(13)), mul(I, rc3)), x);
+    assert(eq(r1, r2));
+
+    r1 = mul(c2, div(x, c1));
+    rc3 = Rational::from_two_ints(integer(2), integer(13));
+    r2 = mul(sub(div(integer(10), integer(13)), mul(I, rc3)), x);
+    assert(eq(r1, r2));
+
 }
 
 void test_pow()
@@ -418,7 +491,58 @@ void test_pow()
     r1 = pow(mul(x, y), z);
     r2 = mul(pow(x, z), pow(y, z));
     assert(neq(r1, r2));
- }
+
+    RCP<const Number> rc1, rc2, rc3, c1, c2;
+    rc1 = Rational::from_two_ints(integer(1), integer(2));
+    rc2 = Rational::from_two_ints(integer(3), integer(4));
+    rc3 = Rational::from_two_ints(integer(12), integer(13));
+
+    c1 = Complex::from_two_nums(*rc1, *rc2);
+    c2 = Complex::from_two_nums(*rc1, *rc1);
+
+    r1 = pow(x, c1);
+    r2 = mul(pow(x, div(one, i2)), pow(x, mul(I, div(i3, i4))));
+    assert(eq(r1, r2));
+
+    r1 = pow(c1, x);
+    r2 = pow(c1, y);
+    r1 = mul(r1, r2);
+    r2 = pow(c1, add(x, y));
+    assert(eq(r1, r2));
+
+    r1 = pow(I, integer(3));
+    r2 = mul(im1, I);
+    assert(eq(r1, r2));
+
+    r1 = pow(mul(I, i2), i2);
+    r2 = mul(im1, i4);
+    assert(eq(r1, r2));
+
+    r1 = pow(mul(I, im3), integer(5));
+    r2 = mul(integer(243), mul(I, im1));
+    assert(eq(r1, r2));
+
+    r1 = pow(mul(I, im3), integer(4));
+    r2 = integer(81);
+    assert(eq(r1, r2));
+
+    r1 = pow(im1, div(one, i2));
+    r2 = I;
+    assert(eq(r1, r2));
+
+    r1 = pow(im1, div(i6, i4));
+    r2 = mul(im1, I);
+    assert(eq(r1, r2));
+
+    r1 = pow(im1, div(integer(9), i6));
+    r2 = mul(im1, I);
+    assert(eq(r1, r2));
+
+    r1 = pow(im3, div(integer(9), i6));
+    r2 = mul(mul(im3, I), pow(i3, div(one, i2)));
+    assert(eq(r1, r2));
+
+}
 
  void test_log()
  {
@@ -589,11 +713,11 @@ void test_expand3()
     RCP<const Basic> y = rcp(new Symbol("y"));
     RCP<const Basic> z = rcp(new Symbol("z"));
     RCP<const Basic> w = rcp(new Symbol("w"));
-    RCP<const Basic> i4 = rcp(new Integer(2));
+    RCP<const Basic> i2 = rcp(new Integer(2));
 
     RCP<const Basic> e, f, r;
 
-    e = pow(add(add(add(x, y), z), w), i4);
+    e = pow(add(add(add(x, y), z), w), i2);
     f = mul(e, add(e, w));
 
     std::cout << *f << std::endl;

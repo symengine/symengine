@@ -17,6 +17,8 @@ public:
     virtual bool is_zero() const = 0;
     //! \return true if `1`
     virtual bool is_one() const = 0;
+    //! \return true if `-1`
+    virtual bool is_minus_one() const = 0;
 
     virtual bool is_negative() const = 0;
 
@@ -79,6 +81,12 @@ inline void imulnum(const Ptr<RCP<const Number>> &self,
     const RCP<const Number> &other)
 {
     *self = mulnum(*self, other);
+}
+
+inline void idivnum(const Ptr<RCP<const Number>> &self,
+    const RCP<const Number> &other)
+{
+    *self = divnum(*self, other);
 }
 
 

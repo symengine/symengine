@@ -33,7 +33,9 @@ bool Mul::is_canonical(const RCP<const Number> &coef,
         if (p.first == null) return false;
         if (p.second == null) return false;
         // e.g. 2^3, (2/3)^4
-        if (is_a_Number(*p.first) && is_a<Integer>(*p.second))
+        // However for Complex no simplification is done
+        if ((is_a<Integer>(*p.first) || is_a<Rational>(*p.first))
+            && is_a<Integer>(*p.second))
             return false;
         // e.g. 0^x
         if (is_a<Integer>(*p.first) &&
@@ -100,14 +102,23 @@ int Mul::compare(const Basic &o) const
 std::string Mul::__str__() const
 {
     std::ostringstream o;
-    if (eq(coef_, minus_one))
+    if (eq(coef_, minus_one)) {
         o << "-";
-    else if (neq(coef_, one))
+    } else if (is_a<Rational>(*coef_) &&
+                !(rcp_static_cast<const Rational>(coef_)->is_int())) {
+        o << "(" << *coef_ <<")";
+    } else if (is_a<Complex>(*coef_)) {
+        if (!(rcp_static_cast<const Complex>(coef_)->is_reim_zero())) {
+            o << "(" << *coef_ <<")";
+        } else {
+            o << *coef_;
+        }
+    } else if (neq(coef_, one)) {
         o << *coef_;
+    }
 
     auto p = dict_.begin();
-    if (is_a_Number(*(p->first)) && neq(coef_, minus_one)) o << "*";
-
+    if (neq(coef_, minus_one) && neq(coef_, one)) o << "*";
     for (; p != dict_.end(); p++) {
         if (is_a<Add>(*(p->first))) o << "(";
         o << *(p->first);
@@ -191,9 +202,18 @@ void Mul::dict_add_term_new(const Ptr<RCP<const Number>> &coef, map_basic_basic 
     auto it = d.find(t);
     if (it == d.end()) {
         // Don't check for `exp = 0` here
-        if (is_a<Integer>(*exp) && is_a_Number(*t)) {
+        // `pow` for Complex is not expanded by default
+        if (is_a<Integer>(*exp) && (is_a<Integer>(*t) || is_a<Rational>(*t))) {
             imulnum(outArg(*coef), pownum(rcp_static_cast<const Number>(t),
                 rcp_static_cast<const Number>(exp)));
+        } else if (is_a<Integer>(*exp) && is_a<Complex>(*t)) {
+            if (rcp_static_cast<const Integer>(exp)->is_one()) {
+                imulnum(outArg(*coef), rcp_static_cast<const Number>(t));
+            } else if (rcp_static_cast<const Integer>(exp)->is_minus_one()) {
+                idivnum(outArg(*coef), rcp_static_cast<const Number>(t));
+            } else {
+                insert(d, t, exp);
+            }
         } else {
             insert(d, t, exp);
         }
@@ -209,7 +229,8 @@ void Mul::dict_add_term_new(const Ptr<RCP<const Number>> &coef, map_basic_basic 
             it->second = add(it->second, exp);
 
         if (is_a<Integer>(*it->second)) {
-            if (is_a_Number(*t)) {
+            // `pow` for Complex is not expanded by default
+            if (is_a<Integer>(*t) || is_a<Rational>(*t)) {
                 if (!rcp_static_cast<const Integer>(it->second)->is_zero()) {
                     imulnum(outArg(*coef), pownum(rcp_static_cast<const Number>(t),
                         rcp_static_cast<const Number>(it->second)));
@@ -217,6 +238,14 @@ void Mul::dict_add_term_new(const Ptr<RCP<const Number>> &coef, map_basic_basic 
                 d.erase(it);
             } else if (rcp_static_cast<const Integer>(it->second)->is_zero()) {
                 d.erase(it);
+            } else if (is_a<Complex>(*t)) {
+                if (rcp_static_cast<const Integer>(it->second)->is_one()) {
+                    imulnum(outArg(*coef), rcp_static_cast<const Number>(t));
+                    d.erase(it);
+                } else if (rcp_static_cast<const Integer>(it->second)->is_minus_one()) {
+                    idivnum(outArg(*coef), rcp_static_cast<const Number>(t));
+                    d.erase(it);
+                }
             }
         }
     }
