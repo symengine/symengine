@@ -1005,9 +1005,6 @@ RCP<const Basic> det_berkowitz(const DenseMatrix &A)
     return poly.get(poly.nrows() - 1);
 }
 
-// Characteristic polynomial: Only the coefficients of monomials in decreasing
-// order of monomial powers is returned, i.e. if `B = transpose([1, -2, 3])`
-// then the corresponding polynomial is `x^2 - 2x + 3`.
 void char_poly(const DenseMatrix &A, DenseMatrix &B)
 {
     CSYMPY_ASSERT(B.ncols() == 1 && B.nrows() == A.nrows() + 1);
