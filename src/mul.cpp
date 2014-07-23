@@ -102,19 +102,20 @@ int Mul::compare(const Basic &o) const
 std::string Mul::__str__() const
 {
     std::ostringstream o;
-    if (eq(coef_, minus_one))
+    if (eq(coef_, minus_one)) {
         o << "-";
-    else if (is_a<Rational>(*coef_) &&
-                !(rcp_static_cast<const Rational>(coef_)->is_int()))
+    } else if (is_a<Rational>(*coef_) &&
+                !(rcp_static_cast<const Rational>(coef_)->is_int())) {
         o << "(" << *coef_ <<")";
-    else if (is_a<Complex>(*coef_)) {
-        if (!(rcp_static_cast<const Complex>(coef_)->is_reim_zero()))
+    } else if (is_a<Complex>(*coef_)) {
+        if (!(rcp_static_cast<const Complex>(coef_)->is_reim_zero())) {
             o << "(" << *coef_ <<")";
-        else
+        } else {
             o << *coef_;
-    }
-    else if (neq(coef_, one))
+        }
+    } else if (neq(coef_, one)) {
         o << *coef_;
+    }
 
     auto p = dict_.begin();
     if (neq(coef_, minus_one) && neq(coef_, one)) o << "*";
