@@ -322,6 +322,21 @@ void multinomial_coefficients_mpz(int m, int n, map_vec_mpz &r)
     }
 }
 
+RCP<const Number> pow_number(const RCP<const Number> &x, long n)
+{
+    RCP<const Number> r, p;
+    long mask = 1;
+    r = one;
+    p = x;
+    while (mask > 0 && n >= mask) {
+        if (n & mask)
+            r = mulnum(r, p);
+        mask = mask << 1;
+        p = mulnum(p, p);
+    }
+    return r;
+}
+
 RCP<const Basic> pow_expand(const RCP<const Pow> &self)
 {
     if (! is_a<Integer>(*self->exp_) || ! is_a<Add>(*self->base_))
@@ -359,6 +374,10 @@ RCP<const Basic> pow_expand(const RCP<const Pow> &self)
                         rcp_static_cast<const Integer>(base)->powint(*exp)));
                 } else if (is_a<Symbol>(*base)) {
                     Mul::dict_add_term(d, exp, base);
+                } else if (is_a<Complex>(*base) &&
+                            !(rcp_static_cast<const Complex>(base)->is_re_zero())) {
+                    imulnum(outArg(overall_coeff),
+                        pow_number(rcp_static_cast<const Complex>(base), exp->as_int()));
                 } else {
                     RCP<const Basic> exp2, t, tmp;
                     tmp = pow(base, exp);
@@ -375,23 +394,27 @@ RCP<const Basic> pow_expand(const RCP<const Pow> &self)
                             imulnum(outArg(overall_coeff), i2->second);
                         } else if (exp->is_minus_one()) {
                             idivnum(outArg(overall_coeff), i2->second);
-                        } else if (rcp_static_cast<const Complex>(i2->second)->is_re_zero() &&
-                                is_a<Integer>(*exp)) {
-                            // Imaginary Number raised to an integer power.
-                            RCP<const Number> im = Rational::from_mpq(rcp_static_cast<const Complex>(i2->second)->imaginary_);
+                        } else if (is_a<Integer>(*exp)) {
                             RCP<const Integer> pow_new = rcp_static_cast<const Integer>(exp);
-                            RCP<const Number> res;
-                            mod(outArg(res), *pow_new, *integer(4));
-                            if (eq(res, zero)) {
-                                res = one;
-                            } else if (eq(res, one)) {
-                                res = I;
-                            } else if (eq(res, integer(2))) {
-                                res = minus_one;
+                            if (rcp_static_cast<const Complex>(i2->second)->is_re_zero()) {
+                                // Imaginary Number raised to an integer power.
+                                RCP<const Number> im = Rational::from_mpq(rcp_static_cast<const Complex>(i2->second)->imaginary_);
+                                RCP<const Number> res;
+                                mod(outArg(res), *pow_new, *integer(4));
+                                if (eq(res, zero)) {
+                                    res = one;
+                                } else if (eq(res, one)) {
+                                    res = I;
+                                } else if (eq(res, integer(2))) {
+                                    res = minus_one;
+                                } else {
+                                    res = mulnum(I, minus_one);
+                                }
+                                imulnum(outArg(overall_coeff), mulnum(im->pow(*pow_new), res));
                             } else {
-                                res = mulnum(I, minus_one);
+                                imulnum(outArg(overall_coeff),
+                                    pow_number(rcp_static_cast<const Complex>(i2->second), pow_new->as_int()));
                             }
-                            imulnum(outArg(overall_coeff), mulnum(im->pow(*pow_new), res));
                         } else {
                             Mul::dict_add_term_new(outArg(overall_coeff), d, exp, i2->second);
                         }

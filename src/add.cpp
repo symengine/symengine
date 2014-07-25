@@ -120,11 +120,18 @@ std::string Add::__str__() const
                 // TODO: extend this for Rationals as well:
                 if (is_a<Integer>(*p.second) &&
                         rcp_static_cast<const Integer>(p.second)->is_negative()) {
-                    if (counter >= 1)
+                    if (counter >= 1) {
                         o << " - ";
-                    else
+                    } else {
                         o << "-";
+                    }
                     o << -(rcp_static_cast<const Integer>(p.second))->i;
+                } else if (is_a<Complex>(*p.second)) {
+                    if (!(rcp_static_cast<const Complex>(p.second)->is_reim_zero())) {
+                        o << "(" << *(p.second) <<")";
+                    } else {
+                        o << *(p.second);
+                    }
                 } else {
                     o << *(p.second);
                 }
