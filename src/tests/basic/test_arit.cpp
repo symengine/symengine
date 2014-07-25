@@ -749,6 +749,17 @@ void test_expand3()
         << "ms" << std::endl;
     std::cout << "number of terms: "
         << rcp_dynamic_cast<const Add>(r)->dict_.size() << std::endl;
+
+    e = pow(c1, integer(-40));
+
+    t1 = std::chrono::high_resolution_clock::now();
+    r = expand(e);
+    t2 = std::chrono::high_resolution_clock::now();
+
+    std::cout << *r << std::endl;
+    std::cout
+        << std::chrono::duration_cast<std::chrono::milliseconds>(t2-t1).count()
+        << "ms" << std::endl;
 }
 
 int main(int argc, char* argv[])
