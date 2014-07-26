@@ -731,6 +731,35 @@ void test_expand3()
         << "ms" << std::endl;
     std::cout << "number of terms: "
         << rcp_dynamic_cast<const Add>(r)->dict_.size() << std::endl;
+
+    RCP<const Number> rc1, rc2, c1;
+    rc1 = Rational::from_two_ints(integer(2), integer(1));
+    rc2 = Rational::from_two_ints(integer(3), integer(1));
+
+    c1 = Complex::from_two_nums(*rc1, *rc2);
+    e = pow(add(x, c1), integer(40));
+
+    t1 = std::chrono::high_resolution_clock::now();
+    r = expand(e);
+    t2 = std::chrono::high_resolution_clock::now();
+
+    std::cout << *r << std::endl;
+    std::cout
+        << std::chrono::duration_cast<std::chrono::milliseconds>(t2-t1).count()
+        << "ms" << std::endl;
+    std::cout << "number of terms: "
+        << rcp_dynamic_cast<const Add>(r)->dict_.size() << std::endl;
+
+    e = pow(c1, integer(-40));
+
+    t1 = std::chrono::high_resolution_clock::now();
+    r = expand(e);
+    t2 = std::chrono::high_resolution_clock::now();
+
+    std::cout << *r << std::endl;
+    std::cout
+        << std::chrono::duration_cast<std::chrono::milliseconds>(t2-t1).count()
+        << "ms" << std::endl;
 }
 
 int main(int argc, char* argv[])
