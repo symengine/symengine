@@ -132,13 +132,13 @@ RCP<const Number> pow_number(const RCP<const Number> &x, long n)
 
 void pow_complex(const Ptr<RCP<const Number>> &self,
     const RCP<const Complex> &base_,
-    const RCP<const Integer> &exp_)
+    const Integer &exp_)
 {
     if (base_->is_re_zero()) {
         // Imaginary Number raised to an integer power.
         RCP<const Number> im = Rational::from_mpq(base_->imaginary_);
         RCP<const Number> res;
-        mod(outArg(res), *exp_, *integer(4));
+        mod(outArg(res), exp_, *integer(4));
         if (eq(res, zero)) {
             res = one;
         } else if (eq(res, one)) {
@@ -148,11 +148,11 @@ void pow_complex(const Ptr<RCP<const Number>> &self,
         } else {
             res = mulnum(I, minus_one);
         }
-        *self = mulnum(im->pow(*exp_), res);
-    } else if (exp_->is_positive()) {
-        *self = pow_number(base_, exp_->as_int());
+        *self = mulnum(im->pow(exp_), res);
+    } else if (exp_.is_positive()) {
+        *self = pow_number(base_, exp_.as_int());
     } else {
-        *self = pow_number(divnum(one, base_), -1 * exp_->as_int());
+        *self = pow_number(divnum(one, base_), -1 * exp_.as_int());
     }
 
 }
@@ -185,7 +185,7 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
                 RCP<const Complex> exp_new = rcp_static_cast<const Complex>(a);
                 RCP<const Integer> pow_new = rcp_static_cast<const Integer>(b);
                 RCP<const Number> res;
-                pow_complex(outArg(res), exp_new, pow_new);
+                pow_complex(outArg(res), exp_new, *pow_new);
                 return res;
             } else {
                 throw std::runtime_error("Not implemented");
@@ -399,7 +399,7 @@ RCP<const Basic> pow_expand(const RCP<const Pow> &self)
                         if (is_a<Integer>(*exp)) {
                             RCP<const Integer> pow_new = rcp_static_cast<const Integer>(exp);
                             RCP<const Complex> base_new = rcp_static_cast<const Complex>(i2->second);
-                            pow_complex(outArg(overall_coeff), base_new, pow_new);
+                            pow_complex(outArg(overall_coeff), base_new, *pow_new);
                         } else {
                             Mul::dict_add_term_new(outArg(overall_coeff), d, exp, i2->second);
                         }
