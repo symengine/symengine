@@ -10,10 +10,6 @@
 #ifndef CSYMPY_NTHEORY_H
 #define CSYMPY_NTHEORY_H
 
-#include "csympy_config.h"
-#ifdef HAVE_CSYMPY_PRIMESIEVE
-#  include <primesieve.hpp>
-#endif // HAVE_CSYMPY_PRIMESIEVE
 #include "integer.h"
 
 namespace CSymPy {
@@ -102,6 +98,8 @@ public:
     static void generate_primes(unsigned limit, std::vector<unsigned> &primes);
     //Clear the array of primes stored if the variable set_clear is set to true
     static void clear();
+    //L1d cache size in bits.
+    static unsigned l1dCacheSize;
     //Variable to set whether the sieve is cleared when clear() is called
     static bool set_clear;
 

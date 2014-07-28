@@ -471,6 +471,7 @@ void prime_factor_multiplicities(const RCP<const Integer> &n,
 
 std::vector<unsigned> Sieve::_primes={2,3,5,7,11,13,17,19,23,29};
 bool Sieve::set_clear = true;
+unsigned Sieve::l1dCacheSize = 262144;
 
 void Sieve::_extend(unsigned limit)
 {
@@ -487,22 +488,28 @@ void Sieve::_extend(unsigned limit)
         start = _primes.back() + 1;
     }
     
-    std::valarray<bool> is_prime(true, (limit + 1 - start)/2);
-    //considering only odd integers. An odd number n corresponds to n/2 in the array.
-    for (unsigned index = 1; index < _primes.size() && _primes[index] <= sqrt_limit; ++index) {
-        unsigned n = _primes[index];
-        unsigned multiple = (start / n + 1) * n;
-        if (multiple % 2 == 0)
-            multiple += n;
-        if (multiple > limit)
-            continue;
-        std::slice sl = std::slice((multiple-start)/ 2, 1 + (limit - multiple) / (2 * n), n); 
-        //starting from n*n, all the odd multiples of n are marked not prime. 
-        is_prime[sl] = false;
-    }
-    for (unsigned n = start + 1; n <= limit; n += 2) {
-        if (is_prime[(n - start) / 2])
-            _primes.push_back(n);
+    unsigned segment = l1dCacheSize;
+    std::valarray<bool> is_prime(segment);
+    for (; start <= limit; start += 2 * segment) {
+        unsigned finish = std::min(start + segment * 2 + 1, limit);
+        is_prime[std::slice(0, segment, 1)] = true;
+        //considering only odd integers. An odd number n corresponds to n-start/2 in the array.
+        for (unsigned index = 1; index < _primes.size() &&
+            _primes[index] * _primes[index] <= finish; ++index) {
+            unsigned n = _primes[index];
+            unsigned multiple = (start / n + 1) * n;
+            if (multiple % 2 == 0)
+                multiple += n;
+            if (multiple > finish)
+                continue;
+            std::slice sl = std::slice((multiple-start)/ 2, 1 + (finish - multiple) / (2 * n), n);
+            //starting from n*n, all the odd multiples of n are marked not prime. 
+            is_prime[sl] = false;
+        }
+        for (unsigned n = start + 1; n <= finish; n += 2) {
+            if (is_prime[(n - start) / 2])
+                _primes.push_back(n);
+        }
     }
 #endif
 }
