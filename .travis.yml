@@ -22,6 +22,8 @@ env:
   - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_CSYMPY_ASSERT="yes" WITH_PRIMESIEVE="yes"
   # Debug build (with BFD and CSYMPY_ASSERT) with Python 2.7
   - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_CSYMPY_ASSERT="yes" WITH_PYTHON="yes"
+  # Debug build (with BFD and CSYMPY_ASSERT) with Arb
+  - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_CSYMPY_ASSERT="yes" WITH_ARB="yes"
   # Debug build with Teuchos::RCP (just to test that it compiles)
   - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_CSYMPY_RCP="no"
   # Release build (with BFD)
@@ -78,6 +80,17 @@ before_install:
         wget http://dl.bintray.com/kimwalisch/primesieve/primesieve-5.2.tar.gz;
         tar -xzvf primesieve-5.2.tar.gz;
         cd primesieve-5.2 && ./configure && make && sudo make install && cd ..;
+    fi
+  - if [[ "${WITH_ARB}" == "yes" ]]; then
+        wget http://www.mpfr.org/mpfr-current/mpfr-3.1.2.tar.gz;
+        tar -xzvf mpfr-3.1.2.tar.gz;
+        cd mpfr-3.1.2 && ./configure && make && sudo make install && cd ..;
+        wget http://www.flintlib.org/flint-2.4.4.tar.gz;
+        tar -xzvf flint-2.4.4.tar.gz;
+        cd flint-2.4.4 && ./configure && make && sudo make install && cd ..;
+        wget https://github.com/fredrik-johansson/arb/archive/2.1.0.tar.gz;
+        tar -xzvf 2.1.0.tar.gz;
+        cd arb-2.1.0 && ./configure && make && sudo make install && cd ..;
     fi
 install:
   - if [[ "${WITH_PYTHON}" == "yes" ]]; then
