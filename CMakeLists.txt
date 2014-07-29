@@ -58,6 +58,17 @@ if (WITH_PRIMESIEVE)
     set(HAVE_CSYMPY_PRIMESIEVE yes)
 endif()
 
+#ARB
+set(WITH_ARB no
+    CACHE BOOL "Build with Arb")
+
+if (WITH_ARB)
+    find_package(ARB REQUIRED)
+    include_directories(${ARB_INCLUDE_DIRS})
+    set(LIBS ${LIBS} ${ARB_LIBRARY})
+    set(HAVE_CSYMPY_ARB yes)
+endif()
+
 # Python
 set(WITH_PYTHON no
     CACHE BOOL "Build with Python wrappers")
@@ -169,6 +180,12 @@ message("WITH_PRIMESIEVE: ${WITH_PRIMESIEVE}")
 if (WITH_PRIMESIEVE)
     message("PRIMESIEVE_INCLUDE_DIRS: ${PRIMESIEVE_INCLUDE_DIRS}")
     message("PRIMESIEVE_LIBRARIES: ${PRIMESIEVE_LIBRARY}")
+endif()
+
+message("WITH_ARB: ${WITH_ARB}")
+if (WITH_ARB)
+    message("ARB_INCLUDE_DIRS: ${ARB_INCLUDE_DIRS}")
+    message("ARB_LIBRARIES: ${ARB_LIBRARY}")
 endif()
 
 message("Copying source of python wrappers into: ${CMAKE_CURRENT_BINARY_DIR}")
