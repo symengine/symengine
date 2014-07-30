@@ -469,9 +469,17 @@ void prime_factor_multiplicities(const RCP<const Integer> &n,
         insert(primes_mul, integer(_n), 1);
 }
 
-std::vector<unsigned> Sieve::_primes={2,3,5,7,11,13,17,19,23,29};
+std::vector<unsigned> Sieve::_primes = {2,3,5,7,11,13,17,19,23,29};
 bool Sieve::set_clear = true;
-unsigned Sieve::l1dCacheSize = 262144;
+unsigned Sieve::_sieve_size = 32 * 1024 * 8; //32K in bits
+
+void Sieve::set_sieve_size(unsigned size) {
+#ifdef HAVE_CSYMPY_PRIMESIEVE
+    primesieve::set_sieve_size(size);
+#else
+    _sieve_size = size * 1024 * 8; //size in bits
+#endif
+}
 
 void Sieve::_extend(unsigned limit)
 {
@@ -488,7 +496,7 @@ void Sieve::_extend(unsigned limit)
         start = _primes.back() + 1;
     }
     
-    unsigned segment = l1dCacheSize;
+    unsigned segment = _sieve_size;
     std::valarray<bool> is_prime(segment);
     for (; start <= limit; start += 2 * segment) {
         unsigned finish = std::min(start + segment * 2 + 1, limit);
