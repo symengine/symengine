@@ -83,11 +83,12 @@ before_install:
     fi
   - if [[ "${WITH_ARB}" == "yes" ]]; then
         sudo apt-get install libmpfr-dev;
-        wget https://github.com/fredrik-johansson/arb/archive/2.1.0.tar.gz;
-        tar -xzf 2.1.0.tar.gz;
         wget http://www.flintlib.org/flint-2.4.4.tar.gz;
         tar -xzf flint-2.4.4.tar.gz;
-        cd flint-2.4.4 && ./configure --extensions=../arb-2.1.0 && make && sudo make install && cd ..;
+        cd flint-2.4.4 && ./configure && make && sudo make install && cd ..;
+        wget https://github.com/fredrik-johansson/arb/archive/2.1.0.tar.gz;
+        tar -xzf 2.1.0.tar.gz;
+        cd arb-2.1.0 && ./configure && make ARB_GMP_LIB_DIR=/usr/lib/x86_64-linux-gnu ARB_MPFR_LIB_DIR=/usr/lib/x86_64-linux-gnu && sudo make ARB_GMP_LIB_DIR=/usr/lib/x86_64-linux-gnu ARB_MPFR_LIB_DIR=/usr/lib/x86_64-linux-gnu install && cd ..;
     fi
 install:
   - if [[ "${WITH_PYTHON}" == "yes" ]]; then
