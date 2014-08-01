@@ -90,6 +90,8 @@ void prime_factors(const RCP<const Integer> &n,
 void prime_factor_multiplicities(const RCP<const Integer> &n,
         map_integer_uint &primes);
 
+//! Computes the Bernoulli number Bn as an exact fraction, for an isolated integer n
+RCP<const Number> bernoulli(ulong n);
 }
 #endif
 

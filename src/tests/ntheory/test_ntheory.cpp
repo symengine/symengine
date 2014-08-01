@@ -19,6 +19,7 @@ using CSymPy::rcp_dynamic_cast;
 using CSymPy::mod_inverse;
 using CSymPy::mod;
 using CSymPy::Number;
+using CSymPy::bernoulli;
 
 void test_gcd_lcm()
 {
@@ -352,6 +353,15 @@ void test_prime_factor_multiplicities()
     _test_prime_factor_multiplicities(i2357);
 }
 
+void test_bernoulli()
+{
+    RCP<const Number> res;
+    #ifdef HAVE_CSYMPY_ARB
+        res = bernoulli(12);
+        std::cout << *res << std::endl;
+    #endif
+}
+
 int main(int argc, char* argv[])
 {
     print_stack_on_segfault();
@@ -371,6 +381,7 @@ int main(int argc, char* argv[])
     test_prime_factors();
     test_prime_factor_multiplicities();
     test_modulo();
+    test_bernoulli();
 
     return 0;
 }
