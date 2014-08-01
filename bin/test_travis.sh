@@ -88,6 +88,9 @@ else
     if [[ "${WITH_PRIMESIEVE}" != "" ]]; then
         extra_libs="$extra_libs -lprimesieve"
     fi
+    if [[ "${WITH_ARB}" != "" ]]; then
+        extra_libs="$extra_libs -larb -lflint"
+    fi
     g++ -std=c++0x -I$our_install_dir/include/ -L$our_install_dir/lib test_basic.cpp -lcsympy -lgmpxx -lgmp -lteuchos $extra_libs
     ./a.out
 fi
