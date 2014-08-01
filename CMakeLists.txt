@@ -19,14 +19,14 @@ endif ()
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     set(CMAKE_CXX_FLAGS_DEBUG
-        "${CMAKE_CXX_FLAGS_DEBUG} -Wno-unused-parameter -ggdb")
+        "${CMAKE_CXX_FLAGS_DEBUG} -Wno-unused-parameter -ggdb -I/usr/local/include/flint ")
     set(CMAKE_CXX_FLAGS_RELEASE
         "${CMAKE_CXX_FLAGS_RELEASE} -Wno-unused-parameter")
 endif()
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
     set(CMAKE_CXX_FLAGS_DEBUG
-        "${CMAKE_CXX_FLAGS_DEBUG} -Wno-unused-parameter -ggdb")
+        "${CMAKE_CXX_FLAGS_DEBUG} -Wno-unused-parameter -ggdb -I/usr/local/include/flint")
     set(CMAKE_CXX_FLAGS_RELEASE
         "${CMAKE_CXX_FLAGS_RELEASE} -Wno-unused-parameter")
 endif()
@@ -65,7 +65,7 @@ set(WITH_ARB no
 if (WITH_ARB)
     find_package(ARB REQUIRED)
     include_directories(${ARB_INCLUDE_DIRS})
-    set(LIBS ${LIBS} ${ARB_LIBRARY})
+    set(LIBS ${LIBS} ${ARB_LIBRARY} -lflint -larb)
     set(HAVE_CSYMPY_ARB yes)
 endif()
 
