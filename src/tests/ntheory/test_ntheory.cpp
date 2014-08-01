@@ -2,11 +2,13 @@
 
 #include "ntheory.h"
 #include "integer.h"
+#include "rational.h"
 #include "add.h"
 #include "mul.h"
 #include "dict.h"
 
 using CSymPy::Integer;
+using CSymPy::Rational;
 using CSymPy::print_stack_on_segfault;
 using CSymPy::RCP;
 using CSymPy::fibonacci;
@@ -355,10 +357,14 @@ void test_prime_factor_multiplicities()
 
 void test_bernoulli()
 {
-    RCP<const Number> res;
+    RCP<const Number> r1;
+    RCP<const Number> r2;
     #ifdef HAVE_CSYMPY_ARB
-        res = bernoulli(12);
-        std::cout << *res << std::endl;
+        r1 = bernoulli(12);
+        r2 = Rational::from_two_ints(integer(-691), integer(2730));
+        assert(eq(r1, r2));
+    #else
+        CSYMPY_CHECK_THROW(bernoulli(12), std::runtime_error)
     #endif
 }
 
