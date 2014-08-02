@@ -19,14 +19,14 @@ endif ()
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     set(CMAKE_CXX_FLAGS_DEBUG
-        "${CMAKE_CXX_FLAGS_DEBUG} -Wno-unused-parameter -ggdb -I/usr/local/include/flint ")
+        "${CMAKE_CXX_FLAGS_DEBUG} -Wno-unused-parameter -ggdb ")
     set(CMAKE_CXX_FLAGS_RELEASE
         "${CMAKE_CXX_FLAGS_RELEASE} -Wno-unused-parameter")
 endif()
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
     set(CMAKE_CXX_FLAGS_DEBUG
-        "${CMAKE_CXX_FLAGS_DEBUG} -Wno-unused-parameter -ggdb -I/usr/local/include/flint")
+        "${CMAKE_CXX_FLAGS_DEBUG} -Wno-unused-parameter -ggdb")
     set(CMAKE_CXX_FLAGS_RELEASE
         "${CMAKE_CXX_FLAGS_RELEASE} -Wno-unused-parameter")
 endif()
@@ -63,9 +63,13 @@ set(WITH_ARB no
     CACHE BOOL "Build with Arb")
 
 if (WITH_ARB)
+    find_package(FLINT REQUIRED)
+    include_directories(${FLINT_INCLUDE_DIRS})
+    set(LIBS ${LIBS} ${FLINT_LIBRARY})
+
     find_package(ARB REQUIRED)
     include_directories(${ARB_INCLUDE_DIRS})
-    set(LIBS ${LIBS} ${ARB_LIBRARY} -lflint -larb)
+    set(LIBS ${LIBS} ${ARB_LIBRARY})
     set(HAVE_CSYMPY_ARB yes)
 endif()
 
@@ -186,6 +190,8 @@ message("WITH_ARB: ${WITH_ARB}")
 if (WITH_ARB)
     message("ARB_INCLUDE_DIRS: ${ARB_INCLUDE_DIRS}")
     message("ARB_LIBRARIES: ${ARB_LIBRARY}")
+    message("FLINT_INCLUDE_DIRS: ${FLINT_INCLUDE_DIRS}")
+    message("FLINT_LIBRARIES: ${FLINT_LIBRARY}")
 endif()
 
 message("Copying source of python wrappers into: ${CMAKE_CURRENT_BINARY_DIR}")
