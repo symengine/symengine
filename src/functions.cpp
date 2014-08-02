@@ -2134,4 +2134,89 @@ RCP<const Basic> ACoth::create(const RCP<const Basic> &arg) const
 {
     return acoth(arg);
 }
+
+Zeta::Zeta(const RCP<const Basic> &s, const RCP<const Basic> &a)
+    : s_{s}, a_{a}
+{
+    CSYMPY_ASSERT(is_canonical(s_, a_))
+}
+
+Zeta::Zeta(const RCP<const Basic> &s)
+    : s_{s}, a_{one}
+{
+    CSYMPY_ASSERT(is_canonical(s_, a_))
+}
+
+bool Zeta::is_canonical(const RCP<const Basic> &s, const RCP<const Basic> &a)
+{
+    if (eq(s, zero)) return false;
+    if (eq(s, one)) return false;
+    return true;
+}
+
+std::size_t Zeta::__hash__() const
+{
+    std::size_t seed = 0;
+    hash_combine<Basic>(seed, *s_);
+    hash_combine<Basic>(seed, *a_);
+    return seed;
+}
+
+bool Zeta::__eq__(const Basic &o) const
+{
+    if (is_a<Zeta>(o) &&
+        eq(s_, static_cast<const Zeta &>(o).s_) &&
+        eq(a_, static_cast<const Zeta &>(o).a_))
+        return true;
+    return false;
+}
+
+int Zeta::compare(const Basic &o) const
+{
+    CSYMPY_ASSERT(is_a<Zeta>(o))
+    return s_->__cmp__(*(static_cast<const Zeta &>(o).s_));
+}
+
+
+std::string Zeta::__str__() const
+{
+    std::ostringstream o;
+    o << "zeta(" << *s_ ;
+    if (neq(a_, one))
+        o << ", " << *a_;
+    o << ")";
+    return o.str();
+}
+
+RCP<const Basic> Zeta::diff(const RCP<const Symbol> &x) const
+{
+    // TODO: check if it is differentiated wrt s
+    return mul(mul(mul(minus_one, s_), zeta(add(s_, one), a_)), a_->diff(x));
+}
+
+RCP<const Basic> zeta(const RCP<const Basic> &s, const RCP<const Basic> &a)
+{
+    if (is_a_Number(*s)) {
+        if (rcp_static_cast<const Number>(s)->is_zero()) {
+            if (is_a_Number(*a) &&
+                rcp_static_cast<const Number>(s)->is_negative()) {
+                return sub(div(minus_one, i2), a);
+            } else {
+                return sub(div(one, i2), a);
+            }
+        } else if (rcp_static_cast<const Number>(s)->is_one()) {
+            throw std::runtime_error("Complex infinity is not yet implemented");
+        } else if (is_a<Integer>(*s) && is_a<Integer>(*a)) {
+            // Implement Harmonic and simplify this
+            return rcp(new Zeta(s, a));
+        }
+    }
+    return rcp(new Zeta(s, a));
+}
+
+RCP<const Basic> zeta(const RCP<const Basic> &s)
+{
+    return zeta(s, one);
+}
+
 } // CSymPy
