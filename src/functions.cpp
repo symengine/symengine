@@ -2199,7 +2199,7 @@ RCP<const Basic> zeta(const RCP<const Basic> &s, const RCP<const Basic> &a)
     if (is_a_Number(*s)) {
         if (rcp_static_cast<const Number>(s)->is_zero()) {
             if (is_a_Number(*a) &&
-                rcp_static_cast<const Number>(s)->is_negative()) {
+                rcp_static_cast<const Number>(a)->is_negative()) {
                 return sub(div(minus_one, i2), a);
             } else {
                 return sub(div(one, i2), a);

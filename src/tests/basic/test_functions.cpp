@@ -54,6 +54,7 @@ using CSymPy::asinh;
 using CSymPy::acosh;
 using CSymPy::atanh;
 using CSymPy::acoth;
+using CSymPy::zeta;
 
 void test_sin()
 {
@@ -1410,6 +1411,28 @@ void test_acoth()
     assert(eq(r1, r2));
 }
 
+void test_zeta()
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Basic> im1 = integer(-1);
+    RCP<const Basic> i2 = integer(2);
+
+    RCP<const Basic> r1;
+    RCP<const Basic> r2;
+
+    r1 = zeta(zero, x);
+    r2 = sub(div(one, i2), x);
+    assert(eq(r1, r2));
+
+    r1 = zeta(zero, im1);
+    r2 = div(one, i2);
+    assert(eq(r1, r2));
+
+    r1 = zeta(zero, i2);
+    r2 = div(integer(-3), i2);
+    assert(eq(r1, r2));
+}
+
 int main(int argc, char* argv[])
 {
     print_stack_on_segfault();    
@@ -1440,5 +1463,6 @@ int main(int argc, char* argv[])
     test_acosh();
     test_atanh();
     test_acoth();
+    test_zeta();
     return 0;
 }
