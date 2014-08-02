@@ -92,5 +92,6 @@ else
         extra_libs="$extra_libs -larb -lflint"
     fi
     g++ -std=c++0x -I$our_install_dir/include/ -L$our_install_dir/lib test_basic.cpp -lcsympy -lgmpxx -lgmp -lteuchos $extra_libs
+    export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
     ./a.out
 fi
