@@ -468,6 +468,37 @@ public:
 RCP<const Basic> zeta(const RCP<const Basic> &s, const RCP<const Basic> &a);
 RCP<const Basic> zeta(const RCP<const Basic> &s);
 
+class Dirichlet_eta : public Function {
+// See http://en.wikipedia.org/wiki/Dirichlet_eta_function
+
+private:
+    RCP<const Basic> s_;
+
+public:
+    //! Dirichlet_eta Constructor
+    Dirichlet_eta(const RCP<const Basic> &s);
+    //! \return Size of the hash
+    virtual std::size_t __hash__() const;
+    /*! Equality comparator
+     * \param o  Object to be compared with
+     * \return whether the 2 objects are equal
+     * */
+    virtual bool __eq__(const Basic &o) const;
+    virtual int compare(const Basic &o) const;
+    //! \return stringify version
+    virtual std::string __str__() const;
+    //! \return `s_`
+    inline RCP<const Basic> get_s() const { return s_; }
+    virtual vec_basic get_args() const { return {s_}; }
+    //! \return `true` if canonical
+    bool is_canonical(const RCP<const Basic> &s);
+    //! Rewrites in the form of zeta
+    RCP<const Basic> rewrite_as_zeta() const;
+};
+
+//! Create a new Dirichlet_eta instance:
+RCP<const Basic> dirichlet_eta(const RCP<const Basic> &s);
+
 class FunctionSymbol : public Function {
 private:
     std::string name_; //! The `f` in `f(x+y)`

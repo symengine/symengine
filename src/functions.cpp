@@ -2219,4 +2219,65 @@ RCP<const Basic> zeta(const RCP<const Basic> &s)
     return zeta(s, one);
 }
 
+Dirichlet_eta::Dirichlet_eta(const RCP<const Basic> &s)
+    : s_{s}
+{
+    CSYMPY_ASSERT(is_canonical(s_))
+}
+
+bool Dirichlet_eta::is_canonical(const RCP<const Basic> &s)
+{
+    if (eq(s, one)) return false;
+    if (!(is_a<Zeta>(*zeta(s)))) return false;
+    return true;
+}
+
+std::size_t Dirichlet_eta::__hash__() const
+{
+    std::size_t seed = 0;
+    hash_combine<Basic>(seed, *s_);
+    return seed;
+}
+
+bool Dirichlet_eta::__eq__(const Basic &o) const
+{
+    if (is_a<Dirichlet_eta>(o) &&
+        eq(s_, static_cast<const Dirichlet_eta &>(o).s_))
+        return true;
+    return false;
+}
+
+int Dirichlet_eta::compare(const Basic &o) const
+{
+    CSYMPY_ASSERT(is_a<Dirichlet_eta>(o))
+    return s_->__cmp__(*(static_cast<const Dirichlet_eta &>(o).s_));
+}
+
+
+std::string Dirichlet_eta::__str__() const
+{
+    std::ostringstream o;
+    o << "dirichlet_eta(" << *s_ << ")";
+    return o.str();
+}
+
+RCP<const Basic> Dirichlet_eta::rewrite_as_zeta() const
+{
+    return mul(sub(one, pow(i2, sub(one, s_))), zeta(s_));
+}
+
+RCP<const Basic> dirichlet_eta(const RCP<const Basic> &s)
+{
+    if (is_a_Number(*s) &&
+        rcp_static_cast<const Number>(s)->is_one()) {
+            return log(i2);
+    }
+    RCP<const Basic> z = zeta(s);
+    if (is_a<Zeta>(*z)) {
+        return rcp(new Dirichlet_eta(s));
+    } else {
+        return mul(sub(one, pow(i2, sub(one, s))), z);
+    }
+}
+
 } // CSymPy
