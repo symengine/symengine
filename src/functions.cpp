@@ -2134,4 +2134,69 @@ RCP<const Basic> ACoth::create(const RCP<const Basic> &arg) const
 {
     return acoth(arg);
 }
+
+KroneckerDelta::KroneckerDelta(const RCP<const Basic> &i, const RCP<const Basic> &j)
+    :i_{i}, j_{j}
+{
+    CSYMPY_ASSERT(is_canonical(i_, j_))
+}
+
+bool KroneckerDelta::is_canonical(const RCP<const Basic> &i, const RCP<const Basic> &j)
+{
+    RCP<const Basic> diff = expand(sub(i, j));
+    if (eq(diff, zero)) {
+        return false;
+    } else if (is_a_Number(*diff)) {
+        return false;
+    } else {
+        // TODO: SymPy uses default key sorting to return in order
+        return true;
+    }
+}
+
+bool KroneckerDelta::__eq__(const Basic &o) const
+{
+    if (is_a<KroneckerDelta>(o) &&
+        eq(i_, static_cast<const KroneckerDelta &>(o).i_) &&
+        eq(j_, static_cast<const KroneckerDelta &>(o).j_))
+        return true;
+    else
+        return false;
+}
+
+int KroneckerDelta::compare(const Basic &o) const
+{
+    CSYMPY_ASSERT(is_a<KroneckerDelta>(o))
+    const KroneckerDelta &s = static_cast<const KroneckerDelta &>(o);
+    return i_->__cmp__(*(s.i_));
+}
+
+std::size_t KroneckerDelta::__hash__() const
+{
+    std::size_t seed = 0;
+    hash_combine<Basic>(seed, *i_);
+    hash_combine<Basic>(seed, *j_);
+    return seed;
+}
+
+std::string KroneckerDelta::__str__() const
+{
+    std::ostringstream o;
+    o << "KroneckerDelta(" << *i_ << ", " << *j_ << ")";
+    return o.str();
+}
+
+RCP<const Basic> kronecker_delta(const RCP<const Basic> &i, const RCP<const Basic> &j)
+{
+    RCP<const Basic> diff = expand(sub(i, j));
+    if (eq(diff, zero)) {
+        return one;
+    } else if (is_a_Number(*diff)) {
+        return zero;
+    } else {
+        // SymPy uses default key sorting to return in order
+        return rcp(new KroneckerDelta(i, j));
+    }
+}
+
 } // CSymPy

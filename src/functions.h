@@ -712,6 +712,36 @@ public:
 
 //! Canonicalize ACoth:
 RCP<const Basic> acoth(const RCP<const Basic> &arg);
+
+class KroneckerDelta: public Function {
+/*! The discrete, or Kronecker, delta function.
+ * A function that takes in two integers `i` and `j`. It returns `0` if `i` and `j` are
+ * not equal or it returns `1` if `i` and `j` are equal.
+ * http://en.wikipedia.org/wiki/Kronecker_delta
+ **/
+private:
+    RCP<const Basic> i_;
+    RCP<const Basic> j_;
+public:
+    //! KroneckerDelta Constructor
+    KroneckerDelta(const RCP<const Basic> &i, const RCP<const Basic> &j);
+    /*! Equality comparator
+     * \param o - Object to be compared with
+     * \return whether the 2 objects are equal
+     * */
+    virtual bool __eq__(const Basic &o) const;
+    virtual int compare(const Basic &o) const;
+    //! \return Size of the hash
+    virtual std::size_t __hash__() const;
+    //! \return stringify version
+    virtual std::string __str__() const;
+    //! \return `true` if canonical
+    bool is_canonical(const RCP<const Basic> &i, const RCP<const Basic> &j);
+    virtual vec_basic get_args() const { return {i_, j_}; }
+};
+
+//! Canonicalize KroneckerDelta:
+RCP<const Basic> kronecker_delta(const RCP<const Basic> &i, const RCP<const Basic> &j);
 } // CSymPy
 
 #endif

@@ -54,6 +54,7 @@ using CSymPy::asinh;
 using CSymPy::acosh;
 using CSymPy::atanh;
 using CSymPy::acoth;
+using CSymPy::kronecker_delta;
 
 void test_sin()
 {
@@ -1410,6 +1411,23 @@ void test_acoth()
     assert(eq(r1, r2));
 }
 
+void test_kronecker_delta()
+{
+    RCP<const Symbol> i = symbol("i");
+    RCP<const Symbol> j = symbol("j");
+
+    RCP<const Basic> r1;
+    RCP<const Basic> r2;
+
+    r1 = kronecker_delta(i, i);
+    r2 = one;
+    assert(eq(r1, r2));
+
+    r1 = kronecker_delta(i, add(i, one));
+    r2 = zero;
+    assert(eq(r1, r2));
+}
+
 int main(int argc, char* argv[])
 {
     print_stack_on_segfault();    
@@ -1440,5 +1458,6 @@ int main(int argc, char* argv[])
     test_acosh();
     test_atanh();
     test_acoth();
+    test_kronecker_delta();
     return 0;
 }
