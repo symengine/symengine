@@ -2199,4 +2199,61 @@ RCP<const Basic> kronecker_delta(const RCP<const Basic> &i, const RCP<const Basi
     }
 }
 
+LeviCivita::LeviCivita(vec_basic&& arg)
+    :arg_{std::move(arg)}
+{
+    CSYMPY_ASSERT(is_canonical(arg_))
+}
+
+bool LeviCivita::is_canonical(const vec_basic &arg)
+{
+    return true;
+}
+
+bool LeviCivita::__eq__(const Basic &o) const
+{
+    if (is_a<LeviCivita>(o) &&
+        vec_basic_eq(arg_, static_cast<const LeviCivita &>(o).arg_))
+        return true;
+    else
+        return false;
+}
+
+int LeviCivita::compare(const Basic &o) const
+{
+    CSYMPY_ASSERT(is_a<LeviCivita>(o))
+    const LeviCivita &s = static_cast<const LeviCivita &>(o);
+    // # of elements
+    if (arg_.size() != s.arg_.size())
+        return (arg_.size() < s.arg_.size()) ? -1 : 1;
+    return vec_basic_compare(arg_, s.arg_);
+}
+
+std::size_t LeviCivita::__hash__() const
+{
+    std::size_t seed = 0;
+    for (auto &p: arg_) {
+        hash_combine<Basic>(seed, *p);
+    }
+    return seed;
+}
+
+std::string LeviCivita::__str__() const
+{
+    std::ostringstream o;
+    o << "LeviCivita(";
+    for (auto &p: arg_) {
+        o << *p << ", ";
+    }
+    std::string s = o.str();
+    s = s.substr(0, s.size()-2);
+    s.append(")");
+    return s;
+}
+
+RCP<const Basic> levi_civita(vec_basic arg)
+{
+    return rcp(new LeviCivita(std::move(arg)));
+}
+
 } // CSymPy
