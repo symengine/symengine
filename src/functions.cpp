@@ -2199,6 +2199,21 @@ RCP<const Basic> kronecker_delta(const RCP<const Basic> &i, const RCP<const Basi
     }
 }
 
+bool has_dup(vec_basic arg)
+{
+    map_basic_basic d;
+    auto it = d.end();
+    for (auto &p: arg) {
+        it = d.find(p);
+        if (it == d.end()) {
+            insert(d, p, one);
+        } else {
+            return true;
+        }
+    }
+    return false;
+}
+
 LeviCivita::LeviCivita(vec_basic&& arg)
     :arg_{std::move(arg)}
 {
@@ -2207,7 +2222,20 @@ LeviCivita::LeviCivita(vec_basic&& arg)
 
 bool LeviCivita::is_canonical(const vec_basic &arg)
 {
-    return true;
+    bool are_int = true;
+    for (auto &p: arg) {
+        if (!(is_a_Number(*p))) {
+            are_int = false;
+            break;
+        }
+    }
+    if (are_int) {
+        return false;
+    } else if (has_dup(arg)) {
+        return false;
+    } else {
+        return true;
+    }
 }
 
 bool LeviCivita::__eq__(const Basic &o) const
@@ -2251,9 +2279,38 @@ std::string LeviCivita::__str__() const
     return s;
 }
 
+RCP<const Basic> eval_levicivita(vec_basic arg, int len)
+{
+    int i, j;
+    RCP<const Basic> res = one;
+    for (i = 0; i < len; i++) {
+        for (j = i + 1; j < len; j++) {
+            res = mul(sub(arg[j], arg[i]), res);
+        }
+        res = div(res, factorial(i));
+    }
+    return res;
+}
+
 RCP<const Basic> levi_civita(vec_basic arg)
 {
-    return rcp(new LeviCivita(std::move(arg)));
+    bool are_int = true;
+    int len = 0;
+    for (auto &p: arg) {
+        if (!(is_a_Number(*p))) {
+            are_int = false;
+            break;
+        } else {
+            len++;
+        }
+    }
+    if (are_int) {
+        return eval_levicivita(arg, len);
+    } else if (has_dup(arg)) {
+        return zero;
+    } else {
+        return rcp(new LeviCivita(std::move(arg)));
+    }
 }
 
 } // CSymPy
