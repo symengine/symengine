@@ -19,10 +19,10 @@ CSRMatrix::CSRMatrix(unsigned row, unsigned col, std::vector<unsigned>&& p,
 
 bool CSRMatrix::is_canonical()
 {
-	if (p_.size() != row_ + 1 || j_.size() != p_[row_] || x_.size() != p_[row_])
-		return false;
-	// Check if column indices are strictly increasing so we know for sure that
-	// they are sorted and no duplicates
+    if (p_.size() != row_ + 1 || j_.size() != p_[row_] || x_.size() != p_[row_])
+        return false;
+    // Check if column indices are strictly increasing so we know for sure that
+    // they are sorted and no duplicates
     for (unsigned i = 0; i < row_; i++) {
         if (p_[i] > p_[i + 1])
             return false;
@@ -88,7 +88,7 @@ CSRMatrix CSRMatrix::from_coo(unsigned row, unsigned col,
     const std::vector<RCP<const Basic>>& x)
 {
     unsigned nnz = x.size();
-    std::vector<unsigned> p_ = std::vector<unsigned>(row + 1);
+    std::vector<unsigned> p_ = std::vector<unsigned>(row + 1, 0);
     std::vector<unsigned> j_ = std::vector<unsigned>(nnz);
     std::vector<RCP<const Basic>> x_ = std::vector<RCP<const Basic>>(nnz);
 
@@ -119,6 +119,28 @@ CSRMatrix CSRMatrix::from_coo(unsigned row, unsigned col,
         unsigned temp = p_[i];
         p_[i]  = last;
         last   = temp;
+    }
+
+    // Remove duplicates
+    unsigned nnz_ = 0;
+    unsigned row_end = 0;
+    for (unsigned i = 0; i < row; i++) {
+        unsigned jj = row_end;
+        row_end = p_[i + 1];
+        while (jj < row_end) {
+            unsigned j = j_[jj];
+            RCP<const Basic> e = x_[jj];
+            jj++;
+
+            while (jj < row_end && j_[jj] == j) {
+                e = add(e, x_[jj]);
+                jj++;
+            }
+            j_[nnz_] = j;
+            x_[nnz_] = e;
+            nnz_++;
+        }
+        p_[i + 1] = nnz_;
     }
 
     CSRMatrix B = CSRMatrix(row, col, std::move(p_), std::move(j_), std::move(x_));
@@ -177,7 +199,7 @@ bool csr_has_canonical_format(const CSRMatrix &A)
 }
 
 template< class T1, class T2 >
-bool kv_pair_less(const std::pair<T1,T2>& x, const std::pair<T1,T2>& y){
+bool kv_pair_less(const std::pair<T1,T2>& x, const std::pair<T1,T2>& y) {
     return x.first < y.first;
 }
 
@@ -228,12 +250,10 @@ void csr_matmat_pass1(const CSRMatrix &A, const CSRMatrix &B, CSRMatrix &C)
 
         unsigned next_nnz = nnz + row_nnz;
 
-        // if (row_nnz > NPY_MAX_INTP - nnz || next_nnz != (I)next_nnz) {
-
-        //      * Index overflowed. Note that row_nnz <= n_col and cannot overflow
-
-        //     throw std::overflow_error("nnz of the result is too large");
-        // }
+        // Addition overflow: http://www.cplusplus.com/articles/DE18T05o/
+        if (next_nnz < nnz) {
+            throw std::overflow_error("nnz of the result is too large");
+        }
 
         nnz = next_nnz;
         C.p_[i + 1] = nnz;
