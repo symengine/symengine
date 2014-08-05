@@ -194,9 +194,6 @@ RCP<const Basic> det_berkowitz(const DenseMatrix &A);
 // then the corresponding polynomial is `x^2 - 2x + 3`.
 void char_poly(const DenseMatrix &A, DenseMatrix &B);
 
-// Eigen values
-void eigenvalues(const DenseMatrix &A, std::vector<RCP<const Basic>> &roots);
-
 } // CSymPy
 
 // Test two matrices for equality
