@@ -12,3 +12,6 @@
 
 /* Define if you want to enable PRIMESIEVE support in CSymPy */
 #cmakedefine HAVE_CSYMPY_PRIMESIEVE
+
+/* Define if you want to enable ARB support in CSymPy */
+#cmakedefine HAVE_CSYMPY_ARB

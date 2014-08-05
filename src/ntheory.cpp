@@ -9,6 +9,11 @@
 #ifdef HAVE_CSYMPY_PRIMESIEVE
 #  include <primesieve.hpp>
 #endif // HAVE_CSYMPY_PRIMESIEVE
+#ifdef HAVE_CSYMPY_ARB
+#  include "arb.h"
+#  include "bernoulli.h"
+#  include "rational.h"
+#endif // HAVE_CSYMPY_ARB
 #include "dict.h"
 
 namespace CSymPy {
@@ -498,5 +503,22 @@ void prime_factor_multiplicities(const RCP<const Integer> &n,
         insert(primes_mul, integer(_n), 1);
 }
 
+RCP<const Number> bernoulli(ulong n)
+{
+#ifdef HAVE_CSYMPY_ARB
+    fmpq_t res;
+    fmpq_init(res);
+    bernoulli_fmpq_ui(res, n);
+    mpq_t a;
+    mpq_init(a);
+    fmpq_get_mpq(a, res);
+    mpq_class b (a);
+    fmpq_clear(res);
+    mpq_clear(a);
+    return Rational::from_mpq(b);
+#else
+    throw std::runtime_error("Currently supported only if ARB is installed");
+#endif
+}
 } // CSymPy
 
