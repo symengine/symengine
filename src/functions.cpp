@@ -2199,7 +2199,7 @@ RCP<const Basic> kronecker_delta(const RCP<const Basic> &i, const RCP<const Basi
     }
 }
 
-bool has_dup(vec_basic arg)
+bool has_dup(const vec_basic &arg)
 {
     map_basic_basic d;
     auto it = d.end();
