@@ -2313,4 +2313,149 @@ RCP<const Basic> levi_civita(vec_basic arg)
     }
 }
 
+Zeta::Zeta(const RCP<const Basic> &s, const RCP<const Basic> &a)
+    : s_{s}, a_{a}
+{
+    CSYMPY_ASSERT(is_canonical(s_, a_))
+}
+
+Zeta::Zeta(const RCP<const Basic> &s)
+    : s_{s}, a_{one}
+{
+    CSYMPY_ASSERT(is_canonical(s_, a_))
+}
+
+bool Zeta::is_canonical(const RCP<const Basic> &s, const RCP<const Basic> &a)
+{
+    if (eq(s, zero)) return false;
+    if (eq(s, one)) return false;
+    return true;
+}
+
+std::size_t Zeta::__hash__() const
+{
+    std::size_t seed = 0;
+    hash_combine<Basic>(seed, *s_);
+    hash_combine<Basic>(seed, *a_);
+    return seed;
+}
+
+bool Zeta::__eq__(const Basic &o) const
+{
+    if (is_a<Zeta>(o) &&
+        eq(s_, static_cast<const Zeta &>(o).s_) &&
+        eq(a_, static_cast<const Zeta &>(o).a_))
+        return true;
+    return false;
+}
+
+int Zeta::compare(const Basic &o) const
+{
+    CSYMPY_ASSERT(is_a<Zeta>(o))
+    return s_->__cmp__(*(static_cast<const Zeta &>(o).s_));
+}
+
+
+std::string Zeta::__str__() const
+{
+    std::ostringstream o;
+    o << "zeta(" << *s_ ;
+    if (neq(a_, one))
+        o << ", " << *a_;
+    o << ")";
+    return o.str();
+}
+
+RCP<const Basic> Zeta::diff(const RCP<const Symbol> &x) const
+{
+    // TODO: check if it is differentiated wrt s
+    return mul(mul(mul(minus_one, s_), zeta(add(s_, one), a_)), a_->diff(x));
+}
+
+RCP<const Basic> zeta(const RCP<const Basic> &s, const RCP<const Basic> &a)
+{
+    if (is_a_Number(*s)) {
+        if (rcp_static_cast<const Number>(s)->is_zero()) {
+            if (is_a_Number(*a) &&
+                rcp_static_cast<const Number>(a)->is_negative()) {
+                return sub(div(minus_one, i2), a);
+            } else {
+                return sub(div(one, i2), a);
+            }
+        } else if (rcp_static_cast<const Number>(s)->is_one()) {
+            throw std::runtime_error("Complex infinity is not yet implemented");
+        } else if (is_a<Integer>(*s) && is_a<Integer>(*a)) {
+            // Implement Harmonic and simplify this
+            return rcp(new Zeta(s, a));
+        }
+    }
+    return rcp(new Zeta(s, a));
+}
+
+RCP<const Basic> zeta(const RCP<const Basic> &s)
+{
+    return zeta(s, one);
+}
+
+Dirichlet_eta::Dirichlet_eta(const RCP<const Basic> &s)
+    : s_{s}
+{
+    CSYMPY_ASSERT(is_canonical(s_))
+}
+
+bool Dirichlet_eta::is_canonical(const RCP<const Basic> &s)
+{
+    if (eq(s, one)) return false;
+    if (!(is_a<Zeta>(*zeta(s)))) return false;
+    return true;
+}
+
+std::size_t Dirichlet_eta::__hash__() const
+{
+    std::size_t seed = 0;
+    hash_combine<Basic>(seed, *s_);
+    return seed;
+}
+
+bool Dirichlet_eta::__eq__(const Basic &o) const
+{
+    if (is_a<Dirichlet_eta>(o) &&
+        eq(s_, static_cast<const Dirichlet_eta &>(o).s_))
+        return true;
+    return false;
+}
+
+int Dirichlet_eta::compare(const Basic &o) const
+{
+    CSYMPY_ASSERT(is_a<Dirichlet_eta>(o))
+    return s_->__cmp__(*(static_cast<const Dirichlet_eta &>(o).s_));
+}
+
+
+std::string Dirichlet_eta::__str__() const
+{
+    std::ostringstream o;
+    o << "dirichlet_eta(" << *s_ << ")";
+    return o.str();
+}
+
+RCP<const Basic> Dirichlet_eta::rewrite_as_zeta() const
+{
+    return mul(sub(one, pow(i2, sub(one, s_))), zeta(s_));
+}
+
+RCP<const Basic> dirichlet_eta(const RCP<const Basic> &s)
+{
+    if (is_a_Number(*s) &&
+        rcp_static_cast<const Number>(s)->is_one()) {
+            return log(i2);
+    }
+    RCP<const Basic> z = zeta(s);
+    if (is_a<Zeta>(*z)) {
+        return rcp(new Dirichlet_eta(s));
+    } else {
+        return mul(sub(one, pow(i2, sub(one, s))), z);
+    }
+}
+
 } // CSymPy

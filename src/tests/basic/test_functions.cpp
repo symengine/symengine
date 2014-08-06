@@ -56,6 +56,8 @@ using CSymPy::atanh;
 using CSymPy::acoth;
 using CSymPy::kronecker_delta;
 using CSymPy::levi_civita;
+using CSymPy::zeta;
+using CSymPy::dirichlet_eta;
 
 void test_sin()
 {
@@ -1429,6 +1431,29 @@ void test_kronecker_delta()
     assert(eq(r1, r2));
 }
 
+void test_zeta()
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Basic> im1 = integer(-1);
+    RCP<const Basic> i2 = integer(2);
+
+    RCP<const Basic> r1;
+    RCP<const Basic> r2;
+
+    r1 = zeta(zero, x);
+    r2 = sub(div(one, i2), x);
+    assert(eq(r1, r2));
+
+    r1 = zeta(zero, im1);
+    r2 = div(one, i2);
+    assert(eq(r1, r2));
+
+    r1 = zeta(zero, i2);
+    r2 = div(integer(-3), i2);
+    assert(eq(r1, r2));
+}
+
+
 void test_levi_civita()
 {
     RCP<const Symbol> i = symbol("i");
@@ -1453,6 +1478,24 @@ void test_levi_civita()
 
     r1 = levi_civita({i2, i4});
     assert(eq(r1, i2));
+}
+
+void test_dirichlet_eta()
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Basic> im1 = integer(-1);
+    RCP<const Basic> i2 = integer(2);
+
+    RCP<const Basic> r1;
+    RCP<const Basic> r2;
+
+    r1 = dirichlet_eta(one);
+    r2 = log(i2);
+    assert(eq(r1, r2));
+
+    r1 = dirichlet_eta(zero);
+    r2 = div(one, i2);
+    assert(eq(r1, r2));
 }
 
 int main(int argc, char* argv[])
@@ -1487,5 +1530,7 @@ int main(int argc, char* argv[])
     test_acoth();
     test_kronecker_delta();
     test_levi_civita();
+    test_zeta();
+    test_dirichlet_eta();
     return 0;
 }
