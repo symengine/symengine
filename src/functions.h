@@ -832,7 +832,7 @@ private:
     vec_basic arg_;
 public:
     //! LeviCivita Constructor
-    LeviCivita(vec_basic&& arg);
+    LeviCivita(const vec_basic&& arg);
     /*! Equality comparator
      * \param o - Object to be compared with
      * \return whether the 2 objects are equal
@@ -849,7 +849,7 @@ public:
 };
 
 //! Canonicalize LeviCivita:
-RCP<const Basic> levi_civita(vec_basic arg);
+RCP<const Basic> levi_civita(const vec_basic &arg);
 } // CSymPy
 
 #endif

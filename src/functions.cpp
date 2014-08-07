@@ -2188,6 +2188,7 @@ std::string KroneckerDelta::__str__() const
 
 RCP<const Basic> kronecker_delta(const RCP<const Basic> &i, const RCP<const Basic> &j)
 {
+    // Expand is needed to simplify things like `i-(i+1)` to `-1`
     RCP<const Basic> diff = expand(sub(i, j));
     if (eq(diff, zero)) {
         return one;
@@ -2214,7 +2215,7 @@ bool has_dup(const vec_basic &arg)
     return false;
 }
 
-LeviCivita::LeviCivita(vec_basic&& arg)
+LeviCivita::LeviCivita(const vec_basic&& arg)
     :arg_{std::move(arg)}
 {
     CSYMPY_ASSERT(is_canonical(arg_))
@@ -2279,7 +2280,7 @@ std::string LeviCivita::__str__() const
     return s;
 }
 
-RCP<const Basic> eval_levicivita(vec_basic arg, int len)
+RCP<const Basic> eval_levicivita(const vec_basic &arg, int len)
 {
     int i, j;
     RCP<const Basic> res = one;
@@ -2292,7 +2293,7 @@ RCP<const Basic> eval_levicivita(vec_basic arg, int len)
     return res;
 }
 
-RCP<const Basic> levi_civita(vec_basic arg)
+RCP<const Basic> levi_civita(const vec_basic &arg)
 {
     bool are_int = true;
     int len = 0;
