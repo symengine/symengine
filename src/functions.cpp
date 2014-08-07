@@ -2280,4 +2280,94 @@ RCP<const Basic> dirichlet_eta(const RCP<const Basic> &s)
     }
 }
 
+Gamma::Gamma(const RCP<const Basic> &arg)
+    : arg_{arg}
+{
+    CSYMPY_ASSERT(is_canonical(arg_))
+}
+
+bool Gamma::is_canonical(const RCP<const Basic> &arg)
+{
+    if (is_a<Integer>(*arg)) return false;
+    if (is_a<Rational>(*arg) &&
+        (rcp_static_cast<const Rational>(arg)->i.get_den()) == 2) {
+        return false;
+    }
+    return true;
+}
+
+std::size_t Gamma::__hash__() const
+{
+    std::size_t seed = 0;
+    hash_combine<Basic>(seed, *arg_);
+    return seed;
+}
+
+bool Gamma::__eq__(const Basic &o) const
+{
+    if (is_a<Gamma>(o) &&
+        eq(arg_, static_cast<const Gamma &>(o).arg_))
+        return true;
+    return false;
+}
+
+int Gamma::compare(const Basic &o) const
+{
+    CSYMPY_ASSERT(is_a<Gamma>(o))
+    return arg_->__cmp__(*(static_cast<const Gamma &>(o).arg_));
+}
+
+std::string Gamma::__str__() const
+{
+    std::ostringstream o;
+    o << "gamma(" << *arg_ << ")";
+    return o.str();
+}
+
+RCP<const Basic> gamma(const RCP<const Basic> &arg)
+{
+    if (is_a<Integer>(*arg)) {
+        RCP<const Integer> arg_ = rcp_static_cast<const Integer>(arg);
+        if (arg_->is_positive()) {
+            return factorial((arg_->subint(*one))->as_int());
+        } else {
+            throw std::runtime_error("Complex Infinity not yet implemented");
+        }
+    } else if (is_a<Rational>(*arg)) {
+        RCP<const Rational> arg_ = rcp_static_cast<const Rational>(arg);
+        if ((arg_->i.get_den()) == 2) {
+            RCP<const Integer> n;
+            fdiv_q(outArg(n), *(integer(abs(arg_->i.get_num()))), *(integer(arg_->i.get_den())));
+            RCP<const Integer> k, coeff;
+            if (arg_->is_positive()) {
+                k = n;
+                coeff = one;
+            } else {
+                n = n->addint(*one);
+                k = n;
+                if ((n->as_int() && 1) == 0) {
+                    coeff = one;
+                } else {
+                    coeff = minus_one;
+                }
+            }
+            int j = 1;
+            for (int i = 3; i < 2*k->as_int(); i = i + 2)
+            {
+                j = j * i;
+            }
+            mulnum(coeff, integer(j));
+            if (arg_->is_positive()) {
+                return div(mul(coeff, sqrt(pi)), pow(i2, n));
+            } else {
+                return div(mul(pow(i2, n), sqrt(pi)), coeff);
+            }
+        } else {
+            return rcp(new Gamma(arg));
+        }
+    }
+    return rcp(new Gamma(arg));
+}
+
+
 } // CSymPy
