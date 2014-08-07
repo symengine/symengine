@@ -30,6 +30,8 @@ void gcd_ext(const Ptr<RCP<const Integer>> &g, const Ptr<RCP<const Integer>> &s,
         const Ptr<RCP<const Integer>> &t, const Integer &a, const Integer &b);
 //! modulo
 void mod(const Ptr<RCP<const Number>> &r, const Integer &n, const Integer &d);
+//! \return floor of quotient when `n` is divided by `d`
+void fdiv_q(const Ptr<RCP<const Integer>> &q, const Integer &n, const Integer &d);
 //! inverse modulo
 int mod_inverse(const Ptr<RCP<const Integer>> &b, const Integer &a,
         const Integer &m);
