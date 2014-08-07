@@ -12,7 +12,6 @@ using CSymPy::RCP;
 using CSymPy::rcp;
 using CSymPy::DenseMatrix;
 using CSymPy::symbol;
-using CSymPy::add_dense_dense;
 
 int main(int argc, char* argv[])
 {

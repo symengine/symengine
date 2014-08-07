@@ -54,7 +54,7 @@ inline std::ostream& print_vec_rcp(std::ostream& out, T& d)
 } // CSymPy
 
 
-std::ostream& operator<<(std::ostream& out, const CSymPy::umap_basic_int& d)
+std::ostream& operator<<(std::ostream& out, const CSymPy::umap_basic_num& d)
 {
     return print_map_rcp(out, d);
 }
@@ -79,7 +79,7 @@ std::ostream& operator<<(std::ostream& out, const CSymPy::umap_vec_mpz& d)
     return print_map(out, d);
 }
 
-std::ostream& operator<<(std::ostream& out, const CSymPy::map_basic_int& d)
+std::ostream& operator<<(std::ostream& out, const CSymPy::map_basic_num& d)
 {
     return print_map_rcp(out, d);
 }
@@ -102,7 +102,7 @@ std::ostream& operator<<(std::ostream& out, const CSymPy::vec_basic& d)
 
 namespace CSymPy {
 
-bool map_basic_int_eq(const map_basic_int &A, const map_basic_int &B)
+bool map_basic_num_eq(const map_basic_num &A, const map_basic_num &B)
 {
     // Can't be equal if # of entries differ:
     if (A.size() != B.size()) return false;
@@ -146,7 +146,7 @@ int map_basic_basic_compare(const map_basic_basic &A, const map_basic_basic &B)
     return 0;
 }
 
-int map_basic_int_compare(const map_basic_int &A, const map_basic_int &B)
+int map_basic_num_compare(const map_basic_num &A, const map_basic_num &B)
 {
     if (A.size() != B.size())
         return (A.size() < B.size()) ? -1 : 1;
@@ -162,7 +162,7 @@ int map_basic_int_compare(const map_basic_int &A, const map_basic_int &B)
     return 0;
 }
 
-bool umap_basic_int_eq(const umap_basic_int &a, const umap_basic_int &b)
+bool umap_basic_num_eq(const umap_basic_num &a, const umap_basic_num &b)
 {
     // This follows the same algorithm as Python's dictionary comparison
     // (a==b), which is implemented by "dict_equal" function in
@@ -204,9 +204,30 @@ bool vec_basic_eq(const vec_basic &a, const vec_basic &b)
     // Can't be equal if # of entries differ:
     if (a.size() != b.size()) return false;
     // Loop over elements in "a" and "b":
-    for (size_t i=0; i < a.size(); i++) {
+    for (size_t i = 0; i < a.size(); i++) {
         if (neq(a[i], b[i])) return false; // values not equal
     }
+    return true;
+}
+
+bool vec_basic_eq_perm(const vec_basic &a, const vec_basic &b)
+{
+    // Can't be equal if # of entries differ:
+    if (a.size() != b.size()) return false;
+    // Loop over elements in "a"
+    for (size_t i = 0; i < a.size(); i++) {
+        // Find the element a[i] in "b"
+        bool found = false;
+        for (size_t j = 0; j < a.size(); j++) {
+            if (eq(a[i], b[j])) {
+                found = true;
+                break;
+            }
+        }
+        // If not found, then a != b
+        if (!found) return false;
+    }
+    // If all elements were found, then a == b
     return true;
 }
 

@@ -45,6 +45,7 @@ cdef extern from "basic.h" namespace "CSymPy":
         unsigned int hash() nogil except +
         RCP[const Basic] diff(RCP[const Symbol] &x) nogil except +
         RCP[const Basic] subs(map_basic_basic &x) nogil except +
+        vector[RCP[Basic]] get_args() nogil
 
     bool eq(RCP[const Basic] &a, RCP[const Basic] &b) nogil except +
     bool neq(RCP[const Basic] &a, RCP[const Basic] &b) nogil except +
@@ -54,6 +55,7 @@ cdef extern from "basic.h" namespace "CSymPy":
     bool is_a_Pow "CSymPy::is_a<CSymPy::Pow>"(const Basic &b) nogil
     bool is_a_Integer "CSymPy::is_a<CSymPy::Integer>"(const Basic &b) nogil
     bool is_a_Rational "CSymPy::is_a<CSymPy::Rational>"(const Basic &b) nogil
+    bool is_a_Complex "CSymPy::is_a<CSymPy::Complex>"(const Basic &b) nogil
     bool is_a_Symbol "CSymPy::is_a<CSymPy::Symbol>"(const Basic &b) nogil
     bool is_a_Sin "CSymPy::is_a<CSymPy::Sin>"(const Basic &b) nogil
     bool is_a_Cos "CSymPy::is_a<CSymPy::Cos>"(const Basic &b) nogil
@@ -68,15 +70,23 @@ cdef extern from "symbol.h" namespace "CSymPy":
         Symbol(string name) nogil
         string get_name() nogil
 
+cdef extern from "number.h" namespace "CSymPy":
+    cdef cppclass Number(Basic):
+        pass
 
 cdef extern from "integer.h" namespace "CSymPy":
-    cdef cppclass Integer(Basic):
+    cdef cppclass Integer(Number):
         Integer(int i) nogil
         Integer(mpz_class i) nogil
 
 cdef extern from "rational.h" namespace "CSymPy":
-    cdef cppclass Rational(Basic):
+    cdef cppclass Rational(Number):
         pass
+
+cdef extern from "complex.h" namespace "CSymPy":
+    cdef cppclass Complex(Number):
+        pass
+    RCP[const Basic] I
 
 
 cdef extern from "add.h" namespace "CSymPy":

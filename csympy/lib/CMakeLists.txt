@@ -3,8 +3,8 @@ set(SRC
     )
 
 include_directories(${PYTHON_INCLUDE_PATH})
-include_directories(${csympy_BINARY_DIR}/src ${teuchos_BINARY_DIR})
-include_directories(${CMAKE_SOURCE_DIR}/src)
+include_directories(BEFORE ${csympy_BINARY_DIR}/src ${teuchos_BINARY_DIR})
+include_directories(BEFORE ${CMAKE_SOURCE_DIR}/src)
 
 cython_add_module_pyx(csympy_wrapper csympy.pxd)
 add_python_library(csympy_wrapper ${SRC})

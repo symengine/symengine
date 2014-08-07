@@ -4,20 +4,20 @@
 #include "symbol.h"
 #include "mul.h"
 #include "pow.h"
-#include "rational.h"
+#include "complex.h"
 #include "functions.h"
 
 
 namespace CSymPy {
 
-Add::Add(const RCP<const Number> &coef, umap_basic_int&& dict)
+Add::Add(const RCP<const Number> &coef, umap_basic_num&& dict)
     : coef_{coef}, dict_{std::move(dict)}
 {
     CSYMPY_ASSERT(is_canonical(coef, dict_))
 }
 
 bool Add::is_canonical(const RCP<const Number> &coef,
-        const umap_basic_int& dict)
+        const umap_basic_num& dict)
 {
     if (coef == null) return false;
     if (dict.size() == 0) return false;
@@ -57,7 +57,7 @@ std::size_t Add::__hash__() const
 {
     std::size_t seed = 0;
     hash_combine<Basic>(seed, *coef_);
-    map_basic_int ordered(dict_.begin(), dict_.end());
+    map_basic_num ordered(dict_.begin(), dict_.end());
     for (auto &p: ordered) {
         hash_combine<Basic>(seed, *(p.first));
         hash_combine<Basic>(seed, *(p.second));
@@ -69,7 +69,7 @@ bool Add::__eq__(const Basic &o) const
 {
     if (is_a<Add>(o) &&
         eq(coef_, static_cast<const Add &>(o).coef_) &&
-        umap_basic_int_eq(dict_, static_cast<const Add &>(o).dict_))
+        umap_basic_num_eq(dict_, static_cast<const Add &>(o).dict_))
         return true;
 
     return false;
@@ -89,11 +89,11 @@ int Add::compare(const Basic &o) const
         return cmp;
 
     // Compare dictionaries:
-    // NOTE: This is slow. Add should cache this map_basic_int representation
+    // NOTE: This is slow. Add should cache this map_basic_num representation
     // once it is computed.
-    map_basic_int adict(dict_.begin(), dict_.end());
-    map_basic_int bdict(s.dict_.begin(), s.dict_.end());
-    return map_basic_int_compare(adict, bdict);
+    map_basic_num adict(dict_.begin(), dict_.end());
+    map_basic_num bdict(s.dict_.begin(), s.dict_.end());
+    return map_basic_num_compare(adict, bdict);
 }
 
 std::string Add::__str__() const
@@ -120,21 +120,28 @@ std::string Add::__str__() const
                 // TODO: extend this for Rationals as well:
                 if (is_a<Integer>(*p.second) &&
                         rcp_static_cast<const Integer>(p.second)->is_negative()) {
-                    if (counter >= 1)
+                    if (counter >= 1) {
                         o << " - ";
-                    else
+                    } else {
                         o << "-";
+                    }
                     o << -(rcp_static_cast<const Integer>(p.second))->i;
+                } else if (is_a<Complex>(*p.second)) {
+                    if (!(rcp_static_cast<const Complex>(p.second)->is_reim_zero())) {
+                        o << "(" << *(p.second) <<")";
+                    } else {
+                        o << *(p.second);
+                    }
                 } else {
                     o << *(p.second);
                 }
             }
-            if (is_a<Add>(*p.first)) {
-                if (!eq(p.second, minus_one)) o << "*";
+            if (!eq(p.second, minus_one)) o << "*";
+            if (is_a<Add>(*p.first) || is_a<Rational>(*p.first) || is_a<Complex>(*p.first)) {
                 o << "(";
             }
             o << *(p.first);
-            if (is_a<Add>(*p.first)) o << ")";
+            if (is_a<Add>(*p.first) || is_a<Rational>(*p.first) || is_a<Complex>(*p.first)) o << ")";
         }
         o << " + ";
         counter++;
@@ -149,7 +156,7 @@ std::string Add::__str__() const
 // If d.size() > 1 then it just returns Add. This means that the dictionary
 // must be in canonical form already. For d.size == 1, it returns Mul, Pow,
 // Symbol or Integer, depending on the expression.
-RCP<const Basic> Add::from_dict(const RCP<const Number> &coef, umap_basic_int &&d)
+RCP<const Basic> Add::from_dict(const RCP<const Number> &coef, umap_basic_num &&d)
 {
     if (d.size() == 0) {
         return coef;
@@ -163,14 +170,27 @@ RCP<const Basic> Add::from_dict(const RCP<const Number> &coef, umap_basic_int &&
                 return p->first;
             }
             if (is_a<Mul>(*(p->first))) {
-                const map_basic_basic &d2 =
-                    rcp_static_cast<const Mul>(p->first)->dict_;
-                // Cast away const'ness, so that we can move 'dict_', since
-                // 'p->first' will be destroyed when 'd' is at the end of this
-                // function, so we "steal" its dict_ to avoid an unnecessary
-                // copy.
-                map_basic_basic &d3 = const_cast<map_basic_basic &>(d2);
-                return Mul::from_dict(p->second, std::move(d3));
+#if !defined(WITH_CSYMPY_THREAD_SAFE) && defined(WITH_CSYMPY_RCP)
+                if (rcp_static_cast<const Mul>(p->first)->refcount_ == 1) {
+                    // We can steal the dictionary:
+                    // Cast away const'ness, so that we can move 'dict_', since
+                    // 'p->first' will be destroyed when 'd' is at the end of
+                    // this function, so we "steal" its dict_ to avoid an
+                    // unnecessary copy. We know the refcount_ is one, so
+                    // nobody else is using the Mul except us.
+                    const map_basic_basic &d2 =
+                        rcp_static_cast<const Mul>(p->first)->dict_;
+                    map_basic_basic &d3 = const_cast<map_basic_basic &>(d2);
+                    return Mul::from_dict(p->second, std::move(d3));
+                } else {
+#else
+                {
+#endif
+                    // We need to copy the dictionary:
+                    map_basic_basic d2 =
+                        rcp_static_cast<const Mul>(p->first)->dict_;
+                    return Mul::from_dict(p->second, std::move(d2));
+                }
             }
             map_basic_basic m;
             if (is_a<Pow>(*(p->first))) {
@@ -184,14 +204,27 @@ RCP<const Basic> Add::from_dict(const RCP<const Number> &coef, umap_basic_int &&
         map_basic_basic m;
         if (is_a_Number(*p->second)) {
             if (is_a<Mul>(*(p->first))) {
-                const map_basic_basic &d2 =
-                    rcp_static_cast<const Mul>(p->first)->dict_;
-                // Cast away const'ness, so that we can move 'dict_', since
-                // 'p->first' will be destroyed when 'd' is at the end of this
-                // function, so we "steal" its dict_ to avoid an unnecessary
-                // copy.
-                map_basic_basic &d3 = const_cast<map_basic_basic &>(d2);
-                return Mul::from_dict(p->second, std::move(d3));
+#if !defined(WITH_CSYMPY_THREAD_SAFE) && defined(WITH_CSYMPY_RCP)
+                if (rcp_static_cast<const Mul>(p->first)->refcount_ == 1) {
+                    // We can steal the dictionary:
+                    // Cast away const'ness, so that we can move 'dict_', since
+                    // 'p->first' will be destroyed when 'd' is at the end of
+                    // this function, so we "steal" its dict_ to avoid an
+                    // unnecessary copy. We know the refcount_ is one, so
+                    // nobody else is using the Mul except us.
+                    const map_basic_basic &d2 =
+                        rcp_static_cast<const Mul>(p->first)->dict_;
+                    map_basic_basic &d3 = const_cast<map_basic_basic &>(d2);
+                    return Mul::from_dict(p->second, std::move(d3));
+                } else {
+#else
+                {
+#endif
+                    // We need to copy the dictionary:
+                    map_basic_basic d2 =
+                        rcp_static_cast<const Mul>(p->first)->dict_;
+                    return Mul::from_dict(p->second, std::move(d2));
+                }
             }
             if (is_a<Pow>(*p->first)) {
                 insert(m, rcp_static_cast<const Pow>(p->first)->base_,
@@ -212,7 +245,7 @@ RCP<const Basic> Add::from_dict(const RCP<const Number> &coef, umap_basic_int &&
 
 // Adds (coef*t) to the dict "d"
 // Assumption: "t" does not have any numerical coefficients, those are in "coef"
-void Add::dict_add_term(umap_basic_int &d, const RCP<const Number> &coef,
+void Add::dict_add_term(umap_basic_num &d, const RCP<const Number> &coef,
         const RCP<const Basic> &t)
 {
     auto it = d.find(t);
@@ -245,7 +278,7 @@ void Add::as_coef_term(const RCP<const Basic> &self,
 
 RCP<const Basic> add(const RCP<const Basic> &a, const RCP<const Basic> &b)
 {
-    CSymPy::umap_basic_int d;
+    CSymPy::umap_basic_num d;
     RCP<const Number> coef;
     RCP<const Basic> t;
     if (CSymPy::is_a<Add>(*a) && CSymPy::is_a<Add>(*b)) {
@@ -298,7 +331,7 @@ RCP<const Basic> sub(const RCP<const Basic> &a, const RCP<const Basic> &b)
 
 RCP<const Basic> add_expand(const RCP<const Add> &self)
 {
-    umap_basic_int d;
+    umap_basic_num d;
     RCP<const Number> coef_overall = self->coef_;
     RCP<const Number> coef;
     RCP<const Basic> tmp, tmp2;
@@ -322,7 +355,7 @@ RCP<const Basic> add_expand(const RCP<const Add> &self)
 
 RCP<const Basic> Add::diff(const RCP<const Symbol> &x) const
 {
-    CSymPy::umap_basic_int d;
+    CSymPy::umap_basic_num d;
     RCP<const Number> coef=zero, coef2;
     RCP<const Basic> t;
     for (auto &p: dict_) {
@@ -349,7 +382,7 @@ void Add::as_two_terms(const Ptr<RCP<const Basic>> &a,
 {
     auto p = dict_.begin();
     *a = mul(p->first, p->second);
-    umap_basic_int d = dict_;
+    umap_basic_num d = dict_;
     d.erase(p->first);
     *b = Add::from_dict(coef_, std::move(d));
 }
@@ -361,7 +394,7 @@ RCP<const Basic> Add::subs(const map_basic_basic &subs_dict) const
     if (it != subs_dict.end())
         return it->second;
 
-    CSymPy::umap_basic_int d;
+    CSymPy::umap_basic_num d;
     RCP<const Number> coef=coef_, coef2;
     RCP<const Basic> t;
     for (auto &p: dict_) {
@@ -384,6 +417,15 @@ RCP<const Basic> Add::subs(const map_basic_basic &subs_dict) const
         }
     }
     return Add::from_dict(coef, std::move(d));
+}
+
+vec_basic Add::get_args() const {
+    vec_basic args;
+    if (!coef_->is_zero()) args.push_back(coef_);
+    for (auto &p: dict_) {
+        args.push_back(Add::from_dict(zero, {{p.first, p.second}}));
+    }
+    return args;
 }
 
 } // CSymPy

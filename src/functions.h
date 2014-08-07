@@ -7,8 +7,6 @@
 #ifndef CSYMPY_FUNCTIONS_H
 #define CSYMPY_FUNCTIONS_H
 
-#include <gmpxx.h>
-
 #include "basic.h"
 #include "dict.h"
 
@@ -28,9 +26,8 @@ public:
     //! \return Size of the hash
     virtual std::size_t __hash__() const;
     //! \return `arg_`
-    inline RCP<const Basic> get_arg() const {
-        return arg_;
-    }
+    inline RCP<const Basic> get_arg() const { return arg_; }
+    virtual vec_basic get_args() const { return {arg_}; }
     //! Method to construct classes with canonicalization
     virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
     //! Substitute with `subs_dict`
@@ -383,6 +380,8 @@ public:
     }
     //! Differentiate w.r.t Symbol `x`
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
+
+    virtual vec_basic get_args() const { return {num_, den_}; }
 };
 
 //! Canonicalize ATan2:
@@ -412,9 +411,8 @@ public:
     //! \return stringify version
     virtual std::string __str__() const;
     //! \return `arg_`
-    inline RCP<const Basic> get_arg() const {
-        return arg_;
-    }
+    inline RCP<const Basic> get_arg() const { return arg_; }
+    virtual vec_basic get_args() const { return {arg_}; }
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &arg);
     //! Differentiate w.r.t Symbol `x`
@@ -423,6 +421,83 @@ public:
 
 //! Create a new LambertW instance:
 RCP<const Basic> lambertw(const RCP<const Basic> &arg);
+
+
+class Zeta : public Function {
+// Hurwitz zeta function (or Riemann zeta function).
+//
+// For `\operatorname{Re}(a) > 0` and `\operatorname{Re}(s) > 1`, this function is defined as
+//
+// .. math:: \zeta(s, a) = \sum_{n=0}^\infty \frac{1}{(n + a)^s},
+//
+// where the standard choice of argument for :math:`n + a` is used. 
+// If no value is passed for :math:`a`, by this function assumes a default value
+// of :math:`a = 1`, yielding the Riemann zeta function.
+
+private:
+    RCP<const Basic> s_;
+    RCP<const Basic> a_;
+
+public:
+    //! Zeta Constructor
+    Zeta(const RCP<const Basic> &s, const RCP<const Basic> &a);
+    //! Zeta Constructor
+    Zeta(const RCP<const Basic> &s);
+    //! \return Size of the hash
+    virtual std::size_t __hash__() const;
+    /*! Equality comparator
+     * \param o  Object to be compared with
+     * \return whether the 2 objects are equal
+     * */
+    virtual bool __eq__(const Basic &o) const;
+    virtual int compare(const Basic &o) const;
+    //! \return stringify version
+    virtual std::string __str__() const;
+    //! \return `s_`
+    inline RCP<const Basic> get_s() const { return s_; }
+    //! \return `a_`
+    inline RCP<const Basic> get_a() const { return a_; }
+    virtual vec_basic get_args() const { return {s_, a_}; }
+    //! \return `true` if canonical
+    bool is_canonical(const RCP<const Basic> &s, const RCP<const Basic> &a);
+    //! Differentiate w.r.t Symbol `x`
+    virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
+};
+
+//! Create a new Zeta instance:
+RCP<const Basic> zeta(const RCP<const Basic> &s, const RCP<const Basic> &a);
+RCP<const Basic> zeta(const RCP<const Basic> &s);
+
+class Dirichlet_eta : public Function {
+// See http://en.wikipedia.org/wiki/Dirichlet_eta_function
+
+private:
+    RCP<const Basic> s_;
+
+public:
+    //! Dirichlet_eta Constructor
+    Dirichlet_eta(const RCP<const Basic> &s);
+    //! \return Size of the hash
+    virtual std::size_t __hash__() const;
+    /*! Equality comparator
+     * \param o  Object to be compared with
+     * \return whether the 2 objects are equal
+     * */
+    virtual bool __eq__(const Basic &o) const;
+    virtual int compare(const Basic &o) const;
+    //! \return stringify version
+    virtual std::string __str__() const;
+    //! \return `s_`
+    inline RCP<const Basic> get_s() const { return s_; }
+    virtual vec_basic get_args() const { return {s_}; }
+    //! \return `true` if canonical
+    bool is_canonical(const RCP<const Basic> &s);
+    //! Rewrites in the form of zeta
+    RCP<const Basic> rewrite_as_zeta() const;
+};
+
+//! Create a new Dirichlet_eta instance:
+RCP<const Basic> dirichlet_eta(const RCP<const Basic> &s);
 
 class FunctionSymbol : public Function {
 private:
@@ -443,13 +518,10 @@ public:
     //! \return stringify version
     virtual std::string __str__() const;
     //! \return `name_`
-    inline std::string get_name() const {
-        return name_;
-    }
+    inline std::string get_name() const { return name_; }
     //! \return `arg_`
-    inline RCP<const Basic> get_arg() const {
-        return arg_;
-    }
+    inline RCP<const Basic> get_arg() const { return arg_; }
+    virtual vec_basic get_args() const { return {arg_}; }
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &arg);
     //! Differentiate w.r.t Symbol `x`
@@ -490,6 +562,11 @@ public:
     inline vec_basic get_symbols() const {
         return x_;
     }
+    virtual vec_basic get_args() const {
+        vec_basic args = {arg_};
+        args.insert(args.end(), x_.begin(), x_.end());
+        return args;
+    }
     bool is_canonical(const RCP<const Basic> &arg, const vec_basic &x) const;
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
 };
@@ -505,9 +582,8 @@ public:
     //! \return Size of the hash
     virtual std::size_t __hash__() const;
     //! \return `arg_`
-    inline RCP<const Basic> get_arg() const {
-        return arg_;
-    }
+    inline RCP<const Basic> get_arg() const { return arg_; }
+    virtual vec_basic get_args() const { return {arg_}; }
     //! Method to construct classes with canonicalization
     virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
     //! Substitute with `subs_dict`

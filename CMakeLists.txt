@@ -58,6 +58,21 @@ if (WITH_PRIMESIEVE)
     set(HAVE_CSYMPY_PRIMESIEVE yes)
 endif()
 
+#ARB
+set(WITH_ARB no
+    CACHE BOOL "Build with Arb")
+
+if (WITH_ARB)
+    find_package(FLINT REQUIRED)
+    include_directories(${FLINT_INCLUDE_DIRS})
+    set(LIBS ${LIBS} ${FLINT_LIBRARY})
+
+    find_package(ARB REQUIRED)
+    include_directories(${ARB_INCLUDE_DIRS})
+    set(LIBS ${LIBS} ${ARB_LIBRARY})
+    set(HAVE_CSYMPY_ARB yes)
+endif()
+
 # Python
 set(WITH_PYTHON no
     CACHE BOOL "Build with Python wrappers")
@@ -100,6 +115,10 @@ set(WITH_CSYMPY_ASSERT no
 set(WITH_CSYMPY_RCP yes
     CACHE BOOL "Enable CSYMPY_RCP support")
 
+# CSYMPY_THREAD_SAFE
+set(WITH_CSYMPY_THREAD_SAFE no
+    CACHE BOOL "Enable CSYMPY_THREAD_SAFE support")
+
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(HAVE_TEUCHOS_DEBUG yes)
     set(HAVE_TEUCHOS_DEBUG_RCP_NODE_TRACING yes)
@@ -134,6 +153,7 @@ message("Installation prefix: ${CMAKE_INSTALL_PREFIX}")
 
 message("WITH_CSYMPY_ASSERT: ${WITH_CSYMPY_ASSERT}")
 message("WITH_CSYMPY_RCP: ${WITH_CSYMPY_RCP}")
+message("WITH_CSYMPY_THREAD_SAFE: ${WITH_CSYMPY_THREAD_SAFE}")
 
 message("GMP_INCLUDE_DIRS: ${GMP_INCLUDE_DIRS}")
 message("GMP_LIBRARIES: ${GMP_LIBRARIES}")
@@ -164,6 +184,14 @@ message("WITH_PRIMESIEVE: ${WITH_PRIMESIEVE}")
 if (WITH_PRIMESIEVE)
     message("PRIMESIEVE_INCLUDE_DIRS: ${PRIMESIEVE_INCLUDE_DIRS}")
     message("PRIMESIEVE_LIBRARIES: ${PRIMESIEVE_LIBRARY}")
+endif()
+
+message("WITH_ARB: ${WITH_ARB}")
+if (WITH_ARB)
+    message("ARB_INCLUDE_DIRS: ${ARB_INCLUDE_DIRS}")
+    message("ARB_LIBRARIES: ${ARB_LIBRARY}")
+    message("FLINT_INCLUDE_DIRS: ${FLINT_INCLUDE_DIRS}")
+    message("FLINT_LIBRARIES: ${FLINT_LIBRARY}")
 endif()
 
 message("Copying source of python wrappers into: ${CMAKE_CURRENT_BINARY_DIR}")

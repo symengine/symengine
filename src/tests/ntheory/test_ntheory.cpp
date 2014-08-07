@@ -2,11 +2,13 @@
 
 #include "ntheory.h"
 #include "integer.h"
+#include "rational.h"
 #include "add.h"
 #include "mul.h"
 #include "dict.h"
 
 using CSymPy::Integer;
+using CSymPy::Rational;
 using CSymPy::print_stack_on_segfault;
 using CSymPy::RCP;
 using CSymPy::fibonacci;
@@ -16,6 +18,10 @@ using CSymPy::integer;
 using CSymPy::is_a;
 using CSymPy::map_integer_uint;
 using CSymPy::rcp_dynamic_cast;
+using CSymPy::mod_inverse;
+using CSymPy::mod;
+using CSymPy::Number;
+using CSymPy::bernoulli;
 
 void test_gcd_lcm()
 {
@@ -84,6 +90,24 @@ void test_modular_inverse()
 
     assert(mod_inverse(outArg(b), *i3, *i11) != 0);
     assert(eq(b, integer(4)));
+}
+
+void test_modulo()
+{
+    RCP<const Integer> i5 = integer(5);
+    RCP<const Integer> i3 = integer(3);
+    RCP<const Integer> i8 = integer(8);
+    RCP<const Integer> i11 = integer(11);
+    RCP<const Number> b;
+
+    mod(outArg(b), *i5, *i3);
+    assert(eq(b, integer(2)));
+
+    mod(outArg(b), *i11, *i8);
+    assert(eq(b, integer(3)));
+
+    mod(outArg(b), *i11, *i3);
+    assert(eq(b, integer(2)));
 }
 
 void test_fibonacci_lucas()
@@ -348,6 +372,19 @@ void test_prime_factor_multiplicities()
     _test_prime_factor_multiplicities(i2357);
 }
 
+void test_bernoulli()
+{
+    RCP<const Number> r1;
+    RCP<const Number> r2;
+    #ifdef HAVE_CSYMPY_ARB
+        r1 = bernoulli(12);
+        r2 = Rational::from_two_ints(integer(-691), integer(2730));
+        assert(eq(r1, r2));
+    #else
+        CSYMPY_CHECK_THROW(bernoulli(12), std::runtime_error)
+    #endif
+}
+
 int main(int argc, char* argv[])
 {
     print_stack_on_segfault();
@@ -367,6 +404,8 @@ int main(int argc, char* argv[])
     test_sieve_iterator();
     test_prime_factors();
     test_prime_factor_multiplicities();
+    test_modulo();
+    test_bernoulli();
 
     return 0;
 }

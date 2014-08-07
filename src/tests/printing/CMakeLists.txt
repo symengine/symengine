@@ -1,7 +1,5 @@
 project(test_printing)
 
-include_directories(${csympy_SOURCE_DIR}/src)
-
 add_executable(test_printing test_printing.cpp)
 target_link_libraries(test_printing csympy teuchos ${LIBS})
 add_test(test_printing ${PROJECT_BINARY_DIR}/test_printing)

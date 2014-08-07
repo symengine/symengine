@@ -21,7 +21,7 @@ struct RCPBasicKeyLess;
 struct RCPIntegerKeyLess;
 
 typedef std::unordered_map<RCP<const Basic>, RCP<const Number>,
-        RCPBasicHash, RCPBasicKeyEq> umap_basic_int;
+        RCPBasicHash, RCPBasicKeyEq> umap_basic_num;
 typedef std::unordered_map<RCP<const Basic>, RCP<const Basic>,
         RCPBasicHash, RCPBasicKeyEq> umap_basic_basic;
 
@@ -30,7 +30,7 @@ typedef std::vector<RCP<const Basic>> vec_basic;
 typedef std::map<vec_int, long long int> map_vec_int;
 typedef std::map<vec_int, mpz_class> map_vec_mpz;
 typedef std::map<RCP<const Basic>, RCP<const Number>,
-        RCPBasicKeyLess> map_basic_int;
+        RCPBasicKeyLess> map_basic_num;
 typedef std::map<RCP<const Basic>, RCP<const Basic>,
         RCPBasicKeyLess> map_basic_basic;
 typedef std::map<RCP<const Integer>, unsigned,
@@ -44,9 +44,9 @@ void insert(T1 &m, const T2 &first, const T3 &second) {
 }
 
 //! \return true if the two dictionaries `a` and `b` are equal. Otherwise false.
-bool umap_basic_int_eq(const umap_basic_int &a, const umap_basic_int &b);
+bool umap_basic_num_eq(const umap_basic_num &a, const umap_basic_num &b);
 //! \return true if the two dictionaries `a` and `b` are equal. Otherwise false.
-bool map_basic_int_eq(const map_basic_int &a, const map_basic_int &b);
+bool map_basic_num_eq(const map_basic_num &a, const map_basic_num &b);
 //! \return true if the two dictionaries `a` and `b` are equal. Otherwise false.
 bool map_basic_basic_eq(const map_basic_basic &a, const map_basic_basic &b);
 //! \return true if the two dictionaries `a` and `b` are equal. Otherwise false.
@@ -54,12 +54,14 @@ bool umap_basic_basic_eq(const umap_basic_basic &a,
         const umap_basic_basic &b);
 //! \return true if the two vectors `a` and `b` are equal. Otherwise false.
 bool vec_basic_eq(const vec_basic &a, const vec_basic &b);
+//! \return true if the two vectors `a` and `b` are equal up to a permutation. Otherwise false.
+bool vec_basic_eq_perm(const vec_basic &a, const vec_basic &b);
 
 
 //! \return -1, 0, 1 for a < b, a == b, a > b
 int map_basic_basic_compare(const map_basic_basic &a, const map_basic_basic &b);
 //! \return -1, 0, 1 for a < b, a == b, a > b
-int map_basic_int_compare(const map_basic_int &a, const map_basic_int &b);
+int map_basic_num_compare(const map_basic_num &a, const map_basic_num &b);
 //! \return -1, 0, 1 for a < b, a == b, a > b
 int vec_basic_compare(const vec_basic &a, const vec_basic &b);
 
@@ -77,8 +79,8 @@ typedef struct
 } vec_int_hash;
 
 typedef struct
-{	
-	//! \return true if `x==y`
+{
+    //! \return true if `x==y`
     inline bool operator() (const vec_int &x, const vec_int &y) const {
         return x == y;
     }
@@ -90,12 +92,12 @@ typedef std::unordered_map<vec_int, mpz_class,
 } // CSymPy
 
 
-std::ostream& operator<<(std::ostream& out, const CSymPy::umap_basic_int& d);
+std::ostream& operator<<(std::ostream& out, const CSymPy::umap_basic_num& d);
 std::ostream& operator<<(std::ostream& out, const CSymPy::vec_int& d);
 std::ostream& operator<<(std::ostream& out, const CSymPy::map_vec_int& d);
 std::ostream& operator<<(std::ostream& out, const CSymPy::map_vec_mpz& d);
 std::ostream& operator<<(std::ostream& out, const CSymPy::umap_vec_mpz& d);
-std::ostream& operator<<(std::ostream& out, const CSymPy::map_basic_int& d);
+std::ostream& operator<<(std::ostream& out, const CSymPy::map_basic_num& d);
 std::ostream& operator<<(std::ostream& out, const CSymPy::map_basic_basic& d);
 std::ostream& operator<<(std::ostream& out, const CSymPy::umap_basic_basic& d);
 std::ostream& operator<<(std::ostream& out, const CSymPy::vec_basic& d);

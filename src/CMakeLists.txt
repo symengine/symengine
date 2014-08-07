@@ -1,9 +1,9 @@
 add_subdirectory(teuchos)
 
 # Include Teuchos headers:
-include_directories(${teuchos_SOURCE_DIR})
+include_directories(BEFORE ${teuchos_SOURCE_DIR})
 # Include Teuchos config file (generated per build):
-include_directories(${teuchos_BINARY_DIR})
+include_directories(BEFORE ${teuchos_BINARY_DIR})
 
 set(SRC
     csympy_rcp.cpp
@@ -13,6 +13,7 @@ set(SRC
     number.cpp
     integer.cpp
     rational.cpp
+    complex.cpp
     add.cpp
     mul.cpp
     pow.cpp
@@ -22,6 +23,7 @@ set(SRC
     ntheory.cpp
     dense_matrix.cpp
     sparse_matrix.cpp
+    matrix.cpp
 )
 
 # Needed for "make install"
@@ -29,13 +31,13 @@ set(HEADERS
     add.h        csympy_assert.h  functions.h  monomials.h  number.h    rings.h
     basic.h      csympy_rcp.h     integer.h    mul.h        pow.h
     symbol.h
-    basic-inl.h  dict.h           matrix.h     ntheory.h    rational.h
+    basic-inl.h  dict.h           matrix.h     ntheory.h    rational.h complex.h
 )
 
 # Configure CSymPy using our CMake options:
 configure_file(csympy_config.h.in csympy_config.h)
 # Include the config file:
-include_directories(${csympy_BINARY_DIR}/src)
+include_directories(BEFORE ${csympy_BINARY_DIR}/src)
 
 add_library(csympy ${SRC})
 

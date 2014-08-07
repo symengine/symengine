@@ -16,7 +16,7 @@ using CSymPy::Add;
 using CSymPy::Mul;
 using CSymPy::Pow;
 using CSymPy::Symbol;
-using CSymPy::umap_basic_int;
+using CSymPy::umap_basic_num;
 using CSymPy::map_vec_int;
 using CSymPy::Integer;
 using CSymPy::multinomial_coefficients;
@@ -63,7 +63,7 @@ void test_expand()
     f1 = expand(e);
     f2 = expand(add(e, w));
 
-    umap_basic_int syms;
+    umap_basic_num syms;
     insert(syms, x, rcp(new Integer(0)));
     insert(syms, y, rcp(new Integer(1)));
     insert(syms, z, rcp(new Integer(2)));

@@ -16,7 +16,7 @@ using CSymPy::Mul;
 using CSymPy::Pow;
 using CSymPy::Symbol;
 using CSymPy::symbol;
-using CSymPy::umap_basic_int;
+using CSymPy::umap_basic_num;
 using CSymPy::map_vec_int;
 using CSymPy::Integer;
 using CSymPy::integer;
@@ -54,6 +54,8 @@ using CSymPy::asinh;
 using CSymPy::acosh;
 using CSymPy::atanh;
 using CSymPy::acoth;
+using CSymPy::zeta;
+using CSymPy::dirichlet_eta;
 
 void test_sin()
 {
@@ -669,6 +671,7 @@ void test_Derivative()
     assert(eq(r1, r2));
     assert(neq(r1, r3));
     assert(neq(r2, r3));
+    assert(vec_basic_eq(r1->get_args(), {f, x}));
 
     std::cout << *r1 << std::endl;
     std::cout << *r2 << std::endl;
@@ -682,6 +685,7 @@ void test_Derivative()
     assert(eq(r1, r2));
     std::cout << *r1 << std::endl;
     assert(r1->__str__() == "Derivative(f(x), x, x)");
+    assert(vec_basic_eq(r1->get_args(), {f, x, x}));
 
     f = function_symbol("f", pow(x, integer(2)));
     r1 = f->diff(x);
@@ -697,6 +701,9 @@ void test_Derivative()
     assert(r4->is_canonical(x, {y}));
     assert(r4->is_canonical(x, {x, y, x, x}));
     assert(!(r4->is_canonical(x, {pow(x, integer(2))})));
+
+    r1 = rcp(new Derivative(pow(x, integer(2)), {x, x, y}));
+    assert(vec_basic_eq(r1->get_args(), {pow(x, integer(2)), x, x, y}));
 }
 
 void test_get_pi_shift()
@@ -734,17 +741,17 @@ void test_get_pi_shift()
     b = get_pi_shift(r, outArg(n), outArg(r1));
     assert(eq(n, i8) && (b == true) && eq(r1, zero));
 
-	// arg neq n*pi/12 , n not an integer
+    // arg neq n*pi/12 , n not an integer
     r = mul(pi, div(i2, integer(5)));
     b = get_pi_shift(r, outArg(n), outArg(r1));
     assert(b == false);
 
-	// arg neq theta + n*pi/12 (no pi symbol, pi as pow)
+    // arg neq theta + n*pi/12 (no pi symbol, pi as pow)
     r = mul(pow(pi, i2), div(i2, integer(3)));
     b = get_pi_shift(r, outArg(n), outArg(r1));
     assert(b == false);
 
-	// arg neq theta + n*pi/12 (no pi symbol, pi as mul form)
+    // arg neq theta + n*pi/12 (no pi symbol, pi as mul form)
     r = mul(mul(pi, x), div(i2, integer(3)));
     b = get_pi_shift(r, outArg(n), outArg(r1));
     assert(b == false);
@@ -775,7 +782,7 @@ void test_get_pi_shift()
     b = get_pi_shift(r, outArg(n), outArg(r1));
     assert(b == false);
 
-	// arg neq n*pi/12 (pi is not in form of symbol)
+    // arg neq n*pi/12 (pi is not in form of symbol)
     r = mul(pow(pi, i2), div(i2, integer(3)));
     b = get_pi_shift(r, outArg(n), outArg(r1));
     assert(b == false);
@@ -982,7 +989,7 @@ void test_asec()
     r2 = mul(i2, div(pi,  i3));
     assert(eq(r1, r2));
     
-    r1 = asec(div(i2, sqrt(i2)));
+    r1 = asec(sqrt(i2));
     r2 = div(pi, mul(i2, i2));
     assert(eq(r1, r2));
 
@@ -1025,7 +1032,7 @@ void test_acsc()
     r2 = div(pi, mul(im2, i3));
     assert(eq(r1, r2));
 
-    r1 = acsc(div(i2, sqrt(i2)));
+    r1 = acsc(sqrt(i2));
     r2 = div(pi, mul(i2, i2));
     assert(eq(r1, r2));
 
@@ -1182,6 +1189,9 @@ void test_atan2()
     r1 = atan2(y, x)->diff(y);
     r2 = div(x, add(pow(x, i2), pow(y, i2)));
     assert(eq(r1, r2));
+
+    r1 = atan2(y, x);
+    assert(vec_basic_eq(r1->get_args(), {y, x}));
 }
 
 void test_lambertw()
@@ -1402,6 +1412,46 @@ void test_acoth()
     assert(eq(r1, r2));
 }
 
+void test_zeta()
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Basic> im1 = integer(-1);
+    RCP<const Basic> i2 = integer(2);
+
+    RCP<const Basic> r1;
+    RCP<const Basic> r2;
+
+    r1 = zeta(zero, x);
+    r2 = sub(div(one, i2), x);
+    assert(eq(r1, r2));
+
+    r1 = zeta(zero, im1);
+    r2 = div(one, i2);
+    assert(eq(r1, r2));
+
+    r1 = zeta(zero, i2);
+    r2 = div(integer(-3), i2);
+    assert(eq(r1, r2));
+}
+
+void test_dirichlet_eta()
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Basic> im1 = integer(-1);
+    RCP<const Basic> i2 = integer(2);
+
+    RCP<const Basic> r1;
+    RCP<const Basic> r2;
+
+    r1 = dirichlet_eta(one);
+    r2 = log(i2);
+    assert(eq(r1, r2));
+
+    r1 = dirichlet_eta(zero);
+    r2 = div(one, i2);
+    assert(eq(r1, r2));
+}
+
 int main(int argc, char* argv[])
 {
     print_stack_on_segfault();    
@@ -1432,5 +1482,7 @@ int main(int argc, char* argv[])
     test_acosh();
     test_atanh();
     test_acoth();
+    test_zeta();
+    test_dirichlet_eta();
     return 0;
 }

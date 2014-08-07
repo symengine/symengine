@@ -10,6 +10,7 @@
 #include "dict.h"
 #include "mul.h"
 #include "integer.h"
+#include "ntheory.h"
 
 namespace CSymPy {
 
@@ -18,7 +19,7 @@ public: // TODO: make this private
     RCP<const Basic> base_, exp_; //! base^exp
 
 public:
-	//! Pow Constructor
+    //! Pow Constructor
     Pow(const RCP<const Basic> &base, const RCP<const Basic> &exp);
     //! \return Size of the hash
     virtual std::size_t __hash__() const;
@@ -30,16 +31,18 @@ public:
     virtual int compare(const Basic &o) const;
     //! \return stringify version
     virtual std::string __str__() const;
-	//! \return `true` if canonical
+    //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &base,
             const RCP<const Basic> &exp);
     //! \return `base` of `base^exp`
     inline RCP<const Basic> get_base() const { return base_; }
     //! \return `exp` of `base^exp`
     inline RCP<const Basic> get_exp() const { return exp_; }
-	//! Differentiate w.r.t Symbol `x`
+    //! Differentiate w.r.t Symbol `x`
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
     virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
+
+    virtual vec_basic get_args() const;
 };
 
 //! \return Pow from `a` and `b`
@@ -81,6 +84,7 @@ public:
     bool is_canonical(const RCP<const Basic> &arg);
     //! \return `arg` of `log(arg)`
     inline RCP<const Basic> get_arg() const { return arg_; }
+    virtual vec_basic get_args() const { return {arg_}; }
     //! Differentiate w.r.t Symbol `x`
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
 };
