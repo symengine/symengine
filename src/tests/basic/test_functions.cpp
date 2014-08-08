@@ -56,6 +56,7 @@ using CSymPy::atanh;
 using CSymPy::acoth;
 using CSymPy::zeta;
 using CSymPy::dirichlet_eta;
+using CSymPy::gamma;
 
 void test_sin()
 {
@@ -1452,6 +1453,41 @@ void test_dirichlet_eta()
     assert(eq(r1, r2));
 }
 
+void test_gamma()
+{
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> i3 = integer(3);
+    RCP<const Basic> im1 = integer(-1);
+    RCP<const Basic> sqrt_pi = sqrt(pi);
+
+    RCP<const Basic> r1;
+    RCP<const Basic> r2;
+
+    r1 = gamma(one);
+    r2 = one;
+    assert(eq(r1, r2));
+
+    r1 = gamma(mul(i2, i2));
+    r2 = mul(i2, i3);
+    assert(eq(r1, r2));
+
+    r1 = gamma(div(i3, i2));
+    r2 = div(sqrt(pi), i2);
+    assert(eq(r1, r2));
+
+    r1 = gamma(div(one, i2));
+    r2 = sqrt(pi);
+    assert(eq(r1, r2));
+
+    r1 = gamma(div(im1, i2));
+    r2 = mul(mul(im1, i2), sqrt(pi));
+    assert(eq(r1, r2));
+
+    r1 = gamma(div(integer(-15), i2));
+    r2 = mul(div(integer(256), integer(2027025)), sqrt(pi));
+    assert(eq(r1, r2));
+}
+
 int main(int argc, char* argv[])
 {
     print_stack_on_segfault();    
@@ -1484,5 +1520,6 @@ int main(int argc, char* argv[])
     test_acoth();
     test_zeta();
     test_dirichlet_eta();
+    test_gamma();
     return 0;
 }

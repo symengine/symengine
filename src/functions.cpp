@@ -2336,16 +2336,16 @@ RCP<const Basic> gamma(const RCP<const Basic> &arg)
     } else if (is_a<Rational>(*arg)) {
         RCP<const Rational> arg_ = rcp_static_cast<const Rational>(arg);
         if ((arg_->i.get_den()) == 2) {
-            RCP<const Integer> n;
+            RCP<const Integer> n, k;
+            RCP<const Number> coeff;
             fdiv_q(outArg(n), *(integer(abs(arg_->i.get_num()))), *(integer(arg_->i.get_den())));
-            RCP<const Integer> k, coeff;
             if (arg_->is_positive()) {
                 k = n;
                 coeff = one;
             } else {
                 n = n->addint(*one);
                 k = n;
-                if ((n->as_int() && 1) == 0) {
+                if ((n->as_int() & 1) == 0) {
                     coeff = one;
                 } else {
                     coeff = minus_one;
@@ -2356,7 +2356,7 @@ RCP<const Basic> gamma(const RCP<const Basic> &arg)
             {
                 j = j * i;
             }
-            mulnum(coeff, integer(j));
+            coeff = mulnum(coeff, integer(j));
             if (arg_->is_positive()) {
                 return div(mul(coeff, sqrt(pi)), pow(i2, n));
             } else {
