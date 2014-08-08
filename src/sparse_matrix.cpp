@@ -132,8 +132,8 @@ void CSRMatrix::csr_sort_indices(std::vector<unsigned>& p_,
     }
 }
 
-bool CSRMatrix::csr_has_sorted_indices(std::vector<unsigned>& p_,
-	std::vector<unsigned>& j_,
+bool CSRMatrix::csr_has_sorted_indices(const std::vector<unsigned>& p_,
+	const std::vector<unsigned>& j_,
     unsigned row_)
 {
     for (unsigned i = 0; i < row_; i++) {
@@ -146,8 +146,8 @@ bool CSRMatrix::csr_has_sorted_indices(std::vector<unsigned>& p_,
     return true;
 }
 
-bool CSRMatrix::csr_has_canonical_format(std::vector<unsigned>& p_,
-	std::vector<unsigned>& j_,
+bool CSRMatrix::csr_has_canonical_format(const std::vector<unsigned>& p_,
+	const std::vector<unsigned>& j_,
     unsigned row_)
 {
     for (unsigned i = 0; i < row_; i++) {

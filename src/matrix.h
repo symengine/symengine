@@ -173,12 +173,12 @@ public:
         vec_basic& x_,
         unsigned row_);
 
-    static bool csr_has_sorted_indices(std::vector<unsigned>& p_,
-        std::vector<unsigned>& j_,
+    static bool csr_has_sorted_indices(const std::vector<unsigned>& p_,
+        const std::vector<unsigned>& j_,
         unsigned row_);
 
-    static bool csr_has_canonical_format(std::vector<unsigned>& p_,
-        std::vector<unsigned>& j_,
+    static bool csr_has_canonical_format(const std::vector<unsigned>& p_,
+        const std::vector<unsigned>& j_,
         unsigned row_);
 
     static CSRMatrix from_coo(unsigned row, unsigned col,
