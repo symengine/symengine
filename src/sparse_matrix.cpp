@@ -1,3 +1,5 @@
+#include <algorithm>
+
 #include "matrix.h"
 #include "add.h"
 #include "mul.h"
