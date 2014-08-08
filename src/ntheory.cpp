@@ -9,6 +9,11 @@
 #ifdef HAVE_CSYMPY_PRIMESIEVE
 #  include <primesieve.hpp>
 #endif // HAVE_CSYMPY_PRIMESIEVE
+#ifdef HAVE_CSYMPY_ARB
+#  include "arb.h"
+#  include "bernoulli.h"
+#  include "rational.h"
+#endif // HAVE_CSYMPY_ARB
 #include "dict.h"
 
 namespace CSymPy {
@@ -67,6 +72,15 @@ int mod_inverse(const Ptr<RCP<const Integer>> &b, const Integer &a,
     mpz_clear(inv_t);
 
     return ret_val;
+}
+
+void mod(const Ptr<RCP<const Number>> &r, const Integer &n, const Integer &d)
+{
+    mpz_t inv_t;
+    mpz_init(inv_t);
+
+    mpz_mod(inv_t, n.as_mpz().get_mpz_t(), d.as_mpz().get_mpz_t());
+    *r = integer(mpz_class(inv_t));
 }
 
 RCP<const Integer> fibonacci(unsigned long n)
@@ -489,5 +503,22 @@ void prime_factor_multiplicities(const RCP<const Integer> &n,
         insert(primes_mul, integer(_n), 1);
 }
 
+RCP<const Number> bernoulli(ulong n)
+{
+#ifdef HAVE_CSYMPY_ARB
+    fmpq_t res;
+    fmpq_init(res);
+    bernoulli_fmpq_ui(res, n);
+    mpq_t a;
+    mpq_init(a);
+    fmpq_get_mpq(a, res);
+    mpq_class b (a);
+    fmpq_clear(res);
+    mpq_clear(a);
+    return Rational::from_mpq(b);
+#else
+    throw std::runtime_error("Currently supported only if ARB is installed");
+#endif
+}
 } // CSymPy
 

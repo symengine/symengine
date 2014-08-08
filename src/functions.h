@@ -422,6 +422,83 @@ public:
 //! Create a new LambertW instance:
 RCP<const Basic> lambertw(const RCP<const Basic> &arg);
 
+
+class Zeta : public Function {
+// Hurwitz zeta function (or Riemann zeta function).
+//
+// For `\operatorname{Re}(a) > 0` and `\operatorname{Re}(s) > 1`, this function is defined as
+//
+// .. math:: \zeta(s, a) = \sum_{n=0}^\infty \frac{1}{(n + a)^s},
+//
+// where the standard choice of argument for :math:`n + a` is used. 
+// If no value is passed for :math:`a`, by this function assumes a default value
+// of :math:`a = 1`, yielding the Riemann zeta function.
+
+private:
+    RCP<const Basic> s_;
+    RCP<const Basic> a_;
+
+public:
+    //! Zeta Constructor
+    Zeta(const RCP<const Basic> &s, const RCP<const Basic> &a);
+    //! Zeta Constructor
+    Zeta(const RCP<const Basic> &s);
+    //! \return Size of the hash
+    virtual std::size_t __hash__() const;
+    /*! Equality comparator
+     * \param o  Object to be compared with
+     * \return whether the 2 objects are equal
+     * */
+    virtual bool __eq__(const Basic &o) const;
+    virtual int compare(const Basic &o) const;
+    //! \return stringify version
+    virtual std::string __str__() const;
+    //! \return `s_`
+    inline RCP<const Basic> get_s() const { return s_; }
+    //! \return `a_`
+    inline RCP<const Basic> get_a() const { return a_; }
+    virtual vec_basic get_args() const { return {s_, a_}; }
+    //! \return `true` if canonical
+    bool is_canonical(const RCP<const Basic> &s, const RCP<const Basic> &a);
+    //! Differentiate w.r.t Symbol `x`
+    virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
+};
+
+//! Create a new Zeta instance:
+RCP<const Basic> zeta(const RCP<const Basic> &s, const RCP<const Basic> &a);
+RCP<const Basic> zeta(const RCP<const Basic> &s);
+
+class Dirichlet_eta : public Function {
+// See http://en.wikipedia.org/wiki/Dirichlet_eta_function
+
+private:
+    RCP<const Basic> s_;
+
+public:
+    //! Dirichlet_eta Constructor
+    Dirichlet_eta(const RCP<const Basic> &s);
+    //! \return Size of the hash
+    virtual std::size_t __hash__() const;
+    /*! Equality comparator
+     * \param o  Object to be compared with
+     * \return whether the 2 objects are equal
+     * */
+    virtual bool __eq__(const Basic &o) const;
+    virtual int compare(const Basic &o) const;
+    //! \return stringify version
+    virtual std::string __str__() const;
+    //! \return `s_`
+    inline RCP<const Basic> get_s() const { return s_; }
+    virtual vec_basic get_args() const { return {s_}; }
+    //! \return `true` if canonical
+    bool is_canonical(const RCP<const Basic> &s);
+    //! Rewrites in the form of zeta
+    RCP<const Basic> rewrite_as_zeta() const;
+};
+
+//! Create a new Dirichlet_eta instance:
+RCP<const Basic> dirichlet_eta(const RCP<const Basic> &s);
+
 class FunctionSymbol : public Function {
 private:
     std::string name_; //! The `f` in `f(x+y)`
@@ -712,6 +789,67 @@ public:
 
 //! Canonicalize ACoth:
 RCP<const Basic> acoth(const RCP<const Basic> &arg);
+
+class KroneckerDelta: public Function {
+/*! The discrete, or Kronecker, delta function.
+ * A function that takes in two integers `i` and `j`. It returns `0` if `i` and `j` are
+ * not equal or it returns `1` if `i` and `j` are equal.
+ * http://en.wikipedia.org/wiki/Kronecker_delta
+ **/
+private:
+    RCP<const Basic> i_;
+    RCP<const Basic> j_;
+public:
+    //! KroneckerDelta Constructor
+    KroneckerDelta(const RCP<const Basic> &i, const RCP<const Basic> &j);
+    /*! Equality comparator
+     * \param o - Object to be compared with
+     * \return whether the 2 objects are equal
+     * */
+    virtual bool __eq__(const Basic &o) const;
+    virtual int compare(const Basic &o) const;
+    //! \return Size of the hash
+    virtual std::size_t __hash__() const;
+    //! \return stringify version
+    virtual std::string __str__() const;
+    //! \return `true` if canonical
+    bool is_canonical(const RCP<const Basic> &i, const RCP<const Basic> &j);
+    virtual vec_basic get_args() const { return {i_, j_}; }
+};
+
+//! Canonicalize KroneckerDelta:
+RCP<const Basic> kronecker_delta(const RCP<const Basic> &i, const RCP<const Basic> &j);
+
+
+class LeviCivita: public Function {
+/*! Represent the Levi-Civita symbol.
+ *  For even permutations of indices it returns 1, for odd permutations -1, and
+ *  for everything else (a repeated index) it returns 0.
+ *
+ *  Thus it represents an alternating pseudotensor.
+ **/
+private:
+    vec_basic arg_;
+public:
+    //! LeviCivita Constructor
+    LeviCivita(const vec_basic&& arg);
+    /*! Equality comparator
+     * \param o - Object to be compared with
+     * \return whether the 2 objects are equal
+     * */
+    virtual bool __eq__(const Basic &o) const;
+    virtual int compare(const Basic &o) const;
+    //! \return Size of the hash
+    virtual std::size_t __hash__() const;
+    //! \return stringify version
+    virtual std::string __str__() const;
+    //! \return `true` if canonical
+    bool is_canonical(const vec_basic &arg);
+    virtual vec_basic get_args() const { return arg_; }
+};
+
+//! Canonicalize LeviCivita:
+RCP<const Basic> levi_civita(const vec_basic &arg);
 } // CSymPy
 
 #endif

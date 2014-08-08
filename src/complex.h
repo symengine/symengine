@@ -69,7 +69,13 @@ public:
     virtual bool is_zero() const { return ((this->real_ == 0) && (this->imaginary_ == 0)); }
     //! \return `true` if `1`
     virtual bool is_one() const { return ((this->real_ == 1) && (this->imaginary_ == 0)); }
-
+    //! \return `true` if `-1`
+    virtual bool is_minus_one() const { return ((this->real_ == -1) && (this->imaginary_ == 0)); }
+    //! \return `true` if both `real_` or `imaginary_` are zero
+    // This is needed while printing inside `mul`.
+    inline bool is_reim_zero() const { return ((this->real_ == 0) || (this->imaginary_ == 0)); }
+    //! \return `true` if `real_`  is zero
+    inline bool is_re_zero() const { return (this->real_ == 0); }
     /*! Add Complex
      * \param other of type Complex
      * */
@@ -275,6 +281,11 @@ inline bool is_a_Number(const Basic &b)
     // frequent (on the left) to the least frequent (on the right):
     return is_a<Integer>(b) || is_a<Rational>(b) || is_a<Complex>(b);
 }
+
+// `I` is created only once in complex.cpp and reused
+// everywhere (faster than creating it all the time):
+extern RCP<const Number> I;
+
 } // CSymPy
 
 #endif

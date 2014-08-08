@@ -46,8 +46,10 @@ public:
     virtual bool is_zero() const { return this->i == 0; }
     //! \return `true` if `1`
     virtual bool is_one() const { return this->i == 1; }
+    //! \return `true` if `-1`
+    virtual bool is_minus_one() const { return this->i == -1; }
     //! \return `true` if denominator is `1`
-    inline bool is_int() { return this->i.get_den() == 1; }
+    inline bool is_int() const { return this->i.get_den() == 1; }
     //! \return `true` if positive
     inline virtual bool is_positive() const {
         return ((this->i.get_den() > 0) && (this->i.get_num() > 0)) ||
@@ -160,7 +162,7 @@ public:
         } else if (is_a<Integer>(other)) {
             return addrat(static_cast<const Integer&>(other));
         } else {
-            throw std::runtime_error("Not implemented.");
+            return other.add(*this);
         }
     };
     //! Converts the param `other` appropriately and then calls `subrat`
@@ -170,7 +172,7 @@ public:
         } else if (is_a<Integer>(other)) {
             return subrat(static_cast<const Integer&>(other));
         } else {
-            throw std::runtime_error("Not implemented.");
+            return other.rsub(*this);
         }
     };
     //! Converts the param `other` appropriately and then calls `rsubrat`
@@ -178,7 +180,7 @@ public:
         if (is_a<Integer>(other)) {
             return rsubrat(static_cast<const Integer&>(other));
         } else {
-            throw std::runtime_error("Not implemented.");
+            return other.sub(*this);
         }
     };
     //! Converts the param `other` appropriately and then calls `mulrat`
@@ -188,7 +190,7 @@ public:
         } else if (is_a<Integer>(other)) {
             return mulrat(static_cast<const Integer&>(other));
         } else {
-            throw std::runtime_error("Not implemented.");
+            return other.mul(*this);
         }
     };
     //! Converts the param `other` appropriately and then calls `divrat`
@@ -198,7 +200,7 @@ public:
         } else if (is_a<Integer>(other)) {
             return divrat(static_cast<const Integer&>(other));
         } else {
-            throw std::runtime_error("Not implemented.");
+            return other.rdiv(*this);
         }
     };
     //! Converts the param `other` appropriately and then calls `rdivrat`

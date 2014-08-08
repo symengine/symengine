@@ -33,7 +33,7 @@ bool Pow::is_canonical(const RCP<const Basic> &base, const RCP<const Basic> &exp
     if (is_a<Integer>(*exp) && rcp_static_cast<const Integer>(exp)->is_one())
         return false;
     // e.g. 2^3, (2/3)^4
-    if (is_a_Number(*base) && is_a<Integer>(*exp))
+    if ((is_a<Integer>(*base) || is_a<Rational>(*base)) && is_a<Integer>(*exp))
         return false;
     // e.g. (x*y)^2, should rather be x^2*y^2
     if (is_a<Mul>(*base) && is_a<Integer>(*exp))
@@ -43,11 +43,16 @@ bool Pow::is_canonical(const RCP<const Basic> &base, const RCP<const Basic> &exp
         return false;
     // If exp is a rational, it should be between 0  and 1, i.e. we don't
     // allow things like 2^(-1/2) or 2^(3/2)
-    if (is_a_Number(*base) && is_a<Rational>(*exp) &&
+    if ((is_a<Rational>(*base) || is_a<Integer>(*base)) &&
+        is_a<Rational>(*exp) &&
         (rcp_static_cast<const Rational>(exp)->i < 0 ||
         rcp_static_cast<const Rational>(exp)->i > 1))
         return false;
-
+    // Purely Imaginary complex numbers with integral powers are expanded
+    // e.g (2I)^3
+    if (is_a<Complex>(*base) && rcp_static_cast<const Complex>(base)->is_re_zero() &&
+        is_a<Integer>(*exp))
+        return false;
     return true;
 }
 
@@ -86,16 +91,70 @@ std::string Pow::__str__() const
     std::ostringstream o;
     if (is_a<Add>(*base_)) {
         o << "(" << *base_ << ")";
-    } else {
+    } else if ((is_a<Rational>(*base_) || is_a<Integer>(*base_)) &&
+                rcp_static_cast<const Number>(base_)->is_negative()) {
+        o << "(" << *base_ << ")";
+    } else if (is_a<Complex>(*base_) &&
+                (rcp_static_cast<const Complex>(base_)->imaginary_)!=0) {
+        o << "(" << *base_ <<")";
+    }  else {
         o << *base_;
     }
     o << "^";
     if (is_a<Add>(*exp_) || is_a<Pow>(*exp_)) {
         o << "(" << *exp_ << ")";
+    } else if ((is_a<Rational>(*exp_) || is_a<Integer>(*exp_)) &&
+                rcp_static_cast<const Number>(exp_)->is_negative()) {
+        o << "(" << *exp_ << ")";
+    } else if (is_a<Complex>(*exp_) &&
+                (rcp_static_cast<const Complex>(exp_)->imaginary_)!=0) {
+        o << "(" << *exp_ <<")";
     } else {
         o << *exp_;
     }
     return o.str();
+}
+
+RCP<const Number> pow_number(const RCP<const Number> &x, long n)
+{
+    RCP<const Number> r, p;
+    long mask = 1;
+    r = one;
+    p = x;
+    while (mask > 0 && n >= mask) {
+        if (n & mask)
+            r = mulnum(r, p);
+        mask = mask << 1;
+        p = mulnum(p, p);
+    }
+    return r;
+}
+
+void pow_complex(const Ptr<RCP<const Number>> &self,
+    const RCP<const Complex> &base_,
+    const Integer &exp_)
+{
+    if (base_->is_re_zero()) {
+        // Imaginary Number raised to an integer power.
+        RCP<const Number> im = Rational::from_mpq(base_->imaginary_);
+        RCP<const Number> res;
+        mod(outArg(res), exp_, *integer(4));
+        if (eq(res, zero)) {
+            res = one;
+        } else if (eq(res, one)) {
+            res = I;
+        } else if (eq(res, integer(2))) {
+            res = minus_one;
+        } else {
+            res = mulnum(I, minus_one);
+        }
+        *self = mulnum(im->pow(exp_), res);
+    } else if (exp_.is_positive()) {
+        *self = pow_number(base_, exp_.as_int());
+    } else {
+        *self = pow_number(divnum(one, base_), -1 * exp_.as_int());
+    }
+
 }
 
 RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
@@ -104,8 +163,15 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
     if (eq(b, one)) return a;
     if (eq(a, zero)) return zero;
     if (eq(a, one)) return one;
-    if (eq(a, minus_one) && is_a<Integer>(*b))
-        return is_a<Integer>(*div(b, integer(2))) ? one : minus_one;
+    if (eq(a, minus_one)) {
+        if (is_a<Integer>(*b)) {
+            return is_a<Integer>(*div(b, integer(2))) ? one : minus_one;
+        } else if (is_a<Rational>(*b) &&
+                    (rcp_static_cast<const Rational>(b)->i.get_num() == 1) &&
+                    (rcp_static_cast<const Rational>(b)->i.get_den() == 2)) {
+            return I;
+        }
+    }
 
     if (is_a_Number(*a) && is_a_Number(*b)) {
         if (is_a<Integer>(*b)) {
@@ -115,6 +181,12 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
             } else if (is_a<Integer>(*a)) {
                 RCP<const Integer> exp_new = rcp_static_cast<const Integer>(a);
                 return exp_new->powint(*rcp_static_cast<const Integer>(b));
+            } else if (is_a<Complex>(*a)) {
+                RCP<const Complex> exp_new = rcp_static_cast<const Complex>(a);
+                RCP<const Integer> pow_new = rcp_static_cast<const Integer>(b);
+                RCP<const Number> res;
+                pow_complex(outArg(res), exp_new, *pow_new);
+                return res;
             } else {
                 throw std::runtime_error("Not implemented");
             }
@@ -149,11 +221,24 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
                 RCP<const Integer> exp_new = rcp_static_cast<const Integer>(a);
                 RCP<const Number> frac = exp_new->powint(Integer(q));
                 map_basic_basic surd;
-                surd[exp_new] = div(integer(r), integer(den));
+                if ((exp_new->is_negative()) && ((r / den) == 1/2)) {
+                    frac = mulnum(frac, I);
+                    exp_new = exp_new->mulint(*minus_one);
+                    // if exp_new is one, no need to add it to dict
+                    if (exp_new->is_one())
+                        return frac;
+                    surd[exp_new] = div(integer(r), integer(den));
+                } else {
+                    surd[exp_new] = div(integer(r), integer(den));
+                }
                 return rcp(new Mul(frac, std::move(surd)));
+            } else if (is_a<Complex>(*a)) {
+                return rcp(new Pow(a, b));
             } else {
                 throw std::runtime_error("Not implemented");
             }
+        } else if (is_a<Complex>(*b)) {
+            return rcp(new Pow(a, b));
         } else {
             throw std::runtime_error("Not implemented");
         }
@@ -306,9 +391,19 @@ RCP<const Basic> pow_expand(const RCP<const Pow> &self)
                     Mul::dict_add_term_new(outArg(overall_coeff), d, exp2, t);
                 }
                 if (!(i2->second->is_one())) {
-                    imulnum(outArg(overall_coeff),
+                    if (is_a<Integer>(*(i2->second)) || is_a<Rational>(*(i2->second))) {
+                        imulnum(outArg(overall_coeff),
                         pownum(i2->second,
                             rcp_static_cast<const Number>(exp)));
+                    } else if (is_a<Complex>(*(i2->second))) {
+                        if (is_a<Integer>(*exp)) {
+                            RCP<const Integer> pow_new = rcp_static_cast<const Integer>(exp);
+                            RCP<const Complex> base_new = rcp_static_cast<const Complex>(i2->second);
+                            pow_complex(outArg(overall_coeff), base_new, *pow_new);
+                        } else {
+                            Mul::dict_add_term_new(outArg(overall_coeff), d, exp, i2->second);
+                        }
+                    }
                 }
             }
         }

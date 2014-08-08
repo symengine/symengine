@@ -28,6 +28,8 @@ RCP<const Integer> lcm(const Integer &a, const Integer &b);
 //! Extended GCD
 void gcd_ext(const Ptr<RCP<const Integer>> &g, const Ptr<RCP<const Integer>> &s,
         const Ptr<RCP<const Integer>> &t, const Integer &a, const Integer &b);
+//! modulo
+void mod(const Ptr<RCP<const Number>> &r, const Integer &n, const Integer &d);
 //! inverse modulo
 int mod_inverse(const Ptr<RCP<const Integer>> &b, const Integer &a,
         const Integer &m);
@@ -88,6 +90,8 @@ void prime_factors(const RCP<const Integer> &n,
 void prime_factor_multiplicities(const RCP<const Integer> &n,
         map_integer_uint &primes);
 
+//! Computes the Bernoulli number Bn as an exact fraction, for an isolated integer n
+RCP<const Number> bernoulli(ulong n);
 }
 #endif
 

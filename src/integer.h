@@ -42,6 +42,8 @@ public:
     inline virtual bool is_zero() const { return this->i == 0; }
     //! \return `true` if `1`
     inline virtual bool is_one() const { return this->i == 1; }
+    //! \return `true` if `-1`
+    inline virtual bool is_minus_one() const { return this->i == -1; }
     //! \return `true` if positive
     inline virtual bool is_positive() const { return this->i > 0; }
     //! \return `true` if negative

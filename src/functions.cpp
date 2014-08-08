@@ -2134,4 +2134,329 @@ RCP<const Basic> ACoth::create(const RCP<const Basic> &arg) const
 {
     return acoth(arg);
 }
+
+KroneckerDelta::KroneckerDelta(const RCP<const Basic> &i, const RCP<const Basic> &j)
+    :i_{i}, j_{j}
+{
+    CSYMPY_ASSERT(is_canonical(i_, j_))
+}
+
+bool KroneckerDelta::is_canonical(const RCP<const Basic> &i, const RCP<const Basic> &j)
+{
+    RCP<const Basic> diff = expand(sub(i, j));
+    if (eq(diff, zero)) {
+        return false;
+    } else if (is_a_Number(*diff)) {
+        return false;
+    } else {
+        // TODO: SymPy uses default key sorting to return in order
+        return true;
+    }
+}
+
+bool KroneckerDelta::__eq__(const Basic &o) const
+{
+    if (is_a<KroneckerDelta>(o) &&
+        eq(i_, static_cast<const KroneckerDelta &>(o).i_) &&
+        eq(j_, static_cast<const KroneckerDelta &>(o).j_))
+        return true;
+    else
+        return false;
+}
+
+int KroneckerDelta::compare(const Basic &o) const
+{
+    CSYMPY_ASSERT(is_a<KroneckerDelta>(o))
+    const KroneckerDelta &s = static_cast<const KroneckerDelta &>(o);
+    return i_->__cmp__(*(s.i_));
+}
+
+std::size_t KroneckerDelta::__hash__() const
+{
+    std::size_t seed = 0;
+    hash_combine<Basic>(seed, *i_);
+    hash_combine<Basic>(seed, *j_);
+    return seed;
+}
+
+std::string KroneckerDelta::__str__() const
+{
+    std::ostringstream o;
+    o << "KroneckerDelta(" << *i_ << ", " << *j_ << ")";
+    return o.str();
+}
+
+RCP<const Basic> kronecker_delta(const RCP<const Basic> &i, const RCP<const Basic> &j)
+{
+    // Expand is needed to simplify things like `i-(i+1)` to `-1`
+    RCP<const Basic> diff = expand(sub(i, j));
+    if (eq(diff, zero)) {
+        return one;
+    } else if (is_a_Number(*diff)) {
+        return zero;
+    } else {
+        // SymPy uses default key sorting to return in order
+        return rcp(new KroneckerDelta(i, j));
+    }
+}
+
+bool has_dup(const vec_basic &arg)
+{
+    map_basic_basic d;
+    auto it = d.end();
+    for (auto &p: arg) {
+        it = d.find(p);
+        if (it == d.end()) {
+            insert(d, p, one);
+        } else {
+            return true;
+        }
+    }
+    return false;
+}
+
+LeviCivita::LeviCivita(const vec_basic&& arg)
+    :arg_{std::move(arg)}
+{
+    CSYMPY_ASSERT(is_canonical(arg_))
+}
+
+bool LeviCivita::is_canonical(const vec_basic &arg)
+{
+    bool are_int = true;
+    for (auto &p: arg) {
+        if (!(is_a_Number(*p))) {
+            are_int = false;
+            break;
+        }
+    }
+    if (are_int) {
+        return false;
+    } else if (has_dup(arg)) {
+        return false;
+    } else {
+        return true;
+    }
+}
+
+bool LeviCivita::__eq__(const Basic &o) const
+{
+    if (is_a<LeviCivita>(o) &&
+        vec_basic_eq(arg_, static_cast<const LeviCivita &>(o).arg_))
+        return true;
+    else
+        return false;
+}
+
+int LeviCivita::compare(const Basic &o) const
+{
+    CSYMPY_ASSERT(is_a<LeviCivita>(o))
+    const LeviCivita &s = static_cast<const LeviCivita &>(o);
+    // # of elements
+    if (arg_.size() != s.arg_.size())
+        return (arg_.size() < s.arg_.size()) ? -1 : 1;
+    return vec_basic_compare(arg_, s.arg_);
+}
+
+std::size_t LeviCivita::__hash__() const
+{
+    std::size_t seed = 0;
+    for (auto &p: arg_) {
+        hash_combine<Basic>(seed, *p);
+    }
+    return seed;
+}
+
+std::string LeviCivita::__str__() const
+{
+    std::ostringstream o;
+    o << "LeviCivita(";
+    for (auto &p: arg_) {
+        o << *p << ", ";
+    }
+    std::string s = o.str();
+    s = s.substr(0, s.size()-2);
+    s.append(")");
+    return s;
+}
+
+RCP<const Basic> eval_levicivita(const vec_basic &arg, int len)
+{
+    int i, j;
+    RCP<const Basic> res = one;
+    for (i = 0; i < len; i++) {
+        for (j = i + 1; j < len; j++) {
+            res = mul(sub(arg[j], arg[i]), res);
+        }
+        res = div(res, factorial(i));
+    }
+    return res;
+}
+
+RCP<const Basic> levi_civita(const vec_basic &arg)
+{
+    bool are_int = true;
+    int len = 0;
+    for (auto &p: arg) {
+        if (!(is_a_Number(*p))) {
+            are_int = false;
+            break;
+        } else {
+            len++;
+        }
+    }
+    if (are_int) {
+        return eval_levicivita(arg, len);
+    } else if (has_dup(arg)) {
+        return zero;
+    } else {
+        return rcp(new LeviCivita(std::move(arg)));
+    }
+}
+
+Zeta::Zeta(const RCP<const Basic> &s, const RCP<const Basic> &a)
+    : s_{s}, a_{a}
+{
+    CSYMPY_ASSERT(is_canonical(s_, a_))
+}
+
+Zeta::Zeta(const RCP<const Basic> &s)
+    : s_{s}, a_{one}
+{
+    CSYMPY_ASSERT(is_canonical(s_, a_))
+}
+
+bool Zeta::is_canonical(const RCP<const Basic> &s, const RCP<const Basic> &a)
+{
+    if (eq(s, zero)) return false;
+    if (eq(s, one)) return false;
+    return true;
+}
+
+std::size_t Zeta::__hash__() const
+{
+    std::size_t seed = 0;
+    hash_combine<Basic>(seed, *s_);
+    hash_combine<Basic>(seed, *a_);
+    return seed;
+}
+
+bool Zeta::__eq__(const Basic &o) const
+{
+    if (is_a<Zeta>(o) &&
+        eq(s_, static_cast<const Zeta &>(o).s_) &&
+        eq(a_, static_cast<const Zeta &>(o).a_))
+        return true;
+    return false;
+}
+
+int Zeta::compare(const Basic &o) const
+{
+    CSYMPY_ASSERT(is_a<Zeta>(o))
+    return s_->__cmp__(*(static_cast<const Zeta &>(o).s_));
+}
+
+
+std::string Zeta::__str__() const
+{
+    std::ostringstream o;
+    o << "zeta(" << *s_ ;
+    if (neq(a_, one))
+        o << ", " << *a_;
+    o << ")";
+    return o.str();
+}
+
+RCP<const Basic> Zeta::diff(const RCP<const Symbol> &x) const
+{
+    // TODO: check if it is differentiated wrt s
+    return mul(mul(mul(minus_one, s_), zeta(add(s_, one), a_)), a_->diff(x));
+}
+
+RCP<const Basic> zeta(const RCP<const Basic> &s, const RCP<const Basic> &a)
+{
+    if (is_a_Number(*s)) {
+        if (rcp_static_cast<const Number>(s)->is_zero()) {
+            if (is_a_Number(*a) &&
+                rcp_static_cast<const Number>(a)->is_negative()) {
+                return sub(div(minus_one, i2), a);
+            } else {
+                return sub(div(one, i2), a);
+            }
+        } else if (rcp_static_cast<const Number>(s)->is_one()) {
+            throw std::runtime_error("Complex infinity is not yet implemented");
+        } else if (is_a<Integer>(*s) && is_a<Integer>(*a)) {
+            // Implement Harmonic and simplify this
+            return rcp(new Zeta(s, a));
+        }
+    }
+    return rcp(new Zeta(s, a));
+}
+
+RCP<const Basic> zeta(const RCP<const Basic> &s)
+{
+    return zeta(s, one);
+}
+
+Dirichlet_eta::Dirichlet_eta(const RCP<const Basic> &s)
+    : s_{s}
+{
+    CSYMPY_ASSERT(is_canonical(s_))
+}
+
+bool Dirichlet_eta::is_canonical(const RCP<const Basic> &s)
+{
+    if (eq(s, one)) return false;
+    if (!(is_a<Zeta>(*zeta(s)))) return false;
+    return true;
+}
+
+std::size_t Dirichlet_eta::__hash__() const
+{
+    std::size_t seed = 0;
+    hash_combine<Basic>(seed, *s_);
+    return seed;
+}
+
+bool Dirichlet_eta::__eq__(const Basic &o) const
+{
+    if (is_a<Dirichlet_eta>(o) &&
+        eq(s_, static_cast<const Dirichlet_eta &>(o).s_))
+        return true;
+    return false;
+}
+
+int Dirichlet_eta::compare(const Basic &o) const
+{
+    CSYMPY_ASSERT(is_a<Dirichlet_eta>(o))
+    return s_->__cmp__(*(static_cast<const Dirichlet_eta &>(o).s_));
+}
+
+
+std::string Dirichlet_eta::__str__() const
+{
+    std::ostringstream o;
+    o << "dirichlet_eta(" << *s_ << ")";
+    return o.str();
+}
+
+RCP<const Basic> Dirichlet_eta::rewrite_as_zeta() const
+{
+    return mul(sub(one, pow(i2, sub(one, s_))), zeta(s_));
+}
+
+RCP<const Basic> dirichlet_eta(const RCP<const Basic> &s)
+{
+    if (is_a_Number(*s) &&
+        rcp_static_cast<const Number>(s)->is_one()) {
+            return log(i2);
+    }
+    RCP<const Basic> z = zeta(s);
+    if (is_a<Zeta>(*z)) {
+        return rcp(new Dirichlet_eta(s));
+    } else {
+        return mul(sub(one, pow(i2, sub(one, s))), z);
+    }
+}
+
 } // CSymPy
