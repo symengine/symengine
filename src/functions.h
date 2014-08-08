@@ -790,6 +790,67 @@ public:
 //! Canonicalize ACoth:
 RCP<const Basic> acoth(const RCP<const Basic> &arg);
 
+class KroneckerDelta: public Function {
+/*! The discrete, or Kronecker, delta function.
+ * A function that takes in two integers `i` and `j`. It returns `0` if `i` and `j` are
+ * not equal or it returns `1` if `i` and `j` are equal.
+ * http://en.wikipedia.org/wiki/Kronecker_delta
+ **/
+private:
+    RCP<const Basic> i_;
+    RCP<const Basic> j_;
+public:
+    //! KroneckerDelta Constructor
+    KroneckerDelta(const RCP<const Basic> &i, const RCP<const Basic> &j);
+    /*! Equality comparator
+     * \param o - Object to be compared with
+     * \return whether the 2 objects are equal
+     * */
+    virtual bool __eq__(const Basic &o) const;
+    virtual int compare(const Basic &o) const;
+    //! \return Size of the hash
+    virtual std::size_t __hash__() const;
+    //! \return stringify version
+    virtual std::string __str__() const;
+    //! \return `true` if canonical
+    bool is_canonical(const RCP<const Basic> &i, const RCP<const Basic> &j);
+    virtual vec_basic get_args() const { return {i_, j_}; }
+};
+
+//! Canonicalize KroneckerDelta:
+RCP<const Basic> kronecker_delta(const RCP<const Basic> &i, const RCP<const Basic> &j);
+
+
+class LeviCivita: public Function {
+/*! Represent the Levi-Civita symbol.
+ *  For even permutations of indices it returns 1, for odd permutations -1, and
+ *  for everything else (a repeated index) it returns 0.
+ *
+ *  Thus it represents an alternating pseudotensor.
+ **/
+private:
+    vec_basic arg_;
+public:
+    //! LeviCivita Constructor
+    LeviCivita(const vec_basic&& arg);
+    /*! Equality comparator
+     * \param o - Object to be compared with
+     * \return whether the 2 objects are equal
+     * */
+    virtual bool __eq__(const Basic &o) const;
+    virtual int compare(const Basic &o) const;
+    //! \return Size of the hash
+    virtual std::size_t __hash__() const;
+    //! \return stringify version
+    virtual std::string __str__() const;
+    //! \return `true` if canonical
+    bool is_canonical(const vec_basic &arg);
+    virtual vec_basic get_args() const { return arg_; }
+};
+
+//! Canonicalize LeviCivita:
+RCP<const Basic> levi_civita(const vec_basic &arg);
+
 class Gamma: public Function {
 /*!    The gamma function
  *
@@ -823,6 +884,7 @@ public:
 
 //! Canonicalize Gamma:
 RCP<const Basic> gamma(const RCP<const Basic> &arg);
+
 } // CSymPy
 
 #endif
