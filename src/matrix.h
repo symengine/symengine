@@ -5,9 +5,6 @@
 
 namespace CSymPy {
 
-// Forward declaration
-class SparseMatrix;
-
 // Base class for matrices
 class MatrixBase {
 public:
@@ -52,7 +49,7 @@ class DenseMatrix: public MatrixBase {
 public:
     // Constructors
     DenseMatrix(unsigned row, unsigned col);
-    DenseMatrix(unsigned row, unsigned col, const std::vector<RCP<const Basic>> &l);
+    DenseMatrix(unsigned row, unsigned col, const vec_basic &l);
 
     // Should implement all the virtual methods from MatrixBase
     // and throw an exception if a method is not applicable.
@@ -67,15 +64,15 @@ public:
 
     // Matrix addition
     virtual MatrixBase& add_matrix(const MatrixBase &other) const;
-    friend void add_dense_dense(const DenseMatrix &A, const DenseMatrix &B,
-        DenseMatrix &C);
-    friend void add_dense_scalar(const DenseMatrix &A, RCP<const Basic> &k,
-        DenseMatrix &B );
 
     // Matrix multiplication
     virtual MatrixBase& mul_matrix(const MatrixBase &other) const;
 
     // Friend functions related to Matrix Operations
+    friend void add_dense_dense(const DenseMatrix &A, const DenseMatrix &B,
+        DenseMatrix &C);
+    friend void add_dense_scalar(const DenseMatrix &A, RCP<const Basic> &k,
+        DenseMatrix &B );
     friend void mul_dense_dense(const DenseMatrix &A, const DenseMatrix &B,
         DenseMatrix &C);
     friend void mul_dense_scalar(const DenseMatrix &A, RCP<const Basic> &k,
@@ -140,27 +137,19 @@ public:
 
 protected:
     // Matrix elements are stored in row-major order
-    std::vector<RCP<const Basic>> m_;
+    vec_basic m_;
 };
 
-// ----------------------------- Sparse Matrix -------------------------------//
-
-class SparseMatrix: public MatrixBase {
+// ----------------------------- Sparse Matrices -------------------------------//
+class CSRMatrix: public MatrixBase {
 public:
-    // Constructors
-    SparseMatrix(unsigned row, unsigned col);
-    SparseMatrix(unsigned row, unsigned col,
-            std::map<int, RCP<Basic>> &l);
+    CSRMatrix(unsigned row, unsigned col);
+    CSRMatrix(unsigned row, unsigned col, std::vector<unsigned>&& p,
+        std::vector<unsigned>&& j, vec_basic&& x);
 
-    // Virtual functions inherited from Basic class
-    virtual std::size_t __hash__() const;
-    virtual bool __eq__(const Basic &o) const;
-    virtual int compare(const Basic &o) const;
+    bool is_canonical();
 
-    // Should implement all the virtual methods from MatrixBase
-    // and throw an exception if a method is not applicable.
-
-    // Get and Set elements
+    // Get and set elements
     virtual RCP<const Basic> get(unsigned i) const;
     virtual void set(unsigned i, RCP<const Basic> &e);
 
@@ -174,11 +163,41 @@ public:
     // Matrix Multiplication
     virtual MatrixBase& mul_matrix(const MatrixBase &other) const;
 
+    static void csr_sum_duplicates(std::vector<unsigned>& p_,
+        std::vector<unsigned>& j_,
+        vec_basic& x_,
+        unsigned row_);
+
+    static void csr_sort_indices(std::vector<unsigned>& p_,
+        std::vector<unsigned>& j_,
+        vec_basic& x_,
+        unsigned row_);
+
+    static bool csr_has_sorted_indices(const std::vector<unsigned>& p_,
+        const std::vector<unsigned>& j_,
+        unsigned row_);
+
+    static bool csr_has_canonical_format(const std::vector<unsigned>& p_,
+        const std::vector<unsigned>& j_,
+        unsigned row_);
+
+    static CSRMatrix from_coo(unsigned row, unsigned col,
+        const std::vector<unsigned>& i, const std::vector<unsigned>& j,
+        const vec_basic& x);
+
+    friend void csr_matmat_pass1(const CSRMatrix &A, const CSRMatrix &B,
+        CSRMatrix &C);
+    friend void csr_matmat_pass2(const CSRMatrix &A, const CSRMatrix &B,
+        CSRMatrix &C);
+
 protected:
-    std::map<int, RCP<Basic>> m_;
+    std::vector<unsigned> p_;
+    std::vector<unsigned> j_;
+    vec_basic x_;
 };
 
 // Solving Ax = b
+
 void fraction_free_LU_solve(const DenseMatrix &A, const DenseMatrix &b,
     DenseMatrix &x);
 
