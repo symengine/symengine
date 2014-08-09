@@ -189,6 +189,9 @@ public:
         CSRMatrix &C);
     friend void csr_matmat_pass2(const CSRMatrix &A, const CSRMatrix &B,
         CSRMatrix &C);
+    friend void csr_diagonal(const CSRMatrix& A, DenseMatrix& D);
+    friend void csr_scale_rows(CSRMatrix& A, const DenseMatrix& X);
+    friend void csr_scale_columns(CSRMatrix& A, const DenseMatrix& X);
 
 protected:
     std::vector<unsigned> p_;

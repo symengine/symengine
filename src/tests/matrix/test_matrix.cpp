@@ -993,6 +993,40 @@ void test_from_coo()
     assert(A == B);
 }
 
+void test_csr_diagonal()
+{
+    CSRMatrix A = CSRMatrix(3, 3, {0, 2, 3, 6}, {0, 2, 2, 0, 1, 2},
+        {integer(1), integer(2), integer(3), integer(4), integer(5), integer(6)});
+    DenseMatrix D = DenseMatrix(3, 1);
+    csr_diagonal(A, D);
+
+    assert(D == DenseMatrix(3, 1, {integer(1), integer(0), integer(6)}));
+}
+
+void test_csr_scale_rows()
+{
+    CSRMatrix A = CSRMatrix(3, 3, {0, 2, 3, 6}, {0, 2, 2, 0, 1, 2},
+        {integer(1), integer(2), integer(3), integer(4), integer(5), integer(6)});
+    DenseMatrix X = DenseMatrix(3, 1, {integer(1), integer(-1), integer(3)});
+
+    csr_scale_rows(A, X);
+
+    assert(A == CSRMatrix(3, 3, {0, 2, 3, 6}, {0, 2, 2, 0, 1, 2},
+        {integer(1), integer(2), integer(-3), integer(12), integer(15), integer(18)}));
+}
+
+void test_csr_scale_columns()
+{
+    CSRMatrix A = CSRMatrix(3, 3, {0, 2, 3, 6}, {0, 2, 2, 0, 1, 2},
+        {integer(1), integer(2), integer(3), integer(4), integer(5), integer(6)});
+    DenseMatrix X = DenseMatrix(3, 1, {integer(1), integer(-1), integer(3)});
+
+    csr_scale_columns(A, X);
+
+    assert(A == CSRMatrix(3, 3, {0, 2, 3, 6}, {0, 2, 2, 0, 1, 2},
+        {integer(1), integer(6), integer(9), integer(4), integer(-5), integer(18)}));
+}
+
 int main(int argc, char* argv[])
 {
     print_stack_on_segfault();
@@ -1048,6 +1082,12 @@ int main(int argc, char* argv[])
     test_inverse();
 
     test_from_coo();
+
+    test_csr_diagonal();
+
+    test_csr_scale_rows();
+
+    test_csr_scale_columns();
 
     return 0;
 }

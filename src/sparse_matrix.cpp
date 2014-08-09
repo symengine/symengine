@@ -261,7 +261,7 @@ void csr_matmat_pass2(const CSRMatrix &A, const CSRMatrix &B, CSRMatrix &C)
             RCP<const Basic> v = A.x_[jj];
 
             unsigned kk_start = B.p_[j];
-            unsigned kk_end   = B.p_[j+1];
+            unsigned kk_end   = B.p_[j + 1];
             for (unsigned kk = kk_start; kk < kk_end; kk++) {
                 unsigned k = B.j_[kk];
 
@@ -292,6 +292,54 @@ void csr_matmat_pass2(const CSRMatrix &A, const CSRMatrix &B, CSRMatrix &C)
 
         C.p_[i + 1] = nnz;
     }
+}
+
+// Extract main diagonal of CSR matrix A
+void csr_diagonal(const CSRMatrix& A, DenseMatrix& D)
+{
+    unsigned N = std::min(A.row_, A.col_);
+
+    CSYMPY_ASSERT(D.nrows() == N && D.ncols() == 1);
+
+    unsigned row_start;
+    unsigned row_end;
+    RCP<const Basic> diag;
+
+    for(unsigned i = 0; i < N; i++) {
+        row_start = A.p_[i];
+        row_end = A.p_[i + 1];
+        diag = zero;
+
+        // TODO: Use Binary search as A is in canonical format
+        for(unsigned jj = row_start; jj < row_end; jj++) {
+            if (A.j_[jj] == i) {
+                diag = A.x_[jj];
+                break;
+            }
+        }
+        D.set(i, diag);
+    }
+}
+
+// Scale the rows of a CSR matrix *in place*
+// A[i, :] *= X[i]
+void csr_scale_rows(CSRMatrix& A, const DenseMatrix& X)
+{
+    CSYMPY_ASSERT(A.row_ == X.nrows() && X.ncols() == 1);
+
+    for(unsigned i = 0; i < A.row_; i++) {
+        for(unsigned jj = A.p_[i]; jj < A.p_[i + 1]; jj++)
+            A.x_[jj] = mul(A.x_[jj], X.get(i));
+    }
+}
+
+// Scale the columns of a CSR matrix *in place*
+// A[:,i] *= X[i]
+void csr_scale_columns(CSRMatrix& A, const DenseMatrix& X)
+{
+    const unsigned nnz = A.p_[A.row_];
+    for(unsigned i = 0; i < nnz; i++)
+        A.x_[i] = mul(A.x_[i], X.get(A.j_[i]));
 }
 
 } // CSymPy
