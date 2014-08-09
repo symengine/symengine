@@ -29,25 +29,22 @@ bool CSRMatrix::is_canonical()
 }
 
 // Get and set elements
-RCP<const Basic> CSRMatrix::get(unsigned i) const
+RCP<const Basic> CSRMatrix::get(unsigned i, unsigned j) const
 {
-    unsigned row = i / col_;
-    unsigned col = i - row*col_;
+    unsigned row_start = p_[i];
+    unsigned row_end = p_[i + 1] - 1;
 
-    unsigned row_start = p_[row];
-    unsigned row_end = p_[row + 1] - 1;
-
-    for (unsigned j = row_start; j <= row_end; j++) {
-        if (j_[j] == col)
-            return x_[j];
-        else if (j_[j] > col)
+    for (unsigned k = row_start; k <= row_end; k++) {
+        if (j_[k] == j)
+            return x_[k];
+        else if (j_[k] > j)
             break;
     }
 
     return zero;
 }
 
-void CSRMatrix::set(unsigned i, RCP<const Basic> &e)
+void CSRMatrix::set(unsigned i, unsigned j, RCP<const Basic> &e)
 {
 }
 

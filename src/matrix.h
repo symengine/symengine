@@ -20,8 +20,8 @@ public:
     virtual bool eq(const MatrixBase &other) const;
 
     // Get and set elements
-    virtual RCP<const Basic>get(unsigned i) const = 0;
-    virtual void set(unsigned i, RCP<const Basic> &e) = 0;
+    virtual RCP<const Basic>get(unsigned i, unsigned j) const = 0;
+    virtual void set(unsigned i, unsigned j, RCP<const Basic> &e) = 0;
 
     // Print Matrix, very mundane version, should be overriden derived
     // class if better printing is available
@@ -55,8 +55,8 @@ public:
     // and throw an exception if a method is not applicable.
 
     // Get and set elements
-    virtual RCP<const Basic> get(unsigned i) const;
-    virtual void set(unsigned i, RCP<const Basic> &e);
+    virtual RCP<const Basic>get(unsigned i, unsigned j) const;
+    virtual void set(unsigned i, unsigned j, RCP<const Basic> &e);
 
     virtual unsigned rank() const;
     virtual RCP<const Basic> det() const;
@@ -150,8 +150,8 @@ public:
     bool is_canonical();
 
     // Get and set elements
-    virtual RCP<const Basic> get(unsigned i) const;
-    virtual void set(unsigned i, RCP<const Basic> &e);
+    virtual RCP<const Basic>get(unsigned i, unsigned j) const;
+    virtual void set(unsigned i, unsigned j, RCP<const Basic> &e);
 
     virtual unsigned rank() const;
     virtual RCP<const Basic> det() const;
