@@ -23,8 +23,6 @@ bool CSRMatrix::is_canonical()
 {
     if (p_.size() != row_ + 1 || j_.size() != p_[row_] || x_.size() != p_[row_])
         return false;
-    // Check if column indices are strictly increasing so we know for sure that
-    // they are sorted and no duplicates
     return csr_has_canonical_format(p_, j_, row_);
 }
 
@@ -83,24 +81,33 @@ void CSRMatrix::csr_sum_duplicates(std::vector<unsigned>& p_,
 {
     unsigned nnz = 0;
     unsigned row_end = 0;
+    unsigned jj = 0, j = 0;
+    RCP<const Basic> x = zero;
+
     for (unsigned i = 0; i < row_; i++) {
-        unsigned jj = row_end;
+        jj = row_end;
         row_end = p_[i + 1];
+
         while (jj < row_end) {
-            unsigned j = j_[jj];
-            RCP<const Basic> x = x_[jj];
+            j = j_[jj];
+            x = x_[jj];
             jj++;
 
             while (jj < row_end && j_[jj] == j) {
                 x = add(x, x_[jj]);
                 jj++;
             }
+
             j_[nnz] = j;
             x_[nnz] = x;
             nnz++;
         }
         p_[i + 1] = nnz;
     }
+
+    // Resize to discard unnecessary elements
+    j_.resize(nnz);
+    x_.resize(nnz);
 }
 
 void CSRMatrix::csr_sort_indices(std::vector<unsigned>& p_,
@@ -134,15 +141,28 @@ void CSRMatrix::csr_sort_indices(std::vector<unsigned>& p_,
     }
 }
 
+// Assumes that the indices are sorted
+bool CSRMatrix::csr_has_duplicates(const std::vector<unsigned>& p_,
+    const std::vector<unsigned>& j_,
+    unsigned row_)
+{
+    for (unsigned i = 0; i < row_; i++) {
+        for (unsigned j = p_[i]; j < p_[i + 1] - 1; j++) {
+            if (j_[j] == j_[j + 1])
+                return true;
+        }
+    }
+    return false;
+}
+
 bool CSRMatrix::csr_has_sorted_indices(const std::vector<unsigned>& p_,
 	const std::vector<unsigned>& j_,
     unsigned row_)
 {
     for (unsigned i = 0; i < row_; i++) {
         for (unsigned jj = p_[i]; jj < p_[i + 1] - 1; jj++) {
-            if (j_[jj] > j_[jj + 1]) {
+            if (j_[jj] > j_[jj + 1])
                 return false;
-            }
         }
     }
     return true;
@@ -156,7 +176,7 @@ bool CSRMatrix::csr_has_canonical_format(const std::vector<unsigned>& p_,
         if (p_[i] > p_[i + 1])
             return false;
     }
-    return csr_has_sorted_indices(p_, j_, row_);
+    return csr_has_sorted_indices(p_, j_, row_) && !csr_has_duplicates(p_, j_, row_);
 }
 
 CSRMatrix CSRMatrix::from_coo(unsigned row, unsigned col,
@@ -173,30 +193,32 @@ CSRMatrix CSRMatrix::from_coo(unsigned row, unsigned col,
     }
 
     // cumsum the nnz per row to get p
+    unsigned temp;
     for (unsigned i = 0, cumsum = 0; i < row; i++) {
-        unsigned temp = p_[i];
+        temp = p_[i];
         p_[i] = cumsum;
         cumsum += temp;
     }
     p_[row] = nnz;
 
     // write j, x into j_, x_
+    unsigned row_, dest_;
     for (unsigned n = 0; n < nnz; n++) {
-        unsigned row  = i[n];
-        unsigned dest = p_[row];
+        row_  = i[n];
+        dest_ = p_[row_];
 
-        j_[dest] = j[n];
-        x_[dest] = x[n];
+        j_[dest_] = j[n];
+        x_[dest_] = x[n];
 
-        p_[row]++;
+        p_[row_]++;
     }
 
     for (unsigned i = 0, last = 0; i <= row; i++) {
-        unsigned temp = p_[i];
-        p_[i]  = last;
-        last   = temp;
+        std::swap(p_[i], last);
     }
 
+    // sort indices
+    csr_sort_indices(p_, j_, x_, row);
     // Remove duplicates
     csr_sum_duplicates(p_, j_, x_, row);
 

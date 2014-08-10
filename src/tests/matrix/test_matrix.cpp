@@ -991,6 +991,26 @@ void test_from_coo()
         integer(60), integer(70), integer(80)});
 
     assert(A == B);
+
+    // Check for duplicate removal
+    // Here duplicates are summed to create one element
+    A = CSRMatrix(3, 3, {0, 2, 3, 6}, {0, 2, 2, 0, 1, 2},
+        {integer(0), integer(2), integer(3), integer(4), integer(12), integer(6)});
+    B = CSRMatrix::from_coo(3, 3, {0, 0, 0, 1, 2, 2, 2, 2},
+        {0, 2, 0, 2, 0, 1, 2, 1},
+        {integer(1), integer(2), integer(-1), integer(3), integer(4), integer(5),
+            integer(6), integer(7)});
+
+    assert(A == B);
+
+    A = CSRMatrix(3, 3, {0, 2, 3, 6}, {0, 2, 2, 0, 1, 2},
+        {integer(-1), integer(3), integer(3), integer(4), integer(5), integer(13)});
+    B = CSRMatrix::from_coo(3, 3, {0, 0, 0, 1, 2, 2, 2, 2},
+        {2, 2, 0, 2, 0, 1, 2, 2},
+        {integer(1), integer(2), integer(-1), integer(3), integer(4), integer(5),
+            integer(6), integer(7)});
+
+    assert(A == B);
 }
 
 void test_csr_diagonal()

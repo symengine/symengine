@@ -177,6 +177,10 @@ public:
         const std::vector<unsigned>& j_,
         unsigned row_);
 
+    static bool csr_has_duplicates(const std::vector<unsigned>& p_,
+        const std::vector<unsigned>& j_,
+        unsigned row_);
+
     static bool csr_has_canonical_format(const std::vector<unsigned>& p_,
         const std::vector<unsigned>& j_,
         unsigned row_);
