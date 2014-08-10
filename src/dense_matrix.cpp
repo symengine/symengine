@@ -22,11 +22,13 @@ DenseMatrix::DenseMatrix(unsigned row, unsigned col, const std::vector<RCP<const
 // Get and set elements
 RCP<const Basic> DenseMatrix::get(unsigned i, unsigned j) const
 {
+    CSYMPY_ASSERT(i < row_ && j < col_);
     return m_[i*col_ + j];
 }
 
-void DenseMatrix::set(unsigned i, unsigned j, RCP<const Basic> &e)
+void DenseMatrix::set(unsigned i, unsigned j, const RCP<const Basic> &e)
 {
+    CSYMPY_ASSERT(i < row_ && j < col_);
     m_[i*col_ + j] = e;
 }
 
