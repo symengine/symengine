@@ -327,13 +327,13 @@ void csr_diagonal(const CSRMatrix& A, DenseMatrix& D)
     unsigned row_end;
     RCP<const Basic> diag;
 
-    for(unsigned i = 0; i < N; i++) {
+    for (unsigned i = 0; i < N; i++) {
         row_start = A.p_[i];
         row_end = A.p_[i + 1];
         diag = zero;
 
         // TODO: Use Binary search as A is in canonical format
-        for(unsigned jj = row_start; jj < row_end; jj++) {
+        for (unsigned jj = row_start; jj < row_end; jj++) {
             if (A.j_[jj] == i) {
                 diag = A.x_[jj];
                 break;
@@ -350,7 +350,9 @@ void csr_scale_rows(CSRMatrix& A, const DenseMatrix& X)
     CSYMPY_ASSERT(A.row_ == X.nrows() && X.ncols() == 1);
 
     for(unsigned i = 0; i < A.row_; i++) {
-        for(unsigned jj = A.p_[i]; jj < A.p_[i + 1]; jj++)
+        if (eq(X.get(i), zero))
+            throw std::runtime_error("Scaling factor can't be zero");
+        for (unsigned jj = A.p_[i]; jj < A.p_[i + 1]; jj++)
             A.x_[jj] = mul(A.x_[jj], X.get(i));
     }
 }
@@ -359,8 +361,17 @@ void csr_scale_rows(CSRMatrix& A, const DenseMatrix& X)
 // A[:,i] *= X[i]
 void csr_scale_columns(CSRMatrix& A, const DenseMatrix& X)
 {
+    CSYMPY_ASSERT(A.col_ == X.nrows() && X.ncols() == 1);
+
     const unsigned nnz = A.p_[A.row_];
-    for(unsigned i = 0; i < nnz; i++)
+    unsigned i;
+
+    for (i = 0; i < A.col_; i++) {
+        if (eq(X.get(i), zero))
+            throw std::runtime_error("Scaling factor can't be zero");
+    }
+
+    for (i = 0; i < nnz; i++)
         A.x_[i] = mul(A.x_[i], X.get(A.j_[i]));
 }
 
