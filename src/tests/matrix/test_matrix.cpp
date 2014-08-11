@@ -45,11 +45,11 @@ void test_get_set()
 
     B.set(2, 1, integer(6));
     assert(B == CSRMatrix(3, 3, {0, 2, 3, 6}, {0, 2, 2, 0, 1, 2},
-        {integer(1), integer(2), integer(3), integer(4), integer(11), integer(6)}));
+        {integer(1), integer(2), integer(3), integer(4), integer(6), integer(6)}));
 
     B.set(0, 1, integer(1));
     assert(B == CSRMatrix(3, 3, {0, 3, 4, 7}, {0, 1, 2, 2, 0, 1, 2},
-        {integer(1), integer(1), integer(2), integer(3), integer(4), integer(11),
+        {integer(1), integer(1), integer(2), integer(3), integer(4), integer(6),
             integer(6)}));
 }
 

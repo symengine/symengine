@@ -61,7 +61,7 @@ void CSRMatrix::set(unsigned i, unsigned j, const RCP<const Basic> &e)
 
         if (k <= row_end) {
             if (j_[k] == j)
-                x_[k] = add(x_[k], e);
+                x_[k] =  e;
             else {  // j_[k] > j, so insert the element
                 x_.insert(x_.begin() + k, e);
                 j_.insert(j_.begin() + k, j);
