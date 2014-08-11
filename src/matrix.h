@@ -149,6 +149,8 @@ public:
 
     bool is_canonical();
 
+    virtual bool eq(const MatrixBase &other) const;
+
     // Get and set elements
     virtual RCP<const Basic> get(unsigned i) const;
     virtual void set(unsigned i, RCP<const Basic> &e);

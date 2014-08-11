@@ -972,6 +972,33 @@ void test_inverse()
     assert(C == I3);
 }
 
+void test_csr_has_canonical_format()
+{
+    std::vector<unsigned> p = {0, 2, 3, 6};
+    std::vector<unsigned> j = {2, 0, 2, 0, 1, 2};
+
+    assert(CSRMatrix::csr_has_canonical_format(p, j, 3) == false);
+
+    j = {0, 2, 2, 0, 1, 1};
+
+    assert(CSRMatrix::csr_has_canonical_format(p, j, 3) == false);
+}
+
+void test_csr_eq()
+{
+    CSRMatrix A = CSRMatrix(3, 3, {0, 2, 3, 6}, {0, 2, 2, 0, 1, 2},
+        {integer(1), integer(2), integer(3), integer(4), integer(5), integer(6)});
+    CSRMatrix B = CSRMatrix(3, 3, {0, 2, 3, 6}, {0, 2, 2, 0, 1, 2},
+        {integer(1), integer(2), integer(3), integer(4), integer(5), integer(6)});
+
+    assert(A == B);
+
+    CSRMatrix C = CSRMatrix(3, 3, {0, 2, 3, 6}, {0, 2, 2, 0, 1, 2},
+        {integer(0), integer(2), integer(3), integer(4), integer(5), integer(6)});
+
+    assert(!(A == C));
+}
+
 void test_from_coo()
 {
     // Example from:
@@ -1033,6 +1060,9 @@ void test_csr_scale_rows()
 
     assert(A == CSRMatrix(3, 3, {0, 2, 3, 6}, {0, 2, 2, 0, 1, 2},
         {integer(1), integer(2), integer(-3), integer(12), integer(15), integer(18)}));
+
+    X = DenseMatrix(3, 1, {integer(1), integer(0), integer(-1)});
+    CSYMPY_CHECK_THROW(csr_scale_columns(A, X), std::runtime_error);
 }
 
 void test_csr_scale_columns()
@@ -1045,6 +1075,9 @@ void test_csr_scale_columns()
 
     assert(A == CSRMatrix(3, 3, {0, 2, 3, 6}, {0, 2, 2, 0, 1, 2},
         {integer(1), integer(6), integer(9), integer(4), integer(-5), integer(18)}));
+
+    X = DenseMatrix(3, 1, {integer(0), integer(1), integer(-1)});
+    CSYMPY_CHECK_THROW(csr_scale_columns(A, X), std::runtime_error);
 }
 
 int main(int argc, char* argv[])
@@ -1100,6 +1133,10 @@ int main(int argc, char* argv[])
     test_char_poly();
 
     test_inverse();
+
+    test_csr_has_canonical_format();
+
+    test_csr_eq();
 
     test_from_coo();
 

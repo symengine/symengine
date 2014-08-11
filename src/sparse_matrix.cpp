@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <typeinfo>
 
 #include "matrix.h"
 #include "add.h"
@@ -17,6 +18,32 @@ CSRMatrix::CSRMatrix(unsigned row, unsigned col, std::vector<unsigned>&& p,
         : MatrixBase(row, col), p_{std::move(p)}, j_{std::move(j)}, x_{std::move(x)}
 {
     CSYMPY_ASSERT(is_canonical());
+}
+
+bool CSRMatrix::eq(const MatrixBase &other) const
+{
+    unsigned row = this->nrows();
+    if (row != other.nrows() || this->ncols() != other.ncols())
+        return false;
+
+    if (typeid(*this) == typeid(other)) {
+        const CSRMatrix &o = dynamic_cast<const CSRMatrix &>(other);
+
+        if (this->p_[row] != o.p_[row])
+            return false;
+
+        for (unsigned i = 0; i <= row; i++)
+            if(this->p_[i] != o.p_[i])
+                return false;
+
+        for (unsigned i = 0; i < this->p_[row]; i++)
+            if ((this->j_[i] != o.j_[i]) || neq(this->x_[i], o.x_[i]))
+                return false;
+
+        return true;
+    } else {
+        return this->MatrixBase::eq(other);
+    }
 }
 
 bool CSRMatrix::is_canonical()
