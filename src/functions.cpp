@@ -2603,6 +2603,7 @@ std::string LowerGamma::__str__() const
 
 RCP<const Basic> lowergamma(const RCP<const Basic> &s, const RCP<const Basic> &x)
 {
+    // Only special values are being evaluated
     if (is_a<Integer>(*s)) {
         RCP<const Integer> s_int = rcp_static_cast<const Integer>(s);
         if (s_int->is_one()) {
@@ -2614,6 +2615,8 @@ RCP<const Basic> lowergamma(const RCP<const Basic> &s, const RCP<const Basic> &x
             return rcp(new LowerGamma(s, x));
         }
     } else if (is_a<Integer>(*(mul(i2, s)))) {
+        // TODO: Implement `erf`. Currently the recursive expansion has no base case
+        // when s is of form n/2 n is Integer
         RCP<const Number> s_num = rcp_static_cast<const Number>(s);
         s_num = subnum(s_num, one);
         if (s_num->is_positive()) {
