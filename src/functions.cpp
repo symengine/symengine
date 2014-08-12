@@ -2459,4 +2459,255 @@ RCP<const Basic> dirichlet_eta(const RCP<const Basic> &s)
     }
 }
 
+Gamma::Gamma(const RCP<const Basic> &arg)
+    : arg_{arg}
+{
+    CSYMPY_ASSERT(is_canonical(arg_))
+}
+
+bool Gamma::is_canonical(const RCP<const Basic> &arg)
+{
+    if (is_a<Integer>(*arg)) return false;
+    if (is_a<Rational>(*arg) &&
+        (rcp_static_cast<const Rational>(arg)->i.get_den()) == 2) {
+        return false;
+    }
+    return true;
+}
+
+std::size_t Gamma::__hash__() const
+{
+    std::size_t seed = 0;
+    hash_combine<Basic>(seed, *arg_);
+    return seed;
+}
+
+bool Gamma::__eq__(const Basic &o) const
+{
+    if (is_a<Gamma>(o) &&
+        eq(arg_, static_cast<const Gamma &>(o).arg_))
+        return true;
+    return false;
+}
+
+int Gamma::compare(const Basic &o) const
+{
+    CSYMPY_ASSERT(is_a<Gamma>(o))
+    return arg_->__cmp__(*(static_cast<const Gamma &>(o).arg_));
+}
+
+std::string Gamma::__str__() const
+{
+    std::ostringstream o;
+    o << "gamma(" << *arg_ << ")";
+    return o.str();
+}
+
+RCP<const Basic> gamma(const RCP<const Basic> &arg)
+{
+    if (is_a<Integer>(*arg)) {
+        RCP<const Integer> arg_ = rcp_static_cast<const Integer>(arg);
+        if (arg_->is_positive()) {
+            return factorial((arg_->subint(*one))->as_int());
+        } else {
+            throw std::runtime_error("Complex Infinity not yet implemented");
+        }
+    } else if (is_a<Rational>(*arg)) {
+        RCP<const Rational> arg_ = rcp_static_cast<const Rational>(arg);
+        if ((arg_->i.get_den()) == 2) {
+            RCP<const Integer> n, k;
+            RCP<const Number> coeff;
+            fdiv_q(outArg(n), *(integer(abs(arg_->i.get_num()))), *(integer(arg_->i.get_den())));
+            if (arg_->is_positive()) {
+                k = n;
+                coeff = one;
+            } else {
+                n = n->addint(*one);
+                k = n;
+                if ((n->as_int() & 1) == 0) {
+                    coeff = one;
+                } else {
+                    coeff = minus_one;
+                }
+            }
+            int j = 1;
+            for (int i = 3; i < 2*k->as_int(); i = i + 2)
+            {
+                j = j * i;
+            }
+            coeff = mulnum(coeff, integer(j));
+            if (arg_->is_positive()) {
+                return div(mul(coeff, sqrt(pi)), pow(i2, n));
+            } else {
+                return div(mul(pow(i2, n), sqrt(pi)), coeff);
+            }
+        } else {
+            return rcp(new Gamma(arg));
+        }
+    }
+    return rcp(new Gamma(arg));
+}
+
+LowerGamma::LowerGamma(const RCP<const Basic> &s, const RCP<const Basic> &x)
+    : s_{s}, x_{x}
+{
+    CSYMPY_ASSERT(is_canonical(s_, x_))
+}
+
+bool LowerGamma::is_canonical(const RCP<const Basic> &s, const RCP<const Basic> &x)
+{
+    // Only special values are evaluated
+    if (eq(s, one)) return false;
+    if (is_a<Integer>(*s) &&
+        rcp_static_cast<const Integer>(s)->i > 1)
+        return false;
+    if (is_a<Integer>(*mul(i2, s))) return false;
+    return true;
+}
+
+std::size_t LowerGamma::__hash__() const
+{
+    std::size_t seed = 0;
+    hash_combine<Basic>(seed, *s_);
+    hash_combine<Basic>(seed, *x_);
+    return seed;
+}
+
+bool LowerGamma::__eq__(const Basic &o) const
+{
+    if (is_a<LowerGamma>(o) &&
+        eq(s_, static_cast<const LowerGamma &>(o).s_) &&
+        eq(x_, static_cast<const LowerGamma &>(o).x_))
+        return true;
+    return false;
+}
+
+int LowerGamma::compare(const Basic &o) const
+{
+    CSYMPY_ASSERT(is_a<LowerGamma>(o))
+    const LowerGamma &lg = static_cast<const LowerGamma &>(o);
+    if (neq(s_, lg.s_)) {
+        return s_->__cmp__(*(static_cast<const LowerGamma &>(o).s_));
+    }
+    else {
+        return x_->__cmp__(*(static_cast<const LowerGamma &>(o).x_));
+    }
+}
+
+std::string LowerGamma::__str__() const
+{
+    std::ostringstream o;
+    o << "lowergamma(" << *s_ << ", " << *x_ << ")";
+    return o.str();
+}
+
+RCP<const Basic> lowergamma(const RCP<const Basic> &s, const RCP<const Basic> &x)
+{
+    // Only special values are being evaluated
+    if (is_a<Integer>(*s)) {
+        RCP<const Integer> s_int = rcp_static_cast<const Integer>(s);
+        if (s_int->is_one()) {
+            return sub(one, exp(mul(minus_one, x)));
+        } else if (s_int->i > 1) {
+            s_int = s_int->subint(*one);
+            return sub(mul(s_int, lowergamma(s_int, x)), mul(pow(x, s_int), exp(mul(minus_one, x))));
+        } else {
+            return rcp(new LowerGamma(s, x));
+        }
+    } else if (is_a<Integer>(*(mul(i2, s)))) {
+        // TODO: Implement `erf`. Currently the recursive expansion has no base case
+        // when s is of form n/2 n is Integer
+        RCP<const Number> s_num = rcp_static_cast<const Number>(s);
+        s_num = subnum(s_num, one);
+        if (s_num->is_positive()) {
+            return sub(mul(s_num, lowergamma(s_num, x)), mul(pow(x, s_num), exp(mul(minus_one, x))));
+        } else {
+            return add(lowergamma(add(s, one), x), mul(pow(x, s), div(exp(mul(minus_one, x)), s)));
+        }
+    }
+    return rcp(new LowerGamma(s, x));
+}
+
+UpperGamma::UpperGamma(const RCP<const Basic> &s, const RCP<const Basic> &x)
+    : s_{s}, x_{x}
+{
+    CSYMPY_ASSERT(is_canonical(s_, x_))
+}
+
+bool UpperGamma::is_canonical(const RCP<const Basic> &s, const RCP<const Basic> &x)
+{
+    // Only special values are evaluated
+    if (eq(s, one)) return false;
+    if (is_a<Integer>(*s) &&
+        rcp_static_cast<const Integer>(s)->i > 1)
+        return false;
+    if (is_a<Integer>(*mul(i2, s))) return false;
+    return true;
+}
+
+std::size_t UpperGamma::__hash__() const
+{
+    std::size_t seed = 0;
+    hash_combine<Basic>(seed, *s_);
+    hash_combine<Basic>(seed, *x_);
+    return seed;
+}
+
+bool UpperGamma::__eq__(const Basic &o) const
+{
+    if (is_a<UpperGamma>(o) &&
+        eq(s_, static_cast<const UpperGamma &>(o).s_) &&
+        eq(x_, static_cast<const UpperGamma &>(o).x_))
+        return true;
+    return false;
+}
+
+int UpperGamma::compare(const Basic &o) const
+{
+    CSYMPY_ASSERT(is_a<UpperGamma>(o))
+    const UpperGamma &ug = static_cast<const UpperGamma &>(o);
+    if (neq(s_, ug.s_)) {
+        return s_->__cmp__(*(static_cast<const UpperGamma &>(o).s_));
+    }
+    else {
+        return x_->__cmp__(*(static_cast<const UpperGamma &>(o).x_));
+    }
+}
+
+std::string UpperGamma::__str__() const
+{
+    std::ostringstream o;
+    o << "uppergamma(" << *s_ << ", " << *x_ << ")";
+    return o.str();
+}
+
+RCP<const Basic> uppergamma(const RCP<const Basic> &s, const RCP<const Basic> &x)
+{
+    // Only special values are being evaluated
+    if (is_a<Integer>(*s)) {
+        RCP<const Integer> s_int = rcp_static_cast<const Integer>(s);
+        if (s_int->is_one()) {
+            return exp(mul(minus_one, x));
+        } else if (s_int->i > 1) {
+            s_int = s_int->subint(*one);
+            return add(mul(s_int, uppergamma(s_int, x)), mul(pow(x, s_int), exp(mul(minus_one, x))));
+        } else {
+            // TODO: implement unpolarfy to handle this case
+            return rcp(new LowerGamma(s, x));
+        }
+    } else if (is_a<Integer>(*(mul(i2, s)))) {
+        // TODO: Implement `erf`. Currently the recursive expansion has no base case
+        // when s is of form n/2 n is Integer
+        RCP<const Number> s_num = rcp_static_cast<const Number>(s);
+        s_num = subnum(s_num, one);
+        if (s_num->is_positive()) {
+            return add(mul(s_num, uppergamma(s_num, x)), mul(pow(x, s_num), exp(mul(minus_one, x))));
+        } else {
+            return sub(uppergamma(add(s, one), x), mul(pow(x, s), div(exp(mul(minus_one, x)), s)));
+        }
+    }
+    return rcp(new UpperGamma(s, x));
+}
+
+
 } // CSymPy

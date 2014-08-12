@@ -850,6 +850,93 @@ public:
 
 //! Canonicalize LeviCivita:
 RCP<const Basic> levi_civita(const vec_basic &arg);
+
+class Gamma: public Function {
+/*!    The gamma function
+ *
+ *   .. math::
+ *      \Gamma(x) := \int^{\infty}_{0} t^{x-1} e^{t} \mathrm{d}t.
+ *
+ *  The ``gamma`` function implements the function which passes through the
+ *  values of the factorial function, i.e. `\Gamma(n) = (n - 1)!` when n is
+ *  an integer. More general, `\Gamma(z)` is defined in the whole complex
+ *  plane except at the negative integers where there are simple poles.
+ **/
+private:
+    RCP<const Basic> arg_;
+public:
+    //! Gamma Constructor
+    Gamma(const RCP<const Basic> &arg);
+    /*! Equality comparator
+     * \param o - Object to be compared with
+     * \return whether the 2 objects are equal
+     * */
+    virtual bool __eq__(const Basic &o) const;
+    virtual int compare(const Basic &o) const;
+    //! \return Size of the hash
+    virtual std::size_t __hash__() const;
+    //! \return stringify version
+    virtual std::string __str__() const;
+    //! \return `true` if canonical
+    bool is_canonical(const RCP<const Basic> &arg);
+    virtual vec_basic get_args() const { return {arg_}; }
+};
+
+//! Canonicalize Gamma:
+RCP<const Basic> gamma(const RCP<const Basic> &arg);
+
+class LowerGamma: public Function {
+//! The lower incomplete gamma function.
+private:
+    RCP<const Basic> s_;
+    RCP<const Basic> x_;
+public:
+    //! LowerGamma Constructor
+    LowerGamma(const RCP<const Basic> &s, const RCP<const Basic> &x);
+    /*! Equality comparator
+     * \param o - Object to be compared with
+     * \return whether the 2 objects are equal
+     * */
+    virtual bool __eq__(const Basic &o) const;
+    virtual int compare(const Basic &o) const;
+    //! \return Size of the hash
+    virtual std::size_t __hash__() const;
+    //! \return stringify version
+    virtual std::string __str__() const;
+    //! \return `true` if canonical
+    bool is_canonical(const RCP<const Basic> &s, const RCP<const Basic> &x);
+    virtual vec_basic get_args() const { return {s_, x_}; }
+};
+
+//! Canonicalize LowerGamma:
+RCP<const Basic> lowergamma(const RCP<const Basic> &s, const RCP<const Basic> &x);
+
+
+class UpperGamma: public Function {
+//! The upper incomplete gamma function.
+private:
+    RCP<const Basic> s_;
+    RCP<const Basic> x_;
+public:
+    //! UpperGamma Constructor
+    UpperGamma(const RCP<const Basic> &s, const RCP<const Basic> &x);
+    /*! Equality comparator
+     * \param o - Object to be compared with
+     * \return whether the 2 objects are equal
+     * */
+    virtual bool __eq__(const Basic &o) const;
+    virtual int compare(const Basic &o) const;
+    //! \return Size of the hash
+    virtual std::size_t __hash__() const;
+    //! \return stringify version
+    virtual std::string __str__() const;
+    //! \return `true` if canonical
+    bool is_canonical(const RCP<const Basic> &s, const RCP<const Basic> &x);
+    virtual vec_basic get_args() const { return {s_, x_}; }
+};
+
+//! Canonicalize UpperGamma:
+RCP<const Basic> uppergamma(const RCP<const Basic> &s, const RCP<const Basic> &x);
 } // CSymPy
 
 #endif
