@@ -18,6 +18,41 @@ using CSymPy::Add;
 using CSymPy::minus_one;
 using CSymPy::CSRMatrix;
 
+void test_get_set()
+{
+    // Test for DenseMatirx
+    DenseMatrix A = DenseMatrix(2, 2, {integer(1), integer(0), integer(-1),
+        integer(-2)});
+
+    assert(eq(A.get(0, 0), integer(1)));
+    assert(eq(A.get(1, 1), integer(-2)));
+
+    A.set(1, 0, integer(0));
+    assert(A == DenseMatrix(2, 2, {integer(1), integer(0), integer(0),
+        integer(-2)}));
+
+    A.set(0, 1, integer(-2));
+    assert(A == DenseMatrix(2, 2, {integer(1), integer(-2), integer(0),
+        integer(-2)}));
+
+    // Test for CSRMatrix
+    CSRMatrix B = CSRMatrix(3, 3, {0, 2, 3, 6}, {0, 2, 2, 0, 1, 2},
+        {integer(1), integer(2), integer(3), integer(4), integer(5), integer(6)});
+
+    assert(eq(B.get(0, 0), integer(1)));
+    assert(eq(B.get(1, 2), integer(3)));
+    assert(eq(B.get(2, 1), integer(5)));
+
+    B.set(2, 1, integer(6));
+    assert(B == CSRMatrix(3, 3, {0, 2, 3, 6}, {0, 2, 2, 0, 1, 2},
+        {integer(1), integer(2), integer(3), integer(4), integer(6), integer(6)}));
+
+    B.set(0, 1, integer(1));
+    assert(B == CSRMatrix(3, 3, {0, 3, 4, 7}, {0, 1, 2, 2, 0, 1, 2},
+        {integer(1), integer(1), integer(2), integer(3), integer(4), integer(6),
+            integer(6)}));
+}
+
 void test_dense_dense_addition()
 {
     DenseMatrix C = DenseMatrix(2, 2);
@@ -996,6 +1031,8 @@ void test_from_coo()
 int main(int argc, char* argv[])
 {
     print_stack_on_segfault();
+
+    test_get_set();
 
     test_dense_dense_addition();
 
