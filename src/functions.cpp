@@ -2556,6 +2556,12 @@ LowerGamma::LowerGamma(const RCP<const Basic> &s, const RCP<const Basic> &x)
 
 bool LowerGamma::is_canonical(const RCP<const Basic> &s, const RCP<const Basic> &x)
 {
+    // Only special values are evaluated
+    if (eq(s, one)) return false;
+    if (is_a<Integer>(*s) &&
+        rcp_static_cast<const Integer>(s)->i > 1)
+        return false;
+    if (is_a<Integer>(*mul(i2, s))) return false;
     return true;
 }
 
@@ -2597,6 +2603,25 @@ std::string LowerGamma::__str__() const
 
 RCP<const Basic> lowergamma(const RCP<const Basic> &s, const RCP<const Basic> &x)
 {
+    if (is_a<Integer>(*s)) {
+        RCP<const Integer> s_int = rcp_static_cast<const Integer>(s);
+        if (s_int->is_one()) {
+            return sub(one, exp(mul(minus_one, x)));
+        } else if (s_int->i > 1) {
+            s_int = s_int->subint(*one);
+            return sub(mul(s_int, lowergamma(s_int, x)), mul(pow(x, s_int), exp(mul(minus_one, x))));
+        } else {
+            return rcp(new LowerGamma(s, x));
+        }
+    } else if (is_a<Integer>(*(mul(i2, s)))) {
+        RCP<const Number> s_num = rcp_static_cast<const Number>(s);
+        s_num = subnum(s_num, one);
+        if (s_num->is_positive()) {
+            return sub(mul(s_num, lowergamma(s_num, x)), mul(pow(x, s_num), exp(mul(minus_one, x))));
+        } else {
+            return add(lowergamma(add(s, one), x), mul(pow(x, s), div(exp(mul(minus_one, x)), s)));
+        }
+    }
     return rcp(new LowerGamma(s, x));
 }
 

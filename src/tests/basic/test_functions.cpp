@@ -59,6 +59,7 @@ using CSymPy::levi_civita;
 using CSymPy::zeta;
 using CSymPy::dirichlet_eta;
 using CSymPy::gamma;
+using CSymPy::lowergamma;
 
 void test_sin()
 {
@@ -1534,6 +1535,25 @@ void test_gamma()
     assert(eq(r1, r2));
 }
 
+void test_lowergamma()
+{
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> i3 = integer(3);
+    RCP<const Basic> im1 = integer(-1);
+
+
+    RCP<const Basic> r1;
+    RCP<const Basic> r2;
+
+    r1 = lowergamma(one, i2);
+    r2 = sub(one, exp(mul(im1, i2)));
+    assert(eq(r1, r2));
+
+    r1 = lowergamma(i2, i2);
+    r2 = sub(one, mul(i3, exp(mul(im1, i2))));
+    assert(eq(r1, r2));
+}
+
 int main(int argc, char* argv[])
 {
     print_stack_on_segfault();    
@@ -1569,5 +1589,6 @@ int main(int argc, char* argv[])
     test_zeta();
     test_dirichlet_eta();
     test_gamma();
+    test_lowergamma();
     return 0;
 }
