@@ -44,7 +44,6 @@ protected:
 };
 
 // ----------------------------- Dense Matrix --------------------------------//
-
 class DenseMatrix: public MatrixBase {
 public:
     // Constructors
@@ -140,7 +139,7 @@ protected:
     vec_basic m_;
 };
 
-// ----------------------------- Sparse Matrices -------------------------------//
+// ----------------------------- Sparse Matrices -----------------------------//
 class CSRMatrix: public MatrixBase {
 public:
     CSRMatrix(unsigned row, unsigned col);
@@ -206,7 +205,6 @@ protected:
 };
 
 // Solving Ax = b
-
 void fraction_free_LU_solve(const DenseMatrix &A, const DenseMatrix &b,
     DenseMatrix &x);
 
@@ -221,6 +219,14 @@ RCP<const Basic> det_berkowitz(const DenseMatrix &A);
 // order of monomial powers is returned, i.e. if `B = transpose([1, -2, 3])`
 // then the corresponding polynomial is `x^2 - 2x + 3`.
 void char_poly(const DenseMatrix &A, DenseMatrix &B);
+
+// Returns true if `b` is of type T or any of its subclasses.
+// Here T can be a DenseMatrix, CSRMatrix, etc.
+template <class T>
+inline bool is_a(const MatrixBase &b)
+{
+    return typeid(T) == typeid(b);
+}
 
 } // CSymPy
 

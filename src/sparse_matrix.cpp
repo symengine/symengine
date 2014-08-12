@@ -1,5 +1,4 @@
 #include <algorithm>
-#include <typeinfo>
 
 #include "matrix.h"
 #include "add.h"
@@ -26,8 +25,8 @@ bool CSRMatrix::eq(const MatrixBase &other) const
     if (row != other.nrows() || this->ncols() != other.ncols())
         return false;
 
-    if (typeid(*this) == typeid(other)) {
-        const CSRMatrix &o = dynamic_cast<const CSRMatrix &>(other);
+    if (is_a<CSRMatrix>(other)) {
+        const CSRMatrix &o = static_cast<const CSRMatrix &>(other);
 
         if (this->p_[row] != o.p_[row])
             return false;
