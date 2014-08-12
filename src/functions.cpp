@@ -2548,5 +2548,57 @@ RCP<const Basic> gamma(const RCP<const Basic> &arg)
     return rcp(new Gamma(arg));
 }
 
+LowerGamma::LowerGamma(const RCP<const Basic> &s, const RCP<const Basic> &x)
+    : s_{s}, x_{x}
+{
+    CSYMPY_ASSERT(is_canonical(s_, x_))
+}
+
+bool LowerGamma::is_canonical(const RCP<const Basic> &s, const RCP<const Basic> &x)
+{
+    return true;
+}
+
+std::size_t LowerGamma::__hash__() const
+{
+    std::size_t seed = 0;
+    hash_combine<Basic>(seed, *s_);
+    hash_combine<Basic>(seed, *x_);
+    return seed;
+}
+
+bool LowerGamma::__eq__(const Basic &o) const
+{
+    if (is_a<LowerGamma>(o) &&
+        eq(s_, static_cast<const LowerGamma &>(o).s_) &&
+        eq(x_, static_cast<const LowerGamma &>(o).x_))
+        return true;
+    return false;
+}
+
+int LowerGamma::compare(const Basic &o) const
+{
+    CSYMPY_ASSERT(is_a<LowerGamma>(o))
+    const LowerGamma &lg = static_cast<const LowerGamma &>(o);
+    if (neq(s_, lg.s_)) {
+        return s_->__cmp__(*(static_cast<const LowerGamma &>(o).s_));
+    }
+    else {
+        return x_->__cmp__(*(static_cast<const LowerGamma &>(o).x_));
+    }
+}
+
+std::string LowerGamma::__str__() const
+{
+    std::ostringstream o;
+    o << "lowergamma(" << *s_ << ", " << *x_ << ")";
+    return o.str();
+}
+
+RCP<const Basic> lowergamma(const RCP<const Basic> &s, const RCP<const Basic> &x)
+{
+    return rcp(new LowerGamma(s, x));
+}
+
 
 } // CSymPy
