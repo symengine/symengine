@@ -20,14 +20,16 @@ DenseMatrix::DenseMatrix(unsigned row, unsigned col, const std::vector<RCP<const
 }
 
 // Get and set elements
-RCP<const Basic> DenseMatrix::get(unsigned i) const
+RCP<const Basic> DenseMatrix::get(unsigned i, unsigned j) const
 {
-    return m_[i];
+    CSYMPY_ASSERT(i < row_ && j < col_);
+    return m_[i*col_ + j];
 }
 
-void DenseMatrix::set(unsigned i, RCP<const Basic> &e)
+void DenseMatrix::set(unsigned i, unsigned j, const RCP<const Basic> &e)
 {
-    m_[i] = e;
+    CSYMPY_ASSERT(i < row_ && j < col_);
+    m_[i*col_ + j] = e;
 }
 
 unsigned DenseMatrix::rank() const
@@ -1000,9 +1002,9 @@ RCP<const Basic> det_berkowitz(const DenseMatrix &A)
     DenseMatrix poly = polys[polys.size() - 1];
 
     if (polys.size() % 2 == 1)
-        return mul(minus_one, poly.get(poly.nrows() - 1));
+        return mul(minus_one, poly.get(poly.nrows() - 1, 0));
 
-    return poly.get(poly.nrows() - 1);
+    return poly.get(poly.nrows() - 1, 0);
 }
 
 void char_poly(const DenseMatrix &A, DenseMatrix &B)

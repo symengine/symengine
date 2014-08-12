@@ -83,6 +83,15 @@ void mod(const Ptr<RCP<const Number>> &r, const Integer &n, const Integer &d)
     *r = integer(mpz_class(inv_t));
 }
 
+void fdiv_q(const Ptr<RCP<const Integer>> &q, const Integer &n, const Integer &d)
+{
+    mpz_t q_;
+    mpz_init(q_);
+    mpz_fdiv_q (q_, n.as_mpz().get_mpz_t(), d.as_mpz().get_mpz_t());
+    *q = integer(mpz_class(q_));
+    mpz_clear(q_);
+}
+
 RCP<const Integer> fibonacci(unsigned long n)
 {
     mpz_class f;

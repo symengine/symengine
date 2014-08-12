@@ -54,26 +54,47 @@ bool CSRMatrix::is_canonical()
 }
 
 // Get and set elements
-RCP<const Basic> CSRMatrix::get(unsigned i) const
+RCP<const Basic> CSRMatrix::get(unsigned i, unsigned j) const
 {
-    unsigned row = i / col_;
-    unsigned col = i - row*col_;
+    CSYMPY_ASSERT(i < row_ && j < col_);
 
-    unsigned row_start = p_[row];
-    unsigned row_end = p_[row + 1] - 1;
+    unsigned row_start = p_[i];
+    unsigned row_end = p_[i + 1] - 1;
 
-    for (unsigned j = row_start; j <= row_end; j++) {
-        if (j_[j] == col)
-            return x_[j];
-        else if (j_[j] > col)
+    // TODO: Use binary search
+    for (unsigned k = row_start; k <= row_end; k++) {
+        if (j_[k] == j)
+            return x_[k];
+        else if (j_[k] > j)
             break;
     }
 
     return zero;
 }
 
-void CSRMatrix::set(unsigned i, RCP<const Basic> &e)
+void CSRMatrix::set(unsigned i, unsigned j, const RCP<const Basic> &e)
 {
+    CSYMPY_ASSERT(i < row_ && j < col_);
+
+    if (neq(e, zero)) {
+        unsigned k = p_[i];
+        unsigned row_end = p_[i + 1] - 1;
+
+        // TODO: Use binary search
+        while (k <= row_end && j_[k] < j)
+            k++;
+
+        if (k <= row_end) {
+            if (j_[k] == j)
+                x_[k] =  e;
+            else {  // j_[k] > j, so insert the element
+                x_.insert(x_.begin() + k, e);
+                j_.insert(j_.begin() + k, j);
+                for (unsigned l = i + 1; l <= row_; l++)
+                    p_[l]++;
+            }
+        }
+    }
 }
 
 unsigned CSRMatrix::rank() const
