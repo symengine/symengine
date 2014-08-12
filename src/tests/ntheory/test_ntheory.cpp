@@ -269,16 +269,33 @@ void test_factor_pollard_rho_method()
 
 void test_sieve()
 {
-    const int MAX=100003;
+    const int MAX = 100003;
     std::vector<unsigned> v;
     auto t1 = std::chrono::high_resolution_clock::now();
-    CSymPy::eratosthenes_sieve(MAX, v);
+    CSymPy::Sieve::generate_primes(MAX, v);
     auto t2 = std::chrono::high_resolution_clock::now();
     std::cout
         << std::chrono::duration_cast<std::chrono::microseconds>(t2-t1).count()
         << "us" << std::endl;
     std::cout << "Number of primes up to " << MAX << ": " << v.size() << std::endl;
     assert(v.size() == 9593);
+}
+
+void test_sieve_iterator()
+{
+    const int MAX = 100003;
+    int count = 0, prime;
+    CSymPy::Sieve::iterator pi(MAX);
+    auto t1 = std::chrono::high_resolution_clock::now();
+    while((prime=pi.next_prime()) <= MAX){
+        count++;
+    }
+    auto t2 = std::chrono::high_resolution_clock::now();
+    std::cout
+        << std::chrono::duration_cast<std::chrono::microseconds>(t2-t1).count()
+        << "us" << std::endl;
+    std::cout << "Number of primes up to " << MAX << ": " << count << std::endl;
+    assert(count == 9593);
 }
 
 // helper function for test_primefactors
@@ -384,6 +401,7 @@ int main(int argc, char* argv[])
     test_factor_pollard_pm1_method();
     test_factor_pollard_rho_method();
     test_sieve();
+    test_sieve_iterator();
     test_prime_factors();
     test_prime_factor_multiplicities();
     test_modulo();
