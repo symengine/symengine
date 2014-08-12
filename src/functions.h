@@ -911,6 +911,32 @@ public:
 //! Canonicalize LowerGamma:
 RCP<const Basic> lowergamma(const RCP<const Basic> &s, const RCP<const Basic> &x);
 
+
+class UpperGamma: public Function {
+//! The upper incomplete gamma function.
+private:
+    RCP<const Basic> s_;
+    RCP<const Basic> x_;
+public:
+    //! UpperGamma Constructor
+    UpperGamma(const RCP<const Basic> &s, const RCP<const Basic> &x);
+    /*! Equality comparator
+     * \param o - Object to be compared with
+     * \return whether the 2 objects are equal
+     * */
+    virtual bool __eq__(const Basic &o) const;
+    virtual int compare(const Basic &o) const;
+    //! \return Size of the hash
+    virtual std::size_t __hash__() const;
+    //! \return stringify version
+    virtual std::string __str__() const;
+    //! \return `true` if canonical
+    bool is_canonical(const RCP<const Basic> &s, const RCP<const Basic> &x);
+    virtual vec_basic get_args() const { return {s_, x_}; }
+};
+
+//! Canonicalize UpperGamma:
+RCP<const Basic> uppergamma(const RCP<const Basic> &s, const RCP<const Basic> &x);
 } // CSymPy
 
 #endif

@@ -60,6 +60,7 @@ using CSymPy::zeta;
 using CSymPy::dirichlet_eta;
 using CSymPy::gamma;
 using CSymPy::lowergamma;
+using CSymPy::uppergamma;
 
 void test_sin()
 {
@@ -1552,6 +1553,33 @@ void test_lowergamma()
     r1 = lowergamma(i2, i2);
     r2 = sub(one, mul(i3, exp(mul(im1, i2))));
     assert(eq(r1, r2));
+
+    r1 = lowergamma(mul(i2, i3), i2);
+    r2 = sub(integer(120), mul(integer(872), exp(mul(im1, i2))));
+    assert(eq(expand(r1), r2));
+}
+
+void test_uppergamma()
+{
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> i3 = integer(3);
+    RCP<const Basic> im1 = integer(-1);
+
+
+    RCP<const Basic> r1;
+    RCP<const Basic> r2;
+
+    r1 = uppergamma(one, i2);
+    r2 = exp(mul(im1, i2));
+    assert(eq(r1, r2));
+
+    r1 = uppergamma(i2, i2);
+    r2 = mul(i3, exp(mul(im1, i2)));
+    assert(eq(r1, r2));
+
+    r1 = uppergamma(mul(i2, i3), i2);
+    r2 = mul(integer(872), exp(mul(im1, i2)));
+    assert(eq(r1, r2));
 }
 
 int main(int argc, char* argv[])
@@ -1590,5 +1618,6 @@ int main(int argc, char* argv[])
     test_dirichlet_eta();
     test_gamma();
     test_lowergamma();
+    test_uppergamma();
     return 0;
 }
