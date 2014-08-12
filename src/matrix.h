@@ -220,7 +220,7 @@ RCP<const Basic> det_berkowitz(const DenseMatrix &A);
 // then the corresponding polynomial is `x^2 - 2x + 3`.
 void char_poly(const DenseMatrix &A, DenseMatrix &B);
 
-// Returns true if `b` is of type T or any of its subclasses.
+// Returns true if `b` is exactly the type T.
 // Here T can be a DenseMatrix, CSRMatrix, etc.
 template <class T>
 inline bool is_a(const MatrixBase &b)
