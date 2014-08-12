@@ -387,7 +387,7 @@ void csr_diagonal(const CSRMatrix& A, DenseMatrix& D)
                 break;
             }
         }
-        D.set(i, diag);
+        D.set(i, 0, diag);
     }
 }
 
@@ -398,10 +398,10 @@ void csr_scale_rows(CSRMatrix& A, const DenseMatrix& X)
     CSYMPY_ASSERT(A.row_ == X.nrows() && X.ncols() == 1);
 
     for(unsigned i = 0; i < A.row_; i++) {
-        if (eq(X.get(i), zero))
+        if (eq(X.get(i, 0), zero))
             throw std::runtime_error("Scaling factor can't be zero");
         for (unsigned jj = A.p_[i]; jj < A.p_[i + 1]; jj++)
-            A.x_[jj] = mul(A.x_[jj], X.get(i));
+            A.x_[jj] = mul(A.x_[jj], X.get(i, 0));
     }
 }
 
@@ -415,12 +415,12 @@ void csr_scale_columns(CSRMatrix& A, const DenseMatrix& X)
     unsigned i;
 
     for (i = 0; i < A.col_; i++) {
-        if (eq(X.get(i), zero))
+        if (eq(X.get(i, 0), zero))
             throw std::runtime_error("Scaling factor can't be zero");
     }
 
     for (i = 0; i < nnz; i++)
-        A.x_[i] = mul(A.x_[i], X.get(A.j_[i]));
+        A.x_[i] = mul(A.x_[i], X.get(A.j_[i], 0));
 }
 
 } // CSymPy
