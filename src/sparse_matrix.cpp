@@ -19,12 +19,36 @@ CSRMatrix::CSRMatrix(unsigned row, unsigned col, std::vector<unsigned>&& p,
     CSYMPY_ASSERT(is_canonical());
 }
 
+bool CSRMatrix::eq(const MatrixBase &other) const
+{
+    unsigned row = this->nrows();
+    if (row != other.nrows() || this->ncols() != other.ncols())
+        return false;
+
+    if (is_a<CSRMatrix>(other)) {
+        const CSRMatrix &o = static_cast<const CSRMatrix &>(other);
+
+        if (this->p_[row] != o.p_[row])
+            return false;
+
+        for (unsigned i = 0; i <= row; i++)
+            if(this->p_[i] != o.p_[i])
+                return false;
+
+        for (unsigned i = 0; i < this->p_[row]; i++)
+            if ((this->j_[i] != o.j_[i]) || neq(this->x_[i], o.x_[i]))
+                return false;
+
+        return true;
+    } else {
+        return this->MatrixBase::eq(other);
+    }
+}
+
 bool CSRMatrix::is_canonical()
 {
     if (p_.size() != row_ + 1 || j_.size() != p_[row_] || x_.size() != p_[row_])
         return false;
-    // Check if column indices are strictly increasing so we know for sure that
-    // they are sorted and no duplicates
     return csr_has_canonical_format(p_, j_, row_);
 }
 
@@ -104,24 +128,33 @@ void CSRMatrix::csr_sum_duplicates(std::vector<unsigned>& p_,
 {
     unsigned nnz = 0;
     unsigned row_end = 0;
+    unsigned jj = 0, j = 0;
+    RCP<const Basic> x = zero;
+
     for (unsigned i = 0; i < row_; i++) {
-        unsigned jj = row_end;
+        jj = row_end;
         row_end = p_[i + 1];
+
         while (jj < row_end) {
-            unsigned j = j_[jj];
-            RCP<const Basic> x = x_[jj];
+            j = j_[jj];
+            x = x_[jj];
             jj++;
 
             while (jj < row_end && j_[jj] == j) {
                 x = add(x, x_[jj]);
                 jj++;
             }
+
             j_[nnz] = j;
             x_[nnz] = x;
             nnz++;
         }
         p_[i + 1] = nnz;
     }
+
+    // Resize to discard unnecessary elements
+    j_.resize(nnz);
+    x_.resize(nnz);
 }
 
 void CSRMatrix::csr_sort_indices(std::vector<unsigned>& p_,
@@ -155,15 +188,28 @@ void CSRMatrix::csr_sort_indices(std::vector<unsigned>& p_,
     }
 }
 
+// Assumes that the indices are sorted
+bool CSRMatrix::csr_has_duplicates(const std::vector<unsigned>& p_,
+    const std::vector<unsigned>& j_,
+    unsigned row_)
+{
+    for (unsigned i = 0; i < row_; i++) {
+        for (unsigned j = p_[i]; j < p_[i + 1] - 1; j++) {
+            if (j_[j] == j_[j + 1])
+                return true;
+        }
+    }
+    return false;
+}
+
 bool CSRMatrix::csr_has_sorted_indices(const std::vector<unsigned>& p_,
 	const std::vector<unsigned>& j_,
     unsigned row_)
 {
     for (unsigned i = 0; i < row_; i++) {
         for (unsigned jj = p_[i]; jj < p_[i + 1] - 1; jj++) {
-            if (j_[jj] > j_[jj + 1]) {
+            if (j_[jj] > j_[jj + 1])
                 return false;
-            }
         }
     }
     return true;
@@ -177,7 +223,7 @@ bool CSRMatrix::csr_has_canonical_format(const std::vector<unsigned>& p_,
         if (p_[i] > p_[i + 1])
             return false;
     }
-    return csr_has_sorted_indices(p_, j_, row_);
+    return csr_has_sorted_indices(p_, j_, row_) && !csr_has_duplicates(p_, j_, row_);
 }
 
 CSRMatrix CSRMatrix::from_coo(unsigned row, unsigned col,
@@ -194,30 +240,32 @@ CSRMatrix CSRMatrix::from_coo(unsigned row, unsigned col,
     }
 
     // cumsum the nnz per row to get p
+    unsigned temp;
     for (unsigned i = 0, cumsum = 0; i < row; i++) {
-        unsigned temp = p_[i];
+        temp = p_[i];
         p_[i] = cumsum;
         cumsum += temp;
     }
     p_[row] = nnz;
 
     // write j, x into j_, x_
+    unsigned row_, dest_;
     for (unsigned n = 0; n < nnz; n++) {
-        unsigned row  = i[n];
-        unsigned dest = p_[row];
+        row_  = i[n];
+        dest_ = p_[row_];
 
-        j_[dest] = j[n];
-        x_[dest] = x[n];
+        j_[dest_] = j[n];
+        x_[dest_] = x[n];
 
-        p_[row]++;
+        p_[row_]++;
     }
 
     for (unsigned i = 0, last = 0; i <= row; i++) {
-        unsigned temp = p_[i];
-        p_[i]  = last;
-        last   = temp;
+        std::swap(p_[i], last);
     }
 
+    // sort indices
+    csr_sort_indices(p_, j_, x_, row);
     // Remove duplicates
     csr_sum_duplicates(p_, j_, x_, row);
 
@@ -282,7 +330,7 @@ void csr_matmat_pass2(const CSRMatrix &A, const CSRMatrix &B, CSRMatrix &C)
             RCP<const Basic> v = A.x_[jj];
 
             unsigned kk_start = B.p_[j];
-            unsigned kk_end   = B.p_[j+1];
+            unsigned kk_end   = B.p_[j + 1];
             for (unsigned kk = kk_start; kk < kk_end; kk++) {
                 unsigned k = B.j_[kk];
 
@@ -313,6 +361,65 @@ void csr_matmat_pass2(const CSRMatrix &A, const CSRMatrix &B, CSRMatrix &C)
 
         C.p_[i + 1] = nnz;
     }
+}
+
+// Extract main diagonal of CSR matrix A
+void csr_diagonal(const CSRMatrix& A, DenseMatrix& D)
+{
+    unsigned N = std::min(A.row_, A.col_);
+
+    CSYMPY_ASSERT(D.nrows() == N && D.ncols() == 1);
+
+    unsigned row_start;
+    unsigned row_end;
+    RCP<const Basic> diag;
+
+    for (unsigned i = 0; i < N; i++) {
+        row_start = A.p_[i];
+        row_end = A.p_[i + 1];
+        diag = zero;
+
+        // TODO: Use Binary search as A is in canonical format
+        for (unsigned jj = row_start; jj < row_end; jj++) {
+            if (A.j_[jj] == i) {
+                diag = A.x_[jj];
+                break;
+            }
+        }
+        D.set(i, 0, diag);
+    }
+}
+
+// Scale the rows of a CSR matrix *in place*
+// A[i, :] *= X[i]
+void csr_scale_rows(CSRMatrix& A, const DenseMatrix& X)
+{
+    CSYMPY_ASSERT(A.row_ == X.nrows() && X.ncols() == 1);
+
+    for(unsigned i = 0; i < A.row_; i++) {
+        if (eq(X.get(i, 0), zero))
+            throw std::runtime_error("Scaling factor can't be zero");
+        for (unsigned jj = A.p_[i]; jj < A.p_[i + 1]; jj++)
+            A.x_[jj] = mul(A.x_[jj], X.get(i, 0));
+    }
+}
+
+// Scale the columns of a CSR matrix *in place*
+// A[:,i] *= X[i]
+void csr_scale_columns(CSRMatrix& A, const DenseMatrix& X)
+{
+    CSYMPY_ASSERT(A.col_ == X.nrows() && X.ncols() == 1);
+
+    const unsigned nnz = A.p_[A.row_];
+    unsigned i;
+
+    for (i = 0; i < A.col_; i++) {
+        if (eq(X.get(i, 0), zero))
+            throw std::runtime_error("Scaling factor can't be zero");
+    }
+
+    for (i = 0; i < nnz; i++)
+        A.x_[i] = mul(A.x_[i], X.get(A.j_[i], 0));
 }
 
 } // CSymPy

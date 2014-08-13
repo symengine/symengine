@@ -44,7 +44,6 @@ protected:
 };
 
 // ----------------------------- Dense Matrix --------------------------------//
-
 class DenseMatrix: public MatrixBase {
 public:
     // Constructors
@@ -140,7 +139,7 @@ protected:
     vec_basic m_;
 };
 
-// ----------------------------- Sparse Matrices -------------------------------//
+// ----------------------------- Sparse Matrices -----------------------------//
 class CSRMatrix: public MatrixBase {
 public:
     CSRMatrix(unsigned row, unsigned col);
@@ -148,6 +147,8 @@ public:
         std::vector<unsigned>&& j, vec_basic&& x);
 
     bool is_canonical();
+
+    virtual bool eq(const MatrixBase &other) const;
 
     // Get and set elements
     virtual RCP<const Basic> get(unsigned i, unsigned j) const;
@@ -177,6 +178,10 @@ public:
         const std::vector<unsigned>& j_,
         unsigned row_);
 
+    static bool csr_has_duplicates(const std::vector<unsigned>& p_,
+        const std::vector<unsigned>& j_,
+        unsigned row_);
+
     static bool csr_has_canonical_format(const std::vector<unsigned>& p_,
         const std::vector<unsigned>& j_,
         unsigned row_);
@@ -189,6 +194,9 @@ public:
         CSRMatrix &C);
     friend void csr_matmat_pass2(const CSRMatrix &A, const CSRMatrix &B,
         CSRMatrix &C);
+    friend void csr_diagonal(const CSRMatrix& A, DenseMatrix& D);
+    friend void csr_scale_rows(CSRMatrix& A, const DenseMatrix& X);
+    friend void csr_scale_columns(CSRMatrix& A, const DenseMatrix& X);
 
 protected:
     std::vector<unsigned> p_;
@@ -197,7 +205,6 @@ protected:
 };
 
 // Solving Ax = b
-
 void fraction_free_LU_solve(const DenseMatrix &A, const DenseMatrix &b,
     DenseMatrix &x);
 
@@ -212,6 +219,14 @@ RCP<const Basic> det_berkowitz(const DenseMatrix &A);
 // order of monomial powers is returned, i.e. if `B = transpose([1, -2, 3])`
 // then the corresponding polynomial is `x^2 - 2x + 3`.
 void char_poly(const DenseMatrix &A, DenseMatrix &B);
+
+// Returns true if `b` is exactly the type T.
+// Here T can be a DenseMatrix, CSRMatrix, etc.
+template <class T>
+inline bool is_a(const MatrixBase &b)
+{
+    return typeid(T) == typeid(b);
+}
 
 } // CSymPy
 
