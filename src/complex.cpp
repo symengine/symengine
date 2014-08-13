@@ -1,4 +1,5 @@
 #include "complex.h"
+#include "constants.h"
 
 namespace CSymPy {
 
@@ -132,9 +133,5 @@ RCP<const Number> Complex::from_two_nums(const Number &re,
         throw std::runtime_error("Invalid Format: Expected Integer or Rational");
     }
 }
-
-// Initialize the special symbol declared in
-// complex.h:
-RCP<const Number> I = Complex::from_two_nums(*zero, *one);
 
 } // CSymPy

@@ -9,6 +9,7 @@
 #include "basic.h"
 #include "number.h"
 #include "integer.h"
+#include "constants.h"
 
 namespace CSymPy {
 //! Rational Class

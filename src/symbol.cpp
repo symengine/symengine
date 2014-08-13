@@ -1,5 +1,6 @@
 #include "symbol.h"
 #include "integer.h"
+#include "constants.h"
 
 namespace CSymPy {
 

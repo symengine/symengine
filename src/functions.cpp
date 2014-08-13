@@ -6,6 +6,7 @@
 #include "pow.h"
 #include "complex.h"
 #include "functions.h"
+#include "constants.h"
 
 
 namespace CSymPy {

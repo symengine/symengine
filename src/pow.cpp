@@ -7,6 +7,7 @@
 #include "integer.h"
 #include "rational.h"
 #include "complex.h"
+#include "constants.h"
 
 namespace CSymPy {
 
