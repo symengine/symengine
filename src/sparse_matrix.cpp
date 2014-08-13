@@ -422,4 +422,90 @@ void csr_scale_columns(CSRMatrix& A, const DenseMatrix& X)
         A.x_[i] = mul(A.x_[i], X.get(A.j_[i], 0));
 }
 
+// Compute C = A (binary_op) B for CSR matrices that are in the
+// canonical CSR format. Matrix dimensions of A and B should be the
+// same. C will be in canonical format as well.
+CSRMatrix csr_binop_csr_canonical(const CSRMatrix A, const CSRMatrix B,
+        RCP<const Basic>(&bin_op)(const RCP<const Basic>&, const RCP<const Basic>&))
+{
+    CSYMPY_ASSERT(A.row_ == B.row_ && A.col_ == B.col_);
+
+    //Method that works for canonical CSR matrices
+    std::vector<unsigned> p_(A.row_ + 1, 0);
+    std::vector<unsigned> j_;
+    vec_basic x_;
+
+    p_[0] = 0;
+    unsigned nnz = 0;
+    unsigned A_pos, B_pos, A_end, B_end;
+
+    for (unsigned i = 0; i < A.row_; i++) {
+        A_pos = A.p_[i];
+        B_pos = B.p_[i];
+        A_end = A.p_[i + 1];
+        B_end = B.p_[i + 1];
+
+        //while not finished with either row
+        while (A_pos < A_end && B_pos < B_end) {
+            unsigned A_j = A.j_[A_pos];
+            unsigned B_j = B.j_[B_pos];
+
+            if (A_j == B_j) {
+                RCP<const Basic> result = bin_op(A.x_[A_pos], B.x_[B_pos]);
+                if (neq(result, zero)) {
+                    j_.push_back(A_j);
+                    x_.push_back(result);
+                    nnz++;
+                }
+                A_pos++;
+                B_pos++;
+            } else if (A_j < B_j) {
+                RCP<const Basic> result = bin_op(A.x_[A_pos], zero);
+                if (neq(result, zero)) {
+                    j_.push_back(A_j);
+                    x_.push_back(result);
+                    nnz++;
+                }
+                A_pos++;
+            } else {
+                //B_j < A_j
+                RCP<const Basic> result = bin_op(zero, B.x_[B_pos]);
+                if (neq(result, zero)) {
+                    j_.push_back(B_j);
+                    x_.push_back(result);
+                    nnz++;
+                }
+                B_pos++;
+            }
+        }
+
+        //tail
+        while (A_pos < A_end) {
+            RCP<const Basic> result = bin_op(A.x_[A_pos], zero);
+            if (neq(result, zero)) {
+                j_.push_back(A.j_[A_pos]);
+                x_.push_back(result);
+                nnz++;
+            }
+            A_pos++;
+        }
+        while (B_pos < B_end) {
+            RCP<const Basic> result = bin_op(zero, B.x_[B_pos]);
+            if (neq(result, zero)) {
+                j_.push_back(B.j_[B_pos]);
+                x_.push_back(result);
+                nnz++;
+            }
+            B_pos++;
+        }
+
+        p_[i + 1] = nnz;
+    }
+
+    if (CSRMatrix::csr_has_duplicates(p_, j_, A.row_))
+        CSRMatrix::csr_sum_duplicates(p_, j_, x_, A.row_);
+
+    return CSRMatrix(A.row_, A.col_, std::move(p_), std::move(j_), std::move(x_));
+}
+
 } // CSymPy

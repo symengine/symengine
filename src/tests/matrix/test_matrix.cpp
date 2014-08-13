@@ -1,4 +1,5 @@
 #include <chrono>
+#include <functional>
 
 #include "matrix.h"
 #include "integer.h"
@@ -17,6 +18,7 @@ using CSymPy::is_a;
 using CSymPy::Add;
 using CSymPy::minus_one;
 using CSymPy::CSRMatrix;
+using CSymPy::add;
 
 void test_get_set()
 {
@@ -1115,6 +1117,18 @@ void test_csr_scale_columns()
     CSYMPY_CHECK_THROW(csr_scale_columns(A, X), std::runtime_error);
 }
 
+void test_csr_binop_csr_canonical()
+{
+    CSRMatrix A = CSRMatrix(3, 3, {0, 2, 3, 6}, {0, 2, 2, 0, 1, 2},
+        {integer(1), integer(2), integer(3), integer(4), integer(5), integer(6)});
+    CSRMatrix B = CSRMatrix(3, 3);
+
+    B = csr_binop_csr_canonical(A, A, add);
+
+    assert(B == CSRMatrix(3, 3, {0, 2, 3, 6}, {0, 2, 2, 0, 1, 2},
+        {integer(2), integer(4), integer(6), integer(8), integer(10), integer(12)}));
+}
+
 int main(int argc, char* argv[])
 {
     print_stack_on_segfault();
@@ -1182,6 +1196,8 @@ int main(int argc, char* argv[])
     test_csr_scale_rows();
 
     test_csr_scale_columns();
+
+    test_csr_binop_csr_canonical();
 
     return 0;
 }
