@@ -10,13 +10,19 @@
 #include "basic.h"
 #include "number.h"
 #include "integer.h"
+#include "symbol.h"
 
 namespace CSymPy {
 
+// Constant Numbers
 extern RCP<const Integer> zero;
 extern RCP<const Integer> one;
 extern RCP<const Integer> minus_one;
 extern RCP<const Number> I;
+
+// Constant Symbols
+extern RCP<const Symbol> pi;
+extern RCP<const Symbol> E;
 
 } // CSymPy
 
