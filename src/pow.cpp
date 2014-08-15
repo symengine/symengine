@@ -104,8 +104,12 @@ std::string Pow::__str__() const
     o << "^";
     if (is_a<Add>(*exp_) || is_a<Pow>(*exp_)) {
         o << "(" << *exp_ << ")";
-    } else if ((is_a<Rational>(*exp_) || is_a<Integer>(*exp_)) &&
-                rcp_static_cast<const Number>(exp_)->is_negative()) {
+    } else if (is_a<Integer>(*exp_) &&
+                rcp_static_cast<const Integer>(exp_)->is_negative()) {
+        o << "(" << *exp_ << ")";
+    } else if (is_a<Rational>(*exp_) &&
+                (!(rcp_static_cast<const Rational>(exp_)->is_int()) ||
+                rcp_static_cast<const Rational>(exp_)->is_negative())) {
         o << "(" << *exp_ << ")";
     } else if (is_a<Complex>(*exp_) &&
                 (rcp_static_cast<const Complex>(exp_)->imaginary_)!=0) {

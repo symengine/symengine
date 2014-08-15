@@ -61,7 +61,7 @@ void test_printing()
     r = mul(integer(-1), pow(integer(196), div(integer(1), integer(2))));
     assert(r->__str__() == "-196^(1/2)");
     r = pow(integer(-6), div(integer(1), integer(2)));
-    assert(r->__str__() == "(-6)^1/2");
+    assert(r->__str__() == "(-6)^(1/2)");
 
     RCP<const Number> rn1, rn2, rn3, c1, c2;
     rn1 = Rational::from_two_ints(integer(2), integer(4));
@@ -113,7 +113,7 @@ void test_printing()
     assert(r2->__str__() == "(-5/7)*x");
     r1 = pow(x, c1);
     r2 = pow(x, c2);
-    assert(r1->__str__() == "x^5/7");
+    assert(r1->__str__() == "x^(5/7)");
     assert(r2->__str__() == "x^(-5/7)");
 
     rn1 = Rational::from_two_ints(integer(1), integer(1));
