@@ -120,9 +120,20 @@ std::string Mul::__str__() const
     auto p = dict_.begin();
     if (neq(coef_, minus_one) && neq(coef_, one)) o << "*";
     for (; p != dict_.end(); p++) {
-        if (is_a<Add>(*(p->first))) o << "(";
-        o << *(p->first);
-        if (is_a<Add>(*(p->first))) o << ")";
+        if (is_a<Add>(*(p->first))) {
+            o << "(" << *(p->first) << ")";
+        } else if (is_a<Rational>(*(p->first)) &&
+                !(rcp_static_cast<const Rational>((p->first))->is_int())) {
+            o << "(" << *(p->first) <<")";
+        } else if (is_a<Complex>(*(p->first))) {
+            if (!(rcp_static_cast<const Complex>((p->first))->is_reim_zero())) {
+                o << "(" << *(p->first) <<")";
+            } else {
+                o << *(p->first);
+            }
+        } else {
+            o << *(p->first);
+        }
         if (neq(p->second, one)) {
             o << "^";
             if (!is_a<Integer>(*(p->second)) && !is_a<Symbol>(*(p->second)))
