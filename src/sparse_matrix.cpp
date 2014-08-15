@@ -80,14 +80,14 @@ void CSRMatrix::set(unsigned i, unsigned j, const RCP<const Basic> &e)
 {
     CSYMPY_ASSERT(i < row_ && j < col_);
 
+    unsigned k = p_[i];
+    unsigned row_end = p_[i + 1];
+
+    // TODO: Use binary search
+    while (k < row_end && j_[k] < j)
+        k++;
+
     if (neq(e, zero)) {
-        unsigned k = p_[i];
-        unsigned row_end = p_[i + 1];
-
-        // TODO: Use binary search
-        while (k < row_end && j_[k] < j)
-            k++;
-
         if (k < row_end && j_[k] == j) {
             x_[k] =  e;
         } else {  // j_[k] > j or k is the last non-zero element
@@ -95,6 +95,13 @@ void CSRMatrix::set(unsigned i, unsigned j, const RCP<const Basic> &e)
             j_.insert(j_.begin() + k, j);
             for (unsigned l = i + 1; l <= row_; l++)
                 p_[l]++;
+        }
+    } else { // e is zero
+        if (k < row_end && j_[k] == j) { // remove existing non-zero element
+            x_.erase(x_.begin() + k);
+            j_.erase(j_.begin() + k);
+            for (unsigned l = i + 1; l <= row_; l++)
+                p_[l]--;
         }
     }
 }
