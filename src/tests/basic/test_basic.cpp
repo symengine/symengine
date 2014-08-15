@@ -9,6 +9,7 @@
 #include "complex.h"
 #include "mul.h"
 #include "pow.h"
+#include "constants.h"
 
 using CSymPy::Basic;
 using CSymPy::Add;

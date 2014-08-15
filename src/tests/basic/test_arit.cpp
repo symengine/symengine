@@ -10,6 +10,7 @@
 #include "pow.h"
 #include "functions.h"
 #include "complex.h"
+#include "constants.h"
 
 using CSymPy::Basic;
 using CSymPy::Add;

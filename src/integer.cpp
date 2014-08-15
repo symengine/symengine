@@ -153,11 +153,5 @@ int perfect_power(const Integer &n)
     return mpz_perfect_power_p(n.as_mpz().get_mpz_t());
 }
 
-// Initialize (declare) the integers -1, 0 and 1 (those are exposed in
-// integer.h):
-RCP<const Integer> zero = rcp(new Integer(0));
-RCP<const Integer> one = rcp(new Integer(1));
-RCP<const Integer> minus_one = rcp(new Integer(-1));
-
 } // CSymPy
 

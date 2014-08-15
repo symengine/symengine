@@ -4,6 +4,7 @@
 #include "add.h"
 #include "mul.h"
 #include "integer.h"
+#include "constants.h"
 
 namespace CSymPy {
 // ----------------------------- CSRMatrix ------------------------------------
