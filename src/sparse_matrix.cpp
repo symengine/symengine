@@ -8,10 +8,11 @@
 
 namespace CSymPy {
 // ----------------------------- CSRMatrix ------------------------------------
+CSRMatrix::CSRMatrix()
+        : MatrixBase() {}
+
 CSRMatrix::CSRMatrix(unsigned row, unsigned col)
-        : MatrixBase(row, col)
-{
-}
+        : MatrixBase(row, col) {}
 
 CSRMatrix::CSRMatrix(unsigned row, unsigned col, std::vector<unsigned>&& p,
     std::vector<unsigned>&& j, vec_basic&& x)

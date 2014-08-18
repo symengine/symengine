@@ -139,3 +139,24 @@ cdef extern from "functions.h" namespace "CSymPy":
     cdef cppclass Derivative(Basic):
         RCP[const Basic] get_arg() nogil
         vector[RCP[Basic]] get_symbols() nogil
+
+cdef extern from "dict.h" namespace "CSymPy":
+    cdef cppclass VecBasic:
+        void push(const RCP[const Basic] &e)
+
+cdef extern from "matrix.h" namespace "CSymPy":
+    cdef cppclass MatrixBase:
+        const unsigned nrows() nogil
+        const unsigned ncols() nogil
+        RCP[const Basic] get(unsigned i, unsigned j) nogil
+        RCP[const Basic] set(unsigned i, unsigned j, const RCP[const Basic] &e) nogil
+
+    cdef cppclass DenseMatrix(MatrixBase):
+        DenseMatrix()
+        DenseMatrix(unsigned i, unsigned j) nogil
+        DenseMatrix(unsigned i, unsigned j, const VecBasic &v) nogil
+
+        RCP[const Basic] get(unsigned i, unsigned j) nogil
+        RCP[const Basic] set(unsigned i, unsigned j, const RCP[const Basic] &e) nogil
+
+    bool is_a_DenseMatrix "CSymPy::is_a<CSymPy::DenseMatrix>"(const MatrixBase &b) nogil
