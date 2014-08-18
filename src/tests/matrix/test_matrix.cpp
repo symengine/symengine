@@ -17,6 +17,8 @@ using CSymPy::is_a;
 using CSymPy::Add;
 using CSymPy::minus_one;
 using CSymPy::CSRMatrix;
+using CSymPy::add;
+using CSymPy::sub;
 
 void test_get_set()
 {
@@ -51,6 +53,42 @@ void test_get_set()
     assert(B == CSRMatrix(3, 3, {0, 3, 4, 7}, {0, 1, 2, 2, 0, 1, 2},
         {integer(1), integer(1), integer(2), integer(3), integer(4), integer(6),
             integer(6)}));
+
+    B.set(1, 2, integer(7));
+    assert(B == CSRMatrix(3, 3, {0, 3, 4, 7}, {0, 1, 2, 2, 0, 1, 2},
+        {integer(1), integer(1), integer(2), integer(7), integer(4), integer(6),
+            integer(6)}));
+
+    B = CSRMatrix(3, 3, {0, 1, 2, 5}, {0, 2, 0, 1, 2},
+        {integer(1), integer(3), integer(4), integer(5), integer(6)});
+
+    B.set(0, 2, integer(2));
+    assert(B == CSRMatrix(3, 3, {0, 2, 3, 6}, {0, 2, 2, 0, 1, 2},
+        {integer(1), integer(2), integer(3), integer(4), integer(5), integer(6)}));
+
+    B = CSRMatrix(3, 3); // 3x3 Zero matrix
+
+    assert(eq(B.get(0, 0), integer(0)));
+    assert(eq(B.get(1, 2), integer(0)));
+    assert(eq(B.get(2, 2), integer(0)));
+
+    B.set(0, 0, integer(1));
+    B.set(0, 2, integer(2));
+    B.set(1, 2, integer(3));
+    B.set(2, 0, integer(4));
+    B.set(2, 1, integer(5));
+    B.set(2, 2, integer(6));
+
+    assert(B == CSRMatrix(3, 3, {0, 2, 3, 6}, {0, 2, 2, 0, 1, 2},
+        {integer(1), integer(2), integer(3), integer(4), integer(5), integer(6)}));
+
+    B.set(0, 0, integer(0));
+    assert(B == CSRMatrix(3, 3, {0, 1, 2, 5}, {2, 2, 0, 1, 2},
+        {integer(2), integer(3), integer(4), integer(5), integer(6)}));
+
+    B.set(2, 1, integer(0));
+    assert(B == CSRMatrix(3, 3, {0, 1, 2, 4}, {2, 2, 0, 2},
+        {integer(2), integer(3), integer(4), integer(6)}));
 }
 
 void test_dense_dense_addition()
@@ -1115,6 +1153,28 @@ void test_csr_scale_columns()
     CSYMPY_CHECK_THROW(csr_scale_columns(A, X), std::runtime_error);
 }
 
+void test_csr_binop_csr_canonical()
+{
+    CSRMatrix A = CSRMatrix(3, 3, {0, 2, 3, 6}, {0, 2, 2, 0, 1, 2},
+        {integer(1), integer(2), integer(3), integer(4), integer(5), integer(6)});
+    CSRMatrix B = CSRMatrix(3, 3);
+
+    csr_binop_csr_canonical(A, A, B, add);
+    assert(B == CSRMatrix(3, 3, {0, 2, 3, 6}, {0, 2, 2, 0, 1, 2},
+        {integer(2), integer(4), integer(6), integer(8), integer(10), integer(12)}));
+
+    csr_binop_csr_canonical(A, A, B, sub);
+    assert(B == CSRMatrix(3, 3));
+
+    CSRMatrix C = CSRMatrix(3, 3, {0, 1, 3, 3}, {1, 0, 1},
+        {integer(7), integer(8), integer(9)});
+
+    csr_binop_csr_canonical(A, C, B, add);
+    assert(B == CSRMatrix(3, 3, {0, 3, 6, 9}, {0, 1, 2, 0, 1, 2, 0, 1, 2},
+        {integer(1), integer(7), integer(2), integer(8), integer(9), integer(3),
+            integer(4), integer(5), integer(6)}));
+}
+
 int main(int argc, char* argv[])
 {
     print_stack_on_segfault();
@@ -1182,6 +1242,8 @@ int main(int argc, char* argv[])
     test_csr_scale_rows();
 
     test_csr_scale_columns();
+
+    test_csr_binop_csr_canonical();
 
     return 0;
 }

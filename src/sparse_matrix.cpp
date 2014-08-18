@@ -11,6 +11,8 @@ namespace CSymPy {
 CSRMatrix::CSRMatrix(unsigned row, unsigned col)
         : MatrixBase(row, col)
 {
+    p_ = std::vector<unsigned>(row + 1, 0);
+    CSYMPY_ASSERT(is_canonical());
 }
 
 CSRMatrix::CSRMatrix(unsigned row, unsigned col, std::vector<unsigned>&& p,
@@ -50,7 +52,10 @@ bool CSRMatrix::is_canonical()
 {
     if (p_.size() != row_ + 1 || j_.size() != p_[row_] || x_.size() != p_[row_])
         return false;
-    return csr_has_canonical_format(p_, j_, row_);
+
+    if (p_[row_] != 0)   // Zero matrix is in canonical format
+        return csr_has_canonical_format(p_, j_, row_);
+    return true;
 }
 
 // Get and set elements
@@ -59,10 +64,10 @@ RCP<const Basic> CSRMatrix::get(unsigned i, unsigned j) const
     CSYMPY_ASSERT(i < row_ && j < col_);
 
     unsigned row_start = p_[i];
-    unsigned row_end = p_[i + 1] - 1;
+    unsigned row_end = p_[i + 1];
 
     // TODO: Use binary search
-    for (unsigned k = row_start; k <= row_end; k++) {
+    for (unsigned k = row_start; k < row_end; k++) {
         if (j_[k] == j)
             return x_[k];
         else if (j_[k] > j)
@@ -76,23 +81,28 @@ void CSRMatrix::set(unsigned i, unsigned j, const RCP<const Basic> &e)
 {
     CSYMPY_ASSERT(i < row_ && j < col_);
 
+    unsigned k = p_[i];
+    unsigned row_end = p_[i + 1];
+
+    // TODO: Use binary search
+    while (k < row_end && j_[k] < j)
+        k++;
+
     if (neq(e, zero)) {
-        unsigned k = p_[i];
-        unsigned row_end = p_[i + 1] - 1;
-
-        // TODO: Use binary search
-        while (k <= row_end && j_[k] < j)
-            k++;
-
-        if (k <= row_end) {
-            if (j_[k] == j)
-                x_[k] =  e;
-            else {  // j_[k] > j, so insert the element
-                x_.insert(x_.begin() + k, e);
-                j_.insert(j_.begin() + k, j);
-                for (unsigned l = i + 1; l <= row_; l++)
-                    p_[l]++;
-            }
+        if (k < row_end && j_[k] == j) {
+            x_[k] =  e;
+        } else {  // j_[k] > j or k is the last non-zero element
+            x_.insert(x_.begin() + k, e);
+            j_.insert(j_.begin() + k, j);
+            for (unsigned l = i + 1; l <= row_; l++)
+                p_[l]++;
+        }
+    } else { // e is zero
+        if (k < row_end && j_[k] == j) { // remove existing non-zero element
+            x_.erase(x_.begin() + k);
+            j_.erase(j_.begin() + k);
+            for (unsigned l = i + 1; l <= row_; l++)
+                p_[l]--;
         }
     }
 }
@@ -224,6 +234,7 @@ bool CSRMatrix::csr_has_canonical_format(const std::vector<unsigned>& p_,
         if (p_[i] > p_[i + 1])
             return false;
     }
+
     return csr_has_sorted_indices(p_, j_, row_) && !csr_has_duplicates(p_, j_, row_);
 }
 
@@ -421,6 +432,88 @@ void csr_scale_columns(CSRMatrix& A, const DenseMatrix& X)
 
     for (i = 0; i < nnz; i++)
         A.x_[i] = mul(A.x_[i], X.get(A.j_[i], 0));
+}
+
+// Compute C = A (binary_op) B for CSR matrices that are in the
+// canonical CSR format. Matrix dimensions of A and B should be the
+// same. C will be in canonical format as well.
+void csr_binop_csr_canonical(const CSRMatrix& A, const CSRMatrix& B, CSRMatrix& C,
+        RCP<const Basic>(&bin_op)(const RCP<const Basic>&, const RCP<const Basic>&))
+{
+    CSYMPY_ASSERT(A.row_ == B.row_ && A.col_ == B.col_ && C.row_ == A.row_ && C.col_ == A.col_);
+
+    //Method that works for canonical CSR matrices
+    C.p_[0] = 0;
+    unsigned nnz = 0;
+    unsigned A_pos, B_pos, A_end, B_end;
+
+    for (unsigned i = 0; i < A.row_; i++) {
+        A_pos = A.p_[i];
+        B_pos = B.p_[i];
+        A_end = A.p_[i + 1];
+        B_end = B.p_[i + 1];
+
+        //while not finished with either row
+        while (A_pos < A_end && B_pos < B_end) {
+            unsigned A_j = A.j_[A_pos];
+            unsigned B_j = B.j_[B_pos];
+
+            if (A_j == B_j) {
+                RCP<const Basic> result = bin_op(A.x_[A_pos], B.x_[B_pos]);
+                if (neq(result, zero)) {
+                    C.j_.push_back(A_j);
+                    C.x_.push_back(result);
+                    nnz++;
+                }
+                A_pos++;
+                B_pos++;
+            } else if (A_j < B_j) {
+                RCP<const Basic> result = bin_op(A.x_[A_pos], zero);
+                if (neq(result, zero)) {
+                    C.j_.push_back(A_j);
+                    C.x_.push_back(result);
+                    nnz++;
+                }
+                A_pos++;
+            } else {
+                //B_j < A_j
+                RCP<const Basic> result = bin_op(zero, B.x_[B_pos]);
+                if (neq(result, zero)) {
+                    C.j_.push_back(B_j);
+                    C.x_.push_back(result);
+                    nnz++;
+                }
+                B_pos++;
+            }
+        }
+
+        //tail
+        while (A_pos < A_end) {
+            RCP<const Basic> result = bin_op(A.x_[A_pos], zero);
+            if (neq(result, zero)) {
+                C.j_.push_back(A.j_[A_pos]);
+                C.x_.push_back(result);
+                nnz++;
+            }
+            A_pos++;
+        }
+        while (B_pos < B_end) {
+            RCP<const Basic> result = bin_op(zero, B.x_[B_pos]);
+            if (neq(result, zero)) {
+                C.j_.push_back(B.j_[B_pos]);
+                C.x_.push_back(result);
+                nnz++;
+            }
+            B_pos++;
+        }
+
+        C.p_[i + 1] = nnz;
+    }
+
+    // It's enough to check for duplicates as the column indices
+    // remain sorted after the above operations
+    if (CSRMatrix::csr_has_duplicates(C.p_, C.j_, A.row_))
+        CSRMatrix::csr_sum_duplicates(C.p_, C.j_, C.x_, A.row_);
 }
 
 } // CSymPy
