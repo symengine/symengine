@@ -93,6 +93,8 @@ their default values indicated below:
         -DWITH_PYTHON:BOOL=OFF \                      # Build Python wrappers
         -DWITH_CSYMPY_ASSERT:BOOL=OFF \               # Test all CSYMPY_ASSERT statements in the code
         -DWITH_CSYMPY_RCP:BOOL=ON \                   # Use our faster special implementation of RCP
+        -DWITH_PRIMESIEVE=OFF \                       # Install with Primesieve library
+        -DWITH_ARB=OFF \                              # Install with ARB library
         .
 
 `CMake` prints the value of its options at the end of the run.
