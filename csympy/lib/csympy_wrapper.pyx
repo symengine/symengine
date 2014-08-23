@@ -43,6 +43,9 @@ cdef matrix_c2py(csympy.MatrixBase &o):
     if (csympy.is_a_DenseMatrix(o)):
         A = DenseMatrix.__new__(DenseMatrix)
         A.thisptr = &o
+    else:
+        raise Exception("Unsupported Matrix type.")
+
     return A
 
 def sympy2csympy(a, raise_error=False):
@@ -369,24 +372,30 @@ cdef class DenseMatrix(MatrixBase):
     def __cinit__(self, row, col, v):
         cdef csympy.VecBasic v_
         cdef Basic A
-        for row in v:
-            for e in row:
-                A = sympify(e, False)
-                if A is not None:
-                    v_.push(<const RCP[const csympy.Basic]>(A.thisptr))
+        for e in v:
+            A = sympify(e, False)
+            if A is not None:
+                v_.push(<const RCP[const csympy.Basic]>(A.thisptr))
 
         self.thisptr = new csympy.DenseMatrix(row, col, v_)
+
+    def __str__(self):
+        return deref(self.thisptr).__str__().decode("utf-8")
 
     def __dealloc__(self):
         del self.thisptr
 
-    def __sympy__(self):
+    def get(self, i, j):
+        # No error checking is done
+        return c2py(deref(self.thisptr).get(i, j))._sympy_()
+
+    def _sympy_(self):
         s = []
         cdef csympy.DenseMatrix A = deref(csympy.static_cast_DenseMatrix(self.thisptr))
         for i in range(A.nrows()):
             l = []
             for j in range(A.ncols()):
-                l.append(c2py(A.get(i, j)).__sympy__())
+                l.append(c2py(A.get(i, j))._sympy_())
             s.append(l)
         import sympy
         return sympy.Matrix(s)
