@@ -148,8 +148,6 @@ cdef extern from "matrix.h" namespace "CSymPy":
     cdef cppclass MatrixBase:
         const unsigned nrows() nogil
         const unsigned ncols() nogil
-        RCP[const Basic] get(unsigned i, unsigned j) nogil
-        RCP[const Basic] set(unsigned i, unsigned j, const RCP[const Basic] &e) nogil
 
     cdef cppclass DenseMatrix(MatrixBase):
         DenseMatrix()
@@ -160,3 +158,4 @@ cdef extern from "matrix.h" namespace "CSymPy":
         RCP[const Basic] set(unsigned i, unsigned j, const RCP[const Basic] &e) nogil
 
     bool is_a_DenseMatrix "CSymPy::is_a<CSymPy::DenseMatrix>"(const MatrixBase &b) nogil
+    DenseMatrix* static_cast_DenseMatrix "static_cast<CSymPy::DenseMatrix*>"(const MatrixBase *a)

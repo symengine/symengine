@@ -84,7 +84,7 @@ def sympy2csympy(a, raise_error=False):
         raise SympifyError("sympy2csympy: Cannot convert '%r' to a csympy type." % a)
 
 def sympify(a, raise_error=True):
-    if isinstance(a, Basic):
+    if isinstance(a, (Basic, MatrixBase)):
         return a
     elif isinstance(a, (int, long)):
         return Integer(a)
@@ -380,6 +380,17 @@ cdef class DenseMatrix(MatrixBase):
     def __dealloc__(self):
         del self.thisptr
 
+    def __sympy__(self):
+        s = []
+        cdef csympy.DenseMatrix A = deref(csympy.static_cast_DenseMatrix(self.thisptr))
+        for i in range(A.nrows()):
+            l = []
+            for j in range(A.ncols()):
+                l.append(c2py(A.get(i, j)).__sympy__())
+            s.append(l)
+        import sympy
+        return sympy.Matrix(s)
+
 def sin(x):
     cdef Basic X = sympify(x)
     return c2py(csympy.sin(X.thisptr))
@@ -395,6 +406,9 @@ def function_symbol(name, x):
 def sqrt(x):
     cdef Basic X = sympify(x)
     return c2py(csympy.sqrt(X.thisptr))
+
+def densematrix(row, col, l):
+    return DenseMatrix(row, col, l)
 
 I = c2py(csympy.I)
 
