@@ -199,11 +199,10 @@ cdef class Basic(object):
 
     @property
     def args(self):
-        cdef RCP[const csympy.Basic] Y
+        cdef csympy.vec_basic Y = deref(self.thisptr).get_args()
         s = []
-        for i in range(deref(self.thisptr).get_args().size()):
-            Y = <RCP[const csympy.Basic]>(deref(self.thisptr).get_args()[i])
-            s.append(c2py(Y))
+        for i in range(Y.size()):
+            s.append(c2py(<RCP[const csympy.Basic]>(Y[i])))
         return tuple(s)
 
 
