@@ -36,6 +36,10 @@ void fdiv_q(const Ptr<RCP<const Integer>> &q, const Integer &n, const Integer &d
 int mod_inverse(const Ptr<RCP<const Integer>> &b, const Integer &a,
         const Integer &m);
 
+//! Chinese remainder function. Return true when a solution exists.
+bool crt(const Ptr<RCP<const Integer>> &R, std::vector<RCP<const Integer>> &rem,
+       std::vector<RCP<const Integer>> &mod);
+
 //! Fibonacci number
 RCP<const Integer> fibonacci(unsigned long n);
 

@@ -385,6 +385,14 @@ void test_bernoulli()
     #endif
 }
 
+void test_crt() {
+    RCP<const Integer> g;
+    std::vector<RCP<const Integer>> r = {integer(21), integer(31), integer(6), integer(17), integer(83)};
+    std::vector<RCP<const Integer>> m = {integer(30), integer(35), integer(45), integer(77), integer(88)};
+    assert(crt(outArg(g), r, m) == true);
+    asser(eq(g, integer(19411)));
+}
+
 int main(int argc, char* argv[])
 {
     print_stack_on_segfault();
@@ -406,6 +414,7 @@ int main(int argc, char* argv[])
     test_prime_factor_multiplicities();
     test_modulo();
     test_bernoulli();
+    test_crt();
 
     return 0;
 }

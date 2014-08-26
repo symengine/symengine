@@ -611,5 +611,31 @@ RCP<const Number> bernoulli(ulong n)
 #endif
 }
 
+bool crt(const Ptr<RCP<const Integer>> &R, std::vector<RCP<const Integer>> &rem,
+       std::vector<RCP<const Integer>> &mod)
+{
+    if (mod.size() > rem.size())
+        throw std::runtime_error("Too few remainders");
+    if (mod.size() == 0)
+        throw std::runtime_error("Moduli vector cannot be empty");
+
+    mpz_class m, r, g, s, t;
+    m = (*mod[0]).as_mpz();
+    r = (*rem[0]).as_mpz();
+
+    for (unsigned i = 1; i < mod.size(); i++) {
+        mpz_gcdext(g.get_mpz_t(), s.get_mpz_t(), t.get_mpz_t(), m.get_mpz_t(), (*mod[i]).as_mpz().get_mpz_t());
+        //g = s * m + t * mod[i]
+        t = (*rem[i]).as_mpz() - r;
+        if (!mpz_divisible_p (t.get_mpz_t(), g.get_mpz_t()))
+            return false;
+        r += m * s * (t / g);           //r = m * (m^-1 mod[i]/g)* (rem[i] - r) / g
+        m *= (*mod[i]).as_mpz() / g;
+        mpz_fdiv_r (r.get_mpz_t(), r.get_mpz_t(), m.get_mpz_t());
+    }
+    *R = integer(r);
+    return true;
+}
+
 } // CSymPy
 
