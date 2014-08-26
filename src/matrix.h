@@ -53,8 +53,6 @@ public:
     DenseMatrix();
     DenseMatrix(unsigned row, unsigned col);
     DenseMatrix(unsigned row, unsigned col, const vec_basic &l);
-    // To use in CSymPy wrappers
-    DenseMatrix(unsigned row, unsigned col, const VecBasic &v);
 
     // Should implement all the virtual methods from MatrixBase
     // and throw an exception if a method is not applicable.

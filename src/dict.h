@@ -91,9 +91,11 @@ typedef std::unordered_map<vec_int, mpz_class,
 
 // To be used in CSymPy wrappers
 class VecBasic {
-public:
+private:
     vec_basic v_;
+public:
     void push_back(const RCP<const Basic> &e) { v_.push_back(e); }
+    vec_basic get_vec() { return v_; }
 };
 
 } // CSymPy

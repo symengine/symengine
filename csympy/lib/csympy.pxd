@@ -142,7 +142,8 @@ cdef extern from "functions.h" namespace "CSymPy":
 
 cdef extern from "dict.h" namespace "CSymPy":
     cdef cppclass VecBasic:
-        void push_back(const RCP[const Basic] &e)
+        void push_back(const RCP[const Basic] &e) nogil
+        vector[RCP[Basic]] get_vec() nogil
 
 cdef extern from "matrix.h" namespace "CSymPy":
     cdef cppclass MatrixBase:
@@ -156,7 +157,7 @@ cdef extern from "matrix.h" namespace "CSymPy":
     cdef cppclass DenseMatrix(MatrixBase):
         DenseMatrix()
         DenseMatrix(unsigned i, unsigned j) nogil
-        DenseMatrix(unsigned i, unsigned j, const VecBasic &v) nogil
+        DenseMatrix(unsigned i, unsigned j, const vector[RCP[Basic]] &v) nogil
 
     bool is_a_DenseMatrix "CSymPy::is_a<CSymPy::DenseMatrix>"(const MatrixBase &b) nogil
     DenseMatrix* static_cast_DenseMatrix "static_cast<CSymPy::DenseMatrix*>"(const MatrixBase *a)

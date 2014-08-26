@@ -392,7 +392,7 @@ cdef class DenseMatrix(MatrixBase):
             if e_ is not None:
                 v_.push_back(<const RCP[const csympy.Basic]>(e_.thisptr))
 
-        self.thisptr = new csympy.DenseMatrix(row, col, v_)
+        self.thisptr = new csympy.DenseMatrix(row, col, v_.get_vec())
 
     def __str__(self):
         return deref(self.thisptr).__str__().decode("utf-8")
