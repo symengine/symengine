@@ -375,7 +375,7 @@ cdef class MatrixBase:
         if (op == 2):
             return deref(A.thisptr).eq(deref(B.thisptr))
         elif (op == 3):
-            return deref(A.thisptr).eq(deref(B.thisptr))
+            return not deref(A.thisptr).eq(deref(B.thisptr))
         else:
             return NotImplemented
 
