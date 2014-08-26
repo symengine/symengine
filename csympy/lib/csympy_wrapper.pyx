@@ -390,7 +390,7 @@ cdef class DenseMatrix(MatrixBase):
         for e in v:
             e_ = sympify(e, False)
             if e_ is not None:
-                v_.push(<const RCP[const csympy.Basic]>(e_.thisptr))
+                v_.push_back(<const RCP[const csympy.Basic]>(e_.thisptr))
 
         self.thisptr = new csympy.DenseMatrix(row, col, v_)
 

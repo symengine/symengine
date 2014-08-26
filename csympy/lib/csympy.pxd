@@ -142,7 +142,7 @@ cdef extern from "functions.h" namespace "CSymPy":
 
 cdef extern from "dict.h" namespace "CSymPy":
     cdef cppclass VecBasic:
-        void push(const RCP[const Basic] &e)
+        void push_back(const RCP[const Basic] &e)
 
 cdef extern from "matrix.h" namespace "CSymPy":
     cdef cppclass MatrixBase:

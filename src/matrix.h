@@ -12,6 +12,7 @@ public:
         : row_{0}, col_{0} {};
     MatrixBase(unsigned row, unsigned col)
         : row_{row}, col_{col} {};
+    virtual ~MatrixBase() {};
 
     // Below methods should be implemented by the derived classes. If not
     // applicable, raise an exception
