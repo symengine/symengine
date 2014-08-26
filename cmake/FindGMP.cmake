@@ -1,6 +1,6 @@
-find_path(GMP_INCLUDE_DIR gmpxx.h $ENV{PYTHONHPC}/include)
-find_library(GMPXX gmpxx $ENV{PYTHONHPC}/lib)
-find_library(GMP gmp $ENV{PYTHONHPC}/lib)
+find_path(GMP_INCLUDE_DIR gmpxx.h "${GMP_DIR}/include")
+find_library(GMPXX gmpxx "${GMP_DIR}/lib")
+find_library(GMP gmp "${GMP_DIR}/lib")
 set(GMP_LIBRARIES ${GMPXX} ${GMP})
 set(GMP_INCLUDE_DIRS ${GMP_INCLUDE_DIR})
 

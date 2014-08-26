@@ -204,6 +204,10 @@ public:
     friend void csr_scale_rows(CSRMatrix& A, const DenseMatrix& X);
     friend void csr_scale_columns(CSRMatrix& A, const DenseMatrix& X);
 
+    friend void csr_binop_csr_canonical(const CSRMatrix& A, const CSRMatrix& B,
+        CSRMatrix& C,
+        RCP<const Basic> (&bin_op)(const RCP<const Basic>&, const RCP<const Basic>&));
+
 protected:
     std::vector<unsigned> p_;
     std::vector<unsigned> j_;
