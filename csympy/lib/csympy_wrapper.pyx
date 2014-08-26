@@ -371,11 +371,11 @@ cdef class DenseMatrix(MatrixBase):
 
     def __cinit__(self, row, col, v):
         cdef csympy.VecBasic v_
-        cdef Basic A
+        cdef Basic e_
         for e in v:
-            A = sympify(e, False)
-            if A is not None:
-                v_.push(<const RCP[const csympy.Basic]>(A.thisptr))
+            e_ = sympify(e, False)
+            if e_ is not None:
+                v_.push(<const RCP[const csympy.Basic]>(e_.thisptr))
 
         self.thisptr = new csympy.DenseMatrix(row, col, v_)
 
@@ -388,6 +388,11 @@ cdef class DenseMatrix(MatrixBase):
     def get(self, i, j):
         # No error checking is done
         return c2py(deref(self.thisptr).get(i, j))._sympy_()
+
+    def set(self, i, j, e):
+        cdef Basic e_ = sympify(e)
+        if e_ is not None:
+            deref(self.thisptr).set(i, j, <const RCP[const csympy.Basic] &>(e_.thisptr))
 
     def _sympy_(self):
         s = []
