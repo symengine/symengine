@@ -89,13 +89,6 @@ typedef struct
 typedef std::unordered_map<vec_int, mpz_class,
         vec_int_hash, vec_int_eq> umap_vec_mpz;
 
-// To be used in CSymPy wrappers
-class VecBasic {
-public:
-    vec_basic v_;
-    void push_back(const RCP<const Basic> &e) { v_.push_back(e); }
-};
-
 } // CSymPy
 
 

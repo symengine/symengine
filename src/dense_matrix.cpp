@@ -22,12 +22,6 @@ DenseMatrix::DenseMatrix(unsigned row, unsigned col, const vec_basic &l)
     CSYMPY_ASSERT(m_.size() == row*col)
 }
 
-DenseMatrix::DenseMatrix(unsigned row, unsigned col, const VecBasic &v)
-        : MatrixBase(row, col), m_{v.v_}
-{
-    CSYMPY_ASSERT(m_.size() == row*col)
-}
-
 // Get and set elements
 RCP<const Basic> DenseMatrix::get(unsigned i, unsigned j) const
 {

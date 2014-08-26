@@ -40,6 +40,7 @@ cdef extern from "csympy_rcp.h" namespace "CSymPy":
 
 cdef extern from "basic.h" namespace "CSymPy":
     ctypedef map[RCP[Basic], RCP[Basic]] map_basic_basic
+    ctypedef vector[RCP[Basic]] vec_basic "CSymPy::vec_basic"
     cdef cppclass Basic:
         string __str__() nogil except +
         unsigned int hash() nogil except +
@@ -140,10 +141,6 @@ cdef extern from "functions.h" namespace "CSymPy":
         RCP[const Basic] get_arg() nogil
         vector[RCP[Basic]] get_symbols() nogil
 
-cdef extern from "dict.h" namespace "CSymPy":
-    cdef cppclass VecBasic:
-        void push_back(const RCP[const Basic] &e)
-
 cdef extern from "matrix.h" namespace "CSymPy":
     cdef cppclass MatrixBase:
         const unsigned nrows() nogil
@@ -156,7 +153,7 @@ cdef extern from "matrix.h" namespace "CSymPy":
     cdef cppclass DenseMatrix(MatrixBase):
         DenseMatrix()
         DenseMatrix(unsigned i, unsigned j) nogil
-        DenseMatrix(unsigned i, unsigned j, const VecBasic &v) nogil
+        DenseMatrix(unsigned i, unsigned j, const vector[RCP[Basic]] &v) nogil
 
     bool is_a_DenseMatrix "CSymPy::is_a<CSymPy::DenseMatrix>"(const MatrixBase &b) nogil
     DenseMatrix* static_cast_DenseMatrix "static_cast<CSymPy::DenseMatrix*>"(const MatrixBase *a)

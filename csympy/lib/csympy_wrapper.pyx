@@ -385,12 +385,12 @@ cdef class DenseMatrix(MatrixBase):
         self.thisptr = new csympy.DenseMatrix(row, col)
 
     def __cinit__(self, row, col, v):
-        cdef csympy.VecBasic v_
+        cdef csympy.vec_basic v_
         cdef Basic e_
         for e in v:
             e_ = sympify(e, False)
             if e_ is not None:
-                v_.push_back(<const RCP[const csympy.Basic]>(e_.thisptr))
+                v_.push_back(e_.thisptr)
 
         self.thisptr = new csympy.DenseMatrix(row, col, v_)
 
