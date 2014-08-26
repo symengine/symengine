@@ -82,7 +82,11 @@ def sympy2csympy(a, raise_error=False):
         return function_symbol(name, sympy2csympy(arg, True))
     elif isinstance(a, sympy.Matrix):
         row, col = a.shape
-        return DenseMatrix(row, col, a.tolist())
+        v = []
+        for r in a.tolist():
+            for e in r:
+                v.append(e)
+        return DenseMatrix(row, col, v)
     if raise_error:
         raise SympifyError("sympy2csympy: Cannot convert '%r' to a csympy type." % a)
 
@@ -364,6 +368,17 @@ cdef class Derivative(Basic):
 cdef class MatrixBase:
     cdef csympy.MatrixBase* thisptr
 
+    def __richcmp__(a, b, int op):
+        cdef MatrixBase A = sympify(a, False)
+        cdef MatrixBase B = sympify(b, False)
+        if A is None or B is None: return NotImplemented
+        if (op == 2):
+            return deref(A.thisptr).eq(deref(B.thisptr))
+        elif (op == 3):
+            return deref(A.thisptr).eq(deref(B.thisptr))
+        else:
+            return NotImplemented
+
 cdef class DenseMatrix(MatrixBase):
 
     def __cinit__(self, row, col):
@@ -387,7 +402,7 @@ cdef class DenseMatrix(MatrixBase):
 
     def get(self, i, j):
         # No error checking is done
-        return c2py(deref(self.thisptr).get(i, j))._sympy_()
+        return c2py(deref(self.thisptr).get(i, j))
 
     def set(self, i, j, e):
         cdef Basic e_ = sympify(e)

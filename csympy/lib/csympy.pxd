@@ -151,6 +151,7 @@ cdef extern from "matrix.h" namespace "CSymPy":
         RCP[const Basic] get(unsigned i, unsigned j) nogil
         RCP[const Basic] set(unsigned i, unsigned j, const RCP[const Basic] &e) nogil
         string __str__() nogil except+
+        bool eq(const MatrixBase &) nogil
 
     cdef cppclass DenseMatrix(MatrixBase):
         DenseMatrix()

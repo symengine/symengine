@@ -169,3 +169,18 @@ def test_conv10():
 
     assert C._sympy_() == sympy.Matrix([[5, sympy.Symbol("x")],
         [sympy.Function("f")(sympy.Symbol("x")), 1 + sympy.I]])
+
+def test_conv10b():
+    A = sympy.Matrix([[sympy.Symbol("x"), sympy.Symbol("y")],
+        [sympy.Symbol("z"), sympy.Symbol("t")]])
+    assert sympify(A) == densematrix(2, 2, [Symbol("x"), Symbol("y"),
+        Symbol("z"), Symbol("t")])
+
+    B = sympy.Matrix([[1, 2], [3, 4]])
+    assert sympify(B) == densematrix(2, 2, [Integer(1), Integer(2), Integer(3),
+        Integer(4)])
+
+    C = sympy.Matrix([[7, sympy.Symbol("y")],
+        [sympy.Function("g")(sympy.Symbol("z")), 3 + 2*sympy.I]])
+    assert sympify(C) == densematrix(2, 2, [Integer(7), Symbol("y"),
+        function_symbol("g", Symbol("z")), 3 + 2*I])
