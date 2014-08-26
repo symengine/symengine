@@ -356,11 +356,10 @@ cdef class Derivative(Basic):
         cdef RCP[const csympy.Derivative] X = \
             csympy.rcp_static_cast_Derivative(self.thisptr)
         arg = c2py(deref(X).get_arg())._sympy_()
-        cdef RCP[const csympy.Basic] Y
+        cdef csympy.vec_basic Y = deref(X).get_symbols()
         s = []
-        for i in range(deref(X).get_symbols().size()):
-            Y = <RCP[const csympy.Basic]>(deref(X).get_symbols()[i])
-            s.append(c2py(Y)._sympy_())
+        for i in range(Y.size()):
+            s.append(c2py(<RCP[const csympy.Basic]>(Y[i]))._sympy_())
         import sympy
         return sympy.Derivative(arg, *s)
 
