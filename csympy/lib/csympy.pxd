@@ -46,7 +46,7 @@ cdef extern from "basic.h" namespace "CSymPy":
         unsigned int hash() nogil except +
         RCP[const Basic] diff(RCP[const Symbol] &x) nogil except +
         RCP[const Basic] subs(map_basic_basic &x) nogil except +
-        vector[RCP[Basic]] get_args() nogil
+        vec_basic get_args() nogil
 
     bool eq(RCP[const Basic] &a, RCP[const Basic] &b) nogil except +
     bool neq(RCP[const Basic] &a, RCP[const Basic] &b) nogil except +
@@ -139,7 +139,7 @@ cdef extern from "functions.h" namespace "CSymPy":
 
     cdef cppclass Derivative(Basic):
         RCP[const Basic] get_arg() nogil
-        vector[RCP[Basic]] get_symbols() nogil
+        vec_basic get_symbols() nogil
 
 cdef extern from "matrix.h" namespace "CSymPy":
     cdef cppclass MatrixBase:
@@ -153,7 +153,7 @@ cdef extern from "matrix.h" namespace "CSymPy":
     cdef cppclass DenseMatrix(MatrixBase):
         DenseMatrix()
         DenseMatrix(unsigned i, unsigned j) nogil
-        DenseMatrix(unsigned i, unsigned j, const vector[RCP[Basic]] &v) nogil
+        DenseMatrix(unsigned i, unsigned j, const vec_basic &v) nogil
 
     bool is_a_DenseMatrix "CSymPy::is_a<CSymPy::DenseMatrix>"(const MatrixBase &b) nogil
     DenseMatrix* static_cast_DenseMatrix "static_cast<CSymPy::DenseMatrix*>"(const MatrixBase *a)

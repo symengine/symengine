@@ -2,7 +2,6 @@ from cython.operator cimport dereference as deref
 cimport csympy
 from csympy cimport rcp, RCP
 from libcpp.string cimport string
-from libcpp.vector cimport vector
 
 class SympifyError(Exception):
     pass
