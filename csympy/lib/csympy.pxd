@@ -40,6 +40,7 @@ cdef extern from "csympy_rcp.h" namespace "CSymPy":
 
 cdef extern from "basic.h" namespace "CSymPy":
     ctypedef map[RCP[Basic], RCP[Basic]] map_basic_basic
+    ctypedef vector[RCP[Basic]] vec_basic "CSymPy::vec_basic"
     cdef cppclass Basic:
         string __str__() nogil except +
         unsigned int hash() nogil except +
