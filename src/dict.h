@@ -89,18 +89,6 @@ typedef struct
 typedef std::unordered_map<vec_int, mpz_class,
         vec_int_hash, vec_int_eq> umap_vec_mpz;
 
-// To be used in CSymPy wrappers only.
-// This is a simple wrapper around std::vector of Basic (vec_basic) in order to
-// allow it to be used inside Cython, as a workaround a bug in Cython:
-// https://groups.google.com/d/topic/cython-users/_wqZklAQcLA/discussion
-class VecBasic {
-private:
-    vec_basic v_;
-public:
-    void push_back(const RCP<const Basic> &e) { v_.push_back(e); }
-    vec_basic get_vec() { return v_; }
-};
-
 } // CSymPy
 
 

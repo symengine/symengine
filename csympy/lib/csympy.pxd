@@ -141,11 +141,6 @@ cdef extern from "functions.h" namespace "CSymPy":
         RCP[const Basic] get_arg() nogil
         vector[RCP[Basic]] get_symbols() nogil
 
-cdef extern from "dict.h" namespace "CSymPy":
-    cdef cppclass VecBasic:
-        void push_back(const RCP[const Basic] &e) nogil
-        vector[RCP[Basic]] get_vec() nogil
-
 cdef extern from "matrix.h" namespace "CSymPy":
     cdef cppclass MatrixBase:
         const unsigned nrows() nogil
