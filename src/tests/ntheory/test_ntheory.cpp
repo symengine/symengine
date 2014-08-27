@@ -390,7 +390,26 @@ void test_crt() {
     std::vector<RCP<const Integer>> r = {integer(21), integer(31), integer(6), integer(17), integer(83)};
     std::vector<RCP<const Integer>> m = {integer(30), integer(35), integer(45), integer(77), integer(88)};
     assert(crt(outArg(g), r, m) == true);
-    asser(eq(g, integer(19411)));
+    assert(eq(g, integer(9411)));
+}
+
+void test_primitive_root()
+{
+    RCP<const Integer> i15 = integer(15);
+    RCP<const Integer> i18 = integer(47);
+    RCP<const Integer> i162 = integer(162);
+    RCP<const Integer> i100 = integer(100);
+    RCP<const Integer> i = integer(40487*40487);
+    RCP<const Integer> g;
+
+    assert(primitive_root(outArg(g), *i15) == false);
+    assert(primitive_root(outArg(g), *i100) == false);
+    assert(primitive_root(outArg(g), *i18) == true);
+    assert(primitive_root(outArg(g), *i) == true);
+
+    std::vector<RCP<const Integer>> roots;
+    primitive_root_list(roots, 162);
+    assert(roots.size() == 18);
 }
 
 int main(int argc, char* argv[])
@@ -415,6 +434,7 @@ int main(int argc, char* argv[])
     test_modulo();
     test_bernoulli();
     test_crt();
+    test_primitive_root();
 
     return 0;
 }
