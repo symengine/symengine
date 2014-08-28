@@ -8,8 +8,11 @@ namespace CSymPy {
 // Base class for matrices
 class MatrixBase {
 public:
+    MatrixBase()
+        : row_{0}, col_{0} {};
     MatrixBase(unsigned row, unsigned col)
         : row_{row}, col_{col} {};
+    virtual ~MatrixBase() {};
 
     // Below methods should be implemented by the derived classes. If not
     // applicable, raise an exception
@@ -47,6 +50,7 @@ protected:
 class DenseMatrix: public MatrixBase {
 public:
     // Constructors
+    DenseMatrix();
     DenseMatrix(unsigned row, unsigned col);
     DenseMatrix(unsigned row, unsigned col, const vec_basic &l);
 
@@ -142,6 +146,7 @@ protected:
 // ----------------------------- Sparse Matrices -----------------------------//
 class CSRMatrix: public MatrixBase {
 public:
+    CSRMatrix();
     CSRMatrix(unsigned row, unsigned col);
     CSRMatrix(unsigned row, unsigned col, std::vector<unsigned>&& p,
         std::vector<unsigned>&& j, vec_basic&& x);

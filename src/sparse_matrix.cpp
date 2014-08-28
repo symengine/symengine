@@ -8,6 +8,9 @@
 
 namespace CSymPy {
 // ----------------------------- CSRMatrix ------------------------------------
+CSRMatrix::CSRMatrix()
+        : MatrixBase() {}
+
 CSRMatrix::CSRMatrix(unsigned row, unsigned col)
         : MatrixBase(row, col)
 {

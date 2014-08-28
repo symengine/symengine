@@ -7,13 +7,16 @@
 namespace CSymPy {
 
 // Constructors
+DenseMatrix::DenseMatrix()
+        : MatrixBase() {}
+
 DenseMatrix::DenseMatrix(unsigned row, unsigned col)
         : MatrixBase(row, col)
 {
     m_ = std::vector<RCP<const Basic>>(row*col);
 }
 
-DenseMatrix::DenseMatrix(unsigned row, unsigned col, const std::vector<RCP<const Basic>> &l)
+DenseMatrix::DenseMatrix(unsigned row, unsigned col, const vec_basic &l)
         : MatrixBase(row, col), m_{l}
 {
     CSYMPY_ASSERT(m_.size() == row*col)

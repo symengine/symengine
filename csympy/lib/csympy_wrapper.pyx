@@ -2,7 +2,6 @@ from cython.operator cimport dereference as deref
 cimport csympy
 from csympy cimport rcp, RCP
 from libcpp.string cimport string
-from libcpp.vector cimport vector
 
 class SympifyError(Exception):
     pass
@@ -38,6 +37,16 @@ cdef c2py(RCP[const csympy.Basic] o):
     r.thisptr = o
     return r
 
+cdef matrix_c2py(csympy.MatrixBase &o):
+    cdef MatrixBase A
+    if (csympy.is_a_DenseMatrix(o)):
+        A = DenseMatrix.__new__(DenseMatrix)
+        A.thisptr = &o
+    else:
+        raise Exception("Unsupported Matrix type.")
+
+    return A
+
 def sympy2csympy(a, raise_error=False):
     """
     Converts 'a' from SymPy to CSymPy.
@@ -70,11 +79,18 @@ def sympy2csympy(a, raise_error=False):
         name = str(a.func)
         arg = a.args[0]
         return function_symbol(name, sympy2csympy(arg, True))
+    elif isinstance(a, sympy.Matrix):
+        row, col = a.shape
+        v = []
+        for r in a.tolist():
+            for e in r:
+                v.append(e)
+        return DenseMatrix(row, col, v)
     if raise_error:
         raise SympifyError("sympy2csympy: Cannot convert '%r' to a csympy type." % a)
 
 def sympify(a, raise_error=True):
-    if isinstance(a, Basic):
+    if isinstance(a, (Basic, MatrixBase)):
         return a
     elif isinstance(a, (int, long)):
         return Integer(a)
@@ -183,11 +199,10 @@ cdef class Basic(object):
 
     @property
     def args(self):
-        cdef RCP[const csympy.Basic] Y
+        cdef csympy.vec_basic Y = deref(self.thisptr).get_args()
         s = []
-        for i in range(deref(self.thisptr).get_args().size()):
-            Y = <RCP[const csympy.Basic]>(deref(self.thisptr).get_args()[i])
-            s.append(c2py(Y))
+        for i in range(Y.size()):
+            s.append(c2py(<RCP[const csympy.Basic]>(Y[i])))
         return tuple(s)
 
 
@@ -340,13 +355,67 @@ cdef class Derivative(Basic):
         cdef RCP[const csympy.Derivative] X = \
             csympy.rcp_static_cast_Derivative(self.thisptr)
         arg = c2py(deref(X).get_arg())._sympy_()
-        cdef RCP[const csympy.Basic] Y
+        cdef csympy.vec_basic Y = deref(X).get_symbols()
         s = []
-        for i in range(deref(X).get_symbols().size()):
-            Y = <RCP[const csympy.Basic]>(deref(X).get_symbols()[i])
-            s.append(c2py(Y)._sympy_())
+        for i in range(Y.size()):
+            s.append(c2py(<RCP[const csympy.Basic]>(Y[i]))._sympy_())
         import sympy
         return sympy.Derivative(arg, *s)
+
+cdef class MatrixBase:
+    cdef csympy.MatrixBase* thisptr
+
+    def __richcmp__(a, b, int op):
+        cdef MatrixBase A = sympify(a, False)
+        cdef MatrixBase B = sympify(b, False)
+        if A is None or B is None: return NotImplemented
+        if (op == 2):
+            return deref(A.thisptr).eq(deref(B.thisptr))
+        elif (op == 3):
+            return not deref(A.thisptr).eq(deref(B.thisptr))
+        else:
+            return NotImplemented
+
+cdef class DenseMatrix(MatrixBase):
+
+    def __cinit__(self, row, col):
+        self.thisptr = new csympy.DenseMatrix(row, col)
+
+    def __cinit__(self, row, col, v):
+        cdef csympy.vec_basic v_
+        cdef Basic e_
+        for e in v:
+            e_ = sympify(e, False)
+            if e_ is not None:
+                v_.push_back(e_.thisptr)
+
+        self.thisptr = new csympy.DenseMatrix(row, col, v_)
+
+    def __str__(self):
+        return deref(self.thisptr).__str__().decode("utf-8")
+
+    def __dealloc__(self):
+        del self.thisptr
+
+    def get(self, i, j):
+        # No error checking is done
+        return c2py(deref(self.thisptr).get(i, j))
+
+    def set(self, i, j, e):
+        cdef Basic e_ = sympify(e)
+        if e_ is not None:
+            deref(self.thisptr).set(i, j, <const RCP[const csympy.Basic] &>(e_.thisptr))
+
+    def _sympy_(self):
+        s = []
+        cdef csympy.DenseMatrix A = deref(csympy.static_cast_DenseMatrix(self.thisptr))
+        for i in range(A.nrows()):
+            l = []
+            for j in range(A.ncols()):
+                l.append(c2py(A.get(i, j))._sympy_())
+            s.append(l)
+        import sympy
+        return sympy.Matrix(s)
 
 def sin(x):
     cdef Basic X = sympify(x)
@@ -363,6 +432,9 @@ def function_symbol(name, x):
 def sqrt(x):
     cdef Basic X = sympify(x)
     return c2py(csympy.sqrt(X.thisptr))
+
+def densematrix(row, col, l):
+    return DenseMatrix(row, col, l)
 
 I = c2py(csympy.I)
 
