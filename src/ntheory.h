@@ -37,8 +37,8 @@ int mod_inverse(const Ptr<RCP<const Integer>> &b, const Integer &a,
         const Integer &m);
 
 //! Chinese remainder function. Return true when a solution exists.
-bool crt(const Ptr<RCP<const Integer>> &R, std::vector<RCP<const Integer>> &rem,
-       std::vector<RCP<const Integer>> &mod);
+bool crt(const Ptr<RCP<const Integer>> &R, const std::vector<RCP<const Integer>> &rem,
+       const std::vector<RCP<const Integer>> &mod);
 
 //! Fibonacci number
 RCP<const Integer> fibonacci(unsigned long n);
@@ -83,11 +83,9 @@ int factor_pollard_rho_method(const Ptr<RCP<const Integer>> &f, const Integer &n
         unsigned retries = 5);
 
 //! Find prime factors of `n`
-void prime_factors(const RCP<const Integer> &n,
-        std::vector<RCP<const Integer>> &primes);
+void prime_factors(std::vector<RCP<const Integer>> &primes, const Integer &n);
 //! Find multiplicities of prime factors of `n`
-void prime_factor_multiplicities(const RCP<const Integer> &n,
-        map_integer_uint &primes);
+void prime_factor_multiplicities(map_integer_uint &primes, const Integer &n);
 // Sieve class stores all the primes upto a limit. When a prime or a list of prime 
 // is requested, if the prime is not there in the sieve, it is extended to hold that 
 // prime. The implementation is a very basic Eratosthenes sieve, but the code should
@@ -138,6 +136,12 @@ RCP<const Number> bernoulli(ulong n);
 bool primitive_root(const Ptr<RCP<const Integer>> &g, const Integer &n);
 //! Computes all primitive roots less than n. Returns false if no primitive root exists.
 bool primitive_root_list(std::vector<RCP<const Integer>> &roots, const Integer &n);
+//! Euler's totient function
+RCP<const Integer> totient(RCP<const Integer> &n);
+//! Carmichael function
+RCP<const Integer> carmichael(RCP<const Integer> &n);
+//! Multiplicative order. Return false if order does not exist
+bool multiplicative_order(const Ptr<RCP<const Integer>> &o, RCP<const Integer> &a, RCP<const Integer> &n);
 }
 #endif
 

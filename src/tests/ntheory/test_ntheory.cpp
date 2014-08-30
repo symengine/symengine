@@ -22,6 +22,12 @@ using CSymPy::mod_inverse;
 using CSymPy::mod;
 using CSymPy::Number;
 using CSymPy::bernoulli;
+using CSymPy::crt;
+using CSymPy::primitive_root;
+using CSymPy::primitive_root_list;
+using CSymPy::multiplicative_order;
+using CSymPy::totient;
+using CSymPy::carmichael;
 
 void test_gcd_lcm()
 {
@@ -303,7 +309,7 @@ void _test_primefactors(const RCP<const Integer> &a, unsigned size)
 {
     std::vector<RCP<const Integer>> primes;
 
-    prime_factors(a, primes);
+    prime_factors(primes, *a);
     assert(primes.size() == size);
 
     for (auto &it: primes) {
@@ -337,10 +343,9 @@ void _test_prime_factor_multiplicities(const RCP<const Integer> &a)
 {
     unsigned multiplicity;
     RCP<const Integer> _a = a;
-    std::vector<RCP<const Integer>> primes;
     map_integer_uint prime_mul;
 
-    prime_factor_multiplicities(a, prime_mul);
+    prime_factor_multiplicities(prime_mul, *a);
 
     for (auto it : prime_mul) {
         multiplicity = it.second;
@@ -387,29 +392,91 @@ void test_bernoulli()
 
 void test_crt() {
     RCP<const Integer> g;
-    std::vector<RCP<const Integer>> r = {integer(21), integer(31), integer(6), integer(17), integer(83)};
-    std::vector<RCP<const Integer>> m = {integer(30), integer(35), integer(45), integer(77), integer(88)};
+    std::vector<RCP<const Integer>> r, m;
+    r = {integer(21), integer(31), integer(6), integer(17), integer(83)};
+    m = {integer(30), integer(35), integer(45), integer(77), integer(88)};
     assert(crt(outArg(g), r, m) == true);
     assert(eq(g, integer(9411)));
+
+    r = {integer(3), integer(2), integer(1)};
+    m = {integer(20), integer(14), integer(11)};
+    assert(crt(outArg(g), r, m) == false);
+
+    r = {integer(3), integer(21), integer(23), integer(9), integer(45)};
+    m = {integer(15), integer(48), integer(55), integer(61), integer(66)};
+    assert(crt(outArg(g), r, m) == true);
+    assert(eq(g, integer(12453)));
+
+    r = {integer(-1), integer(-1), integer(-1), integer(-1), integer(-1)};
+    m = {integer(2), integer(3), integer(4), integer(5), integer(6)};
+    assert(crt(outArg(g), r, m) == true);
+    assert(eq(g, integer(59)));
 }
 
 void test_primitive_root()
 {
     RCP<const Integer> i15 = integer(15);
-    RCP<const Integer> i18 = integer(47);
+    RCP<const Integer> i18 = integer(18);
     RCP<const Integer> i162 = integer(162);
     RCP<const Integer> i100 = integer(100);
     RCP<const Integer> i = integer(40487*40487);
-    RCP<const Integer> g;
+    RCP<const Integer> g, p;
 
     assert(primitive_root(outArg(g), *i15) == false);
     assert(primitive_root(outArg(g), *i100) == false);
+
     assert(primitive_root(outArg(g), *i18) == true);
+    assert(multiplicative_order(outArg(p), g, i18) == true );
+    assert(eq(p, totient(i18)));
+
     assert(primitive_root(outArg(g), *i) == true);
+    assert(multiplicative_order(outArg(p), g, i) == true );
+    assert(eq(p, totient(i)));
 
     std::vector<RCP<const Integer>> roots;
     primitive_root_list(roots, 162);
     assert(roots.size() == 18);
+}
+
+void test_totient_carmichael()
+{
+    RCP<const Integer> i8 = integer(8);
+    RCP<const Integer> i9 = integer(9);
+    RCP<const Integer> i30 = integer(30);
+    RCP<const Integer> i1729 = integer(1729);
+
+    assert(eq(totient(i8), integer(4)));
+    assert(eq(totient(i9), integer(6)));
+    assert(eq(totient(i30), integer(8)));
+    assert(eq(totient(i1729), integer(1296)));
+
+    assert(eq(carmichael(i8), integer(2)));
+    assert(eq(carmichael(i9), integer(6)));
+    assert(eq(carmichael(i30), integer(4)));
+    assert(eq(carmichael(i1729), integer(36)));
+}
+
+void test_multiplicative_order()
+{
+    RCP<const Integer> i0 = integer(0);
+    RCP<const Integer> i1 = integer(1);
+    RCP<const Integer> i3 = integer(3);
+    RCP<const Integer> i2 = integer(2);
+    RCP<const Integer> i6 = integer(6);
+    RCP<const Integer> i9 = integer(9);
+    RCP<const Integer> i13 = integer(13);
+    RCP<const Integer> g;
+
+    assert(multiplicative_order(outArg(g), i0, i9) == false);
+    assert(multiplicative_order(outArg(g), i2, i6) == false);
+    assert(multiplicative_order(outArg(g), i1, i13) == true);
+    assert(eq(g, i1));
+    assert(multiplicative_order(outArg(g), i13, i9) == true);
+    assert(eq(g, i3));
+    assert(multiplicative_order(outArg(g), i2, i9) == true);
+    assert(eq(g, i6));
+    assert(multiplicative_order(outArg(g), i3, i13) == true);
+    assert(eq(g, i3));
 }
 
 int main(int argc, char* argv[])
@@ -434,6 +501,8 @@ int main(int argc, char* argv[])
     test_modulo();
     test_bernoulli();
     test_crt();
+    test_totient_carmichael();
+    test_multiplicative_order();
     test_primitive_root();
 
     return 0;
