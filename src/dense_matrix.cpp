@@ -42,22 +42,40 @@ unsigned DenseMatrix::rank() const
 
 RCP<const Basic> DenseMatrix::det() const
 {
-    throw std::runtime_error("Not implemented.");
+    return det_bareis(*this);
 }
 
 MatrixBase* DenseMatrix::inv() const
 {
-    throw std::runtime_error("Not implemented.");
+    DenseMatrix A = DenseMatrix(row_, row_);
+    inverse_LU(*this, A);
+    return new DenseMatrix(A.row_, A.col_, A.m_);
 }
 
 MatrixBase* DenseMatrix::add_matrix(const MatrixBase &other) const
 {
-    throw std::runtime_error("Not implemented.");
+    DenseMatrix A;
+
+    if (is_a<DenseMatrix>(other)) {
+        const DenseMatrix &o = static_cast<const DenseMatrix &>(other);
+        A = DenseMatrix(row_, col_);
+        add_dense_dense(*this, o, A);
+    }
+
+    return new DenseMatrix(A.row_, A.col_, A.m_);
 }
 
 MatrixBase* DenseMatrix::mul_matrix(const MatrixBase &other) const
 {
-    throw std::runtime_error("Not implemented.");
+    DenseMatrix A;
+
+    if (is_a<DenseMatrix>(other)) {
+        const DenseMatrix &o = static_cast<const DenseMatrix &>(other);
+        A = DenseMatrix(row_, o.ncols());
+        mul_dense_dense(*this, o, A);
+    }
+
+    return new DenseMatrix(A.row_, A.col_, A.m_);
 }
 
 // ----------------------------- Matrix Transpose ----------------------------//
