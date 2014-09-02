@@ -35,3 +35,14 @@ def test_set():
     assert A.get(1, 0) == g
     A.set(1, 1, c)
     A.get(1, 1) == c
+
+def test_det():
+    A = densematrix(2, 2, [1, 2, 3, 4])
+    assert A.det() == -2
+
+    a = Symbol("a")
+    b = Symbol("b")
+    c = Symbol("c")
+    d = Symbol("d")
+    A = densematrix(2, 2, [a, b, c, d])
+    assert A.det() == a*d - b*c

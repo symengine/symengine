@@ -406,6 +406,9 @@ cdef class DenseMatrix(MatrixBase):
         if e_ is not None:
             deref(self.thisptr).set(i, j, <const RCP[const csympy.Basic] &>(e_.thisptr))
 
+    def det(self):
+        return c2py(deref(self.thisptr).det())
+
     def _sympy_(self):
         s = []
         cdef csympy.DenseMatrix A = deref(csympy.static_cast_DenseMatrix(self.thisptr))
