@@ -1,8 +1,31 @@
 from __future__ import print_function
-from distutils.core import setup
-from distutils.command.build import build as _build
-from distutils.command.install import install as _install
+from os import getenv
 import subprocess
+
+# use setuptools by default as per the official advice at:
+# packaging.python.org/en/latest/current.html#packaging-tool-recommendations
+use_setuptools = True
+# set the environment variable USE_DISTUTILS=True to force the use of distutils
+use_distutils = getenv('USE_DISTUTILS')
+if use_distutils is not None:
+    if use_distutils.lower() == 'true':
+        use_setuptools = False
+    else:
+        print("Value {} for USE_DISTUTILS treated as False".\
+              format(use_distutils))
+
+from distutils.command.build import build as _build
+
+if use_setuptools:
+    try:
+        from setuptools import setup
+        from setuptools.command.install import install as _install
+    except ImportError:
+        use_setuptools = False
+
+if not use_setuptools:
+    from distutils.core import setup
+    from distutils.command.install import install as _install
 
 cmake_opts = [("WITH_PYTHON","yes")]
 
