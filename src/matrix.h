@@ -32,13 +32,13 @@ public:
 
     virtual unsigned rank() const = 0;
     virtual RCP<const Basic> det() const = 0;
-    virtual RCP<const MatrixBase> inv() const = 0;
+    virtual MatrixBase* inv() const = 0;
 
     // Matrix addition
-    virtual MatrixBase& add_matrix(const MatrixBase &other) const = 0;
+    virtual MatrixBase* add_matrix(const MatrixBase &other) const = 0;
 
     // Matrix Multiplication
-    virtual MatrixBase& mul_matrix(const MatrixBase &other) const = 0;
+    virtual MatrixBase* mul_matrix(const MatrixBase &other) const = 0;
 
 protected:
     // Stores the dimension of the Matrix
@@ -63,13 +63,13 @@ public:
 
     virtual unsigned rank() const;
     virtual RCP<const Basic> det() const;
-    virtual RCP<const MatrixBase> inv() const;
+    virtual MatrixBase* inv() const;
 
     // Matrix addition
-    virtual MatrixBase& add_matrix(const MatrixBase &other) const;
+    virtual MatrixBase* add_matrix(const MatrixBase &other) const;
 
     // Matrix multiplication
-    virtual MatrixBase& mul_matrix(const MatrixBase &other) const;
+    virtual MatrixBase* mul_matrix(const MatrixBase &other) const;
 
     // Friend functions related to Matrix Operations
     friend void add_dense_dense(const DenseMatrix &A, const DenseMatrix &B,
@@ -161,13 +161,13 @@ public:
 
     virtual unsigned rank() const;
     virtual RCP<const Basic> det() const;
-    virtual RCP<const MatrixBase> inv() const;
+    virtual MatrixBase* inv() const;
 
     // Matrix addition
-    virtual MatrixBase& add_matrix(const MatrixBase &other) const;
+    virtual MatrixBase* add_matrix(const MatrixBase &other) const;
 
     // Matrix Multiplication
-    virtual MatrixBase& mul_matrix(const MatrixBase &other) const;
+    virtual MatrixBase* mul_matrix(const MatrixBase &other) const;
 
     static void csr_sum_duplicates(std::vector<unsigned>& p_,
         std::vector<unsigned>& j_,

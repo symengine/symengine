@@ -120,17 +120,17 @@ RCP<const Basic> CSRMatrix::det() const
     throw std::runtime_error("Not implemented.");
 }
 
-RCP<const MatrixBase> CSRMatrix::inv() const
+MatrixBase* CSRMatrix::inv() const
 {
     throw std::runtime_error("Not implemented.");
 }
 
-MatrixBase& CSRMatrix::add_matrix(const MatrixBase &other) const
+MatrixBase* CSRMatrix::add_matrix(const MatrixBase &other) const
 {
     throw std::runtime_error("Not implemented.");
 }
 
-MatrixBase& CSRMatrix::mul_matrix(const MatrixBase &other) const
+MatrixBase* CSRMatrix::mul_matrix(const MatrixBase &other) const
 {
     throw std::runtime_error("Not implemented.");
 }

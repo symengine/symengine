@@ -45,17 +45,17 @@ RCP<const Basic> DenseMatrix::det() const
     throw std::runtime_error("Not implemented.");
 }
 
-RCP<const MatrixBase> DenseMatrix::inv() const
+MatrixBase* DenseMatrix::inv() const
 {
     throw std::runtime_error("Not implemented.");
 }
 
-MatrixBase& DenseMatrix::add_matrix(const MatrixBase &other) const
+MatrixBase* DenseMatrix::add_matrix(const MatrixBase &other) const
 {
     throw std::runtime_error("Not implemented.");
 }
 
-MatrixBase& DenseMatrix::mul_matrix(const MatrixBase &other) const
+MatrixBase* DenseMatrix::mul_matrix(const MatrixBase &other) const
 {
     throw std::runtime_error("Not implemented.");
 }
