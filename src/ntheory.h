@@ -137,11 +137,12 @@ bool primitive_root(const Ptr<RCP<const Integer>> &g, const Integer &n);
 //! Computes all primitive roots less than n. Returns false if no primitive root exists.
 bool primitive_root_list(std::vector<RCP<const Integer>> &roots, const Integer &n);
 //! Euler's totient function
-RCP<const Integer> totient(RCP<const Integer> &n);
+RCP<const Integer> totient(const RCP<const Integer> &n);
 //! Carmichael function
-RCP<const Integer> carmichael(RCP<const Integer> &n);
+RCP<const Integer> carmichael(const RCP<const Integer> &n);
 //! Multiplicative order. Return false if order does not exist
-bool multiplicative_order(const Ptr<RCP<const Integer>> &o, RCP<const Integer> &a, RCP<const Integer> &n);
+bool multiplicative_order(const Ptr<RCP<const Integer>> &o, const RCP<const Integer> &a,
+        const RCP<const Integer> &n);
 }
 #endif
 

@@ -426,11 +426,11 @@ void test_primitive_root()
     assert(primitive_root(outArg(g), *i100) == false);
 
     assert(primitive_root(outArg(g), *i18) == true);
-    assert(multiplicative_order(outArg(p), g, i18) == true );
+    assert(multiplicative_order(outArg(p), g, i18) == true);
     assert(eq(p, totient(i18)));
 
     assert(primitive_root(outArg(g), *i) == true);
-    assert(multiplicative_order(outArg(p), g, i) == true );
+    assert(multiplicative_order(outArg(p), g, i) == true);
     assert(eq(p, totient(i)));
 
     std::vector<RCP<const Integer>> roots;

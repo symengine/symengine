@@ -609,7 +609,7 @@ RCP<const Number> bernoulli(ulong n)
 #endif
 }
 
-// References : Cohen H., A course in computational algebraic number theory, page 21
+// References : Cohen H., A course in computational algebraic number theory (1996), page 21.
 bool crt(const Ptr<RCP<const Integer>> &R, const std::vector<RCP<const Integer>> &rem,
        const std::vector<RCP<const Integer>> &mod)
 {
@@ -628,7 +628,7 @@ bool crt(const Ptr<RCP<const Integer>> &R, const std::vector<RCP<const Integer>>
         t = rem[i]->as_mpz() - r;
         if (!mpz_divisible_p (t.get_mpz_t(), g.get_mpz_t()))
             return false;
-        r += m * s * (t / g);           //r = m * (m^-1 mod[i]/g)* (rem[i] - r) / g
+        r += m * s * (t / g);           //r += m * (m^-1 mod[i]/g)* (rem[i] - r) / g
         m *= mod[i]->as_mpz() / g;
         mpz_fdiv_r (r.get_mpz_t(), r.get_mpz_t(), m.get_mpz_t());
     }
@@ -636,7 +636,7 @@ bool crt(const Ptr<RCP<const Integer>> &R, const std::vector<RCP<const Integer>>
     return true;
 }
 
-//tests whether n is a prime power and finds a prime p and e such that n = p**e
+// Tests whether n is a prime power and finds a prime p and e such that n = p**e.
 bool _prime_power(mpz_class &p, mpz_class &e, const mpz_class &n)
 {
     if (n < 2)
@@ -659,8 +659,8 @@ bool _prime_power(mpz_class &p, mpz_class &e, const mpz_class &n)
     return false;
 }
 
-// computes a primitive root modulo p**e or 2*p**e where p is an odd prime
-// References : Cohen H., A course in computational algebraic number theory, pages 25-27
+// Computes a primitive root modulo p**e or 2*p**e where p is an odd prime.
+// References : Cohen H., A course in computational algebraic number theory (2009), pages 25-27.
 void _primitive_root(mpz_class &g, const mpz_class &p, const mpz_class &e, 
         bool even = false)
 {
@@ -675,7 +675,7 @@ void _primitive_root(mpz_class &g, const mpz_class &p, const mpz_class &e,
             t = it->as_mpz();
             t = (p - 1)/t;
             mpz_powm(t.get_mpz_t(), g.get_mpz_t(), t.get_mpz_t(), p.get_mpz_t());
-            if (t == 1) {           //if g**(p-1)/q is 1 then g is not a primitive root
+            if (t == 1) {           // If g**(p-1)/q is 1 then g is not a primitive root.
                root = false;
                break;
             }
@@ -689,13 +689,13 @@ void _primitive_root(mpz_class &g, const mpz_class &p, const mpz_class &e,
         t = p * p;
         mpz_class pm1 = p - 1;
         mpz_powm(t.get_mpz_t(), g.get_mpz_t(), pm1.get_mpz_t(), t.get_mpz_t());
-        if (t == 1) {               // if g**(p-1) mod (p**2) == 1
+        if (t == 1) {               // If g**(p-1) mod (p**2) == 1 then g + p is a primitive root.
             g += p;
         }
     }
     if (even && g % 2 == 0) {
         mpz_pow_ui(t.get_mpz_t(), p.get_mpz_t(), e.get_ui());
-        g += t;                     //if g is even then root of 2*p**e is g + p**e
+        g += t;                     // If g is even then root of 2*p**e is g + p**e.
     }
 }
 
@@ -711,7 +711,7 @@ bool primitive_root(const Ptr<RCP<const Integer>> &g, const Integer &n)
     bool even = false;
     if (_n % 2 == 0) {
         if (_n % 4 == 0) {
-            return false;    // if n%4 == 0 and n > 4, then no primitive roots.
+            return false;    // If n%4 == 0 and n > 4, then no primitive roots.
         }
         _n /= 2;
         even = true;
@@ -724,18 +724,18 @@ bool primitive_root(const Ptr<RCP<const Integer>> &g, const Integer &n)
     return true;
 }
 
-// computes primitive roots modulo p**e or 2*p**e where p is an odd prime
+// Computes primitive roots modulo p**e or 2*p**e where p is an odd prime.
 // References :
-// [1] Cohen H., A course in computational algebraic number theory, pages 25-27
-// [2] References : Hackman P., Elementary number theory. page 28
+// [1] Cohen H., A course in computational algebraic number theory (1996), pages 25-27.
+// [2] Hackman P., Elementary number theory (2009), page 28.
 void _primitive_root_list(std::vector<RCP<const Integer>> &roots, const mpz_class &p,
         const mpz_class &e, bool even = false)
 {
     mpz_class g, h, d, t, pe2, n, pm1;
-    _primitive_root(g, p, 1, false); //find one primitive root for p
+    _primitive_root(g, p, 1, false); // Find one primitive root for p.
     h = 1;
     pm1 = p - 1;
-    //generate other primitive roots for p. h = g**i and gcd(i,p-1) = 1. Ref[2]
+    // Generate other primitive roots for p. h = g**i and gcd(i,p-1) = 1. Ref[2]
     mpz_pow_ui(n.get_mpz_t(), p.get_mpz_t(), e.get_ui());
     for (ulong i = 1; i < p; i++) {
         h *= g;
@@ -749,7 +749,7 @@ void _primitive_root_list(std::vector<RCP<const Integer>> &roots, const mpz_clas
                     roots.push_back(integer(h));
             } else {
                 mpz_class pp = p * p;
-                // find t such that (h + d*p)**(p-1) mod (p**2) == 1. Ref[1]
+                // Find t such that (h + d*p)**(p-1) mod (p**2) == 1. Ref[1]
                 // h**(p-1) - 1 = d*p*h**(p-2)
                 // d = (h - h**(2-p)) / p
                 t = 2 - p;
@@ -786,7 +786,7 @@ bool primitive_root_list(std::vector<RCP<const Integer>> &roots, const Integer &
     bool even = false;
     if (_n % 2 == 0) {
         if (_n % 4 == 0) {
-            return false;    // if n%4 == 0 and n > 4, then no primitive roots.
+            return false;    // If n%4 == 0 and n > 4, then no primitive roots.
         }
         _n /= 2;
         even = true;
@@ -798,7 +798,7 @@ bool primitive_root_list(std::vector<RCP<const Integer>> &roots, const Integer &
     return true;
 }
 
-RCP<const Integer> totient(RCP<const Integer> &n) {
+RCP<const Integer> totient(const RCP<const Integer> &n) {
     if (n->is_negative())
         return integer(0);
     if (n->is_zero())
@@ -811,13 +811,13 @@ RCP<const Integer> totient(RCP<const Integer> &n) {
     for (auto &it: prime_mul) {
         p = it.first->as_mpz();
         mpz_divexact(phi.get_mpz_t(), phi.get_mpz_t(), p.get_mpz_t());
-        // phi is exactly divisible by p
+        // phi is exactly divisible by p.
         phi *= p - 1;
     }
     return integer(phi);
 }
 
-RCP<const Integer> carmichael(RCP<const Integer> &n) {
+RCP<const Integer> carmichael(const RCP<const Integer> &n) {
     if (n->is_negative())
         return integer(0);
     if (n->is_zero())
@@ -832,23 +832,24 @@ RCP<const Integer> carmichael(RCP<const Integer> &n) {
     for (auto it : prime_mul) {
         p = it.first->as_mpz();
         multiplicity = it.second;
-        if (p == 2 && multiplicity > 2) {     // for powers of 2 greater than 4 divide by 2
+        if (p == 2 && multiplicity > 2) {     // For powers of 2 greater than 4 divide by 2.
             multiplicity--;
         }
         t = p - 1;
         mpz_lcm(lambda.get_mpz_t(), lambda.get_mpz_t(), t.get_mpz_t());
         mpz_pow_ui(t.get_mpz_t(), p.get_mpz_t(), multiplicity - 1);
-        //lambda and p are relatively prime.
+        // lambda and p are relatively prime.
         lambda = lambda * t;
     }
     return integer(lambda);
 }
 
-// References : Cohen H., A course in computational algebraic number theory, page 25
-bool multiplicative_order(const Ptr<RCP<const Integer>> &o, RCP<const Integer> &a, RCP<const Integer> &n)
+// References : Cohen H., A course in computational algebraic number theory (1996), page 25.
+bool multiplicative_order(const Ptr<RCP<const Integer>> &o, const RCP<const Integer> &a,
+        const RCP<const Integer> &n)
 {
-    mpz_class order, p,t;
-    mpz_class _a = a->as_mpz(), _n=n->as_mpz();
+    mpz_class order, p, t;
+    mpz_class _a = a->as_mpz(), _n = n->as_mpz();
     mpz_gcd(t.get_mpz_t(), _a.get_mpz_t(), _n.get_mpz_t());
     if (t != 1)
         return false;
