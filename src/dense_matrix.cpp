@@ -45,37 +45,34 @@ RCP<const Basic> DenseMatrix::det() const
     return det_bareis(*this);
 }
 
-MatrixBase* DenseMatrix::inv() const
+void DenseMatrix::inv(MatrixBase &result) const
 {
-    DenseMatrix A = DenseMatrix(row_, row_);
-    inverse_LU(*this, A);
-    return new DenseMatrix(A.row_, A.col_, A.m_);
+    if (is_a<DenseMatrix>(result)) {
+        DenseMatrix &r = static_cast<DenseMatrix &>(result);
+        inverse_LU(*this, r);
+    }
 }
 
-MatrixBase* DenseMatrix::add_matrix(const MatrixBase &other) const
+void DenseMatrix::add_matrix(const MatrixBase &other, MatrixBase &result) const
 {
-    DenseMatrix A;
+    CSYMPY_ASSERT(row_ == result.nrows() && col_ == result.ncols());
 
-    if (is_a<DenseMatrix>(other)) {
+    if (is_a<DenseMatrix>(other) && is_a<DenseMatrix>(result)) {
         const DenseMatrix &o = static_cast<const DenseMatrix &>(other);
-        A = DenseMatrix(row_, col_);
-        add_dense_dense(*this, o, A);
+        DenseMatrix &r = static_cast<DenseMatrix &>(result);
+        add_dense_dense(*this, o, r);
     }
-
-    return new DenseMatrix(A.row_, A.col_, A.m_);
 }
 
-MatrixBase* DenseMatrix::mul_matrix(const MatrixBase &other) const
+void DenseMatrix::mul_matrix(const MatrixBase &other, MatrixBase &result) const
 {
-    DenseMatrix A;
+    CSYMPY_ASSERT(row_ == result.nrows() && other.ncols() == result.nrows());
 
-    if (is_a<DenseMatrix>(other)) {
+    if (is_a<DenseMatrix>(other) && is_a<DenseMatrix>(result)) {
         const DenseMatrix &o = static_cast<const DenseMatrix &>(other);
-        A = DenseMatrix(row_, o.ncols());
-        mul_dense_dense(*this, o, A);
+        DenseMatrix &r = static_cast<DenseMatrix &>(result);
+        mul_dense_dense(*this, o, r);
     }
-
-    return new DenseMatrix(A.row_, A.col_, A.m_);
 }
 
 // ----------------------------- Matrix Transpose ----------------------------//
