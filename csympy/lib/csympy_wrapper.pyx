@@ -40,12 +40,19 @@ cdef c2py(RCP[const csympy.Basic] o):
 cdef matrix_c2py(csympy.MatrixBase &o):
     cdef MatrixBase A
     if (csympy.is_a_DenseMatrix(o)):
-        A = DenseMatrix.__new__(DenseMatrix)
+        A = DenseMatrix.__new__(DenseMatrix, 1, 1, [1])
         A.thisptr = &o
     else:
         raise Exception("Unsupported Matrix type.")
 
     return A
+
+cdef _matrix_c2py(csympy.MatrixBase &o):
+    v = []
+    for i in range(o.nrows()):
+        for j in range(o.ncols()):
+            v.append(c2py(o.get(i, j)))
+    return DenseMatrix(o.nrows(), o.ncols(), v)
 
 def sympy2csympy(a, raise_error=False):
     """
@@ -397,6 +404,12 @@ cdef class DenseMatrix(MatrixBase):
     def __dealloc__(self):
         del self.thisptr
 
+    def nrows(self):
+        return deref(self.thisptr).nrows()
+
+    def ncols(self):
+        return deref(self.thisptr).ncols()
+
     def get(self, i, j):
         # No error checking is done
         return c2py(deref(self.thisptr).get(i, j))
@@ -408,6 +421,23 @@ cdef class DenseMatrix(MatrixBase):
 
     def det(self):
         return c2py(deref(self.thisptr).det())
+
+    def inv(self):
+        cdef csympy.DenseMatrix A = csympy.DenseMatrix(self.nrows(), self.ncols())
+        deref(self.thisptr).inv(A)
+        return _matrix_c2py(A)
+
+    def add_matrix(self, A):
+        cdef MatrixBase A_ = sympify(A)
+        cdef csympy.DenseMatrix result = csympy.DenseMatrix(self.nrows(), self.ncols())
+        deref(self.thisptr).add_matrix(deref(A_.thisptr), result)
+        return _matrix_c2py(result)
+
+    def mul_matrix(self, A):
+        cdef MatrixBase A_ = sympify(A)
+        cdef csympy.DenseMatrix result = csympy.DenseMatrix(self.nrows(), self.ncols())
+        deref(self.thisptr).mul_matrix(deref(A_.thisptr), result)
+        return _matrix_c2py(result)
 
     def _sympy_(self):
         s = []

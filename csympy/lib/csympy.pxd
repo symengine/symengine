@@ -150,6 +150,9 @@ cdef extern from "matrix.h" namespace "CSymPy":
         string __str__() nogil except+
         bool eq(const MatrixBase &) nogil
         RCP[const Basic] det() nogil
+        void inv(MatrixBase &)
+        void add_matrix(const MatrixBase &other, MatrixBase &result) const
+        void mul_matrix(const MatrixBase &other, MatrixBase &result) const
 
     cdef cppclass DenseMatrix(MatrixBase):
         DenseMatrix()
