@@ -66,7 +66,7 @@ void DenseMatrix::add_matrix(const MatrixBase &other, MatrixBase &result) const
 
 void DenseMatrix::mul_matrix(const MatrixBase &other, MatrixBase &result) const
 {
-    CSYMPY_ASSERT(row_ == result.nrows() && other.ncols() == result.nrows());
+    CSYMPY_ASSERT(row_ == result.nrows() && other.ncols() == result.ncols());
 
     if (is_a<DenseMatrix>(other) && is_a<DenseMatrix>(result)) {
         const DenseMatrix &o = static_cast<const DenseMatrix &>(other);

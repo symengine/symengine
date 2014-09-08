@@ -47,13 +47,6 @@ cdef matrix_c2py(csympy.MatrixBase &o):
 
     return A
 
-cdef _matrix_c2py(csympy.MatrixBase &o):
-    v = []
-    for i in range(o.nrows()):
-        for j in range(o.ncols()):
-            v.append(c2py(o.get(i, j)))
-    return DenseMatrix(o.nrows(), o.ncols(), v)
-
 def sympy2csympy(a, raise_error=False):
     """
     Converts 'a' from SymPy to CSymPy.
@@ -423,21 +416,21 @@ cdef class DenseMatrix(MatrixBase):
         return c2py(deref(self.thisptr).det())
 
     def inv(self):
-        cdef csympy.DenseMatrix A = csympy.DenseMatrix(self.nrows(), self.ncols())
-        deref(self.thisptr).inv(A)
-        return _matrix_c2py(A)
+        result = DenseMatrix(self.nrows(), self.ncols(), [0]*self.nrows()*self.ncols())
+        deref(self.thisptr).inv(deref(result.thisptr))
+        return result
 
     def add_matrix(self, A):
         cdef MatrixBase A_ = sympify(A)
-        cdef csympy.DenseMatrix result = csympy.DenseMatrix(self.nrows(), self.ncols())
-        deref(self.thisptr).add_matrix(deref(A_.thisptr), result)
-        return _matrix_c2py(result)
+        result = DenseMatrix(self.nrows(), self.ncols(), [0]*self.nrows()*self.ncols())
+        deref(self.thisptr).add_matrix(deref(A_.thisptr), deref(result.thisptr))
+        return result
 
     def mul_matrix(self, A):
         cdef MatrixBase A_ = sympify(A)
-        cdef csympy.DenseMatrix result = csympy.DenseMatrix(self.nrows(), self.ncols())
-        deref(self.thisptr).mul_matrix(deref(A_.thisptr), result)
-        return _matrix_c2py(result)
+        result = DenseMatrix(self.nrows(), self.ncols(), [0]*self.nrows()*self.ncols())
+        deref(self.thisptr).mul_matrix(deref(A_.thisptr), deref(result.thisptr))
+        return result
 
     def _sympy_(self):
         s = []
