@@ -46,3 +46,40 @@ def test_det():
     d = Symbol("d")
     A = densematrix(2, 2, [a, b, c, d])
     assert A.det() == a*d - b*c
+
+def test_inv():
+    A = densematrix(2, 2, [1, 0, 0, 1])
+    assert A.inv() == A
+
+    A = densematrix(2, 2, [1, 2, 2, 3])
+    assert A.inv() == densematrix(2, 2, [-3, 2, 2, -1])
+
+def test_add_matrix():
+    A = densematrix(2, 2, [1, 2, 3, 4])
+    B = densematrix(2, 2, [1, 0, 0, 1])
+
+    assert A.add_matrix(B) == densematrix(2, 2, [2, 2, 3, 5])
+
+    a = Symbol("a")
+    b = Symbol("b")
+    c = Symbol("c")
+    d = Symbol("d")
+    A = densematrix(2, 2, [a + b, a - b, a, b])
+    B = densematrix(2, 2, [a - b, a + b, -a, b])
+
+    assert A.add_matrix(B) == densematrix(2, 2, [2*a, 2*a, 0, 2*b])
+
+def test_mul_matrix():
+    A = densematrix(2, 2, [1, 2, 3, 4])
+    B = densematrix(2, 2, [1, 0, 0, 1])
+
+    assert A.mul_matrix(B) == A
+
+    a = Symbol("a")
+    b = Symbol("b")
+    c = Symbol("c")
+    d = Symbol("d")
+    A = densematrix(2, 2, [a, b, c, d])
+    B = densematrix(2, 2, [1, 0, 1, 0])
+
+    assert A.mul_matrix(B) == densematrix(2, 2, [a + b, 0, c + d, 0])
