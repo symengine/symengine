@@ -83,3 +83,38 @@ def test_mul_matrix():
     B = densematrix(2, 2, [1, 0, 1, 0])
 
     assert A.mul_matrix(B) == densematrix(2, 2, [a + b, 0, c + d, 0])
+
+def test_add_scalar():
+    A = densematrix(2, 2, [1, 2, 3, 4])
+
+    a = Symbol("a")
+    assert A.add_scalar(a) == densematrix(2, 2, [1 + a, 2 + a, 3 + a, 4 + a])
+
+    i5 = Integer(5)
+    assert A.add_scalar(i5) == densematrix(2, 2, [6, 7, 8, 9])
+
+def test_mul_scalar():
+    A = densematrix(2, 2, [1, 2, 3, 4])
+
+    a = Symbol("a")
+    assert A.mul_scalar(a) == densematrix(2, 2, [a, 2*a, 3*a, 4*a])
+
+    i5 = Integer(5)
+    assert A.mul_scalar(i5) == densematrix(2, 2, [5, 10, 15, 20])
+
+def test_transpose():
+    A = densematrix(3, 3, [1, 2, 3, 4, 5, 6, 7, 8, 9])
+
+    assert A.transpose() == densematrix(3, 3, [1, 4, 7, 2, 5, 8, 3, 6, 9])
+
+    A = densematrix(2, 2, [1, 2, 2, 1])
+
+    assert A.transpose() == A
+
+def test_submatrix():
+    A = densematrix(3, 3, [1, 2, 3, 4, 5, 6, 7, 8, 9])
+
+    assert A.submatrix(0, 0, 0, 2) == densematrix(1, 3, [1, 2, 3])
+    assert A.submatrix(2, 2, 0, 2) == densematrix(1, 3, [7, 8, 9])
+    assert A.submatrix(0, 1, 1, 2) == densematrix(2, 2, [2, 3, 5, 6])
+    assert A.submatrix(1, 2, 0, 2) == densematrix(2, 3, [4, 5, 6, 7, 8, 9])
