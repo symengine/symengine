@@ -121,7 +121,7 @@ void add_dense_dense(const DenseMatrix &A, const DenseMatrix &B, DenseMatrix &C)
     }
 }
 
-void add_dense_scalar(const DenseMatrix &A, RCP<const Basic> &k, DenseMatrix &B)
+void add_dense_scalar(const DenseMatrix &A, const RCP<const Basic> &k, DenseMatrix &B)
 {
     CSYMPY_ASSERT(A.row_ == B.row_ && A.col_ == B.col_);
 
@@ -153,7 +153,7 @@ void mul_dense_dense(const DenseMatrix &A, const DenseMatrix &B,
     }
 }
 
-void mul_dense_scalar(const DenseMatrix &A, RCP<const Basic> &k, DenseMatrix& B)
+void mul_dense_scalar(const DenseMatrix &A, const RCP<const Basic> &k, DenseMatrix& B)
 {
     CSYMPY_ASSERT(A.col_ == B.col_ && A.row_ == B.row_);
 

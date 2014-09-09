@@ -74,11 +74,11 @@ public:
     // Friend functions related to Matrix Operations
     friend void add_dense_dense(const DenseMatrix &A, const DenseMatrix &B,
         DenseMatrix &C);
-    friend void add_dense_scalar(const DenseMatrix &A, RCP<const Basic> &k,
+    friend void add_dense_scalar(const DenseMatrix &A, const RCP<const Basic> &k,
         DenseMatrix &B );
     friend void mul_dense_dense(const DenseMatrix &A, const DenseMatrix &B,
         DenseMatrix &C);
-    friend void mul_dense_scalar(const DenseMatrix &A, RCP<const Basic> &k,
+    friend void mul_dense_scalar(const DenseMatrix &A, const RCP<const Basic> &k,
         DenseMatrix &C);
     friend void transpose_dense(const DenseMatrix &A, DenseMatrix &B);
     friend void submatrix_dense(const DenseMatrix &A, unsigned row_start,
