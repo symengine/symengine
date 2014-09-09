@@ -131,7 +131,9 @@ void transpose_dense(const DenseMatrix &A, DenseMatrix &B)
 void submatrix_dense(const DenseMatrix &A, unsigned row_start, unsigned row_end,
         unsigned col_start, unsigned col_end, DenseMatrix &B)
 {
-    CSYMPY_ASSERT(row_end > row_start && col_end > col_start);
+    CSYMPY_ASSERT(row_end >= row_start && col_end >= col_start);
+    CSYMPY_ASSERT(row_start >= 0 && row_end < A.row_);
+    CSYMPY_ASSERT(col_start >= 0 && col_end < A.col_);
     CSYMPY_ASSERT(B.row_ == row_end - row_start + 1 &&
             B.col_ == col_end - col_start + 1);
 
@@ -140,7 +142,7 @@ void submatrix_dense(const DenseMatrix &A, unsigned row_start, unsigned row_end,
     for (unsigned i = 0; i < row; i++)
         for (unsigned j = 0; j < col; j++)
             B.m_[i*col + j] =
-                A.m_[(row_start + i - 1)*A.col_ + col_start - 1 + j];
+                A.m_[(row_start + i)*A.col_ + col_start + j];
 }
 
 // ------------------------------- Matrix Addition ---------------------------//

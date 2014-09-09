@@ -216,7 +216,7 @@ void test_submatrix_dense()
     DenseMatrix A = DenseMatrix(3, 3, {symbol("a"), symbol("b"), symbol("c"),
         symbol("p"), symbol("q"), symbol("r"), symbol("u"), symbol("v"), symbol("w")});
     DenseMatrix B = DenseMatrix(3, 2);
-    submatrix_dense(A, 1, 3, 2, 3, B);
+    submatrix_dense(A, 0, 2, 1, 2, B);
 
     assert(B == DenseMatrix(3, 2, {symbol("b"), symbol("c"), symbol("q"),
         symbol("r"), symbol("v"), symbol("w")}));
@@ -226,7 +226,7 @@ void test_submatrix_dense()
         integer(10), integer(11), integer(12), integer(13), integer(14),
         integer(15), integer(16)});
     B = DenseMatrix(3, 3);
-    submatrix_dense(A, 2, 4, 2, 4, B);
+    submatrix_dense(A, 1, 3, 1, 3, B);
 
     assert(B == DenseMatrix(3, 3, {integer(6), integer(7), integer(8), integer(10),
         integer(11), integer(12), integer(14), integer(15), integer(16)}));
