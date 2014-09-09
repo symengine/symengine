@@ -432,6 +432,28 @@ cdef class DenseMatrix(MatrixBase):
         deref(self.thisptr).mul_matrix(deref(A_.thisptr), deref(result.thisptr))
         return result
 
+    def add_scalar(self, k):
+        cdef Basic k_ = sympify(k)
+        result = DenseMatrix(self.nrows(), self.ncols(), [0]*self.nrows()*self.ncols())
+        deref(self.thisptr).add_scalar(<const RCP[const csympy.Basic] &>(k_.thisptr), deref(result.thisptr))
+        return result
+
+    def mul_scalar(self, k):
+        cdef Basic k_ = sympify(k)
+        result = DenseMatrix(self.nrows(), self.ncols(), [0]*self.nrows()*self.ncols())
+        deref(self.thisptr).mul_scalar(<const RCP[const csympy.Basic] &>(k_.thisptr), deref(result.thisptr))
+        return result
+
+    def transpose(self):
+        result = DenseMatrix(self.ncols(), self.nrows(), [0]*self.nrows()*self.ncols())
+        deref(self.thisptr).transpose(deref(result.thisptr))
+        return result
+
+    def submatrix(self, r_i, r_j, c_i, c_j):
+        result = DenseMatrix(r_j - r_i + 1, c_j - c_i + 1, [0]*(r_j - r_i + 1)*(c_j - c_i + 1))
+        deref(self.thisptr).submatrix(r_i, r_j, c_i, c_j, deref(result.thisptr))
+        return result
+
     def _sympy_(self):
         s = []
         cdef csympy.DenseMatrix A = deref(csympy.static_cast_DenseMatrix(self.thisptr))

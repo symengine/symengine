@@ -151,8 +151,16 @@ cdef extern from "matrix.h" namespace "CSymPy":
         bool eq(const MatrixBase &) nogil
         RCP[const Basic] det() nogil
         void inv(MatrixBase &)
-        void add_matrix(const MatrixBase &other, MatrixBase &result) const
-        void mul_matrix(const MatrixBase &other, MatrixBase &result) const
+        void add_matrix(const MatrixBase &other, MatrixBase &result) nogil
+        void mul_matrix(const MatrixBase &other, MatrixBase &result) nogil
+        void add_scalar(const RCP[const Basic] &k, MatrixBase &result) nogil
+        void mul_scalar(const RCP[const Basic] &k, MatrixBase &result) nogil
+        void transpose(MatrixBase &result) nogil
+        void submatrix(unsigned row_start,
+                        unsigned row_end,
+                        unsigned col_start,
+                        unsigned col_end,
+                        MatrixBase &result) nogil
 
     cdef cppclass DenseMatrix(MatrixBase):
         DenseMatrix()
