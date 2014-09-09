@@ -75,6 +75,46 @@ void DenseMatrix::mul_matrix(const MatrixBase &other, MatrixBase &result) const
     }
 }
 
+// Add a scalar
+void DenseMatrix::add_scalar(const RCP<const Basic> &k, MatrixBase &result) const
+{
+    if (is_a<DenseMatrix>(result)) {
+        DenseMatrix &r = static_cast<DenseMatrix &>(result);
+        add_dense_scalar(*this, k, r);
+    }
+}
+
+// Multiply by a scalar
+void DenseMatrix::mul_scalar(const RCP<const Basic> &k, MatrixBase &result) const
+{
+    if (is_a<DenseMatrix>(result)) {
+        DenseMatrix &r = static_cast<DenseMatrix &>(result);
+        mul_dense_scalar(*this, k, r);
+    }
+}
+
+// Matrix transpose
+void DenseMatrix::transpose(MatrixBase &result) const
+{
+    if (is_a<DenseMatrix>(result)) {
+        DenseMatrix &r = static_cast<DenseMatrix &>(result);
+        transpose_dense(*this, r);
+    }
+}
+
+// Extract out a submatrix
+void DenseMatrix::submatrix( unsigned row_start,
+                        unsigned row_end,
+                        unsigned col_start,
+                        unsigned col_end,
+                        MatrixBase &result) const
+{
+    if (is_a<DenseMatrix>(result)) {
+        DenseMatrix &r = static_cast<DenseMatrix &>(result);
+        submatrix_dense(*this, row_start, row_end, col_start, col_end, r);
+    }
+}
+
 // ----------------------------- Matrix Transpose ----------------------------//
 void transpose_dense(const DenseMatrix &A, DenseMatrix &B)
 {

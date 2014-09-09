@@ -40,6 +40,22 @@ public:
     // Matrix Multiplication
     virtual void mul_matrix(const MatrixBase &other, MatrixBase &result) const = 0;
 
+    // Add a scalar
+    virtual void add_scalar(const RCP<const Basic> &k, MatrixBase &result) const = 0;
+
+    // Multiply by a scalar
+    virtual void mul_scalar(const RCP<const Basic> &k, MatrixBase &result) const = 0;
+
+    // Matrix transpose
+    virtual void transpose(MatrixBase &result) const = 0;
+
+    // Extract out a submatrix
+    virtual void submatrix( unsigned row_start,
+                            unsigned row_end,
+                            unsigned col_start,
+                            unsigned col_end,
+                            MatrixBase &result) const = 0;
+
 protected:
     // Stores the dimension of the Matrix
     unsigned row_;
@@ -70,6 +86,22 @@ public:
 
     // Matrix multiplication
     virtual void mul_matrix(const MatrixBase &other, MatrixBase &result) const;
+
+    // Add a scalar
+    virtual void add_scalar(const RCP<const Basic> &k, MatrixBase &result) const;
+
+    // Multiply by a scalar
+    virtual void mul_scalar(const RCP<const Basic> &k, MatrixBase &result) const;
+
+    // Matrix transpose
+    virtual void transpose(MatrixBase &result) const;
+
+    // Extract out a submatrix
+    virtual void submatrix( unsigned row_start,
+                            unsigned row_end,
+                            unsigned col_start,
+                            unsigned col_end,
+                            MatrixBase &result) const;
 
     // Friend functions related to Matrix Operations
     friend void add_dense_dense(const DenseMatrix &A, const DenseMatrix &B,
@@ -168,6 +200,22 @@ public:
 
     // Matrix Multiplication
     virtual void mul_matrix(const MatrixBase &other, MatrixBase &result) const;
+
+    // Add a scalar
+    virtual void add_scalar(const RCP<const Basic> &k, MatrixBase &result) const;
+
+    // Multiply by a scalar
+    virtual void mul_scalar(const RCP<const Basic> &k, MatrixBase &result) const;
+
+    // Matrix transpose
+    virtual void transpose(MatrixBase &result) const;
+
+    // Extract out a submatrix
+    virtual void submatrix( unsigned row_start,
+                            unsigned row_end,
+                            unsigned col_start,
+                            unsigned col_end,
+                            MatrixBase &result) const;
 
     static void csr_sum_duplicates(std::vector<unsigned>& p_,
         std::vector<unsigned>& j_,

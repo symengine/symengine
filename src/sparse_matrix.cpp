@@ -135,6 +135,34 @@ void CSRMatrix::mul_matrix(const MatrixBase &other, MatrixBase &result) const
     throw std::runtime_error("Not implemented.");
 }
 
+// Add a scalar
+void CSRMatrix::add_scalar(const RCP<const Basic> &k, MatrixBase &result) const
+{
+    throw std::runtime_error("Not implemented.");
+}
+
+// Multiply by a scalar
+void CSRMatrix::mul_scalar(const RCP<const Basic> &k, MatrixBase &result) const
+{
+    throw std::runtime_error("Not implemented.");
+}
+
+// Matrix transpose
+void CSRMatrix::transpose(MatrixBase &result) const
+{
+    throw std::runtime_error("Not implemented.");
+}
+
+// Extract out a submatrix
+void CSRMatrix::submatrix( unsigned row_start,
+                        unsigned row_end,
+                        unsigned col_start,
+                        unsigned col_end,
+                        MatrixBase &result) const
+{
+    throw std::runtime_error("Not implemented.");
+}
+
 void CSRMatrix::csr_sum_duplicates(std::vector<unsigned>& p_,
 	std::vector<unsigned>& j_,
     vec_basic& x_,
