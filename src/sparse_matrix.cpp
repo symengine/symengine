@@ -163,6 +163,24 @@ void CSRMatrix::submatrix( unsigned row_start,
     throw std::runtime_error("Not implemented.");
 }
 
+// LU factorization
+void CSRMatrix::LU(MatrixBase &L, MatrixBase &U) const
+{
+    throw std::runtime_error("Not implemented.");
+}
+
+// LDL factorization
+void CSRMatrix::LDL(MatrixBase &L, MatrixBase &D) const
+{
+    throw std::runtime_error("Not implemented.");
+}
+
+// Solve Ax = b using diagonal solve
+void CSRMatrix::LU_solve(const MatrixBase &b, MatrixBase &x) const
+{
+    throw std::runtime_error("Not implemented.");
+}
+
 void CSRMatrix::csr_sum_duplicates(std::vector<unsigned>& p_,
 	std::vector<unsigned>& j_,
     vec_basic& x_,

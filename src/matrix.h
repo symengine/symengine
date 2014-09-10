@@ -55,6 +55,14 @@ public:
                             unsigned col_start,
                             unsigned col_end,
                             MatrixBase &result) const = 0;
+    // LU factorization
+    virtual void LU(MatrixBase &L, MatrixBase &U) const = 0;
+
+    // LDL factorization
+    virtual void LDL(MatrixBase &L, MatrixBase &D) const = 0;
+
+    // Solve Ax = b using diagonal solve
+    virtual void LU_solve(const MatrixBase &b, MatrixBase &x) const = 0;
 
 protected:
     // Stores the dimension of the Matrix
@@ -102,6 +110,15 @@ public:
                             unsigned col_start,
                             unsigned col_end,
                             MatrixBase &result) const;
+
+    // LU factorization
+    virtual void LU(MatrixBase &L, MatrixBase &U) const;
+
+    // LDL factorization
+    virtual void LDL(MatrixBase &L, MatrixBase &D) const;
+
+    // Solve Ax = b using diagonal solve
+    virtual void LU_solve(const MatrixBase &b, MatrixBase &x) const;
 
     // Friend functions related to Matrix Operations
     friend void add_dense_dense(const DenseMatrix &A, const DenseMatrix &B,
@@ -217,6 +234,15 @@ public:
                             unsigned col_end,
                             MatrixBase &result) const;
 
+    // LU factorization
+    virtual void LU(MatrixBase &L, MatrixBase &U) const;
+
+    // LDL factorization
+    virtual void LDL(MatrixBase &L, MatrixBase &D) const;
+
+    // Solve Ax = b using diagonal solve
+    virtual void LU_solve(const MatrixBase &b, MatrixBase &x) const;
+
     static void csr_sum_duplicates(std::vector<unsigned>& p_,
         std::vector<unsigned>& j_,
         vec_basic& x_,
@@ -260,6 +286,11 @@ protected:
     std::vector<unsigned> j_;
     vec_basic x_;
 };
+
+// Matrix Factorization
+void LU(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &U);
+
+void LDL(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &D);
 
 // Solving Ax = b
 void fraction_free_LU_solve(const DenseMatrix &A, const DenseMatrix &b,

@@ -115,6 +115,36 @@ void DenseMatrix::submatrix( unsigned row_start,
     }
 }
 
+// LU factorization
+void DenseMatrix::LU(MatrixBase &L, MatrixBase &U) const
+{
+    if (is_a<DenseMatrix>(L) && is_a<DenseMatrix>(U)) {
+        DenseMatrix &L_ = static_cast<DenseMatrix &>(L);
+        DenseMatrix &U_ = static_cast<DenseMatrix &>(U);
+        CSymPy::LU(*this, L_, U_);
+    }
+}
+
+// LDL factorization
+void DenseMatrix::LDL(MatrixBase &L, MatrixBase &D) const
+{
+    if (is_a<DenseMatrix>(L) && is_a<DenseMatrix>(D)) {
+        DenseMatrix &L_ = static_cast<DenseMatrix &>(L);
+        DenseMatrix &D_ = static_cast<DenseMatrix &>(D);
+        CSymPy::LDL(*this, L_, D_);
+    }
+}
+
+// Solve Ax = b using diagonal solve
+void DenseMatrix::LU_solve(const MatrixBase &b, MatrixBase &x) const
+{
+    if (is_a<DenseMatrix>(b) && is_a<DenseMatrix>(x)) {
+        const DenseMatrix &b_ = static_cast<const DenseMatrix &>(b);
+        DenseMatrix &x_ = static_cast<DenseMatrix &>(x);
+        CSymPy::LU_solve(*this, b_, x_);
+    }
+}
+
 // ----------------------------- Matrix Transpose ----------------------------//
 void transpose_dense(const DenseMatrix &A, DenseMatrix &B)
 {
