@@ -37,16 +37,6 @@ cdef c2py(RCP[const csympy.Basic] o):
     r.thisptr = o
     return r
 
-cdef matrix_c2py(csympy.MatrixBase &o):
-    cdef MatrixBase A
-    if (csympy.is_a_DenseMatrix(o)):
-        A = DenseMatrix.__new__(DenseMatrix, 1, 1, [1])
-        A.thisptr = &o
-    else:
-        raise Exception("Unsupported Matrix type.")
-
-    return A
-
 def sympy2csympy(a, raise_error=False):
     """
     Converts 'a' from SymPy to CSymPy.
