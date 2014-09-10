@@ -161,6 +161,9 @@ cdef extern from "matrix.h" namespace "CSymPy":
                         unsigned col_start,
                         unsigned col_end,
                         MatrixBase &result) nogil
+        void LU(MatrixBase &L, MatrixBase &U) nogil
+        void LDL(MatrixBase &L, MatrixBase &D) nogil
+        void LU_solve(const MatrixBase &b, MatrixBase &x) nogil
 
     cdef cppclass DenseMatrix(MatrixBase):
         DenseMatrix()

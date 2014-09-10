@@ -454,6 +454,24 @@ cdef class DenseMatrix(MatrixBase):
         deref(self.thisptr).submatrix(r_i, r_j, c_i, c_j, deref(result.thisptr))
         return result
 
+    def LU(self):
+        L = DenseMatrix(self.nrows(), self.ncols(), [0]*self.nrows()*self.ncols())
+        U = DenseMatrix(self.nrows(), self.ncols(), [0]*self.nrows()*self.ncols())
+        deref(self.thisptr).LU(deref(L.thisptr), deref(U.thisptr))
+        return L, U
+
+    def LDL(self):
+        L = DenseMatrix(self.nrows(), self.ncols(), [0]*self.nrows()*self.ncols())
+        D = DenseMatrix(self.nrows(), self.ncols(), [0]*self.nrows()*self.ncols())
+        deref(self.thisptr).LDL(deref(L.thisptr), deref(D.thisptr))
+        return L, D
+
+    def LU_solve(self, b):
+        cdef DenseMatrix b_ = sympify(b)
+        x = DenseMatrix(b_.nrows(), b_.ncols(), [0]*b_.nrows()*b_.ncols())
+        deref(self.thisptr).LU_solve(deref(b_.thisptr), deref(x.thisptr))
+        return x
+
     def _sympy_(self):
         s = []
         cdef csympy.DenseMatrix A = deref(csympy.static_cast_DenseMatrix(self.thisptr))
