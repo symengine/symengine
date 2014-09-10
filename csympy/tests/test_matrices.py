@@ -118,3 +118,26 @@ def test_submatrix():
     assert A.submatrix(2, 2, 0, 2) == densematrix(1, 3, [7, 8, 9])
     assert A.submatrix(0, 1, 1, 2) == densematrix(2, 2, [2, 3, 5, 6])
     assert A.submatrix(1, 2, 0, 2) == densematrix(2, 3, [4, 5, 6, 7, 8, 9])
+
+def test_LU():
+    A = densematrix(3, 3, [1, 3, 5, 2, 5, 6, 8, 3, 1]);
+    L, U = A.LU()
+
+    assert L == densematrix(3, 3, [1, 0, 0, 2, 1, 0, 8, 21, 1]);
+    assert U == densematrix(3, 3, [1, 3, 5, 0, -1, -4, 0, 0, 45]);
+
+def test_LDL():
+    A = densematrix(3, 3, [4, 12, -16, 12, 37, -43, -16, -43, 98])
+
+    L, D = A.LDL();
+
+    assert L == densematrix(3, 3, [1, 0, 0, 3, 1, 0, -4, 5, 1])
+    assert D == densematrix(3, 3, [4, 0, 0, 0, 1, 0, 0, 0, 9])
+
+def test_LU_solve():
+    A = densematrix(4, 4, [1, 2, 3, 4, 2, 2, 3, 4, 3, 3, 3, 4, 9, 8, 7, 6])
+    b = densematrix(4, 1, [10, 11, 13, 30])
+
+    x = A.LU_solve(b)
+
+    assert x == densematrix(4, 1, [1, 1, 1, 1]);
