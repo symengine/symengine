@@ -42,22 +42,107 @@ unsigned DenseMatrix::rank() const
 
 RCP<const Basic> DenseMatrix::det() const
 {
-    throw std::runtime_error("Not implemented.");
+    return det_bareis(*this);
 }
 
-RCP<const MatrixBase> DenseMatrix::inv() const
+void DenseMatrix::inv(MatrixBase &result) const
 {
-    throw std::runtime_error("Not implemented.");
+    if (is_a<DenseMatrix>(result)) {
+        DenseMatrix &r = static_cast<DenseMatrix &>(result);
+        inverse_LU(*this, r);
+    }
 }
 
-MatrixBase& DenseMatrix::add_matrix(const MatrixBase &other) const
+void DenseMatrix::add_matrix(const MatrixBase &other, MatrixBase &result) const
 {
-    throw std::runtime_error("Not implemented.");
+    CSYMPY_ASSERT(row_ == result.nrows() && col_ == result.ncols());
+
+    if (is_a<DenseMatrix>(other) && is_a<DenseMatrix>(result)) {
+        const DenseMatrix &o = static_cast<const DenseMatrix &>(other);
+        DenseMatrix &r = static_cast<DenseMatrix &>(result);
+        add_dense_dense(*this, o, r);
+    }
 }
 
-MatrixBase& DenseMatrix::mul_matrix(const MatrixBase &other) const
+void DenseMatrix::mul_matrix(const MatrixBase &other, MatrixBase &result) const
 {
-    throw std::runtime_error("Not implemented.");
+    CSYMPY_ASSERT(row_ == result.nrows() && other.ncols() == result.ncols());
+
+    if (is_a<DenseMatrix>(other) && is_a<DenseMatrix>(result)) {
+        const DenseMatrix &o = static_cast<const DenseMatrix &>(other);
+        DenseMatrix &r = static_cast<DenseMatrix &>(result);
+        mul_dense_dense(*this, o, r);
+    }
+}
+
+// Add a scalar
+void DenseMatrix::add_scalar(const RCP<const Basic> &k, MatrixBase &result) const
+{
+    if (is_a<DenseMatrix>(result)) {
+        DenseMatrix &r = static_cast<DenseMatrix &>(result);
+        add_dense_scalar(*this, k, r);
+    }
+}
+
+// Multiply by a scalar
+void DenseMatrix::mul_scalar(const RCP<const Basic> &k, MatrixBase &result) const
+{
+    if (is_a<DenseMatrix>(result)) {
+        DenseMatrix &r = static_cast<DenseMatrix &>(result);
+        mul_dense_scalar(*this, k, r);
+    }
+}
+
+// Matrix transpose
+void DenseMatrix::transpose(MatrixBase &result) const
+{
+    if (is_a<DenseMatrix>(result)) {
+        DenseMatrix &r = static_cast<DenseMatrix &>(result);
+        transpose_dense(*this, r);
+    }
+}
+
+// Extract out a submatrix
+void DenseMatrix::submatrix( unsigned row_start,
+                        unsigned row_end,
+                        unsigned col_start,
+                        unsigned col_end,
+                        MatrixBase &result) const
+{
+    if (is_a<DenseMatrix>(result)) {
+        DenseMatrix &r = static_cast<DenseMatrix &>(result);
+        submatrix_dense(*this, row_start, row_end, col_start, col_end, r);
+    }
+}
+
+// LU factorization
+void DenseMatrix::LU(MatrixBase &L, MatrixBase &U) const
+{
+    if (is_a<DenseMatrix>(L) && is_a<DenseMatrix>(U)) {
+        DenseMatrix &L_ = static_cast<DenseMatrix &>(L);
+        DenseMatrix &U_ = static_cast<DenseMatrix &>(U);
+        CSymPy::LU(*this, L_, U_);
+    }
+}
+
+// LDL factorization
+void DenseMatrix::LDL(MatrixBase &L, MatrixBase &D) const
+{
+    if (is_a<DenseMatrix>(L) && is_a<DenseMatrix>(D)) {
+        DenseMatrix &L_ = static_cast<DenseMatrix &>(L);
+        DenseMatrix &D_ = static_cast<DenseMatrix &>(D);
+        CSymPy::LDL(*this, L_, D_);
+    }
+}
+
+// Solve Ax = b using diagonal solve
+void DenseMatrix::LU_solve(const MatrixBase &b, MatrixBase &x) const
+{
+    if (is_a<DenseMatrix>(b) && is_a<DenseMatrix>(x)) {
+        const DenseMatrix &b_ = static_cast<const DenseMatrix &>(b);
+        DenseMatrix &x_ = static_cast<DenseMatrix &>(x);
+        CSymPy::LU_solve(*this, b_, x_);
+    }
 }
 
 // ----------------------------- Matrix Transpose ----------------------------//
@@ -76,7 +161,9 @@ void transpose_dense(const DenseMatrix &A, DenseMatrix &B)
 void submatrix_dense(const DenseMatrix &A, unsigned row_start, unsigned row_end,
         unsigned col_start, unsigned col_end, DenseMatrix &B)
 {
-    CSYMPY_ASSERT(row_end > row_start && col_end > col_start);
+    CSYMPY_ASSERT(row_end >= row_start && col_end >= col_start);
+    CSYMPY_ASSERT(row_start >= 0 && row_end < A.row_);
+    CSYMPY_ASSERT(col_start >= 0 && col_end < A.col_);
     CSYMPY_ASSERT(B.row_ == row_end - row_start + 1 &&
             B.col_ == col_end - col_start + 1);
 
@@ -85,7 +172,7 @@ void submatrix_dense(const DenseMatrix &A, unsigned row_start, unsigned row_end,
     for (unsigned i = 0; i < row; i++)
         for (unsigned j = 0; j < col; j++)
             B.m_[i*col + j] =
-                A.m_[(row_start + i - 1)*A.col_ + col_start - 1 + j];
+                A.m_[(row_start + i)*A.col_ + col_start + j];
 }
 
 // ------------------------------- Matrix Addition ---------------------------//
@@ -106,7 +193,7 @@ void add_dense_dense(const DenseMatrix &A, const DenseMatrix &B, DenseMatrix &C)
     }
 }
 
-void add_dense_scalar(const DenseMatrix &A, RCP<const Basic> &k, DenseMatrix &B)
+void add_dense_scalar(const DenseMatrix &A, const RCP<const Basic> &k, DenseMatrix &B)
 {
     CSYMPY_ASSERT(A.row_ == B.row_ && A.col_ == B.col_);
 
@@ -138,7 +225,7 @@ void mul_dense_dense(const DenseMatrix &A, const DenseMatrix &B,
     }
 }
 
-void mul_dense_scalar(const DenseMatrix &A, RCP<const Basic> &k, DenseMatrix& B)
+void mul_dense_scalar(const DenseMatrix &A, const RCP<const Basic> &k, DenseMatrix& B)
 {
     CSYMPY_ASSERT(A.col_ == B.col_ && A.row_ == B.row_);
 

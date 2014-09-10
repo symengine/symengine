@@ -149,6 +149,21 @@ cdef extern from "matrix.h" namespace "CSymPy":
         RCP[const Basic] set(unsigned i, unsigned j, const RCP[const Basic] &e) nogil
         string __str__() nogil except+
         bool eq(const MatrixBase &) nogil
+        RCP[const Basic] det() nogil
+        void inv(MatrixBase &)
+        void add_matrix(const MatrixBase &other, MatrixBase &result) nogil
+        void mul_matrix(const MatrixBase &other, MatrixBase &result) nogil
+        void add_scalar(const RCP[const Basic] &k, MatrixBase &result) nogil
+        void mul_scalar(const RCP[const Basic] &k, MatrixBase &result) nogil
+        void transpose(MatrixBase &result) nogil
+        void submatrix(unsigned row_start,
+                        unsigned row_end,
+                        unsigned col_start,
+                        unsigned col_end,
+                        MatrixBase &result) nogil
+        void LU(MatrixBase &L, MatrixBase &U) nogil
+        void LDL(MatrixBase &L, MatrixBase &D) nogil
+        void LU_solve(const MatrixBase &b, MatrixBase &x) nogil
 
     cdef cppclass DenseMatrix(MatrixBase):
         DenseMatrix()

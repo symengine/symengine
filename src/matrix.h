@@ -32,13 +32,37 @@ public:
 
     virtual unsigned rank() const = 0;
     virtual RCP<const Basic> det() const = 0;
-    virtual RCP<const MatrixBase> inv() const = 0;
+    virtual void inv(MatrixBase &result) const = 0;
 
     // Matrix addition
-    virtual MatrixBase& add_matrix(const MatrixBase &other) const = 0;
+    virtual void add_matrix(const MatrixBase &other, MatrixBase &result) const = 0;
 
     // Matrix Multiplication
-    virtual MatrixBase& mul_matrix(const MatrixBase &other) const = 0;
+    virtual void mul_matrix(const MatrixBase &other, MatrixBase &result) const = 0;
+
+    // Add a scalar
+    virtual void add_scalar(const RCP<const Basic> &k, MatrixBase &result) const = 0;
+
+    // Multiply by a scalar
+    virtual void mul_scalar(const RCP<const Basic> &k, MatrixBase &result) const = 0;
+
+    // Matrix transpose
+    virtual void transpose(MatrixBase &result) const = 0;
+
+    // Extract out a submatrix
+    virtual void submatrix( unsigned row_start,
+                            unsigned row_end,
+                            unsigned col_start,
+                            unsigned col_end,
+                            MatrixBase &result) const = 0;
+    // LU factorization
+    virtual void LU(MatrixBase &L, MatrixBase &U) const = 0;
+
+    // LDL factorization
+    virtual void LDL(MatrixBase &L, MatrixBase &D) const = 0;
+
+    // Solve Ax = b using diagonal solve
+    virtual void LU_solve(const MatrixBase &b, MatrixBase &x) const = 0;
 
 protected:
     // Stores the dimension of the Matrix
@@ -63,22 +87,47 @@ public:
 
     virtual unsigned rank() const;
     virtual RCP<const Basic> det() const;
-    virtual RCP<const MatrixBase> inv() const;
+    virtual void inv(MatrixBase &result) const;
 
     // Matrix addition
-    virtual MatrixBase& add_matrix(const MatrixBase &other) const;
+    virtual void add_matrix(const MatrixBase &other, MatrixBase &result) const;
 
     // Matrix multiplication
-    virtual MatrixBase& mul_matrix(const MatrixBase &other) const;
+    virtual void mul_matrix(const MatrixBase &other, MatrixBase &result) const;
+
+    // Add a scalar
+    virtual void add_scalar(const RCP<const Basic> &k, MatrixBase &result) const;
+
+    // Multiply by a scalar
+    virtual void mul_scalar(const RCP<const Basic> &k, MatrixBase &result) const;
+
+    // Matrix transpose
+    virtual void transpose(MatrixBase &result) const;
+
+    // Extract out a submatrix
+    virtual void submatrix( unsigned row_start,
+                            unsigned row_end,
+                            unsigned col_start,
+                            unsigned col_end,
+                            MatrixBase &result) const;
+
+    // LU factorization
+    virtual void LU(MatrixBase &L, MatrixBase &U) const;
+
+    // LDL factorization
+    virtual void LDL(MatrixBase &L, MatrixBase &D) const;
+
+    // Solve Ax = b using diagonal solve
+    virtual void LU_solve(const MatrixBase &b, MatrixBase &x) const;
 
     // Friend functions related to Matrix Operations
     friend void add_dense_dense(const DenseMatrix &A, const DenseMatrix &B,
         DenseMatrix &C);
-    friend void add_dense_scalar(const DenseMatrix &A, RCP<const Basic> &k,
+    friend void add_dense_scalar(const DenseMatrix &A, const RCP<const Basic> &k,
         DenseMatrix &B );
     friend void mul_dense_dense(const DenseMatrix &A, const DenseMatrix &B,
         DenseMatrix &C);
-    friend void mul_dense_scalar(const DenseMatrix &A, RCP<const Basic> &k,
+    friend void mul_dense_scalar(const DenseMatrix &A, const RCP<const Basic> &k,
         DenseMatrix &C);
     friend void transpose_dense(const DenseMatrix &A, DenseMatrix &B);
     friend void submatrix_dense(const DenseMatrix &A, unsigned row_start,
@@ -161,13 +210,38 @@ public:
 
     virtual unsigned rank() const;
     virtual RCP<const Basic> det() const;
-    virtual RCP<const MatrixBase> inv() const;
+    virtual void inv(MatrixBase &result) const;
 
     // Matrix addition
-    virtual MatrixBase& add_matrix(const MatrixBase &other) const;
+    virtual void add_matrix(const MatrixBase &other, MatrixBase &result) const;
 
     // Matrix Multiplication
-    virtual MatrixBase& mul_matrix(const MatrixBase &other) const;
+    virtual void mul_matrix(const MatrixBase &other, MatrixBase &result) const;
+
+    // Add a scalar
+    virtual void add_scalar(const RCP<const Basic> &k, MatrixBase &result) const;
+
+    // Multiply by a scalar
+    virtual void mul_scalar(const RCP<const Basic> &k, MatrixBase &result) const;
+
+    // Matrix transpose
+    virtual void transpose(MatrixBase &result) const;
+
+    // Extract out a submatrix
+    virtual void submatrix( unsigned row_start,
+                            unsigned row_end,
+                            unsigned col_start,
+                            unsigned col_end,
+                            MatrixBase &result) const;
+
+    // LU factorization
+    virtual void LU(MatrixBase &L, MatrixBase &U) const;
+
+    // LDL factorization
+    virtual void LDL(MatrixBase &L, MatrixBase &D) const;
+
+    // Solve Ax = b using diagonal solve
+    virtual void LU_solve(const MatrixBase &b, MatrixBase &x) const;
 
     static void csr_sum_duplicates(std::vector<unsigned>& p_,
         std::vector<unsigned>& j_,
@@ -212,6 +286,11 @@ protected:
     std::vector<unsigned> j_;
     vec_basic x_;
 };
+
+// Matrix Factorization
+void LU(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &U);
+
+void LDL(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &D);
 
 // Solving Ax = b
 void fraction_free_LU_solve(const DenseMatrix &A, const DenseMatrix &b,

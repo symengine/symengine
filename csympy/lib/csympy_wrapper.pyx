@@ -37,16 +37,6 @@ cdef c2py(RCP[const csympy.Basic] o):
     r.thisptr = o
     return r
 
-cdef matrix_c2py(csympy.MatrixBase &o):
-    cdef MatrixBase A
-    if (csympy.is_a_DenseMatrix(o)):
-        A = DenseMatrix.__new__(DenseMatrix)
-        A.thisptr = &o
-    else:
-        raise Exception("Unsupported Matrix type.")
-
-    return A
-
 def sympy2csympy(a, raise_error=False):
     """
     Converts 'a' from SymPy to CSymPy.
@@ -397,6 +387,12 @@ cdef class DenseMatrix(MatrixBase):
     def __dealloc__(self):
         del self.thisptr
 
+    def nrows(self):
+        return deref(self.thisptr).nrows()
+
+    def ncols(self):
+        return deref(self.thisptr).ncols()
+
     def get(self, i, j):
         # No error checking is done
         return c2py(deref(self.thisptr).get(i, j))
@@ -405,6 +401,66 @@ cdef class DenseMatrix(MatrixBase):
         cdef Basic e_ = sympify(e)
         if e_ is not None:
             deref(self.thisptr).set(i, j, <const RCP[const csympy.Basic] &>(e_.thisptr))
+
+    def det(self):
+        return c2py(deref(self.thisptr).det())
+
+    def inv(self):
+        result = DenseMatrix(self.nrows(), self.ncols(), [0]*self.nrows()*self.ncols())
+        deref(self.thisptr).inv(deref(result.thisptr))
+        return result
+
+    def add_matrix(self, A):
+        cdef MatrixBase A_ = sympify(A)
+        result = DenseMatrix(self.nrows(), self.ncols(), [0]*self.nrows()*self.ncols())
+        deref(self.thisptr).add_matrix(deref(A_.thisptr), deref(result.thisptr))
+        return result
+
+    def mul_matrix(self, A):
+        cdef MatrixBase A_ = sympify(A)
+        result = DenseMatrix(self.nrows(), self.ncols(), [0]*self.nrows()*self.ncols())
+        deref(self.thisptr).mul_matrix(deref(A_.thisptr), deref(result.thisptr))
+        return result
+
+    def add_scalar(self, k):
+        cdef Basic k_ = sympify(k)
+        result = DenseMatrix(self.nrows(), self.ncols(), [0]*self.nrows()*self.ncols())
+        deref(self.thisptr).add_scalar(<const RCP[const csympy.Basic] &>(k_.thisptr), deref(result.thisptr))
+        return result
+
+    def mul_scalar(self, k):
+        cdef Basic k_ = sympify(k)
+        result = DenseMatrix(self.nrows(), self.ncols(), [0]*self.nrows()*self.ncols())
+        deref(self.thisptr).mul_scalar(<const RCP[const csympy.Basic] &>(k_.thisptr), deref(result.thisptr))
+        return result
+
+    def transpose(self):
+        result = DenseMatrix(self.ncols(), self.nrows(), [0]*self.nrows()*self.ncols())
+        deref(self.thisptr).transpose(deref(result.thisptr))
+        return result
+
+    def submatrix(self, r_i, r_j, c_i, c_j):
+        result = DenseMatrix(r_j - r_i + 1, c_j - c_i + 1, [0]*(r_j - r_i + 1)*(c_j - c_i + 1))
+        deref(self.thisptr).submatrix(r_i, r_j, c_i, c_j, deref(result.thisptr))
+        return result
+
+    def LU(self):
+        L = DenseMatrix(self.nrows(), self.ncols(), [0]*self.nrows()*self.ncols())
+        U = DenseMatrix(self.nrows(), self.ncols(), [0]*self.nrows()*self.ncols())
+        deref(self.thisptr).LU(deref(L.thisptr), deref(U.thisptr))
+        return L, U
+
+    def LDL(self):
+        L = DenseMatrix(self.nrows(), self.ncols(), [0]*self.nrows()*self.ncols())
+        D = DenseMatrix(self.nrows(), self.ncols(), [0]*self.nrows()*self.ncols())
+        deref(self.thisptr).LDL(deref(L.thisptr), deref(D.thisptr))
+        return L, D
+
+    def LU_solve(self, b):
+        cdef DenseMatrix b_ = sympify(b)
+        x = DenseMatrix(b_.nrows(), b_.ncols(), [0]*b_.nrows()*b_.ncols())
+        deref(self.thisptr).LU_solve(deref(b_.thisptr), deref(x.thisptr))
+        return x
 
     def _sympy_(self):
         s = []

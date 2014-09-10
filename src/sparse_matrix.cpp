@@ -120,17 +120,63 @@ RCP<const Basic> CSRMatrix::det() const
     throw std::runtime_error("Not implemented.");
 }
 
-RCP<const MatrixBase> CSRMatrix::inv() const
+void CSRMatrix::inv(MatrixBase &result) const
 {
     throw std::runtime_error("Not implemented.");
 }
 
-MatrixBase& CSRMatrix::add_matrix(const MatrixBase &other) const
+void CSRMatrix::add_matrix(const MatrixBase &other, MatrixBase &result) const
 {
     throw std::runtime_error("Not implemented.");
 }
 
-MatrixBase& CSRMatrix::mul_matrix(const MatrixBase &other) const
+void CSRMatrix::mul_matrix(const MatrixBase &other, MatrixBase &result) const
+{
+    throw std::runtime_error("Not implemented.");
+}
+
+// Add a scalar
+void CSRMatrix::add_scalar(const RCP<const Basic> &k, MatrixBase &result) const
+{
+    throw std::runtime_error("Not implemented.");
+}
+
+// Multiply by a scalar
+void CSRMatrix::mul_scalar(const RCP<const Basic> &k, MatrixBase &result) const
+{
+    throw std::runtime_error("Not implemented.");
+}
+
+// Matrix transpose
+void CSRMatrix::transpose(MatrixBase &result) const
+{
+    throw std::runtime_error("Not implemented.");
+}
+
+// Extract out a submatrix
+void CSRMatrix::submatrix( unsigned row_start,
+                        unsigned row_end,
+                        unsigned col_start,
+                        unsigned col_end,
+                        MatrixBase &result) const
+{
+    throw std::runtime_error("Not implemented.");
+}
+
+// LU factorization
+void CSRMatrix::LU(MatrixBase &L, MatrixBase &U) const
+{
+    throw std::runtime_error("Not implemented.");
+}
+
+// LDL factorization
+void CSRMatrix::LDL(MatrixBase &L, MatrixBase &D) const
+{
+    throw std::runtime_error("Not implemented.");
+}
+
+// Solve Ax = b using diagonal solve
+void CSRMatrix::LU_solve(const MatrixBase &b, MatrixBase &x) const
 {
     throw std::runtime_error("Not implemented.");
 }
