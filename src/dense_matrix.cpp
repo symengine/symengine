@@ -135,7 +135,7 @@ void DenseMatrix::LDL(MatrixBase &L, MatrixBase &D) const
     }
 }
 
-// Solve Ax = b using diagonal solve
+// Solve Ax = b using LU factorization
 void DenseMatrix::LU_solve(const MatrixBase &b, MatrixBase &x) const
 {
     if (is_a<DenseMatrix>(b) && is_a<DenseMatrix>(x)) {

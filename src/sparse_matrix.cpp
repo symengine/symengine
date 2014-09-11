@@ -175,7 +175,7 @@ void CSRMatrix::LDL(MatrixBase &L, MatrixBase &D) const
     throw std::runtime_error("Not implemented.");
 }
 
-// Solve Ax = b using diagonal solve
+// Solve Ax = b using LU factorization
 void CSRMatrix::LU_solve(const MatrixBase &b, MatrixBase &x) const
 {
     throw std::runtime_error("Not implemented.");

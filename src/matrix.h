@@ -67,7 +67,7 @@ public:
     // Fraction free LDU factorization
     virtual void FFLDU(MatrixBase&L, MatrixBase &D, MatrixBase &U) const = 0;
 
-    // Solve Ax = b using diagonal solve
+    // Solve Ax = b using LU factorization
     virtual void LU_solve(const MatrixBase &b, MatrixBase &x) const = 0;
 
 protected:
@@ -123,7 +123,7 @@ public:
     // LDL factorization
     virtual void LDL(MatrixBase &L, MatrixBase &D) const;
 
-    // Solve Ax = b using diagonal solve
+    // Solve Ax = b using LU factorization
     virtual void LU_solve(const MatrixBase &b, MatrixBase &x) const;
 
     // Fraction free LU factorization
@@ -252,7 +252,7 @@ public:
     // LDL factorization
     virtual void LDL(MatrixBase &L, MatrixBase &D) const;
 
-    // Solve Ax = b using diagonal solve
+    // Solve Ax = b using LU factorization
     virtual void LU_solve(const MatrixBase &b, MatrixBase &x) const;
 
     // Fraction free LU factorization
