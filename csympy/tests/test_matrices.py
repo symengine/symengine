@@ -52,7 +52,11 @@ def test_inv():
     assert A.inv() == A
 
     A = densematrix(2, 2, [1, 2, 2, 3])
-    assert A.inv() == densematrix(2, 2, [-3, 2, 2, -1])
+    B = densematrix(2, 2, [-3, 2, 2, -1])
+
+    assert A.inv('LU') == B
+    assert A.inv('FFLU') == B
+    assert A.inv('GJ') == B
 
 def test_add_matrix():
     A = densematrix(2, 2, [1, 2, 3, 4])
@@ -134,10 +138,29 @@ def test_LDL():
     assert L == densematrix(3, 3, [1, 0, 0, 3, 1, 0, -4, 5, 1])
     assert D == densematrix(3, 3, [4, 0, 0, 0, 1, 0, 0, 0, 9])
 
-def test_LU_solve():
+def test_solve():
     A = densematrix(4, 4, [1, 2, 3, 4, 2, 2, 3, 4, 3, 3, 3, 4, 9, 8, 7, 6])
     b = densematrix(4, 1, [10, 11, 13, 30])
+    y = densematrix(4, 1, [1, 1, 1, 1]);
 
-    x = A.LU_solve(b)
+    x = A.solve(b, 'LU')
+    assert x == y
+    x = A.solve(b, 'FFLU')
+    assert x == y
+    x = A.solve(b, 'FFGJ')
+    assert x == y
 
-    assert x == densematrix(4, 1, [1, 1, 1, 1]);
+def test_FFLU():
+    A = densematrix(4, 4, [1, 2, 3, 4, 2, 2, 3, 4, 3, 3, 3, 4, 9, 8, 7, 6])
+
+    L, U = A.FFLU()
+    assert L == densematrix(4, 4, [1, 0, 0, 0, 2, -2, 0, -0, 3, -3, 3, 0, 9, -10, 10, -10])
+    assert U == densematrix(4, 4, [1, 2, 3, 4, 0, -2, -3, -4, 0, 0, 3, 4, 0, 0, 0, -10])
+
+def test_FFLDU():
+    A = densematrix(3, 3, [1, 2, 3, 5, -3, 2, 6, 2, 1])
+    L, D, U = A.FFLDU()
+
+    assert L == densematrix(3, 3, [1, 0, 0, 5, -13, 0, 6, -10, 1])
+    assert D == densematrix(3, 3, [1, 0, 0, 0, -13, 0, 0, 0, -13])
+    assert U == densematrix(3, 3, [1, 2, 3, 0, -13, -13, 0, 0, 91])

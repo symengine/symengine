@@ -164,6 +164,8 @@ cdef extern from "matrix.h" namespace "CSymPy":
         void LU(MatrixBase &L, MatrixBase &U) nogil
         void LDL(MatrixBase &L, MatrixBase &D) nogil
         void LU_solve(const MatrixBase &b, MatrixBase &x) nogil
+        void FFLU(MatrixBase &LU) nogil
+        void FFLDU(MatrixBase&L, MatrixBase &D, MatrixBase &U) nogil
 
     cdef cppclass DenseMatrix(MatrixBase):
         DenseMatrix()
@@ -172,3 +174,13 @@ cdef extern from "matrix.h" namespace "CSymPy":
 
     bool is_a_DenseMatrix "CSymPy::is_a<CSymPy::DenseMatrix>"(const MatrixBase &b) nogil
     DenseMatrix* static_cast_DenseMatrix "static_cast<CSymPy::DenseMatrix*>"(const MatrixBase *a)
+    void inverse_FFLU "CSymPy::inverse_fraction_free_LU"(const DenseMatrix &A,
+        DenseMatrix &B) nogil
+    void inverse_GJ "CSymPy::inverse_gauss_jordan"(const DenseMatrix &A,
+        DenseMatrix &B) nogil
+    void FFLU_solve "CSymPy::fraction_free_LU_solve"(const DenseMatrix &A,
+        const DenseMatrix &b, DenseMatrix &x) nogil
+    void FFGJ_solve "CSymPy::fraction_free_gauss_jordan_solve"(const DenseMatrix &A,
+        const DenseMatrix &b, DenseMatrix &x) nogil
+    void LDL_solve "CSymPy::LDL_solve"(const DenseMatrix &A, const DenseMatrix &b,
+        DenseMatrix &x) nogil

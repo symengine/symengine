@@ -61,7 +61,13 @@ public:
     // LDL factorization
     virtual void LDL(MatrixBase &L, MatrixBase &D) const = 0;
 
-    // Solve Ax = b using diagonal solve
+    // Fraction free LU factorization
+    virtual void FFLU(MatrixBase &LU) const = 0;
+
+    // Fraction free LDU factorization
+    virtual void FFLDU(MatrixBase&L, MatrixBase &D, MatrixBase &U) const = 0;
+
+    // Solve Ax = b using LU factorization
     virtual void LU_solve(const MatrixBase &b, MatrixBase &x) const = 0;
 
 protected:
@@ -117,8 +123,14 @@ public:
     // LDL factorization
     virtual void LDL(MatrixBase &L, MatrixBase &D) const;
 
-    // Solve Ax = b using diagonal solve
+    // Solve Ax = b using LU factorization
     virtual void LU_solve(const MatrixBase &b, MatrixBase &x) const;
+
+    // Fraction free LU factorization
+    virtual void FFLU(MatrixBase &LU) const;
+
+    // Fraction free LDU factorization
+    virtual void FFLDU(MatrixBase&L, MatrixBase &D, MatrixBase &U) const;
 
     // Friend functions related to Matrix Operations
     friend void add_dense_dense(const DenseMatrix &A, const DenseMatrix &B,
@@ -240,8 +252,14 @@ public:
     // LDL factorization
     virtual void LDL(MatrixBase &L, MatrixBase &D) const;
 
-    // Solve Ax = b using diagonal solve
+    // Solve Ax = b using LU factorization
     virtual void LU_solve(const MatrixBase &b, MatrixBase &x) const;
+
+    // Fraction free LU factorization
+    virtual void FFLU(MatrixBase &LU) const;
+
+    // Fraction free LDU factorization
+    virtual void FFLDU(MatrixBase&L, MatrixBase &D, MatrixBase &U) const;
 
     static void csr_sum_duplicates(std::vector<unsigned>& p_,
         std::vector<unsigned>& j_,
@@ -292,9 +310,17 @@ void LU(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &U);
 
 void LDL(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &D);
 
+// Inverse
+void inverse_fraction_free_LU(const DenseMatrix &A, DenseMatrix &B);
+
+void inverse_gauss_jordan(const DenseMatrix &A, DenseMatrix &B);
+
 // Solving Ax = b
 void fraction_free_LU_solve(const DenseMatrix &A, const DenseMatrix &b,
     DenseMatrix &x);
+
+void fraction_free_gauss_jordan_solve(const DenseMatrix &A,
+    const DenseMatrix &b, DenseMatrix &x);
 
 void LU_solve(const DenseMatrix &A, const DenseMatrix &b, DenseMatrix &x);
 

@@ -135,13 +135,33 @@ void DenseMatrix::LDL(MatrixBase &L, MatrixBase &D) const
     }
 }
 
-// Solve Ax = b using diagonal solve
+// Solve Ax = b using LU factorization
 void DenseMatrix::LU_solve(const MatrixBase &b, MatrixBase &x) const
 {
     if (is_a<DenseMatrix>(b) && is_a<DenseMatrix>(x)) {
         const DenseMatrix &b_ = static_cast<const DenseMatrix &>(b);
         DenseMatrix &x_ = static_cast<DenseMatrix &>(x);
         CSymPy::LU_solve(*this, b_, x_);
+    }
+}
+
+// Fraction free LU factorization
+void DenseMatrix::FFLU(MatrixBase &LU) const
+{
+    if (is_a<DenseMatrix>(LU)) {
+        DenseMatrix &LU_ = static_cast<DenseMatrix &>(LU);
+        fraction_free_LU(*this, LU_);
+    }
+}
+
+// Fraction free LDU factorization
+void DenseMatrix::FFLDU(MatrixBase&L, MatrixBase &D, MatrixBase &U) const
+{
+    if (is_a<DenseMatrix>(L) && is_a<DenseMatrix>(D) && is_a<DenseMatrix>(U)) {
+        DenseMatrix &L_ = static_cast<DenseMatrix &>(L);
+        DenseMatrix &D_ = static_cast<DenseMatrix &>(D);
+        DenseMatrix &U_ = static_cast<DenseMatrix &>(U);
+        fraction_free_LDU(*this, L_, D_, U_);
     }
 }
 
