@@ -164,6 +164,8 @@ cdef extern from "matrix.h" namespace "CSymPy":
         void LU(MatrixBase &L, MatrixBase &U) nogil
         void LDL(MatrixBase &L, MatrixBase &D) nogil
         void LU_solve(const MatrixBase &b, MatrixBase &x) nogil
+        void FFLU(MatrixBase &LU) nogil
+        void FFLDU(MatrixBase&L, MatrixBase &D, MatrixBase &U) nogil
 
     cdef cppclass DenseMatrix(MatrixBase):
         DenseMatrix()

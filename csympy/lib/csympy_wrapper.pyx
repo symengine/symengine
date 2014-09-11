@@ -462,6 +462,26 @@ cdef class DenseMatrix(MatrixBase):
         deref(self.thisptr).LU_solve(deref(b_.thisptr), deref(x.thisptr))
         return x
 
+    def FFLU(self):
+        L = DenseMatrix(self.nrows(), self.ncols(), [0]*self.nrows()*self.ncols())
+        U = DenseMatrix(self.nrows(), self.ncols(), [0]*self.nrows()*self.ncols())
+        deref(self.thisptr).FFLU(deref(L.thisptr))
+
+        for i in range(self.nrows()):
+            for j in range(i + 1, self.ncols()):
+                U.set(i, j, L.get(i, j))
+                L.set(i, j, 0)
+            U.set(i, i, L.get(i, i))
+
+        return L, U
+
+    def FFLDU(self):
+        L = DenseMatrix(self.nrows(), self.ncols(), [0]*self.nrows()*self.ncols())
+        D = DenseMatrix(self.nrows(), self.ncols(), [0]*self.nrows()*self.ncols())
+        U = DenseMatrix(self.nrows(), self.ncols(), [0]*self.nrows()*self.ncols())
+        deref(self.thisptr).FFLDU(deref(L.thisptr), deref(D.thisptr), deref(U.thisptr))
+        return L, D, U
+
     def _sympy_(self):
         s = []
         cdef csympy.DenseMatrix A = deref(csympy.static_cast_DenseMatrix(self.thisptr))
