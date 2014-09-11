@@ -181,6 +181,18 @@ void CSRMatrix::LU_solve(const MatrixBase &b, MatrixBase &x) const
     throw std::runtime_error("Not implemented.");
 }
 
+// Fraction free LU factorization
+void CSRMatrix::FFLU(MatrixBase &LU) const
+{
+    throw std::runtime_error("Not implemented.");
+}
+
+// Fraction free LDU factorization
+void CSRMatrix::FFLDU(MatrixBase&L, MatrixBase &D, MatrixBase &U) const
+{
+    throw std::runtime_error("Not implemented.");
+}
+
 void CSRMatrix::csr_sum_duplicates(std::vector<unsigned>& p_,
 	std::vector<unsigned>& j_,
     vec_basic& x_,

@@ -61,6 +61,12 @@ public:
     // LDL factorization
     virtual void LDL(MatrixBase &L, MatrixBase &D) const = 0;
 
+    // Fraction free LU factorization
+    virtual void FFLU(MatrixBase &LU) const = 0;
+
+    // Fraction free LDU factorization
+    virtual void FFLDU(MatrixBase&L, MatrixBase &D, MatrixBase &U) const = 0;
+
     // Solve Ax = b using diagonal solve
     virtual void LU_solve(const MatrixBase &b, MatrixBase &x) const = 0;
 
@@ -119,6 +125,12 @@ public:
 
     // Solve Ax = b using diagonal solve
     virtual void LU_solve(const MatrixBase &b, MatrixBase &x) const;
+
+    // Fraction free LU factorization
+    virtual void FFLU(MatrixBase &LU) const;
+
+    // Fraction free LDU factorization
+    virtual void FFLDU(MatrixBase&L, MatrixBase &D, MatrixBase &U) const;
 
     // Friend functions related to Matrix Operations
     friend void add_dense_dense(const DenseMatrix &A, const DenseMatrix &B,
@@ -242,6 +254,12 @@ public:
 
     // Solve Ax = b using diagonal solve
     virtual void LU_solve(const MatrixBase &b, MatrixBase &x) const;
+
+    // Fraction free LU factorization
+    virtual void FFLU(MatrixBase &LU) const;
+
+    // Fraction free LDU factorization
+    virtual void FFLDU(MatrixBase&L, MatrixBase &D, MatrixBase &U) const;
 
     static void csr_sum_duplicates(std::vector<unsigned>& p_,
         std::vector<unsigned>& j_,

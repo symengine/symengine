@@ -145,6 +145,26 @@ void DenseMatrix::LU_solve(const MatrixBase &b, MatrixBase &x) const
     }
 }
 
+// Fraction free LU factorization
+void DenseMatrix::FFLU(MatrixBase &LU) const
+{
+    if (is_a<DenseMatrix>(LU)) {
+        DenseMatrix &LU_ = static_cast<DenseMatrix &>(LU);
+        fraction_free_LU(*this, LU_);
+    }
+}
+
+// Fraction free LDU factorization
+void DenseMatrix::FFLDU(MatrixBase&L, MatrixBase &D, MatrixBase &U) const
+{
+    if (is_a<DenseMatrix>(L) && is_a<DenseMatrix>(D) && is_a<DenseMatrix>(U)) {
+        DenseMatrix &L_ = static_cast<DenseMatrix &>(L);
+        DenseMatrix &D_ = static_cast<DenseMatrix &>(D);
+        DenseMatrix &U_ = static_cast<DenseMatrix &>(U);
+        fraction_free_LDU(*this, L_, D_, U_);
+    }
+}
+
 // ----------------------------- Matrix Transpose ----------------------------//
 void transpose_dense(const DenseMatrix &A, DenseMatrix &B)
 {
