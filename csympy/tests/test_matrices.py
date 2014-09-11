@@ -141,3 +141,18 @@ def test_LU_solve():
     x = A.LU_solve(b)
 
     assert x == densematrix(4, 1, [1, 1, 1, 1]);
+
+def test_FFLU():
+    A = densematrix(4, 4, [1, 2, 3, 4, 2, 2, 3, 4, 3, 3, 3, 4, 9, 8, 7, 6])
+
+    L, U = A.FFLU()
+    assert L == densematrix(4, 4, [1, 0, 0, 0, 2, -2, 0, -0, 3, -3, 3, 0, 9, -10, 10, -10])
+    assert U == densematrix(4, 4, [1, 2, 3, 4, 0, -2, -3, -4, 0, 0, 3, 4, 0, 0, 0, -10])
+
+def test_FFLDU():
+    A = densematrix(3, 3, [1, 2, 3, 5, -3, 2, 6, 2, 1])
+    L, D, U = A.FFLDU()
+
+    assert L == densematrix(3, 3, [1, 0, 0, 5, -13, 0, 6, -10, 1])
+    assert D == densematrix(3, 3, [1, 0, 0, 0, -13, 0, 0, 0, -13])
+    assert U == densematrix(3, 3, [1, 2, 3, 0, -13, -13, 0, 0, 91])
