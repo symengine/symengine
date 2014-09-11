@@ -405,9 +405,21 @@ cdef class DenseMatrix(MatrixBase):
     def det(self):
         return c2py(deref(self.thisptr).det())
 
-    def inv(self):
+    def inv(self, method='LU'):
         result = DenseMatrix(self.nrows(), self.ncols(), [0]*self.nrows()*self.ncols())
-        deref(self.thisptr).inv(deref(result.thisptr))
+
+        if method.upper() == 'LU':
+            ## inv() method of DenseMatrix uses LU factorization
+            deref(self.thisptr).inv(deref(result.thisptr))
+        elif method.upper() == 'FFLU':
+            csympy.inverse_FFLU(deref(csympy.static_cast_DenseMatrix(self.thisptr)),
+                deref(csympy.static_cast_DenseMatrix(result.thisptr)))
+        elif method.upper() == 'GJ':
+            csympy.inverse_GJ(deref(csympy.static_cast_DenseMatrix(self.thisptr)),
+                deref(csympy.static_cast_DenseMatrix(result.thisptr)))
+        else:
+            raise Exception("Unsupported method.")
+
         return result
 
     def add_matrix(self, A):
@@ -456,10 +468,28 @@ cdef class DenseMatrix(MatrixBase):
         deref(self.thisptr).LDL(deref(L.thisptr), deref(D.thisptr))
         return L, D
 
-    def LU_solve(self, b):
+    def solve(self, b, method='LU'):
         cdef DenseMatrix b_ = sympify(b)
         x = DenseMatrix(b_.nrows(), b_.ncols(), [0]*b_.nrows()*b_.ncols())
-        deref(self.thisptr).LU_solve(deref(b_.thisptr), deref(x.thisptr))
+
+        if method.upper() == 'LU':
+            ## solve() method of DenseMatrix uses LU factorization
+            deref(self.thisptr).LU_solve(deref(b_.thisptr), deref(x.thisptr))
+        elif method.upper() == 'FFLU':
+            csympy.FFLU_solve(deref(csympy.static_cast_DenseMatrix(self.thisptr)),
+                deref(csympy.static_cast_DenseMatrix(b_.thisptr)),
+                deref(csympy.static_cast_DenseMatrix(x.thisptr)))
+        elif method.upper() == 'LDL':
+            csympy.LDL_solve(deref(csympy.static_cast_DenseMatrix(self.thisptr)),
+                deref(csympy.static_cast_DenseMatrix(b_.thisptr)),
+                deref(csympy.static_cast_DenseMatrix(x.thisptr)))
+        elif method.upper() == 'FFGJ':
+            csympy.FFGJ_solve(deref(csympy.static_cast_DenseMatrix(self.thisptr)),
+                deref(csympy.static_cast_DenseMatrix(b_.thisptr)),
+                deref(csympy.static_cast_DenseMatrix(x.thisptr)))
+        else:
+            raise Exception("Unsupported method.")
+
         return x
 
     def FFLU(self):

@@ -310,9 +310,17 @@ void LU(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &U);
 
 void LDL(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &D);
 
+// Inverse
+void inverse_fraction_free_LU(const DenseMatrix &A, DenseMatrix &B);
+
+void inverse_gauss_jordan(const DenseMatrix &A, DenseMatrix &B);
+
 // Solving Ax = b
 void fraction_free_LU_solve(const DenseMatrix &A, const DenseMatrix &b,
     DenseMatrix &x);
+
+void fraction_free_gauss_jordan_solve(const DenseMatrix &A,
+    const DenseMatrix &b, DenseMatrix &x);
 
 void LU_solve(const DenseMatrix &A, const DenseMatrix &b, DenseMatrix &x);
 
