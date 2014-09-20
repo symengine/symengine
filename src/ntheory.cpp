@@ -624,11 +624,11 @@ bool crt(const Ptr<RCP<const Integer>> &R, const std::vector<RCP<const Integer>>
 
     for (unsigned i = 1; i < mod.size(); i++) {
         mpz_gcdext(g.get_mpz_t(), s.get_mpz_t(), t.get_mpz_t(), m.get_mpz_t(), mod[i]->as_mpz().get_mpz_t());
-        //g = s * m + t * mod[i]
+        // g = s * m + t * mod[i]
         t = rem[i]->as_mpz() - r;
         if (!mpz_divisible_p (t.get_mpz_t(), g.get_mpz_t()))
             return false;
-        r += m * s * (t / g);           //r += m * (m^-1 mod[i]/g)* (rem[i] - r) / g
+        r += m * s * (t / g);           // r += m * (m^-1 mod[i]/g)* (rem[i] - r) / g
         m *= mod[i]->as_mpz() / g;
         mpz_fdiv_r (r.get_mpz_t(), r.get_mpz_t(), m.get_mpz_t());
     }
@@ -649,8 +649,9 @@ bool _prime_power(mpz_class &p, mpz_class &e, const mpz_class &n)
             mpz_mul_ui(e.get_mpz_t(), e.get_mpz_t(), i);
             _n = temp;
         }
-        else
+        else {
             i++;
+        }
     }
     if (mpz_probab_prime_p(_n.get_mpz_t(), 25)) {
         p = _n;
@@ -735,6 +736,7 @@ void _primitive_root_list(std::vector<RCP<const Integer>> &roots, const mpz_clas
     _primitive_root(g, p, 1, false); // Find one primitive root for p.
     h = 1;
     pm1 = p - 1;
+
     // Generate other primitive roots for p. h = g**i and gcd(i,p-1) = 1. Ref[2]
     mpz_pow_ui(n.get_mpz_t(), p.get_mpz_t(), e.get_ui());
     for (ulong i = 1; i < p; i++) {
@@ -756,7 +758,7 @@ void _primitive_root_list(std::vector<RCP<const Integer>> &roots, const mpz_clas
                 mpz_powm(d.get_mpz_t(), h.get_mpz_t(), t.get_mpz_t(), pp.get_mpz_t());
                 d = ((h - d) / p + p) % p;
                 t = h;
-                //t = h + i * p + j * p * p and i != d
+                // t = h + i * p + j * p * p and i != d
                 mpz_pow_ui(pe2.get_mpz_t(), p.get_mpz_t(), e.get_ui() - 2);
                 for (ulong j = 0; j < pe2; j++) {
                     for (ulong i = 0; i < p; i++) {
