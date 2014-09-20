@@ -143,7 +143,7 @@ void pow_complex(const Ptr<RCP<const Number>> &self,
         // Imaginary Number raised to an integer power.
         RCP<const Number> im = Rational::from_mpq(base_->imaginary_);
         RCP<const Number> res;
-        mod(outArg(res), exp_, *integer(4));
+        res = mod(exp_, *integer(4));
         if (eq(res, zero)) {
             res = one;
         } else if (eq(res, one)) {

@@ -2486,7 +2486,7 @@ RCP<const Basic> gamma(const RCP<const Basic> &arg)
         if ((arg_->i.get_den()) == 2) {
             RCP<const Integer> n, k;
             RCP<const Number> coeff;
-            fdiv_q(outArg(n), *(integer(abs(arg_->i.get_num()))), *(integer(arg_->i.get_den())));
+            n = quotient_f(*(integer(abs(arg_->i.get_num()))), *(integer(arg_->i.get_den())));
             if (arg_->is_positive()) {
                 k = n;
                 coeff = one;
