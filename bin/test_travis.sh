@@ -51,10 +51,14 @@ if [[ "${WITH_ARB}" != "" ]]; then
 fi
 if [[ "${PYTHON_INSTALL}" == "yes" ]]; then
     git clean -dfx
-    python setup.py install
-    mkdir empty
+    pip install .
+    mkdir -p empty
     cd empty
-    py.test --pyargs csympy
+    cat << EOF | python
+import csympy
+if not csympy.test():
+    raise Exception('Tests failed')
+EOF
     cd ..
     exit 0
 fi
