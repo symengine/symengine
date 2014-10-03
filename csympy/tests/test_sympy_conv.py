@@ -184,3 +184,24 @@ def test_conv10b():
         [sympy.Function("g")(sympy.Symbol("z")), 3 + 2*sympy.I]])
     assert sympify(C) == densematrix(2, 2, [Integer(7), Symbol("y"),
         function_symbol("g", Symbol("z")), 3 + 2*I])
+
+def test_tuples_lists():
+    x = sympy.Symbol("x")
+    y = sympy.Symbol("y")
+    z = sympy.Symbol("z")
+    l = [x, y, z, x*y, z**y]
+    t = (x, y, z, x*y, z**y)
+    x = Symbol("x")
+    y = Symbol("y")
+    z = Symbol("z")
+    l2 = [x, y, z, x*y, z**y]
+    t2 = (x, y, z, x*y, z**y)
+    assert sympify(l) == l2
+    assert sympify(t) == t2
+    assert sympify(l) != t2
+    assert sympify(t) != l2
+
+    assert l == l2
+    assert t == t2
+    assert l != t2
+    assert t != l2

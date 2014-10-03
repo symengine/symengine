@@ -78,6 +78,16 @@ def sympy2csympy(a, raise_error=False):
             for e in r:
                 v.append(e)
         return DenseMatrix(row, col, v)
+    elif isinstance(a, tuple):
+        v = []
+        for e in a:
+            v.append(sympy2csympy(e, True))
+        return tuple(v)
+    elif isinstance(a, list):
+        v = []
+        for e in a:
+            v.append(sympy2csympy(e, True))
+        return v
     if raise_error:
         raise SympifyError("sympy2csympy: Cannot convert '%r' to a csympy type." % a)
 
