@@ -85,12 +85,9 @@ def sympify(a, raise_error=True):
     elif isinstance(a, (int, long)):
         return Integer(a)
     else:
-        try:
-            e = sympy2csympy(a)
-            if e is not None:
-                return e
-        except ImportError:
-            pass
+        e = sympy2csympy(a)
+        if e is not None:
+            return e
 
         if raise_error:
             raise SympifyError("Cannot convert '%r' to a csympy type." % a)
