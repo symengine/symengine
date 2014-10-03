@@ -41,7 +41,9 @@ def sympy2csympy(a, raise_error=False):
     """
     Converts 'a' from SymPy to CSymPy.
 
-    Returns None if the expression cannot be converted.
+    If the expression cannot be converted, it either returns None (if
+    raise_error==False) or raises an SympifyError exception (if
+    raise_error==True).
     """
     import sympy
     if isinstance(a, sympy.Symbol):
@@ -85,12 +87,7 @@ def sympify(a, raise_error=True):
     elif isinstance(a, (int, long)):
         return Integer(a)
     else:
-        e = sympy2csympy(a)
-        if e is not None:
-            return e
-
-        if raise_error:
-            raise SympifyError("Cannot convert '%r' to a csympy type." % a)
+        return sympy2csympy(a, raise_error)
 
 cdef class Basic(object):
     cdef RCP[const csympy.Basic] thisptr
