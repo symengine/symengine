@@ -276,10 +276,7 @@ void Mul::as_two_terms(const Ptr<RCP<const Basic>> &a,
 void Mul::as_base_exp(const RCP<const Basic> &self, const Ptr<RCP<const Basic>> &exp,
         const Ptr<RCP<const Basic>> &base)
 {
-    if (is_a<Symbol>(*self)) {
-        *exp = one;
-        *base = self;
-    } else if (is_a_Number(*self)) {
+    if (is_a_Number(*self)) {
         // Always ensure it is of form |num| > |den|
         // in case of Integers den = 1
         if (is_a<Rational>(*self)) {
@@ -298,18 +295,9 @@ void Mul::as_base_exp(const RCP<const Basic> &self, const Ptr<RCP<const Basic>> 
     } else if (is_a<Pow>(*self)) {
         *exp = rcp_static_cast<const Pow>(self)->exp_;
         *base = rcp_static_cast<const Pow>(self)->base_;
-    } else if (is_a<Add>(*self)) {
-        *exp = one;
-        *base = self;
-    } else if (is_a<Log>(*self)) {
-        *exp = one;
-        *base = self;
-    } else if (is_a_sub<Function>(*self)) {
-        *exp = one;
-        *base = self;
     } else {
-        std::cout << "as_base_exp: " << *self << std::endl;
-        throw std::runtime_error("Not implemented yet.");
+        *exp = one;
+        *base = self;
     }
 }
 
