@@ -41,7 +41,9 @@ def sympy2csympy(a, raise_error=False):
     """
     Converts 'a' from SymPy to CSymPy.
 
-    Returns None if the expression cannot be converted.
+    If the expression cannot be converted, it either returns None (if
+    raise_error==False) or raises an SympifyError exception (if
+    raise_error==True).
     """
     import sympy
     if isinstance(a, sympy.Symbol):
@@ -76,6 +78,16 @@ def sympy2csympy(a, raise_error=False):
             for e in r:
                 v.append(e)
         return DenseMatrix(row, col, v)
+    elif isinstance(a, tuple):
+        v = []
+        for e in a:
+            v.append(sympy2csympy(e, True))
+        return tuple(v)
+    elif isinstance(a, list):
+        v = []
+        for e in a:
+            v.append(sympy2csympy(e, True))
+        return v
     if raise_error:
         raise SympifyError("sympy2csympy: Cannot convert '%r' to a csympy type." % a)
 
@@ -85,15 +97,7 @@ def sympify(a, raise_error=True):
     elif isinstance(a, (int, long)):
         return Integer(a)
     else:
-        try:
-            e = sympy2csympy(a)
-            if e is not None:
-                return e
-        except ImportError:
-            pass
-
-        if raise_error:
-            raise SympifyError("Cannot convert '%r' to a csympy type." % a)
+        return sympy2csympy(a, raise_error)
 
 cdef class Basic(object):
     cdef RCP[const csympy.Basic] thisptr
