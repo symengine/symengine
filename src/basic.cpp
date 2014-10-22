@@ -7,7 +7,7 @@
 #include "mul.h"
 #include "pow.h"
 #include "constants.h"
-
+#include "eval.h"
 
 namespace CSymPy {
 
@@ -49,6 +49,14 @@ RCP<const Basic> Basic::subs(const map_basic_basic &subs_dict) const
         return self;
     else
         return it->second;
+}
+
+//! Numerical evaluation of CSymPy types using Arb
+RCP<const Basic> Basic::n(long precision)
+{
+    // Currently n() does not check for accuracy of the returned answer
+    // and loop till we get an acceptable value
+    return eval(rcp_const_cast<Basic>(rcp(this)), precision);
 }
 
 } // CSymPy

@@ -25,6 +25,7 @@ set(SRC
     dense_matrix.cpp
     sparse_matrix.cpp
     matrix.cpp
+    eval.cpp
 )
 
 # Needed for "make install"
