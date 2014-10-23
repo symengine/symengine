@@ -220,6 +220,8 @@ public:
             throw std::runtime_error("Not implemented.");
         }
     };
+
+    virtual void accept(Visitor &v) const;
 };
 
 //! returns the `num` and `den` of rational `rat` as `rcp Integer`

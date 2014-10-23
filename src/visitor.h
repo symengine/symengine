@@ -19,7 +19,9 @@ public:
     virtual void visit(const Add &) { };
     virtual void visit(const Mul &) { };
     virtual void visit(const Pow &) { };
-    virtual void visit(const Number &) { };
+    virtual void visit(const Integer &) { };
+    virtual void visit(const Rational &) { };
+    virtual void visit(const Complex &) { };
     virtual void visit(const Log &) { };
     virtual void visit(const Derivative &) { };
     virtual void visit(const Sin &) { };
