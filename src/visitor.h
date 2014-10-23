@@ -106,6 +106,7 @@ public:
     void visit(const Sin &x);
     void visit(const Cos &x);
     void visit(const Tan &x);
+    void visit(const Integer &x);
     double apply(const Basic &b) {
         b.accept(*this);
         return result_;

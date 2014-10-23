@@ -78,6 +78,12 @@ RCP<const Basic> coeff(const Basic &b, const RCP<const Symbol> &x,
     return v.apply(b, x, n);
 }
 
+void EvalDoubleVisitor::visit(const Integer &x)
+{
+    double tmp = x.as_int();
+    result_ = tmp;
+}
+
 void EvalDoubleVisitor::visit(const Sin &x)
 {
     double tmp = eval_double(*(x.get_arg()));
