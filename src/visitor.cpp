@@ -80,7 +80,7 @@ RCP<const Basic> coeff(const Basic &b, const RCP<const Symbol> &x,
 
 void EvalDoubleVisitor::visit(const Integer &x)
 {
-    double tmp = x.as_int();
+    double tmp = x.i.get_d();
     result_ = tmp;
 }
 
