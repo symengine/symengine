@@ -97,6 +97,20 @@ void EvalDoubleVisitor::visit(const Add &x)
     result_ = tmp;
 }
 
+void EvalDoubleVisitor::visit(const Mul &x)
+{
+    double tmp = 1;
+    for (auto &p: x.get_args()) tmp = tmp * eval_double(*p);
+    result_ = tmp;
+}
+
+void EvalDoubleVisitor::visit(const Pow &x)
+{
+    double a = eval_double(*(x.base_));
+    double b = eval_double(*(x.exp_));
+    result_ = ::pow(a, b);
+}
+
 void EvalDoubleVisitor::visit(const Sin &x)
 {
     double tmp = eval_double(*(x.get_arg()));

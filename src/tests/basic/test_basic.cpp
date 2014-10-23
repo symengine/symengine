@@ -612,6 +612,15 @@ void test_eval_double()
 
     r3 = add(r1, r2);
     assert(::fabs(eval_double(*r3) - 1.320896523412) < 1e-12);
+
+    r3 = mul(r1, r2);
+    assert(::fabs(eval_double(*r3) - 0.403422680111) < 1e-12);
+
+    r3 = pow(r1, r2);
+    assert(::fabs(eval_double(*r3) - 0.920580670898) < 1e-12);
+
+    r3 = tan(pow(r1, r2));
+    assert(::fabs(eval_double(*r3) - 1.314847038576) < 1e-12);
 }
 
 int main(int argc, char* argv[])

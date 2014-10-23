@@ -109,6 +109,8 @@ public:
     void visit(const Integer &x);
     void visit(const Rational &x);
     void visit(const Add &x);
+    void visit(const Mul &x);
+    void visit(const Pow &x);
     double apply(const Basic &b) {
         b.accept(*this);
         return result_;
