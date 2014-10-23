@@ -591,6 +591,11 @@ void test_has()
     assert(has_symbol(*r1, x));
     assert(has_symbol(*r1, y));
     assert(!has_symbol(*r1, z));
+
+    r1 = sin(add(x, pow(y, integer(2))));
+    assert(has_symbol(*r1, x));
+    assert(has_symbol(*r1, y));
+    assert(!has_symbol(*r1, z));
 }
 
 int main(int argc, char* argv[])
