@@ -15,7 +15,7 @@ namespace CSymPy {
 //! Rational Class
 class Rational : public Number {
 public:
-    //! `i` : object of `mpz_class`
+    //! `i` : object of `mpq_class`
     mpq_class i;
 
 public:
