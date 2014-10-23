@@ -621,6 +621,17 @@ void test_eval_double()
 
     r3 = tan(pow(r1, r2));
     assert(::fabs(eval_double(*r3) - 1.314847038576) < 1e-12);
+
+    // Symbol must raise an exception
+    CSYMPY_CHECK_THROW(eval_double(*symbol("x")), std::runtime_error)
+
+    // TODO: this is not implemented yet, so we check that it raises an
+    // exception for now
+    CSYMPY_CHECK_THROW(eval_double(*cot(r1)), std::runtime_error)
+    CSYMPY_CHECK_THROW(eval_double(*asin(r1)), std::runtime_error)
+    CSYMPY_CHECK_THROW(eval_double(*acos(r1)), std::runtime_error)
+    CSYMPY_CHECK_THROW(eval_double(*atan(r1)), std::runtime_error)
+    // ... we don't test the rest of functions that are not implemented.
 }
 
 int main(int argc, char* argv[])

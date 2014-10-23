@@ -189,37 +189,99 @@ public:
         return result_;
     }
 
-    virtual void visit(const Symbol &) { };
-    virtual void visit(const Complex &) { };
-    virtual void visit(const Log &) { };
-    virtual void visit(const Derivative &) { };
-    virtual void visit(const Cot &) { };
-    virtual void visit(const Csc &) { };
-    virtual void visit(const Sec &) { };
-    virtual void visit(const ASin &) { };
-    virtual void visit(const ACos &) { };
-    virtual void visit(const ASec &) { };
-    virtual void visit(const ACsc &) { };
-    virtual void visit(const ATan &) { };
-    virtual void visit(const ACot &) { };
-    virtual void visit(const ATan2 &) { };
-    virtual void visit(const LambertW &) { };
-    virtual void visit(const FunctionSymbol &) { };
-    virtual void visit(const Sinh &) { };
-    virtual void visit(const Cosh &) { };
-    virtual void visit(const Tanh &) { };
-    virtual void visit(const Coth &) { };
-    virtual void visit(const ASinh &) { };
-    virtual void visit(const ACosh &) { };
-    virtual void visit(const ATanh &) { };
-    virtual void visit(const ACoth &) { };
-    virtual void visit(const KroneckerDelta &) { };
-    virtual void visit(const LeviCivita &) { };
-    virtual void visit(const Zeta &) { };
-    virtual void visit(const Dirichlet_eta &) { };
-    virtual void visit(const Gamma &) { };
-    virtual void visit(const LowerGamma &) { };
-    virtual void visit(const UpperGamma &) { };
+    virtual void visit(const Symbol &) {
+        throw std::runtime_error("Symbol cannot be evaluated as a double.");
+    };
+    virtual void visit(const Complex &) {
+        throw std::runtime_error("Not implemented.");
+    };
+    virtual void visit(const Log &) {
+        throw std::runtime_error("Not implemented.");
+    };
+    virtual void visit(const Derivative &) {
+        throw std::runtime_error("Not implemented.");
+    };
+    virtual void visit(const Cot &) {
+        throw std::runtime_error("Not implemented.");
+    };
+    virtual void visit(const Csc &) {
+        throw std::runtime_error("Not implemented.");
+    };
+    virtual void visit(const Sec &) {
+        throw std::runtime_error("Not implemented.");
+    };
+    virtual void visit(const ASin &) {
+        throw std::runtime_error("Not implemented.");
+    };
+    virtual void visit(const ACos &) {
+        throw std::runtime_error("Not implemented.");
+    };
+    virtual void visit(const ASec &) {
+        throw std::runtime_error("Not implemented.");
+    };
+    virtual void visit(const ACsc &) {
+        throw std::runtime_error("Not implemented.");
+    };
+    virtual void visit(const ATan &) {
+        throw std::runtime_error("Not implemented.");
+    };
+    virtual void visit(const ACot &) {
+        throw std::runtime_error("Not implemented.");
+    };
+    virtual void visit(const ATan2 &) {
+        throw std::runtime_error("Not implemented.");
+    };
+    virtual void visit(const LambertW &) {
+        throw std::runtime_error("Not implemented.");
+    };
+    virtual void visit(const FunctionSymbol &) {
+        throw std::runtime_error("Not implemented.");
+    };
+    virtual void visit(const Sinh &) {
+        throw std::runtime_error("Not implemented.");
+    };
+    virtual void visit(const Cosh &) {
+        throw std::runtime_error("Not implemented.");
+    };
+    virtual void visit(const Tanh &) {
+        throw std::runtime_error("Not implemented.");
+    };
+    virtual void visit(const Coth &) {
+        throw std::runtime_error("Not implemented.");
+    };
+    virtual void visit(const ASinh &) {
+        throw std::runtime_error("Not implemented.");
+    };
+    virtual void visit(const ACosh &) {
+        throw std::runtime_error("Not implemented.");
+    };
+    virtual void visit(const ATanh &) {
+        throw std::runtime_error("Not implemented.");
+    };
+    virtual void visit(const ACoth &) {
+        throw std::runtime_error("Not implemented.");
+    };
+    virtual void visit(const KroneckerDelta &) {
+        throw std::runtime_error("Not implemented.");
+    };
+    virtual void visit(const LeviCivita &) {
+        throw std::runtime_error("Not implemented.");
+    };
+    virtual void visit(const Zeta &) {
+        throw std::runtime_error("Not implemented.");
+    };
+    virtual void visit(const Dirichlet_eta &) {
+        throw std::runtime_error("Not implemented.");
+    };
+    virtual void visit(const Gamma &) {
+        throw std::runtime_error("Not implemented.");
+    };
+    virtual void visit(const LowerGamma &) {
+        throw std::runtime_error("Not implemented.");
+    };
+    virtual void visit(const UpperGamma &) {
+        throw std::runtime_error("Not implemented.");
+    };
 };
 
 double eval_double(const Basic &b);
