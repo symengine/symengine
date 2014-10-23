@@ -10,6 +10,8 @@
 #include "dict.h"
 #include "mul.h"
 #include "integer.h"
+#include "ntheory.h"
+#include "constants.h"
 
 namespace CSymPy {
 

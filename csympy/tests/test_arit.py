@@ -59,9 +59,9 @@ def test_arit6():
     e = x * y
     assert str(e) == "x*y" or "y*x"
     e = Integer(2)*x
-    assert str(e) == "2x"
+    assert str(e) == "2*x"
     e = 2*x
-    assert str(e) == "2x"
+    assert str(e) == "2*x"
 
 def test_arit7():
     x = Symbol("x")

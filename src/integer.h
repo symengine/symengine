@@ -7,8 +7,6 @@
 #ifndef CSYMPY_INTEGER_H
 #define CSYMPY_INTEGER_H
 
-#include <gmpxx.h>
-
 #include "basic.h"
 #include "number.h"
 
@@ -44,6 +42,8 @@ public:
     inline virtual bool is_zero() const { return this->i == 0; }
     //! \return `true` if `1`
     inline virtual bool is_one() const { return this->i == 1; }
+    //! \return `true` if `-1`
+    inline virtual bool is_minus_one() const { return this->i == -1; }
     //! \return `true` if positive
     inline virtual bool is_positive() const { return this->i > 0; }
     //! \return `true` if negative
@@ -170,12 +170,6 @@ int perfect_square(const Integer &n);
 int perfect_power(const Integer &n);
 //! Integer Absolute value
 RCP<const Integer> iabs(const Integer &n);
-
-// Integers -1, 0 and 1 are created only once in integer.cpp and reused
-// everywhere (faster than creating them all the time):
-extern RCP<const Integer> zero;
-extern RCP<const Integer> one;
-extern RCP<const Integer> minus_one;
 
 } // CSymPy
 

@@ -5,14 +5,14 @@
 
 namespace CSymPy {
 
-// Forward declaration
-class SparseMatrix;
-
 // Base class for matrices
 class MatrixBase {
 public:
+    MatrixBase()
+        : row_{0}, col_{0} {};
     MatrixBase(unsigned row, unsigned col)
         : row_{row}, col_{col} {};
+    virtual ~MatrixBase() {};
 
     // Below methods should be implemented by the derived classes. If not
     // applicable, raise an exception
@@ -23,8 +23,8 @@ public:
     virtual bool eq(const MatrixBase &other) const;
 
     // Get and set elements
-    virtual RCP<const Basic>get(unsigned i) const = 0;
-    virtual void set(unsigned i, RCP<const Basic> &e) = 0;
+    virtual RCP<const Basic> get(unsigned i, unsigned j) const = 0;
+    virtual void set(unsigned i, unsigned j, const RCP<const Basic> &e) = 0;
 
     // Print Matrix, very mundane version, should be overriden derived
     // class if better printing is available
@@ -32,13 +32,43 @@ public:
 
     virtual unsigned rank() const = 0;
     virtual RCP<const Basic> det() const = 0;
-    virtual RCP<const MatrixBase> inv() const = 0;
+    virtual void inv(MatrixBase &result) const = 0;
 
     // Matrix addition
-    virtual MatrixBase& add_matrix(const MatrixBase &other) const = 0;
+    virtual void add_matrix(const MatrixBase &other, MatrixBase &result) const = 0;
 
     // Matrix Multiplication
-    virtual MatrixBase& mul_matrix(const MatrixBase &other) const = 0;
+    virtual void mul_matrix(const MatrixBase &other, MatrixBase &result) const = 0;
+
+    // Add a scalar
+    virtual void add_scalar(const RCP<const Basic> &k, MatrixBase &result) const = 0;
+
+    // Multiply by a scalar
+    virtual void mul_scalar(const RCP<const Basic> &k, MatrixBase &result) const = 0;
+
+    // Matrix transpose
+    virtual void transpose(MatrixBase &result) const = 0;
+
+    // Extract out a submatrix
+    virtual void submatrix( unsigned row_start,
+                            unsigned row_end,
+                            unsigned col_start,
+                            unsigned col_end,
+                            MatrixBase &result) const = 0;
+    // LU factorization
+    virtual void LU(MatrixBase &L, MatrixBase &U) const = 0;
+
+    // LDL factorization
+    virtual void LDL(MatrixBase &L, MatrixBase &D) const = 0;
+
+    // Fraction free LU factorization
+    virtual void FFLU(MatrixBase &LU) const = 0;
+
+    // Fraction free LDU factorization
+    virtual void FFLDU(MatrixBase&L, MatrixBase &D, MatrixBase &U) const = 0;
+
+    // Solve Ax = b using LU factorization
+    virtual void LU_solve(const MatrixBase &b, MatrixBase &x) const = 0;
 
 protected:
     // Stores the dimension of the Matrix
@@ -47,38 +77,69 @@ protected:
 };
 
 // ----------------------------- Dense Matrix --------------------------------//
-
 class DenseMatrix: public MatrixBase {
 public:
     // Constructors
+    DenseMatrix();
     DenseMatrix(unsigned row, unsigned col);
-    DenseMatrix(unsigned row, unsigned col, const std::vector<RCP<const Basic>> &l);
+    DenseMatrix(unsigned row, unsigned col, const vec_basic &l);
 
     // Should implement all the virtual methods from MatrixBase
     // and throw an exception if a method is not applicable.
 
     // Get and set elements
-    virtual RCP<const Basic> get(unsigned i) const;
-    virtual void set(unsigned i, RCP<const Basic> &e);
+    virtual RCP<const Basic> get(unsigned i, unsigned j) const;
+    virtual void set(unsigned i, unsigned j, const RCP<const Basic> &e);
 
     virtual unsigned rank() const;
     virtual RCP<const Basic> det() const;
-    virtual RCP<const MatrixBase> inv() const;
+    virtual void inv(MatrixBase &result) const;
 
     // Matrix addition
-    virtual MatrixBase& add_matrix(const MatrixBase &other) const;
-    friend void add_dense_dense(const DenseMatrix &A, const DenseMatrix &B,
-        DenseMatrix &C);
-    friend void add_dense_scalar(const DenseMatrix &A, RCP<const Basic> &k,
-        DenseMatrix &B );
+    virtual void add_matrix(const MatrixBase &other, MatrixBase &result) const;
 
     // Matrix multiplication
-    virtual MatrixBase& mul_matrix(const MatrixBase &other) const;
+    virtual void mul_matrix(const MatrixBase &other, MatrixBase &result) const;
+
+    // Add a scalar
+    virtual void add_scalar(const RCP<const Basic> &k, MatrixBase &result) const;
+
+    // Multiply by a scalar
+    virtual void mul_scalar(const RCP<const Basic> &k, MatrixBase &result) const;
+
+    // Matrix transpose
+    virtual void transpose(MatrixBase &result) const;
+
+    // Extract out a submatrix
+    virtual void submatrix( unsigned row_start,
+                            unsigned row_end,
+                            unsigned col_start,
+                            unsigned col_end,
+                            MatrixBase &result) const;
+
+    // LU factorization
+    virtual void LU(MatrixBase &L, MatrixBase &U) const;
+
+    // LDL factorization
+    virtual void LDL(MatrixBase &L, MatrixBase &D) const;
+
+    // Solve Ax = b using LU factorization
+    virtual void LU_solve(const MatrixBase &b, MatrixBase &x) const;
+
+    // Fraction free LU factorization
+    virtual void FFLU(MatrixBase &LU) const;
+
+    // Fraction free LDU factorization
+    virtual void FFLDU(MatrixBase&L, MatrixBase &D, MatrixBase &U) const;
 
     // Friend functions related to Matrix Operations
+    friend void add_dense_dense(const DenseMatrix &A, const DenseMatrix &B,
+        DenseMatrix &C);
+    friend void add_dense_scalar(const DenseMatrix &A, const RCP<const Basic> &k,
+        DenseMatrix &B );
     friend void mul_dense_dense(const DenseMatrix &A, const DenseMatrix &B,
         DenseMatrix &C);
-    friend void mul_dense_scalar(const DenseMatrix &A, RCP<const Basic> &k,
+    friend void mul_dense_scalar(const DenseMatrix &A, const RCP<const Basic> &k,
         DenseMatrix &C);
     friend void transpose_dense(const DenseMatrix &A, DenseMatrix &B);
     friend void submatrix_dense(const DenseMatrix &A, unsigned row_start,
@@ -133,48 +194,133 @@ public:
     friend RCP<const Basic> det_bareis(const DenseMatrix &A);
     friend void berkowitz(const DenseMatrix &A, std::vector<DenseMatrix> &polys);
 
+    // Inverse
+    friend void inverse_fraction_free_LU(const DenseMatrix &A, DenseMatrix &B);
+    friend void inverse_LU(const DenseMatrix &A, DenseMatrix&B);
+    friend void inverse_gauss_jordan(const DenseMatrix &A, DenseMatrix &B);
+
 protected:
     // Matrix elements are stored in row-major order
-    std::vector<RCP<const Basic>> m_;
+    vec_basic m_;
 };
 
-// ----------------------------- Sparse Matrix -------------------------------//
-
-class SparseMatrix: public MatrixBase {
+// ----------------------------- Sparse Matrices -----------------------------//
+class CSRMatrix: public MatrixBase {
 public:
-    // Constructors
-    SparseMatrix(unsigned row, unsigned col);
-    SparseMatrix(unsigned row, unsigned col,
-            std::map<int, RCP<Basic>> &l);
+    CSRMatrix();
+    CSRMatrix(unsigned row, unsigned col);
+    CSRMatrix(unsigned row, unsigned col, std::vector<unsigned>&& p,
+        std::vector<unsigned>&& j, vec_basic&& x);
 
-    // Virtual functions inherited from Basic class
-    virtual std::size_t __hash__() const;
-    virtual bool __eq__(const Basic &o) const;
-    virtual int compare(const Basic &o) const;
+    bool is_canonical();
 
-    // Should implement all the virtual methods from MatrixBase
-    // and throw an exception if a method is not applicable.
+    virtual bool eq(const MatrixBase &other) const;
 
-    // Get and Set elements
-    virtual RCP<const Basic> get(unsigned i) const;
-    virtual void set(unsigned i, RCP<const Basic> &e);
+    // Get and set elements
+    virtual RCP<const Basic> get(unsigned i, unsigned j) const;
+    virtual void set(unsigned i, unsigned j, const RCP<const Basic> &e);
 
     virtual unsigned rank() const;
     virtual RCP<const Basic> det() const;
-    virtual RCP<const MatrixBase> inv() const;
+    virtual void inv(MatrixBase &result) const;
 
     // Matrix addition
-    virtual MatrixBase& add_matrix(const MatrixBase &other) const;
+    virtual void add_matrix(const MatrixBase &other, MatrixBase &result) const;
 
     // Matrix Multiplication
-    virtual MatrixBase& mul_matrix(const MatrixBase &other) const;
+    virtual void mul_matrix(const MatrixBase &other, MatrixBase &result) const;
+
+    // Add a scalar
+    virtual void add_scalar(const RCP<const Basic> &k, MatrixBase &result) const;
+
+    // Multiply by a scalar
+    virtual void mul_scalar(const RCP<const Basic> &k, MatrixBase &result) const;
+
+    // Matrix transpose
+    virtual void transpose(MatrixBase &result) const;
+
+    // Extract out a submatrix
+    virtual void submatrix( unsigned row_start,
+                            unsigned row_end,
+                            unsigned col_start,
+                            unsigned col_end,
+                            MatrixBase &result) const;
+
+    // LU factorization
+    virtual void LU(MatrixBase &L, MatrixBase &U) const;
+
+    // LDL factorization
+    virtual void LDL(MatrixBase &L, MatrixBase &D) const;
+
+    // Solve Ax = b using LU factorization
+    virtual void LU_solve(const MatrixBase &b, MatrixBase &x) const;
+
+    // Fraction free LU factorization
+    virtual void FFLU(MatrixBase &LU) const;
+
+    // Fraction free LDU factorization
+    virtual void FFLDU(MatrixBase&L, MatrixBase &D, MatrixBase &U) const;
+
+    static void csr_sum_duplicates(std::vector<unsigned>& p_,
+        std::vector<unsigned>& j_,
+        vec_basic& x_,
+        unsigned row_);
+
+    static void csr_sort_indices(std::vector<unsigned>& p_,
+        std::vector<unsigned>& j_,
+        vec_basic& x_,
+        unsigned row_);
+
+    static bool csr_has_sorted_indices(const std::vector<unsigned>& p_,
+        const std::vector<unsigned>& j_,
+        unsigned row_);
+
+    static bool csr_has_duplicates(const std::vector<unsigned>& p_,
+        const std::vector<unsigned>& j_,
+        unsigned row_);
+
+    static bool csr_has_canonical_format(const std::vector<unsigned>& p_,
+        const std::vector<unsigned>& j_,
+        unsigned row_);
+
+    static CSRMatrix from_coo(unsigned row, unsigned col,
+        const std::vector<unsigned>& i, const std::vector<unsigned>& j,
+        const vec_basic& x);
+
+    friend void csr_matmat_pass1(const CSRMatrix &A, const CSRMatrix &B,
+        CSRMatrix &C);
+    friend void csr_matmat_pass2(const CSRMatrix &A, const CSRMatrix &B,
+        CSRMatrix &C);
+    friend void csr_diagonal(const CSRMatrix& A, DenseMatrix& D);
+    friend void csr_scale_rows(CSRMatrix& A, const DenseMatrix& X);
+    friend void csr_scale_columns(CSRMatrix& A, const DenseMatrix& X);
+
+    friend void csr_binop_csr_canonical(const CSRMatrix& A, const CSRMatrix& B,
+        CSRMatrix& C,
+        RCP<const Basic> (&bin_op)(const RCP<const Basic>&, const RCP<const Basic>&));
 
 protected:
-    std::map<int, RCP<Basic>> m_;
+    std::vector<unsigned> p_;
+    std::vector<unsigned> j_;
+    vec_basic x_;
 };
 
+// Matrix Factorization
+void LU(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &U);
+
+void LDL(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &D);
+
+// Inverse
+void inverse_fraction_free_LU(const DenseMatrix &A, DenseMatrix &B);
+
+void inverse_gauss_jordan(const DenseMatrix &A, DenseMatrix &B);
+
+// Solving Ax = b
 void fraction_free_LU_solve(const DenseMatrix &A, const DenseMatrix &b,
     DenseMatrix &x);
+
+void fraction_free_gauss_jordan_solve(const DenseMatrix &A,
+    const DenseMatrix &b, DenseMatrix &x);
 
 void LU_solve(const DenseMatrix &A, const DenseMatrix &b, DenseMatrix &x);
 
@@ -182,6 +328,19 @@ void LDL_solve(const DenseMatrix &A, const DenseMatrix &b, DenseMatrix &x);
 
 // Determinant
 RCP<const Basic> det_berkowitz(const DenseMatrix &A);
+
+// Characteristic polynomial: Only the coefficients of monomials in decreasing
+// order of monomial powers is returned, i.e. if `B = transpose([1, -2, 3])`
+// then the corresponding polynomial is `x^2 - 2x + 3`.
+void char_poly(const DenseMatrix &A, DenseMatrix &B);
+
+// Returns true if `b` is exactly the type T.
+// Here T can be a DenseMatrix, CSRMatrix, etc.
+template <class T>
+inline bool is_a(const MatrixBase &b)
+{
+    return typeid(T) == typeid(b);
+}
 
 } // CSymPy
 

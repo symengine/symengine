@@ -28,9 +28,17 @@ RCP<const Integer> lcm(const Integer &a, const Integer &b);
 //! Extended GCD
 void gcd_ext(const Ptr<RCP<const Integer>> &g, const Ptr<RCP<const Integer>> &s,
         const Ptr<RCP<const Integer>> &t, const Integer &a, const Integer &b);
+//! modulo
+void mod(const Ptr<RCP<const Number>> &r, const Integer &n, const Integer &d);
+//! \return floor of quotient when `n` is divided by `d`
+void fdiv_q(const Ptr<RCP<const Integer>> &q, const Integer &n, const Integer &d);
 //! inverse modulo
 int mod_inverse(const Ptr<RCP<const Integer>> &b, const Integer &a,
         const Integer &m);
+
+//! Chinese remainder function. Return true when a solution exists.
+bool crt(const Ptr<RCP<const Integer>> &R, const std::vector<RCP<const Integer>> &rem,
+       const std::vector<RCP<const Integer>> &mod);
 
 //! Fibonacci number
 RCP<const Integer> fibonacci(unsigned long n);
@@ -62,13 +70,6 @@ int factor(const Ptr<RCP<const Integer>> &f, const Integer &n, double B1 = 1.0);
 //! Factor using trial division. 
 //! \return 1 if a non-trivial factor is found, otherwise 0.
 int factor_trial_division(const Ptr<RCP<const Integer>> &f, const Integer &n);
-// Returns all primes up to the `limit` (excluding). The vector `primes` should
-// be empty on input and it will be filled with the primes.
-// The implementation is a very basic Eratosthenes sieve, but the code should
-// be quite optimized. For limit=1e8, it is about 50x slower than the
-// `primesieve` library (1498ms vs 28.29ms).
-//! \param primes: holds all primes up to the `limit` (excluding).
-void eratosthenes_sieve(unsigned limit, std::vector<unsigned> &primes);
 
 //! Factor using lehman's methods
 int factor_lehman_method(const Ptr<RCP<const Integer>> &f, const Integer &n);
@@ -82,12 +83,66 @@ int factor_pollard_rho_method(const Ptr<RCP<const Integer>> &f, const Integer &n
         unsigned retries = 5);
 
 //! Find prime factors of `n`
-void prime_factors(const RCP<const Integer> &n,
-        std::vector<RCP<const Integer>> &primes);
+void prime_factors(std::vector<RCP<const Integer>> &primes, const Integer &n);
 //! Find multiplicities of prime factors of `n`
-void prime_factor_multiplicities(const RCP<const Integer> &n,
-        map_integer_uint &primes);
+void prime_factor_multiplicities(map_integer_uint &primes, const Integer &n);
+// Sieve class stores all the primes upto a limit. When a prime or a list of prime 
+// is requested, if the prime is not there in the sieve, it is extended to hold that 
+// prime. The implementation is a very basic Eratosthenes sieve, but the code should
+// be quite optimized. For limit=1e8, it is about 20x slower than the
+// `primesieve` library (1206ms vs 55.63ms).
+class Sieve {
 
+private:
+    static std::vector<unsigned> _primes;
+    static void _extend(unsigned limit);
+    static unsigned _sieve_size;
+
+public:
+    // Returns all primes up to the `limit` (including). The vector `primes` should
+    // be empty on input and it will be filled with the primes.
+    //! \param primes: holds all primes up to the `limit` (including).
+    static void generate_primes(unsigned limit, std::vector<unsigned> &primes);
+    //Clear the array of primes stored if the variable set_clear is set to true
+    static void clear();
+    //Set the sieve size in kilobytes. Set it to L1d cache size for best performance.
+    //Default value is 32.
+    static void set_sieve_size(unsigned size);
+    //Variable to set whether the sieve is cleared when clear() is called
+    static bool set_clear;
+
+    class iterator {
+
+    private:
+        unsigned _index;
+        unsigned _limit;
+
+    public:
+        //Iterator that generates primes upto limit
+        iterator(unsigned limit);
+        //Iterator that generates primes with no limit.
+        iterator();
+        //Destructor
+        ~iterator();
+        //Next prime
+        unsigned next_prime();
+    };
+};
+
+//! Computes the Bernoulli number Bn as an exact fraction, for an isolated integer n
+RCP<const Number> bernoulli(ulong n);
+//! Computes a primitive root. Returns false if no primitive root exists. 
+//Primitive root calculated is the smallest when n is prime.
+bool primitive_root(const Ptr<RCP<const Integer>> &g, const Integer &n);
+//! Computes all primitive roots less than n. Returns false if no primitive root exists.
+bool primitive_root_list(std::vector<RCP<const Integer>> &roots, const Integer &n);
+//! Euler's totient function
+RCP<const Integer> totient(const RCP<const Integer> &n);
+//! Carmichael function
+RCP<const Integer> carmichael(const RCP<const Integer> &n);
+//! Multiplicative order. Return false if order does not exist
+bool multiplicative_order(const Ptr<RCP<const Integer>> &o, const RCP<const Integer> &a,
+        const RCP<const Integer> &n);
 }
 #endif
 

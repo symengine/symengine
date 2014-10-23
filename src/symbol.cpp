@@ -1,5 +1,6 @@
 #include "symbol.h"
 #include "integer.h"
+#include "constants.h"
 
 namespace CSymPy {
 
@@ -41,9 +42,5 @@ RCP<const Basic> Symbol::diff(const RCP<const Symbol> &x) const
     else
         return zero;
 }
-
-// Initialize the special symbols.
-RCP<const Symbol> pi = rcp(new Symbol("pi"));
-RCP<const Symbol> E = rcp(new Symbol("E"));
 
 } // CSymPy

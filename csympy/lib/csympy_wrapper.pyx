@@ -2,7 +2,6 @@ from cython.operator cimport dereference as deref
 cimport csympy
 from csympy cimport rcp, RCP
 from libcpp.string cimport string
-from libcpp.vector cimport vector
 
 class SympifyError(Exception):
     pass
@@ -20,6 +19,8 @@ cdef c2py(RCP[const csympy.Basic] o):
         r = Integer.__new__(Integer, -99999)
     elif (csympy.is_a_Rational(deref(o))):
         r = Rational.__new__(Rational)
+    elif (csympy.is_a_Complex(deref(o))):
+        r = Complex.__new__(Complex)
     elif (csympy.is_a_Symbol(deref(o))):
         # TODO: figure out how to bypass the __init__() completely:
         r = Symbol.__new__(Symbol, "null")
@@ -40,7 +41,9 @@ def sympy2csympy(a, raise_error=False):
     """
     Converts 'a' from SymPy to CSymPy.
 
-    Returns None if the expression cannot be converted.
+    If the expression cannot be converted, it either returns None (if
+    raise_error==False) or raises an SympifyError exception (if
+    raise_error==True).
     """
     import sympy
     if isinstance(a, sympy.Symbol):
@@ -58,6 +61,8 @@ def sympy2csympy(a, raise_error=False):
         return Integer(a.p)
     elif isinstance(a, sympy.Rational):
         return Integer(a.p) / Integer(a.q)
+    elif a is sympy.I:
+        return I
     elif isinstance(a, sympy.sin):
         return sin(a.args[0])
     elif isinstance(a, sympy.cos):
@@ -66,24 +71,33 @@ def sympy2csympy(a, raise_error=False):
         name = str(a.func)
         arg = a.args[0]
         return function_symbol(name, sympy2csympy(arg, True))
+    elif isinstance(a, sympy.Matrix):
+        row, col = a.shape
+        v = []
+        for r in a.tolist():
+            for e in r:
+                v.append(e)
+        return DenseMatrix(row, col, v)
+    elif isinstance(a, tuple):
+        v = []
+        for e in a:
+            v.append(sympy2csympy(e, True))
+        return tuple(v)
+    elif isinstance(a, list):
+        v = []
+        for e in a:
+            v.append(sympy2csympy(e, True))
+        return v
     if raise_error:
         raise SympifyError("sympy2csympy: Cannot convert '%r' to a csympy type." % a)
 
 def sympify(a, raise_error=True):
-    if isinstance(a, Basic):
+    if isinstance(a, (Basic, MatrixBase)):
         return a
     elif isinstance(a, (int, long)):
         return Integer(a)
     else:
-        try:
-            e = sympy2csympy(a)
-            if e is not None:
-                return e
-        except ImportError:
-            pass
-
-        if raise_error:
-            raise SympifyError("Cannot convert '%r' to a csympy type." % a)
+        return sympy2csympy(a, raise_error)
 
 cdef class Basic(object):
     cdef RCP[const csympy.Basic] thisptr
@@ -179,11 +193,10 @@ cdef class Basic(object):
 
     @property
     def args(self):
-        cdef RCP[const csympy.Basic] Y
+        cdef csympy.vec_basic Y = deref(self.thisptr).get_args()
         s = []
-        for i in range(deref(self.thisptr).get_args().size()):
-            Y = <RCP[const csympy.Basic]>(deref(self.thisptr).get_args()[i])
-            s.append(c2py(Y))
+        for i in range(Y.size()):
+            s.append(c2py(<RCP[const csympy.Basic]>(Y[i])))
         return tuple(s)
 
 
@@ -239,6 +252,20 @@ cdef class Rational(Number):
     def _sympy_(self):
         import sympy
         return sympy.Rational(deref(self.thisptr).__str__().decode("utf-8"))
+
+cdef class Complex(Number):
+
+    def __dealloc__(self):
+        self.thisptr.reset()
+
+    def _sympy_(self):
+        import sympy
+        # FIXME: this is quite fragile. We should request the real and
+        # imaginary parts and construct the sympy expression using those (and
+        # using sympy.I explicitly), rather than relying on the string
+        # representation and hoping sympy.sympify() will do the right thing.
+        s = deref(self.thisptr).__str__().decode("utf-8")
+        return sympy.sympify(s)
 
 cdef class Add(Basic):
 
@@ -322,13 +349,183 @@ cdef class Derivative(Basic):
         cdef RCP[const csympy.Derivative] X = \
             csympy.rcp_static_cast_Derivative(self.thisptr)
         arg = c2py(deref(X).get_arg())._sympy_()
-        cdef RCP[const csympy.Basic] Y
+        cdef csympy.vec_basic Y = deref(X).get_symbols()
         s = []
-        for i in range(deref(X).get_symbols().size()):
-            Y = <RCP[const csympy.Basic]>(deref(X).get_symbols()[i])
-            s.append(c2py(Y)._sympy_())
+        for i in range(Y.size()):
+            s.append(c2py(<RCP[const csympy.Basic]>(Y[i]))._sympy_())
         import sympy
         return sympy.Derivative(arg, *s)
+
+cdef class MatrixBase:
+    cdef csympy.MatrixBase* thisptr
+
+    def __richcmp__(a, b, int op):
+        cdef MatrixBase A = sympify(a, False)
+        cdef MatrixBase B = sympify(b, False)
+        if A is None or B is None: return NotImplemented
+        if (op == 2):
+            return deref(A.thisptr).eq(deref(B.thisptr))
+        elif (op == 3):
+            return not deref(A.thisptr).eq(deref(B.thisptr))
+        else:
+            return NotImplemented
+
+cdef class DenseMatrix(MatrixBase):
+
+    def __cinit__(self, row, col):
+        self.thisptr = new csympy.DenseMatrix(row, col)
+
+    def __cinit__(self, row, col, v):
+        cdef csympy.vec_basic v_
+        cdef Basic e_
+        for e in v:
+            e_ = sympify(e, False)
+            if e_ is not None:
+                v_.push_back(e_.thisptr)
+
+        self.thisptr = new csympy.DenseMatrix(row, col, v_)
+
+    def __str__(self):
+        return deref(self.thisptr).__str__().decode("utf-8")
+
+    def __dealloc__(self):
+        del self.thisptr
+
+    def nrows(self):
+        return deref(self.thisptr).nrows()
+
+    def ncols(self):
+        return deref(self.thisptr).ncols()
+
+    def get(self, i, j):
+        # No error checking is done
+        return c2py(deref(self.thisptr).get(i, j))
+
+    def set(self, i, j, e):
+        cdef Basic e_ = sympify(e)
+        if e_ is not None:
+            deref(self.thisptr).set(i, j, <const RCP[const csympy.Basic] &>(e_.thisptr))
+
+    def det(self):
+        return c2py(deref(self.thisptr).det())
+
+    def inv(self, method='LU'):
+        result = DenseMatrix(self.nrows(), self.ncols(), [0]*self.nrows()*self.ncols())
+
+        if method.upper() == 'LU':
+            ## inv() method of DenseMatrix uses LU factorization
+            deref(self.thisptr).inv(deref(result.thisptr))
+        elif method.upper() == 'FFLU':
+            csympy.inverse_FFLU(deref(csympy.static_cast_DenseMatrix(self.thisptr)),
+                deref(csympy.static_cast_DenseMatrix(result.thisptr)))
+        elif method.upper() == 'GJ':
+            csympy.inverse_GJ(deref(csympy.static_cast_DenseMatrix(self.thisptr)),
+                deref(csympy.static_cast_DenseMatrix(result.thisptr)))
+        else:
+            raise Exception("Unsupported method.")
+
+        return result
+
+    def add_matrix(self, A):
+        cdef MatrixBase A_ = sympify(A)
+        result = DenseMatrix(self.nrows(), self.ncols(), [0]*self.nrows()*self.ncols())
+        deref(self.thisptr).add_matrix(deref(A_.thisptr), deref(result.thisptr))
+        return result
+
+    def mul_matrix(self, A):
+        cdef MatrixBase A_ = sympify(A)
+        result = DenseMatrix(self.nrows(), self.ncols(), [0]*self.nrows()*self.ncols())
+        deref(self.thisptr).mul_matrix(deref(A_.thisptr), deref(result.thisptr))
+        return result
+
+    def add_scalar(self, k):
+        cdef Basic k_ = sympify(k)
+        result = DenseMatrix(self.nrows(), self.ncols(), [0]*self.nrows()*self.ncols())
+        deref(self.thisptr).add_scalar(<const RCP[const csympy.Basic] &>(k_.thisptr), deref(result.thisptr))
+        return result
+
+    def mul_scalar(self, k):
+        cdef Basic k_ = sympify(k)
+        result = DenseMatrix(self.nrows(), self.ncols(), [0]*self.nrows()*self.ncols())
+        deref(self.thisptr).mul_scalar(<const RCP[const csympy.Basic] &>(k_.thisptr), deref(result.thisptr))
+        return result
+
+    def transpose(self):
+        result = DenseMatrix(self.ncols(), self.nrows(), [0]*self.nrows()*self.ncols())
+        deref(self.thisptr).transpose(deref(result.thisptr))
+        return result
+
+    def submatrix(self, r_i, r_j, c_i, c_j):
+        result = DenseMatrix(r_j - r_i + 1, c_j - c_i + 1, [0]*(r_j - r_i + 1)*(c_j - c_i + 1))
+        deref(self.thisptr).submatrix(r_i, r_j, c_i, c_j, deref(result.thisptr))
+        return result
+
+    def LU(self):
+        L = DenseMatrix(self.nrows(), self.ncols(), [0]*self.nrows()*self.ncols())
+        U = DenseMatrix(self.nrows(), self.ncols(), [0]*self.nrows()*self.ncols())
+        deref(self.thisptr).LU(deref(L.thisptr), deref(U.thisptr))
+        return L, U
+
+    def LDL(self):
+        L = DenseMatrix(self.nrows(), self.ncols(), [0]*self.nrows()*self.ncols())
+        D = DenseMatrix(self.nrows(), self.ncols(), [0]*self.nrows()*self.ncols())
+        deref(self.thisptr).LDL(deref(L.thisptr), deref(D.thisptr))
+        return L, D
+
+    def solve(self, b, method='LU'):
+        cdef DenseMatrix b_ = sympify(b)
+        x = DenseMatrix(b_.nrows(), b_.ncols(), [0]*b_.nrows()*b_.ncols())
+
+        if method.upper() == 'LU':
+            ## solve() method of DenseMatrix uses LU factorization
+            deref(self.thisptr).LU_solve(deref(b_.thisptr), deref(x.thisptr))
+        elif method.upper() == 'FFLU':
+            csympy.FFLU_solve(deref(csympy.static_cast_DenseMatrix(self.thisptr)),
+                deref(csympy.static_cast_DenseMatrix(b_.thisptr)),
+                deref(csympy.static_cast_DenseMatrix(x.thisptr)))
+        elif method.upper() == 'LDL':
+            csympy.LDL_solve(deref(csympy.static_cast_DenseMatrix(self.thisptr)),
+                deref(csympy.static_cast_DenseMatrix(b_.thisptr)),
+                deref(csympy.static_cast_DenseMatrix(x.thisptr)))
+        elif method.upper() == 'FFGJ':
+            csympy.FFGJ_solve(deref(csympy.static_cast_DenseMatrix(self.thisptr)),
+                deref(csympy.static_cast_DenseMatrix(b_.thisptr)),
+                deref(csympy.static_cast_DenseMatrix(x.thisptr)))
+        else:
+            raise Exception("Unsupported method.")
+
+        return x
+
+    def FFLU(self):
+        L = DenseMatrix(self.nrows(), self.ncols(), [0]*self.nrows()*self.ncols())
+        U = DenseMatrix(self.nrows(), self.ncols(), [0]*self.nrows()*self.ncols())
+        deref(self.thisptr).FFLU(deref(L.thisptr))
+
+        for i in range(self.nrows()):
+            for j in range(i + 1, self.ncols()):
+                U.set(i, j, L.get(i, j))
+                L.set(i, j, 0)
+            U.set(i, i, L.get(i, i))
+
+        return L, U
+
+    def FFLDU(self):
+        L = DenseMatrix(self.nrows(), self.ncols(), [0]*self.nrows()*self.ncols())
+        D = DenseMatrix(self.nrows(), self.ncols(), [0]*self.nrows()*self.ncols())
+        U = DenseMatrix(self.nrows(), self.ncols(), [0]*self.nrows()*self.ncols())
+        deref(self.thisptr).FFLDU(deref(L.thisptr), deref(D.thisptr), deref(U.thisptr))
+        return L, D, U
+
+    def _sympy_(self):
+        s = []
+        cdef csympy.DenseMatrix A = deref(csympy.static_cast_DenseMatrix(self.thisptr))
+        for i in range(A.nrows()):
+            l = []
+            for j in range(A.ncols()):
+                l.append(c2py(A.get(i, j))._sympy_())
+            s.append(l)
+        import sympy
+        return sympy.Matrix(s)
 
 def sin(x):
     cdef Basic X = sympify(x)
@@ -345,6 +542,11 @@ def function_symbol(name, x):
 def sqrt(x):
     cdef Basic X = sympify(x)
     return c2py(csympy.sqrt(X.thisptr))
+
+def densematrix(row, col, l):
+    return DenseMatrix(row, col, l)
+
+I = c2py(csympy.I)
 
 # Turn on nice stacktraces:
 csympy.print_stack_on_segfault()

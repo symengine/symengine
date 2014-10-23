@@ -40,12 +40,13 @@ cdef extern from "csympy_rcp.h" namespace "CSymPy":
 
 cdef extern from "basic.h" namespace "CSymPy":
     ctypedef map[RCP[Basic], RCP[Basic]] map_basic_basic
+    ctypedef vector[RCP[Basic]] vec_basic "CSymPy::vec_basic"
     cdef cppclass Basic:
         string __str__() nogil except +
         unsigned int hash() nogil except +
         RCP[const Basic] diff(RCP[const Symbol] &x) nogil except +
         RCP[const Basic] subs(map_basic_basic &x) nogil except +
-        vector[RCP[Basic]] get_args() nogil
+        vec_basic get_args() nogil
 
     bool eq(RCP[const Basic] &a, RCP[const Basic] &b) nogil except +
     bool neq(RCP[const Basic] &a, RCP[const Basic] &b) nogil except +
@@ -55,6 +56,7 @@ cdef extern from "basic.h" namespace "CSymPy":
     bool is_a_Pow "CSymPy::is_a<CSymPy::Pow>"(const Basic &b) nogil
     bool is_a_Integer "CSymPy::is_a<CSymPy::Integer>"(const Basic &b) nogil
     bool is_a_Rational "CSymPy::is_a<CSymPy::Rational>"(const Basic &b) nogil
+    bool is_a_Complex "CSymPy::is_a<CSymPy::Complex>"(const Basic &b) nogil
     bool is_a_Symbol "CSymPy::is_a<CSymPy::Symbol>"(const Basic &b) nogil
     bool is_a_Sin "CSymPy::is_a<CSymPy::Sin>"(const Basic &b) nogil
     bool is_a_Cos "CSymPy::is_a<CSymPy::Cos>"(const Basic &b) nogil
@@ -69,15 +71,23 @@ cdef extern from "symbol.h" namespace "CSymPy":
         Symbol(string name) nogil
         string get_name() nogil
 
+cdef extern from "number.h" namespace "CSymPy":
+    cdef cppclass Number(Basic):
+        pass
 
 cdef extern from "integer.h" namespace "CSymPy":
-    cdef cppclass Integer(Basic):
+    cdef cppclass Integer(Number):
         Integer(int i) nogil
         Integer(mpz_class i) nogil
 
 cdef extern from "rational.h" namespace "CSymPy":
-    cdef cppclass Rational(Basic):
+    cdef cppclass Rational(Number):
         pass
+
+cdef extern from "complex.h" namespace "CSymPy":
+    cdef cppclass Complex(Number):
+        pass
+    RCP[const Basic] I
 
 
 cdef extern from "add.h" namespace "CSymPy":
@@ -129,4 +139,48 @@ cdef extern from "functions.h" namespace "CSymPy":
 
     cdef cppclass Derivative(Basic):
         RCP[const Basic] get_arg() nogil
-        vector[RCP[Basic]] get_symbols() nogil
+        vec_basic get_symbols() nogil
+
+cdef extern from "matrix.h" namespace "CSymPy":
+    cdef cppclass MatrixBase:
+        const unsigned nrows() nogil
+        const unsigned ncols() nogil
+        RCP[const Basic] get(unsigned i, unsigned j) nogil
+        RCP[const Basic] set(unsigned i, unsigned j, const RCP[const Basic] &e) nogil
+        string __str__() nogil except+
+        bool eq(const MatrixBase &) nogil
+        RCP[const Basic] det() nogil
+        void inv(MatrixBase &)
+        void add_matrix(const MatrixBase &other, MatrixBase &result) nogil
+        void mul_matrix(const MatrixBase &other, MatrixBase &result) nogil
+        void add_scalar(const RCP[const Basic] &k, MatrixBase &result) nogil
+        void mul_scalar(const RCP[const Basic] &k, MatrixBase &result) nogil
+        void transpose(MatrixBase &result) nogil
+        void submatrix(unsigned row_start,
+                        unsigned row_end,
+                        unsigned col_start,
+                        unsigned col_end,
+                        MatrixBase &result) nogil
+        void LU(MatrixBase &L, MatrixBase &U) nogil
+        void LDL(MatrixBase &L, MatrixBase &D) nogil
+        void LU_solve(const MatrixBase &b, MatrixBase &x) nogil
+        void FFLU(MatrixBase &LU) nogil
+        void FFLDU(MatrixBase&L, MatrixBase &D, MatrixBase &U) nogil
+
+    cdef cppclass DenseMatrix(MatrixBase):
+        DenseMatrix()
+        DenseMatrix(unsigned i, unsigned j) nogil
+        DenseMatrix(unsigned i, unsigned j, const vec_basic &v) nogil
+
+    bool is_a_DenseMatrix "CSymPy::is_a<CSymPy::DenseMatrix>"(const MatrixBase &b) nogil
+    DenseMatrix* static_cast_DenseMatrix "static_cast<CSymPy::DenseMatrix*>"(const MatrixBase *a)
+    void inverse_FFLU "CSymPy::inverse_fraction_free_LU"(const DenseMatrix &A,
+        DenseMatrix &B) nogil
+    void inverse_GJ "CSymPy::inverse_gauss_jordan"(const DenseMatrix &A,
+        DenseMatrix &B) nogil
+    void FFLU_solve "CSymPy::fraction_free_LU_solve"(const DenseMatrix &A,
+        const DenseMatrix &b, DenseMatrix &x) nogil
+    void FFGJ_solve "CSymPy::fraction_free_gauss_jordan_solve"(const DenseMatrix &A,
+        const DenseMatrix &b, DenseMatrix &x) nogil
+    void LDL_solve "CSymPy::LDL_solve"(const DenseMatrix &A, const DenseMatrix &b,
+        DenseMatrix &x) nogil

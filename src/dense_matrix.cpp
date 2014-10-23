@@ -7,27 +7,32 @@
 namespace CSymPy {
 
 // Constructors
+DenseMatrix::DenseMatrix()
+        : MatrixBase() {}
+
 DenseMatrix::DenseMatrix(unsigned row, unsigned col)
         : MatrixBase(row, col)
 {
     m_ = std::vector<RCP<const Basic>>(row*col);
 }
 
-DenseMatrix::DenseMatrix(unsigned row, unsigned col, const std::vector<RCP<const Basic>> &l)
+DenseMatrix::DenseMatrix(unsigned row, unsigned col, const vec_basic &l)
         : MatrixBase(row, col), m_{l}
 {
     CSYMPY_ASSERT(m_.size() == row*col)
 }
 
 // Get and set elements
-RCP<const Basic> DenseMatrix::get(unsigned i) const
+RCP<const Basic> DenseMatrix::get(unsigned i, unsigned j) const
 {
-    return m_[i];
+    CSYMPY_ASSERT(i < row_ && j < col_);
+    return m_[i*col_ + j];
 }
 
-void DenseMatrix::set(unsigned i, RCP<const Basic> &e)
+void DenseMatrix::set(unsigned i, unsigned j, const RCP<const Basic> &e)
 {
-    m_[i] = e;
+    CSYMPY_ASSERT(i < row_ && j < col_);
+    m_[i*col_ + j] = e;
 }
 
 unsigned DenseMatrix::rank() const
@@ -37,22 +42,127 @@ unsigned DenseMatrix::rank() const
 
 RCP<const Basic> DenseMatrix::det() const
 {
-    throw std::runtime_error("Not implemented.");
+    return det_bareis(*this);
 }
 
-RCP<const MatrixBase> DenseMatrix::inv() const
+void DenseMatrix::inv(MatrixBase &result) const
 {
-    throw std::runtime_error("Not implemented.");
+    if (is_a<DenseMatrix>(result)) {
+        DenseMatrix &r = static_cast<DenseMatrix &>(result);
+        inverse_LU(*this, r);
+    }
 }
 
-MatrixBase& DenseMatrix::add_matrix(const MatrixBase &other) const
+void DenseMatrix::add_matrix(const MatrixBase &other, MatrixBase &result) const
 {
-    throw std::runtime_error("Not implemented.");
+    CSYMPY_ASSERT(row_ == result.nrows() && col_ == result.ncols());
+
+    if (is_a<DenseMatrix>(other) && is_a<DenseMatrix>(result)) {
+        const DenseMatrix &o = static_cast<const DenseMatrix &>(other);
+        DenseMatrix &r = static_cast<DenseMatrix &>(result);
+        add_dense_dense(*this, o, r);
+    }
 }
 
-MatrixBase& DenseMatrix::mul_matrix(const MatrixBase &other) const
+void DenseMatrix::mul_matrix(const MatrixBase &other, MatrixBase &result) const
 {
-    throw std::runtime_error("Not implemented.");
+    CSYMPY_ASSERT(row_ == result.nrows() && other.ncols() == result.ncols());
+
+    if (is_a<DenseMatrix>(other) && is_a<DenseMatrix>(result)) {
+        const DenseMatrix &o = static_cast<const DenseMatrix &>(other);
+        DenseMatrix &r = static_cast<DenseMatrix &>(result);
+        mul_dense_dense(*this, o, r);
+    }
+}
+
+// Add a scalar
+void DenseMatrix::add_scalar(const RCP<const Basic> &k, MatrixBase &result) const
+{
+    if (is_a<DenseMatrix>(result)) {
+        DenseMatrix &r = static_cast<DenseMatrix &>(result);
+        add_dense_scalar(*this, k, r);
+    }
+}
+
+// Multiply by a scalar
+void DenseMatrix::mul_scalar(const RCP<const Basic> &k, MatrixBase &result) const
+{
+    if (is_a<DenseMatrix>(result)) {
+        DenseMatrix &r = static_cast<DenseMatrix &>(result);
+        mul_dense_scalar(*this, k, r);
+    }
+}
+
+// Matrix transpose
+void DenseMatrix::transpose(MatrixBase &result) const
+{
+    if (is_a<DenseMatrix>(result)) {
+        DenseMatrix &r = static_cast<DenseMatrix &>(result);
+        transpose_dense(*this, r);
+    }
+}
+
+// Extract out a submatrix
+void DenseMatrix::submatrix( unsigned row_start,
+                        unsigned row_end,
+                        unsigned col_start,
+                        unsigned col_end,
+                        MatrixBase &result) const
+{
+    if (is_a<DenseMatrix>(result)) {
+        DenseMatrix &r = static_cast<DenseMatrix &>(result);
+        submatrix_dense(*this, row_start, row_end, col_start, col_end, r);
+    }
+}
+
+// LU factorization
+void DenseMatrix::LU(MatrixBase &L, MatrixBase &U) const
+{
+    if (is_a<DenseMatrix>(L) && is_a<DenseMatrix>(U)) {
+        DenseMatrix &L_ = static_cast<DenseMatrix &>(L);
+        DenseMatrix &U_ = static_cast<DenseMatrix &>(U);
+        CSymPy::LU(*this, L_, U_);
+    }
+}
+
+// LDL factorization
+void DenseMatrix::LDL(MatrixBase &L, MatrixBase &D) const
+{
+    if (is_a<DenseMatrix>(L) && is_a<DenseMatrix>(D)) {
+        DenseMatrix &L_ = static_cast<DenseMatrix &>(L);
+        DenseMatrix &D_ = static_cast<DenseMatrix &>(D);
+        CSymPy::LDL(*this, L_, D_);
+    }
+}
+
+// Solve Ax = b using LU factorization
+void DenseMatrix::LU_solve(const MatrixBase &b, MatrixBase &x) const
+{
+    if (is_a<DenseMatrix>(b) && is_a<DenseMatrix>(x)) {
+        const DenseMatrix &b_ = static_cast<const DenseMatrix &>(b);
+        DenseMatrix &x_ = static_cast<DenseMatrix &>(x);
+        CSymPy::LU_solve(*this, b_, x_);
+    }
+}
+
+// Fraction free LU factorization
+void DenseMatrix::FFLU(MatrixBase &LU) const
+{
+    if (is_a<DenseMatrix>(LU)) {
+        DenseMatrix &LU_ = static_cast<DenseMatrix &>(LU);
+        fraction_free_LU(*this, LU_);
+    }
+}
+
+// Fraction free LDU factorization
+void DenseMatrix::FFLDU(MatrixBase&L, MatrixBase &D, MatrixBase &U) const
+{
+    if (is_a<DenseMatrix>(L) && is_a<DenseMatrix>(D) && is_a<DenseMatrix>(U)) {
+        DenseMatrix &L_ = static_cast<DenseMatrix &>(L);
+        DenseMatrix &D_ = static_cast<DenseMatrix &>(D);
+        DenseMatrix &U_ = static_cast<DenseMatrix &>(U);
+        fraction_free_LDU(*this, L_, D_, U_);
+    }
 }
 
 // ----------------------------- Matrix Transpose ----------------------------//
@@ -71,7 +181,9 @@ void transpose_dense(const DenseMatrix &A, DenseMatrix &B)
 void submatrix_dense(const DenseMatrix &A, unsigned row_start, unsigned row_end,
         unsigned col_start, unsigned col_end, DenseMatrix &B)
 {
-    CSYMPY_ASSERT(row_end > row_start && col_end > col_start);
+    CSYMPY_ASSERT(row_end >= row_start && col_end >= col_start);
+    CSYMPY_ASSERT(row_start >= 0 && row_end < A.row_);
+    CSYMPY_ASSERT(col_start >= 0 && col_end < A.col_);
     CSYMPY_ASSERT(B.row_ == row_end - row_start + 1 &&
             B.col_ == col_end - col_start + 1);
 
@@ -80,7 +192,7 @@ void submatrix_dense(const DenseMatrix &A, unsigned row_start, unsigned row_end,
     for (unsigned i = 0; i < row; i++)
         for (unsigned j = 0; j < col; j++)
             B.m_[i*col + j] =
-                A.m_[(row_start + i - 1)*A.col_ + col_start - 1 + j];
+                A.m_[(row_start + i)*A.col_ + col_start + j];
 }
 
 // ------------------------------- Matrix Addition ---------------------------//
@@ -101,7 +213,7 @@ void add_dense_dense(const DenseMatrix &A, const DenseMatrix &B, DenseMatrix &C)
     }
 }
 
-void add_dense_scalar(const DenseMatrix &A, RCP<const Basic> &k, DenseMatrix &B)
+void add_dense_scalar(const DenseMatrix &A, const RCP<const Basic> &k, DenseMatrix &B)
 {
     CSYMPY_ASSERT(A.row_ == B.row_ && A.col_ == B.col_);
 
@@ -133,7 +245,7 @@ void mul_dense_dense(const DenseMatrix &A, const DenseMatrix &B,
     }
 }
 
-void mul_dense_scalar(const DenseMatrix &A, RCP<const Basic> &k, DenseMatrix& B)
+void mul_dense_scalar(const DenseMatrix &A, const RCP<const Basic> &k, DenseMatrix& B)
 {
     CSYMPY_ASSERT(A.col_ == B.col_ && A.row_ == B.row_);
 
@@ -470,21 +582,24 @@ void fraction_free_gaussian_elimination_solve(const DenseMatrix &A,
     const DenseMatrix &b, DenseMatrix &x)
 {
     CSYMPY_ASSERT(A.row_ == A.col_);
-    CSYMPY_ASSERT(b.row_ == A.row_ && b.col_ == 1);
-    CSYMPY_ASSERT(x.row_ == A.col_ && x.col_ == 1);
+    CSYMPY_ASSERT(b.row_ == A.row_ && x.row_ == A.row_);
+    CSYMPY_ASSERT(x.col_ == b.col_);
 
-    int i, j, col = A.col_;
+    int i, j, k, col = A.col_, bcol = b.col_;
     DenseMatrix A_ = DenseMatrix(A.row_, A.col_, A.m_);
-    DenseMatrix b_ = DenseMatrix(b.row_, 1, b.m_);
+    DenseMatrix b_ = DenseMatrix(b.row_, b.col_, b.m_);
 
     for (i = 0; i < col - 1; i++)
         for (j = i + 1; j < col; j++) {
-            b_.m_[j] = sub(mul(A_.m_[i*col + i], b_.m_[j]),
-                mul(A_.m_[j*col + i], b_.m_[i]));
-            if(i > 0)
-                b_.m_[j] = div(b_.m_[j], A_.m_[i*col - col + i - 1]);
+            for (k = 0; k < bcol; k++) {
+                b_.m_[j*bcol + k] = sub(mul(A_.m_[i*col + i], b_.m_[j*bcol + k]),
+                    mul(A_.m_[j*col + i], b_.m_[i*bcol + k]));
+                if(i > 0)
+                    b_.m_[j*bcol + k] = div(b_.m_[j*bcol + k],
+                        A_.m_[i*col - col + i - 1]);
+            }
 
-            for (int k = i + 1; k < col; k++) {
+            for (k = i + 1; k < col; k++) {
                 A_.m_[j*col + k] = sub(mul(A_.m_[i*col + i], A_.m_[j*col + k]),
                     mul(A_.m_[j*col + i], A_.m_[i*col + k]));
                 if (i> 0)
@@ -494,13 +609,16 @@ void fraction_free_gaussian_elimination_solve(const DenseMatrix &A,
             A_.m_[j*col + i] = zero;
         }
 
-    for (i = 0; i < col; i++)
+    for (i = 0; i < col*bcol; i++)
         x.m_[i] = zero; // Integer zero;
 
-    for (i = col - 1; i >= 0; i--) {
-        for (j = i + 1; j < col; j++)
-            b_.m_[i] = sub(b_.m_[i], mul(A_.m_[i*col + j], x.m_[j]));
-        x.m_[i] = div(b_.m_[i], A_.m_[i*col + i]);
+    for (k = 0; k < bcol; k++) {
+        for (i = col - 1; i >= 0; i--) {
+            for (j = i + 1; j < col; j++)
+                b_.m_[i*bcol + k] = sub(b_.m_[i*bcol + k], mul(A_.m_[i*col + j],
+                    x.m_[j*bcol + k]));
+            x.m_[i*bcol + k] = div(b_.m_[i*bcol + k], A_.m_[i*col + i]);
+        }
     }
 }
 
@@ -508,25 +626,27 @@ void fraction_free_gauss_jordan_solve(const DenseMatrix &A, const DenseMatrix &b
     DenseMatrix &x)
 {
     CSYMPY_ASSERT(A.row_ == A.col_);
-    CSYMPY_ASSERT(b.row_ == A.row_ && b.col_ == 1);
-    CSYMPY_ASSERT(x.row_ == A.col_ && x.col_ == 1);
+    CSYMPY_ASSERT(b.row_ == A.row_ && x.row_ == A.row_);
+    CSYMPY_ASSERT(x.col_ = b.col_);
 
-    unsigned i, j, col = A.col_;
+    unsigned i, j, k, col = A.col_, bcol = b.col_;
     RCP<const Basic> d;
     DenseMatrix A_ = DenseMatrix(A.row_, A.col_, A.m_);
-    DenseMatrix b_ = DenseMatrix(b.row_, 1, b.m_);
+    DenseMatrix b_ = DenseMatrix(b.row_, b.col_, b.m_);
 
     for (i = 0; i < col; i++) {
         if (i > 0)
             d = A_.m_[i*col - col + i - 1];
         for (j = 0; j < col; j++)
             if (j != i) {
-                b_.m_[j] = sub(mul(A_.m_[i*col + i], b_.m_[j]),
-                    mul(A_.m_[j*col + i], b_.m_[i]));
-                if (i > 0)
-                    b_.m_[j] = div(b_.m_[j], d);
+                for (k = 0; k < bcol; k++) {
+                    b_.m_[j*bcol + k] = sub(mul(A_.m_[i*col + i], b_.m_[j*bcol + k]),
+                        mul(A_.m_[j*col + i], b_.m_[i*bcol + k]));
+                    if (i > 0)
+                        b_.m_[j*bcol + k] = div(b_.m_[j*bcol + k], d);
+                }
 
-                for (unsigned k = 0; k < col; k++) {
+                for (k = 0; k < col; k++) {
                     if (k != i) {
                         A_.m_[j*col + k] =
                             sub(mul(A_.m_[i*col + i], A_.m_[j*col + k]),
@@ -543,8 +663,9 @@ void fraction_free_gauss_jordan_solve(const DenseMatrix &A, const DenseMatrix &b
     }
 
     // No checks are done to see if the diagonal entries are zero
-    for (i = 0; i < col; i++)
-        x.m_[i] = div(b_.m_[i], A_.m_[i*col + i]);
+    for (k = 0; k < bcol; k++)
+        for (i = 0; i < col; i++)
+            x.m_[i*bcol + k] = div(b_.m_[i*bcol + k], A_.m_[i*col + i]);
 }
 
 void fraction_free_LU_solve(const DenseMatrix &A, const DenseMatrix &b,
@@ -991,9 +1112,122 @@ RCP<const Basic> det_berkowitz(const DenseMatrix &A)
     DenseMatrix poly = polys[polys.size() - 1];
 
     if (polys.size() % 2 == 1)
-        return mul(minus_one, poly.get(poly.nrows() - 1));
+        return mul(minus_one, poly.get(poly.nrows() - 1, 0));
 
-    return poly.get(poly.nrows() - 1);
+    return poly.get(poly.nrows() - 1, 0);
+}
+
+void char_poly(const DenseMatrix &A, DenseMatrix &B)
+{
+    CSYMPY_ASSERT(B.ncols() == 1 && B.nrows() == A.nrows() + 1);
+    CSYMPY_ASSERT(A.nrows() == A.ncols());
+
+    std::vector<DenseMatrix> polys;
+
+    berkowitz(A, polys);
+    B = polys[polys.size() - 1];
+}
+
+void inverse_fraction_free_LU(const DenseMatrix &A, DenseMatrix &B)
+{
+    CSYMPY_ASSERT(A.row_ == A.col_ && B.row_ == B.col_ && B.row_ == A.row_);
+
+    unsigned n = A.row_, i;
+    DenseMatrix LU = DenseMatrix(n, n);
+    DenseMatrix e = DenseMatrix(n, 1);
+    DenseMatrix x = DenseMatrix(n, 1);
+    DenseMatrix x_ = DenseMatrix(n, 1);
+
+    // Initialize matrices
+    for (i = 0; i < n*n; i++) {
+        LU.m_[i] = zero;
+        B.m_[i] = zero;
+    }
+    for (i = 0; i < n; i++) {
+        e.m_[i] = zero;
+        x.m_[i] = zero;
+        x_.m_[i] = zero;
+    }
+
+    fraction_free_LU(A, LU);
+
+    // We solve AX_{i} = e_{i} for i = 1, 2, .. n and combine the row vectors
+    // X_{1}, X_{2}, ... X_{n} to form the inverse of A. Here, e_{i}'s are the
+    // elements of the standard basis.
+    for (unsigned j = 0; j < n; j++) {
+        e.m_[j] = one;
+
+        forward_substitution(LU, e, x_);
+        back_substitution(LU, x_, x);
+
+        for (i = 0; i < n; i++)
+            B.m_[i*n + j] = x.m_[i];
+
+        e.m_[j] = zero;
+    }
+}
+
+void inverse_LU(const DenseMatrix &A, DenseMatrix&B)
+{
+    CSYMPY_ASSERT(A.row_ == A.col_ && B.row_ == B.col_ && B.row_ == A.row_);
+
+    unsigned n = A.row_, i;
+    DenseMatrix L = DenseMatrix(n, n);
+    DenseMatrix U = DenseMatrix(n, n);
+    DenseMatrix e = DenseMatrix(n, 1);
+    DenseMatrix x = DenseMatrix(n, 1);
+    DenseMatrix x_ = DenseMatrix(n, 1);
+
+    // Initialize matrices
+    for (i = 0; i < n*n; i++) {
+        L.m_[i] = zero;
+        U.m_[i] = zero;
+        B.m_[i] = zero;
+    }
+
+    for (i = 0; i < n; i++) {
+        e.m_[i] = zero;
+        x.m_[i] = zero;
+        x_.m_[i] = zero;
+    }
+
+    LU(A, L, U);
+
+    // We solve AX_{i} = e_{i} for i = 1, 2, .. n and combine the column vectors
+    // X_{1}, X_{2}, ... X_{n} to form the inverse of A. Here, e_{i}'s are the
+    // elements of the standard basis.
+    for (unsigned j = 0; j < n; j++) {
+        e.m_[j] = one;
+
+        forward_substitution(L, e, x_);
+        back_substitution(U, x_, x);
+
+        for (i = 0; i < n; i++)
+            B.m_[i*n + j] = x.m_[i];
+
+        e.m_[j] = zero;
+    }
+}
+
+void inverse_gauss_jordan(const DenseMatrix &A, DenseMatrix &B)
+{
+    CSYMPY_ASSERT(A.row_ == A.col_ && B.row_ == B.col_ && B.row_ == A.row_);
+
+    unsigned n = A.row_;
+    DenseMatrix e = DenseMatrix(n, n);
+
+    // Initialize matrices
+    for (unsigned i = 0; i < n; i++)
+        for (unsigned j = 0; j < n; j++) {
+            if (i != j) {
+                e.m_[i*n + j] = zero;
+            } else {
+                e.m_[i*n + i] = one;
+            }
+            B.m_[i*n + j] = zero;
+        }
+
+    fraction_free_gauss_jordan_solve(A, e, B);
 }
 
 } // CSymPy

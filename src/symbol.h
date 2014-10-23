@@ -54,12 +54,6 @@ inline RCP<const Symbol> symbol(const std::string &name)
     return rcp(new Symbol(name));
 }
 
-//! Symbol `pi`.
-extern RCP<const Symbol> pi;
-
-//! Symbol `E`.
-extern RCP<const Symbol> E;
-
 } // CSymPy
 
 #endif

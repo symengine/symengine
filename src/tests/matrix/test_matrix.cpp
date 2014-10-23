@@ -16,6 +16,80 @@ using CSymPy::symbol;
 using CSymPy::is_a;
 using CSymPy::Add;
 using CSymPy::minus_one;
+using CSymPy::CSRMatrix;
+using CSymPy::add;
+using CSymPy::sub;
+
+void test_get_set()
+{
+    // Test for DenseMatirx
+    DenseMatrix A = DenseMatrix(2, 2, {integer(1), integer(0), integer(-1),
+        integer(-2)});
+
+    assert(eq(A.get(0, 0), integer(1)));
+    assert(eq(A.get(1, 1), integer(-2)));
+
+    A.set(1, 0, integer(0));
+    assert(A == DenseMatrix(2, 2, {integer(1), integer(0), integer(0),
+        integer(-2)}));
+
+    A.set(0, 1, integer(-2));
+    assert(A == DenseMatrix(2, 2, {integer(1), integer(-2), integer(0),
+        integer(-2)}));
+
+    // Test for CSRMatrix
+    CSRMatrix B = CSRMatrix(3, 3, {0, 2, 3, 6}, {0, 2, 2, 0, 1, 2},
+        {integer(1), integer(2), integer(3), integer(4), integer(5), integer(6)});
+
+    assert(eq(B.get(0, 0), integer(1)));
+    assert(eq(B.get(1, 2), integer(3)));
+    assert(eq(B.get(2, 1), integer(5)));
+
+    B.set(2, 1, integer(6));
+    assert(B == CSRMatrix(3, 3, {0, 2, 3, 6}, {0, 2, 2, 0, 1, 2},
+        {integer(1), integer(2), integer(3), integer(4), integer(6), integer(6)}));
+
+    B.set(0, 1, integer(1));
+    assert(B == CSRMatrix(3, 3, {0, 3, 4, 7}, {0, 1, 2, 2, 0, 1, 2},
+        {integer(1), integer(1), integer(2), integer(3), integer(4), integer(6),
+            integer(6)}));
+
+    B.set(1, 2, integer(7));
+    assert(B == CSRMatrix(3, 3, {0, 3, 4, 7}, {0, 1, 2, 2, 0, 1, 2},
+        {integer(1), integer(1), integer(2), integer(7), integer(4), integer(6),
+            integer(6)}));
+
+    B = CSRMatrix(3, 3, {0, 1, 2, 5}, {0, 2, 0, 1, 2},
+        {integer(1), integer(3), integer(4), integer(5), integer(6)});
+
+    B.set(0, 2, integer(2));
+    assert(B == CSRMatrix(3, 3, {0, 2, 3, 6}, {0, 2, 2, 0, 1, 2},
+        {integer(1), integer(2), integer(3), integer(4), integer(5), integer(6)}));
+
+    B = CSRMatrix(3, 3); // 3x3 Zero matrix
+
+    assert(eq(B.get(0, 0), integer(0)));
+    assert(eq(B.get(1, 2), integer(0)));
+    assert(eq(B.get(2, 2), integer(0)));
+
+    B.set(0, 0, integer(1));
+    B.set(0, 2, integer(2));
+    B.set(1, 2, integer(3));
+    B.set(2, 0, integer(4));
+    B.set(2, 1, integer(5));
+    B.set(2, 2, integer(6));
+
+    assert(B == CSRMatrix(3, 3, {0, 2, 3, 6}, {0, 2, 2, 0, 1, 2},
+        {integer(1), integer(2), integer(3), integer(4), integer(5), integer(6)}));
+
+    B.set(0, 0, integer(0));
+    assert(B == CSRMatrix(3, 3, {0, 1, 2, 5}, {2, 2, 0, 1, 2},
+        {integer(2), integer(3), integer(4), integer(5), integer(6)}));
+
+    B.set(2, 1, integer(0));
+    assert(B == CSRMatrix(3, 3, {0, 1, 2, 4}, {2, 2, 0, 2},
+        {integer(2), integer(3), integer(4), integer(6)}));
+}
 
 void test_dense_dense_addition()
 {
@@ -142,7 +216,7 @@ void test_submatrix_dense()
     DenseMatrix A = DenseMatrix(3, 3, {symbol("a"), symbol("b"), symbol("c"),
         symbol("p"), symbol("q"), symbol("r"), symbol("u"), symbol("v"), symbol("w")});
     DenseMatrix B = DenseMatrix(3, 2);
-    submatrix_dense(A, 1, 3, 2, 3, B);
+    submatrix_dense(A, 0, 2, 1, 2, B);
 
     assert(B == DenseMatrix(3, 2, {symbol("b"), symbol("c"), symbol("q"),
         symbol("r"), symbol("v"), symbol("w")}));
@@ -152,7 +226,7 @@ void test_submatrix_dense()
         integer(10), integer(11), integer(12), integer(13), integer(14),
         integer(15), integer(16)});
     B = DenseMatrix(3, 3);
-    submatrix_dense(A, 2, 4, 2, 4, B);
+    submatrix_dense(A, 1, 3, 1, 3, B);
 
     assert(B == DenseMatrix(3, 3, {integer(6), integer(7), integer(8), integer(10),
         integer(11), integer(12), integer(14), integer(15), integer(16)}));
@@ -491,14 +565,22 @@ void test_fraction_free_gaussian_elimination_solve()
     x = DenseMatrix(2, 1);
     fraction_free_gaussian_elimination_solve(A, b, x);
 
-//    assert(x == DenseMatrix(2, 1, {symbol("a"), symbol("b")}));
+    // assert(x == DenseMatrix(2, 1, {symbol("a"), symbol("b")}));
 
     A = DenseMatrix(2, 2, {integer(1), integer(1), integer(1), integer(-1)});
     b = DenseMatrix(2, 1, {add(symbol("a"), symbol("b")), sub(symbol("a"), symbol("b"))});
-    x = DenseMatrix(2, 1, {symbol("a"), symbol("b")});
+    x = DenseMatrix(2, 1);
     fraction_free_gaussian_elimination_solve(A, b, x);
 
-//    assert(x == DenseMatrix(2, 1, {symbol("a"), symbol("b")}));
+    // assert(x == DenseMatrix(2, 1, {symbol("a"), symbol("b")}));
+
+    // Solve two systems at once, Ax = transpose([7, 3]) and Ax = transpose([4, 6])
+    A = DenseMatrix(2, 2, {integer(1), integer(1), integer(1), integer(-1)});
+    b = DenseMatrix(2, 2, {integer(7), integer(4), integer(3), integer(6)});
+    x = DenseMatrix(2, 2);
+    fraction_free_gaussian_elimination_solve(A, b, x);
+
+    assert(x == DenseMatrix(2, 2, {integer(5), integer(5), integer(2), integer(-1)}));
 }
 
 void test_fraction_free_gauss_jordan_solve()
@@ -520,6 +602,14 @@ void test_fraction_free_gauss_jordan_solve()
 
     assert(x == DenseMatrix(4, 1, {integer(1), integer(1), integer(1),
         integer(1)}));
+
+    // Solve two systems at once, Ax = transpose([7, 3]) and Ax = transpose([4, 6])
+    A = DenseMatrix(2, 2, {integer(1), integer(1), integer(1), integer(-1)});
+    b = DenseMatrix(2, 2, {integer(7), integer(4), integer(3), integer(6)});
+    x = DenseMatrix(2, 2);
+    fraction_free_gauss_jordan_solve(A, b, x);
+
+    assert(x == DenseMatrix(2, 2, {integer(5), integer(5), integer(2), integer(-1)}));
 }
 
 void test_fraction_free_LU()
@@ -864,9 +954,232 @@ void test_solve_functions()
     assert(x == DenseMatrix(2, 1, {integer(2), integer(7)}));
 }
 
+void test_char_poly()
+{
+    RCP<const Basic> x = symbol("x");
+    RCP<const Basic> y = symbol("y");
+    RCP<const Basic> z = symbol("z");
+    RCP<const Basic> t = symbol("t");
+
+    DenseMatrix A = DenseMatrix(3, 3, {integer(1), integer(0), integer(0),
+        integer(0), integer(1), integer(0),
+        integer(0), integer(0), integer(1)});
+    DenseMatrix B = DenseMatrix(4, 1);
+    char_poly(A, B);
+
+    assert(B == DenseMatrix(4, 1, {integer(1), integer(-3), integer(3),
+        integer(-1)}));
+
+    A = DenseMatrix(2, 2, {integer(1), integer(3), integer(2), integer(0)});
+    B = DenseMatrix(3, 1);
+    char_poly(A, B);
+
+    assert(B == DenseMatrix(3, 1, {integer(1), integer(-1), integer(-6)}));
+
+    A = DenseMatrix(2, 2, {integer(2), integer(1), integer(-1), integer(0)});
+    B = DenseMatrix(3, 1);
+    char_poly(A, B);
+
+    assert(B == DenseMatrix(3, 1, {integer(1), integer(-2), integer(1)}));
+
+    A = DenseMatrix(2, 2, {x, y, z, t});
+    B = DenseMatrix(3, 1);
+    char_poly(A, B);
+
+    assert(B == DenseMatrix(3, 1, {integer(1), add(mul(integer(-1), t),
+        mul(integer(-1), x)), add(mul(integer(-1), mul(y, z)), mul(t, x))}));
+}
+
+void test_inverse()
+{
+    DenseMatrix I3 = DenseMatrix(3, 3, {integer(1), integer(0), integer(0),
+            integer(0), integer(1), integer(0),
+            integer(0), integer(0), integer(1)});
+
+    DenseMatrix A =
+        DenseMatrix(4, 4, {integer(1), integer(0), integer(0), integer(0),
+            integer(0), integer(1), integer(0), integer(0),
+            integer(0), integer(0), integer(1), integer(0),
+            integer(0), integer(0), integer(0), integer(1)});
+    DenseMatrix B = DenseMatrix(4, 4);
+
+    inverse_fraction_free_LU(A, B);
+    assert(A == B);
+    inverse_LU(A, B);
+    assert(A == B);
+    inverse_gauss_jordan(A, B);
+    assert(A == B);
+
+    A = DenseMatrix(3, 3, {integer(2), integer(3), integer(5),
+        integer(3), integer(6), integer(2),
+        integer(8), integer(3), integer(6)});
+    B = DenseMatrix(3, 3);
+    DenseMatrix C = DenseMatrix(3, 3);
+
+    inverse_fraction_free_LU(A, B);
+    mul_dense_dense(A, B, C);
+    assert(C == I3);
+
+    inverse_LU(A, B);
+    mul_dense_dense(A, B, C);
+    assert(C == I3);
+
+    inverse_gauss_jordan(A, B);
+    mul_dense_dense(A, B, C);
+    assert(C == I3);
+
+    A = DenseMatrix(3, 3, {integer(48), integer(49), integer(31),
+        integer(9), integer(71), integer(94),
+        integer(59), integer(28), integer(65)});
+
+    inverse_fraction_free_LU(A, B);
+    mul_dense_dense(A, B, C);
+    assert(C == I3);
+
+    inverse_LU(A, B);
+    mul_dense_dense(A, B, C);
+    assert(C == I3);
+
+    inverse_gauss_jordan(A, B);
+    mul_dense_dense(A, B, C);
+    assert(C == I3);
+}
+
+void test_csr_has_canonical_format()
+{
+    std::vector<unsigned> p = {0, 2, 3, 6};
+    std::vector<unsigned> j = {2, 0, 2, 0, 1, 2};
+
+    assert(CSRMatrix::csr_has_canonical_format(p, j, 3) == false);
+
+    j = {0, 2, 2, 0, 1, 1};
+
+    assert(CSRMatrix::csr_has_canonical_format(p, j, 3) == false);
+}
+
+void test_csr_eq()
+{
+    CSRMatrix A = CSRMatrix(3, 3, {0, 2, 3, 6}, {0, 2, 2, 0, 1, 2},
+        {integer(1), integer(2), integer(3), integer(4), integer(5), integer(6)});
+    CSRMatrix B = CSRMatrix(3, 3, {0, 2, 3, 6}, {0, 2, 2, 0, 1, 2},
+        {integer(1), integer(2), integer(3), integer(4), integer(5), integer(6)});
+
+    assert(A == B);
+
+    CSRMatrix C = CSRMatrix(3, 3, {0, 2, 3, 6}, {0, 2, 2, 0, 1, 2},
+        {integer(0), integer(2), integer(3), integer(4), integer(5), integer(6)});
+
+    assert(!(A == C));
+}
+
+void test_from_coo()
+{
+    // Example from:
+    // http://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.csr_matrix.html#scipy.sparse.csr_matrix
+    CSRMatrix A = CSRMatrix(3, 3, {0, 2, 3, 6}, {0, 2, 2, 0, 1, 2},
+        {integer(1), integer(2), integer(3), integer(4), integer(5), integer(6)});
+    CSRMatrix B = CSRMatrix::from_coo(3, 3, {0, 0, 1, 2, 2, 2}, {0, 2, 2, 0, 1, 2},
+        {integer(1), integer(2), integer(3), integer(4), integer(5), integer(6)});
+
+    assert(A == B);
+
+    A = CSRMatrix(4, 6, {0, 2, 4, 7, 8}, {0, 1, 1, 3, 2, 3, 4, 5},
+        {integer(10), integer(20), integer(30), integer(40), integer(50),
+        integer(60), integer(70), integer(80)});
+    B = CSRMatrix::from_coo(4, 6, {0, 0, 1, 1, 2, 2, 2, 3}, {0, 1, 1, 3, 2, 3, 4, 5},
+        {integer(10), integer(20), integer(30), integer(40), integer(50),
+        integer(60), integer(70), integer(80)});
+
+    assert(A == B);
+
+    // Check for duplicate removal
+    // Here duplicates are summed to create one element
+    A = CSRMatrix(3, 3, {0, 2, 3, 6}, {0, 2, 2, 0, 1, 2},
+        {integer(0), integer(2), integer(3), integer(4), integer(12), integer(6)});
+    B = CSRMatrix::from_coo(3, 3, {0, 0, 0, 1, 2, 2, 2, 2},
+        {0, 2, 0, 2, 0, 1, 2, 1},
+        {integer(1), integer(2), integer(-1), integer(3), integer(4), integer(5),
+            integer(6), integer(7)});
+
+    assert(A == B);
+
+    A = CSRMatrix(3, 3, {0, 2, 3, 6}, {0, 2, 2, 0, 1, 2},
+        {integer(-1), integer(3), integer(3), integer(4), integer(5), integer(13)});
+    B = CSRMatrix::from_coo(3, 3, {0, 0, 0, 1, 2, 2, 2, 2},
+        {2, 2, 0, 2, 0, 1, 2, 2},
+        {integer(1), integer(2), integer(-1), integer(3), integer(4), integer(5),
+            integer(6), integer(7)});
+
+    assert(A == B);
+}
+
+void test_csr_diagonal()
+{
+    CSRMatrix A = CSRMatrix(3, 3, {0, 2, 3, 6}, {0, 2, 2, 0, 1, 2},
+        {integer(1), integer(2), integer(3), integer(4), integer(5), integer(6)});
+    DenseMatrix D = DenseMatrix(3, 1);
+    csr_diagonal(A, D);
+
+    assert(D == DenseMatrix(3, 1, {integer(1), integer(0), integer(6)}));
+}
+
+void test_csr_scale_rows()
+{
+    CSRMatrix A = CSRMatrix(3, 3, {0, 2, 3, 6}, {0, 2, 2, 0, 1, 2},
+        {integer(1), integer(2), integer(3), integer(4), integer(5), integer(6)});
+    DenseMatrix X = DenseMatrix(3, 1, {integer(1), integer(-1), integer(3)});
+
+    csr_scale_rows(A, X);
+
+    assert(A == CSRMatrix(3, 3, {0, 2, 3, 6}, {0, 2, 2, 0, 1, 2},
+        {integer(1), integer(2), integer(-3), integer(12), integer(15), integer(18)}));
+
+    X = DenseMatrix(3, 1, {integer(1), integer(0), integer(-1)});
+    CSYMPY_CHECK_THROW(csr_scale_columns(A, X), std::runtime_error);
+}
+
+void test_csr_scale_columns()
+{
+    CSRMatrix A = CSRMatrix(3, 3, {0, 2, 3, 6}, {0, 2, 2, 0, 1, 2},
+        {integer(1), integer(2), integer(3), integer(4), integer(5), integer(6)});
+    DenseMatrix X = DenseMatrix(3, 1, {integer(1), integer(-1), integer(3)});
+
+    csr_scale_columns(A, X);
+
+    assert(A == CSRMatrix(3, 3, {0, 2, 3, 6}, {0, 2, 2, 0, 1, 2},
+        {integer(1), integer(6), integer(9), integer(4), integer(-5), integer(18)}));
+
+    X = DenseMatrix(3, 1, {integer(0), integer(1), integer(-1)});
+    CSYMPY_CHECK_THROW(csr_scale_columns(A, X), std::runtime_error);
+}
+
+void test_csr_binop_csr_canonical()
+{
+    CSRMatrix A = CSRMatrix(3, 3, {0, 2, 3, 6}, {0, 2, 2, 0, 1, 2},
+        {integer(1), integer(2), integer(3), integer(4), integer(5), integer(6)});
+    CSRMatrix B = CSRMatrix(3, 3);
+
+    csr_binop_csr_canonical(A, A, B, add);
+    assert(B == CSRMatrix(3, 3, {0, 2, 3, 6}, {0, 2, 2, 0, 1, 2},
+        {integer(2), integer(4), integer(6), integer(8), integer(10), integer(12)}));
+
+    csr_binop_csr_canonical(A, A, B, sub);
+    assert(B == CSRMatrix(3, 3));
+
+    CSRMatrix C = CSRMatrix(3, 3, {0, 1, 3, 3}, {1, 0, 1},
+        {integer(7), integer(8), integer(9)});
+
+    csr_binop_csr_canonical(A, C, B, add);
+    assert(B == CSRMatrix(3, 3, {0, 3, 6, 9}, {0, 1, 2, 0, 1, 2, 0, 1, 2},
+        {integer(1), integer(7), integer(2), integer(8), integer(9), integer(3),
+            integer(4), integer(5), integer(6)}));
+}
+
 int main(int argc, char* argv[])
 {
     print_stack_on_segfault();
+
+    test_get_set();
 
     test_dense_dense_addition();
 
@@ -913,6 +1226,24 @@ int main(int argc, char* argv[])
     test_berkowitz();
 
     test_solve_functions();
+
+    test_char_poly();
+
+    test_inverse();
+
+    test_csr_has_canonical_format();
+
+    test_csr_eq();
+
+    test_from_coo();
+
+    test_csr_diagonal();
+
+    test_csr_scale_rows();
+
+    test_csr_scale_columns();
+
+    test_csr_binop_csr_canonical();
 
     return 0;
 }
