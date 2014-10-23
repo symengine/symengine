@@ -600,15 +600,18 @@ void test_has()
 
 void test_eval_double()
 {
-    RCP<const Basic> r1;
+    RCP<const Basic> r1, r2, r3;
 
     r1 = sin(integer(1));
     assert(::fabs(eval_double(*r1) - 0.841470984808) < 1e-12);
     assert(::fabs(eval_double(*r1) - 0.85) > 1e-12);
 
-    r1 = sin(div(integer(1), integer(2)));
-    assert(::fabs(eval_double(*r1) - 0.479425538604) < 1e-12);
-    assert(::fabs(eval_double(*r1) - 0.48) > 1e-12);
+    r2 = sin(div(integer(1), integer(2)));
+    assert(::fabs(eval_double(*r2) - 0.479425538604) < 1e-12);
+    assert(::fabs(eval_double(*r2) - 0.48) > 1e-12);
+
+    r3 = add(r1, r2);
+    assert(::fabs(eval_double(*r3) - 1.320896523412) < 1e-12);
 }
 
 int main(int argc, char* argv[])

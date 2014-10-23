@@ -90,6 +90,13 @@ void EvalDoubleVisitor::visit(const Rational &x)
     result_ = tmp;
 }
 
+void EvalDoubleVisitor::visit(const Add &x)
+{
+    double tmp = 0;
+    for (auto &p: x.get_args()) tmp = tmp + eval_double(*p);
+    result_ = tmp;
+}
+
 void EvalDoubleVisitor::visit(const Sin &x)
 {
     double tmp = eval_double(*(x.get_arg()));
