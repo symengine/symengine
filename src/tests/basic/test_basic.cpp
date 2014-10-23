@@ -606,11 +606,9 @@ void test_eval_double()
     assert(::fabs(eval_double(*r1) - 0.841470984808) < 1e-12);
     assert(::fabs(eval_double(*r1) - 0.85) > 1e-12);
 
-    /*
     r1 = sin(div(integer(1), integer(2)));
-    assert(abs(eval_double(*r1) - 0.479425538604) < 1e-12);
-    assert(abs(eval_double(*r1) - 0.48) > 1e-12);
-    */
+    assert(::fabs(eval_double(*r1) - 0.479425538604) < 1e-12);
+    assert(::fabs(eval_double(*r1) - 0.48) > 1e-12);
 }
 
 int main(int argc, char* argv[])

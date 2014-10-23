@@ -84,6 +84,12 @@ void EvalDoubleVisitor::visit(const Integer &x)
     result_ = tmp;
 }
 
+void EvalDoubleVisitor::visit(const Rational &x)
+{
+    double tmp = x.i.get_d();
+    result_ = tmp;
+}
+
 void EvalDoubleVisitor::visit(const Sin &x)
 {
     double tmp = eval_double(*(x.get_arg()));
