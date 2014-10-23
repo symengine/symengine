@@ -97,6 +97,21 @@ public:
 RCP<const Basic> coeff(const Basic &b, const RCP<const Symbol> &x,
         const RCP<const Integer> &n);
 
+class EvalDoubleVisitor : public Visitor {
+private:
+    double result_;
+public:
+    void visit(const Sin &x);
+    void visit(const Cos &x);
+    void visit(const Tan &x);
+    double apply(const Basic &b) {
+        b.accept(*this);
+        return result_;
+    }
+};
+
+double eval_double(const Basic &b);
+
 } // CSymPy
 
 #endif

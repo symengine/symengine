@@ -76,5 +76,29 @@ RCP<const Basic> coeff(const Basic &b, const RCP<const Symbol> &x,
     return v.apply(b, x, n);
 }
 
+void EvalDoubleVisitor::visit(const Sin &x)
+{
+    double tmp = eval_double(*(x.get_arg()));
+    result_ = ::sin(tmp);
+}
+
+void EvalDoubleVisitor::visit(const Cos &x)
+{
+    double tmp = eval_double(*(x.get_arg()));
+    result_ = ::cos(tmp);
+}
+
+void EvalDoubleVisitor::visit(const Tan &x)
+{
+    double tmp = eval_double(*(x.get_arg()));
+    result_ = ::tan(tmp);
+}
+
+double eval_double(const Basic &b)
+{
+    EvalDoubleVisitor v;
+    return v.apply(b);
+}
+
 } // CSymPy
 
