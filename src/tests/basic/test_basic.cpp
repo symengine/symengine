@@ -598,6 +598,21 @@ void test_has()
     assert(!has_symbol(*r1, z));
 }
 
+void test_eval_double()
+{
+    RCP<const Basic> r1;
+
+    r1 = sin(integer(1));
+    assert(::fabs(eval_double(*r1) - 0.841470984808) < 1e-12);
+    assert(::fabs(eval_double(*r1) - 0.85) > 1e-12);
+
+    /*
+    r1 = sin(div(integer(1), integer(2)));
+    assert(abs(eval_double(*r1) - 0.479425538604) < 1e-12);
+    assert(abs(eval_double(*r1) - 0.48) > 1e-12);
+    */
+}
+
 int main(int argc, char* argv[])
 {
     print_stack_on_segfault();
@@ -621,6 +636,8 @@ int main(int argc, char* argv[])
     test_complex();
 
     test_has();
+
+    test_eval_double();
 
     return 0;
 }
