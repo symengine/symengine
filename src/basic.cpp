@@ -51,17 +51,5 @@ RCP<const Basic> Basic::subs(const map_basic_basic &subs_dict) const
         return it->second;
 }
 
-void Basic::preorder_traversal(Visitor &v) const
-{
-    accept(v);
-    for (auto &p: get_args()) p->preorder_traversal(v);
-}
-
-void Basic::postorder_traversal(Visitor &v) const
-{
-    for (auto &p: get_args()) p->postorder_traversal(v);
-    accept(v);
-}
-
 } // CSymPy
 
