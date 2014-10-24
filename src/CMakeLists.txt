@@ -26,6 +26,7 @@ set(SRC
     sparse_matrix.cpp
     matrix.cpp
     visitor.cpp
+    eval_double.cpp
 )
 
 # Needed for "make install"

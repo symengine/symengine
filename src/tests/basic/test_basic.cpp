@@ -12,6 +12,7 @@
 #include "pow.h"
 #include "functions.h"
 #include "visitor.h"
+#include "eval_double.h"
 
 using CSymPy::Basic;
 using CSymPy::Add;
