@@ -25,6 +25,7 @@ set(SRC
     dense_matrix.cpp
     sparse_matrix.cpp
     matrix.cpp
+    visitor.cpp
 )
 
 # Needed for "make install"
@@ -33,6 +34,7 @@ set(HEADERS
     basic.h      csympy_rcp.h     integer.h    mul.h        pow.h       constants.h
     symbol.h
     basic-inl.h  dict.h           matrix.h     ntheory.h    rational.h complex.h
+    visitor.h
 )
 
 # Configure CSymPy using our CMake options:
