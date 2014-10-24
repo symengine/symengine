@@ -18,17 +18,52 @@ class EvalDoubleVisitor : public Visitor {
 private:
     double result_;
 public:
-    void visit(const Integer &x);
-    void visit(const Rational &x);
-    void visit(const Add &x);
-    void visit(const Mul &x);
-    void visit(const Pow &x);
-    void visit(const Sin &x);
-    void visit(const Cos &x);
-    void visit(const Tan &x);
     double apply(const Basic &b) {
         b.accept(*this);
         return result_;
+    }
+
+    void visit(const Integer &x) {
+        double tmp = x.i.get_d();
+        result_ = tmp;
+    }
+
+    void visit(const Rational &x) {
+        double tmp = x.i.get_d();
+        result_ = tmp;
+    }
+
+    void visit(const Add &x) {
+        double tmp = 0;
+        for (auto &p: x.get_args()) tmp = tmp + eval_double(*p);
+        result_ = tmp;
+    }
+
+    void visit(const Mul &x) {
+        double tmp = 1;
+        for (auto &p: x.get_args()) tmp = tmp * eval_double(*p);
+        result_ = tmp;
+    }
+
+    void visit(const Pow &x) {
+        double a = eval_double(*(x.base_));
+        double b = eval_double(*(x.exp_));
+        result_ = ::pow(a, b);
+    }
+
+    void visit(const Sin &x) {
+        double tmp = eval_double(*(x.get_arg()));
+        result_ = ::sin(tmp);
+    }
+
+    void visit(const Cos &x) {
+        double tmp = eval_double(*(x.get_arg()));
+        result_ = ::cos(tmp);
+    }
+
+    void visit(const Tan &x) {
+        double tmp = eval_double(*(x.get_arg()));
+        result_ = ::tan(tmp);
     }
 
     virtual void visit(const Symbol &) {
@@ -124,58 +159,8 @@ public:
     virtual void visit(const UpperGamma &) {
         throw std::runtime_error("Not implemented.");
     };
+
 };
-
-void EvalDoubleVisitor::visit(const Integer &x)
-{
-    double tmp = x.i.get_d();
-    result_ = tmp;
-}
-
-void EvalDoubleVisitor::visit(const Rational &x)
-{
-    double tmp = x.i.get_d();
-    result_ = tmp;
-}
-
-void EvalDoubleVisitor::visit(const Add &x)
-{
-    double tmp = 0;
-    for (auto &p: x.get_args()) tmp = tmp + eval_double(*p);
-    result_ = tmp;
-}
-
-void EvalDoubleVisitor::visit(const Mul &x)
-{
-    double tmp = 1;
-    for (auto &p: x.get_args()) tmp = tmp * eval_double(*p);
-    result_ = tmp;
-}
-
-void EvalDoubleVisitor::visit(const Pow &x)
-{
-    double a = eval_double(*(x.base_));
-    double b = eval_double(*(x.exp_));
-    result_ = ::pow(a, b);
-}
-
-void EvalDoubleVisitor::visit(const Sin &x)
-{
-    double tmp = eval_double(*(x.get_arg()));
-    result_ = ::sin(tmp);
-}
-
-void EvalDoubleVisitor::visit(const Cos &x)
-{
-    double tmp = eval_double(*(x.get_arg()));
-    result_ = ::cos(tmp);
-}
-
-void EvalDoubleVisitor::visit(const Tan &x)
-{
-    double tmp = eval_double(*(x.get_arg()));
-    result_ = ::tan(tmp);
-}
 
 double eval_double(const Basic &b)
 {
