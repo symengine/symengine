@@ -1,6 +1,5 @@
 /**
  *  \file eval_double.h
- *  Class EvalDoubleVisitor
  *
  **/
 #ifndef CSYMPY_EVAL_DOUBLE_H
