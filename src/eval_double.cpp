@@ -16,6 +16,13 @@ namespace CSymPy {
 
 class EvalDoubleVisitor : public Visitor {
 private:
+    /*
+       The 'result_' variable is assigned into at the very end of each visit()
+       methods below. The only place where these methods are called from is the
+       line 'b.accept(*this)' in apply() and the 'result_' is immediately
+       returned. Thus no corruption can happen and apply() can be safely called
+       recursively.
+    */
     double result_;
 public:
     double apply(const Basic &b) {
@@ -35,34 +42,34 @@ public:
 
     void visit(const Add &x) {
         double tmp = 0;
-        for (auto &p: x.get_args()) tmp = tmp + eval_double(*p);
+        for (auto &p: x.get_args()) tmp = tmp + apply(*p);
         result_ = tmp;
     }
 
     void visit(const Mul &x) {
         double tmp = 1;
-        for (auto &p: x.get_args()) tmp = tmp * eval_double(*p);
+        for (auto &p: x.get_args()) tmp = tmp * apply(*p);
         result_ = tmp;
     }
 
     void visit(const Pow &x) {
-        double a = eval_double(*(x.base_));
-        double b = eval_double(*(x.exp_));
+        double a = apply(*(x.base_));
+        double b = apply(*(x.exp_));
         result_ = ::pow(a, b);
     }
 
     void visit(const Sin &x) {
-        double tmp = eval_double(*(x.get_arg()));
+        double tmp = apply(*(x.get_arg()));
         result_ = ::sin(tmp);
     }
 
     void visit(const Cos &x) {
-        double tmp = eval_double(*(x.get_arg()));
+        double tmp = apply(*(x.get_arg()));
         result_ = ::cos(tmp);
     }
 
     void visit(const Tan &x) {
-        double tmp = eval_double(*(x.get_arg()));
+        double tmp = apply(*(x.get_arg()));
         result_ = ::tan(tmp);
     }
 
