@@ -53,6 +53,9 @@ public:
     virtual void visit(const UpperGamma &) = 0;
 };
 
+void preorder_traversal(const Basic &b, Visitor &v);
+void postorder_traversal(const Basic &b, Visitor &v);
+
 class HasSymbolVisitor : public Visitor {
 private:
     RCP<const Symbol> x_;
@@ -66,7 +69,7 @@ public:
     bool apply(const Basic &b, const RCP<const Symbol> &x) {
         x_ = x;
         has_ = false;
-        b.preorder_traversal(*this);
+        preorder_traversal(b, *this);
         return has_;
     }
     virtual void visit(const Add &) { };
