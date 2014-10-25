@@ -18,6 +18,7 @@ using CSymPy::integer;
 using CSymPy::is_a;
 using CSymPy::map_integer_uint;
 using CSymPy::rcp_dynamic_cast;
+using CSymPy::rcp_static_cast;
 using CSymPy::mod_inverse;
 using CSymPy::mod;
 using CSymPy::Number;
@@ -106,13 +107,13 @@ void test_modulo()
     RCP<const Integer> i11 = integer(11);
     RCP<const Number> b;
 
-    mod(outArg(b), *i5, *i3);
+    b = mod(*i5, *i3);
     assert(eq(b, integer(2)));
 
-    mod(outArg(b), *i11, *i8);
+    b = mod(*i11, *i8);
     assert(eq(b, integer(3)));
 
-    mod(outArg(b), *i11, *i3);
+    b = mod(*i11, *i3);
     assert(eq(b, integer(2)));
 }
 
@@ -186,16 +187,16 @@ void test_factor()
     assert(factor(outArg(f), *i31) == 0);
 
     assert(factor(outArg(f), *i6) > 0);
-    assert(divides(i6, f));
+    assert(divides(*i6, *f));
     assert(factor(outArg(f), *i121) > 0);
-    assert(divides(i121, f));
+    assert(divides(*i121, *f));
     assert(factor(outArg(f), *i122) > 0);
-    assert(divides(i122, f));
+    assert(divides(*i122, *f));
     assert(factor(outArg(f), *i1001) > 0);
-    assert(divides(i1001, f));
-    assert(!divides(i1001, i6));
+    assert(divides(*i1001, *f));
+    assert(!divides(*i1001, *i6));
     assert(factor(outArg(f), *i900) > 0);
-    assert(divides(i900, f));
+    assert(divides(*i900, *f));
 }
 
 void test_factor_lehman_method()
@@ -216,15 +217,15 @@ void test_factor_lehman_method()
     assert(factor_lehman_method(outArg(f), *i47) == 0);
 
     assert(factor_lehman_method(outArg(f), *i21) > 0);
-    assert(divides(i21, f) && !eq(f, i1) && !eq(f, i21));   //Lehman's method returns only a proper divisor when composite
+    assert(divides(*i21, *f) && !eq(f, i1) && !eq(f, i21));   //Lehman's method returns only a proper divisor when composite
     assert(factor_lehman_method(outArg(f), *i121) > 0);
-    assert(divides(i121, f) && !eq(f, i1) && !eq(f, i121));
+    assert(divides(*i121, *f) && !eq(f, i1) && !eq(f, i121));
     assert(factor_lehman_method(outArg(f), *i122) > 0);
-    assert(divides(i122, f) && !eq(f, i1) && !eq(f, i122));
+    assert(divides(*i122, *f) && !eq(f, i1) && !eq(f, i122));
     assert(factor_lehman_method(outArg(f), *i900) > 0);
-    assert(divides(i900, f) && !eq(f, i1) && !eq(f, i900));
+    assert(divides(*i900, *f) && !eq(f, i1) && !eq(f, i900));
     assert(factor_lehman_method(outArg(f), *i1001) > 0);
-    assert(divides(i1001, f) && !eq(f, i1) && !eq(f, i1001));
+    assert(divides(*i1001, *f) && !eq(f, i1) && !eq(f, i1001));
 }
 
 void test_factor_pollard_pm1_method()
@@ -243,11 +244,11 @@ void test_factor_pollard_pm1_method()
     assert(factor_pollard_pm1_method(outArg(f), *i31) == 0);
     assert(factor_pollard_pm1_method(outArg(f), *i47) == 0);
 
-    assert(factor_pollard_pm1_method(outArg(f), *i121) == 0 || divides(i121, f));
-    assert(factor_pollard_pm1_method(outArg(f), *i122) == 0 || divides(i122, f));
-    assert(factor_pollard_pm1_method(outArg(f), *i900) == 0 || divides(i900, f));
-    assert(factor_pollard_pm1_method(outArg(f), *i1001, 20) == 0 || divides(i1001, f));
-    assert(factor_pollard_pm1_method(outArg(f), *i1850) == 0 || divides(i1850, f));
+    assert(factor_pollard_pm1_method(outArg(f), *i121) == 0 || divides(*i121, *f));
+    assert(factor_pollard_pm1_method(outArg(f), *i122) == 0 || divides(*i122, *f));
+    assert(factor_pollard_pm1_method(outArg(f), *i900) == 0 || divides(*i900, *f));
+    assert(factor_pollard_pm1_method(outArg(f), *i1001, 20) == 0 || divides(*i1001, *f));
+    assert(factor_pollard_pm1_method(outArg(f), *i1850) == 0 || divides(*i1850, *f));
 }
 
 void test_factor_pollard_rho_method()
@@ -266,11 +267,11 @@ void test_factor_pollard_rho_method()
     assert(factor_pollard_rho_method(outArg(f), *i31) == 0);
     assert(factor_pollard_rho_method(outArg(f), *i47) == 0);
 
-    assert(factor_pollard_rho_method(outArg(f), *i121) == 0 || divides(i121, f));
-    assert(factor_pollard_rho_method(outArg(f), *i122) == 0 || divides(i122, f));
-    assert(factor_pollard_rho_method(outArg(f), *i900) == 0 || divides(i900, f));
-    assert(factor_pollard_rho_method(outArg(f), *i1001) == 0 || divides(i1001, f));
-    assert(factor_pollard_rho_method(outArg(f), *i1850) == 0 || divides(i1850, f));
+    assert(factor_pollard_rho_method(outArg(f), *i121) == 0 || divides(*i121, *f));
+    assert(factor_pollard_rho_method(outArg(f), *i122) == 0 || divides(*i122, *f));
+    assert(factor_pollard_rho_method(outArg(f), *i900) == 0 || divides(*i900, *f));
+    assert(factor_pollard_rho_method(outArg(f), *i1001) == 0 || divides(*i1001, *f));
+    assert(factor_pollard_rho_method(outArg(f), *i1850) == 0 || divides(*i1850, *f));
 }
 
 void test_sieve()
@@ -278,7 +279,7 @@ void test_sieve()
     const int MAX = 100003;
     std::vector<unsigned> v;
     auto t1 = std::chrono::high_resolution_clock::now();
-    CSymPy::Sieve::generate_primes(MAX, v);
+    CSymPy::Sieve::generate_primes(v, MAX);
     auto t2 = std::chrono::high_resolution_clock::now();
     std::cout
         << std::chrono::duration_cast<std::chrono::microseconds>(t2-t1).count()
@@ -313,7 +314,7 @@ void _test_primefactors(const RCP<const Integer> &a, unsigned size)
     assert(primes.size() == size);
 
     for (auto &it: primes) {
-        assert(divides(a, it) == true);
+        assert(divides(*a, *it) == true);
         assert(probab_prime_p(*it) > 0);
     }
 }
@@ -416,7 +417,7 @@ void test_crt() {
 void test_primitive_root()
 {
     RCP<const Integer> i15 = integer(15);
-    RCP<const Integer> i18 = integer(18);
+    RCP<const Integer> im18 = integer(-18);
     RCP<const Integer> i162 = integer(162);
     RCP<const Integer> i100 = integer(100);
     RCP<const Integer> i = integer(40487*40487);
@@ -425,17 +426,21 @@ void test_primitive_root()
     assert(primitive_root(outArg(g), *i15) == false);
     assert(primitive_root(outArg(g), *i100) == false);
 
-    assert(primitive_root(outArg(g), *i18) == true);
-    assert(multiplicative_order(outArg(p), g, i18) == true);
-    assert(eq(p, totient(i18)));
+    assert(primitive_root(outArg(g), *im18) == true);
+    assert(multiplicative_order(outArg(p), g, im18) == true );
+    assert(eq(p, totient(im18)));
 
     assert(primitive_root(outArg(g), *i) == true);
-    assert(multiplicative_order(outArg(p), g, i) == true);
+    assert(multiplicative_order(outArg(p), g, i) == true );
     assert(eq(p, totient(i)));
 
     std::vector<RCP<const Integer>> roots;
-    primitive_root_list(roots, 162);
+    primitive_root_list(roots, *i162);
     assert(roots.size() == 18);
+
+    roots.clear();
+    primitive_root_list(roots, *i100);
+    assert(roots.size() == 0);
 }
 
 void test_totient_carmichael()
@@ -443,17 +448,17 @@ void test_totient_carmichael()
     RCP<const Integer> i8 = integer(8);
     RCP<const Integer> i9 = integer(9);
     RCP<const Integer> i30 = integer(30);
-    RCP<const Integer> i1729 = integer(1729);
+    RCP<const Integer> im1729 = integer(-1729);
 
     assert(eq(totient(i8), integer(4)));
     assert(eq(totient(i9), integer(6)));
     assert(eq(totient(i30), integer(8)));
-    assert(eq(totient(i1729), integer(1296)));
+    assert(eq(totient(im1729), integer(1296)));
 
     assert(eq(carmichael(i8), integer(2)));
     assert(eq(carmichael(i9), integer(6)));
     assert(eq(carmichael(i30), integer(4)));
-    assert(eq(carmichael(i1729), integer(36)));
+    assert(eq(carmichael(im1729), integer(36)));
 }
 
 void test_multiplicative_order()
@@ -477,6 +482,123 @@ void test_multiplicative_order()
     assert(eq(g, i6));
     assert(multiplicative_order(outArg(g), i3, i13) == true);
     assert(eq(g, i3));
+}
+
+void test_legendre_jacobi_kronecker()
+{
+    RCP<const Integer> im1 = integer(-1);
+    RCP<const Integer> i1 = integer(1);
+    RCP<const Integer> i3 = integer(3);
+    RCP<const Integer> i4 = integer(4);
+    RCP<const Integer> i5 = integer(5);
+    RCP<const Integer> i8 = integer(8);
+    RCP<const Integer> i9 = integer(9);
+    RCP<const Integer> i15 = integer(15);
+    RCP<const Integer> i23 = integer(23);
+    RCP<const Integer> i27 = integer(27);
+    RCP<const Integer> i93 = integer(93);
+    RCP<const Integer> i115 = integer(115);
+
+    assert(legendre(*im1, *i23) == -1);
+    assert(legendre(*im1, *i3) == -1);
+    assert(legendre(*i3, *i3) == 0);
+    assert(legendre(*i4, *i5) == 1);
+
+    assert(jacobi(*im1, *i93) == 1);
+    assert(jacobi(*i4, *i27) == 1);
+    assert(jacobi(*i5, *i115) == 0);
+    assert(jacobi(*i93, *i115) == -1);
+
+    assert(kronecker(*i8, *i27) == -1);
+    assert(kronecker(*i4, *i8) == 0);
+    assert(kronecker(*i8, *i23) == 1);
+}
+
+void test_nthroot_mod()
+{
+    RCP<const Integer> im1 = integer(-1);
+    RCP<const Integer> i1 = integer(1);
+    RCP<const Integer> i2 = integer(2);
+    RCP<const Integer> i3 = integer(3);
+    RCP<const Integer> i4 = integer(4);
+    RCP<const Integer> i5 = integer(5);
+    RCP<const Integer> i9 = integer(9);
+    RCP<const Integer> i10 = integer(10);
+    RCP<const Integer> i16 = integer(16);
+    RCP<const Integer> i18 = integer(18);
+    RCP<const Integer> i23 = integer(23);
+    RCP<const Integer> i27 = integer(27);
+    RCP<const Integer> i31 = integer(31);
+    RCP<const Integer> i32 = integer(32);
+    RCP<const Integer> i41 = integer(41);
+    RCP<const Integer> i64 = integer(64);
+    RCP<const Integer> i93 = integer(93);
+    RCP<const Integer> i100 = integer(100);
+    RCP<const Integer> i105 = integer(105);
+    RCP<const Integer> nthroot, rem;
+    std::vector<RCP<const Integer>> roots;
+
+    assert(nthroot_mod(outArg(nthroot), im1, i2, i23) == false);
+    assert(nthroot_mod(outArg(nthroot), im1, i2, i93) == false);
+    assert(nthroot_mod(outArg(nthroot), i3, i2, i27) == false);
+    assert(nthroot_mod(outArg(nthroot), i18, i2, i27) == false);
+    assert(nthroot_mod(outArg(nthroot), i9, i4, i64) == false);
+    assert(nthroot_mod(outArg(nthroot), im1, i2, i23) == false);
+    assert(nthroot_mod(outArg(nthroot), i2, i3, i105) == false);
+
+    assert(nthroot_mod(outArg(nthroot), i5, i1, i100) == true);
+    assert(eq(nthroot, i5));
+
+    assert(nthroot_mod(outArg(nthroot), im1, i2, i41) == true);
+    rem = integer(nthroot->as_mpz() * nthroot->as_mpz() - im1->as_mpz());
+    assert(divides(*rem, *i41));
+
+    assert(nthroot_mod(outArg(nthroot), i31, i4, i41) == true);
+    nthroot_mod(outArg(nthroot), i32, i10, i41);
+    nthroot_mod_list(roots, i1, i10, i100);
+
+    assert(nthroot_mod(outArg(nthroot), i4, i2, i64) == true);
+    rem = integer(nthroot->as_mpz() * nthroot->as_mpz() - i4->as_mpz());
+    assert(divides(*rem, *i64));
+
+    assert(nthroot_mod(outArg(nthroot), i32, i10, i41) == true);
+    rem = rcp_static_cast<const Integer>(nthroot->powint(*i10));
+    rem = integer(rem->as_mpz() - i32->as_mpz());
+    assert(divides(*rem, *i41));
+
+    roots.clear();
+    nthroot_mod_list(roots, i9, i2, i27);
+    assert(roots.size() == 6);
+
+    roots.clear();
+    nthroot_mod_list(roots, i1, i18, i105);
+    assert(roots.size() == 24);
+}
+
+void test_powermod()
+{
+    RCP<const Integer> im1 = integer(-1);
+    RCP<const Integer> i1 = integer(1);
+    RCP<const Integer> i2 = integer(2);
+    RCP<const Integer> i3 = integer(3);
+    RCP<const Integer> i4 = integer(4);
+    RCP<const Integer> i15 = integer(15);
+    RCP<const Integer> i18 = integer(18);
+    RCP<const Integer> i23 = integer(23);
+    RCP<const Integer> i41 = integer(41);
+    RCP<const Integer> i105 = integer(105);
+    RCP<const Integer> r;
+    std::vector<RCP<const Integer>> powms;
+
+    assert(powermod(outArg(r), i2, im1, i4) == false);
+    assert(powermod(outArg(r), i4, i3, i41) == true);
+    assert(eq(r, i23));
+
+    assert(powermod(outArg(r), i2, i23->divint(*i41), i41) == true);
+    assert(eq(r, integer(8)));
+
+    powermod_list(powms, i15, i1->divint(*i18), i105);
+    assert(powms.size() == 6);
 }
 
 int main(int argc, char* argv[])
@@ -504,6 +626,9 @@ int main(int argc, char* argv[])
     test_totient_carmichael();
     test_multiplicative_order();
     test_primitive_root();
+    test_legendre_jacobi_kronecker();
+    test_nthroot_mod();
+    test_powermod();
 
     return 0;
 }
