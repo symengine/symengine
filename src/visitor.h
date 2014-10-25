@@ -56,20 +56,27 @@ public:
 void preorder_traversal(const Basic &b, Visitor &v);
 void postorder_traversal(const Basic &b, Visitor &v);
 
-class HasSymbolVisitor : public Visitor {
+class StopVisitor : public Visitor {
+public:
+    bool stop_;
+};
+
+void preorder_traversal_stop(const Basic &b, StopVisitor &v);
+
+class HasSymbolVisitor : public StopVisitor {
 private:
     RCP<const Symbol> x_;
     bool has_;
 public:
-    // TODO: allow to return true/false from the visit() methods, and if it
-    // returns false, stop the traversal in pre/postorder_traversal().
     void visit(const Symbol &x) {
         if (x_->__eq__(x)) has_ = true;
+        stop_ = true;
     }
     bool apply(const Basic &b, const RCP<const Symbol> &x) {
         x_ = x;
         has_ = false;
-        preorder_traversal(b, *this);
+        stop_ = false;
+        preorder_traversal_stop(b, *this);
         return has_;
     }
     virtual void visit(const Add &) { };

@@ -67,6 +67,13 @@ void postorder_traversal(const Basic &b, Visitor &v)
     b.accept(v);
 }
 
+void preorder_traversal_stop(const Basic &b, StopVisitor &v)
+{
+    b.accept(v);
+    if (v.stop_) return;
+    for (auto &p: b.get_args()) preorder_traversal(*p, v);
+}
+
 bool has_symbol(const Basic &b, const RCP<const Symbol> &x)
 {
     HasSymbolVisitor v;
