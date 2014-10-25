@@ -841,6 +841,7 @@ void primitive_root_list(std::vector<RCP<const Integer>> &roots, const Integer &
     if (!_prime_power(p, e, _n))
         return;
     _primitive_root_list(roots, p, e, even);
+    std::sort(roots.begin(), roots.end(), CSymPy::RCPIntegerKeyLess());
     return;
 }
 
@@ -1370,6 +1371,7 @@ void nthroot_mod_list(std::vector<RCP<const Integer>> &roots, const RCP<const In
         rem.push_back(rem1);
     }
     _crt_cartesian(roots, rem, moduli);
+    std::sort(roots.begin(), roots.end(), CSymPy::RCPIntegerKeyLess());
 }
 
 bool powermod(const Ptr<RCP<const Integer>> &powm, const RCP<const Integer> &a,

@@ -1,6 +1,7 @@
 from cython.operator cimport dereference as deref
 cimport csympy
 from csympy cimport rcp, RCP
+from libcpp cimport bool
 from libcpp.string cimport string
 
 class SympifyError(Exception):
@@ -240,6 +241,29 @@ cdef class Integer(Number):
     def __dealloc__(self):
         self.thisptr.reset()
 
+    def __hash__(self):
+        return deref(self.thisptr).hash()
+
+    def __richcmp__(a, b, int op):
+        cdef Integer A = sympify(a, False)
+        cdef Integer B = sympify(b, False)
+        if A is None or B is None: return NotImplemented
+        cdef int i = deref(csympy.rcp_static_cast_Integer(A.thisptr)).compare(deref(csympy.rcp_static_cast_Integer(B.thisptr)))
+        if (op == 0):
+            return i < 0
+        elif (op == 1):
+            return i <= 0
+        elif (op == 2):
+            return i == 0
+        elif (op == 3):
+            return i != 0
+        elif (op == 4):
+            return i > 0
+        elif (op == 5):
+            return i >= 0
+        else:
+            return NotImplemented
+
     def _sympy_(self):
         import sympy
         return sympy.Integer(deref(self.thisptr).__str__().decode("utf-8"))
@@ -423,7 +447,6 @@ cdef class DenseMatrix(MatrixBase):
                 deref(csympy.static_cast_DenseMatrix(result.thisptr)))
         else:
             raise Exception("Unsupported method.")
-
         return result
 
     def add_matrix(self, A):
@@ -527,6 +550,37 @@ cdef class DenseMatrix(MatrixBase):
         import sympy
         return sympy.Matrix(s)
 
+cdef class Sieve:
+    @staticmethod
+    def generate_primes(n):
+        cdef csympy.vector[unsigned] primes
+        csympy.sieve_generate_primes(primes, n)
+        s = []
+        for i in range(primes.size()):
+            s.append(primes[i])
+        return s
+
+cdef class Sieve_iterator:
+    cdef csympy.sieve_iterator *thisptr
+    cdef unsigned limit
+    def __cinit__(self):
+        self.thisptr = new csympy.sieve_iterator()
+        self.limit = 0
+
+    def __cinit__(self, n):
+        self.thisptr = new csympy.sieve_iterator(n)
+        self.limit = n
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        n = deref(self.thisptr).next_prime()
+        if self.limit > 0 and n > self.limit:
+            raise StopIteration
+        else:
+            return n
+
 def sin(x):
     cdef Basic X = sympify(x)
     return c2py(csympy.sin(X.thisptr))
@@ -545,6 +599,317 @@ def sqrt(x):
 
 def densematrix(row, col, l):
     return DenseMatrix(row, col, l)
+
+def probab_prime_p(n, reps = 25):
+    cdef Integer _n = sympify(n)
+    return csympy.probab_prime_p(deref(csympy.rcp_static_cast_Integer(_n.thisptr)), reps) >= 1
+
+def nextprime(n):
+    cdef Integer _n = sympify(n)
+    return c2py(<RCP[const csympy.Basic]>(csympy.nextprime(deref(csympy.rcp_static_cast_Integer(_n.thisptr)))))
+
+def gcd(a, b):
+    cdef Integer _a = sympify(a)
+    cdef Integer _b = sympify(b)
+    return c2py(<RCP[const csympy.Basic]>(csympy.gcd(deref(csympy.rcp_static_cast_Integer(_a.thisptr)),
+        deref(csympy.rcp_static_cast_Integer(_b.thisptr)))))
+
+def lcm(a, b):
+    cdef Integer _a = sympify(a)
+    cdef Integer _b = sympify(b)
+    return c2py(<RCP[const csympy.Basic]>(csympy.lcm(deref(csympy.rcp_static_cast_Integer(_a.thisptr)), 
+        deref(csympy.rcp_static_cast_Integer(_b.thisptr)))))
+
+def gcd_ext(a, b):
+    cdef Integer _a = sympify(a)
+    cdef Integer _b = sympify(b)
+    cdef RCP[const csympy.Integer] g, s, t
+    csympy.gcd_ext(csympy.outArg_Integer(g), csympy.outArg_Integer(s), csympy.outArg_Integer(t),
+        deref(csympy.rcp_static_cast_Integer(_a.thisptr)), deref(csympy.rcp_static_cast_Integer(_b.thisptr)))
+    return [c2py(<RCP[const csympy.Basic]>g), c2py(<RCP[const csympy.Basic]>s), c2py(<RCP[const csympy.Basic]>t)]
+
+def mod(a, b):
+    if b == 0:
+        raise ZeroDivisionError
+    cdef Integer _a = sympify(a)
+    cdef Integer _b = sympify(b)
+    return c2py(<RCP[const csympy.Basic]>(csympy.mod(deref(csympy.rcp_static_cast_Integer(_a.thisptr)),
+        deref(csympy.rcp_static_cast_Integer(_b.thisptr)))))
+
+def quotient(a, b):
+    if b == 0:
+        raise ZeroDivisionError
+    cdef Integer _a = sympify(a)
+    cdef Integer _b = sympify(b)
+    return c2py(<RCP[const csympy.Basic]>(csympy.quotient(deref(csympy.rcp_static_cast_Integer(_a.thisptr)),
+        deref(csympy.rcp_static_cast_Integer(_b.thisptr)))))
+
+def quotient_mod(a, b):
+    if b == 0:
+        raise ZeroDivisionError
+    cdef RCP[const csympy.Integer] q, r
+    cdef Integer _a = sympify(a)
+    cdef Integer _b = sympify(b)
+    csympy.quotient_mod(csympy.outArg_Integer(q), csympy.outArg_Integer(r),
+        deref(csympy.rcp_static_cast_Integer(_a.thisptr)), deref(csympy.rcp_static_cast_Integer(_b.thisptr)))
+    return [c2py(<RCP[const csympy.Basic]>q), c2py(<RCP[const csympy.Basic]>r)]
+
+def mod_inverse(a, b):
+    cdef RCP[const csympy.Integer] inv
+    cdef Integer _a = sympify(a)
+    cdef Integer _b = sympify(b)
+    cdef int ret_val = csympy.mod_inverse(csympy.outArg_Integer(inv),
+        deref(csympy.rcp_static_cast_Integer(_a.thisptr)), deref(csympy.rcp_static_cast_Integer(_b.thisptr)))
+    if ret_val == 0:
+        return None
+    return c2py(<RCP[const csympy.Basic]>inv)
+
+def crt(rem, mod):
+    cdef csympy.vec_integer _rem, _mod
+    cdef Integer _a
+    cdef bool ret_val
+    for i in range(len(rem)):
+        _a = sympify(rem[i])
+        _rem.push_back(csympy.rcp_static_cast_Integer(_a.thisptr))
+        _a = sympify(mod[i])
+        _mod.push_back(csympy.rcp_static_cast_Integer(_a.thisptr))
+
+    cdef RCP[const csympy.Integer] c
+    ret_val = csympy.crt(csympy.outArg_Integer(c), _rem, _mod)
+    if not ret_val:
+        return None
+    return c2py(<RCP[const csympy.Basic]>c)
+
+def fibonacci(n):
+    if n < 0 :
+        raise NotImplementedError
+    return c2py(<RCP[const csympy.Basic]>(csympy.fibonacci(n)))
+
+def fibonacci2(n):
+    if n < 0 :
+        raise NotImplementedError
+    cdef RCP[const csympy.Integer] f1, f2
+    csympy.fibonacci2(csympy.outArg_Integer(f1), csympy.outArg_Integer(f2), n)
+    return [c2py(<RCP[const csympy.Basic]>f1), c2py(<RCP[const csympy.Basic]>f2)]
+
+def lucas(n):
+    if n < 0 :
+        raise NotImplementedError
+    return c2py(<RCP[const csympy.Basic]>(csympy.lucas(n)))
+
+def lucas2(n):
+    if n < 0 :
+        raise NotImplementedError
+    cdef RCP[const csympy.Integer] f1, f2
+    csympy.lucas2(csympy.outArg_Integer(f1), csympy.outArg_Integer(f2), n)
+    return [c2py(<RCP[const csympy.Basic]>f1), c2py(<RCP[const csympy.Basic]>f2)]
+
+def binomial(n, k):
+    if k < 0:
+        raise ArithmeticError
+    cdef Integer _n = sympify(n)
+    return c2py(<RCP[const csympy.Basic]>csympy.binomial(deref(csympy.rcp_static_cast_Integer(_n.thisptr)), k))
+
+def factorial(n):
+    if n < 0:
+        raise ArithmeticError
+    return c2py(<RCP[const csympy.Basic]>(csympy.factorial(n)))
+
+def divides(a, b):
+    cdef Integer _a = sympify(a)
+    cdef Integer _b = sympify(b)
+    return csympy.divides(deref(csympy.rcp_static_cast_Integer(_a.thisptr)),
+        deref(csympy.rcp_static_cast_Integer(_b.thisptr)))
+
+def factor(n, B1 = 1.0):
+    cdef Integer _n = sympify(n)
+    cdef RCP[const csympy.Integer] f
+    cdef int ret_val = csympy.factor(csympy.outArg_Integer(f),
+        deref(csympy.rcp_static_cast_Integer(_n.thisptr)), B1)
+    if (ret_val == 1):
+        return c2py(<RCP[const csympy.Basic]>f)
+    else:
+        return None
+
+def factor_lehman_method(n):
+    cdef Integer _n = sympify(n)
+    cdef RCP[const csympy.Integer] f
+    cdef int ret_val = csympy.factor_lehman_method(csympy.outArg_Integer(f),
+        deref(csympy.rcp_static_cast_Integer(_n.thisptr)))
+    if (ret_val == 1):
+        return c2py(<RCP[const csympy.Basic]>f)
+    else:
+        return None
+
+def factor_pollard_pm1_method(n, B = 10, retries = 5):
+    cdef Integer _n = sympify(n)
+    cdef RCP[const csympy.Integer] f
+    cdef int ret_val = csympy.factor_pollard_pm1_method(csympy.outArg_Integer(f),
+        deref(csympy.rcp_static_cast_Integer(_n.thisptr)), B, retries)
+    if (ret_val == 1):
+        return c2py(<RCP[const csympy.Basic]>f)
+    else:
+        return None
+
+def factor_pollard_rho_method(n, retries = 5):
+    cdef Integer _n = sympify(n)
+    cdef RCP[const csympy.Integer] f
+    cdef int ret_val = csympy.factor_pollard_rho_method(csympy.outArg_Integer(f),
+        deref(csympy.rcp_static_cast_Integer(_n.thisptr)), retries)
+    if (ret_val == 1):
+        return c2py(<RCP[const csympy.Basic]>f)
+    else:
+        return None
+
+def prime_factors(n):
+    cdef csympy.vec_integer factors
+    cdef Integer _n = sympify(n)
+    csympy.prime_factors(factors, deref(csympy.rcp_static_cast_Integer(_n.thisptr)))
+    s = []
+    for i in range(factors.size()):
+        s.append(c2py(<RCP[const csympy.Basic]>(factors[i])))
+    return s
+
+def prime_factor_multiplicities(n):
+    cdef csympy.vec_integer factors
+    cdef Integer _n = sympify(n)
+    csympy.prime_factors(factors, deref(csympy.rcp_static_cast_Integer(_n.thisptr)))
+    cdef Basic r
+    dict = {}
+    for i in range(factors.size()):
+        r = c2py(<RCP[const csympy.Basic]>(factors[i]))
+        if (r not in dict):
+            dict[r] = 1
+        else:
+            dict[r] += 1
+    return dict
+
+def bernoulli(n):
+    if n < 0:
+        raise ArithmeticError
+    return c2py(<RCP[const csympy.Basic]>(csympy.bernoulli(n)))
+
+def primitive_root(n):
+    cdef RCP[const csympy.Integer] g
+    cdef Integer _n = sympify(n)
+    cdef bool ret_val = csympy.primitive_root(csympy.outArg_Integer(g),
+        deref(csympy.rcp_static_cast_Integer(_n.thisptr)))
+    if ret_val == 0:
+        return None
+    return c2py(<RCP[const csympy.Basic]>g)
+
+def primitive_root_list(n):
+    cdef csympy.vec_integer root_list
+    cdef Integer _n = sympify(n)
+    csympy.primitive_root_list(root_list,
+        deref(csympy.rcp_static_cast_Integer(_n.thisptr)))
+    s = []
+    for i in range(root_list.size()):
+        s.append(c2py(<RCP[const csympy.Basic]>(root_list[i])))
+    return s
+
+def totient(n):
+    cdef Integer _n = sympify(n)
+    cdef RCP[const csympy.Integer] m = csympy.rcp_static_cast_Integer(_n.thisptr)
+    return c2py(<RCP[const csympy.Basic]>csympy.totient(<const RCP[const csympy.Integer]>m))
+
+def carmichael(n):
+    cdef Integer _n = sympify(n)
+    cdef RCP[const csympy.Integer] m = csympy.rcp_static_cast_Integer(_n.thisptr)
+    return c2py(<RCP[const csympy.Basic]>csympy.carmichael(<const RCP[const csympy.Integer]>m))
+
+def multiplicative_order(a, n):
+    cdef Integer _n = sympify(n)
+    cdef Integer _a = sympify(a)
+    cdef RCP[const csympy.Integer] n1 = csympy.rcp_static_cast_Integer(_n.thisptr)
+    cdef RCP[const csympy.Integer] a1 = csympy.rcp_static_cast_Integer(_a.thisptr)
+    cdef RCP[const csympy.Integer] o
+    cdef bool c = csympy.multiplicative_order(csympy.outArg_Integer(o),
+        <const RCP[const csympy.Integer]>a1, <const RCP[const csympy.Integer]>n1)
+    if not c:
+        return None
+    return c2py(<RCP[const csympy.Basic]>o)
+
+def legendre(a, n):
+    cdef Integer _n = sympify(n)
+    cdef Integer _a = sympify(a)
+    return csympy.legendre(deref(csympy.rcp_static_cast_Integer(_a.thisptr)),
+        deref(csympy.rcp_static_cast_Integer(_n.thisptr)))
+
+def jacobi(a, n):
+    cdef Integer _n = sympify(n)
+    cdef Integer _a = sympify(a)
+    return csympy.jacobi(deref(csympy.rcp_static_cast_Integer(_a.thisptr)),
+        deref(csympy.rcp_static_cast_Integer(_n.thisptr)))
+
+def kronecker(a, n):
+    cdef Integer _n = sympify(n)
+    cdef Integer _a = sympify(a)
+    return csympy.kronecker(deref(csympy.rcp_static_cast_Integer(_a.thisptr)),
+        deref(csympy.rcp_static_cast_Integer(_n.thisptr)))
+
+def nthroot_mod(a, n, m):
+    cdef RCP[const csympy.Integer] root
+    cdef Integer _n = sympify(n)
+    cdef Integer _a = sympify(a)
+    cdef Integer _m = sympify(m)
+    cdef RCP[const csympy.Integer] n1 = csympy.rcp_static_cast_Integer(_n.thisptr)
+    cdef RCP[const csympy.Integer] a1 = csympy.rcp_static_cast_Integer(_a.thisptr)
+    cdef RCP[const csympy.Integer] m1 = csympy.rcp_static_cast_Integer(_m.thisptr)
+    cdef bool ret_val = csympy.nthroot_mod(csympy.outArg_Integer(root),
+        <const RCP[const csympy.Integer]>a1, <const RCP[const csympy.Integer]>n1,
+        <const RCP[const csympy.Integer]>m1)
+    if not ret_val:
+        return None
+    return c2py(<RCP[const csympy.Basic]>root)
+
+def nthroot_mod_list(a, n, m):
+    cdef csympy.vec_integer root_list
+    cdef Integer _n = sympify(n)
+    cdef Integer _a = sympify(a)
+    cdef Integer _m = sympify(m)
+    cdef RCP[const csympy.Integer] n1 = csympy.rcp_static_cast_Integer(_n.thisptr)
+    cdef RCP[const csympy.Integer] a1 = csympy.rcp_static_cast_Integer(_a.thisptr)
+    cdef RCP[const csympy.Integer] m1 = csympy.rcp_static_cast_Integer(_m.thisptr)
+    csympy.nthroot_mod_list(root_list, <const RCP[const csympy.Integer]>a1,
+        <const RCP[const csympy.Integer]>n1, <const RCP[const csympy.Integer]>m1)
+    s = []
+    for i in range(root_list.size()):
+        s.append(c2py(<RCP[const csympy.Basic]>(root_list[i])))
+    return s
+
+def powermod(a, b, m):
+    cdef Integer _a = sympify(a)
+    cdef Integer _m = sympify(m)
+    cdef Number _b = sympify(b)
+    cdef RCP[const csympy.Integer] a1 = csympy.rcp_static_cast_Integer(_a.thisptr)
+    cdef RCP[const csympy.Integer] m1 = csympy.rcp_static_cast_Integer(_m.thisptr)
+    cdef RCP[const csympy.Number] b1 = csympy.rcp_static_cast_Number(_b.thisptr)
+    cdef RCP[const csympy.Integer] root
+
+    cdef bool ret_val = csympy.powermod(csympy.outArg_Integer(root),
+        <const RCP[const csympy.Integer]>a1, <const RCP[const csympy.Number]>b1,
+        <const RCP[const csympy.Integer]>m1)
+    if ret_val == 0:
+        return None
+    return c2py(<RCP[const csympy.Basic]>root)
+
+def powermod_list(a, b, m):
+    cdef Integer _a = sympify(a)
+    cdef Integer _m = sympify(m)
+    cdef Number _b = sympify(b)
+    cdef RCP[const csympy.Integer] a1 = csympy.rcp_static_cast_Integer(_a.thisptr)
+    cdef RCP[const csympy.Integer] m1 = csympy.rcp_static_cast_Integer(_m.thisptr)
+    cdef RCP[const csympy.Number] b1 = csympy.rcp_static_cast_Number(_b.thisptr)
+    cdef csympy.vec_integer v
+
+    csympy.powermod_list(v,
+        <const RCP[const csympy.Integer]>a1, <const RCP[const csympy.Number]>b1,
+        <const RCP[const csympy.Integer]>m1)
+    s = []
+    for i in range(v.size()):
+        s.append(c2py(<RCP[const csympy.Basic]>(v[i])))
+    return s
 
 I = c2py(csympy.I)
 

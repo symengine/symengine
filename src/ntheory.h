@@ -63,7 +63,7 @@ RCP<const Integer> binomial(const Integer &n,unsigned long k);
 //! Factorial
 RCP<const Integer> factorial(unsigned long n);
 
-//! \return true of `a` divides `b`
+//! \return true if `b` divides `a`
 bool divides(const Integer &a, const Integer &b);
 
 //! Factorization

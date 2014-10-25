@@ -26,6 +26,8 @@ cdef extern from "csympy_rcp.h" namespace "CSymPy":
         T& operator*() nogil except +
 
     RCP[const Symbol] rcp_static_cast_Symbol "CSymPy::rcp_static_cast<const CSymPy::Symbol>"(RCP[const Basic] &b) nogil
+    RCP[const Integer] rcp_static_cast_Integer "CSymPy::rcp_static_cast<const CSymPy::Integer>"(RCP[const Basic] &b) nogil
+    RCP[const Number] rcp_static_cast_Number "CSymPy::rcp_static_cast<const CSymPy::Number>"(RCP[const Basic] &b) nogil
     RCP[const Add] rcp_static_cast_Add "CSymPy::rcp_static_cast<const CSymPy::Add>"(RCP[const Basic] &b) nogil
     RCP[const Mul] rcp_static_cast_Mul "CSymPy::rcp_static_cast<const CSymPy::Mul>"(RCP[const Basic] &b) nogil
     RCP[const Pow] rcp_static_cast_Pow "CSymPy::rcp_static_cast<const CSymPy::Pow>"(RCP[const Basic] &b) nogil
@@ -34,6 +36,7 @@ cdef extern from "csympy_rcp.h" namespace "CSymPy":
     RCP[const FunctionSymbol] rcp_static_cast_FunctionSymbol "CSymPy::rcp_static_cast<const CSymPy::FunctionSymbol>"(RCP[const Basic] &b) nogil
     RCP[const Derivative] rcp_static_cast_Derivative "CSymPy::rcp_static_cast<const CSymPy::Derivative>"(RCP[const Basic] &b) nogil
     Ptr[RCP[Basic]] outArg(RCP[const Basic] &arg) nogil
+    Ptr[RCP[Integer]] outArg_Integer "CSymPy::outArg<CSymPy::RCP<const CSymPy::Integer>>"(RCP[const Integer] &arg) nogil
 
     void print_stack_on_segfault() nogil
 
@@ -41,6 +44,9 @@ cdef extern from "csympy_rcp.h" namespace "CSymPy":
 cdef extern from "basic.h" namespace "CSymPy":
     ctypedef map[RCP[Basic], RCP[Basic]] map_basic_basic
     ctypedef vector[RCP[Basic]] vec_basic "CSymPy::vec_basic"
+    ctypedef vector[RCP[Integer]] vec_integer "CSymPy::vec_integer"
+    ctypedef map[RCP[Integer], unsigned] map_integer_uint "CSymPy::map_integer_uint"
+    cdef struct RCPIntegerKeyLess
     cdef cppclass Basic:
         string __str__() nogil except +
         unsigned int hash() nogil except +
@@ -79,6 +85,7 @@ cdef extern from "integer.h" namespace "CSymPy":
     cdef cppclass Integer(Number):
         Integer(int i) nogil
         Integer(mpz_class i) nogil
+        int compare(const Basic &o) nogil
 
 cdef extern from "rational.h" namespace "CSymPy":
     cdef cppclass Rational(Number):
@@ -184,3 +191,61 @@ cdef extern from "matrix.h" namespace "CSymPy":
         const DenseMatrix &b, DenseMatrix &x) nogil
     void LDL_solve "CSymPy::LDL_solve"(const DenseMatrix &A, const DenseMatrix &b,
         DenseMatrix &x) nogil
+
+cdef extern from "ntheory.h" namespace "CSymPy":
+    int probab_prime_p(const Integer &a, int reps)
+    RCP[const Integer] nextprime (const Integer &a) nogil
+    RCP[const Integer] gcd(const Integer &a, const Integer &b) nogil
+    RCP[const Integer] lcm(const Integer &a, const Integer &b) nogil
+    void gcd_ext(const Ptr[RCP[Integer]] &g, const Ptr[RCP[Integer]] &s,
+            const Ptr[RCP[Integer]] &t, const Integer &a, const Integer &b) nogil
+    RCP[const Integer] mod(const Integer &n, const Integer &d) nogil except +
+    RCP[const Integer] quotient "CSymPy::quotient_f"(const Integer &n, const Integer &d) nogil except +
+    void quotient_mod (const Ptr[RCP[Integer]] &q, const Ptr[RCP[Integer]] &mod,
+            const Integer &n, const Integer &d) nogil except +
+    int mod_inverse(const Ptr[RCP[Integer]] &b, const Integer &a,
+            const Integer &m) nogil
+    bool crt(const Ptr[RCP[Integer]] &R, const vec_integer &rem,
+           const vec_integer &mod) nogil
+    RCP[const Integer] fibonacci(unsigned long n) nogil
+    void fibonacci2(const Ptr[RCP[Integer]] &g, const Ptr[RCP[Integer]] &s,
+            unsigned long n) nogil
+    RCP[const Integer] lucas(unsigned long n) nogil
+    void lucas2(const Ptr[RCP[Integer]] &g, const Ptr[RCP[Integer]] &s,
+            unsigned long n) nogil
+    RCP[const Integer] binomial(const Integer &n,unsigned long k) nogil
+    RCP[const Integer] factorial(unsigned long n) nogil
+    bool divides(const Integer &a, const Integer &b) nogil
+    int factor(const Ptr[RCP[Integer]] &f, const Integer &n, double B1) nogil
+    int factor_lehman_method(const Ptr[RCP[Integer]] &f, const Integer &n) nogil
+    int factor_pollard_pm1_method(const Ptr[RCP[Integer]] &f, const Integer &n,
+            unsigned B, unsigned retries) nogil
+    int factor_pollard_rho_method(const Ptr[RCP[Integer]] &f, const Integer &n,
+            unsigned retries) nogil
+    void prime_factors(vec_integer &primes, const Integer &n) nogil except +
+    void prime_factor_multiplicities(map_integer_uint &primes, const Integer &n) nogil except +
+    RCP[const Number] bernoulli(unsigned long n) nogil except +
+    bool primitive_root(const Ptr[RCP[Integer]] &g, const Integer &n) nogil
+    void primitive_root_list(vec_integer &roots, const Integer &n) nogil
+    RCP[const Integer] totient(const RCP[const Integer] &n) nogil
+    RCP[const Integer] carmichael(const RCP[const Integer] &n) nogil
+    bool multiplicative_order(const Ptr[RCP[Integer]] &o, const RCP[const Integer] &a,
+            const RCP[const Integer] &n) nogil
+    int legendre(const Integer &a, const Integer &n) nogil
+    int jacobi(const Integer &a, const Integer &n) nogil
+    int kronecker(const Integer &a, const Integer &n) nogil
+    void nthroot_mod_list(vec_integer &roots, const RCP[const Integer] &n,
+            const RCP[const Integer] &a, const RCP[const Integer] &m) nogil
+    bool nthroot_mod(const Ptr[RCP[Integer]] &root, const RCP[const Integer] &n,
+            const RCP[const Integer] &a, const RCP[const Integer] &m) nogil
+    bool powermod(const Ptr[RCP[Integer]] &powm, const RCP[const Integer] &a,
+            const RCP[const Number] &b, const RCP[const Integer] &m) nogil
+    void powermod_list(vec_integer &powm, const RCP[const Integer] &a,
+            const RCP[const Number] &b, const RCP[const Integer] &m) nogil
+
+    void sieve_generate_primes "CSymPy::Sieve::generate_primes"(vector[unsigned] &primes, unsigned limit) nogil
+
+    cdef cppclass sieve_iterator "CSymPy::Sieve::iterator":
+        sieve_iterator()
+        sieve_iterator(unsigned limit) nogil
+        unsigned next_prime() nogil
