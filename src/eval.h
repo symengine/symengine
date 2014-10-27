@@ -15,7 +15,7 @@
 
 namespace CSymPy {
 
-void eval_double(arb_t result, const Basic &b);
+void eval_double(arb_t result, const Basic &b, long precision = 15);
 
 } // CSymPy
 

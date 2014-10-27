@@ -17,23 +17,40 @@ namespace CSymPy {
 
 class EvalArbVisitor : public Visitor {
 private:
+    long prec_;
     arb_t result_;
 public:
-    void apply(arb_t &result, const Basic &b) {
+    void apply(arb_t &result, const Basic &b, long precision) {
+        prec_ = precision;
         b.accept(*this);
         arb_set(result, result_);
     }
 
     virtual void visit(const Integer &x) {
-        throw std::runtime_error("Not implemented.");
+        fmpz_t z_;
+        fmpz_init(z_);
+        fmpz_set_mpz(z_, x.i.get_mpz_t());
+        arb_set_fmpz(result_, z_);
+        fmpz_clear(z_);
     }
 
     virtual void visit(const Rational &x) {
-        throw std::runtime_error("Not implemented.");
+        fmpq_t q_;
+        fmpq_init(q_);
+        fmpq_set_mpq(q_, x.i.get_mpq_t());
+        arb_set_fmpq(result_, q_, prec_);
+        fmpq_clear(q_);
     }
 
     virtual void visit(const Add &x) {
-        throw std::runtime_error("Not implemented.");
+        arb_t t1, t2;
+        arb_init(t1);
+        arb_init(t2);
+        for (auto &p: x.get_args()) {
+            apply(t1, *p, prec_);
+            arb_add(t2, t2, t1, prec_);
+        }
+        arb_set(result_, t2);
     }
 
     virtual void visit(const Mul &x) {
@@ -152,10 +169,10 @@ public:
 
 };
 
-void eval_arb(arb_t &result, const Basic &b)
+void eval_arb(arb_t &result, const Basic &b, long precision)
 {
     EvalArbVisitor v;
-    v.apply(result, b);
+    v.apply(result, b, precision);
 }
 
 } // CSymPy
