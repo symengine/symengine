@@ -1,65 +1,161 @@
-#include "eval.h"
-#include "pow.h"
-#include "rational.h"
-#include "integer.h"
 #include "basic.h"
+#include "symbol.h"
+#include "add.h"
+#include "integer.h"
+#include "rational.h"
 #include "complex.h"
+#include "mul.h"
+#include "pow.h"
+#include "functions.h"
+#include "visitor.h"
+#include "eval.h"
 
 #ifdef HAVE_CSYMPY_ARB
 #include "arb.h"
 
 namespace CSymPy {
 
-inline void mpz_to_arb(arb_t &a, const mpz_t z)
-{
-    fmpz_t z_;
-    fmpz_init(z_);
-    fmpz_set_mpz(z_, z);
-    arb_set_fmpz(a, z_);
-    fmpz_clear(z_);
-}
-
-inline void mpq_to_arb(arb_t &a, const mpq_t q, long prec)
-{
-    fmpq_t q_;
-    fmpq_init(q_);
-    fmpq_set_mpq(q_, q);
-    arb_set_fmpq(a, q_, prec);
-    fmpq_clear(q_);
-}
-
-RCP<const Basic> eval_pow(const RCP<const Basic> &x, long prec)
-{
-    RCP<const Pow> x_ = rcp_static_cast<const Pow>(x);
-    arb_t e, b, y;
-    arb_init(e);
-    arb_init(b);
-    arb_init(y);
-
-    RCP<const Basic> base = eval(x_->get_base(), prec);
-    if (is_a<Rational>(*base)) {
-        mpq_to_arb(b, rcp_static_cast<const Rational>(base)->i.get_mpq_t(), prec);
-    } else if (is_a<Integer>(*base)) {
-        mpz_to_arb(b, rcp_static_cast<const Integer>(base)->i.get_mpz_t());
+class EvalArbVisitor : public Visitor {
+private:
+    arb_t result_;
+public:
+    void apply(arb_t &result, const Basic &b) {
+        b.accept(*this);
+        arb_set(result, result_);
     }
 
-    RCP<const Basic> exp = eval(x_->get_exp(), prec);
-    if (is_a<Rational>(*exp)) {
-        mpq_to_arb(e, rcp_static_cast<const Rational>(exp)->i.get_mpq_t(), prec);
+    virtual void visit(const Integer &x) {
+        throw std::runtime_error("Not implemented.");
     }
 
-    arb_pow(y, b, e, prec);
-}
+    virtual void visit(const Rational &x) {
+        throw std::runtime_error("Not implemented.");
+    }
 
-RCP<const Basic> eval(const RCP<const Basic> &x, long prec)
+    virtual void visit(const Add &x) {
+        throw std::runtime_error("Not implemented.");
+    }
+
+    virtual void visit(const Mul &x) {
+        throw std::runtime_error("Not implemented.");
+    }
+
+    virtual void visit(const Pow &x) {
+        throw std::runtime_error("Not implemented.");
+    }
+
+    virtual void visit(const Sin &x) {
+        throw std::runtime_error("Not implemented.");
+    }
+
+    virtual void visit(const Cos &x) {
+        throw std::runtime_error("Not implemented.");
+    }
+
+    virtual void visit(const Tan &x) {
+        throw std::runtime_error("Not implemented.");
+    }
+
+    virtual void visit(const Symbol &) {
+        throw std::runtime_error("Symbol cannot be evaluated as an arb type.");
+    };
+    virtual void visit(const Complex &) {
+        throw std::runtime_error("Not implemented.");
+    };
+    virtual void visit(const Log &) {
+        throw std::runtime_error("Not implemented.");
+    };
+    virtual void visit(const Derivative &) {
+        throw std::runtime_error("Not implemented.");
+    };
+    virtual void visit(const Cot &) {
+        throw std::runtime_error("Not implemented.");
+    };
+    virtual void visit(const Csc &) {
+        throw std::runtime_error("Not implemented.");
+    };
+    virtual void visit(const Sec &) {
+        throw std::runtime_error("Not implemented.");
+    };
+    virtual void visit(const ASin &) {
+        throw std::runtime_error("Not implemented.");
+    };
+    virtual void visit(const ACos &) {
+        throw std::runtime_error("Not implemented.");
+    };
+    virtual void visit(const ASec &) {
+        throw std::runtime_error("Not implemented.");
+    };
+    virtual void visit(const ACsc &) {
+        throw std::runtime_error("Not implemented.");
+    };
+    virtual void visit(const ATan &) {
+        throw std::runtime_error("Not implemented.");
+    };
+    virtual void visit(const ACot &) {
+        throw std::runtime_error("Not implemented.");
+    };
+    virtual void visit(const ATan2 &) {
+        throw std::runtime_error("Not implemented.");
+    };
+    virtual void visit(const LambertW &) {
+        throw std::runtime_error("Not implemented.");
+    };
+    virtual void visit(const FunctionSymbol &) {
+        throw std::runtime_error("Not implemented.");
+    };
+    virtual void visit(const Sinh &) {
+        throw std::runtime_error("Not implemented.");
+    };
+    virtual void visit(const Cosh &) {
+        throw std::runtime_error("Not implemented.");
+    };
+    virtual void visit(const Tanh &) {
+        throw std::runtime_error("Not implemented.");
+    };
+    virtual void visit(const Coth &) {
+        throw std::runtime_error("Not implemented.");
+    };
+    virtual void visit(const ASinh &) {
+        throw std::runtime_error("Not implemented.");
+    };
+    virtual void visit(const ACosh &) {
+        throw std::runtime_error("Not implemented.");
+    };
+    virtual void visit(const ATanh &) {
+        throw std::runtime_error("Not implemented.");
+    };
+    virtual void visit(const ACoth &) {
+        throw std::runtime_error("Not implemented.");
+    };
+    virtual void visit(const KroneckerDelta &) {
+        throw std::runtime_error("Not implemented.");
+    };
+    virtual void visit(const LeviCivita &) {
+        throw std::runtime_error("Not implemented.");
+    };
+    virtual void visit(const Zeta &) {
+        throw std::runtime_error("Not implemented.");
+    };
+    virtual void visit(const Dirichlet_eta &) {
+        throw std::runtime_error("Not implemented.");
+    };
+    virtual void visit(const Gamma &) {
+        throw std::runtime_error("Not implemented.");
+    };
+    virtual void visit(const LowerGamma &) {
+        throw std::runtime_error("Not implemented.");
+    };
+    virtual void visit(const UpperGamma &) {
+        throw std::runtime_error("Not implemented.");
+    };
+
+};
+
+void eval_arb(arb_t &result, const Basic &b)
 {
-    if (is_a_Number(*x)) {
-        return x;
-    } else if (is_a<Pow>(*x)) {
-        return eval_pow(x, prec);
-    }
-
-    return x;
+    EvalArbVisitor v;
+    v.apply(result, b);
 }
 
 } // CSymPy

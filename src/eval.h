@@ -15,17 +15,7 @@
 
 namespace CSymPy {
 
-//! Create an arb_t instance from a gmp integer
-inline void mpz_to_arb(arb_t &a, const mpz_t z);
-
-//! Create an arb_t instance from a gmp rational
-inline void mpq_to_arb(arb_t &a, const mpq_t q, long prec);
-
-//! Evaluate a CSymPy power using Arb
-RCP<const Basic> eval_pow(const RCP<const Basic> &x, long prec);
-
-//! Main eval function
-RCP<const Basic> eval(const RCP<const Basic> &x, long prec);
+void eval_double(arb_t result, const Basic &b);
 
 } // CSymPy
 

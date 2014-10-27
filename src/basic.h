@@ -158,11 +158,6 @@ public:
     virtual vec_basic get_args() const = 0;
 
     virtual void accept(Visitor &v) const = 0;
-
-#ifdef HAVE_CSYMPY_ARB
-    //! Numerical evaluation of CSymPy types using Arb
-    RCP<const Basic> n(long precision = 15);
-#endif // HAVE_CSYMPY_ARB
 };
 
 //! Our hash:
