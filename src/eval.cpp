@@ -6,8 +6,7 @@
 #include "complex.h"
 
 #ifdef HAVE_CSYMPY_ARB
-#  include "arb.h"
-#endif // HAVE_CSYMPY_ARB
+#include "arb.h"
 
 namespace CSymPy {
 
@@ -64,3 +63,5 @@ RCP<const Basic> eval(const RCP<const Basic> &x, long prec)
 }
 
 } // CSymPy
+
+#endif // HAVE_CSYMPY_ARB
