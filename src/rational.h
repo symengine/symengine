@@ -15,7 +15,7 @@ namespace CSymPy {
 //! Rational Class
 class Rational : public Number {
 public:
-    //! `i` : object of `mpz_class`
+    //! `i` : object of `mpq_class`
     mpq_class i;
 
 public:
@@ -220,6 +220,8 @@ public:
             throw std::runtime_error("Not implemented.");
         }
     };
+
+    virtual void accept(Visitor &v) const;
 };
 
 //! returns the `num` and `den` of rational `rat` as `rcp Integer`

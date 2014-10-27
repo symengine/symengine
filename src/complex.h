@@ -272,6 +272,8 @@ public:
             throw std::runtime_error("Not implemented.");
         }
     };
+
+    virtual void accept(Visitor &v) const;
 };
 
 //! \return true if 'b' is a Number or any of its subclasses

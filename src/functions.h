@@ -80,6 +80,8 @@ public:
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
     //! \return Canonicalized sin
     virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
+
+    virtual void accept(Visitor &v) const;
 };
 
 //! Canonicalize Sin:
@@ -106,6 +108,7 @@ public:
     //! \return Canonicalized cos
     virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
 
+    virtual void accept(Visitor &v) const;
 };
 
 //! Canonicalize Cos:
@@ -131,6 +134,8 @@ public:
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
     //! \return Canonicalized tan
     virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
+
+    virtual void accept(Visitor &v) const;
 };
 //! Canonicalize Tan:
 RCP<const Basic> tan(const RCP<const Basic> &arg);
@@ -155,6 +160,8 @@ public:
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
     //! \return Canonicalized cot
     virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
+
+    virtual void accept(Visitor &v) const;
 };
 //! Canonicalize Cot:
 RCP<const Basic> cot(const RCP<const Basic> &arg);
@@ -179,6 +186,8 @@ public:
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
     //! \return Canonicalized csc
     virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
+
+    virtual void accept(Visitor &v) const;
 };
 //! Canonicalize Csc:
 RCP<const Basic> csc(const RCP<const Basic> &arg);
@@ -203,6 +212,8 @@ public:
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
     //! \return Canonicalized sec
     virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
+
+    virtual void accept(Visitor &v) const;
 };
 //! Canonicalize Sec:
 RCP<const Basic> sec(const RCP<const Basic> &arg);
@@ -226,6 +237,8 @@ public:
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
     //! \return Canonicalized asin
     virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
+
+    virtual void accept(Visitor &v) const;
 };
 
 //! Canonicalize ASin:
@@ -250,6 +263,8 @@ public:
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
     //! \return Canonicalized acos
     virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
+
+    virtual void accept(Visitor &v) const;
 };
 
 //! Canonicalize ACos:
@@ -274,6 +289,8 @@ public:
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
     //! \return Canonicalized asec
     virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
+
+    virtual void accept(Visitor &v) const;
 };
 
 //! Canonicalize ASec:
@@ -298,6 +315,8 @@ public:
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
     //! \return Canonicalized acsc
     virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
+
+    virtual void accept(Visitor &v) const;
 };
 
 //! Canonicalize ACsc:
@@ -322,6 +341,8 @@ public:
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
     //! \return Canonicalized atan
     virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
+
+    virtual void accept(Visitor &v) const;
 };
 
 //! Canonicalize ATan:
@@ -346,6 +367,8 @@ public:
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
     //! \return Canonicalized acot
     virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
+
+    virtual void accept(Visitor &v) const;
 };
 
 //! Canonicalize ACot:
@@ -382,6 +405,8 @@ public:
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
 
     virtual vec_basic get_args() const { return {num_, den_}; }
+
+    virtual void accept(Visitor &v) const;
 };
 
 //! Canonicalize ATan2:
@@ -417,6 +442,8 @@ public:
     bool is_canonical(const RCP<const Basic> &arg);
     //! Differentiate w.r.t Symbol `x`
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
+
+    virtual void accept(Visitor &v) const;
 };
 
 //! Create a new LambertW instance:
@@ -462,6 +489,8 @@ public:
     bool is_canonical(const RCP<const Basic> &s, const RCP<const Basic> &a);
     //! Differentiate w.r.t Symbol `x`
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
+
+    virtual void accept(Visitor &v) const;
 };
 
 //! Create a new Zeta instance:
@@ -494,6 +523,8 @@ public:
     bool is_canonical(const RCP<const Basic> &s);
     //! Rewrites in the form of zeta
     RCP<const Basic> rewrite_as_zeta() const;
+
+    virtual void accept(Visitor &v) const;
 };
 
 //! Create a new Dirichlet_eta instance:
@@ -526,6 +557,8 @@ public:
     bool is_canonical(const RCP<const Basic> &arg);
     //! Differentiate w.r.t Symbol `x`
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
+
+    virtual void accept(Visitor &v) const;
 };
 
 //! Create a new FunctionSymbol instance:
@@ -569,6 +602,8 @@ public:
     }
     bool is_canonical(const RCP<const Basic> &arg, const vec_basic &x) const;
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
+
+    virtual void accept(Visitor &v) const;
 };
 
 class HyperbolicFunction : public Function {
@@ -611,6 +646,8 @@ public:
     virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
     //! expands sinh in terms of exp function
     virtual RCP<const Basic> expand_as_exp() const;
+
+    virtual void accept(Visitor &v) const;
 };
 
 //! Canonicalize Sinh:
@@ -637,6 +674,8 @@ public:
     virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
     //! expands cosh in terms of exp function
     virtual RCP<const Basic> expand_as_exp() const;
+
+    virtual void accept(Visitor &v) const;
 };
 
 //! Canonicalize Cosh:
@@ -663,6 +702,8 @@ public:
     virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
     //! expands tanh in terms of exp function
     virtual RCP<const Basic> expand_as_exp() const;
+
+    virtual void accept(Visitor &v) const;
 };
 
 //! Canonicalize Tanh:
@@ -689,6 +730,8 @@ public:
     virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
     //! expands coth in terms of exp function
     virtual RCP<const Basic> expand_as_exp() const;
+
+    virtual void accept(Visitor &v) const;
 };
 
 //! Canonicalize Coth:
@@ -713,6 +756,8 @@ public:
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
     //! \return Canonicalized asinh
     virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
+
+    virtual void accept(Visitor &v) const;
 };
 
 //! Canonicalize ASinh:
@@ -737,6 +782,8 @@ public:
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
     //! \return Canonicalized acosh
     virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
+
+    virtual void accept(Visitor &v) const;
 };
 
 //! Canonicalize ACosh:
@@ -761,6 +808,8 @@ public:
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
     //! \return Canonicalized atanh
     virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
+
+    virtual void accept(Visitor &v) const;
 };
 
 //! Canonicalize ATanh:
@@ -785,6 +834,8 @@ public:
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
     //! \return Canonicalized acoth
     virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
+
+    virtual void accept(Visitor &v) const;
 };
 
 //! Canonicalize ACoth:
@@ -815,6 +866,8 @@ public:
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &i, const RCP<const Basic> &j);
     virtual vec_basic get_args() const { return {i_, j_}; }
+
+    virtual void accept(Visitor &v) const;
 };
 
 //! Canonicalize KroneckerDelta:
@@ -846,6 +899,8 @@ public:
     //! \return `true` if canonical
     bool is_canonical(const vec_basic &arg);
     virtual vec_basic get_args() const { return arg_; }
+
+    virtual void accept(Visitor &v) const;
 };
 
 //! Canonicalize LeviCivita:
@@ -880,6 +935,8 @@ public:
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &arg);
     virtual vec_basic get_args() const { return {arg_}; }
+
+    virtual void accept(Visitor &v) const;
 };
 
 //! Canonicalize Gamma:
@@ -906,6 +963,8 @@ public:
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &s, const RCP<const Basic> &x);
     virtual vec_basic get_args() const { return {s_, x_}; }
+
+    virtual void accept(Visitor &v) const;
 };
 
 //! Canonicalize LowerGamma:
@@ -933,6 +992,8 @@ public:
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &s, const RCP<const Basic> &x);
     virtual vec_basic get_args() const { return {s_, x_}; }
+
+    virtual void accept(Visitor &v) const;
 };
 
 //! Canonicalize UpperGamma:

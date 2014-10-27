@@ -29,9 +29,12 @@ RCP<const Integer> lcm(const Integer &a, const Integer &b);
 void gcd_ext(const Ptr<RCP<const Integer>> &g, const Ptr<RCP<const Integer>> &s,
         const Ptr<RCP<const Integer>> &t, const Integer &a, const Integer &b);
 //! modulo
-void mod(const Ptr<RCP<const Number>> &r, const Integer &n, const Integer &d);
+RCP<const Integer> mod(const Integer &n, const Integer &d);
 //! \return floor of quotient when `n` is divided by `d`
-void fdiv_q(const Ptr<RCP<const Integer>> &q, const Integer &n, const Integer &d);
+RCP<const Integer> quotient_f(const Integer &n, const Integer &d);
+//! modulo and quotient
+void quotient_mod(const Ptr<RCP<const Integer>> &q, const Ptr<RCP<const Integer>> &r,
+        const Integer &a, const Integer &b);
 //! inverse modulo
 int mod_inverse(const Ptr<RCP<const Integer>> &b, const Integer &a,
         const Integer &m);
@@ -61,7 +64,7 @@ RCP<const Integer> binomial(const Integer &n,unsigned long k);
 RCP<const Integer> factorial(unsigned long n);
 
 //! \return true of `a` divides `b`
-bool divides(const RCP<const Integer> &a, const RCP<const Integer> &b);
+bool divides(const Integer &a, const Integer &b);
 
 //! Factorization
 //! \param B1 is only used when `n` is factored using gmp-ecm
@@ -97,19 +100,20 @@ private:
     static std::vector<unsigned> _primes;
     static void _extend(unsigned limit);
     static unsigned _sieve_size;
+    static bool _clear;
 
 public:
     // Returns all primes up to the `limit` (including). The vector `primes` should
     // be empty on input and it will be filled with the primes.
     //! \param primes: holds all primes up to the `limit` (including).
-    static void generate_primes(unsigned limit, std::vector<unsigned> &primes);
-    //Clear the array of primes stored if the variable set_clear is set to true
+    static void generate_primes(std::vector<unsigned> &primes, unsigned limit);
+    //Clear the array of primes stored
     static void clear();
     //Set the sieve size in kilobytes. Set it to L1d cache size for best performance.
     //Default value is 32.
     static void set_sieve_size(unsigned size);
-    //Variable to set whether the sieve is cleared when clear() is called
-    static bool set_clear;
+    //Set whether the sieve is cleared after the sieve is extended in internal functions
+    static void set_clear(bool clear);
 
     class iterator {
 
@@ -130,12 +134,12 @@ public:
 };
 
 //! Computes the Bernoulli number Bn as an exact fraction, for an isolated integer n
-RCP<const Number> bernoulli(ulong n);
+RCP<const Number> bernoulli(unsigned long n);
 //! Computes a primitive root. Returns false if no primitive root exists. 
 //Primitive root calculated is the smallest when n is prime.
 bool primitive_root(const Ptr<RCP<const Integer>> &g, const Integer &n);
 //! Computes all primitive roots less than n. Returns false if no primitive root exists.
-bool primitive_root_list(std::vector<RCP<const Integer>> &roots, const Integer &n);
+void primitive_root_list(std::vector<RCP<const Integer>> &roots, const Integer &n);
 //! Euler's totient function
 RCP<const Integer> totient(const RCP<const Integer> &n);
 //! Carmichael function
@@ -143,6 +147,24 @@ RCP<const Integer> carmichael(const RCP<const Integer> &n);
 //! Multiplicative order. Return false if order does not exist
 bool multiplicative_order(const Ptr<RCP<const Integer>> &o, const RCP<const Integer> &a,
         const RCP<const Integer> &n);
+//! Legendre Function
+int legendre(const Integer &a, const Integer &n);
+//! Jacobi Function
+int jacobi(const Integer &a, const Integer &n);
+//! Kronecker Function
+int kronecker(const Integer &a, const Integer &n);
+//! All Solutions to x**n == a mod m. Return false if none exists.
+void nthroot_mod_list(std::vector<RCP<const Integer>> &roots, const RCP<const Integer> &a,
+        const RCP<const Integer> &n, const RCP<const Integer> &m);
+//! A solution to x**n == a mod m. Return false if none exists.
+bool nthroot_mod(const Ptr<RCP<const Integer>> &root, const RCP<const Integer> &a,
+        const RCP<const Integer> &n, const RCP<const Integer> &m);
+//! A solution to x**s == a**r mod m where b = r / s. Return false if none exists.
+bool powermod(const Ptr<RCP<const Integer>> &powm, const RCP<const Integer> &a,
+        const RCP<const Number> &b, const RCP<const Integer> &m);
+//! All solutions to x**s == a**r mod m where b = r / s. Return false if none exists.
+void powermod_list(std::vector<RCP<const Integer>> &pows, const RCP<const Integer> &a,
+        const RCP<const Number> &b, const RCP<const Integer> &m);
 }
 #endif
 

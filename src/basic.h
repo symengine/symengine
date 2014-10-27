@@ -26,6 +26,7 @@
 
 namespace CSymPy {
 
+class Visitor;
 class Symbol;
 
 /*!
@@ -155,6 +156,8 @@ public:
 
     //! Returns the list of arguments
     virtual vec_basic get_args() const = 0;
+
+    virtual void accept(Visitor &v) const = 0;
 
     //! Numerical evaluation of CSymPy types using Arb
     RCP<const Basic> n(long precision = 15);
