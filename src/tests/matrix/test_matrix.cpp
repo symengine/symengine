@@ -209,6 +209,14 @@ void test_transpose_dense()
 
     assert(B == DenseMatrix(3, 3, {symbol("a"), symbol("p"), symbol("u"), symbol("b"),
         symbol("q"), symbol("v"), symbol("c"), symbol("r"), symbol("w")}));
+
+    RCP<const Basic> x = symbol("x");
+    RCP<const Basic> y = symbol("x");
+    RCP<const Basic> z = symbol("x");
+    A = DenseMatrix(1, 3, {x, y, z});
+    B = DenseMatrix(3, 1);
+    transpose_dense(A, B);
+    assert(B == DenseMatrix(3, 1, {x, y, z}));
 }
 
 void test_submatrix_dense()
