@@ -37,10 +37,6 @@ RCP<const Basic> eval_pow(const RCP<const Basic> &x, long prec)
     arb_init(b);
     arb_init(y);
 
-    // Is the following okay? or should we store the results of evaluation of
-    // subexpressions (subtypes) as `arb_t` instances and then manipulate those
-    // `arb_t` instances to get a final `arb_t` instance which can then be converted
-    // to MPFR or something similar?
     RCP<const Basic> base = eval(x_->get_base(), prec);
     if (is_a<Rational>(*base)) {
         mpq_to_arb(b, rcp_static_cast<const Rational>(base)->i.get_mpq_t(), prec);
@@ -54,14 +50,6 @@ RCP<const Basic> eval_pow(const RCP<const Basic> &x, long prec)
     }
 
     arb_pow(y, b, e, prec);
-    // Now we should convert y to a CSymPy type. But following are the only
-    // methods supported in Arb to convert arb_t type into other types:
-    // + void arb_get_fmprb(fmprb_t y, const arb_t x)
-    // + void arb_get_mag(mag_t z, const arb_t x)
-    // + void arb_get_interval_arf(mpfr_t a, mpfr_t b, const arb_t x, long prec)
-    // + void arb_get_interval_mpfr(mpfr_t a, mpfr_t b, const arb_t x)
-    // So, I think we have to use something like MPFR in CSymPy for representing
-    // floating point values to proceed beyond this point.
 }
 
 RCP<const Basic> eval(const RCP<const Basic> &x, long prec)
