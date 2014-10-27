@@ -55,16 +55,23 @@ ACCEPT(Gamma)
 ACCEPT(LowerGamma)
 ACCEPT(UpperGamma)
 
-void Basic::preorder_traversal(Visitor &v) const
+void preorder_traversal(const Basic &b, Visitor &v)
 {
-    accept(v);
-    for (auto &p: get_args()) p->preorder_traversal(v);
+    b.accept(v);
+    for (auto &p: b.get_args()) preorder_traversal(*p, v);
 }
 
-void Basic::postorder_traversal(Visitor &v) const
+void postorder_traversal(const Basic &b, Visitor &v)
 {
-    for (auto &p: get_args()) p->postorder_traversal(v);
-    accept(v);
+    for (auto &p: b.get_args()) postorder_traversal(*p, v);
+    b.accept(v);
+}
+
+void preorder_traversal_stop(const Basic &b, StopVisitor &v)
+{
+    b.accept(v);
+    if (v.stop_) return;
+    for (auto &p: b.get_args()) preorder_traversal(*p, v);
 }
 
 bool has_symbol(const Basic &b, const RCP<const Symbol> &x)

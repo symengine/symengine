@@ -158,9 +158,6 @@ public:
     virtual vec_basic get_args() const = 0;
 
     virtual void accept(Visitor &v) const = 0;
-
-    void preorder_traversal(Visitor &v) const;
-    void postorder_traversal(Visitor &v) const;
 };
 
 //! Our hash:
