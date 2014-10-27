@@ -8,7 +8,7 @@
 #include "pow.h"
 #include "functions.h"
 #include "visitor.h"
-#include "eval.h"
+#include "eval_arb.h"
 
 #ifdef HAVE_CSYMPY_ARB
 #include "arb.h"

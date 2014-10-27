@@ -7,7 +7,6 @@
 #include "mul.h"
 #include "pow.h"
 #include "constants.h"
-#include "eval.h"
 
 namespace CSymPy {
 
