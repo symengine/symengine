@@ -168,13 +168,11 @@ void DenseMatrix::FFLDU(MatrixBase&L, MatrixBase &D, MatrixBase &U) const
 // ----------------------------- Matrix Transpose ----------------------------//
 void transpose_dense(const DenseMatrix &A, DenseMatrix &B)
 {
-    CSYMPY_ASSERT(B.row_ == A.row_ && B.col_ == A.col_);
+    CSYMPY_ASSERT(B.row_ == A.col_ && B.col_ == A.row_);
 
-    unsigned row = A.row_, col = A.col_;
-
-    for (unsigned i = 0; i < row; i++)
-        for (unsigned j = 0; j < col; j++)
-            B.m_[j*col + i] = A.m_[i*col + j];
+    for (unsigned i = 0; i < A.row_; i++)
+        for (unsigned j = 0; j < A.col_; j++)
+            B.m_[j*B.col_ + i] = A.m_[i*A.col_ + j];
 }
 
 // ------------------------------- Submatrix ---------------------------------//
