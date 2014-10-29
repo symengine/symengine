@@ -11,7 +11,6 @@
 #include "eval_arb.h"
 
 #ifdef HAVE_CSYMPY_ARB
-#include "arb.h"
 
 namespace CSymPy {
 
