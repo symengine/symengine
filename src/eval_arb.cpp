@@ -54,23 +54,41 @@ public:
     }
 
     virtual void visit(const Mul &x) {
-        throw std::runtime_error("Not implemented.");
+        arb_t t1, t2;
+        arb_init(t1);
+        arb_one(t2);
+        for (auto &p: x.get_args()) {
+            apply(t1, *p, prec_);
+            arb_mul(t2, t2, t1, prec_);
+        }
+        arb_set(result_, t2);
     }
 
     virtual void visit(const Pow &x) {
-        throw std::runtime_error("Not implemented.");
+        arb_t a, b;
+        arb_init(a);
+        arb_init(b);
+        apply(a, *(x.base_), prec_);
+        apply(b, *(x.exp_), prec_);
+        arb_pow(result_, a, b, prec_);
     }
 
     virtual void visit(const Sin &x) {
-        throw std::runtime_error("Not implemented.");
+        arb_t tmp;
+        apply(tmp, *(x.get_arg()), prec_);
+        arb_sin(result_, tmp, prec_);
     }
 
     virtual void visit(const Cos &x) {
-        throw std::runtime_error("Not implemented.");
+        arb_t tmp;
+        apply(tmp, *(x.get_arg()), prec_);
+        arb_cos(result_, tmp, prec_);
     }
 
     virtual void visit(const Tan &x) {
-        throw std::runtime_error("Not implemented.");
+        arb_t tmp;
+        apply(tmp, *(x.get_arg()), prec_);
+        arb_tan(result_, tmp, prec_);
     }
 
     virtual void visit(const Symbol &) {
