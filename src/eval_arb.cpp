@@ -21,6 +21,7 @@ private:
     arb_t result_;
 public:
     void apply(arb_t &result, const Basic &b, long precision) {
+        arb_init(result_);
         prec_ = precision;
         b.accept(*this);
         arb_set(result, result_);
@@ -75,18 +76,21 @@ public:
 
     virtual void visit(const Sin &x) {
         arb_t tmp;
+        arb_init(tmp);
         apply(tmp, *(x.get_arg()), prec_);
         arb_sin(result_, tmp, prec_);
     }
 
     virtual void visit(const Cos &x) {
         arb_t tmp;
+        arb_init(tmp);
         apply(tmp, *(x.get_arg()), prec_);
         arb_cos(result_, tmp, prec_);
     }
 
     virtual void visit(const Tan &x) {
         arb_t tmp;
+        arb_init(tmp);
         apply(tmp, *(x.get_arg()), prec_);
         arb_tan(result_, tmp, prec_);
     }
