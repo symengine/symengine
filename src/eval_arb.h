@@ -1,6 +1,6 @@
 
 /**
- *  \file eval.h
+ *  \file eval_arb.h
  *  Evaluation of numeric expressions using Arb
  *
  **/
