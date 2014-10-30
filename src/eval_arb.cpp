@@ -56,6 +56,7 @@ public:
     virtual void visit(const Mul &x) {
         arb_t t1, t2;
         arb_init(t1);
+        arb_init(t2);
         arb_one(t2);
         for (auto &p: x.get_args()) {
             apply(t1, *p, prec_);
