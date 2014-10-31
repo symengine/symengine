@@ -27,6 +27,7 @@ set(SRC
     matrix.cpp
     visitor.cpp
     eval_double.cpp
+    eval_arb.cpp
 )
 
 # Needed for "make install"

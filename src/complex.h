@@ -87,7 +87,7 @@ public:
      * */
     inline RCP<const Number> addcomp(const Rational &other) const {
         return from_mpq(this->real_ + other.i, this->imaginary_);
-    }   
+    }
     /*! Add Complex
      * \param other of type Integer
      * */

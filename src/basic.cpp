@@ -8,7 +8,6 @@
 #include "pow.h"
 #include "constants.h"
 
-
 namespace CSymPy {
 
 int Basic::__cmp__(const Basic &o) const

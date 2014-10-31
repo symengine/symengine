@@ -31,7 +31,7 @@ class Symbol;
 
 /*!
     Any Basic class can be used in a "dictionary", due to the methods:
-        
+
         __hash__()
         __eq__(o)
     Sublcasses must implement these.
@@ -125,7 +125,7 @@ public:
 
     //! true if `this` is not equal to `o`.
     bool __neq__(const Basic &o) const;
-    
+
     //! Comparison operator.
     int __cmp__(const Basic &o) const;
 
@@ -188,10 +188,10 @@ struct RCPBasicKeyLess {
 };
 
 // Convenience functions
-//! Checks equality for `a` and `b` 
+//! Checks equality for `a` and `b`
 bool eq(const RCP<const Basic> &a, const RCP<const Basic> &b);
 
-//! Checks inequality for `a` and `b` 
+//! Checks inequality for `a` and `b`
 bool neq(const RCP<const Basic> &a, const RCP<const Basic> &b);
 
 /*! Returns true if `b` is exactly of type `T`. Example:
@@ -199,10 +199,10 @@ bool neq(const RCP<const Basic> &a, const RCP<const Basic> &b);
 */
 template <class T> bool is_a(const Basic &b);
 
-/*! Returns true if `b` is of type T or any of its subclasses. 
+/*! Returns true if `b` is of type T or any of its subclasses.
  * Example:
-     
-        is_a_sub<Symbol>(b)  // true if `b` is of type `Symbol` or any Symbol's subclass 
+
+        is_a_sub<Symbol>(b)  // true if `b` is of type `Symbol` or any Symbol's subclass
 */
 template <class T>
 bool is_a_sub(const Basic &b);
@@ -232,7 +232,7 @@ namespace std {
 
      You can use it with any CSymPy class:
 
-        
+
         RCP<const Symbol> x = rcp(new Symbol("x"));
         RCP<const Symbol> y = rcp(new Symbol("y"));
         std::size_t seed2 = 0;
