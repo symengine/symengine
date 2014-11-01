@@ -1,5 +1,5 @@
-find_path(ECM_INCLUDE_DIR ecm.h)
-find_library(ECM_LIBRARY ecm)
+find_path(ECM_INCLUDE_DIR ecm.h "${ECM_DIR}/include")
+find_library(ECM_LIBRARY ecm "${ECM_DIR}/include")
 set(ECM_LIBRARIES ${ECM_LIBRARY})
 set(ECM_INCLUDE_DIRS ${ECM_INCLUDE_DIR})
 

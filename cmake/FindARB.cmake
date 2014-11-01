@@ -1,5 +1,5 @@
-find_path(ARB_INCLUDE_DIR fmprb.h)
-find_library(ARB_LIBRARY arb)
+find_path(ARB_INCLUDE_DIR fmprb.h "${ARB_DIR}/include")
+find_library(ARB_LIBRARY arb "${ARB_DIR}/include")
 set(ARB_LIBRARIES ${ARB_LIBRARY})
 set(ARB_INCLUDE_DIRS ${ARB_INCLUDE_DIR})
 
