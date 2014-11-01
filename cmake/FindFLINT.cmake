@@ -1,5 +1,5 @@
 find_path(FLINT_INCLUDE_DIR flint/flint.h "${FLINT_DIR}/include")
-find_library(FLINT_LIBRARY flint "${FLINT_DIR}/include")
+find_library(FLINT_LIBRARY flint "${FLINT_DIR}/lib")
 set(FLINT_LIBRARIES ${FLINT_LIBRARY})
 set(FLINT_INCLUDE_DIRS ${FLINT_INCLUDE_DIR}/flint)
 

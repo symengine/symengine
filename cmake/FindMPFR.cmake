@@ -1,5 +1,5 @@
 find_path(MPFR_INCLUDE_DIR mpfr.h "${MPFR_DIR}/include")
-find_library(MPFR_LIBRARY mpfr "${MPFR_DIR}/include")
+find_library(MPFR_LIBRARY mpfr "${MPFR_DIR}/lib")
 set(MPFR_LIBRARIES ${MPFR_LIBRARY})
 set(MPFR_INCLUDE_DIRS ${MPFR_INCLUDE_DIR})
 
