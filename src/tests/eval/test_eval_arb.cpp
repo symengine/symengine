@@ -67,7 +67,7 @@ void test_Rational()
 
     mpfr_t f;
     mpfr_init2(f, 17);
-    mpfr_set_d(f, (double)22/7, MPFR_RNDN);
+    mpfr_set_d(f, 22.0/7, MPFR_RNDN);
 
     eval_arb(a, *q, 10);
 
@@ -102,7 +102,7 @@ void test_Add()
 
     mpfr_t f;
     mpfr_init2(f, 17);
-    mpfr_set_d(f, sqrt(3) + (double)223/71, MPFR_RNDN);
+    mpfr_set_d(f, sqrt(3) + 223.0/71, MPFR_RNDN);
 
     assert(arb_contains_mpfr(a, f));
 
@@ -110,7 +110,7 @@ void test_Add()
     r1 = add(sqrt(integer(7)), q);
     eval_arb(a, *r1, 10);
 
-    mpfr_set_d(f, sqrt(7) + (double)34/7100, MPFR_RNDN);
+    mpfr_set_d(f, sqrt(7) + 34.0/7100, MPFR_RNDN);
 
     assert(arb_contains_mpfr(a, f));
 }
@@ -126,7 +126,7 @@ void test_Mul()
 
     mpfr_t f;
     mpfr_init2(f, 17);
-    mpfr_set_d(f, sqrt(15)*(double)377/120, MPFR_RNDN);
+    mpfr_set_d(f, sqrt(15)*377.0/120, MPFR_RNDN);
 
     assert(arb_contains_mpfr(a, f));
 
@@ -134,7 +134,7 @@ void test_Mul()
     r1 = mul(sqrt(integer(2317)), q);
     eval_arb(a, *r1, 8);
 
-    mpfr_set_d(f, sqrt(2317)*(double)9001/71, MPFR_RNDN);
+    mpfr_set_d(f, sqrt(2317)*9001.0/71, MPFR_RNDN);
 
     assert(arb_contains_mpfr(a, f));
 }
@@ -151,7 +151,7 @@ void test_Pow()
 
     mpfr_t f;
     mpfr_init2(f, 17);
-    mpfr_set_d(f, pow((double)377/120, (double)34/1257), MPFR_RNDN);
+    mpfr_set_d(f, pow(377.0/120, 34.0/1257), MPFR_RNDN);
 
     assert(arb_contains_mpfr(a, f));
 
@@ -160,7 +160,7 @@ void test_Pow()
     r1 = pow(b, e);
     eval_arb(a, *r1, 10);
 
-    mpfr_set_d(f, pow((double)120/377, (double)97/34), MPFR_RNDN);
+    mpfr_set_d(f, pow(120.0/377, 97.0/34), MPFR_RNDN);
 
     assert(arb_contains_mpfr(a, f));
 }
@@ -183,7 +183,7 @@ void test_Sin()
     r1 = add(sin(integer(2)), sin(q));  // r1 = sin(2) + sin(3/5)
     eval_arb(a, *r1, 10);
 
-    mpfr_set_d(f, sin(2) + sin((double)3/5), MPFR_RNDN);
+    mpfr_set_d(f, sin(2) + sin(3.0/5), MPFR_RNDN);
 
     assert(arb_contains_mpfr(a, f));
 }
@@ -206,7 +206,7 @@ void test_Cos()
     r1 = mul(cos(integer(-1)), cos(q));  // r1 = cos(-1)*cos(7/3)
     eval_arb(a, *r1, 13);
 
-    mpfr_set_d(f, cos(-1)*cos((double)7/3), MPFR_RNDN);
+    mpfr_set_d(f, cos(-1)*cos(7.0/3), MPFR_RNDN);
 
     assert(arb_contains_mpfr(a, f));
 }
