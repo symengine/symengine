@@ -26,6 +26,10 @@ using CSymPy::pow;
 using CSymPy::sin;
 using CSymPy::cos;
 using CSymPy::tan;
+using CSymPy::csc;
+using CSymPy::sec;
+using CSymPy::cot;
+using CSymPy::log;
 using CSymPy::eval_arb;
 using CSymPy::print_stack_on_segfault;
 
@@ -234,6 +238,97 @@ void test_Tan()
     assert(arb_contains_mpfr(a, f));
 }
 
+void test_Csc()
+{
+    arb_t a;
+    arb_init(a);
+
+    RCP<const Basic> r1 = csc(integer(2));
+    eval_arb(a, *r1, 10);
+
+    mpfr_t f;
+    mpfr_init2(f, 17);
+    mpfr_set_d(f, 1/sin(2), MPFR_RNDN);
+
+    assert(arb_contains_mpfr(a, f));
+
+    RCP<const Basic> q = div(integer(3), integer(5));
+    r1 = add(csc(integer(2)), csc(q));  // r1 = csc(2) + csc(3/5)
+    eval_arb(a, *r1, 10);
+
+    mpfr_set_d(f, 1/sin(2) + 1/sin(3.0/5), MPFR_RNDN);
+
+    assert(arb_contains_mpfr(a, f));
+}
+
+void test_Sec()
+{
+    arb_t a;
+    arb_init(a);
+
+    RCP<const Basic> r1 = sec(integer(-1));
+    eval_arb(a, *r1, 13);
+
+    mpfr_t f;
+    mpfr_init2(f, 17);
+    mpfr_set_d(f, 1/cos(-1), MPFR_RNDN);
+
+    assert(arb_contains_mpfr(a, f));
+
+    RCP<const Basic> q = div(integer(7), integer(3));
+    r1 = mul(sec(integer(-1)), sec(q));  // r1 = sec(-1)*sec(7/3)
+    eval_arb(a, *r1, 13);
+
+    mpfr_set_d(f, 1/cos(-1)*1/cos(7.0/3), MPFR_RNDN);
+
+    assert(arb_contains_mpfr(a, f));
+}
+
+void test_Cot()
+{
+    arb_t a;
+    arb_init(a);
+
+    RCP<const Basic> r1 = cot(integer(1239));
+    eval_arb(a, *r1, 10);
+
+    mpfr_t f;
+    mpfr_init2(f, 17);
+    mpfr_set_d(f, 1/tan(1239), MPFR_RNDN);
+
+    assert(arb_contains_mpfr(a, f));
+
+    // r1 = cot(2) + cot(3)*cot(7)
+    r1 = add(cot(integer(2)), mul(cot(integer(3)), cot(integer(7))));
+    eval_arb(a, *r1, 14);
+
+    mpfr_set_d(f, 1/tan(2) + 1/tan(3)*1/tan(7), MPFR_RNDN);
+
+    assert(arb_contains_mpfr(a, f));
+}
+
+void test_Log()
+{
+    arb_t a;
+    arb_init(a);
+
+    RCP<const Basic> r1 = log(integer(3498));
+    eval_arb(a, *r1, 10);
+
+    mpfr_t f;
+    mpfr_init2(f, 17);
+    mpfr_set_d(f, log(3498), MPFR_RNDN);
+
+    assert(arb_contains_mpfr(a, f));
+
+    r1 = add(log(integer(2)), log(div(integer(3), integer(73))));
+    eval_arb(a, *r1, 14);
+
+    mpfr_set_d(f, log(2) + log(3.0/73), MPFR_RNDN);
+
+    assert(arb_contains_mpfr(a, f));
+}
+
 int main(int argc, char* argv[])
 {
     print_stack_on_segfault();
@@ -246,6 +341,10 @@ int main(int argc, char* argv[])
     test_Sin();
     test_Cos();
     test_Tan();
+    test_Csc();
+    test_Sec();
+    test_Cot();
+    test_Log();
 
     return 0;
 }
