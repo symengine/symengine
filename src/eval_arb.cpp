@@ -98,24 +98,45 @@ public:
     virtual void visit(const Symbol &) {
         throw std::runtime_error("Symbol cannot be evaluated as an arb type.");
     };
+
     virtual void visit(const Complex &) {
         throw std::runtime_error("Not implemented.");
     };
-    virtual void visit(const Log &) {
-        throw std::runtime_error("Not implemented.");
+
+    virtual void visit(const Log &x) {
+        arb_t tmp;
+        arb_init(tmp);
+        apply(tmp, *(x.get_arg()), prec_);
+        arb_log(result_, tmp, prec_);
     };
+
     virtual void visit(const Derivative &) {
         throw std::runtime_error("Not implemented.");
     };
-    virtual void visit(const Cot &) {
-        throw std::runtime_error("Not implemented.");
+
+    virtual void visit(const Cot &x) {
+        arb_t tmp;
+        arb_init(tmp);
+        apply(tmp, *(x.get_arg()), prec_);
+        arb_cot(result_, tmp, prec_);
     };
-    virtual void visit(const Csc &) {
-        throw std::runtime_error("Not implemented.");
+
+    virtual void visit(const Csc &x) {
+        arb_t tmp;
+        arb_init(tmp);
+        apply(tmp, *(x.get_arg()), prec_);
+        arb_sin(tmp, tmp, prec_);
+        arb_inv(result_, tmp, prec_);
     };
-    virtual void visit(const Sec &) {
-        throw std::runtime_error("Not implemented.");
+
+    virtual void visit(const Sec &x) {
+        arb_t tmp;
+        arb_init(tmp);
+        apply(tmp, *(x.get_arg()), prec_);
+        arb_cos(result_, tmp, prec_);
+        arb_inv(result_, tmp, prec_);
     };
+
     virtual void visit(const ASin &) {
         throw std::runtime_error("Not implemented.");
     };
