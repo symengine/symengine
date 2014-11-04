@@ -156,47 +156,19 @@ public:
     };
 
     virtual void visit(const ASec &x) {
-        arb_t tmp, interval;
+        arb_t tmp;
         arb_init(tmp);
-        arb_init(interval);
-
-        mpfr_t a, b;
-        mpfr_init2(a, prec_);
-        mpfr_init2(b, prec_);
-        mpfr_set_si(a, -1, MPFR_RNDN);
-        mpfr_set_ui(b, 1, MPFR_RNDN);
-        arb_set_interval_mpfr(interval, a, b, prec_);
-
         apply(tmp, *(x.get_arg()), prec_);
-
-        if ( (arb_overlaps(tmp, interval) && !arb_is_int(tmp)) || arb_is_zero(tmp) ) {
-            arb_indeterminate(result_);
-        } else {
-            arb_inv(tmp, tmp, prec_);
-            arb_acos(result_, tmp, prec_);
-        }
+        arb_inv(tmp, tmp, prec_);
+        arb_acos(result_, tmp, prec_);
     };
 
     virtual void visit(const ACsc &x) {
-        arb_t tmp, interval;
+        arb_t tmp;
         arb_init(tmp);
-        arb_init(interval);
-
-        mpfr_t a, b;
-        mpfr_init2(a, prec_);
-        mpfr_init2(b, prec_);
-        mpfr_set_si(a, -1, MPFR_RNDN);
-        mpfr_set_ui(b, 1, MPFR_RNDN);
-        arb_set_interval_mpfr(interval, a, b, prec_);
-
         apply(tmp, *(x.get_arg()), prec_);
-
-        if ( (arb_overlaps(tmp, interval) && !arb_is_int(tmp)) || arb_is_zero(tmp) ) {
-            arb_indeterminate(result_);
-        } else {
-            arb_inv(tmp, tmp, prec_);
-            arb_asin(result_, tmp, prec_);
-        }
+        arb_inv(tmp, tmp, prec_);
+        arb_asin(result_, tmp, prec_);
     };
 
     virtual void visit(const ATan &x) {

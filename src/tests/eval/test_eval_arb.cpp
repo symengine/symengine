@@ -48,12 +48,12 @@ void test_Integer()
     eval_arb(a, *integer(3));
     arb_set_ui(b, 3);
 
-    assert(arb_equal(a, b) && arb_is_exact(a));
+    assert(arb_equal(a, b));
 
     eval_arb(a, *integer(-45));
     arb_set_si(b, -45);
 
-    assert(arb_equal(a, b) && arb_is_exact(a));
+    assert(arb_equal(a, b));
 
     srand(time(NULL));
     unsigned int ui = rand();
@@ -62,7 +62,7 @@ void test_Integer()
     eval_arb(a, *i);
     arb_set_ui(b, ui);
 
-    assert(arb_equal(a, b) && arb_is_exact(a));
+    assert(arb_equal(a, b));
 }
 
 void test_Rational()
