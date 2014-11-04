@@ -95,8 +95,12 @@ public:
         arb_tan(result_, tmp, prec_);
     }
 
-    virtual void visit(const Symbol &) {
-        throw std::runtime_error("Symbol cannot be evaluated as an arb type.");
+    virtual void visit(const Symbol &x) {
+        if (x.get_name().compare("pi") == 0) {
+            arb_const_pi(result_, prec_);
+        } else {
+            throw std::runtime_error("Symbol cannot be evaluated as an arb type.");
+        }
     };
 
     virtual void visit(const Complex &) {
