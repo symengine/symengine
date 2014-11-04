@@ -161,7 +161,8 @@ public:
         arb_init(interval);
 
         mpfr_t a, b;
-        mpfr_inits2(prec_, a, b);
+        mpfr_init2(a, prec_);
+        mpfr_init2(b, prec_);
         mpfr_set_si(a, -1, MPFR_RNDN);
         mpfr_set_ui(b, 1, MPFR_RNDN);
         arb_set_interval_mpfr(interval, a, b, prec_);
@@ -182,7 +183,8 @@ public:
         arb_init(interval);
 
         mpfr_t a, b;
-        mpfr_inits2(prec_, a, b);
+        mpfr_init2(a, prec_);
+        mpfr_init2(b, prec_);
         mpfr_set_si(a, -1, MPFR_RNDN);
         mpfr_set_ui(b, 1, MPFR_RNDN);
         arb_set_interval_mpfr(interval, a, b, prec_);

@@ -11,7 +11,7 @@
 #include "pow.h"
 #include "functions.h"
 #include "eval_arb.h"
-
+#include "constants.h"
 
 using CSymPy::RCP;
 using CSymPy::Basic;
@@ -30,6 +30,12 @@ using CSymPy::csc;
 using CSymPy::sec;
 using CSymPy::cot;
 using CSymPy::log;
+using CSymPy::asin;
+using CSymPy::acos;
+using CSymPy::atan;
+using CSymPy::acsc;
+using CSymPy::asec;
+using CSymPy::acot;
 using CSymPy::eval_arb;
 using CSymPy::print_stack_on_segfault;
 
@@ -329,6 +335,177 @@ void test_Log()
     assert(arb_contains_mpfr(a, f));
 }
 
+void test_ASin()
+{
+    arb_t a;
+    arb_init(a);
+
+    RCP<const Basic> r1 = asin(div(integer(1), integer(2)));
+    eval_arb(a, *r1, 13);
+
+    mpfr_t f;
+    mpfr_init2(f, 17);
+    mpfr_set_d(f, asin(0.5), MPFR_RNDN);
+
+    assert(arb_contains_mpfr(a, f));
+
+    r1 = asin(integer(1));
+    eval_arb(a, *r1, 13);
+
+    mpfr_set_d(f, asin(1), MPFR_RNDN);
+
+    assert(arb_contains_mpfr(a, f));
+}
+
+void test_ACos()
+{
+    arb_t a;
+    arb_init(a);
+
+    RCP<const Basic> r1 = acos(div(sqrt(integer(3)), integer(2)));
+    eval_arb(a, *r1, 13);
+
+    mpfr_t f;
+    mpfr_init2(f, 17);
+    mpfr_set_d(f, acos(sqrt(3)/2), MPFR_RNDN);
+
+    assert(arb_contains_mpfr(a, f));
+
+    r1 = acos(integer(-1));
+    eval_arb(a, *r1, 13);
+
+    mpfr_set_d(f, acos(-1), MPFR_RNDN);
+
+    assert(arb_contains_mpfr(a, f));
+}
+
+void test_ASec()
+{
+    arb_t a;
+    arb_init(a);
+
+    RCP<const Basic> r1 = asec(integer(23));
+    eval_arb(a, *r1, 13);
+
+    mpfr_t f;
+    mpfr_init2(f, 17);
+    mpfr_set_d(f, acos(1.0/23), MPFR_RNDN);
+
+    assert(arb_contains_mpfr(a, f));
+
+    r1 = asec(integer(-1));
+    eval_arb(a, *r1, 13);
+
+    mpfr_set_d(f, acos(1.0/-1), MPFR_RNDN);
+
+    assert(arb_contains_mpfr(a, f));
+
+    r1 = asec(integer(1));
+    eval_arb(a, *r1, 13);
+
+    mpfr_set_d(f, acos(1.0/1), MPFR_RNDN);
+
+    assert(arb_contains_mpfr(a, f));
+
+    r1 = asec(integer(0));
+    eval_arb(a, *r1, 13);           // `a` should be indeterminate
+
+    arb_t b;
+    arb_init(b);
+    arb_indeterminate(b);
+
+    assert(arb_contains(a, b));     // if true `a` is indeterminate as well
+}
+
+void test_ACsc()
+{
+    arb_t a;
+    arb_init(a);
+
+    RCP<const Basic> r1 = acsc(integer(-34));
+    eval_arb(a, *r1, 13);
+
+    mpfr_t f;
+    mpfr_init2(f, 17);
+    mpfr_set_d(f, asin(1.0/-34), MPFR_RNDN);
+
+    assert(arb_contains_mpfr(a, f));
+
+    r1 = acsc(integer(-1));
+    eval_arb(a, *r1, 13);
+
+    mpfr_set_d(f, asin(1.0/-1), MPFR_RNDN);
+
+    assert(arb_contains_mpfr(a, f));
+
+    r1 = acsc(integer(16));
+    eval_arb(a, *r1, 13);
+
+    mpfr_set_d(f, asin(1.0/16), MPFR_RNDN);
+
+    assert(arb_contains_mpfr(a, f));
+
+    r1 = acsc(integer(0));
+    eval_arb(a, *r1, 13);           // `a` should be indeterminate
+
+    arb_t b;
+    arb_init(b);
+    arb_indeterminate(b);
+
+    assert(arb_contains(a, b));     // if true, `a` is indeterminate as well
+}
+
+void test_ATan()
+{
+    arb_t a;
+    arb_init(a);
+
+    RCP<const Basic> r1 = atan(sqrt(integer(3)));
+    eval_arb(a, *r1, 13);
+
+    mpfr_t f;
+    mpfr_init2(f, 17);
+    mpfr_set_d(f, atan(sqrt(3)), MPFR_RNDN);
+
+    assert(arb_contains_mpfr(a, f));
+
+    r1 = atan(integer(-1));
+    eval_arb(a, *r1, 13);
+
+    mpfr_set_d(f, atan(-1), MPFR_RNDN);
+
+    assert(arb_contains_mpfr(a, f));
+}
+
+void test_ACot()
+{
+    arb_t a;
+    arb_init(a);
+
+    RCP<const Basic> r1 = acot(integer(-34));
+    eval_arb(a, *r1, 13);
+
+    mpfr_t f;
+    mpfr_init2(f, 17);
+    mpfr_set_d(f, atan(1.0/-34), MPFR_RNDN);
+
+    assert(arb_contains_mpfr(a, f));
+
+    r1 = acot(integer(591));
+    eval_arb(a, *r1, 13);
+
+    mpfr_set_d(f, atan(1.0/591), MPFR_RNDN);
+
+    assert(arb_contains_mpfr(a, f));
+
+    r1 = acot(integer(16));
+    eval_arb(a, *r1, 13);
+
+    mpfr_set_d(f, atan(1.0/16), MPFR_RNDN);
+
+    assert(arb_contains_mpfr(a, f));
+}
+
 int main(int argc, char* argv[])
 {
     print_stack_on_segfault();
@@ -345,6 +522,12 @@ int main(int argc, char* argv[])
     test_Sec();
     test_Cot();
     test_Log();
+    test_ASin();
+    test_ACos();
+    test_ASec();
+    test_ACsc();
+    test_ATan();
+    test_ACot();
 
     return 0;
 }
