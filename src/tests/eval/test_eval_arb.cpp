@@ -506,6 +506,116 @@ void test_ACot()
     assert(arb_contains_mpfr(a, f));
 }
 
+void test_ATan2()
+{
+    arb_t a;
+    arb_init(a);
+
+    RCP<const Basic> r1 = atan2(sqrt(integer(3)), integer(1));
+    eval_arb(a, *r1, 15);
+
+    mpfr_t f;
+    mpfr_init2(f, 17);
+    mpfr_set_d(f, atan2(sqrt(3), 1), MPFR_RNDN);
+
+    assert(arb_contains_mpfr(a, f));
+
+    r1 = atan2(integer(-1), sqrt(integer(3)));
+    eval_arb(a, *r1, 15);
+
+    mpfr_set_d(f, atan2(-1, sqrt(3)), MPFR_RNDN);
+
+    assert(arb_contains_mpfr(a, f));
+}
+
+void test_Sinh()
+{
+    arb_t a;
+    arb_init(a);
+
+    RCP<const Basic> r1 = sinh(integer(3));
+    eval_arb(a, *r1, 15);
+
+    mpfr_t f;
+    mpfr_init2(f, 17);
+    mpfr_set_d(f, sinh(3), MPFR_RNDN);
+
+    assert(arb_contains_mpfr(a, f));
+
+    r1 = sinh(mul(integer(-5), sqrt(integer(3))));
+    eval_arb(a, *r1, 15);
+
+    mpfr_set_d(f, sinh(-5*sqrt(3)), MPFR_RNDN);
+
+    assert(arb_contains_mpfr(a, f));
+}
+
+void test_Cosh()
+{
+    arb_t a;
+    arb_init(a);
+
+    RCP<const Basic> r1 = cosh(integer(123));
+    eval_arb(a, *r1, 15);
+
+    mpfr_t f;
+    mpfr_init2(f, 17);
+    mpfr_set_d(f, cosh(123), MPFR_RNDN);
+
+    assert(arb_contains_mpfr(a, f));
+
+    r1 = cosh(div(integer(5), sqrt(integer(3))));
+    eval_arb(a, *r1, 15);
+
+    mpfr_set_d(f, cosh(5.0/sqrt(3)), MPFR_RNDN);
+
+    assert(arb_contains_mpfr(a, f));
+}
+
+void test_Tanh()
+{
+    arb_t a;
+    arb_init(a);
+
+    RCP<const Basic> r1 = tanh(integer(-34));
+    eval_arb(a, *r1, 15);
+
+    mpfr_t f;
+    mpfr_init2(f, 17);
+    mpfr_set_d(f, tanh(-34), MPFR_RNDN);
+
+    assert(arb_contains_mpfr(a, f));
+
+    r1 = tanh(add(integer(5), sqrt(integer(3))));
+    eval_arb(a, *r1, 15);
+
+    mpfr_set_d(f, tanh(5 + sqrt(3)), MPFR_RNDN);
+
+    assert(arb_contains_mpfr(a, f));
+}
+
+void test_Coth()
+{
+    arb_t a;
+    arb_init(a);
+
+    RCP<const Basic> r1 = coth(integer(40));
+    eval_arb(a, *r1, 15);
+
+    mpfr_t f;
+    mpfr_init2(f, 17);
+    mpfr_set_d(f, -sinh(2*40)/(1 - cosh(2*40)), MPFR_RNDN);
+
+    assert(arb_contains_mpfr(a, f));
+
+    r1 = coth(integer(5));
+    eval_arb(a, *r1, 15);
+
+    mpfr_set_d(f, -sinh(2*5)/(1 - cosh(2*5)), MPFR_RNDN);
+
+    assert(arb_contains_mpfr(a, f));
+}
+
 int main(int argc, char* argv[])
 {
     print_stack_on_segfault();
@@ -528,6 +638,11 @@ int main(int argc, char* argv[])
     test_ACsc();
     test_ATan();
     test_ACot();
+    test_ATan2();
+    test_Sinh();
+    test_Cosh();
+    test_Tanh();
+    test_Coth();
 
     return 0;
 }
