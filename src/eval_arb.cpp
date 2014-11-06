@@ -96,7 +96,7 @@ public:
     }
 
     virtual void visit(const Symbol &x) {
-        if (x.get_name().compare("pi") == 0) {
+        if ((*pi).__eq__(x)) {
             arb_const_pi(result_, prec_);
         } else {
             throw std::runtime_error("Symbol cannot be evaluated as an arb type.");
