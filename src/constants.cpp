@@ -7,6 +7,42 @@
 
 namespace CSymPy {
 
+Constant::Constant(const std::string &name)
+    : name_{name}
+{
+}
+
+std::size_t Constant::__hash__() const
+{
+    std::hash<std::string> hash_fn;
+    return hash_fn(name_);
+}
+
+bool Constant::__eq__(const Basic &o) const
+{
+    if (is_a<Constant>(o))
+        return name_ == static_cast<const Constant &>(o).name_;
+    return false;
+}
+
+int Constant::compare(const Basic &o) const
+{
+    CSYMPY_ASSERT(is_a<Constant>(o))
+    const Constant &s = static_cast<const Constant &>(o);
+    if (name_ == s.name_) return 0;
+    return name_ < s.name_ ? -1 : 1;
+}
+
+std::string Constant::__str__() const
+{
+    return name_;
+}
+
+RCP<const Basic> Constant::diff(const RCP<const Symbol> &x) const
+{
+    return zero;
+}
+
 RCP<const Integer> zero = rcp(new Integer(0));
 RCP<const Integer> one = rcp(new Integer(1));
 RCP<const Integer> minus_one = rcp(new Integer(-1));
@@ -90,4 +126,4 @@ umap_basic_basic inverse_tct = {
     {minus_one, mul(minus_one, pow(i2, i2))},
 };
 
-}
+} // CSymPy

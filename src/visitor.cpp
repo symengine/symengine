@@ -9,6 +9,7 @@
 #include "mul.h"
 #include "pow.h"
 #include "functions.h"
+#include "constants.h"
 #include "visitor.h"
 
 #define ACCEPT(CLASS) void CLASS::accept(Visitor &v) const { v.visit(*this); }
@@ -54,6 +55,7 @@ ACCEPT(Dirichlet_eta)
 ACCEPT(Gamma)
 ACCEPT(LowerGamma)
 ACCEPT(UpperGamma)
+ACCEPT(Constant)
 
 void preorder_traversal(const Basic &b, Visitor &v)
 {
