@@ -63,9 +63,9 @@ extern RCP<const Integer> one;
 extern RCP<const Integer> minus_one;
 extern RCP<const Number> I;
 
-// Constant Symbols
-extern RCP<const Symbol> pi;
-extern RCP<const Symbol> E;
+// Symbolic Constants
+extern RCP<const Constant> pi;
+extern RCP<const Constant> E;
 
 } // CSymPy
 

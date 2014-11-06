@@ -66,8 +66,8 @@ bool get_pi_shift(const RCP<const Basic> &arg,
             *x = coef;
             for (auto &p: s.dict_) {
                 temp = mul(p.second, integer(12));
-                if (is_a<Symbol>(*p.first) &&
-                    eq(rcp_static_cast<const Symbol>(p.first), pi)
+                if (is_a<Constant>(*p.first) &&
+                    eq(rcp_static_cast<const Constant>(p.first), pi)
                     && is_a<Integer>(*temp)) {
                     check_pi = true;
                     *n = rcp_dynamic_cast<const Integer>(temp);
@@ -86,8 +86,8 @@ bool get_pi_shift(const RCP<const Basic> &arg,
             // where `a` is a `Number`.
             auto p = s.dict_.begin();
             RCP<const Basic> temp = mul(p->second, integer(12));
-            if (is_a<Symbol>(*p->first) &&
-                eq(rcp_static_cast<const Symbol>(p->first), pi) &&
+            if (is_a<Constant>(*p->first) &&
+                eq(rcp_static_cast<const Constant>(p->first), pi) &&
                 is_a<Integer>(*temp)) {
 
                 *n = rcp_dynamic_cast<const Integer>(temp);
@@ -111,8 +111,8 @@ bool get_pi_shift(const RCP<const Basic> &arg,
         auto p = s.dict_.begin();
         // dict should contain symbol `pi` only
         // and coeff should be a multiple of 12
-        if (s.dict_.size() == 1 && is_a<Symbol>(*p->first) &&
-                eq(rcp_static_cast<const Symbol>(p->first), pi) &&
+        if (s.dict_.size() == 1 && is_a<Constant>(*p->first) &&
+                eq(rcp_static_cast<const Constant>(p->first), pi) &&
                 eq(rcp_static_cast<const Number>(p->second), one) &&
                 is_a<Integer>(*coef)) {
 
@@ -124,8 +124,8 @@ bool get_pi_shift(const RCP<const Basic> &arg,
             return false;
         }
     }
-    else if (is_a<Symbol>(*arg) &&
-             eq(rcp_static_cast<const Symbol>(arg), pi)) {
+    else if (is_a<Constant>(*arg) &&
+             eq(rcp_static_cast<const Constant>(arg), pi)) {
         *n = integer(12);
         *x = zero;
         return true;
