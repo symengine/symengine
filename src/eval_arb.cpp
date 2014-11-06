@@ -186,27 +186,52 @@ public:
         arb_atan(result_, tmp, prec_);
     };
 
-    virtual void visit(const ATan2 &) {
-        throw std::runtime_error("Not implemented.");
+    virtual void visit(const ATan2 &x) {
+        arb_t t1, t2;
+        arb_init(t1);
+        arb_init(t2);
+
+        apply(t1, *(x.get_num()), prec_);
+        apply(t2, *(x.get_den()), prec_);
+        arb_atan2(result_, t1, t2, prec_);
     };
+
     virtual void visit(const LambertW &) {
         throw std::runtime_error("Not implemented.");
     };
+
     virtual void visit(const FunctionSymbol &) {
         throw std::runtime_error("Not implemented.");
     };
-    virtual void visit(const Sinh &) {
-        throw std::runtime_error("Not implemented.");
+
+    virtual void visit(const Sinh &x) {
+        arb_t tmp;
+        arb_init(tmp);
+        apply(tmp, *(x.get_arg()), prec_);
+        arb_sinh(result_, tmp, prec_);
     };
-    virtual void visit(const Cosh &) {
-        throw std::runtime_error("Not implemented.");
+
+    virtual void visit(const Cosh &x) {
+        arb_t tmp;
+        arb_init(tmp);
+        apply(tmp, *(x.get_arg()), prec_);
+        arb_cosh(result_, tmp, prec_);
     };
-    virtual void visit(const Tanh &) {
-        throw std::runtime_error("Not implemented.");
+
+    virtual void visit(const Tanh &x) {
+        arb_t tmp;
+        arb_init(tmp);
+        apply(tmp, *(x.get_arg()), prec_);
+        arb_tanh(result_, tmp, prec_);
     };
-    virtual void visit(const Coth &) {
-        throw std::runtime_error("Not implemented.");
+
+    virtual void visit(const Coth &x) {
+        arb_t tmp;
+        arb_init(tmp);
+        apply(tmp, *(x.get_arg()), prec_);
+        arb_coth(result_, tmp, prec_);
     };
+
     virtual void visit(const ASinh &) {
         throw std::runtime_error("Not implemented.");
     };
