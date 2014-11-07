@@ -92,9 +92,11 @@ before_install:
     fi
 install:
   - if [[ "${WITH_PYTHON}" == "yes" ]]; then
-        pip install cython sympy;
+        pip install --install-option="--no-cython-compile" cython;
+        pip install sympy;
     fi
   - if [[ "${PYTHON_INSTALL}" == "yes" ]]; then
+        pip install --install-option="--no-cython-compile" cython;
         pip install cython sympy;
     fi
 script:
