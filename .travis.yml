@@ -91,11 +91,7 @@ before_install:
         cd arb-2.2.0 && ./configure && make ARB_GMP_LIB_DIR=/usr/lib/x86_64-linux-gnu ARB_MPFR_LIB_DIR=/usr/lib/x86_64-linux-gnu && sudo make ARB_GMP_LIB_DIR=/usr/lib/x86_64-linux-gnu ARB_MPFR_LIB_DIR=/usr/lib/x86_64-linux-gnu install && cd ..;
     fi
 install:
-  - if [[ "${WITH_PYTHON}" == "yes" ]]; then
-        pip install --install-option="--no-cython-compile" cython;
-        pip install sympy;
-    fi
-  - if [[ "${PYTHON_INSTALL}" == "yes" ]]; then
+  - if [[ "${WITH_PYTHON}" == "yes" ]] || [[ "${PYTHON_INSTALL}" == "yes" ]]; then
         pip install --install-option="--no-cython-compile" cython;
         pip install sympy;
     fi
