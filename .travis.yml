@@ -97,7 +97,7 @@ install:
     fi
   - if [[ "${PYTHON_INSTALL}" == "yes" ]]; then
         pip install --install-option="--no-cython-compile" cython;
-        pip install cython sympy;
+        pip install sympy;
     fi
 script:
   - bin/test_travis.sh
