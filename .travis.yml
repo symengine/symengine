@@ -92,10 +92,10 @@ before_install:
     fi
 install:
   - if [[ "${WITH_PYTHON}" == "yes" ]]; then
-        pip install cython sympy --use-mirrors;
+        pip install cython sympy;
     fi
   - if [[ "${PYTHON_INSTALL}" == "yes" ]]; then
-        pip install cython sympy --use-mirrors;
+        pip install cython sympy;
     fi
 script:
   - bin/test_travis.sh
