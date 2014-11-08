@@ -7,6 +7,7 @@
 #include "mul.h"
 #include "pow.h"
 #include "functions.h"
+#include "constants.h"
 #include "visitor.h"
 #include "eval_arb.h"
 
@@ -188,7 +189,9 @@ public:
     virtual void visit(const UpperGamma &) {
         throw std::runtime_error("Not implemented.");
     };
-
+    virtual void visit(const Constant &) {
+        throw std::runtime_error("Not implemented.");
+    };
 };
 
 void eval_arb(arb_t &result, const Basic &b, long precision)
