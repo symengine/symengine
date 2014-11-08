@@ -795,7 +795,7 @@ void _primitive_root_list(std::vector<RCP<const Integer>> &roots, const mpz_clas
                     roots.push_back(integer(h));
             } else {
                 mpz_class pp = p * p;
-                // Find t such that (h + d*p)**(p-1) mod (p**2) == 1. Ref[1]
+                // Find d such that (h + d*p)**(p-1) mod (p**2) == 1. Ref[1]
                 // h**(p-1) - 1 = d*p*h**(p-2)
                 // d = (h - h**(2-p)) / p
                 t = 2 - p;
@@ -823,6 +823,8 @@ void _primitive_root_list(std::vector<RCP<const Integer>> &roots, const mpz_clas
 void primitive_root_list(std::vector<RCP<const Integer>> &roots, const Integer &n)
 {
     mpz_class _n = n.as_mpz();
+    if (_n < 0)
+        _n = -_n;
     if (_n <= 1)
         return;
     if (_n < 5) {
