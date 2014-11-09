@@ -11,7 +11,7 @@
 #include "pow.h"
 #include "functions.h"
 #include "eval_arb.h"
-
+#include "constants.h"
 
 using CSymPy::RCP;
 using CSymPy::Basic;
@@ -26,6 +26,16 @@ using CSymPy::pow;
 using CSymPy::sin;
 using CSymPy::cos;
 using CSymPy::tan;
+using CSymPy::csc;
+using CSymPy::sec;
+using CSymPy::cot;
+using CSymPy::log;
+using CSymPy::asin;
+using CSymPy::acos;
+using CSymPy::atan;
+using CSymPy::acsc;
+using CSymPy::asec;
+using CSymPy::acot;
 using CSymPy::eval_arb;
 using CSymPy::print_stack_on_segfault;
 
@@ -38,12 +48,12 @@ void test_Integer()
     eval_arb(a, *integer(3));
     arb_set_ui(b, 3);
 
-    assert(arb_equal(a, b) && arb_is_exact(a));
+    assert(arb_equal(a, b));
 
     eval_arb(a, *integer(-45));
     arb_set_si(b, -45);
 
-    assert(arb_equal(a, b) && arb_is_exact(a));
+    assert(arb_equal(a, b));
 
     srand(time(NULL));
     unsigned int ui = rand();
@@ -52,7 +62,7 @@ void test_Integer()
     eval_arb(a, *i);
     arb_set_ui(b, ui);
 
-    assert(arb_equal(a, b) && arb_is_exact(a));
+    assert(arb_equal(a, b));
 }
 
 void test_Rational()
@@ -234,6 +244,378 @@ void test_Tan()
     assert(arb_contains_mpfr(a, f));
 }
 
+void test_Csc()
+{
+    arb_t a;
+    arb_init(a);
+
+    RCP<const Basic> r1 = csc(integer(2));
+    eval_arb(a, *r1, 10);
+
+    mpfr_t f;
+    mpfr_init2(f, 17);
+    mpfr_set_d(f, 1/sin(2), MPFR_RNDN);
+
+    assert(arb_contains_mpfr(a, f));
+
+    RCP<const Basic> q = div(integer(3), integer(5));
+    r1 = add(csc(integer(2)), csc(q));  // r1 = csc(2) + csc(3/5)
+    eval_arb(a, *r1, 10);
+
+    mpfr_set_d(f, 1/sin(2) + 1/sin(3.0/5), MPFR_RNDN);
+
+    assert(arb_contains_mpfr(a, f));
+}
+
+void test_Sec()
+{
+    arb_t a;
+    arb_init(a);
+
+    RCP<const Basic> r1 = sec(integer(-1));
+    eval_arb(a, *r1, 13);
+
+    mpfr_t f;
+    mpfr_init2(f, 17);
+    mpfr_set_d(f, 1/cos(-1), MPFR_RNDN);
+
+    assert(arb_contains_mpfr(a, f));
+
+    RCP<const Basic> q = div(integer(7), integer(3));
+    r1 = mul(sec(integer(-1)), sec(q));  // r1 = sec(-1)*sec(7/3)
+    eval_arb(a, *r1, 13);
+
+    mpfr_set_d(f, 1/cos(-1)*1/cos(7.0/3), MPFR_RNDN);
+
+    assert(arb_contains_mpfr(a, f));
+}
+
+void test_Cot()
+{
+    arb_t a;
+    arb_init(a);
+
+    RCP<const Basic> r1 = cot(integer(1239));
+    eval_arb(a, *r1, 10);
+
+    mpfr_t f;
+    mpfr_init2(f, 17);
+    mpfr_set_d(f, 1/tan(1239), MPFR_RNDN);
+
+    assert(arb_contains_mpfr(a, f));
+
+    // r1 = cot(2) + cot(3)*cot(7)
+    r1 = add(cot(integer(2)), mul(cot(integer(3)), cot(integer(7))));
+    eval_arb(a, *r1, 14);
+
+    mpfr_set_d(f, 1/tan(2) + 1/tan(3)*1/tan(7), MPFR_RNDN);
+
+    assert(arb_contains_mpfr(a, f));
+}
+
+void test_Log()
+{
+    arb_t a;
+    arb_init(a);
+
+    RCP<const Basic> r1 = log(integer(3498));
+    eval_arb(a, *r1, 10);
+
+    mpfr_t f;
+    mpfr_init2(f, 17);
+    mpfr_set_d(f, log(3498), MPFR_RNDN);
+
+    assert(arb_contains_mpfr(a, f));
+
+    r1 = add(log(integer(2)), log(div(integer(3), integer(73))));
+    eval_arb(a, *r1, 14);
+
+    mpfr_set_d(f, log(2) + log(3.0/73), MPFR_RNDN);
+
+    assert(arb_contains_mpfr(a, f));
+}
+
+void test_ASin()
+{
+    arb_t a;
+    arb_init(a);
+
+    RCP<const Basic> r1 = asin(div(integer(1), integer(2)));
+    eval_arb(a, *r1, 13);
+
+    mpfr_t f;
+    mpfr_init2(f, 17);
+    mpfr_set_d(f, asin(0.5), MPFR_RNDN);
+
+    assert(arb_contains_mpfr(a, f));
+
+    r1 = asin(integer(1));
+    eval_arb(a, *r1, 13);
+
+    mpfr_set_d(f, asin(1), MPFR_RNDN);
+
+    assert(arb_contains_mpfr(a, f));
+}
+
+void test_ACos()
+{
+    arb_t a;
+    arb_init(a);
+
+    RCP<const Basic> r1 = acos(div(sqrt(integer(3)), integer(2)));
+    eval_arb(a, *r1, 13);
+
+    mpfr_t f;
+    mpfr_init2(f, 17);
+    mpfr_set_d(f, acos(sqrt(3)/2), MPFR_RNDN);
+
+    assert(arb_contains_mpfr(a, f));
+
+    r1 = acos(integer(-1));
+    eval_arb(a, *r1, 13);
+
+    mpfr_set_d(f, acos(-1), MPFR_RNDN);
+
+    assert(arb_contains_mpfr(a, f));
+}
+
+void test_ASec()
+{
+    arb_t a;
+    arb_init(a);
+
+    RCP<const Basic> r1 = asec(integer(23));
+    eval_arb(a, *r1, 13);
+
+    mpfr_t f;
+    mpfr_init2(f, 17);
+    mpfr_set_d(f, acos(1.0/23), MPFR_RNDN);
+
+    assert(arb_contains_mpfr(a, f));
+
+    r1 = asec(integer(-1));
+    eval_arb(a, *r1, 13);
+
+    mpfr_set_d(f, acos(1.0/-1), MPFR_RNDN);
+
+    assert(arb_contains_mpfr(a, f));
+
+    r1 = asec(integer(1));
+    eval_arb(a, *r1, 13);
+
+    mpfr_set_d(f, acos(1.0/1), MPFR_RNDN);
+
+    assert(arb_contains_mpfr(a, f));
+
+    r1 = asec(integer(0));
+    eval_arb(a, *r1, 13);           // `a` should be indeterminate
+
+    arb_t b;
+    arb_init(b);
+    arb_indeterminate(b);
+
+    assert(arb_contains(a, b));     // if true `a` is indeterminate as well
+}
+
+void test_ACsc()
+{
+    arb_t a;
+    arb_init(a);
+
+    RCP<const Basic> r1 = acsc(integer(-34));
+    eval_arb(a, *r1, 13);
+
+    mpfr_t f;
+    mpfr_init2(f, 17);
+    mpfr_set_d(f, asin(1.0/-34), MPFR_RNDN);
+
+    assert(arb_contains_mpfr(a, f));
+
+    r1 = acsc(integer(-1));
+    eval_arb(a, *r1, 13);
+
+    mpfr_set_d(f, asin(1.0/-1), MPFR_RNDN);
+
+    assert(arb_contains_mpfr(a, f));
+
+    r1 = acsc(integer(16));
+    eval_arb(a, *r1, 13);
+
+    mpfr_set_d(f, asin(1.0/16), MPFR_RNDN);
+
+    assert(arb_contains_mpfr(a, f));
+
+    r1 = acsc(integer(0));
+    eval_arb(a, *r1, 13);           // `a` should be indeterminate
+
+    arb_t b;
+    arb_init(b);
+    arb_indeterminate(b);
+
+    assert(arb_contains(a, b));     // if true, `a` is indeterminate as well
+}
+
+void test_ATan()
+{
+    arb_t a;
+    arb_init(a);
+
+    RCP<const Basic> r1 = atan(sqrt(integer(3)));
+    eval_arb(a, *r1, 13);
+
+    mpfr_t f;
+    mpfr_init2(f, 17);
+    mpfr_set_d(f, atan(sqrt(3)), MPFR_RNDN);
+
+    assert(arb_contains_mpfr(a, f));
+
+    r1 = atan(integer(-1));
+    eval_arb(a, *r1, 13);
+
+    mpfr_set_d(f, atan(-1), MPFR_RNDN);
+
+    assert(arb_contains_mpfr(a, f));
+}
+
+void test_ACot()
+{
+    arb_t a;
+    arb_init(a);
+
+    RCP<const Basic> r1 = acot(integer(-34));
+    eval_arb(a, *r1, 13);
+
+    mpfr_t f;
+    mpfr_init2(f, 17);
+    mpfr_set_d(f, atan(1.0/-34), MPFR_RNDN);
+
+    assert(arb_contains_mpfr(a, f));
+
+    r1 = acot(integer(591));
+    eval_arb(a, *r1, 13);
+
+    mpfr_set_d(f, atan(1.0/591), MPFR_RNDN);
+
+    assert(arb_contains_mpfr(a, f));
+
+    r1 = acot(integer(16));
+    eval_arb(a, *r1, 13);
+
+    mpfr_set_d(f, atan(1.0/16), MPFR_RNDN);
+
+    assert(arb_contains_mpfr(a, f));
+}
+
+void test_ATan2()
+{
+    arb_t a;
+    arb_init(a);
+
+    RCP<const Basic> r1 = atan2(sqrt(integer(3)), integer(1));
+    eval_arb(a, *r1, 15);
+
+    mpfr_t f;
+    mpfr_init2(f, 17);
+    mpfr_set_d(f, atan2(sqrt(3), 1), MPFR_RNDN);
+
+    assert(arb_contains_mpfr(a, f));
+
+    r1 = atan2(integer(-1), sqrt(integer(3)));
+    eval_arb(a, *r1, 15);
+
+    mpfr_set_d(f, atan2(-1, sqrt(3)), MPFR_RNDN);
+
+    assert(arb_contains_mpfr(a, f));
+}
+
+void test_Sinh()
+{
+    arb_t a;
+    arb_init(a);
+
+    RCP<const Basic> r1 = sinh(integer(3));
+    eval_arb(a, *r1, 15);
+
+    mpfr_t f;
+    mpfr_init2(f, 17);
+    mpfr_set_d(f, sinh(3), MPFR_RNDN);
+
+    assert(arb_contains_mpfr(a, f));
+
+    r1 = sinh(mul(integer(-5), sqrt(integer(3))));
+    eval_arb(a, *r1, 15);
+
+    mpfr_set_d(f, sinh(-5*sqrt(3)), MPFR_RNDN);
+
+    assert(arb_contains_mpfr(a, f));
+}
+
+void test_Cosh()
+{
+    arb_t a;
+    arb_init(a);
+
+    RCP<const Basic> r1 = cosh(integer(123));
+    eval_arb(a, *r1, 15);
+
+    mpfr_t f;
+    mpfr_init2(f, 17);
+    mpfr_set_d(f, cosh(123), MPFR_RNDN);
+
+    assert(arb_contains_mpfr(a, f));
+
+    r1 = cosh(div(integer(5), sqrt(integer(3))));
+    eval_arb(a, *r1, 15);
+
+    mpfr_set_d(f, cosh(5.0/sqrt(3)), MPFR_RNDN);
+
+    assert(arb_contains_mpfr(a, f));
+}
+
+void test_Tanh()
+{
+    arb_t a;
+    arb_init(a);
+
+    RCP<const Basic> r1 = tanh(integer(-34));
+    eval_arb(a, *r1, 15);
+
+    mpfr_t f;
+    mpfr_init2(f, 17);
+    mpfr_set_d(f, tanh(-34), MPFR_RNDN);
+
+    assert(arb_contains_mpfr(a, f));
+
+    r1 = tanh(add(integer(5), sqrt(integer(3))));
+    eval_arb(a, *r1, 15);
+
+    mpfr_set_d(f, tanh(5 + sqrt(3)), MPFR_RNDN);
+
+    assert(arb_contains_mpfr(a, f));
+}
+
+void test_Coth()
+{
+    arb_t a;
+    arb_init(a);
+
+    RCP<const Basic> r1 = coth(integer(40));
+    eval_arb(a, *r1, 15);
+
+    mpfr_t f;
+    mpfr_init2(f, 17);
+    mpfr_set_d(f, -sinh(2*40)/(1 - cosh(2*40)), MPFR_RNDN);
+
+    assert(arb_contains_mpfr(a, f));
+
+    r1 = coth(integer(5));
+    eval_arb(a, *r1, 15);
+
+    mpfr_set_d(f, -sinh(2*5)/(1 - cosh(2*5)), MPFR_RNDN);
+
+    assert(arb_contains_mpfr(a, f));
+}
+
 int main(int argc, char* argv[])
 {
     print_stack_on_segfault();
@@ -246,6 +628,21 @@ int main(int argc, char* argv[])
     test_Sin();
     test_Cos();
     test_Tan();
+    test_Csc();
+    test_Sec();
+    test_Cot();
+    test_Log();
+    test_ASin();
+    test_ACos();
+    test_ASec();
+    test_ACsc();
+    test_ATan();
+    test_ACot();
+    test_ATan2();
+    test_Sinh();
+    test_Cosh();
+    test_Tanh();
+    test_Coth();
 
     return 0;
 }
