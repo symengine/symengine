@@ -262,9 +262,16 @@ public:
     virtual void visit(const UpperGamma &) {
         throw std::runtime_error("Not implemented.");
     };
-    virtual void visit(const Constant &) {
-        throw std::runtime_error("Not implemented.");
-    };
+
+    virtual void visit(const Constant &x) {
+        if (x.__eq__(*pi)) {
+            arb_const_pi(result_, prec_);
+        } else if (x.__eq__(*E)) {
+            arb_const_e(result_, prec_);
+        } else {
+            throw std::runtime_error("Unknown constant.");
+        }
+    }
 };
 
 void eval_arb(arb_t &result, const Basic &b, long precision)
