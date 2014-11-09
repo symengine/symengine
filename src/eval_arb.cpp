@@ -97,11 +97,7 @@ public:
     }
 
     virtual void visit(const Symbol &x) {
-        if ((*pi).__eq__(x)) {
-            arb_const_pi(result_, prec_);
-        } else {
-            throw std::runtime_error("Symbol cannot be evaluated as an arb type.");
-        }
+        throw std::runtime_error("Symbol cannot be evaluated as an arb type.");
     };
 
     virtual void visit(const Complex &) {
