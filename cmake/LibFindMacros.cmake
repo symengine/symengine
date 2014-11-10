@@ -32,7 +32,7 @@ macro (libfind_library libname pkg)
 
 endmacro()
 
-macro (libfind_path HEADER pkg)
+macro (libfind_header HEADER pkg)
     string(TOUPPER ${pkg} PKG)
 
     find_path(${PKG}_INCLUDE_DIR
