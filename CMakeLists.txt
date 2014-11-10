@@ -31,12 +31,19 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
         "${CMAKE_CXX_FLAGS_RELEASE} -Wno-unused-parameter")
 endif()
 
+# Check c++11 support
+try_compile(CXX11 ${CMAKE_CURRENT_BINARY_DIR}/cxx ${CMAKE_SOURCE_DIR}/cmake/checkcxx11.cpp
+    COMPILE_DEFINITIONS ${CMAKE_CXX_FLAGS_RELEASE})
+if (NOT ${CXX11})
+    message(FATAL_ERROR "Compiler does not support C++11 constructs")
+endif()
+
 # GMP
 find_package(GMP REQUIRED)
 include_directories(${GMP_INCLUDE_DIRS})
 set(LIBS ${LIBS} ${GMP_LIBRARIES})
 
-#ECM
+# ECM
 set(WITH_ECM no
     CACHE BOOL "Build with ECM (libecm-dev) support")
 
@@ -47,7 +54,7 @@ if (WITH_ECM)
     set(HAVE_CSYMPY_ECM yes)
 endif()
 
-#PRIMESIEVE
+# PRIMESIEVE
 set(WITH_PRIMESIEVE no
     CACHE BOOL "Build with primesieve")
 
@@ -58,7 +65,7 @@ if (WITH_PRIMESIEVE)
     set(HAVE_CSYMPY_PRIMESIEVE yes)
 endif()
 
-#ARB
+# ARB
 set(WITH_ARB no
     CACHE BOOL "Build with Arb")
 
