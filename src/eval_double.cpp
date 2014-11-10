@@ -9,6 +9,7 @@
 #include "mul.h"
 #include "pow.h"
 #include "functions.h"
+#include "constants.h"
 #include "visitor.h"
 #include "eval_double.h"
 
@@ -166,7 +167,9 @@ public:
     virtual void visit(const UpperGamma &) {
         throw std::runtime_error("Not implemented.");
     };
-
+    virtual void visit(const Constant &) {
+        throw std::runtime_error("Not implemented.");
+    };
 };
 
 double eval_double(const Basic &b)

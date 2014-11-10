@@ -795,7 +795,7 @@ void _primitive_root_list(std::vector<RCP<const Integer>> &roots, const mpz_clas
                     roots.push_back(integer(h));
             } else {
                 mpz_class pp = p * p;
-                // Find t such that (h + d*p)**(p-1) mod (p**2) == 1. Ref[1]
+                // Find d such that (h + d*p)**(p-1) mod (p**2) == 1. Ref[1]
                 // h**(p-1) - 1 = d*p*h**(p-2)
                 // d = (h - h**(2-p)) / p
                 t = 2 - p;
@@ -823,6 +823,8 @@ void _primitive_root_list(std::vector<RCP<const Integer>> &roots, const mpz_clas
 void primitive_root_list(std::vector<RCP<const Integer>> &roots, const Integer &n)
 {
     mpz_class _n = n.as_mpz();
+    if (_n < 0)
+        _n = -_n;
     if (_n <= 1)
         return;
     if (_n < 5) {
@@ -841,6 +843,7 @@ void primitive_root_list(std::vector<RCP<const Integer>> &roots, const Integer &
     if (!_prime_power(p, e, _n))
         return;
     _primitive_root_list(roots, p, e, even);
+    std::sort(roots.begin(), roots.end(), CSymPy::RCPIntegerKeyLess());
     return;
 }
 
@@ -1370,6 +1373,7 @@ void nthroot_mod_list(std::vector<RCP<const Integer>> &roots, const RCP<const In
         rem.push_back(rem1);
     }
     _crt_cartesian(roots, rem, moduli);
+    std::sort(roots.begin(), roots.end(), CSymPy::RCPIntegerKeyLess());
 }
 
 bool powermod(const Ptr<RCP<const Integer>> &powm, const RCP<const Integer> &a,

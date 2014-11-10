@@ -418,6 +418,7 @@ void test_primitive_root()
 {
     RCP<const Integer> i15 = integer(15);
     RCP<const Integer> im18 = integer(-18);
+    RCP<const Integer> im22 = integer(-22);
     RCP<const Integer> i162 = integer(162);
     RCP<const Integer> i100 = integer(100);
     RCP<const Integer> i = integer(40487*40487);
@@ -434,13 +435,20 @@ void test_primitive_root()
     assert(multiplicative_order(outArg(p), g, i) == true );
     assert(eq(p, totient(i)));
 
-    std::vector<RCP<const Integer>> roots;
+    std::vector<RCP<const Integer>> roots, v;
     primitive_root_list(roots, *i162);
     assert(roots.size() == 18);
 
     roots.clear();
     primitive_root_list(roots, *i100);
     assert(roots.size() == 0);
+    
+    roots.clear();
+    primitive_root_list(roots, *im22);
+    assert(roots.size() == 4);
+    v = {integer(7), integer(13), integer(17), integer(19)};
+    bool same = std::equal(v.begin(), v.end(), roots.begin(), CSymPy::eq);
+    assert(same == true);
 }
 
 void test_totient_carmichael()
@@ -536,7 +544,7 @@ void test_nthroot_mod()
     RCP<const Integer> i100 = integer(100);
     RCP<const Integer> i105 = integer(105);
     RCP<const Integer> nthroot, rem;
-    std::vector<RCP<const Integer>> roots;
+    std::vector<RCP<const Integer>> roots, v;
 
     assert(nthroot_mod(outArg(nthroot), im1, i2, i23) == false);
     assert(nthroot_mod(outArg(nthroot), im1, i2, i93) == false);
@@ -569,6 +577,9 @@ void test_nthroot_mod()
     roots.clear();
     nthroot_mod_list(roots, i9, i2, i27);
     assert(roots.size() == 6);
+    v = {integer(3), integer(6), integer(12), integer(15), integer(21), integer(24)};
+    bool same = std::equal(v.begin(), v.end(), roots.begin(), CSymPy::eq);
+    assert(same == true);
 
     roots.clear();
     nthroot_mod_list(roots, i1, i18, i105);
