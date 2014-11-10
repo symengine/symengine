@@ -67,6 +67,9 @@ if (WITH_ARB)
     include_directories(${FLINT_INCLUDE_DIRS})
     set(LIBS ${LIBS} ${FLINT_LIBRARIES})
 
+    # Workaround for https://github.com/fredrik-johansson/arb/issues/24
+    include_directories(${FLINT_INCLUDE_DIRS}/flint)
+
     find_package(MPFR REQUIRED)
     include_directories(${MPFR_INCLUDE_DIRS})
     set(LIBS ${LIBS} ${MPFR_LIBRARIES})
