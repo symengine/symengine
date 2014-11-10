@@ -1,6 +1,6 @@
 include(LibFindMacros)
 
-libfind_path(flint.h flint)
+libfind_path(flint/flint.h flint)
 libfind_library(flint flint)
 
 set(FLINT_LIBRARIES ${FLINT_LIBRARY})
