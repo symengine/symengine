@@ -35,7 +35,7 @@ inline bool is_a(const Basic &b)
 template <class T>
 inline bool is_a_sub(const Basic &b)
 {
-    return dynamic_cast<const T *>(&b) != NULL;
+    return dynamic_cast<const T *>(&b) != nullptr;
 }
 
 } // CSymPy
