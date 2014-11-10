@@ -33,9 +33,9 @@ endif()
 
 # Check c++11 support
 try_compile(CXX11 ${CMAKE_CURRENT_BINARY_DIR}/cxx ${CMAKE_SOURCE_DIR}/cmake/checkcxx11.cpp
-    COMPILE_DEFINITIONS ${CMAKE_CXX_FLAGS_RELEASE})
+    COMPILE_DEFINITIONS ${CMAKE_CXX_FLAGS_RELEASE} OUTPUT_VARIABLE CXX11_ERROR_LOG)
 if (NOT ${CXX11})
-    message(FATAL_ERROR "Compiler does not support C++11 constructs")
+    message(FATAL_ERROR "Compiler does not support C++11 constructs \nCXX11 ERROR LOG : ${CXX11_ERROR_LOG}")
 endif()
 
 # GMP
