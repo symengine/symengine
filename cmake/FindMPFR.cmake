@@ -1,5 +1,8 @@
-find_path(MPFR_INCLUDE_DIR mpfr.h "${MPFR_DIR}/include")
-find_library(MPFR_LIBRARY mpfr "${MPFR_DIR}/lib")
+include(LibFindMacros)
+
+libfind_path(mpfr.h mpfr)
+libfind_library(mpfr mpfr)
+
 set(MPFR_LIBRARIES ${MPFR_LIBRARY})
 set(MPFR_INCLUDE_DIRS ${MPFR_INCLUDE_DIR})
 

@@ -1,5 +1,8 @@
-find_path(BFD_INCLUDE_DIR bfd.h "${BFD_DIR}/include")
-find_library(BFD_LIBRARY bfd "${BFD_DIR}/lib")
+include(LibFindMacros)
+
+libfind_path(bfd.h bfd)
+libfind_library(bfd bfd)
+
 set(BFD_LIBRARIES ${BFD_LIBRARY})
 set(BFD_INCLUDE_DIRS ${BFD_INCLUDE_DIR})
 

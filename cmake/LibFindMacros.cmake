@@ -1,8 +1,10 @@
-macro (libfind_library LIBNAME PKG)
+macro (libfind_library libname pkg)
+    string(TOUPPER ${pkg} PKG)
+    string(TOUPPER ${libname} LIBNAME)
 
     find_library(${LIBNAME}_LIBRARY
         NAMES
-            ${LIBNAME}
+            ${libname}
         PATHS
             ${${PKG}_LIB}
             ${${PKG}_LIB_DIR}
@@ -13,11 +15,10 @@ macro (libfind_library LIBNAME PKG)
 
     find_library(${LIBNAME}_LIBRARY
         NAMES
-            ${LIBNAME}
+            ${libname}
         PATHS
             ${${PKG}_DIR}
-            ${COMMON_DIR}/${PKG}
-            ${CMAKE_INSTALL_PREFIX}
+            ${COMMON_DIR}/${pkg}
         PATH_SUFFIXES
             lib
             lib64
@@ -26,12 +27,13 @@ macro (libfind_library LIBNAME PKG)
 
     find_library(${LIBNAME}_LIBRARY
         NAMES
-            ${LIBNAME}
+            ${libname}
     )
 
 endmacro()
 
-macro (libfind_path HEADER PKG)
+macro (libfind_path HEADER pkg)
+    string(TOUPPER ${pkg} PKG)
 
     find_path(${PKG}_INCLUDE_DIR
         NAMES
@@ -47,8 +49,7 @@ macro (libfind_path HEADER PKG)
             ${HEADER}
         PATHS
             ${${PKG}_DIR}
-            ${COMMON_DIR}/${PKG}
-            ${CMAKE_INSTALL_PREFIX}
+            ${COMMON_DIR}/${pkg}
         PATH_SUFFIXES
             include
         NO_DEFAULT_PATH
@@ -58,6 +59,6 @@ macro (libfind_path HEADER PKG)
         NAMES
             ${HEADER}
         PATH_SUFFIXES
-            ${PKG}
+            ${pkg}
     )
 endmacro()
