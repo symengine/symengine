@@ -1,6 +1,6 @@
 include(LibFindMacros)
 
-libfind_path(mpfr.h mpfr)
+libfind_include(mpfr.h mpfr)
 libfind_library(mpfr mpfr)
 
 set(MPFR_LIBRARIES ${MPFR_LIBRARY})

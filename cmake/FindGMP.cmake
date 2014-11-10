@@ -1,6 +1,6 @@
 include(LibFindMacros)
 
-libfind_path(gmpxx.h gmp)
+libfind_include(gmpxx.h gmp)
 libfind_library(gmpxx gmp)
 libfind_library(gmp gmp)
 

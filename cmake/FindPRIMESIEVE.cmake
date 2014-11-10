@@ -1,6 +1,6 @@
 include(LibFindMacros)
 
-libfind_path(primesieve.hpp primesieve)
+libfind_include(primesieve.hpp primesieve)
 libfind_library(primesieve primesieve)
 
 set(PRIMESIEVE_LIBRARIES ${PRIMESIEVE_LIBRARY})

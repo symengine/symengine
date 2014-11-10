@@ -1,6 +1,6 @@
 include(LibFindMacros)
 
-libfind_path(link.h linkh)
+libfind_include(link.h linkh)
 
 set(LINKH_INCLUDE_DIRS ${LINKH_INCLUDE_DIR})
 

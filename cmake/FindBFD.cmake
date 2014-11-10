@@ -1,6 +1,6 @@
 include(LibFindMacros)
 
-libfind_path(bfd.h bfd)
+libfind_include(bfd.h bfd)
 libfind_library(bfd bfd)
 
 set(BFD_LIBRARIES ${BFD_LIBRARY})

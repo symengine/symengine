@@ -1,6 +1,6 @@
 include(LibFindMacros)
 
-libfind_path(fmprb.h arb)
+libfind_include(fmprb.h arb)
 libfind_library(arb arb)
 
 set(ARB_LIBRARIES ${ARB_LIBRARY})

@@ -1,6 +1,6 @@
 include(LibFindMacros)
 
-libfind_path(ecm.h ecm)
+libfind_include(ecm.h ecm)
 libfind_library(ecm ecm)
 
 set(ECM_LIBRARIES ${ECM_LIBRARY})
