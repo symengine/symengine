@@ -13,6 +13,14 @@
 #         GMP_INCLUDE_DIRS)
 #     mark_as_advanced(GMP_INCLUDE_DIR GMPXX_LIBRARY GMP_LIBRARY)
 #
+# The result of the Find*.cmake (e.g. FindGMP.cmake) module should be two
+# variables GMP_LIBRARIES and GMP_INCLUDE_DIRS, that the user then uses in the
+# following way:
+#
+#     find_package(GMP REQUIRED)
+#     include_directories(${GMP_INCLUDE_DIRS})
+#     set(LIBS ${LIBS} ${GMP_LIBRARIES})
+#     # LIBS is later used in target_link_libraries()
 
 macro (libfind_library libname pkg)
     string(TOUPPER ${pkg} PKG)
