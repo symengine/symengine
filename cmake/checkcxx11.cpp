@@ -1,4 +1,7 @@
 #include <unordered_map>
+#include <string>
+#include <cstddef>
+#include <stdexcept>
 
 template<class T>
 class Ptr {
