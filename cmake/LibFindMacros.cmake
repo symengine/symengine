@@ -42,7 +42,7 @@ macro (libfind_library libname pkg)
             ${libname}
         PATHS
             ${${PKG}_DIR}
-            ${COMMON_DIR}/${pkg}
+            ${COMMON_DIR}
         PATH_SUFFIXES
             lib
             lib64
@@ -73,7 +73,7 @@ macro (libfind_path HEADER pkg)
             ${HEADER}
         PATHS
             ${${PKG}_DIR}
-            ${COMMON_DIR}/${pkg}
+            ${COMMON_DIR}
         PATH_SUFFIXES
             include
         NO_DEFAULT_PATH
