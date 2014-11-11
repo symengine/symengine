@@ -1,10 +1,14 @@
-find_path(GMP_INCLUDE_DIR gmpxx.h "${GMP_DIR}/include")
-find_library(GMPXX gmpxx "${GMP_DIR}/lib")
-find_library(GMP gmp "${GMP_DIR}/lib")
-set(GMP_LIBRARIES ${GMPXX} ${GMP})
+include(LibFindMacros)
+
+libfind_include(gmpxx.h gmp)
+libfind_library(gmpxx gmp)
+libfind_library(gmp gmp)
+
+set(GMP_LIBRARIES ${GMPXX_LIBRARY} ${GMP_LIBRARY})
 set(GMP_INCLUDE_DIRS ${GMP_INCLUDE_DIR})
 
 include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(GMP DEFAULT_MSG GMP_LIBRARIES GMP_INCLUDE_DIR)
+find_package_handle_standard_args(GMP DEFAULT_MSG GMP_LIBRARIES
+    GMP_INCLUDE_DIRS)
 
-mark_as_advanced(GMP_INCLUDE_DIR GMPXX GMP)
+mark_as_advanced(GMP_INCLUDE_DIR GMPXX_LIBRARY GMP_LIBRARY)

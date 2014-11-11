@@ -43,7 +43,7 @@ set(WITH_ECM no
 if (WITH_ECM)
     find_package(ECM REQUIRED)
     include_directories(${ECM_INCLUDE_DIRS})
-    set(LIBS ${LIBS} ${ECM_LIBRARY})
+    set(LIBS ${LIBS} ${ECM_LIBRARIES})
     set(HAVE_CSYMPY_ECM yes)
 endif()
 
@@ -54,7 +54,7 @@ set(WITH_PRIMESIEVE no
 if (WITH_PRIMESIEVE)
     find_package(PRIMESIEVE REQUIRED)
     include_directories(${PRIMESIEVE_INCLUDE_DIRS})
-    set(LIBS ${LIBS} ${PRIMESIEVE_LIBRARY})
+    set(LIBS ${LIBS} ${PRIMESIEVE_LIBRARIES})
     set(HAVE_CSYMPY_PRIMESIEVE yes)
 endif()
 
@@ -65,15 +65,18 @@ set(WITH_ARB no
 if (WITH_ARB)
     find_package(FLINT REQUIRED)
     include_directories(${FLINT_INCLUDE_DIRS})
-    set(LIBS ${LIBS} ${FLINT_LIBRARY})
+    set(LIBS ${LIBS} ${FLINT_LIBRARIES})
+
+    # Workaround for https://github.com/fredrik-johansson/arb/issues/24
+    include_directories(${FLINT_INCLUDE_DIRS}/flint)
 
     find_package(MPFR REQUIRED)
     include_directories(${MPFR_INCLUDE_DIRS})
-    set(LIBS ${LIBS} ${MPFR_LIBRARY})
+    set(LIBS ${LIBS} ${MPFR_LIBRARIES})
 
     find_package(ARB REQUIRED)
     include_directories(${ARB_INCLUDE_DIRS})
-    set(LIBS ${LIBS} ${ARB_LIBRARY})
+    set(LIBS ${LIBS} ${ARB_LIBRARIES})
     set(HAVE_CSYMPY_ARB yes)
 endif()
 
@@ -181,23 +184,23 @@ endif ()
 message("WITH_ECM: ${WITH_ECM}")
 if (WITH_ECM)
     message("ECM_INCLUDE_DIRS: ${ECM_INCLUDE_DIRS}")
-    message("ECM_LIBRARIES: ${ECM_LIBRARY}")
+    message("ECM_LIBRARIES: ${ECM_LIBRARIES}")
 endif()
 
 message("WITH_PRIMESIEVE: ${WITH_PRIMESIEVE}")
 if (WITH_PRIMESIEVE)
     message("PRIMESIEVE_INCLUDE_DIRS: ${PRIMESIEVE_INCLUDE_DIRS}")
-    message("PRIMESIEVE_LIBRARIES: ${PRIMESIEVE_LIBRARY}")
+    message("PRIMESIEVE_LIBRARIES: ${PRIMESIEVE_LIBRARIES}")
 endif()
 
 message("WITH_ARB: ${WITH_ARB}")
 if (WITH_ARB)
     message("ARB_INCLUDE_DIRS: ${ARB_INCLUDE_DIRS}")
-    message("ARB_LIBRARIES: ${ARB_LIBRARY}")
+    message("ARB_LIBRARIES: ${ARB_LIBRARIES}")
     message("FLINT_INCLUDE_DIRS: ${FLINT_INCLUDE_DIRS}")
-    message("FLINT_LIBRARIES: ${FLINT_LIBRARY}")
+    message("FLINT_LIBRARIES: ${FLINT_LIBRARIES}")
     message("MPFR_INCLUDE_DIRS: ${MPFR_INCLUDE_DIRS}")
-    message("MPFR_LIBRARIES: ${MPFR_LIBRARY}")
+    message("MPFR_LIBRARIES: ${MPFR_LIBRARIES}")
 endif()
 
 message("Copying source of python wrappers into: ${CMAKE_CURRENT_BINARY_DIR}")
