@@ -420,7 +420,8 @@ int factor(const Ptr<RCP<const Integer>> &f, const Integer &n, double B1)
         else {
 
             for (int i = 0; i < 10 && !ret_val; i++)
-                ret_val = ecm_factor(_f.get_mpz_t(), _n.get_mpz_t(), B1, NULL);
+                ret_val = ecm_factor(_f.get_mpz_t(), _n.get_mpz_t(), B1,
+                        nullptr);
             if (!ret_val)
                 throw std::runtime_error("ECM failed to factor the given number");
         }
