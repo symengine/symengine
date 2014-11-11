@@ -55,7 +55,7 @@ void test_Integer()
 
     assert(arb_equal(a, b));
 
-    srand(time(NULL));
+    srand(time(nullptr));
     unsigned int ui = rand();
 
     RCP<const Basic> i = integer(ui);
@@ -83,9 +83,9 @@ void test_Rational()
 
     assert(arb_contains_mpfr(a, f));
 
-    srand(time(NULL));
+    srand(time(nullptr));
     int x_ = rand();
-    srand(time(NULL) + 1000);
+    srand(time(nullptr) + 1000);
     int y_ = rand() - RAND_MAX / 2;
     if (y_ == 0) {
         y_ = RAND_MAX / 2;

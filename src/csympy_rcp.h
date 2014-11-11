@@ -27,13 +27,13 @@ namespace CSymPy {
 
 /* Ptr */
 
-// Ptr is always pointing to a valid object (can never be NULL).
+// Ptr is always pointing to a valid object (can never be nullptr).
 
 template<class T>
 class Ptr {
 public:
     inline explicit Ptr( T *ptr ) : ptr_(ptr) {
-        CSYMPY_ASSERT(ptr_ != NULL)
+        CSYMPY_ASSERT(ptr_ != nullptr)
     }
     inline Ptr(const Ptr<T>& ptr) : ptr_(ptr.ptr_) {}
     template<class T2> inline Ptr(const Ptr<T2>& ptr) : ptr_(ptr.get()) {}
@@ -64,9 +64,9 @@ enum ENull { null };
 template<class T>
 class RCP {
 public:
-    RCP(ENull null_arg = null) : ptr_(NULL) {}
+    RCP(ENull null_arg = null) : ptr_(nullptr) {}
     explicit RCP(T *p) : ptr_(p) {
-        CSYMPY_ASSERT(ptr_ != NULL)
+        CSYMPY_ASSERT(ptr_ != nullptr)
         (ptr_->refcount_)++;
     }
     // Copy constructor
@@ -79,26 +79,26 @@ public:
     }
     // Move constructor
     RCP(RCP<T> &&rp) : ptr_(rp.ptr_) {
-        rp.ptr_ = NULL;
+        rp.ptr_ = nullptr;
     }
     // Move constructor
     template<class T2> RCP(RCP<T2>&& r_ptr) : ptr_(r_ptr.get()) {
         r_ptr._set_null();
     }
     ~RCP() {
-        if (ptr_ != NULL && --(ptr_->refcount_) == 0) delete ptr_;
+        if (ptr_ != nullptr && --(ptr_->refcount_) == 0) delete ptr_;
     }
     T* operator->() const {
-        CSYMPY_ASSERT(ptr_ != NULL)
+        CSYMPY_ASSERT(ptr_ != nullptr)
         return ptr_;
     }
     T& operator*() const {
-        CSYMPY_ASSERT(ptr_ != NULL)
+        CSYMPY_ASSERT(ptr_ != nullptr)
         return *ptr_;
     }
     T* get() const { return ptr_; }
     Ptr<T> ptr() const { return Ptr<T>(get()); }
-    bool is_null() const { return ptr_ == NULL; }
+    bool is_null() const { return ptr_ == nullptr; }
     template<class T2> bool operator==(const RCP<T2> &p2) {
         return ptr_ == p2.ptr_;
     }
@@ -120,10 +120,10 @@ public:
     }
     void reset() {
         if (!is_null() && --(ptr_->refcount_) == 0) delete ptr_;
-        ptr_ = NULL;
+        ptr_ = nullptr;
     }
     // Don't use this function directly:
-    void _set_null() { ptr_ = NULL; }
+    void _set_null() { ptr_ = nullptr; }
 private:
     T *ptr_;
 };
@@ -146,7 +146,7 @@ template<class T2, class T1>
 inline RCP<T2> rcp_dynamic_cast(const RCP<T1>& p1)
 {
     if (!p1.is_null()) {
-        T2 *p = NULL;
+        T2 *p = nullptr;
         // Make the compiler check if the conversion is legal
         p = dynamic_cast<T2*>(p1.get());
         if (p) {
@@ -168,7 +168,7 @@ inline RCP<T2> rcp_const_cast(const RCP<T1>& p1)
 template<class T>
 inline bool operator==(const RCP<T> &p, ENull)
 {
-  return p.get() == NULL;
+  return p.get() == nullptr;
 }
 
 
