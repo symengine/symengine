@@ -82,7 +82,7 @@ For RPM based systems (Fedora etc.)
 
     yum install binutils-devel
 
-### CMake Options
+## CMake Options
 
 Here are all the `CMake` options that you can use to configure the build, with
 their default values indicated below:
@@ -103,6 +103,27 @@ If you want to use a different compiler, do:
     CXX=clang cmake .
 
 and check that CMake picked it up.
+
+### External Libraries
+
+There are three ways how to specify where external libraries are. In the lines
+below, change `PKG1`, `PKG2`, ... to the names of the external libraries (`GMP`, `ARB`, `PRIMESIEVE`,
+`BFD`, `FLINT`, `MPFR`, ...).
+
+1. `cmake -DPKG1_DIR=$HASHSTACK -DPKG2_DIR=$HASHSTACK .`
+2. `cmake -DPKG1_INCLUDE_DIRS=$HASHSTACK/include -DPKG1_LIBRARIES=$HASHSTACK/lib -DPKG2_DIR=$HASHSTACK .`
+3. `cmake -DCOMMON_DIR=$HASHSTACK .`
+
+In the approach 1., you specify `PKG_DIR` as the base prefix, and the include
+files must be in `${PKG_DIR}/include` and libraries in `${PKG_DIR}/lib` (or
+`lib64`). In the approach 2., you specify the include and library directories
+separately (you can use approach 1. for some libraries and 2. for other
+libraries on the same command line). In the approach 3., you specify a common
+prefix for all libraries at once.
+
+If all your libraries are installed in the same prefix, use 3. If they are
+installed in separate locations, use 1. or 2.: if the given library has a
+common prefix for includes and libs, use 1., otherwise use 2.
 
 ## Developer Documentation
 
