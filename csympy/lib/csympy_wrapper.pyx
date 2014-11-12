@@ -621,6 +621,10 @@ def sqrt(x):
     cdef Basic X = sympify(x)
     return c2py(csympy.sqrt(X.thisptr))
 
+def exp(x):
+    cdef Basic X = sympify(x)
+    return c2py(csympy.exp(X.thisptr))
+
 def densematrix(row, col, l):
     return DenseMatrix(row, col, l)
 

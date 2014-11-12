@@ -1,5 +1,5 @@
 from .lib.csympy_wrapper import (Symbol, Integer, sympify, SympifyError, Add,
-        Mul, Pow, sin, cos, sqrt, function_symbol, I, E, pi)
+        Mul, Pow, exp, sin, cos, sqrt, function_symbol, I, E, pi)
 from .utilities import var
 
 def test():
