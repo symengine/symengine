@@ -25,6 +25,9 @@ cdef c2py(RCP[const csympy.Basic] o):
     elif (csympy.is_a_Symbol(deref(o))):
         # TODO: figure out how to bypass the __init__() completely:
         r = Symbol.__new__(Symbol, "null")
+    elif (csympy.is_a_Constant(deref(o))):
+        # TODO: figure out how to bypass the __init__() completely:
+        r = Constant.__new__(Constant, "null")
     elif (csympy.is_a_Sin(deref(o))):
         r = Sin.__new__(Sin)
     elif (csympy.is_a_Cos(deref(o))):
@@ -64,6 +67,10 @@ def sympy2csympy(a, raise_error=False):
         return Integer(a.p) / Integer(a.q)
     elif a is sympy.I:
         return I
+    elif a is sympy.E:
+        return E
+    elif a is sympy.pi:
+        return pi
     elif isinstance(a, sympy.sin):
         return sin(a.args[0])
     elif isinstance(a, sympy.cos):
@@ -213,6 +220,23 @@ cdef class Symbol(Basic):
         cdef RCP[const csympy.Symbol] X = csympy.rcp_static_cast_Symbol(self.thisptr)
         import sympy
         return sympy.Symbol(str(deref(X).get_name().decode("utf-8")))
+
+cdef class Constant(Basic):
+
+    def __cinit__(self, name):
+        self.thisptr = rcp(new csympy.Constant(name.encode("utf-8")))
+
+    def __dealloc__(self):
+        self.thisptr.reset()
+
+    def _sympy_(self):
+        import sympy
+        if self == E:
+            return sympy.E
+        elif self == pi:
+            return sympy.pi
+        else:
+            raise Exception("Unknown Constant")
 
 cdef class Number(Basic):
     pass
@@ -912,6 +936,8 @@ def powermod_list(a, b, m):
     return s
 
 I = c2py(csympy.I)
+E = c2py(csympy.E)
+pi = c2py(csympy.pi)
 
 # Turn on nice stacktraces:
 csympy.print_stack_on_segfault()

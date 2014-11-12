@@ -64,6 +64,7 @@ cdef extern from "basic.h" namespace "CSymPy":
     bool is_a_Rational "CSymPy::is_a<CSymPy::Rational>"(const Basic &b) nogil
     bool is_a_Complex "CSymPy::is_a<CSymPy::Complex>"(const Basic &b) nogil
     bool is_a_Symbol "CSymPy::is_a<CSymPy::Symbol>"(const Basic &b) nogil
+    bool is_a_Constant "CSymPy::is_a<CSymPy::Constant>"(const Basic &b) nogil
     bool is_a_Sin "CSymPy::is_a<CSymPy::Sin>"(const Basic &b) nogil
     bool is_a_Cos "CSymPy::is_a<CSymPy::Cos>"(const Basic &b) nogil
     bool is_a_FunctionSymbol "CSymPy::is_a<CSymPy::FunctionSymbol>"(const Basic &b) nogil
@@ -94,7 +95,14 @@ cdef extern from "rational.h" namespace "CSymPy":
 cdef extern from "complex.h" namespace "CSymPy":
     cdef cppclass Complex(Number):
         pass
+
+cdef extern from "constants.h" namespace "CSymPy":
+    cdef cppclass Constant(Basic):
+        Constant(string name) nogil
+        string get_name() nogil
     RCP[const Basic] I
+    RCP[const Basic] E
+    RCP[const Basic] pi
 
 
 cdef extern from "add.h" namespace "CSymPy":
@@ -124,6 +132,7 @@ cdef extern from "pow.h" namespace "CSymPy":
 cdef extern from "basic.h" namespace "CSymPy":
     # We need to specialize these for our classes:
     RCP[const Basic] rcp(Symbol *p) nogil
+    RCP[const Basic] rcp(Constant *p) nogil
     RCP[const Basic] rcp(Integer *p) nogil
 
 cdef extern from "functions.h" namespace "CSymPy":
