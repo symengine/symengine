@@ -58,7 +58,7 @@ def sympy2csympy(a, raise_error=False):
     elif isinstance(a, sympy.Add):
         x, y = a.as_two_terms()
         return sympy2csympy(x, True) + sympy2csympy(y, True)
-    elif isinstance(a, sympy.Pow):
+    elif isinstance(a, (sympy.Pow, sympy.exp)):
         x, y = a.as_base_exp()
         return sympy2csympy(x, True) ** sympy2csympy(y, True)
     elif isinstance(a, sympy.Integer):
