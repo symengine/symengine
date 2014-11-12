@@ -1,4 +1,4 @@
-from csympy import Symbol, sin, cos, sqrt, Add, function_symbol
+from csympy import Symbol, sin, cos, sqrt, Add, function_symbol, Integer
 
 def test_sin():
     x = Symbol("x")
@@ -44,3 +44,16 @@ def test_derivative():
     assert g.diff(y).diff(y) == function_symbol("f", y).diff(y).diff(y)
 
     assert f - function_symbol("f", x) == 0
+
+def test_abs():
+    x = Symbol("x")
+    e = abs(x)
+    assert e == abs(x)
+    assert e != cos(x)
+
+    assert abs(5) == 5
+    assert abs(-5) == 5
+    assert abs(Integer(5)/3) == Integer(5)/3
+    assert abs(-Integer(5)/3) == Integer(5)/3
+    assert abs(Integer(5)/3+x) != Integer(5)/3
+    assert abs(Integer(5)/3+x) == abs(Integer(5)/3+x)

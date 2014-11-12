@@ -205,3 +205,21 @@ def test_tuples_lists():
     assert t == t2
     assert l != t2
     assert t != l2
+
+def test_abs():
+    x = Symbol("x")
+    e1 = abs(sympy.Symbol("x"))
+    e2 = abs(x)
+    assert sympify(e1) == e2
+    assert e1 == e2._sympy_()
+
+    e1 = abs(2*sympy.Symbol("x"))
+    e2 = 2*abs(x)
+    assert sympify(e1) == e2
+    assert e1 == e2._sympy_()
+
+    y = Symbol("y")
+    e1 = abs(sympy.Symbol("y")*sympy.Symbol("x"))
+    e2 = abs(y*x)
+    assert sympify(e1) == e2
+    assert e1 == e2._sympy_()
