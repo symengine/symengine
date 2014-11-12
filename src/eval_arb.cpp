@@ -52,6 +52,8 @@ public:
             arb_add(t, t, result_, prec_);
         }
         arb_set(result_, t);
+
+        arb_clear(t);
     }
 
     virtual void visit(const Mul &x) {
@@ -64,6 +66,8 @@ public:
             arb_mul(t, t, result_, prec_);
         }
         arb_set(result_, t);
+
+        arb_clear(t);
     }
 
     virtual void visit(const Pow &x) {
@@ -73,6 +77,8 @@ public:
         apply(b, *(x.base_), prec_);
         apply(result_, *(x.exp_), prec_);
         arb_pow(result_, b, result_, prec_);
+
+        arb_clear(b);
     }
 
     virtual void visit(const Sin &x) {
@@ -164,6 +170,8 @@ public:
         apply(t, *(x.get_num()), prec_);
         apply(result_, *(x.get_den()), prec_);
         arb_atan2(result_, t, result_, prec_);
+
+        arb_clear(t);
     }
 
     virtual void visit(const LambertW &) {
