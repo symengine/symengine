@@ -77,14 +77,19 @@ public:
     }
 
     virtual void visit(const Pow &x) {
-        arb_t b;
-        arb_init(b);
+        if (eq(x.get_base(), E)) {
+            apply(result_, *(x.exp_));
+            arb_exp(result_, result_, prec_);
+        } else {
+            arb_t b;
+            arb_init(b);
 
-        apply(b, *(x.base_));
-        apply(result_, *(x.exp_));
-        arb_pow(result_, b, result_, prec_);
+            apply(b, *(x.base_));
+            apply(result_, *(x.exp_));
+            arb_pow(result_, b, result_, prec_);
 
-        arb_clear(b);
+            arb_clear(b);
+        }
     }
 
     virtual void visit(const Sin &x) {
