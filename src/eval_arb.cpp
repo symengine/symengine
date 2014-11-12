@@ -253,7 +253,7 @@ public:
     }
 };
 
-void eval_arb(arb_t &result, const Basic &b, long precision)
+void eval_arb(arb_t result, const Basic &b, long precision)
 {
     EvalArbVisitor v(precision);
     v.apply(result, b);
