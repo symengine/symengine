@@ -1,5 +1,5 @@
 from csympy import (Symbol, Integer, sympify, SympifyError, sin, cos,
-        function_symbol, I, exp)
+        function_symbol, I, E, pi, exp)
 from csympy.lib.csympy_wrapper import densematrix
 import sympy
 
@@ -217,3 +217,10 @@ def test_exp():
     e2 = exp(x).diff(x)
     assert sympify(e1) == e2
     assert e1 == e2._sympy_()
+
+def test_constants():
+    assert sympify(sympy.E) == E
+    assert sympy.E == E._sympy_()
+
+    assert sympify(sympy.pi) == pi
+    assert sympy.pi == pi._sympy_()
