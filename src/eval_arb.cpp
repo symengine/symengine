@@ -20,9 +20,15 @@ private:
     long prec_;
     arb_t result_;
 public:
-    void apply(arb_t &result, const Basic &b, long precision) {
+    EvalArbVisitor(long precision) : prec_{precision} {
         arb_init(result_);
-        prec_ = precision;
+    }
+
+    ~EvalArbVisitor() {
+        arb_clear(result_);
+    }
+
+    void apply(arb_t result, const Basic &b) {
         b.accept(*this);
         arb_set(result, result_);
     }
@@ -44,56 +50,61 @@ public:
     }
 
     virtual void visit(const Add &x) {
-        arb_t t1, t2;
-        arb_init(t1);
-        arb_init(t2);
+        arb_t t;
+        arb_init(t);
+
         for (auto &p: x.get_args()) {
-            apply(t1, *p, prec_);
-            arb_add(t2, t2, t1, prec_);
+            apply(result_, *p);
+            arb_add(t, t, result_, prec_);
         }
-        arb_set(result_, t2);
+        arb_set(result_, t);
+
+        arb_clear(t);
     }
 
     virtual void visit(const Mul &x) {
-        arb_t t1, t2;
-        arb_init(t1);
-        arb_init(t2);
-        arb_one(t2);
+        arb_t t;
+        arb_init(t);
+        arb_one(t);
+
         for (auto &p: x.get_args()) {
-            apply(t1, *p, prec_);
-            arb_mul(t2, t2, t1, prec_);
+            apply(result_, *p);
+            arb_mul(t, t, result_, prec_);
         }
-        arb_set(result_, t2);
+        arb_set(result_, t);
+
+        arb_clear(t);
     }
 
     virtual void visit(const Pow &x) {
-        arb_t a, b;
-        arb_init(a);
-        arb_init(b);
-        apply(a, *(x.base_), prec_);
-        apply(b, *(x.exp_), prec_);
-        arb_pow(result_, a, b, prec_);
+        if (eq(x.get_base(), E)) {
+            apply(result_, *(x.exp_));
+            arb_exp(result_, result_, prec_);
+        } else {
+            arb_t b;
+            arb_init(b);
+
+            apply(b, *(x.base_));
+            apply(result_, *(x.exp_));
+            arb_pow(result_, b, result_, prec_);
+
+            arb_clear(b);
+        }
     }
 
     virtual void visit(const Sin &x) {
-        arb_t tmp;
-        arb_init(tmp);
-        apply(tmp, *(x.get_arg()), prec_);
-        arb_sin(result_, tmp, prec_);
+        apply(result_, *(x.get_arg()));
+        arb_sin(result_, result_, prec_);
     }
 
     virtual void visit(const Cos &x) {
-        arb_t tmp;
-        arb_init(tmp);
-        apply(tmp, *(x.get_arg()), prec_);
-        arb_cos(result_, tmp, prec_);
+        apply(result_, *(x.get_arg()));
+        arb_cos(result_, result_, prec_);
     }
 
     virtual void visit(const Tan &x) {
-        arb_t tmp;
-        arb_init(tmp);
-        apply(tmp, *(x.get_arg()), prec_);
-        arb_tan(result_, tmp, prec_);
+        apply(result_, *(x.get_arg()));
+        arb_tan(result_, result_, prec_);
     }
 
     virtual void visit(const Symbol &x) {
@@ -105,10 +116,8 @@ public:
     }
 
     virtual void visit(const Log &x) {
-        arb_t tmp;
-        arb_init(tmp);
-        apply(tmp, *(x.get_arg()), prec_);
-        arb_log(result_, tmp, prec_);
+        apply(result_, *(x.get_arg()));
+        arb_log(result_, result_, prec_);
     }
 
     virtual void visit(const Derivative &) {
@@ -116,81 +125,64 @@ public:
     }
 
     virtual void visit(const Cot &x) {
-        arb_t tmp;
-        arb_init(tmp);
-        apply(tmp, *(x.get_arg()), prec_);
-        arb_cot(result_, tmp, prec_);
+        apply(result_, *(x.get_arg()));
+        arb_cot(result_, result_, prec_);
     }
 
     virtual void visit(const Csc &x) {
-        arb_t tmp;
-        arb_init(tmp);
-        apply(tmp, *(x.get_arg()), prec_);
-        arb_sin(tmp, tmp, prec_);
-        arb_inv(result_, tmp, prec_);
+        apply(result_, *(x.get_arg()));
+        arb_sin(result_, result_, prec_);
+        arb_inv(result_, result_, prec_);
     }
 
     virtual void visit(const Sec &x) {
-        arb_t tmp;
-        arb_init(tmp);
-        apply(tmp, *(x.get_arg()), prec_);
-        arb_cos(tmp, tmp, prec_);
-        arb_inv(result_, tmp, prec_);
+        apply(result_, *(x.get_arg()));
+        arb_cos(result_, result_, prec_);
+        arb_inv(result_, result_, prec_);
     }
 
     virtual void visit(const ASin &x) {
-        arb_t tmp;
-        arb_init(tmp);
-        apply(tmp, *(x.get_arg()), prec_);
-        arb_asin(result_, tmp, prec_);
+        apply(result_, *(x.get_arg()));
+        arb_asin(result_, result_, prec_);
     }
 
     virtual void visit(const ACos &x) {
-        arb_t tmp;
-        arb_init(tmp);
-        apply(tmp, *(x.get_arg()), prec_);
-        arb_acos(result_, tmp, prec_);
+        apply(result_, *(x.get_arg()));
+        arb_acos(result_, result_, prec_);
     }
 
     virtual void visit(const ASec &x) {
-        arb_t tmp;
-        arb_init(tmp);
-        apply(tmp, *(x.get_arg()), prec_);
-        arb_inv(tmp, tmp, prec_);
-        arb_acos(result_, tmp, prec_);
+        apply(result_, *(x.get_arg()));
+        arb_inv(result_, result_, prec_);
+        arb_acos(result_, result_, prec_);
     }
 
     virtual void visit(const ACsc &x) {
-        arb_t tmp;
-        arb_init(tmp);
-        apply(tmp, *(x.get_arg()), prec_);
-        arb_inv(tmp, tmp, prec_);
-        arb_asin(result_, tmp, prec_);
+        apply(result_, *(x.get_arg()));
+        arb_inv(result_, result_, prec_);
+        arb_asin(result_, result_, prec_);
     }
 
     virtual void visit(const ATan &x) {
-        arb_t tmp;
-        arb_init(tmp);
-        apply(tmp, *(x.get_arg()), prec_);
-        arb_atan(result_, tmp, prec_);
+        apply(result_, *(x.get_arg()));
+        arb_atan(result_, result_, prec_);
     }
 
     virtual void visit(const ACot &x) {
-        arb_t tmp;
-        arb_init(tmp);
-        apply(tmp, *(x.get_arg()), prec_);
-        arb_inv(tmp, tmp, prec_);
-        arb_atan(result_, tmp, prec_);
+        apply(result_, *(x.get_arg()));
+        arb_inv(result_, result_, prec_);
+        arb_atan(result_, result_, prec_);
     }
 
     virtual void visit(const ATan2 &x) {
-        arb_t t1, t2;
-        arb_init(t1);
-        arb_init(t2);
+        arb_t t;
+        arb_init(t);
 
-        apply(t1, *(x.get_num()), prec_);
-        apply(t2, *(x.get_den()), prec_);
-        arb_atan2(result_, t1, t2, prec_);
+        apply(t, *(x.get_num()));
+        apply(result_, *(x.get_den()));
+        arb_atan2(result_, t, result_, prec_);
+
+        arb_clear(t);
     }
 
     virtual void visit(const LambertW &) {
@@ -202,31 +194,23 @@ public:
     }
 
     virtual void visit(const Sinh &x) {
-        arb_t tmp;
-        arb_init(tmp);
-        apply(tmp, *(x.get_arg()), prec_);
-        arb_sinh(result_, tmp, prec_);
+        apply(result_, *(x.get_arg()));
+        arb_sinh(result_, result_, prec_);
     }
 
     virtual void visit(const Cosh &x) {
-        arb_t tmp;
-        arb_init(tmp);
-        apply(tmp, *(x.get_arg()), prec_);
-        arb_cosh(result_, tmp, prec_);
+        apply(result_, *(x.get_arg()));
+        arb_cosh(result_, result_, prec_);
     }
 
     virtual void visit(const Tanh &x) {
-        arb_t tmp;
-        arb_init(tmp);
-        apply(tmp, *(x.get_arg()), prec_);
-        arb_tanh(result_, tmp, prec_);
+        apply(result_, *(x.get_arg()));
+        arb_tanh(result_, result_, prec_);
     }
 
     virtual void visit(const Coth &x) {
-        arb_t tmp;
-        arb_init(tmp);
-        apply(tmp, *(x.get_arg()), prec_);
-        arb_coth(result_, tmp, prec_);
+        apply(result_, *(x.get_arg()));
+        arb_coth(result_, result_, prec_);
     }
 
     virtual void visit(const ASinh &) {
@@ -274,10 +258,10 @@ public:
     }
 };
 
-void eval_arb(arb_t &result, const Basic &b, long precision)
+void eval_arb(arb_t result, const Basic &b, long precision)
 {
-    EvalArbVisitor v;
-    v.apply(result, b, precision);
+    EvalArbVisitor v(precision);
+    v.apply(result, b);
 }
 
 } // CSymPy
