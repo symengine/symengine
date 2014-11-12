@@ -46,7 +46,7 @@ def sympy2csympy(a, raise_error=False):
     Converts 'a' from SymPy to CSymPy.
 
     If the expression cannot be converted, it either returns None (if
-    raise_error==False) or raises an SympifyError exception (if
+    raise_error==False) or raises a SympifyError exception (if
     raise_error==True).
     """
     import sympy
