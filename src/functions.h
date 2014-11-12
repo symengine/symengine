@@ -1020,6 +1020,7 @@ public:
     virtual std::string __str__() const;
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &arg);
+    inline RCP<const Basic> get_arg() const { return arg_; }
     virtual vec_basic get_args() const { return {arg_}; }
 
     virtual void accept(Visitor &v) const;
