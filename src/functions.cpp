@@ -2679,4 +2679,65 @@ RCP<const Basic> uppergamma(const RCP<const Basic> &s, const RCP<const Basic> &x
 }
 
 
+Abs::Abs(const RCP<const Basic> &arg)
+    : arg_{arg}
+{
+    CSYMPY_ASSERT(is_canonical(arg_))
+}
+
+bool Abs::is_canonical(const RCP<const Basic> &arg)
+{
+    if (is_a<Integer>(*arg) || is_a<Rational>(*arg)) return false;
+    return true;
+}
+
+std::size_t Abs::__hash__() const
+{
+    std::size_t seed = 0;
+    hash_combine<Basic>(seed, *arg_);
+    return seed;
+}
+
+bool Abs::__eq__(const Basic &o) const
+{
+    if (is_a<Abs>(o) &&
+        eq(arg_, static_cast<const Abs &>(o).arg_))
+        return true;
+    return false;
+}
+
+int Abs::compare(const Basic &o) const
+{
+    CSYMPY_ASSERT(is_a<Abs>(o))
+    return arg_->__cmp__(*(static_cast<const Abs &>(o).arg_));
+}
+
+std::string Abs::__str__() const
+{
+    std::ostringstream o;
+    o << "abs(" << *arg_ << ")";
+    return o.str();
+}
+
+RCP<const Basic> abs(const RCP<const Basic> &arg)
+{
+    if (is_a<Integer>(*arg)) {
+        RCP<const Integer> arg_ = rcp_static_cast<const Integer>(arg);
+        if (arg_->is_negative()) {
+            return arg_->neg();
+        } else {
+            return arg_;
+        }
+    } else if (is_a<Rational>(*arg)) {
+        RCP<const Rational> arg_ = rcp_static_cast<const Rational>(arg);
+        if (arg_->is_negative()) {
+            // TODO: make this faster by implementing Rational::neg()
+            return neg(arg_);
+        } else {
+            return arg_;
+        }
+    }
+    return rcp(new Abs(arg));
+}
+
 } // CSymPy
