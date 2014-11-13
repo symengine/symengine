@@ -1,5 +1,5 @@
 from csympy import (Symbol, Integer, sympify, SympifyError, sin, cos,
-        function_symbol, I)
+        function_symbol, I, E, pi, exp)
 from csympy.lib.csympy_wrapper import densematrix
 import sympy
 
@@ -205,6 +205,25 @@ def test_tuples_lists():
     assert t == t2
     assert l != t2
     assert t != l2
+
+def test_exp():
+    x = Symbol("x")
+    e1 = sympy.exp(sympy.Symbol("x"))
+    e2 = exp(x)
+    assert sympify(e1) == e2
+    assert e1 == e2._sympy_()
+
+    e1 = sympy.exp(sympy.Symbol("x")).diff(sympy.Symbol("x"))
+    e2 = exp(x).diff(x)
+    assert sympify(e1) == e2
+    assert e1 == e2._sympy_()
+
+def test_constants():
+    assert sympify(sympy.E) == E
+    assert sympy.E == E._sympy_()
+
+    assert sympify(sympy.pi) == pi
+    assert sympy.pi == pi._sympy_()
 
 def test_abs():
     x = Symbol("x")
