@@ -1006,7 +1006,7 @@ class Abs: public Function {
 private:
     RCP<const Basic> arg_;
 public:
-    //! Gamma Constructor
+    //! Abs Constructor
     Abs(const RCP<const Basic> &arg);
     /*! Equality comparator
      * \param o - Object to be compared with
@@ -1026,7 +1026,7 @@ public:
     virtual void accept(Visitor &v) const;
 };
 
-//! Canonicalize Gamma:
+//! Canonicalize Abs:
 RCP<const Basic> abs(const RCP<const Basic> &arg);
 
 
