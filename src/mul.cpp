@@ -108,7 +108,6 @@ std::string Mul::__str__() const
     } else if (neq(coef_, one)) {
         if (is_a<Rational>(*coef_) &&
                 !(rcp_static_cast<const Rational>(coef_)->is_int())) {
-
             RCP<const Integer> num_, den_;
             get_num_den(rcp_static_cast<const Rational>(coef_),
                 outArg(num_), outArg(den_));
@@ -141,10 +140,17 @@ std::string Mul::__str__() const
     }
     for (auto q : num) {
         if (is_a<Mul>(*q) || is_a<Add>(*q)) {
-            o << "(" << (*q) << ")*";
+            o << "(" << (*q) << ")";
+        } else if (is_a<Complex>(*q)) {
+            if (!(rcp_static_cast<const Complex>(q)->is_reim_zero())) {
+                o << "(" << (*q) <<")";
+            } else {
+                o << (*q);
+            }
         } else {
-            o << (*q) << "*";
+            o << (*q);
         }
+        o << "*";
     }
 
     std::string s = o.str();
@@ -159,10 +165,17 @@ std::string Mul::__str__() const
         }
         for (auto q : den) {
             if (is_a<Mul>(*q) || is_a<Add>(*q)) {
-                o << "(" << (*q) << ")*";
+                o << "(" << (*q) << ")";
+            } else if (is_a<Complex>(*q)) {
+                if (!(rcp_static_cast<const Complex>(q)->is_reim_zero())) {
+                    o << "(" << (*q) <<")";
+                } else {
+                    o << (*q);
+                }
             } else {
-                o << (*q) << "*";
+                o << (*q);
             }
+            o << "*";
         }
         s = o.str();
         s = s.substr(0, s.size()-1);
