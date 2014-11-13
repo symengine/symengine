@@ -106,29 +106,16 @@ std::string Mul::__str__() const
     if (eq(coef_, minus_one)) {
         o << "-";
     } else if (neq(coef_, one)) {
-        if (is_a<Rational>(*coef_) &&
-                !(rcp_static_cast<const Rational>(coef_)->is_int())) {
-            RCP<const Integer> num_, den_;
-            get_num_den(rcp_static_cast<const Rational>(coef_),
-                outArg(num_), outArg(den_));
-
-            if(eq(num_, minus_one)) {
-                o << "-";
-            }
-            else if(neq(num_, one)) {
-                num.push_back(num_);
-            }
-            den.push_back(den_);
-        } else {
-            num.push_back(coef_);
-        }
+        num.push_back(coef_);
     }
 
     auto p = dict_.begin();
     for (; p != dict_.end(); p++) {
-        if (!is_a<Integer>(*(p->second)) && rcp_static_cast<const Integer>(p->second)->is_negative()) {
+        if (!is_a<Integer>(*(p->second)) &&
+                rcp_static_cast<const Integer>(p->second)->is_negative()) {
             den.push_back(pow(p->first, neg(p->second)));
-        } else if (!is_a<Rational>(*(p->second)) && rcp_static_cast<const Rational>(p->second)->is_negative()) {
+        } else if (!is_a<Rational>(*(p->second)) &&
+                rcp_static_cast<const Rational>(p->second)->is_negative()) {
             den.push_back(pow(p->first, neg(p->second)));
         } else {
             num.push_back(pow(p->first, p->second));
@@ -136,11 +123,14 @@ std::string Mul::__str__() const
     }
 
     if (num.size() == 0) {
-        o << "1*";
+        num.push_back(integer(1));
     }
     for (auto q : num) {
         if (is_a<Mul>(*q) || is_a<Add>(*q)) {
             o << "(" << (*q) << ")";
+        } if (is_a<Rational>(*q) &&
+                 !(rcp_static_cast<const Rational>(q)->is_int())) {
+            o << "(" << (*q) <<")";
         } else if (is_a<Complex>(*q)) {
             if (!(rcp_static_cast<const Complex>(q)->is_reim_zero())) {
                 o << "(" << (*q) <<")";
