@@ -53,9 +53,15 @@ public:
         arb_t t;
         arb_init(t);
 
-        for (auto &p: x.get_args()) {
-            apply(result_, *p);
-            arb_add(t, t, result_, prec_);
+        auto d = x.get_args();
+        for (auto p = d.begin(); p != d.end();  p++) {
+            apply(result_, *(*p));
+
+            if (p == d.begin()) {
+                arb_set(t, result_);
+            } else {
+                arb_add(t, t, result_, prec_);
+            }
         }
         arb_set(result_, t);
 
@@ -65,11 +71,16 @@ public:
     virtual void visit(const Mul &x) {
         arb_t t;
         arb_init(t);
-        arb_one(t);
 
-        for (auto &p: x.get_args()) {
-            apply(result_, *p);
-            arb_mul(t, t, result_, prec_);
+        auto d = x.get_args();
+        for (auto p = d.begin(); p != d.end(); p++) {
+            apply(result_, *(*p));
+
+            if (p == d.begin()) {
+                arb_set(t, result_);
+            } else {
+                arb_mul(t, t, result_, prec_);
+            }
         }
         arb_set(result_, t);
 
