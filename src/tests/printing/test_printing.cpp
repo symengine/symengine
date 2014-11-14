@@ -144,8 +144,10 @@ void test_printing()
 
     r = div(integer(1), mul(x, add(x, y)));
     r1 = div(mul(y, integer(-1)), mul(x, add(x, y)));
+    r2 = mul(pow(y, x), pow(x, y));
     assert(r->__str__() == "1/((y + x)*x)");
     assert(r1->__str__() == "-y/((y + x)*x)");
+    assert(r2->__str__() == "x^y*y^x");
 
     r = pow(y, pow(x, integer(2)));
     r1 = pow(integer(3), mul(integer(2), x));

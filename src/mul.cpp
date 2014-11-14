@@ -111,10 +111,10 @@ std::string Mul::__str__() const
 
     auto p = dict_.begin();
     for (; p != dict_.end(); p++) {
-        if (!is_a<Integer>(*(p->second)) &&
+        if (is_a<Integer>(*(p->second)) &&
                 rcp_static_cast<const Integer>(p->second)->is_negative()) {
             den.push_back(pow(p->first, neg(p->second)));
-        } else if (!is_a<Rational>(*(p->second)) &&
+        } else if (is_a<Rational>(*(p->second)) &&
                 rcp_static_cast<const Rational>(p->second)->is_negative()) {
             den.push_back(pow(p->first, neg(p->second)));
         } else {
