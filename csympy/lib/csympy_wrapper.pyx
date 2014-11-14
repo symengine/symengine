@@ -34,6 +34,8 @@ cdef c2py(RCP[const csympy.Basic] o):
         r = Cos.__new__(Cos)
     elif (csympy.is_a_FunctionSymbol(deref(o))):
         r = FunctionSymbol.__new__(FunctionSymbol)
+    elif (csympy.is_a_Abs(deref(o))):
+        r = Abs.__new__(Abs)
     elif (csympy.is_a_Derivative(deref(o))):
         r = Derivative.__new__(Derivative)
     else:
@@ -75,6 +77,8 @@ def sympy2csympy(a, raise_error=False):
         return sin(a.args[0])
     elif isinstance(a, sympy.cos):
         return cos(a.args[0])
+    elif isinstance(a, sympy.Abs):
+        return abs(sympy2csympy(a.args[0], True))
     elif isinstance(a, sympy.Function):
         name = str(a.func)
         arg = a.args[0]
@@ -159,6 +163,9 @@ cdef class Basic(object):
 
     def __neg__(Basic self not None):
         return c2py(csympy.neg(self.thisptr))
+
+    def __abs__(Basic self not None):
+        return c2py(csympy.abs(self.thisptr))
 
     def __richcmp__(a, b, int op):
         cdef Basic A = sympify(a, False)
@@ -387,6 +394,17 @@ cdef class FunctionSymbol(Function):
         arg = c2py(deref(X).get_arg())._sympy_()
         import sympy
         return sympy.Function(name)(arg)
+
+cdef class Abs(Function):
+
+    def __dealloc__(self):
+        self.thisptr.reset()
+
+    def _sympy_(self):
+        cdef RCP[const csympy.Abs] X = csympy.rcp_static_cast_Abs(self.thisptr)
+        arg = c2py(deref(X).get_arg())._sympy_()
+        return abs(arg)
+
 
 cdef class Derivative(Basic):
 

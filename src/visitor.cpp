@@ -56,6 +56,7 @@ ACCEPT(Gamma)
 ACCEPT(LowerGamma)
 ACCEPT(UpperGamma)
 ACCEPT(Constant)
+ACCEPT(Abs)
 
 void preorder_traversal(const Basic &b, Visitor &v)
 {

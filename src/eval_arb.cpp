@@ -256,6 +256,10 @@ public:
             throw std::runtime_error("Unknown constant.");
         }
     }
+
+    virtual void visit(const Abs &) {
+        throw std::runtime_error("Not implemented.");
+    };
 };
 
 void eval_arb(arb_t result, const Basic &b, long precision)

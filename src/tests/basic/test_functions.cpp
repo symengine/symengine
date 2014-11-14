@@ -62,6 +62,7 @@ using CSymPy::dirichlet_eta;
 using CSymPy::gamma;
 using CSymPy::lowergamma;
 using CSymPy::uppergamma;
+using CSymPy::abs;
 
 void test_sin()
 {
@@ -1583,6 +1584,23 @@ void test_uppergamma()
     assert(eq(r1, r2));
 }
 
+void test_abs()
+{
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> i3 = integer(3);
+    RCP<const Basic> im1 = integer(-1);
+    RCP<const Basic> sqrt_pi = sqrt(pi);
+
+    assert(eq(abs(one), one));
+    assert(eq(abs(i2), i2));
+    assert(eq(abs(im1), one));
+    assert(eq(abs(integer(-5)), integer(5)));
+    assert(neq(abs(sqrt_pi), sqrt_pi));
+    assert(eq(abs(sqrt_pi), abs(sqrt_pi)));
+    assert(eq(abs(div(i2, i3)), div(i2, i3)));
+    assert(eq(abs(neg(div(i2, i3))), div(i2, i3)));
+}
+
 int main(int argc, char* argv[])
 {
     print_stack_on_segfault();    
@@ -1620,5 +1638,6 @@ int main(int argc, char* argv[])
     test_gamma();
     test_lowergamma();
     test_uppergamma();
+    test_abs();
     return 0;
 }
