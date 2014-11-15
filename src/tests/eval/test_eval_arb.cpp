@@ -36,6 +36,7 @@ using CSymPy::atan;
 using CSymPy::acsc;
 using CSymPy::asec;
 using CSymPy::acot;
+using CSymPy::E;
 using CSymPy::eval_arb;
 using CSymPy::print_stack_on_segfault;
 
@@ -171,6 +172,13 @@ void test_Pow()
     eval_arb(a, *r1, 10);
 
     mpfr_set_d(f, pow(120.0/377, 97.0/34), MPFR_RNDN);
+
+    assert(arb_contains_mpfr(a, f));
+
+    r1 = pow(E, e);
+    eval_arb(a, *r1, 12);
+
+    mpfr_set_d(f, exp(97.0/34), MPFR_RNDN);
 
     assert(arb_contains_mpfr(a, f));
 }
