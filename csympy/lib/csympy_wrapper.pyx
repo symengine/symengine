@@ -957,6 +957,9 @@ def powermod_list(a, b, m):
         s.append(c2py(<RCP[const csympy.Basic]>(v[i])))
     return s
 
+def eval_double(Basic b not None):
+    return csympy.eval_double(deref(b.thisptr))
+
 I = c2py(csympy.I)
 E = c2py(csympy.E)
 pi = c2py(csympy.pi)

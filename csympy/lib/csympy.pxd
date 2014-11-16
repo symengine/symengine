@@ -265,3 +265,6 @@ cdef extern from "ntheory.h" namespace "CSymPy":
         sieve_iterator()
         sieve_iterator(unsigned limit) nogil
         unsigned next_prime() nogil
+
+cdef extern from "eval_double.h" namespace "CSymPy":
+    double eval_double(const Basic &b) nogil except +
