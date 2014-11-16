@@ -138,7 +138,7 @@ std::string Mul::__str__() const
                     o2 << (*p->first);
                 }
             } else {
-                o2 << (new Pow(p->first, neg(p->second)))->__str__();
+                o2 << rcp(new Pow(p->first, neg(p->second)))->__str__();
             }
             o2 << "*";
             den++;
@@ -159,7 +159,7 @@ std::string Mul::__str__() const
                     o << (*p->first);
                 }
             } else {
-                o << (new Pow(p->first, p->second))->__str__();
+                o << rcp(new Pow(p->first, p->second))->__str__();
             }
             o << "*";
             num = true;
