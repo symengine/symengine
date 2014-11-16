@@ -101,7 +101,7 @@ int Mul::compare(const Basic &o) const
 
 std::string Mul::__str__() const
 {
-    std::ostringstream o;
+    std::ostringstream o, o2;
     if (eq(coef_, minus_one)) {
         o << "-";
     } else if (is_a<Rational>(*coef_) &&
@@ -117,36 +117,73 @@ std::string Mul::__str__() const
         o << *coef_;
     }
 
-    auto p = dict_.begin();
-    if (neq(coef_, minus_one) && neq(coef_, one)) o << "*";
-    for (; p != dict_.end(); p++) {
-        if (is_a<Add>(*(p->first))) {
-            o << "(" << *(p->first) << ")";
-        } else if (is_a<Rational>(*(p->first)) &&
-                !(rcp_static_cast<const Rational>((p->first))->is_int())) {
-            o << "(" << *(p->first) <<")";
-        } else if (is_a<Complex>(*(p->first))) {
-            if (!(rcp_static_cast<const Complex>((p->first))->is_reim_zero())) {
-                o << "(" << *(p->first) <<")";
-            } else {
-                o << *(p->first);
-            }
-        } else {
-            o << *(p->first);
-        }
-        if (neq(p->second, one)) {
-            o << "^";
-            if (!is_a<Integer>(*(p->second)) && !is_a<Symbol>(*(p->second)))
-                o << "(";
-            o << *(p->second);
-            if (!is_a<Integer>(*(p->second)) && !is_a<Symbol>(*(p->second)))
-                o << ")";
-        }
+    bool num = false;
+    unsigned den = 0;
+    if (neq(coef_, minus_one) && neq(coef_, one)) {
         o << "*";
+        num = true;
+    }
+
+    auto p = dict_.begin();
+    for (; p != dict_.end(); p++) {
+        if ((is_a<Integer>(*(p->second)) &&
+                rcp_static_cast<const Integer>(p->second)->is_negative()) ||
+                (is_a<Rational>(*(p->second)) &&
+                rcp_static_cast<const Rational>(p->second)->is_negative())) {
+            if(eq(p->second, minus_one)) {
+                if (is_a<Mul>(*p->first) || is_a<Add>(*p->first)) {
+                    o2 << "(" << (*p->first) << ")";
+                } else {
+                    o2 << (*p->first);
+                }
+            } else {
+                o2 << rcp(new Pow(p->first, neg(p->second)))->__str__();
+            }
+            o2 << "*";
+            den++;
+        } else {
+            if(eq(p->second, one)) {
+                if (is_a<Mul>(*p->first) || is_a<Add>(*p->first)) {
+                    o << "(" << (*p->first) << ")";
+                } else if (is_a<Rational>(*p->first) &&
+                         !(rcp_static_cast<const Rational>(p->first)->is_int())) {
+                    o << "(" << (*p->first) <<")";
+                } else if (is_a<Complex>(*p->first)) {
+                    if (!(rcp_static_cast<const Complex>(p->first)->is_reim_zero())) {
+                        o << "(" << (*p->first) <<")";
+                    } else {
+                        o << (*p->first);
+                    }
+                } else {
+                    o << (*p->first);
+                }
+            } else {
+                o << rcp(new Pow(p->first, p->second))->__str__();
+            }
+            o << "*";
+            num = true;
+        }
+    }
+
+    if (!num) {
+        o << "1*";
     }
 
     std::string s = o.str();
-    return s.substr(0, s.size()-1);
+    s = s.substr(0, s.size()-1);
+
+    if (den != 0) {
+        std::string s2 = o2.str();
+        s2 = s2.substr(0, s2.size()-1);
+        if (den > 1) {
+            return s + "/(" + s2 + ")";
+        }
+        else {
+            return s + "/" + s2;
+        }
+    } else {
+        return s;
+    }
 }
 
 RCP<const CSymPy::Basic> Mul::from_dict(const RCP<const Number> &coef, map_basic_basic &&d)

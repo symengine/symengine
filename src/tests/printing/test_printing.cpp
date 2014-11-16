@@ -134,6 +134,27 @@ void test_printing()
 
     r1 = mul(x, y);
     assert(r1->__str__() == "x*y" );
+
+    r = div(x, add(x, y));
+    r1 = div(x, pow(add(x, y), div(integer(2), integer(3))));
+    r2 = div(x, pow(add(x, y), div(integer(-2), integer(3))));
+    assert(r->__str__() == "x/(y + x)");
+    assert(r1->__str__() == "x/(y + x)^(2/3)" );
+    assert(r2->__str__() == "(y + x)^(2/3)*x" );
+
+    r = div(integer(1), mul(x, add(x, y)));
+    r1 = div(mul(y, integer(-1)), mul(x, add(x, y)));
+    r2 = mul(pow(y, x), pow(x, y));
+    assert(r->__str__() == "1/((y + x)*x)");
+    assert(r1->__str__() == "-y/((y + x)*x)");
+    assert(r2->__str__() == "x^y*y^x");
+
+    r = pow(y, pow(x, integer(2)));
+    r1 = pow(integer(3), mul(integer(2), x));
+    r2 = pow(integer(3), mul(integer(-1), x));
+    assert(r->__str__() == "y^(x^2)");
+    assert(r1->__str__() == "3^(2*x)" );
+    assert(r2->__str__() == "3^(-x)" );
 }
 
 void test_matrix()

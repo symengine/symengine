@@ -102,7 +102,7 @@ std::string Pow::__str__() const
         o << *base_;
     }
     o << "^";
-    if (is_a<Add>(*exp_) || is_a<Pow>(*exp_)) {
+    if (is_a<Add>(*exp_) || is_a<Pow>(*exp_) || is_a<Mul>(*exp_)) {
         o << "(" << *exp_ << ")";
     } else if (is_a<Integer>(*exp_) &&
                 rcp_static_cast<const Integer>(exp_)->is_negative()) {
