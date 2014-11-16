@@ -125,7 +125,6 @@ std::string Mul::__str__() const
     }
 
     auto p = dict_.begin();
-    RCP<const Basic> exp_;
     for (; p != dict_.end(); p++) {
         if ((is_a<Integer>(*(p->second)) &&
                 rcp_static_cast<const Integer>(p->second)->is_negative()) ||
