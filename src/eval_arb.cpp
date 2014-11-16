@@ -18,19 +18,15 @@ namespace CSymPy {
 class EvalArbVisitor : public Visitor {
 private:
     long prec_;
-    arb_t result_;
+    arb_ptr result_;
 public:
-    EvalArbVisitor(long precision) : prec_{precision} {
-        arb_init(result_);
-    }
+    EvalArbVisitor(long precision) : prec_{precision} { }
 
-    ~EvalArbVisitor() {
-        arb_clear(result_);
-    }
-
-    void apply(arb_t result, const Basic &b) {
+    void apply(arb_ptr result, const Basic &b) {
+        arb_ptr tmp = result_;
+        result_ = result;
         b.accept(*this);
-        arb_set(result, result_);
+        result_ = tmp;
     }
 
     virtual void visit(const Integer &x) {
