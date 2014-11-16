@@ -51,15 +51,14 @@ public:
 
         auto d = x.get_args();
         for (auto p = d.begin(); p != d.end();  p++) {
-            apply(result_, *(*p));
 
             if (p == d.begin()) {
-                arb_set(t, result_);
+                apply(result_, *(*p));
             } else {
-                arb_add(t, t, result_, prec_);
+                apply(t, *(*p));
+                arb_add(result_, result_, t, prec_);
             }
         }
-        arb_set(result_, t);
 
         arb_clear(t);
     }
