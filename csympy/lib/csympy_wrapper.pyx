@@ -16,18 +16,15 @@ cdef c2py(RCP[const csympy.Basic] o):
     elif (csympy.is_a_Pow(deref(o))):
         r = Pow.__new__(Pow)
     elif (csympy.is_a_Integer(deref(o))):
-        # TODO: figure out how to bypass the __init__() completely:
-        r = Integer.__new__(Integer, -99999)
+        r = Integer.__new__(Integer)
     elif (csympy.is_a_Rational(deref(o))):
         r = Rational.__new__(Rational)
     elif (csympy.is_a_Complex(deref(o))):
         r = Complex.__new__(Complex)
     elif (csympy.is_a_Symbol(deref(o))):
-        # TODO: figure out how to bypass the __init__() completely:
-        r = Symbol.__new__(Symbol, "null")
+        r = Symbol.__new__(Symbol)
     elif (csympy.is_a_Constant(deref(o))):
-        # TODO: figure out how to bypass the __init__() completely:
-        r = Constant.__new__(Constant, "null")
+        r = Constant.__new__(Constant)
     elif (csympy.is_a_Sin(deref(o))):
         r = Sin.__new__(Sin)
     elif (csympy.is_a_Cos(deref(o))):
@@ -154,8 +151,9 @@ cdef class Basic(object):
         if A is None or B is None: return NotImplemented
         return c2py(csympy.div(A.thisptr, B.thisptr))
 
-    # What is the purpose of "c" here?
     def __pow__(a, b, c):
+        if c is not None:
+            return powermod(a, b, c)
         cdef Basic A = sympify(a, False)
         cdef Basic B = sympify(b, False)
         if A is None or B is None: return NotImplemented
@@ -168,9 +166,18 @@ cdef class Basic(object):
         return c2py(csympy.abs(self.thisptr))
 
     def __richcmp__(a, b, int op):
-        cdef Basic A = sympify(a, False)
-        cdef Basic B = sympify(b, False)
-        if A is None or B is None: return NotImplemented
+        A = sympify(a, False)
+        B = sympify(b, False)
+        if not (isinstance(A, Basic) and isinstance(B, Basic)):
+            if (op == 2):
+                return False
+            elif (op == 3):
+                return True
+            else:
+                return NotImplemented
+        return Basic._richcmp_(A, B, op)
+
+    def _richcmp_(Basic A, Basic B, int op):
         if (op == 2):
             return csympy.eq(A.thisptr, B.thisptr)
         elif (op == 3):
@@ -217,7 +224,9 @@ cdef class Basic(object):
 
 cdef class Symbol(Basic):
 
-    def __cinit__(self, name):
+    def __cinit__(self, name = None):
+        if name is None:
+            return
         self.thisptr = rcp(new csympy.Symbol(name.encode("utf-8")))
 
     def __dealloc__(self):
@@ -230,7 +239,9 @@ cdef class Symbol(Basic):
 
 cdef class Constant(Basic):
 
-    def __cinit__(self, name):
+    def __cinit__(self, name = None):
+        if name is None:
+            return
         self.thisptr = rcp(new csympy.Constant(name.encode("utf-8")))
 
     def __dealloc__(self):
@@ -250,7 +261,9 @@ cdef class Number(Basic):
 
 cdef class Integer(Number):
 
-    def __cinit__(self, i):
+    def __cinit__(self, i = None):
+        if i is None:
+            return
         cdef int i_
         cdef csympy.mpz_class i__
         cdef string tmp
@@ -276,9 +289,17 @@ cdef class Integer(Number):
         return deref(self.thisptr).hash()
 
     def __richcmp__(a, b, int op):
-        cdef Integer A = sympify(a, False)
-        cdef Integer B = sympify(b, False)
-        if A is None or B is None: return NotImplemented
+        A = sympify(a, False)
+        B = sympify(b, False)
+        if not (isinstance(A, Integer) and isinstance(B, Integer)):
+            if (op == 2):
+                return False
+            elif (op == 3):
+                return True
+            return NotImplemented
+        return Integer._richcmp_(A, B, op)
+
+    def _richcmp_(Integer A, Integer B, int op):
         cdef int i = deref(csympy.rcp_static_cast_Integer(A.thisptr)).compare(deref(csympy.rcp_static_cast_Integer(B.thisptr)))
         if (op == 0):
             return i < 0
@@ -294,6 +315,15 @@ cdef class Integer(Number):
             return i >= 0
         else:
             return NotImplemented
+
+    def __floordiv__(x, y):
+        return quotient(x, y)
+
+    def __mod__(x, y):
+        return mod(x, y)
+
+    def __divmod__(x, y):
+        return quotient_mod(x, y)
 
     def _sympy_(self):
         import sympy
@@ -426,9 +456,17 @@ cdef class MatrixBase:
     cdef csympy.MatrixBase* thisptr
 
     def __richcmp__(a, b, int op):
-        cdef MatrixBase A = sympify(a, False)
-        cdef MatrixBase B = sympify(b, False)
-        if A is None or B is None: return NotImplemented
+        A = sympify(a, False)
+        B = sympify(b, False)
+        if not (isinstance(A, MatrixBase) and isinstance(B, MatrixBase)):
+            if (op == 2):
+                return False
+            elif (op == 3):
+                return True
+            return NotImplemented
+        return MatrixBase._richcmp_(A, B, op)
+
+    def _richcmp_(MatrixBase A, MatrixBase B, int op):
         if (op == 2):
             return deref(A.thisptr).eq(deref(B.thisptr))
         elif (op == 3):
@@ -698,7 +736,7 @@ def quotient_mod(a, b):
     cdef Integer _b = sympify(b)
     csympy.quotient_mod(csympy.outArg_Integer(q), csympy.outArg_Integer(r),
         deref(csympy.rcp_static_cast_Integer(_a.thisptr)), deref(csympy.rcp_static_cast_Integer(_b.thisptr)))
-    return [c2py(<RCP[const csympy.Basic]>q), c2py(<RCP[const csympy.Basic]>r)]
+    return (c2py(<RCP[const csympy.Basic]>q), c2py(<RCP[const csympy.Basic]>r))
 
 def mod_inverse(a, b):
     cdef RCP[const csympy.Integer] inv
