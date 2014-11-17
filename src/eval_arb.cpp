@@ -18,19 +18,15 @@ namespace CSymPy {
 class EvalArbVisitor : public Visitor {
 private:
     long prec_;
-    arb_t result_;
+    arb_ptr result_;
 public:
-    EvalArbVisitor(long precision) : prec_{precision} {
-        arb_init(result_);
-    }
+    EvalArbVisitor(long precision) : prec_{precision} { }
 
-    ~EvalArbVisitor() {
-        arb_clear(result_);
-    }
-
-    void apply(arb_t result, const Basic &b) {
+    void apply(arb_ptr result, const Basic &b) {
+        arb_ptr tmp = result_;
+        result_ = result;
         b.accept(*this);
-        arb_set(result, result_);
+        result_ = tmp;
     }
 
     virtual void visit(const Integer &x) {
@@ -55,15 +51,14 @@ public:
 
         auto d = x.get_args();
         for (auto p = d.begin(); p != d.end();  p++) {
-            apply(result_, *(*p));
 
             if (p == d.begin()) {
-                arb_set(t, result_);
+                apply(result_, *(*p));
             } else {
-                arb_add(t, t, result_, prec_);
+                apply(t, *(*p));
+                arb_add(result_, result_, t, prec_);
             }
         }
-        arb_set(result_, t);
 
         arb_clear(t);
     }
@@ -74,15 +69,14 @@ public:
 
         auto d = x.get_args();
         for (auto p = d.begin(); p != d.end(); p++) {
-            apply(result_, *(*p));
 
             if (p == d.begin()) {
-                arb_set(t, result_);
+                apply(result_, *(*p));
             } else {
-                arb_mul(t, t, result_, prec_);
+                apply(t, *(*p));
+                arb_mul(result_, result_, t, prec_);
             }
         }
-        arb_set(result_, t);
 
         arb_clear(t);
     }
