@@ -19,6 +19,7 @@ using CSymPy::minus_one;
 using CSymPy::CSRMatrix;
 using CSymPy::add;
 using CSymPy::sub;
+using CSymPy::eye;
 
 void test_get_set()
 {
@@ -1183,6 +1184,27 @@ void test_csr_binop_csr_canonical()
             integer(4), integer(5), integer(6)}));
 }
 
+void test_eye()
+{
+    DenseMatrix A;
+    eye(A, 3);
+
+    assert(A == DenseMatrix(3, 3, {integer(1), integer(0), integer(0),
+        integer(0), integer(1), integer(0), integer(0), integer(0), integer(1)}));
+
+    eye(A, 3, 3, 1);
+    assert(A == DenseMatrix(3, 3, {integer(0), integer(1), integer(0),
+        integer(0), integer(0), integer(1), integer(0), integer(0), integer(0)}));
+
+    eye(A, 3, 3, -1);
+    assert(A == DenseMatrix(3, 3, {integer(0), integer(0), integer(0),
+        integer(1), integer(0), integer(0), integer(0), integer(1), integer(0)}));
+
+    eye(A, 3, 3, -2);
+    assert(A == DenseMatrix(3, 3, {integer(0), integer(0), integer(0),
+        integer(0), integer(0), integer(0), integer(1), integer(0), integer(0)}));
+}
+
 int main(int argc, char* argv[])
 {
     print_stack_on_segfault();
@@ -1252,6 +1274,8 @@ int main(int argc, char* argv[])
     test_csr_scale_columns();
 
     test_csr_binop_csr_canonical();
+
+    test_eye();
 
     return 0;
 }
