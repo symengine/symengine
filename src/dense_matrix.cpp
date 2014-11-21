@@ -1228,4 +1228,44 @@ void inverse_gauss_jordan(const DenseMatrix &A, DenseMatrix &B)
     fraction_free_gauss_jordan_solve(A, e, B);
 }
 
+// ------------------------- NumPy-like functions ----------------------------//
+
+// Mimic `eye` function in NumPy
+void eye(DenseMatrix &A, unsigned N, unsigned M, int k)
+{
+    if (M == 0) {
+        M = N;
+    }
+
+    CSYMPY_ASSERT(-N < k && k < M);
+
+    A = DenseMatrix(N, M);
+
+    if (k >= 0) {
+        for (unsigned i = 0; i < A.row_; i++) {
+            for (unsigned j = 0; j < A.col_; j++) {
+                if (j != (unsigned)k) {
+                    A.m_[i*A.col_ + j] = zero;
+                } else {
+                    A.m_[i*A.col_ + j] = one;
+                }
+            }
+            k++;
+        }
+    } else {
+        k = -k;
+
+        for (unsigned j = 0; j < A.col_; j++) {
+            for (unsigned i = 0; i < A.row_; i++) {
+                if (i != (unsigned)k) {
+                    A.m_[i*A.col_ + j] = zero;
+                } else {
+                    A.m_[i*A.col_ + j] = one;
+                }
+            }
+            k++;
+        }
+    }
+}
+
 } // CSymPy

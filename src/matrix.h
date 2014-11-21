@@ -199,6 +199,9 @@ public:
     friend void inverse_LU(const DenseMatrix &A, DenseMatrix&B);
     friend void inverse_gauss_jordan(const DenseMatrix &A, DenseMatrix &B);
 
+    // NumPy-like functions
+    friend void eye(DenseMatrix &A, unsigned N, unsigned M, int k);
+
 protected:
     // Matrix elements are stored in row-major order
     vec_basic m_;
@@ -341,6 +344,9 @@ inline bool is_a(const MatrixBase &b)
 {
     return typeid(T) == typeid(b);
 }
+
+// Mimic `eye` function in NumPy
+void eye(DenseMatrix &A, unsigned N, unsigned M = 0, int k = 0);
 
 } // CSymPy
 
