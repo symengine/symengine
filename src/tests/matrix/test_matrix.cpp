@@ -20,6 +20,8 @@ using CSymPy::CSRMatrix;
 using CSymPy::add;
 using CSymPy::sub;
 using CSymPy::eye;
+using CSymPy::diag;
+using CSymPy::vec_basic;
 
 void test_get_set()
 {
@@ -1205,6 +1207,30 @@ void test_eye()
         integer(0), integer(0), integer(0), integer(1), integer(0), integer(0)}));
 }
 
+void test_diag()
+{
+    DenseMatrix A;
+    vec_basic d {integer(1), integer(2), integer(3)};
+
+    diag(A, d);
+    assert(A == DenseMatrix(3, 3, {integer(1), integer(0), integer(0),
+        integer(0), integer(2), integer(0), integer(0), integer(0), integer(3)}));
+
+    diag(A, d, 1);
+    assert(A == DenseMatrix(4, 4, {integer(0), integer(1), integer(0), integer(0),
+                                integer(0), integer(0), integer(2), integer(0),
+                                integer(0), integer(0), integer(0), integer(3),
+                                integer(0), integer(0), integer(0), integer(0)}));
+
+    diag(A, d, -2);
+    assert(A == DenseMatrix(5, 5,
+        {integer(0), integer(0), integer(0), integer(0), integer(0),
+        integer(0), integer(0), integer(0), integer(0), integer(0),
+        integer(1), integer(0), integer(0), integer(0), integer(0),
+        integer(0), integer(2), integer(0), integer(0), integer(0),
+        integer(0), integer(0), integer(3), integer(0), integer(0)}));
+}
+
 int main(int argc, char* argv[])
 {
     print_stack_on_segfault();
@@ -1276,6 +1302,8 @@ int main(int argc, char* argv[])
     test_csr_binop_csr_canonical();
 
     test_eye();
+
+    test_diag();
 
     return 0;
 }
