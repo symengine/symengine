@@ -1268,4 +1268,41 @@ void eye(DenseMatrix &A, unsigned N, unsigned M, int k)
     }
 }
 
+// Create diagonal matrices directly
+void diag(DenseMatrix &A, vec_basic &v, int k)
+{
+    CSYMPY_ASSERT(v.size() > 0);
+
+    unsigned k_ = std::abs(k);
+    unsigned n = v.size() + k_;
+
+    A = DenseMatrix(n, n);
+
+    if (k >= 0) {
+        for (unsigned i = 0; i < A.row_; i++) {
+            for (unsigned j = 0; j < A.col_; j++) {
+                if (j != (unsigned)k) {
+                    A.m_[i*A.col_ + j] = zero;
+                } else {
+                    A.m_[i*A.col_ + j] = v[k - k_];
+                }
+            }
+            k++;
+        }
+    } else {
+        k = -k;
+
+        for (unsigned j = 0; j < A.col_; j++) {
+            for (unsigned i = 0; i < A.row_; i++) {
+                if (i != (unsigned)k) {
+                    A.m_[i*A.col_ + j] = zero;
+                } else {
+                    A.m_[i*A.col_ + j] = v[k - k_];
+                }
+            }
+            k++;
+        }
+    }
+}
+
 } // CSymPy
