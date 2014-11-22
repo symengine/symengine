@@ -1239,33 +1239,15 @@ void eye(DenseMatrix &A, unsigned N, unsigned M, int k)
 
     CSYMPY_ASSERT(-N < k && k < M);
 
-    A = DenseMatrix(N, M);
+    vec_basic v;
 
-    if (k >= 0) {
-        for (unsigned i = 0; i < A.row_; i++) {
-            for (unsigned j = 0; j < A.col_; j++) {
-                if (j != (unsigned)k) {
-                    A.m_[i*A.col_ + j] = zero;
-                } else {
-                    A.m_[i*A.col_ + j] = one;
-                }
-            }
-            k++;
-        }
+    if (k > 0) {
+        v = vec_basic(M - k, one);
     } else {
-        k = -k;
-
-        for (unsigned j = 0; j < A.col_; j++) {
-            for (unsigned i = 0; i < A.row_; i++) {
-                if (i != (unsigned)k) {
-                    A.m_[i*A.col_ + j] = zero;
-                } else {
-                    A.m_[i*A.col_ + j] = one;
-                }
-            }
-            k++;
-        }
+        v = vec_basic(N + k, one);
     }
+
+    diag(A, v, k);
 }
 
 // Create diagonal matrices directly
