@@ -1231,6 +1231,24 @@ void test_diag()
         integer(0), integer(0), integer(3), integer(0), integer(0)}));
 }
 
+void test_ones_zeros()
+{
+    DenseMatrix A;
+
+    ones(A, 1, 5);
+    assert(A == DenseMatrix(1, 5,
+        {integer(1), integer(1), integer(1), integer(1),integer(1)}));
+
+    ones(A, 2, 3);
+    assert(A == DenseMatrix(2, 3, {integer(1), integer(1), integer(1),
+                                integer(1),integer(1), integer(1)}));
+
+    zeros(A, 3, 2);
+    assert(A == DenseMatrix(3, 2, {integer(0), integer(0),
+                                integer(0), integer(0),
+                                integer(0), integer(0)}));
+}
+
 int main(int argc, char* argv[])
 {
     print_stack_on_segfault();
@@ -1304,6 +1322,8 @@ int main(int argc, char* argv[])
     test_eye();
 
     test_diag();
+
+    test_ones_zeros();
 
     return 0;
 }
