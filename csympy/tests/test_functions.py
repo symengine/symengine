@@ -57,3 +57,8 @@ def test_abs():
     assert abs(-Integer(5)/3) == Integer(5)/3
     assert abs(Integer(5)/3+x) != Integer(5)/3
     assert abs(Integer(5)/3+x) == abs(Integer(5)/3+x)
+
+def test_abs_diff():
+    x = Symbol("x")
+    e = abs(x)
+    assert e.diff(x) != e
