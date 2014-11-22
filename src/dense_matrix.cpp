@@ -1305,4 +1305,28 @@ void diag(DenseMatrix &A, vec_basic &v, int k)
     }
 }
 
+// Create a matrix filled with ones
+void ones(DenseMatrix &A, unsigned rows, unsigned cols)
+{
+    A = DenseMatrix(rows, cols);
+
+    for (unsigned i = 0; i < rows; i++) {
+        for (unsigned j = 0; j < cols; j++) {
+            A.m_[i*cols + j] = one;
+        }
+    }
+}
+
+// Create a matrix filled with zeros
+void zeros(DenseMatrix &A, unsigned rows, unsigned cols)
+{
+    A = DenseMatrix(rows, cols);
+
+    for (unsigned i = 0; i < rows; i++) {
+        for (unsigned j = 0; j < cols; j++) {
+            A.m_[i*cols + j] = zero;
+        }
+    }
+}
+
 } // CSymPy
