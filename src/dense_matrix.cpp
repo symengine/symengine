@@ -1237,7 +1237,7 @@ void eye(DenseMatrix &A, unsigned N, unsigned M, int k)
         M = N;
     }
 
-    CSYMPY_ASSERT(-N < k && k < M);
+    CSYMPY_ASSERT((int)-N < k && k < (int)M);
 
     vec_basic v;
 
