@@ -42,8 +42,8 @@ def test_quotient_error():
     quotient(1, 0)
 
 def test_quotient_mod():
-    assert quotient_mod(13, 5) == [2, 3]
-    assert quotient_mod(-4, 7) == [-1, 3]
+    assert quotient_mod(13, 5) == (2, 3)
+    assert quotient_mod(-4, 7) == (-1, 3)
 
 @raises(ZeroDivisionError)
 def test_quotient_mod_error():
