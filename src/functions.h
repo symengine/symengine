@@ -1022,6 +1022,7 @@ public:
     bool is_canonical(const RCP<const Basic> &arg);
     inline RCP<const Basic> get_arg() const { return arg_; }
     virtual vec_basic get_args() const { return {arg_}; }
+    RCP<const Basic> diff(const RCP<const Symbol> &x) const;
 
     virtual void accept(Visitor &v) const;
 };

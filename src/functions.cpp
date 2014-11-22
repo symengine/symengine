@@ -2719,6 +2719,14 @@ std::string Abs::__str__() const
     return o.str();
 }
 
+RCP<const Basic> Abs::diff(const RCP<const Symbol> &x) const
+{
+    if (eq(arg_->diff(x), zero))
+        return zero;
+    else
+        return rcp(new Derivative(rcp(this), {x}));
+}
+
 RCP<const Basic> abs(const RCP<const Basic> &arg)
 {
     if (is_a<Integer>(*arg)) {
