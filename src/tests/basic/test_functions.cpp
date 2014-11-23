@@ -1590,6 +1590,8 @@ void test_abs()
     RCP<const Basic> i3 = integer(3);
     RCP<const Basic> im1 = integer(-1);
     RCP<const Basic> sqrt_pi = sqrt(pi);
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
 
     assert(eq(abs(one), one));
     assert(eq(abs(i2), i2));
@@ -1599,6 +1601,8 @@ void test_abs()
     assert(eq(abs(sqrt_pi), abs(sqrt_pi)));
     assert(eq(abs(div(i2, i3)), div(i2, i3)));
     assert(eq(abs(neg(div(i2, i3))), div(i2, i3)));
+    assert(neq(abs(x)->diff(x), integer(0)));
+    assert(eq(abs(x)->diff(y), integer(0)));
 }
 
 int main(int argc, char* argv[])

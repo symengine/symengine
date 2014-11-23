@@ -142,9 +142,7 @@ public:
     virtual std::string __str__() const;
 
     //! Returns the derivative of self
-    virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const {
-        throw std::runtime_error("Not implemented.");
-    }
+    virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
 
     //! Substitutes 'subs_dict' into 'self'.
     virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
