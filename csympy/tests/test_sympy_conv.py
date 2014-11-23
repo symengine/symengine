@@ -125,17 +125,28 @@ def test_conv7b():
     assert sympify(sympy.cos(x/3)) == cos(Symbol("x") / 3)
 
 def test_conv8():
+    e1 = function_symbol("f", Symbol("x"))
+    e2 = function_symbol("g", Symbol("x"), Symbol("y"))
+    assert e1._sympy_() == sympy.Function("f")(sympy.Symbol("x"))
+    assert e2._sympy_() != sympy.Function("f")(sympy.Symbol("x"))
+    assert e2._sympy_() == sympy.Function("g")(sympy.Symbol("x"), sympy.Symbol("y"))
+
+    e3 = function_symbol("q", Symbol("t"))
+    assert e3._sympy_() == sympy.Function("q")(sympy.Symbol("t"))
+    assert e3._sympy_() != sympy.Function("f")(sympy.Symbol("t"))
+    assert e3._sympy_() != sympy.Function("q")(sympy.Symbol("t"), sympy.Symbol("t"))
+
+def test_conv8b():
     e1 = sympy.Function("f")(sympy.Symbol("x"))
-    e2 = function_symbol("f", Symbol("x"))
-    assert e2._sympy_() == e1
-    assert sympify(e1) == e2
+    e2 = sympy.Function("g")(sympy.Symbol("x"), sympy.Symbol("y"))
+    assert sympify(e1) == function_symbol("f", Symbol("x"))
+    assert sympify(e2) != function_symbol("f", Symbol("x"))
+    assert sympify(e2) == function_symbol("g", Symbol("x"), Symbol("y"))
 
     e3 = sympy.Function("q")(sympy.Symbol("t"))
-    e4 = function_symbol("q", Symbol("t"))
-    assert e4._sympy_() == e3
-    assert e4._sympy_() != e1
-    assert sympify(e3) == e4
-    assert sympify(e3) != e2
+    assert sympify(e3) == function_symbol("q", Symbol("t"))
+    assert sympify(e3) != function_symbol("f", Symbol("t"))
+    assert sympify(e3) != function_symbol("q", Symbol("t"), Symbol("t"))
 
 def test_conv9():
     x = Symbol("x")

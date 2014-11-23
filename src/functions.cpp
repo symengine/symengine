@@ -1405,12 +1405,18 @@ RCP<const Basic> lambertw(const RCP<const Basic> &arg)
 }
 
 FunctionSymbol::FunctionSymbol(std::string name, const RCP<const Basic> &arg)
-    : name_{name}, arg_{arg}
+    : name_{name}, arg_{{arg}}
 {
-    CSYMPY_ASSERT(is_canonical(arg))
+    CSYMPY_ASSERT(is_canonical(arg_))
 }
 
-bool FunctionSymbol::is_canonical(const RCP<const Basic> &arg)
+FunctionSymbol::FunctionSymbol(std::string name, const vec_basic &arg)
+    : name_{name}, arg_{arg}
+{
+    CSYMPY_ASSERT(is_canonical(arg_))
+}
+
+bool FunctionSymbol::is_canonical(const vec_basic &arg)
 {
     return true;
 }
@@ -1418,7 +1424,8 @@ bool FunctionSymbol::is_canonical(const RCP<const Basic> &arg)
 std::size_t FunctionSymbol::__hash__() const
 {
     std::size_t seed = 0;
-    hash_combine<Basic>(seed, *arg_);
+    for (auto &a : arg_)
+        hash_combine<Basic>(seed, *a);
     hash_combine<std::string>(seed, name_);
     return seed;
 }
@@ -1427,7 +1434,7 @@ bool FunctionSymbol::__eq__(const Basic &o) const
 {
     if (is_a<FunctionSymbol>(o) &&
         name_ == static_cast<const FunctionSymbol &>(o).name_ &&
-        eq(arg_, static_cast<const FunctionSymbol &>(o).arg_))
+        vec_basic_eq(arg_, static_cast<const FunctionSymbol &>(o).arg_))
         return true;
     return false;
 }
@@ -1437,7 +1444,7 @@ int FunctionSymbol::compare(const Basic &o) const
     CSYMPY_ASSERT(is_a<FunctionSymbol>(o))
     const FunctionSymbol &s = static_cast<const FunctionSymbol &>(o);
     if (name_ == s.name_)
-        return arg_->__cmp__(*(s.arg_));
+        return vec_basic_compare(arg_, s.arg_);
     else
         return name_ < s.name_ ? -1 : 1;
 }
@@ -1445,17 +1452,26 @@ int FunctionSymbol::compare(const Basic &o) const
 
 std::string FunctionSymbol::__str__() const
 {
-    std::ostringstream o;
-    o << name_ << "(" << *arg_ << ")";
+    std::ostringstream o, tmp;
+    tmp << arg_;
+    std::string args = tmp.str();
+    o << name_ << "(" << args.substr(1, args.size()-2) << ")";
     return o.str();
 }
 
 RCP<const Basic> FunctionSymbol::diff(const RCP<const Symbol> &x) const
 {
-    if (eq(arg_->diff(x), zero))
-        return zero;
-    else
-        return rcp(new Derivative(rcp(this), {x}));
+    for (auto &a : arg_) {
+        if (neq(a->diff(x), zero)) {
+            return rcp(new Derivative(rcp(this), {x}));
+        }
+    }
+    return zero;
+}
+
+RCP<const Basic> function_symbol(std::string name, const vec_basic &arg)
+{
+    return rcp(new FunctionSymbol(name, arg));
 }
 
 RCP<const Basic> function_symbol(std::string name, const RCP<const Basic> &arg)

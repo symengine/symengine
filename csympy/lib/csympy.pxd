@@ -141,7 +141,7 @@ cdef extern from "basic.h" namespace "CSymPy":
 cdef extern from "functions.h" namespace "CSymPy":
     cdef RCP[const Basic] sin(RCP[const Basic] &arg) nogil except+
     cdef RCP[const Basic] cos(RCP[const Basic] &arg) nogil except+
-    cdef RCP[const Basic] function_symbol(string name, RCP[const Basic] &arg) nogil except+
+    cdef RCP[const Basic] function_symbol(string name, const vec_basic &arg) nogil except+
     cdef RCP[const Basic] abs(RCP[const Basic] &arg) nogil except+
 
     cdef cppclass Function(Basic):
@@ -155,7 +155,6 @@ cdef extern from "functions.h" namespace "CSymPy":
 
     cdef cppclass FunctionSymbol(Function):
         string get_name() nogil
-        RCP[const Basic] get_arg() nogil
 
     cdef cppclass Derivative(Basic):
         RCP[const Basic] get_arg() nogil

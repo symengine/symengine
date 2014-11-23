@@ -78,8 +78,10 @@ def sympy2csympy(a, raise_error=False):
         return abs(sympy2csympy(a.args[0], True))
     elif isinstance(a, sympy.Function):
         name = str(a.func)
-        arg = a.args[0]
-        return function_symbol(name, sympy2csympy(arg, True))
+        v = []
+        for arg in a.args:
+            v.append(sympy2csympy(arg, True))
+        return function_symbol(name, *v)
     elif isinstance(a, sympy.Matrix):
         row, col = a.shape
         v = []
@@ -421,9 +423,12 @@ cdef class FunctionSymbol(Function):
         name = deref(X).get_name().decode("utf-8")
         # In Python 2.7, function names cannot be unicode:
         name = str(name)
-        arg = c2py(deref(X).get_arg())._sympy_()
+        cdef csympy.vec_basic Y = deref(X).get_args()
+        s = []
+        for i in range(Y.size()):
+            s.append(c2py(<RCP[const csympy.Basic]>(Y[i]))._sympy_())
         import sympy
-        return sympy.Function(name)(arg)
+        return sympy.Function(name)(*s)
 
 cdef class Abs(Function):
 
@@ -669,9 +674,14 @@ def cos(x):
     cdef Basic X = sympify(x)
     return c2py(csympy.cos(X.thisptr))
 
-def function_symbol(name, x):
-    cdef Basic X = sympify(x)
-    return c2py(csympy.function_symbol(name.encode("utf-8"), X.thisptr))
+def function_symbol(name, *args):
+    cdef csympy.vec_basic v
+    cdef Basic e_
+    for e in args:
+        e_ = sympify(e, False)
+        if e_ is not None:
+            v.push_back(e_.thisptr)
+    return c2py(csympy.function_symbol(name.encode("utf-8"), v))
 
 def sqrt(x):
     cdef Basic X = sympify(x)
