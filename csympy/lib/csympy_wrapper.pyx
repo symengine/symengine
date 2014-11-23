@@ -78,10 +78,7 @@ def sympy2csympy(a, raise_error=False):
         return abs(sympy2csympy(a.args[0], True))
     elif isinstance(a, sympy.Function):
         name = str(a.func)
-        v = []
-        for arg in a.args:
-            v.append(sympy2csympy(arg, True))
-        return function_symbol(name, *v)
+        return function_symbol(name, *(a.args))
     elif isinstance(a, sympy.Matrix):
         row, col = a.shape
         v = []
