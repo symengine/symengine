@@ -1455,7 +1455,7 @@ std::string FunctionSymbol::__str__() const
     std::ostringstream o, tmp;
     tmp << arg_;
     std::string args = tmp.str();
-    o << name_ << "(" << args.substr(1, args.size()-2) << ")";
+    o << name_ << "(" << args.substr(1, args.size() - 2) << ")";
     return o.str();
 }
 
@@ -1535,7 +1535,7 @@ std::string Derivative::__str__() const
     std::ostringstream o, tmp;
     tmp << x_;
     std::string vars = tmp.str();
-    o << "Derivative(" << *arg_ << ", " << vars.substr(1, vars.size()-2) << ")";
+    o << "Derivative(" << *arg_ << ", " << vars.substr(1, vars.size() - 2) << ")";
     return o.str();
 }
 
@@ -2260,7 +2260,7 @@ std::string LeviCivita::__str__() const
         o << *p << ", ";
     }
     std::string s = o.str();
-    s = s.substr(0, s.size()-2);
+    s = s.substr(0, s.size() - 2);
     s.append(")");
     return s;
 }

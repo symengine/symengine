@@ -669,6 +669,10 @@ void test_f()
     r2 = zero;
     assert(eq(r1, r2));
 
+    r1 = function_symbol("f", {x, y})->diff(z);
+    r2 = zero;
+    assert(eq(r1, r2));
+
     r1 = mul(i2, pow(function_symbol("f", add(add(x, y), z)), i2));
     r2 = mul(i2, pow(function_symbol("f", add(add(y, z), x)), i2));
     std::cout << *r1 << std::endl;
