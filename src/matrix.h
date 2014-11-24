@@ -342,14 +342,14 @@ inline bool is_a(const MatrixBase &b)
     return typeid(T) == typeid(b);
 }
 
-} // CSymPy
-
 // Test two matrices for equality
 inline bool operator==(const CSymPy::MatrixBase &lhs,
     const CSymPy::MatrixBase &rhs)
 {
     return lhs.eq(rhs);
 }
+
+} // CSymPy
 
 // Print Matrix
 inline std::ostream& operator<<(std::ostream& out, const CSymPy::MatrixBase& A)
