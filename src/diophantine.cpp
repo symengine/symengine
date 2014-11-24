@@ -35,6 +35,10 @@ bool is_minimum(const DenseMatrix &t, const std::vector<DenseMatrix> &basis, uns
 }
 
 // Solve the diophantine system Ax = 0 and return a basis set for solutions
+// Reference:
+// Evelyne Contejean, Herve Devie. An Efficient Incremental Algorithm for Solving
+// Systems of Linear Diophantine Equations. Information and computation, 113(1):143-172,
+// August 1994.
 void homogeneous_lde(std::vector<DenseMatrix> &basis, const DenseMatrix &A)
 {
     unsigned p = A.nrows();
