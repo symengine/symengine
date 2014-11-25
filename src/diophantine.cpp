@@ -56,20 +56,12 @@ void homogeneous_lde(std::vector<DenseMatrix> &basis, const DenseMatrix &A)
     std::vector<DenseMatrix> P;
     P.push_back(row_zero);
 
-    bool Frozen[q][q];
+    std::vector<std::vector<bool>> Frozen(q, std::vector<bool>(q, true));
     for (unsigned j = 0; j < q; j++) {
         Frozen[0][j] = false;
     }
-    for (unsigned i = 1; i < q; i++) {
-        for (unsigned j = 0; j < q; j++) {
-            Frozen[i][j] = true;
-        }
-    }
 
-    bool F[q];
-    for (unsigned i = 0; i < q; i++) {
-        F[i] = false;
-    }
+    std::vector<bool> F(q, false);
 
     DenseMatrix t, transpose, product, T;
     RCP<const Integer> dot;
