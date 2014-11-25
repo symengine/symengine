@@ -7,6 +7,7 @@
 #include "mul.h"
 #include "pow.h"
 #include "constants.h"
+#include "functions.h"
 
 namespace CSymPy {
 
@@ -48,6 +49,11 @@ RCP<const Basic> Basic::subs(const map_basic_basic &subs_dict) const
         return self;
     else
         return it->second;
+}
+
+RCP<const Basic> Basic::diff(const RCP<const Symbol> &x) const
+{
+    return rcp(new Derivative(rcp(this), {x}));
 }
 
 } // CSymPy

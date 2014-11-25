@@ -532,11 +532,12 @@ RCP<const Basic> dirichlet_eta(const RCP<const Basic> &s);
 
 class FunctionSymbol : public Function {
 private:
-    std::string name_; //! The `f` in `f(x+y)`
-    RCP<const Basic> arg_; //! The `x+y` in `f(x+y)`
+    std::string name_; //! The `f` in `f(x+y, z)`
+    vec_basic arg_; //! The `x+y`, `z` in `f(x+y, z)`
 
 public:
-    //! FunctionSymbol Constructor
+    //! FunctionSymbol Constructors
+    FunctionSymbol(std::string name, const vec_basic &arg);
     FunctionSymbol(std::string name, const RCP<const Basic> &arg);
     //! \return Size of the hash
     virtual std::size_t __hash__() const;
@@ -551,10 +552,9 @@ public:
     //! \return `name_`
     inline std::string get_name() const { return name_; }
     //! \return `arg_`
-    inline RCP<const Basic> get_arg() const { return arg_; }
-    virtual vec_basic get_args() const { return {arg_}; }
+    virtual vec_basic get_args() const { return arg_; }
     //! \return `true` if canonical
-    bool is_canonical(const RCP<const Basic> &arg);
+    bool is_canonical(const vec_basic &arg);
     //! Differentiate w.r.t Symbol `x`
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
 
@@ -564,6 +564,8 @@ public:
 //! Create a new FunctionSymbol instance:
 RCP<const Basic> function_symbol(std::string name,
         const RCP<const Basic> &arg);
+RCP<const Basic> function_symbol(std::string name,
+        const vec_basic &arg);
 
 /*! Derivative operator
  *  Derivative(f, [x, y, ...]) represents a derivative of `f` with respect to
@@ -1022,6 +1024,7 @@ public:
     bool is_canonical(const RCP<const Basic> &arg);
     inline RCP<const Basic> get_arg() const { return arg_; }
     virtual vec_basic get_args() const { return {arg_}; }
+    RCP<const Basic> diff(const RCP<const Symbol> &x) const;
 
     virtual void accept(Visitor &v) const;
 };

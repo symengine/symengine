@@ -199,6 +199,12 @@ public:
     friend void inverse_LU(const DenseMatrix &A, DenseMatrix&B);
     friend void inverse_gauss_jordan(const DenseMatrix &A, DenseMatrix &B);
 
+    // NumPy-like functions
+    friend void eye(DenseMatrix &A, unsigned N, unsigned M, int k);
+    friend void diag(DenseMatrix &A, vec_basic &v, int k);
+    friend void ones(DenseMatrix &A, unsigned rows, unsigned cols);
+    friend void zeros(DenseMatrix &A, unsigned rows, unsigned cols);
+
 protected:
     // Matrix elements are stored in row-major order
     vec_basic m_;
@@ -333,6 +339,18 @@ RCP<const Basic> det_berkowitz(const DenseMatrix &A);
 // order of monomial powers is returned, i.e. if `B = transpose([1, -2, 3])`
 // then the corresponding polynomial is `x^2 - 2x + 3`.
 void char_poly(const DenseMatrix &A, DenseMatrix &B);
+
+// Mimic `eye` function in NumPy
+void eye(DenseMatrix &A, unsigned N, unsigned M = 0, int k = 0);
+
+// Create diagonal matrices directly
+void diag(DenseMatrix &A, vec_basic &v, int k = 0);
+
+// Create a matrix filled with ones
+void ones(DenseMatrix &A, unsigned rows, unsigned cols);
+
+// Create a matrix filled with zeros
+void zeros(DenseMatrix &A, unsigned rows, unsigned cols);
 
 // Returns true if `b` is exactly the type T.
 // Here T can be a DenseMatrix, CSRMatrix, etc.

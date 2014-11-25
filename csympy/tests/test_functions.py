@@ -17,6 +17,7 @@ def test_sin():
 def test_f():
     x = Symbol("x")
     y = Symbol("y")
+    z = Symbol("z")
     f = function_symbol("f", x)
     g = function_symbol("g", x)
     assert f != g
@@ -25,8 +26,13 @@ def test_f():
     g = function_symbol("f", x)
     assert f == g
 
-    f = function_symbol("f", x)
-    assert f.diff(y) == 0
+    f = function_symbol("f", x, y)
+    g = function_symbol("f", y, x)
+    assert f != g
+
+    f = function_symbol("f", x, y)
+    g = function_symbol("f", x, y)
+    assert f == g
 
 def test_derivative():
     x = Symbol("x")
@@ -45,6 +51,10 @@ def test_derivative():
 
     assert f - function_symbol("f", x) == 0
 
+    f = function_symbol("f", x, y)
+    assert f.diff(x).diff(y) == function_symbol("f", x, y).diff(x).diff(y)
+    assert f.diff(Symbol("z")) == 0
+
 def test_abs():
     x = Symbol("x")
     e = abs(x)
@@ -57,3 +67,11 @@ def test_abs():
     assert abs(-Integer(5)/3) == Integer(5)/3
     assert abs(Integer(5)/3+x) != Integer(5)/3
     assert abs(Integer(5)/3+x) == abs(Integer(5)/3+x)
+
+def test_abs_diff():
+    x = Symbol("x")
+    y = Symbol("y")
+    e = abs(x)
+    assert e.diff(x) != e
+    assert e.diff(x) != 0
+    assert e.diff(y) == 0

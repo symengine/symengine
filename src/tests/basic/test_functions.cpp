@@ -649,11 +649,27 @@ void test_f()
     r2 = function_symbol("f", y);
     assert(neq(r1, r2));
 
+    r1 = function_symbol("f", {x, y});
+    r2 = function_symbol("f", {x, y});
+    assert(eq(r1, r2));
+
+    r1 = function_symbol("f", {x, y});
+    r2 = function_symbol("f", {y, x});
+    assert(neq(r1, r2));
+
+    r1 = function_symbol("f", {x, y});
+    r2 = function_symbol("f", x);
+    assert(neq(r1, r2));
+
     r1 = function_symbol("f", zero);
     r2 = one;
     assert(neq(r1, r2));
 
     r1 = function_symbol("f", x)->diff(y);
+    r2 = zero;
+    assert(eq(r1, r2));
+
+    r1 = function_symbol("f", {x, y})->diff(z);
     r2 = zero;
     assert(eq(r1, r2));
 
@@ -693,6 +709,16 @@ void test_Derivative()
     std::cout << *r1 << std::endl;
     assert(r1->__str__() == "Derivative(f(x), x, x)");
     assert(vec_basic_eq(r1->get_args(), {f, x, x}));
+
+    f = function_symbol("f", {x, y});
+    r1 = f->diff(x)->diff(y);
+    r2 = rcp(new Derivative(f, {x, y}));
+    r3 = rcp(new Derivative(f, {y, x}));
+    assert(r1->__str__() == "Derivative(f(x, y), x, y)");
+    assert(r2->__str__() == "Derivative(f(x, y), x, y)");
+    assert(r3->__str__() == "Derivative(f(x, y), y, x)");
+    assert(eq(r1, r2));
+    assert(neq(r1, r3));
 
     f = function_symbol("f", pow(x, integer(2)));
     r1 = f->diff(x);
@@ -1590,6 +1616,8 @@ void test_abs()
     RCP<const Basic> i3 = integer(3);
     RCP<const Basic> im1 = integer(-1);
     RCP<const Basic> sqrt_pi = sqrt(pi);
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
 
     assert(eq(abs(one), one));
     assert(eq(abs(i2), i2));
@@ -1599,6 +1627,8 @@ void test_abs()
     assert(eq(abs(sqrt_pi), abs(sqrt_pi)));
     assert(eq(abs(div(i2, i3)), div(i2, i3)));
     assert(eq(abs(neg(div(i2, i3))), div(i2, i3)));
+    assert(neq(abs(x)->diff(x), integer(0)));
+    assert(eq(abs(x)->diff(y), integer(0)));
 }
 
 int main(int argc, char* argv[])

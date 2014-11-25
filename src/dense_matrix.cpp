@@ -1228,4 +1228,81 @@ void inverse_gauss_jordan(const DenseMatrix &A, DenseMatrix &B)
     fraction_free_gauss_jordan_solve(A, e, B);
 }
 
+// ------------------------- NumPy-like functions ----------------------------//
+
+// Mimic `eye` function in NumPy
+void eye(DenseMatrix &A, unsigned N, unsigned M, int k)
+{
+    if (M == 0) {
+        M = N;
+    }
+
+    CSYMPY_ASSERT((int)-N < k && k < (int)M);
+
+    vec_basic v = vec_basic(k > 0 ? M - k : N + k, one);
+
+    diag(A, v, k);
+}
+
+// Create diagonal matrices directly
+void diag(DenseMatrix &A, vec_basic &v, int k)
+{
+    CSYMPY_ASSERT(v.size() > 0);
+
+    unsigned k_ = std::abs(k);
+    unsigned n = v.size() + k_;
+
+    A = DenseMatrix(n, n);
+
+    if (k >= 0) {
+        for (unsigned i = 0; i < A.row_; i++) {
+            for (unsigned j = 0; j < A.col_; j++) {
+                if (j != (unsigned)k) {
+                    A.m_[i*A.col_ + j] = zero;
+                } else {
+                    A.m_[i*A.col_ + j] = v[k - k_];
+                }
+            }
+            k++;
+        }
+    } else {
+        k = -k;
+
+        for (unsigned j = 0; j < A.col_; j++) {
+            for (unsigned i = 0; i < A.row_; i++) {
+                if (i != (unsigned)k) {
+                    A.m_[i*A.col_ + j] = zero;
+                } else {
+                    A.m_[i*A.col_ + j] = v[k - k_];
+                }
+            }
+            k++;
+        }
+    }
+}
+
+// Create a matrix filled with ones
+void ones(DenseMatrix &A, unsigned rows, unsigned cols)
+{
+    A = DenseMatrix(rows, cols);
+
+    for (unsigned i = 0; i < rows; i++) {
+        for (unsigned j = 0; j < cols; j++) {
+            A.m_[i*cols + j] = one;
+        }
+    }
+}
+
+// Create a matrix filled with zeros
+void zeros(DenseMatrix &A, unsigned rows, unsigned cols)
+{
+    A = DenseMatrix(rows, cols);
+
+    for (unsigned i = 0; i < rows; i++) {
+        for (unsigned j = 0; j < cols; j++) {
+            A.m_[i*cols + j] = zero;
+        }
+    }
+}
+
 } // CSymPy
