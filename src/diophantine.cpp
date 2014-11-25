@@ -29,9 +29,9 @@ bool is_minimum(const DenseMatrix &t, const std::vector<DenseMatrix> &basis, uns
 {
     if (n == 0) {
         return true;
-    } else {
-        return  !order(t, basis, n - 1) && is_minimum(t, basis, n - 1);
     }
+
+    return  !order(t, basis, n - 1) && is_minimum(t, basis, n - 1);
 }
 
 // Solve the diophantine system Ax = 0 and return a basis set for solutions
