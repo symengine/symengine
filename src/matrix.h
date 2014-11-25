@@ -199,6 +199,12 @@ public:
     friend void inverse_LU(const DenseMatrix &A, DenseMatrix&B);
     friend void inverse_gauss_jordan(const DenseMatrix &A, DenseMatrix &B);
 
+    // NumPy-like functions
+    friend void eye(DenseMatrix &A, unsigned N, unsigned M, int k);
+    friend void diag(DenseMatrix &A, vec_basic &v, int k);
+    friend void ones(DenseMatrix &A, unsigned rows, unsigned cols);
+    friend void zeros(DenseMatrix &A, unsigned rows, unsigned cols);
+
 protected:
     // Matrix elements are stored in row-major order
     vec_basic m_;
@@ -341,6 +347,18 @@ inline bool is_a(const MatrixBase &b)
 {
     return typeid(T) == typeid(b);
 }
+
+// Mimic `eye` function in NumPy
+void eye(DenseMatrix &A, unsigned N, unsigned M = 0, int k = 0);
+
+// Create diagonal matrices directly
+void diag(DenseMatrix &A, vec_basic &v, int k = 0);
+
+// Create a matrix filled with ones
+void ones(DenseMatrix &A, unsigned rows, unsigned cols);
+
+// Create a matrix filled with zeros
+void zeros(DenseMatrix &A, unsigned rows, unsigned cols);
 
 } // CSymPy
 
