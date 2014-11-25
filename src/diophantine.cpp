@@ -47,15 +47,11 @@ void homogeneous_lde(std::vector<DenseMatrix> &basis, const DenseMatrix &A)
 
     CSYMPY_ASSERT(p > 0 && q > 1);
 
-    DenseMatrix row_zero = DenseMatrix(1, q);
-    for (unsigned j = 0; j < q; j++) {
-        row_zero.set(0, j, zero);
-    }
+    DenseMatrix row_zero;
+    zeros(row_zero, 1, q);
 
-    DenseMatrix col_zero = DenseMatrix(p, 1);
-    for (unsigned i = 0; i < p; i++) {
-        col_zero.set(i, 0, zero);
-    }
+    DenseMatrix col_zero;
+    zeros(col_zero, p, 1);
 
     std::vector<DenseMatrix> P;
     P.push_back(row_zero);
