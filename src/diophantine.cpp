@@ -11,13 +11,13 @@ bool order(const DenseMatrix &t, const std::vector<DenseMatrix> &basis, unsigned
     bool eq = true;
 
     for (unsigned j = 0; j < t.ncols(); j++) {
-        const Integer &t_ = static_cast<const Integer &>(*t.get(0, j));
-        const Integer &b_ = static_cast<const Integer &>(*basis[k].get(0, j));
+        mpz_class t_ = rcp_static_cast<const Integer>(t.get(0, j))->as_mpz();
+        mpz_class b_ = rcp_static_cast<const Integer>(basis[k].get(0, j))->as_mpz();
 
-        if (t_.as_mpz() < b_.as_mpz()) {
+        if (t_ < b_) {
             return false;
         }
-        if (t_.as_mpz() > b_.as_mpz()) {
+        if (t_ > b_) {
             eq = false;
         }
     }
@@ -95,9 +95,9 @@ void homogeneous_lde(std::vector<DenseMatrix> &basis, const DenseMatrix &A)
 
                 dot = zero;
                 for (unsigned j = 0; j < p; j++) {
-                    const Integer &p_j0 = static_cast<const Integer &>(*product.get(j, 0));
-                    const Integer &A_ji = static_cast<const Integer &>(*A.get(j, i));
-                    dot = dot->addint(*p_j0.mulint(A_ji));
+                    RCP<const Integer> p_j0 = rcp_static_cast<const Integer>(product.get(j, 0));
+                    RCP<const Integer> A_ji = rcp_static_cast<const Integer>(A.get(j, i));
+                    dot = dot->addint(*p_j0->mulint(*A_ji));
                 }
 
                 if (F[i] == false && ((dot->is_negative() && is_minimum(T, basis, basis.size()))
