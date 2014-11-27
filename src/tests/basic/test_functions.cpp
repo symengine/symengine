@@ -63,6 +63,7 @@ using CSymPy::gamma;
 using CSymPy::lowergamma;
 using CSymPy::uppergamma;
 using CSymPy::abs;
+using CSymPy::Subs;
 
 void test_sin()
 {
@@ -720,13 +721,29 @@ void test_Derivative()
     assert(eq(r1, r2));
     assert(neq(r1, r3));
 
+    RCP<const Basic> _x = symbol("_x");
     f = function_symbol("f", pow(x, integer(2)));
     r1 = f->diff(x);
     std::cout << *f << " " << *r1 << std::endl;
-    // NOTE: After we implement the Subs class, then f(x^2).diff(x) should
-    // become 2*x*Subs(Derivative(f(_xi_1), _xi_1), _xi_1, x**2). For now we
-    // don't simplify things:
-    assert(eq(r1, rcp(new Derivative(f, {x}))));
+    r2 = rcp(new Derivative(function_symbol("f", _x), {_x}));
+    r2 = rcp(new Subs(r2, {{_x, pow(x, integer(2))}}));
+    assert(eq(r1, mul(mul(integer(2), x), r2)));
+
+    f = function_symbol("f", {x, x});
+    r1 = f->diff(x);
+    std::cout << *f << " " << *r1 << std::endl;
+    r2 = rcp(new Derivative(function_symbol("f", {_x, x}), {_x}));
+    r2 = rcp(new Subs(r2, {{_x, x}}));
+    r3 = rcp(new Derivative(function_symbol("f", {x, _x}), {_x}));
+    r3 = rcp(new Subs(r3, {{_x, x}}));
+    assert(eq(r1, add(r2, r3)));
+
+    f = function_symbol("f", {y, add(x, y)});
+    r1 = f->diff(x);
+    std::cout << *f << " " << *r1 << std::endl;
+    r2 = rcp(new Derivative(function_symbol("f", {y, _x}), {_x}));
+    r2 = rcp(new Subs(r2, {{_x, add(y, x)}}));
+    assert(eq(r1, r2));
 
     // Test is_canonical()
     RCP<const Derivative> r4 = rcp(new Derivative(f, {x}));

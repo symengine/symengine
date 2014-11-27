@@ -36,6 +36,7 @@ cdef extern from "csympy_rcp.h" namespace "CSymPy":
     RCP[const FunctionSymbol] rcp_static_cast_FunctionSymbol "CSymPy::rcp_static_cast<const CSymPy::FunctionSymbol>"(RCP[const Basic] &b) nogil
     RCP[const Abs] rcp_static_cast_Abs "CSymPy::rcp_static_cast<const CSymPy::Abs>"(RCP[const Basic] &b) nogil
     RCP[const Derivative] rcp_static_cast_Derivative "CSymPy::rcp_static_cast<const CSymPy::Derivative>"(RCP[const Basic] &b) nogil
+    RCP[const Subs] rcp_static_cast_Subs "CSymPy::rcp_static_cast<const CSymPy::Subs>"(RCP[const Basic] &b) nogil
     Ptr[RCP[Basic]] outArg(RCP[const Basic] &arg) nogil
     Ptr[RCP[Integer]] outArg_Integer "CSymPy::outArg<CSymPy::RCP<const CSymPy::Integer>>"(RCP[const Integer] &arg) nogil
 
@@ -71,6 +72,7 @@ cdef extern from "basic.h" namespace "CSymPy":
     bool is_a_FunctionSymbol "CSymPy::is_a<CSymPy::FunctionSymbol>"(const Basic &b) nogil
     bool is_a_Abs "CSymPy::is_a<CSymPy::Abs>"(const Basic &b) nogil
     bool is_a_Derivative "CSymPy::is_a<CSymPy::Derivative>"(const Basic &b) nogil
+    bool is_a_Subs "CSymPy::is_a<CSymPy::Subs>"(const Basic &b) nogil
 
     RCP[const Basic] expand(RCP[const Basic] &o) nogil except +
 
@@ -159,6 +161,10 @@ cdef extern from "functions.h" namespace "CSymPy":
     cdef cppclass Derivative(Basic):
         RCP[const Basic] get_arg() nogil
         vec_basic get_symbols() nogil
+
+    cdef cppclass Subs(Basic):
+        vec_basic get_variables() nogil
+        vec_basic get_point() nogil
 
     cdef cppclass Abs(Function):
         RCP[const Basic] get_arg() nogil

@@ -1461,12 +1461,31 @@ std::string FunctionSymbol::__str__() const
 
 RCP<const Basic> FunctionSymbol::diff(const RCP<const Symbol> &x) const
 {
+    RCP<const Basic> diff = zero, t;
+    unsigned count  = 0;
+    bool found_x = false;
     for (auto &a : arg_) {
-        if (neq(a->diff(x), zero)) {
-            return rcp(new Derivative(rcp(this), {x}));
+        if (eq(a, x)) {
+            found_x = true;
+            count++;
+        } else if (count < 2 && neq(a->diff(x), zero)) {
+            count++;
         }
     }
-    return zero;
+    if (count == 1 && found_x) {
+        return rcp(new Derivative(rcp(this), {x}));
+    }
+    for (unsigned i = 0; i < arg_.size(); i++) {
+        t = arg_[i]->diff(x);
+        if (neq(t, zero)) {
+            vec_basic v = arg_;
+            v[i] = rcp(new Symbol("_x"));
+            map_basic_basic m;
+            insert(m, v[i], arg_[i]);
+            diff = add(diff, mul(t, rcp(new Subs(rcp(new Derivative(rcp(new FunctionSymbol(name_, v)), {v[i]})), m))));
+        }
+    }
+    return diff;
 }
 
 RCP<const Basic> function_symbol(std::string name, const vec_basic &arg)
@@ -1497,7 +1516,27 @@ bool Derivative::is_canonical(const RCP<const Basic> &arg,
     // Check that 'x' are Symbols:
     for(auto &a: x)
         if (!is_a<Symbol>(*a)) return false;
-
+    if (is_a<FunctionSymbol>(*arg)) {
+        RCP<const Symbol> s = rcp_static_cast<const Symbol>(x[0]);
+        RCP<const FunctionSymbol> f = rcp_static_cast<const FunctionSymbol>(x[0]);
+        bool found_s = false;
+        // 's' should be one of the args of the function
+        // and should not appear anywhere else.
+        for (auto &a : f->get_args()) {
+            if (eq(a, s)) {
+                if(found_s) {
+                    return false;
+                } else {
+                    found_s = true;
+                }
+            } else if (neq(a->diff(s), zero)) {
+                return false;
+            }
+        }
+        if (!found_s) {
+            return false;
+        }
+    }
     return true;
 }
 
@@ -1541,9 +1580,128 @@ std::string Derivative::__str__() const
 
 RCP<const Basic> Derivative::diff(const RCP<const Symbol> &x) const
 {
+    RCP<const Basic> d = arg_->diff(x);
+    if (eq(d, zero)) return zero;
     vec_basic t = x_;
     t.push_back(x);
     return rcp(new Derivative(arg_, t));
+}
+
+// Subs class
+Subs::Subs(const RCP<const Basic> &arg, const map_basic_basic &dict)
+    : arg_{arg}, dict_{dict}
+{
+    CSYMPY_ASSERT(is_canonical(arg, dict))
+}
+
+bool Subs::is_canonical(const RCP<const Basic> &arg,
+        const map_basic_basic &dict) const
+{
+    if (is_a<Derivative>(*arg)) {
+        for (auto &p: dict) {
+            if (!is_a<Symbol>(*p.first)) return false;
+        }
+        return true;
+    }
+    return false;
+}
+
+std::size_t Subs::__hash__() const
+{
+    std::size_t seed = 0;
+    hash_combine<Basic>(seed, *arg_);
+    for (auto &p: dict_) {
+        hash_combine<Basic>(seed, *p.first);
+        hash_combine<Basic>(seed, *p.second);
+    }
+    return seed;
+}
+
+bool Subs::__eq__(const Basic &o) const
+{
+    if (is_a<Subs>(o) &&
+            eq(arg_, static_cast<const Subs &>(o).arg_) &&
+            map_basic_basic_eq(dict_, static_cast<const Subs &>(o).dict_))
+        return true;
+    return false;
+}
+
+int Subs::compare(const Basic &o) const
+{
+    CSYMPY_ASSERT(is_a<Subs>(o))
+    const Subs &s = static_cast<const Subs &>(o);
+    int cmp = arg_->__cmp__(*(arg_));
+    if (cmp != 0) return cmp;
+    cmp = map_basic_basic_compare(dict_, s.dict_);
+    return cmp;
+}
+
+std::string Subs::__str__() const
+{
+    std::ostringstream o, vars, point;
+    for (auto p = dict_.begin(); p != dict_.end(); p++) {
+        if (p != dict_.begin()) {
+            vars << ", ";
+            point << ", ";
+        }
+        vars << *(p->first);
+        point << *(p->second);
+    }
+    o << "Subs(" << *arg_ << ", (" << vars.str() << "), (" << point.str() << "))";
+    return o.str();
+}
+
+vec_basic Subs::get_variables() const {
+    vec_basic v;
+    for (auto &p: dict_) {
+        v.push_back(p.first);
+    }
+    return v;
+}
+
+vec_basic Subs::get_point() const {
+    vec_basic v;
+    for (auto &p: dict_) {
+        v.push_back(p.second);
+    }
+    return v;
+}
+
+vec_basic Subs::get_args() const {
+    vec_basic v = {arg_};
+    for (auto &p: dict_) {
+        v.push_back(p.first);
+    }
+    for (auto &p: dict_) {
+        v.push_back(p.second);
+    }
+    return v;
+}
+
+RCP<const Basic> Subs::diff(const RCP<const Symbol> &x) const
+{
+    RCP<const Basic> diff = zero, t;
+    if (dict_.count(x) == 0) {
+        diff = arg_->diff(x);
+    }
+    for (auto &p: dict_) {
+        t = p.second->diff(x);
+        if (neq(t, zero)) {
+            if (is_a<Symbol>(*p.first)) {
+                diff = add(diff, mul(arg_->diff(rcp_static_cast<const Symbol>(p.first)), t));
+            } else {
+                return rcp(new Derivative(rcp(this), {x}));
+            }
+        }
+    }
+    return diff;
+}
+
+RCP<const Basic> Subs::subs(const map_basic_basic &subs_dict) const
+{
+    map_basic_basic m = dict_;
+    m.insert(subs_dict.begin(), subs_dict.end());
+    return rcp(new Subs(arg_, m));
 }
 
 std::size_t HyperbolicFunction::__hash__() const

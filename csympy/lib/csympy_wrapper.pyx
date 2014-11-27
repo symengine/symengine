@@ -35,6 +35,8 @@ cdef c2py(RCP[const csympy.Basic] o):
         r = Abs.__new__(Abs)
     elif (csympy.is_a_Derivative(deref(o))):
         r = Derivative.__new__(Derivative)
+    elif (csympy.is_a_Subs(deref(o))):
+        r = Subs.__new__(Subs)
     else:
         raise Exception("Unsupported CSymPy class.")
     r.thisptr = o
@@ -453,6 +455,11 @@ cdef class Derivative(Basic):
             s.append(c2py(<RCP[const csympy.Basic]>(Y[i]))._sympy_())
         import sympy
         return sympy.Derivative(arg, *s)
+
+cdef class Subs(Basic):
+
+    def __dealloc__(self):
+        self.thisptr.reset()
 
 cdef class MatrixBase:
     cdef csympy.MatrixBase* thisptr
