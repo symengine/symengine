@@ -686,12 +686,13 @@ void test_Derivative()
     RCP<const Symbol> x = symbol("x");
     RCP<const Symbol> y = symbol("y");
     RCP<const Basic> f = function_symbol("f", x);
+    RCP<const Basic> g = function_symbol("g", x);
 
     RCP<const Basic> r1, r2, r3;
 
     r1 = f->diff(x);
     r2 = rcp(new Derivative(f, {x}));
-    r3 = rcp(new Derivative(f, {y}));
+    r3 = rcp(new Derivative(g, {x}));
     assert(eq(r1, r2));
     assert(neq(r1, r3));
     assert(neq(r2, r3));
@@ -702,7 +703,7 @@ void test_Derivative()
     std::cout << *r3 << std::endl;
     assert(r1->__str__() == "Derivative(f(x), x)");
     assert(r2->__str__() == "Derivative(f(x), x)");
-    assert(r3->__str__() == "Derivative(f(x), y)");
+    assert(r3->__str__() == "Derivative(g(x), x)");
 
     r1 = f->diff(x)->diff(x);
     r2 = rcp(new Derivative(f, {x, x}));
@@ -746,6 +747,7 @@ void test_Derivative()
     assert(eq(r1, r2));
 
     // Test is_canonical()
+    f = function_symbol("f", x);
     RCP<const Derivative> r4 = rcp(new Derivative(f, {x}));
     assert(r4->is_canonical(x, {x}));
     assert(r4->is_canonical(x, {y}));

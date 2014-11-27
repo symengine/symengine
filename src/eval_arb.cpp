@@ -265,6 +265,10 @@ public:
     virtual void visit(const Abs &) {
         throw std::runtime_error("Not implemented.");
     };
+
+    virtual void visit(const Subs &) {
+        throw std::runtime_error("Not implemented.");
+    };
 };
 
 void eval_arb(arb_t result, const Basic &b, long precision)

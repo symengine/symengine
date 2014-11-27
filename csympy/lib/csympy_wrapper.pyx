@@ -78,6 +78,10 @@ def sympy2csympy(a, raise_error=False):
         return cos(a.args[0])
     elif isinstance(a, sympy.Abs):
         return abs(sympy2csympy(a.args[0], True))
+    elif isinstance(a, sympy.Derivative):
+        return Derivative(a.expr, a.variables)
+    elif isinstance(a, sympy.Subs):
+        return Subs(a.expr, a.variables, a.point)
     elif isinstance(a, sympy.Function):
         name = str(a.func)
         return function_symbol(name, *(a.args))
@@ -442,6 +446,17 @@ cdef class Abs(Function):
 
 cdef class Derivative(Basic):
 
+    def __cinit__(self, expr = None, symbols = None):
+        if expr is None or symbols is None:
+            return
+        cdef csympy.vec_basic vec
+        cdef Basic s_
+        cdef Basic expr_ = sympify(expr, True)
+        for s in symbols:
+            s_ = sympify(s, True)
+            vec.push_back(s_.thisptr)
+        self.thisptr = rcp(new csympy.Derivative(<const RCP[const csympy.Basic]>expr_.thisptr, vec))
+
     def __dealloc__(self):
         self.thisptr.reset()
 
@@ -458,8 +473,34 @@ cdef class Derivative(Basic):
 
 cdef class Subs(Basic):
 
+    def __cinit__(self, expr = None, variables = None, point = None):
+        if expr is None or variables is None or point is None:
+            return
+        cdef csympy.map_basic_basic m
+        cdef Basic v_
+        cdef Basic p_
+        cdef Basic expr_ = sympify(expr, True)
+        for v, p in zip(variables, point):
+            v_ = sympify(v, True)
+            p_ = sympify(p, True)
+            m[v_.thisptr] = p_.thisptr
+        self.thisptr = rcp(new csympy.Subs(<const RCP[const csympy.Basic]>expr_.thisptr, m))
+
     def __dealloc__(self):
         self.thisptr.reset()
+
+    def _sympy_(self):
+        cdef RCP[const csympy.Subs] X = csympy.rcp_static_cast_Subs(self.thisptr)
+        arg = c2py(deref(X).get_arg())._sympy_()
+        cdef csympy.vec_basic V = deref(X).get_variables()
+        cdef csympy.vec_basic P = deref(X).get_point()
+        v = []
+        p = []
+        for i in range(V.size()):
+            v.append(c2py(<RCP[const csympy.Basic]>(V[i]))._sympy_())
+            p.append(c2py(<RCP[const csympy.Basic]>(P[i]))._sympy_())
+        import sympy
+        return sympy.Subs(arg, v, p)
 
 cdef class MatrixBase:
     cdef csympy.MatrixBase* thisptr

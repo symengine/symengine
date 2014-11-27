@@ -139,6 +139,8 @@ cdef extern from "basic.h" namespace "CSymPy":
     RCP[const Basic] rcp(Symbol *p) nogil
     RCP[const Basic] rcp(Constant *p) nogil
     RCP[const Basic] rcp(Integer *p) nogil
+    RCP[const Basic] rcp(Subs *p) nogil
+    RCP[const Basic] rcp(Derivative *p) nogil
 
 cdef extern from "functions.h" namespace "CSymPy":
     cdef RCP[const Basic] sin(RCP[const Basic] &arg) nogil except+
@@ -159,10 +161,13 @@ cdef extern from "functions.h" namespace "CSymPy":
         string get_name() nogil
 
     cdef cppclass Derivative(Basic):
+        Derivative(const RCP[const Basic] &arg, const vec_basic &x) nogil
         RCP[const Basic] get_arg() nogil
         vec_basic get_symbols() nogil
 
     cdef cppclass Subs(Basic):
+        Subs(const RCP[const Basic] &arg, const map_basic_basic &x) nogil
+        RCP[const Basic] get_arg() nogil
         vec_basic get_variables() nogil
         vec_basic get_point() nogil
 

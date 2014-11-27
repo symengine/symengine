@@ -1518,7 +1518,7 @@ bool Derivative::is_canonical(const RCP<const Basic> &arg,
         if (!is_a<Symbol>(*a)) return false;
     if (is_a<FunctionSymbol>(*arg)) {
         RCP<const Symbol> s = rcp_static_cast<const Symbol>(x[0]);
-        RCP<const FunctionSymbol> f = rcp_static_cast<const FunctionSymbol>(x[0]);
+        RCP<const FunctionSymbol> f = rcp_static_cast<const FunctionSymbol>(arg);
         bool found_s = false;
         // 's' should be one of the args of the function
         // and should not appear anywhere else.
@@ -1682,13 +1682,13 @@ RCP<const Basic> Subs::diff(const RCP<const Symbol> &x) const
 {
     RCP<const Basic> diff = zero, t;
     if (dict_.count(x) == 0) {
-        diff = arg_->diff(x);
+        diff = rcp(new Subs(arg_->diff(x), dict_));
     }
     for (auto &p: dict_) {
         t = p.second->diff(x);
         if (neq(t, zero)) {
             if (is_a<Symbol>(*p.first)) {
-                diff = add(diff, mul(arg_->diff(rcp_static_cast<const Symbol>(p.first)), t));
+                diff = add(diff, mul(t, rcp(new Subs(arg_->diff(rcp_static_cast<const Symbol>(p.first)), dict_))));
             } else {
                 return rcp(new Derivative(rcp(this), {x}));
             }
