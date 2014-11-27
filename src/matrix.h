@@ -340,14 +340,6 @@ RCP<const Basic> det_berkowitz(const DenseMatrix &A);
 // then the corresponding polynomial is `x^2 - 2x + 3`.
 void char_poly(const DenseMatrix &A, DenseMatrix &B);
 
-// Returns true if `b` is exactly the type T.
-// Here T can be a DenseMatrix, CSRMatrix, etc.
-template <class T>
-inline bool is_a(const MatrixBase &b)
-{
-    return typeid(T) == typeid(b);
-}
-
 // Mimic `eye` function in NumPy
 void eye(DenseMatrix &A, unsigned N, unsigned M = 0, int k = 0);
 
@@ -360,7 +352,13 @@ void ones(DenseMatrix &A, unsigned rows, unsigned cols);
 // Create a matrix filled with zeros
 void zeros(DenseMatrix &A, unsigned rows, unsigned cols);
 
-} // CSymPy
+// Returns true if `b` is exactly the type T.
+// Here T can be a DenseMatrix, CSRMatrix, etc.
+template <class T>
+inline bool is_a(const MatrixBase &b)
+{
+    return typeid(T) == typeid(b);
+}
 
 // Test two matrices for equality
 inline bool operator==(const CSymPy::MatrixBase &lhs,
@@ -368,6 +366,8 @@ inline bool operator==(const CSymPy::MatrixBase &lhs,
 {
     return lhs.eq(rhs);
 }
+
+} // CSymPy
 
 // Print Matrix
 inline std::ostream& operator<<(std::ostream& out, const CSymPy::MatrixBase& A)
