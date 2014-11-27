@@ -95,6 +95,9 @@ void homogeneous_lde(std::vector<DenseMatrix> &basis, const DenseMatrix &A)
 
                 dot = zero;
                 for (unsigned j = 0; j < p; j++) {
+                    CSYMPY_ASSERT(is_a<Integer>(*product.get(j, 0)));
+                    CSYMPY_ASSERT(is_a<Integer>(*A.get(j, i)));
+
                     RCP<const Integer> p_j0 = rcp_static_cast<const Integer>(product.get(j, 0));
                     RCP<const Integer> A_ji = rcp_static_cast<const Integer>(A.get(j, i));
                     dot = dot->addint(*p_j0->mulint(*A_ji));
