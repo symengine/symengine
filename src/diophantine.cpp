@@ -11,7 +11,10 @@ bool order(const DenseMatrix &t, const std::vector<DenseMatrix> &basis, unsigned
     bool eq = true;
 
     for (unsigned j = 0; j < t.ncols(); j++) {
+        CSYMPY_ASSERT(is_a<Integer>(*t.get(0, j)));
         mpz_class t_ = rcp_static_cast<const Integer>(t.get(0, j))->as_mpz();
+
+        CSYMPY_ASSERT(is_a<Integer>(*basis[k].get(0, j)));
         mpz_class b_ = rcp_static_cast<const Integer>(basis[k].get(0, j))->as_mpz();
 
         if (t_ < b_) {
@@ -86,9 +89,12 @@ void homogeneous_lde(std::vector<DenseMatrix> &basis, const DenseMatrix &A)
 
             T = t;
             for (unsigned i = 0; i < q; i++) {
+                CSYMPY_ASSERT(is_a<Integer>(*T.get(0, i)));
                 T.set(0, i,
                     rcp_static_cast<const Integer>(T.get(0, i))->addint(*one));
+
                 if (i > 0) {
+                    CSYMPY_ASSERT(is_a<Integer>(*T.get(0, i - 1)));
                     T.set(0, i - 1,
                         rcp_static_cast<const Integer>(T.get(0, i - 1))->subint(*one));
                 }
@@ -96,10 +102,11 @@ void homogeneous_lde(std::vector<DenseMatrix> &basis, const DenseMatrix &A)
                 dot = zero;
                 for (unsigned j = 0; j < p; j++) {
                     CSYMPY_ASSERT(is_a<Integer>(*product.get(j, 0)));
-                    CSYMPY_ASSERT(is_a<Integer>(*A.get(j, i)));
-
                     RCP<const Integer> p_j0 = rcp_static_cast<const Integer>(product.get(j, 0));
+
+                    CSYMPY_ASSERT(is_a<Integer>(*A.get(j, i)));
                     RCP<const Integer> A_ji = rcp_static_cast<const Integer>(A.get(j, i));
+
                     dot = dot->addint(*p_j0->mulint(*A_ji));
                 }
 
