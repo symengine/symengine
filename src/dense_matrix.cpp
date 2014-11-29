@@ -199,15 +199,12 @@ void add_dense_dense(const DenseMatrix &A, const DenseMatrix &B, DenseMatrix &C)
     CSYMPY_ASSERT(A.row_ == B.row_ && A.col_ == B.col_ &&
         A.row_ == C.row_ && A.col_ == C.col_);
 
-    std::vector<RCP<const Basic>>::const_iterator ait = A.m_.begin();
-    std::vector<RCP<const Basic>>::const_iterator bit = B.m_.begin();
-    std::vector<RCP<const Basic>>::iterator cit = C.m_.begin();
+    unsigned row = A.row_, col = A.col_;
 
-    while(ait != A.m_.end()) {
-        *cit = add(*ait, *bit);
-        ait++;
-        bit++;
-        cit++;
+    for (unsigned i = 0; i < row; i++) {
+        for (unsigned j = 0; j < col; j++) {
+            C.m_[i*col + j] = add(A.m_[i*col + j], B.m_[i*col + j]);
+        }
     }
 }
 
@@ -215,13 +212,12 @@ void add_dense_scalar(const DenseMatrix &A, const RCP<const Basic> &k, DenseMatr
 {
     CSYMPY_ASSERT(A.row_ == B.row_ && A.col_ == B.col_);
 
-    std::vector<RCP<const Basic>>::const_iterator ait = A.m_.begin();
-    std::vector<RCP<const Basic>>::iterator bit = B.m_.begin();
+    unsigned row = A.row_, col = A.col_;
 
-    while (ait != A.m_.end()) {
-        *bit = add(*ait, k);
-        ait++;
-        bit++;
+    for (unsigned i = 0; i < row; i++) {
+        for (unsigned j = 0; j < col; j++) {
+            B.m_[i*col + j] = add(A.m_[i*col + j], k);
+        }
     }
 }
 
@@ -247,13 +243,12 @@ void mul_dense_scalar(const DenseMatrix &A, const RCP<const Basic> &k, DenseMatr
 {
     CSYMPY_ASSERT(A.col_ == B.col_ && A.row_ == B.row_);
 
-    std::vector<RCP<const Basic>>::const_iterator ait = A.m_.begin();
-    std::vector<RCP<const Basic>>::iterator bit = B.m_.begin();
+    unsigned row = A.row_, col = A.col_;
 
-    while (ait != A.m_.end()) {
-         *bit = mul(*ait, k);
-         ait++;
-         bit++;
+    for (unsigned i = 0; i < row; i++) {
+        for (unsigned j = 0; j < col; j++) {
+            B.m_[i*col + j] = mul(A.m_[i*col + j], k);
+        }
     }
 }
 
