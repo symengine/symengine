@@ -1,6 +1,6 @@
 /**
  *  \file ntheory.h
- *  Basic Ntheory Functions
+ *  Basic number theory functions
  *
  **/
 
