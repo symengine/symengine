@@ -7,6 +7,7 @@
 #include "complex.h"
 #include "functions.h"
 #include "constants.h"
+#include "visitor.h"
 
 
 namespace CSymPy {
@@ -1462,6 +1463,9 @@ std::string FunctionSymbol::__str__() const
 RCP<const Basic> FunctionSymbol::diff(const RCP<const Symbol> &x) const
 {
     RCP<const Basic> diff = zero, t;
+    RCP<const Basic> self = rcp(this);
+    RCP<const Symbol> s;
+    std::string name;
     unsigned count  = 0;
     bool found_x = false;
     for (auto &a : arg_) {
@@ -1473,19 +1477,36 @@ RCP<const Basic> FunctionSymbol::diff(const RCP<const Symbol> &x) const
         }
     }
     if (count == 1 && found_x) {
-        return rcp(new Derivative(rcp(this), {x}));
+        return rcp(new Derivative(self, {x}));
     }
     for (unsigned i = 0; i < arg_.size(); i++) {
         t = arg_[i]->diff(x);
         if (neq(t, zero)) {
+            name = "x";
+            do {
+                name = "_" + name;
+                s = symbol(name);
+            } while (has_symbol(*self, s));
             vec_basic v = arg_;
-            v[i] = rcp(new Symbol("_x"));
+            v[i] = s;
             map_basic_basic m;
             insert(m, v[i], arg_[i]);
             diff = add(diff, mul(t, rcp(new Subs(rcp(new Derivative(rcp(new FunctionSymbol(name_, v)), {v[i]})), m))));
         }
     }
     return diff;
+}
+
+RCP<const Basic> FunctionSymbol::subs(const map_basic_basic &subs_dict) const
+{
+    auto it = subs_dict.find(rcp(this));
+    if (it != subs_dict.end())
+        return it->second;
+    vec_basic v = arg_;
+    for (unsigned i = 0; i < v.size(); i++) {
+        v[i] = v[i]->subs(subs_dict);
+    }
+    return rcp(new FunctionSymbol(name_, v));
 }
 
 RCP<const Basic> function_symbol(std::string name, const vec_basic &arg)
@@ -1509,10 +1530,6 @@ Derivative::Derivative(const RCP<const Basic> &arg, const vec_basic &x)
 bool Derivative::is_canonical(const RCP<const Basic> &arg,
         const vec_basic &x) const
 {
-    // After we implement the Subs class, we will require simplifications like
-    // f(x^2).diff(x) -> 2*x*Subs(Derivative(f(_xi_1), _xi_1), _xi_1, x**2).
-    // This will be checked here for 'args'.
-
     // Check that 'x' are Symbols:
     for(auto &a: x)
         if (!is_a<Symbol>(*a)) return false;
@@ -1533,11 +1550,11 @@ bool Derivative::is_canonical(const RCP<const Basic> &arg,
                 return false;
             }
         }
-        if (!found_s) {
-            return false;
-        }
+        return found_s;
+    } else if (is_a<Abs>(*arg)) {
+        return true;
     }
-    return true;
+    return false;
 }
 
 std::size_t Derivative::__hash__() const
@@ -1580,11 +1597,60 @@ std::string Derivative::__str__() const
 
 RCP<const Basic> Derivative::diff(const RCP<const Symbol> &x) const
 {
-    RCP<const Basic> d = arg_->diff(x);
-    if (eq(d, zero)) return zero;
+    if (eq(arg_->diff(x), zero)) return zero;
     vec_basic t = x_;
     t.push_back(x);
     return rcp(new Derivative(arg_, t));
+}
+
+RCP<const Basic> Derivative::subs(const map_basic_basic &subs_dict) const
+{
+    RCP<const Symbol> s;
+    map_basic_basic m, n;
+    bool subs;
+    auto it = subs_dict.find(rcp(this));
+    if (it != subs_dict.end())
+        return it->second;
+    for (auto &p: subs_dict) {
+        subs = true;
+        if (eq(arg_->subs({{p.first, p.second}}), arg_))
+            continue;
+        // If p.first and p.second are symbols and arg_ is
+        // independent of p.second, p.first can be replaced
+        if (is_a<Symbol>(*p.first) && is_a<Symbol>(*p.second)
+                && eq(arg_->diff(rcp_static_cast<const Symbol>(p.second)), zero)) {
+            insert(n, p.first, p.second);
+            continue;
+        }
+        for (auto &d: x_) {
+            if (is_a<Symbol>(*d)) {
+                s = rcp_static_cast<const Symbol>(d);
+                // If p.first or p.second has non zero derivates wrt to s
+                // p.first cannot be replaced
+                if (neq(zero, p.first->diff(s)) ||
+                        neq(zero, p.second->diff(s))) {
+                    subs = false;
+                    break;
+                }
+            } else {
+                return rcp(new Subs(rcp(this), subs_dict));
+            }
+        }
+        if (subs) {
+            insert(n, p.first, p.second);
+        } else {
+            insert(m, p.first, p.second);
+        }
+    }
+    vec_basic sym = x_;
+    for (unsigned i = 0; i < sym.size(); i++) {
+        sym[i] = sym[i]->subs(n);
+    }
+    if (m.empty()) {
+        return rcp(new Derivative(arg_->subs(n), sym));
+    } else {
+         return rcp(new Subs(rcp(new Derivative(arg_->subs(n), sym)), m));
+    }
 }
 
 // Subs class
@@ -1598,9 +1664,6 @@ bool Subs::is_canonical(const RCP<const Basic> &arg,
         const map_basic_basic &dict) const
 {
     if (is_a<Derivative>(*arg)) {
-        for (auto &p: dict) {
-            if (!is_a<Symbol>(*p.first)) return false;
-        }
         return true;
     }
     return false;
@@ -1682,13 +1745,13 @@ RCP<const Basic> Subs::diff(const RCP<const Symbol> &x) const
 {
     RCP<const Basic> diff = zero, t;
     if (dict_.count(x) == 0) {
-        diff = rcp(new Subs(arg_->diff(x), dict_));
+        diff = arg_->diff(x)->subs(dict_);
     }
     for (auto &p: dict_) {
         t = p.second->diff(x);
         if (neq(t, zero)) {
             if (is_a<Symbol>(*p.first)) {
-                diff = add(diff, mul(t, rcp(new Subs(arg_->diff(rcp_static_cast<const Symbol>(p.first)), dict_))));
+                diff = add(diff, mul(t, arg_->diff(rcp_static_cast<const Symbol>(p.first))->subs(dict_)));
             } else {
                 return rcp(new Derivative(rcp(this), {x}));
             }
@@ -1699,9 +1762,25 @@ RCP<const Basic> Subs::diff(const RCP<const Symbol> &x) const
 
 RCP<const Basic> Subs::subs(const map_basic_basic &subs_dict) const
 {
-    map_basic_basic m = dict_;
-    m.insert(subs_dict.begin(), subs_dict.end());
-    return rcp(new Subs(arg_, m));
+    map_basic_basic m, n;
+    for (auto &p: subs_dict) {
+        bool found = false;
+        for (auto &s: dict_) {
+            if (neq(s.first->subs({{p.first, p.second}}), s.first)) {
+                found = true;
+                break;
+            }
+        }
+        // If p.first is not replaced in arg_ by dict_,
+        // store p.first in n to replace in arg_
+        if (!found) {
+            insert(n, p.first, p.second);
+        }
+    }
+    for (auto &s: dict_) {
+        insert(m, s.first, s.second->subs(subs_dict));
+    }
+    return rcp(new Subs(arg_->subs(n), m));
 }
 
 std::size_t HyperbolicFunction::__hash__() const
