@@ -59,6 +59,22 @@ void test_homogeneous_lde()
     };
 
     assert(vec_dense_matrix_eq_perm(basis, true_basis));
+
+    basis.clear();
+    A = DenseMatrix(1, 2, {integer(2), integer(3)});
+    homogeneous_lde(basis, A);
+    true_basis = std::vector<DenseMatrix>{};
+
+    assert(vec_dense_matrix_eq_perm(basis, true_basis));
+
+    basis.clear();
+    A = DenseMatrix(1, 2, {integer(2), integer(-3)});
+    homogeneous_lde(basis, A);
+    true_basis = std::vector<DenseMatrix>{
+        DenseMatrix(1, 2, {integer(3), integer(2)})
+    };
+
+    assert(vec_dense_matrix_eq_perm(basis, true_basis));
 }
 
 int main(int argc, char* argv[])
