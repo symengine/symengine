@@ -9,6 +9,28 @@ using CSymPy::DenseMatrix;
 using CSymPy::integer;
 using CSymPy::homogeneous_lde;
 
+bool vec_dense_matrix_eq_perm(const std::vector<DenseMatrix> &a,
+    const std::vector<DenseMatrix> &b) {
+
+    // Can't be equal if # of entries differ:
+    if (a.size() != b.size()) return false;
+    // Loop over elements in "a"
+    for (size_t i = 0; i < a.size(); i++) {
+        // Find the element a[i] in "b"
+        bool found = false;
+        for (size_t j = 0; j < a.size(); j++) {
+            if (a[i] == b[j]) {
+                found = true;
+                break;
+            }
+        }
+        // If not found, then a != b
+        if (!found) return false;
+    }
+    // If all elements were found, then a == b
+    return true;
+}
+
 void test_homogeneous_lde()
 {
     DenseMatrix A = DenseMatrix(2, 4, {
