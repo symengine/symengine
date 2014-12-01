@@ -557,6 +557,7 @@ public:
     bool is_canonical(const vec_basic &arg);
     //! Differentiate w.r.t Symbol `x`
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
+    virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
 
     virtual void accept(Visitor &v) const;
 };
@@ -604,9 +605,40 @@ public:
     }
     bool is_canonical(const RCP<const Basic> &arg, const vec_basic &x) const;
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
+    virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
 
     virtual void accept(Visitor &v) const;
 };
+
+/*! Subs operator
+ *  Subs(f, {x1 : x2, y1: y2, ...}) represents `f` after substituting
+ *  `x1` with `x2`, `y1` with `y2`, and so on.
+ * */
+class Subs : public Basic {
+private:
+    RCP<const Basic> arg_;
+    map_basic_basic dict_;
+
+public:
+    Subs(const RCP<const Basic> &arg, const map_basic_basic &x);
+    virtual std::size_t __hash__() const;
+    virtual bool __eq__(const Basic &o) const;
+    virtual int compare(const Basic &o) const;
+    virtual std::string __str__() const;
+    inline RCP<const Basic> get_arg() const {
+        return arg_;
+    }
+    virtual vec_basic get_variables() const;
+    virtual vec_basic get_point() const;
+    virtual vec_basic get_args() const;
+
+    bool is_canonical(const RCP<const Basic> &arg, const map_basic_basic &x) const;
+    virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
+    virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
+
+    virtual void accept(Visitor &v) const;
+};
+
 
 class HyperbolicFunction : public Function {
 

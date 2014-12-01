@@ -53,6 +53,7 @@ public:
     virtual void visit(const UpperGamma &) = 0;
     virtual void visit(const Constant &) = 0;
     virtual void visit(const Abs &) = 0;
+    virtual void visit(const Subs &) = 0;
 };
 
 void preorder_traversal(const Basic &b, Visitor &v);
@@ -121,6 +122,7 @@ public:
     virtual void visit(const UpperGamma &) { };
     virtual void visit(const Constant &) { };
     virtual void visit(const Abs &) { };
+    virtual void visit(const Subs &) { };
 };
 
 bool has_symbol(const Basic &b, const RCP<const Symbol> &x);
@@ -183,6 +185,7 @@ public:
     virtual void visit(const UpperGamma &) { };
     virtual void visit(const Constant &) { };
     virtual void visit(const Abs &) { };
+    virtual void visit(const Subs &) { };
 };
 
 RCP<const Basic> coeff(const Basic &b, const RCP<const Symbol> &x,

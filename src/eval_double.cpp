@@ -173,6 +173,9 @@ public:
     virtual void visit(const Abs &) {
         throw std::runtime_error("Not implemented.");
     };
+    virtual void visit(const Subs &) {
+        throw std::runtime_error("Not implemented.");
+    };
 };
 
 double eval_double(const Basic &b)

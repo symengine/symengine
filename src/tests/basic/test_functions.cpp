@@ -63,6 +63,7 @@ using CSymPy::gamma;
 using CSymPy::lowergamma;
 using CSymPy::uppergamma;
 using CSymPy::abs;
+using CSymPy::Subs;
 
 void test_sin()
 {
@@ -683,14 +684,18 @@ void test_f()
 void test_Derivative()
 {
     RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> _x = symbol("_x");
+    RCP<const Symbol> __x = symbol("__x");
     RCP<const Symbol> y = symbol("y");
+    RCP<const Symbol> z = symbol("z");
     RCP<const Basic> f = function_symbol("f", x);
+    RCP<const Basic> g = function_symbol("g", x);
 
     RCP<const Basic> r1, r2, r3;
 
     r1 = f->diff(x);
     r2 = rcp(new Derivative(f, {x}));
-    r3 = rcp(new Derivative(f, {y}));
+    r3 = rcp(new Derivative(g, {x}));
     assert(eq(r1, r2));
     assert(neq(r1, r3));
     assert(neq(r2, r3));
@@ -701,7 +706,7 @@ void test_Derivative()
     std::cout << *r3 << std::endl;
     assert(r1->__str__() == "Derivative(f(x), x)");
     assert(r2->__str__() == "Derivative(f(x), x)");
-    assert(r3->__str__() == "Derivative(f(x), y)");
+    assert(r3->__str__() == "Derivative(g(x), x)");
 
     r1 = f->diff(x)->diff(x);
     r2 = rcp(new Derivative(f, {x, x}));
@@ -723,20 +728,101 @@ void test_Derivative()
     f = function_symbol("f", pow(x, integer(2)));
     r1 = f->diff(x);
     std::cout << *f << " " << *r1 << std::endl;
-    // NOTE: After we implement the Subs class, then f(x^2).diff(x) should
-    // become 2*x*Subs(Derivative(f(_xi_1), _xi_1), _xi_1, x**2). For now we
-    // don't simplify things:
-    assert(eq(r1, rcp(new Derivative(f, {x}))));
+    r2 = rcp(new Derivative(function_symbol("f", _x), {_x}));
+    r2 = rcp(new Subs(r2, {{_x, pow(x, integer(2))}}));
+    assert(eq(r1, mul(mul(integer(2), x), r2)));
+
+    f = function_symbol("f", {x, x});
+    r1 = f->diff(x);
+    std::cout << *f << " " << *r1 << std::endl;
+    r2 = rcp(new Derivative(function_symbol("f", {_x, x}), {_x}));
+    r2 = rcp(new Subs(r2, {{_x, x}}));
+    r3 = rcp(new Derivative(function_symbol("f", {x, _x}), {_x}));
+    r3 = rcp(new Subs(r3, {{_x, x}}));
+    assert(eq(r1, add(r2, r3)));
+
+    f = function_symbol("f", {y, add(x, y)});
+    r1 = f->diff(x);
+    std::cout << *f << " " << *r1 << std::endl;
+    r2 = rcp(new Derivative(function_symbol("f", {y, _x}), {_x}));
+    r2 = rcp(new Subs(r2, {{_x, add(y, x)}}));
+    assert(eq(r1, r2));
+
+    r1 = function_symbol("f", add(_x, x))->diff(_x);
+    std::cout << *f << " " << *r1 << std::endl;
+    r2 = rcp(new Subs(rcp(new Derivative(function_symbol("f", __x), {__x})), {{__x, add(_x, x)}}));
+    assert(eq(r1, r2));
 
     // Test is_canonical()
+    f = function_symbol("f", x);
     RCP<const Derivative> r4 = rcp(new Derivative(f, {x}));
-    assert(r4->is_canonical(x, {x}));
-    assert(r4->is_canonical(x, {y}));
-    assert(r4->is_canonical(x, {x, y, x, x}));
-    assert(!(r4->is_canonical(x, {pow(x, integer(2))})));
+    assert(r4->is_canonical(function_symbol("f", {y, x}), {x}));
+    assert(!r4->is_canonical(function_symbol("f", y), {x}));
+    assert(r4->is_canonical(function_symbol("f", x), {x, y, x, x}));
+    assert(!(r4->is_canonical(function_symbol("f", x), {pow(x, integer(2))})));
 
-    r1 = rcp(new Derivative(pow(x, integer(2)), {x, x, y}));
-    assert(vec_basic_eq(r1->get_args(), {pow(x, integer(2)), x, x, y}));
+    // Test get_args()
+    r1 = rcp(new Derivative(function_symbol("f", {x, pow(y, integer(2))}), {x, x, y}));
+    assert(vec_basic_eq(r1->get_args(), {function_symbol("f", {x, pow(y, integer(2))}), x, x, y}));
+
+    // Test Derivative::subs
+    r1 = rcp(new Derivative(function_symbol("f", {x, add(y, y)}), {x}));
+    r2 = r1->subs({{x, y}});
+    r3 = rcp(new Subs(rcp(new Derivative(function_symbol("f", {x, add(y, y)}), {x})), {{x, y}}));
+    assert(eq(r2, r3));
+
+    r2 = r1->subs({{x, z}});
+    r3 = rcp(new Derivative(function_symbol("f", {z, add(y, y)}), {z}));
+    assert(eq(r2, r3));
+
+    r2 = r1->subs({{y, z}});
+    r3 = rcp(new Derivative(function_symbol("f", {x, add(z, z)}), {x}));
+    assert(eq(r2, r3));
+}
+
+void test_Subs()
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    RCP<const Symbol> z = symbol("z");
+    RCP<const Symbol> _x = symbol("_x");
+    RCP<const Basic> r1, r2, r3, r4;
+
+    // Test Subs::subs
+    r1 = rcp(new Subs(rcp(new Derivative(function_symbol("f", {y, x}), {x})), {{x, add(x, y)}}));
+    assert(r1->__str__() == "Subs(Derivative(f(y, x), x), (x), (y + x))");
+
+    r2 = rcp(new Subs(rcp(new Derivative(function_symbol("f", {y, x}), {x})), {{x, z}, {y, z}}));
+    r3 = rcp(new Subs(rcp(new Derivative(function_symbol("f", {y, x}), {x})), {{y, z}, {x, z}}));
+    assert(eq(r2, r3));
+
+    r2 = r1->subs({{y, z}});
+    r3 = rcp(new Subs(rcp(new Derivative(function_symbol("f", {z, x}), {x})), {{x, add(x, z)}}));
+    assert(eq(r2, r3));
+
+    r2 = r1->subs({{x, z}});
+    r3 = rcp(new Subs(rcp(new Derivative(function_symbol("f", {y, x}), {x})), {{x, add(z, y)}}));
+    assert(eq(r2, r3));
+
+    // Test Subs::diff
+    r1 = function_symbol("f", {add(y, y), add(x, y)})->diff(x);
+
+    r2 = r1->diff(_x);
+    r3 = zero;
+    assert(eq(r2, r3));
+
+    r2 = r1->diff(x);
+    r3 = rcp(new Subs(rcp(new Derivative(function_symbol("f", {add(y, y), _x}), {_x, _x})), 
+                        {{_x, add(x, y)}}));
+    assert(eq(r2, r3));
+
+    r2 = r1->diff(y);
+    r3 = rcp(new Subs(rcp(new Derivative(function_symbol("f", {add(y, y), _x}), {_x, _x})), 
+                        {{_x, add(x, y)}}));
+    r4 = rcp(new Subs(rcp(new Derivative(function_symbol("f", {add(y, y), _x}), {_x, y})), 
+                        {{_x, add(x, y)}}));
+    r3 = add(r3, r4);
+    assert(eq(r2, r3));
 }
 
 void test_get_pi_shift()
@@ -1669,5 +1755,6 @@ int main(int argc, char* argv[])
     test_lowergamma();
     test_uppergamma();
     test_abs();
+    test_Subs();
     return 0;
 }

@@ -1,6 +1,6 @@
 from csympy import (Symbol, Integer, sympify, SympifyError, sin, cos,
         function_symbol, I, E, pi, exp)
-from csympy.lib.csympy_wrapper import densematrix
+from csympy.lib.csympy_wrapper import densematrix, Subs, Derivative
 import sympy
 
 # Note: We test _sympy_() for CSymPy -> SymPy conversion, as those are methods
@@ -195,6 +195,22 @@ def test_conv10b():
         [sympy.Function("g")(sympy.Symbol("z")), 3 + 2*sympy.I]])
     assert sympify(C) == densematrix(2, 2, [Integer(7), Symbol("y"),
         function_symbol("g", Symbol("z")), 3 + 2*I])
+
+def test_conv11():
+    x = sympy.Symbol("x")
+    y = sympy.Symbol("y")
+    x1 = Symbol("x")
+    y1 = Symbol("y")
+    e1 = sympy.Subs(sympy.Derivative(sympy.Function("f")(x, y), x), [x, y], [y, y])
+
+    e2 = Subs(Derivative(function_symbol("f", x1, y1), [x1]), [x1, y1], [y1, y1])
+    e3 = Subs(Derivative(function_symbol("f", x1, y1), [x1]), [y1, x1], [x1, y1])
+
+    assert sympify(e1) == e2
+    assert sympify(e1) != e3
+
+    assert e2._sympy_() == e1
+    assert e3._sympy_() != e1
 
 def test_tuples_lists():
     x = sympy.Symbol("x")

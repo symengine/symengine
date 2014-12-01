@@ -1,4 +1,5 @@
 from csympy import Symbol, sin, cos, sqrt, Add, function_symbol, Integer
+from csympy.lib.csympy_wrapper import Subs, Derivative
 
 def test_sin():
     x = Symbol("x")
@@ -75,3 +76,12 @@ def test_abs_diff():
     assert e.diff(x) != e
     assert e.diff(x) != 0
     assert e.diff(y) == 0
+
+def test_Subs():
+    x = Symbol("x")
+    y = Symbol("y")
+    _x = Symbol("_x")
+    f = function_symbol("f", 2*x)
+    assert f.diff(x) == 2 * Subs(Derivative(function_symbol("f", _x), [_x]), [_x], [2 * x])
+    assert Subs(Derivative(function_symbol("f", x, y), [x]), [x, y], [_x, x]) \
+                == Subs(Derivative(function_symbol("f", x, y), [x]), [y, x], [x, _x])
