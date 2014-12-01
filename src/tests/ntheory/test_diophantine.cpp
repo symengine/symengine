@@ -35,6 +35,11 @@ void test_homogeneous_lde()
 {
     std::vector<DenseMatrix> basis, true_basis;
 
+    // First two tests are taken from the following paper:
+    // Evelyne Contejean, Herve Devie. An Efficient Incremental Algorithm
+    // for Solving Systems of Linear Diophantine Equations. Information and
+    // computation, 113(1):143-172, August 1994.
+
     DenseMatrix A = DenseMatrix(2, 4, {
         integer(-1), integer(1), integer(2), integer(-3),
         integer(-1), integer(3), integer(-2), integer(-1)});
