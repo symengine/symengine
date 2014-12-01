@@ -1,11 +1,8 @@
 /**
  *  \file ntheory.h
- *  Basic Ntheory Functions
+ *  Basic number theory functions
  *
  **/
-// Following number theoretic functions just make use of GMP's number theoretic
-// function implementations. Please refer the following manual:
-// https://gmplib.org/manual/Number-Theoretic-Functions.html
 
 #ifndef CSYMPY_NTHEORY_H
 #define CSYMPY_NTHEORY_H
@@ -70,7 +67,7 @@ bool divides(const Integer &a, const Integer &b);
 //! \param B1 is only used when `n` is factored using gmp-ecm
 int factor(const Ptr<RCP<const Integer>> &f, const Integer &n, double B1 = 1.0);
 
-//! Factor using trial division. 
+//! Factor using trial division.
 //! \return 1 if a non-trivial factor is found, otherwise 0.
 int factor_trial_division(const Ptr<RCP<const Integer>> &f, const Integer &n);
 
@@ -78,19 +75,19 @@ int factor_trial_division(const Ptr<RCP<const Integer>> &f, const Integer &n);
 int factor_lehman_method(const Ptr<RCP<const Integer>> &f, const Integer &n);
 
 //! Factor using Pollard's p-1 method
-int factor_pollard_pm1_method(const Ptr<RCP<const Integer>> &f, const Integer &n, 
+int factor_pollard_pm1_method(const Ptr<RCP<const Integer>> &f, const Integer &n,
         unsigned B = 10, unsigned retries = 5);
 
 //! Factor using Pollard's rho methods
-int factor_pollard_rho_method(const Ptr<RCP<const Integer>> &f, const Integer &n, 
+int factor_pollard_rho_method(const Ptr<RCP<const Integer>> &f, const Integer &n,
         unsigned retries = 5);
 
 //! Find prime factors of `n`
 void prime_factors(std::vector<RCP<const Integer>> &primes, const Integer &n);
 //! Find multiplicities of prime factors of `n`
 void prime_factor_multiplicities(map_integer_uint &primes, const Integer &n);
-// Sieve class stores all the primes upto a limit. When a prime or a list of prime 
-// is requested, if the prime is not there in the sieve, it is extended to hold that 
+// Sieve class stores all the primes upto a limit. When a prime or a list of prime
+// is requested, if the prime is not there in the sieve, it is extended to hold that
 // prime. The implementation is a very basic Eratosthenes sieve, but the code should
 // be quite optimized. For limit=1e8, it is about 20x slower than the
 // `primesieve` library (1206ms vs 55.63ms).
@@ -135,7 +132,7 @@ public:
 
 //! Computes the Bernoulli number Bn as an exact fraction, for an isolated integer n
 RCP<const Number> bernoulli(unsigned long n);
-//! Computes a primitive root. Returns false if no primitive root exists. 
+//! Computes a primitive root. Returns false if no primitive root exists.
 //Primitive root calculated is the smallest when n is prime.
 bool primitive_root(const Ptr<RCP<const Integer>> &g, const Integer &n);
 //! Computes all primitive roots less than n. Returns false if no primitive root exists.
