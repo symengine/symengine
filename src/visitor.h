@@ -72,8 +72,10 @@ private:
     bool has_;
 public:
     void visit(const Symbol &x) {
-        if (x_->__eq__(x)) has_ = true;
-        stop_ = true;
+        if (x_->__eq__(x)) {
+            has_ = true;
+            stop_ = true;
+        }
     }
     bool apply(const Basic &b, const RCP<const Symbol> &x) {
         x_ = x;
