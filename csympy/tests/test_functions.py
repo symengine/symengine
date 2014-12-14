@@ -85,3 +85,11 @@ def test_Subs():
     assert f.diff(x) == 2 * Subs(Derivative(function_symbol("f", _x), [_x]), [_x], [2 * x])
     assert Subs(Derivative(function_symbol("f", x, y), [x]), [x, y], [_x, x]) \
                 == Subs(Derivative(function_symbol("f", x, y), [x]), [y, x], [x, _x])
+
+def test_SympyFunction():
+    import sympy
+    sympy.var("n m, theta, phi")
+    r = sympy.Ynm(n, m, -theta, phi)
+    s = Integer(1) + r
+    assert (isinstance(s, Add))
+    assert (isinstance(s.args[1]._sympy_(), sympy.Ynm))

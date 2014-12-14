@@ -1,3 +1,7 @@
+#ifdef WITH_PYTHON
+#include <Python.h>
+#endif
+
 #include <stdexcept>
 
 #include "add.h"
@@ -1519,6 +1523,59 @@ RCP<const Basic> function_symbol(std::string name, const RCP<const Basic> &arg)
     return rcp(new FunctionSymbol(name, arg));
 }
 
+#ifdef WITH_PYTHON
+SympyFunction::SympyFunction(PyObject* obj, std::string name, std::string hash, const vec_basic &arg)
+    : FunctionSymbol(name, arg)
+{
+    sympy_ = obj;
+    hash_ = hash;
+    CSYMPY_ASSERT(is_canonical(arg_))
+}
+
+std::size_t SympyFunction::__hash__() const
+{
+    std::size_t seed = 0;
+    hash_combine<std::string>(seed, hash_);
+    return seed;
+}
+
+int SympyFunction::compare(const Basic &o) const
+{
+    CSYMPY_ASSERT(is_a<SympyFunction>(o))
+    const SympyFunction &s = static_cast<const SympyFunction &>(o);
+    if (hash_ == s.hash_) {
+        if (name_ == s.name_) {
+            return vec_basic_compare(arg_, s.arg_);
+        } else {
+            return name_ < s.name_ ? -1 : 1;
+        }
+    } else {
+        return hash_ < s.hash_ ? -1 : 1;
+    }
+}
+
+bool SympyFunction::__eq__(const Basic &o) const
+{
+    if (is_a<SympyFunction>(o) &&
+        sympy_ == static_cast<const SympyFunction &>(o).sympy_ &&
+        name_ == static_cast<const SympyFunction &>(o).name_ &&
+        hash_ == static_cast<const SympyFunction &>(o).hash_ &&
+        vec_basic_eq(arg_, static_cast<const SympyFunction &>(o).arg_))
+        return true;
+    return false;
+}
+
+RCP<const Basic> SympyFunction::diff(const RCP<const Symbol> &x) const
+{
+    for (auto &a : arg_) {
+        if (neq(a->diff(x), zero)) {
+            return rcp(new Derivative(rcp(this), {x}));
+        }
+    }
+    return zero;
+}
+#endif
+
 /* ---------------------------- */
 
 Derivative::Derivative(const RCP<const Basic> &arg, const vec_basic &x)
@@ -1554,6 +1611,11 @@ bool Derivative::is_canonical(const RCP<const Basic> &arg,
     } else if (is_a<Abs>(*arg)) {
         return true;
     }
+#ifdef WITH_PYTHON
+    else if (is_a<SympyFunction>(*arg)) {
+        return true;
+    }
+#endif
     return false;
 }
 

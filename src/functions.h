@@ -10,6 +10,11 @@
 #include "basic.h"
 #include "dict.h"
 
+#ifndef PyObject_HEAD
+struct _object;
+typedef _object PyObject;
+#endif
+
 namespace CSymPy {
 
 class Function : public Basic {
@@ -531,7 +536,7 @@ public:
 RCP<const Basic> dirichlet_eta(const RCP<const Basic> &s);
 
 class FunctionSymbol : public Function {
-private:
+protected:
     std::string name_; //! The `f` in `f(x+y, z)`
     vec_basic arg_; //! The `x+y`, `z` in `f(x+y, z)`
 
@@ -567,6 +572,24 @@ RCP<const Basic> function_symbol(std::string name,
         const RCP<const Basic> &arg);
 RCP<const Basic> function_symbol(std::string name,
         const vec_basic &arg);
+
+#ifdef WITH_PYTHON
+/*! Class to hold a pointer to a SymPy object
+* */
+
+class SympyFunction: public FunctionSymbol {
+private:
+    PyObject* sympy_;
+    std::string hash_;
+public:
+    SympyFunction(PyObject* obj, std::string name, std::string hash, const vec_basic &arg);
+    virtual std::size_t __hash__() const;
+    virtual bool __eq__(const Basic &o) const;
+    virtual int compare(const Basic &o) const;
+    virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
+    inline PyObject* get_sympy_object() const { return sympy_; }
+};
+#endif
 
 /*! Derivative operator
  *  Derivative(f, [x, y, ...]) represents a derivative of `f` with respect to
