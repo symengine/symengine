@@ -262,7 +262,7 @@ void hash_combine(std::size_t& seed, const T& v);
 /*! Type_code_id shared by all instances */ \
 const static TypeID type_code_id = ID; \
 /*! Virtual function that gives the type_code_id of the object */ \
-virtual TypeID get_type_code() const { return type_code_id; };
+virtual TypeID get_type_code() const final { return type_code_id; };
 
 #endif
 
