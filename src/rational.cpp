@@ -48,7 +48,7 @@ std::size_t Rational::__hash__() const
 {
     // only the least significant bits that fit into "signed long int" are
     // hashed:
-    std::size_t seed = 0;
+    std::size_t seed = RATIONAL;
     hash_combine<long long int>(seed, this->i.get_num().get_si());
     hash_combine<long long int>(seed, this->i.get_den().get_si());
     return seed;

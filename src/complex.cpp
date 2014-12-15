@@ -76,7 +76,7 @@ std::size_t Complex::__hash__() const
 {
     // only the least significant bits that fit into "signed long int" are
     // hashed:
-    std::size_t seed = 0;
+    std::size_t seed = COMPLEX;
     hash_combine<long long int>(seed, this->real_.get_num().get_si());
     hash_combine<long long int>(seed, this->real_.get_den().get_si());
     hash_combine<long long int>(seed, this->imaginary_.get_num().get_si());

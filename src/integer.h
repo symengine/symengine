@@ -19,6 +19,7 @@ public:
     mpz_class i;
 
 public:
+    IMPLEMENT_TYPEID(INTEGER)
     //! Constructor of Integer using `int`
     Integer(int i);
     //! Constructor of Integer using `mpz_class`
