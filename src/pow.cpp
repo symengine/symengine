@@ -59,7 +59,7 @@ bool Pow::is_canonical(const RCP<const Basic> &base, const RCP<const Basic> &exp
 
 std::size_t Pow::__hash__() const
 {
-    std::size_t seed = 0;
+    std::size_t seed = POW;
     hash_combine<Basic>(seed, *base_);
     hash_combine<Basic>(seed, *exp_);
     return seed;
@@ -494,7 +494,7 @@ bool Log::is_canonical(const RCP<const Basic> &arg)
 
 std::size_t Log::__hash__() const
 {
-    std::size_t seed = 0;
+    std::size_t seed = LOG;
     hash_combine<Basic>(seed, *arg_);
     return seed;
 }

@@ -14,8 +14,9 @@ Constant::Constant(const std::string &name)
 
 std::size_t Constant::__hash__() const
 {
-    std::hash<std::string> hash_fn;
-    return hash_fn(name_);
+    std::size_t seed = CONSTANT;
+    hash_combine<std::string>(seed, name_);
+    return seed;
 }
 
 bool Constant::__eq__(const Basic &o) const

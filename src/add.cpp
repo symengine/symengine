@@ -55,7 +55,7 @@ bool Add::is_canonical(const RCP<const Number> &coef,
 
 std::size_t Add::__hash__() const
 {
-    std::size_t seed = 0;
+    std::size_t seed = ADD;
     hash_combine<Basic>(seed, *coef_);
     map_basic_num ordered(dict_.begin(), dict_.end());
     for (auto &p: ordered) {
