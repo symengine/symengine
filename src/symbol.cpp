@@ -11,9 +11,8 @@ Symbol::Symbol(const std::string &name)
 
 std::size_t Symbol::__hash__() const
 {
-    std::size_t seed = SYMBOL;
-    hash_combine<std::string>(seed, name_);
-    return seed;
+    std::hash<std::string> hash_fn;
+    return hash_fn(name_);
 }
 
 bool Symbol::__eq__(const Basic &o) const
