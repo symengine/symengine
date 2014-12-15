@@ -20,6 +20,7 @@ private:
     std::string name_;
 
 public:
+    IMPLEMENT_TYPEID(CONSTANT)
     //! Constant Constructor
     Constant(const std::string &name);
     //! \return Size of the hash

@@ -22,6 +22,7 @@ public:
     mpq_class imaginary_;
 
 public:
+    IMPLEMENT_TYPEID(COMPLEX)
     //! Constructor of Complex class
     Complex(mpq_class real, mpq_class imaginary);
     /*! Creates an instance of Complex if imaginary part is non-zero

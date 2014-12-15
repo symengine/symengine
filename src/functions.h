@@ -63,6 +63,7 @@ RCP<const Basic> sqrt(const RCP<const Basic> &arg);
 class Sin : public TrigFunction {
 
 public:
+    IMPLEMENT_TYPEID(SIN)
     //! Sin Constructor
     Sin(const RCP<const Basic> &arg);
     /*! Equality comparator
@@ -91,6 +92,7 @@ RCP<const Basic> sin(const RCP<const Basic> &arg);
 class Cos : public TrigFunction {
 
 public:
+    IMPLEMENT_TYPEID(COS)
     //! Cos Constructor
     Cos(const RCP<const Basic> &arg);
     /*! Equality comparator
@@ -117,6 +119,7 @@ RCP<const Basic> cos(const RCP<const Basic> &arg);
 class Tan : public TrigFunction {
 
 public:
+    IMPLEMENT_TYPEID(TAN)
     //! Tan Constructor
     Tan(const RCP<const Basic> &arg);
     /*! Equality comparator
@@ -143,6 +146,7 @@ RCP<const Basic> tan(const RCP<const Basic> &arg);
 class Cot : public TrigFunction {
 
 public:
+    IMPLEMENT_TYPEID(COT)
     //! Cot Constructor
     Cot(const RCP<const Basic> &arg);
     /*! Equality comparator
@@ -169,6 +173,7 @@ RCP<const Basic> cot(const RCP<const Basic> &arg);
 class Csc: public TrigFunction {
 
 public:
+    IMPLEMENT_TYPEID(CSC)
     //! Csc Constructor
     Csc(const RCP<const Basic> &arg);
     /*! Equality comparator
@@ -195,6 +200,7 @@ RCP<const Basic> csc(const RCP<const Basic> &arg);
 class Sec: public TrigFunction {
 
 public:
+    IMPLEMENT_TYPEID(SEC)
     //! Sec Constructor
     Sec(const RCP<const Basic> &arg);
     /*! Equality comparator
@@ -221,6 +227,7 @@ RCP<const Basic> sec(const RCP<const Basic> &arg);
 class ASin : public TrigFunction {
 
 public:
+    IMPLEMENT_TYPEID(ASIN)
     //! ASin Constructor
     ASin(const RCP<const Basic> &arg);
     /*! Equality comparator
@@ -247,6 +254,7 @@ RCP<const Basic> asin(const RCP<const Basic> &arg);
 class ACos : public TrigFunction {
 
 public:
+    IMPLEMENT_TYPEID(ACOS)
     //! ACos Constructor
     ACos(const RCP<const Basic> &arg);
     /*! Equality comparator
@@ -273,6 +281,7 @@ RCP<const Basic> acos(const RCP<const Basic> &arg);
 class ASec : public TrigFunction {
 
 public:
+    IMPLEMENT_TYPEID(ASEC)
     //! ASec Constructor
     ASec(const RCP<const Basic> &arg);
     /*! Equality comparator
@@ -299,6 +308,7 @@ RCP<const Basic> asec(const RCP<const Basic> &arg);
 class ACsc : public TrigFunction {
 
 public:
+    IMPLEMENT_TYPEID(ACSC)
     //! ACsc Constructor
     ACsc(const RCP<const Basic> &arg);
     /*! Equality comparator
@@ -325,6 +335,7 @@ RCP<const Basic> acsc(const RCP<const Basic> &arg);
 class ATan : public TrigFunction {
 
 public:
+    IMPLEMENT_TYPEID(ATAN)
     //! ATan Constructor
     ATan(const RCP<const Basic> &arg);
     /*! Equality comparator
@@ -351,6 +362,7 @@ RCP<const Basic> atan(const RCP<const Basic> &arg);
 class ACot : public TrigFunction {
 
 public:
+    IMPLEMENT_TYPEID(ACOT)
     //! ACot Constructor
     ACot(const RCP<const Basic> &arg);
     /*! Equality comparator
@@ -379,6 +391,7 @@ private:
     RCP<const Basic> num_; //! The `y` in `atan2(y, x)`
     RCP<const Basic> den_; //! The `x` in `atan2(y, x)`
 public:
+    IMPLEMENT_TYPEID(ATAN2)
     //! ATan2 Constructor
     ATan2(const RCP<const Basic> &num, const RCP<const Basic> &den);
     /*! Equality comparator
@@ -423,6 +436,7 @@ private:
     RCP<const Basic> arg_;
 
 public:
+    IMPLEMENT_TYPEID(LAMBERTW)
     //! LambertW Constructor
     LambertW(const RCP<const Basic> &arg);
     //! \return Size of the hash
@@ -466,6 +480,7 @@ private:
     RCP<const Basic> a_;
 
 public:
+    IMPLEMENT_TYPEID(ZETA)
     //! Zeta Constructor
     Zeta(const RCP<const Basic> &s, const RCP<const Basic> &a);
     //! Zeta Constructor
@@ -504,6 +519,7 @@ private:
     RCP<const Basic> s_;
 
 public:
+    IMPLEMENT_TYPEID(DIRICHLET_ETA)
     //! Dirichlet_eta Constructor
     Dirichlet_eta(const RCP<const Basic> &s);
     //! \return Size of the hash
@@ -536,6 +552,7 @@ private:
     vec_basic arg_; //! The `x+y`, `z` in `f(x+y, z)`
 
 public:
+    IMPLEMENT_TYPEID(FUNCTIONSYMBOL)
     //! FunctionSymbol Constructors
     FunctionSymbol(std::string name, const vec_basic &arg);
     FunctionSymbol(std::string name, const RCP<const Basic> &arg);
@@ -587,6 +604,7 @@ private:
     vec_basic x_; //! x, y, ...
 
 public:
+    IMPLEMENT_TYPEID(DERIVATIVE)
     Derivative(const RCP<const Basic> &arg, const vec_basic &x);
     virtual std::size_t __hash__() const;
     virtual bool __eq__(const Basic &o) const;
@@ -620,6 +638,7 @@ private:
     map_basic_basic dict_;
 
 public:
+    IMPLEMENT_TYPEID(SUBS)
     Subs(const RCP<const Basic> &arg, const map_basic_basic &x);
     virtual std::size_t __hash__() const;
     virtual bool __eq__(const Basic &o) const;
@@ -662,6 +681,7 @@ public:
 class Sinh : public HyperbolicFunction {
 //! The hyperbolic sine function, `\frac{e^x - e^{-x}}{2}`.
 public:
+    IMPLEMENT_TYPEID(SINH)
     //! Sinh Constructor
     Sinh(const RCP<const Basic> &arg);
     /*! Equality comparator
@@ -690,6 +710,7 @@ RCP<const Basic> sinh(const RCP<const Basic> &arg);
 class Cosh : public HyperbolicFunction {
 //! The hyperbolic cosine function, `\frac{e^x + e^{-x}}{2}`.
 public:
+    IMPLEMENT_TYPEID(COSH)
     //! Cosh Constructor
     Cosh(const RCP<const Basic> &arg);
     /*! Equality comparator
@@ -718,6 +739,7 @@ RCP<const Basic> cosh(const RCP<const Basic> &arg);
 class Tanh : public HyperbolicFunction {
 //! The hyperbolic tangent function, `\frac{\sinh(x)}{\cosh(x)}`.
 public:
+    IMPLEMENT_TYPEID(TANH)
     //! Tanh Constructor
     Tanh(const RCP<const Basic> &arg);
     /*! Equality comparator
@@ -746,6 +768,7 @@ RCP<const Basic> tanh(const RCP<const Basic> &arg);
 class Coth : public HyperbolicFunction {
 //! The hyperbolic tangent function, `\frac{\cosh(x)}{\sinh(x)}`.
 public:
+    IMPLEMENT_TYPEID(COTH)
     //! Coth Constructor
     Coth(const RCP<const Basic> &arg);
     /*! Equality comparator
@@ -774,6 +797,7 @@ RCP<const Basic> coth(const RCP<const Basic> &arg);
 class ASinh : public HyperbolicFunction {
 //! The inverse hyperbolic sine function.
 public:
+    IMPLEMENT_TYPEID(ASINH)
     //! ASinh Constructor
     ASinh(const RCP<const Basic> &arg);
     /*! Equality comparator
@@ -800,6 +824,7 @@ RCP<const Basic> asinh(const RCP<const Basic> &arg);
 class ACosh: public HyperbolicFunction {
 //! The inverse hyperbolic cosine function.
 public:
+    IMPLEMENT_TYPEID(ACOSH)
     //! ACosh Constructor
     ACosh(const RCP<const Basic> &arg);
     /*! Equality comparator
@@ -826,6 +851,7 @@ RCP<const Basic> acosh(const RCP<const Basic> &arg);
 class ATanh: public HyperbolicFunction {
 //! The inverse hyperbolic tangent function.
 public:
+    IMPLEMENT_TYPEID(ATANH)
     //! ATanh Constructor
     ATanh(const RCP<const Basic> &arg);
     /*! Equality comparator
@@ -852,6 +878,7 @@ RCP<const Basic> atanh(const RCP<const Basic> &arg);
 class ACoth: public HyperbolicFunction {
 //! The inverse hyperbolic cotangent function.
 public:
+    IMPLEMENT_TYPEID(ACOTH)
     //! ACoth Constructor
     ACoth(const RCP<const Basic> &arg);
     /*! Equality comparator
@@ -885,6 +912,7 @@ private:
     RCP<const Basic> i_;
     RCP<const Basic> j_;
 public:
+    IMPLEMENT_TYPEID(KRONECKERDELTA)
     //! KroneckerDelta Constructor
     KroneckerDelta(const RCP<const Basic> &i, const RCP<const Basic> &j);
     /*! Equality comparator
@@ -918,6 +946,7 @@ class LeviCivita: public Function {
 private:
     vec_basic arg_;
 public:
+    IMPLEMENT_TYPEID(LEVICIVITA)
     //! LeviCivita Constructor
     LeviCivita(const vec_basic&& arg);
     /*! Equality comparator
@@ -954,6 +983,7 @@ class Gamma: public Function {
 private:
     RCP<const Basic> arg_;
 public:
+    IMPLEMENT_TYPEID(GAMMA)
     //! Gamma Constructor
     Gamma(const RCP<const Basic> &arg);
     /*! Equality comparator
@@ -982,6 +1012,7 @@ private:
     RCP<const Basic> s_;
     RCP<const Basic> x_;
 public:
+    IMPLEMENT_TYPEID(LOWERGAMMA)
     //! LowerGamma Constructor
     LowerGamma(const RCP<const Basic> &s, const RCP<const Basic> &x);
     /*! Equality comparator
@@ -1011,6 +1042,7 @@ private:
     RCP<const Basic> s_;
     RCP<const Basic> x_;
 public:
+    IMPLEMENT_TYPEID(UPPERGAMMA)
     //! UpperGamma Constructor
     UpperGamma(const RCP<const Basic> &s, const RCP<const Basic> &x);
     /*! Equality comparator
@@ -1040,6 +1072,7 @@ class Abs: public Function {
 private:
     RCP<const Basic> arg_;
 public:
+    IMPLEMENT_TYPEID(ABS)
     //! Abs Constructor
     Abs(const RCP<const Basic> &arg);
     /*! Equality comparator

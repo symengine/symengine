@@ -17,6 +17,7 @@ public: // TODO: make this private
     map_basic_basic dict_;   //! the dictionary of the rest (e.g. `x*y` in `2*x*y`)
 
 public:
+    IMPLEMENT_TYPEID(MUL)
     //! Constructs Mul from a dictionary by copying the contents of the
     //! dictionary:
     Mul(const RCP<const Number> &coef, map_basic_basic&& dict);
