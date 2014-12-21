@@ -19,7 +19,7 @@ public: // TODO: make this private
 
 public:
     /*! Constructs Add from a dictionary by copying the contents of the
- dictionary
+        dictionary
     */
     Add(const RCP<const Number> &coef, umap_basic_num&& dict);
     //! \return Size of the hash
