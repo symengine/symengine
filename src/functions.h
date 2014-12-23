@@ -10,11 +10,6 @@
 #include "basic.h"
 #include "dict.h"
 
-#ifndef PyObject_HEAD
-struct _object;
-typedef _object PyObject;
-#endif
-
 namespace CSymPy {
 
 class Function : public Basic {
@@ -577,17 +572,22 @@ RCP<const Basic> function_symbol(std::string name,
 /*! Class to hold a pointer to a SymPy object
 * */
 
-class SympyFunction: public FunctionSymbol {
+class FunctionWrapper: public FunctionSymbol {
 private:
-    PyObject* sympy_;
+    void* obj_;
     std::string hash_;
+    void (*dec_ref_)(void *);
+    int (*comp_)(void *, void *);
+
 public:
-    SympyFunction(PyObject* obj, std::string name, std::string hash, const vec_basic &arg);
+    FunctionWrapper(void* obj, std::string name, std::string hash, const vec_basic &arg,
+        void (*dec_ref)(void *), int (*comp)(void *, void *));
+    ~FunctionWrapper();
     virtual std::size_t __hash__() const;
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
-    inline PyObject* get_sympy_object() const { return sympy_; }
+    inline void* get_object() const { return obj_; }
 };
 #endif
 

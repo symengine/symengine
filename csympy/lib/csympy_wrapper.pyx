@@ -3,7 +3,8 @@ cimport csympy
 from csympy cimport rcp, RCP
 from libcpp cimport bool
 from libcpp.string cimport string
-from cpython cimport PyObject
+from cpython cimport PyObject, Py_XINCREF, Py_XDECREF, \
+    PyObject_CallMethodObjArgs
 
 class SympifyError(Exception):
     pass
@@ -38,8 +39,8 @@ cdef c2py(RCP[const csympy.Basic] o):
         r = Derivative.__new__(Derivative)
     elif (csympy.is_a_Subs(deref(o))):
         r = Subs.__new__(Subs)
-    elif (csympy.is_a_SympyFunction(deref(o))):
-        r = SympyFunction.__new__(SympyFunction)
+    elif (csympy.is_a_FunctionWrapper(deref(o))):
+        r = FunctionWrapper.__new__(FunctionWrapper)
     else:
         raise Exception("Unsupported CSymPy class.")
     r.thisptr = o
@@ -90,7 +91,7 @@ def sympy2csympy(a, raise_error=False):
         name = str(a.func)
         return function_symbol(name, *(a.args))
     elif isinstance(a, sympy.Function):
-        return SympyFunction(a)
+        return FunctionWrapper(a)
     elif isinstance(a, sympy.Matrix):
         row, col = a.shape
         v = []
@@ -439,32 +440,41 @@ cdef class FunctionSymbol(Function):
         import sympy
         return sympy.Function(name)(*s)
 
-cdef class SympyFunction(FunctionSymbol):
+cdef inline void SymPy_XDECREF(void* o):
+    Py_XDECREF(<PyObject*>o)
+
+cdef inline void SymPy_XINCREF(void* o):
+    Py_XINCREF(<PyObject*>o)
+
+cdef inline int SymPy_CMP(void* o1, void* o2):
+    return <int>PyObject_CallMethodObjArgs(<object>o1, "compare", <PyObject *>o2, NULL)
+
+cdef class FunctionWrapper(FunctionSymbol):
 
     def __cinit__(self, sympy_function = None):
         import sympy
         if not isinstance(sympy_function, sympy.Function):
             return
-        cdef PyObject *ptr
-        ptr = <PyObject *>(sympy_function)
+        cdef void* ptr
+        ptr = <void *>(sympy_function)
         cdef string name = str(sympy_function.func).encode("utf-8")
-        cdef string hashV = str(sympy_function.__hash__()).encode("utf-8")
+        cdef string hash_ = str(sympy_function.__hash__()).encode("utf-8")
         cdef csympy.vec_basic v
         cdef Basic arg_
         for arg in sympy_function.args:
             arg_ = sympify(arg)
             v.push_back(arg_.thisptr)
-
-        self.thisptr = rcp(new csympy.SympyFunction(ptr, name, hashV, v))
+        SymPy_XINCREF(ptr)
+        self.thisptr = rcp(new csympy.FunctionWrapper(ptr, name, hash_, v, &SymPy_XDECREF, &SymPy_CMP))
 
     def __dealloc__(self):
         self.thisptr.reset()
 
     def _sympy_(self):
         cdef object pyobj
-        cdef RCP[const csympy.SympyFunction] X = \
-            csympy.rcp_static_cast_SympyFunction(self.thisptr)
-        pyobj = <object>(deref(X).get_sympy_object())
+        cdef RCP[const csympy.FunctionWrapper] X = \
+            csympy.rcp_static_cast_FunctionWrapper(self.thisptr)
+        pyobj = <object>(deref(X).get_object())
         return pyobj
 
 cdef class Abs(Function):

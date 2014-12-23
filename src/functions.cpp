@@ -1,7 +1,3 @@
-#ifdef WITH_PYTHON
-#include <Python.h>
-#endif
-
 #include <stdexcept>
 
 #include "add.h"
@@ -1524,48 +1520,45 @@ RCP<const Basic> function_symbol(std::string name, const RCP<const Basic> &arg)
 }
 
 #ifdef WITH_PYTHON
-SympyFunction::SympyFunction(PyObject* obj, std::string name, std::string hash, const vec_basic &arg)
+FunctionWrapper::FunctionWrapper(void* obj, std::string name, std::string hash, const vec_basic &arg, 
+    void(*dec_ref)(void *), int(*comp)(void *, void *))
     : FunctionSymbol(name, arg)
 {
-    sympy_ = obj;
+    obj_ = obj;
     hash_ = hash;
+    dec_ref_ = dec_ref;
+    comp_ = comp;
     CSYMPY_ASSERT(is_canonical(arg_))
 }
 
-std::size_t SympyFunction::__hash__() const
+FunctionWrapper::~FunctionWrapper()
+{
+    (*dec_ref_)(obj_);
+}
+
+std::size_t FunctionWrapper::__hash__() const
 {
     std::size_t seed = 0;
     hash_combine<std::string>(seed, hash_);
     return seed;
 }
 
-int SympyFunction::compare(const Basic &o) const
+int FunctionWrapper::compare(const Basic &o) const
 {
-    CSYMPY_ASSERT(is_a<SympyFunction>(o))
-    const SympyFunction &s = static_cast<const SympyFunction &>(o);
-    if (hash_ == s.hash_) {
-        if (name_ == s.name_) {
-            return vec_basic_compare(arg_, s.arg_);
-        } else {
-            return name_ < s.name_ ? -1 : 1;
-        }
-    } else {
-        return hash_ < s.hash_ ? -1 : 1;
-    }
+    CSYMPY_ASSERT(is_a<FunctionWrapper>(o))
+    const FunctionWrapper &s = static_cast<const FunctionWrapper &>(o);
+    return (*comp_)(obj_, s.obj_);
 }
 
-bool SympyFunction::__eq__(const Basic &o) const
+bool FunctionWrapper::__eq__(const Basic &o) const
 {
-    if (is_a<SympyFunction>(o) &&
-        sympy_ == static_cast<const SympyFunction &>(o).sympy_ &&
-        name_ == static_cast<const SympyFunction &>(o).name_ &&
-        hash_ == static_cast<const SympyFunction &>(o).hash_ &&
-        vec_basic_eq(arg_, static_cast<const SympyFunction &>(o).arg_))
+    if (is_a<FunctionWrapper>(o) &&
+        (*comp_)(obj_, static_cast<const FunctionWrapper &>(o).obj_) == 0)
         return true;
     return false;
 }
 
-RCP<const Basic> SympyFunction::diff(const RCP<const Symbol> &x) const
+RCP<const Basic> FunctionWrapper::diff(const RCP<const Symbol> &x) const
 {
     for (auto &a : arg_) {
         if (neq(a->diff(x), zero)) {
@@ -1612,7 +1605,7 @@ bool Derivative::is_canonical(const RCP<const Basic> &arg,
         return true;
     }
 #ifdef WITH_PYTHON
-    else if (is_a<SympyFunction>(*arg)) {
+    else if (is_a<FunctionWrapper>(*arg)) {
         return true;
     }
 #endif
