@@ -37,15 +37,15 @@ class Symbol;
     Sublcasses must implement these.
 
 */
-/*    Classes like Add, Mul, Pow are initialzied through their constructor using
+/*  Classes like Add, Mul, Pow are initialized through their constructor using
     their internal representation. Add, Mul have a 'coeff' and 'dict', while
-    Pow hase 'base' and 'exp'. There are restrictions on what 'coeff' and
+    Pow has 'base' and 'exp'. There are restrictions on what 'coeff' and
     'dict' can be (for example 'coeff' cannot be zero in Mul, and if Mul is
     used inside Add, then Mul's coeff must be one, etc.). All these
     restrictions are checked when CSYMPY_ASSERT is enabled inside the
     constructors using the is_canonical() method. That way, you don't have to
     worry about creating Add/Mul/Pow with wrong arguments, as it will be caught
-    be the tests. In the Release mode no checks are done, so you can construct
+    by the tests. In the Release mode no checks are done, so you can construct
     Add/Mul/Pow very quickly. The idea is that depending on the algorithm, you
     sometimes know that things are already canonical, so you simply pass it
     directly to Add/Mul/Pow and you avoid expensive type checking and
@@ -59,6 +59,19 @@ class Symbol;
     simpler code, you can use the add(), mul(), pow() functions that peform
     general and possibly slow canonicalization first.
 */
+
+enum TypeID {
+    SYMBOL, MUL, ADD, POW, LOG,
+    NUMBER, INTEGER, RATIONAL, COMPLEX, CONSTANT,
+    SIN, COS, TAN, COT, CSC, SEC,
+    ASIN, ACOS, ASEC, ACSC, ATAN, ACOT, ATAN2,
+    SINH, COSH, TANH, COTH,
+    ASINH, ACOSH, ATANH, ACOTH,
+    LAMBERTW, ZETA, DIRICHLET_ETA, KRONECKERDELTA,
+    LEVICIVITA, GAMMA, LOWERGAMMA, UPPERGAMMA,
+    FUNCTIONSYMBOL, DERIVATIVE, SUBS, ABS
+};
+
 class Basic {
 private:
     //! Private variables
@@ -89,6 +102,7 @@ public:
 #endif // WITH_CSYMPY_THREAD_SAFE
 #endif // WITH_CSYMPY_RCP
 public:
+    virtual TypeID get_type_code() const = 0;
     //! Constructor
     Basic() : hash_{0}
 #if defined(WITH_CSYMPY_RCP)
@@ -242,6 +256,13 @@ void hash_combine(std::size_t& seed, const T& v);
 
 //! Inline members and functions
 #include "basic-inl.h"
+
+// Macro to define the type_code_id variable and its getter method
+#define IMPLEMENT_TYPEID(ID) \
+/*! Type_code_id shared by all instances */ \
+const static TypeID type_code_id = ID; \
+/*! Virtual function that gives the type_code_id of the object */ \
+virtual TypeID get_type_code() const { return type_code_id; };
 
 #endif
 

@@ -262,7 +262,7 @@ bool inverse_lookup(umap_basic_basic &d, const RCP<const Basic> &t,
 
 std::size_t TrigFunction::__hash__() const
 {
-    std::size_t seed = 0;
+    std::size_t seed = this->get_type_code();
     hash_combine<Basic>(seed, *arg_);
     return seed;
 }
@@ -1144,7 +1144,7 @@ std::string ATan2::__str__() const
 
 std::size_t ATan2::__hash__() const
 {
-    std::size_t seed = 0;
+    std::size_t seed = ATAN2;
     hash_combine<Basic>(seed, *num_);
     hash_combine<Basic>(seed, *den_);
     return seed;
@@ -1361,7 +1361,7 @@ bool LambertW::is_canonical(const RCP<const Basic> &arg)
 
 std::size_t LambertW::__hash__() const
 {
-    std::size_t seed = 0;
+    std::size_t seed = LAMBERTW;
     hash_combine<Basic>(seed, *arg_);
     return seed;
 }
@@ -1424,7 +1424,7 @@ bool FunctionSymbol::is_canonical(const vec_basic &arg)
 
 std::size_t FunctionSymbol::__hash__() const
 {
-    std::size_t seed = 0;
+    std::size_t seed = FUNCTIONSYMBOL;
     for (auto &a : arg_)
         hash_combine<Basic>(seed, *a);
     hash_combine<std::string>(seed, name_);
@@ -1614,7 +1614,7 @@ bool Derivative::is_canonical(const RCP<const Basic> &arg,
 
 std::size_t Derivative::__hash__() const
 {
-    std::size_t seed = 0;
+    std::size_t seed = DERIVATIVE;
     hash_combine<Basic>(seed, *arg_);
     for(size_t i=0; i < x_.size(); i++)
         hash_combine<Basic>(seed, *x_[i]);
@@ -1726,7 +1726,7 @@ bool Subs::is_canonical(const RCP<const Basic> &arg,
 
 std::size_t Subs::__hash__() const
 {
-    std::size_t seed = 0;
+    std::size_t seed = SUBS;
     hash_combine<Basic>(seed, *arg_);
     for (auto &p: dict_) {
         hash_combine<Basic>(seed, *p.first);
@@ -1840,7 +1840,7 @@ RCP<const Basic> Subs::subs(const map_basic_basic &subs_dict) const
 
 std::size_t HyperbolicFunction::__hash__() const
 {
-    std::size_t seed = 0;
+    std::size_t seed = this->get_type_code();
     hash_combine<Basic>(seed, *arg_);
     return seed;
 }
@@ -2450,7 +2450,7 @@ int KroneckerDelta::compare(const Basic &o) const
 
 std::size_t KroneckerDelta::__hash__() const
 {
-    std::size_t seed = 0;
+    std::size_t seed = KRONECKERDELTA;
     hash_combine<Basic>(seed, *i_);
     hash_combine<Basic>(seed, *j_);
     return seed;
@@ -2537,7 +2537,7 @@ int LeviCivita::compare(const Basic &o) const
 
 std::size_t LeviCivita::__hash__() const
 {
-    std::size_t seed = 0;
+    std::size_t seed = LEVICIVITA;
     for (auto &p: arg_) {
         hash_combine<Basic>(seed, *p);
     }
@@ -2612,7 +2612,7 @@ bool Zeta::is_canonical(const RCP<const Basic> &s, const RCP<const Basic> &a)
 
 std::size_t Zeta::__hash__() const
 {
-    std::size_t seed = 0;
+    std::size_t seed = ZETA;
     hash_combine<Basic>(seed, *s_);
     hash_combine<Basic>(seed, *a_);
     return seed;
@@ -2690,7 +2690,7 @@ bool Dirichlet_eta::is_canonical(const RCP<const Basic> &s)
 
 std::size_t Dirichlet_eta::__hash__() const
 {
-    std::size_t seed = 0;
+    std::size_t seed = DIRICHLET_ETA;
     hash_combine<Basic>(seed, *s_);
     return seed;
 }
@@ -2754,7 +2754,7 @@ bool Gamma::is_canonical(const RCP<const Basic> &arg)
 
 std::size_t Gamma::__hash__() const
 {
-    std::size_t seed = 0;
+    std::size_t seed = GAMMA;
     hash_combine<Basic>(seed, *arg_);
     return seed;
 }
@@ -2844,7 +2844,7 @@ bool LowerGamma::is_canonical(const RCP<const Basic> &s, const RCP<const Basic> 
 
 std::size_t LowerGamma::__hash__() const
 {
-    std::size_t seed = 0;
+    std::size_t seed = LOWERGAMMA;
     hash_combine<Basic>(seed, *s_);
     hash_combine<Basic>(seed, *x_);
     return seed;
@@ -2924,7 +2924,7 @@ bool UpperGamma::is_canonical(const RCP<const Basic> &s, const RCP<const Basic> 
 
 std::size_t UpperGamma::__hash__() const
 {
-    std::size_t seed = 0;
+    std::size_t seed = UPPERGAMMA;
     hash_combine<Basic>(seed, *s_);
     hash_combine<Basic>(seed, *x_);
     return seed;
@@ -3001,7 +3001,7 @@ bool Abs::is_canonical(const RCP<const Basic> &arg)
 
 std::size_t Abs::__hash__() const
 {
-    std::size_t seed = 0;
+    std::size_t seed = ABS;
     hash_combine<Basic>(seed, *arg_);
     return seed;
 }

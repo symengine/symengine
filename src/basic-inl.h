@@ -29,7 +29,7 @@ inline bool neq(const RCP<const Basic> &a, const RCP<const Basic> &b)
 template <class T>
 inline bool is_a(const Basic &b)
 {
-    return typeid(T) == typeid(b);
+    return T::type_code_id == b.get_type_code();
 }
 
 template <class T>

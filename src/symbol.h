@@ -16,6 +16,7 @@ private:
     std::string name_;
 
 public:
+    IMPLEMENT_TYPEID(SYMBOL)
     //! Symbol Constructor
     Symbol(const std::string &name);
     //! \return Size of the hash

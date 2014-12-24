@@ -20,6 +20,7 @@ public: // TODO: make this private
     RCP<const Basic> base_, exp_; //! base^exp
 
 public:
+    IMPLEMENT_TYPEID(POW)
     //! Pow Constructor
     Pow(const RCP<const Basic> &base, const RCP<const Basic> &exp);
     //! \return Size of the hash
@@ -71,6 +72,7 @@ private:
     RCP<const Basic> arg_; //! The `arg` in `log(arg)`
 
 public:
+    IMPLEMENT_TYPEID(LOG)
     //! Log Constructor
     Log(const RCP<const Basic> &arg);
     //! \return Size of the hash

@@ -18,8 +18,9 @@ public: // TODO: make this private
     umap_basic_num dict_; //! The dictionary of the rest (e.g. `x+y` in `2+x+y`)
 
 public:
+    IMPLEMENT_TYPEID(ADD)
     /*! Constructs Add from a dictionary by copying the contents of the
- dictionary
+        dictionary
     */
     Add(const RCP<const Number> &coef, umap_basic_num&& dict);
     //! \return Size of the hash
