@@ -15,6 +15,3 @@
 
 /* Define if you want to enable ARB support in CSymPy */
 #cmakedefine HAVE_CSYMPY_ARB
-
-/* Define if you want to enable Python support in CSymPy */
-#cmakedefine WITH_PYTHON

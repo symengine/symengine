@@ -1,4 +1,4 @@
-from csympy import Symbol, sin, cos, sqrt, Add, function_symbol, Integer
+from csympy import Symbol, sin, cos, sqrt, Add, Mul, function_symbol, Integer
 from csympy.lib.csympy_wrapper import Subs, Derivative
 
 def test_sin():
@@ -86,10 +86,10 @@ def test_Subs():
     assert Subs(Derivative(function_symbol("f", x, y), [x]), [x, y], [_x, x]) \
                 == Subs(Derivative(function_symbol("f", x, y), [x]), [y, x], [x, _x])
 
-def test_SympyFunction():
+def test_FunctionWrapper():
     import sympy
-    sympy.var("n m, theta, phi")
-    r = sympy.Ynm(n, m, -theta, phi)
-    s = Integer(1) + r
-    assert (isinstance(s, Add))
-    assert (isinstance(s.args[1]._sympy_(), sympy.Ynm))
+    sympy.var("n, m, theta, phi")
+    r = sympy.Ynm(n, m, theta, phi)
+    s = Integer(2)*r
+    assert isinstance(s, Mul)
+    assert isinstance(s.args[1]._sympy_(), sympy.Ynm)

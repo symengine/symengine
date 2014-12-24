@@ -1519,7 +1519,6 @@ RCP<const Basic> function_symbol(std::string name, const RCP<const Basic> &arg)
     return rcp(new FunctionSymbol(name, arg));
 }
 
-#ifdef WITH_PYTHON
 FunctionWrapper::FunctionWrapper(void* obj, std::string name, std::string hash, const vec_basic &arg, 
     void(*dec_ref)(void *), int(*comp)(void *, void *))
     : FunctionSymbol(name, arg)
@@ -1567,7 +1566,6 @@ RCP<const Basic> FunctionWrapper::diff(const RCP<const Symbol> &x) const
     }
     return zero;
 }
-#endif
 
 /* ---------------------------- */
 
@@ -1603,12 +1601,9 @@ bool Derivative::is_canonical(const RCP<const Basic> &arg,
         return found_s;
     } else if (is_a<Abs>(*arg)) {
         return true;
-    }
-#ifdef WITH_PYTHON
-    else if (is_a<FunctionWrapper>(*arg)) {
+    } else if (is_a<FunctionWrapper>(*arg)) {
         return true;
     }
-#endif
     return false;
 }
 

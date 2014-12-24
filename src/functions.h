@@ -585,8 +585,9 @@ RCP<const Basic> function_symbol(std::string name,
 RCP<const Basic> function_symbol(std::string name,
         const vec_basic &arg);
 
-#ifdef WITH_PYTHON
-/*! Class to hold a pointer to a SymPy object
+/*! Class to hold a pointer to a function object
+*   FunctionWrapper can be used to wrap any C/C++ object
+*   (eg: Python object through Python/C API) 
 * */
 
 class FunctionWrapper: public FunctionSymbol {
@@ -597,6 +598,15 @@ private:
     int (*comp_)(void *, void *);
 
 public:
+    IMPLEMENT_TYPEID(FUNCTIONWRAPPER)
+    /*! FunctionWrapper Constructor
+     * \param obj - Pointer to the function object
+     * \param name - Name of the function
+     * \param hash - Hash value of obj
+     * \param arg - Arguments of the function
+     * \param dec_ref - Function pointer to decrease the reference count
+     * \param comp - Function pointer to compare two function objects
+     * */
     FunctionWrapper(void* obj, std::string name, std::string hash, const vec_basic &arg,
         void (*dec_ref)(void *), int (*comp)(void *, void *));
     ~FunctionWrapper();
@@ -604,9 +614,9 @@ public:
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
+    //! \return Pointer to the function object
     inline void* get_object() const { return obj_; }
 };
-#endif
 
 /*! Derivative operator
  *  Derivative(f, [x, y, ...]) represents a derivative of `f` with respect to
