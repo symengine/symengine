@@ -13,13 +13,13 @@ namespace CSymPy {
 
 int Basic::__cmp__(const Basic &o) const
 {
-    auto &a = typeid(*this);
-    auto &b = typeid(o);
+    TypeID a = this->get_type_code();
+    TypeID b = o.get_type_code();
     if (a == b) {
         return this->compare(o);
     } else {
         // This order is compiler implementation specific:
-        return a.before(b) ? -1 : 1;
+        return a < b ? -1 : 1;
     }
 }
 
