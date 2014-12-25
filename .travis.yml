@@ -1,6 +1,7 @@
-language: python
-python:
-  - 2.7
+language: cpp
+compiler:
+  - gcc
+  - clang
 env:
   ## All these variables are sent into the bin/test_travis.sh script. See this
   ## script to know how they are used. Most of them are just passed to cmake,
@@ -14,14 +15,14 @@ env:
   - BUILD_TYPE="Debug"
   # Debug build (with BFD and CSYMPY_ASSERT)
   - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_CSYMPY_ASSERT="yes"
+  # Debug build (with BFD and CSYMPY_ASSERT) with Python 2.7
+  - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_CSYMPY_ASSERT="yes" WITH_PYTHON="yes" PYTHON_VERSION="2.7"
   # Debug build (with BFD and CSYMPY_ASSERT and CSYMPY_THREAD_SAFE)
   - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_CSYMPY_ASSERT="yes" WITH_CSYMPY_THREAD_SAFE="yes"
   # Debug build (with BFD and CSYMPY_ASSERT) with ECM
   - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_CSYMPY_ASSERT="yes" WITH_ECM="yes"
   # Debug build (with BFD and CSYMPY_ASSERT) with PRIMESIEVE
   - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_CSYMPY_ASSERT="yes" WITH_PRIMESIEVE="yes"
-  # Debug build (with BFD and CSYMPY_ASSERT) with Python 2.7
-  - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_CSYMPY_ASSERT="yes" WITH_PYTHON="yes"
   # Debug build (with BFD and CSYMPY_ASSERT) with Arb
   - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_CSYMPY_ASSERT="yes" WITH_ARB="yes"
   # Debug build with Teuchos::RCP (just to test that it compiles)
@@ -33,40 +34,28 @@ env:
   # Debug build without Python:
   - BUILD_TYPE="Debug" WITH_BFD="yes" TEST_IN_TREE="yes"
   # Debug build with Python 2.7:
-  - BUILD_TYPE="Debug" WITH_BFD="yes" TEST_IN_TREE="yes" WITH_PYTHON="yes" WITH_CSYMPY_ASSERT="yes"
+  - BUILD_TYPE="Debug" WITH_BFD="yes" TEST_IN_TREE="yes" WITH_PYTHON="yes" WITH_CSYMPY_ASSERT="yes" PYTHON_VERSION="2.7"
   # Release build with Python 2.7:
-  - TEST_IN_TREE="yes" WITH_PYTHON="yes"
+  - TEST_IN_TREE="yes" WITH_PYTHON="yes" PYTHON_VERSION="2.7"
+
+  # These test the default Release build with other Python versions
+  - WITH_PYTHON="yes" PYTHON_VERSION="2.6"
+  - WITH_PYTHON="yes" PYTHON_VERSION="3.3"
+  - WITH_PYTHON="yes" PYTHON_VERSION="3.4"
+
+  # These test the setup.py file
+  - TEST_IN_TREE="yes" PYTHON_INSTALL="yes" PYTHON_VERSION="2.6"
+  - TEST_IN_TREE="yes" PYTHON_INSTALL="yes" PYTHON_VERSION="2.7"
+  - TEST_IN_TREE="yes" PYTHON_INSTALL="yes" PYTHON_VERSION="3.3"
+  - TEST_IN_TREE="yes" PYTHON_INSTALL="yes" PYTHON_VERSION="3.4"
+
 matrix:
+  exclude:
+    - compiler: clang
   include:
-    # These test the default Release build with other Python versions
-    - python: 2.6
-      env:
-        - WITH_PYTHON="yes"
-    - python: 3.2
-      env:
-        - WITH_PYTHON="yes"
-    - python: 3.3
-      env:
-        - WITH_PYTHON="yes"
-    - python: 3.4
-      env:
-        - WITH_PYTHON="yes"
-    # These test the setup.py file
-    - python: 2.6
-      env:
-        - TEST_IN_TREE="yes" PYTHON_INSTALL="yes"
-    - python: 2.7
-      env:
-        - TEST_IN_TREE="yes" PYTHON_INSTALL="yes"
-    - python: 3.2
-      env:
-        - TEST_IN_TREE="yes" PYTHON_INSTALL="yes"
-    - python: 3.3
-      env:
-        - TEST_IN_TREE="yes" PYTHON_INSTALL="yes"
-    - python: 3.4
-      env:
-        - TEST_IN_TREE="yes" PYTHON_INSTALL="yes"
+    - env: BUILD_TYPE="Debug" WITH_BFD="yes" WITH_CSYMPY_ASSERT="yes" WITH_PYTHON="yes" PYTHON_VERSION="2.7"
+      compiler: clang
+
 before_install:
   - sudo apt-get update
   - sudo apt-get install cmake libgmp-dev
@@ -90,10 +79,18 @@ before_install:
         tar -xzf 2.2.0.tar.gz;
         cd arb-2.2.0 && ./configure && make ARB_GMP_LIB_DIR=/usr/lib/x86_64-linux-gnu ARB_MPFR_LIB_DIR=/usr/lib/x86_64-linux-gnu && sudo make ARB_GMP_LIB_DIR=/usr/lib/x86_64-linux-gnu ARB_MPFR_LIB_DIR=/usr/lib/x86_64-linux-gnu install && cd ..;
     fi
-install:
   - if [[ "${WITH_PYTHON}" == "yes" ]] || [[ "${PYTHON_INSTALL}" == "yes" ]]; then
-        pip install --install-option="--no-cython-compile" cython;
-        pip install sympy;
+        wget http://repo.continuum.io/miniconda/Miniconda3-3.7.3-Linux-x86_64.sh -O miniconda.sh;
+        bash miniconda.sh -b -p $HOME/miniconda;
+        export PATH="$HOME/miniconda/bin:$PATH";
+        hash -r;
+        conda config --set always_yes yes --set changeps1 no;
+        conda update -q conda;
+        conda info -a;
+
+        conda create -q -n test-environment python="${PYTHON_VERSION}" pip cython sympy nose pytest;
+        source activate test-environment;
+        rm $HOME/miniconda/envs/test-environment/bin/../lib/libm.so.6;
     fi
 script:
   - bin/test_travis.sh
