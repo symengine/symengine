@@ -102,7 +102,11 @@ if (WITH_BFD)
     set(LIBS ${LIBS} ${BFD_LIBRARIES})
     set(HAVE_TEUCHOS_BFD yes)
     set(HAVE_TEUCHOS_LINK yes)
+    
     set(HAVE_TEUCHOS_EXECINFO yes)
+    find_package(EXECINFO REQUIRED)
+    include_directories(${EXECINFO_INCLUDE_DIRS})
+    set(LIBS ${LIBS} ${EXECINFO_LIBRARIES})
 endif()
 
 # Doxygen
@@ -178,6 +182,7 @@ if (WITH_BFD)
     message("BFD_INCLUDE_DIRS: ${BFD_INCLUDE_DIRS}")
     message("BFD_LIBRARIES: ${BFD_LIBRARIES}")
     message("LINKH_INCLUDE_DIRS: ${LINKH_INCLUDE_DIRS}")
+    message("EXECINFO_INCLUDE_DIRS: ${EXECINFO_INCLUDE_DIRS}")
 endif()
 
 message("WITH_PYTHON: ${WITH_PYTHON}")
