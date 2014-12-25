@@ -34,6 +34,7 @@ cdef extern from "csympy_rcp.h" namespace "CSymPy":
     RCP[const Sin] rcp_static_cast_Sin "CSymPy::rcp_static_cast<const CSymPy::Sin>"(RCP[const Basic] &b) nogil
     RCP[const Cos] rcp_static_cast_Cos "CSymPy::rcp_static_cast<const CSymPy::Cos>"(RCP[const Basic] &b) nogil
     RCP[const FunctionSymbol] rcp_static_cast_FunctionSymbol "CSymPy::rcp_static_cast<const CSymPy::FunctionSymbol>"(RCP[const Basic] &b) nogil
+    RCP[const FunctionWrapper] rcp_static_cast_FunctionWrapper "CSymPy::rcp_static_cast<const CSymPy::FunctionWrapper>"(RCP[const Basic] &b) nogil
     RCP[const Abs] rcp_static_cast_Abs "CSymPy::rcp_static_cast<const CSymPy::Abs>"(RCP[const Basic] &b) nogil
     RCP[const Derivative] rcp_static_cast_Derivative "CSymPy::rcp_static_cast<const CSymPy::Derivative>"(RCP[const Basic] &b) nogil
     RCP[const Subs] rcp_static_cast_Subs "CSymPy::rcp_static_cast<const CSymPy::Subs>"(RCP[const Basic] &b) nogil
@@ -73,6 +74,7 @@ cdef extern from "basic.h" namespace "CSymPy":
     bool is_a_Abs "CSymPy::is_a<CSymPy::Abs>"(const Basic &b) nogil
     bool is_a_Derivative "CSymPy::is_a<CSymPy::Derivative>"(const Basic &b) nogil
     bool is_a_Subs "CSymPy::is_a<CSymPy::Subs>"(const Basic &b) nogil
+    bool is_a_FunctionWrapper "CSymPy::is_a<CSymPy::FunctionWrapper>"(const Basic &b) nogil
 
     RCP[const Basic] expand(RCP[const Basic] &o) nogil except +
 
@@ -141,6 +143,7 @@ cdef extern from "basic.h" namespace "CSymPy":
     RCP[const Basic] rcp(Integer *p) nogil
     RCP[const Basic] rcp(Subs *p) nogil
     RCP[const Basic] rcp(Derivative *p) nogil
+    RCP[const Basic] rcp(FunctionWrapper *p) nogil
 
 cdef extern from "functions.h" namespace "CSymPy":
     cdef RCP[const Basic] sin(RCP[const Basic] &arg) nogil except+
@@ -159,6 +162,11 @@ cdef extern from "functions.h" namespace "CSymPy":
 
     cdef cppclass FunctionSymbol(Function):
         string get_name() nogil
+
+    cdef cppclass FunctionWrapper(FunctionSymbol):
+        FunctionWrapper(void* obj, string name, string hash_, const vec_basic &arg, \
+            void (*dec_ref)(void *), int (*comp)(void *, void *))
+        void* get_object()
 
     cdef cppclass Derivative(Basic):
         Derivative(const RCP[const Basic] &arg, const vec_basic &x) nogil

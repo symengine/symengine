@@ -547,7 +547,7 @@ public:
 RCP<const Basic> dirichlet_eta(const RCP<const Basic> &s);
 
 class FunctionSymbol : public Function {
-private:
+protected:
     std::string name_; //! The `f` in `f(x+y, z)`
     vec_basic arg_; //! The `x+y`, `z` in `f(x+y, z)`
 
@@ -584,6 +584,39 @@ RCP<const Basic> function_symbol(std::string name,
         const RCP<const Basic> &arg);
 RCP<const Basic> function_symbol(std::string name,
         const vec_basic &arg);
+
+/*! Class to hold a pointer to a function object
+*   FunctionWrapper can be used to wrap any C/C++ object
+*   (eg: Python object through Python/C API) 
+* */
+
+class FunctionWrapper: public FunctionSymbol {
+private:
+    void* obj_;
+    std::string hash_;
+    void (*dec_ref_)(void *);
+    int (*comp_)(void *, void *);
+
+public:
+    IMPLEMENT_TYPEID(FUNCTIONWRAPPER)
+    /*! FunctionWrapper Constructor
+     * \param obj - Pointer to the function object
+     * \param name - Name of the function
+     * \param hash - Hash value of obj
+     * \param arg - Arguments of the function
+     * \param dec_ref - Function pointer to decrease the reference count
+     * \param comp - Function pointer to compare two function objects
+     * */
+    FunctionWrapper(void* obj, std::string name, std::string hash, const vec_basic &arg,
+        void (*dec_ref)(void *), int (*comp)(void *, void *));
+    ~FunctionWrapper();
+    virtual std::size_t __hash__() const;
+    virtual bool __eq__(const Basic &o) const;
+    virtual int compare(const Basic &o) const;
+    virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
+    //! \return Pointer to the function object
+    inline void* get_object() const { return obj_; }
+};
 
 /*! Derivative operator
  *  Derivative(f, [x, y, ...]) represents a derivative of `f` with respect to

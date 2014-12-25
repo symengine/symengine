@@ -1519,6 +1519,54 @@ RCP<const Basic> function_symbol(std::string name, const RCP<const Basic> &arg)
     return rcp(new FunctionSymbol(name, arg));
 }
 
+FunctionWrapper::FunctionWrapper(void* obj, std::string name, std::string hash, const vec_basic &arg, 
+    void(*dec_ref)(void *), int(*comp)(void *, void *))
+    : FunctionSymbol(name, arg)
+{
+    obj_ = obj;
+    hash_ = hash;
+    dec_ref_ = dec_ref;
+    comp_ = comp;
+    CSYMPY_ASSERT(is_canonical(arg_))
+}
+
+FunctionWrapper::~FunctionWrapper()
+{
+    (*dec_ref_)(obj_);
+}
+
+std::size_t FunctionWrapper::__hash__() const
+{
+    std::size_t seed = 0;
+    hash_combine<std::string>(seed, hash_);
+    return seed;
+}
+
+int FunctionWrapper::compare(const Basic &o) const
+{
+    CSYMPY_ASSERT(is_a<FunctionWrapper>(o))
+    const FunctionWrapper &s = static_cast<const FunctionWrapper &>(o);
+    return (*comp_)(obj_, s.obj_);
+}
+
+bool FunctionWrapper::__eq__(const Basic &o) const
+{
+    if (is_a<FunctionWrapper>(o) &&
+        (*comp_)(obj_, static_cast<const FunctionWrapper &>(o).obj_) == 0)
+        return true;
+    return false;
+}
+
+RCP<const Basic> FunctionWrapper::diff(const RCP<const Symbol> &x) const
+{
+    for (auto &a : arg_) {
+        if (neq(a->diff(x), zero)) {
+            return rcp(new Derivative(rcp(this), {x}));
+        }
+    }
+    return zero;
+}
+
 /* ---------------------------- */
 
 Derivative::Derivative(const RCP<const Basic> &arg, const vec_basic &x)
@@ -1552,6 +1600,8 @@ bool Derivative::is_canonical(const RCP<const Basic> &arg,
         }
         return found_s;
     } else if (is_a<Abs>(*arg)) {
+        return true;
+    } else if (is_a<FunctionWrapper>(*arg)) {
         return true;
     }
     return false;

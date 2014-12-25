@@ -64,6 +64,8 @@ using CSymPy::lowergamma;
 using CSymPy::uppergamma;
 using CSymPy::abs;
 using CSymPy::Subs;
+using CSymPy::FunctionWrapper;
+using CSymPy::vec_basic;
 
 void test_sin()
 {
@@ -1717,6 +1719,59 @@ void test_abs()
     assert(eq(abs(x)->diff(y), integer(0)));
 }
 
+// Test FunctionWrapper
+void dec_ref(void* obj);
+int comp(void* o1, void* o2);
+
+class DummyFunction {
+    public :
+        std::string name_;
+        std::string hash_;
+        vec_basic args_;
+        int count_;
+        inline DummyFunction(std::string name, std::string hash, vec_basic args)
+            : name_{name}, hash_{hash}, args_{args}, count_{0} {
+        }
+        RCP<const Basic> getFunctionWrapper() {
+            ++count_;
+            return rcp(new FunctionWrapper((void*)this, name_, hash_, args_, &dec_ref, &comp));
+        }
+};
+
+void dec_ref(void* obj)
+{
+    DummyFunction* o = (DummyFunction*)obj;
+    o->count_ = o->count_ - 1;
+}
+
+int comp(void* o1, void* o2)
+{
+    DummyFunction* d1 = (DummyFunction*)o1;
+    DummyFunction* d2 = (DummyFunction*)o2;
+    if (d1->name_ == d2->name_)
+        return 0;
+    else return d1->name_ < d2->name_ ? -1 : 1;
+}
+
+void test_FunctionWrapper()
+{
+    RCP<const Basic> x = symbol("x");
+    RCP<const Basic> y = symbol("y");
+
+    DummyFunction a = DummyFunction("Foo", "hashFoo", {x, y});
+    DummyFunction b = DummyFunction("Bar", "hashBar", {y, y});
+    RCP<const Basic> wrap_a = a.getFunctionWrapper();
+    RCP<const Basic> wrap_b = b.getFunctionWrapper();
+
+    assert(wrap_a->compare(*wrap_b) == 1);
+    assert(wrap_b->compare(*wrap_a) == -1);
+    assert(wrap_a->compare(*wrap_a) == 0);
+
+    wrap_a.reset();
+    assert(a.count_ == 0);
+}
+/* ---------------------------- */
+
 int main(int argc, char* argv[])
 {
     print_stack_on_segfault();    
@@ -1756,5 +1811,6 @@ int main(int argc, char* argv[])
     test_uppergamma();
     test_abs();
     test_Subs();
+    test_FunctionWrapper();
     return 0;
 }
