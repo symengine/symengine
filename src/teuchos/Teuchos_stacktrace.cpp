@@ -51,8 +51,10 @@
 // The following C headers are needed for some specific C functionality (see
 // the comments), which is not available in C++:
 
+#ifdef HAVE_TEUCHOS_EXECINFO
 // backtrace() function for retrieving the stacktrace
-#include <execinfo.h>
+#  include <execinfo.h>
+#endif
 
 // For demangling function names
 #include <cxxabi.h>
@@ -453,8 +455,12 @@ RCP<StacktraceAddresses> get_stacktrace_addresses(int impl_stacktrace_depth)
 {
   const int STACKTRACE_ARRAY_SIZE = 100; // 2010/05/22: rabartl: Is this large enough?
   void *stacktrace_array[STACKTRACE_ARRAY_SIZE];
+#ifdef HAVE_TEUCHOS_EXECINFO
   const size_t stacktrace_size = backtrace(stacktrace_array,
     STACKTRACE_ARRAY_SIZE);
+#else
+  const size_t stacktrace_size = 0;
+#endif
   return rcp(new StacktraceAddresses(stacktrace_array, stacktrace_size,
       impl_stacktrace_depth+1));
 }

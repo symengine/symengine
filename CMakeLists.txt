@@ -102,6 +102,7 @@ if (WITH_BFD)
     set(LIBS ${LIBS} ${BFD_LIBRARIES})
     set(HAVE_TEUCHOS_BFD yes)
     set(HAVE_TEUCHOS_LINK yes)
+    set(HAVE_TEUCHOS_EXECINFO yes)
 endif()
 
 # Doxygen

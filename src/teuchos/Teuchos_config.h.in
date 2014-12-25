@@ -119,6 +119,8 @@
 
 #cmakedefine HAVE_TEUCHOS_BFD
 
+#cmakedefine HAVE_TEUCHOS_EXECINFO
+
 #define HAVE_TEUCHOS_STACKTRACE
 
 /* These git commits to binutils (which change bfd/bfd-in.h):
