@@ -13,12 +13,13 @@ namespace CSymPy {
 
 int Basic::__cmp__(const Basic &o) const
 {
-    TypeID a = this->get_type_code();
-    TypeID b = o.get_type_code();
+    auto a = this->get_type_code();
+    auto b = o.get_type_code();
     if (a == b) {
         return this->compare(o);
     } else {
-        // This order is compiler implementation specific:
+        // We return the order given by the numerical value of the TypeID enum type.
+        // The types don't need to be ordered in any given way, they just need to be ordered.
         return a < b ? -1 : 1;
     }
 }

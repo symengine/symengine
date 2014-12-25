@@ -419,8 +419,8 @@ void test_compare()
     assert(r2->compare(*r1) == 1);
     assert(r1->compare(*r1) == 0);
 
-    // These are compiler implementation specific, so we just make sure that if
-    // x < y, then y > x.
+    // These are specific to the order in the declaration of enum TypeID,
+    // so we just make sure that if x < y, then y > x.
     r1 = add(x, z);
     r2 = mul(x, y);
     int cmp = r1->__cmp__(*r2);
