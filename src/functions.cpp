@@ -317,7 +317,7 @@ int Sin::compare(const Basic &o) const
 {
     CSYMPY_ASSERT(is_a<Sin>(o))
     const Sin &s = static_cast<const Sin &>(o);
-    return get_arg()->__cmp__(s);
+    return get_arg()->__cmp__(*(s.get_arg()));
 }
 
 std::string Sin::__str__() const
@@ -391,7 +391,7 @@ int Cos::compare(const Basic &o) const
 {
     CSYMPY_ASSERT(is_a<Cos>(o))
     const Cos &s = static_cast<const Cos &>(o);
-    return get_arg()->__cmp__(s);
+    return get_arg()->__cmp__(*(s.get_arg()));
 }
 
 std::string Cos::__str__() const
@@ -466,7 +466,7 @@ int Tan::compare(const Basic &o) const
 {
     CSYMPY_ASSERT(is_a<Tan>(o))
     const Tan &s = static_cast<const Tan &>(o);
-    return get_arg()->__cmp__(s);
+    return get_arg()->__cmp__(*(s.get_arg()));
 }
 
 
@@ -543,7 +543,7 @@ int Cot::compare(const Basic &o) const
 {
     CSYMPY_ASSERT(is_a<Cot>(o))
     const Cot &s = static_cast<const Cot &>(o);
-    return get_arg()->__cmp__(s);
+    return get_arg()->__cmp__(*(s.get_arg()));
 }
 
 
@@ -619,7 +619,7 @@ int Csc::compare(const Basic &o) const
 {
     CSYMPY_ASSERT(is_a<Csc>(o))
     const Csc &s = static_cast<const Csc &>(o);
-    return get_arg()->__cmp__(s);
+    return get_arg()->__cmp__(*(s.get_arg()));
 }
 
 std::string Csc::__str__() const
@@ -694,7 +694,7 @@ bool Sec::__eq__(const Basic &o) const
 int Sec::compare(const Basic &o) const
 {    CSYMPY_ASSERT(is_a<Sec>(o))
     const Sec &s = static_cast<const Sec &>(o);
-    return get_arg()->__cmp__(s);
+    return get_arg()->__cmp__(*(s.get_arg()));
 }
 
 std::string Sec::__str__() const
@@ -766,7 +766,7 @@ int ASin::compare(const Basic &o) const
 {
     CSYMPY_ASSERT(is_a<ASin>(o))
     const ASin &s = static_cast<const ASin &>(o);
-    return get_arg()->__cmp__(s);
+    return get_arg()->__cmp__(*(s.get_arg()));
 }
 
 
@@ -825,7 +825,7 @@ int ACos::compare(const Basic &o) const
 {
     CSYMPY_ASSERT(is_a<ACos>(o))
     const ACos &s = static_cast<const ACos &>(o);
-    return get_arg()->__cmp__(s);
+    return get_arg()->__cmp__(*(s.get_arg()));
 }
 
 
@@ -888,7 +888,7 @@ int ASec::compare(const Basic &o) const
 {
     CSYMPY_ASSERT(is_a<ASec>(o))
     const ASec &s = static_cast<const ASec &>(o);
-    return get_arg()->__cmp__(s);
+    return get_arg()->__cmp__(*(s.get_arg()));
 }
 
 
@@ -950,7 +950,7 @@ int ACsc::compare(const Basic &o) const
 {
     CSYMPY_ASSERT(is_a<ACsc>(o))
     const ACsc &s = static_cast<const ACsc &>(o);
-    return get_arg()->__cmp__(s);
+    return get_arg()->__cmp__(*(s.get_arg()));
 }
 
 
@@ -1007,7 +1007,7 @@ int ATan::compare(const Basic &o) const
 {
     CSYMPY_ASSERT(is_a<ATan>(o))
     const ATan &s = static_cast<const ATan &>(o);
-    return get_arg()->__cmp__(s);
+    return get_arg()->__cmp__(*(s.get_arg()));
 }
 
 
@@ -1065,7 +1065,7 @@ int ACot::compare(const Basic &o) const
 {
     CSYMPY_ASSERT(is_a<ACot>(o))
     const ACot &s = static_cast<const ACot &>(o);
-    return get_arg()->__cmp__(s);
+    return get_arg()->__cmp__(*(s.get_arg()));
 }
 
 
@@ -1131,7 +1131,7 @@ int ATan2::compare(const Basic &o) const
 {
     CSYMPY_ASSERT(is_a<ATan2>(o))
     const ATan2 &s = static_cast<const ATan2 &>(o);
-    return div(num_, den_)->__cmp__(s);
+    return div(num_, den_)->__cmp__(*div(s.num_, s.den_));
 }
 
 
@@ -1890,7 +1890,7 @@ int Sinh::compare(const Basic &o) const
 {
     CSYMPY_ASSERT(is_a<Sinh>(o))
     const Sinh &s = static_cast<const Sinh &>(o);
-    return get_arg()->__cmp__(s);
+    return get_arg()->__cmp__(*(s.get_arg()));
 }
 
 
@@ -1957,7 +1957,7 @@ int Cosh::compare(const Basic &o) const
 {
     CSYMPY_ASSERT(is_a<Cosh>(o))
     const Cosh &s = static_cast<const Cosh &>(o);
-    return get_arg()->__cmp__(s);
+    return get_arg()->__cmp__(*(s.get_arg()));
 }
 
 std::string Cosh::__str__() const
@@ -2023,7 +2023,7 @@ int Tanh::compare(const Basic &o) const
 {
     CSYMPY_ASSERT(is_a<Tanh>(o))
     const Tanh &s = static_cast<const Tanh &>(o);
-    return get_arg()->__cmp__(s);
+    return get_arg()->__cmp__(*(s.get_arg()));
 }
 
 
@@ -2092,7 +2092,7 @@ int Coth::compare(const Basic &o) const
 {
     CSYMPY_ASSERT(is_a<Coth>(o))
     const Coth &s = static_cast<const Coth &>(o);
-    return get_arg()->__cmp__(s);
+    return get_arg()->__cmp__(*(s.get_arg()));
 }
 
 
@@ -2164,7 +2164,7 @@ int ASinh::compare(const Basic &o) const
 {
     CSYMPY_ASSERT(is_a<ASinh>(o))
     const ASinh &s = static_cast<const ASinh &>(o);
-    return get_arg()->__cmp__(s);
+    return get_arg()->__cmp__(*(s.get_arg()));
 }
 
 
@@ -2223,7 +2223,7 @@ int ACosh::compare(const Basic &o) const
 {
     CSYMPY_ASSERT(is_a<ACosh>(o))
     const ACosh &s = static_cast<const ACosh &>(o);
-    return get_arg()->__cmp__(s);
+    return get_arg()->__cmp__(*(s.get_arg()));
 }
 
 
@@ -2279,7 +2279,7 @@ int ATanh::compare(const Basic &o) const
 {
     CSYMPY_ASSERT(is_a<ATanh>(o))
     const ATanh &s = static_cast<const ATanh &>(o);
-    return get_arg()->__cmp__(s);
+    return get_arg()->__cmp__(*(s.get_arg()));
 }
 
 
@@ -2339,7 +2339,7 @@ int ACoth::compare(const Basic &o) const
 {
     CSYMPY_ASSERT(is_a<ACoth>(o))
     const ACoth &s = static_cast<const ACoth &>(o);
-    return get_arg()->__cmp__(s);
+    return get_arg()->__cmp__(*(s.get_arg()));
 }
 
 
