@@ -1,0 +1,90 @@
+language: python
+env:
+  ## All these variables are sent into the bin/test_travis.sh script. See this
+  ## script to know how they are used. Most of them are just passed to cmake,
+  ## so if they are not set, cmake will use a default value. For the rest, the
+  ## bin/test_travis.sh script usually checks for either "yes" or "no" in an if
+  ## statement, so if the variable is not set, the other if branch will get
+  ## executed.
+
+  ## Out of tree builds (default):
+  # Debug build
+  - BUILD_TYPE="Debug"
+  # Debug build (with BFD and CSYMPY_ASSERT)
+  - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_CSYMPY_ASSERT="yes"
+  # Debug build (with BFD and CSYMPY_ASSERT) with Python 2.7
+  - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_CSYMPY_ASSERT="yes" WITH_PYTHON="yes" PYTHON_VERSION="2.7"
+  # Debug build (with BFD and CSYMPY_ASSERT and CSYMPY_THREAD_SAFE)
+  - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_CSYMPY_ASSERT="yes" WITH_CSYMPY_THREAD_SAFE="yes"
+  # Debug build (with BFD and CSYMPY_ASSERT) with ECM
+  - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_CSYMPY_ASSERT="yes" WITH_ECM="yes"
+  # Debug build (with BFD and CSYMPY_ASSERT) with PRIMESIEVE
+  - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_CSYMPY_ASSERT="yes" WITH_PRIMESIEVE="yes"
+  # Debug build (with BFD and CSYMPY_ASSERT) with Arb
+  - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_CSYMPY_ASSERT="yes" WITH_ARB="yes"
+  # Debug build with Teuchos::RCP (just to test that it compiles)
+  - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_CSYMPY_RCP="no"
+  # Release build (with BFD)
+  - WITH_BFD="yes"
+
+  ## In-tree builds (we just check a few configurations to make sure they work):
+  # Debug build without Python:
+  - BUILD_TYPE="Debug" WITH_BFD="yes" TEST_IN_TREE="yes"
+  # Debug build with Python 2.7:
+  - BUILD_TYPE="Debug" WITH_BFD="yes" TEST_IN_TREE="yes" WITH_PYTHON="yes" WITH_CSYMPY_ASSERT="yes" PYTHON_VERSION="2.7"
+  # Release build with Python 2.7:
+  - TEST_IN_TREE="yes" WITH_PYTHON="yes" PYTHON_VERSION="2.7"
+
+  # These test the default Release build with other Python versions
+  - WITH_PYTHON="yes" PYTHON_VERSION="2.6"
+  - WITH_PYTHON="yes" PYTHON_VERSION="3.3"
+  - WITH_PYTHON="yes" PYTHON_VERSION="3.4"
+
+  # These test the setup.py file
+  - TEST_IN_TREE="yes" PYTHON_INSTALL="yes" PYTHON_VERSION="2.6"
+  - TEST_IN_TREE="yes" PYTHON_INSTALL="yes" PYTHON_VERSION="2.7"
+  - TEST_IN_TREE="yes" PYTHON_INSTALL="yes" PYTHON_VERSION="3.3"
+  - TEST_IN_TREE="yes" PYTHON_INSTALL="yes" PYTHON_VERSION="3.4"
+
+before_install:
+  - sudo apt-get update
+  - sudo apt-get install cmake libgmp-dev
+  - if [[ "${WITH_BFD}" == "yes" ]]; then
+        sudo apt-get install binutils-dev;
+    fi
+  - if [[ "${WITH_ECM}" == "yes" ]]; then
+        sudo apt-get install libecm-dev;
+    fi
+  - if [[ "${WITH_PRIMESIEVE}" == "yes" ]]; then
+        wget http://dl.bintray.com/kimwalisch/primesieve/primesieve-5.2.tar.gz;
+        tar -xzf primesieve-5.2.tar.gz;
+        cd primesieve-5.2 && ./configure && make && sudo make install && cd ..;
+    fi
+  - if [[ "${WITH_ARB}" == "yes" ]]; then
+        sudo apt-get install libmpfr-dev;
+        wget http://www.flintlib.org/flint-2.4.4.tar.gz;
+        tar -xzf flint-2.4.4.tar.gz;
+        cd flint-2.4.4 && ./configure && make && sudo make install && cd ..;
+        wget https://github.com/fredrik-johansson/arb/archive/2.2.0.tar.gz;
+        tar -xzf 2.2.0.tar.gz;
+        cd arb-2.2.0 && ./configure && make ARB_GMP_LIB_DIR=/usr/lib/x86_64-linux-gnu ARB_MPFR_LIB_DIR=/usr/lib/x86_64-linux-gnu && sudo make ARB_GMP_LIB_DIR=/usr/lib/x86_64-linux-gnu ARB_MPFR_LIB_DIR=/usr/lib/x86_64-linux-gnu install && cd ..;
+    fi
+  - if [[ "${WITH_PYTHON}" == "yes" ]] || [[ "${PYTHON_INSTALL}" == "yes" ]]; then
+        wget http://repo.continuum.io/miniconda/Miniconda3-3.7.3-Linux-x86_64.sh -O miniconda.sh;
+        bash miniconda.sh -b -p $HOME/miniconda;
+        export PATH="$HOME/miniconda/bin:$PATH";
+        hash -r;
+        conda config --set always_yes yes --set changeps1 no;
+        conda update -q conda;
+        conda info -a;
+
+        conda create -q -n test-environment python="${PYTHON_VERSION}" pip cython sympy nose pytest;
+        source activate test-environment;
+        rm $HOME/miniconda/envs/test-environment/bin/../lib/libm.so.6;
+    fi
+  - export CC=gcc
+  - export CXX=g++
+script:
+  - bin/test_travis.sh
+notifications:
+  email: false
