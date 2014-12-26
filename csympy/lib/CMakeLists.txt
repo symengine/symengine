@@ -13,7 +13,7 @@ if (CMAKE_CXX_COMPILER_ID MATCHES GNU|Clang)
   # Must suppress strict aliasing for this file
   set_source_files_properties(
     csympy_wrapper.cpp
-    PROPERTIES COMPILE_FLAGS "-fno-strict-aliasing -Wno-unused-function"
+    PROPERTIES COMPILE_FLAGS "-fno-strict-aliasing -Wno-unused-function -Wno-constant-logical-operand"
     )
 endif()
 
