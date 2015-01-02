@@ -2,7 +2,6 @@
 #include "cwrapper.h"
 
 void test_cwrapper() {
-    char* x_ = "x";
     char* s;
     basic x = basic_new(), y = basic_new(), z = basic_new();
     basic_symbol(x, "x");
