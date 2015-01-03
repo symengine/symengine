@@ -18,9 +18,10 @@ namespace CSymPy {
 using CSymPy::CWrapper;
 
 extern "C" {
-#endif
 
+#else
 typedef struct CWrapper CWrapper;
+#endif
 
 //! basic is a pointer to a CWrapper which wraps the C++ class.
 // A basic type should be initialized using the return value of basic_new(), before any
