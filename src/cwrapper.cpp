@@ -10,10 +10,12 @@
 #include "pow.h"
 #include "add.h"
 #include "number.h"
+#include "constants.h"
 
 using CSymPy::Basic;
 using CSymPy::RCP;
 using CSymPy::rcp;
+using CSymPy::zero;
 using CSymPy::Symbol;
 using CSymPy::Rational;
 using CSymPy::Integer;
@@ -21,11 +23,20 @@ using CSymPy::Number;
 using CSymPy::rcp_static_cast;
 using CSymPy::is_a;
 
+class CWrapper {
+    public:
+        RCP<const Basic> ptr;
+        CWrapper() {
+            ptr = zero;
+        }
+};
+
 extern "C" {
 
 void basic_free(basic s)
 {
     s->ptr.reset();
+    delete s;
 }
 
 basic basic_new()
@@ -135,25 +146,30 @@ void basic_expand(basic s, const basic a)
     s->ptr = CSymPy::expand(a->ptr);
 }
 
-char* basic_str(const basic s) {
+char* basic_str(const basic s)
+{
     std::string str = s->ptr->__str__();
-    char* cc = (char*) malloc(sizeof(char) * (str.size() + 1));
-    std::copy(str.begin(), str.end(), cc);
-    cc[str.size()] = '\0';
+    char *cc = new char[str.length()+1];
+    std::strcpy(cc, str.c_str());
     return cc;
+}
+
+void basic_str_free(char* s)
+{
+    delete[] s;
 }
 
 int is_a_Integer(const basic c)
 {
-    return (c->ptr->get_type_code() == CSymPy::INTEGER) ? 1 : 0;
+    return is_a<Integer>(*(c->ptr));
 }
 int is_a_Rational(const basic c)
 {
-    return (c->ptr->get_type_code() == CSymPy::RATIONAL) ? 1 : 0;
+    return is_a<Rational>(*(c->ptr));
 }
 int is_a_Symbol(const basic c)
 {
-    return (c->ptr->get_type_code() == CSymPy::SYMBOL) ? 1 : 0;
+    return is_a<Symbol>(*(c->ptr));
 }
 
 }

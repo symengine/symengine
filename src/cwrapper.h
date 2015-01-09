@@ -4,24 +4,10 @@
 #include <gmp.h>
 
 #ifdef __cplusplus
-#include "basic.h"
-#include "constants.h"
-namespace CSymPy {
-    class CWrapper {
-        public:
-            RCP<const Basic> ptr;
-            CWrapper() {
-                ptr = zero;
-            }
-    };
-}
-using CSymPy::CWrapper;
-
 extern "C" {
-
-#else
-typedef struct CWrapper CWrapper;
 #endif
+
+typedef struct CWrapper CWrapper;
 
 //! basic is a pointer to a CWrapper which wraps the C++ class.
 // A basic type should be initialized using the return value of basic_new(), before any
@@ -84,6 +70,8 @@ void basic_expand(basic s, const basic a);
 
 //! Returns a new char pointer to the string representation of s.
 char* basic_str(const basic s);
+//! Frees the string s
+void basic_str_free(char* s);
 
 //! Return 1 if s is an Integer, 0 if not.
 int is_a_Integer(const basic s);
