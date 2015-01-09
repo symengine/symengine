@@ -25,6 +25,7 @@ src/teuchos/Teuchos_config.h
 # Python build files
 build*
 *__pycache__*
+*.pyc
 
 # Temp files
 *~
@@ -43,6 +44,7 @@ src/tests/ntheory/test_ntheory
 src/tests/ntheory/test_diophantine
 src/tests/printing/test_printing
 src/tests/rcp/test_rcp
+src/tests/cwrapper/test_cwrapper
 
 # Benchmarks executables
 benchmarks/add1
