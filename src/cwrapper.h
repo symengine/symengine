@@ -36,25 +36,32 @@ void basic_assign(basic a, const basic b);
 void basic_free(basic s);
 
 //! Assign to s, a symbol with string representation c.
-void basic_symbol(basic s, char* c);
+void symbol_set(basic s, char* c);
 
 //! Assign to s, a long.
-void basic_integer_si(basic s, long i);
+void integer_set_si(basic s, long i);
 //! Assign to s, a ulong.
-void basic_integer_ui(basic s, unsigned long i);
+void integer_set_ui(basic s, unsigned long i);
 //! Assign to s, a mpz_t.
-void basic_integer_mpz(basic s, const mpz_t i);
+void integer_set_mpz(basic s, const mpz_t i);
 //! Assign to s, an integer that has base 10 representation c.
-void basic_integer_str(basic s, char* c);
+void integer_set_str(basic s, char* c);
+
+//! Returns signed long value of s.
+long integer_get_si(basic s);
+//! Returns unsigned long value of s.
+long integer_get_ui(basic s);
+//! Returns s as a mpz_t.
+long integer_get_mpz(basic s);
 
 //! Assign to s, a rational i/j. Returns 0 if either i or j is not an integer.
-int basic_rational(basic s, const basic i, const basic j);
+int rational_set(basic s, const basic i, const basic j);
 //! Assign to s, a rational i/j, where i and j are signed longs.
-void basic_rational_si(basic s, long i, long j);
+void rational_set_si(basic s, long i, long j);
 //! Assign to s, a rational i/j, where i and j are unsigned longs.
-void basic_rational_ui(basic s, unsigned long i, unsigned long j);
+void rational_set_ui(basic s, unsigned long i, unsigned long j);
 //! Assign to s, a rational i, where is of type mpq_t.
-void basic_rational_mpq(basic s, const mpq_t i);
+void rational_set_mpq(basic s, const mpq_t i);
 
 //! Assigns s = a + b.
 void basic_add(basic s, const basic a, const basic b);

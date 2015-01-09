@@ -33,42 +33,42 @@ basic basic_new()
     return new CWrapper();
 }
 
-void basic_symbol(basic s, char* c)
+void symbol_set(basic s, char* c)
 {
     s->ptr = CSymPy::symbol(std::string(c));
 }
 
-void basic_integer_si(basic s, long i)
+void integer_set_si(basic s, long i)
 {
     s->ptr = CSymPy::integer(mpz_class(i));
 }
 
-void basic_integer_ui(basic s, unsigned long i)
+void integer_set_ui(basic s, unsigned long i)
 {
     s->ptr = CSymPy::integer(mpz_class(i));
 }
 
-void basic_integer_mpz(basic s, const mpz_t i)
+void integer_set_mpz(basic s, const mpz_t i)
 {
     s->ptr = CSymPy::integer(mpz_class(i));
 }
 
-void basic_integer_str(basic s, char* c)
+void integer_set_str(basic s, char* c)
 {
     s->ptr = CSymPy::integer(mpz_class(c, 10));
 }
 
-void basic_rational_si(basic s, long a, long b)
+void rational_set_si(basic s, long a, long b)
 {
     s->ptr = CSymPy::Rational::from_mpq(mpq_class(a, b));
 }
 
-void basic_rational_ui(basic s, unsigned long a, unsigned long b)
+void rational_set_ui(basic s, unsigned long a, unsigned long b)
 {
     s->ptr = CSymPy::Rational::from_mpq(mpq_class(a, b));
 }
 
-int basic_rational(basic s, const basic a, const basic b)
+int rational_set(basic s, const basic a, const basic b)
 {
     if (!is_a_Integer(a) || !is_a_Integer(b)) {
         return 0;
@@ -78,7 +78,7 @@ int basic_rational(basic s, const basic a, const basic b)
     return 1;
 }
 
-void basic_rational_mpq(basic s, const mpq_t i)
+void rational_set_mpq(basic s, const mpq_t i)
 {
     s->ptr = CSymPy::Rational::from_mpq(mpq_class(i));
 }

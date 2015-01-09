@@ -4,19 +4,19 @@
 void test_cwrapper() {
     char* s;
     basic x = basic_new(), y = basic_new(), z = basic_new();
-    basic_symbol(x, "x");
-    basic_symbol(y, "y");
-    basic_symbol(z, "z");
+    symbol_set(x, "x");
+    symbol_set(y, "y");
+    symbol_set(z, "z");
     
     s = basic_str(x);
     printf("Symbol : %s\n", s);
     basic e = basic_new();
 
-    basic_integer_ui(e, 123);
+    integer_set_ui(e, 123);
     s = basic_str(e);
     printf("Integer : %s\n", s);
 
-    basic_integer_ui(e, 456);
+    integer_set_ui(e, 456);
     basic_add(e, e, x);
     basic_mul(e, e, y);
     basic_div(e, e, z);
@@ -24,7 +24,7 @@ void test_cwrapper() {
     basic_diff(e, e, z);
     printf("Basic : %s\n", basic_str(e));
 
-    basic_rational_ui(e, 100, 47);
+    rational_set_ui(e, 100, 47);
     s = basic_str(e);
 
     printf("Rational : %s\n", s);
