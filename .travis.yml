@@ -59,6 +59,6 @@ matrix:
 install:
   - source bin/install_travis.sh
 script:
-  - source bin/test_travis.sh
+  - bin/test_travis.sh
 notifications:
   email: false
