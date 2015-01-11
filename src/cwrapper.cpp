@@ -24,11 +24,7 @@ using CSymPy::rcp_static_cast;
 using CSymPy::is_a;
 
 struct CWrapper {
-    public:
-        RCP<const Basic> ptr;
-        CWrapper() {
-            ptr = zero;
-        }
+    RCP<const Basic> ptr;
 };
 
 extern "C" {
