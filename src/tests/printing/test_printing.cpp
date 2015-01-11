@@ -32,6 +32,7 @@ void test_printing()
     RCP<const Integer> i = integer(-1);
     RCP<const Symbol> x  = symbol("x");
     RCP<const Symbol> y  = symbol("y");
+    RCP<const Symbol> z  = symbol("z");
 
     r = div(integer(12), pow(integer(196), div(integer(1), integer(2))));
     assert(r->__str__() == "(3/49)*196^(1/2)");
@@ -155,6 +156,16 @@ void test_printing()
     assert(r->__str__() == "y^(x^2)");
     assert(r1->__str__() == "3^(2*x)" );
     assert(r2->__str__() == "3^(-x)" );
+
+    r1 = pow(mul(integer(2), x), y);
+    r2 = pow(mul(x, y), z);
+    assert(r1->__str__() == "(2*x)^y");
+    assert(r2->__str__() == "(x*y)^z");
+
+    r1 = pow(pow(integer(2), x), y);
+    r2 = pow(pow(x, y), z);
+    assert(r1->__str__() == "(2^x)^y");
+    assert(r2->__str__() == "(x^y)^z");
 }
 
 void test_matrix()

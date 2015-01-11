@@ -90,7 +90,7 @@ int Pow::compare(const Basic &o) const
 std::string Pow::__str__() const
 {
     std::ostringstream o;
-    if (is_a<Add>(*base_)) {
+    if (is_a<Add>(*base_) || is_a<Mul>(*base_) || is_a<Pow>(*base_)) {
         o << "(" << *base_ << ")";
     } else if ((is_a<Rational>(*base_) || is_a<Integer>(*base_)) &&
                 rcp_static_cast<const Number>(base_)->is_negative()) {
