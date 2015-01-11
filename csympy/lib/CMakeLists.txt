@@ -9,11 +9,11 @@ include_directories(BEFORE ${CMAKE_SOURCE_DIR}/src)
 cython_add_module_pyx(csympy_wrapper csympy.pxd)
 add_python_library(csympy_wrapper ${SRC})
 target_link_libraries(csympy_wrapper csympy teuchos ${LIBS})
-if (CMAKE_CXX_COMPILER_ID STREQUAL GNU)
+if (CMAKE_CXX_COMPILER_ID MATCHES GNU|Clang)
   # Must suppress strict aliasing for this file
   set_source_files_properties(
     csympy_wrapper.cpp
-    PROPERTIES COMPILE_FLAGS "-fno-strict-aliasing -Wno-unused-function"
+    PROPERTIES COMPILE_FLAGS "-fno-strict-aliasing -Wno-unused-function -Wno-constant-logical-operand"
     )
 endif()
 

@@ -1,7 +1,4 @@
-language: cpp
-compiler:
-  - gcc
-  - clang
+language: python
 env:
   ## All these variables are sent into the bin/test_travis.sh script. See this
   ## script to know how they are used. Most of them are just passed to cmake,
@@ -48,13 +45,6 @@ env:
   - TEST_IN_TREE="yes" PYTHON_INSTALL="yes" PYTHON_VERSION="2.7"
   - TEST_IN_TREE="yes" PYTHON_INSTALL="yes" PYTHON_VERSION="3.3"
   - TEST_IN_TREE="yes" PYTHON_INSTALL="yes" PYTHON_VERSION="3.4"
-
-matrix:
-  exclude:
-    - compiler: clang
-  include:
-    - env: BUILD_TYPE="Debug" WITH_BFD="yes" WITH_CSYMPY_ASSERT="yes" WITH_PYTHON="yes" PYTHON_VERSION="2.7"
-      compiler: clang
 
 install:
   - source bin/install_travis.sh

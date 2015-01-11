@@ -24,7 +24,7 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
         "${CMAKE_CXX_FLAGS_RELEASE} -Wno-unused-parameter")
 endif()
 
-if (CMAKE_CXX_COMPILER_ID MATCHES Clang|AppleClang)
+if (CMAKE_CXX_COMPILER_ID MATCHES Clang)
     set(CMAKE_CXX_FLAGS_DEBUG
         "${CMAKE_CXX_FLAGS_DEBUG} -Wno-unused-parameter -ggdb")
     set(CMAKE_CXX_FLAGS_RELEASE
