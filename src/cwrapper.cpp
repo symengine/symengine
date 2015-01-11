@@ -35,7 +35,6 @@ extern "C" {
 
 void basic_free(basic s)
 {
-    s->ptr.reset();
     delete s;
 }
 
