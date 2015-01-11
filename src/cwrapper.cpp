@@ -23,7 +23,7 @@ using CSymPy::Number;
 using CSymPy::rcp_static_cast;
 using CSymPy::is_a;
 
-class CWrapper {
+struct CWrapper {
     public:
         RCP<const Basic> ptr;
         CWrapper() {
