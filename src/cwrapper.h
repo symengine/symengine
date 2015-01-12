@@ -7,15 +7,16 @@
 extern "C" {
 #endif
 
-typedef struct CWrapper CWrapper;
+#define SIZE_OF_RCP_BASIC 8
+
+typedef char basic[SIZE_OF_RCP_BASIC];
 
 //! basic is a pointer to a CWrapper which wraps the C++ class.
 // A basic type should be initialized using the return value of basic_new(), before any
 // function is called. Assignment should be done only by using basic_assign()
-typedef CWrapper* basic;
 
 //! Return a new basic instance.
-basic basic_new();
+void basic_new(basic s);
 //! Assign value of b to a.
 void basic_assign(basic a, const basic b);
 //! Free the C++ class wrapped by s.
