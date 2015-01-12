@@ -24,18 +24,13 @@ using CSymPy::rcp_static_cast;
 using CSymPy::is_a;
 
 struct CWrapper {
-    public:
-        RCP<const Basic> ptr;
-        CWrapper() {
-            ptr = zero;
-        }
+    RCP<const Basic> ptr;
 };
 
 extern "C" {
 
 void basic_free(basic s)
 {
-    s->ptr.reset();
     delete s;
 }
 
