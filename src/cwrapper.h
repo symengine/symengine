@@ -7,7 +7,14 @@
 extern "C" {
 #endif
 
-#define SIZE_OF_RCP_BASIC 8
+// SIZE_OF_RCP_BASIC must be set to be equal to sizeof(RCP<const Basic>). We
+// cannot use C++ in this file, so we need to calculate the size differently.
+// The size of the RCP object on most platforms should then be just the size of
+// the 'T *ptr_' pointer that it contains (as there is no virtual function
+// table). Pointers are all the same size, so we just use the size of 'void *'
+// here. However, this is checked at compile time in cwrapper.cpp, so if the
+// size is different on some platform, the compilation will fail.
+#define SIZE_OF_RCP_BASIC sizeof(void *)
 
 typedef char basic[SIZE_OF_RCP_BASIC];
 
