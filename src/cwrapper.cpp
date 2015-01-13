@@ -31,11 +31,8 @@ extern "C" {
 
 void basic_init(basic s)
 {
-    if (sizeof(RCP<const Basic>) > SIZE_OF_RCP_BASIC) {
-        // The preallocated array is smaller than what is needed for
-        // RCP<const Basic>
-        throw std::runtime_error("Incorrect value in SIZE_OF_RCP_BASIC");
-    }
+    // This check only happens at compile time
+    static_assert(sizeof(RCP<const Basic>) == SIZE_OF_RCP_BASIC, "Size SIZE_OF_RCP_BASIC is not correct");
     // No allocation is being done, but the constructor of RCP is called and
     // the instance is initialized at the memory address 's'.
     new(s) RCP<const Basic>();
