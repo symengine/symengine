@@ -29,7 +29,7 @@ using CSymPy::is_a;
 
 extern "C" {
 
-void basic_new(basic s)
+void basic_init(basic s)
 {
     if (sizeof(RCP<const Basic>) > SIZE_OF_RCP_BASIC) {
         // The preallocated array is smaller than what is needed for

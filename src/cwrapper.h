@@ -12,11 +12,11 @@ extern "C" {
 typedef char basic[SIZE_OF_RCP_BASIC];
 
 //! basic is a pointer to a CWrapper which wraps the C++ class.
-// A basic type should be initialized using the return value of basic_new(), before any
+// A basic type should be initialized using the return value of basic_init(), before any
 // function is called. Assignment should be done only by using basic_assign()
 
 //! Return a new basic instance.
-void basic_new(basic s);
+void basic_init(basic s);
 //! Assign value of b to a.
 void basic_assign(basic a, const basic b);
 //! Free the C++ class wrapped by s.

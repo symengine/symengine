@@ -4,9 +4,9 @@
 void test_cwrapper() {
     char* s;
     basic x, y, z;
-    basic_new(x);
-    basic_new(y);
-    basic_new(z);
+    basic_init(x);
+    basic_init(y);
+    basic_init(z);
     symbol_set(x, "x");
     symbol_set(y, "y");
     symbol_set(z, "z");
@@ -15,7 +15,7 @@ void test_cwrapper() {
     printf("Symbol : %s\n", s);
     basic_str_free(s);
     basic e;
-    basic_new(e);
+    basic_init(e);
 
     integer_set_ui(e, 123);
     s = basic_str(e);
