@@ -32,14 +32,18 @@ extern "C" {
 void basic_init(basic s)
 {
 #if defined(WITH_CSYMPY_RCP)
-    // These checks only happen at compile time
-    static_assert(sizeof(RCP<const Basic>) == SIZE_OF_RCP_BASIC, "Size SIZE_OF_RCP_BASIC is not correct");
+    // These checks only happen at compile time.
+    // Check that 'basic' has the correct size:
+    static_assert(sizeof(RCP<const Basic>) == sizeof(basic), "Size SIZE_OF_RCP_BASIC is not correct");
+    // Check that 'basic' has the correct alignment:
     static_assert(std::alignment_of<RCP<const Basic>>::value == std::alignment_of<basic>::value, "'basic' alignment is not correct");
 #else
     throw std::runtime_error("Teuchos::RCP is not compatible with the C wrappers");
 #endif
     // No allocation is being done, but the constructor of RCP is called and
-    // the instance is initialized at the memory address 's'.
+    // the instance is initialized at the memory address 's'. The above checks
+    // make sure that 's' has the correct size and alignment, which is
+    // necessary for placement new, otherwise the results are undefined.
     new(s) RCP<const Basic>();
 }
 

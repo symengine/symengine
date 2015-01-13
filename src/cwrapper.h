@@ -7,18 +7,21 @@
 extern "C" {
 #endif
 
-// SIZE_OF_RCP_BASIC must be set to be equal to sizeof(RCP<const Basic>). We
-// cannot use C++ in this file, so we need to calculate the size differently.
-// The size of the RCP object on most platforms should then be just the size of
-// the 'T *ptr_' pointer that it contains (as there is no virtual function
-// table). Pointers are all the same size, so we just use the size of 'void *'
-// here. However, this is checked at compile time in cwrapper.cpp, so if the
-// size is different on some platform, the compilation will fail.
-#define SIZE_OF_RCP_BASIC sizeof(void *)
-
+// The size of 'basic_struct' must be the same as RCP<const Basic> *and* they
+// must have the same alignment (because we allocate RCP<const Basic> into the
+// memory occupied by this struct in cwrapper.cpp). We cannot use C++ in this
+// file, so we need to use C tools to arrive at the correct size and alignment.
+// The size of the RCP object on most platforms should be just the size of the
+// 'T *ptr_' pointer that it contains (as there is no virtual function table)
+// and the alignment should also be of a pointer. So we just put 'void *data'
+// as the only member of the struct, that should have the correct size and
+// alignment.  However, this is checked at compile time in cwrapper.cpp, so if
+// the size or alignment is different on some platform, the compilation will
+// fail --- in that case one needs to modify the contents of this struct to
+// adjust its size and/or alignment.
 typedef struct
 {
-    char data[SIZE_OF_RCP_BASIC]  __attribute__ ((aligned (8)));
+    void *data;
 } basic_struct;
 
 typedef basic_struct basic[1];
