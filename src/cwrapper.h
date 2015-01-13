@@ -18,7 +18,7 @@ extern "C" {
 
 typedef struct
 {
-    char ptr[SIZE_OF_RCP_BASIC]  __attribute__ ((aligned (8)));
+    char data[SIZE_OF_RCP_BASIC]  __attribute__ ((aligned (8)));
 } basic_struct;
 
 typedef basic_struct basic[1];
