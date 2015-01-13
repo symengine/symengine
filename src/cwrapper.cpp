@@ -34,9 +34,9 @@ void basic_init(basic s)
 #if defined(WITH_CSYMPY_RCP)
     // These checks only happen at compile time.
     // Check that 'basic' has the correct size:
-    static_assert(sizeof(RCP<const Basic>) == sizeof(basic), "Size SIZE_OF_RCP_BASIC is not correct");
+    static_assert(sizeof(RCP<const Basic>) == sizeof(basic), "Size of 'basic' is not correct");
     // Check that 'basic' has the correct alignment:
-    static_assert(std::alignment_of<RCP<const Basic>>::value == std::alignment_of<basic>::value, "'basic' alignment is not correct");
+    static_assert(std::alignment_of<RCP<const Basic>>::value == std::alignment_of<basic>::value, "Alignment of 'basic' is not correct");
 #else
     throw std::runtime_error("Teuchos::RCP is not compatible with the C wrappers");
 #endif
