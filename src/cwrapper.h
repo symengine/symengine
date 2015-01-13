@@ -16,7 +16,12 @@ extern "C" {
 // size is different on some platform, the compilation will fail.
 #define SIZE_OF_RCP_BASIC sizeof(void *)
 
-typedef char basic[SIZE_OF_RCP_BASIC];
+typedef struct
+{
+    char ptr[SIZE_OF_RCP_BASIC]  __attribute__ ((aligned (8)));
+} basic_struct;
+
+typedef basic_struct basic[1];
 
 //! basic is internally implemented as a char array of sufficient size to hold
 // the RCP<const Basic> instance, that is then used by the user to allocate the
