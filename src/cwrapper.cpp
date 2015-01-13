@@ -31,8 +31,9 @@ extern "C" {
 
 void basic_init(basic s)
 {
-    // This check only happens at compile time
+    // These checks only happen at compile time
     static_assert(sizeof(RCP<const Basic>) == SIZE_OF_RCP_BASIC, "Size SIZE_OF_RCP_BASIC is not correct");
+    static_assert(std::alignment_of<RCP<const Basic>>::value == alignof(s), "'basic' alignment is not correct");
     // No allocation is being done, but the constructor of RCP is called and
     // the instance is initialized at the memory address 's'.
     new(s) RCP<const Basic>();
