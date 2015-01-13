@@ -23,7 +23,7 @@ using CSymPy::Number;
 using CSymPy::rcp_static_cast;
 using CSymPy::is_a;
 
-#define RCP_cast_general(x, CONST) (static_cast<CONST RCP<const Basic> *>(static_cast<CONST void *>(x)))
+#define RCP_cast_general(x, CONST) (reinterpret_cast<CONST RCP<const Basic> *>(x))
 #define RCP_cast(x) RCP_cast_general(x, )
 #define RCP_const_cast(x) RCP_cast_general(x, const)
 
