@@ -23,8 +23,8 @@ using CSymPy::Number;
 using CSymPy::rcp_static_cast;
 using CSymPy::is_a;
 
-#define RCP_cast(x) (static_cast<RCP<const Basic> *>(static_cast<void *>(x)));
-#define RCP_cast_const(x) (static_cast<const RCP<const Basic> *>(static_cast<const void *>(x)));
+#define RCP_cast(x) (static_cast<RCP<const Basic> *>(static_cast<void *>(x)))
+#define RCP_const_cast(x) (static_cast<const RCP<const Basic> *>(static_cast<const void *>(x)))
 
 extern "C" {
 
@@ -42,153 +42,116 @@ void basic_new(basic s)
 
 void basic_free(basic s)
 {
-    RCP<const Basic> *p = RCP_cast(s);
-    p->~RCP();
+    RCP_cast(s)->~RCP();
 }
 
 void symbol_set(basic s, char* c)
 {
-    RCP<const Basic> *p = RCP_cast(s);
-    *p = CSymPy::symbol(std::string(c));
+    *RCP_cast(s) = CSymPy::symbol(std::string(c));
 }
 
 void integer_set_si(basic s, long i)
 {
-    RCP<const Basic> *p = RCP_cast(s);
-    *p = CSymPy::integer(mpz_class(i));
+    *RCP_cast(s) = CSymPy::integer(mpz_class(i));
 }
 
 void integer_set_ui(basic s, unsigned long i)
 {
-    RCP<const Basic> *p = RCP_cast(s);
-    *p = CSymPy::integer(mpz_class(i));
+    *RCP_cast(s) = CSymPy::integer(mpz_class(i));
 }
 
 void integer_set_mpz(basic s, const mpz_t i)
 {
-    RCP<const Basic> *p = RCP_cast(s);
-    *p = CSymPy::integer(mpz_class(i));
+    *RCP_cast(s) = CSymPy::integer(mpz_class(i));
 }
 
 void integer_set_str(basic s, char* c)
 {
-    RCP<const Basic> *p = RCP_cast(s);
-    *p = CSymPy::integer(mpz_class(c, 10));
+    *RCP_cast(s) = CSymPy::integer(mpz_class(c, 10));
 }
 
 void rational_set_si(basic s, long a, long b)
 {
-    RCP<const Basic> *p = RCP_cast(s);
-    *p = CSymPy::Rational::from_mpq(mpq_class(a, b));
+    *RCP_cast(s) = CSymPy::Rational::from_mpq(mpq_class(a, b));
 }
 
 void rational_set_ui(basic s, unsigned long a, unsigned long b)
 {
-    RCP<const Basic> *p = RCP_cast(s);
-    *p = CSymPy::Rational::from_mpq(mpq_class(a, b));
+    *RCP_cast(s) = CSymPy::Rational::from_mpq(mpq_class(a, b));
 }
 
 int rational_set(basic s, const basic a, const basic b)
 {
-    RCP<const Basic> *p = RCP_cast(s);
-    const RCP<const Basic> *a2 = RCP_cast_const(a);
-    const RCP<const Basic> *b2 = RCP_cast_const(b);
     if (!is_a_Integer(a) || !is_a_Integer(b)) {
         return 0;
     }
-    *p = CSymPy::Rational::from_two_ints(rcp_static_cast<const Integer>(*a2),
-                rcp_static_cast<const Integer>(*b2));
+    *RCP_cast(s) = CSymPy::Rational::from_two_ints(
+            rcp_static_cast<const Integer>(*RCP_const_cast(a)),
+            rcp_static_cast<const Integer>(*RCP_const_cast(b)));
     return 1;
 }
 
 void rational_set_mpq(basic s, const mpq_t i)
 {
-    RCP<const Basic> *p = RCP_cast(s);
-    *p = CSymPy::Rational::from_mpq(mpq_class(i));
+    *RCP_cast(s) = CSymPy::Rational::from_mpq(mpq_class(i));
 }
 
 int basic_diff(basic s, const basic expr, basic const symbol)
 {
     if (!is_a_Symbol(symbol))
         return 0;
-    RCP<const Basic> *s2 = RCP_cast(s);
-    const RCP<const Basic> *expr2 = RCP_cast_const(expr);
-    const RCP<const Basic> *symbol2 = RCP_cast_const(symbol);
-    *s2 = (*expr2)->diff(rcp_static_cast<const Symbol>(*symbol2));
+    *RCP_cast(s) = (*RCP_const_cast(expr))->diff(rcp_static_cast<const Symbol>
+            (*RCP_const_cast(symbol)));
     return 1;
 }
 
 void basic_assign(basic a, const basic b) {
-    RCP<const Basic> *a2 = RCP_cast(a);
-    const RCP<const Basic> *b2 = RCP_cast_const(b);
-    *a2 = RCP<const Basic>(*b2);
+    *RCP_cast(a) = RCP<const Basic>(*RCP_const_cast(b));
 }
 
 void basic_add(basic s, const basic a, const basic b)
 {
-    RCP<const Basic> *s2 = RCP_cast(s);
-    const RCP<const Basic> *a2 = RCP_cast_const(a);
-    const RCP<const Basic> *b2 = RCP_cast_const(b);
-    *s2 = CSymPy::add(*a2, *b2);
+    *RCP_cast(s) = CSymPy::add(*RCP_const_cast(a), *RCP_const_cast(b));
 }
 
 void basic_sub(basic s, const basic a, const basic b)
 {
-    RCP<const Basic> *s2 = RCP_cast(s);
-    const RCP<const Basic> *a2 = RCP_cast_const(a);
-    const RCP<const Basic> *b2 = RCP_cast_const(b);
-    *s2 = CSymPy::sub(*a2, *b2);
+    *RCP_cast(s) = CSymPy::sub(*RCP_const_cast(a), *RCP_const_cast(b));
 }
 
 void basic_mul(basic s, const basic a, const basic b)
 {
-    RCP<const Basic> *s2 = RCP_cast(s);
-    const RCP<const Basic> *a2 = RCP_cast_const(a);
-    const RCP<const Basic> *b2 = RCP_cast_const(b);
-    *s2 = CSymPy::mul(*a2, *b2);
+    *RCP_cast(s) = CSymPy::mul(*RCP_const_cast(a), *RCP_const_cast(b));
 }
 
 void basic_pow(basic s, const basic a, const basic b)
 {
-    RCP<const Basic> *s2 = RCP_cast(s);
-    const RCP<const Basic> *a2 = RCP_cast_const(a);
-    const RCP<const Basic> *b2 = RCP_cast_const(b);
-    *s2 = CSymPy::pow(*a2, *b2);
+    *RCP_cast(s) = CSymPy::pow(*RCP_const_cast(a), *RCP_const_cast(b));
 }
 
 void basic_div(basic s, const basic a, const basic b)
 {
-    RCP<const Basic> *s2 = RCP_cast(s);
-    const RCP<const Basic> *a2 = RCP_cast_const(a);
-    const RCP<const Basic> *b2 = RCP_cast_const(b);
-    *s2 = CSymPy::div(*a2, *b2);
+    *RCP_cast(s) = CSymPy::div(*RCP_const_cast(a), *RCP_const_cast(b));
 }
 
 void basic_neg(basic s, const basic a)
 {
-    RCP<const Basic> *s2 = RCP_cast(s);
-    const RCP<const Basic> *a2 = RCP_cast_const(a);
-    *s2 = CSymPy::neg(*a2);
+    *RCP_cast(s) = CSymPy::neg(*RCP_const_cast(a));
 }
 
 void basic_abs(basic s, const basic a)
 {
-    RCP<const Basic> *s2 = RCP_cast(s);
-    const RCP<const Basic> *a2 = RCP_cast_const(a);
-    *s2 = CSymPy::abs(*a2);
+    *RCP_cast(s) = CSymPy::abs(*RCP_const_cast(a));
 }
 
 void basic_expand(basic s, const basic a)
 {
-    RCP<const Basic> *s2 = RCP_cast(s);
-    const RCP<const Basic> *a2 = RCP_cast_const(a);
-    *s2 = CSymPy::expand(*a2);
+    *RCP_cast(s) = CSymPy::expand(*RCP_const_cast(a));
 }
 
 char* basic_str(const basic s)
 {
-    const RCP<const Basic> *s2 = RCP_cast_const(s);
-    std::string str = (*s2)->__str__();
+    std::string str = (*RCP_const_cast(s))->__str__();
     char *cc = new char[str.length()+1];
     std::strcpy(cc, str.c_str());
     return cc;
@@ -201,18 +164,15 @@ void basic_str_free(char* s)
 
 int is_a_Integer(const basic c)
 {
-    const RCP<const Basic> *c2 = RCP_cast_const(c);
-    return is_a<Integer>(*(*c2));
+    return is_a<Integer>(*(*RCP_const_cast(c)));
 }
 int is_a_Rational(const basic c)
 {
-    const RCP<const Basic> *c2 = RCP_cast_const(c);
-    return is_a<Rational>(*(*c2));
+    return is_a<Rational>(*(*RCP_const_cast(c)));
 }
 int is_a_Symbol(const basic c)
 {
-    const RCP<const Basic> *c2 = RCP_cast_const(c);
-    return is_a<Symbol>(*(*c2));
+    return is_a<Symbol>(*(*RCP_const_cast(c)));
 }
 
 }
