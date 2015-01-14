@@ -23,55 +23,68 @@ using CSymPy::Number;
 using CSymPy::rcp_static_cast;
 using CSymPy::is_a;
 
-struct CWrapper {
-    RCP<const Basic> ptr;
-};
+#define RCP_cast_general(x, CONST) (reinterpret_cast<CONST RCP<const Basic> *>(x))
+#define RCP_cast(x) RCP_cast_general(x, )
+#define RCP_const_cast(x) RCP_cast_general(x, const)
 
 extern "C" {
 
-void basic_free(basic s)
+void basic_init(basic s)
 {
-    delete s;
+#if defined(WITH_CSYMPY_RCP)
+    // These checks only happen at compile time.
+    // Check that 'basic' has the correct size:
+    static_assert(sizeof(RCP<const Basic>) == sizeof(basic), "Size of 'basic' is not correct");
+    // Check that 'basic' has the correct alignment:
+    static_assert(std::alignment_of<RCP<const Basic>>::value == std::alignment_of<basic>::value, "Alignment of 'basic' is not correct");
+#else
+    throw std::runtime_error("Teuchos::RCP is not compatible with the C wrappers");
+#endif
+    // No allocation is being done, but the constructor of RCP is called and
+    // the instance is initialized at the memory address 's'. The above checks
+    // make sure that 's' has the correct size and alignment, which is
+    // necessary for placement new, otherwise the results are undefined.
+    new(s) RCP<const Basic>();
 }
 
-basic basic_new()
+void basic_free(basic s)
 {
-    return new CWrapper();
+    RCP_cast(s)->~RCP();
 }
 
 void symbol_set(basic s, char* c)
 {
-    s->ptr = CSymPy::symbol(std::string(c));
+    *RCP_cast(s) = CSymPy::symbol(std::string(c));
 }
 
 void integer_set_si(basic s, long i)
 {
-    s->ptr = CSymPy::integer(mpz_class(i));
+    *RCP_cast(s) = CSymPy::integer(mpz_class(i));
 }
 
 void integer_set_ui(basic s, unsigned long i)
 {
-    s->ptr = CSymPy::integer(mpz_class(i));
+    *RCP_cast(s) = CSymPy::integer(mpz_class(i));
 }
 
 void integer_set_mpz(basic s, const mpz_t i)
 {
-    s->ptr = CSymPy::integer(mpz_class(i));
+    *RCP_cast(s) = CSymPy::integer(mpz_class(i));
 }
 
 void integer_set_str(basic s, char* c)
 {
-    s->ptr = CSymPy::integer(mpz_class(c, 10));
+    *RCP_cast(s) = CSymPy::integer(mpz_class(c, 10));
 }
 
 void rational_set_si(basic s, long a, long b)
 {
-    s->ptr = CSymPy::Rational::from_mpq(mpq_class(a, b));
+    *RCP_cast(s) = CSymPy::Rational::from_mpq(mpq_class(a, b));
 }
 
 void rational_set_ui(basic s, unsigned long a, unsigned long b)
 {
-    s->ptr = CSymPy::Rational::from_mpq(mpq_class(a, b));
+    *RCP_cast(s) = CSymPy::Rational::from_mpq(mpq_class(a, b));
 }
 
 int rational_set(basic s, const basic a, const basic b)
@@ -79,71 +92,73 @@ int rational_set(basic s, const basic a, const basic b)
     if (!is_a_Integer(a) || !is_a_Integer(b)) {
         return 0;
     }
-    s->ptr = CSymPy::Rational::from_two_ints(rcp_static_cast<const Integer>(a->ptr),
-                rcp_static_cast<const Integer>(b->ptr));
+    *RCP_cast(s) = CSymPy::Rational::from_two_ints(
+            rcp_static_cast<const Integer>(*RCP_const_cast(a)),
+            rcp_static_cast<const Integer>(*RCP_const_cast(b)));
     return 1;
 }
 
 void rational_set_mpq(basic s, const mpq_t i)
 {
-    s->ptr = CSymPy::Rational::from_mpq(mpq_class(i));
+    *RCP_cast(s) = CSymPy::Rational::from_mpq(mpq_class(i));
 }
 
 int basic_diff(basic s, const basic expr, basic const symbol)
 {
     if (!is_a_Symbol(symbol))
         return 0;
-    s->ptr = expr->ptr->diff(rcp_static_cast<const Symbol>(symbol->ptr));
+    *RCP_cast(s) = (*RCP_const_cast(expr))->diff(rcp_static_cast<const Symbol>
+            (*RCP_const_cast(symbol)));
     return 1;
 }
 
 void basic_assign(basic a, const basic b) {
-    a->ptr = RCP<const Basic>(b->ptr);
+    *RCP_cast(a) = RCP<const Basic>(*RCP_const_cast(b));
 }
 
 void basic_add(basic s, const basic a, const basic b)
 {
-    s->ptr = CSymPy::add(a->ptr, b->ptr);
+    *RCP_cast(s) = CSymPy::add(*RCP_const_cast(a), *RCP_const_cast(b));
 }
 
 void basic_sub(basic s, const basic a, const basic b)
 {
-    s->ptr = CSymPy::sub(a->ptr, b->ptr);
+    *RCP_cast(s) = CSymPy::sub(*RCP_const_cast(a), *RCP_const_cast(b));
 }
 
 void basic_mul(basic s, const basic a, const basic b)
 {
-    s->ptr = CSymPy::mul(a->ptr, b->ptr);
+    *RCP_cast(s) = CSymPy::mul(*RCP_const_cast(a), *RCP_const_cast(b));
 }
 
 void basic_pow(basic s, const basic a, const basic b)
 {
-    s->ptr = CSymPy::pow(a->ptr, b->ptr);
+    *RCP_cast(s) = CSymPy::pow(*RCP_const_cast(a), *RCP_const_cast(b));
 }
 
 void basic_div(basic s, const basic a, const basic b)
 {
-    s->ptr = CSymPy::div(a->ptr, b->ptr);
+    *RCP_cast(s) = CSymPy::div(*RCP_const_cast(a), *RCP_const_cast(b));
 }
 
 void basic_neg(basic s, const basic a)
 {
-    s->ptr = CSymPy::neg(a->ptr);
+    *RCP_cast(s) = CSymPy::neg(*RCP_const_cast(a));
 }
 
 void basic_abs(basic s, const basic a)
 {
-    s->ptr = CSymPy::abs(a->ptr);
+    *RCP_cast(s) = CSymPy::abs(*RCP_const_cast(a));
 }
 
 void basic_expand(basic s, const basic a)
 {
-    s->ptr = CSymPy::expand(a->ptr);
+    *RCP_cast(s) = CSymPy::expand(*RCP_const_cast(a));
 }
 
 char* basic_str(const basic s)
 {
-    std::string str = s->ptr->__str__();
+    std::string str = (*RCP_const_cast(s))->__str__();
     char *cc = new char[str.length()+1];
     std::strcpy(cc, str.c_str());
     return cc;
@@ -156,15 +171,15 @@ void basic_str_free(char* s)
 
 int is_a_Integer(const basic c)
 {
-    return is_a<Integer>(*(c->ptr));
+    return is_a<Integer>(*(*RCP_const_cast(c)));
 }
 int is_a_Rational(const basic c)
 {
-    return is_a<Rational>(*(c->ptr));
+    return is_a<Rational>(*(*RCP_const_cast(c)));
 }
 int is_a_Symbol(const basic c)
 {
-    return is_a<Symbol>(*(c->ptr));
+    return is_a<Symbol>(*(*RCP_const_cast(c)));
 }
 
 }

@@ -7,15 +7,34 @@
 extern "C" {
 #endif
 
-typedef struct CWrapper CWrapper;
+// The size of 'basic_struct' must be the same as RCP<const Basic> *and* they
+// must have the same alignment (because we allocate RCP<const Basic> into the
+// memory occupied by this struct in cwrapper.cpp). We cannot use C++ in this
+// file, so we need to use C tools to arrive at the correct size and alignment.
+// The size of the RCP object on most platforms should be just the size of the
+// 'T *ptr_' pointer that it contains (as there is no virtual function table)
+// and the alignment should also be of a pointer. So we just put 'void *data'
+// as the only member of the struct, that should have the correct size and
+// alignment.  However, this is checked at compile time in cwrapper.cpp, so if
+// the size or alignment is different on some platform, the compilation will
+// fail --- in that case one needs to modify the contents of this struct to
+// adjust its size and/or alignment.
+typedef struct
+{
+    void *data;
+} basic_struct;
 
-//! basic is a pointer to a CWrapper which wraps the C++ class.
-// A basic type should be initialized using the return value of basic_new(), before any
-// function is called. Assignment should be done only by using basic_assign()
-typedef CWrapper* basic;
+typedef basic_struct basic[1];
 
-//! Return a new basic instance.
-basic basic_new();
+//! basic is internally implemented as a char array of sufficient size to hold
+// the RCP<const Basic> instance, that is then used by the user to allocate the
+// memory needed for RCP<const Basic> on the stack. A basic type should be
+// initialized using basic_init(), before any function is called.  Assignment
+// should be done only by using basic_assign(). Before the variable goes out of
+// scope, basic_free() must be called.
+
+//! Initialize a new basic instance.
+void basic_init(basic s);
 //! Assign value of b to a.
 void basic_assign(basic a, const basic b);
 //! Free the C++ class wrapped by s.
