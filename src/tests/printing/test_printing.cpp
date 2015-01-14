@@ -141,13 +141,13 @@ void test_printing()
     r2 = div(x, pow(add(x, y), div(integer(-2), integer(3))));
     assert(r->__str__() == "x/(y + x)");
     assert(r1->__str__() == "x/(y + x)^(2/3)" );
-    assert(r2->__str__() == "(y + x)^(2/3)*x" );
+    assert(r2->__str__() == "(y + x)^(2/3)*x" || r2->__str__() == "x*(y + x)^(2/3)");
 
     r = div(integer(1), mul(x, add(x, y)));
     r1 = div(mul(y, integer(-1)), mul(x, add(x, y)));
     r2 = mul(pow(y, x), pow(x, y));
-    assert(r->__str__() == "1/((y + x)*x)");
-    assert(r1->__str__() == "-y/((y + x)*x)");
+    assert(r->__str__() == "1/((y + x)*x)" || r->__str__() == "1/(x*(y + x))");
+    assert(r1->__str__() == "-y/((y + x)*x)" || r1->__str__() == "-y/(x*(y + x))");
     assert(r2->__str__() == "x^y*y^x");
 
     r = pow(y, pow(x, integer(2)));
