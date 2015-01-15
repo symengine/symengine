@@ -1,5 +1,5 @@
-from .lib.csympy_wrapper import Symbol
-from compatibility import string_types
+from .lib.csympy_wrapper import Symbol, Basic
+from .compatibility import string_types
 from itertools import combinations, permutations, product, product as cartes
 import re as _re
 import string
@@ -176,56 +176,60 @@ def symbols(names, **args):
         return type(names)(result)
 
 
-def var(s):
+def var(names, **args):
     """
-        Create a symbolic variable with the name *s*.
+    Create symbols and inject them into the global namespace.
 
-        INPUT:
-            s -- a string, either a single variable name, or
-                 a space separated list of variable names, or
-                 a list of variable names.
+    INPUT:
+-            s -- a string, either a single variable name, or
+-                 a space separated list of variable names, or
+-                 a list of variable names.
 
-        NOTE: The new variable is both returned and automatically injected into
-        the parent's *global* namespace.  It's recommended not to use "var" in
-        library code, it is better to use symbols() instead.
+    This calls :func:`symbols` with the same arguments and puts the results
+    into the *global* namespace. It's recommended not to use :func:`var` in
+    library code, where :func:`symbols` has to be used::
 
-        EXAMPLES:
-        We define some symbolic variables:
-            >>> var('m')
-            m
-            >>> var('n xx yy zz')
-            (n, xx, yy, zz)
-            >>> n
-            n
+    Examples
+    ========
+
+    >>> from csympy import var
+
+    >>> var('x')
+    x
+    >>> x
+    x
+
+    >>> var('a,ab,abc')
+    (a, ab, abc)
+    >>> abc
+    abc
+
+    See :func:`symbols` documentation for more details on what kinds of
+    arguments can be passed to :func:`var`.
 
     """
-    import re
-    import inspect
-    frame = inspect.currentframe().f_back
+    def traverse(symbols, frame):
+        """Recursively inject symbols to the global namespace. """
+        for symbol in symbols:
+            if isinstance(symbol, Basic):
+                frame.f_globals[symbol.__str__()] = symbol
+            #Once we hace an undefined function class implemented, put a check for function here
+            else:
+                traverse(symbol, frame)
+
+    from inspect import currentframe
+    frame = currentframe().f_back
 
     try:
-        if not isinstance(s, list):
-            s = re.split('\s|,', s)
+        syms = symbols(names, **args)
 
-        res = []
-
-        for t in s:
-            # skip empty strings
-            if not t:
-                continue
-            sym = Symbol(t)
-            frame.f_globals[t] = sym
-            res.append(sym)
-
-        res = tuple(res)
-        if len(res) == 0:   # var('')
-            res = None
-        elif len(res) == 1: # var('x')
-            res = res[0]
-                            # otherwise var('a b ...')
-        return res
-
+        if syms is not None:
+            if isinstance(syms, Basic):
+                frame.f_globals[syms.__str__()] = syms
+            #Once we hace an undefined function class implemented, put a check for function here
+            else:
+                traverse(syms, frame)
     finally:
-        # we should explicitly break cyclic dependencies as stated in inspect
-        # doc
-        del frame
+        del frame  # break cyclic dependencies as stated in inspect docs
+
+    return syms
