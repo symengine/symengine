@@ -354,13 +354,14 @@ void multinomial_coefficients_mpz(int m, int n, map_vec_mpz &r)
 
 RCP<const Basic> pow_expand(const RCP<const Pow> &self)
 {
-    if (! is_a<Integer>(*self->exp_) || ! is_a<Add>(*self->base_))
+    RCP<const Basic> _base = expand(self->base_);
+    if (! is_a<Integer>(*self->exp_) || ! is_a<Add>(*_base))
         return self;
 
     map_vec_mpz r;
     int n = rcp_static_cast<const Integer>(self->exp_)->as_int();
 
-    RCP<const Add> base = rcp_static_cast<const Add>(self->base_);
+    RCP<const Add> base = rcp_static_cast<const Add>(_base);
     umap_basic_num base_dict = base->dict_;
     if (! (base->coef_->is_zero())) {
         // Add the numerical coefficient into the dictionary. This

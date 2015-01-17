@@ -628,6 +628,8 @@ void test_expand2()
     RCP<const Basic> i9 = rcp(new Integer(9));
     RCP<const Basic> i10 = rcp(new Integer(10));
     RCP<const Basic> i12 = rcp(new Integer(12));
+    RCP<const Basic> i16 = rcp(new Integer(16));
+    RCP<const Basic> i24 = rcp(new Integer(24));
     RCP<const Basic> i25 = rcp(new Integer(25));
     RCP<const Basic> i30 = rcp(new Integer(30));
 
@@ -728,6 +730,11 @@ void test_expand2()
     r1 = mul(sqrt(i2), add(mul(x, i2), mul(i2, sqrt(i2))));
     r1 = expand(r1);
     r2 = add(mul(i2, mul(sqrt(i2), x)), i4);
+    assert(eq(r1, r2));
+
+    r1 = pow(add(pow(add(one, sqrt(i2)), i2), one), i2);
+    r1 = expand(r1);
+    r2 = add(i24, mul(i16, sqrt(i2)));
     assert(eq(r1, r2));
 }
 
