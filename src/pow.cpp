@@ -226,7 +226,7 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
                 RCP<const Integer> exp_new = rcp_static_cast<const Integer>(a);
                 RCP<const Number> frac = exp_new->powint(Integer(q));
                 map_basic_basic surd;
-                if ((exp_new->is_negative()) && ((r / den) == 1/2)) {
+                if ((exp_new->is_negative()) && (2 * r == den)) {
                     frac = mulnum(frac, I);
                     exp_new = exp_new->mulint(*minus_one);
                     // if exp_new is one, no need to add it to dict
@@ -401,13 +401,9 @@ RCP<const Basic> pow_expand(const RCP<const Pow> &self)
                         pownum(i2->second,
                             rcp_static_cast<const Number>(exp)));
                     } else if (is_a<Complex>(*(i2->second))) {
-                        if (is_a<Integer>(*exp)) {
-                            RCP<const Integer> pow_new = rcp_static_cast<const Integer>(exp);
-                            RCP<const Complex> base_new = rcp_static_cast<const Complex>(i2->second);
-                            pow_complex(outArg(overall_coeff), base_new, *pow_new);
-                        } else {
-                            Mul::dict_add_term_new(outArg(overall_coeff), d, exp, i2->second);
-                        }
+                        RCP<const Number> tmp;
+                        pow_complex(outArg(tmp), rcp_static_cast<const Complex>(i2->second), *exp);
+                        imulnum(outArg(overall_coeff), tmp);
                     }
                 }
             }
