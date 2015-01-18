@@ -543,6 +543,9 @@ void test_pow()
     r2 = mul(mul(im3, I), pow(i3, div(one, i2)));
     assert(eq(r1, r2));
 
+    r1 = pow(im3, div(i4, i3));
+    r2 = pow(r1, i3);
+    assert(eq(r2, integer(81)));
 }
 
  void test_log()
@@ -625,6 +628,8 @@ void test_expand2()
     RCP<const Basic> i9 = rcp(new Integer(9));
     RCP<const Basic> i10 = rcp(new Integer(10));
     RCP<const Basic> i12 = rcp(new Integer(12));
+    RCP<const Basic> i16 = rcp(new Integer(16));
+    RCP<const Basic> i24 = rcp(new Integer(24));
     RCP<const Basic> i25 = rcp(new Integer(25));
     RCP<const Basic> i30 = rcp(new Integer(30));
 
@@ -706,6 +711,31 @@ void test_expand2()
     r2 = mul(i4, pow(i5, div(im1, i2)));
     r2 = expand(pow(add(add(r1, r2), integer(1)), i2));
     assert(eq(r2, add(div(integer(54), i5), mul(integer(14), pow(i5, div(im1, i2))))));
+
+    r1 = pow(add(mul(I, x), i2), i2);
+    r1 = expand(r1);
+    r2 = add(sub(mul(mul(I, x), i4), pow(x, i2)), i4);
+    assert(eq(r1, r2));
+
+    r1 = mul(add(sqrt(i3), one), add(sqrt(i3), i2));
+    r1 = expand(r1);
+    r2 = add(i5, mul(i3, sqrt(i3)));
+    assert(eq(r1, r2));
+
+    r1 = mul(add(mul(i2, x), sqrt(i2)), add(x, mul(i2, sqrt(i2))));
+    r1 = expand(r1);
+    r2 = add(mul(i2, mul(x, x)), add(mul(x, mul(sqrt(i2), i5)), i4));
+    assert(eq(r1, r2));
+
+    r1 = mul(sqrt(i2), add(mul(x, i2), mul(i2, sqrt(i2))));
+    r1 = expand(r1);
+    r2 = add(mul(i2, mul(sqrt(i2), x)), i4);
+    assert(eq(r1, r2));
+
+    r1 = pow(add(pow(add(one, sqrt(i2)), i2), one), i2);
+    r1 = expand(r1);
+    r2 = add(i24, mul(i16, sqrt(i2)));
+    assert(eq(r1, r2));
 }
 
 void test_expand3()
