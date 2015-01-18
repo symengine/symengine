@@ -333,6 +333,7 @@ void Mul::as_base_exp(const RCP<const Basic> &self, const Ptr<RCP<const Basic>> 
         *exp = rcp_static_cast<const Pow>(self)->exp_;
         *base = rcp_static_cast<const Pow>(self)->base_;
     } else {
+        CSYMPY_ASSERT(!is_a<Mul>(*self));
         *exp = one;
         *base = self;
     }

@@ -393,8 +393,15 @@ RCP<const Basic> pow_expand(const RCP<const Pow> &self)
                 } else {
                     RCP<const Basic> exp2, t, tmp;
                     tmp = pow(base, exp);
-                    Mul::as_base_exp(tmp, outArg(exp2), outArg(t));
-                    Mul::dict_add_term_new(outArg(overall_coeff), d, exp2, t);
+                    if (is_a<Mul>(*tmp)) {
+                        for (auto &p: (rcp_static_cast<const Mul>(tmp))->dict_) {
+                            Mul::dict_add_term(d, p.second, p.first);
+                        }
+                        imulnum(outArg(overall_coeff), (rcp_static_cast<const Mul>(tmp))->coef_);
+                    } else {
+                        Mul::as_base_exp(tmp, outArg(exp2), outArg(t));
+                        Mul::dict_add_term_new(outArg(overall_coeff), d, exp2, t);
+                    }
                 }
                 if (!(i2->second->is_one())) {
                     if (is_a<Integer>(*(i2->second)) || is_a<Rational>(*(i2->second))) {
