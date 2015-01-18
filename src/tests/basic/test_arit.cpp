@@ -736,6 +736,11 @@ void test_expand2()
     r1 = expand(r1);
     r2 = add(i24, mul(i16, sqrt(i2)));
     assert(eq(r1, r2));
+
+    r1 = mul(add(mul(sqrt(i3), x), one), sub(mul(sqrt(i3), x), one));
+    r1 = expand(r1);
+    r2 = sub(mul(mul(i3, x), x), one);
+    assert(eq(r1, r2));
 }
 
 void test_expand3()

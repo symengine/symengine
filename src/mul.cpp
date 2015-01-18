@@ -418,10 +418,9 @@ RCP<const Basic> mul_expand_two(const RCP<const Basic> &a, const RCP<const Basic
                 } else {
                     if (is_a<Mul>(*term) &&
                         !(rcp_static_cast<const Mul>(term)->coef_->is_one())) {
-                        RCP<const Number> coef2;
                         // Tidy up things like {2x: 3} -> {x: 6}
-                        imulnum(outArg(coef2),
-                                rcp_static_cast<const Mul>(term)->coef_);
+                        RCP<const Number> coef2 =
+                                rcp_static_cast<const Mul>(term)->coef_;
                         // We make a copy of the dict_:
                         map_basic_basic d2 = rcp_static_cast<const Mul>(term)->dict_;
                         term = Mul::from_dict(one, std::move(d2));
@@ -460,10 +459,9 @@ RCP<const Basic> mul_expand_two(const RCP<const Basic> &a, const RCP<const Basic
             } else {
                 if (is_a<Mul>(*term) &&
                     !(rcp_static_cast<const Mul>(term)->coef_->is_one())) {
-                    RCP<const Number> coef2;
                     // Tidy up things like {2x: 3} -> {x: 6}
-                    imulnum(outArg(coef2),
-                            rcp_static_cast<const Mul>(term)->coef_);
+                    RCP<const Number> coef2 =
+                            rcp_static_cast<const Mul>(term)->coef_;
                     // We make a copy of the dict_:
                     map_basic_basic d2 = rcp_static_cast<const Mul>(term)->dict_;
                     term = Mul::from_dict(one, std::move(d2));
