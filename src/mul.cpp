@@ -251,9 +251,23 @@ void Mul::dict_add_term_new(const Ptr<RCP<const Number>> &coef, map_basic_basic 
     if (it == d.end()) {
         // Don't check for `exp = 0` here
         // `pow` for Complex is not expanded by default
-        if (is_a<Integer>(*exp) && (is_a<Integer>(*t) || is_a<Rational>(*t))) {
-            imulnum(outArg(*coef), pownum(rcp_static_cast<const Number>(t),
-                rcp_static_cast<const Number>(exp)));
+        if (is_a<Integer>(*t) || is_a<Rational>(*t)) {
+            if (is_a<Integer>(*exp)) {
+                imulnum(outArg(*coef), pownum(rcp_static_cast<const Number>(t),
+                    rcp_static_cast<const Number>(exp)));
+            } else if (is_a<Rational>(*exp)) {
+                mpz_class q, r, num, den;
+                num = rcp_static_cast<const Rational>(exp)->i.get_num();
+                den = rcp_static_cast<const Rational>(exp)->i.get_den();
+                mpz_fdiv_qr(q.get_mpz_t(), r.get_mpz_t(), num.get_mpz_t(),
+                    den.get_mpz_t());
+
+                insert(d, t, Rational::from_mpq(mpq_class(r, den)));
+                imulnum(outArg(*coef), pownum(rcp_static_cast<const Number>(t),
+                    rcp_static_cast<const Number>(integer(q))));
+            } else {
+                insert(d, t, exp);
+            }
         } else if (is_a<Integer>(*exp) && is_a<Complex>(*t)) {
             if (rcp_static_cast<const Integer>(exp)->is_one()) {
                 imulnum(outArg(*coef), rcp_static_cast<const Number>(t));
@@ -294,6 +308,18 @@ void Mul::dict_add_term_new(const Ptr<RCP<const Number>> &coef, map_basic_basic 
                     idivnum(outArg(*coef), rcp_static_cast<const Number>(t));
                     d.erase(it);
                 }
+            }
+        } else if (is_a<Rational>(*it->second)) {
+            mpz_class q, r, num, den;
+            num = rcp_static_cast<const Rational>(it->second)->i.get_num();
+            den = rcp_static_cast<const Rational>(it->second)->i.get_den();
+            if (num > den || num < 0) {
+                mpz_fdiv_qr(q.get_mpz_t(), r.get_mpz_t(), num.get_mpz_t(),
+                    den.get_mpz_t());
+
+                it->second = Rational::from_mpq(mpq_class(r, den));
+                imulnum(outArg(*coef), pownum(rcp_static_cast<const Number>(t),
+                    rcp_static_cast<const Number>(integer(q))));
             }
         }
     }
