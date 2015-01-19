@@ -201,13 +201,8 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
             den = rcp_static_cast<const Rational>(b)->i.get_den();
 
             if (num > den || num < 0) {
-                mpz_cdiv_qr(q.get_mpz_t(), r.get_mpz_t(), num.get_mpz_t(),
+                mpz_fdiv_qr(q.get_mpz_t(), r.get_mpz_t(), num.get_mpz_t(),
                     den.get_mpz_t());
-
-                if (r < 0) {
-                    r += den;
-                    q -= 1;
-                }
             } else {
                 return rcp(new Pow(a, b));
             }

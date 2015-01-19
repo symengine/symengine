@@ -256,12 +256,14 @@ void Mul::dict_add_term_new(const Ptr<RCP<const Number>> &coef, map_basic_basic 
                 imulnum(outArg(*coef), pownum(rcp_static_cast<const Number>(t),
                     rcp_static_cast<const Number>(exp)));
             } else if (is_a<Rational>(*exp)) {
+                // Here we make the exponent postive and a fraction between
+                // 0 and 1.
                 mpz_class q, r, num, den;
                 num = rcp_static_cast<const Rational>(exp)->i.get_num();
                 den = rcp_static_cast<const Rational>(exp)->i.get_den();
                 mpz_fdiv_qr(q.get_mpz_t(), r.get_mpz_t(), num.get_mpz_t(),
                     den.get_mpz_t());
-
+                
                 insert(d, t, Rational::from_mpq(mpq_class(r, den)));
                 imulnum(outArg(*coef), pownum(rcp_static_cast<const Number>(t),
                     rcp_static_cast<const Number>(integer(q))));
@@ -313,6 +315,8 @@ void Mul::dict_add_term_new(const Ptr<RCP<const Number>> &coef, map_basic_basic 
             mpz_class q, r, num, den;
             num = rcp_static_cast<const Rational>(it->second)->i.get_num();
             den = rcp_static_cast<const Rational>(it->second)->i.get_den();
+            // Here we make the exponent postive and a fraction between
+            // 0 and 1.
             if (num > den || num < 0) {
                 mpz_fdiv_qr(q.get_mpz_t(), r.get_mpz_t(), num.get_mpz_t(),
                     den.get_mpz_t());

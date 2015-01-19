@@ -749,15 +749,15 @@ void test_expand2()
 
     // The following test that the expand method outputs canonical objects
     r1 = pow(add(y, mul(sqrt(i3), z)), i2);
-    r1 = expand(r1);
+    r1 = expand(mul(r1, add(r1, one)));
     std::cout << r1->__str__() << std::endl;
 
     r1 = pow(add(y, mul(sqrt(i3), z)), i3);
-    r1 = expand(r1);
+    r1 = expand(mul(r1, add(r1, one)));
     std::cout << r1->__str__() << std::endl;
 
     r1 = pow(mul(sqrt(i3), mul(y, add(one, pow(i3, div(one, i3))))), i3);
-    r1 = expand(r1);
+    r1 = expand(mul(r1, add(r1, one)));
     std::cout << r1->__str__() << std::endl;
 }
 
