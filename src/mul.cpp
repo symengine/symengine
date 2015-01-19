@@ -251,9 +251,25 @@ void Mul::dict_add_term_new(const Ptr<RCP<const Number>> &coef, map_basic_basic 
     if (it == d.end()) {
         // Don't check for `exp = 0` here
         // `pow` for Complex is not expanded by default
-        if (is_a<Integer>(*exp) && (is_a<Integer>(*t) || is_a<Rational>(*t))) {
-            imulnum(outArg(*coef), pownum(rcp_static_cast<const Number>(t),
-                rcp_static_cast<const Number>(exp)));
+        if (is_a<Integer>(*t) || is_a<Rational>(*t)) {
+            if (is_a<Integer>(*exp)) {
+                imulnum(outArg(*coef), pownum(rcp_static_cast<const Number>(t),
+                    rcp_static_cast<const Number>(exp)));
+            } else if (is_a<Rational>(*exp)) {
+                // Here we make the exponent postive and a fraction between
+                // 0 and 1.
+                mpz_class q, r, num, den;
+                num = rcp_static_cast<const Rational>(exp)->i.get_num();
+                den = rcp_static_cast<const Rational>(exp)->i.get_den();
+                mpz_fdiv_qr(q.get_mpz_t(), r.get_mpz_t(), num.get_mpz_t(),
+                    den.get_mpz_t());
+                
+                insert(d, t, Rational::from_mpq(mpq_class(r, den)));
+                imulnum(outArg(*coef), pownum(rcp_static_cast<const Number>(t),
+                    rcp_static_cast<const Number>(integer(q))));
+            } else {
+                insert(d, t, exp);
+            }
         } else if (is_a<Integer>(*exp) && is_a<Complex>(*t)) {
             if (rcp_static_cast<const Integer>(exp)->is_one()) {
                 imulnum(outArg(*coef), rcp_static_cast<const Number>(t));
@@ -295,6 +311,20 @@ void Mul::dict_add_term_new(const Ptr<RCP<const Number>> &coef, map_basic_basic 
                     d.erase(it);
                 }
             }
+        } else if (is_a<Rational>(*it->second)) {
+            mpz_class q, r, num, den;
+            num = rcp_static_cast<const Rational>(it->second)->i.get_num();
+            den = rcp_static_cast<const Rational>(it->second)->i.get_den();
+            // Here we make the exponent postive and a fraction between
+            // 0 and 1.
+            if (num > den || num < 0) {
+                mpz_fdiv_qr(q.get_mpz_t(), r.get_mpz_t(), num.get_mpz_t(),
+                    den.get_mpz_t());
+
+                it->second = Rational::from_mpq(mpq_class(r, den));
+                imulnum(outArg(*coef), pownum(rcp_static_cast<const Number>(t),
+                    rcp_static_cast<const Number>(integer(q))));
+            }
         }
     }
 }
@@ -333,6 +363,7 @@ void Mul::as_base_exp(const RCP<const Basic> &self, const Ptr<RCP<const Basic>> 
         *exp = rcp_static_cast<const Pow>(self)->exp_;
         *base = rcp_static_cast<const Pow>(self)->base_;
     } else {
+        CSYMPY_ASSERT(!is_a<Mul>(*self));
         *exp = one;
         *base = self;
     }
@@ -418,10 +449,9 @@ RCP<const Basic> mul_expand_two(const RCP<const Basic> &a, const RCP<const Basic
                 } else {
                     if (is_a<Mul>(*term) &&
                         !(rcp_static_cast<const Mul>(term)->coef_->is_one())) {
-                        RCP<const Number> coef2;
                         // Tidy up things like {2x: 3} -> {x: 6}
-                        imulnum(outArg(coef2),
-                                rcp_static_cast<const Mul>(term)->coef_);
+                        RCP<const Number> coef2 =
+                                rcp_static_cast<const Mul>(term)->coef_;
                         // We make a copy of the dict_:
                         map_basic_basic d2 = rcp_static_cast<const Mul>(term)->dict_;
                         term = Mul::from_dict(one, std::move(d2));
@@ -460,10 +490,9 @@ RCP<const Basic> mul_expand_two(const RCP<const Basic> &a, const RCP<const Basic
             } else {
                 if (is_a<Mul>(*term) &&
                     !(rcp_static_cast<const Mul>(term)->coef_->is_one())) {
-                    RCP<const Number> coef2;
                     // Tidy up things like {2x: 3} -> {x: 6}
-                    imulnum(outArg(coef2),
-                            rcp_static_cast<const Mul>(term)->coef_);
+                    RCP<const Number> coef2 =
+                            rcp_static_cast<const Mul>(term)->coef_;
                     // We make a copy of the dict_:
                     map_basic_basic d2 = rcp_static_cast<const Mul>(term)->dict_;
                     term = Mul::from_dict(one, std::move(d2));

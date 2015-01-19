@@ -271,6 +271,7 @@ void Add::as_coef_term(const RCP<const Basic> &self,
         *coef = rcp_static_cast<const Number>(self);
         *term = one;
     } else {
+        CSYMPY_ASSERT(!is_a<Add>(*self));
         *coef = one;
         *term = self;
     }
