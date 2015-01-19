@@ -660,7 +660,7 @@ void test_expand2()
     r2 = expand(r1);
     std::cout << *r2 << std::endl;
 
-    assert(eq(r2, r1);
+    assert(eq(r2, r1));
 
     r1 = pow(add(x, y), im2);       // 1/(x+y)^2
     std::cout << *r1 << std::endl;
@@ -668,7 +668,7 @@ void test_expand2()
     r2 = expand(r1);
     std::cout << *r2 <<std::endl;
 
-    assert(eq(r2, pow(add(pow(x, i2), mul(i2, x, y), pow(y, i2)), im1);
+    assert(eq(r2, pow(add(add(pow(x, i2), mul(mul(i2, x), y)), pow(y, i2)), im1)));
     assert(neq(r2, r1));
 
     r1 = mul(im1, add(x, i2));
