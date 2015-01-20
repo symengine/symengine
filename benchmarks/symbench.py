@@ -59,6 +59,43 @@ def R5(m = csympy):
     t2 = clock()
     return t2 - t1
 
+def S1(m = csympy):
+    m.var("x y z")
+    e = (x+y+z+1)**7
+    f = e*(e+1)
+    t1 = clock()
+    f = f.expand()
+    t2 = clock()
+    return t2 - t1
+
+def S2(m = csympy):
+    m.var("x y z")
+    e = (x**m.sin(x) + y**m.cos(y) + z**(x + y))**100
+    t1 = clock()
+    f = e.expand()
+    t2 = clock()
+    return t2 - t1
+
+def S3(m = csympy):
+    m.var("x y z")
+    e = (x**y + y**z + z**x)**50
+    e = e.expand()
+    t1 = clock()
+    f = e.diff(x)
+    t2 = clock()
+    return t2 - t1
+
+def S3a(m = csympy):
+    if (m != csympy):
+        return "Test not run"
+    m.var("x y z")
+    e = (x**y + y**z + z**x)**500
+    e = e.expand()
+    t1 = clock()
+    f = e.diff(x)
+    t2 = clock()
+    return t2 - t1
+
 benchmarks = []
 if "R1" in sys.argv:
     benchmarks.append(R1)
@@ -68,8 +105,15 @@ if "R3" in sys.argv:
     benchmarks.append(R3)
 if "R5" in sys.argv:
     benchmarks.append(R4)
+if "S1" in sys.argv:
+    benchmarks.append(S1)
+if "S2" in sys.argv:
+    benchmarks.append(S2)
+if "S3" in sys.argv:
+    benchmarks.append(S3)
+    benchmarks.append(S3a)
 if not benchmarks:
-    benchmarks = [R1, R2, R3, R5]
+    benchmarks = [R1, R2, R3, R5, S1, S2, S3, S3a]
 
 run_sympy = False
 if "sympy" in sys.argv:
@@ -77,7 +121,7 @@ if "sympy" in sys.argv:
     import sympy
     print("\t\t CSymPy \t\t SymPy")
     for benchmark in benchmarks:
-        print("Time for %s \t %s s\t %s s" % (benchmark.__name__, benchmark(csympy), benchmark(sympy)))
+        print("Time for %s \t %s s \t %s s" % (benchmark.__name__, benchmark(csympy), benchmark(sympy)))
 else :
     print("\t\t CSymPy")
     for benchmark in benchmarks:
