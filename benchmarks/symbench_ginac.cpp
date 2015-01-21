@@ -1,38 +1,23 @@
+// To complie on a debian system you need to install libginac-dev first
+// $ sudo apt-get install libginac-dev
+// Then compile with the following command,
+// $ g++ -std=c++0x -o matrix_add1_ginac -Wl,--no-as-needed `pkg-config --cflags --libs ginac` symbench_ginac.cpp
+// See this SO answer: http://stackoverflow.com/a/18696743/1895353
+
 #include <iostream>
 #include <chrono>
 
-#include "Teuchos_stacktrace.hpp"
-
-#include "basic.h"
-#include "add.h"
-#include "symbol.h"
-#include "integer.h"
-#include "mul.h"
-#include "pow.h"
-#include "constants.h"
-#include "functions.h"
-
-using CSymPy::Basic;
-using CSymPy::RCP;
-using CSymPy::rcp_static_cast;
-using CSymPy::RCPBasicKeyLess;
-using CSymPy::vec_basic;
-using CSymPy::integer;
-using CSymPy::Integer;
-using CSymPy::symbol;
-using CSymPy::Symbol;
-using CSymPy::sin;
-using CSymPy::cos;
-using CSymPy::I;
-using CSymPy::pi;
-using CSymPy::add;
-using CSymPy::mul;
-using CSymPy::pow;
-using CSymPy::div;
-using CSymPy::one;
-using CSymPy::expand;
-using CSymPy::sub;
-using CSymPy::zero;
+#include <ginac/ginac.h>
+using GiNaC::basic;
+using GiNaC::ex;
+using GiNaC::ex_is_less;
+using GiNaC::sqrt;
+using GiNaC::numeric;
+using GiNaC::pow;
+using GiNaC::I;
+using GiNaC::expand;
+using GiNaC::real_part;
+using GiNaC::symbol;
 
 double R1();
 double R2();
@@ -45,7 +30,6 @@ double S3a();
 
 int main(int argc, char* argv[])
 {
-    Teuchos::print_stack_on_segfault();
     std::cout << "Time for R1 : \t " << std::setw(15) << std::setprecision(9)  << std::fixed << R1() << std::endl;
     std::cout << "Time for R2 : \t " << std::setw(15) << std::setprecision(9)  << std::fixed << R2() << std::endl;
     std::cout << "Time for R3 : \t " << std::setw(15) << std::setprecision(9)  << std::fixed << R3() << std::endl;
@@ -54,37 +38,35 @@ int main(int argc, char* argv[])
     std::cout << "Time for S2 : \t " << std::setw(15) << std::setprecision(9)  << std::fixed << S2() << std::endl;
     std::cout << "Time for S3 : \t " << std::setw(15) << std::setprecision(9)  << std::fixed << S3() << std::endl;
     std::cout << "Time for S3a : \t " << std::setw(15) << std::setprecision(9)  << std::fixed << S3a() << std::endl;
-
     return 0;
 }
 
-RCP<const Basic> f(RCP<const Basic> z) {
-    return add(mul(sqrt(div(one, integer(3))), pow(z, integer(2))), div(I, integer(3)));
+ex f(ex z) {
+    return sqrt(ex(numeric(1)/3))*pow(z, 2) + I/3;
 }
 
 double R1()
 {
-    RCP<const Basic> g;
-    RCP<const Basic> h = div(I, integer(2));
+    ex g;
+    ex h = I/2;
     auto t1 = std::chrono::high_resolution_clock::now();
-    g = expand(f(f(f(f(f(f(f(f(f(f(h)))))))))));
+    g = real_part(f(f(f(f(f(f(f(f(f(f(h)))))))))));
     auto t2 = std::chrono::high_resolution_clock::now();
     return std::chrono::duration_cast<std::chrono::nanoseconds>(t2-t1).count()/1000000000.0;
 }
 
-RCP<const Basic> hermite(RCP<const Integer> n, RCP<const Basic> y)
+ex hermite(numeric n, ex y)
 {
-    if (eq(n, one)) return mul(y, integer(2));
-    if (eq(n, zero)) return one;
-    return expand(sub(mul(mul(integer(2), y), hermite(n->subint(*one), y)), 
-        mul(integer(2), mul(n->subint(*one), hermite(n->subint(*integer(2)), y)))));
+    if (n == 1) return 2*y;
+    if (n == 0) return 1;
+    return expand(2*y*hermite(n-1,y) - 2*(n-1)*hermite(n-2,y));
 }
 
 double R2()
 {
-    RCP<const Basic> g;
-    RCP<const Integer> n = integer(15);
-    RCP<const Basic> y = symbol("y");
+    ex g;
+    numeric n(15);
+    ex y = symbol("y");
     auto t1 = std::chrono::high_resolution_clock::now();
     g = hermite(n, y);
     auto t2 = std::chrono::high_resolution_clock::now();
@@ -93,50 +75,52 @@ double R2()
 
 double R3()
 {
-    RCP<const Basic> x = symbol("x");
-    RCP<const Basic> y = symbol("y");
-    RCP<const Basic> z = symbol("z");
-    RCP<const Basic> f = add(x, add(y, z));
+    ex x = symbol("x");
+    ex y = symbol("y");
+    ex z = symbol("z");
+    ex f = x + y + z;
     std::vector<bool> vec(10);
     auto t1 = std::chrono::high_resolution_clock::now();
     for (int i = 0; i < 10; i++) {
-        vec.push_back(eq(f, f));
+        vec.push_back(((bool)f.is_equal(f)));
     }
     auto t2 = std::chrono::high_resolution_clock::now();
     return std::chrono::duration_cast<std::chrono::nanoseconds>(t2-t1).count()/1000000000.0;
 }
 
+
 double R5()
 {
-    RCP<const Basic> x = symbol("x");
-    RCP<const Basic> y = symbol("y");
-    RCP<const Basic> z = symbol("z");
-    RCP<const Basic> f = add(x, add(y, z));
-    vec_basic v;
+    ex x = symbol("x");
+    ex y = symbol("y");
+    ex z = symbol("z");
+    ex f = x + y + z;
+    std::vector<ex> v;
 
     v.push_back(x);
     v.push_back(y);
     v.push_back(z);
     for (int i = 0; i < 8; i++) {
-        v.push_back(add(v[i], add(v[i + 1], v[i + 2])));
+        v.push_back(v[i] + v[i+1] + v[i+2]);
     }
 
     auto t1 = std::chrono::high_resolution_clock::now();
-    std::set<RCP<const Basic>, RCPBasicKeyLess> s(v.begin(), v.end());
+    std::set<ex, ex_is_less> s(v.begin(), v.end());
     auto t2 = std::chrono::high_resolution_clock::now();
     return std::chrono::duration_cast<std::chrono::nanoseconds>(t2-t1).count()/1000000000.0;
 }
 
+
 double S1()
 {
-    RCP<const Basic> x = symbol("x");
-    RCP<const Basic> y = symbol("y");
-    RCP<const Basic> z = symbol("z");
-    RCP<const Basic> e;
-    RCP<const Basic> f;
+    ex x = symbol("x");
+    ex y = symbol("y");
+    ex z = symbol("z");
+    ex e;
+    ex f;
 
-    e = pow(add(x, add(y, add(z, one))), integer(7));
-    f = mul(e, add(e, one));
+    e = pow(x + y + z + 1, 7);
+    f = e * (e + 1);
 
     auto t1 = std::chrono::high_resolution_clock::now();
     f = expand(f);
@@ -146,13 +130,13 @@ double S1()
 
 double S2()
 {
-    RCP<const Basic> x = symbol("x");
-    RCP<const Basic> y = symbol("y");
-    RCP<const Basic> z = symbol("z");
-    RCP<const Basic> e;
-    RCP<const Basic> f;
+    ex x = symbol("x");
+    ex y = symbol("y");
+    ex z = symbol("z");
+    ex e;
+    ex f;
 
-    e = pow(add(pow(x, sin(x)), add(pow(y, cos(y)), pow(z, add(x, y)))), integer(100));
+    e = pow(pow(x, sin(x)) + pow(y, cos(y)) + pow(z, x + y), 100);
 
     auto t1 = std::chrono::high_resolution_clock::now();
     f = expand(e);
@@ -162,34 +146,34 @@ double S2()
 
 double S3()
 {
-    RCP<const Basic> x = symbol("x");
-    RCP<const Basic> y = symbol("y");
-    RCP<const Basic> z = symbol("z");
-    RCP<const Basic> e;
-    RCP<const Basic> f;
+    symbol x = symbol("x");
+    ex y = symbol("y");
+    ex z = symbol("z");
+    ex e;
+    ex f;
 
-    e = pow(add(pow(x, y), add(pow(y, z), pow(z, x))), integer(50));
+    e = pow(pow(x, y) + pow(y, z) + pow(z, x), 50);
     e = expand(e);
 
     auto t1 = std::chrono::high_resolution_clock::now();
-    f = e->diff(rcp_static_cast<const Symbol>(x));
+    f = e.diff(x);
     auto t2 = std::chrono::high_resolution_clock::now();
     return std::chrono::duration_cast<std::chrono::nanoseconds>(t2-t1).count()/1000000000.0;
 }
 
 double S3a()
 {
-    RCP<const Basic> x = symbol("x");
-    RCP<const Basic> y = symbol("y");
-    RCP<const Basic> z = symbol("z");
-    RCP<const Basic> e;
-    RCP<const Basic> f;
+    symbol x = symbol("x");
+    ex y = symbol("y");
+    ex z = symbol("z");
+    ex e;
+    ex f;
 
-    e = pow(add(pow(x, y), add(pow(y, z), pow(z, x))), integer(500));
+    e = pow(pow(x, y) + pow(y, z) + pow(z, x), 500);
     e = expand(e);
 
     auto t1 = std::chrono::high_resolution_clock::now();
-    f = e->diff(rcp_static_cast<const Symbol>(x));
+    f = e.diff(x);
     auto t2 = std::chrono::high_resolution_clock::now();
     return std::chrono::duration_cast<std::chrono::nanoseconds>(t2-t1).count()/1000000000.0;
 }
