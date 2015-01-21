@@ -77,4 +77,4 @@ def S3a():
     t2 = clock()
     return t2 - t1
 
-sys.stdout.write("%15.10f" % locals()[sys.argv[-1]]())
+sys.stdout.write("%15.9f" % locals()[sys.argv[-1]]())
