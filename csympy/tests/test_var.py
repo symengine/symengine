@@ -1,8 +1,7 @@
 # Tests for var are in their own file, because var pollutes global namespace.
 
 from csympy import Symbol, var
-from pytest import raises
-
+from csympy.pytest import raises
 # make z1 with call-depth = 1
 
 

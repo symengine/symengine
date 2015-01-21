@@ -4,6 +4,7 @@ from itertools import combinations, permutations, product, product as cartes
 import re as _re
 import string
 
+
 _range = _re.compile('([0-9]*:[0-9]+|[a-zA-Z]?:[a-zA-Z])')
 def symbols(names, **args):
     """
