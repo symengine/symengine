@@ -1,128 +1,45 @@
 #!/usr/bin/env python
 
 """
-Benchmarks listed at http://wiki.sagemath.org/symbench can be run here
-To run all benchmarks in csympy, python symbench.py
-To run all benchmarks including sympy benchmarks, python symbench.py sympy
-To run a set of benchmarks give the benchmark name as a command line argument
-
+Benchmarks listed at http://wiki.sagemath.org/symbench can be run using this script
+To run all benchmarks using csympy, sympy and sage, python symbench.py sympy sage
 """
 
-from timeit import default_timer as clock
-from random import random
 import sys
-import csympy
+import subprocess
 
-def R1(m = csympy):
-    def f(z):
-        return m.sqrt(m.Integer(1)/3)*z**2 + m.I/3
-    if (m == csympy):
-        t1 = clock()
-        g = f(f(f(f(f(f(f(f(f(f(m.I/2)))))))))).expand()
-        t2 = clock()
-    else :
-        t1 = clock()
-        g = f(f(f(f(f(f(f(f(f(f(m.I/2)))))))))).as_real_imag()[0]
-        t2 = clock()
-    return t2 - t1
+benchmarks = ['R1', 'R2', 'R3', 'R5', 'S1', 'S2', 'S3', 'S3a']
+csympy_skip = [False, False, False, False, False, False, False, False]
+sympy_skip = [False, False, False, False, False, False, False, True]
+sage_skip = [False, False, False, False, False, False, False, False]
 
-def R2(m = csympy):
-    def hermite(n,y):
-          if n == 1: return 2*y
-          if n == 0: return 1
-          return (2*y*hermite(n-1,y) - 2*(n-1)*hermite(n-2,y)).expand()
-    t1 = clock()
-    hermite(15, m.var('y'))
-    t2 = clock()
-    return t2 - t1
-
-def R3(m = csympy):
-    m.var('x y z')
-    f = x+y+z
-    t1 = clock()
-    a = [bool(f==f) for _ in range(10)]
-    t2 = clock()
-    return t2 - t1
-
-def R5(m = csympy):
-    def blowup(L,n):
-        for i in range(n):
-            L.append( (L[i] + L[i+1]) * L[i+2] )
-    def uniq(x):
-        v = list(set(x))
-        return v
-    m.var('x y z')
-    L = [x,y,z]
-    blowup(L,8)
-    t1 = clock()
-    L = uniq(L)
-    t2 = clock()
-    return t2 - t1
-
-def S1(m = csympy):
-    m.var("x y z")
-    e = (x+y+z+1)**7
-    f = e*(e+1)
-    t1 = clock()
-    f = f.expand()
-    t2 = clock()
-    return t2 - t1
-
-def S2(m = csympy):
-    m.var("x y z")
-    e = (x**m.sin(x) + y**m.cos(y) + z**(x + y))**100
-    t1 = clock()
-    f = e.expand()
-    t2 = clock()
-    return t2 - t1
-
-def S3(m = csympy):
-    m.var("x y z")
-    e = (x**y + y**z + z**x)**50
-    e = e.expand()
-    t1 = clock()
-    f = e.diff(x)
-    t2 = clock()
-    return t2 - t1
-
-def S3a(m = csympy):
-    if (m != csympy):
-        return "Test not run"
-    m.var("x y z")
-    e = (x**y + y**z + z**x)**500
-    e = e.expand()
-    t1 = clock()
-    f = e.diff(x)
-    t2 = clock()
-    return t2 - t1
-
-benchmarks = []
-if "R1" in sys.argv:
-    benchmarks.append(R1)
-if "R2" in sys.argv:
-    benchmarks.append(R2)
-if "R3" in sys.argv:
-    benchmarks.append(R3)
-if "R5" in sys.argv:
-    benchmarks.append(R4)
-if "S1" in sys.argv:
-    benchmarks.append(S1)
-if "S2" in sys.argv:
-    benchmarks.append(S2)
-if "S3" in sys.argv:
-    benchmarks.append(S3)
-    benchmarks.append(S3a)
-if not benchmarks:
-    benchmarks = [R1, R2, R3, R5, S1, S2, S3, S3a]
-
-run_sympy = False
+args = sys.argv[1:]
+sympy = False
+sage = False
 if "sympy" in sys.argv:
-    run_sympy = True
-    import sympy
-    print("\t\t CSymPy \t\t SymPy")
-    for benchmark in benchmarks:
-        print("Time for %s \t %s s \t %s s" % (benchmark.__name__, benchmark(csympy), benchmark(sympy)))
-else :
-    print("\t\t CSymPy")
-    for benchmark in benchmarks:
-        print("Time for %s \t %s s" % (benchmark.__name__, benchmark(csympy)))
+    sympy = True
+if "sage" in sys.argv:
+    sage = True
+ws = "\t\t\t\t"
+
+for i in range(len(benchmarks)):
+    benchmark = benchmarks[i]
+    sys.stdout.write("Time for " + benchmark)
+    a = None
+    b = None
+    c = None
+    if not csympy_skip[i]:
+        a = subprocess.check_output(['python', 'symbench_def.py', benchmark])
+        a = "\t CSymPy : " + a + " s"
+    sys.stdout.write(a or ws)
+    if sympy:
+        if not sympy_skip[i]:
+            b = subprocess.check_output(['python', 'symbench_def.py', 'sympy', benchmark])
+            b = "\t SymPy  : " + b + " s"
+        sys.stdout.write(b or ws)
+    if sage:
+        if not sage_skip[i]:
+            c = subprocess.check_output(['sage', 'symbench_sage.py', benchmark])
+            c = "\t Sage   : " + c + " s"
+        sys.stdout.write(c or ws)
+    print("")
