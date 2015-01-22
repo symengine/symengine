@@ -368,8 +368,8 @@ RCP<const Basic> Add::diff(const RCP<const Symbol> &x) const
                     mulnum(p.second, rcp_static_cast<const Number>(term)));
         } else if (is_a<Add>(*term)) {
             for (auto &q: (rcp_static_cast<const Add>(term))->dict_)
-                Add::dict_add_term(d, q.second, q.first);
-            iaddnum(outArg(coef), rcp_static_cast<const Add>(term)->coef_);
+                Add::dict_add_term(d, mulnum(q.second, p.second), q.first);
+            iaddnum(outArg(coef), mulnum(p.second, rcp_static_cast<const Add>(term)->coef_));
         } else {
             Add::as_coef_term(mul(p.second, term), outArg(coef2), outArg(t));
             Add::dict_add_term(d, coef2, t);
