@@ -325,6 +325,10 @@ void test_diff()
     r1 = add(add(i2, mul(i3, x)), mul(i5, pow(x, i2)));
     assert(eq(r1->diff(x), add(i3, mul(i10, x))));
     assert(eq(r1->diff(x)->diff(x), i10));
+
+    r1 = add(mul(mul(pow(x, y), pow(y, x)), i2), one)->diff(x);
+    r2 = add(mul(i2, mul(pow(x, y), mul(pow(y, x), log(y)))), mul(i2, mul(pow(x, y), mul(pow(y, x), div(y, x)))));
+    assert(eq(r1, r2));
 }
 
 void test_compare()
