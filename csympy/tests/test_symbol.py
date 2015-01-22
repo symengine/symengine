@@ -1,5 +1,5 @@
 from csympy import Symbol, symbols
-from csympy.pytest import raises
+from csympy.utilities import raises
 
 
 def test_symbol():
