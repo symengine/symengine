@@ -350,12 +350,16 @@ void multinomial_coefficients_mpz(int m, int n, map_vec_mpz &r)
 RCP<const Basic> pow_expand(const RCP<const Pow> &self)
 {
     RCP<const Basic> _base = expand(self->base_);
+    bool negative_pow = false;
     if (! is_a<Integer>(*self->exp_) || ! is_a<Add>(*_base))
         return self;
 
     map_vec_mpz r;
     int n = rcp_static_cast<const Integer>(self->exp_)->as_int();
-
+    if (n < 0) {
+        n = -n;
+        negative_pow = true;
+    }
     RCP<const Add> base = rcp_static_cast<const Add>(_base);
     umap_basic_num base_dict = base->dict_;
     if (! (base->coef_->is_zero())) {
@@ -430,6 +434,7 @@ RCP<const Basic> pow_expand(const RCP<const Pow> &self)
         }
     }
     RCP<const Basic> result = Add::from_dict(add_overall_coeff, std::move(rd));
+    if (negative_pow) result = pow(result, minus_one);
     return result;
 }
 

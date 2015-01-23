@@ -642,7 +642,7 @@ void test_expand2()
     r2 = expand(r1);
     std::cout << *r2 << std::endl;
 
-    assert( eq(r2, add(add(mul(w, x), mul(w, y)), mul(w, z))));
+    assert(eq(r2, add(add(mul(w, x), mul(w, y)), mul(w, z))));
     assert(neq(r2, add(add(mul(w, x), mul(w, w)), mul(w, z))));
 
     r1 = mul(add(x, y), add(z, w)); // (x+y)*(z+w)
@@ -651,8 +651,25 @@ void test_expand2()
     r2 = expand(r1);
     std::cout << *r2 << std::endl;
 
-    assert( eq(r2, add(add(add(mul(x, z), mul(y, z)), mul(x, w)), mul(y, w))));
+    assert(eq(r2, add(add(add(mul(x, z), mul(y, z)), mul(x, w)), mul(y, w))));
     assert(neq(r2, add(add(add(mul(y, z), mul(y, z)), mul(x, w)), mul(y, w))));
+
+    r1 = pow(add(x, y), im1);       // 1/(x+y)
+    std::cout << *r1 << std::endl;
+
+    r2 = expand(r1);
+    std::cout << *r2 << std::endl;
+
+    assert(eq(r2, r1));
+
+    r1 = pow(add(x, y), im2);       // 1/(x+y)^2
+    std::cout << *r1 << std::endl;
+
+    r2 = expand(r1);
+    std::cout << *r2 <<std::endl;
+
+    assert(eq(r2, pow(add(add(pow(x, i2), mul(mul(i2, x), y)), pow(y, i2)), im1)));
+    assert(neq(r2, r1));
 
     r1 = mul(im1, add(x, i2));
     r1 = expand(r1);
