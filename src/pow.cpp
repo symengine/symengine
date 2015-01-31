@@ -347,8 +347,9 @@ void multinomial_coefficients_mpz(int m, int n, map_vec_mpz &r)
     }
 }
 
-RCP<const Basic> pow_expand(const RCP<const Pow> &self)
+RCP<const Basic> pow_expand(const RCP<const Basic> &self_)
 {
+    const RCP<const Pow> self = rcp_static_cast<const Pow>(self_);
     RCP<const Basic> _base = expand(self->base_);
     bool negative_pow = false;
     if (! is_a<Integer>(*self->exp_) || ! is_a<Add>(*_base))

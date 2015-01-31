@@ -34,11 +34,18 @@ std::string Basic::__str__() const
 
 RCP<const Basic> expand(const RCP<const Basic> &self)
 {
-    if (is_a<Symbol>(*self)) return self;
-    if (is_a_Number(*self)) return self;
-    if (is_a<Add>(*self)) return add_expand(rcp_static_cast<const Add>(self));
-    if (is_a<Mul>(*self)) return mul_expand(rcp_static_cast<const Mul>(self));
-    if (is_a<Pow>(*self)) return pow_expand(rcp_static_cast<const Pow>(self));
+    typedef RCP<const Basic> (*fn)(const RCP<const Basic> &);
+    std::vector<fn> table;
+    table.assign(100, NULL);
+    table[ADD] = add_expand;
+    table[MUL] = mul_expand;
+    table[POW] = pow_expand;
+    fn f = table[self->get_type_code()];
+    if (f == NULL) {
+        return self;
+    } else {
+        return f(self);
+    }
     return self;
 }
 

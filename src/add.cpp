@@ -330,8 +330,9 @@ RCP<const Basic> sub(const RCP<const Basic> &a, const RCP<const Basic> &b)
     return add(a, mul(minus_one, b));
 }
 
-RCP<const Basic> add_expand(const RCP<const Add> &self)
+RCP<const Basic> add_expand(const RCP<const Basic> &self_)
 {
+    const RCP<const Add> self = rcp_static_cast<const Add>(self_);
     umap_basic_num d;
     RCP<const Number> coef_overall = self->coef_;
     RCP<const Number> coef;

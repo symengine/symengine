@@ -75,7 +75,7 @@ RCP<const Basic> div(const RCP<const Basic> &a,
 RCP<const Basic> neg(const RCP<const Basic> &a);
 
 //! Expand `self`
-RCP<const Basic> mul_expand(const RCP<const Mul> &self);
+RCP<const Basic> mul_expand(const RCP<const Basic> &self);
 
 } // CSymPy
 

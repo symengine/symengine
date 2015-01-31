@@ -58,7 +58,7 @@ RCP<const Basic> exp(const RCP<const Basic> &x);
 
 void multinomial_coefficients(int m, int n, map_vec_int &r);
 //! Expand the power expression
-RCP<const Basic> pow_expand(const RCP<const Pow> &self);
+RCP<const Basic> pow_expand(const RCP<const Basic> &self);
 //! \return square root of `x`
 inline RCP<const Basic> sqrt(const RCP<const Basic> &x) {
     return pow(x, div(one, integer(2)));
