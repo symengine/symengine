@@ -515,9 +515,8 @@ RCP<const Basic> mul_expand_two(const RCP<const Basic> &a, const RCP<const Basic
     return mul(a, b);
 }
 
-RCP<const Basic> mul_expand(const RCP<const Basic> &self_)
+RCP<const Basic> mul_expand(const RCP<const Mul> &self)
 {
-    const RCP<const Mul> self = rcp_static_cast<const Mul>(self_);
     RCP<const Basic> a, b;
     self->as_two_terms(outArg(a), outArg(b));
     a = expand(a);

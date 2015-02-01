@@ -32,14 +32,27 @@ std::string Basic::__str__() const
     return s.str();
 }
 
+RCP<const Mul> rcp_static_cast_Mul(const RCP<const Basic> &self) {
+    return rcp_static_cast<const Mul>(self);
+}
+
+RCP<const Pow> rcp_static_cast_Pow(const RCP<const Basic> &self) {
+    return rcp_static_cast<const Pow>(self);
+}
+
+RCP<const Add> rcp_static_cast_Add(const RCP<const Basic> &self) {
+    return rcp_static_cast<const Add>(self);
+}
+
 RCP<const Basic> expand(const RCP<const Basic> &self)
 {
-    typedef RCP<const Basic> (*fn)(const RCP<const Basic> &);
+    typedef std::function<RCP<const Basic>(const RCP<const Basic>)> fn;
+    using std::placeholders::_1;
     std::vector<fn> table;
     table.assign(100, NULL);
-    table[ADD] = add_expand;
-    table[MUL] = mul_expand;
-    table[POW] = pow_expand;
+    table[ADD] = std::bind(add_expand, std::bind(rcp_static_cast_Add, _1));
+    table[MUL] = std::bind(mul_expand, std::bind(rcp_static_cast_Mul, _1));
+    table[POW] = std::bind(pow_expand, std::bind(rcp_static_cast_Pow, _1));
     fn f = table[self->get_type_code()];
     if (f == NULL) {
         return self;

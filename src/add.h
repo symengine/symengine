@@ -72,7 +72,7 @@ RCP<const Basic> add(const RCP<const Basic> &a,
 RCP<const Basic> sub(const RCP<const Basic> &a,
         const RCP<const Basic> &b);
 //! \return expanded version of Add
-RCP<const Basic> add_expand(const RCP<const Basic> &self);
+RCP<const Basic> add_expand(const RCP<const Add> &self);
 
 } // CSymPy
 
