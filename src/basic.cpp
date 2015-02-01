@@ -1,3 +1,5 @@
+#include<functional>
+
 #include "basic.h"
 #include "symbol.h"
 #include "add.h"
