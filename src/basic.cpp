@@ -39,16 +39,24 @@ RCP<const T> rcp_static_cast_T(const RCP<const Basic> &self) {
     return rcp_static_cast<const T>(self);
 }
 
-RCP<const Basic> expand(const RCP<const Basic> &self)
+typedef std::function<RCP<const Basic>(const RCP<const Basic>)> fn;
+
+std::vector<fn> init_expand()
 {
-    typedef std::function<RCP<const Basic>(const RCP<const Basic>)> fn;
     using std::placeholders::_1;
     std::vector<fn> table;
     table.assign(100, NULL);
     table[ADD] = std::bind(add_expand, std::bind(rcp_static_cast_T<Add>, _1));
     table[MUL] = std::bind(mul_expand, std::bind(rcp_static_cast_T<Mul>, _1));
     table[POW] = std::bind(pow_expand, std::bind(rcp_static_cast_T<Pow>, _1));
-    fn f = table[self->get_type_code()];
+    return table;
+}
+
+std::vector<fn> table_expand = init_expand();
+
+RCP<const Basic> expand(const RCP<const Basic> &self)
+{
+    fn f = table_expand[self->get_type_code()];
     if (f == NULL) {
         return self;
     } else {
