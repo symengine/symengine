@@ -1,3 +1,5 @@
+#include<functional>
+
 #include "basic.h"
 #include "symbol.h"
 #include "add.h"
@@ -32,7 +34,7 @@ std::string Basic::__str__() const
     return s.str();
 }
 
-typedef RCP<const Basic> (*fn)(const RCP<const Basic> &);
+typedef std::function<RCP<const Basic>(const RCP<const Basic>)> fn;
 
 std::vector<fn> init_expand()
 {
