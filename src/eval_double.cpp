@@ -197,43 +197,28 @@ std::vector<fn> init_eval_double()
         for (auto &p: x.get_args()) tmp = tmp + eval_double(*p);
         return tmp;
     };
-
-    /*
-    void visit(const Mul &x) {
+    table[MUL] = [](const Basic &x) {
         double tmp = 1;
-        for (auto &p: x.get_args()) tmp = tmp * apply(*p);
-        result_ = tmp;
-    }
-
-    void visit(const Pow &x) {
-        double a = apply(*(x.base_));
-        double b = apply(*(x.exp_));
-        result_ = ::pow(a, b);
-    }
-
-    void visit(const Sin &x) {
-        double tmp = apply(*(x.get_arg()));
-        result_ = ::sin(tmp);
-    }
-
-    void visit(const Cos &x) {
-        double tmp = apply(*(x.get_arg()));
-        result_ = ::cos(tmp);
-    }
-
-    void visit(const Tan &x) {
-        double tmp = apply(*(x.get_arg()));
-        result_ = ::tan(tmp);
-    }
-    */
-    /*
-    table[MUL] = [](const RCP<const Basic> &self) {
-        return mul_expand(rcp_static_cast<const Mul>(self));
+        for (auto &p: x.get_args()) tmp = tmp * eval_double(*p);
+        return tmp;
     };
-    table[POW] = [](const RCP<const Basic> &self) {
-        return pow_expand(rcp_static_cast<const Pow>(self));
+    table[POW] = [](const Basic &x) {
+        double a = eval_double(*(static_cast<const Pow &>(x)).base_);
+        double b = eval_double(*(static_cast<const Pow &>(x)).exp_);
+        return ::pow(a, b);
     };
-    */
+    table[SIN] = [](const Basic &x) {
+        double tmp = eval_double(*(static_cast<const Sin &>(x)).get_arg());
+        return ::sin(tmp);
+    };
+    table[COS] = [](const Basic &x) {
+        double tmp = eval_double(*(static_cast<const Cos &>(x)).get_arg());
+        return ::cos(tmp);
+    };
+    table[TAN] = [](const Basic &x) {
+        double tmp = eval_double(*(static_cast<const Tan &>(x)).get_arg());
+        return ::tan(tmp);
+    };
     return table;
 }
 
