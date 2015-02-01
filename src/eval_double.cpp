@@ -178,10 +178,76 @@ public:
     };
 };
 
+typedef std::function<double(const Basic &)> fn;
+
+std::vector<fn> init_eval_double()
+{
+    std::vector<fn> table;
+    table.assign(100, NULL);
+    table[INTEGER] = [](const Basic &x) {
+        double tmp = (static_cast<const Integer &>(x)).i.get_d();
+        return tmp;
+    };
+    table[RATIONAL] = [](const Basic &x) {
+        double tmp = (static_cast<const Rational &>(x)).i.get_d();
+        return tmp;
+    };
+    table[ADD] = [](const Basic &x) {
+        double tmp = 0;
+        for (auto &p: x.get_args()) tmp = tmp + eval_double(*p);
+        return tmp;
+    };
+
+    /*
+    void visit(const Mul &x) {
+        double tmp = 1;
+        for (auto &p: x.get_args()) tmp = tmp * apply(*p);
+        result_ = tmp;
+    }
+
+    void visit(const Pow &x) {
+        double a = apply(*(x.base_));
+        double b = apply(*(x.exp_));
+        result_ = ::pow(a, b);
+    }
+
+    void visit(const Sin &x) {
+        double tmp = apply(*(x.get_arg()));
+        result_ = ::sin(tmp);
+    }
+
+    void visit(const Cos &x) {
+        double tmp = apply(*(x.get_arg()));
+        result_ = ::cos(tmp);
+    }
+
+    void visit(const Tan &x) {
+        double tmp = apply(*(x.get_arg()));
+        result_ = ::tan(tmp);
+    }
+    */
+    /*
+    table[MUL] = [](const RCP<const Basic> &self) {
+        return mul_expand(rcp_static_cast<const Mul>(self));
+    };
+    table[POW] = [](const RCP<const Basic> &self) {
+        return pow_expand(rcp_static_cast<const Pow>(self));
+    };
+    */
+    return table;
+}
+
+std::vector<fn> table_eval_double = init_eval_double();
+
 double eval_double(const Basic &b)
 {
-    EvalDoubleVisitor v;
-    return v.apply(b);
+    fn f = table_eval_double[b.get_type_code()];
+    if (f == NULL) {
+        throw std::runtime_error("Not implemented.");
+    } else {
+        return f(b);
+    }
+    return 0.0;
 }
 
 } // CSymPy
