@@ -1,5 +1,3 @@
-#include<functional>
-
 #include "basic.h"
 #include "symbol.h"
 #include "add.h"
@@ -38,7 +36,6 @@ typedef RCP<const Basic> (*fn)(const RCP<const Basic> &);
 
 std::vector<fn> init_expand()
 {
-    using std::placeholders::_1;
     std::vector<fn> table;
     table.assign(100, NULL);
     table[ADD] = [](const RCP<const Basic> &self) {
