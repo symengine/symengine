@@ -47,6 +47,16 @@ void test_printing()
     r = mul(integer(2), pow(symbol("x"), integer(2)));
     assert(r->__str__() == "2*x^2");
 
+    r = mul(integer(23), mul(pow(div(integer(5), integer(2)), div(integer(1), integer(2))),
+        pow(div(integer(7), integer(3)), div(integer(1), integer(2)))));
+    assert(r->__str__() == "23*(7/3)^(1/2)*(5/2)^(1/2)");
+	
+    r = pow(div(symbol("x"), integer(2)), div(integer(1), integer(2)));
+    assert(r->__str__() == "((1/2)*x)^(1/2)");
+
+    r = pow(div(integer(3), integer(2)),div(integer(1), integer(2)));
+    assert(r->__str__() == "(3/2)^(1/2)");	
+	
     r1 = mul(integer(12), pow(integer(196), div(integer(-1), integer(2))));
     r2 = mul(integer(294), pow(integer(196), div(integer(-1), integer(2))));
     r = add(integer(-51), mul(r1, r2));
