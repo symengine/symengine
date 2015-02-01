@@ -34,11 +34,6 @@ std::string Basic::__str__() const
     return s.str();
 }
 
-template <class T>
-RCP<const T> rcp_static_cast_T(const RCP<const Basic> &self) {
-    return rcp_static_cast<const T>(self);
-}
-
 typedef std::function<RCP<const Basic>(const RCP<const Basic>)> fn;
 
 std::vector<fn> init_expand()
@@ -46,9 +41,15 @@ std::vector<fn> init_expand()
     using std::placeholders::_1;
     std::vector<fn> table;
     table.assign(100, NULL);
-    table[ADD] = std::bind(add_expand, std::bind(rcp_static_cast_T<Add>, _1));
-    table[MUL] = std::bind(mul_expand, std::bind(rcp_static_cast_T<Mul>, _1));
-    table[POW] = std::bind(pow_expand, std::bind(rcp_static_cast_T<Pow>, _1));
+    table[ADD] = [](const RCP<const Basic> &self) {
+        return add_expand(rcp_static_cast<const Add>(self));
+    };
+    table[MUL] = [](const RCP<const Basic> &self) {
+        return mul_expand(rcp_static_cast<const Mul>(self));
+    };
+    table[POW] = [](const RCP<const Basic> &self) {
+        return pow_expand(rcp_static_cast<const Pow>(self));
+    };
     return table;
 }
 
