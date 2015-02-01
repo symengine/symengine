@@ -34,7 +34,7 @@ std::string Basic::__str__() const
     return s.str();
 }
 
-typedef std::function<RCP<const Basic>(const RCP<const Basic>)> fn;
+typedef std::function<RCP<const Basic>(const RCP<const Basic> &)> fn;
 
 std::vector<fn> init_expand()
 {
