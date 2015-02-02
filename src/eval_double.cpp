@@ -228,6 +228,10 @@ std::vector<fn> table_eval_double = init_eval_double();
 
 double eval_double(const Basic &b)
 {
+/*
+    EvalDoubleVisitor v;
+    return v.apply(b);
+*/
     fn f = table_eval_double[b.get_type_code()];
     if (f == NULL) {
         throw std::runtime_error("Not implemented.");
