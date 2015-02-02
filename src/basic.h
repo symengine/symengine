@@ -69,7 +69,12 @@ enum TypeID {
     ASINH, ACOSH, ATANH, ACOTH,
     LAMBERTW, ZETA, DIRICHLET_ETA, KRONECKERDELTA,
     LEVICIVITA, GAMMA, LOWERGAMMA, UPPERGAMMA,
-    FUNCTIONSYMBOL, FUNCTIONWRAPPER, DERIVATIVE, SUBS, ABS
+    FUNCTIONSYMBOL, FUNCTIONWRAPPER, DERIVATIVE, SUBS, ABS,
+
+    // The 'TypeID_Count' returns the number of elements in 'TypeID'. For this
+    // to work, do not assign numbers to the elements above (or if you do, you
+    // must assign the correct count below).
+    TypeID_Count
 };
 
 class Basic {
