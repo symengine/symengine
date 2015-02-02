@@ -137,6 +137,10 @@ public:
     };
 
     virtual void accept(Visitor &v) const;
+
+    virtual double eval_double() const {
+        return i.get_d();
+    }
 };
 
 //! less operator (<) for Integers

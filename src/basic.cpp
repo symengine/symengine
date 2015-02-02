@@ -1,3 +1,5 @@
+#include<functional>
+
 #include "basic.h"
 #include "symbol.h"
 #include "add.h"
@@ -32,14 +34,31 @@ std::string Basic::__str__() const
     return s.str();
 }
 
+typedef std::function<RCP<const Basic>(const RCP<const Basic> &)> fn;
+
+std::vector<fn> init_expand()
+{
+    std::vector<fn> table;
+    table.assign(TypeID_Count, [](const RCP<const Basic> &self) {
+        return self;
+    });
+    table[ADD] = [](const RCP<const Basic> &self) {
+        return add_expand(rcp_static_cast<const Add>(self));
+    };
+    table[MUL] = [](const RCP<const Basic> &self) {
+        return mul_expand(rcp_static_cast<const Mul>(self));
+    };
+    table[POW] = [](const RCP<const Basic> &self) {
+        return pow_expand(rcp_static_cast<const Pow>(self));
+    };
+    return table;
+}
+
+const static std::vector<fn> table_expand = init_expand();
+
 RCP<const Basic> expand(const RCP<const Basic> &self)
 {
-    if (is_a<Symbol>(*self)) return self;
-    if (is_a_Number(*self)) return self;
-    if (is_a<Add>(*self)) return add_expand(rcp_static_cast<const Add>(self));
-    if (is_a<Mul>(*self)) return mul_expand(rcp_static_cast<const Mul>(self));
-    if (is_a<Pow>(*self)) return pow_expand(rcp_static_cast<const Pow>(self));
-    return self;
+    return table_expand[self->get_type_code()](self);
 }
 
 RCP<const Basic> Basic::subs(const map_basic_basic &subs_dict) const

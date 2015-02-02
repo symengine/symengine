@@ -223,6 +223,10 @@ public:
     };
 
     virtual void accept(Visitor &v) const;
+
+    virtual double eval_double() const {
+        return i.get_d();
+    }
 };
 
 //! returns the `num` and `den` of rational `rat` as `rcp Integer`
