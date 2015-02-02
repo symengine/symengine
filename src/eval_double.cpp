@@ -232,13 +232,7 @@ double eval_double(const Basic &b)
     EvalDoubleVisitor v;
     return v.apply(b);
 */
-    fn f = table_eval_double[b.get_type_code()];
-    if (f == NULL) {
-        throw std::runtime_error("Not implemented.");
-    } else {
-        return f(b);
-    }
-    return 0.0;
+    return table_eval_double[b.get_type_code()](b);
 }
 
 } // CSymPy
