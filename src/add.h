@@ -63,6 +63,12 @@ public:
     virtual vec_basic get_args() const;
 
     virtual void accept(Visitor &v) const;
+
+    virtual double eval_double() const {
+        double tmp = 0;
+        for (auto &p: get_args()) tmp = tmp + p->eval_double();
+        return tmp;
+    }
 };
 
 //! \return Add made from `a + b`

@@ -83,6 +83,11 @@ public:
     virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
 
     virtual void accept(Visitor &v) const;
+
+    virtual double eval_double() const {
+        double tmp = get_arg()->eval_double();
+        return ::sin(tmp);
+    }
 };
 
 //! Canonicalize Sin:
@@ -111,6 +116,11 @@ public:
     virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
 
     virtual void accept(Visitor &v) const;
+
+    virtual double eval_double() const {
+        double tmp = get_arg()->eval_double();
+        return ::cos(tmp);
+    }
 };
 
 //! Canonicalize Cos:
@@ -139,6 +149,11 @@ public:
     virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
 
     virtual void accept(Visitor &v) const;
+
+    virtual double eval_double() const {
+        double tmp = get_arg()->eval_double();
+        return ::tan(tmp);
+    }
 };
 //! Canonicalize Tan:
 RCP<const Basic> tan(const RCP<const Basic> &arg);

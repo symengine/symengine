@@ -47,6 +47,12 @@ public:
     virtual vec_basic get_args() const;
 
     virtual void accept(Visitor &v) const;
+
+    virtual double eval_double() const {
+        double a = base_->eval_double();
+        double b = exp_->eval_double();
+        return ::pow(a, b);
+    }
 };
 
 //! \return Pow from `a` and `b`

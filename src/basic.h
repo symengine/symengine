@@ -175,6 +175,10 @@ public:
     virtual vec_basic get_args() const = 0;
 
     virtual void accept(Visitor &v) const = 0;
+
+    virtual double eval_double() const {
+        throw std::runtime_error("Not implemented.");
+    }
 };
 
 //! Our hash:
