@@ -185,7 +185,9 @@ typedef std::function<double(const Basic &)> fn;
 std::vector<fn> init_eval_double()
 {
     std::vector<fn> table;
-    table.assign(100, NULL);
+    table.assign(100, [](const Basic &x) -> double {
+        throw std::runtime_error("Not implemented.");
+    });
     table[INTEGER] = [](const Basic &x) {
         double tmp = (static_cast<const Integer &>(x)).i.get_d();
         return tmp;
