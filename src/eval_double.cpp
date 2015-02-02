@@ -1,4 +1,6 @@
 #include <cmath>
+#include <functional>
+
 
 #include "basic.h"
 #include "symbol.h"
