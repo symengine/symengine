@@ -231,7 +231,7 @@ std::vector<fn> init_eval_double()
     return table;
 }
 
-std::vector<fn> table_eval_double = init_eval_double();
+const static std::vector<fn> table_eval_double = init_eval_double();
 
 double eval_double(const Basic &b)
 {
