@@ -37,7 +37,7 @@ int main(int argc, char* argv[])
     RCP<const Basic> e = sin(integer(1));
     double r, r_exact;
 
-    for(int i = 0; i < 10000; i++)
+    for(int i = 0; i < 9000; i++)
         e = pow(add(mul(add(e, pow(integer(2), integer(-3))), integer(3)), integer(1)), div(integer(2), integer(3)));
 
 //  Too long:

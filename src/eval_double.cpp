@@ -240,6 +240,7 @@ double eval_double(const Basic &b)
     return v.apply(b);
 */
     return table_eval_double[b.get_type_code()](b);
+//    return b.eval_double();
 }
 
 } // CSymPy
