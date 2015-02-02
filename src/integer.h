@@ -139,8 +139,7 @@ public:
     virtual void accept(Visitor &v) const;
 
     virtual double eval_double() const {
-        double tmp = i.get_d();
-        return tmp;
+        return i.get_d();
     }
 };
 
