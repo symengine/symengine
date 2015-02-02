@@ -180,6 +180,11 @@ public:
     };
 };
 
+
+/*
+ * These two seem to be equivalent and about the same fast.
+*/
+//typedef double (*fn)(const Basic &);
 typedef std::function<double(const Basic &)> fn;
 
 std::vector<fn> init_eval_double()
