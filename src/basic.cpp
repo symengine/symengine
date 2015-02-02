@@ -39,7 +39,9 @@ typedef std::function<RCP<const Basic>(const RCP<const Basic> &)> fn;
 std::vector<fn> init_expand()
 {
     std::vector<fn> table;
-    table.assign(100, NULL);
+    table.assign(TypeID_Count, [](const RCP<const Basic> &self) {
+        return self;
+    });
     table[ADD] = [](const RCP<const Basic> &self) {
         return add_expand(rcp_static_cast<const Add>(self));
     };
@@ -52,17 +54,11 @@ std::vector<fn> init_expand()
     return table;
 }
 
-std::vector<fn> table_expand = init_expand();
+const static std::vector<fn> table_expand = init_expand();
 
 RCP<const Basic> expand(const RCP<const Basic> &self)
 {
-    fn f = table_expand[self->get_type_code()];
-    if (f == NULL) {
-        return self;
-    } else {
-        return f(self);
-    }
-    return self;
+    return table_expand[self->get_type_code()](self);
 }
 
 RCP<const Basic> Basic::subs(const map_basic_basic &subs_dict) const
