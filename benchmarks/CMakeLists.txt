@@ -8,6 +8,9 @@ include_directories(BEFORE ${teuchos_BINARY_DIR})
 add_executable(expand1 expand1.cpp)
 target_link_libraries(expand1 csympy teuchos ${LIBS})
 
+add_executable(eval_double1 eval_double1.cpp)
+target_link_libraries(eval_double1 csympy teuchos ${LIBS})
+
 add_executable(expand2 expand2.cpp)
 target_link_libraries(expand2 csympy teuchos ${LIBS})
 
