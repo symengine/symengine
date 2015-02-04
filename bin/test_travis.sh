@@ -98,4 +98,12 @@ else
     ${CXX} -std=c++0x -I$our_install_dir/include/ -L$our_install_dir/lib test_basic.cpp -lcsympy -lgmpxx -lgmp -lteuchos $extra_libs
     export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
     ./a.out
+
+    if [[ "${WITH_PYTHON}" == "yes" ]]; then
+        cat << EOF | python
+import csympy
+if not csympy.test():
+    raise Exception('Tests failed')
+EOF
+    fi
 fi
