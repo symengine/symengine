@@ -75,12 +75,15 @@ if [[ "${WITH_CSYMPY_RCP}" == "no" ]]; then
     echo "CSymPy successfully built with Teuchos::RCP. No tests being run."
 else
     echo "Running tests in build directory:"
+    # C++
     ctest --output-on-failure
+    # Python
     if [[ "${WITH_PYTHON}" == "yes" ]]; then
         nosetests -v
     fi
 
     echo "Running tests using installed csympy:"
+    # C++
     cd $SOURCE_DIR/src/tests/basic/
     extra_libs=""
     if [[ "${WITH_BFD}" != "" ]]; then
@@ -98,4 +101,14 @@ else
     ${CXX} -std=c++0x -I$our_install_dir/include/ -L$our_install_dir/lib test_basic.cpp -lcsympy -lgmpxx -lgmp -lteuchos $extra_libs
     export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
     ./a.out
+    # Python
+    if [[ "${WITH_PYTHON}" == "yes" ]]; then
+        mkdir -p empty
+        cd empty
+        cat << EOF | python
+import csympy
+if not csympy.test():
+    raise Exception('Tests failed')
+EOF
+    fi
 fi
