@@ -776,6 +776,10 @@ void test_expand2()
     r1 = pow(mul(sqrt(i3), mul(y, add(one, pow(i3, div(one, i3))))), i3);
     r1 = expand(mul(r1, add(r1, one)));
     std::cout << r1->__str__() << std::endl;
+
+    r1 = expand(pow(add(sqrt(i2), mul(sqrt(i2), x)), i2));
+    r2 = add(i2, add(mul(i4, x), mul(i2, pow(x, i2))));
+    assert(eq(r1, r2));
 }
 
 void test_expand3()
