@@ -764,6 +764,11 @@ void test_expand2()
     r2 = add(i4, add(mul(mul(i4, x), y), pow(mul(x, y), i2)));
     assert(eq(r1, r2));
 
+    r1 = pow(sub(sub(pow(add(x, one), i2), pow(x, i2)), mul(x, i2)), i2);
+    r1 = expand(r1);
+    r2 = one;
+    assert(eq(r1, r2));
+
     // The following test that the expand method outputs canonical objects
     r1 = pow(add(y, mul(sqrt(i3), z)), i2);
     r1 = expand(mul(r1, add(r1, one)));
