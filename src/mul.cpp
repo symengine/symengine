@@ -547,11 +547,18 @@ RCP<const Basic> Mul::power_all_terms(const RCP<const Basic> &exp) const
     }
     if (is_a_Number(*new_coef)) {
         imulnum(outArg(coef_num), rcp_static_cast<const Number>(new_coef));
-        return Mul::from_dict(coef_num, std::move(d));
+    }  else if (is_a<Mul>(*new_coef)) {
+        RCP<const Mul> tmp = rcp_static_cast<const Mul>(new_coef);
+        imulnum(outArg(coef_num), tmp->coef_);
+        for (auto &q: tmp->dict_) {
+            Mul::dict_add_term_new(outArg(coef_num), d, q.second, q.first);
+        }
     } else {
-        // TODO: this can be made faster probably:
-        return mul(mul(new_coef, coef_num), Mul::from_dict(one, std::move(d)));
+        RCP<const Basic> _exp, t;
+        Mul::as_base_exp(new_coef, outArg(_exp), outArg(t));
+        Mul::dict_add_term_new(outArg(coef_num), d, _exp, t);
     }
+    return Mul::from_dict(coef_num, std::move(d));
 }
 
 RCP<const Basic> Mul::diff(const RCP<const Symbol> &x) const
