@@ -547,16 +547,24 @@ RCP<const Basic> Mul::power_all_terms(const RCP<const Basic> &exp) const
     }
     if (is_a_Number(*new_coef)) {
         imulnum(outArg(coef_num), rcp_static_cast<const Number>(new_coef));
-        return Mul::from_dict(coef_num, std::move(d));
+    }  else if (is_a<Mul>(*new_coef)) {
+        RCP<const Mul> tmp = rcp_static_cast<const Mul>(new_coef);
+        imulnum(outArg(coef_num), tmp->coef_);
+        for (auto &q: tmp->dict_) {
+            Mul::dict_add_term_new(outArg(coef_num), d, q.second, q.first);
+        }
     } else {
-        // TODO: this can be made faster probably:
-        return mul(mul(new_coef, coef_num), Mul::from_dict(one, std::move(d)));
+        RCP<const Basic> _exp, t;
+        Mul::as_base_exp(new_coef, outArg(_exp), outArg(t));
+        Mul::dict_add_term_new(outArg(coef_num), d, _exp, t);
     }
+    return Mul::from_dict(coef_num, std::move(d));
 }
 
 RCP<const Basic> Mul::diff(const RCP<const Symbol> &x) const
 {
-    RCP<const Basic> r=zero;
+    RCP<const Number> overall_coef = zero;
+    umap_basic_num add_dict;
     for (auto &p: dict_) {
         RCP<const Number> coef = coef_;
         RCP<const Basic> factor = pow(p.first, p.second)->diff(x);
@@ -577,10 +585,14 @@ RCP<const Basic> Mul::diff(const RCP<const Symbol> &x) const
             Mul::as_base_exp(factor, outArg(exp), outArg(t));
             Mul::dict_add_term_new(outArg(coef), d, exp, t);
         }
-        // TODO: speed this up:
-        r = add(r, Mul::from_dict(coef, std::move(d)));
+        if (d.size() == 0) {
+            iaddnum(outArg(overall_coef), coef);
+        } else {
+            RCP<const Basic> mul = Mul::from_dict(one, std::move(d));
+            Add::dict_add_term(add_dict, coef, mul);
+        }
     }
-    return r;
+    return Add::from_dict(overall_coef, std::move(add_dict));
 }
 
 RCP<const Basic> Mul::subs(const map_basic_basic &subs_dict) const
