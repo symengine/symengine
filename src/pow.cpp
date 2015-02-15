@@ -355,8 +355,13 @@ RCP<const Basic> pow_expand(const RCP<const Pow> &self)
 {
     RCP<const Basic> _base = expand(self->base_);
     bool negative_pow = false;
-    if (! is_a<Integer>(*self->exp_) || ! is_a<Add>(*_base))
-        return self;
+    if (! is_a<Integer>(*self->exp_) || ! is_a<Add>(*_base)) {
+        if (neq(_base, self->base_)) {
+            return pow(_base, self->exp_);
+        } else {
+            return self;
+        }
+    }
 
     map_vec_mpz r;
     int n = rcp_static_cast<const Integer>(self->exp_)->as_int();
