@@ -35,27 +35,27 @@ void test_printing()
     RCP<const Symbol> z  = symbol("z");
 
     r = div(integer(12), pow(integer(196), div(integer(1), integer(2))));
-    assert(r->__str__() == "(3/49)*196^(1/2)");
+    assert(r->__str__() == "(3/49)*196**(1/2)");
 
     r = mul(integer(12), pow(integer(196), div(integer(1), integer(2))));
-    assert(r->__str__() == "12*196^(1/2)");
+    assert(r->__str__() == "12*196**(1/2)");
 
     r = mul(integer(23), mul(pow(integer(5), div(integer(1), integer(2))),
         pow(integer(7), div(integer(1), integer(2)))));
-    assert(r->__str__() == "23*5^(1/2)*7^(1/2)");
+    assert(r->__str__() == "23*5**(1/2)*7**(1/2)");
 
     r = mul(integer(2), pow(symbol("x"), integer(2)));
-    assert(r->__str__() == "2*x^2");
+    assert(r->__str__() == "2*x**2");
 
     r = mul(integer(23), mul(pow(div(integer(5), integer(2)), div(integer(1), integer(2))),
         pow(div(integer(7), integer(3)), div(integer(1), integer(2)))));
-    assert(r->__str__() == "23*(7/3)^(1/2)*(5/2)^(1/2)");
+    assert(r->__str__() == "23*(7/3)**(1/2)*(5/2)**(1/2)");
 	
     r = pow(div(symbol("x"), integer(2)), div(integer(1), integer(2)));
-    assert(r->__str__() == "((1/2)*x)^(1/2)");
+    assert(r->__str__() == "((1/2)*x)**(1/2)");
 
     r = pow(div(integer(3), integer(2)),div(integer(1), integer(2)));
-    assert(r->__str__() == "(3/2)^(1/2)");	
+    assert(r->__str__() == "(3/2)**(1/2)");	
 	
     r1 = mul(integer(12), pow(integer(196), div(integer(-1), integer(2))));
     r2 = mul(integer(294), pow(integer(196), div(integer(-1), integer(2))));
@@ -70,9 +70,9 @@ void test_printing()
     assert(r2->__str__() != "-1x*y");
 
     r = mul(integer(-1), pow(integer(196), div(integer(1), integer(2))));
-    assert(r->__str__() == "-196^(1/2)");
+    assert(r->__str__() == "-196**(1/2)");
     r = pow(integer(-6), div(integer(1), integer(2)));
-    assert(r->__str__() == "(-6)^(1/2)");
+    assert(r->__str__() == "(-6)**(1/2)");
 
     RCP<const Number> rn1, rn2, rn3, c1, c2;
     rn1 = Rational::from_two_ints(integer(2), integer(4));
@@ -89,8 +89,8 @@ void test_printing()
     assert(r2->__str__() == "(1/2 - 5/7*I)*x");
     r1 = pow(x, c1);
     r2 = pow(x, c2);
-    assert(r1->__str__() == "x^(1/2 + 5/7*I)");
-    assert(r2->__str__() == "x^(1/2 - 5/7*I)");
+    assert(r1->__str__() == "x**(1/2 + 5/7*I)");
+    assert(r2->__str__() == "x**(1/2 - 5/7*I)");
 
 
     c1 = Complex::from_two_nums(*rn1, *rn2);
@@ -109,8 +109,8 @@ void test_printing()
     assert(r2->__str__() == "-5/7*I*x");
     r1 = pow(x, c1);
     r2 = pow(x, c2);
-    assert(r1->__str__() == "x^(5/7*I)");
-    assert(r2->__str__() == "x^(-5/7*I)");
+    assert(r1->__str__() == "x**(5/7*I)");
+    assert(r2->__str__() == "x**(-5/7*I)");
 
 
 
@@ -124,8 +124,8 @@ void test_printing()
     assert(r2->__str__() == "(-5/7)*x");
     r1 = pow(x, c1);
     r2 = pow(x, c2);
-    assert(r1->__str__() == "x^(5/7)");
-    assert(r2->__str__() == "x^(-5/7)");
+    assert(r1->__str__() == "x**(5/7)");
+    assert(r2->__str__() == "x**(-5/7)");
 
     rn1 = Rational::from_two_ints(integer(1), integer(1));
     c1 = Complex::from_two_nums(*rn2, *rn1);
@@ -141,7 +141,7 @@ void test_printing()
     assert(r1->__str__() == "2*x" );
 
     r1 = mul(mul(integer(2), pow(symbol("x"), div(integer(2), integer(3)))), y);
-    assert(r1->__str__() == "2*x^(2/3)*y" );
+    assert(r1->__str__() == "2*x**(2/3)*y" );
 
     r1 = mul(x, y);
     assert(r1->__str__() == "x*y" );
@@ -150,32 +150,32 @@ void test_printing()
     r1 = div(x, pow(add(x, y), div(integer(2), integer(3))));
     r2 = div(x, pow(add(x, y), div(integer(-2), integer(3))));
     assert(r->__str__() == "x/(y + x)");
-    assert(r1->__str__() == "x/(y + x)^(2/3)" );
-    assert(r2->__str__() == "(y + x)^(2/3)*x" );
+    assert(r1->__str__() == "x/(y + x)**(2/3)" );
+    assert(r2->__str__() == "(y + x)**(2/3)*x" );
 
     r = div(integer(1), mul(x, add(x, y)));
     r1 = div(mul(y, integer(-1)), mul(x, add(x, y)));
     r2 = mul(pow(y, x), pow(x, y));
     assert(r->__str__() == "1/((y + x)*x)");
     assert(r1->__str__() == "-y/((y + x)*x)");
-    assert(r2->__str__() == "x^y*y^x");
+    assert(r2->__str__() == "x**y*y**x");
 
     r = pow(y, pow(x, integer(2)));
     r1 = pow(integer(3), mul(integer(2), x));
     r2 = pow(integer(3), mul(integer(-1), x));
-    assert(r->__str__() == "y^(x^2)");
-    assert(r1->__str__() == "3^(2*x)" );
-    assert(r2->__str__() == "3^(-x)" );
+    assert(r->__str__() == "y**(x**2)");
+    assert(r1->__str__() == "3**(2*x)" );
+    assert(r2->__str__() == "3**(-x)" );
 
     r1 = pow(mul(integer(2), x), y);
     r2 = pow(mul(x, y), z);
-    assert(r1->__str__() == "(2*x)^y");
-    assert(r2->__str__() == "(x*y)^z");
+    assert(r1->__str__() == "(2*x)**y");
+    assert(r2->__str__() == "(x*y)**z");
 
     r1 = pow(pow(integer(2), x), y);
     r2 = pow(pow(x, y), z);
-    assert(r1->__str__() == "(2^x)^y");
-    assert(r2->__str__() == "(x^y)^z");
+    assert(r1->__str__() == "(2**x)**y");
+    assert(r2->__str__() == "(x**y)**z");
 }
 
 void test_matrix()
