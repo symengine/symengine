@@ -20,6 +20,7 @@ set(SRC
     pow.cpp
     functions.cpp
     monomials.cpp
+    polynomial.cpp
     rings.cpp
     ntheory.cpp
     dense_matrix.cpp
@@ -34,7 +35,7 @@ set(SRC
 
 # Needed for "make install"
 set(HEADERS
-    add.h        csympy_assert.h  functions.h  monomials.h  number.h    rings.h
+    add.h        csympy_assert.h  functions.h  monomials.h  polynomial.h number.h    rings.h
     basic.h      csympy_rcp.h     integer.h    mul.h        pow.h       constants.h
     symbol.h
     basic-inl.h  dict.h           matrix.h     ntheory.h    rational.h complex.h

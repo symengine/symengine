@@ -28,7 +28,7 @@ namespace CSymPy {
 
 class Visitor;
 class Symbol;
-
+//class Polynomial;
 /*!
     Any Basic class can be used in a "dictionary", due to the methods:
 
@@ -61,7 +61,7 @@ class Symbol;
 */
 
 enum TypeID {
-    SYMBOL, MUL, ADD, POW, LOG,
+    SYMBOL, MUL, ADD, POW, LOG, POLYNOMIAL,
     NUMBER, INTEGER, RATIONAL, COMPLEX, CONSTANT,
     SIN, COS, TAN, COT, CSC, SEC,
     ASIN, ACOS, ASEC, ACSC, ATAN, ACOT, ATAN2,

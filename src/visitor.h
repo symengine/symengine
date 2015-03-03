@@ -10,8 +10,11 @@
 
 namespace CSymPy {
 
+class Polynomial;
+
 class Visitor {
 public:
+    virtual void visit(const Polynomial &) = 0;
     virtual void visit(const Symbol &) = 0;
     virtual void visit(const Add &) = 0;
     virtual void visit(const Mul &) = 0;
@@ -84,6 +87,7 @@ public:
         preorder_traversal_stop(b, *this);
         return has_;
     }
+    virtual void visit(const Polynomial &) { };
     virtual void visit(const Add &) { };
     virtual void visit(const Mul &) { };
     virtual void visit(const Pow &) { };
@@ -147,6 +151,7 @@ public:
         b.accept(*this);
         return coeff_;
     }
+    virtual void visit(const Polynomial &) { };
     virtual void visit(const Symbol &) { };
     virtual void visit(const Mul &) { };
     virtual void visit(const Pow &) { };
