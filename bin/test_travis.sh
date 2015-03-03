@@ -49,6 +49,9 @@ fi
 if [[ "${WITH_ARB}" != "" ]]; then
     cmake_line="$cmake_line -DWITH_ARB=${WITH_ARB}"
 fi
+if [[ "${BUILD_SHARED_LIBS}" != "" ]]; then
+    cmake_line="$cmake_line -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}"
+fi
 if [[ "${PYTHON_INSTALL}" == "yes" ]]; then
     git clean -dfx
     pip install .
@@ -98,8 +101,8 @@ else
     if [[ "${WITH_ARB}" != "" ]]; then
         extra_libs="$extra_libs -larb -lflint"
     fi
-    ${CXX} -std=c++0x -I$our_install_dir/include/ -L$our_install_dir/lib test_basic.cpp -lcsympy -lgmpxx -lgmp -lteuchos $extra_libs
-    export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+    ${CXX} -std=c++0x -I$our_install_dir/include/ -L$our_install_dir/lib test_basic.cpp -lcsympy -lteuchos -lgmpxx -lgmp $extra_libs
+    export LD_LIBRARY_PATH=/usr/local/lib:$our_install_dir/lib:$LD_LIBRARY_PATH
     ./a.out
     # Python
     if [[ "${WITH_PYTHON}" == "yes" ]]; then

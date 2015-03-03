@@ -47,6 +47,7 @@ configure_file(csympy_config.h.in csympy_config.h)
 include_directories(BEFORE ${csympy_BINARY_DIR}/src)
 
 add_library(csympy ${SRC})
+target_link_libraries(csympy teuchos ${LIBS})
 
 install(TARGETS csympy
             RUNTIME DESTINATION bin
