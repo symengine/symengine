@@ -397,7 +397,7 @@ RCP<const Basic> pow_expand(const RCP<const Pow> &self)
                         rcp_static_cast<const Number>(
                         rcp_static_cast<const Integer>(base)->powint(*exp)));
                 } else if (is_a<Symbol>(*base)) {
-                    Mul::dict_add_term(d, exp, base);
+                    Mul::dict_add_term(inoutArg(d), exp, base);
                 } else {
                     RCP<const Basic> exp2, t, tmp;
                     tmp = pow(base, exp);

@@ -216,19 +216,19 @@ RCP<const CSymPy::Basic> Mul::from_dict(const RCP<const Number> &coef, map_basic
 }
 
 // Mul (t^exp) to the dict "d"
-void Mul::dict_add_term(map_basic_basic &d, const RCP<const Basic> &exp,
+void Mul::dict_add_term(const Ptr<map_basic_basic> &d, const RCP<const Basic> &exp,
         const RCP<const Basic> &t)
 {
-    auto it = d.find(t);
-    if (it == d.end()) {
-        insert(d, t, exp);
+    auto it = d->find(t);
+    if (it == d->end()) {
+        insert(*d, t, exp);
     } else {
         // Very common case, needs to be fast:
         if (is_a_Number(*it->second) && is_a_Number(*exp)) {
             RCP<const Number> tmp = rcp_static_cast<const Number>(it->second);
             iaddnum(outArg(tmp), rcp_static_cast<const Number>(exp));
             if (tmp->is_zero()) {
-                d.erase(it);
+                d->erase(it);
             } else {
                 it->second = tmp;
             }
@@ -237,7 +237,7 @@ void Mul::dict_add_term(map_basic_basic &d, const RCP<const Basic> &exp,
             it->second = add(it->second, exp);
             if (is_a<Integer>(*it->second) &&
                     rcp_static_cast<const Integer>(it->second)->is_zero()) {
-                d.erase(it);
+                d->erase(it);
             }
         }
     }
