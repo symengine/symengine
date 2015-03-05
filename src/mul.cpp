@@ -455,19 +455,19 @@ RCP<const Basic> mul_expand_two(const RCP<const Basic> &a, const RCP<const Basic
                         // We make a copy of the dict_:
                         map_basic_basic d2 = rcp_static_cast<const Mul>(term)->dict_;
                         term = Mul::from_dict(one, std::move(d2));
-                        Add::dict_add_term(d, mulnum(mulnum(p.second, q.second), coef2), term);
+                        Add::dict_add_term(inoutArg(d), mulnum(mulnum(p.second, q.second), coef2), term);
                     } else {
-                        Add::dict_add_term(d, mulnum(p.second, q.second), term);
+                        Add::dict_add_term(inoutArg(d), mulnum(p.second, q.second), term);
                     }
                 }
             }
-            Add::dict_add_term(d,
+            Add::dict_add_term(inoutArg(d),
                     mulnum(rcp_static_cast<const Add>(b)->coef_, p.second),
                     p.first);
         }
         // Handle the coefficient of "a":
         for (auto &q: (rcp_static_cast<const Add>(b))->dict_) {
-            Add::dict_add_term(d,
+            Add::dict_add_term(inoutArg(d),
                     mulnum(rcp_static_cast<const Add>(a)->coef_, q.second),
                     q.first);
         }
@@ -496,9 +496,9 @@ RCP<const Basic> mul_expand_two(const RCP<const Basic> &a, const RCP<const Basic
                     // We make a copy of the dict_:
                     map_basic_basic d2 = rcp_static_cast<const Mul>(term)->dict_;
                     term = Mul::from_dict(one, std::move(d2));
-                    Add::dict_add_term(d, mulnum(mulnum(q.second, a_coef), coef2), term);
+                    Add::dict_add_term(inoutArg(d), mulnum(mulnum(q.second, a_coef), coef2), term);
                 } else {
-                    Add::dict_add_term(d, mulnum(a_coef, q.second), term);
+                    Add::dict_add_term(inoutArg(d), mulnum(a_coef, q.second), term);
                 }
             }
         }
@@ -506,7 +506,7 @@ RCP<const Basic> mul_expand_two(const RCP<const Basic> &a, const RCP<const Basic
             iaddnum(outArg(coef),
                 mulnum(rcp_static_cast<const Add>(b)->coef_, a_coef));
         } else {
-            Add::dict_add_term(d,
+            Add::dict_add_term(inoutArg(d),
                     mulnum(rcp_static_cast<const Add>(b)->coef_, a_coef),
                     a_term);
         }
@@ -589,7 +589,7 @@ RCP<const Basic> Mul::diff(const RCP<const Symbol> &x) const
             iaddnum(outArg(overall_coef), coef);
         } else {
             RCP<const Basic> mul = Mul::from_dict(one, std::move(d));
-            Add::dict_add_term(add_dict, coef, mul);
+            Add::dict_add_term(inoutArg(add_dict), coef, mul);
         }
     }
     return Add::from_dict(overall_coef, std::move(add_dict));

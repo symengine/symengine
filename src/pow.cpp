@@ -440,7 +440,7 @@ RCP<const Basic> pow_expand(const RCP<const Pow> &self)
                 map_basic_basic d2 = rcp_static_cast<const Mul>(term)->dict_;
                 term = Mul::from_dict(one, std::move(d2));
             }
-            Add::dict_add_term(rd, coef2, term);
+            Add::dict_add_term(inoutArg(rd), coef2, term);
         }
     }
     RCP<const Basic> result = Add::from_dict(add_overall_coeff, std::move(rd));

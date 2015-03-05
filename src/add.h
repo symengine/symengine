@@ -44,7 +44,7 @@ public:
     /*!
     * Adds `(coeff*t)` to the dict `d`
     */
-    static void dict_add_term(umap_basic_num &d,
+    static void dict_add_term(const Ptr<umap_basic_num> &d,
             const RCP<const Number> &coef, const RCP<const Basic> &t);
     //! Converts the add dict into two appropriate instances
     void as_two_terms(const Ptr<RCP<const Basic>> &a,
