@@ -55,6 +55,12 @@ Ptr<T> outArg( T& arg )
     return Ptr<T>(&arg);
 }
 
+template<typename T> inline
+Ptr<T> inoutArg( T& arg )
+{
+    return Ptr<T>(&arg);
+}
+
 /* RCP */
 
 enum ENull { null };
