@@ -12,20 +12,13 @@ namespace CSymPy {
     public:
         int degree;
         std::string var_;
-        //umap_vec_mpz dict;
-        map_integer_uint dict_;
+        map_uint_integer dict_;
     public:
         IMPLEMENT_TYPEID(POLYNOMIAL)
-        //polynomial(const RCP<const Symbol> &var, const umap_basic_num&& dict);
-        //void add(const RCP<const polynomial> &b, const RCP<const polynomial> &c){
-        //polynomial(const RCP<const Number> &var) : var_{var} {}
-        Polynomial() : degree{-1}, var_{-1} {}
+        Polynomial(){}
 
-        Polynomial(const std::string& var, map_integer_uint&& dict);
+        Polynomial(const std::string& var, map_uint_integer&& dict);
 
-        //Polynomial(const std::string &var);
-
-        int ret_degree();
 
         std::size_t __hash__() const {return 0;}
         //{
@@ -52,7 +45,8 @@ namespace CSymPy {
 
     }; //Polynomial
 
-    inline RCP<const Polynomial> polynomial(std::string i, map_integer_uint&& dict)
+        RCP<const Polynomial> add_poly(const RCP<const Polynomial> &a, const RCP<const Polynomial> &b);
+    inline RCP<const Polynomial> polynomial(std::string i, map_uint_integer&& dict)
     {
         return rcp(new Polynomial(i, std::move(dict)));
     }

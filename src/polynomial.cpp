@@ -1,19 +1,16 @@
 #include "polynomial.h"
+#include "add.h"
 
 namespace CSymPy {
 
-    //polynomial::polynomial (const RCP<const Basic> &var, umap_basic_num&& dict) :
-   //degree{-1}, var_{var}, dict_{std::move(dict)}{}
-   // void polynomial::add(const RCP<const poynomial> &b, const RCP<const polynomial> &c){
-
-    Polynomial::Polynomial(const std::string& var, map_integer_uint&& dict) :
+    Polynomial::Polynomial(const std::string& var, map_uint_integer&& dict) :
          var_{var}, dict_{std::move(dict)} {
 
-        map_integer_uint::iterator it = dict_.begin();
-        int largest = (it->first)->as_int();
-        int cur;
+        map_uint_integer::iterator it = dict_.begin();
+        uint largest = it->first;
+        uint cur;
         while(it!=dict_.end()){
-            cur =(it->first)->as_int();
+            cur =it->first;
             if(cur > largest)
                 largest = cur;
             it++;
@@ -21,4 +18,18 @@ namespace CSymPy {
         degree = largest;
     }
 
+    RCP<const Polynomial> add_poly(const RCP<const Polynomial> &a, const RCP<const Polynomial> &b) {
+        map_uint_integer dict;
+        for(auto &it : a->dict_)
+            dict[it.first] = integer(0);
+        for(auto &it : b->dict_)
+            dict[it.first] = integer(0);
+        for(auto &it : a->dict_)
+            dict[it.first] = rcp_static_cast<const Integer>(add(dict[it.first],(it.second)));
+        for(auto &it : b->dict_)
+            dict[it.first] = rcp_static_cast<const Integer>(add(dict[it.first], (it.second)));
+
+        RCP<const Polynomial> c = polynomial(a->var_, std::move(dict));
+        return c;
+    }
 }

@@ -36,6 +36,8 @@ typedef std::map<RCP<const Basic>, RCP<const Basic>,
         RCPBasicKeyLess> map_basic_basic;
 typedef std::map<RCP<const Integer>, unsigned,
         RCPIntegerKeyLess> map_integer_uint;
+typedef std::map<unsigned, RCP<const Integer> >
+       map_uint_integer;
 
 //! `insert(m, first, second)` is equivalent to `m[first] = second`, just faster,
 //! because no default constructor is called on the `second` type.
