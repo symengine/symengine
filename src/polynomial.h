@@ -19,7 +19,6 @@ namespace CSymPy {
 
         Polynomial(const std::string& var, map_uint_integer&& dict);
 
-
         std::size_t __hash__() const {return 0;}
         //{
             //std::hash<long long int> hash_fn;
@@ -45,7 +44,7 @@ namespace CSymPy {
 
     }; //Polynomial
 
-        RCP<const Polynomial> add_poly(const RCP<const Polynomial> &a, const RCP<const Polynomial> &b);
+        RCP<const Polynomial> add_poly(const Polynomial &a, const Polynomial &b);
     inline RCP<const Polynomial> polynomial(std::string i, map_uint_integer&& dict)
     {
         return rcp(new Polynomial(i, std::move(dict)));
