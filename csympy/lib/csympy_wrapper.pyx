@@ -200,8 +200,9 @@ cdef class Basic(object):
     def expand(Basic self not None):
         return c2py(csympy.expand(self.thisptr))
 
-    def diff(Basic self not None, Symbol x not None):
-        cdef RCP[const csympy.Symbol] X = csympy.rcp_static_cast_Symbol(x.thisptr)
+    def diff(Basic self not None, x):
+        cdef Symbol symbol = sympify(x)
+        cdef RCP[const csympy.Symbol] X = csympy.rcp_static_cast_Symbol(symbol.thisptr)
         return c2py(deref(self.thisptr).diff(X))
 
     def subs_dict(Basic self not None, subs_dict):
@@ -341,28 +342,47 @@ cdef class Integer(Number):
         import sympy
         return sympy.Integer(deref(self.thisptr).__str__().decode("utf-8"))
 
+    def _sage_(self):
+        import sage.all as sage
+        return sage.Integer(deref(self.thisptr).__str__().decode("utf-8"))
+
 cdef class Rational(Number):
 
     def __dealloc__(self):
         self.thisptr.reset()
 
+    def get_num_den(self):
+        cdef RCP[const csympy.Integer] _num, _den
+        csympy.get_num_den(csympy.rcp_static_cast_Rational(self.thisptr),
+                           csympy.outArg_Integer(_num), csympy.outArg_Integer(_den))
+        return [c2py(<RCP[const csympy.Basic]>_num), c2py(<RCP[const csympy.Basic]>_den)]
+
     def _sympy_(self):
-        import sympy
-        return sympy.Rational(deref(self.thisptr).__str__().decode("utf-8"))
+        rat = self.get_num_den()
+        return rat[0]._sympy_() / rat[1]._sympy_()
+
+    def _sage_(self):
+        rat = self.get_num_den()
+        return rat[0]._sage_() / rat[1]._sage_()
 
 cdef class Complex(Number):
 
     def __dealloc__(self):
         self.thisptr.reset()
 
+    def real_part(self):
+        return c2py(<RCP[const csympy.Basic]>deref(csympy.rcp_static_cast_Complex(self.thisptr)).real_part())
+
+    def imaginary_part(self):
+        return c2py(<RCP[const csympy.Basic]>deref(csympy.rcp_static_cast_Complex(self.thisptr)).imaginary_part())
+
     def _sympy_(self):
         import sympy
-        # FIXME: this is quite fragile. We should request the real and
-        # imaginary parts and construct the sympy expression using those (and
-        # using sympy.I explicitly), rather than relying on the string
-        # representation and hoping sympy.sympify() will do the right thing.
-        s = deref(self.thisptr).__str__().decode("utf-8")
-        return sympy.sympify(s)
+        return self.real_part()._sympy_() + sympy.I * self.imaginary_part()._sympy_()
+
+    def _sage_(self):
+        import sage.all as sage
+        return self.real_part()._sage_() + sage.I * self.imaginary_part()._sage_()
 
 cdef class Add(Basic):
 
@@ -375,6 +395,12 @@ cdef class Add(Basic):
         deref(X).as_two_terms(csympy.outArg(a), csympy.outArg(b))
         return c2py(a)._sympy_() + c2py(b)._sympy_()
 
+    def _sage_(self):
+        cdef RCP[const csympy.Add] X = csympy.rcp_static_cast_Add(self.thisptr)
+        cdef RCP[const csympy.Basic] a, b
+        deref(X).as_two_terms(csympy.outArg(a), csympy.outArg(b))
+        return c2py(a)._sage_() + c2py(b)._sage_()
+
 cdef class Mul(Basic):
 
     def __dealloc__(self):
@@ -386,6 +412,12 @@ cdef class Mul(Basic):
         deref(X).as_two_terms(csympy.outArg(a), csympy.outArg(b))
         return c2py(a)._sympy_() * c2py(b)._sympy_()
 
+    def _sage_(self):
+        cdef RCP[const csympy.Mul] X = csympy.rcp_static_cast_Mul(self.thisptr)
+        cdef RCP[const csympy.Basic] a, b
+        deref(X).as_two_terms(csympy.outArg(a), csympy.outArg(b))
+        return c2py(a)._sage_() * c2py(b)._sage_()
+
 cdef class Pow(Basic):
 
     def __dealloc__(self):
@@ -396,6 +428,12 @@ cdef class Pow(Basic):
         base = c2py(deref(X).get_base())
         exp = c2py(deref(X).get_exp())
         return base._sympy_() ** exp._sympy_()
+
+    def _sage_(self):
+        cdef RCP[const csympy.Pow] X = csympy.rcp_static_cast_Pow(self.thisptr)
+        base = c2py(deref(X).get_base())
+        exp = c2py(deref(X).get_exp())
+        return base._sage_() ** exp._sage_()
 
 cdef class Function(Basic):
     pass
@@ -411,6 +449,12 @@ cdef class Sin(Function):
         import sympy
         return sympy.sin(arg)
 
+    def _sage_(self):
+        cdef RCP[const csympy.Sin] X = csympy.rcp_static_cast_Sin(self.thisptr)
+        arg = c2py(deref(X).get_arg())._sage_()
+        import sage.all as sage
+        return sage.sin(arg)
+
 cdef class Cos(Function):
 
     def __dealloc__(self):
@@ -421,6 +465,12 @@ cdef class Cos(Function):
         arg = c2py(deref(X).get_arg())._sympy_()
         import sympy
         return sympy.cos(arg)
+
+    def _sage_(self):
+        cdef RCP[const csympy.Cos] X = csympy.rcp_static_cast_Cos(self.thisptr)
+        arg = c2py(deref(X).get_arg())._sage_()
+        import sage.all as sage
+        return sage.cos(arg)
 
 cdef class FunctionSymbol(Function):
 
@@ -485,6 +535,11 @@ cdef class Abs(Function):
     def _sympy_(self):
         cdef RCP[const csympy.Abs] X = csympy.rcp_static_cast_Abs(self.thisptr)
         arg = c2py(deref(X).get_arg())._sympy_()
+        return abs(arg)
+
+    def _sage_(self):
+        cdef RCP[const csympy.Abs] X = csympy.rcp_static_cast_Abs(self.thisptr)
+        arg = c2py(deref(X).get_arg())._sage_()
         return abs(arg)
 
 
@@ -1094,7 +1149,8 @@ def powermod_list(a, b, m):
         s.append(c2py(<RCP[const csympy.Basic]>(v[i])))
     return s
 
-def eval_double(Basic b not None):
+def eval_double(basic):
+    cdef Basic b = sympify(basic)
     return csympy.eval_double(deref(b.thisptr))
 
 I = c2py(csympy.I)

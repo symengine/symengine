@@ -27,6 +27,8 @@ cdef extern from "csympy_rcp.h" namespace "CSymPy":
 
     RCP[const Symbol] rcp_static_cast_Symbol "CSymPy::rcp_static_cast<const CSymPy::Symbol>"(RCP[const Basic] &b) nogil
     RCP[const Integer] rcp_static_cast_Integer "CSymPy::rcp_static_cast<const CSymPy::Integer>"(RCP[const Basic] &b) nogil
+    RCP[const Rational] rcp_static_cast_Rational "CSymPy::rcp_static_cast<const CSymPy::Rational>"(RCP[const Basic] &b) nogil
+    RCP[const Complex] rcp_static_cast_Complex "CSymPy::rcp_static_cast<const CSymPy::Complex>"(RCP[const Basic] &b) nogil
     RCP[const Number] rcp_static_cast_Number "CSymPy::rcp_static_cast<const CSymPy::Number>"(RCP[const Basic] &b) nogil
     RCP[const Add] rcp_static_cast_Add "CSymPy::rcp_static_cast<const CSymPy::Add>"(RCP[const Basic] &b) nogil
     RCP[const Mul] rcp_static_cast_Mul "CSymPy::rcp_static_cast<const CSymPy::Mul>"(RCP[const Basic] &b) nogil
@@ -97,10 +99,13 @@ cdef extern from "integer.h" namespace "CSymPy":
 cdef extern from "rational.h" namespace "CSymPy":
     cdef cppclass Rational(Number):
         pass
+    cdef void get_num_den(const RCP[Rational] &rat, const Ptr[RCP[Integer]] &num,
+                     const Ptr[RCP[Integer]] &den) nogil
 
 cdef extern from "complex.h" namespace "CSymPy":
     cdef cppclass Complex(Number):
-        pass
+        RCP[const Rational] real_part() nogil
+        RCP[const Rational] imaginary_part() nogil
 
 cdef extern from "constants.h" namespace "CSymPy":
     cdef cppclass Constant(Basic):
