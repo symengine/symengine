@@ -104,8 +104,8 @@ cdef extern from "rational.h" namespace "CSymPy":
 
 cdef extern from "complex.h" namespace "CSymPy":
     cdef cppclass Complex(Number):
-        RCP[const Rational] real_part() nogil
-        RCP[const Rational] imaginary_part() nogil
+        RCP[const Number] real_part() nogil
+        RCP[const Number] imaginary_part() nogil
 
 cdef extern from "constants.h" namespace "CSymPy":
     cdef cppclass Constant(Basic):

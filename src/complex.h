@@ -275,13 +275,13 @@ public:
     };
 
     //! Get the real part of the complex number
-    inline RCP<const Rational> real_part() const {
-        return rcp(new Rational(real_));
+    inline RCP<const Number> real_part() const {
+        return Rational::from_mpq(real_);
     };
 
     //! Get the imaginary part of the complex number
-    inline RCP<const Rational> imaginary_part() const {
-        return rcp(new Rational(imaginary_));
+    inline RCP<const Number> imaginary_part() const {
+        return Rational::from_mpq(imaginary_);
     };
     virtual void accept(Visitor &v) const;
 };
