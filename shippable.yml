@@ -22,6 +22,8 @@ env:
   - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_CSYMPY_ASSERT="yes" WITH_PRIMESIEVE="yes"
   # Debug build (with BFD and CSYMPY_ASSERT) with Arb
   - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_CSYMPY_ASSERT="yes" WITH_ARB="yes"
+  # Debug build shared lib (with BFD and CSYMPY_ASSERT)
+  - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_CSYMPY_ASSERT="yes" BUILD_SHARED_LIBS="yes"
   # Debug build with Teuchos::RCP (just to test that it compiles)
   - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_CSYMPY_RCP="no"
   # Release build (with BFD)
@@ -34,6 +36,8 @@ env:
   - BUILD_TYPE="Debug" WITH_BFD="yes" TEST_IN_TREE="yes" WITH_PYTHON="yes" WITH_CSYMPY_ASSERT="yes" PYTHON_VERSION="2.7"
   # Release build with Python 2.7:
   - TEST_IN_TREE="yes" WITH_PYTHON="yes" PYTHON_VERSION="2.7"
+  # Release build shared lib with Python 2.7:
+  - TEST_IN_TREE="yes" WITH_PYTHON="yes" PYTHON_VERSION="2.7" BUILD_SHARED_LIBS="yes"
 
   # These test the default Release build with other Python versions
   - WITH_PYTHON="yes" PYTHON_VERSION="2.6"
@@ -42,7 +46,7 @@ env:
 
   # These test the setup.py file
   - TEST_IN_TREE="yes" PYTHON_INSTALL="yes" PYTHON_VERSION="2.6"
-  - TEST_IN_TREE="yes" PYTHON_INSTALL="yes" PYTHON_VERSION="2.7"
+  - PYTHON_INSTALL="yes" PYTHON_VERSION="2.7"
   - TEST_IN_TREE="yes" PYTHON_INSTALL="yes" PYTHON_VERSION="3.3"
   - TEST_IN_TREE="yes" PYTHON_INSTALL="yes" PYTHON_VERSION="3.4"
 
