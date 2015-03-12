@@ -1,5 +1,5 @@
 from __future__ import print_function
-from os import getenv
+from os import getenv, path
 import subprocess
 
 # use setuptools by default as per the official advice at:
@@ -33,7 +33,7 @@ def process_opts(opts):
     return ['-D'+'='.join(o) for o in opts]
 
 def cmake_build():
-    cmake_cmd = ["cmake", "."]
+    cmake_cmd = ["cmake", path.dirname(path.realpath(__file__))]
     cmake_cmd.extend(process_opts(cmake_opts))
     if subprocess.call(cmake_cmd) != 0:
         raise EnvironmentError("error calling cmake")

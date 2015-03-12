@@ -54,7 +54,7 @@ if [[ "${BUILD_SHARED_LIBS}" != "" ]]; then
 fi
 if [[ "${PYTHON_INSTALL}" == "yes" ]]; then
     git clean -dfx
-    pip install .
+    pip install $SOURCE_DIR
     mkdir -p empty
     cd empty
     cat << EOF | python
