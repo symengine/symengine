@@ -79,17 +79,17 @@ void integer_set_str(basic s, char* c)
 
 signed long integer_get_si(const basic s)
 {
-	return mpz_get_si((rcp_static_cast<const Integer>(*RCP_const_cast(s)))->as_mpz().get_mpz_t());
+    return mpz_get_si((rcp_static_cast<const Integer>(*RCP_const_cast(s)))->as_mpz().get_mpz_t());
 }
 
 unsigned long integer_get_ui(const basic s)
 {
-	return mpz_get_ui((rcp_static_cast<const Integer>(*RCP_const_cast(s)))->as_mpz().get_mpz_t());
+    return mpz_get_ui((rcp_static_cast<const Integer>(*RCP_const_cast(s)))->as_mpz().get_mpz_t());
 }
 
 void integer_get_mpz(mpz_t a, const basic s)
 {
-	mpz_set(a, (rcp_static_cast<const Integer>(*RCP_const_cast(s)))->as_mpz().get_mpz_t());
+    mpz_set(a, (rcp_static_cast<const Integer>(*RCP_const_cast(s)))->as_mpz().get_mpz_t());
 }
 
 void rational_set_si(basic s, long a, long b)
