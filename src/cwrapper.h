@@ -53,11 +53,11 @@ void integer_set_mpz(basic s, const mpz_t i);
 void integer_set_str(basic s, char* c);
 
 //! Returns signed long value of s.
-long integer_get_si(basic s);
+signed long integer_get_si(const basic s);
 //! Returns unsigned long value of s.
-long integer_get_ui(basic s);
+unsigned long integer_get_ui(const basic s);
 //! Returns s as a mpz_t.
-long integer_get_mpz(basic s);
+void integer_get_mpz(mpz_t a, const basic s);
 
 //! Assign to s, a rational i/j. Returns 0 if either i or j is not an integer.
 int rational_set(basic s, const basic i, const basic j);

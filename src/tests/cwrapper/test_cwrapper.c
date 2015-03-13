@@ -43,6 +43,19 @@ void test_cwrapper() {
     printf("Is_a_Rational %s: %d\n", s, is_a_Rational(e));
     printf("Is_a_Integer %s: %d\n", s, is_a_Integer(e));
 
+    integer_set_ui(e, 123);
+    printf("integer_get_ui 123: %lu\n", integer_get_ui(e));
+
+    integer_set_si(e, -123);
+    printf("integer_get_si -123: %ld\n", integer_get_si(e));
+
+    mpz_t test;
+    mpz_init(test);
+
+    integer_get_mpz(test, e);
+    printf("integer_get_mpz(e): %ld\n", mpz_get_ui(test));
+
+    mpz_clear(test);
     basic_free(e);
     basic_free(x);
     basic_free(y);
