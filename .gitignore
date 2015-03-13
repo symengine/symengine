@@ -1,4 +1,4 @@
-# CMake 
+# CMake
 CMakeCache.txt
 CMakeFiles
 Makefile
@@ -48,6 +48,7 @@ src/tests/cwrapper/test_cwrapper
 
 # Benchmarks executables
 benchmarks/add1
+benchmarks/eval_double1
 benchmarks/expand1
 benchmarks/expand2
 benchmarks/expand2b
