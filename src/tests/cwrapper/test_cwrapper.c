@@ -55,6 +55,7 @@ void test_cwrapper() {
     integer_get_mpz(test, e);
     printf("integer_get_mpz(e): %ld\n", mpz_get_ui(test));
 
+    mpz_clear(test);
     basic_free(e);
     basic_free(x);
     basic_free(y);
