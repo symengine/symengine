@@ -1,0 +1,7 @@
+Rakefile
+Gemfile
+LICENSE
+Manifest.txt
+symengine.gemspec
+lib/symengine.rb
+spec/spec_helper.rb
