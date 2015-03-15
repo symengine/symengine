@@ -1,3 +1,8 @@
+try:
+    import sage.all
+except ImportError:
+    pass
+
 from .lib.csympy_wrapper import (Symbol, Integer, sympify, SympifyError, Add,
         Mul, Pow, exp, sin, cos, sqrt, function_symbol, I, E, pi)
 from .utilities import var, symbols

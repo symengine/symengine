@@ -38,6 +38,17 @@ if (NOT ${CXX11})
     message(FATAL_ERROR "Compiler does not support C++11 constructs \nCXX11 ERROR LOG : ${CXX11_ERROR_LOG}")
 endif()
 
+# Sage
+if (WITH_SAGE)
+    set(HAVE_SAGE True)
+    if ("${COMMON_DIR}" STREQUAL "")
+        set(COMMON_DIR $ENV{SAGE_LOCAL})
+    endif()
+    set(WITH_PYTHON "yes")
+else (WITH_SAGE)
+    set(HAVE_SAGE False)
+endif()
+
 # GMP
 find_package(GMP REQUIRED)
 include_directories(${GMP_INCLUDE_DIRS})

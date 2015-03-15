@@ -1,3 +1,5 @@
+configure_file(csympy_wrapper.pyx.in csympy_wrapper.pyx)
+
 set(SRC
     csympy_wrapper.cpp
     )
@@ -5,6 +7,9 @@ set(SRC
 include_directories(${PYTHON_INCLUDE_PATH})
 include_directories(BEFORE ${csympy_BINARY_DIR}/src ${teuchos_BINARY_DIR})
 include_directories(BEFORE ${CMAKE_SOURCE_DIR}/src)
+include_directories($ENV{SAGE_SRC} $ENV{SAGE_LOCAL}/include/csage)
+set(CYTHON_INCLUDE_DIRECTORIES ${CYTHON_INCLUDE_DIRECTORIES} )
+set(csympy_wrapper_DIR ${CMAKE_BINARY_DIR}/csympy/lib)
 
 cython_add_module_pyx(csympy_wrapper csympy.pxd)
 add_python_library(csympy_wrapper ${SRC})

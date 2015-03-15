@@ -6,6 +6,12 @@ from libcpp.string cimport string
 from cpython cimport PyObject, Py_XINCREF, Py_XDECREF, \
     PyObject_CallMethodObjArgs
 
+DEF HAVE_SAGE = ${HAVE_SAGE}
+have_sage = ${HAVE_SAGE}
+
+IF HAVE_SAGE == True:
+    from sage.rings cimport integer as sageInteger
+
 class SympifyError(Exception):
     pass
 
@@ -277,7 +283,7 @@ cdef class Constant(Basic):
     def _sage_(self):
         import sage.all as sage
         if self == E:
-            return sage.E
+            return sage.e
         elif self == pi:
             return sage.pi
         else:
@@ -357,8 +363,11 @@ cdef class Integer(Number):
         return sympy.Integer(deref(self.thisptr).__str__().decode("utf-8"))
 
     def _sage_(self):
-        import sage.all as sage
-        return sage.Integer(deref(self.thisptr).__str__().decode("utf-8"))
+        IF HAVE_SAGE == True:
+            cdef sageInteger.Integer z
+            z = sageInteger.Integer()
+            z.set_from_mpz(deref(csympy.rcp_static_cast_Integer(self.thisptr)).as_mpz().get_mpz_t())
+            return z
 
 cdef class Rational(Number):
 
@@ -650,7 +659,7 @@ cdef class Subs(Basic):
         for i in range(V.size()):
             v[c2py(<RCP[const csympy.Basic]>(V[i]))._sage_()] = \
                 c2py(<RCP[const csympy.Basic]>(P[i]))._sage_()
-        arg.sub(v)
+        return arg.subs(v)
 
 cdef class MatrixBase:
     cdef csympy.MatrixBase* thisptr
