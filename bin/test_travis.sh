@@ -69,7 +69,7 @@ EOF
     exit 0
 fi
 if [[ "${WITH_SAGE}" == "yes" ]]; then
-    sage -python $SOURCE_DIR/setup.py install --define="WITH_SAGE=yes"
+    sudo /usr/lib/sagemath/sage -python $SOURCE_DIR/setup.py install --define="WITH_SAGE=yes"
     sage -t $SOURCE_DIR/csympy/tests/test_sage.py
     exit 0
 fi
