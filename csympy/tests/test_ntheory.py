@@ -1,4 +1,4 @@
-from nose.tools import raises
+from csympy.utilities import raises
 
 from csympy.lib.csympy_wrapper import probab_prime_p, nextprime, gcd, lcm, gcd_ext, mod, quotient, quotient_mod, mod_inverse, crt, fibonacci, fibonacci2, lucas, lucas2, binomial, factorial, divides, factor, factor_lehman_method, factor_pollard_pm1_method, factor_pollard_rho_method, prime_factors, prime_factor_multiplicities, Sieve, Sieve_iterator, bernoulli, primitive_root, primitive_root_list, totient, carmichael, multiplicative_order, legendre, jacobi, kronecker, nthroot_mod, nthroot_mod_list, powermod, powermod_list, Integer
 
@@ -29,25 +29,22 @@ def test_mod():
     assert mod(13, 5) == 3
     assert mod(-4, 7) == 3
 
-@raises(ZeroDivisionError)
 def test_mod_error():
-    mod(2, 0)
+    raises(ZeroDivisionError, lambda: mod(2, 0))
 
 def test_quotient():
     assert quotient(13, 5) == 2
     assert quotient(-4, 7) == -1
 
-@raises(ZeroDivisionError)
 def test_quotient_error():
-    quotient(1, 0)
+    raises(ZeroDivisionError, lambda: quotient(1, 0))
 
 def test_quotient_mod():
     assert quotient_mod(13, 5) == (2, 3)
     assert quotient_mod(-4, 7) == (-1, 3)
 
-@raises(ZeroDivisionError)
 def test_quotient_mod_error():
-    quotient_mod(1, 0)
+    raises(ZeroDivisionError, lambda: quotient_mod(1, 0))
 
 def test_mod_inverse():
     mod_inverse(2, 7) == 4
@@ -62,50 +59,44 @@ def test_fibonacci():
     assert fibonacci(0) == 0
     assert fibonacci(5) == 5
 
-@raises(NotImplementedError)
 def test_fibonacci_error():
-    fibonacci(-3)
+    raises(NotImplementedError, lambda: fibonacci(-3))
 
 def test_fibonacci2():
     assert fibonacci2(0) == [0, 1]
     assert fibonacci2(5) == [5, 3]
 
-@raises(NotImplementedError)
 def test_fibonacci2_error():
-    fibonacci2(-1)
+    raises(NotImplementedError, lambda: fibonacci2(-1))
 
 def test_lucas():
     assert lucas(2) == 3
     assert lucas(3) == 4
 
-@raises(NotImplementedError)
 def test_lucas_error():
-    lucas(-1)
+    raises(NotImplementedError, lambda: lucas(-1))
 
 def test_lucas2():
     assert lucas2(3) == [4, 3]
     assert lucas2(5) == [11, 7]
 
-@raises(NotImplementedError)
 def test_lucas2_error():
-    lucas2(-1)
+    raises(NotImplementedError, lambda: lucas2(-1))
 
 def test_binomial():
     assert binomial(5, 2) == 10
     assert binomial(5, 7) == 0
     assert binomial(-5, 2) == 15
 
-@raises(ArithmeticError)
 def test_binomial_error():
-    binomial(5, -1)
+    raises(ArithmeticError, lambda: binomial(5, -1))
 
 def test_factorial():
     assert factorial(5) == 120
     assert factorial(0) == 1
 
-@raises(ArithmeticError)
 def test_factorial_error():
-    factorial(-1)
+    raises(ArithmeticError, lambda: factorial(-1))
 
 def test_divides():
     assert divides(5, 2) == False

@@ -1,4 +1,4 @@
-from nose.tools import raises
+from csympy.utilities import raises
 from csympy import Symbol, sin, cos, sqrt, Add, function_symbol
 
 def test_basic():
@@ -19,11 +19,10 @@ def test_sin():
     assert e.subs({x: 0}) == 1
     assert e.subs(x, 0) == 1
 
-@raises(TypeError)
 def test_args():
     x = Symbol("x")
     e = cos(x)
-    f = e.subs(x, 0, 3)
+    raises(TypeError, lambda: e.subs(x, 0, 3))
 
 def test_f():
     x = Symbol("x")
