@@ -5,10 +5,9 @@ from libcpp cimport bool
 from libcpp.string cimport string
 from cpython cimport PyObject, Py_XINCREF, Py_XDECREF, \
     PyObject_CallMethodObjArgs
+include "config.pxi"
 
-DEF HAVE_SAGE = ${HAVE_SAGE}
-have_sage = ${HAVE_SAGE}
-
+have_sage = HAVE_SAGE
 IF HAVE_SAGE == True:
     from sage.rings cimport integer as sageInteger
 
