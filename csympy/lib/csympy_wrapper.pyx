@@ -10,6 +10,7 @@ include "config.pxi"
 have_sage = HAVE_SAGE
 IF HAVE_SAGE == True:
     from sage.rings cimport integer as sageInteger
+    from sage.rings cimport rational as sageRational
 
 class SympifyError(Exception):
     pass
@@ -384,8 +385,11 @@ cdef class Rational(Number):
         return rat[0]._sympy_() / rat[1]._sympy_()
 
     def _sage_(self):
-        rat = self.get_num_den()
-        return rat[0]._sage_() / rat[1]._sage_()
+        IF HAVE_SAGE == True:
+            cdef sageRational.Rational z
+            z = sageRational.Rational()
+            z.set_from_mpq(deref(csympy.rcp_static_cast_Rational(self.thisptr)).as_mpq().get_mpq_t())
+            return z
 
 cdef class Complex(Number):
 

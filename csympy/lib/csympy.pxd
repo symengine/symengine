@@ -27,6 +27,7 @@ cdef extern from 'gmpxx.h':
         mpz_t get_mpz_t()
     cdef cppclass mpq_class:
         mpq_class()
+        mpq_t get_mpq_t()
 
 cdef extern from "csympy_rcp.h" namespace "CSymPy":
     cdef enum ENull:
@@ -115,7 +116,7 @@ cdef extern from "integer.h" namespace "CSymPy":
 
 cdef extern from "rational.h" namespace "CSymPy":
     cdef cppclass Rational(Number):
-        pass
+        mpq_class as_mpq() nogil
     cdef void get_num_den(const RCP[Rational] &rat, const Ptr[RCP[Integer]] &num,
                      const Ptr[RCP[Integer]] &den) nogil
 
