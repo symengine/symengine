@@ -2780,7 +2780,7 @@ RCP<const Basic> gamma(const RCP<const Basic> &arg)
     if (is_a<Integer>(*arg)) {
         RCP<const Integer> arg_ = rcp_static_cast<const Integer>(arg);
         if (arg_->is_positive()) {
-            return factorial((arg_->subint(*one))->as_int());
+            return factorial((arg_->subint(*rcp_static_cast<const Integer>(one)))->as_int());
         } else {
             throw std::runtime_error("Complex Infinity not yet implemented");
         }
@@ -2792,12 +2792,12 @@ RCP<const Basic> gamma(const RCP<const Basic> &arg)
             n = quotient_f(*(integer(abs(arg_->i.get_num()))), *(integer(arg_->i.get_den())));
             if (arg_->is_positive()) {
                 k = n;
-                coeff = one;
+                coeff = rcp_static_cast<const Integer>(one);
             } else {
-                n = n->addint(*one);
+                n = n->addint(*rcp_static_cast<const Integer>(one));
                 k = n;
                 if ((n->as_int() & 1) == 0) {
-                    coeff = one;
+                    coeff = rcp_static_cast<const Integer>(one);
                 } else {
                     coeff = minus_one;
                 }
@@ -2881,7 +2881,7 @@ RCP<const Basic> lowergamma(const RCP<const Basic> &s, const RCP<const Basic> &x
         if (s_int->is_one()) {
             return sub(one, exp(mul(minus_one, x)));
         } else if (s_int->i > 1) {
-            s_int = s_int->subint(*one);
+            s_int = s_int->subint(*rcp_static_cast<const Integer>(one));
             return sub(mul(s_int, lowergamma(s_int, x)), mul(pow(x, s_int), exp(mul(minus_one, x))));
         } else {
             return rcp(new LowerGamma(s, x));
@@ -2890,7 +2890,7 @@ RCP<const Basic> lowergamma(const RCP<const Basic> &s, const RCP<const Basic> &x
         // TODO: Implement `erf`. Currently the recursive expansion has no base case
         // when s is of form n/2 n is Integer
         RCP<const Number> s_num = rcp_static_cast<const Number>(s);
-        s_num = subnum(s_num, one);
+        s_num = subnum(s_num, rcp_static_cast<const Integer>(one));
         if (s_num->is_positive()) {
             return sub(mul(s_num, lowergamma(s_num, x)), mul(pow(x, s_num), exp(mul(minus_one, x))));
         } else {
@@ -2961,7 +2961,7 @@ RCP<const Basic> uppergamma(const RCP<const Basic> &s, const RCP<const Basic> &x
         if (s_int->is_one()) {
             return exp(mul(minus_one, x));
         } else if (s_int->i > 1) {
-            s_int = s_int->subint(*one);
+            s_int = s_int->subint(*rcp_static_cast<const Integer>(one));
             return add(mul(s_int, uppergamma(s_int, x)), mul(pow(x, s_int), exp(mul(minus_one, x))));
         } else {
             // TODO: implement unpolarfy to handle this case
@@ -2971,7 +2971,7 @@ RCP<const Basic> uppergamma(const RCP<const Basic> &s, const RCP<const Basic> &x
         // TODO: Implement `erf`. Currently the recursive expansion has no base case
         // when s is of form n/2 n is Integer
         RCP<const Number> s_num = rcp_static_cast<const Number>(s);
-        s_num = subnum(s_num, one);
+        s_num = subnum(s_num, rcp_static_cast<const Integer>(one));
         if (s_num->is_positive()) {
             return add(mul(s_num, uppergamma(s_num, x)), mul(pow(x, s_num), exp(mul(minus_one, x))));
         } else {

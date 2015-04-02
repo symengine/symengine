@@ -236,7 +236,7 @@ RCP<const Basic> Add::from_dict(const RCP<const Number> &coef, umap_basic_num &&
         } else {
             insert(m, p->first, one);
             insert(m, p->second, one);
-            return rcp(new Mul(one, std::move(m)));
+            return rcp(new Mul(rcp_static_cast<const Integer>(one), std::move(m)));
         }
     } else {
         return rcp(new Add(coef, std::move(d)));
@@ -266,13 +266,13 @@ void Add::as_coef_term(const RCP<const Basic> &self,
         *coef = (rcp_static_cast<const Mul>(self))->coef_;
         // We need to copy our 'dict_' here, as 'term' has to have its own.
         map_basic_basic d2 = (rcp_static_cast<const Mul>(self))->dict_;
-        *term = Mul::from_dict(one, std::move(d2));
+        *term = Mul::from_dict(rcp_static_cast<const Integer>(one), std::move(d2));
     } else if (is_a_Number(*self)) {
         *coef = rcp_static_cast<const Number>(self);
         *term = one;
     } else {
         CSYMPY_ASSERT(!is_a<Add>(*self));
-        *coef = one;
+        *coef = rcp_static_cast<const Integer>(one);
         *term = self;
     }
 }
@@ -315,7 +315,7 @@ RCP<const Basic> add(const RCP<const Basic> &a, const RCP<const Basic> &b)
         Add::dict_add_term(d, coef, t);
         auto it = d.find(one);
         if (it == d.end()) {
-            coef = zero;
+            coef = rcp_static_cast<const Integer>(zero);
         } else {
             coef = it->second;
             d.erase(it);
@@ -357,7 +357,7 @@ RCP<const Basic> add_expand(const RCP<const Add> &self)
 RCP<const Basic> Add::diff(const RCP<const Symbol> &x) const
 {
     CSymPy::umap_basic_num d;
-    RCP<const Number> coef=zero, coef2;
+    RCP<const Number> coef=rcp_static_cast<const Integer>(zero), coef2;
     RCP<const Basic> t;
     for (auto &p: dict_) {
         RCP<const Basic> term = p.first->diff(x);
@@ -424,7 +424,7 @@ vec_basic Add::get_args() const {
     vec_basic args;
     if (!coef_->is_zero()) args.push_back(coef_);
     for (auto &p: dict_) {
-        args.push_back(Add::from_dict(zero, {{p.first, p.second}}));
+        args.push_back(Add::from_dict(rcp_static_cast<const Integer>(zero), {{p.first, p.second}}));
     }
     return args;
 }

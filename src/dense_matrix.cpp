@@ -889,7 +889,7 @@ void LDL(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &D)
     // Initialize L
     for (i = 0; i < col; i++)
         for (j = 0; j < col; j++)
-            L.m_[i*col + j] = (i != j) ? zero : one;
+            L.m_[i*col + j] = (i != j) ? rcp_static_cast<const Integer>(zero) : rcp_static_cast<const Integer>(one);
 
     for (i = 0; i < col; i++) {
         for (j = 0; j < i; j++) {

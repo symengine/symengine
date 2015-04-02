@@ -128,7 +128,7 @@ RCP<const Number> pow_number(const RCP<const Number> &x, long n)
 {
     RCP<const Number> r, p;
     long mask = 1;
-    r = one;
+    r = rcp_static_cast<const Integer>(one);
     p = x;
     while (mask > 0 && n >= mask) {
         if (n & mask)
@@ -149,7 +149,7 @@ void pow_complex(const Ptr<RCP<const Number>> &self,
         RCP<const Number> res;
         res = mod(exp_, *integer(4));
         if (eq(res, zero)) {
-            res = one;
+            res = rcp_static_cast<const Integer>(one);
         } else if (eq(res, one)) {
             res = I;
         } else if (eq(res, integer(2))) {
@@ -161,7 +161,7 @@ void pow_complex(const Ptr<RCP<const Number>> &self,
     } else if (exp_.is_positive()) {
         *self = pow_number(base_, exp_.as_int());
     } else {
-        *self = pow_number(divnum(one, base_), -1 * exp_.as_int());
+        *self = pow_number(divnum(rcp_static_cast<const Integer>(one), base_), -1 * exp_.as_int());
     }
 
 }
@@ -174,7 +174,7 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
     if (eq(a, one)) return one;
     if (eq(a, minus_one)) {
         if (is_a<Integer>(*b)) {
-            return is_a<Integer>(*div(b, integer(2))) ? one : minus_one;
+            return is_a<Integer>(*div(b, integer(2))) ? rcp_static_cast<const Integer>(one) : minus_one;
         } else if (is_a<Rational>(*b) &&
                     (rcp_static_cast<const Rational>(b)->i.get_num() == 1) &&
                     (rcp_static_cast<const Rational>(b)->i.get_den() == 2)) {
@@ -374,7 +374,7 @@ RCP<const Basic> pow_expand(const RCP<const Pow> &self)
     if (! (base->coef_->is_zero())) {
         // Add the numerical coefficient into the dictionary. This
         // allows a little bit easier treatment below.
-        insert(base_dict, base->coef_, one);
+        insert(base_dict, base->coef_, rcp_static_cast<const Integer>(one));
     }
     int m = base_dict.size();
     multinomial_coefficients_mpz(m, n, r);
@@ -382,12 +382,12 @@ RCP<const Basic> pow_expand(const RCP<const Pow> &self)
     // This speeds up overall expansion. For example for the benchmark
     // (y + x + z + w)^60 it improves the timing from 135ms to 124ms.
     rd.reserve(2*r.size());
-    RCP<const Number> add_overall_coeff=zero;
+    RCP<const Number> add_overall_coeff=rcp_static_cast<const Integer>(zero);
     for (auto &p: r) {
         auto power = p.first.begin();
         auto i2 = base_dict.begin();
         map_basic_basic d;
-        RCP<const Number> overall_coeff=one;
+        RCP<const Number> overall_coeff=rcp_static_cast<const Integer>(one);
         for (; power != p.first.end(); ++power, ++i2) {
             if (*power > 0) {
                 RCP<const Integer> exp = rcp(new Integer(*power));
@@ -438,7 +438,7 @@ RCP<const Basic> pow_expand(const RCP<const Pow> &self)
                         rcp_static_cast<const Mul>(term)->coef_);
                 // We make a copy of the dict_:
                 map_basic_basic d2 = rcp_static_cast<const Mul>(term)->dict_;
-                term = Mul::from_dict(one, std::move(d2));
+                term = Mul::from_dict(rcp_static_cast<const Integer>(one), std::move(d2));
             }
             Add::dict_add_term(rd, coef2, term);
         }

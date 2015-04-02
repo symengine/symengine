@@ -91,15 +91,15 @@ void homogeneous_lde(std::vector<DenseMatrix> &basis, const DenseMatrix &A)
             for (unsigned i = 0; i < q; i++) {
                 CSYMPY_ASSERT(is_a<Integer>(*T.get(0, i)));
                 T.set(0, i,
-                    rcp_static_cast<const Integer>(T.get(0, i))->addint(*one));
+                    rcp_static_cast<const Integer>(T.get(0, i))->addint(*rcp_static_cast<const Integer>(one)));
 
                 if (i > 0) {
                     CSYMPY_ASSERT(is_a<Integer>(*T.get(0, i - 1)));
                     T.set(0, i - 1,
-                        rcp_static_cast<const Integer>(T.get(0, i - 1))->subint(*one));
+                        rcp_static_cast<const Integer>(T.get(0, i - 1))->subint(*rcp_static_cast<const Integer>(one)));
                 }
 
-                dot = zero;
+                dot = rcp_static_cast<const Integer>(zero);
                 for (unsigned j = 0; j < p; j++) {
                     CSYMPY_ASSERT(is_a<Integer>(*product.get(j, 0)));
                     RCP<const Integer> p_j0 = rcp_static_cast<const Integer>(product.get(j, 0));
