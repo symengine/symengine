@@ -22,7 +22,7 @@ if [[ "${WITH_ARB}" == "yes" ]]; then
     tar -xzf 2.2.0.tar.gz;
     cd arb-2.2.0 && ./configure && make ARB_GMP_LIB_DIR=/usr/lib/x86_64-linux-gnu ARB_MPFR_LIB_DIR=/usr/lib/x86_64-linux-gnu && sudo make ARB_GMP_LIB_DIR=/usr/lib/x86_64-linux-gnu ARB_MPFR_LIB_DIR=/usr/lib/x86_64-linux-gnu install && cd ..;
 fi
-# Install python using Miniconda. Last line is due to https://github.com/ContinuumIO/anaconda-issues/issues/182
+# Install python using Miniconda.
 if [[ "${WITH_PYTHON}" == "yes" ]] || [[ "${PYTHON_INSTALL}" == "yes" ]]; then
     wget http://repo.continuum.io/miniconda/Miniconda3-3.7.3-Linux-x86_64.sh -O miniconda.sh;
     bash miniconda.sh -b -p $HOME/miniconda;
@@ -34,7 +34,6 @@ if [[ "${WITH_PYTHON}" == "yes" ]] || [[ "${PYTHON_INSTALL}" == "yes" ]]; then
 
     conda create -q -n test-environment python="${PYTHON_VERSION}" pip cython sympy nose pytest;
     source activate test-environment;
-    rm $HOME/miniconda/envs/test-environment/bin/../lib/libm.so.6;
 fi
 if [[ "${CC}" == "" ]]; then
     export CC=gcc
