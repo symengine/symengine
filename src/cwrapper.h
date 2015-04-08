@@ -24,14 +24,15 @@ typedef struct
     void *data;
 } basic_struct;
 
+//! 'basic' is internally implemented as a size 1 array of the type
+//   basic_struct, which has the same size and alignment as RCP<const Basic>
+//   (see the above comment for details). That is then used by the user to
+//   allocate the memory needed for RCP<const Basic> on the stack. A 'basic'
+//   type should be initialized using basic_init(), before any function is
+//   called.  Assignment should be done only by using basic_assign(). Before
+//   the variable goes out of scope, basic_free() must be called.
 typedef basic_struct basic[1];
 
-//! basic is internally implemented as a char array of sufficient size to hold
-// the RCP<const Basic> instance, that is then used by the user to allocate the
-// memory needed for RCP<const Basic> on the stack. A basic type should be
-// initialized using basic_init(), before any function is called.  Assignment
-// should be done only by using basic_assign(). Before the variable goes out of
-// scope, basic_free() must be called.
 
 //! Initialize a new basic instance.
 void basic_init(basic s);
