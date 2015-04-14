@@ -159,6 +159,7 @@ public:
      provide custom printing.
      */
     virtual std::string __str__() const;
+    virtual std::string __str2__() const;
 
     //! Returns the derivative of self
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
@@ -199,6 +200,15 @@ struct RCPBasicKeyLess {
     bool operator() (const RCP<const Basic> &x, const RCP<const Basic> &y) const {
         std::size_t xh=x->hash(), yh=y->hash();
         if (xh != yh) return xh < yh;
+        if (x->__eq__(*y)) return false;
+        return x->__cmp__(*y) == -1;
+    }
+};
+
+//! Less operator `(<)` using cmp:
+struct RCPBasicKeyLessCmp {
+    //! true if `x < y`, false otherwise
+    bool operator() (const RCP<const Basic> &x, const RCP<const Basic> &y) const {
         if (x->__eq__(*y)) return false;
         return x->__cmp__(*y) == -1;
     }

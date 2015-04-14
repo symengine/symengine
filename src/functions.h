@@ -666,7 +666,7 @@ public:
  *  `x1` with `x2`, `y1` with `y2`, and so on.
  * */
 class Subs : public Basic {
-private:
+public:
     RCP<const Basic> arg_;
     map_basic_basic dict_;
 
