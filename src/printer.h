@@ -9,29 +9,29 @@ enum class PrecedenceEnum {
     Add, Mul, Pow, Atom
 };
 
-class Precedence : public Printer<Precedence> {
+class Precedence : public BaseVisitor<Precedence> {
 public:
     PrecedenceEnum precedence;
-    Precedence() : Printer(this) {
+    Precedence() : BaseVisitor(this) {
 
     }
-    void print(const Add &x) {
+    void bvisit(const Add &x) {
         precedence = PrecedenceEnum::Add;
     }
 
-    void print(const Mul &x) {
+    void bvisit(const Mul &x) {
         precedence = PrecedenceEnum::Mul;
     }
 
-    void print(const Pow &x) {
+    void bvisit(const Pow &x) {
         precedence = PrecedenceEnum::Pow;
     }
 
-    void print(const Rational &x) {
+    void bvisit(const Rational &x) {
         precedence = PrecedenceEnum::Add;
     }
 
-    void print(const Complex &x) {
+    void bvisit(const Complex &x) {
         if(x.is_re_zero()) {
             if(x.imaginary_ == 1) {
                 precedence = PrecedenceEnum::Atom;
@@ -43,7 +43,7 @@ public:
         }
     }
 
-    void print(const Integer &x) {
+    void bvisit(const Integer &x) {
         if (x.is_negative()) {
             precedence = PrecedenceEnum::Mul;
         } else {
@@ -51,7 +51,7 @@ public:
         }
     }
 
-    void print(const Basic &x) {
+    void bvisit(const Basic &x) {
         precedence = PrecedenceEnum::Atom;
     }
 
@@ -61,27 +61,27 @@ public:
     }
 };
 
-class StrPrinter : public Printer<StrPrinter> {
+class StrPrinter : public BaseVisitor<StrPrinter> {
 private:
     std::string str_;
     bool order_;
 public:
     StrPrinter(bool ordered = true);
     static const std::vector<std::string> names_;
-    void print(const Basic &x);
-    void print(const Symbol &x);
-    void print(const Integer &x);
-    void print(const Rational &x);
-    void print(const Complex &x);
-    void print(const Add &x);
-    void print(const Mul &x);
-    void print(const Pow &x);
-    void print(const Log &x);
-    void print(const Constant &x);
-    void print(const Function &x);
-    void print(const FunctionSymbol &x);
-    void print(const Derivative &x);
-    void print(const Subs &x);
+    void bvisit(const Basic &x);
+    void bvisit(const Symbol &x);
+    void bvisit(const Integer &x);
+    void bvisit(const Rational &x);
+    void bvisit(const Complex &x);
+    void bvisit(const Add &x);
+    void bvisit(const Mul &x);
+    void bvisit(const Pow &x);
+    void bvisit(const Log &x);
+    void bvisit(const Constant &x);
+    void bvisit(const Function &x);
+    void bvisit(const FunctionSymbol &x);
+    void bvisit(const Derivative &x);
+    void bvisit(const Subs &x);
 
     std::string parenthesizeLT(const RCP<const Basic> &x, PrecedenceEnum precedenceEnum);
     std::string parenthesizeLE(const RCP<const Basic> &x, PrecedenceEnum precedenceEnum);

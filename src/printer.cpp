@@ -4,30 +4,30 @@
 
 namespace CSymPy {
 
-StrPrinter::StrPrinter(bool ordered) : Printer(this), order_(ordered) {
+StrPrinter::StrPrinter(bool ordered) : BaseVisitor(this), order_(ordered) {
 
 }
-void StrPrinter::print(const Basic &x) {
+void StrPrinter::bvisit(const Basic &x) {
     std::cout << "Basic" <<std::endl;
 }
 
-void StrPrinter::print(const Symbol &x) {
+void StrPrinter::bvisit(const Symbol &x) {
     str_ = x.get_name();
 }
 
-void StrPrinter::print(const Integer &x) {
+void StrPrinter::bvisit(const Integer &x) {
     std::ostringstream s;
     s << x.i;
     str_ = s.str();
 }
 
-void StrPrinter::print(const Rational &x) {
+void StrPrinter::bvisit(const Rational &x) {
     std::ostringstream s;
     s << x.i;
     str_ = s.str();
 }
 
-void StrPrinter::print(const Complex &x) {
+void StrPrinter::bvisit(const Complex &x) {
     std::ostringstream s;
     if (x.real_ != 0) {
         s << x.real_;
@@ -78,7 +78,7 @@ void getKeysValues(vec_basic &keys, vec_basic &values, T &dict, bool order) {
     }
 }
 
-void StrPrinter::print(const Add &x) {
+void StrPrinter::bvisit(const Add &x) {
     std::ostringstream o;
     bool first = true;
     vec_basic keys;
@@ -115,7 +115,7 @@ void StrPrinter::print(const Add &x) {
     str_ = o.str();
 }
 
-void StrPrinter::print(const Mul &x) {
+void StrPrinter::bvisit(const Mul &x) {
     std::ostringstream o, o2;
     bool num = false;
     unsigned den = 0;
@@ -179,7 +179,7 @@ void StrPrinter::print(const Mul &x) {
     }
 }
 
-void StrPrinter::print(const Pow &x) {
+void StrPrinter::bvisit(const Pow &x) {
     std::ostringstream o;
     o << parenthesizeLE(x.base_, PrecedenceEnum::Pow);
     o << "**";
@@ -187,11 +187,11 @@ void StrPrinter::print(const Pow &x) {
     str_ = o.str();
 }
 
-void StrPrinter::print(const Log &x) {
+void StrPrinter::bvisit(const Log &x) {
     str_ = "log(" + this->apply(x.get_arg()) + ")";
 }
 
-void StrPrinter::print(const Constant &x) {
+void StrPrinter::bvisit(const Constant &x) {
     str_ = x.get_name();
 }
 
@@ -206,7 +206,7 @@ std::string StrPrinter::apply(const vec_basic &d)
     }
     return o.str();
 }
-void StrPrinter::print(const Function &x) {
+void StrPrinter::bvisit(const Function &x) {
     std::ostringstream o;
     o << names_[x.get_type_code()];
     o << "(";
@@ -215,7 +215,7 @@ void StrPrinter::print(const Function &x) {
     str_ = o.str();
 }
 
-void StrPrinter::print(const FunctionSymbol &x) {
+void StrPrinter::bvisit(const FunctionSymbol &x) {
     std::ostringstream o;
     o << x.get_name();
     o << "(";
@@ -224,7 +224,7 @@ void StrPrinter::print(const FunctionSymbol &x) {
     str_ = o.str();
 }
 
-void StrPrinter::print(const Derivative &x) {
+void StrPrinter::bvisit(const Derivative &x) {
     std::ostringstream o;
     o << "Derivative(";
     vec_basic vec = x.get_args();
@@ -232,7 +232,7 @@ void StrPrinter::print(const Derivative &x) {
     str_ = o.str();
 }
 
-void StrPrinter::print(const Subs &x) {
+void StrPrinter::bvisit(const Subs &x) {
     std::ostringstream o, vars, point;
     for (auto p = x.dict_.begin(); p != x.dict_.end(); p++) {
         if (p != x.dict_.begin()) {
