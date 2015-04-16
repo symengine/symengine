@@ -40,9 +40,7 @@ public:
      * \return whether the 2 objects are equal
      * */
     virtual bool __eq__(const Basic &o) const;
-    inline virtual int compare(const Basic &o) const {
-        throw std::runtime_error("Complex Numbers cannot be totally ordered");
-    }
+    virtual int compare(const Basic &o) const;
     //! \return `true` if positive
     inline virtual bool is_positive() const {
         throw std::runtime_error("Complex Numbers cannot be totally ordered");

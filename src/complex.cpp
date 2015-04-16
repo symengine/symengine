@@ -46,6 +46,20 @@ bool Complex::__eq__(const Basic &o) const
     return false;
 }
 
+int Complex::compare(const Basic &o) const {
+    CSYMPY_ASSERT(is_a<Complex>(o))
+    const Complex &s = static_cast<const Complex &>(o);
+    if (real_ == s.real_) {
+        if (imaginary_ == s.imaginary_) {
+            return 0;
+        } else {
+            return imaginary_ < s.imaginary_ ? -1 : 1;
+        }
+    } else {
+        return real_ < s.real_ ? -1 : 1;
+    }
+}
+
 RCP<const Number> Complex::from_mpq(const mpq_class re, const mpq_class im)
 {
     // It is assumed that `re` and `im` are already in canonical form.
