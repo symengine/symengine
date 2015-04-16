@@ -270,3 +270,4 @@ const static TypeID type_code_id = ID; \
 virtual TypeID get_type_code() const { return type_code_id; };
 
 #endif
+
