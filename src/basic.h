@@ -34,7 +34,7 @@ class Symbol;
 
         __hash__()
         __eq__(o)
-    Sublcasses must implement these.
+    Subclasses must implement these.
 
 */
 /*  Classes like Add, Mul, Pow are initialized through their constructor using
@@ -270,4 +270,3 @@ const static TypeID type_code_id = ID; \
 virtual TypeID get_type_code() const { return type_code_id; };
 
 #endif
-
