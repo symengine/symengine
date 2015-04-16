@@ -9,6 +9,7 @@
 #include "complex.h"
 #include "add.h"
 #include "matrix.h"
+#include "printer.h"
 
 using CSymPy::RCP;
 using CSymPy::Basic;
@@ -25,6 +26,10 @@ using CSymPy::add;
 using CSymPy::Symbol;
 using CSymPy::Integer;
 using CSymPy::DenseMatrix;
+using CSymPy::rcp;
+using CSymPy::Subs;
+using CSymPy::Derivative;
+using CSymPy::function_symbol;
 
 void test_printing()
 {
@@ -149,15 +154,15 @@ void test_printing()
     r = div(x, add(x, y));
     r1 = div(x, pow(add(x, y), div(integer(2), integer(3))));
     r2 = div(x, pow(add(x, y), div(integer(-2), integer(3))));
-    assert(r->__str__() == "x/(y + x)");
-    assert(r1->__str__() == "x/(y + x)**(2/3)" );
-    assert(r2->__str__() == "(y + x)**(2/3)*x" );
+    assert(r->__str__() == "x/(x + y)");
+    assert(r1->__str__() == "x/(x + y)**(2/3)");
+    assert(r2->__str__() == "x*(x + y)**(2/3)");
 
     r = div(integer(1), mul(x, add(x, y)));
     r1 = div(mul(y, integer(-1)), mul(x, add(x, y)));
     r2 = mul(pow(y, x), pow(x, y));
-    assert(r->__str__() == "1/((y + x)*x)");
-    assert(r1->__str__() == "-y/((y + x)*x)");
+    assert(r->__str__() == "1/(x*(x + y))");
+    assert(r1->__str__() == "-y/(x*(x + y))");
     assert(r2->__str__() == "x**y*y**x");
 
     r = pow(y, pow(x, integer(2)));
@@ -176,6 +181,31 @@ void test_printing()
     r2 = pow(pow(x, y), z);
     assert(r1->__str__() == "(2**x)**y");
     assert(r2->__str__() == "(x**y)**z");
+
+
+    RCP<const Basic> f = function_symbol("f", x);
+    RCP<const Basic> g = function_symbol("g", x);
+    r = f->diff(x);
+    r1 = rcp(new Derivative(f, {x}));
+    r2 = rcp(new Derivative(g, {x}));
+
+    assert(r->__str__() == "Derivative(f(x), x)");
+    assert(r1->__str__() == "Derivative(f(x), x)");
+    assert(r2->__str__() == "Derivative(g(x), x)");
+
+    r1 = f->diff(x)->diff(x);
+    assert(r1->__str__() == "Derivative(f(x), x, x)");
+
+    f = function_symbol("f", {x, y});
+    r = f->diff(x)->diff(y);
+    r1 = rcp(new Derivative(f, {x, y}));
+    r2 = rcp(new Derivative(f, {y, x}));
+    assert(r->__str__() == "Derivative(f(x, y), x, y)");
+    assert(r1->__str__() == "Derivative(f(x, y), x, y)");
+    assert(r2->__str__() == "Derivative(f(x, y), y, x)");
+
+    r1 = rcp(new Subs(rcp(new Derivative(function_symbol("f", {y, x}), {x})), {{x, add(x, y)}}));
+    assert(r1->__str__() == "Subs(Derivative(f(y, x), x), (x), (x + y))");
 }
 
 void test_matrix()

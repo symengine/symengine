@@ -86,44 +86,6 @@ int Pow::compare(const Basic &o) const
         return base_cmp;
 }
 
-
-std::string Pow::__str__() const
-{
-    std::ostringstream o;
-    if (is_a<Add>(*base_) || is_a<Mul>(*base_) || is_a<Pow>(*base_)) {
-        o << "(" << *base_ << ")";
-    } else if (is_a<Integer>(*base_) &&
-                rcp_static_cast<const Integer>(base_)->is_negative()) {
-        o << "(" << *base_ << ")";
-    } else if (is_a<Rational>(*base_) &&
-                (!(rcp_static_cast<const Rational>(base_)->is_int()) ||
-                rcp_static_cast<const Rational>(base_)->is_negative())) {
-        o << "(" << *base_ << ")";
-    } else if (is_a<Complex>(*base_) &&
-                (rcp_static_cast<const Complex>(base_)->imaginary_)!=0) {
-        o << "(" << *base_ <<")";
-    }  else {
-        o << *base_;
-    }
-    o << "**";
-    if (is_a<Add>(*exp_) || is_a<Pow>(*exp_) || is_a<Mul>(*exp_)) {
-        o << "(" << *exp_ << ")";
-    } else if (is_a<Integer>(*exp_) &&
-                rcp_static_cast<const Integer>(exp_)->is_negative()) {
-        o << "(" << *exp_ << ")";
-    } else if (is_a<Rational>(*exp_) &&
-                (!(rcp_static_cast<const Rational>(exp_)->is_int()) ||
-                rcp_static_cast<const Rational>(exp_)->is_negative())) {
-        o << "(" << *exp_ << ")";
-    } else if (is_a<Complex>(*exp_) &&
-                (rcp_static_cast<const Complex>(exp_)->imaginary_)!=0) {
-        o << "(" << *exp_ <<")";
-    } else {
-        o << *exp_;
-    }
-    return o.str();
-}
-
 RCP<const Number> pow_number(const RCP<const Number> &x, long n)
 {
     RCP<const Number> r, p;
@@ -527,13 +489,6 @@ int Log::compare(const Basic &o) const
     CSYMPY_ASSERT(is_a<Log>(o))
     const Log &s = static_cast<const Log &>(o);
     return arg_->__cmp__(s);
-}
-
-std::string Log::__str__() const
-{
-    std::ostringstream o;
-    o << "log(" << *get_arg() << ")";
-    return o.str();
 }
 
 RCP<const Basic> Log::diff(const RCP<const Symbol> &x) const

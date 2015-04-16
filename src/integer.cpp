@@ -38,14 +38,6 @@ int Integer::compare(const Basic &o) const
     return i < s.i ? -1 : 1;
 }
 
-
-std::string Integer::__str__() const
-{
-    std::ostringstream s;
-    s << this->i;
-    return s.str();
-}
-
 signed long int Integer::as_int() const
 {
     // get_si() returns "signed long int", so that's what we return from

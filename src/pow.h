@@ -31,8 +31,6 @@ public:
      * */
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
-    //! \return stringify version
-    virtual std::string __str__() const;
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &base,
             const RCP<const Basic> &exp);
@@ -83,8 +81,6 @@ public:
      * */
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
-    //! \return stringify version
-    virtual std::string __str__() const;
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &arg);
     //! \return `arg` of `log(arg)`

@@ -25,53 +25,6 @@ bool Complex::is_canonical(const mpq_class &real, const mpq_class &imaginary)
     return true;
 }
 
-std::string Complex::__str__() const
-{
-    std::ostringstream s;
-    if (this->real_ != 0) {
-        s << this->real_;
-        // Since imaginary_ should be in canonical form,
-        // the denominator is expected to be always positive
-        if (imaginary_.get_num() < 0) {
-            s << " - ";
-            if (imaginary_ != -1) {
-                mpq_class q(imaginary_.get_num()*(-1), imaginary_.get_den());
-                s << q;
-                s << "*I";
-            } else {
-                s << "I";
-            }
-        } else if (imaginary_.get_num() > 0) {
-            s << " + ";
-            if (imaginary_ != 1) {
-                s << this->imaginary_;
-                s << "*I";
-            } else {
-                s << "I";
-            }
-        }
-    } else {
-        // Since imaginary_ should be in canonical form,
-        // the denominator is expected to be always positive
-        if (imaginary_.get_num() < 0) {
-            if (imaginary_ != -1) {
-                s << this->imaginary_;
-                s << "*I";
-            } else {
-                s << "-I";
-            }
-        } else if (imaginary_.get_num() > 0) {
-            if (imaginary_ != 1) {
-                s << this->imaginary_;
-                s << "*I";
-            } else {
-                s << "I";
-            }
-        }
-    }
-    return s.str();
-}
-
 std::size_t Complex::__hash__() const
 {
     // only the least significant bits that fit into "signed long int" are

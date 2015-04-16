@@ -155,11 +155,9 @@ public:
      */
     virtual int compare(const Basic &o) const = 0;
 
-    /*! Returns string representation of `self`. Subclasses can override this to
-     provide custom printing.
+    /*! Returns string representation of `self`.
      */
-    virtual std::string __str__() const;
-    virtual std::string __str2__() const;
+    std::string __str__() const;
 
     //! Returns the derivative of self
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;

@@ -34,11 +34,6 @@ int Constant::compare(const Basic &o) const
     return name_ < s.name_ ? -1 : 1;
 }
 
-std::string Constant::__str__() const
-{
-    return name_;
-}
-
 RCP<const Basic> Constant::diff(const RCP<const Symbol> &x) const
 {
     return zero;

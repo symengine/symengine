@@ -27,14 +27,6 @@ int Basic::__cmp__(const Basic &o) const
 
 std::string Basic::__str__() const
 {
-    std::ostringstream s;
-    s << "<" << typeName<Basic>(*this)
-        << " instance at " << (const void*)this << ">";
-    return s.str();
-}
-
-std::string Basic::__str2__() const
-{
     StrPrinter strPrinter;
     return strPrinter.apply(*this);
 }

@@ -71,13 +71,6 @@ int Rational::compare(const Basic &o) const
     return i < s.i ? -1 : 1;
 }
 
-std::string Rational::__str__() const
-{
-    std::ostringstream s;
-    s << this->i;
-    return s.str();
-}
-
 void get_num_den(const RCP<const Rational> &rat,
             const Ptr<RCP<const Integer>> &num,
             const Ptr<RCP<const Integer>> &den)

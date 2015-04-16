@@ -73,8 +73,6 @@ public:
     virtual bool __eq__(const Basic &o) const;
 
     virtual int compare(const Basic &o) const;
-    //! \return stringify version
-    virtual std::string __str__() const;
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &arg);
     //! Differentiate w.r.t Symbol `x`
@@ -101,8 +99,6 @@ public:
      * */
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
-    //! \return stringify version
-    virtual std::string __str__() const;
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &arg);
     //! Differentiate w.r.t Symbol `x`
@@ -129,8 +125,6 @@ public:
     virtual bool __eq__(const Basic &o) const;
 
     virtual int compare(const Basic &o) const;
-    //! \return stringify version
-    virtual std::string __str__() const;
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &arg);
     //! Differentiate w.r.t Symbol `x`
@@ -156,8 +150,6 @@ public:
     virtual bool __eq__(const Basic &o) const;
 
     virtual int compare(const Basic &o) const;
-    //! \return stringify version
-    virtual std::string __str__() const;
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &arg);
     //! Differentiate w.r.t Symbol `x`
@@ -183,8 +175,6 @@ public:
     virtual bool __eq__(const Basic &o) const;
 
     virtual int compare(const Basic &o) const;
-    //! \return stringify version
-    virtual std::string __str__() const;
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &arg);
     //! Differentiate w.r.t Symbol `x`
@@ -210,8 +200,6 @@ public:
     virtual bool __eq__(const Basic &o) const;
 
     virtual int compare(const Basic &o) const;
-    //! \return stringify version
-    virtual std::string __str__() const;
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &arg);
     //! Differentiate w.r.t Symbol `x`
@@ -236,8 +224,6 @@ public:
      * */
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
-    //! \return stringify version
-    virtual std::string __str__() const;
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &arg);
     //! Differentiate w.r.t Symbol `x`
@@ -263,8 +249,6 @@ public:
      * */
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
-    //! \return stringify version
-    virtual std::string __str__() const;
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &arg);
     //! Differentiate w.r.t Symbol `x`
@@ -290,8 +274,6 @@ public:
      * */
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
-    //! \return stringify version
-    virtual std::string __str__() const;
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &arg);
     //! Differentiate w.r.t Symbol `x`
@@ -317,8 +299,6 @@ public:
      * */
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
-    //! \return stringify version
-    virtual std::string __str__() const;
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &arg);
     //! Differentiate w.r.t Symbol `x`
@@ -344,8 +324,6 @@ public:
      * */
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
-    //! \return stringify version
-    virtual std::string __str__() const;
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &arg);
     //! Differentiate w.r.t Symbol `x`
@@ -371,8 +349,6 @@ public:
      * */
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
-    //! \return stringify version
-    virtual std::string __str__() const;
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &arg);
     //! Differentiate w.r.t Symbol `x`
@@ -400,8 +376,6 @@ public:
      * */
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
-    //! \return stringify version
-    virtual std::string __str__() const;
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &num, const RCP<const Basic> &den);
     //! \return Size of the hash
@@ -447,8 +421,6 @@ public:
      * */
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
-    //! \return stringify version
-    virtual std::string __str__() const;
     //! \return `arg_`
     inline RCP<const Basic> get_arg() const { return arg_; }
     virtual vec_basic get_args() const { return {arg_}; }
@@ -493,8 +465,6 @@ public:
      * */
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
-    //! \return stringify version
-    virtual std::string __str__() const;
     //! \return `s_`
     inline RCP<const Basic> get_s() const { return s_; }
     //! \return `a_`
@@ -530,8 +500,6 @@ public:
      * */
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
-    //! \return stringify version
-    virtual std::string __str__() const;
     //! \return `s_`
     inline RCP<const Basic> get_s() const { return s_; }
     virtual vec_basic get_args() const { return {s_}; }
@@ -564,8 +532,6 @@ public:
      * */
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
-    //! \return stringify version
-    virtual std::string __str__() const;
     //! \return `name_`
     inline std::string get_name() const { return name_; }
     //! \return `arg_`
@@ -642,7 +608,6 @@ public:
     virtual std::size_t __hash__() const;
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
-    virtual std::string __str__() const;
     inline RCP<const Basic> get_arg() const {
         return arg_;
     }
@@ -676,7 +641,6 @@ public:
     virtual std::size_t __hash__() const;
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
-    virtual std::string __str__() const;
     inline RCP<const Basic> get_arg() const {
         return arg_;
     }
@@ -723,8 +687,6 @@ public:
      * */
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
-    //! \return stringify version
-    virtual std::string __str__() const;
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &arg);
     //! Differentiate w.r.t Symbol `x`
@@ -752,8 +714,6 @@ public:
      * */
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
-    //! \return stringify version
-    virtual std::string __str__() const;
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &arg);
     //! Differentiate w.r.t Symbol `x`
@@ -781,8 +741,6 @@ public:
      * */
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
-    //! \return stringify version
-    virtual std::string __str__() const;
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &arg);
     //! Differentiate w.r.t Symbol `x`
@@ -810,8 +768,6 @@ public:
      * */
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
-    //! \return stringify version
-    virtual std::string __str__() const;
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &arg);
     //! Differentiate w.r.t Symbol `x`
@@ -839,8 +795,6 @@ public:
      * */
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
-    //! \return stringify version
-    virtual std::string __str__() const;
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &arg);
     //! Differentiate w.r.t Symbol `x`
@@ -866,8 +820,6 @@ public:
      * */
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
-    //! \return stringify version
-    virtual std::string __str__() const;
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &arg);
     //! Differentiate w.r.t Symbol `x`
@@ -893,8 +845,6 @@ public:
      * */
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
-    //! \return stringify version
-    virtual std::string __str__() const;
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &arg);
     //! Differentiate w.r.t Symbol `x`
@@ -920,8 +870,6 @@ public:
      * */
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
-    //! \return stringify version
-    virtual std::string __str__() const;
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &arg);
     //! Differentiate w.r.t Symbol `x`
@@ -956,8 +904,6 @@ public:
     virtual int compare(const Basic &o) const;
     //! \return Size of the hash
     virtual std::size_t __hash__() const;
-    //! \return stringify version
-    virtual std::string __str__() const;
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &i, const RCP<const Basic> &j);
     virtual vec_basic get_args() const { return {i_, j_}; }
@@ -990,8 +936,6 @@ public:
     virtual int compare(const Basic &o) const;
     //! \return Size of the hash
     virtual std::size_t __hash__() const;
-    //! \return stringify version
-    virtual std::string __str__() const;
     //! \return `true` if canonical
     bool is_canonical(const vec_basic &arg);
     virtual vec_basic get_args() const { return arg_; }
@@ -1027,8 +971,6 @@ public:
     virtual int compare(const Basic &o) const;
     //! \return Size of the hash
     virtual std::size_t __hash__() const;
-    //! \return stringify version
-    virtual std::string __str__() const;
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &arg);
     virtual vec_basic get_args() const { return {arg_}; }
@@ -1056,8 +998,6 @@ public:
     virtual int compare(const Basic &o) const;
     //! \return Size of the hash
     virtual std::size_t __hash__() const;
-    //! \return stringify version
-    virtual std::string __str__() const;
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &s, const RCP<const Basic> &x);
     virtual vec_basic get_args() const { return {s_, x_}; }
@@ -1086,8 +1026,6 @@ public:
     virtual int compare(const Basic &o) const;
     //! \return Size of the hash
     virtual std::size_t __hash__() const;
-    //! \return stringify version
-    virtual std::string __str__() const;
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &s, const RCP<const Basic> &x);
     virtual vec_basic get_args() const { return {s_, x_}; }
@@ -1116,8 +1054,6 @@ public:
     virtual int compare(const Basic &o) const;
     //! \return Size of the hash
     virtual std::size_t __hash__() const;
-    //! \return stringify version
-    virtual std::string __str__() const;
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &arg);
     inline RCP<const Basic> get_arg() const { return arg_; }

@@ -34,8 +34,6 @@ public:
      * */
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
-    //! \return stringify version of `self`s
-    virtual std::string __str__() const;
     //! \return true if canonical
     bool is_canonical(const mpq_class &i);
 
