@@ -34,7 +34,7 @@ class Symbol;
 
         __hash__()
         __eq__(o)
-    Sublcasses must implement these.
+    Subclasses must implement these.
 
 */
 /*  Classes like Add, Mul, Pow are initialized through their constructor using
