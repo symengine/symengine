@@ -30,6 +30,7 @@ using CSymPy::rcp;
 using CSymPy::Subs;
 using CSymPy::Derivative;
 using CSymPy::function_symbol;
+using CSymPy::I;
 
 void test_printing()
 {
@@ -182,6 +183,10 @@ void test_printing()
     assert(r1->__str__() == "(2**x)**y");
     assert(r2->__str__() == "(x**y)**z");
 
+    r = pow(I, x);
+    r1 = sub(sub(integer(2), x), y);
+    assert(r->__str__() == "I**x");
+    assert(r1->__str__() == "2 - x - y");
 
     RCP<const Basic> f = function_symbol("f", x);
     RCP<const Basic> g = function_symbol("g", x);
