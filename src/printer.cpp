@@ -4,11 +4,13 @@
 
 namespace CSymPy {
 
-StrPrinter::StrPrinter(bool ordered) : BaseVisitor(this), order_(ordered) {
+StrPrinter::StrPrinter() : BaseVisitor(this) {
 
 }
 void StrPrinter::bvisit(const Basic &x) {
-    std::cout << "Basic" <<std::endl;
+    std::ostringstream s;
+    s << "<" << typeName<Basic>(x) << " instance at " << (const void*)this << ">";
+    str_ = s.str();
 }
 
 void StrPrinter::bvisit(const Symbol &x) {
@@ -59,46 +61,24 @@ void StrPrinter::bvisit(const Complex &x) {
     str_ = s.str();
 }
 
-template<class T>
-void getKeysValues(vec_basic &keys, vec_basic &values, T &dict, bool order) {
-
-    if(order) {
-        for(auto &p: dict) {
-            keys.push_back(p.first);
-        }
-        std::sort(keys.begin(), keys.end(), RCPBasicKeyLessCmp());
-        for(auto &p: keys) {
-            values.push_back(dict.find(p)->second);
-        }
-    } else {
-        for(auto &p: dict) {
-            keys.push_back(p.first);
-            values.push_back(p.second);
-        }
-    }
-}
-
 void StrPrinter::bvisit(const Add &x) {
     std::ostringstream o;
     bool first = true;
-    vec_basic keys;
-    vec_basic values;
-    getKeysValues(keys, values, x.dict_, order_);
+    std::map<RCP<const Basic>, RCP<const Number>,
+            RCPBasicKeyLessCmp> dict(x.dict_.begin(), x.dict_.end());
 
     if (neq(x.coef_, zero)) {
         o << this->apply(x.coef_);
         first = false;
     }
-    auto k = keys.begin();
-    auto v = values.begin();
-    for (; k != keys.end(); k++, v++) {
+    for (auto &p: dict) {
         std::string t;
-        if (eq(*v, one)) {
-            t = this->apply(*k);
-        } else if(eq(*v, minus_one)) {
-            t = "-" + parenthesizeLT(*k, PrecedenceEnum::Mul);
+        if (eq(p.second, one)) {
+            t = this->apply(p.first);
+        } else if(eq(p.second, minus_one)) {
+            t = "-" + parenthesizeLT(p.first, PrecedenceEnum::Mul);
         } else {
-            t = parenthesizeLT(*v, PrecedenceEnum::Mul) + "*" + parenthesizeLT(*k, PrecedenceEnum::Mul);
+            t = parenthesizeLT(p.second, PrecedenceEnum::Mul) + "*" + parenthesizeLT(p.first, PrecedenceEnum::Mul);
         }
 
         if (!first) {
@@ -119,9 +99,8 @@ void StrPrinter::bvisit(const Mul &x) {
     std::ostringstream o, o2;
     bool num = false;
     unsigned den = 0;
-    vec_basic keys;
-    vec_basic values;
-    getKeysValues(keys, values, x.dict_, order_);
+    std::map<RCP<const Basic>, RCP<const Basic>,
+            RCPBasicKeyLessCmp> dict(x.dict_.begin(), x.dict_.end());
 
     if (eq(x.coef_, minus_one)) {
         o << "-";
@@ -130,29 +109,27 @@ void StrPrinter::bvisit(const Mul &x) {
         num = true;
     }
 
-    auto first = keys.begin();
-    auto second = values.begin();
-    for (; first != keys.end(); first++, second++) {
-        if ((is_a<Integer>(*(*second)) &&
-             rcp_static_cast<const Integer>(*second)->is_negative()) ||
-            (is_a<Rational>(*(*second)) &&
-             rcp_static_cast<const Rational>(*second)->is_negative())) {
-            if(eq(*second, minus_one)) {
-                o2 << parenthesizeLT(*first, PrecedenceEnum::Mul);
+    for (auto &p: dict) {
+        if ((is_a<Integer>(*p.second) &&
+             rcp_static_cast<const Integer>(p.second)->is_negative()) ||
+            (is_a<Rational>(*p.second) &&
+             rcp_static_cast<const Rational>(p.second)->is_negative())) {
+            if(eq(p.second, minus_one)) {
+                o2 << parenthesizeLT(p.first, PrecedenceEnum::Mul);
             } else {
-                o2 << parenthesizeLE(*first, PrecedenceEnum::Pow);
+                o2 << parenthesizeLE(p.first, PrecedenceEnum::Pow);
                 o2 << "**";
-                o2 << parenthesizeLE(neg(*second), PrecedenceEnum::Pow);
+                o2 << parenthesizeLE(neg(p.second), PrecedenceEnum::Pow);
             }
             o2 << "*";
             den++;
         } else {
-            if(eq(*second, one)) {
-                o << parenthesizeLT(*first, PrecedenceEnum::Mul);
+            if(eq(p.second, one)) {
+                o << parenthesizeLT(p.first, PrecedenceEnum::Mul);
             } else {
-                o << parenthesizeLE(*first, PrecedenceEnum::Pow);
+                o << parenthesizeLE(p.first, PrecedenceEnum::Pow);
                 o << "**";
-                o << parenthesizeLE(*second, PrecedenceEnum::Pow);
+                o << parenthesizeLE(p.second, PrecedenceEnum::Pow);
             }
             o << "*";
             num = true;
@@ -164,11 +141,11 @@ void StrPrinter::bvisit(const Mul &x) {
     }
 
     std::string s = o.str();
-    s = s.substr(0, s.size()-1);
+    s = s.substr(0, s.size() - 1);
 
     if (den != 0) {
         std::string s2 = o2.str();
-        s2 = s2.substr(0, s2.size()-1);
+        s2 = s2.substr(0, s2.size() - 1);
         if (den > 1) {
             str_ = s + "/(" + s2 + ")";
         } else {
@@ -265,7 +242,7 @@ std::string StrPrinter::parenthesizeLE(const RCP<const Basic> &x, PrecedenceEnum
 }
 
 std::string StrPrinter::apply(const RCP<const Basic> &b) {
-    (*b).accept(*this);
+    b->accept(*this);
     return str_;
 }
 

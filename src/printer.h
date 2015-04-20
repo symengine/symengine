@@ -64,9 +64,8 @@ public:
 class StrPrinter : public BaseVisitor<StrPrinter> {
 private:
     std::string str_;
-    bool order_;
 public:
-    StrPrinter(bool ordered = true);
+    StrPrinter();
     static const std::vector<std::string> names_;
     void bvisit(const Basic &x);
     void bvisit(const Symbol &x);
