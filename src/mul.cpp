@@ -225,18 +225,20 @@ void Mul::dict_add_term_new(const Ptr<RCP<const Number>> &coef, map_basic_basic 
                 }
             }
         } else if (is_a<Rational>(*it->second)) {
-            mpz_class q, r, num, den;
-            num = rcp_static_cast<const Rational>(it->second)->i.get_num();
-            den = rcp_static_cast<const Rational>(it->second)->i.get_den();
-            // Here we make the exponent postive and a fraction between
-            // 0 and 1.
-            if (num > den || num < 0) {
-                mpz_fdiv_qr(q.get_mpz_t(), r.get_mpz_t(), num.get_mpz_t(),
-                    den.get_mpz_t());
+            if (is_a<Integer>(*t) || is_a<Rational>(*t)) {
+                mpz_class q, r, num, den;
+                num = rcp_static_cast<const Rational>(it->second)->i.get_num();
+                den = rcp_static_cast<const Rational>(it->second)->i.get_den();
+                // Here we make the exponent postive and a fraction between
+                // 0 and 1.
+                if (num > den || num < 0) {
+                    mpz_fdiv_qr(q.get_mpz_t(), r.get_mpz_t(), num.get_mpz_t(),
+                                den.get_mpz_t());
 
-                it->second = Rational::from_mpq(mpq_class(r, den));
-                imulnum(outArg(*coef), pownum(rcp_static_cast<const Number>(t),
-                    rcp_static_cast<const Number>(integer(q))));
+                    it->second = Rational::from_mpq(mpq_class(r, den));
+                    imulnum(outArg(*coef), pownum(rcp_static_cast<const Number>(t),
+                                                  rcp_static_cast<const Number>(integer(q))));
+                }
             }
         }
     }

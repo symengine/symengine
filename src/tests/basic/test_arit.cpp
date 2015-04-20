@@ -176,6 +176,15 @@ void test_mul()
     r1 = mul(r1, r2);
     r2 = mul(pow(x, i2), c2);
     assert(eq(r1, r2));
+
+    r1 = mul(sqrt(x), x);
+    r2 = pow(x, div(i3, i2));
+    assert(eq(r1, r2));
+
+    r1 = mul(pow(i2, x), pow(i2, sub(div(i3, i2), x)));
+    r2 = mul(i2, pow(i2, div(one, i2)));
+    std::cout << r1->__str__() << " " << r2->__str__() <<std::endl;
+    assert(eq(r1, r2));
 }
 
 void test_sub()
