@@ -1,5 +1,6 @@
 #include "basic.h"
 #include "symbol.h"
+#include "polynomial.h"
 #include "add.h"
 #include "integer.h"
 #include "rational.h"
@@ -114,6 +115,10 @@ public:
 
     virtual void visit(const Symbol &x) {
         throw std::runtime_error("Symbol cannot be evaluated as an arb type.");
+    }
+
+    virtual void visit(const Polynomial &x) {
+        throw std::runtime_error("Not implemented.");
     }
 
     virtual void visit(const Complex &) {

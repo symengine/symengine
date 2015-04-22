@@ -11,11 +11,13 @@
 #include "functions.h"
 #include "constants.h"
 #include "visitor.h"
+#include "polynomial.h"
 
 #define ACCEPT(CLASS) void CLASS::accept(Visitor &v) const { v.visit(*this); }
 
 namespace CSymPy {
 
+ACCEPT(Polynomial)
 ACCEPT(Symbol)
 ACCEPT(Add)
 ACCEPT(Mul)

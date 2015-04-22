@@ -87,6 +87,11 @@ public:
     virtual void visit(const Symbol &) {
         throw std::runtime_error("Symbol cannot be evaluated as a double.");
     };
+
+    virtual void visit(const Polynomial &) {
+        throw std::runtime_error("Not implemented.");
+    };
+
     virtual void visit(const Complex &) {
         throw std::runtime_error("Not implemented.");
     };
