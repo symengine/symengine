@@ -225,7 +225,7 @@ void Mul::dict_add_term_new(const Ptr<RCP<const Number>> &coef, map_basic_basic 
                 }
             }
         } else if (is_a<Rational>(*it->second)) {
-            if (is_a<Integer>(*t) || is_a<Rational>(*t)) {
+            if (is_a_Number(*t)) {
                 mpz_class q, r, num, den;
                 num = rcp_static_cast<const Rational>(it->second)->i.get_num();
                 den = rcp_static_cast<const Rational>(it->second)->i.get_den();

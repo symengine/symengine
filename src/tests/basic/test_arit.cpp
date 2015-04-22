@@ -183,7 +183,13 @@ void test_mul()
 
     r1 = mul(pow(i2, x), pow(i2, sub(div(i3, i2), x)));
     r2 = mul(i2, pow(i2, div(one, i2)));
-    std::cout << r1->__str__() << " " << r2->__str__() <<std::endl;
+    std::cout << r1->__str__() << std::endl;
+    assert(eq(r1, r2));
+
+    rc1 = Complex::from_two_nums(*one, *one);
+    r1 = pow(rc1, x);
+    r1 = mul(r1, pow(rc1, sub(div(i3, i2), x)));
+    r2 = mul(rc1, pow(rc1, div(one, i2)));
     assert(eq(r1, r2));
 }
 
