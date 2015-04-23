@@ -101,4 +101,44 @@ RCP<const Number> Complex::from_two_nums(const Number &re,
     }
 }
 
+RCP<const Number> pow_number(const RCP<const Number> &x, long n)
+{
+    RCP<const Number> r, p;
+    long mask = 1;
+    mpq_class re = 1;
+    mpq_class im = 0;
+    r = one;
+    p = x;
+    while (mask > 0 && n >= mask) {
+        if (n & mask)
+            r = mulnum(r, p);
+        mask = mask << 1;
+        p = mulnum(p, p);
+    }
+    return r;
+}
+
+RCP<const Number> Complex::powcomp(const Integer &other) const {
+    if (this->is_re_zero()) {
+        // Imaginary Number raised to an integer power.
+        RCP<const Number> im = Rational::from_mpq(this->imaginary_);
+        RCP<const Number> res;
+        res = mod(other, *integer(4));
+        if (eq(res, zero)) {
+            res = one;
+        } else if (eq(res, one)) {
+            res = I;
+        } else if (eq(res, integer(2))) {
+            res = minus_one;
+        } else {
+            res = mulnum(I, minus_one);
+        }
+        return mulnum(im->pow(other), res);
+    } else if (other.is_positive()) {
+        return pow_number(rcp(this), other.as_int());
+    } else {
+        return pow_number(divnum(one, rcp(this)), -1 * other.as_int());
+    }
+};
+
 } // CSymPy

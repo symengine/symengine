@@ -192,6 +192,11 @@ public:
             return from_mpq((this->real_ * other.i) / conjugate, (this->imaginary_ * (-other.i)) / conjugate);
         }
     }
+    /*! Pow Complex
+     * \param other of type Integer
+     * */
+    RCP<const Number> powcomp(const Integer &other) const;
+
     //! Converts the param `other` appropriately and then calls `addcomp`
     virtual RCP<const Number> add(const Number &other) const {
         if (is_a<Rational>(other)) {
@@ -263,8 +268,7 @@ public:
     //! Converts the param `other` appropriately and then calls `powcomp`
     virtual RCP<const Number> pow(const Number &other) const {
         if (is_a<Integer>(other)) {
-            // Needs to be implemented
-            throw std::runtime_error("Not implemented.");
+            return powcomp(static_cast<const Integer&>(other));
         } else {
             throw std::runtime_error("Not implemented.");
         }
