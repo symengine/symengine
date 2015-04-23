@@ -1,5 +1,6 @@
 #include "complex.h"
 #include "constants.h"
+#include "ntheory.h"
 
 namespace CSymPy {
 
@@ -101,44 +102,53 @@ RCP<const Number> Complex::from_two_nums(const Number &re,
     }
 }
 
-RCP<const Number> pow_number(const RCP<const Number> &x, long n)
+RCP<const Number> pow_number(const Complex &x, unsigned long n)
 {
-    RCP<const Number> r, p;
-    long mask = 1;
-    mpq_class re = 1;
-    mpq_class im = 0;
-    r = one;
-    p = x;
+    unsigned long mask = 1;
+    mpq_class r_re = 1;
+    mpq_class r_im = 0;
+
+    mpq_class p_re = x.real_;
+    mpq_class p_im = x.imaginary_;
+
+    mpq_class tmp;
+
     while (mask > 0 && n >= mask) {
-        if (n & mask)
-            r = mulnum(r, p);
+        if (n & mask) {
+            // Multiply r by p
+            tmp = r_re * p_re - r_im * p_im;
+            r_im = r_re * p_im + r_im * p_re;
+            r_re = tmp;
+        }
         mask = mask << 1;
-        p = mulnum(p, p);
+        // Multiply p by p
+        tmp = p_re * p_re - p_im * p_im;
+        p_im = 2 * p_re * p_im;
+        p_re = tmp;
     }
-    return r;
+    return Complex::from_mpq(r_re, r_im);
 }
 
 RCP<const Number> Complex::powcomp(const Integer &other) const {
     if (this->is_re_zero()) {
         // Imaginary Number raised to an integer power.
         RCP<const Number> im = Rational::from_mpq(this->imaginary_);
+        long rem = mod(other, *integer(4))->as_int();
         RCP<const Number> res;
-        res = mod(other, *integer(4));
-        if (eq(res, zero)) {
+        if (rem == 0) {
             res = one;
-        } else if (eq(res, one)) {
+        } else if (rem == 1) {
             res = I;
-        } else if (eq(res, integer(2))) {
+        } else if (rem == 2) {
             res = minus_one;
         } else {
             res = mulnum(I, minus_one);
         }
         return mulnum(im->pow(other), res);
     } else if (other.is_positive()) {
-        return pow_number(rcp(this), other.as_int());
+        return pow_number(*this, other.as_int());
     } else {
-        return pow_number(divnum(one, rcp(this)), -1 * other.as_int());
+        return one->div(*pow_number(*this, -1 * other.as_int()));
     }
 };
-
 } // CSymPy
