@@ -30,11 +30,6 @@ int Symbol::compare(const Basic &o) const
     return name_ < s.name_ ? -1 : 1;
 }
 
-std::string Symbol::__str__() const
-{
-    return name_;
-}
-
 RCP<const Basic> Symbol::diff(const RCP<const Symbol> &x) const
 {
     if (x->name_ == this->name_)

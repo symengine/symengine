@@ -29,8 +29,6 @@ public:
      * */
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
-    //! \return stringify version of `self`
-    virtual std::string __str__() const;
 
     // Performs canonicalization first:
     //! Create a Mul from a dict

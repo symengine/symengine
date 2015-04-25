@@ -96,61 +96,6 @@ int Add::compare(const Basic &o) const
     return map_basic_num_compare(adict, bdict);
 }
 
-std::string Add::__str__() const
-{
-    std::ostringstream o;
-    if (neq(coef_, zero))
-        o << *coef_ << " + ";
-    int counter = 0;
-    for (auto &p: dict_) {
-        if (eq(p.second, one))
-            o << *(p.first);
-        else {
-            // TODO: extend this for Rationals as well:
-            if (is_a<Integer>(*p.second) &&
-                    rcp_static_cast<const Integer>(p.second)->is_negative()
-                    && o.tellp() >= 3)
-                o.seekp(-3, std::ios_base::cur);
-            if (eq(p.second, minus_one)) {
-                if (counter >= 1)
-                    o << " - ";
-                else
-                    o << "-";
-            } else {
-                // TODO: extend this for Rationals as well:
-                if (is_a<Integer>(*p.second) &&
-                        rcp_static_cast<const Integer>(p.second)->is_negative()) {
-                    if (counter >= 1) {
-                        o << " - ";
-                    } else {
-                        o << "-";
-                    }
-                    o << -(rcp_static_cast<const Integer>(p.second))->i;
-                } else if (is_a<Complex>(*p.second)) {
-                    if (!(rcp_static_cast<const Complex>(p.second)->is_reim_zero())) {
-                        o << "(" << *(p.second) <<")";
-                    } else {
-                        o << *(p.second);
-                    }
-                } else {
-                    o << *(p.second);
-                }
-            }
-            if (!eq(p.second, minus_one)) o << "*";
-            if (is_a<Add>(*p.first) || is_a<Rational>(*p.first) || is_a<Complex>(*p.first)) {
-                o << "(";
-            }
-            o << *(p.first);
-            if (is_a<Add>(*p.first) || is_a<Rational>(*p.first) || is_a<Complex>(*p.first)) o << ")";
-        }
-        o << " + ";
-        counter++;
-    }
-    o.seekp(-3, std::ios_base::cur);
-    std::string s = o.str();
-    return s.substr(0, o.tellp());
-}
-
 // Very quickly (!) creates the appropriate instance (i.e. Add, Symbol,
 // Integer, Mul) depending on the size of the dictionary 'd'.
 // If d.size() > 1 then it just returns Add. This means that the dictionary

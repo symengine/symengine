@@ -703,27 +703,15 @@ void test_Derivative()
     assert(neq(r2, r3));
     assert(vec_basic_eq(r1->get_args(), {f, x}));
 
-    std::cout << *r1 << std::endl;
-    std::cout << *r2 << std::endl;
-    std::cout << *r3 << std::endl;
-    assert(r1->__str__() == "Derivative(f(x), x)");
-    assert(r2->__str__() == "Derivative(f(x), x)");
-    assert(r3->__str__() == "Derivative(g(x), x)");
-
     r1 = f->diff(x)->diff(x);
     r2 = rcp(new Derivative(f, {x, x}));
     assert(eq(r1, r2));
-    std::cout << *r1 << std::endl;
-    assert(r1->__str__() == "Derivative(f(x), x, x)");
     assert(vec_basic_eq(r1->get_args(), {f, x, x}));
 
     f = function_symbol("f", {x, y});
     r1 = f->diff(x)->diff(y);
     r2 = rcp(new Derivative(f, {x, y}));
     r3 = rcp(new Derivative(f, {y, x}));
-    assert(r1->__str__() == "Derivative(f(x, y), x, y)");
-    assert(r2->__str__() == "Derivative(f(x, y), x, y)");
-    assert(r3->__str__() == "Derivative(f(x, y), y, x)");
     assert(eq(r1, r2));
     assert(neq(r1, r3));
 
@@ -792,8 +780,6 @@ void test_Subs()
 
     // Test Subs::subs
     r1 = rcp(new Subs(rcp(new Derivative(function_symbol("f", {y, x}), {x})), {{x, add(x, y)}}));
-    assert(r1->__str__() == "Subs(Derivative(f(y, x), x), (x), (y + x))");
-
     r2 = rcp(new Subs(rcp(new Derivative(function_symbol("f", {y, x}), {x})), {{x, z}, {y, z}}));
     r3 = rcp(new Subs(rcp(new Derivative(function_symbol("f", {y, x}), {x})), {{y, z}, {x, z}}));
     assert(eq(r2, r3));

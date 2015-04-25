@@ -35,8 +35,6 @@ public:
      * \return `0` if equal, `-1` , `1` according to string compare
      * */
     virtual int compare(const Basic &o) const;
-    //! \return name of the Constant. Stringify version
-    virtual std::string __str__() const;
     //! \return name of the Constant.
     inline std::string get_name() const {
         return name_;

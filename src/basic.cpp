@@ -8,6 +8,7 @@
 #include "pow.h"
 #include "constants.h"
 #include "functions.h"
+#include "printer.h"
 
 namespace CSymPy {
 
@@ -26,10 +27,8 @@ int Basic::__cmp__(const Basic &o) const
 
 std::string Basic::__str__() const
 {
-    std::ostringstream s;
-    s << "<" << typeName<Basic>(*this)
-        << " instance at " << (const void*)this << ">";
-    return s.str();
+    StrPrinter strPrinter;
+    return strPrinter.apply(*this);
 }
 
 RCP<const Basic> expand(const RCP<const Basic> &self)

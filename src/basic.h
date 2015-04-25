@@ -155,10 +155,9 @@ public:
      */
     virtual int compare(const Basic &o) const = 0;
 
-    /*! Returns string representation of `self`. Subclasses can override this to
-     provide custom printing.
+    /*! Returns string representation of `self`.
      */
-    virtual std::string __str__() const;
+    std::string __str__() const;
 
     //! Returns the derivative of self
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
@@ -199,6 +198,15 @@ struct RCPBasicKeyLess {
     bool operator() (const RCP<const Basic> &x, const RCP<const Basic> &y) const {
         std::size_t xh=x->hash(), yh=y->hash();
         if (xh != yh) return xh < yh;
+        if (x->__eq__(*y)) return false;
+        return x->__cmp__(*y) == -1;
+    }
+};
+
+//! Less operator `(<)` using cmp:
+struct RCPBasicKeyLessCmp {
+    //! true if `x < y`, false otherwise
+    bool operator() (const RCP<const Basic> &x, const RCP<const Basic> &y) const {
         if (x->__eq__(*y)) return false;
         return x->__cmp__(*y) == -1;
     }

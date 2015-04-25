@@ -320,13 +320,6 @@ int Sin::compare(const Basic &o) const
     return get_arg()->__cmp__(*(s.get_arg()));
 }
 
-std::string Sin::__str__() const
-{
-    std::ostringstream o;
-    o << "sin(" << *get_arg() << ")";
-    return o.str();
-}
-
 RCP<const Basic> sin(const RCP<const Basic> &arg)
 {
     if (eq(arg, zero)) return zero;
@@ -392,13 +385,6 @@ int Cos::compare(const Basic &o) const
     CSYMPY_ASSERT(is_a<Cos>(o))
     const Cos &s = static_cast<const Cos &>(o);
     return get_arg()->__cmp__(*(s.get_arg()));
-}
-
-std::string Cos::__str__() const
-{
-    std::ostringstream o;
-    o << "cos(" << *get_arg() << ")";
-    return o.str();
 }
 
 RCP<const Basic> cos(const RCP<const Basic> &arg)
@@ -467,14 +453,6 @@ int Tan::compare(const Basic &o) const
     CSYMPY_ASSERT(is_a<Tan>(o))
     const Tan &s = static_cast<const Tan &>(o);
     return get_arg()->__cmp__(*(s.get_arg()));
-}
-
-
-std::string Tan::__str__() const
-{
-    std::ostringstream o;
-    o << "tan(" << *get_arg() << ")";
-    return o.str();
 }
 
 RCP<const Basic> tan(const RCP<const Basic> &arg)
@@ -546,14 +524,6 @@ int Cot::compare(const Basic &o) const
     return get_arg()->__cmp__(*(s.get_arg()));
 }
 
-
-std::string Cot::__str__() const
-{
-    std::ostringstream o;
-    o << "cot(" << *get_arg() << ")";
-    return o.str();
-}
-
 RCP<const Basic> cot(const RCP<const Basic> &arg)
 {
     RCP<const Basic> ret_arg;
@@ -620,13 +590,6 @@ int Csc::compare(const Basic &o) const
     CSYMPY_ASSERT(is_a<Csc>(o))
     const Csc &s = static_cast<const Csc &>(o);
     return get_arg()->__cmp__(*(s.get_arg()));
-}
-
-std::string Csc::__str__() const
-{
-    std::ostringstream o;
-    o << "csc(" << *get_arg() << ")";
-    return o.str();
 }
 
 RCP<const Basic> csc(const RCP<const Basic> &arg)
@@ -697,13 +660,6 @@ int Sec::compare(const Basic &o) const
     return get_arg()->__cmp__(*(s.get_arg()));
 }
 
-std::string Sec::__str__() const
-{
-    std::ostringstream o;
-    o << "sec(" << *get_arg() << ")";
-    return o.str();
-}
-
 RCP<const Basic> sec(const RCP<const Basic> &arg)
 {
     RCP<const Basic> ret_arg;
@@ -769,14 +725,6 @@ int ASin::compare(const Basic &o) const
     return get_arg()->__cmp__(*(s.get_arg()));
 }
 
-
-std::string ASin::__str__() const
-{
-    std::ostringstream o;
-    o << "asin(" << *get_arg() << ")";
-    return o.str();
-}
-
 RCP<const Basic> asin(const RCP<const Basic> &arg)
 {
     if (eq(arg, zero)) return zero;
@@ -826,14 +774,6 @@ int ACos::compare(const Basic &o) const
     CSYMPY_ASSERT(is_a<ACos>(o))
     const ACos &s = static_cast<const ACos &>(o);
     return get_arg()->__cmp__(*(s.get_arg()));
-}
-
-
-std::string ACos::__str__() const
-{
-    std::ostringstream o;
-    o << "acos(" << *get_arg() << ")";
-    return o.str();
 }
 
 RCP<const Basic> acos(const RCP<const Basic> &arg)
@@ -891,14 +831,6 @@ int ASec::compare(const Basic &o) const
     return get_arg()->__cmp__(*(s.get_arg()));
 }
 
-
-std::string ASec::__str__() const
-{
-    std::ostringstream o;
-    o << "asec(" << *get_arg() << ")";
-    return o.str();
-}
-
 RCP<const Basic> asec(const RCP<const Basic> &arg)
 {
     if (eq(arg, one)) return zero;
@@ -953,14 +885,6 @@ int ACsc::compare(const Basic &o) const
     return get_arg()->__cmp__(*(s.get_arg()));
 }
 
-
-std::string ACsc::__str__() const
-{
-    std::ostringstream o;
-    o << "acsc(" << *get_arg() << ")";
-    return o.str();
-}
-
 RCP<const Basic> acsc(const RCP<const Basic> &arg)
 {
     if (eq(arg, one)) return div(pi, i2);
@@ -1008,14 +932,6 @@ int ATan::compare(const Basic &o) const
     CSYMPY_ASSERT(is_a<ATan>(o))
     const ATan &s = static_cast<const ATan &>(o);
     return get_arg()->__cmp__(*(s.get_arg()));
-}
-
-
-std::string ATan::__str__() const
-{
-    std::ostringstream o;
-    o << "atan(" << *get_arg() << ")";
-    return o.str();
 }
 
 RCP<const Basic> atan(const RCP<const Basic> &arg)
@@ -1066,14 +982,6 @@ int ACot::compare(const Basic &o) const
     CSYMPY_ASSERT(is_a<ACot>(o))
     const ACot &s = static_cast<const ACot &>(o);
     return get_arg()->__cmp__(*(s.get_arg()));
-}
-
-
-std::string ACot::__str__() const
-{
-    std::ostringstream o;
-    o << "acot(" << *get_arg() << ")";
-    return o.str();
 }
 
 RCP<const Basic> acot(const RCP<const Basic> &arg)
@@ -1132,14 +1040,6 @@ int ATan2::compare(const Basic &o) const
     CSYMPY_ASSERT(is_a<ATan2>(o))
     const ATan2 &s = static_cast<const ATan2 &>(o);
     return div(num_, den_)->__cmp__(*div(s.num_, s.den_));
-}
-
-
-std::string ATan2::__str__() const
-{
-    std::ostringstream o;
-    o << "atan2(" << *num_ << "/" << *den_ << ")";
-    return o.str();
 }
 
 std::size_t ATan2::__hash__() const
@@ -1380,14 +1280,6 @@ int LambertW::compare(const Basic &o) const
     return arg_->__cmp__(*(static_cast<const LambertW &>(o).arg_));
 }
 
-
-std::string LambertW::__str__() const
-{
-    std::ostringstream o;
-    o<< "lambertw(" << *arg_ << ")";
-    return o.str();
-}
-
 RCP<const Basic> LambertW::diff(const RCP<const Symbol> &x) const
 {
     // check http://en.wikipedia.org/wiki/Lambert_W_function#Derivative
@@ -1448,16 +1340,6 @@ int FunctionSymbol::compare(const Basic &o) const
         return vec_basic_compare(arg_, s.arg_);
     else
         return name_ < s.name_ ? -1 : 1;
-}
-
-
-std::string FunctionSymbol::__str__() const
-{
-    std::ostringstream o, tmp;
-    tmp << arg_;
-    std::string args = tmp.str();
-    o << name_ << "(" << args.substr(1, args.size() - 2) << ")";
-    return o.str();
 }
 
 RCP<const Basic> FunctionSymbol::diff(const RCP<const Symbol> &x) const
@@ -1635,16 +1517,6 @@ int Derivative::compare(const Basic &o) const
     return cmp;
 }
 
-
-std::string Derivative::__str__() const
-{
-    std::ostringstream o, tmp;
-    tmp << x_;
-    std::string vars = tmp.str();
-    o << "Derivative(" << *arg_ << ", " << vars.substr(1, vars.size() - 2) << ")";
-    return o.str();
-}
-
 RCP<const Basic> Derivative::diff(const RCP<const Symbol> &x) const
 {
     if (eq(arg_->diff(x), zero)) return zero;
@@ -1747,21 +1619,6 @@ int Subs::compare(const Basic &o) const
     if (cmp != 0) return cmp;
     cmp = map_basic_basic_compare(dict_, s.dict_);
     return cmp;
-}
-
-std::string Subs::__str__() const
-{
-    std::ostringstream o, vars, point;
-    for (auto p = dict_.begin(); p != dict_.end(); p++) {
-        if (p != dict_.begin()) {
-            vars << ", ";
-            point << ", ";
-        }
-        vars << *(p->first);
-        point << *(p->second);
-    }
-    o << "Subs(" << *arg_ << ", (" << vars.str() << "), (" << point.str() << "))";
-    return o.str();
 }
 
 vec_basic Subs::get_variables() const {
@@ -1893,14 +1750,6 @@ int Sinh::compare(const Basic &o) const
     return get_arg()->__cmp__(*(s.get_arg()));
 }
 
-
-std::string Sinh::__str__() const
-{
-    std::ostringstream o;
-    o << "sinh(" << *get_arg() << ")";
-    return o.str();
-}
-
 RCP<const Basic> sinh(const RCP<const Basic> &arg)
 {
     if (eq(arg, zero)) return zero;
@@ -1958,13 +1807,6 @@ int Cosh::compare(const Basic &o) const
     CSYMPY_ASSERT(is_a<Cosh>(o))
     const Cosh &s = static_cast<const Cosh &>(o);
     return get_arg()->__cmp__(*(s.get_arg()));
-}
-
-std::string Cosh::__str__() const
-{
-    std::ostringstream o;
-    o << "cosh(" << *get_arg() << ")";
-    return o.str();
 }
 
 RCP<const Basic> cosh(const RCP<const Basic> &arg)
@@ -2026,14 +1868,6 @@ int Tanh::compare(const Basic &o) const
     return get_arg()->__cmp__(*(s.get_arg()));
 }
 
-
-std::string Tanh::__str__() const
-{
-    std::ostringstream o;
-    o << "tanh(" << *get_arg() << ")";
-    return o.str();
-}
-
 RCP<const Basic> tanh(const RCP<const Basic> &arg)
 {
     if (eq(arg, zero)) return zero;
@@ -2093,14 +1927,6 @@ int Coth::compare(const Basic &o) const
     CSYMPY_ASSERT(is_a<Coth>(o))
     const Coth &s = static_cast<const Coth &>(o);
     return get_arg()->__cmp__(*(s.get_arg()));
-}
-
-
-std::string Coth::__str__() const
-{
-    std::ostringstream o;
-    o << "coth(" << *get_arg() << ")";
-    return o.str();
 }
 
 RCP<const Basic> coth(const RCP<const Basic> &arg)
@@ -2167,14 +1993,6 @@ int ASinh::compare(const Basic &o) const
     return get_arg()->__cmp__(*(s.get_arg()));
 }
 
-
-std::string ASinh::__str__() const
-{
-    std::ostringstream o;
-    o << "asinh(" << *get_arg() << ")";
-    return o.str();
-}
-
 RCP<const Basic> asinh(const RCP<const Basic> &arg)
 {
     if (eq(arg, zero)) return zero;
@@ -2226,14 +2044,6 @@ int ACosh::compare(const Basic &o) const
     return get_arg()->__cmp__(*(s.get_arg()));
 }
 
-
-std::string ACosh::__str__() const
-{
-    std::ostringstream o;
-    o << "acosh(" << *get_arg() << ")";
-    return o.str();
-}
-
 RCP<const Basic> acosh(const RCP<const Basic> &arg)
 {
     // TODO: Lookup into a cst table once complex is implemented
@@ -2280,14 +2090,6 @@ int ATanh::compare(const Basic &o) const
     CSYMPY_ASSERT(is_a<ATanh>(o))
     const ATanh &s = static_cast<const ATanh &>(o);
     return get_arg()->__cmp__(*(s.get_arg()));
-}
-
-
-std::string ATanh::__str__() const
-{
-    std::ostringstream o;
-    o << "atanh(" << *get_arg() << ")";
-    return o.str();
 }
 
 RCP<const Basic> atanh(const RCP<const Basic> &arg)
@@ -2340,14 +2142,6 @@ int ACoth::compare(const Basic &o) const
     CSYMPY_ASSERT(is_a<ACoth>(o))
     const ACoth &s = static_cast<const ACoth &>(o);
     return get_arg()->__cmp__(*(s.get_arg()));
-}
-
-
-std::string ACoth::__str__() const
-{
-    std::ostringstream o;
-    o << "acoth(" << *get_arg() << ")";
-    return o.str();
 }
 
 RCP<const Basic> acoth(const RCP<const Basic> &arg)
@@ -2451,13 +2245,6 @@ std::size_t KroneckerDelta::__hash__() const
     return seed;
 }
 
-std::string KroneckerDelta::__str__() const
-{
-    std::ostringstream o;
-    o << "KroneckerDelta(" << *i_ << ", " << *j_ << ")";
-    return o.str();
-}
-
 RCP<const Basic> kronecker_delta(const RCP<const Basic> &i, const RCP<const Basic> &j)
 {
     // Expand is needed to simplify things like `i-(i+1)` to `-1`
@@ -2539,19 +2326,6 @@ std::size_t LeviCivita::__hash__() const
     return seed;
 }
 
-std::string LeviCivita::__str__() const
-{
-    std::ostringstream o;
-    o << "LeviCivita(";
-    for (auto &p: arg_) {
-        o << *p << ", ";
-    }
-    std::string s = o.str();
-    s = s.substr(0, s.size() - 2);
-    s.append(")");
-    return s;
-}
-
 RCP<const Basic> eval_levicivita(const vec_basic &arg, int len)
 {
     int i, j;
@@ -2628,17 +2402,6 @@ int Zeta::compare(const Basic &o) const
     return s_->__cmp__(*(static_cast<const Zeta &>(o).s_));
 }
 
-
-std::string Zeta::__str__() const
-{
-    std::ostringstream o;
-    o << "zeta(" << *s_ ;
-    if (neq(a_, one))
-        o << ", " << *a_;
-    o << ")";
-    return o.str();
-}
-
 RCP<const Basic> Zeta::diff(const RCP<const Symbol> &x) const
 {
     // TODO: check if it is differentiated wrt s
@@ -2704,14 +2467,6 @@ int Dirichlet_eta::compare(const Basic &o) const
     return s_->__cmp__(*(static_cast<const Dirichlet_eta &>(o).s_));
 }
 
-
-std::string Dirichlet_eta::__str__() const
-{
-    std::ostringstream o;
-    o << "dirichlet_eta(" << *s_ << ")";
-    return o.str();
-}
-
 RCP<const Basic> Dirichlet_eta::rewrite_as_zeta() const
 {
     return mul(sub(one, pow(i2, sub(one, s_))), zeta(s_));
@@ -2766,13 +2521,6 @@ int Gamma::compare(const Basic &o) const
 {
     CSYMPY_ASSERT(is_a<Gamma>(o))
     return arg_->__cmp__(*(static_cast<const Gamma &>(o).arg_));
-}
-
-std::string Gamma::__str__() const
-{
-    std::ostringstream o;
-    o << "gamma(" << *arg_ << ")";
-    return o.str();
 }
 
 RCP<const Basic> gamma(const RCP<const Basic> &arg)
@@ -2866,13 +2614,6 @@ int LowerGamma::compare(const Basic &o) const
     }
 }
 
-std::string LowerGamma::__str__() const
-{
-    std::ostringstream o;
-    o << "lowergamma(" << *s_ << ", " << *x_ << ")";
-    return o.str();
-}
-
 RCP<const Basic> lowergamma(const RCP<const Basic> &s, const RCP<const Basic> &x)
 {
     // Only special values are being evaluated
@@ -2946,13 +2687,6 @@ int UpperGamma::compare(const Basic &o) const
     }
 }
 
-std::string UpperGamma::__str__() const
-{
-    std::ostringstream o;
-    o << "uppergamma(" << *s_ << ", " << *x_ << ")";
-    return o.str();
-}
-
 RCP<const Basic> uppergamma(const RCP<const Basic> &s, const RCP<const Basic> &x)
 {
     // Only special values are being evaluated
@@ -3013,13 +2747,6 @@ int Abs::compare(const Basic &o) const
 {
     CSYMPY_ASSERT(is_a<Abs>(o))
     return arg_->__cmp__(*(static_cast<const Abs &>(o).arg_));
-}
-
-std::string Abs::__str__() const
-{
-    std::ostringstream o;
-    o << "abs(" << *arg_ << ")";
-    return o.str();
 }
 
 RCP<const Basic> Abs::diff(const RCP<const Symbol> &x) const

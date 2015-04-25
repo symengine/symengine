@@ -35,8 +35,6 @@ public:
      * \return `0` if equal, `-1` , `1` according to string compare
      * */
     virtual int compare(const Basic &o) const;
-    //! \return Stringify version
-    virtual std::string __str__() const;
     /*! Creates appropriate instance (i.e Add , Symbol, Integer,
     * Mul) depending on the size of dictionary `d`.
     */

@@ -7,6 +7,15 @@
 #define CSYMPY_VISITOR_H
 
 #include "basic.h"
+#include "add.h"
+#include "mul.h"
+#include "pow.h"
+#include "functions.h"
+#include "symbol.h"
+#include "integer.h"
+#include "rational.h"
+#include "complex.h"
+#include "constants.h"
 
 namespace CSymPy {
 
@@ -65,6 +74,59 @@ public:
 };
 
 void preorder_traversal_stop(const Basic &b, StopVisitor &v);
+
+template<class T>
+class BaseVisitor : public Visitor {
+
+public:
+    T *p_;
+public:
+    BaseVisitor(T* p) : p_ {p} {
+
+    };
+    virtual void visit(const Add &x) { p_->bvisit(x); };
+    virtual void visit(const Symbol &x) { p_->bvisit(x); };
+    virtual void visit(const Mul &x) { p_->bvisit(x); };
+    virtual void visit(const Pow &x) { p_->bvisit(x); };
+    virtual void visit(const Integer &x) { p_->bvisit(x); };
+    virtual void visit(const Rational &x) { p_->bvisit(x); };
+    virtual void visit(const Complex &x) { p_->bvisit(x); };
+    virtual void visit(const Log &x) { p_->bvisit(x); };
+    virtual void visit(const Derivative &x) { p_->bvisit(x); };
+    virtual void visit(const Sin &x) { p_->bvisit(x); };
+    virtual void visit(const Cos &x) { p_->bvisit(x); };
+    virtual void visit(const Tan &x) { p_->bvisit(x); };
+    virtual void visit(const Cot &x) { p_->bvisit(x); };
+    virtual void visit(const Csc &x) { p_->bvisit(x); };
+    virtual void visit(const Sec &x) { p_->bvisit(x); };
+    virtual void visit(const ASin &x) { p_->bvisit(x); };
+    virtual void visit(const ACos &x) { p_->bvisit(x); };
+    virtual void visit(const ASec &x) { p_->bvisit(x); };
+    virtual void visit(const ACsc &x) { p_->bvisit(x); };
+    virtual void visit(const ATan &x) { p_->bvisit(x); };
+    virtual void visit(const ACot &x) { p_->bvisit(x); };
+    virtual void visit(const ATan2 &x) { p_->bvisit(x); };
+    virtual void visit(const LambertW &x) { p_->bvisit(x); };
+    virtual void visit(const FunctionSymbol &x) { p_->bvisit(x); };
+    virtual void visit(const Sinh &x) { p_->bvisit(x); };
+    virtual void visit(const Cosh &x) { p_->bvisit(x); };
+    virtual void visit(const Tanh &x) { p_->bvisit(x); };
+    virtual void visit(const Coth &x) { p_->bvisit(x); };
+    virtual void visit(const ASinh &x) { p_->bvisit(x); };
+    virtual void visit(const ACosh &x) { p_->bvisit(x); };
+    virtual void visit(const ATanh &x) { p_->bvisit(x); };
+    virtual void visit(const ACoth &x) { p_->bvisit(x); };
+    virtual void visit(const KroneckerDelta &x) { p_->bvisit(x); };
+    virtual void visit(const LeviCivita &x) { p_->bvisit(x); };
+    virtual void visit(const Zeta &x) { p_->bvisit(x); };
+    virtual void visit(const Dirichlet_eta &x) { p_->bvisit(x); };
+    virtual void visit(const Gamma &x) { p_->bvisit(x); };
+    virtual void visit(const LowerGamma &x) { p_->bvisit(x); };
+    virtual void visit(const UpperGamma &x) { p_->bvisit(x); };
+    virtual void visit(const Constant &x) { p_->bvisit(x); };
+    virtual void visit(const Abs &x) { p_->bvisit(x); };
+    virtual void visit(const Subs &x) { p_->bvisit(x); };
+};
 
 class HasSymbolVisitor : public StopVisitor {
 private:

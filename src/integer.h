@@ -32,8 +32,6 @@ public:
      * */
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
-    //! \return stringify version of `self`s
-    virtual std::string __str__() const;
 
     //! Convert to `int`, raise an exception if it does not fit
     signed long int as_int() const;

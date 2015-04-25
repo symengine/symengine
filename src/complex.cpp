@@ -25,53 +25,6 @@ bool Complex::is_canonical(const mpq_class &real, const mpq_class &imaginary)
     return true;
 }
 
-std::string Complex::__str__() const
-{
-    std::ostringstream s;
-    if (this->real_ != 0) {
-        s << this->real_;
-        // Since imaginary_ should be in canonical form,
-        // the denominator is expected to be always positive
-        if (imaginary_.get_num() < 0) {
-            s << " - ";
-            if (imaginary_ != -1) {
-                mpq_class q(imaginary_.get_num()*(-1), imaginary_.get_den());
-                s << q;
-                s << "*I";
-            } else {
-                s << "I";
-            }
-        } else if (imaginary_.get_num() > 0) {
-            s << " + ";
-            if (imaginary_ != 1) {
-                s << this->imaginary_;
-                s << "*I";
-            } else {
-                s << "I";
-            }
-        }
-    } else {
-        // Since imaginary_ should be in canonical form,
-        // the denominator is expected to be always positive
-        if (imaginary_.get_num() < 0) {
-            if (imaginary_ != -1) {
-                s << this->imaginary_;
-                s << "*I";
-            } else {
-                s << "-I";
-            }
-        } else if (imaginary_.get_num() > 0) {
-            if (imaginary_ != 1) {
-                s << this->imaginary_;
-                s << "*I";
-            } else {
-                s << "I";
-            }
-        }
-    }
-    return s.str();
-}
-
 std::size_t Complex::__hash__() const
 {
     // only the least significant bits that fit into "signed long int" are
@@ -91,6 +44,20 @@ bool Complex::__eq__(const Basic &o) const
         return ((this->real_ == s.real_) && (this->imaginary_ == s.imaginary_));
     }
     return false;
+}
+
+int Complex::compare(const Basic &o) const {
+    CSYMPY_ASSERT(is_a<Complex>(o))
+    const Complex &s = static_cast<const Complex &>(o);
+    if (real_ == s.real_) {
+        if (imaginary_ == s.imaginary_) {
+            return 0;
+        } else {
+            return imaginary_ < s.imaginary_ ? -1 : 1;
+        }
+    } else {
+        return real_ < s.real_ ? -1 : 1;
+    }
 }
 
 RCP<const Number> Complex::from_mpq(const mpq_class re, const mpq_class im)
