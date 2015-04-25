@@ -117,6 +117,7 @@ public:
     virtual void visit(const ACosh &x) { p_->bvisit(x); };
     virtual void visit(const ATanh &x) { p_->bvisit(x); };
     virtual void visit(const ACoth &x) { p_->bvisit(x); };
+    virtual void visit(const ASech &x) { p_->bvisit(x); };
     virtual void visit(const KroneckerDelta &x) { p_->bvisit(x); };
     virtual void visit(const LeviCivita &x) { p_->bvisit(x); };
     virtual void visit(const Zeta &x) { p_->bvisit(x); };
