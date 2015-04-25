@@ -29,6 +29,7 @@ using CSymPy::zero;
 using CSymPy::Number;
 using CSymPy::pow;
 using CSymPy::RCP;
+using CSymPy::rcp_static_cast;
 using CSymPy::print_stack_on_segfault;
 using CSymPy::Complex;
 using CSymPy::has_symbol;
@@ -89,9 +90,9 @@ void test_add()
     insert(m, y, rcp(new Integer(3)));
 
     m2 = m;
-    RCP<const Add> a = rcp(new Add(zero, std::move(m2)));
+    RCP<const Add> a = rcp(new Add(rcp_static_cast<const Integer>(zero), std::move(m2)));
     insert(m, x, rcp(new Integer(-2)));
-    RCP<const Add> b = rcp(new Add(zero, std::move(m)));
+    RCP<const Add> b = rcp(new Add(rcp_static_cast<const Integer>(zero), std::move(m)));
     std::cout << *a << std::endl;
     std::cout << *b << std::endl;
 
@@ -156,7 +157,7 @@ void test_integer()
     assert(eq(k, rcp(new Integer(-5))));
     assert(neq(k, rcp(new Integer(12))));
 
-    CSYMPY_CHECK_THROW(divnum(i, zero), std::runtime_error)
+    CSYMPY_CHECK_THROW(divnum(i, rcp_static_cast<const Integer>(zero)), std::runtime_error)
 }
 
 void test_rational()
@@ -255,7 +256,7 @@ void test_rational()
     assert(eq(divnum(r2, r1), r3));
 
     r1 = Rational::from_two_ints(integer(2), integer(3));
-    r2 = zero;
+    r2 = rcp_static_cast<const Integer>(zero);
     CSYMPY_CHECK_THROW(divnum(r1, r2), std::runtime_error)
 }
 
@@ -268,9 +269,9 @@ void test_mul()
     insert(m, y, rcp(new Integer(3)));
 
     m2 = m;
-    RCP<const Mul> a = rcp(new Mul(one, std::move(m2)));
+    RCP<const Mul> a = rcp(new Mul(rcp_static_cast<const Integer>(one), std::move(m2)));
     insert(m, x, rcp(new Integer(-2)));
-    RCP<const Mul> b = rcp(new Mul(one, std::move(m)));
+    RCP<const Mul> b = rcp(new Mul(rcp_static_cast<const Integer>(one), std::move(m)));
     std::cout << *a << std::endl;
     std::cout << *b << std::endl;
 

@@ -39,10 +39,10 @@ RCP<const Basic> Constant::diff(const RCP<const Symbol> &x) const
     return zero;
 }
 
-RCP<const Integer> zero = rcp(new Integer(0));
-RCP<const Integer> one = rcp(new Integer(1));
+RCP<const Basic> zero = rcp(new Integer(0));
+RCP<const Basic> one = rcp(new Integer(1));
 RCP<const Integer> minus_one = rcp(new Integer(-1));
-RCP<const Number> I = Complex::from_two_nums(*zero, *one);
+RCP<const Number> I = Complex::from_two_nums(*(rcp_static_cast<const Integer>(zero)), *rcp_static_cast<const Integer>(one));
 
 RCP<const Constant> pi = rcp(new Constant("pi"));
 RCP<const Constant> E = rcp(new Constant("E"));

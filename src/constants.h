@@ -57,8 +57,8 @@ inline RCP<const Constant> constant(const std::string &name)
 }
 
 // Constant Numbers
-extern RCP<const Integer> zero;
-extern RCP<const Integer> one;
+extern RCP<const Basic> zero;
+extern RCP<const Basic> one;
 extern RCP<const Integer> minus_one;
 extern RCP<const Number> I;
 

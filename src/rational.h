@@ -144,12 +144,12 @@ public:
         // Since 'this' is in canonical form, so is this**other, so we simply
         // pass num/den into the constructor directly:
         if (!neg)
-            if (abs(den) == one->i)
+            if (abs(den) == rcp_static_cast<const Integer>(one)->i)
                 return rcp(new Integer(num*sgn(den)));
             else
                 return rcp(new Rational(mpq_class(num*sgn(den), abs(den))));
         else
-            if (abs(num) == one->i)
+            if (abs(num) == rcp_static_cast<const Integer>(one)->i)
                 return rcp(new Integer(den*sgn(num)));
             else
                 return rcp(new Rational(mpq_class(den*sgn(num), abs(num))));
