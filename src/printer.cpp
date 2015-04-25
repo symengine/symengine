@@ -275,6 +275,7 @@ std::vector<std::string> init_str_printer_names() {
     names[ACOSH] = "acosh";
     names[ATANH] = "atanh";
     names[ACOTH] = "acoth";
+    names[ASECH] = "asech";
     names[LAMBERTW] = "lambertw";
     names[ZETA] = "zeta";
     names[DIRICHLET_ETA] = "dirichlet_eta";
