@@ -55,6 +55,7 @@ using CSymPy::asinh;
 using CSymPy::acosh;
 using CSymPy::atanh;
 using CSymPy::acoth;
+using CSymPy::asech;
 using CSymPy::kronecker_delta;
 using CSymPy::levi_civita;
 using CSymPy::zeta;
@@ -1519,6 +1520,24 @@ void test_acoth()
     assert(eq(r1, r2));
 }
 
+void test_asech()
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Basic> im1 = integer(-1);
+    RCP<const Basic> i2 = integer(2);
+
+    RCP<const Basic> r1;
+    RCP<const Basic> r2;
+
+    r1 = asech(one);
+    r2 = zero;
+    assert(eq(r1, r2));
+
+    r1 = asech(x)->diff(x);
+    r2 = div(im1, mul(sqrt(sub(one, pow(x, i2))), x));
+    assert(eq(r1, r2));
+}
+
 void test_kronecker_delta()
 {
     RCP<const Symbol> i = symbol("i");
@@ -1788,6 +1807,7 @@ int main(int argc, char* argv[])
     test_acosh();
     test_atanh();
     test_acoth();
+    test_asech();
     test_kronecker_delta();
     test_levi_civita();
     test_zeta();

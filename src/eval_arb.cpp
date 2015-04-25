@@ -230,6 +230,9 @@ public:
     virtual void visit(const ACoth &) {
         throw std::runtime_error("Not implemented.");
     };
+    virtual void visit(const ASech &) {
+        throw std::runtime_error("Not implemented.");
+    };
     virtual void visit(const KroneckerDelta &) {
         throw std::runtime_error("Not implemented.");
     };

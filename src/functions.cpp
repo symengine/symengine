@@ -2158,7 +2158,58 @@ RCP<const Basic> acoth(const RCP<const Basic> &arg)
 
 RCP<const Basic> ACoth::diff(const RCP<const Symbol> &x) const
 {
-    return mul(div(one, sub(one, pow(x, i2))), get_arg()->diff(x));
+    return mul(div(one, sub(one, pow(get_arg(), i2))), get_arg()->diff(x));
+}
+
+ASech::ASech(const RCP<const Basic> &arg)
+    : HyperbolicFunction(arg)
+{
+    CSYMPY_ASSERT(is_canonical(arg))
+}
+
+bool ASech::is_canonical(const RCP<const Basic> &arg)
+{
+    // TODO: Add further checks for +inf -inf cases
+    // TODO: Lookup into a cst table once complex is implemented
+    if (eq(arg, one))
+        return false;
+    return true;
+}
+
+bool ASech::__eq__(const Basic &o) const
+{
+    if (is_a<ASech>(o) &&
+        eq(get_arg(), static_cast<const ASech &>(o).get_arg()))
+        return true;
+    else
+        return false;
+}
+
+int ASech::compare(const Basic &o) const
+{
+    CSYMPY_ASSERT(is_a<ASech>(o))
+    const ASech &s = static_cast<const ASech &>(o);
+    return get_arg()->__cmp__(*(s.get_arg()));
+}
+
+
+std::string ASech::__str__() const
+{
+    std::ostringstream o;
+    o << "asech(" << *get_arg() << ")";
+    return o.str();
+}
+
+RCP<const Basic> asech(const RCP<const Basic> &arg)
+{
+    // TODO: Lookup into a cst table once complex is implemented
+    if (eq(arg, one)) return zero;
+    return rcp(new ASech(arg));
+}
+
+RCP<const Basic> ASech::diff(const RCP<const Symbol> &x) const
+{
+    return mul(div(minus_one, mul(sqrt(sub(one, pow(get_arg(), i2))), get_arg())), get_arg()->diff(x));
 }
 
 RCP<const Basic> Sinh::create(const RCP<const Basic> &arg) const
@@ -2199,6 +2250,11 @@ RCP<const Basic> ATanh::create(const RCP<const Basic> &arg) const
 RCP<const Basic> ACoth::create(const RCP<const Basic> &arg) const
 {
     return acoth(arg);
+}
+
+RCP<const Basic> ASech::create(const RCP<const Basic> &arg) const
+{
+    return asech(arg);
 }
 
 KroneckerDelta::KroneckerDelta(const RCP<const Basic> &i, const RCP<const Basic> &j)

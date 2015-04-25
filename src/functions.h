@@ -883,6 +883,33 @@ public:
 //! Canonicalize ACoth:
 RCP<const Basic> acoth(const RCP<const Basic> &arg);
 
+class ASech: public HyperbolicFunction {
+//! The inverse hyperbolic secant function.
+public:
+    IMPLEMENT_TYPEID(ASECH)
+    //! ASech Constructor
+    ASech(const RCP<const Basic> &arg);
+    /*! Equality comparator
+     * \param o - Object to be compared with
+     * \return whether the 2 objects are equal
+     * */
+    virtual bool __eq__(const Basic &o) const;
+    virtual int compare(const Basic &o) const;
+    //! \return stringify version
+    virtual std::string __str__() const;
+    //! \return `true` if canonical
+    bool is_canonical(const RCP<const Basic> &arg);
+    //! Differentiate w.r.t Symbol `x`
+    virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
+    //! \return Canonicalized asech
+    virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
+
+    virtual void accept(Visitor &v) const;
+};
+
+//! Canonicalize ASech:
+RCP<const Basic> asech(const RCP<const Basic> &arg);
+
 class KroneckerDelta: public Function {
 /*! The discrete, or Kronecker, delta function.
  * A function that takes in two integers `i` and `j`. It returns `0` if `i` and `j` are
