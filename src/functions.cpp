@@ -2192,14 +2192,6 @@ int ASech::compare(const Basic &o) const
     return get_arg()->__cmp__(*(s.get_arg()));
 }
 
-
-std::string ASech::__str__() const
-{
-    std::ostringstream o;
-    o << "asech(" << *get_arg() << ")";
-    return o.str();
-}
-
 RCP<const Basic> asech(const RCP<const Basic> &arg)
 {
     // TODO: Lookup into a cst table once complex is implemented
