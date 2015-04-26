@@ -65,9 +65,13 @@ public:
     }
 
     void bvisit(const Pow &x) {
-        double a = apply(*(x.base_));
-        double b = apply(*(x.exp_));
-        result_ = ::pow(a, b);
+        double exp_ = apply(*(x.get_exp()));
+        if (eq(x.get_base(), E)) {
+            result_ = ::exp(exp_);
+        } else {
+            double base_ = apply(*(x.get_base()));
+            result_ = ::pow(base_, exp_);
+        }
     }
 
     void bvisit(const Sin &x) {
@@ -84,6 +88,126 @@ public:
         double tmp = apply(*(x.get_arg()));
         result_ = ::tan(tmp);
     }
+
+    void bvisit(const Symbol &) {
+        throw std::runtime_error("Symbol cannot be evaluated as a double.");
+    };
+
+    void bvisit(const Log &x) {
+        double tmp = apply(*(x.get_arg()));
+        result_ = ::log(tmp);
+    };
+
+    void bvisit(const Cot &x) {
+        double tmp = apply(*(x.get_arg()));
+        result_ = 1/::tan(tmp);
+    };
+
+    void bvisit(const Csc &x) {
+        double tmp = apply(*(x.get_arg()));
+        result_ = 1/::cos(tmp);
+    };
+
+    void bvisit(const Sec &x) {
+        double tmp = apply(*(x.get_arg()));
+        result_ = 1/::sin(tmp);
+    };
+
+    void bvisit(const ASin &x) {
+        double tmp = apply(*(x.get_arg()));
+        result_ = ::asin(tmp);
+    };
+
+    void bvisit(const ACos &x) {
+        double tmp = apply(*(x.get_arg()));
+        result_ = ::acos(tmp);
+    };
+
+    void bvisit(const ASec &x) {
+        double tmp = apply(*(x.get_arg()));
+        result_ = ::asin(1/tmp);
+    };
+
+    void bvisit(const ACsc &x) {
+        double tmp = apply(*(x.get_arg()));
+        result_ = ::acos(1/tmp);
+    };
+
+    void bvisit(const ATan &x) {
+        double tmp = apply(*(x.get_arg()));
+        result_ = ::atan(tmp);
+    };
+
+    void bvisit(const ACot &x) {
+        double tmp = apply(*(x.get_arg()));
+        result_ = ::atan(1/tmp);
+    };
+
+    void bvisit(const ATan2 &x) {
+        double num = apply(*(x.get_num()));
+        double den = apply(*(x.get_den()));
+        result_ = ::atan2(num, den);
+    };
+
+    void bvisit(const Sinh &x) {
+        double tmp = apply(*(x.get_arg()));
+        result_ = ::sinh(tmp);
+    };
+
+    void bvisit(const Cosh &x) {
+        double tmp = apply(*(x.get_arg()));
+        result_ = ::cosh(tmp);
+    };
+
+    void bvisit(const Tanh &x) {
+        double tmp = apply(*(x.get_arg()));
+        result_ = ::tanh(tmp);
+    };
+
+    void bvisit(const Coth &x) {
+        double tmp = apply(*(x.get_arg()));
+        result_ = 1/::tanh(tmp);
+    };
+
+    void bvisit(const ASinh &x) {
+        double tmp = apply(*(x.get_arg()));
+        result_ = ::asinh(tmp);
+    };
+
+    void bvisit(const ACosh &x) {
+        double tmp = apply(*(x.get_arg()));
+        result_ = ::acosh(tmp);
+    };
+
+    void bvisit(const ATanh &x) {
+        double tmp = apply(*(x.get_arg()));
+        result_ = ::atanh(tmp);
+    };
+
+    void bvisit(const ACoth &x) {
+        double tmp = apply(*(x.get_arg()));
+        result_ = ::atanh(1/tmp);
+    };
+
+    void bvisit(const Gamma &x) {
+        double tmp = apply(*(x.get_args()[0]));
+        result_ = ::tgamma(tmp);
+    };
+
+    void bvisit(const Constant &x) {
+        if (x.__eq__(*pi)) {
+            result_ = ::atan2(0, -1);
+        } else if (x.__eq__(*E)) {
+            result_ = ::exp(1);
+        } else {
+            throw std::runtime_error("Unknown constant.");
+        }
+    };
+
+    void bvisit(const Abs &x) {
+        double tmp = apply(*(x.get_arg()));
+        result_ = std::abs(tmp);
+    };
 
     void bvisit(const Basic &) {
         throw std::runtime_error("Not implemented.");
