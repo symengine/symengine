@@ -11,16 +11,16 @@ fi
 if [[ "${WITH_PRIMESIEVE}" == "yes" ]]; then
     wget http://dl.bintray.com/kimwalisch/primesieve/primesieve-5.2.tar.gz;
     tar -xzf primesieve-5.2.tar.gz;
-    cd primesieve-5.2 && ./configure && make && sudo make install && cd ..;
+    cd primesieve-5.2 && ./configure && make -j8 && sudo make install && cd ..;
 fi
 if [[ "${WITH_ARB}" == "yes" ]]; then
     sudo apt-get install libmpfr-dev;
     wget http://www.flintlib.org/flint-2.4.4.tar.gz;
     tar -xzf flint-2.4.4.tar.gz;
-    cd flint-2.4.4 && ./configure && make && sudo make install && cd ..;
+    cd flint-2.4.4 && ./configure && make -j8 && sudo make install && cd ..;
     wget https://github.com/fredrik-johansson/arb/archive/2.2.0.tar.gz;
     tar -xzf 2.2.0.tar.gz;
-    cd arb-2.2.0 && ./configure && make ARB_GMP_LIB_DIR=/usr/lib/x86_64-linux-gnu ARB_MPFR_LIB_DIR=/usr/lib/x86_64-linux-gnu && sudo make ARB_GMP_LIB_DIR=/usr/lib/x86_64-linux-gnu ARB_MPFR_LIB_DIR=/usr/lib/x86_64-linux-gnu install && cd ..;
+    cd arb-2.2.0 && ./configure && make -j8 ARB_GMP_LIB_DIR=/usr/lib/x86_64-linux-gnu ARB_MPFR_LIB_DIR=/usr/lib/x86_64-linux-gnu && sudo make ARB_GMP_LIB_DIR=/usr/lib/x86_64-linux-gnu ARB_MPFR_LIB_DIR=/usr/lib/x86_64-linux-gnu install && cd ..;
 fi
 # Install python using Miniconda.
 if [[ "${WITH_PYTHON}" == "yes" ]] || [[ "${PYTHON_INSTALL}" == "yes" ]]; then
