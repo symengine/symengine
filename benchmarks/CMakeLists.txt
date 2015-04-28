@@ -37,3 +37,6 @@ target_link_libraries(matrix_mul2 csympy)
 
 add_executable(symbench symbench.cpp)
 target_link_libraries(symbench csympy)
+
+add_executable(lwbench lwbench.cpp)
+target_link_libraries(lwbench csympy)
