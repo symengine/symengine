@@ -65,3 +65,5 @@ benchmarks/symbench
 benchmarks/symbench_ginac
 benchmarks/lwbench
 benchmarks/lwbench_ginac
+benchmarks/expand6
+benchmarks/expand6_ginac
