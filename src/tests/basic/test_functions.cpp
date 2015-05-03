@@ -1439,6 +1439,8 @@ void test_coth()
 void test_asinh()
 {
     RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    RCP<const Basic> i1 = integer(1);
     RCP<const Basic> im1 = integer(-1);
     RCP<const Basic> i2 = integer(2);
 
@@ -1460,11 +1462,17 @@ void test_asinh()
     r1 = asinh(mul(im1, x))->diff(x);
     r2 = div(im1, sqrt(add(pow(x, i2), one)));
     assert(eq(r1, r2));
+
+    r1 = asinh(y)->diff(y);
+    r2 = div(i1, sqrt(add(pow(y, i2), one)));
+    assert(eq(r1, r2));
 }
 
 void test_acosh()
 {
     RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    RCP<const Basic> i1 = integer(1);
     RCP<const Basic> im1 = integer(-1);
     RCP<const Basic> i2 = integer(2);
 
@@ -1478,11 +1486,17 @@ void test_acosh()
     r1 = acosh(mul(im1, x))->diff(x);
     r2 = div(im1, sqrt(add(pow(x, i2), im1)));
     assert(eq(r1, r2));
+
+    r1 = acosh(y)->diff(y);
+    r2 = div(i1, sqrt(add(pow(y, i2), im1)));
+    assert(eq(r1, r2));
 }
 
 void test_atanh()
 {
     RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    RCP<const Basic> i1 = integer(1);
     RCP<const Basic> im1 = integer(-1);
     RCP<const Basic> i2 = integer(2);
 
@@ -1495,6 +1509,10 @@ void test_atanh()
 
     r1 = atanh(mul(im1, x))->diff(x);
     r2 = div(im1, sub(one, pow(x, i2)));
+    assert(eq(r1, r2));
+
+    r1 = atanh(y)->diff(y);
+    r2 = div(i1, sub(one, pow(y, i2)));
     assert(eq(r1, r2));
 
     r1 = atanh(mul(im1, x));
