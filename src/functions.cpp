@@ -2010,7 +2010,7 @@ RCP<const Basic> asinh(const RCP<const Basic> &arg)
 
 RCP<const Basic> ASinh::diff(const RCP<const Symbol> &x) const
 {
-    return mul(div(one, sqrt(add(pow(x, i2), one))), get_arg()->diff(x));
+    return mul(div(one, sqrt(add(pow(get_arg(), i2), one))), get_arg()->diff(x));
 }
 
 ACosh::ACosh(const RCP<const Basic> &arg)
@@ -2053,7 +2053,7 @@ RCP<const Basic> acosh(const RCP<const Basic> &arg)
 
 RCP<const Basic> ACosh::diff(const RCP<const Symbol> &x) const
 {
-    return mul(div(one, sqrt(sub(pow(x, i2), one))), get_arg()->diff(x));
+    return mul(div(one, sqrt(sub(pow(get_arg(), i2), one))), get_arg()->diff(x));
 }
 
 ATanh::ATanh(const RCP<const Basic> &arg)
@@ -2107,7 +2107,7 @@ RCP<const Basic> atanh(const RCP<const Basic> &arg)
 
 RCP<const Basic> ATanh::diff(const RCP<const Symbol> &x) const
 {
-    return mul(div(one, sub(one, pow(x, i2))), get_arg()->diff(x));
+    return mul(div(one, sub(one, pow(get_arg(), i2))), get_arg()->diff(x));
 }
 
 ACoth::ACoth(const RCP<const Basic> &arg)
