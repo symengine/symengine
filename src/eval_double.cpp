@@ -205,7 +205,7 @@ public:
         } else if (x.__eq__(*E)) {
             result_ = ::exp(1);
         } else {
-            throw std::runtime_error("Unknown constant.");
+            throw std::runtime_error("Constant " + x.get_name() + " is not implemented.");
         }
     };
 
@@ -365,7 +365,7 @@ std::vector<fn> init_eval_double()
         } else if (x.__eq__(*E)) {
             return ::exp(1);
         } else {
-            throw std::runtime_error("Unknown constant.");
+            throw std::runtime_error("Constant " + static_cast<const Constant &>(x).get_name() + " is not implemented.");
         }
     };
     table[ABS] = [](const Basic &x) {

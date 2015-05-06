@@ -261,7 +261,7 @@ public:
         } else if (x.__eq__(*E)) {
             arb_const_e(result_, prec_);
         } else {
-            throw std::runtime_error("Unknown constant.");
+            throw std::runtime_error("Constant " + x.get_name() + " is not implemented.");
         }
     }
 
