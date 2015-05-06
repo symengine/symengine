@@ -46,53 +46,72 @@ using SymEngine::acoth;
 using SymEngine::log;
 using SymEngine::pi;
 using SymEngine::E;
+using SymEngine::vec_basic;
 
 void test_eval_double()
 {
-    RCP<const Basic> r1, r2, r3, r4, r5;
-
+    RCP<const Basic> r1, r2, r3, r4;
     r1 = sin(integer(1));
-    assert(::fabs(eval_double(*r1) - 0.841470984808) < 1e-12);
-    assert(::fabs(eval_double(*r1) - 0.85) > 1e-12);
-
     r2 = sin(div(integer(1), integer(2)));
-    assert(::fabs(eval_double(*r2) - 0.479425538604) < 1e-12);
-    assert(::fabs(eval_double(*r2) - 0.48) > 1e-12);
+    r3 = div(one, integer(5));
+    r4 = integer(5);
 
-    r3 = add(r1, r2);
-    assert(::fabs(eval_double(*r3) - 1.320896523412) < 1e-12);
+    vec_basic vec;
+    std::vector<double> result;
 
-    r3 = mul(r1, r2);
-    assert(::fabs(eval_double(*r3) - 0.403422680111) < 1e-12);
+    vec.push_back(r1);
+    result.push_back(0.841470984808);
 
-    r3 = pow(r1, r2);
-    assert(::fabs(eval_double(*r3) - 0.920580670898) < 1e-12);
+    vec.push_back(r2);
+    result.push_back(0.479425538604);
 
-    r3 = tan(pow(r1, r2));
-    assert(::fabs(eval_double(*r3) - 1.314847038576) < 1e-12);
+    vec.push_back(add(r1, r2));
+    result.push_back(1.320896523412);
 
-    r4 = div(one, integer(5));
-    r5 = integer(5);
+    vec.push_back(mul(r1, r2));
+    result.push_back(0.403422680111);
 
-    r3 = add(asin(r4), add(acos(r4), add(atan(r4), add(asec(r5), add(acsc(r5), acot(r5))))));
-    assert(::fabs(eval_double(*r3) - 3.536383773289) < 1e-12);
+    vec.push_back(pow(r1, r2));
+    result.push_back(0.920580670898);
 
-    r3 = add(sinh(one), add(cosh(one), add(tanh(one), coth(one))));
-    assert(::fabs(eval_double(*r3) - 4.792911269914) < 1e-12);
+    vec.push_back(tan(pow(r1, r2)));
+    result.push_back(1.314847038576);
 
-    r3 = add(asinh(r5), add(acosh(r5), add(atanh(r4), acoth(r5))));
-    assert(::fabs(eval_double(*r3) - 5.010335118942) < 1e-12);
+    vec.push_back(add(asin(r3), add(acos(r3), add(atan(r3), add(asec(r4), add(acsc(r4), acot(r4)))))));
+    result.push_back(3.536383773289);
 
-    r3 = SymEngine::abs(log(div(pi, mul(E, integer(2)))));
-    assert(::fabs(eval_double(*r3) - 0.548417294710) < 1e-12);
+    vec.push_back(add(sinh(one), add(cosh(one), add(tanh(one), coth(one)))));
+    result.push_back(4.792911269914);
+
+    vec.push_back(add(asinh(r4), add(acosh(r4), add(atanh(r3), acoth(r4)))));
+    result.push_back(5.010335118942);
+
+    vec.push_back(SymEngine::abs(log(div(pi, mul(E, integer(2))))));
+    result.push_back(0.548417294710);
+
+    for (unsigned i = 0; i < vec.size(); i++) {
+        double val = eval_double(*vec[i]);
+        std::cout.precision(12);
+        std::cout << vec[i]->__str__() << " ~ " << val << std::endl;
+        assert(::fabs(val - result[i]) < 1e-12);
+    }
+
+    for (unsigned i = 0; i < vec.size(); i++) {
+        double val = eval_double_single_dispatch(*vec[i]);
+        assert(::fabs(val - result[i]) < 1e-12);
+    }
 
     // Symbol must raise an exception
     SYMENGINE_CHECK_THROW(eval_double(*symbol("x")), std::runtime_error)
+    SYMENGINE_CHECK_THROW(eval_double_single_dispatch(*symbol("x")), std::runtime_error)
 
     // TODO: this is not implemented yet, so we check that it raises an
     // exception for now
     SYMENGINE_CHECK_THROW(eval_double(*levi_civita({r1})), std::runtime_error)
+    SYMENGINE_CHECK_THROW(eval_double_single_dispatch(*levi_civita({r1})), std::runtime_error)
+
     SYMENGINE_CHECK_THROW(eval_double(*zeta(r1, r2)), std::runtime_error)
+    SYMENGINE_CHECK_THROW(eval_double_single_dispatch(*zeta(r1, r2)), std::runtime_error)
     // ... we don't test the rest of functions that are not implemented.
 }
 

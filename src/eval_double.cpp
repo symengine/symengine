@@ -377,14 +377,13 @@ std::vector<fn> init_eval_double()
 
 const static std::vector<fn> table_eval_double = init_eval_double();
 
-double eval_double(const Basic &b)
-{
-#if defined(SYMENGINE_SINGLE_DISPATCH)
-    return table_eval_double[b.get_type_code()](b);
-#else
+double eval_double(const Basic &b) {
     EvalDoubleVisitor v;
     return v.apply(b);
-#endif
+}
+
+double eval_double_single_dispatch(const Basic &b) {
+    return table_eval_double[b.get_type_code()](b);
 }
 
 } // SymEngine
