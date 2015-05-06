@@ -5,3 +5,7 @@ if (HAVE_CSYMPY_ARB)
     target_link_libraries(test_eval_arb csympy)
     add_test(test_eval_arb ${PROJECT_BINARY_DIR}/test_eval_arb)
 endif()
+
+add_executable(test_eval_double test_eval_double.cpp)
+target_link_libraries(test_eval_double csympy)
+add_test(test_eval_double ${PROJECT_BINARY_DIR}/test_eval_double)
