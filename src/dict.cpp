@@ -1,7 +1,7 @@
 #include "basic.h"
 #include "integer.h"
 
-namespace CSymPy {
+namespace SymEngine {
 
 template<class T>
 inline std::ostream& print_map(std::ostream& out, T& d)
@@ -51,56 +51,56 @@ inline std::ostream& print_vec_rcp(std::ostream& out, T& d)
     return out;
 }
 
-} // CSymPy
+} // SymEngine
 
 
-std::ostream& operator<<(std::ostream& out, const CSymPy::umap_basic_num& d)
+std::ostream& operator<<(std::ostream& out, const SymEngine::umap_basic_num& d)
 {
     return print_map_rcp(out, d);
 }
 
-std::ostream& operator<<(std::ostream& out, const CSymPy::vec_int& d)
+std::ostream& operator<<(std::ostream& out, const SymEngine::vec_int& d)
 {
-    return CSymPy::print_vec(out, d);
+    return SymEngine::print_vec(out, d);
 }
 
-std::ostream& operator<<(std::ostream& out, const CSymPy::map_vec_int& d)
+std::ostream& operator<<(std::ostream& out, const SymEngine::map_vec_int& d)
 {
-    return CSymPy::print_map(out, d);
+    return SymEngine::print_map(out, d);
 }
 
-std::ostream& operator<<(std::ostream& out, const CSymPy::map_vec_mpz& d)
+std::ostream& operator<<(std::ostream& out, const SymEngine::map_vec_mpz& d)
 {
-    return CSymPy::print_map(out, d);
+    return SymEngine::print_map(out, d);
 }
 
-std::ostream& operator<<(std::ostream& out, const CSymPy::umap_vec_mpz& d)
+std::ostream& operator<<(std::ostream& out, const SymEngine::umap_vec_mpz& d)
 {
     return print_map(out, d);
 }
 
-std::ostream& operator<<(std::ostream& out, const CSymPy::map_basic_num& d)
+std::ostream& operator<<(std::ostream& out, const SymEngine::map_basic_num& d)
 {
     return print_map_rcp(out, d);
 }
 
-std::ostream& operator<<(std::ostream& out, const CSymPy::map_basic_basic& d)
+std::ostream& operator<<(std::ostream& out, const SymEngine::map_basic_basic& d)
 {
     return print_map_rcp(out, d);
 }
 
-std::ostream& operator<<(std::ostream& out, const CSymPy::umap_basic_basic& d)
+std::ostream& operator<<(std::ostream& out, const SymEngine::umap_basic_basic& d)
 {
     return print_map_rcp(out, d);
 }
 
-std::ostream& operator<<(std::ostream& out, const CSymPy::vec_basic& d)
+std::ostream& operator<<(std::ostream& out, const SymEngine::vec_basic& d)
 {
     return print_vec_rcp(out, d);
 }
 
 
-namespace CSymPy {
+namespace SymEngine {
 
 bool map_basic_num_eq(const map_basic_num &A, const map_basic_num &B)
 {

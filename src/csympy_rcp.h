@@ -19,7 +19,7 @@
 
 #endif
 
-namespace CSymPy {
+namespace SymEngine {
 
 
 #if defined(WITH_CSYMPY_RCP)
@@ -196,7 +196,7 @@ using Teuchos::print_stack_on_segfault;
 
 #endif
 
-} // CSymPy
+} // SymEngine
 
 
 #endif

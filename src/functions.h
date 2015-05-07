@@ -10,7 +10,7 @@
 #include "basic.h"
 #include "dict.h"
 
-namespace CSymPy {
+namespace SymEngine {
 
 class Function : public Basic {
 };
@@ -1092,6 +1092,6 @@ public:
 RCP<const Basic> abs(const RCP<const Basic> &arg);
 
 
-} // CSymPy
+} // SymEngine
 
 #endif

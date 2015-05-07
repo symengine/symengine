@@ -7,10 +7,10 @@
 
 #include "basic.h"
 
-namespace CSymPy {
+namespace SymEngine {
 
 double eval_double(const Basic &b);
 
-} // CSymPy
+} // SymEngine
 
 #endif

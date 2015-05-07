@@ -10,7 +10,7 @@
 #include "basic.h"
 #include "dict.h"
 
-namespace CSymPy {
+namespace SymEngine {
 
 class Add : public Basic {
 public: // TODO: make this private
@@ -72,6 +72,6 @@ RCP<const Basic> sub(const RCP<const Basic> &a,
 //! \return expanded version of Add
 RCP<const Basic> add_expand(const RCP<const Add> &self);
 
-} // CSymPy
+} // SymEngine
 
 #endif

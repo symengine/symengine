@@ -4,7 +4,7 @@
 #include "integer.h"
 #include "pow.h"
 
-namespace CSymPy {
+namespace SymEngine {
 
 // Constructors
 DenseMatrix::DenseMatrix()
@@ -121,7 +121,7 @@ void DenseMatrix::LU(MatrixBase &L, MatrixBase &U) const
     if (is_a<DenseMatrix>(L) && is_a<DenseMatrix>(U)) {
         DenseMatrix &L_ = static_cast<DenseMatrix &>(L);
         DenseMatrix &U_ = static_cast<DenseMatrix &>(U);
-        CSymPy::LU(*this, L_, U_);
+        SymEngine::LU(*this, L_, U_);
     }
 }
 
@@ -131,7 +131,7 @@ void DenseMatrix::LDL(MatrixBase &L, MatrixBase &D) const
     if (is_a<DenseMatrix>(L) && is_a<DenseMatrix>(D)) {
         DenseMatrix &L_ = static_cast<DenseMatrix &>(L);
         DenseMatrix &D_ = static_cast<DenseMatrix &>(D);
-        CSymPy::LDL(*this, L_, D_);
+        SymEngine::LDL(*this, L_, D_);
     }
 }
 
@@ -141,7 +141,7 @@ void DenseMatrix::LU_solve(const MatrixBase &b, MatrixBase &x) const
     if (is_a<DenseMatrix>(b) && is_a<DenseMatrix>(x)) {
         const DenseMatrix &b_ = static_cast<const DenseMatrix &>(b);
         DenseMatrix &x_ = static_cast<DenseMatrix &>(x);
-        CSymPy::LU_solve(*this, b_, x_);
+        SymEngine::LU_solve(*this, b_, x_);
     }
 }
 
@@ -1300,4 +1300,4 @@ void zeros(DenseMatrix &A, unsigned rows, unsigned cols)
     }
 }
 
-} // CSymPy
+} // SymEngine

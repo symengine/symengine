@@ -11,7 +11,7 @@
 #include "integer.h"
 #include "rational.h"
 
-namespace CSymPy {
+namespace SymEngine {
 //! Complex Class
 class Complex : public Number {
 public:
@@ -285,6 +285,6 @@ inline bool is_a_Number(const Basic &b)
     return is_a<Integer>(b) || is_a<Rational>(b) || is_a<Complex>(b);
 }
 
-} // CSymPy
+} // SymEngine
 
 #endif

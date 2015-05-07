@@ -11,7 +11,7 @@
 #include "integer.h"
 #include "constants.h"
 
-namespace CSymPy {
+namespace SymEngine {
 //! Rational Class
 class Rational : public Number {
 public:
@@ -228,6 +228,6 @@ void get_num_den(const RCP<const Rational> &rat,
         const Ptr<RCP<const Integer>> &num,
         const Ptr<RCP<const Integer>> &den);
 
-} // CSymPy
+} // SymEngine
 
 #endif

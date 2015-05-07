@@ -2,7 +2,7 @@
 #include "integer.h"
 #include "constants.h"
 
-namespace CSymPy {
+namespace SymEngine {
 
 Symbol::Symbol(const std::string &name)
     : name_{name}
@@ -38,4 +38,4 @@ RCP<const Basic> Symbol::diff(const RCP<const Symbol> &x) const
         return zero;
 }
 
-} // CSymPy
+} // SymEngine

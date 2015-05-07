@@ -12,7 +12,7 @@
 #include "integer.h"
 #include "symbol.h"
 
-namespace CSymPy {
+namespace SymEngine {
 
 class Constant : public Basic {
 private:
@@ -66,6 +66,6 @@ extern RCP<const Number> I;
 extern RCP<const Constant> pi;
 extern RCP<const Constant> E;
 
-} // CSymPy
+} // SymEngine
 
 #endif

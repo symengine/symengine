@@ -6,7 +6,7 @@
 #include "integer.h"
 #include "constants.h"
 
-namespace CSymPy {
+namespace SymEngine {
 // ----------------------------- CSRMatrix ------------------------------------
 CSRMatrix::CSRMatrix()
         : MatrixBase() {}
@@ -577,4 +577,4 @@ void csr_binop_csr_canonical(const CSRMatrix& A, const CSRMatrix& B, CSRMatrix& 
         CSRMatrix::csr_sum_duplicates(C.p_, C.j_, C.x_, A.row_);
 }
 
-} // CSymPy
+} // SymEngine

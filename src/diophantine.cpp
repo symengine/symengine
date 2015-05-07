@@ -4,7 +4,7 @@
 #include "add.h"
 #include "mul.h"
 
-namespace CSymPy {
+namespace SymEngine {
 
 bool order(const DenseMatrix &t, const std::vector<DenseMatrix> &basis, unsigned k)
 {

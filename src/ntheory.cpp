@@ -17,7 +17,7 @@
 #endif // HAVE_CSYMPY_ARB
 #include "dict.h"
 
-namespace CSymPy {
+namespace SymEngine {
 
 // Basic number theoretic functions
 RCP<const Integer> gcd(const Integer &a, const Integer &b)
@@ -603,7 +603,7 @@ unsigned Sieve::iterator::next_prime()
             return _limit + 1;
         }
     }
-    return CSymPy::Sieve::_primes[_index++];
+    return SymEngine::Sieve::_primes[_index++];
 }
 
 RCP<const Number> bernoulli(unsigned long n)
@@ -844,7 +844,7 @@ void primitive_root_list(std::vector<RCP<const Integer>> &roots, const Integer &
     if (!_prime_power(p, e, _n))
         return;
     _primitive_root_list(roots, p, e, even);
-    std::sort(roots.begin(), roots.end(), CSymPy::RCPIntegerKeyLess());
+    std::sort(roots.begin(), roots.end(), SymEngine::RCPIntegerKeyLess());
     return;
 }
 
@@ -1374,7 +1374,7 @@ void nthroot_mod_list(std::vector<RCP<const Integer>> &roots, const RCP<const In
         rem.push_back(rem1);
     }
     _crt_cartesian(roots, rem, moduli);
-    std::sort(roots.begin(), roots.end(), CSymPy::RCPIntegerKeyLess());
+    std::sort(roots.begin(), roots.end(), SymEngine::RCPIntegerKeyLess());
 }
 
 bool powermod(const Ptr<RCP<const Integer>> &powm, const RCP<const Integer> &a,
@@ -1449,5 +1449,5 @@ void powermod_list(std::vector<RCP<const Integer>> &pows, const RCP<const Intege
     }
 }
 
-} // CSymPy
+} // SymEngine
 

@@ -1,7 +1,7 @@
 #include "integer.h"
 #include "rational.h"
 
-namespace CSymPy {
+namespace SymEngine {
 
 Integer::Integer(int i)
 {
@@ -145,5 +145,5 @@ int perfect_power(const Integer &n)
     return mpz_perfect_power_p(n.as_mpz().get_mpz_t());
 }
 
-} // CSymPy
+} // SymEngine
 

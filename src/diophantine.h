@@ -11,7 +11,7 @@
 
 #include "matrix.h"
 
-namespace CSymPy {
+namespace SymEngine {
 
 // Solve the diophantine system Ax = 0 and return a basis set for solutions
 void homogeneous_lde(std::vector<DenseMatrix> &basis, const DenseMatrix &A);

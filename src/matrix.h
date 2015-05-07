@@ -3,7 +3,7 @@
 
 #include "basic.h"
 
-namespace CSymPy {
+namespace SymEngine {
 
 // Base class for matrices
 class MatrixBase {
@@ -361,16 +361,16 @@ inline bool is_a(const MatrixBase &b)
 }
 
 // Test two matrices for equality
-inline bool operator==(const CSymPy::MatrixBase &lhs,
-    const CSymPy::MatrixBase &rhs)
+inline bool operator==(const SymEngine::MatrixBase &lhs,
+    const SymEngine::MatrixBase &rhs)
 {
     return lhs.eq(rhs);
 }
 
-} // CSymPy
+} // SymEngine
 
 // Print Matrix
-inline std::ostream& operator<<(std::ostream& out, const CSymPy::MatrixBase& A)
+inline std::ostream& operator<<(std::ostream& out, const SymEngine::MatrixBase& A)
 {
     return out << A.__str__();
 }

@@ -9,7 +9,7 @@
 
 #include "integer.h"
 
-namespace CSymPy {
+namespace SymEngine {
 
 // Prime Functions
 //! Probabilistic Prime

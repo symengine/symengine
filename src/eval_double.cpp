@@ -15,7 +15,7 @@
 #include "visitor.h"
 #include "eval_double.h"
 
-namespace CSymPy {
+namespace SymEngine {
 
 /*
  * We have two implementations, the visitor pattern (EvalDoubleVisitor) and
@@ -387,4 +387,4 @@ double eval_double(const Basic &b)
 #endif
 }
 
-} // CSymPy
+} // SymEngine

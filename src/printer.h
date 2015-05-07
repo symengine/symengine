@@ -3,7 +3,7 @@
 
 #include "visitor.h"
 
-namespace CSymPy {
+namespace SymEngine {
 
 enum class PrecedenceEnum {
     Add, Mul, Pow, Atom

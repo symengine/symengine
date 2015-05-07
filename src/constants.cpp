@@ -5,7 +5,7 @@
 #include "add.h"
 #include "pow.h"
 
-namespace CSymPy {
+namespace SymEngine {
 
 Constant::Constant(const std::string &name)
     : name_{name}
@@ -122,4 +122,4 @@ umap_basic_basic inverse_tct = {
     {minus_one, mul(minus_one, pow(i2, i2))},
 };
 
-} // CSymPy
+} // SymEngine

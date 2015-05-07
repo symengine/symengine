@@ -9,7 +9,7 @@
 #include "complex.h"
 #include "constants.h"
 
-namespace CSymPy {
+namespace SymEngine {
 
 Pow::Pow(const RCP<const Basic> &base, const RCP<const Basic> &exp)
     : base_{base}, exp_{exp}
@@ -475,4 +475,4 @@ RCP<const Basic> log(const RCP<const Basic> &arg, const RCP<const Basic> &base)
 {
     return div(log(arg), log(base));
 }
-} // CSymPy
+} // SymEngine

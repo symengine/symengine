@@ -46,7 +46,7 @@ cdef extern from "electrostatics.h":
         void set_boundary_derivatives(vector[double] &bc_der)
         bool calculate(Solution* phi)
 
-cdef extern from "csympy_rcp.h" namespace "CSymPy":
+cdef extern from "csympy_rcp.h" namespace "SymEngine":
     cdef enum ENull:
         null
 
@@ -57,11 +57,11 @@ cdef extern from "csympy_rcp.h" namespace "CSymPy":
     cdef cppclass Ptr[T]:
         T& operator*() nogil except +
 
-    RCP[Symbol] rcp_static_cast_Symbol "CSymPy::rcp_static_cast<CSymPy::Symbol>"(const RCP[Basic] &b) nogil
-    RCP[Add] rcp_static_cast_Add "CSymPy::rcp_static_cast<CSymPy::Add>"(const RCP[Basic] &b) nogil
+    RCP[Symbol] rcp_static_cast_Symbol "SymEngine::rcp_static_cast<SymEngine::Symbol>"(const RCP[Basic] &b) nogil
+    RCP[Add] rcp_static_cast_Add "SymEngine::rcp_static_cast<SymEngine::Add>"(const RCP[Basic] &b) nogil
 
 
-cdef extern from "basic.h" namespace "CSymPy":
+cdef extern from "basic.h" namespace "SymEngine":
     cdef cppclass Basic:
         string __str__() nogil except +
         RCP[Basic] diff(const RCP[Symbol] &x) nogil except +
@@ -69,15 +69,15 @@ cdef extern from "basic.h" namespace "CSymPy":
     bool eq(RCP[Basic] &a, RCP[Basic] &b) nogil except +
     bool neq(RCP[Basic] &a, RCP[Basic] &b) nogil except +
 
-    bool is_a_Add "CSymPy::is_a<CSymPy::Add>"(const Basic &b) nogil
-    bool is_a_Mul "CSymPy::is_a<CSymPy::Mul>"(const Basic &b) nogil
+    bool is_a_Add "SymEngine::is_a<SymEngine::Add>"(const Basic &b) nogil
+    bool is_a_Mul "SymEngine::is_a<SymEngine::Mul>"(const Basic &b) nogil
 
-cdef extern from "symbol.h" namespace "CSymPy":
+cdef extern from "symbol.h" namespace "SymEngine":
     cdef cppclass Symbol(Basic):
         Symbol(string name) nogil
         string get_name() nogil
 
-cdef extern from "add.h" namespace "CSymPy":
+cdef extern from "add.h" namespace "SymEngine":
     cdef RCP[Basic] add(RCP[Basic] &a, RCP[Basic] &b) nogil except+
     cdef RCP[Basic] sub(RCP[Basic] &a, RCP[Basic] &b) nogil except+
 

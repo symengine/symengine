@@ -8,7 +8,7 @@
 #include "functions.h"
 #include "constants.h"
 
-namespace CSymPy {
+namespace SymEngine {
 
 Mul::Mul(const RCP<const Number> &coef, map_basic_basic&& dict)
     : coef_{coef}, dict_{std::move(dict)}
@@ -99,7 +99,7 @@ int Mul::compare(const Basic &o) const
     return map_basic_basic_compare(dict_, s.dict_);
 }
 
-RCP<const CSymPy::Basic> Mul::from_dict(const RCP<const Number> &coef, map_basic_basic &&d)
+RCP<const SymEngine::Basic> Mul::from_dict(const RCP<const Number> &coef, map_basic_basic &&d)
 {
     if (coef->is_zero()) return zero;
     if (d.size() == 0) {
@@ -286,9 +286,9 @@ void Mul::as_base_exp(const RCP<const Basic> &self, const Ptr<RCP<const Basic>> 
 
 RCP<const Basic> mul(const RCP<const Basic> &a, const RCP<const Basic> &b)
 {
-    CSymPy::map_basic_basic d;
+    SymEngine::map_basic_basic d;
     RCP<const Number> coef = one;
-    if (CSymPy::is_a<Mul>(*a) && CSymPy::is_a<Mul>(*b)) {
+    if (SymEngine::is_a<Mul>(*a) && SymEngine::is_a<Mul>(*b)) {
         RCP<const Mul> A = rcp_static_cast<const Mul>(a);
         RCP<const Mul> B = rcp_static_cast<const Mul>(b);
         // This is important optimization, as coef=1 if Mul is inside an Add.
@@ -300,7 +300,7 @@ RCP<const Basic> mul(const RCP<const Basic> &a, const RCP<const Basic> &b)
         d = A->dict_;
         for (auto &p: B->dict_)
             Mul::dict_add_term_new(outArg(coef), d, p.second, p.first);
-    } else if (CSymPy::is_a<Mul>(*a)) {
+    } else if (SymEngine::is_a<Mul>(*a)) {
         RCP<const Basic> exp;
         RCP<const Basic> t;
         coef = (rcp_static_cast<const Mul>(a))->coef_;
@@ -311,7 +311,7 @@ RCP<const Basic> mul(const RCP<const Basic> &a, const RCP<const Basic> &b)
             Mul::as_base_exp(b, outArg(exp), outArg(t));
             Mul::dict_add_term_new(outArg(coef), d, exp, t);
         }
-    } else if (CSymPy::is_a<Mul>(*b)) {
+    } else if (SymEngine::is_a<Mul>(*b)) {
         RCP<const Basic> exp;
         RCP<const Basic> t;
         coef = (rcp_static_cast<const Mul>(b))->coef_;
@@ -441,7 +441,7 @@ RCP<const Basic> mul_expand(const RCP<const Mul> &self)
 
 RCP<const Basic> Mul::power_all_terms(const RCP<const Basic> &exp) const
 {
-    CSymPy::map_basic_basic d;
+    SymEngine::map_basic_basic d;
     RCP<const Basic> new_coef = pow(coef_, exp);
     RCP<const Number> coef_num = one;
     RCP<const Basic> new_exp;
@@ -553,4 +553,4 @@ vec_basic Mul::get_args() const {
     return args;
 }
 
-} // CSymPy
+} // SymEngine

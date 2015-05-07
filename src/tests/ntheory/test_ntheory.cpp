@@ -7,28 +7,28 @@
 #include "mul.h"
 #include "dict.h"
 
-using CSymPy::Integer;
-using CSymPy::Rational;
-using CSymPy::print_stack_on_segfault;
-using CSymPy::RCP;
-using CSymPy::fibonacci;
-using CSymPy::lucas;
-using CSymPy::factorial;
-using CSymPy::integer;
-using CSymPy::is_a;
-using CSymPy::map_integer_uint;
-using CSymPy::rcp_dynamic_cast;
-using CSymPy::rcp_static_cast;
-using CSymPy::mod_inverse;
-using CSymPy::mod;
-using CSymPy::Number;
-using CSymPy::bernoulli;
-using CSymPy::crt;
-using CSymPy::primitive_root;
-using CSymPy::primitive_root_list;
-using CSymPy::multiplicative_order;
-using CSymPy::totient;
-using CSymPy::carmichael;
+using SymEngine::Integer;
+using SymEngine::Rational;
+using SymEngine::print_stack_on_segfault;
+using SymEngine::RCP;
+using SymEngine::fibonacci;
+using SymEngine::lucas;
+using SymEngine::factorial;
+using SymEngine::integer;
+using SymEngine::is_a;
+using SymEngine::map_integer_uint;
+using SymEngine::rcp_dynamic_cast;
+using SymEngine::rcp_static_cast;
+using SymEngine::mod_inverse;
+using SymEngine::mod;
+using SymEngine::Number;
+using SymEngine::bernoulli;
+using SymEngine::crt;
+using SymEngine::primitive_root;
+using SymEngine::primitive_root_list;
+using SymEngine::multiplicative_order;
+using SymEngine::totient;
+using SymEngine::carmichael;
 
 void test_gcd_lcm()
 {
@@ -279,7 +279,7 @@ void test_sieve()
     const int MAX = 100003;
     std::vector<unsigned> v;
     auto t1 = std::chrono::high_resolution_clock::now();
-    CSymPy::Sieve::generate_primes(v, MAX);
+    SymEngine::Sieve::generate_primes(v, MAX);
     auto t2 = std::chrono::high_resolution_clock::now();
     std::cout
         << std::chrono::duration_cast<std::chrono::microseconds>(t2-t1).count()
@@ -292,7 +292,7 @@ void test_sieve_iterator()
 {
     const int MAX = 100003;
     int count = 0, prime;
-    CSymPy::Sieve::iterator pi(MAX);
+    SymEngine::Sieve::iterator pi(MAX);
     auto t1 = std::chrono::high_resolution_clock::now();
     while((prime=pi.next_prime()) <= MAX){
         count++;
@@ -447,7 +447,7 @@ void test_primitive_root()
     primitive_root_list(roots, *im22);
     assert(roots.size() == 4);
     v = {integer(7), integer(13), integer(17), integer(19)};
-    bool same = std::equal(v.begin(), v.end(), roots.begin(), CSymPy::eq);
+    bool same = std::equal(v.begin(), v.end(), roots.begin(), SymEngine::eq);
     assert(same == true);
 }
 
@@ -578,7 +578,7 @@ void test_nthroot_mod()
     nthroot_mod_list(roots, i9, i2, i27);
     assert(roots.size() == 6);
     v = {integer(3), integer(6), integer(12), integer(15), integer(21), integer(24)};
-    bool same = std::equal(v.begin(), v.end(), roots.begin(), CSymPy::eq);
+    bool same = std::equal(v.begin(), v.end(), roots.begin(), SymEngine::eq);
     assert(same == true);
 
     roots.clear();

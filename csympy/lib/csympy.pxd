@@ -12,7 +12,7 @@ cdef extern from 'gmpxx.h':
     cdef cppclass mpq_class:
         mpq_class()
 
-cdef extern from "csympy_rcp.h" namespace "CSymPy":
+cdef extern from "csympy_rcp.h" namespace "SymEngine":
     cdef enum ENull:
         null
 
@@ -25,30 +25,30 @@ cdef extern from "csympy_rcp.h" namespace "CSymPy":
     cdef cppclass Ptr[T]:
         T& operator*() nogil except +
 
-    RCP[const Symbol] rcp_static_cast_Symbol "CSymPy::rcp_static_cast<const CSymPy::Symbol>"(RCP[const Basic] &b) nogil
-    RCP[const Integer] rcp_static_cast_Integer "CSymPy::rcp_static_cast<const CSymPy::Integer>"(RCP[const Basic] &b) nogil
-    RCP[const Number] rcp_static_cast_Number "CSymPy::rcp_static_cast<const CSymPy::Number>"(RCP[const Basic] &b) nogil
-    RCP[const Add] rcp_static_cast_Add "CSymPy::rcp_static_cast<const CSymPy::Add>"(RCP[const Basic] &b) nogil
-    RCP[const Mul] rcp_static_cast_Mul "CSymPy::rcp_static_cast<const CSymPy::Mul>"(RCP[const Basic] &b) nogil
-    RCP[const Pow] rcp_static_cast_Pow "CSymPy::rcp_static_cast<const CSymPy::Pow>"(RCP[const Basic] &b) nogil
-    RCP[const Sin] rcp_static_cast_Sin "CSymPy::rcp_static_cast<const CSymPy::Sin>"(RCP[const Basic] &b) nogil
-    RCP[const Cos] rcp_static_cast_Cos "CSymPy::rcp_static_cast<const CSymPy::Cos>"(RCP[const Basic] &b) nogil
-    RCP[const FunctionSymbol] rcp_static_cast_FunctionSymbol "CSymPy::rcp_static_cast<const CSymPy::FunctionSymbol>"(RCP[const Basic] &b) nogil
-    RCP[const FunctionWrapper] rcp_static_cast_FunctionWrapper "CSymPy::rcp_static_cast<const CSymPy::FunctionWrapper>"(RCP[const Basic] &b) nogil
-    RCP[const Abs] rcp_static_cast_Abs "CSymPy::rcp_static_cast<const CSymPy::Abs>"(RCP[const Basic] &b) nogil
-    RCP[const Derivative] rcp_static_cast_Derivative "CSymPy::rcp_static_cast<const CSymPy::Derivative>"(RCP[const Basic] &b) nogil
-    RCP[const Subs] rcp_static_cast_Subs "CSymPy::rcp_static_cast<const CSymPy::Subs>"(RCP[const Basic] &b) nogil
+    RCP[const Symbol] rcp_static_cast_Symbol "SymEngine::rcp_static_cast<const SymEngine::Symbol>"(RCP[const Basic] &b) nogil
+    RCP[const Integer] rcp_static_cast_Integer "SymEngine::rcp_static_cast<const SymEngine::Integer>"(RCP[const Basic] &b) nogil
+    RCP[const Number] rcp_static_cast_Number "SymEngine::rcp_static_cast<const SymEngine::Number>"(RCP[const Basic] &b) nogil
+    RCP[const Add] rcp_static_cast_Add "SymEngine::rcp_static_cast<const SymEngine::Add>"(RCP[const Basic] &b) nogil
+    RCP[const Mul] rcp_static_cast_Mul "SymEngine::rcp_static_cast<const SymEngine::Mul>"(RCP[const Basic] &b) nogil
+    RCP[const Pow] rcp_static_cast_Pow "SymEngine::rcp_static_cast<const SymEngine::Pow>"(RCP[const Basic] &b) nogil
+    RCP[const Sin] rcp_static_cast_Sin "SymEngine::rcp_static_cast<const SymEngine::Sin>"(RCP[const Basic] &b) nogil
+    RCP[const Cos] rcp_static_cast_Cos "SymEngine::rcp_static_cast<const SymEngine::Cos>"(RCP[const Basic] &b) nogil
+    RCP[const FunctionSymbol] rcp_static_cast_FunctionSymbol "SymEngine::rcp_static_cast<const SymEngine::FunctionSymbol>"(RCP[const Basic] &b) nogil
+    RCP[const FunctionWrapper] rcp_static_cast_FunctionWrapper "SymEngine::rcp_static_cast<const SymEngine::FunctionWrapper>"(RCP[const Basic] &b) nogil
+    RCP[const Abs] rcp_static_cast_Abs "SymEngine::rcp_static_cast<const SymEngine::Abs>"(RCP[const Basic] &b) nogil
+    RCP[const Derivative] rcp_static_cast_Derivative "SymEngine::rcp_static_cast<const SymEngine::Derivative>"(RCP[const Basic] &b) nogil
+    RCP[const Subs] rcp_static_cast_Subs "SymEngine::rcp_static_cast<const SymEngine::Subs>"(RCP[const Basic] &b) nogil
     Ptr[RCP[Basic]] outArg(RCP[const Basic] &arg) nogil
-    Ptr[RCP[Integer]] outArg_Integer "CSymPy::outArg<CSymPy::RCP<const CSymPy::Integer>>"(RCP[const Integer] &arg) nogil
+    Ptr[RCP[Integer]] outArg_Integer "SymEngine::outArg<SymEngine::RCP<const SymEngine::Integer>>"(RCP[const Integer] &arg) nogil
 
     void print_stack_on_segfault() nogil
 
 
-cdef extern from "basic.h" namespace "CSymPy":
+cdef extern from "basic.h" namespace "SymEngine":
     ctypedef map[RCP[Basic], RCP[Basic]] map_basic_basic
-    ctypedef vector[RCP[Basic]] vec_basic "CSymPy::vec_basic"
-    ctypedef vector[RCP[Integer]] vec_integer "CSymPy::vec_integer"
-    ctypedef map[RCP[Integer], unsigned] map_integer_uint "CSymPy::map_integer_uint"
+    ctypedef vector[RCP[Basic]] vec_basic "SymEngine::vec_basic"
+    ctypedef vector[RCP[Integer]] vec_integer "SymEngine::vec_integer"
+    ctypedef map[RCP[Integer], unsigned] map_integer_uint "SymEngine::map_integer_uint"
     cdef struct RCPIntegerKeyLess
     cdef cppclass Basic:
         string __str__() nogil except +
@@ -60,49 +60,49 @@ cdef extern from "basic.h" namespace "CSymPy":
     bool eq(RCP[const Basic] &a, RCP[const Basic] &b) nogil except +
     bool neq(RCP[const Basic] &a, RCP[const Basic] &b) nogil except +
 
-    bool is_a_Add "CSymPy::is_a<CSymPy::Add>"(const Basic &b) nogil
-    bool is_a_Mul "CSymPy::is_a<CSymPy::Mul>"(const Basic &b) nogil
-    bool is_a_Pow "CSymPy::is_a<CSymPy::Pow>"(const Basic &b) nogil
-    bool is_a_Integer "CSymPy::is_a<CSymPy::Integer>"(const Basic &b) nogil
-    bool is_a_Rational "CSymPy::is_a<CSymPy::Rational>"(const Basic &b) nogil
-    bool is_a_Complex "CSymPy::is_a<CSymPy::Complex>"(const Basic &b) nogil
-    bool is_a_Symbol "CSymPy::is_a<CSymPy::Symbol>"(const Basic &b) nogil
-    bool is_a_Constant "CSymPy::is_a<CSymPy::Constant>"(const Basic &b) nogil
-    bool is_a_Sin "CSymPy::is_a<CSymPy::Sin>"(const Basic &b) nogil
-    bool is_a_Cos "CSymPy::is_a<CSymPy::Cos>"(const Basic &b) nogil
-    bool is_a_FunctionSymbol "CSymPy::is_a<CSymPy::FunctionSymbol>"(const Basic &b) nogil
-    bool is_a_Abs "CSymPy::is_a<CSymPy::Abs>"(const Basic &b) nogil
-    bool is_a_Derivative "CSymPy::is_a<CSymPy::Derivative>"(const Basic &b) nogil
-    bool is_a_Subs "CSymPy::is_a<CSymPy::Subs>"(const Basic &b) nogil
-    bool is_a_FunctionWrapper "CSymPy::is_a<CSymPy::FunctionWrapper>"(const Basic &b) nogil
+    bool is_a_Add "SymEngine::is_a<SymEngine::Add>"(const Basic &b) nogil
+    bool is_a_Mul "SymEngine::is_a<SymEngine::Mul>"(const Basic &b) nogil
+    bool is_a_Pow "SymEngine::is_a<SymEngine::Pow>"(const Basic &b) nogil
+    bool is_a_Integer "SymEngine::is_a<SymEngine::Integer>"(const Basic &b) nogil
+    bool is_a_Rational "SymEngine::is_a<SymEngine::Rational>"(const Basic &b) nogil
+    bool is_a_Complex "SymEngine::is_a<SymEngine::Complex>"(const Basic &b) nogil
+    bool is_a_Symbol "SymEngine::is_a<SymEngine::Symbol>"(const Basic &b) nogil
+    bool is_a_Constant "SymEngine::is_a<SymEngine::Constant>"(const Basic &b) nogil
+    bool is_a_Sin "SymEngine::is_a<SymEngine::Sin>"(const Basic &b) nogil
+    bool is_a_Cos "SymEngine::is_a<SymEngine::Cos>"(const Basic &b) nogil
+    bool is_a_FunctionSymbol "SymEngine::is_a<SymEngine::FunctionSymbol>"(const Basic &b) nogil
+    bool is_a_Abs "SymEngine::is_a<SymEngine::Abs>"(const Basic &b) nogil
+    bool is_a_Derivative "SymEngine::is_a<SymEngine::Derivative>"(const Basic &b) nogil
+    bool is_a_Subs "SymEngine::is_a<SymEngine::Subs>"(const Basic &b) nogil
+    bool is_a_FunctionWrapper "SymEngine::is_a<SymEngine::FunctionWrapper>"(const Basic &b) nogil
 
     RCP[const Basic] expand(RCP[const Basic] &o) nogil except +
 
 
-cdef extern from "symbol.h" namespace "CSymPy":
+cdef extern from "symbol.h" namespace "SymEngine":
     cdef cppclass Symbol(Basic):
         Symbol(string name) nogil
         string get_name() nogil
 
-cdef extern from "number.h" namespace "CSymPy":
+cdef extern from "number.h" namespace "SymEngine":
     cdef cppclass Number(Basic):
         pass
 
-cdef extern from "integer.h" namespace "CSymPy":
+cdef extern from "integer.h" namespace "SymEngine":
     cdef cppclass Integer(Number):
         Integer(int i) nogil
         Integer(mpz_class i) nogil
         int compare(const Basic &o) nogil
 
-cdef extern from "rational.h" namespace "CSymPy":
+cdef extern from "rational.h" namespace "SymEngine":
     cdef cppclass Rational(Number):
         pass
 
-cdef extern from "complex.h" namespace "CSymPy":
+cdef extern from "complex.h" namespace "SymEngine":
     cdef cppclass Complex(Number):
         pass
 
-cdef extern from "constants.h" namespace "CSymPy":
+cdef extern from "constants.h" namespace "SymEngine":
     cdef cppclass Constant(Basic):
         Constant(string name) nogil
         string get_name() nogil
@@ -111,14 +111,14 @@ cdef extern from "constants.h" namespace "CSymPy":
     RCP[const Basic] pi
 
 
-cdef extern from "add.h" namespace "CSymPy":
+cdef extern from "add.h" namespace "SymEngine":
     cdef RCP[const Basic] add(RCP[const Basic] &a, RCP[const Basic] &b) nogil except+
     cdef RCP[const Basic] sub(RCP[const Basic] &a, RCP[const Basic] &b) nogil except+
 
     cdef cppclass Add(Basic):
         void as_two_terms(const Ptr[RCP[Basic]] &a, const Ptr[RCP[Basic]] &b)
 
-cdef extern from "mul.h" namespace "CSymPy":
+cdef extern from "mul.h" namespace "SymEngine":
     cdef RCP[const Basic] mul(RCP[const Basic] &a, RCP[const Basic] &b) nogil except+
     cdef RCP[const Basic] div(RCP[const Basic] &a, RCP[const Basic] &b) nogil except+
     cdef RCP[const Basic] neg(RCP[const Basic] &a) nogil except+
@@ -126,7 +126,7 @@ cdef extern from "mul.h" namespace "CSymPy":
     cdef cppclass Mul(Basic):
         void as_two_terms(const Ptr[RCP[Basic]] &a, const Ptr[RCP[Basic]] &b)
 
-cdef extern from "pow.h" namespace "CSymPy":
+cdef extern from "pow.h" namespace "SymEngine":
     cdef RCP[const Basic] pow(RCP[const Basic] &a, RCP[const Basic] &b) nogil except+
     cdef RCP[const Basic] sqrt(RCP[const Basic] &x) nogil except+
     cdef RCP[const Basic] exp(RCP[const Basic] &x) nogil except+
@@ -136,7 +136,7 @@ cdef extern from "pow.h" namespace "CSymPy":
         RCP[const Basic] get_exp() nogil
 
 
-cdef extern from "basic.h" namespace "CSymPy":
+cdef extern from "basic.h" namespace "SymEngine":
     # We need to specialize these for our classes:
     RCP[const Basic] rcp(Symbol *p) nogil
     RCP[const Basic] rcp(Constant *p) nogil
@@ -145,7 +145,7 @@ cdef extern from "basic.h" namespace "CSymPy":
     RCP[const Basic] rcp(Derivative *p) nogil
     RCP[const Basic] rcp(FunctionWrapper *p) nogil
 
-cdef extern from "functions.h" namespace "CSymPy":
+cdef extern from "functions.h" namespace "SymEngine":
     cdef RCP[const Basic] sin(RCP[const Basic] &arg) nogil except+
     cdef RCP[const Basic] cos(RCP[const Basic] &arg) nogil except+
     cdef RCP[const Basic] function_symbol(string name, const vec_basic &arg) nogil except+
@@ -182,7 +182,7 @@ cdef extern from "functions.h" namespace "CSymPy":
     cdef cppclass Abs(Function):
         RCP[const Basic] get_arg() nogil
 
-cdef extern from "matrix.h" namespace "CSymPy":
+cdef extern from "matrix.h" namespace "SymEngine":
     cdef cppclass MatrixBase:
         const unsigned nrows() nogil
         const unsigned ncols() nogil
@@ -213,20 +213,20 @@ cdef extern from "matrix.h" namespace "CSymPy":
         DenseMatrix(unsigned i, unsigned j) nogil
         DenseMatrix(unsigned i, unsigned j, const vec_basic &v) nogil
 
-    bool is_a_DenseMatrix "CSymPy::is_a<CSymPy::DenseMatrix>"(const MatrixBase &b) nogil
-    DenseMatrix* static_cast_DenseMatrix "static_cast<CSymPy::DenseMatrix*>"(const MatrixBase *a)
-    void inverse_FFLU "CSymPy::inverse_fraction_free_LU"(const DenseMatrix &A,
+    bool is_a_DenseMatrix "SymEngine::is_a<SymEngine::DenseMatrix>"(const MatrixBase &b) nogil
+    DenseMatrix* static_cast_DenseMatrix "static_cast<SymEngine::DenseMatrix*>"(const MatrixBase *a)
+    void inverse_FFLU "SymEngine::inverse_fraction_free_LU"(const DenseMatrix &A,
         DenseMatrix &B) nogil
-    void inverse_GJ "CSymPy::inverse_gauss_jordan"(const DenseMatrix &A,
+    void inverse_GJ "SymEngine::inverse_gauss_jordan"(const DenseMatrix &A,
         DenseMatrix &B) nogil
-    void FFLU_solve "CSymPy::fraction_free_LU_solve"(const DenseMatrix &A,
+    void FFLU_solve "SymEngine::fraction_free_LU_solve"(const DenseMatrix &A,
         const DenseMatrix &b, DenseMatrix &x) nogil
-    void FFGJ_solve "CSymPy::fraction_free_gauss_jordan_solve"(const DenseMatrix &A,
+    void FFGJ_solve "SymEngine::fraction_free_gauss_jordan_solve"(const DenseMatrix &A,
         const DenseMatrix &b, DenseMatrix &x) nogil
-    void LDL_solve "CSymPy::LDL_solve"(const DenseMatrix &A, const DenseMatrix &b,
+    void LDL_solve "SymEngine::LDL_solve"(const DenseMatrix &A, const DenseMatrix &b,
         DenseMatrix &x) nogil
 
-cdef extern from "ntheory.h" namespace "CSymPy":
+cdef extern from "ntheory.h" namespace "SymEngine":
     int probab_prime_p(const Integer &a, int reps)
     RCP[const Integer] nextprime (const Integer &a) nogil
     RCP[const Integer] gcd(const Integer &a, const Integer &b) nogil
@@ -234,7 +234,7 @@ cdef extern from "ntheory.h" namespace "CSymPy":
     void gcd_ext(const Ptr[RCP[Integer]] &g, const Ptr[RCP[Integer]] &s,
             const Ptr[RCP[Integer]] &t, const Integer &a, const Integer &b) nogil
     RCP[const Integer] mod(const Integer &n, const Integer &d) nogil except +
-    RCP[const Integer] quotient "CSymPy::quotient_f"(const Integer &n, const Integer &d) nogil except +
+    RCP[const Integer] quotient "SymEngine::quotient_f"(const Integer &n, const Integer &d) nogil except +
     void quotient_mod (const Ptr[RCP[Integer]] &q, const Ptr[RCP[Integer]] &mod,
             const Integer &n, const Integer &d) nogil except +
     int mod_inverse(const Ptr[RCP[Integer]] &b, const Integer &a,
@@ -277,12 +277,12 @@ cdef extern from "ntheory.h" namespace "CSymPy":
     void powermod_list(vec_integer &powm, const RCP[const Integer] &a,
             const RCP[const Number] &b, const RCP[const Integer] &m) nogil
 
-    void sieve_generate_primes "CSymPy::Sieve::generate_primes"(vector[unsigned] &primes, unsigned limit) nogil
+    void sieve_generate_primes "SymEngine::Sieve::generate_primes"(vector[unsigned] &primes, unsigned limit) nogil
 
-    cdef cppclass sieve_iterator "CSymPy::Sieve::iterator":
+    cdef cppclass sieve_iterator "SymEngine::Sieve::iterator":
         sieve_iterator()
         sieve_iterator(unsigned limit) nogil
         unsigned next_prime() nogil
 
-cdef extern from "eval_double.h" namespace "CSymPy":
+cdef extern from "eval_double.h" namespace "SymEngine":
     double eval_double(const Basic &b) nogil except +

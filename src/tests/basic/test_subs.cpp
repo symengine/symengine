@@ -11,24 +11,24 @@
 #include "functions.h"
 #include "constants.h"
 
-using CSymPy::Basic;
-using CSymPy::Add;
-using CSymPy::Mul;
-using CSymPy::Pow;
-using CSymPy::Symbol;
-using CSymPy::umap_basic_num;
-using CSymPy::map_vec_int;
-using CSymPy::Integer;
-using CSymPy::integer;
-using CSymPy::multinomial_coefficients;
-using CSymPy::one;
-using CSymPy::zero;
-using CSymPy::sin;
-using CSymPy::RCP;
-using CSymPy::rcp;
-using CSymPy::rcp_dynamic_cast;
-using CSymPy::map_basic_basic;
-using CSymPy::print_stack_on_segfault;
+using SymEngine::Basic;
+using SymEngine::Add;
+using SymEngine::Mul;
+using SymEngine::Pow;
+using SymEngine::Symbol;
+using SymEngine::umap_basic_num;
+using SymEngine::map_vec_int;
+using SymEngine::Integer;
+using SymEngine::integer;
+using SymEngine::multinomial_coefficients;
+using SymEngine::one;
+using SymEngine::zero;
+using SymEngine::sin;
+using SymEngine::RCP;
+using SymEngine::rcp;
+using SymEngine::rcp_dynamic_cast;
+using SymEngine::map_basic_basic;
+using SymEngine::print_stack_on_segfault;
 
 void test_symbol()
 {

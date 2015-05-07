@@ -1,10 +1,10 @@
 #include "integer.h"
 
-using CSymPy::print_stack_on_segfault;
-using CSymPy::RCP;
-using CSymPy::Integer;
-using CSymPy::integer;
-using CSymPy::isqrt;
+using SymEngine::print_stack_on_segfault;
+using SymEngine::RCP;
+using SymEngine::Integer;
+using SymEngine::integer;
+using SymEngine::isqrt;
 
 void test_isqrt()
 {

@@ -13,7 +13,7 @@
 
 #ifdef HAVE_CSYMPY_ARB
 
-namespace CSymPy {
+namespace SymEngine {
 
 class EvalArbVisitor : public Visitor {
 private:
@@ -280,6 +280,6 @@ void eval_arb(arb_t result, const Basic &b, long precision)
     v.apply(result, b);
 }
 
-} // CSymPy
+} // SymEngine
 
 #endif // HAVE_CSYMPY_ARB

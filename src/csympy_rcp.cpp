@@ -4,7 +4,7 @@
 #include "csympy_rcp.h"
 #include "Teuchos_RCP.hpp"
 
-namespace CSymPy {
+namespace SymEngine {
 
 #if defined(WITH_CSYMPY_RCP)
 
@@ -16,4 +16,4 @@ void print_stack_on_segfault()
 
 #endif
 
-} // CSymPy
+} // SymEngine

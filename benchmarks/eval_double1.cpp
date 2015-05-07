@@ -14,21 +14,21 @@
 #include "eval_double.h"
 
 
-using CSymPy::Basic;
-using CSymPy::Add;
-using CSymPy::Mul;
-using CSymPy::Pow;
-using CSymPy::Symbol;
-using CSymPy::umap_basic_num;
-using CSymPy::map_vec_int;
-using CSymPy::Integer;
-using CSymPy::multinomial_coefficients;
-using CSymPy::RCP;
-using CSymPy::rcp;
-using CSymPy::rcp_dynamic_cast;
-using CSymPy::integer;
-using CSymPy::sin;
-using CSymPy::eval_double;
+using SymEngine::Basic;
+using SymEngine::Add;
+using SymEngine::Mul;
+using SymEngine::Pow;
+using SymEngine::Symbol;
+using SymEngine::umap_basic_num;
+using SymEngine::map_vec_int;
+using SymEngine::Integer;
+using SymEngine::multinomial_coefficients;
+using SymEngine::RCP;
+using SymEngine::rcp;
+using SymEngine::rcp_dynamic_cast;
+using SymEngine::integer;
+using SymEngine::sin;
+using SymEngine::eval_double;
 
 int main(int argc, char* argv[])
 {

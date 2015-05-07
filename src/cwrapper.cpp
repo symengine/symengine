@@ -12,16 +12,16 @@
 #include "number.h"
 #include "constants.h"
 
-using CSymPy::Basic;
-using CSymPy::RCP;
-using CSymPy::rcp;
-using CSymPy::zero;
-using CSymPy::Symbol;
-using CSymPy::Rational;
-using CSymPy::Integer;
-using CSymPy::Number;
-using CSymPy::rcp_static_cast;
-using CSymPy::is_a;
+using SymEngine::Basic;
+using SymEngine::RCP;
+using SymEngine::rcp;
+using SymEngine::zero;
+using SymEngine::Symbol;
+using SymEngine::Rational;
+using SymEngine::Integer;
+using SymEngine::Number;
+using SymEngine::rcp_static_cast;
+using SymEngine::is_a;
 
 #define RCP_cast_general(x, CONST) (reinterpret_cast<CONST RCP<const Basic> *>(x))
 #define RCP_cast(x) RCP_cast_general(x, )
@@ -54,27 +54,27 @@ void basic_free(basic s)
 
 void symbol_set(basic s, char* c)
 {
-    *RCP_cast(s) = CSymPy::symbol(std::string(c));
+    *RCP_cast(s) = SymEngine::symbol(std::string(c));
 }
 
 void integer_set_si(basic s, long i)
 {
-    *RCP_cast(s) = CSymPy::integer(mpz_class(i));
+    *RCP_cast(s) = SymEngine::integer(mpz_class(i));
 }
 
 void integer_set_ui(basic s, unsigned long i)
 {
-    *RCP_cast(s) = CSymPy::integer(mpz_class(i));
+    *RCP_cast(s) = SymEngine::integer(mpz_class(i));
 }
 
 void integer_set_mpz(basic s, const mpz_t i)
 {
-    *RCP_cast(s) = CSymPy::integer(mpz_class(i));
+    *RCP_cast(s) = SymEngine::integer(mpz_class(i));
 }
 
 void integer_set_str(basic s, char* c)
 {
-    *RCP_cast(s) = CSymPy::integer(mpz_class(c, 10));
+    *RCP_cast(s) = SymEngine::integer(mpz_class(c, 10));
 }
 
 signed long integer_get_si(const basic s)
@@ -97,12 +97,12 @@ void integer_get_mpz(mpz_t a, const basic s)
 
 void rational_set_si(basic s, long a, long b)
 {
-    *RCP_cast(s) = CSymPy::Rational::from_mpq(mpq_class(a, b));
+    *RCP_cast(s) = SymEngine::Rational::from_mpq(mpq_class(a, b));
 }
 
 void rational_set_ui(basic s, unsigned long a, unsigned long b)
 {
-    *RCP_cast(s) = CSymPy::Rational::from_mpq(mpq_class(a, b));
+    *RCP_cast(s) = SymEngine::Rational::from_mpq(mpq_class(a, b));
 }
 
 int rational_set(basic s, const basic a, const basic b)
@@ -110,7 +110,7 @@ int rational_set(basic s, const basic a, const basic b)
     if (!is_a_Integer(a) || !is_a_Integer(b)) {
         return 0;
     }
-    *RCP_cast(s) = CSymPy::Rational::from_two_ints(
+    *RCP_cast(s) = SymEngine::Rational::from_two_ints(
             rcp_static_cast<const Integer>(*RCP_const_cast(a)),
             rcp_static_cast<const Integer>(*RCP_const_cast(b)));
     return 1;
@@ -118,7 +118,7 @@ int rational_set(basic s, const basic a, const basic b)
 
 void rational_set_mpq(basic s, const mpq_t i)
 {
-    *RCP_cast(s) = CSymPy::Rational::from_mpq(mpq_class(i));
+    *RCP_cast(s) = SymEngine::Rational::from_mpq(mpq_class(i));
 }
 
 int basic_diff(basic s, const basic expr, basic const symbol)
@@ -136,42 +136,42 @@ void basic_assign(basic a, const basic b) {
 
 void basic_add(basic s, const basic a, const basic b)
 {
-    *RCP_cast(s) = CSymPy::add(*RCP_const_cast(a), *RCP_const_cast(b));
+    *RCP_cast(s) = SymEngine::add(*RCP_const_cast(a), *RCP_const_cast(b));
 }
 
 void basic_sub(basic s, const basic a, const basic b)
 {
-    *RCP_cast(s) = CSymPy::sub(*RCP_const_cast(a), *RCP_const_cast(b));
+    *RCP_cast(s) = SymEngine::sub(*RCP_const_cast(a), *RCP_const_cast(b));
 }
 
 void basic_mul(basic s, const basic a, const basic b)
 {
-    *RCP_cast(s) = CSymPy::mul(*RCP_const_cast(a), *RCP_const_cast(b));
+    *RCP_cast(s) = SymEngine::mul(*RCP_const_cast(a), *RCP_const_cast(b));
 }
 
 void basic_pow(basic s, const basic a, const basic b)
 {
-    *RCP_cast(s) = CSymPy::pow(*RCP_const_cast(a), *RCP_const_cast(b));
+    *RCP_cast(s) = SymEngine::pow(*RCP_const_cast(a), *RCP_const_cast(b));
 }
 
 void basic_div(basic s, const basic a, const basic b)
 {
-    *RCP_cast(s) = CSymPy::div(*RCP_const_cast(a), *RCP_const_cast(b));
+    *RCP_cast(s) = SymEngine::div(*RCP_const_cast(a), *RCP_const_cast(b));
 }
 
 void basic_neg(basic s, const basic a)
 {
-    *RCP_cast(s) = CSymPy::neg(*RCP_const_cast(a));
+    *RCP_cast(s) = SymEngine::neg(*RCP_const_cast(a));
 }
 
 void basic_abs(basic s, const basic a)
 {
-    *RCP_cast(s) = CSymPy::abs(*RCP_const_cast(a));
+    *RCP_cast(s) = SymEngine::abs(*RCP_const_cast(a));
 }
 
 void basic_expand(basic s, const basic a)
 {
-    *RCP_cast(s) = CSymPy::expand(*RCP_const_cast(a));
+    *RCP_cast(s) = SymEngine::expand(*RCP_const_cast(a));
 }
 
 char* basic_str(const basic s)

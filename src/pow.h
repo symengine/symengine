@@ -13,7 +13,7 @@
 #include "ntheory.h"
 #include "constants.h"
 
-namespace CSymPy {
+namespace SymEngine {
 
 class Pow : public Basic {
 public: // TODO: make this private
@@ -98,6 +98,6 @@ RCP<const Basic> log(const RCP<const Basic> &arg);
 RCP<const Basic> log(const RCP<const Basic> &arg,
                     const RCP<const Basic> &b);
 
-} // CSymPy
+} // SymEngine
 
 #endif

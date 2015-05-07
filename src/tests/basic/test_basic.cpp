@@ -14,24 +14,24 @@
 #include "visitor.h"
 #include "eval_double.h"
 
-using CSymPy::Basic;
-using CSymPy::Add;
-using CSymPy::Mul;
-using CSymPy::Symbol;
-using CSymPy::symbol;
-using CSymPy::umap_basic_num;
-using CSymPy::map_basic_basic;
-using CSymPy::Integer;
-using CSymPy::integer;
-using CSymPy::Rational;
-using CSymPy::one;
-using CSymPy::zero;
-using CSymPy::Number;
-using CSymPy::pow;
-using CSymPy::RCP;
-using CSymPy::print_stack_on_segfault;
-using CSymPy::Complex;
-using CSymPy::has_symbol;
+using SymEngine::Basic;
+using SymEngine::Add;
+using SymEngine::Mul;
+using SymEngine::Symbol;
+using SymEngine::symbol;
+using SymEngine::umap_basic_num;
+using SymEngine::map_basic_basic;
+using SymEngine::Integer;
+using SymEngine::integer;
+using SymEngine::Rational;
+using SymEngine::one;
+using SymEngine::zero;
+using SymEngine::Number;
+using SymEngine::pow;
+using SymEngine::RCP;
+using SymEngine::print_stack_on_segfault;
+using SymEngine::Complex;
+using SymEngine::has_symbol;
 
 void test_symbol_hash()
 {

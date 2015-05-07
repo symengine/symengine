@@ -9,7 +9,7 @@
 
 #include "basic.h"
 
-namespace CSymPy {
+namespace SymEngine {
 
 class Number : public Basic {
 public:
@@ -90,6 +90,6 @@ inline void idivnum(const Ptr<RCP<const Number>> &self,
 }
 
 
-} // CSymPy
+} // SymEngine
 
 #endif

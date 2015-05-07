@@ -1,7 +1,7 @@
 #ifndef CSYMPY_BASIC_INL_H
 #define CSYMPY_BASIC_INL_H
 
-namespace CSymPy {
+namespace SymEngine {
 
 inline std::size_t Basic::hash() const
 {
@@ -38,11 +38,11 @@ inline bool is_a_sub(const Basic &b)
     return dynamic_cast<const T *>(&b) != nullptr;
 }
 
-} // CSymPy
+} // SymEngine
 
 // global namespace functions
 //! `<<` Operator
-inline std::ostream& operator<<(std::ostream& out, const CSymPy::Basic& p)
+inline std::ostream& operator<<(std::ostream& out, const SymEngine::Basic& p)
 {
     out << p.__str__();
     return out;
@@ -60,9 +60,9 @@ namespace std
 {
     //! Specialise std::hash for Basic. We just call Basic.__hash__()
     template<>
-    struct hash<CSymPy::Basic>
+    struct hash<SymEngine::Basic>
     {
-        std::size_t operator()(const CSymPy::Basic& b) const
+        std::size_t operator()(const SymEngine::Basic& b) const
         {
             return b.hash();
         }

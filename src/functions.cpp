@@ -10,7 +10,7 @@
 #include "visitor.h"
 
 
-namespace CSymPy {
+namespace SymEngine {
 
 extern RCP<const Basic> i2;
 extern RCP<const Basic> i3;
@@ -1085,7 +1085,7 @@ RCP<const Basic> atan2(const RCP<const Basic> &num, const RCP<const Basic> &den)
         // Currently is_positive() and is_negative() is not implemented for
         // types other than `Number`
         // Hence this will give exact answers in case when num and den are
-        // numbers in CSymPy sense and when num and den are positive.
+        // numbers in SymEngine sense and when num and den are positive.
         // for the remaining cases in which we just return the value from
         // the lookup table.
         // TODO: update once is_positive() and is_negative() is implemented
@@ -1932,7 +1932,7 @@ int Coth::compare(const Basic &o) const
 RCP<const Basic> coth(const RCP<const Basic> &arg)
 {
     if (eq(arg, zero)) {
-        // Answer is infinity. Yet to be implemented in CSymPy
+        // Answer is infinity. Yet to be implemented in SymEngine
         throw std::runtime_error("Not implemented.");
     }
     if (is_a_Number(*arg) &&
@@ -2826,4 +2826,4 @@ RCP<const Basic> abs(const RCP<const Basic> &arg)
     return rcp(new Abs(arg));
 }
 
-} // CSymPy
+} // SymEngine

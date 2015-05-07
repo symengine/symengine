@@ -1,6 +1,6 @@
 #include "rational.h"
 
-namespace CSymPy {
+namespace SymEngine {
 
 Rational::Rational(mpq_class i)
     : i{i}
@@ -78,4 +78,4 @@ void get_num_den(const RCP<const Rational> &rat,
     *num = integer(rat->i.get_num());
     *den = integer(rat->i.get_den());
 }
-} // CSymPy
+} // SymEngine

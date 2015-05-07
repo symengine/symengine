@@ -8,7 +8,7 @@
 #include "functions.h"
 
 
-namespace CSymPy {
+namespace SymEngine {
 
 Add::Add(const RCP<const Number> &coef, umap_basic_num&& dict)
     : coef_{coef}, dict_{std::move(dict)}
@@ -224,16 +224,16 @@ void Add::as_coef_term(const RCP<const Basic> &self,
 
 RCP<const Basic> add(const RCP<const Basic> &a, const RCP<const Basic> &b)
 {
-    CSymPy::umap_basic_num d;
+    SymEngine::umap_basic_num d;
     RCP<const Number> coef;
     RCP<const Basic> t;
-    if (CSymPy::is_a<Add>(*a) && CSymPy::is_a<Add>(*b)) {
+    if (SymEngine::is_a<Add>(*a) && SymEngine::is_a<Add>(*b)) {
         coef = (rcp_static_cast<const Add>(a))->coef_;
         d = (rcp_static_cast<const Add>(a))->dict_;
         for (auto &p: (rcp_static_cast<const Add>(b))->dict_)
             Add::dict_add_term(d, p.second, p.first);
         iaddnum(outArg(coef), rcp_static_cast<const Add>(b)->coef_);
-    } else if (CSymPy::is_a<Add>(*a)) {
+    } else if (SymEngine::is_a<Add>(*a)) {
         coef = (rcp_static_cast<const Add>(a))->coef_;
         d = (rcp_static_cast<const Add>(a))->dict_;
         if (is_a_Number(*b)) {
@@ -243,7 +243,7 @@ RCP<const Basic> add(const RCP<const Basic> &a, const RCP<const Basic> &b)
             Add::as_coef_term(b, outArg(coef2), outArg(t));
             Add::dict_add_term(d, coef2, t);
         }
-    } else if (CSymPy::is_a<Add>(*b)) {
+    } else if (SymEngine::is_a<Add>(*b)) {
         coef = (rcp_static_cast<const Add>(b))->coef_;
         d = (rcp_static_cast<const Add>(b))->dict_;
         if (is_a_Number(*a)) {
@@ -301,7 +301,7 @@ RCP<const Basic> add_expand(const RCP<const Add> &self)
 
 RCP<const Basic> Add::diff(const RCP<const Symbol> &x) const
 {
-    CSymPy::umap_basic_num d;
+    SymEngine::umap_basic_num d;
     RCP<const Number> coef=zero, coef2;
     RCP<const Basic> t;
     for (auto &p: dict_) {
@@ -340,7 +340,7 @@ RCP<const Basic> Add::subs(const map_basic_basic &subs_dict) const
     if (it != subs_dict.end())
         return it->second;
 
-    CSymPy::umap_basic_num d;
+    SymEngine::umap_basic_num d;
     RCP<const Number> coef=coef_, coef2;
     RCP<const Basic> t;
     for (auto &p: dict_) {
@@ -374,4 +374,4 @@ vec_basic Add::get_args() const {
     return args;
 }
 
-} // CSymPy
+} // SymEngine

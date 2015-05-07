@@ -13,39 +13,39 @@
 #include "visitor.h"
 #include "eval_double.h"
 
-using CSymPy::Basic;
-using CSymPy::symbol;
-using CSymPy::integer;
-using CSymPy::one;
-using CSymPy::zero;
-using CSymPy::pow;
-using CSymPy::RCP;
-using CSymPy::print_stack_on_segfault;
-using CSymPy::levi_civita;
-using CSymPy::zeta;
-using CSymPy::sin;
-using CSymPy::cos;
-using CSymPy::tan;
-using CSymPy::sec;
-using CSymPy::csc;
-using CSymPy::cot;
-using CSymPy::asin;
-using CSymPy::acos;
-using CSymPy::atan;
-using CSymPy::asec;
-using CSymPy::acsc;
-using CSymPy::acot;
-using CSymPy::sinh;
-using CSymPy::cosh;
-using CSymPy::tanh;
-using CSymPy::coth;
-using CSymPy::asinh;
-using CSymPy::acosh;
-using CSymPy::atanh;
-using CSymPy::acoth;
-using CSymPy::log;
-using CSymPy::pi;
-using CSymPy::E;
+using SymEngine::Basic;
+using SymEngine::symbol;
+using SymEngine::integer;
+using SymEngine::one;
+using SymEngine::zero;
+using SymEngine::pow;
+using SymEngine::RCP;
+using SymEngine::print_stack_on_segfault;
+using SymEngine::levi_civita;
+using SymEngine::zeta;
+using SymEngine::sin;
+using SymEngine::cos;
+using SymEngine::tan;
+using SymEngine::sec;
+using SymEngine::csc;
+using SymEngine::cot;
+using SymEngine::asin;
+using SymEngine::acos;
+using SymEngine::atan;
+using SymEngine::asec;
+using SymEngine::acsc;
+using SymEngine::acot;
+using SymEngine::sinh;
+using SymEngine::cosh;
+using SymEngine::tanh;
+using SymEngine::coth;
+using SymEngine::asinh;
+using SymEngine::acosh;
+using SymEngine::atanh;
+using SymEngine::acoth;
+using SymEngine::log;
+using SymEngine::pi;
+using SymEngine::E;
 
 void test_eval_double()
 {
@@ -83,7 +83,7 @@ void test_eval_double()
     r3 = add(asinh(r5), add(acosh(r5), add(atanh(r4), acoth(r5))));
     assert(::fabs(eval_double(*r3) - 5.010335118942) < 1e-12);
 
-    r3 = CSymPy::abs(log(div(pi, mul(E, integer(2)))));
+    r3 = SymEngine::abs(log(div(pi, mul(E, integer(2)))));
     assert(::fabs(eval_double(*r3) - 0.548417294710) < 1e-12);
 
     // Symbol must raise an exception

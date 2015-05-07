@@ -9,7 +9,7 @@
 #include "basic.h"
 #include "dict.h"
 
-namespace CSymPy {
+namespace SymEngine {
 
 class Mul : public Basic {
 public: // TODO: make this private
@@ -75,6 +75,6 @@ RCP<const Basic> neg(const RCP<const Basic> &a);
 //! Expand `self`
 RCP<const Basic> mul_expand(const RCP<const Mul> &self);
 
-} // CSymPy
+} // SymEngine
 
 #endif

@@ -24,7 +24,7 @@
 #include "csympy_rcp.h"
 #include "dict.h"
 
-namespace CSymPy {
+namespace SymEngine {
 
 class Visitor;
 class Symbol;
@@ -128,7 +128,7 @@ public:
     //! Assignment operator in continuation with above
     Basic& operator=(Basic&&) = delete;
 
-    /*!  Implements the hash of the given CSymPy class.
+    /*!  Implements the hash of the given SymEngine class.
          Use `std::hash` to get the hash. Example:
              RCP<const Symbol> x = rcp(new Symbol("x"));
              std::hash<Basic> hash_fn;
@@ -235,18 +235,18 @@ bool is_a_sub(const Basic &b);
 //! Expands `self`
 RCP<const Basic> expand(const RCP<const Basic> &self);
 
-} // CSymPy
+} // SymEngine
 
 /*! This `<<` overloaded function simply calls `p.__str__`, so it allows any Basic
     type to be printed.
 
     This prints using: `std::cout << *x;`
 */
-std::ostream& operator<<(std::ostream& out, const CSymPy::Basic& p);
+std::ostream& operator<<(std::ostream& out, const SymEngine::Basic& p);
 
 //! Specialise `std::hash` for Basic.
 namespace std {
-    template<> struct hash<CSymPy::Basic>;
+    template<> struct hash<SymEngine::Basic>;
 }
 
 /*! Standard `hash_combine()` function. Example of usage:
@@ -255,7 +255,7 @@ namespace std {
         hash_combine<std::string>(seed1, "x");
         hash_combine<std::string>(seed1, "y");
 
-     You can use it with any CSymPy class:
+     You can use it with any SymEngine class:
 
 
         RCP<const Symbol> x = rcp(new Symbol("x"));

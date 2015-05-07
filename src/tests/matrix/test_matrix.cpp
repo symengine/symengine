@@ -7,21 +7,21 @@
 #include "mul.h"
 #include "pow.h"
 
-using CSymPy::print_stack_on_segfault;
-using CSymPy::RCP;
-using CSymPy::integer;
-using CSymPy::DenseMatrix;
-using CSymPy::Basic;
-using CSymPy::symbol;
-using CSymPy::is_a;
-using CSymPy::Add;
-using CSymPy::minus_one;
-using CSymPy::CSRMatrix;
-using CSymPy::add;
-using CSymPy::sub;
-using CSymPy::eye;
-using CSymPy::diag;
-using CSymPy::vec_basic;
+using SymEngine::print_stack_on_segfault;
+using SymEngine::RCP;
+using SymEngine::integer;
+using SymEngine::DenseMatrix;
+using SymEngine::Basic;
+using SymEngine::symbol;
+using SymEngine::is_a;
+using SymEngine::Add;
+using SymEngine::minus_one;
+using SymEngine::CSRMatrix;
+using SymEngine::add;
+using SymEngine::sub;
+using SymEngine::eye;
+using SymEngine::diag;
+using SymEngine::vec_basic;
 
 void test_get_set()
 {
