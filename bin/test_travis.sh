@@ -75,7 +75,7 @@ echo "Running make install:"
 make install
 
 if [[ "${WITH_CSYMPY_RCP}" == "no" ]]; then
-    echo "CSymPy successfully built with Teuchos::RCP. No tests being run."
+    echo "SymEngine successfully built with Teuchos::RCP. No tests being run."
 else
     echo "Running tests in build directory:"
     # C++
