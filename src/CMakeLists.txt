@@ -42,7 +42,7 @@ set(HEADERS
     visitor.h    eval_double.h    diophantine.h cwrapper.h  printer.h
 )
 
-# Configure CSymPy using our CMake options:
+# Configure SymEngine using our CMake options:
 configure_file(symengine_config.h.in symengine_config.h)
 # Include the config file:
 include_directories(BEFORE ${csympy_BINARY_DIR}/src)

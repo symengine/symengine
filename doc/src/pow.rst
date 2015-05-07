@@ -2,4 +2,4 @@ pow
 ===
 
 .. doxygenfile:: pow.h
-    :project: csympy
+    :project: symengine

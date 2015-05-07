@@ -2,4 +2,4 @@ mul
 ===
 
 .. doxygenfile:: mul.h
-    :project: csympy
+    :project: symengine

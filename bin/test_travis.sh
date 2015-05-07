@@ -85,7 +85,7 @@ else
         nosetests -v
     fi
 
-    echo "Running tests using installed csympy:"
+    echo "Running tests using installed SymEngine:"
     # C++
     cd $SOURCE_DIR/src/tests/basic/
     extra_libs=""

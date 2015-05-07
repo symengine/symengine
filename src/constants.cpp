@@ -48,7 +48,7 @@ RCP<const Constant> pi = rcp(new Constant("pi"));
 RCP<const Constant> E = rcp(new Constant("E"));
 
 // Global variables declared in functions.cpp
-// Look over https://github.com/sympy/csympy/issues/272
+// Look over https://github.com/sympy/symengine/issues/272
 // for further details
 RCP<const Basic> i2 = rcp(new Integer(2));
 

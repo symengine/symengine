@@ -658,7 +658,7 @@ void test_fraction_free_gaussian_elimination_solve()
     assert(x == DenseMatrix(2, 1, {integer(3), integer(2)}));
 
     // below two sets produce the correct matrix but the results are not
-    // simplified. See: https://github.com/sympy/csympy/issues/183
+    // simplified. See: https://github.com/sympy/symengine/issues/183
     A = DenseMatrix(2, 2, {symbol("a"), symbol("b"),
                            symbol("b"), symbol("a")});
     b = DenseMatrix(2, 1, {

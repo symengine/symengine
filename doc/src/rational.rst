@@ -2,4 +2,4 @@ rational
 ========
 
 .. doxygenfile:: rational.h
-    :project: csympy
+    :project: symengine

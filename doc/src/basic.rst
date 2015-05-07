@@ -2,4 +2,4 @@ basic
 =====
 
 .. doxygenfile:: basic.h
-    :project: csympy
+    :project: symengine
