@@ -13,7 +13,7 @@ namespace SymEngine {
 Mul::Mul(const RCP<const Number> &coef, map_basic_basic&& dict)
     : coef_{coef}, dict_{std::move(dict)}
 {
-    CSYMPY_ASSERT(is_canonical(coef, dict_))
+    SYMENGINE_ASSERT(is_canonical(coef, dict_))
 }
 
 bool Mul::is_canonical(const RCP<const Number> &coef,
@@ -84,7 +84,7 @@ bool Mul::__eq__(const Basic &o) const
 
 int Mul::compare(const Basic &o) const
 {
-    CSYMPY_ASSERT(is_a<Mul>(o))
+    SYMENGINE_ASSERT(is_a<Mul>(o))
     const Mul &s = static_cast<const Mul &>(o);
     // # of elements
     if (dict_.size() != s.dict_.size())
@@ -278,7 +278,7 @@ void Mul::as_base_exp(const RCP<const Basic> &self, const Ptr<RCP<const Basic>> 
         *exp = rcp_static_cast<const Pow>(self)->exp_;
         *base = rcp_static_cast<const Pow>(self)->base_;
     } else {
-        CSYMPY_ASSERT(!is_a<Mul>(*self));
+        SYMENGINE_ASSERT(!is_a<Mul>(*self));
         *exp = one;
         *base = self;
     }

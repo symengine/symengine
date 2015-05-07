@@ -11,7 +11,7 @@
 #include "visitor.h"
 #include "eval_arb.h"
 
-#ifdef HAVE_CSYMPY_ARB
+#ifdef HAVE_SYMENGINE_ARB
 
 namespace SymEngine {
 
@@ -282,4 +282,4 @@ void eval_arb(arb_t result, const Basic &b, long precision)
 
 } // SymEngine
 
-#endif // HAVE_CSYMPY_ARB
+#endif // HAVE_SYMENGINE_ARB

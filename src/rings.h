@@ -3,8 +3,8 @@
  *  Polynomial Manipulation
  *
  **/
-#ifndef CSYMPY_RINGS_H
-#define CSYMPY_RINGS_H
+#ifndef SYMENGINE_RINGS_H
+#define SYMENGINE_RINGS_H
 
 #include "basic.h"
 #include "dict.h"

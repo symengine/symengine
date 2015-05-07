@@ -1,17 +1,17 @@
-/* Define if you want to enable ASSERT testing in CSymPy */
-#cmakedefine WITH_CSYMPY_ASSERT
+/* Define if you want to enable ASSERT testing in SymEngine */
+#cmakedefine WITH_SYMENGINE_ASSERT
 
-/* Define if you want to enable CSYMPY_RCP support in CSymPy */
-#cmakedefine WITH_CSYMPY_RCP
+/* Define if you want to enable SYMENGINE_RCP support in SymEngine */
+#cmakedefine WITH_SYMENGINE_RCP
 
-/* Define if you want to enable CSYMPY_THREAD_SAFE support in CSymPy */
-#cmakedefine WITH_CSYMPY_THREAD_SAFE
+/* Define if you want to enable SYMENGINE_THREAD_SAFE support in SymEngine */
+#cmakedefine WITH_SYMENGINE_THREAD_SAFE
 
-/* Define if you want to enable ECM support in CSymPy */
-#cmakedefine HAVE_CSYMPY_ECM
+/* Define if you want to enable ECM support in SymEngine */
+#cmakedefine HAVE_SYMENGINE_ECM
 
-/* Define if you want to enable PRIMESIEVE support in CSymPy */
-#cmakedefine HAVE_CSYMPY_PRIMESIEVE
+/* Define if you want to enable PRIMESIEVE support in SymEngine */
+#cmakedefine HAVE_SYMENGINE_PRIMESIEVE
 
-/* Define if you want to enable ARB support in CSymPy */
-#cmakedefine HAVE_CSYMPY_ARB
+/* Define if you want to enable ARB support in SymEngine */
+#cmakedefine HAVE_SYMENGINE_ARB

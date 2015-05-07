@@ -21,9 +21,9 @@ namespace SymEngine {
  * We have two implementations, the visitor pattern (EvalDoubleVisitor) and
  * single dispatch (init_eval_double). Currently the visitor pattern is the
  * default. To instead use single dispatch, uncomment the
- * CSYMPY_SINGLE_DISPATCH define below.
+ * SYMENGINE_SINGLE_DISPATCH define below.
  */
-// #define CSYMPY_SINGLE_DISPATCH
+// #define SYMENGINE_SINGLE_DISPATCH
 
 class EvalDoubleVisitor : public BaseVisitor<EvalDoubleVisitor> {
 private:
@@ -379,7 +379,7 @@ const static std::vector<fn> table_eval_double = init_eval_double();
 
 double eval_double(const Basic &b)
 {
-#if defined(CSYMPY_SINGLE_DISPATCH)
+#if defined(SYMENGINE_SINGLE_DISPATCH)
     return table_eval_double[b.get_type_code()](b);
 #else
     EvalDoubleVisitor v;

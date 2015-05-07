@@ -5,10 +5,10 @@
  *
  **/
 
-#ifndef CSYMPY_EVAL_ARB_H
-#define CSYMPY_EVAL_ARB_H
+#ifndef SYMENGINE_EVAL_ARB_H
+#define SYMENGINE_EVAL_ARB_H
 
-#ifdef HAVE_CSYMPY_ARB
+#ifdef HAVE_SYMENGINE_ARB
 
 #include "basic.h"
 #include "arb.h"
@@ -22,6 +22,6 @@ void eval_arb(arb_t result, const Basic &b, long precision = 53);
 
 } // SymEngine
 
-#endif // HAVE_CSYMPY_ARB
+#endif // HAVE_SYMENGINE_ARB
 
 #endif

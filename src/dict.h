@@ -5,8 +5,8 @@
  **/
 
 
-#ifndef CSYMPY_DICT_H
-#define CSYMPY_DICT_H
+#ifndef SYMENGINE_DICT_H
+#define SYMENGINE_DICT_H
 
 #include <gmpxx.h>
 

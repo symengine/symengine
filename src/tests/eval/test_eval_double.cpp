@@ -87,12 +87,12 @@ void test_eval_double()
     assert(::fabs(eval_double(*r3) - 0.548417294710) < 1e-12);
 
     // Symbol must raise an exception
-    CSYMPY_CHECK_THROW(eval_double(*symbol("x")), std::runtime_error)
+    SYMENGINE_CHECK_THROW(eval_double(*symbol("x")), std::runtime_error)
 
     // TODO: this is not implemented yet, so we check that it raises an
     // exception for now
-    CSYMPY_CHECK_THROW(eval_double(*levi_civita({r1})), std::runtime_error)
-    CSYMPY_CHECK_THROW(eval_double(*zeta(r1, r2)), std::runtime_error)
+    SYMENGINE_CHECK_THROW(eval_double(*levi_civita({r1})), std::runtime_error)
+    SYMENGINE_CHECK_THROW(eval_double(*zeta(r1, r2)), std::runtime_error)
     // ... we don't test the rest of functions that are not implemented.
 }
 

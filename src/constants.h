@@ -4,8 +4,8 @@
  *
  **/
 
-#ifndef CSYMPY_CONSTANTS_H
-#define CSYMPY_CONSTANTS_H
+#ifndef SYMENGINE_CONSTANTS_H
+#define SYMENGINE_CONSTANTS_H
 
 #include "basic.h"
 #include "number.h"

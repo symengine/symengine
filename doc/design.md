@@ -39,8 +39,8 @@ the Debug build to test your code, only when all tests pass you can enable
 Release mode.
 
 The Trilinos RCP pointers as described above are only used when
-`WITH_CSYMPY_RCP=OFF` is set in `CMake`. The default option is
-`WITH_CSYMPY_RCP=ON`, which uses our own implementation of `RCP` (see
+`WITH_SYMENGINE_RCP=OFF` is set in `CMake`. The default option is
+`WITH_SYMENGINE_RCP=ON`, which uses our own implementation of `RCP` (see
 `src/csympy_rcp.h`). Our implementation is faster, but it only implements a
 subset of all the functinoality and it requires all our objects to have a
 `refcount_` variable. Otherwise the usage of our RCP is identical to

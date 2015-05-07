@@ -3,8 +3,8 @@
  *  Class Symbol
  *
  **/
-#ifndef CSYMPY_SYMBOL_H
-#define CSYMPY_SYMBOL_H
+#ifndef SYMENGINE_SYMBOL_H
+#define SYMENGINE_SYMBOL_H
 
 #include "basic.h"
 

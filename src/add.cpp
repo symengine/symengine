@@ -13,7 +13,7 @@ namespace SymEngine {
 Add::Add(const RCP<const Number> &coef, umap_basic_num&& dict)
     : coef_{coef}, dict_{std::move(dict)}
 {
-    CSYMPY_ASSERT(is_canonical(coef, dict_))
+    SYMENGINE_ASSERT(is_canonical(coef, dict_))
 }
 
 bool Add::is_canonical(const RCP<const Number> &coef,
@@ -77,7 +77,7 @@ bool Add::__eq__(const Basic &o) const
 
 int Add::compare(const Basic &o) const
 {
-    CSYMPY_ASSERT(is_a<Add>(o))
+    SYMENGINE_ASSERT(is_a<Add>(o))
     const Add &s = static_cast<const Add &>(o);
     // # of elements
     if (dict_.size() != s.dict_.size())
@@ -115,7 +115,7 @@ RCP<const Basic> Add::from_dict(const RCP<const Number> &coef, umap_basic_num &&
                 return p->first;
             }
             if (is_a<Mul>(*(p->first))) {
-#if !defined(WITH_CSYMPY_THREAD_SAFE) && defined(WITH_CSYMPY_RCP)
+#if !defined(WITH_SYMENGINE_THREAD_SAFE) && defined(WITH_SYMENGINE_RCP)
                 if (rcp_static_cast<const Mul>(p->first)->refcount_ == 1) {
                     // We can steal the dictionary:
                     // Cast away const'ness, so that we can move 'dict_', since
@@ -149,7 +149,7 @@ RCP<const Basic> Add::from_dict(const RCP<const Number> &coef, umap_basic_num &&
         map_basic_basic m;
         if (is_a_Number(*p->second)) {
             if (is_a<Mul>(*(p->first))) {
-#if !defined(WITH_CSYMPY_THREAD_SAFE) && defined(WITH_CSYMPY_RCP)
+#if !defined(WITH_SYMENGINE_THREAD_SAFE) && defined(WITH_SYMENGINE_RCP)
                 if (rcp_static_cast<const Mul>(p->first)->refcount_ == 1) {
                     // We can steal the dictionary:
                     // Cast away const'ness, so that we can move 'dict_', since
@@ -216,7 +216,7 @@ void Add::as_coef_term(const RCP<const Basic> &self,
         *coef = rcp_static_cast<const Number>(self);
         *term = one;
     } else {
-        CSYMPY_ASSERT(!is_a<Add>(*self));
+        SYMENGINE_ASSERT(!is_a<Add>(*self));
         *coef = one;
         *term = self;
     }

@@ -4,8 +4,8 @@
  *
  **/
 
-#ifndef CSYMPY_DIOPHANTINE_H
-#define CSYMPY_DIOPHANTINE_H
+#ifndef SYMENGINE_DIOPHANTINE_H
+#define SYMENGINE_DIOPHANTINE_H
 
 #include <vector>
 

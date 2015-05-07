@@ -1289,7 +1289,7 @@ void test_csr_scale_rows()
         {integer(1), integer(2), integer(-3), integer(12), integer(15), integer(18)}));
 
     X = DenseMatrix(3, 1, {integer(1), integer(0), integer(-1)});
-    CSYMPY_CHECK_THROW(csr_scale_columns(A, X), std::runtime_error);
+    SYMENGINE_CHECK_THROW(csr_scale_columns(A, X), std::runtime_error);
 }
 
 void test_csr_scale_columns()
@@ -1304,7 +1304,7 @@ void test_csr_scale_columns()
         {integer(1), integer(6), integer(9), integer(4), integer(-5), integer(18)}));
 
     X = DenseMatrix(3, 1, {integer(0), integer(1), integer(-1)});
-    CSYMPY_CHECK_THROW(csr_scale_columns(A, X), std::runtime_error);
+    SYMENGINE_CHECK_THROW(csr_scale_columns(A, X), std::runtime_error);
 }
 
 void test_csr_binop_csr_canonical()

@@ -4,8 +4,8 @@
  *
  **/
  
-#ifndef CSYMPY_NUMBER_H
-#define CSYMPY_NUMBER_H
+#ifndef SYMENGINE_NUMBER_H
+#define SYMENGINE_NUMBER_H
 
 #include "basic.h"
 

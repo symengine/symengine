@@ -51,7 +51,7 @@ if (WITH_ECM)
     find_package(ECM REQUIRED)
     include_directories(${ECM_INCLUDE_DIRS})
     set(LIBS ${LIBS} ${ECM_LIBRARIES})
-    set(HAVE_CSYMPY_ECM yes)
+    set(HAVE_SYMENGINE_ECM yes)
 endif()
 
 # PRIMESIEVE
@@ -62,7 +62,7 @@ if (WITH_PRIMESIEVE)
     find_package(PRIMESIEVE REQUIRED)
     include_directories(${PRIMESIEVE_INCLUDE_DIRS})
     set(LIBS ${LIBS} ${PRIMESIEVE_LIBRARIES})
-    set(HAVE_CSYMPY_PRIMESIEVE yes)
+    set(HAVE_SYMENGINE_PRIMESIEVE yes)
 endif()
 
 # ARB
@@ -84,7 +84,7 @@ if (WITH_ARB)
     find_package(ARB REQUIRED)
     include_directories(${ARB_INCLUDE_DIRS})
     set(LIBS ${LIBS} ${ARB_LIBRARIES})
-    set(HAVE_CSYMPY_ARB yes)
+    set(HAVE_SYMENGINE_ARB yes)
 endif()
 
 # Python
@@ -126,22 +126,22 @@ if (BUILD_DOXYGEN)
     endif(DOXYGEN_FOUND)
 endif()
 
-# CSYMPY_ASSERT
-set(WITH_CSYMPY_ASSERT no
-    CACHE BOOL "Enable CSYMPY_ASSERT macro")
+# SYMENGINE_ASSERT
+set(WITH_SYMENGINE_ASSERT no
+    CACHE BOOL "Enable SYMENGINE_ASSERT macro")
 
-# CSYMPY_RCP
-set(WITH_CSYMPY_RCP yes
-    CACHE BOOL "Enable CSYMPY_RCP support")
+# SYMENGINE_RCP
+set(WITH_SYMENGINE_RCP yes
+    CACHE BOOL "Enable SYMENGINE_RCP support")
 
-# CSYMPY_THREAD_SAFE
-set(WITH_CSYMPY_THREAD_SAFE no
-    CACHE BOOL "Enable CSYMPY_THREAD_SAFE support")
+# SYMENGINE_THREAD_SAFE
+set(WITH_SYMENGINE_THREAD_SAFE no
+    CACHE BOOL "Enable SYMENGINE_THREAD_SAFE support")
 
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(HAVE_TEUCHOS_DEBUG yes)
     set(HAVE_TEUCHOS_DEBUG_RCP_NODE_TRACING yes)
-    set(HAVE_CSYMPY_RCP yes)
+    set(HAVE_SYMENGINE_RCP yes)
 endif()
 
 enable_testing()
@@ -170,9 +170,9 @@ else ()
 endif ()
 message("Installation prefix: ${CMAKE_INSTALL_PREFIX}")
 
-message("WITH_CSYMPY_ASSERT: ${WITH_CSYMPY_ASSERT}")
-message("WITH_CSYMPY_RCP: ${WITH_CSYMPY_RCP}")
-message("WITH_CSYMPY_THREAD_SAFE: ${WITH_CSYMPY_THREAD_SAFE}")
+message("WITH_SYMENGINE_ASSERT: ${WITH_SYMENGINE_ASSERT}")
+message("WITH_SYMENGINE_RCP: ${WITH_SYMENGINE_RCP}")
+message("WITH_SYMENGINE_THREAD_SAFE: ${WITH_SYMENGINE_THREAD_SAFE}")
 
 message("GMP_INCLUDE_DIRS: ${GMP_INCLUDE_DIRS}")
 message("GMP_LIBRARIES: ${GMP_LIBRARIES}")

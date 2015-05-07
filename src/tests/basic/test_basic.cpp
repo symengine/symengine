@@ -156,7 +156,7 @@ void test_integer()
     assert(eq(k, rcp(new Integer(-5))));
     assert(neq(k, rcp(new Integer(12))));
 
-    CSYMPY_CHECK_THROW(divnum(i, zero), std::runtime_error)
+    SYMENGINE_CHECK_THROW(divnum(i, zero), std::runtime_error)
 }
 
 void test_rational()
@@ -256,7 +256,7 @@ void test_rational()
 
     r1 = Rational::from_two_ints(integer(2), integer(3));
     r2 = zero;
-    CSYMPY_CHECK_THROW(divnum(r1, r2), std::runtime_error)
+    SYMENGINE_CHECK_THROW(divnum(r1, r2), std::runtime_error)
 }
 
 void test_mul()
@@ -583,13 +583,13 @@ void test_complex()
     assert(eq(subnum(c1, c2), c3));
 
     // Explicit division by zero checks
-    CSYMPY_CHECK_THROW(divnum(c1, integer(0)), std::runtime_error);
+    SYMENGINE_CHECK_THROW(divnum(c1, integer(0)), std::runtime_error);
 
     r3 = Rational::from_two_ints(integer(0), integer(1));
-    CSYMPY_CHECK_THROW(divnum(c1, r3), std::runtime_error);
+    SYMENGINE_CHECK_THROW(divnum(c1, r3), std::runtime_error);
 
     c2 = Complex::from_two_nums(*r3, *r3);
-    CSYMPY_CHECK_THROW(divnum(c1, c2), std::runtime_error);
+    SYMENGINE_CHECK_THROW(divnum(c1, c2), std::runtime_error);
 }
 
 void test_has()

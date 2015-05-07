@@ -15,14 +15,14 @@ CSRMatrix::CSRMatrix(unsigned row, unsigned col)
         : MatrixBase(row, col)
 {
     p_ = std::vector<unsigned>(row + 1, 0);
-    CSYMPY_ASSERT(is_canonical());
+    SYMENGINE_ASSERT(is_canonical());
 }
 
 CSRMatrix::CSRMatrix(unsigned row, unsigned col, std::vector<unsigned>&& p,
     std::vector<unsigned>&& j, vec_basic&& x)
         : MatrixBase(row, col), p_{std::move(p)}, j_{std::move(j)}, x_{std::move(x)}
 {
-    CSYMPY_ASSERT(is_canonical());
+    SYMENGINE_ASSERT(is_canonical());
 }
 
 bool CSRMatrix::eq(const MatrixBase &other) const
@@ -64,7 +64,7 @@ bool CSRMatrix::is_canonical()
 // Get and set elements
 RCP<const Basic> CSRMatrix::get(unsigned i, unsigned j) const
 {
-    CSYMPY_ASSERT(i < row_ && j < col_);
+    SYMENGINE_ASSERT(i < row_ && j < col_);
 
     unsigned row_start = p_[i];
     unsigned row_end = p_[i + 1];
@@ -82,7 +82,7 @@ RCP<const Basic> CSRMatrix::get(unsigned i, unsigned j) const
 
 void CSRMatrix::set(unsigned i, unsigned j, const RCP<const Basic> &e)
 {
-    CSYMPY_ASSERT(i < row_ && j < col_);
+    SYMENGINE_ASSERT(i < row_ && j < col_);
 
     unsigned k = p_[i];
     unsigned row_end = p_[i + 1];
@@ -441,7 +441,7 @@ void csr_diagonal(const CSRMatrix& A, DenseMatrix& D)
 {
     unsigned N = std::min(A.row_, A.col_);
 
-    CSYMPY_ASSERT(D.nrows() == N && D.ncols() == 1);
+    SYMENGINE_ASSERT(D.nrows() == N && D.ncols() == 1);
 
     unsigned row_start;
     unsigned row_end;
@@ -467,7 +467,7 @@ void csr_diagonal(const CSRMatrix& A, DenseMatrix& D)
 // A[i, :] *= X[i]
 void csr_scale_rows(CSRMatrix& A, const DenseMatrix& X)
 {
-    CSYMPY_ASSERT(A.row_ == X.nrows() && X.ncols() == 1);
+    SYMENGINE_ASSERT(A.row_ == X.nrows() && X.ncols() == 1);
 
     for(unsigned i = 0; i < A.row_; i++) {
         if (eq(X.get(i, 0), zero))
@@ -481,7 +481,7 @@ void csr_scale_rows(CSRMatrix& A, const DenseMatrix& X)
 // A[:,i] *= X[i]
 void csr_scale_columns(CSRMatrix& A, const DenseMatrix& X)
 {
-    CSYMPY_ASSERT(A.col_ == X.nrows() && X.ncols() == 1);
+    SYMENGINE_ASSERT(A.col_ == X.nrows() && X.ncols() == 1);
 
     const unsigned nnz = A.p_[A.row_];
     unsigned i;
@@ -501,7 +501,7 @@ void csr_scale_columns(CSRMatrix& A, const DenseMatrix& X)
 void csr_binop_csr_canonical(const CSRMatrix& A, const CSRMatrix& B, CSRMatrix& C,
         RCP<const Basic>(&bin_op)(const RCP<const Basic>&, const RCP<const Basic>&))
 {
-    CSYMPY_ASSERT(A.row_ == B.row_ && A.col_ == B.col_ && C.row_ == A.row_ && C.col_ == A.col_);
+    SYMENGINE_ASSERT(A.row_ == B.row_ && A.col_ == B.col_ && C.row_ == A.row_ && C.col_ == A.col_);
 
     //Method that works for canonical CSR matrices
     C.p_[0] = 0;

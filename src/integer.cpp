@@ -32,7 +32,7 @@ bool Integer::__eq__(const Basic &o) const
 
 int Integer::compare(const Basic &o) const
 {
-    CSYMPY_ASSERT(is_a<Integer>(o))
+    SYMENGINE_ASSERT(is_a<Integer>(o))
     const Integer &s = static_cast<const Integer &>(o);
     if (i == s.i) return 0;
     return i < s.i ? -1 : 1;

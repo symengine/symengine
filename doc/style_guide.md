@@ -15,7 +15,7 @@ Use 4 spaces. Format ``if`` as follows:
 ## Pointers
 
 Never use raw C++ pointers. Always use the smart pointers provided by `csympy_rcp.h`
-(depending on WITH_CSYMPY_RCP, those are either Teuchos::RCP, or our own,
+(depending on WITH_SYMENGINE_RCP, those are either Teuchos::RCP, or our own,
 faster implementation).
 
 ### Declaration

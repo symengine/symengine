@@ -3,8 +3,8 @@
  *  Multiplication class
  *
  **/
-#ifndef CSYMPY_MUL_H
-#define CSYMPY_MUL_H
+#ifndef SYMENGINE_MUL_H
+#define SYMENGINE_MUL_H
 
 #include "basic.h"
 #include "dict.h"

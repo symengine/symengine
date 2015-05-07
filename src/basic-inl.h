@@ -1,5 +1,5 @@
-#ifndef CSYMPY_BASIC_INL_H
-#define CSYMPY_BASIC_INL_H
+#ifndef SYMENGINE_BASIC_INL_H
+#define SYMENGINE_BASIC_INL_H
 
 namespace SymEngine {
 

@@ -287,7 +287,7 @@ RCP<const Basic> TrigFunction::subs(const map_basic_basic &subs_dict) const
 Sin::Sin(const RCP<const Basic> &arg)
     : TrigFunction(arg)
 {
-    CSYMPY_ASSERT(is_canonical(arg))
+    SYMENGINE_ASSERT(is_canonical(arg))
 }
 
 bool Sin::is_canonical(const RCP<const Basic> &arg)
@@ -315,7 +315,7 @@ bool Sin::__eq__(const Basic &o) const
 
 int Sin::compare(const Basic &o) const
 {
-    CSYMPY_ASSERT(is_a<Sin>(o))
+    SYMENGINE_ASSERT(is_a<Sin>(o))
     const Sin &s = static_cast<const Sin &>(o);
     return get_arg()->__cmp__(*(s.get_arg()));
 }
@@ -354,7 +354,7 @@ RCP<const Basic> sin(const RCP<const Basic> &arg)
 Cos::Cos(const RCP<const Basic> &arg)
     : TrigFunction(arg)
 {
-    CSYMPY_ASSERT(is_canonical(arg))
+    SYMENGINE_ASSERT(is_canonical(arg))
 }
 
 bool Cos::is_canonical(const RCP<const Basic> &arg)
@@ -382,7 +382,7 @@ bool Cos::__eq__(const Basic &o) const
 
 int Cos::compare(const Basic &o) const
 {
-    CSYMPY_ASSERT(is_a<Cos>(o))
+    SYMENGINE_ASSERT(is_a<Cos>(o))
     const Cos &s = static_cast<const Cos &>(o);
     return get_arg()->__cmp__(*(s.get_arg()));
 }
@@ -421,7 +421,7 @@ RCP<const Basic> cos(const RCP<const Basic> &arg)
 Tan::Tan(const RCP<const Basic> &arg)
     : TrigFunction(arg)
 {
-    CSYMPY_ASSERT(is_canonical(arg))
+    SYMENGINE_ASSERT(is_canonical(arg))
 }
 
 bool Tan::is_canonical(const RCP<const Basic> &arg)
@@ -450,7 +450,7 @@ bool Tan::__eq__(const Basic &o) const
 
 int Tan::compare(const Basic &o) const
 {
-    CSYMPY_ASSERT(is_a<Tan>(o))
+    SYMENGINE_ASSERT(is_a<Tan>(o))
     const Tan &s = static_cast<const Tan &>(o);
     return get_arg()->__cmp__(*(s.get_arg()));
 }
@@ -490,7 +490,7 @@ RCP<const Basic> tan(const RCP<const Basic> &arg)
 Cot::Cot(const RCP<const Basic> &arg)
     : TrigFunction(arg)
 {
-    CSYMPY_ASSERT(is_canonical(arg))
+    SYMENGINE_ASSERT(is_canonical(arg))
 }
 
 bool Cot::is_canonical(const RCP<const Basic> &arg)
@@ -519,7 +519,7 @@ bool Cot::__eq__(const Basic &o) const
 
 int Cot::compare(const Basic &o) const
 {
-    CSYMPY_ASSERT(is_a<Cot>(o))
+    SYMENGINE_ASSERT(is_a<Cot>(o))
     const Cot &s = static_cast<const Cot &>(o);
     return get_arg()->__cmp__(*(s.get_arg()));
 }
@@ -558,7 +558,7 @@ RCP<const Basic> cot(const RCP<const Basic> &arg)
 Csc::Csc(const RCP<const Basic> &arg)
     : TrigFunction(arg)
 {
-    CSYMPY_ASSERT(is_canonical(arg))
+    SYMENGINE_ASSERT(is_canonical(arg))
 }
 
 bool Csc::is_canonical(const RCP<const Basic> &arg)
@@ -587,7 +587,7 @@ bool Csc::__eq__(const Basic &o) const
 
 int Csc::compare(const Basic &o) const
 {
-    CSYMPY_ASSERT(is_a<Csc>(o))
+    SYMENGINE_ASSERT(is_a<Csc>(o))
     const Csc &s = static_cast<const Csc &>(o);
     return get_arg()->__cmp__(*(s.get_arg()));
 }
@@ -627,7 +627,7 @@ RCP<const Basic> csc(const RCP<const Basic> &arg)
 Sec::Sec(const RCP<const Basic> &arg)
     : TrigFunction(arg)
 {
-    CSYMPY_ASSERT(is_canonical(arg))
+    SYMENGINE_ASSERT(is_canonical(arg))
 }
 
 bool Sec::is_canonical(const RCP<const Basic> &arg)
@@ -655,7 +655,7 @@ bool Sec::__eq__(const Basic &o) const
 }
 
 int Sec::compare(const Basic &o) const
-{    CSYMPY_ASSERT(is_a<Sec>(o))
+{    SYMENGINE_ASSERT(is_a<Sec>(o))
     const Sec &s = static_cast<const Sec &>(o);
     return get_arg()->__cmp__(*(s.get_arg()));
 }
@@ -693,7 +693,7 @@ RCP<const Basic> sec(const RCP<const Basic> &arg)
 ASin::ASin(const RCP<const Basic> &arg)
     : TrigFunction(arg)
 {
-    CSYMPY_ASSERT(is_canonical(arg))
+    SYMENGINE_ASSERT(is_canonical(arg))
 }
 
 bool ASin::is_canonical(const RCP<const Basic> &arg)
@@ -720,7 +720,7 @@ bool ASin::__eq__(const Basic &o) const
 
 int ASin::compare(const Basic &o) const
 {
-    CSYMPY_ASSERT(is_a<ASin>(o))
+    SYMENGINE_ASSERT(is_a<ASin>(o))
     const ASin &s = static_cast<const ASin &>(o);
     return get_arg()->__cmp__(*(s.get_arg()));
 }
@@ -744,7 +744,7 @@ RCP<const Basic> asin(const RCP<const Basic> &arg)
 ACos::ACos(const RCP<const Basic> &arg)
     : TrigFunction(arg)
 {
-    CSYMPY_ASSERT(is_canonical(arg))
+    SYMENGINE_ASSERT(is_canonical(arg))
 }
 
 bool ACos::is_canonical(const RCP<const Basic> &arg)
@@ -771,7 +771,7 @@ bool ACos::__eq__(const Basic &o) const
 
 int ACos::compare(const Basic &o) const
 {
-    CSYMPY_ASSERT(is_a<ACos>(o))
+    SYMENGINE_ASSERT(is_a<ACos>(o))
     const ACos &s = static_cast<const ACos &>(o);
     return get_arg()->__cmp__(*(s.get_arg()));
 }
@@ -799,7 +799,7 @@ RCP<const Basic> acos(const RCP<const Basic> &arg)
 ASec::ASec(const RCP<const Basic> &arg)
     : TrigFunction(arg)
 {
-    CSYMPY_ASSERT(is_canonical(arg))
+    SYMENGINE_ASSERT(is_canonical(arg))
 }
 
 bool ASec::is_canonical(const RCP<const Basic> &arg)
@@ -826,7 +826,7 @@ bool ASec::__eq__(const Basic &o) const
 
 int ASec::compare(const Basic &o) const
 {
-    CSYMPY_ASSERT(is_a<ASec>(o))
+    SYMENGINE_ASSERT(is_a<ASec>(o))
     const ASec &s = static_cast<const ASec &>(o);
     return get_arg()->__cmp__(*(s.get_arg()));
 }
@@ -853,7 +853,7 @@ RCP<const Basic> asec(const RCP<const Basic> &arg)
 ACsc::ACsc(const RCP<const Basic> &arg)
     : TrigFunction(arg)
 {
-    CSYMPY_ASSERT(is_canonical(arg))
+    SYMENGINE_ASSERT(is_canonical(arg))
 }
 
 bool ACsc::is_canonical(const RCP<const Basic> &arg)
@@ -880,7 +880,7 @@ bool ACsc::__eq__(const Basic &o) const
 
 int ACsc::compare(const Basic &o) const
 {
-    CSYMPY_ASSERT(is_a<ACsc>(o))
+    SYMENGINE_ASSERT(is_a<ACsc>(o))
     const ACsc &s = static_cast<const ACsc &>(o);
     return get_arg()->__cmp__(*(s.get_arg()));
 }
@@ -902,7 +902,7 @@ RCP<const Basic> acsc(const RCP<const Basic> &arg)
 ATan::ATan(const RCP<const Basic> &arg)
     : TrigFunction(arg)
 {
-    CSYMPY_ASSERT(is_canonical(arg))
+    SYMENGINE_ASSERT(is_canonical(arg))
 }
 
 bool ATan::is_canonical(const RCP<const Basic> &arg)
@@ -929,7 +929,7 @@ bool ATan::__eq__(const Basic &o) const
 
 int ATan::compare(const Basic &o) const
 {
-    CSYMPY_ASSERT(is_a<ATan>(o))
+    SYMENGINE_ASSERT(is_a<ATan>(o))
     const ATan &s = static_cast<const ATan &>(o);
     return get_arg()->__cmp__(*(s.get_arg()));
 }
@@ -952,7 +952,7 @@ RCP<const Basic> atan(const RCP<const Basic> &arg)
 ACot::ACot(const RCP<const Basic> &arg)
     : TrigFunction(arg)
 {
-    CSYMPY_ASSERT(is_canonical(arg))
+    SYMENGINE_ASSERT(is_canonical(arg))
 }
 
 bool ACot::is_canonical(const RCP<const Basic> &arg)
@@ -979,7 +979,7 @@ bool ACot::__eq__(const Basic &o) const
 
 int ACot::compare(const Basic &o) const
 {
-    CSYMPY_ASSERT(is_a<ACot>(o))
+    SYMENGINE_ASSERT(is_a<ACot>(o))
     const ACot &s = static_cast<const ACot &>(o);
     return get_arg()->__cmp__(*(s.get_arg()));
 }
@@ -1007,7 +1007,7 @@ RCP<const Basic> acot(const RCP<const Basic> &arg)
 ATan2::ATan2(const RCP<const Basic> &num, const RCP<const Basic> &den)
     : num_{num}, den_{den}
 {
-    CSYMPY_ASSERT(is_canonical(num, den))
+    SYMENGINE_ASSERT(is_canonical(num, den))
 }
 
 bool ATan2::is_canonical(const RCP<const Basic> &num,
@@ -1037,7 +1037,7 @@ bool ATan2::__eq__(const Basic &o) const
 
 int ATan2::compare(const Basic &o) const
 {
-    CSYMPY_ASSERT(is_a<ATan2>(o))
+    SYMENGINE_ASSERT(is_a<ATan2>(o))
     const ATan2 &s = static_cast<const ATan2 &>(o);
     return div(num_, den_)->__cmp__(*div(s.num_, s.den_));
 }
@@ -1247,7 +1247,7 @@ RCP<const Basic> ACsc::create(const RCP<const Basic> &arg) const
 LambertW::LambertW(const RCP<const Basic> &arg)
     : arg_{arg}
 {
-    CSYMPY_ASSERT(is_canonical(arg))
+    SYMENGINE_ASSERT(is_canonical(arg))
 }
 
 bool LambertW::is_canonical(const RCP<const Basic> &arg)
@@ -1276,7 +1276,7 @@ bool LambertW::__eq__(const Basic &o) const
 
 int LambertW::compare(const Basic &o) const
 {
-    CSYMPY_ASSERT(is_a<LambertW>(o))
+    SYMENGINE_ASSERT(is_a<LambertW>(o))
     return arg_->__cmp__(*(static_cast<const LambertW &>(o).arg_));
 }
 
@@ -1300,13 +1300,13 @@ RCP<const Basic> lambertw(const RCP<const Basic> &arg)
 FunctionSymbol::FunctionSymbol(std::string name, const RCP<const Basic> &arg)
     : name_{name}, arg_{{arg}}
 {
-    CSYMPY_ASSERT(is_canonical(arg_))
+    SYMENGINE_ASSERT(is_canonical(arg_))
 }
 
 FunctionSymbol::FunctionSymbol(std::string name, const vec_basic &arg)
     : name_{name}, arg_{arg}
 {
-    CSYMPY_ASSERT(is_canonical(arg_))
+    SYMENGINE_ASSERT(is_canonical(arg_))
 }
 
 bool FunctionSymbol::is_canonical(const vec_basic &arg)
@@ -1334,7 +1334,7 @@ bool FunctionSymbol::__eq__(const Basic &o) const
 
 int FunctionSymbol::compare(const Basic &o) const
 {
-    CSYMPY_ASSERT(is_a<FunctionSymbol>(o))
+    SYMENGINE_ASSERT(is_a<FunctionSymbol>(o))
     const FunctionSymbol &s = static_cast<const FunctionSymbol &>(o);
     if (name_ == s.name_)
         return vec_basic_compare(arg_, s.arg_);
@@ -1409,7 +1409,7 @@ FunctionWrapper::FunctionWrapper(void* obj, std::string name, std::string hash, 
     hash_ = hash;
     dec_ref_ = dec_ref;
     comp_ = comp;
-    CSYMPY_ASSERT(is_canonical(arg_))
+    SYMENGINE_ASSERT(is_canonical(arg_))
 }
 
 FunctionWrapper::~FunctionWrapper()
@@ -1426,7 +1426,7 @@ std::size_t FunctionWrapper::__hash__() const
 
 int FunctionWrapper::compare(const Basic &o) const
 {
-    CSYMPY_ASSERT(is_a<FunctionWrapper>(o))
+    SYMENGINE_ASSERT(is_a<FunctionWrapper>(o))
     const FunctionWrapper &s = static_cast<const FunctionWrapper &>(o);
     return (*comp_)(obj_, s.obj_);
 }
@@ -1454,7 +1454,7 @@ RCP<const Basic> FunctionWrapper::diff(const RCP<const Symbol> &x) const
 Derivative::Derivative(const RCP<const Basic> &arg, const vec_basic &x)
     : arg_{arg}, x_{x}
 {
-    CSYMPY_ASSERT(is_canonical(arg, x))
+    SYMENGINE_ASSERT(is_canonical(arg, x))
 }
 
 bool Derivative::is_canonical(const RCP<const Basic> &arg,
@@ -1509,7 +1509,7 @@ bool Derivative::__eq__(const Basic &o) const
 
 int Derivative::compare(const Basic &o) const
 {
-    CSYMPY_ASSERT(is_a<Derivative>(o))
+    SYMENGINE_ASSERT(is_a<Derivative>(o))
     const Derivative &s = static_cast<const Derivative &>(o);
     int cmp = arg_->__cmp__(*(s.arg_));
     if (cmp != 0) return cmp;
@@ -1579,7 +1579,7 @@ RCP<const Basic> Derivative::subs(const map_basic_basic &subs_dict) const
 Subs::Subs(const RCP<const Basic> &arg, const map_basic_basic &dict)
     : arg_{arg}, dict_{dict}
 {
-    CSYMPY_ASSERT(is_canonical(arg, dict))
+    SYMENGINE_ASSERT(is_canonical(arg, dict))
 }
 
 bool Subs::is_canonical(const RCP<const Basic> &arg,
@@ -1613,7 +1613,7 @@ bool Subs::__eq__(const Basic &o) const
 
 int Subs::compare(const Basic &o) const
 {
-    CSYMPY_ASSERT(is_a<Subs>(o))
+    SYMENGINE_ASSERT(is_a<Subs>(o))
     const Subs &s = static_cast<const Subs &>(o);
     int cmp = arg_->__cmp__(*(arg_));
     if (cmp != 0) return cmp;
@@ -1717,7 +1717,7 @@ RCP<const Basic> HyperbolicFunction::subs(const map_basic_basic &subs_dict) cons
 Sinh::Sinh(const RCP<const Basic> &arg)
     : HyperbolicFunction(arg)
 {
-    CSYMPY_ASSERT(is_canonical(arg))
+    SYMENGINE_ASSERT(is_canonical(arg))
 }
 
 bool Sinh::is_canonical(const RCP<const Basic> &arg)
@@ -1745,7 +1745,7 @@ bool Sinh::__eq__(const Basic &o) const
 
 int Sinh::compare(const Basic &o) const
 {
-    CSYMPY_ASSERT(is_a<Sinh>(o))
+    SYMENGINE_ASSERT(is_a<Sinh>(o))
     const Sinh &s = static_cast<const Sinh &>(o);
     return get_arg()->__cmp__(*(s.get_arg()));
 }
@@ -1776,7 +1776,7 @@ RCP<const Basic> Sinh::diff(const RCP<const Symbol> &x) const
 Cosh::Cosh(const RCP<const Basic> &arg)
     : HyperbolicFunction(arg)
 {
-    CSYMPY_ASSERT(is_canonical(arg))
+    SYMENGINE_ASSERT(is_canonical(arg))
 }
 
 bool Cosh::is_canonical(const RCP<const Basic> &arg)
@@ -1804,7 +1804,7 @@ bool Cosh::__eq__(const Basic &o) const
 
 int Cosh::compare(const Basic &o) const
 {
-    CSYMPY_ASSERT(is_a<Cosh>(o))
+    SYMENGINE_ASSERT(is_a<Cosh>(o))
     const Cosh &s = static_cast<const Cosh &>(o);
     return get_arg()->__cmp__(*(s.get_arg()));
 }
@@ -1835,7 +1835,7 @@ RCP<const Basic> Cosh::diff(const RCP<const Symbol> &x) const
 Tanh::Tanh(const RCP<const Basic> &arg)
     : HyperbolicFunction(arg)
 {
-    CSYMPY_ASSERT(is_canonical(arg))
+    SYMENGINE_ASSERT(is_canonical(arg))
 }
 
 bool Tanh::is_canonical(const RCP<const Basic> &arg)
@@ -1863,7 +1863,7 @@ bool Tanh::__eq__(const Basic &o) const
 
 int Tanh::compare(const Basic &o) const
 {
-    CSYMPY_ASSERT(is_a<Tanh>(o))
+    SYMENGINE_ASSERT(is_a<Tanh>(o))
     const Tanh &s = static_cast<const Tanh &>(o);
     return get_arg()->__cmp__(*(s.get_arg()));
 }
@@ -1896,7 +1896,7 @@ RCP<const Basic> Tanh::diff(const RCP<const Symbol> &x) const
 Coth::Coth(const RCP<const Basic> &arg)
     : HyperbolicFunction(arg)
 {
-    CSYMPY_ASSERT(is_canonical(arg))
+    SYMENGINE_ASSERT(is_canonical(arg))
 }
 
 bool Coth::is_canonical(const RCP<const Basic> &arg)
@@ -1924,7 +1924,7 @@ bool Coth::__eq__(const Basic &o) const
 
 int Coth::compare(const Basic &o) const
 {
-    CSYMPY_ASSERT(is_a<Coth>(o))
+    SYMENGINE_ASSERT(is_a<Coth>(o))
     const Coth &s = static_cast<const Coth &>(o);
     return get_arg()->__cmp__(*(s.get_arg()));
 }
@@ -1960,7 +1960,7 @@ RCP<const Basic> Coth::diff(const RCP<const Symbol> &x) const
 ASinh::ASinh(const RCP<const Basic> &arg)
     : HyperbolicFunction(arg)
 {
-    CSYMPY_ASSERT(is_canonical(arg))
+    SYMENGINE_ASSERT(is_canonical(arg))
 }
 
 bool ASinh::is_canonical(const RCP<const Basic> &arg)
@@ -1988,7 +1988,7 @@ bool ASinh::__eq__(const Basic &o) const
 
 int ASinh::compare(const Basic &o) const
 {
-    CSYMPY_ASSERT(is_a<ASinh>(o))
+    SYMENGINE_ASSERT(is_a<ASinh>(o))
     const ASinh &s = static_cast<const ASinh &>(o);
     return get_arg()->__cmp__(*(s.get_arg()));
 }
@@ -2016,7 +2016,7 @@ RCP<const Basic> ASinh::diff(const RCP<const Symbol> &x) const
 ACosh::ACosh(const RCP<const Basic> &arg)
     : HyperbolicFunction(arg)
 {
-    CSYMPY_ASSERT(is_canonical(arg))
+    SYMENGINE_ASSERT(is_canonical(arg))
 }
 
 bool ACosh::is_canonical(const RCP<const Basic> &arg)
@@ -2039,7 +2039,7 @@ bool ACosh::__eq__(const Basic &o) const
 
 int ACosh::compare(const Basic &o) const
 {
-    CSYMPY_ASSERT(is_a<ACosh>(o))
+    SYMENGINE_ASSERT(is_a<ACosh>(o))
     const ACosh &s = static_cast<const ACosh &>(o);
     return get_arg()->__cmp__(*(s.get_arg()));
 }
@@ -2059,7 +2059,7 @@ RCP<const Basic> ACosh::diff(const RCP<const Symbol> &x) const
 ATanh::ATanh(const RCP<const Basic> &arg)
     : HyperbolicFunction(arg)
 {
-    CSYMPY_ASSERT(is_canonical(arg))
+    SYMENGINE_ASSERT(is_canonical(arg))
 }
 
 bool ATanh::is_canonical(const RCP<const Basic> &arg)
@@ -2087,7 +2087,7 @@ bool ATanh::__eq__(const Basic &o) const
 
 int ATanh::compare(const Basic &o) const
 {
-    CSYMPY_ASSERT(is_a<ATanh>(o))
+    SYMENGINE_ASSERT(is_a<ATanh>(o))
     const ATanh &s = static_cast<const ATanh &>(o);
     return get_arg()->__cmp__(*(s.get_arg()));
 }
@@ -2113,7 +2113,7 @@ RCP<const Basic> ATanh::diff(const RCP<const Symbol> &x) const
 ACoth::ACoth(const RCP<const Basic> &arg)
     : HyperbolicFunction(arg)
 {
-    CSYMPY_ASSERT(is_canonical(arg))
+    SYMENGINE_ASSERT(is_canonical(arg))
 }
 
 bool ACoth::is_canonical(const RCP<const Basic> &arg)
@@ -2139,7 +2139,7 @@ bool ACoth::__eq__(const Basic &o) const
 
 int ACoth::compare(const Basic &o) const
 {
-    CSYMPY_ASSERT(is_a<ACoth>(o))
+    SYMENGINE_ASSERT(is_a<ACoth>(o))
     const ACoth &s = static_cast<const ACoth &>(o);
     return get_arg()->__cmp__(*(s.get_arg()));
 }
@@ -2164,7 +2164,7 @@ RCP<const Basic> ACoth::diff(const RCP<const Symbol> &x) const
 ASech::ASech(const RCP<const Basic> &arg)
     : HyperbolicFunction(arg)
 {
-    CSYMPY_ASSERT(is_canonical(arg))
+    SYMENGINE_ASSERT(is_canonical(arg))
 }
 
 bool ASech::is_canonical(const RCP<const Basic> &arg)
@@ -2187,7 +2187,7 @@ bool ASech::__eq__(const Basic &o) const
 
 int ASech::compare(const Basic &o) const
 {
-    CSYMPY_ASSERT(is_a<ASech>(o))
+    SYMENGINE_ASSERT(is_a<ASech>(o))
     const ASech &s = static_cast<const ASech &>(o);
     return get_arg()->__cmp__(*(s.get_arg()));
 }
@@ -2252,7 +2252,7 @@ RCP<const Basic> ASech::create(const RCP<const Basic> &arg) const
 KroneckerDelta::KroneckerDelta(const RCP<const Basic> &i, const RCP<const Basic> &j)
     :i_{i}, j_{j}
 {
-    CSYMPY_ASSERT(is_canonical(i_, j_))
+    SYMENGINE_ASSERT(is_canonical(i_, j_))
 }
 
 bool KroneckerDelta::is_canonical(const RCP<const Basic> &i, const RCP<const Basic> &j)
@@ -2280,7 +2280,7 @@ bool KroneckerDelta::__eq__(const Basic &o) const
 
 int KroneckerDelta::compare(const Basic &o) const
 {
-    CSYMPY_ASSERT(is_a<KroneckerDelta>(o))
+    SYMENGINE_ASSERT(is_a<KroneckerDelta>(o))
     const KroneckerDelta &s = static_cast<const KroneckerDelta &>(o);
     return i_->__cmp__(*(s.i_));
 }
@@ -2325,7 +2325,7 @@ bool has_dup(const vec_basic &arg)
 LeviCivita::LeviCivita(const vec_basic&& arg)
     :arg_{std::move(arg)}
 {
-    CSYMPY_ASSERT(is_canonical(arg_))
+    SYMENGINE_ASSERT(is_canonical(arg_))
 }
 
 bool LeviCivita::is_canonical(const vec_basic &arg)
@@ -2357,7 +2357,7 @@ bool LeviCivita::__eq__(const Basic &o) const
 
 int LeviCivita::compare(const Basic &o) const
 {
-    CSYMPY_ASSERT(is_a<LeviCivita>(o))
+    SYMENGINE_ASSERT(is_a<LeviCivita>(o))
     const LeviCivita &s = static_cast<const LeviCivita &>(o);
     // # of elements
     if (arg_.size() != s.arg_.size())
@@ -2411,13 +2411,13 @@ RCP<const Basic> levi_civita(const vec_basic &arg)
 Zeta::Zeta(const RCP<const Basic> &s, const RCP<const Basic> &a)
     : s_{s}, a_{a}
 {
-    CSYMPY_ASSERT(is_canonical(s_, a_))
+    SYMENGINE_ASSERT(is_canonical(s_, a_))
 }
 
 Zeta::Zeta(const RCP<const Basic> &s)
     : s_{s}, a_{one}
 {
-    CSYMPY_ASSERT(is_canonical(s_, a_))
+    SYMENGINE_ASSERT(is_canonical(s_, a_))
 }
 
 bool Zeta::is_canonical(const RCP<const Basic> &s, const RCP<const Basic> &a)
@@ -2446,7 +2446,7 @@ bool Zeta::__eq__(const Basic &o) const
 
 int Zeta::compare(const Basic &o) const
 {
-    CSYMPY_ASSERT(is_a<Zeta>(o))
+    SYMENGINE_ASSERT(is_a<Zeta>(o))
     return s_->__cmp__(*(static_cast<const Zeta &>(o).s_));
 }
 
@@ -2484,7 +2484,7 @@ RCP<const Basic> zeta(const RCP<const Basic> &s)
 Dirichlet_eta::Dirichlet_eta(const RCP<const Basic> &s)
     : s_{s}
 {
-    CSYMPY_ASSERT(is_canonical(s_))
+    SYMENGINE_ASSERT(is_canonical(s_))
 }
 
 bool Dirichlet_eta::is_canonical(const RCP<const Basic> &s)
@@ -2511,7 +2511,7 @@ bool Dirichlet_eta::__eq__(const Basic &o) const
 
 int Dirichlet_eta::compare(const Basic &o) const
 {
-    CSYMPY_ASSERT(is_a<Dirichlet_eta>(o))
+    SYMENGINE_ASSERT(is_a<Dirichlet_eta>(o))
     return s_->__cmp__(*(static_cast<const Dirichlet_eta &>(o).s_));
 }
 
@@ -2537,7 +2537,7 @@ RCP<const Basic> dirichlet_eta(const RCP<const Basic> &s)
 Gamma::Gamma(const RCP<const Basic> &arg)
     : arg_{arg}
 {
-    CSYMPY_ASSERT(is_canonical(arg_))
+    SYMENGINE_ASSERT(is_canonical(arg_))
 }
 
 bool Gamma::is_canonical(const RCP<const Basic> &arg)
@@ -2567,7 +2567,7 @@ bool Gamma::__eq__(const Basic &o) const
 
 int Gamma::compare(const Basic &o) const
 {
-    CSYMPY_ASSERT(is_a<Gamma>(o))
+    SYMENGINE_ASSERT(is_a<Gamma>(o))
     return arg_->__cmp__(*(static_cast<const Gamma &>(o).arg_));
 }
 
@@ -2619,7 +2619,7 @@ RCP<const Basic> gamma(const RCP<const Basic> &arg)
 LowerGamma::LowerGamma(const RCP<const Basic> &s, const RCP<const Basic> &x)
     : s_{s}, x_{x}
 {
-    CSYMPY_ASSERT(is_canonical(s_, x_))
+    SYMENGINE_ASSERT(is_canonical(s_, x_))
 }
 
 bool LowerGamma::is_canonical(const RCP<const Basic> &s, const RCP<const Basic> &x)
@@ -2652,7 +2652,7 @@ bool LowerGamma::__eq__(const Basic &o) const
 
 int LowerGamma::compare(const Basic &o) const
 {
-    CSYMPY_ASSERT(is_a<LowerGamma>(o))
+    SYMENGINE_ASSERT(is_a<LowerGamma>(o))
     const LowerGamma &lg = static_cast<const LowerGamma &>(o);
     if (neq(s_, lg.s_)) {
         return s_->__cmp__(*(static_cast<const LowerGamma &>(o).s_));
@@ -2692,7 +2692,7 @@ RCP<const Basic> lowergamma(const RCP<const Basic> &s, const RCP<const Basic> &x
 UpperGamma::UpperGamma(const RCP<const Basic> &s, const RCP<const Basic> &x)
     : s_{s}, x_{x}
 {
-    CSYMPY_ASSERT(is_canonical(s_, x_))
+    SYMENGINE_ASSERT(is_canonical(s_, x_))
 }
 
 bool UpperGamma::is_canonical(const RCP<const Basic> &s, const RCP<const Basic> &x)
@@ -2725,7 +2725,7 @@ bool UpperGamma::__eq__(const Basic &o) const
 
 int UpperGamma::compare(const Basic &o) const
 {
-    CSYMPY_ASSERT(is_a<UpperGamma>(o))
+    SYMENGINE_ASSERT(is_a<UpperGamma>(o))
     const UpperGamma &ug = static_cast<const UpperGamma &>(o);
     if (neq(s_, ug.s_)) {
         return s_->__cmp__(*(static_cast<const UpperGamma &>(o).s_));
@@ -2767,7 +2767,7 @@ RCP<const Basic> uppergamma(const RCP<const Basic> &s, const RCP<const Basic> &x
 Abs::Abs(const RCP<const Basic> &arg)
     : arg_{arg}
 {
-    CSYMPY_ASSERT(is_canonical(arg_))
+    SYMENGINE_ASSERT(is_canonical(arg_))
 }
 
 bool Abs::is_canonical(const RCP<const Basic> &arg)
@@ -2793,7 +2793,7 @@ bool Abs::__eq__(const Basic &o) const
 
 int Abs::compare(const Basic &o) const
 {
-    CSYMPY_ASSERT(is_a<Abs>(o))
+    SYMENGINE_ASSERT(is_a<Abs>(o))
     return arg_->__cmp__(*(static_cast<const Abs &>(o).arg_));
 }
 

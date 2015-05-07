@@ -7,7 +7,7 @@ namespace SymEngine {
 Complex::Complex(mpq_class real, mpq_class imaginary)
     : real_{real}, imaginary_{imaginary}
 {
-    CSYMPY_ASSERT(is_canonical(this->real_, this->imaginary_))
+    SYMENGINE_ASSERT(is_canonical(this->real_, this->imaginary_))
 }
 
 bool Complex::is_canonical(const mpq_class &real, const mpq_class &imaginary)
@@ -48,7 +48,7 @@ bool Complex::__eq__(const Basic &o) const
 }
 
 int Complex::compare(const Basic &o) const {
-    CSYMPY_ASSERT(is_a<Complex>(o))
+    SYMENGINE_ASSERT(is_a<Complex>(o))
     const Complex &s = static_cast<const Complex &>(o);
     if (real_ == s.real_) {
         if (imaginary_ == s.imaginary_) {

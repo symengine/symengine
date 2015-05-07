@@ -28,7 +28,7 @@ bool Constant::__eq__(const Basic &o) const
 
 int Constant::compare(const Basic &o) const
 {
-    CSYMPY_ASSERT(is_a<Constant>(o))
+    SYMENGINE_ASSERT(is_a<Constant>(o))
     const Constant &s = static_cast<const Constant &>(o);
     if (name_ == s.name_) return 0;
     return name_ < s.name_ ? -1 : 1;

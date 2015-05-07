@@ -5,7 +5,7 @@ namespace SymEngine {
 Rational::Rational(mpq_class i)
     : i{i}
 {
-    CSYMPY_ASSERT(is_canonical(this->i))
+    SYMENGINE_ASSERT(is_canonical(this->i))
 }
 
 bool Rational::is_canonical(const mpq_class &i)
@@ -65,7 +65,7 @@ bool Rational::__eq__(const Basic &o) const
 
 int Rational::compare(const Basic &o) const
 {
-    CSYMPY_ASSERT(is_a<Rational>(o))
+    SYMENGINE_ASSERT(is_a<Rational>(o))
     const Rational &s = static_cast<const Rational &>(o);
     if (i == s.i) return 0;
     return i < s.i ? -1 : 1;

@@ -31,7 +31,7 @@ extern "C" {
 
 void basic_init(basic s)
 {
-#if defined(WITH_CSYMPY_RCP)
+#if defined(WITH_SYMENGINE_RCP)
     // These checks only happen at compile time.
     // Check that 'basic' has the correct size:
     static_assert(sizeof(RCP<const Basic>) == sizeof(basic), "Size of 'basic' is not correct");
@@ -79,19 +79,19 @@ void integer_set_str(basic s, char* c)
 
 signed long integer_get_si(const basic s)
 {
-    CSYMPY_ASSERT(is_a<Integer>(*(*RCP_const_cast(s))));
+    SYMENGINE_ASSERT(is_a<Integer>(*(*RCP_const_cast(s))));
     return mpz_get_si((rcp_static_cast<const Integer>(*RCP_const_cast(s)))->as_mpz().get_mpz_t());
 }
 
 unsigned long integer_get_ui(const basic s)
 {
-    CSYMPY_ASSERT(is_a<Integer>(*(*RCP_const_cast(s))));
+    SYMENGINE_ASSERT(is_a<Integer>(*(*RCP_const_cast(s))));
     return mpz_get_ui((rcp_static_cast<const Integer>(*RCP_const_cast(s)))->as_mpz().get_mpz_t());
 }
 
 void integer_get_mpz(mpz_t a, const basic s)
 {
-    CSYMPY_ASSERT(is_a<Integer>(*(*RCP_const_cast(s))));
+    SYMENGINE_ASSERT(is_a<Integer>(*(*RCP_const_cast(s))));
     mpz_set(a, (rcp_static_cast<const Integer>(*RCP_const_cast(s)))->as_mpz().get_mpz_t());
 }
 

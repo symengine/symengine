@@ -3,8 +3,8 @@
  *  Power Class 
  *
  **/
-#ifndef CSYMPY_POW_H
-#define CSYMPY_POW_H
+#ifndef SYMENGINE_POW_H
+#define SYMENGINE_POW_H
 
 #include "basic.h"
 #include "dict.h"

@@ -4,8 +4,8 @@
  *
  **/
  
-#ifndef CSYMPY_MONOMIALS_H
-#define CSYMPY_MONOMIALS_H
+#ifndef SYMENGINE_MONOMIALS_H
+#define SYMENGINE_MONOMIALS_H
 
 #include "basic.h"
 

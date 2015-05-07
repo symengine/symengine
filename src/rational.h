@@ -3,8 +3,8 @@
  *  Class for Rationals built on top of Number class
  *
  **/
-#ifndef CSYMPY_RATIONAL_H
-#define CSYMPY_RATIONAL_H
+#ifndef SYMENGINE_RATIONAL_H
+#define SYMENGINE_RATIONAL_H
 
 #include "basic.h"
 #include "number.h"

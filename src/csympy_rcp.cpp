@@ -6,7 +6,7 @@
 
 namespace SymEngine {
 
-#if defined(WITH_CSYMPY_RCP)
+#if defined(WITH_SYMENGINE_RCP)
 
 
 void print_stack_on_segfault()

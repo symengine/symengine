@@ -3,8 +3,8 @@
  *  Class for Complex built on top of Number class
  *
  **/
-#ifndef CSYMPY_COMPLEX_H
-#define CSYMPY_COMPLEX_H
+#ifndef SYMENGINE_COMPLEX_H
+#define SYMENGINE_COMPLEX_H
 
 #include "basic.h"
 #include "number.h"

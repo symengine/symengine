@@ -14,7 +14,7 @@ namespace SymEngine {
 Pow::Pow(const RCP<const Basic> &base, const RCP<const Basic> &exp)
     : base_{base}, exp_{exp}
 {
-    CSYMPY_ASSERT(is_canonical(base, exp))
+    SYMENGINE_ASSERT(is_canonical(base, exp))
 }
 
 bool Pow::is_canonical(const RCP<const Basic> &base, const RCP<const Basic> &exp)
@@ -77,7 +77,7 @@ bool Pow::__eq__(const Basic &o) const
 
 int Pow::compare(const Basic &o) const
 {
-    CSYMPY_ASSERT(is_a<Pow>(o))
+    SYMENGINE_ASSERT(is_a<Pow>(o))
     const Pow &s = static_cast<const Pow &>(o);
     int base_cmp = base_->__cmp__(*s.base_);
     if (base_cmp == 0)
@@ -400,7 +400,7 @@ RCP<const Basic> exp(const RCP<const Basic> &x)
 Log::Log(const RCP<const Basic> &arg)
     : arg_{arg}
 {
-    CSYMPY_ASSERT(is_canonical(arg))
+    SYMENGINE_ASSERT(is_canonical(arg))
 }
 
 bool Log::is_canonical(const RCP<const Basic> &arg)
@@ -442,7 +442,7 @@ bool Log::__eq__(const Basic &o) const
 
 int Log::compare(const Basic &o) const
 {
-    CSYMPY_ASSERT(is_a<Log>(o))
+    SYMENGINE_ASSERT(is_a<Log>(o))
     const Log &s = static_cast<const Log &>(o);
     return arg_->__cmp__(s);
 }

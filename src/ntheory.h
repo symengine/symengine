@@ -4,8 +4,8 @@
  *
  **/
 
-#ifndef CSYMPY_NTHEORY_H
-#define CSYMPY_NTHEORY_H
+#ifndef SYMENGINE_NTHEORY_H
+#define SYMENGINE_NTHEORY_H
 
 #include "integer.h"
 

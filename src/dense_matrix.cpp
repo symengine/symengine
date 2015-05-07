@@ -19,19 +19,19 @@ DenseMatrix::DenseMatrix(unsigned row, unsigned col)
 DenseMatrix::DenseMatrix(unsigned row, unsigned col, const vec_basic &l)
         : MatrixBase(row, col), m_{l}
 {
-    CSYMPY_ASSERT(m_.size() == row*col)
+    SYMENGINE_ASSERT(m_.size() == row*col)
 }
 
 // Get and set elements
 RCP<const Basic> DenseMatrix::get(unsigned i, unsigned j) const
 {
-    CSYMPY_ASSERT(i < row_ && j < col_);
+    SYMENGINE_ASSERT(i < row_ && j < col_);
     return m_[i*col_ + j];
 }
 
 void DenseMatrix::set(unsigned i, unsigned j, const RCP<const Basic> &e)
 {
-    CSYMPY_ASSERT(i < row_ && j < col_);
+    SYMENGINE_ASSERT(i < row_ && j < col_);
     m_[i*col_ + j] = e;
 }
 
@@ -55,7 +55,7 @@ void DenseMatrix::inv(MatrixBase &result) const
 
 void DenseMatrix::add_matrix(const MatrixBase &other, MatrixBase &result) const
 {
-    CSYMPY_ASSERT(row_ == result.nrows() && col_ == result.ncols());
+    SYMENGINE_ASSERT(row_ == result.nrows() && col_ == result.ncols());
 
     if (is_a<DenseMatrix>(other) && is_a<DenseMatrix>(result)) {
         const DenseMatrix &o = static_cast<const DenseMatrix &>(other);
@@ -66,7 +66,7 @@ void DenseMatrix::add_matrix(const MatrixBase &other, MatrixBase &result) const
 
 void DenseMatrix::mul_matrix(const MatrixBase &other, MatrixBase &result) const
 {
-    CSYMPY_ASSERT(row_ == result.nrows() && other.ncols() == result.ncols());
+    SYMENGINE_ASSERT(row_ == result.nrows() && other.ncols() == result.ncols());
 
     if (is_a<DenseMatrix>(other) && is_a<DenseMatrix>(result)) {
         const DenseMatrix &o = static_cast<const DenseMatrix &>(other);
@@ -168,7 +168,7 @@ void DenseMatrix::FFLDU(MatrixBase&L, MatrixBase &D, MatrixBase &U) const
 // ----------------------------- Matrix Transpose ----------------------------//
 void transpose_dense(const DenseMatrix &A, DenseMatrix &B)
 {
-    CSYMPY_ASSERT(B.row_ == A.col_ && B.col_ == A.row_);
+    SYMENGINE_ASSERT(B.row_ == A.col_ && B.col_ == A.row_);
 
     for (unsigned i = 0; i < A.row_; i++)
         for (unsigned j = 0; j < A.col_; j++)
@@ -179,10 +179,10 @@ void transpose_dense(const DenseMatrix &A, DenseMatrix &B)
 void submatrix_dense(const DenseMatrix &A, unsigned row_start, unsigned row_end,
         unsigned col_start, unsigned col_end, DenseMatrix &B)
 {
-    CSYMPY_ASSERT(row_end >= row_start && col_end >= col_start);
-    CSYMPY_ASSERT(row_end < A.row_);
-    CSYMPY_ASSERT(col_end < A.col_);
-    CSYMPY_ASSERT(B.row_ == row_end - row_start + 1 &&
+    SYMENGINE_ASSERT(row_end >= row_start && col_end >= col_start);
+    SYMENGINE_ASSERT(row_end < A.row_);
+    SYMENGINE_ASSERT(col_end < A.col_);
+    SYMENGINE_ASSERT(B.row_ == row_end - row_start + 1 &&
             B.col_ == col_end - col_start + 1);
 
     unsigned row = B.row_, col = B.col_;
@@ -196,7 +196,7 @@ void submatrix_dense(const DenseMatrix &A, unsigned row_start, unsigned row_end,
 // ------------------------------- Matrix Addition ---------------------------//
 void add_dense_dense(const DenseMatrix &A, const DenseMatrix &B, DenseMatrix &C)
 {
-    CSYMPY_ASSERT(A.row_ == B.row_ && A.col_ == B.col_ &&
+    SYMENGINE_ASSERT(A.row_ == B.row_ && A.col_ == B.col_ &&
         A.row_ == C.row_ && A.col_ == C.col_);
 
     unsigned row = A.row_, col = A.col_;
@@ -210,7 +210,7 @@ void add_dense_dense(const DenseMatrix &A, const DenseMatrix &B, DenseMatrix &C)
 
 void add_dense_scalar(const DenseMatrix &A, const RCP<const Basic> &k, DenseMatrix &B)
 {
-    CSYMPY_ASSERT(A.row_ == B.row_ && A.col_ == B.col_);
+    SYMENGINE_ASSERT(A.row_ == B.row_ && A.col_ == B.col_);
 
     unsigned row = A.row_, col = A.col_;
 
@@ -225,7 +225,7 @@ void add_dense_scalar(const DenseMatrix &A, const RCP<const Basic> &k, DenseMatr
 void mul_dense_dense(const DenseMatrix &A, const DenseMatrix &B,
         DenseMatrix &C)
 {
-    CSYMPY_ASSERT(A.col_ == B.row_ && C.row_ == A.row_ && C.col_ == B.col_);
+    SYMENGINE_ASSERT(A.col_ == B.row_ && C.row_ == A.row_ && C.col_ == B.col_);
 
     unsigned row = A.row_, col = B.col_;
 
@@ -241,7 +241,7 @@ void mul_dense_dense(const DenseMatrix &A, const DenseMatrix &B,
 
 void mul_dense_scalar(const DenseMatrix &A, const RCP<const Basic> &k, DenseMatrix& B)
 {
-    CSYMPY_ASSERT(A.col_ == B.col_ && A.row_ == B.row_);
+    SYMENGINE_ASSERT(A.col_ == B.col_ && A.row_ == B.row_);
 
     unsigned row = A.row_, col = A.col_;
 
@@ -255,7 +255,7 @@ void mul_dense_scalar(const DenseMatrix &A, const RCP<const Basic> &k, DenseMatr
 // -------------------------------- Row Operations ---------------------------//
 void row_exchange_dense(DenseMatrix &A , unsigned i, unsigned j)
 {
-    CSYMPY_ASSERT(i != j && i < A.row_ && j < A.row_);
+    SYMENGINE_ASSERT(i != j && i < A.row_ && j < A.row_);
 
     unsigned col = A.col_;
 
@@ -265,7 +265,7 @@ void row_exchange_dense(DenseMatrix &A , unsigned i, unsigned j)
 
 void row_mul_scalar_dense(DenseMatrix &A, unsigned i, RCP<const Basic> &c)
 {
-    CSYMPY_ASSERT(i < A.row_);
+    SYMENGINE_ASSERT(i < A.row_);
 
     unsigned col = A.col_;
 
@@ -276,7 +276,7 @@ void row_mul_scalar_dense(DenseMatrix &A, unsigned i, RCP<const Basic> &c)
 void row_add_row_dense(DenseMatrix &A, unsigned i, unsigned j,
     RCP<const Basic> &c)
 {
-    CSYMPY_ASSERT(i != j && i < A.row_ && j < A.row_);
+    SYMENGINE_ASSERT(i != j && i < A.row_ && j < A.row_);
 
     unsigned col = A.col_;
 
@@ -288,8 +288,8 @@ void row_add_row_dense(DenseMatrix &A, unsigned i, unsigned j,
 void pivoted_gaussian_elimination(const DenseMatrix &A, DenseMatrix &B,
     std::vector<unsigned> &pivotlist)
 {
-    CSYMPY_ASSERT(A.row_ == B.row_ && A.col_ == B.col_);
-    CSYMPY_ASSERT(pivotlist.size() == A.row_);
+    SYMENGINE_ASSERT(A.row_ == B.row_ && A.col_ == B.col_);
+    SYMENGINE_ASSERT(pivotlist.size() == A.row_);
 
     unsigned row = A.row_, col = A.col_;
     unsigned index = 0, i, j, k;
@@ -331,7 +331,7 @@ void pivoted_gaussian_elimination(const DenseMatrix &A, DenseMatrix &B,
 // ACM SIGSAM Bulletin, 31(3), 11–19. doi:10.1145/271130.271133.
 void fraction_free_gaussian_elimination(const DenseMatrix &A, DenseMatrix &B)
 {
-    CSYMPY_ASSERT(A.row_ == B.row_ && A.col_ == B.col_);
+    SYMENGINE_ASSERT(A.row_ == B.row_ && A.col_ == B.col_);
 
     unsigned col = A.col_;
     B.m_ = A.m_;
@@ -353,8 +353,8 @@ void fraction_free_gaussian_elimination(const DenseMatrix &A, DenseMatrix &B)
 void pivoted_fraction_free_gaussian_elimination(const DenseMatrix &A,
     DenseMatrix &B, std::vector<unsigned> &pivotlist)
 {
-    CSYMPY_ASSERT(A.row_ == B.row_ && A.col_ == B.col_);
-    CSYMPY_ASSERT(pivotlist.size() == A.row_);
+    SYMENGINE_ASSERT(A.row_ == B.row_ && A.col_ == B.col_);
+    SYMENGINE_ASSERT(pivotlist.size() == A.row_);
 
     unsigned col = A.col_, row = A.row_;
     unsigned index = 0, i, k, j;
@@ -392,8 +392,8 @@ void pivoted_fraction_free_gaussian_elimination(const DenseMatrix &A,
 void pivoted_gauss_jordan_elimination(const DenseMatrix &A, DenseMatrix &B,
     std::vector<unsigned> &pivotlist)
 {
-    CSYMPY_ASSERT(A.row_ == B.row_ && A.col_ == B.col_);
-    CSYMPY_ASSERT(pivotlist.size() == A.row_);
+    SYMENGINE_ASSERT(A.row_ == B.row_ && A.col_ == B.col_);
+    SYMENGINE_ASSERT(pivotlist.size() == A.row_);
 
     unsigned row = A.row_, col = A.col_;
     unsigned index = 0, i, j, k;
@@ -435,7 +435,7 @@ void pivoted_gauss_jordan_elimination(const DenseMatrix &A, DenseMatrix &B,
 // ACM SIGSAM Bulletin, 31(3), 11–19. doi:10.1145/271130.271133.
 void fraction_free_gauss_jordan_elimination(const DenseMatrix &A, DenseMatrix &B)
 {
-    CSYMPY_ASSERT(A.row_ == B.row_ && A.col_ == B.col_);
+    SYMENGINE_ASSERT(A.row_ == B.row_ && A.col_ == B.col_);
 
     unsigned row = A.row_, col = A.col_;
     unsigned i, j, k;
@@ -465,8 +465,8 @@ void fraction_free_gauss_jordan_elimination(const DenseMatrix &A, DenseMatrix &B
 void pivoted_fraction_free_gauss_jordan_elimination(const DenseMatrix &A,
         DenseMatrix &B, std::vector<unsigned> &pivotlist)
 {
-    CSYMPY_ASSERT(A.row_ == B.row_ && A.col_ == B.col_);
-    CSYMPY_ASSERT(pivotlist.size() == A.row_);
+    SYMENGINE_ASSERT(A.row_ == B.row_ && A.col_ == B.col_);
+    SYMENGINE_ASSERT(pivotlist.size() == A.row_);
 
     unsigned row = A.row_, col = A.col_;
     unsigned index = 0, i, k, j;
@@ -526,9 +526,9 @@ unsigned pivot(DenseMatrix &B, unsigned r, unsigned c)
 // Assuming A is a diagonal square matrix
 void diagonal_solve(const DenseMatrix &A, const DenseMatrix &b, DenseMatrix &x)
 {
-    CSYMPY_ASSERT(A.row_ == A.col_);
-    CSYMPY_ASSERT(b.row_ == A.row_ && b.col_ == 1);
-    CSYMPY_ASSERT(x.row_ == A.col_ && x.col_ == 1);
+    SYMENGINE_ASSERT(A.row_ == A.col_);
+    SYMENGINE_ASSERT(b.row_ == A.row_ && b.col_ == 1);
+    SYMENGINE_ASSERT(x.row_ == A.col_ && x.col_ == 1);
 
     // No checks are done to see if the diagonal entries are zero
     for (unsigned i = 0; i < A.col_; i++)
@@ -538,9 +538,9 @@ void diagonal_solve(const DenseMatrix &A, const DenseMatrix &b, DenseMatrix &x)
 void back_substitution(const DenseMatrix &U, const DenseMatrix &b,
     DenseMatrix &x)
 {
-    CSYMPY_ASSERT(U.row_ == U.col_);
-    CSYMPY_ASSERT(b.row_ == U.row_ && b.col_ == 1);
-    CSYMPY_ASSERT(x.row_ == U.col_ && x.col_ == 1);
+    SYMENGINE_ASSERT(U.row_ == U.col_);
+    SYMENGINE_ASSERT(b.row_ == U.row_ && b.col_ == 1);
+    SYMENGINE_ASSERT(x.row_ == U.col_ && x.col_ == 1);
 
     unsigned col = U.col_;
     x.m_ = b.m_;
@@ -555,9 +555,9 @@ void back_substitution(const DenseMatrix &U, const DenseMatrix &b,
 void forward_substitution(const DenseMatrix &A, const DenseMatrix &b,
     DenseMatrix &x)
 {
-    CSYMPY_ASSERT(A.row_ == A.col_);
-    CSYMPY_ASSERT(b.row_ == A.row_ && b.col_ == 1);
-    CSYMPY_ASSERT(x.row_ == A.col_ && x.col_ == 1);
+    SYMENGINE_ASSERT(A.row_ == A.col_);
+    SYMENGINE_ASSERT(b.row_ == A.row_ && b.col_ == 1);
+    SYMENGINE_ASSERT(x.row_ == A.col_ && x.col_ == 1);
 
     unsigned col = A.col_;
     x.m_ = b.m_;
@@ -574,9 +574,9 @@ void forward_substitution(const DenseMatrix &A, const DenseMatrix &b,
 void fraction_free_gaussian_elimination_solve(const DenseMatrix &A,
     const DenseMatrix &b, DenseMatrix &x)
 {
-    CSYMPY_ASSERT(A.row_ == A.col_);
-    CSYMPY_ASSERT(b.row_ == A.row_ && x.row_ == A.row_);
-    CSYMPY_ASSERT(x.col_ == b.col_);
+    SYMENGINE_ASSERT(A.row_ == A.col_);
+    SYMENGINE_ASSERT(b.row_ == A.row_ && x.row_ == A.row_);
+    SYMENGINE_ASSERT(x.col_ == b.col_);
 
     int i, j, k, col = A.col_, bcol = b.col_;
     DenseMatrix A_ = DenseMatrix(A.row_, A.col_, A.m_);
@@ -618,9 +618,9 @@ void fraction_free_gaussian_elimination_solve(const DenseMatrix &A,
 void fraction_free_gauss_jordan_solve(const DenseMatrix &A, const DenseMatrix &b,
     DenseMatrix &x)
 {
-    CSYMPY_ASSERT(A.row_ == A.col_);
-    CSYMPY_ASSERT(b.row_ == A.row_ && x.row_ == A.row_);
-    CSYMPY_ASSERT(x.col_ = b.col_);
+    SYMENGINE_ASSERT(A.row_ == A.col_);
+    SYMENGINE_ASSERT(b.row_ == A.row_ && x.row_ == A.row_);
+    SYMENGINE_ASSERT(x.col_ = b.col_);
 
     unsigned i, j, k, col = A.col_, bcol = b.col_;
     RCP<const Basic> d;
@@ -709,7 +709,7 @@ void LDL_solve(const DenseMatrix &A, const DenseMatrix &b, DenseMatrix &x)
 // substitutions respectively.
 void fraction_free_LU(const DenseMatrix &A, DenseMatrix &LU)
 {
-    CSYMPY_ASSERT(A.row_ == A.col_ && LU.row_ == LU.col_ && A.row_ == LU.row_);
+    SYMENGINE_ASSERT(A.row_ == A.col_ && LU.row_ == LU.col_ && A.row_ == LU.row_);
 
     unsigned n = A.row_;
     unsigned i, j, k;
@@ -730,8 +730,8 @@ void fraction_free_LU(const DenseMatrix &A, DenseMatrix &LU)
 // with no pivoting
 void LU(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &U)
 {
-    CSYMPY_ASSERT(A.row_ == A.col_ && L.row_ == L.col_ && U.row_ == U.col_);
-    CSYMPY_ASSERT(A.row_ == L.row_ && A.row_ == U.row_);
+    SYMENGINE_ASSERT(A.row_ == A.col_ && L.row_ == L.col_ && U.row_ == U.col_);
+    SYMENGINE_ASSERT(A.row_ == L.row_ && A.row_ == U.row_);
 
     unsigned n = A.row_;
     unsigned i, j, k;
@@ -775,8 +775,8 @@ void LU(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &U)
 void fraction_free_LDU(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &D,
         DenseMatrix &U)
 {
-    CSYMPY_ASSERT(A.row_ == L.row_ && A.row_ == U.row_);
-    CSYMPY_ASSERT(A.col_ == L.col_ && A.col_ == U.col_);
+    SYMENGINE_ASSERT(A.row_ == L.row_ && A.row_ == U.row_);
+    SYMENGINE_ASSERT(A.col_ == L.col_ && A.col_ == U.col_);
 
     unsigned row = A.row_, col = A.col_;
     unsigned i, j, k;
@@ -821,7 +821,7 @@ void QR(const DenseMatrix &A, DenseMatrix &Q, DenseMatrix &R)
     unsigned row = A.row_;
     unsigned col = A.col_;
 
-    CSYMPY_ASSERT(Q.row_ == row && Q.col_ == col && R.row_ == col && R.col_ == col);
+    SYMENGINE_ASSERT(Q.row_ == row && Q.col_ == col && R.row_ == col && R.col_ == col);
 
     unsigned i, j, k;
     RCP<const Basic> t;
@@ -872,9 +872,9 @@ void QR(const DenseMatrix &A, DenseMatrix &Q, DenseMatrix &R)
 // definite non singular matrix
 void LDL(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &D)
 {
-    CSYMPY_ASSERT(A.row_ == A.col_);
-    CSYMPY_ASSERT(L.row_ == A.row_ && L.col_ == A.row_);
-    CSYMPY_ASSERT(D.row_ == A.row_ && D.col_ == A.row_);
+    SYMENGINE_ASSERT(A.row_ == A.col_);
+    SYMENGINE_ASSERT(L.row_ == A.row_ && L.col_ == A.row_);
+    SYMENGINE_ASSERT(D.row_ == A.row_ && D.col_ == A.row_);
 
     unsigned col = A.col_;
     unsigned i, k, j;
@@ -910,8 +910,8 @@ void LDL(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &D)
 // SymPy's cholesky decomposition
 void cholesky(const DenseMatrix &A, DenseMatrix &L)
 {
-    CSYMPY_ASSERT(A.row_ == A.col_);
-    CSYMPY_ASSERT(L.row_ == A.row_ && L.col_ == A.row_);
+    SYMENGINE_ASSERT(A.row_ == A.col_);
+    SYMENGINE_ASSERT(L.row_ == A.row_ && L.col_ == A.row_);
 
     unsigned col = A.col_;
     unsigned i, j, k;
@@ -962,7 +962,7 @@ bool is_symmetric_dense(const DenseMatrix &A)
 // ----------------------------- Determinant ---------------------------------//
 RCP<const Basic> det_bareis(const DenseMatrix &A)
 {
-    CSYMPY_ASSERT(A.row_ == A.col_);
+    SYMENGINE_ASSERT(A.row_ == A.col_);
 
     unsigned n = A.row_;
 
@@ -1028,7 +1028,7 @@ RCP<const Basic> det_bareis(const DenseMatrix &A)
 // from A. Here `n` is the dimension of the square matrix A.
 void berkowitz(const DenseMatrix &A, std::vector<DenseMatrix> &polys)
 {
-    CSYMPY_ASSERT(A.row_ == A.col_);
+    SYMENGINE_ASSERT(A.row_ == A.col_);
 
     unsigned col = A.col_;
     unsigned i, k, l, m;
@@ -1112,8 +1112,8 @@ RCP<const Basic> det_berkowitz(const DenseMatrix &A)
 
 void char_poly(const DenseMatrix &A, DenseMatrix &B)
 {
-    CSYMPY_ASSERT(B.ncols() == 1 && B.nrows() == A.nrows() + 1);
-    CSYMPY_ASSERT(A.nrows() == A.ncols());
+    SYMENGINE_ASSERT(B.ncols() == 1 && B.nrows() == A.nrows() + 1);
+    SYMENGINE_ASSERT(A.nrows() == A.ncols());
 
     std::vector<DenseMatrix> polys;
 
@@ -1123,7 +1123,7 @@ void char_poly(const DenseMatrix &A, DenseMatrix &B)
 
 void inverse_fraction_free_LU(const DenseMatrix &A, DenseMatrix &B)
 {
-    CSYMPY_ASSERT(A.row_ == A.col_ && B.row_ == B.col_ && B.row_ == A.row_);
+    SYMENGINE_ASSERT(A.row_ == A.col_ && B.row_ == B.col_ && B.row_ == A.row_);
 
     unsigned n = A.row_, i;
     DenseMatrix LU = DenseMatrix(n, n);
@@ -1162,7 +1162,7 @@ void inverse_fraction_free_LU(const DenseMatrix &A, DenseMatrix &B)
 
 void inverse_LU(const DenseMatrix &A, DenseMatrix&B)
 {
-    CSYMPY_ASSERT(A.row_ == A.col_ && B.row_ == B.col_ && B.row_ == A.row_);
+    SYMENGINE_ASSERT(A.row_ == A.col_ && B.row_ == B.col_ && B.row_ == A.row_);
 
     unsigned n = A.row_, i;
     DenseMatrix L = DenseMatrix(n, n);
@@ -1204,7 +1204,7 @@ void inverse_LU(const DenseMatrix &A, DenseMatrix&B)
 
 void inverse_gauss_jordan(const DenseMatrix &A, DenseMatrix &B)
 {
-    CSYMPY_ASSERT(A.row_ == A.col_ && B.row_ == B.col_ && B.row_ == A.row_);
+    SYMENGINE_ASSERT(A.row_ == A.col_ && B.row_ == B.col_ && B.row_ == A.row_);
 
     unsigned n = A.row_;
     DenseMatrix e = DenseMatrix(n, n);
@@ -1232,7 +1232,7 @@ void eye(DenseMatrix &A, unsigned N, unsigned M, int k)
         M = N;
     }
 
-    CSYMPY_ASSERT((int)-N < k && k < (int)M);
+    SYMENGINE_ASSERT((int)-N < k && k < (int)M);
 
     vec_basic v = vec_basic(k > 0 ? M - k : N + k, one);
 
@@ -1242,7 +1242,7 @@ void eye(DenseMatrix &A, unsigned N, unsigned M, int k)
 // Create diagonal matrices directly
 void diag(DenseMatrix &A, vec_basic &v, int k)
 {
-    CSYMPY_ASSERT(v.size() > 0);
+    SYMENGINE_ASSERT(v.size() > 0);
 
     unsigned k_ = std::abs(k);
     unsigned n = v.size() + k_;

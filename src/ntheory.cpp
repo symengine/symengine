@@ -4,17 +4,17 @@
 #include "ntheory.h"
 #include "rational.h"
 #include "mul.h"
-#ifdef HAVE_CSYMPY_ECM
+#ifdef HAVE_SYMENGINE_ECM
 #  include <ecm.h>
-#endif // HAVE_CSYMPY_ECM
-#ifdef HAVE_CSYMPY_PRIMESIEVE
+#endif // HAVE_SYMENGINE_ECM
+#ifdef HAVE_SYMENGINE_PRIMESIEVE
 #  include <primesieve.hpp>
-#endif // HAVE_CSYMPY_PRIMESIEVE
-#ifdef HAVE_CSYMPY_ARB
+#endif // HAVE_SYMENGINE_PRIMESIEVE
+#ifdef HAVE_SYMENGINE_ARB
 #  include "arb.h"
 #  include "bernoulli.h"
 #  include "rational.h"
-#endif // HAVE_CSYMPY_ARB
+#endif // HAVE_SYMENGINE_ARB
 #include "dict.h"
 
 namespace SymEngine {
@@ -390,7 +390,7 @@ int factor(const Ptr<RCP<const Integer>> &f, const Integer &n, double B1)
 
     _n = n.as_mpz();
 
-#ifdef HAVE_CSYMPY_ECM
+#ifdef HAVE_SYMENGINE_ECM
     if (mpz_perfect_power_p(_n.get_mpz_t())) {
 
         unsigned long int i = 1;
@@ -429,7 +429,7 @@ int factor(const Ptr<RCP<const Integer>> &f, const Integer &n, double B1)
 #else
     // B1 is discarded if gmp-ecm is not installed
     ret_val = _factor_trial_division_sieve(_f, _n);
-#endif // HAVE_CSYMPY_ECM
+#endif // HAVE_SYMENGINE_ECM
     *f = integer(_f);
 
     return ret_val;
@@ -514,7 +514,7 @@ void Sieve::clear()
 }
 
 void Sieve::set_sieve_size(unsigned size) {
-#ifdef HAVE_CSYMPY_PRIMESIEVE
+#ifdef HAVE_SYMENGINE_PRIMESIEVE
     primesieve::set_sieve_size(size);
 #else
     _sieve_size = size * 1024 * 8; //size in bits
@@ -523,7 +523,7 @@ void Sieve::set_sieve_size(unsigned size) {
 
 void Sieve::_extend(unsigned limit)
 {
-#ifdef HAVE_CSYMPY_PRIMESIEVE
+#ifdef HAVE_SYMENGINE_PRIMESIEVE
     if (_primes.back() < limit)
         primesieve::generate_primes(_primes.back() + 1, limit, &_primes);
 #else
@@ -608,7 +608,7 @@ unsigned Sieve::iterator::next_prime()
 
 RCP<const Number> bernoulli(unsigned long n)
 {
-#ifdef HAVE_CSYMPY_ARB
+#ifdef HAVE_SYMENGINE_ARB
     fmpq_t res;
     fmpq_init(res);
     bernoulli_fmpq_ui(res, n);

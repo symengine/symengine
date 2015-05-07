@@ -1,5 +1,5 @@
-#ifndef CSYMPY_MATRIX_H
-#define CSYMPY_MATRIX_H
+#ifndef SYMENGINE_MATRIX_H
+#define SYMENGINE_MATRIX_H
 
 #include "basic.h"
 

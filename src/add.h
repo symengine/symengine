@@ -4,8 +4,8 @@
  * 
  **/
 
-#ifndef CSYMPY_ADD_H
-#define CSYMPY_ADD_H
+#ifndef SYMENGINE_ADD_H
+#define SYMENGINE_ADD_H
 
 #include "basic.h"
 #include "dict.h"

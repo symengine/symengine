@@ -31,14 +31,14 @@ fi
 if [[ "${WITH_PYTHON}" != "" ]]; then
     cmake_line="$cmake_line -DWITH_PYTHON=${WITH_PYTHON}"
 fi
-if [[ "${WITH_CSYMPY_ASSERT}" != "" ]]; then
-    cmake_line="$cmake_line -DWITH_CSYMPY_ASSERT=${WITH_CSYMPY_ASSERT}"
+if [[ "${WITH_SYMENGINE_ASSERT}" != "" ]]; then
+    cmake_line="$cmake_line -DWITH_SYMENGINE_ASSERT=${WITH_SYMENGINE_ASSERT}"
 fi
-if [[ "${WITH_CSYMPY_RCP}" != "" ]]; then
-    cmake_line="$cmake_line -DWITH_CSYMPY_RCP=${WITH_CSYMPY_RCP}"
+if [[ "${WITH_SYMENGINE_RCP}" != "" ]]; then
+    cmake_line="$cmake_line -DWITH_SYMENGINE_RCP=${WITH_SYMENGINE_RCP}"
 fi
-if [[ "${WITH_CSYMPY_THREAD_SAFE}" != "" ]]; then
-    cmake_line="$cmake_line -DWITH_CSYMPY_THREAD_SAFE=${WITH_CSYMPY_THREAD_SAFE}"
+if [[ "${WITH_SYMENGINE_THREAD_SAFE}" != "" ]]; then
+    cmake_line="$cmake_line -DWITH_SYMENGINE_THREAD_SAFE=${WITH_SYMENGINE_THREAD_SAFE}"
 fi
 if [[ "${WITH_ECM}" != "" ]]; then
     cmake_line="$cmake_line -DWITH_ECM=${WITH_ECM}"
@@ -74,7 +74,7 @@ make
 echo "Running make install:"
 make install
 
-if [[ "${WITH_CSYMPY_RCP}" == "no" ]]; then
+if [[ "${WITH_SYMENGINE_RCP}" == "no" ]]; then
     echo "SymEngine successfully built with Teuchos::RCP. No tests being run."
 else
     echo "Running tests in build directory:"

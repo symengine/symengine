@@ -3,8 +3,8 @@
  *  Class Visitor
  *
  **/
-#ifndef CSYMPY_VISITOR_H
-#define CSYMPY_VISITOR_H
+#ifndef SYMENGINE_VISITOR_H
+#define SYMENGINE_VISITOR_H
 
 #include "basic.h"
 #include "add.h"
