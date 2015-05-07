@@ -104,10 +104,10 @@ and used as follows:
     RCP<Basic> t;
     as_coef_term(b, outArg(coef), outArg(t));
 
-`CSymPy` objects are always immutable, so you always declare them as `const`.
-And `RCP` is only used with `CSymPy`'s objects, so you always use `const
+`SymEngine` objects are always immutable, so you always declare them as `const`.
+And `RCP` is only used with `SymEngine`'s objects, so you always use `const
 RCP<const Integer> &i`. But if the `Integer` was somehow mutable (it's not in
-`CSymPy`), you would use `const RCP<Integer> &i`.
+`SymEngine`), you would use `const RCP<Integer> &i`.
 
 For returning objects from functions, simply declare the return type as `RCP<const Basic>` as shown above.
 
