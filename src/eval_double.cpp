@@ -17,14 +17,6 @@
 
 namespace SymEngine {
 
-/*
- * We have two implementations, the visitor pattern (EvalDoubleVisitor) and
- * single dispatch (init_eval_double). Currently the visitor pattern is the
- * default. To instead use single dispatch, uncomment the
- * SYMENGINE_SINGLE_DISPATCH define below.
- */
-// #define SYMENGINE_SINGLE_DISPATCH
-
 class EvalDoubleVisitor : public BaseVisitor<EvalDoubleVisitor> {
 private:
     /*
