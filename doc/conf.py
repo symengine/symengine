@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# CSymPy documentation build configuration file, created by
+# SymEngine documentation build configuration file, created by
 # sphinx-quickstart on Sat Mar 29 13:31:11 2014.
 #
 # This file is execfile()d with the current directory set to its
@@ -53,8 +53,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'CSymPy'
-copyright = u'2014, 2014 CSymPy Development Team'
+project = u'SymEngine'
+copyright = u'2014, 2014 SymEngine Development Team'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -186,7 +186,7 @@ html_static_path = ['_static']
 #html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'CSymPydoc'
+htmlhelp_basename = 'SymEnginedoc'
 
 
 # -- Options for LaTeX output ---------------------------------------------
@@ -206,8 +206,8 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-  ('index', 'CSymPy.tex', u'CSymPy Documentation',
-   u'2014 CSymPy Development Team', 'manual'),
+  ('index', 'SymEngine.tex', u'SymEngine Documentation',
+   u'2014 SymEngine Development Team', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -236,8 +236,8 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'csympy', u'CSymPy Documentation',
-     [u'2014 CSymPy Development Team'], 1)
+    ('index', 'symengine', u'SymEngine Documentation',
+     [u'2014 SymEngine Development Team'], 1)
 ]
 
 # If true, show URL addresses after external links.
@@ -250,8 +250,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'CSymPy', u'CSymPy Documentation',
-   u'2014 CSymPy Development Team', 'CSymPy', 'One line description of project.',
+  ('index', 'SymEngine', u'SymEngine Documentation',
+   u'2014 SymEngine Development Team', 'SymEngine', 'One line description of project.',
    'Miscellaneous'),
 ]
 
@@ -274,11 +274,11 @@ intersphinx_mapping = {'http://docs.python.org/': None}
 # Options for breathe extension
 # -----------------------------
 breathe_projects = {
-        "csympy" : "doxyxml"
+        "symengine" : "doxyxml"
         }
-breathe_default_project = "csympy"
+breathe_default_project = "symengine"
 breathe_projects_source = {
-        "csympy" : "../src/",
+        "symengine" : "../src/",
         "symbol" : "../src/",
         "rings" : "../src/",
         "rational" : "../src/",

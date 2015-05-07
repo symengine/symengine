@@ -31,14 +31,14 @@ fi
 if [[ "${WITH_PYTHON}" != "" ]]; then
     cmake_line="$cmake_line -DWITH_PYTHON=${WITH_PYTHON}"
 fi
-if [[ "${WITH_CSYMPY_ASSERT}" != "" ]]; then
-    cmake_line="$cmake_line -DWITH_CSYMPY_ASSERT=${WITH_CSYMPY_ASSERT}"
+if [[ "${WITH_SYMENGINE_ASSERT}" != "" ]]; then
+    cmake_line="$cmake_line -DWITH_SYMENGINE_ASSERT=${WITH_SYMENGINE_ASSERT}"
 fi
-if [[ "${WITH_CSYMPY_RCP}" != "" ]]; then
-    cmake_line="$cmake_line -DWITH_CSYMPY_RCP=${WITH_CSYMPY_RCP}"
+if [[ "${WITH_SYMENGINE_RCP}" != "" ]]; then
+    cmake_line="$cmake_line -DWITH_SYMENGINE_RCP=${WITH_SYMENGINE_RCP}"
 fi
-if [[ "${WITH_CSYMPY_THREAD_SAFE}" != "" ]]; then
-    cmake_line="$cmake_line -DWITH_CSYMPY_THREAD_SAFE=${WITH_CSYMPY_THREAD_SAFE}"
+if [[ "${WITH_SYMENGINE_THREAD_SAFE}" != "" ]]; then
+    cmake_line="$cmake_line -DWITH_SYMENGINE_THREAD_SAFE=${WITH_SYMENGINE_THREAD_SAFE}"
 fi
 if [[ "${WITH_ECM}" != "" ]]; then
     cmake_line="$cmake_line -DWITH_ECM=${WITH_ECM}"
@@ -74,7 +74,7 @@ make
 echo "Running make install:"
 make install
 
-if [[ "${WITH_CSYMPY_RCP}" == "no" ]]; then
+if [[ "${WITH_SYMENGINE_RCP}" == "no" ]]; then
     echo "SymEngine successfully built with Teuchos::RCP. No tests being run."
 else
     echo "Running tests in build directory:"
@@ -85,7 +85,7 @@ else
         nosetests -v
     fi
 
-    echo "Running tests using installed csympy:"
+    echo "Running tests using installed SymEngine:"
     # C++
     cd $SOURCE_DIR/src/tests/basic/
     extra_libs=""
@@ -101,7 +101,7 @@ else
     if [[ "${WITH_ARB}" != "" ]]; then
         extra_libs="$extra_libs -larb -lflint"
     fi
-    ${CXX} -std=c++0x -I$our_install_dir/include/ -L$our_install_dir/lib test_basic.cpp -lcsympy -lteuchos -lgmpxx -lgmp $extra_libs
+    ${CXX} -std=c++0x -I$our_install_dir/include/ -L$our_install_dir/lib test_basic.cpp -lsymengine -lteuchos -lgmpxx -lgmp $extra_libs
     export LD_LIBRARY_PATH=/usr/local/lib:$our_install_dir/lib:$LD_LIBRARY_PATH
     ./a.out
     # Python

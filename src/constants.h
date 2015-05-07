@@ -4,15 +4,15 @@
  *
  **/
 
-#ifndef CSYMPY_CONSTANTS_H
-#define CSYMPY_CONSTANTS_H
+#ifndef SYMENGINE_CONSTANTS_H
+#define SYMENGINE_CONSTANTS_H
 
 #include "basic.h"
 #include "number.h"
 #include "integer.h"
 #include "symbol.h"
 
-namespace CSymPy {
+namespace SymEngine {
 
 class Constant : public Basic {
 private:
@@ -66,6 +66,6 @@ extern RCP<const Number> I;
 extern RCP<const Constant> pi;
 extern RCP<const Constant> E;
 
-} // CSymPy
+} // SymEngine
 
 #endif

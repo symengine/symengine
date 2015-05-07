@@ -6,7 +6,7 @@ include_directories(BEFORE ${teuchos_SOURCE_DIR})
 include_directories(BEFORE ${teuchos_BINARY_DIR})
 
 set(SRC
-    csympy_rcp.cpp
+    symengine_rcp.cpp
     basic.cpp
     dict.cpp
     symbol.cpp
@@ -35,27 +35,27 @@ set(SRC
 
 # Needed for "make install"
 set(HEADERS
-    add.h        csympy_assert.h  functions.h  monomials.h  number.h    rings.h
-    basic.h      csympy_rcp.h     integer.h    mul.h        pow.h       constants.h
+    add.h        symengine_assert.h  functions.h  monomials.h  number.h    rings.h
+    basic.h      symengine_rcp.h     integer.h    mul.h        pow.h       constants.h
     symbol.h
     basic-inl.h  dict.h           matrix.h     ntheory.h    rational.h complex.h
     visitor.h    eval_double.h    diophantine.h cwrapper.h  printer.h
 )
 
-# Configure CSymPy using our CMake options:
-configure_file(csympy_config.h.in csympy_config.h)
+# Configure SymEngine using our CMake options:
+configure_file(symengine_config.h.in symengine_config.h)
 # Include the config file:
-include_directories(BEFORE ${csympy_BINARY_DIR}/src)
+include_directories(BEFORE ${symengine_BINARY_DIR}/src)
 
-add_library(csympy ${SRC})
-target_link_libraries(csympy teuchos ${LIBS})
+add_library(symengine ${SRC})
+target_link_libraries(symengine teuchos ${LIBS})
 
-install(TARGETS csympy
+install(TARGETS symengine
             RUNTIME DESTINATION bin
             ARCHIVE DESTINATION lib
             LIBRARY DESTINATION lib
         )
-install(FILES ${HEADERS} "${csympy_BINARY_DIR}/src/csympy_config.h"
+install(FILES ${HEADERS} "${symengine_BINARY_DIR}/src/symengine_config.h"
     DESTINATION include)
 
 add_subdirectory(tests)

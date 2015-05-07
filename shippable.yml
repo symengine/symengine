@@ -10,22 +10,22 @@ env:
   ## Out of tree builds (default):
   # Debug build
   - BUILD_TYPE="Debug"
-  # Debug build (with BFD and CSYMPY_ASSERT)
-  - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_CSYMPY_ASSERT="yes"
-  # Debug build (with BFD and CSYMPY_ASSERT) with Python 2.7
-  - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_CSYMPY_ASSERT="yes" WITH_PYTHON="yes" PYTHON_VERSION="2.7"
-  # Debug build (with BFD and CSYMPY_ASSERT and CSYMPY_THREAD_SAFE)
-  - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_CSYMPY_ASSERT="yes" WITH_CSYMPY_THREAD_SAFE="yes"
-  # Debug build (with BFD and CSYMPY_ASSERT) with ECM
-  - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_CSYMPY_ASSERT="yes" WITH_ECM="yes"
-  # Debug build (with BFD and CSYMPY_ASSERT) with PRIMESIEVE
-  - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_CSYMPY_ASSERT="yes" WITH_PRIMESIEVE="yes"
-  # Debug build (with BFD and CSYMPY_ASSERT) with Arb
-  - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_CSYMPY_ASSERT="yes" WITH_ARB="yes"
-  # Debug build shared lib (with BFD and CSYMPY_ASSERT)
-  - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_CSYMPY_ASSERT="yes" BUILD_SHARED_LIBS="yes"
+  # Debug build (with BFD and SYMENGINE_ASSERT)
+  - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_SYMENGINE_ASSERT="yes"
+  # Debug build (with BFD and SYMENGINE_ASSERT) with Python 2.7
+  - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_SYMENGINE_ASSERT="yes" WITH_PYTHON="yes" PYTHON_VERSION="2.7"
+  # Debug build (with BFD and SYMENGINE_ASSERT and SYMENGINE_THREAD_SAFE)
+  - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_SYMENGINE_ASSERT="yes" WITH_SYMENGINE_THREAD_SAFE="yes"
+  # Debug build (with BFD and SYMENGINE_ASSERT) with ECM
+  - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_SYMENGINE_ASSERT="yes" WITH_ECM="yes"
+  # Debug build (with BFD and SYMENGINE_ASSERT) with PRIMESIEVE
+  - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_SYMENGINE_ASSERT="yes" WITH_PRIMESIEVE="yes"
+  # Debug build (with BFD and SYMENGINE_ASSERT) with Arb
+  - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_SYMENGINE_ASSERT="yes" WITH_ARB="yes"
+  # Debug build shared lib (with BFD and SYMENGINE_ASSERT)
+  - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_SYMENGINE_ASSERT="yes" BUILD_SHARED_LIBS="yes"
   # Debug build with Teuchos::RCP (just to test that it compiles)
-  - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_CSYMPY_RCP="no"
+  - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_SYMENGINE_RCP="no"
   # Release build (with BFD)
   - WITH_BFD="yes"
 
@@ -33,7 +33,7 @@ env:
   # Debug build without Python:
   - BUILD_TYPE="Debug" WITH_BFD="yes" TEST_IN_TREE="yes"
   # Debug build with Python 2.7:
-  - BUILD_TYPE="Debug" WITH_BFD="yes" TEST_IN_TREE="yes" WITH_PYTHON="yes" WITH_CSYMPY_ASSERT="yes" PYTHON_VERSION="2.7"
+  - BUILD_TYPE="Debug" WITH_BFD="yes" TEST_IN_TREE="yes" WITH_PYTHON="yes" WITH_SYMENGINE_ASSERT="yes" PYTHON_VERSION="2.7"
   # Release build with Python 2.7:
   - TEST_IN_TREE="yes" WITH_PYTHON="yes" PYTHON_VERSION="2.7"
   # Release build shared lib with Python 2.7:

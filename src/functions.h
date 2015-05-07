@@ -4,13 +4,13 @@
  *
  **/
 
-#ifndef CSYMPY_FUNCTIONS_H
-#define CSYMPY_FUNCTIONS_H
+#ifndef SYMENGINE_FUNCTIONS_H
+#define SYMENGINE_FUNCTIONS_H
 
 #include "basic.h"
 #include "dict.h"
 
-namespace CSymPy {
+namespace SymEngine {
 
 class Function : public Basic {
 };
@@ -1092,6 +1092,6 @@ public:
 RCP<const Basic> abs(const RCP<const Basic> &arg);
 
 
-} // CSymPy
+} // SymEngine
 
 #endif

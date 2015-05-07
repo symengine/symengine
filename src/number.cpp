@@ -7,11 +7,11 @@
 #include "rational.h"
 #include "functions.h"
 
-namespace CSymPy {
+namespace SymEngine {
 
 RCP<const Basic> Number::diff(const RCP<const Symbol> &x) const
 {
     return zero;
 }
 
-} // CSymPy
+} // SymEngine

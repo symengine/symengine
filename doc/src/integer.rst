@@ -2,4 +2,4 @@ integer
 =======
 
 .. doxygenfile:: integer.h
-    :project: csympy
+    :project: symengine

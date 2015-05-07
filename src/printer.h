@@ -1,9 +1,9 @@
-#ifndef CSYMPY_PRINTER_H
-#define CSYMPY_PRINTER_H
+#ifndef SYMENGINE_PRINTER_H
+#define SYMENGINE_PRINTER_H
 
 #include "visitor.h"
 
-namespace CSymPy {
+namespace SymEngine {
 
 enum class PrecedenceEnum {
     Add, Mul, Pow, Atom
@@ -92,4 +92,4 @@ public:
 
 }
 
-#endif //CSYMPY_PRINTER_H
+#endif //SYMENGINE_PRINTER_H

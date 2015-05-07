@@ -19,7 +19,7 @@ doc/doxyxml
 doc/html
 
 # Config Files
-src/csympy_config.h
+src/symengine_config.h
 src/teuchos/Teuchos_config.h
 
 # Python build files

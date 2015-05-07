@@ -4,13 +4,13 @@
  *
  **/
 
-#ifndef CSYMPY_INTEGER_H
-#define CSYMPY_INTEGER_H
+#ifndef SYMENGINE_INTEGER_H
+#define SYMENGINE_INTEGER_H
 
 #include "basic.h"
 #include "number.h"
 
-namespace CSymPy {
+namespace SymEngine {
 
 //! Integer Class
 class Integer : public Number {
@@ -172,7 +172,7 @@ int perfect_power(const Integer &n);
 //! Integer Absolute value
 RCP<const Integer> iabs(const Integer &n);
 
-} // CSymPy
+} // SymEngine
 
 #endif
 

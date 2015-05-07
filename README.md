@@ -70,7 +70,7 @@ mode you want to develop it. However, the best way to develop SymEngine is to
 use the Debug mode, turn assertions on and turn `BFD` support on (prints very
 nice stacktraces on exceptions, segfaults or assert errors):
 
-    cmake -DCMAKE_BUILD_TYPE=Debug -DWITH_CSYMPY_ASSERT=yes -DWITH_BFD=yes .
+    cmake -DCMAKE_BUILD_TYPE=Debug -DWITH_SYMENGINE_ASSERT=yes -DWITH_BFD=yes .
 
 To make `WITH_BFD=yes` work, you need to install `binutils-dev` first,
 otherwise you will get a `CMake` error during configuring.
@@ -91,8 +91,8 @@ their default values indicated below:
         -DCMAKE_BUILD_TYPE:STRING="Release" \         # Type of build, one of: Debug or Release
         -DWITH_BFD:BOOL=OFF \                         # Install with BFD library (requires binutils-dev)
         -DWITH_PYTHON:BOOL=OFF \                      # Build Python wrappers
-        -DWITH_CSYMPY_ASSERT:BOOL=OFF \               # Test all CSYMPY_ASSERT statements in the code
-        -DWITH_CSYMPY_RCP:BOOL=ON \                   # Use our faster special implementation of RCP
+        -DWITH_SYMENGINE_ASSERT:BOOL=OFF \               # Test all SYMENGINE_ASSERT statements in the code
+        -DWITH_SYMENGINE_RCP:BOOL=ON \                   # Use our faster special implementation of RCP
         -DWITH_PRIMESIEVE=OFF \                       # Install with Primesieve library
         -DWITH_ARB=OFF \                              # Install with ARB library
         .

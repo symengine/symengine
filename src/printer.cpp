@@ -2,7 +2,7 @@
 
 #include "printer.h"
 
-namespace CSymPy {
+namespace SymEngine {
 
 StrPrinter::StrPrinter() : BaseVisitor(this) {
 

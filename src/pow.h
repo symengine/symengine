@@ -3,8 +3,8 @@
  *  Power Class 
  *
  **/
-#ifndef CSYMPY_POW_H
-#define CSYMPY_POW_H
+#ifndef SYMENGINE_POW_H
+#define SYMENGINE_POW_H
 
 #include "basic.h"
 #include "dict.h"
@@ -13,7 +13,7 @@
 #include "ntheory.h"
 #include "constants.h"
 
-namespace CSymPy {
+namespace SymEngine {
 
 class Pow : public Basic {
 public: // TODO: make this private
@@ -98,6 +98,6 @@ RCP<const Basic> log(const RCP<const Basic> &arg);
 RCP<const Basic> log(const RCP<const Basic> &arg,
                     const RCP<const Basic> &b);
 
-} // CSymPy
+} // SymEngine
 
 #endif

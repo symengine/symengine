@@ -11,16 +11,16 @@
 #include "rings.h"
 #include "monomials.h"
 
-using CSymPy::Basic;
-using CSymPy::Symbol;
-using CSymPy::umap_basic_num;
-using CSymPy::Integer;
-using CSymPy::expr2poly;
-using CSymPy::poly_mul;
-using CSymPy::umap_vec_mpz;
-using CSymPy::RCP;
-using CSymPy::rcp;
-using CSymPy::print_stack_on_segfault;
+using SymEngine::Basic;
+using SymEngine::Symbol;
+using SymEngine::umap_basic_num;
+using SymEngine::Integer;
+using SymEngine::expr2poly;
+using SymEngine::poly_mul;
+using SymEngine::umap_vec_mpz;
+using SymEngine::RCP;
+using SymEngine::rcp;
+using SymEngine::print_stack_on_segfault;
 
 int main(int argc, char* argv[])
 {

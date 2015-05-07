@@ -8,12 +8,12 @@
 #include "functions.h"
 
 
-namespace CSymPy {
+namespace SymEngine {
 
 Add::Add(const RCP<const Number> &coef, umap_basic_num&& dict)
     : coef_{coef}, dict_{std::move(dict)}
 {
-    CSYMPY_ASSERT(is_canonical(coef, dict_))
+    SYMENGINE_ASSERT(is_canonical(coef, dict_))
 }
 
 bool Add::is_canonical(const RCP<const Number> &coef,
@@ -77,7 +77,7 @@ bool Add::__eq__(const Basic &o) const
 
 int Add::compare(const Basic &o) const
 {
-    CSYMPY_ASSERT(is_a<Add>(o))
+    SYMENGINE_ASSERT(is_a<Add>(o))
     const Add &s = static_cast<const Add &>(o);
     // # of elements
     if (dict_.size() != s.dict_.size())
@@ -115,7 +115,7 @@ RCP<const Basic> Add::from_dict(const RCP<const Number> &coef, umap_basic_num &&
                 return p->first;
             }
             if (is_a<Mul>(*(p->first))) {
-#if !defined(WITH_CSYMPY_THREAD_SAFE) && defined(WITH_CSYMPY_RCP)
+#if !defined(WITH_SYMENGINE_THREAD_SAFE) && defined(WITH_SYMENGINE_RCP)
                 if (rcp_static_cast<const Mul>(p->first)->refcount_ == 1) {
                     // We can steal the dictionary:
                     // Cast away const'ness, so that we can move 'dict_', since
@@ -149,7 +149,7 @@ RCP<const Basic> Add::from_dict(const RCP<const Number> &coef, umap_basic_num &&
         map_basic_basic m;
         if (is_a_Number(*p->second)) {
             if (is_a<Mul>(*(p->first))) {
-#if !defined(WITH_CSYMPY_THREAD_SAFE) && defined(WITH_CSYMPY_RCP)
+#if !defined(WITH_SYMENGINE_THREAD_SAFE) && defined(WITH_SYMENGINE_RCP)
                 if (rcp_static_cast<const Mul>(p->first)->refcount_ == 1) {
                     // We can steal the dictionary:
                     // Cast away const'ness, so that we can move 'dict_', since
@@ -216,7 +216,7 @@ void Add::as_coef_term(const RCP<const Basic> &self,
         *coef = rcp_static_cast<const Number>(self);
         *term = one;
     } else {
-        CSYMPY_ASSERT(!is_a<Add>(*self));
+        SYMENGINE_ASSERT(!is_a<Add>(*self));
         *coef = one;
         *term = self;
     }
@@ -224,16 +224,16 @@ void Add::as_coef_term(const RCP<const Basic> &self,
 
 RCP<const Basic> add(const RCP<const Basic> &a, const RCP<const Basic> &b)
 {
-    CSymPy::umap_basic_num d;
+    SymEngine::umap_basic_num d;
     RCP<const Number> coef;
     RCP<const Basic> t;
-    if (CSymPy::is_a<Add>(*a) && CSymPy::is_a<Add>(*b)) {
+    if (SymEngine::is_a<Add>(*a) && SymEngine::is_a<Add>(*b)) {
         coef = (rcp_static_cast<const Add>(a))->coef_;
         d = (rcp_static_cast<const Add>(a))->dict_;
         for (auto &p: (rcp_static_cast<const Add>(b))->dict_)
             Add::dict_add_term(d, p.second, p.first);
         iaddnum(outArg(coef), rcp_static_cast<const Add>(b)->coef_);
-    } else if (CSymPy::is_a<Add>(*a)) {
+    } else if (SymEngine::is_a<Add>(*a)) {
         coef = (rcp_static_cast<const Add>(a))->coef_;
         d = (rcp_static_cast<const Add>(a))->dict_;
         if (is_a_Number(*b)) {
@@ -243,7 +243,7 @@ RCP<const Basic> add(const RCP<const Basic> &a, const RCP<const Basic> &b)
             Add::as_coef_term(b, outArg(coef2), outArg(t));
             Add::dict_add_term(d, coef2, t);
         }
-    } else if (CSymPy::is_a<Add>(*b)) {
+    } else if (SymEngine::is_a<Add>(*b)) {
         coef = (rcp_static_cast<const Add>(b))->coef_;
         d = (rcp_static_cast<const Add>(b))->dict_;
         if (is_a_Number(*a)) {
@@ -301,7 +301,7 @@ RCP<const Basic> add_expand(const RCP<const Add> &self)
 
 RCP<const Basic> Add::diff(const RCP<const Symbol> &x) const
 {
-    CSymPy::umap_basic_num d;
+    SymEngine::umap_basic_num d;
     RCP<const Number> coef=zero, coef2;
     RCP<const Basic> t;
     for (auto &p: dict_) {
@@ -340,7 +340,7 @@ RCP<const Basic> Add::subs(const map_basic_basic &subs_dict) const
     if (it != subs_dict.end())
         return it->second;
 
-    CSymPy::umap_basic_num d;
+    SymEngine::umap_basic_num d;
     RCP<const Number> coef=coef_, coef2;
     RCP<const Basic> t;
     for (auto &p: dict_) {
@@ -374,4 +374,4 @@ vec_basic Add::get_args() const {
     return args;
 }
 
-} // CSymPy
+} // SymEngine

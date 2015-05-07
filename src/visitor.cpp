@@ -14,7 +14,7 @@
 
 #define ACCEPT(CLASS) void CLASS::accept(Visitor &v) const { v.visit(*this); }
 
-namespace CSymPy {
+namespace SymEngine {
 
 ACCEPT(Symbol)
 ACCEPT(Add)
@@ -95,5 +95,5 @@ RCP<const Basic> coeff(const Basic &b, const RCP<const Symbol> &x,
     return v.apply(b, x, n);
 }
 
-} // CSymPy
+} // SymEngine
 

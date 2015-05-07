@@ -11,17 +11,17 @@
 #include "mul.h"
 #include "pow.h"
 
-using CSymPy::Basic;
-using CSymPy::Add;
-using CSymPy::Mul;
-using CSymPy::Pow;
-using CSymPy::Symbol;
-using CSymPy::map_vec_int;
-using CSymPy::integer;
-using CSymPy::multinomial_coefficients;
-using CSymPy::RCP;
-using CSymPy::rcp;
-using CSymPy::rcp_dynamic_cast;
+using SymEngine::Basic;
+using SymEngine::Add;
+using SymEngine::Mul;
+using SymEngine::Pow;
+using SymEngine::Symbol;
+using SymEngine::map_vec_int;
+using SymEngine::integer;
+using SymEngine::multinomial_coefficients;
+using SymEngine::RCP;
+using SymEngine::rcp;
+using SymEngine::rcp_dynamic_cast;
 
 int main(int argc, char* argv[])
 {

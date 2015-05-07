@@ -2,4 +2,4 @@ symbol
 ======
 
 .. doxygenfile:: symbol.h
-    :project: csympy
+    :project: symengine

@@ -3,15 +3,15 @@
  *  Class for Rationals built on top of Number class
  *
  **/
-#ifndef CSYMPY_RATIONAL_H
-#define CSYMPY_RATIONAL_H
+#ifndef SYMENGINE_RATIONAL_H
+#define SYMENGINE_RATIONAL_H
 
 #include "basic.h"
 #include "number.h"
 #include "integer.h"
 #include "constants.h"
 
-namespace CSymPy {
+namespace SymEngine {
 //! Rational Class
 class Rational : public Number {
 public:
@@ -228,6 +228,6 @@ void get_num_den(const RCP<const Rational> &rat,
         const Ptr<RCP<const Integer>> &num,
         const Ptr<RCP<const Integer>> &den);
 
-} // CSymPy
+} // SymEngine
 
 #endif

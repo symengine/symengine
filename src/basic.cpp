@@ -10,7 +10,7 @@
 #include "functions.h"
 #include "printer.h"
 
-namespace CSymPy {
+namespace SymEngine {
 
 int Basic::__cmp__(const Basic &o) const
 {
@@ -56,5 +56,5 @@ RCP<const Basic> Basic::diff(const RCP<const Symbol> &x) const
     return rcp(new Derivative(rcp(this), {x}));
 }
 
-} // CSymPy
+} // SymEngine
 

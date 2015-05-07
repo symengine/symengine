@@ -3,12 +3,12 @@ set(SRC
     )
 
 include_directories(${PYTHON_INCLUDE_PATH})
-include_directories(BEFORE ${csympy_BINARY_DIR}/src ${teuchos_BINARY_DIR})
+include_directories(BEFORE ${symengine_BINARY_DIR}/src ${teuchos_BINARY_DIR})
 include_directories(BEFORE ${CMAKE_SOURCE_DIR}/src)
 
 cython_add_module_pyx(csympy_wrapper csympy.pxd)
 add_python_library(csympy_wrapper ${SRC})
-target_link_libraries(csympy_wrapper csympy)
+target_link_libraries(csympy_wrapper symengine)
 if (CMAKE_CXX_COMPILER_ID MATCHES GNU|Clang)
   # Must suppress strict aliasing for this file
   set_source_files_properties(

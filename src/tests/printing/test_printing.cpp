@@ -11,26 +11,26 @@
 #include "matrix.h"
 #include "printer.h"
 
-using CSymPy::RCP;
-using CSymPy::Basic;
-using CSymPy::div;
-using CSymPy::pow;
-using CSymPy::mul;
-using CSymPy::integer;
-using CSymPy::print_stack_on_segfault;
-using CSymPy::symbol;
-using CSymPy::Complex;
-using CSymPy::Rational;
-using CSymPy::Number;
-using CSymPy::add;
-using CSymPy::Symbol;
-using CSymPy::Integer;
-using CSymPy::DenseMatrix;
-using CSymPy::rcp;
-using CSymPy::Subs;
-using CSymPy::Derivative;
-using CSymPy::function_symbol;
-using CSymPy::I;
+using SymEngine::RCP;
+using SymEngine::Basic;
+using SymEngine::div;
+using SymEngine::pow;
+using SymEngine::mul;
+using SymEngine::integer;
+using SymEngine::print_stack_on_segfault;
+using SymEngine::symbol;
+using SymEngine::Complex;
+using SymEngine::Rational;
+using SymEngine::Number;
+using SymEngine::add;
+using SymEngine::Symbol;
+using SymEngine::Integer;
+using SymEngine::DenseMatrix;
+using SymEngine::rcp;
+using SymEngine::Subs;
+using SymEngine::Derivative;
+using SymEngine::function_symbol;
+using SymEngine::I;
 
 void test_printing()
 {

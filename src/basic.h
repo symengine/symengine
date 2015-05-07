@@ -4,8 +4,8 @@
  *
  **/
 
-#ifndef CSYMPY_BASIC_H
-#define CSYMPY_BASIC_H
+#ifndef SYMENGINE_BASIC_H
+#define SYMENGINE_BASIC_H
 
 // Include all C++ headers here:
 #include <cstddef>
@@ -19,12 +19,12 @@
 #include <cassert>
 #include <atomic>
 
-#include "csympy_config.h"
-#include "csympy_assert.h"
-#include "csympy_rcp.h"
+#include "symengine_config.h"
+#include "symengine_assert.h"
+#include "symengine_rcp.h"
 #include "dict.h"
 
-namespace CSymPy {
+namespace SymEngine {
 
 class Visitor;
 class Symbol;
@@ -42,7 +42,7 @@ class Symbol;
     Pow has 'base' and 'exp'. There are restrictions on what 'coeff' and
     'dict' can be (for example 'coeff' cannot be zero in Mul, and if Mul is
     used inside Add, then Mul's coeff must be one, etc.). All these
-    restrictions are checked when CSYMPY_ASSERT is enabled inside the
+    restrictions are checked when SYMENGINE_ASSERT is enabled inside the
     constructors using the is_canonical() method. That way, you don't have to
     worry about creating Add/Mul/Pow with wrong arguments, as it will be caught
     by the tests. In the Release mode no checks are done, so you can construct
@@ -50,7 +50,7 @@ class Symbol;
     sometimes know that things are already canonical, so you simply pass it
     directly to Add/Mul/Pow and you avoid expensive type checking and
     canonicalization. At the same time, you need to make sure that tests are
-    still running with CSYMPY_ASSERT enabled, so that Add/Mul/Pow are never in
+    still running with SYMENGINE_ASSERT enabled, so that Add/Mul/Pow are never in
     an inconsistent state.
 
     Summary: always try to construct the expressions Add/Mul/Pow directly using
@@ -84,14 +84,14 @@ private:
     // in the constructor and then it can be changed in Basic::hash() to the
     // current hash (which is always the same for the given instance). The
     // state of the instance does not change, so we define hash_ as mutable.
-#if defined(WITH_CSYMPY_THREAD_SAFE)
+#if defined(WITH_SYMENGINE_THREAD_SAFE)
     mutable std::atomic<std::size_t> hash_; // This holds the hash value
 #else
     mutable std::size_t hash_; // This holds the hash value
-#endif // WITH_CSYMPY_THREAD_SAFE
-#if defined(WITH_CSYMPY_RCP)
+#endif // WITH_SYMENGINE_THREAD_SAFE
+#if defined(WITH_SYMENGINE_RCP)
 public:
-    //! Public variables if defined with CSYMPY_RCP
+    //! Public variables if defined with SYMENGINE_RCP
     // The reference counter is defined either as "unsigned int" (faster, but
     // not thread safe) or as std::atomic<unsigned int> (slower, but thread
     // safe). Semantically they are almost equivalent, except that the
@@ -100,17 +100,17 @@ public:
     // The refcount_ is defined as mutable, because it does not change the
     // state of the instance, but changes when more copies
     // of the same instance are made.
-#if defined(WITH_CSYMPY_THREAD_SAFE)
+#if defined(WITH_SYMENGINE_THREAD_SAFE)
     mutable std::atomic<unsigned int> refcount_; // reference counter
 #else
     mutable unsigned int refcount_; // reference counter
-#endif // WITH_CSYMPY_THREAD_SAFE
-#endif // WITH_CSYMPY_RCP
+#endif // WITH_SYMENGINE_THREAD_SAFE
+#endif // WITH_SYMENGINE_RCP
 public:
     virtual TypeID get_type_code() const = 0;
     //! Constructor
     Basic() : hash_{0}
-#if defined(WITH_CSYMPY_RCP)
+#if defined(WITH_SYMENGINE_RCP)
         , refcount_(0)
 #endif
         {}
@@ -128,7 +128,7 @@ public:
     //! Assignment operator in continuation with above
     Basic& operator=(Basic&&) = delete;
 
-    /*!  Implements the hash of the given CSymPy class.
+    /*!  Implements the hash of the given SymEngine class.
          Use `std::hash` to get the hash. Example:
              RCP<const Symbol> x = rcp(new Symbol("x"));
              std::hash<Basic> hash_fn;
@@ -235,18 +235,18 @@ bool is_a_sub(const Basic &b);
 //! Expands `self`
 RCP<const Basic> expand(const RCP<const Basic> &self);
 
-} // CSymPy
+} // SymEngine
 
 /*! This `<<` overloaded function simply calls `p.__str__`, so it allows any Basic
     type to be printed.
 
     This prints using: `std::cout << *x;`
 */
-std::ostream& operator<<(std::ostream& out, const CSymPy::Basic& p);
+std::ostream& operator<<(std::ostream& out, const SymEngine::Basic& p);
 
 //! Specialise `std::hash` for Basic.
 namespace std {
-    template<> struct hash<CSymPy::Basic>;
+    template<> struct hash<SymEngine::Basic>;
 }
 
 /*! Standard `hash_combine()` function. Example of usage:
@@ -255,7 +255,7 @@ namespace std {
         hash_combine<std::string>(seed1, "x");
         hash_combine<std::string>(seed1, "y");
 
-     You can use it with any CSymPy class:
+     You can use it with any SymEngine class:
 
 
         RCP<const Symbol> x = rcp(new Symbol("x"));

@@ -14,23 +14,23 @@ Use 4 spaces. Format ``if`` as follows:
 
 ## Pointers
 
-Never use raw C++ pointers. Always use the smart pointers provided by `csympy_rcp.h`
-(depending on WITH_CSYMPY_RCP, those are either Teuchos::RCP, or our own,
+Never use raw C++ pointers. Always use the smart pointers provided by `symengine_rcp.h`
+(depending on WITH_SYMENGINE_RCP, those are either Teuchos::RCP, or our own,
 faster implementation).
 
 ### Declaration
 
 In the `.cpp` files you can declare:
 
-    using CSymPy::RCP;
-    using CSymPy::Ptr;
-    using CSymPy::outArg;
-    using CSymPy::rcp;
-    using CSymPy::rcp_dynamic_cast;
+    using SymEngine::RCP;
+    using SymEngine::Ptr;
+    using SymEngine::outArg;
+    using SymEngine::rcp;
+    using SymEngine::rcp_dynamic_cast;
     
 and then just use `RCP` or `Ptr`.
 
-In the `.h` header files use the full name like `CSymPy::RCP` or `CSymPy::Ptr`.
+In the `.h` header files use the full name like `SymEngine::RCP` or `SymEngine::Ptr`.
 
 ### Initialization
 
@@ -123,7 +123,7 @@ You can use dynamic cast as follows:
 
 Never use "implicit imports": ``using namespace std;``.
 
-In cpp files, either use the full name of the symbol (e.g. ``CSymPy::RCP``),
-or use "explicit import" as follows: ``using CSymPy::RCP;``.
+In cpp files, either use the full name of the symbol (e.g. ``SymEngine::RCP``),
+or use "explicit import" as follows: ``using SymEngine::RCP;``.
 
 In header files, always use the full name (never import symbols there).

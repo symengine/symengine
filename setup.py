@@ -99,18 +99,18 @@ class InstallWithCmake(_install):
         _install.run(self)
 
 long_description = '''
-CSymPy is a standalone fast C++ symbolic manipulation library.
-Optional thin Python wrappers allow easy usage from Python and
+SymEngine is a standalone fast C++ symbolic manipulation library.
+Optional thin Python wrappers (CSymPy) allow easy usage from Python and
 integration with SymPy.'''
 
 setup(name = "csympy",
       version = "git",
-      description = "CSymPy is a standalone fast C++ symbolic manipulation library",
+      description = "CSymPy is a Python library providing wrappers to SymEngine",
       long_description = "",
       author = "",
       author_email = "",
       license = "MIT",
-      url = "https://github.com/sympy/csympy",
+      url = "https://github.com/sympy/symengine",
       packages = ["csympy", "csympy.lib", "csympy.tests"],
       package_data= {'' : ['lib/csympy_wrapper.so']},
       cmdclass={

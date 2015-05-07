@@ -2,15 +2,15 @@
  *  \file eval_double.h
  *
  **/
-#ifndef CSYMPY_EVAL_DOUBLE_H
-#define CSYMPY_EVAL_DOUBLE_H
+#ifndef SYMENGINE_EVAL_DOUBLE_H
+#define SYMENGINE_EVAL_DOUBLE_H
 
 #include "basic.h"
 
-namespace CSymPy {
+namespace SymEngine {
 
 double eval_double(const Basic &b);
 
-} // CSymPy
+} // SymEngine
 
 #endif

@@ -8,12 +8,12 @@
 #include "matrix.h"
 
 
-using CSymPy::Basic;
-using CSymPy::Integer;
-using CSymPy::RCP;
-using CSymPy::rcp;
-using CSymPy::integer;
-using CSymPy::DenseMatrix;
+using SymEngine::Basic;
+using SymEngine::Integer;
+using SymEngine::RCP;
+using SymEngine::rcp;
+using SymEngine::integer;
+using SymEngine::DenseMatrix;
 
 int main(int argc, char* argv[])
 {

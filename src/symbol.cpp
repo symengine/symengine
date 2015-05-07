@@ -2,7 +2,7 @@
 #include "integer.h"
 #include "constants.h"
 
-namespace CSymPy {
+namespace SymEngine {
 
 Symbol::Symbol(const std::string &name)
     : name_{name}
@@ -24,7 +24,7 @@ bool Symbol::__eq__(const Basic &o) const
 
 int Symbol::compare(const Basic &o) const
 {
-    CSYMPY_ASSERT(is_a<Symbol>(o))
+    SYMENGINE_ASSERT(is_a<Symbol>(o))
     const Symbol &s = static_cast<const Symbol &>(o);
     if (name_ == s.name_) return 0;
     return name_ < s.name_ ? -1 : 1;
@@ -38,4 +38,4 @@ RCP<const Basic> Symbol::diff(const RCP<const Symbol> &x) const
         return zero;
 }
 
-} // CSymPy
+} // SymEngine
