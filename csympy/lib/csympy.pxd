@@ -27,6 +27,8 @@ cdef extern from "symengine_rcp.h" namespace "SymEngine":
 
     RCP[const Symbol] rcp_static_cast_Symbol "SymEngine::rcp_static_cast<const SymEngine::Symbol>"(RCP[const Basic] &b) nogil
     RCP[const Integer] rcp_static_cast_Integer "SymEngine::rcp_static_cast<const SymEngine::Integer>"(RCP[const Basic] &b) nogil
+    RCP[const Rational] rcp_static_cast_Rational "SymEngine::rcp_static_cast<const SymEngine::Rational>"(RCP[const Basic] &b) nogil
+    RCP[const Complex] rcp_static_cast_Complex "SymEngine::rcp_static_cast<const SymEngine::Complex>"(RCP[const Basic] &b) nogil
     RCP[const Number] rcp_static_cast_Number "SymEngine::rcp_static_cast<const SymEngine::Number>"(RCP[const Basic] &b) nogil
     RCP[const Add] rcp_static_cast_Add "SymEngine::rcp_static_cast<const SymEngine::Add>"(RCP[const Basic] &b) nogil
     RCP[const Mul] rcp_static_cast_Mul "SymEngine::rcp_static_cast<const SymEngine::Mul>"(RCP[const Basic] &b) nogil
@@ -93,14 +95,18 @@ cdef extern from "integer.h" namespace "SymEngine":
         Integer(int i) nogil
         Integer(mpz_class i) nogil
         int compare(const Basic &o) nogil
+        mpz_class as_mpz() nogil
 
 cdef extern from "rational.h" namespace "SymEngine":
     cdef cppclass Rational(Number):
-        pass
+        mpq_class as_mpq() nogil
+    cdef void get_num_den(const RCP[Rational] &rat, const Ptr[RCP[Integer]] &num,
+                     const Ptr[RCP[Integer]] &den) nogil
 
 cdef extern from "complex.h" namespace "SymEngine":
     cdef cppclass Complex(Number):
-        pass
+        RCP[const Number] real_part() nogil
+        RCP[const Number] imaginary_part() nogil
 
 cdef extern from "constants.h" namespace "SymEngine":
     cdef cppclass Constant(Basic):

@@ -261,10 +261,7 @@ void test_rational()
 
     r1 = Rational::from_two_ints(integer(2), integer(3));
     r2 = zero;
-<<<<<<< HEAD
     SYMENGINE_CHECK_THROW(divnum(r1, r2), std::runtime_error)
-=======
-    CSYMPY_CHECK_THROW(divnum(r1, r2), std::runtime_error)
 
     r1 = Rational::from_two_ints(integer(3), integer(5));
     assert(is_a<Rational>(*r1));
@@ -272,7 +269,6 @@ void test_rational()
     a = mpq_class(3, 5);
     b =  r->as_mpq();
     assert(a == b);
->>>>>>> Added Rational::as_mpq(), Complex::real_part(), Complex::imaginary_part()  methods
 }
 
 void test_mul()
