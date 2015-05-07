@@ -101,7 +101,7 @@ else
     if [[ "${WITH_ARB}" != "" ]]; then
         extra_libs="$extra_libs -larb -lflint"
     fi
-    ${CXX} -std=c++0x -I$our_install_dir/include/ -L$our_install_dir/lib test_basic.cpp -lcsympy -lteuchos -lgmpxx -lgmp $extra_libs
+    ${CXX} -std=c++0x -I$our_install_dir/include/ -L$our_install_dir/lib test_basic.cpp -lsymengine -lteuchos -lgmpxx -lgmp $extra_libs
     export LD_LIBRARY_PATH=/usr/local/lib:$our_install_dir/lib:$LD_LIBRARY_PATH
     ./a.out
     # Python

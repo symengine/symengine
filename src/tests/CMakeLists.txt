@@ -1,4 +1,4 @@
-include_directories(BEFORE ${csympy_SOURCE_DIR}/src)
+include_directories(BEFORE ${symengine_SOURCE_DIR}/src)
 
 add_subdirectory(rcp)
 add_subdirectory(basic)
