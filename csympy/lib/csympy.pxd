@@ -12,7 +12,7 @@ cdef extern from 'gmpxx.h':
     cdef cppclass mpq_class:
         mpq_class()
 
-cdef extern from "csympy_rcp.h" namespace "SymEngine":
+cdef extern from "symengine_rcp.h" namespace "SymEngine":
     cdef enum ENull:
         null
 

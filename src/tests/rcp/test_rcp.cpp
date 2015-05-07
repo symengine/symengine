@@ -1,6 +1,6 @@
 #include <cassert>
 
-#include "csympy_rcp.h"
+#include "symengine_rcp.h"
 
 using SymEngine::RCP;
 using SymEngine::rcp;

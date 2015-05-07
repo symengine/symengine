@@ -46,7 +46,7 @@ cdef extern from "electrostatics.h":
         void set_boundary_derivatives(vector[double] &bc_der)
         bool calculate(Solution* phi)
 
-cdef extern from "csympy_rcp.h" namespace "SymEngine":
+cdef extern from "symengine_rcp.h" namespace "SymEngine":
     cdef enum ENull:
         null
 

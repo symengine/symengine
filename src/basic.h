@@ -19,9 +19,9 @@
 #include <cassert>
 #include <atomic>
 
-#include "csympy_config.h"
-#include "csympy_assert.h"
-#include "csympy_rcp.h"
+#include "symengine_config.h"
+#include "symengine_assert.h"
+#include "symengine_rcp.h"
 #include "dict.h"
 
 namespace SymEngine {
