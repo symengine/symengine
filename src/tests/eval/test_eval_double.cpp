@@ -56,49 +56,29 @@ void test_eval_double()
     r3 = div(one, integer(5));
     r4 = integer(5);
 
-    vec_basic vec;
-    std::vector<double> result;
-
-    vec.push_back(r1);
-    result.push_back(0.841470984808);
-
-    vec.push_back(r2);
-    result.push_back(0.479425538604);
-
-    vec.push_back(add(r1, r2));
-    result.push_back(1.320896523412);
-
-    vec.push_back(mul(r1, r2));
-    result.push_back(0.403422680111);
-
-    vec.push_back(pow(r1, r2));
-    result.push_back(0.920580670898);
-
-    vec.push_back(tan(pow(r1, r2)));
-    result.push_back(1.314847038576);
-
-    vec.push_back(add(asin(r3), add(acos(r3), add(atan(r3), add(asec(r4), add(acsc(r4), acot(r4)))))));
-    result.push_back(3.536383773289);
-
-    vec.push_back(add(sinh(one), add(cosh(one), add(tanh(one), coth(one)))));
-    result.push_back(4.792911269914);
-
-    vec.push_back(add(asinh(r4), add(acosh(r4), add(atanh(r3), acoth(r4)))));
-    result.push_back(5.010335118942);
-
-    vec.push_back(SymEngine::abs(log(div(pi, mul(E, integer(2))))));
-    result.push_back(0.548417294710);
+    std::vector<std::pair<RCP<const Basic>, double>> vec = {
+        { r1, 0.841470984808 },
+        { r2, 0.479425538604 },
+        { add(r1, r2), 1.320896523412 },
+        { mul(r1, r2), 0.403422680111 },
+        { pow(r1, r2), 0.920580670898 },
+        { tan(pow(r1, r2)), 1.314847038576 },
+        { add(asin(r3), add(acos(r3), add(atan(r3), add(asec(r4), add(acsc(r4), acot(r4)))))), 3.536383773289 },
+        { add(sinh(one), add(cosh(one), add(tanh(one), coth(one)))), 4.792911269914 },
+        { add(asinh(r4), add(acosh(r4), add(atanh(r3), acoth(r4)))), 5.010335118942 },
+        { SymEngine::abs(log(div(pi, mul(E, integer(2))))), 0.548417294710 }
+    };
 
     for (unsigned i = 0; i < vec.size(); i++) {
-        double val = eval_double(*vec[i]);
+        double val = eval_double(*vec[i].first);
         std::cout.precision(12);
-        std::cout << vec[i]->__str__() << " ~ " << val << std::endl;
-        assert(::fabs(val - result[i]) < 1e-12);
+        std::cout << vec[i].first->__str__() << " ~ " << val << std::endl;
+        assert(::fabs(val - vec[i].second) < 1e-12);
     }
 
     for (unsigned i = 0; i < vec.size(); i++) {
-        double val = eval_double_single_dispatch(*vec[i]);
-        assert(::fabs(val - result[i]) < 1e-12);
+        double val = eval_double_single_dispatch(*vec[i].first);
+        assert(::fabs(val - vec[i].second) < 1e-12);
     }
 
     // Symbol must raise an exception
