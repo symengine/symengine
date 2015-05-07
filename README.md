@@ -1,6 +1,6 @@
 # SymEngine
 
-[![Build Status](https://travis-ci.org/sympy/csympy.png?branch=master)](https://travis-ci.org/sympy/csympy)
+[![Build Status](https://travis-ci.org/sympy/symengine.png?branch=master)](https://travis-ci.org/sympy/symengine)
 
 SymEngine is a standalone fast C++ symbolic manipulation library.
 Optional thin Python wrappers allow easy usage from Python and
@@ -16,7 +16,7 @@ license (see the LICENSE file).
 
 We use the SymPy mailinglist: http://groups.google.com/group/sympy
 
-[![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/sympy/csympy?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/sympy/symengine?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 ## Installation
 
@@ -29,7 +29,7 @@ For RPM based systems (Fedora etc.):
 
     yum install cmake gmp-devel
 
-Install csympy:
+Install SymEngine:
 
     cmake .
     make
