@@ -5,6 +5,12 @@ from libcpp cimport bool
 from libcpp.string cimport string
 from cpython cimport PyObject, Py_XINCREF, Py_XDECREF, \
     PyObject_CallMethodObjArgs
+include "config.pxi"
+
+have_sage = HAVE_SAGE
+IF HAVE_SAGE == True:
+    from sage.rings cimport integer as sageInteger
+    from sage.rings cimport rational as sageRational
 
 class SympifyError(Exception):
     pass
@@ -200,8 +206,9 @@ cdef class Basic(object):
     def expand(Basic self not None):
         return c2py(csympy.expand(self.thisptr))
 
-    def diff(Basic self not None, Symbol x not None):
-        cdef RCP[const csympy.Symbol] X = csympy.rcp_static_cast_Symbol(x.thisptr)
+    def diff(Basic self not None, x):
+        cdef Symbol symbol = sympify(x)
+        cdef RCP[const csympy.Symbol] X = csympy.rcp_static_cast_Symbol(symbol.thisptr)
         return c2py(deref(self.thisptr).diff(X))
 
     def subs_dict(Basic self not None, subs_dict):
@@ -249,6 +256,11 @@ cdef class Symbol(Basic):
         import sympy
         return sympy.Symbol(str(deref(X).get_name().decode("utf-8")))
 
+    def _sage_(self):
+        cdef RCP[const csympy.Symbol] X = csympy.rcp_static_cast_Symbol(self.thisptr)
+        import sage.all as sage
+        return sage.var(str(deref(X).get_name().decode("utf-8")))
+
 cdef class Constant(Basic):
 
     def __cinit__(self, name = None):
@@ -265,6 +277,15 @@ cdef class Constant(Basic):
             return sympy.E
         elif self == pi:
             return sympy.pi
+        else:
+            raise Exception("Unknown Constant")
+
+    def _sage_(self):
+        import sage.all as sage
+        if self == E:
+            return sage.e
+        elif self == pi:
+            return sage.pi
         else:
             raise Exception("Unknown Constant")
 
@@ -341,28 +362,53 @@ cdef class Integer(Number):
         import sympy
         return sympy.Integer(deref(self.thisptr).__str__().decode("utf-8"))
 
+    def _sage_(self):
+        IF HAVE_SAGE == True:
+            cdef sageInteger.Integer z
+            z = sageInteger.Integer()
+            z.set_from_mpz(deref(csympy.rcp_static_cast_Integer(self.thisptr)).as_mpz().get_mpz_t())
+            return z
+
 cdef class Rational(Number):
 
     def __dealloc__(self):
         self.thisptr.reset()
 
+    def get_num_den(self):
+        cdef RCP[const csympy.Integer] _num, _den
+        csympy.get_num_den(csympy.rcp_static_cast_Rational(self.thisptr),
+                           csympy.outArg_Integer(_num), csympy.outArg_Integer(_den))
+        return [c2py(<RCP[const csympy.Basic]>_num), c2py(<RCP[const csympy.Basic]>_den)]
+
     def _sympy_(self):
-        import sympy
-        return sympy.Rational(deref(self.thisptr).__str__().decode("utf-8"))
+        rat = self.get_num_den()
+        return rat[0]._sympy_() / rat[1]._sympy_()
+
+    def _sage_(self):
+        IF HAVE_SAGE == True:
+            cdef sageRational.Rational z
+            z = sageRational.Rational()
+            z.set_from_mpq(deref(csympy.rcp_static_cast_Rational(self.thisptr)).as_mpq().get_mpq_t())
+            return z
 
 cdef class Complex(Number):
 
     def __dealloc__(self):
         self.thisptr.reset()
 
+    def real_part(self):
+        return c2py(<RCP[const csympy.Basic]>deref(csympy.rcp_static_cast_Complex(self.thisptr)).real_part())
+
+    def imaginary_part(self):
+        return c2py(<RCP[const csympy.Basic]>deref(csympy.rcp_static_cast_Complex(self.thisptr)).imaginary_part())
+
     def _sympy_(self):
         import sympy
-        # FIXME: this is quite fragile. We should request the real and
-        # imaginary parts and construct the sympy expression using those (and
-        # using sympy.I explicitly), rather than relying on the string
-        # representation and hoping sympy.sympify() will do the right thing.
-        s = deref(self.thisptr).__str__().decode("utf-8")
-        return sympy.sympify(s)
+        return self.real_part()._sympy_() + sympy.I * self.imaginary_part()._sympy_()
+
+    def _sage_(self):
+        import sage.all as sage
+        return self.real_part()._sage_() + sage.I * self.imaginary_part()._sage_()
 
 cdef class Add(Basic):
 
@@ -375,6 +421,12 @@ cdef class Add(Basic):
         deref(X).as_two_terms(csympy.outArg(a), csympy.outArg(b))
         return c2py(a)._sympy_() + c2py(b)._sympy_()
 
+    def _sage_(self):
+        cdef RCP[const csympy.Add] X = csympy.rcp_static_cast_Add(self.thisptr)
+        cdef RCP[const csympy.Basic] a, b
+        deref(X).as_two_terms(csympy.outArg(a), csympy.outArg(b))
+        return c2py(a)._sage_() + c2py(b)._sage_()
+
 cdef class Mul(Basic):
 
     def __dealloc__(self):
@@ -386,6 +438,12 @@ cdef class Mul(Basic):
         deref(X).as_two_terms(csympy.outArg(a), csympy.outArg(b))
         return c2py(a)._sympy_() * c2py(b)._sympy_()
 
+    def _sage_(self):
+        cdef RCP[const csympy.Mul] X = csympy.rcp_static_cast_Mul(self.thisptr)
+        cdef RCP[const csympy.Basic] a, b
+        deref(X).as_two_terms(csympy.outArg(a), csympy.outArg(b))
+        return c2py(a)._sage_() * c2py(b)._sage_()
+
 cdef class Pow(Basic):
 
     def __dealloc__(self):
@@ -396,6 +454,12 @@ cdef class Pow(Basic):
         base = c2py(deref(X).get_base())
         exp = c2py(deref(X).get_exp())
         return base._sympy_() ** exp._sympy_()
+
+    def _sage_(self):
+        cdef RCP[const csympy.Pow] X = csympy.rcp_static_cast_Pow(self.thisptr)
+        base = c2py(deref(X).get_base())
+        exp = c2py(deref(X).get_exp())
+        return base._sage_() ** exp._sage_()
 
 cdef class Function(Basic):
     pass
@@ -411,6 +475,12 @@ cdef class Sin(Function):
         import sympy
         return sympy.sin(arg)
 
+    def _sage_(self):
+        cdef RCP[const csympy.Sin] X = csympy.rcp_static_cast_Sin(self.thisptr)
+        arg = c2py(deref(X).get_arg())._sage_()
+        import sage.all as sage
+        return sage.sin(arg)
+
 cdef class Cos(Function):
 
     def __dealloc__(self):
@@ -421,6 +491,12 @@ cdef class Cos(Function):
         arg = c2py(deref(X).get_arg())._sympy_()
         import sympy
         return sympy.cos(arg)
+
+    def _sage_(self):
+        cdef RCP[const csympy.Cos] X = csympy.rcp_static_cast_Cos(self.thisptr)
+        arg = c2py(deref(X).get_arg())._sage_()
+        import sage.all as sage
+        return sage.cos(arg)
 
 cdef class FunctionSymbol(Function):
 
@@ -439,6 +515,19 @@ cdef class FunctionSymbol(Function):
             s.append(c2py(<RCP[const csympy.Basic]>(Y[i]))._sympy_())
         import sympy
         return sympy.Function(name)(*s)
+
+    def _sage_(self):
+        cdef RCP[const csympy.FunctionSymbol] X = \
+            csympy.rcp_static_cast_FunctionSymbol(self.thisptr)
+        name = deref(X).get_name().decode("utf-8")
+        # In Python 2.7, function names cannot be unicode:
+        name = str(name)
+        cdef csympy.vec_basic Y = deref(X).get_args()
+        s = []
+        for i in range(Y.size()):
+            s.append(c2py(<RCP[const csympy.Basic]>(Y[i]))._sage_())
+        import sage.all as sage
+        return sage.function(name, *s)
 
 cdef inline void SymPy_XDECREF(void* o):
     Py_XDECREF(<PyObject*>o)
@@ -475,7 +564,10 @@ cdef class FunctionWrapper(FunctionSymbol):
         cdef RCP[const csympy.FunctionWrapper] X = \
             csympy.rcp_static_cast_FunctionWrapper(self.thisptr)
         pyobj = <object>(deref(X).get_object())
-        return pyobj
+        if hasattr(pyobj, '_sympy_'):
+            return pyobj._sympy_()
+        else :
+            return pyobj
 
 cdef class Abs(Function):
 
@@ -485,6 +577,11 @@ cdef class Abs(Function):
     def _sympy_(self):
         cdef RCP[const csympy.Abs] X = csympy.rcp_static_cast_Abs(self.thisptr)
         arg = c2py(deref(X).get_arg())._sympy_()
+        return abs(arg)
+
+    def _sage_(self):
+        cdef RCP[const csympy.Abs] X = csympy.rcp_static_cast_Abs(self.thisptr)
+        arg = c2py(deref(X).get_arg())._sage_()
         return abs(arg)
 
 
@@ -514,6 +611,16 @@ cdef class Derivative(Basic):
             s.append(c2py(<RCP[const csympy.Basic]>(Y[i]))._sympy_())
         import sympy
         return sympy.Derivative(arg, *s)
+
+    def _sage_(self):
+        cdef RCP[const csympy.Derivative] X = \
+            csympy.rcp_static_cast_Derivative(self.thisptr)
+        arg = c2py(deref(X).get_arg())._sage_()
+        cdef csympy.vec_basic Y = deref(X).get_symbols()
+        s = []
+        for i in range(Y.size()):
+            s.append(c2py(<RCP[const csympy.Basic]>(Y[i]))._sage_())
+        return arg.diff(*s)
 
 cdef class Subs(Basic):
 
@@ -545,6 +652,17 @@ cdef class Subs(Basic):
             p.append(c2py(<RCP[const csympy.Basic]>(P[i]))._sympy_())
         import sympy
         return sympy.Subs(arg, v, p)
+
+    def _sage_(self):
+        cdef RCP[const csympy.Subs] X = csympy.rcp_static_cast_Subs(self.thisptr)
+        arg = c2py(deref(X).get_arg())._sage_()
+        cdef csympy.vec_basic V = deref(X).get_variables()
+        cdef csympy.vec_basic P = deref(X).get_point()
+        v = {}
+        for i in range(V.size()):
+            v[c2py(<RCP[const csympy.Basic]>(V[i]))._sage_()] = \
+                c2py(<RCP[const csympy.Basic]>(P[i]))._sage_()
+        return arg.subs(v)
 
 cdef class MatrixBase:
     cdef csympy.MatrixBase* thisptr
@@ -723,6 +841,17 @@ cdef class DenseMatrix(MatrixBase):
             s.append(l)
         import sympy
         return sympy.Matrix(s)
+
+    def _sage_(self):
+        s = []
+        cdef csympy.DenseMatrix A = deref(csympy.static_cast_DenseMatrix(self.thisptr))
+        for i in range(A.nrows()):
+            l = []
+            for j in range(A.ncols()):
+                l.append(c2py(A.get(i, j))._sage_())
+            s.append(l)
+        import sage.all as sage
+        return sage.Matrix(s)
 
 cdef class Sieve:
     @staticmethod
@@ -1094,7 +1223,8 @@ def powermod_list(a, b, m):
         s.append(c2py(<RCP[const csympy.Basic]>(v[i])))
     return s
 
-def eval_double(Basic b not None):
+def eval_double(basic):
+    cdef Basic b = sympify(basic)
     return csympy.eval_double(deref(b.thisptr))
 
 I = c2py(csympy.I)

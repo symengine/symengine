@@ -35,6 +35,11 @@ if [[ "${WITH_PYTHON}" == "yes" ]] || [[ "${PYTHON_INSTALL}" == "yes" ]]; then
     conda create -q -n test-environment python="${PYTHON_VERSION}" pip cython sympy nose pytest;
     source activate test-environment;
 fi
+if [[ "${WITH_SAGE}" == "yes" ]]; then
+    sudo apt-add-repository -y ppa:aims/sagemath;
+    sudo apt-get update;
+    sudo apt-get install sagemath-upstream-binary;
+fi
 if [[ "${CC}" == "" ]]; then
     export CC=gcc
     export CXX=g++

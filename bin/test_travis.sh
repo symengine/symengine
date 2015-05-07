@@ -49,6 +49,9 @@ fi
 if [[ "${WITH_ARB}" != "" ]]; then
     cmake_line="$cmake_line -DWITH_ARB=${WITH_ARB}"
 fi
+if [[ "${WITH_SAGE}" != "" ]]; then
+    cmake_line="$cmake_line -DWITH_SAGE=${WITH_SAGE}"
+fi
 if [[ "${BUILD_SHARED_LIBS}" != "" ]]; then
     cmake_line="$cmake_line -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}"
 fi
@@ -63,6 +66,11 @@ if not csympy.test():
     raise Exception('Tests failed')
 EOF
     cd ..
+    exit 0
+fi
+if [[ "${WITH_SAGE}" == "yes" ]]; then
+    sudo /usr/lib/sagemath/sage -python $SOURCE_DIR/setup.py install --define="WITH_SAGE=yes"
+    sage -t $SOURCE_DIR/csympy/tests/test_sage.py
     exit 0
 fi
 

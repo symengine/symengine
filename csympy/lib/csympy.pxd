@@ -3,14 +3,31 @@ from libcpp.string cimport string
 from libcpp.map cimport map
 from libcpp.vector cimport vector
 
+cdef extern from "gmp.h":
+    ctypedef long long mp_limb_t
+
+    ctypedef struct __mpz_struct:
+        int _mp_alloc
+        int _mp_size
+        mp_limb_t* _mp_d
+
+    ctypedef struct __mpq_struct:
+        __mpz_struct _mp_num
+        __mpz_struct _mp_den
+
+    ctypedef __mpz_struct mpz_t[1]
+    ctypedef __mpq_struct mpq_t[1]
+
 cdef extern from 'gmpxx.h':
     cdef cppclass mpz_class:
         mpz_class()
         mpz_class(int i)
         mpz_class(mpz_class)
         mpz_class(const string &s, int base) except +
+        mpz_t get_mpz_t()
     cdef cppclass mpq_class:
         mpq_class()
+        mpq_t get_mpq_t()
 
 cdef extern from "csympy_rcp.h" namespace "CSymPy":
     cdef enum ENull:
@@ -27,6 +44,8 @@ cdef extern from "csympy_rcp.h" namespace "CSymPy":
 
     RCP[const Symbol] rcp_static_cast_Symbol "CSymPy::rcp_static_cast<const CSymPy::Symbol>"(RCP[const Basic] &b) nogil
     RCP[const Integer] rcp_static_cast_Integer "CSymPy::rcp_static_cast<const CSymPy::Integer>"(RCP[const Basic] &b) nogil
+    RCP[const Rational] rcp_static_cast_Rational "CSymPy::rcp_static_cast<const CSymPy::Rational>"(RCP[const Basic] &b) nogil
+    RCP[const Complex] rcp_static_cast_Complex "CSymPy::rcp_static_cast<const CSymPy::Complex>"(RCP[const Basic] &b) nogil
     RCP[const Number] rcp_static_cast_Number "CSymPy::rcp_static_cast<const CSymPy::Number>"(RCP[const Basic] &b) nogil
     RCP[const Add] rcp_static_cast_Add "CSymPy::rcp_static_cast<const CSymPy::Add>"(RCP[const Basic] &b) nogil
     RCP[const Mul] rcp_static_cast_Mul "CSymPy::rcp_static_cast<const CSymPy::Mul>"(RCP[const Basic] &b) nogil
@@ -93,14 +112,18 @@ cdef extern from "integer.h" namespace "CSymPy":
         Integer(int i) nogil
         Integer(mpz_class i) nogil
         int compare(const Basic &o) nogil
+        mpz_class as_mpz() nogil
 
 cdef extern from "rational.h" namespace "CSymPy":
     cdef cppclass Rational(Number):
-        pass
+        mpq_class as_mpq() nogil
+    cdef void get_num_den(const RCP[Rational] &rat, const Ptr[RCP[Integer]] &num,
+                     const Ptr[RCP[Integer]] &den) nogil
 
 cdef extern from "complex.h" namespace "CSymPy":
     cdef cppclass Complex(Number):
-        pass
+        RCP[const Number] real_part() nogil
+        RCP[const Number] imaginary_part() nogil
 
 cdef extern from "constants.h" namespace "CSymPy":
     cdef cppclass Constant(Basic):

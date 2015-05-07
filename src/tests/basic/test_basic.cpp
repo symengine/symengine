@@ -32,6 +32,8 @@ using CSymPy::RCP;
 using CSymPy::print_stack_on_segfault;
 using CSymPy::Complex;
 using CSymPy::has_symbol;
+using CSymPy::is_a;
+using CSymPy::rcp_static_cast;
 
 void test_symbol_hash()
 {
@@ -162,6 +164,9 @@ void test_integer()
 void test_rational()
 {
     RCP<const Number> r1, r2, r3;
+    RCP<const Rational> r;
+    mpq_class a, b;
+
     r1 = Rational::from_two_ints(integer(5), integer(6));
     std::cout << *r1 << std::endl;
     assert(eq(r1, Rational::from_two_ints(integer(5), integer(6))));
@@ -257,6 +262,13 @@ void test_rational()
     r1 = Rational::from_two_ints(integer(2), integer(3));
     r2 = zero;
     CSYMPY_CHECK_THROW(divnum(r1, r2), std::runtime_error)
+
+    r1 = Rational::from_two_ints(integer(3), integer(5));
+    assert(is_a<Rational>(*r1));
+    r = rcp_static_cast<const Rational>(r1);
+    a = mpq_class(3, 5);
+    b =  r->as_mpq();
+    assert(a == b);
 }
 
 void test_mul()
@@ -465,6 +477,7 @@ void test_compare()
 void test_complex()
 {
     RCP<const Number> r1, r2, r3, c1, c2, c3;
+    RCP<const Complex> c;
     r1 = Rational::from_two_ints(integer(2), integer(4));
     r2 = Rational::from_two_ints(integer(5), integer(7));
     r3 = Rational::from_two_ints(integer(-5), integer(7));
@@ -581,6 +594,11 @@ void test_complex()
     r2 = Rational::from_two_ints(integer(-1), integer(8));
     c3 = Complex::from_two_nums(*r1, *r2);
     assert(eq(subnum(c1, c2), c3));
+
+    assert(is_a<Complex>(*c3));
+    c = rcp_static_cast<const Complex>(c3);
+    assert(eq(c->real_part(), r1));
+    assert(eq(c->imaginary_part(), r2));
 
     // Explicit division by zero checks
     CSYMPY_CHECK_THROW(divnum(c1, integer(0)), std::runtime_error);

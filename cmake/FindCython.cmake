@@ -68,7 +68,10 @@ macro(CYTHON_ADD_MODULE_PYX name)
     add_custom_command(
         OUTPUT ${name}.cpp
         COMMAND ${CYTHON_BIN}
-        ARGS ${CYTHON_FLAGS} -I ${CYTHON_INCLUDE_DIRECTORIES} -o ${name}.cpp ${CMAKE_CURRENT_SOURCE_DIR}/${name}.pyx
+        ARGS ${CYTHON_FLAGS}
+            -I ${CYTHON_INCLUDE_DIRECTORIES}
+            -I $ENV{SAGE_SRC}/
+            -o ${name}.cpp ${name}.pyx
         DEPENDS ${DEPENDS}
         COMMENT "Cythonizing ${name}.pyx")
 endmacro(CYTHON_ADD_MODULE_PYX)

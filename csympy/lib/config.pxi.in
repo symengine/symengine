@@ -1,0 +1,2 @@
+# This file contains the compile time configurations for csympy_wrapper
+DEF HAVE_SAGE = ${HAVE_SAGE}
