@@ -42,6 +42,8 @@ public:
     * */
     static RCP<const Number> from_two_ints(const RCP<const Integer> &n,
             const RCP<const Integer> &d);
+    //! Convert to `mpq_class`.
+    inline mpq_class as_mpq() const { return this->i; }
     //! \return `true` if `0`
     virtual bool is_zero() const { return this->i == 0; }
     //! \return `true` if `1`

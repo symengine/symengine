@@ -274,6 +274,15 @@ public:
         }
     };
 
+    //! Get the real part of the complex number
+    inline RCP<const Number> real_part() const {
+        return Rational::from_mpq(real_);
+    };
+
+    //! Get the imaginary part of the complex number
+    inline RCP<const Number> imaginary_part() const {
+        return Rational::from_mpq(imaginary_);
+    };
     virtual void accept(Visitor &v) const;
 };
 
