@@ -28,6 +28,7 @@ typedef std::unordered_map<RCP<const Basic>, RCP<const Basic>,
 typedef std::vector<int> vec_int;
 typedef std::vector<RCP<const Basic>> vec_basic;
 typedef std::vector<RCP<const Integer>> vec_integer;
+typedef std::set<RCP<const Basic>, RCPBasicKeyLess> set_basic;
 typedef std::map<vec_int, long long int> map_vec_int;
 typedef std::map<vec_int, mpz_class> map_vec_mpz;
 typedef std::map<RCP<const Basic>, RCP<const Number>,
