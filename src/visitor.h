@@ -69,13 +69,6 @@ public:
 void preorder_traversal(const Basic &b, Visitor &v);
 void postorder_traversal(const Basic &b, Visitor &v);
 
-class StopVisitor : public Visitor {
-public:
-    bool stop_;
-};
-
-void preorder_traversal_stop(const Basic &b, StopVisitor &v);
-
 template<class T>
 class BaseVisitor : public Visitor {
 
@@ -130,17 +123,32 @@ public:
     virtual void visit(const Subs &x) { p_->bvisit(x); };
 };
 
-class HasSymbolVisitor : public StopVisitor {
+template<class T>
+class StopVisitor : public BaseVisitor<T> {
+public:
+    StopVisitor(T *p) : BaseVisitor<T>(p) { };
+    bool stop_;
+};
+
+template<class T>
+void preorder_traversal_stop(const Basic &b, StopVisitor<T> &v);
+
+class HasSymbolVisitor : public StopVisitor<HasSymbolVisitor> {
 private:
     RCP<const Symbol> x_;
     bool has_;
 public:
-    void visit(const Symbol &x) {
+    HasSymbolVisitor() : StopVisitor(this) { };
+
+    void bvisit(const Symbol &x) {
         if (x_->__eq__(x)) {
             has_ = true;
             stop_ = true;
         }
     }
+
+    void bvisit(const Basic &x) { };
+
     bool apply(const Basic &b, const RCP<const Symbol> &x) {
         x_ = x;
         has_ = false;
@@ -148,62 +156,26 @@ public:
         preorder_traversal_stop(b, *this);
         return has_;
     }
-    virtual void visit(const Add &) { };
-    virtual void visit(const Mul &) { };
-    virtual void visit(const Pow &) { };
-    virtual void visit(const Integer &) { };
-    virtual void visit(const Rational &) { };
-    virtual void visit(const Complex &) { };
-    virtual void visit(const Log &) { };
-    virtual void visit(const Derivative &) { };
-    virtual void visit(const Sin &) { };
-    virtual void visit(const Cos &) { };
-    virtual void visit(const Tan &) { };
-    virtual void visit(const Cot &) { };
-    virtual void visit(const Csc &) { };
-    virtual void visit(const Sec &) { };
-    virtual void visit(const ASin &) { };
-    virtual void visit(const ACos &) { };
-    virtual void visit(const ASec &) { };
-    virtual void visit(const ACsc &) { };
-    virtual void visit(const ATan &) { };
-    virtual void visit(const ACot &) { };
-    virtual void visit(const ATan2 &) { };
-    virtual void visit(const LambertW &) { };
-    virtual void visit(const FunctionSymbol &) { };
-    virtual void visit(const Sinh &) { };
-    virtual void visit(const Cosh &) { };
-    virtual void visit(const Tanh &) { };
-    virtual void visit(const Coth &) { };
-    virtual void visit(const ASinh &) { };
-    virtual void visit(const ACosh &) { };
-    virtual void visit(const ATanh &) { };
-    virtual void visit(const ACoth &) { };
-    virtual void visit(const ASech &) { };
-    virtual void visit(const KroneckerDelta &) { };
-    virtual void visit(const LeviCivita &) { };
-    virtual void visit(const Zeta &) { };
-    virtual void visit(const Dirichlet_eta &) { };
-    virtual void visit(const Gamma &) { };
-    virtual void visit(const LowerGamma &) { };
-    virtual void visit(const UpperGamma &) { };
-    virtual void visit(const Constant &) { };
-    virtual void visit(const Abs &) { };
-    virtual void visit(const Subs &) { };
 };
 
 bool has_symbol(const Basic &b, const RCP<const Symbol> &x);
 
-class CoeffVisitor : public Visitor {
+class CoeffVisitor : public StopVisitor<CoeffVisitor> {
 private:
     RCP<const Symbol> x_;
     RCP<const Integer> n_;
     RCP<const Basic> coeff_;
 public:
-    void visit(const Add &x) {
+    CoeffVisitor() : StopVisitor(this) { };
+
+    void bvisit(const Add &x) {
         // TODO: Implement coeff for Add
-        //coeff_ =
     }
+
+    void bvisit(const Basic &x) {
+
+    }
+
     RCP<const Basic> apply(const Basic &b, const RCP<const Symbol> &x,
             const RCP<const Integer> &n) {
         x_ = x;
@@ -212,48 +184,6 @@ public:
         b.accept(*this);
         return coeff_;
     }
-    virtual void visit(const Symbol &) { };
-    virtual void visit(const Mul &) { };
-    virtual void visit(const Pow &) { };
-    virtual void visit(const Integer &) { };
-    virtual void visit(const Rational &) { };
-    virtual void visit(const Complex &) { };
-    virtual void visit(const Log &) { };
-    virtual void visit(const Derivative &) { };
-    virtual void visit(const Sin &) { };
-    virtual void visit(const Cos &) { };
-    virtual void visit(const Tan &) { };
-    virtual void visit(const Cot &) { };
-    virtual void visit(const Csc &) { };
-    virtual void visit(const Sec &) { };
-    virtual void visit(const ASin &) { };
-    virtual void visit(const ACos &) { };
-    virtual void visit(const ASec &) { };
-    virtual void visit(const ACsc &) { };
-    virtual void visit(const ATan &) { };
-    virtual void visit(const ACot &) { };
-    virtual void visit(const ATan2 &) { };
-    virtual void visit(const LambertW &) { };
-    virtual void visit(const FunctionSymbol &) { };
-    virtual void visit(const Sinh &) { };
-    virtual void visit(const Cosh &) { };
-    virtual void visit(const Tanh &) { };
-    virtual void visit(const Coth &) { };
-    virtual void visit(const ASinh &) { };
-    virtual void visit(const ACosh &) { };
-    virtual void visit(const ATanh &) { };
-    virtual void visit(const ACoth &) { };
-    virtual void visit(const ASech &) { };
-    virtual void visit(const KroneckerDelta &) { };
-    virtual void visit(const LeviCivita &) { };
-    virtual void visit(const Zeta &) { };
-    virtual void visit(const Dirichlet_eta &) { };
-    virtual void visit(const Gamma &) { };
-    virtual void visit(const LowerGamma &) { };
-    virtual void visit(const UpperGamma &) { };
-    virtual void visit(const Constant &) { };
-    virtual void visit(const Abs &) { };
-    virtual void visit(const Subs &) { };
 };
 
 RCP<const Basic> coeff(const Basic &b, const RCP<const Symbol> &x,

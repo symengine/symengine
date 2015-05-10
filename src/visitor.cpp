@@ -72,7 +72,8 @@ void postorder_traversal(const Basic &b, Visitor &v)
     b.accept(v);
 }
 
-void preorder_traversal_stop(const Basic &b, StopVisitor &v)
+template<class T>
+void preorder_traversal_stop(const Basic &b, StopVisitor<T> &v)
 {
     b.accept(v);
     if (v.stop_) return;
