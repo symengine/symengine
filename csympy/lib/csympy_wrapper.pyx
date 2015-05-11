@@ -1,6 +1,6 @@
-from cython.operator cimport dereference as deref
+from cython.operator cimport dereference as deref, preincrement as inc
 cimport csympy
-from csympy cimport rcp, RCP
+from csympy cimport rcp, RCP, set
 from libcpp cimport bool
 from libcpp.string cimport string
 from cpython cimport PyObject, Py_XINCREF, Py_XDECREF, \
@@ -234,6 +234,10 @@ cdef class Basic(object):
             s.append(c2py(<RCP[const csympy.Basic]>(Y[i])))
         return tuple(s)
 
+    @property
+    def free_symbols(self):
+        cdef csympy.set_basic _set = csympy.free_symbols(deref(self.thisptr))
+        return {c2py(<RCP[const csympy.Basic]>(elem)) for elem in _set}
 
 cdef class Symbol(Basic):
 

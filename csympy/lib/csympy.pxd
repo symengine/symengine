@@ -12,6 +12,17 @@ cdef extern from 'gmpxx.h':
     cdef cppclass mpq_class:
         mpq_class()
 
+cdef extern from "<set>" namespace "std":
+    cdef cppclass set[T, U]:
+        cppclass iterator:
+            T& operator*()
+            iterator operator++() nogil
+            iterator operator--() nogil
+            bint operator==(iterator) nogil
+            bint operator!=(iterator) nogil
+        iterator begin() nogil
+        iterator end() nogil
+
 cdef extern from "symengine_rcp.h" namespace "SymEngine":
     cdef enum ENull:
         null
@@ -47,11 +58,14 @@ cdef extern from "symengine_rcp.h" namespace "SymEngine":
 
 
 cdef extern from "basic.h" namespace "SymEngine":
+    ctypedef Basic const_Basic "const SymEngine::Basic"
     ctypedef map[RCP[Basic], RCP[Basic]] map_basic_basic
     ctypedef vector[RCP[Basic]] vec_basic "SymEngine::vec_basic"
     ctypedef vector[RCP[Integer]] vec_integer "SymEngine::vec_integer"
     ctypedef map[RCP[Integer], unsigned] map_integer_uint "SymEngine::map_integer_uint"
     cdef struct RCPIntegerKeyLess
+    cdef struct RCPBasicKeyLess
+    ctypedef set[RCP[const_Basic], RCPBasicKeyLess] set_basic "SymEngine::set_basic"
     cdef cppclass Basic:
         string __str__() nogil except +
         unsigned int hash() nogil except +
@@ -292,3 +306,7 @@ cdef extern from "ntheory.h" namespace "SymEngine":
 
 cdef extern from "eval_double.h" namespace "SymEngine":
     double eval_double(const Basic &b) nogil except +
+
+cdef extern from "visitor.h" namespace "SymEngine":
+    bool has_symbol(const Basic &b, const RCP[const Symbol] &x) nogil except +
+    set_basic free_symbols(const Basic &b) nogil except +
