@@ -68,13 +68,21 @@ RCP<const Basic> CSRMatrix::get(unsigned i, unsigned j) const
 
     unsigned row_start = p_[i];
     unsigned row_end = p_[i + 1];
+    unsigned k;
 
-    // TODO: Use binary search
-    for (unsigned k = row_start; k < row_end; k++) {
-        if (j_[k] == j)
+    if (row_start == row_end) {
+        return zero;
+    }
+
+    while (row_start <= row_end) {
+        k = (row_start + row_end)/2;
+        if (j_[k] == j) {
             return x_[k];
-        else if (j_[k] > j)
-            break;
+        } else if (j_[k] < j){
+            row_start = k + 1;
+        } else {
+            row_end = k - 1;
+        }
     }
 
     return zero;
