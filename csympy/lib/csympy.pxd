@@ -13,6 +13,8 @@ cdef extern from 'gmpxx.h':
         mpq_class()
 
 cdef extern from "<set>" namespace "std":
+# Cython's libcpp.set does not support two template arguments to set.
+# Methods to declare and iterate a set with a custom compare are given here
     cdef cppclass set[T, U]:
         cppclass iterator:
             T& operator*()
