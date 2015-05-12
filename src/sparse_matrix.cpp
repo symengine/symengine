@@ -459,14 +459,20 @@ void csr_diagonal(const CSRMatrix& A, DenseMatrix& D)
         row_start = A.p_[i];
         row_end = A.p_[i + 1];
         diag = zero;
+        unsigned jj;
 
-        // TODO: Use Binary search as A is in canonical format
-        for (unsigned jj = row_start; jj < row_end; jj++) {
+        while (row_start <= row_end) {
+            jj = (row_start + row_end)/2;
             if (A.j_[jj] == i) {
                 diag = A.x_[jj];
                 break;
+            } else if (A.j_[jj] < i){
+                row_start = jj + 1;
+            } else {
+                row_end = jj - 1;
             }
         }
+
         D.set(i, 0, diag);
     }
 }
