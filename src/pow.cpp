@@ -21,36 +21,36 @@ bool Pow::is_canonical(const RCP<const Basic> &base, const RCP<const Basic> &exp
 {
     if (base == null) return false;
     if (exp == null) return false;
-    // e.g. 0^x
+    // e.g. 0**x
     if (is_a<Integer>(*base) && rcp_static_cast<const Integer>(base)->is_zero())
         return false;
-    // e.g. 1^x
+    // e.g. 1**x
     if (is_a<Integer>(*base) && rcp_static_cast<const Integer>(base)->is_one())
         return false;
-    // e.g. x^0
+    // e.g. x**0
     if (is_a<Integer>(*exp) && rcp_static_cast<const Integer>(exp)->is_zero())
         return false;
-    // e.g. x^1
+    // e.g. x**1
     if (is_a<Integer>(*exp) && rcp_static_cast<const Integer>(exp)->is_one())
         return false;
-    // e.g. 2^3, (2/3)^4
+    // e.g. 2**3, (2/3)**4
     if ((is_a<Integer>(*base) || is_a<Rational>(*base)) && is_a<Integer>(*exp))
         return false;
-    // e.g. (x*y)^2, should rather be x^2*y^2
+    // e.g. (x*y)**2, should rather be x**2*y**2
     if (is_a<Mul>(*base) && is_a<Integer>(*exp))
         return false;
-    // e.g. (x^y)^2, should rather be x^(2*y)
+    // e.g. (x**y)**2, should rather be x**(2*y)
     if (is_a<Pow>(*base) && is_a<Integer>(*exp))
         return false;
     // If exp is a rational, it should be between 0  and 1, i.e. we don't
-    // allow things like 2^(-1/2) or 2^(3/2)
+    // allow things like 2**(-1/2) or 2**(3/2)
     if ((is_a<Rational>(*base) || is_a<Integer>(*base)) &&
         is_a<Rational>(*exp) &&
         (rcp_static_cast<const Rational>(exp)->i < 0 ||
         rcp_static_cast<const Rational>(exp)->i > 1))
         return false;
     // Purely Imaginary complex numbers with integral powers are expanded
-    // e.g (2I)^3
+    // e.g (2I)**3
     if (is_a<Complex>(*base) && rcp_static_cast<const Complex>(base)->is_re_zero() &&
         is_a<Integer>(*exp))
         return false;
@@ -167,12 +167,12 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
         }
     }
     if (is_a<Mul>(*a) && is_a<Integer>(*b)) {
-        // Convert (x*y)^b = x^b*y^b, where 'b' is an integer. This holds for
+        // Convert (x*y)**b = x**b*y**b, where 'b' is an integer. This holds for
         // any complex 'x', 'y' and integer 'b'.
         return rcp_static_cast<const Mul>(a)->power_all_terms(b);
     }
     if (is_a<Pow>(*a) && is_a<Integer>(*b)) {
-        // Convert (x^y)^b = x^(b*y), where 'b' is an integer. This holds for
+        // Convert (x**y)**b = x**(b*y), where 'b' is an integer. This holds for
         // any complex 'x', 'y' and integer 'b'.
         RCP<const Pow> A = rcp_static_cast<const Pow>(a);
         return pow(A->base_, mul(A->exp_, b));
@@ -299,7 +299,7 @@ RCP<const Basic> pow_expand(const RCP<const Pow> &self)
     multinomial_coefficients_mpz(m, n, r);
     umap_basic_num rd;
     // This speeds up overall expansion. For example for the benchmark
-    // (y + x + z + w)^60 it improves the timing from 135ms to 124ms.
+    // (y + x + z + w)**60 it improves the timing from 135ms to 124ms.
     rd.reserve(2*r.size());
     RCP<const Number> add_overall_coeff=zero;
     for (auto &p: r) {

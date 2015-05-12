@@ -643,7 +643,7 @@ bool crt(const Ptr<RCP<const Integer>> &R, const std::vector<RCP<const Integer>>
         t = rem[i]->as_mpz() - r;
         if (!mpz_divisible_p (t.get_mpz_t(), g.get_mpz_t()))
             return false;
-        r += m * s * (t / g);           // r += m * (m^-1 mod[i]/g)* (rem[i] - r) / g
+        r += m * s * (t / g);           // r += m * (m**-1 mod[i]/g)* (rem[i] - r) / g
         m *= mod[i]->as_mpz() / g;
         mpz_fdiv_r (r.get_mpz_t(), r.get_mpz_t(), m.get_mpz_t());
     }

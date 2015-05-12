@@ -394,7 +394,7 @@ void test_pow()
     r2 = zero;
     assert(eq(r1, r2));
 
-    /* Test (x*y)^2 -> x^2*y^2 type of simplifications */
+    /* Test (x*y)**2 -> x**2*y**2 type of simplifications */
 
     r1 = pow(mul(x, y), i2);
     r2 = mul(pow(x, i2), pow(y, i2));

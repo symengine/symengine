@@ -25,35 +25,35 @@ bool Mul::is_canonical(const RCP<const Number> &coef,
         return false;
     if (dict.size() == 0) return false;
     if (dict.size() == 1) {
-        // e.g. 1*x, 1*x^2
+        // e.g. 1*x, 1*x**2
         if (coef->is_one()) return false;
     }
     // Check that each term in 'dict' is in canonical form
     for (auto &p: dict) {
         if (p.first == null) return false;
         if (p.second == null) return false;
-        // e.g. 2^3, (2/3)^4
+        // e.g. 2**3, (2/3)**4
         // However for Complex no simplification is done
         if ((is_a<Integer>(*p.first) || is_a<Rational>(*p.first))
             && is_a<Integer>(*p.second))
             return false;
-        // e.g. 0^x
+        // e.g. 0**x
         if (is_a<Integer>(*p.first) &&
                 rcp_static_cast<const Integer>(p.first)->is_zero())
             return false;
-        // e.g. 1^x
+        // e.g. 1**x
         if (is_a<Integer>(*p.first) &&
                 rcp_static_cast<const Integer>(p.first)->is_one())
             return false;
-        // e.g. x^0
+        // e.g. x**0
         if (is_a<Integer>(*p.second) &&
                 rcp_static_cast<const Integer>(p.second)->is_zero())
             return false;
-        // e.g. (x*y)^2 (={xy:2}), which should be represented as x^2*y^2
+        // e.g. (x*y)**2 (={xy:2}), which should be represented as x**2*y**2
         //     (={x:2, y:2})
         if (is_a<Mul>(*p.first))
             return false;
-        // e.g. x^2^y (={x^2:y}), which should be represented as x^(2y)
+        // e.g. x**2**y (={x**2:y}), which should be represented as x**(2y)
         //     (={x:2y})
         if (is_a<Pow>(*p.first))
             return false;
@@ -109,11 +109,11 @@ RCP<const SymEngine::Basic> Mul::from_dict(const RCP<const Number> &coef, map_ba
         if (is_a<Integer>(*(p->second))) {
             if (coef->is_one()) {
                 if ((rcp_static_cast<const Integer>(p->second))->is_one()) {
-                    // For x^1 we simply return "x":
+                    // For x**1 we simply return "x":
                     return p->first;
                 }
             } else {
-                // For coef*x or coef*x^3 we simply return Mul:
+                // For coef*x or coef*x**3 we simply return Mul:
                 return rcp(new Mul(coef, std::move(d)));
             }
         }
@@ -128,7 +128,7 @@ RCP<const SymEngine::Basic> Mul::from_dict(const RCP<const Number> &coef, map_ba
     }
 }
 
-// Mul (t^exp) to the dict "d"
+// Mul (t**exp) to the dict "d"
 void Mul::dict_add_term(map_basic_basic &d, const RCP<const Basic> &exp,
         const RCP<const Basic> &t)
 {
@@ -156,7 +156,7 @@ void Mul::dict_add_term(map_basic_basic &d, const RCP<const Basic> &exp,
     }
 }
 
-// Mul (t^exp) to the dict "d"
+// Mul (t**exp) to the dict "d"
 void Mul::dict_add_term_new(const Ptr<RCP<const Number>> &coef, map_basic_basic &d,
     const RCP<const Basic> &exp, const RCP<const Basic> &t)
 {
@@ -247,7 +247,7 @@ void Mul::dict_add_term_new(const Ptr<RCP<const Number>> &coef, map_basic_basic 
 void Mul::as_two_terms(const Ptr<RCP<const Basic>> &a,
             const Ptr<RCP<const Basic>> &b) const
 {
-    // Example: if this=3*x^2*y^2*z^2, then a=x^2 and b=3*y^2*z^2
+    // Example: if this=3*x**2*y**2*z**2, then a=x**2 and b=3*y**2*z**2
     auto p = dict_.begin();
     *a = pow(p->first, p->second);
     map_basic_basic d = dict_;
@@ -350,7 +350,7 @@ RCP<const Basic> mul_expand_two(const RCP<const Basic> &a, const RCP<const Basic
         RCP<const Number> coef = mulnum(rcp_static_cast<const Add>(a)->coef_,
             rcp_static_cast<const Add>(b)->coef_);
         umap_basic_num d;
-        // Improves (x+1)^3(x+2)^3...(x+350)^3 expansion from 0.97s to 0.93s:
+        // Improves (x+1)**3*(x+2)**3*...(x+350)**3 expansion from 0.97s to 0.93s:
         d.reserve((rcp_static_cast<const Add>(a))->dict_.size()*
             (rcp_static_cast<const Add>(b))->dict_.size());
         // Expand dicts first:
