@@ -45,7 +45,7 @@ public:
             const Ptr<RCP<const Basic>> &base);
     //! Rewrite as 2 terms
     /*!
-        Example: if this=3*x^2*y^2*z^2`, then `a=x^2` and `b=3*y^2*z^2`
+        Example: if this=3*x**2*y**2*z**2`, then `a=x**2` and `b=3*y**2*z**2`
     * */
     void as_two_terms(const Ptr<RCP<const Basic>> &a,
             const Ptr<RCP<const Basic>> &b) const;

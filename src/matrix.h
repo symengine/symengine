@@ -337,7 +337,7 @@ RCP<const Basic> det_berkowitz(const DenseMatrix &A);
 
 // Characteristic polynomial: Only the coefficients of monomials in decreasing
 // order of monomial powers is returned, i.e. if `B = transpose([1, -2, 3])`
-// then the corresponding polynomial is `x^2 - 2x + 3`.
+// then the corresponding polynomial is `x**2 - 2x + 3`.
 void char_poly(const DenseMatrix &A, DenseMatrix &B);
 
 // Mimic `eye` function in NumPy

@@ -77,7 +77,7 @@ void basic_sub(basic s, const basic a, const basic b);
 void basic_mul(basic s, const basic a, const basic b);
 //! Assigns s = a / b.
 void basic_div(basic s, const basic a, const basic b);
-//! Assigns s = a ^ b.
+//! Assigns s = a ** b.
 void basic_pow(basic s, const basic a, const basic b);
 //! Assign to s, derivative of expr with respect to sym. Returns 0 if sym is not a symbol.
 int basic_diff(basic s, const basic expr, const basic sym);
