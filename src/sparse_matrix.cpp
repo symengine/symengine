@@ -94,10 +94,25 @@ void CSRMatrix::set(unsigned i, unsigned j, const RCP<const Basic> &e)
 
     unsigned k = p_[i];
     unsigned row_end = p_[i + 1];
+    unsigned end = p_[i + 1];
+    unsigned mid;
 
-    // TODO: Use binary search
-    while (k < row_end && j_[k] < j)
-        k++;
+    while (k < end) {
+        mid = (k + end)/2;
+        if (mid == k) {
+            if (j_[k] < j) {
+                k++;
+            }
+            break;
+        } else if (j_[mid] >= j && j_[mid - 1] < j) {
+            k = mid;
+            break;
+        } else if (j_[mid - 1] >= j) {
+            end = mid - 1;
+        } else {
+            k = mid + 1;
+        }
+    }
 
     if (neq(e, zero)) {
         if (k < row_end && j_[k] == j) {
