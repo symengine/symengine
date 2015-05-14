@@ -37,4 +37,6 @@ int RealDouble::compare(const Basic &o) const
     return i < s.i ? -1 : 1;
 }
 
+RCP<const RealDouble> real_double(double x) { return rcp(new RealDouble(x)); };
+
 } // SymEngine

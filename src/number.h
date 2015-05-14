@@ -24,7 +24,8 @@ public:
 
     virtual bool is_positive() const = 0;
 
-    virtual bool is_real() const = 0;
+    virtual bool is_exact() const { return true; };
+
     //! Addition
     virtual RCP<const Number> add(const Number &other) const = 0;
     //! Subtraction

@@ -54,6 +54,10 @@ bool Pow::is_canonical(const RCP<const Basic> &base, const RCP<const Basic> &exp
     if (is_a<Complex>(*base) && rcp_static_cast<const Complex>(base)->is_re_zero() &&
         is_a<Integer>(*exp))
         return false;
+    // e.g. 0.5^2.0 should be represented as 0.25
+    if(is_a_Number(*base) && !rcp_static_cast<const Number>(base)->is_exact() &&
+            is_a_Number(*exp) && !rcp_static_cast<const Number>(exp)->is_exact())
+        return false;
     return true;
 }
 
@@ -116,7 +120,7 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
                 RCP<const Number> res = exp_new->pow(*pow_new);
                 return res;
             } else {
-                throw std::runtime_error("Not implemented");
+                return rcp_static_cast<const Number>(a)->pow(*rcp_static_cast<const Number>(b));
             }
         } else if (is_a<Rational>(*b)) {
             mpz_class q, r, num, den;
@@ -158,12 +162,12 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
             } else if (is_a<Complex>(*a)) {
                 return rcp(new Pow(a, b));
             } else {
-                throw std::runtime_error("Not implemented");
+                return rcp_static_cast<const Number>(a)->pow(*rcp_static_cast<const Number>(b));
             }
         } else if (is_a<Complex>(*b)) {
             return rcp(new Pow(a, b));
         } else {
-            throw std::runtime_error("Not implemented");
+            return rcp_static_cast<const Number>(a)->pow(*rcp_static_cast<const Number>(b));
         }
     }
     if (is_a<Mul>(*a) && is_a<Integer>(*b)) {

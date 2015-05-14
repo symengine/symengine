@@ -30,7 +30,7 @@ bool Add::is_canonical(const RCP<const Number> &coef,
         if (p.first == null) return false;
         if (p.second == null) return false;
         // e.g. 2*3
-        if (is_a_Number(*p.first) && is_a_Number(*p.second))
+        if (is_a_Number(*p.first))
             return false;
         // e.g. 0*x
         if (is_a<Integer>(*p.first) &&

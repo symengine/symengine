@@ -50,8 +50,6 @@ public:
         throw std::runtime_error("Complex Numbers cannot be totally ordered");
     }
 
-    inline virtual bool is_real() const { return true; }
-
     /*! Constructs Complex from re, im. If im is 0
      * it will return a Rational instead.
      * */

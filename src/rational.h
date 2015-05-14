@@ -61,8 +61,6 @@ public:
         return ((this->i.get_den() < 0) && (this->i.get_num() > 0)) ||
                 ((this->i.get_den() > 0) && (this->i.get_num() < 0)) ; }
 
-    inline virtual bool is_real() const { return true; }
-
     /*! Add Rationals
      * \param other of type Rational
      * */

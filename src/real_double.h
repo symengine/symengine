@@ -6,6 +6,7 @@
 #ifndef SYMENGINE_REAL_DOUBLE_H
 #define SYMENGINE_REAL_DOUBLE_H
 
+#include <cmath>
 #include "basic.h"
 #include "number.h"
 #include "integer.h"
@@ -41,7 +42,7 @@ public:
         return i < 0;
     }
 
-    inline virtual bool is_real() const { return false; }
+    inline virtual bool is_exact() const { return false; }
 
     //! \return `true` if `0`
     virtual bool is_zero() const { return false; }
@@ -382,6 +383,8 @@ public:
 
     virtual void accept(Visitor &v) const;
 };
+
+RCP<const RealDouble> real_double(double x);
 
 } // SymEngine
 

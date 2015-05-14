@@ -57,6 +57,10 @@ bool Mul::is_canonical(const RCP<const Number> &coef,
         //     (={x:2y})
         if (is_a<Pow>(*p.first))
             return false;
+        // e.g. 0.5^2.0 should be represented as 0.25
+        if(is_a_Number(*p.first) && !rcp_static_cast<const Number>(p.first)->is_exact() &&
+                is_a_Number(*p.second) && !rcp_static_cast<const Number>(p.second)->is_exact())
+            return false;
     }
     return true;
 }
