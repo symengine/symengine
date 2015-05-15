@@ -590,8 +590,10 @@ void test_pow()
 
     r1 = real_double(0.1);
     r2 = Rational::from_mpq(mpq_class(1, 2));
-    r2 = pow(pow(pow(r1, r2), integer(3)), real_double(0.2));
+    r2 = pow(r1, r2);
     assert(is_a<RealDouble>(*r2));
+    assert(std::abs(rcp_static_cast<const RealDouble>(r2)->i - 0.316227766016) < 1e-12);
+    r2 = pow(pow(r2, integer(3)), real_double(0.2));
     assert(std::abs(rcp_static_cast<const RealDouble>(r2)->i - 0.501187233627) < 1e-12);
 }
 

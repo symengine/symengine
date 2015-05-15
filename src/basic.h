@@ -61,9 +61,10 @@ class Symbol;
 */
 
 enum TypeID {
-    INTEGER, RATIONAL, COMPLEX, REAL_DOUBLE, NUMBER,
-    // 'NUMBER' returns the number of subclasses of Number.
-    // All subclasses of Number must be added before it.
+    INTEGER, RATIONAL, COMPLEX, REAL_DOUBLE,
+    // 'REAL_DOUBLE' returns the number of subclasses of Number.
+    // All subclasses of Number must be added before it. Do not assign
+    // non subclasses of Number before it.
     SYMBOL, MUL, ADD, POW, LOG, CONSTANT,
     SIN, COS, TAN, COT, CSC, SEC,
     ASIN, ACOS, ASEC, ACSC, ATAN, ACOT, ATAN2,

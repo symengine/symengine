@@ -96,9 +96,10 @@ inline void idivnum(const Ptr<RCP<const Number>> &self,
 //! \return true if 'b' is a Number or any of its subclasses
 inline bool is_a_Number(const Basic &b)
 {
-    // Currently we enumerate all the subclasses explicitly, from the most
-    // frequent (on the left) to the least frequent (on the right):
-    return b.get_type_code() < NUMBER;
+    // `REAL_DOUBLE` is the last subclass of Number in TypeID
+    // An enum should be before `REAL_DOUBLE` iff it is a
+    // subclass of Number
+    return b.get_type_code() <= REAL_DOUBLE;
 }
 
 

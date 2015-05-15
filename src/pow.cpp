@@ -131,6 +131,9 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
                 mpz_fdiv_qr(q.get_mpz_t(), r.get_mpz_t(), num.get_mpz_t(),
                     den.get_mpz_t());
             } else {
+                if (is_a_Number(*a) && !rcp_static_cast<const Number>(a)->is_exact()) {
+                    return rcp_static_cast<const Number>(a)->pow(*rcp_static_cast<const Number>(b));
+                }
                 return rcp(new Pow(a, b));
             }
             // Here we make the exponent postive and a fraction between
