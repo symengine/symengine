@@ -57,6 +57,10 @@ bool Mul::is_canonical(const RCP<const Number> &coef,
         //     (={x:2y})
         if (is_a<Pow>(*p.first))
             return false;
+        // e.g. 0.5^2.0 should be represented as 0.25
+        if(is_a_Number(*p.first) && !rcp_static_cast<const Number>(p.first)->is_exact() &&
+                is_a_Number(*p.second) && !rcp_static_cast<const Number>(p.second)->is_exact())
+            return false;
     }
     return true;
 }
@@ -176,7 +180,7 @@ void Mul::dict_add_term_new(const Ptr<RCP<const Number>> &coef, map_basic_basic 
                 den = rcp_static_cast<const Rational>(exp)->i.get_den();
                 mpz_fdiv_qr(q.get_mpz_t(), r.get_mpz_t(), num.get_mpz_t(),
                     den.get_mpz_t());
-                
+
                 insert(d, t, Rational::from_mpq(mpq_class(r, den)));
                 imulnum(outArg(*coef), pownum(rcp_static_cast<const Number>(t),
                     rcp_static_cast<const Number>(integer(q))));
@@ -325,10 +329,18 @@ RCP<const Basic> mul(const RCP<const Basic> &a, const RCP<const Basic> &b)
     } else {
         RCP<const Basic> exp;
         RCP<const Basic> t;
-        Mul::as_base_exp(a, outArg(exp), outArg(t));
-        Mul::dict_add_term_new(outArg(coef), d, exp, t);
-        Mul::as_base_exp(b, outArg(exp), outArg(t));
-        Mul::dict_add_term_new(outArg(coef), d, exp, t);
+        if (is_a_Number(*a)) {
+            imulnum(outArg(coef), rcp_static_cast<const Number>(a));
+        } else {
+            Mul::as_base_exp(a, outArg(exp), outArg(t));
+            Mul::dict_add_term_new(outArg(coef), d, exp, t);
+        }
+        if (is_a_Number(*b)) {
+            imulnum(outArg(coef), rcp_static_cast<const Number>(b));
+        } else {
+            Mul::as_base_exp(b, outArg(exp), outArg(t));
+            Mul::dict_add_term_new(outArg(coef), d, exp, t);
+        }
     }
     return Mul::from_dict(coef, std::move(d));
 }

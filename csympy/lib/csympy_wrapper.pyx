@@ -41,6 +41,8 @@ cdef c2py(RCP[const csympy.Basic] o):
         r = Subs.__new__(Subs)
     elif (csympy.is_a_FunctionWrapper(deref(o))):
         r = FunctionWrapper.__new__(FunctionWrapper)
+    elif (csympy.is_a_RealDouble(deref(o))):
+        r = RealDouble.__new__(RealDouble)
     else:
         raise Exception("Unsupported CSymPy class.")
     r.thisptr = o
@@ -117,6 +119,8 @@ def sympify(a, raise_error=True):
         return a
     elif isinstance(a, (int, long)):
         return Integer(a)
+    elif isinstance(a, (float)):
+        return RealDouble(a)
     else:
         return sympy2csympy(a, raise_error)
 
@@ -341,6 +345,22 @@ cdef class Integer(Number):
     def _sympy_(self):
         import sympy
         return sympy.Integer(deref(self.thisptr).__str__().decode("utf-8"))
+
+
+cdef class RealDouble(Number):
+
+    def __cinit__(self, i = None):
+        if i is None:
+            return
+        cdef double i_ = i
+        self.thisptr = rcp(new csympy.RealDouble(i_))
+
+    def __dealloc__(self):
+        self.thisptr.reset()
+
+    def _sympy_(self):
+        import sympy
+        return sympy.Float(deref(self.thisptr).__str__().decode("utf-8"))
 
 cdef class Rational(Number):
 

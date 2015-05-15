@@ -23,6 +23,9 @@ public:
     virtual bool is_negative() const = 0;
 
     virtual bool is_positive() const = 0;
+
+    virtual bool is_exact() const { return true; };
+
     //! Addition
     virtual RCP<const Number> add(const Number &other) const = 0;
     //! Subtraction
@@ -35,6 +38,7 @@ public:
     virtual RCP<const Number> rdiv(const Number &other) const = 0;
     //! Power
     virtual RCP<const Number> pow(const Number &other) const = 0;
+    virtual RCP<const Number> rpow(const Number &other) const = 0;
     //! Differentiation w.r.t Symbol `x`
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
 
@@ -87,6 +91,15 @@ inline void idivnum(const Ptr<RCP<const Number>> &self,
     const RCP<const Number> &other)
 {
     *self = divnum(*self, other);
+}
+
+//! \return true if 'b' is a Number or any of its subclasses
+inline bool is_a_Number(const Basic &b)
+{
+    // `REAL_DOUBLE` is the last subclass of Number in TypeID
+    // An enum should be before `REAL_DOUBLE` iff it is a
+    // subclass of Number
+    return b.get_type_code() <= REAL_DOUBLE;
 }
 
 

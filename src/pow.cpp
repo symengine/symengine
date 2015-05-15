@@ -54,6 +54,10 @@ bool Pow::is_canonical(const RCP<const Basic> &base, const RCP<const Basic> &exp
     if (is_a<Complex>(*base) && rcp_static_cast<const Complex>(base)->is_re_zero() &&
         is_a<Integer>(*exp))
         return false;
+    // e.g. 0.5^2.0 should be represented as 0.25
+    if(is_a_Number(*base) && !rcp_static_cast<const Number>(base)->is_exact() &&
+            is_a_Number(*exp) && !rcp_static_cast<const Number>(exp)->is_exact())
+        return false;
     return true;
 }
 
@@ -116,7 +120,7 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
                 RCP<const Number> res = exp_new->pow(*pow_new);
                 return res;
             } else {
-                throw std::runtime_error("Not implemented");
+                return rcp_static_cast<const Number>(a)->pow(*rcp_static_cast<const Number>(b));
             }
         } else if (is_a<Rational>(*b)) {
             mpz_class q, r, num, den;
@@ -127,6 +131,9 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
                 mpz_fdiv_qr(q.get_mpz_t(), r.get_mpz_t(), num.get_mpz_t(),
                     den.get_mpz_t());
             } else {
+                if (is_a_Number(*a) && !rcp_static_cast<const Number>(a)->is_exact()) {
+                    return rcp_static_cast<const Number>(a)->pow(*rcp_static_cast<const Number>(b));
+                }
                 return rcp(new Pow(a, b));
             }
             // Here we make the exponent postive and a fraction between
@@ -158,12 +165,12 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
             } else if (is_a<Complex>(*a)) {
                 return rcp(new Pow(a, b));
             } else {
-                throw std::runtime_error("Not implemented");
+                return rcp_static_cast<const Number>(a)->pow(*rcp_static_cast<const Number>(b));
             }
         } else if (is_a<Complex>(*b)) {
             return rcp(new Pow(a, b));
         } else {
-            throw std::runtime_error("Not implemented");
+            return rcp_static_cast<const Number>(a)->pow(*rcp_static_cast<const Number>(b));
         }
     }
     if (is_a<Mul>(*a) && is_a<Integer>(*b)) {
@@ -326,6 +333,8 @@ RCP<const Basic> pow_expand(const RCP<const Pow> &self)
                                     p.second, p.first);
                         }
                         imulnum(outArg(overall_coeff), (rcp_static_cast<const Mul>(tmp))->coef_);
+                    } else if (is_a_Number(*tmp)) {
+                        imulnum(outArg(overall_coeff), rcp_static_cast<const Number>(tmp));
                     } else {
                         Mul::as_base_exp(tmp, outArg(exp2), outArg(t));
                         Mul::dict_add_term_new(outArg(overall_coeff), d, exp2, t);

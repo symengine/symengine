@@ -44,6 +44,11 @@ public:
         result_ = tmp;
     }
 
+    void bvisit(const RealDouble &x) {
+        double tmp = x.i;
+        result_ = tmp;
+    }
+
     void bvisit(const Add &x) {
         double tmp = 0;
         for (auto &p: x.get_args()) tmp = tmp + apply(*p);
@@ -233,6 +238,10 @@ std::vector<fn> init_eval_double()
     };
     table[RATIONAL] = [](const Basic &x) {
         double tmp = (static_cast<const Rational &>(x)).i.get_d();
+        return tmp;
+    };
+    table[REAL_DOUBLE] = [](const Basic &x) {
+        double tmp = (static_cast<const RealDouble &>(x)).i;
         return tmp;
     };
     table[ADD] = [](const Basic &x) {

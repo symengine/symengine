@@ -48,7 +48,6 @@ public:
     //! \return `true` if negative
     inline virtual bool is_negative() const { return this->i < 0; }
 
-
     /* These are very fast methods for add/sub/mul/div/pow on Integers only */
     //! Fast Integer Addition
     inline RCP<const Integer> addint(const Integer &other) const {
@@ -130,8 +129,12 @@ public:
         if (is_a<Integer>(other)) {
             return powint(static_cast<const Integer&>(other));
         } else {
-            throw std::runtime_error("Not implemented.");
+            return other.rpow(*this);
         }
+    };
+
+    virtual RCP<const Number> rpow(const Number &other) const {
+        throw std::runtime_error("Not implemented.");
     };
 
     virtual void accept(Visitor &v) const;

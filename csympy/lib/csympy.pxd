@@ -77,6 +77,7 @@ cdef extern from "basic.h" namespace "SymEngine":
     bool is_a_Derivative "SymEngine::is_a<SymEngine::Derivative>"(const Basic &b) nogil
     bool is_a_Subs "SymEngine::is_a<SymEngine::Subs>"(const Basic &b) nogil
     bool is_a_FunctionWrapper "SymEngine::is_a<SymEngine::FunctionWrapper>"(const Basic &b) nogil
+    bool is_a_RealDouble "SymEngine::is_a<SymEngine::RealDouble>"(const Basic &b) nogil
 
     RCP[const Basic] expand(RCP[const Basic] &o) nogil except +
 
@@ -107,6 +108,10 @@ cdef extern from "complex.h" namespace "SymEngine":
     cdef cppclass Complex(Number):
         RCP[const Number] real_part() nogil
         RCP[const Number] imaginary_part() nogil
+
+cdef extern from "real_double.h" namespace "SymEngine":
+    cdef cppclass RealDouble(Number):
+        RealDouble(double x) nogil
 
 cdef extern from "constants.h" namespace "SymEngine":
     cdef cppclass Constant(Basic):
@@ -150,6 +155,7 @@ cdef extern from "basic.h" namespace "SymEngine":
     RCP[const Basic] rcp(Subs *p) nogil
     RCP[const Basic] rcp(Derivative *p) nogil
     RCP[const Basic] rcp(FunctionWrapper *p) nogil
+    RCP[const Basic] rcp(RealDouble *p) nogil
 
 cdef extern from "functions.h" namespace "SymEngine":
     cdef RCP[const Basic] sin(RCP[const Basic] &arg) nogil except+

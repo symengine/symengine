@@ -45,6 +45,14 @@ public:
         fmpq_clear(q_);
     }
 
+    virtual void visit(const RealDouble &x) {
+        arf_t f_;
+        arf_init(f_);
+        arf_set_d(f_, x.i);
+        arb_set_arf(result_, f_);
+        arf_clear(f_);
+    }
+
     virtual void visit(const Add &x) {
         arb_t t;
         arb_init(t);

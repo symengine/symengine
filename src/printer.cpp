@@ -61,6 +61,13 @@ void StrPrinter::bvisit(const Complex &x) {
     str_ = s.str();
 }
 
+void StrPrinter::bvisit(const RealDouble &x) {
+    std::ostringstream s;
+    s.precision(std::numeric_limits< double >::digits10);
+    s << std::scientific << x.i;
+    str_ = s.str();
+}
+
 void StrPrinter::bvisit(const Add &x) {
     std::ostringstream o;
     bool first = true;
