@@ -299,9 +299,12 @@ bool Sin::is_canonical(const RCP<const Basic> &arg)
     // e.g sin(k*pi/12)
     RCP<const Integer> n;
     RCP<const Basic> r;
-    bool b = get_pi_shift(arg, outArg(n), outArg(r));
-    if (b)
+    if (get_pi_shift(arg, outArg(n), outArg(r))) {
         return false;
+    }
+    if (is_a_Number(*arg) && !static_cast<const Number &>(*arg).is_exact()) {
+        return false;
+    }
     return true;
 }
 
@@ -323,6 +326,9 @@ int Sin::compare(const Basic &o) const
 RCP<const Basic> sin(const RCP<const Basic> &arg)
 {
     if (eq(arg, zero)) return zero;
+    if (is_a_Number(*arg) && !static_cast<const Number &>(*arg).is_exact()) {
+        return static_cast<const Number &>(*arg).get_eval().sin(*arg);
+    }
     RCP<const Basic> ret_arg;
     int index;
     int sign;
@@ -331,20 +337,26 @@ RCP<const Basic> sin(const RCP<const Basic> &arg)
 
     if (conjugate) {
         // cos has to be returned
-        if (sign == 1)
-            return rcp(new Cos(ret_arg));
-        else
-            return mul(minus_one, rcp(new Cos(ret_arg)));
-    }
-    else {
+        if (sign == 1) {
+            return cos(ret_arg);
+        } else {
+            return mul(minus_one, cos(ret_arg));
+        }
+    } else {
         if (eq(ret_arg, zero)) {
             return mul(integer(sign), sin_table[index]);
-        }
-        else {
-            if (sign == 1)
-                return rcp(new Sin(ret_arg));
-            else
-                return mul(minus_one, rcp(new Sin(ret_arg)));
+        } else {
+            // If ret_arg is the same as arg, a `Sin` instance is returned
+            // Or else `sin` is called again.
+            if (sign == 1) {
+                if (neq(ret_arg, arg)) {
+                    return sin(ret_arg);
+                } else {
+                    return rcp(new Sin(arg));
+                }
+            } else {
+                return mul(minus_one, sin(ret_arg));
+            }
         }
     }
 }
@@ -366,9 +378,12 @@ bool Cos::is_canonical(const RCP<const Basic> &arg)
     // e.g cos(k*pi/12)
     RCP<const Integer> n;
     RCP<const Basic> r;
-    bool b = get_pi_shift(arg, outArg(n), outArg(r));
-    if (b)
+    if (get_pi_shift(arg, outArg(n), outArg(r))) {
         return false;
+    }
+    if (is_a_Number(*arg) && !static_cast<const Number &>(*arg).is_exact()) {
+        return false;
+    }
     return true;
 }
 
@@ -390,6 +405,9 @@ int Cos::compare(const Basic &o) const
 RCP<const Basic> cos(const RCP<const Basic> &arg)
 {
     if (eq(arg, zero)) return one;
+    if (is_a_Number(*arg) && !static_cast<const Number &>(*arg).is_exact()) {
+        return static_cast<const Number &>(*arg).get_eval().cos(*arg);
+    }
     RCP<const Basic> ret_arg;
     int index;
     int sign;
@@ -398,20 +416,24 @@ RCP<const Basic> cos(const RCP<const Basic> &arg)
 
     if (conjugate) {
         // cos has to be returned
-        if (sign == 1)
-            return rcp(new Sin(ret_arg));
-        else
-            return mul(minus_one, rcp(new Sin(ret_arg)));
-    }
-    else {
+        if (sign == 1) {
+            return sin(ret_arg);
+        } else {
+            return mul(minus_one, sin(ret_arg));
+        }
+    } else {
         if (eq(ret_arg, zero)) {
             return mul(integer(sign), sin_table[(index + 6) % 24]);
-        }
-        else {
-            if (sign == 1)
-                return rcp(new Cos(ret_arg));
-            else
-                return mul(minus_one, rcp(new Cos(ret_arg)));
+        } else {
+            if (sign == 1) {
+                if (neq(ret_arg, arg)) {
+                    return cos(ret_arg);
+                } else {
+                    return rcp(new Cos(ret_arg));
+                }
+            } else {
+                return mul(minus_one, cos(ret_arg));
+            }
         }
     }
 }
