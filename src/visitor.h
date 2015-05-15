@@ -192,6 +192,8 @@ public:
 RCP<const Basic> coeff(const Basic &b, const RCP<const Symbol> &x,
         const RCP<const Integer> &n);
 
+set_basic free_symbols(const Basic &b);
+
 } // SymEngine
 
 #endif

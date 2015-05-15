@@ -118,3 +118,10 @@ def test_args():
     assert set((x**2 + 2*x*y + 5).args) == set((x**2, 2*x*y, 5))
     assert (2*x**2).args == (2, x**2)
     assert set((2*x**2*y).args) == set((2, x**2, y))
+
+def test_free_symbols():
+    x = Symbol("x")
+    y = Symbol("y")
+    z = Symbol("z")
+    assert (x**2).free_symbols == set([x])
+    assert (x**y + z).free_symbols == set([x, y, z])

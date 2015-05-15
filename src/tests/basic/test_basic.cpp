@@ -34,6 +34,9 @@ using SymEngine::Complex;
 using SymEngine::has_symbol;
 using SymEngine::is_a;
 using SymEngine::rcp_static_cast;
+using SymEngine::set_basic;
+using SymEngine::free_symbols;
+using SymEngine::function_symbol;
 
 void test_symbol_hash()
 {
@@ -628,6 +631,28 @@ void test_has()
     assert(!has_symbol(*r1, z));
 }
 
+void test_free_symbols()
+{
+    RCP<const Basic> r1;
+    RCP<const Symbol> x, y, z;
+    x = symbol("x");
+    y = symbol("y");
+    z = symbol("z");
+    r1 = add(x, add(z, pow(y, x)));
+
+    set_basic s = free_symbols(*r1);
+    assert(s.size() == 3);
+    assert(s.count(x) == 1);
+    assert(s.count(y) == 1);
+    assert(s.count(z) == 1);
+    s.clear();
+
+    r1 = function_symbol("f", mul(x, integer(2)))->diff(x);
+    s = free_symbols(*r1);
+    assert(s.size() == 1);
+    assert(s.count(x) == 1);
+}
+
 int main(int argc, char* argv[])
 {
     print_stack_on_segfault();
@@ -651,6 +676,8 @@ int main(int argc, char* argv[])
     test_complex();
 
     test_has();
+
+    test_free_symbols();
 
     return 0;
 }

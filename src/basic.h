@@ -15,6 +15,7 @@
 #include <typeinfo>
 #include <map>
 #include <vector>
+#include <set>
 #include <unordered_map>
 #include <cassert>
 #include <atomic>
