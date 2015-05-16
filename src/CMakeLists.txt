@@ -33,6 +33,7 @@ set(SRC
     printer.cpp
     real_double.cpp
     complex_double.cpp
+    eval_mpfr.cpp
 )
 
 # Needed for "make install"

@@ -69,6 +69,10 @@ endif()
 set(WITH_ARB no
     CACHE BOOL "Build with Arb")
 
+# MPFR
+set(WITH_MPFR no
+    CACHE BOOL "Build with MPFR")
+
 if (WITH_ARB)
     find_package(FLINT REQUIRED)
     include_directories(${FLINT_INCLUDE_DIRS})
@@ -77,14 +81,19 @@ if (WITH_ARB)
     # Workaround for https://github.com/fredrik-johansson/arb/issues/24
     include_directories(${FLINT_INCLUDE_DIRS}/flint)
 
-    find_package(MPFR REQUIRED)
-    include_directories(${MPFR_INCLUDE_DIRS})
-    set(LIBS ${LIBS} ${MPFR_LIBRARIES})
+    set(WITH_MPFR yes)
 
     find_package(ARB REQUIRED)
     include_directories(${ARB_INCLUDE_DIRS})
     set(LIBS ${LIBS} ${ARB_LIBRARIES})
     set(HAVE_SYMENGINE_ARB yes)
+endif()
+
+if (WITH_MPFR)
+    find_package(MPFR REQUIRED)
+    include_directories(${MPFR_INCLUDE_DIRS})
+    set(LIBS ${LIBS} ${MPFR_LIBRARIES})
+    set(HAVE_SYMENGINE_MPFR yes)
 endif()
 
 # Python
@@ -244,6 +253,10 @@ if (WITH_ARB)
     message("ARB_LIBRARIES: ${ARB_LIBRARIES}")
     message("FLINT_INCLUDE_DIRS: ${FLINT_INCLUDE_DIRS}")
     message("FLINT_LIBRARIES: ${FLINT_LIBRARIES}")
+endif()
+
+message("WITH_MPFR: ${WITH_MPFR}")
+if (WITH_MPFR)
     message("MPFR_INCLUDE_DIRS: ${MPFR_INCLUDE_DIRS}")
     message("MPFR_LIBRARIES: ${MPFR_LIBRARIES}")
 endif()
