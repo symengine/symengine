@@ -64,6 +64,8 @@ void test_Integer()
     arb_set_ui(b, ui);
 
     assert(arb_equal(a, b));
+    arb_clear(a);
+    arb_clear(b);
 }
 
 void test_Rational()
@@ -100,6 +102,8 @@ void test_Rational()
     mpfr_set_d(f, (double)x_/y_, MPFR_RNDN);
 
     assert(arb_contains_mpfr(a, f));
+    mpfr_clear(f);
+    arb_clear(a);
 }
 
 void test_Add()
@@ -124,6 +128,8 @@ void test_Add()
     mpfr_set_d(f, sqrt(7) + 34.0/7100, MPFR_RNDN);
 
     assert(arb_contains_mpfr(a, f));
+    mpfr_clear(f);
+    arb_clear(a);
 }
 
 void test_Mul()
@@ -148,6 +154,8 @@ void test_Mul()
     mpfr_set_d(f, sqrt(2317)*9001.0/71, MPFR_RNDN);
 
     assert(arb_contains_mpfr(a, f));
+    mpfr_clear(f);
+    arb_clear(a);
 }
 
 void test_Pow()
@@ -181,6 +189,8 @@ void test_Pow()
     mpfr_set_d(f, exp(97.0/34), MPFR_RNDN);
 
     assert(arb_contains_mpfr(a, f));
+    mpfr_clear(f);
+    arb_clear(a);
 }
 
 void test_Sin()
@@ -204,6 +214,8 @@ void test_Sin()
     mpfr_set_d(f, sin(2) + sin(3.0/5), MPFR_RNDN);
 
     assert(arb_contains_mpfr(a, f));
+    mpfr_clear(f);
+    arb_clear(a);
 }
 
 void test_Cos()
@@ -227,6 +239,8 @@ void test_Cos()
     mpfr_set_d(f, cos(-1)*cos(7.0/3), MPFR_RNDN);
 
     assert(arb_contains_mpfr(a, f));
+    mpfr_clear(f);
+    arb_clear(a);
 }
 
 void test_Tan()
@@ -250,6 +264,8 @@ void test_Tan()
     mpfr_set_d(f, tan(2) + tan(3)*tan(7), MPFR_RNDN);
 
     assert(arb_contains_mpfr(a, f));
+    mpfr_clear(f);
+    arb_clear(a);
 }
 
 void test_Csc()
@@ -273,6 +289,8 @@ void test_Csc()
     mpfr_set_d(f, 1/sin(2) + 1/sin(3.0/5), MPFR_RNDN);
 
     assert(arb_contains_mpfr(a, f));
+    mpfr_clear(f);
+    arb_clear(a);
 }
 
 void test_Sec()
@@ -296,6 +314,8 @@ void test_Sec()
     mpfr_set_d(f, 1/cos(-1)*1/cos(7.0/3), MPFR_RNDN);
 
     assert(arb_contains_mpfr(a, f));
+    mpfr_clear(f);
+    arb_clear(a);
 }
 
 void test_Cot()
@@ -319,6 +339,8 @@ void test_Cot()
     mpfr_set_d(f, 1/tan(2) + 1/tan(3)*1/tan(7), MPFR_RNDN);
 
     assert(arb_contains_mpfr(a, f));
+    mpfr_clear(f);
+    arb_clear(a);
 }
 
 void test_Log()
@@ -341,6 +363,8 @@ void test_Log()
     mpfr_set_d(f, log(2) + log(3.0/73), MPFR_RNDN);
 
     assert(arb_contains_mpfr(a, f));
+    mpfr_clear(f);
+    arb_clear(a);
 }
 
 void test_ASin()
@@ -363,6 +387,8 @@ void test_ASin()
     mpfr_set_d(f, asin(1), MPFR_RNDN);
 
     assert(arb_contains_mpfr(a, f));
+    mpfr_clear(f);
+    arb_clear(a);
 }
 
 void test_ACos()
@@ -385,6 +411,8 @@ void test_ACos()
     mpfr_set_d(f, acos(-1), MPFR_RNDN);
 
     assert(arb_contains_mpfr(a, f));
+    mpfr_clear(f);
+    arb_clear(a);
 }
 
 void test_ASec()
@@ -423,6 +451,9 @@ void test_ASec()
     arb_indeterminate(b);
 
     assert(arb_contains(a, b));     // if true `a` is indeterminate as well
+    mpfr_clear(f);
+    arb_clear(a);
+    arb_clear(b);
 }
 
 void test_ACsc()
@@ -461,6 +492,9 @@ void test_ACsc()
     arb_indeterminate(b);
 
     assert(arb_contains(a, b));     // if true, `a` is indeterminate as well
+    mpfr_clear(f);
+    arb_clear(a);
+    arb_clear(b);
 }
 
 void test_ATan()
@@ -483,6 +517,8 @@ void test_ATan()
     mpfr_set_d(f, atan(-1), MPFR_RNDN);
 
     assert(arb_contains_mpfr(a, f));
+    mpfr_clear(f);
+    arb_clear(a);
 }
 
 void test_ACot()
@@ -512,6 +548,8 @@ void test_ACot()
     mpfr_set_d(f, atan(1.0/16), MPFR_RNDN);
 
     assert(arb_contains_mpfr(a, f));
+    mpfr_clear(f);
+    arb_clear(a);
 }
 
 void test_ATan2()
@@ -534,6 +572,8 @@ void test_ATan2()
     mpfr_set_d(f, atan2(-1, sqrt(3)), MPFR_RNDN);
 
     assert(arb_contains_mpfr(a, f));
+    mpfr_clear(f);
+    arb_clear(a);
 }
 
 void test_Sinh()
@@ -556,6 +596,8 @@ void test_Sinh()
     mpfr_set_d(f, sinh(-5*sqrt(3)), MPFR_RNDN);
 
     assert(arb_contains_mpfr(a, f));
+    mpfr_clear(f);
+    arb_clear(a);
 }
 
 void test_Cosh()
@@ -578,6 +620,8 @@ void test_Cosh()
     mpfr_set_d(f, cosh(5.0/sqrt(3)), MPFR_RNDN);
 
     assert(arb_contains_mpfr(a, f));
+    mpfr_clear(f);
+    arb_clear(a);
 }
 
 void test_Tanh()
@@ -600,6 +644,8 @@ void test_Tanh()
     mpfr_set_d(f, tanh(5 + sqrt(3)), MPFR_RNDN);
 
     assert(arb_contains_mpfr(a, f));
+    mpfr_clear(f);
+    arb_clear(a);
 }
 
 void test_Coth()
@@ -622,6 +668,8 @@ void test_Coth()
     mpfr_set_d(f, -sinh(2*5)/(1 - cosh(2*5)), MPFR_RNDN);
 
     assert(arb_contains_mpfr(a, f));
+    mpfr_clear(f);
+    arb_clear(a);
 }
 
 int main(int argc, char* argv[])
@@ -651,6 +699,9 @@ int main(int argc, char* argv[])
     test_Cosh();
     test_Tanh();
     test_Coth();
+
+    // Clear the cache for this thread.
+    flint_cleanup();
 
     return 0;
 }
