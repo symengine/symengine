@@ -326,7 +326,7 @@ int factor_pollard_pm1_method(const Ptr<RCP<const Integer>> &f, const Integer &n
 
     if (ret_val != 0)
         *f = integer(rop);
-
+    gmp_randclear(state);
     return ret_val;
 }
 
@@ -379,6 +379,7 @@ int factor_pollard_rho_method(const Ptr<RCP<const Integer>> &f,
 
     if (ret_val != 0)
         *f = integer(rop);
+    gmp_randclear(state);
     return ret_val;
 }
 
