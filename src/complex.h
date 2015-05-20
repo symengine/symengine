@@ -41,13 +41,15 @@ public:
      * */
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
-    //! \return `true` if positive
+    //! \returns `false`
+    // False is returned because complex cannot be compared with zero
     inline virtual bool is_positive() const {
-        throw std::runtime_error("Complex Numbers cannot be totally ordered");
+        return false;
     }
-    //! \return `true` if negative
+    //! \returns `false`
+    // False is returned because complex cannot be compared with zero
     inline virtual bool is_negative() const {
-        throw std::runtime_error("Complex Numbers cannot be totally ordered");
+        return false;
     }
 
     /*! Constructs Complex from re, im. If im is 0
