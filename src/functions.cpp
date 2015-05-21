@@ -415,7 +415,7 @@ RCP<const Basic> cos(const RCP<const Basic> &arg)
                       outArg(ret_arg), index, sign); //output
 
     if (conjugate) {
-        // cos has to be returned
+        // sin has to be returned
         if (sign == 1) {
             return sin(ret_arg);
         } else {
@@ -455,9 +455,12 @@ bool Tan::is_canonical(const RCP<const Basic> &arg)
     // e.g tan(k*pi/12)
     RCP<const Integer> n;
     RCP<const Basic> r;
-    bool b = get_pi_shift(arg, outArg(n), outArg(r));
-    if (b)
+    if (get_pi_shift(arg, outArg(n), outArg(r))) {
         return false;
+    }
+    if (is_a_Number(*arg) && !static_cast<const Number &>(*arg).is_exact()) {
+        return false;
+    }
     return true;
 }
 
@@ -480,6 +483,9 @@ int Tan::compare(const Basic &o) const
 RCP<const Basic> tan(const RCP<const Basic> &arg)
 {
     if (eq(arg, zero)) return zero;
+    if (is_a_Number(*arg) && !static_cast<const Number &>(*arg).is_exact()) {
+        return static_cast<const Number &>(*arg).get_eval().tan(*arg);
+    }
     RCP<const Basic> ret_arg;
     int index;
     int sign;
@@ -487,22 +493,27 @@ RCP<const Basic> tan(const RCP<const Basic> &arg)
                       outArg(ret_arg), index, sign); //output
 
     if (conjugate) {
-        // cos has to be returned
-        if (sign == 1)
-            return rcp(new Cot(ret_arg));
-        else
-            return mul(minus_one, rcp(new Cot(ret_arg)));
+        // cot has to be returned
+        if (sign == 1) {
+            return cot(ret_arg);
+        } else {
+            return mul(minus_one, cot(ret_arg));
+        }
     }
     else {
         if (eq(ret_arg, zero)) {
             return mul(integer(sign),
                    div(sin_table[index], sin_table[(index + 6) % 24]));
-        }
-        else {
-            if (sign == 1)
-                return rcp(new Tan(ret_arg));
-            else
-                return mul(minus_one, rcp(new Tan(ret_arg)));
+        } else {
+            if (sign == 1) {
+                if (neq(ret_arg, arg)) {
+                    return tan(ret_arg);
+                } else {
+                    return rcp(new Tan(ret_arg));
+                }
+            } else {
+                return mul(minus_one, tan(ret_arg));
+            }
         }
     }
 }
@@ -524,9 +535,12 @@ bool Cot::is_canonical(const RCP<const Basic> &arg)
     // e.g cot(k*pi/12)
     RCP<const Integer> n;
     RCP<const Basic> r;
-    bool b = get_pi_shift(arg, outArg(n), outArg(r));
-    if (b)
+    if (get_pi_shift(arg, outArg(n), outArg(r))) {
         return false;
+    }
+    if (is_a_Number(*arg) && !static_cast<const Number &>(*arg).is_exact()) {
+        return false;
+    }
     return true;
 }
 
@@ -548,6 +562,9 @@ int Cot::compare(const Basic &o) const
 
 RCP<const Basic> cot(const RCP<const Basic> &arg)
 {
+    if (is_a_Number(*arg) && !static_cast<const Number &>(*arg).is_exact()) {
+        return static_cast<const Number &>(*arg).get_eval().cot(*arg);
+    }
     RCP<const Basic> ret_arg;
     int index;
     int sign;
@@ -555,11 +572,12 @@ RCP<const Basic> cot(const RCP<const Basic> &arg)
                       outArg(ret_arg), index, sign); //output
 
     if (conjugate) {
-        // cos has to be returned
-        if (sign == 1)
-            return rcp(new Tan(ret_arg));
-        else
-            return mul(minus_one, rcp(new Tan(ret_arg)));
+        // tan has to be returned
+        if (sign == 1) {
+            return tan(ret_arg);
+        } else {
+            return mul(minus_one, tan(ret_arg));
+        }
     }
     else {
         if (eq(ret_arg, zero)) {
@@ -567,10 +585,15 @@ RCP<const Basic> cot(const RCP<const Basic> &arg)
                    div(sin_table[(index + 6) % 24], sin_table[index]));
         }
         else {
-            if (sign == 1)
-                return rcp(new Cot(ret_arg));
-            else
-                return mul(minus_one, rcp(new Cot(ret_arg)));
+            if (sign == 1) {
+                if (neq(ret_arg, arg)) {
+                    return cot(ret_arg);
+                } else {
+                    return rcp(new Cot(ret_arg));
+                }
+            } else {
+                return mul(minus_one, cot(ret_arg));
+            }
         }
     }
 }
@@ -593,9 +616,12 @@ bool Csc::is_canonical(const RCP<const Basic> &arg)
     // e.g csc(k*pi/12)
     RCP<const Integer> n;
     RCP<const Basic> r;
-    bool b = get_pi_shift(arg, outArg(n), outArg(r));
-    if (b)
+    if (get_pi_shift(arg, outArg(n), outArg(r))) {
         return false;
+    }
+    if (is_a_Number(*arg) && !static_cast<const Number &>(*arg).is_exact()) {
+        return false;
+    }
     return true;
 }
 
@@ -616,6 +642,9 @@ int Csc::compare(const Basic &o) const
 
 RCP<const Basic> csc(const RCP<const Basic> &arg)
 {
+    if (is_a_Number(*arg) && !static_cast<const Number &>(*arg).is_exact()) {
+        return static_cast<const Number &>(*arg).get_eval().csc(*arg);
+    }
     RCP<const Basic> ret_arg;
     int index;
     int sign;
@@ -624,10 +653,11 @@ RCP<const Basic> csc(const RCP<const Basic> &arg)
 
     if (conjugate) {
         // cos has to be returned
-        if (sign == 1)
-            return rcp(new Sec(ret_arg));
-        else
-            return mul(minus_one, rcp(new Sec(ret_arg)));
+        if (sign == 1) {
+            return sec(ret_arg);
+        } else {
+            return mul(minus_one, sec(ret_arg));
+        }
     }
     else {
         if (eq(ret_arg, zero)) {
@@ -635,10 +665,15 @@ RCP<const Basic> csc(const RCP<const Basic> &arg)
                    div(one, sin_table[index]));
         }
         else {
-            if (sign == 1)
-                return rcp(new Csc(ret_arg));
-            else
-                return mul(minus_one, rcp(new Csc(ret_arg)));
+            if (sign == 1) {
+                if (neq(ret_arg, arg)) {
+                    return csc(ret_arg);
+                } else {
+                    return rcp(new Csc(ret_arg));
+                }
+            } else {
+                return mul(minus_one, csc(ret_arg));
+            }
         }
     }
 }
@@ -662,9 +697,12 @@ bool Sec::is_canonical(const RCP<const Basic> &arg)
     // e.g sec(k*pi/12)
     RCP<const Integer> n;
     RCP<const Basic> r;
-    bool b = get_pi_shift(arg, outArg(n), outArg(r));
-    if (b)
+    if (get_pi_shift(arg, outArg(n), outArg(r))) {
         return false;
+    }
+    if (is_a_Number(*arg) && !static_cast<const Number &>(*arg).is_exact()) {
+        return false;
+    }
     return true;
 }
 
@@ -684,6 +722,9 @@ int Sec::compare(const Basic &o) const
 
 RCP<const Basic> sec(const RCP<const Basic> &arg)
 {
+    if (is_a_Number(*arg) && !static_cast<const Number &>(*arg).is_exact()) {
+        return static_cast<const Number &>(*arg).get_eval().sec(*arg);
+    }
     RCP<const Basic> ret_arg;
     int index;
     int sign;
@@ -691,22 +732,27 @@ RCP<const Basic> sec(const RCP<const Basic> &arg)
                       outArg(ret_arg), index, sign); //output
 
     if (conjugate) {
-        // cos has to be returned
-        if (sign == 1)
-            return rcp(new Csc(ret_arg));
-        else
-            return mul(minus_one, rcp(new Csc(ret_arg)));
+        // csc has to be returned
+        if (sign == 1) {
+            return csc(ret_arg);
+        } else {
+            return mul(minus_one, csc(ret_arg));
+        }
     }
     else {
         if (eq(ret_arg, zero)) {
             return mul(integer(sign),
                    div(one, sin_table[(index + 6)% 24]));
-        }
-        else {
-            if (sign == 1)
-                return rcp(new Sec(ret_arg));
-            else
-                return mul(minus_one, rcp(new Sec(ret_arg)));
+        } else {
+            if (sign == 1) {
+                if (neq(ret_arg, arg)) {
+                    return sec(ret_arg);
+                } else {
+                    return rcp(new Sec(ret_arg));
+                }
+            } else {
+                return mul(minus_one, sec(ret_arg));
+            }
         }
     }
 }
@@ -724,11 +770,13 @@ bool ASin::is_canonical(const RCP<const Basic> &arg)
     if (eq(arg, zero) || eq(arg, one) || eq(arg, minus_one))
         return false;
     RCP<const Basic> index;
-    bool b = inverse_lookup(inverse_cst, get_arg(), outArg(index));
-    if (b)
+    if (inverse_lookup(inverse_cst, get_arg(), outArg(index))) {
         return false;
-    else
-        return true;
+    }
+    if (is_a_Number(*arg) && !static_cast<const Number &>(*arg).is_exact()) {
+        return false;
+    }
+    return true;
 }
 
 bool ASin::__eq__(const Basic &o) const
@@ -752,6 +800,9 @@ RCP<const Basic> asin(const RCP<const Basic> &arg)
     if (eq(arg, zero)) return zero;
     else if (eq(arg, one)) return div(pi, i2);
     else if (eq(arg, minus_one)) return mul(minus_one, div(pi, i2));
+    else if (is_a_Number(*arg) && !static_cast<const Number &>(*arg).is_exact()) {
+        return static_cast<const Number &>(*arg).get_eval().asin(*arg);
+    }
 
     RCP<const Basic> index;
     bool b = inverse_lookup(inverse_cst, arg, outArg(index));
@@ -775,11 +826,13 @@ bool ACos::is_canonical(const RCP<const Basic> &arg)
     if (eq(arg, zero) || eq(arg, one) || eq(arg, minus_one))
         return false;
     RCP<const Basic> index;
-    bool b = inverse_lookup(inverse_cst, get_arg(), outArg(index));
-    if (b)
+    if (inverse_lookup(inverse_cst, get_arg(), outArg(index))) {
         return false;
-    else
-        return true;
+    }
+    if (is_a_Number(*arg) && !static_cast<const Number &>(*arg).is_exact()) {
+        return false;
+    }
+    return true;
 }
 
 bool ACos::__eq__(const Basic &o) const
@@ -803,6 +856,9 @@ RCP<const Basic> acos(const RCP<const Basic> &arg)
     if (eq(arg, zero)) return div(pi, i2);
     else if (eq(arg, one)) return zero;
     else if (eq(arg, minus_one)) return pi;
+    else if (is_a_Number(*arg) && !static_cast<const Number &>(*arg).is_exact()) {
+        return static_cast<const Number &>(*arg).get_eval().acos(*arg);
+    }
 
     RCP<const Basic> index;
     bool b = inverse_lookup(inverse_cst, arg, outArg(index));
@@ -830,11 +886,12 @@ bool ASec::is_canonical(const RCP<const Basic> &arg)
     if (eq(arg, one) || eq(arg, minus_one))
         return false;
     RCP<const Basic> index;
-    bool b = inverse_lookup(inverse_cst, div(one, get_arg()), outArg(index));
-    if (b)
+    if (inverse_lookup(inverse_cst, div(one, get_arg()), outArg(index))) {
         return false;
-    else
-        return true;
+    } else if (is_a_Number(*arg) && !static_cast<const Number &>(*arg).is_exact()) {
+        return false;
+    }
+    return true;
 }
 
 bool ASec::__eq__(const Basic &o) const
@@ -857,6 +914,9 @@ RCP<const Basic> asec(const RCP<const Basic> &arg)
 {
     if (eq(arg, one)) return zero;
     else if (eq(arg, minus_one)) return pi;
+    else if (is_a_Number(*arg) && !static_cast<const Number &>(*arg).is_exact()) {
+        return static_cast<const Number &>(*arg).get_eval().asec(*arg);
+    }
 
     RCP<const Basic> index;
     bool b = inverse_lookup(inverse_cst, div(one, arg), outArg(index));
@@ -884,11 +944,13 @@ bool ACsc::is_canonical(const RCP<const Basic> &arg)
     if (eq(arg, one) || eq(arg, minus_one))
         return false;
     RCP<const Basic> index;
-    bool b = inverse_lookup(inverse_cst, div(one, get_arg()), outArg(index));
-    if (b)
+    if (inverse_lookup(inverse_cst, div(one, arg), outArg(index))) {
         return false;
-    else
-        return true;
+    }
+    if (is_a_Number(*arg) && !static_cast<const Number &>(*arg).is_exact()) {
+        return false;
+    }
+    return true;
 }
 
 bool ACsc::__eq__(const Basic &o) const
@@ -911,6 +973,9 @@ RCP<const Basic> acsc(const RCP<const Basic> &arg)
 {
     if (eq(arg, one)) return div(pi, i2);
     else if (eq(arg, minus_one)) return div(pi, im2);
+    else if (is_a_Number(*arg) && !static_cast<const Number &>(*arg).is_exact()) {
+        return static_cast<const Number &>(*arg).get_eval().acsc(*arg);
+    }
 
     RCP<const Basic> index;
     bool b = inverse_lookup(inverse_cst, div(one, arg), outArg(index));
@@ -933,11 +998,13 @@ bool ATan::is_canonical(const RCP<const Basic> &arg)
     if (eq(arg, zero) || eq(arg, one) || eq(arg, minus_one))
         return false;
     RCP<const Basic> index;
-    bool b = inverse_lookup(inverse_tct, get_arg(), outArg(index));
-    if (b)
+    if (inverse_lookup(inverse_tct, get_arg(), outArg(index))) {
         return false;
-    else
-        return true;
+    }
+    if (is_a_Number(*arg) && !static_cast<const Number &>(*arg).is_exact()) {
+        return false;
+    }
+    return true;
 }
 
 bool ATan::__eq__(const Basic &o) const
@@ -961,6 +1028,9 @@ RCP<const Basic> atan(const RCP<const Basic> &arg)
     if (eq(arg, zero)) return zero;
     else if (eq(arg, one)) return div(pi, mul(i2, i2));
     else if (eq(arg, minus_one)) return mul(minus_one, div(pi, mul(i2, i2)));
+    else if (is_a_Number(*arg) && !static_cast<const Number &>(*arg).is_exact()) {
+        return static_cast<const Number &>(*arg).get_eval().atan(*arg);
+    }
 
     RCP<const Basic> index;
     bool b = inverse_lookup(inverse_tct, arg, outArg(index));
@@ -983,11 +1053,13 @@ bool ACot::is_canonical(const RCP<const Basic> &arg)
     if (eq(arg, zero) || eq(arg, one) || eq(arg, minus_one))
         return false;
     RCP<const Basic> index;
-    bool b = inverse_lookup(inverse_cst, get_arg(), outArg(index));
-    if (b)
+    if (inverse_lookup(inverse_tct, arg, outArg(index))) {
         return false;
-    else
-        return true;
+    }
+    if (is_a_Number(*arg) && !static_cast<const Number &>(*arg).is_exact()) {
+        return false;
+    }
+    return true;
 }
 
 bool ACot::__eq__(const Basic &o) const
@@ -1011,6 +1083,9 @@ RCP<const Basic> acot(const RCP<const Basic> &arg)
     if (eq(arg, zero)) return div(pi, i2);
     else if (eq(arg, one)) return div(pi, mul(i2, i2));
     else if (eq(arg, minus_one)) return mul(i3, div(pi, mul(i2, i2)));
+    else if (is_a_Number(*arg) && !static_cast<const Number &>(*arg).is_exact()) {
+        return static_cast<const Number &>(*arg).get_eval().acot(*arg);
+    }
 
     RCP<const Basic> index;
     bool b = inverse_lookup(inverse_tct, arg, outArg(index));
@@ -1747,9 +1822,12 @@ bool Sinh::is_canonical(const RCP<const Basic> &arg)
     // TODO: Add further checks for +inf -inf cases
     if (eq(arg, zero))
         return false;
-    if (is_a_Number(*arg) &&
-        rcp_static_cast<const Number>(arg)->is_negative()) {
-        return false;
+    if (is_a_Number(*arg)) {
+        if (static_cast<const Number &>(*arg).is_negative()) {
+            return false;
+        } else if (!static_cast<const Number &>(*arg).is_exact()) {
+            return false;
+        }
     }
     if (could_extract_minus(arg))
         return false;
@@ -1775,12 +1853,16 @@ int Sinh::compare(const Basic &o) const
 RCP<const Basic> sinh(const RCP<const Basic> &arg)
 {
     if (eq(arg, zero)) return zero;
-    if (is_a_Number(*arg) &&
-        rcp_static_cast<const Number>(arg)->is_negative()) {
-        return mul(minus_one, sinh(mul(minus_one, arg)));
+    if (is_a_Number(*arg)) {
+        RCP<const Number> _arg = rcp_static_cast<const Number>(arg);
+        if (!_arg->is_exact()) {
+            return _arg->get_eval().sinh(*_arg);
+        } else if (_arg->is_negative()) {
+            return neg(sinh(zero->sub(*_arg)));
+        }
     }
     if (could_extract_minus(arg)) {
-        return mul(minus_one, sinh(mul(minus_one, arg)));
+        return neg(sinh(neg(arg)));
     }
     return rcp(new Sinh(arg));
 }
@@ -1806,9 +1888,12 @@ bool Cosh::is_canonical(const RCP<const Basic> &arg)
     // TODO: Add further checks for +inf -inf cases
     if (eq(arg, zero))
         return false;
-    if (is_a_Number(*arg) &&
-        rcp_static_cast<const Number>(arg)->is_negative()) {
-        return false;
+    if (is_a_Number(*arg)) {
+        if (static_cast<const Number &>(*arg).is_negative()) {
+            return false;
+        } else if (!static_cast<const Number &>(*arg).is_exact()) {
+            return false;
+        }
     }
     if (could_extract_minus(arg))
         return false;
@@ -1834,12 +1919,16 @@ int Cosh::compare(const Basic &o) const
 RCP<const Basic> cosh(const RCP<const Basic> &arg)
 {
     if (eq(arg, zero)) return one;
-    if (is_a_Number(*arg) &&
-        rcp_static_cast<const Number>(arg)->is_negative()) {
-        return cosh(mul(minus_one, arg));
+    if (is_a_Number(*arg)) {
+        RCP<const Number> _arg = rcp_static_cast<const Number>(arg);
+        if (!_arg->is_exact()) {
+            return _arg->get_eval().cosh(*_arg);
+        } else if (_arg->is_negative()) {
+            return cosh(zero->sub(*_arg));
+        }
     }
     if (could_extract_minus(arg)) {
-        return cosh(mul(minus_one, arg));
+        return cosh(neg(arg));
     }
     return rcp(new Cosh(arg));
 }
@@ -1865,9 +1954,12 @@ bool Tanh::is_canonical(const RCP<const Basic> &arg)
     // TODO: Add further checks for +inf -inf cases
     if (eq(arg, zero))
         return false;
-    if (is_a_Number(*arg) &&
-        rcp_static_cast<const Number>(arg)->is_negative()) {
-        return false;
+    if (is_a_Number(*arg)) {
+        if (static_cast<const Number &>(*arg).is_negative()) {
+            return false;
+        } else if (!static_cast<const Number &>(*arg).is_exact()) {
+            return false;
+        }
     }
     if (could_extract_minus(arg))
         return false;
@@ -1893,12 +1985,16 @@ int Tanh::compare(const Basic &o) const
 RCP<const Basic> tanh(const RCP<const Basic> &arg)
 {
     if (eq(arg, zero)) return zero;
-    if (is_a_Number(*arg) &&
-        rcp_static_cast<const Number>(arg)->is_negative()) {
-        return mul(minus_one, tanh(mul(minus_one, arg)));
+    if (is_a_Number(*arg)) {
+        RCP<const Number> _arg = rcp_static_cast<const Number>(arg);
+        if (!_arg->is_exact()) {
+            return _arg->get_eval().tanh(*_arg);
+        } else if (_arg->is_negative()) {
+            return neg(tanh(zero->sub(*_arg)));
+        }
     }
     if (could_extract_minus(arg)) {
-        return mul(minus_one, tanh(mul(minus_one, arg)));
+        return neg(tanh(neg(arg)));
     }
     return rcp(new Tanh(arg));
 }
@@ -1926,9 +2022,12 @@ bool Coth::is_canonical(const RCP<const Basic> &arg)
     // TODO: Add further checks for +inf -inf cases
     if (eq(arg, zero))
         return false;
-    if (is_a_Number(*arg) &&
-        rcp_static_cast<const Number>(arg)->is_negative()) {
-        return false;
+    if (is_a_Number(*arg)) {
+        if (static_cast<const Number &>(*arg).is_negative()) {
+            return false;
+        } else if (!static_cast<const Number &>(*arg).is_exact()) {
+            return false;
+        }
     }
     if (could_extract_minus(arg))
         return false;
@@ -1957,12 +2056,16 @@ RCP<const Basic> coth(const RCP<const Basic> &arg)
         // Answer is infinity. Yet to be implemented in SymEngine
         throw std::runtime_error("Not implemented.");
     }
-    if (is_a_Number(*arg) &&
-        rcp_static_cast<const Number>(arg)->is_negative()) {
-        return mul(minus_one, coth(mul(minus_one, arg)));
+    if (is_a_Number(*arg)) {
+        RCP<const Number> _arg = rcp_static_cast<const Number>(arg);
+        if (!_arg->is_exact()) {
+            return _arg->get_eval().coth(*_arg);
+        } else if (_arg->is_negative()) {
+            return neg(coth(zero->sub(*_arg)));
+        }
     }
     if (could_extract_minus(arg)) {
-        return mul(minus_one, coth(mul(minus_one, arg)));
+        return neg(coth(neg(arg)));
     }
     return rcp(new Coth(arg));
 }
@@ -1990,9 +2093,12 @@ bool ASinh::is_canonical(const RCP<const Basic> &arg)
     // TODO: Add further checks for +inf -inf cases
     if (eq(arg, zero) || eq(arg, one) || eq(arg, minus_one))
         return false;
-    if (is_a_Number(*arg) &&
-        rcp_static_cast<const Number>(arg)->is_negative()) {
-        return false;
+    if (is_a_Number(*arg)) {
+        if (static_cast<const Number &>(*arg).is_negative()) {
+            return false;
+        } else if (!static_cast<const Number &>(*arg).is_exact()) {
+            return false;
+        }
     }
     if (could_extract_minus(arg))
         return false;
@@ -2020,12 +2126,16 @@ RCP<const Basic> asinh(const RCP<const Basic> &arg)
     if (eq(arg, zero)) return zero;
     if (eq(arg, one)) return log(add(one, sq2));
     if (eq(arg, minus_one)) return log(sub(sq2, one));
-    if (is_a_Number(*arg) &&
-        rcp_static_cast<const Number>(arg)->is_negative()) {
-        return mul(minus_one, asinh(mul(minus_one, arg)));
+    if (is_a_Number(*arg)) {
+        RCP<const Number> _arg = rcp_static_cast<const Number>(arg);
+        if (!_arg->is_exact()) {
+            return _arg->get_eval().asinh(*_arg);
+        } else if (_arg->is_negative()) {
+            return neg(asinh(zero->sub(*_arg)));
+        }
     }
     if (could_extract_minus(arg)) {
-        return mul(minus_one, asinh(mul(minus_one, arg)));
+        return neg(asinh(neg(arg)));
     }
     return rcp(new ASinh(arg));
 }
@@ -2047,6 +2157,9 @@ bool ACosh::is_canonical(const RCP<const Basic> &arg)
     // TODO: Lookup into a cst table once complex is implemented
     if (eq(arg, one))
         return false;
+    if (is_a_Number(*arg) && !static_cast<const Number &>(*arg).is_exact()) {
+        return false;
+    }
     return true;
 }
 
@@ -2070,6 +2183,9 @@ RCP<const Basic> acosh(const RCP<const Basic> &arg)
 {
     // TODO: Lookup into a cst table once complex is implemented
     if (eq(arg, one)) return zero;
+    if (is_a_Number(*arg) && !static_cast<const Number &>(*arg).is_exact()) {
+        return static_cast<const Number &>(*arg).get_eval().acosh(*arg);
+    }
     return rcp(new ACosh(arg));
 }
 
@@ -2089,9 +2205,12 @@ bool ATanh::is_canonical(const RCP<const Basic> &arg)
     // TODO: Add further checks for +inf -inf cases
     if (eq(arg, zero))
         return false;
-    if (is_a_Number(*arg) &&
-        rcp_static_cast<const Number>(arg)->is_negative()) {
-        return false;
+    if (is_a_Number(*arg)) {
+        if (static_cast<const Number &>(*arg).is_negative()) {
+            return false;
+        } else if (!static_cast<const Number &>(*arg).is_exact()) {
+            return false;
+        }
     }
     if (could_extract_minus(arg))
         return false;
@@ -2117,12 +2236,16 @@ int ATanh::compare(const Basic &o) const
 RCP<const Basic> atanh(const RCP<const Basic> &arg)
 {
     if (eq(arg, zero)) return zero;
-    if (is_a_Number(*arg) &&
-        rcp_static_cast<const Number>(arg)->is_negative()) {
-        return mul(minus_one, atanh(mul(minus_one, arg)));
+    if (is_a_Number(*arg)) {
+        RCP<const Number> _arg = rcp_static_cast<const Number>(arg);
+        if (!_arg->is_exact()) {
+            return _arg->get_eval().atanh(*_arg);
+        } else if (_arg->is_negative()) {
+            return neg(atanh(zero->sub(*_arg)));
+        }
     }
     if (could_extract_minus(arg)) {
-        return mul(minus_one, atanh(mul(minus_one, arg)));
+        return neg(atanh(neg(arg)));
     }
     return rcp(new ATanh(arg));
 }
@@ -2141,9 +2264,12 @@ ACoth::ACoth(const RCP<const Basic> &arg)
 bool ACoth::is_canonical(const RCP<const Basic> &arg)
 {
     // TODO: Add further checks for +inf -inf cases
-    if (is_a_Number(*arg) &&
-        rcp_static_cast<const Number>(arg)->is_negative()) {
-        return false;
+    if (is_a_Number(*arg)) {
+        if (static_cast<const Number &>(*arg).is_negative()) {
+            return false;
+        } else if (!static_cast<const Number &>(*arg).is_exact()) {
+            return false;
+        }
     }
     if (could_extract_minus(arg))
         return false;
@@ -2168,12 +2294,16 @@ int ACoth::compare(const Basic &o) const
 
 RCP<const Basic> acoth(const RCP<const Basic> &arg)
 {
-    if (is_a_Number(*arg) &&
-        rcp_static_cast<const Number>(arg)->is_negative()) {
-        return mul(minus_one, acoth(mul(minus_one, arg)));
+    if (is_a_Number(*arg)) {
+        RCP<const Number> _arg = rcp_static_cast<const Number>(arg);
+        if (!_arg->is_exact()) {
+            return _arg->get_eval().acoth(*_arg);
+        } else if (_arg->is_negative()) {
+            return neg(acoth(zero->sub(*_arg)));
+        }
     }
     if (could_extract_minus(arg)) {
-        return mul(minus_one, acoth(mul(minus_one, arg)));
+        return neg(acoth(neg(arg)));
     }
     return rcp(new ACoth(arg));
 }
@@ -2569,6 +2699,9 @@ bool Gamma::is_canonical(const RCP<const Basic> &arg)
         (rcp_static_cast<const Rational>(arg)->i.get_den()) == 2) {
         return false;
     }
+    if (is_a_Number(*arg) && !static_cast<const Number &>(*arg).is_exact()) {
+        return false;
+    }
     return true;
 }
 
@@ -2634,6 +2767,8 @@ RCP<const Basic> gamma(const RCP<const Basic> &arg)
         } else {
             return rcp(new Gamma(arg));
         }
+    } else if (is_a_Number(*arg) && !static_cast<const Number &>(*arg).is_exact()) {
+        return static_cast<const Number &>(*arg).get_eval().gamma(*arg);
     }
     return rcp(new Gamma(arg));
 }
@@ -2795,6 +2930,9 @@ Abs::Abs(const RCP<const Basic> &arg)
 bool Abs::is_canonical(const RCP<const Basic> &arg)
 {
     if (is_a<Integer>(*arg) || is_a<Rational>(*arg)) return false;
+    if (is_a_Number(*arg) && !static_cast<const Number &>(*arg).is_exact()) {
+        return false;
+    }
     return true;
 }
 
@@ -2844,6 +2982,8 @@ RCP<const Basic> abs(const RCP<const Basic> &arg)
         } else {
             return arg_;
         }
+    } else if (is_a_Number(*arg) && !static_cast<const Number &>(*arg).is_exact()) {
+        return static_cast<const Number &>(*arg).get_eval().abs(*arg);
     }
     return rcp(new Abs(arg));
 }

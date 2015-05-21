@@ -427,6 +427,8 @@ bool Log::is_canonical(const RCP<const Basic> &arg)
     // Currently not implemented, however should be expanded as `-ipi + log(-arg)`
     if (is_a_Number(*arg) && rcp_static_cast<const Number>(arg)->is_negative())
         return false;
+    if (is_a_Number(*arg) && !rcp_static_cast<const Number>(arg)->is_exact())
+        return false;
     // log(num/den) = log(num) - log(den)
     if (is_a<Rational>(*arg))
         return false;
@@ -468,9 +470,13 @@ RCP<const Basic> log(const RCP<const Basic> &arg)
     }
     if (eq(arg, one)) return zero;
     if (eq(arg, E)) return one;
-    if (is_a_Number(*arg) &&
-        rcp_static_cast<const Number>(arg)->is_negative()) {
-        throw std::runtime_error("Imaginary Result. Yet to be implemented");
+    if (is_a_Number(*arg)) {
+        RCP<const Number> _arg = rcp_static_cast<const Number>(arg);
+        if (!_arg->is_exact()) {
+            return _arg->get_eval().log(*_arg);
+        } else if (_arg->is_negative()) {
+            throw std::runtime_error("Imaginary Result. Yet to be implemented");
+        }
     }
     if (is_a<Rational>(*arg)) {
         RCP<const Integer> num, den;
