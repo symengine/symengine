@@ -453,7 +453,7 @@ int Log::compare(const Basic &o) const
 {
     SYMENGINE_ASSERT(is_a<Log>(o))
     const Log &s = static_cast<const Log &>(o);
-    return arg_->__cmp__(s);
+    return arg_->__cmp__(*s.get_arg());
 }
 
 RCP<const Basic> Log::subs(const map_basic_basic &subs_dict) const
