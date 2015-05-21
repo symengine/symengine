@@ -456,6 +456,20 @@ int Log::compare(const Basic &o) const
     return arg_->__cmp__(s);
 }
 
+RCP<const Basic> Log::subs(const map_basic_basic &subs_dict) const
+{
+    RCP<const Log> self = rcp_const_cast<Log>(rcp(this));
+    auto it = subs_dict.find(self);
+    if (it != subs_dict.end())
+        return it->second;
+    RCP<const Basic> arg_new = arg_->subs(subs_dict);
+    if (arg_new == arg_) {
+        return self;
+    } else {
+        return log(arg_new);
+    }
+}
+
 RCP<const Basic> Log::diff(const RCP<const Symbol> &x) const
 {
     return mul(div(one, arg_), arg_->diff(x));

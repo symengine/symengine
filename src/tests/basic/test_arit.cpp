@@ -19,6 +19,7 @@ using SymEngine::Mul;
 using SymEngine::Pow;
 using SymEngine::Log;
 using SymEngine::Symbol;
+using SymEngine::symbol;
 using SymEngine::umap_basic_num;
 using SymEngine::map_vec_int;
 using SymEngine::Integer;
@@ -597,8 +598,9 @@ void test_pow()
     assert(std::abs(rcp_static_cast<const RealDouble>(r2)->i - 0.501187233627) < 1e-12);
 }
 
- void test_log()
- {
+void test_log()
+{
+    RCP<const Basic> x = symbol("x");
     RCP<const Basic> i2 = rcp(new Integer(2));
     RCP<const Basic> i3 = rcp(new Integer(3));
 
@@ -620,7 +622,12 @@ void test_pow()
     r1 = log(E, i2);
     r2 = div(one, log(i2));
     assert(eq(r1, r2));
- }
+
+    r1 = log(x);
+    r1 = r1->subs({{x, E}});
+    r2 = one;
+    assert(eq(r1, r2));
+}
 
 void test_multinomial()
 {
