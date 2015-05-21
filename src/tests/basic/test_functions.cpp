@@ -983,8 +983,8 @@ void test_sin_table()
 
 void test_could_extract_minus()
 {
-    RCP<const Basic> x = rcp(new Symbol("x"));
-    RCP<const Basic> y = rcp(new Symbol("y"));
+    RCP<const Basic> x = symbol("x");
+    RCP<const Basic> y = symbol("y");
     
     RCP<const Basic> i2 = integer(2);
     RCP<const Basic> im1 = integer(-1);
