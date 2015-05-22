@@ -475,6 +475,11 @@ void test_compare()
     cmp = r1->__cmp__(*r2);
     assert(cmp != 0);
     assert(r2->__cmp__(*r1) == -cmp);
+
+    r1 = log(log(x));
+    r2 = log(x);
+    assert(r1->__cmp__(*r2) != 0);
+    assert(r1->__cmp__(*r1) == 0);
 }
 
 void test_complex()
