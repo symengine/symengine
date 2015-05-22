@@ -10,6 +10,7 @@
 #include "pow.h"
 #include "functions.h"
 #include "constants.h"
+#include "real_double.h"
 
 using SymEngine::Basic;
 using SymEngine::Add;
@@ -67,6 +68,9 @@ using SymEngine::abs;
 using SymEngine::Subs;
 using SymEngine::FunctionWrapper;
 using SymEngine::vec_basic;
+using SymEngine::real_double;
+using SymEngine::RealDouble;
+using SymEngine::is_a;
 
 void test_sin()
 {
@@ -177,6 +181,13 @@ void test_sin()
     r1 = sin(add(sub(mul(i12, pi), y), div(pi, i2)));
     r2 = cos(y);
     assert(eq(r1, r2));
+
+    r1 = sin(real_double(1.0));
+    r2 = sin(sub(div(pi, i2), real_double(2.0)));
+    assert(is_a<RealDouble>(*r1));
+    assert(is_a<RealDouble>(*r2));
+    assert(std::abs(static_cast<const RealDouble &>(*r1).i - 0.841470984807897) < 1e-12);
+    assert(std::abs(static_cast<const RealDouble &>(*r2).i + 0.416146836547142) < 1e-12);
 }
 
 void test_cos()
@@ -258,6 +269,13 @@ void test_cos()
     r1 = cos(add(sub(mul(i12, pi), y), div(pi, i2)));
     r2 = sin(y);
     assert(eq(r1, r2));
+
+    r1 = cos(real_double(1.0));
+    r2 = cos(sub(div(pi, i2), real_double(2.0)));
+    assert(is_a<RealDouble>(*r1));
+    assert(is_a<RealDouble>(*r2));
+    assert(std::abs(static_cast<const RealDouble &>(*r1).i - 0.540302305868140) < 1e-12);
+    assert(std::abs(static_cast<const RealDouble &>(*r2).i - 0.909297426825682) < 1e-12);
 }
 
 void test_tan()
