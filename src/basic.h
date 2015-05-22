@@ -134,7 +134,7 @@ public:
 
     /*!  Implements the hash of the given SymEngine class.
          Use `std::hash` to get the hash. Example:
-             RCP<const Symbol> x = rcp(new Symbol("x"));
+             RCP<const Symbol> x = symbol("x");
              std::hash<Basic> hash_fn;
              std::cout << hash_fn(*x);
     */
@@ -262,8 +262,8 @@ namespace std {
      You can use it with any SymEngine class:
 
 
-        RCP<const Symbol> x = rcp(new Symbol("x"));
-        RCP<const Symbol> y = rcp(new Symbol("y"));
+        RCP<const Symbol> x = symbol("x");
+        RCP<const Symbol> y = symbol("y");
         std::size_t seed2 = 0;
         hash_combine<Basic>(seed2, *x);
         hash_combine<Basic>(seed2, *y);

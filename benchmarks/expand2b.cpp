@@ -13,8 +13,10 @@
 
 using SymEngine::Basic;
 using SymEngine::Symbol;
+using SymEngine::symbol;
 using SymEngine::umap_basic_num;
 using SymEngine::Integer;
+using SymEngine::integer;
 using SymEngine::expr2poly;
 using SymEngine::poly_mul;
 using SymEngine::umap_vec_mpz;
@@ -25,11 +27,11 @@ using SymEngine::print_stack_on_segfault;
 int main(int argc, char* argv[])
 {
     print_stack_on_segfault();
-    RCP<const Basic> x = rcp(new Symbol("x"));
-    RCP<const Basic> y = rcp(new Symbol("y"));
-    RCP<const Basic> z = rcp(new Symbol("z"));
-    RCP<const Basic> w = rcp(new Symbol("w"));
-    RCP<const Basic> i15 = rcp(new Integer(15));
+    RCP<const Basic> x = symbol("x");
+    RCP<const Basic> y = symbol("y");
+    RCP<const Basic> z = symbol("z");
+    RCP<const Basic> w = symbol("w");
+    RCP<const Basic> i15 = integer(15);
 
     RCP<const Basic> e, f1, f2, r;
 
@@ -38,10 +40,10 @@ int main(int argc, char* argv[])
     f2 = expand(add(e, w));
 
     umap_basic_num syms;
-    insert(syms, x, rcp(new Integer(0)));
-    insert(syms, y, rcp(new Integer(1)));
-    insert(syms, z, rcp(new Integer(2)));
-    insert(syms, w, rcp(new Integer(3)));
+    insert(syms, x, integer(0));
+    insert(syms, y, integer(1));
+    insert(syms, z, integer(2));
+    insert(syms, w, integer(3));
 
     umap_vec_mpz P1, P2, C;
 

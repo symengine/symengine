@@ -51,12 +51,12 @@ using SymEngine::is_a;
 
 void test_add()
 {
-    RCP<const Basic> x = rcp(new Symbol("x"));
-    RCP<const Basic> y = rcp(new Symbol("y"));
-    RCP<const Basic> z = rcp(new Symbol("z"));
-    RCP<const Basic> i2 = rcp(new Integer(2));
-    RCP<const Basic> i3 = rcp(new Integer(3));
-    RCP<const Basic> i4 = rcp(new Integer(4));
+    RCP<const Basic> x = symbol("x");
+    RCP<const Basic> y = symbol("y");
+    RCP<const Basic> z = symbol("z");
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> i3 = integer(3);
+    RCP<const Basic> i4 = integer(4);
 
     RCP<const Basic> r1 = add(x, x);
     RCP<const Basic> r2 = mul(i2, x);
@@ -107,14 +107,14 @@ void test_add()
 
 void test_mul()
 {
-    RCP<const Basic> x = rcp(new Symbol("x"));
-    RCP<const Basic> y = rcp(new Symbol("y"));
-    RCP<const Basic> z = rcp(new Symbol("z"));
-    RCP<const Basic> im2 = rcp(new Integer(-2));
-    RCP<const Basic> i2 = rcp(new Integer(2));
-    RCP<const Basic> i3 = rcp(new Integer(3));
-    RCP<const Basic> i4 = rcp(new Integer(4));
-    RCP<const Basic> i6 = rcp(new Integer(6));
+    RCP<const Basic> x = symbol("x");
+    RCP<const Basic> y = symbol("y");
+    RCP<const Basic> z = symbol("z");
+    RCP<const Basic> im2 = integer(-2);
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> i3 = integer(3);
+    RCP<const Basic> i4 = integer(4);
+    RCP<const Basic> i6 = integer(6);
 
     RCP<const Basic> r1, r2, mhalf;
     r1 = mul(pow(x, y), z);
@@ -211,13 +211,13 @@ void test_mul()
 
 void test_sub()
 {
-    RCP<const Basic> x = rcp(new Symbol("x"));
-    RCP<const Basic> y = rcp(new Symbol("y"));
-    RCP<const Basic> z = rcp(new Symbol("z"));
-    RCP<const Basic> im1 = rcp(new Integer(-1));
-    RCP<const Basic> i2 = rcp(new Integer(2));
-    RCP<const Basic> i3 = rcp(new Integer(3));
-    RCP<const Basic> i4 = rcp(new Integer(4));
+    RCP<const Basic> x = symbol("x");
+    RCP<const Basic> y = symbol("y");
+    RCP<const Basic> z = symbol("z");
+    RCP<const Basic> im1 = integer(-1);
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> i3 = integer(3);
+    RCP<const Basic> i4 = integer(4);
 
     RCP<const Basic> r1, r2;
 
@@ -281,13 +281,13 @@ void test_sub()
 
 void test_div()
 {
-    RCP<const Basic> x = rcp(new Symbol("x"));
-    RCP<const Basic> y = rcp(new Symbol("y"));
-    RCP<const Basic> z = rcp(new Symbol("z"));
-    RCP<const Basic> im1 = rcp(new Integer(-1));
-    RCP<const Basic> i2 = rcp(new Integer(2));
-    RCP<const Basic> i3 = rcp(new Integer(3));
-    RCP<const Basic> i4 = rcp(new Integer(4));
+    RCP<const Basic> x = symbol("x");
+    RCP<const Basic> y = symbol("y");
+    RCP<const Basic> z = symbol("z");
+    RCP<const Basic> im1 = integer(-1);
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> i3 = integer(3);
+    RCP<const Basic> i4 = integer(4);
 
     assert(integer(2)->is_positive());
     assert(integer(0)->is_zero());
@@ -382,17 +382,17 @@ void test_div()
 
 void test_pow()
 {
-    RCP<const Symbol> x = rcp(new Symbol("x"));
-    RCP<const Basic> y = rcp(new Symbol("y"));
-    RCP<const Basic> z = rcp(new Symbol("z"));
-    RCP<const Basic> im1 = rcp(new Integer(-1));
-    RCP<const Basic> i2 = rcp(new Integer(2));
-    RCP<const Basic> i3 = rcp(new Integer(3));
-    RCP<const Basic> im3 = rcp(new Integer(-3));
-    RCP<const Basic> i4 = rcp(new Integer(4));
-    RCP<const Basic> i6 = rcp(new Integer(6));
-    RCP<const Basic> i9 = rcp(new Integer(9));
-    RCP<const Basic> i27 = rcp(new Integer(27));
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Basic> y = symbol("y");
+    RCP<const Basic> z = symbol("z");
+    RCP<const Basic> im1 = integer(-1);
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> i3 = integer(3);
+    RCP<const Basic> im3 = integer(-3);
+    RCP<const Basic> i4 = integer(4);
+    RCP<const Basic> i6 = integer(6);
+    RCP<const Basic> i9 = integer(9);
+    RCP<const Basic> i27 = integer(27);
 
     RCP<const Basic> r1;
     RCP<const Basic> r2;
@@ -601,8 +601,8 @@ void test_pow()
 void test_log()
 {
     RCP<const Basic> x = symbol("x");
-    RCP<const Basic> i2 = rcp(new Integer(2));
-    RCP<const Basic> i3 = rcp(new Integer(3));
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> i3 = integer(3);
 
     RCP<const Basic> r1;
     RCP<const Basic> r2;
@@ -642,13 +642,13 @@ void test_multinomial()
 
 void test_expand1()
 {
-    RCP<const Basic> x = rcp(new Symbol("x"));
-    RCP<const Basic> y = rcp(new Symbol("y"));
-    RCP<const Basic> z = rcp(new Symbol("z"));
-    RCP<const Basic> w = rcp(new Symbol("w"));
-    RCP<const Basic> i2 = rcp(new Integer(2));
-    RCP<const Basic> i3 = rcp(new Integer(3));
-    RCP<const Basic> i4 = rcp(new Integer(10));
+    RCP<const Basic> x = symbol("x");
+    RCP<const Basic> y = symbol("y");
+    RCP<const Basic> z = symbol("z");
+    RCP<const Basic> w = symbol("w");
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> i3 = integer(3);
+    RCP<const Basic> i4 = integer(10);
 
     RCP<const Basic> r1;
     RCP<const Basic> r2;
@@ -670,24 +670,24 @@ void test_expand1()
 
 void test_expand2()
 {
-    RCP<const Basic> x = rcp(new Symbol("x"));
-    RCP<const Basic> y = rcp(new Symbol("y"));
-    RCP<const Basic> z = rcp(new Symbol("z"));
-    RCP<const Basic> w = rcp(new Symbol("w"));
-    RCP<const Basic> im1 = rcp(new Integer(-1));
-    RCP<const Basic> im2 = rcp(new Integer(-2));
-    RCP<const Basic> i2 = rcp(new Integer(2));
-    RCP<const Basic> i3 = rcp(new Integer(3));
-    RCP<const Basic> i4 = rcp(new Integer(4));
-    RCP<const Basic> i5 = rcp(new Integer(5));
-    RCP<const Basic> i6 = rcp(new Integer(6));
-    RCP<const Basic> i9 = rcp(new Integer(9));
-    RCP<const Basic> i10 = rcp(new Integer(10));
-    RCP<const Basic> i12 = rcp(new Integer(12));
-    RCP<const Basic> i16 = rcp(new Integer(16));
-    RCP<const Basic> i24 = rcp(new Integer(24));
-    RCP<const Basic> i25 = rcp(new Integer(25));
-    RCP<const Basic> i30 = rcp(new Integer(30));
+    RCP<const Basic> x = symbol("x");
+    RCP<const Basic> y = symbol("y");
+    RCP<const Basic> z = symbol("z");
+    RCP<const Basic> w = symbol("w");
+    RCP<const Basic> im1 = integer(-1);
+    RCP<const Basic> im2 = integer(-2);
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> i3 = integer(3);
+    RCP<const Basic> i4 = integer(4);
+    RCP<const Basic> i5 = integer(5);
+    RCP<const Basic> i6 = integer(6);
+    RCP<const Basic> i9 = integer(9);
+    RCP<const Basic> i10 = integer(10);
+    RCP<const Basic> i12 = integer(12);
+    RCP<const Basic> i16 = integer(16);
+    RCP<const Basic> i24 = integer(24);
+    RCP<const Basic> i25 = integer(25);
+    RCP<const Basic> i30 = integer(30);
 
     RCP<const Basic> r1;
     RCP<const Basic> r2;
@@ -854,11 +854,11 @@ void test_expand2()
 
 void test_expand3()
 {
-    RCP<const Basic> x = rcp(new Symbol("x"));
-    RCP<const Basic> y = rcp(new Symbol("y"));
-    RCP<const Basic> z = rcp(new Symbol("z"));
-    RCP<const Basic> w = rcp(new Symbol("w"));
-    RCP<const Basic> i2 = rcp(new Integer(2));
+    RCP<const Basic> x = symbol("x");
+    RCP<const Basic> y = symbol("y");
+    RCP<const Basic> z = symbol("z");
+    RCP<const Basic> w = symbol("w");
+    RCP<const Basic> i2 = integer(2);
 
     RCP<const Basic> e, f, r;
 

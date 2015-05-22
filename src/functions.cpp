@@ -1224,13 +1224,13 @@ RCP<const Basic> Cos::diff(const RCP<const Symbol> &x) const
 
 RCP<const Basic> Tan::diff(const RCP<const Symbol> &x) const
 {
-    RCP<const Integer> two = rcp(new Integer(2));
+    RCP<const Integer> two = integer(2);
     return mul(add(one, pow(tan(get_arg()), two)), get_arg()->diff(x));
 }
 
 RCP<const Basic> Cot::diff(const RCP<const Symbol> &x) const
 {
-    RCP<const Integer> two = rcp(new Integer(2));
+    RCP<const Integer> two = integer(2);
     return mul(mul(add(one, pow(cot(get_arg()), two)), minus_one), get_arg()->diff(x));
 }
 

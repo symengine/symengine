@@ -40,9 +40,9 @@ using SymEngine::function_symbol;
 
 void test_symbol_hash()
 {
-    RCP<const Symbol> x  = rcp(new Symbol("x"));
-    RCP<const Symbol> x2 = rcp(new Symbol("x"));
-    RCP<const Symbol> y  = rcp(new Symbol("y"));
+    RCP<const Symbol> x  = symbol("x");
+    RCP<const Symbol> x2 = symbol("x");
+    RCP<const Symbol> y  = symbol("y");
 
     assert(x->__eq__(*x));
     assert(x->__eq__(*x2));
@@ -71,14 +71,14 @@ void test_symbol_hash()
 void test_symbol_dict()
 {
     umap_basic_num d;
-    RCP<const Basic> x  = rcp(new Symbol("x"));
-    RCP<const Basic> x2 = rcp(new Symbol("x"));
-    RCP<const Basic> y  = rcp(new Symbol("y"));
+    RCP<const Basic> x  = symbol("x");
+    RCP<const Basic> x2 = symbol("x");
+    RCP<const Basic> y  = symbol("y");
     assert( x !=  x2);  // The instances are different...
     assert(eq(x, x2));  // ...but equal in the SymPy sense
 
-    insert(d, x, rcp(new Integer(2)));
-    insert(d, y, rcp(new Integer(3)));
+    insert(d, x, integer(2));
+    insert(d, y, integer(3));
 
     // Test printing:
     std::cout << d << std::endl;
@@ -88,14 +88,14 @@ void test_symbol_dict()
 void test_add()
 {
     umap_basic_num m, m2;
-    RCP<const Basic> x  = rcp(new Symbol("x"));
-    RCP<const Basic> y  = rcp(new Symbol("y"));
-    insert(m, x, rcp(new Integer(2)));
-    insert(m, y, rcp(new Integer(3)));
+    RCP<const Basic> x  = symbol("x");
+    RCP<const Basic> y  = symbol("y");
+    insert(m, x, integer(2));
+    insert(m, y, integer(3));
 
     m2 = m;
     RCP<const Add> a = rcp(new Add(zero, std::move(m2)));
-    insert(m, x, rcp(new Integer(-2)));
+    insert(m, x, integer(-2));
     RCP<const Add> b = rcp(new Add(zero, std::move(m)));
     std::cout << *a << std::endl;
     std::cout << *b << std::endl;
@@ -124,25 +124,25 @@ void test_add()
 
 void test_integer()
 {
-    RCP<const Integer> i = rcp(new Integer(5));
-    RCP<const Integer> j = rcp(new Integer(6));
+    RCP<const Integer> i = integer(5);
+    RCP<const Integer> j = integer(6);
     std::cout << *i << std::endl;
     std::cout << *j << std::endl;
 
     RCP<const Number> k = addnum(i, j);
     std::cout << *k << std::endl;
-    assert(eq(k, rcp(new Integer(11))));
-    assert(neq(k, rcp(new Integer(12))));
+    assert(eq(k, integer(11)));
+    assert(neq(k, integer(12)));
 
     k = subnum(i, j);
     std::cout << *k << std::endl;
-    assert(eq(k, rcp(new Integer(-1))));
-    assert(neq(k, rcp(new Integer(12))));
+    assert(eq(k, integer(-1)));
+    assert(neq(k, integer(12)));
 
     k = mulnum(i, j);
     std::cout << *k << std::endl;
-    assert(eq(k, rcp(new Integer(30))));
-    assert(neq(k, rcp(new Integer(12))));
+    assert(eq(k, integer(30)));
+    assert(neq(k, integer(12)));
 
     k = divnum(i, j);
     assert(eq(k, Rational::from_two_ints(integer(5), integer(6))));
@@ -158,8 +158,8 @@ void test_integer()
 
     k = i->neg();
     std::cout << *k << std::endl;
-    assert(eq(k, rcp(new Integer(-5))));
-    assert(neq(k, rcp(new Integer(12))));
+    assert(eq(k, integer(-5)));
+    assert(neq(k, integer(12)));
 
     SYMENGINE_CHECK_THROW(divnum(i, zero), std::runtime_error)
 }
@@ -277,14 +277,14 @@ void test_rational()
 void test_mul()
 {
     map_basic_basic m, m2;
-    RCP<const Basic> x  = rcp(new Symbol("x"));
-    RCP<const Basic> y  = rcp(new Symbol("y"));
-    insert(m, x, rcp(new Integer(2)));
-    insert(m, y, rcp(new Integer(3)));
+    RCP<const Basic> x  = symbol("x");
+    RCP<const Basic> y  = symbol("y");
+    insert(m, x, integer(2));
+    insert(m, y, integer(3));
 
     m2 = m;
     RCP<const Mul> a = rcp(new Mul(one, std::move(m2)));
-    insert(m, x, rcp(new Integer(-2)));
+    insert(m, x, integer(-2));
     RCP<const Mul> b = rcp(new Mul(one, std::move(m)));
     std::cout << *a << std::endl;
     std::cout << *b << std::endl;
