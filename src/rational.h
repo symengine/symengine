@@ -147,12 +147,12 @@ public:
         // pass num/den into the constructor directly:
         if (!neg)
             if (abs(den) == one->i)
-                return rcp(new Integer(num*sgn(den)));
+                return integer(num*sgn(den));
             else
                 return rcp(new Rational(mpq_class(num*sgn(den), abs(den))));
         else
             if (abs(num) == one->i)
-                return rcp(new Integer(den*sgn(num)));
+                return integer(den*sgn(num));
             else
                 return rcp(new Rational(mpq_class(den*sgn(num), abs(num))));
     }

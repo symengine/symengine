@@ -316,7 +316,7 @@ RCP<const Basic> pow_expand(const RCP<const Pow> &self)
         RCP<const Number> overall_coeff=one;
         for (; power != p.first.end(); ++power, ++i2) {
             if (*power > 0) {
-                RCP<const Integer> exp = rcp(new Integer(*power));
+                RCP<const Integer> exp = integer(*power);
                 RCP<const Basic> base = i2->first;
                 if (is_a<Integer>(*base)) {
                     imulnum(outArg(overall_coeff),
@@ -353,7 +353,7 @@ RCP<const Basic> pow_expand(const RCP<const Pow> &self)
             }
         }
         RCP<const Basic> term = Mul::from_dict(overall_coeff, std::move(d));
-        RCP<const Number> coef2 = rcp(new Integer(p.second));
+        RCP<const Number> coef2 = integer(p.second);
         if (is_a_Number(*term)) {
             iaddnum(outArg(add_overall_coeff),
                 mulnum(rcp_static_cast<const Number>(term), coef2));

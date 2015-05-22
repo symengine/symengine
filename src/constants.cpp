@@ -39,18 +39,18 @@ RCP<const Basic> Constant::diff(const RCP<const Symbol> &x) const
     return zero;
 }
 
-RCP<const Integer> zero = rcp(new Integer(0));
-RCP<const Integer> one = rcp(new Integer(1));
-RCP<const Integer> minus_one = rcp(new Integer(-1));
+RCP<const Integer> zero = integer(0);
+RCP<const Integer> one = integer(1);
+RCP<const Integer> minus_one = integer(-1);
 RCP<const Number> I = Complex::from_two_nums(*zero, *one);
 
-RCP<const Constant> pi = rcp(new Constant("pi"));
-RCP<const Constant> E = rcp(new Constant("E"));
+RCP<const Constant> pi = constant("pi");
+RCP<const Constant> E = constant("E");
 
 // Global variables declared in functions.cpp
 // Look over https://github.com/sympy/symengine/issues/272
 // for further details
-RCP<const Basic> i2 = rcp(new Integer(2));
+RCP<const Basic> i2 = integer(2);
 
 RCP<const Basic> sqrt_(const RCP<const Basic>& arg)
 {
@@ -58,11 +58,11 @@ RCP<const Basic> sqrt_(const RCP<const Basic>& arg)
 }
 
 
-RCP<const Basic> i3 = rcp(new Integer(3));
-RCP<const Basic> i5 = rcp(new Integer(5));
-RCP<const Basic> im2 = rcp(new Integer(-2));
-RCP<const Basic> im3 = rcp(new Integer(-3));
-RCP<const Basic> im5 = rcp(new Integer(-5));
+RCP<const Basic> i3 = integer(3);
+RCP<const Basic> i5 = integer(5);
+RCP<const Basic> im2 = integer(-2);
+RCP<const Basic> im3 = integer(-3);
+RCP<const Basic> im5 = integer(-5);
 
 RCP<const Basic> sq3 = sqrt_(i3);
 RCP<const Basic> sq2 = sqrt_(i2);
