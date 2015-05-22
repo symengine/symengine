@@ -1,7 +1,7 @@
 require 'symengine/symengine'
 
-class SymEngine
-  def self.ascii_art
+module SymEngine
+  def SymEngine.ascii_art
     puts "
  _____           _____         _         
 |   __|_ _ _____|   __|___ ___|_|___ ___ 
