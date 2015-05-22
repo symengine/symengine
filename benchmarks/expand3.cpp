@@ -16,9 +16,11 @@ using SymEngine::Add;
 using SymEngine::Mul;
 using SymEngine::Pow;
 using SymEngine::Symbol;
+using SymEngine::symbol;
 using SymEngine::umap_basic_num;
 using SymEngine::map_vec_int;
 using SymEngine::Integer;
+using SymEngine::integer;
 using SymEngine::multinomial_coefficients;
 using SymEngine::RCP;
 using SymEngine::rcp;
@@ -28,11 +30,11 @@ int main(int argc, char* argv[])
 {
     Teuchos::print_stack_on_segfault();
 
-    RCP<const Basic> x = rcp(new Symbol("x"));
-    RCP<const Basic> y = rcp(new Symbol("y"));
-    RCP<const Basic> z = rcp(new Symbol("z"));
-    RCP<const Basic> w = rcp(new Symbol("w"));
-    RCP<const Basic> i100 = rcp(new Integer(100));
+    RCP<const Basic> x = symbol("x");
+    RCP<const Basic> y = symbol("y");
+    RCP<const Basic> z = symbol("z");
+    RCP<const Basic> w = symbol("w");
+    RCP<const Basic> i100 = integer(100);
 
     RCP<const Basic> e, r;
 
