@@ -109,6 +109,23 @@ if (WITH_BFD)
     set(LIBS ${LIBS} ${EXECINFO_LIBRARIES})
 endif()
 
+# TCMalloc
+set(WITH_TCMALLOC no
+    CACHE BOOL "Build with TCMalloc linked")
+
+if (WITH_TCMALLOC)
+    find_package(TCMALLOC REQUIRED)
+    set(LIBS ${LIBS} ${TCMALLOC_LIBRARIES})
+
+    if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+        set(CMAKE_CXX_FLAGS_DEBUG
+            "${CMAKE_CXX_FLAGS_DEBUG} -fno-builtin-malloc -fno-builtin-calloc -fno-builtin-realloc -fno-builtin-free")
+        set(CMAKE_CXX_FLAGS_RELEASE
+            "${CMAKE_CXX_FLAGS_RELEASE} -fno-builtin-malloc -fno-builtin-calloc -fno-builtin-realloc -fno-builtin-free")
+    endif()
+
+endif()
+
 # Doxygen
 set(BUILD_DOXYGEN no
     CACHE BOOL "Create C++ API Doxgyen documentation.")
