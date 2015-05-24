@@ -87,6 +87,20 @@ if (WITH_ARB)
     set(HAVE_SYMENGINE_ARB yes)
 endif()
 
+# OpenMp
+set(WITH_OPENMP no
+    CACHE BOOL "Build with OpenMP")
+
+if (WITH_OPENMP)
+    find_package(OpenMP REQUIRED)
+    if(OPENMP_FOUND)
+        set(CMAKE_CXX_FLAGS_DEBUG
+            "${CMAKE_CXX_FLAGS_DEBUG} ${OpenMP_CXX_FLAGS}")
+        set(CMAKE_CXX_FLAGS_RELEASE
+            "${CMAKE_CXX_FLAGS_RELEASE} ${OpenMP_CXX_FLAGS}")
+    endif()
+endif()
+
 # Python
 set(WITH_PYTHON no
     CACHE BOOL "Build with Python wrappers")
@@ -215,6 +229,8 @@ if (WITH_ARB)
     message("MPFR_INCLUDE_DIRS: ${MPFR_INCLUDE_DIRS}")
     message("MPFR_LIBRARIES: ${MPFR_LIBRARIES}")
 endif()
+
+message("WITH_OPENMP: ${WITH_OPENMP}")
 
 message("Copying source of python wrappers into: ${CMAKE_CURRENT_BINARY_DIR}")
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/csympy DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
