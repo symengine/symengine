@@ -24,7 +24,6 @@ class Polynomial;
 
 class Visitor {
 public:
-    virtual void visit(const Polynomial &) = 0;
     virtual void visit(const Symbol &) = 0;
     virtual void visit(const Add &) = 0;
     virtual void visit(const Mul &) = 0;

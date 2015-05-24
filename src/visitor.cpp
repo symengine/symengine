@@ -17,7 +17,7 @@
 
 namespace SymEngine {
 
-ACCEPT(Polynomial)
+//ACCEPT(Polynomial)
 ACCEPT(Symbol)
 ACCEPT(Add)
 ACCEPT(Mul)

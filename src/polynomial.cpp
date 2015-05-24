@@ -1,7 +1,7 @@
 #include "polynomial.h"
 #include "add.h"
 
-namespace CSymPy {
+namespace SymEngine {
 
     Polynomial::Polynomial(const std::string& var, map_uint_integer&& dict) :
          var_{var}, dict_{std::move(dict)} {

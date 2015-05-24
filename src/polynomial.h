@@ -1,12 +1,12 @@
-#ifndef CSYMPY_POLYNOMIALS_H
-#define CSYMPY_POLYNOMIALS_H
+#ifndef SYMENGINE_POLYNOMIALS_H
+#define SYMENGINE_POLYNOMIALS_H
 
 #include "monomials.h"
 #include "dict.h"
 #include "basic.h"
 #include "integer.h"
 
-namespace CSymPy {
+namespace SymEngine {
 
     class Polynomial : public Basic{
     public:
