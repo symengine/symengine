@@ -3,12 +3,12 @@
  *  Class Symbol
  *
  **/
-#ifndef CSYMPY_SYMBOL_H
-#define CSYMPY_SYMBOL_H
+#ifndef SYMENGINE_SYMBOL_H
+#define SYMENGINE_SYMBOL_H
 
 #include "basic.h"
 
-namespace CSymPy {
+namespace SymEngine {
 
 class Symbol : public Basic {
 private:
@@ -53,6 +53,6 @@ inline RCP<const Symbol> symbol(const std::string &name)
     return rcp(new Symbol(name));
 }
 
-} // CSymPy
+} // SymEngine
 
 #endif

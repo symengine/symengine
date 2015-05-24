@@ -10,63 +10,67 @@
 #include "pow.h"
 #include "functions.h"
 #include "constants.h"
+#include "real_double.h"
 
-using CSymPy::Basic;
-using CSymPy::Add;
-using CSymPy::Mul;
-using CSymPy::Pow;
-using CSymPy::Symbol;
-using CSymPy::symbol;
-using CSymPy::umap_basic_num;
-using CSymPy::map_vec_int;
-using CSymPy::Integer;
-using CSymPy::integer;
-using CSymPy::multinomial_coefficients;
-using CSymPy::one;
-using CSymPy::zero;
-using CSymPy::sin;
-using CSymPy::cos;
-using CSymPy::tan;
-using CSymPy::cot;
-using CSymPy::csc;
-using CSymPy::sec;
-using CSymPy::asin;
-using CSymPy::acos;
-using CSymPy::asec;
-using CSymPy::acsc;
-using CSymPy::atan;
-using CSymPy::acot;
-using CSymPy::atan2;
-using CSymPy::lambertw;
-using CSymPy::log;
-using CSymPy::exp;
-using CSymPy::function_symbol;
-using CSymPy::Derivative;
-using CSymPy::pi;
-using CSymPy::RCP;
-using CSymPy::rcp;
-using CSymPy::print_stack_on_segfault;
-using CSymPy::sqrt;
-using CSymPy::sinh;
-using CSymPy::cosh;
-using CSymPy::tanh;
-using CSymPy::coth;
-using CSymPy::asinh;
-using CSymPy::acosh;
-using CSymPy::atanh;
-using CSymPy::acoth;
-using CSymPy::asech;
-using CSymPy::kronecker_delta;
-using CSymPy::levi_civita;
-using CSymPy::zeta;
-using CSymPy::dirichlet_eta;
-using CSymPy::gamma;
-using CSymPy::lowergamma;
-using CSymPy::uppergamma;
-using CSymPy::abs;
-using CSymPy::Subs;
-using CSymPy::FunctionWrapper;
-using CSymPy::vec_basic;
+using SymEngine::Basic;
+using SymEngine::Add;
+using SymEngine::Mul;
+using SymEngine::Pow;
+using SymEngine::Symbol;
+using SymEngine::symbol;
+using SymEngine::umap_basic_num;
+using SymEngine::map_vec_int;
+using SymEngine::Integer;
+using SymEngine::integer;
+using SymEngine::multinomial_coefficients;
+using SymEngine::one;
+using SymEngine::zero;
+using SymEngine::sin;
+using SymEngine::cos;
+using SymEngine::tan;
+using SymEngine::cot;
+using SymEngine::csc;
+using SymEngine::sec;
+using SymEngine::asin;
+using SymEngine::acos;
+using SymEngine::asec;
+using SymEngine::acsc;
+using SymEngine::atan;
+using SymEngine::acot;
+using SymEngine::atan2;
+using SymEngine::lambertw;
+using SymEngine::log;
+using SymEngine::exp;
+using SymEngine::function_symbol;
+using SymEngine::Derivative;
+using SymEngine::pi;
+using SymEngine::RCP;
+using SymEngine::rcp;
+using SymEngine::print_stack_on_segfault;
+using SymEngine::sqrt;
+using SymEngine::sinh;
+using SymEngine::cosh;
+using SymEngine::tanh;
+using SymEngine::coth;
+using SymEngine::asinh;
+using SymEngine::acosh;
+using SymEngine::atanh;
+using SymEngine::acoth;
+using SymEngine::asech;
+using SymEngine::kronecker_delta;
+using SymEngine::levi_civita;
+using SymEngine::zeta;
+using SymEngine::dirichlet_eta;
+using SymEngine::gamma;
+using SymEngine::lowergamma;
+using SymEngine::uppergamma;
+using SymEngine::abs;
+using SymEngine::Subs;
+using SymEngine::FunctionWrapper;
+using SymEngine::vec_basic;
+using SymEngine::real_double;
+using SymEngine::RealDouble;
+using SymEngine::is_a;
 
 void test_sin()
 {
@@ -177,6 +181,13 @@ void test_sin()
     r1 = sin(add(sub(mul(i12, pi), y), div(pi, i2)));
     r2 = cos(y);
     assert(eq(r1, r2));
+
+    r1 = sin(real_double(1.0));
+    r2 = sin(sub(div(pi, i2), real_double(2.0)));
+    assert(is_a<RealDouble>(*r1));
+    assert(is_a<RealDouble>(*r2));
+    assert(std::abs(static_cast<const RealDouble &>(*r1).i - 0.841470984807897) < 1e-12);
+    assert(std::abs(static_cast<const RealDouble &>(*r2).i + 0.416146836547142) < 1e-12);
 }
 
 void test_cos()
@@ -258,6 +269,13 @@ void test_cos()
     r1 = cos(add(sub(mul(i12, pi), y), div(pi, i2)));
     r2 = sin(y);
     assert(eq(r1, r2));
+
+    r1 = cos(real_double(1.0));
+    r2 = cos(sub(div(pi, i2), real_double(2.0)));
+    assert(is_a<RealDouble>(*r1));
+    assert(is_a<RealDouble>(*r2));
+    assert(std::abs(static_cast<const RealDouble &>(*r1).i - 0.540302305868140) < 1e-12);
+    assert(std::abs(static_cast<const RealDouble &>(*r2).i - 0.909297426825682) < 1e-12);
 }
 
 void test_tan()
@@ -965,8 +983,8 @@ void test_sin_table()
 
 void test_could_extract_minus()
 {
-    RCP<const Basic> x = rcp(new Symbol("x"));
-    RCP<const Basic> y = rcp(new Symbol("y"));
+    RCP<const Basic> x = symbol("x");
+    RCP<const Basic> y = symbol("y");
     
     RCP<const Basic> i2 = integer(2);
     RCP<const Basic> im1 = integer(-1);
@@ -1439,6 +1457,8 @@ void test_coth()
 void test_asinh()
 {
     RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    RCP<const Basic> i4 = integer(4);
     RCP<const Basic> im1 = integer(-1);
     RCP<const Basic> i2 = integer(2);
 
@@ -1460,11 +1480,17 @@ void test_asinh()
     r1 = asinh(mul(im1, x))->diff(x);
     r2 = div(im1, sqrt(add(pow(x, i2), one)));
     assert(eq(r1, r2));
+
+    r1 = asinh(mul(i2, y))->diff(y);
+    r2 = div(i2, sqrt(add(mul(i4, pow(y, i2)), one)));
+    assert(eq(r1, r2));
 }
 
 void test_acosh()
 {
     RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    RCP<const Basic> i4 = integer(4);
     RCP<const Basic> im1 = integer(-1);
     RCP<const Basic> i2 = integer(2);
 
@@ -1478,11 +1504,17 @@ void test_acosh()
     r1 = acosh(mul(im1, x))->diff(x);
     r2 = div(im1, sqrt(add(pow(x, i2), im1)));
     assert(eq(r1, r2));
+
+    r1 = acosh(mul(i2, y))->diff(y);
+    r2 = div(i2, sqrt(add(mul(i4, pow(y, i2)), im1)));
+    assert(eq(r1, r2));
 }
 
 void test_atanh()
 {
     RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    RCP<const Basic> i4 = integer(4);
     RCP<const Basic> im1 = integer(-1);
     RCP<const Basic> i2 = integer(2);
 
@@ -1495,6 +1527,10 @@ void test_atanh()
 
     r1 = atanh(mul(im1, x))->diff(x);
     r2 = div(im1, sub(one, pow(x, i2)));
+    assert(eq(r1, r2));
+
+    r1 = atanh(mul(i2, y))->diff(y);
+    r2 = div(i2, sub(one, mul(i4, pow(y, i2))));
     assert(eq(r1, r2));
 
     r1 = atanh(mul(im1, x));

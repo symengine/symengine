@@ -4,12 +4,14 @@
  *
  **/
  
-#ifndef CSYMPY_NUMBER_H
-#define CSYMPY_NUMBER_H
+#ifndef SYMENGINE_NUMBER_H
+#define SYMENGINE_NUMBER_H
 
 #include "basic.h"
 
-namespace CSymPy {
+namespace SymEngine {
+
+class Evaluate;
 
 class Number : public Basic {
 public:
@@ -19,10 +21,15 @@ public:
     virtual bool is_one() const = 0;
     //! \return true if `-1`
     virtual bool is_minus_one() const = 0;
-
+    //! \return true if negative
     virtual bool is_negative() const = 0;
-
+    //! \return true if positive
     virtual bool is_positive() const = 0;
+    //! return `true` if the number is exact
+    virtual bool is_exact() const { return true; };
+    //! Get `Evaluate` singleton to evaluate numerically
+    virtual Evaluate& get_eval() const { throw std::runtime_error("Not Implemented."); };
+
     //! Addition
     virtual RCP<const Number> add(const Number &other) const = 0;
     //! Subtraction
@@ -35,6 +42,7 @@ public:
     virtual RCP<const Number> rdiv(const Number &other) const = 0;
     //! Power
     virtual RCP<const Number> pow(const Number &other) const = 0;
+    virtual RCP<const Number> rpow(const Number &other) const = 0;
     //! Differentiation w.r.t Symbol `x`
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
 
@@ -89,7 +97,43 @@ inline void idivnum(const Ptr<RCP<const Number>> &self,
     *self = divnum(*self, other);
 }
 
+//! \return true if 'b' is a Number or any of its subclasses
+inline bool is_a_Number(const Basic &b)
+{
+    // `REAL_DOUBLE` is the last subclass of Number in TypeID
+    // An enum should be before `REAL_DOUBLE` iff it is a
+    // subclass of Number
+    return b.get_type_code() <= REAL_DOUBLE;
+}
 
-} // CSymPy
+//! A class that will evaluate functions numerically.
+class Evaluate {
+public:
+    virtual RCP<const Basic> sin(const Basic &) const = 0;
+    virtual RCP<const Basic> cos(const Basic &) const = 0;
+    virtual RCP<const Basic> tan(const Basic &) const = 0;
+    virtual RCP<const Basic> cot(const Basic &) const = 0;
+    virtual RCP<const Basic> sec(const Basic &) const = 0;
+    virtual RCP<const Basic> csc(const Basic &) const = 0;
+    virtual RCP<const Basic> asin(const Basic &) const = 0;
+    virtual RCP<const Basic> acos(const Basic &) const = 0;
+    virtual RCP<const Basic> atan(const Basic &) const = 0;
+    virtual RCP<const Basic> acot(const Basic &) const = 0;
+    virtual RCP<const Basic> asec(const Basic &) const = 0;
+    virtual RCP<const Basic> acsc(const Basic &) const = 0;
+    virtual RCP<const Basic> sinh(const Basic &) const = 0;
+    virtual RCP<const Basic> cosh(const Basic &) const = 0;
+    virtual RCP<const Basic> tanh(const Basic &) const = 0;
+    virtual RCP<const Basic> coth(const Basic &) const = 0;
+    virtual RCP<const Basic> asinh(const Basic &) const = 0;
+    virtual RCP<const Basic> acosh(const Basic &) const = 0;
+    virtual RCP<const Basic> atanh(const Basic &) const = 0;
+    virtual RCP<const Basic> acoth(const Basic &) const = 0;
+    virtual RCP<const Basic> log(const Basic &) const = 0;
+    virtual RCP<const Basic> gamma(const Basic &) const = 0;
+    virtual RCP<const Basic> abs(const Basic &) const = 0;
+};
+
+} // SymEngine
 
 #endif

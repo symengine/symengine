@@ -4,10 +4,10 @@
 #include "matrix.h"
 #include "integer.h"
 
-using CSymPy::print_stack_on_segfault;
-using CSymPy::DenseMatrix;
-using CSymPy::integer;
-using CSymPy::homogeneous_lde;
+using SymEngine::print_stack_on_segfault;
+using SymEngine::DenseMatrix;
+using SymEngine::integer;
+using SymEngine::homogeneous_lde;
 
 bool vec_dense_matrix_eq_perm(const std::vector<DenseMatrix> &a,
     const std::vector<DenseMatrix> &b) {

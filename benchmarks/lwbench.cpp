@@ -13,19 +13,19 @@
 #include "pow.h"
 #include "symbol.h"
 
-using CSymPy::div;
-using CSymPy::factorial;
-using CSymPy::RCP;
-using CSymPy::Basic;
-using CSymPy::one;
-using CSymPy::add;
-using CSymPy::Integer;
-using CSymPy::Number;
-using CSymPy::integer;
-using CSymPy::gcd;
-using CSymPy::rcp_static_cast;
-using CSymPy::pow;
-using CSymPy::symbol;
+using SymEngine::div;
+using SymEngine::factorial;
+using SymEngine::RCP;
+using SymEngine::Basic;
+using SymEngine::one;
+using SymEngine::add;
+using SymEngine::Integer;
+using SymEngine::Number;
+using SymEngine::integer;
+using SymEngine::gcd;
+using SymEngine::rcp_static_cast;
+using SymEngine::pow;
+using SymEngine::symbol;
 
 double A()
 {

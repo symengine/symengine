@@ -10,7 +10,7 @@
 #include "visitor.h"
 
 
-namespace CSymPy {
+namespace SymEngine {
 
 extern RCP<const Basic> i2;
 extern RCP<const Basic> i3;
@@ -287,7 +287,7 @@ RCP<const Basic> TrigFunction::subs(const map_basic_basic &subs_dict) const
 Sin::Sin(const RCP<const Basic> &arg)
     : TrigFunction(arg)
 {
-    CSYMPY_ASSERT(is_canonical(arg))
+    SYMENGINE_ASSERT(is_canonical(arg))
 }
 
 bool Sin::is_canonical(const RCP<const Basic> &arg)
@@ -299,9 +299,12 @@ bool Sin::is_canonical(const RCP<const Basic> &arg)
     // e.g sin(k*pi/12)
     RCP<const Integer> n;
     RCP<const Basic> r;
-    bool b = get_pi_shift(arg, outArg(n), outArg(r));
-    if (b)
+    if (get_pi_shift(arg, outArg(n), outArg(r))) {
         return false;
+    }
+    if (is_a_Number(*arg) && !static_cast<const Number &>(*arg).is_exact()) {
+        return false;
+    }
     return true;
 }
 
@@ -315,7 +318,7 @@ bool Sin::__eq__(const Basic &o) const
 
 int Sin::compare(const Basic &o) const
 {
-    CSYMPY_ASSERT(is_a<Sin>(o))
+    SYMENGINE_ASSERT(is_a<Sin>(o))
     const Sin &s = static_cast<const Sin &>(o);
     return get_arg()->__cmp__(*(s.get_arg()));
 }
@@ -323,6 +326,9 @@ int Sin::compare(const Basic &o) const
 RCP<const Basic> sin(const RCP<const Basic> &arg)
 {
     if (eq(arg, zero)) return zero;
+    if (is_a_Number(*arg) && !static_cast<const Number &>(*arg).is_exact()) {
+        return static_cast<const Number &>(*arg).get_eval().sin(*arg);
+    }
     RCP<const Basic> ret_arg;
     int index;
     int sign;
@@ -331,20 +337,26 @@ RCP<const Basic> sin(const RCP<const Basic> &arg)
 
     if (conjugate) {
         // cos has to be returned
-        if (sign == 1)
-            return rcp(new Cos(ret_arg));
-        else
-            return mul(minus_one, rcp(new Cos(ret_arg)));
-    }
-    else {
+        if (sign == 1) {
+            return cos(ret_arg);
+        } else {
+            return mul(minus_one, cos(ret_arg));
+        }
+    } else {
         if (eq(ret_arg, zero)) {
             return mul(integer(sign), sin_table[index]);
-        }
-        else {
-            if (sign == 1)
-                return rcp(new Sin(ret_arg));
-            else
-                return mul(minus_one, rcp(new Sin(ret_arg)));
+        } else {
+            // If ret_arg is the same as arg, a `Sin` instance is returned
+            // Or else `sin` is called again.
+            if (sign == 1) {
+                if (neq(ret_arg, arg)) {
+                    return sin(ret_arg);
+                } else {
+                    return rcp(new Sin(arg));
+                }
+            } else {
+                return mul(minus_one, sin(ret_arg));
+            }
         }
     }
 }
@@ -354,7 +366,7 @@ RCP<const Basic> sin(const RCP<const Basic> &arg)
 Cos::Cos(const RCP<const Basic> &arg)
     : TrigFunction(arg)
 {
-    CSYMPY_ASSERT(is_canonical(arg))
+    SYMENGINE_ASSERT(is_canonical(arg))
 }
 
 bool Cos::is_canonical(const RCP<const Basic> &arg)
@@ -366,9 +378,12 @@ bool Cos::is_canonical(const RCP<const Basic> &arg)
     // e.g cos(k*pi/12)
     RCP<const Integer> n;
     RCP<const Basic> r;
-    bool b = get_pi_shift(arg, outArg(n), outArg(r));
-    if (b)
+    if (get_pi_shift(arg, outArg(n), outArg(r))) {
         return false;
+    }
+    if (is_a_Number(*arg) && !static_cast<const Number &>(*arg).is_exact()) {
+        return false;
+    }
     return true;
 }
 
@@ -382,7 +397,7 @@ bool Cos::__eq__(const Basic &o) const
 
 int Cos::compare(const Basic &o) const
 {
-    CSYMPY_ASSERT(is_a<Cos>(o))
+    SYMENGINE_ASSERT(is_a<Cos>(o))
     const Cos &s = static_cast<const Cos &>(o);
     return get_arg()->__cmp__(*(s.get_arg()));
 }
@@ -390,6 +405,9 @@ int Cos::compare(const Basic &o) const
 RCP<const Basic> cos(const RCP<const Basic> &arg)
 {
     if (eq(arg, zero)) return one;
+    if (is_a_Number(*arg) && !static_cast<const Number &>(*arg).is_exact()) {
+        return static_cast<const Number &>(*arg).get_eval().cos(*arg);
+    }
     RCP<const Basic> ret_arg;
     int index;
     int sign;
@@ -397,21 +415,25 @@ RCP<const Basic> cos(const RCP<const Basic> &arg)
                       outArg(ret_arg), index, sign); //output
 
     if (conjugate) {
-        // cos has to be returned
-        if (sign == 1)
-            return rcp(new Sin(ret_arg));
-        else
-            return mul(minus_one, rcp(new Sin(ret_arg)));
-    }
-    else {
+        // sin has to be returned
+        if (sign == 1) {
+            return sin(ret_arg);
+        } else {
+            return mul(minus_one, sin(ret_arg));
+        }
+    } else {
         if (eq(ret_arg, zero)) {
             return mul(integer(sign), sin_table[(index + 6) % 24]);
-        }
-        else {
-            if (sign == 1)
-                return rcp(new Cos(ret_arg));
-            else
-                return mul(minus_one, rcp(new Cos(ret_arg)));
+        } else {
+            if (sign == 1) {
+                if (neq(ret_arg, arg)) {
+                    return cos(ret_arg);
+                } else {
+                    return rcp(new Cos(ret_arg));
+                }
+            } else {
+                return mul(minus_one, cos(ret_arg));
+            }
         }
     }
 }
@@ -421,7 +443,7 @@ RCP<const Basic> cos(const RCP<const Basic> &arg)
 Tan::Tan(const RCP<const Basic> &arg)
     : TrigFunction(arg)
 {
-    CSYMPY_ASSERT(is_canonical(arg))
+    SYMENGINE_ASSERT(is_canonical(arg))
 }
 
 bool Tan::is_canonical(const RCP<const Basic> &arg)
@@ -433,9 +455,12 @@ bool Tan::is_canonical(const RCP<const Basic> &arg)
     // e.g tan(k*pi/12)
     RCP<const Integer> n;
     RCP<const Basic> r;
-    bool b = get_pi_shift(arg, outArg(n), outArg(r));
-    if (b)
+    if (get_pi_shift(arg, outArg(n), outArg(r))) {
         return false;
+    }
+    if (is_a_Number(*arg) && !static_cast<const Number &>(*arg).is_exact()) {
+        return false;
+    }
     return true;
 }
 
@@ -450,7 +475,7 @@ bool Tan::__eq__(const Basic &o) const
 
 int Tan::compare(const Basic &o) const
 {
-    CSYMPY_ASSERT(is_a<Tan>(o))
+    SYMENGINE_ASSERT(is_a<Tan>(o))
     const Tan &s = static_cast<const Tan &>(o);
     return get_arg()->__cmp__(*(s.get_arg()));
 }
@@ -458,6 +483,9 @@ int Tan::compare(const Basic &o) const
 RCP<const Basic> tan(const RCP<const Basic> &arg)
 {
     if (eq(arg, zero)) return zero;
+    if (is_a_Number(*arg) && !static_cast<const Number &>(*arg).is_exact()) {
+        return static_cast<const Number &>(*arg).get_eval().tan(*arg);
+    }
     RCP<const Basic> ret_arg;
     int index;
     int sign;
@@ -465,22 +493,27 @@ RCP<const Basic> tan(const RCP<const Basic> &arg)
                       outArg(ret_arg), index, sign); //output
 
     if (conjugate) {
-        // cos has to be returned
-        if (sign == 1)
-            return rcp(new Cot(ret_arg));
-        else
-            return mul(minus_one, rcp(new Cot(ret_arg)));
+        // cot has to be returned
+        if (sign == 1) {
+            return cot(ret_arg);
+        } else {
+            return mul(minus_one, cot(ret_arg));
+        }
     }
     else {
         if (eq(ret_arg, zero)) {
             return mul(integer(sign),
                    div(sin_table[index], sin_table[(index + 6) % 24]));
-        }
-        else {
-            if (sign == 1)
-                return rcp(new Tan(ret_arg));
-            else
-                return mul(minus_one, rcp(new Tan(ret_arg)));
+        } else {
+            if (sign == 1) {
+                if (neq(ret_arg, arg)) {
+                    return tan(ret_arg);
+                } else {
+                    return rcp(new Tan(ret_arg));
+                }
+            } else {
+                return mul(minus_one, tan(ret_arg));
+            }
         }
     }
 }
@@ -490,7 +523,7 @@ RCP<const Basic> tan(const RCP<const Basic> &arg)
 Cot::Cot(const RCP<const Basic> &arg)
     : TrigFunction(arg)
 {
-    CSYMPY_ASSERT(is_canonical(arg))
+    SYMENGINE_ASSERT(is_canonical(arg))
 }
 
 bool Cot::is_canonical(const RCP<const Basic> &arg)
@@ -502,9 +535,12 @@ bool Cot::is_canonical(const RCP<const Basic> &arg)
     // e.g cot(k*pi/12)
     RCP<const Integer> n;
     RCP<const Basic> r;
-    bool b = get_pi_shift(arg, outArg(n), outArg(r));
-    if (b)
+    if (get_pi_shift(arg, outArg(n), outArg(r))) {
         return false;
+    }
+    if (is_a_Number(*arg) && !static_cast<const Number &>(*arg).is_exact()) {
+        return false;
+    }
     return true;
 }
 
@@ -519,13 +555,16 @@ bool Cot::__eq__(const Basic &o) const
 
 int Cot::compare(const Basic &o) const
 {
-    CSYMPY_ASSERT(is_a<Cot>(o))
+    SYMENGINE_ASSERT(is_a<Cot>(o))
     const Cot &s = static_cast<const Cot &>(o);
     return get_arg()->__cmp__(*(s.get_arg()));
 }
 
 RCP<const Basic> cot(const RCP<const Basic> &arg)
 {
+    if (is_a_Number(*arg) && !static_cast<const Number &>(*arg).is_exact()) {
+        return static_cast<const Number &>(*arg).get_eval().cot(*arg);
+    }
     RCP<const Basic> ret_arg;
     int index;
     int sign;
@@ -533,11 +572,12 @@ RCP<const Basic> cot(const RCP<const Basic> &arg)
                       outArg(ret_arg), index, sign); //output
 
     if (conjugate) {
-        // cos has to be returned
-        if (sign == 1)
-            return rcp(new Tan(ret_arg));
-        else
-            return mul(minus_one, rcp(new Tan(ret_arg)));
+        // tan has to be returned
+        if (sign == 1) {
+            return tan(ret_arg);
+        } else {
+            return mul(minus_one, tan(ret_arg));
+        }
     }
     else {
         if (eq(ret_arg, zero)) {
@@ -545,10 +585,15 @@ RCP<const Basic> cot(const RCP<const Basic> &arg)
                    div(sin_table[(index + 6) % 24], sin_table[index]));
         }
         else {
-            if (sign == 1)
-                return rcp(new Cot(ret_arg));
-            else
-                return mul(minus_one, rcp(new Cot(ret_arg)));
+            if (sign == 1) {
+                if (neq(ret_arg, arg)) {
+                    return cot(ret_arg);
+                } else {
+                    return rcp(new Cot(ret_arg));
+                }
+            } else {
+                return mul(minus_one, cot(ret_arg));
+            }
         }
     }
 }
@@ -558,7 +603,7 @@ RCP<const Basic> cot(const RCP<const Basic> &arg)
 Csc::Csc(const RCP<const Basic> &arg)
     : TrigFunction(arg)
 {
-    CSYMPY_ASSERT(is_canonical(arg))
+    SYMENGINE_ASSERT(is_canonical(arg))
 }
 
 bool Csc::is_canonical(const RCP<const Basic> &arg)
@@ -571,9 +616,12 @@ bool Csc::is_canonical(const RCP<const Basic> &arg)
     // e.g csc(k*pi/12)
     RCP<const Integer> n;
     RCP<const Basic> r;
-    bool b = get_pi_shift(arg, outArg(n), outArg(r));
-    if (b)
+    if (get_pi_shift(arg, outArg(n), outArg(r))) {
         return false;
+    }
+    if (is_a_Number(*arg) && !static_cast<const Number &>(*arg).is_exact()) {
+        return false;
+    }
     return true;
 }
 
@@ -587,13 +635,16 @@ bool Csc::__eq__(const Basic &o) const
 
 int Csc::compare(const Basic &o) const
 {
-    CSYMPY_ASSERT(is_a<Csc>(o))
+    SYMENGINE_ASSERT(is_a<Csc>(o))
     const Csc &s = static_cast<const Csc &>(o);
     return get_arg()->__cmp__(*(s.get_arg()));
 }
 
 RCP<const Basic> csc(const RCP<const Basic> &arg)
 {
+    if (is_a_Number(*arg) && !static_cast<const Number &>(*arg).is_exact()) {
+        return static_cast<const Number &>(*arg).get_eval().csc(*arg);
+    }
     RCP<const Basic> ret_arg;
     int index;
     int sign;
@@ -602,10 +653,11 @@ RCP<const Basic> csc(const RCP<const Basic> &arg)
 
     if (conjugate) {
         // cos has to be returned
-        if (sign == 1)
-            return rcp(new Sec(ret_arg));
-        else
-            return mul(minus_one, rcp(new Sec(ret_arg)));
+        if (sign == 1) {
+            return sec(ret_arg);
+        } else {
+            return mul(minus_one, sec(ret_arg));
+        }
     }
     else {
         if (eq(ret_arg, zero)) {
@@ -613,10 +665,15 @@ RCP<const Basic> csc(const RCP<const Basic> &arg)
                    div(one, sin_table[index]));
         }
         else {
-            if (sign == 1)
-                return rcp(new Csc(ret_arg));
-            else
-                return mul(minus_one, rcp(new Csc(ret_arg)));
+            if (sign == 1) {
+                if (neq(ret_arg, arg)) {
+                    return csc(ret_arg);
+                } else {
+                    return rcp(new Csc(ret_arg));
+                }
+            } else {
+                return mul(minus_one, csc(ret_arg));
+            }
         }
     }
 }
@@ -627,7 +684,7 @@ RCP<const Basic> csc(const RCP<const Basic> &arg)
 Sec::Sec(const RCP<const Basic> &arg)
     : TrigFunction(arg)
 {
-    CSYMPY_ASSERT(is_canonical(arg))
+    SYMENGINE_ASSERT(is_canonical(arg))
 }
 
 bool Sec::is_canonical(const RCP<const Basic> &arg)
@@ -640,9 +697,12 @@ bool Sec::is_canonical(const RCP<const Basic> &arg)
     // e.g sec(k*pi/12)
     RCP<const Integer> n;
     RCP<const Basic> r;
-    bool b = get_pi_shift(arg, outArg(n), outArg(r));
-    if (b)
+    if (get_pi_shift(arg, outArg(n), outArg(r))) {
         return false;
+    }
+    if (is_a_Number(*arg) && !static_cast<const Number &>(*arg).is_exact()) {
+        return false;
+    }
     return true;
 }
 
@@ -655,13 +715,16 @@ bool Sec::__eq__(const Basic &o) const
 }
 
 int Sec::compare(const Basic &o) const
-{    CSYMPY_ASSERT(is_a<Sec>(o))
+{    SYMENGINE_ASSERT(is_a<Sec>(o))
     const Sec &s = static_cast<const Sec &>(o);
     return get_arg()->__cmp__(*(s.get_arg()));
 }
 
 RCP<const Basic> sec(const RCP<const Basic> &arg)
 {
+    if (is_a_Number(*arg) && !static_cast<const Number &>(*arg).is_exact()) {
+        return static_cast<const Number &>(*arg).get_eval().sec(*arg);
+    }
     RCP<const Basic> ret_arg;
     int index;
     int sign;
@@ -669,22 +732,27 @@ RCP<const Basic> sec(const RCP<const Basic> &arg)
                       outArg(ret_arg), index, sign); //output
 
     if (conjugate) {
-        // cos has to be returned
-        if (sign == 1)
-            return rcp(new Csc(ret_arg));
-        else
-            return mul(minus_one, rcp(new Csc(ret_arg)));
+        // csc has to be returned
+        if (sign == 1) {
+            return csc(ret_arg);
+        } else {
+            return mul(minus_one, csc(ret_arg));
+        }
     }
     else {
         if (eq(ret_arg, zero)) {
             return mul(integer(sign),
                    div(one, sin_table[(index + 6)% 24]));
-        }
-        else {
-            if (sign == 1)
-                return rcp(new Sec(ret_arg));
-            else
-                return mul(minus_one, rcp(new Sec(ret_arg)));
+        } else {
+            if (sign == 1) {
+                if (neq(ret_arg, arg)) {
+                    return sec(ret_arg);
+                } else {
+                    return rcp(new Sec(ret_arg));
+                }
+            } else {
+                return mul(minus_one, sec(ret_arg));
+            }
         }
     }
 }
@@ -693,7 +761,7 @@ RCP<const Basic> sec(const RCP<const Basic> &arg)
 ASin::ASin(const RCP<const Basic> &arg)
     : TrigFunction(arg)
 {
-    CSYMPY_ASSERT(is_canonical(arg))
+    SYMENGINE_ASSERT(is_canonical(arg))
 }
 
 bool ASin::is_canonical(const RCP<const Basic> &arg)
@@ -702,11 +770,13 @@ bool ASin::is_canonical(const RCP<const Basic> &arg)
     if (eq(arg, zero) || eq(arg, one) || eq(arg, minus_one))
         return false;
     RCP<const Basic> index;
-    bool b = inverse_lookup(inverse_cst, get_arg(), outArg(index));
-    if (b)
+    if (inverse_lookup(inverse_cst, get_arg(), outArg(index))) {
         return false;
-    else
-        return true;
+    }
+    if (is_a_Number(*arg) && !static_cast<const Number &>(*arg).is_exact()) {
+        return false;
+    }
+    return true;
 }
 
 bool ASin::__eq__(const Basic &o) const
@@ -720,7 +790,7 @@ bool ASin::__eq__(const Basic &o) const
 
 int ASin::compare(const Basic &o) const
 {
-    CSYMPY_ASSERT(is_a<ASin>(o))
+    SYMENGINE_ASSERT(is_a<ASin>(o))
     const ASin &s = static_cast<const ASin &>(o);
     return get_arg()->__cmp__(*(s.get_arg()));
 }
@@ -730,6 +800,9 @@ RCP<const Basic> asin(const RCP<const Basic> &arg)
     if (eq(arg, zero)) return zero;
     else if (eq(arg, one)) return div(pi, i2);
     else if (eq(arg, minus_one)) return mul(minus_one, div(pi, i2));
+    else if (is_a_Number(*arg) && !static_cast<const Number &>(*arg).is_exact()) {
+        return static_cast<const Number &>(*arg).get_eval().asin(*arg);
+    }
 
     RCP<const Basic> index;
     bool b = inverse_lookup(inverse_cst, arg, outArg(index));
@@ -744,7 +817,7 @@ RCP<const Basic> asin(const RCP<const Basic> &arg)
 ACos::ACos(const RCP<const Basic> &arg)
     : TrigFunction(arg)
 {
-    CSYMPY_ASSERT(is_canonical(arg))
+    SYMENGINE_ASSERT(is_canonical(arg))
 }
 
 bool ACos::is_canonical(const RCP<const Basic> &arg)
@@ -753,11 +826,13 @@ bool ACos::is_canonical(const RCP<const Basic> &arg)
     if (eq(arg, zero) || eq(arg, one) || eq(arg, minus_one))
         return false;
     RCP<const Basic> index;
-    bool b = inverse_lookup(inverse_cst, get_arg(), outArg(index));
-    if (b)
+    if (inverse_lookup(inverse_cst, get_arg(), outArg(index))) {
         return false;
-    else
-        return true;
+    }
+    if (is_a_Number(*arg) && !static_cast<const Number &>(*arg).is_exact()) {
+        return false;
+    }
+    return true;
 }
 
 bool ACos::__eq__(const Basic &o) const
@@ -771,7 +846,7 @@ bool ACos::__eq__(const Basic &o) const
 
 int ACos::compare(const Basic &o) const
 {
-    CSYMPY_ASSERT(is_a<ACos>(o))
+    SYMENGINE_ASSERT(is_a<ACos>(o))
     const ACos &s = static_cast<const ACos &>(o);
     return get_arg()->__cmp__(*(s.get_arg()));
 }
@@ -781,6 +856,9 @@ RCP<const Basic> acos(const RCP<const Basic> &arg)
     if (eq(arg, zero)) return div(pi, i2);
     else if (eq(arg, one)) return zero;
     else if (eq(arg, minus_one)) return pi;
+    else if (is_a_Number(*arg) && !static_cast<const Number &>(*arg).is_exact()) {
+        return static_cast<const Number &>(*arg).get_eval().acos(*arg);
+    }
 
     RCP<const Basic> index;
     bool b = inverse_lookup(inverse_cst, arg, outArg(index));
@@ -799,7 +877,7 @@ RCP<const Basic> acos(const RCP<const Basic> &arg)
 ASec::ASec(const RCP<const Basic> &arg)
     : TrigFunction(arg)
 {
-    CSYMPY_ASSERT(is_canonical(arg))
+    SYMENGINE_ASSERT(is_canonical(arg))
 }
 
 bool ASec::is_canonical(const RCP<const Basic> &arg)
@@ -808,11 +886,12 @@ bool ASec::is_canonical(const RCP<const Basic> &arg)
     if (eq(arg, one) || eq(arg, minus_one))
         return false;
     RCP<const Basic> index;
-    bool b = inverse_lookup(inverse_cst, div(one, get_arg()), outArg(index));
-    if (b)
+    if (inverse_lookup(inverse_cst, div(one, get_arg()), outArg(index))) {
         return false;
-    else
-        return true;
+    } else if (is_a_Number(*arg) && !static_cast<const Number &>(*arg).is_exact()) {
+        return false;
+    }
+    return true;
 }
 
 bool ASec::__eq__(const Basic &o) const
@@ -826,7 +905,7 @@ bool ASec::__eq__(const Basic &o) const
 
 int ASec::compare(const Basic &o) const
 {
-    CSYMPY_ASSERT(is_a<ASec>(o))
+    SYMENGINE_ASSERT(is_a<ASec>(o))
     const ASec &s = static_cast<const ASec &>(o);
     return get_arg()->__cmp__(*(s.get_arg()));
 }
@@ -835,6 +914,9 @@ RCP<const Basic> asec(const RCP<const Basic> &arg)
 {
     if (eq(arg, one)) return zero;
     else if (eq(arg, minus_one)) return pi;
+    else if (is_a_Number(*arg) && !static_cast<const Number &>(*arg).is_exact()) {
+        return static_cast<const Number &>(*arg).get_eval().asec(*arg);
+    }
 
     RCP<const Basic> index;
     bool b = inverse_lookup(inverse_cst, div(one, arg), outArg(index));
@@ -853,7 +935,7 @@ RCP<const Basic> asec(const RCP<const Basic> &arg)
 ACsc::ACsc(const RCP<const Basic> &arg)
     : TrigFunction(arg)
 {
-    CSYMPY_ASSERT(is_canonical(arg))
+    SYMENGINE_ASSERT(is_canonical(arg))
 }
 
 bool ACsc::is_canonical(const RCP<const Basic> &arg)
@@ -862,11 +944,13 @@ bool ACsc::is_canonical(const RCP<const Basic> &arg)
     if (eq(arg, one) || eq(arg, minus_one))
         return false;
     RCP<const Basic> index;
-    bool b = inverse_lookup(inverse_cst, div(one, get_arg()), outArg(index));
-    if (b)
+    if (inverse_lookup(inverse_cst, div(one, arg), outArg(index))) {
         return false;
-    else
-        return true;
+    }
+    if (is_a_Number(*arg) && !static_cast<const Number &>(*arg).is_exact()) {
+        return false;
+    }
+    return true;
 }
 
 bool ACsc::__eq__(const Basic &o) const
@@ -880,7 +964,7 @@ bool ACsc::__eq__(const Basic &o) const
 
 int ACsc::compare(const Basic &o) const
 {
-    CSYMPY_ASSERT(is_a<ACsc>(o))
+    SYMENGINE_ASSERT(is_a<ACsc>(o))
     const ACsc &s = static_cast<const ACsc &>(o);
     return get_arg()->__cmp__(*(s.get_arg()));
 }
@@ -889,6 +973,9 @@ RCP<const Basic> acsc(const RCP<const Basic> &arg)
 {
     if (eq(arg, one)) return div(pi, i2);
     else if (eq(arg, minus_one)) return div(pi, im2);
+    else if (is_a_Number(*arg) && !static_cast<const Number &>(*arg).is_exact()) {
+        return static_cast<const Number &>(*arg).get_eval().acsc(*arg);
+    }
 
     RCP<const Basic> index;
     bool b = inverse_lookup(inverse_cst, div(one, arg), outArg(index));
@@ -902,7 +989,7 @@ RCP<const Basic> acsc(const RCP<const Basic> &arg)
 ATan::ATan(const RCP<const Basic> &arg)
     : TrigFunction(arg)
 {
-    CSYMPY_ASSERT(is_canonical(arg))
+    SYMENGINE_ASSERT(is_canonical(arg))
 }
 
 bool ATan::is_canonical(const RCP<const Basic> &arg)
@@ -911,11 +998,13 @@ bool ATan::is_canonical(const RCP<const Basic> &arg)
     if (eq(arg, zero) || eq(arg, one) || eq(arg, minus_one))
         return false;
     RCP<const Basic> index;
-    bool b = inverse_lookup(inverse_tct, get_arg(), outArg(index));
-    if (b)
+    if (inverse_lookup(inverse_tct, get_arg(), outArg(index))) {
         return false;
-    else
-        return true;
+    }
+    if (is_a_Number(*arg) && !static_cast<const Number &>(*arg).is_exact()) {
+        return false;
+    }
+    return true;
 }
 
 bool ATan::__eq__(const Basic &o) const
@@ -929,7 +1018,7 @@ bool ATan::__eq__(const Basic &o) const
 
 int ATan::compare(const Basic &o) const
 {
-    CSYMPY_ASSERT(is_a<ATan>(o))
+    SYMENGINE_ASSERT(is_a<ATan>(o))
     const ATan &s = static_cast<const ATan &>(o);
     return get_arg()->__cmp__(*(s.get_arg()));
 }
@@ -939,6 +1028,9 @@ RCP<const Basic> atan(const RCP<const Basic> &arg)
     if (eq(arg, zero)) return zero;
     else if (eq(arg, one)) return div(pi, mul(i2, i2));
     else if (eq(arg, minus_one)) return mul(minus_one, div(pi, mul(i2, i2)));
+    else if (is_a_Number(*arg) && !static_cast<const Number &>(*arg).is_exact()) {
+        return static_cast<const Number &>(*arg).get_eval().atan(*arg);
+    }
 
     RCP<const Basic> index;
     bool b = inverse_lookup(inverse_tct, arg, outArg(index));
@@ -952,7 +1044,7 @@ RCP<const Basic> atan(const RCP<const Basic> &arg)
 ACot::ACot(const RCP<const Basic> &arg)
     : TrigFunction(arg)
 {
-    CSYMPY_ASSERT(is_canonical(arg))
+    SYMENGINE_ASSERT(is_canonical(arg))
 }
 
 bool ACot::is_canonical(const RCP<const Basic> &arg)
@@ -961,11 +1053,13 @@ bool ACot::is_canonical(const RCP<const Basic> &arg)
     if (eq(arg, zero) || eq(arg, one) || eq(arg, minus_one))
         return false;
     RCP<const Basic> index;
-    bool b = inverse_lookup(inverse_cst, get_arg(), outArg(index));
-    if (b)
+    if (inverse_lookup(inverse_tct, arg, outArg(index))) {
         return false;
-    else
-        return true;
+    }
+    if (is_a_Number(*arg) && !static_cast<const Number &>(*arg).is_exact()) {
+        return false;
+    }
+    return true;
 }
 
 bool ACot::__eq__(const Basic &o) const
@@ -979,7 +1073,7 @@ bool ACot::__eq__(const Basic &o) const
 
 int ACot::compare(const Basic &o) const
 {
-    CSYMPY_ASSERT(is_a<ACot>(o))
+    SYMENGINE_ASSERT(is_a<ACot>(o))
     const ACot &s = static_cast<const ACot &>(o);
     return get_arg()->__cmp__(*(s.get_arg()));
 }
@@ -989,6 +1083,9 @@ RCP<const Basic> acot(const RCP<const Basic> &arg)
     if (eq(arg, zero)) return div(pi, i2);
     else if (eq(arg, one)) return div(pi, mul(i2, i2));
     else if (eq(arg, minus_one)) return mul(i3, div(pi, mul(i2, i2)));
+    else if (is_a_Number(*arg) && !static_cast<const Number &>(*arg).is_exact()) {
+        return static_cast<const Number &>(*arg).get_eval().acot(*arg);
+    }
 
     RCP<const Basic> index;
     bool b = inverse_lookup(inverse_tct, arg, outArg(index));
@@ -1007,7 +1104,7 @@ RCP<const Basic> acot(const RCP<const Basic> &arg)
 ATan2::ATan2(const RCP<const Basic> &num, const RCP<const Basic> &den)
     : num_{num}, den_{den}
 {
-    CSYMPY_ASSERT(is_canonical(num, den))
+    SYMENGINE_ASSERT(is_canonical(num, den))
 }
 
 bool ATan2::is_canonical(const RCP<const Basic> &num,
@@ -1037,7 +1134,7 @@ bool ATan2::__eq__(const Basic &o) const
 
 int ATan2::compare(const Basic &o) const
 {
-    CSYMPY_ASSERT(is_a<ATan2>(o))
+    SYMENGINE_ASSERT(is_a<ATan2>(o))
     const ATan2 &s = static_cast<const ATan2 &>(o);
     return div(num_, den_)->__cmp__(*div(s.num_, s.den_));
 }
@@ -1085,7 +1182,7 @@ RCP<const Basic> atan2(const RCP<const Basic> &num, const RCP<const Basic> &den)
         // Currently is_positive() and is_negative() is not implemented for
         // types other than `Number`
         // Hence this will give exact answers in case when num and den are
-        // numbers in CSymPy sense and when num and den are positive.
+        // numbers in SymEngine sense and when num and den are positive.
         // for the remaining cases in which we just return the value from
         // the lookup table.
         // TODO: update once is_positive() and is_negative() is implemented
@@ -1127,13 +1224,13 @@ RCP<const Basic> Cos::diff(const RCP<const Symbol> &x) const
 
 RCP<const Basic> Tan::diff(const RCP<const Symbol> &x) const
 {
-    RCP<const Integer> two = rcp(new Integer(2));
+    RCP<const Integer> two = integer(2);
     return mul(add(one, pow(tan(get_arg()), two)), get_arg()->diff(x));
 }
 
 RCP<const Basic> Cot::diff(const RCP<const Symbol> &x) const
 {
-    RCP<const Integer> two = rcp(new Integer(2));
+    RCP<const Integer> two = integer(2);
     return mul(mul(add(one, pow(cot(get_arg()), two)), minus_one), get_arg()->diff(x));
 }
 
@@ -1247,7 +1344,7 @@ RCP<const Basic> ACsc::create(const RCP<const Basic> &arg) const
 LambertW::LambertW(const RCP<const Basic> &arg)
     : arg_{arg}
 {
-    CSYMPY_ASSERT(is_canonical(arg))
+    SYMENGINE_ASSERT(is_canonical(arg))
 }
 
 bool LambertW::is_canonical(const RCP<const Basic> &arg)
@@ -1276,7 +1373,7 @@ bool LambertW::__eq__(const Basic &o) const
 
 int LambertW::compare(const Basic &o) const
 {
-    CSYMPY_ASSERT(is_a<LambertW>(o))
+    SYMENGINE_ASSERT(is_a<LambertW>(o))
     return arg_->__cmp__(*(static_cast<const LambertW &>(o).arg_));
 }
 
@@ -1300,13 +1397,13 @@ RCP<const Basic> lambertw(const RCP<const Basic> &arg)
 FunctionSymbol::FunctionSymbol(std::string name, const RCP<const Basic> &arg)
     : name_{name}, arg_{{arg}}
 {
-    CSYMPY_ASSERT(is_canonical(arg_))
+    SYMENGINE_ASSERT(is_canonical(arg_))
 }
 
 FunctionSymbol::FunctionSymbol(std::string name, const vec_basic &arg)
     : name_{name}, arg_{arg}
 {
-    CSYMPY_ASSERT(is_canonical(arg_))
+    SYMENGINE_ASSERT(is_canonical(arg_))
 }
 
 bool FunctionSymbol::is_canonical(const vec_basic &arg)
@@ -1334,7 +1431,7 @@ bool FunctionSymbol::__eq__(const Basic &o) const
 
 int FunctionSymbol::compare(const Basic &o) const
 {
-    CSYMPY_ASSERT(is_a<FunctionSymbol>(o))
+    SYMENGINE_ASSERT(is_a<FunctionSymbol>(o))
     const FunctionSymbol &s = static_cast<const FunctionSymbol &>(o);
     if (name_ == s.name_)
         return vec_basic_compare(arg_, s.arg_);
@@ -1409,7 +1506,7 @@ FunctionWrapper::FunctionWrapper(void* obj, std::string name, std::string hash, 
     hash_ = hash;
     dec_ref_ = dec_ref;
     comp_ = comp;
-    CSYMPY_ASSERT(is_canonical(arg_))
+    SYMENGINE_ASSERT(is_canonical(arg_))
 }
 
 FunctionWrapper::~FunctionWrapper()
@@ -1426,7 +1523,7 @@ std::size_t FunctionWrapper::__hash__() const
 
 int FunctionWrapper::compare(const Basic &o) const
 {
-    CSYMPY_ASSERT(is_a<FunctionWrapper>(o))
+    SYMENGINE_ASSERT(is_a<FunctionWrapper>(o))
     const FunctionWrapper &s = static_cast<const FunctionWrapper &>(o);
     return (*comp_)(obj_, s.obj_);
 }
@@ -1454,7 +1551,7 @@ RCP<const Basic> FunctionWrapper::diff(const RCP<const Symbol> &x) const
 Derivative::Derivative(const RCP<const Basic> &arg, const vec_basic &x)
     : arg_{arg}, x_{x}
 {
-    CSYMPY_ASSERT(is_canonical(arg, x))
+    SYMENGINE_ASSERT(is_canonical(arg, x))
 }
 
 bool Derivative::is_canonical(const RCP<const Basic> &arg,
@@ -1509,7 +1606,7 @@ bool Derivative::__eq__(const Basic &o) const
 
 int Derivative::compare(const Basic &o) const
 {
-    CSYMPY_ASSERT(is_a<Derivative>(o))
+    SYMENGINE_ASSERT(is_a<Derivative>(o))
     const Derivative &s = static_cast<const Derivative &>(o);
     int cmp = arg_->__cmp__(*(s.arg_));
     if (cmp != 0) return cmp;
@@ -1579,7 +1676,7 @@ RCP<const Basic> Derivative::subs(const map_basic_basic &subs_dict) const
 Subs::Subs(const RCP<const Basic> &arg, const map_basic_basic &dict)
     : arg_{arg}, dict_{dict}
 {
-    CSYMPY_ASSERT(is_canonical(arg, dict))
+    SYMENGINE_ASSERT(is_canonical(arg, dict))
 }
 
 bool Subs::is_canonical(const RCP<const Basic> &arg,
@@ -1613,7 +1710,7 @@ bool Subs::__eq__(const Basic &o) const
 
 int Subs::compare(const Basic &o) const
 {
-    CSYMPY_ASSERT(is_a<Subs>(o))
+    SYMENGINE_ASSERT(is_a<Subs>(o))
     const Subs &s = static_cast<const Subs &>(o);
     int cmp = arg_->__cmp__(*(arg_));
     if (cmp != 0) return cmp;
@@ -1717,7 +1814,7 @@ RCP<const Basic> HyperbolicFunction::subs(const map_basic_basic &subs_dict) cons
 Sinh::Sinh(const RCP<const Basic> &arg)
     : HyperbolicFunction(arg)
 {
-    CSYMPY_ASSERT(is_canonical(arg))
+    SYMENGINE_ASSERT(is_canonical(arg))
 }
 
 bool Sinh::is_canonical(const RCP<const Basic> &arg)
@@ -1725,9 +1822,12 @@ bool Sinh::is_canonical(const RCP<const Basic> &arg)
     // TODO: Add further checks for +inf -inf cases
     if (eq(arg, zero))
         return false;
-    if (is_a_Number(*arg) &&
-        rcp_static_cast<const Number>(arg)->is_negative()) {
-        return false;
+    if (is_a_Number(*arg)) {
+        if (static_cast<const Number &>(*arg).is_negative()) {
+            return false;
+        } else if (!static_cast<const Number &>(*arg).is_exact()) {
+            return false;
+        }
     }
     if (could_extract_minus(arg))
         return false;
@@ -1745,7 +1845,7 @@ bool Sinh::__eq__(const Basic &o) const
 
 int Sinh::compare(const Basic &o) const
 {
-    CSYMPY_ASSERT(is_a<Sinh>(o))
+    SYMENGINE_ASSERT(is_a<Sinh>(o))
     const Sinh &s = static_cast<const Sinh &>(o);
     return get_arg()->__cmp__(*(s.get_arg()));
 }
@@ -1753,12 +1853,16 @@ int Sinh::compare(const Basic &o) const
 RCP<const Basic> sinh(const RCP<const Basic> &arg)
 {
     if (eq(arg, zero)) return zero;
-    if (is_a_Number(*arg) &&
-        rcp_static_cast<const Number>(arg)->is_negative()) {
-        return mul(minus_one, sinh(mul(minus_one, arg)));
+    if (is_a_Number(*arg)) {
+        RCP<const Number> _arg = rcp_static_cast<const Number>(arg);
+        if (!_arg->is_exact()) {
+            return _arg->get_eval().sinh(*_arg);
+        } else if (_arg->is_negative()) {
+            return neg(sinh(zero->sub(*_arg)));
+        }
     }
     if (could_extract_minus(arg)) {
-        return mul(minus_one, sinh(mul(minus_one, arg)));
+        return neg(sinh(neg(arg)));
     }
     return rcp(new Sinh(arg));
 }
@@ -1776,7 +1880,7 @@ RCP<const Basic> Sinh::diff(const RCP<const Symbol> &x) const
 Cosh::Cosh(const RCP<const Basic> &arg)
     : HyperbolicFunction(arg)
 {
-    CSYMPY_ASSERT(is_canonical(arg))
+    SYMENGINE_ASSERT(is_canonical(arg))
 }
 
 bool Cosh::is_canonical(const RCP<const Basic> &arg)
@@ -1784,9 +1888,12 @@ bool Cosh::is_canonical(const RCP<const Basic> &arg)
     // TODO: Add further checks for +inf -inf cases
     if (eq(arg, zero))
         return false;
-    if (is_a_Number(*arg) &&
-        rcp_static_cast<const Number>(arg)->is_negative()) {
-        return false;
+    if (is_a_Number(*arg)) {
+        if (static_cast<const Number &>(*arg).is_negative()) {
+            return false;
+        } else if (!static_cast<const Number &>(*arg).is_exact()) {
+            return false;
+        }
     }
     if (could_extract_minus(arg))
         return false;
@@ -1804,7 +1911,7 @@ bool Cosh::__eq__(const Basic &o) const
 
 int Cosh::compare(const Basic &o) const
 {
-    CSYMPY_ASSERT(is_a<Cosh>(o))
+    SYMENGINE_ASSERT(is_a<Cosh>(o))
     const Cosh &s = static_cast<const Cosh &>(o);
     return get_arg()->__cmp__(*(s.get_arg()));
 }
@@ -1812,12 +1919,16 @@ int Cosh::compare(const Basic &o) const
 RCP<const Basic> cosh(const RCP<const Basic> &arg)
 {
     if (eq(arg, zero)) return one;
-    if (is_a_Number(*arg) &&
-        rcp_static_cast<const Number>(arg)->is_negative()) {
-        return cosh(mul(minus_one, arg));
+    if (is_a_Number(*arg)) {
+        RCP<const Number> _arg = rcp_static_cast<const Number>(arg);
+        if (!_arg->is_exact()) {
+            return _arg->get_eval().cosh(*_arg);
+        } else if (_arg->is_negative()) {
+            return cosh(zero->sub(*_arg));
+        }
     }
     if (could_extract_minus(arg)) {
-        return cosh(mul(minus_one, arg));
+        return cosh(neg(arg));
     }
     return rcp(new Cosh(arg));
 }
@@ -1835,7 +1946,7 @@ RCP<const Basic> Cosh::diff(const RCP<const Symbol> &x) const
 Tanh::Tanh(const RCP<const Basic> &arg)
     : HyperbolicFunction(arg)
 {
-    CSYMPY_ASSERT(is_canonical(arg))
+    SYMENGINE_ASSERT(is_canonical(arg))
 }
 
 bool Tanh::is_canonical(const RCP<const Basic> &arg)
@@ -1843,9 +1954,12 @@ bool Tanh::is_canonical(const RCP<const Basic> &arg)
     // TODO: Add further checks for +inf -inf cases
     if (eq(arg, zero))
         return false;
-    if (is_a_Number(*arg) &&
-        rcp_static_cast<const Number>(arg)->is_negative()) {
-        return false;
+    if (is_a_Number(*arg)) {
+        if (static_cast<const Number &>(*arg).is_negative()) {
+            return false;
+        } else if (!static_cast<const Number &>(*arg).is_exact()) {
+            return false;
+        }
     }
     if (could_extract_minus(arg))
         return false;
@@ -1863,7 +1977,7 @@ bool Tanh::__eq__(const Basic &o) const
 
 int Tanh::compare(const Basic &o) const
 {
-    CSYMPY_ASSERT(is_a<Tanh>(o))
+    SYMENGINE_ASSERT(is_a<Tanh>(o))
     const Tanh &s = static_cast<const Tanh &>(o);
     return get_arg()->__cmp__(*(s.get_arg()));
 }
@@ -1871,12 +1985,16 @@ int Tanh::compare(const Basic &o) const
 RCP<const Basic> tanh(const RCP<const Basic> &arg)
 {
     if (eq(arg, zero)) return zero;
-    if (is_a_Number(*arg) &&
-        rcp_static_cast<const Number>(arg)->is_negative()) {
-        return mul(minus_one, tanh(mul(minus_one, arg)));
+    if (is_a_Number(*arg)) {
+        RCP<const Number> _arg = rcp_static_cast<const Number>(arg);
+        if (!_arg->is_exact()) {
+            return _arg->get_eval().tanh(*_arg);
+        } else if (_arg->is_negative()) {
+            return neg(tanh(zero->sub(*_arg)));
+        }
     }
     if (could_extract_minus(arg)) {
-        return mul(minus_one, tanh(mul(minus_one, arg)));
+        return neg(tanh(neg(arg)));
     }
     return rcp(new Tanh(arg));
 }
@@ -1896,7 +2014,7 @@ RCP<const Basic> Tanh::diff(const RCP<const Symbol> &x) const
 Coth::Coth(const RCP<const Basic> &arg)
     : HyperbolicFunction(arg)
 {
-    CSYMPY_ASSERT(is_canonical(arg))
+    SYMENGINE_ASSERT(is_canonical(arg))
 }
 
 bool Coth::is_canonical(const RCP<const Basic> &arg)
@@ -1904,9 +2022,12 @@ bool Coth::is_canonical(const RCP<const Basic> &arg)
     // TODO: Add further checks for +inf -inf cases
     if (eq(arg, zero))
         return false;
-    if (is_a_Number(*arg) &&
-        rcp_static_cast<const Number>(arg)->is_negative()) {
-        return false;
+    if (is_a_Number(*arg)) {
+        if (static_cast<const Number &>(*arg).is_negative()) {
+            return false;
+        } else if (!static_cast<const Number &>(*arg).is_exact()) {
+            return false;
+        }
     }
     if (could_extract_minus(arg))
         return false;
@@ -1924,7 +2045,7 @@ bool Coth::__eq__(const Basic &o) const
 
 int Coth::compare(const Basic &o) const
 {
-    CSYMPY_ASSERT(is_a<Coth>(o))
+    SYMENGINE_ASSERT(is_a<Coth>(o))
     const Coth &s = static_cast<const Coth &>(o);
     return get_arg()->__cmp__(*(s.get_arg()));
 }
@@ -1932,15 +2053,19 @@ int Coth::compare(const Basic &o) const
 RCP<const Basic> coth(const RCP<const Basic> &arg)
 {
     if (eq(arg, zero)) {
-        // Answer is infinity. Yet to be implemented in CSymPy
+        // Answer is infinity. Yet to be implemented in SymEngine
         throw std::runtime_error("Not implemented.");
     }
-    if (is_a_Number(*arg) &&
-        rcp_static_cast<const Number>(arg)->is_negative()) {
-        return mul(minus_one, coth(mul(minus_one, arg)));
+    if (is_a_Number(*arg)) {
+        RCP<const Number> _arg = rcp_static_cast<const Number>(arg);
+        if (!_arg->is_exact()) {
+            return _arg->get_eval().coth(*_arg);
+        } else if (_arg->is_negative()) {
+            return neg(coth(zero->sub(*_arg)));
+        }
     }
     if (could_extract_minus(arg)) {
-        return mul(minus_one, coth(mul(minus_one, arg)));
+        return neg(coth(neg(arg)));
     }
     return rcp(new Coth(arg));
 }
@@ -1960,7 +2085,7 @@ RCP<const Basic> Coth::diff(const RCP<const Symbol> &x) const
 ASinh::ASinh(const RCP<const Basic> &arg)
     : HyperbolicFunction(arg)
 {
-    CSYMPY_ASSERT(is_canonical(arg))
+    SYMENGINE_ASSERT(is_canonical(arg))
 }
 
 bool ASinh::is_canonical(const RCP<const Basic> &arg)
@@ -1968,9 +2093,12 @@ bool ASinh::is_canonical(const RCP<const Basic> &arg)
     // TODO: Add further checks for +inf -inf cases
     if (eq(arg, zero) || eq(arg, one) || eq(arg, minus_one))
         return false;
-    if (is_a_Number(*arg) &&
-        rcp_static_cast<const Number>(arg)->is_negative()) {
-        return false;
+    if (is_a_Number(*arg)) {
+        if (static_cast<const Number &>(*arg).is_negative()) {
+            return false;
+        } else if (!static_cast<const Number &>(*arg).is_exact()) {
+            return false;
+        }
     }
     if (could_extract_minus(arg))
         return false;
@@ -1988,7 +2116,7 @@ bool ASinh::__eq__(const Basic &o) const
 
 int ASinh::compare(const Basic &o) const
 {
-    CSYMPY_ASSERT(is_a<ASinh>(o))
+    SYMENGINE_ASSERT(is_a<ASinh>(o))
     const ASinh &s = static_cast<const ASinh &>(o);
     return get_arg()->__cmp__(*(s.get_arg()));
 }
@@ -1998,25 +2126,29 @@ RCP<const Basic> asinh(const RCP<const Basic> &arg)
     if (eq(arg, zero)) return zero;
     if (eq(arg, one)) return log(add(one, sq2));
     if (eq(arg, minus_one)) return log(sub(sq2, one));
-    if (is_a_Number(*arg) &&
-        rcp_static_cast<const Number>(arg)->is_negative()) {
-        return mul(minus_one, asinh(mul(minus_one, arg)));
+    if (is_a_Number(*arg)) {
+        RCP<const Number> _arg = rcp_static_cast<const Number>(arg);
+        if (!_arg->is_exact()) {
+            return _arg->get_eval().asinh(*_arg);
+        } else if (_arg->is_negative()) {
+            return neg(asinh(zero->sub(*_arg)));
+        }
     }
     if (could_extract_minus(arg)) {
-        return mul(minus_one, asinh(mul(minus_one, arg)));
+        return neg(asinh(neg(arg)));
     }
     return rcp(new ASinh(arg));
 }
 
 RCP<const Basic> ASinh::diff(const RCP<const Symbol> &x) const
 {
-    return mul(div(one, sqrt(add(pow(x, i2), one))), get_arg()->diff(x));
+    return mul(div(one, sqrt(add(pow(get_arg(), i2), one))), get_arg()->diff(x));
 }
 
 ACosh::ACosh(const RCP<const Basic> &arg)
     : HyperbolicFunction(arg)
 {
-    CSYMPY_ASSERT(is_canonical(arg))
+    SYMENGINE_ASSERT(is_canonical(arg))
 }
 
 bool ACosh::is_canonical(const RCP<const Basic> &arg)
@@ -2025,6 +2157,9 @@ bool ACosh::is_canonical(const RCP<const Basic> &arg)
     // TODO: Lookup into a cst table once complex is implemented
     if (eq(arg, one))
         return false;
+    if (is_a_Number(*arg) && !static_cast<const Number &>(*arg).is_exact()) {
+        return false;
+    }
     return true;
 }
 
@@ -2039,7 +2174,7 @@ bool ACosh::__eq__(const Basic &o) const
 
 int ACosh::compare(const Basic &o) const
 {
-    CSYMPY_ASSERT(is_a<ACosh>(o))
+    SYMENGINE_ASSERT(is_a<ACosh>(o))
     const ACosh &s = static_cast<const ACosh &>(o);
     return get_arg()->__cmp__(*(s.get_arg()));
 }
@@ -2048,18 +2183,21 @@ RCP<const Basic> acosh(const RCP<const Basic> &arg)
 {
     // TODO: Lookup into a cst table once complex is implemented
     if (eq(arg, one)) return zero;
+    if (is_a_Number(*arg) && !static_cast<const Number &>(*arg).is_exact()) {
+        return static_cast<const Number &>(*arg).get_eval().acosh(*arg);
+    }
     return rcp(new ACosh(arg));
 }
 
 RCP<const Basic> ACosh::diff(const RCP<const Symbol> &x) const
 {
-    return mul(div(one, sqrt(sub(pow(x, i2), one))), get_arg()->diff(x));
+    return mul(div(one, sqrt(sub(pow(get_arg(), i2), one))), get_arg()->diff(x));
 }
 
 ATanh::ATanh(const RCP<const Basic> &arg)
     : HyperbolicFunction(arg)
 {
-    CSYMPY_ASSERT(is_canonical(arg))
+    SYMENGINE_ASSERT(is_canonical(arg))
 }
 
 bool ATanh::is_canonical(const RCP<const Basic> &arg)
@@ -2067,9 +2205,12 @@ bool ATanh::is_canonical(const RCP<const Basic> &arg)
     // TODO: Add further checks for +inf -inf cases
     if (eq(arg, zero))
         return false;
-    if (is_a_Number(*arg) &&
-        rcp_static_cast<const Number>(arg)->is_negative()) {
-        return false;
+    if (is_a_Number(*arg)) {
+        if (static_cast<const Number &>(*arg).is_negative()) {
+            return false;
+        } else if (!static_cast<const Number &>(*arg).is_exact()) {
+            return false;
+        }
     }
     if (could_extract_minus(arg))
         return false;
@@ -2087,7 +2228,7 @@ bool ATanh::__eq__(const Basic &o) const
 
 int ATanh::compare(const Basic &o) const
 {
-    CSYMPY_ASSERT(is_a<ATanh>(o))
+    SYMENGINE_ASSERT(is_a<ATanh>(o))
     const ATanh &s = static_cast<const ATanh &>(o);
     return get_arg()->__cmp__(*(s.get_arg()));
 }
@@ -2095,33 +2236,40 @@ int ATanh::compare(const Basic &o) const
 RCP<const Basic> atanh(const RCP<const Basic> &arg)
 {
     if (eq(arg, zero)) return zero;
-    if (is_a_Number(*arg) &&
-        rcp_static_cast<const Number>(arg)->is_negative()) {
-        return mul(minus_one, atanh(mul(minus_one, arg)));
+    if (is_a_Number(*arg)) {
+        RCP<const Number> _arg = rcp_static_cast<const Number>(arg);
+        if (!_arg->is_exact()) {
+            return _arg->get_eval().atanh(*_arg);
+        } else if (_arg->is_negative()) {
+            return neg(atanh(zero->sub(*_arg)));
+        }
     }
     if (could_extract_minus(arg)) {
-        return mul(minus_one, atanh(mul(minus_one, arg)));
+        return neg(atanh(neg(arg)));
     }
     return rcp(new ATanh(arg));
 }
 
 RCP<const Basic> ATanh::diff(const RCP<const Symbol> &x) const
 {
-    return mul(div(one, sub(one, pow(x, i2))), get_arg()->diff(x));
+    return mul(div(one, sub(one, pow(get_arg(), i2))), get_arg()->diff(x));
 }
 
 ACoth::ACoth(const RCP<const Basic> &arg)
     : HyperbolicFunction(arg)
 {
-    CSYMPY_ASSERT(is_canonical(arg))
+    SYMENGINE_ASSERT(is_canonical(arg))
 }
 
 bool ACoth::is_canonical(const RCP<const Basic> &arg)
 {
     // TODO: Add further checks for +inf -inf cases
-    if (is_a_Number(*arg) &&
-        rcp_static_cast<const Number>(arg)->is_negative()) {
-        return false;
+    if (is_a_Number(*arg)) {
+        if (static_cast<const Number &>(*arg).is_negative()) {
+            return false;
+        } else if (!static_cast<const Number &>(*arg).is_exact()) {
+            return false;
+        }
     }
     if (could_extract_minus(arg))
         return false;
@@ -2139,19 +2287,23 @@ bool ACoth::__eq__(const Basic &o) const
 
 int ACoth::compare(const Basic &o) const
 {
-    CSYMPY_ASSERT(is_a<ACoth>(o))
+    SYMENGINE_ASSERT(is_a<ACoth>(o))
     const ACoth &s = static_cast<const ACoth &>(o);
     return get_arg()->__cmp__(*(s.get_arg()));
 }
 
 RCP<const Basic> acoth(const RCP<const Basic> &arg)
 {
-    if (is_a_Number(*arg) &&
-        rcp_static_cast<const Number>(arg)->is_negative()) {
-        return mul(minus_one, acoth(mul(minus_one, arg)));
+    if (is_a_Number(*arg)) {
+        RCP<const Number> _arg = rcp_static_cast<const Number>(arg);
+        if (!_arg->is_exact()) {
+            return _arg->get_eval().acoth(*_arg);
+        } else if (_arg->is_negative()) {
+            return neg(acoth(zero->sub(*_arg)));
+        }
     }
     if (could_extract_minus(arg)) {
-        return mul(minus_one, acoth(mul(minus_one, arg)));
+        return neg(acoth(neg(arg)));
     }
     return rcp(new ACoth(arg));
 }
@@ -2164,7 +2316,7 @@ RCP<const Basic> ACoth::diff(const RCP<const Symbol> &x) const
 ASech::ASech(const RCP<const Basic> &arg)
     : HyperbolicFunction(arg)
 {
-    CSYMPY_ASSERT(is_canonical(arg))
+    SYMENGINE_ASSERT(is_canonical(arg))
 }
 
 bool ASech::is_canonical(const RCP<const Basic> &arg)
@@ -2187,7 +2339,7 @@ bool ASech::__eq__(const Basic &o) const
 
 int ASech::compare(const Basic &o) const
 {
-    CSYMPY_ASSERT(is_a<ASech>(o))
+    SYMENGINE_ASSERT(is_a<ASech>(o))
     const ASech &s = static_cast<const ASech &>(o);
     return get_arg()->__cmp__(*(s.get_arg()));
 }
@@ -2252,7 +2404,7 @@ RCP<const Basic> ASech::create(const RCP<const Basic> &arg) const
 KroneckerDelta::KroneckerDelta(const RCP<const Basic> &i, const RCP<const Basic> &j)
     :i_{i}, j_{j}
 {
-    CSYMPY_ASSERT(is_canonical(i_, j_))
+    SYMENGINE_ASSERT(is_canonical(i_, j_))
 }
 
 bool KroneckerDelta::is_canonical(const RCP<const Basic> &i, const RCP<const Basic> &j)
@@ -2280,7 +2432,7 @@ bool KroneckerDelta::__eq__(const Basic &o) const
 
 int KroneckerDelta::compare(const Basic &o) const
 {
-    CSYMPY_ASSERT(is_a<KroneckerDelta>(o))
+    SYMENGINE_ASSERT(is_a<KroneckerDelta>(o))
     const KroneckerDelta &s = static_cast<const KroneckerDelta &>(o);
     return i_->__cmp__(*(s.i_));
 }
@@ -2325,7 +2477,7 @@ bool has_dup(const vec_basic &arg)
 LeviCivita::LeviCivita(const vec_basic&& arg)
     :arg_{std::move(arg)}
 {
-    CSYMPY_ASSERT(is_canonical(arg_))
+    SYMENGINE_ASSERT(is_canonical(arg_))
 }
 
 bool LeviCivita::is_canonical(const vec_basic &arg)
@@ -2357,7 +2509,7 @@ bool LeviCivita::__eq__(const Basic &o) const
 
 int LeviCivita::compare(const Basic &o) const
 {
-    CSYMPY_ASSERT(is_a<LeviCivita>(o))
+    SYMENGINE_ASSERT(is_a<LeviCivita>(o))
     const LeviCivita &s = static_cast<const LeviCivita &>(o);
     // # of elements
     if (arg_.size() != s.arg_.size())
@@ -2411,13 +2563,13 @@ RCP<const Basic> levi_civita(const vec_basic &arg)
 Zeta::Zeta(const RCP<const Basic> &s, const RCP<const Basic> &a)
     : s_{s}, a_{a}
 {
-    CSYMPY_ASSERT(is_canonical(s_, a_))
+    SYMENGINE_ASSERT(is_canonical(s_, a_))
 }
 
 Zeta::Zeta(const RCP<const Basic> &s)
     : s_{s}, a_{one}
 {
-    CSYMPY_ASSERT(is_canonical(s_, a_))
+    SYMENGINE_ASSERT(is_canonical(s_, a_))
 }
 
 bool Zeta::is_canonical(const RCP<const Basic> &s, const RCP<const Basic> &a)
@@ -2446,7 +2598,7 @@ bool Zeta::__eq__(const Basic &o) const
 
 int Zeta::compare(const Basic &o) const
 {
-    CSYMPY_ASSERT(is_a<Zeta>(o))
+    SYMENGINE_ASSERT(is_a<Zeta>(o))
     return s_->__cmp__(*(static_cast<const Zeta &>(o).s_));
 }
 
@@ -2484,7 +2636,7 @@ RCP<const Basic> zeta(const RCP<const Basic> &s)
 Dirichlet_eta::Dirichlet_eta(const RCP<const Basic> &s)
     : s_{s}
 {
-    CSYMPY_ASSERT(is_canonical(s_))
+    SYMENGINE_ASSERT(is_canonical(s_))
 }
 
 bool Dirichlet_eta::is_canonical(const RCP<const Basic> &s)
@@ -2511,7 +2663,7 @@ bool Dirichlet_eta::__eq__(const Basic &o) const
 
 int Dirichlet_eta::compare(const Basic &o) const
 {
-    CSYMPY_ASSERT(is_a<Dirichlet_eta>(o))
+    SYMENGINE_ASSERT(is_a<Dirichlet_eta>(o))
     return s_->__cmp__(*(static_cast<const Dirichlet_eta &>(o).s_));
 }
 
@@ -2537,7 +2689,7 @@ RCP<const Basic> dirichlet_eta(const RCP<const Basic> &s)
 Gamma::Gamma(const RCP<const Basic> &arg)
     : arg_{arg}
 {
-    CSYMPY_ASSERT(is_canonical(arg_))
+    SYMENGINE_ASSERT(is_canonical(arg_))
 }
 
 bool Gamma::is_canonical(const RCP<const Basic> &arg)
@@ -2545,6 +2697,9 @@ bool Gamma::is_canonical(const RCP<const Basic> &arg)
     if (is_a<Integer>(*arg)) return false;
     if (is_a<Rational>(*arg) &&
         (rcp_static_cast<const Rational>(arg)->i.get_den()) == 2) {
+        return false;
+    }
+    if (is_a_Number(*arg) && !static_cast<const Number &>(*arg).is_exact()) {
         return false;
     }
     return true;
@@ -2567,7 +2722,7 @@ bool Gamma::__eq__(const Basic &o) const
 
 int Gamma::compare(const Basic &o) const
 {
-    CSYMPY_ASSERT(is_a<Gamma>(o))
+    SYMENGINE_ASSERT(is_a<Gamma>(o))
     return arg_->__cmp__(*(static_cast<const Gamma &>(o).arg_));
 }
 
@@ -2612,6 +2767,8 @@ RCP<const Basic> gamma(const RCP<const Basic> &arg)
         } else {
             return rcp(new Gamma(arg));
         }
+    } else if (is_a_Number(*arg) && !static_cast<const Number &>(*arg).is_exact()) {
+        return static_cast<const Number &>(*arg).get_eval().gamma(*arg);
     }
     return rcp(new Gamma(arg));
 }
@@ -2619,7 +2776,7 @@ RCP<const Basic> gamma(const RCP<const Basic> &arg)
 LowerGamma::LowerGamma(const RCP<const Basic> &s, const RCP<const Basic> &x)
     : s_{s}, x_{x}
 {
-    CSYMPY_ASSERT(is_canonical(s_, x_))
+    SYMENGINE_ASSERT(is_canonical(s_, x_))
 }
 
 bool LowerGamma::is_canonical(const RCP<const Basic> &s, const RCP<const Basic> &x)
@@ -2652,7 +2809,7 @@ bool LowerGamma::__eq__(const Basic &o) const
 
 int LowerGamma::compare(const Basic &o) const
 {
-    CSYMPY_ASSERT(is_a<LowerGamma>(o))
+    SYMENGINE_ASSERT(is_a<LowerGamma>(o))
     const LowerGamma &lg = static_cast<const LowerGamma &>(o);
     if (neq(s_, lg.s_)) {
         return s_->__cmp__(*(static_cast<const LowerGamma &>(o).s_));
@@ -2692,7 +2849,7 @@ RCP<const Basic> lowergamma(const RCP<const Basic> &s, const RCP<const Basic> &x
 UpperGamma::UpperGamma(const RCP<const Basic> &s, const RCP<const Basic> &x)
     : s_{s}, x_{x}
 {
-    CSYMPY_ASSERT(is_canonical(s_, x_))
+    SYMENGINE_ASSERT(is_canonical(s_, x_))
 }
 
 bool UpperGamma::is_canonical(const RCP<const Basic> &s, const RCP<const Basic> &x)
@@ -2725,7 +2882,7 @@ bool UpperGamma::__eq__(const Basic &o) const
 
 int UpperGamma::compare(const Basic &o) const
 {
-    CSYMPY_ASSERT(is_a<UpperGamma>(o))
+    SYMENGINE_ASSERT(is_a<UpperGamma>(o))
     const UpperGamma &ug = static_cast<const UpperGamma &>(o);
     if (neq(s_, ug.s_)) {
         return s_->__cmp__(*(static_cast<const UpperGamma &>(o).s_));
@@ -2767,12 +2924,15 @@ RCP<const Basic> uppergamma(const RCP<const Basic> &s, const RCP<const Basic> &x
 Abs::Abs(const RCP<const Basic> &arg)
     : arg_{arg}
 {
-    CSYMPY_ASSERT(is_canonical(arg_))
+    SYMENGINE_ASSERT(is_canonical(arg_))
 }
 
 bool Abs::is_canonical(const RCP<const Basic> &arg)
 {
     if (is_a<Integer>(*arg) || is_a<Rational>(*arg)) return false;
+    if (is_a_Number(*arg) && !static_cast<const Number &>(*arg).is_exact()) {
+        return false;
+    }
     return true;
 }
 
@@ -2793,7 +2953,7 @@ bool Abs::__eq__(const Basic &o) const
 
 int Abs::compare(const Basic &o) const
 {
-    CSYMPY_ASSERT(is_a<Abs>(o))
+    SYMENGINE_ASSERT(is_a<Abs>(o))
     return arg_->__cmp__(*(static_cast<const Abs &>(o).arg_));
 }
 
@@ -2822,8 +2982,10 @@ RCP<const Basic> abs(const RCP<const Basic> &arg)
         } else {
             return arg_;
         }
+    } else if (is_a_Number(*arg) && !static_cast<const Number &>(*arg).is_exact()) {
+        return static_cast<const Number &>(*arg).get_eval().abs(*arg);
     }
     return rcp(new Abs(arg));
 }
 
-} // CSymPy
+} // SymEngine

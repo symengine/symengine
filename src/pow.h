@@ -3,8 +3,8 @@
  *  Power Class 
  *
  **/
-#ifndef CSYMPY_POW_H
-#define CSYMPY_POW_H
+#ifndef SYMENGINE_POW_H
+#define SYMENGINE_POW_H
 
 #include "basic.h"
 #include "dict.h"
@@ -13,11 +13,11 @@
 #include "ntheory.h"
 #include "constants.h"
 
-namespace CSymPy {
+namespace SymEngine {
 
 class Pow : public Basic {
 public: // TODO: make this private
-    RCP<const Basic> base_, exp_; //! base^exp
+    RCP<const Basic> base_, exp_; //! base**exp
 
 public:
     IMPLEMENT_TYPEID(POW)
@@ -34,9 +34,9 @@ public:
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &base,
             const RCP<const Basic> &exp);
-    //! \return `base` of `base^exp`
+    //! \return `base` of `base**exp`
     inline RCP<const Basic> get_base() const { return base_; }
-    //! \return `exp` of `base^exp`
+    //! \return `exp` of `base**exp`
     inline RCP<const Basic> get_exp() const { return exp_; }
     //! Differentiate w.r.t Symbol `x`
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
@@ -51,7 +51,7 @@ public:
 RCP<const Basic> pow(const RCP<const Basic> &a,
         const RCP<const Basic> &b);
 
-//! Returns the natural exponential function `E^x = pow(E, x)`
+//! Returns the natural exponential function `E**x = pow(E, x)`
 RCP<const Basic> exp(const RCP<const Basic> &x);
 
 void multinomial_coefficients(int m, int n, map_vec_int &r);
@@ -88,6 +88,7 @@ public:
     virtual vec_basic get_args() const { return {arg_}; }
     //! Differentiate w.r.t Symbol `x`
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
+    virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
 
     virtual void accept(Visitor &v) const;
 };
@@ -98,6 +99,6 @@ RCP<const Basic> log(const RCP<const Basic> &arg);
 RCP<const Basic> log(const RCP<const Basic> &arg,
                     const RCP<const Basic> &b);
 
-} // CSymPy
+} // SymEngine
 
 #endif

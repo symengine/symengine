@@ -1,15 +1,15 @@
-#ifndef CSYMPY_RCP_H
-#define CSYMPY_RCP_H
+#ifndef SYMENGINE_RCP_H
+#define SYMENGINE_RCP_H
 
 #include <cstddef>
 #include <stdexcept>
 #include <string>
 
-#include "csympy_config.h"
-#include "csympy_assert.h"
+#include "symengine_config.h"
+#include "symengine_assert.h"
 
 
-#if defined(WITH_CSYMPY_RCP)
+#if defined(WITH_SYMENGINE_RCP)
 
 #else
 
@@ -19,10 +19,10 @@
 
 #endif
 
-namespace CSymPy {
+namespace SymEngine {
 
 
-#if defined(WITH_CSYMPY_RCP)
+#if defined(WITH_SYMENGINE_RCP)
 
 
 /* Ptr */
@@ -33,7 +33,7 @@ template<class T>
 class Ptr {
 public:
     inline explicit Ptr( T *ptr ) : ptr_(ptr) {
-        CSYMPY_ASSERT(ptr_ != nullptr)
+        SYMENGINE_ASSERT(ptr_ != nullptr)
     }
     inline Ptr(const Ptr<T>& ptr) : ptr_(ptr.ptr_) {}
     template<class T2> inline Ptr(const Ptr<T2>& ptr) : ptr_(ptr.get()) {}
@@ -66,7 +66,7 @@ class RCP {
 public:
     RCP(ENull null_arg = null) : ptr_(nullptr) {}
     explicit RCP(T *p) : ptr_(p) {
-        CSYMPY_ASSERT(ptr_ != nullptr)
+        SYMENGINE_ASSERT(ptr_ != nullptr)
         (ptr_->refcount_)++;
     }
     // Copy constructor
@@ -89,11 +89,11 @@ public:
         if (ptr_ != nullptr && --(ptr_->refcount_) == 0) delete ptr_;
     }
     T* operator->() const {
-        CSYMPY_ASSERT(ptr_ != nullptr)
+        SYMENGINE_ASSERT(ptr_ != nullptr)
         return ptr_;
     }
     T& operator*() const {
-        CSYMPY_ASSERT(ptr_ != nullptr)
+        SYMENGINE_ASSERT(ptr_ != nullptr)
         return *ptr_;
     }
     T* get() const { return ptr_; }
@@ -196,7 +196,7 @@ using Teuchos::print_stack_on_segfault;
 
 #endif
 
-} // CSymPy
+} // SymEngine
 
 
 #endif

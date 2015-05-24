@@ -1,7 +1,7 @@
 #include "integer.h"
 #include "rational.h"
 
-namespace CSymPy {
+namespace SymEngine {
 
 Integer::Integer(int i)
 {
@@ -32,7 +32,7 @@ bool Integer::__eq__(const Basic &o) const
 
 int Integer::compare(const Basic &o) const
 {
-    CSYMPY_ASSERT(is_a<Integer>(o))
+    SYMENGINE_ASSERT(is_a<Integer>(o))
     const Integer &s = static_cast<const Integer &>(o);
     if (i == s.i) return 0;
     return i < s.i ? -1 : 1;
@@ -145,5 +145,5 @@ int perfect_power(const Integer &n)
     return mpz_perfect_power_p(n.as_mpz().get_mpz_t());
 }
 
-} // CSymPy
+} // SymEngine
 

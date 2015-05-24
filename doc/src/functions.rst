@@ -2,4 +2,4 @@ functions
 =========
 
 .. doxygenfile:: functions.h
-    :project: csympy
+    :project: symengine

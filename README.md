@@ -1,8 +1,8 @@
-# CSymPy
+# SymEngine
 
-[![Build Status](https://travis-ci.org/sympy/csympy.png?branch=master)](https://travis-ci.org/sympy/csympy)
+[![Build Status](https://travis-ci.org/sympy/symengine.png?branch=master)](https://travis-ci.org/sympy/symengine)
 
-CSymPy is a standalone fast C++ symbolic manipulation library.
+SymEngine is a standalone fast C++ symbolic manipulation library.
 Optional thin Python wrappers allow easy usage from Python and
 integration with [SymPy](http://sympy.org/).
 
@@ -16,7 +16,7 @@ license (see the LICENSE file).
 
 We use the SymPy mailinglist: http://groups.google.com/group/sympy
 
-[![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/sympy/csympy?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/sympy/symengine?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 ## Installation
 
@@ -29,13 +29,13 @@ For RPM based systems (Fedora etc.):
 
     yum install cmake gmp-devel
 
-Install csympy:
+Install SymEngine:
 
     cmake .
     make
 
-This will configure and build CSymPy in the default Release mode with all code
-and compiler optimizations on.
+This will configure and build SymEngine in the default Release mode with all
+code and compiler optimizations on.
 
 Run tests:
 
@@ -48,7 +48,7 @@ The optional Python wrappers can be turned on by
     cmake -DWITH_PYTHON=yes .
     make
 
-Use CSymPy from Python as follows:
+Use SymEngine from Python as follows:
 
     >>> from csympy import var
     >>> var("x y z")
@@ -66,11 +66,11 @@ will report at configure time if the Cython version is too old.
 
 The Travis-CI checks the code in both Release and Debug mode with all possible
 checks, so just sending a GitHub pull request is enough and you can use any
-mode you want to develop it. However, the best way to develop CSymPy is to use
-the Debug mode, turn assertions on and turn `BFD` support on (prints very nice
-stacktraces on exceptions, segfaults or assert errors):
+mode you want to develop it. However, the best way to develop SymEngine is to
+use the Debug mode, turn assertions on and turn `BFD` support on (prints very
+nice stacktraces on exceptions, segfaults or assert errors):
 
-    cmake -DCMAKE_BUILD_TYPE=Debug -DWITH_CSYMPY_ASSERT=yes -DWITH_BFD=yes .
+    cmake -DCMAKE_BUILD_TYPE=Debug -DWITH_SYMENGINE_ASSERT=yes -DWITH_BFD=yes .
 
 To make `WITH_BFD=yes` work, you need to install `binutils-dev` first,
 otherwise you will get a `CMake` error during configuring.
@@ -91,8 +91,8 @@ their default values indicated below:
         -DCMAKE_BUILD_TYPE:STRING="Release" \         # Type of build, one of: Debug or Release
         -DWITH_BFD:BOOL=OFF \                         # Install with BFD library (requires binutils-dev)
         -DWITH_PYTHON:BOOL=OFF \                      # Build Python wrappers
-        -DWITH_CSYMPY_ASSERT:BOOL=OFF \               # Test all CSYMPY_ASSERT statements in the code
-        -DWITH_CSYMPY_RCP:BOOL=ON \                   # Use our faster special implementation of RCP
+        -DWITH_SYMENGINE_ASSERT:BOOL=OFF \               # Test all SYMENGINE_ASSERT statements in the code
+        -DWITH_SYMENGINE_RCP:BOOL=ON \                   # Use our faster special implementation of RCP
         -DWITH_PRIMESIEVE=OFF \                       # Install with Primesieve library
         -DWITH_ARB=OFF \                              # Install with ARB library
         .

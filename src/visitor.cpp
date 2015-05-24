@@ -14,7 +14,7 @@
 
 #define ACCEPT(CLASS) void CLASS::accept(Visitor &v) const { v.visit(*this); }
 
-namespace CSymPy {
+namespace SymEngine {
 
 ACCEPT(Symbol)
 ACCEPT(Add)
@@ -59,6 +59,7 @@ ACCEPT(UpperGamma)
 ACCEPT(Constant)
 ACCEPT(Abs)
 ACCEPT(Subs)
+ACCEPT(RealDouble)
 
 void preorder_traversal(const Basic &b, Visitor &v)
 {
@@ -72,7 +73,8 @@ void postorder_traversal(const Basic &b, Visitor &v)
     b.accept(v);
 }
 
-void preorder_traversal_stop(const Basic &b, StopVisitor &v)
+template<class T>
+void preorder_traversal_stop(const Basic &b, StopVisitor<T> &v)
 {
     b.accept(v);
     if (v.stop_) return;
@@ -95,5 +97,42 @@ RCP<const Basic> coeff(const Basic &b, const RCP<const Symbol> &x,
     return v.apply(b, x, n);
 }
 
-} // CSymPy
+class FreeSymbolsVisitor : public BaseVisitor<FreeSymbolsVisitor> {
+public:
+    set_basic s;
+    FreeSymbolsVisitor() : BaseVisitor(this) { };
+
+    void bvisit(const Symbol &x) {
+        s.insert(rcp(&x));
+    }
+
+    void bvisit(const Subs &x) {
+        set_basic set_ = free_symbols(*x.get_arg());
+        for (auto &p: x.get_variables()) {
+            set_.erase(p);
+        }
+        s.insert(set_.begin(), set_.end());
+        for (auto &p: x.get_point()) {
+            p->accept(*this);
+        }
+    }
+
+    void bvisit(const Basic &x) {
+        for (auto &p: x.get_args()) {
+            p->accept(*this);
+        }
+    }
+
+    set_basic apply(const Basic &b) {
+        b.accept(*this);
+        return s;
+    }
+};
+
+set_basic free_symbols(const Basic &b) {
+    FreeSymbolsVisitor visitor;
+    return visitor.apply(b);
+}
+
+} // SymEngine
 

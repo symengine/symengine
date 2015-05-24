@@ -2,4 +2,4 @@ ntheory
 =======
 
 .. doxygenfile:: ntheory.h
-    :project: csympy
+    :project: symengine

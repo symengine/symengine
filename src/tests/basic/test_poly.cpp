@@ -11,25 +11,27 @@
 #include "rings.h"
 #include "monomials.h"
 
-using CSymPy::Basic;
-using CSymPy::Add;
-using CSymPy::Mul;
-using CSymPy::Pow;
-using CSymPy::Symbol;
-using CSymPy::umap_basic_num;
-using CSymPy::map_vec_int;
-using CSymPy::Integer;
-using CSymPy::multinomial_coefficients;
-using CSymPy::map_vec_mpz;
-using CSymPy::expr2poly;
-using CSymPy::vec_int;
-using CSymPy::monomial_mul;
-using CSymPy::poly_mul;
-using CSymPy::umap_vec_mpz;
-using CSymPy::RCP;
-using CSymPy::rcp;
-using CSymPy::rcp_dynamic_cast;
-using CSymPy::print_stack_on_segfault;
+using SymEngine::Basic;
+using SymEngine::Add;
+using SymEngine::Mul;
+using SymEngine::Pow;
+using SymEngine::Symbol;
+using SymEngine::symbol;
+using SymEngine::umap_basic_num;
+using SymEngine::map_vec_int;
+using SymEngine::Integer;
+using SymEngine::integer;
+using SymEngine::multinomial_coefficients;
+using SymEngine::map_vec_mpz;
+using SymEngine::expr2poly;
+using SymEngine::vec_int;
+using SymEngine::monomial_mul;
+using SymEngine::poly_mul;
+using SymEngine::umap_vec_mpz;
+using SymEngine::RCP;
+using SymEngine::rcp;
+using SymEngine::rcp_dynamic_cast;
+using SymEngine::print_stack_on_segfault;
 
 void test_monomial_mul()
 {
@@ -51,11 +53,11 @@ void test_monomial_mul()
 
 void test_expand()
 {
-    RCP<const Basic> x = rcp(new Symbol("x"));
-    RCP<const Basic> y = rcp(new Symbol("y"));
-    RCP<const Basic> z = rcp(new Symbol("z"));
-    RCP<const Basic> w = rcp(new Symbol("w"));
-    RCP<const Basic> i4 = rcp(new Integer(2));
+    RCP<const Basic> x = symbol("x");
+    RCP<const Basic> y = symbol("y");
+    RCP<const Basic> z = symbol("z");
+    RCP<const Basic> w = symbol("w");
+    RCP<const Basic> i4 = integer(2);
 
     RCP<const Basic> e, f1, f2, r;
 
@@ -64,10 +66,10 @@ void test_expand()
     f2 = expand(add(e, w));
 
     umap_basic_num syms;
-    insert(syms, x, rcp(new Integer(0)));
-    insert(syms, y, rcp(new Integer(1)));
-    insert(syms, z, rcp(new Integer(2)));
-    insert(syms, w, rcp(new Integer(3)));
+    insert(syms, x, integer(0));
+    insert(syms, y, integer(1));
+    insert(syms, z, integer(2));
+    insert(syms, w, integer(3));
 
     umap_vec_mpz P1, P2, C;
 

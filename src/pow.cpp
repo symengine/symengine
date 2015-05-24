@@ -9,50 +9,54 @@
 #include "complex.h"
 #include "constants.h"
 
-namespace CSymPy {
+namespace SymEngine {
 
 Pow::Pow(const RCP<const Basic> &base, const RCP<const Basic> &exp)
     : base_{base}, exp_{exp}
 {
-    CSYMPY_ASSERT(is_canonical(base, exp))
+    SYMENGINE_ASSERT(is_canonical(base, exp))
 }
 
 bool Pow::is_canonical(const RCP<const Basic> &base, const RCP<const Basic> &exp)
 {
     if (base == null) return false;
     if (exp == null) return false;
-    // e.g. 0^x
+    // e.g. 0**x
     if (is_a<Integer>(*base) && rcp_static_cast<const Integer>(base)->is_zero())
         return false;
-    // e.g. 1^x
+    // e.g. 1**x
     if (is_a<Integer>(*base) && rcp_static_cast<const Integer>(base)->is_one())
         return false;
-    // e.g. x^0
+    // e.g. x**0
     if (is_a<Integer>(*exp) && rcp_static_cast<const Integer>(exp)->is_zero())
         return false;
-    // e.g. x^1
+    // e.g. x**1
     if (is_a<Integer>(*exp) && rcp_static_cast<const Integer>(exp)->is_one())
         return false;
-    // e.g. 2^3, (2/3)^4
+    // e.g. 2**3, (2/3)**4
     if ((is_a<Integer>(*base) || is_a<Rational>(*base)) && is_a<Integer>(*exp))
         return false;
-    // e.g. (x*y)^2, should rather be x^2*y^2
+    // e.g. (x*y)**2, should rather be x**2*y**2
     if (is_a<Mul>(*base) && is_a<Integer>(*exp))
         return false;
-    // e.g. (x^y)^2, should rather be x^(2*y)
+    // e.g. (x**y)**2, should rather be x**(2*y)
     if (is_a<Pow>(*base) && is_a<Integer>(*exp))
         return false;
     // If exp is a rational, it should be between 0  and 1, i.e. we don't
-    // allow things like 2^(-1/2) or 2^(3/2)
+    // allow things like 2**(-1/2) or 2**(3/2)
     if ((is_a<Rational>(*base) || is_a<Integer>(*base)) &&
         is_a<Rational>(*exp) &&
         (rcp_static_cast<const Rational>(exp)->i < 0 ||
         rcp_static_cast<const Rational>(exp)->i > 1))
         return false;
     // Purely Imaginary complex numbers with integral powers are expanded
-    // e.g (2I)^3
+    // e.g (2I)**3
     if (is_a<Complex>(*base) && rcp_static_cast<const Complex>(base)->is_re_zero() &&
         is_a<Integer>(*exp))
+        return false;
+    // e.g. 0.5^2.0 should be represented as 0.25
+    if(is_a_Number(*base) && !rcp_static_cast<const Number>(base)->is_exact() &&
+            is_a_Number(*exp) && !rcp_static_cast<const Number>(exp)->is_exact())
         return false;
     return true;
 }
@@ -77,7 +81,7 @@ bool Pow::__eq__(const Basic &o) const
 
 int Pow::compare(const Basic &o) const
 {
-    CSYMPY_ASSERT(is_a<Pow>(o))
+    SYMENGINE_ASSERT(is_a<Pow>(o))
     const Pow &s = static_cast<const Pow &>(o);
     int base_cmp = base_->__cmp__(*s.base_);
     if (base_cmp == 0)
@@ -116,7 +120,7 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
                 RCP<const Number> res = exp_new->pow(*pow_new);
                 return res;
             } else {
-                throw std::runtime_error("Not implemented");
+                return rcp_static_cast<const Number>(a)->pow(*rcp_static_cast<const Number>(b));
             }
         } else if (is_a<Rational>(*b)) {
             mpz_class q, r, num, den;
@@ -127,6 +131,9 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
                 mpz_fdiv_qr(q.get_mpz_t(), r.get_mpz_t(), num.get_mpz_t(),
                     den.get_mpz_t());
             } else {
+                if (is_a_Number(*a) && !rcp_static_cast<const Number>(a)->is_exact()) {
+                    return rcp_static_cast<const Number>(a)->pow(*rcp_static_cast<const Number>(b));
+                }
                 return rcp(new Pow(a, b));
             }
             // Here we make the exponent postive and a fraction between
@@ -158,21 +165,21 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
             } else if (is_a<Complex>(*a)) {
                 return rcp(new Pow(a, b));
             } else {
-                throw std::runtime_error("Not implemented");
+                return rcp_static_cast<const Number>(a)->pow(*rcp_static_cast<const Number>(b));
             }
         } else if (is_a<Complex>(*b)) {
             return rcp(new Pow(a, b));
         } else {
-            throw std::runtime_error("Not implemented");
+            return rcp_static_cast<const Number>(a)->pow(*rcp_static_cast<const Number>(b));
         }
     }
     if (is_a<Mul>(*a) && is_a<Integer>(*b)) {
-        // Convert (x*y)^b = x^b*y^b, where 'b' is an integer. This holds for
+        // Convert (x*y)**b = x**b*y**b, where 'b' is an integer. This holds for
         // any complex 'x', 'y' and integer 'b'.
         return rcp_static_cast<const Mul>(a)->power_all_terms(b);
     }
     if (is_a<Pow>(*a) && is_a<Integer>(*b)) {
-        // Convert (x^y)^b = x^(b*y), where 'b' is an integer. This holds for
+        // Convert (x**y)**b = x**(b*y), where 'b' is an integer. This holds for
         // any complex 'x', 'y' and integer 'b'.
         RCP<const Pow> A = rcp_static_cast<const Pow>(a);
         return pow(A->base_, mul(A->exp_, b));
@@ -299,7 +306,7 @@ RCP<const Basic> pow_expand(const RCP<const Pow> &self)
     multinomial_coefficients_mpz(m, n, r);
     umap_basic_num rd;
     // This speeds up overall expansion. For example for the benchmark
-    // (y + x + z + w)^60 it improves the timing from 135ms to 124ms.
+    // (y + x + z + w)**60 it improves the timing from 135ms to 124ms.
     rd.reserve(2*r.size());
     RCP<const Number> add_overall_coeff=zero;
     for (auto &p: r) {
@@ -309,7 +316,7 @@ RCP<const Basic> pow_expand(const RCP<const Pow> &self)
         RCP<const Number> overall_coeff=one;
         for (; power != p.first.end(); ++power, ++i2) {
             if (*power > 0) {
-                RCP<const Integer> exp = rcp(new Integer(*power));
+                RCP<const Integer> exp = integer(*power);
                 RCP<const Basic> base = i2->first;
                 if (is_a<Integer>(*base)) {
                     imulnum(outArg(overall_coeff),
@@ -326,6 +333,8 @@ RCP<const Basic> pow_expand(const RCP<const Pow> &self)
                                     p.second, p.first);
                         }
                         imulnum(outArg(overall_coeff), (rcp_static_cast<const Mul>(tmp))->coef_);
+                    } else if (is_a_Number(*tmp)) {
+                        imulnum(outArg(overall_coeff), rcp_static_cast<const Number>(tmp));
                     } else {
                         Mul::as_base_exp(tmp, outArg(exp2), outArg(t));
                         Mul::dict_add_term_new(outArg(overall_coeff), d, exp2, t);
@@ -344,7 +353,7 @@ RCP<const Basic> pow_expand(const RCP<const Pow> &self)
             }
         }
         RCP<const Basic> term = Mul::from_dict(overall_coeff, std::move(d));
-        RCP<const Number> coef2 = rcp(new Integer(p.second));
+        RCP<const Number> coef2 = integer(p.second);
         if (is_a_Number(*term)) {
             iaddnum(outArg(add_overall_coeff),
                 mulnum(rcp_static_cast<const Number>(term), coef2));
@@ -400,7 +409,7 @@ RCP<const Basic> exp(const RCP<const Basic> &x)
 Log::Log(const RCP<const Basic> &arg)
     : arg_{arg}
 {
-    CSYMPY_ASSERT(is_canonical(arg))
+    SYMENGINE_ASSERT(is_canonical(arg))
 }
 
 bool Log::is_canonical(const RCP<const Basic> &arg)
@@ -417,6 +426,8 @@ bool Log::is_canonical(const RCP<const Basic> &arg)
         return false;
     // Currently not implemented, however should be expanded as `-ipi + log(-arg)`
     if (is_a_Number(*arg) && rcp_static_cast<const Number>(arg)->is_negative())
+        return false;
+    if (is_a_Number(*arg) && !rcp_static_cast<const Number>(arg)->is_exact())
         return false;
     // log(num/den) = log(num) - log(den)
     if (is_a<Rational>(*arg))
@@ -442,9 +453,23 @@ bool Log::__eq__(const Basic &o) const
 
 int Log::compare(const Basic &o) const
 {
-    CSYMPY_ASSERT(is_a<Log>(o))
+    SYMENGINE_ASSERT(is_a<Log>(o))
     const Log &s = static_cast<const Log &>(o);
-    return arg_->__cmp__(s);
+    return arg_->__cmp__(*s.get_arg());
+}
+
+RCP<const Basic> Log::subs(const map_basic_basic &subs_dict) const
+{
+    RCP<const Log> self = rcp_const_cast<Log>(rcp(this));
+    auto it = subs_dict.find(self);
+    if (it != subs_dict.end())
+        return it->second;
+    RCP<const Basic> arg_new = arg_->subs(subs_dict);
+    if (arg_new == arg_) {
+        return self;
+    } else {
+        return log(arg_new);
+    }
 }
 
 RCP<const Basic> Log::diff(const RCP<const Symbol> &x) const
@@ -459,9 +484,13 @@ RCP<const Basic> log(const RCP<const Basic> &arg)
     }
     if (eq(arg, one)) return zero;
     if (eq(arg, E)) return one;
-    if (is_a_Number(*arg) &&
-        rcp_static_cast<const Number>(arg)->is_negative()) {
-        throw std::runtime_error("Imaginary Result. Yet to be implemented");
+    if (is_a_Number(*arg)) {
+        RCP<const Number> _arg = rcp_static_cast<const Number>(arg);
+        if (!_arg->is_exact()) {
+            return _arg->get_eval().log(*_arg);
+        } else if (_arg->is_negative()) {
+            throw std::runtime_error("Imaginary Result. Yet to be implemented");
+        }
     }
     if (is_a<Rational>(*arg)) {
         RCP<const Integer> num, den;
@@ -475,4 +504,4 @@ RCP<const Basic> log(const RCP<const Basic> &arg, const RCP<const Basic> &base)
 {
     return div(log(arg), log(base));
 }
-} // CSymPy
+} // SymEngine

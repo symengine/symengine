@@ -11,13 +11,13 @@
 #include "integer.h"
 #include "constants.h"
 
-using CSymPy::Basic;
-using CSymPy::RCP;
-using CSymPy::symbol;
-using CSymPy::zero;
-using CSymPy::map_basic_basic;
-using CSymPy::sqrt;
-using CSymPy::integer;
+using SymEngine::Basic;
+using SymEngine::RCP;
+using SymEngine::symbol;
+using SymEngine::zero;
+using SymEngine::map_basic_basic;
+using SymEngine::sqrt;
+using SymEngine::integer;
 
 int main(int argc, char* argv[])
 {

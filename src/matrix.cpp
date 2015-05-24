@@ -1,6 +1,6 @@
 #include "matrix.h"
 
-namespace CSymPy {
+namespace SymEngine {
 
 std::string MatrixBase::__str__() const {
     std::ostringstream o;
@@ -28,4 +28,4 @@ bool MatrixBase::eq(const MatrixBase &other) const
     return true;
 }
 
-} // CSymPy
+} // SymEngine

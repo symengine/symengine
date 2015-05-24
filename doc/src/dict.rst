@@ -2,4 +2,4 @@ dict
 ====
 
 .. doxygenfile:: dict.h
-    :project: csympy
+    :project: symengine
