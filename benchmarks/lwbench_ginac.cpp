@@ -1,51 +1,43 @@
+// To compile on a debian system you need to install libginac-dev first
+// $ sudo apt-get install libginac-dev
+// Then compile with the following command,
+// $ g++ -std=c++0x -o lwbench_ginac -Wl,--no-as-needed `pkg-config --cflags --libs ginac` lwbench_ginac.cpp
+// See this SO answer: http://stackoverflow.com/a/18696743/1895353
+
 #include <iostream>
 #include <chrono>
-#include <cstdlib>
 
-#include "Teuchos_stacktrace.hpp"
-
-#include "ntheory.h"
-#include "mul.h"
-#include "integer.h"
-#include "basic.h"
-#include "constants.h"
-#include "add.h"
-#include "pow.h"
-#include "symbol.h"
-
-using CSymPy::div;
-using CSymPy::factorial;
-using CSymPy::RCP;
-using CSymPy::Basic;
-using CSymPy::one;
-using CSymPy::add;
-using CSymPy::Integer;
-using CSymPy::Number;
-using CSymPy::integer;
-using CSymPy::gcd;
-using CSymPy::rcp_static_cast;
-using CSymPy::pow;
-using CSymPy::symbol;
+#include <ginac/ginac.h>
+using GiNaC::basic;
+using GiNaC::ex;
+using GiNaC::ex_is_less;
+using GiNaC::sqrt;
+using GiNaC::numeric;
+using GiNaC::pow;
+using GiNaC::I;
+using GiNaC::expand;
+using GiNaC::real_part;
+using GiNaC::symbol;
+using GiNaC::factorial;
 
 double A()
 {
     auto t1 = std::chrono::high_resolution_clock::now();
     for (int i = 1; i <= 100; i++) {
-        div(factorial(1000 + i), factorial(900 + i));
+        factorial(1000 + i) / factorial(900 + i);
     }
     auto t2 = std::chrono::high_resolution_clock::now();
 
     return std::chrono::duration_cast<std::chrono::nanoseconds>(t2-t1).count()/1000000000.0;
 }
 
-
 double B()
 {
-    RCP<const Number> s = integer(0);
+    numeric s = 0;
 
     auto t1 = std::chrono::high_resolution_clock::now();
     for (int i = 1; i <= 1000; i++) {
-        s = s->add(*one->div(*integer(i)));
+        s = s + numeric(1) / i;
     }
     auto t2 = std::chrono::high_resolution_clock::now();
 
@@ -54,13 +46,12 @@ double B()
 
 double C()
 {
-    RCP<const Integer> x = integer(13*17*31);
-    RCP<const Integer> y = integer(13*19*29);
+    numeric x = numeric(13*17*31);
+    numeric y = numeric(13*19*29);
 
     auto t1 = std::chrono::high_resolution_clock::now();
     for (int i = 1; i <= 200; i++) {
-        gcd(*rcp_static_cast<const Integer>(pow(x, integer(300 + i%181))),
-            *rcp_static_cast<const Integer>(pow(y, integer(200 + i%183))));
+        gcd(pow(x, numeric(300 + i%181)), pow(y, numeric(200 + i%183)));
     }
     auto t2 = std::chrono::high_resolution_clock::now();
 
@@ -69,14 +60,13 @@ double C()
 
 double D()
 {
-    RCP<const Basic> s = integer(0);
-    RCP<const Basic> y = symbol("y");
-    RCP<const Basic> t = symbol("t");
+    ex s = numeric(0);
+    ex y = symbol("y");
+    ex t = symbol("t");
 
     auto t1 = std::chrono::high_resolution_clock::now();
     for (int i = 1; i <= 10; i++) {
-        s = add(s, div(mul(integer(i), mul(y, pow(t, integer(i)))),
-                    pow(add(y, mul(integer(i), t)), integer(i))));
+        s = s + numeric(i) * y * pow(t, numeric(i)) / (pow(y + numeric(i) * t, numeric(i)));
     }
     auto t2 = std::chrono::high_resolution_clock::now();
 
@@ -85,29 +75,26 @@ double D()
 
 double E()
 {
-    RCP<const Basic> s = integer(0);
-    RCP<const Basic> y = symbol("y");
-    RCP<const Basic> t = symbol("t");
+    ex s = numeric(0);
+    ex y = symbol("y");
+    ex t = symbol("t");
 
     auto t1 = std::chrono::high_resolution_clock::now();
     for (int i = 1; i <= 10; i++) {
-        s = add(s, div(mul(integer(i), mul(y, pow(t, integer(i)))),
-                    pow(add(y, mul(integer(abs(5 - i)), t)), integer(i))));
+        s = s + numeric(i) * y * pow(t, numeric(i)) / (pow(y + abs(numeric(5 - i)) * t, numeric(i)));
     }
     auto t2 = std::chrono::high_resolution_clock::now();
 
     return std::chrono::duration_cast<std::chrono::nanoseconds>(t2-t1).count()/1000000000.0;
 }
 
+
 int main(int argc, char* argv[])
 {
-    Teuchos::print_stack_on_segfault();
-
     std::cout << "Time for A : \t " << std::setw(15) << std::setprecision(9)  << std::fixed << A() << std::endl;
     std::cout << "Time for B : \t " << std::setw(15) << std::setprecision(9)  << std::fixed << B() << std::endl;
     std::cout << "Time for C : \t " << std::setw(15) << std::setprecision(9)  << std::fixed << C() << std::endl;
     std::cout << "Time for D : \t " << std::setw(15) << std::setprecision(9)  << std::fixed << D() << std::endl;
     std::cout << "Time for E : \t " << std::setw(15) << std::setprecision(9)  << std::fixed << E() << std::endl;
-
     return 0;
 }
