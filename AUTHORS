@@ -1,4 +1,4 @@
-All people who contributed to CSymPy by sending at least a patch or more (in
+All people who contributed to SymEngine by sending at least a patch or more (in
 the order of the date of their first contribution). You can generate this file
 by: git log --reverse --format="%aN <%aE>" | awk ' !x[$0]++'
 
@@ -15,3 +15,6 @@ Isuru Fernando <isuruf@gmail.com>
 Peter Brady <petertbrady@gmail.com>
 Shivam Vats <shivamvats.iitkgp@gmail.com>
 Sumith <sumith1896@gmail.com>
+Sanka Rasnayaka <nuwan.ras@gmail.com>
+Abinash Meher <abinashdakshana999@gmail.com>
+AMiT Kumar <dtu.amit@gmail.com>

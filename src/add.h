@@ -4,13 +4,13 @@
  * 
  **/
 
-#ifndef CSYMPY_ADD_H
-#define CSYMPY_ADD_H
+#ifndef SYMENGINE_ADD_H
+#define SYMENGINE_ADD_H
 
 #include "basic.h"
 #include "dict.h"
 
-namespace CSymPy {
+namespace SymEngine {
 
 class Add : public Basic {
 public: // TODO: make this private
@@ -35,8 +35,6 @@ public:
      * \return `0` if equal, `-1` , `1` according to string compare
      * */
     virtual int compare(const Basic &o) const;
-    //! \return Stringify version
-    virtual std::string __str__() const;
     /*! Creates appropriate instance (i.e Add , Symbol, Integer,
     * Mul) depending on the size of dictionary `d`.
     */
@@ -74,6 +72,6 @@ RCP<const Basic> sub(const RCP<const Basic> &a,
 //! \return expanded version of Add
 RCP<const Basic> add_expand(const RCP<const Add> &self);
 
-} // CSymPy
+} // SymEngine
 
 #endif

@@ -8,12 +8,12 @@
 #include "functions.h"
 #include "constants.h"
 
-namespace CSymPy {
+namespace SymEngine {
 
 Mul::Mul(const RCP<const Number> &coef, map_basic_basic&& dict)
     : coef_{coef}, dict_{std::move(dict)}
 {
-    CSYMPY_ASSERT(is_canonical(coef, dict_))
+    SYMENGINE_ASSERT(is_canonical(coef, dict_))
 }
 
 bool Mul::is_canonical(const RCP<const Number> &coef,
@@ -25,37 +25,41 @@ bool Mul::is_canonical(const RCP<const Number> &coef,
         return false;
     if (dict.size() == 0) return false;
     if (dict.size() == 1) {
-        // e.g. 1*x, 1*x^2
+        // e.g. 1*x, 1*x**2
         if (coef->is_one()) return false;
     }
     // Check that each term in 'dict' is in canonical form
     for (auto &p: dict) {
         if (p.first == null) return false;
         if (p.second == null) return false;
-        // e.g. 2^3, (2/3)^4
+        // e.g. 2**3, (2/3)**4
         // However for Complex no simplification is done
         if ((is_a<Integer>(*p.first) || is_a<Rational>(*p.first))
             && is_a<Integer>(*p.second))
             return false;
-        // e.g. 0^x
+        // e.g. 0**x
         if (is_a<Integer>(*p.first) &&
                 rcp_static_cast<const Integer>(p.first)->is_zero())
             return false;
-        // e.g. 1^x
+        // e.g. 1**x
         if (is_a<Integer>(*p.first) &&
                 rcp_static_cast<const Integer>(p.first)->is_one())
             return false;
-        // e.g. x^0
+        // e.g. x**0
         if (is_a<Integer>(*p.second) &&
                 rcp_static_cast<const Integer>(p.second)->is_zero())
             return false;
-        // e.g. (x*y)^2 (={xy:2}), which should be represented as x^2*y^2
+        // e.g. (x*y)**2 (={xy:2}), which should be represented as x**2*y**2
         //     (={x:2, y:2})
         if (is_a<Mul>(*p.first))
             return false;
-        // e.g. x^2^y (={x^2:y}), which should be represented as x^(2y)
+        // e.g. x**2**y (={x**2:y}), which should be represented as x**(2y)
         //     (={x:2y})
         if (is_a<Pow>(*p.first))
+            return false;
+        // e.g. 0.5^2.0 should be represented as 0.25
+        if(is_a_Number(*p.first) && !rcp_static_cast<const Number>(p.first)->is_exact() &&
+                is_a_Number(*p.second) && !rcp_static_cast<const Number>(p.second)->is_exact())
             return false;
     }
     return true;
@@ -84,7 +88,7 @@ bool Mul::__eq__(const Basic &o) const
 
 int Mul::compare(const Basic &o) const
 {
-    CSYMPY_ASSERT(is_a<Mul>(o))
+    SYMENGINE_ASSERT(is_a<Mul>(o))
     const Mul &s = static_cast<const Mul &>(o);
     // # of elements
     if (dict_.size() != s.dict_.size())
@@ -99,94 +103,7 @@ int Mul::compare(const Basic &o) const
     return map_basic_basic_compare(dict_, s.dict_);
 }
 
-std::string Mul::__str__() const
-{
-    std::ostringstream o, o2;
-    if (eq(coef_, minus_one)) {
-        o << "-";
-    } else if (is_a<Rational>(*coef_) &&
-                !(rcp_static_cast<const Rational>(coef_)->is_int())) {
-        o << "(" << *coef_ <<")";
-    } else if (is_a<Complex>(*coef_)) {
-        if (!(rcp_static_cast<const Complex>(coef_)->is_reim_zero())) {
-            o << "(" << *coef_ <<")";
-        } else {
-            o << *coef_;
-        }
-    } else if (neq(coef_, one)) {
-        o << *coef_;
-    }
-
-    bool num = false;
-    unsigned den = 0;
-    if (neq(coef_, minus_one) && neq(coef_, one)) {
-        o << "*";
-        num = true;
-    }
-
-    auto p = dict_.begin();
-    for (; p != dict_.end(); p++) {
-        if ((is_a<Integer>(*(p->second)) &&
-                rcp_static_cast<const Integer>(p->second)->is_negative()) ||
-                (is_a<Rational>(*(p->second)) &&
-                rcp_static_cast<const Rational>(p->second)->is_negative())) {
-            if(eq(p->second, minus_one)) {
-                if (is_a<Mul>(*p->first) || is_a<Add>(*p->first)) {
-                    o2 << "(" << (*p->first) << ")";
-                } else {
-                    o2 << (*p->first);
-                }
-            } else {
-                o2 << rcp(new Pow(p->first, neg(p->second)))->__str__();
-            }
-            o2 << "*";
-            den++;
-        } else {
-            if(eq(p->second, one)) {
-                if (is_a<Mul>(*p->first) || is_a<Add>(*p->first)) {
-                    o << "(" << (*p->first) << ")";
-                } else if (is_a<Rational>(*p->first) &&
-                         !(rcp_static_cast<const Rational>(p->first)->is_int())) {
-                    o << "(" << (*p->first) <<")";
-                } else if (is_a<Complex>(*p->first)) {
-                    if (!(rcp_static_cast<const Complex>(p->first)->is_reim_zero())) {
-                        o << "(" << (*p->first) <<")";
-                    } else {
-                        o << (*p->first);
-                    }
-                } else {
-                    o << (*p->first);
-                }
-            } else {
-                o << rcp(new Pow(p->first, p->second))->__str__();
-            }
-            o << "*";
-            num = true;
-        }
-    }
-
-    if (!num) {
-        o << "1*";
-    }
-
-    std::string s = o.str();
-    s = s.substr(0, s.size()-1);
-
-    if (den != 0) {
-        std::string s2 = o2.str();
-        s2 = s2.substr(0, s2.size()-1);
-        if (den > 1) {
-            return s + "/(" + s2 + ")";
-        }
-        else {
-            return s + "/" + s2;
-        }
-    } else {
-        return s;
-    }
-}
-
-RCP<const CSymPy::Basic> Mul::from_dict(const RCP<const Number> &coef, map_basic_basic &&d)
+RCP<const SymEngine::Basic> Mul::from_dict(const RCP<const Number> &coef, map_basic_basic &&d)
 {
     if (coef->is_zero()) return zero;
     if (d.size() == 0) {
@@ -196,11 +113,11 @@ RCP<const CSymPy::Basic> Mul::from_dict(const RCP<const Number> &coef, map_basic
         if (is_a<Integer>(*(p->second))) {
             if (coef->is_one()) {
                 if ((rcp_static_cast<const Integer>(p->second))->is_one()) {
-                    // For x^1 we simply return "x":
+                    // For x**1 we simply return "x":
                     return p->first;
                 }
             } else {
-                // For coef*x or coef*x^3 we simply return Mul:
+                // For coef*x or coef*x**3 we simply return Mul:
                 return rcp(new Mul(coef, std::move(d)));
             }
         }
@@ -215,7 +132,7 @@ RCP<const CSymPy::Basic> Mul::from_dict(const RCP<const Number> &coef, map_basic
     }
 }
 
-// Mul (t^exp) to the dict "d"
+// Mul (t**exp) to the dict "d"
 void Mul::dict_add_term(map_basic_basic &d, const RCP<const Basic> &exp,
         const RCP<const Basic> &t)
 {
@@ -243,7 +160,7 @@ void Mul::dict_add_term(map_basic_basic &d, const RCP<const Basic> &exp,
     }
 }
 
-// Mul (t^exp) to the dict "d"
+// Mul (t**exp) to the dict "d"
 void Mul::dict_add_term_new(const Ptr<RCP<const Number>> &coef, map_basic_basic &d,
     const RCP<const Basic> &exp, const RCP<const Basic> &t)
 {
@@ -263,7 +180,7 @@ void Mul::dict_add_term_new(const Ptr<RCP<const Number>> &coef, map_basic_basic 
                 den = rcp_static_cast<const Rational>(exp)->i.get_den();
                 mpz_fdiv_qr(q.get_mpz_t(), r.get_mpz_t(), num.get_mpz_t(),
                     den.get_mpz_t());
-                
+
                 insert(d, t, Rational::from_mpq(mpq_class(r, den)));
                 imulnum(outArg(*coef), pownum(rcp_static_cast<const Number>(t),
                     rcp_static_cast<const Number>(integer(q))));
@@ -312,18 +229,20 @@ void Mul::dict_add_term_new(const Ptr<RCP<const Number>> &coef, map_basic_basic 
                 }
             }
         } else if (is_a<Rational>(*it->second)) {
-            mpz_class q, r, num, den;
-            num = rcp_static_cast<const Rational>(it->second)->i.get_num();
-            den = rcp_static_cast<const Rational>(it->second)->i.get_den();
-            // Here we make the exponent postive and a fraction between
-            // 0 and 1.
-            if (num > den || num < 0) {
-                mpz_fdiv_qr(q.get_mpz_t(), r.get_mpz_t(), num.get_mpz_t(),
-                    den.get_mpz_t());
+            if (is_a_Number(*t)) {
+                mpz_class q, r, num, den;
+                num = rcp_static_cast<const Rational>(it->second)->i.get_num();
+                den = rcp_static_cast<const Rational>(it->second)->i.get_den();
+                // Here we make the exponent postive and a fraction between
+                // 0 and 1.
+                if (num > den || num < 0) {
+                    mpz_fdiv_qr(q.get_mpz_t(), r.get_mpz_t(), num.get_mpz_t(),
+                                den.get_mpz_t());
 
-                it->second = Rational::from_mpq(mpq_class(r, den));
-                imulnum(outArg(*coef), pownum(rcp_static_cast<const Number>(t),
-                    rcp_static_cast<const Number>(integer(q))));
+                    it->second = Rational::from_mpq(mpq_class(r, den));
+                    imulnum(outArg(*coef), pownum(rcp_static_cast<const Number>(t),
+                                                  rcp_static_cast<const Number>(integer(q))));
+                }
             }
         }
     }
@@ -332,7 +251,7 @@ void Mul::dict_add_term_new(const Ptr<RCP<const Number>> &coef, map_basic_basic 
 void Mul::as_two_terms(const Ptr<RCP<const Basic>> &a,
             const Ptr<RCP<const Basic>> &b) const
 {
-    // Example: if this=3*x^2*y^2*z^2, then a=x^2 and b=3*y^2*z^2
+    // Example: if this=3*x**2*y**2*z**2, then a=x**2 and b=3*y**2*z**2
     auto p = dict_.begin();
     *a = pow(p->first, p->second);
     map_basic_basic d = dict_;
@@ -363,7 +282,7 @@ void Mul::as_base_exp(const RCP<const Basic> &self, const Ptr<RCP<const Basic>> 
         *exp = rcp_static_cast<const Pow>(self)->exp_;
         *base = rcp_static_cast<const Pow>(self)->base_;
     } else {
-        CSYMPY_ASSERT(!is_a<Mul>(*self));
+        SYMENGINE_ASSERT(!is_a<Mul>(*self));
         *exp = one;
         *base = self;
     }
@@ -371,9 +290,9 @@ void Mul::as_base_exp(const RCP<const Basic> &self, const Ptr<RCP<const Basic>> 
 
 RCP<const Basic> mul(const RCP<const Basic> &a, const RCP<const Basic> &b)
 {
-    CSymPy::map_basic_basic d;
+    SymEngine::map_basic_basic d;
     RCP<const Number> coef = one;
-    if (CSymPy::is_a<Mul>(*a) && CSymPy::is_a<Mul>(*b)) {
+    if (SymEngine::is_a<Mul>(*a) && SymEngine::is_a<Mul>(*b)) {
         RCP<const Mul> A = rcp_static_cast<const Mul>(a);
         RCP<const Mul> B = rcp_static_cast<const Mul>(b);
         // This is important optimization, as coef=1 if Mul is inside an Add.
@@ -385,7 +304,7 @@ RCP<const Basic> mul(const RCP<const Basic> &a, const RCP<const Basic> &b)
         d = A->dict_;
         for (auto &p: B->dict_)
             Mul::dict_add_term_new(outArg(coef), d, p.second, p.first);
-    } else if (CSymPy::is_a<Mul>(*a)) {
+    } else if (SymEngine::is_a<Mul>(*a)) {
         RCP<const Basic> exp;
         RCP<const Basic> t;
         coef = (rcp_static_cast<const Mul>(a))->coef_;
@@ -396,7 +315,7 @@ RCP<const Basic> mul(const RCP<const Basic> &a, const RCP<const Basic> &b)
             Mul::as_base_exp(b, outArg(exp), outArg(t));
             Mul::dict_add_term_new(outArg(coef), d, exp, t);
         }
-    } else if (CSymPy::is_a<Mul>(*b)) {
+    } else if (SymEngine::is_a<Mul>(*b)) {
         RCP<const Basic> exp;
         RCP<const Basic> t;
         coef = (rcp_static_cast<const Mul>(b))->coef_;
@@ -410,10 +329,18 @@ RCP<const Basic> mul(const RCP<const Basic> &a, const RCP<const Basic> &b)
     } else {
         RCP<const Basic> exp;
         RCP<const Basic> t;
-        Mul::as_base_exp(a, outArg(exp), outArg(t));
-        Mul::dict_add_term_new(outArg(coef), d, exp, t);
-        Mul::as_base_exp(b, outArg(exp), outArg(t));
-        Mul::dict_add_term_new(outArg(coef), d, exp, t);
+        if (is_a_Number(*a)) {
+            imulnum(outArg(coef), rcp_static_cast<const Number>(a));
+        } else {
+            Mul::as_base_exp(a, outArg(exp), outArg(t));
+            Mul::dict_add_term_new(outArg(coef), d, exp, t);
+        }
+        if (is_a_Number(*b)) {
+            imulnum(outArg(coef), rcp_static_cast<const Number>(b));
+        } else {
+            Mul::as_base_exp(b, outArg(exp), outArg(t));
+            Mul::dict_add_term_new(outArg(coef), d, exp, t);
+        }
     }
     return Mul::from_dict(coef, std::move(d));
 }
@@ -435,7 +362,7 @@ RCP<const Basic> mul_expand_two(const RCP<const Basic> &a, const RCP<const Basic
         RCP<const Number> coef = mulnum(rcp_static_cast<const Add>(a)->coef_,
             rcp_static_cast<const Add>(b)->coef_);
         umap_basic_num d;
-        // Improves (x+1)^3(x+2)^3...(x+350)^3 expansion from 0.97s to 0.93s:
+        // Improves (x+1)**3*(x+2)**3*...(x+350)**3 expansion from 0.97s to 0.93s:
         d.reserve((rcp_static_cast<const Add>(a))->dict_.size()*
             (rcp_static_cast<const Add>(b))->dict_.size());
         // Expand dicts first:
@@ -526,7 +453,7 @@ RCP<const Basic> mul_expand(const RCP<const Mul> &self)
 
 RCP<const Basic> Mul::power_all_terms(const RCP<const Basic> &exp) const
 {
-    CSymPy::map_basic_basic d;
+    SymEngine::map_basic_basic d;
     RCP<const Basic> new_coef = pow(coef_, exp);
     RCP<const Number> coef_num = one;
     RCP<const Basic> new_exp;
@@ -638,4 +565,4 @@ vec_basic Mul::get_args() const {
     return args;
 }
 
-} // CSymPy
+} // SymEngine

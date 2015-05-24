@@ -1,4 +1,4 @@
-from nose.tools import raises
+from csympy.utilities import raises
 
 from csympy import Symbol, Integer, Add, Pow
 
@@ -26,11 +26,10 @@ def test_arit2():
     assert not x+x == 3*x
     assert not x+x != 2*x
 
-@raises(TypeError)
 def test_arit3():
     x = Symbol("x")
     y = Symbol("y")
-    e = "x"*x
+    raises(TypeError, lambda: ("x"*x))
 
 def test_arit4():
     x = Symbol("x")
@@ -119,3 +118,10 @@ def test_args():
     assert set((x**2 + 2*x*y + 5).args) == set((x**2, 2*x*y, 5))
     assert (2*x**2).args == (2, x**2)
     assert set((2*x**2*y).args) == set((2, x**2, y))
+
+def test_free_symbols():
+    x = Symbol("x")
+    y = Symbol("y")
+    z = Symbol("z")
+    assert (x**2).free_symbols == set([x])
+    assert (x**y + z).free_symbols == set([x, y, z])

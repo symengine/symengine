@@ -24,14 +24,15 @@ typedef struct
     void *data;
 } basic_struct;
 
+//! 'basic' is internally implemented as a size 1 array of the type
+//   basic_struct, which has the same size and alignment as RCP<const Basic>
+//   (see the above comment for details). That is then used by the user to
+//   allocate the memory needed for RCP<const Basic> on the stack. A 'basic'
+//   type should be initialized using basic_init(), before any function is
+//   called.  Assignment should be done only by using basic_assign(). Before
+//   the variable goes out of scope, basic_free() must be called.
 typedef basic_struct basic[1];
 
-//! basic is internally implemented as a char array of sufficient size to hold
-// the RCP<const Basic> instance, that is then used by the user to allocate the
-// memory needed for RCP<const Basic> on the stack. A basic type should be
-// initialized using basic_init(), before any function is called.  Assignment
-// should be done only by using basic_assign(). Before the variable goes out of
-// scope, basic_free() must be called.
 
 //! Initialize a new basic instance.
 void basic_init(basic s);
@@ -53,11 +54,11 @@ void integer_set_mpz(basic s, const mpz_t i);
 void integer_set_str(basic s, char* c);
 
 //! Returns signed long value of s.
-long integer_get_si(basic s);
+signed long integer_get_si(const basic s);
 //! Returns unsigned long value of s.
-long integer_get_ui(basic s);
+unsigned long integer_get_ui(const basic s);
 //! Returns s as a mpz_t.
-long integer_get_mpz(basic s);
+void integer_get_mpz(mpz_t a, const basic s);
 
 //! Assign to s, a rational i/j. Returns 0 if either i or j is not an integer.
 int rational_set(basic s, const basic i, const basic j);
@@ -76,7 +77,7 @@ void basic_sub(basic s, const basic a, const basic b);
 void basic_mul(basic s, const basic a, const basic b);
 //! Assigns s = a / b.
 void basic_div(basic s, const basic a, const basic b);
-//! Assigns s = a ^ b.
+//! Assigns s = a ** b.
 void basic_pow(basic s, const basic a, const basic b);
 //! Assign to s, derivative of expr with respect to sym. Returns 0 if sym is not a symbol.
 int basic_diff(basic s, const basic expr, const basic sym);

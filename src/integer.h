@@ -4,13 +4,13 @@
  *
  **/
 
-#ifndef CSYMPY_INTEGER_H
-#define CSYMPY_INTEGER_H
+#ifndef SYMENGINE_INTEGER_H
+#define SYMENGINE_INTEGER_H
 
 #include "basic.h"
 #include "number.h"
 
-namespace CSymPy {
+namespace SymEngine {
 
 //! Integer Class
 class Integer : public Number {
@@ -32,8 +32,6 @@ public:
      * */
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
-    //! \return stringify version of `self`s
-    virtual std::string __str__() const;
 
     //! Convert to `int`, raise an exception if it does not fit
     signed long int as_int() const;
@@ -49,7 +47,6 @@ public:
     inline virtual bool is_positive() const { return this->i > 0; }
     //! \return `true` if negative
     inline virtual bool is_negative() const { return this->i < 0; }
-
 
     /* These are very fast methods for add/sub/mul/div/pow on Integers only */
     //! Fast Integer Addition
@@ -132,8 +129,12 @@ public:
         if (is_a<Integer>(other)) {
             return powint(static_cast<const Integer&>(other));
         } else {
-            throw std::runtime_error("Not implemented.");
+            return other.rpow(*this);
         }
+    };
+
+    virtual RCP<const Number> rpow(const Number &other) const {
+        throw std::runtime_error("Not implemented.");
     };
 
     virtual void accept(Visitor &v) const;
@@ -174,7 +175,7 @@ int perfect_power(const Integer &n);
 //! Integer Absolute value
 RCP<const Integer> iabs(const Integer &n);
 
-} // CSymPy
+} // SymEngine
 
 #endif
 

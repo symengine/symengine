@@ -1,6 +1,6 @@
-from cython.operator cimport dereference as deref
+from cython.operator cimport dereference as deref, preincrement as inc
 cimport csympy
-from csympy cimport rcp, RCP
+from csympy cimport rcp, RCP, set
 from libcpp cimport bool
 from libcpp.string cimport string
 from cpython cimport PyObject, Py_XINCREF, Py_XDECREF, \
@@ -41,6 +41,8 @@ cdef c2py(RCP[const csympy.Basic] o):
         r = Subs.__new__(Subs)
     elif (csympy.is_a_FunctionWrapper(deref(o))):
         r = FunctionWrapper.__new__(FunctionWrapper)
+    elif (csympy.is_a_RealDouble(deref(o))):
+        r = RealDouble.__new__(RealDouble)
     else:
         raise Exception("Unsupported CSymPy class.")
     r.thisptr = o
@@ -117,6 +119,8 @@ def sympify(a, raise_error=True):
         return a
     elif isinstance(a, (int, long)):
         return Integer(a)
+    elif isinstance(a, (float)):
+        return RealDouble(a)
     else:
         return sympy2csympy(a, raise_error)
 
@@ -200,8 +204,9 @@ cdef class Basic(object):
     def expand(Basic self not None):
         return c2py(csympy.expand(self.thisptr))
 
-    def diff(Basic self not None, Symbol x not None):
-        cdef RCP[const csympy.Symbol] X = csympy.rcp_static_cast_Symbol(x.thisptr)
+    def diff(Basic self not None, x):
+        cdef Symbol symbol = sympify(x)
+        cdef RCP[const csympy.Symbol] X = csympy.rcp_static_cast_Symbol(symbol.thisptr)
         return c2py(deref(self.thisptr).diff(X))
 
     def subs_dict(Basic self not None, subs_dict):
@@ -233,6 +238,10 @@ cdef class Basic(object):
             s.append(c2py(<RCP[const csympy.Basic]>(Y[i])))
         return tuple(s)
 
+    @property
+    def free_symbols(self):
+        cdef csympy.set_basic _set = csympy.free_symbols(deref(self.thisptr))
+        return {c2py(<RCP[const csympy.Basic]>(elem)) for elem in _set}
 
 cdef class Symbol(Basic):
 
@@ -341,28 +350,51 @@ cdef class Integer(Number):
         import sympy
         return sympy.Integer(deref(self.thisptr).__str__().decode("utf-8"))
 
-cdef class Rational(Number):
+
+cdef class RealDouble(Number):
+
+    def __cinit__(self, i = None):
+        if i is None:
+            return
+        cdef double i_ = i
+        self.thisptr = rcp(new csympy.RealDouble(i_))
 
     def __dealloc__(self):
         self.thisptr.reset()
 
     def _sympy_(self):
         import sympy
-        return sympy.Rational(deref(self.thisptr).__str__().decode("utf-8"))
+        return sympy.Float(deref(self.thisptr).__str__().decode("utf-8"))
+
+cdef class Rational(Number):
+
+    def __dealloc__(self):
+        self.thisptr.reset()
+
+    def get_num_den(self):
+        cdef RCP[const csympy.Integer] _num, _den
+        csympy.get_num_den(csympy.rcp_static_cast_Rational(self.thisptr),
+                           csympy.outArg_Integer(_num), csympy.outArg_Integer(_den))
+        return [c2py(<RCP[const csympy.Basic]>_num), c2py(<RCP[const csympy.Basic]>_den)]
+
+    def _sympy_(self):
+        rat = self.get_num_den()
+        return rat[0]._sympy_() / rat[1]._sympy_()
 
 cdef class Complex(Number):
 
     def __dealloc__(self):
         self.thisptr.reset()
 
+    def real_part(self):
+        return c2py(<RCP[const csympy.Basic]>deref(csympy.rcp_static_cast_Complex(self.thisptr)).real_part())
+
+    def imaginary_part(self):
+        return c2py(<RCP[const csympy.Basic]>deref(csympy.rcp_static_cast_Complex(self.thisptr)).imaginary_part())
+
     def _sympy_(self):
         import sympy
-        # FIXME: this is quite fragile. We should request the real and
-        # imaginary parts and construct the sympy expression using those (and
-        # using sympy.I explicitly), rather than relying on the string
-        # representation and hoping sympy.sympify() will do the right thing.
-        s = deref(self.thisptr).__str__().decode("utf-8")
-        return sympy.sympify(s)
+        return self.real_part()._sympy_() + sympy.I * self.imaginary_part()._sympy_()
 
 cdef class Add(Basic):
 
@@ -1094,7 +1126,8 @@ def powermod_list(a, b, m):
         s.append(c2py(<RCP[const csympy.Basic]>(v[i])))
     return s
 
-def eval_double(Basic b not None):
+def eval_double(basic):
+    cdef Basic b = sympify(basic)
     return csympy.eval_double(deref(b.thisptr))
 
 I = c2py(csympy.I)

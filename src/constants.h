@@ -4,15 +4,15 @@
  *
  **/
 
-#ifndef CSYMPY_CONSTANTS_H
-#define CSYMPY_CONSTANTS_H
+#ifndef SYMENGINE_CONSTANTS_H
+#define SYMENGINE_CONSTANTS_H
 
 #include "basic.h"
 #include "number.h"
 #include "integer.h"
 #include "symbol.h"
 
-namespace CSymPy {
+namespace SymEngine {
 
 class Constant : public Basic {
 private:
@@ -35,8 +35,6 @@ public:
      * \return `0` if equal, `-1` , `1` according to string compare
      * */
     virtual int compare(const Basic &o) const;
-    //! \return name of the Constant. Stringify version
-    virtual std::string __str__() const;
     //! \return name of the Constant.
     inline std::string get_name() const {
         return name_;
@@ -68,6 +66,6 @@ extern RCP<const Number> I;
 extern RCP<const Constant> pi;
 extern RCP<const Constant> E;
 
-} // CSymPy
+} // SymEngine
 
 #endif

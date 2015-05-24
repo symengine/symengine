@@ -5,12 +5,12 @@
  **/
 
 
-#ifndef CSYMPY_DICT_H
-#define CSYMPY_DICT_H
+#ifndef SYMENGINE_DICT_H
+#define SYMENGINE_DICT_H
 
 #include <gmpxx.h>
 
-namespace CSymPy {
+namespace SymEngine {
 
 class Basic;
 class Number;
@@ -28,6 +28,7 @@ typedef std::unordered_map<RCP<const Basic>, RCP<const Basic>,
 typedef std::vector<int> vec_int;
 typedef std::vector<RCP<const Basic>> vec_basic;
 typedef std::vector<RCP<const Integer>> vec_integer;
+typedef std::set<RCP<const Basic>, RCPBasicKeyLess> set_basic;
 typedef std::map<vec_int, long long int> map_vec_int;
 typedef std::map<vec_int, mpz_class> map_vec_mpz;
 typedef std::map<RCP<const Basic>, RCP<const Number>,
@@ -92,18 +93,18 @@ typedef struct
 typedef std::unordered_map<vec_int, mpz_class,
         vec_int_hash, vec_int_eq> umap_vec_mpz;
 
-} // CSymPy
+} // SymEngine
 
 
-std::ostream& operator<<(std::ostream& out, const CSymPy::umap_basic_num& d);
-std::ostream& operator<<(std::ostream& out, const CSymPy::vec_int& d);
-std::ostream& operator<<(std::ostream& out, const CSymPy::map_vec_int& d);
-std::ostream& operator<<(std::ostream& out, const CSymPy::map_vec_mpz& d);
-std::ostream& operator<<(std::ostream& out, const CSymPy::umap_vec_mpz& d);
-std::ostream& operator<<(std::ostream& out, const CSymPy::map_basic_num& d);
-std::ostream& operator<<(std::ostream& out, const CSymPy::map_basic_basic& d);
-std::ostream& operator<<(std::ostream& out, const CSymPy::umap_basic_basic& d);
-std::ostream& operator<<(std::ostream& out, const CSymPy::vec_basic& d);
+std::ostream& operator<<(std::ostream& out, const SymEngine::umap_basic_num& d);
+std::ostream& operator<<(std::ostream& out, const SymEngine::vec_int& d);
+std::ostream& operator<<(std::ostream& out, const SymEngine::map_vec_int& d);
+std::ostream& operator<<(std::ostream& out, const SymEngine::map_vec_mpz& d);
+std::ostream& operator<<(std::ostream& out, const SymEngine::umap_vec_mpz& d);
+std::ostream& operator<<(std::ostream& out, const SymEngine::map_basic_num& d);
+std::ostream& operator<<(std::ostream& out, const SymEngine::map_basic_basic& d);
+std::ostream& operator<<(std::ostream& out, const SymEngine::umap_basic_basic& d);
+std::ostream& operator<<(std::ostream& out, const SymEngine::vec_basic& d);
 
 #endif
 

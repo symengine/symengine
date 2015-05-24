@@ -9,8 +9,9 @@
 #include "constants.h"
 #include "functions.h"
 #include "polynomial.h"
+#include "printer.h"
 
-namespace CSymPy {
+namespace SymEngine {
 
 int Basic::__cmp__(const Basic &o) const
 {
@@ -27,10 +28,8 @@ int Basic::__cmp__(const Basic &o) const
 
 std::string Basic::__str__() const
 {
-    std::ostringstream s;
-    s << "<" << typeName<Basic>(*this)
-        << " instance at " << (const void*)this << ">";
-    return s.str();
+    StrPrinter strPrinter;
+    return strPrinter.apply(*this);
 }
 
 RCP<const Basic> expand(const RCP<const Basic> &self)
@@ -58,5 +57,5 @@ RCP<const Basic> Basic::diff(const RCP<const Symbol> &x) const
     return rcp(new Derivative(rcp(this), {x}));
 }
 
-} // CSymPy
+} // SymEngine
 

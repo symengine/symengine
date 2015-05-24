@@ -14,30 +14,35 @@
 #include "visitor.h"
 #include "eval_double.h"
 
-using CSymPy::Basic;
-using CSymPy::Add;
-using CSymPy::Mul;
-using CSymPy::Symbol;
-using CSymPy::symbol;
-using CSymPy::umap_basic_num;
-using CSymPy::map_basic_basic;
-using CSymPy::Integer;
-using CSymPy::integer;
-using CSymPy::Rational;
-using CSymPy::one;
-using CSymPy::zero;
-using CSymPy::Number;
-using CSymPy::pow;
-using CSymPy::RCP;
-using CSymPy::print_stack_on_segfault;
-using CSymPy::Complex;
-using CSymPy::has_symbol;
+using SymEngine::Basic;
+using SymEngine::Add;
+using SymEngine::Mul;
+using SymEngine::Symbol;
+using SymEngine::symbol;
+using SymEngine::umap_basic_num;
+using SymEngine::map_basic_basic;
+using SymEngine::Integer;
+using SymEngine::integer;
+using SymEngine::Rational;
+using SymEngine::one;
+using SymEngine::zero;
+using SymEngine::Number;
+using SymEngine::pow;
+using SymEngine::RCP;
+using SymEngine::print_stack_on_segfault;
+using SymEngine::Complex;
+using SymEngine::has_symbol;
+using SymEngine::is_a;
+using SymEngine::rcp_static_cast;
+using SymEngine::set_basic;
+using SymEngine::free_symbols;
+using SymEngine::function_symbol;
 
 void test_symbol_hash()
 {
-    RCP<const Symbol> x  = rcp(new Symbol("x"));
-    RCP<const Symbol> x2 = rcp(new Symbol("x"));
-    RCP<const Symbol> y  = rcp(new Symbol("y"));
+    RCP<const Symbol> x  = symbol("x");
+    RCP<const Symbol> x2 = symbol("x");
+    RCP<const Symbol> y  = symbol("y");
 
     assert(x->__eq__(*x));
     assert(x->__eq__(*x2));
@@ -66,14 +71,14 @@ void test_symbol_hash()
 void test_symbol_dict()
 {
     umap_basic_num d;
-    RCP<const Basic> x  = rcp(new Symbol("x"));
-    RCP<const Basic> x2 = rcp(new Symbol("x"));
-    RCP<const Basic> y  = rcp(new Symbol("y"));
+    RCP<const Basic> x  = symbol("x");
+    RCP<const Basic> x2 = symbol("x");
+    RCP<const Basic> y  = symbol("y");
     assert( x !=  x2);  // The instances are different...
     assert(eq(x, x2));  // ...but equal in the SymPy sense
 
-    insert(d, x, rcp(new Integer(2)));
-    insert(d, y, rcp(new Integer(3)));
+    insert(d, x, integer(2));
+    insert(d, y, integer(3));
 
     // Test printing:
     std::cout << d << std::endl;
@@ -83,14 +88,14 @@ void test_symbol_dict()
 void test_add()
 {
     umap_basic_num m, m2;
-    RCP<const Basic> x  = rcp(new Symbol("x"));
-    RCP<const Basic> y  = rcp(new Symbol("y"));
-    insert(m, x, rcp(new Integer(2)));
-    insert(m, y, rcp(new Integer(3)));
+    RCP<const Basic> x  = symbol("x");
+    RCP<const Basic> y  = symbol("y");
+    insert(m, x, integer(2));
+    insert(m, y, integer(3));
 
     m2 = m;
     RCP<const Add> a = rcp(new Add(zero, std::move(m2)));
-    insert(m, x, rcp(new Integer(-2)));
+    insert(m, x, integer(-2));
     RCP<const Add> b = rcp(new Add(zero, std::move(m)));
     std::cout << *a << std::endl;
     std::cout << *b << std::endl;
@@ -119,25 +124,25 @@ void test_add()
 
 void test_integer()
 {
-    RCP<const Integer> i = rcp(new Integer(5));
-    RCP<const Integer> j = rcp(new Integer(6));
+    RCP<const Integer> i = integer(5);
+    RCP<const Integer> j = integer(6);
     std::cout << *i << std::endl;
     std::cout << *j << std::endl;
 
     RCP<const Number> k = addnum(i, j);
     std::cout << *k << std::endl;
-    assert(eq(k, rcp(new Integer(11))));
-    assert(neq(k, rcp(new Integer(12))));
+    assert(eq(k, integer(11)));
+    assert(neq(k, integer(12)));
 
     k = subnum(i, j);
     std::cout << *k << std::endl;
-    assert(eq(k, rcp(new Integer(-1))));
-    assert(neq(k, rcp(new Integer(12))));
+    assert(eq(k, integer(-1)));
+    assert(neq(k, integer(12)));
 
     k = mulnum(i, j);
     std::cout << *k << std::endl;
-    assert(eq(k, rcp(new Integer(30))));
-    assert(neq(k, rcp(new Integer(12))));
+    assert(eq(k, integer(30)));
+    assert(neq(k, integer(12)));
 
     k = divnum(i, j);
     assert(eq(k, Rational::from_two_ints(integer(5), integer(6))));
@@ -153,15 +158,18 @@ void test_integer()
 
     k = i->neg();
     std::cout << *k << std::endl;
-    assert(eq(k, rcp(new Integer(-5))));
-    assert(neq(k, rcp(new Integer(12))));
+    assert(eq(k, integer(-5)));
+    assert(neq(k, integer(12)));
 
-    CSYMPY_CHECK_THROW(divnum(i, zero), std::runtime_error)
+    SYMENGINE_CHECK_THROW(divnum(i, zero), std::runtime_error)
 }
 
 void test_rational()
 {
     RCP<const Number> r1, r2, r3;
+    RCP<const Rational> r;
+    mpq_class a, b;
+
     r1 = Rational::from_two_ints(integer(5), integer(6));
     std::cout << *r1 << std::endl;
     assert(eq(r1, Rational::from_two_ints(integer(5), integer(6))));
@@ -256,20 +264,27 @@ void test_rational()
 
     r1 = Rational::from_two_ints(integer(2), integer(3));
     r2 = zero;
-    CSYMPY_CHECK_THROW(divnum(r1, r2), std::runtime_error)
+    SYMENGINE_CHECK_THROW(divnum(r1, r2), std::runtime_error)
+
+    r1 = Rational::from_two_ints(integer(3), integer(5));
+    assert(is_a<Rational>(*r1));
+    r = rcp_static_cast<const Rational>(r1);
+    a = mpq_class(3, 5);
+    b =  r->as_mpq();
+    assert(a == b);
 }
 
 void test_mul()
 {
     map_basic_basic m, m2;
-    RCP<const Basic> x  = rcp(new Symbol("x"));
-    RCP<const Basic> y  = rcp(new Symbol("y"));
-    insert(m, x, rcp(new Integer(2)));
-    insert(m, y, rcp(new Integer(3)));
+    RCP<const Basic> x  = symbol("x");
+    RCP<const Basic> y  = symbol("y");
+    insert(m, x, integer(2));
+    insert(m, y, integer(3));
 
     m2 = m;
     RCP<const Mul> a = rcp(new Mul(one, std::move(m2)));
-    insert(m, x, rcp(new Integer(-2)));
+    insert(m, x, integer(-2));
     RCP<const Mul> b = rcp(new Mul(one, std::move(m)));
     std::cout << *a << std::endl;
     std::cout << *b << std::endl;
@@ -460,11 +475,17 @@ void test_compare()
     cmp = r1->__cmp__(*r2);
     assert(cmp != 0);
     assert(r2->__cmp__(*r1) == -cmp);
+
+    r1 = log(log(x));
+    r2 = log(x);
+    assert(r1->__cmp__(*r2) != 0);
+    assert(r1->__cmp__(*r1) == 0);
 }
 
 void test_complex()
 {
     RCP<const Number> r1, r2, r3, c1, c2, c3;
+    RCP<const Complex> c;
     r1 = Rational::from_two_ints(integer(2), integer(4));
     r2 = Rational::from_two_ints(integer(5), integer(7));
     r3 = Rational::from_two_ints(integer(-5), integer(7));
@@ -582,14 +603,19 @@ void test_complex()
     c3 = Complex::from_two_nums(*r1, *r2);
     assert(eq(subnum(c1, c2), c3));
 
+    assert(is_a<Complex>(*c3));
+    c = rcp_static_cast<const Complex>(c3);
+    assert(eq(c->real_part(), r1));
+    assert(eq(c->imaginary_part(), r2));
+
     // Explicit division by zero checks
-    CSYMPY_CHECK_THROW(divnum(c1, integer(0)), std::runtime_error);
+    SYMENGINE_CHECK_THROW(divnum(c1, integer(0)), std::runtime_error);
 
     r3 = Rational::from_two_ints(integer(0), integer(1));
-    CSYMPY_CHECK_THROW(divnum(c1, r3), std::runtime_error);
+    SYMENGINE_CHECK_THROW(divnum(c1, r3), std::runtime_error);
 
     c2 = Complex::from_two_nums(*r3, *r3);
-    CSYMPY_CHECK_THROW(divnum(c1, c2), std::runtime_error);
+    SYMENGINE_CHECK_THROW(divnum(c1, c2), std::runtime_error);
 }
 
 void test_has()
@@ -610,40 +636,26 @@ void test_has()
     assert(!has_symbol(*r1, z));
 }
 
-void test_eval_double()
+void test_free_symbols()
 {
-    RCP<const Basic> r1, r2, r3;
+    RCP<const Basic> r1;
+    RCP<const Symbol> x, y, z;
+    x = symbol("x");
+    y = symbol("y");
+    z = symbol("z");
+    r1 = add(x, add(z, pow(y, x)));
 
-    r1 = sin(integer(1));
-    assert(::fabs(eval_double(*r1) - 0.841470984808) < 1e-12);
-    assert(::fabs(eval_double(*r1) - 0.85) > 1e-12);
+    set_basic s = free_symbols(*r1);
+    assert(s.size() == 3);
+    assert(s.count(x) == 1);
+    assert(s.count(y) == 1);
+    assert(s.count(z) == 1);
+    s.clear();
 
-    r2 = sin(div(integer(1), integer(2)));
-    assert(::fabs(eval_double(*r2) - 0.479425538604) < 1e-12);
-    assert(::fabs(eval_double(*r2) - 0.48) > 1e-12);
-
-    r3 = add(r1, r2);
-    assert(::fabs(eval_double(*r3) - 1.320896523412) < 1e-12);
-
-    r3 = mul(r1, r2);
-    assert(::fabs(eval_double(*r3) - 0.403422680111) < 1e-12);
-
-    r3 = pow(r1, r2);
-    assert(::fabs(eval_double(*r3) - 0.920580670898) < 1e-12);
-
-    r3 = tan(pow(r1, r2));
-    assert(::fabs(eval_double(*r3) - 1.314847038576) < 1e-12);
-
-    // Symbol must raise an exception
-    CSYMPY_CHECK_THROW(eval_double(*symbol("x")), std::runtime_error)
-
-    // TODO: this is not implemented yet, so we check that it raises an
-    // exception for now
-    CSYMPY_CHECK_THROW(eval_double(*cot(r1)), std::runtime_error)
-    CSYMPY_CHECK_THROW(eval_double(*asin(r1)), std::runtime_error)
-    CSYMPY_CHECK_THROW(eval_double(*acos(r1)), std::runtime_error)
-    CSYMPY_CHECK_THROW(eval_double(*atan(r1)), std::runtime_error)
-    // ... we don't test the rest of functions that are not implemented.
+    r1 = function_symbol("f", mul(x, integer(2)))->diff(x);
+    s = free_symbols(*r1);
+    assert(s.size() == 1);
+    assert(s.count(x) == 1);
 }
 
 int main(int argc, char* argv[])
@@ -670,7 +682,7 @@ int main(int argc, char* argv[])
 
     test_has();
 
-    test_eval_double();
+    test_free_symbols();
 
     return 0;
 }

@@ -7,11 +7,11 @@
 #include "matrix.h"
 #include "symbol.h"
 
-using CSymPy::Basic;
-using CSymPy::RCP;
-using CSymPy::rcp;
-using CSymPy::DenseMatrix;
-using CSymPy::symbol;
+using SymEngine::Basic;
+using SymEngine::RCP;
+using SymEngine::rcp;
+using SymEngine::DenseMatrix;
+using SymEngine::symbol;
 
 int main(int argc, char* argv[])
 {

@@ -2,4 +2,4 @@ add
 ===
 
 .. doxygenfile:: add.h
-    :project: csympy
+    :project: symengine

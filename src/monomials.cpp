@@ -2,7 +2,7 @@
 
 #include "monomials.h"
 
-namespace CSymPy {
+namespace SymEngine {
 
 // This is the fastest implementation:
 void monomial_mul(const vec_int &A, const vec_int &B, vec_int &C)
@@ -31,4 +31,4 @@ void monomial_mul3(const vec_int &A, const vec_int &B, vec_int &C)
 }
 */
 
-} // CSymPy
+} // SymEngine

@@ -5,23 +5,23 @@
  *
  **/
 
-#ifndef CSYMPY_EVAL_ARB_H
-#define CSYMPY_EVAL_ARB_H
+#ifndef SYMENGINE_EVAL_ARB_H
+#define SYMENGINE_EVAL_ARB_H
 
-#ifdef HAVE_CSYMPY_ARB
+#ifdef HAVE_SYMENGINE_ARB
 
 #include "basic.h"
 #include "arb.h"
 
-namespace CSymPy {
+namespace SymEngine {
 
 // `result` is returned by value since `arb_t` is defined as an array in `arb.h`.
-// This design will not change in `arb` and hence will not change in `CSymPy`
+// This design will not change in `arb` and hence will not change in `SymEngine`
 // also.
 void eval_arb(arb_t result, const Basic &b, long precision = 53);
 
-} // CSymPy
+} // SymEngine
 
-#endif // HAVE_CSYMPY_ARB
+#endif // HAVE_SYMENGINE_ARB
 
 #endif

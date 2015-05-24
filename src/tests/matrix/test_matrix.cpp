@@ -7,21 +7,21 @@
 #include "mul.h"
 #include "pow.h"
 
-using CSymPy::print_stack_on_segfault;
-using CSymPy::RCP;
-using CSymPy::integer;
-using CSymPy::DenseMatrix;
-using CSymPy::Basic;
-using CSymPy::symbol;
-using CSymPy::is_a;
-using CSymPy::Add;
-using CSymPy::minus_one;
-using CSymPy::CSRMatrix;
-using CSymPy::add;
-using CSymPy::sub;
-using CSymPy::eye;
-using CSymPy::diag;
-using CSymPy::vec_basic;
+using SymEngine::print_stack_on_segfault;
+using SymEngine::RCP;
+using SymEngine::integer;
+using SymEngine::DenseMatrix;
+using SymEngine::Basic;
+using SymEngine::symbol;
+using SymEngine::is_a;
+using SymEngine::Add;
+using SymEngine::minus_one;
+using SymEngine::CSRMatrix;
+using SymEngine::add;
+using SymEngine::sub;
+using SymEngine::eye;
+using SymEngine::diag;
+using SymEngine::vec_basic;
 
 void test_get_set()
 {
@@ -658,7 +658,7 @@ void test_fraction_free_gaussian_elimination_solve()
     assert(x == DenseMatrix(2, 1, {integer(3), integer(2)}));
 
     // below two sets produce the correct matrix but the results are not
-    // simplified. See: https://github.com/sympy/csympy/issues/183
+    // simplified. See: https://github.com/sympy/symengine/issues/183
     A = DenseMatrix(2, 2, {symbol("a"), symbol("b"),
                            symbol("b"), symbol("a")});
     b = DenseMatrix(2, 1, {
@@ -1289,7 +1289,7 @@ void test_csr_scale_rows()
         {integer(1), integer(2), integer(-3), integer(12), integer(15), integer(18)}));
 
     X = DenseMatrix(3, 1, {integer(1), integer(0), integer(-1)});
-    CSYMPY_CHECK_THROW(csr_scale_columns(A, X), std::runtime_error);
+    SYMENGINE_CHECK_THROW(csr_scale_columns(A, X), std::runtime_error);
 }
 
 void test_csr_scale_columns()
@@ -1304,7 +1304,7 @@ void test_csr_scale_columns()
         {integer(1), integer(6), integer(9), integer(4), integer(-5), integer(18)}));
 
     X = DenseMatrix(3, 1, {integer(0), integer(1), integer(-1)});
-    CSYMPY_CHECK_THROW(csr_scale_columns(A, X), std::runtime_error);
+    SYMENGINE_CHECK_THROW(csr_scale_columns(A, X), std::runtime_error);
 }
 
 void test_csr_binop_csr_canonical()

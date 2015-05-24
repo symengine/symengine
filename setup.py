@@ -1,5 +1,5 @@
 from __future__ import print_function
-from os import getenv
+from os import getenv, path
 import subprocess
 
 # use setuptools by default as per the official advice at:
@@ -33,7 +33,7 @@ def process_opts(opts):
     return ['-D'+'='.join(o) for o in opts]
 
 def cmake_build():
-    cmake_cmd = ["cmake", "."]
+    cmake_cmd = ["cmake", path.dirname(path.realpath(__file__))]
     cmake_cmd.extend(process_opts(cmake_opts))
     if subprocess.call(cmake_cmd) != 0:
         raise EnvironmentError("error calling cmake")
@@ -99,18 +99,18 @@ class InstallWithCmake(_install):
         _install.run(self)
 
 long_description = '''
-CSymPy is a standalone fast C++ symbolic manipulation library.
-Optional thin Python wrappers allow easy usage from Python and
+SymEngine is a standalone fast C++ symbolic manipulation library.
+Optional thin Python wrappers (CSymPy) allow easy usage from Python and
 integration with SymPy.'''
 
 setup(name = "csympy",
       version = "git",
-      description = "CSymPy is a standalone fast C++ symbolic manipulation library",
+      description = "CSymPy is a Python library providing wrappers to SymEngine",
       long_description = "",
       author = "",
       author_email = "",
       license = "MIT",
-      url = "https://github.com/sympy/csympy",
+      url = "https://github.com/sympy/symengine",
       packages = ["csympy", "csympy.lib", "csympy.tests"],
       package_data= {'' : ['lib/csympy_wrapper.so']},
       cmdclass={

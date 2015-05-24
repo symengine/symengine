@@ -1,6 +1,6 @@
 #include <cmath>
 #include <functional>
-
+#include <complex>
 
 #include "basic.h"
 #include "symbol.h"
@@ -15,18 +15,11 @@
 #include "visitor.h"
 #include "eval_double.h"
 
-namespace CSymPy {
+namespace SymEngine {
 
-/*
- * We have two implementations, the visitor pattern (EvalDoubleVisitor) and
- * single dispatch (init_eval_double). Currently the visitor pattern is the
- * default. To instead use single dispatch, uncomment the
- * CSYMPY_SINGLE_DISPATCH define below.
- */
-// #define CSYMPY_SINGLE_DISPATCH
-
-class EvalDoubleVisitor : public Visitor {
-private:
+template <typename T, typename U>
+class EvalDoubleVisitor : public BaseVisitor<U> {
+protected:
     /*
        The 'result_' variable is assigned into at the very end of each visit()
        methods below. The only place where these methods are called from is the
@@ -34,164 +27,225 @@ private:
        returned. Thus no corruption can happen and apply() can be safely called
        recursively.
     */
-    double result_;
+    T result_;
 public:
-    double apply(const Basic &b) {
+    EvalDoubleVisitor(U *p) : BaseVisitor<U>(p) { }
+
+    T apply(const Basic &b) {
         b.accept(*this);
         return result_;
     }
 
-    void visit(const Integer &x) {
-        double tmp = x.i.get_d();
+    void bvisit(const Integer &x) {
+        T tmp = x.i.get_d();
         result_ = tmp;
     }
 
-    void visit(const Rational &x) {
-        double tmp = x.i.get_d();
+    void bvisit(const Rational &x) {
+        T tmp = x.i.get_d();
         result_ = tmp;
     }
 
-    void visit(const Add &x) {
-        double tmp = 0;
+    void bvisit(const RealDouble &x) {
+        T tmp = x.i;
+        result_ = tmp;
+    }
+
+    void bvisit(const Add &x) {
+        T tmp = 0;
         for (auto &p: x.get_args()) tmp = tmp + apply(*p);
         result_ = tmp;
     }
 
-    void visit(const Mul &x) {
-        double tmp = 1;
+    void bvisit(const Mul &x) {
+        T tmp = 1;
         for (auto &p: x.get_args()) tmp = tmp * apply(*p);
         result_ = tmp;
     }
 
-    void visit(const Pow &x) {
-        double a = apply(*(x.base_));
-        double b = apply(*(x.exp_));
-        result_ = ::pow(a, b);
+    void bvisit(const Pow &x) {
+        T exp_ = apply(*(x.get_exp()));
+        if (eq(x.get_base(), E)) {
+            result_ = std::exp(exp_);
+        } else {
+            T base_ = apply(*(x.get_base()));
+            result_ = std::pow(base_, exp_);
+        }
     }
 
-    void visit(const Sin &x) {
-        double tmp = apply(*(x.get_arg()));
-        result_ = ::sin(tmp);
+    void bvisit(const Sin &x) {
+        T tmp = apply(*(x.get_arg()));
+        result_ = std::sin(tmp);
     }
 
-    void visit(const Cos &x) {
-        double tmp = apply(*(x.get_arg()));
-        result_ = ::cos(tmp);
+    void bvisit(const Cos &x) {
+        T tmp = apply(*(x.get_arg()));
+        result_ = std::cos(tmp);
     }
 
-    void visit(const Tan &x) {
-        double tmp = apply(*(x.get_arg()));
-        result_ = ::tan(tmp);
+    void bvisit(const Tan &x) {
+        T tmp = apply(*(x.get_arg()));
+        result_ = std::tan(tmp);
     }
 
-    virtual void visit(const Symbol &) {
-        throw std::runtime_error("Symbol cannot be evaluated as a double.");
+    void bvisit(const Symbol &) {
+        throw std::runtime_error("Symbol cannot be evaluated.");
     };
 
-    virtual void visit(const Polynomial &) {
-        throw std::runtime_error("Not implemented.");
+    void bvisit(const Log &x) {
+        T tmp = apply(*(x.get_arg()));
+        result_ = std::log(tmp);
     };
 
-    virtual void visit(const Complex &) {
-        throw std::runtime_error("Not implemented.");
+    void bvisit(const Cot &x) {
+        T tmp = apply(*(x.get_arg()));
+        result_ = 1.0/std::tan(tmp);
     };
-    virtual void visit(const Log &) {
-        throw std::runtime_error("Not implemented.");
+
+    void bvisit(const Csc &x) {
+        T tmp = apply(*(x.get_arg()));
+        result_ = 1.0/std::sin(tmp);
     };
-    virtual void visit(const Derivative &) {
-        throw std::runtime_error("Not implemented.");
+
+    void bvisit(const Sec &x) {
+        T tmp = apply(*(x.get_arg()));
+        result_ = 1.0/std::cos(tmp);
     };
-    virtual void visit(const Cot &) {
-        throw std::runtime_error("Not implemented.");
+
+    void bvisit(const ASin &x) {
+        T tmp = apply(*(x.get_arg()));
+        result_ = std::asin(tmp);
     };
-    virtual void visit(const Csc &) {
-        throw std::runtime_error("Not implemented.");
+
+    void bvisit(const ACos &x) {
+        T tmp = apply(*(x.get_arg()));
+        result_ = std::acos(tmp);
     };
-    virtual void visit(const Sec &) {
-        throw std::runtime_error("Not implemented.");
+
+    void bvisit(const ASec &x) {
+        T tmp = apply(*(x.get_arg()));
+        result_ = std::acos(1.0/tmp);
     };
-    virtual void visit(const ASin &) {
-        throw std::runtime_error("Not implemented.");
+
+    void bvisit(const ACsc &x) {
+        T tmp = apply(*(x.get_arg()));
+        result_ = std::asin(1.0/tmp);
     };
-    virtual void visit(const ACos &) {
-        throw std::runtime_error("Not implemented.");
+
+    void bvisit(const ATan &x) {
+        T tmp = apply(*(x.get_arg()));
+        result_ = std::atan(tmp);
     };
-    virtual void visit(const ASec &) {
-        throw std::runtime_error("Not implemented.");
+
+    void bvisit(const ACot &x) {
+        T tmp = apply(*(x.get_arg()));
+        result_ = std::atan(1.0/tmp);
     };
-    virtual void visit(const ACsc &) {
-        throw std::runtime_error("Not implemented.");
+
+    void bvisit(const Sinh &x) {
+        T tmp = apply(*(x.get_arg()));
+        result_ = std::sinh(tmp);
     };
-    virtual void visit(const ATan &) {
-        throw std::runtime_error("Not implemented.");
+
+    void bvisit(const Cosh &x) {
+        T tmp = apply(*(x.get_arg()));
+        result_ = std::cosh(tmp);
     };
-    virtual void visit(const ACot &) {
-        throw std::runtime_error("Not implemented.");
+
+    void bvisit(const Tanh &x) {
+        T tmp = apply(*(x.get_arg()));
+        result_ = std::tanh(tmp);
     };
-    virtual void visit(const ATan2 &) {
-        throw std::runtime_error("Not implemented.");
+
+    void bvisit(const Coth &x) {
+        T tmp = apply(*(x.get_arg()));
+        result_ = 1.0/std::tanh(tmp);
     };
-    virtual void visit(const LambertW &) {
-        throw std::runtime_error("Not implemented.");
+
+    void bvisit(const ASinh &x) {
+        T tmp = apply(*(x.get_arg()));
+        result_ = std::asinh(tmp);
     };
-    virtual void visit(const FunctionSymbol &) {
-        throw std::runtime_error("Not implemented.");
+
+    void bvisit(const ACosh &x) {
+        T tmp = apply(*(x.get_arg()));
+        result_ = std::acosh(tmp);
     };
-    virtual void visit(const Sinh &) {
-        throw std::runtime_error("Not implemented.");
+
+    void bvisit(const ATanh &x) {
+        T tmp = apply(*(x.get_arg()));
+        result_ = std::atanh(tmp);
     };
-    virtual void visit(const Cosh &) {
-        throw std::runtime_error("Not implemented.");
+
+    void bvisit(const ACoth &x) {
+        T tmp = apply(*(x.get_arg()));
+        result_ = std::atanh(1.0/tmp);
     };
-    virtual void visit(const Tanh &) {
-        throw std::runtime_error("Not implemented.");
+
+    void bvisit(const ASech &x) {
+        T tmp = apply(*(x.get_arg()));
+        result_ = std::acosh(1.0/tmp);
     };
-    virtual void visit(const Coth &) {
-        throw std::runtime_error("Not implemented.");
+
+    void bvisit(const Constant &x) {
+        if (x.__eq__(*pi)) {
+            result_ = std::atan2(0, -1);
+        } else if (x.__eq__(*E)) {
+            result_ = std::exp(1);
+        } else {
+            throw std::runtime_error("Constant " + x.get_name() + " is not implemented.");
+        }
     };
-    virtual void visit(const ASinh &) {
-        throw std::runtime_error("Not implemented.");
+
+    void bvisit(const Abs &x) {
+        T tmp = apply(*(x.get_arg()));
+        result_ = std::abs(tmp);
     };
-    virtual void visit(const ACosh &) {
-        throw std::runtime_error("Not implemented.");
-    };
-    virtual void visit(const ATanh &) {
-        throw std::runtime_error("Not implemented.");
-    };
-    virtual void visit(const ACoth &) {
-        throw std::runtime_error("Not implemented.");
-    };
-    virtual void visit(const KroneckerDelta &) {
-        throw std::runtime_error("Not implemented.");
-    };
-    virtual void visit(const LeviCivita &) {
-        throw std::runtime_error("Not implemented.");
-    };
-    virtual void visit(const Zeta &) {
-        throw std::runtime_error("Not implemented.");
-    };
-    virtual void visit(const Dirichlet_eta &) {
-        throw std::runtime_error("Not implemented.");
-    };
-    virtual void visit(const Gamma &) {
-        throw std::runtime_error("Not implemented.");
-    };
-    virtual void visit(const LowerGamma &) {
-        throw std::runtime_error("Not implemented.");
-    };
-    virtual void visit(const UpperGamma &) {
-        throw std::runtime_error("Not implemented.");
-    };
-    virtual void visit(const Constant &) {
-        throw std::runtime_error("Not implemented.");
-    };
-    virtual void visit(const Abs &) {
-        throw std::runtime_error("Not implemented.");
-    };
-    virtual void visit(const Subs &) {
+
+    void bvisit(const Basic &) {
         throw std::runtime_error("Not implemented.");
     };
 };
+
+class EvalRealDoubleVisitor : public EvalDoubleVisitor<double, EvalRealDoubleVisitor> {
+public:
+    EvalRealDoubleVisitor() : EvalDoubleVisitor(this) { };
+
+    // Classes not implemented are
+    // Subs, UpperGamma, LowerGamma, Dirichlet_eta, Zeta
+    // LeviCivita, KroneckerDelta, FunctionSymbol, LambertW
+    // Derivative, Complex
+
+    using EvalDoubleVisitor::bvisit;
+
+    void bvisit(const ATan2 &x) {
+        double num = apply(*(x.get_num()));
+        double den = apply(*(x.get_den()));
+        result_ = std::atan2(num, den);
+    };
+
+    void bvisit(const Gamma &x) {
+        double tmp = apply(*(x.get_args()[0]));
+        result_ = std::tgamma(tmp);
+    };
+};
+
+class EvalComplexDoubleVisitor : public EvalDoubleVisitor<std::complex<double>, EvalComplexDoubleVisitor> {
+public:
+    EvalComplexDoubleVisitor() : EvalDoubleVisitor(this) { };
+
+    // Classes not implemented are
+    // Subs, UpperGamma, LowerGamma, Dirichlet_eta, Zeta
+    // LeviCivita, KroneckerDelta, FunctionSymbol, LambertW
+    // Derivative, ATan2, Gamma
+
+    using EvalDoubleVisitor::bvisit;
+
+    void bvisit(const Complex &x) {
+        result_ = std::complex<double>(x.real_.get_d(), x.imaginary_.get_d());
+    };
+};
+
 
 /*
  * These two seem to be equivalent and about the same fast.
@@ -213,46 +267,156 @@ std::vector<fn> init_eval_double()
         double tmp = (static_cast<const Rational &>(x)).i.get_d();
         return tmp;
     };
+    table[REAL_DOUBLE] = [](const Basic &x) {
+        double tmp = (static_cast<const RealDouble &>(x)).i;
+        return tmp;
+    };
     table[ADD] = [](const Basic &x) {
         double tmp = 0;
-        for (auto &p: x.get_args()) tmp = tmp + eval_double(*p);
+        for (auto &p: x.get_args()) tmp = tmp + eval_double_single_dispatch(*p);
         return tmp;
     };
     table[MUL] = [](const Basic &x) {
         double tmp = 1;
-        for (auto &p: x.get_args()) tmp = tmp * eval_double(*p);
+        for (auto &p: x.get_args()) tmp = tmp * eval_double_single_dispatch(*p);
         return tmp;
     };
     table[POW] = [](const Basic &x) {
-        double a = eval_double(*(static_cast<const Pow &>(x)).base_);
-        double b = eval_double(*(static_cast<const Pow &>(x)).exp_);
+        double a = eval_double_single_dispatch(*(static_cast<const Pow &>(x)).base_);
+        double b = eval_double_single_dispatch(*(static_cast<const Pow &>(x)).exp_);
         return ::pow(a, b);
     };
     table[SIN] = [](const Basic &x) {
-        double tmp = eval_double(*(static_cast<const Sin &>(x)).get_arg());
+        double tmp = eval_double_single_dispatch(*(static_cast<const Sin &>(x)).get_arg());
         return ::sin(tmp);
     };
     table[COS] = [](const Basic &x) {
-        double tmp = eval_double(*(static_cast<const Cos &>(x)).get_arg());
+        double tmp = eval_double_single_dispatch(*(static_cast<const Cos &>(x)).get_arg());
         return ::cos(tmp);
     };
     table[TAN] = [](const Basic &x) {
-        double tmp = eval_double(*(static_cast<const Tan &>(x)).get_arg());
+        double tmp = eval_double_single_dispatch(*(static_cast<const Tan &>(x)).get_arg());
         return ::tan(tmp);
+    };
+    table[LOG] = [](const Basic &x) {
+        double tmp = eval_double_single_dispatch(*(static_cast<const Log &>(x)).get_arg());
+        return ::log(tmp);
+    };
+    table[COT] = [](const Basic &x) {
+        double tmp = eval_double_single_dispatch(*(static_cast<const Cot &>(x)).get_arg());
+        return 1/::tan(tmp);
+    };
+    table[CSC] = [](const Basic &x) {
+        double tmp = eval_double_single_dispatch(*(static_cast<const Csc &>(x)).get_arg());
+        return 1/::sin(tmp);
+    };
+    table[SEC] = [](const Basic &x) {
+        double tmp = eval_double_single_dispatch(*(static_cast<const Sec &>(x)).get_arg());
+        return 1/::cos(tmp);
+    };
+    table[ASIN] = [](const Basic &x) {
+        double tmp = eval_double_single_dispatch(*(static_cast<const ASin &>(x)).get_arg());
+        return ::asin(tmp);
+    };
+    table[ACOS] = [](const Basic &x) {
+        double tmp = eval_double_single_dispatch(*(static_cast<const ACos &>(x)).get_arg());
+        return ::acos(tmp);
+    };
+    table[ASEC]= [](const Basic &x) {
+        double tmp = eval_double_single_dispatch(*(static_cast<const ASec &>(x)).get_arg());
+        return ::acos(1/tmp);
+    };
+    table[ACSC] = [](const Basic &x) {
+        double tmp = eval_double_single_dispatch(*(static_cast<const ACsc &>(x)).get_arg());
+        return ::asin(1/tmp);
+    };
+    table[ATAN] = [](const Basic &x) {
+        double tmp = eval_double_single_dispatch(*(static_cast<const ATan &>(x)).get_arg());
+        return ::atan(tmp);
+    };
+    table[ACOT] = [](const Basic &x) {
+        double tmp = eval_double_single_dispatch(*(static_cast<const ACot &>(x)).get_arg());
+        return ::atan(1/tmp);
+    };
+    table[ATAN2] = [](const Basic &x) {
+        double num = eval_double_single_dispatch(*(static_cast<const ATan2 &>(x)).get_num());
+        double den = eval_double_single_dispatch(*(static_cast<const ATan2 &>(x)).get_den());
+        return ::atan2(num, den);
+    };
+    table[ACOT] = [](const Basic &x) {
+        double tmp = eval_double_single_dispatch(*(static_cast<const ACot &>(x)).get_arg());
+        return ::atan(1/tmp);
+    };
+    table[SINH] = [](const Basic &x) {
+        double tmp = eval_double_single_dispatch(*(static_cast<const Sinh &>(x)).get_arg());
+        return ::sinh(tmp);
+    };
+    table[COSH] = [](const Basic &x) {
+        double tmp = eval_double_single_dispatch(*(static_cast<const Cosh &>(x)).get_arg());
+        return ::cosh(tmp);
+    };
+    table[TANH] = [](const Basic &x) {
+        double tmp = eval_double_single_dispatch(*(static_cast<const Tanh &>(x)).get_arg());
+        return ::tanh(tmp);
+    };
+    table[COTH] = [](const Basic &x) {
+        double tmp = eval_double_single_dispatch(*(static_cast<const Coth &>(x)).get_arg());
+        return 1/::tanh(tmp);
+    };
+    table[ASINH] = [](const Basic &x) {
+        double tmp = eval_double_single_dispatch(*(static_cast<const ASinh &>(x)).get_arg());
+        return ::asinh(tmp);
+    };
+    table[ACOSH] = [](const Basic &x) {
+        double tmp = eval_double_single_dispatch(*(static_cast<const ACosh &>(x)).get_arg());
+        return ::acosh(tmp);
+    };
+    table[ATANH] = [](const Basic &x) {
+        double tmp = eval_double_single_dispatch(*(static_cast<const ATanh &>(x)).get_arg());
+        return ::atanh(tmp);
+    };
+    table[ACOTH] = [](const Basic &x) {
+        double tmp = eval_double_single_dispatch(*(static_cast<const ACoth &>(x)).get_arg());
+        return std::atanh(1/tmp);
+    };
+    table[ASECH] = [](const Basic &x) {
+        double tmp = eval_double_single_dispatch(*(static_cast<const ASech &>(x)).get_arg());
+        return ::acosh(1/tmp);
+    };
+    table[GAMMA] = [](const Basic &x) {
+        double tmp = eval_double_single_dispatch(*(static_cast<const Gamma &>(x)).get_args()[0]);
+        return ::tgamma(tmp);
+    };
+    table[CONSTANT] = [](const Basic &x) {
+        if (x.__eq__(*pi)) {
+            return ::atan2(0, -1);
+        } else if (x.__eq__(*E)) {
+            return ::exp(1);
+        } else {
+            throw std::runtime_error("Constant " + static_cast<const Constant &>(x).get_name() + " is not implemented.");
+        }
+    };
+    table[ABS] = [](const Basic &x) {
+        double tmp = eval_double_single_dispatch(*(static_cast<const Abs &>(x)).get_arg());
+        return std::abs(tmp);
     };
     return table;
 }
 
 const static std::vector<fn> table_eval_double = init_eval_double();
 
-double eval_double(const Basic &b)
-{
-#if defined(CSYMPY_SINGLE_DISPATCH)
-    return table_eval_double[b.get_type_code()](b);
-#else
-    EvalDoubleVisitor v;
+double eval_double(const Basic &b) {
+    EvalRealDoubleVisitor v;
     return v.apply(b);
-#endif
 }
 
-} // CSymPy
+std::complex<double> eval_complex_double(const Basic &b) {
+    EvalComplexDoubleVisitor v;
+    return v.apply(b);
+}
+
+double eval_double_single_dispatch(const Basic &b) {
+    return table_eval_double[b.get_type_code()](b);
+}
+
+} // SymEngine

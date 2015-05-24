@@ -12,9 +12,9 @@
 #include "visitor.h"
 #include "eval_arb.h"
 
-#ifdef HAVE_CSYMPY_ARB
+#ifdef HAVE_SYMENGINE_ARB
 
-namespace CSymPy {
+namespace SymEngine {
 
 class EvalArbVisitor : public Visitor {
 private:
@@ -44,6 +44,14 @@ public:
         fmpq_set_mpq(q_, x.i.get_mpq_t());
         arb_set_fmpq(result_, q_, prec_);
         fmpq_clear(q_);
+    }
+
+    virtual void visit(const RealDouble &x) {
+        arf_t f_;
+        arf_init(f_);
+        arf_set_d(f_, x.i);
+        arb_set_arf(result_, f_);
+        arf_clear(f_);
     }
 
     virtual void visit(const Add &x) {
@@ -235,6 +243,9 @@ public:
     virtual void visit(const ACoth &) {
         throw std::runtime_error("Not implemented.");
     };
+    virtual void visit(const ASech &) {
+        throw std::runtime_error("Not implemented.");
+    };
     virtual void visit(const KroneckerDelta &) {
         throw std::runtime_error("Not implemented.");
     };
@@ -263,7 +274,7 @@ public:
         } else if (x.__eq__(*E)) {
             arb_const_e(result_, prec_);
         } else {
-            throw std::runtime_error("Unknown constant.");
+            throw std::runtime_error("Constant " + x.get_name() + " is not implemented.");
         }
     }
 
@@ -282,6 +293,6 @@ void eval_arb(arb_t result, const Basic &b, long precision)
     v.apply(result, b);
 }
 
-} // CSymPy
+} // SymEngine
 
-#endif // HAVE_CSYMPY_ARB
+#endif // HAVE_SYMENGINE_ARB

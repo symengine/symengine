@@ -11,34 +11,35 @@
 #include "functions.h"
 #include "constants.h"
 
-using CSymPy::Basic;
-using CSymPy::Add;
-using CSymPy::Mul;
-using CSymPy::Pow;
-using CSymPy::Symbol;
-using CSymPy::umap_basic_num;
-using CSymPy::map_vec_int;
-using CSymPy::Integer;
-using CSymPy::integer;
-using CSymPy::multinomial_coefficients;
-using CSymPy::one;
-using CSymPy::zero;
-using CSymPy::sin;
-using CSymPy::RCP;
-using CSymPy::rcp;
-using CSymPy::rcp_dynamic_cast;
-using CSymPy::map_basic_basic;
-using CSymPy::print_stack_on_segfault;
+using SymEngine::Basic;
+using SymEngine::Add;
+using SymEngine::Mul;
+using SymEngine::Pow;
+using SymEngine::Symbol;
+using SymEngine::symbol;
+using SymEngine::umap_basic_num;
+using SymEngine::map_vec_int;
+using SymEngine::Integer;
+using SymEngine::integer;
+using SymEngine::multinomial_coefficients;
+using SymEngine::one;
+using SymEngine::zero;
+using SymEngine::sin;
+using SymEngine::RCP;
+using SymEngine::rcp;
+using SymEngine::rcp_dynamic_cast;
+using SymEngine::map_basic_basic;
+using SymEngine::print_stack_on_segfault;
 
 void test_symbol()
 {
-    RCP<const Basic> x = rcp(new Symbol("x"));
-    RCP<const Basic> y = rcp(new Symbol("y"));
-    RCP<const Basic> z = rcp(new Symbol("z"));
-    RCP<const Basic> w = rcp(new Symbol("w"));
-    RCP<const Basic> i2 = rcp(new Integer(2));
-    RCP<const Basic> i3 = rcp(new Integer(3));
-    RCP<const Basic> i4 = rcp(new Integer(4));
+    RCP<const Basic> x = symbol("x");
+    RCP<const Basic> y = symbol("y");
+    RCP<const Basic> z = symbol("z");
+    RCP<const Basic> w = symbol("w");
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> i3 = integer(3);
+    RCP<const Basic> i4 = integer(4);
 
     RCP<const Basic> r1 = x;
     RCP<const Basic> r2 = y;
@@ -50,13 +51,13 @@ void test_symbol()
 
 void test_add()
 {
-    RCP<const Basic> x = rcp(new Symbol("x"));
-    RCP<const Basic> y = rcp(new Symbol("y"));
-    RCP<const Basic> z = rcp(new Symbol("z"));
-    RCP<const Basic> w = rcp(new Symbol("w"));
-    RCP<const Basic> i2 = rcp(new Integer(2));
-    RCP<const Basic> i3 = rcp(new Integer(3));
-    RCP<const Basic> i4 = rcp(new Integer(4));
+    RCP<const Basic> x = symbol("x");
+    RCP<const Basic> y = symbol("y");
+    RCP<const Basic> z = symbol("z");
+    RCP<const Basic> w = symbol("w");
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> i3 = integer(3);
+    RCP<const Basic> i4 = integer(4);
 
     RCP<const Basic> r1 = add(x, y);
     RCP<const Basic> r2 = mul(i2, y);
@@ -91,13 +92,13 @@ void test_add()
 
 void test_mul()
 {
-    RCP<const Basic> x = rcp(new Symbol("x"));
-    RCP<const Basic> y = rcp(new Symbol("y"));
-    RCP<const Basic> z = rcp(new Symbol("z"));
-    RCP<const Basic> w = rcp(new Symbol("w"));
-    RCP<const Basic> i2 = rcp(new Integer(2));
-    RCP<const Basic> i3 = rcp(new Integer(3));
-    RCP<const Basic> i4 = rcp(new Integer(4));
+    RCP<const Basic> x = symbol("x");
+    RCP<const Basic> y = symbol("y");
+    RCP<const Basic> z = symbol("z");
+    RCP<const Basic> w = symbol("w");
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> i3 = integer(3);
+    RCP<const Basic> i4 = integer(4);
 
     RCP<const Basic> r1 = mul(x, y);
     RCP<const Basic> r2 = pow(y, i2);
@@ -126,13 +127,13 @@ void test_mul()
 
 void test_pow()
 {
-    RCP<const Basic> x = rcp(new Symbol("x"));
-    RCP<const Basic> y = rcp(new Symbol("y"));
-    RCP<const Basic> z = rcp(new Symbol("z"));
-    RCP<const Basic> w = rcp(new Symbol("w"));
-    RCP<const Basic> i2 = rcp(new Integer(2));
-    RCP<const Basic> i3 = rcp(new Integer(3));
-    RCP<const Basic> i4 = rcp(new Integer(4));
+    RCP<const Basic> x = symbol("x");
+    RCP<const Basic> y = symbol("y");
+    RCP<const Basic> z = symbol("z");
+    RCP<const Basic> w = symbol("w");
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> i3 = integer(3);
+    RCP<const Basic> i4 = integer(4);
 
     RCP<const Basic> r1 = pow(x, y);
     RCP<const Basic> r2 = pow(y, y);
@@ -159,13 +160,13 @@ void test_pow()
 
 void test_trig()
 {
-    RCP<const Basic> x = rcp(new Symbol("x"));
-    RCP<const Basic> y = rcp(new Symbol("y"));
-    RCP<const Basic> z = rcp(new Symbol("z"));
-    RCP<const Basic> w = rcp(new Symbol("w"));
-    RCP<const Basic> i2 = rcp(new Integer(2));
-    RCP<const Basic> i3 = rcp(new Integer(3));
-    RCP<const Basic> i4 = rcp(new Integer(4));
+    RCP<const Basic> x = symbol("x");
+    RCP<const Basic> y = symbol("y");
+    RCP<const Basic> z = symbol("z");
+    RCP<const Basic> w = symbol("w");
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> i3 = integer(3);
+    RCP<const Basic> i4 = integer(4);
 
     RCP<const Basic> r1 = sin(x);
     RCP<const Basic> r2 = zero;

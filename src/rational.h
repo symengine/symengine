@@ -3,15 +3,15 @@
  *  Class for Rationals built on top of Number class
  *
  **/
-#ifndef CSYMPY_RATIONAL_H
-#define CSYMPY_RATIONAL_H
+#ifndef SYMENGINE_RATIONAL_H
+#define SYMENGINE_RATIONAL_H
 
 #include "basic.h"
 #include "number.h"
 #include "integer.h"
 #include "constants.h"
 
-namespace CSymPy {
+namespace SymEngine {
 //! Rational Class
 class Rational : public Number {
 public:
@@ -34,8 +34,6 @@ public:
      * */
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
-    //! \return stringify version of `self`s
-    virtual std::string __str__() const;
     //! \return true if canonical
     bool is_canonical(const mpq_class &i);
 
@@ -44,6 +42,8 @@ public:
     * */
     static RCP<const Number> from_two_ints(const RCP<const Integer> &n,
             const RCP<const Integer> &d);
+    //! Convert to `mpq_class`.
+    inline mpq_class as_mpq() const { return this->i; }
     //! \return `true` if `0`
     virtual bool is_zero() const { return this->i == 0; }
     //! \return `true` if `1`
@@ -147,12 +147,12 @@ public:
         // pass num/den into the constructor directly:
         if (!neg)
             if (abs(den) == one->i)
-                return rcp(new Integer(num*sgn(den)));
+                return integer(num*sgn(den));
             else
                 return rcp(new Rational(mpq_class(num*sgn(den), abs(den))));
         else
             if (abs(num) == one->i)
-                return rcp(new Integer(den*sgn(num)));
+                return integer(den*sgn(num));
             else
                 return rcp(new Rational(mpq_class(den*sgn(num), abs(num))));
     }
@@ -182,7 +182,7 @@ public:
         if (is_a<Integer>(other)) {
             return rsubrat(static_cast<const Integer&>(other));
         } else {
-            return other.sub(*this);
+            throw std::runtime_error("Not implemented.");
         }
     };
     //! Converts the param `other` appropriately and then calls `mulrat`
@@ -218,8 +218,12 @@ public:
         if (is_a<Integer>(other)) {
             return powrat(static_cast<const Integer&>(other));
         } else {
-            throw std::runtime_error("Not implemented.");
+            return other.rpow(*this);
         }
+    };
+
+    virtual RCP<const Number> rpow(const Number &other) const {
+        throw std::runtime_error("Not implemented.");
     };
 
     virtual void accept(Visitor &v) const;
@@ -230,6 +234,6 @@ void get_num_den(const RCP<const Rational> &rat,
         const Ptr<RCP<const Integer>> &num,
         const Ptr<RCP<const Integer>> &den);
 
-} // CSymPy
+} // SymEngine
 
 #endif

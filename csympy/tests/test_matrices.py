@@ -1,4 +1,3 @@
-from nose.tools import raises
 from csympy.lib.csympy_wrapper import (densematrix, Symbol, Integer,
     function_symbol, I)
 

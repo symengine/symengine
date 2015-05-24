@@ -1,11 +1,11 @@
 #include "rational.h"
 
-namespace CSymPy {
+namespace SymEngine {
 
 Rational::Rational(mpq_class i)
     : i{i}
 {
-    CSYMPY_ASSERT(is_canonical(this->i))
+    SYMENGINE_ASSERT(is_canonical(this->i))
 }
 
 bool Rational::is_canonical(const mpq_class &i)
@@ -24,7 +24,7 @@ RCP<const Number> Rational::from_mpq(const mpq_class i)
 {
     // If the result is an Integer, return an Integer:
     if (i.get_den() == 1) {
-        return rcp(new Integer(i.get_num()));
+        return integer(i.get_num());
     } else {
         return rcp(new Rational(i));
     }
@@ -65,17 +65,10 @@ bool Rational::__eq__(const Basic &o) const
 
 int Rational::compare(const Basic &o) const
 {
-    CSYMPY_ASSERT(is_a<Rational>(o))
+    SYMENGINE_ASSERT(is_a<Rational>(o))
     const Rational &s = static_cast<const Rational &>(o);
     if (i == s.i) return 0;
     return i < s.i ? -1 : 1;
-}
-
-std::string Rational::__str__() const
-{
-    std::ostringstream s;
-    s << this->i;
-    return s.str();
 }
 
 void get_num_den(const RCP<const Rational> &rat,
@@ -85,4 +78,4 @@ void get_num_den(const RCP<const Rational> &rat,
     *num = integer(rat->i.get_num());
     *den = integer(rat->i.get_den());
 }
-} // CSymPy
+} // SymEngine

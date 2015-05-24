@@ -3,13 +3,13 @@
  *  Multiplication class
  *
  **/
-#ifndef CSYMPY_MUL_H
-#define CSYMPY_MUL_H
+#ifndef SYMENGINE_MUL_H
+#define SYMENGINE_MUL_H
 
 #include "basic.h"
 #include "dict.h"
 
-namespace CSymPy {
+namespace SymEngine {
 
 class Mul : public Basic {
 public: // TODO: make this private
@@ -29,8 +29,6 @@ public:
      * */
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
-    //! \return stringify version of `self`
-    virtual std::string __str__() const;
 
     // Performs canonicalization first:
     //! Create a Mul from a dict
@@ -47,7 +45,7 @@ public:
             const Ptr<RCP<const Basic>> &base);
     //! Rewrite as 2 terms
     /*!
-        Example: if this=3*x^2*y^2*z^2`, then `a=x^2` and `b=3*y^2*z^2`
+        Example: if this=3*x**2*y**2*z**2`, then `a=x**2` and `b=3*y**2*z**2`
     * */
     void as_two_terms(const Ptr<RCP<const Basic>> &a,
             const Ptr<RCP<const Basic>> &b) const;
@@ -77,6 +75,6 @@ RCP<const Basic> neg(const RCP<const Basic> &a);
 //! Expand `self`
 RCP<const Basic> mul_expand(const RCP<const Mul> &self);
 
-} // CSymPy
+} // SymEngine
 
 #endif

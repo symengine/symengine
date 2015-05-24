@@ -1,4 +1,4 @@
-# CMake 
+# CMake
 CMakeCache.txt
 CMakeFiles
 Makefile
@@ -19,7 +19,7 @@ doc/doxyxml
 doc/html
 
 # Config Files
-src/csympy_config.h
+src/symengine_config.h
 src/teuchos/Teuchos_config.h
 
 # Python build files
@@ -45,9 +45,11 @@ src/tests/ntheory/test_diophantine
 src/tests/printing/test_printing
 src/tests/rcp/test_rcp
 src/tests/cwrapper/test_cwrapper
+src/tests/eval/test_eval_double
 
 # Benchmarks executables
 benchmarks/add1
+benchmarks/eval_double1
 benchmarks/expand1
 benchmarks/expand2
 benchmarks/expand2b

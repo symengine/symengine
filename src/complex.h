@@ -3,15 +3,15 @@
  *  Class for Complex built on top of Number class
  *
  **/
-#ifndef CSYMPY_COMPLEX_H
-#define CSYMPY_COMPLEX_H
+#ifndef SYMENGINE_COMPLEX_H
+#define SYMENGINE_COMPLEX_H
 
 #include "basic.h"
 #include "number.h"
 #include "integer.h"
 #include "rational.h"
 
-namespace CSymPy {
+namespace SymEngine {
 //! Complex Class
 class Complex : public Number {
 public:
@@ -40,18 +40,16 @@ public:
      * \return whether the 2 objects are equal
      * */
     virtual bool __eq__(const Basic &o) const;
-    //! \return stringify version of `self`s
-    virtual std::string __str__() const;
-    inline virtual int compare(const Basic &o) const {
-        throw std::runtime_error("Complex Numbers cannot be totally ordered");
-    }
-    //! \return `true` if positive
+    virtual int compare(const Basic &o) const;
+    //! \returns `false`
+    // False is returned because complex cannot be compared with zero
     inline virtual bool is_positive() const {
-        throw std::runtime_error("Complex Numbers cannot be totally ordered");
+        return false;
     }
-    //! \return `true` if negative
+    //! \returns `false`
+    // False is returned because complex cannot be compared with zero
     inline virtual bool is_negative() const {
-        throw std::runtime_error("Complex Numbers cannot be totally ordered");
+        return false;
     }
 
     /*! Constructs Complex from re, im. If im is 0
@@ -196,6 +194,11 @@ public:
             return from_mpq((this->real_ * other.i) / conjugate, (this->imaginary_ * (-other.i)) / conjugate);
         }
     }
+    /*! Pow Complex
+     * \param other of type Integer
+     * */
+    RCP<const Number> powcomp(const Integer &other) const;
+
     //! Converts the param `other` appropriately and then calls `addcomp`
     virtual RCP<const Number> add(const Number &other) const {
         if (is_a<Rational>(other)) {
@@ -205,7 +208,7 @@ public:
         } else if (is_a<Complex>(other)) {
             return addcomp(static_cast<const Complex&>(other));
         } else {
-            throw std::runtime_error("Not implemented.");
+            return other.add(*this);
         }
     };
     //! Converts the param `other` appropriately and then calls `subcomp`
@@ -217,7 +220,7 @@ public:
         } else if (is_a<Complex>(other)) {
             return subcomp(static_cast<const Complex&>(other));
         } else {
-            throw std::runtime_error("Not implemented.");
+            return other.rsub(*this);
         }
     };
     //! Converts the param `other` appropriately and then calls `rsubcomp`
@@ -226,8 +229,6 @@ public:
             return rsubcomp(static_cast<const Rational&>(other));
         } else if (is_a<Integer>(other)) {
             return rsubcomp(static_cast<const Integer&>(other));
-        } else if (is_a<Complex>(other)) {
-            return rsubcomp(static_cast<const Complex&>(other));
         } else {
             throw std::runtime_error("Not implemented.");
         }
@@ -241,7 +242,7 @@ public:
         } else if (is_a<Complex>(other)) {
             return mulcomp(static_cast<const Complex&>(other));
         } else {
-            throw std::runtime_error("Not implemented.");
+            return other.mul(*this);
         }
     };
     //! Converts the param `other` appropriately and then calls `divcomp`
@@ -253,7 +254,7 @@ public:
         } else if (is_a<Complex>(other)) {
             return divcomp(static_cast<const Complex&>(other));
         } else {
-            throw std::runtime_error("Not implemented.");
+            return other.rdiv(*this);
         }
     };
     //! Converts the param `other` appropriately and then calls `rdivcomp`
@@ -267,24 +268,29 @@ public:
     //! Converts the param `other` appropriately and then calls `powcomp`
     virtual RCP<const Number> pow(const Number &other) const {
         if (is_a<Integer>(other)) {
-            // Needs to be implemented
-            throw std::runtime_error("Not implemented.");
+            return powcomp(static_cast<const Integer&>(other));
         } else {
-            throw std::runtime_error("Not implemented.");
+            return other.rpow(*this);
         }
+    };
+
+    //! Get the real part of the complex number
+    inline RCP<const Number> real_part() const {
+        return Rational::from_mpq(real_);
+    };
+
+    //! Get the imaginary part of the complex number
+    inline RCP<const Number> imaginary_part() const {
+        return Rational::from_mpq(imaginary_);
+    };
+
+    virtual RCP<const Number> rpow(const Number &other) const {
+        throw std::runtime_error("Not implemented.");
     };
 
     virtual void accept(Visitor &v) const;
 };
 
-//! \return true if 'b' is a Number or any of its subclasses
-inline bool is_a_Number(const Basic &b)
-{
-    // Currently we enumerate all the subclasses explicitly, from the most
-    // frequent (on the left) to the least frequent (on the right):
-    return is_a<Integer>(b) || is_a<Rational>(b) || is_a<Complex>(b);
-}
-
-} // CSymPy
+} // SymEngine
 
 #endif

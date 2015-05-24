@@ -30,7 +30,7 @@ for i in range(len(benchmarks)):
     c = None
     if not csympy_skip[i]:
         a = subprocess.check_output(['python', 'symbench_def.py', benchmark])
-        a = "\t CSymPy : " + a + " s"
+        a = "\t SymEngine : " + a + " s"
     sys.stdout.write(a or ws)
     if sympy:
         if not sympy_skip[i]:

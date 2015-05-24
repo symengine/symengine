@@ -1,11 +1,11 @@
 #include <cassert>
 
-#include "csympy_rcp.h"
+#include "symengine_rcp.h"
 
-using CSymPy::RCP;
-using CSymPy::rcp;
-using CSymPy::Ptr;
-using CSymPy::null;
+using SymEngine::RCP;
+using SymEngine::rcp;
+using SymEngine::Ptr;
+using SymEngine::null;
 
 class Mesh {
 public:
