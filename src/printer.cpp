@@ -171,6 +171,12 @@ void StrPrinter::bvisit(const Pow &x) {
     str_ = o.str();
 }
 
+void StrPrinter::bvisit(const Polynomial &x) {
+    std::ostringstream s;
+    s << x.var_;
+    str_ = s.str();
+}
+
 void StrPrinter::bvisit(const Log &x) {
     str_ = "log(" + this->apply(x.get_arg()) + ")";
 }

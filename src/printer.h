@@ -79,6 +79,7 @@ public:
     void bvisit(const Add &x);
     void bvisit(const Mul &x);
     void bvisit(const Pow &x);
+    void bvisit(const Polynomial &x);
     void bvisit(const Log &x);
     void bvisit(const Constant &x);
     void bvisit(const Function &x);

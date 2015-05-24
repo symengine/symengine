@@ -10,6 +10,7 @@
 #include "add.h"
 #include "mul.h"
 #include "pow.h"
+#include "polynomial.h"
 #include "functions.h"
 #include "symbol.h"
 #include "integer.h"
@@ -26,6 +27,7 @@ public:
     virtual void visit(const Add &) = 0;
     virtual void visit(const Mul &) = 0;
     virtual void visit(const Pow &) = 0;
+    virtual void visit(const Polynomial &) = 0;
     virtual void visit(const Integer &) = 0;
     virtual void visit(const Rational &) = 0;
     virtual void visit(const Complex &) = 0;
@@ -84,6 +86,7 @@ public:
     virtual void visit(const Symbol &x) { p_->bvisit(x); };
     virtual void visit(const Mul &x) { p_->bvisit(x); };
     virtual void visit(const Pow &x) { p_->bvisit(x); };
+    virtual void visit(const Polynomial &x) { p_->bvisit(x); };
     virtual void visit(const Integer &x) { p_->bvisit(x); };
     virtual void visit(const Rational &x) { p_->bvisit(x); };
     virtual void visit(const Complex &x) { p_->bvisit(x); };

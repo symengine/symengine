@@ -17,11 +17,11 @@
 
 namespace SymEngine {
 
-//ACCEPT(Polynomial)
 ACCEPT(Symbol)
 ACCEPT(Add)
 ACCEPT(Mul)
 ACCEPT(Pow)
+ACCEPT(Polynomial)
 ACCEPT(Integer)
 ACCEPT(Rational)
 ACCEPT(Complex)
