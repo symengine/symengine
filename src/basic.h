@@ -29,7 +29,7 @@ namespace SymEngine {
 
 class Visitor;
 class Symbol;
-//class Polynomial;
+
 /*!
     Any Basic class can be used in a "dictionary", due to the methods:
 

@@ -12,12 +12,12 @@ namespace SymEngine {
     public:
         int degree;
         std::string var_;
-        map_uint_integer dict_;
+        map_uint_mpz dict_;
     public:
         IMPLEMENT_TYPEID(POLYNOMIAL)
         Polynomial(){}
 
-        Polynomial(const std::string& var, map_uint_integer&& dict);
+        Polynomial(const std::string& var, map_uint_mpz&& dict);
 
         std::size_t __hash__() const {return 0;}
         //{
@@ -44,12 +44,13 @@ namespace SymEngine {
 
     }; //Polynomial
 
-        RCP<const Polynomial> add_poly(const Polynomial &a, const Polynomial &b);
-    inline RCP<const Polynomial> polynomial(std::string i, map_uint_integer&& dict)
+    RCP<const Polynomial> add_poly(const Polynomial &a, const Polynomial &b);
+
+    inline RCP<const Polynomial> polynomial(std::string i, map_uint_mpz&& dict)
     {
         return rcp(new Polynomial(i, std::move(dict)));
     }
-}  //CSymPy
+}  //SymEngine
 
 #endif
 

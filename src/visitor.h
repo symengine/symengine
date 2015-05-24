@@ -20,8 +20,6 @@
 
 namespace SymEngine {
 
-class Polynomial;
-
 class Visitor {
 public:
     virtual void visit(const Symbol &) = 0;
