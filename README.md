@@ -95,6 +95,7 @@ their default values indicated below:
         -DWITH_SYMENGINE_RCP:BOOL=ON \                   # Use our faster special implementation of RCP
         -DWITH_PRIMESIEVE=OFF \                       # Install with Primesieve library
         -DWITH_ARB=OFF \                              # Install with ARB library
+        -DWITH_TCMALLOC=OFF \                         # Install with TCMalloc linked
         .
 
 `CMake` prints the value of its options at the end of the run.
