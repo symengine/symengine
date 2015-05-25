@@ -233,5 +233,10 @@ if (WITH_ARB)
     message("MPFR_LIBRARIES: ${MPFR_LIBRARIES}")
 endif()
 
+message("WITH_TCMALLOC: ${WITH_TCMALLOC}")
+if (WITH_TCMALLOC)
+    message("TCMALLOC_LIBRARIES: ${TCMALLOC_LIBRARIES}")
+endif()
+
 message("Copying source of python wrappers into: ${CMAKE_CURRENT_BINARY_DIR}")
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/csympy DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
