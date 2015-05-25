@@ -245,5 +245,34 @@ int vec_basic_compare(const vec_basic &A, const vec_basic &B)
     return 0;
 }
 
+bool map_uint_mpz_eq(const map_uint_mpz &a,
+        const map_uint_mpz &b)
+{
+    // Can't be equal if # of entries differ:
+    if (a.size() != b.size()) return false;
+    // Loop over keys in "a":
+    for (auto &p: a) {
+        auto f = b.find(p.first);
+        if (f == b.end()) return false; // no such element in "b"
+        if (p.second != f->second) return false; // values not equal
+    }
+    return true;
+}
+
+int map_uint_mpz_compare(const map_uint_mpz &A, const map_uint_mpz &B)
+{
+    if (A.size() != B.size())
+        return (A.size() < B.size()) ? -1 : 1;
+    auto a = A.begin();
+    auto b = B.begin();
+    for (; a != A.end(); ++a, ++b) {
+        if (a->first != b->first)
+            return (a->first < b->first) ? -1 : 1;
+        if (a->second != b->second)
+            return (a->second < b->second) ? -1 : 1;
+    }
+    return 0;
+}
+
 }
 
