@@ -4,6 +4,7 @@
 #include "integer.h"
 #include "mul.h"
 #include "pow.h"
+#include "polynomial.h"
 #include "symbol.h"
 #include "rational.h"
 #include "complex.h"
@@ -15,6 +16,7 @@ using SymEngine::RCP;
 using SymEngine::Basic;
 using SymEngine::div;
 using SymEngine::pow;
+using SymEngine::polynomial;
 using SymEngine::mul;
 using SymEngine::integer;
 using SymEngine::print_stack_on_segfault;
@@ -220,6 +222,49 @@ void test_matrix()
     assert(A.__str__() == "[1, 0]\n[0, 1]\n");
 }
 
+void test_polynomial()
+{
+    RCP<const Basic> p;
+    std::string x = "x";
+
+    p = polynomial(x, {{0, 0}});
+    assert(p->__str__() == "0");
+    //std::cout<<p->__str__()<<std::endl;
+    p = polynomial(x, {{0, 1}});
+    assert(p->__str__() == "1");
+    //std::cout<<p->__str__()<<std::endl;
+    p = polynomial(x, {{1, 1}});
+    assert(p->__str__() == "x");
+    //std::cout<<p->__str__()<<std::endl;
+    p = polynomial(x, {{0, 1}, {1, 2}});
+    assert(p->__str__() == "2*x + 1");
+    //std::cout<<p->__str__()<<std::endl;
+    p = polynomial(x, {{0, -1}, {1, 2}});
+    assert(p->__str__() == "2*x - 1");
+    //std::cout<<p->__str__()<<std::endl;
+    p = polynomial(x, {{0, -1}});
+    assert(p->__str__() == "-1");
+    //std::cout<<p->__str__()<<std::endl;
+    p = polynomial(x, {{1, -1}});
+    assert(p->__str__() == "-x");
+    //std::cout<<p->__str__()<<std::endl;
+    p = polynomial(x, {{0, -1}, {1, 1}});
+    assert(p->__str__() == "x - 1");
+    //std::cout<<p->__str__()<<std::endl;   
+    p = polynomial(x, {{0, 1}, {1, 1}, {2, 1}});
+    assert(p->__str__() == "x**2 + x + 1");
+    //std::cout<<p->__str__()<<std::endl;
+    p = polynomial(x, {{0, 1}, {1, -1}, {2, 1}});
+    assert(p->__str__() == "x**2 - x + 1");
+    //std::cout<<p->__str__()<<std::endl;
+    p = polynomial(x, {{0, 1}, {1, 2}, {2, 1}});
+    assert(p->__str__() == "x**2 + 2*x + 1");
+    //std::cout<<p->__str__()<<std::endl;
+    p = polynomial(x, {{1, 2}, {2, 1}});
+    assert(p->__str__() == "x**2 + 2*x");
+    //std::cout<<p->__str__()<<std::endl;
+}
+
 int main(int argc, char* argv[])
 {
     print_stack_on_segfault();
@@ -227,6 +272,8 @@ int main(int argc, char* argv[])
     test_printing();
 
     test_matrix();
+
+    test_polynomial();
 
     return 0;
 }

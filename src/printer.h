@@ -27,6 +27,34 @@ public:
         precedence = PrecedenceEnum::Pow;
     }
 
+    void bvisit(const Polynomial &x) {
+        if (x.dict_.size() == 1) {
+            auto it = x.dict_.begin();
+            if (it->second == 0) {
+                precedence = PrecedenceEnum::Atom;
+            }
+            else if (it->second == 1) {
+                if (it->first == 0 || it->first == 1) {
+                    precedence = PrecedenceEnum::Atom;
+                }
+                else {
+                    precedence = PrecedenceEnum::Pow;
+                }
+            }
+            else {
+                if (it->first == 0) {
+                    precedence = PrecedenceEnum::Atom;
+                }
+                else {
+                    precedence = PrecedenceEnum::Mul;
+                }
+            }
+        }
+        else {
+            precedence = PrecedenceEnum::Add;
+        }
+    }
+
     void bvisit(const Rational &x) {
         precedence = PrecedenceEnum::Add;
     }
