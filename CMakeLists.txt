@@ -155,6 +155,21 @@ set(WITH_SYMENGINE_RCP yes
 set(WITH_SYMENGINE_THREAD_SAFE no
     CACHE BOOL "Enable SYMENGINE_THREAD_SAFE support")
 
+# OpenMp
+set(WITH_OPENMP no
+    CACHE BOOL "Build with OpenMP")
+
+if (WITH_OPENMP)
+    find_package(OpenMP REQUIRED)
+    if(OPENMP_FOUND)
+        set(CMAKE_CXX_FLAGS_DEBUG
+            "${CMAKE_CXX_FLAGS_DEBUG} ${OpenMP_CXX_FLAGS}")
+        set(CMAKE_CXX_FLAGS_RELEASE
+            "${CMAKE_CXX_FLAGS_RELEASE} ${OpenMP_CXX_FLAGS}")
+        set(WITH_SYMENGINE_THREAD_SAFE yes)
+    endif()
+endif()
+
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(HAVE_TEUCHOS_DEBUG yes)
     set(HAVE_TEUCHOS_DEBUG_RCP_NODE_TRACING yes)
@@ -237,6 +252,8 @@ message("WITH_TCMALLOC: ${WITH_TCMALLOC}")
 if (WITH_TCMALLOC)
     message("TCMALLOC_LIBRARIES: ${TCMALLOC_LIBRARIES}")
 endif()
+
+message("WITH_OPENMP: ${WITH_OPENMP}")
 
 message("Copying source of python wrappers into: ${CMAKE_CURRENT_BINARY_DIR}")
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/csympy DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
