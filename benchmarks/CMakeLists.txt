@@ -37,3 +37,9 @@ target_link_libraries(matrix_mul2 symengine)
 
 add_executable(symbench symbench.cpp)
 target_link_libraries(symbench symengine)
+
+add_executable(lwbench lwbench.cpp)
+target_link_libraries(lwbench symengine)
+
+add_executable(expand6 expand6.cpp)
+target_link_libraries(expand6 symengine)
