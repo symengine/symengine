@@ -123,6 +123,23 @@ if (WITH_BFD)
     set(LIBS ${LIBS} ${EXECINFO_LIBRARIES})
 endif()
 
+# TCMalloc
+set(WITH_TCMALLOC no
+    CACHE BOOL "Build with TCMalloc linked")
+
+if (WITH_TCMALLOC)
+    find_package(TCMALLOC REQUIRED)
+    set(LIBS ${LIBS} ${TCMALLOC_LIBRARIES})
+
+    if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+        set(CMAKE_CXX_FLAGS_DEBUG
+            "${CMAKE_CXX_FLAGS_DEBUG} -fno-builtin-malloc -fno-builtin-calloc -fno-builtin-realloc -fno-builtin-free")
+        set(CMAKE_CXX_FLAGS_RELEASE
+            "${CMAKE_CXX_FLAGS_RELEASE} -fno-builtin-malloc -fno-builtin-calloc -fno-builtin-realloc -fno-builtin-free")
+    endif()
+
+endif()
+
 # Doxygen
 set(BUILD_DOXYGEN no
     CACHE BOOL "Create C++ API Doxgyen documentation.")
@@ -228,6 +245,11 @@ if (WITH_ARB)
     message("FLINT_LIBRARIES: ${FLINT_LIBRARIES}")
     message("MPFR_INCLUDE_DIRS: ${MPFR_INCLUDE_DIRS}")
     message("MPFR_LIBRARIES: ${MPFR_LIBRARIES}")
+endif()
+
+message("WITH_TCMALLOC: ${WITH_TCMALLOC}")
+if (WITH_TCMALLOC)
+    message("TCMALLOC_LIBRARIES: ${TCMALLOC_LIBRARIES}")
 endif()
 
 message("WITH_OPENMP: ${WITH_OPENMP}")
