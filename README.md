@@ -91,13 +91,18 @@ their default values indicated below:
         -DCMAKE_BUILD_TYPE:STRING="Release" \         # Type of build, one of: Debug or Release
         -DWITH_BFD:BOOL=OFF \                         # Install with BFD library (requires binutils-dev)
         -DWITH_PYTHON:BOOL=OFF \                      # Build Python wrappers
-        -DWITH_SYMENGINE_ASSERT:BOOL=OFF \               # Test all SYMENGINE_ASSERT statements in the code
-        -DWITH_SYMENGINE_RCP:BOOL=ON \                   # Use our faster special implementation of RCP
-        -DWITH_PRIMESIEVE=OFF \                       # Install with Primesieve library
-        -DWITH_ARB=OFF \                              # Install with ARB library
-        -DWITH_TCMALLOC=OFF \                         # Install with TCMalloc linked
-        -DWITH_OPENMP=OFF\                            # Install with OpenMP enabled
+        -DWITH_SYMENGINE_ASSERT:BOOL=OFF \            # Test all SYMENGINE_ASSERT statements in the code
+        -DWITH_SYMENGINE_RCP:BOOL=ON \                # Use our faster special implementation of RCP
+        -DWITH_SYMENGINE_THREAD_SAFE:BOOL=OFF \       # Build with thread safety
+        -DWITH_ECM:BOOL=OFF \                         # Build with GMP-ECM library for integer factorization
+        -DWITH_PRIMESIEVE:BOOL=OFF \                  # Install with Primesieve library
+        -DWITH_ARB:BOOL=OFF \                         # Install with ARB library
+        -DWITH_TCMALLOC:BOOL=OFF \                    # Install with TCMalloc linked
+        -DWITH_OPENMP:BOOL=OFF \                      # Install with OpenMP enabled
         .
+
+If `OPENMP` is enabled, then `SYMENGINE_THREAD_SAFE` is also enabled automatically
+irrespective of the user input for `WITH_SYMENGINE_THREAD_SAFE`.
 
 `CMake` prints the value of its options at the end of the run.
 If you want to use a different compiler, do:
