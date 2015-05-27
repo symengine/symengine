@@ -87,20 +87,6 @@ if (WITH_ARB)
     set(HAVE_SYMENGINE_ARB yes)
 endif()
 
-# OpenMp
-set(WITH_OPENMP no
-    CACHE BOOL "Build with OpenMP")
-
-if (WITH_OPENMP)
-    find_package(OpenMP REQUIRED)
-    if(OPENMP_FOUND)
-        set(CMAKE_CXX_FLAGS_DEBUG
-            "${CMAKE_CXX_FLAGS_DEBUG} ${OpenMP_CXX_FLAGS}")
-        set(CMAKE_CXX_FLAGS_RELEASE
-            "${CMAKE_CXX_FLAGS_RELEASE} ${OpenMP_CXX_FLAGS}")
-    endif()
-endif()
-
 # Python
 set(WITH_PYTHON no
     CACHE BOOL "Build with Python wrappers")
@@ -168,6 +154,21 @@ set(WITH_SYMENGINE_RCP yes
 # SYMENGINE_THREAD_SAFE
 set(WITH_SYMENGINE_THREAD_SAFE no
     CACHE BOOL "Enable SYMENGINE_THREAD_SAFE support")
+
+# OpenMp
+set(WITH_OPENMP no
+    CACHE BOOL "Build with OpenMP")
+
+if (WITH_OPENMP)
+    find_package(OpenMP REQUIRED)
+    if(OPENMP_FOUND)
+        set(CMAKE_CXX_FLAGS_DEBUG
+            "${CMAKE_CXX_FLAGS_DEBUG} ${OpenMP_CXX_FLAGS}")
+        set(CMAKE_CXX_FLAGS_RELEASE
+            "${CMAKE_CXX_FLAGS_RELEASE} ${OpenMP_CXX_FLAGS}")
+        set(WITH_SYMENGINE_THREAD_SAFE yes)
+    endif()
+endif()
 
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(HAVE_TEUCHOS_DEBUG yes)
