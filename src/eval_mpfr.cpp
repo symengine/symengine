@@ -43,14 +43,13 @@ public:
 
     void bvisit(const Add &x) {
         mpfr_t t;
-        mpfr_init(t);
-        mpfr_set_prec(t, mpfr_get_prec(result_));
+        mpfr_init2(t, mpfr_get_prec(result_));
 
         auto d = x.get_args();
         auto p = d.begin();
         apply(result_, *(*p));
         p++;
-        for (auto p = d.begin(); p != d.end();  p++) {
+        for (; p != d.end();  p++) {
             apply(t, *(*p));
             mpfr_add(result_, result_, t, rnd_);
         }
@@ -59,14 +58,13 @@ public:
 
     void bvisit(const Mul &x) {
         mpfr_t t;
-        mpfr_init(t);
-        mpfr_set_prec(t, mpfr_get_prec(result_));
+        mpfr_init2(t, mpfr_get_prec(result_));
 
         auto d = x.get_args();
         auto p = d.begin();
         apply(result_, *(*p));
         p++;
-        for (auto p = d.begin(); p != d.end();  p++) {
+        for (; p != d.end();  p++) {
             apply(t, *(*p));
             mpfr_mul(result_, result_, t, rnd_);
         }
@@ -79,8 +77,7 @@ public:
             mpfr_exp(result_, result_, rnd_);
         } else {
             mpfr_t b;
-            mpfr_init(b);
-            mpfr_set_prec(b, mpfr_get_prec(result_));
+            mpfr_init2(b, mpfr_get_prec(result_));
 
             apply(b, *(x.base_));
             apply(result_, *(x.exp_));
