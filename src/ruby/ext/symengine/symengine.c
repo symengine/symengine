@@ -1,4 +1,3 @@
-#include "extconf.h"
 #include "ruby_basic.h"
 ///////////////////
 // Ruby Bindings //
