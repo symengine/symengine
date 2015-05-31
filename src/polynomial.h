@@ -56,6 +56,8 @@ namespace SymEngine {
 
     RCP<const Polynomial> add_poly(const Polynomial &a, const Polynomial &b);
 
+    RCP<const Polynomial> neg_poly(const Polynomial &a);
+
     inline RCP<const Polynomial> polynomial(std::string i, map_uint_mpz&& dict)
     {
         return rcp(new Polynomial(i, std::move(dict)));

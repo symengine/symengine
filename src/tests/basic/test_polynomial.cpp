@@ -30,6 +30,17 @@ void test_add_poly()
 	assert(c->__str__() == "5*x**2 + 5*x + 3");
 }
 
+void test_neg_poly()
+{
+	std::string x = "x";
+	map_uint_mpz adict_ = {{0, 1}, {1, 2}, {2, 1}};
+	const Polynomial a(x, std::move(adict_));
+
+	RCP<const Polynomial> b = neg_poly(a);
+	//std::cout<<b->__str__()<<std::endl;
+	assert(b->__str__() == "-x**2 - 2*x - 1");
+}
+
 int main(int argc, char* argv[])
 {
     print_stack_on_segfault();
@@ -37,5 +48,7 @@ int main(int argc, char* argv[])
     polynomial_constructor();
 
     test_add_poly();
+
+    test_neg_poly();
     return 0;
 }
