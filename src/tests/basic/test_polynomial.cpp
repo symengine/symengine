@@ -41,6 +41,19 @@ void test_neg_poly()
 	assert(b->__str__() == "-x**2 - 2*x - 1");
 }
 
+void test_sub_poly()
+{
+	std::string x = "x";
+	map_uint_mpz adict_ = {{0, 1}, {1, 2}, {2, 1}};
+	map_uint_mpz bdict_ = {{0, 2}, {1, 3}, {2, 4}};
+	const Polynomial a(x, std::move(adict_));
+	const Polynomial b(x, std::move(bdict_));
+
+	RCP<const Basic> c = sub_poly(b, a);
+	//std::cout<<c->__str__();
+	assert(c->__str__() == "3*x**2 + x + 1");
+}
+
 int main(int argc, char* argv[])
 {
     print_stack_on_segfault();
@@ -50,5 +63,7 @@ int main(int argc, char* argv[])
     test_add_poly();
 
     test_neg_poly();
+
+    test_sub_poly();
     return 0;
 }

@@ -29,11 +29,21 @@ namespace SymEngine {
         return c;
     }
 
-
     RCP<const Polynomial> neg_poly(const Polynomial &a) {
         map_uint_mpz dict;
         for(auto &it : a.dict_)
             dict[it.first] = -1 * it.second;
+
+        RCP<const Polynomial> c = polynomial(a.var_, std::move(dict));
+        return c;
+    }
+
+    RCP<const Polynomial> sub_poly(const Polynomial &a, const Polynomial &b) {
+        map_uint_mpz dict;
+        for(auto &it : a.dict_)
+            dict[it.first] = it.second;
+        for(auto &it : b.dict_)
+            dict[it.first] -= it.second;
 
         RCP<const Polynomial> c = polynomial(a.var_, std::move(dict));
         return c;

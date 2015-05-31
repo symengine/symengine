@@ -58,6 +58,8 @@ namespace SymEngine {
 
     RCP<const Polynomial> neg_poly(const Polynomial &a);
 
+    RCP<const Polynomial> sub_poly(const Polynomial &a, const Polynomial &b);
+
     inline RCP<const Polynomial> polynomial(std::string i, map_uint_mpz&& dict)
     {
         return rcp(new Polynomial(i, std::move(dict)));
