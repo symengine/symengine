@@ -263,6 +263,9 @@ void test_polynomial()
     p = polynomial(x, {{1, 2}, {2, 1}});
     assert(p->__str__() == "x**2 + 2*x");
     //std::cout<<p->__str__()<<std::endl;
+    p = polynomial(x, {{0, -1}, {1, -2}, {2, -1}});
+    //std::cout<<p->__str__()<<std::endl;
+    assert(p->__str__() == "-x**2 - 2*x - 1");
 }
 
 int main(int argc, char* argv[])

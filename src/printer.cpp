@@ -209,7 +209,12 @@ void StrPrinter::bvisit(const Polynomial &x) {
                 }
             }          
             else {
-                s << x.var_ << "**"  << it->first;
+                if (first && it->second == -1) {
+                    s << "-" << x.var_ << "**"  << it->first;
+                }
+                else {
+                    s << x.var_ << "**"  << it->first;
+                }
             }
             //if next term is going to be 0, don't print +, so that x**3 + 0 + x becomes x**3 + x
             //also consider that sign of term here itself to avoid prints like x + -1
