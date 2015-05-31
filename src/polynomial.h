@@ -27,15 +27,25 @@ namespace SymEngine {
 
         bool __eq__(const Basic &o) const
         {
-            const Polynomial &s = static_cast<const Polynomial&>(o);
-            return this->var_ == s.var_;
+            if ((var_ == static_cast<const Polynomial &>(o).var_) &&
+                map_uint_mpz_eq(dict_, static_cast<const Polynomial &>(o).dict_))
+                return true;
+
+            return false;
         }
 
         int compare(const Basic &o) const
         {
-            const Polynomial &s = static_cast<const Polynomial&>(o);
-            if (this->var_ == s.var_) return 0;
-            return this->var_ < s.var_ ? -1 : 1;
+            const Polynomial &s = static_cast<const Polynomial &>(o);
+
+            if (dict_.size() != s.dict_.size())
+                return (dict_.size() < s.dict_.size()) ? -1 : 1;
+
+            int cmp = (var_ < s.var_) ? -1 : 1;
+            if (cmp != 0)
+                return cmp;
+
+            return map_uint_mpz_compare(dict_, s.dict_);
         }
 
         virtual vec_basic get_args() const {return {};}
@@ -53,9 +63,3 @@ namespace SymEngine {
 }  //SymEngine
 
 #endif
-
-
-
-
-
-
