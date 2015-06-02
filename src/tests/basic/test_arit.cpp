@@ -294,6 +294,13 @@ void test_sub()
     r2 = sub(sub(sub(r1, r2), integer(3)), real_double(0.2));
     assert(is_a<RealDouble>(*r2));
     assert(std::abs(rcp_static_cast<const RealDouble>(r2)->i + 3.6) < 1e-12);
+
+    r1 = real_double(0.1);
+    r2 = Complex::from_two_nums(*Rational::from_mpq(mpq_class(1, 2)), *Rational::from_mpq(mpq_class(7, 5)));
+    r2 = sub(sub(sub(r1, r2), integer(1)), real_double(0.4));
+    assert(is_a<ComplexDouble>(*r2));
+    assert(std::abs(rcp_static_cast<const ComplexDouble>(r2)->i.real() + 1.8) < 1e-12);
+    assert(std::abs(rcp_static_cast<const ComplexDouble>(r2)->i.imag() + 1.4) < 1e-12);
 }
 
 void test_div()
@@ -395,6 +402,13 @@ void test_div()
     r2 = div(div(div(r1, r2), integer(3)), real_double(0.2));
     assert(is_a<RealDouble>(*r2));
     assert(std::abs(rcp_static_cast<const RealDouble>(r2)->i - 0.333333333333) < 1e-12);
+
+    r1 = real_double(0.1);
+    r2 = Complex::from_two_nums(*Rational::from_mpq(mpq_class(1, 2)), *Rational::from_mpq(mpq_class(7, 5)));
+    r2 = div(div(div(r1, r2), integer(2)), real_double(0.4));
+    assert(is_a<ComplexDouble>(*r2));
+    assert(std::abs(rcp_static_cast<const ComplexDouble>(r2)->i.real() - 0.0282805429864253) < 1e-12);
+    assert(std::abs(rcp_static_cast<const ComplexDouble>(r2)->i.imag() + 0.0791855203619909) < 1e-12);
 }
 
 void test_pow()
@@ -613,6 +627,13 @@ void test_pow()
     assert(std::abs(rcp_static_cast<const RealDouble>(r2)->i - 0.316227766016) < 1e-12);
     r2 = pow(pow(r2, integer(3)), real_double(0.2));
     assert(std::abs(rcp_static_cast<const RealDouble>(r2)->i - 0.501187233627) < 1e-12);
+
+    r1 = real_double(-0.01);
+    r2 = pow(r1, Rational::from_mpq(mpq_class(1, 2)));
+    r2 = pow(integer(2), r2);
+    assert(is_a<ComplexDouble>(*r2));
+    assert(std::abs(rcp_static_cast<const ComplexDouble>(r2)->i.real() - 0.997598696589298) < 1e-12);
+    assert(std::abs(rcp_static_cast<const ComplexDouble>(r2)->i.imag() - 0.069259227279362) < 1e-12);
 }
 
 void test_log()

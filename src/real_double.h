@@ -311,7 +311,7 @@ public:
      * \param other of type Rational
      * */
     RCP<const Number> powreal(const Rational &other) const {
-        if (i < 0 && mpz_even_p(other.i.get_den().get_mpz_t())) {
+        if (i < 0) {
             return number(std::pow(std::complex<double>(i), other.i.get_d()));
         }
         return rcp(new RealDouble(std::pow(i, other.i.get_d())));
