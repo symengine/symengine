@@ -1,3 +1,8 @@
+/**
+ *  \file polynomial.h
+ *  Class for univariate sparse Polynomial
+ *
+ **/
 #ifndef SYMENGINE_POLYNOMIALS_H
 #define SYMENGINE_POLYNOMIALS_H
 
@@ -19,11 +24,20 @@ namespace SymEngine {
 
         Polynomial(const std::string& var, map_uint_mpz&& dict);
 
-        std::size_t __hash__() const {return 0;}
-        //{
-            //std::hash<long long int> hash_fn;
-            //return hash_fn(this->var_);
-        //}
+        std::size_t __hash__() const 
+        {
+            std::hash<std::string> hash_string;
+            std::hash<uint> hash_uint;
+            std::hash<long long int> hash_si;
+            std::size_t seed = POLYNOMIAL;
+
+            seed += hash_string(var_);
+            for (auto &it : dict_)
+            {
+                seed += hash_uint(it.first) + hash_si(it.second.get_si());
+            }
+            return seed;
+        }
 
         bool __eq__(const Basic &o) const
         {
