@@ -42,7 +42,7 @@ public:
                 }
             }
             else {
-                if (it->first == 0) {
+                if (it->first == 0 && it->second >= 0) {
                     precedence = PrecedenceEnum::Atom;
                 }
                 else {
