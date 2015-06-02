@@ -12,72 +12,82 @@
 #include "integer.h"
 
 namespace SymEngine {
+//! Polynomial Class
+class Polynomial : public Basic{
+public:
+    //! `degree` : Degree of Polynomial
+    //! `var_` : Variable of the uni-variate Polynomial
+    //! `dict_` : holds the Polynomial
+    // Polynomial x**2 + 2*x + 1 has dict_ = {{0, 1}, {1, 2}, {2, 1}} with var_ = "x" 
+    int degree;
+    std::string var_;
+    map_uint_mpz dict_;
+public:
+    IMPLEMENT_TYPEID(POLYNOMIAL)
+    //! Constructor of Polynomial class
+    Polynomial(const std::string &var, map_uint_mpz&& dict);
+    //! \return true if canonical
+    bool is_canonical(const int &degree, map_uint_mpz&& dict);
+    //! \return size of the hash
+    std::size_t __hash__() const;
+    /*! Equality comparator
+     * \param o - Object to be compared with
+     * \return whether the 2 objects are equal
+     * */
+    bool __eq__(const Basic &o) const;
+    int compare(const Basic &o) const;
 
-    class Polynomial : public Basic{
-    public:
-        int degree;
-        std::string var_;
-        map_uint_mpz dict_;
-    public:
-        IMPLEMENT_TYPEID(POLYNOMIAL)
-        Polynomial(){}
+    /*! Creates appropriate instance (i.e Symbol, Integer,
+    * Mul, Pow, Polynomial) depending on the size of dictionary `d`.
+    */
+    static RCP<const Basic> from_dict(const std::string &var, map_uint_mpz &&d);
+    /*!
+    * Adds coef*var_**n to the dict_
+    */
+    static void dict_add_term(map_uint_mpz &d,
+            const mpz_class &coef, const uint &n);
+    //! Differentiates w.r.t symbol `x`
+    //virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
+    //! Evaluates the Polynomial at value x
+    mpz_class eval(const int &x) const;
+    //! Evaluates the Polynomial at value 2**x
+    mpz_class eval_bit(const int &x) const;
 
-        Polynomial(const std::string& var, map_uint_mpz&& dict);
+    //! \return `true` if `0`
+    bool is_zero() const;
+    //! \return `true` if `1`
+    bool is_one() const;
+    //! \return `true` if `-1`    
+    bool is_minus_one() const;
+    //! \return `true` if integer  
+    bool is_integer() const;
+    //! \return `true` if symbol 
+    bool is_symbol() const;
+    //! \return `true` if mul   
+    bool is_mul() const;
+    //! \return `true` if pow    
+    bool is_pow() const;
 
-        std::size_t __hash__() const 
-        {
-            std::hash<std::string> hash_string;
-            std::hash<uint> hash_uint;
-            std::hash<long long int> hash_si;
-            std::size_t seed = POLYNOMIAL;
+    virtual vec_basic get_args() const {return {};}
 
-            seed += hash_string(var_);
-            for (auto &it : dict_)
-            {
-                seed += hash_uint(it.first) + hash_si(it.second.get_si());
-            }
-            return seed;
-        }
+    virtual void accept(Visitor &v) const;
 
-        bool __eq__(const Basic &o) const
-        {
-            if ((var_ == static_cast<const Polynomial &>(o).var_) &&
-                map_uint_mpz_eq(dict_, static_cast<const Polynomial &>(o).dict_))
-                return true;
+}; //Polynomial
 
-            return false;
-        }
+//! Adding two Polynomials a and b
+RCP<const Polynomial> add_poly(const Polynomial &a, const Polynomial &b);
+//! Negative of a Polynomial
+RCP<const Polynomial> neg_poly(const Polynomial &a);
+//! Subtracting two Polynomials a and b
+RCP<const Polynomial> sub_poly(const Polynomial &a, const Polynomial &b);
+//! Multiplying two Polynomials a and b
+RCP<const Polynomial> mul_poly(const Polynomial &a, const Polynomial &b);
 
-        int compare(const Basic &o) const
-        {
-            const Polynomial &s = static_cast<const Polynomial &>(o);
+inline RCP<const Polynomial> polynomial(std::string i, map_uint_mpz&& dict)
+{
+    return rcp(new Polynomial(i, std::move(dict)));
+}
 
-            if (dict_.size() != s.dict_.size())
-                return (dict_.size() < s.dict_.size()) ? -1 : 1;
-
-            int cmp = (var_ < s.var_) ? -1 : 1;
-            if (cmp != 0)
-                return cmp;
-
-            return map_uint_mpz_compare(dict_, s.dict_);
-        }
-
-        virtual vec_basic get_args() const {return {};}
-
-        virtual void accept(Visitor &v) const;
-
-    }; //Polynomial
-
-    RCP<const Polynomial> add_poly(const Polynomial &a, const Polynomial &b);
-
-    RCP<const Polynomial> neg_poly(const Polynomial &a);
-
-    RCP<const Polynomial> sub_poly(const Polynomial &a, const Polynomial &b);
-
-    inline RCP<const Polynomial> polynomial(std::string i, map_uint_mpz&& dict)
-    {
-        return rcp(new Polynomial(i, std::move(dict)));
-    }
 }  //SymEngine
 
 #endif

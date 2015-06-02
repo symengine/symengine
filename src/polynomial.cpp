@@ -18,6 +18,44 @@ namespace SymEngine {
         degree = largest;
     }
 
+    std::size_t Polynomial::__hash__() const 
+    {
+        std::hash<std::string> hash_string;
+        std::hash<uint> hash_uint;
+        std::hash<long long int> hash_si;
+        std::size_t seed = POLYNOMIAL;
+
+        seed += hash_string(this->var_);
+        for (auto &it : this->dict_)
+        {
+            seed += hash_uint(it.first) + hash_si(it.second.get_si());
+        }
+        return seed;
+    }
+
+    bool Polynomial::__eq__(const Basic &o) const
+    {
+        if ((var_ == static_cast<const Polynomial &>(o).var_) &&
+            map_uint_mpz_eq(dict_, static_cast<const Polynomial &>(o).dict_))
+            return true;
+
+        return false;
+    }
+
+    int Polynomial::compare(const Basic &o) const
+    {
+        const Polynomial &s = static_cast<const Polynomial &>(o);
+
+        if (dict_.size() != s.dict_.size())
+            return (dict_.size() < s.dict_.size()) ? -1 : 1;
+
+        int cmp = (var_ < s.var_) ? -1 : 1;
+        if (cmp != 0)
+            return cmp;
+
+        return map_uint_mpz_compare(dict_, s.dict_);
+    }
+
     RCP<const Polynomial> add_poly(const Polynomial &a, const Polynomial &b) {
         map_uint_mpz dict;
         for(auto &it : a.dict_)
