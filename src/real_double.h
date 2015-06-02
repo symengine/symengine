@@ -7,6 +7,7 @@
 #define SYMENGINE_REAL_DOUBLE_H
 
 #include <cmath>
+#include <complex>
 #include "basic.h"
 #include "number.h"
 #include "integer.h"
@@ -14,6 +15,10 @@
 #include "complex.h"
 
 namespace SymEngine {
+
+RCP<const Number> number(std::complex<double> x);
+RCP<const Number> number(double x);
+
 //! RealDouble Class to hold double values
 class RealDouble : public Number {
 public:
@@ -23,8 +28,6 @@ public:
     IMPLEMENT_TYPEID(REAL_DOUBLE)
     //! Constructor of RealDouble class
     RealDouble(double i);
-    //! \return true if canonical
-    bool is_canonical(const double i) { return false; }
     //! \return size of the hash
     virtual std::size_t __hash__() const;
     /*! Equality comparator
@@ -74,7 +77,7 @@ public:
      * \param other of type Complex
      * */
     RCP<const Number> addreal(const Complex &other) const {
-        throw std::runtime_error("Not implemented.");
+        return number(i + std::complex<double>(other.real_.get_d(), other.imaginary_.get_d()));
     }
 
     /*! Add RealDoubles
@@ -117,7 +120,7 @@ public:
      * \param other of type Complex
      * */
     RCP<const Number> subreal(const Complex &other) const {
-        throw std::runtime_error("Not implemented.");
+        return number(i - std::complex<double>(other.real_.get_d(), other.imaginary_.get_d()));
     }
 
     /*! Subtract RealDoubles
@@ -160,7 +163,7 @@ public:
      * \param other of type Complex
      * */
     RCP<const Number> rsubreal(const Complex &other) const {
-        throw std::runtime_error("Not implemented.");
+        return number(-i + std::complex<double>(other.real_.get_d(), other.imaginary_.get_d()));
     }
 
     //! Converts the param `other` appropriately and then calls `subreal`
@@ -195,7 +198,7 @@ public:
      * \param other of type Complex
      * */
     RCP<const Number> mulreal(const Complex &other) const {
-        throw std::runtime_error("Not implemented.");
+        return number(i * std::complex<double>(other.real_.get_d(), other.imaginary_.get_d()));
     }
 
     /*! Multiply RealDoubles
@@ -238,7 +241,7 @@ public:
      * \param other of type Complex
      * */
     RCP<const Number> divreal(const Complex &other) const {
-        throw std::runtime_error("Not implemented.");
+        return number(i / std::complex<double>(other.real_.get_d(), other.imaginary_.get_d()));
     }
 
     /*! Divide RealDoubles
@@ -281,7 +284,7 @@ public:
      * \param other of type Complex
      * */
     RCP<const Number> rdivreal(const Complex &other) const {
-        throw std::runtime_error("Not implemented.");
+        return number(std::complex<double>(other.real_.get_d(), other.imaginary_.get_d()) / i);
     }
 
     //! Converts the param `other` appropriately and then calls `divreal`
@@ -309,7 +312,7 @@ public:
      * */
     RCP<const Number> powreal(const Rational &other) const {
         if (i < 0 && mpz_even_p(other.i.get_den().get_mpz_t())) {
-            throw std::runtime_error("Not implemented.");
+            return number(std::pow(std::complex<double>(i), other.i.get_d()));
         }
         return rcp(new RealDouble(std::pow(i, other.i.get_d())));
     }
@@ -318,7 +321,7 @@ public:
      * \param other of type Complex
      * */
     RCP<const Number> powreal(const Complex &other) const {
-        throw std::runtime_error("Not implemented.");
+        return number(std::pow(i, std::complex<double>(other.real_.get_d(), other.imaginary_.get_d())));
     }
 
     /*! Raise RealDouble to power `other`
@@ -326,7 +329,7 @@ public:
      * */
     RCP<const Number> powreal(const RealDouble &other) const {
         if (i < 0) {
-            throw std::runtime_error("Not implemented.");
+            return number(std::pow(std::complex<double>(i), other.i));
         }
         return rcp(new RealDouble(std::pow(i, other.i)));
     }
@@ -351,7 +354,7 @@ public:
      * */
     RCP<const Number> rpowreal(const Integer &other) const {
         if (other.is_negative()) {
-            throw std::runtime_error("Not implemented.");
+            return number(std::pow(other.i.get_d(), std::complex<double>(i)));
         }
         return rcp(new RealDouble(std::pow(other.i.get_d(), i)));
     }
@@ -361,7 +364,7 @@ public:
      * */
     RCP<const Number> rpowreal(const Rational &other) const {
         if (other.is_negative()) {
-            throw std::runtime_error("Not implemented.");
+            return number(std::pow(std::complex<double>(i), other.i.get_d()));
         }
         return rcp(new RealDouble(std::pow(other.i.get_d(), i)));
     }
@@ -370,7 +373,7 @@ public:
      * \param other of type Complex
      * */
     RCP<const Number> rpowreal(const Complex &other) const {
-        throw std::runtime_error("Not implemented.");
+        return number(std::pow(std::complex<double>(other.real_.get_d(), other.imaginary_.get_d()), i));
     }
 
     //! Converts the param `other` appropriately and then calls `powreal`
