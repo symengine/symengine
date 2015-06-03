@@ -2,6 +2,9 @@
 #include <chrono>
 
 #include "polynomial.h"
+#include "mul.h"
+#include "pow.h"
+#include "dict.h"
 
 using SymEngine::Polynomial;
 using SymEngine::polynomial;
@@ -11,6 +14,10 @@ using SymEngine::RCP;
 using SymEngine::print_stack_on_segfault;
 using SymEngine::map_uint_mpz;
 using SymEngine::Basic;
+using SymEngine::one;
+using SymEngine::zero;
+using SymEngine::integer;
+using SymEngine::vec_basic_eq_perm;
 
 void polynomial_constructor()
 {   
@@ -56,6 +63,15 @@ void test_sub_poly()
 	assert(c->__str__() == "3*x**2 + x + 1");
 }
 
+void test_get_args()
+{
+	RCP<const Symbol> x  = symbol("x");
+	RCP<const Polynomial> a = polynomial(x, {{0, 1}, {1, 2}, {2, 1}});
+
+    assert(vec_basic_eq_perm(a->get_args(), {one, mul(integer(2), x), pow(x, integer(2))}));
+    assert(!vec_basic_eq_perm(a->get_args(), {one, mul(integer(3), x), pow(x, integer(2))}));
+}
+
 int main(int argc, char* argv[])
 {
     print_stack_on_segfault();
@@ -67,5 +83,7 @@ int main(int argc, char* argv[])
     test_neg_poly();
 
     test_sub_poly();
+
+    test_get_args();
     return 0;
 }

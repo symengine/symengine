@@ -1,5 +1,8 @@
 #include "polynomial.h"
 #include "add.h"
+#include "mul.h"
+#include "pow.h"
+#include "constants.h"
 
 namespace SymEngine {
 
@@ -66,6 +69,42 @@ namespace SymEngine {
             return cmp;
 
         return map_uint_mpz_compare(dict_, s.dict_);
+    }
+
+    RCP<const Basic> Polynomial::from_dict(const RCP<const Symbol> &var, map_uint_mpz &&d)
+    {
+        if (d.size() == 1) {
+            if (d.begin()->first == 0) 
+                return integer(d.begin()->second);
+            else if (d.begin()->first == 1) {
+                if (d.begin()->second == 0)
+                    return zero;
+                else if (d.begin()->second == 1) 
+                    return var;
+                else 
+                    return Mul::from_dict(integer(d.begin()->second), {{var, one}});
+            }
+            else {
+                if (d.begin()->second == 0)
+                    return zero;
+                else if (d.begin()->second == 1) 
+                    return pow(var, integer(d.begin()->first));
+                else 
+                    return Mul::from_dict(integer(d.begin()->second), 
+                        {{var, integer(d.begin()->first)}});
+            }
+        }
+        else {
+            return rcp(new Polynomial(var, std::move(d)));
+        }
+    }
+
+    vec_basic Polynomial::get_args() const {
+        vec_basic args;
+        for (auto &p: dict_) {
+            args.push_back(Polynomial::from_dict(var_, {{p.first, p.second}}));
+        }
+        return args;
     }
 
     RCP<const Polynomial> add_poly(const Polynomial &a, const Polynomial &b) {

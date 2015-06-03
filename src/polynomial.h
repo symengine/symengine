@@ -69,7 +69,7 @@ public:
     //! \return `true` if pow    
     bool is_pow() const;
 
-    virtual vec_basic get_args() const {return {};}
+    virtual vec_basic get_args() const;
 
     virtual void accept(Visitor &v) const;
 
