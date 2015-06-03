@@ -6,6 +6,7 @@
 #include <cmath>
 #include "basic.h"
 #include "real_double.h"
+#include "complex_double.h"
 
 namespace SymEngine {
 
@@ -16,8 +17,6 @@ RealDouble::RealDouble(double i) {
 std::size_t RealDouble::__hash__() const
 {
     std::hash<double> hash_fn;
-    // only the least significant bits that fit into "signed long int" are
-    // hashed:
     return hash_fn(i);
 }
 
@@ -40,104 +39,126 @@ int RealDouble::compare(const Basic &o) const
 
 RCP<const RealDouble> real_double(double x) { return rcp(new RealDouble(x)); };
 
+RCP<const Number> number(std::complex<double> x) { return complex_double(x); };
+RCP<const Number> number(double x) { return real_double(x); };
+
 //! Evaluate functions with double precision
+template<class T>
 class EvaluateDouble : public Evaluate {
     virtual RCP<const Basic> sin(const Basic &x) const {
-        SYMENGINE_ASSERT(is_a<RealDouble>(x))
-        return real_double(std::sin(static_cast<const RealDouble &>(x).i));
+        SYMENGINE_ASSERT(is_a<T>(x))
+        return number(std::sin(static_cast<const T &>(x).i));
     }
     virtual RCP<const Basic> cos(const Basic &x) const {
-        SYMENGINE_ASSERT(is_a<RealDouble>(x))
-        return real_double(std::cos(static_cast<const RealDouble &>(x).i));
+        SYMENGINE_ASSERT(is_a<T>(x))
+        return number(std::cos(static_cast<const T &>(x).i));
     }
     virtual RCP<const Basic> tan(const Basic &x) const {
-        SYMENGINE_ASSERT(is_a<RealDouble>(x))
-        return real_double(std::tan(static_cast<const RealDouble &>(x).i));
+        SYMENGINE_ASSERT(is_a<T>(x))
+        return number(std::tan(static_cast<const T &>(x).i));
     }
     virtual RCP<const Basic> cot(const Basic &x) const {
-        SYMENGINE_ASSERT(is_a<RealDouble>(x))
-        return real_double(1/std::tan(static_cast<const RealDouble &>(x).i));
+        SYMENGINE_ASSERT(is_a<T>(x))
+        return number(1.0/std::tan(static_cast<const T &>(x).i));
     }
     virtual RCP<const Basic> sec(const Basic &x) const {
-        SYMENGINE_ASSERT(is_a<RealDouble>(x))
-        return real_double(1/std::sin(static_cast<const RealDouble &>(x).i));
+        SYMENGINE_ASSERT(is_a<T>(x))
+        return number(1.0/std::sin(static_cast<const T &>(x).i));
     }
     virtual RCP<const Basic> csc(const Basic &x) const {
-        SYMENGINE_ASSERT(is_a<RealDouble>(x))
-        return real_double(1/std::cos(static_cast<const RealDouble &>(x).i));
+        SYMENGINE_ASSERT(is_a<T>(x))
+        return number(1.0/std::cos(static_cast<const T &>(x).i));
     }
     virtual RCP<const Basic> asin(const Basic &x) const {
-        SYMENGINE_ASSERT(is_a<RealDouble>(x))
-        return real_double(std::asin(static_cast<const RealDouble &>(x).i));
+        SYMENGINE_ASSERT(is_a<T>(x))
+        return number(std::asin(static_cast<const T &>(x).i));
     }
     virtual RCP<const Basic> acos(const Basic &x) const {
-        SYMENGINE_ASSERT(is_a<RealDouble>(x))
-        return real_double(std::acos(static_cast<const RealDouble &>(x).i));
+        SYMENGINE_ASSERT(is_a<T>(x))
+        return number(std::acos(static_cast<const T &>(x).i));
     }
     virtual RCP<const Basic> atan(const Basic &x) const {
-        SYMENGINE_ASSERT(is_a<RealDouble>(x))
-        return real_double(std::atan(static_cast<const RealDouble &>(x).i));
+        SYMENGINE_ASSERT(is_a<T>(x))
+        return number(std::atan(static_cast<const T &>(x).i));
     }
     virtual RCP<const Basic> acot(const Basic &x) const {
-        SYMENGINE_ASSERT(is_a<RealDouble>(x))
-        return real_double(std::atan(1/static_cast<const RealDouble &>(x).i));
+        SYMENGINE_ASSERT(is_a<T>(x))
+        return number(std::atan(1.0/static_cast<const T &>(x).i));
     }
     virtual RCP<const Basic> asec(const Basic &x) const {
-        SYMENGINE_ASSERT(is_a<RealDouble>(x))
-        return real_double(std::acos(1/static_cast<const RealDouble &>(x).i));
+        SYMENGINE_ASSERT(is_a<T>(x))
+        return number(std::acos(1.0/static_cast<const T &>(x).i));
     }
     virtual RCP<const Basic> acsc(const Basic &x) const {
-        SYMENGINE_ASSERT(is_a<RealDouble>(x))
-        return real_double(std::asin(1/static_cast<const RealDouble &>(x).i));
+        SYMENGINE_ASSERT(is_a<T>(x))
+        return number(std::asin(1.0/static_cast<const T &>(x).i));
     }
     virtual RCP<const Basic> sinh(const Basic &x) const {
-        SYMENGINE_ASSERT(is_a<RealDouble>(x))
-        return real_double(std::sinh(static_cast<const RealDouble &>(x).i));
+        SYMENGINE_ASSERT(is_a<T>(x))
+        return number(std::sinh(static_cast<const T &>(x).i));
     }
     virtual RCP<const Basic> cosh(const Basic &x) const {
-        SYMENGINE_ASSERT(is_a<RealDouble>(x))
-        return real_double(std::cosh(static_cast<const RealDouble &>(x).i));
+        SYMENGINE_ASSERT(is_a<T>(x))
+        return number(std::cosh(static_cast<const T &>(x).i));
     }
     virtual RCP<const Basic> tanh(const Basic &x) const {
-        SYMENGINE_ASSERT(is_a<RealDouble>(x))
-        return real_double(std::tanh(static_cast<const RealDouble &>(x).i));
+        SYMENGINE_ASSERT(is_a<T>(x))
+        return number(std::tanh(static_cast<const T &>(x).i));
     }
     virtual RCP<const Basic> coth(const Basic &x) const {
-        SYMENGINE_ASSERT(is_a<RealDouble>(x))
-        return real_double(1/std::tanh(static_cast<const RealDouble &>(x).i));
+        SYMENGINE_ASSERT(is_a<T>(x))
+        return number(1.0/std::tanh(static_cast<const T &>(x).i));
     }
     virtual RCP<const Basic> asinh(const Basic &x) const {
-        SYMENGINE_ASSERT(is_a<RealDouble>(x))
-        return real_double(std::asinh(static_cast<const RealDouble &>(x).i));
+        SYMENGINE_ASSERT(is_a<T>(x))
+        return number(std::asinh(static_cast<const T &>(x).i));
     }
     virtual RCP<const Basic> acosh(const Basic &x) const {
-        SYMENGINE_ASSERT(is_a<RealDouble>(x))
-        return real_double(std::acosh(static_cast<const RealDouble &>(x).i));
+        SYMENGINE_ASSERT(is_a<T>(x))
+        return number(std::acosh(static_cast<const T &>(x).i));
     }
     virtual RCP<const Basic> atanh(const Basic &x) const {
-        SYMENGINE_ASSERT(is_a<RealDouble>(x))
-        return real_double(std::atanh(static_cast<const RealDouble &>(x).i));
+        SYMENGINE_ASSERT(is_a<T>(x))
+        return number(std::atanh(static_cast<const T &>(x).i));
     }
     virtual RCP<const Basic> acoth(const Basic &x) const {
-        SYMENGINE_ASSERT(is_a<RealDouble>(x))
-        return real_double(std::atanh(1/static_cast<const RealDouble &>(x).i));
+        SYMENGINE_ASSERT(is_a<T>(x))
+        return number(std::atanh(1.0/static_cast<const T &>(x).i));
     }
     virtual RCP<const Basic> log(const Basic &x) const {
-        SYMENGINE_ASSERT(is_a<RealDouble>(x))
-        return real_double(std::log(static_cast<const RealDouble &>(x).i));
-    }
-    virtual RCP<const Basic> gamma(const Basic &x) const {
-        SYMENGINE_ASSERT(is_a<RealDouble>(x))
-        return real_double(std::tgamma(static_cast<const RealDouble &>(x).i));
+        SYMENGINE_ASSERT(is_a<T>(x))
+        return number(std::log(static_cast<const T &>(x).i));
     }
     virtual RCP<const Basic> abs(const Basic &x) const {
-        SYMENGINE_ASSERT(is_a<RealDouble>(x))
-        return real_double(std::abs(static_cast<const RealDouble &>(x).i));
+        SYMENGINE_ASSERT(is_a<T>(x))
+        return number(std::abs(static_cast<const T &>(x).i));
     }
 };
 
-Evaluate& RealDouble::get_eval() const {
-    static EvaluateDouble evaluate_double;
-    return evaluate_double;
+class EvaluateRealDouble : public EvaluateDouble<RealDouble> {
+    virtual RCP<const Basic> gamma(const Basic &x) const {
+        SYMENGINE_ASSERT(is_a<RealDouble>(x))
+        return number(std::tgamma(static_cast<const RealDouble &>(x).i));
+    }
+};
+
+class EvaluateComplexDouble : public EvaluateDouble<RealDouble> {
+    virtual RCP<const Basic> gamma(const Basic &x) const {
+        SYMENGINE_ASSERT(is_a<RealDouble>(x))
+        throw std::runtime_error("Not Implemented.");
+    }
+};
+
+Evaluate& RealDouble::get_eval() const
+{
+    static EvaluateRealDouble evaluate_real_double;
+    return evaluate_real_double;
 }
+
+Evaluate& ComplexDouble::get_eval() const
+{
+    static EvaluateComplexDouble evaluate_complex_double;
+    return evaluate_complex_double;
+}
+
 } // SymEngine

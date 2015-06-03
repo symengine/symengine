@@ -43,6 +43,8 @@ cdef c2py(RCP[const csympy.Basic] o):
         r = FunctionWrapper.__new__(FunctionWrapper)
     elif (csympy.is_a_RealDouble(deref(o))):
         r = RealDouble.__new__(RealDouble)
+    elif (csympy.is_a_ComplexDouble(deref(o))):
+        r = ComplexDouble.__new__(ComplexDouble)
     else:
         raise Exception("Unsupported CSymPy class.")
     r.thisptr = o
@@ -119,8 +121,10 @@ def sympify(a, raise_error=True):
         return a
     elif isinstance(a, (int, long)):
         return Integer(a)
-    elif isinstance(a, (float)):
+    elif isinstance(a, float):
         return RealDouble(a)
+    elif isinstance(a, complex):
+        return ComplexDouble(a)
     else:
         return sympy2csympy(a, raise_error)
 
@@ -365,6 +369,27 @@ cdef class RealDouble(Number):
     def _sympy_(self):
         import sympy
         return sympy.Float(deref(self.thisptr).__str__().decode("utf-8"))
+
+cdef class ComplexDouble(Number):
+
+    def __cinit__(self, i = None):
+        if i is None:
+            return
+        cdef double complex i_ = i
+        self.thisptr = rcp(new csympy.ComplexDouble(i_))
+
+    def __dealloc__(self):
+        self.thisptr.reset()
+
+    def real_part(self):
+        return c2py(<RCP[const csympy.Basic]>deref(csympy.rcp_static_cast_ComplexDouble(self.thisptr)).real_part())
+
+    def imaginary_part(self):
+        return c2py(<RCP[const csympy.Basic]>deref(csympy.rcp_static_cast_ComplexDouble(self.thisptr)).imaginary_part())
+
+    def _sympy_(self):
+        import sympy
+        return self.real_part()._sympy_() + sympy.I * self.imaginary_part()._sympy_()
 
 cdef class Rational(Number):
 

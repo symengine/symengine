@@ -53,6 +53,7 @@ cdef extern from "symengine_rcp.h" namespace "SymEngine":
     RCP[const Abs] rcp_static_cast_Abs "SymEngine::rcp_static_cast<const SymEngine::Abs>"(RCP[const Basic] &b) nogil
     RCP[const Derivative] rcp_static_cast_Derivative "SymEngine::rcp_static_cast<const SymEngine::Derivative>"(RCP[const Basic] &b) nogil
     RCP[const Subs] rcp_static_cast_Subs "SymEngine::rcp_static_cast<const SymEngine::Subs>"(RCP[const Basic] &b) nogil
+    RCP[const ComplexDouble] rcp_static_cast_ComplexDouble "SymEngine::rcp_static_cast<const SymEngine::ComplexDouble>"(RCP[const Basic] &b) nogil
     Ptr[RCP[Basic]] outArg(RCP[const Basic] &arg) nogil
     Ptr[RCP[Integer]] outArg_Integer "SymEngine::outArg<SymEngine::RCP<const SymEngine::Integer>>"(RCP[const Integer] &arg) nogil
 
@@ -94,6 +95,7 @@ cdef extern from "basic.h" namespace "SymEngine":
     bool is_a_Subs "SymEngine::is_a<SymEngine::Subs>"(const Basic &b) nogil
     bool is_a_FunctionWrapper "SymEngine::is_a<SymEngine::FunctionWrapper>"(const Basic &b) nogil
     bool is_a_RealDouble "SymEngine::is_a<SymEngine::RealDouble>"(const Basic &b) nogil
+    bool is_a_ComplexDouble "SymEngine::is_a<SymEngine::ComplexDouble>"(const Basic &b) nogil
 
     RCP[const Basic] expand(RCP[const Basic] &o) nogil except +
 
@@ -128,6 +130,12 @@ cdef extern from "complex.h" namespace "SymEngine":
 cdef extern from "real_double.h" namespace "SymEngine":
     cdef cppclass RealDouble(Number):
         RealDouble(double x) nogil
+
+cdef extern from "complex_double.h" namespace "SymEngine":
+    cdef cppclass ComplexDouble(Number):
+        ComplexDouble(double complex x) nogil
+        RCP[const Number] real_part() nogil
+        RCP[const Number] imaginary_part() nogil
 
 cdef extern from "constants.h" namespace "SymEngine":
     cdef cppclass Constant(Basic):
@@ -172,6 +180,7 @@ cdef extern from "basic.h" namespace "SymEngine":
     RCP[const Basic] rcp(Derivative *p) nogil
     RCP[const Basic] rcp(FunctionWrapper *p) nogil
     RCP[const Basic] rcp(RealDouble *p) nogil
+    RCP[const Basic] rcp(ComplexDouble *p) nogil
 
 cdef extern from "functions.h" namespace "SymEngine":
     cdef RCP[const Basic] sin(RCP[const Basic] &arg) nogil except+
