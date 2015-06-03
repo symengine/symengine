@@ -32,6 +32,10 @@ public:
      * */
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
+    //! Get the real part of the complex number
+    RCP<const Number> real_part() const;
+    //! Get the imaginary part of the complex number
+    RCP<const Number> imaginary_part() const;
     //! \returns `false`
     // False is returned because complex cannot be compared with zero
     inline virtual bool is_positive() const {
