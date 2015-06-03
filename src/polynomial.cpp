@@ -16,6 +16,18 @@ namespace SymEngine {
             it++;
         }
         degree = largest;
+
+        SYMENGINE_ASSERT(is_canonical(degree, dict_))
+    }
+
+    bool Polynomial::is_canonical(const uint &degree, const map_uint_mpz& dict)
+    {
+        map_uint_mpz ordered(dict.begin(), dict.end());
+        uint prev_degree = (ordered.end()--)->first;
+        if (prev_degree != degree)
+            return false;
+
+        return true;
     }
 
     std::size_t Polynomial::__hash__() const 

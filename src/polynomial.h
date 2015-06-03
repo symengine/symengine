@@ -19,7 +19,7 @@ public:
     //! `var_` : Variable of the uni-variate Polynomial
     //! `dict_` : holds the Polynomial
     // Polynomial x**2 + 2*x + 1 has dict_ = {{0, 1}, {1, 2}, {2, 1}} with var_ = "x" 
-    int degree;
+    uint degree;
     std::string var_;
     map_uint_mpz dict_;
 public:
@@ -27,7 +27,7 @@ public:
     //! Constructor of Polynomial class
     Polynomial(const std::string &var, map_uint_mpz&& dict);
     //! \return true if canonical
-    bool is_canonical(const int &degree, map_uint_mpz&& dict);
+    bool is_canonical(const uint &degree, const map_uint_mpz& dict);
     //! \return size of the hash
     std::size_t __hash__() const;
     /*! Equality comparator
