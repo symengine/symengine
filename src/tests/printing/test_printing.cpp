@@ -225,7 +225,7 @@ void test_matrix()
 void test_polynomial()
 {
     RCP<const Basic> p;
-    std::string x = "x";
+    RCP<const Symbol> x = symbol("x");
 
     p = polynomial(x, {{0, 0}});
     assert(p->__str__() == "0");

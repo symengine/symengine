@@ -10,6 +10,7 @@
 #include "dict.h"
 #include "basic.h"
 #include "integer.h"
+#include "symbol.h"
 
 namespace SymEngine {
 //! Polynomial Class
@@ -20,12 +21,12 @@ public:
     //! `dict_` : holds the Polynomial
     // Polynomial x**2 + 2*x + 1 has dict_ = {{0, 1}, {1, 2}, {2, 1}} with var_ = "x" 
     uint degree;
-    std::string var_;
+    RCP<const Symbol> var_;
     map_uint_mpz dict_;
 public:
     IMPLEMENT_TYPEID(POLYNOMIAL)
     //! Constructor of Polynomial class
-    Polynomial(const std::string &var, map_uint_mpz&& dict);
+    Polynomial(const RCP<const Symbol> &var, map_uint_mpz&& dict);
     //! \return true if canonical
     bool is_canonical(const uint &degree, const map_uint_mpz& dict);
     //! \return size of the hash
@@ -40,7 +41,7 @@ public:
     /*! Creates appropriate instance (i.e Symbol, Integer,
     * Mul, Pow, Polynomial) depending on the size of dictionary `d`.
     */
-    static RCP<const Basic> from_dict(const std::string &var, map_uint_mpz &&d);
+    static RCP<const Basic> from_dict(const RCP<const Symbol> &var, map_uint_mpz &&d);
     /*!
     * Adds coef*var_**n to the dict_
     */
@@ -83,7 +84,7 @@ RCP<const Polynomial> sub_poly(const Polynomial &a, const Polynomial &b);
 //! Multiplying two Polynomials a and b
 RCP<const Polynomial> mul_poly(const Polynomial &a, const Polynomial &b);
 
-inline RCP<const Polynomial> polynomial(std::string i, map_uint_mpz&& dict)
+inline RCP<const Polynomial> polynomial(RCP<const Symbol> i, map_uint_mpz&& dict)
 {
     return rcp(new Polynomial(i, std::move(dict)));
 }

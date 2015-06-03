@@ -5,6 +5,8 @@
 
 using SymEngine::Polynomial;
 using SymEngine::polynomial;
+using SymEngine::Symbol;
+using SymEngine::symbol;
 using SymEngine::RCP;
 using SymEngine::print_stack_on_segfault;
 using SymEngine::map_uint_mpz;
@@ -12,14 +14,14 @@ using SymEngine::Basic;
 
 void polynomial_constructor()
 {   
-    std::string x = "x";
+    RCP<const Symbol> x  = symbol("x");
     RCP<const Polynomial> P = polynomial(x, {{0, 1}, {1, 2}, {2, 1}});
     assert(P->degree == 2);
 }
 
 void test_add_poly()
 {
-	std::string x = "x";
+	RCP<const Symbol> x  = symbol("x");
 	map_uint_mpz adict_ = {{0, 1}, {1, 2}, {2, 1}};
 	map_uint_mpz bdict_ = {{0, 2}, {1, 3}, {2, 4}};
 	const Polynomial a(x, std::move(adict_));
@@ -32,7 +34,7 @@ void test_add_poly()
 
 void test_neg_poly()
 {
-	std::string x = "x";
+	RCP<const Symbol> x  = symbol("x");
 	map_uint_mpz adict_ = {{0, 1}, {1, 2}, {2, 1}};
 	const Polynomial a(x, std::move(adict_));
 
@@ -43,7 +45,7 @@ void test_neg_poly()
 
 void test_sub_poly()
 {
-	std::string x = "x";
+	RCP<const Symbol> x  = symbol("x");
 	map_uint_mpz adict_ = {{0, 1}, {1, 2}, {2, 1}};
 	map_uint_mpz bdict_ = {{0, 2}, {1, 3}, {2, 4}};
 	const Polynomial a(x, std::move(adict_));

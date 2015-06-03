@@ -3,7 +3,7 @@
 
 namespace SymEngine {
 
-    Polynomial::Polynomial(const std::string& var, map_uint_mpz&& dict) :
+    Polynomial::Polynomial(const RCP<const Symbol> &var, map_uint_mpz&& dict) :
          var_{var}, dict_{std::move(dict)} {
 
         map_uint_mpz::iterator it = dict_.begin();
@@ -23,7 +23,7 @@ namespace SymEngine {
     bool Polynomial::is_canonical(const uint &degree, const map_uint_mpz& dict)
     {
         map_uint_mpz ordered(dict.begin(), dict.end());
-        uint prev_degree = (ordered.end()--)->first;
+        uint prev_degree = (--ordered.end())->first;
         if (prev_degree != degree)
             return false;
 
@@ -37,7 +37,7 @@ namespace SymEngine {
         std::hash<long long int> hash_si;
         std::size_t seed = POLYNOMIAL;
 
-        seed += hash_string(this->var_);
+        seed += hash_string(this->var_->get_name());
         for (auto &it : this->dict_)
         {
             seed += hash_uint(it.first) + hash_si(it.second.get_si());
@@ -47,7 +47,7 @@ namespace SymEngine {
 
     bool Polynomial::__eq__(const Basic &o) const
     {
-        if ((var_ == static_cast<const Polynomial &>(o).var_) &&
+        if (eq(var_, static_cast<const Polynomial &>(o).var_) &&
             map_uint_mpz_eq(dict_, static_cast<const Polynomial &>(o).dict_))
             return true;
 
@@ -61,7 +61,7 @@ namespace SymEngine {
         if (dict_.size() != s.dict_.size())
             return (dict_.size() < s.dict_.size()) ? -1 : 1;
 
-        int cmp = (var_ < s.var_) ? -1 : 1;
+        int cmp = var_->compare(*s.var_);
         if (cmp != 0)
             return cmp;
 

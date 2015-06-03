@@ -202,18 +202,18 @@ void StrPrinter::bvisit(const Polynomial &x) {
                 //in cases of -x, print -x
                 //in cases of x**2 - x, print x, the '-' is considered earlier
                 if (first && it->second == -1) {
-                    s << "-" << x.var_;
+                    s << "-" << x.var_->get_name();
                 }
                 else {
-                    s << x.var_;
+                    s << x.var_->get_name();
                 }
             }          
             else {
                 if (first && it->second == -1) {
-                    s << "-" << x.var_ << "**"  << it->first;
+                    s << "-" << x.var_->get_name() << "**"  << it->first;
                 }
                 else {
-                    s << x.var_ << "**"  << it->first;
+                    s << x.var_->get_name() << "**"  << it->first;
                 }
             }
             //if next term is going to be 0, don't print +, so that x**3 + 0 + x becomes x**3 + x
@@ -237,14 +237,14 @@ void StrPrinter::bvisit(const Polynomial &x) {
             }
             else if (it->first == 1) {
                 if (first && it->second < 0) {
-                    s << it->second << "*" << x.var_;
+                    s << it->second << "*" << x.var_->get_name();
                 }
                 else {
-                    s << abs(it->second) << "*" << x.var_;
+                    s << abs(it->second) << "*" << x.var_->get_name();
                 }
             }          
             else {
-                s << abs(it->second) << "*" << x.var_ << "**"  << it->first;
+                s << abs(it->second) << "*" << x.var_->get_name() << "**"  << it->first;
             }
             if ((++it != x.dict_.rend()) && (it->second != 0)) {
                 if (it->second < 0) {
