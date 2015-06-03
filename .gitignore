@@ -38,6 +38,7 @@ src/tests/basic/test_basic
 src/tests/basic/test_functions
 src/tests/basic/test_integer
 src/tests/basic/test_poly
+src/tests/basic/test_polynomial
 src/tests/basic/test_subs
 src/tests/matrix/test_matrix
 src/tests/ntheory/test_ntheory
