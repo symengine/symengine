@@ -72,6 +72,15 @@ void test_get_args()
     assert(!vec_basic_eq_perm(a->get_args(), {one, mul(integer(3), x), pow(x, integer(2))}));
 }
 
+void test_eval()
+{
+	RCP<const Symbol> x  = symbol("x");
+	RCP<const Polynomial> a = polynomial(x, {{0, 1}, {1, 2}, {2, 1}});
+
+	assert(a->eval(2) == 9);
+	assert(a->eval_bit(3) == 81);
+}
+
 int main(int argc, char* argv[])
 {
     print_stack_on_segfault();
@@ -85,5 +94,7 @@ int main(int argc, char* argv[])
     test_sub_poly();
 
     test_get_args();
+
+    test_eval();
     return 0;
 }

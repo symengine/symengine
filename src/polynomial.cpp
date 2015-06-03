@@ -107,6 +107,28 @@ namespace SymEngine {
         return args;
     }
 
+    mpz_class Polynomial::eval(const mpz_class &x) const {
+        //TODO: Use Horner's Scheme
+        mpz_class ans = 0;
+        for (auto &p : dict_) {
+            mpz_class temp;
+            mpz_pow_ui(temp.get_mpz_t(), x.get_mpz_t(), p.first);
+            ans += p.second * temp;
+        }
+        return ans;
+    }
+
+    mpz_class Polynomial::eval_bit(const int &x) const {
+        //TODO: Use Horner's Scheme
+        mpz_class ans = 0;
+        for (auto &p : dict_) {
+            mpz_class temp = 1;
+            temp <<= x * p.first;
+            ans += p.second * temp;
+        }
+        return ans;
+    }
+
     RCP<const Polynomial> add_poly(const Polynomial &a, const Polynomial &b) {
         map_uint_mpz dict;
         for(auto &it : a.dict_)
