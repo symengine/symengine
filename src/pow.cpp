@@ -8,6 +8,7 @@
 #include "rational.h"
 #include "complex.h"
 #include "constants.h"
+#include "polynomial.h"
 
 namespace SymEngine {
 
@@ -281,6 +282,22 @@ RCP<const Basic> pow_expand(const RCP<const Pow> &self)
 {
     RCP<const Basic> _base = expand(self->base_);
     bool negative_pow = false;
+
+    if (is_a<Integer>(*self->exp_) && is_a<UnivariatePolynomial>(*_base)) {
+        int q = rcp_static_cast<const Integer>(self->exp_)->as_int();
+        RCP<const UnivariatePolynomial> p = rcp_static_cast<const UnivariatePolynomial>(_base);
+        RCP<const UnivariatePolynomial> r = univariate_polynomial(p->var_, 0, {{0, 1}});
+        while (q != 0) {
+            if (q % 2 == 1) {
+                r = mul_uni_poly(r, p);
+                q--;
+            }
+            p = mul_uni_poly(p, p);
+            q /= 2;
+        }
+        return r;
+    }
+
     if (! is_a<Integer>(*self->exp_) || ! is_a<Add>(*_base)) {
         if (neq(_base, self->base_)) {
             return pow(_base, self->exp_);

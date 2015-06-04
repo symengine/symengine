@@ -10,6 +10,7 @@ using SymEngine::UnivariatePolynomial;
 using SymEngine::univariate_polynomial;
 using SymEngine::Symbol;
 using SymEngine::symbol;
+using SymEngine::Pow;
 using SymEngine::RCP;
 using SymEngine::print_stack_on_segfault;
 using SymEngine::map_uint_mpz;
@@ -144,6 +145,19 @@ void test_bool_checks()
 			!poly->is_mul() && !poly->is_pow());
 }
 
+void test_expand()
+{
+    RCP<const Symbol> x  = symbol("x");
+    RCP<const UnivariatePolynomial> a = univariate_polynomial(x, 3, {{1, 1}, {2, 1}, {3, 1}});
+    RCP<const Basic> b = rcp(new Pow(a, integer(3)));
+    RCP<const Basic> c = expand(b);
+
+    assert(b->__str__() == "(x**3 + x**2 + x)**3");
+    //std::cout<<b->__str__()<<std::endl;
+    assert(c->__str__() == "x**9 + 3*x**8 + 6*x**7 + 7*x**6 + 6*x**5 + 3*x**4 + x**3");
+    //std::cout<<c->__str__()<<std::endl;
+}
+
 int main(int argc, char* argv[])
 {
     print_stack_on_segfault();
@@ -165,5 +179,7 @@ int main(int argc, char* argv[])
     test_diff();
 
     test_bool_checks();
+
+    test_expand();
     return 0;
 }
