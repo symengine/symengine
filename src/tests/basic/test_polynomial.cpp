@@ -111,6 +111,39 @@ void test_diff()
 	//std::cout<<a->diff(y)->__str__()<<std::endl;
 }
 
+void test_bool_checks()
+{
+	RCP<const Symbol> x  = symbol("x");
+	RCP<const Polynomial> z = polynomial(x, {{0, 0}});
+	RCP<const Polynomial> o = polynomial(x, {{0, 1}});
+	RCP<const Polynomial> mo = polynomial(x, {{0, -1}});
+	RCP<const Polynomial> i = polynomial(x, {{0, 6}});
+	RCP<const Polynomial> s = polynomial(x, {{1, 1}});
+	RCP<const Polynomial> m1 = polynomial(x, {{1, 6}});
+	RCP<const Polynomial> m2 = polynomial(x, {{3, 5}});
+	RCP<const Polynomial> po = polynomial(x, {{5, 1}});
+	RCP<const Polynomial> poly = polynomial(x, {{0, 1}, {1, 2}, {2, 1}});
+
+	assert(z->is_zero() && !z->is_one() && !z->is_minus_one() && z->is_integer() && !z->is_symbol() &&
+			!z->is_mul() && !z->is_pow());
+	assert(!o->is_zero() && o->is_one() && !o->is_minus_one() && o->is_integer() && !o->is_symbol() &&
+			!o->is_mul() && !o->is_pow());
+	assert(!mo->is_zero() && !mo->is_one() && mo->is_minus_one() && mo->is_integer() && !mo->is_symbol() &&
+			!mo->is_mul() && !mo->is_pow());
+	assert(!i->is_zero() && !i->is_one() && !i->is_minus_one() && i->is_integer() && !i->is_symbol() &&
+			!i->is_mul() && !i->is_pow());
+	assert(!s->is_zero() && !s->is_one() && !s->is_minus_one() && !s->is_integer() && s->is_symbol() &&
+			!s->is_mul() && !s->is_pow());
+	assert(!m1->is_zero() && !m1->is_one() && !m1->is_minus_one() && !m1->is_integer() && !m1->is_symbol() &&
+			m1->is_mul() && !m1->is_pow());
+	assert(!m2->is_zero() && !m2->is_one() && !m2->is_minus_one() && !m2->is_integer() && !m2->is_symbol() &&
+			m2->is_mul() && !m2->is_pow());
+	assert(!po->is_zero() && !po->is_one() && !po->is_minus_one() && !po->is_integer() && !po->is_symbol() &&
+			!po->is_mul() && po->is_pow());
+	assert(!poly->is_zero() && !poly->is_one() && !poly->is_minus_one() && !poly->is_integer() && !poly->is_symbol() &&
+			!poly->is_mul() && !poly->is_pow());
+}
+
 int main(int argc, char* argv[])
 {
     print_stack_on_segfault();
@@ -130,5 +163,7 @@ int main(int argc, char* argv[])
     test_eval();
 
     test_diff();
+
+    test_bool_checks();
     return 0;
 }

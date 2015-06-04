@@ -170,6 +170,53 @@ namespace SymEngine {
         return ans;
     }
 
+    bool Polynomial::is_zero() const {
+        if (dict_.size() == 1 && dict_.begin()->second == 0)
+            return true;
+        return false;
+    }
+
+    bool Polynomial::is_one() const {
+        if (dict_.size() == 1 && dict_.begin()->second == 1 &&
+                dict_.begin()->first == 0)
+            return true;
+        return false;
+    }
+
+    bool Polynomial::is_minus_one() const {
+        if (dict_.size() == 1 && dict_.begin()->second == -1 &&
+                dict_.begin()->first == 0)
+            return true;
+        return false;
+    }
+
+    bool Polynomial::is_integer() const {
+        if (dict_.size() == 1 && dict_.begin()->first == 0)
+            return true;
+        return false;
+    }
+
+    bool Polynomial::is_symbol() const {
+        if (dict_.size() == 1 && dict_.begin()->first == 1 &&
+                dict_.begin()->second == 1)
+            return true;
+        return false;
+    }
+
+    bool Polynomial::is_mul() const {
+        if (dict_.size() == 1 && dict_.begin()->first != 0 &&
+                dict_.begin()->second != 1 && dict_.begin()->second != 0)
+            return true;
+        return false;
+    }
+
+    bool Polynomial::is_pow() const {
+        if (dict_.size() == 1 && dict_.begin()->second == 1 &&
+                dict_.begin()->first != 1 && dict_.begin()->first != 0)
+            return true;
+        return false;
+    }
+
     RCP<const Polynomial> add_poly(const Polynomial &a, const Polynomial &b) {
         map_uint_mpz dict;
         for(auto &it : a.dict_)
