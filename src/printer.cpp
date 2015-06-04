@@ -181,9 +181,8 @@ void StrPrinter::bvisit(const Polynomial &x) {
         //given a term in polynomial, if coefficient is zero, print nothing
         if (it->second == 0) {
             //except when it is the only term, say "0"
-            if (it->first == 0) {
+            if (it->first == 0) 
                 s << "0";
-            }
             ++it;
         }
         //if the coefficient of a term is +1 or -1
@@ -203,16 +202,13 @@ void StrPrinter::bvisit(const Polynomial &x) {
                 //in cases of x**2 - x, print x, the '-' is considered earlier
                 if (first && it->second == -1) {
                     s << "-" << x.var_->get_name();
-                }
-                else {
+                } else {
                     s << x.var_->get_name();
                 }
-            }          
-            else {
+            } else {
                 if (first && it->second == -1) {
                     s << "-" << x.var_->get_name() << "**"  << it->first;
-                }
-                else {
+                } else {
                     s << x.var_->get_name() << "**"  << it->first;
                 }
             }
@@ -221,8 +217,7 @@ void StrPrinter::bvisit(const Polynomial &x) {
             if ((++it != x.dict_.rend()) && (it->second != 0)) {
                 if (it->second < 0) {
                     s << " - ";
-                }
-                else {
+                } else {
                     s << " + "; 
                 }
             }
@@ -234,23 +229,19 @@ void StrPrinter::bvisit(const Polynomial &x) {
                     s << it->second;
                 else 
                     s << abs(it->second);
-            }
-            else if (it->first == 1) {
+            } else if (it->first == 1) {
                 if (first && it->second < 0) {
                     s << it->second << "*" << x.var_->get_name();
-                }
-                else {
+                } else {
                     s << abs(it->second) << "*" << x.var_->get_name();
                 }
-            }          
-            else {
+            } else {
                 s << abs(it->second) << "*" << x.var_->get_name() << "**"  << it->first;
             }
             if ((++it != x.dict_.rend()) && (it->second != 0)) {
                 if (it->second < 0) {
                     s << " - ";
-                }
-                else {
+                } else {
                     s << " + "; 
                 }
             }

@@ -32,25 +32,20 @@ public:
             auto it = x.dict_.begin();
             if (it->second == 0) {
                 precedence = PrecedenceEnum::Atom;
-            }
-            else if (it->second == 1) {
+            } else if (it->second == 1) {
                 if (it->first == 0 || it->first == 1) {
                     precedence = PrecedenceEnum::Atom;
-                }
-                else {
+                } else {
                     precedence = PrecedenceEnum::Pow;
                 }
-            }
-            else {
+            } else {
                 if (it->first == 0 && it->second >= 0) {
                     precedence = PrecedenceEnum::Atom;
-                }
-                else {
+                } else {
                     precedence = PrecedenceEnum::Mul;
                 }
             }
-        }
-        else {
+        } else {
             precedence = PrecedenceEnum::Add;
         }
     }
