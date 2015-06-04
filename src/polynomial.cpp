@@ -23,6 +23,18 @@ namespace SymEngine {
         SYMENGINE_ASSERT(is_canonical(degree, dict_))
     }
 
+    Polynomial::Polynomial(const RCP<const Symbol> &var, const std::vector<mpz_class> &v) :
+         var_{var} {
+
+        for (uint i = 0; i < v.size(); i++) {
+            if (v[i] != 0)
+                dict_add_term(dict_, v[i], i);
+        }
+        degree = v.size() - 1;
+
+        SYMENGINE_ASSERT(is_canonical(degree, dict_))
+    }
+
     bool Polynomial::is_canonical(const uint &degree, const map_uint_mpz& dict)
     {
         map_uint_mpz ordered(dict.begin(), dict.end());
@@ -99,12 +111,28 @@ namespace SymEngine {
         }
     }
 
+    void Polynomial::dict_add_term(map_uint_mpz &d, const mpz_class &coef, const uint &n)
+    {
+        auto it = d.find(n);
+        if (it == d.end())
+            d[n] = coef;
+    }
+
     vec_basic Polynomial::get_args() const {
         vec_basic args;
         for (auto &p: dict_) {
             args.push_back(Polynomial::from_dict(var_, {{p.first, p.second}}));
         }
         return args;
+    }
+
+    mpz_class Polynomial::max_coef() const {
+        mpz_class curr = dict_.begin()->second;
+        for (auto &it : dict_) {
+            if (it.second > curr)
+                curr = it.second;
+        }
+        return curr;
     }
 
     mpz_class Polynomial::eval(const mpz_class &x) const {
@@ -158,5 +186,65 @@ namespace SymEngine {
 
         RCP<const Polynomial> c = polynomial(a.var_, std::move(dict));
         return c;
+    }
+
+    //Calculates bit length of number, used in mul_poly() only
+    template <typename T>
+    uint bit_length(T t){
+        uint count = 0;
+        while (t > 0) {
+        count++;
+        t = t >> 1;
+        }
+        return count;
+    }
+
+    RCP<const Polynomial> mul_poly(RCP<const Polynomial> a, RCP<const Polynomial> b) {
+        //TODO: Use `const RCP<const Polynomial> &a` for input arguments,
+        //      even better is use `const Polynomial &a` 
+        uint da = a->degree;
+        uint db = b->degree;
+
+        int sign = 1;
+        if ((--(a->dict_.end()))->second < 0) {
+            a = neg_poly(*a);
+            sign = -1 * sign;
+        }
+        if ((--(b->dict_.end()))->second < 0) {
+            b = neg_poly(*b);
+            sign = -1 * sign;
+        }
+
+        mpz_class p = std::max(a->max_coef(), b->max_coef());
+        uint N = bit_length(std::min(da + 1, db + 1)) + bit_length(p) + 1;
+
+        mpz_class a1 = 1 << N;
+        mpz_class a2 = a1 / 2;
+        mpz_class mask = a1 - 1;
+        mpz_class sa = a->eval_bit(N);
+        mpz_class sb = b->eval_bit(N);
+        mpz_class r = sa*sb;
+
+        std::vector<mpz_class> v;
+        mpz_class carry = 0;
+
+        while (r != 0 || carry != 0) {
+            mpz_class b;
+            mpz_and(b.get_mpz_t(), r.get_mpz_t(), mask.get_mpz_t());
+            if (b < a2) {
+                v.push_back(b + carry);
+                carry = 0;
+            }
+            else {
+                v.push_back(b - a1 + carry);
+                carry = 1;
+            }
+            r >>= N;
+        }
+
+        if (sign == -1)
+            return neg_poly(*rcp(new Polynomial(a->var_, v)));
+        else
+            return rcp(new Polynomial(a->var_, v));
     }
 }

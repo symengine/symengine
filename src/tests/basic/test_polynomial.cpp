@@ -23,7 +23,10 @@ void polynomial_constructor()
 {   
     RCP<const Symbol> x  = symbol("x");
     RCP<const Polynomial> P = polynomial(x, {{0, 1}, {1, 2}, {2, 1}});
-    assert(P->degree == 2);
+    assert(P->__str__() == "x**2 + 2*x + 1");
+
+    RCP<const Polynomial> Q = rcp(new Polynomial(x, {1, 0, 2, 1}));
+    assert(Q->__str__() == "x**3 + 2*x**2 + 1");
 }
 
 void test_add_poly()
@@ -63,6 +66,21 @@ void test_sub_poly()
 	assert(c->__str__() == "3*x**2 + x + 1");
 }
 
+void test_mul_poly()
+{
+	RCP<const Symbol> x  = symbol("x");
+    RCP<const Polynomial> a = polynomial(x, {{0, 1}, {1, 2}, {2, 1}});
+    RCP<const Polynomial> b = polynomial(x, {{0, -1}, {1, -2}, {2, -1}});
+
+	RCP<const Polynomial> c = mul_poly(a, a);
+	//std::cout<<c->__str__();
+	RCP<const Polynomial> d = mul_poly(a, b);
+	//std::cout<<c->__str__();
+
+	assert(c->__str__() == "x**4 + 4*x**3 + 6*x**2 + 4*x + 1");
+	assert(d->__str__() == "-x**4 - 4*x**3 - 6*x**2 - 4*x - 1");
+}
+
 void test_get_args()
 {
 	RCP<const Symbol> x  = symbol("x");
@@ -92,6 +110,8 @@ int main(int argc, char* argv[])
     test_neg_poly();
 
     test_sub_poly();
+
+    test_mul_poly();
 
     test_get_args();
 
