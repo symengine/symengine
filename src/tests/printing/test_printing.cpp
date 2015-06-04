@@ -16,7 +16,7 @@ using SymEngine::RCP;
 using SymEngine::Basic;
 using SymEngine::div;
 using SymEngine::pow;
-using SymEngine::polynomial;
+using SymEngine::univariate_polynomial;
 using SymEngine::mul;
 using SymEngine::integer;
 using SymEngine::print_stack_on_segfault;
@@ -222,48 +222,48 @@ void test_matrix()
     assert(A.__str__() == "[1, 0]\n[0, 1]\n");
 }
 
-void test_polynomial()
+void test_univariate_polynomial()
 {
     RCP<const Basic> p;
     RCP<const Symbol> x = symbol("x");
 
-    p = polynomial(x, 0, {{0, 0}});
+    p = univariate_polynomial(x, 0, {{0, 0}});
     assert(p->__str__() == "0");
     //std::cout<<p->__str__()<<std::endl;
-    p = polynomial(x, 0, {{0, 1}});
+    p = univariate_polynomial(x, 0, {{0, 1}});
     assert(p->__str__() == "1");
     //std::cout<<p->__str__()<<std::endl;
-    p = polynomial(x, 1, {{1, 1}});
+    p = univariate_polynomial(x, 1, {{1, 1}});
     assert(p->__str__() == "x");
     //std::cout<<p->__str__()<<std::endl;
-    p = polynomial(x, 1, {{0, 1}, {1, 2}});
+    p = univariate_polynomial(x, 1, {{0, 1}, {1, 2}});
     assert(p->__str__() == "2*x + 1");
     //std::cout<<p->__str__()<<std::endl;
-    p = polynomial(x, 1, {{0, -1}, {1, 2}});
+    p = univariate_polynomial(x, 1, {{0, -1}, {1, 2}});
     assert(p->__str__() == "2*x - 1");
     //std::cout<<p->__str__()<<std::endl;
-    p = polynomial(x, 0, {{0, -1}});
+    p = univariate_polynomial(x, 0, {{0, -1}});
     assert(p->__str__() == "-1");
     //std::cout<<p->__str__()<<std::endl;
-    p = polynomial(x, 1, {{1, -1}});
+    p = univariate_polynomial(x, 1, {{1, -1}});
     assert(p->__str__() == "-x");
     //std::cout<<p->__str__()<<std::endl;
-    p = polynomial(x, 1, {{0, -1}, {1, 1}});
+    p = univariate_polynomial(x, 1, {{0, -1}, {1, 1}});
     assert(p->__str__() == "x - 1");
     //std::cout<<p->__str__()<<std::endl;   
-    p = polynomial(x, 2, {{0, 1}, {1, 1}, {2, 1}});
+    p = univariate_polynomial(x, 2, {{0, 1}, {1, 1}, {2, 1}});
     assert(p->__str__() == "x**2 + x + 1");
     //std::cout<<p->__str__()<<std::endl;
-    p = polynomial(x, 2, {{0, 1}, {1, -1}, {2, 1}});
+    p = univariate_polynomial(x, 2, {{0, 1}, {1, -1}, {2, 1}});
     assert(p->__str__() == "x**2 - x + 1");
     //std::cout<<p->__str__()<<std::endl;
-    p = polynomial(x, 2, {{0, 1}, {1, 2}, {2, 1}});
+    p = univariate_polynomial(x, 2, {{0, 1}, {1, 2}, {2, 1}});
     assert(p->__str__() == "x**2 + 2*x + 1");
     //std::cout<<p->__str__()<<std::endl;
-    p = polynomial(x, 2, {{1, 2}, {2, 1}});
+    p = univariate_polynomial(x, 2, {{1, 2}, {2, 1}});
     assert(p->__str__() == "x**2 + 2*x");
     //std::cout<<p->__str__()<<std::endl;
-    p = polynomial(x, 2, {{0, -1}, {1, -2}, {2, -1}});
+    p = univariate_polynomial(x, 2, {{0, -1}, {1, -2}, {2, -1}});
     //std::cout<<p->__str__()<<std::endl;
     assert(p->__str__() == "-x**2 - 2*x - 1");
 }
@@ -276,7 +276,7 @@ int main(int argc, char* argv[])
 
     test_matrix();
 
-    test_polynomial();
+    test_univariate_polynomial();
 
     return 0;
 }

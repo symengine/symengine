@@ -183,14 +183,14 @@ void StrPrinter::bvisit(const Pow &x) {
     str_ = o.str();
 }
 
-//Polynomial printing, tests taken from SymPy and printing ensures that there is compatibility
-void StrPrinter::bvisit(const Polynomial &x) {
+//UnivariatePolynomial printing, tests taken from SymPy and printing ensures that there is compatibility
+void StrPrinter::bvisit(const UnivariatePolynomial &x) {
     std::ostringstream s;
     //bool variable needed to take care of cases like -5, -x, -3*x etc.
     bool first = true;
     //we iterate over the map in reverse order so that highest degree gets printed first
     for (auto it = x.dict_.rbegin(); it != x.dict_.rend();) {
-        //given a term in polynomial, if coefficient is zero, print nothing
+        //given a term in univariate polynomial, if coefficient is zero, print nothing
         if (it->second == 0) {
             //except when it is the only term, say "0"
             if (it->first == 0) 

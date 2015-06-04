@@ -1,6 +1,6 @@
 /**
  *  \file polynomial.h
- *  Class for univariate sparse Polynomial
+ *  Class for sparse Polynomial: UnivariatePolynomial and Polynomial
  *
  **/
 #ifndef SYMENGINE_POLYNOMIALS_H
@@ -13,22 +13,22 @@
 #include "symbol.h"
 
 namespace SymEngine {
-//! Polynomial Class
-class Polynomial : public Basic{
+//! UnivariatePolynomial Class
+class UnivariatePolynomial : public Basic{
 public:
-    //! `degree` : Degree of Polynomial
-    //! `var_` : Variable of the uni-variate Polynomial
-    //! `dict_` : holds the Polynomial
-    // Polynomial x**2 + 2*x + 1 has dict_ = {{0, 1}, {1, 2}, {2, 1}} with var_ = "x" 
+    //! `degree` : Degree of UnivariatePolynomial
+    //! `var_` : Variable of the uni-variate UnivariatePolynomial
+    //! `dict_` : holds the UnivariatePolynomial
+    // UnivariatePolynomial x**2 + 2*x + 1 has dict_ = {{0, 1}, {1, 2}, {2, 1}} with var_ = "x" 
     uint degree_;
     RCP<const Symbol> var_;
     map_uint_mpz dict_;
 public:
-    IMPLEMENT_TYPEID(POLYNOMIAL)
-    //! Constructor of Polynomial class
-    Polynomial(const RCP<const Symbol> &var, const uint &degree, map_uint_mpz&& dict);
+    IMPLEMENT_TYPEID(UNIVARIATEPOLYNOMIAL)
+    //! Constructor of UnivariatePolynomial class
+    UnivariatePolynomial(const RCP<const Symbol> &var, const uint &degree, map_uint_mpz&& dict);
     //! Constructor using a dense vector of mpz_class coefficients
-    Polynomial(const RCP<const Symbol> &var, const std::vector<mpz_class> &v);
+    UnivariatePolynomial(const RCP<const Symbol> &var, const std::vector<mpz_class> &v);
     //! \return true if canonical
     bool is_canonical(const uint &degree, const map_uint_mpz& dict);
     //! \return size of the hash
@@ -41,7 +41,7 @@ public:
     int compare(const Basic &o) const;
 
     /*! Creates appropriate instance (i.e Symbol, Integer,
-    * Mul, Pow, Polynomial) depending on the size of dictionary `d`.
+    * Mul, Pow, UnivariatePolynomial) depending on the size of dictionary `d`.
     */
     static RCP<const Basic> from_dict(const RCP<const Symbol> &var, map_uint_mpz &&d);
     /*!
@@ -52,9 +52,9 @@ public:
     mpz_class max_coef() const;
     //! Differentiates w.r.t symbol `x`
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
-    //! Evaluates the Polynomial at value x
+    //! Evaluates the UnivariatePolynomial at value x
     mpz_class eval(const mpz_class &x) const;
-    //! Evaluates the Polynomial at value 2**x
+    //! Evaluates the UnivariatePolynomial at value 2**x
     mpz_class eval_bit(const int &x) const;
 
     //! \return `true` if `0`
@@ -76,20 +76,20 @@ public:
 
     virtual void accept(Visitor &v) const;
 
-}; //Polynomial
+}; //UnivariatePolynomial
 
-//! Adding two Polynomials a and b
-RCP<const Polynomial> add_poly(const Polynomial &a, const Polynomial &b);
-//! Negative of a Polynomial
-RCP<const Polynomial> neg_poly(const Polynomial &a);
-//! Subtracting two Polynomials a and b
-RCP<const Polynomial> sub_poly(const Polynomial &a, const Polynomial &b);
-//! Multiplying two Polynomials a and b
-RCP<const Polynomial> mul_poly(RCP<const Polynomial> a, RCP<const Polynomial> b);
+//! Adding two UnivariatePolynomial a and b
+RCP<const UnivariatePolynomial> add_uni_poly(const UnivariatePolynomial &a, const UnivariatePolynomial &b);
+//! Negative of a UnivariatePolynomial
+RCP<const UnivariatePolynomial> neg_uni_poly(const UnivariatePolynomial &a);
+//! Subtracting two UnivariatePolynomial a and b
+RCP<const UnivariatePolynomial> sub_uni_poly(const UnivariatePolynomial &a, const UnivariatePolynomial &b);
+//! Multiplying two UnivariatePolynomial a and b
+RCP<const UnivariatePolynomial> mul_uni_poly(RCP<const UnivariatePolynomial> a, RCP<const UnivariatePolynomial> b);
 
-inline RCP<const Polynomial> polynomial(RCP<const Symbol> i, uint deg, map_uint_mpz&& dict)
+inline RCP<const UnivariatePolynomial> univariate_polynomial(RCP<const Symbol> i, uint deg, map_uint_mpz&& dict)
 {
-    return rcp(new Polynomial(i, deg, std::move(dict)));
+    return rcp(new UnivariatePolynomial(i, deg, std::move(dict)));
 }
 
 }  //SymEngine

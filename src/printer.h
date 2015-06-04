@@ -27,7 +27,7 @@ public:
         precedence = PrecedenceEnum::Pow;
     }
 
-    void bvisit(const Polynomial &x) {
+    void bvisit(const UnivariatePolynomial &x) {
         if (x.dict_.size() == 1) {
             auto it = x.dict_.begin();
             if (it->second == 0) {
@@ -106,7 +106,7 @@ public:
     void bvisit(const Add &x);
     void bvisit(const Mul &x);
     void bvisit(const Pow &x);
-    void bvisit(const Polynomial &x);
+    void bvisit(const UnivariatePolynomial &x);
     void bvisit(const Log &x);
     void bvisit(const Constant &x);
     void bvisit(const Function &x);

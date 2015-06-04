@@ -125,7 +125,7 @@ public:
         throw std::runtime_error("Symbol cannot be evaluated as an arb type.");
     }
 
-    virtual void visit(const Polynomial &x) {
+    virtual void visit(const UnivariatePolynomial &x) {
         throw std::runtime_error("Not implemented.");
     }
 

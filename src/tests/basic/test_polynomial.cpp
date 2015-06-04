@@ -6,8 +6,8 @@
 #include "pow.h"
 #include "dict.h"
 
-using SymEngine::Polynomial;
-using SymEngine::polynomial;
+using SymEngine::UnivariatePolynomial;
+using SymEngine::univariate_polynomial;
 using SymEngine::Symbol;
 using SymEngine::symbol;
 using SymEngine::RCP;
@@ -17,64 +17,64 @@ using SymEngine::Basic;
 using SymEngine::one;
 using SymEngine::zero;
 using SymEngine::integer;
-using SymEngine::vec_basic_eq_perm;
+using SymEngine::vec_basic_eq_perm;	
 
-void polynomial_constructor()
+void uni_poly_constructor()
 {   
     RCP<const Symbol> x  = symbol("x");
-    RCP<const Polynomial> P = polynomial(x, 2, {{0, 1}, {1, 2}, {2, 1}});
+    RCP<const UnivariatePolynomial> P = univariate_polynomial(x, 2, {{0, 1}, {1, 2}, {2, 1}});
     assert(P->__str__() == "x**2 + 2*x + 1");
 
-    RCP<const Polynomial> Q = rcp(new Polynomial(x, {1, 0, 2, 1}));
+    RCP<const UnivariatePolynomial> Q = rcp(new UnivariatePolynomial(x, {1, 0, 2, 1}));
     assert(Q->__str__() == "x**3 + 2*x**2 + 1");
 }
 
-void test_add_poly()
+void test_add_uni_poly()
 {
     RCP<const Symbol> x  = symbol("x");
     map_uint_mpz adict_ = {{0, 1}, {1, 2}, {2, 1}};
     map_uint_mpz bdict_ = {{0, 2}, {1, 3}, {2, 4}};
-    const Polynomial a(x, 2, std::move(adict_));
-    const Polynomial b(x, 2, std::move(bdict_));
+    const UnivariatePolynomial a(x, 2, std::move(adict_));
+    const UnivariatePolynomial b(x, 2, std::move(bdict_));
 
-    RCP<const Basic> c = add_poly(a, b);
+    RCP<const Basic> c = add_uni_poly(a, b);
     //std::cout<<c->__str__();
     assert(c->__str__() == "5*x**2 + 5*x + 3");
 }
 
-void test_neg_poly()
+void test_neg_uni_poly()
 {
     RCP<const Symbol> x  = symbol("x");
     map_uint_mpz adict_ = {{0, 1}, {1, 2}, {2, 1}};
-    const Polynomial a(x, 2, std::move(adict_));
+    const UnivariatePolynomial a(x, 2, std::move(adict_));
 
-    RCP<const Polynomial> b = neg_poly(a);
+    RCP<const UnivariatePolynomial> b = neg_uni_poly(a);
     //std::cout<<b->__str__()<<std::endl;
     assert(b->__str__() == "-x**2 - 2*x - 1");
 }
 
-void test_sub_poly()
+void test_sub_uni_poly()
 {
     RCP<const Symbol> x  = symbol("x");
     map_uint_mpz adict_ = {{0, 1}, {1, 2}, {2, 1}};
     map_uint_mpz bdict_ = {{0, 2}, {1, 3}, {2, 4}};
-    const Polynomial a(x, 2, std::move(adict_));
-    const Polynomial b(x, 2, std::move(bdict_));
+    const UnivariatePolynomial a(x, 2, std::move(adict_));
+    const UnivariatePolynomial b(x, 2, std::move(bdict_));
 
-    RCP<const Basic> c = sub_poly(b, a);
+    RCP<const Basic> c = sub_uni_poly(b, a);
     //std::cout<<c->__str__();
     assert(c->__str__() == "3*x**2 + x + 1");
 }
 
-void test_mul_poly()
+void test_mul_uni_poly()
 {
     RCP<const Symbol> x  = symbol("x");
-    RCP<const Polynomial> a = polynomial(x, 2, {{0, 1}, {1, 2}, {2, 1}});
-    RCP<const Polynomial> b = polynomial(x, 2, {{0, -1}, {1, -2}, {2, -1}});
+    RCP<const UnivariatePolynomial> a = univariate_polynomial(x, 2, {{0, 1}, {1, 2}, {2, 1}});
+    RCP<const UnivariatePolynomial> b = univariate_polynomial(x, 2, {{0, -1}, {1, -2}, {2, -1}});
 
-    RCP<const Polynomial> c = mul_poly(a, a);
+    RCP<const UnivariatePolynomial> c = mul_uni_poly(a, a);
     //std::cout<<c->__str__();
-    RCP<const Polynomial> d = mul_poly(a, b);
+    RCP<const UnivariatePolynomial> d = mul_uni_poly(a, b);
     //std::cout<<c->__str__();
 
     assert(c->__str__() == "x**4 + 4*x**3 + 6*x**2 + 4*x + 1");
@@ -84,7 +84,7 @@ void test_mul_poly()
 void test_get_args()
 {
     RCP<const Symbol> x  = symbol("x");
-    RCP<const Polynomial> a = polynomial(x, 2, {{0, 1}, {1, 2}, {2, 1}});
+    RCP<const UnivariatePolynomial> a = univariate_polynomial(x, 2, {{0, 1}, {1, 2}, {2, 1}});
 
     assert(vec_basic_eq_perm(a->get_args(), {one, mul(integer(2), x), pow(x, integer(2))}));
     assert(!vec_basic_eq_perm(a->get_args(), {one, mul(integer(3), x), pow(x, integer(2))}));
@@ -93,7 +93,7 @@ void test_get_args()
 void test_eval()
 {
     RCP<const Symbol> x  = symbol("x");
-    RCP<const Polynomial> a = polynomial(x, 2, {{0, 1}, {1, 2}, {2, 1}});
+    RCP<const UnivariatePolynomial> a = univariate_polynomial(x, 2, {{0, 1}, {1, 2}, {2, 1}});
 
     assert(a->eval(2) == 9);
     assert(a->eval_bit(3) == 81);
@@ -103,7 +103,7 @@ void test_diff()
 {
     RCP<const Symbol> x  = symbol("x");
     RCP<const Symbol> y  = symbol("y");
-    RCP<const Polynomial> a = polynomial(x, 2, {{0, 1}, {1, 2}, {2, 1}});
+    RCP<const UnivariatePolynomial> a = univariate_polynomial(x, 2, {{0, 1}, {1, 2}, {2, 1}});
 
     assert(a->diff(x)->__str__() == "2*x + 2");
 	//std::cout<<a->diff(x)->__str__()<<std::endl;
@@ -114,15 +114,15 @@ void test_diff()
 void test_bool_checks()
 {
     RCP<const Symbol> x  = symbol("x");
-    RCP<const Polynomial> z = polynomial(x, 0, {{0, 0}});
-    RCP<const Polynomial> o = polynomial(x, 0, {{0, 1}});
-    RCP<const Polynomial> mo = polynomial(x, 0, {{0, -1}});
-    RCP<const Polynomial> i = polynomial(x, 0, {{0, 6}});
-    RCP<const Polynomial> s = polynomial(x, 1, {{1, 1}});
-    RCP<const Polynomial> m1 = polynomial(x, 1, {{1, 6}});
-    RCP<const Polynomial> m2 = polynomial(x, 3, {{3, 5}});
-    RCP<const Polynomial> po = polynomial(x, 5, {{5, 1}});
-    RCP<const Polynomial> poly = polynomial(x, 2, {{0, 1}, {1, 2}, {2, 1}});
+    RCP<const UnivariatePolynomial> z = univariate_polynomial(x, 0, {{0, 0}});
+    RCP<const UnivariatePolynomial> o = univariate_polynomial(x, 0, {{0, 1}});
+    RCP<const UnivariatePolynomial> mo = univariate_polynomial(x, 0, {{0, -1}});
+    RCP<const UnivariatePolynomial> i = univariate_polynomial(x, 0, {{0, 6}});
+    RCP<const UnivariatePolynomial> s = univariate_polynomial(x, 1, {{1, 1}});
+    RCP<const UnivariatePolynomial> m1 = univariate_polynomial(x, 1, {{1, 6}});
+    RCP<const UnivariatePolynomial> m2 = univariate_polynomial(x, 3, {{3, 5}});
+    RCP<const UnivariatePolynomial> po = univariate_polynomial(x, 5, {{5, 1}});
+    RCP<const UnivariatePolynomial> poly = univariate_polynomial(x, 2, {{0, 1}, {1, 2}, {2, 1}});
 
     assert(z->is_zero() && !z->is_one() && !z->is_minus_one() && z->is_integer() && !z->is_symbol() &&
 			!z->is_mul() && !z->is_pow());
@@ -148,15 +148,15 @@ int main(int argc, char* argv[])
 {
     print_stack_on_segfault();
 
-    polynomial_constructor();
+    uni_poly_constructor();
 
-    test_add_poly();
+    test_add_uni_poly();
 
-    test_neg_poly();
+    test_neg_uni_poly();
 
-    test_sub_poly();
+    test_sub_uni_poly();
 
-    test_mul_poly();
+    test_mul_uni_poly();
 
     test_get_args();
 
