@@ -68,13 +68,21 @@ RCP<const Basic> CSRMatrix::get(unsigned i, unsigned j) const
 
     unsigned row_start = p_[i];
     unsigned row_end = p_[i + 1];
+    unsigned k;
 
-    // TODO: Use binary search
-    for (unsigned k = row_start; k < row_end; k++) {
-        if (j_[k] == j)
+    if (row_start == row_end) {
+        return zero;
+    }
+
+    while (row_start <= row_end) {
+        k = (row_start + row_end)/2;
+        if (j_[k] == j) {
             return x_[k];
-        else if (j_[k] > j)
-            break;
+        } else if (j_[k] < j){
+            row_start = k + 1;
+        } else {
+            row_end = k - 1;
+        }
     }
 
     return zero;
@@ -86,10 +94,25 @@ void CSRMatrix::set(unsigned i, unsigned j, const RCP<const Basic> &e)
 
     unsigned k = p_[i];
     unsigned row_end = p_[i + 1];
+    unsigned end = p_[i + 1];
+    unsigned mid;
 
-    // TODO: Use binary search
-    while (k < row_end && j_[k] < j)
-        k++;
+    while (k < end) {
+        mid = (k + end)/2;
+        if (mid == k) {
+            if (j_[k] < j) {
+                k++;
+            }
+            break;
+        } else if (j_[mid] >= j && j_[mid - 1] < j) {
+            k = mid;
+            break;
+        } else if (j_[mid - 1] >= j) {
+            end = mid - 1;
+        } else {
+            k = mid + 1;
+        }
+    }
 
     if (neq(e, zero)) {
         if (k < row_end && j_[k] == j) {
@@ -451,14 +474,20 @@ void csr_diagonal(const CSRMatrix& A, DenseMatrix& D)
         row_start = A.p_[i];
         row_end = A.p_[i + 1];
         diag = zero;
+        unsigned jj;
 
-        // TODO: Use Binary search as A is in canonical format
-        for (unsigned jj = row_start; jj < row_end; jj++) {
+        while (row_start <= row_end) {
+            jj = (row_start + row_end)/2;
             if (A.j_[jj] == i) {
                 diag = A.x_[jj];
                 break;
+            } else if (A.j_[jj] < i){
+                row_start = jj + 1;
+            } else {
+                row_end = jj - 1;
             }
         }
+
         D.set(i, 0, diag);
     }
 }

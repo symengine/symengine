@@ -12,6 +12,7 @@
 #include "constants.h"
 #include "visitor.h"
 #include "polynomial.h"
+#include "complex_double.h"
 
 #define ACCEPT(CLASS) void CLASS::accept(Visitor &v) const { v.visit(*this); }
 
@@ -62,6 +63,7 @@ ACCEPT(Constant)
 ACCEPT(Abs)
 ACCEPT(Subs)
 ACCEPT(RealDouble)
+ACCEPT(ComplexDouble)
 
 void preorder_traversal(const Basic &b, Visitor &v)
 {

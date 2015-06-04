@@ -133,6 +133,10 @@ public:
         throw std::runtime_error("Not implemented.");
     }
 
+    virtual void visit(const ComplexDouble &x) {
+        throw std::runtime_error("Not implemented.");
+    }
+
     virtual void visit(const Log &x) {
         apply(result_, *(x.get_arg()));
         arb_log(result_, result_, prec_);

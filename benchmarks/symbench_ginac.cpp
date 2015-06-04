@@ -1,4 +1,4 @@
-// To complie on a debian system you need to install libginac-dev first
+// To compile on a debian system you need to install libginac-dev first
 // $ sudo apt-get install libginac-dev
 // Then compile with the following command,
 // $ g++ -std=c++0x -o matrix_add1_ginac -Wl,--no-as-needed `pkg-config --cflags --libs ginac` symbench_ginac.cpp

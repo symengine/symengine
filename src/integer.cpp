@@ -8,11 +8,6 @@ Integer::Integer(int i)
     this->i = i;
 }
 
-Integer::Integer(mpz_class i)
-{
-    this->i = i;
-}
-
 std::size_t Integer::__hash__() const
 {
     std::hash<long long int> hash_fn;

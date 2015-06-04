@@ -18,6 +18,7 @@
 #include "complex.h"
 #include "constants.h"
 #include "real_double.h"
+#include "complex_double.h"
 
 namespace SymEngine {
 
@@ -68,6 +69,7 @@ public:
     virtual void visit(const Abs &) = 0;
     virtual void visit(const Subs &) = 0;
     virtual void visit(const RealDouble &) = 0;
+    virtual void visit(const ComplexDouble &) = 0;
 };
 
 void preorder_traversal(const Basic &b, Visitor &v);
@@ -127,6 +129,7 @@ public:
     virtual void visit(const Abs &x) { p_->bvisit(x); };
     virtual void visit(const Subs &x) { p_->bvisit(x); };
     virtual void visit(const RealDouble &x) { p_->bvisit(x); };
+    virtual void visit(const ComplexDouble &x) { p_->bvisit(x); };
 };
 
 template<class T>

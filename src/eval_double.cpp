@@ -214,7 +214,7 @@ public:
     // Classes not implemented are
     // Subs, UpperGamma, LowerGamma, Dirichlet_eta, Zeta
     // LeviCivita, KroneckerDelta, FunctionSymbol, LambertW
-    // Derivative, Complex
+    // Derivative, Complex, ComplexDouble
 
     using EvalDoubleVisitor::bvisit;
 
@@ -243,6 +243,10 @@ public:
 
     void bvisit(const Complex &x) {
         result_ = std::complex<double>(x.real_.get_d(), x.imaginary_.get_d());
+    };
+
+    void bvisit(const ComplexDouble &x) {
+        result_ = x.i;
     };
 };
 

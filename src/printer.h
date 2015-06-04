@@ -78,6 +78,10 @@ public:
         precedence = PrecedenceEnum::Add;
     }
 
+    void bvisit(const ComplexDouble &x) {
+        precedence = PrecedenceEnum::Add;
+    }
+
     void bvisit(const Basic &x) {
         precedence = PrecedenceEnum::Atom;
     }
@@ -110,6 +114,7 @@ public:
     void bvisit(const Derivative &x);
     void bvisit(const Subs &x);
     void bvisit(const RealDouble &x);
+    void bvisit(const ComplexDouble &x);
 
     std::string parenthesizeLT(const RCP<const Basic> &x, PrecedenceEnum precedenceEnum);
     std::string parenthesizeLE(const RCP<const Basic> &x, PrecedenceEnum precedenceEnum);

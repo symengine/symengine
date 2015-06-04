@@ -109,6 +109,23 @@ if (WITH_BFD)
     set(LIBS ${LIBS} ${EXECINFO_LIBRARIES})
 endif()
 
+# TCMalloc
+set(WITH_TCMALLOC no
+    CACHE BOOL "Build with TCMalloc linked")
+
+if (WITH_TCMALLOC)
+    find_package(TCMALLOC REQUIRED)
+    set(LIBS ${LIBS} ${TCMALLOC_LIBRARIES})
+
+    if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+        set(CMAKE_CXX_FLAGS_DEBUG
+            "${CMAKE_CXX_FLAGS_DEBUG} -fno-builtin-malloc -fno-builtin-calloc -fno-builtin-realloc -fno-builtin-free")
+        set(CMAKE_CXX_FLAGS_RELEASE
+            "${CMAKE_CXX_FLAGS_RELEASE} -fno-builtin-malloc -fno-builtin-calloc -fno-builtin-realloc -fno-builtin-free")
+    endif()
+
+endif()
+
 # Doxygen
 set(BUILD_DOXYGEN no
     CACHE BOOL "Create C++ API Doxgyen documentation.")
@@ -137,6 +154,21 @@ set(WITH_SYMENGINE_RCP yes
 # SYMENGINE_THREAD_SAFE
 set(WITH_SYMENGINE_THREAD_SAFE no
     CACHE BOOL "Enable SYMENGINE_THREAD_SAFE support")
+
+# OpenMp
+set(WITH_OPENMP no
+    CACHE BOOL "Build with OpenMP")
+
+if (WITH_OPENMP)
+    find_package(OpenMP REQUIRED)
+    if(OPENMP_FOUND)
+        set(CMAKE_CXX_FLAGS_DEBUG
+            "${CMAKE_CXX_FLAGS_DEBUG} ${OpenMP_CXX_FLAGS}")
+        set(CMAKE_CXX_FLAGS_RELEASE
+            "${CMAKE_CXX_FLAGS_RELEASE} ${OpenMP_CXX_FLAGS}")
+        set(WITH_SYMENGINE_THREAD_SAFE yes)
+    endif()
+endif()
 
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(HAVE_TEUCHOS_DEBUG yes)
@@ -215,6 +247,13 @@ if (WITH_ARB)
     message("MPFR_INCLUDE_DIRS: ${MPFR_INCLUDE_DIRS}")
     message("MPFR_LIBRARIES: ${MPFR_LIBRARIES}")
 endif()
+
+message("WITH_TCMALLOC: ${WITH_TCMALLOC}")
+if (WITH_TCMALLOC)
+    message("TCMALLOC_LIBRARIES: ${TCMALLOC_LIBRARIES}")
+endif()
+
+message("WITH_OPENMP: ${WITH_OPENMP}")
 
 message("Copying source of python wrappers into: ${CMAKE_CURRENT_BINARY_DIR}")
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/csympy DESTINATION ${CMAKE_CURRENT_BINARY_DIR})

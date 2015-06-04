@@ -175,6 +175,8 @@ int perfect_power(const Integer &n);
 //! Integer Absolute value
 RCP<const Integer> iabs(const Integer &n);
 
+inline Integer::Integer(mpz_class i) : i{i} {}
+
 } // SymEngine
 
 #endif
