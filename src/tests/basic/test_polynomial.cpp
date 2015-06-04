@@ -99,6 +99,18 @@ void test_eval()
 	assert(a->eval_bit(3) == 81);
 }
 
+void test_diff()
+{
+	RCP<const Symbol> x  = symbol("x");
+	RCP<const Symbol> y  = symbol("y");
+	RCP<const Polynomial> a = polynomial(x, {{0, 1}, {1, 2}, {2, 1}});
+
+	assert(a->diff(x)->__str__() == "2*x + 2");
+	//std::cout<<a->diff(x)->__str__()<<std::endl;
+	assert(a->diff(y)->__str__() == "0");
+	//std::cout<<a->diff(y)->__str__()<<std::endl;
+}
+
 int main(int argc, char* argv[])
 {
     print_stack_on_segfault();
@@ -116,5 +128,7 @@ int main(int argc, char* argv[])
     test_get_args();
 
     test_eval();
+
+    test_diff();
     return 0;
 }

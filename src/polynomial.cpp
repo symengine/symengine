@@ -135,6 +135,19 @@ namespace SymEngine {
         return curr;
     }
 
+    RCP<const Basic> Polynomial::diff(const RCP<const Symbol> &x) const
+    {
+        if (var_->__eq__(*x)) {
+            map_uint_mpz d;
+            for (auto &p : dict_) {
+                d[p.first - 1] = p.second * p.first;
+            }
+            return rcp(new Polynomial(var_, std::move(d)));
+        }
+        else
+            return zero;
+    }
+
     mpz_class Polynomial::eval(const mpz_class &x) const {
         //TODO: Use Horner's Scheme
         mpz_class ans = 0;

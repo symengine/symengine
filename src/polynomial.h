@@ -51,7 +51,7 @@ public:
             const mpz_class &coef, const uint &n);
     mpz_class max_coef() const;
     //! Differentiates w.r.t symbol `x`
-    //virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
+    virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
     //! Evaluates the Polynomial at value x
     mpz_class eval(const mpz_class &x) const;
     //! Evaluates the Polynomial at value 2**x
