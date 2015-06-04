@@ -6,21 +6,10 @@
 
 namespace SymEngine {
 
-Polynomial::Polynomial(const RCP<const Symbol> &var, map_uint_mpz&& dict) :
-     var_{var}, dict_{std::move(dict)} {
+Polynomial::Polynomial(const RCP<const Symbol> &var, const uint &degree, map_uint_mpz&& dict) :
+     degree_{degree}, var_{var}, dict_{std::move(dict)} {
 
-    map_uint_mpz::iterator it = dict_.begin();
-    uint largest = it->first;
-    uint cur;
-    while (it != dict_.end()) {
-        cur =it->first;
-        if (cur > largest)
-            largest = cur;
-        it++;
-    }
-    degree = largest;
-
-    SYMENGINE_ASSERT(is_canonical(degree, dict_))
+    SYMENGINE_ASSERT(is_canonical(degree_, dict_))
 }
 
 Polynomial::Polynomial(const RCP<const Symbol> &var, const std::vector<mpz_class> &v) :
@@ -30,16 +19,16 @@ Polynomial::Polynomial(const RCP<const Symbol> &var, const std::vector<mpz_class
         if (v[i] != 0)
             dict_add_term(dict_, v[i], i);
     }
-    degree = v.size() - 1;
+    degree_ = v.size() - 1;
 
-    SYMENGINE_ASSERT(is_canonical(degree, dict_))
+    SYMENGINE_ASSERT(is_canonical(degree_, dict_))
 }
 
-bool Polynomial::is_canonical(const uint &degree, const map_uint_mpz& dict)
+bool Polynomial::is_canonical(const uint &degree_, const map_uint_mpz& dict)
 {
     map_uint_mpz ordered(dict.begin(), dict.end());
     uint prev_degree = (--ordered.end())->first;
-    if (prev_degree != degree)
+    if (prev_degree != degree_)
         return false;
 
     return true;
@@ -48,14 +37,15 @@ bool Polynomial::is_canonical(const uint &degree, const map_uint_mpz& dict)
 std::size_t Polynomial::__hash__() const 
 {
     std::hash<std::string> hash_string;
-    std::hash<uint> hash_uint;
-    std::hash<long long int> hash_si;
     std::size_t seed = POLYNOMIAL;
 
     seed += hash_string(this->var_->get_name());
     for (auto &it : this->dict_)
-    {
-        seed += hash_uint(it.first) + hash_si(it.second.get_si());
+    {   
+        std::size_t temp = POLYNOMIAL;
+        hash_combine<uint>(temp, it.first);
+        hash_combine<long long int>(temp, it.second.get_si());
+        seed += temp;
     }
     return seed;
 }
@@ -105,7 +95,7 @@ RCP<const Basic> Polynomial::from_dict(const RCP<const Symbol> &var, map_uint_mp
                     {{var, integer(d.begin()->first)}});
         }
     } else {
-        return rcp(new Polynomial(var, std::move(d)));
+        return rcp(new Polynomial(var, (--(d.end()))->first, std::move(d)));
     }
 }
 
@@ -140,7 +130,7 @@ RCP<const Basic> Polynomial::diff(const RCP<const Symbol> &x) const
         for (auto &p : dict_) {
             d[p.first - 1] = p.second * p.first;
         }
-        return rcp(new Polynomial(var_, std::move(d)));
+        return rcp(new Polynomial(var_, (--(d.end()))->first, std::move(d)));
     } else
         return zero;
 }
@@ -221,7 +211,7 @@ RCP<const Polynomial> add_poly(const Polynomial &a, const Polynomial &b) {
     for (auto &it : b.dict_)
         dict[it.first] += it.second;
 
-    RCP<const Polynomial> c = polynomial(a.var_, std::move(dict));
+    RCP<const Polynomial> c = polynomial(a.var_, (--(dict.end()))->first, std::move(dict));
     return c;
 }
 
@@ -230,7 +220,7 @@ RCP<const Polynomial> neg_poly(const Polynomial &a) {
     for (auto &it : a.dict_)
         dict[it.first] = -1 * it.second;
 
-    RCP<const Polynomial> c = polynomial(a.var_, std::move(dict));
+    RCP<const Polynomial> c = polynomial(a.var_, (--(dict.end()))->first, std::move(dict));
     return c;
 }
 
@@ -241,7 +231,7 @@ RCP<const Polynomial> sub_poly(const Polynomial &a, const Polynomial &b) {
     for (auto &it : b.dict_)
         dict[it.first] -= it.second;
 
-    RCP<const Polynomial> c = polynomial(a.var_, std::move(dict));
+    RCP<const Polynomial> c = polynomial(a.var_, (--(dict.end()))->first, std::move(dict));
     return c;
 }
 
@@ -259,8 +249,8 @@ uint bit_length(T t){
 RCP<const Polynomial> mul_poly(RCP<const Polynomial> a, RCP<const Polynomial> b) {
     //TODO: Use `const RCP<const Polynomial> &a` for input arguments,
     //      even better is use `const Polynomial &a` 
-    uint da = a->degree;
-    uint db = b->degree;
+    uint da = a->degree_;
+    uint db = b->degree_;
 
     int sign = 1;
     if ((--(a->dict_.end()))->second < 0) {

@@ -20,13 +20,13 @@ public:
     //! `var_` : Variable of the uni-variate Polynomial
     //! `dict_` : holds the Polynomial
     // Polynomial x**2 + 2*x + 1 has dict_ = {{0, 1}, {1, 2}, {2, 1}} with var_ = "x" 
-    uint degree;
+    uint degree_;
     RCP<const Symbol> var_;
     map_uint_mpz dict_;
 public:
     IMPLEMENT_TYPEID(POLYNOMIAL)
     //! Constructor of Polynomial class
-    Polynomial(const RCP<const Symbol> &var, map_uint_mpz&& dict);
+    Polynomial(const RCP<const Symbol> &var, const uint &degree, map_uint_mpz&& dict);
     //! Constructor using a dense vector of mpz_class coefficients
     Polynomial(const RCP<const Symbol> &var, const std::vector<mpz_class> &v);
     //! \return true if canonical
@@ -87,9 +87,9 @@ RCP<const Polynomial> sub_poly(const Polynomial &a, const Polynomial &b);
 //! Multiplying two Polynomials a and b
 RCP<const Polynomial> mul_poly(RCP<const Polynomial> a, RCP<const Polynomial> b);
 
-inline RCP<const Polynomial> polynomial(RCP<const Symbol> i, map_uint_mpz&& dict)
+inline RCP<const Polynomial> polynomial(RCP<const Symbol> i, uint deg, map_uint_mpz&& dict)
 {
-    return rcp(new Polynomial(i, std::move(dict)));
+    return rcp(new Polynomial(i, deg, std::move(dict)));
 }
 
 }  //SymEngine

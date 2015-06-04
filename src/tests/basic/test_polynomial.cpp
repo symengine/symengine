@@ -22,7 +22,7 @@ using SymEngine::vec_basic_eq_perm;
 void polynomial_constructor()
 {   
     RCP<const Symbol> x  = symbol("x");
-    RCP<const Polynomial> P = polynomial(x, {{0, 1}, {1, 2}, {2, 1}});
+    RCP<const Polynomial> P = polynomial(x, 2, {{0, 1}, {1, 2}, {2, 1}});
     assert(P->__str__() == "x**2 + 2*x + 1");
 
     RCP<const Polynomial> Q = rcp(new Polynomial(x, {1, 0, 2, 1}));
@@ -34,8 +34,8 @@ void test_add_poly()
     RCP<const Symbol> x  = symbol("x");
     map_uint_mpz adict_ = {{0, 1}, {1, 2}, {2, 1}};
     map_uint_mpz bdict_ = {{0, 2}, {1, 3}, {2, 4}};
-    const Polynomial a(x, std::move(adict_));
-    const Polynomial b(x, std::move(bdict_));
+    const Polynomial a(x, 2, std::move(adict_));
+    const Polynomial b(x, 2, std::move(bdict_));
 
     RCP<const Basic> c = add_poly(a, b);
     //std::cout<<c->__str__();
@@ -46,7 +46,7 @@ void test_neg_poly()
 {
     RCP<const Symbol> x  = symbol("x");
     map_uint_mpz adict_ = {{0, 1}, {1, 2}, {2, 1}};
-    const Polynomial a(x, std::move(adict_));
+    const Polynomial a(x, 2, std::move(adict_));
 
     RCP<const Polynomial> b = neg_poly(a);
     //std::cout<<b->__str__()<<std::endl;
@@ -58,8 +58,8 @@ void test_sub_poly()
     RCP<const Symbol> x  = symbol("x");
     map_uint_mpz adict_ = {{0, 1}, {1, 2}, {2, 1}};
     map_uint_mpz bdict_ = {{0, 2}, {1, 3}, {2, 4}};
-    const Polynomial a(x, std::move(adict_));
-    const Polynomial b(x, std::move(bdict_));
+    const Polynomial a(x, 2, std::move(adict_));
+    const Polynomial b(x, 2, std::move(bdict_));
 
     RCP<const Basic> c = sub_poly(b, a);
     //std::cout<<c->__str__();
@@ -69,8 +69,8 @@ void test_sub_poly()
 void test_mul_poly()
 {
     RCP<const Symbol> x  = symbol("x");
-    RCP<const Polynomial> a = polynomial(x, {{0, 1}, {1, 2}, {2, 1}});
-    RCP<const Polynomial> b = polynomial(x, {{0, -1}, {1, -2}, {2, -1}});
+    RCP<const Polynomial> a = polynomial(x, 2, {{0, 1}, {1, 2}, {2, 1}});
+    RCP<const Polynomial> b = polynomial(x, 2, {{0, -1}, {1, -2}, {2, -1}});
 
     RCP<const Polynomial> c = mul_poly(a, a);
     //std::cout<<c->__str__();
@@ -84,7 +84,7 @@ void test_mul_poly()
 void test_get_args()
 {
     RCP<const Symbol> x  = symbol("x");
-    RCP<const Polynomial> a = polynomial(x, {{0, 1}, {1, 2}, {2, 1}});
+    RCP<const Polynomial> a = polynomial(x, 2, {{0, 1}, {1, 2}, {2, 1}});
 
     assert(vec_basic_eq_perm(a->get_args(), {one, mul(integer(2), x), pow(x, integer(2))}));
     assert(!vec_basic_eq_perm(a->get_args(), {one, mul(integer(3), x), pow(x, integer(2))}));
@@ -93,7 +93,7 @@ void test_get_args()
 void test_eval()
 {
     RCP<const Symbol> x  = symbol("x");
-    RCP<const Polynomial> a = polynomial(x, {{0, 1}, {1, 2}, {2, 1}});
+    RCP<const Polynomial> a = polynomial(x, 2, {{0, 1}, {1, 2}, {2, 1}});
 
     assert(a->eval(2) == 9);
     assert(a->eval_bit(3) == 81);
@@ -103,7 +103,7 @@ void test_diff()
 {
     RCP<const Symbol> x  = symbol("x");
     RCP<const Symbol> y  = symbol("y");
-    RCP<const Polynomial> a = polynomial(x, {{0, 1}, {1, 2}, {2, 1}});
+    RCP<const Polynomial> a = polynomial(x, 2, {{0, 1}, {1, 2}, {2, 1}});
 
     assert(a->diff(x)->__str__() == "2*x + 2");
 	//std::cout<<a->diff(x)->__str__()<<std::endl;
@@ -114,15 +114,15 @@ void test_diff()
 void test_bool_checks()
 {
     RCP<const Symbol> x  = symbol("x");
-    RCP<const Polynomial> z = polynomial(x, {{0, 0}});
-    RCP<const Polynomial> o = polynomial(x, {{0, 1}});
-    RCP<const Polynomial> mo = polynomial(x, {{0, -1}});
-    RCP<const Polynomial> i = polynomial(x, {{0, 6}});
-    RCP<const Polynomial> s = polynomial(x, {{1, 1}});
-    RCP<const Polynomial> m1 = polynomial(x, {{1, 6}});
-    RCP<const Polynomial> m2 = polynomial(x, {{3, 5}});
-    RCP<const Polynomial> po = polynomial(x, {{5, 1}});
-    RCP<const Polynomial> poly = polynomial(x, {{0, 1}, {1, 2}, {2, 1}});
+    RCP<const Polynomial> z = polynomial(x, 0, {{0, 0}});
+    RCP<const Polynomial> o = polynomial(x, 0, {{0, 1}});
+    RCP<const Polynomial> mo = polynomial(x, 0, {{0, -1}});
+    RCP<const Polynomial> i = polynomial(x, 0, {{0, 6}});
+    RCP<const Polynomial> s = polynomial(x, 1, {{1, 1}});
+    RCP<const Polynomial> m1 = polynomial(x, 1, {{1, 6}});
+    RCP<const Polynomial> m2 = polynomial(x, 3, {{3, 5}});
+    RCP<const Polynomial> po = polynomial(x, 5, {{5, 1}});
+    RCP<const Polynomial> poly = polynomial(x, 2, {{0, 1}, {1, 2}, {2, 1}});
 
     assert(z->is_zero() && !z->is_one() && !z->is_minus_one() && z->is_integer() && !z->is_symbol() &&
 			!z->is_mul() && !z->is_pow());
