@@ -15,3 +15,6 @@
 
 /* Define if you want to enable ARB support in SymEngine */
 #cmakedefine HAVE_SYMENGINE_ARB
+
+/* Define if you want to enable MPFR support in SymEngine */
+#cmakedefine HAVE_SYMENGINE_MPFR
