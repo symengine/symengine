@@ -183,6 +183,87 @@ void StrPrinter::bvisit(const Pow &x) {
     str_ = o.str();
 }
 
+//UnivariatePolynomial printing, tests taken from SymPy and printing ensures that there is compatibility
+void StrPrinter::bvisit(const UnivariatePolynomial &x) {
+    std::ostringstream s;
+    //bool variable needed to take care of cases like -5, -x, -3*x etc.
+    bool first = true;
+    //we iterate over the map in reverse order so that highest degree gets printed first
+    for (auto it = x.dict_.rbegin(); it != x.dict_.rend();) {
+        //given a term in univariate polynomial, if coefficient is zero, print nothing
+        if (it->second == 0) {
+            //except when it is the only term, say "0"
+            if (it->first == 0) 
+                s << "0";
+            ++it;
+        }
+        //if the coefficient of a term is +1 or -1
+        else if (abs(it->second) == 1) {
+            //if exponent is 0, then print only coefficient
+            //in cases of -7, it is the only term, hence we print -7
+            //in cases of x - 7, the '-' is considered earlier, hence print only 7
+            if (it->first == 0) {
+                if (first) 
+                    s << it->second;
+                else 
+                    s << abs(it->second);
+            }
+            //if exponent is 1, print x instead of x**1 
+            else if (it->first == 1) {
+                //in cases of -x, print -x
+                //in cases of x**2 - x, print x, the '-' is considered earlier
+                if (first && it->second == -1) {
+                    s << "-" << x.var_->get_name();
+                } else {
+                    s << x.var_->get_name();
+                }
+            } else {
+                if (first && it->second == -1) {
+                    s << "-" << x.var_->get_name() << "**"  << it->first;
+                } else {
+                    s << x.var_->get_name() << "**"  << it->first;
+                }
+            }
+            //if next term is going to be 0, don't print +, so that x**3 + 0 + x becomes x**3 + x
+            //also consider that sign of term here itself to avoid prints like x + -1
+            if ((++it != x.dict_.rend()) && (it->second != 0)) {
+                if (it->second < 0) {
+                    s << " - ";
+                } else {
+                    s << " + "; 
+                }
+            }
+        }
+        //same logic is followed as above
+        else {
+            if (it->first == 0) {
+                if (first) 
+                    s << it->second;
+                else 
+                    s << abs(it->second);
+            } else if (it->first == 1) {
+                if (first && it->second < 0) {
+                    s << it->second << "*" << x.var_->get_name();
+                } else {
+                    s << abs(it->second) << "*" << x.var_->get_name();
+                }
+            } else {
+                s << abs(it->second) << "*" << x.var_->get_name() << "**"  << it->first;
+            }
+            if ((++it != x.dict_.rend()) && (it->second != 0)) {
+                if (it->second < 0) {
+                    s << " - ";
+                } else {
+                    s << " + "; 
+                }
+            }
+        }
+        //corner cases of only first term handled successfully, switch the bool
+        first = false;
+    }
+    str_ = s.str();
+}
+
 void StrPrinter::bvisit(const Log &x) {
     str_ = "log(" + this->apply(x.get_arg()) + ")";
 }

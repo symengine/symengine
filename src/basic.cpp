@@ -8,6 +8,7 @@
 #include "pow.h"
 #include "constants.h"
 #include "functions.h"
+#include "polynomial.h"
 #include "printer.h"
 
 namespace SymEngine {

@@ -66,7 +66,7 @@ enum TypeID {
     // 'REAL_DOUBLE' returns the number of subclasses of Number.
     // All subclasses of Number must be added before it. Do not assign
     // non subclasses of Number before it.
-    SYMBOL, MUL, ADD, POW, LOG, CONSTANT,
+    SYMBOL, MUL, ADD, POW, UNIVARIATEPOLYNOMIAL, LOG, CONSTANT,
     SIN, COS, TAN, COT, CSC, SEC,
     ASIN, ACOS, ASEC, ACSC, ATAN, ACOT, ATAN2,
     SINH, COSH, TANH, COTH,

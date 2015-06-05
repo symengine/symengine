@@ -12,6 +12,10 @@ add_executable(test_poly test_poly.cpp)
 target_link_libraries(test_poly symengine)
 add_test(test_poly ${PROJECT_BINARY_DIR}/test_poly)
 
+add_executable(test_polynomial test_polynomial.cpp)
+target_link_libraries(test_polynomial symengine)
+add_test(test_polynomial ${PROJECT_BINARY_DIR}/test_polynomial)
+
 add_executable(test_functions test_functions.cpp)
 target_link_libraries(test_functions symengine)
 add_test(test_functions ${PROJECT_BINARY_DIR}/test_functions)

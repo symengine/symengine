@@ -37,6 +37,8 @@ typedef std::map<RCP<const Basic>, RCP<const Basic>,
         RCPBasicKeyLess> map_basic_basic;
 typedef std::map<RCP<const Integer>, unsigned,
         RCPIntegerKeyLess> map_integer_uint;
+typedef std::map<unsigned, mpz_class>
+       map_uint_mpz;
 
 //! `insert(m, first, second)` is equivalent to `m[first] = second`, just faster,
 //! because no default constructor is called on the `second` type.
@@ -58,7 +60,8 @@ bool umap_basic_basic_eq(const umap_basic_basic &a,
 bool vec_basic_eq(const vec_basic &a, const vec_basic &b);
 //! \return true if the two vectors `a` and `b` are equal up to a permutation. Otherwise false.
 bool vec_basic_eq_perm(const vec_basic &a, const vec_basic &b);
-
+//! \return true if the two dictionaries `a` and `b` are equal. Otherwise false.
+bool map_uint_mpz_eq(const map_uint_mpz &a, const map_uint_mpz &b);
 
 //! \return -1, 0, 1 for a < b, a == b, a > b
 int map_basic_basic_compare(const map_basic_basic &a, const map_basic_basic &b);
@@ -66,6 +69,8 @@ int map_basic_basic_compare(const map_basic_basic &a, const map_basic_basic &b);
 int map_basic_num_compare(const map_basic_num &a, const map_basic_num &b);
 //! \return -1, 0, 1 for a < b, a == b, a > b
 int vec_basic_compare(const vec_basic &a, const vec_basic &b);
+//! \return -1, 0, 1 for a < b, a == b, a > b
+int map_uint_mpz_compare(const map_uint_mpz &a, const map_uint_mpz &b);
 
 
 //! Part of umap_vec_mpz:

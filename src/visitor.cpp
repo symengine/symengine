@@ -11,6 +11,7 @@
 #include "functions.h"
 #include "constants.h"
 #include "visitor.h"
+#include "polynomial.h"
 #include "complex_double.h"
 
 #define ACCEPT(CLASS) void CLASS::accept(Visitor &v) const { v.visit(*this); }
@@ -21,6 +22,7 @@ ACCEPT(Symbol)
 ACCEPT(Add)
 ACCEPT(Mul)
 ACCEPT(Pow)
+ACCEPT(UnivariatePolynomial)
 ACCEPT(Integer)
 ACCEPT(Rational)
 ACCEPT(Complex)
