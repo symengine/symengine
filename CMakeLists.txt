@@ -96,6 +96,41 @@ if (WITH_MPFR)
     set(HAVE_SYMENGINE_MPFR yes)
 endif()
 
+# Piranha
+set(WITH_PIRANHA no
+    CACHE BOOL "Build with Piranha")
+
+# Boost
+set(WITH_BOOST no
+    CACHE BOOL "Build with Boost")
+
+# PTHREAD
+set(WITH_PTHREAD no
+    CACHE BOOL "Build with PTHREAD")
+
+if (WITH_PIRANHA)
+    set(WITH_BOOST yes)
+    set(WITH_PTHREAD yes)
+
+    find_package(Piranha REQUIRED)
+    include_directories(${PIRANHA_INCLUDE_DIRS})
+    set(HAVE_SYMENGINE_PIRANHA yes)
+endif()
+
+if (WITH_PTHREAD)
+    find_package(PTHREAD REQUIRED)
+    include_directories(${PTHREAD_INCLUDE_DIRS})
+    set(LIBS ${LIBS} ${PTHREAD_LIBRARIES})
+    set(HAVE_SYMENGINE_PTHREAD yes)
+endif()
+
+if (WITH_BOOST)
+    find_package(Boost REQUIRED COMPONENTS date_time filesystem system)
+    include_directories(${Boost_INCLUDE_DIRS})
+    set(LIBS ${LIBS} ${Boost_LIBRARIES})
+    set(HAVE_SYMENGINE_BOOST yes)
+endif()
+
 # Python
 set(WITH_PYTHON no
     CACHE BOOL "Build with Python wrappers")
@@ -259,6 +294,23 @@ message("WITH_MPFR: ${WITH_MPFR}")
 if (WITH_MPFR)
     message("MPFR_INCLUDE_DIRS: ${MPFR_INCLUDE_DIRS}")
     message("MPFR_LIBRARIES: ${MPFR_LIBRARIES}")
+endif()
+
+message("WITH_PIRANHA: ${WITH_PIRANHA}")
+if (WITH_PIRANHA)
+    message("PIRANHA_INCLUDE_DIRS: ${PIRANHA_INCLUDE_DIRS}")
+endif()
+
+message("WITH_BOOST: ${WITH_BOOST}")
+if (WITH_BOOST)
+    message("BOOST_INCLUDE_DIRS: ${Boost_INCLUDE_DIRS}")
+    message("BOOST_LIBRARIES: ${Boost_LIBRARIES}")
+endif()
+
+message("WITH_PTHREAD: ${WITH_PTHREAD}")
+if (WITH_PTHREAD)
+    message("PTHREAD_INCLUDE_DIRS: ${PTHREAD_INCLUDE_DIRS}")
+    message("PTHREAD_LIBRARIES: ${PTHREAD_LIBRARIES}")
 endif()
 
 message("WITH_TCMALLOC: ${WITH_TCMALLOC}")

@@ -18,3 +18,12 @@
 
 /* Define if you want to enable MPFR support in SymEngine */
 #cmakedefine HAVE_SYMENGINE_MPFR
+
+/* Define if you want to enable Piranha support in SymEngine */
+#cmakedefine HAVE_SYMENGINE_PIRANHA
+
+/* Define if you want to enable BOOST support in SymEngine */
+#cmakedefine HAVE_SYMENGINE_BOOST
+
+/* Define if you want to enable PTHREAD support in SymEngine */
+#cmakedefine HAVE_SYMENGINE_PTHREAD
