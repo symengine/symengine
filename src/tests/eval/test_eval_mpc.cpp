@@ -42,6 +42,10 @@ void test_eval()
     mpc_set_fr_fr(b, real, imag, MPFR_RNDN);
 
     assert(mpc_cmp(a, b) == 0);
+    mpfr_clear(real);
+    mpfr_clear(imag);
+    mpc_clear(a);
+    mpc_clear(b);
 }
 
 int main(int argc, char* argv[])
