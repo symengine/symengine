@@ -13,14 +13,19 @@ if [[ "${WITH_PRIMESIEVE}" == "yes" ]]; then
     tar -xzf primesieve-5.2.tar.gz;
     cd primesieve-5.2 && ./configure && make -j8 && sudo make install && cd ..;
 fi
-if [[ "${WITH_ARB}" == "yes" ]]; then
+if [[ "${WITH_MPFR}" == "yes" ]] || [[ "${WITH_MPC}" == "yes" ]] || [[ "${WITH_ARB}" == "yes" ]]; then
     sudo apt-get install libmpfr-dev;
+fi
+if [[ "${WITH_ARB}" == "yes" ]]; then
     wget http://www.flintlib.org/flint-2.4.4.tar.gz;
     tar -xzf flint-2.4.4.tar.gz;
     cd flint-2.4.4 && ./configure && make -j8 && sudo make install && cd ..;
     wget https://github.com/fredrik-johansson/arb/archive/2.2.0.tar.gz;
     tar -xzf 2.2.0.tar.gz;
     cd arb-2.2.0 && ./configure && make -j8 ARB_GMP_LIB_DIR=/usr/lib/x86_64-linux-gnu ARB_MPFR_LIB_DIR=/usr/lib/x86_64-linux-gnu && sudo make ARB_GMP_LIB_DIR=/usr/lib/x86_64-linux-gnu ARB_MPFR_LIB_DIR=/usr/lib/x86_64-linux-gnu install && cd ..;
+fi
+if [[ "${WITH_MPC}" == "yes" ]]; then
+    sudo apt-get install libmpc-dev
 fi
 # Install python using Miniconda.
 if [[ "${WITH_PYTHON}" == "yes" ]] || [[ "${PYTHON_INSTALL}" == "yes" ]]; then

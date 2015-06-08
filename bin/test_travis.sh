@@ -49,6 +49,12 @@ fi
 if [[ "${WITH_ARB}" != "" ]]; then
     cmake_line="$cmake_line -DWITH_ARB=${WITH_ARB}"
 fi
+if [[ "${WITH_MPFR}" != "" ]]; then
+    cmake_line="$cmake_line -DWITH_MPFR=${WITH_MPFR}"
+fi
+if [[ "${WITH_MPC}" != "" ]]; then
+    cmake_line="$cmake_line -DWITH_MPC=${WITH_MPC}"
+fi
 if [[ "${BUILD_SHARED_LIBS}" != "" ]]; then
     cmake_line="$cmake_line -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}"
 fi
@@ -101,7 +107,13 @@ else
     if [[ "${WITH_ARB}" != "" ]]; then
         extra_libs="$extra_libs -larb -lflint"
     fi
-    ${CXX} -std=c++0x -I$our_install_dir/include/ -L$our_install_dir/lib test_basic.cpp -lsymengine -lteuchos -lgmpxx -lgmp $extra_libs
+    if [[ "${WITH_MPC}" != "" ]]; then
+        extra_libs="$extra_libs -lmpc"
+    fi
+    if [[ "${WITH_MPFR}" == "yes" ]] || [[ "${WITH_MPC}" == "yes" ]] || [[ "${WITH_ARB}" == "yes" ]]; then
+        extra_libs="$extra_libs -lmpfr"
+    fi
+    ${CXX} -std=c++0x -I$our_install_dir/include/ -L$our_install_dir/lib test_basic.cpp -lsymengine -lteuchos $extra_libs -lgmpxx -lgmp
     export LD_LIBRARY_PATH=/usr/local/lib:$our_install_dir/lib:$LD_LIBRARY_PATH
     ./a.out
     # Python
