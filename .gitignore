@@ -50,6 +50,7 @@ src/tests/cwrapper/test_cwrapper
 src/tests/eval/test_eval_double
 src/tests/eval/test_eval_arb
 src/tests/eval/test_eval_mpfr
+src/tests/eval/test_eval_mpc
 
 # Benchmarks executables
 benchmarks/add1

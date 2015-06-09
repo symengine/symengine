@@ -27,3 +27,6 @@
 
 /* Define if you want to enable PTHREAD support in SymEngine */
 #cmakedefine HAVE_SYMENGINE_PTHREAD
+
+/* Define if you want to enable MPC support in SymEngine */
+#cmakedefine HAVE_SYMENGINE_MPC

@@ -73,6 +73,10 @@ set(WITH_ARB no
 set(WITH_MPFR no
     CACHE BOOL "Build with MPFR")
 
+# MPC
+set(WITH_MPC no
+    CACHE BOOL "Build with MPC")
+
 if (WITH_ARB)
     find_package(FLINT REQUIRED)
     include_directories(${FLINT_INCLUDE_DIRS})
@@ -87,6 +91,14 @@ if (WITH_ARB)
     include_directories(${ARB_INCLUDE_DIRS})
     set(LIBS ${LIBS} ${ARB_LIBRARIES})
     set(HAVE_SYMENGINE_ARB yes)
+endif()
+
+if (WITH_MPC)
+    find_package(MPC REQUIRED)
+    include_directories(${MPC_INCLUDE_DIRS})
+    set(LIBS ${LIBS} ${MPC_LIBRARIES})
+    set(HAVE_SYMENGINE_MPC yes)
+    set(WITH_MPFR yes)
 endif()
 
 if (WITH_MPFR)
@@ -311,6 +323,12 @@ message("WITH_PTHREAD: ${WITH_PTHREAD}")
 if (WITH_PTHREAD)
     message("PTHREAD_INCLUDE_DIRS: ${PTHREAD_INCLUDE_DIRS}")
     message("PTHREAD_LIBRARIES: ${PTHREAD_LIBRARIES}")
+endif()
+
+message("WITH_MPC: ${WITH_MPC}")
+if (WITH_MPC)
+    message("MPC_INCLUDE_DIRS: ${MPC_INCLUDE_DIRS}")
+    message("MPC_LIBRARIES: ${MPC_LIBRARIES}")
 endif()
 
 message("WITH_TCMALLOC: ${WITH_TCMALLOC}")
