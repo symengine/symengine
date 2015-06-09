@@ -19,6 +19,7 @@
 #include <symengine/constants.h>
 #include <symengine/real_double.h>
 #include <symengine/complex_double.h>
+#include <symengine/real_mpfr.h>
 
 namespace SymEngine {
 
@@ -70,6 +71,9 @@ public:
     virtual void visit(const Subs &) = 0;
     virtual void visit(const RealDouble &) = 0;
     virtual void visit(const ComplexDouble &) = 0;
+#ifdef HAVE_SYMENGINE_MPFR
+    virtual void visit(const RealMPFR &) = 0;
+#endif
 };
 
 void preorder_traversal(const Basic &b, Visitor &v);
@@ -130,6 +134,9 @@ public:
     virtual void visit(const Subs &x) { p_->bvisit(x); };
     virtual void visit(const RealDouble &x) { p_->bvisit(x); };
     virtual void visit(const ComplexDouble &x) { p_->bvisit(x); };
+#ifdef HAVE_SYMENGINE_MPFR
+    virtual void visit(const RealMPFR &x) { p_->bvisit(x); };
+#endif
 };
 
 template<class T>

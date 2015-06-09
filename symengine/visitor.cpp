@@ -64,6 +64,9 @@ ACCEPT(Abs)
 ACCEPT(Subs)
 ACCEPT(RealDouble)
 ACCEPT(ComplexDouble)
+#ifdef HAVE_SYMENGINE_MPFR
+ACCEPT(RealMPFR)
+#endif
 
 void preorder_traversal(const Basic &b, Visitor &v)
 {

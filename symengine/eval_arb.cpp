@@ -11,6 +11,7 @@
 #include <symengine/constants.h>
 #include <symengine/visitor.h>
 #include <symengine/eval_arb.h>
+#include <symengine/real_mpfr.h>
 
 #ifdef HAVE_SYMENGINE_ARB
 
@@ -134,6 +135,10 @@ public:
     }
 
     virtual void visit(const ComplexDouble &x) {
+        throw std::runtime_error("Not implemented.");
+    }
+
+    virtual void visit(const RealMPFR &x) {
         throw std::runtime_error("Not implemented.");
     }
 
