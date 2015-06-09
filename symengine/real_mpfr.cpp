@@ -8,8 +8,10 @@
 #include <symengine/real_double.h>
 #include <symengine/complex_double.h>
 #include <symengine/real_mpfr.h>
+#include <symengine/complex_mpc.h>
 
 #ifdef HAVE_SYMENGINE_MPFR
+
 namespace SymEngine {
 
 RealMPFR::RealMPFR(mpfr_class i, mpfr_rnd_t rnd) : i{std::move(i)}, rnd_(rnd)  {
@@ -71,7 +73,10 @@ RCP<const Number> RealMPFR::addreal(const Rational &other) const {
  * */
 RCP<const Number> RealMPFR::addreal(const Complex &other) const {
 #ifdef HAVE_SYMENGINE_MPC
-    throw std::runtime_error("Not Implemented.");
+    mpc_class t(get_prec());
+    mpc_set_q_q(t.get_mpc_t(), other.real_.get_mpq_t(), other.imaginary_.get_mpq_t(), rnd_);
+    mpc_add_fr(t.get_mpc_t(), t.get_mpc_t(), this->i.get_mpfr_t(), rnd_);
+    return complex_mpc(std::move(t));
 #else
     throw std::runtime_error("Result is complex. Recompile with MPC support.");
 #endif
@@ -91,7 +96,10 @@ RCP<const Number> RealMPFR::addreal(const RealDouble &other) const {
  * */
 RCP<const Number> RealMPFR::addreal(const ComplexDouble &other) const {
 #ifdef HAVE_SYMENGINE_MPC
-    throw std::runtime_error("Not Implemented.");
+    mpc_class t(get_prec());
+    mpc_set_d_d(t.get_mpc_t(), other.i.real(), other.i.imag(), rnd_);
+    mpc_add_fr(t.get_mpc_t(), t.get_mpc_t(), this->i.get_mpfr_t(), rnd_);
+    return complex_mpc(std::move(t));
 #else
     throw std::runtime_error("Result is complex. Recompile with MPC support.");
 #endif
@@ -129,7 +137,10 @@ RCP<const Number> RealMPFR::subreal(const Rational &other) const {
  * */
 RCP<const Number> RealMPFR::subreal(const Complex &other) const {
 #ifdef HAVE_SYMENGINE_MPC
-    throw std::runtime_error("Not Implemented.");
+    mpc_class t(get_prec());
+    mpc_set_q_q(t.get_mpc_t(), other.real_.get_mpq_t(), other.imaginary_.get_mpq_t(), rnd_);
+    mpc_sub_fr(t.get_mpc_t(), t.get_mpc_t(), this->i.get_mpfr_t(), rnd_);
+    return complex_mpc(std::move(t));
 #else
     throw std::runtime_error("Result is complex. Recompile with MPC support.");
 #endif
@@ -149,7 +160,10 @@ RCP<const Number> RealMPFR::subreal(const RealDouble &other) const {
  * */
 RCP<const Number> RealMPFR::subreal(const ComplexDouble &other) const {
 #ifdef HAVE_SYMENGINE_MPC
-    throw std::runtime_error("Not Implemented.");
+    mpc_class t(get_prec());
+    mpc_set_d_d(t.get_mpc_t(), other.i.real(), other.i.imag(), rnd_);
+    mpc_sub_fr(t.get_mpc_t(), t.get_mpc_t(), this->i.get_mpfr_t(), rnd_);
+    return complex_mpc(std::move(t));
 #else
     throw std::runtime_error("Result is complex. Recompile with MPC support.");
 #endif
@@ -188,7 +202,10 @@ RCP<const Number> RealMPFR::rsubreal(const Rational &other) const {
  * */
 RCP<const Number> RealMPFR::rsubreal(const Complex &other) const {
 #ifdef HAVE_SYMENGINE_MPC
-    throw std::runtime_error("Not Implemented.");
+    mpc_class t(get_prec());
+    mpc_set_q_q(t.get_mpc_t(), other.real_.get_mpq_t(), other.imaginary_.get_mpq_t(), rnd_);
+    mpc_fr_sub(t.get_mpc_t(), this->i.get_mpfr_t(), t.get_mpc_t(), rnd_);
+    return complex_mpc(std::move(t));
 #else
     throw std::runtime_error("Result is complex. Recompile with MPC support.");
 #endif
@@ -208,7 +225,10 @@ RCP<const Number> RealMPFR::rsubreal(const RealDouble &other) const {
  * */
 RCP<const Number> RealMPFR::rsubreal(const ComplexDouble &other) const {
 #ifdef HAVE_SYMENGINE_MPC
-    throw std::runtime_error("Not Implemented.");
+    mpc_class t(get_prec());
+    mpc_set_d_d(t.get_mpc_t(), other.i.real(), other.i.imag(), rnd_);
+    mpc_fr_sub(t.get_mpc_t(), this->i.get_mpfr_t(), t.get_mpc_t(), rnd_);
+    return complex_mpc(std::move(t));
 #else
     throw std::runtime_error("Result is complex. Recompile with MPC support.");
 #endif
@@ -237,7 +257,10 @@ RCP<const Number> RealMPFR::mulreal(const Rational &other) const {
  * */
 RCP<const Number> RealMPFR::mulreal(const Complex &other) const {
 #ifdef HAVE_SYMENGINE_MPC
-    throw std::runtime_error("Not Implemented.");
+    mpc_class t(get_prec());
+    mpc_set_q_q(t.get_mpc_t(), other.real_.get_mpq_t(), other.imaginary_.get_mpq_t(), rnd_);
+    mpc_mul_fr(t.get_mpc_t(), t.get_mpc_t(), this->i.get_mpfr_t(), rnd_);
+    return complex_mpc(std::move(t));
 #else
     throw std::runtime_error("Result is complex. Recompile with MPC support.");
 #endif
@@ -257,7 +280,10 @@ RCP<const Number> RealMPFR::mulreal(const RealDouble &other) const {
  * */
 RCP<const Number> RealMPFR::mulreal(const ComplexDouble &other) const {
 #ifdef HAVE_SYMENGINE_MPC
-    throw std::runtime_error("Not Implemented.");
+    mpc_class t(get_prec());
+    mpc_set_d_d(t.get_mpc_t(), other.i.real(), other.i.imag(), rnd_);
+    mpc_mul_fr(t.get_mpc_t(), t.get_mpc_t(), this->i.get_mpfr_t(), rnd_);
+    return complex_mpc(std::move(t));
 #else
     throw std::runtime_error("Result is complex. Recompile with MPC support.");
 #endif
@@ -295,7 +321,10 @@ RCP<const Number> RealMPFR::divreal(const Rational &other) const {
  * */
 RCP<const Number> RealMPFR::divreal(const Complex &other) const {
 #ifdef HAVE_SYMENGINE_MPC
-    throw std::runtime_error("Not Implemented.");
+    mpc_class t(get_prec());
+    mpc_set_q_q(t.get_mpc_t(), other.real_.get_mpq_t(), other.imaginary_.get_mpq_t(), rnd_);
+    mpc_div_fr(t.get_mpc_t(), t.get_mpc_t(), this->i.get_mpfr_t(), rnd_);
+    return complex_mpc(std::move(t));
 #else
     throw std::runtime_error("Result is complex. Recompile with MPC support.");
 #endif
@@ -315,7 +344,10 @@ RCP<const Number> RealMPFR::divreal(const RealDouble &other) const {
  * */
 RCP<const Number> RealMPFR::divreal(const ComplexDouble &other) const {
 #ifdef HAVE_SYMENGINE_MPC
-    throw std::runtime_error("Not Implemented.");
+    mpc_class t(get_prec());
+    mpc_set_d_d(t.get_mpc_t(), other.i.real(), other.i.imag(), rnd_);
+    mpc_div_fr(t.get_mpc_t(), t.get_mpc_t(), this->i.get_mpfr_t(), rnd_);
+    return complex_mpc(std::move(t));
 #else
     throw std::runtime_error("Result is complex. Recompile with MPC support.");
 #endif
@@ -355,7 +387,10 @@ RCP<const Number> RealMPFR::rdivreal(const Rational &other) const {
  * */
 RCP<const Number> RealMPFR::rdivreal(const Complex &other) const {
 #ifdef HAVE_SYMENGINE_MPC
-    throw std::runtime_error("Not Implemented.");
+    mpc_class t(get_prec());
+    mpc_set_q_q(t.get_mpc_t(), other.real_.get_mpq_t(), other.imaginary_.get_mpq_t(), rnd_);
+    mpc_fr_div(t.get_mpc_t(), this->i.get_mpfr_t(), t.get_mpc_t(), rnd_);
+    return complex_mpc(std::move(t));
 #else
     throw std::runtime_error("Result is complex. Recompile with MPC support.");
 #endif
@@ -375,7 +410,10 @@ RCP<const Number> RealMPFR::rdivreal(const RealDouble &other) const {
  * */
 RCP<const Number> RealMPFR::rdivreal(const ComplexDouble &other) const {
 #ifdef HAVE_SYMENGINE_MPC
-    throw std::runtime_error("Not Implemented.");
+    mpc_class t(get_prec());
+    mpc_set_d_d(t.get_mpc_t(), other.i.real(), other.i.imag(), rnd_);
+    mpc_fr_div(t.get_mpc_t(), this->i.get_mpfr_t(), t.get_mpc_t(), rnd_);
+    return complex_mpc(std::move(t));
 #else
     throw std::runtime_error("Result is complex. Recompile with MPC support.");
 #endif
@@ -396,7 +434,11 @@ RCP<const Number> RealMPFR::powreal(const Integer &other) const {
 RCP<const Number> RealMPFR::powreal(const Rational &other) const {
     if (mpfr_cmp_si(i.get_mpfr_t(), 0) < 0) {
 #ifdef HAVE_SYMENGINE_MPC
-        throw std::runtime_error("Not Implemented.");
+        mpc_class t(get_prec()), s(get_prec());
+        mpc_set_q(t.get_mpc_t(), other.i.get_mpq_t(), rnd_);
+        mpc_set_fr(s.get_mpc_t(), this->i.get_mpfr_t(), rnd_);
+        mpc_pow(t.get_mpc_t(), s.get_mpc_t(), t.get_mpc_t(), rnd_);
+        return complex_mpc(std::move(t));
 #else
         throw std::runtime_error("Result is complex. Recompile with MPC support.");
 #endif
@@ -412,7 +454,10 @@ RCP<const Number> RealMPFR::powreal(const Rational &other) const {
  * */
 RCP<const Number> RealMPFR::powreal(const Complex &other) const {
 #ifdef HAVE_SYMENGINE_MPC
-    throw std::runtime_error("Not Implemented.");
+    mpc_class t(get_prec());
+    mpc_set_q_q(t.get_mpc_t(), other.real_.get_mpq_t(), other.imaginary_.get_mpq_t(), rnd_);
+    mpc_pow_fr(t.get_mpc_t(), t.get_mpc_t(), this->i.get_mpfr_t(), rnd_);
+    return complex_mpc(std::move(t));
 #else
     throw std::runtime_error("Result is complex. Recompile with MPC support.");
 #endif
@@ -424,7 +469,10 @@ RCP<const Number> RealMPFR::powreal(const Complex &other) const {
 RCP<const Number> RealMPFR::powreal(const RealDouble &other) const {
     if (mpfr_cmp_si(i.get_mpfr_t(), 0) < 0) {
 #ifdef HAVE_SYMENGINE_MPC
-        throw std::runtime_error("Not Implemented.");
+        mpc_class t(get_prec());
+        mpc_set_fr(t.get_mpc_t(), this->i.get_mpfr_t(), rnd_);
+        mpc_pow_d(t.get_mpc_t(), t.get_mpc_t(), other.i, rnd_);
+        return complex_mpc(std::move(t));
 #else
         throw std::runtime_error("Result is complex. Recompile with MPC support.");
 #endif
@@ -440,7 +488,11 @@ RCP<const Number> RealMPFR::powreal(const RealDouble &other) const {
  * */
 RCP<const Number> RealMPFR::powreal(const ComplexDouble &other) const {
 #ifdef HAVE_SYMENGINE_MPC
-    throw std::runtime_error("Not Implemented.");
+    mpc_class t(get_prec()), s(get_prec());
+    mpc_set_d_d(t.get_mpc_t(), other.i.real(), other.i.imag(), rnd_);
+    mpc_set_fr(s.get_mpc_t(), this->i.get_mpfr_t(), rnd_);
+    mpc_pow(t.get_mpc_t(), s.get_mpc_t(), t.get_mpc_t(), rnd_);
+    return complex_mpc(std::move(t));
 #else
     throw std::runtime_error("Result is complex. Recompile with MPC support.");
 #endif
@@ -452,7 +504,10 @@ RCP<const Number> RealMPFR::powreal(const ComplexDouble &other) const {
 RCP<const Number> RealMPFR::powreal(const RealMPFR &other) const {
     if (mpfr_cmp_si(i.get_mpfr_t(), 0) < 0) {
 #ifdef HAVE_SYMENGINE_MPC
-        throw std::runtime_error("Not Implemented.");
+        mpc_class t(get_prec());
+        mpc_set_fr(t.get_mpc_t(), this->i.get_mpfr_t(), rnd_);
+        mpc_pow_fr(t.get_mpc_t(), t.get_mpc_t(), other.i.get_mpfr_t(), rnd_);
+        return complex_mpc(std::move(t));
 #else
         throw std::runtime_error("Result is complex. Recompile with MPC support.");
 #endif
@@ -468,7 +523,11 @@ RCP<const Number> RealMPFR::powreal(const RealMPFR &other) const {
 RCP<const Number> RealMPFR::rpowreal(const Integer &other) const {
     if (other.is_negative()) {
 #ifdef HAVE_SYMENGINE_MPC
-        throw std::runtime_error("Not Implemented.");
+        mpc_class t(get_prec()), s(get_prec());
+        mpc_set_z(t.get_mpc_t(), other.i.get_mpz_t(), rnd_);
+        mpc_set_fr(s.get_mpc_t(), this->i.get_mpfr_t(), rnd_);
+        mpc_pow(t.get_mpc_t(), t.get_mpc_t(), s.get_mpc_t(), rnd_);
+        return complex_mpc(std::move(t));
 #else
         throw std::runtime_error("Result is complex. Recompile with MPC support.");
 #endif
@@ -485,7 +544,11 @@ RCP<const Number> RealMPFR::rpowreal(const Integer &other) const {
 RCP<const Number> RealMPFR::rpowreal(const Rational &other) const {
     if (other.is_negative()) {
 #ifdef HAVE_SYMENGINE_MPC
-        throw std::runtime_error("Not Implemented.");
+        mpc_class t(get_prec()), s(get_prec());
+        mpc_set_q(t.get_mpc_t(), other.i.get_mpq_t(), rnd_);
+        mpc_set_fr(s.get_mpc_t(), this->i.get_mpfr_t(), rnd_);
+        mpc_pow(t.get_mpc_t(), t.get_mpc_t(), s.get_mpc_t(), rnd_);
+        return complex_mpc(std::move(t));
 #else
         throw std::runtime_error("Result is complex. Recompile with MPC support.");
 #endif
@@ -501,7 +564,11 @@ RCP<const Number> RealMPFR::rpowreal(const Rational &other) const {
  * */
 RCP<const Number> RealMPFR::rpowreal(const Complex &other) const {
 #ifdef HAVE_SYMENGINE_MPC
-    throw std::runtime_error("Not Implemented.");
+    mpc_class t(get_prec()), s(get_prec());
+    mpc_set_q_q(t.get_mpc_t(), other.real_.get_mpq_t(), other.imaginary_.get_mpq_t(), rnd_);
+    mpc_set_fr(s.get_mpc_t(), this->i.get_mpfr_t(), rnd_);
+    mpc_pow(t.get_mpc_t(), s.get_mpc_t(), t.get_mpc_t(), rnd_);
+    return complex_mpc(std::move(t));
 #else
     throw std::runtime_error("Result is complex. Recompile with MPC support.");
 #endif
@@ -514,7 +581,11 @@ RCP<const Number> RealMPFR::rpowreal(const Complex &other) const {
 RCP<const Number> RealMPFR::rpowreal(const RealDouble &other) const {
     if (mpfr_cmp_si(i.get_mpfr_t(), 0) < 0) {
 #ifdef HAVE_SYMENGINE_MPC
-        throw std::runtime_error("Not Implemented.");
+        mpc_class t(get_prec()), s(get_prec());
+        mpc_set_d(t.get_mpc_t(), other.i, rnd_);
+        mpc_set_fr(s.get_mpc_t(), this->i.get_mpfr_t(), rnd_);
+        mpc_pow(t.get_mpc_t(), t.get_mpc_t(), s.get_mpc_t(), rnd_);
+        return complex_mpc(std::move(t));
 #else
         throw std::runtime_error("Result is complex. Recompile with MPC support.");
 #endif

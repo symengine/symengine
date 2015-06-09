@@ -72,7 +72,7 @@ public:
 public:
     IMPLEMENT_TYPEID(REAL_MPFR)
     //! Constructor of RealMPFR class
-    RealMPFR(mpfr_class i, mpfr_rnd_t rnd = MPFR_RNDN);
+    RealMPFR(mpfr_class i, mpfr_rnd_t rnd);
     inline mpfr_class as_mpfr() const { return i; }
     inline mpfr_prec_t get_prec() const { return mpfr_get_prec(i.get_mpfr_t()); }
     //! \return size of the hash
@@ -311,8 +311,8 @@ public:
     virtual void accept(Visitor &v) const;
 };
 
-inline RCP<const RealMPFR> real_mpfr(mpfr_class x) {
-    return rcp(new RealMPFR(std::move(x)));
+inline RCP<const RealMPFR> real_mpfr(mpfr_class x, mpfr_rnd_t rnd = MPFR_RNDN) {
+    return rcp(new RealMPFR(std::move(x), rnd));
 }
 
 } // SymEngine
