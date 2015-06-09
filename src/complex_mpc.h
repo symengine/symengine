@@ -8,6 +8,7 @@
 
 #include <cmath>
 #include <complex>
+#include <mpfr.h>
 #include "basic.h"
 #include "number.h"
 #include "integer.h"
@@ -16,65 +17,62 @@
 #include "real_double.h"
 #include "complex_double.h"
 
-#ifdef HAVE_SYMENGINE_MPFR
-#include "mpfr.h"
+#ifdef HAVE_SYMENGINE_MPC
+#include "mpc.h"
 
 namespace SymEngine {
 
-class mpfr_class {
+class mpc_class {
 private:
-    mpfr_t mp;
+    mpc_t mp;
 public:
-    mpfr_ptr get_mpfr_t() { return mp; }
-    mpfr_srcptr get_mpfr_t() const { return mp; }
-    mpfr_class(mpfr_t m) {
-        mpfr_init2(mp, mpfr_get_prec(m));
-        mpfr_set(mp, m, MPFR_RNDN);
+    mpc_ptr get_mpc_t() { return mp; }
+    mpc_srcptr get_mpc_t() const { return mp; }
+    mpc_class(mpc_t m) {
+        mpc_init2(mp, mpc_get_prec(m));
+        mpc_set(mp, m, MPFR_RNDN);
     }
-    mpfr_class(mpfr_prec_t prec = 53) {
-        mpfr_init2(mp, prec);
+    mpc_class(mpfr_prec_t prec = 53) {
+        mpc_init2(mp, prec);
     }
-    mpfr_class(const mpfr_class& other) {
-        mpfr_init2(mp, mpfr_get_prec(other.get_mpfr_t()));
-        mpfr_set(mp, other.get_mpfr_t(), MPFR_RNDN);
+    mpc_class(const mpc_class& other) {
+        mpc_init2(mp, mpc_get_prec(other.get_mpc_t()));
+        mpc_set(mp, other.get_mpc_t(), MPFR_RNDN);
     }
-    mpfr_class(mpfr_class&& other) {
-        mp->_mpfr_d = nullptr;
-        mpfr_swap(mp, other.get_mpfr_t());
+    mpc_class(mpc_class&& other) {
+        mp->re->_mpfr_d = nullptr;
+        mpc_swap(mp, other.get_mpc_t());
     }
-    mpfr_class& operator=(const mpfr_class& other) {
-        mpfr_set_prec(mp, mpfr_get_prec(other.get_mpfr_t()));
-        mpfr_set(mp, other.get_mpfr_t(), MPFR_RNDN);
+    mpc_class& operator=(const mpc_class& other) {
+        mpc_set_prec(mp, mpc_get_prec(other.get_mpc_t()));
+        mpc_set(mp, other.get_mpc_t(), MPFR_RNDN);
         return *this;
     }
-    mpfr_class& operator=(mpfr_class&& other) {
-        mpfr_swap(mp, other.get_mpfr_t());
+    mpc_class& operator=(mpc_class&& other) {
+        mpc_swap(mp, other.get_mpc_t());
         return *this;
     }
-    ~mpfr_class() {
-        if (mp->_mpfr_d != nullptr) {
-            mpfr_clear(mp);
+    ~mpc_class() {
+        if (mp->re->_mpfr_d != nullptr) {
+            mpc_clear(mp);
         }
-    }
-    mpfr_prec_t get_prec() {
-        return mpfr_get_prec(mp);
     }
 };
 
 RCP<const Number> number(mpfr_ptr x);
 
-//! RealMPFR Class to hold mpfr_t values
+//! RealMPFR Class to hold mpc_t values
 class RealMPFR : public Number {
 public:
-    mpfr_class i;
+    mpc_class i;
     mpfr_rnd_t rnd_;
 
 public:
-    IMPLEMENT_TYPEID(REAL_MPFR)
+    IMPLEMENT_TYPEID(REAL_DOUBLE)
     //! Constructor of RealMPFR class
-    RealMPFR(mpfr_class i, mpfr_rnd_t rnd = MPFR_RNDN);
-    inline mpfr_class as_mpfr() const { return i; }
-    inline mpfr_prec_t get_prec() const { return mpfr_get_prec(i.get_mpfr_t()); }
+    RealMPFR(mpc_class i, mpfr_rnd_t rnd = MPFR_RNDN);
+    inline mpc_class as_mpfr() const { return i; }
+    inline mpfr_prec_t get_prec() const { return mpc_get_prec(i.get_mpc_t()); }
     //! \return size of the hash
     virtual std::size_t __hash__() const;
     /*! Equality comparator
@@ -85,11 +83,11 @@ public:
     virtual int compare(const Basic &o) const;
     //! \return `true` if positive
     inline virtual bool is_positive() const {
-        return mpfr_cmp_si(i.get_mpfr_t(), 0) > 0;
+        return false;
     }
     //! \return `true` if negative
     inline virtual bool is_negative() const {
-        return mpfr_cmp_si(i.get_mpfr_t(), 0) < 0;
+        return false;
     }
     //! \return `true` if this number is an exact number
     inline virtual bool is_exact() const { return false; }
@@ -97,13 +95,13 @@ public:
     //virtual Evaluate& get_eval() const;
 
     //! \return `false`
-    // A mpfr_t is not exactly equal to `0`
+    // A mpc_t is not exactly equal to `0`
     virtual bool is_zero() const { return false; }
     //! \return `false`
-    // A mpfr_t is not exactly equal to `1`
+    // A mpc_t is not exactly equal to `1`
     virtual bool is_one() const { return false; }
     //! \return `false`
-    // A mpfr_t is not exactly equal to `-1`
+    // A mpc_t is not exactly equal to `-1`
     virtual bool is_minus_one() const { return false; }
 
     /*! Add RealMPFRs
@@ -311,7 +309,7 @@ public:
     virtual void accept(Visitor &v) const;
 };
 
-inline RCP<const RealMPFR> real_mpfr(mpfr_class x) {
+inline RCP<const RealMPFR> real_mpfr(mpc_class x) {
     return rcp(new RealMPFR(std::move(x)));
 }
 

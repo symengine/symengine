@@ -26,11 +26,7 @@ bool RealMPFR::__eq__(const Basic &o) const
 {
     if (is_a<RealMPFR>(o)) {
         const RealMPFR &s = static_cast<const RealMPFR &>(o);
-        if (get_prec() == s.get_prec()) {
-            return mpfr_cmp(this->i.get_mpfr_t(), s.i.get_mpfr_t()) == 0;
-        } else {
-            return false;
-        }
+        return mpfr_cmp(this->i.get_mpfr_t(), s.i.get_mpfr_t()) == 0;
     }
     return false;
 }
@@ -39,13 +35,9 @@ int RealMPFR::compare(const Basic &o) const
 {
     SYMENGINE_ASSERT(is_a<RealMPFR>(o))
     const RealMPFR &s = static_cast<const RealMPFR &>(o);
-    if (get_prec() == s.get_prec()) {
-        int cmp = mpfr_cmp(this->i.get_mpfr_t(), s.i.get_mpfr_t());
-        if (cmp == 0) return 0;
-        return cmp > 0 ? 1 : -1;
-    } else {
-        return get_prec() > s.get_prec() ? 1 : -1;
-    }
+    int cmp = mpfr_cmp(this->i.get_mpfr_t(), s.i.get_mpfr_t());
+    if (cmp == 0) return 0;
+    return cmp > 0 ? 1 : -1;
 }
 
 /*! Add RealMPFRs
