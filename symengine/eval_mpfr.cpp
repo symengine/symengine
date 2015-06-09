@@ -42,33 +42,27 @@ public:
     }
 
     void bvisit(const Add &x) {
-        mpfr_t t;
-        mpfr_init2(t, mpfr_get_prec(result_));
-
+        mpfr_class t(mpfr_get_prec(result_));
         auto d = x.get_args();
         auto p = d.begin();
         apply(result_, *(*p));
         p++;
         for (; p != d.end();  p++) {
-            apply(t, *(*p));
-            mpfr_add(result_, result_, t, rnd_);
+            apply(t.get_mpfr_t(), *(*p));
+            mpfr_add(result_, result_, t.get_mpfr_t(), rnd_);
         }
-        mpfr_clear(t);
     }
 
     void bvisit(const Mul &x) {
-        mpfr_t t;
-        mpfr_init2(t, mpfr_get_prec(result_));
-
+        mpfr_class t(mpfr_get_prec(result_));
         auto d = x.get_args();
         auto p = d.begin();
         apply(result_, *(*p));
         p++;
         for (; p != d.end();  p++) {
-            apply(t, *(*p));
-            mpfr_mul(result_, result_, t, rnd_);
+            apply(t.get_mpfr_t(), *(*p));
+            mpfr_mul(result_, result_, t.get_mpfr_t(), rnd_);
         }
-        mpfr_clear(t);
     }
 
     void bvisit(const Pow &x) {
@@ -76,14 +70,10 @@ public:
             apply(result_, *(x.exp_));
             mpfr_exp(result_, result_, rnd_);
         } else {
-            mpfr_t b;
-            mpfr_init2(b, mpfr_get_prec(result_));
-
-            apply(b, *(x.base_));
+            mpfr_class b(mpfr_get_prec(result_));
+            apply(b.get_mpfr_t(), *(x.base_));
             apply(result_, *(x.exp_));
-            mpfr_pow(result_, b, result_, rnd_);
-
-            mpfr_clear(b);
+            mpfr_pow(result_, b.get_mpfr_t(), result_, rnd_);
         }
     }
 
@@ -158,14 +148,10 @@ public:
     }
 
     void bvisit(const ATan2 &x) {
-        mpfr_t t;
-        mpfr_init(t);
-
-        apply(t, *(x.get_num()));
+        mpfr_class t(mpfr_get_prec(result_));
+        apply(t.get_mpfr_t(), *(x.get_num()));
         apply(result_, *(x.get_den()));
-        mpfr_atan2(result_, t, result_, rnd_);
-
-        mpfr_clear(t);
+        mpfr_atan2(result_, t.get_mpfr_t(), result_, rnd_);
     }
 
     void bvisit(const Sinh &x) {
