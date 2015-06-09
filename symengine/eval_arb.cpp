@@ -141,7 +141,11 @@ public:
     virtual void visit(const RealMPFR &x) {
         throw std::runtime_error("Not implemented.");
     }
-
+#ifdef HAVE_SYMENGINE_MPC
+    virtual void visit(const ComplexMPC &) {
+        throw std::runtime_error("Not implemented.");
+    };
+#endif
     virtual void visit(const Log &x) {
         apply(result_, *(x.get_arg()));
         arb_log(result_, result_, prec_);

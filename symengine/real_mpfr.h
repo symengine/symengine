@@ -8,16 +8,16 @@
 
 #include <cmath>
 #include <complex>
-#include "basic.h"
-#include "number.h"
-#include "integer.h"
-#include "rational.h"
-#include "complex.h"
-#include "real_double.h"
-#include "complex_double.h"
+#include <symengine/basic.h>
+#include <symengine/number.h>
+#include <symengine/integer.h>
+#include <symengine/rational.h>
+#include <symengine/complex.h>
+#include <symengine/real_double.h>
+#include <symengine/complex_double.h>
 
 #ifdef HAVE_SYMENGINE_MPFR
-#include "mpfr.h"
+#include <mpfr.h>
 
 namespace SymEngine {
 

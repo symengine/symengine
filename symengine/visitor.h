@@ -20,6 +20,7 @@
 #include <symengine/real_double.h>
 #include <symengine/complex_double.h>
 #include <symengine/real_mpfr.h>
+#include <symengine/complex_mpc.h>
 
 namespace SymEngine {
 
@@ -73,6 +74,9 @@ public:
     virtual void visit(const ComplexDouble &) = 0;
 #ifdef HAVE_SYMENGINE_MPFR
     virtual void visit(const RealMPFR &) = 0;
+#endif
+#ifdef HAVE_SYMENGINE_MPC
+    virtual void visit(const ComplexMPC &) = 0;
 #endif
 };
 
@@ -136,6 +140,9 @@ public:
     virtual void visit(const ComplexDouble &x) { p_->bvisit(x); };
 #ifdef HAVE_SYMENGINE_MPFR
     virtual void visit(const RealMPFR &x) { p_->bvisit(x); };
+#endif
+#ifdef HAVE_SYMENGINE_MPC
+    virtual void visit(const ComplexMPC &x) { p_->bvisit(x); };
 #endif
 };
 

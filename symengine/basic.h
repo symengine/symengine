@@ -62,7 +62,7 @@ class Symbol;
 */
 
 enum TypeID {
-    INTEGER, RATIONAL, COMPLEX, COMPLEX_DOUBLE, REAL_MPFR, REAL_DOUBLE,
+    INTEGER, RATIONAL, COMPLEX, COMPLEX_DOUBLE, REAL_MPFR, COMPLEX_MPC, REAL_DOUBLE,
     // 'REAL_DOUBLE' returns the number of subclasses of Number.
     // All subclasses of Number must be added before it. Do not assign
     // non subclasses of Number before it.

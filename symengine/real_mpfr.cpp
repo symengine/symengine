@@ -4,10 +4,10 @@
  *
  **/
 #include <cmath>
-#include "basic.h"
-#include "real_double.h"
-#include "complex_double.h"
-#include "real_mpfr.h"
+#include <symengine/basic.h>
+#include <symengine/real_double.h>
+#include <symengine/complex_double.h>
+#include <symengine/real_mpfr.h>
 
 #ifdef HAVE_SYMENGINE_MPFR
 namespace SymEngine {
