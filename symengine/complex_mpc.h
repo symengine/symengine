@@ -8,7 +8,6 @@
 
 #include <cmath>
 #include <complex>
-#include <mpfr.h>
 #include <symengine/basic.h>
 #include <symengine/number.h>
 #include <symengine/integer.h>
@@ -69,12 +68,11 @@ RCP<const Number> number(mpfr_ptr x);
 class ComplexMPC : public Number {
 public:
     mpc_class i;
-    mpfr_rnd_t rnd_;
 
 public:
     IMPLEMENT_TYPEID(COMPLEX_MPC)
     //! Constructor of ComplexMPC class
-    ComplexMPC(mpc_class i, mpfr_rnd_t rnd = MPFR_RNDN);
+    ComplexMPC(mpc_class i);
     inline mpc_class as_mpc() const { return i; }
     inline mpfr_prec_t get_prec() const { return mpc_get_prec(i.get_mpc_t()); }
     //! \return size of the hash
@@ -337,8 +335,8 @@ public:
     virtual void accept(Visitor &v) const;
 };
 
-inline RCP<const ComplexMPC> complex_mpc(mpc_class x, mpfr_rnd_t rnd = MPFR_RNDN) {
-    return rcp(new ComplexMPC(std::move(x), rnd));
+inline RCP<const ComplexMPC> complex_mpc(mpc_class x) {
+    return rcp(new ComplexMPC(std::move(x)));
 }
 
 } // SymEngine
