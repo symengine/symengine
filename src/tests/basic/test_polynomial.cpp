@@ -19,6 +19,8 @@ using SymEngine::one;
 using SymEngine::zero;
 using SymEngine::integer;
 using SymEngine::vec_basic_eq_perm;	
+using SymEngine::vec_int;
+using SymEngine::pack_vec_int;
 
 void uni_poly_constructor()
 {   
@@ -158,6 +160,19 @@ void test_expand()
     //std::cout<<c->__str__()<<std::endl;
 }
 
+void test_pack_vec_int()
+{
+    vec_int a = {1, 3, 1};
+    vec_int b = {0, 3, 2};
+    vec_int c = {3, 0, 0};
+    vec_int d = {0, 0, 0};
+
+    assert(pack_vec_int(a) == 5*std::pow(2, 48) + 1*std::pow(2, 32) + 3*std::pow(2, 16) + 1);
+    assert(pack_vec_int(b) == 5*std::pow(2, 48) + 2*std::pow(2, 32) + 3*std::pow(2, 16));
+    assert(pack_vec_int(c) == 3*std::pow(2, 48) + 3);
+    assert(pack_vec_int(d) == 0);
+}
+
 int main(int argc, char* argv[])
 {
     print_stack_on_segfault();
@@ -181,5 +196,7 @@ int main(int argc, char* argv[])
     test_bool_checks();
 
     test_expand();
+
+    test_pack_vec_int();
     return 0;
 }

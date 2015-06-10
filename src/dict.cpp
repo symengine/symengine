@@ -51,6 +51,21 @@ inline std::ostream& print_vec_rcp(std::ostream& out, T& d)
     return out;
 }
 
+unsigned long long pack_vec_int(const vec_int &a) {
+    uint n_var = a.size();
+    uint b = 64 / (n_var + 1) ;
+    unsigned long long ans = 0;
+    int mul = 0;
+    int t = 0;
+    for (uint i = 0; i < n_var; i++) {
+        ans += static_cast<unsigned long long>(a[i])<<mul;
+        t += a[i];
+        mul += b;
+    }
+    ans += static_cast<unsigned long long>(t)<<mul;
+    return ans;
+}
+
 } // SymEngine
 
 

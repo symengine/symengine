@@ -72,6 +72,8 @@ int vec_basic_compare(const vec_basic &a, const vec_basic &b);
 //! \return -1, 0, 1 for a < b, a == b, a > b
 int map_uint_mpz_compare(const map_uint_mpz &a, const map_uint_mpz &b);
 
+//! kronecker packing of exponents
+unsigned long long pack_vec_int(const vec_int &a);
 
 //! Part of umap_vec_mpz:
 typedef struct
