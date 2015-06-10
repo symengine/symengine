@@ -99,6 +99,7 @@ their default values indicated below:
         -DWITH_ARB:BOOL=OFF \                         # Install with ARB library
         -DWITH_TCMALLOC:BOOL=OFF \                    # Install with TCMalloc linked
         -DWITH_OPENMP:BOOL=OFF \                      # Install with OpenMP enabled
+        -DWITH_PIRANHA:BOOL=ON \                      # Install with Piranha library
         .
 
 If `OPENMP` is enabled, then `SYMENGINE_THREAD_SAFE` is also enabled automatically
