@@ -52,11 +52,13 @@ inline std::ostream& print_vec_rcp(std::ostream& out, T& d)
 }
 
 unsigned long long pack_vec_int(const vec_int &a) {
+    //Equal bits, not necessary. if the total(t) were allocated more
+    //bits may lead to more optimization.
     uint n_var = a.size();
     uint b = 64 / (n_var + 1) ;
     unsigned long long ans = 0;
     int mul = 0;
-    int t = 0;
+    long long t = 0;
     for (uint i = 0; i < n_var; i++) {
         ans += static_cast<unsigned long long>(a[i])<<mul;
         t += a[i];
@@ -64,6 +66,25 @@ unsigned long long pack_vec_int(const vec_int &a) {
     }
     ans += static_cast<unsigned long long>(t)<<mul;
     return ans;
+}
+
+bool if_pack_vec_int(const vec_int &a) {
+    uint n_var = a.size();
+    if (!(n_var < 32))
+        return false;
+    uint b = 64 / (n_var + 1) ;
+    long long max = 1<<b;
+    std::cout<<"max is :"<<max<<std::endl;
+    long long t = 0;
+    for (uint i = 0; i < n_var; i++) {
+        if (!(a[i] >= 0) || !(a[i] < max))
+            return false;
+        t += a[i];
+    }
+    std::cout<<"t is :"<<t<<std::endl;
+    if (!(t >= 0) || !(t < max))
+        return false;
+    return true;
 }
 
 } // SymEngine

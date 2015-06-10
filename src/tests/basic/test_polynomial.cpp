@@ -21,6 +21,7 @@ using SymEngine::integer;
 using SymEngine::vec_basic_eq_perm;	
 using SymEngine::vec_int;
 using SymEngine::pack_vec_int;
+using SymEngine::if_pack_vec_int;
 
 void uni_poly_constructor()
 {   
@@ -167,10 +168,19 @@ void test_pack_vec_int()
     vec_int c = {3, 0, 0};
     vec_int d = {0, 0, 0};
 
-    assert(pack_vec_int(a) == 5*std::pow(2, 48) + 1*std::pow(2, 32) + 3*std::pow(2, 16) + 1);
-    assert(pack_vec_int(b) == 5*std::pow(2, 48) + 2*std::pow(2, 32) + 3*std::pow(2, 16));
-    assert(pack_vec_int(c) == 3*std::pow(2, 48) + 3);
-    assert(pack_vec_int(d) == 0);
+    assert(if_pack_vec_int(a) && 
+        (pack_vec_int(a) == 5*std::pow(2, 48) + 1*std::pow(2, 32) + 3*std::pow(2, 16) + 1));
+    assert(if_pack_vec_int(b) &&
+        (pack_vec_int(b) == 5*std::pow(2, 48) + 2*std::pow(2, 32) + 3*std::pow(2, 16)));
+    assert(if_pack_vec_int(c) &&
+        (pack_vec_int(c) == 3*std::pow(2, 48) + 3));
+    assert(if_pack_vec_int(b) &&
+        (pack_vec_int(d) == 0));
+
+    assert(!if_pack_vec_int({-1, 0 ,1}));
+    
+    int n = 1<<15;
+    assert(!if_pack_vec_int({n, n ,n}));
 }
 
 int main(int argc, char* argv[])

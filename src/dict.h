@@ -74,6 +74,8 @@ int map_uint_mpz_compare(const map_uint_mpz &a, const map_uint_mpz &b);
 
 //! kronecker packing of exponents
 unsigned long long pack_vec_int(const vec_int &a);
+//! check if the packing is possible
+bool if_pack_vec_int(const vec_int &a);
 
 //! Part of umap_vec_mpz:
 typedef struct
