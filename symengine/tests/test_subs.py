@@ -1,5 +1,5 @@
-from csympy.utilities import raises
-from csympy import Symbol, sin, cos, sqrt, Add, function_symbol
+from symengine.utilities import raises
+from symengine import Symbol, sin, cos, sqrt, Add, function_symbol
 
 def test_basic():
     x = Symbol("x")

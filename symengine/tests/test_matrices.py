@@ -1,4 +1,4 @@
-from csympy.lib.csympy_wrapper import (densematrix, Symbol, Integer,
+from symengine.lib.symengine_wrapper import (densematrix, Symbol, Integer,
     function_symbol, I)
 
 def test_get():

@@ -1,6 +1,6 @@
-from csympy.utilities import raises
+from symengine.utilities import raises
 
-from csympy import Integer
+from symengine import Integer
 
 def test_integer():
     i = Integer(5)

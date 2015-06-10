@@ -1,7 +1,7 @@
 # Tests for var are in their own file, because var pollutes global namespace.
 
-from csympy import Symbol, var
-from csympy.utilities import raises
+from symengine import Symbol, var
+from symengine.utilities import raises
 # make z1 with call-depth = 1
 
 

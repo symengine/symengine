@@ -1,6 +1,6 @@
-from csympy.utilities import raises
+from symengine.utilities import raises
 
-from csympy import Symbol, Integer, Add, Pow
+from symengine import Symbol, Integer, Add, Pow
 
 def test_arit1():
     x = Symbol("x")

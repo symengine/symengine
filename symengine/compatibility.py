@@ -148,7 +148,7 @@ def with_metaclass(meta, *bases):
 
     Use this as the metaclass by doing
 
-    >>> from csympy.compatibility import with_metaclass
+    >>> from symengine.compatibility import with_metaclass
     >>> class MyClass(with_metaclass(Meta, object)):
     ...     pass
 

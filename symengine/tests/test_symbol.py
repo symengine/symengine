@@ -1,5 +1,5 @@
-from csympy import Symbol, symbols
-from csympy.utilities import raises
+from symengine import Symbol, symbols
+from symengine.utilities import raises
 
 
 def test_symbol():
