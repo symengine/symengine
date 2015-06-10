@@ -64,4 +64,6 @@ install(TARGETS symengine
 install(FILES ${HEADERS} "${symengine_BINARY_DIR}/src/symengine_config.h"
     DESTINATION include)
 
-add_subdirectory(tests)
+if (BUILD_TESTS)
+    add_subdirectory(tests)
+endif()

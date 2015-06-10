@@ -211,6 +211,14 @@ set(WITH_SYMENGINE_RCP yes
 set(WITH_SYMENGINE_THREAD_SAFE no
     CACHE BOOL "Enable SYMENGINE_THREAD_SAFE support")
 
+# TESTS
+set(BUILD_TESTS yes
+    CACHE BOOL "Build SymEngine tests")
+
+# BENCHMARKS
+set(BUILD_BENCHMARKS yes
+    CACHE BOOL "Build SymEngine benchmarks")
+
 # OpenMp
 set(WITH_OPENMP no
     CACHE BOOL "Build with OpenMP")
@@ -234,7 +242,9 @@ endif()
 
 enable_testing()
 add_subdirectory(src)
-add_subdirectory(benchmarks)
+if (BUILD_BENCHMARKS)
+    add_subdirectory(benchmarks)
+endif()
 
 if (WITH_PYTHON)
     # We need to execute the find_package() commands here, so that the
