@@ -41,6 +41,10 @@ public:
         mpfr_set_d(result_, x.i, rnd_);
     }
 
+    void bvisit(const RealMPFR &x) {
+        mpfr_set(result_, x.i.get_mpfr_t(), rnd_);
+    }
+
     void bvisit(const Add &x) {
         mpfr_class t(mpfr_get_prec(result_));
         auto d = x.get_args();
@@ -224,7 +228,7 @@ public:
     // Classes not implemented are
     // Subs, UpperGamma, LowerGamma, Dirichlet_eta, Zeta
     // LeviCivita, KroneckerDelta, FunctionSymbol, LambertW
-    // Derivative, Complex, ComplexDouble
+    // Derivative, Complex, ComplexDouble, ComplexMPC
     void bvisit(const Basic &) {
         throw std::runtime_error("Not implemented.");
     };

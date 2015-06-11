@@ -48,6 +48,18 @@ int ComplexMPC::compare(const Basic &o) const
     }
 }
 
+RCP<const Number> ComplexMPC::real_part() const {
+    mpfr_class t(get_prec());
+    mpc_real(t.get_mpfr_t(), i.get_mpc_t(), MPFR_RNDN);
+    return real_mpfr(std::move(t));
+}
+
+RCP<const Number> ComplexMPC::imaginary_part() const {
+    mpfr_class t(get_prec());
+    mpc_imag(t.get_mpfr_t(), i.get_mpc_t(), MPFR_RNDN);
+    return real_mpfr(std::move(t));
+}
+
 /*! Add ComplexMPCs
  * \param other of type Integer
  * */
