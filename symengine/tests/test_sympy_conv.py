@@ -3,12 +3,12 @@ from symengine import (Symbol, Integer, sympify, SympifyError, sin, cos,
 from symengine.lib.symengine_wrapper import densematrix, Subs, Derivative
 import sympy
 
-# Note: We test _sympy_() for symengine -> SymPy conversion, as those are methods
+# Note: We test _sympy_() for SymEngine -> SymPy conversion, as those are methods
 # that are implemented in this library. Users can simply use sympy.sympify(...)
 # to do this conversion, as this function will call our _sympy_() methods under
 # the hood.
 #
-# For SymPy -> symengine, we test symengine.sympify(...) which does the conversion.
+# For SymPy -> SymEngine, we test symengine.sympify(...) which does the conversion.
 
 def test_conv1():
     x = Symbol("x")

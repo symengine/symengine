@@ -46,13 +46,13 @@ cdef c2py(RCP[const symengine.Basic] o):
     elif (symengine.is_a_ComplexDouble(deref(o))):
         r = ComplexDouble.__new__(ComplexDouble)
     else:
-        raise Exception("Unsupported symengine class.")
+        raise Exception("Unsupported SymEngine class.")
     r.thisptr = o
     return r
 
 def sympy2symengine(a, raise_error=False):
     """
-    Converts 'a' from SymPy to symengine.
+    Converts 'a' from SymPy to SymEngine.
 
     If the expression cannot be converted, it either returns None (if
     raise_error==False) or raises a SympifyError exception (if
