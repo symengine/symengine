@@ -91,4 +91,40 @@ void poly_mul(const umap_vec_mpz &A, const umap_vec_mpz &B, umap_vec_mpz &C)
     */
 }
 
+void poly2packed(const umap_vec_mpz &A, umap_ull_mpz &B)
+{
+    for (auto &a: A) {
+        B[pack_vec_int(a.first)] = a.second;
+    }
+}
+
+void poly_mul2(const umap_ull_mpz &A, const umap_ull_mpz &B, umap_ull_mpz &C)
+{
+    for (auto &a: A) {
+        for (auto &b: B) {
+            C[a.first + b.first] += a.second*b.second;
+        }
+    }
+}
+
+void packed2poly(const umap_ull_mpz &A, const umap_basic_num &syms, umap_vec_mpz &P)
+{
+    uint b = 0;
+    uint n_var = syms.size();
+    while (b*(n_var + 1) < 64)
+        b++;
+
+    unsigned long long n = 1<<b;
+
+    for (auto &a: A) {
+        vec_int exp;
+        unsigned long long ull = a.first;
+        for (int i = 0; i < n_var; i++) {
+            exp.push_back(ull % n);
+            ull = ull / n;
+        }
+        P[exp] = a.second;
+    }
+}
+
 } // SymEngine

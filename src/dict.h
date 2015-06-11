@@ -24,6 +24,7 @@ typedef std::unordered_map<RCP<const Basic>, RCP<const Number>,
         RCPBasicHash, RCPBasicKeyEq> umap_basic_num;
 typedef std::unordered_map<RCP<const Basic>, RCP<const Basic>,
         RCPBasicHash, RCPBasicKeyEq> umap_basic_basic;
+typedef std::unordered_map<unsigned long long, mpz_class> umap_ull_mpz;
 
 typedef std::vector<int> vec_int;
 typedef std::vector<RCP<const Basic>> vec_basic;
@@ -112,6 +113,7 @@ std::ostream& operator<<(std::ostream& out, const SymEngine::map_basic_num& d);
 std::ostream& operator<<(std::ostream& out, const SymEngine::map_basic_basic& d);
 std::ostream& operator<<(std::ostream& out, const SymEngine::umap_basic_basic& d);
 std::ostream& operator<<(std::ostream& out, const SymEngine::vec_basic& d);
+std::ostream& operator<<(std::ostream& out, const SymEngine::umap_ull_mpz& d);
 
 #endif
 

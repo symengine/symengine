@@ -2,9 +2,11 @@
 #include <chrono>
 
 #include "polynomial.h"
+#include "add.h"
 #include "mul.h"
 #include "pow.h"
 #include "dict.h"
+#include "rings.h"
 
 using SymEngine::UnivariatePolynomial;
 using SymEngine::univariate_polynomial;
@@ -14,6 +16,9 @@ using SymEngine::Pow;
 using SymEngine::RCP;
 using SymEngine::print_stack_on_segfault;
 using SymEngine::map_uint_mpz;
+using SymEngine::umap_ull_mpz;
+using SymEngine::umap_vec_mpz;
+using SymEngine::umap_basic_num;
 using SymEngine::Basic;
 using SymEngine::one;
 using SymEngine::zero;
@@ -22,6 +27,7 @@ using SymEngine::vec_basic_eq_perm;
 using SymEngine::vec_int;
 using SymEngine::pack_vec_int;
 using SymEngine::if_pack_vec_int;
+using SymEngine::poly_mul2;
 
 void uni_poly_constructor()
 {   
@@ -183,6 +189,61 @@ void test_pack_vec_int()
     assert(!if_pack_vec_int({n, n ,n}));
 }
 
+void test_poly2packed()
+{
+
+    RCP<const Basic> x = symbol("x");
+    RCP<const Basic> y = symbol("y");
+    RCP<const Basic> z = symbol("z");
+    RCP<const Basic> i9 = integer(9);
+    RCP<const Basic> i3 = integer(3);
+    RCP<const Basic> e;
+
+    e = add(mul(i9, mul(mul(x, z), pow(y, i3))), mul(i3, x));
+
+    umap_basic_num syms;
+    insert(syms, x, integer(0));
+    insert(syms, y, integer(1));
+    insert(syms, z, integer(2));
+    umap_vec_mpz P, Q;
+    umap_ull_mpz p;
+
+    expr2poly(e, syms, P);
+    poly2packed(P, p);
+    packed2poly(p, syms, Q);
+
+    assert(P == Q);
+}
+
+void test_poly_mul2()
+{
+
+    RCP<const Basic> x = symbol("x");
+    RCP<const Basic> y = symbol("y");
+    RCP<const Basic> z = symbol("z");
+    RCP<const Basic> i9 = integer(9);
+    RCP<const Basic> i3 = integer(3);
+    RCP<const Basic> e;
+
+    e = add(mul(i9, mul(mul(x, z), pow(y, i3))), mul(i3, x));
+
+    umap_basic_num syms;
+    insert(syms, x, integer(0));
+    insert(syms, y, integer(1));
+    insert(syms, z, integer(2));
+    umap_vec_mpz P, Q;
+    umap_ull_mpz p, q;
+
+    expr2poly(e, syms, P);
+    poly2packed(P, p);
+    poly_mul2(p, p, q);
+    packed2poly(q, syms, Q);
+
+    //std::cout<<Q<<std::endl;
+    //TODO:Tested only by looking at output
+    //Assertion test needed
+}
+
 int main(int argc, char* argv[])
 {
     print_stack_on_segfault();
@@ -208,5 +269,9 @@ int main(int argc, char* argv[])
     test_expand();
 
     test_pack_vec_int();
+
+    test_poly2packed();
+
+    test_poly_mul2();
     return 0;
 }
