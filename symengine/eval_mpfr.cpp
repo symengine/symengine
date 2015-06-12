@@ -108,14 +108,12 @@ public:
 
     void bvisit(const Csc &x) {
         apply(result_, *(x.get_arg()));
-        mpfr_sin(result_, result_, rnd_);
-        mpfr_ui_div(result_, 1, result_, rnd_);
+        mpfr_csc(result_, result_, rnd_);
     }
 
     void bvisit(const Sec &x) {
         apply(result_, *(x.get_arg()));
-        mpfr_cos(result_, result_, rnd_);
-        mpfr_ui_div(result_, 1, result_, rnd_);
+        mpfr_sec(result_, result_, rnd_);
     }
 
     void bvisit(const ASin &x) {

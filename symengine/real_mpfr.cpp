@@ -611,5 +611,210 @@ RCP<const Number> RealMPFR::rpowreal(const ComplexDouble &other) const {
 #endif
 }
 
+//! Evaluate functions with double precision
+class EvaluateMPFR : public Evaluate {
+    virtual RCP<const Basic> sin(const Basic &x) const {
+        SYMENGINE_ASSERT(is_a<RealMPFR>(x))
+        mpfr_class t(static_cast<const RealMPFR &>(x).i.get_prec());
+        mpfr_sin(t.get_mpfr_t(), static_cast<const RealMPFR &>(x).i.get_mpfr_t(), MPFR_RNDN);
+        return real_mpfr(std::move(t));
+    }
+    virtual RCP<const Basic> cos(const Basic &x) const {
+        SYMENGINE_ASSERT(is_a<RealMPFR>(x))
+        mpfr_class t(static_cast<const RealMPFR &>(x).i.get_prec());
+        mpfr_cos(t.get_mpfr_t(), static_cast<const RealMPFR &>(x).i.get_mpfr_t(), MPFR_RNDN);
+        return real_mpfr(std::move(t));
+    }
+    virtual RCP<const Basic> tan(const Basic &x) const {
+        SYMENGINE_ASSERT(is_a<RealMPFR>(x))
+        mpfr_class t(static_cast<const RealMPFR &>(x).i.get_prec());
+        mpfr_tan(t.get_mpfr_t(), static_cast<const RealMPFR &>(x).i.get_mpfr_t(), MPFR_RNDN);
+        return real_mpfr(std::move(t));
+    }
+    virtual RCP<const Basic> cot(const Basic &x) const {
+        SYMENGINE_ASSERT(is_a<RealMPFR>(x))
+        mpfr_class t(static_cast<const RealMPFR &>(x).i.get_prec());
+        mpfr_cot(t.get_mpfr_t(), static_cast<const RealMPFR &>(x).i.get_mpfr_t(), MPFR_RNDN);
+        return real_mpfr(std::move(t));
+    }
+    virtual RCP<const Basic> sec(const Basic &x) const {
+        SYMENGINE_ASSERT(is_a<RealMPFR>(x))
+        mpfr_class t(static_cast<const RealMPFR &>(x).i.get_prec());
+        mpfr_sec(t.get_mpfr_t(), static_cast<const RealMPFR &>(x).i.get_mpfr_t(), MPFR_RNDN);
+        return real_mpfr(std::move(t));
+    }
+    virtual RCP<const Basic> csc(const Basic &x) const {
+        SYMENGINE_ASSERT(is_a<RealMPFR>(x))
+        mpfr_class t(static_cast<const RealMPFR &>(x).i.get_prec());
+        mpfr_csc(t.get_mpfr_t(), static_cast<const RealMPFR &>(x).i.get_mpfr_t(), MPFR_RNDN);
+        return real_mpfr(std::move(t));
+    }
+    virtual RCP<const Basic> asin(const Basic &x) const {
+        SYMENGINE_ASSERT(is_a<RealMPFR>(x))
+        mpfr_srcptr x_ = static_cast<const RealMPFR &>(x).i.get_mpfr_t();
+        if (mpfr_cmp_si(x_, 1) <= 0 && mpfr_cmp_si(x_, -1) >= 0) {
+            mpfr_class t(mpfr_get_prec(x_));
+            mpfr_asin(t.get_mpfr_t(), x_, MPFR_RNDN);
+            return real_mpfr(std::move(t));
+        }
+        mpc_class t(mpfr_get_prec(x_));
+        mpc_set_fr(t.get_mpc_t(), x_, MPFR_RNDN);
+        mpc_asin(t.get_mpc_t(), t.get_mpc_t(), MPFR_RNDN);
+        return complex_mpc(std::move(t));
+    }
+    virtual RCP<const Basic> acos(const Basic &x) const {
+        SYMENGINE_ASSERT(is_a<RealMPFR>(x))
+        mpfr_srcptr x_ = static_cast<const RealMPFR &>(x).i.get_mpfr_t();
+        if (mpfr_cmp_si(x_, 1) <= 0 && mpfr_cmp_si(x_, -1) >= 0) {
+            mpfr_class t(mpfr_get_prec(x_));
+            mpfr_acos(t.get_mpfr_t(), x_, MPFR_RNDN);
+            return real_mpfr(std::move(t));
+        }
+        mpc_class t(mpfr_get_prec(x_));
+        mpc_set_fr(t.get_mpc_t(), x_, MPFR_RNDN);
+        mpc_acos(t.get_mpc_t(), t.get_mpc_t(), MPFR_RNDN);
+        return complex_mpc(std::move(t));
+    }
+    virtual RCP<const Basic> atan(const Basic &x) const {
+        SYMENGINE_ASSERT(is_a<RealMPFR>(x))
+        mpfr_class t(static_cast<const RealMPFR &>(x).i.get_prec());
+        mpfr_atan(t.get_mpfr_t(), static_cast<const RealMPFR &>(x).i.get_mpfr_t(), MPFR_RNDN);
+        return real_mpfr(std::move(t));
+    }
+    virtual RCP<const Basic> acot(const Basic &x) const {
+        SYMENGINE_ASSERT(is_a<RealMPFR>(x))
+        mpfr_class t(static_cast<const RealMPFR &>(x).i.get_prec());
+        mpfr_ui_div(t.get_mpfr_t(), 1, static_cast<const RealMPFR &>(x).i.get_mpfr_t(), MPFR_RNDN);
+        mpfr_atan(t.get_mpfr_t(), t.get_mpfr_t(), MPFR_RNDN);
+        return real_mpfr(std::move(t));
+    }
+    virtual RCP<const Basic> asec(const Basic &x) const {
+        SYMENGINE_ASSERT(is_a<RealMPFR>(x))
+        mpfr_srcptr x_ = static_cast<const RealMPFR &>(x).i.get_mpfr_t();
+        if (mpfr_cmp_si(x_, 1) >= 0 || mpfr_cmp_si(x_, -1) <= 0) {
+            mpfr_class t(mpfr_get_prec(x_));
+            mpfr_ui_div(t.get_mpfr_t(), 1, x_, MPFR_RNDN);
+            mpfr_acos(t.get_mpfr_t(), t.get_mpfr_t(), MPFR_RNDN);
+            return real_mpfr(std::move(t));
+        }
+        mpc_class t(mpfr_get_prec(x_));
+        mpc_set_ui(t.get_mpc_t(), 1, MPFR_RNDN);
+        mpc_div_fr(t.get_mpc_t(), t.get_mpc_t(), x_, MPFR_RNDN);
+        mpc_acos(t.get_mpc_t(), t.get_mpc_t(), MPFR_RNDN);
+        return complex_mpc(std::move(t));
+    }
+    virtual RCP<const Basic> acsc(const Basic &x) const {
+        SYMENGINE_ASSERT(is_a<RealMPFR>(x))
+        mpfr_srcptr x_ = static_cast<const RealMPFR &>(x).i.get_mpfr_t();
+        if (mpfr_cmp_si(x_, 1) >= 0 || mpfr_cmp_si(x_, -1) <= 0) {
+            mpfr_class t(mpfr_get_prec(x_));
+            mpfr_ui_div(t.get_mpfr_t(), 1, x_, MPFR_RNDN);
+            mpfr_asin(t.get_mpfr_t(), t.get_mpfr_t(), MPFR_RNDN);
+            return real_mpfr(std::move(t));
+        }
+        mpc_class t(mpfr_get_prec(x_));
+        mpc_set_ui(t.get_mpc_t(), 1, MPFR_RNDN);
+        mpc_div_fr(t.get_mpc_t(), t.get_mpc_t(), x_, MPFR_RNDN);
+        mpc_asin(t.get_mpc_t(), t.get_mpc_t(), MPFR_RNDN);
+        return complex_mpc(std::move(t));
+    }
+    virtual RCP<const Basic> sinh(const Basic &x) const {
+        SYMENGINE_ASSERT(is_a<RealMPFR>(x))
+        mpfr_class t(static_cast<const RealMPFR &>(x).i.get_prec());
+        mpfr_sinh(t.get_mpfr_t(), static_cast<const RealMPFR &>(x).i.get_mpfr_t(), MPFR_RNDN);
+        return real_mpfr(std::move(t));
+    }
+    virtual RCP<const Basic> cosh(const Basic &x) const {
+        SYMENGINE_ASSERT(is_a<RealMPFR>(x))
+        mpfr_class t(static_cast<const RealMPFR &>(x).i.get_prec());
+        mpfr_cosh(t.get_mpfr_t(), static_cast<const RealMPFR &>(x).i.get_mpfr_t(), MPFR_RNDN);
+        return real_mpfr(std::move(t));
+    }
+    virtual RCP<const Basic> tanh(const Basic &x) const {
+        SYMENGINE_ASSERT(is_a<RealMPFR>(x))
+        mpfr_class t(static_cast<const RealMPFR &>(x).i.get_prec());
+        mpfr_tanh(t.get_mpfr_t(), static_cast<const RealMPFR &>(x).i.get_mpfr_t(), MPFR_RNDN);
+        return real_mpfr(std::move(t));
+    }
+    virtual RCP<const Basic> coth(const Basic &x) const {
+        SYMENGINE_ASSERT(is_a<RealMPFR>(x))
+        mpfr_class t(static_cast<const RealMPFR &>(x).i.get_prec());
+        mpfr_coth(t.get_mpfr_t(), static_cast<const RealMPFR &>(x).i.get_mpfr_t(), MPFR_RNDN);
+        return real_mpfr(std::move(t));
+    }
+    virtual RCP<const Basic> asinh(const Basic &x) const {
+        SYMENGINE_ASSERT(is_a<RealMPFR>(x))
+        mpfr_class t(static_cast<const RealMPFR &>(x).i.get_prec());
+        mpfr_asinh(t.get_mpfr_t(), static_cast<const RealMPFR &>(x).i.get_mpfr_t(), MPFR_RNDN);
+        return real_mpfr(std::move(t));
+    }
+    virtual RCP<const Basic> acosh(const Basic &x) const {
+        SYMENGINE_ASSERT(is_a<RealMPFR>(x))
+        mpfr_srcptr x_ = static_cast<const RealMPFR &>(x).i.get_mpfr_t();
+        if (mpfr_cmp_si(x_, 1) >= 0) {
+            mpfr_class t(mpfr_get_prec(x_));
+            mpfr_acosh(t.get_mpfr_t(), t.get_mpfr_t(), MPFR_RNDN);
+            return real_mpfr(std::move(t));
+        }
+        mpc_class t(mpfr_get_prec(x_));
+        mpc_set_ui(t.get_mpc_t(), 1, MPFR_RNDN);
+        mpc_acosh(t.get_mpc_t(), t.get_mpc_t(), MPFR_RNDN);
+        return complex_mpc(std::move(t));
+    }
+    virtual RCP<const Basic> atanh(const Basic &x) const {
+        SYMENGINE_ASSERT(is_a<RealMPFR>(x))
+        mpfr_srcptr x_ = static_cast<const RealMPFR &>(x).i.get_mpfr_t();
+        if (mpfr_cmp_si(x_, 1) <= 0 && mpfr_cmp_si(x_, -1) >= 0) {
+            mpfr_class t(mpfr_get_prec(x_));
+            mpfr_atanh(t.get_mpfr_t(), x_, MPFR_RNDN);
+            return real_mpfr(std::move(t));
+        }
+        mpc_class t(mpfr_get_prec(x_));
+        mpc_set_fr(t.get_mpc_t(), x_, MPFR_RNDN);
+        mpc_atanh(t.get_mpc_t(), t.get_mpc_t(), MPFR_RNDN);
+        return complex_mpc(std::move(t));
+    }
+    virtual RCP<const Basic> acoth(const Basic &x) const {
+        SYMENGINE_ASSERT(is_a<RealMPFR>(x))
+        mpfr_srcptr x_ = static_cast<const RealMPFR &>(x).i.get_mpfr_t();
+        if (mpfr_cmp_si(x_, 1) >= 0 || mpfr_cmp_si(x_, -1) <= 0) {
+            mpfr_class t(mpfr_get_prec(x_));
+            mpfr_ui_div(t.get_mpfr_t(), 1, t.get_mpfr_t(), MPFR_RNDN);
+            mpfr_atanh(t.get_mpfr_t(), x_, MPFR_RNDN);
+            return real_mpfr(std::move(t));
+        }
+        mpc_class t(mpfr_get_prec(x_));
+        mpc_set_fr(t.get_mpc_t(), x_, MPFR_RNDN);
+        mpc_ui_div(t.get_mpc_t(), 1, t.get_mpc_t(), MPFR_RNDN);
+        mpc_atanh(t.get_mpc_t(), t.get_mpc_t(), MPFR_RNDN);
+        return complex_mpc(std::move(t));
+    }
+    virtual RCP<const Basic> log(const Basic &x) const {
+        SYMENGINE_ASSERT(is_a<RealMPFR>(x))
+        mpfr_srcptr x_ = static_cast<const RealMPFR &>(x).i.get_mpfr_t();
+        if (mpfr_cmp_si(x_, 0) >= 0) {
+            mpfr_class t(mpfr_get_prec(x_));
+            mpfr_log(t.get_mpfr_t(), x_, MPFR_RNDN);
+            return real_mpfr(std::move(t));
+        }
+        mpc_class t(mpfr_get_prec(x_));
+        mpc_set_fr(t.get_mpc_t(), x_, MPFR_RNDN);
+        mpc_log(t.get_mpc_t(), t.get_mpc_t(), MPFR_RNDN);
+        return complex_mpc(std::move(t));
+    }
+    virtual RCP<const Basic> abs(const Basic &x) const {
+        SYMENGINE_ASSERT(is_a<RealMPFR>(x))
+        mpfr_class t(static_cast<const RealMPFR &>(x).i.get_prec());
+        mpfr_abs(t.get_mpfr_t(), static_cast<const RealMPFR &>(x).i.get_mpfr_t(), MPFR_RNDN);
+        return real_mpfr(std::move(t));
+    }
+};
+
+Evaluate& RealMPFR::get_eval() const
+{
+    static EvaluateMPFR evaluate_mpfr;
+    return evaluate_mpfr;
+}
+
 } // SymEngine
 #endif //HAVE_SYMENGINE_MPFR
