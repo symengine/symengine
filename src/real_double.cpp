@@ -145,7 +145,7 @@ class EvaluateRealDouble : public EvaluateDouble<RealDouble> {
         }
     }
     virtual RCP<const Basic> acosh(const Basic &x) const {
-        SYMENGINE_ASSERT(is_a<ComplexDouble>(x))
+        SYMENGINE_ASSERT(is_a<RealDouble>(x))
         double d = static_cast<const RealDouble &>(x).i;
         if (d >= 1.0) {
             return number(std::acosh(d));
@@ -154,7 +154,7 @@ class EvaluateRealDouble : public EvaluateDouble<RealDouble> {
         }
     }
     virtual RCP<const Basic> atanh(const Basic &x) const {
-        SYMENGINE_ASSERT(is_a<ComplexDouble>(x))
+        SYMENGINE_ASSERT(is_a<RealDouble>(x))
         double d = static_cast<const RealDouble &>(x).i;
         if (d <= 1.0 && d >= -1.0) {
             return number(std::atanh(d));
@@ -163,7 +163,7 @@ class EvaluateRealDouble : public EvaluateDouble<RealDouble> {
         }
     }
     virtual RCP<const Basic> acoth(const Basic &x) const {
-        SYMENGINE_ASSERT(is_a<ComplexDouble>(x))
+        SYMENGINE_ASSERT(is_a<RealDouble>(x))
         double d = static_cast<const RealDouble &>(x).i;
         if (d >= 1.0 || d <= -1.0) {
             return number(std::atanh(1.0/d));
@@ -172,7 +172,7 @@ class EvaluateRealDouble : public EvaluateDouble<RealDouble> {
         }
     }
     virtual RCP<const Basic> log(const Basic &x) const {
-        SYMENGINE_ASSERT(is_a<ComplexDouble>(x))
+        SYMENGINE_ASSERT(is_a<RealDouble>(x))
         double d = static_cast<const RealDouble &>(x).i;
         if (d >= 0.0) {
             return number(std::log(d));
