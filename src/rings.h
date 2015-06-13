@@ -9,6 +9,8 @@
 #include "basic.h"
 #include "dict.h"
 
+#include <piranha/piranha.hpp>
+
 namespace SymEngine {
 
 //! Converts expression `p` into a polynomial `P`, with symbols `sym`

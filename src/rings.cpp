@@ -94,7 +94,7 @@ void poly_mul(const umap_vec_mpz &A, const umap_vec_mpz &B, umap_vec_mpz &C)
 void poly2packed(const umap_vec_mpz &A, umap_ull_mpz &B)
 {
     for (auto &a: A) {
-        B[pack_vec_int(a.first)] = a.second;
+        B[pack_vec_int(a.first)] = piranha::integer{a.second.get_str()};
     }
 }
 
@@ -119,11 +119,15 @@ void packed2poly(const umap_ull_mpz &A, const umap_basic_num &syms, umap_vec_mpz
     for (auto &a: A) {
         vec_int exp;
         unsigned long long ull = a.first;
-        for (int i = 0; i < n_var; i++) {
+        for (uint i = 0; i < n_var; i++) {
             exp.push_back(ull % n);
             ull = ull / n;
         }
-        P[exp] = a.second;
+        mpz_t m;
+        mpz_init(m);
+        auto v = a.second.get_mpz_view();  
+        P[exp] = mpz_class(v);
+        mpz_clear(m);
     }
 }
 

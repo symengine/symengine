@@ -10,6 +10,8 @@
 
 #include <gmpxx.h>
 
+#include <piranha/piranha.hpp>
+
 namespace SymEngine {
 
 class Basic;
@@ -24,7 +26,7 @@ typedef std::unordered_map<RCP<const Basic>, RCP<const Number>,
         RCPBasicHash, RCPBasicKeyEq> umap_basic_num;
 typedef std::unordered_map<RCP<const Basic>, RCP<const Basic>,
         RCPBasicHash, RCPBasicKeyEq> umap_basic_basic;
-typedef std::unordered_map<unsigned long long, mpz_class> umap_ull_mpz;
+typedef std::unordered_map<unsigned long long, piranha::integer> umap_ull_mpz;
 
 typedef std::vector<int> vec_int;
 typedef std::vector<RCP<const Basic>> vec_basic;
