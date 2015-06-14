@@ -64,8 +64,8 @@ if [[ "${PYTHON_INSTALL}" == "yes" ]]; then
     mkdir -p empty
     cd empty
     cat << EOF | python
-import csympy
-if not csympy.test():
+import symengine
+if not symengine.test():
     raise Exception('Tests failed')
 EOF
     cd ..
@@ -121,8 +121,8 @@ else
         mkdir -p empty
         cd empty
         cat << EOF | python
-import csympy
-if not csympy.test():
+import symengine
+if not symengine.test():
     raise Exception('Tests failed')
 EOF
     fi

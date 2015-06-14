@@ -1,6 +1,6 @@
-from csympy.utilities import raises
+from symengine.utilities import raises
 
-from csympy.lib.csympy_wrapper import probab_prime_p, nextprime, gcd, lcm, gcd_ext, mod, quotient, quotient_mod, mod_inverse, crt, fibonacci, fibonacci2, lucas, lucas2, binomial, factorial, divides, factor, factor_lehman_method, factor_pollard_pm1_method, factor_pollard_rho_method, prime_factors, prime_factor_multiplicities, Sieve, Sieve_iterator, bernoulli, primitive_root, primitive_root_list, totient, carmichael, multiplicative_order, legendre, jacobi, kronecker, nthroot_mod, nthroot_mod_list, powermod, powermod_list, Integer
+from symengine.lib.symengine_wrapper import probab_prime_p, nextprime, gcd, lcm, gcd_ext, mod, quotient, quotient_mod, mod_inverse, crt, fibonacci, fibonacci2, lucas, lucas2, binomial, factorial, divides, factor, factor_lehman_method, factor_pollard_pm1_method, factor_pollard_rho_method, prime_factors, prime_factor_multiplicities, Sieve, Sieve_iterator, bernoulli, primitive_root, primitive_root_list, totient, carmichael, multiplicative_order, legendre, jacobi, kronecker, nthroot_mod, nthroot_mod_list, powermod, powermod_list, Integer
 
 def test_probab_prime_p():
     assert probab_prime_p(101) == True

@@ -1,4 +1,4 @@
-from .lib.csympy_wrapper import Symbol, Basic
+from .lib.symengine_wrapper import Symbol, Basic
 from .compatibility import string_types
 from itertools import combinations, permutations, product, product as cartes
 import re as _re
@@ -13,7 +13,7 @@ def symbols(names, **args):
     :func:`symbols` function returns a sequence of symbols with names taken
     from ``names`` argument, which can be a comma or whitespace delimited
     string, or a sequence of strings::
-        >>> from csympy import symbols
+        >>> from symengine import symbols
         >>> x, y, z = symbols('x,y,z')
         >>> a, b, c = symbols('a b c')
     The type of output is dependent on the properties of input arguments::
@@ -194,7 +194,7 @@ def var(names, **args):
     Examples
     ========
 
-    >>> from csympy import var
+    >>> from symengine import var
 
     >>> var('x')
     x
@@ -263,7 +263,7 @@ if not USE_PYTEST:
         Examples
         ========
 
-        >>> from csympy.pytest import raises
+        >>> from symengine.pytest import raises
 
         >>> raises(ZeroDivisionError, lambda: 1/0)
         >>> raises(ZeroDivisionError, lambda: 1/2)

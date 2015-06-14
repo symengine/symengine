@@ -1,4 +1,4 @@
-from .lib.csympy_wrapper import (Symbol, Integer, sympify, SympifyError, Add,
+from .lib.symengine_wrapper import (Symbol, Integer, sympify, SympifyError, Add,
         Mul, Pow, exp, sin, cos, sqrt, function_symbol, I, E, pi)
 from .utilities import var, symbols
 

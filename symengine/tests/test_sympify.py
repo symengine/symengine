@@ -1,6 +1,6 @@
-from csympy.utilities import raises
+from symengine.utilities import raises
 
-from csympy import Symbol, Integer, sympify, SympifyError
+from symengine import Symbol, Integer, sympify, SympifyError
 
 def test_sympify1():
     assert sympify(1) == Integer(1)

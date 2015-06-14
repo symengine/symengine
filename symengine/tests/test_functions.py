@@ -1,5 +1,5 @@
-from csympy import Symbol, sin, cos, sqrt, Add, Mul, function_symbol, Integer
-from csympy.lib.csympy_wrapper import Subs, Derivative
+from symengine import Symbol, sin, cos, sqrt, Add, Mul, function_symbol, Integer
+from symengine.lib.symengine_wrapper import Subs, Derivative
 
 def test_sin():
     x = Symbol("x")

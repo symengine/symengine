@@ -1,6 +1,6 @@
-from csympy.utilities import raises
-from csympy import Symbol, sin, cos
-from csympy.lib.csympy_wrapper import eval_double
+from symengine.utilities import raises
+from symengine import Symbol, sin, cos
+from symengine.lib.symengine_wrapper import eval_double
 
 def test_eval_double1():
     x = Symbol("x")
