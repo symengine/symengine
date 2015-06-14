@@ -273,6 +273,8 @@ public:
     virtual RCP<const Number> rdiv(const Number &other) const {
         if (is_a<Integer>(other)) {
             return rdivcomp(static_cast<const Integer&>(other));
+        } else if (is_a<Rational>(other)) {
+            return rdivcomp(static_cast<const Rational&>(other));
         } else {
             throw std::runtime_error("Not implemented.");
         }
@@ -281,8 +283,6 @@ public:
     virtual RCP<const Number> pow(const Number &other) const {
         if (is_a<Integer>(other)) {
             return powcomp(static_cast<const Integer&>(other));
-        } else if (is_a<Rational>(other)) {
-            return rdivcomp(static_cast<const Rational&>(other));
         } else {
             return other.rpow(*this);
         }
