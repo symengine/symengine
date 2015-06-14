@@ -1,7 +1,7 @@
 import sys
 sys.path.append("..")
 from timeit import default_timer as clock
-from csympy import var, sympify, function_symbol, Symbol
+from symengine import var, sympify, function_symbol, Symbol
 import sympy
 s = open("expr.txt").read()
 print "Converting to SymPy..."

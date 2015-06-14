@@ -1,7 +1,7 @@
 import sys
 sys.path.append("..")
 from timeit import default_timer as clock
-from csympy import var, Integer
+from symengine import var, Integer
 
 def fact(n):
     if n in [0, 1]:

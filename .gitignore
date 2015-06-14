@@ -12,7 +12,7 @@ cmake/cython_test.cpp
 *.a
 *.o
 *.out
-csympy/lib/csympy_wrapper.cpp
+symengine/lib/symengine_wrapper.cpp
 
 # Documentation
 doc/_build

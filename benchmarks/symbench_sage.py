@@ -2,7 +2,7 @@
 
 """
 Benchmarks listed at http://wiki.sagemath.org/symbench can be run using this script
-To run the benchmark in csympy, run python symbench.py <benchmark_name>
+To run the benchmark in symengine, run python symbench.py <benchmark_name>
 To run the benchmark in sympy, run python symbench.py sympy <benchmark_name>
 """
 
