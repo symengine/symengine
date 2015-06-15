@@ -11,6 +11,7 @@
 #include "functions.h"
 #include "constants.h"
 #include "real_double.h"
+#include "complex_double.h"
 
 using SymEngine::Basic;
 using SymEngine::Add;
@@ -69,7 +70,9 @@ using SymEngine::Subs;
 using SymEngine::FunctionWrapper;
 using SymEngine::vec_basic;
 using SymEngine::real_double;
+using SymEngine::complex_double;
 using SymEngine::RealDouble;
+using SymEngine::ComplexDouble;
 using SymEngine::is_a;
 
 void test_sin()
@@ -1052,6 +1055,17 @@ void test_asin()
     r1 = asin(mul(div(sub(sqrt(i5), i1), integer(4)), im1));
     r2 = div(pi, mul(im2, i5));
     assert(eq(r1, r2));
+
+    r1 = asin(real_double(0.5));
+    assert(is_a<RealDouble>(*r1));
+    assert(std::abs(static_cast<const RealDouble &>(*r1).i - 0.523598775598299) < 1e-12);
+
+    r1 = asin(complex_double(std::complex<double>(1, 1)));
+    r2 = asin(real_double(2.0));
+    assert(is_a<ComplexDouble>(*r1));
+    assert(is_a<ComplexDouble>(*r2));
+    assert(std::abs(std::abs(static_cast<const ComplexDouble &>(*r1).i) - 1.2530681300031) < 1e-10);
+    assert(std::abs(std::abs(static_cast<const ComplexDouble &>(*r2).i) - 2.0498241882037) < 1e-10);
 }
 
 void test_acos()
@@ -1536,6 +1550,17 @@ void test_atanh()
     r1 = atanh(mul(im1, x));
     r2 = mul(im1, atanh(x));
     assert(eq(r1, r2));
+
+    r1 = atanh(real_double(0.5));
+    assert(is_a<RealDouble>(*r1));
+    assert(std::abs(static_cast<const RealDouble &>(*r1).i - 0.549306144334055) < 1e-12);
+
+    r1 = atanh(complex_double(std::complex<double>(1, 1)));
+    r2 = atanh(real_double(2.0));
+    assert(is_a<ComplexDouble>(*r1));
+    assert(is_a<ComplexDouble>(*r2));
+    assert(std::abs(std::abs(static_cast<const ComplexDouble &>(*r1).i) - 1.09390752881482) < 1e-12);
+    assert(std::abs(std::abs(static_cast<const ComplexDouble &>(*r2).i) - 1.66407281705924) < 1e-12);
 }
 
 void test_acoth()
