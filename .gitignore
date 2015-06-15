@@ -76,9 +76,11 @@ benchmarks/expand6_ginac
 
 #rubygem
 src/ruby/Gemfile.lock
+src/ruby/LICENSE
 src/ruby/*.bundle
 src/ruby/*.gem
 src/ruby/tmp/
+src/ruby/pkg/
 src/ruby/ext/symengine/mkmf.log
 src/ruby/bin/*
 src/ruby/ext/symengine/extconf.h
