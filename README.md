@@ -50,14 +50,14 @@ The optional Python wrappers can be turned on by
 
 Use SymEngine from Python as follows:
 
-    >>> from csympy import var
+    >>> from symengine import var
     >>> var("x y z")
     (x, y, z)
     >>> e = (x+y+z)**2
     >>> e.expand()
-    2x*z + x^2 + 2y*x + 2y*z + z^2 + y^2
+    2*x*y + 2*x*z + 2*y*z + x**2 + y**2 + z**2
 
-You can read Python tests in `csympy/tests` to see what features are
+You can read Python tests in `symengine/tests` to see what features are
 implemented. Supported versions of Python are: 2.6, 2.7, 3.2, 3.3.
 You need Cython >= 0.19.1 in order to compile the wrappers. CMake
 will report at configure time if the Cython version is too old.
@@ -99,7 +99,9 @@ their default values indicated below:
         -DWITH_ARB:BOOL=OFF \                         # Install with ARB library
         -DWITH_TCMALLOC:BOOL=OFF \                    # Install with TCMalloc linked
         -DWITH_OPENMP:BOOL=OFF \                      # Install with OpenMP enabled
-        -DWITH_PIRANHA:BOOL=ON \                      # Install with Piranha library
+        -DWITH_PIRANHA:BOOL=OFF \                     # Install with Piranha library
+        -DBUILD_TESTS:BOOL=ON \                       # Build with tests
+        -DBUILD_BENCHMARKS:BOOL=ON \                  # Build with benchmarks
         .
 
 If `OPENMP` is enabled, then `SYMENGINE_THREAD_SAFE` is also enabled automatically
