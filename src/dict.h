@@ -27,7 +27,6 @@ struct hash<std::pair<unsigned long long,piranha::integer>>
 };
 }
 
-
 namespace SymEngine {
 
 class Basic;
@@ -38,13 +37,22 @@ struct RCPBasicKeyEq;
 struct RCPBasicKeyLess;
 struct RCPIntegerKeyLess;
 
+typedef struct
+{
+    //! \return true if `x==y`
+    inline bool operator() (const std::pair<unsigned long long, piranha::integer> &x, 
+        const std::pair<unsigned long long, piranha::integer> &y) const {
+        return x.first == y.first;
+    }
+} hash_eq;
+
 typedef std::unordered_map<RCP<const Basic>, RCP<const Number>,
         RCPBasicHash, RCPBasicKeyEq> umap_basic_num;
 typedef std::unordered_map<RCP<const Basic>, RCP<const Basic>,
         RCPBasicHash, RCPBasicKeyEq> umap_basic_basic;
 typedef std::unordered_map<unsigned long long, piranha::integer> umap_ull_mpz;
 typedef piranha::hash_set<std::pair<unsigned long long, piranha::integer>,
-            std::hash< std::pair<unsigned long long, piranha::integer> >> hash_set;
+            std::hash< std::pair<unsigned long long, piranha::integer> >, hash_eq> hash_set;
 
 typedef std::vector<int> vec_int;
 typedef std::vector<RCP<const Basic>> vec_basic;
