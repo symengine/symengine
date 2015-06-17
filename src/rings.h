@@ -24,13 +24,13 @@ void poly_mul(const umap_vec_mpz &A, const umap_vec_mpz &B, umap_vec_mpz &C);
 void poly2packed(const umap_vec_mpz &A, umap_ull_mpz &B);
 
 //! Convert packed to hash_set
-void packed2hashset(const umap_ull_mpz &A, hash_set &B);
+void poly2hashset(const umap_vec_mpz &A, hash_set &B);
 
 //! new multiplication routine for hash_set
 void poly_mul3(const hash_set &A, const hash_set &B, hash_set &C);
 
 //! Convert hash_set to packed
-void hashset2packed(const hash_set &A, umap_ull_mpz &B);
+void hashset2poly(const hash_set &A, const umap_basic_num &syms, umap_vec_mpz &B);
 
 //! Multiply in packed structure
 void poly_mul2(const umap_ull_mpz &A, const umap_ull_mpz &B, umap_ull_mpz &C);

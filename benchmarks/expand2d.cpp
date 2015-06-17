@@ -23,8 +23,8 @@ using SymEngine::poly_mul2;
 using SymEngine::poly_mul3;
 using SymEngine::packed2poly;
 using SymEngine::poly2packed;
-using SymEngine::packed2hashset;
-using SymEngine::hashset2packed;
+using SymEngine::poly2hashset;
+using SymEngine::hashset2poly;
 using SymEngine::umap_vec_mpz;
 using SymEngine::umap_ull_mpz;
 using SymEngine::hash_set;
@@ -58,15 +58,10 @@ int main(int argc, char* argv[])
     expr2poly(f1, syms, P1);
     expr2poly(f2, syms, P2);
 
-    umap_ull_mpz p, q, r;
-
-    poly2packed(P1, p);
-    poly2packed(P2, q);
-
     hash_set l, m, n;
 
-    packed2hashset(p, l);
-    packed2hashset(q, m);
+    poly2hashset(P1, l);
+    poly2hashset(P2, m);
 
     std::cout << "poly_mul start" << std::endl;
     auto t1 = std::chrono::high_resolution_clock::now();
@@ -74,8 +69,12 @@ int main(int argc, char* argv[])
     auto t2 = std::chrono::high_resolution_clock::now();
     std::cout << "poly_mul stop" << std::endl;
 
-    hashset2packed(n, r);
-    packed2poly(r, syms, C);
+    auto s = n.evaluate_sparsity();
+    for (const auto &p: s) {
+        std::cout << p.first << ',' << p.second << '\n';
+    }
+
+    hashset2poly(n, syms, C);
 
     /*
     std::cout << *e << std::endl;

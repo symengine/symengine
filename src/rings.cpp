@@ -1,4 +1,5 @@
 #include <stdexcept>
+#include <piranha/piranha.hpp>
 
 #include "add.h"
 #include "mul.h"
@@ -107,13 +108,13 @@ void poly_mul2(const umap_ull_mpz &A, const umap_ull_mpz &B, umap_ull_mpz &C)
     }
 }
 
-void packed2hashset(const umap_ull_mpz &A, hash_set &B)
+void poly2hashset(const umap_vec_mpz &A, hash_set &B)
 {
     for (auto &a: A) {
         std::pair<unsigned long long, piranha::integer> temp;
-        temp.first = a.first;
-        auto v = a.second.get_mpz_view();
-        temp.second = mpz_class(v).get_ui();
+        using ka = piranha::kronecker_array<long long>;
+        temp.first = ka::encode(a.first);
+        temp.second = piranha::integer{a.second.get_str()};
         B.insert(temp);
     }
 }
@@ -130,10 +131,15 @@ void poly_mul3(const hash_set &A, const hash_set &B, hash_set &C)
     }
 }
 
-void hashset2packed(const hash_set &A, umap_ull_mpz &B)
+void hashset2poly(const hash_set &A, const umap_basic_num &syms, umap_vec_mpz &B)
 {
+    uint n_var = syms.size();
     for (auto &a: A) {
-        B[a.first] = a.second;
+        using ka = piranha::kronecker_array<long long>;
+        std::vector<int> out(n_var);
+        ka::decode(out, a.first);
+        auto v = a.second.get_mpz_view();  
+        B[out] = mpz_class(v);
     }
 }
 
