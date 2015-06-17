@@ -11,6 +11,22 @@
 #include <gmpxx.h>
 
 #include <piranha/piranha.hpp>
+#include <boost/functional/hash.hpp>
+
+namespace std
+{
+template <>
+struct hash<std::pair<unsigned long long,piranha::integer>>
+{
+    typedef size_t result_type;
+    typedef std::pair<unsigned long long,piranha::integer> argument_type;
+    result_type operator()(const argument_type &p) const noexcept
+    {
+             return std::hash<unsigned long long>()(p.first);
+    }
+};
+}
+
 
 namespace SymEngine {
 
@@ -27,6 +43,8 @@ typedef std::unordered_map<RCP<const Basic>, RCP<const Number>,
 typedef std::unordered_map<RCP<const Basic>, RCP<const Basic>,
         RCPBasicHash, RCPBasicKeyEq> umap_basic_basic;
 typedef std::unordered_map<unsigned long long, piranha::integer> umap_ull_mpz;
+typedef piranha::hash_set<std::pair<unsigned long long, piranha::integer>,
+            std::hash< std::pair<unsigned long long, piranha::integer> >> hash_set;
 
 typedef std::vector<int> vec_int;
 typedef std::vector<RCP<const Basic>> vec_basic;

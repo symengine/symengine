@@ -20,6 +20,9 @@ target_link_libraries(expand2b symengine)
 add_executable(expand2c expand2c.cpp)
 target_link_libraries(expand2c symengine)
 
+add_executable(expand2d expand2d.cpp)
+target_link_libraries(expand2d symengine)
+
 add_executable(expand3 expand3.cpp)
 target_link_libraries(expand3 symengine)
 

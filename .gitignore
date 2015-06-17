@@ -59,6 +59,7 @@ benchmarks/expand1
 benchmarks/expand2
 benchmarks/expand2b
 benchmarks/expand2c
+benchmarks/expand2d
 benchmarks/expand3
 benchmarks/matrix_add1
 benchmarks/matrix_add2

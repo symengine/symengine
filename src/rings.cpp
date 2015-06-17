@@ -107,6 +107,36 @@ void poly_mul2(const umap_ull_mpz &A, const umap_ull_mpz &B, umap_ull_mpz &C)
     }
 }
 
+void packed2hashset(const umap_ull_mpz &A, hash_set &B)
+{
+    for (auto &a: A) {
+        std::pair<unsigned long long, piranha::integer> temp;
+        temp.first = a.first;
+        auto v = a.second.get_mpz_view();
+        temp.second = mpz_class(v).get_ui();
+        B.insert(temp);
+    }
+}
+
+void poly_mul3(const hash_set &A, const hash_set &B, hash_set &C)
+{   
+    std::pair<unsigned long long, piranha::integer> temp;
+    for (auto &a: A) {
+        for (auto &b: B) {
+            temp.first = a.first + b.first;
+            temp.second = a.second*b.second;
+            C.insert(temp);
+        }
+    }
+}
+
+void hashset2packed(const hash_set &A, umap_ull_mpz &B)
+{
+    for (auto &a: A) {
+        B[a.first] = a.second;
+    }
+}
+
 void packed2poly(const umap_ull_mpz &A, const umap_basic_num &syms, umap_vec_mpz &P)
 {
     uint b = 0;
@@ -123,11 +153,8 @@ void packed2poly(const umap_ull_mpz &A, const umap_basic_num &syms, umap_vec_mpz
             exp.push_back(ull % n);
             ull = ull / n;
         }
-        mpz_t m;
-        mpz_init(m);
         auto v = a.second.get_mpz_view();  
         P[exp] = mpz_class(v);
-        mpz_clear(m);
     }
 }
 
