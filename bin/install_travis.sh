@@ -1,7 +1,12 @@
 #!/usr/bin/env bash
 
-sudo apt-get update
-sudo apt-get install cmake libgmp-dev
+if [[ "$TRAVIS_OS_NAME" != "osx" ]]; then
+    sudo apt-get update
+    sudo apt-get install cmake libgmp-dev
+else
+    brew update
+    brew install gmp
+fi
 if [[ "${WITH_BFD}" == "yes" ]]; then
     sudo apt-get install binutils-dev;
 fi
@@ -29,7 +34,11 @@ if [[ "${WITH_MPC}" == "yes" ]]; then
 fi
 # Install python using Miniconda.
 if [[ "${WITH_PYTHON}" == "yes" ]] || [[ "${PYTHON_INSTALL}" == "yes" ]]; then
-    wget http://repo.continuum.io/miniconda/Miniconda3-3.7.3-Linux-x86_64.sh -O miniconda.sh;
+    if [[ "$TRAVIS_OS_NAME" != "osx" ]]; then
+        wget https://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O miniconda.sh;
+    else
+        wget https://repo.continuum.io/miniconda/Miniconda-latest-MacOSX-x86_64.sh -O miniconda.sh;
+    fi
     bash miniconda.sh -b -p $HOME/miniconda;
     export PATH="$HOME/miniconda/bin:$PATH";
     hash -r;
@@ -43,4 +52,8 @@ fi
 if [[ "${CC}" == "" ]]; then
     export CC=gcc
     export CXX=g++
+fi
+if [[ "$TRAVIS_OS_NAME" == "osx" ]] && [[ "$CC" == "gcc" ]]; then
+    export CC=gcc-4.8
+    export CXX=g++-4.8
 fi
