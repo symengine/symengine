@@ -6,7 +6,7 @@
 
 namespace SymEngine {
 
-UnivariatePolynomial::UnivariatePolynomial(const RCP<const Symbol> &var, const uint &degree, map_uint_mpz&& dict) :
+UnivariatePolynomial::UnivariatePolynomial(const RCP<const Symbol> &var, const unsigned int &degree, map_uint_mpz&& dict) :
      degree_{degree}, var_{var}, dict_{std::move(dict)} {
 
     SYMENGINE_ASSERT(is_canonical(degree_, dict_))
@@ -15,7 +15,7 @@ UnivariatePolynomial::UnivariatePolynomial(const RCP<const Symbol> &var, const u
 UnivariatePolynomial::UnivariatePolynomial(const RCP<const Symbol> &var, const std::vector<mpz_class> &v) :
      var_{var} {
 
-    for (uint i = 0; i < v.size(); i++) {
+    for (unsigned int i = 0; i < v.size(); i++) {
         if (v[i] != 0)
             dict_add_term(dict_, v[i], i);
     }
@@ -24,10 +24,10 @@ UnivariatePolynomial::UnivariatePolynomial(const RCP<const Symbol> &var, const s
     SYMENGINE_ASSERT(is_canonical(degree_, dict_))
 }
 
-bool UnivariatePolynomial::is_canonical(const uint &degree_, const map_uint_mpz& dict)
+bool UnivariatePolynomial::is_canonical(const unsigned int &degree_, const map_uint_mpz& dict)
 {
     map_uint_mpz ordered(dict.begin(), dict.end());
-    uint prev_degree = (--ordered.end())->first;
+    unsigned int prev_degree = (--ordered.end())->first;
     if (prev_degree != degree_)
         return false;
 
@@ -43,7 +43,7 @@ std::size_t UnivariatePolynomial::__hash__() const
     for (auto &it : this->dict_)
     {   
         std::size_t temp = UNIVARIATEPOLYNOMIAL;
-        hash_combine<uint>(temp, it.first);
+        hash_combine<unsigned int>(temp, it.first);
         hash_combine<long long int>(temp, it.second.get_si());
         seed += temp;
     }
@@ -99,7 +99,7 @@ RCP<const Basic> UnivariatePolynomial::from_dict(const RCP<const Symbol> &var, m
     }
 }
 
-void UnivariatePolynomial::dict_add_term(map_uint_mpz &d, const mpz_class &coef, const uint &n)
+void UnivariatePolynomial::dict_add_term(map_uint_mpz &d, const mpz_class &coef, const unsigned int &n)
 {
     auto it = d.find(n);
     if (it == d.end())
@@ -237,8 +237,8 @@ RCP<const UnivariatePolynomial> sub_uni_poly(const UnivariatePolynomial &a, cons
 
 //Calculates bit length of number, used in mul_uni_poly() only
 template <typename T>
-uint bit_length(T t){
-    uint count = 0;
+unsigned int bit_length(T t){
+    unsigned int count = 0;
     while (t > 0) {
         count++;
         t = t >> 1;
@@ -249,8 +249,8 @@ uint bit_length(T t){
 RCP<const UnivariatePolynomial> mul_uni_poly(RCP<const UnivariatePolynomial> a, RCP<const UnivariatePolynomial> b) {
     //TODO: Use `const RCP<const UnivariatePolynomial> &a` for input arguments,
     //      even better is use `const UnivariatePolynomial &a` 
-    uint da = a->degree_;
-    uint db = b->degree_;
+    unsigned int da = a->degree_;
+    unsigned int db = b->degree_;
 
     int sign = 1;
     if ((--(a->dict_.end()))->second < 0) {
@@ -263,7 +263,7 @@ RCP<const UnivariatePolynomial> mul_uni_poly(RCP<const UnivariatePolynomial> a, 
     }
 
     mpz_class p = std::max(a->max_coef(), b->max_coef());
-    uint N = bit_length(std::min(da + 1, db + 1)) + bit_length(p) + 1;
+    unsigned int N = bit_length(std::min(da + 1, db + 1)) + bit_length(p) + 1;
 
     mpz_class a1 = 1 << N;
     mpz_class a2 = a1 / 2;

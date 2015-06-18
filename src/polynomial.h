@@ -20,17 +20,17 @@ public:
     //! `var_` : Variable of the uni-variate UnivariatePolynomial
     //! `dict_` : holds the UnivariatePolynomial
     // UnivariatePolynomial x**2 + 2*x + 1 has dict_ = {{0, 1}, {1, 2}, {2, 1}} with var_ = "x" 
-    uint degree_;
+    unsigned int degree_;
     RCP<const Symbol> var_;
     map_uint_mpz dict_;
 public:
     IMPLEMENT_TYPEID(UNIVARIATEPOLYNOMIAL)
     //! Constructor of UnivariatePolynomial class
-    UnivariatePolynomial(const RCP<const Symbol> &var, const uint &degree, map_uint_mpz&& dict);
+    UnivariatePolynomial(const RCP<const Symbol> &var, const unsigned int &degree, map_uint_mpz&& dict);
     //! Constructor using a dense vector of mpz_class coefficients
     UnivariatePolynomial(const RCP<const Symbol> &var, const std::vector<mpz_class> &v);
     //! \return true if canonical
-    bool is_canonical(const uint &degree, const map_uint_mpz& dict);
+    bool is_canonical(const unsigned int &degree, const map_uint_mpz& dict);
     //! \return size of the hash
     std::size_t __hash__() const;
     /*! Equality comparator
@@ -48,7 +48,7 @@ public:
     * Adds coef*var_**n to the dict_
     */
     static void dict_add_term(map_uint_mpz &d,
-            const mpz_class &coef, const uint &n);
+            const mpz_class &coef, const unsigned int &n);
     mpz_class max_coef() const;
     //! Differentiates w.r.t symbol `x`
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
@@ -87,7 +87,7 @@ RCP<const UnivariatePolynomial> sub_uni_poly(const UnivariatePolynomial &a, cons
 //! Multiplying two UnivariatePolynomial a and b
 RCP<const UnivariatePolynomial> mul_uni_poly(RCP<const UnivariatePolynomial> a, RCP<const UnivariatePolynomial> b);
 
-inline RCP<const UnivariatePolynomial> univariate_polynomial(RCP<const Symbol> i, uint deg, map_uint_mpz&& dict)
+inline RCP<const UnivariatePolynomial> univariate_polynomial(RCP<const Symbol> i, unsigned int deg, map_uint_mpz&& dict)
 {
     return rcp(new UnivariatePolynomial(i, deg, std::move(dict)));
 }
