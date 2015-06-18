@@ -5,13 +5,23 @@ if [[ "$TRAVIS_OS_NAME" != "osx" ]]; then
     sudo apt-get install cmake libgmp-dev
 else
     brew update
-    brew install gmp
+    brew install cmake gmp
 fi
 if [[ "${WITH_BFD}" == "yes" ]]; then
-    sudo apt-get install binutils-dev;
+    if [[ "$TRAVIS_OS_NAME" != "osx" ]]; then
+        sudo apt-get install binutils-dev;
+    else
+        brew install binutils;
+    fi
 fi
 if [[ "${WITH_ECM}" == "yes" ]]; then
-    sudo apt-get install libecm-dev;
+    if [[ "$TRAVIS_OS_NAME" != "osx" ]]; then
+        sudo apt-get install libecm-dev;
+    else
+        wget http://gforge.inria.fr/frs/download.php/file/32159/ecm-6.4.4.tar.gz;
+        tar -xzf ecm-6.4.4.tar.gz;
+        cd ecm-6.4.4 && ./configure && sudo make -j8 install && cd ..;
+    fi
 fi
 if [[ "${WITH_PRIMESIEVE}" == "yes" ]]; then
     wget http://dl.bintray.com/kimwalisch/primesieve/primesieve-5.2.tar.gz;
@@ -19,7 +29,11 @@ if [[ "${WITH_PRIMESIEVE}" == "yes" ]]; then
     cd primesieve-5.2 && ./configure && make -j8 && sudo make install && cd ..;
 fi
 if [[ "${WITH_MPFR}" == "yes" ]] || [[ "${WITH_MPC}" == "yes" ]] || [[ "${WITH_ARB}" == "yes" ]]; then
-    sudo apt-get install libmpfr-dev;
+    if [[ "$TRAVIS_OS_NAME" != "osx" ]]; then
+        sudo apt-get install libmpfr-dev;
+    else
+        brew install mpfr;
+    fi
 fi
 if [[ "${WITH_ARB}" == "yes" ]]; then
     wget http://www.flintlib.org/flint-2.4.4.tar.gz;
@@ -30,7 +44,11 @@ if [[ "${WITH_ARB}" == "yes" ]]; then
     cd arb-2.2.0 && ./configure && make -j8 ARB_GMP_LIB_DIR=/usr/lib/x86_64-linux-gnu ARB_MPFR_LIB_DIR=/usr/lib/x86_64-linux-gnu && sudo make ARB_GMP_LIB_DIR=/usr/lib/x86_64-linux-gnu ARB_MPFR_LIB_DIR=/usr/lib/x86_64-linux-gnu install && cd ..;
 fi
 if [[ "${WITH_MPC}" == "yes" ]]; then
-    sudo apt-get install libmpc-dev
+    if [[ "$TRAVIS_OS_NAME" != "osx" ]]; then
+        sudo apt-get install libmpc-dev;
+    else
+        brew install libmpc;
+    fi
 fi
 # Install python using Miniconda.
 if [[ "${WITH_PYTHON}" == "yes" ]] || [[ "${PYTHON_INSTALL}" == "yes" ]]; then
