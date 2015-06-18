@@ -28,15 +28,24 @@ set(SRC
     matrix.cpp
     visitor.cpp
     eval_double.cpp
-    eval_arb.cpp
     diophantine.cpp
     cwrapper.cpp
     printer.cpp
     real_double.cpp
     complex_double.cpp
-    eval_mpfr.cpp
-    eval_mpc.cpp
 )
+
+if (WITH_MPFR)
+    set(SRC ${SRC} eval_mpfr.cpp)
+endif()
+
+if (WITH_MPC)
+    set(SRC ${SRC} eval_mpc.cpp)
+endif()
+
+if (WITH_ARB)
+    set(SRC ${SRC} eval_arb.cpp)
+endif()
 
 # Needed for "make install"
 set(HEADERS
