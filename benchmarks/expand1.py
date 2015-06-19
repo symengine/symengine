@@ -1,7 +1,7 @@
 import sys
 sys.path.append("..")
 from timeit import default_timer as clock
-from csympy import var
+from symengine import var
 var("x y z w")
 e = (x+y+z+w)**60
 t1 = clock()

@@ -1,7 +1,7 @@
 import sys
 sys.path.append("..")
 from timeit import default_timer as clock
-from csympy import var
+from symengine import var
 var("x")
 e = 1
 for i in range(1, 351):

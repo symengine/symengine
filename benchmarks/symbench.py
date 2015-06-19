@@ -2,14 +2,14 @@
 
 """
 Benchmarks listed at http://wiki.sagemath.org/symbench can be run using this script
-To run all benchmarks using csympy, sympy and sage, python symbench.py sympy sage
+To run all benchmarks using symengine, sympy and sage, python symbench.py sympy sage
 """
 
 import sys
 import subprocess
 
 benchmarks = ['R1', 'R2', 'R3', 'R5', 'S1', 'S2', 'S3', 'S3a']
-csympy_skip = [False, False, False, False, False, False, False, False]
+symengine_skip = [False, False, False, False, False, False, False, False]
 sympy_skip = [False, False, False, False, False, False, False, True]
 sage_skip = [False, False, False, False, False, False, False, False]
 
@@ -28,7 +28,7 @@ for i in range(len(benchmarks)):
     a = None
     b = None
     c = None
-    if not csympy_skip[i]:
+    if not symengine_skip[i]:
         a = subprocess.check_output(['python', 'symbench_def.py', benchmark])
         a = "\t SymEngine : " + a + " s"
     sys.stdout.write(a or ws)

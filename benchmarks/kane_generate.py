@@ -250,9 +250,9 @@ def test_bicycle():
     # independent coordinates and speeds.
 
     e = KM._fr[0]
-    #import csympy
-    #print "Converting to csympy..."
-    #f = csympy.sympify(e)
+    #import symengine
+    #print "Converting to symengine..."
+    #f = symengine.sympify(e)
     print "Saving to expr.txt"
     s = str(e)
     open("expr.txt", "w").write(s)

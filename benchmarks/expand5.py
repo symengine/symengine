@@ -1,7 +1,7 @@
 import sys
 sys.path.append("..")
 from timeit import default_timer as clock
-from csympy import var
+from symengine import var
 var("x y z")
 e = (x+y+z+1)**15
 f = e*(e+1)
