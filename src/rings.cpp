@@ -111,7 +111,7 @@ void poly_mul2(const umap_ull_mpz &A, const umap_ull_mpz &B, umap_ull_mpz &C)
 void poly2hashset(const umap_vec_mpz &A, hash_set &B)
 {
     for (auto &a: A) {
-        std::pair<unsigned long long, piranha::integer> temp;
+        my_pair temp;
         using ka = piranha::kronecker_array<long long>;
         temp.first = ka::encode(a.first);
         temp.second = piranha::integer{a.second.get_str()};
@@ -121,12 +121,18 @@ void poly2hashset(const umap_vec_mpz &A, hash_set &B)
 
 void poly_mul3(const hash_set &A, const hash_set &B, hash_set &C)
 {   
-    std::pair<unsigned long long, piranha::integer> temp;
+    my_pair temp;
+    C.rehash(10000);
     for (auto &a: A) {
         for (auto &b: B) {
             temp.first = a.first + b.first;
-            temp.second = a.second*b.second;
-            C.insert(temp);
+            auto it = C.find(temp);
+            if (it == C.end()) {
+                temp.second = a.second * b.second;
+                C.insert(temp);
+            } else {
+                piranha::math::multiply_accumulate(it->second,a.second,b.second);
+            }
         }
     }
 }
