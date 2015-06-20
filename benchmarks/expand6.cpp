@@ -36,7 +36,9 @@ int main(int argc, char* argv[])
     e = add(a0, a1);
     f = zero;
     for (long long i = 2; i < N; i++) {
-        s = symbol("a" + std::to_string(i));
+        std::ostringstream o;
+        o << "a" << i;
+        s = symbol(o.str());
         e = add(e, s);
         f = sub(f, s);
     }
