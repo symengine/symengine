@@ -56,9 +56,9 @@ if [[ "${WITH_ARB}" == "yes" ]]; then
     wget http://www.flintlib.org/flint-2.4.4.tar.gz;
     tar -xzf flint-2.4.4.tar.gz;
     cd flint-2.4.4 && ./configure --prefix=$our_install_dir && make -j8 install && cd ..;
-    wget https://github.com/fredrik-johansson/arb/archive/2.2.0.tar.gz;
-    tar -xzf 2.2.0.tar.gz;
-    cd arb-2.2.0 && ./configure --prefix=$our_install_dir  --with-flint=$our_install_dir;
+    wget https://github.com/fredrik-johansson/arb/archive/2.6.0.tar.gz;
+    tar -xzf 2.6.0.tar.gz;
+    cd arb-2.6.0 && ./configure --prefix=$our_install_dir  --with-flint=$our_install_dir;
     make -j8 install ARB_GMP_LIB_DIR=/usr/lib/x86_64-linux-gnu ARB_MPFR_LIB_DIR=/usr/lib/x86_64-linux-gnu && cd ..;
 fi
 if [[ "${WITH_MPC}" == "yes" ]]; then
