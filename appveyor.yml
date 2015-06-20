@@ -1,0 +1,19 @@
+environment:
+  matrix:
+    - BUILD_TYPE: "Debug"
+    - BUILD_TYPE: "Release"
+install:
+- set PATH=C:\MinGW\bin;%PATH%
+- mingw-get update
+# For MinGW to work, sh.exe must not be in the path
+- rename "C:\Program Files (x86)\Git\bin\sh.exe" "sh2.exe"
+- mingw-get install mingw32-gmp
+
+build_script:
+- cd C:\projects\symengine
+- cmake -G "MinGW Makefiles" -DCOMMON_DIR=C:\MinGW -DCMAKE_BUILD_TYPE=%BUILD_TYPE% .
+- mingw32-make
+- mingw32-make install
+
+test_script:
+- ctest --output-on-failure
