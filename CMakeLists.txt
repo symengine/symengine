@@ -31,6 +31,11 @@ if (CMAKE_CXX_COMPILER_ID MATCHES Clang)
         "${CMAKE_CXX_FLAGS_RELEASE} -Wno-unused-parameter")
 endif()
 
+if ((NOT "${CMAKE_CXX_FLAGS_RELEASE}" MATCHES "std=c\\+\\+0x") AND
+    (NOT "${CMAKE_CXX_FLAGS_RELEASE}" MATCHES "std=c\\+\\+11"))
+    message(FATAL_ERROR "CXX flags not set properly. Remove CMakeCache.txt and run cmake again")
+endif()
+
 # Check c++11 support
 try_compile(CXX11 ${CMAKE_CURRENT_BINARY_DIR}/cxx ${CMAKE_SOURCE_DIR}/cmake/checkcxx11.cpp
     COMPILE_DEFINITIONS ${CMAKE_CXX_FLAGS_RELEASE} OUTPUT_VARIABLE CXX11_ERROR_LOG)
