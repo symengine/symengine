@@ -2,6 +2,9 @@ language: cpp
 compiler:
   - gcc
   - clang
+os:
+  - linux
+  - osx
 env:
   ## All these variables are sent into the bin/test_travis.sh script. See this
   ## script to know how they are used. Most of them are just passed to cmake,
@@ -58,9 +61,17 @@ env:
 matrix:
   exclude:
     - compiler: clang
+    - os: osx
   include:
     - env: BUILD_TYPE="Debug" WITH_BFD="yes" WITH_SYMENGINE_ASSERT="yes" WITH_PYTHON="yes" PYTHON_VERSION="2.7"
       compiler: clang
+      os: linux
+    - env: BUILD_TYPE="Debug" WITH_SYMENGINE_ASSERT="yes" WITH_PYTHON="yes" PYTHON_VERSION="2.7"
+      compiler: clang
+      os: osx
+    - env: BUILD_TYPE="Debug" WITH_SYMENGINE_ASSERT="yes" WITH_PYTHON="yes" PYTHON_VERSION="2.7"
+      compiler: gcc
+      os: osx
 
 install:
   - source bin/install_travis.sh
