@@ -505,6 +505,7 @@ void test_complex()
     r3 = Rational::from_two_ints(integer(10), integer(7));
     c3 = Complex::from_two_nums(*r2, *r3);
     assert(eq(addnum(c1, c1), c3));
+
     // Final result is rational
     r1 = Rational::from_two_ints(integer(1), integer(4));
     r2 = Rational::from_two_ints(integer(5), integer(7));
@@ -616,6 +617,23 @@ void test_complex()
 
     c2 = Complex::from_two_nums(*r3, *r3);
     SYMENGINE_CHECK_THROW(divnum(c1, c2), std::runtime_error);
+
+    r1 = integer(2);
+    c1 = Complex::from_two_nums(Integer(2), Integer(3));
+    c2 = mulnum(c1, c1);
+    c3 = Complex::from_two_nums(Integer(-5), Integer(12));
+    assert(eq(pownum(c1, r1), c2));
+    assert(eq(pownum(c1, r1), c3));
+
+    r1 = integer(-2);
+    c2 = divnum(one, c2);
+    assert(eq(pownum(c1, r1), c2));
+
+    r2 = Rational::from_two_ints(integer(5), integer(12));
+    r1 = Rational::from_two_ints(integer(5), integer(78));
+    r3 = Rational::from_two_ints(integer(-5), integer(52));
+    c2 = Complex::from_two_nums(*r1, *r3);
+    assert(eq(divnum(r2, c1), c2));
 }
 
 void test_has()

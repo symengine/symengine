@@ -194,6 +194,18 @@ public:
             return from_mpq((this->real_ * other.i) / conjugate, (this->imaginary_ * (-other.i)) / conjugate);
         }
     }
+    /*! Divide other by the Complex
+    * \param other of type Rational
+    * */
+    inline RCP<const Number> rdivcomp(const Rational &other) const {
+        mpq_class conjugate = this->real_*this->real_ + this->imaginary_*this->imaginary_;
+        if (conjugate.get_num() == 0) {
+            throw std::runtime_error("Divide by zero.");
+        } else {
+            return from_mpq((this->real_ * other.i) / conjugate, (this->imaginary_ * (-other.i)) / conjugate);
+        }
+    }
+
     /*! Pow Complex
      * \param other of type Integer
      * */
@@ -261,6 +273,8 @@ public:
     virtual RCP<const Number> rdiv(const Number &other) const {
         if (is_a<Integer>(other)) {
             return rdivcomp(static_cast<const Integer&>(other));
+        } else if (is_a<Rational>(other)) {
+            return rdivcomp(static_cast<const Rational&>(other));
         } else {
             throw std::runtime_error("Not implemented.");
         }
