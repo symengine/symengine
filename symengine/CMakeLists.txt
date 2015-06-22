@@ -60,7 +60,7 @@ set(HEADERS
 # Configure SymEngine using our CMake options:
 configure_file(symengine_config.h.in symengine_config.h)
 # Include the config file:
-include_directories(BEFORE ${symengine_BINARY_DIR}/src)
+include_directories(BEFORE ${symengine_BINARY_DIR})
 
 add_library(symengine ${SRC})
 target_link_libraries(symengine teuchos ${LIBS})
@@ -70,8 +70,8 @@ install(TARGETS symengine
             ARCHIVE DESTINATION lib
             LIBRARY DESTINATION lib
         )
-install(FILES ${HEADERS} "${symengine_BINARY_DIR}/src/symengine_config.h"
-    DESTINATION include)
+install(FILES ${HEADERS} "${symengine_BINARY_DIR}/symengine/symengine_config.h"
+    DESTINATION include/symengine)
 
 if (BUILD_TESTS)
     add_subdirectory(tests)
