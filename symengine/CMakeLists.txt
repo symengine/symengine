@@ -61,6 +61,8 @@ set(HEADERS
 configure_file(symengine_config.h.in symengine_config.h)
 # Include the config file:
 include_directories(BEFORE ${symengine_BINARY_DIR})
+# Include the source directory
+include_directories(BEFORE ${symengine_SOURCE_DIR})
 
 add_library(symengine ${SRC})
 target_link_libraries(symengine teuchos ${LIBS})
