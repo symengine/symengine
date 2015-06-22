@@ -31,17 +31,35 @@ if (CMAKE_CXX_COMPILER_ID MATCHES Clang)
         "${CMAKE_CXX_FLAGS_RELEASE} -Wno-unused-parameter")
 endif()
 
+if ((NOT "${CMAKE_CXX_FLAGS_RELEASE}" MATCHES "std=c\\+\\+0x") AND
+    (NOT "${CMAKE_CXX_FLAGS_RELEASE}" MATCHES "std=c\\+\\+11"))
+    message(FATAL_ERROR "CXX flags not set properly. Remove CMakeCache.txt and run cmake again")
+endif()
+
 # Check c++11 support
-try_compile(CXX11 ${CMAKE_CURRENT_BINARY_DIR}/cxx ${CMAKE_SOURCE_DIR}/cmake/checkcxx11.cpp
-    COMPILE_DEFINITIONS ${CMAKE_CXX_FLAGS_RELEASE} OUTPUT_VARIABLE CXX11_ERROR_LOG)
+try_compile(CXX11 "${CMAKE_CURRENT_BINARY_DIR}/cxx" "${CMAKE_SOURCE_DIR}/cmake/checkcxx11.cpp"
+    COMPILE_DEFINITIONS "${CMAKE_CXX_FLAGS_RELEASE}" OUTPUT_VARIABLE CXX11_ERROR_LOG)
 if (NOT ${CXX11})
-    message(FATAL_ERROR "Compiler does not support C++11 constructs \nCXX11 ERROR LOG : ${CXX11_ERROR_LOG}")
+    message(FATAL_ERROR "Compiler does not support C++11 constructs. \n"
+        "CXX11 Error Log : \n${CXX11_ERROR_LOG}")
 endif()
 
 # GMP
 find_package(GMP REQUIRED)
 include_directories(${GMP_INCLUDE_DIRS})
 set(LIBS ${LIBS} ${GMP_LIBRARIES})
+
+# Check gmpxx
+try_compile(GMPXX "${CMAKE_CURRENT_BINARY_DIR}/cxx" "${CMAKE_SOURCE_DIR}/cmake/checkgmpxx.cpp"
+    CMAKE_FLAGS "-DCOMPILE_DEFINITIONS=${CMAKE_CXX_FLAGS_RELEASE}"
+    CMAKE_FLAGS "-DINCLUDE_DIRECTORIES=${GMP_INCLUDE_DIRS}"
+    CMAKE_FLAGS "-DLINK_LIBRARIES=${GMP_LIBRARIES}"
+    OUTPUT_VARIABLE GMPXX_ERROR_LOG)
+if (NOT ${GMPXX})
+    message(FATAL_ERROR "GMP library being linked is not supported by CMAKE_CXX_COMPILER used. \n"
+        "Recompile GMP with C++ support using ${CMAKE_CXX_COMPILER}, remove CMakeCache.txt and try again.\n"
+        "Error Log : \n${GMPXX_ERROR_LOG}")
+endif()
 
 # ECM
 set(WITH_ECM no
