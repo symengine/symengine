@@ -126,10 +126,11 @@ void poly_mul3(const hash_set &A, const hash_set &B, hash_set &C)
     for (auto &a: A) {
         for (auto &b: B) {
             temp.first = a.first + b.first;
-            auto it = C.find(temp);
+            temp.second = a.second * b.second;
+            size_t bucket = C._bucket(temp.first);
+            auto it = C._find(temp, bucket);
             if (it == C.end()) {
-                temp.second = a.second * b.second;
-                C.insert(temp);
+                C._unique_insert(temp, bucket);
             } else {
                 piranha::math::multiply_accumulate(it->second,a.second,b.second);
             }
