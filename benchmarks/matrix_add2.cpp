@@ -3,9 +3,9 @@
 
 #include "Teuchos_stacktrace.hpp"
 
-#include "basic.h"
-#include "matrix.h"
-#include "symbol.h"
+#include <symengine/basic.h>
+#include <symengine/matrix.h>
+#include <symengine/symbol.h>
 
 using SymEngine::Basic;
 using SymEngine::RCP;

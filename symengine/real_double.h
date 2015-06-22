@@ -8,11 +8,11 @@
 
 #include <cmath>
 #include <complex>
-#include "basic.h"
-#include "number.h"
-#include "integer.h"
-#include "rational.h"
-#include "complex.h"
+#include <symengine/basic.h>
+#include <symengine/number.h>
+#include <symengine/integer.h>
+#include <symengine/rational.h>
+#include <symengine/complex.h>
 
 namespace SymEngine {
 

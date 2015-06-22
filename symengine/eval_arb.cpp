@@ -1,16 +1,16 @@
-#include "basic.h"
-#include "symbol.h"
-#include "polynomial.h"
-#include "add.h"
-#include "integer.h"
-#include "rational.h"
-#include "complex.h"
-#include "mul.h"
-#include "pow.h"
-#include "functions.h"
-#include "constants.h"
-#include "visitor.h"
-#include "eval_arb.h"
+#include <symengine/basic.h>
+#include <symengine/symbol.h>
+#include <symengine/polynomial.h>
+#include <symengine/add.h>
+#include <symengine/integer.h>
+#include <symengine/rational.h>
+#include <symengine/complex.h>
+#include <symengine/mul.h>
+#include <symengine/pow.h>
+#include <symengine/functions.h>
+#include <symengine/constants.h>
+#include <symengine/visitor.h>
+#include <symengine/eval_arb.h>
 
 #ifdef HAVE_SYMENGINE_ARB
 

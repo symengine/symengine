@@ -4,9 +4,9 @@
  *
  **/
 #include <cmath>
-#include "basic.h"
-#include "real_double.h"
-#include "complex_double.h"
+#include <symengine/basic.h>
+#include <symengine/real_double.h>
+#include <symengine/complex_double.h>
 
 namespace SymEngine {
 

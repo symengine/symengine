@@ -1,10 +1,10 @@
 #include <iostream>
 #include <chrono>
 
-#include "polynomial.h"
-#include "mul.h"
-#include "pow.h"
-#include "dict.h"
+#include <symengine/polynomial.h>
+#include <symengine/mul.h>
+#include <symengine/pow.h>
+#include <symengine/dict.h>
 
 using SymEngine::UnivariatePolynomial;
 using SymEngine::univariate_polynomial;

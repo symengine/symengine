@@ -5,8 +5,8 @@
 #include <stdexcept>
 #include <string>
 
-#include "symengine_config.h"
-#include "symengine_assert.h"
+#include <symengine/symengine_config.h>
+#include <symengine/symengine_assert.h>
 
 
 #if defined(WITH_SYMENGINE_RCP)

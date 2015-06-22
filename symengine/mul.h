@@ -6,8 +6,8 @@
 #ifndef SYMENGINE_MUL_H
 #define SYMENGINE_MUL_H
 
-#include "basic.h"
-#include "dict.h"
+#include <symengine/basic.h>
+#include <symengine/dict.h>
 
 namespace SymEngine {
 

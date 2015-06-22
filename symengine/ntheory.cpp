@@ -1,9 +1,9 @@
 #include <cmath>
 #include <valarray>
 
-#include "ntheory.h"
-#include "rational.h"
-#include "mul.h"
+#include <symengine/ntheory.h>
+#include <symengine/rational.h>
+#include <symengine/mul.h>
 #ifdef HAVE_SYMENGINE_ECM
 #  include <ecm.h>
 #endif // HAVE_SYMENGINE_ECM
@@ -15,7 +15,7 @@
 #  include "bernoulli.h"
 #  include "rational.h"
 #endif // HAVE_SYMENGINE_ARB
-#include "dict.h"
+#include <symengine/dict.h>
 
 namespace SymEngine {
 

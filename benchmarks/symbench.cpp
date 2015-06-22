@@ -3,14 +3,14 @@
 
 #include "Teuchos_stacktrace.hpp"
 
-#include "basic.h"
-#include "add.h"
-#include "symbol.h"
-#include "integer.h"
-#include "mul.h"
-#include "pow.h"
-#include "constants.h"
-#include "functions.h"
+#include <symengine/basic.h>
+#include <symengine/add.h>
+#include <symengine/symbol.h>
+#include <symengine/integer.h>
+#include <symengine/mul.h>
+#include <symengine/pow.h>
+#include <symengine/constants.h>
+#include <symengine/functions.h>
 
 using SymEngine::Basic;
 using SymEngine::RCP;

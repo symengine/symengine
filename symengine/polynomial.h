@@ -6,11 +6,11 @@
 #ifndef SYMENGINE_POLYNOMIALS_H
 #define SYMENGINE_POLYNOMIALS_H
 
-#include "monomials.h"
-#include "dict.h"
-#include "basic.h"
-#include "integer.h"
-#include "symbol.h"
+#include <symengine/monomials.h>
+#include <symengine/dict.h>
+#include <symengine/basic.h>
+#include <symengine/integer.h>
+#include <symengine/symbol.h>
 
 namespace SymEngine {
 //! UnivariatePolynomial Class

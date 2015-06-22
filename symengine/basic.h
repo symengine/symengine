@@ -20,10 +20,10 @@
 #include <cassert>
 #include <atomic>
 
-#include "symengine_config.h"
-#include "symengine_assert.h"
-#include "symengine_rcp.h"
-#include "dict.h"
+#include <symengine/symengine_config.h>
+#include <symengine/symengine_assert.h>
+#include <symengine/symengine_rcp.h>
+#include <symengine/dict.h>
 
 namespace SymEngine {
 

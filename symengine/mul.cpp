@@ -1,12 +1,12 @@
 #include <stdexcept>
 
-#include "add.h"
-#include "mul.h"
-#include "symbol.h"
-#include "pow.h"
-#include "complex.h"
-#include "functions.h"
-#include "constants.h"
+#include <symengine/add.h>
+#include <symengine/mul.h>
+#include <symengine/symbol.h>
+#include <symengine/pow.h>
+#include <symengine/complex.h>
+#include <symengine/functions.h>
+#include <symengine/constants.h>
 
 namespace SymEngine {
 

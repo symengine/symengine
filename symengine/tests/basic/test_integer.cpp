@@ -1,4 +1,4 @@
-#include "integer.h"
+#include <symengine/integer.h>
 
 using SymEngine::print_stack_on_segfault;
 using SymEngine::RCP;

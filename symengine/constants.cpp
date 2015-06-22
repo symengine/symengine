@@ -1,9 +1,9 @@
-#include "constants.h"
-#include "complex.h"
-#include "functions.h"
-#include "mul.h"
-#include "add.h"
-#include "pow.h"
+#include <symengine/constants.h>
+#include <symengine/complex.h>
+#include <symengine/functions.h>
+#include <symengine/mul.h>
+#include <symengine/add.h>
+#include <symengine/pow.h>
 
 namespace SymEngine {
 

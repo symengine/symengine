@@ -1,8 +1,8 @@
 #include <algorithm>
 
-#include "diophantine.h"
-#include "matrix.h"
-#include "integer.h"
+#include <symengine/diophantine.h>
+#include <symengine/matrix.h>
+#include <symengine/integer.h>
 
 using SymEngine::print_stack_on_segfault;
 using SymEngine::DenseMatrix;

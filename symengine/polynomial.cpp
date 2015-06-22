@@ -1,8 +1,8 @@
-#include "polynomial.h"
-#include "add.h"
-#include "mul.h"
-#include "pow.h"
-#include "constants.h"
+#include <symengine/polynomial.h>
+#include <symengine/add.h>
+#include <symengine/mul.h>
+#include <symengine/pow.h>
+#include <symengine/constants.h>
 
 namespace SymEngine {
 

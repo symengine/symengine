@@ -7,7 +7,7 @@
 #ifndef SYMENGINE_MONOMIALS_H
 #define SYMENGINE_MONOMIALS_H
 
-#include "basic.h"
+#include <symengine/basic.h>
 
 namespace SymEngine {
 //! Monomial multiplication

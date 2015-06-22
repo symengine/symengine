@@ -7,7 +7,7 @@
 #ifndef SYMENGINE_NUMBER_H
 #define SYMENGINE_NUMBER_H
 
-#include "basic.h"
+#include <symengine/basic.h>
 
 namespace SymEngine {
 

@@ -1,11 +1,11 @@
 #include <chrono>
 
-#include "ntheory.h"
-#include "integer.h"
-#include "rational.h"
-#include "add.h"
-#include "mul.h"
-#include "dict.h"
+#include <symengine/ntheory.h>
+#include <symengine/integer.h>
+#include <symengine/rational.h>
+#include <symengine/add.h>
+#include <symengine/mul.h>
+#include <symengine/dict.h>
 
 using SymEngine::Integer;
 using SymEngine::Rational;

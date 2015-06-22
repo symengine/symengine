@@ -1,14 +1,14 @@
 #include <stdexcept>
 
-#include "pow.h"
-#include "add.h"
-#include "mul.h"
-#include "symbol.h"
-#include "integer.h"
-#include "rational.h"
-#include "complex.h"
-#include "constants.h"
-#include "polynomial.h"
+#include <symengine/pow.h>
+#include <symengine/add.h>
+#include <symengine/mul.h>
+#include <symengine/symbol.h>
+#include <symengine/integer.h>
+#include <symengine/rational.h>
+#include <symengine/complex.h>
+#include <symengine/constants.h>
+#include <symengine/polynomial.h>
 
 namespace SymEngine {
 

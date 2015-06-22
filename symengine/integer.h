@@ -7,8 +7,8 @@
 #ifndef SYMENGINE_INTEGER_H
 #define SYMENGINE_INTEGER_H
 
-#include "basic.h"
-#include "number.h"
+#include <symengine/basic.h>
+#include <symengine/number.h>
 
 namespace SymEngine {
 

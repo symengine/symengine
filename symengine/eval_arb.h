@@ -10,8 +10,8 @@
 
 #ifdef HAVE_SYMENGINE_ARB
 
-#include "basic.h"
-#include "arb.h"
+#include <symengine/basic.h>
+#include <symengine/arb.h>
 
 namespace SymEngine {
 

@@ -7,7 +7,7 @@
 #ifndef SYMENGINE_NTHEORY_H
 #define SYMENGINE_NTHEORY_H
 
-#include "integer.h"
+#include <symengine/integer.h>
 
 namespace SymEngine {
 

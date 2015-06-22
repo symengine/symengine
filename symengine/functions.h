@@ -7,8 +7,8 @@
 #ifndef SYMENGINE_FUNCTIONS_H
 #define SYMENGINE_FUNCTIONS_H
 
-#include "basic.h"
-#include "dict.h"
+#include <symengine/basic.h>
+#include <symengine/dict.h>
 
 namespace SymEngine {
 

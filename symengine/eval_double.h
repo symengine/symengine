@@ -6,7 +6,7 @@
 #define SYMENGINE_EVAL_DOUBLE_H
 
 #include <complex>
-#include "basic.h"
+#include <symengine/basic.h>
 
 namespace SymEngine {
 

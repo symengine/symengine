@@ -6,19 +6,19 @@
 #ifndef SYMENGINE_VISITOR_H
 #define SYMENGINE_VISITOR_H
 
-#include "basic.h"
-#include "add.h"
-#include "mul.h"
-#include "pow.h"
-#include "polynomial.h"
-#include "functions.h"
-#include "symbol.h"
-#include "integer.h"
-#include "rational.h"
-#include "complex.h"
-#include "constants.h"
-#include "real_double.h"
-#include "complex_double.h"
+#include <symengine/basic.h>
+#include <symengine/add.h>
+#include <symengine/mul.h>
+#include <symengine/pow.h>
+#include <symengine/polynomial.h>
+#include <symengine/functions.h>
+#include <symengine/symbol.h>
+#include <symengine/integer.h>
+#include <symengine/rational.h>
+#include <symengine/complex.h>
+#include <symengine/constants.h>
+#include <symengine/real_double.h>
+#include <symengine/complex_double.h>
 
 namespace SymEngine {
 

@@ -1,5 +1,5 @@
-#include "basic.h"
-#include "integer.h"
+#include <symengine/basic.h>
+#include <symengine/integer.h>
 
 namespace SymEngine {
 

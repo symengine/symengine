@@ -1,10 +1,10 @@
 #include <algorithm>
 
-#include "matrix.h"
-#include "add.h"
-#include "mul.h"
-#include "integer.h"
-#include "constants.h"
+#include <symengine/matrix.h>
+#include <symengine/add.h>
+#include <symengine/mul.h>
+#include <symengine/integer.h>
+#include <symengine/constants.h>
 
 namespace SymEngine {
 // ----------------------------- CSRMatrix ------------------------------------

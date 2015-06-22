@@ -25,7 +25,7 @@ cdef extern from "<set>" namespace "std":
         iterator begin() nogil
         iterator end() nogil
 
-cdef extern from "symengine_rcp.h" namespace "SymEngine":
+cdef extern from "<symengine/symengine_rcp.h>" namespace "SymEngine":
     cdef enum ENull:
         null
 
@@ -60,7 +60,7 @@ cdef extern from "symengine_rcp.h" namespace "SymEngine":
     void print_stack_on_segfault() nogil
 
 
-cdef extern from "basic.h" namespace "SymEngine":
+cdef extern from "<symengine/basic.h>" namespace "SymEngine":
     ctypedef Basic const_Basic "const SymEngine::Basic"
     ctypedef map[RCP[Basic], RCP[Basic]] map_basic_basic
     ctypedef vector[RCP[Basic]] vec_basic "SymEngine::vec_basic"
@@ -100,44 +100,44 @@ cdef extern from "basic.h" namespace "SymEngine":
     RCP[const Basic] expand(RCP[const Basic] &o) nogil except +
 
 
-cdef extern from "symbol.h" namespace "SymEngine":
+cdef extern from "<symengine/symbol.h>" namespace "SymEngine":
     cdef cppclass Symbol(Basic):
         Symbol(string name) nogil
         string get_name() nogil
 
-cdef extern from "number.h" namespace "SymEngine":
+cdef extern from "<symengine/number.h>" namespace "SymEngine":
     cdef cppclass Number(Basic):
         pass
 
-cdef extern from "integer.h" namespace "SymEngine":
+cdef extern from "<symengine/integer.h>" namespace "SymEngine":
     cdef cppclass Integer(Number):
         Integer(int i) nogil
         Integer(mpz_class i) nogil
         int compare(const Basic &o) nogil
         mpz_class as_mpz() nogil
 
-cdef extern from "rational.h" namespace "SymEngine":
+cdef extern from "<symengine/rational.h>" namespace "SymEngine":
     cdef cppclass Rational(Number):
         mpq_class as_mpq() nogil
     cdef void get_num_den(const RCP[Rational] &rat, const Ptr[RCP[Integer]] &num,
                      const Ptr[RCP[Integer]] &den) nogil
 
-cdef extern from "complex.h" namespace "SymEngine":
+cdef extern from "<symengine/complex.h>" namespace "SymEngine":
     cdef cppclass Complex(Number):
         RCP[const Number] real_part() nogil
         RCP[const Number] imaginary_part() nogil
 
-cdef extern from "real_double.h" namespace "SymEngine":
+cdef extern from "<symengine/real_double.h>" namespace "SymEngine":
     cdef cppclass RealDouble(Number):
         RealDouble(double x) nogil
 
-cdef extern from "complex_double.h" namespace "SymEngine":
+cdef extern from "<symengine/complex_double.h>" namespace "SymEngine":
     cdef cppclass ComplexDouble(Number):
         ComplexDouble(double complex x) nogil
         RCP[const Number] real_part() nogil
         RCP[const Number] imaginary_part() nogil
 
-cdef extern from "constants.h" namespace "SymEngine":
+cdef extern from "<symengine/constants.h>" namespace "SymEngine":
     cdef cppclass Constant(Basic):
         Constant(string name) nogil
         string get_name() nogil
@@ -146,14 +146,14 @@ cdef extern from "constants.h" namespace "SymEngine":
     RCP[const Basic] pi
 
 
-cdef extern from "add.h" namespace "SymEngine":
+cdef extern from "<symengine/add.h>" namespace "SymEngine":
     cdef RCP[const Basic] add(RCP[const Basic] &a, RCP[const Basic] &b) nogil except+
     cdef RCP[const Basic] sub(RCP[const Basic] &a, RCP[const Basic] &b) nogil except+
 
     cdef cppclass Add(Basic):
         void as_two_terms(const Ptr[RCP[Basic]] &a, const Ptr[RCP[Basic]] &b)
 
-cdef extern from "mul.h" namespace "SymEngine":
+cdef extern from "<symengine/mul.h>" namespace "SymEngine":
     cdef RCP[const Basic] mul(RCP[const Basic] &a, RCP[const Basic] &b) nogil except+
     cdef RCP[const Basic] div(RCP[const Basic] &a, RCP[const Basic] &b) nogil except+
     cdef RCP[const Basic] neg(RCP[const Basic] &a) nogil except+
@@ -161,7 +161,7 @@ cdef extern from "mul.h" namespace "SymEngine":
     cdef cppclass Mul(Basic):
         void as_two_terms(const Ptr[RCP[Basic]] &a, const Ptr[RCP[Basic]] &b)
 
-cdef extern from "pow.h" namespace "SymEngine":
+cdef extern from "<symengine/pow.h>" namespace "SymEngine":
     cdef RCP[const Basic] pow(RCP[const Basic] &a, RCP[const Basic] &b) nogil except+
     cdef RCP[const Basic] sqrt(RCP[const Basic] &x) nogil except+
     cdef RCP[const Basic] exp(RCP[const Basic] &x) nogil except+
@@ -171,7 +171,7 @@ cdef extern from "pow.h" namespace "SymEngine":
         RCP[const Basic] get_exp() nogil
 
 
-cdef extern from "basic.h" namespace "SymEngine":
+cdef extern from "<symengine/basic.h>" namespace "SymEngine":
     # We need to specialize these for our classes:
     RCP[const Basic] rcp(Symbol *p) nogil
     RCP[const Basic] rcp(Constant *p) nogil
@@ -182,7 +182,7 @@ cdef extern from "basic.h" namespace "SymEngine":
     RCP[const Basic] rcp(RealDouble *p) nogil
     RCP[const Basic] rcp(ComplexDouble *p) nogil
 
-cdef extern from "functions.h" namespace "SymEngine":
+cdef extern from "<symengine/functions.h>" namespace "SymEngine":
     cdef RCP[const Basic] sin(RCP[const Basic] &arg) nogil except+
     cdef RCP[const Basic] cos(RCP[const Basic] &arg) nogil except+
     cdef RCP[const Basic] function_symbol(string name, const vec_basic &arg) nogil except+
@@ -219,7 +219,7 @@ cdef extern from "functions.h" namespace "SymEngine":
     cdef cppclass Abs(Function):
         RCP[const Basic] get_arg() nogil
 
-cdef extern from "matrix.h" namespace "SymEngine":
+cdef extern from "<symengine/matrix.h>" namespace "SymEngine":
     cdef cppclass MatrixBase:
         const unsigned nrows() nogil
         const unsigned ncols() nogil
@@ -263,7 +263,7 @@ cdef extern from "matrix.h" namespace "SymEngine":
     void LDL_solve "SymEngine::LDL_solve"(const DenseMatrix &A, const DenseMatrix &b,
         DenseMatrix &x) nogil
 
-cdef extern from "ntheory.h" namespace "SymEngine":
+cdef extern from "<symengine/ntheory.h>" namespace "SymEngine":
     int probab_prime_p(const Integer &a, int reps)
     RCP[const Integer] nextprime (const Integer &a) nogil
     RCP[const Integer] gcd(const Integer &a, const Integer &b) nogil
@@ -321,9 +321,9 @@ cdef extern from "ntheory.h" namespace "SymEngine":
         sieve_iterator(unsigned limit) nogil
         unsigned next_prime() nogil
 
-cdef extern from "eval_double.h" namespace "SymEngine":
+cdef extern from "<symengine/eval_double.h>" namespace "SymEngine":
     double eval_double(const Basic &b) nogil except +
 
-cdef extern from "visitor.h" namespace "SymEngine":
+cdef extern from "<symengine/visitor.h>" namespace "SymEngine":
     bool has_symbol(const Basic &b, const RCP[const Symbol] &x) nogil except +
     set_basic free_symbols(const Basic &b) nogil except +

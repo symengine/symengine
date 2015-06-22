@@ -1,6 +1,6 @@
 #include <stdexcept>
 
-#include "monomials.h"
+#include <symengine/monomials.h>
 
 namespace SymEngine {
 

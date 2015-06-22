@@ -1,6 +1,6 @@
-#include "symbol.h"
-#include "integer.h"
-#include "constants.h"
+#include <symengine/symbol.h>
+#include <symengine/integer.h>
+#include <symengine/constants.h>
 
 namespace SymEngine {
 

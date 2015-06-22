@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "cwrapper.h"
+#include <symengine/cwrapper.h>
 
 void test_cwrapper() {
     char* s;

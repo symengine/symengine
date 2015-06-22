@@ -1,11 +1,11 @@
 #include <chrono>
 
-#include "matrix.h"
-#include "integer.h"
-#include "symbol.h"
-#include "add.h"
-#include "mul.h"
-#include "pow.h"
+#include <symengine/matrix.h>
+#include <symengine/integer.h>
+#include <symengine/symbol.h>
+#include <symengine/add.h>
+#include <symengine/mul.h>
+#include <symengine/pow.h>
 
 using SymEngine::print_stack_on_segfault;
 using SymEngine::RCP;

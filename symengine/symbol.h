@@ -6,7 +6,7 @@
 #ifndef SYMENGINE_SYMBOL_H
 #define SYMENGINE_SYMBOL_H
 
-#include "basic.h"
+#include <symengine/basic.h>
 
 namespace SymEngine {
 

@@ -7,12 +7,12 @@
 #define SYMENGINE_COMPLEX_DOUBLE_H
 
 #include <cmath>
-#include "basic.h"
-#include "number.h"
-#include "integer.h"
-#include "rational.h"
-#include "complex.h"
-#include "real_double.h"
+#include <symengine/basic.h>
+#include <symengine/number.h>
+#include <symengine/integer.h>
+#include <symengine/rational.h>
+#include <symengine/complex.h>
+#include <symengine/real_double.h>
 
 namespace SymEngine {
 //! Complex Double Class to hold std::complex<double> values

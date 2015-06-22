@@ -1,17 +1,17 @@
 #include <cmath>
 #include <iostream>
 
-#include "basic.h"
-#include "add.h"
-#include "symbol.h"
-#include "integer.h"
-#include "rational.h"
-#include "complex.h"
-#include "mul.h"
-#include "pow.h"
-#include "functions.h"
-#include "visitor.h"
-#include "eval_double.h"
+#include <symengine/basic.h>
+#include <symengine/add.h>
+#include <symengine/symbol.h>
+#include <symengine/integer.h>
+#include <symengine/rational.h>
+#include <symengine/complex.h>
+#include <symengine/mul.h>
+#include <symengine/pow.h>
+#include <symengine/functions.h>
+#include <symengine/visitor.h>
+#include <symengine/eval_double.h>
 
 using SymEngine::Basic;
 using SymEngine::Complex;

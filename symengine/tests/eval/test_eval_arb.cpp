@@ -3,15 +3,15 @@
 #include <ctime>
 #include <cmath>
 
-#include "basic.h"
-#include "integer.h"
-#include "rational.h"
-#include "add.h"
-#include "mul.h"
-#include "pow.h"
-#include "functions.h"
-#include "eval_arb.h"
-#include "constants.h"
+#include <symengine/basic.h>
+#include <symengine/integer.h>
+#include <symengine/rational.h>
+#include <symengine/add.h>
+#include <symengine/mul.h>
+#include <symengine/pow.h>
+#include <symengine/functions.h>
+#include <symengine/eval_arb.h>
+#include <symengine/constants.h>
 
 using SymEngine::RCP;
 using SymEngine::Basic;

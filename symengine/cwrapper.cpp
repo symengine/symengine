@@ -1,16 +1,16 @@
 #include <stdlib.h>
 
-#include "basic.h"
-#include "symbol.h"
-#include "cwrapper.h"
-#include "integer.h"
-#include "rational.h"
-#include "functions.h"
-#include "mul.h"
-#include "pow.h"
-#include "add.h"
-#include "number.h"
-#include "constants.h"
+#include <symengine/basic.h>
+#include <symengine/symbol.h>
+#include <symengine/cwrapper.h>
+#include <symengine/integer.h>
+#include <symengine/rational.h>
+#include <symengine/functions.h>
+#include <symengine/mul.h>
+#include <symengine/pow.h>
+#include <symengine/add.h>
+#include <symengine/number.h>
+#include <symengine/constants.h>
 
 using SymEngine::Basic;
 using SymEngine::RCP;

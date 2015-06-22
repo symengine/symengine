@@ -1,6 +1,6 @@
 #include <algorithm>
 
-#include "printer.h"
+#include <symengine/printer.h>
 
 namespace SymEngine {
 

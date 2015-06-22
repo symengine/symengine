@@ -1,8 +1,8 @@
-#include "diophantine.h"
-#include "constants.h"
-#include "basic.h"
-#include "add.h"
-#include "mul.h"
+#include <symengine/diophantine.h>
+#include <symengine/constants.h>
+#include <symengine/basic.h>
+#include <symengine/add.h>
+#include <symengine/mul.h>
 
 namespace SymEngine {
 

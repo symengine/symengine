@@ -1,15 +1,15 @@
 #include <iostream>
 #include <chrono>
 
-#include "basic.h"
-#include "add.h"
-#include "symbol.h"
-#include "dict.h"
-#include "integer.h"
-#include "mul.h"
-#include "pow.h"
-#include "functions.h"
-#include "constants.h"
+#include <symengine/basic.h>
+#include <symengine/add.h>
+#include <symengine/symbol.h>
+#include <symengine/dict.h>
+#include <symengine/integer.h>
+#include <symengine/mul.h>
+#include <symengine/pow.h>
+#include <symengine/functions.h>
+#include <symengine/constants.h>
 
 using SymEngine::Basic;
 using SymEngine::Add;

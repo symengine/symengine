@@ -1,6 +1,6 @@
-#include "complex.h"
-#include "constants.h"
-#include "ntheory.h"
+#include <symengine/complex.h>
+#include <symengine/constants.h>
+#include <symengine/ntheory.h>
 
 namespace SymEngine {
 

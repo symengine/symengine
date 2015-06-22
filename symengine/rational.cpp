@@ -1,4 +1,4 @@
-#include "rational.h"
+#include <symengine/rational.h>
 
 namespace SymEngine {
 

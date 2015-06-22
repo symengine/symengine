@@ -1,4 +1,4 @@
-#include "matrix.h"
+#include <symengine/matrix.h>
 
 namespace SymEngine {
 

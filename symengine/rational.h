@@ -6,10 +6,10 @@
 #ifndef SYMENGINE_RATIONAL_H
 #define SYMENGINE_RATIONAL_H
 
-#include "basic.h"
-#include "number.h"
-#include "integer.h"
-#include "constants.h"
+#include <symengine/basic.h>
+#include <symengine/number.h>
+#include <symengine/integer.h>
+#include <symengine/constants.h>
 
 namespace SymEngine {
 //! Rational Class

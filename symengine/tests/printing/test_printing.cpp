@@ -1,16 +1,16 @@
 #include <chrono>
 
-#include "basic.h"
-#include "integer.h"
-#include "mul.h"
-#include "pow.h"
-#include "polynomial.h"
-#include "symbol.h"
-#include "rational.h"
-#include "complex.h"
-#include "add.h"
-#include "matrix.h"
-#include "printer.h"
+#include <symengine/basic.h>
+#include <symengine/integer.h>
+#include <symengine/mul.h>
+#include <symengine/pow.h>
+#include <symengine/polynomial.h>
+#include <symengine/symbol.h>
+#include <symengine/rational.h>
+#include <symengine/complex.h>
+#include <symengine/add.h>
+#include <symengine/matrix.h>
+#include <symengine/printer.h>
 
 using SymEngine::RCP;
 using SymEngine::Basic;

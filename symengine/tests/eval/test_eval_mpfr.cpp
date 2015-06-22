@@ -1,9 +1,9 @@
-#include "basic.h"
-#include "integer.h"
-#include "add.h"
-#include "mul.h"
-#include "eval_mpfr.h"
-#include "constants.h"
+#include <symengine/basic.h>
+#include <symengine/integer.h>
+#include <symengine/add.h>
+#include <symengine/mul.h>
+#include <symengine/eval_mpfr.h>
+#include <symengine/constants.h>
 
 using SymEngine::RCP;
 using SymEngine::Basic;

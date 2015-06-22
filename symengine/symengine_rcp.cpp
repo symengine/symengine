@@ -1,7 +1,7 @@
 #include <cstddef>
 #include <stdexcept>
 
-#include "symengine_rcp.h"
+#include <symengine/symengine_rcp.h>
 #include "Teuchos_RCP.hpp"
 
 namespace SymEngine {

@@ -6,8 +6,8 @@
 #ifndef SYMENGINE_RINGS_H
 #define SYMENGINE_RINGS_H
 
-#include "basic.h"
-#include "dict.h"
+#include <symengine/basic.h>
+#include <symengine/dict.h>
 
 namespace SymEngine {
 

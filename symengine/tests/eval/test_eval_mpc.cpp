@@ -1,12 +1,12 @@
-#include "basic.h"
-#include "integer.h"
-#include "add.h"
-#include "mul.h"
-#include "pow.h"
-#include "eval_mpc.h"
-#include "eval_mpfr.h"
-#include "constants.h"
-#include "functions.h"
+#include <symengine/basic.h>
+#include <symengine/integer.h>
+#include <symengine/add.h>
+#include <symengine/mul.h>
+#include <symengine/pow.h>
+#include <symengine/eval_mpc.h>
+#include <symengine/eval_mpfr.h>
+#include <symengine/constants.h>
+#include <symengine/functions.h>
 
 using SymEngine::RCP;
 using SymEngine::Basic;

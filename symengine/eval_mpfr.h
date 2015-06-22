@@ -9,8 +9,8 @@
 
 #ifdef HAVE_SYMENGINE_MPFR
 
-#include "basic.h"
-#include "mpfr.h"
+#include <symengine/basic.h>
+#include <symengine/mpfr.h>
 
 namespace SymEngine {
 

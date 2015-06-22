@@ -6,12 +6,12 @@
 #ifndef SYMENGINE_POW_H
 #define SYMENGINE_POW_H
 
-#include "basic.h"
-#include "dict.h"
-#include "mul.h"
-#include "integer.h"
-#include "ntheory.h"
-#include "constants.h"
+#include <symengine/basic.h>
+#include <symengine/dict.h>
+#include <symengine/mul.h>
+#include <symengine/integer.h>
+#include <symengine/ntheory.h>
+#include <symengine/constants.h>
 
 namespace SymEngine {
 

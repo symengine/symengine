@@ -1,7 +1,7 @@
 #ifndef SYMENGINE_MATRIX_H
 #define SYMENGINE_MATRIX_H
 
-#include "basic.h"
+#include <symengine/basic.h>
 
 namespace SymEngine {
 

@@ -5,8 +5,8 @@
  **/
 #include <cmath>
 #include <complex>
-#include "basic.h"
-#include "complex_double.h"
+#include <symengine/basic.h>
+#include <symengine/complex_double.h>
 
 namespace SymEngine {
 

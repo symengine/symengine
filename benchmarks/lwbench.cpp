@@ -4,14 +4,14 @@
 
 #include "Teuchos_stacktrace.hpp"
 
-#include "ntheory.h"
-#include "mul.h"
-#include "integer.h"
-#include "basic.h"
-#include "constants.h"
-#include "add.h"
-#include "pow.h"
-#include "symbol.h"
+#include "symengine/ntheory.h"
+#include <symengine/mul.h>
+#include <symengine/integer.h>
+#include <symengine/basic.h>
+#include "symengine/constants.h"
+#include <symengine/add.h>
+#include <symengine/pow.h>
+#include <symengine/symbol.h>
 
 using SymEngine::div;
 using SymEngine::factorial;
