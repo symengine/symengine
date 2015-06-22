@@ -119,13 +119,6 @@ if (WITH_MPC)
     set(WITH_MPFR yes)
 endif()
 
-if (WITH_MPFR)
-    find_package(MPFR REQUIRED)
-    include_directories(${MPFR_INCLUDE_DIRS})
-    set(LIBS ${LIBS} ${MPFR_LIBRARIES})
-    set(HAVE_SYMENGINE_MPFR yes)
-endif()
-
 # Piranha
 set(WITH_PIRANHA no
     CACHE BOOL "Build with Piranha")
@@ -141,6 +134,7 @@ set(WITH_PTHREAD no
 if (WITH_PIRANHA)
     set(WITH_BOOST yes)
     set(WITH_PTHREAD yes)
+    set(WITH_MPFR yes)
 
     find_package(Piranha REQUIRED)
     include_directories(${PIRANHA_INCLUDE_DIRS})
@@ -159,6 +153,13 @@ if (WITH_BOOST)
     include_directories(${Boost_INCLUDE_DIRS})
     set(LIBS ${LIBS} ${Boost_LIBRARIES})
     set(HAVE_SYMENGINE_BOOST yes)
+endif()
+
+if (WITH_MPFR)
+    find_package(MPFR REQUIRED)
+    include_directories(${MPFR_INCLUDE_DIRS})
+    set(LIBS ${LIBS} ${MPFR_LIBRARIES})
+    set(HAVE_SYMENGINE_MPFR yes)
 endif()
 
 # Python
