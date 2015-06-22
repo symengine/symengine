@@ -75,3 +75,7 @@ VALUE cbasic_pow(VALUE self, VALUE operand2){
 VALUE cbasic_neg(VALUE self){
     return cbasic_unary_op(self, basic_neg);
 }
+
+VALUE cbasic_expand(VALUE self){
+    return cbasic_unary_op(self, basic_expand);
+}
