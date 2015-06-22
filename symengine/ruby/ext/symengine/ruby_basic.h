@@ -19,4 +19,6 @@ VALUE cbasic_pow(VALUE self, VALUE operand2);
 
 VALUE cbasic_neg(VALUE self);
 
+VALUE cbasic_to_str(VALUE self);
+
 VALUE cbasic_expand(VALUE self);

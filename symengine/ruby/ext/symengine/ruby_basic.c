@@ -76,6 +76,20 @@ VALUE cbasic_neg(VALUE self){
     return cbasic_unary_op(self, basic_neg);
 }
 
+VALUE cbasic_to_str(VALUE self){
+    basic_struct *this;
+    char *str_ptr;
+    VALUE result;
+
+    Data_Get_Struct(self, basic_struct, this);
+
+    str_ptr = basic_str(this);
+    result = rb_str_new_cstr(str_ptr);
+    basic_str_free(str_ptr);
+
+    return result;
+}
+
 VALUE cbasic_expand(VALUE self){
     return cbasic_unary_op(self, basic_expand);
 }
