@@ -63,6 +63,8 @@ int main(int argc, char* argv[])
     poly2hashset(P1, l);
     poly2hashset(P2, m);
 
+    n.rehash(10000);
+
     std::cout << "poly_mul start" << std::endl;
     auto t1 = std::chrono::high_resolution_clock::now();
     poly_mul3(l, m, n);

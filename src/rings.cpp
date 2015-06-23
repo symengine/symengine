@@ -122,15 +122,22 @@ void poly2hashset(const umap_vec_mpz &A, hash_set &B)
 void poly_mul3(const hash_set &A, const hash_set &B, hash_set &C)
 {   
     my_pair temp;
-    C.rehash(10000);
     for (auto &a: A) {
         for (auto &b: B) {
             temp.first = a.first + b.first;
-            temp.second = a.second * b.second;
-            size_t bucket = C._bucket(temp.first);
+            size_t bucket = C._bucket(temp);
             auto it = C._find(temp, bucket);
             if (it == C.end()) {
+                // Check it the load factor of C is too large.
+                if ((double(C.size()) + 1) / C.bucket_count() > C.max_load_factor()) {
+                    // Increase the size of the table.
+                    C._increase_size();
+                    // Recompute the bucker.
+                    bucket = C._bucket(temp);
+                }
+                temp.second = a.second * b.second;
                 C._unique_insert(temp, bucket);
+                C._update_size(C.size() + 1u);
             } else {
                 piranha::math::multiply_accumulate(it->second,a.second,b.second);
             }
