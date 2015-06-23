@@ -10,7 +10,7 @@
 #ifdef HAVE_SYMENGINE_MPC
 
 #include <symengine/basic.h>
-#include <symengine/mpc.h>
+#include <mpc.h>
 
 namespace SymEngine {
 

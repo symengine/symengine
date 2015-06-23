@@ -104,7 +104,7 @@ else
 
     echo "Running tests using installed SymEngine:"
     # C++
-    cd $SOURCE_DIR/src/tests/basic/
+    cd $SOURCE_DIR/symengine/tests/basic/
     extra_libs=""
     if [[ "${WITH_BFD}" != "" ]]; then
         extra_libs="$extra_libs -lbfd"
