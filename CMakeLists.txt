@@ -386,5 +386,7 @@ endif()
 
 message("WITH_OPENMP: ${WITH_OPENMP}")
 
-message("Copying source of python wrappers into: ${CMAKE_CURRENT_BINARY_DIR}")
-file(COPY symengine/python DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+if (WITH_PYTHON)
+    message("Copying source of python wrappers into: ${CMAKE_CURRENT_BINARY_DIR}/symengine/python/symengine")
+    file(COPY symengine/python/symengine/ DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/symengine/python/symengine)
+endif()
