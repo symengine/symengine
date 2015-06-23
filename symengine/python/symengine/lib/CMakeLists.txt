@@ -3,8 +3,8 @@ set(SRC
     )
 
 include_directories(${PYTHON_INCLUDE_PATH})
-include_directories(BEFORE ${symengine_BINARY_DIR}/src ${teuchos_BINARY_DIR})
-include_directories(BEFORE ${CMAKE_SOURCE_DIR}/src)
+include_directories(BEFORE ${symengine_BINARY_DIR} ${teuchos_BINARY_DIR})
+include_directories(BEFORE ${symengine_SOURCE_DIR} ${teuchos_SOURCE_DIR})
 
 cython_add_module_pyx(symengine_wrapper symengine.pxd)
 add_python_library(symengine_wrapper ${SRC})
