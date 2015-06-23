@@ -5,8 +5,8 @@ Gem::Specification.new do |gem|
 	gem.description = "This gem provides a Ruby interface for SymEngine, a fast C++ library for symbolic manipulation, so that the you can use the features of SymEngine in ruby."
 	gem.authors = ['Abinash Meher']
 	gem.email = ["abinashdakshana999@gmail.com"]
-	gem.extensions = ['ext/symengine/extconf.rb']
-	gem.files = Dir["lib/**/*.rb", "bin/*", "LICENSE", "*.md"]
+	gem.homepage = 'https://github.com/sympy/symengine'
+	gem.files = Dir["lib/**/*", "bin/*", "LICENSE", "*.md"]
 	gem.require_paths = ["lib"]
 	gem.license = 'MIT'
 
