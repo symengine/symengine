@@ -9,4 +9,8 @@ Gem::Specification.new do |gem|
 	gem.files = Dir["lib/**/*.rb", "bin/*", "LICENSE", "*.md"]
 	gem.require_paths = ["lib"]
 	gem.license = 'MIT'
+
+	gem.add_development_dependency 'bundler', '~> 1.7'
+	gem.add_development_dependency 'rspec', '~> 3.0'
+    gem.add_development_dependency 'rdoc', '~> 4.0'
 end
