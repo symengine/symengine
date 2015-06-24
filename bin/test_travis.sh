@@ -89,7 +89,9 @@ else
     ctest --output-on-failure
     # Python
     if [[ "${WITH_PYTHON}" == "yes" ]]; then
+        cd symengine/python
         nosetests -v
+        cd ../../
     fi
     # Ruby
     if [[ "${WITH_RUBY}" == "yes" ]]; then
