@@ -51,6 +51,40 @@ inline std::ostream& print_vec_rcp(std::ostream& out, T& d)
     return out;
 }
 
+unsigned long long pack_vec_int(const vec_int &a) {
+    //Equal bits, not necessary. if the total(t) were allocated more
+    //bits may lead to more optimization.
+    uint n_var = a.size();
+    uint b = 64 / (n_var + 1) ;
+    unsigned long long ans = 0;
+    int mul = 0;
+    long long t = 0;
+    for (uint i = 0; i < n_var; i++) {
+        ans += static_cast<unsigned long long>(a[i])<<mul;
+        t += a[i];
+        mul += b;
+    }
+    ans += static_cast<unsigned long long>(t)<<mul;
+    return ans;
+}
+
+bool if_pack_vec_int(const vec_int &a) {
+    uint n_var = a.size();
+    if (!(n_var < 32))
+        return false;
+    uint b = 64 / (n_var + 1) ;
+    long long max = 1<<b;
+    long long t = 0;
+    for (uint i = 0; i < n_var; i++) {
+        if (!(a[i] >= 0) || !(a[i] < max))
+            return false;
+        t += a[i];
+    }
+    if (!(t >= 0) || !(t < max))
+        return false;
+    return true;
+}
+
 } // SymEngine
 
 
@@ -77,6 +111,11 @@ std::ostream& operator<<(std::ostream& out, const SymEngine::map_vec_mpz& d)
 std::ostream& operator<<(std::ostream& out, const SymEngine::umap_vec_mpz& d)
 {
     return print_map(out, d);
+}
+
+std::ostream& operator<<(std::ostream& out, const SymEngine::umap_ull_mpz& d)
+{
+    return SymEngine::print_map(out, d);
 }
 
 std::ostream& operator<<(std::ostream& out, const SymEngine::map_basic_num& d)

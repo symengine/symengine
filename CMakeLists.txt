@@ -24,6 +24,9 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
         "${CMAKE_CXX_FLAGS_RELEASE} -Wno-unused-parameter")
 endif()
 
+set(CMAKE_CXX_FLAGS_RELEASE
+    "${CMAKE_CXX_FLAGS_RELEASE} -DNDEBUG")
+
 if (CMAKE_CXX_COMPILER_ID MATCHES Clang)
     set(CMAKE_CXX_FLAGS_DEBUG
         "${CMAKE_CXX_FLAGS_DEBUG} -Wno-unused-parameter -ggdb")
@@ -149,7 +152,7 @@ if (WITH_PTHREAD)
 endif()
 
 if (WITH_BOOST)
-    find_package(Boost REQUIRED COMPONENTS date_time filesystem system)
+    find_package(Boost REQUIRED COMPONENTS date_time filesystem system serialization)
     include_directories(${Boost_INCLUDE_DIRS})
     set(LIBS ${LIBS} ${Boost_LIBRARIES})
     set(HAVE_SYMENGINE_BOOST yes)

@@ -10,6 +10,23 @@
 
 #include <gmpxx.h>
 
+#include <piranha/piranha.hpp>
+#include <boost/functional/hash.hpp>
+
+namespace std
+{
+template <>
+struct hash<std::pair<unsigned long long, piranha::integer>>
+{
+    typedef size_t result_type;
+    typedef std::pair<unsigned long long,piranha::integer> argument_type;
+    result_type operator()(const argument_type &p) const noexcept
+    {
+             return std::hash<unsigned long long>()(p.first);
+    }
+};
+}
+
 namespace SymEngine {
 
 class Basic;
@@ -20,10 +37,36 @@ struct RCPBasicKeyEq;
 struct RCPBasicKeyLess;
 struct RCPIntegerKeyLess;
 
+struct my_pair
+{
+    long long first;
+    mutable piranha::integer second;
+};
+
+typedef struct
+{
+    typedef size_t result_type;
+    typedef my_pair argument_type;
+    result_type operator()(const argument_type &p) const noexcept
+    {
+             return std::hash<long long>()(p.first);
+    }
+} my_hash;
+
+typedef struct
+{
+    //! \return true if `x==y`
+    inline bool operator() (const my_pair &x, const my_pair &y) const {
+        return x.first == y.first;
+    }
+} hash_eq;
+
 typedef std::unordered_map<RCP<const Basic>, RCP<const Number>,
         RCPBasicHash, RCPBasicKeyEq> umap_basic_num;
 typedef std::unordered_map<RCP<const Basic>, RCP<const Basic>,
         RCPBasicHash, RCPBasicKeyEq> umap_basic_basic;
+typedef std::unordered_map<long long, piranha::integer> umap_ull_mpz;
+typedef piranha::hash_set<my_pair, my_hash, hash_eq> hash_set;
 
 typedef std::vector<int> vec_int;
 typedef std::vector<RCP<const Basic>> vec_basic;
@@ -72,6 +115,10 @@ int vec_basic_compare(const vec_basic &a, const vec_basic &b);
 //! \return -1, 0, 1 for a < b, a == b, a > b
 int map_uint_mpz_compare(const map_uint_mpz &a, const map_uint_mpz &b);
 
+//! kronecker packing of exponents
+unsigned long long pack_vec_int(const vec_int &a);
+//! check if the packing is possible
+bool if_pack_vec_int(const vec_int &a);
 
 //! Part of umap_vec_mpz:
 typedef struct
@@ -108,6 +155,7 @@ std::ostream& operator<<(std::ostream& out, const SymEngine::map_basic_num& d);
 std::ostream& operator<<(std::ostream& out, const SymEngine::map_basic_basic& d);
 std::ostream& operator<<(std::ostream& out, const SymEngine::umap_basic_basic& d);
 std::ostream& operator<<(std::ostream& out, const SymEngine::vec_basic& d);
+std::ostream& operator<<(std::ostream& out, const SymEngine::umap_ull_mpz& d);
 
 #endif
 
