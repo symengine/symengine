@@ -271,7 +271,7 @@ if (CMAKE_BUILD_TYPE STREQUAL "Debug")
 endif()
 
 enable_testing()
-add_subdirectory(src)
+add_subdirectory(symengine)
 if (BUILD_BENCHMARKS)
     add_subdirectory(benchmarks)
 endif()
@@ -282,7 +282,7 @@ if (WITH_PYTHON)
     # files (as opposed to just subset of cmake files).
     find_package(Python REQUIRED)
     find_package(Cython REQUIRED)
-    add_subdirectory(symengine)
+    add_subdirectory(symengine/python)
 endif ()
 
 
@@ -386,5 +386,7 @@ endif()
 
 message("WITH_OPENMP: ${WITH_OPENMP}")
 
-message("Copying source of python wrappers into: ${CMAKE_CURRENT_BINARY_DIR}")
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/symengine DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+if (WITH_PYTHON)
+    message("Copying source of python wrappers into: ${CMAKE_CURRENT_BINARY_DIR}/symengine/python/symengine")
+    file(COPY symengine/python/symengine/ DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/symengine/python/symengine)
+endif()

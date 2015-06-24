@@ -1,7 +1,7 @@
 project(benchmarks)
 
-include_directories(BEFORE ${symengine_SOURCE_DIR}/src)
-include_directories(BEFORE ${symengine_BINARY_DIR}/src)
+include_directories(BEFORE ${symengine_SOURCE_DIR})
+include_directories(BEFORE ${symengine_BINARY_DIR})
 include_directories(BEFORE ${teuchos_SOURCE_DIR})
 include_directories(BEFORE ${teuchos_BINARY_DIR})
 

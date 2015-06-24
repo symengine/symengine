@@ -27,7 +27,7 @@ if not use_setuptools:
     from distutils.core import setup
     from distutils.command.install import install as _install
 
-cmake_opts = [("WITH_PYTHON","yes")]
+cmake_opts = [("WITH_PYTHON","yes"), ("BUILD_TESTS", "no"), ("BUILD_BENCHMARKS", "no")]
 
 def process_opts(opts):
     return ['-D'+'='.join(o) for o in opts]
@@ -111,8 +111,9 @@ setup(name = "symengine",
       author_email = "",
       license = "MIT",
       url = "https://github.com/sympy/symengine",
-      packages = ["symengine", "symengine.lib", "symengine.tests"],
-      package_data= {'' : ['lib/symengine_wrapper.so']},
+      package_dir = {'symengine': 'symengine/python/symengine'},
+      packages=['symengine', 'symengine.lib', 'symengine.tests'],
+      package_data= {'symengine' : ['lib/symengine_wrapper.so']},
       cmdclass={
           'build' : BuildWithCmake,
           'install' : InstallWithCmake,

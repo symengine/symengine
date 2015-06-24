@@ -89,11 +89,13 @@ else
     ctest --output-on-failure
     # Python
     if [[ "${WITH_PYTHON}" == "yes" ]]; then
+        cd symengine/python
         nosetests -v
+        cd ../../
     fi
     # Ruby
     if [[ "${WITH_RUBY}" == "yes" ]]; then
-        RUBY_GEM_DIR="$SOURCE_DIR/src/ruby"
+        RUBY_GEM_DIR="$SOURCE_DIR/symengine/ruby"
         echo "Installing dependent gems"
         cd $RUBY_GEM_DIR
         bundle install
@@ -104,7 +106,7 @@ else
 
     echo "Running tests using installed SymEngine:"
     # C++
-    cd $SOURCE_DIR/src/tests/basic/
+    cd $SOURCE_DIR/symengine/tests/basic/
     extra_libs=""
     if [[ "${WITH_BFD}" != "" ]]; then
         extra_libs="$extra_libs -lbfd"

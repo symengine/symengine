@@ -46,7 +46,7 @@ cdef extern from "electrostatics.h":
         void set_boundary_derivatives(vector[double] &bc_der)
         bool calculate(Solution* phi)
 
-cdef extern from "symengine_rcp.h" namespace "SymEngine":
+cdef extern from "<symengine/symengine_rcp.h>" namespace "SymEngine":
     cdef enum ENull:
         null
 
@@ -61,7 +61,7 @@ cdef extern from "symengine_rcp.h" namespace "SymEngine":
     RCP[Add] rcp_static_cast_Add "SymEngine::rcp_static_cast<SymEngine::Add>"(const RCP[Basic] &b) nogil
 
 
-cdef extern from "basic.h" namespace "SymEngine":
+cdef extern from "<symengine/basic.h>" namespace "SymEngine":
     cdef cppclass Basic:
         string __str__() nogil except +
         RCP[Basic] diff(const RCP[Symbol] &x) nogil except +
@@ -72,12 +72,12 @@ cdef extern from "basic.h" namespace "SymEngine":
     bool is_a_Add "SymEngine::is_a<SymEngine::Add>"(const Basic &b) nogil
     bool is_a_Mul "SymEngine::is_a<SymEngine::Mul>"(const Basic &b) nogil
 
-cdef extern from "symbol.h" namespace "SymEngine":
+cdef extern from "<symengine/symbol.h>" namespace "SymEngine":
     cdef cppclass Symbol(Basic):
         Symbol(string name) nogil
         string get_name() nogil
 
-cdef extern from "add.h" namespace "SymEngine":
+cdef extern from "<symengine/add.h>" namespace "SymEngine":
     cdef RCP[Basic] add(RCP[Basic] &a, RCP[Basic] &b) nogil except+
     cdef RCP[Basic] sub(RCP[Basic] &a, RCP[Basic] &b) nogil except+
 
