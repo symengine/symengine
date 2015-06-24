@@ -20,8 +20,8 @@ doc/doxyxml
 doc/html
 
 # Config Files
-src/symengine_config.h
-src/teuchos/Teuchos_config.h
+symengine/symengine_config.h
+symengine/teuchos/Teuchos_config.h
 
 # Python build files
 build*
@@ -34,23 +34,23 @@ build*
 Testing
 
 # Test executables
-src/tests/basic/test_arit
-src/tests/basic/test_basic
-src/tests/basic/test_functions
-src/tests/basic/test_integer
-src/tests/basic/test_poly
-src/tests/basic/test_polynomial
-src/tests/basic/test_subs
-src/tests/matrix/test_matrix
-src/tests/ntheory/test_ntheory
-src/tests/ntheory/test_diophantine
-src/tests/printing/test_printing
-src/tests/rcp/test_rcp
-src/tests/cwrapper/test_cwrapper
-src/tests/eval/test_eval_double
-src/tests/eval/test_eval_arb
-src/tests/eval/test_eval_mpfr
-src/tests/eval/test_eval_mpc
+symengine/tests/basic/test_arit
+symengine/tests/basic/test_basic
+symengine/tests/basic/test_functions
+symengine/tests/basic/test_integer
+symengine/tests/basic/test_poly
+symengine/tests/basic/test_polynomial
+symengine/tests/basic/test_subs
+symengine/tests/matrix/test_matrix
+symengine/tests/ntheory/test_ntheory
+symengine/tests/ntheory/test_diophantine
+symengine/tests/printing/test_printing
+symengine/tests/rcp/test_rcp
+symengine/tests/cwrapper/test_cwrapper
+symengine/tests/eval/test_eval_double
+symengine/tests/eval/test_eval_arb
+symengine/tests/eval/test_eval_mpfr
+symengine/tests/eval/test_eval_mpc
 
 # Benchmarks executables
 benchmarks/add1
@@ -75,12 +75,12 @@ benchmarks/expand6
 benchmarks/expand6_ginac
 
 #rubygem
-src/ruby/Gemfile.lock
-src/ruby/LICENSE
-src/ruby/*.bundle
-src/ruby/*.gem
-src/ruby/tmp/
-src/ruby/pkg/
-src/ruby/ext/symengine/mkmf.log
-src/ruby/bin/*
-src/ruby/ext/symengine/extconf.h
+symengine/ruby/Gemfile.lock
+symengine/ruby/LICENSE
+symengine/ruby/*.bundle
+symengine/ruby/*.gem
+symengine/ruby/tmp/
+symengine/ruby/pkg/
+symengine/ruby/ext/symengine/mkmf.log
+symengine/ruby/bin/*
+symengine/ruby/ext/symengine/extconf.h

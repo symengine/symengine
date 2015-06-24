@@ -1,5 +1,5 @@
-#include "ruby.h"
-#include "cwrapper.h"
+#include <ruby.h>
+#include <symengine/cwrapper.h>
 
 void cbasic_free(void *ptr);
 

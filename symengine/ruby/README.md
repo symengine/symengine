@@ -1,11 +1,11 @@
 Steps to compile the extensions
 ===============================
 * Install bundler by `gem install bundler`
-* Change directory to src/ruby, `cd src/ruby`
+* Change directory to src/ruby, `cd symengine/ruby`
 * Execute `bundle install` this will install the gems required
 * Change to root directory, `cd ../..`
 * Build symengine with Ruby by adding the flag, `cmake -DWITH_RUBY=yes .`
-* Then cd to src/ruby again, `cd src/ruby`
+* Then cd to symengine/ruby again, `cd symengine/ruby`
 * Build the gem, `gem build symengine.gemspec`
 * Install the gem, `gem install symengine-0.0.0.pre.gem`
 

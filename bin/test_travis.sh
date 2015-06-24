@@ -95,7 +95,7 @@ else
     fi
     # Ruby
     if [[ "${WITH_RUBY}" == "yes" ]]; then
-        RUBY_GEM_DIR="$SOURCE_DIR/src/ruby"
+        RUBY_GEM_DIR="$SOURCE_DIR/symengine/ruby"
         echo "Installing dependent gems"
         cd $RUBY_GEM_DIR
         bundle install
