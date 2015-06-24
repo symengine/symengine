@@ -135,7 +135,8 @@ void poly_mul3(const hash_set &A, const hash_set &B, hash_set &C)
                     // Recompute the bucker.
                     bucket = C._bucket(temp);
                 }
-                temp.second = a.second * b.second;
+                temp.second = a.second;
+                temp.second *= b.second;
                 C._unique_insert(temp, bucket);
                 C._update_size(C.size() + 1u);
             } else {

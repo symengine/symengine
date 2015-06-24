@@ -39,7 +39,7 @@ struct RCPIntegerKeyLess;
 
 struct my_pair
 {
-    unsigned long long first;
+    long long first;
     mutable piranha::integer second;
 };
 
@@ -49,7 +49,7 @@ typedef struct
     typedef my_pair argument_type;
     result_type operator()(const argument_type &p) const noexcept
     {
-             return std::hash<unsigned long long>()(p.first);
+             return std::hash<long long>()(p.first);
     }
 } my_hash;
 
@@ -65,7 +65,7 @@ typedef std::unordered_map<RCP<const Basic>, RCP<const Number>,
         RCPBasicHash, RCPBasicKeyEq> umap_basic_num;
 typedef std::unordered_map<RCP<const Basic>, RCP<const Basic>,
         RCPBasicHash, RCPBasicKeyEq> umap_basic_basic;
-typedef std::unordered_map<unsigned long long, piranha::integer> umap_ull_mpz;
+typedef std::unordered_map<long long, piranha::integer> umap_ull_mpz;
 typedef piranha::hash_set<my_pair, my_hash, hash_eq> hash_set;
 
 typedef std::vector<int> vec_int;
