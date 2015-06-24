@@ -76,3 +76,6 @@ install(FILES ${HEADERS} "${symengine_BINARY_DIR}/src/symengine_config.h"
 if (BUILD_TESTS)
     add_subdirectory(tests)
 endif()
+if (WITH_RUBY)
+    add_subdirectory(ruby)
+endif()

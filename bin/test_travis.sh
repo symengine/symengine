@@ -56,6 +56,9 @@ fi
 if [[ "${BUILD_SHARED_LIBS}" != "" ]]; then
     cmake_line="$cmake_line -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}"
 fi
+if [[ "${WITH_RUBY}" != "" ]]; then
+    cmake_line="$cmake_line -DWITH_RUBY=${WITH_RUBY}"
+fi
 if [[ "${PYTHON_INSTALL}" == "yes" ]]; then
     git clean -dfx
     pip install $SOURCE_DIR
@@ -87,6 +90,16 @@ else
     # Python
     if [[ "${WITH_PYTHON}" == "yes" ]]; then
         nosetests -v
+    fi
+    # Ruby
+    if [[ "${WITH_RUBY}" == "yes" ]]; then
+        RUBY_GEM_DIR="$SOURCE_DIR/src/ruby"
+        echo "Installing dependent gems"
+        cd $RUBY_GEM_DIR
+        bundle install
+        echo "Running RSpec tests for Ruby extension in $RUBY_GEM_DIR"
+        bundle exec rspec
+        cd $SOURCE_DIR
     fi
 
     echo "Running tests using installed SymEngine:"

@@ -166,6 +166,10 @@ endif()
 set(WITH_PYTHON no
     CACHE BOOL "Build with Python wrappers")
 
+#Ruby
+set(WITH_RUBY no
+    CACHE BOOL "Build with Ruby bindings")
+
 # BFD
 set(WITH_BFD no
     CACHE BOOL "Build with BFD (binutils-dev) support")
@@ -177,7 +181,7 @@ if (WITH_BFD)
     set(LIBS ${LIBS} ${BFD_LIBRARIES})
     set(HAVE_TEUCHOS_BFD yes)
     set(HAVE_TEUCHOS_LINK yes)
-    
+
     set(HAVE_TEUCHOS_EXECINFO yes)
     find_package(EXECINFO REQUIRED)
     include_directories(${EXECINFO_INCLUDE_DIRS})
@@ -253,6 +257,13 @@ if (WITH_OPENMP)
     endif()
 endif()
 
+
+if (WITH_RUBY)
+    find_package(Ruby REQUIRED)
+    include_directories(${RUBY_INCLUDE_DIRS})
+    set(LIBS ${LIBS} ${RUBY_LIBRARY})
+endif ()
+
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(HAVE_TEUCHOS_DEBUG yes)
     set(HAVE_TEUCHOS_DEBUG_RCP_NODE_TRACING yes)
@@ -311,6 +322,12 @@ if (WITH_PYTHON)
     message("Python install path: ${PYTHON_INSTALL_PATH}")
 
     message("Cython path: ${CYTHON_BIN}")
+endif ()
+
+message("WITH_RUBY: ${WITH_RUBY}")
+if (WITH_RUBY)
+    message("RUBY_INCLUDE_DIRS: ${RUBY_INCLUDE_DIRS}")
+    message("RUBY_LIBRARY: ${RUBY_LIBRARY}")
 endif ()
 
 message("WITH_ECM: ${WITH_ECM}")
