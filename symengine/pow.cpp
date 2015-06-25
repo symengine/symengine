@@ -135,7 +135,7 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
                 if (is_a_Number(*a) && !rcp_static_cast<const Number>(a)->is_exact()) {
                     return rcp_static_cast<const Number>(a)->pow(*rcp_static_cast<const Number>(b));
                 }
-                return rcp(new Pow(a, b));
+                return make_rcp<const Pow>(a, b);
             }
             // Here we make the exponent postive and a fraction between
             // 0 and 1. We multiply numerator and denominator appropriately
@@ -145,8 +145,8 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
                 RCP<const Basic> frac =
                     div(exp_new->powrat(Integer(q)), integer(exp_new->i.get_den()));
                 RCP<const Basic> surds =
-                    mul(rcp(new Pow(integer(exp_new->i.get_num()), div(integer(r), integer(den)))),
-                        rcp(new Pow(integer(exp_new->i.get_den()), sub(one, div(integer(r), integer(den))))));
+                    mul(make_rcp<const Pow>(integer(exp_new->i.get_num()), div(integer(r), integer(den))),
+                        make_rcp<const Pow>(integer(exp_new->i.get_den()), sub(one, div(integer(r), integer(den)))));
                 return mul(frac, surds);
             } else if (is_a<Integer>(*a)) {
                 RCP<const Integer> exp_new = rcp_static_cast<const Integer>(a);
@@ -162,14 +162,14 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
                 } else {
                     surd[exp_new] = div(integer(r), integer(den));
                 }
-                return rcp(new Mul(frac, std::move(surd)));
+                return make_rcp<const Mul>(frac, std::move(surd));
             } else if (is_a<Complex>(*a)) {
-                return rcp(new Pow(a, b));
+                return make_rcp<const Pow>(a, b);
             } else {
                 return rcp_static_cast<const Number>(a)->pow(*rcp_static_cast<const Number>(b));
             }
         } else if (is_a<Complex>(*b)) {
-            return rcp(new Pow(a, b));
+            return make_rcp<const Pow>(a, b);
         } else {
             return rcp_static_cast<const Number>(a)->pow(*rcp_static_cast<const Number>(b));
         }
@@ -185,7 +185,7 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
         RCP<const Pow> A = rcp_static_cast<const Pow>(a);
         return pow(A->base_, mul(A->exp_, b));
     }
-    return rcp(new Pow(a, b));
+    return make_rcp<const Pow>(a, b);
 }
 
 // This function can overflow, but it is fast.
@@ -514,7 +514,7 @@ RCP<const Basic> log(const RCP<const Basic> &arg)
         get_num_den(rcp_static_cast<const Rational>(arg), outArg(num), outArg(den));
         return sub(log(num), log(den));
     }
-    return rcp(new Log(arg));
+    return make_rcp<const Log>(arg);
 }
 
 RCP<const Basic> log(const RCP<const Basic> &arg, const RCP<const Basic> &base)

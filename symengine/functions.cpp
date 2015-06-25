@@ -352,7 +352,7 @@ RCP<const Basic> sin(const RCP<const Basic> &arg)
                 if (neq(ret_arg, arg)) {
                     return sin(ret_arg);
                 } else {
-                    return rcp(new Sin(arg));
+                    return make_rcp<const Sin>(arg);
                 }
             } else {
                 return mul(minus_one, sin(ret_arg));
@@ -429,7 +429,7 @@ RCP<const Basic> cos(const RCP<const Basic> &arg)
                 if (neq(ret_arg, arg)) {
                     return cos(ret_arg);
                 } else {
-                    return rcp(new Cos(ret_arg));
+                    return make_rcp<const Cos>(ret_arg);
                 }
             } else {
                 return mul(minus_one, cos(ret_arg));
@@ -509,7 +509,7 @@ RCP<const Basic> tan(const RCP<const Basic> &arg)
                 if (neq(ret_arg, arg)) {
                     return tan(ret_arg);
                 } else {
-                    return rcp(new Tan(ret_arg));
+                    return make_rcp<const Tan>(ret_arg);
                 }
             } else {
                 return mul(minus_one, tan(ret_arg));
@@ -589,7 +589,7 @@ RCP<const Basic> cot(const RCP<const Basic> &arg)
                 if (neq(ret_arg, arg)) {
                     return cot(ret_arg);
                 } else {
-                    return rcp(new Cot(ret_arg));
+                    return make_rcp<const Cot>(ret_arg);
                 }
             } else {
                 return mul(minus_one, cot(ret_arg));
@@ -669,7 +669,7 @@ RCP<const Basic> csc(const RCP<const Basic> &arg)
                 if (neq(ret_arg, arg)) {
                     return csc(ret_arg);
                 } else {
-                    return rcp(new Csc(ret_arg));
+                    return make_rcp<const Csc>(ret_arg);
                 }
             } else {
                 return mul(minus_one, csc(ret_arg));
@@ -748,7 +748,7 @@ RCP<const Basic> sec(const RCP<const Basic> &arg)
                 if (neq(ret_arg, arg)) {
                     return sec(ret_arg);
                 } else {
-                    return rcp(new Sec(ret_arg));
+                    return make_rcp<const Sec>(ret_arg);
                 }
             } else {
                 return mul(minus_one, sec(ret_arg));
@@ -809,7 +809,7 @@ RCP<const Basic> asin(const RCP<const Basic> &arg)
     if (b) {
         return div(pi, index);
     } else {
-        return rcp(new ASin(arg));
+        return make_rcp<const ASin>(arg);
     }
 }
 
@@ -870,7 +870,7 @@ RCP<const Basic> acos(const RCP<const Basic> &arg)
             return sub(div(pi, i2), div(pi, index));
         }
     } else {
-        return rcp(new ACos(arg));
+        return make_rcp<const ACos>(arg);
     }
 }
 
@@ -928,7 +928,7 @@ RCP<const Basic> asec(const RCP<const Basic> &arg)
             return sub(div(pi, i2), div(pi, index));
         }
     } else {
-        return rcp(new ASec(arg));
+        return make_rcp<const ASec>(arg);
     }
 }
 
@@ -982,7 +982,7 @@ RCP<const Basic> acsc(const RCP<const Basic> &arg)
     if (b) {
         return div(pi, index);
     } else {
-        return rcp(new ACsc(arg));
+        return make_rcp<const ACsc>(arg);
     }
 }
 
@@ -1037,7 +1037,7 @@ RCP<const Basic> atan(const RCP<const Basic> &arg)
     if (b) {
         return div(pi, index);
     } else {
-        return rcp(new ATan(arg));
+        return make_rcp<const ATan>(arg);
     }
 }
 
@@ -1097,7 +1097,7 @@ RCP<const Basic> acot(const RCP<const Basic> &arg)
             return sub(div(pi, i2), div(pi, index));
         }
     } else {
-        return rcp(new ACot(arg));
+        return make_rcp<const ACot>(arg);
     }
 }
 
@@ -1206,7 +1206,7 @@ RCP<const Basic> atan2(const RCP<const Basic> &num, const RCP<const Basic> &den)
             return div(pi, index);
         }
     } else {
-        return rcp(new ATan2(num, den));
+        return make_rcp<const ATan2>(num, den);
     }
 }
 
@@ -1391,7 +1391,7 @@ RCP<const Basic> lambertw(const RCP<const Basic> &arg)
     if (eq(arg, E)) return one;
     if (eq(arg, div(one, E))) return minus_one;
     if (eq(arg, div(log(i2), im2))) return mul(minus_one, log(i2));
-    return rcp(new LambertW(arg));
+    return make_rcp<const LambertW>(arg);
 }
 
 FunctionSymbol::FunctionSymbol(std::string name, const RCP<const Basic> &arg)
@@ -1456,7 +1456,7 @@ RCP<const Basic> FunctionSymbol::diff(const RCP<const Symbol> &x) const
         }
     }
     if (count == 1 && found_x) {
-        return rcp(new Derivative(self, {x}));
+        return Derivative::create(self, {x});
     }
     for (unsigned i = 0; i < arg_.size(); i++) {
         t = arg_[i]->diff(x);
@@ -1470,7 +1470,7 @@ RCP<const Basic> FunctionSymbol::diff(const RCP<const Symbol> &x) const
             v[i] = s;
             map_basic_basic m;
             insert(m, v[i], arg_[i]);
-            diff = add(diff, mul(t, rcp(new Subs(rcp(new Derivative(rcp(new FunctionSymbol(name_, v)), {v[i]})), m))));
+            diff = add(diff, mul(t, make_rcp<const Subs>(Derivative::create(make_rcp<const FunctionSymbol>(name_, v), {v[i]}), m)));
         }
     }
     return diff;
@@ -1485,17 +1485,17 @@ RCP<const Basic> FunctionSymbol::subs(const map_basic_basic &subs_dict) const
     for (unsigned i = 0; i < v.size(); i++) {
         v[i] = v[i]->subs(subs_dict);
     }
-    return rcp(new FunctionSymbol(name_, v));
+    return make_rcp<const FunctionSymbol>(name_, v);
 }
 
 RCP<const Basic> function_symbol(std::string name, const vec_basic &arg)
 {
-    return rcp(new FunctionSymbol(name, arg));
+    return make_rcp<const FunctionSymbol>(name, arg);
 }
 
 RCP<const Basic> function_symbol(std::string name, const RCP<const Basic> &arg)
 {
-    return rcp(new FunctionSymbol(name, arg));
+    return make_rcp<const FunctionSymbol>(name, arg);
 }
 
 FunctionWrapper::FunctionWrapper(void* obj, std::string name, std::string hash, const vec_basic &arg, 
@@ -1540,7 +1540,7 @@ RCP<const Basic> FunctionWrapper::diff(const RCP<const Symbol> &x) const
 {
     for (auto &a : arg_) {
         if (neq(a->diff(x), zero)) {
-            return rcp(new Derivative(get_rcp(), {x}));
+            return Derivative::create(get_rcp(), {x});
         }
     }
     return zero;
@@ -1619,7 +1619,7 @@ RCP<const Basic> Derivative::diff(const RCP<const Symbol> &x) const
     if (eq(arg_->diff(x), zero)) return zero;
     vec_basic t = x_;
     t.push_back(x);
-    return rcp(new Derivative(arg_, t));
+    return Derivative::create(arg_, t);
 }
 
 RCP<const Basic> Derivative::subs(const map_basic_basic &subs_dict) const
@@ -1652,7 +1652,7 @@ RCP<const Basic> Derivative::subs(const map_basic_basic &subs_dict) const
                     break;
                 }
             } else {
-                return rcp(new Subs(get_rcp(), subs_dict));
+                return make_rcp<const Subs>(get_rcp(), subs_dict);
             }
         }
         if (subs) {
@@ -1666,9 +1666,9 @@ RCP<const Basic> Derivative::subs(const map_basic_basic &subs_dict) const
         sym[i] = sym[i]->subs(n);
     }
     if (m.empty()) {
-        return rcp(new Derivative(arg_->subs(n), sym));
+        return Derivative::create(arg_->subs(n), sym);
     } else {
-         return rcp(new Subs(rcp(new Derivative(arg_->subs(n), sym)), m));
+         return make_rcp<const Subs>(Derivative::create(arg_->subs(n), sym), m);
     }
 }
 
@@ -1757,7 +1757,7 @@ RCP<const Basic> Subs::diff(const RCP<const Symbol> &x) const
             if (is_a<Symbol>(*p.first)) {
                 diff = add(diff, mul(t, arg_->diff(rcp_static_cast<const Symbol>(p.first))->subs(dict_)));
             } else {
-                return rcp(new Derivative(get_rcp(), {x}));
+                return Derivative::create(get_rcp(), {x});
             }
         }
     }
@@ -1784,7 +1784,7 @@ RCP<const Basic> Subs::subs(const map_basic_basic &subs_dict) const
     for (auto &s: dict_) {
         insert(m, s.first, s.second->subs(subs_dict));
     }
-    return rcp(new Subs(arg_->subs(n), m));
+    return make_rcp<const Subs>(arg_->subs(n), m);
 }
 
 std::size_t HyperbolicFunction::__hash__() const
@@ -1864,7 +1864,7 @@ RCP<const Basic> sinh(const RCP<const Basic> &arg)
     if (could_extract_minus(arg)) {
         return neg(sinh(neg(arg)));
     }
-    return rcp(new Sinh(arg));
+    return make_rcp<const Sinh>(arg);
 }
 
 RCP<const Basic>  Sinh::expand_as_exp() const
@@ -1930,7 +1930,7 @@ RCP<const Basic> cosh(const RCP<const Basic> &arg)
     if (could_extract_minus(arg)) {
         return cosh(neg(arg));
     }
-    return rcp(new Cosh(arg));
+    return make_rcp<const Cosh>(arg);
 }
 
 RCP<const Basic>  Cosh::expand_as_exp() const
@@ -1996,7 +1996,7 @@ RCP<const Basic> tanh(const RCP<const Basic> &arg)
     if (could_extract_minus(arg)) {
         return neg(tanh(neg(arg)));
     }
-    return rcp(new Tanh(arg));
+    return make_rcp<const Tanh>(arg);
 }
 
 RCP<const Basic>  Tanh::expand_as_exp() const
@@ -2067,7 +2067,7 @@ RCP<const Basic> coth(const RCP<const Basic> &arg)
     if (could_extract_minus(arg)) {
         return neg(coth(neg(arg)));
     }
-    return rcp(new Coth(arg));
+    return make_rcp<const Coth>(arg);
 }
 
 RCP<const Basic>  Coth::expand_as_exp() const
@@ -2137,7 +2137,7 @@ RCP<const Basic> asinh(const RCP<const Basic> &arg)
     if (could_extract_minus(arg)) {
         return neg(asinh(neg(arg)));
     }
-    return rcp(new ASinh(arg));
+    return make_rcp<const ASinh>(arg);
 }
 
 RCP<const Basic> ASinh::diff(const RCP<const Symbol> &x) const
@@ -2186,7 +2186,7 @@ RCP<const Basic> acosh(const RCP<const Basic> &arg)
     if (is_a_Number(*arg) && !static_cast<const Number &>(*arg).is_exact()) {
         return static_cast<const Number &>(*arg).get_eval().acosh(*arg);
     }
-    return rcp(new ACosh(arg));
+    return make_rcp<const ACosh>(arg);
 }
 
 RCP<const Basic> ACosh::diff(const RCP<const Symbol> &x) const
@@ -2247,7 +2247,7 @@ RCP<const Basic> atanh(const RCP<const Basic> &arg)
     if (could_extract_minus(arg)) {
         return neg(atanh(neg(arg)));
     }
-    return rcp(new ATanh(arg));
+    return make_rcp<const ATanh>(arg);
 }
 
 RCP<const Basic> ATanh::diff(const RCP<const Symbol> &x) const
@@ -2305,7 +2305,7 @@ RCP<const Basic> acoth(const RCP<const Basic> &arg)
     if (could_extract_minus(arg)) {
         return neg(acoth(neg(arg)));
     }
-    return rcp(new ACoth(arg));
+    return make_rcp<const ACoth>(arg);
 }
 
 RCP<const Basic> ACoth::diff(const RCP<const Symbol> &x) const
@@ -2348,7 +2348,7 @@ RCP<const Basic> asech(const RCP<const Basic> &arg)
 {
     // TODO: Lookup into a cst table once complex is implemented
     if (eq(arg, one)) return zero;
-    return rcp(new ASech(arg));
+    return make_rcp<const ASech>(arg);
 }
 
 RCP<const Basic> ASech::diff(const RCP<const Symbol> &x) const
@@ -2455,7 +2455,7 @@ RCP<const Basic> kronecker_delta(const RCP<const Basic> &i, const RCP<const Basi
         return zero;
     } else {
         // SymPy uses default key sorting to return in order
-        return rcp(new KroneckerDelta(i, j));
+        return make_rcp<const KroneckerDelta>(i, j);
     }
 }
 
@@ -2556,7 +2556,7 @@ RCP<const Basic> levi_civita(const vec_basic &arg)
     } else if (has_dup(arg)) {
         return zero;
     } else {
-        return rcp(new LeviCivita(std::move(arg)));
+        return make_rcp<const LeviCivita>(std::move(arg));
     }
 }
 
@@ -2622,10 +2622,10 @@ RCP<const Basic> zeta(const RCP<const Basic> &s, const RCP<const Basic> &a)
             throw std::runtime_error("Complex infinity is not yet implemented");
         } else if (is_a<Integer>(*s) && is_a<Integer>(*a)) {
             // Implement Harmonic and simplify this
-            return rcp(new Zeta(s, a));
+            return make_rcp<const Zeta>(s, a);
         }
     }
-    return rcp(new Zeta(s, a));
+    return make_rcp<const Zeta>(s, a);
 }
 
 RCP<const Basic> zeta(const RCP<const Basic> &s)
@@ -2680,7 +2680,7 @@ RCP<const Basic> dirichlet_eta(const RCP<const Basic> &s)
     }
     RCP<const Basic> z = zeta(s);
     if (is_a<Zeta>(*z)) {
-        return rcp(new Dirichlet_eta(s));
+        return make_rcp<const Dirichlet_eta>(s);
     } else {
         return mul(sub(one, pow(i2, sub(one, s))), z);
     }
@@ -2765,12 +2765,12 @@ RCP<const Basic> gamma(const RCP<const Basic> &arg)
                 return div(mul(pow(i2, n), sqrt(pi)), coeff);
             }
         } else {
-            return rcp(new Gamma(arg));
+            return make_rcp<const Gamma>(arg);
         }
     } else if (is_a_Number(*arg) && !static_cast<const Number &>(*arg).is_exact()) {
         return static_cast<const Number &>(*arg).get_eval().gamma(*arg);
     }
-    return rcp(new Gamma(arg));
+    return make_rcp<const Gamma>(arg);
 }
 
 LowerGamma::LowerGamma(const RCP<const Basic> &s, const RCP<const Basic> &x)
@@ -2830,7 +2830,7 @@ RCP<const Basic> lowergamma(const RCP<const Basic> &s, const RCP<const Basic> &x
             s_int = s_int->subint(*one);
             return sub(mul(s_int, lowergamma(s_int, x)), mul(pow(x, s_int), exp(mul(minus_one, x))));
         } else {
-            return rcp(new LowerGamma(s, x));
+            return make_rcp<const LowerGamma>(s, x);
         }
     } else if (is_a<Integer>(*(mul(i2, s)))) {
         // TODO: Implement `erf`. Currently the recursive expansion has no base case
@@ -2843,7 +2843,7 @@ RCP<const Basic> lowergamma(const RCP<const Basic> &s, const RCP<const Basic> &x
             return add(lowergamma(add(s, one), x), mul(pow(x, s), div(exp(mul(minus_one, x)), s)));
         }
     }
-    return rcp(new LowerGamma(s, x));
+    return make_rcp<const LowerGamma>(s, x);
 }
 
 UpperGamma::UpperGamma(const RCP<const Basic> &s, const RCP<const Basic> &x)
@@ -2904,7 +2904,7 @@ RCP<const Basic> uppergamma(const RCP<const Basic> &s, const RCP<const Basic> &x
             return add(mul(s_int, uppergamma(s_int, x)), mul(pow(x, s_int), exp(mul(minus_one, x))));
         } else {
             // TODO: implement unpolarfy to handle this case
-            return rcp(new LowerGamma(s, x));
+            return make_rcp<const LowerGamma>(s, x);
         }
     } else if (is_a<Integer>(*(mul(i2, s)))) {
         // TODO: Implement `erf`. Currently the recursive expansion has no base case
@@ -2917,7 +2917,7 @@ RCP<const Basic> uppergamma(const RCP<const Basic> &s, const RCP<const Basic> &x
             return sub(uppergamma(add(s, one), x), mul(pow(x, s), div(exp(mul(minus_one, x)), s)));
         }
     }
-    return rcp(new UpperGamma(s, x));
+    return make_rcp<const UpperGamma>(s, x);
 }
 
 
@@ -2962,7 +2962,7 @@ RCP<const Basic> Abs::diff(const RCP<const Symbol> &x) const
     if (eq(arg_->diff(x), zero))
         return zero;
     else
-        return rcp(new Derivative(get_rcp(), {x}));
+        return Derivative::create(get_rcp(), {x});
 }
 
 RCP<const Basic> abs(const RCP<const Basic> &arg)
@@ -2985,7 +2985,7 @@ RCP<const Basic> abs(const RCP<const Basic> &arg)
     } else if (is_a_Number(*arg) && !static_cast<const Number &>(*arg).is_exact()) {
         return static_cast<const Number &>(*arg).get_eval().abs(*arg);
     }
-    return rcp(new Abs(arg));
+    return make_rcp<const Abs>(arg);
 }
 
 } // SymEngine

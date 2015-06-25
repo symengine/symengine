@@ -26,7 +26,7 @@ RCP<const Number> Rational::from_mpq(const mpq_class i)
     if (i.get_den() == 1) {
         return integer(i.get_num());
     } else {
-        return rcp(new Rational(i));
+        return make_rcp<const Rational>(i);
     }
 }
 
