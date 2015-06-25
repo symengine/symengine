@@ -144,7 +144,7 @@ public:
 #if defined(WITH_SYMENGINE_RCP)
         return rcp(static_cast<T*>(this));
 #else
-        return weak_self_ptr_.create_strong();
+        return rcp_static_cast<T>(weak_self_ptr_.create_strong());
 #endif
     }
 
