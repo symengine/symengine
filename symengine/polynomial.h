@@ -89,7 +89,7 @@ RCP<const UnivariatePolynomial> mul_uni_poly(RCP<const UnivariatePolynomial> a, 
 
 inline RCP<const UnivariatePolynomial> univariate_polynomial(RCP<const Symbol> i, unsigned int deg, map_uint_mpz&& dict)
 {
-    return rcp(new UnivariatePolynomial(i, deg, std::move(dict)));
+    return make_rcp<const UnivariatePolynomial>(i, deg, std::move(dict));
 }
 
 }  //SymEngine
