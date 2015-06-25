@@ -255,9 +255,6 @@ bool is_a_sub(const Basic &b);
 //! Expands `self`
 RCP<const Basic> expand(const RCP<const Basic> &self);
 
-template<typename T, typename ...Args>
-inline RCP<T> make_rcp( Args&& ...args );
-
 } // SymEngine
 
 /*! This `<<` overloaded function simply calls `p.__str__`, so it allows any Basic
