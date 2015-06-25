@@ -1,3 +1,5 @@
+#define CATCH_CONFIG_MAIN
+#include "catch.hpp"
 #include <iostream>
 #include <chrono>
 
@@ -20,17 +22,17 @@ using SymEngine::zero;
 using SymEngine::integer;
 using SymEngine::vec_basic_eq_perm;	
 
-void uni_poly_constructor()
+TEST_CASE("Constructor of UnivariatePolynomial", "[UnivariatePolynomial")
 {   
     RCP<const Symbol> x  = symbol("x");
     RCP<const UnivariatePolynomial> P = univariate_polynomial(x, 2, {{0, 1}, {1, 2}, {2, 1}});
-    assert(P->__str__() == "x**2 + 2*x + 1");
+    REQUIRE(P->__str__() == "x**2 + 2*x + 1");
 
     RCP<const UnivariatePolynomial> Q = rcp(new UnivariatePolynomial(x, {1, 0, 2, 1}));
-    assert(Q->__str__() == "x**3 + 2*x**2 + 1");
+    REQUIRE(Q->__str__() == "x**3 + 2*x**2 + 1");
 }
 
-void test_add_uni_poly()
+TEST_CASE("Adding two UnivariatePolynomial", "[UnivariatePolynomial")
 {
     RCP<const Symbol> x  = symbol("x");
     map_uint_mpz adict_ = {{0, 1}, {1, 2}, {2, 1}};
@@ -40,10 +42,10 @@ void test_add_uni_poly()
 
     RCP<const Basic> c = add_uni_poly(a, b);
     //std::cout<<c->__str__();
-    assert(c->__str__() == "5*x**2 + 5*x + 3");
+    REQUIRE(c->__str__() == "5*x**2 + 5*x + 3");
 }
 
-void test_neg_uni_poly()
+TEST_CASE("Negative of a UnivariatePolynomial", "[UnivariatePolynomial")
 {
     RCP<const Symbol> x  = symbol("x");
     map_uint_mpz adict_ = {{0, 1}, {1, 2}, {2, 1}};
@@ -51,10 +53,10 @@ void test_neg_uni_poly()
 
     RCP<const UnivariatePolynomial> b = neg_uni_poly(a);
     //std::cout<<b->__str__()<<std::endl;
-    assert(b->__str__() == "-x**2 - 2*x - 1");
+    REQUIRE(b->__str__() == "-x**2 - 2*x - 1");
 }
 
-void test_sub_uni_poly()
+TEST_CASE("Subtracting two UnivariatePolynomial", "[UnivariatePolynomial]")
 {
     RCP<const Symbol> x  = symbol("x");
     map_uint_mpz adict_ = {{0, 1}, {1, 2}, {2, 1}};
@@ -64,10 +66,10 @@ void test_sub_uni_poly()
 
     RCP<const Basic> c = sub_uni_poly(b, a);
     //std::cout<<c->__str__();
-    assert(c->__str__() == "3*x**2 + x + 1");
+    REQUIRE(c->__str__() == "3*x**2 + x + 1");
 }
 
-void test_mul_uni_poly()
+TEST_CASE("Multiplication of two UnivariatePolynomial", "[UnivariatePolynomial")
 {
     RCP<const Symbol> x  = symbol("x");
     RCP<const UnivariatePolynomial> a = univariate_polynomial(x, 2, {{0, 1}, {1, 2}, {2, 1}});
@@ -78,41 +80,41 @@ void test_mul_uni_poly()
     RCP<const UnivariatePolynomial> d = mul_uni_poly(a, b);
     //std::cout<<c->__str__();
 
-    assert(c->__str__() == "x**4 + 4*x**3 + 6*x**2 + 4*x + 1");
-    assert(d->__str__() == "-x**4 - 4*x**3 - 6*x**2 - 4*x - 1");
+    REQUIRE(c->__str__() == "x**4 + 4*x**3 + 6*x**2 + 4*x + 1");
+    REQUIRE(d->__str__() == "-x**4 - 4*x**3 - 6*x**2 - 4*x - 1");
 }
 
-void test_get_args()
+TEST_CASE("UnivariatePolynomial get_args", "[UnivariatePolynomial")
 {
     RCP<const Symbol> x  = symbol("x");
     RCP<const UnivariatePolynomial> a = univariate_polynomial(x, 2, {{0, 1}, {1, 2}, {2, 1}});
 
-    assert(vec_basic_eq_perm(a->get_args(), {one, mul(integer(2), x), pow(x, integer(2))}));
-    assert(!vec_basic_eq_perm(a->get_args(), {one, mul(integer(3), x), pow(x, integer(2))}));
+    REQUIRE(vec_basic_eq_perm(a->get_args(), {one, mul(integer(2), x), pow(x, integer(2))}));
+    REQUIRE(!vec_basic_eq_perm(a->get_args(), {one, mul(integer(3), x), pow(x, integer(2))}));
 }
 
-void test_eval()
+TEST_CASE("Evaluation of UnivariatePolynomial", "[UnivariatePolynomial")
 {
     RCP<const Symbol> x  = symbol("x");
     RCP<const UnivariatePolynomial> a = univariate_polynomial(x, 2, {{0, 1}, {1, 2}, {2, 1}});
 
-    assert(a->eval(2) == 9);
-    assert(a->eval_bit(3) == 81);
+    REQUIRE(a->eval(2) == 9);
+    REQUIRE(a->eval_bit(3) == 81);
 }
 
-void test_diff()
+TEST_CASE("Derivative of UnivariatePolynomial", "[UnivariatePolynomial")
 {
     RCP<const Symbol> x  = symbol("x");
     RCP<const Symbol> y  = symbol("y");
     RCP<const UnivariatePolynomial> a = univariate_polynomial(x, 2, {{0, 1}, {1, 2}, {2, 1}});
 
-    assert(a->diff(x)->__str__() == "2*x + 2");
+    REQUIRE(a->diff(x)->__str__() == "2*x + 2");
 	//std::cout<<a->diff(x)->__str__()<<std::endl;
-    assert(a->diff(y)->__str__() == "0");
+    REQUIRE(a->diff(y)->__str__() == "0");
 	//std::cout<<a->diff(y)->__str__()<<std::endl;
 }
 
-void test_bool_checks()
+TEST_CASE("Bool checks specific UnivariatePolynomial cases", "[UnivariatePolynomial")
 {
     RCP<const Symbol> x  = symbol("x");
     RCP<const UnivariatePolynomial> z = univariate_polynomial(x, 0, {{0, 0}});
@@ -125,61 +127,35 @@ void test_bool_checks()
     RCP<const UnivariatePolynomial> po = univariate_polynomial(x, 5, {{5, 1}});
     RCP<const UnivariatePolynomial> poly = univariate_polynomial(x, 2, {{0, 1}, {1, 2}, {2, 1}});
 
-    assert(z->is_zero() && !z->is_one() && !z->is_minus_one() && z->is_integer() && !z->is_symbol() &&
-			!z->is_mul() && !z->is_pow());
-    assert(!o->is_zero() && o->is_one() && !o->is_minus_one() && o->is_integer() && !o->is_symbol() &&
-			!o->is_mul() && !o->is_pow());
-    assert(!mo->is_zero() && !mo->is_one() && mo->is_minus_one() && mo->is_integer() && !mo->is_symbol() &&
-			!mo->is_mul() && !mo->is_pow());
-    assert(!i->is_zero() && !i->is_one() && !i->is_minus_one() && i->is_integer() && !i->is_symbol() &&
-			!i->is_mul() && !i->is_pow());
-    assert(!s->is_zero() && !s->is_one() && !s->is_minus_one() && !s->is_integer() && s->is_symbol() &&
-			!s->is_mul() && !s->is_pow());
-    assert(!m1->is_zero() && !m1->is_one() && !m1->is_minus_one() && !m1->is_integer() && !m1->is_symbol() &&
-			m1->is_mul() && !m1->is_pow());
-    assert(!m2->is_zero() && !m2->is_one() && !m2->is_minus_one() && !m2->is_integer() && !m2->is_symbol() &&
-			m2->is_mul() && !m2->is_pow());
-    assert(!po->is_zero() && !po->is_one() && !po->is_minus_one() && !po->is_integer() && !po->is_symbol() &&
-			!po->is_mul() && po->is_pow());
-    assert(!poly->is_zero() && !poly->is_one() && !poly->is_minus_one() && !poly->is_integer() && !poly->is_symbol() &&
-			!poly->is_mul() && !poly->is_pow());
+    REQUIRE((z->is_zero() && !z->is_one() && !z->is_minus_one() && z->is_integer() && !z->is_symbol() &&
+			!z->is_mul() && !z->is_pow()));
+    REQUIRE((!o->is_zero() && o->is_one() && !o->is_minus_one() && o->is_integer() && !o->is_symbol() &&
+			!o->is_mul() && !o->is_pow()));
+    REQUIRE((!mo->is_zero() && !mo->is_one() && mo->is_minus_one() && mo->is_integer() && !mo->is_symbol() &&
+			!mo->is_mul() && !mo->is_pow()));
+    REQUIRE((!i->is_zero() && !i->is_one() && !i->is_minus_one() && i->is_integer() && !i->is_symbol() &&
+			!i->is_mul() && !i->is_pow()));
+    REQUIRE((!s->is_zero() && !s->is_one() && !s->is_minus_one() && !s->is_integer() && s->is_symbol() &&
+			!s->is_mul() && !s->is_pow()));
+    REQUIRE((!m1->is_zero() && !m1->is_one() && !m1->is_minus_one() && !m1->is_integer() && !m1->is_symbol() &&
+			m1->is_mul() && !m1->is_pow()));
+    REQUIRE((!m2->is_zero() && !m2->is_one() && !m2->is_minus_one() && !m2->is_integer() && !m2->is_symbol() &&
+			m2->is_mul() && !m2->is_pow()));
+    REQUIRE((!po->is_zero() && !po->is_one() && !po->is_minus_one() && !po->is_integer() && !po->is_symbol() &&
+			!po->is_mul() && po->is_pow()));
+    REQUIRE((!poly->is_zero() && !poly->is_one() && !poly->is_minus_one() && !poly->is_integer() && !poly->is_symbol() &&
+			!poly->is_mul() && !poly->is_pow()));
 }
 
-void test_expand()
+TEST_CASE("Univariate Polynomial expand", "[UnivariatePolynomial][expand]")
 {
     RCP<const Symbol> x  = symbol("x");
     RCP<const UnivariatePolynomial> a = univariate_polynomial(x, 3, {{1, 1}, {2, 1}, {3, 1}});
     RCP<const Basic> b = rcp(new Pow(a, integer(3)));
     RCP<const Basic> c = expand(b);
 
-    assert(b->__str__() == "(x**3 + x**2 + x)**3");
+    REQUIRE(b->__str__() == "(x**3 + x**2 + x)**3");
     //std::cout<<b->__str__()<<std::endl;
-    assert(c->__str__() == "x**9 + 3*x**8 + 6*x**7 + 7*x**6 + 6*x**5 + 3*x**4 + x**3");
+    REQUIRE(c->__str__() == "x**9 + 3*x**8 + 6*x**7 + 7*x**6 + 6*x**5 + 3*x**4 + x**3");
     //std::cout<<c->__str__()<<std::endl;
-}
-
-int main(int argc, char* argv[])
-{
-    print_stack_on_segfault();
-
-    uni_poly_constructor();
-
-    test_add_uni_poly();
-
-    test_neg_uni_poly();
-
-    test_sub_uni_poly();
-
-    test_mul_uni_poly();
-
-    test_get_args();
-
-    test_eval();
-
-    test_diff();
-
-    test_bool_checks();
-
-    test_expand();
-    return 0;
 }
