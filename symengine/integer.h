@@ -51,15 +51,15 @@ public:
     /* These are very fast methods for add/sub/mul/div/pow on Integers only */
     //! Fast Integer Addition
     inline RCP<const Integer> addint(const Integer &other) const {
-        return rcp(new Integer(this->i + other.i));
+        return make_rcp<const Integer>(this->i + other.i);
     }
     //! Fast Integer Subtraction
     inline RCP<const Integer> subint(const Integer &other) const {
-        return rcp(new Integer(this->i - other.i));
+        return make_rcp<const Integer>(this->i - other.i);
     }
     //! Fast Integer Multiplication
     inline RCP<const Integer> mulint(const Integer &other) const {
-        return rcp(new Integer(this->i * other.i));
+        return make_rcp<const Integer>(this->i * other.i);
     }
     //!  Integer Division
     RCP<const Number> divint(const Integer &other) const;
@@ -75,11 +75,11 @@ public:
         }
         mpz_class tmp;
         mpz_pow_ui(tmp.get_mpz_t(), this->i.get_mpz_t(), other.i.get_ui());
-        return rcp(new Integer(tmp));
+        return make_rcp<const Integer>(tmp);
     }
     //! \return negative of self.
     inline RCP<const Integer> neg() const {
-        return rcp(new Integer(-i));
+        return make_rcp<const Integer>(-i);
     }
 
     /* These are general methods, overriden from the Number class, that need to
@@ -155,13 +155,13 @@ struct RCPIntegerKeyLess
 //! \return RCP<const Integer> from `int`
 inline RCP<const Integer> integer(int i)
 {
-    return rcp(new Integer(i));
+    return make_rcp<const Integer>(i);
 }
 
 //! \return RCP<const Integer> from `mpz_class`
 inline RCP<const Integer> integer(mpz_class i)
 {
-    return rcp(new Integer(i));
+    return make_rcp<const Integer>(i);
 }
 //! Integer Square root
 RCP<const Integer> isqrt(const Integer &n);

@@ -51,7 +51,7 @@ int ComplexDouble::compare(const Basic &o) const
 
 RCP<const ComplexDouble> complex_double(std::complex<double> x)
 {
-    return rcp(new ComplexDouble(x));
+    return make_rcp<const ComplexDouble>(x);
 };
 
 } // SymEngine

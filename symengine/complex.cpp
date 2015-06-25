@@ -67,7 +67,7 @@ RCP<const Number> Complex::from_mpq(const mpq_class re, const mpq_class im)
     if (im.get_num() == 0) {
         return Rational::from_mpq(re);
     } else {
-        return rcp(new Complex(re, im));
+        return make_rcp<const Complex>(re, im);
     }
 
 }

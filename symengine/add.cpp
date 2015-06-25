@@ -144,7 +144,7 @@ RCP<const Basic> Add::from_dict(const RCP<const Number> &coef, umap_basic_num &&
             } else {
                 insert(m, p->first, one);
             }
-            return rcp(new Mul(p->second, std::move(m)));
+            return make_rcp<const Mul>(p->second, std::move(m));
         }
         map_basic_basic m;
         if (is_a_Number(*p->second)) {
@@ -177,14 +177,14 @@ RCP<const Basic> Add::from_dict(const RCP<const Number> &coef, umap_basic_num &&
             } else {
                 insert(m, p->first, one);
             }
-            return rcp(new Mul(p->second, std::move(m)));
+            return make_rcp<const Mul>(p->second, std::move(m));
         } else {
             insert(m, p->first, one);
             insert(m, p->second, one);
-            return rcp(new Mul(one, std::move(m)));
+            return make_rcp<const Mul>(one, std::move(m));
         }
     } else {
-        return rcp(new Add(coef, std::move(d)));
+        return make_rcp<const Add>(coef, std::move(d));
     }
 }
 
@@ -335,7 +335,7 @@ void Add::as_two_terms(const Ptr<RCP<const Basic>> &a,
 
 RCP<const Basic> Add::subs(const map_basic_basic &subs_dict) const
 {
-    RCP<const Add> self = rcp_const_cast<Add>(rcp(this));
+    RCP<const Add> self = get_rcp_cast<const Add>();
     auto it = subs_dict.find(self);
     if (it != subs_dict.end())
         return it->second;

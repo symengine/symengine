@@ -149,12 +149,12 @@ public:
             if (abs(den) == one->i)
                 return integer(num*sgn(den));
             else
-                return rcp(new Rational(mpq_class(num*sgn(den), abs(den))));
+                return make_rcp<const Rational>(mpq_class(num*sgn(den), abs(den)));
         else
             if (abs(num) == one->i)
                 return integer(den*sgn(num));
             else
-                return rcp(new Rational(mpq_class(den*sgn(num), abs(num))));
+                return make_rcp<const Rational>(mpq_class(den*sgn(num), abs(num)));
     }
 
     //! Converts the param `other` appropriately and then calls `addrat`

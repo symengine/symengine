@@ -194,8 +194,8 @@ TEST_CASE("test_printing(): printing", "[printing]")
     RCP<const Basic> f = function_symbol("f", x);
     RCP<const Basic> g = function_symbol("g", x);
     r = f->diff(x);
-    r1 = rcp(new Derivative(f, {x}));
-    r2 = rcp(new Derivative(g, {x}));
+    r1 = Derivative::create(f, {x});
+    r2 = Derivative::create(g, {x});
 
     REQUIRE(r->__str__() == "Derivative(f(x), x)");
     REQUIRE(r1->__str__() == "Derivative(f(x), x)");
@@ -206,13 +206,13 @@ TEST_CASE("test_printing(): printing", "[printing]")
 
     f = function_symbol("f", {x, y});
     r = f->diff(x)->diff(y);
-    r1 = rcp(new Derivative(f, {x, y}));
-    r2 = rcp(new Derivative(f, {y, x}));
+    r1 = Derivative::create(f, {x, y});
+    r2 = Derivative::create(f, {y, x});
     REQUIRE(r->__str__() == "Derivative(f(x, y), x, y)");
     REQUIRE(r1->__str__() == "Derivative(f(x, y), x, y)");
     REQUIRE(r2->__str__() == "Derivative(f(x, y), y, x)");
 
-    r1 = rcp(new Subs(rcp(new Derivative(function_symbol("f", {y, x}), {x})), {{x, add(x, y)}}));
+    r1 = Subs::create(Derivative::create(function_symbol("f", {y, x}), {x}), {{x, add(x, y)}});
     REQUIRE(r1->__str__() == "Subs(Derivative(f(y, x), x), (x), (x + y))");
 }
 

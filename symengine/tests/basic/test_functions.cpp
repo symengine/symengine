@@ -48,6 +48,7 @@ using SymEngine::Derivative;
 using SymEngine::pi;
 using SymEngine::RCP;
 using SymEngine::rcp;
+using SymEngine::make_rcp;
 using SymEngine::print_stack_on_segfault;
 using SymEngine::sqrt;
 using SymEngine::sinh;
@@ -719,44 +720,53 @@ TEST_CASE("Derivative: functions", "[functions]")
     RCP<const Basic> r1, r2, r3;
 
     r1 = f->diff(x);
-    r2 = rcp(new Derivative(f, {x}));
-    r3 = rcp(new Derivative(g, {x}));
+    r2 = Derivative::create(f, {x});
+    r3 = Derivative::create(g, {x});
     REQUIRE(eq(r1, r2));
     REQUIRE(neq(r1, r3));
     REQUIRE(neq(r2, r3));
     REQUIRE(vec_basic_eq(r1->get_args(), {f, x}));
 
     r1 = f->diff(x)->diff(x);
-    r2 = rcp(new Derivative(f, {x, x}));
+    r2 = Derivative::create(f, {x, x});
     REQUIRE(eq(r1, r2));
     REQUIRE(vec_basic_eq(r1->get_args(), {f, x, x}));
 
     f = function_symbol("f", {x, y});
     r1 = f->diff(x)->diff(y);
-    r2 = rcp(new Derivative(f, {x, y}));
-    r3 = rcp(new Derivative(f, {y, x}));
+    r2 = Derivative::create(f, {x, y});
+    r3 = Derivative::create(f, {y, x});
     REQUIRE(eq(r1, r2));
     REQUIRE(neq(r1, r3));
 
     f = function_symbol("f", pow(x, integer(2)));
     r1 = f->diff(x);
     std::cout << *f << " " << *r1 << std::endl;
-    r2 = rcp(new Derivative(function_symbol("f", _x), {_x}));
-    r2 = rcp(new Subs(r2, {{_x, pow(x, integer(2))}}));
+    r2 = Derivative::create(function_symbol("f", _x), {_x});
+    r2 = Subs::create(r2, {{_x, pow(x, integer(2))}});
     REQUIRE(eq(r1, mul(mul(integer(2), x), r2)));
 
     f = function_symbol("f", {x, x});
     r1 = f->diff(x);
     std::cout << *f << " " << *r1 << std::endl;
+<<<<<<< HEAD
     r2 = rcp(new Derivative(function_symbol("f", {_x, x}), {_x}));
     r2 = rcp(new Subs(r2, {{_x, x}}));
     r3 = rcp(new Derivative(function_symbol("f", {x, _x}), {_x}));
     r3 = rcp(new Subs(r3, {{_x, x}}));
     REQUIRE(eq(r1, add(r2, r3)));
+=======
+    r2 = Derivative::create(function_symbol("f", {_x, x}), {_x});
+    r2 = Subs::create(r2, {{_x, x}});
+    r3 = Derivative::create(function_symbol("f", {x, _x}), {_x});
+    r3 = Subs::create(r3, {{_x, x}});
+    assert(eq(r1, add(r2, r3)));
+>>>>>>> master
 
     f = function_symbol("f", {y, add(x, y)});
     r1 = f->diff(x);
     std::cout << *f << " " << *r1 << std::endl;
+<<<<<<< HEAD
     r2 = rcp(new Derivative(function_symbol("f", {y, _x}), {_x}));
     r2 = rcp(new Subs(r2, {{_x, add(y, x)}}));
     REQUIRE(eq(r1, r2));
@@ -777,10 +787,33 @@ TEST_CASE("Derivative: functions", "[functions]")
     // Test get_args()
     r1 = rcp(new Derivative(function_symbol("f", {x, pow(y, integer(2))}), {x, x, y}));
     REQUIRE(vec_basic_eq(r1->get_args(), {function_symbol("f", {x, pow(y, integer(2))}), x, x, y}));
+=======
+    r2 = Derivative::create(function_symbol("f", {y, _x}), {_x});
+    r2 = Subs::create(r2, {{_x, add(y, x)}});
+    assert(eq(r1, r2));
+
+    r1 = function_symbol("f", add(_x, x))->diff(_x);
+    std::cout << *f << " " << *r1 << std::endl;
+    r2 = Subs::create(Derivative::create(function_symbol("f", __x), {__x}), {{__x, add(_x, x)}});
+    assert(eq(r1, r2));
+
+    // Test is_canonical()
+    f = function_symbol("f", x);
+    RCP<const Derivative> r4 = Derivative::create(f, {x});
+    assert(r4->is_canonical(function_symbol("f", {y, x}), {x}));
+    assert(!r4->is_canonical(function_symbol("f", y), {x}));
+    assert(r4->is_canonical(function_symbol("f", x), {x, y, x, x}));
+    assert(!(r4->is_canonical(function_symbol("f", x), {pow(x, integer(2))})));
+
+    // Test get_args()
+    r1 = Derivative::create(function_symbol("f", {x, pow(y, integer(2))}), {x, x, y});
+    assert(vec_basic_eq(r1->get_args(), {function_symbol("f", {x, pow(y, integer(2))}), x, x, y}));
+>>>>>>> master
 
     // Test Derivative::subs
-    r1 = rcp(new Derivative(function_symbol("f", {x, add(y, y)}), {x}));
+    r1 = Derivative::create(function_symbol("f", {x, add(y, y)}), {x});
     r2 = r1->subs({{x, y}});
+<<<<<<< HEAD
     r3 = rcp(new Subs(rcp(new Derivative(function_symbol("f", {x, add(y, y)}), {x})), {{x, y}}));
     REQUIRE(eq(r2, r3));
 
@@ -791,6 +824,18 @@ TEST_CASE("Derivative: functions", "[functions]")
     r2 = r1->subs({{y, z}});
     r3 = rcp(new Derivative(function_symbol("f", {x, add(z, z)}), {x}));
     REQUIRE(eq(r2, r3));
+=======
+    r3 = Subs::create(Derivative::create(function_symbol("f", {x, add(y, y)}), {x}), {{x, y}});
+    assert(eq(r2, r3));
+
+    r2 = r1->subs({{x, z}});
+    r3 = Derivative::create(function_symbol("f", {z, add(y, y)}), {z});
+    assert(eq(r2, r3));
+
+    r2 = r1->subs({{y, z}});
+    r3 = Derivative::create(function_symbol("f", {x, add(z, z)}), {x});
+    assert(eq(r2, r3));
+>>>>>>> master
 }
 
 TEST_CASE("Subs: functions", "[functions]")
@@ -802,6 +847,7 @@ TEST_CASE("Subs: functions", "[functions]")
     RCP<const Basic> r1, r2, r3, r4;
 
     // Test Subs::subs
+<<<<<<< HEAD
     r1 = rcp(new Subs(rcp(new Derivative(function_symbol("f", {y, x}), {x})), {{x, add(x, y)}}));
     r2 = rcp(new Subs(rcp(new Derivative(function_symbol("f", {y, x}), {x})), {{x, z}, {y, z}}));
     r3 = rcp(new Subs(rcp(new Derivative(function_symbol("f", {y, x}), {x})), {{y, z}, {x, z}}));
@@ -814,6 +860,20 @@ TEST_CASE("Subs: functions", "[functions]")
     r2 = r1->subs({{x, z}});
     r3 = rcp(new Subs(rcp(new Derivative(function_symbol("f", {y, x}), {x})), {{x, add(z, y)}}));
     REQUIRE(eq(r2, r3));
+=======
+    r1 = Subs::create(Derivative::create(function_symbol("f", {y, x}), {x}), {{x, add(x, y)}});
+    r2 = Subs::create(Derivative::create(function_symbol("f", {y, x}), {x}), {{x, z}, {y, z}});
+    r3 = Subs::create(Derivative::create(function_symbol("f", {y, x}), {x}), {{y, z}, {x, z}});
+    assert(eq(r2, r3));
+
+    r2 = r1->subs({{y, z}});
+    r3 = Subs::create(Derivative::create(function_symbol("f", {z, x}), {x}), {{x, add(x, z)}});
+    assert(eq(r2, r3));
+
+    r2 = r1->subs({{x, z}});
+    r3 = Subs::create(Derivative::create(function_symbol("f", {y, x}), {x}), {{x, add(z, y)}});
+    assert(eq(r2, r3));
+>>>>>>> master
 
     // Test Subs::diff
     r1 = function_symbol("f", {add(y, y), add(x, y)})->diff(x);
@@ -823,15 +883,21 @@ TEST_CASE("Subs: functions", "[functions]")
     REQUIRE(eq(r2, r3));
 
     r2 = r1->diff(x);
+<<<<<<< HEAD
     r3 = rcp(new Subs(rcp(new Derivative(function_symbol("f", {add(y, y), _x}), {_x, _x})), 
                         {{_x, add(x, y)}}));
     REQUIRE(eq(r2, r3));
+=======
+    r3 = Subs::create(Derivative::create(function_symbol("f", {add(y, y), _x}), {_x, _x}), 
+                        {{_x, add(x, y)}});
+    assert(eq(r2, r3));
+>>>>>>> master
 
     r2 = r1->diff(y);
-    r3 = rcp(new Subs(rcp(new Derivative(function_symbol("f", {add(y, y), _x}), {_x, _x})), 
-                        {{_x, add(x, y)}}));
-    r4 = rcp(new Subs(rcp(new Derivative(function_symbol("f", {add(y, y), _x}), {_x, y})), 
-                        {{_x, add(x, y)}}));
+    r3 = Subs::create(Derivative::create(function_symbol("f", {add(y, y), _x}), {_x, _x}), 
+                        {{_x, add(x, y)}});
+    r4 = Subs::create(Derivative::create(function_symbol("f", {add(y, y), _x}), {_x, y}), 
+                        {{_x, add(x, y)}});
     r3 = add(r3, r4);
     REQUIRE(eq(r2, r3));
 }
@@ -1801,7 +1867,7 @@ class DummyFunction {
         }
         RCP<const Basic> getFunctionWrapper() {
             ++count_;
-            return rcp(new FunctionWrapper((void*)this, name_, hash_, args_, &dec_ref, &comp));
+            return make_rcp<const FunctionWrapper>((void*)this, name_, hash_, args_, &dec_ref, &comp);
         }
 };
 
