@@ -31,7 +31,6 @@ using SymEngine::one;
 using SymEngine::zero;
 using SymEngine::sin;
 using SymEngine::RCP;
-using SymEngine::rcp;
 using SymEngine::sqrt;
 using SymEngine::pow;
 using SymEngine::add;

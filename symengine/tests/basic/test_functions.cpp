@@ -47,7 +47,6 @@ using SymEngine::function_symbol;
 using SymEngine::Derivative;
 using SymEngine::pi;
 using SymEngine::RCP;
-using SymEngine::rcp;
 using SymEngine::make_rcp;
 using SymEngine::print_stack_on_segfault;
 using SymEngine::sqrt;
