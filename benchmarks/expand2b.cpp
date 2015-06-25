@@ -21,7 +21,6 @@ using SymEngine::expr2poly;
 using SymEngine::poly_mul;
 using SymEngine::umap_vec_mpz;
 using SymEngine::RCP;
-using SymEngine::rcp;
 using SymEngine::print_stack_on_segfault;
 
 int main(int argc, char* argv[])
