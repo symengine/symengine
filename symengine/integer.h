@@ -161,7 +161,7 @@ inline RCP<const Integer> integer(int i)
 //! \return RCP<const Integer> from `mpz_class`
 inline RCP<const Integer> integer(mpz_class i)
 {
-    return rcp(new Integer(i));
+    return make_rcp<const Integer>(i);
 }
 //! Integer Square root
 RCP<const Integer> isqrt(const Integer &n);
