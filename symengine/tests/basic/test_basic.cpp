@@ -657,6 +657,11 @@ void test_free_symbols()
     s = free_symbols(*r1);
     assert(s.size() == 1);
     assert(s.count(x) == 1);
+
+    r1 = mul(x, integer(2));
+    s = free_symbols(*r1);
+    assert(s.size() == 1);
+    assert(s.count(x) == 1);
 }
 
 int main(int argc, char* argv[])
