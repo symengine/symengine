@@ -29,6 +29,12 @@ public:
     UnivariatePolynomial(const RCP<const Symbol> &var, const unsigned int &degree, map_uint_mpz&& dict);
     //! Constructor using a dense vector of mpz_class coefficients
     UnivariatePolynomial(const RCP<const Symbol> &var, const std::vector<mpz_class> &v);
+
+    static RCP<const UnivariatePolynomial> create(const RCP<const Symbol> &var,
+            const std::vector<mpz_class> &v) {
+        return make_rcp<const UnivariatePolynomial>(var, v);
+    }
+
     //! \return true if canonical
     bool is_canonical(const unsigned int &degree, const map_uint_mpz& dict);
     //! \return size of the hash
