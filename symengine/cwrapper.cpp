@@ -31,15 +31,12 @@ extern "C" {
 
 void basic_init(basic s)
 {
-#if defined(WITH_SYMENGINE_RCP)
     // These checks only happen at compile time.
     // Check that 'basic' has the correct size:
     static_assert(sizeof(RCP<const Basic>) == sizeof(basic), "Size of 'basic' is not correct");
     // Check that 'basic' has the correct alignment:
     static_assert(std::alignment_of<RCP<const Basic>>::value == std::alignment_of<basic>::value, "Alignment of 'basic' is not correct");
-#else
-    throw std::runtime_error("Teuchos::RCP is not compatible with the C wrappers");
-#endif
+
     // No allocation is being done, but the constructor of RCP is called and
     // the instance is initialized at the memory address 's'. The above checks
     // make sure that 's' has the correct size and alignment, which is
