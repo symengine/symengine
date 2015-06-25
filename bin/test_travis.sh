@@ -81,62 +81,58 @@ make
 echo "Running make install:"
 make install
 
-if [[ "${WITH_SYMENGINE_RCP}" == "no" ]]; then
-    echo "SymEngine successfully built with Teuchos::RCP. No tests being run."
-else
-    echo "Running tests in build directory:"
-    # C++
-    ctest --output-on-failure
-    # Python
-    if [[ "${WITH_PYTHON}" == "yes" ]]; then
-        cd symengine/python
-        nosetests -v
-        cd ../../
-    fi
-    # Ruby
-    if [[ "${WITH_RUBY}" == "yes" ]]; then
-        RUBY_GEM_DIR="$SOURCE_DIR/symengine/ruby"
-        echo "Installing dependent gems"
-        cd $RUBY_GEM_DIR
-        bundle install
-        echo "Running RSpec tests for Ruby extension in $RUBY_GEM_DIR"
-        bundle exec rspec
-        cd $SOURCE_DIR
-    fi
+echo "Running tests in build directory:"
+# C++
+ctest --output-on-failure
+# Python
+if [[ "${WITH_PYTHON}" == "yes" ]]; then
+    cd symengine/python
+    nosetests -v
+    cd ../../
+fi
+# Ruby
+if [[ "${WITH_RUBY}" == "yes" ]]; then
+    RUBY_GEM_DIR="$SOURCE_DIR/symengine/ruby"
+    echo "Installing dependent gems"
+    cd $RUBY_GEM_DIR
+    bundle install
+    echo "Running RSpec tests for Ruby extension in $RUBY_GEM_DIR"
+    bundle exec rspec
+    cd $SOURCE_DIR
+fi
 
-    echo "Running tests using installed SymEngine:"
-    # C++
-    cd $SOURCE_DIR/symengine/tests/basic/
-    extra_libs=""
-    if [[ "${WITH_BFD}" != "" ]]; then
-        extra_libs="$extra_libs -lbfd"
-    fi
-    if [[ "${WITH_ECM}" != "" ]]; then
-        extra_libs="$extra_libs -lecm"
-    fi
-    if [[ "${WITH_PRIMESIEVE}" != "" ]]; then
-        extra_libs="$extra_libs -lprimesieve"
-    fi
-    if [[ "${WITH_ARB}" != "" ]]; then
-        extra_libs="$extra_libs -larb -lflint"
-    fi
-    if [[ "${WITH_MPC}" != "" ]]; then
-        extra_libs="$extra_libs -lmpc"
-    fi
-    if [[ "${WITH_MPFR}" == "yes" ]] || [[ "${WITH_MPC}" == "yes" ]] || [[ "${WITH_ARB}" == "yes" ]]; then
-        extra_libs="$extra_libs -lmpfr"
-    fi
-    ${CXX} -std=c++0x -I$our_install_dir/include/ -L$our_install_dir/lib test_basic.cpp -lsymengine -lteuchos $extra_libs -lgmpxx -lgmp
-    export LD_LIBRARY_PATH=$our_install_dir/lib:$LD_LIBRARY_PATH
-    ./a.out
-    # Python
-    if [[ "${WITH_PYTHON}" == "yes" ]]; then
-        mkdir -p empty
-        cd empty
-        cat << EOF | python
+echo "Running tests using installed SymEngine:"
+# C++
+cd $SOURCE_DIR/symengine/tests/basic/
+extra_libs=""
+if [[ "${WITH_BFD}" != "" ]]; then
+    extra_libs="$extra_libs -lbfd"
+fi
+if [[ "${WITH_ECM}" != "" ]]; then
+    extra_libs="$extra_libs -lecm"
+fi
+if [[ "${WITH_PRIMESIEVE}" != "" ]]; then
+    extra_libs="$extra_libs -lprimesieve"
+fi
+if [[ "${WITH_ARB}" != "" ]]; then
+    extra_libs="$extra_libs -larb -lflint"
+fi
+if [[ "${WITH_MPC}" != "" ]]; then
+    extra_libs="$extra_libs -lmpc"
+fi
+if [[ "${WITH_MPFR}" == "yes" ]] || [[ "${WITH_MPC}" == "yes" ]] || [[ "${WITH_ARB}" == "yes" ]]; then
+    extra_libs="$extra_libs -lmpfr"
+fi
+${CXX} -std=c++0x -I$our_install_dir/include/ -L$our_install_dir/lib test_basic.cpp -lsymengine -lteuchos $extra_libs -lgmpxx -lgmp
+export LD_LIBRARY_PATH=$our_install_dir/lib:$LD_LIBRARY_PATH
+./a.out
+# Python
+if [[ "${WITH_PYTHON}" == "yes" ]]; then
+    mkdir -p empty
+    cd empty
+    cat << EOF | python
 import symengine
 if not symengine.test():
     raise Exception('Tests failed')
 EOF
-    fi
 fi
