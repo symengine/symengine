@@ -23,32 +23,28 @@ env:
   ## Out of tree builds (default):
   # Debug build
   - BUILD_TYPE="Debug"
-  # Debug build (with SYMENGINE_ASSERT)
-  - BUILD_TYPE="Debug" WITH_SYMENGINE_ASSERT="yes"
-  # Debug build (with SYMENGINE_ASSERT) with Python 2.7
-  - BUILD_TYPE="Debug" WITH_SYMENGINE_ASSERT="yes" WITH_PYTHON="yes" PYTHON_VERSION="2.7"
-  # Debug build (with SYMENGINE_ASSERT and SYMENGINE_THREAD_SAFE)
-  - BUILD_TYPE="Debug" WITH_SYMENGINE_ASSERT="yes" WITH_SYMENGINE_THREAD_SAFE="yes"
-  # Debug build (with SYMENGINE_ASSERT) with ECM
-  - BUILD_TYPE="Debug" WITH_SYMENGINE_ASSERT="yes" WITH_ECM="yes"
-  # Debug build (with SYMENGINE_ASSERT) with PRIMESIEVE
-  - BUILD_TYPE="Debug" WITH_SYMENGINE_ASSERT="yes" WITH_PRIMESIEVE="yes"
-  # Debug build (with SYMENGINE_ASSERT) with Arb
-  - BUILD_TYPE="Debug" WITH_SYMENGINE_ASSERT="yes" WITH_ARB="yes"
-  # Debug build (with SYMENGINE_ASSERT) with MPC
-  - BUILD_TYPE="Debug" WITH_SYMENGINE_ASSERT="yes" WITH_MPC="yes"
-  # Debug build shared lib (with SYMENGINE_ASSERT)
-  - BUILD_TYPE="Debug" WITH_SYMENGINE_ASSERT="yes" BUILD_SHARED_LIBS="yes"
-  # Debug build with Teuchos::RCP (just to test that it compiles)
-  - BUILD_TYPE="Debug" WITH_SYMENGINE_RCP="no"
-  # Release build
-  - BUILD_TYPE="Release"
+  # Debug build (with SYMENGINE_ASSERT and Teuchos::RCP)
+  - BUILD_TYPE="Debug" WITH_SYMENGINE_ASSERT="yes" WITH_SYMENGINE_RCP="no"
+  # Debug build (with SYMENGINE_ASSERT and Teuchos::RCP) with Python 2.7
+  - BUILD_TYPE="Debug" WITH_SYMENGINE_ASSERT="yes" WITH_SYMENGINE_RCP="no" WITH_PYTHON="yes" PYTHON_VERSION="2.7"
+  # Debug build (with SYMENGINE_ASSERT and SYMENGINE_THREAD_SAFE and Teuchos::RCP)
+  - BUILD_TYPE="Debug" WITH_SYMENGINE_ASSERT="yes" WITH_SYMENGINE_RCP="no" WITH_SYMENGINE_THREAD_SAFE="yes"
+  # Debug build (with SYMENGINE_ASSERT and Teuchos::RCP) with ECM
+  - BUILD_TYPE="Debug" WITH_SYMENGINE_ASSERT="yes" WITH_SYMENGINE_RCP="no" WITH_ECM="yes"
+  # Debug build (with SYMENGINE_ASSERT and Teuchos::RCP) with PRIMESIEVE
+  - BUILD_TYPE="Debug" WITH_SYMENGINE_ASSERT="yes" WITH_SYMENGINE_RCP="no" WITH_PRIMESIEVE="yes"
+  # Debug build (with SYMENGINE_ASSERT and Teuchos::RCP) with Arb
+  - BUILD_TYPE="Debug" WITH_SYMENGINE_ASSERT="yes" WITH_SYMENGINE_RCP="no" WITH_ARB="yes"
+  # Debug build (with SYMENGINE_ASSERT and Teuchos::RCP) with MPC
+  - BUILD_TYPE="Debug" WITH_SYMENGINE_ASSERT="yes" WITH_SYMENGINE_RCP="no" WITH_MPC="yes"
+  # Debug build shared lib (with SYMENGINE_ASSERT and Teuchos::RCP)
+  - BUILD_TYPE="Debug" WITH_SYMENGINE_ASSERT="yes" WITH_SYMENGINE_RCP="no" BUILD_SHARED_LIBS="yes"
 
   ## In-tree builds (we just check a few configurations to make sure they work):
   # Debug build without Python:
   - BUILD_TYPE="Debug" TEST_IN_TREE="yes"
   # Debug build with Python 2.7:
-  - BUILD_TYPE="Debug" TEST_IN_TREE="yes" WITH_PYTHON="yes" WITH_SYMENGINE_ASSERT="yes" PYTHON_VERSION="2.7"
+  - BUILD_TYPE="Debug" TEST_IN_TREE="yes" WITH_PYTHON="yes" WITH_SYMENGINE_ASSERT="yes" WITH_SYMENGINE_RCP="no" PYTHON_VERSION="2.7"
   # Release build with Python 2.7:
   - TEST_IN_TREE="yes" WITH_PYTHON="yes" PYTHON_VERSION="2.7"
   # Release build shared lib with Python 2.7:
@@ -70,7 +66,7 @@ matrix:
     - compiler: clang
     - os: osx
   include:
-    - env: BUILD_TYPE="Debug" WITH_SYMENGINE_ASSERT="yes" WITH_PYTHON="yes" PYTHON_VERSION="2.7"
+    - env: BUILD_TYPE="Debug" WITH_SYMENGINE_ASSERT="yes" WITH_SYMENGINE_RCP="no" WITH_PYTHON="yes" PYTHON_VERSION="2.7"
       compiler: clang
       os: linux
       addons:
@@ -81,10 +77,27 @@ matrix:
           - clang
           - libstdc++-4.8-dev
           - libgmp-dev
-    - env: BUILD_TYPE="Debug" WITH_SYMENGINE_ASSERT="yes" WITH_PYTHON="yes" PYTHON_VERSION="2.7"
+    - env: BUILD_TYPE="Release" WITH_PYTHON="yes" PYTHON_VERSION="2.7"
+      compiler: clang
+      os: linux
+      addons:
+        apt:
+          sources:
+          - ubuntu-toolchain-r-test
+          packages:
+          - clang
+          - libstdc++-4.8-dev
+          - libgmp-dev
+    - env: BUILD_TYPE="Debug" WITH_SYMENGINE_ASSERT="yes" WITH_SYMENGINE_RCP="no" WITH_PYTHON="yes" PYTHON_VERSION="2.7"
       compiler: clang
       os: osx
-    - env: BUILD_TYPE="Debug" WITH_SYMENGINE_ASSERT="yes" WITH_PYTHON="yes" PYTHON_VERSION="2.7"
+    - env: BUILD_TYPE="Release" WITH_PYTHON="yes" PYTHON_VERSION="2.7"
+      compiler: clang
+      os: osx
+    - env: BUILD_TYPE="Debug" WITH_SYMENGINE_ASSERT="yes" WITH_SYMENGINE_RCP="no" WITH_PYTHON="yes" PYTHON_VERSION="2.7"
+      compiler: gcc
+      os: osx
+    - env: BUILD_TYPE="Release" WITH_PYTHON="yes" PYTHON_VERSION="2.7"
       compiler: gcc
       os: osx
     - language: ruby
