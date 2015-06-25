@@ -1,3 +1,5 @@
+#define CATCH_CONFIG_MAIN
+#include "catch.hpp"
 #include <algorithm>
 
 #include <symengine/diophantine.h>
@@ -31,7 +33,7 @@ bool vec_dense_matrix_eq_perm(const std::vector<DenseMatrix> &a,
     return true;
 }
 
-void test_homogeneous_lde()
+TEST_CASE("test_homogeneous_lde()", "[diophantine]")
 {
     std::vector<DenseMatrix> basis, true_basis;
 
@@ -49,7 +51,7 @@ void test_homogeneous_lde()
         DenseMatrix(1, 4, {integer(4), integer(2), integer(1), integer(0)})
     };
 
-    assert(vec_dense_matrix_eq_perm(basis, true_basis));
+    REQUIRE(vec_dense_matrix_eq_perm(basis, true_basis));
 
     basis.clear();
     A = DenseMatrix(1, 4, {integer(-1), integer(1), integer(2), integer(-3)});
@@ -63,14 +65,14 @@ void test_homogeneous_lde()
         DenseMatrix(1, 4, {integer(1), integer(1), integer(0), integer(0)})
     };
 
-    assert(vec_dense_matrix_eq_perm(basis, true_basis));
+    REQUIRE(vec_dense_matrix_eq_perm(basis, true_basis));
 
     basis.clear();
     A = DenseMatrix(1, 2, {integer(2), integer(3)});
     homogeneous_lde(basis, A);
     true_basis = std::vector<DenseMatrix>{};
 
-    assert(vec_dense_matrix_eq_perm(basis, true_basis));
+    REQUIRE(vec_dense_matrix_eq_perm(basis, true_basis));
 
     basis.clear();
     A = DenseMatrix(1, 2, {integer(2), integer(-3)});
@@ -79,14 +81,5 @@ void test_homogeneous_lde()
         DenseMatrix(1, 2, {integer(3), integer(2)})
     };
 
-    assert(vec_dense_matrix_eq_perm(basis, true_basis));
-}
-
-int main(int argc, char* argv[])
-{
-    print_stack_on_segfault();
-
-    test_homogeneous_lde();
-
-    return 0;
+    REQUIRE(vec_dense_matrix_eq_perm(basis, true_basis));
 }
