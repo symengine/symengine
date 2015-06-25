@@ -38,18 +38,6 @@ inline bool is_a_sub(const Basic &b)
     return dynamic_cast<const T *>(&b) != nullptr;
 }
 
-template<typename T, typename ...Args>
-inline RCP<T> make_rcp( Args&& ...args )
-{
-#if defined(WITH_SYMENGINE_RCP)
-    return rcp( new T( std::forward<Args>(args)... ) );
-#else
-    RCP<T> p = rcp( new T( std::forward<Args>(args)... ) );
-    p->weak_self_ptr_ = p.create_weak();
-    return p;
-#endif
-}
-
 } // SymEngine
 
 // global namespace functions
