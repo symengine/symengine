@@ -135,18 +135,12 @@ public:
     //! Assignment operator in continuation with above
     Basic& operator=(Basic&&) = delete;
 
-    RCP<const Basic> get_rcp() const {
-        return get_rcp_cast<const Basic>();
-    }
+    //! Get RCP<const Basic> pointer to self
+    inline RCP<const Basic> get_rcp() const;
 
+    //! Get RCP<T> pointer to self (it will cast the pointer to T)
     template <class T>
-    RCP<T> get_rcp_cast() const {
-#if defined(WITH_SYMENGINE_RCP)
-        return rcp(static_cast<T*>(this));
-#else
-        return rcp_static_cast<T>(weak_self_ptr_.create_strong());
-#endif
-    }
+    inline RCP<T> get_rcp_cast() const;
 
     /*!  Implements the hash of the given SymEngine class.
          Use `std::hash` to get the hash. Example:
