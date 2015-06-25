@@ -54,11 +54,7 @@ RCP<const Basic> Basic::subs(const map_basic_basic &subs_dict) const
 
 RCP<const Basic> Basic::diff(const RCP<const Symbol> &x) const
 {
-    // A brace enclosed initializer list cannot be forwarded. There are some
-    // complicated workarounds, but for now we just first initialize the
-    // `vec_basic`, then pass it into the make_rcp.
-    const vec_basic &v = {x};
-    return make_rcp<const Derivative>(get_rcp(), v);
+    return Derivative::create(get_rcp(), {x});
 }
 
 } // SymEngine

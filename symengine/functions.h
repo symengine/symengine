@@ -605,6 +605,12 @@ private:
 public:
     IMPLEMENT_TYPEID(DERIVATIVE)
     Derivative(const RCP<const Basic> &arg, const vec_basic &x);
+
+    static RCP<const Derivative> create(const RCP<const Basic> &arg,
+            const vec_basic &x) {
+        return make_rcp<const Derivative>(arg, x);
+    }
+
     virtual std::size_t __hash__() const;
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
