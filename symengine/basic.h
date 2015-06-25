@@ -136,8 +136,13 @@ public:
     Basic& operator=(Basic&&) = delete;
 
     RCP<const Basic> get_rcp() const {
+        return get_rcp_cast<const Basic>();
+    }
+
+    template <class T>
+    RCP<T> get_rcp_cast() const {
 #if defined(WITH_SYMENGINE_RCP)
-        return rcp(this);
+        return rcp(static_cast<T*>(this));
 #else
         return weak_self_ptr_.create_strong();
 #endif
