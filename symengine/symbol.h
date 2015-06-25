@@ -50,7 +50,13 @@ public:
 //! inline version to return `Symbol`
 inline RCP<const Symbol> symbol(const std::string &name)
 {
+#if defined(WITH_SYMENGINE_RCP)
     return rcp(new Symbol(name));
+#else
+    RCP<const Symbol> s = rcp(new Symbol(name));
+    s->weak_self_ptr_ = s.create_weak();
+    return s;
+#endif
 }
 
 } // SymEngine
