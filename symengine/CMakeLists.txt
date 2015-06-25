@@ -5,6 +5,11 @@ include_directories(BEFORE ${teuchos_SOURCE_DIR})
 # Include Teuchos config file (generated per build):
 include_directories(BEFORE ${teuchos_BINARY_DIR})
 
+add_subdirectory(catch)
+
+# Include Catch headers:
+include_directories(BEFORE ${catch_SOURCE_DIR})
+
 set(SRC
     symengine_rcp.cpp
     basic.cpp
