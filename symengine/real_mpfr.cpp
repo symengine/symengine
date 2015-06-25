@@ -30,8 +30,6 @@ bool RealMPFR::__eq__(const Basic &o) const
         const RealMPFR &s = static_cast<const RealMPFR &>(o);
         if (get_prec() == s.get_prec()) {
             return mpfr_cmp(this->i.get_mpfr_t(), s.i.get_mpfr_t()) == 0;
-        } else {
-            return false;
         }
     }
     return false;
@@ -807,6 +805,10 @@ class EvaluateMPFR : public Evaluate {
         mpfr_class t(static_cast<const RealMPFR &>(x).i.get_prec());
         mpfr_abs(t.get_mpfr_t(), static_cast<const RealMPFR &>(x).i.get_mpfr_t(), MPFR_RNDN);
         return real_mpfr(std::move(t));
+    }
+
+    virtual RCP<const Basic> gamma(Basic const &aConst) const {
+        throw std::runtime_error("Not Implemented.");
     }
 };
 

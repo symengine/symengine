@@ -28,8 +28,6 @@ bool ComplexMPC::__eq__(const Basic &o) const
         const ComplexMPC &s = static_cast<const ComplexMPC &>(o);
         if (get_prec() == s.get_prec()) {
             return mpc_cmp(this->i.get_mpc_t(), s.i.get_mpc_t()) == 0;
-        } else {
-            return false;
         }
     }
     return false;
@@ -722,6 +720,9 @@ class EvaluateMPC : public Evaluate {
         mpfr_class t(static_cast<const ComplexMPC &>(x).i.get_prec());
         mpc_abs(t.get_mpfr_t(), static_cast<const ComplexMPC &>(x).i.get_mpc_t(), MPFR_RNDN);
         return real_mpfr(std::move(t));
+    }
+    virtual RCP<const Basic> gamma(Basic const &aConst) const {
+        throw std::runtime_error("Not Implemented.");
     }
 };
 

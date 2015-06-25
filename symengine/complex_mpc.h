@@ -57,7 +57,7 @@ public:
             mpc_clear(mp);
         }
     }
-    mpfr_prec_t get_prec() {
+    mpfr_prec_t get_prec() const {
         return mpc_get_prec(mp);
     }
 };
