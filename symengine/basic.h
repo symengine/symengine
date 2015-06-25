@@ -135,11 +135,13 @@ public:
     //! Assignment operator in continuation with above
     Basic& operator=(Basic&&) = delete;
 
-#if !defined(WITH_SYMENGINE_RCP)
     RCP<const Basic> get_rcp() const {
+#if defined(WITH_SYMENGINE_RCP)
+        return rcp(this);
+#else
         return weak_self_ptr_.create_strong();
-    }
 #endif
+    }
 
     /*!  Implements the hash of the given SymEngine class.
          Use `std::hash` to get the hash. Example:
