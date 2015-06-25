@@ -14,7 +14,6 @@
 
 using SymEngine::Basic;
 using SymEngine::RCP;
-using SymEngine::rcp;
 using SymEngine::zero;
 using SymEngine::Symbol;
 using SymEngine::Rational;
