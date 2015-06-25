@@ -1,3 +1,6 @@
+#ifndef RUBY_BASIC_H_
+#define RUBY_BASIC_H_
+
 #include <ruby.h>
 #include <symengine/cwrapper.h>
 
@@ -19,8 +22,12 @@ VALUE cbasic_pow(VALUE self, VALUE operand2);
 
 VALUE cbasic_eq(VALUE self, VALUE operand2);
 
+VALUE cbasic_neq(VALUE self, VALUE operand2);
+
 VALUE cbasic_neg(VALUE self);
 
 VALUE cbasic_to_str(VALUE self);
 
 VALUE cbasic_expand(VALUE self);
+
+#endif //RUBY_BASIC_H_

@@ -73,13 +73,24 @@ describe SymEngine do
                 end
             end
             describe '#==' do
-                context 'with another Basic object as argument' do
+                context 'with another initialised Basic object as argument' do
                     it 'returns true if they are the same expression
                         false if not' do
                         a = SymEngine::Symbol.new("x");
                         b = SymEngine::Symbol.new("y");
                         c = ((a*b)==(@a*@b))
                         expect(c).to be true
+                    end
+                end
+            end
+            describe '#!=' do
+                context 'with another initialised Basic object as argument' do
+                    it 'returns true is they are not the same expression
+                        false if they are' do |variable|
+                        a = SymEngine::Symbol.new("x");
+                        b = SymEngine::Symbol.new("y");
+                        c = ((a*b)!=(@a*@b))
+                        expect(c).to be false
                     end
                 end
             end

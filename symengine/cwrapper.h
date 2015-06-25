@@ -125,6 +125,8 @@ int basic_diff(basic s, const basic expr, const basic sym);
 void basic_neg(basic s, const basic a);
 //! Returns 1 if both basic are equal, 0 if not
 int basic_eq(const basic a, const basic b);
+//! Returns 1 if both basic are not equal, 0 if they are
+int basic_neq(const basic a, const basic b);
 //! Assigns s = abs(a).
 void basic_abs(basic s, const basic a);
 //! Expands the expr a and assigns to s.

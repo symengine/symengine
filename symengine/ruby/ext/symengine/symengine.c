@@ -24,6 +24,7 @@ void Init_symengine() {
     rb_define_method(c_basic, "/", cbasic_div, 1);
     rb_define_method(c_basic, "**", cbasic_pow, 1);
     rb_define_method(c_basic, "==", cbasic_eq, 1);
+    rb_define_method(c_basic, "!=", cbasic_neq, 1);
     rb_define_method(c_basic, "-@", cbasic_neg, 0);
     rb_define_method(c_basic, "to_s", cbasic_to_str, 0);
     rb_define_method(c_basic, "expand", cbasic_expand, 0);
