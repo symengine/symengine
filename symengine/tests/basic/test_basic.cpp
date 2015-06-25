@@ -29,6 +29,7 @@ using SymEngine::zero;
 using SymEngine::Number;
 using SymEngine::pow;
 using SymEngine::RCP;
+using SymEngine::make_rcp;
 using SymEngine::print_stack_on_segfault;
 using SymEngine::Complex;
 using SymEngine::has_symbol;
@@ -94,9 +95,9 @@ void test_add()
     insert(m, y, integer(3));
 
     m2 = m;
-    RCP<const Add> a = rcp(new Add(zero, std::move(m2)));
+    RCP<const Add> a = make_rcp<const Add>(zero, std::move(m2));
     insert(m, x, integer(-2));
-    RCP<const Add> b = rcp(new Add(zero, std::move(m)));
+    RCP<const Add> b = make_rcp<const Add>(zero, std::move(m));
     std::cout << *a << std::endl;
     std::cout << *b << std::endl;
 
@@ -283,9 +284,9 @@ void test_mul()
     insert(m, y, integer(3));
 
     m2 = m;
-    RCP<const Mul> a = rcp(new Mul(one, std::move(m2)));
+    RCP<const Mul> a = make_rcp<const Mul>(one, std::move(m2));
     insert(m, x, integer(-2));
-    RCP<const Mul> b = rcp(new Mul(one, std::move(m)));
+    RCP<const Mul> b = make_rcp<const Mul>(one, std::move(m));
     std::cout << *a << std::endl;
     std::cout << *b << std::endl;
 

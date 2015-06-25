@@ -107,7 +107,7 @@ public:
     FreeSymbolsVisitor() : BaseVisitor(this) { };
 
     void bvisit(const Symbol &x) {
-        s.insert(rcp(&x));
+        s.insert(x.get_rcp());
     }
 
     void bvisit(const Subs &x) {

@@ -193,8 +193,8 @@ void test_printing()
     RCP<const Basic> f = function_symbol("f", x);
     RCP<const Basic> g = function_symbol("g", x);
     r = f->diff(x);
-    r1 = rcp(new Derivative(f, {x}));
-    r2 = rcp(new Derivative(g, {x}));
+    r1 = Derivative::create(f, {x});
+    r2 = Derivative::create(g, {x});
 
     assert(r->__str__() == "Derivative(f(x), x)");
     assert(r1->__str__() == "Derivative(f(x), x)");
@@ -205,13 +205,13 @@ void test_printing()
 
     f = function_symbol("f", {x, y});
     r = f->diff(x)->diff(y);
-    r1 = rcp(new Derivative(f, {x, y}));
-    r2 = rcp(new Derivative(f, {y, x}));
+    r1 = Derivative::create(f, {x, y});
+    r2 = Derivative::create(f, {y, x});
     assert(r->__str__() == "Derivative(f(x, y), x, y)");
     assert(r1->__str__() == "Derivative(f(x, y), x, y)");
     assert(r2->__str__() == "Derivative(f(x, y), y, x)");
 
-    r1 = rcp(new Subs(rcp(new Derivative(function_symbol("f", {y, x}), {x})), {{x, add(x, y)}}));
+    r1 = Subs::create(Derivative::create(function_symbol("f", {y, x}), {x}), {{x, add(x, y)}});
     assert(r1->__str__() == "Subs(Derivative(f(y, x), x), (x), (x + y))");
 }
 

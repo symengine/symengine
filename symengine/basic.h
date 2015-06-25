@@ -109,6 +109,9 @@ public:
 #else
     mutable unsigned int refcount_; // reference counter
 #endif // WITH_SYMENGINE_THREAD_SAFE
+#else
+public:
+    mutable RCP<const Basic> weak_self_ptr_;
 #endif // WITH_SYMENGINE_RCP
 public:
     virtual TypeID get_type_code() const = 0;
@@ -131,6 +134,19 @@ public:
     Basic(Basic&&) = delete;
     //! Assignment operator in continuation with above
     Basic& operator=(Basic&&) = delete;
+
+    RCP<const Basic> get_rcp() const {
+        return get_rcp_cast<const Basic>();
+    }
+
+    template <class T>
+    RCP<T> get_rcp_cast() const {
+#if defined(WITH_SYMENGINE_RCP)
+        return rcp(static_cast<T*>(this));
+#else
+        return rcp_static_cast<T>(weak_self_ptr_.create_strong());
+#endif
+    }
 
     /*!  Implements the hash of the given SymEngine class.
          Use `std::hash` to get the hash. Example:
@@ -238,6 +254,9 @@ bool is_a_sub(const Basic &b);
 
 //! Expands `self`
 RCP<const Basic> expand(const RCP<const Basic> &self);
+
+template<typename T, typename ...Args>
+inline RCP<T> make_rcp( Args&& ...args );
 
 } // SymEngine
 

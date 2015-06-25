@@ -118,17 +118,17 @@ RCP<const SymEngine::Basic> Mul::from_dict(const RCP<const Number> &coef, map_ba
                 }
             } else {
                 // For coef*x or coef*x**3 we simply return Mul:
-                return rcp(new Mul(coef, std::move(d)));
+                return make_rcp<const Mul>(coef, std::move(d));
             }
         }
         if (coef->is_one()) {
             // Create a Pow() here:
             return pow(p->first, p->second);
         } else {
-            return rcp(new Mul(coef, std::move(d)));
+            return make_rcp<const Mul>(coef, std::move(d));
         }
     } else {
-        return rcp(new Mul(coef, std::move(d)));
+        return make_rcp<const Mul>(coef, std::move(d));
     }
 }
 
@@ -524,7 +524,7 @@ RCP<const Basic> Mul::diff(const RCP<const Symbol> &x) const
 
 RCP<const Basic> Mul::subs(const map_basic_basic &subs_dict) const
 {
-    RCP<const Mul> self = rcp_const_cast<Mul>(rcp(this));
+    RCP<const Mul> self = get_rcp_cast<const Mul>();
     auto it = subs_dict.find(self);
     if (it != subs_dict.end())
         return it->second;

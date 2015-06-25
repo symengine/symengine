@@ -50,7 +50,7 @@ public:
 //! inline version to return `Symbol`
 inline RCP<const Symbol> symbol(const std::string &name)
 {
-    return rcp(new Symbol(name));
+    return make_rcp<const Symbol>(name);
 }
 
 } // SymEngine

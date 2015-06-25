@@ -44,7 +44,7 @@ RCP<const Basic> expand(const RCP<const Basic> &self)
 
 RCP<const Basic> Basic::subs(const map_basic_basic &subs_dict) const
 {
-    RCP<const Basic> self = rcp_const_cast<Basic>(rcp(this));
+    RCP<const Basic> self = get_rcp();
     auto it = subs_dict.find(self);
     if (it == subs_dict.end())
         return self;
@@ -54,7 +54,7 @@ RCP<const Basic> Basic::subs(const map_basic_basic &subs_dict) const
 
 RCP<const Basic> Basic::diff(const RCP<const Symbol> &x) const
 {
-    return rcp(new Derivative(rcp(this), {x}));
+    return Derivative::create(get_rcp(), {x});
 }
 
 } // SymEngine

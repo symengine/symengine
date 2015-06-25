@@ -12,6 +12,7 @@ using SymEngine::Symbol;
 using SymEngine::symbol;
 using SymEngine::Pow;
 using SymEngine::RCP;
+using SymEngine::make_rcp;
 using SymEngine::print_stack_on_segfault;
 using SymEngine::map_uint_mpz;
 using SymEngine::Basic;
@@ -26,7 +27,7 @@ void uni_poly_constructor()
     RCP<const UnivariatePolynomial> P = univariate_polynomial(x, 2, {{0, 1}, {1, 2}, {2, 1}});
     assert(P->__str__() == "x**2 + 2*x + 1");
 
-    RCP<const UnivariatePolynomial> Q = rcp(new UnivariatePolynomial(x, {1, 0, 2, 1}));
+    RCP<const UnivariatePolynomial> Q = UnivariatePolynomial::create(x, {1, 0, 2, 1});
     assert(Q->__str__() == "x**3 + 2*x**2 + 1");
 }
 
@@ -149,7 +150,7 @@ void test_expand()
 {
     RCP<const Symbol> x  = symbol("x");
     RCP<const UnivariatePolynomial> a = univariate_polynomial(x, 3, {{1, 1}, {2, 1}, {3, 1}});
-    RCP<const Basic> b = rcp(new Pow(a, integer(3)));
+    RCP<const Basic> b = make_rcp<const Pow>(a, integer(3));
     RCP<const Basic> c = expand(b);
 
     assert(b->__str__() == "(x**3 + x**2 + x)**3");

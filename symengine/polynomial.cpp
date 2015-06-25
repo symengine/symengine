@@ -95,7 +95,7 @@ RCP<const Basic> UnivariatePolynomial::from_dict(const RCP<const Symbol> &var, m
                     {{var, integer(d.begin()->first)}});
         }
     } else {
-        return rcp(new UnivariatePolynomial(var, (--(d.end()))->first, std::move(d)));
+        return make_rcp<const UnivariatePolynomial>(var, (--(d.end()))->first, std::move(d));
     }
 }
 
@@ -130,7 +130,7 @@ RCP<const Basic> UnivariatePolynomial::diff(const RCP<const Symbol> &x) const
         for (auto &p : dict_) {
             d[p.first - 1] = p.second * p.first;
         }
-        return rcp(new UnivariatePolynomial(var_, (--(d.end()))->first, std::move(d)));
+        return make_rcp<const UnivariatePolynomial>(var_, (--(d.end()))->first, std::move(d));
     } else
         return zero;
 }
@@ -289,9 +289,9 @@ RCP<const UnivariatePolynomial> mul_uni_poly(RCP<const UnivariatePolynomial> a, 
     }
 
     if (sign == -1)
-        return neg_uni_poly(*rcp(new UnivariatePolynomial(a->var_, v)));
+        return neg_uni_poly(*make_rcp<const UnivariatePolynomial>(a->var_, v));
     else
-        return rcp(new UnivariatePolynomial(a->var_, v));
+        return make_rcp<const UnivariatePolynomial>(a->var_, v);
 }
 
 } // SymEngine

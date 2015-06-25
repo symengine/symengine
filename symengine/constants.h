@@ -53,7 +53,7 @@ public:
 //! inline version to return `Constant`
 inline RCP<const Constant> constant(const std::string &name)
 {
-    return rcp(new Constant(name));
+    return make_rcp<const Constant>(name);
 }
 
 // Constant Numbers
