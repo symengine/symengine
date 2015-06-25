@@ -13,6 +13,8 @@
 #include <symengine/constants.h>
 #include <symengine/real_double.h>
 #include <symengine/complex_double.h>
+#include <symengine/real_mpfr.h>
+#include <symengine/complex_mpc.h>
 
 using SymEngine::Basic;
 using SymEngine::Add;
@@ -75,6 +77,18 @@ using SymEngine::complex_double;
 using SymEngine::RealDouble;
 using SymEngine::ComplexDouble;
 using SymEngine::is_a;
+
+#ifdef HAVE_SYMENGINE_MPFR
+using SymEngine::real_mpfr;
+using SymEngine::RealMPFR;
+using SymEngine::mpfr_class;
+#endif
+
+#ifdef HAVE_SYMENGINE_MPC
+using SymEngine::complex_mpc;
+using SymEngine::ComplexMPC;
+using SymEngine::mpc_class;
+#endif
 
 TEST_CASE("Sin: functions", "[functions]")
 {
@@ -1836,4 +1850,68 @@ TEST_CASE("FunctionWrapper: functions", "[functions]")
 
     wrap_a.reset();
     REQUIRE(a.count_ == 0);
+}
+/* ---------------------------- */
+
+TEST_CASE("MPFR and MPC: functions", "[functions]")
+{
+#ifdef HAVE_SYMENGINE_MPFR
+    RCP<const Basic> r1, r2;
+    RCP<const Basic> i2 = integer(2);
+    unsigned long p = 100000000000000000;
+
+    mpfr_class a(60);
+    mpfr_set_ui(a.get_mpfr_t(), 1, MPFR_RNDN);
+    r1 = sin(real_mpfr(a));
+
+    mpfr_set_ui(a.get_mpfr_t(), 2, MPFR_RNDN);
+    r2 = sin(sub(div(pi, i2), real_mpfr(a)));
+    REQUIRE(is_a<RealMPFR>(*r1));
+    REQUIRE(is_a<RealMPFR>(*r2));
+
+    mpfr_mul_ui(a.get_mpfr_t(), static_cast<const RealMPFR &>(*r1).i.get_mpfr_t(), p, MPFR_RNDN);
+    REQUIRE(mpfr_cmp_si(a.get_mpfr_t(), 84147098480789650) > 0);
+    REQUIRE(mpfr_cmp_si(a.get_mpfr_t(), 84147098480789651) < 0);
+    mpfr_mul_ui(a.get_mpfr_t(), static_cast<const RealMPFR &>(*r2).i.get_mpfr_t(), p, MPFR_RNDN);
+    REQUIRE(mpfr_cmp_si(a.get_mpfr_t(), -41614683654714239) > 0);
+    REQUIRE(mpfr_cmp_si(a.get_mpfr_t(), -41614683654714238) < 0);
+
+    mpfr_set_si(a.get_mpfr_t(), 0, MPFR_RNDN);
+    r1 = asin(real_mpfr(a));
+    REQUIRE(is_a<RealMPFR>(*r1));
+
+#ifdef HAVE_SYMENGINE_MPC
+    // Check asin(2.0)
+    mpfr_set_si(a.get_mpfr_t(), 2, MPFR_RNDN);
+    r1 = asin(real_mpfr(a));
+    REQUIRE(is_a<ComplexMPC>(*r1));
+    mpc_srcptr b = static_cast<const ComplexMPC &>(*r1).i.get_mpc_t();
+    mpc_real(a.get_mpfr_t(), b, MPFR_RNDN);
+    mpfr_mul_ui(a.get_mpfr_t(), a.get_mpfr_t(), p, MPFR_RNDN);
+    REQUIRE(mpfr_cmp_si(a.get_mpfr_t(), 157079632679489661) > 0);
+    REQUIRE(mpfr_cmp_si(a.get_mpfr_t(), 157079632679489662) < 0);
+    mpc_imag(a.get_mpfr_t(), b, MPFR_RNDN);
+    mpfr_mul_ui(a.get_mpfr_t(), a.get_mpfr_t(), p, MPFR_RNDN);
+    REQUIRE(mpfr_cmp_si(a.get_mpfr_t(), 131695789692481670) > 0);
+    REQUIRE(mpfr_cmp_si(a.get_mpfr_t(), 131695789692481671) < 0);
+
+    //Check asin(1.0 + 1.0*I)
+    mpc_class c(60);
+    mpc_set_si_si(c.get_mpc_t(), 1, 1, MPFR_RNDN);
+    r1 = asin(complex_mpc(c));
+    REQUIRE(is_a<ComplexMPC>(*r1));
+    b = static_cast<const ComplexMPC &>(*r1).i.get_mpc_t();
+    mpc_real(a.get_mpfr_t(), b, MPFR_RNDN);
+    mpfr_mul_ui(a.get_mpfr_t(), a.get_mpfr_t(), p, MPFR_RNDN);
+    REQUIRE(mpfr_cmp_si(a.get_mpfr_t(), 66623943249251525) > 0);
+    REQUIRE(mpfr_cmp_si(a.get_mpfr_t(), 66623943249251526) < 0);
+    mpc_imag(a.get_mpfr_t(), b, MPFR_RNDN);
+    mpfr_mul_ui(a.get_mpfr_t(), a.get_mpfr_t(), p, MPFR_RNDN);
+    REQUIRE(mpfr_cmp_si(a.get_mpfr_t(), 106127506190503565) > 0);
+    REQUIRE(mpfr_cmp_si(a.get_mpfr_t(), 106127506190503566) < 0);
+#else
+    mpfr_set_si(a.get_mpfr_t(), 2, MPFR_RNDN);
+    SYMENGINE_CHECK_THROW(asin(real_mpfr(a)), std::runtime_error);
+#endif //HAVE_SYMENGINE_MPC
+#endif //HAVE_SYMENGINE_MPFR
 }
