@@ -335,7 +335,7 @@ void Add::as_two_terms(const Ptr<RCP<const Basic>> &a,
 
 RCP<const Basic> Add::subs(const map_basic_basic &subs_dict) const
 {
-    RCP<const Add> self = rcp_const_cast<Add>(rcp(this));
+    RCP<const Add> self = get_rcp_cast<const Add>();
     auto it = subs_dict.find(self);
     if (it != subs_dict.end())
         return it->second;
