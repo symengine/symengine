@@ -1,3 +1,4 @@
+#include "catch.hpp"
 #include <cmath>
 #include <iostream>
 
@@ -50,7 +51,7 @@ using SymEngine::pi;
 using SymEngine::E;
 using SymEngine::vec_basic;
 
-void test_eval_double()
+TEST_CASE("eval_double: eval_double", "[eval_double]")
 {
     RCP<const Basic> r1, r2, r3, r4;
     r1 = sin(integer(1));
@@ -77,12 +78,12 @@ void test_eval_double()
         double val = eval_double(*vec[i].first);
         std::cout.precision(12);
         std::cout << vec[i].first->__str__() << " ~ " << val << std::endl;
-        assert(::fabs(val - vec[i].second) < 1e-12);
+        REQUIRE(::fabs(val - vec[i].second) < 1e-12);
     }
 
     for (unsigned i = 0; i < vec.size(); i++) {
         double val = eval_double_single_dispatch(*vec[i].first);
-        assert(::fabs(val - vec[i].second) < 1e-12);
+        REQUIRE(::fabs(val - vec[i].second) < 1e-12);
     }
 
     // Symbol must raise an exception
@@ -99,7 +100,7 @@ void test_eval_double()
     // ... we don't test the rest of functions that are not implemented.
 }
 
-void test_eval_complex_double()
+TEST_CASE("eval_complex_double: eval_double", "[eval_double]")
 {
     RCP<const Basic> r1, r2, r3, r4;
     r1 = sin(pow(integer(-5), div(integer(1), integer(2))));
@@ -128,18 +129,7 @@ void test_eval_complex_double()
         std::complex<double> val = eval_complex_double(*vec[i].first);
         std::cout.precision(12);
         std::cout << vec[i].first->__str__() << " ~ " << val << std::endl;
-        assert(std::abs(val.imag() - vec[i].second.imag()) < 1e-12);
-        assert(std::abs(val.real() - vec[i].second.real()) < 1e-12);
+        REQUIRE(std::abs(val.imag() - vec[i].second.imag()) < 1e-12);
+        REQUIRE(std::abs(val.real() - vec[i].second.real()) < 1e-12);
     }
-}
-
-int main(int argc, char* argv[])
-{
-    print_stack_on_segfault();
-
-    test_eval_double();
-
-    test_eval_complex_double();
-
-    return 0;
 }

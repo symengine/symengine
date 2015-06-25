@@ -5,6 +5,7 @@ set(SRC
 )
 
 add_library(catch STATIC ${SRC})
+target_link_libraries(catch symengine)
 
 install(TARGETS catch
             RUNTIME DESTINATION bin
