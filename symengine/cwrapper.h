@@ -123,6 +123,8 @@ void basic_pow(basic s, const basic a, const basic b);
 int basic_diff(basic s, const basic expr, const basic sym);
 //! Assigns s = -a.
 void basic_neg(basic s, const basic a);
+//! Returns 1 if both basic are equal, 0 if not
+int basic_eq(const basic a, const basic b);
 //! Assigns s = abs(a).
 void basic_abs(basic s, const basic a);
 //! Expands the expr a and assigns to s.

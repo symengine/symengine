@@ -177,6 +177,11 @@ void basic_neg(basic s, const basic a)
     s->m = SymEngine::neg(a->m);
 }
 
+int basic_eq(const basic a, const basic b)
+{
+    return (SymEngine::eq(*RCP_const_cast(a), *RCP_const_cast(b))) ? 1 : 0;
+}
+
 void basic_abs(basic s, const basic a)
 {
     s->m = SymEngine::abs(a->m);

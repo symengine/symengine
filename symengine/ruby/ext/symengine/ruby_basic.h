@@ -17,6 +17,8 @@ VALUE cbasic_div(VALUE self, VALUE operand2);
 
 VALUE cbasic_pow(VALUE self, VALUE operand2);
 
+VALUE cbasic_eq(VALUE self, VALUE operand2);
+
 VALUE cbasic_neg(VALUE self);
 
 VALUE cbasic_to_str(VALUE self);

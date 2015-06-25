@@ -72,6 +72,15 @@ VALUE cbasic_pow(VALUE self, VALUE operand2){
     return cbasic_binary_op(self, operand2, basic_pow);
 }
 
+VALUE cbasic_eq(VALUE self, VALUE operand2) {
+    basic_struct *this, *cbasic_operand2;
+
+    Data_Get_Struct(self, basic_struct, this);
+    Data_Get_Struct(operand2, basic_struct, cbasic_operand2);
+
+    return basic_eq(this, cbasic_operand2) ? Qtrue : Qfalse;
+}
+
 VALUE cbasic_neg(VALUE self){
     return cbasic_unary_op(self, basic_neg);
 }
