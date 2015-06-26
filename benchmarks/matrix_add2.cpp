@@ -9,7 +9,6 @@
 
 using SymEngine::Basic;
 using SymEngine::RCP;
-using SymEngine::rcp;
 using SymEngine::DenseMatrix;
 using SymEngine::symbol;
 
