@@ -65,9 +65,11 @@ matrix:
     - env: BUILD_TYPE="Debug" WITH_BFD="yes" WITH_SYMENGINE_ASSERT="yes" WITH_SYMENGINE_RCP="no" WITH_PYTHON="yes" PYTHON_VERSION="2.7"
       compiler: clang
       os: linux
-    - env: BUILD_TYPE="Release" WITH_BFD="yes" WITH_PYTHON="yes" PYTHON_VERSION="2.7"
-      compiler: clang
-      os: linux
+# Clang fails to build due to https://github.com/sympy/symengine/issues/486, so
+# we comment the following test out, until this gets fixed.
+#    - env: BUILD_TYPE="Release" WITH_BFD="yes" WITH_PYTHON="yes" PYTHON_VERSION="2.7"
+#      compiler: clang
+#      os: linux
     - env: BUILD_TYPE="Debug" WITH_SYMENGINE_ASSERT="yes" WITH_SYMENGINE_RCP="no" WITH_PYTHON="yes" PYTHON_VERSION="2.7"
       compiler: clang
       os: osx
