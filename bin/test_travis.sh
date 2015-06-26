@@ -123,7 +123,7 @@ fi
 if [[ "${WITH_MPFR}" == "yes" ]] || [[ "${WITH_MPC}" == "yes" ]] || [[ "${WITH_ARB}" == "yes" ]]; then
     extra_libs="$extra_libs -lmpfr"
 fi
-${CXX} -std=c++0x -I$our_install_dir/include/ -I$SOURCE_DIR/symengine/teuchos -L$our_install_dir/lib test_basic.cpp -lsymengine -lteuchos $extra_libs -lgmpxx -lgmp
+${CXX} -std=c++0x -I$our_install_dir/include/ -I$SOURCE_DIR/symengine/teuchos -I$SOURCE_DIR/build/symengine/teuchos -L$our_install_dir/lib test_basic.cpp -lsymengine -lteuchos $extra_libs -lgmpxx -lgmp
 export LD_LIBRARY_PATH=$our_install_dir/lib:$LD_LIBRARY_PATH
 ./a.out
 # Python
