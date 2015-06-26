@@ -5,7 +5,7 @@ void csymbol_free(void *ptr) {
 }
 
 VALUE csymbol_alloc(VALUE klass) {
-    return cbasic_alloc(klass);
+    return alloc_func(klass, csymbol_free);
 }
 
 VALUE csymbol_init(VALUE self, VALUE name) {

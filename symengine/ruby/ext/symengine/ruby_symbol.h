@@ -1,9 +1,7 @@
 #ifndef RUBY_SYMBOL_H_
 #define RUBY_SYMBOL_H_
 
-#include "ruby.h"
 #include "ruby_basic.h"
-#include "symengine/cwrapper.h"
 
 void csymbol_free(void *ptr);
 

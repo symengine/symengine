@@ -5,15 +5,19 @@ void cbasic_free(void *ptr){
     basic_free(basic_ptr);
 }
 
-VALUE cbasic_alloc(VALUE klass){
+VALUE alloc_func(VALUE klass, void(*free_func_ptr)(void *)) {
     VALUE obj;
     basic_struct *struct_ptr;
 
-    obj = Data_Make_Struct(klass, basic_struct, NULL, cbasic_free, struct_ptr);
+    obj = Data_Make_Struct(klass, basic_struct, NULL, free_func_ptr, struct_ptr);
 
     struct_ptr->data = NULL;
 
     return obj;
+}
+
+VALUE cbasic_alloc(VALUE klass){
+    return alloc_func(klass, cbasic_free);
 }
 
 VALUE cbasic_init(VALUE self){
