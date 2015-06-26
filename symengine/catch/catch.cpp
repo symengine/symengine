@@ -35,9 +35,5 @@ int main(int argc, char* const argv[])
 	   flint_cleanup();
 	#endif // HAVE_SYMENGINE_ARB
 
-	#if defined(HAVE_SYMENGINE_MPC)
-	   mpfr_free_cache();
-	#endif // HAVE_SYMENGINE_MPC
-
 	return result;
 }
