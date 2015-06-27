@@ -233,7 +233,7 @@ public:
 
 };
 
-void eval_mpfr(mpfr_t result, const Basic &b, mpfr_rnd_t rnd)
+void eval_mpfr(mpfr_ptr result, const Basic &b, mpfr_rnd_t rnd)
 {
     EvalMPFRVisitor v(rnd);
     v.apply(result, b);

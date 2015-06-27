@@ -73,7 +73,7 @@ TEST_CASE("ComplexMPC: arithmetic", "[number]")
     mpc_set_ui_ui(b.get_mpc_t(), 20, 14, MPFR_RNDN);
     mpc_pow_ui(c.get_mpc_t(), a.get_mpc_t(), 2, MPFR_RNDN);
     mpc_set_ui(d.get_mpc_t(), 2, MPFR_RNDN);
-    mpc_pow_ui(d.get_mpc_t(), d.get_mpc_t(), 10, MPFR_RNDN);
+    mpc_pow(d.get_mpc_t(), d.get_mpc_t(), a.get_mpc_t(), MPFR_RNDN);
 
     RCP<const Number> r1 = complex_mpc(std::move(a));
     RCP<const Number> r2 = complex_mpc(std::move(b));

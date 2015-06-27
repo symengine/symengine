@@ -93,14 +93,17 @@ endif()
 # ARB
 set(WITH_ARB no
     CACHE BOOL "Build with Arb")
+set(HAVE_SYMENGINE_ARB False)
 
 # MPFR
 set(WITH_MPFR no
     CACHE BOOL "Build with MPFR")
+set(HAVE_SYMENGINE_MPFR False)
 
 # MPC
 set(WITH_MPC no
     CACHE BOOL "Build with MPC")
+set(HAVE_SYMENGINE_MPC False)
 
 if (WITH_ARB)
     find_package(FLINT REQUIRED)
@@ -115,14 +118,14 @@ if (WITH_ARB)
     find_package(ARB REQUIRED)
     include_directories(${ARB_INCLUDE_DIRS})
     set(LIBS ${LIBS} ${ARB_LIBRARIES})
-    set(HAVE_SYMENGINE_ARB yes)
+    set(HAVE_SYMENGINE_ARB True)
 endif()
 
 if (WITH_MPC)
     find_package(MPC REQUIRED)
     include_directories(${MPC_INCLUDE_DIRS})
     set(LIBS ${LIBS} ${MPC_LIBRARIES})
-    set(HAVE_SYMENGINE_MPC yes)
+    set(HAVE_SYMENGINE_MPC True)
     set(WITH_MPFR yes)
 endif()
 
@@ -166,7 +169,7 @@ if (WITH_MPFR)
     find_package(MPFR REQUIRED)
     include_directories(${MPFR_INCLUDE_DIRS})
     set(LIBS ${LIBS} ${MPFR_LIBRARIES})
-    set(HAVE_SYMENGINE_MPFR yes)
+    set(HAVE_SYMENGINE_MPFR True)
 endif()
 
 # Python

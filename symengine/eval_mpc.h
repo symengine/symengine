@@ -18,7 +18,7 @@ namespace SymEngine {
 //! Evaluate expression `b` and store it in `result` with rounding mode rnd
 // Different precisions for real and imaginary parts of `result` is not supported
 // Use `mpc_init2` to initialize `result`
-void eval_mpc(mpc_t result, const Basic &b, mpfr_rnd_t rnd);
+void eval_mpc(mpc_ptr result, const Basic &b, mpfr_rnd_t rnd);
 
 } // SymEngine
 

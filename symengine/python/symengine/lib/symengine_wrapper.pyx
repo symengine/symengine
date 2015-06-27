@@ -6,6 +6,8 @@ from libcpp.string cimport string
 from cpython cimport PyObject, Py_XINCREF, Py_XDECREF, \
     PyObject_CallMethodObjArgs
 
+include "config.pxi"
+
 class SympifyError(Exception):
     pass
 
@@ -45,6 +47,10 @@ cdef c2py(RCP[const symengine.Basic] o):
         r = RealDouble.__new__(RealDouble)
     elif (symengine.is_a_ComplexDouble(deref(o))):
         r = ComplexDouble.__new__(ComplexDouble)
+    elif (symengine.is_a_RealMPFR(deref(o))):
+        r = RealMPFR.__new__(RealMPFR)
+    elif (symengine.is_a_ComplexMPC(deref(o))):
+        r = ComplexMPC.__new__(ComplexMPC)
     else:
         raise Exception("Unsupported SymEngine class.")
     r.thisptr = o
@@ -234,6 +240,12 @@ cdef class Basic(object):
             raise TypeError("subs() takes one or two arguments (%d given)" % \
                     len(args))
 
+    def n(self, prec = 53, real = False):
+        if real:
+            return eval_real(self, prec)
+        else:
+            return eval(self, prec)
+
     @property
     def args(self):
         cdef symengine.vec_basic Y = deref(self.thisptr).get_args()
@@ -390,6 +402,35 @@ cdef class ComplexDouble(Number):
     def _sympy_(self):
         import sympy
         return self.real_part()._sympy_() + sympy.I * self.imaginary_part()._sympy_()
+
+cdef class RealMPFR(Number):
+    IF HAVE_SYMENGINE_MPFR:
+        def __cinit__(self, i = None, long prec = 53, unsigned base = 10):
+            if i is None:
+                return
+            cdef string i_ = i
+            cdef symengine.mpfr_class m
+            m = symengine.mpfr_class(i_, prec, base)
+            self.thisptr = real_mpfr(std_move_mpfr(m))
+
+        def __dealloc__(self):
+            self.thisptr.reset()
+    ELSE:
+        pass
+
+cdef class ComplexMPC(Number):
+    IF HAVE_SYMENGINE_MPC:
+        def __cinit__(self, i = None, j = None, long prec = 53, unsigned base = 10):
+            if i is None:
+                return
+            cdef string i_ = i
+            cdef symengine.mpc_class m = symengine.mpc_class(i_, prec, base)
+            self.thisptr = complex_mpc(std_move_mpc(m))
+
+        def __dealloc__(self):
+            self.thisptr.reset()
+    ELSE:
+        pass
 
 cdef class Rational(Number):
 
@@ -839,6 +880,46 @@ def exp(x):
 
 def densematrix(row, col, l):
     return DenseMatrix(row, col, l)
+
+def eval_double(x):
+    cdef Basic X = sympify(x)
+    return c2py(<RCP[const symengine.Basic]>(symengine.real_double(symengine.eval_double(deref(X.thisptr)))))
+
+def eval_complex_double(x):
+    cdef Basic X = sympify(x)
+    return c2py(<RCP[const symengine.Basic]>(symengine.complex_double(symengine.eval_complex_double(deref(X.thisptr)))))
+
+IF HAVE_SYMENGINE_MPFR:
+    def eval_mpfr(x, long prec):
+        cdef Basic X = sympify(x)
+        cdef symengine.mpfr_class a = symengine.mpfr_class(prec)
+        symengine.eval_mpfr(a.get_mpfr_t(), deref(X.thisptr), symengine.MPFR_RNDN)
+        return c2py(<RCP[const symengine.Basic]>(symengine.real_mpfr(symengine.std_move_mpfr(a))))
+
+IF HAVE_SYMENGINE_MPC:
+    def eval_mpc(x, long prec):
+        cdef Basic X = sympify(x)
+        cdef symengine.mpc_class a = symengine.mpc_class(prec)
+        symengine.eval_mpc(a.get_mpc_t(), deref(X.thisptr), symengine.MPFR_RNDN)
+        return c2py(<RCP[const symengine.Basic]>(symengine.complex_mpc(symengine.std_move_mpc(a))))
+
+def eval(x, long prec):
+    if prec <= 53:
+        return eval_complex_double(x)
+    else:
+        try:
+            return eval_mpc(x, prec)
+        except NameError:
+            raise ValueError("Precision %s is only supported with MPC" % prec)
+
+def eval_real(x, long prec):
+    if prec <= 53:
+        return eval_double(x)
+    else:
+        try:
+            return eval_mpfr(x, prec)
+        except NameError:
+            raise ValueError("Precision %s is only supported with MPFR" % prec)
 
 def probab_prime_p(n, reps = 25):
     cdef Integer _n = sympify(n)

@@ -34,6 +34,10 @@ public:
     mpfr_class(mpfr_prec_t prec = 53) {
         mpfr_init2(mp, prec);
     }
+    mpfr_class(std::string s, mpfr_prec_t prec = 53, unsigned base = 10) {
+        mpfr_init2(mp, prec);
+        mpfr_set_str(mp, s.c_str(), base, MPFR_RNDN);
+    }
     mpfr_class(const mpfr_class& other) {
         mpfr_init2(mp, mpfr_get_prec(other.get_mpfr_t()));
         mpfr_set(mp, other.get_mpfr_t(), MPFR_RNDN);
@@ -314,7 +318,15 @@ inline RCP<const RealMPFR> real_mpfr(mpfr_class x) {
     return rcp(new RealMPFR(std::move(x)));
 }
 
-} // SymEngine
+}
+#else
+
+namespace SymEngine {
+class RealMPFR : public Number {
+public:
+    IMPLEMENT_TYPEID(REAL_MPFR)
+};
+}
 
 #endif //HAVE_SYMENGINE_MPFR
-#endif
+#endif // SymEngine

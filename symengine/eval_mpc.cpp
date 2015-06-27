@@ -259,7 +259,7 @@ public:
 
 };
 
-void eval_mpc(mpc_t result, const Basic &b, mpfr_rnd_t rnd)
+void eval_mpc(mpc_ptr result, const Basic &b, mpfr_rnd_t rnd)
 {
     EvalMPCVisitor v(rnd);
     v.apply(result, b);

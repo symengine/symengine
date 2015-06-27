@@ -35,6 +35,10 @@ public:
     mpc_class(mpfr_prec_t prec = 53) {
         mpc_init2(mp, prec);
     }
+    mpc_class(std::string s, mpfr_prec_t prec = 53, unsigned base = 10) {
+        mpc_init2(mp, prec);
+        mpc_set_str(mp, s.c_str(), base, MPFR_RNDN);
+    }
     mpc_class(const mpc_class& other) {
         mpc_init2(mp, mpc_get_prec(other.get_mpc_t()));
         mpc_set(mp, other.get_mpc_t(), MPFR_RNDN);
@@ -343,7 +347,15 @@ inline RCP<const ComplexMPC> complex_mpc(mpc_class x) {
     return rcp(new ComplexMPC(std::move(x)));
 }
 
-} // SymEngine
+}
+#else
+
+namespace SymEngine {
+class ComplexMPC : public Number {
+public:
+    IMPLEMENT_TYPEID(COMPLEX_MPC)
+};
+}
 
 #endif //HAVE_SYMENGINE_MPC
-#endif
+#endif // SymEngine

@@ -15,7 +15,7 @@
 
 namespace SymEngine {
 
-void eval_mpfr(mpfr_t result, const Basic &b, mpfr_rnd_t rnd);
+void eval_mpfr(mpfr_ptr result, const Basic &b, mpfr_rnd_t rnd);
 
 } // SymEngine
 

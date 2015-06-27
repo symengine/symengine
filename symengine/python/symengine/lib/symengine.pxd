@@ -3,6 +3,8 @@ from libcpp.string cimport string
 from libcpp.map cimport map
 from libcpp.vector cimport vector
 
+include "config.pxi"
+
 cdef extern from 'gmpxx.h':
     cdef cppclass mpz_class:
         mpz_class()
@@ -96,6 +98,8 @@ cdef extern from "<symengine/basic.h>" namespace "SymEngine":
     bool is_a_FunctionWrapper "SymEngine::is_a<SymEngine::FunctionWrapper>"(const Basic &b) nogil
     bool is_a_RealDouble "SymEngine::is_a<SymEngine::RealDouble>"(const Basic &b) nogil
     bool is_a_ComplexDouble "SymEngine::is_a<SymEngine::ComplexDouble>"(const Basic &b) nogil
+    bool is_a_RealMPFR "SymEngine::is_a<SymEngine::RealMPFR>"(const Basic &b) nogil
+    bool is_a_ComplexMPC "SymEngine::is_a<SymEngine::ComplexMPC>"(const Basic &b) nogil
 
     RCP[const Basic] expand(RCP[const Basic] &o) nogil except +
 
@@ -130,12 +134,14 @@ cdef extern from "<symengine/complex.h>" namespace "SymEngine":
 cdef extern from "<symengine/real_double.h>" namespace "SymEngine":
     cdef cppclass RealDouble(Number):
         RealDouble(double x) nogil
+    RCP[const RealDouble] real_double(double d) nogil
 
 cdef extern from "<symengine/complex_double.h>" namespace "SymEngine":
     cdef cppclass ComplexDouble(Number):
         ComplexDouble(double complex x) nogil
         RCP[const Number] real_part() nogil
         RCP[const Number] imaginary_part() nogil
+    RCP[const ComplexDouble] complex_double(double complex d) nogil
 
 cdef extern from "<symengine/constants.h>" namespace "SymEngine":
     cdef cppclass Constant(Basic):
@@ -220,6 +226,63 @@ cdef extern from "<symengine/functions.h>" namespace "SymEngine":
 
     cdef cppclass Abs(Function):
         RCP[const Basic] get_arg() nogil
+
+IF HAVE_SYMENGINE_MPFR:
+    cdef extern from "mpfr.h":
+        ctypedef struct __mpfr_struct:
+            pass
+        ctypedef __mpfr_struct mpfr_t[1]
+        ctypedef __mpfr_struct* mpfr_ptr
+        ctypedef const __mpfr_struct* mpfr_srcptr
+        ctypedef long mpfr_prec_t
+        ctypedef enum mpfr_rnd_t:
+            MPFR_RNDN
+            MPFR_RNDZ
+            MPFR_RNDU
+            MPFR_RNDD
+            MPFR_RNDA
+            MPFR_RNDF
+            MPFR_RNDNA
+
+    cdef extern from "<symengine/real_mpfr.h>" namespace "SymEngine":
+        cdef cppclass mpfr_class:
+            mpfr_class() nogil
+            mpfr_class(mpfr_prec_t prec) nogil
+            mpfr_class(string s, mpfr_prec_t prec, unsigned base) nogil
+            mpfr_class(mpfr_t m) nogil
+            mpfr_ptr get_mpfr_t() nogil
+
+        cdef cppclass RealMPFR(Number):
+            RealMPFR(mpfr_class) nogil
+            mpfr_class as_mpfr() nogil
+            mpfr_prec_t get_prec() nogil
+
+        RCP[const RealMPFR] real_mpfr(mpfr_class t) nogil
+
+IF HAVE_SYMENGINE_MPC:
+    cdef extern from "mpc.h":
+        ctypedef struct __mpc_struct:
+            pass
+        ctypedef __mpc_struct mpc_t[1]
+        ctypedef __mpc_struct* mpc_ptr
+        ctypedef const __mpc_struct* mpc_srcptr
+
+    cdef extern from "<symengine/complex_mpc.h>" namespace "SymEngine":
+        cdef cppclass mpc_class:
+            mpc_class() nogil
+            mpc_class(mpfr_prec_t prec) nogil
+            mpc_class(mpc_t m) nogil
+            mpc_ptr get_mpc_t() nogil
+            mpc_class(string s, mpfr_prec_t prec, unsigned base) nogil
+
+        cdef cppclass ComplexMPC(Number):
+            ComplexMPC(mpc_class) nogil
+            mpc_class as_mpc() nogil
+            mpfr_prec_t get_prec() nogil
+            RCP[const Number] real_part() nogil
+            RCP[const Number] imaginary_part() nogil
+
+        RCP[const ComplexMPC] complex_mpc(mpc_class t) nogil
 
 cdef extern from "<symengine/matrix.h>" namespace "SymEngine":
     cdef cppclass MatrixBase:
@@ -323,9 +386,25 @@ cdef extern from "<symengine/ntheory.h>" namespace "SymEngine":
         sieve_iterator(unsigned limit) nogil
         unsigned next_prime() nogil
 
-cdef extern from "<symengine/eval_double.h>" namespace "SymEngine":
-    double eval_double(const Basic &b) nogil except +
-
 cdef extern from "<symengine/visitor.h>" namespace "SymEngine":
     bool has_symbol(const Basic &b, const RCP[const Symbol] &x) nogil except +
     set_basic free_symbols(const Basic &b) nogil except +
+
+cdef extern from "<utility>" namespace "std":
+    cdef mpz_class std_move_mpz "std::move" (mpz_class) nogil
+    IF HAVE_SYMENGINE_MPFR:
+        cdef mpfr_class std_move_mpfr "std::move" (mpfr_class) nogil
+    IF HAVE_SYMENGINE_MPC:
+        cdef mpc_class std_move_mpc "std::move" (mpc_class) nogil
+
+cdef extern from "<symengine/eval_double.h>" namespace "SymEngine":
+    double eval_double(const Basic &b) nogil except +
+    double complex eval_complex_double(const Basic &b) nogil except +
+
+IF HAVE_SYMENGINE_MPFR:
+    cdef extern from "<symengine/eval_mpfr.h>" namespace "SymEngine":
+        void eval_mpfr(mpfr_t result, const Basic &b, mpfr_rnd_t rnd) nogil except +
+
+IF HAVE_SYMENGINE_MPC:
+    cdef extern from "<symengine/eval_mpc.h>" namespace "SymEngine":
+        void eval_mpc(mpc_t result, const Basic &b, mpfr_rnd_t rnd) nogil except +
