@@ -655,10 +655,14 @@ class EvaluateMPFR : public Evaluate {
             mpfr_asin(t.get_mpfr_t(), x_, MPFR_RNDN);
             return real_mpfr(std::move(t));
         }
+#ifdef HAVE_SYMENGINE_MPC
         mpc_class t(mpfr_get_prec(x_));
         mpc_set_fr(t.get_mpc_t(), x_, MPFR_RNDN);
         mpc_asin(t.get_mpc_t(), t.get_mpc_t(), MPFR_RNDN);
         return complex_mpc(std::move(t));
+#else
+        throw std::runtime_error("Result is complex. Recompile with MPC support.");
+#endif
     }
     virtual RCP<const Basic> acos(const Basic &x) const {
         SYMENGINE_ASSERT(is_a<RealMPFR>(x))
@@ -668,10 +672,14 @@ class EvaluateMPFR : public Evaluate {
             mpfr_acos(t.get_mpfr_t(), x_, MPFR_RNDN);
             return real_mpfr(std::move(t));
         }
+#ifdef HAVE_SYMENGINE_MPC
         mpc_class t(mpfr_get_prec(x_));
         mpc_set_fr(t.get_mpc_t(), x_, MPFR_RNDN);
         mpc_acos(t.get_mpc_t(), t.get_mpc_t(), MPFR_RNDN);
         return complex_mpc(std::move(t));
+#else
+        throw std::runtime_error("Result is complex. Recompile with MPC support.");
+#endif
     }
     virtual RCP<const Basic> atan(const Basic &x) const {
         SYMENGINE_ASSERT(is_a<RealMPFR>(x))
@@ -695,11 +703,15 @@ class EvaluateMPFR : public Evaluate {
             mpfr_acos(t.get_mpfr_t(), t.get_mpfr_t(), MPFR_RNDN);
             return real_mpfr(std::move(t));
         }
+#ifdef HAVE_SYMENGINE_MPC
         mpc_class t(mpfr_get_prec(x_));
         mpc_set_ui(t.get_mpc_t(), 1, MPFR_RNDN);
         mpc_div_fr(t.get_mpc_t(), t.get_mpc_t(), x_, MPFR_RNDN);
         mpc_acos(t.get_mpc_t(), t.get_mpc_t(), MPFR_RNDN);
         return complex_mpc(std::move(t));
+#else
+        throw std::runtime_error("Result is complex. Recompile with MPC support.");
+#endif
     }
     virtual RCP<const Basic> acsc(const Basic &x) const {
         SYMENGINE_ASSERT(is_a<RealMPFR>(x))
@@ -710,11 +722,15 @@ class EvaluateMPFR : public Evaluate {
             mpfr_asin(t.get_mpfr_t(), t.get_mpfr_t(), MPFR_RNDN);
             return real_mpfr(std::move(t));
         }
+#ifdef HAVE_SYMENGINE_MPC
         mpc_class t(mpfr_get_prec(x_));
         mpc_set_ui(t.get_mpc_t(), 1, MPFR_RNDN);
         mpc_div_fr(t.get_mpc_t(), t.get_mpc_t(), x_, MPFR_RNDN);
         mpc_asin(t.get_mpc_t(), t.get_mpc_t(), MPFR_RNDN);
         return complex_mpc(std::move(t));
+#else
+        throw std::runtime_error("Result is complex. Recompile with MPC support.");
+#endif
     }
     virtual RCP<const Basic> sinh(const Basic &x) const {
         SYMENGINE_ASSERT(is_a<RealMPFR>(x))
@@ -754,10 +770,14 @@ class EvaluateMPFR : public Evaluate {
             mpfr_acosh(t.get_mpfr_t(), t.get_mpfr_t(), MPFR_RNDN);
             return real_mpfr(std::move(t));
         }
+#ifdef HAVE_SYMENGINE_MPC
         mpc_class t(mpfr_get_prec(x_));
         mpc_set_ui(t.get_mpc_t(), 1, MPFR_RNDN);
         mpc_acosh(t.get_mpc_t(), t.get_mpc_t(), MPFR_RNDN);
         return complex_mpc(std::move(t));
+#else
+        throw std::runtime_error("Result is complex. Recompile with MPC support.");
+#endif
     }
     virtual RCP<const Basic> atanh(const Basic &x) const {
         SYMENGINE_ASSERT(is_a<RealMPFR>(x))
@@ -767,10 +787,14 @@ class EvaluateMPFR : public Evaluate {
             mpfr_atanh(t.get_mpfr_t(), x_, MPFR_RNDN);
             return real_mpfr(std::move(t));
         }
+#ifdef HAVE_SYMENGINE_MPC
         mpc_class t(mpfr_get_prec(x_));
         mpc_set_fr(t.get_mpc_t(), x_, MPFR_RNDN);
         mpc_atanh(t.get_mpc_t(), t.get_mpc_t(), MPFR_RNDN);
         return complex_mpc(std::move(t));
+#else
+        throw std::runtime_error("Result is complex. Recompile with MPC support.");
+#endif
     }
     virtual RCP<const Basic> acoth(const Basic &x) const {
         SYMENGINE_ASSERT(is_a<RealMPFR>(x))
@@ -781,11 +805,15 @@ class EvaluateMPFR : public Evaluate {
             mpfr_atanh(t.get_mpfr_t(), x_, MPFR_RNDN);
             return real_mpfr(std::move(t));
         }
+#ifdef HAVE_SYMENGINE_MPC
         mpc_class t(mpfr_get_prec(x_));
         mpc_set_fr(t.get_mpc_t(), x_, MPFR_RNDN);
         mpc_ui_div(t.get_mpc_t(), 1, t.get_mpc_t(), MPFR_RNDN);
         mpc_atanh(t.get_mpc_t(), t.get_mpc_t(), MPFR_RNDN);
         return complex_mpc(std::move(t));
+#else
+        throw std::runtime_error("Result is complex. Recompile with MPC support.");
+#endif
     }
     virtual RCP<const Basic> log(const Basic &x) const {
         SYMENGINE_ASSERT(is_a<RealMPFR>(x))
@@ -795,10 +823,14 @@ class EvaluateMPFR : public Evaluate {
             mpfr_log(t.get_mpfr_t(), x_, MPFR_RNDN);
             return real_mpfr(std::move(t));
         }
+#ifdef HAVE_SYMENGINE_MPC
         mpc_class t(mpfr_get_prec(x_));
         mpc_set_fr(t.get_mpc_t(), x_, MPFR_RNDN);
         mpc_log(t.get_mpc_t(), t.get_mpc_t(), MPFR_RNDN);
         return complex_mpc(std::move(t));
+#else
+        throw std::runtime_error("Result is complex. Recompile with MPC support.");
+#endif
     }
     virtual RCP<const Basic> abs(const Basic &x) const {
         SYMENGINE_ASSERT(is_a<RealMPFR>(x))
