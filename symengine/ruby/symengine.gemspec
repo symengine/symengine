@@ -13,4 +13,5 @@ Gem::Specification.new do |gem|
     gem.add_development_dependency 'bundler', '~> 1.7'
     gem.add_development_dependency 'rspec', '~> 3.0'
     gem.add_development_dependency 'rdoc', '~> 4.0'
+    gem.add_development_dependency 'iruby', '~> 0.2'
 end

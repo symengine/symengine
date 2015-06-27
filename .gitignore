@@ -84,3 +84,4 @@ symengine/ruby/pkg/
 symengine/ruby/ext/symengine/mkmf.log
 symengine/ruby/bin/*
 symengine/ruby/ext/symengine/extconf.h
+symengine/ruby/notebooks/.ipynb_checkpoints/
