@@ -56,6 +56,8 @@ cdef extern from "<symengine/symengine_rcp.h>" namespace "SymEngine":
     RCP[const Derivative] rcp_static_cast_Derivative "SymEngine::rcp_static_cast<const SymEngine::Derivative>"(RCP[const Basic] &b) nogil
     RCP[const Subs] rcp_static_cast_Subs "SymEngine::rcp_static_cast<const SymEngine::Subs>"(RCP[const Basic] &b) nogil
     RCP[const ComplexDouble] rcp_static_cast_ComplexDouble "SymEngine::rcp_static_cast<const SymEngine::ComplexDouble>"(RCP[const Basic] &b) nogil
+    RCP[const RealMPFR] rcp_static_cast_RealMPFR "SymEngine::rcp_static_cast<const SymEngine::RealMPFR>"(RCP[const Basic] &b) nogil
+    RCP[const ComplexMPC] rcp_static_cast_ComplexMPC "SymEngine::rcp_static_cast<const SymEngine::ComplexMPC>"(RCP[const Basic] &b) nogil
     Ptr[RCP[Basic]] outArg(RCP[const Basic] &arg) nogil
     Ptr[RCP[Integer]] outArg_Integer "SymEngine::outArg<SymEngine::RCP<const SymEngine::Integer>>"(RCP[const Integer] &arg) nogil
 
@@ -258,6 +260,10 @@ IF HAVE_SYMENGINE_MPFR:
             mpfr_prec_t get_prec() nogil
 
         RCP[const RealMPFR] real_mpfr(mpfr_class t) nogil
+ELSE:
+    cdef extern from "<symengine/real_mpfr.h>" namespace "SymEngine":
+        cdef cppclass RealMPFR(Number):
+            pass
 
 IF HAVE_SYMENGINE_MPC:
     cdef extern from "mpc.h":
@@ -283,6 +289,10 @@ IF HAVE_SYMENGINE_MPC:
             RCP[const Number] imaginary_part() nogil
 
         RCP[const ComplexMPC] complex_mpc(mpc_class t) nogil
+ELSE:
+    cdef extern from "<symengine/complex_mpc.h>" namespace "SymEngine":
+        cdef cppclass ComplexMPC(Number):
+            pass
 
 cdef extern from "<symengine/matrix.h>" namespace "SymEngine":
     cdef cppclass MatrixBase:

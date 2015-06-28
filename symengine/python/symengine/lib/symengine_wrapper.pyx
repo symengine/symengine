@@ -81,6 +81,8 @@ def sympy2symengine(a, raise_error=False):
         return Integer(a.p)
     elif isinstance(a, sympy.Rational):
         return Integer(a.p) / Integer(a.q)
+    elif isinstance(a, sympy.Float):
+        return RealMPFR(str(a), a._prec)
     elif a is sympy.I:
         return I
     elif a is sympy.E:
@@ -316,6 +318,9 @@ cdef class Integer(Number):
         else:
             self.thisptr = symengine.make_rcp_Integer(i__)
 
+    def __hash__(self):
+        return deref(self.thisptr).hash()
+
     def __richcmp__(a, b, int op):
         A = sympify(a, False)
         B = sympify(b, False)
@@ -393,10 +398,18 @@ cdef class RealMPFR(Number):
         def __cinit__(self, i = None, long prec = 53, unsigned base = 10):
             if i is None:
                 return
-            cdef string i_ = i
+            cdef string i_ = str(i)
             cdef symengine.mpfr_class m
             m = symengine.mpfr_class(i_, prec, base)
             self.thisptr = real_mpfr(std_move_mpfr(m))
+
+        def get_prec(self):
+            return Integer(deref(symengine.rcp_static_cast_RealMPFR(self.thisptr)).get_prec())
+
+        def __sympy__(self):
+            import sympy
+            prec = sympy.log(2**self.get_prec(), 10).n().ceiling()
+            return sympy.Float(str(self), prec)
     ELSE:
         pass
 
@@ -405,9 +418,19 @@ cdef class ComplexMPC(Number):
         def __cinit__(self, i = None, j = None, long prec = 53, unsigned base = 10):
             if i is None:
                 return
-            cdef string i_ = i
+            cdef string i_ = str(i)
             cdef symengine.mpc_class m = symengine.mpc_class(i_, prec, base)
             self.thisptr = complex_mpc(std_move_mpc(m))
+
+        def real_part(self):
+            return c2py(<RCP[const symengine.Basic]>deref(symengine.rcp_static_cast_ComplexMPC(self.thisptr)).real_part())
+
+        def imaginary_part(self):
+            return c2py(<RCP[const symengine.Basic]>deref(symengine.rcp_static_cast_ComplexMPC(self.thisptr)).imaginary_part())
+
+        def _sympy_(self):
+            import sympy
+            return self.real_part()._sympy_() + sympy.I * self.imaginary_part()._sympy_()
     ELSE:
         pass
 
@@ -832,7 +855,11 @@ def eval_complex_double(x):
     cdef Basic X = sympify(x)
     return c2py(<RCP[const symengine.Basic]>(symengine.complex_double(symengine.eval_complex_double(deref(X.thisptr)))))
 
+have_mpfr = False
+have_mpc = False
+
 IF HAVE_SYMENGINE_MPFR:
+    have_mpfr = True
     def eval_mpfr(x, long prec):
         cdef Basic X = sympify(x)
         cdef symengine.mpfr_class a = symengine.mpfr_class(prec)
@@ -840,6 +867,7 @@ IF HAVE_SYMENGINE_MPFR:
         return c2py(<RCP[const symengine.Basic]>(symengine.real_mpfr(symengine.std_move_mpfr(a))))
 
 IF HAVE_SYMENGINE_MPC:
+    have_mpc = True
     def eval_mpc(x, long prec):
         cdef Basic X = sympify(x)
         cdef symengine.mpc_class a = symengine.mpc_class(prec)
@@ -851,8 +879,9 @@ def eval(x, long prec):
         return eval_complex_double(x)
     else:
         try:
+            import eval_mpc
             return eval_mpc(x, prec)
-        except NameError:
+        except ImportError:
             raise ValueError("Precision %s is only supported with MPC" % prec)
 
 def eval_real(x, long prec):
@@ -860,8 +889,9 @@ def eval_real(x, long prec):
         return eval_double(x)
     else:
         try:
+            import eval_mpfr
             return eval_mpfr(x, prec)
-        except NameError:
+        except ImportError:
             raise ValueError("Precision %s is only supported with MPFR" % prec)
 
 def probab_prime_p(n, reps = 25):
