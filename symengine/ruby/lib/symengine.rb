@@ -1,4 +1,5 @@
 require 'symengine/symengine'
+require 'symengine/iruby'
 
 module SymEngine
   def SymEngine.ascii_art
