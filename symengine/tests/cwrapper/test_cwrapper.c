@@ -2,6 +2,7 @@
 
 void test_cwrapper() {
     char* s;
+    const basic_struct **basic_array;
     basic x, y, z;
     basic_init(x);
     basic_init(y);
@@ -54,12 +55,29 @@ void test_cwrapper() {
     integer_get_mpz(test, e);
     printf("integer_get_mpz(e): %ld\n", mpz_get_ui(test));
 
+    //Tests basic_free_symbols
+    basic_mul(e, x, y);
+    basic_mul(e, e, z);
+    int size = 0;
+    char* k = basic_str(e);
+    basic_free_symbols(e, &basic_array, &size);
+    printf("basic_free_symbols(%s) :", k);
+    int i;
+    for (i = 0; i < size; i++) {
+        char *str;
+        str = basic_str(basic_array[i]);
+        printf("%s ", str);
+        basic_str_free(str);
+    }
+    printf("\n");
+
     mpz_clear(test);
     basic_free(e);
     basic_free(x);
     basic_free(y);
     basic_free(z);
     basic_str_free(s);
+    basic_str_free(k);
 }
 
 void test_basic() {

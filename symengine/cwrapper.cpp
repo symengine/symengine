@@ -22,6 +22,8 @@ using SymEngine::Integer;
 using SymEngine::Number;
 using SymEngine::rcp_static_cast;
 using SymEngine::is_a;
+using SymEngine::RCPBasicKeyLess;
+using SymEngine::set_basic;
 
 namespace SymEngine {
 
@@ -208,6 +210,19 @@ char* basic_str(const basic s)
 void basic_str_free(char* s)
 {
     delete[] s;
+}
+
+void basic_free_symbols(const basic a, const basic_struct*** array, int *size)
+{
+    set_basic set_symbols;
+    set_symbols = SymEngine::free_symbols(*(*RCP_const_cast(a)));
+    *size = set_symbols.size();
+    *array = (const basic_struct**)malloc((*size)*sizeof(const basic_struct*));
+    set_basic::iterator it;
+    int index = 0;
+    for (it = set_symbols.begin(); it != set_symbols.end(); ++it) {
+        (*array)[index++] = reinterpret_cast<const basic_struct*>(&(*it));
+    }
 }
 
 int is_a_Integer(const basic c)
