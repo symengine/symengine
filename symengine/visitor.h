@@ -192,7 +192,7 @@ public:
     CoeffVisitor() : StopVisitor(this) { };
 
     void bvisit(const Add &x) {
-        // TODO: Implement coeff for Add
+        // TODO: Implement coef for Add
     }
 
     void bvisit(const Basic &x) {
@@ -209,8 +209,8 @@ public:
     }
 };
 
-RCP<const Basic> coeff(const Basic &b, const RCP<const Symbol> &x,
-        const RCP<const Integer> &n);
+RCP<const Basic> coef(const Basic &b, const RCP<const Symbol> &x,
+                      const RCP<const Integer> &n);
 
 set_basic free_symbols(const Basic &b);
 
