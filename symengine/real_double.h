@@ -44,6 +44,10 @@ public:
     inline virtual bool is_negative() const {
         return i < 0;
     }
+    //! \return self as a double
+    inline double as_double() const {
+        return i;
+    }
     //! \return `true` if this number is an exact number
     inline virtual bool is_exact() const { return false; }
     //! Get `Evaluate` singleton to evaluate numerically

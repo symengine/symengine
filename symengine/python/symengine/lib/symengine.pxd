@@ -6,13 +6,23 @@ from libcpp.vector cimport vector
 include "config.pxi"
 
 cdef extern from 'gmpxx.h':
+    ctypedef unsigned long mp_limb_t
+    ctypedef struct __mpz_struct:
+        pass
+    ctypedef struct __mpq_struct:
+        pass
+    ctypedef __mpz_struct mpz_t[1]
+    ctypedef __mpq_struct mpq_t[1]
+
     cdef cppclass mpz_class:
         mpz_class()
         mpz_class(int i)
         mpz_class(mpz_class)
         mpz_class(const string &s, int base) except +
+        mpz_t get_mpz_t()
     cdef cppclass mpq_class:
         mpq_class()
+        mpq_t get_mpq_t()
 
 cdef extern from "<set>" namespace "std":
 # Cython's libcpp.set does not support two template arguments to set.
@@ -143,6 +153,7 @@ cdef extern from "<symengine/complex_double.h>" namespace "SymEngine":
         ComplexDouble(double complex x) nogil
         RCP[const Number] real_part() nogil
         RCP[const Number] imaginary_part() nogil
+        double complex as_complex_double() nogil
     RCP[const ComplexDouble] complex_double(double complex d) nogil
 
 cdef extern from "<symengine/constants.h>" namespace "SymEngine":
@@ -257,7 +268,7 @@ IF HAVE_SYMENGINE_MPFR:
         cdef cppclass RealMPFR(Number):
             RealMPFR(mpfr_class) nogil
             mpfr_class as_mpfr() nogil
-            mpfr_prec_t get_prec() nogil
+            long get_prec() nogil
 
         RCP[const RealMPFR] real_mpfr(mpfr_class t) nogil
 ELSE:

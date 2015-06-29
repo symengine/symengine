@@ -46,6 +46,10 @@ public:
     inline virtual bool is_negative() const {
         return false;
     }
+    //! \return self as a double
+    inline std::complex<double> as_complex_double() const {
+        return i;
+    }
     //! \returns `false`
     // False is returned because std::complex<double> is not exact
     inline virtual bool is_exact() const { return false; }
