@@ -74,7 +74,11 @@ EOF
     exit 0
 fi
 
-CXXFLAGS="-Werror -Wno-mismatched-tags" cmake $cmake_line ${SOURCE_DIR}
+if [[ "${CC}" == "clang"* ]] && [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
+    cmake $cmake_line ${SOURCE_DIR}
+else
+    CXXFLAGS="-Werror" cmake $cmake_line ${SOURCE_DIR}
+fi
 echo "Current directory:"
 pwd
 echo "Running make:"
