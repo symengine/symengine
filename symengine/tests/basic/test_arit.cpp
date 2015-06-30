@@ -1,3 +1,4 @@
+#include "catch.hpp"
 #include <iostream>
 #include <chrono>
 
@@ -52,7 +53,7 @@ using SymEngine::real_double;
 using SymEngine::complex_double;
 using SymEngine::is_a;
 
-void test_add()
+TEST_CASE("Add: arit", "[arit]")
 {
     RCP<const Basic> x = symbol("x");
     RCP<const Basic> y = symbol("y");
@@ -64,58 +65,58 @@ void test_add()
     RCP<const Basic> r1 = add(x, x);
     RCP<const Basic> r2 = mul(i2, x);
     RCP<const Basic> r3 = mul(i3, x);
-    assert(eq(r1, r2));
-    assert(neq(r1, r3));
+    REQUIRE(eq(r1, r2));
+    REQUIRE(neq(r1, r3));
 
     r3 = mul(i2, y);
-    assert(neq(r1, r3));
-    assert(neq(r2, r3));
+    REQUIRE(neq(r1, r3));
+    REQUIRE(neq(r2, r3));
 
     r1 = add(mul(y, x), mul(mul(i2, x), y));
     r2 = mul(mul(i3, x), y);
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = add(add(x, x), x);
     r2 = mul(i3, x);
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = add(add(x, x), x);
     r2 = mul(x, i3);
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = add(x, one);
     r2 = add(one, x);
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = add(pow(x, y), z);
     r2 = add(z, pow(x, y));
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = add(x, I);
     r2 = add(I, x);
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = mul(x, I);
     r2 = mul(mul(I, i2), x);
     r3 = mul(mul(I, i3), x);
     r2 = add(r1, r2);
-    assert(eq(r3, r2));
+    REQUIRE(eq(r3, r2));
 
     r1 = real_double(0.1);
     r2 = Rational::from_mpq(mpq_class(1, 2));
     r3 = add(add(add(r1, r2), integer(1)), real_double(0.2));
-    assert(is_a<RealDouble>(*r3));
-    assert(std::abs(rcp_static_cast<const RealDouble>(r3)->i - 1.8) < 1e-12);
+    REQUIRE(is_a<RealDouble>(*r3));
+    REQUIRE(std::abs(rcp_static_cast<const RealDouble>(r3)->i - 1.8) < 1e-12);
 
     r1 = complex_double(std::complex<double>(0.1, 0.2));
     r2 = Complex::from_two_nums(*Rational::from_mpq(mpq_class(1, 2)), *Rational::from_mpq(mpq_class(7, 5)));
     r3 = add(add(add(r1, r2), integer(1)), real_double(0.4));
-    assert(is_a<ComplexDouble>(*r3));
-    assert(std::abs(rcp_static_cast<const ComplexDouble>(r3)->i.real() - 2.0) < 1e-12);
-    assert(std::abs(rcp_static_cast<const ComplexDouble>(r3)->i.imag() - 1.6) < 1e-12);
+    REQUIRE(is_a<ComplexDouble>(*r3));
+    REQUIRE(std::abs(rcp_static_cast<const ComplexDouble>(r3)->i.real() - 2.0) < 1e-12);
+    REQUIRE(std::abs(rcp_static_cast<const ComplexDouble>(r3)->i.imag() - 1.6) < 1e-12);
 }
 
-void test_mul()
+TEST_CASE("Mul: arit", "[arit]")
 {
     RCP<const Basic> x = symbol("x");
     RCP<const Basic> y = symbol("y");
@@ -129,32 +130,32 @@ void test_mul()
     RCP<const Basic> r1, r2, mhalf;
     r1 = mul(pow(x, y), z);
     r2 = mul(z, pow(x, y));
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = mul(mul(x, y), mul(y, x));
     r2 = mul(pow(x, i2), pow(y, i2));
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = mul(pow(x, add(y, z)), z);
     r2 = mul(z, pow(x, add(z, y)));
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = mul(pow(x, y), pow(x, z));
     r2 = pow(x, add(y, z));
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = mul(mul(pow(x, y), pow(x, z)), pow(x, x));
     r2 = pow(x, add(add(x, y), z));
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = mul(mul(mul(pow(x, y), pow(x, z)), pow(x, x)), y);
     r2 = mul(pow(x, add(add(x, y), z)), y);
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = mul(mul(i2, pow(y, mul(im2, pow(x, i2)))),
              mul(i3, pow(y, mul(i2, pow(x, i2)))));
     r2 = i6;
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = mul(mul(mul(mul(div(i3, i2), pow(cos(pow(x, i2)), im2)), x),
            sin(pow(x, i2))), cos(div(mul(i3, x), i4)));
@@ -162,26 +163,26 @@ void test_mul()
            sin(pow(x, i2))), cos(div(mul(i3, x), i4)));
     std::cout << *r1 << std::endl;
     std::cout << *r2 << std::endl;
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     mhalf = div(integer(-1), i2);
     r1 = mul(integer(12), pow(integer(196), mhalf));
     r2 = mul(integer(294), pow(integer(196), mhalf));
-    assert(eq(integer(18), mul(r1, r2)));
+    REQUIRE(eq(integer(18), mul(r1, r2)));
 
     r1 = mul(mul(integer(12), pow(integer(196), mhalf)), pow(i3, mhalf));
     r2 = mul(mul(integer(294), pow(integer(196), mhalf)), pow(i3, mhalf));
-    assert(eq(i6, mul(r1, r2)));
+    REQUIRE(eq(i6, mul(r1, r2)));
 
     r1 = mul(add(x, mul(y, I)), sub(x, mul(y, I)));
     r2 = mul(sub(x, mul(y, I)), add(x, mul(y, I)));
     std::cout << *r1 << std::endl;
     std::cout << *r2 << std::endl;
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = mul(mul(x, I), mul(y, I));
     r2 = mul(integer(-1), mul(x, y));
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     RCP<const Number> rc1, rc2, c1, c2;
     rc1 = Rational::from_two_ints(integer(2), integer(1));
@@ -195,38 +196,38 @@ void test_mul()
     r2 = mul(x, c1);
     r1 = mul(r1, r2);
     r2 = mul(pow(x, i2), c2);
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = mul(sqrt(x), x);
     r2 = pow(x, div(i3, i2));
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = mul(pow(i2, x), pow(i2, sub(div(i3, i2), x)));
     r2 = mul(i2, pow(i2, div(one, i2)));
     std::cout << r1->__str__() << std::endl;
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     rc1 = Complex::from_two_nums(*one, *one);
     r1 = pow(rc1, x);
     r1 = mul(r1, pow(rc1, sub(div(i3, i2), x)));
     r2 = mul(rc1, pow(rc1, div(one, i2)));
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = real_double(0.1);
     r2 = Rational::from_mpq(mpq_class(1, 2));
     r2 = mul(mul(mul(r1, r2), integer(3)), real_double(0.2));
-    assert(is_a<RealDouble>(*r2));
-    assert(std::abs(rcp_static_cast<const RealDouble>(r2)->i - 0.03) < 1e-12);
+    REQUIRE(is_a<RealDouble>(*r2));
+    REQUIRE(std::abs(rcp_static_cast<const RealDouble>(r2)->i - 0.03) < 1e-12);
 
     r1 = complex_double(std::complex<double>(0.1, 0.2));
     r2 = Complex::from_two_nums(*Rational::from_mpq(mpq_class(1, 2)), *Rational::from_mpq(mpq_class(7, 5)));
     r2 = mul(mul(mul(r1, r2), integer(5)), real_double(0.7));
-    assert(is_a<ComplexDouble>(*r2));
-    assert(std::abs(rcp_static_cast<const ComplexDouble>(r2)->i.real() + 0.805) < 1e-12);
-    assert(std::abs(rcp_static_cast<const ComplexDouble>(r2)->i.imag() - 0.84) < 1e-12);
+    REQUIRE(is_a<ComplexDouble>(*r2));
+    REQUIRE(std::abs(rcp_static_cast<const ComplexDouble>(r2)->i.real() + 0.805) < 1e-12);
+    REQUIRE(std::abs(rcp_static_cast<const ComplexDouble>(r2)->i.imag() - 0.84) < 1e-12);
 }
 
-void test_sub()
+TEST_CASE("Sub: arit", "[arit]")
 {
     RCP<const Basic> x = symbol("x");
     RCP<const Basic> y = symbol("y");
@@ -240,40 +241,40 @@ void test_sub()
 
     r1 = sub(i3, i2);
     r2 = one;
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = sub(x, x);
     r2 = zero;
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = sub(mul(i2, x), x);
     r2 = x;
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = add(mul(mul(i2, x), y), mul(x, y));
     r2 = mul(i3, mul(x, y));
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = add(mul(mul(i2, x), y), mul(x, y));
     r2 = mul(mul(x, y), i3);
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = sub(mul(mul(i2, x), y), mul(x, y));
     r2 = mul(x, y);
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = sub(add(x, one), x);
     r2 = one;
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = add(add(x, one), add(x, i2));
     r2 = add(mul(i2, x), i3);
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = sub(add(x, one), add(x, i2));
     r1 = expand(r1);
     r2 = im1;
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     RCP<const Number> rc1, rc2, rc3, c1, c2;
     rc1 = Rational::from_two_ints(integer(1), integer(2));
@@ -287,23 +288,23 @@ void test_sub()
     r2 = mul(x, c2);
     r1 = sub(r1, r2);
     r2 = mul(div(mul(I, integer(19)), integer(12)), x);
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = real_double(0.1);
     r2 = Rational::from_mpq(mpq_class(1, 2));
     r2 = sub(sub(sub(r1, r2), integer(3)), real_double(0.2));
-    assert(is_a<RealDouble>(*r2));
-    assert(std::abs(rcp_static_cast<const RealDouble>(r2)->i + 3.6) < 1e-12);
+    REQUIRE(is_a<RealDouble>(*r2));
+    REQUIRE(std::abs(rcp_static_cast<const RealDouble>(r2)->i + 3.6) < 1e-12);
 
     r1 = real_double(0.1);
     r2 = Complex::from_two_nums(*Rational::from_mpq(mpq_class(1, 2)), *Rational::from_mpq(mpq_class(7, 5)));
     r2 = sub(sub(sub(r1, r2), integer(1)), real_double(0.4));
-    assert(is_a<ComplexDouble>(*r2));
-    assert(std::abs(rcp_static_cast<const ComplexDouble>(r2)->i.real() + 1.8) < 1e-12);
-    assert(std::abs(rcp_static_cast<const ComplexDouble>(r2)->i.imag() + 1.4) < 1e-12);
+    REQUIRE(is_a<ComplexDouble>(*r2));
+    REQUIRE(std::abs(rcp_static_cast<const ComplexDouble>(r2)->i.real() + 1.8) < 1e-12);
+    REQUIRE(std::abs(rcp_static_cast<const ComplexDouble>(r2)->i.imag() + 1.4) < 1e-12);
 }
 
-void test_div()
+TEST_CASE("Div: arit", "[arit]")
 {
     RCP<const Basic> x = symbol("x");
     RCP<const Basic> y = symbol("y");
@@ -313,11 +314,11 @@ void test_div()
     RCP<const Basic> i3 = integer(3);
     RCP<const Basic> i4 = integer(4);
 
-    assert(integer(2)->is_positive());
-    assert(integer(0)->is_zero());
-    assert(integer(1)->is_one());
-    assert(!(integer(-1)->is_positive()));
-    assert(integer(-1)->is_negative());
+    REQUIRE(integer(2)->is_positive());
+    REQUIRE(integer(0)->is_zero());
+    REQUIRE(integer(1)->is_one());
+    REQUIRE(!(integer(-1)->is_positive()));
+    REQUIRE(integer(-1)->is_negative());
 
     RCP<const Basic> r1, r2;
 
@@ -325,60 +326,60 @@ void test_div()
     r2 = mul(integer(1), i4);
     std::cout << "r1: " << *r1 << std::endl;
     std::cout << "r2: " << *r2 << std::endl;
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = pow(i3, i2);
     r2 = integer(9);
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = div(i4, i2);
     r2 = i2;
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = div(x, x);
     r2 = one;
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = div(mul(i2, x), x);
     r2 = i2;
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = div(pow(x, i2), x);
     r2 = x;
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = div(mul(mul(i2, x), y), mul(x, y));
     r2 = i2;
     std::cout << "r1: " << *r1 << std::endl;
     std::cout << "r2: " << *r2 << std::endl;
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = div(mul(mul(y, x), i2), mul(x, y));
     r2 = i2;
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = div(mul(x, i2), x);
     r2 = i2;
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = div(mul(x, i4), mul(x, i2));
     r2 = i2;
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = div(i2, div(i3, mul(i2, im1)));
     r2 = mul(im1, div(i4, i3));
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = div(i4, mul(im1, i2));
     r2 = mul(im1, i2);
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = div(i4, im1);
     r2 = mul(im1, i4);
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = div(integer(5), div(integer(1), integer(3)));
-    assert(eq(r1, integer(15)));
+    REQUIRE(eq(r1, integer(15)));
 
     RCP<const Number> rc1, rc2, rc3, c1, c2;
     rc1 = Rational::from_two_ints(integer(1), integer(2));
@@ -390,28 +391,28 @@ void test_div()
 
     r1 = div(x, c1);
     r2 = mul(sub(div(integer(8), integer(13)), mul(I, rc3)), x);
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = mul(c2, div(x, c1));
     rc3 = Rational::from_two_ints(integer(2), integer(13));
     r2 = mul(sub(div(integer(10), integer(13)), mul(I, rc3)), x);
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = real_double(0.1);
     r2 = Rational::from_mpq(mpq_class(1, 2));
     r2 = div(div(div(r1, r2), integer(3)), real_double(0.2));
-    assert(is_a<RealDouble>(*r2));
-    assert(std::abs(rcp_static_cast<const RealDouble>(r2)->i - 0.333333333333) < 1e-12);
+    REQUIRE(is_a<RealDouble>(*r2));
+    REQUIRE(std::abs(rcp_static_cast<const RealDouble>(r2)->i - 0.333333333333) < 1e-12);
 
     r1 = real_double(0.1);
     r2 = Complex::from_two_nums(*Rational::from_mpq(mpq_class(1, 2)), *Rational::from_mpq(mpq_class(7, 5)));
     r2 = div(div(div(r1, r2), integer(2)), real_double(0.4));
-    assert(is_a<ComplexDouble>(*r2));
-    assert(std::abs(rcp_static_cast<const ComplexDouble>(r2)->i.real() - 0.0282805429864253) < 1e-12);
-    assert(std::abs(rcp_static_cast<const ComplexDouble>(r2)->i.imag() + 0.0791855203619909) < 1e-12);
+    REQUIRE(is_a<ComplexDouble>(*r2));
+    REQUIRE(std::abs(rcp_static_cast<const ComplexDouble>(r2)->i.real() - 0.0282805429864253) < 1e-12);
+    REQUIRE(std::abs(rcp_static_cast<const ComplexDouble>(r2)->i.imag() + 0.0791855203619909) < 1e-12);
 }
 
-void test_pow()
+TEST_CASE("Pow: arit", "[arit]")
 {
     RCP<const Symbol> x = symbol("x");
     RCP<const Basic> y = symbol("y");
@@ -430,141 +431,141 @@ void test_pow()
 
     r1 = mul(x, x);
     r2 = pow(x, i2);
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = mul(mul(x, x), x);
     r2 = pow(x, i3);
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = mul(mul(mul(x, x), x), x);
     r2 = pow(x, i4);
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = mul(mul(add(x, y), add(x, y)), add(x, y));
     r2 = pow(add(x, y), i3);
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = mul(mul(add(x, y), add(y, x)), add(x, y));
     r2 = pow(add(x, y), i3);
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = sub(pow(x, y), pow(x, y));
     r2 = zero;
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     /* Test (x*y)**2 -> x**2*y**2 type of simplifications */
 
     r1 = pow(mul(x, y), i2);
     r2 = mul(pow(x, i2), pow(y, i2));
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = pow(mul(i2, mul(x, y)), i2);
     r2 = mul(i4, mul(pow(x, i2), pow(y, i2)));
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = pow(mul(i3, mul(x, y)), i2);
     r2 = mul(i9, mul(pow(x, i2), pow(y, i2)));
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = pow(mul(i3, mul(x, y)), im1);
     r2 = mul(div(one, i3), mul(pow(x, im1), pow(y, im1)));
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = pow(mul(i3, mul(pow(x, i2), pow(y, i3))), i2);
     r2 = mul(i9, mul(pow(x, i4), pow(y, i6)));
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = pow(mul(i3, mul(pow(x, i2), pow(y, im1))), i3);
     r2 = mul(i27, mul(pow(x, i6), pow(y, im3)));
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     /*    */
     r1 = sqrt(x);
     r1 = r1->diff(x)->diff(x);
     r2 = mul(div(im1, i4), pow(x, div(im3, i2)));
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     // Just test that it works:
     r2 = sin(r1)->diff(x)->diff(x);
 
     r1 = div(one, sqrt(i2));
     r2 = mul(pow(i2, pow(i2, im1)), pow(i2, im1));
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = div(one, sqrt(i2));
     r2 = div(sqrt(i2), i2);
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = exp(pow(x, i3));
     r1 = r1->diff(x);
     r2 = mul(mul(i3, exp(pow(x, i3))), pow(x, i2));
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = pow(x, x);
     r1 = r1->diff(x);
     r2 = mul(pow(x, x), add(log(x), one));
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = pow(x, y);
     r1 = r1->diff(x);
     r2 = mul(pow(x, sub(y, one)), y);
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = pow(y, x);
     r1 = r1->diff(x);
     r2 = mul(pow(y, x), log(y));
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = pow(div(i4, i6), i2);
-    assert(eq(r1, div(integer(4), integer(9))));
+    REQUIRE(eq(r1, div(integer(4), integer(9))));
 
     r1 = pow(i2, div(im1, i2));
     r2 = div(sqrt(i2), i2);
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = pow(div(i3, i2), div(integer(7), i2));
     r2 = mul(div(integer(27), integer(16)), mul(pow(i2, div(integer(1), i2)),
         pow(i3, div(integer(1), i2))));
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = pow(div(i2, i3), div(integer(7), i2));
     r2 = mul(div(integer(8), integer(81)), mul(pow(i2, div(integer(1), i2)),
         pow(i3, div(integer(1), i2))));
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = pow(i6, div(integer(7), i2));
     r2 = mul(integer(216), pow(i6, div(integer(1), i2)));
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = pow(div(i3, i2), div(integer(-7), i2));
     r2 = mul(div(integer(8), integer(81)), mul(pow(i2, div(integer(1), i2)),
         pow(i3, div(integer(1), i2))));
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = pow(i6, div(integer(-7), i2));
     r2 = mul(div(one, integer(1296)), pow(i6, div(integer(1), i2)));
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = mul(pow(i3, div(i27, i4)), pow(i2, div(integer(-13), i6)));
     r2 = mul(mul(div(integer(729), integer(8)), pow(i3, div(i3, i4))),
         pow(i2, div(integer(5), i6)));
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = div(integer(12), pow(integer(196), div(integer(1), integer(2))));
     r2 = mul(div(i3, integer(49)), sqrt(integer(196)));
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = pow(div(sqrt(integer(12)), sqrt(integer(6))), integer(2));
     r2 = integer(2);
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = pow(pow(x, y), z);
     r2 = pow(x, mul(y, z));
-    assert(neq(r1, r2));
+    REQUIRE(neq(r1, r2));
 
     r1 = pow(mul(x, y), z);
     r2 = mul(pow(x, z), pow(y, z));
-    assert(neq(r1, r2));
+    REQUIRE(neq(r1, r2));
 
     RCP<const Number> rc1, rc2, rc3, c1, c2;
     rc1 = Rational::from_two_ints(integer(1), integer(2));
@@ -576,67 +577,67 @@ void test_pow()
 
     r1 = pow(x, c1);
     r2 = mul(pow(x, div(one, i2)), pow(x, mul(I, div(i3, i4))));
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = pow(c1, x);
     r2 = pow(c1, y);
     r1 = mul(r1, r2);
     r2 = pow(c1, add(x, y));
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = pow(I, integer(3));
     r2 = mul(im1, I);
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = pow(mul(I, i2), i2);
     r2 = mul(im1, i4);
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = pow(mul(I, im3), integer(5));
     r2 = mul(integer(243), mul(I, im1));
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = pow(mul(I, im3), integer(4));
     r2 = integer(81);
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = pow(im1, div(one, i2));
     r2 = I;
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = pow(im1, div(i6, i4));
     r2 = mul(im1, I);
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = pow(im1, div(integer(9), i6));
     r2 = mul(im1, I);
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = pow(im3, div(integer(9), i6));
     r2 = mul(mul(im3, I), pow(i3, div(one, i2)));
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = pow(im3, div(i4, i3));
     r2 = pow(r1, i3);
-    assert(eq(r2, integer(81)));
+    REQUIRE(eq(r2, integer(81)));
 
     r1 = real_double(0.1);
     r2 = Rational::from_mpq(mpq_class(1, 2));
     r2 = pow(r1, r2);
-    assert(is_a<RealDouble>(*r2));
-    assert(std::abs(rcp_static_cast<const RealDouble>(r2)->i - 0.316227766016) < 1e-12);
+    REQUIRE(is_a<RealDouble>(*r2));
+    REQUIRE(std::abs(rcp_static_cast<const RealDouble>(r2)->i - 0.316227766016) < 1e-12);
     r2 = pow(pow(r2, integer(3)), real_double(0.2));
-    assert(std::abs(rcp_static_cast<const RealDouble>(r2)->i - 0.501187233627) < 1e-12);
+    REQUIRE(std::abs(rcp_static_cast<const RealDouble>(r2)->i - 0.501187233627) < 1e-12);
 
     r1 = real_double(-0.01);
     r2 = pow(r1, Rational::from_mpq(mpq_class(1, 2)));
     r2 = pow(integer(2), r2);
-    assert(is_a<ComplexDouble>(*r2));
-    assert(std::abs(rcp_static_cast<const ComplexDouble>(r2)->i.real() - 0.997598696589298) < 1e-12);
-    assert(std::abs(rcp_static_cast<const ComplexDouble>(r2)->i.imag() - 0.069259227279362) < 1e-12);
+    REQUIRE(is_a<ComplexDouble>(*r2));
+    REQUIRE(std::abs(rcp_static_cast<const ComplexDouble>(r2)->i.real() - 0.997598696589298) < 1e-12);
+    REQUIRE(std::abs(rcp_static_cast<const ComplexDouble>(r2)->i.imag() - 0.069259227279362) < 1e-12);
 }
 
-void test_log()
+TEST_CASE("Log: arit", "[arit]")
 {
     RCP<const Basic> x = symbol("x");
     RCP<const Basic> i2 = integer(2);
@@ -647,27 +648,27 @@ void test_log()
 
     r1 = log(E);
     r2 = one;
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = log(one);
     r2 = zero;
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = log(div(i2, i3));
     r2 = sub(log(i2), log(i3));
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = log(E, i2);
     r2 = div(one, log(i2));
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = log(x);
     r1 = r1->subs({{x, E}});
     r2 = one;
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 }
 
-void test_multinomial()
+TEST_CASE("Multinomial: arit", "[arit]")
 {
     map_vec_int r;
     auto t1 = std::chrono::high_resolution_clock::now();
@@ -678,7 +679,7 @@ void test_multinomial()
         << "ms" << std::endl;
 }
 
-void test_expand1()
+TEST_CASE("Expand1: arit", "[arit]")
 {
     RCP<const Basic> x = symbol("x");
     RCP<const Basic> y = symbol("y");
@@ -706,7 +707,7 @@ void test_expand1()
         << rcp_dynamic_cast<const Add>(r2)->dict_.size() << std::endl;
 }
 
-void test_expand2()
+TEST_CASE("Expand2: arit", "[arit]")
 {
     RCP<const Basic> x = symbol("x");
     RCP<const Basic> y = symbol("y");
@@ -736,8 +737,8 @@ void test_expand2()
     r2 = expand(r1);
     std::cout << *r2 << std::endl;
 
-    assert(eq(r2, add(add(mul(w, x), mul(w, y)), mul(w, z))));
-    assert(neq(r2, add(add(mul(w, x), mul(w, w)), mul(w, z))));
+    REQUIRE(eq(r2, add(add(mul(w, x), mul(w, y)), mul(w, z))));
+    REQUIRE(neq(r2, add(add(mul(w, x), mul(w, w)), mul(w, z))));
 
     r1 = mul(add(x, y), add(z, w)); // (x+y)*(z+w)
     std::cout << *r1 << std::endl;
@@ -745,8 +746,8 @@ void test_expand2()
     r2 = expand(r1);
     std::cout << *r2 << std::endl;
 
-    assert(eq(r2, add(add(add(mul(x, z), mul(y, z)), mul(x, w)), mul(y, w))));
-    assert(neq(r2, add(add(add(mul(y, z), mul(y, z)), mul(x, w)), mul(y, w))));
+    REQUIRE(eq(r2, add(add(add(mul(x, z), mul(y, z)), mul(x, w)), mul(y, w))));
+    REQUIRE(neq(r2, add(add(add(mul(y, z), mul(y, z)), mul(x, w)), mul(y, w))));
 
     r1 = pow(add(x, y), im1);       // 1/(x+y)
     std::cout << *r1 << std::endl;
@@ -754,7 +755,7 @@ void test_expand2()
     r2 = expand(r1);
     std::cout << *r2 << std::endl;
 
-    assert(eq(r2, r1));
+    REQUIRE(eq(r2, r1));
 
     r1 = pow(add(x, y), im2);       // 1/(x+y)^2
     std::cout << *r1 << std::endl;
@@ -762,39 +763,39 @@ void test_expand2()
     r2 = expand(r1);
     std::cout << *r2 <<std::endl;
 
-    assert(eq(r2, pow(add(add(pow(x, i2), mul(mul(i2, x), y)), pow(y, i2)), im1)));
-    assert(neq(r2, r1));
+    REQUIRE(eq(r2, pow(add(add(pow(x, i2), mul(mul(i2, x), y)), pow(y, i2)), im1)));
+    REQUIRE(neq(r2, r1));
 
     r1 = mul(im1, add(x, i2));
     r1 = expand(r1);
     r2 = add(mul(im1, x), im2);
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = pow(add(x, one), i2);
     r1 = expand(r1);
     r2 = add(add(pow(x, i2), mul(i2, x)), one);
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = pow(add(x, i2), i2);
     r1 = expand(r1);
     r2 = add(add(pow(x, i2), mul(i4, x)), i4);
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = pow(add(x, i3), i2);
     r1 = expand(r1);
     r2 = add(add(pow(x, i2), mul(i6, x)), i9);
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = pow(add(mul(i3, x), i5), i2);
     r1 = expand(r1);
     r2 = add(add(mul(i9, pow(x, i2)), mul(i30, x)), i25);
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = pow(add(mul(i2, pow(x, i2)), mul(i3, y)), i2);
     r1 = expand(r1);
     r2 = add(add(mul(i4, pow(x, i4)), mul(i12, mul(pow(x, i2), y))),
             mul(i9, pow(y, i2)));
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = pow(add(add(pow(x, i3), pow(x, i2)), x), i2);
     r1 = expand(r1);
@@ -802,66 +803,66 @@ void test_expand2()
                 mul(i3, pow(x, i4))), mul(i2, pow(x, i3))), pow(x, i2));
     std::cout << *r1 << std::endl;
     std::cout << *r2 << std::endl;
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = pow(add(x, pow(x, i5)), i2);
     r1 = expand(r1);
     r2 = add(add(pow(x, i10), mul(i2, pow(x, i6))), pow(x, i2));
     std::cout << *r1 << std::endl;
     std::cout << *r2 << std::endl;
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = mul(add(i2, x), add(i3, y));
     r1 = expand(r1);
     r2 = add(add(add(i6, mul(i2, y)), mul(i3, x)), mul(x, y));
     std::cout << *r1 << std::endl;
     std::cout << *r2 << std::endl;
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = mul(i3, pow(i5, div(im1, i2)));
     r2 = mul(i4, pow(i5, div(im1, i2)));
     r2 = expand(pow(add(add(r1, r2), integer(1)), i2));
-    assert(eq(r2, add(div(integer(54), i5), mul(integer(14), pow(i5, div(im1, i2))))));
+    REQUIRE(eq(r2, add(div(integer(54), i5), mul(integer(14), pow(i5, div(im1, i2))))));
 
     r1 = pow(add(mul(I, x), i2), i2);
     r1 = expand(r1);
     r2 = add(sub(mul(mul(I, x), i4), pow(x, i2)), i4);
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = mul(add(sqrt(i3), one), add(sqrt(i3), i2));
     r1 = expand(r1);
     r2 = add(i5, mul(i3, sqrt(i3)));
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = mul(add(mul(i2, x), sqrt(i2)), add(x, mul(i2, sqrt(i2))));
     r1 = expand(r1);
     r2 = add(mul(i2, mul(x, x)), add(mul(x, mul(sqrt(i2), i5)), i4));
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = mul(sqrt(i2), add(mul(x, i2), mul(i2, sqrt(i2))));
     r1 = expand(r1);
     r2 = add(mul(i2, mul(sqrt(i2), x)), i4);
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = pow(add(pow(add(one, sqrt(i2)), i2), one), i2);
     r1 = expand(r1);
     r2 = add(i24, mul(i16, sqrt(i2)));
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = mul(add(mul(sqrt(i3), x), one), sub(mul(sqrt(i3), x), one));
     r1 = expand(r1);
     r2 = sub(mul(mul(i3, x), x), one);
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = pow(add(i2, mul(y, x)), i2);
     r1 = expand(r1);
     r2 = add(i4, add(mul(mul(i4, x), y), pow(mul(x, y), i2)));
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = pow(sub(sub(pow(add(x, one), i2), pow(x, i2)), mul(x, i2)), i2);
     r1 = expand(r1);
     r2 = one;
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     // The following test that the expand method outputs canonical objects
     r1 = pow(add(y, mul(sqrt(i3), z)), i2);
@@ -878,19 +879,19 @@ void test_expand2()
 
     r1 = expand(pow(add(sqrt(i2), mul(sqrt(i2), x)), i2));
     r2 = add(i2, add(mul(i4, x), mul(i2, pow(x, i2))));
-    assert(eq(r1, r2));
+    REQUIRE(eq(r1, r2));
 
     r1 = real_double(0.2);
     r1 = add(r1, x);
     r2 = expand(pow(r1, i2));
-    assert(is_a<Add>(*r2));
+    REQUIRE(is_a<Add>(*r2));
     auto it = rcp_static_cast<const Add>(r2)->dict_.find(x);
-    assert(it != rcp_static_cast<const Add>(r2)->dict_.end());
-    assert(is_a<RealDouble>(*it->second));
-    assert(std::abs(rcp_static_cast<const RealDouble>(it->second)->i - 0.4) < 1e-12);
+    REQUIRE(it != rcp_static_cast<const Add>(r2)->dict_.end());
+    REQUIRE(is_a<RealDouble>(*it->second));
+    REQUIRE(std::abs(rcp_static_cast<const RealDouble>(it->second)->i - 0.4) < 1e-12);
 }
 
-void test_expand3()
+TEST_CASE("Expand3: arit", "[arit]")
 {
     RCP<const Basic> x = symbol("x");
     RCP<const Basic> y = symbol("y");
@@ -943,22 +944,4 @@ void test_expand3()
     std::cout
         << std::chrono::duration_cast<std::chrono::milliseconds>(t2-t1).count()
         << "ms" << std::endl;
-}
-
-int main(int argc, char* argv[])
-{
-    print_stack_on_segfault();
-
-    test_add();
-    test_mul();
-    test_pow();
-    test_log();
-    test_sub();
-    test_div();
-    test_multinomial();
-    test_expand1();
-    test_expand2();
-    test_expand3();
-
-    return 0;
 }

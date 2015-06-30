@@ -1,3 +1,4 @@
+#include "catch.hpp"
 #include <symengine/basic.h>
 #include <symengine/integer.h>
 #include <symengine/add.h>
@@ -23,7 +24,7 @@ using SymEngine::cos;
 using SymEngine::eval_mpc;
 using SymEngine::print_stack_on_segfault;
 
-void test_eval()
+TEST_CASE("eval: eval_mpc", "[eval_mpc]")
 {
     mpc_t a, b;
     mpfr_t real, imag;
@@ -41,20 +42,9 @@ void test_eval()
 
     mpc_set_fr_fr(b, real, imag, MPFR_RNDN);
 
-    assert(mpc_cmp(a, b) == 0);
+    REQUIRE(mpc_cmp(a, b) == 0);
     mpfr_clear(real);
     mpfr_clear(imag);
     mpc_clear(a);
     mpc_clear(b);
-}
-
-int main(int argc, char* argv[])
-{
-    print_stack_on_segfault();
-
-    test_eval();
-
-    mpfr_free_cache();
-
-    return 0;
 }
