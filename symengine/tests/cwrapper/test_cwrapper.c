@@ -102,11 +102,14 @@ void test_CVectorInt2()
 void test_CVecBasic()
 {
     CVecBasic *vec = vecbasic_new();
+    assert(vecbasic_size(vec) == 0);
 
     basic x;
     basic_init(x);
     symbol_set(x, "x");
     vecbasic_push_back(vec, x);
+
+    assert(vecbasic_size(vec) == 1);
 
     basic y;
     basic_init(y);
