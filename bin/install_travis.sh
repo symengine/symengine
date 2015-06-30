@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -e
 
 if [[ "${CC}" == "" ]]; then
     export CC=gcc
@@ -16,12 +17,13 @@ cd $our_install_dir
 
 if [[ "${TRAVIS_OS_NAME}" != "osx" ]]; then
     sudo apt-get update
-    sudo apt-get install cmake
+    sudo apt-get install -y cmake
     if [[ "${CC}" == *"clang"* ]]; then
-        sudo apt-get install libc++-dev
+        echo "sudo apt-get install -y libc++-dev"
+        sudo apt-get install -y libc++-dev
         wget http://ftp.gnu.org/gnu/gmp/gmp-6.0.0a.tar.bz2;
         tar -xjf gmp-6.0.0a.tar.bz2;
-        cd gmp-6.0.0 && ./configure --prefix=$our_install_dir --enable-cxx && make CXXFLAGS="-stdlib=libc++" -j8 install && cd ..;
+        cd gmp-6.0.0 && CC=clang CXX=clang++ ./configure --prefix=$our_install_dir --enable-cxx && make CXXFLAGS="-stdlib=libc++" -j8 install && cd ..;
     else
         sudo apt-get install libgmp-dev
     fi
