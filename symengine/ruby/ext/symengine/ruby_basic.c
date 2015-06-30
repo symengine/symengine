@@ -98,6 +98,25 @@ VALUE cbasic_neg(VALUE self){
     return cbasic_unary_op(self, basic_neg);
 }
 
+VALUE cbasic_free_symbols(VALUE self) {
+    basic_struct *this;
+    const basic_struct **array;
+    int size;
+
+    Data_Get_Struct(self, basic_struct, this);
+    basic_free_symbols(this, &array, &size);
+
+    VALUE ruby_array = rb_ary_new2(size);
+    int i = 0;
+    VALUE temp;
+    for(i = 0; i < size; i++) {
+        temp = Data_Make_Struct(rb_obj_class(self), basic_struct, NULL,
+                                                    cbasic_free, array[i]);
+        rb_ary_push(ruby_array, temp);
+    }
+    return ruby_array;
+}
+
 VALUE cbasic_to_str(VALUE self){
     basic_struct *this;
     char *str_ptr;

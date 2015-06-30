@@ -111,6 +111,19 @@ describe SymEngine do
             end
         end
 
+        describe '#free_symbols' do
+            context 'with nothing as argument' do
+                it 'returns the set of symbols' do
+                    x = SymEngine::Symbol.new("x")
+                    y = SymEngine::Symbol.new("y")
+                    z = SymEngine::Symbol.new("z")
+                    e = (x*y*z)
+                    f = e.free_symbols
+                    expect(f).to eq(["x", "y", "z"].to_set)
+                end
+            end
+        end
+
         describe '#expand' do
             context 'with nothing as argument' do
                 it 'returns the expanded form' do
