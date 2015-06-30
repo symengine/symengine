@@ -245,4 +245,36 @@ int vectorint_get(CVectorInt *self, int n)
     return self->m[n];
 }
 
+
+// C wrapper for vec_basic
+
+struct CVecBasic {
+    SymEngine::vec_basic m;
+};
+
+CVecBasic* vecbasic_new()
+{
+    return new CVecBasic;
+}
+
+void vecbasic_free(CVecBasic *self)
+{
+    delete self;
+}
+
+void vecbasic_push_back(CVecBasic *self, const basic value)
+{
+    self->m.push_back(*RCP_const_cast(value));
+}
+
+void vecbasic_get(CVecBasic *self, int n, basic result)
+{
+    *RCP_cast(result) = self->m[n];
+}
+
+size_t vecbasic_size(CVecBasic *self)
+{
+    return self->m.size();
+}
+
 }

@@ -99,10 +99,30 @@ void test_CVectorInt2()
     assert(vectorint_get(vec, 0) == 5);
 }
 
+void test_CVecBasic()
+{
+    CVecBasic *vec = vecbasic_new();
+
+    basic x;
+    basic_init(x);
+    symbol_set(x, "x");
+    vecbasic_push_back(vec, x);
+
+    basic y;
+    basic_init(y);
+    vecbasic_get(vec, 0, y);
+
+    // TODO: enable this once basic_eq() is implemented
+    // assert(basic_eq(x, y));
+
+    vecbasic_free(vec);
+}
+
 int main(int argc, char* argv[])
 {
     test_cwrapper();
     test_CVectorInt1();
     test_CVectorInt2();
+    test_CVecBasic();
     return 0;
 }

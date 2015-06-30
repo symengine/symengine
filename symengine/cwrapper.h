@@ -118,6 +118,16 @@ void vectorint_free(CVectorInt *self);
 void vectorint_push_back(CVectorInt *self, int value);
 int vectorint_get(CVectorInt *self, int n);
 
+//! Wrapper for vec_basic
+
+typedef struct CVecBasic CVecBasic;
+
+CVecBasic* vecbasic_new();
+void vecbasic_free(CVecBasic *self);
+void vecbasic_push_back(CVecBasic *self, const basic value);
+void vecbasic_get(CVecBasic *self, int n, basic result);
+size_t vecbasic_size(CVecBasic *self);
+
 #ifdef __cplusplus
 }
 #endif
