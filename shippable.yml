@@ -53,6 +53,7 @@ env:
   - TEST_IN_TREE="yes" PYTHON_INSTALL="yes" PYTHON_VERSION="3.4"
 
 install:
+  - export TRAVIS=false
   - source bin/install_travis.sh
 script:
   - bin/test_travis.sh
