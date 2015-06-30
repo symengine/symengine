@@ -6,6 +6,12 @@ compiler:
 os:
   - linux
   - osx
+addons:
+  apt:
+    packages:
+    - libgmp-dev
+    - libmpfr-dev
+    - libmpc-dev
 env:
   ## All these variables are sent into the bin/test_travis.sh script. See this
   ## script to know how they are used. Most of them are just passed to cmake,
@@ -67,6 +73,14 @@ matrix:
     - env: BUILD_TYPE="Debug" WITH_SYMENGINE_ASSERT="yes" WITH_PYTHON="yes" PYTHON_VERSION="2.7"
       compiler: clang
       os: linux
+      addons:
+        apt:
+          sources:
+          - ubuntu-toolchain-r-test
+          packages:
+          - clang
+          - libstdc++-4.8-dev
+          - libgmp-dev
     - env: BUILD_TYPE="Debug" WITH_SYMENGINE_ASSERT="yes" WITH_PYTHON="yes" PYTHON_VERSION="2.7"
       compiler: clang
       os: osx

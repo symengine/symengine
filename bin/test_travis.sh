@@ -74,7 +74,7 @@ EOF
     exit 0
 fi
 
-CXXFLAGS="-Werror" cmake $cmake_line ${SOURCE_DIR}
+CXXFLAGS="-Werror -Wno-mismatched-tags" cmake $cmake_line ${SOURCE_DIR}
 echo "Current directory:"
 pwd
 echo "Running make:"
