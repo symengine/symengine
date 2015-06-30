@@ -64,9 +64,10 @@ matrix:
     - compiler: clang
     - os: osx
   include:
-    - env: BUILD_TYPE="Debug" WITH_BFD="yes" WITH_SYMENGINE_ASSERT="yes" WITH_PYTHON="yes" PYTHON_VERSION="2.7"
-      compiler: clang
-      os: linux
+# Disabled until clang on linux works with C++11 on Travis
+#    - env: BUILD_TYPE="Debug" WITH_BFD="yes" WITH_SYMENGINE_ASSERT="yes" WITH_PYTHON="yes" PYTHON_VERSION="2.7"
+#      compiler: clang
+#      os: linux
     - env: BUILD_TYPE="Debug" WITH_SYMENGINE_ASSERT="yes" WITH_PYTHON="yes" PYTHON_VERSION="2.7"
       compiler: clang
       os: osx
