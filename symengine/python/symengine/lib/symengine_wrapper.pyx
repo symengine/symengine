@@ -153,8 +153,19 @@ def sympify(a, raise_error=True):
         return RealDouble(a)
     elif isinstance(a, complex):
         return ComplexDouble(a)
-    else:
-        return sympy2symengine(a, raise_error)
+    elif isinstance(a, tuple):
+        v = []
+        for e in a:
+            v.append(sympify(e, True))
+        return tuple(v)
+    elif isinstance(a, list):
+        v = []
+        for e in a:
+            v.append(sympify(e, True))
+        return v
+    elif hasattr(a, '_symengine_'):
+        return a._symengine_()
+    return sympy2symengine(a, raise_error)
 
 cdef class Basic(object):
 
