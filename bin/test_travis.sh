@@ -78,9 +78,17 @@ CXXFLAGS="-Werror" cmake $cmake_line ${SOURCE_DIR}
 echo "Current directory:"
 pwd
 echo "Running make:"
-make
-echo "Running make install:"
-make install
+if [[ "${TRAVIS_OS_NAME}" != "osx" ]] && [[ "${CC}" == *"clang"* ]]; then
+    make CXXFLAGS="-stdlib=libc++"
+else
+    make
+fi
+echo "Running make:"
+if [[ "${TRAVIS_OS_NAME}" != "osx" ]] && [[ "${CC}" == *"clang"* ]]; then
+    make CXXFLAGS="-stdlib=libc++" install
+else
+    make install
+fi
 
 if [[ "${WITH_SYMENGINE_RCP}" == "no" ]]; then
     echo "SymEngine successfully built with Teuchos::RCP. No tests being run."

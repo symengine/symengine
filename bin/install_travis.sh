@@ -16,7 +16,15 @@ cd $our_install_dir
 
 if [[ "${TRAVIS_OS_NAME}" != "osx" ]]; then
     sudo apt-get update
-    sudo apt-get install cmake libgmp-dev
+    sudo apt-get install cmake
+    if [[ "${CC}" == *"clang"* ]]; then
+        sudo apt-get install libc++
+        wget http://ftp.gnu.org/gnu/gmp/gmp-6.0.0a.tar.bz2;
+        tar -xjf gmp-6.0.0a.tar.bz2;
+        cd gmp-6.0.0 && ./configure --prefix=$our_install_dir --enable-cxx && make CXXFLAGS="-stdlib=libc++" -j8 install && cd ..;
+    else
+        sudo apt-get install libgmp-dev
+    fi
 else
     brew install cmake
     wget http://ftp.gnu.org/gnu/gmp/gmp-6.0.0a.tar.bz2;
