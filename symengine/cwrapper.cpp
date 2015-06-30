@@ -200,4 +200,31 @@ int is_a_Symbol(const basic c)
     return is_a<Symbol>(*(*RCP_const_cast(c)));
 }
 
+
+// C wrapper for std::vector<int>
+
+struct CVectorInt {
+    std::vector<int> m;
+};
+
+CVectorInt* vectorint_new()
+{
+    return new CVectorInt;
+}
+
+void vectorint_free(CVectorInt *self)
+{
+    delete self;
+}
+
+void vectorint_push_back(CVectorInt *self, int value)
+{
+    self->m.push_back(value);
+}
+
+int vectorint_get(CVectorInt *self, int n)
+{
+    return self->m[n];
+}
+
 }

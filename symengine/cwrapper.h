@@ -100,6 +100,16 @@ int is_a_Rational(const basic s);
 //! Return 1 if s is an Symbol, 0 if not.
 int is_a_Symbol(const basic s);
 
+
+//! Wrapper for std::vector<int>
+
+typedef struct CVectorInt CVectorInt;
+
+CVectorInt* vectorint_new();
+void vectorint_free(CVectorInt *self);
+void vectorint_push_back(CVectorInt *self, int value);
+int vectorint_get(CVectorInt *self, int n);
+
 #ifdef __cplusplus
 }
 #endif

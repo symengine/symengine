@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <assert.h>
 #include <symengine/cwrapper.h>
 
 void test_cwrapper() {
@@ -63,8 +64,17 @@ void test_cwrapper() {
     basic_str_free(s);
 }
 
+void test_CVectorInt()
+{
+    CVectorInt *vec = vectorint_new();
+    vectorint_push_back(vec, 5);
+    assert(vectorint_get(vec, 0) == 5);
+    vectorint_free(vec);
+}
+
 int main(int argc, char* argv[])
 {
     test_cwrapper();
+    test_CVectorInt();
     return 0;
 }
