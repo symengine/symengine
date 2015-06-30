@@ -118,11 +118,39 @@ void test_CVecBasic()
     vecbasic_free(vec);
 }
 
+void test_get_args()
+{
+    basic x, y, z, e;
+    basic_init(x);
+    basic_init(y);
+    basic_init(z);
+    basic_init(e);
+    symbol_set(x, "x");
+    symbol_set(y, "y");
+    symbol_set(z, "z");
+
+    integer_set_ui(e, 123);
+    basic_add(e, e, x);
+    basic_mul(e, e, y);
+    basic_div(e, e, z);
+
+    CVecBasic *args = vecbasic_new();
+    basic_get_args(e, args);
+    assert(vecbasic_size(args) == 3);
+    vecbasic_free(args);
+
+    basic_free(e);
+    basic_free(x);
+    basic_free(y);
+    basic_free(z);
+}
+
 int main(int argc, char* argv[])
 {
     test_cwrapper();
     test_CVectorInt1();
     test_CVectorInt2();
     test_CVecBasic();
+    test_get_args();
     return 0;
 }

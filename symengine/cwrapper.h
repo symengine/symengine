@@ -128,6 +128,10 @@ void vecbasic_push_back(CVecBasic *self, const basic value);
 void vecbasic_get(CVecBasic *self, int n, basic result);
 size_t vecbasic_size(CVecBasic *self);
 
+// -------------------------------------
+
+void basic_get_args(const basic self, CVecBasic *args);
+
 #ifdef __cplusplus
 }
 #endif
