@@ -71,6 +71,21 @@ void test_cwrapper() {
     }
     printf("\n");
 
+    //Tests basic_get_args
+    integer_set_si(e, -123);
+    basic_pow(e, x, e);
+    size = 0;
+    char* l = basic_str(e);
+    basic_get_args(e, &basic_array, &size);
+    printf("basic_get_args(%s) :\n", l);
+    for (i = 0; i < size; i++) {
+        char *str;
+        str = basic_str(basic_array[i]);
+        printf("%s ", str);
+        basic_str_free(str);
+    }
+    printf("\n");
+
     mpz_clear(test);
     basic_free(e);
     basic_free(x);
@@ -78,6 +93,7 @@ void test_cwrapper() {
     basic_free(z);
     basic_str_free(s);
     basic_str_free(k);
+    basic_str_free(l);
 }
 
 void test_basic() {

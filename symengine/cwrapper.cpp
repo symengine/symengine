@@ -225,6 +225,19 @@ void basic_free_symbols(const basic a, const basic_struct*** array, int *size)
     }
 }
 
+void basic_get_args(const basic a, const basic_struct*** array, int *size)
+{
+    std::vector<RCP<const Basic> > args;
+    args = (*RCP_const_cast(a))->get_args();
+    *size = args.size();
+    *array = (const basic_struct**)malloc((*size)*sizeof(basic_struct*));
+    std::vector<RCP<const Basic>>::iterator it;
+    int index = 0;
+    for (it = args.begin(); it != args.end(); ++it) {
+        (*array)[index++] = reinterpret_cast<const basic_struct*>(&(*it));
+    }
+}
+
 int is_a_Integer(const basic c)
 {
     return is_a<Integer>(*(c->m));
