@@ -281,8 +281,7 @@ size_t vecbasic_size(CVecBasic *self)
 
 void basic_get_args(const basic self, CVecBasic *args)
 {
-    for (auto &a: (*RCP_const_cast(self))->get_args())
-        args->m.push_back(a);
+    args->m = (*RCP_const_cast(self))->get_args();
 }
 
 }
