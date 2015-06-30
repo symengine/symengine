@@ -1,6 +1,7 @@
 #ifndef CWRAPPER_H
 #define CWRAPPER_H
 
+#include <stdlib.h>
 #include <gmp.h>
 
 #ifdef __cplusplus
@@ -106,6 +107,13 @@ int is_a_Symbol(const basic s);
 typedef struct CVectorInt CVectorInt;
 
 CVectorInt* vectorint_new();
+
+// 'self' must point to allocated memory of size 'size'. The function returns 0
+// if std::vector<int> can be initialized using placement new into 'self',
+// otherwise 1 if 'size' is too small or 2 if 'self' is not properly aligned.
+// No memory is leaked either way.
+int vectorint_placement_new(CVectorInt *self, size_t size);
+
 void vectorint_free(CVectorInt *self);
 void vectorint_push_back(CVectorInt *self, int value);
 int vectorint_get(CVectorInt *self, int n);

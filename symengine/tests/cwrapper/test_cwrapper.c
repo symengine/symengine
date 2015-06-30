@@ -64,17 +64,45 @@ void test_cwrapper() {
     basic_str_free(s);
 }
 
-void test_CVectorInt()
+void test_CVectorInt1()
 {
+    // Allocate on heap
     CVectorInt *vec = vectorint_new();
     vectorint_push_back(vec, 5);
     assert(vectorint_get(vec, 0) == 5);
     vectorint_free(vec);
 }
 
+struct X {
+    void *x;
+};
+
+void test_CVectorInt2()
+{
+    // Allocate on stack
+    CVectorInt *vec;
+
+    char data1[1];  // Not aligned properly
+    vec = (CVectorInt*)data1;
+    assert(vectorint_placement_new(vec, sizeof(data1)) == 2);
+
+    struct X data2[1];  // Aligned properly but small
+    vec = (CVectorInt*)data2;
+    assert(vectorint_placement_new(vec, sizeof(data2)) == 1);
+
+    char data3[50]; // Aligned properly and enough size to fit std::vector<int>
+    vec = (CVectorInt*)data3;
+    assert(vectorint_placement_new(vec, 1) == 1);
+    assert(vectorint_placement_new(vec, 2) == 1);
+    assert(vectorint_placement_new(vec, sizeof(data3)) == 0);
+    vectorint_push_back(vec, 5);
+    assert(vectorint_get(vec, 0) == 5);
+}
+
 int main(int argc, char* argv[])
 {
     test_cwrapper();
-    test_CVectorInt();
+    test_CVectorInt1();
+    test_CVectorInt2();
     return 0;
 }

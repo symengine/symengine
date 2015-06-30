@@ -27,6 +27,16 @@ using SymEngine::is_a;
 #define RCP_cast(x) RCP_cast_general(x, )
 #define RCP_const_cast(x) RCP_cast_general(x, const)
 
+namespace SymEngine {
+
+template< typename T >
+inline bool is_aligned( T*p, size_t n = alignof(T) ){
+    return 0 == reinterpret_cast<uintptr_t>(p) % n ;
+}
+
+}
+
+
 extern "C" {
 
 void basic_init(basic s)
@@ -210,6 +220,14 @@ struct CVectorInt {
 CVectorInt* vectorint_new()
 {
     return new CVectorInt;
+}
+
+int vectorint_placement_new(CVectorInt *self, size_t size)
+{
+    if (!SymEngine::is_aligned(self)) return 2;
+    if (size < sizeof(CVectorInt)) return 1;
+    new(self) CVectorInt;
+    return 0;
 }
 
 void vectorint_free(CVectorInt *self)
