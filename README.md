@@ -110,7 +110,7 @@ irrespective of the user input for `WITH_SYMENGINE_THREAD_SAFE`.
 `CMake` prints the value of its options at the end of the run.
 If you want to use a different compiler, do:
 
-    CXX=clang cmake .
+    CC=clang CXX=clang++ cmake .
 
 and check that CMake picked it up.
 
