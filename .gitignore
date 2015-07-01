@@ -51,6 +51,7 @@ symengine/tests/eval/test_eval_double
 symengine/tests/eval/test_eval_arb
 symengine/tests/eval/test_eval_mpfr
 symengine/tests/eval/test_eval_mpc
+symengine/tests/expression/test_expression
 
 # Benchmarks executables
 benchmarks/add1
