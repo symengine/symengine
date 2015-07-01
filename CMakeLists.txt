@@ -135,6 +135,8 @@ if (WITH_PIRANHA)
     set(WITH_BOOST yes)
     set(WITH_PTHREAD yes)
     set(WITH_MPFR yes)
+    set(CMAKE_CXX_FLAGS_RELEASE
+        "${CMAKE_CXX_FLAGS_RELEASE} -DNDEBUG")
 
     find_package(Piranha REQUIRED)
     include_directories(${PIRANHA_INCLUDE_DIRS})
