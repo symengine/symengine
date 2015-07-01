@@ -2,7 +2,7 @@
 
 void test_cwrapper() {
     char* s;
-    const basic_struct **basic_array;
+    basic_struct *basic_array;
     basic x, y, z;
     basic_init(x);
     basic_init(y);
@@ -65,7 +65,7 @@ void test_cwrapper() {
     int i;
     for (i = 0; i < size; i++) {
         char *str;
-        str = basic_str(basic_array[i]);
+        str = basic_str(basic_array+i);
         printf("%s ", str);
         basic_str_free(str);
     }
@@ -80,7 +80,7 @@ void test_cwrapper() {
     printf("basic_get_args(%s) :\n", l);
     for (i = 0; i < size; i++) {
         char *str;
-        str = basic_str(basic_array[i]);
+        str = basic_str((basic_array)+i);
         printf("%s ", str);
         basic_str_free(str);
     }

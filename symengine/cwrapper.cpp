@@ -212,29 +212,25 @@ void basic_str_free(char* s)
     delete[] s;
 }
 
-void basic_free_symbols(const basic a, const basic_struct*** array, int *size)
+void basic_free_symbols(const basic a, basic_struct** array, int *size)
 {
-    set_basic set_symbols;
-    set_symbols = SymEngine::free_symbols(*(*RCP_const_cast(a)));
+    set_basic set_symbols = SymEngine::free_symbols(*(*RCP_const_cast(a)));
     *size = set_symbols.size();
-    *array = (const basic_struct**)malloc((*size)*sizeof(const basic_struct*));
-    set_basic::iterator it;
+    *array = (basic_struct*)malloc((*size)*sizeof(basic_struct));
     int index = 0;
-    for (it = set_symbols.begin(); it != set_symbols.end(); ++it) {
-        (*array)[index++] = reinterpret_cast<const basic_struct*>(&(*it));
+    for (auto &a: set_symbols) {
+        *RCP_cast(&((*array)[index])) = a;
     }
 }
 
-void basic_get_args(const basic a, const basic_struct*** array, int *size)
+void basic_get_args(const basic a, basic_struct **array, int *size)
 {
-    std::vector<RCP<const Basic> > args;
-    args = (*RCP_const_cast(a))->get_args();
+    SymEngine::vec_basic args = (*RCP_const_cast(a))->get_args();
     *size = args.size();
-    *array = (const basic_struct**)malloc((*size)*sizeof(basic_struct*));
-    std::vector<RCP<const Basic>>::iterator it;
+    *array = (basic_struct*)malloc((*size)*sizeof(basic_struct));
     int index = 0;
-    for (it = args.begin(); it != args.end(); ++it) {
-        (*array)[index++] = reinterpret_cast<const basic_struct*>(&(*it));
+    for (auto &a: args) {
+        *RCP_cast(&((*array)[index])) = a;
     }
 }
 
