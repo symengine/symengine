@@ -620,7 +620,7 @@ void fraction_free_gauss_jordan_solve(const DenseMatrix &A, const DenseMatrix &b
 {
     SYMENGINE_ASSERT(A.row_ == A.col_);
     SYMENGINE_ASSERT(b.row_ == A.row_ && x.row_ == A.row_);
-    SYMENGINE_ASSERT(x.col_ = b.col_);
+    SYMENGINE_ASSERT(x.col_ == b.col_);
 
     unsigned i, j, k, col = A.col_, bcol = b.col_;
     RCP<const Basic> d;
