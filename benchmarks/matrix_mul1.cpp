@@ -10,7 +10,6 @@
 using SymEngine::Basic;
 using SymEngine::Integer;
 using SymEngine::RCP;
-using SymEngine::rcp;
 using SymEngine::integer;
 using SymEngine::DenseMatrix;
 

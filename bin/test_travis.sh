@@ -15,6 +15,7 @@ if [[ "${TEST_IN_TREE}" != "yes" ]]; then
     cd build
 fi
 echo "Current directory:"
+export BUILD_DIR=`pwd`
 pwd
 echo "Running cmake:"
 # We build the command line here. If the variable is empty, we skip it,
@@ -73,7 +74,11 @@ EOF
     exit 0
 fi
 
-CXXFLAGS="-Werror" cmake $cmake_line ${SOURCE_DIR}
+if [[ "${CC}" == "clang"* ]] && [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
+    cmake $cmake_line ${SOURCE_DIR}
+else
+    CXXFLAGS="-Werror" cmake $cmake_line ${SOURCE_DIR}
+fi
 echo "Current directory:"
 pwd
 echo "Running make:"
@@ -81,62 +86,60 @@ make
 echo "Running make install:"
 make install
 
-if [[ "${WITH_SYMENGINE_RCP}" == "no" ]]; then
-    echo "SymEngine successfully built with Teuchos::RCP. No tests being run."
-else
-    echo "Running tests in build directory:"
-    # C++
-    ctest --output-on-failure
-    # Python
-    if [[ "${WITH_PYTHON}" == "yes" ]]; then
-        cd symengine/python
-        nosetests -v
-        cd ../../
-    fi
-    # Ruby
-    if [[ "${WITH_RUBY}" == "yes" ]]; then
-        RUBY_GEM_DIR="$SOURCE_DIR/symengine/ruby"
-        echo "Installing dependent gems"
-        cd $RUBY_GEM_DIR
-        bundle install
-        echo "Running RSpec tests for Ruby extension in $RUBY_GEM_DIR"
-        bundle exec rspec
-        cd $SOURCE_DIR
-    fi
+echo "Running tests in build directory:"
+# C++
+ctest --output-on-failure
+# Python
+if [[ "${WITH_PYTHON}" == "yes" ]]; then
+    cd symengine/python
+    nosetests -v
+    cd ../../
+fi
+# Ruby
+if [[ "${WITH_RUBY}" == "yes" ]]; then
+    RUBY_GEM_DIR="$SOURCE_DIR/symengine/ruby"
+    echo "Installing dependent gems"
+    cd $RUBY_GEM_DIR
+    bundle install
+    echo "Running RSpec tests for Ruby extension in $RUBY_GEM_DIR"
+    bundle exec rspec
+    cd $SOURCE_DIR
+fi
+echo "Running tests using installed SymEngine:"
+# C++
+cd $SOURCE_DIR/symengine/tests/basic/
+extra_libs=""
+if [[ "${WITH_BFD}" != "" ]]; then
+    extra_libs="$extra_libs -lbfd"
+fi
+if [[ "${WITH_ECM}" != "" ]]; then
+    extra_libs="$extra_libs -lecm"
+fi
+if [[ "${WITH_PRIMESIEVE}" != "" ]]; then
+    extra_libs="$extra_libs -lprimesieve"
+fi
+if [[ "${WITH_ARB}" != "" ]]; then
+    extra_libs="$extra_libs -larb -lflint"
+fi
+if [[ "${WITH_MPC}" != "" ]]; then
+    extra_libs="$extra_libs -lmpc"
+fi
+if [[ "${WITH_MPFR}" == "yes" ]] || [[ "${WITH_MPC}" == "yes" ]] || [[ "${WITH_ARB}" == "yes" ]]; then
+    extra_libs="$extra_libs -lmpfr"
+fi
 
-    echo "Running tests using installed SymEngine:"
-    # C++
-    cd $SOURCE_DIR/symengine/tests/basic/
-    extra_libs=""
-    if [[ "${WITH_BFD}" != "" ]]; then
-        extra_libs="$extra_libs -lbfd"
-    fi
-    if [[ "${WITH_ECM}" != "" ]]; then
-        extra_libs="$extra_libs -lecm"
-    fi
-    if [[ "${WITH_PRIMESIEVE}" != "" ]]; then
-        extra_libs="$extra_libs -lprimesieve"
-    fi
-    if [[ "${WITH_ARB}" != "" ]]; then
-        extra_libs="$extra_libs -larb -lflint"
-    fi
-    if [[ "${WITH_MPC}" != "" ]]; then
-        extra_libs="$extra_libs -lmpc"
-    fi
-    if [[ "${WITH_MPFR}" == "yes" ]] || [[ "${WITH_MPC}" == "yes" ]] || [[ "${WITH_ARB}" == "yes" ]]; then
-        extra_libs="$extra_libs -lmpfr"
-    fi
-    ${CXX} -std=c++0x -I$our_install_dir/include/ -L$our_install_dir/lib test_basic.cpp -lsymengine -lteuchos $extra_libs -lgmpxx -lgmp
-    export LD_LIBRARY_PATH=$our_install_dir/lib:$LD_LIBRARY_PATH
-    ./a.out
-    # Python
-    if [[ "${WITH_PYTHON}" == "yes" ]]; then
-        mkdir -p empty
-        cd empty
-        cat << EOF | python
+extra_include_dirs="-I$SOURCE_DIR/symengine/teuchos -I$BUILD_DIR/symengine/teuchos -I$SOURCE_DIR/symengine/catch"
+
+${CXX} -std=c++0x -I$our_install_dir/include/ $extra_include_dirs -L$our_install_dir/lib -L$BUILD_DIR/symengine/catch test_basic.cpp  -lcatch -lsymengine -lteuchos $extra_libs -lgmpxx -lgmp
+export LD_LIBRARY_PATH=$our_install_dir/lib:$LD_LIBRARY_PATH
+./a.out
+# Python
+if [[ "${WITH_PYTHON}" == "yes" ]]; then
+    mkdir -p empty
+    cd empty
+    cat << EOF | python
 import symengine
 if not symengine.test():
     raise Exception('Tests failed')
 EOF
-    fi
 fi

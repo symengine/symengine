@@ -52,8 +52,8 @@ the code works with both.
 
 Ideally, we would like to be able to do:
 
-    RCP<Basic> x  = rcp(new Symbol("x"));
-    RCP<Basic> y  = rcp(new Symbol("y"));
+    RCP<Basic> x  = make_rcp<Symbol>("x");
+    RCP<Basic> y  = make_rcp<Symbol>("y");
     RCP<Basic> r = (x + y) + (y + x);
     std::cout << r << std::endl;
 

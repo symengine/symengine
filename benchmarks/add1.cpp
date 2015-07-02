@@ -21,7 +21,6 @@ using SymEngine::map_vec_int;
 using SymEngine::integer;
 using SymEngine::multinomial_coefficients;
 using SymEngine::RCP;
-using SymEngine::rcp;
 using SymEngine::rcp_dynamic_cast;
 
 int main(int argc, char* argv[])

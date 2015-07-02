@@ -14,9 +14,15 @@ Use 4 spaces. Format ``if`` as follows:
 
 ## Pointers
 
-Never use raw C++ pointers. Always use the smart pointers provided by `symengine_rcp.h`
-(depending on WITH_SYMENGINE_RCP, those are either Teuchos::RCP, or our own,
-faster implementation).
+Never use raw C++ pointers and never use the raw `new` and `delete`. Always use
+the smart pointers provided by `symengine_rcp.h` (depending on
+WITH_SYMENGINE_RCP, those are either Teuchos::RCP, or our own, faster
+implementation), i.e. `Ptr` and `RCP` (and do not use the `.get()` method, only
+the `.ptr()` method). In Debug mode, the pointers are 100% safe, i.e. no matter
+how you use them the code will not segfault, but instead raise a nice exception
+if a pointer becomes dangling or null. In Release mode, the `Ptr` is as fast as
+a raw pointer and `RCP` is a lot faster, but no checks are done (so the code
+can segfault).
 
 ### Declaration
 
@@ -25,7 +31,7 @@ In the `.cpp` files you can declare:
     using SymEngine::RCP;
     using SymEngine::Ptr;
     using SymEngine::outArg;
-    using SymEngine::rcp;
+    using SymEngine::make_rcp;
     using SymEngine::rcp_dynamic_cast;
     
 and then just use `RCP` or `Ptr`.
@@ -36,15 +42,15 @@ In the `.h` header files use the full name like `SymEngine::RCP` or `SymEngine::
 
 Initialize as follows:
 
-    RCP<Basic> x  = rcp(new Symbol("x"));
+    RCP<Basic> x  = make_rcp<Symbol>("x");
 
-This is the only place where you use the naked ``new``. In fact, you should always be
-using the factory functions if they are available, e.g. in this case `symbol()`
-as follows:
+Never call the naked `new`, nor use the naked `rcp`. If available, use the
+factory functions, e.g. in this case `symbol()` as follows:
 
     RCP<Basic> x  = symbol("x");
 
-This does the same thing, but it's easier to use.
+This does the same thing (internally it calls `make_rcp`), but it is easier to
+use.
 
 ### Freeing
 
@@ -83,7 +89,7 @@ Declare functions with two input arguments (and one return value) as follows:
             const RCP<const Basic> &b)
     {
         ...
-        return rcp(new Integer(1));
+        return make_rcp<const Integer>(1);
     }
 
 Functions with one input and two output arguments are declared:
@@ -93,7 +99,7 @@ Functions with one input and two output arguments are declared:
         const Ptr<RCP<const Basic>> &term)
     {
         ...
-        *coef = rcp(new Integer(1));
+        *coef = make_rcp<const Integer>(1);
         *term = self
         ...
     }

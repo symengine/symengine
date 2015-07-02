@@ -1,6 +1,6 @@
 from cython.operator cimport dereference as deref, preincrement as inc
 cimport symengine
-from symengine cimport rcp, RCP, set
+from symengine cimport RCP, set
 from libcpp cimport bool
 from libcpp.string cimport string
 from cpython cimport PyObject, Py_XINCREF, Py_XDECREF, \
@@ -252,7 +252,7 @@ cdef class Symbol(Basic):
     def __cinit__(self, name = None):
         if name is None:
             return
-        self.thisptr = rcp(new symengine.Symbol(name.encode("utf-8")))
+        self.thisptr = symengine.make_rcp_Symbol(name.encode("utf-8"))
 
     def __dealloc__(self):
         self.thisptr.reset()
@@ -267,7 +267,7 @@ cdef class Constant(Basic):
     def __cinit__(self, name = None):
         if name is None:
             return
-        self.thisptr = rcp(new symengine.Constant(name.encode("utf-8")))
+        self.thisptr = symengine.make_rcp_Constant(name.encode("utf-8"))
 
     def __dealloc__(self):
         self.thisptr.reset()
@@ -303,9 +303,9 @@ cdef class Integer(Number):
             i__ = symengine.mpz_class(tmp, 10)
         # Note: all other exceptions are left intact
         if int_ok:
-            self.thisptr = rcp(new symengine.Integer(i_))
+            self.thisptr = symengine.make_rcp_Integer(i_)
         else:
-            self.thisptr = rcp(new symengine.Integer(i__))
+            self.thisptr = symengine.make_rcp_Integer(i__)
 
     def __dealloc__(self):
         self.thisptr.reset()
@@ -361,7 +361,7 @@ cdef class RealDouble(Number):
         if i is None:
             return
         cdef double i_ = i
-        self.thisptr = rcp(new symengine.RealDouble(i_))
+        self.thisptr = symengine.make_rcp_RealDouble(i_)
 
     def __dealloc__(self):
         self.thisptr.reset()
@@ -376,7 +376,7 @@ cdef class ComplexDouble(Number):
         if i is None:
             return
         cdef double complex i_ = i
-        self.thisptr = rcp(new symengine.ComplexDouble(i_))
+        self.thisptr = symengine.make_rcp_ComplexDouble(i_)
 
     def __dealloc__(self):
         self.thisptr.reset()
@@ -522,7 +522,7 @@ cdef class FunctionWrapper(FunctionSymbol):
             arg_ = sympify(arg)
             v.push_back(arg_.thisptr)
         SymPy_XINCREF(ptr)
-        self.thisptr = rcp(new symengine.FunctionWrapper(ptr, name, hash_, v, &SymPy_XDECREF, &SymPy_CMP))
+        self.thisptr = symengine.make_rcp_FunctionWrapper(ptr, name, hash_, v, &SymPy_XDECREF, &SymPy_CMP)
 
     def __dealloc__(self):
         self.thisptr.reset()
@@ -556,7 +556,7 @@ cdef class Derivative(Basic):
         for s in symbols:
             s_ = sympify(s, True)
             vec.push_back(s_.thisptr)
-        self.thisptr = rcp(new symengine.Derivative(<const RCP[const symengine.Basic]>expr_.thisptr, vec))
+        self.thisptr = symengine.make_rcp_Derivative(<const RCP[const symengine.Basic]>expr_.thisptr, vec)
 
     def __dealloc__(self):
         self.thisptr.reset()
@@ -585,7 +585,7 @@ cdef class Subs(Basic):
             v_ = sympify(v, True)
             p_ = sympify(p, True)
             m[v_.thisptr] = p_.thisptr
-        self.thisptr = rcp(new symengine.Subs(<const RCP[const symengine.Basic]>expr_.thisptr, m))
+        self.thisptr = symengine.make_rcp_Subs(<const RCP[const symengine.Basic]>expr_.thisptr, m)
 
     def __dealloc__(self):
         self.thisptr.reset()

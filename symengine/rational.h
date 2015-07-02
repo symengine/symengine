@@ -229,7 +229,7 @@ public:
     virtual void accept(Visitor &v) const;
 };
 
-//! returns the `num` and `den` of rational `rat` as `rcp Integer`
+//! returns the `num` and `den` of rational `rat` as `RCP<const Integer>`
 void get_num_den(const RCP<const Rational> &rat,
         const Ptr<RCP<const Integer>> &num,
         const Ptr<RCP<const Integer>> &den);

@@ -1,3 +1,4 @@
+#include "catch.hpp"
 #include <iostream>
 #include <chrono>
 
@@ -29,11 +30,10 @@ using SymEngine::monomial_mul;
 using SymEngine::poly_mul;
 using SymEngine::umap_vec_mpz;
 using SymEngine::RCP;
-using SymEngine::rcp;
 using SymEngine::rcp_dynamic_cast;
 using SymEngine::print_stack_on_segfault;
 
-void test_monomial_mul()
+TEST_CASE("monomial_mul: poly", "[poly]")
 {
     vec_int a, b, c, d;
     a = {1, 2, 3, 4};
@@ -43,15 +43,15 @@ void test_monomial_mul()
     monomial_mul(a, b, c);
 
     d = {3, 5, 5, 9};
-    assert(c == d);
+    REQUIRE(c == d);
     d = {5, 6, 5, 5};
-    assert(c != d);
+    REQUIRE(c != d);
 
     umap_vec_mpz m;
     m[a] = 4;
 }
 
-void test_expand()
+TEST_CASE("expand: poly", "[poly]")
 {
     RCP<const Basic> x = symbol("x");
     RCP<const Basic> y = symbol("y");
@@ -94,14 +94,4 @@ void test_expand()
     std::cout
         << std::chrono::duration_cast<std::chrono::milliseconds>(t2-t1).count()
         << "ms" << std::endl;
-}
-
-int main(int argc, char* argv[])
-{
-    print_stack_on_segfault();
-
-    test_monomial_mul();
-    test_expand();
-
-    return 0;
 }
