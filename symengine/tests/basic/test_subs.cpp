@@ -27,7 +27,6 @@ using SymEngine::one;
 using SymEngine::zero;
 using SymEngine::sin;
 using SymEngine::RCP;
-using SymEngine::rcp;
 using SymEngine::rcp_dynamic_cast;
 using SymEngine::map_basic_basic;
 using SymEngine::print_stack_on_segfault;

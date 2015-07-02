@@ -3,14 +3,18 @@
 #include <symengine/symengine_rcp.h>
 
 using SymEngine::RCP;
-using SymEngine::rcp;
+using SymEngine::make_rcp;
 using SymEngine::Ptr;
 using SymEngine::null;
 
 class Mesh {
 public:
+#if defined(WITH_SYMENGINE_RCP)
     mutable unsigned int refcount_;
     Mesh() : refcount_(0) {}
+#else
+    mutable RCP<const Mesh> weak_self_ptr_;
+#endif
 
     int x, y;
 };
@@ -18,10 +22,12 @@ public:
 int main(int argc, char* argv[])
 {
 
-    RCP<Mesh> m = rcp(new Mesh());
+    RCP<Mesh> m = make_rcp<Mesh>();
     Ptr<Mesh> p = m.ptr();
     if (m == null) return 1;
+#if defined(WITH_SYMENGINE_RCP)
     if (p->refcount_ != 1) return 1;
+#endif
 
     return 0;
 }

@@ -29,7 +29,6 @@ using SymEngine::add;
 using SymEngine::Symbol;
 using SymEngine::Integer;
 using SymEngine::DenseMatrix;
-using SymEngine::rcp;
 using SymEngine::Subs;
 using SymEngine::Derivative;
 using SymEngine::function_symbol;

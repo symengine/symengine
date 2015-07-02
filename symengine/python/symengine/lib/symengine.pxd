@@ -173,14 +173,16 @@ cdef extern from "<symengine/pow.h>" namespace "SymEngine":
 
 cdef extern from "<symengine/basic.h>" namespace "SymEngine":
     # We need to specialize these for our classes:
-    RCP[const Basic] rcp(Symbol *p) nogil
-    RCP[const Basic] rcp(Constant *p) nogil
-    RCP[const Basic] rcp(Integer *p) nogil
-    RCP[const Basic] rcp(Subs *p) nogil
-    RCP[const Basic] rcp(Derivative *p) nogil
-    RCP[const Basic] rcp(FunctionWrapper *p) nogil
-    RCP[const Basic] rcp(RealDouble *p) nogil
-    RCP[const Basic] rcp(ComplexDouble *p) nogil
+    RCP[const Basic] make_rcp_Symbol "SymEngine::make_rcp<const SymEngine::Symbol>"(string name) nogil
+    RCP[const Basic] make_rcp_Constant "SymEngine::make_rcp<const SymEngine::Constant>"(string name) nogil
+    RCP[const Basic] make_rcp_Integer "SymEngine::make_rcp<const SymEngine::Integer>"(int i) nogil
+    RCP[const Basic] make_rcp_Integer "SymEngine::make_rcp<const SymEngine::Integer>"(mpz_class i) nogil
+    RCP[const Basic] make_rcp_Subs "SymEngine::make_rcp<const SymEngine::Subs>"(const RCP[const Basic] &arg, const map_basic_basic &x) nogil
+    RCP[const Basic] make_rcp_Derivative "SymEngine::make_rcp<const SymEngine::Derivative>"(const RCP[const Basic] &arg, const vec_basic &x) nogil
+    RCP[const Basic] make_rcp_FunctionWrapper "SymEngine::make_rcp<const SymEngine::FunctionWrapper>"(void* obj, string name, string hash_, const vec_basic &arg, \
+            void (*dec_ref)(void *), int (*comp)(void *, void *)) nogil
+    RCP[const Basic] make_rcp_RealDouble "SymEngine::make_rcp<const SymEngine::RealDouble>"(double x) nogil
+    RCP[const Basic] make_rcp_ComplexDouble "SymEngine::make_rcp<const SymEngine::ComplexDouble>"(double complex x) nogil
 
 cdef extern from "<symengine/functions.h>" namespace "SymEngine":
     cdef RCP[const Basic] sin(RCP[const Basic] &arg) nogil except+

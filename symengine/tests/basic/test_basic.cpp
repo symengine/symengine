@@ -658,4 +658,9 @@ TEST_CASE("free_symbols: Basic", "[basic]")
     s = free_symbols(*r1);
     REQUIRE(s.size() == 1);
     REQUIRE(s.count(x) == 1);
+
+    r1 = mul(x, integer(2));
+    s = free_symbols(*r1);
+    REQUIRE(s.size() == 1);
+    REQUIRE(s.count(x) == 1);
 }

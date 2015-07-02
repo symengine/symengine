@@ -99,6 +99,11 @@ std::ostream& operator<<(std::ostream& out, const SymEngine::vec_basic& d)
     return print_vec_rcp(out, d);
 }
 
+std::ostream& operator<<(std::ostream& out, const SymEngine::set_basic& d)
+{
+    return print_vec_rcp(out, d);
+}
+
 
 namespace SymEngine {
 
