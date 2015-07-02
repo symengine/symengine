@@ -44,6 +44,13 @@ if (NOT ${CXX11})
         "CXX11 Error Log : \n${CXX11_ERROR_LOG}")
 endif()
 
+if ((CMAKE_CXX_COMPILER_ID MATCHES Clang) AND (CMAKE_BUILD_TYPE STREQUAL "Release"))
+    try_compile(CHECK_CLANG "${CMAKE_CURRENT_BINARY_DIR}/cxx" "${CMAKE_SOURCE_DIR}/cmake/checkclang.cpp")
+    if (NOT ${CHECK_CLANG})
+        set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -D__extern_always_inline=inline" )
+    endif()
+endif()
+
 # GMP
 find_package(GMP REQUIRED)
 include_directories(${GMP_INCLUDE_DIRS})
