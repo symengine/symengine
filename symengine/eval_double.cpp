@@ -50,7 +50,12 @@ public:
         T tmp = x.i;
         result_ = tmp;
     }
-
+#ifdef HAVE_SYMENGINE_MPFR
+    void bvisit(const RealMPFR &x) {
+        T tmp = mpfr_get_d(x.i.get_mpfr_t(), MPFR_RNDN);
+        result_ = tmp;
+    }
+#endif
     void bvisit(const Add &x) {
         T tmp = 0;
         for (auto &p: x.get_args()) tmp = tmp + apply(*p);
@@ -214,7 +219,7 @@ public:
     // Classes not implemented are
     // Subs, UpperGamma, LowerGamma, Dirichlet_eta, Zeta
     // LeviCivita, KroneckerDelta, FunctionSymbol, LambertW
-    // Derivative, Complex, ComplexDouble
+    // Derivative, Complex, ComplexDouble, ComplexMPC
 
     using EvalDoubleVisitor::bvisit;
 
@@ -248,6 +253,17 @@ public:
     void bvisit(const ComplexDouble &x) {
         result_ = x.i;
     };
+#ifdef HAVE_SYMENGINE_MPC
+    void bvisit(const ComplexMPC &x) {
+        mpfr_class t(x.get_prec());
+        double real, imag;
+        mpc_real(t.get_mpfr_t(), x.i.get_mpc_t(), MPFR_RNDN);
+        real = mpfr_get_d(t.get_mpfr_t(), MPFR_RNDN);
+        mpc_imag(t.get_mpfr_t(), x.i.get_mpc_t(), MPFR_RNDN);
+        imag = mpfr_get_d(t.get_mpfr_t(), MPFR_RNDN);
+        result_ = std::complex<double>(real, imag);
+    }
+#endif
 };
 
 

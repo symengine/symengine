@@ -49,6 +49,14 @@ public:
         mpc_set_d_d(result_, x.i.real(), x.i.imag(), rnd_);
     }
 
+    void bvisit(const RealMPFR &x) {
+        mpc_set_fr(result_, x.i.get_mpfr_t(), rnd_);
+    }
+
+    void bvisit(const ComplexMPC &x) {
+        mpc_set(result_, x.i.get_mpc_t(), rnd_);
+    }
+
     void bvisit(const Add &x) {
         mpc_t t;
         mpc_init2(t, mpc_get_prec(result_));
@@ -251,7 +259,7 @@ public:
 
 };
 
-void eval_mpc(mpc_t result, const Basic &b, mpfr_rnd_t rnd)
+void eval_mpc(mpc_ptr result, const Basic &b, mpfr_rnd_t rnd)
 {
     EvalMPCVisitor v(rnd);
     v.apply(result, b);

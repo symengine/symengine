@@ -6,6 +6,8 @@ from libcpp.string cimport string
 from cpython cimport PyObject, Py_XINCREF, Py_XDECREF, \
     PyObject_CallMethodObjArgs
 
+include "config.pxi"
+
 class SympifyError(Exception):
     pass
 
@@ -45,6 +47,10 @@ cdef c2py(RCP[const symengine.Basic] o):
         r = RealDouble.__new__(RealDouble)
     elif (symengine.is_a_ComplexDouble(deref(o))):
         r = ComplexDouble.__new__(ComplexDouble)
+    elif (symengine.is_a_RealMPFR(deref(o))):
+        r = RealMPFR.__new__(RealMPFR)
+    elif (symengine.is_a_ComplexMPC(deref(o))):
+        r = ComplexMPC.__new__(ComplexMPC)
     else:
         raise Exception("Unsupported SymEngine class.")
     r.thisptr = o
@@ -75,6 +81,8 @@ def sympy2symengine(a, raise_error=False):
         return Integer(a.p)
     elif isinstance(a, sympy.Rational):
         return Integer(a.p) / Integer(a.q)
+    elif isinstance(a, sympy.Float):
+        return RealMPFR(str(a), a._prec)
     elif a is sympy.I:
         return I
     elif a is sympy.E:
@@ -139,6 +147,9 @@ cdef class Basic(object):
 
     def __hash__(self):
         return deref(self.thisptr).hash()
+
+    def __dealloc__(self):
+        self.thisptr.reset()
 
     def __add__(a, b):
         cdef Basic A = sympify(a, False)
@@ -234,6 +245,12 @@ cdef class Basic(object):
             raise TypeError("subs() takes one or two arguments (%d given)" % \
                     len(args))
 
+    def n(self, prec = 53, real = False):
+        if real:
+            return eval_real(self, prec)
+        else:
+            return eval(self, prec)
+
     @property
     def args(self):
         cdef symengine.vec_basic Y = deref(self.thisptr).get_args()
@@ -254,9 +271,6 @@ cdef class Symbol(Basic):
             return
         self.thisptr = symengine.make_rcp_Symbol(name.encode("utf-8"))
 
-    def __dealloc__(self):
-        self.thisptr.reset()
-
     def _sympy_(self):
         cdef RCP[const symengine.Symbol] X = symengine.rcp_static_cast_Symbol(self.thisptr)
         import sympy
@@ -268,9 +282,6 @@ cdef class Constant(Basic):
         if name is None:
             return
         self.thisptr = symengine.make_rcp_Constant(name.encode("utf-8"))
-
-    def __dealloc__(self):
-        self.thisptr.reset()
 
     def _sympy_(self):
         import sympy
@@ -306,9 +317,6 @@ cdef class Integer(Number):
             self.thisptr = symengine.make_rcp_Integer(i_)
         else:
             self.thisptr = symengine.make_rcp_Integer(i__)
-
-    def __dealloc__(self):
-        self.thisptr.reset()
 
     def __hash__(self):
         return deref(self.thisptr).hash()
@@ -363,9 +371,6 @@ cdef class RealDouble(Number):
         cdef double i_ = i
         self.thisptr = symengine.make_rcp_RealDouble(i_)
 
-    def __dealloc__(self):
-        self.thisptr.reset()
-
     def _sympy_(self):
         import sympy
         return sympy.Float(deref(self.thisptr).__str__().decode("utf-8"))
@@ -378,9 +383,6 @@ cdef class ComplexDouble(Number):
         cdef double complex i_ = i
         self.thisptr = symengine.make_rcp_ComplexDouble(i_)
 
-    def __dealloc__(self):
-        self.thisptr.reset()
-
     def real_part(self):
         return c2py(<RCP[const symengine.Basic]>deref(symengine.rcp_static_cast_ComplexDouble(self.thisptr)).real_part())
 
@@ -391,10 +393,48 @@ cdef class ComplexDouble(Number):
         import sympy
         return self.real_part()._sympy_() + sympy.I * self.imaginary_part()._sympy_()
 
-cdef class Rational(Number):
+cdef class RealMPFR(Number):
+    IF HAVE_SYMENGINE_MPFR:
+        def __cinit__(self, i = None, long prec = 53, unsigned base = 10):
+            if i is None:
+                return
+            cdef string i_ = str(i)
+            cdef symengine.mpfr_class m
+            m = symengine.mpfr_class(i_, prec, base)
+            self.thisptr = real_mpfr(std_move_mpfr(m))
 
-    def __dealloc__(self):
-        self.thisptr.reset()
+        def get_prec(self):
+            return Integer(deref(symengine.rcp_static_cast_RealMPFR(self.thisptr)).get_prec())
+
+        def __sympy__(self):
+            import sympy
+            prec = sympy.log(2**self.get_prec(), 10).n().ceiling()
+            return sympy.Float(str(self), prec)
+    ELSE:
+        pass
+
+cdef class ComplexMPC(Number):
+    IF HAVE_SYMENGINE_MPC:
+        def __cinit__(self, i = None, j = None, long prec = 53, unsigned base = 10):
+            if i is None:
+                return
+            cdef string i_ = str(i)
+            cdef symengine.mpc_class m = symengine.mpc_class(i_, prec, base)
+            self.thisptr = complex_mpc(std_move_mpc(m))
+
+        def real_part(self):
+            return c2py(<RCP[const symengine.Basic]>deref(symengine.rcp_static_cast_ComplexMPC(self.thisptr)).real_part())
+
+        def imaginary_part(self):
+            return c2py(<RCP[const symengine.Basic]>deref(symengine.rcp_static_cast_ComplexMPC(self.thisptr)).imaginary_part())
+
+        def _sympy_(self):
+            import sympy
+            return self.real_part()._sympy_() + sympy.I * self.imaginary_part()._sympy_()
+    ELSE:
+        pass
+
+cdef class Rational(Number):
 
     def get_num_den(self):
         cdef RCP[const symengine.Integer] _num, _den
@@ -408,9 +448,6 @@ cdef class Rational(Number):
 
 cdef class Complex(Number):
 
-    def __dealloc__(self):
-        self.thisptr.reset()
-
     def real_part(self):
         return c2py(<RCP[const symengine.Basic]>deref(symengine.rcp_static_cast_Complex(self.thisptr)).real_part())
 
@@ -423,9 +460,6 @@ cdef class Complex(Number):
 
 cdef class Add(Basic):
 
-    def __dealloc__(self):
-        self.thisptr.reset()
-
     def _sympy_(self):
         cdef RCP[const symengine.Add] X = symengine.rcp_static_cast_Add(self.thisptr)
         cdef RCP[const symengine.Basic] a, b
@@ -434,9 +468,6 @@ cdef class Add(Basic):
 
 cdef class Mul(Basic):
 
-    def __dealloc__(self):
-        self.thisptr.reset()
-
     def _sympy_(self):
         cdef RCP[const symengine.Mul] X = symengine.rcp_static_cast_Mul(self.thisptr)
         cdef RCP[const symengine.Basic] a, b
@@ -444,9 +475,6 @@ cdef class Mul(Basic):
         return c2py(a)._sympy_() * c2py(b)._sympy_()
 
 cdef class Pow(Basic):
-
-    def __dealloc__(self):
-        self.thisptr.reset()
 
     def _sympy_(self):
         cdef RCP[const symengine.Pow] X = symengine.rcp_static_cast_Pow(self.thisptr)
@@ -459,9 +487,6 @@ cdef class Function(Basic):
 
 cdef class Sin(Function):
 
-    def __dealloc__(self):
-        self.thisptr.reset()
-
     def _sympy_(self):
         cdef RCP[const symengine.Sin] X = symengine.rcp_static_cast_Sin(self.thisptr)
         arg = c2py(deref(X).get_arg())._sympy_()
@@ -470,9 +495,6 @@ cdef class Sin(Function):
 
 cdef class Cos(Function):
 
-    def __dealloc__(self):
-        self.thisptr.reset()
-
     def _sympy_(self):
         cdef RCP[const symengine.Cos] X = symengine.rcp_static_cast_Cos(self.thisptr)
         arg = c2py(deref(X).get_arg())._sympy_()
@@ -480,9 +502,6 @@ cdef class Cos(Function):
         return sympy.cos(arg)
 
 cdef class FunctionSymbol(Function):
-
-    def __dealloc__(self):
-        self.thisptr.reset()
 
     def _sympy_(self):
         cdef RCP[const symengine.FunctionSymbol] X = \
@@ -524,9 +543,6 @@ cdef class FunctionWrapper(FunctionSymbol):
         SymPy_XINCREF(ptr)
         self.thisptr = symengine.make_rcp_FunctionWrapper(ptr, name, hash_, v, &SymPy_XDECREF, &SymPy_CMP)
 
-    def __dealloc__(self):
-        self.thisptr.reset()
-
     def _sympy_(self):
         cdef object pyobj
         cdef RCP[const symengine.FunctionWrapper] X = \
@@ -535,9 +551,6 @@ cdef class FunctionWrapper(FunctionSymbol):
         return pyobj
 
 cdef class Abs(Function):
-
-    def __dealloc__(self):
-        self.thisptr.reset()
 
     def _sympy_(self):
         cdef RCP[const symengine.Abs] X = symengine.rcp_static_cast_Abs(self.thisptr)
@@ -557,9 +570,6 @@ cdef class Derivative(Basic):
             s_ = sympify(s, True)
             vec.push_back(s_.thisptr)
         self.thisptr = symengine.make_rcp_Derivative(<const RCP[const symengine.Basic]>expr_.thisptr, vec)
-
-    def __dealloc__(self):
-        self.thisptr.reset()
 
     def _sympy_(self):
         cdef RCP[const symengine.Derivative] X = \
@@ -586,9 +596,6 @@ cdef class Subs(Basic):
             p_ = sympify(p, True)
             m[v_.thisptr] = p_.thisptr
         self.thisptr = symengine.make_rcp_Subs(<const RCP[const symengine.Basic]>expr_.thisptr, m)
-
-    def __dealloc__(self):
-        self.thisptr.reset()
 
     def _sympy_(self):
         cdef RCP[const symengine.Subs] X = symengine.rcp_static_cast_Subs(self.thisptr)
@@ -625,6 +632,9 @@ cdef class MatrixBase:
         else:
             return NotImplemented
 
+    def __dealloc__(self):
+        del self.thisptr
+
 cdef class DenseMatrix(MatrixBase):
 
     def __cinit__(self, row, col):
@@ -642,9 +652,6 @@ cdef class DenseMatrix(MatrixBase):
 
     def __str__(self):
         return deref(self.thisptr).__str__().decode("utf-8")
-
-    def __dealloc__(self):
-        del self.thisptr
 
     def nrows(self):
         return deref(self.thisptr).nrows()
@@ -839,6 +846,53 @@ def exp(x):
 
 def densematrix(row, col, l):
     return DenseMatrix(row, col, l)
+
+def eval_double(x):
+    cdef Basic X = sympify(x)
+    return c2py(<RCP[const symengine.Basic]>(symengine.real_double(symengine.eval_double(deref(X.thisptr)))))
+
+def eval_complex_double(x):
+    cdef Basic X = sympify(x)
+    return c2py(<RCP[const symengine.Basic]>(symengine.complex_double(symengine.eval_complex_double(deref(X.thisptr)))))
+
+have_mpfr = False
+have_mpc = False
+
+IF HAVE_SYMENGINE_MPFR:
+    have_mpfr = True
+    def eval_mpfr(x, long prec):
+        cdef Basic X = sympify(x)
+        cdef symengine.mpfr_class a = symengine.mpfr_class(prec)
+        symengine.eval_mpfr(a.get_mpfr_t(), deref(X.thisptr), symengine.MPFR_RNDN)
+        return c2py(<RCP[const symengine.Basic]>(symengine.real_mpfr(symengine.std_move_mpfr(a))))
+
+IF HAVE_SYMENGINE_MPC:
+    have_mpc = True
+    def eval_mpc(x, long prec):
+        cdef Basic X = sympify(x)
+        cdef symengine.mpc_class a = symengine.mpc_class(prec)
+        symengine.eval_mpc(a.get_mpc_t(), deref(X.thisptr), symengine.MPFR_RNDN)
+        return c2py(<RCP[const symengine.Basic]>(symengine.complex_mpc(symengine.std_move_mpc(a))))
+
+def eval(x, long prec):
+    if prec <= 53:
+        return eval_complex_double(x)
+    else:
+        try:
+            import eval_mpc
+            return eval_mpc(x, prec)
+        except ImportError:
+            raise ValueError("Precision %s is only supported with MPC" % prec)
+
+def eval_real(x, long prec):
+    if prec <= 53:
+        return eval_double(x)
+    else:
+        try:
+            import eval_mpfr
+            return eval_mpfr(x, prec)
+        except ImportError:
+            raise ValueError("Precision %s is only supported with MPFR" % prec)
 
 def probab_prime_p(n, reps = 25):
     cdef Integer _n = sympify(n)
