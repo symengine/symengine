@@ -1,6 +1,7 @@
 #ifndef SYMENGINE_RCP_H
 #define SYMENGINE_RCP_H
 
+#include <iostream>
 #include <cstddef>
 #include <stdexcept>
 #include <string>
