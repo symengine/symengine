@@ -91,9 +91,25 @@ matrix:
     - env: BUILD_TYPE="Debug" WITH_SYMENGINE_ASSERT="yes" WITH_SYMENGINE_RCP="no" WITH_PYTHON="yes" PYTHON_VERSION="2.7"
       compiler: clang
       os: osx
+      addons:
+        apt:
+          sources:
+          - ubuntu-toolchain-r-test
+          packages:
+          - clang
+          - libstdc++-4.8-dev
+          - libgmp-dev
     - env: BUILD_TYPE="Release" WITH_PYTHON="yes" PYTHON_VERSION="2.7"
       compiler: clang
       os: osx
+      addons:
+        apt:
+          sources:
+          - ubuntu-toolchain-r-test
+          packages:
+          - clang
+          - libstdc++-4.8-dev
+          - libgmp-dev
     - env: BUILD_TYPE="Debug" WITH_SYMENGINE_ASSERT="yes" WITH_SYMENGINE_RCP="no" WITH_PYTHON="yes" PYTHON_VERSION="2.7"
       compiler: gcc
       os: osx
