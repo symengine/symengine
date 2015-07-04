@@ -41,34 +41,32 @@ public:
         mpfr_set_d(result_, x.i, rnd_);
     }
 
-    void bvisit(const Add &x) {
-        mpfr_t t;
-        mpfr_init2(t, mpfr_get_prec(result_));
+    void bvisit(const RealMPFR &x) {
+        mpfr_set(result_, x.i.get_mpfr_t(), rnd_);
+    }
 
+    void bvisit(const Add &x) {
+        mpfr_class t(mpfr_get_prec(result_));
         auto d = x.get_args();
         auto p = d.begin();
         apply(result_, *(*p));
         p++;
         for (; p != d.end();  p++) {
-            apply(t, *(*p));
-            mpfr_add(result_, result_, t, rnd_);
+            apply(t.get_mpfr_t(), *(*p));
+            mpfr_add(result_, result_, t.get_mpfr_t(), rnd_);
         }
-        mpfr_clear(t);
     }
 
     void bvisit(const Mul &x) {
-        mpfr_t t;
-        mpfr_init2(t, mpfr_get_prec(result_));
-
+        mpfr_class t(mpfr_get_prec(result_));
         auto d = x.get_args();
         auto p = d.begin();
         apply(result_, *(*p));
         p++;
         for (; p != d.end();  p++) {
-            apply(t, *(*p));
-            mpfr_mul(result_, result_, t, rnd_);
+            apply(t.get_mpfr_t(), *(*p));
+            mpfr_mul(result_, result_, t.get_mpfr_t(), rnd_);
         }
-        mpfr_clear(t);
     }
 
     void bvisit(const Pow &x) {
@@ -76,14 +74,10 @@ public:
             apply(result_, *(x.exp_));
             mpfr_exp(result_, result_, rnd_);
         } else {
-            mpfr_t b;
-            mpfr_init2(b, mpfr_get_prec(result_));
-
-            apply(b, *(x.base_));
+            mpfr_class b(mpfr_get_prec(result_));
+            apply(b.get_mpfr_t(), *(x.base_));
             apply(result_, *(x.exp_));
-            mpfr_pow(result_, b, result_, rnd_);
-
-            mpfr_clear(b);
+            mpfr_pow(result_, b.get_mpfr_t(), result_, rnd_);
         }
     }
 
@@ -114,14 +108,12 @@ public:
 
     void bvisit(const Csc &x) {
         apply(result_, *(x.get_arg()));
-        mpfr_sin(result_, result_, rnd_);
-        mpfr_ui_div(result_, 1, result_, rnd_);
+        mpfr_csc(result_, result_, rnd_);
     }
 
     void bvisit(const Sec &x) {
         apply(result_, *(x.get_arg()));
-        mpfr_cos(result_, result_, rnd_);
-        mpfr_ui_div(result_, 1, result_, rnd_);
+        mpfr_sec(result_, result_, rnd_);
     }
 
     void bvisit(const ASin &x) {
@@ -158,14 +150,10 @@ public:
     }
 
     void bvisit(const ATan2 &x) {
-        mpfr_t t;
-        mpfr_init(t);
-
-        apply(t, *(x.get_num()));
+        mpfr_class t(mpfr_get_prec(result_));
+        apply(t.get_mpfr_t(), *(x.get_num()));
         apply(result_, *(x.get_den()));
-        mpfr_atan2(result_, t, result_, rnd_);
-
-        mpfr_clear(t);
+        mpfr_atan2(result_, t.get_mpfr_t(), result_, rnd_);
     }
 
     void bvisit(const Sinh &x) {
@@ -238,14 +226,14 @@ public:
     // Classes not implemented are
     // Subs, UpperGamma, LowerGamma, Dirichlet_eta, Zeta
     // LeviCivita, KroneckerDelta, FunctionSymbol, LambertW
-    // Derivative, Complex, ComplexDouble
+    // Derivative, Complex, ComplexDouble, ComplexMPC
     void bvisit(const Basic &) {
         throw std::runtime_error("Not implemented.");
     };
 
 };
 
-void eval_mpfr(mpfr_t result, const Basic &b, mpfr_rnd_t rnd)
+void eval_mpfr(mpfr_ptr result, const Basic &b, mpfr_rnd_t rnd)
 {
     EvalMPFRVisitor v(rnd);
     v.apply(result, b);

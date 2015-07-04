@@ -13,6 +13,7 @@
 #include <symengine/visitor.h>
 #include <symengine/polynomial.h>
 #include <symengine/complex_double.h>
+#include <symengine/complex_mpc.h>
 
 #define ACCEPT(CLASS) void CLASS::accept(Visitor &v) const { v.visit(*this); }
 
@@ -64,6 +65,12 @@ ACCEPT(Abs)
 ACCEPT(Subs)
 ACCEPT(RealDouble)
 ACCEPT(ComplexDouble)
+#ifdef HAVE_SYMENGINE_MPFR
+ACCEPT(RealMPFR)
+#endif
+#ifdef HAVE_SYMENGINE_MPC
+ACCEPT(ComplexMPC)
+#endif
 
 void preorder_traversal(const Basic &b, Visitor &v)
 {

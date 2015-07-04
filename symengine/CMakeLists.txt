@@ -36,11 +36,11 @@ set(SRC
 )
 
 if (WITH_MPFR)
-    set(SRC ${SRC} eval_mpfr.cpp)
+    set(SRC ${SRC} eval_mpfr.cpp real_mpfr.cpp)
 endif()
 
 if (WITH_MPC)
-    set(SRC ${SRC} eval_mpc.cpp)
+    set(SRC ${SRC} eval_mpc.cpp complex_mpc.cpp)
 endif()
 
 if (WITH_ARB)
@@ -55,6 +55,7 @@ set(HEADERS
     basic-inl.h  dict.h           matrix.h     ntheory.h    rational.h complex.h
     visitor.h    eval_double.h    diophantine.h cwrapper.h  printer.h  real_double.h
     eval_mpfr.h  eval_arb.h       eval_mpc.h    complex_double.h
+    real_mpfr.h  complex_mpc.h
 )
 
 # Configure SymEngine using our CMake options:

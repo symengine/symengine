@@ -81,6 +81,24 @@ public:
     void bvisit(const ComplexDouble &x) {
         precedence = PrecedenceEnum::Add;
     }
+#ifdef HAVE_SYMENGINE_MPFR
+    void bvisit(const RealMPFR &x) {
+        if (x.is_negative()) {
+            precedence = PrecedenceEnum::Mul;
+        } else {
+            precedence = PrecedenceEnum::Atom;
+        }
+    }
+#endif
+#ifdef HAVE_SYMENGINE_MPC
+    void bvisit(const ComplexMPC &x) {
+        if (x.is_negative()) {
+            precedence = PrecedenceEnum::Mul;
+        } else {
+            precedence = PrecedenceEnum::Atom;
+        }
+    }
+#endif
 
     void bvisit(const Basic &x) {
         precedence = PrecedenceEnum::Atom;
@@ -115,6 +133,12 @@ public:
     void bvisit(const Subs &x);
     void bvisit(const RealDouble &x);
     void bvisit(const ComplexDouble &x);
+#ifdef HAVE_SYMENGINE_MPFR
+    void bvisit(const RealMPFR &x);
+#endif
+#ifdef HAVE_SYMENGINE_MPC
+    void bvisit(const ComplexMPC &x);
+#endif
 
     std::string parenthesizeLT(const RCP<const Basic> &x, PrecedenceEnum precedenceEnum);
     std::string parenthesizeLE(const RCP<const Basic> &x, PrecedenceEnum precedenceEnum);

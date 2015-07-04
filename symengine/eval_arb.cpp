@@ -11,6 +11,7 @@
 #include <symengine/constants.h>
 #include <symengine/visitor.h>
 #include <symengine/eval_arb.h>
+#include <symengine/real_mpfr.h>
 
 #ifdef HAVE_SYMENGINE_ARB
 
@@ -137,6 +138,14 @@ public:
         throw std::runtime_error("Not implemented.");
     }
 
+    virtual void visit(const RealMPFR &x) {
+        throw std::runtime_error("Not implemented.");
+    }
+#ifdef HAVE_SYMENGINE_MPC
+    virtual void visit(const ComplexMPC &) {
+        throw std::runtime_error("Not implemented.");
+    };
+#endif
     virtual void visit(const Log &x) {
         apply(result_, *(x.get_arg()));
         arb_log(result_, result_, prec_);

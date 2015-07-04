@@ -80,6 +80,39 @@ void StrPrinter::bvisit(const ComplexDouble &x) {
     str_ = s.str();
 }
 
+#ifdef HAVE_SYMENGINE_MPFR
+void StrPrinter::bvisit(const RealMPFR &x) {
+    mpfr_exp_t ex;
+    char* c = mpfr_get_str(nullptr, &ex, 10, 0, x.i.get_mpfr_t(), MPFR_RNDN);
+    std::ostringstream s;
+    str_ = std::string(c);
+    if (str_.at(0)== '-') {
+        s << '-' << str_.at(1) << '.' << str_.substr(2, str_.length() - 2);
+        if (ex != 1) {
+            s << 'e' << (ex - 1);
+        }
+    } else {
+        s << str_.at(0) << '.' << str_.substr(1, str_.length() - 1);
+        if (ex != 1) {
+            s << 'e' << (ex - 1);
+        }
+    }
+    mpfr_free_str(c);
+    str_ = s.str();
+}
+#endif
+#ifdef HAVE_SYMENGINE_MPC
+void StrPrinter::bvisit(const ComplexMPC &x) {
+    RCP<const Number> imag = x.imaginary_part();
+    if (imag->is_negative()) {
+        std::string str = this->apply(imag);
+        str = str.substr(1, str.length() - 1);
+        str_ = this->apply(x.real_part()) + " - I*" + str;
+    } else {
+        str_ = this->apply(x.real_part()) + " + I*" + this->apply(imag);
+    }
+}
+#endif
 void StrPrinter::bvisit(const Add &x) {
     std::ostringstream o;
     bool first = true;

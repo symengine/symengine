@@ -1,4 +1,3 @@
-
 /**
  *  \file eval_arb.h
  *  Evaluation of numeric expressions using Arb
@@ -8,8 +7,9 @@
 #ifndef SYMENGINE_EVAL_ARB_H
 #define SYMENGINE_EVAL_ARB_H
 
-#ifdef HAVE_SYMENGINE_ARB
+#include <symengine/symengine_config.h>
 
+#ifdef HAVE_SYMENGINE_ARB
 #include <symengine/basic.h>
 #include <arb.h>
 

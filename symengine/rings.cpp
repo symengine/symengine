@@ -76,7 +76,7 @@ void poly_mul(const umap_vec_mpz &A, const umap_vec_mpz &B, umap_vec_mpz &C)
     for (auto &a: A) {
         for (auto &b: B) {
             monomial_mul(a.first, b.first, exp);
-            C[exp] += a.second*b.second;
+            mpz_addmul(C[exp].get_mpz_t(),a.second.get_mpz_t(),b.second.get_mpz_t());
         }
     }
     /*
