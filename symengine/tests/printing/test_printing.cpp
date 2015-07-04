@@ -12,6 +12,10 @@
 #include <symengine/add.h>
 #include <symengine/matrix.h>
 #include <symengine/printer.h>
+#include <symengine/real_double.h>
+#include <symengine/complex_double.h>
+#include <symengine/real_mpfr.h>
+#include <symengine/complex_mpc.h>
 
 using SymEngine::RCP;
 using SymEngine::Basic;
@@ -33,6 +37,8 @@ using SymEngine::Subs;
 using SymEngine::Derivative;
 using SymEngine::function_symbol;
 using SymEngine::I;
+using SymEngine::real_double;
+using SymEngine::complex_double;
 
 TEST_CASE("test_printing(): printing", "[printing]")
 {
@@ -266,4 +272,37 @@ TEST_CASE("test_univariate_polynomial(): printing", "[printing]")
     p = univariate_polynomial(x, 2, {{0, -1}, {1, -2}, {2, -1}});
     //std::cout<<p->__str__()<<std::endl;
     REQUIRE(p->__str__() == "-x**2 - 2*x - 1");
+}
+
+TEST_CASE("test_floats(): printing", "[printing]")
+{
+    RCP<const Basic> p;;
+    RCP<const Basic> x = symbol("x");
+
+    p = real_double(11111.11);
+    p = pow(p, x);
+    REQUIRE(p->__str__() == "11111.11**x");
+
+    p = real_double(0.00000011);
+    p = mul(p, x);
+    REQUIRE(p->__str__() == "1.1e-07*x");
+
+    p = complex_double(std::complex<double>(0.1, 0.2));
+    p = mul(p, x);
+    REQUIRE(p->__str__() == "(0.1 + 0.2*I)*x");
+
+#ifdef HAVE_SYMENGINE_MPFR
+    SymEngine::mpfr_class m1(75);
+    mpfr_set_ui(m1.get_mpfr_t(), 123, MPFR_RNDN);
+    p = SymEngine::real_mpfr(m1);
+    p = add(p, x);
+    REQUIRE(p->__str__() == "123.000000000000000000000 + x");
+#ifdef HAVE_SYMENGINE_MPC
+    SymEngine::mpc_class m2(75);
+    mpc_set_si_si(m2.get_mpc_t(), -10, 10, MPC_RNDNN);
+    p = SymEngine::complex_mpc(m2);
+    p = div(p, x);
+    REQUIRE(p->__str__() == "(-10.0000000000000000000000 + 10.0000000000000000000000*I)/x");
+#endif
+#endif
 }

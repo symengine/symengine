@@ -75,7 +75,11 @@ public:
     }
 
     void bvisit(const RealDouble &x) {
-        precedence = PrecedenceEnum::Add;
+        if (x.is_negative()) {
+            precedence = PrecedenceEnum::Mul;
+        } else {
+            precedence = PrecedenceEnum::Atom;
+        }
     }
 
     void bvisit(const ComplexDouble &x) {
@@ -92,11 +96,7 @@ public:
 #endif
 #ifdef HAVE_SYMENGINE_MPC
     void bvisit(const ComplexMPC &x) {
-        if (x.is_negative()) {
-            precedence = PrecedenceEnum::Mul;
-        } else {
-            precedence = PrecedenceEnum::Atom;
-        }
+        precedence = PrecedenceEnum::Add;
     }
 #endif
 
