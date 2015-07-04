@@ -11,6 +11,13 @@ abort(); \
 } \
 }
 
+#define SYMENGINE_ASSERT_DO_C(cond) \
+{ \
+if (0 == (cond)) { \
+abort(); \
+} \
+}
+
 // SYMENGINE_ASSERT uses internal functions to perform as assert
 // so that there is no effect with NDEBUG
 #if !defined(SYMENGINE_ASSERT)
