@@ -1,6 +1,15 @@
 #include <stdio.h>
 #include <symengine/cwrapper.h>
-#include <symengine/symengine_assert.h>
+
+#define SYMENGINE_ASSERT_DO_C(cond) \
+{ \
+if (0 == (cond)) { \
+printf("SYMENGINE_ASSERT failed: %s \nfunction %s (), line number %s at \n%s",
+        __FILE__ "\nfunction ", __func__, "(), line number " __LINE__
+        << \ " at \n" << #cond << "\n"); \
+abort(); \
+} \
+}
 
 void test_cwrapper() {
     char* s;
