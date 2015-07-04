@@ -1,6 +1,6 @@
 #include <stdio.h>
-#include <assert.h>
 #include <symengine/cwrapper.h>
+#include <symengine/symengine_assert.h>
 
 void test_cwrapper() {
     char* s;
@@ -69,7 +69,7 @@ void test_CVectorInt1()
     // Allocate on heap
     CVectorInt *vec = vectorint_new();
     vectorint_push_back(vec, 5);
-    assert(vectorint_get(vec, 0) == 5);
+    SYMENGINE_ASSERT_DO(vectorint_get(vec, 0) == 5);
     vectorint_free(vec);
 }
 
@@ -84,39 +84,39 @@ void test_CVectorInt2()
 
     char data1[1];  // Not aligned properly
     vec = (CVectorInt*)data1;
-    assert(vectorint_placement_new(vec, sizeof(data1)) == 2);
+    SYMENGINE_ASSERT_DO(vectorint_placement_new(vec, sizeof(data1)) == 2);
 
     struct X data2[1];  // Aligned properly but small
     vec = (CVectorInt*)data2;
-    assert(vectorint_placement_new(vec, sizeof(data2)) == 1);
+    SYMENGINE_ASSERT_DO(vectorint_placement_new(vec, sizeof(data2)) == 1);
 
     char data3[50]; // Aligned properly and enough size to fit std::vector<int>
     vec = (CVectorInt*)data3;
-    assert(vectorint_placement_new(vec, 1) == 1);
-    assert(vectorint_placement_new(vec, 2) == 1);
-    assert(vectorint_placement_new(vec, sizeof(data3)) == 0);
+    SYMENGINE_ASSERT_DO(vectorint_placement_new(vec, 1) == 1);
+    SYMENGINE_ASSERT_DO(vectorint_placement_new(vec, 2) == 1);
+    SYMENGINE_ASSERT_DO(vectorint_placement_new(vec, sizeof(data3)) == 0);
     vectorint_push_back(vec, 5);
-    assert(vectorint_get(vec, 0) == 5);
+    SYMENGINE_ASSERT_DO(vectorint_get(vec, 0) == 5);
 }
 
 void test_CVecBasic()
 {
     CVecBasic *vec = vecbasic_new();
-    assert(vecbasic_size(vec) == 0);
+    SYMENGINE_ASSERT_DO(vecbasic_size(vec) == 0);
 
     basic x;
     basic_init(x);
     symbol_set(x, "x");
     vecbasic_push_back(vec, x);
 
-    assert(vecbasic_size(vec) == 1);
+    SYMENGINE_ASSERT_DO(vecbasic_size(vec) == 1);
 
     basic y;
     basic_init(y);
     vecbasic_get(vec, 0, y);
 
     // TODO: enable this once basic_eq() is implemented
-    // assert(basic_eq(x, y));
+    // SYMENGINE_ASSERT_DO(basic_eq(x, y));
 
     vecbasic_free(vec);
 }
@@ -139,7 +139,7 @@ void test_get_args()
 
     CVecBasic *args = vecbasic_new();
     basic_get_args(e, args);
-    assert(vecbasic_size(args) == 3);
+    SYMENGINE_ASSERT_DO(vecbasic_size(args) == 3);
     vecbasic_free(args);
 
     basic_free(e);
