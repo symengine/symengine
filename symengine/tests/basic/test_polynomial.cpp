@@ -20,9 +20,11 @@ using SymEngine::Basic;
 using SymEngine::one;
 using SymEngine::zero;
 using SymEngine::integer;
-using SymEngine::vec_basic_eq_perm;	
+using SymEngine::vec_basic_eq_perm;
+using SymEngine::hash_set;
+using SymEngine::m_pair;
 
-TEST_CASE("Constructor of UnivariatePolynomial", "[UnivariatePolynomial")
+TEST_CASE("Constructor of UnivariatePolynomial", "[UnivariatePolynomial]")
 {   
     RCP<const Symbol> x  = symbol("x");
     RCP<const UnivariatePolynomial> P = univariate_polynomial(x, 2, {{0, 1}, {1, 2}, {2, 1}});
@@ -32,7 +34,7 @@ TEST_CASE("Constructor of UnivariatePolynomial", "[UnivariatePolynomial")
     REQUIRE(Q->__str__() == "x**3 + 2*x**2 + 1");
 }
 
-TEST_CASE("Adding two UnivariatePolynomial", "[UnivariatePolynomial")
+TEST_CASE("Adding two UnivariatePolynomial", "[UnivariatePolynomial]")
 {
     RCP<const Symbol> x  = symbol("x");
     map_uint_mpz adict_ = {{0, 1}, {1, 2}, {2, 1}};
@@ -45,7 +47,7 @@ TEST_CASE("Adding two UnivariatePolynomial", "[UnivariatePolynomial")
     REQUIRE(c->__str__() == "5*x**2 + 5*x + 3");
 }
 
-TEST_CASE("Negative of a UnivariatePolynomial", "[UnivariatePolynomial")
+TEST_CASE("Negative of a UnivariatePolynomial", "[UnivariatePolynomial]")
 {
     RCP<const Symbol> x  = symbol("x");
     map_uint_mpz adict_ = {{0, 1}, {1, 2}, {2, 1}};
@@ -84,7 +86,7 @@ TEST_CASE("Multiplication of two UnivariatePolynomial", "[UnivariatePolynomial")
     REQUIRE(d->__str__() == "-x**4 - 4*x**3 - 6*x**2 - 4*x - 1");
 }
 
-TEST_CASE("UnivariatePolynomial get_args", "[UnivariatePolynomial")
+TEST_CASE("UnivariatePolynomial get_args", "[UnivariatePolynomial]")
 {
     RCP<const Symbol> x  = symbol("x");
     RCP<const UnivariatePolynomial> a = univariate_polynomial(x, 2, {{0, 1}, {1, 2}, {2, 1}});
@@ -93,7 +95,7 @@ TEST_CASE("UnivariatePolynomial get_args", "[UnivariatePolynomial")
     REQUIRE(!vec_basic_eq_perm(a->get_args(), {one, mul(integer(3), x), pow(x, integer(2))}));
 }
 
-TEST_CASE("Evaluation of UnivariatePolynomial", "[UnivariatePolynomial")
+TEST_CASE("Evaluation of UnivariatePolynomial", "[UnivariatePolynomial]")
 {
     RCP<const Symbol> x  = symbol("x");
     RCP<const UnivariatePolynomial> a = univariate_polynomial(x, 2, {{0, 1}, {1, 2}, {2, 1}});
@@ -102,7 +104,7 @@ TEST_CASE("Evaluation of UnivariatePolynomial", "[UnivariatePolynomial")
     REQUIRE(a->eval_bit(3) == 81);
 }
 
-TEST_CASE("Derivative of UnivariatePolynomial", "[UnivariatePolynomial")
+TEST_CASE("Derivative of UnivariatePolynomial", "[UnivariatePolynomial]")
 {
     RCP<const Symbol> x  = symbol("x");
     RCP<const Symbol> y  = symbol("y");
@@ -114,7 +116,7 @@ TEST_CASE("Derivative of UnivariatePolynomial", "[UnivariatePolynomial")
 	//std::cout<<a->diff(y)->__str__()<<std::endl;
 }
 
-TEST_CASE("Bool checks specific UnivariatePolynomial cases", "[UnivariatePolynomial")
+TEST_CASE("Bool checks specific UnivariatePolynomial cases", "[UnivariatePolynomial]")
 {
     RCP<const Symbol> x  = symbol("x");
     RCP<const UnivariatePolynomial> z = univariate_polynomial(x, 0, {{0, 0}});
@@ -158,4 +160,31 @@ TEST_CASE("Univariate Polynomial expand", "[UnivariatePolynomial][expand]")
     //std::cout<<b->__str__()<<std::endl;
     REQUIRE(c->__str__() == "x**9 + 3*x**8 + 6*x**7 + 7*x**6 + 6*x**5 + 3*x**4 + x**3");
     //std::cout<<c->__str__()<<std::endl;
+}
+
+TEST_CASE("Testing hash_set", "[hash_set]")
+{
+    m_pair t1, t2;
+    hash_set p, q, s;
+
+    t1.first = 3;
+    t1.second = 2;
+    t2.first = 2;
+    t2.second = 1;
+
+    s.insert(t1);
+    s.insert(t2);
+
+    q = s;
+
+    std::stringstream o;
+    o << s;
+    REQUIRE(o == "{2: 1, 3: 2}");
+
+    REQUIRE(hash_set_eq(s, q) == 1);
+    REQUIRE(hash_set_eq(s, p) == 0);
+
+    REQUIRE(hash_set_compare(s, p) == 1);
+    REQUIRE(hash_set_compare(p, s) == -1);
+    REQUIRE(hash_set_compare(s, q) == 0);
 }

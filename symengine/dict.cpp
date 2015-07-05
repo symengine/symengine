@@ -51,6 +51,18 @@ inline std::ostream& print_vec_rcp(std::ostream& out, T& d)
     return out;
 }
 
+template<class T>
+inline std::ostream& print_set(std::ostream& out, T& d)
+{
+    out << "{";
+    for (auto p = d.begin(); p != d.end(); p++) {
+        if (p != d.begin()) out << ", ";
+        out << (*p).first << ": " << (*p).second;
+    }
+    out << "}";
+    return out;
+}
+
 } // SymEngine
 
 
@@ -102,6 +114,11 @@ std::ostream& operator<<(std::ostream& out, const SymEngine::vec_basic& d)
 std::ostream& operator<<(std::ostream& out, const SymEngine::set_basic& d)
 {
     return print_vec_rcp(out, d);
+}
+
+std::ostream& operator<<(std::ostream& out, const SymEngine::hash_set& d)
+{
+    return print_set(out, d);
 }
 
 
@@ -204,6 +221,19 @@ bool umap_basic_basic_eq(const umap_basic_basic &a,
     return true;
 }
 
+bool hash_set_eq(const hash_set &a,
+        const hash_set &b)
+{
+    // Can't be equal if # of elements in set differ:
+    if (a.size() != b.size()) return false;
+    // Loop over elements in "a":
+    for (auto &p: a) {
+        auto f = b.find(p);
+        if (f == b.end()) return false; // no such element in "b"
+    }
+    return true;
+}
+
 bool vec_basic_eq(const vec_basic &a, const vec_basic &b)
 {
     // Can't be equal if # of entries differ:
@@ -275,6 +305,21 @@ int map_uint_mpz_compare(const map_uint_mpz &A, const map_uint_mpz &B)
             return (a->first < b->first) ? -1 : 1;
         if (a->second != b->second)
             return (a->second < b->second) ? -1 : 1;
+    }
+    return 0;
+}
+
+int hash_set_compare(const hash_set &A, const hash_set &B)
+{
+    if (A.size() != B.size())
+        return (A.size() < B.size()) ? -1 : 1;
+    auto a = A.begin();
+    auto b = B.begin();
+    for (; a != A.end(); ++a, ++b) {
+        if ((*a).first != (*b).first)
+            return ((*a).first < (*b).first) ? -1 : 1;
+        if ((*a).second != (*b).second)
+            return ((*a).second < (*b).second) ? -1 : 1;
     }
     return 0;
 }
