@@ -401,26 +401,27 @@ cdef class RealMPFR(Number):
             cdef string i_ = str(i)
             cdef symengine.mpfr_class m
             m = symengine.mpfr_class(i_, prec, base)
-            self.thisptr = real_mpfr(std_move_mpfr(m))
+            self.thisptr = <RCP[const symengine.Basic]>symengine.real_mpfr(symengine.std_move_mpfr(m))
 
         def get_prec(self):
             return Integer(deref(symengine.rcp_static_cast_RealMPFR(self.thisptr)).get_prec())
 
-        def __sympy__(self):
+        def _sympy_(self):
             import sympy
-            prec = sympy.log(2**self.get_prec(), 10).n().ceiling()
+            cdef long prec_ = deref(symengine.rcp_static_cast_RealMPFR(self.thisptr)).get_prec()
+            prec = max(1, int(round(prec_/3.3219280948873626)-1))
             return sympy.Float(str(self), prec)
     ELSE:
         pass
 
 cdef class ComplexMPC(Number):
     IF HAVE_SYMENGINE_MPC:
-        def __cinit__(self, i = None, j = None, long prec = 53, unsigned base = 10):
+        def __cinit__(self, i = None, j = 0, long prec = 53, unsigned base = 10):
             if i is None:
                 return
-            cdef string i_ = str(i)
+            cdef string i_ = "(" + str(i) + " " + str(j) + ")"
             cdef symengine.mpc_class m = symengine.mpc_class(i_, prec, base)
-            self.thisptr = complex_mpc(std_move_mpc(m))
+            self.thisptr = <RCP[const symengine.Basic]>symengine.complex_mpc(symengine.std_move_mpc(m))
 
         def real_part(self):
             return c2py(<RCP[const symengine.Basic]>deref(symengine.rcp_static_cast_ComplexMPC(self.thisptr)).real_part())
@@ -878,20 +879,18 @@ def eval(x, long prec):
     if prec <= 53:
         return eval_complex_double(x)
     else:
-        try:
-            import eval_mpc
+        IF HAVE_SYMENGINE_MPC:
             return eval_mpc(x, prec)
-        except ImportError:
+        ELSE:
             raise ValueError("Precision %s is only supported with MPC" % prec)
 
 def eval_real(x, long prec):
     if prec <= 53:
         return eval_double(x)
     else:
-        try:
-            import eval_mpfr
+        IF HAVE_SYMENGINE_MPFR:
             return eval_mpfr(x, prec)
-        except ImportError:
+        ELSE:
             raise ValueError("Precision %s is only supported with MPFR" % prec)
 
 def probab_prime_p(n, reps = 25):
