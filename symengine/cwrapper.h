@@ -116,6 +116,7 @@ void basic_expand(basic s, const basic a);
 
 //! Returns a new char pointer to the string representation of s.
 char* basic_str(const basic s);
+char* basic_str2(const CRCPBasic *s);
 //! Frees the string s
 void basic_str_free(char* s);
 

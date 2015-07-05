@@ -73,6 +73,7 @@ void test_cwrapper() {
 }
 
 void test_cwrapper2() {
+    char *s;
     CRCPBasic x[1], y[1], z[1];
     basic_init2(x);
     basic_init2(y);
@@ -80,6 +81,11 @@ void test_cwrapper2() {
     symbol_set2(x, "x");
     symbol_set2(y, "y");
     symbol_set2(z, "z");
+
+    s = basic_str2(x);
+    printf("Symbol : %s\n", s);
+    basic_str_free(s);
+
     basic_free2(x);
     basic_free2(y);
     basic_free2(z);

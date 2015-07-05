@@ -215,6 +215,14 @@ char* basic_str(const basic s)
     return cc;
 }
 
+char* basic_str2(const CRCPBasic *s)
+{
+    std::string str = s->m->__str__();
+    char *cc = new char[str.length()+1];
+    std::strcpy(cc, str.c_str());
+    return cc;
+}
+
 void basic_str_free(char* s)
 {
     delete[] s;
