@@ -57,7 +57,7 @@ void basic_init(basic s)
     new(s) RCP<const Basic>();
 }
 
-void basic_init2(CRCPBasic *s)
+void basic_init2(basic2 s)
 {
 //    if (!SymEngine::is_aligned(s)) return 2;
 //    if (size < sizeof(CRCPBasic)) return 1;
@@ -70,7 +70,7 @@ void basic_free(basic s)
     RCP_cast(s)->~RCP();
 }
 
-void basic_free2(CRCPBasic *s)
+void basic_free2(basic2 s)
 {
     s->m.~RCP();
 }
@@ -80,7 +80,7 @@ void symbol_set(basic s, char* c)
     *RCP_cast(s) = SymEngine::symbol(std::string(c));
 }
 
-void symbol_set2(CRCPBasic *s, char* c)
+void symbol_set2(basic2 s, char* c)
 {
     s->m = SymEngine::symbol(std::string(c));
 }
@@ -167,7 +167,7 @@ void basic_add(basic s, const basic a, const basic b)
     *RCP_cast(s) = SymEngine::add(*RCP_const_cast(a), *RCP_const_cast(b));
 }
 
-void basic_add2(CRCPBasic *s, const CRCPBasic *a, const CRCPBasic *b)
+void basic_add2(basic2 s, const basic2 a, const basic2 b)
 {
     s->m = SymEngine::add(a->m, b->m);
 }
@@ -215,7 +215,7 @@ char* basic_str(const basic s)
     return cc;
 }
 
-char* basic_str2(const CRCPBasic *s)
+char* basic_str2(const basic2 s)
 {
     std::string str = s->m->__str__();
     char *cc = new char[str.length()+1];

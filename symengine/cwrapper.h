@@ -60,16 +60,16 @@ typedef CRCPBasic basic2[1];
 
 //! Initialize a new basic instance.
 void basic_init(basic s);
-void basic_init2(CRCPBasic *s);
+void basic_init2(basic2 s);
 //! Assign value of b to a.
 void basic_assign(basic a, const basic b);
 //! Free the C++ class wrapped by s.
 void basic_free(basic s);
-void basic_free2(CRCPBasic *s);
+void basic_free2(basic2 s);
 
 //! Assign to s, a symbol with string representation c.
 void symbol_set(basic s, char* c);
-void symbol_set2(CRCPBasic *s, char* c);
+void symbol_set2(basic2 s, char* c);
 
 //! Assign to s, a long.
 void integer_set_si(basic s, long i);
@@ -98,7 +98,7 @@ void rational_set_mpq(basic s, const mpq_t i);
 
 //! Assigns s = a + b.
 void basic_add(basic s, const basic a, const basic b);
-void basic_add2(CRCPBasic *s, const CRCPBasic *a, const CRCPBasic *b);
+void basic_add2(basic2 s, const basic2 a, const basic2 b);
 //! Assigns s = a - b.
 void basic_sub(basic s, const basic a, const basic b);
 //! Assigns s = a * b.
@@ -118,7 +118,7 @@ void basic_expand(basic s, const basic a);
 
 //! Returns a new char pointer to the string representation of s.
 char* basic_str(const basic s);
-char* basic_str2(const CRCPBasic *s);
+char* basic_str2(const basic2 s);
 //! Frees the string s
 void basic_str_free(char* s);
 
