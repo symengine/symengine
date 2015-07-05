@@ -1,6 +1,6 @@
 from symengine import (Symbol, Integer, sympify, SympifyError, sin, cos,
-        function_symbol, I, E, pi, exp)
-from symengine.lib.symengine_wrapper import densematrix, Subs, Derivative
+        function_symbol, I, E, pi, exp, have_mpfr, have_mpc)
+from symengine.lib.symengine_wrapper import densematrix, Subs, Derivative, RealMPFR, ComplexMPC
 import sympy
 
 # Note: We test _sympy_() for SymEngine -> SymPy conversion, as those are methods
@@ -269,3 +269,17 @@ def test_abs():
     e2 = abs(y*x)
     assert sympify(e1) == e2
     assert e1 == e2._sympy_()
+
+def test_mpfr():
+    if have_mpfr:
+        a = RealMPFR('100', 100)
+        b = sympy.Float('100', 29)
+        assert sympify(b) == a
+        assert b == a._sympy_()
+
+def test_mpc():
+    if have_mpc:
+        a = ComplexMPC('1', '2', 100)
+        b = sympy.Float(1, 29) + sympy.Float(2, 29) * sympy.I
+        assert sympify(b) == a
+        assert b == a._sympy_()
