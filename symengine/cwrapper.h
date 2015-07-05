@@ -1,12 +1,23 @@
 #ifndef CWRAPPER_H
 #define CWRAPPER_H
 
+#include <stdio.h>
+#include <stdlib.h>
 #include <gmp.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+// Use SYMENGINE_C_ASSERT in C tests
+#define SYMENGINE_C_ASSERT(cond) \
+{ \
+if (0 == (cond)) { \
+    printf("SYMENGINE_C_ASSERT failed: %s \nfunction %s (), line number %d at\n%s\n",\
+            __FILE__, __func__, __LINE__, #cond); \
+    abort(); \
+    } \
+}
 
 // The size of 'CRCPBasic_C' must be the same as CRCPBasic (which contains a
 // single RCP<const Basic> member) *and* they must have the same alignment
@@ -115,6 +126,42 @@ int is_a_Integer(const basic s);
 int is_a_Rational(const basic s);
 //! Return 1 if s is an Symbol, 0 if not.
 int is_a_Symbol(const basic s);
+
+
+//! Wrapper for std::vector<int>
+
+typedef struct CVectorInt CVectorInt;
+
+CVectorInt* vectorint_new();
+
+// 'data' must point to allocated memory of size 'size'. The function returns 0
+// if std::vector<int> can be initialized using placement new into 'data',
+// otherwise 1 if 'size' is too small or 2 if 'data' is not properly aligned.
+// No memory is leaked either way. Use vectorint_placement_new_check() to check
+// that the 'data' and 'size' is properly allocated and aligned. Use
+// vectorint_placement_new() to do the actual allocation.
+int vectorint_placement_new_check(void *data, size_t size);
+CVectorInt* vectorint_placement_new(void *data);
+
+void vectorint_placement_free(CVectorInt *self);
+
+void vectorint_free(CVectorInt *self);
+void vectorint_push_back(CVectorInt *self, int value);
+int vectorint_get(CVectorInt *self, int n);
+
+//! Wrapper for vec_basic
+
+typedef struct CVecBasic CVecBasic;
+
+CVecBasic* vecbasic_new();
+void vecbasic_free(CVecBasic *self);
+void vecbasic_push_back(CVecBasic *self, const basic value);
+void vecbasic_get(CVecBasic *self, int n, basic result);
+size_t vecbasic_size(CVecBasic *self);
+
+// -------------------------------------
+
+void basic_get_args(const basic self, CVecBasic *args);
 
 #ifdef __cplusplus
 }

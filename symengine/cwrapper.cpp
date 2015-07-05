@@ -22,6 +22,15 @@ using SymEngine::Number;
 using SymEngine::rcp_static_cast;
 using SymEngine::is_a;
 
+namespace SymEngine {
+
+template< typename T >
+inline bool is_aligned( T*p, size_t n = alignof(T) ){
+    return 0 == reinterpret_cast<uintptr_t>(p) % n ;
+}
+
+}
+
 
 extern "C" {
 
@@ -187,6 +196,96 @@ int is_a_Rational(const basic c)
 int is_a_Symbol(const basic c)
 {
     return is_a<Symbol>(*(c->m));
+}
+
+
+// C wrapper for std::vector<int>
+
+struct CVectorInt {
+    std::vector<int> m;
+};
+
+CVectorInt* vectorint_new()
+{
+    return new CVectorInt;
+}
+
+int vectorint_placement_new_check(void *data, size_t size)
+{
+    CVectorInt *self = (CVectorInt*)data;
+    if (size < sizeof(CVectorInt)) return 1;
+    if (!SymEngine::is_aligned(self)) return 2;
+    return 0;
+}
+
+CVectorInt* vectorint_placement_new(void *data)
+{
+#if defined(WITH_SYMENGINE_ASSERT)
+    // if (size < sizeof(CVectorInt)) return 1; // Requires the 'size' argument
+    CVectorInt *self = (CVectorInt*)data;
+    SYMENGINE_ASSERT(SymEngine::is_aligned(self));
+#endif
+    new(data) CVectorInt;
+    return (CVectorInt*)data;
+}
+
+void vectorint_placement_free(CVectorInt *self)
+{
+    self->m.~vector<int>();
+}
+
+void vectorint_free(CVectorInt *self)
+{
+    delete self;
+}
+
+void vectorint_push_back(CVectorInt *self, int value)
+{
+    self->m.push_back(value);
+}
+
+int vectorint_get(CVectorInt *self, int n)
+{
+    return self->m[n];
+}
+
+
+// C wrapper for vec_basic
+
+struct CVecBasic {
+    SymEngine::vec_basic m;
+};
+
+CVecBasic* vecbasic_new()
+{
+    return new CVecBasic;
+}
+
+void vecbasic_free(CVecBasic *self)
+{
+    delete self;
+}
+
+void vecbasic_push_back(CVecBasic *self, const basic value)
+{
+    self->m.push_back(value->m);
+}
+
+void vecbasic_get(CVecBasic *self, int n, basic result)
+{
+    result->m = self->m[n];
+}
+
+size_t vecbasic_size(CVecBasic *self)
+{
+    return self->m.size();
+}
+
+// ----------------------
+
+void basic_get_args(const basic self, CVecBasic *args)
+{
+    args->m = self->m->get_args();
 }
 
 }
