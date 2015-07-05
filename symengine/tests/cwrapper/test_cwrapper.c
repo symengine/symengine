@@ -72,25 +72,6 @@ void test_cwrapper() {
     basic_str_free(s);
 }
 
-void test_cwrapper2() {
-    char *s;
-    basic2 x, y, z;
-    basic_init2(x);
-    basic_init2(y);
-    basic_init2(z);
-    symbol_set2(x, "x");
-    symbol_set2(y, "y");
-    symbol_set2(z, "z");
-
-    s = basic_str2(x);
-    printf("Symbol : %s\n", s);
-    basic_str_free(s);
-
-    basic_free2(x);
-    basic_free2(y);
-    basic_free2(z);
-}
-
 void test_CVectorInt1()
 {
     // Allocate on heap
@@ -182,7 +163,6 @@ void test_get_args()
 int main(int argc, char* argv[])
 {
     test_cwrapper();
-    test_cwrapper2();
     test_CVectorInt1();
     test_CVectorInt2();
     test_CVecBasic();
