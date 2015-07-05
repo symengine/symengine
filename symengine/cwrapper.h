@@ -8,10 +8,7 @@
 extern "C" {
 #endif
 
-// For C, define a dummy struct with the right size, so that it can be
-// allocated on the stack. For C++, the CRCPBasic is declared in cwrapper.cpp.
-#ifndef __cplusplus
-struct CRCPBasic
+struct CRCPBasic_C
 {
     void *data;
 #if !defined(WITH_SYMENGINE_RCP)
@@ -19,9 +16,15 @@ struct CRCPBasic
     int teuchos_strength;
 #endif
 };
+
+// For C, define a dummy struct with the right size, so that it can be
+// allocated on the stack. For C++, the CRCPBasic is declared in cwrapper.cpp.
+#ifdef __cplusplus
+typedef struct CRCPBasic basic[1];
+#else
+typedef struct CRCPBasic_C basic[1];
 #endif
 
-typedef struct CRCPBasic basic[1];
 
 //! Initialize a new basic instance.
 void basic_init(basic s);
