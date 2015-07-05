@@ -65,6 +65,7 @@ cdef extern from "<symengine/symengine_rcp.h>" namespace "SymEngine":
     RCP[const Abs] rcp_static_cast_Abs "SymEngine::rcp_static_cast<const SymEngine::Abs>"(RCP[const Basic] &b) nogil
     RCP[const Derivative] rcp_static_cast_Derivative "SymEngine::rcp_static_cast<const SymEngine::Derivative>"(RCP[const Basic] &b) nogil
     RCP[const Subs] rcp_static_cast_Subs "SymEngine::rcp_static_cast<const SymEngine::Subs>"(RCP[const Basic] &b) nogil
+    RCP[const RealDouble] rcp_static_cast_RealDouble "SymEngine::rcp_static_cast<const SymEngine::RealDouble>"(RCP[const Basic] &b) nogil
     RCP[const ComplexDouble] rcp_static_cast_ComplexDouble "SymEngine::rcp_static_cast<const SymEngine::ComplexDouble>"(RCP[const Basic] &b) nogil
     RCP[const RealMPFR] rcp_static_cast_RealMPFR "SymEngine::rcp_static_cast<const SymEngine::RealMPFR>"(RCP[const Basic] &b) nogil
     RCP[const ComplexMPC] rcp_static_cast_ComplexMPC "SymEngine::rcp_static_cast<const SymEngine::ComplexMPC>"(RCP[const Basic] &b) nogil
@@ -146,6 +147,7 @@ cdef extern from "<symengine/complex.h>" namespace "SymEngine":
 cdef extern from "<symengine/real_double.h>" namespace "SymEngine":
     cdef cppclass RealDouble(Number):
         RealDouble(double x) nogil
+        double as_double() nogil
     RCP[const RealDouble] real_double(double d) nogil
 
 cdef extern from "<symengine/complex_double.h>" namespace "SymEngine":
@@ -268,7 +270,7 @@ IF HAVE_SYMENGINE_MPFR:
         cdef cppclass RealMPFR(Number):
             RealMPFR(mpfr_class) nogil
             mpfr_class as_mpfr() nogil
-            long get_prec() nogil
+            mpfr_prec_t get_prec() nogil
 
         RCP[const RealMPFR] real_mpfr(mpfr_class t) nogil
 ELSE:

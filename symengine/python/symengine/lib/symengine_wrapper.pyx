@@ -407,8 +407,8 @@ cdef class Integer(Number):
         return sympy.Integer(deref(self.thisptr).__str__().decode("utf-8"))
 
     def _sage_(self):
-        from sage.symbolic.symengine import convert_integer
-        return convert_integer(self)
+        from sage.symbolic.symengine_conversions import convert_to_integer
+        return convert_to_integer(self)
 
 
 cdef class RealDouble(Number):
@@ -424,8 +424,9 @@ cdef class RealDouble(Number):
         return sympy.Float(deref(self.thisptr).__str__().decode("utf-8"))
 
     def _sage_(self):
-        from sage.symbolic.symengine import convert_real_double
-        return convert_real_double(self)
+        import sage.all as sage
+        cdef double i = deref(symengine.rcp_static_cast_RealDouble(self.thisptr)).as_double()
+        return sage.RealDoubleField(i)
 
 cdef class ComplexDouble(Number):
 
@@ -470,8 +471,8 @@ cdef class RealMPFR(Number):
             return sympy.Float(str(self), prec)
 
         def _sage_(self):
-            from sage.symbolic.symengine import convert_real_mpfr
-            return convert_real_mpfr(self)
+            from sage.symbolic.symengine_conversions import convert_to_real_number
+            return convert_to_real_number(self)
     ELSE:
         pass
 
@@ -495,8 +496,8 @@ cdef class ComplexMPC(Number):
             return self.real_part()._sympy_() + sympy.I * self.imaginary_part()._sympy_()
 
         def _sage_(self):
-            from sage.symbolic.symengine import convert_complex_mpc
-            return convert_complex_mpc(self)
+            from sage.symbolic.symengine_conversions import convert_to_mpcomplex_number
+            return convert_to_mpcomplex_number(self)
     ELSE:
         pass
 
@@ -513,8 +514,8 @@ cdef class Rational(Number):
         return rat[0]._sympy_() / rat[1]._sympy_()
 
     def _sage_(self):
-        from sage.symbolic.symengine import convert_rational
-        return convert_rational(self)
+        from sage.symbolic.symengine_conversions import convert_to_rational
+        return convert_to_rational(self)
 
 cdef class Complex(Number):
 
@@ -529,8 +530,8 @@ cdef class Complex(Number):
         return self.real_part()._sympy_() + sympy.I * self.imaginary_part()._sympy_()
 
     def _sage_(self):
-        import sympy
-        return self.real_part()._sage_() + sympy.I * self.imaginary_part()._sage_()
+        import sage.all as sage
+        return self.real_part()._sage_() + sage.I * self.imaginary_part()._sage_()
 
 cdef class Add(Basic):
 
@@ -585,7 +586,7 @@ cdef class Sin(Function):
         import sympy
         return sympy.sin(arg)
 
-    def _sympy_(self):
+    def _sage_(self):
         cdef RCP[const symengine.Sin] X = symengine.rcp_static_cast_Sin(self.thisptr)
         arg = c2py(deref(X).get_arg())._sage_()
         import sage.all as sage
@@ -668,7 +669,11 @@ cdef class FunctionWrapper(FunctionSymbol):
         return pyobj
 
     def _sage_(self):
-        import sage.all as sage
+        cdef object pyobj
+        cdef RCP[const symengine.FunctionWrapper] X = \
+            symengine.rcp_static_cast_FunctionWrapper(self.thisptr)
+        pyobj = <object>(deref(X).get_object())
+        return pyobj._sage_()
 
 
 cdef class Abs(Function):
@@ -758,7 +763,6 @@ cdef class Subs(Basic):
         return arg.subs(v)
 
 cdef class MatrixBase:
-    cdef symengine.MatrixBase* thisptr
 
     def __richcmp__(a, b, int op):
         A = sympify(a, False)
