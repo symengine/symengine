@@ -1,6 +1,15 @@
 #include <stdio.h>
 #include <symengine/cwrapper.h>
 
+#define SYMENGINE_ASSERT_DO_C(cond) \
+{ \
+if (0 == (cond)) { \
+printf("SYMENGINE_ASSERT failed: %s \nfunction %s (), line number %d at\n%s\n",\
+        __FILE__, __func__, __LINE__, #cond); \
+abort(); \
+} \
+}
+
 void test_cwrapper() {
     char* s;
     basic x, y, z;
@@ -63,8 +72,100 @@ void test_cwrapper() {
     basic_str_free(s);
 }
 
+void test_CVectorInt1()
+{
+    // Allocate on heap
+    CVectorInt *vec = vectorint_new();
+    vectorint_push_back(vec, 5);
+    SYMENGINE_ASSERT_DO_C(vectorint_get(vec, 0) == 5);
+    vectorint_free(vec);
+}
+
+struct X {
+    void *x;
+};
+
+void test_CVectorInt2()
+{
+    // Allocate on stack
+    CVectorInt *vec;
+
+    char data1[1];  // Not aligned properly
+    vec = (CVectorInt*)data1;
+    printf("result: %d\n", vectorint_placement_new(vec, sizeof(data1)));
+//    SYMENGINE_ASSERT_DO_C(vectorint_placement_new(vec, sizeof(data1)) == 2);
+
+    struct X data2[1];  // Aligned properly but small
+    vec = (CVectorInt*)data2;
+//    SYMENGINE_ASSERT_DO_C(vectorint_placement_new(vec, sizeof(data2)) == 1);
+
+    char data3[50]; // Aligned properly and enough size to fit std::vector<int>
+    vec = (CVectorInt*)data3;
+//    SYMENGINE_ASSERT_DO_C(vectorint_placement_new(vec, 1) == 1);
+//    SYMENGINE_ASSERT_DO_C(vectorint_placement_new(vec, 2) == 1);
+    SYMENGINE_ASSERT_DO_C(vectorint_placement_new(vec, sizeof(data3)) == 0);
+    vectorint_push_back(vec, 5);
+    SYMENGINE_ASSERT_DO_C(vectorint_get(vec, 0) == 5);
+    vectorint_placement_free(vec);
+}
+
+void test_CVecBasic()
+{
+    CVecBasic *vec = vecbasic_new();
+    SYMENGINE_ASSERT_DO_C(vecbasic_size(vec) == 0);
+
+    basic x;
+    basic_init(x);
+    symbol_set(x, "x");
+    vecbasic_push_back(vec, x);
+
+    SYMENGINE_ASSERT_DO_C(vecbasic_size(vec) == 1);
+
+    basic y;
+    basic_init(y);
+    vecbasic_get(vec, 0, y);
+
+    // TODO: enable this once basic_eq() is implemented
+    // SYMENGINE_ASSERT_DO_C(basic_eq(x, y));
+
+    vecbasic_free(vec);
+    basic_free(x);
+    basic_free(y);
+}
+
+void test_get_args()
+{
+    basic x, y, z, e;
+    basic_init(x);
+    basic_init(y);
+    basic_init(z);
+    basic_init(e);
+    symbol_set(x, "x");
+    symbol_set(y, "y");
+    symbol_set(z, "z");
+
+    integer_set_ui(e, 123);
+    basic_add(e, e, x);
+    basic_mul(e, e, y);
+    basic_div(e, e, z);
+
+    CVecBasic *args = vecbasic_new();
+    basic_get_args(e, args);
+    SYMENGINE_ASSERT_DO_C(vecbasic_size(args) == 3);
+    vecbasic_free(args);
+
+    basic_free(e);
+    basic_free(x);
+    basic_free(y);
+    basic_free(z);
+}
+
 int main(int argc, char* argv[])
 {
     test_cwrapper();
+    test_CVectorInt1();
+    test_CVectorInt2();
+    test_CVecBasic();
+    test_get_args();
     return 0;
 }
