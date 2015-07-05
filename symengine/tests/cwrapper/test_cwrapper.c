@@ -74,7 +74,7 @@ void test_cwrapper() {
 
 void test_cwrapper2() {
     char *s;
-    CRCPBasic x[1], y[1], z[1];
+    basic2 x, y, z;
     basic_init2(x);
     basic_init2(y);
     basic_init2(z);

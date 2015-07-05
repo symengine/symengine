@@ -56,6 +56,8 @@ struct CRCPBasic
 };
 #endif
 
+typedef CRCPBasic basic2[1];
+
 //! Initialize a new basic instance.
 void basic_init(basic s);
 void basic_init2(CRCPBasic *s);
