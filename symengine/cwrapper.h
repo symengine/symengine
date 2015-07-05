@@ -8,39 +8,6 @@
 extern "C" {
 #endif
 
-// The size of 'basic_struct' must be the same as RCP<const Basic> *and* they
-// must have the same alignment (because we allocate RCP<const Basic> into the
-// memory occupied by this struct in cwrapper.cpp). We cannot use C++ in this
-// file, so we need to use C tools to arrive at the correct size and alignment.
-// The size of the RCP object on most platforms (with WITH_SYMENGINE_RCP on)
-// should be just the size of the 'T *ptr_' pointer that it contains (as there
-// is no virtual function table) and the alignment should also be of a pointer.
-// So we just put 'void *data' as the only member of the struct, that should
-// have the correct size and alignment. With WITH_SYMENGINE_RCP off (i.e. using
-// Teuchos::RCP), we have to add additional members into the structure.
-//
-// However, this is checked at compile time in cwrapper.cpp, so if the size or
-// alignment is different on some platform, the compilation will fail --- in
-// that case one needs to modify the contents of this struct to adjust its size
-// and/or alignment.
-typedef struct
-{
-    void *data;
-#if !defined(WITH_SYMENGINE_RCP)
-    void *teuchos_handle;
-    int teuchos_strength;
-#endif
-} basic_struct;
-
-//! 'basic' is internally implemented as a size 1 array of the type
-//   basic_struct, which has the same size and alignment as RCP<const Basic>
-//   (see the above comment for details). That is then used by the user to
-//   allocate the memory needed for RCP<const Basic> on the stack. A 'basic'
-//   type should be initialized using basic_init(), before any function is
-//   called.  Assignment should be done only by using basic_assign(). Before
-//   the variable goes out of scope, basic_free() must be called.
-typedef basic_struct basic[1];
-
 // For C, define a dummy struct with the right size, so that it can be
 // allocated on the stack. For C++, the CRCPBasic is declared in cwrapper.cpp.
 #ifndef __cplusplus
@@ -54,20 +21,17 @@ struct CRCPBasic
 };
 #endif
 
-typedef struct CRCPBasic basic2[1];
+typedef struct CRCPBasic basic[1];
 
 //! Initialize a new basic instance.
 void basic_init(basic s);
-void basic_init2(basic2 s);
 //! Assign value of b to a.
 void basic_assign(basic a, const basic b);
 //! Free the C++ class wrapped by s.
 void basic_free(basic s);
-void basic_free2(basic2 s);
 
 //! Assign to s, a symbol with string representation c.
 void symbol_set(basic s, char* c);
-void symbol_set2(basic2 s, char* c);
 
 //! Assign to s, a long.
 void integer_set_si(basic s, long i);
@@ -96,7 +60,6 @@ void rational_set_mpq(basic s, const mpq_t i);
 
 //! Assigns s = a + b.
 void basic_add(basic s, const basic a, const basic b);
-void basic_add2(basic2 s, const basic2 a, const basic2 b);
 //! Assigns s = a - b.
 void basic_sub(basic s, const basic a, const basic b);
 //! Assigns s = a * b.
@@ -116,7 +79,6 @@ void basic_expand(basic s, const basic a);
 
 //! Returns a new char pointer to the string representation of s.
 char* basic_str(const basic s);
-char* basic_str2(const basic2 s);
 //! Frees the string s
 void basic_str_free(char* s);
 
