@@ -7,38 +7,47 @@
 extern "C" {
 #endif
 
-// The size of 'basic_struct' must be the same as RCP<const Basic> *and* they
-// must have the same alignment (because we allocate RCP<const Basic> into the
-// memory occupied by this struct in cwrapper.cpp). We cannot use C++ in this
-// file, so we need to use C tools to arrive at the correct size and alignment.
-// The size of the RCP object on most platforms (with WITH_SYMENGINE_RCP on)
-// should be just the size of the 'T *ptr_' pointer that it contains (as there
-// is no virtual function table) and the alignment should also be of a pointer.
-// So we just put 'void *data' as the only member of the struct, that should
-// have the correct size and alignment. With WITH_SYMENGINE_RCP off (i.e. using
-// Teuchos::RCP), we have to add additional members into the structure.
+
+// The size of 'CRCPBasic_C' must be the same as CRCPBasic (which contains a
+// single RCP<const Basic> member) *and* they must have the same alignment
+// (because we allocate CRCPBasic into the memory occupied by this struct in
+// cwrapper.cpp). We cannot use C++ in this file, so we need to use C tools to
+// arrive at the correct size and alignment.  The size of the RCP object on
+// most platforms (with WITH_SYMENGINE_RCP on) should be just the size of the
+// 'T *ptr_' pointer that it contains (as there is no virtual function table)
+// and the alignment should also be of a pointer.  So we just put 'void *data'
+// as the only member of the struct, that should have the correct size and
+// alignment. With WITH_SYMENGINE_RCP off (i.e. using Teuchos::RCP), we have to
+// add additional members into the structure.
 //
 // However, this is checked at compile time in cwrapper.cpp, so if the size or
 // alignment is different on some platform, the compilation will fail --- in
 // that case one needs to modify the contents of this struct to adjust its size
 // and/or alignment.
-typedef struct
+struct CRCPBasic_C
 {
     void *data;
 #if !defined(WITH_SYMENGINE_RCP)
     void *teuchos_handle;
     int teuchos_strength;
 #endif
-} basic_struct;
+};
 
 //! 'basic' is internally implemented as a size 1 array of the type
-//   basic_struct, which has the same size and alignment as RCP<const Basic>
-//   (see the above comment for details). That is then used by the user to
-//   allocate the memory needed for RCP<const Basic> on the stack. A 'basic'
-//   type should be initialized using basic_init(), before any function is
-//   called.  Assignment should be done only by using basic_assign(). Before
-//   the variable goes out of scope, basic_free() must be called.
-typedef basic_struct basic[1];
+//  CRCPBasic, which has the same size and alignment as RCP<const Basic> (see
+//  the above comment for details). That is then used by the user to allocate
+//  the memory needed for RCP<const Basic> on the stack. A 'basic' type should
+//  be initialized using basic_init(), before any function is called.
+//  Assignment should be done only by using basic_assign(). Before the variable
+//  goes out of scope, basic_free() must be called.
+//
+//  For C, define a dummy struct with the right size, so that it can be
+//  allocated on the stack. For C++, the CRCPBasic is declared in cwrapper.cpp.
+#ifdef __cplusplus
+typedef struct CRCPBasic basic[1];
+#else
+typedef struct CRCPBasic_C basic[1];
+#endif
 
 
 //! Initialize a new basic instance.
