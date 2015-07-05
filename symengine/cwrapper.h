@@ -41,10 +41,8 @@ typedef struct
 //   the variable goes out of scope, basic_free() must be called.
 typedef basic_struct basic[1];
 
-typedef struct CRCPBasic CRCPBasic;
-
 // For C, define a dummy struct with the right size, so that it can be
-// allocated on the stack.
+// allocated on the stack. For C++, the CRCPBasic is declared in cwrapper.cpp.
 #ifndef __cplusplus
 struct CRCPBasic
 {
@@ -56,7 +54,7 @@ struct CRCPBasic
 };
 #endif
 
-typedef CRCPBasic basic2[1];
+typedef struct CRCPBasic basic2[1];
 
 //! Initialize a new basic instance.
 void basic_init(basic s);
