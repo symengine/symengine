@@ -128,6 +128,8 @@ void test_CVecBasic()
     // SYMENGINE_ASSERT_DO_C(basic_eq(x, y));
 
     vecbasic_free(vec);
+    basic_free(x);
+    basic_free(y);
 }
 
 void test_get_args()
