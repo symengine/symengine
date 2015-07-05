@@ -117,20 +117,19 @@ int rational_set(basic s, const basic a, const basic b)
 
 void rational_set_mpq(basic s, const mpq_t i)
 {
-    *RCP_cast(s) = SymEngine::Rational::from_mpq(mpq_class(i));
+    s->m = SymEngine::Rational::from_mpq(mpq_class(i));
 }
 
 int basic_diff(basic s, const basic expr, basic const symbol)
 {
     if (!is_a_Symbol(symbol))
         return 0;
-    *RCP_cast(s) = (*RCP_const_cast(expr))->diff(rcp_static_cast<const Symbol>
-            (*RCP_const_cast(symbol)));
+    s->m = expr->m->diff(rcp_static_cast<const Symbol>(symbol->m));
     return 1;
 }
 
 void basic_assign(basic a, const basic b) {
-    *RCP_cast(a) = RCP<const Basic>(*RCP_const_cast(b));
+    a->m = b->m;
 }
 
 void basic_add(basic s, const basic a, const basic b)
@@ -140,48 +139,40 @@ void basic_add(basic s, const basic a, const basic b)
 
 void basic_sub(basic s, const basic a, const basic b)
 {
-    *RCP_cast(s) = SymEngine::sub(*RCP_const_cast(a), *RCP_const_cast(b));
+    s->m = SymEngine::sub(a->m, b->m);
 }
 
 void basic_mul(basic s, const basic a, const basic b)
 {
-    *RCP_cast(s) = SymEngine::mul(*RCP_const_cast(a), *RCP_const_cast(b));
+    s->m = SymEngine::mul(a->m, b->m);
 }
 
 void basic_pow(basic s, const basic a, const basic b)
 {
-    *RCP_cast(s) = SymEngine::pow(*RCP_const_cast(a), *RCP_const_cast(b));
+    s->m = SymEngine::pow(a->m, b->m);
 }
 
 void basic_div(basic s, const basic a, const basic b)
 {
-    *RCP_cast(s) = SymEngine::div(*RCP_const_cast(a), *RCP_const_cast(b));
+    s->m = SymEngine::div(a->m, b->m);
 }
 
 void basic_neg(basic s, const basic a)
 {
-    *RCP_cast(s) = SymEngine::neg(*RCP_const_cast(a));
+    s->m = SymEngine::neg(a->m);
 }
 
 void basic_abs(basic s, const basic a)
 {
-    *RCP_cast(s) = SymEngine::abs(*RCP_const_cast(a));
+    s->m = SymEngine::abs(a->m);
 }
 
 void basic_expand(basic s, const basic a)
 {
-    *RCP_cast(s) = SymEngine::expand(*RCP_const_cast(a));
+    s->m = SymEngine::expand(a->m);
 }
 
 char* basic_str(const basic s)
-{
-    std::string str = (*RCP_const_cast(s))->__str__();
-    char *cc = new char[str.length()+1];
-    std::strcpy(cc, str.c_str());
-    return cc;
-}
-
-char* basic_str2(const basic2 s)
 {
     std::string str = s->m->__str__();
     char *cc = new char[str.length()+1];
@@ -196,15 +187,15 @@ void basic_str_free(char* s)
 
 int is_a_Integer(const basic c)
 {
-    return is_a<Integer>(*(*RCP_const_cast(c)));
+    return is_a<Integer>(*(c->m));
 }
 int is_a_Rational(const basic c)
 {
-    return is_a<Rational>(*(*RCP_const_cast(c)));
+    return is_a<Rational>(*(c->m));
 }
 int is_a_Symbol(const basic c)
 {
-    return is_a<Symbol>(*(*RCP_const_cast(c)));
+    return is_a<Symbol>(*(c->m));
 }
 
 
@@ -266,12 +257,12 @@ void vecbasic_free(CVecBasic *self)
 
 void vecbasic_push_back(CVecBasic *self, const basic value)
 {
-    self->m.push_back(*RCP_const_cast(value));
+    self->m.push_back(value->m);
 }
 
 void vecbasic_get(CVecBasic *self, int n, basic result)
 {
-    *RCP_cast(result) = self->m[n];
+    result->m = self->m[n];
 }
 
 size_t vecbasic_size(CVecBasic *self)
@@ -283,7 +274,7 @@ size_t vecbasic_size(CVecBasic *self)
 
 void basic_get_args(const basic self, CVecBasic *args)
 {
-    args->m = (*RCP_const_cast(self))->get_args();
+    args->m = self->m->get_args();
 }
 
 }
