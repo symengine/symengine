@@ -41,6 +41,7 @@ typedef struct
 //   the variable goes out of scope, basic_free() must be called.
 typedef basic_struct basic[1];
 
+typedef struct CRCPBasic CRCPBasic;
 
 //! Initialize a new basic instance.
 void basic_init(basic s);
@@ -79,6 +80,7 @@ void rational_set_mpq(basic s, const mpq_t i);
 
 //! Assigns s = a + b.
 void basic_add(basic s, const basic a, const basic b);
+void basic_add2(CRCPBasic *s, const CRCPBasic *a, const CRCPBasic *b);
 //! Assigns s = a - b.
 void basic_sub(basic s, const basic a, const basic b);
 //! Assigns s = a * b.

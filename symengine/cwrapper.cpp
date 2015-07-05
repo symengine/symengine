@@ -38,6 +38,10 @@ inline bool is_aligned( T*p, size_t n = alignof(T) ){
 
 extern "C" {
 
+struct CRCPBasic {
+    SymEngine::RCP<const SymEngine::Basic> m;
+};
+
 void basic_init(basic s)
 {
     // These checks only happen at compile time.
@@ -143,6 +147,11 @@ void basic_assign(basic a, const basic b) {
 void basic_add(basic s, const basic a, const basic b)
 {
     *RCP_cast(s) = SymEngine::add(*RCP_const_cast(a), *RCP_const_cast(b));
+}
+
+void basic_add2(CRCPBasic *s, const CRCPBasic *a, const CRCPBasic *b)
+{
+    s->m = SymEngine::add(a->m, b->m);
 }
 
 void basic_sub(basic s, const basic a, const basic b)
