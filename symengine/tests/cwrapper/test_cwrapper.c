@@ -4,9 +4,8 @@
 #define SYMENGINE_ASSERT_DO_C(cond) \
 { \
 if (0 == (cond)) { \
-printf("SYMENGINE_ASSERT failed: %s \nfunction %s (), line number %s at \n%s",
-        __FILE__ "\nfunction ", __func__, "(), line number " __LINE__
-        << \ " at \n" << #cond << "\n"); \
+printf("SYMENGINE_ASSERT failed: %s \nfunction %s (), line number %d at\n%s\n",\
+        __FILE__, __func__, __LINE__, #cond); \
 abort(); \
 } \
 }
