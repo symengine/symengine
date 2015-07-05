@@ -57,14 +57,32 @@ void basic_init(basic s)
     new(s) RCP<const Basic>();
 }
 
+void basic_init2(CRCPBasic *s)
+{
+//    if (!SymEngine::is_aligned(s)) return 2;
+//    if (size < sizeof(CRCPBasic)) return 1;
+
+    new(s) CRCPBasic();
+}
+
 void basic_free(basic s)
 {
     RCP_cast(s)->~RCP();
 }
 
+void basic_free2(CRCPBasic *s)
+{
+    s->m.~RCP();
+}
+
 void symbol_set(basic s, char* c)
 {
     *RCP_cast(s) = SymEngine::symbol(std::string(c));
+}
+
+void symbol_set2(CRCPBasic *s, char* c)
+{
+    s->m = SymEngine::symbol(std::string(c));
 }
 
 void integer_set_si(basic s, long i)

@@ -72,6 +72,19 @@ void test_cwrapper() {
     basic_str_free(s);
 }
 
+void test_cwrapper2() {
+    CRCPBasic x[1], y[1], z[1];
+    basic_init2(x);
+    basic_init2(y);
+    basic_init2(z);
+    symbol_set2(x, "x");
+    symbol_set2(y, "y");
+    symbol_set2(z, "z");
+    basic_free2(x);
+    basic_free2(y);
+    basic_free2(z);
+}
+
 void test_CVectorInt1()
 {
     // Allocate on heap
@@ -163,6 +176,7 @@ void test_get_args()
 int main(int argc, char* argv[])
 {
     test_cwrapper();
+    test_cwrapper2();
     test_CVectorInt1();
     test_CVectorInt2();
     test_CVecBasic();

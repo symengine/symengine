@@ -43,15 +43,31 @@ typedef basic_struct basic[1];
 
 typedef struct CRCPBasic CRCPBasic;
 
+// For C, define a dummy struct with the right size, so that it can be
+// allocated on the stack.
+#ifndef __cplusplus
+struct CRCPBasic
+{
+    void *data;
+#if !defined(WITH_SYMENGINE_RCP)
+    void *teuchos_handle;
+    int teuchos_strength;
+#endif
+};
+#endif
+
 //! Initialize a new basic instance.
 void basic_init(basic s);
+void basic_init2(CRCPBasic *s);
 //! Assign value of b to a.
 void basic_assign(basic a, const basic b);
 //! Free the C++ class wrapped by s.
 void basic_free(basic s);
+void basic_free2(CRCPBasic *s);
 
 //! Assign to s, a symbol with string representation c.
 void symbol_set(basic s, char* c);
+void symbol_set2(CRCPBasic *s, char* c);
 
 //! Assign to s, a long.
 void integer_set_si(basic s, long i);
