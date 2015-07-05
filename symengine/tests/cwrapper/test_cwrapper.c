@@ -106,6 +106,7 @@ void test_CVectorInt2()
     SYMENGINE_ASSERT_DO_C(vectorint_placement_new(vec, sizeof(data3)) == 0);
     vectorint_push_back(vec, 5);
     SYMENGINE_ASSERT_DO_C(vectorint_get(vec, 0) == 5);
+    vectorint_placement_free(vec);
 }
 
 void test_CVecBasic()

@@ -235,6 +235,11 @@ int vectorint_placement_new(CVectorInt *self, size_t size)
     return 0;
 }
 
+void vectorint_placement_free(CVectorInt *self)
+{
+    self->m.~vector<int>();
+}
+
 void vectorint_free(CVectorInt *self)
 {
     delete self;

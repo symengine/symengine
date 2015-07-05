@@ -123,6 +123,8 @@ CVectorInt* vectorint_new();
 // No memory is leaked either way.
 int vectorint_placement_new(CVectorInt *self, size_t size);
 
+void vectorint_placement_free(CVectorInt *self);
+
 void vectorint_free(CVectorInt *self);
 void vectorint_push_back(CVectorInt *self, int value);
 int vectorint_get(CVectorInt *self, int n);
