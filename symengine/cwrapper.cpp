@@ -22,10 +22,6 @@ using SymEngine::Number;
 using SymEngine::rcp_static_cast;
 using SymEngine::is_a;
 
-#define RCP_cast_general(x, CONST) (reinterpret_cast<CONST RCP<const Basic> *>(x))
-#define RCP_cast(x) RCP_cast_general(x, )
-#define RCP_const_cast(x) RCP_cast_general(x, const)
-
 namespace SymEngine {
 
 template< typename T >
@@ -44,21 +40,6 @@ struct CRCPBasic {
 
 void basic_init(basic s)
 {
-    // These checks only happen at compile time.
-    // Check that 'basic' has the correct size:
-    static_assert(sizeof(RCP<const Basic>) == sizeof(basic), "Size of 'basic' is not correct");
-    // Check that 'basic' has the correct alignment:
-    static_assert(std::alignment_of<RCP<const Basic>>::value == std::alignment_of<basic>::value, "Alignment of 'basic' is not correct");
-
-    // No allocation is being done, but the constructor of RCP is called and
-    // the instance is initialized at the memory address 's'. The above checks
-    // make sure that 's' has the correct size and alignment, which is
-    // necessary for placement new, otherwise the results are undefined.
-    new(s) RCP<const Basic>();
-}
-
-void basic_init2(basic2 s)
-{
 //    if (!SymEngine::is_aligned(s)) return 2;
 //    if (size < sizeof(CRCPBasic)) return 1;
 
@@ -67,70 +48,60 @@ void basic_init2(basic2 s)
 
 void basic_free(basic s)
 {
-    RCP_cast(s)->~RCP();
-}
-
-void basic_free2(basic2 s)
-{
     s->m.~RCP();
 }
 
 void symbol_set(basic s, char* c)
-{
-    *RCP_cast(s) = SymEngine::symbol(std::string(c));
-}
-
-void symbol_set2(basic2 s, char* c)
 {
     s->m = SymEngine::symbol(std::string(c));
 }
 
 void integer_set_si(basic s, long i)
 {
-    *RCP_cast(s) = SymEngine::integer(mpz_class(i));
+    s->m = SymEngine::integer(mpz_class(i));
 }
 
 void integer_set_ui(basic s, unsigned long i)
 {
-    *RCP_cast(s) = SymEngine::integer(mpz_class(i));
+    s->m = SymEngine::integer(mpz_class(i));
 }
 
 void integer_set_mpz(basic s, const mpz_t i)
 {
-    *RCP_cast(s) = SymEngine::integer(mpz_class(i));
+    s->m = SymEngine::integer(mpz_class(i));
 }
 
 void integer_set_str(basic s, char* c)
 {
-    *RCP_cast(s) = SymEngine::integer(mpz_class(c, 10));
+    s->m = SymEngine::integer(mpz_class(c, 10));
 }
 
 signed long integer_get_si(const basic s)
 {
-    SYMENGINE_ASSERT(is_a<Integer>(*(*RCP_const_cast(s))));
-    return mpz_get_si((rcp_static_cast<const Integer>(*RCP_const_cast(s)))->as_mpz().get_mpz_t());
+    SYMENGINE_ASSERT(is_a<Integer>(*(s->m)));
+    return mpz_get_si((rcp_static_cast<const Integer>(s->m))->as_mpz().get_mpz_t());
 }
 
 unsigned long integer_get_ui(const basic s)
 {
-    SYMENGINE_ASSERT(is_a<Integer>(*(*RCP_const_cast(s))));
-    return mpz_get_ui((rcp_static_cast<const Integer>(*RCP_const_cast(s)))->as_mpz().get_mpz_t());
+    SYMENGINE_ASSERT(is_a<Integer>(*(s->m)));
+    return mpz_get_ui((rcp_static_cast<const Integer>(s->m))->as_mpz().get_mpz_t());
 }
 
 void integer_get_mpz(mpz_t a, const basic s)
 {
-    SYMENGINE_ASSERT(is_a<Integer>(*(*RCP_const_cast(s))));
-    mpz_set(a, (rcp_static_cast<const Integer>(*RCP_const_cast(s)))->as_mpz().get_mpz_t());
+    SYMENGINE_ASSERT(is_a<Integer>(*(s->m)));
+    mpz_set(a, (rcp_static_cast<const Integer>(s->m))->as_mpz().get_mpz_t());
 }
 
 void rational_set_si(basic s, long a, long b)
 {
-    *RCP_cast(s) = SymEngine::Rational::from_mpq(mpq_class(a, b));
+    s->m = SymEngine::Rational::from_mpq(mpq_class(a, b));
 }
 
 void rational_set_ui(basic s, unsigned long a, unsigned long b)
 {
-    *RCP_cast(s) = SymEngine::Rational::from_mpq(mpq_class(a, b));
+    s->m = SymEngine::Rational::from_mpq(mpq_class(a, b));
 }
 
 int rational_set(basic s, const basic a, const basic b)
@@ -138,9 +109,9 @@ int rational_set(basic s, const basic a, const basic b)
     if (!is_a_Integer(a) || !is_a_Integer(b)) {
         return 0;
     }
-    *RCP_cast(s) = SymEngine::Rational::from_two_ints(
-            rcp_static_cast<const Integer>(*RCP_const_cast(a)),
-            rcp_static_cast<const Integer>(*RCP_const_cast(b)));
+    s->m = SymEngine::Rational::from_two_ints(
+            rcp_static_cast<const Integer>(a->m),
+            rcp_static_cast<const Integer>(b->m));
     return 1;
 }
 
@@ -163,11 +134,6 @@ void basic_assign(basic a, const basic b) {
 }
 
 void basic_add(basic s, const basic a, const basic b)
-{
-    *RCP_cast(s) = SymEngine::add(*RCP_const_cast(a), *RCP_const_cast(b));
-}
-
-void basic_add2(basic2 s, const basic2 a, const basic2 b)
 {
     s->m = SymEngine::add(a->m, b->m);
 }
