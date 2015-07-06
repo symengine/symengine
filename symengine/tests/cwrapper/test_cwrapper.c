@@ -120,6 +120,39 @@ void test_CVecBasic()
     basic_free(y);
 }
 
+void test_CSetBasic()
+{
+    CSetBasic *set = setbasic_new();
+    SYMENGINE_C_ASSERT(setbasic_size(set) == 0);
+
+    basic x;
+    basic_init(x);
+    symbol_set(x, "x");
+
+    int has_insert;
+    has_insert = setbasic_insert(set, x);
+    SYMENGINE_C_ASSERT(has_insert == 1);
+    SYMENGINE_C_ASSERT(setbasic_size(set) == 1);
+
+    has_insert = setbasic_insert(set, x);
+    SYMENGINE_C_ASSERT(has_insert == 0);
+
+    basic y;
+    basic_init(y);
+    symbol_set(y, "y");
+
+    int is_found;
+    is_found = setbasic_find(set, x);
+    SYMENGINE_C_ASSERT(is_found == 1);
+
+    is_found = setbasic_find(set, y);
+    SYMENGINE_C_ASSERT(is_found == 0);
+
+    setbasic_free(set);
+    basic_free(x);
+    basic_free(y);
+}
+
 void test_get_args()
 {
     basic x, y, z, e;
@@ -147,12 +180,41 @@ void test_get_args()
     basic_free(z);
 }
 
+void test_free_symbols()
+{
+    basic x, y, z, e;
+    basic_init(x);
+    basic_init(y);
+    basic_init(z);
+    basic_init(e);
+    symbol_set(x, "x");
+    symbol_set(y, "y");
+    symbol_set(z, "z");
+
+    integer_set_ui(e, 123);
+    basic_add(e, e, x);
+    basic_pow(e, e, y);
+    basic_div(e, e, z);
+
+    CSetBasic *symbols = setbasic_new();
+    basic_free_symbols(e, symbols);
+    SYMENGINE_C_ASSERT(setbasic_size(symbols) == 3);
+    setbasic_free(symbols);
+
+    basic_free(e);
+    basic_free(x);
+    basic_free(y);
+    basic_free(z);
+}
+
 int main(int argc, char* argv[])
 {
     test_cwrapper();
     test_CVectorInt1();
     test_CVectorInt2();
     test_CVecBasic();
+    test_CSetBasic();
     test_get_args();
+    test_free_symbols();
     return 0;
 }
