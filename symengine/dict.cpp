@@ -116,11 +116,12 @@ std::ostream& operator<<(std::ostream& out, const SymEngine::set_basic& d)
     return print_vec_rcp(out, d);
 }
 
+#if defined(HAVE_SYMENGINE_PIRANHA)
 std::ostream& operator<<(std::ostream& out, const SymEngine::hash_set& d)
 {
     return print_set(out, d);
 }
-
+#endif
 
 namespace SymEngine {
 
@@ -221,6 +222,7 @@ bool umap_basic_basic_eq(const umap_basic_basic &a,
     return true;
 }
 
+#if defined(HAVE_SYMENGINE_PIRANHA)
 bool hash_set_eq(const hash_set &a,
         const hash_set &b)
 {
@@ -233,6 +235,7 @@ bool hash_set_eq(const hash_set &a,
     }
     return true;
 }
+#endif
 
 bool vec_basic_eq(const vec_basic &a, const vec_basic &b)
 {
@@ -309,6 +312,7 @@ int map_uint_mpz_compare(const map_uint_mpz &A, const map_uint_mpz &B)
     return 0;
 }
 
+#if defined(HAVE_SYMENGINE_PIRANHA)
 int hash_set_compare(const hash_set &A, const hash_set &B)
 {
     if (A.size() != B.size())
@@ -323,6 +327,7 @@ int hash_set_compare(const hash_set &A, const hash_set &B)
     }
     return 0;
 }
+#endif
 
 }
 

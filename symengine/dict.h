@@ -9,8 +9,9 @@
 #define SYMENGINE_DICT_H
 
 #include <gmpxx.h>
-#include <piranha/mp_integer.hpp>
-#include <piranha/hash_set.hpp>
+#if defined(HAVE_SYMENGINE_PIRANHA)
+#include <piranha/piranha.hpp>
+#endif
 
 namespace SymEngine {
 
@@ -49,6 +50,7 @@ void insert(T1 &m, const T2 &first, const T3 &second) {
     m.insert(std::pair<T2, T3>(first, second));
 }
 
+#if defined(HAVE_SYMENGINE_PIRANHA)
 //! Definition of pair, for the Polynomial terms
 struct m_pair
 {
@@ -76,6 +78,11 @@ typedef struct
 
 //! hash_set container from Piranha
 typedef piranha::hash_set<m_pair, pair_hash, pair_eq> hash_set;
+//! \return true if the two hash_set `a` and `b` are equal. Otherwise false.
+bool hash_set_eq(const hash_set &a, const hash_set &b);
+//! \return -1, 0, 1 for a <b, a == b, a > b
+int hash_set_compare(const hash_set &A, const hash_set &B);
+#endif
 
 //! \return true if the two dictionaries `a` and `b` are equal. Otherwise false.
 bool umap_basic_num_eq(const umap_basic_num &a, const umap_basic_num &b);
@@ -86,8 +93,6 @@ bool map_basic_basic_eq(const map_basic_basic &a, const map_basic_basic &b);
 //! \return true if the two dictionaries `a` and `b` are equal. Otherwise false.
 bool umap_basic_basic_eq(const umap_basic_basic &a,
         const umap_basic_basic &b);
-//! \return true if the two hash_set `a` and `b` are equal. Otherwise false.
-bool hash_set_eq(const hash_set &a, const hash_set &b);
 //! \return true if the two vectors `a` and `b` are equal. Otherwise false.
 bool vec_basic_eq(const vec_basic &a, const vec_basic &b);
 //! \return true if the two vectors `a` and `b` are equal up to a permutation. Otherwise false.
@@ -103,8 +108,6 @@ int map_basic_num_compare(const map_basic_num &a, const map_basic_num &b);
 int vec_basic_compare(const vec_basic &a, const vec_basic &b);
 //! \return -1, 0, 1 for a < b, a == b, a > b
 int map_uint_mpz_compare(const map_uint_mpz &a, const map_uint_mpz &b);
-//! \return -1, 0, 1 for a <b, a == b, a > b
-int hash_set_compare(const hash_set &A, const hash_set &B);
 
 
 //! Part of umap_vec_mpz:
@@ -143,7 +146,9 @@ std::ostream& operator<<(std::ostream& out, const SymEngine::map_basic_basic& d)
 std::ostream& operator<<(std::ostream& out, const SymEngine::umap_basic_basic& d);
 std::ostream& operator<<(std::ostream& out, const SymEngine::vec_basic& d);
 std::ostream& operator<<(std::ostream& out, const SymEngine::set_basic& d);
+#if defined(HAVE_SYMENGINE_PIRANHA)
 std::ostream& operator<<(std::ostream& out, const SymEngine::hash_set& d);
+#endif
 
 #endif
 

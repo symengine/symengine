@@ -6,6 +6,7 @@
 #include <symengine/mul.h>
 #include <symengine/pow.h>
 #include <symengine/dict.h>
+#include <symengine/symengine_config.h>
 
 using SymEngine::UnivariatePolynomial;
 using SymEngine::univariate_polynomial;
@@ -21,8 +22,11 @@ using SymEngine::one;
 using SymEngine::zero;
 using SymEngine::integer;
 using SymEngine::vec_basic_eq_perm;
+
+#if defined(HAVE_SYMENGINE_PIRANHA)
 using SymEngine::hash_set;
 using SymEngine::m_pair;
+#endif
 
 TEST_CASE("Constructor of UnivariatePolynomial", "[UnivariatePolynomial]")
 {   
@@ -162,6 +166,7 @@ TEST_CASE("Univariate Polynomial expand", "[UnivariatePolynomial][expand]")
     //std::cout<<c->__str__()<<std::endl;
 }
 
+#if defined(HAVE_SYMENGINE_PIRANHA)
 TEST_CASE("Testing hash_set", "[hash_set]")
 {
     m_pair t1, t2;
@@ -179,7 +184,7 @@ TEST_CASE("Testing hash_set", "[hash_set]")
 
     std::stringstream o;
     o << s;
-    REQUIRE(o == "{2: 1, 3: 2}");
+    REQUIRE(o.str() == "{2: 1, 3: 2}");
 
     REQUIRE(hash_set_eq(s, q) == 1);
     REQUIRE(hash_set_eq(s, p) == 0);
@@ -188,3 +193,4 @@ TEST_CASE("Testing hash_set", "[hash_set]")
     REQUIRE(hash_set_compare(p, s) == -1);
     REQUIRE(hash_set_compare(s, q) == 0);
 }
+#endif
