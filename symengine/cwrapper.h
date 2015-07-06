@@ -160,9 +160,25 @@ void vecbasic_push_back(CVecBasic *self, const basic value);
 void vecbasic_get(CVecBasic *self, int n, basic result);
 size_t vecbasic_size(CVecBasic *self);
 
+//! Wrapper for set_basic
+
+typedef struct CSetBasic CSetBasic;
+
+CSetBasic* setbasic_new();
+void setbasic_free(CSetBasic *self);
+//! Returns 1 if insert is successful and 0 if set already contains the value
+//! and insertion is unsuccessful
+int setbasic_insert(CSetBasic *self, const basic value);
+//! Returns 1 if value is found in the set and 0 if not
+int setbasic_find(CSetBasic *self, basic value);
+size_t setbasic_size(CSetBasic *self);
+
 // -------------------------------------
 
+//! Returns a CVecBasic of vec_basic given by get_args
 void basic_get_args(const basic self, CVecBasic *args);
+//! Returns a CSetBasic of set_basic given by free_symbols
+void basic_free_symbols(const basic self, CSetBasic *symbols);
 
 #ifdef __cplusplus
 }

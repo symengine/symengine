@@ -11,6 +11,7 @@
 #include <symengine/add.h>
 #include <symengine/number.h>
 #include <symengine/constants.h>
+#include <symengine/visitor.h>
 
 using SymEngine::Basic;
 using SymEngine::RCP;
@@ -281,11 +282,47 @@ size_t vecbasic_size(CVecBasic *self)
     return self->m.size();
 }
 
+// C Wrapper for set_basic
+
+struct CSetBasic {
+    SymEngine::set_basic m;
+};
+
+CSetBasic* setbasic_new()
+{
+    return new CSetBasic;
+}
+
+void setbasic_free(CSetBasic *self)
+{
+    delete self;
+}
+
+int setbasic_insert(CSetBasic *self, const basic value)
+{
+    return (self->m.insert(value->m)).second ? 1 : 0;
+}
+
+int setbasic_find(CSetBasic *self, basic value)
+{
+    return self->m.find(value->m) != (self->m).end() ? 1 : 0;
+}
+
+size_t setbasic_size(CSetBasic *self)
+{
+    return self->m.size();
+}
+
 // ----------------------
 
 void basic_get_args(const basic self, CVecBasic *args)
 {
     args->m = self->m->get_args();
+}
+
+void basic_free_symbols(const basic self, CSetBasic *symbols)
+{
+    symbols->m = SymEngine::free_symbols(*(self->m));
 }
 
 }
