@@ -76,12 +76,10 @@ install(TARGETS symengine
 install(FILES ${HEADERS} "${symengine_BINARY_DIR}/symengine/symengine_config.h"
     DESTINATION include/symengine)
 
-add_subdirectory(catch)
-
-# Include Catch headers:
-include_directories(BEFORE ${catch_SOURCE_DIR})
-
 if (BUILD_TESTS)
+    add_subdirectory(catch)
+    # Include Catch headers:
+    include_directories(BEFORE ${catch_SOURCE_DIR})
     add_subdirectory(tests)
 endif()
 if (WITH_RUBY)
