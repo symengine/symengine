@@ -11,24 +11,24 @@ using namespace SymEngine;
 
 TEST_CASE("Constructors of expression", "[expression]")
 {
-	expression e0 = new Symbol("x");
+	expression e0 = symbol("x");
 }
 
 TEST_CASE("Printing of expression", "[expression]")
 {
-	expression e0 = new Symbol("x");
+	expression e0 = symbol("x");
 	std::cout << e0 << '\n';
 }
 
 TEST_CASE("Arithmetic of expression", "[expression]")
 {
-	expression x = new Symbol("x"), y = new Symbol("y");
+	expression x = symbol("x"), y = symbol("y");
 	auto z = x + y;
 	std::cout << z << '\n';
 	z += y;
 	std::cout << z << '\n';
-	assert(z == x + y + y);
-	assert(z == x + 2 * y);
+	REQUIRE(z == x + y + y);
+	REQUIRE(z == x + 2 * y);
 	std::cout << pow(z,z) << '\n';
 	std::cout << pow(z,45) << '\n';
 	auto t1 = std::chrono::high_resolution_clock::now();
