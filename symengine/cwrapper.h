@@ -55,11 +55,12 @@ struct CRCPBasic_C
 //  For C, define a dummy struct with the right size, so that it can be
 //  allocated on the stack. For C++, the CRCPBasic is declared in cwrapper.cpp.
 #ifdef __cplusplus
-typedef struct CRCPBasic basic[1];
+typedef struct CRCPBasic basic_struct;
 #else
-typedef struct CRCPBasic_C basic[1];
+typedef struct CRCPBasic_C basic_struct;
 #endif
 
+typedef basic_struct basic[1];
 
 //! Initialize a new basic instance.
 void basic_init(basic s);
