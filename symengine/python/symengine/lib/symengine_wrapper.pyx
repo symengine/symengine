@@ -111,16 +111,6 @@ def sympy2symengine(a, raise_error=False):
             for e in r:
                 v.append(e)
         return DenseMatrix(row, col, v)
-    elif isinstance(a, tuple):
-        v = []
-        for e in a:
-            v.append(sympy2symengine(e, True))
-        return tuple(v)
-    elif isinstance(a, list):
-        v = []
-        for e in a:
-            v.append(sympy2symengine(e, True))
-        return v
     if raise_error:
         raise SympifyError("sympy2symengine: Cannot convert '%r' to a symengine type." % a)
 
@@ -165,6 +155,8 @@ def sympify(a, raise_error=True):
         return v
     elif hasattr(a, '_symengine_'):
         return a._symengine_()
+    elif hasattr(a, '_sympy_'):
+        return sympy2symengine(a._sympy_(), raise_error)
     return sympy2symengine(a, raise_error)
 
 cdef class Basic(object):
@@ -407,8 +399,21 @@ cdef class Integer(Number):
         return sympy.Integer(deref(self.thisptr).__str__().decode("utf-8"))
 
     def _sage_(self):
-        from sage.symbolic.symengine_conversions import convert_to_integer
-        return convert_to_integer(self)
+        try:
+            from sage.symbolic.symengine_conversions import convert_to_integer
+            return convert_to_integer(self)
+        except ImportError:
+            import sage.all as sage
+            return sage.Integer(str(self))
+
+    def __int__(self):
+        return int(str(self))
+
+    def __long__(self):
+        return long(str(self))
+
+    def __float__(self):
+        return float(str(self))
 
 
 cdef class RealDouble(Number):
@@ -426,7 +431,10 @@ cdef class RealDouble(Number):
     def _sage_(self):
         import sage.all as sage
         cdef double i = deref(symengine.rcp_static_cast_RealDouble(self.thisptr)).as_double()
-        return sage.RealDoubleField(i)
+        return sage.RealDoubleField()(i)
+
+    def __float__(self):
+        return float(str(self))
 
 cdef class ComplexDouble(Number):
 
@@ -448,8 +456,7 @@ cdef class ComplexDouble(Number):
 
     def _sage_(self):
         import sage.all as sage
-        cdef double complex i = deref(symengine.rcp_static_cast_ComplexDouble(self.thisptr)).as_complex_double()
-        return sage.ComplexNumber(i)
+        return self.real_part()._sage_() + sage.I * self.imaginary_part()._sage_()
 
 cdef class RealMPFR(Number):
     IF HAVE_SYMENGINE_MPFR:
@@ -471,8 +478,15 @@ cdef class RealMPFR(Number):
             return sympy.Float(str(self), prec)
 
         def _sage_(self):
-            from sage.symbolic.symengine_conversions import convert_to_real_number
-            return convert_to_real_number(self)
+            try:
+                from sage.symbolic.symengine_conversions import convert_to_real_number
+                return convert_to_real_number(self)
+            except ImportError:
+                import sage.all as sage
+                return sage.RealField(int(self.get_prec()))(str(self))
+
+        def __float__(self):
+            return float(str(self))
     ELSE:
         pass
 
@@ -496,8 +510,12 @@ cdef class ComplexMPC(Number):
             return self.real_part()._sympy_() + sympy.I * self.imaginary_part()._sympy_()
 
         def _sage_(self):
-            from sage.symbolic.symengine_conversions import convert_to_mpcomplex_number
-            return convert_to_mpcomplex_number(self)
+            try:
+                from sage.symbolic.symengine_conversions import convert_to_mpcomplex_number
+                return convert_to_mpcomplex_number(self)
+            except ImportError:
+                import sage.all as sage
+                return sage.MPComplexField(int(self.get_prec()))(str(self.real_part()), str(self.imaginary_part()))
     ELSE:
         pass
 
@@ -514,8 +532,12 @@ cdef class Rational(Number):
         return rat[0]._sympy_() / rat[1]._sympy_()
 
     def _sage_(self):
-        from sage.symbolic.symengine_conversions import convert_to_rational
-        return convert_to_rational(self)
+        try:
+            from sage.symbolic.symengine_conversions import convert_to_rational
+            return convert_to_rational(self)
+        except ImportError:
+            rat = self.get_num_den()
+            return rat[0]._sage_() / rat[1]._sage_()
 
 cdef class Complex(Number):
 
