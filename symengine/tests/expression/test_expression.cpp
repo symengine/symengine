@@ -11,18 +11,18 @@ using namespace SymEngine;
 
 TEST_CASE("Constructors of expression", "[expression]")
 {
-	expression e0 = new Symbol("x");
+	expression e0 = symbol("x");
 }
 
 TEST_CASE("Printing of expression", "[expression]")
 {
-	expression e0 = new Symbol("x");
+	expression e0 = symbol("x");
 	std::cout << e0 << '\n';
 }
 
 TEST_CASE("Arithmetic of expression", "[expression]")
 {
-	expression x = new Symbol("x"), y = new Symbol("y");
+	expression x = symbol("x"), y = symbol("y");
 	auto z = x + y;
 	std::cout << z << '\n';
 	z += y;
