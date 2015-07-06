@@ -70,7 +70,7 @@ public:
 
     void bvisit(const Pow &x) {
         T exp_ = apply(*(x.get_exp()));
-        if (eq(x.get_base(), E)) {
+        if (eq(*(x.get_base()), *E)) {
             result_ = std::exp(exp_);
         } else {
             T base_ = apply(*(x.get_base()));
@@ -193,9 +193,9 @@ public:
     };
 
     void bvisit(const Constant &x) {
-        if (x.__eq__(*pi)) {
+        if (eq(x, *pi)) {
             result_ = std::atan2(0, -1);
-        } else if (x.__eq__(*E)) {
+        } else if (eq(x, *E)) {
             result_ = std::exp(1);
         } else {
             throw std::runtime_error("Constant " + x.get_name() + " is not implemented.");
@@ -408,9 +408,9 @@ std::vector<fn> init_eval_double()
         return ::tgamma(tmp);
     };
     table[CONSTANT] = [](const Basic &x) {
-        if (x.__eq__(*pi)) {
+        if (eq(x, *pi)) {
             return ::atan2(0, -1);
-        } else if (x.__eq__(*E)) {
+        } else if (eq(x, *E)) {
             return ::exp(1);
         } else {
             throw std::runtime_error("Constant " + static_cast<const Constant &>(x).get_name() + " is not implemented.");

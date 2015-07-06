@@ -73,8 +73,8 @@ std::size_t Pow::__hash__() const
 bool Pow::__eq__(const Basic &o) const
 {
     if (is_a<Pow>(o) &&
-        eq(base_, static_cast<const Pow &>(o).base_) &&
-        eq(exp_, static_cast<const Pow &>(o).exp_))
+        eq(*base_, *(static_cast<const Pow &>(o).base_)) &&
+        eq(*exp_, *(static_cast<const Pow &>(o).exp_)))
             return true;
 
     return false;
@@ -93,11 +93,11 @@ int Pow::compare(const Basic &o) const
 
 RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
 {
-    if (eq(b, zero)) return one;
-    if (eq(b, one)) return a;
-    if (eq(a, zero)) return zero;
-    if (eq(a, one)) return one;
-    if (eq(a, minus_one)) {
+    if (eq(*b, *zero)) return one;
+    if (eq(*b, *one)) return a;
+    if (eq(*a, *zero)) return zero;
+    if (eq(*a, *one)) return one;
+    if (eq(*a, *minus_one)) {
         if (is_a<Integer>(*b)) {
             return is_a<Integer>(*div(b, integer(2))) ? one : minus_one;
         } else if (is_a<Rational>(*b) &&
@@ -299,7 +299,7 @@ RCP<const Basic> pow_expand(const RCP<const Pow> &self)
     }
 
     if (! is_a<Integer>(*self->exp_) || ! is_a<Add>(*_base)) {
-        if (neq(_base, self->base_)) {
+        if (neq(*_base, *self->base_)) {
             return pow(_base, self->exp_);
         } else {
             return self;
@@ -439,7 +439,7 @@ bool Log::is_canonical(const RCP<const Basic> &arg)
     if (is_a<Integer>(*arg) && rcp_static_cast<const Integer>(arg)->is_one())
         return false;
     // log(E)
-    if (eq(arg, E))
+    if (eq(*arg, *E))
         return false;
     // Currently not implemented, however should be expanded as `-ipi + log(-arg)`
     if (is_a_Number(*arg) && rcp_static_cast<const Number>(arg)->is_negative())
@@ -462,7 +462,7 @@ std::size_t Log::__hash__() const
 bool Log::__eq__(const Basic &o) const
 {
     if (is_a<Log>(o) &&
-        eq(arg_, static_cast<const Log &>(o).get_arg()))
+        eq(*arg_, *(static_cast<const Log &>(o).get_arg())))
             return true;
 
     return false;
@@ -496,11 +496,11 @@ RCP<const Basic> Log::diff(const RCP<const Symbol> &x) const
 
 RCP<const Basic> log(const RCP<const Basic> &arg)
 {
-    if (eq(arg, zero)) {
+    if (eq(*arg, *zero)) {
         throw std::runtime_error("log(0) is complex infinity. Yet to be implemented");
     }
-    if (eq(arg, one)) return zero;
-    if (eq(arg, E)) return one;
+    if (eq(*arg, *one)) return zero;
+    if (eq(*arg, *E)) return one;
     if (is_a_Number(*arg)) {
         RCP<const Number> _arg = rcp_static_cast<const Number>(arg);
         if (!_arg->is_exact()) {

@@ -126,15 +126,15 @@ void StrPrinter::bvisit(const Add &x) {
     std::map<RCP<const Basic>, RCP<const Number>,
             RCPBasicKeyLessCmp> dict(x.dict_.begin(), x.dict_.end());
 
-    if (neq(x.coef_, zero)) {
+    if (neq(*(x.coef_), *zero)) {
         o << this->apply(x.coef_);
         first = false;
     }
     for (auto &p: dict) {
         std::string t;
-        if (eq(p.second, one)) {
+        if (eq(*(p.second), *one)) {
             t = this->apply(p.first);
-        } else if(eq(p.second, minus_one)) {
+        } else if(eq(*(p.second), *minus_one)) {
             t = "-" + parenthesizeLT(p.first, PrecedenceEnum::Mul);
         } else {
             t = parenthesizeLT(p.second, PrecedenceEnum::Mul) + "*" + parenthesizeLT(p.first, PrecedenceEnum::Mul);
@@ -161,9 +161,9 @@ void StrPrinter::bvisit(const Mul &x) {
     std::map<RCP<const Basic>, RCP<const Basic>,
             RCPBasicKeyLessCmp> dict(x.dict_.begin(), x.dict_.end());
 
-    if (eq(x.coef_, minus_one)) {
+    if (eq(*(x.coef_), *minus_one)) {
         o << "-";
-    } else if (neq(x.coef_, one)) {
+    } else if (neq(*(x.coef_), *one)) {
         o << parenthesizeLT(x.coef_, PrecedenceEnum::Mul) << "*";
         num = true;
     }
@@ -173,7 +173,7 @@ void StrPrinter::bvisit(const Mul &x) {
              rcp_static_cast<const Integer>(p.second)->is_negative()) ||
             (is_a<Rational>(*p.second) &&
              rcp_static_cast<const Rational>(p.second)->is_negative())) {
-            if(eq(p.second, minus_one)) {
+            if(eq(*(p.second), *minus_one)) {
                 o2 << parenthesizeLT(p.first, PrecedenceEnum::Mul);
             } else {
                 o2 << parenthesizeLE(p.first, PrecedenceEnum::Pow);
@@ -183,7 +183,7 @@ void StrPrinter::bvisit(const Mul &x) {
             o2 << "*";
             den++;
         } else {
-            if(eq(p.second, one)) {
+            if(eq(*(p.second), *one)) {
                 o << parenthesizeLT(p.first, PrecedenceEnum::Mul);
             } else {
                 o << parenthesizeLE(p.first, PrecedenceEnum::Pow);

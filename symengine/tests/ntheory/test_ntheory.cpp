@@ -8,6 +8,7 @@
 #include <symengine/mul.h>
 #include <symengine/dict.h>
 
+using SymEngine::Basic;
 using SymEngine::Integer;
 using SymEngine::Rational;
 using SymEngine::print_stack_on_segfault;
@@ -41,23 +42,23 @@ TEST_CASE("test_gcd_lcm(): ntheory", "[ntheory]")
     RCP<const Integer> s = integer(2);
     RCP<const Integer> t = integer(3);
 
-    REQUIRE(eq(gcd(*i2, *i4), integer(2)));
-    REQUIRE(eq(gcd(*i2, *i3), integer(1)));
-    REQUIRE(eq(gcd(*i2, *i6), integer(2)));
-    REQUIRE(eq(gcd(*i3, *i6), integer(3)));
+    REQUIRE(eq(*gcd(*i2, *i4), *integer(2)));
+    REQUIRE(eq(*gcd(*i2, *i3), *integer(1)));
+    REQUIRE(eq(*gcd(*i2, *i6), *integer(2)));
+    REQUIRE(eq(*gcd(*i3, *i6), *integer(3)));
 
-    REQUIRE(eq(lcm(*i2, *i4), integer(4)));
-    REQUIRE(eq(lcm(*i2, *i3), integer(6)));
-    REQUIRE(eq(lcm(*i2, *i6), integer(6)));
-    REQUIRE(eq(lcm(*i3, *i6), integer(6)));
+    REQUIRE(eq(*lcm(*i2, *i4), *integer(4)));
+    REQUIRE(eq(*lcm(*i2, *i3), *integer(6)));
+    REQUIRE(eq(*lcm(*i2, *i6), *integer(6)));
+    REQUIRE(eq(*lcm(*i3, *i6), *integer(6)));
 
     gcd_ext(outArg(g), outArg(s), outArg(t), *i2, *i3);
-    REQUIRE(eq(g, integer(1)));
-    REQUIRE(eq(g, add(mul(i2, s), mul(i3, t)))); // check if g = i2*s + i3*t
+    REQUIRE(eq(*g, *integer(1)));
+    REQUIRE(eq(*g, *add(mul(i2, s), mul(i3, t)))); // check if g = i2*s + i3*t
 
     gcd_ext(outArg(g), outArg(s), outArg(t), *i3, *i6);
-    REQUIRE(eq(g, integer(3)));
-    REQUIRE(eq(g, add(mul(i3, s), mul(i6, t)))); // check if g = i3*s + i6*t
+    REQUIRE(eq(*g, *integer(3)));
+    REQUIRE(eq(*g, *add(mul(i3, s), mul(i6, t)))); // check if g = i3*s + i6*t
 }
 
 TEST_CASE("test_nextprime(): ntheory", "[ntheory]")
@@ -66,9 +67,9 @@ TEST_CASE("test_nextprime(): ntheory", "[ntheory]")
     RCP<const Integer> i5 = integer(5);
     RCP<const Integer> i6 = integer(6);
 
-    REQUIRE(eq(nextprime(*i1), integer(2)));
-    REQUIRE(eq(nextprime(*i5), integer(7)));
-    REQUIRE(eq(nextprime(*i6), integer(7)));
+    REQUIRE(eq(*nextprime(*i1), *integer(2)));
+    REQUIRE(eq(*nextprime(*i5), *integer(7)));
+    REQUIRE(eq(*nextprime(*i6), *integer(7)));
 }
 
 TEST_CASE("test_probab_prime_p(): ntheory", "[ntheory]")
@@ -91,13 +92,13 @@ TEST_CASE("test_modular_inverse(): ntheory", "[ntheory]")
     RCP<const Integer> b;
 
     REQUIRE(mod_inverse(outArg(b), *i3, *i5) != 0);
-    REQUIRE(eq(b, integer(2)));
+    REQUIRE(eq(*b, *integer(2)));
 
     REQUIRE(mod_inverse(outArg(b), *i3, *i8) != 0);
-    REQUIRE(eq(b, integer(3)));
+    REQUIRE(eq(*b, *integer(3)));
 
     REQUIRE(mod_inverse(outArg(b), *i3, *i11) != 0);
-    REQUIRE(eq(b, integer(4)));
+    REQUIRE(eq(*b, *integer(4)));
 }
 
 TEST_CASE("test_modulo(): ntheory", "[ntheory]")
@@ -109,13 +110,13 @@ TEST_CASE("test_modulo(): ntheory", "[ntheory]")
     RCP<const Number> b;
 
     b = mod(*i5, *i3);
-    REQUIRE(eq(b, integer(2)));
+    REQUIRE(eq(*b, *integer(2)));
 
     b = mod(*i11, *i8);
-    REQUIRE(eq(b, integer(3)));
+    REQUIRE(eq(*b, *integer(3)));
 
     b = mod(*i11, *i3);
-    REQUIRE(eq(b, integer(2)));
+    REQUIRE(eq(*b, *integer(2)));
 }
 
 TEST_CASE("test_fibonacci_lucas(): ntheory", "[ntheory]")
@@ -123,23 +124,23 @@ TEST_CASE("test_fibonacci_lucas(): ntheory", "[ntheory]")
     RCP<const Integer> g;
     RCP<const Integer> s;
 
-    REQUIRE(eq(fibonacci(1), integer(1)));
-    REQUIRE(eq(fibonacci(2), integer(1)));
-    REQUIRE(eq(fibonacci(3), integer(2)));
-    REQUIRE(eq(fibonacci(5), integer(5)));
+    REQUIRE(eq(*fibonacci(1), *integer(1)));
+    REQUIRE(eq(*fibonacci(2), *integer(1)));
+    REQUIRE(eq(*fibonacci(3), *integer(2)));
+    REQUIRE(eq(*fibonacci(5), *integer(5)));
 
-    REQUIRE(eq(lucas(1), integer(1)));
-    REQUIRE(eq(lucas(2), integer(3)));
-    REQUIRE(eq(lucas(3), integer(4)));
-    REQUIRE(eq(lucas(5), integer(11)));
+    REQUIRE(eq(*lucas(1), *integer(1)));
+    REQUIRE(eq(*lucas(2), *integer(3)));
+    REQUIRE(eq(*lucas(3), *integer(4)));
+    REQUIRE(eq(*lucas(5), *integer(11)));
 
     fibonacci2(outArg(g), outArg(s), 10);
-    REQUIRE(eq(g, integer(55)));
-    REQUIRE(eq(s, integer(34)));
+    REQUIRE(eq(*g, *integer(55)));
+    REQUIRE(eq(*s, *integer(34)));
 
     lucas2(outArg(g), outArg(s), 10);
-    REQUIRE(eq(g, integer(123)));
-    REQUIRE(eq(s, integer(76)));
+    REQUIRE(eq(*g, *integer(123)));
+    REQUIRE(eq(*s, *integer(76)));
 }
 
 TEST_CASE("test_binomial(): ntheory", "[ntheory]")
@@ -149,24 +150,24 @@ TEST_CASE("test_binomial(): ntheory", "[ntheory]")
     RCP<const Integer> i0 = integer(0);
     RCP<const Integer> m10 = integer(-10);
 
-    REQUIRE(eq(binomial(*i10, 1), i10));
-    REQUIRE(eq(binomial(*i5, 2), i10));
-    REQUIRE(eq(binomial(*i5, 10), i0));
-    REQUIRE(eq(binomial(*i10, 11), i0));
-    REQUIRE(eq(binomial(*i10, 2), integer(45)));
+    REQUIRE(eq(*binomial(*i10, 1), *i10));
+    REQUIRE(eq(*binomial(*i5, 2), *i10));
+    REQUIRE(eq(*binomial(*i5, 10), *i0));
+    REQUIRE(eq(*binomial(*i10, 11), *i0));
+    REQUIRE(eq(*binomial(*i10, 2), *integer(45)));
 
-    REQUIRE(eq(binomial(*m10, 3), integer(-220)));
-    REQUIRE(eq(binomial(*m10, 2), integer(55)));
+    REQUIRE(eq(*binomial(*m10, 3), *integer(-220)));
+    REQUIRE(eq(*binomial(*m10, 2), *integer(55)));
 }
 
 TEST_CASE("test_factorial(): ntheory", "[ntheory]")
 {
     RCP<const Integer> i1 = integer(1);
 
-    REQUIRE(eq(factorial(1), i1));
-    REQUIRE(eq(factorial(0), i1));
-    REQUIRE(eq(factorial(5), integer(120)));
-    REQUIRE(eq(factorial(9), integer(362880)));
+    REQUIRE(eq(*factorial(1), *i1));
+    REQUIRE(eq(*factorial(0), *i1));
+    REQUIRE(eq(*factorial(5), *integer(120)));
+    REQUIRE(eq(*factorial(9), *integer(362880)));
 }
 
 TEST_CASE("test_factor(): ntheory", "[ntheory]")
@@ -218,15 +219,15 @@ TEST_CASE("test_factor_lehman_method(): ntheory", "[ntheory]")
     REQUIRE(factor_lehman_method(outArg(f), *i47) == 0);
 
     REQUIRE(factor_lehman_method(outArg(f), *i21) > 0);
-    REQUIRE((divides(*i21, *f) && !eq(f, i1) && !eq(f, i21)));   //Lehman's method returns only a proper divisor when composite
+    REQUIRE((divides(*i21, *f) && !eq(*f, *i1) && !eq(*f, *i21)));   //Lehman's method returns only a proper divisor when composite
     REQUIRE(factor_lehman_method(outArg(f), *i121) > 0);
-    REQUIRE((divides(*i121, *f) && !eq(f, i1) && !eq(f, i121)));
+    REQUIRE((divides(*i121, *f) && !eq(*f, *i1) && !eq(*f, *i121)));
     REQUIRE(factor_lehman_method(outArg(f), *i122) > 0);
-    REQUIRE((divides(*i122, *f) && !eq(f, i1) && !eq(f, i122)));
+    REQUIRE((divides(*i122, *f) && !eq(*f, *i1) && !eq(*f, *i122)));
     REQUIRE(factor_lehman_method(outArg(f), *i900) > 0);
-    REQUIRE((divides(*i900, *f) && !eq(f, i1) && !eq(f, i900)));
+    REQUIRE((divides(*i900, *f) && !eq(*f, *i1) && !eq(*f, *i900)));
     REQUIRE(factor_lehman_method(outArg(f), *i1001) > 0);
-    REQUIRE((divides(*i1001, *f) && !eq(f, i1) && !eq(f, i1001)));
+    REQUIRE((divides(*i1001, *f) && !eq(*f, *i1) && !eq(*f, *i1001)));
 }
 
 TEST_CASE("test_factor_pollard_pm1_method(): ntheory", "[ntheory]")
@@ -357,7 +358,7 @@ void _test_prime_factor_multiplicities(const RCP<const Integer> &a)
         }
     }
 
-    REQUIRE(eq(_a, integer(1)));
+    REQUIRE(eq(*_a, *integer(1)));
 }
 
 TEST_CASE("test_prime_factor_multiplicities(): ntheory", "[ntheory]") 
@@ -386,7 +387,7 @@ TEST_CASE("test_bernoulli(): ntheory", "[ntheory]")
     #ifdef HAVE_SYMENGINE_ARB
         r1 = bernoulli(12);
         r2 = Rational::from_two_ints(integer(-691), integer(2730));
-        REQUIRE(eq(r1, r2));
+        REQUIRE(eq(*r1, *r2));
     #else
         SYMENGINE_CHECK_THROW(bernoulli(12), std::runtime_error)
     #endif
@@ -399,7 +400,7 @@ TEST_CASE("test_crt(): ntheory", "[ntheory]")
     r = {integer(21), integer(31), integer(6), integer(17), integer(83)};
     m = {integer(30), integer(35), integer(45), integer(77), integer(88)};
     REQUIRE(crt(outArg(g), r, m) == true);
-    REQUIRE(eq(g, integer(9411)));
+    REQUIRE(eq(*g, *integer(9411)));
 
     r = {integer(3), integer(2), integer(1)};
     m = {integer(20), integer(14), integer(11)};
@@ -408,12 +409,12 @@ TEST_CASE("test_crt(): ntheory", "[ntheory]")
     r = {integer(3), integer(21), integer(23), integer(9), integer(45)};
     m = {integer(15), integer(48), integer(55), integer(61), integer(66)};
     REQUIRE(crt(outArg(g), r, m) == true);
-    REQUIRE(eq(g, integer(12453)));
+    REQUIRE(eq(*g, *integer(12453)));
 
     r = {integer(-1), integer(-1), integer(-1), integer(-1), integer(-1)};
     m = {integer(2), integer(3), integer(4), integer(5), integer(6)};
     REQUIRE(crt(outArg(g), r, m) == true);
-    REQUIRE(eq(g, integer(59)));
+    REQUIRE(eq(*g, *integer(59)));
 }
 
 TEST_CASE("test_primitive_root(): ntheory", "[ntheory]")
@@ -431,11 +432,11 @@ TEST_CASE("test_primitive_root(): ntheory", "[ntheory]")
 
     REQUIRE(primitive_root(outArg(g), *im18) == true);
     REQUIRE(multiplicative_order(outArg(p), g, im18) == true );
-    REQUIRE(eq(p, totient(im18)));
+    REQUIRE(eq(*p, *totient(im18)));
 
     REQUIRE(primitive_root(outArg(g), *i) == true);
     REQUIRE(multiplicative_order(outArg(p), g, i) == true );
-    REQUIRE(eq(p, totient(i)));
+    REQUIRE(eq(*p, *totient(i)));
 
     std::vector<RCP<const Integer>> roots, v;
     primitive_root_list(roots, *i162);
@@ -449,7 +450,10 @@ TEST_CASE("test_primitive_root(): ntheory", "[ntheory]")
     primitive_root_list(roots, *im22);
     REQUIRE(roots.size() == 4);
     v = {integer(7), integer(13), integer(17), integer(19)};
-    bool same = std::equal(v.begin(), v.end(), roots.begin(), SymEngine::eq);
+    bool same = std::equal(v.begin(), v.end(), roots.begin(),
+            [](const RCP<const Basic> &a, const RCP<const Basic> &b) {
+                return SymEngine::eq(*a, *b);
+            });
     REQUIRE(same == true);
 }
 
@@ -460,15 +464,15 @@ TEST_CASE("test_totient_carmichael(): ntheory", "[ntheory]")
     RCP<const Integer> i30 = integer(30);
     RCP<const Integer> im1729 = integer(-1729);
 
-    REQUIRE(eq(totient(i8), integer(4)));
-    REQUIRE(eq(totient(i9), integer(6)));
-    REQUIRE(eq(totient(i30), integer(8)));
-    REQUIRE(eq(totient(im1729), integer(1296)));
+    REQUIRE(eq(*totient(i8), *integer(4)));
+    REQUIRE(eq(*totient(i9), *integer(6)));
+    REQUIRE(eq(*totient(i30), *integer(8)));
+    REQUIRE(eq(*totient(im1729), *integer(1296)));
 
-    REQUIRE(eq(carmichael(i8), integer(2)));
-    REQUIRE(eq(carmichael(i9), integer(6)));
-    REQUIRE(eq(carmichael(i30), integer(4)));
-    REQUIRE(eq(carmichael(im1729), integer(36)));
+    REQUIRE(eq(*carmichael(i8), *integer(2)));
+    REQUIRE(eq(*carmichael(i9), *integer(6)));
+    REQUIRE(eq(*carmichael(i30), *integer(4)));
+    REQUIRE(eq(*carmichael(im1729), *integer(36)));
 }
 
 TEST_CASE("test_multiplicative_order(): ntheory", "[ntheory]")
@@ -485,13 +489,13 @@ TEST_CASE("test_multiplicative_order(): ntheory", "[ntheory]")
     REQUIRE(multiplicative_order(outArg(g), i0, i9) == false);
     REQUIRE(multiplicative_order(outArg(g), i2, i6) == false);
     REQUIRE(multiplicative_order(outArg(g), i1, i13) == true);
-    REQUIRE(eq(g, i1));
+    REQUIRE(eq(*g, *i1));
     REQUIRE(multiplicative_order(outArg(g), i13, i9) == true);
-    REQUIRE(eq(g, i3));
+    REQUIRE(eq(*g, *i3));
     REQUIRE(multiplicative_order(outArg(g), i2, i9) == true);
-    REQUIRE(eq(g, i6));
+    REQUIRE(eq(*g, *i6));
     REQUIRE(multiplicative_order(outArg(g), i3, i13) == true);
-    REQUIRE(eq(g, i3));
+    REQUIRE(eq(*g, *i3));
 }
 
 TEST_CASE("test_legendre_jacobi_kronecker(): ntheory", "[ntheory]")
@@ -557,7 +561,7 @@ TEST_CASE("test_nthroot_mod(): ntheory", "[ntheory]")
     REQUIRE(nthroot_mod(outArg(nthroot), i2, i3, i105) == false);
 
     REQUIRE(nthroot_mod(outArg(nthroot), i5, i1, i100) == true);
-    REQUIRE(eq(nthroot, i5));
+    REQUIRE(eq(*nthroot, *i5));
 
     REQUIRE(nthroot_mod(outArg(nthroot), im1, i2, i41) == true);
     rem = integer(nthroot->as_mpz() * nthroot->as_mpz() - im1->as_mpz());
@@ -580,7 +584,10 @@ TEST_CASE("test_nthroot_mod(): ntheory", "[ntheory]")
     nthroot_mod_list(roots, i9, i2, i27);
     REQUIRE(roots.size() == 6);
     v = {integer(3), integer(6), integer(12), integer(15), integer(21), integer(24)};
-    bool same = std::equal(v.begin(), v.end(), roots.begin(), SymEngine::eq);
+    bool same = std::equal(v.begin(), v.end(), roots.begin(),
+            [](const RCP<const Basic> &a, const RCP<const Basic> &b) {
+                return SymEngine::eq(*a, *b);
+            });
     REQUIRE(same == true);
 
     roots.clear();
@@ -605,10 +612,10 @@ TEST_CASE("test_powermod(): ntheory", "[ntheory]")
 
     REQUIRE(powermod(outArg(r), i2, im1, i4) == false);
     REQUIRE(powermod(outArg(r), i4, i3, i41) == true);
-    REQUIRE(eq(r, i23));
+    REQUIRE(eq(*r, *i23));
 
     REQUIRE(powermod(outArg(r), i2, i23->divint(*i41), i41) == true);
-    REQUIRE(eq(r, integer(8)));
+    REQUIRE(eq(*r, *integer(8)));
 
     powermod_list(powms, i15, i1->divint(*i18), i105);
     REQUIRE(powms.size() == 6);

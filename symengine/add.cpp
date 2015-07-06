@@ -68,7 +68,7 @@ std::size_t Add::__hash__() const
 bool Add::__eq__(const Basic &o) const
 {
     if (is_a<Add>(o) &&
-        eq(coef_, static_cast<const Add &>(o).coef_) &&
+        eq(*coef_, *(static_cast<const Add &>(o).coef_)) &&
         umap_basic_num_eq(dict_, static_cast<const Add &>(o).dict_))
         return true;
 
