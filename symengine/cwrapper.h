@@ -137,11 +137,6 @@ char* basic_str(const basic s);
 //! Frees the string s
 void basic_str_free(char* s);
 
-//! Returns an array of pointers to basic given by free_symbols
-void basic_free_symbols(const basic s, basic_struct** array, int *size);
-//! Returns an array of pointers to basic given by args
-void basic_get_args(const basic s, basic_struct** array, int *size);
-
 //! Return 1 if s is an Integer, 0 if not.
 int is_a_Integer(const basic s);
 //! Return 1 if s is an Rational, 0 if not.

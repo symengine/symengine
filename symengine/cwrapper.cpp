@@ -181,12 +181,12 @@ void basic_neg(basic s, const basic a)
 
 int basic_eq(const basic a, const basic b)
 {
-    return (SymEngine::eq(*RCP_const_cast(a), *RCP_const_cast(b))) ? 1 : 0;
+    return SymEngine::eq(a->m, b->m) ? 1 : 0;
 }
 
 int basic_neq(const basic a, const basic b)
 {
-    return (SymEngine::neq(*RCP_const_cast(a), *RCP_const_cast(b))) ? 1 : 0;
+    return SymEngine::neq(a->m, b->m) ? 1 : 0;
 }
 
 void basic_abs(basic s, const basic a)
@@ -210,28 +210,6 @@ char* basic_str(const basic s)
 void basic_str_free(char* s)
 {
     delete[] s;
-}
-
-void basic_free_symbols(const basic a, basic_struct** array, int *size)
-{
-    set_basic set_symbols = SymEngine::free_symbols(*(*RCP_const_cast(a)));
-    *size = set_symbols.size();
-    *array = (basic_struct*)malloc((*size)*sizeof(basic_struct));
-    int index = 0;
-    for (auto &a: set_symbols) {
-        *RCP_cast(&((*array)[index])) = a;
-    }
-}
-
-void basic_get_args(const basic a, basic_struct **array, int *size)
-{
-    SymEngine::vec_basic args = (*RCP_const_cast(a))->get_args();
-    *size = args.size();
-    *array = (basic_struct*)malloc((*size)*sizeof(basic_struct));
-    int index = 0;
-    for (auto &a: args) {
-        *RCP_cast(&((*array)[index])) = a;
-    }
 }
 
 int is_a_Integer(const basic c)
