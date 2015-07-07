@@ -9,20 +9,20 @@
 
 using namespace SymEngine;
 
-TEST_CASE("Constructors of expression", "[expression]")
+TEST_CASE("Constructors of Expression", "[Expression]")
 {
-	expression e0 = symbol("x");
+	Expression e0 = symbol("x");
 }
 
-TEST_CASE("Printing of expression", "[expression]")
+TEST_CASE("Printing of Expression", "[Expression]")
 {
-	expression e0 = symbol("x");
+	Expression e0 = symbol("x");
 	std::cout << e0 << '\n';
 }
 
-TEST_CASE("Arithmetic of expression", "[expression]")
+TEST_CASE("Arithmetic of Expression", "[Expression]")
 {
-	expression x = symbol("x"), y = symbol("y");
+	Expression x = symbol("x"), y = symbol("y");
 	auto z = x + y;
 	std::cout << z << '\n';
 	z += y;
