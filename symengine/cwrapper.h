@@ -185,6 +185,7 @@ void setbasic_free(CSetBasic *self);
 //! Returns 1 if insert is successful and 0 if set already contains the value
 //! and insertion is unsuccessful
 int setbasic_insert(CSetBasic *self, const basic value);
+void setbasic_get(CSetBasic *self, int n, basic result);
 //! Returns 1 if value is found in the set and 0 if not
 int setbasic_find(CSetBasic *self, basic value);
 size_t setbasic_size(CSetBasic *self);

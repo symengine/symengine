@@ -329,6 +329,11 @@ int setbasic_insert(CSetBasic *self, const basic value)
     return (self->m.insert(value->m)).second ? 1 : 0;
 }
 
+void setbasic_get(CSetBasic *self, int n, basic result)
+{
+    result->m = *std::next((self->m).begin(), n);
+}
+
 int setbasic_find(CSetBasic *self, basic value)
 {
     return self->m.find(value->m) != (self->m).end() ? 1 : 0;

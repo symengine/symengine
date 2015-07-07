@@ -163,6 +163,9 @@ void test_CSetBasic()
     is_found = setbasic_find(set, y);
     SYMENGINE_C_ASSERT(is_found == 0);
 
+    setbasic_get(set, 0, y);
+    SYMENGINE_C_ASSERT(basic_eq(x, y));
+
     setbasic_free(set);
     basic_free(x);
     basic_free(y);
