@@ -286,6 +286,9 @@ cdef class Basic(object):
         cdef symengine.set_basic _set = symengine.free_symbols(deref(self.thisptr))
         return {c2py(<RCP[const symengine.Basic]>(elem)) for elem in _set}
 
+    def _symbolic_(self, ring):
+        return ring(self._sage_())
+
 cdef class Symbol(Basic):
 
     def __cinit__(self, name = None):
@@ -808,6 +811,8 @@ cdef class MatrixBase:
     def __dealloc__(self):
         del self.thisptr
 
+    def _symbolic_(self, ring):
+        return ring(self._sage_())
 
 class MatrixError(Exception):
     pass
