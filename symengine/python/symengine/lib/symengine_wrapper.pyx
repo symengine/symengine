@@ -304,7 +304,7 @@ cdef class Symbol(Basic):
     def _sage_(self):
         cdef RCP[const symengine.Symbol] X = symengine.rcp_static_cast_Symbol(self.thisptr)
         import sage.all as sage
-        return sage.var(str(deref(X).get_name().decode("utf-8")))
+        return sage.SR.symbol(str(deref(X).get_name().decode("utf-8")))
 
 cdef class Constant(Basic):
 
