@@ -98,6 +98,30 @@ VALUE cbasic_neg(VALUE self){
     return cbasic_unary_op(self, basic_neg);
 }
 
+VALUE cbasic_get_args(VALUE self) {
+    basic_struct *this, *iterator_basic;
+    CVecBasic *args = vecbasic_new();
+    int size = 0;
+
+    Data_Get_Struct(self, basic_struct, this);
+    basic_get_args(this, args);
+
+    size = vecbasic_size(args);
+    VALUE ruby_array = rb_ary_new2(size);
+    int i = 0;
+    VALUE temp = NULL;
+    for(i = 0; i < size; i++) {
+        basic_init(iterator_basic);
+        vecbasic_get(args, i, iterator_basic);
+        temp = Data_Make_Struct(rb_obj_class(self), basic_struct, NULL,
+                                                    cbasic_free, iterator_basic);
+        rb_ary_push(ruby_array, temp);
+        basic_free(iterator_basic);
+    }
+    vecbasic_free(args);
+    return ruby_array;
+}
+
 VALUE cbasic_free_symbols(VALUE self) {
     basic_struct *this, *iterator_basic;
     CSetBasic *symbols = setbasic_new();

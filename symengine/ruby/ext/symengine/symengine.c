@@ -28,6 +28,7 @@ void Init_symengine() {
     rb_define_method(c_basic, "-@", cbasic_neg, 0);
     rb_define_method(c_basic, "to_s", cbasic_to_str, 0);
     rb_define_method(c_basic, "expand", cbasic_expand, 0);
+    rb_define_method(c_basic, "args", cbasic_get_args, 0);
     rb_define_protected_method(c_basic, "pr_free_symbols", cbasic_free_symbols, 0);
 
     //Symbol class

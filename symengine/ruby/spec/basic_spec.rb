@@ -111,6 +111,22 @@ describe SymEngine do
       end
     end
 
+    describe '#args' do
+      context 'with nothing as argument' do
+        it 'returns array of arguments' do
+          x = SymEngine::Symbol.new('x')
+          y = SymEngine::Symbol.new('y')
+          z = SymEngine::Symbol.new('z')
+          e = (x**y + z)
+          f = e.args
+          expect(f).to be_an_instance_of Array
+          expect(f.length).to be 2
+          puts f[0].to_s
+          puts f[1].to_s
+        end
+      end
+    end
+
     describe '#free_symbols' do
       context 'with nothing as argument' do
         it 'returns the set of symbols' do

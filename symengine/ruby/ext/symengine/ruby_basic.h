@@ -28,6 +28,8 @@ VALUE cbasic_neq(VALUE self, VALUE operand2);
 
 VALUE cbasic_neg(VALUE self);
 
+VALUE cbasic_get_args(VALUE self);
+
 VALUE cbasic_free_symbols(VALUE self);
 
 VALUE cbasic_to_str(VALUE self);
