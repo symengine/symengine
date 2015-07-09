@@ -845,9 +845,6 @@ def exp(x):
     cdef Basic X = sympify(x)
     return c2py(symengine.exp(X.thisptr))
 
-def densematrix(row, col, l):
-    return DenseMatrix(row, col, l)
-
 def eval_double(x):
     cdef Basic X = sympify(x)
     return c2py(<RCP[const symengine.Basic]>(symengine.real_double(symengine.eval_double(deref(X.thisptr)))))
