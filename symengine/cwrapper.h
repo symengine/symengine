@@ -69,6 +69,10 @@ void basic_assign(basic a, const basic b);
 //! Free the C++ class wrapped by s.
 void basic_free(basic s);
 
+// Use these two functions to allocate 'basic' on a heap:
+basic_struct* basic_new_heap();
+void basic_free_heap(basic_struct *s);
+
 //! Assign to s, a symbol with string representation c.
 void symbol_set(basic s, char* c);
 

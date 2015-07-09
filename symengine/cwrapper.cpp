@@ -52,6 +52,16 @@ void basic_free(basic s)
     s->m.~RCP();
 }
 
+basic_struct* basic_new_heap()
+{
+    return new CRCPBasic();
+}
+
+void basic_free_heap(basic_struct *s)
+{
+    delete s;
+}
+
 void symbol_set(basic s, char* c)
 {
     s->m = SymEngine::symbol(std::string(c));
