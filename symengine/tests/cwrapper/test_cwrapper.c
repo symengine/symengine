@@ -62,6 +62,21 @@ void test_cwrapper() {
     basic_str_free(s);
 }
 
+void test_basic() {
+    basic x;
+    basic_init(x);
+    symbol_set(x, "x");
+
+    basic_struct *y = basic_new_heap();
+    symbol_set(y, "x");
+
+    // TODO: enable this once basic_eq() is implemented
+    //SYMENGINE_C_ASSERT(basic_eq(x, y))
+
+    basic_free(x);
+    basic_free_heap(y);
+}
+
 void test_CVectorInt1()
 {
     // Allocate on heap
@@ -210,6 +225,7 @@ void test_free_symbols()
 int main(int argc, char* argv[])
 {
     test_cwrapper();
+    test_basic();
     test_CVectorInt1();
     test_CVectorInt2();
     test_CVecBasic();
