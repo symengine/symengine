@@ -651,6 +651,9 @@ cdef class DenseMatrix(MatrixBase):
 
         self.thisptr = new symengine.DenseMatrix(row, col, v_)
 
+    def __repr__(self):
+        return self.__str__()
+
     def __str__(self):
         return deref(self.thisptr).__str__().decode("utf-8")
 

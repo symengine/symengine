@@ -163,3 +163,8 @@ def test_FFLDU():
     assert L == DenseMatrix(3, 3, [1, 0, 0, 5, -13, 0, 6, -10, 1])
     assert D == DenseMatrix(3, 3, [1, 0, 0, 0, -13, 0, 0, 0, -13])
     assert U == DenseMatrix(3, 3, [1, 2, 3, 0, -13, -13, 0, 0, 91])
+
+def test_str_repr():
+    d = DenseMatrix(3, 2, [1, 2, 3, 4, 5, 6])
+    assert str(d) == '[1, 2]\n[3, 4]\n[5, 6]\n'
+    assert str(d) == repr(d)
