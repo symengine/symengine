@@ -6,6 +6,8 @@
 
 void cbasic_free(void *ptr);
 
+void cbasic_free_heap(void *ptr);
+
 VALUE alloc_func(VALUE klass, void(*free_func_ptr)(void*));
 
 VALUE cbasic_alloc(VALUE klass);

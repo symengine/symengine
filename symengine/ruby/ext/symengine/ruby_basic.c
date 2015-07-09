@@ -5,6 +5,11 @@ void cbasic_free(void *ptr){
     basic_free(basic_ptr);
 }
 
+void cbasic_free_heap(void *ptr) {
+    basic_struct *basic_ptr = ptr;
+    basic_free_heap(basic_ptr);
+}
+
 VALUE alloc_func(VALUE klass, void(*free_func_ptr)(void *)) {
     VALUE obj;
     basic_struct *struct_ptr;
@@ -111,12 +116,11 @@ VALUE cbasic_get_args(VALUE self) {
     int i = 0;
     VALUE temp = NULL;
     for(i = 0; i < size; i++) {
-        basic_init(iterator_basic);
-        vecbasic_get(args, i, iterator_basic);
+        basic_struct *temp_basic = basic_new_heap();
+        vecbasic_get(args, i, temp_basic);
         temp = Data_Make_Struct(rb_obj_class(self), basic_struct, NULL,
-                                                    cbasic_free, iterator_basic);
+                                                    cbasic_free_heap, temp_basic);
         rb_ary_push(ruby_array, temp);
-        basic_free(iterator_basic);
     }
     vecbasic_free(args);
     return ruby_array;
@@ -135,12 +139,11 @@ VALUE cbasic_free_symbols(VALUE self) {
     int i = 0;
     VALUE temp = NULL;
     for(i = 0; i < size; i++) {
-        basic_init(iterator_basic);
-        setbasic_get(symbols, i, iterator_basic);
+        basic_struct *temp_basic = basic_new_heap();
+        setbasic_get(symbols, i, temp_basic);
         temp = Data_Make_Struct(rb_obj_class(self), basic_struct, NULL,
-                                                    cbasic_free, iterator_basic);
+                                                    cbasic_free_heap, temp_basic);
         rb_ary_push(ruby_array, temp);
-        basic_free(iterator_basic);
     }
     setbasic_free(symbols);
     return ruby_array;
