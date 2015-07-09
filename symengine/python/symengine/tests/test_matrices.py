@@ -1,5 +1,6 @@
 from symengine.lib.symengine_wrapper import (DenseMatrix, Symbol, Integer,
-    function_symbol, I)
+    function_symbol, I, NonSquareMatrixError)
+from symengine.utilities import raises
 
 def test_get():
     A = DenseMatrix(2, 2, [1, 2, 3, 4])
@@ -45,6 +46,9 @@ def test_det():
     d = Symbol("d")
     A = DenseMatrix(2, 2, [a, b, c, d])
     assert A.det() == a*d - b*c
+
+    A = DenseMatrix(3, 2, [1, 2, 3, 4, 5, 6])
+    raises(NonSquareMatrixError, lambda: A.det())
 
 def test_inv():
     A = DenseMatrix(2, 2, [1, 0, 0, 1])

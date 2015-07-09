@@ -656,6 +656,19 @@ cdef class MatrixBase:
     def __dealloc__(self):
         del self.thisptr
 
+
+class MatrixError(Exception):
+    pass
+
+
+class ShapeError(ValueError, MatrixError):
+    """Wrong matrix shape"""
+    pass
+
+
+class NonSquareMatrixError(ShapeError):
+    pass
+
 cdef class DenseMatrix(MatrixBase):
     """
     Represents a dense matrix.
@@ -711,6 +724,8 @@ cdef class DenseMatrix(MatrixBase):
             deref(self.thisptr).set(i, j, <const RCP[const symengine.Basic] &>(e_.thisptr))
 
     def det(self):
+        if self.nrows() != self.ncols():
+            raise NonSquareMatrixError()
         return c2py(deref(self.thisptr).det())
 
     def inv(self, method='LU'):
