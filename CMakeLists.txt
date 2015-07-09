@@ -279,7 +279,6 @@ endif ()
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(HAVE_TEUCHOS_DEBUG yes)
     set(HAVE_TEUCHOS_DEBUG_RCP_NODE_TRACING yes)
-    set(HAVE_SYMENGINE_RCP yes)
 endif()
 
 enable_testing()
