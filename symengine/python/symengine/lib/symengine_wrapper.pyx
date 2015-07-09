@@ -125,6 +125,26 @@ def sympy2symengine(a, raise_error=False):
         raise SympifyError("sympy2symengine: Cannot convert '%r' to a symengine type." % a)
 
 def sympify(a, raise_error=True):
+    """
+    Converts an expression 'a' into a SymEngine type.
+
+    Arguments
+    =========
+
+    a ............. An expression to convert.
+    raise_error ... Will raise an error on a failure (default True), otherwise
+                    it returns None if 'a' cannot be converted.
+
+    Examples
+    ========
+
+    >>> from symengine import sympify
+    >>> sympify(1)
+    1
+    >>> sympify("abc", False)
+    >>>
+
+    """
     if isinstance(a, (Basic, MatrixBase)):
         return a
     elif isinstance(a, (int, long)):
@@ -637,6 +657,24 @@ cdef class MatrixBase:
         del self.thisptr
 
 cdef class DenseMatrix(MatrixBase):
+    """
+    Represents a dense matrix.
+
+    Examples
+    ========
+
+    Empty matrix:
+
+    >>> DenseMatrix(3, 2)
+
+    2D Matrix:
+
+    >>> DenseMatrix(3, 2, [1, 2, 3, 4, 5, 6])
+    [1, 2]
+    [3, 4]
+    [5, 6]
+
+    """
 
     def __cinit__(self, row, col):
         self.thisptr = new symengine.DenseMatrix(row, col)
