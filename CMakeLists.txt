@@ -277,8 +277,11 @@ if (WITH_RUBY)
 endif ()
 
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
-    set(HAVE_TEUCHOS_DEBUG yes)
-    set(HAVE_TEUCHOS_DEBUG_RCP_NODE_TRACING yes)
+    # In Debug mode we use Teuchos::RCP and enable debugging checks that make
+    # the usage 100% safe, as long as the Teuchos guidelines are followed.
+    set(WITH_SYMENGINE_RCP no) # Use the Teuchos::RCP
+    set(HAVE_TEUCHOS_DEBUG yes) # Enable safety checks
+    set(HAVE_TEUCHOS_DEBUG_RCP_NODE_TRACING yes) # Enable safety checks
 endif()
 
 enable_testing()
