@@ -99,21 +99,26 @@ VALUE cbasic_neg(VALUE self){
 }
 
 VALUE cbasic_free_symbols(VALUE self) {
-    basic_struct *this;
-    const basic_struct **array;
-    int size;
+    basic_struct *this, *iterator_basic;
+    CSetBasic *symbols = setbasic_new();
+    int size = 0;
 
     Data_Get_Struct(self, basic_struct, this);
-    basic_free_symbols(this, &array, &size);
+    basic_free_symbols(this, symbols);
 
+    size = setbasic_size(symbols);
     VALUE ruby_array = rb_ary_new2(size);
     int i = 0;
-    VALUE temp;
+    VALUE temp = NULL;
     for(i = 0; i < size; i++) {
+        basic_init(iterator_basic);
+        setbasic_get(symbols, i, iterator_basic);
         temp = Data_Make_Struct(rb_obj_class(self), basic_struct, NULL,
-                                                    cbasic_free, array[i]);
+                                                    cbasic_free, iterator_basic);
         rb_ary_push(ruby_array, temp);
+        basic_free(iterator_basic);
     }
+    setbasic_free(symbols);
     return ruby_array;
 }
 

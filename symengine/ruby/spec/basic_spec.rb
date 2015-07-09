@@ -117,8 +117,11 @@ describe SymEngine do
           x = SymEngine::Symbol.new('x')
           y = SymEngine::Symbol.new('y')
           z = SymEngine::Symbol.new('z')
-          e = (x * y * z)
+          e = (x**y / z)
           f = e.free_symbols
+          expect(f).to be_an_instance_of Set
+          expect(f.length).to be 3
+          f.each { |elem| puts elem.to_s }
         end
       end
     end
