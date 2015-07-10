@@ -1,6 +1,6 @@
 from symengine import (Symbol, Integer, sympify, SympifyError, sin, cos,
-        function_symbol, I, E, pi, exp, have_mpfr, have_mpc)
-from symengine.lib.symengine_wrapper import densematrix, Subs, Derivative, RealMPFR, ComplexMPC
+        function_symbol, I, E, pi, exp, have_mpfr, have_mpc, DenseMatrix)
+from symengine.lib.symengine_wrapper import Subs, Derivative, RealMPFR, ComplexMPC
 import sympy
 
 # Note: We test _sympy_() for SymEngine -> SymPy conversion, as those are methods
@@ -167,15 +167,15 @@ def test_conv9b():
     assert sympify(sympy.Symbol("x") + sympy.I*sympy.Symbol("y")) == x+I*y
 
 def test_conv10():
-    A = densematrix(1, 4, [Integer(1), Integer(2), Integer(3), Integer(4)])
+    A = DenseMatrix(1, 4, [Integer(1), Integer(2), Integer(3), Integer(4)])
     assert A._sympy_() == sympy.Matrix(1, 4, [sympy.Integer(1), sympy.Integer(2),
         sympy.Integer(3), sympy.Integer(4)])
 
-    B = densematrix(4, 1, [Symbol("x"), Symbol("y"), Symbol("z"), Symbol("t")])
+    B = DenseMatrix(4, 1, [Symbol("x"), Symbol("y"), Symbol("z"), Symbol("t")])
     assert B._sympy_() == sympy.Matrix(4, 1, [sympy.Symbol("x"), sympy.Symbol("y"),
         sympy.Symbol("z"), sympy.Symbol("t")])
 
-    C = densematrix(2, 2,
+    C = DenseMatrix(2, 2,
         [Integer(5), Symbol("x"), function_symbol("f", Symbol("x")), 1 + I])
 
     assert C._sympy_() == sympy.Matrix([[5, sympy.Symbol("x")],
@@ -184,16 +184,16 @@ def test_conv10():
 def test_conv10b():
     A = sympy.Matrix([[sympy.Symbol("x"), sympy.Symbol("y")],
         [sympy.Symbol("z"), sympy.Symbol("t")]])
-    assert sympify(A) == densematrix(2, 2, [Symbol("x"), Symbol("y"),
+    assert sympify(A) == DenseMatrix(2, 2, [Symbol("x"), Symbol("y"),
         Symbol("z"), Symbol("t")])
 
     B = sympy.Matrix([[1, 2], [3, 4]])
-    assert sympify(B) == densematrix(2, 2, [Integer(1), Integer(2), Integer(3),
+    assert sympify(B) == DenseMatrix(2, 2, [Integer(1), Integer(2), Integer(3),
         Integer(4)])
 
     C = sympy.Matrix([[7, sympy.Symbol("y")],
         [sympy.Function("g")(sympy.Symbol("z")), 3 + 2*sympy.I]])
-    assert sympify(C) == densematrix(2, 2, [Integer(7), Symbol("y"),
+    assert sympify(C) == DenseMatrix(2, 2, [Integer(7), Symbol("y"),
         function_symbol("g", Symbol("z")), 3 + 2*I])
 
 def test_conv11():

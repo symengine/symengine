@@ -125,6 +125,26 @@ def sympy2symengine(a, raise_error=False):
         raise SympifyError("sympy2symengine: Cannot convert '%r' to a symengine type." % a)
 
 def sympify(a, raise_error=True):
+    """
+    Converts an expression 'a' into a SymEngine type.
+
+    Arguments
+    =========
+
+    a ............. An expression to convert.
+    raise_error ... Will raise an error on a failure (default True), otherwise
+                    it returns None if 'a' cannot be converted.
+
+    Examples
+    ========
+
+    >>> from symengine import sympify
+    >>> sympify(1)
+    1
+    >>> sympify("abc", False)
+    >>>
+
+    """
     if isinstance(a, (Basic, MatrixBase)):
         return a
     elif isinstance(a, (int, long)):
@@ -636,7 +656,38 @@ cdef class MatrixBase:
     def __dealloc__(self):
         del self.thisptr
 
+
+class MatrixError(Exception):
+    pass
+
+
+class ShapeError(ValueError, MatrixError):
+    """Wrong matrix shape"""
+    pass
+
+
+class NonSquareMatrixError(ShapeError):
+    pass
+
 cdef class DenseMatrix(MatrixBase):
+    """
+    Represents a dense matrix.
+
+    Examples
+    ========
+
+    Empty matrix:
+
+    >>> DenseMatrix(3, 2)
+
+    2D Matrix:
+
+    >>> DenseMatrix(3, 2, [1, 2, 3, 4, 5, 6])
+    [1, 2]
+    [3, 4]
+    [5, 6]
+
+    """
 
     def __cinit__(self, row, col):
         self.thisptr = new symengine.DenseMatrix(row, col)
@@ -650,6 +701,9 @@ cdef class DenseMatrix(MatrixBase):
                 v_.push_back(e_.thisptr)
 
         self.thisptr = new symengine.DenseMatrix(row, col, v_)
+
+    def __repr__(self):
+        return self.__str__()
 
     def __str__(self):
         return deref(self.thisptr).__str__().decode("utf-8")
@@ -670,6 +724,8 @@ cdef class DenseMatrix(MatrixBase):
             deref(self.thisptr).set(i, j, <const RCP[const symengine.Basic] &>(e_.thisptr))
 
     def det(self):
+        if self.nrows() != self.ncols():
+            raise NonSquareMatrixError()
         return c2py(deref(self.thisptr).det())
 
     def inv(self, method='LU'):
@@ -844,9 +900,6 @@ def sqrt(x):
 def exp(x):
     cdef Basic X = sympify(x)
     return c2py(symengine.exp(X.thisptr))
-
-def densematrix(row, col, l):
-    return DenseMatrix(row, col, l)
 
 def eval_double(x):
     cdef Basic X = sympify(x)
