@@ -7,11 +7,7 @@
 #ifndef SYMENGINE_TYPE_CODES_H
 #define SYMENGINE_TYPE_CODES_H
 
-#ifdef __cplusplus
-namespace SymEngine {
-#endif
-
-enum TypeID {
+typedef enum TypeID {
     INTEGER, RATIONAL, COMPLEX, COMPLEX_DOUBLE, REAL_MPFR, COMPLEX_MPC, REAL_DOUBLE,
     // 'REAL_DOUBLE' returns the number of subclasses of Number.
     // All subclasses of Number must be added before it. Do not assign
@@ -29,14 +25,6 @@ enum TypeID {
     // to work, do not assign numbers to the elements above (or if you do, you
     // must assign the correct count below).
     TypeID_Count
-};
-
-#ifndef __cplusplus
-typedef enum TypeID TYPEID;
-#endif
-
-#ifdef __cplusplus
-} //SymEngine
-#endif
+} TypeID;
 
 #endif //SYMENGINE_TYPE_CODES_H

@@ -76,7 +76,7 @@ basic_struct* basic_new_heap();
 void basic_free_heap(basic_struct *s);
 
 //Returns the typeID of the basic struct
-enum TypeID basic_get_type(const basic s);
+TypeID basic_get_type(const basic s);
 //! Assign to s, a symbol with string representation c.
 void symbol_set(basic s, char* c);
 
