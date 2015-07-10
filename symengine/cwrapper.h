@@ -1,45 +1,66 @@
 #ifndef CWRAPPER_H
 #define CWRAPPER_H
 
+#include <stdio.h>
+#include <stdlib.h>
 #include <gmp.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-// The size of 'basic_struct' must be the same as RCP<const Basic> *and* they
-// must have the same alignment (because we allocate RCP<const Basic> into the
-// memory occupied by this struct in cwrapper.cpp). We cannot use C++ in this
-// file, so we need to use C tools to arrive at the correct size and alignment.
-// The size of the RCP object on most platforms (with WITH_SYMENGINE_RCP on)
-// should be just the size of the 'T *ptr_' pointer that it contains (as there
-// is no virtual function table) and the alignment should also be of a pointer.
-// So we just put 'void *data' as the only member of the struct, that should
-// have the correct size and alignment. With WITH_SYMENGINE_RCP off (i.e. using
-// Teuchos::RCP), we have to add additional members into the structure.
+// Use SYMENGINE_C_ASSERT in C tests
+#define SYMENGINE_C_ASSERT(cond) \
+{ \
+if (0 == (cond)) { \
+    printf("SYMENGINE_C_ASSERT failed: %s \nfunction %s (), line number %d at\n%s\n",\
+            __FILE__, __func__, __LINE__, #cond); \
+    abort(); \
+    } \
+}
+
+// The size of 'CRCPBasic_C' must be the same as CRCPBasic (which contains a
+// single RCP<const Basic> member) *and* they must have the same alignment
+// (because we allocate CRCPBasic into the memory occupied by this struct in
+// cwrapper.cpp). We cannot use C++ in this file, so we need to use C tools to
+// arrive at the correct size and alignment.  The size of the RCP object on
+// most platforms (with WITH_SYMENGINE_RCP on) should be just the size of the
+// 'T *ptr_' pointer that it contains (as there is no virtual function table)
+// and the alignment should also be of a pointer.  So we just put 'void *data'
+// as the only member of the struct, that should have the correct size and
+// alignment. With WITH_SYMENGINE_RCP off (i.e. using Teuchos::RCP), we have to
+// add additional members into the structure.
 //
 // However, this is checked at compile time in cwrapper.cpp, so if the size or
 // alignment is different on some platform, the compilation will fail --- in
 // that case one needs to modify the contents of this struct to adjust its size
 // and/or alignment.
-typedef struct
+struct CRCPBasic_C
 {
     void *data;
 #if !defined(WITH_SYMENGINE_RCP)
     void *teuchos_handle;
     int teuchos_strength;
 #endif
-} basic_struct;
+};
 
 //! 'basic' is internally implemented as a size 1 array of the type
-//   basic_struct, which has the same size and alignment as RCP<const Basic>
-//   (see the above comment for details). That is then used by the user to
-//   allocate the memory needed for RCP<const Basic> on the stack. A 'basic'
-//   type should be initialized using basic_init(), before any function is
-//   called.  Assignment should be done only by using basic_assign(). Before
-//   the variable goes out of scope, basic_free() must be called.
-typedef basic_struct basic[1];
+//  CRCPBasic, which has the same size and alignment as RCP<const Basic> (see
+//  the above comment for details). That is then used by the user to allocate
+//  the memory needed for RCP<const Basic> on the stack. A 'basic' type should
+//  be initialized using basic_init(), before any function is called.
+//  Assignment should be done only by using basic_assign(). Before the variable
+//  goes out of scope, basic_free() must be called.
+//
+//  For C, define a dummy struct with the right size, so that it can be
+//  allocated on the stack. For C++, the CRCPBasic is declared in cwrapper.cpp.
+#ifdef __cplusplus
+typedef struct CRCPBasic basic_struct;
+#else
+typedef struct CRCPBasic_C basic_struct;
+#endif
 
+typedef basic_struct basic[1];
 
 //! Initialize a new basic instance.
 void basic_init(basic s);
@@ -47,6 +68,10 @@ void basic_init(basic s);
 void basic_assign(basic a, const basic b);
 //! Free the C++ class wrapped by s.
 void basic_free(basic s);
+
+// Use these two functions to allocate 'basic' on a heap:
+basic_struct* basic_new_heap();
+void basic_free_heap(basic_struct *s);
 
 //! Assign to s, a symbol with string representation c.
 void symbol_set(basic s, char* c);
@@ -106,6 +131,58 @@ int is_a_Integer(const basic s);
 int is_a_Rational(const basic s);
 //! Return 1 if s is an Symbol, 0 if not.
 int is_a_Symbol(const basic s);
+
+
+//! Wrapper for std::vector<int>
+
+typedef struct CVectorInt CVectorInt;
+
+CVectorInt* vectorint_new();
+
+// 'data' must point to allocated memory of size 'size'. The function returns 0
+// if std::vector<int> can be initialized using placement new into 'data',
+// otherwise 1 if 'size' is too small or 2 if 'data' is not properly aligned.
+// No memory is leaked either way. Use vectorint_placement_new_check() to check
+// that the 'data' and 'size' is properly allocated and aligned. Use
+// vectorint_placement_new() to do the actual allocation.
+int vectorint_placement_new_check(void *data, size_t size);
+CVectorInt* vectorint_placement_new(void *data);
+
+void vectorint_placement_free(CVectorInt *self);
+
+void vectorint_free(CVectorInt *self);
+void vectorint_push_back(CVectorInt *self, int value);
+int vectorint_get(CVectorInt *self, int n);
+
+//! Wrapper for vec_basic
+
+typedef struct CVecBasic CVecBasic;
+
+CVecBasic* vecbasic_new();
+void vecbasic_free(CVecBasic *self);
+void vecbasic_push_back(CVecBasic *self, const basic value);
+void vecbasic_get(CVecBasic *self, int n, basic result);
+size_t vecbasic_size(CVecBasic *self);
+
+//! Wrapper for set_basic
+
+typedef struct CSetBasic CSetBasic;
+
+CSetBasic* setbasic_new();
+void setbasic_free(CSetBasic *self);
+//! Returns 1 if insert is successful and 0 if set already contains the value
+//! and insertion is unsuccessful
+int setbasic_insert(CSetBasic *self, const basic value);
+//! Returns 1 if value is found in the set and 0 if not
+int setbasic_find(CSetBasic *self, basic value);
+size_t setbasic_size(CSetBasic *self);
+
+// -------------------------------------
+
+//! Returns a CVecBasic of vec_basic given by get_args
+void basic_get_args(const basic self, CVecBasic *args);
+//! Returns a CSetBasic of set_basic given by free_symbols
+void basic_free_symbols(const basic self, CSetBasic *symbols);
 
 #ifdef __cplusplus
 }

@@ -51,7 +51,7 @@ endif()
 set(HEADERS
     add.h        symengine_assert.h  functions.h  monomials.h  polynomial.h  number.h    rings.h
     basic.h      symengine_rcp.h     integer.h    mul.h        pow.h       constants.h
-    symbol.h
+    symbol.h     expression.h
     basic-inl.h  dict.h           matrix.h     ntheory.h    rational.h complex.h
     visitor.h    eval_double.h    diophantine.h cwrapper.h  printer.h  real_double.h
     eval_mpfr.h  eval_arb.h       eval_mpc.h    complex_double.h
@@ -76,12 +76,10 @@ install(TARGETS symengine
 install(FILES ${HEADERS} "${symengine_BINARY_DIR}/symengine/symengine_config.h"
     DESTINATION include/symengine)
 
-add_subdirectory(catch)
-
-# Include Catch headers:
-include_directories(BEFORE ${catch_SOURCE_DIR})
-
 if (BUILD_TESTS)
+    add_subdirectory(catch)
+    # Include Catch headers:
+    include_directories(BEFORE ${catch_SOURCE_DIR})
     add_subdirectory(tests)
 endif()
 if (WITH_RUBY)
