@@ -80,8 +80,8 @@ cdef extern from "<symengine/basic.h>" namespace "SymEngine":
         RCP[const Basic] subs(map_basic_basic &x) nogil except +
         vec_basic get_args() nogil
 
-    bool eq(RCP[const Basic] &a, RCP[const Basic] &b) nogil except +
-    bool neq(RCP[const Basic] &a, RCP[const Basic] &b) nogil except +
+    bool eq(const Basic &a, const Basic &b) nogil except +
+    bool neq(const Basic &a, const Basic &b) nogil except +
 
     bool is_a_Add "SymEngine::is_a<SymEngine::Add>"(const Basic &b) nogil
     bool is_a_Mul "SymEngine::is_a<SymEngine::Mul>"(const Basic &b) nogil
