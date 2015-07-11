@@ -19,6 +19,12 @@ if (0 == (cond)) { \
     } \
 }
 
+typedef enum {
+    #define SYMENGINE_ENUM(type) SYMENGINE_##type
+    #include "symengine/type_codes.h"
+    #undef SYMENGINE_ENUM
+} TypeID;
+
 // The size of 'CRCPBasic_C' must be the same as CRCPBasic (which contains a
 // single RCP<const Basic> member) *and* they must have the same alignment
 // (because we allocate CRCPBasic into the memory occupied by this struct in
