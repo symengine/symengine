@@ -5,6 +5,8 @@
 #include <stdlib.h>
 #include <gmp.h>
 
+#include "symengine/type_codes.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -73,6 +75,8 @@ void basic_free(basic s);
 basic_struct* basic_new_heap();
 void basic_free_heap(basic_struct *s);
 
+//Returns the typeID of the basic struct
+TypeID basic_get_type(const basic s);
 //! Assign to s, a symbol with string representation c.
 void symbol_set(basic s, char* c);
 

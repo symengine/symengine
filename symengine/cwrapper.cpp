@@ -62,6 +62,10 @@ void basic_free_heap(basic_struct *s)
     delete s;
 }
 
+TypeID basic_get_type(const basic s) {
+    return s->m->get_type_code();
+}
+
 void symbol_set(basic s, char* c)
 {
     s->m = SymEngine::symbol(std::string(c));
