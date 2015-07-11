@@ -165,6 +165,28 @@ void DenseMatrix::FFLDU(MatrixBase&L, MatrixBase &D, MatrixBase &U) const
     }
 }
 
+// ---------------------------- Jacobian -------------------------------------//
+
+void jacobian(const DenseMatrix &A, const DenseMatrix &x,
+        DenseMatrix &result)
+{
+    SYMENGINE_ASSERT(A.col_ == 1);
+    SYMENGINE_ASSERT(x.col_ == 1);
+    SYMENGINE_ASSERT(A.row_ == result.nrows() && x.row_ == result.ncols());
+    for (unsigned i = 0; i < result.row_; i++) {
+        for (unsigned j = 0; j < result.col_; j++) {
+            if (is_a<Symbol>(*(x.m_[j]))) {
+                const RCP<const Symbol> x_ = rcp_static_cast<const Symbol>(
+                        x.m_[j]);
+                result.m_[i*result.col_ + j] = A.m_[i]->diff(x_);
+            } else {
+                throw std::runtime_error("'x' must contain Symbols only");
+            }
+        }
+    }
+}
+
+
 // ----------------------------- Matrix Transpose ----------------------------//
 void transpose_dense(const DenseMatrix &A, DenseMatrix &B)
 {

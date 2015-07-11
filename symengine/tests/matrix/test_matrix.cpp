@@ -1398,3 +1398,34 @@ TEST_CASE("test_ones_zeros(): matrices", "[matrices]")
                                    integer(0), integer(0),
                                    integer(0), integer(0)}));
 }
+
+TEST_CASE("Test Jacobian", "[matrices]")
+{
+    DenseMatrix A, X, J;
+    RCP<const Basic> x=symbol("x"), y=symbol("y"), z=symbol("z"),
+        t = symbol("t");
+    A = DenseMatrix(4, 1, {add(x, z), mul(y, z), add(mul(z, x), add(y, t)),
+            add(x, y)});
+    X = DenseMatrix(4, 1, {x, y, z, t});
+    J = DenseMatrix(4, 4);
+    jacobian(A, X, J);
+    REQUIRE(J == DenseMatrix(4, 4,
+            {integer(1), integer(0), integer(1), integer(0),
+            integer(0), z, y, integer(0),
+            z, integer(1), x, integer(1),
+            integer(1), integer(1), integer(0), integer(0)}));
+
+    X = DenseMatrix(4, 1, {mul(x, y), y, z, t});
+    SYMENGINE_CHECK_THROW(jacobian(A, X, J), std::runtime_error);
+
+    A = DenseMatrix(4, 1, {add(x, z), mul(y, z), add(mul(z, x), add(y, t)),
+            add(x, y)});
+    X = DenseMatrix(4, 1, {x, y, z});
+    J = DenseMatrix(4, 3);
+    jacobian(A, X, J);
+    REQUIRE(J == DenseMatrix(4, 3,
+            {integer(1), integer(0), integer(1),
+            integer(0), z, y,
+            z, integer(1), x,
+            integer(1), integer(1), integer(0)}));
+}
