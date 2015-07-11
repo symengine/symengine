@@ -1,3 +1,4 @@
+from symengine import symbols
 from symengine.lib.symengine_wrapper import (DenseMatrix, Symbol, Integer,
     function_symbol, I, NonSquareMatrixError)
 from symengine.utilities import raises
@@ -172,3 +173,15 @@ def test_str_repr():
     d = DenseMatrix(3, 2, [1, 2, 3, 4, 5, 6])
     assert str(d) == '[1, 2]\n[3, 4]\n[5, 6]\n'
     assert str(d) == repr(d)
+
+def test_jacobian():
+    x, y, z, t = symbols("x y z t")
+    J_correct = DenseMatrix(4, 4,
+            [1, 0, 1, 0,
+            0, z, y, 0,
+            z, 1, x, 1,
+            1, 1, 0, 0])
+    D = DenseMatrix(4, 1, [x+z, y*z, z*x+y+t, x+y])
+    x = DenseMatrix(4, 1, [x, y, z, t])
+    J = D.jacobian(x)
+    assert J == J_correct

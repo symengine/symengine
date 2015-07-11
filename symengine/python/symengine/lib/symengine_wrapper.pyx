@@ -834,6 +834,14 @@ cdef class DenseMatrix(MatrixBase):
         deref(self.thisptr).FFLDU(deref(L.thisptr), deref(D.thisptr), deref(U.thisptr))
         return L, D, U
 
+    def jacobian(self, x):
+        cdef DenseMatrix x_ = sympify(x)
+        R = DenseMatrix(self.nrows(), x.nrows(), [0]*self.nrows()*self.nrows())
+        symengine.jacobian(<const symengine.DenseMatrix &>deref(self.thisptr),
+                <const symengine.DenseMatrix &>deref(x_.thisptr),
+                <symengine.DenseMatrix &>deref(R.thisptr))
+        return R
+
     def _sympy_(self):
         s = []
         cdef symengine.DenseMatrix A = deref(symengine.static_cast_DenseMatrix(self.thisptr))
