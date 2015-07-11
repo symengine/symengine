@@ -62,8 +62,8 @@ void basic_free_heap(basic_struct *s)
     delete s;
 }
 
-enum TypeID basic_get_type(const basic s) {
-    return (enum TypeID) s->m->get_type_code();
+TypeID basic_get_type(const basic s) {
+    return s->m->get_type_code();
 }
 
 void symbol_set(basic s, char* c)
