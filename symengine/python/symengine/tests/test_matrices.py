@@ -34,7 +34,7 @@ def test_set():
     A.set(1, 0, g)
     assert A.get(1, 0) == g
     A.set(1, 1, c)
-    A.get(1, 1) == c
+    assert A.get(1, 1) == c
 
 def test_det():
     A = DenseMatrix(2, 2, [1, 2, 3, 4])
