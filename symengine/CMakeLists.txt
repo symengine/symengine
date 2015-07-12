@@ -33,6 +33,7 @@ set(SRC
     printer.cpp
     real_double.cpp
     complex_double.cpp
+    diff.cpp
 )
 
 if (WITH_MPFR)
@@ -56,6 +57,7 @@ set(HEADERS
     visitor.h    eval_double.h    diophantine.h cwrapper.h  printer.h  real_double.h
     eval_mpfr.h  eval_arb.h       eval_mpc.h    complex_double.h
     real_mpfr.h  complex_mpc.h    type_codes.inc
+    diff.h
 )
 
 # Configure SymEngine using our CMake options:
