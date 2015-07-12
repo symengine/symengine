@@ -222,6 +222,20 @@ void test_free_symbols()
     basic_free(z);
 }
 
+void test_get_type() {
+    basic x, y;
+    basic_init(x);
+    basic_init(y);
+    symbol_set(x, "x");
+    integer_set_ui(y, 123);
+
+    SYMENGINE_C_ASSERT(basic_get_type(x) == SYMENGINE_SYMBOL);
+    SYMENGINE_C_ASSERT(basic_get_type(y) == SYMENGINE_INTEGER);
+
+    basic_free(x);
+    basic_free(y);
+}
+
 int main(int argc, char* argv[])
 {
     test_cwrapper();
@@ -232,5 +246,6 @@ int main(int argc, char* argv[])
     test_CSetBasic();
     test_get_args();
     test_free_symbols();
+    test_get_type();
     return 0;
 }

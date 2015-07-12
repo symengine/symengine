@@ -19,6 +19,12 @@ if (0 == (cond)) { \
     } \
 }
 
+typedef enum {
+    #define SYMENGINE_ENUM(type) SYMENGINE_##type
+    #include "symengine/type_codes.inc"
+    #undef SYMENGINE_ENUM
+} TypeID;
+
 // The size of 'CRCPBasic_C' must be the same as CRCPBasic (which contains a
 // single RCP<const Basic> member) *and* they must have the same alignment
 // (because we allocate CRCPBasic into the memory occupied by this struct in
@@ -73,6 +79,8 @@ void basic_free(basic s);
 basic_struct* basic_new_heap();
 void basic_free_heap(basic_struct *s);
 
+//Returns the typeID of the basic struct
+TypeID basic_get_type(const basic s);
 //! Assign to s, a symbol with string representation c.
 void symbol_set(basic s, char* c);
 
