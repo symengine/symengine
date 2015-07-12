@@ -174,6 +174,15 @@ def test_str_repr():
     assert str(d) == '[1, 2]\n[3, 4]\n[5, 6]\n'
     assert str(d) == repr(d)
 
+def test_DenseMatrix_symbols():
+    x, y, z = symbols("x y z")
+    D = DenseMatrix(4, 4,
+            [1, 0, 1, 0,
+            0, z, y, 0,
+            z, 1, x, 1,
+            1, 1, 0, 0])
+    assert D.get(1, 2) == y
+
 def test_jacobian():
     x, y, z, t = symbols("x y z t")
     J_correct = DenseMatrix(4, 4,
