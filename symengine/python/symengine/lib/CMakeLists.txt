@@ -30,5 +30,8 @@ install(TARGETS symengine_wrapper
             LIBRARY DESTINATION ${PY_PATH}
         )
 install(FILES __init__.py
+    ${CMAKE_CURRENT_BINARY_DIR}/config.pxi
+    symengine.pxd
+    symengine_wrapper.pxd
     DESTINATION ${PY_PATH}
     )

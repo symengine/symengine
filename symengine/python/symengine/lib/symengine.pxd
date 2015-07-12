@@ -6,13 +6,25 @@ from libcpp.vector cimport vector
 include "config.pxi"
 
 cdef extern from 'gmpxx.h':
+    ctypedef unsigned long mp_limb_t
+    ctypedef struct __mpz_struct:
+        pass
+    ctypedef struct __mpq_struct:
+        pass
+    ctypedef __mpz_struct mpz_t[1]
+    ctypedef __mpq_struct mpq_t[1]
+
     cdef cppclass mpz_class:
         mpz_class()
         mpz_class(int i)
         mpz_class(mpz_class)
+        mpz_class(mpz_t)
         mpz_class(const string &s, int base) except +
+        mpz_t get_mpz_t()
     cdef cppclass mpq_class:
         mpq_class()
+        mpq_class(mpq_t)
+        mpq_t get_mpq_t()
 
 cdef extern from "<set>" namespace "std":
 # Cython's libcpp.set does not support two template arguments to set.
@@ -55,6 +67,7 @@ cdef extern from "<symengine/symengine_rcp.h>" namespace "SymEngine":
     RCP[const Abs] rcp_static_cast_Abs "SymEngine::rcp_static_cast<const SymEngine::Abs>"(RCP[const Basic] &b) nogil
     RCP[const Derivative] rcp_static_cast_Derivative "SymEngine::rcp_static_cast<const SymEngine::Derivative>"(RCP[const Basic] &b) nogil
     RCP[const Subs] rcp_static_cast_Subs "SymEngine::rcp_static_cast<const SymEngine::Subs>"(RCP[const Basic] &b) nogil
+    RCP[const RealDouble] rcp_static_cast_RealDouble "SymEngine::rcp_static_cast<const SymEngine::RealDouble>"(RCP[const Basic] &b) nogil
     RCP[const ComplexDouble] rcp_static_cast_ComplexDouble "SymEngine::rcp_static_cast<const SymEngine::ComplexDouble>"(RCP[const Basic] &b) nogil
     RCP[const RealMPFR] rcp_static_cast_RealMPFR "SymEngine::rcp_static_cast<const SymEngine::RealMPFR>"(RCP[const Basic] &b) nogil
     RCP[const ComplexMPC] rcp_static_cast_ComplexMPC "SymEngine::rcp_static_cast<const SymEngine::ComplexMPC>"(RCP[const Basic] &b) nogil
@@ -121,10 +134,13 @@ cdef extern from "<symengine/integer.h>" namespace "SymEngine":
         Integer(mpz_class i) nogil
         int compare(const Basic &o) nogil
         mpz_class as_mpz() nogil
+    cdef RCP[const Integer] integer(int i) nogil
+    cdef RCP[const Integer] integer(mpz_class i) nogil
 
 cdef extern from "<symengine/rational.h>" namespace "SymEngine":
     cdef cppclass Rational(Number):
         mpq_class as_mpq() nogil
+    cdef RCP[const Number] from_mpq "SymEngine::Rational::from_mpq"(mpq_class) nogil
     cdef void get_num_den(const RCP[Rational] &rat, const Ptr[RCP[Integer]] &num,
                      const Ptr[RCP[Integer]] &den) nogil
 
@@ -136,6 +152,7 @@ cdef extern from "<symengine/complex.h>" namespace "SymEngine":
 cdef extern from "<symengine/real_double.h>" namespace "SymEngine":
     cdef cppclass RealDouble(Number):
         RealDouble(double x) nogil
+        double as_double() nogil
     RCP[const RealDouble] real_double(double d) nogil
 
 cdef extern from "<symengine/complex_double.h>" namespace "SymEngine":
@@ -143,6 +160,7 @@ cdef extern from "<symengine/complex_double.h>" namespace "SymEngine":
         ComplexDouble(double complex x) nogil
         RCP[const Number] real_part() nogil
         RCP[const Number] imaginary_part() nogil
+        double complex as_complex_double() nogil
     RCP[const ComplexDouble] complex_double(double complex d) nogil
 
 cdef extern from "<symengine/constants.h>" namespace "SymEngine":
