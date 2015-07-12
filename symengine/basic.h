@@ -63,7 +63,7 @@ class Symbol;
 
 enum TypeID {
     #define SYMENGINE_ENUM(type) type
-    #include "symengine/type_codes.h"
+    #include "symengine/type_codes.inc"
     #undef SYMENGINE_ENUM
 };
 
