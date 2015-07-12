@@ -18,10 +18,12 @@ cdef extern from 'gmpxx.h':
         mpz_class()
         mpz_class(int i)
         mpz_class(mpz_class)
+        mpz_class(mpz_t)
         mpz_class(const string &s, int base) except +
         mpz_t get_mpz_t()
     cdef cppclass mpq_class:
         mpq_class()
+        mpq_class(mpq_t)
         mpq_t get_mpq_t()
 
 cdef extern from "<set>" namespace "std":
@@ -132,10 +134,13 @@ cdef extern from "<symengine/integer.h>" namespace "SymEngine":
         Integer(mpz_class i) nogil
         int compare(const Basic &o) nogil
         mpz_class as_mpz() nogil
+    cdef RCP[const Integer] integer(int i) nogil
+    cdef RCP[const Integer] integer(mpz_class i) nogil
 
 cdef extern from "<symengine/rational.h>" namespace "SymEngine":
     cdef cppclass Rational(Number):
         mpq_class as_mpq() nogil
+    cdef RCP[const Number] from_mpq "SymEngine::Rational::from_mpq"(mpq_class) nogil
     cdef void get_num_den(const RCP[Rational] &rat, const Ptr[RCP[Integer]] &num,
                      const Ptr[RCP[Integer]] &den) nogil
 
