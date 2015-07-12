@@ -214,10 +214,10 @@ struct RCPBasicKeyLessCmp {
 
 // Convenience functions
 //! Checks equality for `a` and `b`
-bool eq(const RCP<const Basic> &a, const RCP<const Basic> &b);
+bool eq(const Basic &a, const Basic &b);
 
 //! Checks inequality for `a` and `b`
-bool neq(const RCP<const Basic> &a, const RCP<const Basic> &b);
+bool neq(const Basic &a, const Basic &b);
 
 /*! Returns true if `b` is exactly of type `T`. Example:
   `is_a<Symbol>(b)` : true if "b" is of type Symbol

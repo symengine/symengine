@@ -30,8 +30,8 @@ TEST_CASE("test_get_set(): matrices", "[matrices]")
     DenseMatrix A = DenseMatrix(2, 2, {integer(1), integer(0),
                                        integer(-1), integer(-2)});
 
-    REQUIRE(eq(A.get(0, 0), integer(1)));
-    REQUIRE(eq(A.get(1, 1), integer(-2)));
+    REQUIRE(eq(*A.get(0, 0), *integer(1)));
+    REQUIRE(eq(*A.get(1, 1), *integer(-2)));
 
     A.set(1, 0, integer(0));
     REQUIRE(A == DenseMatrix(2, 2, {integer(1), integer(0),
@@ -45,9 +45,9 @@ TEST_CASE("test_get_set(): matrices", "[matrices]")
     CSRMatrix B = CSRMatrix(3, 3, {0, 2, 3, 6}, {0, 2, 2, 0, 1, 2},
         {integer(1), integer(2), integer(3), integer(4), integer(5), integer(6)});
 
-    REQUIRE(eq(B.get(0, 0), integer(1)));
-    REQUIRE(eq(B.get(1, 2), integer(3)));
-    REQUIRE(eq(B.get(2, 1), integer(5)));
+    REQUIRE(eq(*B.get(0, 0), *integer(1)));
+    REQUIRE(eq(*B.get(1, 2), *integer(3)));
+    REQUIRE(eq(*B.get(2, 1), *integer(5)));
 
     B.set(2, 1, integer(6));
     REQUIRE(B == CSRMatrix(3, 3, {0, 2, 3, 6}, {0, 2, 2, 0, 1, 2},
@@ -72,9 +72,9 @@ TEST_CASE("test_get_set(): matrices", "[matrices]")
 
     B = CSRMatrix(3, 3); // 3x3 Zero matrix
 
-    REQUIRE(eq(B.get(0, 0), integer(0)));
-    REQUIRE(eq(B.get(1, 2), integer(0)));
-    REQUIRE(eq(B.get(2, 2), integer(0)));
+    REQUIRE(eq(*B.get(0, 0), *integer(0)));
+    REQUIRE(eq(*B.get(1, 2), *integer(0)));
+    REQUIRE(eq(*B.get(2, 2), *integer(0)));
 
     B.set(0, 0, integer(1));
     B.set(0, 2, integer(2));
@@ -933,38 +933,38 @@ TEST_CASE("test_determinant(): matrices", "[matrices]")
 {
     // Test cases are taken from SymPy
     DenseMatrix M = DenseMatrix(1, 1, {integer(1)});
-    REQUIRE(eq(det_bareis(M), integer(1)));
-    REQUIRE(eq(det_berkowitz(M), integer(1)));
+    REQUIRE(eq(*det_bareis(M), *integer(1)));
+    REQUIRE(eq(*det_berkowitz(M), *integer(1)));
 
     M = DenseMatrix(2, 2, {integer(-3), integer(2),
                            integer(8), integer(-5)});
-    REQUIRE(eq(det_bareis(M), integer(-1)));
-    REQUIRE(eq(det_berkowitz(M), integer(-1)));
+    REQUIRE(eq(*det_bareis(M), *integer(-1)));
+    REQUIRE(eq(*det_berkowitz(M), *integer(-1)));
 
     M = DenseMatrix(2, 2, {symbol("x"), integer(1),
                            symbol("y"), mul(integer(2), symbol("y"))});
-    REQUIRE(eq(det_bareis(M), sub(mul(integer(2), mul(symbol("x"), symbol("y"))),
+    REQUIRE(eq(*det_bareis(M), *sub(mul(integer(2), mul(symbol("x"), symbol("y"))),
             symbol("y"))));
 
     M = DenseMatrix(3, 3, {integer(1), integer(1), integer(1),
                            integer(1), integer(2), integer(3),
                            integer(1), integer(3), integer(6)});
-    REQUIRE(eq(det_bareis(M), integer(1)));
-    REQUIRE(eq(det_berkowitz(M), integer(1)));
+    REQUIRE(eq(*det_bareis(M), *integer(1)));
+    REQUIRE(eq(*det_berkowitz(M), *integer(1)));
 
     M = DenseMatrix(4, 4, {integer(3), integer(-2), integer(0), integer(5),
                            integer(-2), integer(1), integer(-2), integer(2),
                            integer(0), integer(-2), integer(5), integer(0),
                            integer(5),  integer(0), integer(3), integer(4)});
-    REQUIRE(eq(det_bareis(M), integer(-289)));
-    REQUIRE(eq(det_berkowitz(M), integer(-289)));
+    REQUIRE(eq(*det_bareis(M), *integer(-289)));
+    REQUIRE(eq(*det_berkowitz(M), *integer(-289)));
 
     M = DenseMatrix(4, 4, {integer(1), integer(2), integer(3), integer(4),
                            integer(5), integer(6), integer(7), integer(8),
                            integer(9), integer(10), integer(11), integer(12),
                            integer(13), integer(14), integer(15), integer(16)});
-    REQUIRE(eq(det_bareis(M), integer(0)));
-    REQUIRE(eq(det_berkowitz(M), integer(0)));
+    REQUIRE(eq(*det_bareis(M), *integer(0)));
+    REQUIRE(eq(*det_berkowitz(M), *integer(0)));
 
     M = DenseMatrix(5, 5, {
             integer(3), integer(2), integer(0), integer(0), integer(0),
@@ -972,8 +972,8 @@ TEST_CASE("test_determinant(): matrices", "[matrices]")
             integer(0), integer(0), integer(3), integer(2), integer(0),
             integer(0), integer(0), integer(0), integer(3), integer(2),
             integer(2), integer(0), integer(0), integer(0), integer(3)});
-    REQUIRE(eq(det_bareis(M), integer(275)));
-    REQUIRE(eq(det_berkowitz(M), integer(275)));
+    REQUIRE(eq(*det_bareis(M), *integer(275)));
+    REQUIRE(eq(*det_berkowitz(M), *integer(275)));
 
     M = DenseMatrix(5, 5, {
         integer(1), integer(0), integer(1), integer(2), integer(12),
@@ -981,8 +981,8 @@ TEST_CASE("test_determinant(): matrices", "[matrices]")
         integer(2), integer(1), integer(1), integer(-1), integer(3),
         integer(3), integer(2), integer(-1), integer(1), integer(8),
         integer(1), integer(1),  integer(1), integer(0), integer(6)});
-    REQUIRE(eq(det_bareis(M), integer(-55)));
-    REQUIRE(eq(det_berkowitz(M), integer(-55)));
+    REQUIRE(eq(*det_bareis(M), *integer(-55)));
+    REQUIRE(eq(*det_berkowitz(M), *integer(-55)));
 
     M = DenseMatrix(5, 5, {
         integer(-5), integer(2), integer(3), integer(4), integer(5),
@@ -990,8 +990,8 @@ TEST_CASE("test_determinant(): matrices", "[matrices]")
         integer(1), integer(2), integer(-3), integer(4), integer(5),
         integer(1), integer(2), integer(3), integer(-2), integer(5),
         integer(1), integer(2), integer(3), integer(4), integer(-1)});
-    REQUIRE(eq(det_bareis(M), integer(11664)));
-    REQUIRE(eq(det_berkowitz(M), integer(11664)));
+    REQUIRE(eq(*det_bareis(M), *integer(11664)));
+    REQUIRE(eq(*det_berkowitz(M), *integer(11664)));
 
     M = DenseMatrix(5, 5, {
         integer(2), integer(7), integer(-1), integer(3), integer(2),
@@ -999,8 +999,8 @@ TEST_CASE("test_determinant(): matrices", "[matrices]")
         integer(-2), integer(0), integer(7), integer(0), integer(2),
         integer(-3), integer(-2), integer(4), integer(5), integer(3),
         integer(1), integer(0), integer(0), integer(0), integer(1)});
-    REQUIRE(eq(det_bareis(M), integer(123)));
-    REQUIRE(eq(det_berkowitz(M), integer(123)));
+    REQUIRE(eq(*det_bareis(M), *integer(123)));
+    REQUIRE(eq(*det_berkowitz(M), *integer(123)));
 }
 
 TEST_CASE("test_berkowitz(): matrices", "[matrices]")

@@ -42,7 +42,7 @@ bool CSRMatrix::eq(const MatrixBase &other) const
                 return false;
 
         for (unsigned i = 0; i < this->p_[row]; i++)
-            if ((this->j_[i] != o.j_[i]) || neq(this->x_[i], o.x_[i]))
+            if ((this->j_[i] != o.j_[i]) || neq(*this->x_[i], *(o.x_[i])))
                 return false;
 
         return true;
@@ -114,7 +114,7 @@ void CSRMatrix::set(unsigned i, unsigned j, const RCP<const Basic> &e)
         }
     }
 
-    if (neq(e, zero)) {
+    if (neq(*e, *zero)) {
         if (k < row_end && j_[k] == j) {
             x_[k] =  e;
         } else {  // j_[k] > j or k is the last non-zero element
@@ -442,7 +442,7 @@ void csr_matmat_pass2(const CSRMatrix &A, const CSRMatrix &B, CSRMatrix &C)
 
         for (unsigned jj = 0; jj < length; jj++) {
 
-            if (neq(sums[head], zero)) {
+            if (neq(*sums[head], *zero)) {
                 C.j_[nnz] = head;
                 C.x_[nnz] = sums[head];
                 nnz++;
@@ -499,7 +499,7 @@ void csr_scale_rows(CSRMatrix& A, const DenseMatrix& X)
     SYMENGINE_ASSERT(A.row_ == X.nrows() && X.ncols() == 1);
 
     for(unsigned i = 0; i < A.row_; i++) {
-        if (eq(X.get(i, 0), zero))
+        if (eq(*(X.get(i, 0)), *zero))
             throw std::runtime_error("Scaling factor can't be zero");
         for (unsigned jj = A.p_[i]; jj < A.p_[i + 1]; jj++)
             A.x_[jj] = mul(A.x_[jj], X.get(i, 0));
@@ -516,7 +516,7 @@ void csr_scale_columns(CSRMatrix& A, const DenseMatrix& X)
     unsigned i;
 
     for (i = 0; i < A.col_; i++) {
-        if (eq(X.get(i, 0), zero))
+        if (eq(*(X.get(i, 0)), *zero))
             throw std::runtime_error("Scaling factor can't be zero");
     }
 
@@ -550,7 +550,7 @@ void csr_binop_csr_canonical(const CSRMatrix& A, const CSRMatrix& B, CSRMatrix& 
 
             if (A_j == B_j) {
                 RCP<const Basic> result = bin_op(A.x_[A_pos], B.x_[B_pos]);
-                if (neq(result, zero)) {
+                if (neq(*result, *zero)) {
                     C.j_.push_back(A_j);
                     C.x_.push_back(result);
                     nnz++;
@@ -559,7 +559,7 @@ void csr_binop_csr_canonical(const CSRMatrix& A, const CSRMatrix& B, CSRMatrix& 
                 B_pos++;
             } else if (A_j < B_j) {
                 RCP<const Basic> result = bin_op(A.x_[A_pos], zero);
-                if (neq(result, zero)) {
+                if (neq(*result, *zero)) {
                     C.j_.push_back(A_j);
                     C.x_.push_back(result);
                     nnz++;
@@ -568,7 +568,7 @@ void csr_binop_csr_canonical(const CSRMatrix& A, const CSRMatrix& B, CSRMatrix& 
             } else {
                 //B_j < A_j
                 RCP<const Basic> result = bin_op(zero, B.x_[B_pos]);
-                if (neq(result, zero)) {
+                if (neq(*result, *zero)) {
                     C.j_.push_back(B_j);
                     C.x_.push_back(result);
                     nnz++;
@@ -580,7 +580,7 @@ void csr_binop_csr_canonical(const CSRMatrix& A, const CSRMatrix& B, CSRMatrix& 
         //tail
         while (A_pos < A_end) {
             RCP<const Basic> result = bin_op(A.x_[A_pos], zero);
-            if (neq(result, zero)) {
+            if (neq(*result, *zero)) {
                 C.j_.push_back(A.j_[A_pos]);
                 C.x_.push_back(result);
                 nnz++;
@@ -589,7 +589,7 @@ void csr_binop_csr_canonical(const CSRMatrix& A, const CSRMatrix& B, CSRMatrix& 
         }
         while (B_pos < B_end) {
             RCP<const Basic> result = bin_op(zero, B.x_[B_pos]);
-            if (neq(result, zero)) {
+            if (neq(*result, *zero)) {
                 C.j_.push_back(B.j_[B_pos]);
                 C.x_.push_back(result);
                 nnz++;

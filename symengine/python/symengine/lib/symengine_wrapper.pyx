@@ -230,9 +230,9 @@ cdef class Basic(object):
 
     def _richcmp_(Basic A, Basic B, int op):
         if (op == 2):
-            return symengine.eq(A.thisptr, B.thisptr)
+            return symengine.eq(deref(A.thisptr), deref(B.thisptr))
         elif (op == 3):
-            return symengine.neq(A.thisptr, B.thisptr)
+            return symengine.neq(deref(A.thisptr), deref(B.thisptr))
         else:
             return NotImplemented
 

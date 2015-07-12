@@ -40,18 +40,18 @@ TEST_CASE("RealMPFR: arithmetic", "[number]")
     RCP<const Number> half = integer(1)->div(*integer(2));
     RCP<const Number> c1 = Complex::from_two_nums(*i1, *i1);
 
-    REQUIRE(eq(r2, addnum(r1, r1)));
-    REQUIRE(eq(r2, mulnum(r1, i2)));
-    REQUIRE(eq(r2, mulnum(i2, r1)));
-    REQUIRE(eq(r1, divnum(r2, i2)));
-    REQUIRE(eq(divnum(i1, r1), divnum(i2, r2)));
-    REQUIRE(eq(r1, subnum(r2, r1)));
-    REQUIRE(eq(r1, subnum(integer(20), r1)));
-    REQUIRE(eq(r1, mulnum(r2, half)));
-    REQUIRE(eq(r3, pownum(r1, i2)));
-    REQUIRE(eq(r4, pownum(i2, r1)));
-    REQUIRE(eq(r1, pownum(r3, half)));
-    REQUIRE(eq(divnum(i1, r4), half->pow(*r1)));
+    REQUIRE(eq(*r2, *addnum(r1, r1)));
+    REQUIRE(eq(*r2, *mulnum(r1, i2)));
+    REQUIRE(eq(*r2, *mulnum(i2, r1)));
+    REQUIRE(eq(*r1, *divnum(r2, i2)));
+    REQUIRE(eq(*divnum(i1, r1), *divnum(i2, r2)));
+    REQUIRE(eq(*r1, *subnum(r2, r1)));
+    REQUIRE(eq(*r1, *subnum(integer(20), r1)));
+    REQUIRE(eq(*r1, *mulnum(r2, half)));
+    REQUIRE(eq(*r3, *pownum(r1, i2)));
+    REQUIRE(eq(*r4, *pownum(i2, r1)));
+    REQUIRE(eq(*r1, *pownum(r3, half)));
+    REQUIRE(eq(*divnum(i1, r4), *half->pow(*r1)));
 #ifdef HAVE_SYMENGINE_MPC
     REQUIRE(is_a<ComplexMPC>(*addnum(r1, c1)));
     REQUIRE(is_a<ComplexMPC>(*mulnum(c1, r2)));
@@ -84,17 +84,17 @@ TEST_CASE("ComplexMPC: arithmetic", "[number]")
     RCP<const Number> half = integer(1)->div(*integer(2));
     RCP<const Number> c1 = Complex::from_two_nums(*integer(10), *integer(7));
 
-    REQUIRE(eq(r2, addnum(c1, r1)));
-    REQUIRE(eq(r2, mulnum(r1, i2)));
-    REQUIRE(eq(r2, mulnum(i2, r1)));
-    REQUIRE(eq(r1, divnum(r2, i2)));
-    REQUIRE(eq(divnum(i1, r1), divnum(i2, r2)));
-    REQUIRE(eq(r1, subnum(r2, r1)));
-    REQUIRE(eq(r1, subnum(mulnum(c1, i2), r1)));
-    REQUIRE(eq(r1, mulnum(r2, half)));
-    REQUIRE(eq(r3, pownum(r1, i2)));
-    REQUIRE(eq(r4, pownum(i2, r1)));
-    REQUIRE(eq(r1, pownum(r3, half)));
-    REQUIRE(eq(divnum(i1, r4), half->pow(*r1)));
+    REQUIRE(eq(*r2, *addnum(c1, r1)));
+    REQUIRE(eq(*r2, *mulnum(r1, i2)));
+    REQUIRE(eq(*r2, *mulnum(i2, r1)));
+    REQUIRE(eq(*r1, *divnum(r2, i2)));
+    REQUIRE(eq(*divnum(i1, r1), *divnum(i2, r2)));
+    REQUIRE(eq(*r1, *subnum(r2, r1)));
+    REQUIRE(eq(*r1, *subnum(mulnum(c1, i2), r1)));
+    REQUIRE(eq(*r1, *mulnum(r2, half)));
+    REQUIRE(eq(*r3, *pownum(r1, i2)));
+    REQUIRE(eq(*r4, *pownum(i2, r1)));
+    REQUIRE(eq(*r1, *pownum(r3, half)));
+    REQUIRE(eq(*divnum(i1, r4), *half->pow(*r1)));
 #endif //HAVE_SYMENGINE_MPC
 }
