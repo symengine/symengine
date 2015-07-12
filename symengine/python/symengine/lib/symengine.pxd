@@ -71,6 +71,7 @@ cdef extern from "<symengine/symengine_rcp.h>" namespace "SymEngine":
     RCP[const ComplexDouble] rcp_static_cast_ComplexDouble "SymEngine::rcp_static_cast<const SymEngine::ComplexDouble>"(RCP[const Basic] &b) nogil
     RCP[const RealMPFR] rcp_static_cast_RealMPFR "SymEngine::rcp_static_cast<const SymEngine::RealMPFR>"(RCP[const Basic] &b) nogil
     RCP[const ComplexMPC] rcp_static_cast_ComplexMPC "SymEngine::rcp_static_cast<const SymEngine::ComplexMPC>"(RCP[const Basic] &b) nogil
+    RCP[const Log] rcp_static_cast_Log "SymEngine::rcp_static_cast<const SymEngine::Log>"(RCP[const Basic] &b) nogil
     Ptr[RCP[Basic]] outArg(RCP[const Basic] &arg) nogil
     Ptr[RCP[Integer]] outArg_Integer "SymEngine::outArg<SymEngine::RCP<const SymEngine::Integer>>"(RCP[const Integer] &arg) nogil
 
@@ -115,6 +116,7 @@ cdef extern from "<symengine/basic.h>" namespace "SymEngine":
     bool is_a_ComplexDouble "SymEngine::is_a<SymEngine::ComplexDouble>"(const Basic &b) nogil
     bool is_a_RealMPFR "SymEngine::is_a<SymEngine::RealMPFR>"(const Basic &b) nogil
     bool is_a_ComplexMPC "SymEngine::is_a<SymEngine::ComplexMPC>"(const Basic &b) nogil
+    bool is_a_Log "SymEngine::is_a<SymEngine::Log>"(const Basic &b) nogil
 
     RCP[const Basic] expand(RCP[const Basic] &o) nogil except +
 
@@ -191,10 +193,14 @@ cdef extern from "<symengine/pow.h>" namespace "SymEngine":
     cdef RCP[const Basic] pow(RCP[const Basic] &a, RCP[const Basic] &b) nogil except+
     cdef RCP[const Basic] sqrt(RCP[const Basic] &x) nogil except+
     cdef RCP[const Basic] exp(RCP[const Basic] &x) nogil except+
+    cdef RCP[const Basic] log(RCP[const Basic] &x, RCP[const Basic] &y) nogil except+
 
     cdef cppclass Pow(Basic):
         RCP[const Basic] get_base() nogil
         RCP[const Basic] get_exp() nogil
+
+    cdef cppclass Log(Basic):
+        RCP[const Basic] get_arg() nogil
 
 
 cdef extern from "<symengine/basic.h>" namespace "SymEngine":

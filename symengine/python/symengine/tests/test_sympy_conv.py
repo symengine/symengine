@@ -1,5 +1,5 @@
 from symengine import (Symbol, Integer, sympify, SympifyError, sin, cos,
-        function_symbol, I, E, pi, exp, have_mpfr, have_mpc, DenseMatrix)
+        function_symbol, I, E, pi, exp, have_mpfr, have_mpc, DenseMatrix, log)
 from symengine.lib.symengine_wrapper import Subs, Derivative, RealMPFR, ComplexMPC
 import sympy
 
@@ -283,3 +283,19 @@ def test_mpc():
         b = sympy.Float(1, 29) + sympy.Float(2, 29) * sympy.I
         assert sympify(b) == a
         assert b == a._sympy_()
+
+def test_log():
+    x = Symbol("x")
+    x1 = sympy.Symbol("x")
+
+    assert log(x) == log(x1)
+    assert log(x)._sympy_() == sympy.log(x1)
+    assert sympify(sympy.log(x1)) == log(x)
+
+    y = Symbol("y")
+    y1 = sympy.Symbol("y")
+
+    assert log(x, y) == log(x, y1)
+    assert log(x1, y) == log(x1, y1)
+    assert log(x, y)._sympy_() == sympy.log(x1, y1)
+    assert sympify(sympy.log(x1, y1)) == log(x, y)

@@ -66,3 +66,6 @@ cdef class MatrixBase(object):
 
 cdef class DenseMatrix(MatrixBase):
     pass
+
+cdef class Log(Basic):
+    pass

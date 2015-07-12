@@ -51,6 +51,8 @@ cdef c2py(RCP[const symengine.Basic] o):
         r = RealMPFR.__new__(RealMPFR)
     elif (symengine.is_a_ComplexMPC(deref(o))):
         r = ComplexMPC.__new__(ComplexMPC)
+    elif (symengine.is_a_Log(deref(o))):
+        r = Log.__new__(Log)
     else:
         raise Exception("Unsupported SymEngine class.")
     r.thisptr = o
@@ -93,6 +95,8 @@ def sympy2symengine(a, raise_error=False):
         return sin(a.args[0])
     elif isinstance(a, sympy.cos):
         return cos(a.args[0])
+    elif isinstance(a, sympy.log):
+        return log(a.args[0])
     elif isinstance(a, sympy.Abs):
         return abs(sympy2symengine(a.args[0], True))
     elif isinstance(a, sympy.Derivative):
@@ -600,6 +604,20 @@ cdef class Pow(Basic):
         exp = c2py(deref(X).get_exp())
         return base._sage_() ** exp._sage_()
 
+cdef class Log(Basic):
+
+    def _sympy_(self):
+        import sympy
+        cdef RCP[const symengine.Log] X = symengine.rcp_static_cast_Log(self.thisptr)
+        arg = c2py(deref(X).get_arg())
+        return sympy.log(arg._sympy_())
+
+    def _sage_(self):
+        import sage.all as sage
+        cdef RCP[const symengine.Log] X = symengine.rcp_static_cast_Log(self.thisptr)
+        arg = c2py(deref(X).get_arg())
+        return sage.log(arg._sage_())
+
 cdef class Function(Basic):
     pass
 
@@ -1044,6 +1062,10 @@ cdef class Sieve_iterator:
         else:
             return n
 
+I = c2py(symengine.I)
+E = c2py(symengine.E)
+pi = c2py(symengine.pi)
+
 def sin(x):
     cdef Basic X = sympify(x)
     return c2py(symengine.sin(X.thisptr))
@@ -1068,6 +1090,11 @@ def sqrt(x):
 def exp(x):
     cdef Basic X = sympify(x)
     return c2py(symengine.exp(X.thisptr))
+
+def log(x, y = E):
+    cdef Basic X = sympify(x)
+    cdef Basic Y = sympify(y)
+    return c2py(symengine.log(X.thisptr, Y.thisptr))
 
 def eval_double(x):
     cdef Basic X = sympify(x)
@@ -1428,10 +1455,6 @@ def powermod_list(a, b, m):
 def eval_double(basic):
     cdef Basic b = sympify(basic)
     return symengine.eval_double(deref(b.thisptr))
-
-I = c2py(symengine.I)
-E = c2py(symengine.E)
-pi = c2py(symengine.pi)
 
 # Turn on nice stacktraces:
 symengine.print_stack_on_segfault()

@@ -1,4 +1,4 @@
-from symengine import Symbol, sin, cos, sqrt, Add, Mul, function_symbol, Integer
+from symengine import Symbol, sin, cos, sqrt, Add, Mul, function_symbol, Integer, log, E
 from symengine.lib.symengine_wrapper import Subs, Derivative
 
 def test_sin():
@@ -93,3 +93,10 @@ def test_FunctionWrapper():
     s = Integer(2)*r
     assert isinstance(s, Mul)
     assert isinstance(s.args[1]._sympy_(), sympy.Ynm)
+
+def test_log():
+    x = Symbol("x")
+    y = Symbol("y")
+    assert log(E) == 1
+    assert log(x, x) == 1
+    assert log(x, y) == log(x) / log(y)
