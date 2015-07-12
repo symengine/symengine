@@ -101,8 +101,8 @@ bool has_symbol(const Basic &b, const RCP<const Symbol> &x)
     return v.apply(b, x);
 }
 
-RCP<const Basic> coef(const Basic &b, const RCP<const Symbol> &x,
-                      const RCP<const Integer> &n)
+RCP<const Basic> coeff(const Basic &b, const RCP<const Symbol> &x,
+        const RCP<const Integer> &n)
 {
     CoeffVisitor v;
     return v.apply(b, x, n);
