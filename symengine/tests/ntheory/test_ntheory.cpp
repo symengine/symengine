@@ -451,9 +451,7 @@ TEST_CASE("test_primitive_root(): ntheory", "[ntheory]")
     REQUIRE(roots.size() == 4);
     v = {integer(7), integer(13), integer(17), integer(19)};
     bool same = std::equal(v.begin(), v.end(), roots.begin(),
-            [](const RCP<const Basic> &a, const RCP<const Basic> &b) {
-                return SymEngine::eq(*a, *b);
-            });
+            SymEngine::RCPBasicKeyEq());
     REQUIRE(same == true);
 }
 
@@ -585,9 +583,7 @@ TEST_CASE("test_nthroot_mod(): ntheory", "[ntheory]")
     REQUIRE(roots.size() == 6);
     v = {integer(3), integer(6), integer(12), integer(15), integer(21), integer(24)};
     bool same = std::equal(v.begin(), v.end(), roots.begin(),
-            [](const RCP<const Basic> &a, const RCP<const Basic> &b) {
-                return SymEngine::eq(*a, *b);
-            });
+            SymEngine::RCPBasicKeyEq());
     REQUIRE(same == true);
 
     roots.clear();
