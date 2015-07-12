@@ -51,18 +51,6 @@ inline std::ostream& print_vec_rcp(std::ostream& out, T& d)
     return out;
 }
 
-template<class T>
-inline std::ostream& print_set(std::ostream& out, T& d)
-{
-    out << "{";
-    for (auto p = d.begin(); p != d.end(); p++) {
-        if (p != d.begin()) out << ", ";
-        out << (*p).first << ": " << (*p).second;
-    }
-    out << "}";
-    return out;
-}
-
 } // SymEngine
 
 
@@ -119,7 +107,7 @@ std::ostream& operator<<(std::ostream& out, const SymEngine::set_basic& d)
 #if defined(HAVE_SYMENGINE_PIRANHA)
 std::ostream& operator<<(std::ostream& out, const SymEngine::hash_set& d)
 {
-    return print_set(out, d);
+    return print_map(out, d);
 }
 #endif
 
