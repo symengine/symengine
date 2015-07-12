@@ -1,7 +1,7 @@
 from .lib.symengine_wrapper import (Symbol, Integer, sympify, SympifyError,
-        Add, Mul, Pow, exp, sin, cos, sqrt, function_symbol, I, E, pi,
+        Add, Mul, Pow, exp, log, sqrt, function_symbol, I, E, pi,
         have_mpfr, have_mpc, RealDouble, ComplexDouble, DenseMatrix,
-        log)
+        sin, cos, tan, cot, csc, sec, asin, acos, atan, acot, acsc, asec)
 from .utilities import var, symbols
 
 if have_mpfr:

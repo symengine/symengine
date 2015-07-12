@@ -60,8 +60,7 @@ cdef extern from "<symengine/symengine_rcp.h>" namespace "SymEngine":
     RCP[const Add] rcp_static_cast_Add "SymEngine::rcp_static_cast<const SymEngine::Add>"(RCP[const Basic] &b) nogil
     RCP[const Mul] rcp_static_cast_Mul "SymEngine::rcp_static_cast<const SymEngine::Mul>"(RCP[const Basic] &b) nogil
     RCP[const Pow] rcp_static_cast_Pow "SymEngine::rcp_static_cast<const SymEngine::Pow>"(RCP[const Basic] &b) nogil
-    RCP[const Sin] rcp_static_cast_Sin "SymEngine::rcp_static_cast<const SymEngine::Sin>"(RCP[const Basic] &b) nogil
-    RCP[const Cos] rcp_static_cast_Cos "SymEngine::rcp_static_cast<const SymEngine::Cos>"(RCP[const Basic] &b) nogil
+    RCP[const TrigFunction] rcp_static_cast_TrigFunction "SymEngine::rcp_static_cast<const SymEngine::TrigFunction>"(RCP[const Basic] &b) nogil
     RCP[const FunctionSymbol] rcp_static_cast_FunctionSymbol "SymEngine::rcp_static_cast<const SymEngine::FunctionSymbol>"(RCP[const Basic] &b) nogil
     RCP[const FunctionWrapper] rcp_static_cast_FunctionWrapper "SymEngine::rcp_static_cast<const SymEngine::FunctionWrapper>"(RCP[const Basic] &b) nogil
     RCP[const Abs] rcp_static_cast_Abs "SymEngine::rcp_static_cast<const SymEngine::Abs>"(RCP[const Basic] &b) nogil
@@ -107,6 +106,16 @@ cdef extern from "<symengine/basic.h>" namespace "SymEngine":
     bool is_a_Constant "SymEngine::is_a<SymEngine::Constant>"(const Basic &b) nogil
     bool is_a_Sin "SymEngine::is_a<SymEngine::Sin>"(const Basic &b) nogil
     bool is_a_Cos "SymEngine::is_a<SymEngine::Cos>"(const Basic &b) nogil
+    bool is_a_Tan "SymEngine::is_a<SymEngine::Tan>"(const Basic &b) nogil
+    bool is_a_Cot "SymEngine::is_a<SymEngine::Cot>"(const Basic &b) nogil
+    bool is_a_Csc "SymEngine::is_a<SymEngine::Csc>"(const Basic &b) nogil
+    bool is_a_Sec "SymEngine::is_a<SymEngine::Sec>"(const Basic &b) nogil
+    bool is_a_ASin "SymEngine::is_a<SymEngine::ASin>"(const Basic &b) nogil
+    bool is_a_ACos "SymEngine::is_a<SymEngine::ACos>"(const Basic &b) nogil
+    bool is_a_ATan "SymEngine::is_a<SymEngine::ATan>"(const Basic &b) nogil
+    bool is_a_ACot "SymEngine::is_a<SymEngine::ACot>"(const Basic &b) nogil
+    bool is_a_ACsc "SymEngine::is_a<SymEngine::ACsc>"(const Basic &b) nogil
+    bool is_a_ASec "SymEngine::is_a<SymEngine::ASec>"(const Basic &b) nogil
     bool is_a_FunctionSymbol "SymEngine::is_a<SymEngine::FunctionSymbol>"(const Basic &b) nogil
     bool is_a_Abs "SymEngine::is_a<SymEngine::Abs>"(const Basic &b) nogil
     bool is_a_Derivative "SymEngine::is_a<SymEngine::Derivative>"(const Basic &b) nogil
@@ -219,17 +228,60 @@ cdef extern from "<symengine/basic.h>" namespace "SymEngine":
 cdef extern from "<symengine/functions.h>" namespace "SymEngine":
     cdef RCP[const Basic] sin(RCP[const Basic] &arg) nogil except+
     cdef RCP[const Basic] cos(RCP[const Basic] &arg) nogil except+
+    cdef RCP[const Basic] tan(RCP[const Basic] &arg) nogil except+
+    cdef RCP[const Basic] cot(RCP[const Basic] &arg) nogil except+
+    cdef RCP[const Basic] csc(RCP[const Basic] &arg) nogil except+
+    cdef RCP[const Basic] sec(RCP[const Basic] &arg) nogil except+
+    cdef RCP[const Basic] asin(RCP[const Basic] &arg) nogil except+
+    cdef RCP[const Basic] acos(RCP[const Basic] &arg) nogil except+
+    cdef RCP[const Basic] atan(RCP[const Basic] &arg) nogil except+
+    cdef RCP[const Basic] acot(RCP[const Basic] &arg) nogil except+
+    cdef RCP[const Basic] acsc(RCP[const Basic] &arg) nogil except+
+    cdef RCP[const Basic] asec(RCP[const Basic] &arg) nogil except+
     cdef RCP[const Basic] function_symbol(string name, const vec_basic &arg) nogil except+
     cdef RCP[const Basic] abs(RCP[const Basic] &arg) nogil except+
 
     cdef cppclass Function(Basic):
         pass
 
-    cdef cppclass Sin(Function):
+    cdef cppclass TrigFunction(Function):
         RCP[const Basic] get_arg() nogil
 
-    cdef cppclass Cos(Function):
-        RCP[const Basic] get_arg() nogil
+    cdef cppclass Sin(TrigFunction):
+        pass
+
+    cdef cppclass Cos(TrigFunction):
+        pass
+
+    cdef cppclass Tan(TrigFunction):
+        pass
+
+    cdef cppclass Cot(TrigFunction):
+        pass
+
+    cdef cppclass Csc(TrigFunction):
+        pass
+
+    cdef cppclass Sec(TrigFunction):
+        pass
+
+    cdef cppclass ASin(TrigFunction):
+        pass
+
+    cdef cppclass ACos(TrigFunction):
+        pass
+
+    cdef cppclass ATan(TrigFunction):
+        pass
+
+    cdef cppclass ACot(TrigFunction):
+        pass
+
+    cdef cppclass ACsc(TrigFunction):
+        pass
+
+    cdef cppclass ASec(TrigFunction):
+        pass
 
     cdef cppclass FunctionSymbol(Function):
         string get_name() nogil

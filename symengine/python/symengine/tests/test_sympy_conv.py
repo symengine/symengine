@@ -1,5 +1,6 @@
-from symengine import (Symbol, Integer, sympify, SympifyError, sin, cos,
-        function_symbol, I, E, pi, exp, have_mpfr, have_mpc, DenseMatrix, log)
+from symengine import (Symbol, Integer, sympify, SympifyError, log,
+        function_symbol, I, E, pi, exp, have_mpfr, have_mpc, DenseMatrix,
+        sin, cos, tan, cot, csc, sec, asin, acos, atan, acot, acsc, asec)
 from symengine.lib.symengine_wrapper import Subs, Derivative, RealMPFR, ComplexMPC
 import sympy
 
@@ -113,9 +114,32 @@ def test_conv6b():
 def test_conv7():
     x = Symbol("x")
     y = Symbol("y")
+    assert sin(x/3) == sin(sympy.Symbol("x") / 3)
+    assert cos(x/3) == cos(sympy.Symbol("x") / 3)
+    assert tan(x/3) == tan(sympy.Symbol("x") / 3)
+    assert cot(x/3) == cot(sympy.Symbol("x") / 3)
+    assert csc(x/3) == csc(sympy.Symbol("x") / 3)
+    assert sec(x/3) == sec(sympy.Symbol("x") / 3)
+    assert asin(x/3) == asin(sympy.Symbol("x") / 3)
+    assert acos(x/3) == acos(sympy.Symbol("x") / 3)
+    assert atan(x/3) == atan(sympy.Symbol("x") / 3)
+    assert acot(x/3) == acot(sympy.Symbol("x") / 3)
+    assert acsc(x/3) == acsc(sympy.Symbol("x") / 3)
+    assert asec(x/3) == asec(sympy.Symbol("x") / 3)
+
     assert sin(x/3)._sympy_() == sympy.sin(sympy.Symbol("x") / 3)
     assert sin(x/3)._sympy_() != sympy.cos(sympy.Symbol("x") / 3)
     assert cos(x/3)._sympy_() == sympy.cos(sympy.Symbol("x") / 3)
+    assert tan(x/3)._sympy_() == sympy.tan(sympy.Symbol("x") / 3)
+    assert cot(x/3)._sympy_() == sympy.cot(sympy.Symbol("x") / 3)
+    assert csc(x/3)._sympy_() == sympy.csc(sympy.Symbol("x") / 3)
+    assert sec(x/3)._sympy_() == sympy.sec(sympy.Symbol("x") / 3)
+    assert asin(x/3)._sympy_() == sympy.asin(sympy.Symbol("x") / 3)
+    assert acos(x/3)._sympy_() == sympy.acos(sympy.Symbol("x") / 3)
+    assert atan(x/3)._sympy_() == sympy.atan(sympy.Symbol("x") / 3)
+    assert acot(x/3)._sympy_() == sympy.acot(sympy.Symbol("x") / 3)
+    assert acsc(x/3)._sympy_() == sympy.acsc(sympy.Symbol("x") / 3)
+    assert asec(x/3)._sympy_() == sympy.asec(sympy.Symbol("x") / 3)
 
 def test_conv7b():
     x = sympy.Symbol("x")
@@ -123,6 +147,16 @@ def test_conv7b():
     assert sympify(sympy.sin(x/3)) == sin(Symbol("x") / 3)
     assert sympify(sympy.sin(x/3)) != cos(Symbol("x") / 3)
     assert sympify(sympy.cos(x/3)) == cos(Symbol("x") / 3)
+    assert sympify(sympy.tan(x/3)) == tan(Symbol("x") / 3)
+    assert sympify(sympy.cot(x/3)) == cot(Symbol("x") / 3)
+    assert sympify(sympy.csc(x/3)) == csc(Symbol("x") / 3)
+    assert sympify(sympy.sec(x/3)) == sec(Symbol("x") / 3)
+    assert sympify(sympy.asin(x/3)) == asin(Symbol("x") / 3)
+    assert sympify(sympy.acos(x/3)) == acos(Symbol("x") / 3)
+    assert sympify(sympy.atan(x/3)) == atan(Symbol("x") / 3)
+    assert sympify(sympy.acot(x/3)) == acot(Symbol("x") / 3)
+    assert sympify(sympy.acsc(x/3)) == acsc(Symbol("x") / 3)
+    assert sympify(sympy.asec(x/3)) == asec(Symbol("x") / 3)
 
 def test_conv8():
     e1 = function_symbol("f", Symbol("x"))
