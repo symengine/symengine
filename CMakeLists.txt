@@ -282,6 +282,8 @@ if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(WITH_SYMENGINE_RCP no) # Use the Teuchos::RCP
     set(HAVE_TEUCHOS_DEBUG yes) # Enable safety checks
     set(HAVE_TEUCHOS_DEBUG_RCP_NODE_TRACING yes) # Enable safety checks
+
+    set(WITH_SYMENGINE_ASSERT yes) # Also enable assertions
 endif()
 
 enable_testing()
