@@ -836,7 +836,7 @@ cdef class DenseMatrix(MatrixBase):
 
     def jacobian(self, x):
         cdef DenseMatrix x_ = sympify(x)
-        R = DenseMatrix(self.nrows(), x.nrows(), [0]*self.nrows()*self.nrows())
+        R = DenseMatrix(self.nrows(), x.nrows(), [0]*self.nrows()*x.nrows())
         symengine.jacobian(<const symengine.DenseMatrix &>deref(self.thisptr),
                 <const symengine.DenseMatrix &>deref(x_.thisptr),
                 <symengine.DenseMatrix &>deref(R.thisptr))
