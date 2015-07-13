@@ -73,6 +73,22 @@ cdef c2py(RCP[const symengine.Basic] o):
         r = ACsc.__new__(ACsc)
     elif (symengine.is_a_ASec(deref(o))):
         r = ASec.__new__(ASec)
+    elif (symengine.is_a_Sinh(deref(o))):
+        r = Sinh.__new__(Sinh)
+    elif (symengine.is_a_Cosh(deref(o))):
+        r = Cosh.__new__(Cosh)
+    elif (symengine.is_a_Tanh(deref(o))):
+        r = Tanh.__new__(Tanh)
+    elif (symengine.is_a_Coth(deref(o))):
+        r = Coth.__new__(Coth)
+    elif (symengine.is_a_ASinh(deref(o))):
+        r = ASinh.__new__(ASinh)
+    elif (symengine.is_a_ACosh(deref(o))):
+        r = ACosh.__new__(ACosh)
+    elif (symengine.is_a_ATanh(deref(o))):
+        r = ATanh.__new__(ATanh)
+    elif (symengine.is_a_ACoth(deref(o))):
+        r = ACoth.__new__(ACoth)
     else:
         raise Exception("Unsupported SymEngine class.")
     r.thisptr = o
@@ -111,30 +127,49 @@ def sympy2symengine(a, raise_error=False):
         return E
     elif a is sympy.pi:
         return pi
-    elif isinstance(a, sympy.sin):
-        return sin(a.args[0])
-    elif isinstance(a, sympy.cos):
-        return cos(a.args[0])
-    elif isinstance(a, sympy.tan):
-        return tan(a.args[0])
-    elif isinstance(a, sympy.cot):
-        return cot(a.args[0])
-    elif isinstance(a, sympy.csc):
-        return csc(a.args[0])
-    elif isinstance(a, sympy.sec):
-        return sec(a.args[0])
-    elif isinstance(a, sympy.asin):
-        return asin(a.args[0])
-    elif isinstance(a, sympy.acos):
-        return acos(a.args[0])
-    elif isinstance(a, sympy.atan):
-        return atan(a.args[0])
-    elif isinstance(a, sympy.acot):
-        return acot(a.args[0])
-    elif isinstance(a, sympy.acsc):
-        return acsc(a.args[0])
-    elif isinstance(a, sympy.asec):
-        return asec(a.args[0])
+    elif isinstance(a, sympy.functions.elementary.trigonometric.TrigonometricFunction):
+        if isinstance(a, sympy.sin):
+            return sin(a.args[0])
+        elif isinstance(a, sympy.cos):
+            return cos(a.args[0])
+        elif isinstance(a, sympy.tan):
+            return tan(a.args[0])
+        elif isinstance(a, sympy.cot):
+            return cot(a.args[0])
+        elif isinstance(a, sympy.csc):
+            return csc(a.args[0])
+        elif isinstance(a, sympy.sec):
+            return sec(a.args[0])
+    elif isinstance(a, sympy.functions.elementary.trigonometric.InverseTrigonometricFunction):
+        if isinstance(a, sympy.asin):
+            return asin(a.args[0])
+        elif isinstance(a, sympy.acos):
+            return acos(a.args[0])
+        elif isinstance(a, sympy.atan):
+            return atan(a.args[0])
+        elif isinstance(a, sympy.acot):
+            return acot(a.args[0])
+        elif isinstance(a, sympy.acsc):
+            return acsc(a.args[0])
+        elif isinstance(a, sympy.asec):
+            return asec(a.args[0])
+    elif isinstance(a, sympy.functions.elementary.hyperbolic.HyperbolicFunction):
+        if isinstance(a, sympy.sinh):
+            return sinh(a.args[0])
+        elif isinstance(a, sympy.cosh):
+            return cosh(a.args[0])
+        elif isinstance(a, sympy.tanh):
+            return tanh(a.args[0])
+        elif isinstance(a, sympy.coth):
+            return coth(a.args[0])
+    elif isinstance(a, sympy.asinh):
+        return asinh(a.args[0])
+    elif isinstance(a, sympy.acosh):
+        return acosh(a.args[0])
+    elif isinstance(a, sympy.atanh):
+        return atanh(a.args[0])
+    elif isinstance(a, sympy.acoth):
+        return acoth(a.args[0])
     elif isinstance(a, sympy.log):
         return log(a.args[0])
     elif isinstance(a, sympy.Abs):
@@ -661,7 +696,7 @@ cdef class Log(Basic):
 cdef class Function(Basic):
     pass
 
-cdef class TrigFunction(Basic):
+cdef class TrigFunction(Function):
     def get_arg(self):
         cdef RCP[const symengine.TrigFunction] X = symengine.rcp_static_cast_TrigFunction(self.thisptr)
         return c2py(deref(X).get_arg())
@@ -785,6 +820,91 @@ cdef class ASec(TrigFunction):
     def _sage_(self):
         import sage.all as sage
         return sage.asec(self.get_arg()._sage_())
+
+cdef class HyperbolicFunction(Function):
+    def get_arg(self):
+        cdef RCP[const symengine.HyperbolicFunction] X = symengine.rcp_static_cast_HyperbolicFunction(self.thisptr)
+        return c2py(deref(X).get_arg())
+
+cdef class Sinh(HyperbolicFunction):
+
+    def _sympy_(self):
+        import sympy
+        return sympy.sinh(self.get_arg()._sympy_())
+
+    def _sage_(self):
+        import sage.all as sage
+        return sage.sinh(self.get_arg()._sage_())
+
+cdef class Cosh(HyperbolicFunction):
+
+    def _sympy_(self):
+        import sympy
+        return sympy.cosh(self.get_arg()._sympy_())
+
+    def _sage_(self):
+        import sage.all as sage
+        return sage.cosh(self.get_arg()._sage_())
+
+cdef class Tanh(HyperbolicFunction):
+
+    def _sympy_(self):
+        import sympy
+        return sympy.tanh(self.get_arg()._sympy_())
+
+    def _sage_(self):
+        import sage.all as sage
+        return sage.tanh(self.get_arg()._sage_())
+
+cdef class Coth(HyperbolicFunction):
+
+    def _sympy_(self):
+        import sympy
+        return sympy.coth(self.get_arg()._sympy_())
+
+    def _sage_(self):
+        import sage.all as sage
+        return sage.coth(self.get_arg()._sage_())
+
+cdef class ASinh(HyperbolicFunction):
+
+    def _sympy_(self):
+        import sympy
+        return sympy.asinh(self.get_arg()._sympy_())
+
+    def _sage_(self):
+        import sage.all as sage
+        return sage.asinh(self.get_arg()._sage_())
+
+cdef class ACosh(HyperbolicFunction):
+
+    def _sympy_(self):
+        import sympy
+        return sympy.acosh(self.get_arg()._sympy_())
+
+    def _sage_(self):
+        import sage.all as sage
+        return sage.acosh(self.get_arg()._sage_())
+
+cdef class ATanh(HyperbolicFunction):
+
+    def _sympy_(self):
+        import sympy
+        return sympy.atanh(self.get_arg()._sympy_())
+
+    def _sage_(self):
+        import sage.all as sage
+        return sage.atanh(self.get_arg()._sage_())
+
+cdef class ACoth(HyperbolicFunction):
+
+    def _sympy_(self):
+        import sympy
+        return sympy.acoth(self.get_arg()._sympy_())
+
+    def _sage_(self):
+        import sage.all as sage
+        return sage.acoth(self.get_arg()._sage_())
 
 cdef class FunctionSymbol(Function):
 
@@ -1250,6 +1370,38 @@ def asec(x):
 def acsc(x):
     cdef Basic X = sympify(x)
     return c2py(symengine.acsc(X.thisptr))
+
+def sinh(x):
+    cdef Basic X = sympify(x)
+    return c2py(symengine.sinh(X.thisptr))
+
+def cosh(x):
+    cdef Basic X = sympify(x)
+    return c2py(symengine.cosh(X.thisptr))
+
+def tanh(x):
+    cdef Basic X = sympify(x)
+    return c2py(symengine.tanh(X.thisptr))
+
+def coth(x):
+    cdef Basic X = sympify(x)
+    return c2py(symengine.coth(X.thisptr))
+
+def asinh(x):
+    cdef Basic X = sympify(x)
+    return c2py(symengine.asinh(X.thisptr))
+
+def acosh(x):
+    cdef Basic X = sympify(x)
+    return c2py(symengine.acosh(X.thisptr))
+
+def atanh(x):
+    cdef Basic X = sympify(x)
+    return c2py(symengine.atanh(X.thisptr))
+
+def acoth(x):
+    cdef Basic X = sympify(x)
+    return c2py(symengine.acoth(X.thisptr))
 
 def function_symbol(name, *args):
     cdef symengine.vec_basic v

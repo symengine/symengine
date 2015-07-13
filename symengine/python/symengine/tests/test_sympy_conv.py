@@ -1,6 +1,7 @@
 from symengine import (Symbol, Integer, sympify, SympifyError, log,
         function_symbol, I, E, pi, exp, have_mpfr, have_mpc, DenseMatrix,
-        sin, cos, tan, cot, csc, sec, asin, acos, atan, acot, acsc, asec)
+        sin, cos, tan, cot, csc, sec, asin, acos, atan, acot, acsc, asec,
+        sinh, cosh, tanh, coth, asinh, acosh, atanh, acoth)
 from symengine.lib.symengine_wrapper import Subs, Derivative, RealMPFR, ComplexMPC
 import sympy
 
@@ -245,6 +246,39 @@ def test_conv11():
 
     assert e2._sympy_() == e1
     assert e3._sympy_() != e1
+
+def test_conv12():
+    x = Symbol("x")
+    y = Symbol("y")
+    assert sinh(x/3) == sinh(sympy.Symbol("x") / 3)
+    assert cosh(x/3) == cosh(sympy.Symbol("x") / 3)
+    assert tanh(x/3) == tanh(sympy.Symbol("x") / 3)
+    assert coth(x/3) == coth(sympy.Symbol("x") / 3)
+    assert asinh(x/3) == asinh(sympy.Symbol("x") / 3)
+    assert acosh(x/3) == acosh(sympy.Symbol("x") / 3)
+    assert atanh(x/3) == atanh(sympy.Symbol("x") / 3)
+    assert acoth(x/3) == acoth(sympy.Symbol("x") / 3)
+
+    assert sinh(x/3)._sympy_() == sympy.sinh(sympy.Symbol("x") / 3)
+    assert cosh(x/3)._sympy_() == sympy.cosh(sympy.Symbol("x") / 3)
+    assert tanh(x/3)._sympy_() == sympy.tanh(sympy.Symbol("x") / 3)
+    assert coth(x/3)._sympy_() == sympy.coth(sympy.Symbol("x") / 3)
+    assert asinh(x/3)._sympy_() == sympy.asinh(sympy.Symbol("x") / 3)
+    assert acosh(x/3)._sympy_() == sympy.acosh(sympy.Symbol("x") / 3)
+    assert atanh(x/3)._sympy_() == sympy.atanh(sympy.Symbol("x") / 3)
+    assert acoth(x/3)._sympy_() == sympy.acoth(sympy.Symbol("x") / 3)
+
+def test_conv12b():
+    x = sympy.Symbol("x")
+    y = sympy.Symbol("y")
+    assert sympify(sympy.sinh(x/3)) == sinh(Symbol("x") / 3)
+    assert sympify(sympy.cosh(x/3)) == cosh(Symbol("x") / 3)
+    assert sympify(sympy.tanh(x/3)) == tanh(Symbol("x") / 3)
+    assert sympify(sympy.coth(x/3)) == coth(Symbol("x") / 3)
+    assert sympify(sympy.asinh(x/3)) == asinh(Symbol("x") / 3)
+    assert sympify(sympy.acosh(x/3)) == acosh(Symbol("x") / 3)
+    assert sympify(sympy.atanh(x/3)) == atanh(Symbol("x") / 3)
+    assert sympify(sympy.acoth(x/3)) == acoth(Symbol("x") / 3)
 
 def test_tuples_lists():
     x = sympy.Symbol("x")

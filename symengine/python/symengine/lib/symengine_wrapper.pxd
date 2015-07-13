@@ -40,7 +40,7 @@ cdef class Pow(Basic):
 cdef class Function(Basic):
     pass
 
-cdef class TrigFunction(Basic):
+cdef class TrigFunction(Function):
     pass
 
 cdef class Sin(TrigFunction):
@@ -77,6 +77,33 @@ cdef class ACsc(TrigFunction):
     pass
 
 cdef class ASec(TrigFunction):
+    pass
+
+cdef class HyperbolicFunction(Function):
+    pass
+
+cdef class Sinh(HyperbolicFunction):
+    pass
+
+cdef class Cosh(HyperbolicFunction):
+    pass
+
+cdef class Tanh(HyperbolicFunction):
+    pass
+
+cdef class Coth(HyperbolicFunction):
+    pass
+
+cdef class ASinh(HyperbolicFunction):
+    pass
+
+cdef class ACosh(HyperbolicFunction):
+    pass
+
+cdef class ATanh(HyperbolicFunction):
+    pass
+
+cdef class ACoth(HyperbolicFunction):
     pass
 
 cdef class FunctionSymbol(Function):
