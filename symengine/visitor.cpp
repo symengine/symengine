@@ -12,6 +12,7 @@
 #include <symengine/constants.h>
 #include <symengine/visitor.h>
 #include <symengine/polynomial.h>
+#include <symengine/polys.h>
 #include <symengine/complex_double.h>
 #include <symengine/complex_mpc.h>
 
@@ -24,6 +25,7 @@ ACCEPT(Add)
 ACCEPT(Mul)
 ACCEPT(Pow)
 ACCEPT(UnivariatePolynomial)
+ACCEPT(Polynomial)
 ACCEPT(Integer)
 ACCEPT(Rational)
 ACCEPT(Complex)

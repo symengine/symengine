@@ -9,6 +9,7 @@
 #include <symengine/constants.h>
 #include <symengine/functions.h>
 #include <symengine/polynomial.h>
+#include <symengine/polys.h>
 #include <symengine/printer.h>
 
 namespace SymEngine {
