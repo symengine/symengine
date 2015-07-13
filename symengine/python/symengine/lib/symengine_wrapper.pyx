@@ -701,210 +701,26 @@ cdef class TrigFunction(Function):
         cdef RCP[const symengine.TrigFunction] X = symengine.rcp_static_cast_TrigFunction(self.thisptr)
         return c2py(deref(X).get_arg())
 
-cdef class Sin(TrigFunction):
-
     def _sympy_(self):
         import sympy
-        return sympy.sin(self.get_arg()._sympy_())
+        return getattr(sympy, self.__class__.__name__.lower())(self.get_arg()._sympy_())
 
     def _sage_(self):
         import sage.all as sage
-        return sage.sin(self.get_arg()._sage_())
-
-cdef class Cos(TrigFunction):
-
-    def _sympy_(self):
-        import sympy
-        return sympy.cos(self.get_arg()._sympy_())
-
-    def _sage_(self):
-        import sage.all as sage
-        return sage.cos(self.get_arg()._sage_())
-
-cdef class Tan(TrigFunction):
-
-    def _sympy_(self):
-        import sympy
-        return sympy.tan(self.get_arg()._sympy_())
-
-    def _sage_(self):
-        import sage.all as sage
-        return sage.tan(self.get_arg()._sage_())
-
-cdef class Cot(TrigFunction):
-
-    def _sympy_(self):
-        import sympy
-        return sympy.cot(self.get_arg()._sympy_())
-
-    def _sage_(self):
-        import sage.all as sage
-        return sage.cot(self.get_arg()._sage_())
-
-cdef class Csc(TrigFunction):
-
-    def _sympy_(self):
-        import sympy
-        return sympy.csc(self.get_arg()._sympy_())
-
-    def _sage_(self):
-        import sage.all as sage
-        return sage.csc(self.get_arg()._sage_())
-
-cdef class Sec(TrigFunction):
-
-    def _sympy_(self):
-        import sympy
-        return sympy.sec(self.get_arg()._sympy_())
-
-    def _sage_(self):
-        import sage.all as sage
-        return sage.sec(self.get_arg()._sage_())
-
-cdef class ASin(TrigFunction):
-
-    def _sympy_(self):
-        import sympy
-        return sympy.asin(self.get_arg()._sympy_())
-
-    def _sage_(self):
-        import sage.all as sage
-        return sage.asin(self.get_arg()._sage_())
-
-cdef class ACos(TrigFunction):
-
-    def _sympy_(self):
-        import sympy
-        return sympy.acos(self.get_arg()._sympy_())
-
-    def _sage_(self):
-        import sage.all as sage
-        return sage.acos(self.get_arg()._sage_())
-
-cdef class ATan(TrigFunction):
-
-    def _sympy_(self):
-        import sympy
-        return sympy.atan(self.get_arg()._sympy_())
-
-    def _sage_(self):
-        import sage.all as sage
-        return sage.atan(self.get_arg()._sage_())
-
-cdef class ACot(TrigFunction):
-
-    def _sympy_(self):
-        import sympy
-        return sympy.acot(self.get_arg()._sympy_())
-
-    def _sage_(self):
-        import sage.all as sage
-        return sage.acot(self.get_arg()._sage_())
-
-cdef class ACsc(TrigFunction):
-
-    def _sympy_(self):
-        import sympy
-        return sympy.acsc(self.get_arg()._sympy_())
-
-    def _sage_(self):
-        import sage.all as sage
-        return sage.acsc(self.get_arg()._sage_())
-
-cdef class ASec(TrigFunction):
-
-    def _sympy_(self):
-        import sympy
-        return sympy.asec(self.get_arg()._sympy_())
-
-    def _sage_(self):
-        import sage.all as sage
-        return sage.asec(self.get_arg()._sage_())
+        return getattr(sage, self.__class__.__name__.lower())(self.get_arg()._sage_())
 
 cdef class HyperbolicFunction(Function):
     def get_arg(self):
         cdef RCP[const symengine.HyperbolicFunction] X = symengine.rcp_static_cast_HyperbolicFunction(self.thisptr)
         return c2py(deref(X).get_arg())
 
-cdef class Sinh(HyperbolicFunction):
-
     def _sympy_(self):
         import sympy
-        return sympy.sinh(self.get_arg()._sympy_())
+        return getattr(sympy, self.__class__.__name__.lower())(self.get_arg()._sympy_())
 
     def _sage_(self):
         import sage.all as sage
-        return sage.sinh(self.get_arg()._sage_())
-
-cdef class Cosh(HyperbolicFunction):
-
-    def _sympy_(self):
-        import sympy
-        return sympy.cosh(self.get_arg()._sympy_())
-
-    def _sage_(self):
-        import sage.all as sage
-        return sage.cosh(self.get_arg()._sage_())
-
-cdef class Tanh(HyperbolicFunction):
-
-    def _sympy_(self):
-        import sympy
-        return sympy.tanh(self.get_arg()._sympy_())
-
-    def _sage_(self):
-        import sage.all as sage
-        return sage.tanh(self.get_arg()._sage_())
-
-cdef class Coth(HyperbolicFunction):
-
-    def _sympy_(self):
-        import sympy
-        return sympy.coth(self.get_arg()._sympy_())
-
-    def _sage_(self):
-        import sage.all as sage
-        return sage.coth(self.get_arg()._sage_())
-
-cdef class ASinh(HyperbolicFunction):
-
-    def _sympy_(self):
-        import sympy
-        return sympy.asinh(self.get_arg()._sympy_())
-
-    def _sage_(self):
-        import sage.all as sage
-        return sage.asinh(self.get_arg()._sage_())
-
-cdef class ACosh(HyperbolicFunction):
-
-    def _sympy_(self):
-        import sympy
-        return sympy.acosh(self.get_arg()._sympy_())
-
-    def _sage_(self):
-        import sage.all as sage
-        return sage.acosh(self.get_arg()._sage_())
-
-cdef class ATanh(HyperbolicFunction):
-
-    def _sympy_(self):
-        import sympy
-        return sympy.atanh(self.get_arg()._sympy_())
-
-    def _sage_(self):
-        import sage.all as sage
-        return sage.atanh(self.get_arg()._sage_())
-
-cdef class ACoth(HyperbolicFunction):
-
-    def _sympy_(self):
-        import sympy
-        return sympy.acoth(self.get_arg()._sympy_())
-
-    def _sage_(self):
-        import sage.all as sage
-        return sage.acoth(self.get_arg()._sage_())
+        return getattr(sage, self.__class__.__name__.lower())(self.get_arg()._sage_())
 
 cdef class FunctionSymbol(Function):
 
