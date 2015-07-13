@@ -67,11 +67,20 @@ will report at configure time if the Cython version is too old.
 The Travis-CI checks the code in both Release and Debug mode with all possible
 checks, so just sending a GitHub pull request is enough and you can use any
 mode you want to develop it. However, the best way to develop SymEngine is to
-use the Debug mode, turn assertions and `Teuchos::RCP` on and turn `BFD` support
-on (prints very nice stacktraces on exceptions, segfaults or assert errors):
+use the Debug mode with `BFD` support on:
 
-    cmake -DCMAKE_BUILD_TYPE=Debug -DWITH_SYMENGINE_ASSERT=yes \
-        -DWITH_SYMENGINE_RCP=no -DWITH_BFD=yes .
+    cmake -DCMAKE_BUILD_TYPE=Debug -DWITH_BFD=yes .
+
+This `BFD` support turns on nice Python like stacktraces on exceptions, assert
+errors or segfaults, and the Debug mode automatically turns on
+`WITH_SYMENGINE_RCP=no` (which uses `Teuchos::RCP` with full Debug time
+checking) and `WITH_SYMENGINE_ASSERT=yes`, so the code cannot segfault in Debug
+mode, as long as our style conventions (e.g. no raw pointers) are followed,
+which is easy to check by visual inspection of a given Pull Request. In Release
+mode, which is the default, the code is as performing as manual reference
+counting and raw pointers (and if there is a bug, it could segfault, in which
+case all you have to do is to turn Debug mode on and get a nice exception with
+a stacktrace).
 
 To make `WITH_BFD=yes` work, you need to install `binutils-dev` first,
 otherwise you will get a `CMake` error during configuring.
