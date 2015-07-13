@@ -1420,7 +1420,7 @@ TEST_CASE("Test Jacobian", "[matrices]")
 
     A = DenseMatrix(4, 1, {add(x, z), mul(y, z), add(mul(z, x), add(y, t)),
             add(x, y)});
-    X = DenseMatrix(4, 1, {x, y, z});
+    X = DenseMatrix(3, 1, {x, y, z});
     J = DenseMatrix(4, 3);
     jacobian(A, X, J);
     REQUIRE(J == DenseMatrix(4, 3,
