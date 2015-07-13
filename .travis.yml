@@ -92,7 +92,7 @@ matrix:
           - clang
           - libstdc++-4.8-dev
           - libgmp-dev
-    - env: BUILD_TYPE="Debug" WITH_BFD="yes" WITH_SYMENGINE_ASSERT="yes" WITH_PYTHON="yes" PYTHON_VERSION="2.7"
+    - env: BUILD_TYPE="Debug" WITH_SYMENGINE_ASSERT="yes" WITH_PYTHON="yes" PYTHON_VERSION="2.7"
       compiler: clang
       os: osx
       addons:
