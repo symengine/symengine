@@ -846,10 +846,10 @@ cdef class DenseMatrix(MatrixBase):
 
     """
 
-    def __cinit__(self, row, col):
-        self.thisptr = new symengine.DenseMatrix(row, col)
-
-    def __cinit__(self, row, col, v):
+    def __cinit__(self, row, col, v = None):
+        if v == None:
+            self.thisptr = new symengine.DenseMatrix(row, col)
+            return
         cdef symengine.vec_basic v_
         cdef Basic e_
         for e in v:
@@ -886,7 +886,7 @@ cdef class DenseMatrix(MatrixBase):
         return c2py(deref(self.thisptr).det())
 
     def inv(self, method='LU'):
-        result = DenseMatrix(self.nrows(), self.ncols(), [0]*self.nrows()*self.ncols())
+        result = DenseMatrix(self.nrows(), self.ncols())
 
         if method.upper() == 'LU':
             ## inv() method of DenseMatrix uses LU factorization
@@ -903,53 +903,53 @@ cdef class DenseMatrix(MatrixBase):
 
     def add_matrix(self, A):
         cdef MatrixBase A_ = sympify(A)
-        result = DenseMatrix(self.nrows(), self.ncols(), [0]*self.nrows()*self.ncols())
+        result = DenseMatrix(self.nrows(), self.ncols())
         deref(self.thisptr).add_matrix(deref(A_.thisptr), deref(result.thisptr))
         return result
 
     def mul_matrix(self, A):
         cdef MatrixBase A_ = sympify(A)
-        result = DenseMatrix(self.nrows(), self.ncols(), [0]*self.nrows()*self.ncols())
+        result = DenseMatrix(self.nrows(), self.ncols())
         deref(self.thisptr).mul_matrix(deref(A_.thisptr), deref(result.thisptr))
         return result
 
     def add_scalar(self, k):
         cdef Basic k_ = sympify(k)
-        result = DenseMatrix(self.nrows(), self.ncols(), [0]*self.nrows()*self.ncols())
+        result = DenseMatrix(self.nrows(), self.ncols())
         deref(self.thisptr).add_scalar(<const RCP[const symengine.Basic] &>(k_.thisptr), deref(result.thisptr))
         return result
 
     def mul_scalar(self, k):
         cdef Basic k_ = sympify(k)
-        result = DenseMatrix(self.nrows(), self.ncols(), [0]*self.nrows()*self.ncols())
+        result = DenseMatrix(self.nrows(), self.ncols())
         deref(self.thisptr).mul_scalar(<const RCP[const symengine.Basic] &>(k_.thisptr), deref(result.thisptr))
         return result
 
     def transpose(self):
-        result = DenseMatrix(self.ncols(), self.nrows(), [0]*self.nrows()*self.ncols())
+        result = DenseMatrix(self.ncols(), self.nrows())
         deref(self.thisptr).transpose(deref(result.thisptr))
         return result
 
     def submatrix(self, r_i, r_j, c_i, c_j):
-        result = DenseMatrix(r_j - r_i + 1, c_j - c_i + 1, [0]*(r_j - r_i + 1)*(c_j - c_i + 1))
+        result = DenseMatrix(r_j - r_i + 1, c_j - c_i + 1)
         deref(self.thisptr).submatrix(r_i, r_j, c_i, c_j, deref(result.thisptr))
         return result
 
     def LU(self):
-        L = DenseMatrix(self.nrows(), self.ncols(), [0]*self.nrows()*self.ncols())
-        U = DenseMatrix(self.nrows(), self.ncols(), [0]*self.nrows()*self.ncols())
+        L = DenseMatrix(self.nrows(), self.ncols())
+        U = DenseMatrix(self.nrows(), self.ncols())
         deref(self.thisptr).LU(deref(L.thisptr), deref(U.thisptr))
         return L, U
 
     def LDL(self):
-        L = DenseMatrix(self.nrows(), self.ncols(), [0]*self.nrows()*self.ncols())
-        D = DenseMatrix(self.nrows(), self.ncols(), [0]*self.nrows()*self.ncols())
+        L = DenseMatrix(self.nrows(), self.ncols())
+        D = DenseMatrix(self.nrows(), self.ncols())
         deref(self.thisptr).LDL(deref(L.thisptr), deref(D.thisptr))
         return L, D
 
     def solve(self, b, method='LU'):
         cdef DenseMatrix b_ = sympify(b)
-        x = DenseMatrix(b_.nrows(), b_.ncols(), [0]*b_.nrows()*b_.ncols())
+        x = DenseMatrix(b_.nrows(), b_.ncols())
 
         if method.upper() == 'LU':
             ## solve() method of DenseMatrix uses LU factorization
@@ -972,7 +972,7 @@ cdef class DenseMatrix(MatrixBase):
         return x
 
     def FFLU(self):
-        L = DenseMatrix(self.nrows(), self.ncols(), [0]*self.nrows()*self.ncols())
+        L = DenseMatrix(self.nrows(), self.ncols())
         U = DenseMatrix(self.nrows(), self.ncols(), [0]*self.nrows()*self.ncols())
         deref(self.thisptr).FFLU(deref(L.thisptr))
 
@@ -985,9 +985,9 @@ cdef class DenseMatrix(MatrixBase):
         return L, U
 
     def FFLDU(self):
-        L = DenseMatrix(self.nrows(), self.ncols(), [0]*self.nrows()*self.ncols())
-        D = DenseMatrix(self.nrows(), self.ncols(), [0]*self.nrows()*self.ncols())
-        U = DenseMatrix(self.nrows(), self.ncols(), [0]*self.nrows()*self.ncols())
+        L = DenseMatrix(self.nrows(), self.ncols())
+        D = DenseMatrix(self.nrows(), self.ncols())
+        U = DenseMatrix(self.nrows(), self.ncols())
         deref(self.thisptr).FFLDU(deref(L.thisptr), deref(D.thisptr), deref(U.thisptr))
         return L, D, U
 
