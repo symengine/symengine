@@ -10,17 +10,9 @@ void cbasic_free_heap(void *ptr) {
     basic_free_heap(basic_ptr);
 }
 
-VALUE alloc_func(VALUE klass, void(*free_func_ptr)(void *)) {
-    VALUE obj;
-    basic_struct *struct_ptr = basic_new_heap();
-
-    obj = Data_Wrap_Struct(klass, NULL, free_func_ptr, struct_ptr);
-
-    return obj;
-}
-
 VALUE cbasic_alloc(VALUE klass){
-    return alloc_func(klass, cbasic_free_heap);
+    basic_struct *struct_ptr = basic_new_heap();
+    return Data_Wrap_Struct(klass, NULL, cbasic_free_heap, struct_ptr);
 }
 
 VALUE cbasic_init(VALUE self){
