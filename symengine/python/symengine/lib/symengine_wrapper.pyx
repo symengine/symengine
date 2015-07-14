@@ -29,10 +29,6 @@ cdef c2py(RCP[const symengine.Basic] o):
         r = Symbol.__new__(Symbol)
     elif (symengine.is_a_Constant(deref(o))):
         r = Constant.__new__(Constant)
-    elif (symengine.is_a_Sin(deref(o))):
-        r = Sin.__new__(Sin)
-    elif (symengine.is_a_Cos(deref(o))):
-        r = Cos.__new__(Cos)
     elif (symengine.is_a_FunctionSymbol(deref(o))):
         r = FunctionSymbol.__new__(FunctionSymbol)
     elif (symengine.is_a_Abs(deref(o))):
@@ -51,6 +47,48 @@ cdef c2py(RCP[const symengine.Basic] o):
         r = RealMPFR.__new__(RealMPFR)
     elif (symengine.is_a_ComplexMPC(deref(o))):
         r = ComplexMPC.__new__(ComplexMPC)
+    elif (symengine.is_a_Log(deref(o))):
+        r = Log.__new__(Log)
+    elif (symengine.is_a_Sin(deref(o))):
+        r = Sin.__new__(Sin)
+    elif (symengine.is_a_Cos(deref(o))):
+        r = Cos.__new__(Cos)
+    elif (symengine.is_a_Tan(deref(o))):
+        r = Tan.__new__(Tan)
+    elif (symengine.is_a_Cot(deref(o))):
+        r = Cot.__new__(Cot)
+    elif (symengine.is_a_Csc(deref(o))):
+        r = Csc.__new__(Csc)
+    elif (symengine.is_a_Sec(deref(o))):
+        r = Sec.__new__(Sec)
+    elif (symengine.is_a_ASin(deref(o))):
+        r = ASin.__new__(ASin)
+    elif (symengine.is_a_ACos(deref(o))):
+        r = ACos.__new__(ACos)
+    elif (symengine.is_a_ATan(deref(o))):
+        r = ATan.__new__(ATan)
+    elif (symengine.is_a_ACot(deref(o))):
+        r = ACot.__new__(ACot)
+    elif (symengine.is_a_ACsc(deref(o))):
+        r = ACsc.__new__(ACsc)
+    elif (symengine.is_a_ASec(deref(o))):
+        r = ASec.__new__(ASec)
+    elif (symengine.is_a_Sinh(deref(o))):
+        r = Sinh.__new__(Sinh)
+    elif (symengine.is_a_Cosh(deref(o))):
+        r = Cosh.__new__(Cosh)
+    elif (symengine.is_a_Tanh(deref(o))):
+        r = Tanh.__new__(Tanh)
+    elif (symengine.is_a_Coth(deref(o))):
+        r = Coth.__new__(Coth)
+    elif (symengine.is_a_ASinh(deref(o))):
+        r = ASinh.__new__(ASinh)
+    elif (symengine.is_a_ACosh(deref(o))):
+        r = ACosh.__new__(ACosh)
+    elif (symengine.is_a_ATanh(deref(o))):
+        r = ATanh.__new__(ATanh)
+    elif (symengine.is_a_ACoth(deref(o))):
+        r = ACoth.__new__(ACoth)
     else:
         raise Exception("Unsupported SymEngine class.")
     r.thisptr = o
@@ -89,10 +127,51 @@ def sympy2symengine(a, raise_error=False):
         return E
     elif a is sympy.pi:
         return pi
-    elif isinstance(a, sympy.sin):
-        return sin(a.args[0])
-    elif isinstance(a, sympy.cos):
-        return cos(a.args[0])
+    elif isinstance(a, sympy.functions.elementary.trigonometric.TrigonometricFunction):
+        if isinstance(a, sympy.sin):
+            return sin(a.args[0])
+        elif isinstance(a, sympy.cos):
+            return cos(a.args[0])
+        elif isinstance(a, sympy.tan):
+            return tan(a.args[0])
+        elif isinstance(a, sympy.cot):
+            return cot(a.args[0])
+        elif isinstance(a, sympy.csc):
+            return csc(a.args[0])
+        elif isinstance(a, sympy.sec):
+            return sec(a.args[0])
+    elif isinstance(a, sympy.functions.elementary.trigonometric.InverseTrigonometricFunction):
+        if isinstance(a, sympy.asin):
+            return asin(a.args[0])
+        elif isinstance(a, sympy.acos):
+            return acos(a.args[0])
+        elif isinstance(a, sympy.atan):
+            return atan(a.args[0])
+        elif isinstance(a, sympy.acot):
+            return acot(a.args[0])
+        elif isinstance(a, sympy.acsc):
+            return acsc(a.args[0])
+        elif isinstance(a, sympy.asec):
+            return asec(a.args[0])
+    elif isinstance(a, sympy.functions.elementary.hyperbolic.HyperbolicFunction):
+        if isinstance(a, sympy.sinh):
+            return sinh(a.args[0])
+        elif isinstance(a, sympy.cosh):
+            return cosh(a.args[0])
+        elif isinstance(a, sympy.tanh):
+            return tanh(a.args[0])
+        elif isinstance(a, sympy.coth):
+            return coth(a.args[0])
+    elif isinstance(a, sympy.asinh):
+        return asinh(a.args[0])
+    elif isinstance(a, sympy.acosh):
+        return acosh(a.args[0])
+    elif isinstance(a, sympy.atanh):
+        return atanh(a.args[0])
+    elif isinstance(a, sympy.acoth):
+        return acoth(a.args[0])
+    elif isinstance(a, sympy.log):
+        return log(a.args[0])
     elif isinstance(a, sympy.Abs):
         return abs(sympy2symengine(a.args[0], True))
     elif isinstance(a, sympy.Derivative):
@@ -600,36 +679,48 @@ cdef class Pow(Basic):
         exp = c2py(deref(X).get_exp())
         return base._sage_() ** exp._sage_()
 
+cdef class Log(Basic):
+
+    def _sympy_(self):
+        import sympy
+        cdef RCP[const symengine.Log] X = symengine.rcp_static_cast_Log(self.thisptr)
+        arg = c2py(deref(X).get_arg())
+        return sympy.log(arg._sympy_())
+
+    def _sage_(self):
+        import sage.all as sage
+        cdef RCP[const symengine.Log] X = symengine.rcp_static_cast_Log(self.thisptr)
+        arg = c2py(deref(X).get_arg())
+        return sage.log(arg._sage_())
+
 cdef class Function(Basic):
     pass
 
-cdef class Sin(Function):
+cdef class TrigFunction(Function):
+    def get_arg(self):
+        cdef RCP[const symengine.TrigFunction] X = symengine.rcp_static_cast_TrigFunction(self.thisptr)
+        return c2py(deref(X).get_arg())
 
     def _sympy_(self):
-        cdef RCP[const symengine.Sin] X = symengine.rcp_static_cast_Sin(self.thisptr)
-        arg = c2py(deref(X).get_arg())._sympy_()
         import sympy
-        return sympy.sin(arg)
+        return getattr(sympy, self.__class__.__name__.lower())(self.get_arg()._sympy_())
 
     def _sage_(self):
-        cdef RCP[const symengine.Sin] X = symengine.rcp_static_cast_Sin(self.thisptr)
-        arg = c2py(deref(X).get_arg())._sage_()
         import sage.all as sage
-        return sage.sin(arg)
+        return getattr(sage, self.__class__.__name__.lower())(self.get_arg()._sage_())
 
-cdef class Cos(Function):
+cdef class HyperbolicFunction(Function):
+    def get_arg(self):
+        cdef RCP[const symengine.HyperbolicFunction] X = symengine.rcp_static_cast_HyperbolicFunction(self.thisptr)
+        return c2py(deref(X).get_arg())
 
     def _sympy_(self):
-        cdef RCP[const symengine.Cos] X = symengine.rcp_static_cast_Cos(self.thisptr)
-        arg = c2py(deref(X).get_arg())._sympy_()
         import sympy
-        return sympy.cos(arg)
+        return getattr(sympy, self.__class__.__name__.lower())(self.get_arg()._sympy_())
 
     def _sage_(self):
-        cdef RCP[const symengine.Cos] X = symengine.rcp_static_cast_Cos(self.thisptr)
-        arg = c2py(deref(X).get_arg())._sage_()
         import sage.all as sage
-        return sage.cos(arg)
+        return getattr(sage, self.__class__.__name__.lower())(self.get_arg()._sage_())
 
 cdef class FunctionSymbol(Function):
 
@@ -1044,6 +1135,10 @@ cdef class Sieve_iterator:
         else:
             return n
 
+I = c2py(symengine.I)
+E = c2py(symengine.E)
+pi = c2py(symengine.pi)
+
 def sin(x):
     cdef Basic X = sympify(x)
     return c2py(symengine.sin(X.thisptr))
@@ -1051,6 +1146,78 @@ def sin(x):
 def cos(x):
     cdef Basic X = sympify(x)
     return c2py(symengine.cos(X.thisptr))
+
+def tan(x):
+    cdef Basic X = sympify(x)
+    return c2py(symengine.tan(X.thisptr))
+
+def cot(x):
+    cdef Basic X = sympify(x)
+    return c2py(symengine.cot(X.thisptr))
+
+def sec(x):
+    cdef Basic X = sympify(x)
+    return c2py(symengine.sec(X.thisptr))
+
+def csc(x):
+    cdef Basic X = sympify(x)
+    return c2py(symengine.csc(X.thisptr))
+
+def asin(x):
+    cdef Basic X = sympify(x)
+    return c2py(symengine.asin(X.thisptr))
+
+def acos(x):
+    cdef Basic X = sympify(x)
+    return c2py(symengine.acos(X.thisptr))
+
+def atan(x):
+    cdef Basic X = sympify(x)
+    return c2py(symengine.atan(X.thisptr))
+
+def acot(x):
+    cdef Basic X = sympify(x)
+    return c2py(symengine.acot(X.thisptr))
+
+def asec(x):
+    cdef Basic X = sympify(x)
+    return c2py(symengine.asec(X.thisptr))
+
+def acsc(x):
+    cdef Basic X = sympify(x)
+    return c2py(symengine.acsc(X.thisptr))
+
+def sinh(x):
+    cdef Basic X = sympify(x)
+    return c2py(symengine.sinh(X.thisptr))
+
+def cosh(x):
+    cdef Basic X = sympify(x)
+    return c2py(symengine.cosh(X.thisptr))
+
+def tanh(x):
+    cdef Basic X = sympify(x)
+    return c2py(symengine.tanh(X.thisptr))
+
+def coth(x):
+    cdef Basic X = sympify(x)
+    return c2py(symengine.coth(X.thisptr))
+
+def asinh(x):
+    cdef Basic X = sympify(x)
+    return c2py(symengine.asinh(X.thisptr))
+
+def acosh(x):
+    cdef Basic X = sympify(x)
+    return c2py(symengine.acosh(X.thisptr))
+
+def atanh(x):
+    cdef Basic X = sympify(x)
+    return c2py(symengine.atanh(X.thisptr))
+
+def acoth(x):
+    cdef Basic X = sympify(x)
+    return c2py(symengine.acoth(X.thisptr))
 
 def function_symbol(name, *args):
     cdef symengine.vec_basic v
@@ -1068,6 +1235,11 @@ def sqrt(x):
 def exp(x):
     cdef Basic X = sympify(x)
     return c2py(symengine.exp(X.thisptr))
+
+def log(x, y = E):
+    cdef Basic X = sympify(x)
+    cdef Basic Y = sympify(y)
+    return c2py(symengine.log(X.thisptr, Y.thisptr))
 
 def eval_double(x):
     cdef Basic X = sympify(x)
@@ -1428,10 +1600,6 @@ def powermod_list(a, b, m):
 def eval_double(basic):
     cdef Basic b = sympify(basic)
     return symengine.eval_double(deref(b.thisptr))
-
-I = c2py(symengine.I)
-E = c2py(symengine.E)
-pi = c2py(symengine.pi)
 
 # Turn on nice stacktraces:
 symengine.print_stack_on_segfault()

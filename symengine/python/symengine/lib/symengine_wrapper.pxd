@@ -40,10 +40,70 @@ cdef class Pow(Basic):
 cdef class Function(Basic):
     pass
 
-cdef class Sin(Function):
+cdef class TrigFunction(Function):
     pass
 
-cdef class Cos(Function):
+cdef class Sin(TrigFunction):
+    pass
+
+cdef class Cos(TrigFunction):
+    pass
+
+cdef class Tan(TrigFunction):
+    pass
+
+cdef class Cot(TrigFunction):
+    pass
+
+cdef class Csc(TrigFunction):
+    pass
+
+cdef class Sec(TrigFunction):
+    pass
+
+cdef class ASin(TrigFunction):
+    pass
+
+cdef class ACos(TrigFunction):
+    pass
+
+cdef class ATan(TrigFunction):
+    pass
+
+cdef class ACot(TrigFunction):
+    pass
+
+cdef class ACsc(TrigFunction):
+    pass
+
+cdef class ASec(TrigFunction):
+    pass
+
+cdef class HyperbolicFunction(Function):
+    pass
+
+cdef class Sinh(HyperbolicFunction):
+    pass
+
+cdef class Cosh(HyperbolicFunction):
+    pass
+
+cdef class Tanh(HyperbolicFunction):
+    pass
+
+cdef class Coth(HyperbolicFunction):
+    pass
+
+cdef class ASinh(HyperbolicFunction):
+    pass
+
+cdef class ACosh(HyperbolicFunction):
+    pass
+
+cdef class ATanh(HyperbolicFunction):
+    pass
+
+cdef class ACoth(HyperbolicFunction):
     pass
 
 cdef class FunctionSymbol(Function):
@@ -65,4 +125,7 @@ cdef class MatrixBase(object):
     cdef symengine.MatrixBase* thisptr
 
 cdef class DenseMatrix(MatrixBase):
+    pass
+
+cdef class Log(Basic):
     pass
