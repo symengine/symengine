@@ -107,43 +107,6 @@ std::ostream& operator<<(std::ostream& out, const SymEngine::set_basic& d)
 
 namespace SymEngine {
 
-bool umap_basic_num_eq(const umap_basic_num &a, const umap_basic_num &b)
-{
-    // This follows the same algorithm as Python's dictionary comparison
-    // (a==b), which is implemented by "dict_equal" function in
-    // Objects/dictobject.c.
-
-    // Can't be equal if # of entries differ:
-    if (a.size() != b.size()) return false;
-    // Loop over keys in "a":
-    for (auto &p: a) {
-        // O(1) lookup of the key in "b":
-        auto f = b.find(p.first);
-        if (f == b.end()) return false; // no such element in "b"
-        if (neq(*p.second, *f->second)) return false; // values not equal
-    }
-    return true;
-}
-
-bool umap_basic_basic_eq(const umap_basic_basic &a,
-        const umap_basic_basic &b)
-{
-    // This follows the same algorithm as Python's dictionary comparison
-    // (a==b), which is implemented by "dict_equal" function in
-    // Objects/dictobject.c.
-
-    // Can't be equal if # of entries differ:
-    if (a.size() != b.size()) return false;
-    // Loop over keys in "a":
-    for (auto &p: a) {
-        // O(1) lookup of the key in "b":
-        auto f = b.find(p.first);
-        if (f == b.end()) return false; // no such element in "b"
-        if (neq(*p.second, *f->second)) return false; // values not equal
-    }
-    return true;
-}
-
 bool vec_basic_eq(const vec_basic &a, const vec_basic &b)
 {
     // Can't be equal if # of entries differ:

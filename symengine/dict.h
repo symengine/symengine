@@ -48,11 +48,29 @@ void insert(T1 &m, const T2 &first, const T3 &second) {
 }
 
 //! \return true if the two dictionaries `a` and `b` are equal. Otherwise false.
-bool umap_basic_num_eq(const umap_basic_num &a, const umap_basic_num &b);
+template<class T>
+bool umap_eq(const T &a, const T &b)
+{
+    // This follows the same algorithm as Python's dictionary comparison
+    // (a==b), which is implemented by "dict_equal" function in
+    // Objects/dictobject.c.
+
+    // Can't be equal if # of entries differ:
+    if (a.size() != b.size()) return false;
+    // Loop over keys in "a":
+    for (auto &p: a) {
+        // O(1) lookup of the key in "b":
+        auto f = b.find(p.first);
+        if (f == b.end()) return false; // no such element in "b"
+        if (neq(*p.second, *f->second)) return false; // values not equal
+    }
+    return true;
+}
 
 //! \return true if the two dictionaries `a` and `b` are equal. Otherwise false.
 template<class T>
-bool map_eq(const T &A, const T &B) {
+bool map_eq(const T &A, const T &B)
+{
     // Can't be equal if # of entries differ:
     if (A.size() != B.size()) return false;
     // Loop over keys in "a":
@@ -77,7 +95,8 @@ bool map_uint_mpz_eq(const map_uint_mpz &a, const map_uint_mpz &b);
 
 //! \return -1, 0, 1 for a < b, a == b, a > b
 template<class T>
-int map_compare(const T &A, const T &B) {
+int map_compare(const T &A, const T &B)
+{
     if (A.size() != B.size())
         return (A.size() < B.size()) ? -1 : 1;
     auto a = A.begin();
@@ -92,8 +111,6 @@ int map_compare(const T &A, const T &B) {
     return 0;
 }
 
-//! \return -1, 0, 1 for a < b, a == b, a > b
-int map_basic_num_compare(const map_basic_num &a, const map_basic_num &b);
 //! \return -1, 0, 1 for a < b, a == b, a > b
 int vec_basic_compare(const vec_basic &a, const vec_basic &b);
 //! \return -1, 0, 1 for a < b, a == b, a > b
