@@ -457,6 +457,8 @@ cdef extern from "<symengine/matrix.h>" namespace "SymEngine":
         const DenseMatrix &b, DenseMatrix &x) nogil
     void LDL_solve "SymEngine::LDL_solve"(const DenseMatrix &A, const DenseMatrix &b,
         DenseMatrix &x) nogil
+    void jacobian "SymEngine::jacobian"(const DenseMatrix &A,
+            const DenseMatrix &x, DenseMatrix &result) nogil
 
 cdef extern from "<symengine/ntheory.h>" namespace "SymEngine":
     int probab_prime_p(const Integer &a, int reps)

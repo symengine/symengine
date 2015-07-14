@@ -132,6 +132,10 @@ public:
     // Fraction free LDU factorization
     virtual void FFLDU(MatrixBase&L, MatrixBase &D, MatrixBase &U) const;
 
+    // Return the Jacobian of the matrix
+    friend void jacobian(const DenseMatrix &A, const DenseMatrix &x,
+            DenseMatrix &result);
+
     // Friend functions related to Matrix Operations
     friend void add_dense_dense(const DenseMatrix &A, const DenseMatrix &B,
         DenseMatrix &C);
@@ -310,6 +314,10 @@ protected:
     std::vector<unsigned> j_;
     vec_basic x_;
 };
+
+// Return the Jacobian of the matrix
+void jacobian(const DenseMatrix &A, const DenseMatrix &x,
+        DenseMatrix &result);
 
 // Matrix Factorization
 void LU(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &U);
