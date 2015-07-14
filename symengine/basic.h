@@ -67,7 +67,32 @@ enum TypeID {
     #undef SYMENGINE_ENUM
 };
 
-class Basic {
+class EnableRcpFromThis {
+public:
+#if defined(WITH_SYMENGINE_RCP)
+
+    //! Public variables if defined with SYMENGINE_RCP
+    // The reference counter is defined either as "unsigned int" (faster, but
+    // not thread safe) or as std::atomic<unsigned int> (slower, but thread
+    // safe). Semantically they are almost equivalent, except that the
+    // pre-decrement operator `operator--()` returns a copy for std::atomic
+    // instead of a reference to itself.
+    // The refcount_ is defined as mutable, because it does not change the
+    // state of the instance, but changes when more copies
+    // of the same instance are made.
+#  if defined(WITH_SYMENGINE_THREAD_SAFE)
+    mutable std::atomic<unsigned int> refcount_; // reference counter
+#  else
+    mutable unsigned int refcount_; // reference counter
+#  endif // WITH_SYMENGINE_THREAD_SAFE
+    EnableRcpFromThis() : refcount_(0) {}
+
+#else
+    mutable RCP<const Basic> weak_self_ptr_;
+#endif // WITH_SYMENGINE_RCP
+};
+
+class Basic : public EnableRcpFromThis {
 private:
     //! Private variables
     // The hash_ is defined as mutable, because its value is initialized to 0
@@ -79,34 +104,10 @@ private:
 #else
     mutable std::size_t hash_; // This holds the hash value
 #endif // WITH_SYMENGINE_THREAD_SAFE
-#if defined(WITH_SYMENGINE_RCP)
-public:
-    //! Public variables if defined with SYMENGINE_RCP
-    // The reference counter is defined either as "unsigned int" (faster, but
-    // not thread safe) or as std::atomic<unsigned int> (slower, but thread
-    // safe). Semantically they are almost equivalent, except that the
-    // pre-decrement operator `operator--()` returns a copy for std::atomic
-    // instead of a reference to itself.
-    // The refcount_ is defined as mutable, because it does not change the
-    // state of the instance, but changes when more copies
-    // of the same instance are made.
-#if defined(WITH_SYMENGINE_THREAD_SAFE)
-    mutable std::atomic<unsigned int> refcount_; // reference counter
-#else
-    mutable unsigned int refcount_; // reference counter
-#endif // WITH_SYMENGINE_THREAD_SAFE
-#else
-public:
-    mutable RCP<const Basic> weak_self_ptr_;
-#endif // WITH_SYMENGINE_RCP
 public:
     virtual TypeID get_type_code() const = 0;
     //! Constructor
-    Basic() : hash_{0}
-#if defined(WITH_SYMENGINE_RCP)
-        , refcount_(0)
-#endif
-        {}
+    Basic() : EnableRcpFromThis(), hash_{0} {}
     //! Destructor must be explicitly defined as virtual here to avoid problems
     //! with undefined behavior while deallocating derived classes.
     virtual ~Basic() {}
