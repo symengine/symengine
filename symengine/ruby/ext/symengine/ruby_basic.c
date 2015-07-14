@@ -16,21 +16,14 @@ VALUE alloc_func(VALUE klass, void(*free_func_ptr)(void *)) {
 
     obj = Data_Make_Struct(klass, basic_struct, NULL, free_func_ptr, struct_ptr);
 
-    struct_ptr->data = NULL;
-
     return obj;
 }
 
 VALUE cbasic_alloc(VALUE klass){
-    return alloc_func(klass, cbasic_free);
+    return alloc_func(klass, cbasic_free_heap);
 }
 
 VALUE cbasic_init(VALUE self){
-    basic_struct *this;
-
-    Data_Get_Struct(self, basic_struct, this);
-    basic_init(this);
-
     return self;
 }
 
@@ -40,10 +33,10 @@ VALUE cbasic_binary_op(VALUE self, VALUE operand2, void (*cwfunc_ptr)(basic_stru
 
     Data_Get_Struct(self, basic_struct, this);
     Data_Get_Struct(operand2, basic_struct, cbasic_operand2);
-    result = Data_Make_Struct(rb_obj_class(self), basic_struct, NULL , cbasic_free, cresult);
 
-    basic_init(cresult);
+    cresult = basic_new_heap();
     cwfunc_ptr(cresult, this, cbasic_operand2);
+    result = Data_Wrap_Struct(rb_obj_class(self), NULL , cbasic_free_heap, cresult);
 
     return result;
 }
@@ -53,10 +46,10 @@ VALUE cbasic_unary_op(VALUE self, void (*cwfunc_ptr)(basic_struct*, const basic_
     VALUE result;
 
     Data_Get_Struct(self, basic_struct, this);
-    result = Data_Make_Struct(rb_obj_class(self), basic_struct, NULL, cbasic_free, cresult);
 
-    basic_init(cresult);
+    cresult = basic_new_heap();
     cwfunc_ptr(cresult, this);
+    result = Data_Wrap_Struct(rb_obj_class(self), NULL , cbasic_free_heap, cresult);
 
     return result;
 }
@@ -118,8 +111,7 @@ VALUE cbasic_get_args(VALUE self) {
     for(i = 0; i < size; i++) {
         basic_struct *temp_basic = basic_new_heap();
         vecbasic_get(args, i, temp_basic);
-        temp = Data_Make_Struct(rb_obj_class(self), basic_struct, NULL,
-                                                    cbasic_free_heap, temp_basic);
+        temp = Data_Wrap_Struct(rb_obj_class(self), NULL , cbasic_free_heap, temp_basic);
         rb_ary_push(ruby_array, temp);
     }
     vecbasic_free(args);
@@ -141,8 +133,7 @@ VALUE cbasic_free_symbols(VALUE self) {
     for(i = 0; i < size; i++) {
         basic_struct *temp_basic = basic_new_heap();
         setbasic_get(symbols, i, temp_basic);
-        temp = Data_Make_Struct(rb_obj_class(self), basic_struct, NULL,
-                                                    cbasic_free_heap, temp_basic);
+        temp = Data_Wrap_Struct(rb_obj_class(self), NULL , cbasic_free_heap, temp_basic);
         rb_ary_push(ruby_array, temp);
     }
     setbasic_free(symbols);
