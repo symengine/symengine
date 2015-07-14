@@ -83,6 +83,17 @@ describe SymEngine do
           end
         end
       end
+      describe '#eql?' do
+        context 'with another initialised Basic object as argument' do
+          it 'returns true if they are the same expression
+                        false if not' do
+            a = SymEngine::Symbol.new('x')
+            b = SymEngine::Symbol.new('y')
+            c = ((a * b).eql?(@a * @b))
+            expect(c).to be true
+          end
+        end
+      end
       describe '#!=' do
         context 'with another initialised Basic object as argument' do
           it 'returns true is they are not the same expression
@@ -121,8 +132,7 @@ describe SymEngine do
           f = e.args
           expect(f).to be_an_instance_of Array
           expect(f.length).to be 2
-          puts f[0].to_s
-          puts f[1].to_s
+          expect(f.to_set).to eql([x**y, z].to_set)
         end
       end
     end
@@ -137,7 +147,7 @@ describe SymEngine do
           f = e.free_symbols
           expect(f).to be_an_instance_of Set
           expect(f.length).to be 3
-          f.each { |elem| puts elem.to_s }
+          expect(f).to eql([x, y, z].to_set)
         end
       end
     end
