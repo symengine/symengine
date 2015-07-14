@@ -92,6 +92,11 @@ def test_mul_matrix():
 
     assert A.mul_matrix(B) == DenseMatrix(2, 2, [a + b, 0, c + d, 0])
 
+    A = DenseMatrix(2, 3, [1, 2, 3, 2, 3, 4])
+    B = DenseMatrix(3, 2, [3, 4, 4, 5, 5, 6])
+
+    assert A.mul_matrix(B) == DenseMatrix(2, 2, [26, 32, 38, 47])
+
 def test_add_scalar():
     A = DenseMatrix(2, 2, [1, 2, 3, 4])
 
