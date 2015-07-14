@@ -1703,7 +1703,7 @@ bool Subs::__eq__(const Basic &o) const
 {
     if (is_a<Subs>(o) &&
             eq(*arg_, *(static_cast<const Subs &>(o).arg_)) &&
-            map_basic_basic_eq(dict_, static_cast<const Subs &>(o).dict_))
+            map_eq<map_basic_basic, map_basic_basic>(dict_, static_cast<const Subs &>(o).dict_))
         return true;
     return false;
 }

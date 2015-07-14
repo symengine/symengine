@@ -49,10 +49,22 @@ void insert(T1 &m, const T2 &first, const T3 &second) {
 
 //! \return true if the two dictionaries `a` and `b` are equal. Otherwise false.
 bool umap_basic_num_eq(const umap_basic_num &a, const umap_basic_num &b);
+
 //! \return true if the two dictionaries `a` and `b` are equal. Otherwise false.
-bool map_basic_num_eq(const map_basic_num &a, const map_basic_num &b);
-//! \return true if the two dictionaries `a` and `b` are equal. Otherwise false.
-bool map_basic_basic_eq(const map_basic_basic &a, const map_basic_basic &b);
+template<class T, class U>
+bool map_eq(const T &A, const U &B) {
+    // Can't be equal if # of entries differ:
+    if (A.size() != B.size()) return false;
+    // Loop over keys in "a":
+    auto a = A.begin();
+    auto b = B.begin();
+    for (; a != A.end(); ++a, ++b) {
+        if (neq(*a->first, *b->first)) return false; // keys not equal
+        if (neq(*a->second, *b->second)) return false; // values not equal
+    }
+    return true;
+}
+
 //! \return true if the two dictionaries `a` and `b` are equal. Otherwise false.
 bool umap_basic_basic_eq(const umap_basic_basic &a,
         const umap_basic_basic &b);

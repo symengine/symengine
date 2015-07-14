@@ -106,8 +106,9 @@ std::ostream& operator<<(std::ostream& out, const SymEngine::set_basic& d)
 
 
 namespace SymEngine {
-
-bool map_basic_num_eq(const map_basic_num &A, const map_basic_num &B)
+/*
+template<class T, class U>
+bool map_eq(const T &A, const U &B)
 {
     // Can't be equal if # of entries differ:
     if (A.size() != B.size()) return false;
@@ -120,21 +121,7 @@ bool map_basic_num_eq(const map_basic_num &A, const map_basic_num &B)
     }
     return true;
 }
-
-bool map_basic_basic_eq(const map_basic_basic &A, const map_basic_basic &B)
-{
-    // Can't be equal if # of entries differ:
-    if (A.size() != B.size()) return false;
-    // Loop over keys in "a":
-    auto a = A.begin();
-    auto b = B.begin();
-    for (; a != A.end(); ++a, ++b) {
-        if (neq(*a->first, *b->first)) return false; // keys not equal
-        if (neq(*a->second, *b->second)) return false; // values not equal
-    }
-    return true;
-}
-
+*/
 int map_basic_basic_compare(const map_basic_basic &A, const map_basic_basic &B)
 {
     if (A.size() != B.size())
@@ -167,6 +154,16 @@ int map_basic_num_compare(const map_basic_num &A, const map_basic_num &B)
     return 0;
 }
 
+    // Can't be equal if # of entries differ:
+    if (A.size() != B.size()) return false;
+    // Loop over keys in "a":
+    auto a = A.begin();
+    auto b = B.begin();
+    for (; a != A.end(); ++a, ++b) {
+        if (neq(*a->first, *b->first)) return false; // keys not equal
+        if (neq(*a->second, *b->second)) return false; // values not equal
+    }
+    return true;
 bool umap_basic_num_eq(const umap_basic_num &a, const umap_basic_num &b)
 {
     // This follows the same algorithm as Python's dictionary comparison
