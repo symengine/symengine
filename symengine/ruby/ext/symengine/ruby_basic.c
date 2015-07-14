@@ -12,9 +12,9 @@ void cbasic_free_heap(void *ptr) {
 
 VALUE alloc_func(VALUE klass, void(*free_func_ptr)(void *)) {
     VALUE obj;
-    basic_struct *struct_ptr;
+    basic_struct *struct_ptr = basic_new_heap();
 
-    obj = Data_Make_Struct(klass, basic_struct, NULL, free_func_ptr, struct_ptr);
+    obj = Data_Wrap_Struct(klass, NULL, free_func_ptr, struct_ptr);
 
     return obj;
 }
