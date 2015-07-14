@@ -1000,7 +1000,7 @@ cdef class DenseMatrix(MatrixBase):
 
     def mul_matrix(self, A):
         cdef MatrixBase A_ = sympify(A)
-        result = DenseMatrix(self.nrows(), self.ncols())
+        result = DenseMatrix(self.nrows(), A.ncols())
         deref(self.thisptr).mul_matrix(deref(A_.thisptr), deref(result.thisptr))
         return result
 
