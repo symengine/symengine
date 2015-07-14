@@ -93,7 +93,7 @@ int Add::compare(const Basic &o) const
     // once it is computed.
     map_basic_num adict(dict_.begin(), dict_.end());
     map_basic_num bdict(s.dict_.begin(), s.dict_.end());
-    return map_basic_num_compare(adict, bdict);
+    return map_compare<map_basic_num>(adict, bdict);
 }
 
 // Very quickly (!) creates the appropriate instance (i.e. Add, Symbol,

@@ -51,8 +51,8 @@ void insert(T1 &m, const T2 &first, const T3 &second) {
 bool umap_basic_num_eq(const umap_basic_num &a, const umap_basic_num &b);
 
 //! \return true if the two dictionaries `a` and `b` are equal. Otherwise false.
-template<class T, class U>
-bool map_eq(const T &A, const U &B) {
+template<class T>
+bool map_eq(const T &A, const T &B) {
     // Can't be equal if # of entries differ:
     if (A.size() != B.size()) return false;
     // Loop over keys in "a":
@@ -76,7 +76,22 @@ bool vec_basic_eq_perm(const vec_basic &a, const vec_basic &b);
 bool map_uint_mpz_eq(const map_uint_mpz &a, const map_uint_mpz &b);
 
 //! \return -1, 0, 1 for a < b, a == b, a > b
-int map_basic_basic_compare(const map_basic_basic &a, const map_basic_basic &b);
+template<class T>
+int map_compare(const T &A, const T &B) {
+    if (A.size() != B.size())
+        return (A.size() < B.size()) ? -1 : 1;
+    auto a = A.begin();
+    auto b = B.begin();
+    int cmp;
+    for (; a != A.end(); ++a, ++b) {
+        cmp = a->first->__cmp__(*b->first);
+        if (cmp != 0) return cmp;
+        cmp = a->second->__cmp__(*b->second);
+        if (cmp != 0) return cmp;
+    }
+    return 0;
+}
+
 //! \return -1, 0, 1 for a < b, a == b, a > b
 int map_basic_num_compare(const map_basic_num &a, const map_basic_num &b);
 //! \return -1, 0, 1 for a < b, a == b, a > b
