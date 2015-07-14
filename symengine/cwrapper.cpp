@@ -181,12 +181,12 @@ void basic_neg(basic s, const basic a)
 
 int basic_eq(const basic a, const basic b)
 {
-    return SymEngine::eq(a->m, b->m) ? 1 : 0;
+    return SymEngine::eq(*(a->m), *(b->m)) ? 1 : 0;
 }
 
 int basic_neq(const basic a, const basic b)
 {
-    return SymEngine::neq(a->m, b->m) ? 1 : 0;
+    return SymEngine::neq(*(a->m), *(b->m)) ? 1 : 0;
 }
 
 void basic_abs(basic s, const basic a)
