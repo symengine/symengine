@@ -15,10 +15,6 @@ VALUE cbasic_alloc(VALUE klass){
     return Data_Wrap_Struct(klass, NULL, cbasic_free_heap, struct_ptr);
 }
 
-VALUE cbasic_init(VALUE self){
-    return self;
-}
-
 VALUE cbasic_binary_op(VALUE self, VALUE operand2, void (*cwfunc_ptr)(basic_struct*, const basic_struct*, const basic_struct*)){
     basic_struct *this, *cbasic_operand2, *cresult;
     VALUE result;

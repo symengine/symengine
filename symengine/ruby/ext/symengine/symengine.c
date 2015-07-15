@@ -17,7 +17,6 @@ void Init_symengine() {
     //Basic class
     c_basic = rb_define_class_under(m_symengine, "Basic", rb_cObject);
     rb_define_alloc_func(c_basic, cbasic_alloc);
-    rb_define_method(c_basic, "initialize", cbasic_init, 0);
     rb_define_method(c_basic, "+", cbasic_add, 1);
     rb_define_method(c_basic, "-", cbasic_sub, 1);
     rb_define_method(c_basic, "*", cbasic_mul, 1);
