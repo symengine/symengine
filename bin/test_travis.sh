@@ -144,3 +144,6 @@ if not symengine.test():
     raise Exception('Tests failed')
 EOF
 fi
+if [[ "${WITH_SAGE}" == "yes" ]]; then
+    sage -t $SOURCE_DIR/symengine/python/symengine/tests/test_sage.py
+fi
