@@ -127,8 +127,7 @@ void test_CVecBasic()
     basic_init(y);
     vecbasic_get(vec, 0, y);
 
-    // TODO: enable this once basic_eq() is implemented
-    // SYMENGINE_C_ASSERT(basic_eq(x, y));
+    SYMENGINE_C_ASSERT(basic_eq(x, y));
 
     vecbasic_free(vec);
     basic_free(x);
@@ -162,6 +161,9 @@ void test_CSetBasic()
 
     is_found = setbasic_find(set, y);
     SYMENGINE_C_ASSERT(is_found == 0);
+
+    setbasic_get(set, 0, y);
+    SYMENGINE_C_ASSERT(basic_eq(x, y));
 
     setbasic_free(set);
     basic_free(x);

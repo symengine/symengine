@@ -12,7 +12,7 @@
 # the additional setup, and require it from the spec files that actually need
 # it.
 
-#Loading the classes to be tested
+# Loading the classes to be tested
 require_relative '../lib/symengine'
 
 # The `.rspec` file also contains a few flags that are not defaults but that

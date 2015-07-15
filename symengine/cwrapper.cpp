@@ -22,6 +22,8 @@ using SymEngine::Integer;
 using SymEngine::Number;
 using SymEngine::rcp_static_cast;
 using SymEngine::is_a;
+using SymEngine::RCPBasicKeyLess;
+using SymEngine::set_basic;
 
 namespace SymEngine {
 
@@ -177,6 +179,16 @@ void basic_neg(basic s, const basic a)
     s->m = SymEngine::neg(a->m);
 }
 
+int basic_eq(const basic a, const basic b)
+{
+    return SymEngine::eq(*(a->m), *(b->m)) ? 1 : 0;
+}
+
+int basic_neq(const basic a, const basic b)
+{
+    return SymEngine::neq(*(a->m), *(b->m)) ? 1 : 0;
+}
+
 void basic_abs(basic s, const basic a)
 {
     s->m = SymEngine::abs(a->m);
@@ -315,6 +327,11 @@ void setbasic_free(CSetBasic *self)
 int setbasic_insert(CSetBasic *self, const basic value)
 {
     return (self->m.insert(value->m)).second ? 1 : 0;
+}
+
+void setbasic_get(CSetBasic *self, int n, basic result)
+{
+    result->m = *std::next((self->m).begin(), n);
 }
 
 int setbasic_find(CSetBasic *self, basic value)

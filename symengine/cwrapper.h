@@ -123,6 +123,10 @@ void basic_pow(basic s, const basic a, const basic b);
 int basic_diff(basic s, const basic expr, const basic sym);
 //! Assigns s = -a.
 void basic_neg(basic s, const basic a);
+//! Returns 1 if both basic are equal, 0 if not
+int basic_eq(const basic a, const basic b);
+//! Returns 1 if both basic are not equal, 0 if they are
+int basic_neq(const basic a, const basic b);
 //! Assigns s = abs(a).
 void basic_abs(basic s, const basic a);
 //! Expands the expr a and assigns to s.
@@ -181,6 +185,7 @@ void setbasic_free(CSetBasic *self);
 //! Returns 1 if insert is successful and 0 if set already contains the value
 //! and insertion is unsuccessful
 int setbasic_insert(CSetBasic *self, const basic value);
+void setbasic_get(CSetBasic *self, int n, basic result);
 //! Returns 1 if value is found in the set and 0 if not
 int setbasic_find(CSetBasic *self, basic value);
 size_t setbasic_size(CSetBasic *self);
