@@ -129,8 +129,6 @@ private:
     T *ptr_;
 };
 
-
-
 template<class T>
 inline RCP<T> rcp(T* p)
 {
