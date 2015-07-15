@@ -6,16 +6,9 @@ using SymEngine::RCP;
 using SymEngine::make_rcp;
 using SymEngine::Ptr;
 using SymEngine::null;
+using SymEngine::EnableRCPFromThis;
 
-class Mesh {
-public:
-#if defined(WITH_SYMENGINE_RCP)
-    mutable unsigned int refcount_;
-    Mesh() : refcount_(0) {}
-#else
-    mutable RCP<const Mesh> weak_self_ptr_;
-#endif
-
+class Mesh : public EnableRCPFromThis {
     int x, y;
 };
 
