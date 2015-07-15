@@ -2,7 +2,6 @@
 
 void test_cwrapper() {
     char* s;
-    basic_struct *basic_array;
     basic x, y, z;
     basic_init(x);
     basic_init(y);
