@@ -30,6 +30,7 @@ void Init_symengine() {
     rb_define_method(c_basic, "expand", cbasic_expand, 0);
     rb_define_method(c_basic, "args", cbasic_get_args, 0);
     rb_define_protected_method(c_basic, "pr_free_symbols", cbasic_free_symbols, 0);
+    rb_define_method(c_basic, "hash", cbasic_hash, 0);
 
     //Symbol class
     c_symbol = rb_define_class_under(m_symengine, "Symbol", c_basic);
