@@ -201,6 +201,20 @@ using Teuchos::print_stack_on_segfault;
 
 
 class EnableRCPFromThis {
+// Public interface
+public:
+    unsigned int use_count() const {
+#if defined(WITH_SYMENGINE_RCP)
+        return refcount_;
+#else
+        return weak_self_ptr_.strong_count();
+#endif
+    }
+
+
+
+
+// Everything below is private interface
 public:
 #if defined(WITH_SYMENGINE_RCP)
 
