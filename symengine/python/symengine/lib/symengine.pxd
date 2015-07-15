@@ -211,6 +211,7 @@ cdef extern from "<symengine/pow.h>" namespace "SymEngine":
     cdef RCP[const Basic] pow(RCP[const Basic] &a, RCP[const Basic] &b) nogil except+
     cdef RCP[const Basic] sqrt(RCP[const Basic] &x) nogil except+
     cdef RCP[const Basic] exp(RCP[const Basic] &x) nogil except+
+    cdef RCP[const Basic] log(RCP[const Basic] &x) nogil except+
     cdef RCP[const Basic] log(RCP[const Basic] &x, RCP[const Basic] &y) nogil except+
 
     cdef cppclass Pow(Basic):
