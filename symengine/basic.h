@@ -82,7 +82,7 @@ private:
 public:
     virtual TypeID get_type_code() const = 0;
     //! Constructor
-    Basic() : EnableRCPFromThis(), hash_{0} {}
+    Basic() : hash_{0} {}
     //! Destructor must be explicitly defined as virtual here to avoid problems
     //! with undefined behavior while deallocating derived classes.
     virtual ~Basic() {}
