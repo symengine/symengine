@@ -356,4 +356,10 @@ void basic_free_symbols(const basic self, CSetBasic *symbols)
     symbols->m = SymEngine::free_symbols(*(self->m));
 }
 
+size_t basic_hash(const basic self)
+{
+    std::hash<Basic> hash_fn;
+    return hash_fn(*(self->m));
+}
+
 }
