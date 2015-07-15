@@ -129,6 +129,8 @@ private:
     T *ptr_;
 };
 
+
+
 template<class T>
 inline RCP<T> rcp(T* p)
 {
@@ -196,6 +198,42 @@ using Teuchos::null;
 using Teuchos::print_stack_on_segfault;
 
 #endif
+
+
+class EnableRCPFromThis {
+public:
+#if defined(WITH_SYMENGINE_RCP)
+
+    //! Public variables if defined with SYMENGINE_RCP
+    // The reference counter is defined either as "unsigned int" (faster, but
+    // not thread safe) or as std::atomic<unsigned int> (slower, but thread
+    // safe). Semantically they are almost equivalent, except that the
+    // pre-decrement operator `operator--()` returns a copy for std::atomic
+    // instead of a reference to itself.
+    // The refcount_ is defined as mutable, because it does not change the
+    // state of the instance, but changes when more copies
+    // of the same instance are made.
+#  if defined(WITH_SYMENGINE_THREAD_SAFE)
+    mutable std::atomic<unsigned int> refcount_; // reference counter
+#  else
+    mutable unsigned int refcount_; // reference counter
+#  endif // WITH_SYMENGINE_THREAD_SAFE
+    EnableRCPFromThis() : refcount_(0) {}
+
+#else
+    mutable RCP<const EnableRCPFromThis> weak_self_ptr_;
+#endif // WITH_SYMENGINE_RCP
+
+    //! Get RCP<T> pointer to self (it will cast the pointer to T)
+    template <class T>
+    inline RCP<T> get_rcp_cast() const {
+#if defined(WITH_SYMENGINE_RCP)
+        return rcp(static_cast<T*>(this));
+#else
+        return rcp_static_cast<T>(weak_self_ptr_.create_strong());
+#endif
+    }
+};
 
 
 template<typename T, typename ...Args>
