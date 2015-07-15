@@ -83,9 +83,6 @@ bool map_eq(const T &A, const T &B)
     return true;
 }
 
-//! \return true if the two dictionaries `a` and `b` are equal. Otherwise false.
-bool umap_basic_basic_eq(const umap_basic_basic &a,
-        const umap_basic_basic &b);
 //! \return true if the two vectors `a` and `b` are equal. Otherwise false.
 bool vec_basic_eq(const vec_basic &a, const vec_basic &b);
 //! \return true if the two vectors `a` and `b` are equal up to a permutation. Otherwise false.
