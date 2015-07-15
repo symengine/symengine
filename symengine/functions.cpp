@@ -1703,7 +1703,7 @@ bool Subs::__eq__(const Basic &o) const
 {
     if (is_a<Subs>(o) &&
             eq(*arg_, *(static_cast<const Subs &>(o).arg_)) &&
-            map_basic_basic_eq(dict_, static_cast<const Subs &>(o).dict_))
+            map_eq(dict_, static_cast<const Subs &>(o).dict_))
         return true;
     return false;
 }
@@ -1714,7 +1714,7 @@ int Subs::compare(const Basic &o) const
     const Subs &s = static_cast<const Subs &>(o);
     int cmp = arg_->__cmp__(*(arg_));
     if (cmp != 0) return cmp;
-    cmp = map_basic_basic_compare(dict_, s.dict_);
+    cmp = map_compare(dict_, s.dict_);
     return cmp;
 }
 

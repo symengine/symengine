@@ -48,14 +48,41 @@ void insert(T1 &m, const T2 &first, const T3 &second) {
 }
 
 //! \return true if the two dictionaries `a` and `b` are equal. Otherwise false.
-bool umap_basic_num_eq(const umap_basic_num &a, const umap_basic_num &b);
+template<class T>
+bool umap_eq(const T &a, const T &b)
+{
+    // This follows the same algorithm as Python's dictionary comparison
+    // (a==b), which is implemented by "dict_equal" function in
+    // Objects/dictobject.c.
+
+    // Can't be equal if # of entries differ:
+    if (a.size() != b.size()) return false;
+    // Loop over keys in "a":
+    for (auto &p: a) {
+        // O(1) lookup of the key in "b":
+        auto f = b.find(p.first);
+        if (f == b.end()) return false; // no such element in "b"
+        if (neq(*p.second, *f->second)) return false; // values not equal
+    }
+    return true;
+}
+
 //! \return true if the two dictionaries `a` and `b` are equal. Otherwise false.
-bool map_basic_num_eq(const map_basic_num &a, const map_basic_num &b);
-//! \return true if the two dictionaries `a` and `b` are equal. Otherwise false.
-bool map_basic_basic_eq(const map_basic_basic &a, const map_basic_basic &b);
-//! \return true if the two dictionaries `a` and `b` are equal. Otherwise false.
-bool umap_basic_basic_eq(const umap_basic_basic &a,
-        const umap_basic_basic &b);
+template<class T>
+bool map_eq(const T &A, const T &B)
+{
+    // Can't be equal if # of entries differ:
+    if (A.size() != B.size()) return false;
+    // Loop over keys in "a":
+    auto a = A.begin();
+    auto b = B.begin();
+    for (; a != A.end(); ++a, ++b) {
+        if (neq(*a->first, *b->first)) return false; // keys not equal
+        if (neq(*a->second, *b->second)) return false; // values not equal
+    }
+    return true;
+}
+
 //! \return true if the two vectors `a` and `b` are equal. Otherwise false.
 bool vec_basic_eq(const vec_basic &a, const vec_basic &b);
 //! \return true if the two vectors `a` and `b` are equal up to a permutation. Otherwise false.
@@ -64,9 +91,23 @@ bool vec_basic_eq_perm(const vec_basic &a, const vec_basic &b);
 bool map_uint_mpz_eq(const map_uint_mpz &a, const map_uint_mpz &b);
 
 //! \return -1, 0, 1 for a < b, a == b, a > b
-int map_basic_basic_compare(const map_basic_basic &a, const map_basic_basic &b);
-//! \return -1, 0, 1 for a < b, a == b, a > b
-int map_basic_num_compare(const map_basic_num &a, const map_basic_num &b);
+template<class T>
+int map_compare(const T &A, const T &B)
+{
+    if (A.size() != B.size())
+        return (A.size() < B.size()) ? -1 : 1;
+    auto a = A.begin();
+    auto b = B.begin();
+    int cmp;
+    for (; a != A.end(); ++a, ++b) {
+        cmp = a->first->__cmp__(*b->first);
+        if (cmp != 0) return cmp;
+        cmp = a->second->__cmp__(*b->second);
+        if (cmp != 0) return cmp;
+    }
+    return 0;
+}
+
 //! \return -1, 0, 1 for a < b, a == b, a > b
 int vec_basic_compare(const vec_basic &a, const vec_basic &b);
 //! \return -1, 0, 1 for a < b, a == b, a > b
