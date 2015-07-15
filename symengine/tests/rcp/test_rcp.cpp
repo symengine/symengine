@@ -1,4 +1,4 @@
-#include <cassert>
+#include "catch.hpp"
 
 #include <symengine/symengine_rcp.h>
 
@@ -12,17 +12,15 @@ class Mesh : public EnableRCPFromThis {
     int x, y;
 };
 
-int main(int argc, char* argv[])
+TEST_CASE("Test make_rcp", "[rcp]")
 {
 
     RCP<Mesh> m = make_rcp<Mesh>();
     Ptr<Mesh> p = m.ptr();
-    if (m == null) return 1;
-    if (p->use_count() != 1) return 1;
+    REQUIRE(m != null);
+    REQUIRE(p->use_count() == 1);
     RCP<Mesh> m2 = m;
-    if (p->use_count() != 2) return 1;
+    REQUIRE(p->use_count() == 2);
     RCP<Mesh> m3 = m2;
-    if (p->use_count() != 3) return 1;
-
-    return 0;
+    REQUIRE(p->use_count() == 3);
 }
