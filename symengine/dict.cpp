@@ -1,5 +1,6 @@
 #include <symengine/basic.h>
 #include <symengine/integer.h>
+#include <symengine/symbol.h>
 
 namespace SymEngine {
 

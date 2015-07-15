@@ -6,6 +6,9 @@
 #ifndef SYMENGINE_POLYS_H
 #define SYMENGINE_POLYS_H
 
+#include <symengine/basic.h>
+#include <symengine/dict.h>
+
 namespace SymEngine {
 //! Polynomial Class
 class Polynomial : public Basic{
@@ -19,11 +22,11 @@ public:
     //! Constructor of Polynomial class
     Polynomial(const vec_symbol &vars, hash_set &&polys_set);
     //! Constructor from Basic
-    Polynomial(const Basic &o);
+    Polynomial(const RCP<const Basic> &p, umap_basic_num &vars);
 
-    static RCP<const Polynomial> create(const vec_symbol &vars, hash_set &&polys_set) {
+    /*static RCP<const Polynomial> create(const vec_symbol &vars, hash_set &&polys_set) {
         return make_rcp<const Polynomial>(vars, polys_set);
-    }
+    }*/
 
     //! \return true if canonical
     bool is_canonical(const hash_set& set);

@@ -18,6 +18,7 @@ namespace SymEngine {
 class Basic;
 class Number;
 class Integer;
+class Symbol;
 struct RCPBasicHash;
 struct RCPBasicKeyEq;
 struct RCPBasicKeyLess;
