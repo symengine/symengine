@@ -161,7 +161,7 @@ private:
     RCP<const Symbol> x_;
     bool has_;
 public:
-    HasSymbolVisitor() : StopVisitor(this) { };
+    HasSymbolVisitor() : StopVisitor<HasSymbolVisitor>(this) { };
 
     void bvisit(const Symbol &x) {
         if (x_->__eq__(x)) {
@@ -189,7 +189,7 @@ private:
     RCP<const Integer> n_;
     RCP<const Basic> coeff_;
 public:
-    CoeffVisitor() : StopVisitor(this) { };
+    CoeffVisitor() : StopVisitor<CoeffVisitor>(this) { };
 
     void bvisit(const Add &x) {
         // TODO: Implement coeff for Add

@@ -357,131 +357,131 @@ TEST_CASE("compare: Basic", "[basic]")
     RCP<const Basic> i2  = integer(2);
     RCP<const Basic> im2  = integer(-2);
     RCP<const Basic> i3  = integer(3);
-    REQUIRE(x->compare(*x) == 0);
-    REQUIRE(x->compare(*y) == -1);
-    REQUIRE(x->compare(*z) == -1);
-    REQUIRE(y->compare(*x) == 1);
-    REQUIRE(y->compare(*z) == -1);
-    REQUIRE(z->compare(*x) == 1);
-    REQUIRE(z->compare(*y) == 1);
+    CHECK(x->compare(*x) == 0);
+    CHECK(x->compare(*y) == -1);
+    CHECK(x->compare(*z) == -1);
+    CHECK(y->compare(*x) == 1);
+    CHECK(y->compare(*z) == -1);
+    CHECK(z->compare(*x) == 1);
+    CHECK(z->compare(*y) == 1);
 
-    REQUIRE(i2->compare(*i2) == 0);
-    REQUIRE(i2->compare(*i3) == -1);
-    REQUIRE(i3->compare(*i2) == 1);
+    CHECK(i2->compare(*i2) == 0);
+    CHECK(i2->compare(*i3) == -1);
+    CHECK(i3->compare(*i2) == 1);
 
     r1 = mul(x, y);
     r2 = mul(x, y);
-    REQUIRE(r1->compare(*r2) == 0);
-    REQUIRE(r2->compare(*r1) == 0);
+    CHECK(r1->compare(*r2) == 0);
+    CHECK(r2->compare(*r1) == 0);
 
     r1 = mul(x, y);
     r2 = mul(x, z);
-    REQUIRE(r1->compare(*r2) == -1);
-    REQUIRE(r2->compare(*r1) == 1);
+    CHECK(r1->compare(*r2) == -1);
+    CHECK(r2->compare(*r1) == 1);
 
     r1 = mul(y, x);
     r2 = mul(x, z);
-    REQUIRE(r1->compare(*r2) == -1);
-    REQUIRE(r2->compare(*r1) == 1);
+    CHECK(r1->compare(*r2) == -1);
+    CHECK(r2->compare(*r1) == 1);
 
     r1 = mul(mul(y, x), z);
     r2 = mul(x, z);
-    REQUIRE(r1->compare(*r2) == 1);
-    REQUIRE(r2->compare(*r1) == -1);
+    CHECK(r1->compare(*r2) == 1);
+    CHECK(r2->compare(*r1) == -1);
 
     r1 = add(add(y, x), z);
     r2 = add(x, z);
-    REQUIRE(r1->compare(*r2) == 1);
-    REQUIRE(r2->compare(*r1) == -1);
+    CHECK(r1->compare(*r2) == 1);
+    CHECK(r2->compare(*r1) == -1);
 
     r1 = pow(x, z);
     r2 = pow(y, x);
-    REQUIRE(r1->compare(*r2) == -1);
-    REQUIRE(r2->compare(*r1) == 1);
+    CHECK(r1->compare(*r2) == -1);
+    CHECK(r2->compare(*r1) == 1);
 
     r1 = pow(x, z);
     r2 = pow(x, x);
-    REQUIRE(r1->compare(*r2) == 1);
-    REQUIRE(r2->compare(*r1) == -1);
+    CHECK(r1->compare(*r2) == 1);
+    CHECK(r2->compare(*r1) == -1);
 
     r1 = add(add(x, y), z);
     r2 = add(x, y);
-    REQUIRE(r1->compare(*r2) == 1);
-    REQUIRE(r2->compare(*r1) == -1);
+    CHECK(r1->compare(*r2) == 1);
+    CHECK(r2->compare(*r1) == -1);
 
     r1 = add(add(x, y), i2);
     r2 = add(x, y);
-    REQUIRE(r1->compare(*r2) == 1);
-    REQUIRE(r2->compare(*r1) == -1);
+    CHECK(r1->compare(*r2) == 1);
+    CHECK(r2->compare(*r1) == -1);
 
     r1 = add(add(x, y), im2);
     r2 = add(x, y);
-    REQUIRE(r1->compare(*r2) == -1);
-    REQUIRE(r2->compare(*r1) == 1);
+    CHECK(r1->compare(*r2) == -1);
+    CHECK(r2->compare(*r1) == 1);
 
     r1 = add(x, y);
     r2 = add(x, z);
-    REQUIRE(r1->compare(*r2) == -1);
-    REQUIRE(r2->compare(*r1) == 1);
+    CHECK(r1->compare(*r2) == -1);
+    CHECK(r2->compare(*r1) == 1);
 
     r1 = add(x, y);
     r2 = add(x, y);
-    REQUIRE(r1->compare(*r2) == 0);
-    REQUIRE(r2->compare(*r1) == 0);
+    CHECK(r1->compare(*r2) == 0);
+    CHECK(r2->compare(*r1) == 0);
 
     r1 = add(add(x, y), z);
     r2 = add(add(x, z), y);
-    REQUIRE(r1->compare(*r2) == 0);
-    REQUIRE(r2->compare(*r1) == 0);
+    CHECK(r1->compare(*r2) == 0);
+    CHECK(r2->compare(*r1) == 0);
 
     r1 = sin(x);
     r2 = sin(y);
-    REQUIRE(r1->compare(*r2) == -1);
-    REQUIRE(r2->compare(*r1) == 1);
-    REQUIRE(r1->compare(*r1) == 0);
+    CHECK(r1->compare(*r2) == -1);
+    CHECK(r2->compare(*r1) == 1);
+    CHECK(r1->compare(*r1) == 0);
 
     // These are specific to the order in the declaration of enum TypeID,
     // so we just make sure that if x < y, then y > x.
     r1 = add(x, z);
     r2 = mul(x, y);
     int cmp = r1->__cmp__(*r2);
-    REQUIRE(cmp != 0);
-    REQUIRE(r2->__cmp__(*r1) == -cmp);
+    CHECK(cmp != 0);
+    CHECK(r2->__cmp__(*r1) == -cmp);
 
     r1 = mul(x, pow(z, x));
     r2 = mul(x, y);
     cmp = r1->__cmp__(*r2);
-    REQUIRE(cmp != 0);
-    REQUIRE(r2->__cmp__(*r1) == -cmp);
+    CHECK(cmp != 0);
+    CHECK(r2->__cmp__(*r1) == -cmp);
 
     r1 = mul(x, pow(z, x));
     r2 = mul(x, z);
     cmp = r1->__cmp__(*r2);
-    REQUIRE(cmp != 0);
-    REQUIRE(r2->__cmp__(*r1) == -cmp);
+    CHECK(cmp != 0);
+    CHECK(r2->__cmp__(*r1) == -cmp);
 
     r1 = pow(z, x);
     r2 = pow(z, pow(x, y));
     cmp = r1->__cmp__(*r2);
-    REQUIRE(cmp != 0);
-    REQUIRE(r2->__cmp__(*r1) == -cmp);
+    CHECK(cmp != 0);
+    CHECK(r2->__cmp__(*r1) == -cmp);
 
     r1 = div(mul(x, y), i2);
     r2 = mul(x, y);
     cmp = r1->__cmp__(*r2);
-    REQUIRE(cmp != 0);
-    REQUIRE(r2->__cmp__(*r1) == -cmp);
+    CHECK(cmp != 0);
+    CHECK(r2->__cmp__(*r1) == -cmp);
 
     r1 = add(x, pow(z, x));
     r2 = add(x, y);
     cmp = r1->__cmp__(*r2);
-    REQUIRE(cmp != 0);
-    REQUIRE(r2->__cmp__(*r1) == -cmp);
+    CHECK(cmp != 0);
+    CHECK(r2->__cmp__(*r1) == -cmp);
 
     r1 = log(log(x));
     r2 = log(x);
-    REQUIRE(r1->__cmp__(*r2) != 0);
-    REQUIRE(r1->__cmp__(*r1) == 0);
+    CHECK(r1->__cmp__(*r2) != 0);
+    CHECK(r1->__cmp__(*r1) == 0);
 }
 
 TEST_CASE("Complex: Basic", "[basic]")

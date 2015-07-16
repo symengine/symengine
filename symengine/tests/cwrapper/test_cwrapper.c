@@ -101,7 +101,7 @@ void test_CVectorInt2()
     struct X data2[1];  // Aligned properly but small
     SYMENGINE_C_ASSERT(vectorint_placement_new_check(data2, sizeof(data2)) ==1);
 
-    char data3[50]; // Aligned properly and enough size to fit std::vector<int>
+    struct X data3[50]; // Aligned properly and enough size to fit std::vector<int>
     SYMENGINE_C_ASSERT(vectorint_placement_new_check(data3, 1) == 1);
     SYMENGINE_C_ASSERT(vectorint_placement_new_check(data3, 2) == 1);
     SYMENGINE_C_ASSERT(vectorint_placement_new_check(data3, sizeof(data3)) == 0);

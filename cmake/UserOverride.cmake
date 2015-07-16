@@ -19,12 +19,15 @@ endif ()
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     # g++
-    set(common "-std=c++0x -Wall -Wextra -fPIC")
+    set(common "-std=c++0x -Wall -Wextra -fPIC -fno-common")
     set(CMAKE_CXX_FLAGS_RELEASE_INIT "${common} -O3 -march=native -ffast-math -funroll-loops")
     set(CMAKE_CXX_FLAGS_DEBUG_INIT   "${common} -g")
-endif ()
-
-if (CMAKE_CXX_COMPILER_ID MATCHES Clang)
+elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
+    # icpc
+    set(common "-std=c++11 -Wall -fno-common")
+    set(CMAKE_CXX_FLAGS_RELEASE_INIT "${common} -xHOST -O3 -no-prec-div")
+    set(CMAKE_CXX_FLAGS_DEBUG_INIT   "${common} -g -O0")
+elseif (CMAKE_CXX_COMPILER_ID MATCHES Clang)
     # clang
     set(common "-std=c++11 -Wall -Wextra -fPIC")
     set(CMAKE_CXX_FLAGS_RELEASE_INIT "${common} -O3 -march=native -ffast-math -funroll-loops")
