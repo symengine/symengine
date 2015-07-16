@@ -202,6 +202,15 @@ template <class T>
 class EnableRCPFromThis {
 // Public interface
 public:
+    //! Get RCP<T> pointer to self (it will cast the pointer to T)
+    inline RCP<T> rcp_from_this() const {
+#if defined(WITH_SYMENGINE_RCP)
+        return rcp(static_cast<T*>(this));
+#else
+        return rcp_static_cast<T>(weak_self_ptr_.create_strong());
+#endif
+    }
+
     unsigned int use_count() const {
 #if defined(WITH_SYMENGINE_RCP)
         return refcount_;
@@ -209,8 +218,6 @@ public:
         return weak_self_ptr_.strong_count();
 #endif
     }
-
-
 
 
 // Everything below is private interface
@@ -236,15 +243,6 @@ public:
 #else
     mutable RCP<T> weak_self_ptr_;
 #endif // WITH_SYMENGINE_RCP
-
-    //! Get RCP<T> pointer to self (it will cast the pointer to T)
-    inline RCP<T> get_rcp_cast() const {
-#if defined(WITH_SYMENGINE_RCP)
-        return rcp(static_cast<T*>(this));
-#else
-        return rcp_static_cast<T>(weak_self_ptr_.create_strong());
-#endif
-    }
 };
 
 

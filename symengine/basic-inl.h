@@ -17,7 +17,7 @@ inline bool Basic::__neq__(const Basic &o) const
 }
 
 inline RCP<const Basic> Basic::get_rcp() const {
-    return get_rcp_cast();
+    return rcp_from_this();
 }
 
 //! \return true if  `a` equal `b`

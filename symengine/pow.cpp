@@ -402,7 +402,7 @@ RCP<const Basic> Pow::diff(const RCP<const Symbol> &x) const
 
 RCP<const Basic> Pow::subs(const map_basic_basic &subs_dict) const
 {
-    RCP<const Pow> self = rcp_static_cast<const Pow>(get_rcp_cast());
+    RCP<const Pow> self = rcp_static_cast<const Pow>(rcp_from_this());
     auto it = subs_dict.find(self);
     if (it != subs_dict.end())
         return it->second;
@@ -477,7 +477,7 @@ int Log::compare(const Basic &o) const
 
 RCP<const Basic> Log::subs(const map_basic_basic &subs_dict) const
 {
-    RCP<const Log> self = rcp_static_cast<const Log>(get_rcp_cast());
+    RCP<const Log> self = rcp_static_cast<const Log>(rcp_from_this());
     auto it = subs_dict.find(self);
     if (it != subs_dict.end())
         return it->second;

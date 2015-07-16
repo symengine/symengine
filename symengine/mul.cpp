@@ -524,7 +524,7 @@ RCP<const Basic> Mul::diff(const RCP<const Symbol> &x) const
 
 RCP<const Basic> Mul::subs(const map_basic_basic &subs_dict) const
 {
-    RCP<const Mul> self = rcp_static_cast<const Mul>(get_rcp_cast());
+    RCP<const Mul> self = rcp_static_cast<const Mul>(rcp_from_this());
     auto it = subs_dict.find(self);
     if (it != subs_dict.end())
         return it->second;
