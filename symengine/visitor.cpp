@@ -19,19 +19,9 @@
 
 namespace SymEngine {
 
-#ifndef HAVE_SYMENGINE_MPC
-#define EXCLUDE_COMPLEX_MPC
-#endif
-#ifndef HAVE_SYMENGINE_MPFR
-#define EXCLUDE_REAL_MPFR
-#endif
-#define EXCLUDE_TypeID_Count
 #define SYMENGINE_ENUM(TypeID, Class) ACCEPT(Class)
 #include "symengine/type_codes.inc"
 #undef SYMENGINE_ENUM
-#undef EXCLUDE_COMPLEX_MPC
-#undef EXCLUDE_REAL_MPFR
-#undef EXCLUDE_TypeID_Count
 
 
 void preorder_traversal(const Basic &b, Visitor &v)

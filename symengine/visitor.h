@@ -26,20 +26,10 @@ namespace SymEngine {
 
 class Visitor {
 public:
-#   ifndef HAVE_SYMENGINE_MPC
-#      define EXCLUDE_COMPLEX_MPC
-#   endif
-#   ifndef HAVE_SYMENGINE_MPFR
-#       define EXCLUDE_REAL_MPFR
-#   endif
-#   define EXCLUDE_TypeID_Count
 #   define SYMENGINE_ENUM( TypeID , Class) \
     virtual void visit(const Class &) = 0;
 #   include "symengine/type_codes.inc"
 #   undef SYMENGINE_ENUM
-#   undef EXCLUDE_COMPLEX_MPC
-#   undef EXCLUDE_REAL_MPFR
-#   undef EXCLUDE_TypeID_Count
 };
 
 void preorder_traversal(const Basic &b, Visitor &v);
@@ -54,20 +44,10 @@ public:
     BaseVisitor(T* p) : p_ {p} {
 
     };
-#   ifndef HAVE_SYMENGINE_MPC
-#      define EXCLUDE_COMPLEX_MPC
-#   endif
-#   ifndef HAVE_SYMENGINE_MPFR
-#       define EXCLUDE_REAL_MPFR
-#   endif
-#   define EXCLUDE_TypeID_Count
 #   define SYMENGINE_ENUM( TypeID , Class) \
     virtual void visit(const Class &x) { p_->bvisit(x); };
 #   include "symengine/type_codes.inc"
 #   undef SYMENGINE_ENUM
-#   undef EXCLUDE_COMPLEX_MPC
-#   undef EXCLUDE_REAL_MPFR
-#   undef EXCLUDE_TypeID_Count
 };
 
 template<class T>
