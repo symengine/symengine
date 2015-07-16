@@ -274,12 +274,12 @@ RCP<const Basic> TrigFunction::create(const RCP<const Basic> &arg) const
 
 RCP<const Basic> TrigFunction::subs(const map_basic_basic &subs_dict) const
 {
-    auto it = subs_dict.find(get_rcp());
+    auto it = subs_dict.find(rcp_from_this());
     if (it != subs_dict.end())
         return it->second;
     RCP<const Basic> arg = arg_->subs(subs_dict);
     if (arg == arg_)
-        return get_rcp();
+        return rcp_from_this();
     else
         return this->create(arg);
 }
@@ -1442,7 +1442,7 @@ int FunctionSymbol::compare(const Basic &o) const
 RCP<const Basic> FunctionSymbol::diff(const RCP<const Symbol> &x) const
 {
     RCP<const Basic> diff = zero, t;
-    RCP<const Basic> self = get_rcp();
+    RCP<const Basic> self = rcp_from_this();
     RCP<const Symbol> s;
     std::string name;
     unsigned count  = 0;
@@ -1478,7 +1478,7 @@ RCP<const Basic> FunctionSymbol::diff(const RCP<const Symbol> &x) const
 
 RCP<const Basic> FunctionSymbol::subs(const map_basic_basic &subs_dict) const
 {
-    auto it = subs_dict.find(get_rcp());
+    auto it = subs_dict.find(rcp_from_this());
     if (it != subs_dict.end())
         return it->second;
     vec_basic v = arg_;
@@ -1540,7 +1540,7 @@ RCP<const Basic> FunctionWrapper::diff(const RCP<const Symbol> &x) const
 {
     for (auto &a : arg_) {
         if (neq(*a->diff(x), *zero)) {
-            return Derivative::create(get_rcp(), {x});
+            return Derivative::create(rcp_from_this(), {x});
         }
     }
     return zero;
@@ -1627,7 +1627,7 @@ RCP<const Basic> Derivative::subs(const map_basic_basic &subs_dict) const
     RCP<const Symbol> s;
     map_basic_basic m, n;
     bool subs;
-    auto it = subs_dict.find(get_rcp());
+    auto it = subs_dict.find(rcp_from_this());
     if (it != subs_dict.end())
         return it->second;
     for (auto &p: subs_dict) {
@@ -1652,7 +1652,7 @@ RCP<const Basic> Derivative::subs(const map_basic_basic &subs_dict) const
                     break;
                 }
             } else {
-                return make_rcp<const Subs>(get_rcp(), subs_dict);
+                return make_rcp<const Subs>(rcp_from_this(), subs_dict);
             }
         }
         if (subs) {
@@ -1757,7 +1757,7 @@ RCP<const Basic> Subs::diff(const RCP<const Symbol> &x) const
             if (is_a<Symbol>(*p.first)) {
                 diff = add(diff, mul(t, arg_->diff(rcp_static_cast<const Symbol>(p.first))->subs(dict_)));
             } else {
-                return Derivative::create(get_rcp(), {x});
+                return Derivative::create(rcp_from_this(), {x});
             }
         }
     }
@@ -1801,12 +1801,12 @@ RCP<const Basic> HyperbolicFunction::create(const RCP<const Basic> &arg) const
 
 RCP<const Basic> HyperbolicFunction::subs(const map_basic_basic &subs_dict) const
 {
-    auto it = subs_dict.find(get_rcp());
+    auto it = subs_dict.find(rcp_from_this());
     if (it != subs_dict.end())
         return it->second;
     RCP<const Basic> arg = arg_->subs(subs_dict);
     if (arg == arg_)
-        return get_rcp();
+        return rcp_from_this();
     else
         return this->create(arg);
 }
@@ -2962,7 +2962,7 @@ RCP<const Basic> Abs::diff(const RCP<const Symbol> &x) const
     if (eq(*arg_->diff(x), *zero))
         return zero;
     else
-        return Derivative::create(get_rcp(), {x});
+        return Derivative::create(rcp_from_this(), {x});
 }
 
 RCP<const Basic> abs(const RCP<const Basic> &arg)

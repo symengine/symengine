@@ -16,10 +16,6 @@ inline bool Basic::__neq__(const Basic &o) const
     return !(this->__eq__(o));
 }
 
-inline RCP<const Basic> Basic::get_rcp() const {
-    return rcp_from_this();
-}
-
 //! \return true if  `a` equal `b`
 inline bool eq(const Basic &a, const Basic &b)
 {

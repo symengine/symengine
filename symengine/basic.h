@@ -97,9 +97,6 @@ public:
     //! Assignment operator in continuation with above
     Basic& operator=(Basic&&) = delete;
 
-    //! Get RCP<const Basic> pointer to self
-    inline RCP<const Basic> get_rcp() const;
-
     /*!  Implements the hash of the given SymEngine class.
          Use `std::hash` to get the hash. Example:
              RCP<const Symbol> x = symbol("x");
