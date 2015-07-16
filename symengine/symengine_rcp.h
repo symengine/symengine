@@ -211,6 +211,7 @@ public:
 #endif
     }
 
+    //! Get RCP<const T> pointer to self (it will cast the pointer to const T)
     inline RCP<const T> rcp_from_this() const {
 #if defined(WITH_SYMENGINE_RCP)
         return rcp(static_cast<const T*>(this));
