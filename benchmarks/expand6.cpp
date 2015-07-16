@@ -35,7 +35,7 @@ int main(int argc, char* argv[])
     a1 = symbol("a1");
     e = add(a0, a1);
     f = zero;
-    for (int i = 2; i < N; i++) {
+    for (long long i = 2; i < N; i++) {
         s = symbol("a" + std::to_string(i));
         e = add(e, s);
         f = sub(f, s);
