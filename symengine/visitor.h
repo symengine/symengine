@@ -26,24 +26,12 @@ namespace SymEngine {
 
 class Visitor {
 public:
-    #define EXCLUDE_CONSTANT
-    #define EXCLUDE_REAL_MPFR
-    #define EXCLUDE_COMPLEX_MPC
     #define EXCLUDE_TypeID_Count
     #define SYMENGINE_ENUM( TypeID , Class) \
     virtual void visit(const Class &) = 0;
     #include "symengine/type_codes.inc"
     #undef SYMENGINE_ENUM
-    #undef EXCLUDE_CONSTANT
-    #undef EXCLUDE_REAL_MPFR
-    #undef EXCLUDE_COMPLEX_MPC
     #undef EXCLUDE_TypeID_Count
-#ifdef HAVE_SYMENGINE_MPFR
-    virtual void visit(const RealMPFR &) = 0;
-#endif
-#ifdef HAVE_SYMENGINE_MPC
-    virtual void visit(const ComplexMPC &) = 0;
-#endif
 };
 
 void preorder_traversal(const Basic &b, Visitor &v);
@@ -58,24 +46,12 @@ public:
     BaseVisitor(T* p) : p_ {p} {
 
     };
-    #define EXCLUDE_CONSTANT
-    #define EXCLUDE_REAL_MPFR
-    #define EXCLUDE_COMPLEX_MPC
     #define EXCLUDE_TypeID_Count
     #define SYMENGINE_ENUM(TypeID, Class) \
     virtual void visit(const Class &x) { p_->bvisit(x); };
     #include "symengine/type_codes.inc"
     #undef SYMENGINE_ENUM
-    #undef EXCLUDE_CONSTANT
-    #undef EXCLUDE_REAL_MPFR
-    #undef EXCLUDE_COMPLEX_MPC
     #undef EXCLUDE_TypeID_Count
-#ifdef HAVE_SYMENGINE_MPFR
-    virtual void visit(const RealMPFR &x) { p_->bvisit(x); };
-#endif
-#ifdef HAVE_SYMENGINE_MPC
-    virtual void visit(const ComplexMPC &x) { p_->bvisit(x); };
-#endif
 };
 
 template<class T>
