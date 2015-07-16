@@ -62,9 +62,15 @@ class Symbol;
 */
 
 enum TypeID {
-    #define SYMENGINE_ENUM(type) type
+    #define SYMENGINE_INCLUDE_ALL
+    #define SYMENGINE_ENUM(type, Class) type,
     #include "symengine/type_codes.inc"
     #undef SYMENGINE_ENUM
+    #undef SYMENGINE_INCLUDE_ALL
+    // The 'TypeID_Count' returns the number of elements in 'TypeID'. For this
+    // to work, do not assign numbers to the elements above (or if you do, you
+    // must assign the correct count below).
+    TypeID_Count
 };
 
 class Basic {

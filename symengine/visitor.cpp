@@ -19,58 +19,10 @@
 
 namespace SymEngine {
 
-ACCEPT(Symbol)
-ACCEPT(Add)
-ACCEPT(Mul)
-ACCEPT(Pow)
-ACCEPT(UnivariatePolynomial)
-ACCEPT(Integer)
-ACCEPT(Rational)
-ACCEPT(Complex)
-ACCEPT(Log)
-ACCEPT(Derivative)
-ACCEPT(Sin)
-ACCEPT(Cos)
-ACCEPT(Tan)
-ACCEPT(Cot)
-ACCEPT(Csc)
-ACCEPT(Sec)
-ACCEPT(ASin)
-ACCEPT(ACos)
-ACCEPT(ASec)
-ACCEPT(ACsc)
-ACCEPT(ATan)
-ACCEPT(ACot)
-ACCEPT(ATan2)
-ACCEPT(LambertW)
-ACCEPT(FunctionSymbol)
-ACCEPT(Sinh)
-ACCEPT(Cosh)
-ACCEPT(Tanh)
-ACCEPT(Coth)
-ACCEPT(ASinh)
-ACCEPT(ACosh)
-ACCEPT(ATanh)
-ACCEPT(ACoth)
-ACCEPT(ASech)
-ACCEPT(KroneckerDelta)
-ACCEPT(LeviCivita)
-ACCEPT(Zeta)
-ACCEPT(Dirichlet_eta)
-ACCEPT(Gamma)
-ACCEPT(LowerGamma)
-ACCEPT(UpperGamma)
-ACCEPT(Constant)
-ACCEPT(Abs)
-ACCEPT(Subs)
-ACCEPT(RealDouble)
-ACCEPT(ComplexDouble)
-#ifdef HAVE_SYMENGINE_MPFR
-ACCEPT(RealMPFR)
-#endif
-#ifdef HAVE_SYMENGINE_MPC
-ACCEPT(ComplexMPC)
-#endif
+#define SYMENGINE_ENUM(TypeID, Class) ACCEPT(Class)
+#include "symengine/type_codes.inc"
+#undef SYMENGINE_ENUM
+
 
 void preorder_traversal(const Basic &b, Visitor &v)
 {

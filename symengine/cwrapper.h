@@ -20,9 +20,12 @@ if (0 == (cond)) { \
 }
 
 typedef enum {
-    #define SYMENGINE_ENUM(type) SYMENGINE_##type
+    #define SYMENGINE_INCLUDE_ALL
+    #define SYMENGINE_ENUM(type, Class) SYMENGINE_##type,
     #include "symengine/type_codes.inc"
     #undef SYMENGINE_ENUM
+    #undef SYMENGINE_INCLUDE_ALL
+    SYMENGINE_TypeID_Count
 } TypeID;
 
 // The size of 'CRCPBasic_C' must be the same as CRCPBasic (which contains a
