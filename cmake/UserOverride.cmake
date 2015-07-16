@@ -32,17 +32,8 @@ elseif (CMAKE_CXX_COMPILER_ID MATCHES Clang)
     set(common "-std=c++11 -Wall -Wextra -fPIC")
     set(CMAKE_CXX_FLAGS_RELEASE_INIT "${common} -O3 -march=native -ffast-math -funroll-loops")
     set(CMAKE_CXX_FLAGS_DEBUG_INIT   "${common} -g")
-endif ()
-
-if (CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
-    # clang
-    set(common "-std=c++11")
-    set(CMAKE_CXX_FLAGS_RELEASE_INIT "${common} -xHOST -O3 -no-prec-div")
-    set(CMAKE_CXX_FLAGS_DEBUG_INIT   "${common}")
-endif ()
-
-if (CMAKE_CXX_COMPILER_ID STREQUAL "PGI")
-    # clang
+elseif (CMAKE_CXX_COMPILER_ID STREQUAL "PGI")
+    # pgcpp
     set(common "--gnu --c++11 -D__GXX_EXPERIMENTAL_CXX0X__")
     set(CMAKE_CXX_FLAGS_RELEASE_INIT "${common}")
     set(CMAKE_CXX_FLAGS_DEBUG_INIT   "${common}")
