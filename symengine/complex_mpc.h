@@ -106,7 +106,9 @@ public:
 
     //! \return `false`
     // A mpc_t is not exactly equal to `0`
-    virtual bool is_zero() const { return false; }
+    virtual bool is_exact_zero() const { return false; }
+    //! \return `true` if equal to `0`
+    virtual bool is_zero() const { return mpc_cmp_si_si(i.get_mpc_t(), 0, 0) == 0; }
     //! \return `false`
     // A mpc_t is not exactly equal to `1`
     virtual bool is_one() const { return false; }

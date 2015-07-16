@@ -45,21 +45,17 @@ public:
     //! Convert to `mpq_class`.
     inline mpq_class as_mpq() const { return this->i; }
     //! \return `true` if `0`
-    virtual bool is_zero() const { return this->i == 0; }
+    virtual bool is_exact_zero() const { return false; }
+    //! \return `true` if `0`
+    virtual bool is_zero() const { return false; }
     //! \return `true` if `1`
-    virtual bool is_one() const { return this->i == 1; }
+    virtual bool is_one() const { return false; }
     //! \return `true` if `-1`
-    virtual bool is_minus_one() const { return this->i == -1; }
-    //! \return `true` if denominator is `1`
-    inline bool is_int() const { return this->i.get_den() == 1; }
+    virtual bool is_minus_one() const { return false; }
     //! \return `true` if positive
-    inline virtual bool is_positive() const {
-        return ((this->i.get_den() > 0) && (this->i.get_num() > 0)) ||
-                ((this->i.get_den() < 0) && (this->i.get_num() < 0)) ; }
+    inline virtual bool is_positive() const { return this->i > 0; }
     //! \return `true` if negative
-    inline virtual bool is_negative() const {
-        return ((this->i.get_den() < 0) && (this->i.get_num() > 0)) ||
-                ((this->i.get_den() > 0) && (this->i.get_num() < 0)) ; }
+    inline virtual bool is_negative() const { return this->i < 0; }
 
     /*! Add Rationals
      * \param other of type Rational

@@ -23,7 +23,7 @@ bool Add::is_canonical(const RCP<const Number> &coef,
     if (dict.size() == 0) return false;
     if (dict.size() == 1) {
         // e.g. 0 + x, 0 + 2x
-        if (coef->is_zero()) return false;
+        if (coef->is_exact_zero()) return false;
     }
     // Check that each term in 'dict' is in canonical form
     for (auto &p: dict) {
@@ -32,17 +32,13 @@ bool Add::is_canonical(const RCP<const Number> &coef,
         // e.g. 2*3
         if (is_a_Number(*p.first))
             return false;
-        // e.g. 0*x
-        if (is_a<Integer>(*p.first) &&
-                rcp_static_cast<const Integer>(p.first)->is_zero())
-            return false;
         // e.g. 1*x (={1:x}), this should rather be just x (={x:1})
         if (is_a<Integer>(*p.first) &&
                 rcp_static_cast<const Integer>(p.first)->is_one())
             return false;
         // e.g. x*0
-        if (is_a<Integer>(*p.second) &&
-                rcp_static_cast<const Integer>(p.second)->is_zero())
+        if (is_a_Number(*p.second) &&
+                rcp_static_cast<const Number>(p.second)->is_zero())
             return false;
 
         // e.g. {3x: 2}, this should rather be just {x: 6}
@@ -105,10 +101,10 @@ RCP<const Basic> Add::from_dict(const RCP<const Number> &coef, umap_basic_num &&
 {
     if (d.size() == 0) {
         return coef;
-    } else if (d.size() == 1 && coef->is_zero()) {
+    } else if (d.size() == 1 && coef->is_exact_zero()) {
         auto p = d.begin();
         if (is_a<Integer>(*(p->second))) {
-            if (rcp_static_cast<const Integer>(p->second)->is_zero()) {
+            if (rcp_static_cast<const Integer>(p->second)->is_exact_zero()) {
                 return zero;
             }
             if (rcp_static_cast<const Integer>(p->second)->is_one()) {
@@ -196,7 +192,7 @@ void Add::dict_add_term(umap_basic_num &d, const RCP<const Number> &coef,
     auto it = d.find(t);
     if (it == d.end()) {
         // Not found, add it in if it is nonzero:
-        if (!(coef->is_zero())) insert(d, t, coef);
+        if (!(coef->is_exact_zero())) insert(d, t, coef);
     } else {
         iaddnum(outArg(it->second), coef);
         if (it->second->is_zero()) d.erase(it);
@@ -306,7 +302,7 @@ RCP<const Basic> Add::diff(const RCP<const Symbol> &x) const
     RCP<const Basic> t;
     for (auto &p: dict_) {
         RCP<const Basic> term = p.first->diff(x);
-        if (is_a<Integer>(*term) && rcp_static_cast<const Integer>(term)->is_zero()) {
+        if (is_a<Integer>(*term) && rcp_static_cast<const Integer>(term)->is_exact_zero()) {
             continue;
         } else if (is_a_Number(*term)) {
             iaddnum(outArg(coef),
@@ -348,7 +344,7 @@ RCP<const Basic> Add::subs(const map_basic_basic &subs_dict) const
         if (term == p.first) {
             Add::dict_add_term(d, p.second, p.first);
         } else if (is_a<Integer>(*term) &&
-                rcp_static_cast<const Integer>(term)->is_zero()) {
+                rcp_static_cast<const Integer>(term)->is_exact_zero()) {
             continue;
         } else if (is_a_Number(*term)) {
             iaddnum(outArg(coef),
@@ -367,7 +363,7 @@ RCP<const Basic> Add::subs(const map_basic_basic &subs_dict) const
 
 vec_basic Add::get_args() const {
     vec_basic args;
-    if (!coef_->is_zero()) args.push_back(coef_);
+    if (!coef_->is_exact_zero()) args.push_back(coef_);
     for (auto &p: dict_) {
         args.push_back(Add::from_dict(zero, {{p.first, p.second}}));
     }
