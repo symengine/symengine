@@ -582,6 +582,8 @@ public:
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
     //! \return Pointer to the function object
     inline void* get_object() const { return obj_; }
+
+    virtual void accept(Visitor &v) const;
 };
 
 /*! Derivative operator
