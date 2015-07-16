@@ -19,58 +19,22 @@
 
 namespace SymEngine {
 
-ACCEPT(Symbol)
-ACCEPT(Add)
-ACCEPT(Mul)
-ACCEPT(Pow)
-ACCEPT(UnivariatePolynomial)
-ACCEPT(Integer)
-ACCEPT(Rational)
-ACCEPT(Complex)
-ACCEPT(Log)
-ACCEPT(Derivative)
-ACCEPT(Sin)
-ACCEPT(Cos)
-ACCEPT(Tan)
-ACCEPT(Cot)
-ACCEPT(Csc)
-ACCEPT(Sec)
-ACCEPT(ASin)
-ACCEPT(ACos)
-ACCEPT(ASec)
-ACCEPT(ACsc)
-ACCEPT(ATan)
-ACCEPT(ACot)
-ACCEPT(ATan2)
-ACCEPT(LambertW)
-ACCEPT(FunctionSymbol)
-ACCEPT(Sinh)
-ACCEPT(Cosh)
-ACCEPT(Tanh)
-ACCEPT(Coth)
-ACCEPT(ASinh)
-ACCEPT(ACosh)
-ACCEPT(ATanh)
-ACCEPT(ACoth)
-ACCEPT(ASech)
-ACCEPT(KroneckerDelta)
-ACCEPT(LeviCivita)
-ACCEPT(Zeta)
-ACCEPT(Dirichlet_eta)
-ACCEPT(Gamma)
-ACCEPT(LowerGamma)
-ACCEPT(UpperGamma)
-ACCEPT(Constant)
-ACCEPT(Abs)
-ACCEPT(Subs)
-ACCEPT(RealDouble)
-ACCEPT(ComplexDouble)
-#ifdef HAVE_SYMENGINE_MPFR
-ACCEPT(RealMPFR)
+#ifndef HAVE_SYMENGINE_MPC
+#define EXCLUDE_COMPLEX_MPC
 #endif
-#ifdef HAVE_SYMENGINE_MPC
-ACCEPT(ComplexMPC)
+#ifndef HAVE_SYMENGINE_MPFR
+#define EXCLUDE_REAL_MPFR
 #endif
+#define EXCLUDE_FUNCTIONWRAPPER
+#define EXCLUDE_TypeID_Count
+#define SYMENGINE_ENUM(TypeID, Class) ACCEPT(Class)
+#include "symengine/type_codes.inc"
+#undef SYMENGINE_ENUM
+#undef EXCLUDE_COMPLEX_MPC
+#undef EXCLUDE_REAL_MPFR
+#undef EXCLUDE_FUNCTIONWRAPPER
+#undef EXCLUDE_TypeID_Count
+
 
 void preorder_traversal(const Basic &b, Visitor &v)
 {
