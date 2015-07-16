@@ -198,6 +198,7 @@ using Teuchos::print_stack_on_segfault;
 #endif
 
 
+template <class T>
 class EnableRCPFromThis {
 // Public interface
 public:
@@ -233,11 +234,10 @@ public:
     EnableRCPFromThis() : refcount_(0) {}
 
 #else
-    mutable RCP<const EnableRCPFromThis> weak_self_ptr_;
+    mutable RCP<T> weak_self_ptr_;
 #endif // WITH_SYMENGINE_RCP
 
     //! Get RCP<T> pointer to self (it will cast the pointer to T)
-    template <class T>
     inline RCP<T> get_rcp_cast() const {
 #if defined(WITH_SYMENGINE_RCP)
         return rcp(static_cast<T*>(this));
