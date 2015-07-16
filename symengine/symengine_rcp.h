@@ -39,8 +39,8 @@ public:
     inline Ptr(const Ptr<T>& ptr) : ptr_(ptr.ptr_) {}
     template<class T2> inline Ptr(const Ptr<T2>& ptr) : ptr_(ptr.get()) {}
     Ptr<T>& operator=(const Ptr<T>& ptr) { ptr_ = ptr.get(); return *this; }
-    inline Ptr(Ptr&&) = default;
-    Ptr<T>& operator=(Ptr&&) = default;
+//    inline Ptr(Ptr&&) = default;
+//    Ptr<T>& operator=(Ptr&&) = default;
     inline T* operator->() const { return ptr_; }
     inline T& operator*() const { return *ptr_; }
     inline T* get() const { return ptr_; }
