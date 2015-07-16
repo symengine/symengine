@@ -20,7 +20,7 @@ if (0 == (cond)) { \
 }
 
 typedef enum {
-    #define SYMENGINE_ENUM(type) SYMENGINE_##type
+    #define SYMENGINE_ENUM(type, Class) SYMENGINE_##type,
     #include "symengine/type_codes.inc"
     #undef SYMENGINE_ENUM
 } TypeID;
