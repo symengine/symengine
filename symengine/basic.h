@@ -62,7 +62,7 @@ class Symbol;
 */
 
 enum TypeID {
-    #define SYMENGINE_ENUM(type) type
+    #define SYMENGINE_ENUM(type, Class) type,
     #include "symengine/type_codes.inc"
     #undef SYMENGINE_ENUM
 };
