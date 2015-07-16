@@ -545,7 +545,7 @@ cdef class RealMPFR(Number):
         def __cinit__(self, i = None, long prec = 53, unsigned base = 10):
             if i is None:
                 return
-            cdef string i_ = str(i)
+            cdef string i_ = str(i).encode("utf-8")
             cdef symengine.mpfr_class m
             m = symengine.mpfr_class(i_, prec, base)
             self.thisptr = <RCP[const symengine.Basic]>symengine.real_mpfr(symengine.std_move_mpfr(m))
@@ -577,7 +577,7 @@ cdef class ComplexMPC(Number):
         def __cinit__(self, i = None, j = 0, long prec = 53, unsigned base = 10):
             if i is None:
                 return
-            cdef string i_ = "(" + str(i) + " " + str(j) + ")"
+            cdef string i_ = ("(" + str(i) + " " + str(j) + ")").encode("utf-8")
             cdef symengine.mpc_class m = symengine.mpc_class(i_, prec, base)
             self.thisptr = <RCP[const symengine.Basic]>symengine.complex_mpc(symengine.std_move_mpc(m))
 

@@ -52,8 +52,8 @@ env:
   - TEST_IN_TREE="yes" WITH_PYTHON="yes" PYTHON_VERSION="2.7" BUILD_SHARED_LIBS="yes"
 
   # These test the default Release build with other Python versions
-  - WITH_PYTHON="yes" PYTHON_VERSION="2.6" -DWITH_MPFR="yes"
-  - WITH_PYTHON="yes" PYTHON_VERSION="3.3" -DWITH_MPC="yes"
+  - WITH_PYTHON="yes" PYTHON_VERSION="2.6" WITH_MPFR="yes"
+  - WITH_PYTHON="yes" PYTHON_VERSION="3.3" WITH_MPC="yes"
   - WITH_PYTHON="yes" PYTHON_VERSION="3.4"
 
   # These test the setup.py file

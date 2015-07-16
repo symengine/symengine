@@ -7,6 +7,7 @@ configure_file(config.pxi.in config.pxi)
 include_directories(${PYTHON_INCLUDE_PATH})
 include_directories(BEFORE ${symengine_BINARY_DIR} ${teuchos_BINARY_DIR})
 include_directories(BEFORE ${symengine_SOURCE_DIR} ${teuchos_SOURCE_DIR})
+include_directories(BEFORE ${symengine_BINARY_DIR}/symengine/python/symengine/lib)
 
 cython_add_module_pyx(symengine_wrapper symengine.pxd)
 add_python_library(symengine_wrapper ${SRC})
