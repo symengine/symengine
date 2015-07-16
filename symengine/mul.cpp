@@ -79,8 +79,8 @@ std::size_t Mul::__hash__() const
 bool Mul::__eq__(const Basic &o) const
 {
     if (is_a<Mul>(o) &&
-        eq(coef_, static_cast<const Mul &>(o).coef_) &&
-        map_basic_basic_eq(dict_, static_cast<const Mul &>(o).dict_))
+        eq(*coef_, *(static_cast<const Mul &>(o).coef_)) &&
+        map_eq(dict_, static_cast<const Mul &>(o).dict_))
         return true;
 
     return false;
@@ -100,7 +100,7 @@ int Mul::compare(const Basic &o) const
         return cmp;
 
     // Compare dictionaries:
-    return map_basic_basic_compare(dict_, s.dict_);
+    return map_compare(dict_, s.dict_);
 }
 
 RCP<const SymEngine::Basic> Mul::from_dict(const RCP<const Number> &coef, map_basic_basic &&d)
@@ -429,7 +429,7 @@ RCP<const Basic> mul_expand_two(const RCP<const Basic> &a, const RCP<const Basic
                 }
             }
         }
-        if (eq(a_term, one)) {
+        if (eq(*a_term, *one)) {
             iaddnum(outArg(coef),
                 mulnum(rcp_static_cast<const Add>(b)->coef_, a_coef));
         } else {

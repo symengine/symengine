@@ -114,103 +114,6 @@ std::ostream& operator<<(std::ostream& out, const SymEngine::hash_set& d)
 
 namespace SymEngine {
 
-bool map_basic_num_eq(const map_basic_num &A, const map_basic_num &B)
-{
-    // Can't be equal if # of entries differ:
-    if (A.size() != B.size()) return false;
-    // Loop over keys in "a":
-    auto a = A.begin();
-    auto b = B.begin();
-    for (; a != A.end(); ++a, ++b) {
-        if (neq(a->first, b->first)) return false; // keys not equal
-        if (neq(a->second, b->second)) return false; // values not equal
-    }
-    return true;
-}
-
-bool map_basic_basic_eq(const map_basic_basic &A, const map_basic_basic &B)
-{
-    // Can't be equal if # of entries differ:
-    if (A.size() != B.size()) return false;
-    // Loop over keys in "a":
-    auto a = A.begin();
-    auto b = B.begin();
-    for (; a != A.end(); ++a, ++b) {
-        if (neq(a->first, b->first)) return false; // keys not equal
-        if (neq(a->second, b->second)) return false; // values not equal
-    }
-    return true;
-}
-
-int map_basic_basic_compare(const map_basic_basic &A, const map_basic_basic &B)
-{
-    if (A.size() != B.size())
-        return (A.size() < B.size()) ? -1 : 1;
-    auto a = A.begin();
-    auto b = B.begin();
-    int cmp;
-    for (; a != A.end(); ++a, ++b) {
-        cmp = a->first->__cmp__(*b->first);
-        if (cmp != 0) return cmp;
-        cmp = a->second->__cmp__(*b->second);
-        if (cmp != 0) return cmp;
-    }
-    return 0;
-}
-
-int map_basic_num_compare(const map_basic_num &A, const map_basic_num &B)
-{
-    if (A.size() != B.size())
-        return (A.size() < B.size()) ? -1 : 1;
-    auto a = A.begin();
-    auto b = B.begin();
-    int cmp;
-    for (; a != A.end(); ++a, ++b) {
-        cmp = a->first->__cmp__(*b->first);
-        if (cmp != 0) return cmp;
-        cmp = a->second->__cmp__(*b->second);
-        if (cmp != 0) return cmp;
-    }
-    return 0;
-}
-
-bool umap_basic_num_eq(const umap_basic_num &a, const umap_basic_num &b)
-{
-    // This follows the same algorithm as Python's dictionary comparison
-    // (a==b), which is implemented by "dict_equal" function in
-    // Objects/dictobject.c.
-
-    // Can't be equal if # of entries differ:
-    if (a.size() != b.size()) return false;
-    // Loop over keys in "a":
-    for (auto &p: a) {
-        // O(1) lookup of the key in "b":
-        auto f = b.find(p.first);
-        if (f == b.end()) return false; // no such element in "b"
-        if (neq(p.second, f->second)) return false; // values not equal
-    }
-    return true;
-}
-
-bool umap_basic_basic_eq(const umap_basic_basic &a,
-        const umap_basic_basic &b)
-{
-    // This follows the same algorithm as Python's dictionary comparison
-    // (a==b), which is implemented by "dict_equal" function in
-    // Objects/dictobject.c.
-
-    // Can't be equal if # of entries differ:
-    if (a.size() != b.size()) return false;
-    // Loop over keys in "a":
-    for (auto &p: a) {
-        // O(1) lookup of the key in "b":
-        auto f = b.find(p.first);
-        if (f == b.end()) return false; // no such element in "b"
-        if (neq(p.second, f->second)) return false; // values not equal
-    }
-    return true;
-}
-
 #if defined(HAVE_SYMENGINE_PIRANHA)
 bool hash_set_eq(const hash_set &a,
         const hash_set &b)
@@ -232,7 +135,7 @@ bool vec_basic_eq(const vec_basic &a, const vec_basic &b)
     if (a.size() != b.size()) return false;
     // Loop over elements in "a" and "b":
     for (size_t i = 0; i < a.size(); i++) {
-        if (neq(a[i], b[i])) return false; // values not equal
+        if (neq(*a[i], *b[i])) return false; // values not equal
     }
     return true;
 }
@@ -246,7 +149,7 @@ bool vec_basic_eq_perm(const vec_basic &a, const vec_basic &b)
         // Find the element a[i] in "b"
         bool found = false;
         for (size_t j = 0; j < a.size(); j++) {
-            if (eq(a[i], b[j])) {
+            if (eq(*a[i], *b[j])) {
                 found = true;
                 break;
             }

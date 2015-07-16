@@ -93,7 +93,7 @@ public:
     }
 
     virtual void visit(const Pow &x) {
-        if (eq(x.get_base(), E)) {
+        if (eq(*x.get_base(), *E)) {
             apply(result_, *(x.exp_));
             arb_exp(result_, result_, prec_);
         } else {

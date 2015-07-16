@@ -277,9 +277,13 @@ if (WITH_RUBY)
 endif ()
 
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
-    set(HAVE_TEUCHOS_DEBUG yes)
-    set(HAVE_TEUCHOS_DEBUG_RCP_NODE_TRACING yes)
-    set(HAVE_SYMENGINE_RCP yes)
+    # In Debug mode we use Teuchos::RCP and enable debugging checks that make
+    # the usage 100% safe, as long as the Teuchos guidelines are followed.
+    set(WITH_SYMENGINE_RCP no) # Use the Teuchos::RCP
+    set(HAVE_TEUCHOS_DEBUG yes) # Enable safety checks
+    set(HAVE_TEUCHOS_DEBUG_RCP_NODE_TRACING yes) # Enable safety checks
+
+    set(WITH_SYMENGINE_ASSERT yes) # Also enable assertions
 endif()
 
 enable_testing()
@@ -297,10 +301,20 @@ if (WITH_PYTHON)
     add_subdirectory(symengine/python)
 endif ()
 
+if (WITH_PYTHON)
+    message("Copying source of python wrappers into: ${CMAKE_CURRENT_BINARY_DIR}/symengine/python/symengine")
+    file(COPY symengine/python/symengine/ DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/symengine/python/symengine)
+endif()
 
-message("\n")
-message("Configuration results")
-message("---------------------")
+
+# At the end we print a nice summary
+
+message("--------------------------------------------------------------------------------")
+message("")
+message("+-------------------------------+")
+message("| Configuration results SUMMARY |")
+message("+-------------------------------+")
+message("")
 message("C++ compiler: ${CMAKE_CXX_COMPILER}")
 message("Build type: ${CMAKE_BUILD_TYPE}")
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
@@ -312,6 +326,10 @@ message("Installation prefix: ${CMAKE_INSTALL_PREFIX}")
 
 message("WITH_SYMENGINE_ASSERT: ${WITH_SYMENGINE_ASSERT}")
 message("WITH_SYMENGINE_RCP: ${WITH_SYMENGINE_RCP}")
+if (NOT WITH_SYMENGINE_RCP)
+    message("HAVE_TEUCHOS_DEBUG: ${HAVE_TEUCHOS_DEBUG}")
+    message("HAVE_TEUCHOS_DEBUG_RCP_NODE_TRACING: ${HAVE_TEUCHOS_DEBUG_RCP_NODE_TRACING}")
+endif ()
 message("WITH_SYMENGINE_THREAD_SAFE: ${WITH_SYMENGINE_THREAD_SAFE}")
 message("BUILD_TESTS: ${BUILD_TESTS}")
 message("BUILD_BENCHMARKS: ${BUILD_BENCHMARKS}")
@@ -398,7 +416,6 @@ endif()
 
 message("WITH_OPENMP: ${WITH_OPENMP}")
 
-if (WITH_PYTHON)
-    message("Copying source of python wrappers into: ${CMAKE_CURRENT_BINARY_DIR}/symengine/python/symengine")
-    file(COPY symengine/python/symengine/ DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/symengine/python/symengine)
-endif()
+message("")
+message("--------------------------------------------------------------------------------")
+message("")

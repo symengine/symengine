@@ -64,18 +64,18 @@ void StrPrinter::bvisit(const Complex &x) {
 void StrPrinter::bvisit(const RealDouble &x) {
     std::ostringstream s;
     s.precision(std::numeric_limits< double >::digits10);
-    s << std::scientific << x.i;
+    s << x.i;
     str_ = s.str();
 }
 
 void StrPrinter::bvisit(const ComplexDouble &x) {
     std::ostringstream s;
     s.precision(std::numeric_limits< double >::digits10);
-    s << std::scientific << x.i.real();
+    s << x.i.real();
     if (x.i.imag() < 0) {
-        s << " - (" << -x.i.imag() << ")*I";
+        s << " - " << -x.i.imag() << "*I";
     } else {
-        s << " + (" << x.i.imag() << ")*I";
+        s << " + " << x.i.imag() << "*I";
     }
     str_ = s.str();
 }
@@ -87,15 +87,22 @@ void StrPrinter::bvisit(const RealMPFR &x) {
     std::ostringstream s;
     str_ = std::string(c);
     if (str_.at(0)== '-') {
-        s << '-' << str_.at(1) << '.' << str_.substr(2, str_.length() - 2);
-        if (ex != 1) {
-            s << 'e' << (ex - 1);
+        s << '-';
+        str_ = str_.substr(1, str_.length() - 1);
+    }
+    if (ex > 6) {
+        s << str_.at(0) << '.' << str_.substr(1, str_.length() - 1) << 'e' << (ex - 1);
+    } else if (ex > 0) {
+        s << str_.substr(0, (unsigned long)ex) << ".";
+        s << str_.substr((unsigned long)ex, str_.length() - ex);
+    } else if (ex > -5) {
+        s << "0.";
+        for (int i = 0; i < -ex; ++i) {
+            s << '0';
         }
+        s << str_;
     } else {
-        s << str_.at(0) << '.' << str_.substr(1, str_.length() - 1);
-        if (ex != 1) {
-            s << 'e' << (ex - 1);
-        }
+        s << str_.at(0) << '.' << str_.substr(1, str_.length() - 1) << 'e' << (ex - 1);
     }
     mpfr_free_str(c);
     str_ = s.str();
@@ -107,9 +114,9 @@ void StrPrinter::bvisit(const ComplexMPC &x) {
     if (imag->is_negative()) {
         std::string str = this->apply(imag);
         str = str.substr(1, str.length() - 1);
-        str_ = this->apply(x.real_part()) + " - I*" + str;
+        str_ = this->apply(x.real_part()) + " - " + str + "*I";
     } else {
-        str_ = this->apply(x.real_part()) + " + I*" + this->apply(imag);
+        str_ = this->apply(x.real_part()) + " + " + this->apply(imag) + "*I";
     }
 }
 #endif
@@ -119,15 +126,15 @@ void StrPrinter::bvisit(const Add &x) {
     std::map<RCP<const Basic>, RCP<const Number>,
             RCPBasicKeyLessCmp> dict(x.dict_.begin(), x.dict_.end());
 
-    if (neq(x.coef_, zero)) {
+    if (neq(*(x.coef_), *zero)) {
         o << this->apply(x.coef_);
         first = false;
     }
     for (auto &p: dict) {
         std::string t;
-        if (eq(p.second, one)) {
+        if (eq(*(p.second), *one)) {
             t = this->apply(p.first);
-        } else if(eq(p.second, minus_one)) {
+        } else if(eq(*(p.second), *minus_one)) {
             t = "-" + parenthesizeLT(p.first, PrecedenceEnum::Mul);
         } else {
             t = parenthesizeLT(p.second, PrecedenceEnum::Mul) + "*" + parenthesizeLT(p.first, PrecedenceEnum::Mul);
@@ -154,9 +161,9 @@ void StrPrinter::bvisit(const Mul &x) {
     std::map<RCP<const Basic>, RCP<const Basic>,
             RCPBasicKeyLessCmp> dict(x.dict_.begin(), x.dict_.end());
 
-    if (eq(x.coef_, minus_one)) {
+    if (eq(*(x.coef_), *minus_one)) {
         o << "-";
-    } else if (neq(x.coef_, one)) {
+    } else if (neq(*(x.coef_), *one)) {
         o << parenthesizeLT(x.coef_, PrecedenceEnum::Mul) << "*";
         num = true;
     }
@@ -166,7 +173,7 @@ void StrPrinter::bvisit(const Mul &x) {
              rcp_static_cast<const Integer>(p.second)->is_negative()) ||
             (is_a<Rational>(*p.second) &&
              rcp_static_cast<const Rational>(p.second)->is_negative())) {
-            if(eq(p.second, minus_one)) {
+            if(eq(*(p.second), *minus_one)) {
                 o2 << parenthesizeLT(p.first, PrecedenceEnum::Mul);
             } else {
                 o2 << parenthesizeLE(p.first, PrecedenceEnum::Pow);
@@ -176,7 +183,7 @@ void StrPrinter::bvisit(const Mul &x) {
             o2 << "*";
             den++;
         } else {
-            if(eq(p.second, one)) {
+            if(eq(*(p.second), *one)) {
                 o << parenthesizeLT(p.first, PrecedenceEnum::Mul);
             } else {
                 o << parenthesizeLE(p.first, PrecedenceEnum::Pow);

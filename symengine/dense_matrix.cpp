@@ -165,6 +165,28 @@ void DenseMatrix::FFLDU(MatrixBase&L, MatrixBase &D, MatrixBase &U) const
     }
 }
 
+// ---------------------------- Jacobian -------------------------------------//
+
+void jacobian(const DenseMatrix &A, const DenseMatrix &x,
+        DenseMatrix &result)
+{
+    SYMENGINE_ASSERT(A.col_ == 1);
+    SYMENGINE_ASSERT(x.col_ == 1);
+    SYMENGINE_ASSERT(A.row_ == result.nrows() && x.row_ == result.ncols());
+    for (unsigned i = 0; i < result.row_; i++) {
+        for (unsigned j = 0; j < result.col_; j++) {
+            if (is_a<Symbol>(*(x.m_[j]))) {
+                const RCP<const Symbol> x_ = rcp_static_cast<const Symbol>(
+                        x.m_[j]);
+                result.m_[i*result.col_ + j] = A.m_[i]->diff(x_);
+            } else {
+                throw std::runtime_error("'x' must contain Symbols only");
+            }
+        }
+    }
+}
+
+
 // ----------------------------- Matrix Transpose ----------------------------//
 void transpose_dense(const DenseMatrix &A, DenseMatrix &B)
 {
@@ -515,9 +537,9 @@ unsigned pivot(DenseMatrix &B, unsigned r, unsigned c)
 {
     unsigned k = r;
 
-    if (eq(B.m_[r*B.col_ + c], zero))
+    if (eq(*(B.m_[r*B.col_ + c]), *zero))
         for (k = r; k < B.row_; k++)
-            if (!eq(B.m_[k*B.col_ + c], zero))
+            if (!eq(*(B.m_[k*B.col_ + c]), *zero))
                 break;
     return k;
 }
@@ -951,7 +973,7 @@ bool is_symmetric_dense(const DenseMatrix &A)
 
     for (unsigned i = 0; i < col; i++)
         for (unsigned j = i + 1; j < col; j++)
-            if (!eq(A.m_[j*col + i], A.m_[i*col + j])) {
+            if (!eq(*(A.m_[j*col + i]), *(A.m_[i*col + j]))) {
                 sym = false;
                 break;
             }
@@ -996,9 +1018,9 @@ RCP<const Basic> det_bareis(const DenseMatrix &A)
         RCP<const Basic> d;
 
         for (unsigned k = 0; k < n - 1; k++) {
-            if (eq(B.m_[k*n + k], zero)) {
+            if (eq(*(B.m_[k*n + k]), *zero)) {
                 for (i = k + 1; i < n; i++)
-                    if (neq(B.m_[i*n + k], zero)) {
+                    if (neq(*(B.m_[i*n + k]), *zero)) {
                         row_exchange_dense(B, i, k);
                         sign *= -1;
                         break;

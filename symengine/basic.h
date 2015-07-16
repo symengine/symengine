@@ -79,6 +79,9 @@ enum TypeID {
     // to work, do not assign numbers to the elements above (or if you do, you
     // must assign the correct count below).
     TypeID_Count
+    #define SYMENGINE_ENUM(type) type
+    #include "symengine/type_codes.inc"
+    #undef SYMENGINE_ENUM
 };
 
 class Basic {
@@ -228,10 +231,10 @@ struct RCPBasicKeyLessCmp {
 
 // Convenience functions
 //! Checks equality for `a` and `b`
-bool eq(const RCP<const Basic> &a, const RCP<const Basic> &b);
+bool eq(const Basic &a, const Basic &b);
 
 //! Checks inequality for `a` and `b`
-bool neq(const RCP<const Basic> &a, const RCP<const Basic> &b);
+bool neq(const Basic &a, const Basic &b);
 
 /*! Returns true if `b` is exactly of type `T`. Example:
   `is_a<Symbol>(b)` : true if "b" is of type Symbol
@@ -292,4 +295,3 @@ const static TypeID type_code_id = ID; \
 virtual TypeID get_type_code() const { return type_code_id; };
 
 #endif
-

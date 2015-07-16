@@ -22,7 +22,7 @@ bool MatrixBase::eq(const MatrixBase &other) const
 
     for (unsigned i = 0; i < this->nrows(); i++)
         for (unsigned j = 0; j < this->ncols(); j++)
-        if(neq(this->get(i, j), other.get(i, j)))
+        if(neq(*this->get(i, j), *(other.get(i, j))))
             return false;
 
     return true;

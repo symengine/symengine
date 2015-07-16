@@ -30,14 +30,14 @@ inline RCP<T> Basic::get_rcp_cast() const {
 }
 
 //! \return true if  `a` equal `b`
-inline bool eq(const RCP<const Basic> &a, const RCP<const Basic> &b)
+inline bool eq(const Basic &a, const Basic &b)
 {
-    return a->__eq__(*b);
+    return a.__eq__(b);
 }
 //! \return true if  `a` not equal `b`
-inline bool neq(const RCP<const Basic> &a, const RCP<const Basic> &b)
+inline bool neq(const Basic &a, const Basic &b)
 {
-    return !(a->__eq__(*b));
+    return !(a.__eq__(b));
 }
 
 //! Templatised version to check is_a type

@@ -1,6 +1,8 @@
-from symengine import (Symbol, Integer, sympify, SympifyError, sin, cos,
-        function_symbol, I, E, pi, exp)
-from symengine.lib.symengine_wrapper import densematrix, Subs, Derivative
+from symengine import (Symbol, Integer, sympify, SympifyError, log,
+        function_symbol, I, E, pi, exp, have_mpfr, have_mpc, DenseMatrix,
+        sin, cos, tan, cot, csc, sec, asin, acos, atan, acot, acsc, asec,
+        sinh, cosh, tanh, coth, asinh, acosh, atanh, acoth)
+from symengine.lib.symengine_wrapper import Subs, Derivative, RealMPFR, ComplexMPC
 import sympy
 
 # Note: We test _sympy_() for SymEngine -> SymPy conversion, as those are methods
@@ -113,9 +115,32 @@ def test_conv6b():
 def test_conv7():
     x = Symbol("x")
     y = Symbol("y")
+    assert sin(x/3) == sin(sympy.Symbol("x") / 3)
+    assert cos(x/3) == cos(sympy.Symbol("x") / 3)
+    assert tan(x/3) == tan(sympy.Symbol("x") / 3)
+    assert cot(x/3) == cot(sympy.Symbol("x") / 3)
+    assert csc(x/3) == csc(sympy.Symbol("x") / 3)
+    assert sec(x/3) == sec(sympy.Symbol("x") / 3)
+    assert asin(x/3) == asin(sympy.Symbol("x") / 3)
+    assert acos(x/3) == acos(sympy.Symbol("x") / 3)
+    assert atan(x/3) == atan(sympy.Symbol("x") / 3)
+    assert acot(x/3) == acot(sympy.Symbol("x") / 3)
+    assert acsc(x/3) == acsc(sympy.Symbol("x") / 3)
+    assert asec(x/3) == asec(sympy.Symbol("x") / 3)
+
     assert sin(x/3)._sympy_() == sympy.sin(sympy.Symbol("x") / 3)
     assert sin(x/3)._sympy_() != sympy.cos(sympy.Symbol("x") / 3)
     assert cos(x/3)._sympy_() == sympy.cos(sympy.Symbol("x") / 3)
+    assert tan(x/3)._sympy_() == sympy.tan(sympy.Symbol("x") / 3)
+    assert cot(x/3)._sympy_() == sympy.cot(sympy.Symbol("x") / 3)
+    assert csc(x/3)._sympy_() == sympy.csc(sympy.Symbol("x") / 3)
+    assert sec(x/3)._sympy_() == sympy.sec(sympy.Symbol("x") / 3)
+    assert asin(x/3)._sympy_() == sympy.asin(sympy.Symbol("x") / 3)
+    assert acos(x/3)._sympy_() == sympy.acos(sympy.Symbol("x") / 3)
+    assert atan(x/3)._sympy_() == sympy.atan(sympy.Symbol("x") / 3)
+    assert acot(x/3)._sympy_() == sympy.acot(sympy.Symbol("x") / 3)
+    assert acsc(x/3)._sympy_() == sympy.acsc(sympy.Symbol("x") / 3)
+    assert asec(x/3)._sympy_() == sympy.asec(sympy.Symbol("x") / 3)
 
 def test_conv7b():
     x = sympy.Symbol("x")
@@ -123,6 +148,16 @@ def test_conv7b():
     assert sympify(sympy.sin(x/3)) == sin(Symbol("x") / 3)
     assert sympify(sympy.sin(x/3)) != cos(Symbol("x") / 3)
     assert sympify(sympy.cos(x/3)) == cos(Symbol("x") / 3)
+    assert sympify(sympy.tan(x/3)) == tan(Symbol("x") / 3)
+    assert sympify(sympy.cot(x/3)) == cot(Symbol("x") / 3)
+    assert sympify(sympy.csc(x/3)) == csc(Symbol("x") / 3)
+    assert sympify(sympy.sec(x/3)) == sec(Symbol("x") / 3)
+    assert sympify(sympy.asin(x/3)) == asin(Symbol("x") / 3)
+    assert sympify(sympy.acos(x/3)) == acos(Symbol("x") / 3)
+    assert sympify(sympy.atan(x/3)) == atan(Symbol("x") / 3)
+    assert sympify(sympy.acot(x/3)) == acot(Symbol("x") / 3)
+    assert sympify(sympy.acsc(x/3)) == acsc(Symbol("x") / 3)
+    assert sympify(sympy.asec(x/3)) == asec(Symbol("x") / 3)
 
 def test_conv8():
     e1 = function_symbol("f", Symbol("x"))
@@ -167,15 +202,15 @@ def test_conv9b():
     assert sympify(sympy.Symbol("x") + sympy.I*sympy.Symbol("y")) == x+I*y
 
 def test_conv10():
-    A = densematrix(1, 4, [Integer(1), Integer(2), Integer(3), Integer(4)])
+    A = DenseMatrix(1, 4, [Integer(1), Integer(2), Integer(3), Integer(4)])
     assert A._sympy_() == sympy.Matrix(1, 4, [sympy.Integer(1), sympy.Integer(2),
         sympy.Integer(3), sympy.Integer(4)])
 
-    B = densematrix(4, 1, [Symbol("x"), Symbol("y"), Symbol("z"), Symbol("t")])
+    B = DenseMatrix(4, 1, [Symbol("x"), Symbol("y"), Symbol("z"), Symbol("t")])
     assert B._sympy_() == sympy.Matrix(4, 1, [sympy.Symbol("x"), sympy.Symbol("y"),
         sympy.Symbol("z"), sympy.Symbol("t")])
 
-    C = densematrix(2, 2,
+    C = DenseMatrix(2, 2,
         [Integer(5), Symbol("x"), function_symbol("f", Symbol("x")), 1 + I])
 
     assert C._sympy_() == sympy.Matrix([[5, sympy.Symbol("x")],
@@ -184,16 +219,16 @@ def test_conv10():
 def test_conv10b():
     A = sympy.Matrix([[sympy.Symbol("x"), sympy.Symbol("y")],
         [sympy.Symbol("z"), sympy.Symbol("t")]])
-    assert sympify(A) == densematrix(2, 2, [Symbol("x"), Symbol("y"),
+    assert sympify(A) == DenseMatrix(2, 2, [Symbol("x"), Symbol("y"),
         Symbol("z"), Symbol("t")])
 
     B = sympy.Matrix([[1, 2], [3, 4]])
-    assert sympify(B) == densematrix(2, 2, [Integer(1), Integer(2), Integer(3),
+    assert sympify(B) == DenseMatrix(2, 2, [Integer(1), Integer(2), Integer(3),
         Integer(4)])
 
     C = sympy.Matrix([[7, sympy.Symbol("y")],
         [sympy.Function("g")(sympy.Symbol("z")), 3 + 2*sympy.I]])
-    assert sympify(C) == densematrix(2, 2, [Integer(7), Symbol("y"),
+    assert sympify(C) == DenseMatrix(2, 2, [Integer(7), Symbol("y"),
         function_symbol("g", Symbol("z")), 3 + 2*I])
 
 def test_conv11():
@@ -211,6 +246,39 @@ def test_conv11():
 
     assert e2._sympy_() == e1
     assert e3._sympy_() != e1
+
+def test_conv12():
+    x = Symbol("x")
+    y = Symbol("y")
+    assert sinh(x/3) == sinh(sympy.Symbol("x") / 3)
+    assert cosh(x/3) == cosh(sympy.Symbol("x") / 3)
+    assert tanh(x/3) == tanh(sympy.Symbol("x") / 3)
+    assert coth(x/3) == coth(sympy.Symbol("x") / 3)
+    assert asinh(x/3) == asinh(sympy.Symbol("x") / 3)
+    assert acosh(x/3) == acosh(sympy.Symbol("x") / 3)
+    assert atanh(x/3) == atanh(sympy.Symbol("x") / 3)
+    assert acoth(x/3) == acoth(sympy.Symbol("x") / 3)
+
+    assert sinh(x/3)._sympy_() == sympy.sinh(sympy.Symbol("x") / 3)
+    assert cosh(x/3)._sympy_() == sympy.cosh(sympy.Symbol("x") / 3)
+    assert tanh(x/3)._sympy_() == sympy.tanh(sympy.Symbol("x") / 3)
+    assert coth(x/3)._sympy_() == sympy.coth(sympy.Symbol("x") / 3)
+    assert asinh(x/3)._sympy_() == sympy.asinh(sympy.Symbol("x") / 3)
+    assert acosh(x/3)._sympy_() == sympy.acosh(sympy.Symbol("x") / 3)
+    assert atanh(x/3)._sympy_() == sympy.atanh(sympy.Symbol("x") / 3)
+    assert acoth(x/3)._sympy_() == sympy.acoth(sympy.Symbol("x") / 3)
+
+def test_conv12b():
+    x = sympy.Symbol("x")
+    y = sympy.Symbol("y")
+    assert sympify(sympy.sinh(x/3)) == sinh(Symbol("x") / 3)
+    assert sympify(sympy.cosh(x/3)) == cosh(Symbol("x") / 3)
+    assert sympify(sympy.tanh(x/3)) == tanh(Symbol("x") / 3)
+    assert sympify(sympy.coth(x/3)) == coth(Symbol("x") / 3)
+    assert sympify(sympy.asinh(x/3)) == asinh(Symbol("x") / 3)
+    assert sympify(sympy.acosh(x/3)) == acosh(Symbol("x") / 3)
+    assert sympify(sympy.atanh(x/3)) == atanh(Symbol("x") / 3)
+    assert sympify(sympy.acoth(x/3)) == acoth(Symbol("x") / 3)
 
 def test_tuples_lists():
     x = sympy.Symbol("x")
@@ -269,3 +337,33 @@ def test_abs():
     e2 = abs(y*x)
     assert sympify(e1) == e2
     assert e1 == e2._sympy_()
+
+def test_mpfr():
+    if have_mpfr:
+        a = RealMPFR('100', 100)
+        b = sympy.Float('100', 29)
+        assert sympify(b) == a
+        assert b == a._sympy_()
+
+def test_mpc():
+    if have_mpc:
+        a = ComplexMPC('1', '2', 100)
+        b = sympy.Float(1, 29) + sympy.Float(2, 29) * sympy.I
+        assert sympify(b) == a
+        assert b == a._sympy_()
+
+def test_log():
+    x = Symbol("x")
+    x1 = sympy.Symbol("x")
+
+    assert log(x) == log(x1)
+    assert log(x)._sympy_() == sympy.log(x1)
+    assert sympify(sympy.log(x1)) == log(x)
+
+    y = Symbol("y")
+    y1 = sympy.Symbol("y")
+
+    assert log(x, y) == log(x, y1)
+    assert log(x1, y) == log(x1, y1)
+    assert log(x, y)._sympy_() == sympy.log(x1, y1)
+    assert sympify(sympy.log(x1, y1)) == log(x, y)

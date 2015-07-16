@@ -74,8 +74,8 @@ double R1()
 
 RCP<const Basic> hermite(RCP<const Integer> n, RCP<const Basic> y)
 {
-    if (eq(n, one)) return mul(y, integer(2));
-    if (eq(n, zero)) return one;
+    if (eq(*n, *one)) return mul(y, integer(2));
+    if (eq(*n, *zero)) return one;
     return expand(sub(mul(mul(integer(2), y), hermite(n->subint(*one), y)), 
         mul(integer(2), mul(n->subint(*one), hermite(n->subint(*integer(2)), y)))));
 }
@@ -100,7 +100,7 @@ double R3()
     std::vector<bool> vec(10);
     auto t1 = std::chrono::high_resolution_clock::now();
     for (int i = 0; i < 10; i++) {
-        vec.push_back(eq(f, f));
+        vec.push_back(eq(*f, *f));
     }
     auto t2 = std::chrono::high_resolution_clock::now();
     return std::chrono::duration_cast<std::chrono::nanoseconds>(t2-t1).count()/1000000000.0;

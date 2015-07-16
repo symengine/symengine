@@ -45,8 +45,8 @@ TEST_CASE("Symbol: subs", "[subs]")
     RCP<const Basic> r2 = y;
     map_basic_basic d;
     d[x] = y;
-    REQUIRE(eq(r1->subs(d), r2));
-    REQUIRE(neq(r1->subs(d), r1));
+    REQUIRE(eq(*r1->subs(d), *r2));
+    REQUIRE(neq(*r1->subs(d), *r1));
 }
 
 TEST_CASE("Add: subs", "[subs]")
@@ -63,19 +63,19 @@ TEST_CASE("Add: subs", "[subs]")
     RCP<const Basic> r2 = mul(i2, y);
     map_basic_basic d;
     d[x] = y;
-    REQUIRE(eq(r1->subs(d), r2));
+    REQUIRE(eq(*r1->subs(d), *r2));
 
     d[x] = z;
     d[y] = w;
     r1 = add(x, y);
     r2 = add(z, w);
-    REQUIRE(eq(r1->subs(d), r2));
+    REQUIRE(eq(*r1->subs(d), *r2));
 
     d.clear();
     d[add(x, y)] = z;
     r1 = add(x, y);
     r2 = z;
-    REQUIRE(eq(r1->subs(d), r2));
+    REQUIRE(eq(*r1->subs(d), *r2));
 
     d.clear();
     d[pow(x, y)] = z;
@@ -83,11 +83,11 @@ TEST_CASE("Add: subs", "[subs]")
     d[pow(i2, y)] = x;
     r1 = add(add(pow(x, y), pow(x, i2)), pow(i2, y));
     r2 = add(add(x, y), z);
-    REQUIRE(eq(r1->subs(d), r2));
+    REQUIRE(eq(*r1->subs(d), *r2));
 
     r1 = add(add(add(add(pow(x, y), pow(x, i2)), pow(i2, y)), x), i3);
     r2 = add(add(add(mul(i2, x), y), z), i3);
-    REQUIRE(eq(r1->subs(d), r2));
+    REQUIRE(eq(*r1->subs(d), *r2));
 }
 
 TEST_CASE("Mul: subs", "[subs]")
@@ -104,25 +104,25 @@ TEST_CASE("Mul: subs", "[subs]")
     RCP<const Basic> r2 = pow(y, i2);
     map_basic_basic d;
     d[x] = y;
-    REQUIRE(eq(r1->subs(d), r2));
+    REQUIRE(eq(*r1->subs(d), *r2));
 
     d[x] = z;
     d[y] = w;
     r1 = mul(x, y);
     r2 = mul(z, w);
-    REQUIRE(eq(r1->subs(d), r2));
+    REQUIRE(eq(*r1->subs(d), *r2));
 
     d.clear();
     d[mul(x, y)] = z;
     r1 = mul(x, y);
     r2 = z;
-    REQUIRE(eq(r1->subs(d), r2));
+    REQUIRE(eq(*r1->subs(d), *r2));
 
     d.clear();
     d[pow(x, y)] = z;
     r1 = mul(i2, pow(x, y));
     r2 = mul(i2, z);
-    REQUIRE(eq(r1->subs(d), r2));
+    REQUIRE(eq(*r1->subs(d), *r2));
 }
 
 TEST_CASE("Pow: subs", "[subs]")
@@ -139,23 +139,23 @@ TEST_CASE("Pow: subs", "[subs]")
     RCP<const Basic> r2 = pow(y, y);
     map_basic_basic d;
     d[x] = y;
-    REQUIRE(eq(r1->subs(d), r2));
+    REQUIRE(eq(*r1->subs(d), *r2));
 
     d[x] = z;
     d[y] = w;
     r1 = pow(x, y);
     r2 = pow(z, w);
-    REQUIRE(eq(r1->subs(d), r2));
+    REQUIRE(eq(*r1->subs(d), *r2));
 
     r1 = pow(x, i2);
     r2 = pow(z, i2);
-    REQUIRE(eq(r1->subs(d), r2));
+    REQUIRE(eq(*r1->subs(d), *r2));
 
     d.clear();
     d[pow(x, y)] = z;
     r1 = pow(x, y);
     r2 = z;
-    REQUIRE(eq(r1->subs(d), r2));
+    REQUIRE(eq(*r1->subs(d), *r2));
 }
 
 TEST_CASE("Trig: subs", "[subs]")
@@ -172,24 +172,24 @@ TEST_CASE("Trig: subs", "[subs]")
     RCP<const Basic> r2 = zero;
     map_basic_basic d;
     d[x] = zero;
-    REQUIRE(eq(r1->subs(d), r2));
+    REQUIRE(eq(*r1->subs(d), *r2));
 
     r1 = cos(x);
     r2 = one;
-    REQUIRE(eq(r1->subs(d), r2));
+    REQUIRE(eq(*r1->subs(d), *r2));
 
     d[x] = y;
     r1 = sin(pow(x, i2));
     r2 = sin(pow(y, i2));
-    REQUIRE(eq(r1->subs(d), r2));
+    REQUIRE(eq(*r1->subs(d), *r2));
 
     d.clear();
     d[sin(x)] = z;
     r1 = sin(x);
     r2 = z;
-    REQUIRE(eq(r1->subs(d), r2));
+    REQUIRE(eq(*r1->subs(d), *r2));
 
     r1 = mul(i2, sin(x));
     r2 = mul(i2, z);
-    REQUIRE(eq(r1->subs(d), r2));
+    REQUIRE(eq(*r1->subs(d), *r2));
 }

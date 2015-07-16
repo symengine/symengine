@@ -14,9 +14,9 @@ TEST_CASE("isqrt: integer", "[integer]")
     RCP<const Integer> i19 = integer(19);
     RCP<const Integer> i25 = integer(25);
 
-    REQUIRE(eq(isqrt(*i10), integer(3)));
-    REQUIRE(eq(isqrt(*i19), integer(4)));
-    REQUIRE(eq(isqrt(*i25), integer(5)));
+    REQUIRE(eq(*isqrt(*i10), *integer(3)));
+    REQUIRE(eq(*isqrt(*i19), *integer(4)));
+    REQUIRE(eq(*isqrt(*i25), *integer(5)));
 }
 
 TEST_CASE("i_nth_root: integer", "[integer]")
@@ -27,16 +27,16 @@ TEST_CASE("i_nth_root: integer", "[integer]")
     RCP<const Integer> r;
 
     REQUIRE(i_nth_root(outArg(r), *i7, 2) == 0);
-    REQUIRE(eq(r, integer(2)));
+    REQUIRE(eq(*r, *integer(2)));
 
     REQUIRE(i_nth_root(outArg(r), *i9, 2) != 0);
-    REQUIRE(eq(r, integer(3)));
+    REQUIRE(eq(*r, *integer(3)));
 
     REQUIRE(i_nth_root(outArg(r), *i9, 3) == 0);
-    REQUIRE(eq(r, integer(2)));
+    REQUIRE(eq(*r, *integer(2)));
 
     REQUIRE(i_nth_root(outArg(r), *i10, 2) == 0);
-    REQUIRE(eq(r, integer(3)));
+    REQUIRE(eq(*r, *integer(3)));
 }
 
 TEST_CASE("perfect_power_square: integer", "[integer]")
@@ -62,7 +62,7 @@ TEST_CASE("iabs: integer", "[integer]")
     RCP<const Integer> _i9 = integer(-9);
     RCP<const Integer> i12 =  integer(12);
 
-    REQUIRE(eq(iabs(*_i5), integer(5)));
-    REQUIRE(eq(iabs(*_i9), integer(9)));
-    REQUIRE(eq(iabs(*i12), integer(12)));
+    REQUIRE(eq(*iabs(*_i5), *integer(5)));
+    REQUIRE(eq(*iabs(*_i9), *integer(9)));
+    REQUIRE(eq(*iabs(*i12), *integer(12)));
 }
