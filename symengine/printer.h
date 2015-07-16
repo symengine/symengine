@@ -12,7 +12,7 @@ enum class PrecedenceEnum {
 class Precedence : public BaseVisitor<Precedence> {
 public:
     PrecedenceEnum precedence;
-    Precedence() : BaseVisitor(this) {
+    Precedence() : BaseVisitor<Precedence>(this) {
 
     }
     void bvisit(const Add &x) {

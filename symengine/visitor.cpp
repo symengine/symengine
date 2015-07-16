@@ -111,7 +111,7 @@ RCP<const Basic> coeff(const Basic &b, const RCP<const Symbol> &x,
 class FreeSymbolsVisitor : public BaseVisitor<FreeSymbolsVisitor> {
 public:
     set_basic s;
-    FreeSymbolsVisitor() : BaseVisitor(this) { };
+    FreeSymbolsVisitor() : BaseVisitor<FreeSymbolsVisitor>(this) { };
 
     void bvisit(const Symbol &x) {
         s.insert(x.get_rcp());
