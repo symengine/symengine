@@ -13,6 +13,11 @@ public:
     int x, y;
 };
 
+class Mesh2 : public EnableRCPFromThis<const Mesh2> {
+public:
+    int x, y;
+};
+
 TEST_CASE("Test make_rcp", "[rcp]")
 {
 
@@ -40,7 +45,24 @@ TEST_CASE("Test get_rcp_cast", "[rcp]")
     RCP<Mesh> m = make_rcp<Mesh>();
     REQUIRE(m->use_count() == 1);
     m->x = 5;
+    REQUIRE(m->x == 5);
     f(*m);
     REQUIRE(m->use_count() == 1);
     REQUIRE(m->x == 6);
+}
+
+void f2(const Mesh2 &m)
+{
+    REQUIRE(m.use_count() == 1);
+    RCP<const Mesh2> m2 = m.get_rcp_cast();
+    REQUIRE(m.use_count() == 2);
+}
+
+TEST_CASE("Test get_rcp_cast const", "[rcp]")
+{
+
+    RCP<const Mesh2> m = make_rcp<const Mesh2>();
+    REQUIRE(m->use_count() == 1);
+    f2(*m);
+    REQUIRE(m->use_count() == 1);
 }
