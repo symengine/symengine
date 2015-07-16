@@ -203,11 +203,19 @@ class EnableRCPFromThis {
 // Public interface
 public:
     //! Get RCP<T> pointer to self (it will cast the pointer to T)
-    inline RCP<T> rcp_from_this() const {
+    inline RCP<T> rcp_from_this() {
 #if defined(WITH_SYMENGINE_RCP)
         return rcp(static_cast<T*>(this));
 #else
         return rcp_static_cast<T>(weak_self_ptr_.create_strong());
+#endif
+    }
+
+    inline RCP<const T> rcp_from_this() const {
+#if defined(WITH_SYMENGINE_RCP)
+        return rcp(static_cast<const T*>(this));
+#else
+        return rcp_static_cast<const T>(weak_self_ptr_.create_strong());
 #endif
     }
 
