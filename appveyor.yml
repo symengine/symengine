@@ -2,11 +2,11 @@ version: '{build}'
 
 install:
 - cinst cmake
-- set PATH=%PATH%;C:\MinGW\bin
-- mingw-get update
-# For MinGW to work, sh.exe must not be in the path
-- rename "C:\Program Files (x86)\Git\bin\sh.exe" "sh2.exe"
-- mingw-get install mingw32-gmp
+- appveyor DownloadFile http://mpir.org/mpir-2.7.0.zip
+- 7z x mpir-2.7.0.zip > NUL
+- msbuild mpir-2.7.0/build.vc10/lib_mpir_gc/lib_mpir_gc.vcxproj /p:Configuration=Release /p:Platform=%PLATFORM% /p:PlatformToolset=%PLATFORMTOOLSET% /verbosity:normal
+- dir mpir-2.7.0/lib/%PLATFORM%/Release
+- dir mpir-2.7.0/build.vc10/lib_mpir_gc/%PLATFORM%/Release/
 
 build_script:
 - mkdir build
