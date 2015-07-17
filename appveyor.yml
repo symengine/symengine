@@ -1,8 +1,8 @@
 version: '{build}'
 
 install:
+- ps: Install-Package libgmp_vc120
 - cinst cmake
-- cinst libgmp_vc120
 
 build_script:
 - mkdir build
