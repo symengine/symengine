@@ -1,8 +1,8 @@
 include(LibFindMacros)
 
 libfind_include(gmp.h gmp)
-libfind_library(mpirxx-x86-v120-mt-sgd gmp)
-libfind_library(mpir-x86-v120-mt-sgd gmp)
+libfind_library(gmpxx gmp)
+libfind_library(gmp gmp)
 
 set(GMP_LIBRARIES ${GMPXX_LIBRARY} ${GMP_LIBRARY})
 set(GMP_INCLUDE_DIRS ${GMP_INCLUDE_DIR})
