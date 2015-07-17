@@ -1,4 +1,8 @@
 version: '{build}'
+environment:
+  global:
+    PLATFORMTOOLSET: "v90"
+    PLATFORM: "Win32"
 
 install:
 - cinst cmake
