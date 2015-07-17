@@ -2,6 +2,7 @@ version: '{build}'
 
 install:
 - nuget install libgmp_vc120
+- dir
 - cinst cmake
 
 build_script:
