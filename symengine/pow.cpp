@@ -324,7 +324,7 @@ RCP<const Basic> pow_expand(const RCP<const Pow> &self)
     umap_basic_num rd;
     // This speeds up overall expansion. For example for the benchmark
     // (y + x + z + w)**60 it improves the timing from 135ms to 124ms.
-    rd.reserve(2*r.size());
+//    rd.reserve(2*r.size());
     RCP<const Number> add_overall_coeff=zero;
     for (auto &p: r) {
         auto power = p.first.begin();

@@ -32,16 +32,16 @@ public:
     //! Construct Expression from `int`
     Expression(int n) : m_basic(integer(n)) {}
     //! Construct Expression from Basic
-    template <typename T, typename = typename std::enable_if<std::is_constructible<RCP<const Basic>, T &&>::value>::type>
+    template <typename T>
     Expression(T &&o) : m_basic(std::forward<T>(o)) {}
     //! Construct Expression from Expression
     Expression(const Expression &) = default;
     //! Construct Expression from reference to Expression
-    Expression(Expression &&other) noexcept : m_basic(std::move(other.m_basic)) {}
+    Expression(Expression &&other) : m_basic(std::move(other.m_basic)) {}
     //! Overload assignment operator
     Expression &operator=(const Expression &) = default;
     //! Overload assignment operator for reference
-    Expression &operator=(Expression &&other) noexcept
+    Expression &operator=(Expression &&other)
     {
         if (this != &other) {
             *this = std::move(other);
@@ -49,7 +49,7 @@ public:
         return *this;
     }
     //! Destructor of Expression
-    ~Expression() noexcept {}
+    ~Expression() {}
     //! Overload stream operator
     friend std::ostream &operator<<(std::ostream &os, const Expression &expr)
     {

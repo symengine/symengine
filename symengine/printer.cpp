@@ -63,14 +63,14 @@ void StrPrinter::bvisit(const Complex &x) {
 
 void StrPrinter::bvisit(const RealDouble &x) {
     std::ostringstream s;
-    s.precision(std::numeric_limits< double >::digits10);
+    s.precision(DBL_DIG);
     s << x.i;
     str_ = s.str();
 }
 
 void StrPrinter::bvisit(const ComplexDouble &x) {
     std::ostringstream s;
-    s.precision(std::numeric_limits< double >::digits10);
+    s.precision(DBL_DIG);
     s << x.i.real();
     if (x.i.imag() < 0) {
         s << " - " << -x.i.imag() << "*I";
