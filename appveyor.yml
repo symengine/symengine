@@ -9,12 +9,13 @@ install:
 - appveyor DownloadFile http://mpir.org/mpir-2.7.0.zip
 - 7z x mpir-2.7.0.zip > NUL
 - msbuild mpir-2.7.0/build.vc10/lib_mpir_gc/lib_mpir_gc.vcxproj /p:Configuration=Release /p:Platform=%PLATFORM% /p:PlatformToolset=%PLATFORMTOOLSET% /verbosity:normal
-- dir mpir-2.7.0\lib\%PLATFORM%\Release
-- dir mpir-2.7.0\build.vc10\lib_mpir_gc\%PLATFORM%\Release
+- msbuild mpir-2.7.0/build.vc10/lib_mpir_cxx/lib_mpir_cxx.vcxproj /p:Configuration=Release /p:Platform=%PLATFORM% /p:PlatformToolset=%PLATFORMTOOLSET% /verbosity:normal
+- copy mpir-2.7.0/build.vc10/lib_mpir_gc/%PLATFORM%/Release/mpir.lib mpir-2.7.0/build.vc10/lib_mpir_gc/%PLATFORM%/Release/gmp.lib
+- copy mpir-2.7.0/build.vc10/lib_mpir_cxx/%PLATFORM%/Release/mpirxx.lib mpir-2.7.0/build.vc10/lib_mpir_cxx/%PLATFORM%/Release/gmpxx.lib
 
 build_script:
 - mkdir build
 - cd build
-- cmake -DGMP_INCLUDE_DIRS=..\mpir-2.7.0\lib\%PLATFORM%\Release -DGMP_LIBRARIES=..\mpir-2.7.0\build.vc10\lib_mpir_gc\%PLATFORM%\Release ..
+- cmake -DGMP_DIR=mpir-2.7.0/lib/%PLATFORM%/Release;mpir-2.7.0/build.vc10/lib_mpir_gc/%PLATFORM%/Release;mpir-2.7.0/build.vc10/lib_mpir_cxx/%PLATFORM%/Release .
 - cmake --build .
 - ctest
