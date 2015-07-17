@@ -54,15 +54,17 @@ include_directories(${GMP_INCLUDE_DIRS})
 set(LIBS ${LIBS} ${GMP_LIBRARIES})
 
 # Check gmpxx
-try_compile(GMPXX "${CMAKE_CURRENT_BINARY_DIR}/cxx" "${CMAKE_SOURCE_DIR}/cmake/checkgmpxx.cpp"
-    CMAKE_FLAGS "-DCOMPILE_DEFINITIONS=${CMAKE_CXX_FLAGS_RELEASE}"
-    CMAKE_FLAGS "-DINCLUDE_DIRECTORIES=${GMP_INCLUDE_DIRS}"
-    CMAKE_FLAGS "-DLINK_LIBRARIES=${GMP_LIBRARIES}"
-    OUTPUT_VARIABLE GMPXX_ERROR_LOG)
-if (NOT ${GMPXX})
-    message(FATAL_ERROR "GMP library being linked is not supported by CMAKE_CXX_COMPILER used. \n"
-        "Recompile GMP with C++ support using ${CMAKE_CXX_COMPILER}, remove CMakeCache.txt and try again.\n"
-        "Error Log : \n${GMPXX_ERROR_LOG}")
+if (NOT(MSVC))
+    try_compile(GMPXX "${CMAKE_CURRENT_BINARY_DIR}/cxx" "${CMAKE_SOURCE_DIR}/cmake/checkgmpxx.cpp"
+        CMAKE_FLAGS "-DCOMPILE_DEFINITIONS=${CMAKE_CXX_FLAGS_RELEASE}"
+        CMAKE_FLAGS "-DINCLUDE_DIRECTORIES=${GMP_INCLUDE_DIRS}"
+        CMAKE_FLAGS "-DLINK_LIBRARIES=${GMP_LIBRARIES}"
+        OUTPUT_VARIABLE GMPXX_ERROR_LOG)
+    if (NOT ${GMPXX})
+        message(FATAL_ERROR "GMP library being linked is not supported by CMAKE_CXX_COMPILER used. \n"
+            "Recompile GMP with C++ support using ${CMAKE_CXX_COMPILER}, remove CMakeCache.txt and try again.\n"
+            "Error Log : \n${GMPXX_ERROR_LOG}")
+    endif()
 endif()
 
 # ECM
