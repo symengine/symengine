@@ -31,6 +31,14 @@ if (CMAKE_CXX_COMPILER_ID MATCHES Clang)
         "${CMAKE_CXX_FLAGS_RELEASE} -Wno-unused-parameter")
 endif()
 
+foreach(flag_var
+        CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
+        CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_RELWITHDEBINFO)
+   if(${flag_var} MATCHES "/RTC1")
+      string(REGEX REPLACE "/RTC1" "" ${flag_var} "${${flag_var}}")
+   endif(${flag_var} MATCHES "/RTC1")
+endforeach(flag_var)
+
 # Check c++11 support
 try_compile(CXX11 "${CMAKE_CURRENT_BINARY_DIR}/cxx" "${CMAKE_SOURCE_DIR}/cmake/checkcxx11.cpp"
     COMPILE_DEFINITIONS "${CMAKE_CXX_FLAGS_RELEASE}" OUTPUT_VARIABLE CXX11_ERROR_LOG)
