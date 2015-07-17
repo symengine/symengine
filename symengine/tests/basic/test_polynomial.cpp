@@ -3,6 +3,7 @@
 #include <chrono>
 
 #include <symengine/polynomial.h>
+#include <symengine/polys.h>
 #include <symengine/mul.h>
 #include <symengine/pow.h>
 #include <symengine/dict.h>
@@ -22,6 +23,8 @@ using SymEngine::one;
 using SymEngine::zero;
 using SymEngine::integer;
 using SymEngine::vec_basic_eq_perm;
+using SymEngine::vec_symbol;
+using SymEngine::Polynomial;
 
 #if defined(HAVE_SYMENGINE_PIRANHA)
 using SymEngine::hash_set;
@@ -194,3 +197,31 @@ TEST_CASE("Testing hash_set", "[hash_set]")
     REQUIRE(hash_set_compare(s, q) == 0);
 }
 #endif
+
+TEST_CASE("Constructor of Polynomial", "[Polynomial]")
+{   
+    RCP<const Symbol> x  = symbol("x");
+    vec_symbol vars;
+    vars.push_back(x);
+
+    m_pair t1, t2;
+    hash_set s;
+
+    t1.second = 2;
+    t2.second = 1;
+    
+    std::vector<long long> temp {3};
+    using ka = piranha::kronecker_array<long long>;
+    t1.first = ka::encode(temp);
+    temp = {2};
+    t2.first = ka::encode(temp);
+
+    s.insert(t1);
+    s.insert(t2);
+
+    RCP<const Polynomial> P = polynomial(vars, s);
+    REQUIRE(P->__str__() == "2*x**3 + 1*x**2");
+
+    //RCP<const UnivariatePolynomial> Q = UnivariatePolynomial::create(x, {1, 0, 2, 1});
+    //REQUIRE(Q->__str__() == "x**3 + 2*x**2 + 1");
+}

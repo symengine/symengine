@@ -20,13 +20,13 @@ public:
 public:
     IMPLEMENT_TYPEID(POLYNOMIAL)
     //! Constructor of Polynomial class
-    Polynomial(const vec_symbol &vars, hash_set &&polys_set);
+    Polynomial(const vec_symbol &vars, hash_set&& polys_set);
     //! Constructor from Basic
     Polynomial(const RCP<const Basic> &p, umap_basic_num &vars);
 
-    /*static RCP<const Polynomial> create(const vec_symbol &vars, hash_set &&polys_set) {
+    static RCP<const Polynomial> create(const vec_symbol &vars, hash_set &&polys_set) {
         return make_rcp<const Polynomial>(vars, polys_set);
-    }*/
+    }
 
     //! \return true if canonical
     bool is_canonical(const hash_set& set);

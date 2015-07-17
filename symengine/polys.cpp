@@ -5,11 +5,11 @@
 
 namespace SymEngine {
 
-Polynomial::Polynomial(const vec_symbol &vars, hash_set &&polys_set) {
+Polynomial::Polynomial(const vec_symbol &vars, hash_set&& polys_set) {
     //! TODO: Use initializer list
     vars_ = vars;
     polys_set_ = polys_set;
-    SYMENGINE_ASSERT(is_canonical(vars_, polys_set_))
+    //SYMENGINE_ASSERT(is_canonical(vars_, polys_set_))
 }
 
 Polynomial::Polynomial(const RCP<const Basic> &p, umap_basic_num &vars) {
