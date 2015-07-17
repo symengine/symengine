@@ -2,6 +2,7 @@ version: '{build}'
 
 install:
 - cinst cmake
+- cinst libgmp_vc120
 
 build_script:
 - mkdir build
