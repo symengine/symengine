@@ -5,13 +5,13 @@ install:
 - nuget install libgmp_vc120 -OutputDirectory deps -ExcludeVersion
 - dir deps
 - dir deps\libgmp_vc120
-- dir deps\libgmp_vc120\include
-- dir deps\libgmp_vc120\bin
+- dir deps\libgmp_vc120\build\native\include
+- dir deps\libgmp_vc120\build\native\bin
 - cinst cmake
 
 build_script:
 - mkdir build
 - cd build
-- cmake -DGMP_DIR=..\deps\libgmp_vc120 ..
+- cmake -DGMP_DIR=..\deps\libgmp_vc120\build\native ..
 - cmake --build .
 - ctest
