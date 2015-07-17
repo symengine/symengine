@@ -1,17 +1,16 @@
 version: '{build}'
 
 install:
-- mkdir deps
-- nuget install libgmp_vc120 -OutputDirectory deps -ExcludeVersion
-- dir deps
-- dir deps\libgmp_vc120
-- dir deps\libgmp_vc120\build\native\include
-- dir deps\libgmp_vc120\build\native\bin
 - cinst cmake
+- set PATH=%PATH%;C:\MinGW\bin
+- mingw-get update
+# For MinGW to work, sh.exe must not be in the path
+- rename "C:\Program Files (x86)\Git\bin\sh.exe" "sh2.exe"
+- mingw-get install mingw32-gmp
 
 build_script:
 - mkdir build
 - cd build
-- cmake -DGMP_DIR=..\deps\libgmp_vc120\build\native ..
+- cmake -DGMP_DIR=C:\MinGW ..
 - cmake --build .
 - ctest
