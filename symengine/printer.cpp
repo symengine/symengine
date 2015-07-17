@@ -67,18 +67,30 @@ void StrPrinter::bvisit(const RealDouble &x) {
     s.precision(std::numeric_limits< double >::digits10);
     s << x.i;
     str_ = s.str();
+    if (str_.find(".") == std::string::npos) {
+        s << ".0";
+        str_ =  s.str();
+    }
 }
 
 void StrPrinter::bvisit(const ComplexDouble &x) {
     std::ostringstream s;
     s.precision(std::numeric_limits< double >::digits10);
     s << x.i.real();
+    if (s.str().find(".") == std::string::npos) {
+        s << ".0";
+    }
     if (x.i.imag() < 0) {
-        s << " - " << -x.i.imag() << "*I";
+        s << " - " << -x.i.imag();
     } else {
-        s << " + " << x.i.imag() << "*I";
+        s << " + " << x.i.imag();
     }
     str_ = s.str();
+    if (str_.find(".") == str_.find_last_of(".")) {
+        str_ += ".0*I";
+    } else {
+        str_ += "*I";
+    }
 }
 
 #ifdef HAVE_SYMENGINE_MPFR
