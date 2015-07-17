@@ -322,6 +322,11 @@ RCP<const Basic> pow_expand(const RCP<const Pow> &self)
         // allows a little bit easier treatment below.
         insert(base_dict, base->coef_, one);
     } else {
+        if (base_dict.size() == 1) {
+            // Eg: (0.0 + x * 5) ** 2
+            return add(base->coef_, pow(base_dict.begin()->first,
+                           mul(base_dict.begin()->second, self->exp_)));
+        }
         add_overall_coeff = base->coef_;
     }
     int m = base_dict.size();
@@ -332,7 +337,6 @@ RCP<const Basic> pow_expand(const RCP<const Pow> &self)
 #if defined(HAVE_SYMENGINE_RESERVE)
     rd.reserve(2*r.size());
 #endif
-    RCP<const Number> add_overall_coeff=zero;
     for (auto &p: r) {
         auto power = p.first.begin();
         auto i2 = base_dict.begin();
