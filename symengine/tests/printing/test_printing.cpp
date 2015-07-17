@@ -292,6 +292,14 @@ TEST_CASE("test_floats(): printing", "[printing]")
     p = mul(p, x);
     REQUIRE(p->__str__() == "(0.1 + 0.2*I)*x");
 
+    p = real_double(123);
+    p = sub(p, x);
+    REQUIRE(p->__str__() == "123.0 - x");
+
+    p = complex_double(std::complex<double>(1, 2));
+    p = add(p, x);
+    REQUIRE(p->__str__() == "1.0 + 2.0*I + x");
+
 #ifdef HAVE_SYMENGINE_MPFR
     SymEngine::mpfr_class m1(75);
     mpfr_set_ui(m1.get_mpfr_t(), 123, MPFR_RNDN);
