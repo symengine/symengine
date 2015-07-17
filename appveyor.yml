@@ -3,6 +3,10 @@ version: '{build}'
 install:
 - mkdir deps
 - nuget install libgmp_vc120 -OutputDirectory deps -ExcludeVersion
+- dir deps
+- dir deps/libgmp_vc120
+- dir deps/libgmp_vc120/include
+- dir deps/libgmp_vc120/bin
 - cinst cmake
 
 build_script:
