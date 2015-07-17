@@ -34,4 +34,6 @@ VALUE cbasic_to_str(VALUE self);
 
 VALUE cbasic_expand(VALUE self);
 
+VALUE cbasic_hash(VALUE self);
+
 #endif //RUBY_BASIC_H_

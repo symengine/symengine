@@ -199,6 +199,8 @@ size_t setbasic_size(CSetBasic *self);
 void basic_get_args(const basic self, CVecBasic *args);
 //! Returns a CSetBasic of set_basic given by free_symbols
 void basic_free_symbols(const basic self, CSetBasic *symbols);
+//! returns the hash of the Basic object
+size_t basic_hash(const basic self);
 
 #ifdef __cplusplus
 }

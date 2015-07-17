@@ -145,3 +145,18 @@ VALUE cbasic_to_str(VALUE self){
 VALUE cbasic_expand(VALUE self){
     return cbasic_unary_op(self, basic_expand);
 }
+
+VALUE cbasic_hash(VALUE self){
+    basic_struct *this;
+    Data_Get_Struct(self, basic_struct, this);
+    // All ruby objects return FIXNUM when `hash` method is called.
+    // Though this function returns BIGNUM it won't be a problem, since
+    // we need proper comparison only among objects in SymEngine.
+    // The objects that should have the same hash will always match
+    // and when comparing to the FIXNUM from hash of other ruby objects,
+    // it will return false as it is supposed to.
+    // However, an alternate implementation is given below
+    // long lhash = basic_hash(this) % FIX2LONG(FIXNUM_MAX);
+    // return LONG2FIX(lhash);
+    return SIZET2NUM(basic_hash(this));
+}
