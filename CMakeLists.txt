@@ -31,16 +31,6 @@ if (CMAKE_CXX_COMPILER_ID MATCHES Clang)
         "${CMAKE_CXX_FLAGS_RELEASE} -Wno-unused-parameter")
 endif()
 
-set(CMAKE_CXX_FLAGS_RELEASE "/MD /O2 /Ob2 /D NDEBUG")
-
-# Check c++11 support
-try_compile(CXX11 "${CMAKE_CURRENT_BINARY_DIR}/cxx" "${CMAKE_SOURCE_DIR}/cmake/checkcxx11.cpp"
-    COMPILE_DEFINITIONS "${CMAKE_CXX_FLAGS_RELEASE}" OUTPUT_VARIABLE CXX11_ERROR_LOG)
-if (NOT ${CXX11})
-    message(FATAL_ERROR "Compiler does not support C++11 constructs. \n"
-        "CXX11 Error Log : \n${CXX11_ERROR_LOG}")
-endif()
-
 if ((CMAKE_CXX_COMPILER_ID MATCHES Clang) AND (CMAKE_BUILD_TYPE STREQUAL "Release"))
     try_compile(CHECK_CLANG "${CMAKE_CURRENT_BINARY_DIR}/cxx" "${CMAKE_SOURCE_DIR}/cmake/checkclang.cpp")
     if (NOT ${CHECK_CLANG})
