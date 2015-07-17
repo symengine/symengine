@@ -16,6 +16,6 @@ install:
 build_script:
 - mkdir build
 - cd build
-- cmake -DGMP_DIR=mpir-2.7.0/lib/%PLATFORM%/Release;mpir-2.7.0/build.vc10/lib_mpir_gc/%PLATFORM%/Release;mpir-2.7.0/build.vc10/lib_mpir_cxx/%PLATFORM%/Release .
+- cmake -DGMP_DIR=mpir-2.7.0/lib/%PLATFORM%/Release;mpir-2.7.0/build.vc10/lib_mpir_gc/%PLATFORM%/Release;mpir-2.7.0/build.vc10/lib_mpir_cxx/%PLATFORM%/Release ..
 - cmake --build .
 - ctest
