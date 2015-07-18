@@ -61,7 +61,8 @@ test_script:
 - ctest --output-on-failure
 - if [%WITH_PYTHON%]==[yes] cd symengine/python
 - if [%WITH_PYTHON%]==[yes] nosetests
-
+- if [%WITH_PYTHON%]==[yes] mkdir empty && cd empty
+- if [%WITH_PYTHON%]==[yes] python C:\projects\symengine\bin\test_python.py
 
 # Enable this to be able to login to the build worker. You can use the
 # `remmina` program in Ubuntu, use the login information that the line below
