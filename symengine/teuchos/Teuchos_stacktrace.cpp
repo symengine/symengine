@@ -63,7 +63,7 @@
 
 #ifdef HAVE_TEUCHOS_LINK
 // For dl_iterate_phdr() functionality
-#include <link.h>
+#  include <link.h>
 #endif
 
 #ifdef HAVE_TEUCHOS_BFD
