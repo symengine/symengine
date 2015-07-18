@@ -1,3 +1,9 @@
+#include <symengine/symengine_config.h>
+
+#if defined(HAVE_C_FUNCTION_NOT_FUNC)
+#define __func__ __FUNCTION__
+#endif
+
 #include <symengine/cwrapper.h>
 
 void test_cwrapper() {

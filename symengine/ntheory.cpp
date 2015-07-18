@@ -1,5 +1,6 @@
 #include <cmath>
 #include <valarray>
+#include <iterator>
 
 #include <symengine/ntheory.h>
 #include <symengine/rational.h>

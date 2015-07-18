@@ -56,12 +56,14 @@
 #  include <execinfo.h>
 #endif
 
+#if defined(HAVE_GCC_ABI_DEMANGLE) && defined(HAVE_TEUCHOS_DEMANGLE)
 // For demangling function names
-#include <cxxabi.h>
+#  include <cxxabi.h>
+#endif
 
 #ifdef HAVE_TEUCHOS_LINK
 // For dl_iterate_phdr() functionality
-#include <link.h>
+#  include <link.h>
 #endif
 
 #ifdef HAVE_TEUCHOS_BFD
@@ -154,9 +156,11 @@ std::string demangle_function_name(std::string name)
   if (name.length() == 0) {
     s = "??";
   } else {
-    int status = 0;
     char *d = 0;
+#if defined(HAVE_GCC_ABI_DEMANGLE) && defined(HAVE_TEUCHOS_DEMANGLE)
+    int status = 0;
     d = abi::__cxa_demangle(name.c_str(), 0, 0, &status);
+#endif
     if (d) {
       s = d;
       free(d);
