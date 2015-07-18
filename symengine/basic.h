@@ -67,7 +67,7 @@ enum TypeID {
     #undef SYMENGINE_ENUM
 };
 
-class Basic : public EnableRCPFromThis<const Basic> {
+class Basic : public EnableRCPFromThis<Basic> {
 private:
     //! Private variables
     // The hash_ is defined as mutable, because its value is initialized to 0

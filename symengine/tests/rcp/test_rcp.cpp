@@ -8,12 +8,9 @@ using SymEngine::Ptr;
 using SymEngine::null;
 using SymEngine::EnableRCPFromThis;
 
-class Mesh : public EnableRCPFromThis<Mesh> {
-public:
-    int x, y;
-};
+// This is the canonical use of EnableRCPFromThis:
 
-class Mesh2 : public EnableRCPFromThis<const Mesh2> {
+class Mesh : public EnableRCPFromThis<Mesh> {
 public:
     int x, y;
 };
@@ -33,6 +30,8 @@ TEST_CASE("Test make_rcp", "[rcp]")
 void f(Mesh &m)
 {
     REQUIRE(m.use_count() == 1);
+    // rcp_from_this() gives up non const version of RCP<Mesh> because 'm' is
+    // not const
     RCP<Mesh> m2 = m.rcp_from_this();
     REQUIRE(m.use_count() == 2);
     m2->x = 6;
@@ -41,6 +40,7 @@ void f(Mesh &m)
 void f_const(const Mesh &m)
 {
     REQUIRE(m.use_count() == 1);
+    // rcp_from_this() gives up const version of RCP<Mesh> because 'm' is const
     RCP<const Mesh> m2 = m.rcp_from_this();
     REQUIRE(m.use_count() == 2);
 }
@@ -67,9 +67,29 @@ TEST_CASE("Test rcp_from_this const", "[rcp]")
     REQUIRE(m->use_count() == 1);
 }
 
+// This is not a canonical way how to use EnableRCPFromThis, since we use
+// 'const Mesh2' for the internal weak pointer, so we can only get
+// 'RCP<const Mesh2>' out of rcp_from_this(). But it is legitimate code, so we
+// test it as well.
+
+class Mesh2 : public EnableRCPFromThis<const Mesh2> {
+public:
+    int x, y;
+};
+
 void f2_const(const Mesh2 &m)
 {
     REQUIRE(m.use_count() == 1);
+    // rcp_from_this() gives up const version of RCP<Mesh> because 'm' is const
+    RCP<const Mesh2> m2 = m.rcp_from_this();
+    REQUIRE(m.use_count() == 2);
+}
+
+void f2_hybrid(Mesh2 &m)
+{
+    REQUIRE(m.use_count() == 1);
+    // rcp_from_this() gives up const version of RCP<Mesh> even though 'm' is
+    // not const, because the internal pointer inside Mesh2 is const.
     RCP<const Mesh2> m2 = m.rcp_from_this();
     REQUIRE(m.use_count() == 2);
 }
@@ -80,4 +100,11 @@ TEST_CASE("Test rcp_from_this const 2", "[rcp]")
     REQUIRE(m->use_count() == 1);
     f2_const(*m);
     REQUIRE(m->use_count() == 1);
+
+    RCP<Mesh2> m2 = make_rcp<Mesh2>();
+    REQUIRE(m2->use_count() == 1);
+    f2_const(*m2);
+    REQUIRE(m2->use_count() == 1);
+    f2_hybrid(*m2);
+    REQUIRE(m2->use_count() == 1);
 }
