@@ -120,25 +120,21 @@ matrix:
       compiler: gcc
       os: osx
     - language: ruby
-      cache: bundler
       env: TEST_IN_TREE="yes" WITH_RUBY="yes"
       rvm: 1.9.3
       compiler: gcc
       os: linux
     - language: ruby
-      cache: bundler
       env: TEST_IN_TREE="yes" WITH_RUBY="yes"
       rvm: 2.0
       compiler: gcc
       os: linux
     - language: ruby
-      cache: bundler
       env: TEST_IN_TREE="yes" WITH_RUBY="yes"
       rvm: 2.1
       compiler: gcc
       os: linux
     - language: ruby
-      cache: bundler
       env: TEST_IN_TREE="yes" WITH_RUBY="yes"
       rvm: 2.2
       compiler: gcc
