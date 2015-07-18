@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+# Exit on error
+set -e
+# Echo each command
+set -x
+
 if [[ "${CC}" == "" ]]; then
     export CC=gcc
     export CXX=g++
