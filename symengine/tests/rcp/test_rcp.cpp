@@ -20,7 +20,6 @@ public:
 
 TEST_CASE("Test make_rcp", "[rcp]")
 {
-
     RCP<Mesh> m = make_rcp<Mesh>();
     Ptr<Mesh> p = m.ptr();
     REQUIRE(!(m == null));
@@ -55,7 +54,6 @@ void f2_const(const Mesh2 &m)
 
 TEST_CASE("Test rcp_from_this", "[rcp]")
 {
-
     RCP<Mesh> m = make_rcp<Mesh>();
     REQUIRE(m->use_count() == 1);
     m->x = 5;
@@ -70,7 +68,6 @@ TEST_CASE("Test rcp_from_this", "[rcp]")
 
 TEST_CASE("Test rcp_from_this const", "[rcp]")
 {
-
     RCP<const Mesh2> m = make_rcp<const Mesh2>();
     REQUIRE(m->use_count() == 1);
     f2_const(*m);
