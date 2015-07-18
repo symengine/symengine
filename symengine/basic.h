@@ -18,9 +18,13 @@
 #include <set>
 #include <unordered_map>
 #include <cassert>
-#include <atomic>
 
 #include <symengine/symengine_config.h>
+
+#ifdef WITH_SYMENGINE_THREAD_SAFE
+#    include <atomic>
+#endif
+
 #include <symengine/symengine_assert.h>
 #include <symengine/symengine_rcp.h>
 #include <symengine/dict.h>
