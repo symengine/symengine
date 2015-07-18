@@ -240,7 +240,7 @@ public:
 
 
 // Everything below is private interface
-public:
+private:
 #if defined(WITH_SYMENGINE_RCP)
 
     //! Public variables if defined with SYMENGINE_RCP
@@ -270,6 +270,9 @@ public:
         weak_self_ptr_ = rcp_const_cast<T>(w);
     }
 #endif // WITH_SYMENGINE_RCP
+
+template<typename T_, typename ...Args>
+friend inline RCP<T_> make_rcp( Args&& ...args );
 };
 
 
