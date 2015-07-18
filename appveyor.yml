@@ -11,6 +11,8 @@ environment:
 
   matrix:
     - BUILD_TYPE: "Debug"
+      COMPILER: MSVC15
+    - BUILD_TYPE: "Debug"
       COMPILER: MinGW
       WITH_PYTHON: yes
       PYTHON_VERSION: 27
@@ -18,8 +20,14 @@ environment:
       COMPILER: MinGW
       WITH_PYTHON: yes
       PYTHON_VERSION: 27
-    - BUILD_TYPE: "Debug"
-      COMPILER: MSVC15
+    - BUILD_TYPE: "Release"
+      COMPILER: MinGW
+      WITH_PYTHON: yes
+      PYTHON_VERSION: 33
+    - BUILD_TYPE: "Release"
+      COMPILER: MinGW
+      WITH_PYTHON: yes
+      PYTHON_VERSION: 34
 
 install:
 - if [%COMPILER%]==[MSVC15] set PATH=C:\Program Files (x86)\MSBuild\14.0\Bin;%PATH%
