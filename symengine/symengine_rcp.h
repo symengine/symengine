@@ -222,11 +222,11 @@ public:
 
     //! Get RCP<T2> pointer to self (it will cast the pointer to T2)
     template <class T2>
-    inline RCP<T2> rcp_from_this_cast() const {
+    inline RCP<const T2> rcp_from_this_cast() const {
 #if defined(WITH_SYMENGINE_RCP)
-        return rcp(static_cast<T2*>(this));
+        return rcp(static_cast<const T2*>(this));
 #else
-        return rcp_static_cast<T2>(weak_self_ptr_.create_strong());
+        return rcp_static_cast<const T2>(weak_self_ptr_.create_strong());
 #endif
     }
 
