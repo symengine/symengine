@@ -50,6 +50,15 @@ set(HAVE_C_FUNCTION_NOT_FUNC no
 set(HAVE_DEFAULT_CONSTRUCTORS yes
     CACHE BOOL "C++ compiler supports default constructors")
 
+set(HAVE_SYMENGINE_NOEXCEPT yes
+    CACHE BOOL "C++ compiler supports noexcept specifier")
+
+set(HAVE_SYMENGINE_IS_CONSTRUCTIBLE yes
+    CACHE BOOL "C++ compiler supports std::is_constructible")
+
+set(HAVE_SYMENGINE_RESERVE yes
+    CACHE BOOL "C++ compiler supports std::unordered_map<>::reserve()")
+
 if (MSVC)
     # MSVC doesn't have cxxabi.h
     set(HAVE_GCC_ABI_DEMANGLE no)
@@ -60,6 +69,13 @@ if (MSVC)
     # MSVC does not support =default for constructors
     set(HAVE_DEFAULT_CONSTRUCTORS no)
 endif()
+
+if (CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
+    set(HAVE_DEFAULT_CONSTRUCTORS no)
+    set(HAVE_SYMENGINE_NOEXCEPT no)
+    set(HAVE_SYMENGINE_IS_CONSTRUCTIBLE no)
+    set(HAVE_SYMENGINE_RESERVE no)
+endif ()
 
 if ((CMAKE_CXX_COMPILER_ID MATCHES Clang) AND (CMAKE_BUILD_TYPE STREQUAL "Release"))
     try_compile(CHECK_CLANG "${CMAKE_CURRENT_BINARY_DIR}/cxx" "${CMAKE_SOURCE_DIR}/cmake/checkclang.cpp")
@@ -351,6 +367,9 @@ endif ()
 message("HAVE_GCC_ABI_DEMANGLE: ${HAVE_GCC_ABI_DEMANGLE}")
 message("HAVE_C_FUNCTION_NOT_FUNC: ${HAVE_C_FUNCTION_NOT_FUNC}")
 message("HAVE_DEFAULT_CONSTRUCTORS: ${HAVE_DEFAULT_CONSTRUCTORS}")
+message("HAVE_SYMENGINE_NOEXCEPT: ${HAVE_SYMENGINE_NOEXCEPT}")
+message("HAVE_SYMENGINE_IS_CONSTRUCTIBLE: ${HAVE_SYMENGINE_IS_CONSTRUCTIBLE}")
+message("HAVE_SYMENGINE_RESERVE: ${HAVE_SYMENGINE_RESERVE}")
 message("WITH_SYMENGINE_THREAD_SAFE: ${WITH_SYMENGINE_THREAD_SAFE}")
 message("BUILD_TESTS: ${BUILD_TESTS}")
 message("BUILD_BENCHMARKS: ${BUILD_BENCHMARKS}")

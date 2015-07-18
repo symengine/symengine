@@ -36,3 +36,12 @@
 
 /* Define if the C++ compiler supports default constructors */
 #cmakedefine HAVE_DEFAULT_CONSTRUCTORS
+
+/* Define if the C++ compiler supports noexcept specifier */
+#cmakedefine HAVE_SYMENGINE_NOEXCEPT
+
+/* Define if the C++ compiler supports std::is_constructible */
+#cmakedefine HAVE_SYMENGINE_IS_CONSTRUCTIBLE
+
+/* Define if the C++ compiler supports std::unordered_map<>::reserve() */
+#cmakedefine HAVE_SYMENGINE_RESERVE
