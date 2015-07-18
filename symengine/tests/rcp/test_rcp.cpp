@@ -45,13 +45,6 @@ void f_const(const Mesh &m)
     REQUIRE(m.use_count() == 2);
 }
 
-void f2_const(const Mesh2 &m)
-{
-    REQUIRE(m.use_count() == 1);
-    RCP<const Mesh2> m2 = m.rcp_from_this();
-    REQUIRE(m.use_count() == 2);
-}
-
 TEST_CASE("Test rcp_from_this", "[rcp]")
 {
     RCP<Mesh> m = make_rcp<Mesh>();
@@ -67,6 +60,21 @@ TEST_CASE("Test rcp_from_this", "[rcp]")
 }
 
 TEST_CASE("Test rcp_from_this const", "[rcp]")
+{
+    RCP<const Mesh> m = make_rcp<const Mesh>();
+    REQUIRE(m->use_count() == 1);
+    f_const(*m);
+    REQUIRE(m->use_count() == 1);
+}
+
+void f2_const(const Mesh2 &m)
+{
+    REQUIRE(m.use_count() == 1);
+    RCP<const Mesh2> m2 = m.rcp_from_this();
+    REQUIRE(m.use_count() == 2);
+}
+
+TEST_CASE("Test rcp_from_this const 2", "[rcp]")
 {
     RCP<const Mesh2> m = make_rcp<const Mesh2>();
     REQUIRE(m->use_count() == 1);
