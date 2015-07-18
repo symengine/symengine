@@ -64,13 +64,13 @@ TEST_CASE("test_printing(): printing", "[printing]")
     r = mul(integer(23), mul(pow(div(integer(5), integer(2)), div(integer(1), integer(2))),
         pow(div(integer(7), integer(3)), div(integer(1), integer(2)))));
     REQUIRE(r->__str__() == "23*(7/3)**(1/2)*(5/2)**(1/2)");
-	
+
     r = pow(div(symbol("x"), integer(2)), div(integer(1), integer(2)));
     REQUIRE(r->__str__() == "((1/2)*x)**(1/2)");
 
     r = pow(div(integer(3), integer(2)),div(integer(1), integer(2)));
-    REQUIRE(r->__str__() == "(3/2)**(1/2)");	
-	
+    REQUIRE(r->__str__() == "(3/2)**(1/2)");
+
     r1 = mul(integer(12), pow(integer(196), div(integer(-1), integer(2))));
     r2 = mul(integer(294), pow(integer(196), div(integer(-1), integer(2))));
     r = add(integer(-51), mul(r1, r2));
@@ -256,7 +256,7 @@ TEST_CASE("test_univariate_polynomial(): printing", "[printing]")
     //std::cout<<p->__str__()<<std::endl;
     p = univariate_polynomial(x, 1, {{0, -1}, {1, 1}});
     REQUIRE(p->__str__() == "x - 1");
-    //std::cout<<p->__str__()<<std::endl;   
+    //std::cout<<p->__str__()<<std::endl;
     p = univariate_polynomial(x, 2, {{0, 1}, {1, 1}, {2, 1}});
     REQUIRE(p->__str__() == "x**2 + x + 1");
     //std::cout<<p->__str__()<<std::endl;
@@ -285,7 +285,8 @@ TEST_CASE("test_floats(): printing", "[printing]")
 
     p = real_double(0.00000011);
     p = mul(p, x);
-    REQUIRE(p->__str__() == "1.1e-07*x");
+    bool pr = (p->__str__() == "1.1e-07*x") || (p->__str__() == "1.1e-007*x");
+    REQUIRE(pr == true);
 
     p = complex_double(std::complex<double>(0.1, 0.2));
     p = mul(p, x);

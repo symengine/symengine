@@ -31,8 +31,10 @@ int main(int argc, char* argv[])
     a1 = symbol("a1");
     e = a0 + a1;
     f = 0;
-    for (int i = 2; i < N; i++) {
-        s = sqrt(ex(2))*symbol("a"+std::to_string(i));
+    for (long long i = 2; i < N; i++) {
+        std::ostringstream o;
+        o << "a" << i;
+        s = symbol(o.str());
         e = e + s;
         f = f - s;
     }
