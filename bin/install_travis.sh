@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+# Exit on error
+set -e
+# Echo each command
+set -x
+
 if [[ "${CC}" == "" ]]; then
     export CC=gcc
     export CXX=g++
@@ -21,7 +26,7 @@ if [[ "${TRAVIS_OS_NAME}" != "osx" ]]; then
     fi
 else
     brew install cmake
-    wget http://ftp.gnu.org/gnu/gmp/gmp-6.0.0a.tar.bz2;
+    wget https://raw.githubusercontent.com/symengine/dependencies/6a42d290071921a0a478c6883fc0ddd709d664c9/gmp-6.0.0a.tar.bz2
     tar -xjf gmp-6.0.0a.tar.bz2;
     cd gmp-6.0.0 && ./configure --prefix=$our_install_dir --enable-cxx && make -j8 install && cd ..;
 fi
@@ -34,12 +39,12 @@ if [[ "${WITH_BFD}" == "yes" ]]; then
     fi
 fi
 if [[ "${WITH_ECM}" == "yes" ]]; then
-    wget http://gforge.inria.fr/frs/download.php/file/32159/ecm-6.4.4.tar.gz;
+    wget https://raw.githubusercontent.com/symengine/dependencies/6a42d290071921a0a478c6883fc0ddd709d664c9/ecm-6.4.4.tar.gz
     tar -xzf ecm-6.4.4.tar.gz;
     cd ecm-6.4.4 && ./configure --prefix=$our_install_dir && make -j8 install && cd ..;
 fi
 if [[ "${WITH_PRIMESIEVE}" == "yes" ]]; then
-    wget http://dl.bintray.com/kimwalisch/primesieve/primesieve-5.2.tar.gz;
+    wget https://raw.githubusercontent.com/symengine/dependencies/6a42d290071921a0a478c6883fc0ddd709d664c9/primesieve-5.2.tar.gz
     tar -xzf primesieve-5.2.tar.gz;
     cd primesieve-5.2 && ./configure --prefix=$our_install_dir && make -j8 install && cd ..;
 fi
@@ -51,7 +56,7 @@ if [[ "${WITH_MPFR}" == "yes" ]] || [[ "${WITH_MPC}" == "yes" ]] || [[ "${WITH_A
     fi
 fi
 if [[ "${WITH_ARB}" == "yes" ]]; then
-    wget http://www.flintlib.org/flint-2.4.4.tar.gz;
+    wget https://raw.githubusercontent.com/symengine/dependencies/6a42d290071921a0a478c6883fc0ddd709d664c9/flint-2.4.4.tar.gz;
     tar -xzf flint-2.4.4.tar.gz;
     cd flint-2.4.4 && ./configure --prefix=$our_install_dir && make -j8 install && cd ..;
     wget https://github.com/fredrik-johansson/arb/archive/2.6.0.tar.gz;
