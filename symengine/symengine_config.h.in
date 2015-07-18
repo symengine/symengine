@@ -42,3 +42,6 @@
 
 /* Define if the C++ compiler supports std::is_constructible */
 #cmakedefine HAVE_SYMENGINE_IS_CONSTRUCTIBLE
+
+/* Define if the C++ compiler supports std::unordered_map<>::reserve() */
+#cmakedefine HAVE_SYMENGINE_RESERVE
