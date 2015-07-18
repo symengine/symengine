@@ -19,7 +19,7 @@ environment:
 
 install:
 - if [%COMPILER%]==[MSVC15] set PATH=C:\Program Files (x86)\MSBuild\14.0\Bin;%PATH%
-- if [%COMPILER%]==[MSVC15] appveyor DownloadFile http://mpir.org/mpir-2.7.0.zip
+- if [%COMPILER%]==[MSVC15] appveyor DownloadFile https://raw.githubusercontent.com/symengine/dependencies/fd912ad34c848e7a7a9dab4628f836ab167b9e59/mpir-2.7.0.zip
 - if [%COMPILER%]==[MSVC15] 7z x mpir-2.7.0.zip > NUL
 - if [%COMPILER%]==[MSVC15] set PATH=C:\Program Files (x86)\MSBuild\14.0\Bin;%PATH%
 - if [%COMPILER%]==[MSVC15] msbuild mpir-2.7.0/build.vc14/lib_mpir_gc/lib_mpir_gc.vcxproj /p:Configuration=Debug /p:Platform=%PLATFORM% /p:PlatformToolset=%PLATFORMTOOLSET% /verbosity:normal
