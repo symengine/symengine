@@ -61,6 +61,10 @@ if (MSVC)
     set(HAVE_DEFAULT_CONSTRUCTORS no)
 endif()
 
+if (CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
+    set(HAVE_DEFAULT_CONSTRUCTORS no)
+endif ()
+
 if ((CMAKE_CXX_COMPILER_ID MATCHES Clang) AND (CMAKE_BUILD_TYPE STREQUAL "Release"))
     try_compile(CHECK_CLANG "${CMAKE_CURRENT_BINARY_DIR}/cxx" "${CMAKE_SOURCE_DIR}/cmake/checkclang.cpp")
     if (NOT ${CHECK_CLANG})
