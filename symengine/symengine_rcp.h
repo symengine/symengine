@@ -261,6 +261,14 @@ public:
 
 #else
     mutable RCP<T> weak_self_ptr_;
+
+    void set_weak_self_ptr(const RCP<T> &w) {
+        weak_self_ptr_ = w;
+    }
+
+    void set_weak_self_ptr(const RCP<const T> &w) const {
+        weak_self_ptr_ = rcp_const_cast<T>(w);
+    }
 #endif // WITH_SYMENGINE_RCP
 };
 
@@ -272,7 +280,7 @@ inline RCP<T> make_rcp( Args&& ...args )
     return rcp( new T( std::forward<Args>(args)... ) );
 #else
     RCP<T> p = rcp( new T( std::forward<Args>(args)... ) );
-    p->weak_self_ptr_ = p.create_weak();
+    p->set_weak_self_ptr(p.create_weak());
     return p;
 #endif
 }
