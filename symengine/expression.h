@@ -21,6 +21,12 @@
 namespace SymEngine
 {
 
+#ifdef HAVE_SYMENGINE_NOEXCEPT
+#  define SYMENGINE_NOEXCEPT noexcept
+#else
+#  define SYMENGINE_NOEXCEPT
+#endif
+
 class Expression
 {
 private:
@@ -37,11 +43,11 @@ public:
     //! Construct Expression from Expression
     Expression(const Expression &) = default;
     //! Construct Expression from reference to Expression
-    Expression(Expression &&other) noexcept : m_basic(std::move(other.m_basic)) {}
+    Expression(Expression &&other) SYMENGINE_NOEXCEPT : m_basic(std::move(other.m_basic)) {}
     //! Overload assignment operator
     Expression &operator=(const Expression &) = default;
     //! Overload assignment operator for reference
-    Expression &operator=(Expression &&other) noexcept
+    Expression &operator=(Expression &&other) SYMENGINE_NOEXCEPT
     {
         if (this != &other) {
             *this = std::move(other);
@@ -49,7 +55,7 @@ public:
         return *this;
     }
     //! Destructor of Expression
-    ~Expression() noexcept {}
+    ~Expression() SYMENGINE_NOEXCEPT {}
     //! Overload stream operator
     friend std::ostream &operator<<(std::ostream &os, const Expression &expr)
     {

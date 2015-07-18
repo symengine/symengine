@@ -36,3 +36,6 @@
 
 /* Define if the C++ compiler supports default constructors */
 #cmakedefine HAVE_DEFAULT_CONSTRUCTORS
+
+/* Define if the C++ compiler supports noexcept specifier */
+#cmakedefine HAVE_SYMENGINE_NOEXCEPT
