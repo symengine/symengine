@@ -53,7 +53,7 @@ public:
     //! Overload stream operator
     friend std::ostream &operator<<(std::ostream &os, const Expression &expr)
     {
-        os << (*expr.m_basic.get());
+        os << *(expr.m_basic);
         return os;
     }
     //! Overload addition
