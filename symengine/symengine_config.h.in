@@ -39,3 +39,6 @@
 
 /* Define if the C++ compiler supports noexcept specifier */
 #cmakedefine HAVE_SYMENGINE_NOEXCEPT
+
+/* Define if the C++ compiler supports std::is_constructible */
+#cmakedefine HAVE_SYMENGINE_IS_CONSTRUCTIBLE

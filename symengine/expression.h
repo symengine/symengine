@@ -38,7 +38,11 @@ public:
     //! Construct Expression from `int`
     Expression(int n) : m_basic(integer(n)) {}
     //! Construct Expression from Basic
+#if defined(HAVE_SYMENGINE_IS_CONSTRUCTIBLE)
     template <typename T, typename = typename std::enable_if<std::is_constructible<RCP<const Basic>, T &&>::value>::type>
+#else
+    template <typename T>
+#endif
     Expression(T &&o) : m_basic(std::forward<T>(o)) {}
     //! Construct Expression from Expression
     Expression(const Expression &) = default;
