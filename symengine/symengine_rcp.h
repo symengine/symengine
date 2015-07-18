@@ -257,7 +257,9 @@ private:
 #  else
     mutable unsigned int refcount_; // reference counter
 #  endif // WITH_SYMENGINE_THREAD_SAFE
+public:
     EnableRCPFromThis() : refcount_(0) {}
+private:
 
 #else
     mutable RCP<T> weak_self_ptr_;
@@ -271,6 +273,8 @@ private:
     }
 #endif // WITH_SYMENGINE_RCP
 
+template<class T_>
+friend class RCP;
 template<typename T_, typename ...Args>
 friend inline RCP<T_> make_rcp( Args&& ...args );
 };
