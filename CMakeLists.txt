@@ -41,6 +41,26 @@ if (NOT(MSVC))
     endif()
 endif()
 
+set(HAVE_GCC_ABI_DEMANGLE yes
+    CACHE BOOL "Build with C++ name demangling support")
+
+set(HAVE_C_FUNCTION_NOT_FUNC no
+    CACHE BOOL "C compiler supports __FUNCTION__ but not __func__")
+
+set(HAVE_DEFAULT_CONSTRUCTORS yes
+    CACHE BOOL "C++ compiler supports default constructors")
+
+if (MSVC)
+    # MSVC doesn't have cxxabi.h
+    set(HAVE_GCC_ABI_DEMANGLE no)
+
+    # MSVC only supports __func__ in a C++ mode, not a C mode
+    set(HAVE_C_FUNCTION_NOT_FUNC yes)
+
+    # MSVC does not support =default for constructors
+    set(HAVE_DEFAULT_CONSTRUCTORS no)
+endif()
+
 if ((CMAKE_CXX_COMPILER_ID MATCHES Clang) AND (CMAKE_BUILD_TYPE STREQUAL "Release"))
     try_compile(CHECK_CLANG "${CMAKE_CURRENT_BINARY_DIR}/cxx" "${CMAKE_SOURCE_DIR}/cmake/checkclang.cpp")
     if (NOT ${CHECK_CLANG})
@@ -314,14 +334,13 @@ message("+-------------------------------+")
 message("| Configuration results SUMMARY |")
 message("+-------------------------------+")
 message("")
-message("C++ compiler: ${CMAKE_CXX_COMPILER}")
-message("Build type: ${CMAKE_BUILD_TYPE}")
-if (CMAKE_BUILD_TYPE STREQUAL "Debug")
-    message("C++ compiler flags: ${CMAKE_CXX_FLAGS_DEBUG}")
-else ()
-    message("C++ compiler flags: ${CMAKE_CXX_FLAGS_RELEASE}")
-endif ()
-message("Installation prefix: ${CMAKE_INSTALL_PREFIX}")
+message("CMAKE_C_COMPILER:   ${CMAKE_C_COMPILER}")
+message("CMAKE_CXX_COMPILER: ${CMAKE_CXX_COMPILER}")
+message("CMAKE_BUILD_TYPE: ${CMAKE_BUILD_TYPE}")
+message("CMAKE_CONFIGURATION_TYPES: ${CMAKE_CONFIGURATION_TYPES}")
+message("CMAKE_CXX_FLAGS_DEBUG:   ${CMAKE_CXX_FLAGS_DEBUG}")
+message("CMAKE_CXX_FLAGS_RELEASE: ${CMAKE_CXX_FLAGS_RELEASE}")
+message("CMAKE_INSTALL_PREFIX: ${CMAKE_INSTALL_PREFIX}")
 
 message("WITH_SYMENGINE_ASSERT: ${WITH_SYMENGINE_ASSERT}")
 message("WITH_SYMENGINE_RCP: ${WITH_SYMENGINE_RCP}")
@@ -329,6 +348,9 @@ if (NOT WITH_SYMENGINE_RCP)
     message("HAVE_TEUCHOS_DEBUG: ${HAVE_TEUCHOS_DEBUG}")
     message("HAVE_TEUCHOS_DEBUG_RCP_NODE_TRACING: ${HAVE_TEUCHOS_DEBUG_RCP_NODE_TRACING}")
 endif ()
+message("HAVE_GCC_ABI_DEMANGLE: ${HAVE_GCC_ABI_DEMANGLE}")
+message("HAVE_C_FUNCTION_NOT_FUNC: ${HAVE_C_FUNCTION_NOT_FUNC}")
+message("HAVE_DEFAULT_CONSTRUCTORS: ${HAVE_DEFAULT_CONSTRUCTORS}")
 message("WITH_SYMENGINE_THREAD_SAFE: ${WITH_SYMENGINE_THREAD_SAFE}")
 message("BUILD_TESTS: ${BUILD_TESTS}")
 message("BUILD_BENCHMARKS: ${BUILD_BENCHMARKS}")
@@ -346,9 +368,9 @@ endif()
 
 message("WITH_PYTHON: ${WITH_PYTHON}")
 if (WITH_PYTHON)
-    message("Python library: ${PYTHON_LIBRARY}")
-    message("Python include path: ${PYTHON_INCLUDE_PATH}")
-    message("Python install path: ${PYTHON_INSTALL_PATH}")
+    message("PYTHON_LIBRARY: ${PYTHON_LIBRARY}")
+    message("PYTHON_INCLUDE_PATH: ${PYTHON_INCLUDE_PATH}")
+    message("PYTHON_INSTALL_PATH: ${PYTHON_INSTALL_PATH}")
 
     message("Cython path: ${CYTHON_BIN}")
 endif ()

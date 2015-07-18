@@ -1,21 +1,34 @@
 version: '{build}'
+
+# Uncomment this to enable the fast build environment if your account does not
+# support it automatically:
+#os: Visual Studio 2015 RC
+
 environment:
   global:
-    PLATFORMTOOLSET: "v90"
+    PLATFORMTOOLSET: "v140"
     PLATFORM: "Win32"
 
 install:
-- cinst cmake
 - appveyor DownloadFile http://mpir.org/mpir-2.7.0.zip
 - 7z x mpir-2.7.0.zip > NUL
-- msbuild mpir-2.7.0/build.vc10/lib_mpir_gc/lib_mpir_gc.vcxproj /p:Configuration=Release /p:Platform=%PLATFORM% /p:PlatformToolset=%PLATFORMTOOLSET% /verbosity:normal
-- msbuild mpir-2.7.0/build.vc10/lib_mpir_cxx/lib_mpir_cxx.vcxproj /p:Configuration=Release /p:Platform=%PLATFORM% /p:PlatformToolset=%PLATFORMTOOLSET% /verbosity:normal
-- copy mpir-2.7.0\build.vc10\lib_mpir_gc\%PLATFORM%\Release\mpir.lib mpir-2.7.0\build.vc10\lib_mpir_gc\%PLATFORM%\Release\gmp.lib
-- copy mpir-2.7.0\build.vc10\lib_mpir_cxx\%PLATFORM%\Release\mpirxx.lib mpir-2.7.0\build.vc10\lib_mpir_cxx\%PLATFORM%\Release\gmpxx.lib
+- set PATH=C:\Program Files (x86)\MSBuild\14.0\Bin;%PATH%
+- msbuild mpir-2.7.0/build.vc14/lib_mpir_gc/lib_mpir_gc.vcxproj /p:Configuration=Debug /p:Platform=%PLATFORM% /p:PlatformToolset=%PLATFORMTOOLSET% /verbosity:normal
+- msbuild mpir-2.7.0/build.vc14/lib_mpir_cxx/lib_mpir_cxx.vcxproj /p:Configuration=Debug /p:Platform=%PLATFORM% /p:PlatformToolset=%PLATFORMTOOLSET% /verbosity:normal
+- copy mpir-2.7.0\build.vc14\lib_mpir_gc\%PLATFORM%\Debug\mpir.lib mpir-2.7.0\build.vc14\lib_mpir_gc\%PLATFORM%\Debug\gmp.lib
+- copy mpir-2.7.0\build.vc14\lib_mpir_cxx\%PLATFORM%\Debug\mpirxx.lib mpir-2.7.0\build.vc14\lib_mpir_cxx\%PLATFORM%\Debug\gmpxx.lib
 
 build_script:
 - mkdir build
 - cd build
-- cmake -DGMP_DIR=mpir-2.7.0/lib/%PLATFORM%/Release;mpir-2.7.0/build.vc10/lib_mpir_gc/%PLATFORM%/Release;mpir-2.7.0/build.vc10/lib_mpir_cxx/%PLATFORM%/Release ..
-- cmake --build .
-- ctest
+- cmake -G "Visual Studio 14 2015" -DGMP_DIR=mpir-2.7.0/lib/%PLATFORM%/Debug;mpir-2.7.0/build.vc14/lib_mpir_gc/%PLATFORM%/Debug;mpir-2.7.0/build.vc14/lib_mpir_cxx/%PLATFORM%/Debug -DCMAKE_CXX_FLAGS_DEBUG="/D_DEBUG /MTd /Zi /Ob0 /Od /RTC1 /W1" ..
+# To build in Release mode:
+#- cmake --build . --config Release
+- cmake --build . --config Debug
+- ctest --output-on-failure
+
+# Enable this to be able to login to the build worker. You can use the
+# `remmina` program in Ubuntu, use the login information that the line below
+# prints into the log.
+#on_finish:
+#- ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
