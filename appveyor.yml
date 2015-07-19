@@ -23,10 +23,6 @@ environment:
     - BUILD_TYPE: "Release"
       COMPILER: MinGW
       WITH_PYTHON: yes
-      PYTHON_VERSION: 33
-    - BUILD_TYPE: "Release"
-      COMPILER: MinGW
-      WITH_PYTHON: yes
       PYTHON_VERSION: 34
 
 install:
