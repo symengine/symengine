@@ -47,11 +47,12 @@ install:
       {
         curl -outfile mw64.7z "http://libgd.blob.core.windows.net/mingw/x86_64-4.9.1-release-posix-seh-rt_v3-rev1.7z";
         7z x -oC:\ mw64.7z | out-null;
-      }
-- ps: if($env:COMPILER -eq 'MinGW-w64')
-      {
+
         curl -outfile gmp.7z "https://raw.githubusercontent.com/isuruf/symengine-dependencies/60390a73cbaac2c0c24ddf45a347ba42d66a5e87/gmp-6.0.0-x86_64-w64-mingw32.7z";
         7z x -oC:\mingw64 gmp.7z | out-null;
+
+        curl -outfile pyx64.7z "https://raw.githubusercontent.com/symengine/dependencies/803cb352e18f3084a3fc4eb0648fbffe3d37e132/python-x64.7z";
+        7z x -oC:\ pyx64.7z | out-null;
       }
 
 - if [%COMPILER%]==[MinGW-w64] set PATH=C:\mingw64\bin;%PATH%
