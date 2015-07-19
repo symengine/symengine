@@ -11,17 +11,24 @@ environment:
 
   matrix:
     - BUILD_TYPE: "Debug"
+      COMPILER: MSVC15
+    - BUILD_TYPE: "Debug"
       COMPILER: MinGW
+      WITH_PYTHON: yes
+      PYTHON_VERSION: 27
     - BUILD_TYPE: "Release"
       COMPILER: MinGW
-    - BUILD_TYPE: "Debug"
-      COMPILER: MSVC15
+      WITH_PYTHON: yes
+      PYTHON_VERSION: 27
+    - BUILD_TYPE: "Release"
+      COMPILER: MinGW
+      WITH_PYTHON: yes
+      PYTHON_VERSION: 34
 
 install:
 - if [%COMPILER%]==[MSVC15] set PATH=C:\Program Files (x86)\MSBuild\14.0\Bin;%PATH%
 - if [%COMPILER%]==[MSVC15] appveyor DownloadFile https://raw.githubusercontent.com/symengine/dependencies/fd912ad34c848e7a7a9dab4628f836ab167b9e59/mpir-2.7.0.zip
 - if [%COMPILER%]==[MSVC15] 7z x mpir-2.7.0.zip > NUL
-- if [%COMPILER%]==[MSVC15] set PATH=C:\Program Files (x86)\MSBuild\14.0\Bin;%PATH%
 - if [%COMPILER%]==[MSVC15] msbuild mpir-2.7.0/build.vc14/lib_mpir_gc/lib_mpir_gc.vcxproj /p:Configuration=Debug /p:Platform=%PLATFORM% /p:PlatformToolset=%PLATFORMTOOLSET% /verbosity:normal
 - if [%COMPILER%]==[MSVC15] msbuild mpir-2.7.0/build.vc14/lib_mpir_cxx/lib_mpir_cxx.vcxproj /p:Configuration=Debug /p:Platform=%PLATFORM% /p:PlatformToolset=%PLATFORMTOOLSET% /verbosity:normal
 - if [%COMPILER%]==[MSVC15] copy mpir-2.7.0\build.vc14\lib_mpir_gc\%PLATFORM%\Debug\mpir.lib mpir-2.7.0\build.vc14\lib_mpir_gc\%PLATFORM%\Debug\gmp.lib
@@ -32,15 +39,26 @@ install:
 - if [%COMPILER%]==[MinGW] rename "C:\Program Files (x86)\Git\bin\sh.exe" "sh2.exe"
 - if [%COMPILER%]==[MinGW] mingw-get install mingw32-gmp
 
+- if [%WITH_PYTHON%]==[yes] set PATH=C:\Python%PYTHON_VERSION%;C:\Python%PYTHON_VERSION%\Scripts;%PATH%
+- if [%WITH_PYTHON%]==[yes] pip install cython nose pytest sympy
+
 build_script:
 - mkdir build
 - cd build
+
 - if [%COMPILER%]==[MSVC15] cmake -G "Visual Studio 14 2015" -DGMP_DIR=mpir-2.7.0/lib/%PLATFORM%/Debug;mpir-2.7.0/build.vc14/lib_mpir_gc/%PLATFORM%/Debug;mpir-2.7.0/build.vc14/lib_mpir_cxx/%PLATFORM%/Debug -DCMAKE_CXX_FLAGS_DEBUG="/D_DEBUG /MTd /Zi /Ob0 /Od /RTC1 /W1" ..
 - if [%COMPILER%]==[MinGW] cmake -G "MinGW Makefiles" -DCOMMON_DIR=C:\MinGW -DCMAKE_BUILD_TYPE=%BUILD_TYPE% ..
+- if [%WITH_PYTHON%]==[yes] cmake -DWITH_PYTHON=yes ..
 - cmake --build . --config %BUILD_TYPE%
+- if [%COMPILER%]==[MinGW] mingw32-make install
+
 
 test_script:
 - ctest --output-on-failure
+- if [%WITH_PYTHON%]==[yes] cd symengine/python
+- if [%WITH_PYTHON%]==[yes] nosetests
+- if [%WITH_PYTHON%]==[yes] mkdir empty && cd empty
+- if [%WITH_PYTHON%]==[yes] python C:\projects\symengine\bin\test_python.py
 
 # Enable this to be able to login to the build worker. You can use the
 # `remmina` program in Ubuntu, use the login information that the line below
