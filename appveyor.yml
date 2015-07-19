@@ -10,6 +10,10 @@ environment:
     PLATFORM: "Win32"
 
   matrix:
+    - BUILD_TYPE: "Release"
+      COMPILER: MinGW-w64
+      WITH_PYTHON: yes
+      PYTHON_VERSION: 27-x64
     - BUILD_TYPE: "Debug"
       COMPILER: MSVC15
     - BUILD_TYPE: "Debug"
@@ -39,6 +43,20 @@ install:
 - if [%COMPILER%]==[MinGW] rename "C:\Program Files (x86)\Git\bin\sh.exe" "sh2.exe"
 - if [%COMPILER%]==[MinGW] mingw-get install mingw32-gmp
 
+- ps: if($env:COMPILER -eq 'MinGW-w64')
+      {
+        curl -outfile mw64.7z "http://libgd.blob.core.windows.net/mingw/x86_64-4.9.1-release-posix-seh-rt_v3-rev1.7z";
+        7z x -oC:\ mw64.7z | out-null;
+      }
+- ps: if($env:COMPILER -eq 'MinGW-w64')
+      {
+        curl -outfile gmp.7z "https://raw.githubusercontent.com/isuruf/symengine-dependencies/60390a73cbaac2c0c24ddf45a347ba42d66a5e87/gmp-6.0.0-x86_64-w64-mingw32.7z";
+        7z x -oC:\mingw64 gmp.7z | out-null;
+      }
+
+- if [%COMPILER%]==[MinGW-w64] set PATH=C:\mingw64\bin;%PATH%
+- if [%COMPILER%]==[MinGW-w64] rename "C:\Program Files (x86)\Git\bin\sh.exe" "sh2.exe"
+
 - if [%WITH_PYTHON%]==[yes] set PATH=C:\Python%PYTHON_VERSION%;C:\Python%PYTHON_VERSION%\Scripts;%PATH%
 - if [%WITH_PYTHON%]==[yes] pip install cython nose pytest sympy
 
@@ -47,10 +65,15 @@ build_script:
 - cd build
 
 - if [%COMPILER%]==[MSVC15] cmake -G "Visual Studio 14 2015" -DGMP_DIR=mpir-2.7.0/lib/%PLATFORM%/Debug;mpir-2.7.0/build.vc14/lib_mpir_gc/%PLATFORM%/Debug;mpir-2.7.0/build.vc14/lib_mpir_cxx/%PLATFORM%/Debug -DCMAKE_CXX_FLAGS_DEBUG="/D_DEBUG /MTd /Zi /Ob0 /Od /RTC1 /W1" ..
+
 - if [%COMPILER%]==[MinGW] cmake -G "MinGW Makefiles" -DCOMMON_DIR=C:\MinGW -DCMAKE_BUILD_TYPE=%BUILD_TYPE% ..
+- if [%COMPILER%]==[MinGW-w64] cmake -G "MinGW Makefiles" -DCOMMON_DIR=C:\mingw64 -DCMAKE_BUILD_TYPE=%BUILD_TYPE% ..
+
 - if [%WITH_PYTHON%]==[yes] cmake -DWITH_PYTHON=yes ..
 - cmake --build . --config %BUILD_TYPE%
+
 - if [%COMPILER%]==[MinGW] mingw32-make install
+- if [%COMPILER%]==[MinGW-w64] mingw32-make install
 
 
 test_script:
