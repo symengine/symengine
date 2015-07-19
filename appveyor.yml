@@ -21,6 +21,10 @@ environment:
       WITH_PYTHON: yes
       PYTHON_VERSION: 27
     - BUILD_TYPE: "Release"
+      COMPILER: MinGW-w64
+      WITH_PYTHON: yes
+      PYTHON_VERSION: 27-x64
+    - BUILD_TYPE: "Release"
       COMPILER: MinGW
       WITH_PYTHON: yes
       PYTHON_VERSION: 34
@@ -29,15 +33,26 @@ install:
 - if [%COMPILER%]==[MSVC15] set PATH=C:\Program Files (x86)\MSBuild\14.0\Bin;%PATH%
 - if [%COMPILER%]==[MSVC15] appveyor DownloadFile https://raw.githubusercontent.com/symengine/dependencies/fd912ad34c848e7a7a9dab4628f836ab167b9e59/mpir-2.7.0.zip
 - if [%COMPILER%]==[MSVC15] 7z x mpir-2.7.0.zip > NUL
-- if [%COMPILER%]==[MSVC15] msbuild mpir-2.7.0/build.vc14/lib_mpir_gc/lib_mpir_gc.vcxproj /p:Configuration=Debug /p:Platform=%PLATFORM% /p:PlatformToolset=%PLATFORMTOOLSET% /verbosity:normal
-- if [%COMPILER%]==[MSVC15] msbuild mpir-2.7.0/build.vc14/lib_mpir_cxx/lib_mpir_cxx.vcxproj /p:Configuration=Debug /p:Platform=%PLATFORM% /p:PlatformToolset=%PLATFORMTOOLSET% /verbosity:normal
-- if [%COMPILER%]==[MSVC15] copy mpir-2.7.0\build.vc14\lib_mpir_gc\%PLATFORM%\Debug\mpir.lib mpir-2.7.0\build.vc14\lib_mpir_gc\%PLATFORM%\Debug\gmp.lib
-- if [%COMPILER%]==[MSVC15] copy mpir-2.7.0\build.vc14\lib_mpir_cxx\%PLATFORM%\Debug\mpirxx.lib mpir-2.7.0\build.vc14\lib_mpir_cxx\%PLATFORM%\Debug\gmpxx.lib
+- if [%COMPILER%]==[MSVC15] msbuild mpir-2.7.0/build.vc14/lib_mpir_gc/lib_mpir_gc.vcxproj /p:Configuration=%BUILD_TYPE% /p:Platform=%PLATFORM% /p:PlatformToolset=%PLATFORMTOOLSET% /verbosity:minimal
+- if [%COMPILER%]==[MSVC15] msbuild mpir-2.7.0/build.vc14/lib_mpir_cxx/lib_mpir_cxx.vcxproj /p:Configuration=%BUILD_TYPE% /p:Platform=%PLATFORM% /p:PlatformToolset=%PLATFORMTOOLSET% /verbosity:minimal
+- if [%COMPILER%]==[MSVC15] copy mpir-2.7.0\build.vc14\lib_mpir_gc\%PLATFORM%\%BUILD_TYPE%\mpir.lib mpir-2.7.0\lib\%PLATFORM%\%BUILD_TYPE%\gmp.lib
+- if [%COMPILER%]==[MSVC15] copy mpir-2.7.0\build.vc14\lib_mpir_cxx\%PLATFORM%\%BUILD_TYPE%\mpirxx.lib mpir-2.7.0\lib\%PLATFORM%\%BUILD_TYPE%\gmpxx.lib
 
 - if [%COMPILER%]==[MinGW] set PATH=C:\MinGW\bin;%PATH%
 - if [%COMPILER%]==[MinGW] mingw-get update
 - if [%COMPILER%]==[MinGW] rename "C:\Program Files (x86)\Git\bin\sh.exe" "sh2.exe"
 - if [%COMPILER%]==[MinGW] mingw-get install mingw32-gmp
+
+- if [%COMPILER%]==[MinGW-w64] set PATH=C:\mingw64\bin;%PATH%
+- if [%COMPILER%]==[MinGW-w64] rename "C:\Program Files (x86)\Git\bin\sh.exe" "sh2.exe"
+
+- if [%COMPILER%]==[MinGW-w64] appveyor DownloadFile "https://raw.githubusercontent.com/symengine/dependencies/5cff7d1736877336cf9fb58267111beea4fa152f/x86_64-4.9.1-release-posix-seh-rt_v3-rev1.7z" -FileName mw64.7z
+- if [%COMPILER%]==[MinGW-w64] 7z x -oC:\ mw64.7z > NUL
+- if [%COMPILER%]==[MinGW-w64] appveyor DownloadFile "https://raw.githubusercontent.com/symengine/dependencies/5cff7d1736877336cf9fb58267111beea4fa152f/gmp-6.0.0-x86_64-w64-mingw32.7z" -FileName gmp.7z
+- if [%COMPILER%]==[MinGW-w64] 7z x -oC:\mingw64 gmp.7z > NUL
+
+- if [%COMPILER%]==[MinGW-w64] if [%WITH_PYTHON%]==[yes] appveyor DownloadFile "https://raw.githubusercontent.com/symengine/dependencies/5cff7d1736877336cf9fb58267111beea4fa152f/python-x86_64-w64-mingw32.7z" -FileName pyx64.7z
+- if [%COMPILER%]==[MinGW-w64] if [%WITH_PYTHON%]==[yes] 7z x -aoa -oC:\ pyx64.7z > NUL
 
 - if [%WITH_PYTHON%]==[yes] set PATH=C:\Python%PYTHON_VERSION%;C:\Python%PYTHON_VERSION%\Scripts;%PATH%
 - if [%WITH_PYTHON%]==[yes] pip install cython nose pytest sympy
@@ -46,12 +61,16 @@ build_script:
 - mkdir build
 - cd build
 
-- if [%COMPILER%]==[MSVC15] cmake -G "Visual Studio 14 2015" -DGMP_DIR=mpir-2.7.0/lib/%PLATFORM%/Debug;mpir-2.7.0/build.vc14/lib_mpir_gc/%PLATFORM%/Debug;mpir-2.7.0/build.vc14/lib_mpir_cxx/%PLATFORM%/Debug -DCMAKE_CXX_FLAGS_DEBUG="/D_DEBUG /MTd /Zi /Ob0 /Od /RTC1 /W1" ..
+- if [%COMPILER%]==[MSVC15] cmake -G "Visual Studio 14 2015" -DGMP_DIR=mpir-2.7.0/lib/%PLATFORM%/%BUILD_TYPE% -DCMAKE_CXX_FLAGS_DEBUG="/D_DEBUG /MTd /Zi /Ob0 /Od /RTC1 /W1" ..
+
 - if [%COMPILER%]==[MinGW] cmake -G "MinGW Makefiles" -DCOMMON_DIR=C:\MinGW -DCMAKE_BUILD_TYPE=%BUILD_TYPE% ..
+- if [%COMPILER%]==[MinGW-w64] cmake -G "MinGW Makefiles" -DWITH_MINGW_W64=yes -DCOMMON_DIR=C:\mingw64 -DCMAKE_BUILD_TYPE=%BUILD_TYPE% ..
+
 - if [%WITH_PYTHON%]==[yes] cmake -DWITH_PYTHON=yes ..
 - cmake --build . --config %BUILD_TYPE%
-- if [%COMPILER%]==[MinGW] mingw32-make install
 
+- if [%COMPILER%]==[MinGW] mingw32-make install
+- if [%COMPILER%]==[MinGW-w64] mingw32-make install
 
 test_script:
 - ctest --output-on-failure
