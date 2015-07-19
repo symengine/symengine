@@ -116,7 +116,7 @@ RCP<const Basic> Add::from_dict(const RCP<const Number> &coef, umap_basic_num &&
             }
             if (is_a<Mul>(*(p->first))) {
 #if !defined(WITH_SYMENGINE_THREAD_SAFE) && defined(WITH_SYMENGINE_RCP)
-                if (rcp_static_cast<const Mul>(p->first)->refcount_ == 1) {
+                if (rcp_static_cast<const Mul>(p->first)->use_count() == 1) {
                     // We can steal the dictionary:
                     // Cast away const'ness, so that we can move 'dict_', since
                     // 'p->first' will be destroyed when 'd' is at the end of
@@ -150,7 +150,7 @@ RCP<const Basic> Add::from_dict(const RCP<const Number> &coef, umap_basic_num &&
         if (is_a_Number(*p->second)) {
             if (is_a<Mul>(*(p->first))) {
 #if !defined(WITH_SYMENGINE_THREAD_SAFE) && defined(WITH_SYMENGINE_RCP)
-                if (rcp_static_cast<const Mul>(p->first)->refcount_ == 1) {
+                if (rcp_static_cast<const Mul>(p->first)->use_count() == 1) {
                     // We can steal the dictionary:
                     // Cast away const'ness, so that we can move 'dict_', since
                     // 'p->first' will be destroyed when 'd' is at the end of
@@ -335,7 +335,7 @@ void Add::as_two_terms(const Ptr<RCP<const Basic>> &a,
 
 RCP<const Basic> Add::subs(const map_basic_basic &subs_dict) const
 {
-    RCP<const Add> self = get_rcp_cast<const Add>();
+    RCP<const Add> self = rcp_from_this_cast<const Add>();
     auto it = subs_dict.find(self);
     if (it != subs_dict.end())
         return it->second;
