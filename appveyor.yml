@@ -43,7 +43,7 @@ install:
 - if [%COMPILER%]==[MinGW] rename "C:\Program Files (x86)\Git\bin\sh.exe" "sh2.exe"
 - if [%COMPILER%]==[MinGW] mingw-get install mingw32-gmp
 
-- if [%WITH_PYTHON%]==[yes] set PATH=C:\Python%PYTHON_VERSION%\Scripts;%PATH%
+- if [%WITH_PYTHON%]==[yes] set PATH=C:\Python%PYTHON_VERSION%;C:\Python%PYTHON_VERSION%\Scripts;%PATH%
 - if [%WITH_PYTHON%]==[yes] pip install cython nose pytest sympy
 
 build_script:
