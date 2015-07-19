@@ -45,13 +45,13 @@ install:
 
 - ps: if($env:COMPILER -eq 'MinGW-w64')
       {
-        curl -outfile mw64.7z "http://libgd.blob.core.windows.net/mingw/x86_64-4.9.1-release-posix-seh-rt_v3-rev1.7z";
+        curl -outfile mw64.7z "https://raw.githubusercontent.com/symengine/dependencies/5cff7d1736877336cf9fb58267111beea4fa152f/x86_64-4.9.1-release-posix-seh-rt_v3-rev1.7z";
         7z x -oC:\ mw64.7z | out-null;
 
-        curl -outfile gmp.7z "https://raw.githubusercontent.com/isuruf/symengine-dependencies/60390a73cbaac2c0c24ddf45a347ba42d66a5e87/gmp-6.0.0-x86_64-w64-mingw32.7z";
+        curl -outfile gmp.7z "https://raw.githubusercontent.com/symengine/dependencies/5cff7d1736877336cf9fb58267111beea4fa152f/gmp-6.0.0-x86_64-w64-mingw32.7z";
         7z x -oC:\mingw64 gmp.7z | out-null;
 
-        curl -outfile pyx64.7z "https://raw.githubusercontent.com/symengine/dependencies/803cb352e18f3084a3fc4eb0648fbffe3d37e132/python-x64.7z";
+        curl -outfile pyx64.7z "https://raw.githubusercontent.com/symengine/dependencies/5cff7d1736877336cf9fb58267111beea4fa152f/python-x86_64-w64-mingw32.7z";
         7z x -aoa -oC:\ pyx64.7z | out-null;
       }
 
@@ -75,7 +75,6 @@ build_script:
 
 - if [%COMPILER%]==[MinGW] mingw32-make install
 - if [%COMPILER%]==[MinGW-w64] mingw32-make install
-
 
 test_script:
 - ctest --output-on-failure
