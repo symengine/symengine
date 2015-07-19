@@ -52,7 +52,7 @@ install:
         7z x -oC:\mingw64 gmp.7z | out-null;
 
         curl -outfile pyx64.7z "https://raw.githubusercontent.com/symengine/dependencies/803cb352e18f3084a3fc4eb0648fbffe3d37e132/python-x64.7z";
-        7z x -oC:\ pyx64.7z | out-null;
+        7z x -aoa -oC:\ pyx64.7z | out-null;
       }
 
 - if [%COMPILER%]==[MinGW-w64] set PATH=C:\mingw64\bin;%PATH%
