@@ -273,8 +273,11 @@ private:
     }
 #endif // WITH_SYMENGINE_RCP
 
+#if defined(WITH_SYMENGINE_RCP)
 template<class T_>
 friend class RCP;
+#endif
+
 template<typename T_, typename ...Args>
 friend inline RCP<T_> make_rcp( Args&& ...args );
 };
