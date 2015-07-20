@@ -30,3 +30,18 @@
 
 /* Define if you want to enable MPC support in SymEngine */
 #cmakedefine HAVE_SYMENGINE_MPC
+
+/* Define if the C compiler supports __FUNCTION__ but not __func__ */
+#cmakedefine HAVE_C_FUNCTION_NOT_FUNC
+
+/* Define if the C++ compiler supports default constructors */
+#cmakedefine HAVE_DEFAULT_CONSTRUCTORS
+
+/* Define if the C++ compiler supports noexcept specifier */
+#cmakedefine HAVE_SYMENGINE_NOEXCEPT
+
+/* Define if the C++ compiler supports std::is_constructible */
+#cmakedefine HAVE_SYMENGINE_IS_CONSTRUCTIBLE
+
+/* Define if the C++ compiler supports std::unordered_map<>::reserve() */
+#cmakedefine HAVE_SYMENGINE_RESERVE

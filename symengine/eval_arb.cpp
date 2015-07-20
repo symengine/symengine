@@ -285,6 +285,9 @@ public:
     virtual void visit(const UpperGamma &) {
         throw std::runtime_error("Not implemented.");
     };
+    virtual void visit(const FunctionWrapper &) {
+        throw std::runtime_error("Not implemented.");
+    };
 
     virtual void visit(const Constant &x) {
         if (x.__eq__(*pi)) {

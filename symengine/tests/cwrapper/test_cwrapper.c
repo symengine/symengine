@@ -1,3 +1,9 @@
+#include <symengine/symengine_config.h>
+
+#if defined(HAVE_C_FUNCTION_NOT_FUNC)
+#define __func__ __FUNCTION__
+#endif
+
 #include <symengine/cwrapper.h>
 
 void test_cwrapper() {
@@ -101,7 +107,7 @@ void test_CVectorInt2()
     struct X data2[1];  // Aligned properly but small
     SYMENGINE_C_ASSERT(vectorint_placement_new_check(data2, sizeof(data2)) ==1);
 
-    char data3[50]; // Aligned properly and enough size to fit std::vector<int>
+    struct X data3[50]; // Aligned properly and enough size to fit std::vector<int>
     SYMENGINE_C_ASSERT(vectorint_placement_new_check(data3, 1) == 1);
     SYMENGINE_C_ASSERT(vectorint_placement_new_check(data3, 2) == 1);
     SYMENGINE_C_ASSERT(vectorint_placement_new_check(data3, sizeof(data3)) == 0);
@@ -238,6 +244,23 @@ void test_get_type() {
     basic_free(y);
 }
 
+void test_hash() {
+    basic x1, x2, y;
+    basic_init(x1);
+    basic_init(x2);
+    basic_init(y);
+    symbol_set(x1, "x");
+    symbol_set(x2, "x");
+    symbol_set(y, "y");
+
+    SYMENGINE_C_ASSERT(basic_hash(x1) == basic_hash(x2));
+    if (basic_hash(x1) != basic_hash(y)) SYMENGINE_C_ASSERT(basic_neq(x1,y));
+
+    basic_free(x1);
+    basic_free(x2);
+    basic_free(y);
+}
+
 int main(int argc, char* argv[])
 {
     test_cwrapper();
@@ -249,5 +272,6 @@ int main(int argc, char* argv[])
     test_get_args();
     test_free_symbols();
     test_get_type();
+    test_hash();
     return 0;
 }

@@ -1,10 +1,11 @@
 #include <algorithm>
+#include <limits>
 
 #include <symengine/printer.h>
 
 namespace SymEngine {
 
-StrPrinter::StrPrinter() : BaseVisitor(this) {
+StrPrinter::StrPrinter() : BaseVisitor<StrPrinter>(this) {
 
 }
 void StrPrinter::bvisit(const Basic &x) {

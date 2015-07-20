@@ -20,6 +20,46 @@ def test_get():
     assert A.get(1, 0) == c
     assert A.get(1, 1) == d
 
+    assert A.get(-1, 0) == c
+    assert A.get(-1, -1) == d
+
+    raises(IndexError, lambda: A.get(2, 0))
+    raises(IndexError, lambda: A.get(0, 2))
+    raises(IndexError, lambda: A.get(-3, 0))
+
+def test_get_item():
+    A = DenseMatrix(3, 3, [1, 2, 3, 4, 5, 6, 7, 8, 9])
+
+    assert A[5] == 6
+    assert A[-1] == 9
+    assert A[2, 2] == 9
+    assert A[-2, 2] == 6
+
+    assert A[1:2, 0] == DenseMatrix(1, 1, [4])
+    assert A[1:3, 0] == DenseMatrix(2, 1, [4, 7])
+    assert A[1:3, 0] == DenseMatrix(2, 1, [4, 7])
+    assert A[1:3, 1:] == DenseMatrix(2, 2, [5, 6, 8, 9])
+    assert A[1:3, :1] == DenseMatrix(2, 1, [4, 7])
+    assert A[1:] == DenseMatrix(2, 3, [4, 5, 6, 7, 8, 9])
+    assert A[-2:] == DenseMatrix(2, 3, [4, 5, 6, 7, 8, 9])
+
+    raises(IndexError, lambda: A[-10])
+    raises(IndexError, lambda: A[9])
+
+    raises(IndexError, lambda: A[1:3, 3])
+    raises(IndexError, lambda: A[1:3, -4])
+
+def test_set_item():
+    A = DenseMatrix(3, 3, [1, 2, 3, 4, 5, 6, 7, 8, 9])
+
+    A[2] = 7
+    A[2, 2] = 8
+    A[-2] = 3
+    A[-2, -1] = 1
+
+    B = DenseMatrix(3, 3, [1, 2, 7, 4, 5, 1, 7, 3, 8])
+    assert A == B
+
 def test_set():
     i7 = Integer(7)
     y = Symbol("y")
@@ -76,6 +116,7 @@ def test_add_matrix():
     B = DenseMatrix(2, 2, [a - b, a + b, -a, b])
 
     assert A.add_matrix(B) == DenseMatrix(2, 2, [2*a, 2*a, 0, 2*b])
+    assert A + B == DenseMatrix(2, 2, [2*a, 2*a, 0, 2*b])
 
 def test_mul_matrix():
     A = DenseMatrix(2, 2, [1, 2, 3, 4])
@@ -91,6 +132,7 @@ def test_mul_matrix():
     B = DenseMatrix(2, 2, [1, 0, 1, 0])
 
     assert A.mul_matrix(B) == DenseMatrix(2, 2, [a + b, 0, c + d, 0])
+    assert A * B == DenseMatrix(2, 2, [a + b, 0, c + d, 0])
 
     A = DenseMatrix(2, 3, [1, 2, 3, 2, 3, 4])
     B = DenseMatrix(3, 2, [3, 4, 4, 5, 5, 6])
@@ -105,6 +147,8 @@ def test_add_scalar():
 
     i5 = Integer(5)
     assert A.add_scalar(i5) == DenseMatrix(2, 2, [6, 7, 8, 9])
+    assert A + 5 == DenseMatrix(2, 2, [6, 7, 8, 9])
+    assert 5 + A == DenseMatrix(2, 2, [6, 7, 8, 9])
 
 def test_mul_scalar():
     A = DenseMatrix(2, 2, [1, 2, 3, 4])
@@ -114,6 +158,8 @@ def test_mul_scalar():
 
     i5 = Integer(5)
     assert A.mul_scalar(i5) == DenseMatrix(2, 2, [5, 10, 15, 20])
+    assert A * 5 == DenseMatrix(2, 2, [5, 10, 15, 20])
+    assert 5 * A == DenseMatrix(2, 2, [5, 10, 15, 20])
 
 def test_transpose():
     A = DenseMatrix(3, 3, [1, 2, 3, 4, 5, 6, 7, 8, 9])

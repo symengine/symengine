@@ -18,9 +18,13 @@
 #include <set>
 #include <unordered_map>
 #include <cassert>
-#include <atomic>
 
 #include <symengine/symengine_config.h>
+
+#ifdef WITH_SYMENGINE_THREAD_SAFE
+#    include <atomic>
+#endif
+
 #include <symengine/symengine_assert.h>
 #include <symengine/symengine_rcp.h>
 #include <symengine/dict.h>
@@ -62,12 +66,18 @@ class Symbol;
 */
 
 enum TypeID {
-    #define SYMENGINE_ENUM(type) type
+    #define SYMENGINE_INCLUDE_ALL
+    #define SYMENGINE_ENUM(type, Class) type,
     #include "symengine/type_codes.inc"
     #undef SYMENGINE_ENUM
+    #undef SYMENGINE_INCLUDE_ALL
+    // The 'TypeID_Count' returns the number of elements in 'TypeID'. For this
+    // to work, do not assign numbers to the elements above (or if you do, you
+    // must assign the correct count below).
+    TypeID_Count
 };
 
-class Basic {
+class Basic : public EnableRCPFromThis<Basic> {
 private:
     //! Private variables
     // The hash_ is defined as mutable, because its value is initialized to 0
@@ -79,34 +89,10 @@ private:
 #else
     mutable std::size_t hash_; // This holds the hash value
 #endif // WITH_SYMENGINE_THREAD_SAFE
-#if defined(WITH_SYMENGINE_RCP)
-public:
-    //! Public variables if defined with SYMENGINE_RCP
-    // The reference counter is defined either as "unsigned int" (faster, but
-    // not thread safe) or as std::atomic<unsigned int> (slower, but thread
-    // safe). Semantically they are almost equivalent, except that the
-    // pre-decrement operator `operator--()` returns a copy for std::atomic
-    // instead of a reference to itself.
-    // The refcount_ is defined as mutable, because it does not change the
-    // state of the instance, but changes when more copies
-    // of the same instance are made.
-#if defined(WITH_SYMENGINE_THREAD_SAFE)
-    mutable std::atomic<unsigned int> refcount_; // reference counter
-#else
-    mutable unsigned int refcount_; // reference counter
-#endif // WITH_SYMENGINE_THREAD_SAFE
-#else
-public:
-    mutable RCP<const Basic> weak_self_ptr_;
-#endif // WITH_SYMENGINE_RCP
 public:
     virtual TypeID get_type_code() const = 0;
     //! Constructor
-    Basic() : hash_{0}
-#if defined(WITH_SYMENGINE_RCP)
-        , refcount_(0)
-#endif
-        {}
+    Basic() : hash_{0} {}
     //! Destructor must be explicitly defined as virtual here to avoid problems
     //! with undefined behavior while deallocating derived classes.
     virtual ~Basic() {}
@@ -120,13 +106,6 @@ public:
     Basic(Basic&&) = delete;
     //! Assignment operator in continuation with above
     Basic& operator=(Basic&&) = delete;
-
-    //! Get RCP<const Basic> pointer to self
-    inline RCP<const Basic> get_rcp() const;
-
-    //! Get RCP<T> pointer to self (it will cast the pointer to T)
-    template <class T>
-    inline RCP<T> get_rcp_cast() const;
 
     /*!  Implements the hash of the given SymEngine class.
          Use `std::hash` to get the hash. Example:

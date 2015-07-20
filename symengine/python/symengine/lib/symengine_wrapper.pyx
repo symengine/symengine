@@ -545,7 +545,7 @@ cdef class RealMPFR(Number):
         def __cinit__(self, i = None, long prec = 53, unsigned base = 10):
             if i is None:
                 return
-            cdef string i_ = str(i)
+            cdef string i_ = str(i).encode("utf-8")
             cdef symengine.mpfr_class m
             m = symengine.mpfr_class(i_, prec, base)
             self.thisptr = <RCP[const symengine.Basic]>symengine.real_mpfr(symengine.std_move_mpfr(m))
@@ -577,7 +577,7 @@ cdef class ComplexMPC(Number):
         def __cinit__(self, i = None, j = 0, long prec = 53, unsigned base = 10):
             if i is None:
                 return
-            cdef string i_ = "(" + str(i) + " " + str(j) + ")"
+            cdef string i_ = ("(" + str(i) + " " + str(j) + ")").encode("utf-8")
             cdef symengine.mpc_class m = symengine.mpc_class(i_, prec, base)
             self.thisptr = <RCP[const symengine.Basic]>symengine.complex_mpc(symengine.std_move_mpc(m))
 
@@ -956,17 +956,103 @@ cdef class DenseMatrix(MatrixBase):
     def __str__(self):
         return deref(self.thisptr).__str__().decode("utf-8")
 
+    def __add__(a, b):
+        a = sympify(a)
+        b = sympify(b)
+        if isinstance(a, MatrixBase):
+            if isinstance(b, MatrixBase):
+                return a.add_matrix(b)
+            else:
+                return a.add_scalar(b)
+        else:
+            return b.add_scalar(a)
+
+    def __mul__(a, b):
+        a = sympify(a)
+        b = sympify(b)
+        if isinstance(a, MatrixBase):
+            if isinstance(b, MatrixBase):
+                return a.mul_matrix(b)
+            else:
+                return a.mul_scalar(b)
+        else:
+            return b.mul_scalar(a)
+
+    def __getitem__(self, item):
+        s = [0, 0, 0, 0]
+        if isinstance(item, slice):
+            #TODO: support step in slice
+            s[0], s[1] = self._get_slice(item)
+            s[2], s[3] = 0, self.ncols() - 1
+        elif isinstance(item, int):
+            return self.get(item // self.nrows(), item % self.nrows())
+        elif isinstance(item, tuple):
+            if isinstance(item[0], int) and isinstance(item[1], int):
+                return self.get(item[0], item[1])
+            else:
+                for i in (0, 1):
+                    if isinstance(item[i], slice):
+                        s[2*i], s[2*i+1] = self._get_slice(item[i])
+                    else:
+                        s[2*i], s[2*i+1] = item[i], item[i]
+        else:
+            raise NotImplementedError
+        return self.submatrix(*s)
+
+    def __setitem__(self, key, value):
+        if isinstance(key, int):
+            self.set(key // self.nrows(), key % self.ncols(), value)
+            return
+        elif isinstance(key, tuple):
+            if isinstance(key[0], int) and isinstance(key[1], int):
+                self.set(key[0], key[1], value)
+                return
+            #TODO: support slicing
+        raise NotImplementedError
+
     def nrows(self):
         return deref(self.thisptr).nrows()
 
     def ncols(self):
         return deref(self.thisptr).ncols()
 
+    def _get_index(self, i, j):
+        nr = self.nrows()
+        nc = self.ncols()
+        if i < 0:
+            i += nr
+        if j < 0:
+            j += nc
+        if i < 0 or i >= nr:
+            raise IndexError
+        if j < 0 or j >= nc:
+            raise IndexError
+        return i, j
+
+    def _get_slice(self, slice):
+        i = slice.start
+        if i is None:
+            i = 0
+        if slice.stop is None:
+            j = self.ncols() - 1
+        else:
+            j = slice.stop - 1
+        return i, j
+
     def get(self, i, j):
+        i, j = self._get_index(i, j)
+        return self._get(i, j)
+
+    def _get(self, i, j):
         # No error checking is done
         return c2py(deref(self.thisptr).get(i, j))
 
     def set(self, i, j, e):
+        i, j = self._get_index(i, j)
+        return self._set(i, j, e)
+
+    def _set(self, i, j, e):
+        # No error checking is done
         cdef Basic e_ = sympify(e)
         if e_ is not None:
             deref(self.thisptr).set(i, j, <const RCP[const symengine.Basic] &>(e_.thisptr))
@@ -1022,6 +1108,11 @@ cdef class DenseMatrix(MatrixBase):
         return result
 
     def submatrix(self, r_i, r_j, c_i, c_j):
+        r_i, c_i = self._get_index(r_i, c_i)
+        r_j, c_j = self._get_index(r_j, c_j)
+        return self._submatrix(r_i, r_j, c_i, c_j)
+
+    def _submatrix(self, r_i, r_j, c_i, c_j):
         result = DenseMatrix(r_j - r_i + 1, c_j - c_i + 1)
         deref(self.thisptr).submatrix(r_i, r_j, c_i, c_j, deref(result.thisptr))
         return result
@@ -1244,8 +1335,10 @@ def exp(x):
     cdef Basic X = sympify(x)
     return c2py(symengine.exp(X.thisptr))
 
-def log(x, y = E):
+def log(x, y = None):
     cdef Basic X = sympify(x)
+    if y == None:
+        return c2py(symengine.log(X.thisptr))
     cdef Basic Y = sympify(y)
     return c2py(symengine.log(X.thisptr, Y.thisptr))
 

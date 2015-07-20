@@ -4,7 +4,7 @@
 
 # This finds the "cython" executable in your PATH, and then in some standard
 # paths:
-FIND_FILE(CYTHON_BIN cython /usr/bin /usr/local/bin)
+FIND_PROGRAM(CYTHON_BIN cython /usr/bin /usr/local/bin)
 SET(CYTHON_FLAGS --cplus --fast-fail)
 
 SET(Cython_FOUND FALSE)

@@ -324,7 +324,9 @@ RCP<const Basic> pow_expand(const RCP<const Pow> &self)
     umap_basic_num rd;
     // This speeds up overall expansion. For example for the benchmark
     // (y + x + z + w)**60 it improves the timing from 135ms to 124ms.
+#if defined(HAVE_SYMENGINE_RESERVE)
     rd.reserve(2*r.size());
+#endif
     RCP<const Number> add_overall_coeff=zero;
     for (auto &p: r) {
         auto power = p.first.begin();
@@ -402,7 +404,7 @@ RCP<const Basic> Pow::diff(const RCP<const Symbol> &x) const
 
 RCP<const Basic> Pow::subs(const map_basic_basic &subs_dict) const
 {
-    RCP<const Pow> self = get_rcp_cast<const Pow>();
+    RCP<const Pow> self = rcp_from_this_cast<const Pow>();
     auto it = subs_dict.find(self);
     if (it != subs_dict.end())
         return it->second;
@@ -477,7 +479,7 @@ int Log::compare(const Basic &o) const
 
 RCP<const Basic> Log::subs(const map_basic_basic &subs_dict) const
 {
-    RCP<const Log> self = get_rcp_cast<const Log>();
+    RCP<const Log> self = rcp_from_this_cast<const Log>();
     auto it = subs_dict.find(self);
     if (it != subs_dict.end())
         return it->second;

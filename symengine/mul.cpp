@@ -363,8 +363,10 @@ RCP<const Basic> mul_expand_two(const RCP<const Basic> &a, const RCP<const Basic
             rcp_static_cast<const Add>(b)->coef_);
         umap_basic_num d;
         // Improves (x+1)**3*(x+2)**3*...(x+350)**3 expansion from 0.97s to 0.93s:
+#if defined(HAVE_SYMENGINE_RESERVE)
         d.reserve((rcp_static_cast<const Add>(a))->dict_.size()*
             (rcp_static_cast<const Add>(b))->dict_.size());
+#endif
         // Expand dicts first:
         for (auto &p: (rcp_static_cast<const Add>(a))->dict_) {
             for (auto &q: (rcp_static_cast<const Add>(b))->dict_) {
@@ -408,7 +410,9 @@ RCP<const Basic> mul_expand_two(const RCP<const Basic> &a, const RCP<const Basic
 
         RCP<const Number> coef = zero;
         umap_basic_num d;
+#if defined(HAVE_SYMENGINE_RESERVE)
         d.reserve((rcp_static_cast<const Add>(b))->dict_.size());
+#endif
         for (auto &q: (rcp_static_cast<const Add>(b))->dict_) {
             RCP<const Basic> term = mul(a_term, q.first);
             if (is_a_Number(*term)) {
@@ -524,7 +528,7 @@ RCP<const Basic> Mul::diff(const RCP<const Symbol> &x) const
 
 RCP<const Basic> Mul::subs(const map_basic_basic &subs_dict) const
 {
-    RCP<const Mul> self = get_rcp_cast<const Mul>();
+    RCP<const Mul> self = rcp_from_this_cast<const Mul>();
     auto it = subs_dict.find(self);
     if (it != subs_dict.end())
         return it->second;

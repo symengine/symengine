@@ -31,17 +31,55 @@ if (CMAKE_CXX_COMPILER_ID MATCHES Clang)
         "${CMAKE_CXX_FLAGS_RELEASE} -Wno-unused-parameter")
 endif()
 
-if ((NOT "${CMAKE_CXX_FLAGS_RELEASE}" MATCHES "std=c\\+\\+0x") AND
-    (NOT "${CMAKE_CXX_FLAGS_RELEASE}" MATCHES "std=c\\+\\+11"))
-    message(FATAL_ERROR "CXX flags not set properly. Remove CMakeCache.txt and run cmake again")
+# Check c++11 support
+if (NOT(MSVC))
+    try_compile(CXX11 "${CMAKE_CURRENT_BINARY_DIR}/cxx" "${CMAKE_SOURCE_DIR}/cmake/checkcxx11.cpp"
+        COMPILE_DEFINITIONS "${CMAKE_CXX_FLAGS_RELEASE}" OUTPUT_VARIABLE CXX11_ERROR_LOG)
+    if (NOT ${CXX11})
+        message(FATAL_ERROR "Compiler does not support C++11 constructs. \n"
+            "CXX11 Error Log : \n${CXX11_ERROR_LOG}")
+    endif()
 endif()
 
-# Check c++11 support
-try_compile(CXX11 "${CMAKE_CURRENT_BINARY_DIR}/cxx" "${CMAKE_SOURCE_DIR}/cmake/checkcxx11.cpp"
-    COMPILE_DEFINITIONS "${CMAKE_CXX_FLAGS_RELEASE}" OUTPUT_VARIABLE CXX11_ERROR_LOG)
-if (NOT ${CXX11})
-    message(FATAL_ERROR "Compiler does not support C++11 constructs. \n"
-        "CXX11 Error Log : \n${CXX11_ERROR_LOG}")
+set(HAVE_GCC_ABI_DEMANGLE yes
+    CACHE BOOL "Build with C++ name demangling support")
+
+set(HAVE_C_FUNCTION_NOT_FUNC no
+    CACHE BOOL "C compiler supports __FUNCTION__ but not __func__")
+
+set(HAVE_DEFAULT_CONSTRUCTORS yes
+    CACHE BOOL "C++ compiler supports default constructors")
+
+set(HAVE_SYMENGINE_NOEXCEPT yes
+    CACHE BOOL "C++ compiler supports noexcept specifier")
+
+set(HAVE_SYMENGINE_IS_CONSTRUCTIBLE yes
+    CACHE BOOL "C++ compiler supports std::is_constructible")
+
+set(HAVE_SYMENGINE_RESERVE yes
+    CACHE BOOL "C++ compiler supports std::unordered_map<>::reserve()")
+
+if (MSVC)
+    # MSVC doesn't have cxxabi.h
+    set(HAVE_GCC_ABI_DEMANGLE no)
+
+    # MSVC only supports __func__ in a C++ mode, not a C mode
+    set(HAVE_C_FUNCTION_NOT_FUNC yes)
+
+    # MSVC does not support =default for constructors
+    set(HAVE_DEFAULT_CONSTRUCTORS no)
+endif()
+
+if (CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
+    set(HAVE_DEFAULT_CONSTRUCTORS no)
+    set(HAVE_SYMENGINE_NOEXCEPT no)
+    set(HAVE_SYMENGINE_IS_CONSTRUCTIBLE no)
+    set(HAVE_SYMENGINE_RESERVE no)
+endif()
+
+if (CMAKE_CXX_COMPILER_ID STREQUAL "PGI")
+    set(HAVE_DEFAULT_CONSTRUCTORS no)
+    set(HAVE_SYMENGINE_RESERVE no)
 endif()
 
 if ((CMAKE_CXX_COMPILER_ID MATCHES Clang) AND (CMAKE_BUILD_TYPE STREQUAL "Release"))
@@ -57,15 +95,17 @@ include_directories(${GMP_INCLUDE_DIRS})
 set(LIBS ${LIBS} ${GMP_LIBRARIES})
 
 # Check gmpxx
-try_compile(GMPXX "${CMAKE_CURRENT_BINARY_DIR}/cxx" "${CMAKE_SOURCE_DIR}/cmake/checkgmpxx.cpp"
-    CMAKE_FLAGS "-DCOMPILE_DEFINITIONS=${CMAKE_CXX_FLAGS_RELEASE}"
-    CMAKE_FLAGS "-DINCLUDE_DIRECTORIES=${GMP_INCLUDE_DIRS}"
-    CMAKE_FLAGS "-DLINK_LIBRARIES=${GMP_LIBRARIES}"
-    OUTPUT_VARIABLE GMPXX_ERROR_LOG)
-if (NOT ${GMPXX})
-    message(FATAL_ERROR "GMP library being linked is not supported by CMAKE_CXX_COMPILER used. \n"
-        "Recompile GMP with C++ support using ${CMAKE_CXX_COMPILER}, remove CMakeCache.txt and try again.\n"
-        "Error Log : \n${GMPXX_ERROR_LOG}")
+if (NOT(MSVC))
+    try_compile(GMPXX "${CMAKE_CURRENT_BINARY_DIR}/cxx" "${CMAKE_SOURCE_DIR}/cmake/checkgmpxx.cpp"
+        CMAKE_FLAGS "-DCOMPILE_DEFINITIONS=${CMAKE_CXX_FLAGS_RELEASE}"
+        CMAKE_FLAGS "-DINCLUDE_DIRECTORIES=${GMP_INCLUDE_DIRS}"
+        CMAKE_FLAGS "-DLINK_LIBRARIES=${GMP_LIBRARIES}"
+        OUTPUT_VARIABLE GMPXX_ERROR_LOG)
+    if (NOT ${GMPXX})
+        message(FATAL_ERROR "GMP library being linked is not supported by CMAKE_CXX_COMPILER used. \n"
+            "Recompile GMP with C++ support using ${CMAKE_CXX_COMPILER}, remove CMakeCache.txt and try again.\n"
+            "Error Log : \n${GMPXX_ERROR_LOG}")
+    endif()
 endif()
 
 # ECM
@@ -315,14 +355,13 @@ message("+-------------------------------+")
 message("| Configuration results SUMMARY |")
 message("+-------------------------------+")
 message("")
-message("C++ compiler: ${CMAKE_CXX_COMPILER}")
-message("Build type: ${CMAKE_BUILD_TYPE}")
-if (CMAKE_BUILD_TYPE STREQUAL "Debug")
-    message("C++ compiler flags: ${CMAKE_CXX_FLAGS_DEBUG}")
-else ()
-    message("C++ compiler flags: ${CMAKE_CXX_FLAGS_RELEASE}")
-endif ()
-message("Installation prefix: ${CMAKE_INSTALL_PREFIX}")
+message("CMAKE_C_COMPILER:   ${CMAKE_C_COMPILER}")
+message("CMAKE_CXX_COMPILER: ${CMAKE_CXX_COMPILER}")
+message("CMAKE_BUILD_TYPE: ${CMAKE_BUILD_TYPE}")
+message("CMAKE_CONFIGURATION_TYPES: ${CMAKE_CONFIGURATION_TYPES}")
+message("CMAKE_CXX_FLAGS_DEBUG:   ${CMAKE_CXX_FLAGS_DEBUG}")
+message("CMAKE_CXX_FLAGS_RELEASE: ${CMAKE_CXX_FLAGS_RELEASE}")
+message("CMAKE_INSTALL_PREFIX: ${CMAKE_INSTALL_PREFIX}")
 
 message("WITH_SYMENGINE_ASSERT: ${WITH_SYMENGINE_ASSERT}")
 message("WITH_SYMENGINE_RCP: ${WITH_SYMENGINE_RCP}")
@@ -330,6 +369,12 @@ if (NOT WITH_SYMENGINE_RCP)
     message("HAVE_TEUCHOS_DEBUG: ${HAVE_TEUCHOS_DEBUG}")
     message("HAVE_TEUCHOS_DEBUG_RCP_NODE_TRACING: ${HAVE_TEUCHOS_DEBUG_RCP_NODE_TRACING}")
 endif ()
+message("HAVE_GCC_ABI_DEMANGLE: ${HAVE_GCC_ABI_DEMANGLE}")
+message("HAVE_C_FUNCTION_NOT_FUNC: ${HAVE_C_FUNCTION_NOT_FUNC}")
+message("HAVE_DEFAULT_CONSTRUCTORS: ${HAVE_DEFAULT_CONSTRUCTORS}")
+message("HAVE_SYMENGINE_NOEXCEPT: ${HAVE_SYMENGINE_NOEXCEPT}")
+message("HAVE_SYMENGINE_IS_CONSTRUCTIBLE: ${HAVE_SYMENGINE_IS_CONSTRUCTIBLE}")
+message("HAVE_SYMENGINE_RESERVE: ${HAVE_SYMENGINE_RESERVE}")
 message("WITH_SYMENGINE_THREAD_SAFE: ${WITH_SYMENGINE_THREAD_SAFE}")
 message("BUILD_TESTS: ${BUILD_TESTS}")
 message("BUILD_BENCHMARKS: ${BUILD_BENCHMARKS}")
@@ -347,9 +392,9 @@ endif()
 
 message("WITH_PYTHON: ${WITH_PYTHON}")
 if (WITH_PYTHON)
-    message("Python library: ${PYTHON_LIBRARY}")
-    message("Python include path: ${PYTHON_INCLUDE_PATH}")
-    message("Python install path: ${PYTHON_INSTALL_PATH}")
+    message("PYTHON_LIBRARY: ${PYTHON_LIBRARY}")
+    message("PYTHON_INCLUDE_PATH: ${PYTHON_INCLUDE_PATH}")
+    message("PYTHON_INSTALL_PATH: ${PYTHON_INSTALL_PATH}")
 
     message("Cython path: ${CYTHON_BIN}")
 endif ()

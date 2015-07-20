@@ -20,9 +20,12 @@ if (0 == (cond)) { \
 }
 
 typedef enum {
-    #define SYMENGINE_ENUM(type) SYMENGINE_##type
+    #define SYMENGINE_INCLUDE_ALL
+    #define SYMENGINE_ENUM(type, Class) SYMENGINE_##type,
     #include "symengine/type_codes.inc"
     #undef SYMENGINE_ENUM
+    #undef SYMENGINE_INCLUDE_ALL
+    SYMENGINE_TypeID_Count
 } TypeID;
 
 // The size of 'CRCPBasic_C' must be the same as CRCPBasic (which contains a
@@ -196,6 +199,8 @@ size_t setbasic_size(CSetBasic *self);
 void basic_get_args(const basic self, CVecBasic *args);
 //! Returns a CSetBasic of set_basic given by free_symbols
 void basic_free_symbols(const basic self, CSetBasic *symbols);
+//! returns the hash of the Basic object
+size_t basic_hash(const basic self);
 
 #ifdef __cplusplus
 }
