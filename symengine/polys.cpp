@@ -2,10 +2,11 @@
 #include <symengine/add.h>
 #include <symengine/mul.h>
 #include <symengine/pow.h>
+#include <symengine/symbol.h>
 
 namespace SymEngine {
 
-Polynomial::Polynomial(const vec_symbol &vars, hash_set&& polys_set) {
+Polynomial::Polynomial(const vec_symbol &vars, hash_set polys_set) {
     //! TODO: Use initializer list
     vars_ = vars;
     polys_set_ = polys_set;
@@ -85,6 +86,66 @@ bool Polynomial::is_canonical(const hash_set& set)
         }
     }
     return true;
+}
+
+std::size_t Polynomial::__hash__() const 
+{
+    std::hash<std::string> hash_string;
+    std::size_t seed = POLYNOMIAL;
+
+    for (auto &it: vars_)
+        seed += hash_string(it->get_name());
+
+    for (auto &it : polys_set_)
+    {   
+        std::size_t temp = POLYNOMIAL;
+        hash_combine<long long>(temp, it.first);
+        hash_combine<long long>(temp, mpz_get_si(it.second.get_mpz_view()));
+        seed += temp;
+    }
+    return seed;
+}
+
+bool Polynomial::__eq__(const Basic &o) const
+{
+    const Polynomial &s = static_cast<const Polynomial &>(o);
+
+    for (uint i = 0; i < vars_.size(); i++) {
+        if (!vars_[i]->__eq__(*s.vars_[i]))
+            return false;
+    }
+
+    if (hash_set_eq(polys_set_, s.polys_set_))
+        return true;
+
+    return false;
+}
+
+int Polynomial::compare(const Basic &o) const
+{
+    const Polynomial &s = static_cast<const Polynomial &>(o);
+
+    if (polys_set_.size() != s.polys_set_.size())
+        return (polys_set_.size() < s.polys_set_.size()) ? -1 : 1;
+
+    for (uint i = 0; i < vars_.size(); i++) {
+        int cmp = vars_[i]->compare(*s.vars_[i]);
+        if (cmp != 0)
+            return cmp;
+    }
+
+    return hash_set_compare(polys_set_, s.polys_set_);
+}
+
+vec_basic Polynomial::get_args() const
+{
+    vec_basic args;
+    return args;
+}
+
+RCP<const Basic> Polynomial::diff(const RCP<const Symbol> &x) const
+{
+    return x;
 }
 
 } // SymEngine

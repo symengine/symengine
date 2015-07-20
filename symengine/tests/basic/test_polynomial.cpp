@@ -4,6 +4,7 @@
 
 #include <symengine/polynomial.h>
 #include <symengine/polys.h>
+#include <symengine/add.h>
 #include <symengine/mul.h>
 #include <symengine/pow.h>
 #include <symengine/dict.h>
@@ -25,6 +26,8 @@ using SymEngine::integer;
 using SymEngine::vec_basic_eq_perm;
 using SymEngine::vec_symbol;
 using SymEngine::Polynomial;
+using SymEngine::polynomial;
+using SymEngine::umap_basic_num;
 
 #if defined(HAVE_SYMENGINE_PIRANHA)
 using SymEngine::hash_set;
@@ -220,8 +223,15 @@ TEST_CASE("Constructor of Polynomial", "[Polynomial]")
     s.insert(t2);
 
     RCP<const Polynomial> P = polynomial(vars, s);
-    REQUIRE(P->__str__() == "2*x**3 + 1*x**2");
+    REQUIRE(P->__str__() == "x**2 + 2*x**3");
 
-    //RCP<const UnivariatePolynomial> Q = UnivariatePolynomial::create(x, {1, 0, 2, 1});
-    //REQUIRE(Q->__str__() == "x**3 + 2*x**2 + 1");
+    RCP<const Basic> y  = symbol("y");
+    RCP<const Basic> r = add(add(x, y), add(y, x));
+    
+    umap_basic_num syms;
+    insert(syms, x, integer(0));
+    insert(syms, y, integer(1));
+    
+    const Polynomial Q(r, syms);
+    REQUIRE(Q.__str__() == "2*y**1*x**0 + 2*y**0*x**1");
 }
