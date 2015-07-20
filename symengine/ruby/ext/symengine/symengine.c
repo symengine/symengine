@@ -44,6 +44,7 @@ void Init_symengine() {
     //Integer class
     c_integer = rb_define_class_under(m_symengine, "Integer", c_basic);
     rb_define_alloc_func(c_integer, cbasic_alloc);
+    rb_define_method(c_integer, "initialize", cinteger_init, 1);
 
     //Rational class
     c_rational = rb_define_class_under(m_symengine, "Rational", c_basic);
