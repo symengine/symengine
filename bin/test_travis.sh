@@ -99,13 +99,12 @@ if [[ "${WITH_PYTHON}" == "yes" ]]; then
 fi
 # Ruby
 if [[ "${WITH_RUBY}" == "yes" ]]; then
-    RUBY_GEM_DIR="$SOURCE_DIR/symengine/ruby"
+    cd symengine/ruby
     echo "Installing dependent gems"
-    cd $RUBY_GEM_DIR
     bundle install
     echo "Running RSpec tests for Ruby extension in $RUBY_GEM_DIR"
     bundle exec rspec
-    cd $SOURCE_DIR
+    cd ../../
 fi
 echo "Running tests using installed SymEngine:"
 # C++
