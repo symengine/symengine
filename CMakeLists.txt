@@ -286,6 +286,25 @@ set(WITH_SYMENGINE_RCP yes
 set(WITH_SYMENGINE_THREAD_SAFE no
     CACHE BOOL "Enable SYMENGINE_THREAD_SAFE support")
 
+# SymEngine Debug time checking
+set(WITH_SYMENGINE_CHECKS no
+    CACHE BOOL "Build with Debug time checking")
+
+if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+    set(WITH_SYMENGINE_CHECKS yes)
+endif()
+
+if (WITH_SYMENGINE_CHECKS)
+    # With Debug checking we use Teuchos::RCP and enable debugging checks that
+    # make any code in SymEngine 100% safe, as long as the Teuchos guidelines
+    # are followed.
+    set(WITH_SYMENGINE_RCP no) # Use the Teuchos::RCP
+    set(HAVE_TEUCHOS_DEBUG yes) # Enable safety checks in Teuchos::RCP
+    set(HAVE_TEUCHOS_DEBUG_RCP_NODE_TRACING yes) # Enable node tracing
+
+    set(WITH_SYMENGINE_ASSERT yes) # Also enable SymEngine assertions
+endif()
+
 # TESTS
 set(BUILD_TESTS yes
     CACHE BOOL "Build SymEngine tests")
@@ -294,7 +313,7 @@ set(BUILD_TESTS yes
 set(BUILD_BENCHMARKS yes
     CACHE BOOL "Build SymEngine benchmarks")
 
-# OpenMp
+# OpenMP
 set(WITH_OPENMP no
     CACHE BOOL "Build with OpenMP")
 
@@ -315,16 +334,6 @@ if (WITH_RUBY)
     include_directories(${RUBY_INCLUDE_DIRS})
     set(LIBS ${LIBS} ${RUBY_LIBRARY})
 endif ()
-
-if (CMAKE_BUILD_TYPE STREQUAL "Debug")
-    # In Debug mode we use Teuchos::RCP and enable debugging checks that make
-    # the usage 100% safe, as long as the Teuchos guidelines are followed.
-    set(WITH_SYMENGINE_RCP no) # Use the Teuchos::RCP
-    set(HAVE_TEUCHOS_DEBUG yes) # Enable safety checks
-    set(HAVE_TEUCHOS_DEBUG_RCP_NODE_TRACING yes) # Enable safety checks
-
-    set(WITH_SYMENGINE_ASSERT yes) # Also enable assertions
-endif()
 
 enable_testing()
 add_subdirectory(symengine)
@@ -363,12 +372,12 @@ message("CMAKE_CXX_FLAGS_DEBUG:   ${CMAKE_CXX_FLAGS_DEBUG}")
 message("CMAKE_CXX_FLAGS_RELEASE: ${CMAKE_CXX_FLAGS_RELEASE}")
 message("CMAKE_INSTALL_PREFIX: ${CMAKE_INSTALL_PREFIX}")
 
-message("WITH_SYMENGINE_ASSERT: ${WITH_SYMENGINE_ASSERT}")
-message("WITH_SYMENGINE_RCP: ${WITH_SYMENGINE_RCP}")
-if (NOT WITH_SYMENGINE_RCP)
-    message("HAVE_TEUCHOS_DEBUG: ${HAVE_TEUCHOS_DEBUG}")
-    message("HAVE_TEUCHOS_DEBUG_RCP_NODE_TRACING: ${HAVE_TEUCHOS_DEBUG_RCP_NODE_TRACING}")
-endif ()
+message("WITH_SYMENGINE_CHECKS: ${WITH_SYMENGINE_CHECKS}")
+message("    WITH_SYMENGINE_ASSERT: ${WITH_SYMENGINE_ASSERT}")
+message("    WITH_SYMENGINE_RCP: ${WITH_SYMENGINE_RCP}")
+    message("        HAVE_TEUCHOS_DEBUG: ${HAVE_TEUCHOS_DEBUG}")
+    message("        HAVE_TEUCHOS_DEBUG_RCP_NODE_TRACING: ${HAVE_TEUCHOS_DEBUG_RCP_NODE_TRACING}")
+
 message("HAVE_GCC_ABI_DEMANGLE: ${HAVE_GCC_ABI_DEMANGLE}")
 message("HAVE_C_FUNCTION_NOT_FUNC: ${HAVE_C_FUNCTION_NOT_FUNC}")
 message("HAVE_DEFAULT_CONSTRUCTORS: ${HAVE_DEFAULT_CONSTRUCTORS}")

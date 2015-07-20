@@ -71,16 +71,17 @@ use the Debug mode with `BFD` support on:
 
     cmake -DCMAKE_BUILD_TYPE=Debug -DWITH_BFD=yes .
 
+The Debug build (besides using Debug time CMake C++ compiler options) also sets
+`WITH_SYMENGINE_CHECKS=yes` which turns safety checks that make any code in
+SymEngine 100% safe (it will throw a nice runtime exception if any pointer
+becomes dangling or something else goes wrong), as long as our style
+conventions (e.g. no raw pointers) are followed, which is easy to check by
+visual inspection of a given Pull Request. In Release mode, which is the
+default, the code is as performing as manual reference counting and raw
+pointers (and if there is a bug, it could segfault, in which case all you have
+to do is to turn Debug mode on and get a nice exception with a stacktrace).
 This `BFD` support turns on nice Python like stacktraces on exceptions, assert
-errors or segfaults, and the Debug mode automatically turns on
-`WITH_SYMENGINE_RCP=no` (which uses `Teuchos::RCP` with full Debug time
-checking) and `WITH_SYMENGINE_ASSERT=yes`, so the code cannot segfault in Debug
-mode, as long as our style conventions (e.g. no raw pointers) are followed,
-which is easy to check by visual inspection of a given Pull Request. In Release
-mode, which is the default, the code is as performing as manual reference
-counting and raw pointers (and if there is a bug, it could segfault, in which
-case all you have to do is to turn Debug mode on and get a nice exception with
-a stacktrace).
+errors or segfaults.
 
 To make `WITH_BFD=yes` work, you need to install `binutils-dev` first,
 otherwise you will get a `CMake` error during configuring.
@@ -101,8 +102,7 @@ their default values indicated below:
         -DCMAKE_BUILD_TYPE:STRING="Release" \         # Type of build, one of: Debug or Release
         -DWITH_BFD:BOOL=OFF \                         # Install with BFD library (requires binutils-dev)
         -DWITH_PYTHON:BOOL=OFF \                      # Build Python wrappers
-        -DWITH_SYMENGINE_ASSERT:BOOL=OFF \            # Test all SYMENGINE_ASSERT statements in the code
-        -DWITH_SYMENGINE_RCP:BOOL=ON \                # Use our faster special implementation of RCP
+        -DWITH_SYMENGINE_CHECKS:BOOL=OFF \            # Turn on all Debug time checks that make the code 100% safe
         -DWITH_SYMENGINE_THREAD_SAFE:BOOL=OFF \       # Build with thread safety
         -DWITH_ECM:BOOL=OFF \                         # Build with GMP-ECM library for integer factorization
         -DWITH_PRIMESIEVE:BOOL=OFF \                  # Install with Primesieve library
@@ -114,8 +114,8 @@ their default values indicated below:
         -DBUILD_BENCHMARKS:BOOL=ON \                  # Build with benchmarks
         .
 
-If `OPENMP` is enabled, then `SYMENGINE_THREAD_SAFE` is also enabled automatically
-irrespective of the user input for `WITH_SYMENGINE_THREAD_SAFE`.
+If `OPENMP` is enabled, then `SYMENGINE_THREAD_SAFE` is also enabled
+automatically irrespective of the user input for `WITH_SYMENGINE_THREAD_SAFE`.
 
 `CMake` prints the value of its options at the end of the run.
 If you want to use a different compiler, do:
