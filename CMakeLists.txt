@@ -309,13 +309,6 @@ if (WITH_OPENMP)
     endif()
 endif()
 
-
-if (WITH_RUBY)
-    find_package(Ruby REQUIRED)
-    include_directories(${RUBY_INCLUDE_DIRS})
-    set(LIBS ${LIBS} ${RUBY_LIBRARY})
-endif ()
-
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     # In Debug mode we use Teuchos::RCP and enable debugging checks that make
     # the usage 100% safe, as long as the Teuchos guidelines are followed.
@@ -332,18 +325,28 @@ if (BUILD_BENCHMARKS)
     add_subdirectory(benchmarks)
 endif()
 
+if (WITH_RUBY)
+    find_package(Ruby REQUIRED)
+    include_directories(${RUBY_INCLUDE_DIRS})
+    set(LIBS ${LIBS} ${RUBY_LIBRARY})
+
+    message("Copying source of ruby wrappers into: ${CMAKE_CURRENT_BINARY_DIR}/symengine/ruby")
+    file(COPY symengine/ruby/ DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/symengine/ruby)
+
+    add_subdirectory(symengine/ruby)
+endif ()
+
 if (WITH_PYTHON)
     # We need to execute the find_package() commands here, so that the
     # variables like ${PYTHON_INSTALL_PATH} are defined here and in all cmake
     # files (as opposed to just subset of cmake files).
     find_package(Python REQUIRED)
     find_package(Cython REQUIRED)
-    add_subdirectory(symengine/python)
-endif ()
 
-if (WITH_PYTHON)
     message("Copying source of python wrappers into: ${CMAKE_CURRENT_BINARY_DIR}/symengine/python/symengine")
     file(COPY symengine/python/symengine/ DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/symengine/python/symengine)
+
+    add_subdirectory(symengine/python)
 endif()
 
 
