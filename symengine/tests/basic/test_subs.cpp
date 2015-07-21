@@ -88,6 +88,19 @@ TEST_CASE("Add: subs", "[subs]")
     r1 = add(add(add(add(pow(x, y), pow(x, i2)), pow(i2, y)), x), i3);
     r2 = add(add(add(mul(i2, x), y), z), i3);
     REQUIRE(eq(*r1->subs(d), *r2));
+
+    d.clear();
+    d[x] = integer(5);
+    r1 = add(mul(integer(12), add(integer(3), sin(x))), sin(integer(4)));
+    r2 = add(mul(integer(12), add(integer(3), sin(integer(5)))),
+            sin(integer(4)));
+    REQUIRE(eq(*r1->subs(d), *r2));
+
+    d.clear();
+    d[x] = integer(1);
+    r1 = add(mul(x, add(integer(3), sin(integer(4)))), sin(integer(1)));
+    r2 = add(add(integer(3), sin(integer(4))), sin(integer(1)));
+    REQUIRE(eq(*r1->subs(d), *r2));
 }
 
 TEST_CASE("Mul: subs", "[subs]")
