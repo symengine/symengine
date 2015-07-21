@@ -353,7 +353,7 @@ RCP<const Basic> Add::subs(const map_basic_basic &subs_dict) const
         } else if (is_a_Number(*term)) {
             iaddnum(outArg(coef),
                     mulnum(p.second, rcp_static_cast<const Number>(term)));
-        } else if (is_a<Add>(*term)) {
+        } else if (is_a<Add>(*term) && p.second->is_one()) {
             for (auto &q: (rcp_static_cast<const Add>(term))->dict_)
                 Add::dict_add_term(d, q.second, q.first);
             iaddnum(outArg(coef), rcp_static_cast<const Add>(term)->coef_);
