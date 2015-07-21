@@ -7,11 +7,20 @@ version: '{build}'
 environment:
   global:
     PLATFORMTOOLSET: "v140"
-    PLATFORM: "Win32"
 
   matrix:
     - BUILD_TYPE: "Debug"
       COMPILER: MSVC15
+      PLATFORM: "Win32"
+    - BUILD_TYPE: "Release"
+      COMPILER: MSVC15
+      PLATFORM: "Win32"
+    - BUILD_TYPE: "Debug"
+      COMPILER: MSVC15
+      PLATFORM: "x64"
+    - BUILD_TYPE: "Release"
+      COMPILER: MSVC15
+      PLATFORM: "x64"
     - BUILD_TYPE: "Debug"
       COMPILER: MinGW
       WITH_PYTHON: yes
@@ -19,15 +28,15 @@ environment:
     - BUILD_TYPE: "Release"
       COMPILER: MinGW
       WITH_PYTHON: yes
-      PYTHON_VERSION: 27
+      PYTHON_VERSION: 34
     - BUILD_TYPE: "Release"
       COMPILER: MinGW-w64
       WITH_PYTHON: yes
       PYTHON_VERSION: 27-x64
-    - BUILD_TYPE: "Release"
-      COMPILER: MinGW
+    - BUILD_TYPE: "Debug"
+      COMPILER: MinGW-w64
       WITH_PYTHON: yes
-      PYTHON_VERSION: 34
+      PYTHON_VERSION: 34-x64
 
 install:
 - if [%COMPILER%]==[MSVC15] set PATH=C:\Program Files (x86)\MSBuild\14.0\Bin;%PATH%
@@ -61,16 +70,17 @@ build_script:
 - mkdir build
 - cd build
 
-- if [%COMPILER%]==[MSVC15] cmake -G "Visual Studio 14 2015" -DGMP_DIR=mpir-2.7.0/lib/%PLATFORM%/%BUILD_TYPE% -DCMAKE_CXX_FLAGS_DEBUG="/D_DEBUG /MTd /Zi /Ob0 /Od /RTC1 /W1" ..
+- if [%COMPILER%]==[MSVC15] if [%PLATFORM%]==[Win32] cmake -G "Visual Studio 14 2015" -DGMP_DIR=mpir-2.7.0/lib/%PLATFORM%/%BUILD_TYPE% -DCMAKE_CXX_FLAGS_RELEASE="/MT /W1 /O2 /Ob2 /D NDEBUG" -DCMAKE_CXX_FLAGS_DEBUG="/D_DEBUG /MTd /Zi /Ob0 /Od /RTC1 /W1" ..
+- if [%COMPILER%]==[MSVC15] if [%PLATFORM%]==[x64] cmake -G "Visual Studio 14 2015 Win64" -DGMP_DIR=mpir-2.7.0/lib/%PLATFORM%/%BUILD_TYPE% -DCMAKE_CXX_FLAGS_RELEASE="/MT /W1 /O2 /Ob2 /D NDEBUG" -DCMAKE_CXX_FLAGS_DEBUG="/D_DEBUG /MTd /Zi /Ob0 /Od /RTC1 /W1" ..
 
 - if [%COMPILER%]==[MinGW] cmake -G "MinGW Makefiles" -DCOMMON_DIR=C:\MinGW -DCMAKE_BUILD_TYPE=%BUILD_TYPE% ..
 - if [%COMPILER%]==[MinGW-w64] cmake -G "MinGW Makefiles" -DWITH_MINGW_W64=yes -DCOMMON_DIR=C:\mingw64 -DCMAKE_BUILD_TYPE=%BUILD_TYPE% ..
 
 - if [%WITH_PYTHON%]==[yes] cmake -DWITH_PYTHON=yes ..
-- cmake --build . --config %BUILD_TYPE%
 
-- if [%COMPILER%]==[MinGW] mingw32-make install
-- if [%COMPILER%]==[MinGW-w64] mingw32-make install
+- if [%COMPILER%]==[MSVC15] msbuild ALL_BUILD.vcxproj /p:Configuration=%BUILD_TYPE% /p:Platform=%PLATFORM% /p:PlatformToolset=%PLATFORMTOOLSET% /verbosity:normal
+- if [%COMPILER%]==[MinGW] mingw32-make && mingw32-make install
+- if [%COMPILER%]==[MinGW-w64] mingw32-make && mingw32-make install
 
 test_script:
 - ctest --output-on-failure

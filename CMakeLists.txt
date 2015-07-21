@@ -32,13 +32,11 @@ if (CMAKE_CXX_COMPILER_ID MATCHES Clang)
 endif()
 
 # Check c++11 support
-if (NOT(MSVC))
-    try_compile(CXX11 "${CMAKE_CURRENT_BINARY_DIR}/cxx" "${CMAKE_SOURCE_DIR}/cmake/checkcxx11.cpp"
-        COMPILE_DEFINITIONS "${CMAKE_CXX_FLAGS_RELEASE}" OUTPUT_VARIABLE CXX11_ERROR_LOG)
-    if (NOT ${CXX11})
-        message(FATAL_ERROR "Compiler does not support C++11 constructs. \n"
-            "CXX11 Error Log : \n${CXX11_ERROR_LOG}")
-    endif()
+try_compile(CXX11 "${CMAKE_CURRENT_BINARY_DIR}/cxx" "${CMAKE_SOURCE_DIR}/cmake/checkcxx11.cpp"
+	CMAKE_FLAGS "-DCOMPILE_DEFINITIONS=${CMAKE_CXX_FLAGS_RELEASE}" OUTPUT_VARIABLE CXX11_ERROR_LOG)
+if (NOT ${CXX11})
+	message(FATAL_ERROR "Compiler does not support C++11 constructs. \n"
+		"CXX11 Error Log : \n${CXX11_ERROR_LOG}")
 endif()
 
 set(HAVE_GCC_ABI_DEMANGLE yes
