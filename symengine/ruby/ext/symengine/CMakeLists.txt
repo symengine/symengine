@@ -3,6 +3,7 @@ set(RUBY_WRAPPER_SRC
     ${ruby_wrapper_SOURCE_DIR}/ext/symengine/ruby_symbol.c
     ${ruby_wrapper_SOURCE_DIR}/ext/symengine/ruby_integer.c
     ${ruby_wrapper_SOURCE_DIR}/ext/symengine/ruby_rational.c
+    ${ruby_wrapper_SOURCE_DIR}/ext/symengine/symengine_macros.c
     ${ruby_wrapper_SOURCE_DIR}/ext/symengine/symengine.c
     )
 
