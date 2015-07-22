@@ -56,9 +56,8 @@ public:
     //! Get `Evaluate` singleton to evaluate numerically
     virtual Evaluate& get_eval() const;
 
-    //! \return `false`
-    // A std::complex<double> is not exactly equal to `0`
-    virtual bool is_zero() const { return false; }
+    //! \return `true` if equal to `0`
+    virtual bool is_zero() const { return i == 0.0; }
     //! \return `false`
     // A std::complex<double> is not exactly equal to `1`
     virtual bool is_one() const { return false; }

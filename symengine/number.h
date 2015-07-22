@@ -27,6 +27,8 @@ public:
     virtual bool is_positive() const = 0;
     //! return `true` if the number is exact
     virtual bool is_exact() const { return true; };
+    //! \return true if exactly equal to `0`
+    inline bool is_exact_zero() const { return is_exact() && is_zero(); };
     //! Get `Evaluate` singleton to evaluate numerically
     virtual Evaluate& get_eval() const { throw std::runtime_error("Not Implemented."); };
 

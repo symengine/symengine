@@ -224,6 +224,16 @@ TEST_CASE("Mul: arit", "[arit]")
     REQUIRE(is_a<ComplexDouble>(*r2));
     REQUIRE(std::abs(rcp_static_cast<const ComplexDouble>(r2)->i.real() + 0.805) < 1e-12);
     REQUIRE(std::abs(rcp_static_cast<const ComplexDouble>(r2)->i.imag() - 0.84) < 1e-12);
+
+    r1 = real_double(0.0);
+    r2 = mul(r1, x);
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = mul(i2, mul(pow(x, i2), y));
+    r1 = mul(r1, pow(x, real_double(-2.0)));
+    r2 = mul(y, real_double(2.0));
+    // (2*x**2*y) * (x**(-2.0)) == 2.0 * y
+    REQUIRE(eq(*r1, *r2));
 }
 
 TEST_CASE("Sub: arit", "[arit]")
@@ -634,6 +644,10 @@ TEST_CASE("Pow: arit", "[arit]")
     REQUIRE(is_a<ComplexDouble>(*r2));
     REQUIRE(std::abs(rcp_static_cast<const ComplexDouble>(r2)->i.real() - 0.997598696589298) < 1e-12);
     REQUIRE(std::abs(rcp_static_cast<const ComplexDouble>(r2)->i.imag() - 0.069259227279362) < 1e-12);
+
+    r1 = pow(x, real_double(0.0));
+    r2 = real_double(1.0);
+    REQUIRE(eq(*r1, *r2));
 }
 
 TEST_CASE("Log: arit", "[arit]")
@@ -888,6 +902,10 @@ TEST_CASE("Expand2: arit", "[arit]")
     REQUIRE(it != rcp_static_cast<const Add>(r2)->dict_.end());
     REQUIRE(is_a<RealDouble>(*it->second));
     REQUIRE(std::abs(rcp_static_cast<const RealDouble>(it->second)->i - 0.4) < 1e-12);
+
+    r1 = expand(pow(add(real_double(0.0), x), i2));
+    r2 = add(real_double(0.0), pow(x, i2));
+    REQUIRE(eq(*r1, *r2));
 }
 
 TEST_CASE("Expand3: arit", "[arit]")
