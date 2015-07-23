@@ -2,6 +2,10 @@
 #include <symengine/integer.h>
 #include <symengine/real_mpfr.h>
 #include <symengine/complex_mpc.h>
+#include <symengine/real_double.h>
+#include <symengine/complex_double.h>
+#include <symengine/rational.h>
+#include <symengine/complex.h>
 
 using SymEngine::print_stack_on_segfault;
 using SymEngine::RCP;
@@ -10,6 +14,8 @@ using SymEngine::integer;
 using SymEngine::Number;
 using SymEngine::Rational;
 using SymEngine::Complex;
+using SymEngine::real_double;
+using SymEngine::complex_double;
 using SymEngine::eq;
 using SymEngine::is_a;
 #ifdef HAVE_SYMENGINE_MPFR
@@ -97,4 +103,89 @@ TEST_CASE("ComplexMPC: arithmetic", "[number]")
     REQUIRE(eq(*r1, *pownum(r3, half)));
     REQUIRE(eq(*divnum(i1, r4), *half->pow(*r1)));
 #endif //HAVE_SYMENGINE_MPC
+}
+
+TEST_CASE("Test is_exact", "[number]")
+{
+    RCP<const Number> n1;
+
+    n1 = integer(0);
+    REQUIRE(n1->is_exact());
+    REQUIRE(n1->is_zero());
+    REQUIRE(n1->is_exact_zero());
+    REQUIRE(!n1->is_negative());
+    REQUIRE(!n1->is_positive());
+
+    n1 = integer(-1);
+    REQUIRE(n1->is_exact());
+    REQUIRE(!n1->is_zero());
+    REQUIRE(!n1->is_exact_zero());
+    REQUIRE(n1->is_negative());
+    REQUIRE(!n1->is_positive());
+
+    n1 = Rational::from_mpq(2);
+    REQUIRE(n1->is_exact());
+    REQUIRE(!n1->is_zero());
+    REQUIRE(!n1->is_exact_zero());
+    REQUIRE(!n1->is_negative());
+    REQUIRE(n1->is_positive());
+
+    n1 = Complex::from_mpq(1, 2);
+    REQUIRE(n1->is_exact());
+    REQUIRE(!n1->is_zero());
+    REQUIRE(!n1->is_exact_zero());
+    REQUIRE(!n1->is_negative());
+    REQUIRE(!n1->is_positive());
+
+    n1 = real_double(0.0);
+    REQUIRE(!n1->is_exact());
+    REQUIRE(n1->is_zero());
+    REQUIRE(!n1->is_exact_zero());
+    REQUIRE(!n1->is_negative());
+    REQUIRE(!n1->is_positive());
+
+    n1 = real_double(1.0);
+    REQUIRE(!n1->is_exact());
+    REQUIRE(!n1->is_zero());
+    REQUIRE(!n1->is_exact_zero());
+    REQUIRE(!n1->is_negative());
+    REQUIRE(n1->is_positive());
+
+    n1 = complex_double(1.0);
+    REQUIRE(!n1->is_exact());
+    REQUIRE(!n1->is_zero());
+    REQUIRE(!n1->is_exact_zero());
+    REQUIRE(!n1->is_negative());
+    REQUIRE(!n1->is_positive());
+
+#ifdef HAVE_SYMENGINE_MPFR
+    mpfr_class a(100);
+    mpfr_set_d(a.get_mpfr_t(), 0.0, MPFR_RNDN);
+    n1 = real_mpfr(std::move(a));
+    REQUIRE(!n1->is_exact());
+    REQUIRE(n1->is_zero());
+    REQUIRE(!n1->is_exact_zero());
+    REQUIRE(!n1->is_negative());
+    REQUIRE(!n1->is_positive());
+
+    a = mpfr_class(100);
+    mpfr_set_d(a.get_mpfr_t(), 1.0, MPFR_RNDN);
+    n1 = real_mpfr(std::move(a));
+    REQUIRE(!n1->is_exact());
+    REQUIRE(!n1->is_zero());
+    REQUIRE(!n1->is_exact_zero());
+    REQUIRE(!n1->is_negative());
+    REQUIRE(n1->is_positive());
+
+#ifdef HAVE_SYMENGINE_MPC
+    mpc_class b(100);
+    mpc_set_ui_ui(b.get_mpc_t(), 10, 7, MPFR_RNDN);
+    n1 = complex_mpc(std::move(b));
+    REQUIRE(!n1->is_exact());
+    REQUIRE(!n1->is_zero());
+    REQUIRE(!n1->is_exact_zero());
+    REQUIRE(!n1->is_negative());
+    REQUIRE(!n1->is_positive());
+#endif //HAVE_SYMENGINE_MPC
+#endif //HAVE_SYMENGINE_MPFR
 }
