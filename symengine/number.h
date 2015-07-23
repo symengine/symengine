@@ -15,7 +15,9 @@ class Evaluate;
 
 class Number : public Basic {
 public:
-    //! \return true if `0`
+    //! \return true if exactly equal to `0`
+    virtual bool is_exact_zero() const = 0;
+    //! \return true if equal to `0`
     virtual bool is_zero() const = 0;
     //! \return true if `1`
     virtual bool is_one() const = 0;
@@ -133,6 +135,8 @@ public:
     virtual RCP<const Basic> gamma(const Basic &) const = 0;
     virtual RCP<const Basic> abs(const Basic &) const = 0;
 };
+
+RCP<const Number> get_one_from_zero(const RCP<const Number> &x);
 
 } // SymEngine
 

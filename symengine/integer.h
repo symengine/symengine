@@ -38,6 +38,8 @@ public:
     //! Convert to `mpz_class`.
     inline mpz_class as_mpz() const { return this->i; }
     //! \return `true` if `0`
+    inline virtual bool is_exact_zero() const { return this->i == 0; }
+    //! \return `true` if `0`
     inline virtual bool is_zero() const { return this->i == 0; }
     //! \return `true` if `1`
     inline virtual bool is_one() const { return this->i == 1; }

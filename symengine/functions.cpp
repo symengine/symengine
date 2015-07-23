@@ -294,7 +294,7 @@ bool Sin::is_canonical(const RCP<const Basic> &arg)
 {
     // e.g. sin(0)
     if (is_a<Integer>(*arg) &&
-            rcp_static_cast<const Integer>(arg)->is_zero())
+            rcp_static_cast<const Integer>(arg)->is_exact_zero())
         return false;
     // e.g sin(k*pi/12)
     RCP<const Integer> n;
@@ -373,7 +373,7 @@ bool Cos::is_canonical(const RCP<const Basic> &arg)
 {
     // e.g. cos(0)
     if (is_a<Integer>(*arg) &&
-            rcp_static_cast<const Integer>(arg)->is_zero())
+            rcp_static_cast<const Integer>(arg)->is_exact_zero())
         return false;
     // e.g cos(k*pi/12)
     RCP<const Integer> n;
@@ -450,7 +450,7 @@ bool Tan::is_canonical(const RCP<const Basic> &arg)
 {
     // TODO: Add further checks for +inf -inf cases
     if (is_a<Integer>(*arg) &&
-            rcp_static_cast<const Integer>(arg)->is_zero())
+            rcp_static_cast<const Integer>(arg)->is_exact_zero())
         return false;
     // e.g tan(k*pi/12)
     RCP<const Integer> n;
@@ -530,7 +530,7 @@ bool Cot::is_canonical(const RCP<const Basic> &arg)
 {
     // TODO: Add further checks for +inf -inf cases
     if (is_a<Integer>(*arg) &&
-            rcp_static_cast<const Integer>(arg)->is_zero())
+            rcp_static_cast<const Integer>(arg)->is_exact_zero())
         return false;
     // e.g cot(k*pi/12)
     RCP<const Integer> n;
@@ -610,7 +610,7 @@ bool Csc::is_canonical(const RCP<const Basic> &arg)
 {
     // e.g. Csc(0)
     if (is_a<Integer>(*arg) &&
-            rcp_static_cast<const Integer>(arg)->is_zero())
+            rcp_static_cast<const Integer>(arg)->is_exact_zero())
         return false;
     // Update for +inf/-inf constraints
     // e.g csc(k*pi/12)
@@ -691,7 +691,7 @@ bool Sec::is_canonical(const RCP<const Basic> &arg)
 {
     // e.g. Sec(0)
     if (is_a<Integer>(*arg) &&
-            rcp_static_cast<const Integer>(arg)->is_zero())
+            rcp_static_cast<const Integer>(arg)->is_exact_zero())
         return false;
     // TODO: Update for +inf/-inf constraints
     // e.g sec(k*pi/12)
@@ -2611,7 +2611,7 @@ RCP<const Basic> Zeta::diff(const RCP<const Symbol> &x) const
 RCP<const Basic> zeta(const RCP<const Basic> &s, const RCP<const Basic> &a)
 {
     if (is_a_Number(*s)) {
-        if (rcp_static_cast<const Number>(s)->is_zero()) {
+        if (rcp_static_cast<const Number>(s)->is_exact_zero()) {
             if (is_a_Number(*a) &&
                 rcp_static_cast<const Number>(a)->is_negative()) {
                 return sub(div(minus_one, i2), a);

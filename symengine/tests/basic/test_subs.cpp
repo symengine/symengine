@@ -11,6 +11,7 @@
 #include <symengine/pow.h>
 #include <symengine/functions.h>
 #include <symengine/constants.h>
+#include <symengine/real_double.h>
 
 using SymEngine::Basic;
 using SymEngine::Add;
@@ -30,6 +31,7 @@ using SymEngine::RCP;
 using SymEngine::rcp_dynamic_cast;
 using SymEngine::map_basic_basic;
 using SymEngine::print_stack_on_segfault;
+using SymEngine::real_double;
 
 TEST_CASE("Symbol: subs", "[subs]")
 {
@@ -136,6 +138,10 @@ TEST_CASE("Mul: subs", "[subs]")
     r1 = mul(i2, pow(x, y));
     r2 = mul(i2, z);
     REQUIRE(eq(*r1->subs(d), *r2));
+
+    r1 = mul(x, y)->subs({{x, real_double(0.0)}});
+    r2 = real_double(0.0);
+    REQUIRE(eq(*r1, *r2));
 }
 
 TEST_CASE("Pow: subs", "[subs]")

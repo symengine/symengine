@@ -851,7 +851,7 @@ void primitive_root_list(std::vector<RCP<const Integer>> &roots, const Integer &
 }
 
 RCP<const Integer> totient(const RCP<const Integer> &n) {
-    if (n->is_zero())
+    if (n->is_exact_zero())
         return integer(1);
 
     mpz_class phi = n->as_mpz(), p;
@@ -870,7 +870,7 @@ RCP<const Integer> totient(const RCP<const Integer> &n) {
 }
 
 RCP<const Integer> carmichael(const RCP<const Integer> &n) {
-    if (n->is_zero())
+    if (n->is_exact_zero())
         return integer(1);
 
     map_integer_uint prime_mul;

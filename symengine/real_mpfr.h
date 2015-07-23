@@ -101,7 +101,9 @@ public:
 
     //! \return `false`
     // A mpfr_t is not exactly equal to `0`
-    virtual bool is_zero() const { return false; }
+    virtual bool is_exact_zero() const { return false; }
+    //! \return if equal to `0`
+    virtual bool is_zero() const { return mpfr_cmp_si(i.get_mpfr_t(), 0) == 0; }
     //! \return `false`
     // A mpfr_t is not exactly equal to `1`
     virtual bool is_one() const { return false; }

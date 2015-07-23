@@ -23,13 +23,13 @@ bool Pow::is_canonical(const RCP<const Basic> &base, const RCP<const Basic> &exp
     if (base == null) return false;
     if (exp == null) return false;
     // e.g. 0**x
-    if (is_a<Integer>(*base) && rcp_static_cast<const Integer>(base)->is_zero())
+    if (is_a<Integer>(*base) && rcp_static_cast<const Integer>(base)->is_exact_zero())
         return false;
     // e.g. 1**x
     if (is_a<Integer>(*base) && rcp_static_cast<const Integer>(base)->is_one())
         return false;
     // e.g. x**0
-    if (is_a<Integer>(*exp) && rcp_static_cast<const Integer>(exp)->is_zero())
+    if (is_a<Integer>(*exp) && rcp_static_cast<const Integer>(exp)->is_exact_zero())
         return false;
     // e.g. x**1
     if (is_a<Integer>(*exp) && rcp_static_cast<const Integer>(exp)->is_one())
@@ -93,7 +93,9 @@ int Pow::compare(const Basic &o) const
 
 RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
 {
-    if (eq(*b, *zero)) return one;
+    if (is_a_Number(*b) && rcp_static_cast<const Number>(b)->is_zero()) {
+        return get_one_from_zero(rcp_static_cast<const Number>(b));
+    }
     if (eq(*b, *one)) return a;
     if (eq(*a, *zero)) return zero;
     if (eq(*a, *one)) return one;
@@ -313,11 +315,19 @@ RCP<const Basic> pow_expand(const RCP<const Pow> &self)
         negative_pow = true;
     }
     RCP<const Add> base = rcp_static_cast<const Add>(_base);
+    RCP<const Number> add_overall_coeff = zero;
     umap_basic_num base_dict = base->dict_;
     if (! (base->coef_->is_zero())) {
         // Add the numerical coefficient into the dictionary. This
         // allows a little bit easier treatment below.
         insert(base_dict, base->coef_, one);
+    } else {
+        if (base_dict.size() == 1) {
+            // Eg: (0.0 + x * 5) ** 2
+            return add(base->coef_, pow(base_dict.begin()->first,
+                           mul(base_dict.begin()->second, self->exp_)));
+        }
+        add_overall_coeff = base->coef_;
     }
     int m = base_dict.size();
     multinomial_coefficients_mpz(m, n, r);
@@ -327,7 +337,6 @@ RCP<const Basic> pow_expand(const RCP<const Pow> &self)
 #if defined(HAVE_SYMENGINE_RESERVE)
     rd.reserve(2*r.size());
 #endif
-    RCP<const Number> add_overall_coeff=zero;
     for (auto &p: r) {
         auto power = p.first.begin();
         auto i2 = base_dict.begin();
@@ -435,7 +444,7 @@ bool Log::is_canonical(const RCP<const Basic> &arg)
 {
     if (arg == null) return false;
     //  log(0)
-    if (is_a<Integer>(*arg) && rcp_static_cast<const Integer>(arg)->is_zero())
+    if (is_a<Integer>(*arg) && rcp_static_cast<const Integer>(arg)->is_exact_zero())
         return false;
     //  log(1)
     if (is_a<Integer>(*arg) && rcp_static_cast<const Integer>(arg)->is_one())
