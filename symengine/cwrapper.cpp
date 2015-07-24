@@ -21,6 +21,7 @@ using SymEngine::Symbol;
 using SymEngine::Rational;
 using SymEngine::Integer;
 using SymEngine::Number;
+using SymEngine::Complex;
 using SymEngine::rcp_static_cast;
 using SymEngine::is_a;
 using SymEngine::RCPBasicKeyLess;
@@ -243,6 +244,10 @@ int is_a_Rational(const basic c)
 int is_a_Symbol(const basic c)
 {
     return is_a<Symbol>(*(c->m));
+}
+int is_a_Complex(const basic c)
+{
+    return is_a<Complex>(*(c->m));
 }
 
 

@@ -20,7 +20,9 @@ void test_cwrapper() {
     printf("Symbol : %s\n", s);
     basic_str_free(s);
     basic e;
+    basic f;
     basic_init(e);
+    basic_init(f);
 
     integer_set_ui(e, 123);
     s = basic_str(e);
@@ -47,6 +49,16 @@ void test_cwrapper() {
     printf("Is_a_Symbol %s: %d\n", s, is_a_Symbol(e));
     printf("Is_a_Rational %s: %d\n", s, is_a_Rational(e));
     printf("Is_a_Integer %s: %d\n", s, is_a_Integer(e));
+
+    rational_set_ui(f, 76, 59);
+    complex_set(e, e, f);
+    s = basic_str(e);
+
+    printf("Complex: %s\n", s);
+    printf("Is_a_Symbol %s: %d\n", s, is_a_Symbol(e));
+    printf("Is_a_Rational %s: %d\n", s, is_a_Rational(e));
+    printf("Is_a_Integer %s: %d\n", s, is_a_Integer(e));
+    printf("Is_a_Complex %s: %d\n", s, is_a_Complex(e));
 
     integer_set_ui(e, 123);
     printf("integer_get_ui 123: %lu\n", integer_get_ui(e));
