@@ -27,7 +27,7 @@ public:
     Polynomial(const RCP<const Basic> &p, umap_basic_num &vars);
 
     static RCP<const Polynomial> create(const vec_symbol &vars, hash_set&& polys_set) {
-        return make_rcp<const Polynomial>(vars, polys_set);
+        return make_rcp<const Polynomial>(vars, std::move(polys_set));
     }
 
     //! \return true if canonical
