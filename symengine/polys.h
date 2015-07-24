@@ -26,10 +26,9 @@ public:
     //! Constructor from Basic
     Polynomial(const RCP<const Basic> &p, umap_basic_num &vars);
 
-    //! TODO: Uncomment this
-    /*static RCP<const Polynomial> create(const vec_symbol &vars, hash_set&& polys_set) {
+    static RCP<const Polynomial> create(const vec_symbol &vars, hash_set&& polys_set) {
         return make_rcp<const Polynomial>(vars, polys_set);
-    }*/
+    }
 
     //! \return true if canonical
     bool is_canonical(const hash_set& set);
@@ -63,7 +62,7 @@ RCP<const Polynomial> neg_poly(const Polynomial &a);
 //! Subtracting two Polynomial a and b
 RCP<const Polynomial> sub_poly(const Polynomial &a, const Polynomial &b);
 //! Multiplying two Polynomial a and b
-RCP<const Polynomial> mul_poly(RCP<const Polynomial> a, RCP<const Polynomial> b);
+RCP<const Polynomial> mul_poly(RCP <const Polynomial> a, RCP <const Polynomial> b);
 
 inline RCP<const Polynomial> polynomial(const vec_symbol &vars, hash_set polys_set)
 {

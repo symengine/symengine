@@ -137,15 +137,46 @@ int Polynomial::compare(const Basic &o) const
     return hash_set_compare(polys_set_, s.polys_set_);
 }
 
+//TODO
 vec_basic Polynomial::get_args() const
 {
     vec_basic args;
     return args;
 }
 
+//TODO
 RCP<const Basic> Polynomial::diff(const RCP<const Symbol> &x) const
 {
     return x;
 }
+
+RCP<const Polynomial> mul_poly(RCP <const Polynomial> a, RCP <const Polynomial> b) {
+    hash_set C, A = a->polys_set_, B = b->polys_set_;
+    m_pair temp;
+    for (auto &a: A) {
+        for (auto &b: B) {
+            temp.first = a.first + b.first;
+            size_t bucket = C._bucket(temp);
+            auto it = C._find(temp, bucket);
+            if (it == C.end()) {
+                // Check it the load factor of C is too large.
+                if ((double(C.size()) + 1) / C.bucket_count() > C.max_load_factor()) {
+                    // Increase the size of the table.
+                    C._increase_size();
+                    // Recompute the bucker.
+                    bucket = C._bucket(temp);
+                }
+                temp.second = a.second;
+                temp.second *= b.second;
+                C._unique_insert(temp, bucket);
+                C._update_size(C.size() + 1u);
+            } else {
+                piranha::math::multiply_accumulate(it->second,a.second,b.second);
+            }
+        }
+    }
+    return polynomial(a->vars_, C);
+}
+
 
 } // SymEngine

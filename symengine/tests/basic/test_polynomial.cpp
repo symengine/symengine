@@ -235,3 +235,40 @@ TEST_CASE("Constructor of Polynomial", "[Polynomial]")
     const Polynomial Q(r, syms);
     REQUIRE(Q.__str__() == "2*y**1*x**0 + 2*y**0*x**1");
 }
+
+TEST_CASE("Multiplication of Polynomial", "[Polynomial]")
+{   
+    RCP<const Symbol> x  = symbol("x");
+    vec_symbol vars;
+    vars.push_back(x);
+
+    m_pair t1, t2;
+    hash_set s;
+
+    t1.second = 2;
+    t2.second = 1;
+    
+    std::vector<long long> temp {3};
+    using ka = piranha::kronecker_array<long long>;
+    t1.first = ka::encode(temp);
+    temp = {2};
+    t2.first = ka::encode(temp);
+
+    s.insert(t1);
+    s.insert(t2);
+
+    RCP<const Polynomial> P = polynomial(vars, s);
+    RCP<const Polynomial> R = mul_poly(P, P);
+    std::cout<<R->__str__()<<std::endl;
+    //REQUIRE(P->__str__() == "x**2 + 2*x**3");
+
+    RCP<const Basic> y  = symbol("y");
+    RCP<const Basic> r = add(add(x, y), add(y, x));
+    
+    umap_basic_num syms;
+    insert(syms, x, integer(0));
+    insert(syms, y, integer(1));
+    
+    const Polynomial Q(r, syms);
+    REQUIRE(Q.__str__() == "2*y**1*x**0 + 2*y**0*x**1");
+}
