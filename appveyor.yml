@@ -64,7 +64,8 @@ install:
 - if [%COMPILER%]==[MinGW-w64] if [%WITH_PYTHON%]==[yes] 7z x -aoa -oC:\ pyx64.7z > NUL
 
 - if [%WITH_PYTHON%]==[yes] set PATH=C:\Python%PYTHON_VERSION%;C:\Python%PYTHON_VERSION%\Scripts;%PATH%
-- if [%WITH_PYTHON%]==[yes] pip install cython nose pytest sympy
+- if [%WITH_PYTHON%]==[yes] pip install nose pytest sympy
+- if [%WITH_PYTHON%]==[yes] pip install --install-option="--no-cython-compile" cython
 
 build_script:
 - mkdir build
