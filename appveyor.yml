@@ -15,12 +15,16 @@ environment:
     - BUILD_TYPE: "Release"
       COMPILER: MSVC15
       PLATFORM: "Win32"
+      WITH_PYTHON: yes
+      PYTHON_VERSION: 27
     - BUILD_TYPE: "Debug"
       COMPILER: MSVC15
       PLATFORM: "x64"
     - BUILD_TYPE: "Release"
       COMPILER: MSVC15
       PLATFORM: "x64"
+      WITH_PYTHON: yes
+      PYTHON_VERSION: 27-x64
     - BUILD_TYPE: "Debug"
       COMPILER: MinGW
       WITH_PYTHON: yes
@@ -80,13 +84,14 @@ build_script:
 - if [%WITH_PYTHON%]==[yes] cmake -DWITH_PYTHON=yes ..
 
 - if [%COMPILER%]==[MSVC15] msbuild ALL_BUILD.vcxproj /p:Configuration=%BUILD_TYPE% /p:Platform=%PLATFORM% /p:PlatformToolset=%PLATFORMTOOLSET% /verbosity:normal
-- if [%COMPILER%]==[MinGW] mingw32-make && mingw32-make install
-- if [%COMPILER%]==[MinGW-w64] mingw32-make && mingw32-make install
+- if [%COMPILER%]==[MSVC15] msbuild INSTALL.vcxproj /p:Configuration=%BUILD_TYPE% /p:Platform=%PLATFORM% /p:PlatformToolset=%PLATFORMTOOLSET% /verbosity:normal
+
+- if not [%COMPILER%]==[MSVC15] mingw32-make && mingw32-make install
 
 test_script:
 - ctest --output-on-failure
 - if [%WITH_PYTHON%]==[yes] cd symengine/python
-- if [%WITH_PYTHON%]==[yes] nosetests
+- if [%WITH_PYTHON%]==[yes] if not [%COMPILER%]==[MSVC15] nosetests
 - if [%WITH_PYTHON%]==[yes] mkdir empty && cd empty
 - if [%WITH_PYTHON%]==[yes] python C:\projects\symengine\bin\test_python.py
 
