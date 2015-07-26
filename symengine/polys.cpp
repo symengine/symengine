@@ -170,6 +170,24 @@ RCP<const Polynomial> add_poly(const Polynomial &a, const Polynomial &b) {
     return c;
 }
 
+RCP<const Polynomial> sub_poly(const Polynomial &a, const Polynomial &b) {
+    hash_set res = a.polys_set_;
+    m_pair temp;
+    for (auto &it : b.polys_set_) {
+        temp.first = it.first;
+        auto it2 = res.find(temp);
+        if (it2 == res.end()) {
+            temp.second = it.second;
+            res.insert(temp);
+        }
+        else {
+            it2->second = it2->second - it.second;
+        }
+    }
+
+    RCP<const Polynomial> c = polynomial(a.vars_, std::move(res));
+    return c;
+}
 
 RCP<const Polynomial> neg_poly(const Polynomial &a) {
     hash_set res;
