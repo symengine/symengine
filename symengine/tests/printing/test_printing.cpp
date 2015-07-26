@@ -119,8 +119,8 @@ TEST_CASE("test_printing(): printing", "[printing]")
     r2 = mul(c2, x);
     REQUIRE(c1->__str__() == "5*I/7");
     REQUIRE(c2->__str__() == "-5*I/7");
-    //REQUIRE(r1->__str__() == "5/7*I*x");
-    //REQUIRE(r2->__str__() == "-5/7*I*x");
+    REQUIRE(r1->__str__() == "(5*I/7)*x");
+    REQUIRE(r2->__str__() == "(-5*I/7)*x");
     r1 = pow(x, c1);
     r2 = pow(x, c2);
     REQUIRE(r1->__str__() == "x**(5*I/7)");
