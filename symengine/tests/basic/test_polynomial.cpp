@@ -236,7 +236,7 @@ TEST_CASE("Constructor of Polynomial", "[Polynomial]")
     REQUIRE(Q.__str__() == "2*y**1*x**0 + 2*y**0*x**1");
 }
 
-TEST_CASE("Negative of Polynomial", "[Polynomial]")
+TEST_CASE("Arithmetic of Polynomial", "[Polynomial]")
 {   
     RCP<const Symbol> x  = symbol("x");
     vec_symbol vars;
@@ -260,4 +260,8 @@ TEST_CASE("Negative of Polynomial", "[Polynomial]")
     RCP<const Polynomial> P = polynomial(vars, s);
     RCP<const Polynomial> R = neg_poly(*P);
     REQUIRE(R->__str__() == "-x**2 - 2*x**3");
+
+    RCP<const Polynomial> Q = add_poly(*P, *P);
+    //std::cout<<Q->__str__()<<std::endl;
+    REQUIRE(Q->__str__() == "2*x**2 + 4*x**3");
 }
