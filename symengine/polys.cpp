@@ -6,11 +6,12 @@
 
 namespace SymEngine {
 
-Polynomial::Polynomial(const vec_symbol &vars, hash_set polys_set) {
+Polynomial::Polynomial(const vec_symbol &vars, hash_set polys_set)
+    : vars_{vars} {
     //! TODO: Use initializer list
-    vars_ = vars;
     polys_set_ = polys_set;
-    //SYMENGINE_ASSERT(is_canonical(vars_, polys_set_))
+
+    SYMENGINE_ASSERT(is_canonical(vars_, polys_set_))
 }
 
 Polynomial::Polynomial(const RCP<const Basic> &p, umap_basic_num &vars) {
@@ -148,6 +149,17 @@ vec_basic Polynomial::get_args() const
 RCP<const Basic> Polynomial::diff(const RCP<const Symbol> &x) const
 {
     return x;
+}
+
+RCP<const Polynomial> neg_poly(const Polynomial &a) {
+    hash_set res;
+    m_pair temp;
+    for (auto &it: a.polys_set_) {
+        temp.first = it.first;
+        temp.second = -1 * it.second;
+        res.insert(temp);
+    }
+    return polynomial(a.vars_, res);
 }
 
 RCP<const Polynomial> mul_poly(RCP <const Polynomial> a, RCP <const Polynomial> b) {

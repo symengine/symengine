@@ -236,7 +236,7 @@ TEST_CASE("Constructor of Polynomial", "[Polynomial]")
     REQUIRE(Q.__str__() == "2*y**1*x**0 + 2*y**0*x**1");
 }
 
-TEST_CASE("Multiplication of Polynomial", "[Polynomial]")
+TEST_CASE("Negative of Polynomial", "[Polynomial]")
 {   
     RCP<const Symbol> x  = symbol("x");
     vec_symbol vars;
@@ -258,17 +258,6 @@ TEST_CASE("Multiplication of Polynomial", "[Polynomial]")
     s.insert(t2);
 
     RCP<const Polynomial> P = polynomial(vars, s);
-    RCP<const Polynomial> R = mul_poly(P, P);
-    std::cout<<R->__str__()<<std::endl;
-    //REQUIRE(P->__str__() == "x**2 + 2*x**3");
-
-    RCP<const Basic> y  = symbol("y");
-    RCP<const Basic> r = add(add(x, y), add(y, x));
-    
-    umap_basic_num syms;
-    insert(syms, x, integer(0));
-    insert(syms, y, integer(1));
-    
-    const Polynomial Q(r, syms);
-    REQUIRE(Q.__str__() == "2*y**1*x**0 + 2*y**0*x**1");
+    RCP<const Polynomial> R = neg_poly(*P);
+    REQUIRE(R->__str__() == "-x**2 - 2*x**3");
 }
