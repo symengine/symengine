@@ -513,7 +513,7 @@ RCP<const Basic> log(const RCP<const Basic> &arg)
     }
     if (is_a<Rational>(*arg)) {
         RCP<const Integer> num, den;
-        get_num_den(rcp_static_cast<const Rational>(arg), outArg(num), outArg(den));
+        get_num_den(*(rcp_static_cast<const Rational>(arg)), outArg(num), outArg(den));
         return sub(log(num), log(den));
     }
     return make_rcp<const Log>(arg);

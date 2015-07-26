@@ -161,7 +161,7 @@ cdef extern from "<symengine/rational.h>" namespace "SymEngine":
     cdef cppclass Rational(Number):
         mpq_class as_mpq() nogil
     cdef RCP[const Number] from_mpq "SymEngine::Rational::from_mpq"(mpq_class) nogil
-    cdef void get_num_den(const RCP[Rational] &rat, const Ptr[RCP[Integer]] &num,
+    cdef void get_num_den(const Rational &rat, const Ptr[RCP[Integer]] &num,
                      const Ptr[RCP[Integer]] &den) nogil
 
 cdef extern from "<symengine/complex.h>" namespace "SymEngine":

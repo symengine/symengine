@@ -71,11 +71,11 @@ int Rational::compare(const Basic &o) const
     return i < s.i ? -1 : 1;
 }
 
-void get_num_den(const RCP<const Rational> &rat,
+void get_num_den(const Rational &rat,
             const Ptr<RCP<const Integer>> &num,
             const Ptr<RCP<const Integer>> &den)
 {
-    *num = integer(rat->i.get_num());
-    *den = integer(rat->i.get_den());
+    *num = integer((rat.i).get_num());
+    *den = integer((rat.i).get_den());
 }
 } // SymEngine

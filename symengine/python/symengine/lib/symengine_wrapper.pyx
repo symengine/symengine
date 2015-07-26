@@ -605,7 +605,7 @@ cdef class Rational(Number):
 
     def get_num_den(self):
         cdef RCP[const symengine.Integer] _num, _den
-        symengine.get_num_den(symengine.rcp_static_cast_Rational(self.thisptr),
+        symengine.get_num_den(deref(symengine.rcp_static_cast_Rational(self.thisptr)),
                            symengine.outArg_Integer(_num), symengine.outArg_Integer(_den))
         return [c2py(<RCP[const symengine.Basic]>_num), c2py(<RCP[const symengine.Basic]>_den)]
 
