@@ -40,8 +40,8 @@ public:
     /*! Constructs Rational as n/d, where n, d can be any Integers. If n/d is an
     *   Integer, it will return an Integer instead.
     * */
-    static RCP<const Number> from_two_ints(const RCP<const Integer> &n,
-            const RCP<const Integer> &d);
+    static RCP<const Number> from_two_ints(const Integer &n,
+            const Integer &d);
     //! Convert to `mpq_class`.
     inline mpq_class as_mpq() const { return this->i; }
     //! \return `true` if `0`

@@ -184,11 +184,11 @@ TEST_CASE("Mul: arit", "[arit]")
     REQUIRE(eq(*r1, *r2));
 
     RCP<const Number> rc1, rc2, c1, c2;
-    rc1 = Rational::from_two_ints(integer(2), integer(1));
-    rc2 = Rational::from_two_ints(integer(3), integer(1));
+    rc1 = Rational::from_two_ints(*integer(2), *integer(1));
+    rc2 = Rational::from_two_ints(*integer(3), *integer(1));
     c1 = Complex::from_two_nums(*rc1, *rc2);
-    rc1 = Rational::from_two_ints(integer(-5), integer(1));
-    rc2 = Rational::from_two_ints(integer(12), integer(1));
+    rc1 = Rational::from_two_ints(*integer(-5), *integer(1));
+    rc2 = Rational::from_two_ints(*integer(12), *integer(1));
     c2 = Complex::from_two_nums(*rc1, *rc2);
 
     r1 = mul(x, c1);
@@ -276,9 +276,9 @@ TEST_CASE("Sub: arit", "[arit]")
     REQUIRE(eq(*r1, *r2));
 
     RCP<const Number> rc1, rc2, rc3, c1, c2;
-    rc1 = Rational::from_two_ints(integer(1), integer(2));
-    rc2 = Rational::from_two_ints(integer(3), integer(4));
-    rc3 = Rational::from_two_ints(integer(-5), integer(6));
+    rc1 = Rational::from_two_ints(*integer(1), *integer(2));
+    rc2 = Rational::from_two_ints(*integer(3), *integer(4));
+    rc3 = Rational::from_two_ints(*integer(-5), *integer(6));
 
     c1 = Complex::from_two_nums(*rc1, *rc2);
     c2 = Complex::from_two_nums(*rc1, *rc3);
@@ -381,9 +381,9 @@ TEST_CASE("Div: arit", "[arit]")
     REQUIRE(eq(*r1, *integer(15)));
 
     RCP<const Number> rc1, rc2, rc3, c1, c2;
-    rc1 = Rational::from_two_ints(integer(1), integer(2));
-    rc2 = Rational::from_two_ints(integer(3), integer(4));
-    rc3 = Rational::from_two_ints(integer(12), integer(13));
+    rc1 = Rational::from_two_ints(*integer(1), *integer(2));
+    rc2 = Rational::from_two_ints(*integer(3), *integer(4));
+    rc3 = Rational::from_two_ints(*integer(12), *integer(13));
 
     c1 = Complex::from_two_nums(*rc1, *rc2);
     c2 = Complex::from_two_nums(*rc1, *rc1);
@@ -393,7 +393,7 @@ TEST_CASE("Div: arit", "[arit]")
     REQUIRE(eq(*r1, *r2));
 
     r1 = mul(c2, div(x, c1));
-    rc3 = Rational::from_two_ints(integer(2), integer(13));
+    rc3 = Rational::from_two_ints(*integer(2), *integer(13));
     r2 = mul(sub(div(integer(10), integer(13)), mul(I, rc3)), x);
     REQUIRE(eq(*r1, *r2));
 
@@ -567,9 +567,9 @@ TEST_CASE("Pow: arit", "[arit]")
     REQUIRE(neq(*r1, *r2));
 
     RCP<const Number> rc1, rc2, rc3, c1, c2;
-    rc1 = Rational::from_two_ints(integer(1), integer(2));
-    rc2 = Rational::from_two_ints(integer(3), integer(4));
-    rc3 = Rational::from_two_ints(integer(12), integer(13));
+    rc1 = Rational::from_two_ints(*integer(1), *integer(2));
+    rc2 = Rational::from_two_ints(*integer(3), *integer(4));
+    rc3 = Rational::from_two_ints(*integer(12), *integer(13));
 
     c1 = Complex::from_two_nums(*rc1, *rc2);
     c2 = Complex::from_two_nums(*rc1, *rc1);
@@ -916,8 +916,8 @@ TEST_CASE("Expand3: arit", "[arit]")
         << rcp_dynamic_cast<const Add>(r)->dict_.size() << std::endl;
 
     RCP<const Number> rc1, rc2, c1;
-    rc1 = Rational::from_two_ints(integer(2), integer(1));
-    rc2 = Rational::from_two_ints(integer(3), integer(1));
+    rc1 = Rational::from_two_ints(*integer(2), *integer(1));
+    rc2 = Rational::from_two_ints(*integer(3), *integer(1));
 
     c1 = Complex::from_two_nums(*rc1, *rc2);
     e = pow(add(x, c1), integer(40));

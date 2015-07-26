@@ -127,8 +127,8 @@ int rational_set(basic s, const basic a, const basic b)
         return 0;
     }
     s->m = SymEngine::Rational::from_two_ints(
-            rcp_static_cast<const Integer>(a->m),
-            rcp_static_cast<const Integer>(b->m));
+            *(rcp_static_cast<const Integer>(a->m)),
+            *(rcp_static_cast<const Integer>(b->m)));
     return 1;
 }
 

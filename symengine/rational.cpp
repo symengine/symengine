@@ -30,12 +30,12 @@ RCP<const Number> Rational::from_mpq(const mpq_class i)
     }
 }
 
-RCP<const Number> Rational::from_two_ints(const RCP<const Integer> &n,
-            const RCP<const Integer> &d)
+RCP<const Number> Rational::from_two_ints(const Integer &n,
+            const Integer &d)
 {
-    if (d->i == 0)
+    if (d.i == 0)
         throw std::runtime_error("Rational: Division by zero.");
-    mpq_class q(n->i, d->i);
+    mpq_class q(n.i, d.i);
 
     // This is potentially slow, but has to be done, since 'n/d' might not be
     // in canonical form.
