@@ -1396,7 +1396,7 @@ bool powermod(const Ptr<RCP<const Integer>> &powm, const RCP<const Integer> &a,
         return true;
     } else if (is_a<Rational>(*b)) {
         RCP<const Integer> num, den, r;
-        get_num_den(*(rcp_static_cast<const Rational>(b)), outArg(num), outArg(den));
+        get_num_den(static_cast<const Rational &>(*b), outArg(num), outArg(den));
         if (den->is_negative()) {
             den = den->mulint(*integer(-1));
             num = num->mulint(*integer(-1));
@@ -1432,7 +1432,7 @@ void powermod_list(std::vector<RCP<const Integer>> &pows, const RCP<const Intege
         pows.push_back(integer(t));
     } else if (is_a<Rational>(*b)) {
         RCP<const Integer> num, den, r;
-        get_num_den(*(rcp_static_cast<const Rational>(b)), outArg(num), outArg(den));
+        get_num_den(static_cast<const Rational &>(*b), outArg(num), outArg(den));
         if (den->is_negative()) {
             den = den->mulint(*integer(-1));
             num = num->mulint(*integer(-1));
