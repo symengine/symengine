@@ -100,6 +100,9 @@ void test_complex() {
     SYMENGINE_C_ASSERT(is_a_Rational(e) == 0);
     SYMENGINE_C_ASSERT(is_a_Integer(e) == 0);
     SYMENGINE_C_ASSERT(is_a_Complex(e) == 1);
+
+    basic_free(e);
+    basic_free(f);
 }
 
 void test_CVectorInt1()
