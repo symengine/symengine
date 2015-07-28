@@ -16,49 +16,11 @@ VALUE cbasic_alloc(VALUE klass){
 }
 
 VALUE cbasic_binary_op(VALUE self, VALUE operand2, void (*cwfunc_ptr)(basic_struct*, const basic_struct*, const basic_struct*)){
-    basic_struct *this, *cbasic_operand2, *cresult, *num_basic, *den_basic;
+    basic_struct *this, *cbasic_operand2, *cresult;
     VALUE result;
 
     Data_Get_Struct(self, basic_struct, this);
-    VALUE Klass, new_operand2, num, den;
-
-    switch(TYPE(operand2)) {
-        case T_FIXNUM:
-            Klass = rb_path2class("SymEngine::Integer");
-            new_operand2 = cbasic_alloc(Klass);
-            Data_Get_Struct(new_operand2, basic_struct, cbasic_operand2);
-            integer_set_si(cbasic_operand2, FIX2LONG(operand2));
-            break;
-
-        case T_BIGNUM:
-            Klass = rb_path2class("SymEngine::Integer");
-            new_operand2 = cbasic_alloc(Klass);
-            Data_Get_Struct(new_operand2, basic_struct, cbasic_operand2);
-            integer_set_ui(cbasic_operand2, NUM2ULONG(operand2));
-            break;
-
-        case T_RATIONAL:
-            num = rb_funcall(operand2, rb_intern("numerator"), 0, NULL);
-            den = rb_funcall(operand2, rb_intern("denominator"), 0, NULL);
-
-            num_basic = basic_new_heap();
-            den_basic = basic_new_heap();
-
-            GET_SYMINTFROMVAL(num, num_basic);
-            GET_SYMINTFROMVAL(den, den_basic);
-
-            Klass = rb_path2class("SymEngine::Rational");
-            new_operand2 = cbasic_alloc(Klass);
-            Data_Get_Struct(new_operand2, basic_struct, cbasic_operand2);
-            rational_set(cbasic_operand2, num_basic, den_basic);
-
-            basic_free_heap(num_basic);
-            basic_free_heap(den_basic);
-
-        default:
-            Data_Get_Struct(operand2, basic_struct, cbasic_operand2);
-            break;
-    }
+    sympify(operand2, &cbasic_operand2);
 
     cresult = basic_new_heap();
     cwfunc_ptr(cresult, this, cbasic_operand2);
