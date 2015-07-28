@@ -112,6 +112,13 @@ void rational_set_ui(basic s, unsigned long i, unsigned long j);
 //! Assign to s, a rational i, where is of type mpq_t.
 void rational_set_mpq(basic s, const mpq_t i);
 
+//! Assign to s, a complex re + i*im.
+void complex_set(basic s, const basic re, const basic im);
+//! Assign to s, a complex re + i*im, where re and im are rationals.
+void complex_set_rat(basic s, const basic re, const basic im);
+//! Assign to s, a complex re + i*im, where re and im are of type mpq.
+void complex_set_mpq(basic s, const mpq_t re, const mpq_t im);
+
 //! Assigns s = a + b.
 void basic_add(basic s, const basic a, const basic b);
 //! Assigns s = a - b.
@@ -142,10 +149,12 @@ void basic_str_free(char* s);
 
 //! Return 1 if s is an Integer, 0 if not.
 int is_a_Integer(const basic s);
-//! Return 1 if s is an Rational, 0 if not.
+//! Return 1 if s is a Rational, 0 if not.
 int is_a_Rational(const basic s);
-//! Return 1 if s is an Symbol, 0 if not.
+//! Return 1 if s is a Symbol, 0 if not.
 int is_a_Symbol(const basic s);
+//! Return 1 if s is a Complex, 0 if not.
+int is_a_Complex(const basic s);
 
 
 //! Wrapper for std::vector<int>

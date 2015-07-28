@@ -17,14 +17,14 @@ void test_cwrapper() {
     symbol_set(z, "z");
 
     s = basic_str(x);
-    printf("Symbol : %s\n", s);
+    SYMENGINE_C_ASSERT(strcmp(s, "x") == 0);
     basic_str_free(s);
     basic e;
     basic_init(e);
 
     integer_set_ui(e, 123);
     s = basic_str(e);
-    printf("Integer : %s\n", s);
+    SYMENGINE_C_ASSERT(strcmp(s, "123") == 0);
     basic_str_free(s);
 
     integer_set_ui(e, 456);
@@ -32,33 +32,33 @@ void test_cwrapper() {
     basic_mul(e, e, y);
     basic_div(e, e, z);
     s = basic_str(e);
-    printf("Basic : %s\n", s);
+    SYMENGINE_C_ASSERT(strcmp(s, "y*(456 + x)/z") == 0);
     basic_str_free(s);
 
     basic_diff(e, e, z);
     s = basic_str(e);
-    printf("Basic : %s\n", s);
+    SYMENGINE_C_ASSERT(strcmp(s, "-y*(456 + x)/z**2") == 0);
     basic_str_free(s);
 
     rational_set_ui(e, 100, 47);
     s = basic_str(e);
 
-    printf("Rational : %s\n", s);
-    printf("Is_a_Symbol %s: %d\n", s, is_a_Symbol(e));
-    printf("Is_a_Rational %s: %d\n", s, is_a_Rational(e));
-    printf("Is_a_Integer %s: %d\n", s, is_a_Integer(e));
+    SYMENGINE_C_ASSERT(strcmp(s, "100/47") == 0);
+    SYMENGINE_C_ASSERT(!is_a_Symbol(e));
+    SYMENGINE_C_ASSERT(is_a_Rational(e));
+    SYMENGINE_C_ASSERT(!is_a_Integer(e));
 
     integer_set_ui(e, 123);
-    printf("integer_get_ui 123: %lu\n", integer_get_ui(e));
+    SYMENGINE_C_ASSERT(integer_get_ui(e) == 123);
 
     integer_set_si(e, -123);
-    printf("integer_get_si -123: %ld\n", integer_get_si(e));
+    SYMENGINE_C_ASSERT(integer_get_si(e) == -123);
 
     mpz_t test;
     mpz_init(test);
 
     integer_get_mpz(test, e);
-    printf("integer_get_mpz(e): %ld\n", mpz_get_ui(test));
+    SYMENGINE_C_ASSERT(mpz_get_ui(test) == 123);
 
     mpz_clear(test);
     basic_free(e);
@@ -83,11 +83,34 @@ void test_basic() {
     basic_free_heap(y);
 }
 
+void test_complex() {
+    basic e;
+    basic f;
+    char* s;
+    basic_init(e);
+    basic_init(f);
+    rational_set_ui(e, 100, 47);
+    rational_set_ui(f, 76, 59);
+    complex_set(e, e, f);
+    s = basic_str(e);
+
+    SYMENGINE_C_ASSERT(strcmp(s, "100/47 + 76/59*I") == 0);
+
+    SYMENGINE_C_ASSERT(!is_a_Symbol(e));
+    SYMENGINE_C_ASSERT(!is_a_Rational(e));
+    SYMENGINE_C_ASSERT(!is_a_Integer(e));
+    SYMENGINE_C_ASSERT(is_a_Complex(e));
+
+    basic_free(e);
+    basic_free(f);
+}
+
 void test_CVectorInt1()
 {
     // Allocate on heap
     CVectorInt *vec = vectorint_new();
     vectorint_push_back(vec, 5);
+    ;
     SYMENGINE_C_ASSERT(vectorint_get(vec, 0) == 5);
     vectorint_free(vec);
 }
@@ -264,6 +287,7 @@ void test_hash() {
 int main(int argc, char* argv[])
 {
     test_cwrapper();
+    test_complex();
     test_basic();
     test_CVectorInt1();
     test_CVectorInt2();

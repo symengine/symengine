@@ -10,6 +10,7 @@
 #include <symengine/pow.h>
 #include <symengine/add.h>
 #include <symengine/number.h>
+#include <symengine/complex.h>
 #include <symengine/constants.h>
 #include <symengine/visitor.h>
 
@@ -20,6 +21,7 @@ using SymEngine::Symbol;
 using SymEngine::Rational;
 using SymEngine::Integer;
 using SymEngine::Number;
+using SymEngine::Complex;
 using SymEngine::rcp_static_cast;
 using SymEngine::is_a;
 using SymEngine::RCPBasicKeyLess;
@@ -137,6 +139,25 @@ void rational_set_mpq(basic s, const mpq_t i)
     s->m = SymEngine::Rational::from_mpq(mpq_class(i));
 }
 
+void complex_set(basic s, const basic re, const basic im)
+{
+    s->m = SymEngine::Complex::from_two_nums(
+            *(rcp_static_cast<const Number>(re->m)),
+            *(rcp_static_cast<const Number>(im->m)));
+}
+
+void complex_set_rat(basic s, const basic re, const basic im)
+{
+    s->m = SymEngine::Complex::from_two_rats(
+            *(rcp_static_cast<const Rational>(re->m)),
+            *(rcp_static_cast<const Rational>(im->m)));
+}
+
+void complex_set_mpq(basic s, const mpq_t re, const mpq_t im)
+{
+    s->m = SymEngine::Complex::from_mpq(mpq_class(re), mpq_class(im));
+}
+
 int basic_diff(basic s, const basic expr, basic const symbol)
 {
     if (!is_a_Symbol(symbol))
@@ -223,6 +244,10 @@ int is_a_Rational(const basic c)
 int is_a_Symbol(const basic c)
 {
     return is_a<Symbol>(*(c->m));
+}
+int is_a_Complex(const basic c)
+{
+    return is_a<Complex>(*(c->m));
 }
 
 
