@@ -115,7 +115,7 @@ void rational_set_mpq(basic s, const mpq_t i);
 //! Assign to s, a complex re + i*im.
 void complex_set(basic s, const basic re, const basic im);
 //! Assign to s, a complex re + i*im, where re and im are rationals.
-void complex_set_rat(basic s, basic re, basic im);
+void complex_set_rat(basic s, const basic re, const basic im);
 //! Assign to s, a complex re + i*im, where re and im are of type mpq.
 void complex_set_mpq(basic s, const mpq_t re, const mpq_t im);
 

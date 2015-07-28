@@ -146,7 +146,7 @@ void complex_set(basic s, const basic re, const basic im)
             *(rcp_static_cast<const Number>(im->m)));
 }
 
-void complex_set_rat(basic s, basic re, basic im)
+void complex_set_rat(basic s, const basic re, const basic im)
 {
     s->m = SymEngine::Complex::from_two_rats(
             *(rcp_static_cast<const Rational>(re->m)),
