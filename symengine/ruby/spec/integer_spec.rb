@@ -13,9 +13,8 @@ describe SymEngine do
           expect(b.to_s).to eq('-123')
           c = SymEngine::Integer.new(12_345_678_912_345_678_912)
           expect(c.to_s).to eq('12345678912345678912')
-          expect do
-            SymEngine::Integer.new(-12_345_678_912_345_678_912)
-          end.to raise_error(RangeError)
+          c = SymEngine::Integer.new(-12_345_678_912_345_678_912)
+          expect(c.to_s).to eq('-12345678912345678912')
         end
       end
     end
