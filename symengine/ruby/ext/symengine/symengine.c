@@ -2,18 +2,11 @@
 #include "ruby_symbol.h"
 #include "ruby_integer.h"
 #include "ruby_rational.h"
+#include "symengine.h"
+
 ///////////////////
 // Ruby Bindings //
 ///////////////////
-
-//variable name for a module starts with m
-static VALUE m_symengine;
-
-//variable names for classes begin with c
-static VALUE c_basic;
-static VALUE c_symbol;
-static VALUE c_integer;
-static VALUE c_rational;
 
 void Init_symengine() {
     m_symengine = rb_define_module("SymEngine");
