@@ -44,9 +44,9 @@ void test_cwrapper() {
     s = basic_str(e);
 
     SYMENGINE_C_ASSERT(strcmp(s, "100/47") == 0);
-    SYMENGINE_C_ASSERT(is_a_Symbol(e) == 0);
-    SYMENGINE_C_ASSERT(is_a_Rational(e) == 1);
-    SYMENGINE_C_ASSERT(is_a_Integer(e) == 0);
+    SYMENGINE_C_ASSERT(!is_a_Symbol(e));
+    SYMENGINE_C_ASSERT(is_a_Rational(e));
+    SYMENGINE_C_ASSERT(!is_a_Integer(e));
 
     integer_set_ui(e, 123);
     SYMENGINE_C_ASSERT(integer_get_ui(e) == 123);
@@ -96,10 +96,10 @@ void test_complex() {
 
     SYMENGINE_C_ASSERT(strcmp(s, "100/47 + 76/59*I") == 0);
 
-    SYMENGINE_C_ASSERT(is_a_Symbol(e) == 0);
-    SYMENGINE_C_ASSERT(is_a_Rational(e) == 0);
-    SYMENGINE_C_ASSERT(is_a_Integer(e) == 0);
-    SYMENGINE_C_ASSERT(is_a_Complex(e) == 1);
+    SYMENGINE_C_ASSERT(!is_a_Symbol(e));
+    SYMENGINE_C_ASSERT(!is_a_Rational(e));
+    SYMENGINE_C_ASSERT(!is_a_Integer(e));
+    SYMENGINE_C_ASSERT(is_a_Complex(e));
 
     basic_free(e);
     basic_free(f);
