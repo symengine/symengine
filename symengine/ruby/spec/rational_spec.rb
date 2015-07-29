@@ -12,5 +12,40 @@ describe SymEngine do
         end
       end
     end
+
+    describe 'coercion tests' do
+      before :each do
+        @a = SymEngine::Symbol.new('x')
+        @b = Rational(3, 5)
+      end
+
+      context 'using a ruby Rational as the second operand' do
+        it 'succeeds with commutative operations' do
+          c = @a * @b
+          expect(c).to be_an_instance_of SymEngine::Symbol
+          expect(c).to eq(SymEngine::Rational.new(@b) * @a)
+        end
+
+        it 'succeeds with non commutative operations' do
+          c = @a / @b
+          expect(c).to be_an_instance_of SymEngine::Symbol
+          expect(c).to eq(@a / SymEngine::Rational.new(@b))
+        end
+      end
+
+      context 'using a ruby Rational as the first operand' do
+        it 'succeeds with commutative operations' do
+          c = @b * @a
+          expect(c).to be_an_instance_of SymEngine::Symbol
+          expect(c).to eq(@a * SymEngine::Rational.new(@b))
+        end
+
+        it 'succeeds with non commutative operations' do
+          c = @b / @a
+          expect(c).to be_an_instance_of SymEngine::Symbol
+          expect(c).to eq(SymEngine::Rational.new(@b) / @a)
+        end
+      end
+    end
   end
 end
