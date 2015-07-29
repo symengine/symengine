@@ -18,5 +18,39 @@ describe SymEngine do
         end
       end
     end
+
+    describe 'coercion tests' do
+      before :each do
+        @a = SymEngine::Symbol.new('x')
+      end
+
+      context 'using a ruby integer as the second operand' do
+        it 'succeeds with commutative operations' do
+          b = @a * 2
+          expect(b).to be_an_instance_of SymEngine::Symbol
+          expect(b).to eq(SymEngine::Integer.new(2) * @a)
+        end
+
+        it 'succeeds with non commutative operations' do
+          b = @a / 2
+          expect(b).to be_an_instance_of SymEngine::Symbol
+          expect(b).to eq(@a / SymEngine::Integer.new(2))
+        end
+      end
+
+      context 'using a ruby integer as the first operand' do
+        it 'succeeds with commutative operations' do
+          b = 2 * @a
+          expect(b).to be_an_instance_of SymEngine::Symbol
+          expect(b).to eq(@a * SymEngine::Integer.new(2))
+        end
+
+        it 'succeeds with non commutative operations' do
+          b = 2 / @a
+          expect(b).to be_an_instance_of SymEngine::Symbol
+          expect(b).to eq(SymEngine::Integer.new(2) / @a)
+        end
+      end
+    end
   end
 end
