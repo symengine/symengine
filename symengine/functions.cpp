@@ -1617,9 +1617,33 @@ int Derivative::compare(const Basic &o) const
 RCP<const Basic> Derivative::diff(const RCP<const Symbol> &x) const
 {
     if (eq(*(arg_->diff(x)), *zero)) return zero;
+    unsigned i;
+    bool all_symbols = true;
+    bool directly_present = false;
     vec_basic t = x_;
-    t.push_back(x);
-    return Derivative::create(arg_, t);
+    vec_basic u = arg_->get_args();
+    for (i = 0; i < t.size(); i++) {
+        if (!is_a<Symbol>(*t[i])) {
+            all_symbols = false;
+            break;
+        }
+    }
+    for (i = 0; i < u.size(); i++) {
+        if (eq(*(u[i]->diff(x)), *one)) {
+            directly_present = true;
+            break;
+        }
+    }
+    if (!all_symbols || directly_present) {
+        t.push_back(x);
+        return Derivative::create(arg_, t);
+    } else {
+        RCP<const Basic> ret = arg_->diff(x);
+        for (i = 0; i < t.size(); i++) {
+            ret = ret->diff(rcp_static_cast<const Symbol>(t[i]));
+        }
+        return ret;
+    }
 }
 
 RCP<const Basic> Derivative::subs(const map_basic_basic &subs_dict) const
