@@ -1808,7 +1808,15 @@ RCP<const Basic> Subs::subs(const map_basic_basic &subs_dict) const
     for (auto &s: dict_) {
         insert(m, s.first, s.second->subs(subs_dict));
     }
-    return make_rcp<const Subs>(arg_->subs(n), m);
+    RCP<const Basic> presub = arg_->subs(n);
+    if (neq(*presub, *(make_rcp<const Subs>(arg_, n)))) {
+        return make_rcp<const Subs>(presub, m);
+    } else {
+        for (auto &q: n) {
+            insert(m, q.first, q.second);
+        }
+        return make_rcp<const Subs>(arg_, m);
+    }
 }
 
 std::size_t HyperbolicFunction::__hash__() const
