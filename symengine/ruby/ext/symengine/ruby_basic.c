@@ -66,7 +66,7 @@ VALUE cbasic_eq(VALUE self, VALUE operand2) {
     basic_struct *this, *cbasic_operand2;
 
     Data_Get_Struct(self, basic_struct, this);
-    Data_Get_Struct(operand2, basic_struct, cbasic_operand2);
+    sympify(operand2, &cbasic_operand2);
 
     return basic_eq(this, cbasic_operand2) ? Qtrue : Qfalse;
 }
@@ -75,7 +75,7 @@ VALUE cbasic_neq(VALUE self, VALUE operand2) {
     basic_struct *this, *cbasic_operand2;
 
     Data_Get_Struct(self, basic_struct, this);
-    Data_Get_Struct(operand2, basic_struct, cbasic_operand2);
+    sympify(operand2, &cbasic_operand2);
 
     return basic_neq(this, cbasic_operand2) ? Qtrue : Qfalse;
 }
