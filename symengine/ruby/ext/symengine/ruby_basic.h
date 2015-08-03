@@ -42,4 +42,6 @@ VALUE cbasic_expand(VALUE self);
 
 VALUE cbasic_hash(VALUE self);
 
+VALUE cbasic_coerce(VALUE self, VALUE other);
+
 #endif //RUBY_BASIC_H_

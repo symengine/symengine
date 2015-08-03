@@ -160,3 +160,13 @@ VALUE cbasic_hash(VALUE self){
     // return LONG2FIX(lhash);
     return SIZET2NUM(basic_hash(this));
 }
+
+VALUE cbasic_coerce(VALUE self, VALUE other){
+    basic_struct *cbasic_operand2;
+    sympify(other, &cbasic_operand2);
+    VALUE new_other = Data_Wrap_Struct(Klass_of_Basic(cbasic_operand2), NULL , cbasic_free_heap, cbasic_operand2);
+    VALUE ruby_array = rb_ary_new2(2);
+    rb_ary_push(ruby_array, new_other);
+    rb_ary_push(ruby_array, self);
+    return ruby_array;
+}
