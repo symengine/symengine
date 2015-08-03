@@ -59,7 +59,7 @@ struct CRCPBasic_C
 //  the memory needed for RCP<const Basic> on the stack. A 'basic' type should
 //  be initialized using basic_new_stack(), before any function is called.
 //  Assignment should be done only by using basic_assign(). Before the variable
-//  goes out of scope, basic_free() must be called.
+//  goes out of scope, basic_free_stack() must be called.
 //
 //  For C, define a dummy struct with the right size, so that it can be
 //  allocated on the stack. For C++, the CRCPBasic is declared in cwrapper.cpp.
@@ -76,7 +76,7 @@ void basic_new_stack(basic s);
 //! Assign value of b to a.
 void basic_assign(basic a, const basic b);
 //! Free the C++ class wrapped by s.
-void basic_free(basic s);
+void basic_free_stack(basic s);
 
 // Use these two functions to allocate 'basic' on a heap:
 basic_struct* basic_new_heap();

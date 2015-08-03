@@ -51,7 +51,7 @@ void basic_new_stack(basic s)
     new(s) CRCPBasic();
 }
 
-void basic_free(basic s)
+void basic_free_stack(basic s)
 {
     s->m.~RCP();
 }

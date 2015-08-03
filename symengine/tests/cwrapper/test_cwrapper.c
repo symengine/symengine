@@ -61,10 +61,10 @@ void test_cwrapper() {
     SYMENGINE_C_ASSERT(mpz_get_ui(test) == 123);
 
     mpz_clear(test);
-    basic_free(e);
-    basic_free(x);
-    basic_free(y);
-    basic_free(z);
+    basic_free_stack(e);
+    basic_free_stack(x);
+    basic_free_stack(y);
+    basic_free_stack(z);
     basic_str_free(s);
 }
 
@@ -79,8 +79,8 @@ void test_basic() {
     // TODO: enable this once basic_eq() is implemented
     //SYMENGINE_C_ASSERT(basic_eq(x, y))
 
-    basic_free(x);
     basic_free_heap(y);
+    basic_free_stack(x);
 }
 
 void test_complex() {
@@ -101,8 +101,8 @@ void test_complex() {
     SYMENGINE_C_ASSERT(!is_a_Integer(e));
     SYMENGINE_C_ASSERT(is_a_Complex(e));
 
-    basic_free(e);
-    basic_free(f);
+    basic_free_stack(e);
+    basic_free_stack(f);
 }
 
 void test_CVectorInt1()
@@ -159,8 +159,8 @@ void test_CVecBasic()
     SYMENGINE_C_ASSERT(basic_eq(x, y));
 
     vecbasic_free(vec);
-    basic_free(x);
-    basic_free(y);
+    basic_free_stack(x);
+    basic_free_stack(y);
 }
 
 void test_CSetBasic()
@@ -195,8 +195,8 @@ void test_CSetBasic()
     SYMENGINE_C_ASSERT(basic_eq(x, y));
 
     setbasic_free(set);
-    basic_free(x);
-    basic_free(y);
+    basic_free_stack(x);
+    basic_free_stack(y);
 }
 
 void test_get_args()
@@ -220,10 +220,10 @@ void test_get_args()
     SYMENGINE_C_ASSERT(vecbasic_size(args) == 3);
     vecbasic_free(args);
 
-    basic_free(e);
-    basic_free(x);
-    basic_free(y);
-    basic_free(z);
+    basic_free_stack(e);
+    basic_free_stack(x);
+    basic_free_stack(y);
+    basic_free_stack(z);
 }
 
 void test_free_symbols()
@@ -247,10 +247,10 @@ void test_free_symbols()
     SYMENGINE_C_ASSERT(setbasic_size(symbols) == 3);
     setbasic_free(symbols);
 
-    basic_free(e);
-    basic_free(x);
-    basic_free(y);
-    basic_free(z);
+    basic_free_stack(e);
+    basic_free_stack(x);
+    basic_free_stack(y);
+    basic_free_stack(z);
 }
 
 void test_get_type() {
@@ -263,8 +263,8 @@ void test_get_type() {
     SYMENGINE_C_ASSERT(basic_get_type(x) == SYMENGINE_SYMBOL);
     SYMENGINE_C_ASSERT(basic_get_type(y) == SYMENGINE_INTEGER);
 
-    basic_free(x);
-    basic_free(y);
+    basic_free_stack(x);
+    basic_free_stack(y);
 }
 
 void test_hash() {
@@ -279,9 +279,9 @@ void test_hash() {
     SYMENGINE_C_ASSERT(basic_hash(x1) == basic_hash(x2));
     if (basic_hash(x1) != basic_hash(y)) SYMENGINE_C_ASSERT(basic_neq(x1,y));
 
-    basic_free(x1);
-    basic_free(x2);
-    basic_free(y);
+    basic_free_stack(x1);
+    basic_free_stack(x2);
+    basic_free_stack(y);
 }
 
 int main(int argc, char* argv[])
