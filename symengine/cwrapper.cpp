@@ -46,7 +46,7 @@ struct CRCPBasic {
 static_assert(sizeof(CRCPBasic) == sizeof(CRCPBasic_C), "Size of 'basic' is not correct");
 static_assert(std::alignment_of<CRCPBasic>::value == std::alignment_of<CRCPBasic_C>::value, "Alignment of 'basic' is not correct");
 
-void basic_init(basic s)
+void basic_new_stack(basic s)
 {
     new(s) CRCPBasic();
 }

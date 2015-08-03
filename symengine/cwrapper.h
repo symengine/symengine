@@ -57,7 +57,7 @@ struct CRCPBasic_C
 //  CRCPBasic, which has the same size and alignment as RCP<const Basic> (see
 //  the above comment for details). That is then used by the user to allocate
 //  the memory needed for RCP<const Basic> on the stack. A 'basic' type should
-//  be initialized using basic_init(), before any function is called.
+//  be initialized using basic_new_stack(), before any function is called.
 //  Assignment should be done only by using basic_assign(). Before the variable
 //  goes out of scope, basic_free() must be called.
 //
@@ -72,7 +72,7 @@ typedef struct CRCPBasic_C basic_struct;
 typedef basic_struct basic[1];
 
 //! Initialize a new basic instance.
-void basic_init(basic s);
+void basic_new_stack(basic s);
 //! Assign value of b to a.
 void basic_assign(basic a, const basic b);
 //! Free the C++ class wrapped by s.
