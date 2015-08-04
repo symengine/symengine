@@ -9,9 +9,9 @@
 void test_cwrapper() {
     char* s;
     basic x, y, z;
-    basic_init(x);
-    basic_init(y);
-    basic_init(z);
+    basic_new_stack(x);
+    basic_new_stack(y);
+    basic_new_stack(z);
     symbol_set(x, "x");
     symbol_set(y, "y");
     symbol_set(z, "z");
@@ -20,7 +20,7 @@ void test_cwrapper() {
     SYMENGINE_C_ASSERT(strcmp(s, "x") == 0);
     basic_str_free(s);
     basic e;
-    basic_init(e);
+    basic_new_stack(e);
 
     integer_set_ui(e, 123);
     s = basic_str(e);
@@ -61,16 +61,16 @@ void test_cwrapper() {
     SYMENGINE_C_ASSERT(mpz_get_ui(test) == 123);
 
     mpz_clear(test);
-    basic_free(e);
-    basic_free(x);
-    basic_free(y);
-    basic_free(z);
+    basic_free_stack(e);
+    basic_free_stack(x);
+    basic_free_stack(y);
+    basic_free_stack(z);
     basic_str_free(s);
 }
 
 void test_basic() {
     basic x;
-    basic_init(x);
+    basic_new_stack(x);
     symbol_set(x, "x");
 
     basic_struct *y = basic_new_heap();
@@ -79,16 +79,16 @@ void test_basic() {
     // TODO: enable this once basic_eq() is implemented
     //SYMENGINE_C_ASSERT(basic_eq(x, y))
 
-    basic_free(x);
     basic_free_heap(y);
+    basic_free_stack(x);
 }
 
 void test_complex() {
     basic e;
     basic f;
     char* s;
-    basic_init(e);
-    basic_init(f);
+    basic_new_stack(e);
+    basic_new_stack(f);
     rational_set_ui(e, 100, 47);
     rational_set_ui(f, 76, 59);
     complex_set(e, e, f);
@@ -101,8 +101,8 @@ void test_complex() {
     SYMENGINE_C_ASSERT(!is_a_Integer(e));
     SYMENGINE_C_ASSERT(is_a_Complex(e));
 
-    basic_free(e);
-    basic_free(f);
+    basic_free_stack(e);
+    basic_free_stack(f);
 }
 
 void test_CVectorInt1()
@@ -146,21 +146,21 @@ void test_CVecBasic()
     SYMENGINE_C_ASSERT(vecbasic_size(vec) == 0);
 
     basic x;
-    basic_init(x);
+    basic_new_stack(x);
     symbol_set(x, "x");
     vecbasic_push_back(vec, x);
 
     SYMENGINE_C_ASSERT(vecbasic_size(vec) == 1);
 
     basic y;
-    basic_init(y);
+    basic_new_stack(y);
     vecbasic_get(vec, 0, y);
 
     SYMENGINE_C_ASSERT(basic_eq(x, y));
 
     vecbasic_free(vec);
-    basic_free(x);
-    basic_free(y);
+    basic_free_stack(x);
+    basic_free_stack(y);
 }
 
 void test_CSetBasic()
@@ -169,7 +169,7 @@ void test_CSetBasic()
     SYMENGINE_C_ASSERT(setbasic_size(set) == 0);
 
     basic x;
-    basic_init(x);
+    basic_new_stack(x);
     symbol_set(x, "x");
 
     int has_insert;
@@ -181,7 +181,7 @@ void test_CSetBasic()
     SYMENGINE_C_ASSERT(has_insert == 0);
 
     basic y;
-    basic_init(y);
+    basic_new_stack(y);
     symbol_set(y, "y");
 
     int is_found;
@@ -195,17 +195,17 @@ void test_CSetBasic()
     SYMENGINE_C_ASSERT(basic_eq(x, y));
 
     setbasic_free(set);
-    basic_free(x);
-    basic_free(y);
+    basic_free_stack(x);
+    basic_free_stack(y);
 }
 
 void test_get_args()
 {
     basic x, y, z, e;
-    basic_init(x);
-    basic_init(y);
-    basic_init(z);
-    basic_init(e);
+    basic_new_stack(x);
+    basic_new_stack(y);
+    basic_new_stack(z);
+    basic_new_stack(e);
     symbol_set(x, "x");
     symbol_set(y, "y");
     symbol_set(z, "z");
@@ -220,19 +220,19 @@ void test_get_args()
     SYMENGINE_C_ASSERT(vecbasic_size(args) == 3);
     vecbasic_free(args);
 
-    basic_free(e);
-    basic_free(x);
-    basic_free(y);
-    basic_free(z);
+    basic_free_stack(e);
+    basic_free_stack(x);
+    basic_free_stack(y);
+    basic_free_stack(z);
 }
 
 void test_free_symbols()
 {
     basic x, y, z, e;
-    basic_init(x);
-    basic_init(y);
-    basic_init(z);
-    basic_init(e);
+    basic_new_stack(x);
+    basic_new_stack(y);
+    basic_new_stack(z);
+    basic_new_stack(e);
     symbol_set(x, "x");
     symbol_set(y, "y");
     symbol_set(z, "z");
@@ -247,31 +247,31 @@ void test_free_symbols()
     SYMENGINE_C_ASSERT(setbasic_size(symbols) == 3);
     setbasic_free(symbols);
 
-    basic_free(e);
-    basic_free(x);
-    basic_free(y);
-    basic_free(z);
+    basic_free_stack(e);
+    basic_free_stack(x);
+    basic_free_stack(y);
+    basic_free_stack(z);
 }
 
 void test_get_type() {
     basic x, y;
-    basic_init(x);
-    basic_init(y);
+    basic_new_stack(x);
+    basic_new_stack(y);
     symbol_set(x, "x");
     integer_set_ui(y, 123);
 
     SYMENGINE_C_ASSERT(basic_get_type(x) == SYMENGINE_SYMBOL);
     SYMENGINE_C_ASSERT(basic_get_type(y) == SYMENGINE_INTEGER);
 
-    basic_free(x);
-    basic_free(y);
+    basic_free_stack(x);
+    basic_free_stack(y);
 }
 
 void test_hash() {
     basic x1, x2, y;
-    basic_init(x1);
-    basic_init(x2);
-    basic_init(y);
+    basic_new_stack(x1);
+    basic_new_stack(x2);
+    basic_new_stack(y);
     symbol_set(x1, "x");
     symbol_set(x2, "x");
     symbol_set(y, "y");
@@ -279,9 +279,9 @@ void test_hash() {
     SYMENGINE_C_ASSERT(basic_hash(x1) == basic_hash(x2));
     if (basic_hash(x1) != basic_hash(y)) SYMENGINE_C_ASSERT(basic_neq(x1,y));
 
-    basic_free(x1);
-    basic_free(x2);
-    basic_free(y);
+    basic_free_stack(x1);
+    basic_free_stack(x2);
+    basic_free_stack(y);
 }
 
 int main(int argc, char* argv[])

@@ -2,7 +2,7 @@
 
 void cbasic_free(void *ptr){
     basic_struct *basic_ptr = ptr;
-    basic_free(basic_ptr);
+    basic_free_stack(basic_ptr);
 }
 
 void cbasic_free_heap(void *ptr) {

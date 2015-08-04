@@ -57,9 +57,9 @@ struct CRCPBasic_C
 //  CRCPBasic, which has the same size and alignment as RCP<const Basic> (see
 //  the above comment for details). That is then used by the user to allocate
 //  the memory needed for RCP<const Basic> on the stack. A 'basic' type should
-//  be initialized using basic_init(), before any function is called.
+//  be initialized using basic_new_stack(), before any function is called.
 //  Assignment should be done only by using basic_assign(). Before the variable
-//  goes out of scope, basic_free() must be called.
+//  goes out of scope, basic_free_stack() must be called.
 //
 //  For C, define a dummy struct with the right size, so that it can be
 //  allocated on the stack. For C++, the CRCPBasic is declared in cwrapper.cpp.
@@ -71,16 +71,21 @@ typedef struct CRCPBasic_C basic_struct;
 
 typedef basic_struct basic[1];
 
-//! Initialize a new basic instance.
-void basic_init(basic s);
-//! Assign value of b to a.
-void basic_assign(basic a, const basic b);
+//! Initialize a new basic instance. 's' is allocated on stack using the
+// 'basic' type, this function initializes an RCP<const Basic> on the stack
+// allocated variable. The 's' variable must be freed using basic_free_stack()
+void basic_new_stack(basic s);
 //! Free the C++ class wrapped by s.
-void basic_free(basic s);
+void basic_free_stack(basic s);
 
-// Use these two functions to allocate 'basic' on a heap:
+// Use these two functions to allocate and free 'basic' on a heap. The pointer
+// can then be used in all the other methods below (i.e. the methods that
+// accept 'basic s' work no matter if 's' is stack or heap allocated).
 basic_struct* basic_new_heap();
 void basic_free_heap(basic_struct *s);
+
+//! Assign value of b to a.
+void basic_assign(basic a, const basic b);
 
 //Returns the typeID of the basic struct
 TypeID basic_get_type(const basic s);
