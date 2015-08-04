@@ -89,9 +89,9 @@ TEST_CASE("test_printing(): printing", "[printing]")
     REQUIRE(r->__str__() == "(-6)**(1/2)");
 
     RCP<const Number> rn1, rn2, rn3, c1, c2;
-    rn1 = Rational::from_two_ints(integer(2), integer(4));
-    rn2 = Rational::from_two_ints(integer(5), integer(7));
-    rn3 = Rational::from_two_ints(integer(-5), integer(7));
+    rn1 = Rational::from_two_ints(*integer(2), *integer(4));
+    rn2 = Rational::from_two_ints(*integer(5), *integer(7));
+    rn3 = Rational::from_two_ints(*integer(-5), *integer(7));
 
     c1 = Complex::from_two_rats(static_cast<const Rational&>(*rn1), static_cast<const Rational&>(*rn2));
     c2 = Complex::from_two_rats(static_cast<const Rational&>(*rn1), static_cast<const Rational&>(*rn3));
@@ -112,7 +112,7 @@ TEST_CASE("test_printing(): printing", "[printing]")
     REQUIRE(c1->__str__() == "1/2 + 5/7*I");
     REQUIRE(c2->__str__() == "1/2 - 5/7*I");
 
-    rn1 = Rational::from_two_ints(integer(0), integer(4));
+    rn1 = Rational::from_two_ints(*integer(0), *integer(4));
     c1 = Complex::from_two_nums(*rn1, *rn2);
     c2 = Complex::from_two_nums(*rn1, *rn3);
     r1 = mul(c1, x);
@@ -141,10 +141,10 @@ TEST_CASE("test_printing(): printing", "[printing]")
     REQUIRE(r1->__str__() == "x**(5/7)");
     REQUIRE(r2->__str__() == "x**(-5/7)");
 
-    rn1 = Rational::from_two_ints(integer(1), integer(1));
+    rn1 = Rational::from_two_ints(*integer(1), *integer(1));
     c1 = Complex::from_two_nums(*rn2, *rn1);
     REQUIRE(c1->__str__() == "5/7 + I");
-    rn1 = Rational::from_two_ints(integer(-1), integer(1));
+    rn1 = Rational::from_two_ints(*integer(-1), *integer(1));
     c1 = Complex::from_two_nums(*rn2, *rn1);
     REQUIRE(c1->__str__() == "5/7 - I");
 

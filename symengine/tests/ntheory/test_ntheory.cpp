@@ -386,7 +386,7 @@ TEST_CASE("test_bernoulli(): ntheory", "[ntheory]")
     RCP<const Number> r2;
     #ifdef HAVE_SYMENGINE_ARB
         r1 = bernoulli(12);
-        r2 = Rational::from_two_ints(integer(-691), integer(2730));
+        r2 = Rational::from_two_ints(*integer(-691), *integer(2730));
         REQUIRE(eq(*r1, *r2));
     #else
         SYMENGINE_CHECK_THROW(bernoulli(12), std::runtime_error)

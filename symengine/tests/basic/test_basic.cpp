@@ -147,7 +147,7 @@ TEST_CASE("Integer: Basic", "[basic]")
     REQUIRE(neq(*k, *integer(12)));
 
     k = divnum(i, j);
-    REQUIRE(eq(*k, *Rational::from_two_ints(integer(5), integer(6))));
+    REQUIRE(eq(*k, *Rational::from_two_ints(*integer(5), *integer(6))));
     std::cout << *k << std::endl;
 
     k = pownum(i, j);
@@ -155,7 +155,7 @@ TEST_CASE("Integer: Basic", "[basic]")
     std::cout << *k << std::endl;
 
     k = pownum(i, j->neg());
-    REQUIRE(eq(*k, *Rational::from_two_ints(integer(1), integer(15625))));
+    REQUIRE(eq(*k, *Rational::from_two_ints(*integer(1), *integer(15625))));
     std::cout << *k << std::endl;
 
     k = i->neg();
@@ -172,103 +172,103 @@ TEST_CASE("Rational: Basic", "[basic]")
     RCP<const Rational> r;
     mpq_class a, b;
 
-    r1 = Rational::from_two_ints(integer(5), integer(6));
+    r1 = Rational::from_two_ints(*integer(5), *integer(6));
     std::cout << *r1 << std::endl;
-    REQUIRE(eq(*r1, *Rational::from_two_ints(integer(5), integer(6))));
-    REQUIRE(neq(*r1, *Rational::from_two_ints(integer(5), integer(7))));
+    REQUIRE(eq(*r1, *Rational::from_two_ints(*integer(5), *integer(6))));
+    REQUIRE(neq(*r1, *Rational::from_two_ints(*integer(5), *integer(7))));
 
-    r1 = Rational::from_two_ints(integer(2), integer(4));
-    r2 = Rational::from_two_ints(integer(1), integer(2));
+    r1 = Rational::from_two_ints(*integer(2), *integer(4));
+    r2 = Rational::from_two_ints(*integer(1), *integer(2));
     REQUIRE(eq(*r1, *r2));
 
-    r1 = Rational::from_two_ints(integer(-2), integer(3));
-    r2 = Rational::from_two_ints(integer(2), integer(-3));
+    r1 = Rational::from_two_ints(*integer(-2), *integer(3));
+    r2 = Rational::from_two_ints(*integer(2), *integer(-3));
     REQUIRE(eq(*r1, *r2));
 
-    r1 = Rational::from_two_ints(integer(4), integer(2));
+    r1 = Rational::from_two_ints(*integer(4), *integer(2));
     r2 = integer(2);
     REQUIRE(eq(*r1, *r2));
 
-    r1 = Rational::from_two_ints(integer(2), integer(3));
-    r2 = Rational::from_two_ints(integer(5), integer(7));
-    r3 = Rational::from_two_ints(integer(10), integer(21));
+    r1 = Rational::from_two_ints(*integer(2), *integer(3));
+    r2 = Rational::from_two_ints(*integer(5), *integer(7));
+    r3 = Rational::from_two_ints(*integer(10), *integer(21));
     REQUIRE(eq(*mulnum(r1, r2), *r3));
 
-    r1 = Rational::from_two_ints(integer(2), integer(3));
-    r2 = Rational::from_two_ints(integer(1), integer(2));
-    r3 = Rational::from_two_ints(integer(1), integer(3));
+    r1 = Rational::from_two_ints(*integer(2), *integer(3));
+    r2 = Rational::from_two_ints(*integer(1), *integer(2));
+    r3 = Rational::from_two_ints(*integer(1), *integer(3));
     REQUIRE(eq(*mulnum(r1, r2), *r3));
 
-    r1 = Rational::from_two_ints(integer(2), integer(3));
-    r2 = Rational::from_two_ints(integer(9), integer(2));
+    r1 = Rational::from_two_ints(*integer(2), *integer(3));
+    r2 = Rational::from_two_ints(*integer(9), *integer(2));
     r3 = integer(3);
     REQUIRE(eq(*mulnum(r1, r2), *r3));
 
-    r1 = Rational::from_two_ints(integer(1), integer(2));
+    r1 = Rational::from_two_ints(*integer(1), *integer(2));
     r2 = integer(1);
     REQUIRE(eq(*addnum(r1, r1), *r2));
 
-    r1 = Rational::from_two_ints(integer(1), integer(2));
-    r2 = Rational::from_two_ints(integer(1), integer(3));
-    r3 = Rational::from_two_ints(integer(1), integer(6));
+    r1 = Rational::from_two_ints(*integer(1), *integer(2));
+    r2 = Rational::from_two_ints(*integer(1), *integer(3));
+    r3 = Rational::from_two_ints(*integer(1), *integer(6));
     REQUIRE(eq(*subnum(r1, r2), *r3));
 
-    r1 = Rational::from_two_ints(integer(1), integer(6));
-    r2 = Rational::from_two_ints(integer(1), integer(3));
-    r3 = Rational::from_two_ints(integer(1), integer(2));
+    r1 = Rational::from_two_ints(*integer(1), *integer(6));
+    r2 = Rational::from_two_ints(*integer(1), *integer(3));
+    r3 = Rational::from_two_ints(*integer(1), *integer(2));
     REQUIRE(eq(*divnum(r1, r2), *r3));
 
-    r1 = Rational::from_two_ints(integer(2), integer(3));
+    r1 = Rational::from_two_ints(*integer(2), *integer(3));
     r2 = integer(2);
-    r3 = Rational::from_two_ints(integer(4), integer(9));
+    r3 = Rational::from_two_ints(*integer(4), *integer(9));
     REQUIRE(eq(*pownum(r1, r2), *r3));
 
-    r1 = Rational::from_two_ints(integer(2), integer(3));
+    r1 = Rational::from_two_ints(*integer(2), *integer(3));
     r2 = integer(-2);
-    r3 = Rational::from_two_ints(integer(9), integer(4));
+    r3 = Rational::from_two_ints(*integer(9), *integer(4));
     REQUIRE(eq(*pownum(r1, r2), *r3));
 
-    r1 = Rational::from_two_ints(integer(2), integer(3));
+    r1 = Rational::from_two_ints(*integer(2), *integer(3));
     r2 = integer(3);
-    r3 = Rational::from_two_ints(integer(8), integer(27));
+    r3 = Rational::from_two_ints(*integer(8), *integer(27));
     REQUIRE(eq(*pownum(r1, r2), *r3));
 
-    r1 = Rational::from_two_ints(integer(2), integer(3));
+    r1 = Rational::from_two_ints(*integer(2), *integer(3));
     r2 = integer(-3);
-    r3 = Rational::from_two_ints(integer(27), integer(8));
+    r3 = Rational::from_two_ints(*integer(27), *integer(8));
     REQUIRE(eq(*pownum(r1, r2), *r3));
 
-    r1 = Rational::from_two_ints(integer(2), integer(3));
+    r1 = Rational::from_two_ints(*integer(2), *integer(3));
     r2 = integer(3);
     r3 = integer(2);
     REQUIRE(eq(*mulnum(r1, r2), *r3));
     REQUIRE(eq(*mulnum(r2, r1), *r3));
 
-    r1 = Rational::from_two_ints(integer(2), integer(3));
+    r1 = Rational::from_two_ints(*integer(2), *integer(3));
     r2 = integer(3);
-    r3 = Rational::from_two_ints(integer(11), integer(3));
+    r3 = Rational::from_two_ints(*integer(11), *integer(3));
     REQUIRE(eq(*addnum(r1, r2), *r3));
     REQUIRE(eq(*addnum(r2, r1), *r3));
 
-    r1 = Rational::from_two_ints(integer(2), integer(3));
+    r1 = Rational::from_two_ints(*integer(2), *integer(3));
     r2 = integer(3);
-    r3 = Rational::from_two_ints(integer(-7), integer(3));
+    r3 = Rational::from_two_ints(*integer(-7), *integer(3));
     REQUIRE(eq(*subnum(r1, r2), *r3));
-    r3 = Rational::from_two_ints(integer(7), integer(3));
+    r3 = Rational::from_two_ints(*integer(7), *integer(3));
     REQUIRE(eq(*subnum(r2, r1), *r3));
 
-    r1 = Rational::from_two_ints(integer(2), integer(3));
+    r1 = Rational::from_two_ints(*integer(2), *integer(3));
     r2 = integer(3);
-    r3 = Rational::from_two_ints(integer(2), integer(9));
+    r3 = Rational::from_two_ints(*integer(2), *integer(9));
     REQUIRE(eq(*divnum(r1, r2), *r3));
-    r3 = Rational::from_two_ints(integer(9), integer(2));
+    r3 = Rational::from_two_ints(*integer(9), *integer(2));
     REQUIRE(eq(*divnum(r2, r1), *r3));
 
-    r1 = Rational::from_two_ints(integer(2), integer(3));
+    r1 = Rational::from_two_ints(*integer(2), *integer(3));
     r2 = zero;
     SYMENGINE_CHECK_THROW(divnum(r1, r2), std::runtime_error)
 
-    r1 = Rational::from_two_ints(integer(3), integer(5));
+    r1 = Rational::from_two_ints(*integer(3), *integer(5));
     REQUIRE(is_a<Rational>(*r1));
     r = rcp_static_cast<const Rational>(r1);
     a = mpq_class(3, 5);
@@ -327,7 +327,7 @@ TEST_CASE("Diff: Basic", "[basic]")
     r2 = r1->diff(x);
     REQUIRE(eq(*r2, *zero));
 
-    r1 = Rational::from_two_ints(integer(2), integer(3));
+    r1 = Rational::from_two_ints(*integer(2), *integer(3));
     r2 = r1->diff(x);
     REQUIRE(eq(*r2, *zero));
 
@@ -493,9 +493,9 @@ TEST_CASE("Complex: Basic", "[basic]")
 {
     RCP<const Number> r1, r2, r3, c1, c2, c3;
     RCP<const Complex> c;
-    r1 = Rational::from_two_ints(integer(2), integer(4));
-    r2 = Rational::from_two_ints(integer(5), integer(7));
-    r3 = Rational::from_two_ints(integer(-5), integer(7));
+    r1 = Rational::from_two_ints(*integer(2), *integer(4));
+    r2 = Rational::from_two_ints(*integer(5), *integer(7));
+    r3 = Rational::from_two_ints(*integer(-5), *integer(7));
 
     c1 = Complex::from_two_nums(*r1, *r2);
     c2 = Complex::from_two_nums(*r1, *r3);
@@ -508,22 +508,22 @@ TEST_CASE("Complex: Basic", "[basic]")
     // Final result is int
     REQUIRE(eq(*addnum(c1, c2), *one));
     // Final result is complex
-    r2 = Rational::from_two_ints(integer(1), integer(1));
-    r3 = Rational::from_two_ints(integer(10), integer(7));
+    r2 = Rational::from_two_ints(*integer(1), *integer(1));
+    r3 = Rational::from_two_ints(*integer(10), *integer(7));
     c3 = Complex::from_two_nums(*r2, *r3);
     REQUIRE(eq(*addnum(c1, c1), *c3));
     // Final result is rational
-    r1 = Rational::from_two_ints(integer(1), integer(4));
-    r2 = Rational::from_two_ints(integer(5), integer(7));
-    r3 = Rational::from_two_ints(integer(-5), integer(7));
+    r1 = Rational::from_two_ints(*integer(1), *integer(4));
+    r2 = Rational::from_two_ints(*integer(5), *integer(7));
+    r3 = Rational::from_two_ints(*integer(-5), *integer(7));
     c1 = Complex::from_two_nums(*r1, *r2);
     c2 = Complex::from_two_nums(*r1, *r3);
     REQUIRE(eq(*addnum(c1, c2), *div(one, integer(2))));
 
     // Checks for complex subtraction
-    r1 = Rational::from_two_ints(integer(2), integer(4));
-    r2 = Rational::from_two_ints(integer(5), integer(7));
-    r3 = Rational::from_two_ints(integer(-5), integer(7));
+    r1 = Rational::from_two_ints(*integer(2), *integer(4));
+    r2 = Rational::from_two_ints(*integer(5), *integer(7));
+    r3 = Rational::from_two_ints(*integer(-5), *integer(7));
 
     c1 = Complex::from_two_nums(*r1, *r2);
     c2 = Complex::from_two_nums(*r1, *r3);
@@ -531,29 +531,29 @@ TEST_CASE("Complex: Basic", "[basic]")
     REQUIRE(eq(*subnum(c1, c1), *zero));
 
     // Final result is rational
-    r3 = Rational::from_two_ints(integer(1), integer(3));
+    r3 = Rational::from_two_ints(*integer(1), *integer(3));
     c1 = Complex::from_two_nums(*r1, *r2);
     c2 = Complex::from_two_nums(*r3, *r2);
     REQUIRE(eq(*subnum(c1, c2), *div(one, integer(6))));
 
     // Final result is complex
-    r2 = Rational::from_two_ints(integer(1), integer(6));
+    r2 = Rational::from_two_ints(*integer(1), *integer(6));
     c1 = Complex::from_two_nums(*r1, *r1);
     c2 = Complex::from_two_nums(*r3, *r3);
     c3 = Complex::from_two_nums(*r2, *r2);
     REQUIRE(eq(*subnum(c1, c2), *c3));
 
     // Checks for complex multiplication
-    r1 = Rational::from_two_ints(integer(2), integer(1));
-    r2 = Rational::from_two_ints(integer(1), integer(1));
-    r3 = Rational::from_two_ints(integer(-1), integer(1));
+    r1 = Rational::from_two_ints(*integer(2), *integer(1));
+    r2 = Rational::from_two_ints(*integer(1), *integer(1));
+    r3 = Rational::from_two_ints(*integer(-1), *integer(1));
     // Final result is int
     c1 = Complex::from_two_nums(*r1, *r2);
     c2 = Complex::from_two_nums(*r1, *r3);
     REQUIRE(eq(*mulnum(c1, c2), *integer(5)));
 
     // Final result is rational
-    r1 = Rational::from_two_ints(integer(1), integer(2));
+    r1 = Rational::from_two_ints(*integer(1), *integer(2));
     c1 = Complex::from_two_nums(*r1, *r2);
     c2 = Complex::from_two_nums(*r1, *r3);
     REQUIRE(eq(*mulnum(c1, c2), *div(integer(5), integer(4))));
@@ -577,36 +577,36 @@ TEST_CASE("Complex: Basic", "[basic]")
     REQUIRE(eq(*divnum(c1, c2), *integer(1)));
 
     // Final result is rational
-    r3 = Rational::from_two_ints(integer(2), integer(1));
+    r3 = Rational::from_two_ints(*integer(2), *integer(1));
     c1 = Complex::from_two_nums(*r2, *r2);
     c2 = Complex::from_two_nums(*r3, *r3);
     REQUIRE(eq(*divnum(c1, c2), *div(integer(1), integer(2))));
 
-    r1 = Rational::from_two_ints(integer(1), integer(2));
-    r2 = Rational::from_two_ints(integer(3), integer(4));
+    r1 = Rational::from_two_ints(*integer(1), *integer(2));
+    r2 = Rational::from_two_ints(*integer(3), *integer(4));
     c1 = Complex::from_two_nums(*r1, *r2);
 
-    r1 = Rational::from_two_ints(integer(5), integer(6));
-    r2 = Rational::from_two_ints(integer(7), integer(8));
+    r1 = Rational::from_two_ints(*integer(5), *integer(6));
+    r2 = Rational::from_two_ints(*integer(7), *integer(8));
     c2 = Complex::from_two_nums(*r1, *r2);
 
-    r1 = Rational::from_two_ints(integer(618), integer(841));
-    r2 = Rational::from_two_ints(integer(108), integer(841));
+    r1 = Rational::from_two_ints(*integer(618), *integer(841));
+    r2 = Rational::from_two_ints(*integer(108), *integer(841));
     c3 = Complex::from_two_nums(*r1, *r2);
     REQUIRE(eq(*divnum(c1, c2), *c3));
 
-    r1 = Rational::from_two_ints(integer(-23), integer(96));
-    r2 = Rational::from_two_ints(integer(17), integer(16));
+    r1 = Rational::from_two_ints(*integer(-23), *integer(96));
+    r2 = Rational::from_two_ints(*integer(17), *integer(16));
     c3 = Complex::from_two_nums(*r1, *r2);
     REQUIRE(eq(*mulnum(c1, c2), *c3));
 
-    r1 = Rational::from_two_ints(integer(4), integer(3));
-    r2 = Rational::from_two_ints(integer(13), integer(8));
+    r1 = Rational::from_two_ints(*integer(4), *integer(3));
+    r2 = Rational::from_two_ints(*integer(13), *integer(8));
     c3 = Complex::from_two_nums(*r1, *r2);
     REQUIRE(eq(*addnum(c1, c2), *c3));
 
-    r1 = Rational::from_two_ints(integer(-1), integer(3));
-    r2 = Rational::from_two_ints(integer(-1), integer(8));
+    r1 = Rational::from_two_ints(*integer(-1), *integer(3));
+    r2 = Rational::from_two_ints(*integer(-1), *integer(8));
     c3 = Complex::from_two_nums(*r1, *r2);
     REQUIRE(eq(*subnum(c1, c2), *c3));
 
@@ -618,7 +618,7 @@ TEST_CASE("Complex: Basic", "[basic]")
     // Explicit division by zero checks
     SYMENGINE_CHECK_THROW(divnum(c1, integer(0)), std::runtime_error);
 
-    r3 = Rational::from_two_ints(integer(0), integer(1));
+    r3 = Rational::from_two_ints(*integer(0), *integer(1));
     SYMENGINE_CHECK_THROW(divnum(c1, r3), std::runtime_error);
 
     c2 = Complex::from_two_nums(*r3, *r3);

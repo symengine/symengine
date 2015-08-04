@@ -40,8 +40,8 @@ public:
     /*! Constructs Rational as n/d, where n, d can be any Integers. If n/d is an
     *   Integer, it will return an Integer instead.
     * */
-    static RCP<const Number> from_two_ints(const RCP<const Integer> &n,
-            const RCP<const Integer> &d);
+    static RCP<const Number> from_two_ints(const Integer &n,
+            const Integer &d);
     //! Convert to `mpq_class`.
     inline mpq_class as_mpq() const { return this->i; }
     //! \return `true` if `0`
@@ -230,7 +230,7 @@ public:
 };
 
 //! returns the `num` and `den` of rational `rat` as `RCP<const Integer>`
-void get_num_den(const RCP<const Rational> &rat,
+void get_num_den(const Rational &rat,
         const Ptr<RCP<const Integer>> &num,
         const Ptr<RCP<const Integer>> &den);
 
