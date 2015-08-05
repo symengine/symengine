@@ -20,7 +20,7 @@ pwd
 echo "Running cmake:"
 # We build the command line here. If the variable is empty, we skip it,
 # otherwise we pass it to cmake.
-cmake_line="-DCMAKE_INSTALL_PREFIX=$our_install_dir -DCOMMON_DIR=$our_install_dir"
+cmake_line="-DCMAKE_INSTALL_PREFIX=$our_install_dir -DCOMMON_DIR=$common_dir"
 if [[ "${BUILD_TYPE}" != "" ]]; then
     cmake_line="$cmake_line -DCMAKE_BUILD_TYPE=${BUILD_TYPE}"
 fi
@@ -60,6 +60,9 @@ fi
 if [[ "${WITH_RUBY}" != "" ]]; then
     cmake_line="$cmake_line -DWITH_RUBY=${WITH_RUBY}"
 fi
+if [[ "${WITH_SAGE}" != "" ]]; then
+    cmake_line="$cmake_line -DPYTHON_INSTALL_PATH=$python_install_dir"
+fi
 if [[ "${PYTHON_INSTALL}" == "yes" ]]; then
     git clean -dfx
     pip install $SOURCE_DIR
@@ -87,7 +90,6 @@ echo "Running make:"
 make
 echo "Running make install:"
 make install
-
 echo "Running tests in build directory:"
 # C++
 ctest --output-on-failure
@@ -131,7 +133,7 @@ fi
 
 extra_include_dirs="-I$SOURCE_DIR/symengine/teuchos -I$BUILD_DIR/symengine/teuchos -I$SOURCE_DIR/symengine/catch"
 
-${CXX} -std=c++0x -I$our_install_dir/include/ $extra_include_dirs -L$our_install_dir/lib -L$BUILD_DIR/symengine/catch test_basic.cpp  -lcatch -lsymengine -lteuchos $extra_libs -lgmpxx -lgmp
+${CXX} -std=c++0x -I$our_install_dir/include/ -I$common_dir/include/ $extra_include_dirs -L$our_install_dir/lib -L$common_dir/lib/ -L$BUILD_DIR/symengine/catch test_basic.cpp  -lcatch -lsymengine -lteuchos $extra_libs -lgmpxx -lgmp
 export LD_LIBRARY_PATH=$our_install_dir/lib:$LD_LIBRARY_PATH
 ./a.out
 # Python

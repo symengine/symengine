@@ -16,6 +16,7 @@ fi
 
 export SOURCE_DIR=`pwd`
 export our_install_dir="$HOME/our_usr"
+export common_dir=$our_install_dir
 mkdir -p $our_install_dir
 cd $our_install_dir
 
@@ -99,7 +100,9 @@ print os.environ['SAGE_ROOT']
 EOF
 )
     source $SAGE_ROOT/src/bin/sage-env
-    export our_install_dir=$SAGE_LOCAL
     sudo easy_install nose pytest
+    export common_dir=$SAGE_LOCAL
+    export python_install_dir=$our_install_dir/lib/python2.7/site-packages
+    export SAGE_PATH=$python_install_dir
 fi
 cd $SOURCE_DIR;
