@@ -92,17 +92,22 @@ fi
 if [[ "${WITH_SAGE}" == "yes" ]]; then
     sudo apt-add-repository -y ppa:aims/sagemath;
     sudo apt-get update;
-    sudo apt-get install sagemath-upstream-binary;
+    set +e;
+    function install_sage {
+        sudo dpkg --configure -a;
+        sudo apt-get install sagemath-upstream-binary;
+    };
+    travis_retry install_sage;
+    set -e;
 
     SAGE_ROOT=$(sage -python << EOF
 import os
 print os.environ['SAGE_ROOT']
 EOF
 )
-    source $SAGE_ROOT/src/bin/sage-env
-    sudo easy_install nose pytest
-    export common_dir=$SAGE_LOCAL
     export python_install_dir=$our_install_dir/lib/python2.7/site-packages
     export SAGE_PATH=$python_install_dir
+    source $SAGE_ROOT/src/bin/sage-env
+    export common_dir=$SAGE_LOCAL
 fi
 cd $SOURCE_DIR;

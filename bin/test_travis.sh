@@ -94,7 +94,7 @@ echo "Running tests in build directory:"
 # C++
 ctest --output-on-failure
 # Python
-if [[ "${WITH_PYTHON}" == "yes" ]]; then
+if [[ "${WITH_PYTHON}" == "yes" ]] && [[ "${WITH_SAGE}" != "yes" ]]; then
     cd symengine/python
     nosetests -v
     cd ../../
@@ -137,7 +137,7 @@ ${CXX} -std=c++0x -I$our_install_dir/include/ -I$common_dir/include/ $extra_incl
 export LD_LIBRARY_PATH=$our_install_dir/lib:$LD_LIBRARY_PATH
 ./a.out
 # Python
-if [[ "${WITH_PYTHON}" == "yes" ]]; then
+if [[ "${WITH_PYTHON}" == "yes" ]] && [[ "${WITH_SAGE}" != "yes" ]]; then
     mkdir -p empty
     cd empty
     cat << EOF | python
