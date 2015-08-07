@@ -5,7 +5,7 @@
 #include "symengine/cwrapper.h"
 
 //Returns the pointer wrapped inside the Ruby VALUE
-void sympify(VALUE operand2, basic_struct **cbasic_operand2);
+void sympify(VALUE operand2, basic_struct *cbasic_operand2);
 //Returns the Ruby class of the corresponding basic_struct pointer
 VALUE Klass_of_Basic(const basic_struct *basic_ptr);
 
