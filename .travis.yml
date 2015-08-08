@@ -136,6 +136,11 @@ matrix:
       compiler: gcc
       os: linux
       sudo: true
+  allow_failures:
+    - env: BUILD_TYPE="Release" WITH_SAGE="yes" WITH_PYTHON="yes" WITH_MPC="yes"
+      compiler: gcc
+      os: linux
+      sudo: true
 
 install:
   - source bin/install_travis.sh
