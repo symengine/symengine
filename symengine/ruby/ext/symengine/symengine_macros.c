@@ -36,9 +36,6 @@ void sympify(VALUE operand2, basic_struct *cbasic_operand2) {
 
 VALUE Klass_of_Basic(const basic_struct *basic_ptr) {
     switch(basic_get_type(basic_ptr)) {
-        case SYMENGINE_ADD:
-        case SYMENGINE_MUL:
-        case SYMENGINE_POW:
         case SYMENGINE_SYMBOL:
             return c_symbol;
         case SYMENGINE_INTEGER:
