@@ -46,8 +46,8 @@ bool Mul::is_canonical(const RCP<const Number> &coef,
                 rcp_static_cast<const Integer>(p.first)->is_one())
             return false;
         // e.g. x**0
-        if (is_a<Integer>(*p.second) &&
-                rcp_static_cast<const Integer>(p.second)->is_zero())
+        if (is_a_Number(*p.second) &&
+                rcp_static_cast<const Number>(p.second)->is_zero())
             return false;
         // e.g. (x*y)**2 (={xy:2}), which should be represented as x**2*y**2
         //     (={x:2, y:2})
@@ -105,7 +105,7 @@ int Mul::compare(const Basic &o) const
 
 RCP<const SymEngine::Basic> Mul::from_dict(const RCP<const Number> &coef, map_basic_basic &&d)
 {
-    if (coef->is_zero()) return zero;
+    if (coef->is_zero()) return coef;
     if (d.size() == 0) {
         return coef;
     } else if (d.size() == 1) {
@@ -152,8 +152,8 @@ void Mul::dict_add_term(map_basic_basic &d, const RCP<const Basic> &exp,
         } else {
             // General case:
             it->second = add(it->second, exp);
-            if (is_a<Integer>(*it->second) &&
-                    rcp_static_cast<const Integer>(it->second)->is_zero()) {
+            if (is_a_Number(*it->second) &&
+                    rcp_static_cast<const Number>(it->second)->is_zero()) {
                 d.erase(it);
             }
         }
@@ -244,6 +244,10 @@ void Mul::dict_add_term_new(const Ptr<RCP<const Number>> &coef, map_basic_basic 
                                                   rcp_static_cast<const Number>(integer(q))));
                 }
             }
+        } else if (is_a_Number(*it->second) && static_cast<const Number &>(*it->second).is_zero()) {
+            // In 1*x**0.0, result should be 1.0
+            imulnum(outArg(*coef), pownum(rcp_static_cast<const Number>(it->second), zero));
+            d.erase(it);
         }
     }
 }
@@ -457,24 +461,20 @@ RCP<const Basic> mul_expand(const RCP<const Mul> &self)
 
 RCP<const Basic> Mul::power_all_terms(const RCP<const Basic> &exp) const
 {
+    if (is_a_Number(*exp) && rcp_static_cast<const Number>(exp)->is_zero()) {
+        // (x*y)**(0.0) should return 1.0
+        return pownum(rcp_static_cast<const Number>(exp), zero);
+    }
     SymEngine::map_basic_basic d;
     RCP<const Basic> new_coef = pow(coef_, exp);
     RCP<const Number> coef_num = one;
     RCP<const Basic> new_exp;
     for (auto &p: dict_) {
         new_exp = mul(p.second, exp);
-        if (is_a_Number(*new_exp)) {
-            // No need for additional dict checks here.
-            // The dict should be of standard form before this is
-            // called.
-            if (rcp_static_cast<const Number>(new_exp)->is_zero()) {
-                continue;
-            } else {
-                Mul::dict_add_term_new(outArg(coef_num), d, new_exp, p.first);
-            }
-        } else {
-            Mul::dict_add_term_new(outArg(coef_num), d, new_exp, p.first);
-        }
+        // No need for additional dict checks here.
+        // The dict should be of standard form before this is
+        // called.
+        Mul::dict_add_term_new(outArg(coef_num), d, new_exp, p.first);
     }
     if (is_a_Number(*new_coef)) {
         imulnum(outArg(coef_num), rcp_static_cast<const Number>(new_coef));
@@ -499,8 +499,12 @@ RCP<const Basic> Mul::diff(const RCP<const Symbol> &x) const
     for (auto &p: dict_) {
         RCP<const Number> coef = coef_;
         RCP<const Basic> factor = pow(p.first, p.second)->diff(x);
-        if (is_a<Integer>(*factor) &&
-                rcp_static_cast<const Integer>(factor)->is_zero()) continue;
+        if (is_a_Number(*factor) &&
+                rcp_static_cast<const Number>(factor)->is_zero()) {
+            // overall_coef += factor is done to coerce overall_coef to the type of factor
+            iaddnum(outArg(overall_coef), rcp_static_cast<const Number>(factor));
+            continue;
+        }
         map_basic_basic d = dict_;
         d.erase(p.first);
         if (is_a_Number(*factor)) {
@@ -540,10 +544,10 @@ RCP<const Basic> Mul::subs(const map_basic_basic &subs_dict) const
         RCP<const Basic> factor = factor_old->subs(subs_dict);
         if (factor == factor_old) {
             Mul::dict_add_term_new(outArg(coef), d, p.second, p.first);
-        } else if (is_a<Integer>(*factor) &&
-                rcp_static_cast<const Integer>(factor)->is_zero()) {
-            return zero;
         } else if (is_a_Number(*factor)) {
+            if (rcp_static_cast<const Number>(factor)->is_zero()) {
+                return factor;
+            }
             imulnum(outArg(coef), rcp_static_cast<const Number>(factor));
         } else if (is_a<Mul>(*factor)) {
             RCP<const Mul> tmp = rcp_static_cast<const Mul>(factor);

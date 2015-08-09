@@ -53,9 +53,8 @@ public:
     //! Get `Evaluate` singleton to evaluate numerically
     inline virtual Evaluate& get_eval() const;
 
-    //! \return `false`
-    // A double is not exactly equal to `0`
-    virtual bool is_zero() const { return false; }
+    //! \return `true` when equals to 0
+    virtual bool is_zero() const { return this->i == 0.0; }
     //! \return `false`
     // A double is not exactly equal to `1`
     virtual bool is_one() const { return false; }
