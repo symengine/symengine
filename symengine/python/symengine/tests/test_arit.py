@@ -115,9 +115,9 @@ def test_args():
     y = Symbol("y")
     assert (x**2).args == (x, 2)
     assert (x**2 + 5).args == (5, x**2)
-    assert set((x**2 + 2*x*y + 5).args) == set((x**2, 2*x*y, 5))
+    assert set((x**2 + 2*x*y + 5).args) == set((x**2, 2*x*y, Integer(5)))
     assert (2*x**2).args == (2, x**2)
-    assert set((2*x**2*y).args) == set((2, x**2, y))
+    assert set((2*x**2*y).args) == set((Integer(2), x**2, y))
 
 def test_free_symbols():
     x = Symbol("x")

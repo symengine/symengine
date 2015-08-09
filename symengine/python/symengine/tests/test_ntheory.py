@@ -114,7 +114,7 @@ def test_prime_factors():
     assert prime_factors(1) == []
 
 def test_prime_factor_multiplicities():
-    assert prime_factor_multiplicities(90) == {2: 1, 3: 2, 5: 1}
+    assert prime_factor_multiplicities(90) == {Integer(2): 1, Integer(3): 2, Integer(5): 1}
     assert prime_factor_multiplicities(1) == {}
 
 def test_sieve():
