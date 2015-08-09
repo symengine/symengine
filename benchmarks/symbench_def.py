@@ -63,6 +63,29 @@ def R5():
     t2 = clock()
     return t2 - t1
 
+def R7():
+    var('x')
+    f = x**24+34*x**12+45*x**3+9*x**18 +34*x**10+ 32*x**21
+    t1 = clock()
+    a = [f.subs({x : random()}) for _ in xrange(10^4)]
+    t2 = clock()
+    return t2 - t1
+
+def R8():
+    def right(f,a,b,n):
+       Deltax = (b-a)/n
+       c = a
+       est = 0
+       for i in range(n):
+           c += Deltax
+           est += f.subs({x: c})
+       return est * Deltax
+    var('x')
+    t1 = clock()
+    right(x**2, 0, 5, 10**4)
+    t2 = clock()
+    return t2 - t1
+
 def S1():
     var("x y z")
     e = (x+y+z+1)**7

@@ -1,7 +1,7 @@
 // To compile on a debian system you need to install libginac-dev first
 // $ sudo apt-get install libginac-dev
 // Then compile with the following command,
-// $ g++ -std=c++0x -o matrix_add1_ginac -Wl,--no-as-needed `pkg-config --cflags --libs ginac` symbench_ginac.cpp
+// $ g++ -std=c++0x -o symbench_ginac -Wl,--no-as-needed `pkg-config --cflags --libs ginac` symbench_ginac.cpp
 // See this SO answer: http://stackoverflow.com/a/18696743/1895353
 
 #include <iostream>
@@ -23,6 +23,8 @@ double R1();
 double R2();
 double R3();
 double R5();
+double R7();
+double R8();
 double S1();
 double S2();
 double S3();
@@ -33,7 +35,9 @@ int main(int argc, char* argv[])
     std::cout << "Time for R1 : \t " << std::setw(15) << std::setprecision(9)  << std::fixed << R1() << std::endl;
     std::cout << "Time for R2 : \t " << std::setw(15) << std::setprecision(9)  << std::fixed << R2() << std::endl;
     std::cout << "Time for R3 : \t " << std::setw(15) << std::setprecision(9)  << std::fixed << R3() << std::endl;
-    std::cout << "Time for R4 : \t " << std::setw(15) << std::setprecision(9)  << std::fixed << R5() << std::endl;
+    std::cout << "Time for R5 : \t " << std::setw(15) << std::setprecision(9)  << std::fixed << R5() << std::endl;
+    std::cout << "Time for R7 : \t " << std::setw(15) << std::setprecision(9)  << std::fixed << R7() << std::endl;
+    std::cout << "Time for R8 : \t " << std::setw(15) << std::setprecision(9)  << std::fixed << R8() << std::endl;
     std::cout << "Time for S1 : \t " << std::setw(15) << std::setprecision(9)  << std::fixed << S1() << std::endl;
     std::cout << "Time for S2 : \t " << std::setw(15) << std::setprecision(9)  << std::fixed << S2() << std::endl;
     std::cout << "Time for S3 : \t " << std::setw(15) << std::setprecision(9)  << std::fixed << S3() << std::endl;
@@ -110,6 +114,39 @@ double R5()
     return std::chrono::duration_cast<std::chrono::nanoseconds>(t2-t1).count()/1000000000.0;
 }
 
+double R7()
+{
+    ex x = symbol("x");
+    ex f = pow(x, 24) + 34 * pow(x, 12) + 45 * pow(x, 3) + 9 * pow(x, 18) + 34 * pow(x, 10) + 32 * pow(x, 21);
+    std::vector<ex> v;
+    auto t1 = std::chrono::high_resolution_clock::now();
+    for (int i = 0; i < 10000; ++i) {
+        v.push_back(f.subs(x == 0.5));
+    }
+    auto t2 = std::chrono::high_resolution_clock::now();
+    return std::chrono::duration_cast<std::chrono::nanoseconds>(t2-t1).count()/1000000000.0;
+}
+
+ex right(ex f, numeric a, numeric b, ex x, int n)
+{
+    numeric Deltax = (b-a)/n;
+    numeric c = a;
+    numeric est = 0;
+    for (int i = 0; i < n; i++) {
+        c += Deltax;
+        est += f.subs(x == c);
+    }
+    return est * Deltax;
+}
+
+double R8()
+{
+    ex x = symbol("x");
+    auto t1 = std::chrono::high_resolution_clock::now();
+    right(pow(x, 2), 0, 5, x, 10000);
+    auto t2 = std::chrono::high_resolution_clock::now();
+    return std::chrono::duration_cast<std::chrono::nanoseconds>(t2-t1).count()/1000000000.0;
+}
 
 double S1()
 {
