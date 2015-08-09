@@ -305,6 +305,7 @@ void StrPrinter::bvisit(const UnivariatePolynomial &x) {
     str_ = s.str();
 }
 
+#ifdef HAVE_SYMENGINE_PIRANHA
 //Polynomial printing
 void StrPrinter::bvisit(const Polynomial &x) {
     std::ostringstream s;
@@ -387,6 +388,7 @@ void StrPrinter::bvisit(const Polynomial &x) {
     }
     str_ = s.str();
 }
+#endif
 
 void StrPrinter::bvisit(const Log &x) {
     str_ = "log(" + this->apply(x.get_arg()) + ")";

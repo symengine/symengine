@@ -13,7 +13,7 @@ Polynomial::Polynomial(const vec_symbol &vars, hash_set polys_set)
     SYMENGINE_ASSERT(is_canonical(polys_set_))
 }
 #else
-Polynomial::Polynomial(const vec_symbol &vars, std::unordered_set polys_set)
+Polynomial::Polynomial(const vec_symbol &vars, unordered_set polys_set)
     : vars_{vars}, polys_set_(polys_set) {
 
     SYMENGINE_ASSERT(is_canonical(polys_set_))
@@ -77,9 +77,14 @@ Polynomial::Polynomial(const RCP<const Basic> &p, umap_basic_num &vars) {
 
     for (auto &a: P) {
         m_pair temp;
+#ifdef HAVE_SYMENGINE_PIRANHA
         using ka = piranha::kronecker_array<long long>;
         temp.first = ka::encode(a.first);
         temp.second = piranha::integer{a.second.get_str()};
+#else
+        temp.first = a.first;
+        temp.second = int(a.second)
+#endif
         polys_set_.insert(temp);
     }
 }
@@ -87,7 +92,7 @@ Polynomial::Polynomial(const RCP<const Basic> &p, umap_basic_num &vars) {
 #ifdef HAVE_SYMENGINE_PIRANHA
 bool Polynomial::is_canonical(const hash_set& set)
 #else
-bool Polynomial::is_canonical(const std::unordered_set set)
+bool Polynomial::is_canonical(const unordered_set set)
 #endif
 {
     for(auto &a: set) {
@@ -156,7 +161,7 @@ int Polynomial::compare(const Basic &o) const
     #ifdef HAVE_SYMENGINE_PIRANHA
     return hash_set_compare(polys_set_, s.polys_set_);
     #else
-    return polys_set_ > s.polys_set_;
+    throw::std::runtime_error("Not Implemented");
     #endif
 }
 
@@ -177,7 +182,7 @@ RCP<const Polynomial> add_poly(const Polynomial &a, const Polynomial &b) {
 #ifdef HAVE_SYMENGINE_PIRANHA
     hash_set res = a.polys_set_;
 #else
-    std::unordered_set res = a.polys_set_;
+    unordered_set res = a.polys_set_;
 #endif
 
     m_pair temp;
@@ -201,7 +206,7 @@ RCP<const Polynomial> sub_poly(const Polynomial &a, const Polynomial &b) {
 #ifdef HAVE_SYMENGINE_PIRANHA
     hash_set res = a.polys_set_;
 #else
-    std::unordered_set res = a.polys_set_;
+    unordered_set res = a.polys_set_;
 #endif
     m_pair temp;
     for (auto &it : b.polys_set_) {
@@ -224,7 +229,7 @@ RCP<const Polynomial> neg_poly(const Polynomial &a) {
 #ifdef HAVE_SYMENGINE_PIRANHA
     hash_set res;
 #else
-    std::unordered_set res;
+    unordered_set res;
 #endif
     m_pair temp;
     for (auto &it: a.polys_set_) {
@@ -239,7 +244,7 @@ RCP<const Polynomial> mul_poly(RCP <const Polynomial> a, RCP <const Polynomial> 
 #ifdef HAVE_SYMENGINE_PIRANHA
     hash_set C, A = a->polys_set_, B = b->polys_set_;
 #else
-    std::unordered_set C, A = a->polys_set, B = b->polys_set;
+    unordered_set C, A = a->polys_set, B = b->polys_set;
 #endif
     m_pair temp;
     for (auto &a: A) {

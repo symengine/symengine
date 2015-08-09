@@ -52,12 +52,15 @@ void insert(T1 &m, const T2 &first, const T3 &second) {
     m.insert(std::pair<T2, T3>(first, second));
 }
 
-#if defined(HAVE_SYMENGINE_PIRANHA)
 //! Definition of pair, for the Polynomial terms
 struct m_pair
 {
     long long first;
+#if defined(HAVE_SYMENGINE_PIRANHA)
     mutable piranha::integer second;
+#else
+    mutable int second;
+#endif
 };
 
 typedef struct
@@ -78,8 +81,14 @@ typedef struct
     }
 } pair_eq;
 
+#if defined(HAVE_SYMENGINE_PIRANHA)
 //! hash_set container from Piranha
 typedef piranha::hash_set<m_pair, pair_hash, pair_eq> hash_set;
+#else
+typedef std::unordered_set<m_pair, pair_hash, pair_eq> unordered_set;
+#endif
+
+#if defined(HAVE_SYMENGINE_PIRANHA)
 //! \return true if the two hash_set `a` and `b` are equal. Otherwise false.
 bool hash_set_eq(const hash_set &a, const hash_set &b);
 //! \return -1, 0, 1 for a <b, a == b, a > b

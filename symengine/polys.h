@@ -22,31 +22,32 @@ public:
     #ifdef HAVE_SYMENGINE_PIRANHA
     hash_set polys_set_;
     #else
-    std::unordered_set<int> polys_set_;
+    unordered_set polys_set_;
     #endif
 
 public:
     IMPLEMENT_TYPEID(POLYNOMIAL)
-    //! Constructor of Polynomial class
-    Polynomial(const vec_symbol &vars, hash_set polys_set);
-    //! Costructor using std::unordered_set<int>
-    Polynomial(const vec_symbol &vars, std::unordered_set<int> polys_set);
-    //! Constructor from Basic
-    Polynomial(const RCP<const Basic> &p, umap_basic_num &vars);
 
     #ifdef HAVE_SYMENGINE_PIRANHA
+    //! Constructor of Polynomial class
+    Polynomial(const vec_symbol &vars, hash_set polys_set);
     static RCP<const Polynomial> create(const vec_symbol &vars, hash_set&& polys_set) {
         return make_rcp<const Polynomial>(vars, std::move(polys_set));
     }
     //! \return true if canonical
     bool is_canonical(const hash_set& set);
     #else
-    static RCP<const Polynomial> create(const vec_symbol &vars, std::unordered_set<int>&& polys_set) {
+    //! Costructor using std::unordered_set
+    Polynomial(const vec_symbol &vars, unordered_set polys_set);
+    static RCP<const Polynomial> create(const vec_symbol &vars, unordered_set&& polys_set) {
         return make_rcp<const Polynomial>(vars, std::move(polys_set));
     }
     //! \return true if canonical
-    bool is_canonical(const std::unordered_set<int>& set);
+    bool is_canonical(const unordered_set& set);
     #endif
+
+    //! Constructor from Basic
+    Polynomial(const RCP<const Basic> &p, umap_basic_num &vars);
 
     //! \return size of the hash
     std::size_t __hash__() const;
@@ -86,12 +87,11 @@ inline RCP<const Polynomial> polynomial(const vec_symbol &vars, hash_set polys_s
     return make_rcp<const Polynomial>(vars, std::move(polys_set));
 }
 #else
-inline RCP<const Polynomial> polynomial(const vec_symbol &vars, std::unordered_set<int> polys_set)
+inline RCP<const Polynomial> polynomial(const vec_symbol &vars, unordered_set polys_set)
 {
     return make_rcp<const Polynomial>(vars, std::move(polys_set));
 }
 #endif
-
 
 }  //SymEngine
 

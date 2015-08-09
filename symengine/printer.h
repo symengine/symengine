@@ -50,6 +50,7 @@ public:
         }
     }
 
+#ifdef HAVE_SYMENGINE_PIRANHA
     void bvisit(const Polynomial &x) {
         if (x.polys_set_.size() == 1) {
             auto it = x.polys_set_.begin();
@@ -88,6 +89,7 @@ public:
             precedence = PrecedenceEnum::Add;
         }
     }
+#endif
 
     void bvisit(const Rational &x) {
         precedence = PrecedenceEnum::Add;
