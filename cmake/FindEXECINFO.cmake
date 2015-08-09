@@ -7,6 +7,7 @@ include(FindPackageHandleStandardArgs)
 if (CMAKE_SYSTEM_NAME MATCHES "BSD")
     libfind_library(execinfo execinfo)
     set(EXECINFO_LIBRARIES ${EXECINFO_LIBRARY})
+    set(EXECINFO_TARGETS execinfo)
     find_package_handle_standard_args(EXECINFO DEFAULT_MSG
         EXECINFO_LIBRARIES EXECINFO_INCLUDE_DIRS)
 else ()
