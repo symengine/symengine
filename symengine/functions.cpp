@@ -1785,13 +1785,13 @@ RCP<const Basic> Subs::subs(const map_basic_basic &subs_dict) const
         insert(m, s.first, s.second->subs(subs_dict));
     }
     RCP<const Basic> presub = arg_->subs(n);
-    if (neq(*presub, *(make_rcp<const Subs>(arg_, n)))) {
-        return make_rcp<const Subs>(presub, m);
-    } else {
-        for (auto &q: n) {
+    if (is_a<Subs>(*presub)) {
+        for (auto &q: static_cast<const Subs &>(*presub).dict_) {
             insert(m, q.first, q.second);
         }
-        return make_rcp<const Subs>(arg_, m);
+        return make_rcp<const Subs>(static_cast<const Subs &>(*presub).arg_, m);
+    } else {
+        return make_rcp<const Subs>(presub, m);
     }
 }
 
