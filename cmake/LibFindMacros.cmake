@@ -54,6 +54,9 @@ macro (libfind_library libname pkg)
             ${libname}
     )
 
+    add_library(${libname} STATIC IMPORTED)
+    set_property(TARGET ${libname} PROPERTY IMPORTED_LOCATION ${${LIBNAME}_LIBRARY})
+
 endmacro()
 
 macro (libfind_include HEADER pkg)
