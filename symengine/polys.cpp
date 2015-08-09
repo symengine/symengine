@@ -79,8 +79,11 @@ Polynomial::Polynomial(const RCP<const Basic> &p, umap_basic_num &vars) {
 bool Polynomial::is_canonical(const hash_set& set)
 {
     for(auto &a: set) {
+        int count = 0;
         for(auto &b: set) {
             if (b.first == a.first)
+                count++;
+            if (count == 2)
                 return false;
         }
     }

@@ -35,7 +35,7 @@ using SymEngine::m_pair;
 #endif
 
 TEST_CASE("Constructor of UnivariatePolynomial", "[UnivariatePolynomial]")
-{   
+{
     RCP<const Symbol> x  = symbol("x");
     RCP<const UnivariatePolynomial> P = univariate_polynomial(x, 2, {{0, 1}, {1, 2}, {2, 1}});
     REQUIRE(P->__str__() == "x**2 + 2*x + 1");
@@ -202,7 +202,7 @@ TEST_CASE("Testing hash_set", "[hash_set]")
 #endif
 
 TEST_CASE("Constructor of Polynomial", "[Polynomial]")
-{   
+{
     RCP<const Symbol> x  = symbol("x");
     vec_symbol vars;
     vars.push_back(x);
@@ -212,7 +212,7 @@ TEST_CASE("Constructor of Polynomial", "[Polynomial]")
 
     t1.second = 2;
     t2.second = 1;
-    
+
     std::vector<long long> temp {3};
     using ka = piranha::kronecker_array<long long>;
     t1.first = ka::encode(temp);
@@ -227,17 +227,17 @@ TEST_CASE("Constructor of Polynomial", "[Polynomial]")
 
     RCP<const Basic> y  = symbol("y");
     RCP<const Basic> r = add(add(x, y), add(y, x));
-    
+
     umap_basic_num syms;
     insert(syms, x, integer(0));
     insert(syms, y, integer(1));
-    
+
     const Polynomial Q(r, syms);
     REQUIRE(Q.__str__() == "2*y**1*x**0 + 2*y**0*x**1");
 }
 
 TEST_CASE("Arithmetic of Polynomial", "[Polynomial]")
-{   
+{
     RCP<const Symbol> x  = symbol("x");
     vec_symbol vars;
     vars.push_back(x);
@@ -247,7 +247,7 @@ TEST_CASE("Arithmetic of Polynomial", "[Polynomial]")
 
     t1.second = 2;
     t2.second = 1;
-    
+
     std::vector<long long> temp {3};
     using ka = piranha::kronecker_array<long long>;
     t1.first = ka::encode(temp);
