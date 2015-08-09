@@ -6,11 +6,19 @@
 
 namespace SymEngine {
 
+#ifdef HAVE_SYMENGINE_PIRANHA
 Polynomial::Polynomial(const vec_symbol &vars, hash_set polys_set)
     : vars_{vars}, polys_set_(polys_set) {
 
     SYMENGINE_ASSERT(is_canonical(polys_set_))
 }
+#else
+Polynomial::Polynomial(const vec_symbol &vars, std::unordered_set polys_set)
+    : vars_{vars}, polys_set_(polys_set) {
+
+    SYMENGINE_ASSERT(is_canonical(polys_set_))
+}
+#endif
 
 Polynomial::Polynomial(const RCP<const Basic> &p, umap_basic_num &vars) {
     //! TODO: Make more robust
@@ -62,7 +70,7 @@ Polynomial::Polynomial(const RCP<const Basic> &p, umap_basic_num &vars) {
     } else {
         throw std::runtime_error("Not implemented.");
     }
-    
+
     for (auto &a: vars) {
         vars_.push_back(rcp_static_cast<const Symbol>(a.first));
     }
@@ -76,7 +84,11 @@ Polynomial::Polynomial(const RCP<const Basic> &p, umap_basic_num &vars) {
     }
 }
 
+#ifdef HAVE_SYMENGINE_PIRANHA
 bool Polynomial::is_canonical(const hash_set& set)
+#else
+bool Polynomial::is_canonical(const std::unordered_set set)
+#endif
 {
     for(auto &a: set) {
         int count = 0;
@@ -90,7 +102,7 @@ bool Polynomial::is_canonical(const hash_set& set)
     return true;
 }
 
-std::size_t Polynomial::__hash__() const 
+std::size_t Polynomial::__hash__() const
 {
     std::hash<std::string> hash_string;
     std::size_t seed = POLYNOMIAL;
@@ -99,7 +111,7 @@ std::size_t Polynomial::__hash__() const
         seed += hash_string(it->get_name());
 
     for (auto &it : polys_set_)
-    {   
+    {
         std::size_t temp = POLYNOMIAL;
         hash_combine<long long>(temp, it.first);
         hash_combine<long long>(temp, mpz_get_si(it.second.get_mpz_view()));
@@ -117,8 +129,13 @@ bool Polynomial::__eq__(const Basic &o) const
             return false;
     }
 
+    #ifdef HAVE_SYMENGINE_PIRANHA
     if (hash_set_eq(polys_set_, s.polys_set_))
         return true;
+    #else
+    if (polys_set_ == s.polys_set_)
+        return true;
+    #endif
 
     return false;
 }
@@ -136,7 +153,11 @@ int Polynomial::compare(const Basic &o) const
             return cmp;
     }
 
+    #ifdef HAVE_SYMENGINE_PIRANHA
     return hash_set_compare(polys_set_, s.polys_set_);
+    #else
+    return polys_set_ > s.polys_set_;
+    #endif
 }
 
 //TODO
@@ -153,7 +174,12 @@ RCP<const Basic> Polynomial::diff(const RCP<const Symbol> &x) const
 }
 
 RCP<const Polynomial> add_poly(const Polynomial &a, const Polynomial &b) {
+#ifdef HAVE_SYMENGINE_PIRANHA
     hash_set res = a.polys_set_;
+#else
+    std::unordered_set res = a.polys_set_;
+#endif
+
     m_pair temp;
     for (auto &it : b.polys_set_) {
         temp.first = it.first;
@@ -172,7 +198,11 @@ RCP<const Polynomial> add_poly(const Polynomial &a, const Polynomial &b) {
 }
 
 RCP<const Polynomial> sub_poly(const Polynomial &a, const Polynomial &b) {
+#ifdef HAVE_SYMENGINE_PIRANHA
     hash_set res = a.polys_set_;
+#else
+    std::unordered_set res = a.polys_set_;
+#endif
     m_pair temp;
     for (auto &it : b.polys_set_) {
         temp.first = it.first;
@@ -191,7 +221,11 @@ RCP<const Polynomial> sub_poly(const Polynomial &a, const Polynomial &b) {
 }
 
 RCP<const Polynomial> neg_poly(const Polynomial &a) {
+#ifdef HAVE_SYMENGINE_PIRANHA
     hash_set res;
+#else
+    std::unordered_set res;
+#endif
     m_pair temp;
     for (auto &it: a.polys_set_) {
         temp.first = it.first;
@@ -202,7 +236,11 @@ RCP<const Polynomial> neg_poly(const Polynomial &a) {
 }
 
 RCP<const Polynomial> mul_poly(RCP <const Polynomial> a, RCP <const Polynomial> b) {
+#ifdef HAVE_SYMENGINE_PIRANHA
     hash_set C, A = a->polys_set_, B = b->polys_set_;
+#else
+    std::unordered_set C, A = a->polys_set, B = b->polys_set;
+#endif
     m_pair temp;
     for (auto &a: A) {
         for (auto &b: B) {
