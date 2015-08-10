@@ -2,9 +2,14 @@
 
 [![Build Status](https://travis-ci.org/sympy/symengine.png?branch=master)](https://travis-ci.org/sympy/symengine)
 
-SymEngine is a standalone fast C++ symbolic manipulation library.
-Optional thin Python wrappers allow easy usage from Python and
-integration with [SymPy](http://sympy.org/).
+SymEngine is a standalone fast C++ symbolic manipulation library. Optional thin
+wrappers allow usage of the library from other languages, e.g.:
+
+* C wrappers allow usage from C, or as a basis for other wrappers (the [symengine/cwrapper.h](https://github.com/sympy/symengine/tree/master/symengine/cwrapper.h) file)
+* Python wrappers allow easy usage from Python and integration with [SymPy](http://sympy.org/) and [Sage](http://www.sagemath.org/) (the [symengine/python](https://github.com/sympy/symengine/tree/master/symengine/python) directory)
+* Ruby wrappers (the [symengine/ruby](https://github.com/sympy/symengine/tree/master/symengine/ruby) directory)
+* Julia wrappers (the [SymEngine.jl](https://github.com/symengine/SymEngine.jl) repository)
+* ...
 
 ## License
 
