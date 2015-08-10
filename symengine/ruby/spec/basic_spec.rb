@@ -27,7 +27,7 @@ describe SymEngine do
           it 'returns a initialised Basic object that is result of
                         self added to the argument' do
             c = @a + @b
-            expect(c).to be_an_instance_of SymEngine::Symbol
+            expect(c).to be_an_instance_of SymEngine::Basic
             expect(c.to_s).to eql('x + y')
           end
         end
@@ -37,7 +37,7 @@ describe SymEngine do
           it 'returns a initialised Basic object that is result of
                         argument subtracted from self' do
             c = @a - @b
-            expect(c).to be_an_instance_of SymEngine::Symbol
+            expect(c).to be_an_instance_of SymEngine::Basic
             expect(c.to_s).to eql('x - y')
           end
         end
@@ -47,7 +47,7 @@ describe SymEngine do
           it 'returns a initialised Basic object that is result of
                         self multiplied by the argument' do
             c = @a * @b
-            expect(c).to be_an_instance_of SymEngine::Symbol
+            expect(c).to be_an_instance_of SymEngine::Basic
             expect(c.to_s).to eql('x*y')
           end
         end
@@ -57,7 +57,7 @@ describe SymEngine do
           it 'returns a initialised Basic object that is result of
                         self divided by the argument' do
             c = @a / @b
-            expect(c).to be_an_instance_of SymEngine::Symbol
+            expect(c).to be_an_instance_of SymEngine::Basic
             expect(c.to_s).to eql('x/y')
           end
         end
@@ -67,7 +67,7 @@ describe SymEngine do
           it 'returns a initialised Basic object that is result of
                         self raised to the power of argument' do
             c = @a**@b
-            expect(c).to be_an_instance_of SymEngine::Symbol
+            expect(c).to be_an_instance_of SymEngine::Basic
             expect(c.to_s).to eql('x**y')
           end
         end
@@ -115,7 +115,7 @@ describe SymEngine do
         context "doesn't take any argument" do
           it 'returns the negation of self' do
             p = -@x
-            expect(p).to be_an_instance_of SymEngine::Symbol
+            expect(p).to be_an_instance_of SymEngine::Basic
             expect(p.to_s).to eql('-a')
           end
         end
@@ -161,7 +161,7 @@ describe SymEngine do
           e = (x + y + z) * (x + y + z)
           f = e.expand
           expect(e.to_s).to eql('(x + y + z)**2')
-          expect(f).to be_an_instance_of SymEngine::Symbol
+          expect(f).to be_an_instance_of SymEngine::Basic
           expect(f.to_s).to eql('2*x*y + 2*x*z + 2*y*z + x**2 + y**2 + z**2')
           expect(e == f).to be false
         end

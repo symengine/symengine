@@ -19,12 +19,15 @@ VALUE cbasic_binary_op(VALUE self, VALUE operand2, void (*cwfunc_ptr)(basic_stru
     basic_struct *this, *cbasic_operand2, *cresult;
     VALUE result;
 
+    cbasic_operand2 = basic_new_heap();
+
     Data_Get_Struct(self, basic_struct, this);
-    Data_Get_Struct(operand2, basic_struct, cbasic_operand2);
+    sympify(operand2, cbasic_operand2);
 
     cresult = basic_new_heap();
     cwfunc_ptr(cresult, this, cbasic_operand2);
-    result = Data_Wrap_Struct(rb_obj_class(self), NULL , cbasic_free_heap, cresult);
+    result = Data_Wrap_Struct(Klass_of_Basic(cresult), NULL , cbasic_free_heap, cresult);
+    basic_free_heap(cbasic_operand2);
 
     return result;
 }
@@ -37,7 +40,7 @@ VALUE cbasic_unary_op(VALUE self, void (*cwfunc_ptr)(basic_struct*, const basic_
 
     cresult = basic_new_heap();
     cwfunc_ptr(cresult, this);
-    result = Data_Wrap_Struct(rb_obj_class(self), NULL , cbasic_free_heap, cresult);
+    result = Data_Wrap_Struct(Klass_of_Basic(cresult), NULL , cbasic_free_heap, cresult);
 
     return result;
 }
@@ -65,19 +68,27 @@ VALUE cbasic_pow(VALUE self, VALUE operand2){
 VALUE cbasic_eq(VALUE self, VALUE operand2) {
     basic_struct *this, *cbasic_operand2;
 
+    cbasic_operand2 = basic_new_heap();
     Data_Get_Struct(self, basic_struct, this);
-    Data_Get_Struct(operand2, basic_struct, cbasic_operand2);
+    sympify(operand2, cbasic_operand2);
 
-    return basic_eq(this, cbasic_operand2) ? Qtrue : Qfalse;
+    VALUE ret_val = basic_eq(this, cbasic_operand2) ? Qtrue : Qfalse;
+    basic_free_heap(cbasic_operand2);
+
+    return ret_val;
 }
 
 VALUE cbasic_neq(VALUE self, VALUE operand2) {
     basic_struct *this, *cbasic_operand2;
 
+    cbasic_operand2 = basic_new_heap();
     Data_Get_Struct(self, basic_struct, this);
-    Data_Get_Struct(operand2, basic_struct, cbasic_operand2);
+    sympify(operand2, cbasic_operand2);
 
-    return basic_neq(this, cbasic_operand2) ? Qtrue : Qfalse;
+    VALUE ret_val =  basic_neq(this, cbasic_operand2) ? Qtrue : Qfalse;
+    basic_free_heap(cbasic_operand2);
+
+    return ret_val;
 }
 
 VALUE cbasic_neg(VALUE self){
@@ -159,4 +170,12 @@ VALUE cbasic_hash(VALUE self){
     // long lhash = basic_hash(this) % FIX2LONG(FIXNUM_MAX);
     // return LONG2FIX(lhash);
     return SIZET2NUM(basic_hash(this));
+}
+
+VALUE cbasic_coerce(VALUE self, VALUE other){
+    basic_struct *cbasic_operand2;
+    cbasic_operand2 = basic_new_heap();
+    sympify(other, cbasic_operand2);
+    VALUE new_other = Data_Wrap_Struct(Klass_of_Basic(cbasic_operand2), NULL , cbasic_free_heap, cbasic_operand2);
+    return rb_assoc_new(new_other, self);
 }
