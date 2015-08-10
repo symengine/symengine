@@ -5,6 +5,7 @@ libfind_library(bfd bfd)
 
 set(BFD_LIBRARIES ${BFD_LIBRARY})
 set(BFD_INCLUDE_DIRS ${BFD_INCLUDE_DIR})
+set(BFD_TARGETS bfd)
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(BFD DEFAULT_MSG

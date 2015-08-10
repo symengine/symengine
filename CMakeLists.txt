@@ -90,7 +90,7 @@ endif()
 # GMP
 find_package(GMP REQUIRED)
 include_directories(${GMP_INCLUDE_DIRS})
-set(LIBS ${LIBS} ${GMP_LIBRARIES})
+set(LIBS ${LIBS} ${GMP_TARGETS})
 
 # Check gmpxx
 if (NOT(MSVC))
@@ -113,7 +113,7 @@ set(WITH_ECM no
 if (WITH_ECM)
     find_package(ECM REQUIRED)
     include_directories(${ECM_INCLUDE_DIRS})
-    set(LIBS ${LIBS} ${ECM_LIBRARIES})
+    set(LIBS ${LIBS} ${ECM_TARGETS})
     set(HAVE_SYMENGINE_ECM yes)
 endif()
 
@@ -124,7 +124,7 @@ set(WITH_PRIMESIEVE no
 if (WITH_PRIMESIEVE)
     find_package(PRIMESIEVE REQUIRED)
     include_directories(${PRIMESIEVE_INCLUDE_DIRS})
-    set(LIBS ${LIBS} ${PRIMESIEVE_LIBRARIES})
+    set(LIBS ${LIBS} ${PRIMESIEVE_TARGETS})
     set(HAVE_SYMENGINE_PRIMESIEVE yes)
 endif()
 
@@ -146,7 +146,7 @@ set(HAVE_SYMENGINE_MPC False)
 if (WITH_ARB)
     find_package(FLINT REQUIRED)
     include_directories(${FLINT_INCLUDE_DIRS})
-    set(LIBS ${LIBS} ${FLINT_LIBRARIES})
+    set(LIBS ${LIBS} ${FLINT_TARGETS})
 
     # Workaround for https://github.com/fredrik-johansson/arb/issues/24
     include_directories(${FLINT_INCLUDE_DIRS}/flint)
@@ -155,14 +155,14 @@ if (WITH_ARB)
 
     find_package(ARB REQUIRED)
     include_directories(${ARB_INCLUDE_DIRS})
-    set(LIBS ${LIBS} ${ARB_LIBRARIES})
+    set(LIBS ${LIBS} ${ARB_TARGETS})
     set(HAVE_SYMENGINE_ARB True)
 endif()
 
 if (WITH_MPC)
     find_package(MPC REQUIRED)
     include_directories(${MPC_INCLUDE_DIRS})
-    set(LIBS ${LIBS} ${MPC_LIBRARIES})
+    set(LIBS ${LIBS} ${MPC_TARGETS})
     set(HAVE_SYMENGINE_MPC True)
     set(WITH_MPFR yes)
 endif()
@@ -194,7 +194,7 @@ endif()
 if (WITH_PTHREAD)
     find_package(PTHREAD REQUIRED)
     include_directories(${PTHREAD_INCLUDE_DIRS})
-    set(LIBS ${LIBS} ${PTHREAD_LIBRARIES})
+    set(LIBS ${LIBS} ${PTHREAD_TARGETS})
     set(HAVE_SYMENGINE_PTHREAD yes)
 endif()
 
@@ -208,7 +208,7 @@ endif()
 if (WITH_MPFR)
     find_package(MPFR REQUIRED)
     include_directories(${MPFR_INCLUDE_DIRS})
-    set(LIBS ${LIBS} ${MPFR_LIBRARIES})
+    set(LIBS ${LIBS} ${MPFR_TARGETS})
     set(HAVE_SYMENGINE_MPFR True)
 endif()
 
@@ -228,14 +228,14 @@ if (WITH_BFD)
     find_package(BFD REQUIRED)
     find_package(LINKH REQUIRED)
     include_directories(${BFD_INCLUDE_DIRS} ${LINKH_INCLUDE_DIRS})
-    set(LIBS ${LIBS} ${BFD_LIBRARIES})
+    set(LIBS ${LIBS} ${BFD_TARGETS})
     set(HAVE_TEUCHOS_BFD yes)
     set(HAVE_TEUCHOS_LINK yes)
 
     set(HAVE_TEUCHOS_EXECINFO yes)
     find_package(EXECINFO REQUIRED)
     include_directories(${EXECINFO_INCLUDE_DIRS})
-    set(LIBS ${LIBS} ${EXECINFO_LIBRARIES})
+    set(LIBS ${LIBS} ${EXECINFO_TARGETS})
 endif()
 
 # TCMalloc
@@ -244,7 +244,7 @@ set(WITH_TCMALLOC no
 
 if (WITH_TCMALLOC)
     find_package(TCMALLOC REQUIRED)
-    set(LIBS ${LIBS} ${TCMALLOC_LIBRARIES})
+    set(LIBS ${LIBS} ${TCMALLOC_TARGETS})
 
     if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
         set(CMAKE_CXX_FLAGS_DEBUG
