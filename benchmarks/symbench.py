@@ -8,10 +8,10 @@ To run all benchmarks using symengine, sympy and sage, python symbench.py sympy 
 import sys
 import subprocess
 
-benchmarks = ['R1', 'R2', 'R3', 'R5', 'S1', 'S2', 'S3', 'S3a']
-symengine_skip = [False, False, False, False, False, False, False, False]
-sympy_skip = [False, False, False, False, False, False, False, True]
-sage_skip = [False, False, False, False, False, False, False, False]
+benchmarks = ['R1', 'R2', 'R3', 'R5', 'R7', 'R8', 'S1', 'S2', 'S3', 'S3a']
+symengine_skip = [False, False, False, False, False, False, False, False, False, False]
+sympy_skip = [False, False, False, False, False, False, False, False, False, True]
+sage_skip = [False, False, False, False, False, False, False, False, False, False]
 
 args = sys.argv[1:]
 sympy = False
