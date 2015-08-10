@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Note: use this script from the root dir of the ruby wrappers gem as
+# your current dir.
+
 # Callgrind is a profiling tool that records the call history among functions
 # in a program's run as a call-graph. By default, the collected data consists
 # of the number of instructions executed, their relationship to source lines,

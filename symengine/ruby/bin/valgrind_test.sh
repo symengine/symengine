@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Note: use this script from the root dir of the ruby wrappers gem as
+# your current dir.
+
 # Memcheck is a memory error detector which can detect problems like
 # accessing memory you shouldn't, using undefined values, incorrect
 # freeing of heap memory, overlapping source and destination pointers
