@@ -54,7 +54,7 @@ macro (libfind_library libname pkg)
             ${libname}
     )
 
-    add_library(${libname} STATIC IMPORTED)
+    add_library(${libname} UNKNOWN IMPORTED)
     set_property(TARGET ${libname} PROPERTY IMPORTED_LOCATION ${${LIBNAME}_LIBRARY})
 
 endmacro()
