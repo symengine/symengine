@@ -16,6 +16,7 @@ fi
 
 export SOURCE_DIR=`pwd`
 export our_install_dir="$HOME/our_usr"
+export common_dir=$our_install_dir
 mkdir -p $our_install_dir
 cd $our_install_dir
 
@@ -72,7 +73,7 @@ if [[ "${WITH_MPC}" == "yes" ]]; then
     fi
 fi
 # Install python using Miniconda.
-if [[ "${WITH_PYTHON}" == "yes" ]] || [[ "${PYTHON_INSTALL}" == "yes" ]]; then
+if [[ "${WITH_PYTHON}" == "yes" && "${WITH_SAGE}" != "yes" || "${PYTHON_INSTALL}" == "yes" ]]; then
     if [[ "${TRAVIS_OS_NAME}" != "osx" ]]; then
         wget https://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O miniconda.sh;
     else
@@ -87,5 +88,26 @@ if [[ "${WITH_PYTHON}" == "yes" ]] || [[ "${PYTHON_INSTALL}" == "yes" ]]; then
 
     conda create -q -n test-environment python="${PYTHON_VERSION}" pip cython sympy nose pytest;
     source activate test-environment;
+fi
+if [[ "${WITH_SAGE}" == "yes" ]]; then
+    sudo apt-add-repository -y ppa:aims/sagemath;
+    sudo apt-get update;
+    set +e;
+    function install_sage {
+        sudo dpkg --configure -a;
+        sudo apt-get install sagemath-upstream-binary;
+    };
+    travis_retry install_sage;
+    set -e;
+
+    SAGE_ROOT=$(sage -python << EOF
+import os
+print os.environ['SAGE_ROOT']
+EOF
+)
+    export python_install_dir=$our_install_dir/lib/python2.7/site-packages
+    export SAGE_PATH=$python_install_dir
+    source $SAGE_ROOT/src/bin/sage-env
+    export common_dir=$SAGE_LOCAL
 fi
 cd $SOURCE_DIR;
