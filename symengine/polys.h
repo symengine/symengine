@@ -78,10 +78,10 @@ RCP<const Polynomial> add_poly(const Polynomial &a, const Polynomial &b);
 RCP<const Polynomial> neg_poly(const Polynomial &a);
 //! Subtracting two Polynomial a and b
 RCP<const Polynomial> sub_poly(const Polynomial &a, const Polynomial &b);
+#ifdef HAVE_SYMENGINE_PIRANHA
 //! Multiplying two Polynomial a and b
 RCP<const Polynomial> mul_poly(RCP <const Polynomial> a, RCP <const Polynomial> b);
 
-#ifdef HAVE_SYMENGINE_PIRANHA
 inline RCP<const Polynomial> polynomial(const vec_symbol &vars, hash_set polys_set)
 {
     return make_rcp<const Polynomial>(vars, std::move(polys_set));

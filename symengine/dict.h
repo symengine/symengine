@@ -59,7 +59,7 @@ struct m_pair
 #if defined(HAVE_SYMENGINE_PIRANHA)
     mutable piranha::integer second;
 #else
-    mutable int second;
+    mutable mpz_class second;
 #endif
 };
 
@@ -86,6 +86,10 @@ typedef struct
 typedef piranha::hash_set<m_pair, pair_hash, pair_eq> hash_set;
 #else
 typedef std::unordered_set<m_pair, pair_hash, pair_eq> unordered_set;
+
+long long vec_encode(const vec_int&);
+
+vec_int vec_decode(const int);
 #endif
 
 #if defined(HAVE_SYMENGINE_PIRANHA)
@@ -93,6 +97,9 @@ typedef std::unordered_set<m_pair, pair_hash, pair_eq> unordered_set;
 bool hash_set_eq(const hash_set &a, const hash_set &b);
 //! \return -1, 0, 1 for a <b, a == b, a > b
 int hash_set_compare(const hash_set &A, const hash_set &B);
+#else
+bool unordered_set_eq(const unordered_set &a, const unordered_set &b);
+
 #endif
 
 //! \return true if the two dictionaries `a` and `b` are equal. Otherwise false.

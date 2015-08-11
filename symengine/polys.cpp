@@ -82,8 +82,8 @@ Polynomial::Polynomial(const RCP<const Basic> &p, umap_basic_num &vars) {
         temp.first = ka::encode(a.first);
         temp.second = piranha::integer{a.second.get_str()};
 #else
-        temp.first = a.first;
-        temp.second = int(a.second)
+        temp.first = vec_encode(a.first);
+        temp.second = (a.second).get_ui();
 #endif
         polys_set_.insert(temp);
     }
@@ -92,7 +92,7 @@ Polynomial::Polynomial(const RCP<const Basic> &p, umap_basic_num &vars) {
 #ifdef HAVE_SYMENGINE_PIRANHA
 bool Polynomial::is_canonical(const hash_set& set)
 #else
-bool Polynomial::is_canonical(const unordered_set set)
+bool Polynomial::is_canonical(const unordered_set& set)
 #endif
 {
     for(auto &a: set) {
@@ -119,7 +119,11 @@ std::size_t Polynomial::__hash__() const
     {
         std::size_t temp = POLYNOMIAL;
         hash_combine<long long>(temp, it.first);
+#ifdef HAVE_SYMENGINE_PIRANHA
         hash_combine<long long>(temp, mpz_get_si(it.second.get_mpz_view()));
+#else
+        hash_combine<long long>(temp, (it.second).get_ui());
+#endif
         seed += temp;
     }
     return seed;
@@ -138,7 +142,7 @@ bool Polynomial::__eq__(const Basic &o) const
     if (hash_set_eq(polys_set_, s.polys_set_))
         return true;
     #else
-    if (polys_set_ == s.polys_set_)
+    if (unordered_set_eq(polys_set_, s.polys_set_))
         return true;
     #endif
 
@@ -240,12 +244,9 @@ RCP<const Polynomial> neg_poly(const Polynomial &a) {
     return polynomial(a.vars_, res);
 }
 
-RCP<const Polynomial> mul_poly(RCP <const Polynomial> a, RCP <const Polynomial> b) {
 #ifdef HAVE_SYMENGINE_PIRANHA
+RCP<const Polynomial> mul_poly(RCP <const Polynomial> a, RCP <const Polynomial> b) {
     hash_set C, A = a->polys_set_, B = b->polys_set_;
-#else
-    unordered_set C, A = a->polys_set, B = b->polys_set;
-#endif
     m_pair temp;
     for (auto &a: A) {
         for (auto &b: B) {
@@ -271,6 +272,7 @@ RCP<const Polynomial> mul_poly(RCP <const Polynomial> a, RCP <const Polynomial> 
     }
     return polynomial(a->vars_, C);
 }
+#endif
 
 
 } // SymEngine

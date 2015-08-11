@@ -127,6 +127,40 @@ bool hash_set_eq(const hash_set &a,
     }
     return true;
 }
+
+#else
+bool unordered_set_eq(const unordered_set &a,
+        const unordered_set &b)
+{
+    // Can't be equal if # of elements in set differ:
+    if (a.size() != b.size()) return false;
+    // Loop over elements in "a":
+    for (auto &p: a) {
+        auto f = b.find(p);
+        if (f == b.end()) return false; // no such element in "b"
+    }
+    return true;
+}
+
+long long vec_encode(const vec_int &v) {
+    long long retval = 0;
+    int i = 1;
+    for(auto &a: v) {
+        retval += a*i;
+        i *= 10;
+    }
+    return retval;
+}
+
+vec_int vec_decode(const int code) {
+    vec_int v = {0};
+    int n = code;
+    while(n > 0) {
+        v.push_back(n % 10);
+        n = n/10;
+    }
+    return v;
+}
 #endif
 
 bool vec_basic_eq(const vec_basic &a, const vec_basic &b)

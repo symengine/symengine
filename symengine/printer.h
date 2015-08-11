@@ -50,15 +50,19 @@ public:
         }
     }
 
-#ifdef HAVE_SYMENGINE_PIRANHA
     void bvisit(const Polynomial &x) {
         if (x.polys_set_.size() == 1) {
             auto it = x.polys_set_.begin();
             int n_vars = x.vars_.size();
             int n_zero = 0, n_one = 0;
+#ifdef HAVE_SYMENGINE_PIRANHA
             using ka = piranha::kronecker_array<long long>;
             std::vector<long long> out(n_vars);
             ka::decode(out, it->first);
+#else
+            vec_int out(n_vars);
+            out = vec_decode(it->first);
+#endif
             for (auto &a: out) {
                 if (a == 0) {
                     n_zero++;
@@ -89,7 +93,6 @@ public:
             precedence = PrecedenceEnum::Add;
         }
     }
-#endif
 
     void bvisit(const Rational &x) {
         precedence = PrecedenceEnum::Add;
