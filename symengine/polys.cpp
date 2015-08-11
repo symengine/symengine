@@ -133,7 +133,7 @@ bool Polynomial::__eq__(const Basic &o) const
 {
     const Polynomial &s = static_cast<const Polynomial &>(o);
 
-    for (uint i = 0; i < vars_.size(); i++) {
+    for (unsigned int i = 0; i < vars_.size(); i++) {
         if (!vars_[i]->__eq__(*s.vars_[i]))
             return false;
     }
@@ -156,7 +156,7 @@ int Polynomial::compare(const Basic &o) const
     if (polys_set_.size() != s.polys_set_.size())
         return (polys_set_.size() < s.polys_set_.size()) ? -1 : 1;
 
-    for (uint i = 0; i < vars_.size(); i++) {
+    for (unsigned int i = 0; i < vars_.size(); i++) {
         int cmp = vars_[i]->compare(*s.vars_[i]);
         if (cmp != 0)
             return cmp;
