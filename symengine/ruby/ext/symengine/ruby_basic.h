@@ -26,6 +26,8 @@ VALUE cbasic_div(VALUE self, VALUE operand2);
 
 VALUE cbasic_pow(VALUE self, VALUE operand2);
 
+VALUE cbasic_diff(VALUE self, VALUE operand2);
+
 VALUE cbasic_eq(VALUE self, VALUE operand2);
 
 VALUE cbasic_neq(VALUE self, VALUE operand2);
