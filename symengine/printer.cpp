@@ -234,7 +234,7 @@ void StrPrinter::bvisit(const UnivariatePolynomial &x) {
         //given a term in univariate polynomial, if coefficient is zero, print nothing
         if (it->second == 0) {
             //except when it is the only term, say "0"
-            if (it->first == 0) 
+            if (it->first == 0)
                 s << "0";
             ++it;
         }
@@ -244,12 +244,12 @@ void StrPrinter::bvisit(const UnivariatePolynomial &x) {
             //in cases of -7, it is the only term, hence we print -7
             //in cases of x - 7, the '-' is considered earlier, hence print only 7
             if (it->first == 0) {
-                if (first) 
+                if (first)
                     s << it->second;
-                else 
+                else
                     s << abs(it->second);
             }
-            //if exponent is 1, print x instead of x**1 
+            //if exponent is 1, print x instead of x**1
             else if (it->first == 1) {
                 //in cases of -x, print -x
                 //in cases of x**2 - x, print x, the '-' is considered earlier
@@ -271,16 +271,16 @@ void StrPrinter::bvisit(const UnivariatePolynomial &x) {
                 if (it->second < 0) {
                     s << " - ";
                 } else {
-                    s << " + "; 
+                    s << " + ";
                 }
             }
         }
         //same logic is followed as above
         else {
             if (it->first == 0) {
-                if (first) 
+                if (first)
                     s << it->second;
-                else 
+                else
                     s << abs(it->second);
             } else if (it->first == 1) {
                 if (first && it->second < 0) {
@@ -295,7 +295,7 @@ void StrPrinter::bvisit(const UnivariatePolynomial &x) {
                 if (it->second < 0) {
                     s << " - ";
                 } else {
-                    s << " + "; 
+                    s << " + ";
                 }
             }
         }
@@ -305,7 +305,6 @@ void StrPrinter::bvisit(const UnivariatePolynomial &x) {
     str_ = s.str();
 }
 
-#ifdef HAVE_SYMENGINE_PIRANHA
 //Polynomial printing
 void StrPrinter::bvisit(const Polynomial &x) {
     std::ostringstream s;
@@ -313,9 +312,14 @@ void StrPrinter::bvisit(const Polynomial &x) {
     int n_vars = x.vars_.size();
     for (auto it = x.polys_set_.begin(); it != x.polys_set_.end();) {
         int n_zero = 0, n_one = 0;
+#ifdef HAVE_SYMENGINE_PIRANHA
         using ka = piranha::kronecker_array<long long>;
         std::vector<long long> out(n_vars);
         ka::decode(out, it->first);
+#else
+        vec_int out(n_vars);
+        out = vec_decode(it->first);
+#endif
         for (auto &a: out) {
             if (a == 0) {
                 n_zero++;
@@ -325,16 +329,24 @@ void StrPrinter::bvisit(const Polynomial &x) {
             }
         }
         if (it->second == 0) {
-            if (x.polys_set_.size() == 1) 
+            if (x.polys_set_.size() == 1)
                 s << "0";
             ++it;
         }
+#ifdef HAVE_SYMENGINE_PIRANHA
         else if ((it->second).abs() == 1) {
-            if (n_zero == n_vars) { 
-                if (first) 
+#else
+        else if ((abs(it->second)) == 1) {
+#endif
+            if (n_zero == n_vars) {
+                if (first)
                     s << it->second;
-                else 
+                else
+#ifdef HAVE_SYMENGINE_PIRANHA
                     s << (it->second).abs();
+#else
+                    s << abs(it->second);
+#endif
             } else {
                 if (first && it->second == -1) {
                     s << "-";
@@ -357,18 +369,24 @@ void StrPrinter::bvisit(const Polynomial &x) {
                 if (it->second < 0) {
                     s << " - ";
                 } else {
-                    s << " + "; 
+                    s << " + ";
                 }
             }
         }
         else {
             if (n_zero == n_vars) {
-                if (first) 
+                if (first)
                     s << it->second;
-                else 
+                else
+#ifdef HAVE_SYMENGINE_PIRANHA
                     s << (it->second).abs();
             } else {
                 s << (it->second).abs() << "*";
+#else
+                    s << abs(it->second);
+            } else {
+                s << abs(it->second) << "*";
+#endif
                 for (int i = 0; i < n_vars; i++){
                     s << x.vars_[i]->__str__() << "**" << out[i];
                     if (i != n_vars - 1) {
@@ -380,7 +398,7 @@ void StrPrinter::bvisit(const Polynomial &x) {
                 if (it->second < 0) {
                     s << " - ";
                 } else {
-                    s << " + "; 
+                    s << " + ";
                 }
             }
         }
@@ -388,7 +406,6 @@ void StrPrinter::bvisit(const Polynomial &x) {
     }
     str_ = s.str();
 }
-#endif
 
 void StrPrinter::bvisit(const Log &x) {
     str_ = "log(" + this->apply(x.get_arg()) + ")";

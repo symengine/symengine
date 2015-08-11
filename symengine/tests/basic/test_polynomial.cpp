@@ -199,7 +199,6 @@ TEST_CASE("Testing hash_set", "[hash_set]")
     REQUIRE(hash_set_compare(p, s) == -1);
     REQUIRE(hash_set_compare(s, q) == 0);
 }
-#endif
 
 TEST_CASE("Constructor of Polynomial", "[Polynomial]")
 {
@@ -268,3 +267,4 @@ TEST_CASE("Arithmetic of Polynomial", "[Polynomial]")
     RCP<const Polynomial> S = sub_poly(*Q, *P);
     REQUIRE(S->__str__() == "x**2 + 2*x**3");
 }
+#endif
