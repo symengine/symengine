@@ -72,6 +72,18 @@ describe SymEngine do
           end
         end
       end
+      describe '#diff' do
+        context 'with another initialised Basic object as argument' do
+          it 'differentiates self with respect to the argument
+              and returns the result' do
+            a = @a**3
+            c = a.diff(@a)
+            expect(c).to be_an_instance_of SymEngine::Basic
+            expect(c).to eq(3 * @a**2)
+            expect(a.diff(2)).to be_nil
+          end
+        end
+      end
       describe '#==' do
         context 'with another initialised Basic object as argument' do
           it 'returns true if they are the same expression
