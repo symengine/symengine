@@ -19,6 +19,7 @@ void Init_symengine() {
     rb_define_method(c_basic, "*", cbasic_mul, 1);
     rb_define_method(c_basic, "/", cbasic_div, 1);
     rb_define_method(c_basic, "**", cbasic_pow, 1);
+    rb_define_method(c_basic, "diff", cbasic_diff, 1);
     rb_define_method(c_basic, "==", cbasic_eq, 1);
     rb_define_method(c_basic, "eql?", cbasic_eq, 1);
     rb_define_method(c_basic, "!=", cbasic_neq, 1);
