@@ -388,9 +388,7 @@ size_t basic_hash(const basic self)
 
 void basic_subs2(basic s, const basic e, const basic a, const basic b)
 {
-    SymEngine::map_basic_basic temp;
-    temp.insert(std::pair< RCP<const Basic>, RCP<const Basic> >(a->m,b->m));
-    s->m = e->m->subs(temp);
+    s->m = e->m->subs({{a->m, b->m}});
 }
 
 }
