@@ -199,6 +199,38 @@ void test_CSetBasic()
     basic_free_stack(y);
 }
 
+void test_CMapBasicBasic()
+{
+    CMapBasicBasic *map = mapbasicbasic_new();
+    SYMENGINE_C_ASSERT(mapbasicbasic_size(map) == 0);
+
+    basic x, y;
+    basic_new_stack(x);
+    basic_new_stack(y);
+    symbol_set(x, "x");
+    symbol_set(y, "y");
+
+    mapbasicbasic_insert(map, x, y);
+    SYMENGINE_C_ASSERT(mapbasicbasic_size(map) == 1);
+
+    basic z;
+    basic_new_stack(z);
+    symbol_set(z, "z");
+
+    int is_found;
+    is_found = mapbasicbasic_get(map, x, z);
+    SYMENGINE_C_ASSERT(is_found == 1);
+    SYMENGINE_C_ASSERT(basic_eq(y, z));
+
+    is_found = mapbasicbasic_get(map, y, z);
+    SYMENGINE_C_ASSERT(is_found == 0);
+
+    mapbasicbasic_free(map);
+    basic_free_stack(x);
+    basic_free_stack(y);
+    basic_free_stack(z);
+}
+
 void test_get_args()
 {
     basic x, y, z, e;
@@ -325,6 +357,7 @@ int main(int argc, char* argv[])
     test_CVectorInt2();
     test_CVecBasic();
     test_CSetBasic();
+    test_CMapBasicBasic();
     test_get_args();
     test_free_symbols();
     test_get_type();
