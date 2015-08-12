@@ -99,7 +99,7 @@ if [[ "${WITH_PYTHON}" == "yes" && "${WITH_SAGE}" != "yes" || "${PYTHON_INSTALL}
     source activate test-environment;
 fi
 if [[ "${WITH_SAGE}" == "yes" ]]; then
-    wget -O- http://files.sagemath.org/linux/64bit/sage-6.8-x86_64-Linux-Ubuntu_12.04_64_bit.tar.gz | tar xz
+    wget -O- http://files.sagemath.org/linux/64bit/Ubuntu_12.04_LTS_sage-6.8-x86_64-Linux.tar.lrz | lrzip -dq | tar x
     export PATH="`pwd`/sage-6.8-x86_64-Linux:$PATH"
     SAGE_ROOT=$(sage -python << EOF
 import os
