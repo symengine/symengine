@@ -207,6 +207,17 @@ void setbasic_get(CSetBasic *self, int n, basic result);
 int setbasic_find(CSetBasic *self, basic value);
 size_t setbasic_size(CSetBasic *self);
 
+//! Wrapper for map_basic_basic
+
+typedef struct CMapBasicBasic CMapBasicBasic;
+
+CMapBasicBasic* mapbasicbasic_new();
+void mapbasicbasic_free(CMapBasicBasic *self);
+void mapbasicbasic_insert(CMapBasicBasic *self, const basic key, const basic mapped);
+//! Returns 1 if such a key exists in the map and get is successful, 0 if not
+int mapbasicbasic_get(CMapBasicBasic *self, const basic key, basic mapped);
+size_t mapbasicbasic_size(CMapBasicBasic *self);
+
 // -------------------------------------
 
 //! Returns a CVecBasic of vec_basic given by get_args

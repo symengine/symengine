@@ -369,6 +369,43 @@ size_t setbasic_size(CSetBasic *self)
     return self->m.size();
 }
 
+// C Wrapper for map_basic_basic
+
+struct CMapBasicBasic {
+    SymEngine::map_basic_basic m;
+};
+
+CMapBasicBasic* mapbasicbasic_new()
+{
+    return new CMapBasicBasic;
+}
+
+void mapbasicbasic_free(CMapBasicBasic *self)
+{
+    delete self;
+}
+
+void mapbasicbasic_insert(CMapBasicBasic *self, const basic key, const basic mapped)
+{
+    (self->m)[key->m] = mapped->m;
+}
+
+int mapbasicbasic_get(CMapBasicBasic *self, const basic key, basic mapped)
+{
+    auto it = self->m.find(key->m);
+    if (it != self->m.end())
+    {
+        mapped->m = it->second;
+        return 1;
+    }
+    return 0;
+}
+
+size_t mapbasicbasic_size(CMapBasicBasic *self)
+{
+    return self->m.size();
+}
+
 // ----------------------
 
 void basic_get_args(const basic self, CVecBasic *args)
