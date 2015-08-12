@@ -215,6 +215,9 @@ void basic_get_args(const basic self, CVecBasic *args);
 void basic_free_symbols(const basic self, CSetBasic *symbols);
 //! returns the hash of the Basic object
 size_t basic_hash(const basic self);
+//! substitutes a basic 'a' with another basic 'b',
+//! in the given basic 'e' and returns it through basic 's'
+void basic_subs2(basic s, const basic e, const basic a, const basic b);
 
 #ifdef __cplusplus
 }
