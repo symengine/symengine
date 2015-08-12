@@ -90,16 +90,8 @@ if [[ "${WITH_PYTHON}" == "yes" && "${WITH_SAGE}" != "yes" || "${PYTHON_INSTALL}
     source activate test-environment;
 fi
 if [[ "${WITH_SAGE}" == "yes" ]]; then
-    sudo apt-add-repository -y ppa:aims/sagemath;
-    sudo apt-get update;
-    set +e;
-    function install_sage {
-        sudo dpkg --configure -a;
-        sudo apt-get install sagemath-upstream-binary;
-    };
-    travis_retry install_sage;
-    set -e;
-
+    wget -O- http://files.sagemath.org/linux/64bit/sage-6.8-x86_64-Linux-Ubuntu_12.04_64_bit.tar.gz | tar xz
+    export PATH="`pwd`/sage-6.8-x86_64-Linux:$PATH"
     SAGE_ROOT=$(sage -python << EOF
 import os
 print os.environ['SAGE_ROOT']
