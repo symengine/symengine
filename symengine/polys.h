@@ -31,6 +31,7 @@ public:
     #ifdef HAVE_SYMENGINE_PIRANHA
     //! Constructor of Polynomial class
     Polynomial(const vec_symbol &vars, hash_set polys_set);
+    Polynomial();
     static RCP<const Polynomial> create(const vec_symbol &vars, hash_set&& polys_set) {
         return make_rcp<const Polynomial>(vars, std::move(polys_set));
     }

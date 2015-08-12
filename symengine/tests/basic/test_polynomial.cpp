@@ -266,5 +266,8 @@ TEST_CASE("Arithmetic of Polynomial", "[Polynomial]")
 
     RCP<const Polynomial> S = sub_poly(*Q, *P);
     REQUIRE(S->__str__() == "x**2 + 2*x**3");
+
+    RCP<const Polynomial> T = mul_poly(S, S);
+    //std::cout << T->__str__() << std::endl;
 }
 #endif
