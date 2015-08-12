@@ -284,6 +284,38 @@ void test_hash() {
     basic_free_stack(y);
 }
 
+void test_subs2() {
+    basic s, e, x, y, z;
+    basic_new_stack(s);
+    basic_new_stack(e);
+    basic_new_stack(x);
+    basic_new_stack(y);
+    basic_new_stack(z);
+
+    symbol_set(x, "x");
+    symbol_set(y, "y");
+    symbol_set(z, "z");
+    basic_mul(e, x, y);
+    basic_mul(e, e, z);
+    //e should be x*y*z
+
+    basic_subs2(s, e, y, x);
+    basic_subs2(s, s, z, x);
+    //s should be x**3
+
+    integer_set_si(z, 3);
+    basic_pow(e, x, z);
+    //e should be x**3
+
+    SYMENGINE_C_ASSERT(basic_eq(s, e));
+
+    basic_free_stack(s);
+    basic_free_stack(e);
+    basic_free_stack(x);
+    basic_free_stack(y);
+    basic_free_stack(z);
+}
+
 int main(int argc, char* argv[])
 {
     test_cwrapper();
@@ -297,5 +329,6 @@ int main(int argc, char* argv[])
     test_free_symbols();
     test_get_type();
     test_hash();
+    test_subs2();
     return 0;
 }
