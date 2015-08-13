@@ -423,6 +423,11 @@ size_t basic_hash(const basic self)
     return self->m->hash();
 }
 
+void basic_subs(basic s, const basic e, const CMapBasicBasic *mapbb)
+{
+    s->m = e->m->subs(mapbb->m);
+}
+
 void basic_subs2(basic s, const basic e, const basic a, const basic b)
 {
     s->m = e->m->subs({{a->m, b->m}});
