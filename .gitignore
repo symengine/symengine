@@ -6,6 +6,9 @@ cmake_install.cmake
 install_manifest.txt
 CTestTestfile.cmake
 cmake/cython_test.cpp
+SymEngineConfig.cmake
+SymEngineConfigVersion.cmake
+SymEngineTargets.cmake
 
 # Compiled Object Files, Static/Dynamic Libraries
 *.so

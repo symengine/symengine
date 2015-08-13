@@ -69,6 +69,7 @@ add_library(symengine ${SRC})
 target_link_libraries(symengine teuchos ${LIBS})
 
 install(TARGETS symengine
+            EXPORT SymEngineTargets
             RUNTIME DESTINATION bin
             ARCHIVE DESTINATION lib
             LIBRARY DESTINATION lib

@@ -1,0 +1,72 @@
+# To use SymEngine from another CMake project include the following in your
+# `CMakeLists.txt` file
+
+#    `find_package(SymEngine CONFIG)`
+
+# You can give the path to the SymEngine installation directory if it was
+# installed to a non standard location by,
+
+#    `find_package(SymEngine CONFIG Paths /path/to/install/dir)`
+
+# Alternatively, you can give the path to the build directory.
+
+# Variable exported are
+# SYMENGINE_BUILD_TYPE         - Cofiguration Type Debug or Release
+# SYMENGINE_INCLUDE_DIRS       - Header file directories
+# SYMENGINE_LIBRARIES          - SymEngine libraries and dependency libraries to link against
+# SYMENGINE_FOUND              - Set to yes
+# SYMENGINE_CXX_FLAGS_RELEASE  - C++ flags for Release configuration
+# SYMENGINE_CXX_FLAGS_DEBUG    - C++ flags for Debug configuration
+# SYMENGINE_C_FLAGS_RELEASE    - C flags for Release configuration
+# SYMENGINE_C_FLAGS_DEBUG      - C flags for Debug configuration
+
+# An example project would be,
+#
+# cmake_minimum_required(VERSION 2.8)
+# find_package(symengine CONFIG)
+# set(CMAKE_CXX_FLAGS_RELEASE ${SYMENGINE_CXX_FLAGS_RELEASE})
+#
+# include_directories(${SYMENGINE_INCLUDE_DIRS})
+# add_executable(example main.cpp)
+# target_link_libraries(example ${SYMENGINE_LIBRARIES})
+#
+
+cmake_minimum_required(VERSION 2.8)
+
+set(SYMENGINE_CXX_FLAGS_RELEASE "@CMAKE_CXX_FLAGS_RELEASE@")
+set(SYMENGINE_CXX_FLAGS_DEBUG "@CMAKE_CXX_FLAGS_DEBUG@")
+set(SYMENGINE_C_FLAGS_RELEASE "@CMAKE_C_FLAGS_RELEASE@")
+set(SYMENGINE_C_FLAGS_DEBUG "@CMAKE_C_FLAGS_DEBUG@")
+
+# ... for the build tree
+get_filename_component(SYMENGINE_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+if(NOT TARGET symengine AND NOT symengine_BINARY_DIR)
+    include("${SYMENGINE_CMAKE_DIR}/SymEngineTargets.cmake")
+endif()
+
+foreach(LIB symengine teuchos)
+    # Remove linking of dependencies to later add them as targets
+    set_target_properties(${LIB} PROPERTIES IMPORTED_LINK_INTERFACE_LIBRARIES_RELEASE "")
+endforeach()
+
+set(SYMENGINE_INCLUDE_DIRS "@CONF_INCLUDE_DIRS@")
+set(SYMENGINE_LIBRARIES symengine teuchos)
+set(SYMENGINE_BUILD_TYPE "@CMAKE_BUILD_TYPE@")
+set(SYMENGINE_FOUND yes)
+
+set(SYMENGINE_DEPENDENCY_TARGETS @LIBS@)
+set(SYMENGINE_DEPENDENCY_LIBRARIES @SYMENGINE_TARGETS_LOCATIONS@)
+
+list(LENGTH SYMENGINE_DEPENDENCY_TARGETS COUNT)
+math(EXPR COUNT ${COUNT}-1)
+foreach(index RANGE ${COUNT})
+    list(GET SYMENGINE_DEPENDENCY_TARGETS ${index} LIB)
+    list(GET SYMENGINE_DEPENDENCY_LIBRARIES ${index} LIB_DIR)
+    add_library(symengine_${LIB} UNKNOWN IMPORTED)
+    set_property(TARGET symengine_${LIB} PROPERTY IMPORTED_LOCATION ${LIB_DIR})
+    set(SYMENGINE_LIBRARIES ${SYMENGINE_LIBRARIES} symengine_${LIB})
+endforeach()
+
+unset(SYMENGINE_DEPENDENCY_TARGETS)
+unset(SYMENGINE_DEPENDENCY_LIBRARIES)
+unset(COUNT)

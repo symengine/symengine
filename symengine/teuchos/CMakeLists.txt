@@ -25,6 +25,7 @@ include_directories(BEFORE ${teuchos_BINARY_DIR})
 add_library(teuchos STATIC ${SRC})
 
 install(TARGETS teuchos
+            EXPORT SymEngineTargets
             RUNTIME DESTINATION bin
             ARCHIVE DESTINATION lib
             LIBRARY DESTINATION lib

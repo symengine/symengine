@@ -3,6 +3,10 @@ cmake_minimum_required(VERSION 2.8)
 set(CMAKE_USER_MAKE_RULES_OVERRIDE ${CMAKE_SOURCE_DIR}/cmake/UserOverride.cmake)
 
 project(symengine)
+set(SYMENGINE_MAJOR_VERSION 0)
+set(SYMENGINE_MINOR_VERSION 1)
+set(SYMENGINE_PATCH_VERSION 0)
+set(SYMENGINE_VERSION ${SYMENGINE_MAJOR_VERSION}.${SYMENGINE_MINOR_VERSION}.${SYMENGINE_PATCH_VERSION})
 
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 
@@ -316,6 +320,8 @@ if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(WITH_SYMENGINE_ASSERT yes) # Also enable assertions
 endif()
 
+get_property(TPL_INCLUDE_DIRS DIRECTORY PROPERTY INCLUDE_DIRECTORIES)
+
 enable_testing()
 add_subdirectory(symengine)
 if (BUILD_BENCHMARKS)
@@ -346,6 +352,43 @@ if (WITH_PYTHON)
     add_subdirectory(symengine/python)
 endif()
 
+if(WIN32 AND NOT CYGWIN)
+    set(DEF_INSTALL_CMAKE_DIR CMake)
+else()
+    set(DEF_INSTALL_CMAKE_DIR lib/CMake/symengine)
+endif()
+set(INSTALL_CMAKE_DIR ${DEF_INSTALL_CMAKE_DIR} CACHE PATH
+    "Installation directory for CMake files")
+
+export(TARGETS symengine teuchos FILE "${PROJECT_BINARY_DIR}/SymEngineTargets.cmake")
+foreach(LIB ${LIBS})
+    get_property(temp TARGET ${LIB} PROPERTY LOCATION)
+    set(SYMENGINE_TARGETS_LOCATIONS ${SYMENGINE_TARGETS_LOCATIONS} ${temp})
+endforeach()
+
+# ... for the build tree
+set(CONF_INCLUDE_DIRS ${TPL_INCLUDE_DIRS} ${PROJECT_SOURCE_DIR} ${PROJECT_BINARY_DIR}
+                           ${PROJECT_SOURCE_DIR}/symengine/teuchos ${PROJECT_BINARY_DIR}/symengine/teuchos)
+configure_file(SymEngineConfig.cmake.in
+    "${PROJECT_BINARY_DIR}/SymEngineConfig.cmake" @ONLY)
+export(TARGETS symengine teuchos
+    FILE "${PROJECT_BINARY_DIR}/SymEngineTargets.cmake")
+
+# ... for the install tree
+set(CONF_INCLUDE_DIRS ${TPL_INCLUDE_DIRS} ${CMAKE_INSTALL_PREFIX}/include)
+configure_file(SymEngineConfig.cmake.in
+    "${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/SymEngineConfig.cmake" @ONLY)
+
+include(CMakePackageConfigHelpers)
+write_basic_package_version_file(
+    "${CMAKE_CURRENT_BINARY_DIR}/SymEngineConfigVersion.cmake"
+    VERSION ${SYMENGINE_VERSION}
+    COMPATIBILITY AnyNewerVersion
+)
+
+install(FILES "${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/SymEngineConfig.cmake"
+    DESTINATION ${INSTALL_CMAKE_DIR})
+install(EXPORT SymEngineTargets DESTINATION ${INSTALL_CMAKE_DIR})
 
 # At the end we print a nice summary
 
