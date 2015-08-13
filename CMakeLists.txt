@@ -330,8 +330,6 @@ endif()
 
 if (WITH_RUBY)
     find_package(Ruby REQUIRED)
-    include_directories(${RUBY_INCLUDE_DIRS})
-    set(LIBS ${LIBS} ${RUBY_LIBRARY})
 
     message("Copying source of ruby wrappers into: ${CMAKE_CURRENT_BINARY_DIR}/symengine/ruby")
     file(COPY symengine/ruby/ DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/symengine/ruby)
