@@ -189,7 +189,7 @@ describe SymEngine do
       end
 
       context 'with two basic objects as argument' do
-        xit 'returns the expression with first
+        it 'returns the expression with first
             substituted with second in self' do
           expect(@e.subs(@x, @y)).to eql(2 * @y + @z)
         end
