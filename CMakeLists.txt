@@ -379,15 +379,18 @@ set(CONF_INCLUDE_DIRS ${TPL_INCLUDE_DIRS} ${CMAKE_INSTALL_PREFIX}/include)
 configure_file(SymEngineConfig.cmake.in
     "${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/SymEngineConfig.cmake" @ONLY)
 
-include(CMakePackageConfigHelpers)
-write_basic_package_version_file(
-    "${CMAKE_CURRENT_BINARY_DIR}/SymEngineConfigVersion.cmake"
-    VERSION ${SYMENGINE_VERSION}
-    COMPATIBILITY AnyNewerVersion
-)
+#include(CMakePackageConfigHelpers)
+#write_basic_package_version_file(
+#    "${CMAKE_CURRENT_BINARY_DIR}/SymEngineConfigVersion.cmake"
+#    VERSION ${SYMENGINE_VERSION}
+#    COMPATIBILITY AnyNewerVersion
+#)
+
+configure_file(SymEngineConfigVersion.cmake.in SymEngineConfigVersion.cmake @ONLY)
 
 install(FILES "${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/SymEngineConfig.cmake"
-    DESTINATION ${INSTALL_CMAKE_DIR})
+              ${PROJECT_BINARY_DIR}/SymEngineConfigVersion.cmake
+        DESTINATION ${INSTALL_CMAKE_DIR})
 install(EXPORT SymEngineTargets DESTINATION ${INSTALL_CMAKE_DIR})
 
 # At the end we print a nice summary
