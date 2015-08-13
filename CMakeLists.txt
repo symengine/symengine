@@ -320,35 +320,11 @@ if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(WITH_SYMENGINE_ASSERT yes) # Also enable assertions
 endif()
 
-get_property(TPL_INCLUDE_DIRS DIRECTORY PROPERTY INCLUDE_DIRECTORIES)
-
 enable_testing()
 add_subdirectory(symengine)
-if (BUILD_BENCHMARKS)
-    add_subdirectory(benchmarks)
-endif()
 
-if (WITH_RUBY)
-    find_package(Ruby REQUIRED)
-
-    message("Copying source of ruby wrappers into: ${CMAKE_CURRENT_BINARY_DIR}/symengine/ruby")
-    file(COPY symengine/ruby/ DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/symengine/ruby)
-
-    add_subdirectory(symengine/ruby)
-endif ()
-
-if (WITH_PYTHON)
-    # We need to execute the find_package() commands here, so that the
-    # variables like ${PYTHON_INSTALL_PATH} are defined here and in all cmake
-    # files (as opposed to just subset of cmake files).
-    find_package(Python REQUIRED)
-    find_package(Cython REQUIRED)
-
-    message("Copying source of python wrappers into: ${CMAKE_CURRENT_BINARY_DIR}/symengine/python/symengine")
-    file(COPY symengine/python/symengine/ DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/symengine/python/symengine)
-
-    add_subdirectory(symengine/python)
-endif()
+get_property(TPL_INCLUDE_DIRS DIRECTORY PROPERTY INCLUDE_DIRECTORIES)
+set(SYMENGINE_DIR ${PROJECT_BINARY_DIR} CACHE BOOL "SymEngine Build Directory")
 
 if(WIN32 AND NOT CYGWIN)
     set(DEF_INSTALL_CMAKE_DIR CMake)
@@ -367,14 +343,14 @@ endforeach()
 # ... for the build tree
 set(CONF_INCLUDE_DIRS ${TPL_INCLUDE_DIRS} ${PROJECT_SOURCE_DIR} ${PROJECT_BINARY_DIR}
                            ${PROJECT_SOURCE_DIR}/symengine/teuchos ${PROJECT_BINARY_DIR}/symengine/teuchos)
-configure_file(SymEngineConfig.cmake.in
+configure_file(cmake/SymEngineConfig.cmake.in
     "${PROJECT_BINARY_DIR}/SymEngineConfig.cmake" @ONLY)
 export(TARGETS symengine teuchos
     FILE "${PROJECT_BINARY_DIR}/SymEngineTargets.cmake")
 
 # ... for the install tree
 set(CONF_INCLUDE_DIRS ${TPL_INCLUDE_DIRS} ${CMAKE_INSTALL_PREFIX}/include)
-configure_file(SymEngineConfig.cmake.in
+configure_file(cmake/SymEngineConfig.cmake.in
     "${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/SymEngineConfig.cmake" @ONLY)
 
 #include(CMakePackageConfigHelpers)
@@ -384,12 +360,29 @@ configure_file(SymEngineConfig.cmake.in
 #    COMPATIBILITY AnyNewerVersion
 #)
 
-configure_file(SymEngineConfigVersion.cmake.in SymEngineConfigVersion.cmake @ONLY)
+configure_file(cmake/SymEngineConfigVersion.cmake.in SymEngineConfigVersion.cmake @ONLY)
 
 install(FILES "${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/SymEngineConfig.cmake"
               ${PROJECT_BINARY_DIR}/SymEngineConfigVersion.cmake
         DESTINATION ${INSTALL_CMAKE_DIR})
 install(EXPORT SymEngineTargets DESTINATION ${INSTALL_CMAKE_DIR})
+
+if (BUILD_BENCHMARKS)
+    add_subdirectory(benchmarks)
+endif()
+
+if (WITH_RUBY)
+    find_package(Ruby REQUIRED)
+
+    message("Copying source of ruby wrappers into: ${CMAKE_CURRENT_BINARY_DIR}/symengine/ruby")
+    file(COPY symengine/ruby/ DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/symengine/ruby)
+
+    add_subdirectory(symengine/ruby)
+endif ()
+
+if (WITH_PYTHON)
+    add_subdirectory(symengine/python)
+endif()
 
 # At the end we print a nice summary
 
