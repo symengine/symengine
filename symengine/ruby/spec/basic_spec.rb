@@ -196,7 +196,7 @@ describe SymEngine do
       end
 
       context 'with a Hash as argument' do
-        xit 'returns the expression with
+        it 'returns the expression with
             each key subtituted with its mapped value' do
           expect(@e.subs(@x => @y, @z => @y)).to eql(3 * @y)
         end

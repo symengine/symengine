@@ -44,6 +44,8 @@ VALUE cbasic_expand(VALUE self);
 
 VALUE cbasic_hash(VALUE self);
 
+int insert_entries(VALUE key, VALUE val, VALUE val_map_basic_basic);
+
 VALUE cbasic_subs(int argc, VALUE *argv, VALUE self);
 
 VALUE cbasic_coerce(VALUE self, VALUE other);

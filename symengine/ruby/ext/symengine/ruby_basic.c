@@ -195,24 +195,49 @@ VALUE cbasic_hash(VALUE self){
     return SIZET2NUM(basic_hash(this));
 }
 
+int insert_entries(VALUE key, VALUE val, VALUE input) {
+    CMapBasicBasic *cmapbb;
+    Data_Get_Struct(input, CMapBasicBasic, cmapbb);
+
+    basic ckey, cval;
+    basic_new_stack(ckey);
+    basic_new_stack(cval);
+    sympify(key, ckey);
+    sympify(val, cval);
+
+    mapbasicbasic_insert(cmapbb, ckey, cval);
+
+    basic_free_stack(ckey);
+    basic_free_stack(cval);
+}
+
 VALUE cbasic_subs(int argc, VALUE *argv, VALUE self) {
     basic_struct *this, *cresult;
-    basic a, b;
-    basic_new_stack(a);
-    basic_new_stack(b);
     cresult = basic_new_heap();
 
     VALUE val_a, val_b;
     Data_Get_Struct(self, basic_struct, this);
+
     rb_scan_args(argc, argv, "11", &val_a, &val_b); // 1 mandatory and 1 optional parameter
     if (argc == 1) {
+        CMapBasicBasic *cmapbb = mapbasicbasic_new();
+        VALUE mapbb = Data_Wrap_Struct(rb_cObject, NULL, mapbasicbasic_free, cmapbb);
+
+        rb_hash_foreach(val_a, insert_entries, mapbb);
+        basic_subs(cresult, this, cmapbb);
     } else {
+        basic a, b;
+        basic_new_stack(a);
+        basic_new_stack(b);
+
         sympify(val_a, a);
         sympify(val_b, b);
         basic_subs2(cresult, this, a, b);
+
+        basic_free_stack(a);
+        basic_free_stack(b);
     }
-    basic_free_stack(a);
-    basic_free_stack(b);
+
     return Data_Wrap_Struct(Klass_of_Basic(cresult), NULL, cbasic_free_heap, cresult);
 }
 
