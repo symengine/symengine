@@ -220,6 +220,7 @@ VALUE cbasic_subs(int argc, VALUE *argv, VALUE self) {
 
     rb_scan_args(argc, argv, "11", &val_a, &val_b); // 1 mandatory and 1 optional parameter
     if (argc == 1) {
+        Check_Type(val_a, T_HASH);
         CMapBasicBasic *cmapbb = mapbasicbasic_new();
         VALUE mapbb = Data_Wrap_Struct(rb_cObject, NULL, mapbasicbasic_free, cmapbb);
 

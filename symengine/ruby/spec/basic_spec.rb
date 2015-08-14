@@ -201,6 +201,14 @@ describe SymEngine do
           expect(@e.subs(@x => @y, @z => @y)).to eql(3 * @y)
         end
       end
+
+      context ' with less than one or more than two or wrong argument' do
+        it 'raises errors' do
+          expect { @e.subs }.to raise_error(ArgumentError)
+          expect { @e.subs(@x, @y, @z) }.to raise_error(ArgumentError)
+          expect { @e.subs(@x) }.to raise_error(TypeError)
+        end
+      end
     end
   end
 end
