@@ -9,6 +9,28 @@ set(SRC
     Teuchos_stacktrace.cpp
 )
 
+set(HEADERS
+    Teuchos_any.hpp
+    Teuchos_Assert.hpp
+    Teuchos_ConfigDefs.hpp
+    Teuchos_ConstTypeTraits.hpp
+    Teuchos_DLLExportMacro.h
+    Teuchos_dyn_cast.hpp
+    Teuchos_ENull.hpp
+    Teuchos_Exceptions.hpp
+    Teuchos_getBaseObjVoidPtr.hpp
+    Teuchos_map.hpp
+    Teuchos_NullIteratorTraits.hpp
+    Teuchos_PtrDecl.hpp
+    Teuchos_RCP.hpp
+    Teuchos_RCPDecl.hpp
+    Teuchos_RCPNode.hpp
+    Teuchos_stacktrace.hpp
+    Teuchos_TestForException.hpp
+    Teuchos_toString.hpp
+    Teuchos_TypeNameTraits.hpp
+)
+
 if (CMAKE_CXX_COMPILER_ID STREQUAL GNU)
   # Must suppress strick aliasing warnings for this file!
   SET_SOURCE_FILES_PROPERTIES(
@@ -30,3 +52,8 @@ install(TARGETS teuchos
             ARCHIVE DESTINATION lib
             LIBRARY DESTINATION lib
         )
+
+if (NOT WITH_SYMENGINE_RCP)
+    install(FILES ${HEADERS} "${teuchos_BINARY_DIR}/Teuchos_config.h"
+        DESTINATION include/symengine/teuchos)
+endif()
