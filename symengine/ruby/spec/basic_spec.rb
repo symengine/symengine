@@ -199,6 +199,9 @@ describe SymEngine do
         it 'returns the expression with
             each key subtituted with its mapped value' do
           expect(@e.subs(@x => @y, @z => @y)).to eql(3 * @y)
+          k = SymEngine::Symbol.new('k')
+          e = @e.subs(@x => k, @y => k / 2, @z => 2 * k)
+          expect(e).to eql((7 * k) / 2)
         end
       end
 
