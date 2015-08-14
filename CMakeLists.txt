@@ -372,11 +372,8 @@ if (BUILD_BENCHMARKS)
 endif()
 
 if (WITH_RUBY)
-    find_package(Ruby REQUIRED)
-
-    message("Copying source of ruby wrappers into: ${CMAKE_CURRENT_BINARY_DIR}/symengine/ruby")
-    file(COPY symengine/ruby/ DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/symengine/ruby)
-
+    # Copies LICENSE from root directory to gem directory
+    file(COPY ${symengine_SOURCE_DIR}/LICENSE DESTINATION symengine/ruby)
     add_subdirectory(symengine/ruby)
 endif ()
 

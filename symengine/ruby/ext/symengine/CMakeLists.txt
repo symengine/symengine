@@ -7,11 +7,10 @@ set(RUBY_WRAPPER_SRC
     symengine.c
     )
 
-include_directories(BEFORE ${symengine_SOURCE_DIR} ${symengine_BINARY_DIR})
 include_directories(BEFORE ${RUBY_INCLUDE_DIRS})
 
 add_library(symengine_ruby SHARED ${RUBY_WRAPPER_SRC})
-target_link_libraries(symengine_ruby symengine ${RUBY_LIBRARIES})
+target_link_libraries(symengine_ruby ${SYMENGINE_LIBRARIES} ${RUBY_LIBRARIES})
 set_target_properties(symengine_ruby PROPERTIES
                         PREFIX ""
                         OUTPUT_NAME "symengine"
