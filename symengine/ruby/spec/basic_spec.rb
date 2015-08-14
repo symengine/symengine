@@ -179,5 +179,39 @@ describe SymEngine do
         end
       end
     end
+
+    describe '#subs' do
+      before :each do
+        @x = SymEngine::Symbol.new('x')
+        @y = SymEngine::Symbol.new('y')
+        @z = SymEngine::Symbol.new('z')
+        @e = @x + @y + @z
+      end
+
+      context 'with two basic objects as argument' do
+        it 'returns the expression with first
+            substituted with second in self' do
+          expect(@e.subs(@x, @y)).to eql(2 * @y + @z)
+        end
+      end
+
+      context 'with a Hash as argument' do
+        it 'returns the expression with
+            each key subtituted with its mapped value' do
+          expect(@e.subs(@x => @y, @z => @y)).to eql(3 * @y)
+          k = SymEngine::Symbol.new('k')
+          e = @e.subs(@x => k, @y => k / 2, @z => 2 * k)
+          expect(e).to eql((7 * k) / 2)
+        end
+      end
+
+      context ' with less than one or more than two or wrong argument' do
+        it 'raises errors' do
+          expect { @e.subs }.to raise_error(ArgumentError)
+          expect { @e.subs(@x, @y, @z) }.to raise_error(ArgumentError)
+          expect { @e.subs(@x) }.to raise_error(TypeError)
+        end
+      end
+    end
   end
 end

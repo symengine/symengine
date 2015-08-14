@@ -29,6 +29,7 @@ void Init_symengine() {
     rb_define_method(c_basic, "args", cbasic_get_args, 0);
     rb_define_protected_method(c_basic, "pr_free_symbols", cbasic_free_symbols, 0);
     rb_define_method(c_basic, "hash", cbasic_hash, 0);
+    rb_define_method(c_basic, "subs", cbasic_subs, -1);
     rb_define_method(c_basic, "coerce", cbasic_coerce, 1);
 
     //Symbol class

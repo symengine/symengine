@@ -199,6 +199,38 @@ void test_CSetBasic()
     basic_free_stack(y);
 }
 
+void test_CMapBasicBasic()
+{
+    CMapBasicBasic *map = mapbasicbasic_new();
+    SYMENGINE_C_ASSERT(mapbasicbasic_size(map) == 0);
+
+    basic x, y;
+    basic_new_stack(x);
+    basic_new_stack(y);
+    symbol_set(x, "x");
+    symbol_set(y, "y");
+
+    mapbasicbasic_insert(map, x, y);
+    SYMENGINE_C_ASSERT(mapbasicbasic_size(map) == 1);
+
+    basic z;
+    basic_new_stack(z);
+    symbol_set(z, "z");
+
+    int is_found;
+    is_found = mapbasicbasic_get(map, x, z);
+    SYMENGINE_C_ASSERT(is_found == 1);
+    SYMENGINE_C_ASSERT(basic_eq(y, z));
+
+    is_found = mapbasicbasic_get(map, y, z);
+    SYMENGINE_C_ASSERT(is_found == 0);
+
+    mapbasicbasic_free(map);
+    basic_free_stack(x);
+    basic_free_stack(y);
+    basic_free_stack(z);
+}
+
 void test_get_args()
 {
     basic x, y, z, e;
@@ -284,6 +316,73 @@ void test_hash() {
     basic_free_stack(y);
 }
 
+void test_subs2() {
+    basic s, e, x, y, z;
+    basic_new_stack(s);
+    basic_new_stack(e);
+    basic_new_stack(x);
+    basic_new_stack(y);
+    basic_new_stack(z);
+
+    symbol_set(x, "x");
+    symbol_set(y, "y");
+    symbol_set(z, "z");
+    basic_mul(e, x, y);
+    basic_mul(e, e, z);
+    //e should be x*y*z
+
+    basic_subs2(s, e, y, x);
+    basic_subs2(s, s, z, x);
+    //s should be x**3
+
+    integer_set_si(z, 3);
+    basic_pow(e, x, z);
+    //e should be x**3
+
+    SYMENGINE_C_ASSERT(basic_eq(s, e));
+
+    basic_free_stack(s);
+    basic_free_stack(e);
+    basic_free_stack(x);
+    basic_free_stack(y);
+    basic_free_stack(z);
+}
+
+void test_subs() {
+    basic s, e, x, y, z;
+    basic_new_stack(s);
+    basic_new_stack(e);
+    basic_new_stack(x);
+    basic_new_stack(y);
+    basic_new_stack(z);
+
+    symbol_set(x, "x");
+    symbol_set(y, "y");
+    symbol_set(z, "z");
+    basic_mul(e, x, y);
+    basic_mul(e, e, z);
+    //e should be x*y*z
+
+    CMapBasicBasic *map = mapbasicbasic_new();
+    mapbasicbasic_insert(map, y, x);
+    mapbasicbasic_insert(map, z, x);
+    basic_subs(s, e, map);
+    //s should be x**3
+
+    integer_set_si(z, 3);
+    basic_pow(e, x, z);
+    //e should be x**3
+
+    SYMENGINE_C_ASSERT(basic_eq(s, e));
+
+    mapbasicbasic_free(map);
+    basic_free_stack(s);
+    basic_free_stack(e);
+    basic_free_stack(x);
+    basic_free_stack(y);
+    basic_free_stack(z);
+}
+
 int main(int argc, char* argv[])
 {
     test_cwrapper();
@@ -293,9 +392,12 @@ int main(int argc, char* argv[])
     test_CVectorInt2();
     test_CVecBasic();
     test_CSetBasic();
+    test_CMapBasicBasic();
     test_get_args();
     test_free_symbols();
     test_get_type();
     test_hash();
+    test_subs();
+    test_subs2();
     return 0;
 }
