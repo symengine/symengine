@@ -21,6 +21,7 @@ set(HEADERS
     Teuchos_getBaseObjVoidPtr.hpp
     Teuchos_map.hpp
     Teuchos_NullIteratorTraits.hpp
+    Teuchos_Ptr.hpp
     Teuchos_PtrDecl.hpp
     Teuchos_RCP.hpp
     Teuchos_RCPDecl.hpp
