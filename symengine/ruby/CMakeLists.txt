@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8)
 project(ruby_wrapper)
 
-find_package(SymEngine REQUIRED CONFIG
+find_package(SymEngine 0.1.0 REQUIRED CONFIG
              PATHS ${SYMENGINE_DIR}
              PATH_SUFFIXES lib/cmake/symengine CMake/)
 set(CMAKE_BUILD_TYPE ${SYMENGINE_BUILD_TYPE})

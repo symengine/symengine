@@ -47,6 +47,7 @@ endif()
 foreach(LIB symengine teuchos)
     # Remove linking of dependencies to later add them as targets
     set_target_properties(${LIB} PROPERTIES IMPORTED_LINK_INTERFACE_LIBRARIES_RELEASE "")
+    set_target_properties(${LIB} PROPERTIES IMPORTED_LINK_INTERFACE_LIBRARIES_DEBUG "")
 endforeach()
 
 set(SYMENGINE_INCLUDE_DIRS "@CONF_INCLUDE_DIRS@")
