@@ -46,4 +46,43 @@ void Init_symengine() {
     c_rational = rb_define_class_under(m_symengine, "Rational", c_basic);
     rb_define_alloc_func(c_rational, cbasic_alloc);
     rb_define_method(c_rational, "initialize", crational_init, 1);
+
+    //Function class
+    c_function = rb_define_class_under(m_symengine, "Function", c_basic);
+    rb_define_alloc_func(c_function, cbasic_alloc);
+
+    //Trigfuntion class
+    c_trigfunction = rb_define_class_under(m_symengine, "Trigfuntion", c_function);
+    rb_define_alloc_func(c_trigfunction, cbasic_alloc);
+
+    //Sin class
+    c_sin = rb_define_class_under(m_symengine, "Sin", c_trigfunction);
+    rb_define_alloc_func(c_sin, cbasic_alloc);
+    rb_define_method(c_sin, "initialize", csin_init, 1);
+
+    //Cos class
+    c_cos = rb_define_class_under(m_symengine, "Cos", c_trigfunction);
+    rb_define_alloc_func(c_cos, cbasic_alloc);
+    rb_define_method(c_cos, "initialize", ccos_init, 1);
+
+    //Tan class
+    c_tan = rb_define_class_under(m_symengine, "Tan", c_trigfunction);
+    rb_define_alloc_func(c_tan, cbasic_alloc);
+    rb_define_method(c_tan, "initialize", ctan_init, 1);
+
+    //Cot class
+    c_cot = rb_define_class_under(m_symengine, "Cot", c_trigfunction);
+    rb_define_alloc_func(c_cot, cbasic_alloc);
+    rb_define_method(c_cot, "initialize", ccot_init, 1);
+
+    //Csc class
+    c_csc = rb_define_class_under(m_symengine, "Csc", c_trigfunction);
+    rb_define_alloc_func(c_csc, cbasic_alloc);
+    rb_define_method(c_csc, "initialize", ccsc_init, 1);
+
+    //Sec class
+    c_sec = rb_define_class_under(m_symengine, "Sec", c_trigfunction);
+    rb_define_alloc_func(c_sec, cbasic_alloc);
+    rb_define_method(c_sec, "initialize", csec_init, 1);
+
 }
