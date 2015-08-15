@@ -3,7 +3,7 @@ project(python_wrapper)
 
 find_package(SymEngine REQUIRED CONFIG
              PATHS ${SYMENGINE_DIR}
-             PATH_SUFFIXES lib/CMake/symengine CMake/)
+             PATH_SUFFIXES lib/cmake/symengine CMake/)
 set(CMAKE_BUILD_TYPE ${SYMENGINE_BUILD_TYPE})
 set(CMAKE_CXX_FLAGS_RELEASE ${SYMENGINE_CXX_FLAGS_RELEASE})
 set(CMAKE_CXX_FLAGS_DEBUG ${SYMENGINE_CXX_FLAGS_DEBUG})

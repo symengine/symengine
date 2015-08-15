@@ -325,11 +325,12 @@ add_subdirectory(symengine)
 
 get_property(TPL_INCLUDE_DIRS DIRECTORY PROPERTY INCLUDE_DIRECTORIES)
 set(SYMENGINE_DIR ${PROJECT_BINARY_DIR} CACHE BOOL "SymEngine Build Directory")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR})
 
 if(WIN32 AND NOT CYGWIN)
     set(DEF_INSTALL_CMAKE_DIR CMake)
 else()
-    set(DEF_INSTALL_CMAKE_DIR lib/CMake/symengine)
+    set(DEF_INSTALL_CMAKE_DIR lib/cmake/symengine)
 endif()
 set(INSTALL_CMAKE_DIR ${DEF_INSTALL_CMAKE_DIR} CACHE PATH
     "Installation directory for CMake files")
