@@ -11,5 +11,13 @@ VALUE c_basic;
 VALUE c_symbol;
 VALUE c_integer;
 VALUE c_rational;
+VALUE c_function;
+VALUE c_trigfunction;
+VALUE c_sin;
+VALUE c_cos;
+VALUE c_tan;
+VALUE c_cot;
+VALUE c_csc;
+VALUE c_sec;
 
 #endif //SYMENGINE_H_
