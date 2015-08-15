@@ -180,7 +180,6 @@ set(WITH_PTHREAD no
     CACHE BOOL "Build with PTHREAD")
 
 if (WITH_PIRANHA)
-    set(WITH_BOOST yes)
     set(WITH_PTHREAD yes)
     set(WITH_MPFR yes)
     set(CMAKE_CXX_FLAGS_RELEASE

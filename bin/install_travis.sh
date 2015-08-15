@@ -13,6 +13,10 @@ if [[ "${TRAVIS_OS_NAME}" == "osx" ]] && [[ "${CC}" == "gcc" ]]; then
     export CC=gcc-4.8
     export CXX=g++-4.8
 fi
+if [[ "${WITH_PIRANHA}" == "yes" ]]; then
+    export CC=gcc-4.8
+    export CXX=g++-4.8
+fi
 
 export SOURCE_DIR=`pwd`
 export our_install_dir="$HOME/our_usr"
@@ -71,6 +75,11 @@ if [[ "${WITH_MPC}" == "yes" ]]; then
     elif [[ "${TRAVIS}" != "true" ]]; then
         sudo apt-get install libmpc-dev;
     fi
+fi
+if [[ "${WITH_PIRANHA}" == "yes" ]]; then
+    git clone https://github.com/bluescarni/piranha;
+    cd piranha && mkdir build && cd build;
+    cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$our_install_dir -DBUILD_TESTS=no ../ && make -j8 install && cd ../..;
 fi
 # Install python using Miniconda.
 if [[ "${WITH_PYTHON}" == "yes" && "${WITH_SAGE}" != "yes" || "${PYTHON_INSTALL}" == "yes" ]]; then

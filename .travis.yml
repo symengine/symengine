@@ -60,6 +60,20 @@ matrix:
     - compiler: clang
     - os: osx
   include:
+    - env: BUILD_TYPE="Debug" WITH_BFD="yes" WITH_PIRANHA="yes"
+      compiler: gcc
+      os: linux
+      addons:
+        apt:
+          sources:
+          - ubuntu-toolchain-r-test
+          - boost-latest
+          packages:
+          - libgmp-dev
+          - libmpfr-dev
+          - binutils-dev
+          - libboost-serialization1.55-dev
+          - g++-4.8
     - env: BUILD_TYPE="Debug" WITH_BFD="yes" WITH_PYTHON="yes" PYTHON_VERSION="2.7"
       compiler: clang
       os: linux

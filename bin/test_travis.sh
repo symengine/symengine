@@ -54,6 +54,9 @@ fi
 if [[ "${WITH_MPC}" != "" ]]; then
     cmake_line="$cmake_line -DWITH_MPC=${WITH_MPC}"
 fi
+if [[ "${WITH_PIRANHA}" != "" ]]; then
+    cmake_line="$cmake_line -DWITH_PIRANHA=${WITH_PIRANHA}"
+fi
 if [[ "${BUILD_SHARED_LIBS}" != "" ]]; then
     cmake_line="$cmake_line -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}"
 fi
@@ -127,7 +130,7 @@ fi
 if [[ "${WITH_MPC}" != "" ]]; then
     extra_libs="$extra_libs -lmpc"
 fi
-if [[ "${WITH_MPFR}" == "yes" ]] || [[ "${WITH_MPC}" == "yes" ]] || [[ "${WITH_ARB}" == "yes" ]]; then
+if [[ "${WITH_MPFR}" == "yes" ]] || [[ "${WITH_MPC}" == "yes" ]] || [[ "${WITH_ARB}" == "yes" ]] || [[ "${WITH_PIRANHA}" == "yes" ]]; then
     extra_libs="$extra_libs -lmpfr"
 fi
 
