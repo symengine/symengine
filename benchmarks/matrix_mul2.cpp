@@ -1,8 +1,6 @@
 #include <iostream>
 #include <chrono>
 
-#include "Teuchos_stacktrace.hpp"
-
 #include <symengine/basic.h>
 #include <symengine/matrix.h>
 #include <symengine/symbol.h>
@@ -14,7 +12,7 @@ using SymEngine::symbol;
 
 int main(int argc, char* argv[])
 {
-    Teuchos::print_stack_on_segfault();
+    SymEngine::print_stack_on_segfault();
 
     DenseMatrix A = DenseMatrix(3, 3, {symbol("a"), symbol("b"), symbol("c"),
         symbol("d"), symbol("e"), symbol("f"), symbol("g"), symbol("h"), symbol("i")});

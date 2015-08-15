@@ -1,8 +1,6 @@
 #include <iostream>
 #include <chrono>
 
-#include "Teuchos_stacktrace.hpp"
-
 #include <symengine/basic.h>
 #include <symengine/add.h>
 #include <symengine/symbol.h>
@@ -28,7 +26,7 @@ using SymEngine::rcp_dynamic_cast;
 
 int main(int argc, char* argv[])
 {
-    Teuchos::print_stack_on_segfault();
+    SymEngine::print_stack_on_segfault();
 
     RCP<const Basic> x = symbol("x");
     RCP<const Basic> y = symbol("y");
