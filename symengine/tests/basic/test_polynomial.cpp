@@ -280,5 +280,8 @@ TEST_CASE("Arithmetic of Polynomial", "[Polynomial]")
     RCP<const Polynomial> V = mul_poly(W, W);
     //std::cout<<V->__str__()<<std::endl;
     REQUIRE(V->__str__() == "8*y**1*x**1 + 4*y**2*x**0 + 4*y**0*x**2");
+
+    RCP<const Polynomial> X = mul_poly(V, S);
+    std::cout<<X->__str__()<<std::endl;
 }
 #endif
