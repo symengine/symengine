@@ -1551,6 +1551,8 @@ RCP<const Basic> FunctionWrapper::diff(const RCP<const Symbol> &x) const
 Derivative::Derivative(const RCP<const Basic> &arg, const vec_basic &x)
     : arg_{arg}, x_{x}
 {
+    // TODO: use a multi-set for x_ instead of vector
+    std::sort(x_.begin(), x_.end(), RCPBasicKeyLess());
     SYMENGINE_ASSERT(is_canonical(arg, x))
 }
 
@@ -1616,37 +1618,26 @@ int Derivative::compare(const Basic &o) const
 
 RCP<const Basic> Derivative::diff(const RCP<const Symbol> &x) const
 {
-    unsigned i;
-    bool all_symbols = true;
-    bool directly_present = false;
     if (eq(*(arg_->diff(x)), *zero)) return zero;
-    vec_basic t = x_;
-    for (i = 0; i < t.size(); i++) {
-        if (!is_a<Symbol>(*t[i])) {
-            all_symbols = false;
-            break;
-        }
-    }
-    if (!all_symbols) {
-        t.push_back(x);
-        return Derivative::create(arg_, t);
-    }
 
     vec_basic u = arg_->get_args();
-    for (i = 0; i < u.size(); i++) {
+    for (unsigned i = 0; i < u.size(); i++) {
         if (eq(*u[i], *x)) {
-            directly_present = true;
-            break;
+            vec_basic t = x_;
+            t.push_back(x);
+            return Derivative::create(arg_, t);
         }
-    }
-    if (directly_present) {
-        t.push_back(x);
-        return Derivative::create(arg_, t);
     }
 
     RCP<const Basic> ret = arg_->diff(x);
-    for (i = 0; i < t.size(); i++) {
-        ret = ret->diff(rcp_static_cast<const Symbol>(t[i]));
+    if (is_a<Derivative>(*ret) && eq(*static_cast<const Derivative &>(*ret).arg_, *arg_)) {
+        vec_basic t = x_;
+        t.push_back(x);
+        return Derivative::create(arg_, t);
+    }
+
+    for (unsigned i = 0; i < x_.size(); i++) {
+        ret = ret->diff(rcp_static_cast<const Symbol>(x_[i]));
     }
     return ret;
 }
