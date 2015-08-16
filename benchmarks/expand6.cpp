@@ -7,7 +7,7 @@
 #include <symengine/mul.h>
 #include <symengine/pow.h>
 #include <symengine/integer.h>
-#include "symengine/constants.h"
+#include <symengine/constants.h>
 
 using SymEngine::Basic;
 using SymEngine::RCP;

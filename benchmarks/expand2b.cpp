@@ -8,8 +8,8 @@
 #include <symengine/integer.h>
 #include <symengine/mul.h>
 #include <symengine/pow.h>
-#include "symengine/rings.h"
-#include "symengine/monomials.h"
+#include <symengine/rings.h>
+#include <symengine/monomials.h>
 
 using SymEngine::Basic;
 using SymEngine::Symbol;
