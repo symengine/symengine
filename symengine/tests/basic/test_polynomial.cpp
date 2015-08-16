@@ -238,6 +238,7 @@ TEST_CASE("Constructor of Polynomial", "[Polynomial]")
 TEST_CASE("Arithmetic of Polynomial", "[Polynomial]")
 {
     RCP<const Symbol> x  = symbol("x");
+    RCP<const Basic> y  = symbol("y");
     vec_symbol vars;
     vars.push_back(x);
 
@@ -261,7 +262,6 @@ TEST_CASE("Arithmetic of Polynomial", "[Polynomial]")
     REQUIRE(R->__str__() == "-x**2 - 2*x**3");
 
     RCP<const Polynomial> Q = add_poly(*P, *P);
-    //std::cout<<Q->__str__()<<std::endl;
     REQUIRE(Q->__str__() == "2*x**2 + 4*x**3");
 
     RCP<const Polynomial> S = sub_poly(*Q, *P);
@@ -269,5 +269,16 @@ TEST_CASE("Arithmetic of Polynomial", "[Polynomial]")
 
     RCP<const Polynomial> T = mul_poly(S, S);
     REQUIRE(T->__str__() == "x**4 + 4*x**5 + 4*x**6");
+
+    RCP<const Basic> r = add(add(x, y), add(y, x));
+
+    umap_basic_num syms;
+    insert(syms, x, integer(0));
+    insert(syms, y, integer(1));
+
+    RCP<const Polynomial> W = make_rcp<const Polynomial>(r, syms);
+    RCP<const Polynomial> V = mul_poly(W, W);
+    //std::cout<<V->__str__()<<std::endl;
+    REQUIRE(V->__str__() == "8*y**1*x**1 + 4*y**2*x**0 + 4*y**0*x**2");
 }
 #endif
