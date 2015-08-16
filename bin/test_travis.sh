@@ -113,30 +113,12 @@ if [[ "${WITH_RUBY}" == "yes" ]]; then
 fi
 echo "Running tests using installed SymEngine:"
 # C++
-cd $SOURCE_DIR/symengine/tests/basic/
-extra_libs=""
-if [[ "${WITH_BFD}" != "" ]]; then
-    extra_libs="$extra_libs -lbfd"
-fi
-if [[ "${WITH_ECM}" != "" ]]; then
-    extra_libs="$extra_libs -lecm"
-fi
-if [[ "${WITH_PRIMESIEVE}" != "" ]]; then
-    extra_libs="$extra_libs -lprimesieve"
-fi
-if [[ "${WITH_ARB}" != "" ]]; then
-    extra_libs="$extra_libs -larb -lflint"
-fi
-if [[ "${WITH_MPC}" != "" ]]; then
-    extra_libs="$extra_libs -lmpc"
-fi
-if [[ "${WITH_MPFR}" == "yes" ]] || [[ "${WITH_MPC}" == "yes" ]] || [[ "${WITH_ARB}" == "yes" ]] || [[ "${WITH_PIRANHA}" == "yes" ]]; then
-    extra_libs="$extra_libs -lmpfr"
-fi
+cd $SOURCE_DIR/benchmarks
 
-extra_include_dirs="-I$SOURCE_DIR/symengine/teuchos -I$BUILD_DIR/symengine/teuchos -I$SOURCE_DIR/symengine/catch"
+compile_flags=`cmake --find-package -DNAME=SymEngine -DSymEngine_DIR=$our_install_dir/lib/cmake/symengine -DCOMPILER_ID=GNU -DLANGUAGE=CXX -DMODE=COMPILE`
+link_flags=`cmake --find-package -DNAME=SymEngine -DSymEngine_DIR=$our_install_dir/lib/cmake/symengine  -DCOMPILER_ID=GNU -DLANGUAGE=CXX -DMODE=LINK`
 
-${CXX} -std=c++0x -I$our_install_dir/include/ -I$common_dir/include/ $extra_include_dirs -L$our_install_dir/lib -L$common_dir/lib/ -L$BUILD_DIR/symengine/catch test_basic.cpp  -lcatch -lsymengine -lteuchos $extra_libs -lgmpxx -lgmp
+${CXX} -std=c++0x $compile_flags expand1.cpp $link_flags
 export LD_LIBRARY_PATH=$our_install_dir/lib:$LD_LIBRARY_PATH
 ./a.out
 # Python

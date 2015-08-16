@@ -5,13 +5,11 @@ set(SRC
 configure_file(config.pxi.in config.pxi)
 
 include_directories(${PYTHON_INCLUDE_PATH})
-include_directories(BEFORE ${symengine_BINARY_DIR} ${teuchos_BINARY_DIR})
-include_directories(BEFORE ${symengine_SOURCE_DIR} ${teuchos_SOURCE_DIR})
-include_directories(BEFORE ${symengine_BINARY_DIR}/symengine/python/symengine/lib)
+include_directories(BEFORE ${python_wrapper_BINARY_DIR}/symengine/lib)
 
 cython_add_module_pyx(symengine_wrapper symengine.pxd)
 add_python_library(symengine_wrapper ${SRC})
-target_link_libraries(symengine_wrapper symengine)
+target_link_libraries(symengine_wrapper ${SYMENGINE_LIBRARIES})
 if (CMAKE_CXX_COMPILER_ID MATCHES GNU|Clang)
   # Must suppress strict aliasing for this file
   set_source_files_properties(

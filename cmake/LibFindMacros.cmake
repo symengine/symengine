@@ -57,6 +57,11 @@ macro (libfind_library libname pkg)
     add_library(${libname} UNKNOWN IMPORTED)
     set_property(TARGET ${libname} PROPERTY IMPORTED_LOCATION ${${LIBNAME}_LIBRARY})
 
+    if ("${${LIBNAME}_LIBRARY}" STREQUAL "${LIBNAME}_LIBRARY-NOTFOUND")
+        set(${LIBNAME}_LIBRARY_FOUND no)
+    else()
+        set(${LIBNAME}_LIBRARY_FOUND yes)
+    endif()
 endmacro()
 
 macro (libfind_include HEADER pkg)

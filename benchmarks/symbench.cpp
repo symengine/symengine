@@ -1,7 +1,6 @@
 #include <iostream>
 #include <chrono>
-
-#include "Teuchos_stacktrace.hpp"
+#include <iomanip>
 
 #include <symengine/basic.h>
 #include <symengine/add.h>
@@ -51,7 +50,7 @@ double S3a();
 
 int main(int argc, char* argv[])
 {
-    Teuchos::print_stack_on_segfault();
+    SymEngine::print_stack_on_segfault();
     std::cout << "Time for R1 : \t " << std::setw(15) << std::setprecision(9)  << std::fixed << R1() << std::endl;
     std::cout << "Time for R2 : \t " << std::setw(15) << std::setprecision(9)  << std::fixed << R2() << std::endl;
     std::cout << "Time for R3 : \t " << std::setw(15) << std::setprecision(9)  << std::fixed << R3() << std::endl;

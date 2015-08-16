@@ -2,7 +2,7 @@
 #include <stdexcept>
 
 #include <symengine/symengine_rcp.h>
-#include "Teuchos_RCP.hpp"
+#include <symengine/teuchos/Teuchos_RCP.hpp>
 
 namespace SymEngine {
 

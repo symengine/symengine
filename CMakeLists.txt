@@ -1,8 +1,12 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 2.8.5)
 
 set(CMAKE_USER_MAKE_RULES_OVERRIDE ${CMAKE_SOURCE_DIR}/cmake/UserOverride.cmake)
 
 project(symengine)
+set(SYMENGINE_MAJOR_VERSION 0)
+set(SYMENGINE_MINOR_VERSION 1)
+set(SYMENGINE_PATCH_VERSION 0)
+set(SYMENGINE_VERSION ${SYMENGINE_MAJOR_VERSION}.${SYMENGINE_MINOR_VERSION}.${SYMENGINE_PATCH_VERSION})
 
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 
@@ -318,34 +322,65 @@ endif()
 
 enable_testing()
 add_subdirectory(symengine)
+
+get_property(TPL_INCLUDE_DIRS DIRECTORY PROPERTY INCLUDE_DIRECTORIES)
+set(SYMENGINE_DIR ${PROJECT_BINARY_DIR} CACHE BOOL "SymEngine Build Directory")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR})
+
+if(WIN32 AND NOT CYGWIN)
+    set(DEF_INSTALL_CMAKE_DIR CMake)
+else()
+    set(DEF_INSTALL_CMAKE_DIR lib/cmake/symengine)
+endif()
+set(INSTALL_CMAKE_DIR ${DEF_INSTALL_CMAKE_DIR} CACHE PATH
+    "Installation directory for CMake files")
+
+export(TARGETS symengine teuchos FILE "${PROJECT_BINARY_DIR}/SymEngineTargets.cmake")
+foreach(LIB ${LIBS})
+    get_property(temp TARGET ${LIB} PROPERTY LOCATION)
+    set(SYMENGINE_TARGETS_LOCATIONS ${SYMENGINE_TARGETS_LOCATIONS} ${temp})
+endforeach()
+
+# ... for the build tree
+set(CONF_INCLUDE_DIRS ${TPL_INCLUDE_DIRS} ${PROJECT_SOURCE_DIR} ${PROJECT_BINARY_DIR}
+                           ${PROJECT_SOURCE_DIR}/symengine/teuchos ${PROJECT_BINARY_DIR}/symengine/teuchos)
+configure_file(cmake/SymEngineConfig.cmake.in
+    "${PROJECT_BINARY_DIR}/SymEngineConfig.cmake" @ONLY)
+export(TARGETS symengine teuchos
+    FILE "${PROJECT_BINARY_DIR}/SymEngineTargets.cmake")
+
+# ... for the install tree
+set(CONF_INCLUDE_DIRS ${TPL_INCLUDE_DIRS} ${CMAKE_INSTALL_PREFIX}/include)
+configure_file(cmake/SymEngineConfig.cmake.in
+    "${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/SymEngineConfig.cmake" @ONLY)
+
+#include(CMakePackageConfigHelpers)
+#write_basic_package_version_file(
+#    "${CMAKE_CURRENT_BINARY_DIR}/SymEngineConfigVersion.cmake"
+#    VERSION ${SYMENGINE_VERSION}
+#    COMPATIBILITY AnyNewerVersion
+#)
+
+configure_file(cmake/SymEngineConfigVersion.cmake.in SymEngineConfigVersion.cmake @ONLY)
+
+install(FILES "${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/SymEngineConfig.cmake"
+              ${PROJECT_BINARY_DIR}/SymEngineConfigVersion.cmake
+        DESTINATION ${INSTALL_CMAKE_DIR})
+install(EXPORT SymEngineTargets DESTINATION ${INSTALL_CMAKE_DIR})
+
 if (BUILD_BENCHMARKS)
     add_subdirectory(benchmarks)
 endif()
 
 if (WITH_RUBY)
-    find_package(Ruby REQUIRED)
-    include_directories(${RUBY_INCLUDE_DIRS})
-    set(LIBS ${LIBS} ${RUBY_LIBRARY})
-
-    message("Copying source of ruby wrappers into: ${CMAKE_CURRENT_BINARY_DIR}/symengine/ruby")
-    file(COPY symengine/ruby/ DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/symengine/ruby)
-
+    # Copies LICENSE from root directory to gem directory
+    file(COPY ${symengine_SOURCE_DIR}/LICENSE DESTINATION symengine/ruby)
     add_subdirectory(symengine/ruby)
 endif ()
 
 if (WITH_PYTHON)
-    # We need to execute the find_package() commands here, so that the
-    # variables like ${PYTHON_INSTALL_PATH} are defined here and in all cmake
-    # files (as opposed to just subset of cmake files).
-    find_package(Python REQUIRED)
-    find_package(Cython REQUIRED)
-
-    message("Copying source of python wrappers into: ${CMAKE_CURRENT_BINARY_DIR}/symengine/python/symengine")
-    file(COPY symengine/python/symengine/ DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/symengine/python/symengine)
-
     add_subdirectory(symengine/python)
 endif()
-
 
 # At the end we print a nice summary
 
