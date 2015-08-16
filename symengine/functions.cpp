@@ -1616,10 +1616,39 @@ int Derivative::compare(const Basic &o) const
 
 RCP<const Basic> Derivative::diff(const RCP<const Symbol> &x) const
 {
+    unsigned i;
+    bool all_symbols = true;
+    bool directly_present = false;
     if (eq(*(arg_->diff(x)), *zero)) return zero;
     vec_basic t = x_;
-    t.push_back(x);
-    return Derivative::create(arg_, t);
+    for (i = 0; i < t.size(); i++) {
+        if (!is_a<Symbol>(*t[i])) {
+            all_symbols = false;
+            break;
+        }
+    }
+    if (!all_symbols) {
+        t.push_back(x);
+        return Derivative::create(arg_, t);
+    }
+
+    vec_basic u = arg_->get_args();
+    for (i = 0; i < u.size(); i++) {
+        if (eq(*u[i], *x)) {
+            directly_present = true;
+            break;
+        }
+    }
+    if (directly_present) {
+        t.push_back(x);
+        return Derivative::create(arg_, t);
+    }
+
+    RCP<const Basic> ret = arg_->diff(x);
+    for (i = 0; i < t.size(); i++) {
+        ret = ret->diff(rcp_static_cast<const Symbol>(t[i]));
+    }
+    return ret;
 }
 
 RCP<const Basic> Derivative::subs(const map_basic_basic &subs_dict) const
@@ -1784,7 +1813,15 @@ RCP<const Basic> Subs::subs(const map_basic_basic &subs_dict) const
     for (auto &s: dict_) {
         insert(m, s.first, s.second->subs(subs_dict));
     }
-    return make_rcp<const Subs>(arg_->subs(n), m);
+    RCP<const Basic> presub = arg_->subs(n);
+    if (is_a<Subs>(*presub)) {
+        for (auto &q: static_cast<const Subs &>(*presub).dict_) {
+            insert(m, q.first, q.second);
+        }
+        return make_rcp<const Subs>(static_cast<const Subs &>(*presub).arg_, m);
+    } else {
+        return make_rcp<const Subs>(presub, m);
+    }
 }
 
 std::size_t HyperbolicFunction::__hash__() const
