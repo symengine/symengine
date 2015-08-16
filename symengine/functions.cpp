@@ -1741,7 +1741,7 @@ int Subs::compare(const Basic &o) const
 {
     SYMENGINE_ASSERT(is_a<Subs>(o))
     const Subs &s = static_cast<const Subs &>(o);
-    int cmp = arg_->__cmp__(*(arg_));
+    int cmp = arg_->__cmp__(*(s.arg_));
     if (cmp != 0) return cmp;
     cmp = map_compare(dict_, s.dict_);
     return cmp;
