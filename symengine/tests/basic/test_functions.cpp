@@ -747,8 +747,8 @@ TEST_CASE("Derivative: functions", "[functions]")
 
     f = function_symbol("f", {x, y});
     r1 = f->diff(x)->diff(y);
-    r2 = Derivative::create(f, {x, y});
-    r3 = Derivative::create(f, {y, x});
+    r2 = f->diff(y)->diff(x);
+    r3 = f->diff(x)->diff(z);
     REQUIRE(eq(*r1, *r2));
     REQUIRE(neq(*r1, *r3));
 

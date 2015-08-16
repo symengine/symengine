@@ -1,4 +1,5 @@
 #include <stdexcept>
+#include <algorithm>
 
 #include <symengine/add.h>
 #include <symengine/mul.h>
@@ -1630,6 +1631,7 @@ RCP<const Basic> Derivative::diff(const RCP<const Symbol> &x) const
     }
 
     RCP<const Basic> ret = arg_->diff(x);
+    // Avoid cycles
     if (is_a<Derivative>(*ret) && eq(*static_cast<const Derivative &>(*ret).arg_, *arg_)) {
         vec_basic t = x_;
         t.push_back(x);
