@@ -12,6 +12,10 @@
 
 #if defined(WITH_SYMENGINE_RCP)
 
+#if defined(WITH_SYMENGINE_THREAD_SAFE)
+#include <atomic>
+#endif
+
 #else
 
 // Include all Teuchos headers here:
