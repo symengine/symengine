@@ -324,7 +324,7 @@ enable_testing()
 add_subdirectory(symengine)
 
 get_property(TPL_INCLUDE_DIRS DIRECTORY PROPERTY INCLUDE_DIRECTORIES)
-set(SYMENGINE_DIR ${PROJECT_BINARY_DIR} CACHE BOOL "SymEngine Build Directory")
+set(SymEngine_DIR ${PROJECT_BINARY_DIR} CACHE BOOL "SymEngine Build Directory")
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR})
 
 if(WIN32 AND NOT CYGWIN)
