@@ -51,9 +51,9 @@ int main(int argc, char* argv[])
     RCP<const Polynomial> P2 = make_rcp<const Polynomial>(f2, syms);
 
     std::cout << "poly_mul start" << std::endl;
-    auto t1 = std::chrono::high_resolution_clock::now();
+    // auto t1 = std::chrono::high_resolution_clock::now();
     RCP<const Polynomial> P3 = mul_poly(P1, P2);
-    auto t2 = std::chrono::high_resolution_clock::now();
+    // auto t2 = std::chrono::high_resolution_clock::now();
     std::cout << "poly_mul stop" << std::endl;
 
 
@@ -66,9 +66,9 @@ int main(int argc, char* argv[])
     std::cout << "RESULT:" << std::endl;
     std::cout << C << std::endl;
     */
-    std::cout
-        << std::chrono::duration_cast<std::chrono::milliseconds>(t2-t1).count()
-        << "ms" << std::endl;
+    // std::cout
+    //     << std::chrono::duration_cast<std::chrono::milliseconds>(t2-t1).count()
+    //     << "ms" << std::endl;
     std::cout << "number of terms: "
         << P3->polys_set_.size() << std::endl;
 
