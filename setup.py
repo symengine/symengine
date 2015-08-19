@@ -98,6 +98,9 @@ class InstallWithCmake(_install):
         # can't use super() here because _install is an old style class in 2.7
         _install.run(self)
 
+package_dir = 'symengine/python/symengine' if path.exists(path.join(path.dirname(path.realpath(__file__)),
+              'symengine/python/symengine')) else 'symengine'
+
 long_description = '''
 SymEngine is a standalone fast C++ symbolic manipulation library.
 Optional thin Python wrappers (SymEngine) allow easy usage from Python and
@@ -111,7 +114,7 @@ setup(name = "symengine",
       author_email = "",
       license = "MIT",
       url = "https://github.com/sympy/symengine",
-      package_dir = {'symengine': 'symengine/python/symengine'},
+      package_dir = {'symengine': package_dir},
       packages=['symengine', 'symengine.lib', 'symengine.tests'],
       package_data= {'symengine' : ['lib/symengine_wrapper.so']},
       cmdclass={
