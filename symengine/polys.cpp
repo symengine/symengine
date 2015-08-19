@@ -3,6 +3,7 @@
 #include <symengine/mul.h>
 #include <symengine/pow.h>
 #include <symengine/symbol.h>
+#include <symengine/dict.h>
 
 namespace SymEngine {
 
@@ -12,6 +13,7 @@ Polynomial::Polynomial(const vec_symbol &vars, hash_set polys_set)
 
     SYMENGINE_ASSERT(is_canonical(polys_set_))
 }
+Polynomial::Polynomial() {}
 #else
 Polynomial::Polynomial(const vec_symbol &vars, unordered_set polys_set)
     : vars_{vars}, polys_set_(polys_set) {
@@ -245,14 +247,81 @@ RCP<const Polynomial> neg_poly(const Polynomial &a) {
 }
 
 #ifdef HAVE_SYMENGINE_PIRANHA
-RCP<const Polynomial> mul_poly(RCP <const Polynomial> a, RCP <const Polynomial> b) {
-    hash_set C, A = a->polys_set_, B = b->polys_set_;
+void _normalise_polymul(RCP <const Polynomial> &p, RCP <const Polynomial> &q, vec_symbol &vars_,
+    Polynomial &p_new, Polynomial &q_new) {
+    using ka = piranha::kronecker_array<long long>;
+    vars_ = p->vars_;
+    int c_1 = p->vars_.size();
+    int c_2 = 0;
+    bool present = false;
+    for (auto i = q->vars_.begin(); i < q->vars_.end(); i++) {
+        for (auto j = p->vars_.begin(); j < p->vars_.end(); j++) {
+            if ((*i)->get_name() == (*j)->get_name()) {
+                present = true;
+            }
+        }
+        if (present == false) {
+            vars_.push_back(*i);
+            c_2++;
+        }
+        present = false;
+    }
+    for (auto &a: p->polys_set_) {
+        std::vector<long long> old(p->vars_.size());
+        m_pair temp;
+
+        ka::decode(old, a.first);
+        for (int i = 0; i < c_2; i++) {
+            old.push_back(0);
+        }
+        temp.first = ka::encode(old);
+        temp.second = a.second;
+        p_new.polys_set_.insert(temp);
+    }
+    for (auto &a: q->polys_set_) {
+        if (p->vars_.empty()) {
+            q_new.polys_set_ = q->polys_set_;
+        } else {
+            std::vector<long long> new_(c_1);
+            std::vector<long long> old(q->vars_.size());
+            m_pair temp;
+            ka::decode(old, a.first);
+            auto i = new_.begin();
+            bool present = false;
+            int j_c = 0, k_c = 0;
+            for (auto j = vars_.begin(); j < vars_.end(); j++) {
+                for (auto k = q->vars_.begin(); k < q->vars_.end(); k++) {
+                    if ((*j)->get_name() == (*k)->get_name()) {
+                        present = true;
+                        new_[j_c] = old[k_c];
+                    }
+                    k_c++;
+                }
+                if (present == false)
+                    new_.insert(i, 0);
+                if (i != new_.end())
+                    i++;
+                present = false;
+                j_c++;
+                k_c = 0;
+            }            
+            temp.first = ka::encode(new_);
+            temp.second = a.second;
+            q_new.polys_set_.insert(temp);
+        }
+    }
+}
+
+void _mul_hashset(const hash_set &A, const hash_set &B, hash_set &C) {
     m_pair temp;
+    int count = 0;
     for (auto &a: A) {
         for (auto &b: B) {
             temp.first = a.first + b.first;
             size_t bucket = C._bucket(temp);
-            auto it = C._find(temp, bucket);
+            auto it = C.end();
+            if (!C.empty())
+                it = C._find(temp, bucket);
             if (it == C.end()) {
                 // Check it the load factor of C is too large.
                 if ((double(C.size()) + 1) / C.bucket_count() > C.max_load_factor()) {
@@ -268,11 +337,32 @@ RCP<const Polynomial> mul_poly(RCP <const Polynomial> a, RCP <const Polynomial> 
             } else {
                 piranha::math::multiply_accumulate(it->second,a.second,b.second);
             }
+            count++;
         }
     }
-    return polynomial(a->vars_, C);
+}
+
+RCP<const Polynomial> mul_poly(RCP <const Polynomial> p, RCP <const Polynomial> q) {
+    hash_set C;
+    vec_symbol vars_;
+    Polynomial a, b;
+    _normalise_polymul(p, q, vars_, a, b);
+    _mul_hashset(a.polys_set_, b.polys_set_, C);
+    return polynomial(vars_, C);
+}
+#else
+RCP<const Polynomial> mul_poly(RCP <const Polynomial> p, RCP <const Polynomial> q) {   
+    unordered_set C, A = p->polys_set_, B = q->polys_set_;
+    m_pair temp;
+    for (auto &a: A) {
+        for (auto &b: B) {
+            temp.first = a.first + b.first;
+            temp.second = a.second*b.second;
+            C.insert(temp);
+        }
+    }
+    return polynomial(p->vars_, C);
 }
 #endif
-
 
 } // SymEngine
