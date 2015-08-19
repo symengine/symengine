@@ -174,6 +174,17 @@ bool vec_basic_eq(const vec_basic &a, const vec_basic &b)
     return true;
 }
 
+bool vec_symbol_eq(const vec_symbol &a, const vec_symbol &b)
+{
+    // Can't be equal if # of entries differ:
+    if (a.size() != b.size()) return false;
+    // Loop over elements in "a" and "b":
+    for (size_t i = 0; i < a.size(); i++) {
+        if (a[i]->get_name() != b[i]->get_name()) return false; // values not equal
+    }
+    return true;
+}
+
 bool vec_basic_eq_perm(const vec_basic &a, const vec_basic &b)
 {
     // Can't be equal if # of entries differ:

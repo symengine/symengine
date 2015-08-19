@@ -140,6 +140,8 @@ bool map_eq(const T &A, const T &B)
 
 //! \return true if the two vectors `a` and `b` are equal. Otherwise false.
 bool vec_basic_eq(const vec_basic &a, const vec_basic &b);
+//! \return true if the two symbol vectors `a` and `b` are equal. Otherwise false.
+bool vec_symbol_eq(const vec_symbol &a, const vec_symbol &b);
 //! \return true if the two vectors `a` and `b` are equal up to a permutation. Otherwise false.
 bool vec_basic_eq_perm(const vec_basic &a, const vec_basic &b);
 //! \return true if the two dictionaries `a` and `b` are equal. Otherwise false.

@@ -25,6 +25,7 @@ using SymEngine::RCP;
 using SymEngine::print_stack_on_segfault;
 using SymEngine::Polynomial;
 using SymEngine::make_rcp;
+using SymEngine::mul_poly;
 
 int main(int argc, char* argv[])
 {
