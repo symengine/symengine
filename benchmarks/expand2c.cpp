@@ -53,7 +53,7 @@ int main(int argc, char* argv[])
 
     std::cout << "poly_mul start" << std::endl;
     // auto t1 = std::chrono::high_resolution_clock::now();
-    RCP<const Polynomial> P3 = mul_poly(P1, P2);
+    RCP<const Polynomial> P3 = mul_poly(*P1, *P2);
     // auto t2 = std::chrono::high_resolution_clock::now();
     std::cout << "poly_mul stop" << std::endl;
 

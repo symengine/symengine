@@ -267,7 +267,7 @@ TEST_CASE("Arithmetic of Polynomial", "[Polynomial]")
     RCP<const Polynomial> S = sub_poly(*Q, *P);
     REQUIRE(S->__str__() == "x**2 + 2*x**3");
 
-    RCP<const Polynomial> T = mul_poly(S, S);
+    RCP<const Polynomial> T = mul_poly(*S, *S);
     REQUIRE(T->__str__() == "x**4 + 4*x**5 + 4*x**6");
 
     RCP<const Basic> r = add(add(x, y), add(y, x));
@@ -277,11 +277,11 @@ TEST_CASE("Arithmetic of Polynomial", "[Polynomial]")
     insert(syms, y, integer(1));
 
     RCP<const Polynomial> W = make_rcp<const Polynomial>(r, syms);
-    RCP<const Polynomial> V = mul_poly(W, W);
+    RCP<const Polynomial> V = mul_poly(*W, *W);
     //std::cout<<V->__str__()<<std::endl;
     REQUIRE(V->__str__() == "8*y**1*x**1 + 4*y**2*x**0 + 4*y**0*x**2");
 
-    RCP<const Polynomial> X = mul_poly(V, S);
+    RCP<const Polynomial> X = mul_poly(*V, *S);
     std::cout<<X->__str__()<<std::endl;
 }
 #endif

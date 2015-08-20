@@ -80,7 +80,7 @@ RCP<const Polynomial> neg_poly(const Polynomial &a);
 RCP<const Polynomial> sub_poly(const Polynomial &a, const Polynomial &b);
 #ifdef HAVE_SYMENGINE_PIRANHA
 //! Multiplying two Polynomial a and b
-RCP<const Polynomial> mul_poly(RCP <const Polynomial> a, RCP <const Polynomial> b);
+RCP<const Polynomial> mul_poly(const Polynomial &a, const Polynomial &b);
 
 inline RCP<const Polynomial> polynomial(const vec_symbol &vars, hash_set polys_set)
 {

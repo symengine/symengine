@@ -246,15 +246,15 @@ RCP<const Polynomial> neg_poly(const Polynomial &a) {
 }
 
 #ifdef HAVE_SYMENGINE_PIRANHA
-void _normalise_polymul(RCP <const Polynomial> &p, RCP <const Polynomial> &q, vec_symbol &vars_,
+void _normalise_polymul(const Polynomial &p, const Polynomial &q, vec_symbol &vars_,
     hash_set &p_new, hash_set &q_new) {
     using ka = piranha::kronecker_array<long long>;
-    vars_ = p->vars_;
-    int c_1 = p->vars_.size();
+    vars_ = p.vars_;
+    int c_1 = p.vars_.size();
     int c_2 = 0;
     bool present = false;
-    for (auto &i: q->vars_) {
-        for (auto &j: p->vars_) {
+    for (auto &i: q.vars_) {
+        for (auto &j: p.vars_) {
             if (i->get_name() == j->get_name()) {
                 present = true;
             }
@@ -265,8 +265,8 @@ void _normalise_polymul(RCP <const Polynomial> &p, RCP <const Polynomial> &q, ve
         }
         present = false;
     }
-    for (auto &a: p->polys_set_) {
-        std::vector<long long> old(p->vars_.size());
+    for (auto &a: p.polys_set_) {
+        std::vector<long long> old(p.vars_.size());
         m_pair temp;
 
         ka::decode(old, a.first);
@@ -277,19 +277,19 @@ void _normalise_polymul(RCP <const Polynomial> &p, RCP <const Polynomial> &q, ve
         temp.second = a.second;
         p_new.insert(temp);
     }
-    for (auto &a: q->polys_set_) {
-        if (p->vars_.empty()) {
-            q_new = q->polys_set_;
+    for (auto &a: q.polys_set_) {
+        if (p.vars_.empty()) {
+            q_new = q.polys_set_;
         } else {
             std::vector<long long> new_(c_1);
-            std::vector<long long> old(q->vars_.size());
+            std::vector<long long> old(q.vars_.size());
             m_pair temp;
             ka::decode(old, a.first);
             auto i = new_.begin();
             bool present = false;
             int j_c = 0, k_c = 0;
             for (auto &j: vars_) {
-                for (auto &k: q->vars_) {
+                for (auto &k: q.vars_) {
                     if (j->get_name() == k->get_name()) {
                         present = true;
                         new_[j_c] = old[k_c];
@@ -341,22 +341,22 @@ void _mul_hashset(const hash_set &A, const hash_set &B, hash_set &C) {
     << "ns" << std::endl;
 }
 
-RCP<const Polynomial> mul_poly(RCP <const Polynomial> p, RCP <const Polynomial> q) {
+RCP<const Polynomial> mul_poly(const Polynomial &p, const Polynomial &q) {
     hash_set a, b, C;
     C.rehash(10000);
     vec_symbol vars_;
-    if (!vec_symbol_eq(p->vars_, q->vars_)) {
+    if (!vec_symbol_eq(p.vars_, q.vars_)) {
         _normalise_polymul(p, q, vars_, a, b);
     } else {
-        a = p->polys_set_;
-        b = q->polys_set_;
+        a = p.polys_set_;
+        b = q.polys_set_;
     }
     _mul_hashset(a, b, C);
     return polynomial(vars_, C);
 }
 #else
-RCP<const Polynomial> mul_poly(RCP <const Polynomial> p, RCP <const Polynomial> q) {   
-    unordered_set C, A = p->polys_set_, B = q->polys_set_;
+RCP<const Polynomial> mul_poly(const Polynomial &p, const Polynomial &q) {   
+    unordered_set C, A = p.polys_set_, B = q.polys_set_;
     m_pair temp;
     for (auto &a: A) {
         for (auto &b: B) {
@@ -365,7 +365,7 @@ RCP<const Polynomial> mul_poly(RCP <const Polynomial> p, RCP <const Polynomial> 
             C.insert(temp);
         }
     }
-    return polynomial(p->vars_, C);
+    return polynomial(p.vars_, C);
 }
 #endif
 
