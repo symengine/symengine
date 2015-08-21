@@ -16,10 +16,11 @@ VALUE cbasic_alloc(VALUE klass){
 }
 
 VALUE cbasic_binary_op(VALUE self, VALUE operand2, void (*cwfunc_ptr)(basic_struct*, const basic_struct*, const basic_struct*)){
-    basic_struct *this, *cbasic_operand2, *cresult;
+    basic_struct *this, *cresult;
     VALUE result;
 
-    cbasic_operand2 = basic_new_heap();
+    basic cbasic_operand2;
+    basic_new_stack(cbasic_operand2);
 
     Data_Get_Struct(self, basic_struct, this);
     sympify(operand2, cbasic_operand2);
@@ -27,7 +28,7 @@ VALUE cbasic_binary_op(VALUE self, VALUE operand2, void (*cwfunc_ptr)(basic_stru
     cresult = basic_new_heap();
     cwfunc_ptr(cresult, this, cbasic_operand2);
     result = Data_Wrap_Struct(Klass_of_Basic(cresult), NULL , cbasic_free_heap, cresult);
-    basic_free_heap(cbasic_operand2);
+    basic_free_stack(cbasic_operand2);
 
     return result;
 }
@@ -89,27 +90,29 @@ VALUE cbasic_diff(VALUE self, VALUE operand2) {
 }
 
 VALUE cbasic_eq(VALUE self, VALUE operand2) {
-    basic_struct *this, *cbasic_operand2;
+    basic_struct *this;
 
-    cbasic_operand2 = basic_new_heap();
+    basic cbasic_operand2;
+    basic_new_stack(cbasic_operand2);
     Data_Get_Struct(self, basic_struct, this);
     sympify(operand2, cbasic_operand2);
 
     VALUE ret_val = basic_eq(this, cbasic_operand2) ? Qtrue : Qfalse;
-    basic_free_heap(cbasic_operand2);
+    basic_free_stack(cbasic_operand2);
 
     return ret_val;
 }
 
 VALUE cbasic_neq(VALUE self, VALUE operand2) {
-    basic_struct *this, *cbasic_operand2;
+    basic_struct *this;
 
-    cbasic_operand2 = basic_new_heap();
+    basic cbasic_operand2;
+    basic_new_stack(cbasic_operand2);
     Data_Get_Struct(self, basic_struct, this);
     sympify(operand2, cbasic_operand2);
 
     VALUE ret_val =  basic_neq(this, cbasic_operand2) ? Qtrue : Qfalse;
-    basic_free_heap(cbasic_operand2);
+    basic_free_stack(cbasic_operand2);
 
     return ret_val;
 }
