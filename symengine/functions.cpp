@@ -1553,7 +1553,7 @@ Derivative::Derivative(const RCP<const Basic> &arg, const vec_basic &x)
     : arg_{arg}, x_{x}
 {
     // TODO: use a multi-set for x_ instead of vector
-    std::sort(x_.begin(), x_.end(), RCPBasicKeyLess());
+    std::sort(x_.begin(), x_.end(), RCPBasicKeyLessCmp());
     SYMENGINE_ASSERT(is_canonical(arg, x))
 }
 
