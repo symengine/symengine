@@ -810,22 +810,22 @@ cdef class Derivative(Basic):
     def __cinit__(self, expr = None, symbols = None):
         if expr is None or symbols is None:
             return
-        cdef symengine.vec_basic vec
+        cdef symengine.multiset_basic mset
         cdef Basic s_
         cdef Basic expr_ = sympify(expr, True)
         for s in symbols:
             s_ = sympify(s, True)
-            vec.push_back(s_.thisptr)
-        self.thisptr = symengine.make_rcp_Derivative(<const RCP[const symengine.Basic]>expr_.thisptr, vec)
+            mset.insert(<RCP[symengine.const_Basic]>(s_.thisptr))
+        self.thisptr = symengine.make_rcp_Derivative(<const RCP[const symengine.Basic]>expr_.thisptr, mset)
 
     def _sympy_(self):
         cdef RCP[const symengine.Derivative] X = \
             symengine.rcp_static_cast_Derivative(self.thisptr)
         arg = c2py(deref(X).get_arg())._sympy_()
-        cdef symengine.vec_basic Y = deref(X).get_symbols()
+        cdef symengine.multiset_basic Y = deref(X).get_symbols()
         s = []
-        for i in range(Y.size()):
-            s.append(c2py(<RCP[const symengine.Basic]>(Y[i]))._sympy_())
+        for i in Y:
+            s.append(c2py(<RCP[const symengine.Basic]>(i))._sympy_())
         import sympy
         return sympy.Derivative(arg, *s)
 
@@ -833,10 +833,10 @@ cdef class Derivative(Basic):
         cdef RCP[const symengine.Derivative] X = \
             symengine.rcp_static_cast_Derivative(self.thisptr)
         arg = c2py(deref(X).get_arg())._sage_()
-        cdef symengine.vec_basic Y = deref(X).get_symbols()
+        cdef symengine.multiset_basic Y = deref(X).get_symbols()
         s = []
-        for i in range(Y.size()):
-            s.append(c2py(<RCP[const symengine.Basic]>(Y[i]))._sage_())
+        for i in Y:
+            s.append(c2py(<RCP[const symengine.Basic]>(i))._sage_())
         return arg.diff(*s)
 
 cdef class Subs(Basic):

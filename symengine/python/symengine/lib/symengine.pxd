@@ -38,6 +38,18 @@ cdef extern from "<set>" namespace "std":
             bint operator!=(iterator) nogil
         iterator begin() nogil
         iterator end() nogil
+        iterator insert(T&) nogil
+
+    cdef cppclass multiset[T, U]:
+        cppclass iterator:
+            T& operator*()
+            iterator operator++() nogil
+            iterator operator--() nogil
+            bint operator==(iterator) nogil
+            bint operator!=(iterator) nogil
+        iterator begin() nogil
+        iterator end() nogil
+        iterator insert(T&) nogil
 
 cdef extern from "<symengine/symengine_rcp.h>" namespace "SymEngine":
     cdef enum ENull:
@@ -87,6 +99,7 @@ cdef extern from "<symengine/basic.h>" namespace "SymEngine":
     cdef struct RCPIntegerKeyLess
     cdef struct RCPBasicKeyLess
     ctypedef set[RCP[const_Basic], RCPBasicKeyLess] set_basic "SymEngine::set_basic"
+    ctypedef multiset[RCP[const_Basic], RCPBasicKeyLess] multiset_basic "SymEngine::multiset_basic"
     cdef cppclass Basic:
         string __str__() nogil except +
         unsigned int hash() nogil except +
@@ -229,7 +242,7 @@ cdef extern from "<symengine/basic.h>" namespace "SymEngine":
     RCP[const Basic] make_rcp_Integer "SymEngine::make_rcp<const SymEngine::Integer>"(int i) nogil
     RCP[const Basic] make_rcp_Integer "SymEngine::make_rcp<const SymEngine::Integer>"(mpz_class i) nogil
     RCP[const Basic] make_rcp_Subs "SymEngine::make_rcp<const SymEngine::Subs>"(const RCP[const Basic] &arg, const map_basic_basic &x) nogil
-    RCP[const Basic] make_rcp_Derivative "SymEngine::make_rcp<const SymEngine::Derivative>"(const RCP[const Basic] &arg, const vec_basic &x) nogil
+    RCP[const Basic] make_rcp_Derivative "SymEngine::make_rcp<const SymEngine::Derivative>"(const RCP[const Basic] &arg, const multiset_basic &x) nogil
     RCP[const Basic] make_rcp_FunctionWrapper "SymEngine::make_rcp<const SymEngine::FunctionWrapper>"(void* obj, string name, string hash_, const vec_basic &arg, \
             void (*dec_ref)(void *), int (*comp)(void *, void *)) nogil
     RCP[const Basic] make_rcp_RealDouble "SymEngine::make_rcp<const SymEngine::RealDouble>"(double x) nogil
@@ -337,9 +350,8 @@ cdef extern from "<symengine/functions.h>" namespace "SymEngine":
         void* get_object()
 
     cdef cppclass Derivative(Basic):
-        Derivative(const RCP[const Basic] &arg, const vec_basic &x) nogil
         RCP[const Basic] get_arg() nogil
-        vec_basic get_symbols() nogil
+        multiset_basic get_symbols() nogil
 
     cdef cppclass Subs(Basic):
         Subs(const RCP[const Basic] &arg, const map_basic_basic &x) nogil
