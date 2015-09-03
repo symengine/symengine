@@ -1766,6 +1766,9 @@ RCP<const Basic> Subs::diff(const RCP<const Symbol> &x) const
 
 RCP<const Basic> Subs::subs(const map_basic_basic &subs_dict) const
 {
+    auto it = subs_dict.find(rcp_from_this());
+    if (it != subs_dict.end())
+        return it->second;
     map_basic_basic m, n;
     for (auto &p: subs_dict) {
         bool found = false;

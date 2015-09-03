@@ -829,6 +829,9 @@ TEST_CASE("Subs: functions", "[functions]")
     r3 = Subs::create(Derivative::create(function_symbol("f", {y, x}), {x}), {{x, add(z, y)}});
     REQUIRE(eq(*r2, *r3));
 
+    r2 = r1->subs({{r1, r3}});
+    REQUIRE(eq(*r2, *r3));
+
     // Test Subs::diff
     r1 = function_symbol("f", {add(y, y), add(x, y)})->diff(x);
 
