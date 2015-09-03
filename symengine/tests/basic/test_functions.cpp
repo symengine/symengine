@@ -793,8 +793,8 @@ TEST_CASE("Derivative: functions", "[functions]")
     REQUIRE(!(r4->is_canonical(function_symbol("f", x), {pow(x, integer(2))})));
 
     // Test get_args()
-    r1 = Derivative::create(function_symbol("f", {x, pow(y, integer(2))}), {x, x, y});
-    REQUIRE(vec_basic_eq(r1->get_args(), {function_symbol("f", {x, pow(y, integer(2))}), x, x, y}));
+    r1 = Derivative::create(function_symbol("f", {x, y, pow(z, integer(2))}), {x, x, y});
+    REQUIRE(vec_basic_eq_perm(r1->get_args(), {function_symbol("f", {x, y, pow(z, integer(2))}), x, x, y}));
 
     // Test Derivative::subs
     r1 = Derivative::create(function_symbol("f", {x, add(y, y)}), {x});
