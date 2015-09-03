@@ -752,6 +752,10 @@ TEST_CASE("Derivative: functions", "[functions]")
     REQUIRE(eq(*r1, *r2));
     REQUIRE(neq(*r1, *r3));
 
+    r1 = Derivative::create(f, {x, y, x});
+    r2 = Derivative::create(f, {x, x, y});
+    REQUIRE(eq(*r1, *r2));
+
     f = function_symbol("f", pow(x, integer(2)));
     r1 = f->diff(x);
     std::cout << *f << " " << *r1 << std::endl;
@@ -785,7 +789,7 @@ TEST_CASE("Derivative: functions", "[functions]")
     RCP<const Derivative> r4 = Derivative::create(f, {x});
     REQUIRE(r4->is_canonical(function_symbol("f", {y, x}), {x}));
     REQUIRE(!r4->is_canonical(function_symbol("f", y), {x}));
-    REQUIRE(r4->is_canonical(function_symbol("f", x), {x, y, x, x}));
+    REQUIRE(!r4->is_canonical(function_symbol("f", x), {x, y, x, x}));
     REQUIRE(!(r4->is_canonical(function_symbol("f", x), {pow(x, integer(2))})));
 
     // Test get_args()
