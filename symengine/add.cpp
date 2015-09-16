@@ -220,10 +220,15 @@ void Add::as_coef_term(const RCP<const Basic> &self,
         const Ptr<RCP<const Number>> &coef, const Ptr<RCP<const Basic>> &term)
 {
     if (is_a<Mul>(*self)) {
-        *coef = (rcp_static_cast<const Mul>(self))->coef_;
-        // We need to copy our 'dict_' here, as 'term' has to have its own.
-        map_basic_basic d2 = (rcp_static_cast<const Mul>(self))->dict_;
-        *term = Mul::from_dict(one, std::move(d2));
+        if (neq(*(rcp_static_cast<const Mul>(self)->coef_), *one)) {
+            *coef = (rcp_static_cast<const Mul>(self))->coef_;
+            // We need to copy our 'dict_' here, as 'term' has to have its own.
+            map_basic_basic d2 = (rcp_static_cast<const Mul>(self))->dict_;
+            *term = Mul::from_dict(one, std::move(d2));
+        } else {
+            *coef = one;
+            *term = self;
+        }
     } else if (is_a_Number(*self)) {
         *coef = rcp_static_cast<const Number>(self);
         *term = one;
