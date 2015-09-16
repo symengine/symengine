@@ -92,6 +92,8 @@ benchmarks/lwbench
 benchmarks/lwbench_ginac
 benchmarks/expand6
 benchmarks/expand6_ginac
+benchmarks/expand7
+benchmarks/expand7_ginac
 
 #rubygem
 symengine/ruby/Gemfile.lock
