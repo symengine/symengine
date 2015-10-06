@@ -1702,5 +1702,111 @@ def eval_double(basic):
     cdef Basic b = sympify(basic)
     return symengine.eval_double(deref(b.thisptr))
 
+# Prototype for Lambdify below
+
+from operator import mul
+from functools import reduce
+import numpy as np
+cimport numpy as cnp
+
+cdef void as_real(symengine.vec_basic vec, cnp.ndarray[cnp.float64_t, ndim=1] out):
+    cdef size_t i
+    if out.size != vec.size():
+        raise ValueError("Incompatible sizes")
+    for i in range(vec.size()):
+        out[i] = symengine.eval_double(deref(
+            <symengine.RCP[const symengine.Basic]>(vec[i])))
+
+cdef class Lambdify(object):
+    """
+    Parameters
+    ----------
+    args: iterable of Symbols
+    exprs: array_like of expressions
+
+    Returns
+    -------
+    callback instance with signature f(inp, out=None)
+
+    Examples
+    --------
+    >>> from symengine import var, Lambdify
+    >>> var('x y z')
+    >>> f = Lambdify([x, y, z], [x+y+z, x*y*z])
+    >>> f([2, 3, 4])
+    [ 9., 24.]
+    >>> out = np.array(2)
+    >>> f(x, out); out
+    [ 9., 24.]
+
+    """
+    cdef size_t in_size, out_size
+    cdef tuple out_shape
+    cdef symengine.vec_basic args, exprs
+
+    def __cinit__(self, args, exprs):
+        cdef symengine.vec_basic args_, exprs_
+        cdef Basic e_
+        try:
+            self.out_shape = exprs.shape
+        except AttributeError:
+            exprs = np.asarray(exprs)
+            self.out_shape = exprs.shape
+        self.in_size = len(args)
+        self.out_size = reduce(mul, self.out_shape)
+
+        for e in args:
+            e_ = sympify(e)
+            args_.push_back(e_.thisptr)
+        self.args = args_
+        for e in exprs.flatten():
+            e_ = sympify(e)
+            exprs_.push_back(e_.thisptr)
+        self.exprs = exprs_
+
+    cdef void _cb(self, cnp.ndarray[cnp.float64_t, ndim=1] inp,
+                  cnp.ndarray[cnp.float64_t, ndim=1] out):
+        cdef symengine.RCP[const symengine.Basic] e
+        cdef symengine.map_basic_basic d
+        cdef symengine.vec_basic expr_subs
+        cdef size_t idx
+        cdef symengine.Basic K, V
+        if inp.size != self.in_size:
+            raise ValueError("Size of inp incompatible with number of args.")
+        if out.size != self.out_size:
+            raise ValueError("Size of out incompatible with number of exprs.")
+        for idx in range(inp.size):
+            d[self.args[idx]] = symengine.make_rcp_RealDouble(inp[idx])
+        for idx in range(out.size):
+            expr_subs.push_back(deref(self.exprs[idx]).subs(d))
+        as_real(expr_subs, out)
+
+    def __call__(self, inp, out=None):
+        """
+        Parameters
+        ----------
+        inp: array_like
+        out: array_like or None (default)
+            Allows for for low-overhead use (output argument)
+        """
+        if out is None:
+            reshape = True
+            out = np.empty(self.out_size, dtype=np.float64) #, order=self.out_order)
+        else:
+            reshape = False
+            if out.shape != self.out_shape:
+                raise ValueError("Incompatible shape of output argument")
+            if out.dtype != np.float64:
+                raise ValueError("Output argument dtype not float64: %s" % out.dtype)
+            if not out.flags['WRITEABLE']:
+                raise ValueError("Output argument needs to be writeable")
+            if not out.flags['C_CONTIGUOUS']:
+                raise ValueError("Output argument needs to be C-contiguous")
+        self._cb(np.ascontiguousarray(inp, dtype=np.float64), out)
+        if reshape:
+            out = out.reshape(self.out_shape)
+        return out
+
+
 # Turn on nice stacktraces:
 symengine.print_stack_on_segfault()
