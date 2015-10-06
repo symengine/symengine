@@ -1704,18 +1704,45 @@ def eval_double(basic):
 
 # Prototype for Lambdify below
 
+import cython
 from operator import mul
 from functools import reduce
-import numpy as np
-cimport numpy as cnp
+from libc.string cimport memcpy
 
-cdef void as_real(symengine.vec_basic vec, cnp.ndarray[cnp.float64_t, ndim=1] out):
+
+@cython.wraparound(False)
+@cython.boundscheck(False)
+cdef void as_real(symengine.vec_basic vec, double[::1] out) nogil:
     cdef size_t i
-    if out.size != vec.size():
-        raise ValueError("Incompatible sizes")
     for i in range(vec.size()):
         out[i] = symengine.eval_double(deref(
             <symengine.RCP[const symengine.Basic]>(vec[i])))
+
+
+cdef size_t _size(n):
+    try:
+        return n.size
+    except AttributeError:
+        return len(n)  # e.g. array.array
+
+
+def with_buffer(iterable):
+    """ if iterable supports the buffer interface: return iterable,
+        if not, return a cython.view.array object (which does) """
+    cdef double[::1] cy_arr_view
+    try:
+        memoryview(iterable)
+    except TypeError:
+        # Cython's array to the rescue
+        cy_arr =  cython.view.array(shape=(_size(iterable),),
+                                    itemsize=sizeof(double), format='d')
+        cy_arr_view = cy_arr
+        for i in range(_size(iterable)):
+            cy_arr_view[i] = iterable[i]
+        return cy_arr
+    else:
+        return iterable  # iterable supports memoryview
+
 
 cdef class Lambdify(object):
     """
@@ -1749,48 +1776,79 @@ cdef class Lambdify(object):
         try:
             self.out_shape = exprs.shape
         except AttributeError:
-            exprs = np.asarray(exprs)
-            self.out_shape = exprs.shape
+            self.out_shape = len(exprs),
         self.in_size = len(args)
         self.out_size = reduce(mul, self.out_shape)
 
         for e in args:
             e_ = sympify(e)
             self.args.push_back(e_.thisptr)
-        for e in exprs.flatten():
+
+        try:
+            exprs = exprs.flatten()
+        except AttributeError:
+            pass
+
+        for e in exprs:
             e_ = sympify(e)
             self.exprs.push_back(e_.thisptr)
 
-    cdef void _cb(self, cnp.ndarray[cnp.float64_t, ndim=1] inp,
-                  cnp.ndarray[cnp.float64_t, ndim=1] out):
-        cdef symengine.RCP[const symengine.Basic] e
+    cdef void _cb(self, double[::1] inp, double[::1] out):
         cdef symengine.map_basic_basic d
         cdef symengine.vec_basic expr_subs
         cdef size_t idx
-        cdef symengine.Basic K, V
+
         if inp.size != self.in_size:
             raise ValueError("Size of inp incompatible with number of args.")
         if out.size != self.out_size:
             raise ValueError("Size of out incompatible with number of exprs.")
+
+        # Create the substitution "dict"
         for idx in range(inp.size):
             d[self.args[idx]] = symengine.make_rcp_RealDouble(inp[idx])
+
+        # Do the substitution
         for idx in range(out.size):
             expr_subs.push_back(deref(self.exprs[idx]).subs(d))
+
+        # Convert expr_subs to doubles write to out
         as_real(expr_subs, out)
 
-    def __call__(self, inp, out=None):
+    def __call__(self, inp, out=None, use_numpy=None):
         """
         Parameters
         ----------
         inp: array_like
         out: array_like or None (default)
             Allows for for low-overhead use (output argument)
+        use_numpy: bool (default: None)
+            None -> use numpy if available
         """
+        cdef cython.view.array tmp
+        cdef double[::1] out_view
+
+        if use_numpy is None:
+            try:
+                import numpy as np
+            except ImportError:
+                use_numpy = False  # we will use cython.view.array instead
+            else:
+                use_numpy = True
+        elif use_numpy is True:
+            import numpy as np
+
         if out is None:
-            reshape = True
-            out = np.empty(self.out_size, dtype=np.float64) #, order=self.out_order)
+            # allocate output container
+            if use_numpy:
+                out = np.empty(self.out_size, dtype=np.float64)
+            else:
+                out = cython.view.array(shape=(self.out_size,),
+                                        itemsize=sizeof(double), format='d')
+            reshape = len(self.out_shape) > 1
         else:
-            reshape = False
+            if not use_numpy:
+                raise NotImplementedError(
+                    "Only numpy ndarray supported as output parameter")
             if out.shape != self.out_shape:
                 raise ValueError("Incompatible shape of output argument")
             if out.dtype != np.float64:
@@ -1799,9 +1857,21 @@ cdef class Lambdify(object):
                 raise ValueError("Output argument needs to be writeable")
             if not out.flags['C_CONTIGUOUS']:
                 raise ValueError("Output argument needs to be C-contiguous")
-        self._cb(np.ascontiguousarray(inp, dtype=np.float64), out)
+            if out.ndim > 1:
+                out = out.ravel
+                reshape = True
+            else:
+                reshape = False
+        self._cb(with_buffer(inp), out)
         if reshape:
-            out = out.reshape(self.out_shape)
+            if use_numpy:
+                out = out.reshape(self.out_shape)
+            else:
+                tmp = cython.view.array(shape=self.out_shape,
+                                        itemsize=sizeof(double), format='d')
+                out_view = out
+                memcpy(<double *>tmp.data, &out_view[0], sizeof(double)*self.out_size)
+                out = tmp
         return out
 
 
