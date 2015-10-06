@@ -1745,7 +1745,6 @@ cdef class Lambdify(object):
     cdef symengine.vec_basic args, exprs
 
     def __cinit__(self, args, exprs):
-        cdef symengine.vec_basic args_, exprs_
         cdef Basic e_
         try:
             self.out_shape = exprs.shape
@@ -1757,12 +1756,10 @@ cdef class Lambdify(object):
 
         for e in args:
             e_ = sympify(e)
-            args_.push_back(e_.thisptr)
-        self.args = args_
+            self.args.push_back(e_.thisptr)
         for e in exprs.flatten():
             e_ = sympify(e)
-            exprs_.push_back(e_.thisptr)
-        self.exprs = exprs_
+            self.exprs.push_back(e_.thisptr)
 
     cdef void _cb(self, cnp.ndarray[cnp.float64_t, ndim=1] inp,
                   cnp.ndarray[cnp.float64_t, ndim=1] out):
