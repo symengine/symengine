@@ -35,21 +35,90 @@ def _get_array():
     args = x, y, z = se.symbols('x y z')
     exprs = [x+y+z, se.sin(x)*se.log(y)*se.exp(z)]
     ref = [X+Y+Z, math.sin(X)*math.log(Y)*math.exp(Z)]
-    return args, exprs, inp, ref
+    def check(arr):
+        assert all([abs(x1-x2) < 1e-15 for x1, x2 in zip(ref, arr)])
+    return args, exprs, inp, check
 
 
 def test_array():
-    args, exprs, inp, ref = _get_array()
+    args, exprs, inp, check = _get_array()
     lmb = se.Lambdify(args, exprs)
     out = lmb(inp)
-    assert all([abs(x1-x2) < 1e-15 for x1, x2 in zip(ref, out)])
+    check(out)
 
 
 @pytest.mark.skipif(sys.version_info[0] < 3, reason='requires Py3')
 def test_array_out():
-    args, exprs, inp, ref = _get_array()
+    args, exprs, inp, check = _get_array()
     lmb = se.Lambdify(args, exprs)
-    out1 = array.array('d', [0, 0, 0])
+    out1 = array.array('d', [0]*len(exprs))
     out2 = lmb(inp, out1)
+    # Ensure buffer points to still data point:
+    assert out1.buffer_info()[0] == out2.__array_interface__['data'][0]
+    check(out1)
+    check(out2)
+    out2[:] = -1
+    assert np.allclose(out1[:], [-1]*len(exprs))
+
+@pytest.mark.skipif(sys.version_info[0] < 3, reason='requires Py3')
+def test_array_out_no_numpy():
+    args, exprs, inp, check = _get_array()
+    lmb = se.Lambdify(args, exprs)
+    out1 = array.array('d', [0]*len(exprs))
+    out2 = lmb(inp, out1, use_numpy=False)
+    # Ensure buffer points to still data point:
+    assert out1.buffer_info() == out2.buffer_info()
     assert out1 is out2
-    assert all([abs(x1-x2) < 1e-15 for x1, x2 in zip(ref, out1)])
+    check(out1)
+    check(out2)
+    assert out2[0] != -1
+    out1[0] = -1
+    assert out2[0] == -1
+
+def test_memview_out():
+    args, exprs, inp, check = _get_array()
+    lmb = se.Lambdify(args, exprs)
+    cy_arr1 = lmb(inp, use_numpy=False)
+    check(cy_arr1)
+    cy_arr2 = lmb(inp, cy_arr1, use_numpy=False)
+    check(cy_arr2)
+    assert cy_arr2[0] != -1
+    cy_arr1[0] = -1
+    assert cy_arr2[0] == -1
+
+def test_broadcast():
+    a = np.linspace(-np.pi, np.pi)
+    inp = np.vstack((np.cos(a), np.sin(a))).T  # 50 rows 2 cols
+    x, y = se.symbols('x y')
+    distance = se.Lambdify([x, y], [se.sqrt(x**2 + y**2)])
+    assert np.allclose(distance([inp[0, 0], inp[0, 1]]), [1])
+    dists = distance(inp)
+    assert dists.shape == (50, 1)
+    assert np.allclose(dists, 1)
+
+def test_real_in_complex_out():
+    x = se.Symbol('x')
+    lmb = se.Lambdify([x], [se.sqrt(x)])
+    assert abs(lmb([9]) - 3.0) < 1e-15
+    assert abs(lmb([-9], complex_out=True) - 3.0j) < 1e-15
+
+@pytest.mark.xfail
+def test_complex_in_real_out():
+    x = se.Symbol('x')
+    lmb = se.Lambdify([x], [x*x])
+    assert abs(lmb([3]) - 9) < 1e-15
+    # The line below emits:
+    # Exception RuntimeError: 'Not implemented.' in
+    # 'symengine.lib.symengine_wrapper.as_real' ignored
+    assert abs(lmb([3j], complex_in=True) + 9) < 1e-15
+
+def test_complex_in_real_out2():
+    x = se.Symbol('x')
+    lmb = se.Lambdify([x], [x*x])
+    assert abs(lmb([3j], complex_in=True, complex_out=True) + 9) < 3e-15
+
+def test_complex_in_complex_out():
+    x = se.Symbol('x')
+    lmb = se.Lambdify([x], [3 + x - 1j])
+    assert abs(lmb([11+13j], complex_in=True, complex_out=True) -
+               (14 + 12j)) < 1e-15

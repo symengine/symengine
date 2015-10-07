@@ -1705,10 +1705,14 @@ def eval_double(basic):
 # Prototype for Lambdify below
 
 import cython
+import warnings
 from operator import mul
 from functools import reduce
 from libc.string cimport memcpy
-cimport cpython.version  # To detect 2.6 since it lacks memoryview object
+
+# To detect 2.6 since it lacks memoryview object:
+from cpython.version cimport PY_MAJOR_VERSION, PY_MINOR_VERSION
+
 
 @cython.wraparound(False)
 @cython.boundscheck(False)
@@ -1718,6 +1722,14 @@ cdef void as_real(symengine.vec_basic vec, double[::1] out) nogil:
         out[i] = symengine.eval_double(deref(
             <symengine.RCP[const symengine.Basic]>(vec[i])))
 
+@cython.wraparound(False)
+@cython.boundscheck(False)
+cdef void as_complex(symengine.vec_basic vec, double complex[::1] out) nogil:
+    cdef size_t i
+    for i in range(vec.size()):
+        out[i] = symengine.eval_complex_double(deref(
+            <symengine.RCP[const symengine.Basic]>(vec[i])))
+
 
 cdef size_t _size(n):
     try:
@@ -1725,6 +1737,11 @@ cdef size_t _size(n):
     except AttributeError:
         return len(n)  # e.g. array.array
 
+def get_buffer_address(arr):
+    try:
+        return arr.data
+    except AttributeError:
+        return arr.buffer_info()[0]  # np.array
 
 def with_buffer(iterable):
     """ if iterable supports the buffer interface: return iterable,
@@ -1734,7 +1751,7 @@ def with_buffer(iterable):
         if PY_MAJOR_VERSION == 2 and PY_MINOR_VERSION == 6:
             eval('buffer(iterable)')
         else:
-            eval('memoryview(iterable)')
+            memoryview(iterable)
         # When dropping 2.6, above may be replaced by:
         # memoryview(iterable)
     except TypeError:
@@ -1798,10 +1815,13 @@ cdef class Lambdify(object):
             e_ = sympify(e)
             self.exprs.push_back(e_.thisptr)
 
-    cdef void _cb(self, double[::1] inp, double[::1] out):
+    # Blow follow 4 versions of same code double/complex input/output:
+    # we could replace this with some simple code generation, but for
+    # now it is easier to manually keep these 4 in sync.
+    cdef void _real_real(self, double[::1] inp, double[::1] out):
         cdef symengine.map_basic_basic d
         cdef symengine.vec_basic expr_subs
-        cdef size_t idx
+        cdef size_t idx, ninp = inp.size, nout = out.size
 
         if inp.size != self.in_size:
             raise ValueError("Size of inp incompatible with number of args.")
@@ -1809,29 +1829,102 @@ cdef class Lambdify(object):
             raise ValueError("Size of out incompatible with number of exprs.")
 
         # Create the substitution "dict"
-        for idx in range(inp.size):
+        for idx in range(ninp):
             d[self.args[idx]] = symengine.make_rcp_RealDouble(inp[idx])
 
         # Do the substitution
-        for idx in range(out.size):
+        for idx in range(nout):
             expr_subs.push_back(deref(self.exprs[idx]).subs(d))
 
         # Convert expr_subs to doubles write to out
         as_real(expr_subs, out)
 
-    def __call__(self, inp, out=None, use_numpy=None):
+    cdef void _real_complex(self, double[::1] inp, double complex[::1] out):
+        cdef symengine.map_basic_basic d
+        cdef symengine.vec_basic expr_subs
+        cdef size_t idx, ninp = inp.size, nout = out.size
+
+        if inp.size != self.in_size:
+            raise ValueError("Size of inp incompatible with number of args.")
+        if out.size != self.out_size:
+            raise ValueError("Size of out incompatible with number of exprs.")
+
+        # Create the substitution "dict"
+        for idx in range(ninp):
+            d[self.args[idx]] = symengine.make_rcp_RealDouble(inp[idx])
+
+        # Do the substitution
+        for idx in range(nout):
+            expr_subs.push_back(deref(self.exprs[idx]).subs(d))
+
+        # Convert expr_subs to doubles write to out
+        as_complex(expr_subs, out)
+
+    cdef void _complex_real(self, double complex[::1] inp, double[::1] out):
+        cdef symengine.map_basic_basic d
+        cdef symengine.vec_basic expr_subs
+        cdef size_t idx, ninp = inp.size, nout = out.size
+
+        if inp.size != self.in_size:
+            raise ValueError("Size of inp incompatible with number of args.")
+        if out.size != self.out_size:
+            raise ValueError("Size of out incompatible with number of exprs.")
+
+        # Create the substitution "dict"
+        for idx in range(ninp):
+            d[self.args[idx]] = symengine.make_rcp_ComplexDouble(inp[idx])
+
+        # Do the substitution
+        for idx in range(nout):
+            expr_subs.push_back(deref(self.exprs[idx]).subs(d))
+
+        # Convert expr_subs to doubles write to out
+        as_real(expr_subs, out)
+
+    cdef void _complex_complex(self, double complex[::1] inp, double complex[::1] out):
+        cdef symengine.map_basic_basic d
+        cdef symengine.vec_basic expr_subs
+        cdef size_t idx, ninp = inp.size, nout = out.size
+
+        if inp.size != self.in_size:
+            raise ValueError("Size of inp incompatible with number of args.")
+        if out.size != self.out_size:
+            raise ValueError("Size of out incompatible with number of exprs.")
+
+        # Create the substitution "dict"
+        for idx in range(ninp):
+            d[self.args[idx]] = symengine.make_rcp_ComplexDouble(inp[idx])
+
+        # Do the substitution
+        for idx in range(nout):
+            expr_subs.push_back(deref(self.exprs[idx]).subs(d))
+
+        # Convert expr_subs to doubles write to out
+        as_complex(expr_subs, out)
+
+    def __call__(self, inp, out=None, use_numpy=None, complex_in=False, complex_out=False):
         """
         Parameters
         ----------
         inp: array_like
         out: array_like or None (default)
-            Allows for for low-overhead use (output argument)
+            Allows for for low-overhead use (output argument), if None:
+            an output container will be allocated (NumPy ndarray or
+            cython.view.array)
         use_numpy: bool (default: None)
             None -> use numpy if available
+        complex_in: bool (default: False)
+            Input are complex numbers
+        complex_out: bool (default: False)
+            Output are complex numbers
         """
+        if complex_in and not complex_out:
+            warnings.warn("Known issues with complex_in=True, complex_out=False "
+                          "See xfail:ed test in tests. Use complex_in=True and"
+                          " complex_out=True instead")
         cdef cython.view.array tmp
-        cdef double[::1] out_view
-
+        cdef double[::1] real_out_view
+        cdef size_t nbroadcast = 1
         if use_numpy is None:
             try:
                 import numpy as np
@@ -1842,41 +1935,78 @@ cdef class Lambdify(object):
         elif use_numpy is True:
             import numpy as np
 
+        if use_numpy:
+            inp = np.ascontiguousarray(inp, dtype=np.complex128 if
+                                       complex_in else np.float64)
+
         if out is None:
             # allocate output container
             if use_numpy:
-                out = np.empty(self.out_size, dtype=np.float64)
+                if inp.size % self.in_size != 0:
+                    raise ValueError("Broadcasting failed")
+                nbroadcast = inp.size // self.in_size
+                out = np.empty(self.out_size*nbroadcast, dtype=np.complex128 if
+                               complex_out else np.float64)
             else:
                 out = cython.view.array(shape=(self.out_size,),
                                         itemsize=sizeof(double), format='d')
             reshape = len(self.out_shape) > 1
         else:
-            if not use_numpy:
-                raise NotImplementedError(
-                    "Only numpy ndarray supported as output parameter")
-            if out.shape != self.out_shape:
-                raise ValueError("Incompatible shape of output argument")
-            if out.dtype != np.float64:
-                raise ValueError("Output argument dtype not float64: %s" % out.dtype)
-            if not out.flags['WRITEABLE']:
-                raise ValueError("Output argument needs to be writeable")
-            if not out.flags['C_CONTIGUOUS']:
-                raise ValueError("Output argument needs to be C-contiguous")
-            if out.ndim > 1:
-                out = out.ravel
-                reshape = True
+            if use_numpy:
+                ori_buffer_address = get_buffer_address(out)
+                out = np.asarray(out, dtype=np.complex128 if
+                                 complex_out else np.float64)  # copy if needed
+                # print(get_buffer_address(out), ori_buffer_address)
+                # if get_buffer_address(out) != ori_buffer_address:
+                #     raise ValueError("Output parameter copied by np.asarray")
+                if out.size != nbroadcast*self.out_size:
+                    raise ValueError("Incompatible size of output argument")
+                if not out.flags['C_CONTIGUOUS']:
+                    raise ValueError("Output argument needs to be C-contiguous")
+                if out.shape[-len(self.out_shape):] != self.out_shape:
+                    raise ValueError("Incompatible shape of output argument")
+                if out.dtype != np.float64:
+                    raise ValueError("Output argument dtype not float64: %s" % out.dtype)
+                if not out.flags['WRITEABLE']:
+                    raise ValueError("Output argument needs to be writeable")
+                if out.ndim > 1:
+                    out = out.ravel()
+                    reshape = True
+                else:
+                    reshape = False
             else:
                 reshape = False
-        self._cb(with_buffer(inp), out)
-        if reshape:
-            if use_numpy:
+        if use_numpy:
+            # Cache-friendly broadcasting
+            if inp.ndim > 1:
+                inp = inp.ravel()
+            for idx in range(nbroadcast):
+                if (complex_in, complex_out) == (False, False):
+                    self._real_real(inp[idx*self.in_size:(idx+1)*self.in_size],
+                                    out[idx*self.out_size:(idx+1)*self.out_size])
+                elif (complex_in, complex_out) == (False, True):
+                    self._real_complex(inp[idx*self.in_size:(idx+1)*self.in_size],
+                                       out[idx*self.out_size:(idx+1)*self.out_size])
+                elif (complex_in, complex_out) == (True, False):
+                    self._complex_real(inp[idx*self.in_size:(idx+1)*self.in_size],
+                                       out[idx*self.out_size:(idx+1)*self.out_size])
+                elif (complex_in, complex_out) == (True, True):
+                    self._complex_complex(inp[idx*self.in_size:(idx+1)*self.in_size],
+                                          out[idx*self.out_size:(idx+1)*self.out_size])
+        else:
+            self._real_real(with_buffer(inp), out)
+
+        if use_numpy:
+            if nbroadcast > 1:
+                out = out.reshape((nbroadcast,) + self.out_shape)
+            if reshape:
                 out = out.reshape(self.out_shape)
-            else:
-                tmp = cython.view.array(shape=self.out_shape,
-                                        itemsize=sizeof(double), format='d')
-                out_view = out
-                memcpy(<double *>tmp.data, &out_view[0], sizeof(double)*self.out_size)
-                out = tmp
+        elif reshape:
+            tmp = cython.view.array(shape=self.out_shape,
+                                    itemsize=sizeof(double), format='d')
+            real_out_view = out
+            memcpy(<double *>tmp.data, &real_out_view[0], sizeof(double)*self.out_size)
+            out = tmp
         return out
 
 
