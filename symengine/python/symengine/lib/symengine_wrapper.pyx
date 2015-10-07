@@ -1765,6 +1765,13 @@ def with_buffer(iterable):
     else:
         return iterable  # iterable supports memoryview
 
+ctypedef fused real_type:
+    cython.doublecomplex
+    cython.double
+
+ctypedef fused real_type2:
+    cython.doublecomplex
+    cython.double
 
 cdef class Lambdify(object):
     """
@@ -1815,10 +1822,11 @@ cdef class Lambdify(object):
             e_ = sympify(e)
             self.exprs.push_back(e_.thisptr)
 
-    # Blow follow 4 versions of same code double/complex input/output:
-    # we could replace this with some simple code generation, but for
-    # now it is easier to manually keep these 4 in sync.
-    cdef void _real_real(self, double[::1] inp, double[::1] out):
+    # Two fused types real_type and real_type2 are the same, but with Cython >= 0.21,
+    # fused types have to be declared under different names to generate different
+    # methods for each combination of inp and out
+
+    cdef void _real(self, real_type[::1] inp, real_type2[::1] out):
         cdef symengine.map_basic_basic d
         cdef symengine.vec_basic expr_subs
         cdef size_t idx, ninp = inp.size, nout = out.size
@@ -1830,77 +1838,32 @@ cdef class Lambdify(object):
 
         # Create the substitution "dict"
         for idx in range(ninp):
-            d[self.args[idx]] = symengine.make_rcp_RealDouble(inp[idx])
+            if real_type == cython.double:
+                d[self.args[idx]] = symengine.make_rcp_RealDouble(inp[idx])
+            else:
+                d[self.args[idx]] = symengine.make_rcp_ComplexDouble(inp[idx])
 
         # Do the substitution
         for idx in range(nout):
             expr_subs.push_back(deref(self.exprs[idx]).subs(d))
 
         # Convert expr_subs to doubles write to out
-        as_real(expr_subs, out)
+        if real_type2 == cython.double:
+            as_real(expr_subs, out)
+        else:
+            as_complex(expr_subs, out)
+
+    cdef void _real_real(self, double[::1] inp, double[::1] out):
+        self._real(inp, out)
 
     cdef void _real_complex(self, double[::1] inp, double complex[::1] out):
-        cdef symengine.map_basic_basic d
-        cdef symengine.vec_basic expr_subs
-        cdef size_t idx, ninp = inp.size, nout = out.size
-
-        if inp.size != self.in_size:
-            raise ValueError("Size of inp incompatible with number of args.")
-        if out.size != self.out_size:
-            raise ValueError("Size of out incompatible with number of exprs.")
-
-        # Create the substitution "dict"
-        for idx in range(ninp):
-            d[self.args[idx]] = symengine.make_rcp_RealDouble(inp[idx])
-
-        # Do the substitution
-        for idx in range(nout):
-            expr_subs.push_back(deref(self.exprs[idx]).subs(d))
-
-        # Convert expr_subs to doubles write to out
-        as_complex(expr_subs, out)
+        self._real(inp, out)
 
     cdef void _complex_real(self, double complex[::1] inp, double[::1] out):
-        cdef symengine.map_basic_basic d
-        cdef symengine.vec_basic expr_subs
-        cdef size_t idx, ninp = inp.size, nout = out.size
-
-        if inp.size != self.in_size:
-            raise ValueError("Size of inp incompatible with number of args.")
-        if out.size != self.out_size:
-            raise ValueError("Size of out incompatible with number of exprs.")
-
-        # Create the substitution "dict"
-        for idx in range(ninp):
-            d[self.args[idx]] = symengine.make_rcp_ComplexDouble(inp[idx])
-
-        # Do the substitution
-        for idx in range(nout):
-            expr_subs.push_back(deref(self.exprs[idx]).subs(d))
-
-        # Convert expr_subs to doubles write to out
-        as_real(expr_subs, out)
+        self._real(inp, out)
 
     cdef void _complex_complex(self, double complex[::1] inp, double complex[::1] out):
-        cdef symengine.map_basic_basic d
-        cdef symengine.vec_basic expr_subs
-        cdef size_t idx, ninp = inp.size, nout = out.size
-
-        if inp.size != self.in_size:
-            raise ValueError("Size of inp incompatible with number of args.")
-        if out.size != self.out_size:
-            raise ValueError("Size of out incompatible with number of exprs.")
-
-        # Create the substitution "dict"
-        for idx in range(ninp):
-            d[self.args[idx]] = symengine.make_rcp_ComplexDouble(inp[idx])
-
-        # Do the substitution
-        for idx in range(nout):
-            expr_subs.push_back(deref(self.exprs[idx]).subs(d))
-
-        # Convert expr_subs to doubles write to out
-        as_complex(expr_subs, out)
+        self._real(inp, out)
 
     def __call__(self, inp, out=None, use_numpy=None, complex_in=False, complex_out=False):
         """
