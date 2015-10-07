@@ -1765,11 +1765,11 @@ def with_buffer(iterable):
     else:
         return iterable  # iterable supports memoryview
 
-ctypedef fused real_type:
+ctypedef fused InType:
     cython.doublecomplex
     cython.double
 
-ctypedef fused real_type2:
+ctypedef fused OutType:
     cython.doublecomplex
     cython.double
 
@@ -1822,11 +1822,11 @@ cdef class Lambdify(object):
             e_ = sympify(e)
             self.exprs.push_back(e_.thisptr)
 
-    # Two fused types real_type and real_type2 are the same, but with Cython >= 0.21,
+    # Two fused types InType and OutType are the same, but with Cython >= 0.21,
     # fused types have to be declared under different names to generate different
     # methods for each combination of inp and out
 
-    cdef void _real(self, real_type[::1] inp, real_type2[::1] out):
+    cdef void _real(self, InType[::1] inp, OutType[::1] out):
         cdef symengine.map_basic_basic d
         cdef symengine.vec_basic expr_subs
         cdef size_t idx, ninp = inp.size, nout = out.size
@@ -1838,7 +1838,7 @@ cdef class Lambdify(object):
 
         # Create the substitution "dict"
         for idx in range(ninp):
-            if real_type == cython.double:
+            if InType == cython.double:
                 d[self.args[idx]] = symengine.make_rcp_RealDouble(inp[idx])
             else:
                 d[self.args[idx]] = symengine.make_rcp_ComplexDouble(inp[idx])
@@ -1848,7 +1848,7 @@ cdef class Lambdify(object):
             expr_subs.push_back(deref(self.exprs[idx]).subs(d))
 
         # Convert expr_subs to doubles write to out
-        if real_type2 == cython.double:
+        if OutType == cython.double:
             as_real(expr_subs, out)
         else:
             as_complex(expr_subs, out)
