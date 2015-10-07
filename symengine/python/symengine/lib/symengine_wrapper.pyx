@@ -1708,7 +1708,7 @@ import cython
 from operator import mul
 from functools import reduce
 from libc.string cimport memcpy
-
+cimport cpython.version  # To detect 2.6 since it lacks memoryview object
 
 @cython.wraparound(False)
 @cython.boundscheck(False)
@@ -1731,7 +1731,12 @@ def with_buffer(iterable):
         if not, return a cython.view.array object (which does) """
     cdef double[::1] cy_arr_view
     try:
-        memoryview(iterable)
+        if PY_MAJOR_VERSION == 2 and PY_MINOR_VERSION == 6:
+            eval('buffer(iterable)')
+        else:
+            eval('memoryview(iterable)')
+        # When dropping 2.6, above may be replaced by:
+        # memoryview(iterable)
     except TypeError:
         # Cython's array to the rescue
         cy_arr =  cython.view.array(shape=(_size(iterable),),
