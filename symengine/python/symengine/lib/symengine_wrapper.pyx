@@ -1826,7 +1826,7 @@ cdef class Lambdify(object):
     # fused types have to be declared under different names to generate different
     # methods for each combination of inp and out
 
-    cdef void _real(self, InType[::1] inp, OutType[::1] out):
+    cdef void _eval(self, InType[::1] inp, OutType[::1] out):
         cdef symengine.map_basic_basic d
         cdef symengine.vec_basic expr_subs
         cdef size_t idx, ninp = inp.size, nout = out.size
@@ -1854,16 +1854,16 @@ cdef class Lambdify(object):
             as_complex(expr_subs, out)
 
     cdef void _real_real(self, double[::1] inp, double[::1] out):
-        self._real(inp, out)
+        self._eval(inp, out)
 
     cdef void _real_complex(self, double[::1] inp, double complex[::1] out):
-        self._real(inp, out)
+        self._eval(inp, out)
 
     cdef void _complex_real(self, double complex[::1] inp, double[::1] out):
-        self._real(inp, out)
+        self._eval(inp, out)
 
     cdef void _complex_complex(self, double complex[::1] inp, double complex[::1] out):
-        self._real(inp, out)
+        self._eval(inp, out)
 
     def __call__(self, inp, out=None, use_numpy=None, complex_in=False, complex_out=False):
         """

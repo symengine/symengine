@@ -6,19 +6,29 @@ import math
 import sys
 
 import pytest
-import numpy as np
+
+try:
+    import numpy as np
+    HAVE_NUMPY=True
+except ImportError:
+    HAVE_NUMPY=False
+
 
 import symengine as se
 
+
+def allclose(vec1, vec2, rtol=1e-13, atol=1e-13):
+    return all([abs(a-b) < (atol + rtol*a) for a, b in zip(vec1, vec2)])
 
 def test_Lambdify():
     n = 7
     args = x, y, z = se.symbols('x y z')
     l = se.Lambdify(args, [x+y+z, x**2, (x-y)/z, x*y*z])
-    assert np.allclose(l(range(n, n+len(args))),
+    assert allclose(l(range(n, n+len(args))),
                        [3*n+3, n**2, -1/(n+2), n*(n+1)*(n+2)])
 
 
+@pytest.mark.skipif(not HAVE_NUMPY, reason='requires numpy')
 def test_Lambdify_2dim_numpy():
     args = x, y = se.symbols('x y')
     exprs = np.array([[x+y, x*y],
@@ -47,7 +57,8 @@ def test_array():
     check(out)
 
 
-@pytest.mark.skipif(sys.version_info[0] < 3, reason='requires Py3')
+@pytest.mark.skipif(sys.version_info[0] < 3 or not HAVE_NUMPY,
+                    reason='requires Py3 and NumPy')
 def test_array_out():
     args, exprs, inp, check = _get_array()
     lmb = se.Lambdify(args, exprs)
@@ -86,6 +97,7 @@ def test_memview_out():
     cy_arr1[0] = -1
     assert cy_arr2[0] == -1
 
+@pytest.mark.skipif(not HAVE_NUMPY, reason='requires numpy')
 def test_broadcast():
     a = np.linspace(-np.pi, np.pi)
     inp = np.vstack((np.cos(a), np.sin(a))).T  # 50 rows 2 cols
@@ -122,3 +134,23 @@ def test_complex_in_complex_out():
     lmb = se.Lambdify([x], [3 + x - 1j])
     assert abs(lmb([11+13j], complex_in=True, complex_out=True) -
                (14 + 12j)) < 1e-15
+
+
+@pytest.mark.skipif(not HAVE_NUMPY, reason='requires numpy')
+def test_cse():
+    # More of a demo than a test. This might be non-trivial enough
+    # to warrant a helper function in Lambdify's __init__
+    import sympy as sp
+    inp = [11, 13]
+    ref = [121+13, 13/121, 13*121 + 11]
+    args = x, y = sp.symbols('x y')
+    exprs = [x*x + y, y/(x*x), y*x*x+x]
+    subs, new_exprs = sp.cse(exprs)
+    cse_symbs, cse_exprs = zip(*subs)
+    lmb = se.Lambdify(args + cse_symbs, new_exprs)
+    cse_lambda = se.Lambdify(args, cse_exprs)
+    cse_vals = cse_lambda(inp)
+    new_inp = np.concatenate((inp, cse_vals))
+    print(args, cse_symbs, new_exprs, new_inp, cse_vals)
+    out = lmb(new_inp)
+    assert allclose(out, ref)
