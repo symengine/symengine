@@ -1737,33 +1737,35 @@ cdef size_t _size(n):
     except AttributeError:
         return len(n)  # e.g. array.array
 
-def get_buffer_address(arr):
-    try:
-        return arr.data
-    except AttributeError:
-        return arr.buffer_info()[0]  # np.array
 
-def with_buffer(iterable):
+def with_buffer(iterable, complex_t=False):
     """ if iterable supports the buffer interface: return iterable,
         if not, return a cython.view.array object (which does) """
-    cdef double[::1] cy_arr_view
-    try:
-        if PY_MAJOR_VERSION == 2 and PY_MINOR_VERSION == 6:
-            eval('buffer(iterable)')
+    cdef double[::1] real_view
+    cdef double complex[::1] cmplx_view
+    if complex_t:
+        try:
+            cmplx_view = iterable
+        except (ValueError, TypeError):
+            cmplx_view = cython.view.array(shape=(_size(iterable),),
+                                           itemsize=sizeof(double complex), format='Zd')
+            for i in range(_size(iterable)):
+                cmplx_view[i] = iterable[i]
+            return cmplx_view
         else:
-            memoryview(iterable)
-        # When dropping 2.6, above may be replaced by:
-        # memoryview(iterable)
-    except TypeError:
-        # Cython's array to the rescue
-        cy_arr =  cython.view.array(shape=(_size(iterable),),
-                                    itemsize=sizeof(double), format='d')
-        cy_arr_view = cy_arr
-        for i in range(_size(iterable)):
-            cy_arr_view[i] = iterable[i]
-        return cy_arr
+            return iterable  # already supports memoryview
     else:
-        return iterable  # iterable supports memoryview
+        try:
+            real_view = iterable
+        except (ValueError, TypeError):
+            real_view = cython.view.array(shape=(_size(iterable),),
+                                          itemsize=sizeof(double), format='d')
+            for i in range(_size(iterable)):
+                real_view[i] = iterable[i]
+            return real_view
+        else:
+            return iterable  # already supports memview
+
 
 ctypedef fused InType:
     cython.doublecomplex
@@ -1870,6 +1872,7 @@ cdef class Lambdify(object):
         Parameters
         ----------
         inp: array_like
+            last dimension must be equal to number of arguments
         out: array_like or None (default)
             Allows for for low-overhead use (output argument), if None:
             an output container will be allocated (NumPy ndarray or
@@ -1888,6 +1891,9 @@ cdef class Lambdify(object):
         cdef cython.view.array tmp
         cdef double[::1] real_out_view
         cdef size_t nbroadcast = 1
+
+        inp_shape = getattr(inp, 'shape', (len(inp),))
+
         if use_numpy is None:
             try:
                 import numpy as np
@@ -1913,15 +1919,11 @@ cdef class Lambdify(object):
             else:
                 out = cython.view.array(shape=(self.out_size,),
                                         itemsize=sizeof(double), format='d')
-            reshape = len(self.out_shape) > 1
+            reshape_out = len(self.out_shape) > 1
         else:
             if use_numpy:
-                ori_buffer_address = get_buffer_address(out)
                 out = np.asarray(out, dtype=np.complex128 if
                                  complex_out else np.float64)  # copy if needed
-                # print(get_buffer_address(out), ori_buffer_address)
-                # if get_buffer_address(out) != ori_buffer_address:
-                #     raise ValueError("Output parameter copied by np.asarray")
                 if out.size != nbroadcast*self.out_size:
                     raise ValueError("Incompatible size of output argument")
                 if not out.flags['C_CONTIGUOUS']:
@@ -1934,37 +1936,33 @@ cdef class Lambdify(object):
                     raise ValueError("Output argument needs to be writeable")
                 if out.ndim > 1:
                     out = out.ravel()
-                    reshape = True
+                    reshape_out = True
                 else:
-                    reshape = False
+                    reshape_out = False
             else:
-                reshape = False
-        if use_numpy:
-            # Cache-friendly broadcasting
-            if inp.ndim > 1:
-                inp = inp.ravel()
-            for idx in range(nbroadcast):
-                if (complex_in, complex_out) == (False, False):
-                    self._real_real(inp[idx*self.in_size:(idx+1)*self.in_size],
-                                    out[idx*self.out_size:(idx+1)*self.out_size])
-                elif (complex_in, complex_out) == (False, True):
-                    self._real_complex(inp[idx*self.in_size:(idx+1)*self.in_size],
-                                       out[idx*self.out_size:(idx+1)*self.out_size])
-                elif (complex_in, complex_out) == (True, False):
-                    self._complex_real(inp[idx*self.in_size:(idx+1)*self.in_size],
-                                       out[idx*self.out_size:(idx+1)*self.out_size])
-                elif (complex_in, complex_out) == (True, True):
-                    self._complex_complex(inp[idx*self.in_size:(idx+1)*self.in_size],
-                                          out[idx*self.out_size:(idx+1)*self.out_size])
+                reshape_out = False
+        if use_numpy and inp.ndim > 1:
+            inp = inp.ravel()
         else:
-            self._real_real(with_buffer(inp), out)
+            inp = with_buffer(inp, complex_in)
+
+        for idx in range(nbroadcast):
+            if (complex_in, complex_out) == (False, False):
+                self._real_real(inp[idx*self.in_size:(idx+1)*self.in_size],
+                                out[idx*self.out_size:(idx+1)*self.out_size])
+            elif (complex_in, complex_out) == (False, True):
+                self._real_complex(inp[idx*self.in_size:(idx+1)*self.in_size],
+                                   out[idx*self.out_size:(idx+1)*self.out_size])
+            elif (complex_in, complex_out) == (True, False):
+                self._complex_real(inp[idx*self.in_size:(idx+1)*self.in_size],
+                                   out[idx*self.out_size:(idx+1)*self.out_size])
+            elif (complex_in, complex_out) == (True, True):
+                self._complex_complex(inp[idx*self.in_size:(idx+1)*self.in_size],
+                                      out[idx*self.out_size:(idx+1)*self.out_size])
 
         if use_numpy:
-            if nbroadcast > 1:
-                out = out.reshape((nbroadcast,) + self.out_shape)
-            if reshape:
-                out = out.reshape(self.out_shape)
-        elif reshape:
+            out = out.reshape(inp_shape[:-1] + self.out_shape)
+        elif reshape_out:
             tmp = cython.view.array(shape=self.out_shape,
                                     itemsize=sizeof(double), format='d')
             real_out_view = out
