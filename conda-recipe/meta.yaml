@@ -1,0 +1,27 @@
+package:
+  name: symengine
+  version: "0.1.1"
+
+source:
+  path: ../
+
+requirements:
+  run:
+    - python
+    - gmp
+    - mpfr
+  build:
+    - cmake
+    - python
+    - gmp
+    - mpfr
+
+test:
+  requires:
+    - cmake
+    - pytest
+
+about:
+  home: https://github.com/sympy/symengine
+  license: BSD
+  summary: 'SymEngine is a fast symbolic manipulation library, written in C++'

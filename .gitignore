@@ -38,6 +38,7 @@ symengine/python/symengine/lib/config.pxi
 
 # Python build files
 build*
+!conda-recipe/build.sh
 *__pycache__*
 *.pyc
 
