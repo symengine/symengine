@@ -52,6 +52,21 @@ set(PYTHON_INSTALL_PATH ${PYTHON_INSTALL_PATH_tmp}
     CACHE BOOL "Python install path")
 message(STATUS "Python install path: ${PYTHON_INSTALL_PATH}")
 
+if (NOT WIN32)
+    execute_process(
+        COMMAND ${PYTHON_BIN} -c "from distutils.sysconfig import get_config_var; print(get_config_var('SOABI'))"
+        OUTPUT_VARIABLE PYTHON_EXTENSION_SOABI_tmp
+        )
+    string(STRIP ${PYTHON_EXTENSION_SOABI_tmp} PYTHON_EXTENSION_SOABI_tmp)
+    if (NOT "${PYTHON_EXTENSION_SOABI_tmp}" STREQUAL "None")
+        set(PYTHON_EXTENSION_SOABI_tmp ".${PYTHON_EXTENSION_SOABI_tmp}")
+    else()
+        set(PYTHON_EXTENSION_SOABI_tmp "")
+    endif()
+endif()
+set(PYTHON_EXTENSION_SOABI ${PYTHON_EXTENSION_SOABI_tmp}
+    CACHE STRING "Suffix for python extensions")
+
 INCLUDE(FindPackageHandleStandardArgs)
 FIND_PACKAGE_HANDLE_STANDARD_ARGS(PYTHON DEFAULT_MSG PYTHON_LIBRARY PYTHON_INCLUDE_PATH PYTHON_INSTALL_PATH)
 
@@ -99,6 +114,7 @@ macro(ADD_PYTHON_LIBRARY name)
         add_library(${name} SHARED ${ARGN})
     ENDIF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     set_target_properties(${name} PROPERTIES PREFIX "")
+    set_target_properties(${name} PROPERTIES OUTPUT_NAME "${name}${PYTHON_EXTENSION_SOABI}")
     target_link_libraries(${name} ${PYTHON_LIBRARY})
     IF(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
         set_target_properties(${name} PROPERTIES SUFFIX ".pyd")
