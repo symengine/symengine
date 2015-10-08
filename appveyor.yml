@@ -91,7 +91,7 @@ build_script:
 test_script:
 - ctest --output-on-failure
 - if [%WITH_PYTHON%]==[yes] cd symengine/python
-- if [%WITH_PYTHON%]==[yes] if not [%COMPILER%]==[MSVC15] nosetests
+- if [%WITH_PYTHON%]==[yes] if not [%COMPILER%]==[MSVC15] py.test
 - if [%WITH_PYTHON%]==[yes] mkdir empty && cd empty
 - if [%WITH_PYTHON%]==[yes] python C:\projects\symengine\bin\test_python.py
 
