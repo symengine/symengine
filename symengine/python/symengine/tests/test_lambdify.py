@@ -35,7 +35,6 @@ def _get_2_to_2by2_numpy():
                       [x/y, x**y]])
     l = se.Lambdify(args, exprs)
     def check(A, inp):
-        print(A)
         X, Y = inp
         assert abs(A[0, 0] - (X+Y)) < 1e-15
         assert abs(A[0, 1] - (X*Y)) < 1e-15
@@ -47,7 +46,9 @@ def _get_2_to_2by2_numpy():
 def test_Lambdify_2dim_numpy():
     lmb, check = _get_2_to_2by2_numpy()
     for inp in [(5, 7), np.array([5, 7]), [5.0, 7.0]]:
-        check(lmb(inp), inp)
+        A = lmb(inp)
+        assert A.shape == (2, 2)
+        check(A, inp)
 
 
 def _get_array():
@@ -169,7 +170,6 @@ def test_cse():
     cse_lambda = se.Lambdify(args, cse_exprs)
     cse_vals = cse_lambda(inp)
     new_inp = np.concatenate((inp, cse_vals))
-    print(args, cse_symbs, new_exprs, new_inp, cse_vals)
     out = lmb(new_inp)
     assert allclose(out, ref)
 
@@ -192,3 +192,26 @@ def test_broadcast_fortran():
     assert A.shape == (3, 2, 2)
     for i in range(n):
         check(A[i, ...], inp[i, :])
+
+
+def _get_1_to_2by3_matrix():
+    x = se.symbols('x')
+    args = x,
+    exprs = se.DenseMatrix(2, 3, [x+1, x+2, x+3,
+                                  1/x, 1/(x*x), 1/(x**3.0)])
+    l = se.Lambdify(args, exprs)
+    def check(A, inp):
+        X, = inp
+        assert abs(A[0, 0] - (X+1)) < 1e-15
+        assert abs(A[0, 1] - (X+2)) < 1e-15
+        assert abs(A[0, 2] - (X+3)) < 1e-15
+        assert abs(A[1, 0] - (1/X)) < 1e-15
+        assert abs(A[1, 1] - (1/(X*X))) < 1e-15
+        assert abs(A[1, 2] - (1/(X**3.0))) < 1e-15
+    return l, check
+
+
+def test_2dim_Matrix():
+    l, check = _get_1_to_2by3_matrix()
+    inp = [7]
+    check(l(inp), inp)
