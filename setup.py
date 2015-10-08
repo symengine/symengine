@@ -15,6 +15,7 @@ if use_distutils is not None:
               format(use_distutils))
 
 from distutils.command.build import build as _build
+from distutils.sysconfig import get_config_vars
 
 if use_setuptools:
     try:
@@ -101,6 +102,8 @@ class InstallWithCmake(_install):
 package_dir = 'symengine/python/symengine' if path.exists(path.join(path.dirname(path.realpath(__file__)),
               'symengine/python/symengine')) else 'symengine'
 
+wrapper_extension = get_config_vars().get('EXT_SUFFIX', '.so')
+
 long_description = '''
 SymEngine is a standalone fast C++ symbolic manipulation library.
 Optional thin Python wrappers (SymEngine) allow easy usage from Python and
@@ -116,7 +119,7 @@ setup(name = "symengine",
       url = "https://github.com/sympy/symengine",
       package_dir = {'symengine': package_dir},
       packages=['symengine', 'symengine.lib', 'symengine.tests'],
-      package_data= {'symengine' : ['lib/symengine_wrapper.so']},
+      package_data= {'symengine' : ['lib/symengine_wrapper' + wrapper_extension]},
       cmdclass={
           'build' : BuildWithCmake,
           'install' : InstallWithCmake,
