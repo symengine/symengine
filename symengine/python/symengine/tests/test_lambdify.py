@@ -34,6 +34,7 @@ def _get_2_to_2by2_numpy():
     exprs = np.array([[x+y, x*y],
                       [x/y, x**y]])
     l = se.Lambdify(args, exprs)
+
     def check(A, inp):
         X, Y = inp
         assert abs(A[0, 0] - (X+Y)) < 1e-15
@@ -41,6 +42,7 @@ def _get_2_to_2by2_numpy():
         assert abs(A[1, 0] - (X/Y)) < 1e-15
         assert abs(A[1, 1] - (X**Y)) < 1e-13
     return l, check
+
 
 @pytest.mark.skipif(not HAVE_NUMPY, reason='requires numpy')
 def test_Lambdify_2dim_numpy():
@@ -155,25 +157,35 @@ def test_complex_in_complex_out():
                (14 + 12j)) < 1e-15
 
 
-@pytest.mark.skipif(not HAVE_NUMPY, reason='requires numpy')
-def test_cse():
+def LambdifyCSE(args, exprs):
     # More of a demo than a test. This might be non-trivial enough
     # to warrant a helper function in Lambdify's __init__
+    import sympy as sp
+    subs, new_exprs = sp.cse(exprs)
+    cse_symbs, cse_exprs = zip(*subs)
+    lmb = se.Lambdify(args + cse_symbs, new_exprs)
+    cse_lambda = se.Lambdify(args, cse_exprs)
+
+    def cb(inp, out=None, **kwargs):
+        cse_vals = cse_lambda(inp)
+        new_inp = np.concatenate((inp, cse_vals))
+        return lmb(new_inp, out)
+    return cb
+
+
+@pytest.mark.skipif(not HAVE_NUMPY, reason='requires numpy')
+def test_cse():
     import sympy as sp
     inp = [11, 13]
     ref = [121+13, 13/121, 13*121 + 11]
     args = x, y = sp.symbols('x y')
     exprs = [x*x + y, y/(x*x), y*x*x+x]
-    subs, new_exprs = sp.cse(exprs)
-    cse_symbs, cse_exprs = zip(*subs)
-    lmb = se.Lambdify(args + cse_symbs, new_exprs)
-    cse_lambda = se.Lambdify(args, cse_exprs)
-    cse_vals = cse_lambda(inp)
-    new_inp = np.concatenate((inp, cse_vals))
-    out = lmb(new_inp)
+    lmb = LambdifyCSE(args, exprs)
+    out = lmb(inp)
     assert allclose(out, ref)
 
 
+@pytest.mark.skipif(not HAVE_NUMPY, reason='requires numpy')
 def test_broadcast_c():
     n = 3
     inp = np.arange(2*n).reshape((n, 2))
@@ -184,6 +196,7 @@ def test_broadcast_c():
         check(A[i, ...], inp[i, :])
 
 
+@pytest.mark.skipif(not HAVE_NUMPY, reason='requires numpy')
 def test_broadcast_fortran():
     n = 3
     inp = np.arange(2*n).reshape((n, 2), order='F')
@@ -200,8 +213,10 @@ def _get_1_to_2by3_matrix():
     exprs = se.DenseMatrix(2, 3, [x+1, x+2, x+3,
                                   1/x, 1/(x*x), 1/(x**3.0)])
     l = se.Lambdify(args, exprs)
+
     def check(A, inp):
         X, = inp
+        print(np.array(A), np.array(A).shape)
         assert abs(A[0, 0] - (X+1)) < 1e-15
         assert abs(A[0, 1] - (X+2)) < 1e-15
         assert abs(A[0, 2] - (X+3)) < 1e-15
@@ -211,7 +226,72 @@ def _get_1_to_2by3_matrix():
     return l, check
 
 
-def test_2dim_Matrix():
+def _test_2dim_Matrix(use_numpy):
     l, check = _get_1_to_2by3_matrix()
     inp = [7]
-    check(l(inp), inp)
+    check(l(inp, use_numpy=use_numpy), inp)
+
+
+@pytest.mark.xfail  # output shapes currently requires NumPy
+def test_2dim_Matrix():
+    _test_2dim_Matrix(False)
+
+
+@pytest.mark.skipif(not HAVE_NUMPY, reason='requires numpy')
+def test_2dim_Matrix_numpy():
+    _test_2dim_Matrix(True)
+
+
+def _test_2dim_Matrix_broadcast(use_numpy):
+    l, check = _get_1_to_2by3_matrix()
+    inp = range(1, 5)
+    out = l(inp, use_numpy=use_numpy)
+    print(np.array(out))  # debug
+    for i in range(len(inp)):
+        check(out[i, ...], (inp[i],))
+
+
+@pytest.mark.xfail  # output shapes currently requires NumPy
+def test_2dim_Matrix_broadcast():
+    _test_2dim_Matrix_broadcast(False)
+
+
+@pytest.mark.skipif(not HAVE_NUMPY, reason='requires numpy')
+def test_2dim_Matrix_broadcast_numpy():
+    _test_2dim_Matrix_broadcast(True)
+
+
+@pytest.mark.skipif(not HAVE_NUMPY, reason='requires numpy')
+def test_jacobian():
+    x, y = se.symbols('x, y')
+    args = se.DenseMatrix(2, 1, [x, y])
+    v = se.DenseMatrix(2, 1, [x**3 * y, (x+1)*(y+1)])
+    jac = v.jacobian(args)
+    lmb = se.Lambdify(args, jac)
+    out = np.empty((2, 2))
+    inp = X, Y = 7, 11
+    lmb(inp, out)
+    assert np.allclose(out, [[3 * X**2 * Y, X**3],
+                             [Y + 1, X + 1]])
+
+
+def test_excessive_args():
+    x = se.symbols('x')
+    lmb = se.Lambdify([x], [-x])
+    inp = np.ones(2)
+    out = lmb(inp)
+    assert np.allclose(inp, [1, 1])
+    assert len(out) == 2  # broad casting
+    assert np.allclose(out, -1)
+
+
+def test_excessive_out():
+    x = se.symbols('x')
+    lmb = se.Lambdify([x], [-x])
+    inp = np.ones(1)
+    out = np.ones(2)
+    out = lmb(inp, out)
+    assert np.allclose(inp, [1, 1])
+    assert out.shape == (2,)
+    assert out[0] == -1
+    assert out[1] == 1

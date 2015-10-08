@@ -1946,10 +1946,17 @@ cdef class Lambdify(object):
                           " complex_out=True instead")
         cdef cython.view.array tmp
         cdef double[::1] real_out_view, real_inp_view
+        cdef double* out_ptr
         cdef double complex[::1] cmplx_out_view, cmplx_inp_view
         cdef size_t nbroadcast = 1
 
         inp_shape = getattr(inp, 'shape', (len(inp),))
+        inp_size = reduce(mul, inp_shape)
+        if inp_size % self.inp_size != 0:
+            raise ValueError("Broadcasting failed")
+        nbroadcast = inp_size // self.inp_size
+        new_out_shape = ((nbroadcast,) if nbroadcast > 1 else ()) + self.out_shape
+        new_out_size = nbroadcast * self.out_size
 
         if use_numpy is None:
             try:
@@ -1978,28 +1985,28 @@ cdef class Lambdify(object):
                 inp = inp.ravel()
         else:
             inp = with_buffer(inp, complex_in)
+
         if out is None:
             # allocate output container
             if use_numpy:
-                if inp.size % self.inp_size != 0:
-                    raise ValueError("Broadcasting failed")
                 nbroadcast = inp.size // self.inp_size
-                out = np.empty(self.out_size*nbroadcast, dtype=np.complex128 if
+                out = np.empty(new_out_size, dtype=np.complex128 if
                                complex_out else np.float64)
             else:
-                out = cython.view.array(shape=(self.out_size,),
+                out = cython.view.array(shape=new_out_shape,
                                         itemsize=sizeof(double), format='d')
-            reshape_out = len(self.out_shape) > 1
+            reshape_out = len(new_out_shape) > 1
         else:
             if use_numpy:
                 out = np.asarray(out, dtype=np.complex128 if
                                  complex_out else np.float64)  # copy if needed
-                if out.size != nbroadcast*self.out_size:
+                if out.size < new_out_size:
                     raise ValueError("Incompatible size of output argument")
                 if not out.flags['C_CONTIGUOUS']:
                     raise ValueError("Output argument needs to be C-contiguous")
-                if out.shape[-len(self.out_shape):] != self.out_shape:
-                    raise ValueError("Incompatible shape of output argument")
+                for idx, length in enumerate(out.shape[-len(self.out_shape)::-1]):
+                    if length < self.out_shape[-idx]:
+                        raise ValueError("Incompatible shape of output argument")
                 if out.dtype != np.float64:
                     raise ValueError("Output argument dtype not float64: %s" % out.dtype)
                 if not out.flags['WRITEABLE']:
@@ -2008,28 +2015,15 @@ cdef class Lambdify(object):
                     out = out.ravel()
                     reshape_out = True
                 else:
+                    # The user passed a 1-dimensional output argument,
+                    # we trust the user to do the right thing.
                     reshape_out = False
             else:
                 out = with_buffer(out, complex_out)
                 reshape_out = False  # only reshape if we allocated.
-        #### This works for Numpy:
-        # for idx in range(nbroadcast):
-        #     if (complex_in, complex_out) == (False, False):
-        #         self._real_real(inp[idx*self.inp_size:(idx+1)*self.inp_size],
-        #                         out[idx*self.out_size:(idx+1)*self.out_size])
-        #     elif (complex_in, complex_out) == (False, True):
-        #         self._real_cplx(inp[idx*self.inp_size:(idx+1)*self.inp_size],
-        #                         out[idx*self.out_size:(idx+1)*self.out_size])
-        #     elif (complex_in, complex_out) == (True, False):
-        #         self._cplx_real(inp[idx*self.inp_size:(idx+1)*self.inp_size],
-        #                         out[idx*self.out_size:(idx+1)*self.out_size])
-        #     elif (complex_in, complex_out) == (True, True):
-        #         self._cplx_cplx(inp[idx*self.inp_size:(idx+1)*self.inp_size],
-        #                         out[idx*self.out_size:(idx+1)*self.out_size])
-        ### but slicing a cython.view.array does not give a memview, hence:
         for idx in range(nbroadcast):
             if (complex_in, complex_out) == (False, False):
-                real_inp_view = inp
+                real_inp_view = inp # slicing cython.view.array does not give a memview
                 real_out_view = out
                 self._real_real(real_inp_view[idx*self.inp_size:(idx+1)*self.inp_size],
                                 real_out_view[idx*self.out_size:(idx+1)*self.out_size])
@@ -2049,22 +2043,22 @@ cdef class Lambdify(object):
                 self._cplx_cplx(cplx_inp_view[idx*self.inp_size:(idx+1)*self.inp_size],
                                 cplx_out_view[idx*self.out_size:(idx+1)*self.out_size])
 
-        if use_numpy:
-            out = out.reshape(inp_shape[:-1] + self.out_shape)
+        if use_numpy and reshape_out:
+            out = out.reshape(new_out_shape)
         elif reshape_out:
             if complex_out:
-                tmp = cython.view.array(shape=self.out_shape,
+                tmp = cython.view.array(shape=new_out_shape,
                                         itemsize=sizeof(double complex), format='Zd')
                 cmplx_out_view = tmp
                 memcpy(<double complex*>tmp.data, &cmplx_out_view[0],
-                       sizeof(double complex)*self.out_size)
+                       sizeof(double complex)*new_out_size)
                 out = tmp
             else:
-                tmp = cython.view.array(shape=self.out_shape,
+                tmp = cython.view.array(shape=new_out_shape,
                                         itemsize=sizeof(double), format='d')
                 real_out_view = out
                 memcpy(<double *>tmp.data, &real_out_view[0],
-                       sizeof(double)*self.out_size)
+                       sizeof(double)*new_out_size)
                 out = tmp
         return out
 
