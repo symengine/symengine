@@ -60,7 +60,7 @@ def _get_array():
     ref = [X+Y+Z, math.sin(X)*math.log(Y)*math.exp(Z)]
 
     def check(arr):
-        assert all([abs(x1-x2) < 1e-15 for x1, x2 in zip(ref, arr)])
+        assert all([abs(x1-x2) < 1e-13 for x1, x2 in zip(ref, arr)])
     return args, exprs, inp, check
 
 
