@@ -25,6 +25,7 @@ environment:
       PLATFORM: "x64"
       WITH_PYTHON: yes
       PYTHON_VERSION: 27-x64
+      PYTHON_INSTALL: yes
     - BUILD_TYPE: "Debug"
       COMPILER: MinGW
       WITH_PYTHON: yes
@@ -75,6 +76,9 @@ build_script:
 - mkdir build
 - cd build
 
+- if [%COMPILER%]==[MSVC15] if [%PYTHON_INSTALL%]==[yes] python ../setup.py install --define="GMP_DIR=mpir-2.7.0/lib/%PLATFORM%/%BUILD_TYPE%"
+- if [%COMPILER%]==[MSVC15] if [%PYTHON_INSTALL%]==[yes] exit 0
+
 - if [%COMPILER%]==[MSVC15] if [%PLATFORM%]==[Win32] cmake -G "Visual Studio 14 2015" -DGMP_DIR=mpir-2.7.0/lib/%PLATFORM%/%BUILD_TYPE% -DCMAKE_CXX_FLAGS_RELEASE="/MT /W1 /O2 /Ob2 /D NDEBUG" -DCMAKE_CXX_FLAGS_DEBUG="/D_DEBUG /MTd /Zi /Ob0 /Od /RTC1 /W1" ..
 - if [%COMPILER%]==[MSVC15] if [%PLATFORM%]==[x64] cmake -G "Visual Studio 14 2015 Win64" -DGMP_DIR=mpir-2.7.0/lib/%PLATFORM%/%BUILD_TYPE% -DCMAKE_CXX_FLAGS_RELEASE="/MT /W1 /O2 /Ob2 /D NDEBUG" -DCMAKE_CXX_FLAGS_DEBUG="/D_DEBUG /MTd /Zi /Ob0 /Od /RTC1 /W1" ..
 
@@ -83,10 +87,7 @@ build_script:
 
 - if [%WITH_PYTHON%]==[yes] cmake -DWITH_PYTHON=yes ..
 
-- if [%COMPILER%]==[MSVC15] msbuild ALL_BUILD.vcxproj /p:Configuration=%BUILD_TYPE% /p:Platform=%PLATFORM% /p:PlatformToolset=%PLATFORMTOOLSET% /verbosity:normal
-- if [%COMPILER%]==[MSVC15] msbuild INSTALL.vcxproj /p:Configuration=%BUILD_TYPE% /p:Platform=%PLATFORM% /p:PlatformToolset=%PLATFORMTOOLSET% /verbosity:normal
-
-- if not [%COMPILER%]==[MSVC15] mingw32-make && mingw32-make install
+- cmake --build . --config %BUILD_TYPE% --target install
 
 test_script:
 - ctest --output-on-failure
