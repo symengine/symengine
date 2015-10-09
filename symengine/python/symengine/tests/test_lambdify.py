@@ -2,7 +2,9 @@
 from __future__ import (absolute_import, division, print_function)
 
 import array
+import cmath
 import math
+import operator
 import sys
 
 import pytest
@@ -157,30 +159,36 @@ def test_complex_in_complex_out():
                (14 + 12j)) < 1e-15
 
 
-def LambdifyCSE(args, exprs):
-    # More of a demo than a test. This might be non-trivial enough
-    # to warrant a helper function in Lambdify's __init__
+def _get_cse_exprs():
     import sympy as sp
-    subs, new_exprs = sp.cse(exprs)
-    cse_symbs, cse_exprs = zip(*subs)
-    lmb = se.Lambdify(args + cse_symbs, new_exprs)
-    cse_lambda = se.Lambdify(args, cse_exprs)
+    args = x, y = sp.symbols('x y')
+    exprs = [x*x + y, y/(x*x), y*x*x+x]
+    inp = [11, 13]
+    ref = [121+13, 13/121, 13*121 + 11]
+    return args, exprs, inp, ref
 
-    def cb(inp, out=None, **kwargs):
-        cse_vals = cse_lambda(inp)
-        new_inp = np.concatenate((inp, cse_vals))
-        return lmb(new_inp, out)
-    return cb
+
+def test_cse_list_input():
+    args, exprs, inp, ref = _get_cse_exprs()
+    lmb = se.LambdifyCSE(args, exprs, concatenate=lambda tup:
+                         tup[0]+list(tup[1]))
+    out = lmb(inp, use_numpy=False)
+    assert allclose(out, ref)
+
+
+def test_cse_array_input():
+    args, exprs, inp, ref = _get_cse_exprs()
+    inp = array.array('d', inp)
+    lmb = se.LambdifyCSE(args, exprs, concatenate=lambda tup:
+                         tup[0]+array.array('d', tup[1]))
+    out = lmb(inp, use_numpy=False)
+    assert allclose(out, ref)
 
 
 @pytest.mark.skipif(not HAVE_NUMPY, reason='requires numpy')
-def test_cse():
-    import sympy as sp
-    inp = [11, 13]
-    ref = [121+13, 13/121, 13*121 + 11]
-    args = x, y = sp.symbols('x y')
-    exprs = [x*x + y, y/(x*x), y*x*x+x]
-    lmb = LambdifyCSE(args, exprs)
+def test_cse_numpy():
+    args, exprs, inp, ref = _get_cse_exprs()
+    lmb = se.LambdifyCSE(args, exprs)
     out = lmb(inp)
     assert allclose(out, ref)
 
@@ -295,3 +303,73 @@ def test_excessive_out():
     assert out.shape == (2,)
     assert out[0] == -1
     assert out[1] == 1
+
+
+def ravelled(A):
+    try:
+        return A.ravel()
+    except AttributeError:
+        return A
+
+
+def _get_2_to_2by2_list():
+    args = x, y = se.symbols('x y')
+    exprs = [[x + y*y, x*y*y], [x*y*y, se.sqrt(x)+y*y]]
+    l = se.Lambdify(args, exprs)
+
+    def check(A, inp):
+        X, Y = inp
+        assert A.shape[-2:] == (2, 2)
+        ref = [X + Y*Y, Y*Y, X*Y*Y, cmath.sqrt(X)+Y*Y]
+        ravA = ravelled(A)
+        for i in range(len(A)//4):
+            assert allclose(ravA[i*4:(i+1)*4], ref)
+    return l, check
+
+
+@pytest.mark.xfail
+def test_2_to_2by2_list():
+    l, check = _get_2_to_2by2_list()
+    inp = [13, 17]
+    A = l(inp, use_numpy=False)
+    check(A, inp)
+
+
+@pytest.mark.skipif(not HAVE_NUMPY, reason='requires numpy')
+def test_2_to_2by2_numpy():
+    l, check = _get_2_to_2by2_list()
+    inp = [13, 17]
+    A = l(inp, use_numpy=True)
+    check(A, inp)
+
+
+def test_unsafe_real_real():
+    l, check = _get_2_to_2by2_list()
+    inp = np.array([13., 17.])
+    out = np.empty(4)
+    l.unsafe_real_real(inp, out)
+    check(out.reshape((2, 2)), inp)
+
+
+def test_unsafe_real_complex():
+    l, check = _get_2_to_2by2_list()
+    inp = np.array([-4, 17.])
+    out = np.empty(4, dtype=np.complex128)
+    l.unsafe_real_complex(inp, out)
+    check(out.reshape((2, 2)), inp)
+
+
+def test_unsafe_complex_real():
+    l, check = _get_2_to_2by2_list()
+    inp = np.array([13, 4j], dtype=np.complex128)
+    out = np.empty(4)
+    l.unsafe_complex_real(inp, out)
+    check(out.reshape((2, 2)), inp)
+
+
+def test_unsafe_complex_complex():
+    l, check = _get_2_to_2by2_list()
+    inp = np.array([13+11j, 7+4j], dtype=np.complex128)
+    out = np.empty(4, dtype=np.complex128)
+    l.unsafe_complex_complex(inp, out)
+    check(out.reshape((2, 2)), inp)

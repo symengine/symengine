@@ -1846,9 +1846,12 @@ cdef class Lambdify(object):
             self.out_shape = exprs.shape
         except AttributeError:
             try:
-                self.out_shape = (exprs.nrows(), exprs.ncols())
-            except AttributeError:
+                import numpy as np
+            except ImportError:
                 self.out_shape = len(exprs),
+            else:
+                exprs = np.array(exprs)
+                self.out_shape = exprs.shape
         self.inp_size = len(args)
         self.out_size = reduce(mul, self.out_shape)
 
@@ -1911,16 +1914,16 @@ cdef class Lambdify(object):
         else:
             as_complex(expr_subs, out)
 
-    cdef void _real_real(self, double[::1] inp, double[::1] out):
+    cpdef void unsafe_real_real(self, double[::1] inp, double[::1] out):
         self._eval(inp, out)
 
-    cdef void _real_cplx(self, double[::1] inp, double complex[::1] out):
+    cpdef void unsafe_real_complex(self, double[::1] inp, double complex[::1] out):
         self._eval(inp, out)
 
-    cdef void _cplx_real(self, double complex[::1] inp, double[::1] out):
+    cpdef void unsafe_complex_real(self, double complex[::1] inp, double[::1] out):
         self._eval(inp, out)
 
-    cdef void _cplx_cplx(self, double complex[::1] inp, double complex[::1] out):
+    cpdef void unsafe_complex_complex(self, double complex[::1] inp, double complex[::1] out):
         self._eval(inp, out)
 
     def __call__(self, inp, out=None, use_numpy=None, complex_in=False, complex_out=False):
@@ -2023,25 +2026,25 @@ cdef class Lambdify(object):
                 reshape_out = False  # only reshape if we allocated.
         for idx in range(nbroadcast):
             if (complex_in, complex_out) == (False, False):
-                real_inp_view = inp # slicing cython.view.array does not give a memview
+                real_inp_view = inp  # slicing cython.view.array does not give a memview
                 real_out_view = out
-                self._real_real(real_inp_view[idx*self.inp_size:(idx+1)*self.inp_size],
-                                real_out_view[idx*self.out_size:(idx+1)*self.out_size])
+                self.unsafe_real_real(real_inp_view[idx*self.inp_size:(idx+1)*self.inp_size],
+                                      real_out_view[idx*self.out_size:(idx+1)*self.out_size])
             elif (complex_in, complex_out) == (False, True):
                 real_inp_view = inp
-                cplx_out_view = out
-                self._real_cplx(real_inp_view[idx*self.inp_size:(idx+1)*self.inp_size],
-                                cplx_out_view[idx*self.out_size:(idx+1)*self.out_size])
+                complex_out_view = out
+                self.unsafe_real_complex(real_inp_view[idx*self.inp_size:(idx+1)*self.inp_size],
+                                         complex_out_view[idx*self.out_size:(idx+1)*self.out_size])
             elif (complex_in, complex_out) == (True, False):
-                cplx_inp_view = inp
+                complex_inp_view = inp
                 real_out_view = out
-                self._cplx_real(cplx_inp_view[idx*self.inp_size:(idx+1)*self.inp_size],
-                                real_out_view[idx*self.out_size:(idx+1)*self.out_size])
+                self.unsafe_complex_real(complex_inp_view[idx*self.inp_size:(idx+1)*self.inp_size],
+                                         real_out_view[idx*self.out_size:(idx+1)*self.out_size])
             elif (complex_in, complex_out) == (True, True):
-                cplx_inp_view = inp
-                cplx_out_view = out
-                self._cplx_cplx(cplx_inp_view[idx*self.inp_size:(idx+1)*self.inp_size],
-                                cplx_out_view[idx*self.out_size:(idx+1)*self.out_size])
+                complex_inp_view = inp
+                complex_out_view = out
+                self.unsafe_complex_complex(complex_inp_view[idx*self.inp_size:(idx+1)*self.inp_size],
+                                            complex_out_view[idx*self.out_size:(idx+1)*self.out_size])
 
         if use_numpy and reshape_out:
             out = out.reshape(new_out_shape)
@@ -2061,6 +2064,36 @@ cdef class Lambdify(object):
                        sizeof(double)*new_out_size)
                 out = tmp
         return out
+
+
+def LambdifyCSE(args, exprs, cse=None, concatenate=None):
+    """
+    Analogous with Lambdify but performs common subexpression elimination
+    internally. See docstring of Lambdify.
+
+    Parameters
+    ----------
+    cse: callback (default: None)
+        defaults to sympy.cse (see SymPy documentation)
+    concatenate: callback (default: numpy.concatenate)
+        Examples when not using numpy:
+        ``lambda tup: tup[0]+list(tup[1])``
+        ``lambda tup: tup[0]+array.array('d', tup[1])``
+    """
+    if cse is None:
+        from sympy import cse
+    if concatenate is None:
+        from numpy import concatenate
+    subs, new_exprs = cse(exprs)
+    cse_symbs, cse_exprs = zip(*subs)
+    lmb = Lambdify(args + cse_symbs, new_exprs)
+    cse_lambda = Lambdify(args, cse_exprs)
+
+    def cb(inp, out=None, **kwargs):
+        cse_vals = cse_lambda(inp, **kwargs)
+        new_inp = concatenate((inp, cse_vals))
+        return lmb(new_inp, out, **kwargs)
+    return cb
 
 
 # Turn on nice stacktraces:
