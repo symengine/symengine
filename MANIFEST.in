@@ -1,0 +1,3 @@
+include CMakeLists.txt
+recursive-include symengine *.cpp *.h CMakeLists.txt *.in *.cmake
+recursive-include cmake *.cpp *.in *.cmake
