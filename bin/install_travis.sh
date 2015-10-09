@@ -96,8 +96,8 @@ if [[ "${WITH_PYTHON}" == "yes" && "${WITH_SAGE}" != "yes" || "${PYTHON_INSTALL}
     conda info -a;
 
     conda create -q -n test-environment python="${PYTHON_VERSION}" pip cython sympy nose pytest numpy;
-    python -c "import cython; import sys; cyver = cython.__version__.split('.'); sys.exit(1 if cyver[0]=='0' and int(cyver[1]) < 23 else 0)" && echo "Cython up-to-date" || pip install --upgrade --install-option="--no-cython-compile" cython
     source activate test-environment;
+    python -c "import cython; import sys; cyver = cython.__version__.split('.'); sys.exit(1 if cyver[0]=='0' and int(cyver[1]) < 23 else 0)" && echo "Cython up-to-date" || pip install --upgrade --install-option="--no-cython-compile" cython;
 fi
 if [[ "${WITH_SAGE}" == "yes" ]]; then
     wget -O- http://files.sagemath.org/linux/64bit/sage-6.8-x86_64-Linux-Ubuntu_12.04_64_bit.tar.gz | tar xz
