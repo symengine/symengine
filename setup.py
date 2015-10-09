@@ -96,7 +96,7 @@ class BuildWithCmake(_build):
                 if ("msys" in compiler):
                     return ["-G", "MSYS Makefiles"]
                 elif ("mingw" in compiler):
-                    return ["-G", "MinGW Makeiles"]
+                    return ["-G", "MinGW Makefiles"]
                 elif sys.maxsize > 2**32:
                     return ["-G", "Visual Studio 14 2015 Win64"]
                 else:
