@@ -48,6 +48,8 @@ env:
   - BUILD_TYPE="Debug" WITH_BFD="yes" TEST_IN_TREE="yes" WITH_PYTHON="yes" PYTHON_VERSION="2.7"
   # Release build shared lib with Python 2.7:
   - TEST_IN_TREE="yes" WITH_PYTHON="yes" PYTHON_VERSION="2.7" BUILD_SHARED_LIBS="yes"
+  # NumPy not available:
+  - BUILD_TYPE="Debug" WITH_BFD="yes" TEST_IN_TREE="yes" WITH_PYTHON="yes" PYTHON_VERSION="2.7" SKIP_NUMPY="yes"
 
   # These test the setup.py file
   - TEST_IN_TREE="yes" PYTHON_INSTALL="yes" PYTHON_VERSION="2.6"

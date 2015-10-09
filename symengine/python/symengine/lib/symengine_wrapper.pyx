@@ -1953,7 +1953,12 @@ cdef class Lambdify(object):
         cdef double complex[::1] cmplx_out_view, cmplx_inp_view
         cdef size_t nbroadcast = 1
 
-        inp_shape = getattr(inp, 'shape', (len(inp),))
+        try:
+            inp_shape = getattr(inp, 'shape', (len(inp),))
+        except TypeError:
+            inp = tuple(inp)
+            inp_shape = (len(inp),)
+
         inp_size = reduce(mul, inp_shape)
         if inp_size % self.inp_size != 0:
             raise ValueError("Broadcasting failed")

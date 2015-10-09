@@ -3,6 +3,7 @@ from __future__ import (absolute_import, division, print_function)
 
 import array
 import cmath
+import itertools
 import math
 import operator
 import sys
@@ -224,7 +225,6 @@ def _get_1_to_2by3_matrix():
 
     def check(A, inp):
         X, = inp
-        print(np.array(A), np.array(A).shape)
         assert abs(A[0, 0] - (X+1)) < 1e-15
         assert abs(A[0, 1] - (X+2)) < 1e-15
         assert abs(A[0, 2] - (X+3)) < 1e-15
@@ -254,7 +254,6 @@ def _test_2dim_Matrix_broadcast(use_numpy):
     l, check = _get_1_to_2by3_matrix()
     inp = range(1, 5)
     out = l(inp, use_numpy=use_numpy)
-    print(np.array(out))  # debug
     for i in range(len(inp)):
         check(out[i, ...], (inp[i],))
 
@@ -283,6 +282,7 @@ def test_jacobian():
                              [Y + 1, X + 1]])
 
 
+@pytest.mark.skipif(not HAVE_NUMPY, reason='requires numpy')
 def test_excessive_args():
     x = se.symbols('x')
     lmb = se.Lambdify([x], [-x])
@@ -293,6 +293,7 @@ def test_excessive_args():
     assert np.allclose(out, -1)
 
 
+@pytest.mark.skipif(not HAVE_NUMPY, reason='requires numpy')
 def test_excessive_out():
     x = se.symbols('x')
     lmb = se.Lambdify([x], [-x])
@@ -343,6 +344,7 @@ def test_2_to_2by2_numpy():
     check(A, inp)
 
 
+@pytest.mark.skipif(not HAVE_NUMPY, reason='requires numpy')
 def test_unsafe_real_real():
     l, check = _get_2_to_2by2_list()
     inp = np.array([13., 17.])
@@ -351,6 +353,7 @@ def test_unsafe_real_real():
     check(out.reshape((2, 2)), inp)
 
 
+@pytest.mark.skipif(not HAVE_NUMPY, reason='requires numpy')
 def test_unsafe_real_complex():
     l, check = _get_2_to_2by2_list()
     inp = np.array([-4, 17.])
@@ -359,6 +362,7 @@ def test_unsafe_real_complex():
     check(out.reshape((2, 2)), inp)
 
 
+@pytest.mark.skipif(not HAVE_NUMPY, reason='requires numpy')
 def test_unsafe_complex_real():
     l, check = _get_2_to_2by2_list()
     inp = np.array([13, 4j], dtype=np.complex128)
@@ -367,9 +371,17 @@ def test_unsafe_complex_real():
     check(out.reshape((2, 2)), inp)
 
 
+@pytest.mark.skipif(not HAVE_NUMPY, reason='requires numpy')
 def test_unsafe_complex_complex():
     l, check = _get_2_to_2by2_list()
     inp = np.array([13+11j, 7+4j], dtype=np.complex128)
     out = np.empty(4, dtype=np.complex128)
     l.unsafe_complex_complex(inp, out)
     check(out.reshape((2, 2)), inp)
+
+
+def test_itertools_chain():
+    l, check = _get_2_to_2by2_list()
+    inp = itertools.chain([13], [17])
+    A = l(inp, use_numpy=False)
+    check(A, inp)

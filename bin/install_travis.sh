@@ -95,9 +95,21 @@ if [[ "${WITH_PYTHON}" == "yes" && "${WITH_SAGE}" != "yes" || "${PYTHON_INSTALL}
     conda update -q conda;
     conda info -a;
 
-    conda create -q -n test-environment python="${PYTHON_VERSION}" pip cython sympy nose pytest numpy;
+    CONDA_PKGS="pip cython sympy nose pytest numpy"
+    if [[ "${SKIP_NUMPY}" == "yes" ]]; then
+        true;  # pass
+    else
+        CONDA_PKGS="${CONDA_PKGS} numpy";
+    fi
+    conda create -q -n test-environment python="${PYTHON_VERSION}" "${CONDA_PKGS}";
     source activate test-environment;
-    python -c "import cython; import sys; cyver = cython.__version__.split('.'); sys.exit(1 if cyver[0]=='0' and int(cyver[1]) < 23 else 0)" && echo "Cython up-to-date" || pip install --upgrade --install-option="--no-cython-compile" cython;
+    if python -c "import cython; import sys; cyver = cython.__version__.split('.'); sys.exit(1 if cyver[0]=='0' and int(cyver[1]) < 23 else 0)"; then
+        echo "Cython up-to-date";
+    else
+        echo "Cython in conda repos too old";
+        conda remove cython
+        pip install --upgrade --install-option="--no-cython-compile" cython;
+    fi
 fi
 if [[ "${WITH_SAGE}" == "yes" ]]; then
     wget -O- http://files.sagemath.org/linux/64bit/sage-6.8-x86_64-Linux-Ubuntu_12.04_64_bit.tar.gz | tar xz
