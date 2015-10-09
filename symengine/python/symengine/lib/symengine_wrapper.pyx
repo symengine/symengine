@@ -5,6 +5,12 @@ from libcpp cimport bool
 from libcpp.string cimport string
 from cpython cimport PyObject, Py_XINCREF, Py_XDECREF, \
     PyObject_CallMethodObjArgs
+from libc.string cimport memcpy
+import cython
+import warnings
+from operator import mul
+from functools import reduce
+
 
 include "config.pxi"
 
@@ -1732,17 +1738,6 @@ def eval_double(basic):
     cdef Basic b = sympify(basic)
     return symengine.eval_double(deref(b.thisptr))
 
-# Prototype for Lambdify below
-
-import cython
-import warnings
-from operator import mul
-from functools import reduce
-from libc.string cimport memcpy
-
-# To detect 2.6 since it lacks memoryview object:
-from cpython.version cimport PY_MAJOR_VERSION, PY_MINOR_VERSION
-
 
 @cython.wraparound(False)
 @cython.boundscheck(False)
@@ -1914,16 +1909,18 @@ cdef class Lambdify(object):
         else:
             as_complex(expr_subs, out)
 
-    cpdef void unsafe_real_real(self, double[::1] inp, double[::1] out):
+    # the four cpdef:ed methods below may use void return type
+    # once Cython 0.23 (from 2015) is acceptable as requirement.
+    cpdef unsafe_real_real(self, double[::1] inp, double[::1] out):
         self._eval(inp, out)
 
-    cpdef void unsafe_real_complex(self, double[::1] inp, double complex[::1] out):
+    cpdef unsafe_real_complex(self, double[::1] inp, double complex[::1] out):
         self._eval(inp, out)
 
-    cpdef void unsafe_complex_real(self, double complex[::1] inp, double[::1] out):
+    cpdef unsafe_complex_real(self, double complex[::1] inp, double[::1] out):
         self._eval(inp, out)
 
-    cpdef void unsafe_complex_complex(self, double complex[::1] inp, double complex[::1] out):
+    cpdef unsafe_complex_complex(self, double complex[::1] inp, double complex[::1] out):
         self._eval(inp, out)
 
     def __call__(self, inp, out=None, use_numpy=None, complex_in=False, complex_out=False):

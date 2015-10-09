@@ -85,6 +85,7 @@ cdef extern from "<symengine/add.h>" namespace "SymEngine":
         void as_two_terms(const Ptr[RCP[Basic]] &a, const Ptr[RCP[Basic]] &b)
 
 
+# Currently not used:
 # Test that cpdef void is supported (https://github.com/cython/cython/commit/7df9d654b3e6c3d5812a95904872d35a3c94ef77)
-cpdef void func(double[::1] inp):
-    pass
+# cpdef void func(double[::1] inp):
+#     pass
