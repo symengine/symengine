@@ -2001,8 +2001,12 @@ cdef class Lambdify(object):
                 out = np.empty(new_out_size, dtype=np.complex128 if
                                complex_out else np.float64)
             else:
-                out = cython.view.array(shape=new_out_shape,
-                                        itemsize=sizeof(double), format='d')
+                if complex_out:
+                    out = cython.view.array(shape=new_out_shape,
+                                            itemsize=sizeof(double complex), format='Zd')
+                else:
+                    out = cython.view.array(shape=new_out_shape,
+                                            itemsize=sizeof(double), format='d')
             reshape_out = len(new_out_shape) > 1
         else:
             if use_numpy:

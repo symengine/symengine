@@ -129,10 +129,11 @@ def test_broadcast():
     assert np.allclose(dists, 1)
 
 
+@pytest.mark.xfail(not HAVE_NUMPY, reason='array.array lacks "Zd"')
 def test_real_in_complex_out():
     x = se.Symbol('x')
     lmb = se.Lambdify([x], [se.sqrt(x)])
-    assert abs(lmb([9]) - 3.0) < 1e-15
+    assert abs(lmb([9]) - 3) < 1e-15
     assert abs(lmb([-9], complex_out=True) - 3.0j) < 1e-15
 
 
@@ -140,23 +141,24 @@ def test_real_in_complex_out():
 def test_complex_in_real_out():
     x = se.Symbol('x')
     lmb = se.Lambdify([x], [x*x])
-    assert abs(lmb([3]) - 9) < 1e-15
+    assert abs(lmb([3])[0] - 9) < 1e-15
     # The line below emits:
     # Exception RuntimeError: 'Not implemented.' in
     # 'symengine.lib.symengine_wrapper.as_real' ignored
-    assert abs(lmb([3j], complex_in=True) + 9) < 1e-15
+    out = lmb([3j], complex_in=True)
+    try:
+        discrepancy = out + 9
+    except (TypeError, ValueError):
+        # memory view needs to be wrapped:
+        discrepancy = array.array('d', out)[0] + 9
+    assert abs(discrepancy) < 1e-15
 
 
-def test_complex_in_real_out2():
-    x = se.Symbol('x')
-    lmb = se.Lambdify([x], [x*x])
-    assert abs(lmb([3j], complex_in=True, complex_out=True) + 9) < 3e-15
-
-
+@pytest.mark.xfail(not HAVE_NUMPY, reason='array.array lacks "Zd"')
 def test_complex_in_complex_out():
     x = se.Symbol('x')
     lmb = se.Lambdify([x], [3 + x - 1j])
-    assert abs(lmb([11+13j], complex_in=True, complex_out=True) -
+    assert abs(lmb([11+13j], complex_in=True, complex_out=True)[0] -
                (14 + 12j)) < 1e-15
 
 
@@ -381,7 +383,8 @@ def test_unsafe_complex_complex():
 
 
 def test_itertools_chain():
-    l, check = _get_2_to_2by2_list()
-    inp = itertools.chain([13], [17])
+    args, exprs, inp, check = _get_array()
+    l = se.Lambdify(args, exprs)
+    inp = itertools.chain([inp[0]], (inp[1],), [inp[2]])
     A = l(inp, use_numpy=False)
-    check(A, inp)
+    check(A)
