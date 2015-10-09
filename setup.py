@@ -29,30 +29,55 @@ if not use_setuptools:
     from distutils.command.install import install as _install
 
 cmake_opts = [("WITH_PYTHON","yes"), ("BUILD_TESTS", "no"), ("BUILD_BENCHMARKS", "no")]
+cmake_generator = [""]
 
 def process_opts(opts):
     return ['-D'+'='.join(o) for o in opts]
 
 def cmake_build():
-    cmake_cmd = ["cmake", path.dirname(path.realpath(__file__))]
+    dir = path.dirname(path.realpath(__file__))
+    cmake_cmd = ["cmake", dir]
     cmake_cmd.extend(process_opts(cmake_opts))
+    if len(cmake_generator[0]) > 0:
+        cmake_cmd.extend(["-G", cmake_generator[0]])
+
     if subprocess.call(cmake_cmd) != 0:
         raise EnvironmentError("error calling cmake")
 
-    if subprocess.call("make") != 0:
-        raise EnvironmentError("error calling make")
+    if subprocess.call(["cmake", "--build", dir]) != 0:
+        raise EnvironmentError("error building project")
+
+def set_generator(generator):
+    if generator:
+        cmake_generator[0] = generator
+    else:
+        import platform
+        if (platform.system() == "Windows"):
+            compiler = str(self.compiler).lower()
+            if ("msys" in compiler):
+                cmake_generator[0] = "MSYS Makefiles"
+            elif ("mingw" in compiler):
+                cmake_generator[0] = "MinGW Makeiles"
+            elif "64" in platform.architecture()[0]:
+                cmake_generator[0] = "Visual Studio 14 2015 Win64"
+            else:
+                cmake_generator[0] = "Visual Studio 14 2015"
 
 class BuildWithCmake(_build):
     _build_opts = _build.user_options
     user_options = [
+        ('symengine-dir=', None, 'path to symengine installation or build directory'),
+        ('generator=', None, 'cmake build generator'),
         ('define=', 'D',
-         'cmake <var>:<type>=<value>'),
+         'options to cmake <var>:<type>=<value>')
     ]
     user_options.extend(_build_opts)
 
     def initialize_options(self):
         _build.initialize_options(self)
         self.define = None
+        self.symengine_dir = None
+        self.generator = None
 
     def finalize_options(self):
         _build.finalize_options(self)
@@ -66,6 +91,11 @@ class BuildWithCmake(_build):
                            for s in defines]
             cmake_opts.extend(self.define)
 
+        if self.symengine_dir:
+            cmake_opts.extend(['SymEngine_DIR', self.symengine_dir])
+
+        set_generator(self.generator)
+
     def run(self):
         cmake_build()
         # can't use super() here because _build is an old style class in 2.7
@@ -74,14 +104,18 @@ class BuildWithCmake(_build):
 class InstallWithCmake(_install):
     _install_opts = _install.user_options
     user_options = [
+        ('symengine-dir=', None, 'path to symengine installation or build directory'),
+        ('generator=', None, 'cmake build generator'),
         ('define=', 'D',
-         'cmake <var>:<type>=<value>'),
+         'options to cmake <var>:<type>=<value>')
     ]
     user_options.extend(_install_opts)
 
     def initialize_options(self):
         _install.initialize_options(self)
         self.define = None
+        self.symengine_dir = None
+        self.generator = None
 
     def finalize_options(self):
         _install.finalize_options(self)
@@ -94,6 +128,11 @@ class InstallWithCmake(_install):
                            tuple(ss.strip() for ss in s.split('='))
                            for s in defines]
             cmake_opts.extend(self.define)
+
+        if self.symengine_dir:
+            cmake_opts.extend(['SymEngine_DIR', self.symengine_dir])
+
+        set_generator(self.generator)
 
     def run(self):
         # can't use super() here because _install is an old style class in 2.7
