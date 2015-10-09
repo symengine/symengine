@@ -1,7 +1,12 @@
 set(PY_PATH ${PYTHON_INSTALL_PATH}/symengine/tests)
-install(FILES __init__.py
+
+set(PY_FILES
+    __init__.py
+    test_arit.py
     test_arit.py
     test_eval.py
+    test_eval.py
+    test_functions.py
     test_functions.py
     test_integer.py
     test_matrices.py
@@ -12,5 +17,13 @@ install(FILES __init__.py
     test_sympify.py
     test_sympy_conv.py
     test_var.py
+)
+
+set(PYC_FILES)
+foreach(PYFILE ${PYFILES})
+    set(PYC_FILES "${PYC_FILES} ${CMAKE_CURRENT_BINARY_DIR}/${PYFILE}c")
+endforeach()
+
+install(FILES ${PY_FILES} ${PYC_FILES}
     DESTINATION ${PY_PATH}
     )

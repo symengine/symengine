@@ -17,3 +17,8 @@ message("Copying source of python wrappers into: ${CMAKE_CURRENT_BINARY_DIR}")
 file(COPY symengine/ DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/symengine)
 
 add_subdirectory(symengine)
+
+execute_process(
+	COMMAND ${PYTHON_BIN} -c "import compileall; compileall.compile_dir('${CMAKE_CURRENT_BINARY_DIR}/symengine/', force=True)"
+	OUTPUT_VARIABLE PYTHON_SYS_PATH
+	)

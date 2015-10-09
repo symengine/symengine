@@ -79,11 +79,10 @@ class BuildWithCmake(_build):
         cmake_cmd = ["cmake", dir, "-DCMAKE_BUILD_TYPE=" + cmake_build_type[0]]
         cmake_cmd.extend(process_opts(cmake_opts))
         cmake_cmd.extend(self.get_generator())
-        print(cmake_cmd)
         if subprocess.call(cmake_cmd) != 0:
             raise EnvironmentError("error calling cmake")
 
-        if subprocess.call(["cmake", "--build", dir, "--config", cmake_build_type[0]]) != 0:
+        if subprocess.call(["cmake", "--build", ".", "--config", cmake_build_type[0]]) != 0:
             raise EnvironmentError("error building project")
 
     def get_generator(self):
@@ -157,7 +156,7 @@ class InstallWithCmake(_install):
         if subprocess.call(cmake_cmd) != 0:
             raise EnvironmentError("error calling cmake")
 
-        if subprocess.call(["cmake", "--build", dir, "--config", cmake_build_type[0], "--target", "install"]) != 0:
+        if subprocess.call(["cmake", "--build", ".", "--config", cmake_build_type[0], "--target", "install"]) != 0:
             raise EnvironmentError("error installing")
 
     def run(self):
