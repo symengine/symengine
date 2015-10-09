@@ -95,7 +95,7 @@ if [[ "${WITH_PYTHON}" == "yes" && "${WITH_SAGE}" != "yes" || "${PYTHON_INSTALL}
     conda update -q conda;
     conda info -a;
 
-    CONDA_PKGS="pip cython sympy nose pytest numpy"
+    CONDA_PKGS="pip cython sympy nose pytest"
     if [[ "${SKIP_NUMPY}" == "yes" ]]; then
         true;  # pass
     else
