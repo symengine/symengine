@@ -2098,13 +2098,14 @@ def LambdifyCSE(args, exprs, cse=None, concatenate=None):
         from numpy import concatenate
     subs, new_exprs = cse(exprs)
     cse_symbs, cse_exprs = zip(*subs)
-    lmb = Lambdify(args + cse_symbs, new_exprs)
+    lmb = Lambdify(tuple(args) + cse_symbs, new_exprs)
     cse_lambda = Lambdify(args, cse_exprs)
 
     def cb(inp, out=None, **kwargs):
         cse_vals = cse_lambda(inp, **kwargs)
         new_inp = concatenate((inp, cse_vals))
         return lmb(new_inp, out, **kwargs)
+
     return cb
 
 
