@@ -126,7 +126,10 @@ def sympy2symengine(a, raise_error=False):
     elif isinstance(a, sympy.Rational):
         return Integer(a.p) / Integer(a.q)
     elif isinstance(a, sympy.Float):
-        return RealMPFR(str(a), a._prec)
+        IF HAVE_SYMENGINE_MPFR:
+            return RealMPFR(str(a), a._prec)
+        ELSE:
+            return RealDouble(float(str(a)))
     elif a is sympy.I:
         return I
     elif a is sympy.E:
