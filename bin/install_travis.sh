@@ -101,7 +101,7 @@ if [[ "${WITH_PYTHON}" == "yes" && "${WITH_SAGE}" != "yes" || "${PYTHON_INSTALL}
     else
         CONDA_PKGS="${CONDA_PKGS} numpy";
     fi
-    conda create -q -n test-environment python="${PYTHON_VERSION}" "${CONDA_PKGS}";
+    conda create -q -n test-environment python="${PYTHON_VERSION}" ${CONDA_PKGS};
     source activate test-environment;
 fi
 if [[ "${WITH_SAGE}" == "yes" ]]; then
