@@ -95,7 +95,13 @@ if [[ "${WITH_PYTHON}" == "yes" && "${WITH_SAGE}" != "yes" || "${PYTHON_INSTALL}
     conda update -q conda;
     conda info -a;
 
-    conda create -q -n test-environment python="${PYTHON_VERSION}" pip cython sympy nose pytest;
+    CONDA_PKGS="pip cython sympy nose pytest"
+    if [[ "${SKIP_NUMPY}" == "yes" ]]; then
+        true;  # pass
+    else
+        CONDA_PKGS="${CONDA_PKGS} numpy";
+    fi
+    conda create -q -n test-environment python="${PYTHON_VERSION}" ${CONDA_PKGS};
     source activate test-environment;
 fi
 if [[ "${WITH_SAGE}" == "yes" ]]; then

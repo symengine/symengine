@@ -99,7 +99,7 @@ ctest --output-on-failure
 # Python
 if [[ "${WITH_PYTHON}" == "yes" ]] && [[ "${WITH_SAGE}" != "yes" ]]; then
     cd symengine/python
-    nosetests -v
+    py.test -v
     cd ../../
 fi
 # Ruby
