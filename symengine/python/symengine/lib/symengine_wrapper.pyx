@@ -100,16 +100,13 @@ cdef c2py(RCP[const symengine.Basic] o):
     r.thisptr = o
     return r
 
-def sympy2symengine(a, raise_error=False, prefer_mpfr=True):
+def sympy2symengine(a, raise_error=False):
     """
     Converts 'a' from SymPy to SymEngine.
 
     If the expression cannot be converted, it either returns None (if
     raise_error==False) or raises a SympifyError exception (if
     raise_error==True).
-
-    The default is that sympy.Float is converted to RealMPFR, if faster
-    RealDouble is preferred, set ``prefer_mpfr=True``.
     """
     import sympy
     from sympy.core.function import AppliedUndef as sympy_AppliedUndef
@@ -117,20 +114,20 @@ def sympy2symengine(a, raise_error=False, prefer_mpfr=True):
         return Symbol(a.name)
     elif isinstance(a, sympy.Mul):
         x, y = a.as_two_terms()
-        return sympy2symengine(x, True, prefer_mpfr) * sympy2symengine(y, True, prefer_mpfr)
+        return sympy2symengine(x, True) * sympy2symengine(y, True)
     elif isinstance(a, sympy.Add):
         x, y = a.as_two_terms()
-        return sympy2symengine(x, True, prefer_mpfr) + sympy2symengine(y, True, prefer_mpfr)
+        return sympy2symengine(x, True) + sympy2symengine(y, True)
     elif isinstance(a, (sympy.Pow, sympy.exp)):
         x, y = a.as_base_exp()
-        return sympy2symengine(x, True, prefer_mpfr) ** sympy2symengine(y, True, prefer_mpfr)
+        return sympy2symengine(x, True) ** sympy2symengine(y, True)
     elif isinstance(a, sympy.Integer):
         return Integer(a.p)
     elif isinstance(a, sympy.Rational):
         return Integer(a.p) / Integer(a.q)
     elif isinstance(a, sympy.Float):
         IF HAVE_SYMENGINE_MPFR:
-            if prefer_mpfr:
+            if a._prec > 53:
                 return RealMPFR(str(a), a._prec)
             else:
                 return RealDouble(float(str(a)))
@@ -188,7 +185,7 @@ def sympy2symengine(a, raise_error=False, prefer_mpfr=True):
     elif isinstance(a, sympy.log):
         return log(a.args[0])
     elif isinstance(a, sympy.Abs):
-        return abs(sympy2symengine(a.args[0], True, prefer_mpfr))
+        return abs(sympy2symengine(a.args[0], True))
     elif isinstance(a, sympy.Derivative):
         return Derivative(a.expr, a.variables)
     elif isinstance(a, sympy.Subs):
@@ -208,7 +205,7 @@ def sympy2symengine(a, raise_error=False, prefer_mpfr=True):
     if raise_error:
         raise SympifyError("sympy2symengine: Cannot convert '%r' to a symengine type." % a)
 
-def sympify(a, raise_error=True, prefer_mpfr=True):
+def sympify(a, raise_error=True):
     """
     Converts an expression 'a' into a SymEngine type.
 
@@ -218,8 +215,6 @@ def sympify(a, raise_error=True, prefer_mpfr=True):
     a ............. An expression to convert.
     raise_error ... Will raise an error on a failure (default True), otherwise
                     it returns None if 'a' cannot be converted.
-    prefer_mpfr ... Whether MPFR of double are preferred the preferred conversion
-                    for sympy.Float.
 
     Examples
     ========
@@ -242,18 +237,18 @@ def sympify(a, raise_error=True, prefer_mpfr=True):
     elif isinstance(a, tuple):
         v = []
         for e in a:
-            v.append(sympify(e, True, prefer_mpfr))
+            v.append(sympify(e, True))
         return tuple(v)
     elif isinstance(a, list):
         v = []
         for e in a:
-            v.append(sympify(e, True, prefer_mpfr))
+            v.append(sympify(e, True))
         return v
     elif hasattr(a, '_symengine_'):
         return a._symengine_()
     elif hasattr(a, '_sympy_'):
-        return sympy2symengine(a._sympy_(), raise_error, prefer_mpfr)
-    return sympy2symengine(a, raise_error, prefer_mpfr)
+        return sympy2symengine(a._sympy_(), raise_error)
+    return sympy2symengine(a, raise_error)
 
 cdef class Basic(object):
 
@@ -1745,7 +1740,6 @@ def powermod_list(a, b, m):
         s.append(c2py(<RCP[const symengine.Basic]>(v[i])))
     return s
 
-# Is this really intentional? eval_double already defined earlier:
 def eval_double(basic):
     cdef Basic b = sympify(basic)
     return symengine.eval_double(deref(b.thisptr))
@@ -1871,7 +1865,7 @@ cdef class Lambdify(object):
                     self.args.push_back(deref(mtx).get(ri, ci))
         else:
             for e in args:
-                e_ = sympify(e, prefer_mpfr=False)
+                e_ = sympify(e)
                 self.args.push_back(e_.thisptr)
 
         if isinstance(exprs, DenseMatrix):
@@ -1887,7 +1881,7 @@ cdef class Lambdify(object):
             except AttributeError:
                 exprs = tuple(exprs)
             for e in exprs:
-                e_ = sympify(e, prefer_mpfr=False)
+                e_ = sympify(e)
                 self.exprs.push_back(e_.thisptr)
 
     # Two fused types InType and OutType are the same, but with Cython >= 0.21,
