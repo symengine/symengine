@@ -21,3 +21,7 @@ endif()
 add_executable(test_eval_double test_eval_double.cpp)
 target_link_libraries(test_eval_double symengine catch)
 add_test(test_eval_double ${PROJECT_BINARY_DIR}/test_eval_double)
+
+add_executable(test_lambda_double test_lambda_double.cpp)
+target_link_libraries(test_lambda_double symengine catch)
+add_test(test_lambda_double ${PROJECT_BINARY_DIR}/test_lambda_double)
