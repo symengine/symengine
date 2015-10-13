@@ -54,8 +54,10 @@ macro (libfind_library libname pkg)
             ${libname}
     )
 
-    add_library(${libname} UNKNOWN IMPORTED)
-    set_property(TARGET ${libname} PROPERTY IMPORTED_LOCATION ${${LIBNAME}_LIBRARY})
+    if (NOT TARGET ${libname})
+        add_library(${libname} UNKNOWN IMPORTED)
+        set_property(TARGET ${libname} PROPERTY IMPORTED_LOCATION ${${LIBNAME}_LIBRARY})
+    endif()
 
     if ("${${LIBNAME}_LIBRARY}" STREQUAL "${LIBNAME}_LIBRARY-NOTFOUND")
         set(${LIBNAME}_LIBRARY_FOUND no)

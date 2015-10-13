@@ -95,6 +95,7 @@ endif()
 find_package(GMP REQUIRED)
 include_directories(${GMP_INCLUDE_DIRS})
 set(LIBS ${LIBS} ${GMP_TARGETS})
+set(PKGS ${PKGS} "GMP")
 
 # Check gmpxx
 if (NOT(MSVC))
@@ -119,6 +120,7 @@ if (WITH_ECM)
     include_directories(${ECM_INCLUDE_DIRS})
     set(LIBS ${LIBS} ${ECM_TARGETS})
     set(HAVE_SYMENGINE_ECM yes)
+    set(PKGS ${PKGS} "ECM")
 endif()
 
 # PRIMESIEVE
@@ -130,6 +132,7 @@ if (WITH_PRIMESIEVE)
     include_directories(${PRIMESIEVE_INCLUDE_DIRS})
     set(LIBS ${LIBS} ${PRIMESIEVE_TARGETS})
     set(HAVE_SYMENGINE_PRIMESIEVE yes)
+    set(PKGS ${PKGS} "PRIMESIEVE")
 endif()
 
 # ARB
@@ -151,6 +154,7 @@ if (WITH_ARB)
     find_package(FLINT REQUIRED)
     include_directories(${FLINT_INCLUDE_DIRS})
     set(LIBS ${LIBS} ${FLINT_TARGETS})
+    set(PKGS ${PKGS} "FLINT")
 
     # Workaround for https://github.com/fredrik-johansson/arb/issues/24
     include_directories(${FLINT_INCLUDE_DIRS}/flint)
@@ -161,6 +165,7 @@ if (WITH_ARB)
     include_directories(${ARB_INCLUDE_DIRS})
     set(LIBS ${LIBS} ${ARB_TARGETS})
     set(HAVE_SYMENGINE_ARB True)
+    set(PKGS ${PKGS} "ARB")
 endif()
 
 if (WITH_MPC)
@@ -169,6 +174,7 @@ if (WITH_MPC)
     set(LIBS ${LIBS} ${MPC_TARGETS})
     set(HAVE_SYMENGINE_MPC True)
     set(WITH_MPFR yes)
+    set(PKGS ${PKGS} "MPC")
 endif()
 
 # Piranha
@@ -192,6 +198,8 @@ if (WITH_PIRANHA)
     find_package(Piranha REQUIRED)
     include_directories(${PIRANHA_INCLUDE_DIRS})
     set(HAVE_SYMENGINE_PIRANHA yes)
+    set(PKGS ${PKGS} "PIRANHA")
+    set(BOOST_COMPONENTS ${BOOST_COMPONENTS} serialization iostreams)
 endif()
 
 if (WITH_PTHREAD)
@@ -199,10 +207,11 @@ if (WITH_PTHREAD)
     include_directories(${PTHREAD_INCLUDE_DIRS})
     set(LIBS ${LIBS} ${PTHREAD_TARGETS})
     set(HAVE_SYMENGINE_PTHREAD yes)
+    set(PKGS ${PKGS} "PTHREAD")
 endif()
 
 if (WITH_BOOST)
-    find_package(Boost REQUIRED COMPONENTS date_time filesystem system)
+    find_package(Boost REQUIRED COMPONENTS ${BOOST_COMPONENTS})
     include_directories(${Boost_INCLUDE_DIRS})
     set(LIBS ${LIBS} ${Boost_LIBRARIES})
     set(HAVE_SYMENGINE_BOOST yes)
@@ -213,6 +222,7 @@ if (WITH_MPFR)
     include_directories(${MPFR_INCLUDE_DIRS})
     set(LIBS ${LIBS} ${MPFR_TARGETS})
     set(HAVE_SYMENGINE_MPFR True)
+    set(PKGS ${PKGS} "MPFR")
 endif()
 
 # BFD
@@ -231,6 +241,7 @@ if (WITH_BFD)
     find_package(EXECINFO REQUIRED)
     include_directories(${EXECINFO_INCLUDE_DIRS})
     set(LIBS ${LIBS} ${EXECINFO_TARGETS})
+    set(PKGS ${PKGS} "BFD" "LINKH" "EXECINFO")
 endif()
 
 # TCMalloc
@@ -247,6 +258,7 @@ if (WITH_TCMALLOC)
         set(CMAKE_CXX_FLAGS_RELEASE
             "${CMAKE_CXX_FLAGS_RELEASE} -fno-builtin-malloc -fno-builtin-calloc -fno-builtin-realloc -fno-builtin-free")
     endif()
+    set(PKGS ${PKGS} "TCMALLOC")
 
 endif()
 
@@ -315,34 +327,36 @@ endif()
 enable_testing()
 add_subdirectory(symengine)
 
-get_property(TPL_INCLUDE_DIRS DIRECTORY PROPERTY INCLUDE_DIRECTORIES)
 set(SymEngine_DIR ${PROJECT_BINARY_DIR} CACHE BOOL "SymEngine Build Directory")
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR})
 
 if(WIN32 AND NOT CYGWIN)
     set(DEF_INSTALL_CMAKE_DIR CMake)
+    set(DEF_INSTALL_CMAKE_DIR_REL ..)
 else()
     set(DEF_INSTALL_CMAKE_DIR lib/cmake/symengine)
+    set(DEF_INSTALL_CMAKE_DIR_REL ../../..)
 endif()
 set(INSTALL_CMAKE_DIR ${DEF_INSTALL_CMAKE_DIR} CACHE PATH
     "Installation directory for CMake files")
 
 export(TARGETS symengine teuchos FILE "${PROJECT_BINARY_DIR}/SymEngineTargets.cmake")
-foreach(LIB ${LIBS})
-    get_property(temp TARGET ${LIB} PROPERTY LOCATION)
-    set(SYMENGINE_TARGETS_LOCATIONS ${SYMENGINE_TARGETS_LOCATIONS} ${temp})
+foreach(PKG ${PKGS})
+    set(SYMENGINE_PKG_FINDS "${SYMENGINE_PKG_FINDS}\nset(SYMENGINE_${PKG}_LIBRARIES ${${PKG}_LIBRARIES})")
+    set(SYMENGINE_PKG_FINDS "${SYMENGINE_PKG_FINDS}\nset(SYMENGINE_${PKG}_INCLUDE_DIRS ${${PKG}_INCLUDE_DIRS})")
 endforeach()
 
 # ... for the build tree
-set(CONF_INCLUDE_DIRS ${TPL_INCLUDE_DIRS} ${PROJECT_SOURCE_DIR} ${PROJECT_BINARY_DIR}
+set(CONF_INCLUDE_DIRS ${PROJECT_SOURCE_DIR} ${PROJECT_BINARY_DIR}
                            ${PROJECT_SOURCE_DIR}/symengine/teuchos ${PROJECT_BINARY_DIR}/symengine/teuchos)
+set(SYMENGINE_BUILD_TREE yes)
 configure_file(cmake/SymEngineConfig.cmake.in
     "${PROJECT_BINARY_DIR}/SymEngineConfig.cmake" @ONLY)
 export(TARGETS symengine teuchos
     FILE "${PROJECT_BINARY_DIR}/SymEngineTargets.cmake")
 
 # ... for the install tree
-set(CONF_INCLUDE_DIRS ${TPL_INCLUDE_DIRS} ${CMAKE_INSTALL_PREFIX}/include)
+set(SYMENGINE_BUILD_TREE no)
 configure_file(cmake/SymEngineConfig.cmake.in
     "${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/SymEngineConfig.cmake" @ONLY)
 
@@ -357,8 +371,24 @@ configure_file(cmake/SymEngineConfigVersion.cmake.in SymEngineConfigVersion.cmak
 
 install(FILES "${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/SymEngineConfig.cmake"
               ${PROJECT_BINARY_DIR}/SymEngineConfigVersion.cmake
+              cmake/FindARB.cmake
+              cmake/FindBFD.cmake
+              cmake/FindECM.cmake
+              cmake/FindEXECINFO.cmake
+              cmake/FindFLINT.cmake
+              cmake/FindGMP.cmake
+              cmake/FindLINKH.cmake
+              cmake/FindMPC.cmake
+              cmake/FindMPFR.cmake
+              cmake/FindPIRANHA.cmake
+              cmake/FindPRIMESIEVE.cmake
+              cmake/FindPTHREAD.cmake
+              cmake/FindTCMALLOC.cmake
+              cmake/LibFindMacros.cmake
         DESTINATION ${INSTALL_CMAKE_DIR})
 install(EXPORT SymEngineTargets DESTINATION ${INSTALL_CMAKE_DIR})
+
+file(COPY ${symengine_SOURCE_DIR}/cmake/ DESTINATION ${symengine_BINARY_DIR}/cmake)
 
 if (BUILD_BENCHMARKS)
     add_subdirectory(benchmarks)
