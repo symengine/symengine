@@ -20,15 +20,12 @@ pwd
 echo "Running cmake:"
 # We build the command line here. If the variable is empty, we skip it,
 # otherwise we pass it to cmake.
-cmake_line="-DCMAKE_INSTALL_PREFIX=$our_install_dir -DCOMMON_DIR=$common_dir"
+cmake_line="-DCMAKE_INSTALL_PREFIX=$our_install_dir -DCOMMON_DIR=$our_install_dir"
 if [[ "${BUILD_TYPE}" != "" ]]; then
     cmake_line="$cmake_line -DCMAKE_BUILD_TYPE=${BUILD_TYPE}"
 fi
 if [[ "${WITH_BFD}" != "" ]]; then
     cmake_line="$cmake_line -DWITH_BFD=${WITH_BFD}"
-fi
-if [[ "${WITH_PYTHON}" != "" ]]; then
-    cmake_line="$cmake_line -DWITH_PYTHON=${WITH_PYTHON}"
 fi
 if [[ "${WITH_SYMENGINE_ASSERT}" != "" ]]; then
     cmake_line="$cmake_line -DWITH_SYMENGINE_ASSERT=${WITH_SYMENGINE_ASSERT}"
@@ -63,22 +60,6 @@ fi
 if [[ "${WITH_RUBY}" != "" ]]; then
     cmake_line="$cmake_line -DWITH_RUBY=${WITH_RUBY}"
 fi
-if [[ "${WITH_SAGE}" != "" ]]; then
-    cmake_line="$cmake_line -DPYTHON_INSTALL_PATH=$python_install_dir"
-fi
-if [[ "${PYTHON_INSTALL}" == "yes" ]]; then
-    git clean -dfx
-    pip install $SOURCE_DIR
-    mkdir -p empty
-    cd empty
-    cat << EOF | python
-import symengine
-if not symengine.test():
-    raise Exception('Tests failed')
-EOF
-    cd ..
-    exit 0
-fi
 
 if [[ "${CC}" == "clang"* ]] && [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
     CXXFLAGS=""
@@ -95,42 +76,19 @@ echo "Running make install:"
 make install
 echo "Running tests in build directory:"
 # C++
-ctest --output-on-failure
-# Python
-if [[ "${WITH_PYTHON}" == "yes" ]] && [[ "${WITH_SAGE}" != "yes" ]]; then
-    cd symengine/python
-    nosetests -v
-    cd ../../
-fi
-# Ruby
-if [[ "${WITH_RUBY}" == "yes" ]]; then
-    cd symengine/ruby
-    echo "Installing dependent gems"
-    bundle install
-    echo "Running RSpec tests for Ruby extension in $RUBY_GEM_DIR"
-    bundle exec rspec
-    cd ../../
+if [[ "${TEST_CPP}" != "no" ]]; then
+    ctest --output-on-failure
 fi
 echo "Running tests using installed SymEngine:"
-# C++
-cd $SOURCE_DIR/benchmarks
 
-compile_flags=`cmake --find-package -DNAME=SymEngine -DSymEngine_DIR=$our_install_dir/lib/cmake/symengine -DCOMPILER_ID=GNU -DLANGUAGE=CXX -DMODE=COMPILE`
-link_flags=`cmake --find-package -DNAME=SymEngine -DSymEngine_DIR=$our_install_dir/lib/cmake/symengine  -DCOMPILER_ID=GNU -DLANGUAGE=CXX -DMODE=LINK`
+if [[ "${TEST_CPP}" != "no" ]]; then
+    cd $SOURCE_DIR/benchmarks
 
-${CXX} -std=c++0x $compile_flags expand1.cpp $link_flags
-export LD_LIBRARY_PATH=$our_install_dir/lib:$LD_LIBRARY_PATH
-./a.out
-# Python
-if [[ "${WITH_PYTHON}" == "yes" ]] && [[ "${WITH_SAGE}" != "yes" ]]; then
-    mkdir -p empty
-    cd empty
-    cat << EOF | python
-import symengine
-if not symengine.test():
-    raise Exception('Tests failed')
-EOF
+    compile_flags=`cmake --find-package -DNAME=SymEngine -DSymEngine_DIR=$our_install_dir/lib/cmake/symengine -DCOMPILER_ID=GNU -DLANGUAGE=CXX -DMODE=COMPILE`
+    link_flags=`cmake --find-package -DNAME=SymEngine -DSymEngine_DIR=$our_install_dir/lib/cmake/symengine  -DCOMPILER_ID=GNU -DLANGUAGE=CXX -DMODE=LINK`
+
+    ${CXX} -std=c++0x $compile_flags expand1.cpp $link_flags
+    export LD_LIBRARY_PATH=$our_install_dir/lib:$LD_LIBRARY_PATH
+    ./a.out
 fi
-if [[ "${WITH_SAGE}" == "yes" ]]; then
-    sage -t $SOURCE_DIR/symengine/python/symengine/tests/test_sage.py
-fi
+

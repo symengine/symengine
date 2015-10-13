@@ -15,32 +15,20 @@ environment:
     - BUILD_TYPE: "Release"
       COMPILER: MSVC15
       PLATFORM: "Win32"
-      WITH_PYTHON: yes
-      PYTHON_VERSION: 27
     - BUILD_TYPE: "Debug"
       COMPILER: MSVC15
       PLATFORM: "x64"
     - BUILD_TYPE: "Release"
       COMPILER: MSVC15
       PLATFORM: "x64"
-      WITH_PYTHON: yes
-      PYTHON_VERSION: 27-x64
     - BUILD_TYPE: "Debug"
       COMPILER: MinGW
-      WITH_PYTHON: yes
-      PYTHON_VERSION: 27
     - BUILD_TYPE: "Release"
       COMPILER: MinGW
-      WITH_PYTHON: yes
-      PYTHON_VERSION: 34
     - BUILD_TYPE: "Release"
       COMPILER: MinGW-w64
-      WITH_PYTHON: yes
-      PYTHON_VERSION: 27-x64
     - BUILD_TYPE: "Debug"
       COMPILER: MinGW-w64
-      WITH_PYTHON: yes
-      PYTHON_VERSION: 27-x64
 
 install:
 - if [%COMPILER%]==[MSVC15] set PATH=C:\Program Files (x86)\MSBuild\14.0\Bin;%PATH%
@@ -67,10 +55,6 @@ install:
 - if [%COMPILER%]==[MinGW-w64] if [%WITH_PYTHON%]==[yes] appveyor DownloadFile "https://raw.githubusercontent.com/symengine/dependencies/5cff7d1736877336cf9fb58267111beea4fa152f/python-x86_64-w64-mingw32.7z" -FileName pyx64.7z
 - if [%COMPILER%]==[MinGW-w64] if [%WITH_PYTHON%]==[yes] 7z x -aoa -oC:\ pyx64.7z > NUL
 
-- if [%WITH_PYTHON%]==[yes] set PATH=C:\Python%PYTHON_VERSION%;C:\Python%PYTHON_VERSION%\Scripts;%PATH%
-- if [%WITH_PYTHON%]==[yes] pip install nose pytest sympy
-- if [%WITH_PYTHON%]==[yes] pip install --install-option="--no-cython-compile" cython
-
 build_script:
 - mkdir build
 - cd build
@@ -81,19 +65,10 @@ build_script:
 - if [%COMPILER%]==[MinGW] cmake -G "MinGW Makefiles" -DCOMMON_DIR=C:\MinGW -DCMAKE_BUILD_TYPE=%BUILD_TYPE% ..
 - if [%COMPILER%]==[MinGW-w64] cmake -G "MinGW Makefiles" -DWITH_MINGW_W64=yes -DCOMMON_DIR=C:\mingw64 -DCMAKE_BUILD_TYPE=%BUILD_TYPE% ..
 
-- if [%WITH_PYTHON%]==[yes] cmake -DWITH_PYTHON=yes ..
-
-- if [%COMPILER%]==[MSVC15] msbuild ALL_BUILD.vcxproj /p:Configuration=%BUILD_TYPE% /p:Platform=%PLATFORM% /p:PlatformToolset=%PLATFORMTOOLSET% /verbosity:normal
-- if [%COMPILER%]==[MSVC15] msbuild INSTALL.vcxproj /p:Configuration=%BUILD_TYPE% /p:Platform=%PLATFORM% /p:PlatformToolset=%PLATFORMTOOLSET% /verbosity:normal
-
-- if not [%COMPILER%]==[MSVC15] mingw32-make && mingw32-make install
+- cmake --build . --config %BUILD_TYPE% --target install
 
 test_script:
 - ctest --output-on-failure
-- if [%WITH_PYTHON%]==[yes] cd symengine/python
-- if [%WITH_PYTHON%]==[yes] if not [%COMPILER%]==[MSVC15] nosetests
-- if [%WITH_PYTHON%]==[yes] mkdir empty && cd empty
-- if [%WITH_PYTHON%]==[yes] python C:\projects\symengine\bin\test_python.py
 
 # Enable this to be able to login to the build worker. You can use the
 # `remmina` program in Ubuntu, use the login information that the line below
