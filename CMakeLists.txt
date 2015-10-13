@@ -215,14 +215,6 @@ if (WITH_MPFR)
     set(HAVE_SYMENGINE_MPFR True)
 endif()
 
-# Python
-set(WITH_PYTHON no
-    CACHE BOOL "Build with Python wrappers")
-
-#Ruby
-set(WITH_RUBY no
-    CACHE BOOL "Build with Ruby bindings")
-
 # BFD
 set(WITH_BFD no
     CACHE BOOL "Build with BFD (binutils-dev) support")
@@ -372,16 +364,6 @@ if (BUILD_BENCHMARKS)
     add_subdirectory(benchmarks)
 endif()
 
-if (WITH_RUBY)
-    # Copies LICENSE from root directory to gem directory
-    file(COPY ${symengine_SOURCE_DIR}/LICENSE DESTINATION symengine/ruby)
-    add_subdirectory(symengine/ruby)
-endif ()
-
-if (WITH_PYTHON)
-    add_subdirectory(symengine/python)
-endif()
-
 # At the end we print a nice summary
 
 message("--------------------------------------------------------------------------------")
@@ -424,21 +406,6 @@ if (WITH_BFD)
     message("LINKH_INCLUDE_DIRS: ${LINKH_INCLUDE_DIRS}")
     message("EXECINFO_INCLUDE_DIRS: ${EXECINFO_INCLUDE_DIRS}")
 endif()
-
-message("WITH_PYTHON: ${WITH_PYTHON}")
-if (WITH_PYTHON)
-    message("PYTHON_LIBRARY: ${PYTHON_LIBRARY}")
-    message("PYTHON_INCLUDE_PATH: ${PYTHON_INCLUDE_PATH}")
-    message("PYTHON_INSTALL_PATH: ${PYTHON_INSTALL_PATH}")
-
-    message("Cython path: ${CYTHON_BIN}")
-endif ()
-
-message("WITH_RUBY: ${WITH_RUBY}")
-if (WITH_RUBY)
-    message("RUBY_INCLUDE_DIRS: ${RUBY_INCLUDE_DIRS}")
-    message("RUBY_LIBRARY: ${RUBY_LIBRARY}")
-endif ()
 
 message("WITH_ECM: ${WITH_ECM}")
 if (WITH_ECM)
