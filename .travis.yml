@@ -93,26 +93,9 @@ matrix:
     - env: BUILD_TYPE="Debug"
       compiler: clang
       os: osx
-      addons:
-        apt:
-          sources:
-          - ubuntu-toolchain-r-test
-          packages:
-          - clang
-          - libstdc++-4.8-dev
-          - libgmp-dev
-          - binutils-dev
     - env: BUILD_TYPE="Release"
       compiler: clang
       os: osx
-      addons:
-        apt:
-          sources:
-          - ubuntu-toolchain-r-test
-          packages:
-          - clang
-          - libstdc++-4.8-dev
-          - libgmp-dev
     - env: BUILD_TYPE="Debug"
       compiler: gcc
       os: osx
