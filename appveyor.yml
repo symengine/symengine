@@ -63,7 +63,7 @@ build_script:
 - if [%COMPILER%]==[MSVC15] if [%PLATFORM%]==[x64] cmake -G "Visual Studio 14 2015 Win64" -DGMP_DIR=mpir-2.7.0/lib/%PLATFORM%/%BUILD_TYPE% -DCMAKE_CXX_FLAGS_RELEASE="/MT /W1 /O2 /Ob2 /D NDEBUG" -DCMAKE_CXX_FLAGS_DEBUG="/D_DEBUG /MTd /Zi /Ob0 /Od /RTC1 /W1" ..
 
 - if [%COMPILER%]==[MinGW] cmake -G "MinGW Makefiles" -DCOMMON_DIR=C:\MinGW -DCMAKE_BUILD_TYPE=%BUILD_TYPE% ..
-- if [%COMPILER%]==[MinGW-w64] cmake -G "MinGW Makefiles" -DWITH_MINGW_W64=yes -DCOMMON_DIR=C:\mingw64 -DCMAKE_BUILD_TYPE=%BUILD_TYPE% ..
+- if [%COMPILER%]==[MinGW-w64] cmake -G "MinGW Makefiles" -DCOMMON_DIR=C:\mingw64 -DCMAKE_BUILD_TYPE=%BUILD_TYPE% ..
 
 - cmake --build . --config %BUILD_TYPE% --target install
 
