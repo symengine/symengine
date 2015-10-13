@@ -1,13 +1,13 @@
 # SymEngine
 
-[![Build Status](https://travis-ci.org/sympy/symengine.png?branch=master)](https://travis-ci.org/sympy/symengine)
+[![Build Status](https://travis-ci.org/symengine/symengine.png?branch=master)](https://travis-ci.org/symengine/symengine)
 
 SymEngine is a standalone fast C++ symbolic manipulation library. Optional thin
 wrappers allow usage of the library from other languages, e.g.:
 
 * C wrappers allow usage from C, or as a basis for other wrappers (the [symengine/cwrapper.h](https://github.com/sympy/symengine/tree/master/symengine/cwrapper.h) file)
-* Python wrappers allow easy usage from Python and integration with [SymPy](http://sympy.org/) and [Sage](http://www.sagemath.org/) (the [symengine/python](https://github.com/sympy/symengine/tree/master/symengine/python) directory)
-* Ruby wrappers (the [symengine/ruby](https://github.com/sympy/symengine/tree/master/symengine/ruby) directory)
+* Python wrappers allow easy usage from Python and integration with [SymPy](http://sympy.org/) and [Sage](http://www.sagemath.org/) (the [symengine.py](https://github.com/symengine/symengine.py) repository)
+* Ruby wrappers (the [symengine.rb](https://github.com/symengine/symengine.rb) repository)
 * Julia wrappers (the [SymEngine.jl](https://github.com/symengine/SymEngine.jl) repository)
 * ...
 
@@ -46,27 +46,6 @@ Run tests:
 
     ctest
 
-### Python Wrappers
-
-The optional Python wrappers can be turned on by
-
-    cmake -DWITH_PYTHON=yes .
-    make
-
-Use SymEngine from Python as follows:
-
-    >>> from symengine import var
-    >>> var("x y z")
-    (x, y, z)
-    >>> e = (x+y+z)**2
-    >>> e.expand()
-    2*x*y + 2*x*z + 2*y*z + x**2 + y**2 + z**2
-
-You can read Python tests in `symengine/tests` to see what features are
-implemented. Supported versions of Python are: 2.6, 2.7, 3.2, 3.3.
-You need Cython >= 0.19.1 in order to compile the wrappers. CMake
-will report at configure time if the Cython version is too old.
-
 ### Development
 
 The Travis-CI checks the code in both Release and Debug mode with all possible
@@ -104,8 +83,7 @@ their default values indicated below:
 
     cmake -DCMAKE_INSTALL_PREFIX:PATH="/usr/local" \  # Installation prefix
         -DCMAKE_BUILD_TYPE:STRING="Release" \         # Type of build, one of: Debug or Release
-        -DWITH_BFD:BOOL=OFF \                         # Install with BFD library (requires binutils-dev)
-        -DWITH_PYTHON:BOOL=OFF \                      # Build Python wrappers
+        -DWITH_BFD:BOOL=OFF \                         # Install with BFD library (requires binutils-dev)s
         -DWITH_SYMENGINE_ASSERT:BOOL=OFF \            # Test all SYMENGINE_ASSERT statements in the code
         -DWITH_SYMENGINE_RCP:BOOL=ON \                # Use our faster special implementation of RCP
         -DWITH_SYMENGINE_THREAD_SAFE:BOOL=OFF \       # Build with thread safety
@@ -115,6 +93,8 @@ their default values indicated below:
         -DWITH_TCMALLOC:BOOL=OFF \                    # Install with TCMalloc linked
         -DWITH_OPENMP:BOOL=OFF \                      # Install with OpenMP enabled
         -DWITH_PIRANHA:BOOL=OFF \                     # Install with Piranha library
+        -DWITH_MPFR:BOOL=OFF \                        # Install with MPFR library
+        -DWITH_MPC:BOOL=OFF \                         # Install with MPC library
         -DBUILD_TESTS:BOOL=ON \                       # Build with tests
         -DBUILD_BENCHMARKS:BOOL=ON \                  # Build with benchmarks
         .
