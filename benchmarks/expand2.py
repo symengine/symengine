@@ -1,5 +1,5 @@
 import sys
-sys.path.append("..")
+sys.path.append("../symengine/python")
 from timeit import default_timer as clock
 from symengine import var
 var("x y z w")

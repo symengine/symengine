@@ -1,32 +1,22 @@
 import sys
-sys.path.append("..")
+sys.path.append("../symengine/python")
 from timeit import default_timer as clock
-from symengine import var, sympify, function_symbol, Symbol
+from symengine import var, sympify, function_symbol, Symbol, symbols
 import sympy
+syms = symbols("forkcg1, mwf, mframe, WRrad, t, htangle, g, framelength, forkcg3, WFrad, forkoffset, mfork, forklength, framecg1, framecg3")
+
 s = open("expr.txt").read()
 print "Converting to SymPy..."
 e = sympy.sympify(s)
-print "Converting to SymEngine..."
-ce = sympify(e)
-print "    Done."
-print "SymPy subs:"
+print "Subs"
 t1 = clock()
-f = e.subs(sympy.Function("q5")(sympy.Symbol("t")), sympy.Symbol("sq5"))
-t2 = clock()
-print "Total time:", t2-t1, "s"
-print "SymEngine subs:"
-t1 = clock()
-cf = ce.subs(function_symbol("q5", Symbol("t")), Symbol("sq5"))
-t2 = clock()
-print "Total time:", t2-t1, "s"
+t = sympy.Symbol("t")
+states = [s(t) for s in sympy.symbols('q0, q1, q2, q3, q4, q5, '
+                                      'u0, u1, u2, u3, u4, u5',
+                                      cls=sympy.Function)]
+subs2 = sympy.symbols('s:{}'.format(len(states)))
+f = e.subs(dict(zip(states, subs2)))
 
-print "SymPy diff:"
-t1 = clock()
-g = f.diff(sympy.Symbol("sq5"))
-t2 = clock()
-print "Total time:", t2-t1, "s"
-print "SymEngine diff:"
-t1 = clock()
-cg = cf.diff(Symbol("sq5"))
-t2 = clock()
-print "Total time:", t2-t1, "s"
+print "Saving to expr2.txt"
+s = str(f)
+open("expr2.txt", "w").write(s)
