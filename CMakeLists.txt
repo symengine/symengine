@@ -195,7 +195,7 @@ if (WITH_PIRANHA)
     set(CMAKE_CXX_FLAGS_RELEASE
         "${CMAKE_CXX_FLAGS_RELEASE} -DNDEBUG")
 
-    find_package(Piranha REQUIRED)
+    find_package(PIRANHA REQUIRED)
     include_directories(${PIRANHA_INCLUDE_DIRS})
     set(HAVE_SYMENGINE_PIRANHA yes)
     set(PKGS ${PKGS} "PIRANHA")
