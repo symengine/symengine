@@ -200,6 +200,7 @@ if (WITH_PIRANHA)
     set(HAVE_SYMENGINE_PIRANHA yes)
     set(PKGS ${PKGS} "PIRANHA")
     set(BOOST_COMPONENTS ${BOOST_COMPONENTS} serialization iostreams)
+    set(WITH_BOOST yes)
 endif()
 
 if (WITH_PTHREAD)
