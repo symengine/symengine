@@ -122,9 +122,7 @@ public:
     }
 
     void bvisit(const Symbol &x) {
-        std::cout << "Searching for " << x.__str__() << " in vector of size " << symbols.size() << std::endl;
         for (unsigned i = 0; i < symbols.size(); ++i) {
-            std::cout << "Searched " << symbols[i]->__str__() << std::endl;
             if (eq(x, *symbols[i])) {
                 result_ = [=](const std::vector<T> &x){ return x[i]; };
                 return;
