@@ -37,10 +37,6 @@ TEST_CASE("Evaluate to double", "[lambda_double]")
     // Evaluating to double when there are complex doubles raise an exception
     SYMENGINE_CHECK_THROW(v.init({x}, *add(complex_double(std::complex<double>(1, 2)), x)), std::runtime_error);
 
-    // When raise_error is False, exception is raised when called only.
-    v.init({x}, *add(complex_double(std::complex<double>(1, 2)), x), false);
-    SYMENGINE_CHECK_THROW(v.call({1.0}), std::runtime_error);
-
     // Undefined symbols raise an exception
     SYMENGINE_CHECK_THROW(v.init({x}, *r), std::runtime_error);
 }
