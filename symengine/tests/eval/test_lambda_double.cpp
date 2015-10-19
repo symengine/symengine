@@ -35,10 +35,10 @@ TEST_CASE("Evaluate to double", "[lambda_double]")
     REQUIRE(::fabs(d - 1.75) < 1e-12);
 
     // Evaluating to double when there are complex doubles raise an exception
-    CHECK_THROW_AS(v.init({x}, *add(complex_double(std::complex<double>(1, 2)), x)), std::runtime_error);
+    CHECK_THROWS_AS(v.init({x}, *add(complex_double(std::complex<double>(1, 2)), x)), std::runtime_error);
 
     // Undefined symbols raise an exception
-    CHECK_THROW_AS(v.init({x}, *r), std::runtime_error);
+    CHECK_THROWS_AS(v.init({x}, *r), std::runtime_error);
 }
 
 TEST_CASE("Evaluate to std::complex<double>", "[lambda_complex_double]")
@@ -64,5 +64,5 @@ TEST_CASE("Evaluate to std::complex<double>", "[lambda_complex_double]")
     REQUIRE(::fabs(d.imag() - 0.0) < 1e-12);
 
     // Undefined symbols raise an exception
-    CHECK_THROW_AS(v.init({x}, *r), std::runtime_error);
+    CHECK_THROWS_AS(v.init({x}, *r), std::runtime_error);
 }
