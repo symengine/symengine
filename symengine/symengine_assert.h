@@ -23,13 +23,6 @@ abort(); \
 
 #define SYMENGINE_ERROR(description) std::cerr << description; std::cerr << "\n"; abort();
 #define SYMENGINE_CHECK_THROW(expression, exception) \
-try \
-{ \
-expression; \
-SYMENGINE_ERROR("expected exception not thrown");\
-} \
-catch(exception &) \
-{ \
-}
+    CHECK_THROWS_AS(expression, exception);
 
 #endif
