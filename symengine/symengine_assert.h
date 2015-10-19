@@ -22,7 +22,5 @@ abort(); \
 #endif
 
 #define SYMENGINE_ERROR(description) std::cerr << description; std::cerr << "\n"; abort();
-#define SYMENGINE_CHECK_THROW(expression, exception) \
-    CHECK_THROWS_AS(expression, exception);
 
 #endif

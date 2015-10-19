@@ -1911,7 +1911,7 @@ TEST_CASE("MPFR and MPC: functions", "[functions]")
     REQUIRE(mpfr_cmp_si(a.get_mpfr_t(), 106127506190503566) < 0);
 #else
     mpfr_set_si(a.get_mpfr_t(), 2, MPFR_RNDN);
-    SYMENGINE_CHECK_THROW(asin(real_mpfr(a)), std::runtime_error);
+    CHECK_THROWS_AS(asin(real_mpfr(a)), std::runtime_error);
 #endif //HAVE_SYMENGINE_MPC
 #endif //HAVE_SYMENGINE_MPFR
 }
