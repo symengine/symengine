@@ -1,10 +1,13 @@
 @echo off
 rem initiate the retry number
 set retryNumber=0
-set maxRetries=3
+set maxRetries=6
+set time=1
 
 :DOWNLOAD
+timeout %time% > NUL
 appveyor DownloadFile %*
+set /a time=2*%time%
 
 rem problem?
 IF NOT ERRORLEVEL 1 GOTO :EOF
