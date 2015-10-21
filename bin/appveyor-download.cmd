@@ -2,12 +2,12 @@
 rem initiate the retry number
 set retryNumber=0
 set maxRetries=6
-set time=1
+set time=0
 
 :DOWNLOAD
 timeout %time% > NUL
 appveyor DownloadFile %*
-set /a time=2*%time%
+set /a time=2*%time%+1
 
 rem problem?
 IF NOT ERRORLEVEL 1 GOTO :EOF
