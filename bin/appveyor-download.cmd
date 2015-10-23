@@ -6,8 +6,8 @@ set time=0
 
 :DOWNLOAD
 timeout %time% > NUL
-appveyor DownloadFile %*
 set /a time=2*%time%+1
+appveyor DownloadFile %*
 
 rem problem?
 IF NOT ERRORLEVEL 1 GOTO :EOF
