@@ -8,6 +8,7 @@ namespace SymEngine {
 void monomial_mul(const vec_int &A, const vec_int &B, vec_int &C)
 {
     size_t n = A.size();
+    C.resize(n);
     for(size_t i = 0; i < n; ++i) {
         C[i] = A[i] + B[i];
     }
@@ -20,12 +21,14 @@ void monomial_mul(const vec_int &A, const vec_int &B, vec_int &C)
 // This is slightly slower than monomial_mul
 void monomial_mul2(const vec_int &A, const vec_int &B, vec_int &C)
 {
+    C.resize(n);
     std::transform(A.begin(), A.end(), B.begin(), C.begin(), std::plus<int>());
 }
 
 // The same as monomial_mul2
 void monomial_mul3(const vec_int &A, const vec_int &B, vec_int &C)
 {
+    C.resize(n);
     std::transform(A.begin(), A.end(), B.begin(), C.begin(),
         [] (int a, int b) { return a + b; });
 }
