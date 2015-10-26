@@ -32,7 +32,7 @@ environment:
 
 install:
 - if [%COMPILER%]==[MSVC15] set PATH=C:\Program Files (x86)\MSBuild\14.0\Bin;%PATH%
-- if [%COMPILER%]==[MSVC15] appveyor DownloadFile https://raw.githubusercontent.com/symengine/dependencies/fd912ad34c848e7a7a9dab4628f836ab167b9e59/mpir-2.7.0.zip
+- if [%COMPILER%]==[MSVC15] call bin\appveyor-download.cmd https://raw.githubusercontent.com/symengine/dependencies/fd912ad34c848e7a7a9dab4628f836ab167b9e59/mpir-2.7.0.zip
 - if [%COMPILER%]==[MSVC15] 7z x mpir-2.7.0.zip > NUL
 - if [%COMPILER%]==[MSVC15] msbuild mpir-2.7.0/build.vc14/lib_mpir_gc/lib_mpir_gc.vcxproj /p:Configuration=%BUILD_TYPE% /p:Platform=%PLATFORM% /p:PlatformToolset=%PLATFORMTOOLSET% /verbosity:minimal
 - if [%COMPILER%]==[MSVC15] msbuild mpir-2.7.0/build.vc14/lib_mpir_cxx/lib_mpir_cxx.vcxproj /p:Configuration=%BUILD_TYPE% /p:Platform=%PLATFORM% /p:PlatformToolset=%PLATFORMTOOLSET% /verbosity:minimal
@@ -47,12 +47,12 @@ install:
 - if [%COMPILER%]==[MinGW-w64] set PATH=C:\mingw64\bin;%PATH%
 - if [%COMPILER%]==[MinGW-w64] rename "C:\Program Files (x86)\Git\bin\sh.exe" "sh2.exe"
 
-- if [%COMPILER%]==[MinGW-w64] appveyor DownloadFile "https://raw.githubusercontent.com/symengine/dependencies/5cff7d1736877336cf9fb58267111beea4fa152f/x86_64-4.9.1-release-posix-seh-rt_v3-rev1.7z" -FileName mw64.7z
+- if [%COMPILER%]==[MinGW-w64] call bin\appveyor-download.cmd "https://raw.githubusercontent.com/symengine/dependencies/5cff7d1736877336cf9fb58267111beea4fa152f/x86_64-4.9.1-release-posix-seh-rt_v3-rev1.7z" -FileName mw64.7z
 - if [%COMPILER%]==[MinGW-w64] 7z x -oC:\ mw64.7z > NUL
-- if [%COMPILER%]==[MinGW-w64] appveyor DownloadFile "https://raw.githubusercontent.com/symengine/dependencies/5cff7d1736877336cf9fb58267111beea4fa152f/gmp-6.0.0-x86_64-w64-mingw32.7z" -FileName gmp.7z
+- if [%COMPILER%]==[MinGW-w64] call bin\appveyor-download.cmd "https://raw.githubusercontent.com/symengine/dependencies/5cff7d1736877336cf9fb58267111beea4fa152f/gmp-6.0.0-x86_64-w64-mingw32.7z" -FileName gmp.7z
 - if [%COMPILER%]==[MinGW-w64] 7z x -oC:\mingw64 gmp.7z > NUL
 
-- if [%COMPILER%]==[MinGW-w64] if [%WITH_PYTHON%]==[yes] appveyor DownloadFile "https://raw.githubusercontent.com/symengine/dependencies/5cff7d1736877336cf9fb58267111beea4fa152f/python-x86_64-w64-mingw32.7z" -FileName pyx64.7z
+- if [%COMPILER%]==[MinGW-w64] if [%WITH_PYTHON%]==[yes] call bin\appveyor-download.cmd "https://raw.githubusercontent.com/symengine/dependencies/5cff7d1736877336cf9fb58267111beea4fa152f/python-x86_64-w64-mingw32.7z" -FileName pyx64.7z
 - if [%COMPILER%]==[MinGW-w64] if [%WITH_PYTHON%]==[yes] 7z x -aoa -oC:\ pyx64.7z > NUL
 
 build_script:
