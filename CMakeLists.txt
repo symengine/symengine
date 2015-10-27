@@ -203,6 +203,14 @@ if (WITH_PIRANHA)
     set(WITH_BOOST yes)
 endif()
 
+# BENCHMARKS
+set(BUILD_BENCHMARKS yes
+    CACHE BOOL "Build SymEngine benchmarks")
+
+if (BUILD_BENCHMARKS)
+    set(WITH_PTHREAD yes)
+endif()
+
 if (WITH_PTHREAD)
     find_package(PTHREAD REQUIRED)
     include_directories(${PTHREAD_INCLUDE_DIRS})
@@ -295,10 +303,6 @@ set(WITH_SYMENGINE_THREAD_SAFE no
 # TESTS
 set(BUILD_TESTS yes
     CACHE BOOL "Build SymEngine tests")
-
-# BENCHMARKS
-set(BUILD_BENCHMARKS yes
-    CACHE BOOL "Build SymEngine benchmarks")
 
 # OpenMp
 set(WITH_OPENMP no
