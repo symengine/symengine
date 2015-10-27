@@ -176,10 +176,11 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
             return rcp_static_cast<const Number>(a)->pow(*rcp_static_cast<const Number>(b));
         }
     }
-    if (is_a<Mul>(*a) && is_a<Integer>(*b)) {
-        // Convert (x*y)**b = x**b*y**b, where 'b' is an integer. This holds for
-        // any complex 'x', 'y' and integer 'b'.
-        return rcp_static_cast<const Mul>(a)->power_all_terms(b);
+    if (is_a<Mul>(*a) && is_a_Number(*b)) {
+        map_basic_basic d;
+        RCP<const Number> coef = one;
+        rcp_static_cast<const Mul>(a)->power_num(outArg(coef), d, rcp_static_cast<const Number>(b));
+        return Mul::from_dict(coef, std::move(d));
     }
     if (is_a<Pow>(*a) && is_a<Integer>(*b)) {
         // Convert (x**y)**b = x**(b*y), where 'b' is an integer. This holds for

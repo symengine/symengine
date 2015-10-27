@@ -648,6 +648,18 @@ TEST_CASE("Pow: arit", "[arit]")
     r1 = pow(x, real_double(0.0));
     r2 = real_double(1.0);
     REQUIRE(eq(*r1, *r2));
+
+    r1 = sqrt(mul(i2, x));
+    r2 = mul(sqrt(i2), sqrt(x));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = sqrt(mul(neg(i2), x));
+    r2 = mul(sqrt(i2), sqrt(neg(x)));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = pow(mul(sqrt(mul(y, x)), x), i2);
+    r2 = mul(pow(x, i3), y);
+    REQUIRE(eq(*r1, *r2));
 }
 
 TEST_CASE("Log: arit", "[arit]")
