@@ -209,6 +209,7 @@ set(BUILD_BENCHMARKS yes
 
 if (BUILD_BENCHMARKS)
     set(WITH_PTHREAD yes)
+    set(WITH_BOOST yes)
 endif()
 
 if (WITH_PTHREAD)
