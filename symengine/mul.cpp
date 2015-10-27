@@ -51,8 +51,12 @@ bool Mul::is_canonical(const RCP<const Number> &coef,
             return false;
         // e.g. (x*y)**2 (={xy:2}), which should be represented as x**2*y**2
         //     (={x:2, y:2})
-        if (is_a<Mul>(*p.first) && is_a<Integer>(*p.second))
-            return false;
+        if (is_a<Mul>(*p.first)) {
+            if (is_a<Integer>(*p.second)) return false;
+            if (neq(*static_cast<const Mul &>(*p.first).coef_, *one) &&
+                neq(*static_cast<const Mul &>(*p.first).coef_, *minus_one))
+                return false;
+        }
         // e.g. x**2**y (={x**2:y}), which should be represented as x**(2y)
         //     (={x:2y})
         if (is_a<Pow>(*p.first))
