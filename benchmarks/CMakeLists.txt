@@ -43,3 +43,6 @@ target_link_libraries(lwbench symengine)
 
 add_executable(expand6 expand6.cpp)
 target_link_libraries(expand6 symengine)
+
+add_executable(bench bench.cpp)
+target_link_libraries(bench symengine)
