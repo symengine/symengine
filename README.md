@@ -76,6 +76,8 @@ For RPM based systems (Fedora etc.)
 
     yum install binutils-devel
 
+On OpenSuSE you will additionally need `glibc-devel`.
+
 ## CMake Options
 
 Here are all the `CMake` options that you can use to configure the build, with
