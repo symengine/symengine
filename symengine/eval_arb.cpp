@@ -1,6 +1,7 @@
 #include <symengine/basic.h>
 #include <symengine/symbol.h>
 #include <symengine/polynomial.h>
+#include <symengine/polys.h>
 #include <symengine/add.h>
 #include <symengine/integer.h>
 #include <symengine/rational.h>
@@ -127,6 +128,10 @@ public:
     }
 
     virtual void visit(const UnivariatePolynomial &x) {
+        throw std::runtime_error("Not implemented.");
+    }
+
+    virtual void visit(const Polynomial &x) {
         throw std::runtime_error("Not implemented.");
     }
 
