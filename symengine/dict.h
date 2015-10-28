@@ -9,12 +9,16 @@
 #define SYMENGINE_DICT_H
 
 #include <gmpxx.h>
+#if defined(HAVE_SYMENGINE_PIRANHA)
+#include <piranha/piranha.hpp>
+#endif
 
 namespace SymEngine {
 
 class Basic;
 class Number;
 class Integer;
+class Symbol;
 struct RCPBasicHash;
 struct RCPBasicKeyEq;
 struct RCPBasicKeyLess;
@@ -28,6 +32,7 @@ typedef std::unordered_map<RCP<const Basic>, RCP<const Basic>,
 typedef std::vector<int> vec_int;
 typedef std::vector<RCP<const Basic>> vec_basic;
 typedef std::vector<RCP<const Integer>> vec_integer;
+typedef std::vector<RCP<const Symbol>> vec_symbol;
 typedef std::set<RCP<const Basic>, RCPBasicKeyLess> set_basic;
 typedef std::map<vec_int, long long int> map_vec_int;
 typedef std::map<vec_int, mpz_class> map_vec_mpz;
@@ -46,6 +51,56 @@ template<typename T1, typename T2, typename T3> inline
 void insert(T1 &m, const T2 &first, const T3 &second) {
     m.insert(std::pair<T2, T3>(first, second));
 }
+
+//! Definition of pair, for the Polynomial terms
+struct m_pair
+{
+    long long first;
+#if defined(HAVE_SYMENGINE_PIRANHA)
+    mutable piranha::integer second;
+#else
+    mutable mpz_class second;
+#endif
+};
+
+typedef struct
+{
+    typedef size_t result_type;
+    typedef m_pair argument_type;
+    result_type operator()(const argument_type &p) const noexcept
+    {
+             return std::hash<long long>()(p.first);
+    }
+} pair_hash;
+
+typedef struct
+{
+    //! \return true if `x==y`
+    inline bool operator() (const m_pair &x, const m_pair &y) const {
+        return x.first == y.first;
+    }
+} pair_eq;
+
+#if defined(HAVE_SYMENGINE_PIRANHA)
+//! hash_set container from Piranha
+typedef piranha::hash_set<m_pair, pair_hash, pair_eq> hash_set;
+#else
+typedef std::unordered_set<m_pair, pair_hash, pair_eq> unordered_set;
+
+long long vec_encode(const vec_int&);
+
+vec_int vec_decode(const int);
+#endif
+
+#if defined(HAVE_SYMENGINE_PIRANHA)
+//! \return true if the two hash_set `a` and `b` are equal. Otherwise false.
+bool hash_set_eq(const hash_set &a, const hash_set &b);
+//! \return -1, 0, 1 for a <b, a == b, a > b
+int hash_set_compare(const hash_set &A, const hash_set &B);
+#else
+bool unordered_set_eq(const unordered_set &a, const unordered_set &b);
+
+#endif
 
 //! \return true if the two dictionaries `a` and `b` are equal. Otherwise false.
 template<class T>
@@ -150,6 +205,9 @@ std::ostream& operator<<(std::ostream& out, const SymEngine::map_basic_basic& d)
 std::ostream& operator<<(std::ostream& out, const SymEngine::umap_basic_basic& d);
 std::ostream& operator<<(std::ostream& out, const SymEngine::vec_basic& d);
 std::ostream& operator<<(std::ostream& out, const SymEngine::set_basic& d);
+#if defined(HAVE_SYMENGINE_PIRANHA)
+std::ostream& operator<<(std::ostream& out, const SymEngine::hash_set& d);
+#endif
 
 #endif
 
