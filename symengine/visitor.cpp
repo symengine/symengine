@@ -12,6 +12,7 @@
 #include <symengine/constants.h>
 #include <symengine/visitor.h>
 #include <symengine/polynomial.h>
+#include <symengine/polys.h>
 #include <symengine/complex_double.h>
 #include <symengine/complex_mpc.h>
 
@@ -22,7 +23,6 @@ namespace SymEngine {
 #define SYMENGINE_ENUM(TypeID, Class) ACCEPT(Class)
 #include "symengine/type_codes.inc"
 #undef SYMENGINE_ENUM
-
 
 void preorder_traversal(const Basic &b, Visitor &v)
 {
