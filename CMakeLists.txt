@@ -208,7 +208,9 @@ set(BUILD_BENCHMARKS no
     CACHE BOOL "Build SymEngine benchmarks")
 
 if (BUILD_BENCHMARKS)
-    set(WITH_PTHREAD yes)
+    if(NOT WIN32)
+        set(WITH_PTHREAD yes)
+    endif()
     set(WITH_BOOST yes)
 endif()
 
