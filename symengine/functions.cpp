@@ -1470,10 +1470,14 @@ RCP<const Basic> FunctionSymbol::diff(const RCP<const Symbol> &x) const
             v[i] = s;
             map_basic_basic m;
             insert(m, v[i], arg_[i]);
-            diff = add(diff, mul(t, make_rcp<const Subs>(Derivative::create(make_rcp<const FunctionSymbol>(name_, v), {v[i]}), m)));
+            diff = add(diff, mul(t, make_rcp<const Subs>(Derivative::create(create(v), {v[i]}), m)));
         }
     }
     return diff;
+}
+
+RCP<const Basic> FunctionSymbol::create(const vec_basic &x) const {
+    return make_rcp<const FunctionSymbol>(name_, x);
 }
 
 RCP<const Basic> FunctionSymbol::subs(const map_basic_basic &subs_dict) const
@@ -1485,7 +1489,12 @@ RCP<const Basic> FunctionSymbol::subs(const map_basic_basic &subs_dict) const
     for (unsigned i = 0; i < v.size(); i++) {
         v[i] = v[i]->subs(subs_dict);
     }
-    return make_rcp<const FunctionSymbol>(name_, v);
+    return create(v);
+}
+
+RCP<const Number> FunctionSymbol::eval(long bits) const
+{
+    throw std::runtime_error("Not Implemented/Defined");
 }
 
 RCP<const Basic> function_symbol(std::string name, const vec_basic &arg)
@@ -1498,7 +1507,7 @@ RCP<const Basic> function_symbol(std::string name, const RCP<const Basic> &arg)
     return make_rcp<const FunctionSymbol>(name, arg);
 }
 
-FunctionWrapper::FunctionWrapper(void* obj, std::string name, std::string hash, const vec_basic &arg, 
+FunctionWrapper::FunctionWrapper(void* obj, std::string name, std::string hash, const vec_basic &arg,
     void(*dec_ref)(void *), int(*comp)(void *, void *))
     : FunctionSymbol(name, arg)
 {

@@ -220,8 +220,8 @@ public:
         throw std::runtime_error("Not implemented.");
     }
 
-    void bvisit(const FunctionSymbol &) {
-        throw std::runtime_error("Not implemented.");
+    void bvisit(const FunctionSymbol &x) {
+        x.eval(prec_)->accept(*this);
     }
 
     void bvisit(const Sinh &x) {
@@ -300,7 +300,11 @@ public:
 
     void bvisit(const Basic &) {
         throw std::runtime_error("Not implemented.");
-    };f
+    };
+
+    void bvisit(const NumberWrapper &x) {
+        x.eval(prec_)->accept(*this);
+    }
 };
 
 void eval_arb(arb_t result, const Basic &b, long precision)

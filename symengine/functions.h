@@ -543,6 +543,8 @@ public:
     virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
 
     virtual void accept(Visitor &v) const;
+    virtual RCP<const Basic> create(const vec_basic &x) const;
+    virtual RCP<const Number> eval(long bits) const;
 };
 
 //! Create a new FunctionSymbol instance:
@@ -584,6 +586,9 @@ public:
     inline void* get_object() const { return obj_; }
 
     virtual void accept(Visitor &v) const;
+    virtual RCP<const Basic> create(const vec_basic &x) const {
+        throw std::runtime_error("Not Implmented.");
+    }
 };
 
 /*! Derivative operator

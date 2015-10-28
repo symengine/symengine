@@ -376,6 +376,10 @@ void StrPrinter::bvisit(const Subs &x) {
     str_ = o.str();
 }
 
+void StrPrinter::bvisit(const NumberWrapper &x) {
+    str_ = x.__str__();
+}
+
 std::string StrPrinter::parenthesizeLT(const RCP<const Basic> &x, PrecedenceEnum precedenceEnum) {
     Precedence prec;
     if(prec.getPrecedence(x) < precedenceEnum) {
