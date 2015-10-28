@@ -1,7 +1,7 @@
 /**
  * \file add.h
  * Class Add
- * 
+ *
  **/
 
 #ifndef SYMENGINE_ADD_H
@@ -47,7 +47,7 @@ public:
     //! Converts the add dict into two appropriate instances
     void as_two_terms(const Ptr<RCP<const Basic>> &a,
             const Ptr<RCP<const Basic>> &b) const;
-    //! Converts into the form of coefficient and term 
+    //! Converts into the form of coefficient and term
     static void as_coef_term(const RCP<const Basic> &self,
         const Ptr<RCP<const Number>> &coef, const Ptr<RCP<const Basic>> &term);
     //! \return `true` if it is in canonical form

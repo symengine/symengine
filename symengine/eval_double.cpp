@@ -302,8 +302,8 @@ std::vector<fn> init_eval_double()
         return tmp;
     };
     table[POW] = [](const Basic &x) {
-        double a = eval_double_single_dispatch(*(static_cast<const Pow &>(x)).base_);
-        double b = eval_double_single_dispatch(*(static_cast<const Pow &>(x)).exp_);
+        double a = eval_double_single_dispatch(*(static_cast<const Pow &>(x)).get_base());
+        double b = eval_double_single_dispatch(*(static_cast<const Pow &>(x)).get_exp());
         return ::pow(a, b);
     };
     table[SIN] = [](const Basic &x) {

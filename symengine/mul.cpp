@@ -304,8 +304,8 @@ void Mul::as_base_exp(const RCP<const Basic> &self, const Ptr<RCP<const Basic>> 
             *base = self;
         }
     } else if (is_a<Pow>(*self)) {
-        *exp = rcp_static_cast<const Pow>(self)->exp_;
-        *base = rcp_static_cast<const Pow>(self)->base_;
+        *exp = rcp_static_cast<const Pow>(self)->get_exp();
+        *base = rcp_static_cast<const Pow>(self)->get_base();
     } else {
         SYMENGINE_ASSERT(!is_a<Mul>(*self));
         *exp = one;
