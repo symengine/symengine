@@ -204,7 +204,7 @@ if (WITH_PIRANHA)
 endif()
 
 # BENCHMARKS
-set(BUILD_BENCHMARKS yes
+set(BUILD_BENCHMARKS no
     CACHE BOOL "Build SymEngine benchmarks")
 
 if (BUILD_BENCHMARKS)
