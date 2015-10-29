@@ -282,7 +282,7 @@ int factor_lehman_method(const Ptr<RCP<const Integer>> &f, const Integer &n)
 int _factor_pollard_pm1_method(mpz_class &rop, const mpz_class &n, 
         const mpz_class &c, unsigned B)
 {
-    if (n < 4 || B < 3)
+    if (n < 4 or B < 3)
         throw std::runtime_error("Require n > 3 and B > 2 to use Pollard's p-1 method");
 
     mpz_class m, g, _c;
@@ -302,7 +302,7 @@ int _factor_pollard_pm1_method(mpz_class &rop, const mpz_class &n,
     _c = _c - 1;
     mpz_gcd(rop.get_mpz_t(), _c.get_mpz_t(), n.get_mpz_t());
 
-    if (rop == 1 || rop == n)
+    if (rop == 1 or rop == n)
         return 0;
     else
         return 1;
@@ -319,7 +319,7 @@ int factor_pollard_pm1_method(const Ptr<RCP<const Integer>> &f, const Integer &n
     gmp_randseed_ui(state, retries);
     nm4 = n.as_mpz() - 4;
 
-    for (unsigned i = 0; i < retries && ret_val == 0; i++) {
+    for (unsigned i = 0; i < retries and ret_val == 0; i++) {
         mpz_urandomm(c.get_mpz_t(), state, nm4.get_mpz_t());
         c = c + 2;
         ret_val = _factor_pollard_pm1_method(rop, n.as_mpz(), c, B);
@@ -371,7 +371,7 @@ int factor_pollard_rho_method(const Ptr<RCP<const Integer>> &f,
     nm1 = n.as_mpz() - 1;
     nm4 = n.as_mpz() - 4;
 
-    for (unsigned i = 0; i < retries && ret_val == 0; i++) {
+    for (unsigned i = 0; i < retries and ret_val == 0; i++) {
         mpz_urandomm(a.get_mpz_t(), state, nm1.get_mpz_t());
         mpz_urandomm(s.get_mpz_t(), state, nm4.get_mpz_t());
         s = s + 1;
@@ -406,7 +406,7 @@ int factor(const Ptr<RCP<const Integer>> &f, const Integer &n, double B1)
 
         // eventually `rem` = 0 zero as `n` is a perfect power. `f_t` will
         // be set to a factor of `n` when that happens
-        while (i > 1 && rem != 0) {
+        while (i > 1 and rem != 0) {
             mpz_rootrem(_f.get_mpz_t(), rem.get_mpz_t(), _n.get_mpz_t(), i);
             i--;
         }
@@ -421,7 +421,7 @@ int factor(const Ptr<RCP<const Integer>> &f, const Integer &n, double B1)
         }
         else {
 
-            for (int i = 0; i < 10 && !ret_val; i++)
+            for (int i = 0; i < 10 and !ret_val; i++)
                 ret_val = ecm_factor(_f.get_mpz_t(), _n.get_mpz_t(), B1,
                         nullptr);
             if (!ret_val)
@@ -544,7 +544,7 @@ void Sieve::_extend(unsigned limit)
         unsigned finish = std::min(start + segment * 2 + 1, limit);
         is_prime[std::slice(0, segment, 1)] = true;
         //considering only odd integers. An odd number n corresponds to n-start/2 in the array.
-        for (unsigned index = 1; index < _primes.size() &&
+        for (unsigned index = 1; index < _primes.size() and
             _primes[index] * _primes[index] <= finish; ++index) {
             unsigned n = _primes[index];
             unsigned multiple = (start / n + 1) * n;
@@ -597,7 +597,7 @@ unsigned Sieve::iterator::next_prime()
 {
     if (_index >= _primes.size()) {
         unsigned extend_to = _primes[_index - 1] * 2;
-        if (_limit > 0 && _limit < extend_to) {
+        if (_limit > 0 and _limit < extend_to) {
             extend_to = _limit;
         }
         _extend(extend_to);
@@ -691,7 +691,7 @@ bool _prime_power(mpz_class &p, mpz_class &e, const mpz_class &n)
     mpz_class _n = n, temp;
     e = 1;
     unsigned i = 2;
-    while (mpz_perfect_power_p(_n.get_mpz_t()) && _n >= 2) {
+    while (mpz_perfect_power_p(_n.get_mpz_t()) and _n >= 2) {
         if (mpz_root(temp.get_mpz_t(), _n.get_mpz_t(), i) != 0) {
             mpz_mul_ui(e.get_mpz_t(), e.get_mpz_t(), i);
             _n = temp;
@@ -740,7 +740,7 @@ void _primitive_root(mpz_class &g, const mpz_class &p, const mpz_class &e,
             g += p;
         }
     }
-    if (even && g % 2 == 0) {
+    if (even and g % 2 == 0) {
         mpz_pow_ui(t.get_mpz_t(), p.get_mpz_t(), e.get_ui());
         g += t;                     // If g is even then root of 2*p**e is g + p**e.
     }
@@ -792,7 +792,7 @@ void _primitive_root_list(std::vector<RCP<const Integer>> &roots, const mpz_clas
         mpz_gcd_ui(d.get_mpz_t(), pm1.get_mpz_t(), i);
         if (d == 1) {
             if (e == 1) {
-                if (even && h % 2 == 0)
+                if (even and h % 2 == 0)
                     roots.push_back(integer(h + n));
                 else
                     roots.push_back(integer(h));
@@ -810,7 +810,7 @@ void _primitive_root_list(std::vector<RCP<const Integer>> &roots, const mpz_clas
                 for (unsigned long j = 0; j < pe2; j++) {
                     for (unsigned long i = 0; i < p; i++) {
                         if (i != d) {
-                            if (even && t % 2 == 0)
+                            if (even and t % 2 == 0)
                                 roots.push_back(integer(t + n));
                             else
                                 roots.push_back(integer(t));
@@ -882,7 +882,7 @@ RCP<const Integer> carmichael(const RCP<const Integer> &n) {
     for (auto it : prime_mul) {
         p = it.first->as_mpz();
         multiplicity = it.second;
-        if (p == 2 && multiplicity > 2) {     // For powers of 2 greater than 4 divide by 2.
+        if (p == 2 and multiplicity > 2) {     // For powers of 2 greater than 4 divide by 2.
             multiplicity--;
         }
         t = p - 1;
@@ -1170,7 +1170,7 @@ bool _nthroot_mod1(std::vector<RCP<const Integer>> &roots, const mpz_class &a, c
         root += (s - u * root) * t;
         mpz_fdiv_r(root.get_mpz_t(), root.get_mpz_t(), pd.get_mpz_t());
     }
-    if (m != 1 && all_roots) {
+    if (m != 1 and all_roots) {
         // All roots are generated by root*(g**(phi / gcd(phi , n)))**j
         if (n == 2) {
             t = -1;
@@ -1211,11 +1211,11 @@ bool _nthroot_mod_prime_power(std::vector<RCP<const Integer>> &roots, const mpz_
                 return true;
             }
             if (k == 2) {
-                if (c > 0 && a % 4 == 3) {
+                if (c > 0 and a % 4 == 3) {
                     return false;
                 }
                 roots.push_back(integer(a % 4));
-                if (all_roots && c > 0)
+                if (all_roots and c > 0)
                     roots.push_back(integer(3));
                 return true;
             }
@@ -1296,7 +1296,7 @@ bool _nthroot_mod_prime_power(std::vector<RCP<const Integer>> &roots, const mpz_
                 mpz_divexact(_a.get_mpz_t(), _a.get_mpz_t(), p.get_mpz_t());
                 r++;
             }
-            if (r < n || r % n != 0 || !_nthroot_mod_prime_power(_roots, _a, n, p, k - r, all_roots)) {
+            if (r < n or r % n != 0 or !_nthroot_mod_prime_power(_roots, _a, n, p, k - r, all_roots)) {
                 return false;
             }
             m = r / n.get_ui();

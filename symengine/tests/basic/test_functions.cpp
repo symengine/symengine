@@ -886,7 +886,7 @@ TEST_CASE("Get pi shift: functions", "[functions]")
     // arg = n*pi/12
     r = mul(pi, div(i2, integer(3)));
     b = get_pi_shift(r, outArg(n), outArg(r1));
-    REQUIRE((eq(*n, *i8) && (b == true) && eq(*r1, *zero)));
+    REQUIRE((eq(*n, *i8) and (b == true) and eq(*r1, *zero)));
 
     // arg neq n*pi/12 , n not an integer
     r = mul(pi, div(i2, integer(5)));
@@ -936,7 +936,7 @@ TEST_CASE("Get pi shift: functions", "[functions]")
     
     // arg = pi (it is neither of form add nor mul, just a symbol)
     b = get_pi_shift(pi, outArg(n), outArg(r1));
-    REQUIRE(((b == true) && eq(*n, *i12) && eq(*r1, *zero)));
+    REQUIRE(((b == true) and eq(*n, *i12) and eq(*r1, *zero)));
     
     // arg = theta + n*pi/12 (theta is an expression of >1 symbols)
     r = add(add(mul(i2, x), mul(i2, symbol("y"))), mul(pi, div(i2, integer(3))));

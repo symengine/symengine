@@ -125,7 +125,7 @@ void rational_set_ui(basic s, unsigned long a, unsigned long b)
 
 int rational_set(basic s, const basic a, const basic b)
 {
-    if (!is_a_Integer(a) || !is_a_Integer(b)) {
+    if (!is_a_Integer(a) or !is_a_Integer(b)) {
         return 0;
     }
     s->m = SymEngine::Rational::from_two_ints(

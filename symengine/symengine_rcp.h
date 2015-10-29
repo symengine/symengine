@@ -5,6 +5,7 @@
 #include <cstddef>
 #include <stdexcept>
 #include <string>
+#include <ciso646>
 
 #include <symengine/symengine_config.h>
 #include <symengine/symengine_assert.h>
@@ -93,7 +94,7 @@ public:
         r_ptr._set_null();
     }
     ~RCP() {
-        if (ptr_ != nullptr && --(ptr_->refcount_) == 0) delete ptr_;
+        if (ptr_ != nullptr and --(ptr_->refcount_) == 0) delete ptr_;
     }
     T* operator->() const {
         SYMENGINE_ASSERT(ptr_ != nullptr)
@@ -116,7 +117,7 @@ public:
     RCP<T>& operator=(const RCP<T> &r_ptr) {
         T *r_ptr_ptr_ = r_ptr.ptr_;
         if (!r_ptr.is_null()) (r_ptr_ptr_->refcount_)++;
-        if (!is_null() && --(ptr_->refcount_) == 0) delete ptr_;
+        if (!is_null() and --(ptr_->refcount_) == 0) delete ptr_;
         ptr_ = r_ptr_ptr_;
         return *this;
     }
@@ -126,7 +127,7 @@ public:
         return *this;
     }
     void reset() {
-        if (!is_null() && --(ptr_->refcount_) == 0) delete ptr_;
+        if (!is_null() and --(ptr_->refcount_) == 0) delete ptr_;
         ptr_ = nullptr;
     }
     // Don't use this function directly:
