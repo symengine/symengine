@@ -54,6 +54,7 @@ symengine/tests/basic/test_integer
 symengine/tests/basic/test_number
 symengine/tests/basic/test_poly
 symengine/tests/basic/test_polynomial
+symengine/tests/basic/test_series
 symengine/tests/basic/test_subs
 symengine/tests/matrix/test_matrix
 symengine/tests/ntheory/test_ntheory
