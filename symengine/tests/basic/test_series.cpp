@@ -20,16 +20,17 @@ using SymEngine::Basic;
 using SymEngine::one;
 using SymEngine::zero;
 using SymEngine::integer;
-using SymEngine::vec_basic_eq_perm;	
+using SymEngine::vec_basic_eq_perm;
 
 TEST_CASE("Constructor of UnivariateSeries", "[UnivariateSeries")
-{   
+{
     RCP<const Symbol> x  = symbol("x");
-    RCP<const UnivariateSeries> P = univariate_series(x, 2, {{0, 1}, {1, 2}, {2, 1}});
-    REQUIRE(P->__str__() == "x**2 + 2*x + 1");
+    map_uint_mpz adict_ = {{0, 1}, {1, 2}, {2, 1}};
+    RCP<const UnivariateSeries> P = univariate_series(x, 2, adict_);
+    REQUIRE(P->__str__() == "1 + 2*x + O(x**2)");
 
     RCP<const UnivariateSeries> Q = UnivariateSeries::create(x, 5, {1, 0, 2, 1});
-    REQUIRE(Q->__str__() == "x**3 + 2*x**2 + 1");
+    REQUIRE(Q->__str__() == "1 + 2*x**2 + x**3 + O(x**5)");
 }
 /*
 TEST_CASE("Adding two UnivariatePolynomial", "[UnivariatePolynomial")

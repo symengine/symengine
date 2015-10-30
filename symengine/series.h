@@ -42,6 +42,7 @@ public:
     bool __eq__(const Basic &o) const;
     int compare(const Basic &o) const;
 
+    std::string __str__() const;
     virtual vec_basic get_args() const { return {}; }
     virtual void accept(Visitor &v) const;
 };
