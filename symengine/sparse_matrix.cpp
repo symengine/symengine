@@ -319,7 +319,7 @@ bool CSRMatrix::csr_has_canonical_format(const std::vector<unsigned>& p_,
             return false;
     }
 
-    return csr_has_sorted_indices(p_, j_, row_) and !csr_has_duplicates(p_, j_, row_);
+    return csr_has_sorted_indices(p_, j_, row_) and not csr_has_duplicates(p_, j_, row_);
 }
 
 CSRMatrix CSRMatrix::from_coo(unsigned row, unsigned col,

@@ -153,7 +153,7 @@ void StrPrinter::bvisit(const Add &x) {
             t = parenthesizeLT(p.second, PrecedenceEnum::Mul) + "*" + parenthesizeLT(p.first, PrecedenceEnum::Mul);
         }
 
-        if (!first) {
+        if (not first) {
             if (t[0] == '-') {
                 o << " - " << t.substr(1);
             } else {
@@ -208,7 +208,7 @@ void StrPrinter::bvisit(const Mul &x) {
         }
     }
 
-    if (!num) {
+    if (not num) {
         o << "1*";
     }
 

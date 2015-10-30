@@ -155,11 +155,11 @@ bool could_extract_minus(const RCP<const Basic> &arg)
         const Add &s = static_cast<const Add &>(*arg);
         for (auto &p: s.dict_) {
             if (is_a<Integer>(*p.second)) {
-                if (!(rcp_static_cast<const Integer>(p.second)->is_negative()))
+                if (not (rcp_static_cast<const Integer>(p.second)->is_negative()))
                     return false;
             }
             else if (is_a<Rational>(*p.second)) {
-                if (!(rcp_static_cast<const Rational>(p.second)->is_negative()))
+                if (not (rcp_static_cast<const Rational>(p.second)->is_negative()))
                     return false;
             }
             else
@@ -225,7 +225,7 @@ bool eval(const RCP<const Basic> &arg, int period, bool odd, bool conj_odd, //in
                 sign = -1;
             bool b = handle_minus(r, outArg(ret_arg));
             *rarg = ret_arg;
-            if (!b and conj_odd)
+            if (not b and conj_odd)
                 sign = -sign;
             return true;
         }
@@ -302,7 +302,7 @@ bool Sin::is_canonical(const RCP<const Basic> &arg)
     if (get_pi_shift(arg, outArg(n), outArg(r))) {
         return false;
     }
-    if (is_a_Number(*arg) and !static_cast<const Number &>(*arg).is_exact()) {
+    if (is_a_Number(*arg) and not static_cast<const Number &>(*arg).is_exact()) {
         return false;
     }
     return true;
@@ -326,7 +326,7 @@ int Sin::compare(const Basic &o) const
 RCP<const Basic> sin(const RCP<const Basic> &arg)
 {
     if (eq(*arg, *zero)) return zero;
-    if (is_a_Number(*arg) and !static_cast<const Number &>(*arg).is_exact()) {
+    if (is_a_Number(*arg) and not static_cast<const Number &>(*arg).is_exact()) {
         return static_cast<const Number &>(*arg).get_eval().sin(*arg);
     }
     RCP<const Basic> ret_arg;
@@ -381,7 +381,7 @@ bool Cos::is_canonical(const RCP<const Basic> &arg)
     if (get_pi_shift(arg, outArg(n), outArg(r))) {
         return false;
     }
-    if (is_a_Number(*arg) and !static_cast<const Number &>(*arg).is_exact()) {
+    if (is_a_Number(*arg) and not static_cast<const Number &>(*arg).is_exact()) {
         return false;
     }
     return true;
@@ -405,7 +405,7 @@ int Cos::compare(const Basic &o) const
 RCP<const Basic> cos(const RCP<const Basic> &arg)
 {
     if (eq(*arg, *zero)) return one;
-    if (is_a_Number(*arg) and !static_cast<const Number &>(*arg).is_exact()) {
+    if (is_a_Number(*arg) and not static_cast<const Number &>(*arg).is_exact()) {
         return static_cast<const Number &>(*arg).get_eval().cos(*arg);
     }
     RCP<const Basic> ret_arg;
@@ -458,7 +458,7 @@ bool Tan::is_canonical(const RCP<const Basic> &arg)
     if (get_pi_shift(arg, outArg(n), outArg(r))) {
         return false;
     }
-    if (is_a_Number(*arg) and !static_cast<const Number &>(*arg).is_exact()) {
+    if (is_a_Number(*arg) and not static_cast<const Number &>(*arg).is_exact()) {
         return false;
     }
     return true;
@@ -483,7 +483,7 @@ int Tan::compare(const Basic &o) const
 RCP<const Basic> tan(const RCP<const Basic> &arg)
 {
     if (eq(*arg, *zero)) return zero;
-    if (is_a_Number(*arg) and !static_cast<const Number &>(*arg).is_exact()) {
+    if (is_a_Number(*arg) and not static_cast<const Number &>(*arg).is_exact()) {
         return static_cast<const Number &>(*arg).get_eval().tan(*arg);
     }
     RCP<const Basic> ret_arg;
@@ -538,7 +538,7 @@ bool Cot::is_canonical(const RCP<const Basic> &arg)
     if (get_pi_shift(arg, outArg(n), outArg(r))) {
         return false;
     }
-    if (is_a_Number(*arg) and !static_cast<const Number &>(*arg).is_exact()) {
+    if (is_a_Number(*arg) and not static_cast<const Number &>(*arg).is_exact()) {
         return false;
     }
     return true;
@@ -562,7 +562,7 @@ int Cot::compare(const Basic &o) const
 
 RCP<const Basic> cot(const RCP<const Basic> &arg)
 {
-    if (is_a_Number(*arg) and !static_cast<const Number &>(*arg).is_exact()) {
+    if (is_a_Number(*arg) and not static_cast<const Number &>(*arg).is_exact()) {
         return static_cast<const Number &>(*arg).get_eval().cot(*arg);
     }
     RCP<const Basic> ret_arg;
@@ -619,7 +619,7 @@ bool Csc::is_canonical(const RCP<const Basic> &arg)
     if (get_pi_shift(arg, outArg(n), outArg(r))) {
         return false;
     }
-    if (is_a_Number(*arg) and !static_cast<const Number &>(*arg).is_exact()) {
+    if (is_a_Number(*arg) and not static_cast<const Number &>(*arg).is_exact()) {
         return false;
     }
     return true;
@@ -642,7 +642,7 @@ int Csc::compare(const Basic &o) const
 
 RCP<const Basic> csc(const RCP<const Basic> &arg)
 {
-    if (is_a_Number(*arg) and !static_cast<const Number &>(*arg).is_exact()) {
+    if (is_a_Number(*arg) and not static_cast<const Number &>(*arg).is_exact()) {
         return static_cast<const Number &>(*arg).get_eval().csc(*arg);
     }
     RCP<const Basic> ret_arg;
@@ -700,7 +700,7 @@ bool Sec::is_canonical(const RCP<const Basic> &arg)
     if (get_pi_shift(arg, outArg(n), outArg(r))) {
         return false;
     }
-    if (is_a_Number(*arg) and !static_cast<const Number &>(*arg).is_exact()) {
+    if (is_a_Number(*arg) and not static_cast<const Number &>(*arg).is_exact()) {
         return false;
     }
     return true;
@@ -722,7 +722,7 @@ int Sec::compare(const Basic &o) const
 
 RCP<const Basic> sec(const RCP<const Basic> &arg)
 {
-    if (is_a_Number(*arg) and !static_cast<const Number &>(*arg).is_exact()) {
+    if (is_a_Number(*arg) and not static_cast<const Number &>(*arg).is_exact()) {
         return static_cast<const Number &>(*arg).get_eval().sec(*arg);
     }
     RCP<const Basic> ret_arg;
@@ -773,7 +773,7 @@ bool ASin::is_canonical(const RCP<const Basic> &arg)
     if (inverse_lookup(inverse_cst, get_arg(), outArg(index))) {
         return false;
     }
-    if (is_a_Number(*arg) and !static_cast<const Number &>(*arg).is_exact()) {
+    if (is_a_Number(*arg) and not static_cast<const Number &>(*arg).is_exact()) {
         return false;
     }
     return true;
@@ -800,7 +800,7 @@ RCP<const Basic> asin(const RCP<const Basic> &arg)
     if (eq(*arg, *zero)) return zero;
     else if (eq(*arg, *one)) return div(pi, i2);
     else if (eq(*arg, *minus_one)) return mul(minus_one, div(pi, i2));
-    else if (is_a_Number(*arg) and !static_cast<const Number &>(*arg).is_exact()) {
+    else if (is_a_Number(*arg) and not static_cast<const Number &>(*arg).is_exact()) {
         return static_cast<const Number &>(*arg).get_eval().asin(*arg);
     }
 
@@ -829,7 +829,7 @@ bool ACos::is_canonical(const RCP<const Basic> &arg)
     if (inverse_lookup(inverse_cst, get_arg(), outArg(index))) {
         return false;
     }
-    if (is_a_Number(*arg) and !static_cast<const Number &>(*arg).is_exact()) {
+    if (is_a_Number(*arg) and not static_cast<const Number &>(*arg).is_exact()) {
         return false;
     }
     return true;
@@ -856,7 +856,7 @@ RCP<const Basic> acos(const RCP<const Basic> &arg)
     if (eq(*arg, *zero)) return div(pi, i2);
     else if (eq(*arg, *one)) return zero;
     else if (eq(*arg, *minus_one)) return pi;
-    else if (is_a_Number(*arg) and !static_cast<const Number &>(*arg).is_exact()) {
+    else if (is_a_Number(*arg) and not static_cast<const Number &>(*arg).is_exact()) {
         return static_cast<const Number &>(*arg).get_eval().acos(*arg);
     }
 
@@ -888,7 +888,7 @@ bool ASec::is_canonical(const RCP<const Basic> &arg)
     RCP<const Basic> index;
     if (inverse_lookup(inverse_cst, div(one, get_arg()), outArg(index))) {
         return false;
-    } else if (is_a_Number(*arg) and !static_cast<const Number &>(*arg).is_exact()) {
+    } else if (is_a_Number(*arg) and not static_cast<const Number &>(*arg).is_exact()) {
         return false;
     }
     return true;
@@ -914,7 +914,7 @@ RCP<const Basic> asec(const RCP<const Basic> &arg)
 {
     if (eq(*arg, *one)) return zero;
     else if (eq(*arg, *minus_one)) return pi;
-    else if (is_a_Number(*arg) and !static_cast<const Number &>(*arg).is_exact()) {
+    else if (is_a_Number(*arg) and not static_cast<const Number &>(*arg).is_exact()) {
         return static_cast<const Number &>(*arg).get_eval().asec(*arg);
     }
 
@@ -947,7 +947,7 @@ bool ACsc::is_canonical(const RCP<const Basic> &arg)
     if (inverse_lookup(inverse_cst, div(one, arg), outArg(index))) {
         return false;
     }
-    if (is_a_Number(*arg) and !static_cast<const Number &>(*arg).is_exact()) {
+    if (is_a_Number(*arg) and not static_cast<const Number &>(*arg).is_exact()) {
         return false;
     }
     return true;
@@ -973,7 +973,7 @@ RCP<const Basic> acsc(const RCP<const Basic> &arg)
 {
     if (eq(*arg, *one)) return div(pi, i2);
     else if (eq(*arg, *minus_one)) return div(pi, im2);
-    else if (is_a_Number(*arg) and !static_cast<const Number &>(*arg).is_exact()) {
+    else if (is_a_Number(*arg) and not static_cast<const Number &>(*arg).is_exact()) {
         return static_cast<const Number &>(*arg).get_eval().acsc(*arg);
     }
 
@@ -1001,7 +1001,7 @@ bool ATan::is_canonical(const RCP<const Basic> &arg)
     if (inverse_lookup(inverse_tct, get_arg(), outArg(index))) {
         return false;
     }
-    if (is_a_Number(*arg) and !static_cast<const Number &>(*arg).is_exact()) {
+    if (is_a_Number(*arg) and not static_cast<const Number &>(*arg).is_exact()) {
         return false;
     }
     return true;
@@ -1028,7 +1028,7 @@ RCP<const Basic> atan(const RCP<const Basic> &arg)
     if (eq(*arg, *zero)) return zero;
     else if (eq(*arg, *one)) return div(pi, mul(i2, i2));
     else if (eq(*arg, *minus_one)) return mul(minus_one, div(pi, mul(i2, i2)));
-    else if (is_a_Number(*arg) and !static_cast<const Number &>(*arg).is_exact()) {
+    else if (is_a_Number(*arg) and not static_cast<const Number &>(*arg).is_exact()) {
         return static_cast<const Number &>(*arg).get_eval().atan(*arg);
     }
 
@@ -1056,7 +1056,7 @@ bool ACot::is_canonical(const RCP<const Basic> &arg)
     if (inverse_lookup(inverse_tct, arg, outArg(index))) {
         return false;
     }
-    if (is_a_Number(*arg) and !static_cast<const Number &>(*arg).is_exact()) {
+    if (is_a_Number(*arg) and not static_cast<const Number &>(*arg).is_exact()) {
         return false;
     }
     return true;
@@ -1083,7 +1083,7 @@ RCP<const Basic> acot(const RCP<const Basic> &arg)
     if (eq(*arg, *zero)) return div(pi, i2);
     else if (eq(*arg, *one)) return div(pi, mul(i2, i2));
     else if (eq(*arg, *minus_one)) return mul(i3, div(pi, mul(i2, i2)));
-    else if (is_a_Number(*arg) and !static_cast<const Number &>(*arg).is_exact()) {
+    else if (is_a_Number(*arg) and not static_cast<const Number &>(*arg).is_exact()) {
         return static_cast<const Number &>(*arg).get_eval().acot(*arg);
     }
 
@@ -1559,7 +1559,7 @@ bool Derivative::is_canonical(const RCP<const Basic> &arg,
 {
     // Check that 'x' are Symbols:
     for(auto &a: x)
-        if (!is_a<Symbol>(*a)) return false;
+        if (not is_a<Symbol>(*a)) return false;
     if (is_a<FunctionSymbol>(*arg)) {
         RCP<const Symbol> s = rcp_static_cast<const Symbol>(x[0]);
         RCP<const FunctionSymbol> f = rcp_static_cast<const FunctionSymbol>(arg);
@@ -1780,7 +1780,7 @@ RCP<const Basic> Subs::subs(const map_basic_basic &subs_dict) const
         }
         // If p.first is not replaced in arg_ by dict_,
         // store p.first in n to replace in arg_
-        if (!found) {
+        if (not found) {
             insert(n, p.first, p.second);
         }
     }
@@ -1828,7 +1828,7 @@ bool Sinh::is_canonical(const RCP<const Basic> &arg)
     if (is_a_Number(*arg)) {
         if (static_cast<const Number &>(*arg).is_negative()) {
             return false;
-        } else if (!static_cast<const Number &>(*arg).is_exact()) {
+        } else if (not static_cast<const Number &>(*arg).is_exact()) {
             return false;
         }
     }
@@ -1858,7 +1858,7 @@ RCP<const Basic> sinh(const RCP<const Basic> &arg)
     if (eq(*arg, *zero)) return zero;
     if (is_a_Number(*arg)) {
         RCP<const Number> _arg = rcp_static_cast<const Number>(arg);
-        if (!_arg->is_exact()) {
+        if (not _arg->is_exact()) {
             return _arg->get_eval().sinh(*_arg);
         } else if (_arg->is_negative()) {
             return neg(sinh(zero->sub(*_arg)));
@@ -1894,7 +1894,7 @@ bool Cosh::is_canonical(const RCP<const Basic> &arg)
     if (is_a_Number(*arg)) {
         if (static_cast<const Number &>(*arg).is_negative()) {
             return false;
-        } else if (!static_cast<const Number &>(*arg).is_exact()) {
+        } else if (not static_cast<const Number &>(*arg).is_exact()) {
             return false;
         }
     }
@@ -1924,7 +1924,7 @@ RCP<const Basic> cosh(const RCP<const Basic> &arg)
     if (eq(*arg, *zero)) return one;
     if (is_a_Number(*arg)) {
         RCP<const Number> _arg = rcp_static_cast<const Number>(arg);
-        if (!_arg->is_exact()) {
+        if (not _arg->is_exact()) {
             return _arg->get_eval().cosh(*_arg);
         } else if (_arg->is_negative()) {
             return cosh(zero->sub(*_arg));
@@ -1960,7 +1960,7 @@ bool Tanh::is_canonical(const RCP<const Basic> &arg)
     if (is_a_Number(*arg)) {
         if (static_cast<const Number &>(*arg).is_negative()) {
             return false;
-        } else if (!static_cast<const Number &>(*arg).is_exact()) {
+        } else if (not static_cast<const Number &>(*arg).is_exact()) {
             return false;
         }
     }
@@ -1990,7 +1990,7 @@ RCP<const Basic> tanh(const RCP<const Basic> &arg)
     if (eq(*arg, *zero)) return zero;
     if (is_a_Number(*arg)) {
         RCP<const Number> _arg = rcp_static_cast<const Number>(arg);
-        if (!_arg->is_exact()) {
+        if (not _arg->is_exact()) {
             return _arg->get_eval().tanh(*_arg);
         } else if (_arg->is_negative()) {
             return neg(tanh(zero->sub(*_arg)));
@@ -2028,7 +2028,7 @@ bool Coth::is_canonical(const RCP<const Basic> &arg)
     if (is_a_Number(*arg)) {
         if (static_cast<const Number &>(*arg).is_negative()) {
             return false;
-        } else if (!static_cast<const Number &>(*arg).is_exact()) {
+        } else if (not static_cast<const Number &>(*arg).is_exact()) {
             return false;
         }
     }
@@ -2061,7 +2061,7 @@ RCP<const Basic> coth(const RCP<const Basic> &arg)
     }
     if (is_a_Number(*arg)) {
         RCP<const Number> _arg = rcp_static_cast<const Number>(arg);
-        if (!_arg->is_exact()) {
+        if (not _arg->is_exact()) {
             return _arg->get_eval().coth(*_arg);
         } else if (_arg->is_negative()) {
             return neg(coth(zero->sub(*_arg)));
@@ -2099,7 +2099,7 @@ bool ASinh::is_canonical(const RCP<const Basic> &arg)
     if (is_a_Number(*arg)) {
         if (static_cast<const Number &>(*arg).is_negative()) {
             return false;
-        } else if (!static_cast<const Number &>(*arg).is_exact()) {
+        } else if (not static_cast<const Number &>(*arg).is_exact()) {
             return false;
         }
     }
@@ -2131,7 +2131,7 @@ RCP<const Basic> asinh(const RCP<const Basic> &arg)
     if (eq(*arg, *minus_one)) return log(sub(sq2, one));
     if (is_a_Number(*arg)) {
         RCP<const Number> _arg = rcp_static_cast<const Number>(arg);
-        if (!_arg->is_exact()) {
+        if (not _arg->is_exact()) {
             return _arg->get_eval().asinh(*_arg);
         } else if (_arg->is_negative()) {
             return neg(asinh(zero->sub(*_arg)));
@@ -2160,7 +2160,7 @@ bool ACosh::is_canonical(const RCP<const Basic> &arg)
     // TODO: Lookup into a cst table once complex is implemented
     if (eq(*arg, *one))
         return false;
-    if (is_a_Number(*arg) and !static_cast<const Number &>(*arg).is_exact()) {
+    if (is_a_Number(*arg) and not static_cast<const Number &>(*arg).is_exact()) {
         return false;
     }
     return true;
@@ -2186,7 +2186,7 @@ RCP<const Basic> acosh(const RCP<const Basic> &arg)
 {
     // TODO: Lookup into a cst table once complex is implemented
     if (eq(*arg, *one)) return zero;
-    if (is_a_Number(*arg) and !static_cast<const Number &>(*arg).is_exact()) {
+    if (is_a_Number(*arg) and not static_cast<const Number &>(*arg).is_exact()) {
         return static_cast<const Number &>(*arg).get_eval().acosh(*arg);
     }
     return make_rcp<const ACosh>(arg);
@@ -2211,7 +2211,7 @@ bool ATanh::is_canonical(const RCP<const Basic> &arg)
     if (is_a_Number(*arg)) {
         if (static_cast<const Number &>(*arg).is_negative()) {
             return false;
-        } else if (!static_cast<const Number &>(*arg).is_exact()) {
+        } else if (not static_cast<const Number &>(*arg).is_exact()) {
             return false;
         }
     }
@@ -2241,7 +2241,7 @@ RCP<const Basic> atanh(const RCP<const Basic> &arg)
     if (eq(*arg, *zero)) return zero;
     if (is_a_Number(*arg)) {
         RCP<const Number> _arg = rcp_static_cast<const Number>(arg);
-        if (!_arg->is_exact()) {
+        if (not _arg->is_exact()) {
             return _arg->get_eval().atanh(*_arg);
         } else if (_arg->is_negative()) {
             return neg(atanh(zero->sub(*_arg)));
@@ -2270,7 +2270,7 @@ bool ACoth::is_canonical(const RCP<const Basic> &arg)
     if (is_a_Number(*arg)) {
         if (static_cast<const Number &>(*arg).is_negative()) {
             return false;
-        } else if (!static_cast<const Number &>(*arg).is_exact()) {
+        } else if (not static_cast<const Number &>(*arg).is_exact()) {
             return false;
         }
     }
@@ -2299,7 +2299,7 @@ RCP<const Basic> acoth(const RCP<const Basic> &arg)
 {
     if (is_a_Number(*arg)) {
         RCP<const Number> _arg = rcp_static_cast<const Number>(arg);
-        if (!_arg->is_exact()) {
+        if (not _arg->is_exact()) {
             return _arg->get_eval().acoth(*_arg);
         } else if (_arg->is_negative()) {
             return neg(acoth(zero->sub(*_arg)));
@@ -2487,7 +2487,7 @@ bool LeviCivita::is_canonical(const vec_basic &arg)
 {
     bool are_int = true;
     for (auto &p: arg) {
-        if (!(is_a_Number(*p))) {
+        if (not (is_a_Number(*p))) {
             are_int = false;
             break;
         }
@@ -2547,7 +2547,7 @@ RCP<const Basic> levi_civita(const vec_basic &arg)
     bool are_int = true;
     int len = 0;
     for (auto &p: arg) {
-        if (!(is_a_Number(*p))) {
+        if (not (is_a_Number(*p))) {
             are_int = false;
             break;
         } else {
@@ -2645,7 +2645,7 @@ Dirichlet_eta::Dirichlet_eta(const RCP<const Basic> &s)
 bool Dirichlet_eta::is_canonical(const RCP<const Basic> &s)
 {
     if (eq(*s, *one)) return false;
-    if (!(is_a<Zeta>(*zeta(s)))) return false;
+    if (not (is_a<Zeta>(*zeta(s)))) return false;
     return true;
 }
 
@@ -2702,7 +2702,7 @@ bool Gamma::is_canonical(const RCP<const Basic> &arg)
         (rcp_static_cast<const Rational>(arg)->i.get_den()) == 2) {
         return false;
     }
-    if (is_a_Number(*arg) and !static_cast<const Number &>(*arg).is_exact()) {
+    if (is_a_Number(*arg) and not static_cast<const Number &>(*arg).is_exact()) {
         return false;
     }
     return true;
@@ -2770,7 +2770,7 @@ RCP<const Basic> gamma(const RCP<const Basic> &arg)
         } else {
             return make_rcp<const Gamma>(arg);
         }
-    } else if (is_a_Number(*arg) and !static_cast<const Number &>(*arg).is_exact()) {
+    } else if (is_a_Number(*arg) and not static_cast<const Number &>(*arg).is_exact()) {
         return static_cast<const Number &>(*arg).get_eval().gamma(*arg);
     }
     return make_rcp<const Gamma>(arg);
@@ -2933,7 +2933,7 @@ Abs::Abs(const RCP<const Basic> &arg)
 bool Abs::is_canonical(const RCP<const Basic> &arg)
 {
     if (is_a<Integer>(*arg) or is_a<Rational>(*arg)) return false;
-    if (is_a_Number(*arg) and !static_cast<const Number &>(*arg).is_exact()) {
+    if (is_a_Number(*arg) and not static_cast<const Number &>(*arg).is_exact()) {
         return false;
     }
     return true;
@@ -2985,7 +2985,7 @@ RCP<const Basic> abs(const RCP<const Basic> &arg)
         } else {
             return arg_;
         }
-    } else if (is_a_Number(*arg) and !static_cast<const Number &>(*arg).is_exact()) {
+    } else if (is_a_Number(*arg) and not static_cast<const Number &>(*arg).is_exact()) {
         return static_cast<const Number &>(*arg).get_eval().abs(*arg);
     }
     return make_rcp<const Abs>(arg);

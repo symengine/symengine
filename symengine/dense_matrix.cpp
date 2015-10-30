@@ -539,7 +539,7 @@ unsigned pivot(DenseMatrix &B, unsigned r, unsigned c)
 
     if (eq(*(B.m_[r*B.col_ + c]), *zero))
         for (k = r; k < B.row_; k++)
-            if (!eq(*(B.m_[k*B.col_ + c]), *zero))
+            if (neq(*(B.m_[k*B.col_ + c]), *zero))
                 break;
     return k;
 }
@@ -711,7 +711,7 @@ void LDL_solve(const DenseMatrix &A, const DenseMatrix &b, DenseMatrix &x)
     DenseMatrix D = DenseMatrix(A.nrows(), A.ncols());
     DenseMatrix x_ = DenseMatrix(b.nrows(), 1);
 
-    if (!is_symmetric_dense(A))
+    if (not is_symmetric_dense(A))
         throw std::runtime_error("Matrix must be symmetric");
 
     LDL(A, L, D);
@@ -973,7 +973,7 @@ bool is_symmetric_dense(const DenseMatrix &A)
 
     for (unsigned i = 0; i < col; i++)
         for (unsigned j = i + 1; j < col; j++)
-            if (!eq(*(A.m_[j*col + i]), *(A.m_[i*col + j]))) {
+            if (not eq(*(A.m_[j*col + i]), *(A.m_[i*col + j]))) {
                 sym = false;
                 break;
             }

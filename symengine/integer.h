@@ -67,7 +67,7 @@ public:
     RCP<const Number> pow_negint(const Integer &other) const;
     //! Fast Power Evaluation
     inline RCP<const Number> powint(const Integer &other) const {
-        if (!(other.i.fits_ulong_p())) {
+        if (not (other.i.fits_ulong_p())) {
             if (other.i > 0)
                 throw std::runtime_error("powint: 'exp' does not fit unsigned int.");
             else

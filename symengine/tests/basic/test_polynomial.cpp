@@ -90,7 +90,7 @@ TEST_CASE("UnivariatePolynomial get_args", "[UnivariatePolynomial]")
     RCP<const UnivariatePolynomial> a = univariate_polynomial(x, 2, {{0, 1}, {1, 2}, {2, 1}});
 
     REQUIRE(vec_basic_eq_perm(a->get_args(), {one, mul(integer(2), x), pow(x, integer(2))}));
-    REQUIRE(!vec_basic_eq_perm(a->get_args(), {one, mul(integer(3), x), pow(x, integer(2))}));
+    REQUIRE(not vec_basic_eq_perm(a->get_args(), {one, mul(integer(3), x), pow(x, integer(2))}));
 }
 
 TEST_CASE("Evaluation of UnivariatePolynomial", "[UnivariatePolynomial]")
@@ -127,24 +127,24 @@ TEST_CASE("Bool checks specific UnivariatePolynomial cases", "[UnivariatePolynom
     RCP<const UnivariatePolynomial> po = univariate_polynomial(x, 5, {{5, 1}});
     RCP<const UnivariatePolynomial> poly = univariate_polynomial(x, 2, {{0, 1}, {1, 2}, {2, 1}});
 
-    REQUIRE((z->is_zero() and !z->is_one() and !z->is_minus_one() and z->is_integer() and !z->is_symbol() and
-			!z->is_mul() and !z->is_pow()));
-    REQUIRE((!o->is_zero() and o->is_one() and !o->is_minus_one() and o->is_integer() and !o->is_symbol() and
-			!o->is_mul() and !o->is_pow()));
-    REQUIRE((!mo->is_zero() and !mo->is_one() and mo->is_minus_one() and mo->is_integer() and !mo->is_symbol() and
-			!mo->is_mul() and !mo->is_pow()));
-    REQUIRE((!i->is_zero() and !i->is_one() and !i->is_minus_one() and i->is_integer() and !i->is_symbol() and
-			!i->is_mul() and !i->is_pow()));
-    REQUIRE((!s->is_zero() and !s->is_one() and !s->is_minus_one() and !s->is_integer() and s->is_symbol() and
-			!s->is_mul() and !s->is_pow()));
-    REQUIRE((!m1->is_zero() and !m1->is_one() and !m1->is_minus_one() and !m1->is_integer() and !m1->is_symbol() and
-			m1->is_mul() and !m1->is_pow()));
-    REQUIRE((!m2->is_zero() and !m2->is_one() and !m2->is_minus_one() and !m2->is_integer() and !m2->is_symbol() and
-			m2->is_mul() and !m2->is_pow()));
-    REQUIRE((!po->is_zero() and !po->is_one() and !po->is_minus_one() and !po->is_integer() and !po->is_symbol() and
-			!po->is_mul() and po->is_pow()));
-    REQUIRE((!poly->is_zero() and !poly->is_one() and !poly->is_minus_one() and !poly->is_integer() and !poly->is_symbol() and
-			!poly->is_mul() and !poly->is_pow()));
+    REQUIRE((z->is_zero() and not z->is_one() and not z->is_minus_one() and z->is_integer() and not z->is_symbol() and
+			not z->is_mul() and not z->is_pow()));
+    REQUIRE((not o->is_zero() and o->is_one() and not o->is_minus_one() and o->is_integer() and not o->is_symbol() and
+			not o->is_mul() and not o->is_pow()));
+    REQUIRE((not mo->is_zero() and not mo->is_one() and mo->is_minus_one() and mo->is_integer() and not mo->is_symbol() and
+			not mo->is_mul() and not mo->is_pow()));
+    REQUIRE((not i->is_zero() and not i->is_one() and not i->is_minus_one() and i->is_integer() and not i->is_symbol() and
+			not i->is_mul() and not i->is_pow()));
+    REQUIRE((not s->is_zero() and not s->is_one() and not s->is_minus_one() and not s->is_integer() and s->is_symbol() and
+			not s->is_mul() and not s->is_pow()));
+    REQUIRE((not m1->is_zero() and not m1->is_one() and not m1->is_minus_one() and not m1->is_integer() and not m1->is_symbol() and
+			m1->is_mul() and not m1->is_pow()));
+    REQUIRE((not m2->is_zero() and not m2->is_one() and not m2->is_minus_one() and not m2->is_integer() and not m2->is_symbol() and
+			m2->is_mul() and not m2->is_pow()));
+    REQUIRE((not po->is_zero() and not po->is_one() and not po->is_minus_one() and not po->is_integer() and not po->is_symbol() and
+			not po->is_mul() and po->is_pow()));
+    REQUIRE((not poly->is_zero() and not poly->is_one() and not poly->is_minus_one() and not poly->is_integer() and not poly->is_symbol() and
+			not poly->is_mul() and not poly->is_pow()));
 }
 
 TEST_CASE("Univariate Polynomial expand", "[UnivariatePolynomial][expand]")

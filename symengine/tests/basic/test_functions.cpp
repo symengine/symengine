@@ -784,9 +784,9 @@ TEST_CASE("Derivative: functions", "[functions]")
     f = function_symbol("f", x);
     RCP<const Derivative> r4 = Derivative::create(f, {x});
     REQUIRE(r4->is_canonical(function_symbol("f", {y, x}), {x}));
-    REQUIRE(!r4->is_canonical(function_symbol("f", y), {x}));
+    REQUIRE(not r4->is_canonical(function_symbol("f", y), {x}));
     REQUIRE(r4->is_canonical(function_symbol("f", x), {x, y, x, x}));
-    REQUIRE(!(r4->is_canonical(function_symbol("f", x), {pow(x, integer(2))})));
+    REQUIRE(not (r4->is_canonical(function_symbol("f", x), {pow(x, integer(2))})));
 
     // Test get_args()
     r1 = Derivative::create(function_symbol("f", {x, pow(y, integer(2))}), {x, x, y});

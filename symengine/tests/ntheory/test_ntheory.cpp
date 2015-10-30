@@ -196,7 +196,7 @@ TEST_CASE("test_factor(): ntheory", "[ntheory]")
     REQUIRE(divides(*i122, *f));
     REQUIRE(factor(outArg(f), *i1001) > 0);
     REQUIRE(divides(*i1001, *f));
-    REQUIRE(!divides(*i1001, *i6));
+    REQUIRE(not divides(*i1001, *i6));
     REQUIRE(factor(outArg(f), *i900) > 0);
     REQUIRE(divides(*i900, *f));
 }
@@ -219,15 +219,15 @@ TEST_CASE("test_factor_lehman_method(): ntheory", "[ntheory]")
     REQUIRE(factor_lehman_method(outArg(f), *i47) == 0);
 
     REQUIRE(factor_lehman_method(outArg(f), *i21) > 0);
-    REQUIRE((divides(*i21, *f) and !eq(*f, *i1) and !eq(*f, *i21)));   //Lehman's method returns only a proper divisor when composite
+    REQUIRE((divides(*i21, *f) and not eq(*f, *i1) and not eq(*f, *i21)));   //Lehman's method returns only a proper divisor when composite
     REQUIRE(factor_lehman_method(outArg(f), *i121) > 0);
-    REQUIRE((divides(*i121, *f) and !eq(*f, *i1) and !eq(*f, *i121)));
+    REQUIRE((divides(*i121, *f) and not eq(*f, *i1) and not eq(*f, *i121)));
     REQUIRE(factor_lehman_method(outArg(f), *i122) > 0);
-    REQUIRE((divides(*i122, *f) and !eq(*f, *i1) and !eq(*f, *i122)));
+    REQUIRE((divides(*i122, *f) and not eq(*f, *i1) and not eq(*f, *i122)));
     REQUIRE(factor_lehman_method(outArg(f), *i900) > 0);
-    REQUIRE((divides(*i900, *f) and !eq(*f, *i1) and !eq(*f, *i900)));
+    REQUIRE((divides(*i900, *f) and not eq(*f, *i1) and not eq(*f, *i900)));
     REQUIRE(factor_lehman_method(outArg(f), *i1001) > 0);
-    REQUIRE((divides(*i1001, *f) and !eq(*f, *i1) and !eq(*f, *i1001)));
+    REQUIRE((divides(*i1001, *f) and not eq(*f, *i1) and not eq(*f, *i1001)));
 }
 
 TEST_CASE("test_factor_pollard_pm1_method(): ntheory", "[ntheory]")

@@ -1224,7 +1224,7 @@ TEST_CASE("test_csr_eq(): matrices", "[matrices]")
     CSRMatrix C = CSRMatrix(3, 3, {0, 2, 3, 6}, {0, 2, 2, 0, 1, 2},
         {integer(0), integer(2), integer(3), integer(4), integer(5), integer(6)});
 
-    REQUIRE(!(A == C));
+    REQUIRE(not (A == C));
 }
 
 TEST_CASE("test_from_coo(): matrices", "[matrices]")

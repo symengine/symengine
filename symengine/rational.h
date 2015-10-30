@@ -134,7 +134,7 @@ public:
         bool neg = other.is_negative();
         mpz_class exp_ = other.i;
         if (neg) exp_ = -exp_;
-        if (!(exp_.fits_ulong_p()))
+        if (not (exp_.fits_ulong_p()))
             throw std::runtime_error("powrat: 'exp' does not fit unsigned int.");
         unsigned long exp = exp_.get_ui();
         mpz_class num;
@@ -145,7 +145,7 @@ public:
 
         // Since 'this' is in canonical form, so is this**other, so we simply
         // pass num/den into the constructor directly:
-        if (!neg)
+        if (not neg)
             if (abs(den) == one->i)
                 return integer(num*sgn(den));
             else

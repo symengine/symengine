@@ -197,7 +197,7 @@ int _factor_trial_division_sieve(mpz_class &factor, const mpz_class &N)
 {
     mpz_class sqrtN;
     sqrtN = sqrt(N);
-    if (!(sqrtN.fits_uint_p()))
+    if (not (sqrtN.fits_uint_p()))
         throw std::runtime_error("N too large to factor");
     unsigned limit = sqrtN.get_ui();
     Sieve::iterator pi(limit);
@@ -233,7 +233,7 @@ int _factor_lehman_method(mpz_class &rop, const mpz_class &n)
         }
     }
 
-    if (!ret_val) {
+    if (not ret_val) {
 
         mpz_class k, a, b, l;
         mpf_class t;
@@ -421,10 +421,10 @@ int factor(const Ptr<RCP<const Integer>> &f, const Integer &n, double B1)
         }
         else {
 
-            for (int i = 0; i < 10 and !ret_val; i++)
+            for (int i = 0; i < 10 and not ret_val; i++)
                 ret_val = ecm_factor(_f.get_mpz_t(), _n.get_mpz_t(), B1,
                         nullptr);
-            if (!ret_val)
+            if (not ret_val)
                 throw std::runtime_error("ECM failed to factor the given number");
         }
     }
@@ -454,7 +454,7 @@ void prime_factors(std::vector<RCP<const Integer>> &prime_list, const Integer &n
     if (_n < 0) _n *= -1;
 
     sqrtN = sqrt(_n);
-    if (!sqrtN.fits_uint_p())
+    if (not sqrtN.fits_uint_p())
         throw std::runtime_error("N too large to factor");
     unsigned limit = sqrtN.get_ui();
     Sieve::iterator pi(limit);
@@ -467,7 +467,7 @@ void prime_factors(std::vector<RCP<const Integer>> &prime_list, const Integer &n
         }
         if (_n == 1) break;
     }
-    if (!(_n == 1))
+    if (not (_n == 1))
         prime_list.push_back(integer(_n));
 }
 
@@ -480,7 +480,7 @@ void prime_factor_multiplicities(map_integer_uint &primes_mul, const Integer &n)
     if (_n < 0) _n *= -1;
 
     sqrtN = sqrt(_n);
-    if (!sqrtN.fits_uint_p())
+    if (not sqrtN.fits_uint_p())
         throw std::runtime_error("N too large to factor");
     unsigned limit = sqrtN.get_ui();
     Sieve::iterator pi(limit);
@@ -497,7 +497,7 @@ void prime_factor_multiplicities(map_integer_uint &primes_mul, const Integer &n)
             if (_n == 1) break;
         }
     }
-    if (!(_n == 1))
+    if (not (_n == 1))
         insert(primes_mul, integer(_n), 1);
 }
 
@@ -643,7 +643,7 @@ bool crt(const Ptr<RCP<const Integer>> &R, const std::vector<RCP<const Integer>>
         mpz_gcdext(g.get_mpz_t(), s.get_mpz_t(), t.get_mpz_t(), m.get_mpz_t(), mod[i]->as_mpz().get_mpz_t());
         // g = s * m + t * mod[i]
         t = rem[i]->as_mpz() - r;
-        if (!mpz_divisible_p (t.get_mpz_t(), g.get_mpz_t()))
+        if (not mpz_divisible_p (t.get_mpz_t(), g.get_mpz_t()))
             return false;
         r += m * s * (t / g);           // r += m * (m**-1 mod[i]/g)* (rem[i] - r) / g
         m *= mod[i]->as_mpz() / g;
@@ -766,7 +766,7 @@ bool primitive_root(const Ptr<RCP<const Integer>> &g, const Integer &n)
         even = true;
     }
     mpz_class p, e;
-    if (!_prime_power(p, e, _n))
+    if (not _prime_power(p, e, _n))
         return false;
     _primitive_root(_n, p, e, even);
     *g = integer(_n);
@@ -843,7 +843,7 @@ void primitive_root_list(std::vector<RCP<const Integer>> &roots, const Integer &
         even = true;
     }
     mpz_class p, e;
-    if (!_prime_power(p, e, _n))
+    if (not _prime_power(p, e, _n))
         return;
     _primitive_root_list(roots, p, e, even);
     std::sort(roots.begin(), roots.end(), SymEngine::RCPIntegerKeyLess());
@@ -1053,7 +1053,7 @@ void _discrete_log(mpz_class &log, const mpz_class &a, const mpz_class &g, const
         // Baby-step giant-step algorithm for l = log_alpha(beta)
         d = beta;
         bool found = false;
-        for (unsigned i = 0; !found &&i < m; i++) {
+        for (unsigned i = 0; not found &&i < m; i++) {
             if (table.find(integer(d)) != table.end()) {
                 l = i * m + table[integer(d)];
                 found = true;
@@ -1279,7 +1279,7 @@ bool _nthroot_mod_prime_power(std::vector<RCP<const Integer>> &roots, const mpz_
         unsigned m;
         mpz_class pm;
         if (_a == 0) {
-            if (!all_roots) {
+            if (not all_roots) {
                 roots.push_back(integer(0));
                 return true;
             }
@@ -1296,12 +1296,12 @@ bool _nthroot_mod_prime_power(std::vector<RCP<const Integer>> &roots, const mpz_
                 mpz_divexact(_a.get_mpz_t(), _a.get_mpz_t(), p.get_mpz_t());
                 r++;
             }
-            if (r < n or r % n != 0 or !_nthroot_mod_prime_power(_roots, _a, n, p, k - r, all_roots)) {
+            if (r < n or r % n != 0 or not _nthroot_mod_prime_power(_roots, _a, n, p, k - r, all_roots)) {
                 return false;
             }
             m = r / n.get_ui();
             mpz_pow_ui(pm.get_mpz_t(), p.get_mpz_t(), m);
-            if (!all_roots) {
+            if (not all_roots) {
                 roots.push_back(integer(_roots.back()->as_mpz() * pm));
                 return true;
             }
@@ -1345,7 +1345,7 @@ bool nthroot_mod(const Ptr<RCP<const Integer>> &root, const RCP<const Integer> &
         mpz_pow_ui(_mod.get_mpz_t(), it.first->as_mpz().get_mpz_t(), it.second);
         moduli.push_back(integer(_mod));
         ret_val = _nthroot_mod_prime_power(rem, a->as_mpz(), n->as_mpz(), it.first->as_mpz(), it.second, false);
-        if(!ret_val) return false;
+        if(not ret_val) return false;
     }
     crt(root, rem, moduli);
     return true;
@@ -1372,7 +1372,7 @@ void nthroot_mod_list(std::vector<RCP<const Integer>> &roots, const RCP<const In
         moduli.push_back(integer(_mod));
         std::vector<RCP<const Integer>> rem1;
         ret_val = _nthroot_mod_prime_power(rem1, a->as_mpz(), n->as_mpz(), it.first->as_mpz(), it.second, true);
-        if(!ret_val) return;
+        if(not ret_val) return;
         rem.push_back(rem1);
     }
     _crt_cartesian(roots, rem, moduli);
@@ -1389,7 +1389,7 @@ bool powermod(const Ptr<RCP<const Integer>> &powm, const RCP<const Integer> &a,
         mpz_powm(t.get_mpz_t(), a->as_mpz().get_mpz_t(), t.get_mpz_t(), m->as_mpz().get_mpz_t());
         if (b->is_negative()) {
             bool ret_val = mpz_invert(t.get_mpz_t(), t.get_mpz_t(), m->as_mpz().get_mpz_t());
-            if (!ret_val)
+            if (not ret_val)
                 return false;
         }
         *powm = integer(t);
@@ -1407,7 +1407,7 @@ bool powermod(const Ptr<RCP<const Integer>> &powm, const RCP<const Integer> &a,
         mpz_powm(t.get_mpz_t(), a->as_mpz().get_mpz_t(), t.get_mpz_t(), m->as_mpz().get_mpz_t());
         if (num->is_negative()) {
             bool ret_val = mpz_invert(t.get_mpz_t(), t.get_mpz_t(), m->as_mpz().get_mpz_t());
-            if (!ret_val)
+            if (not ret_val)
                 return false;
         }
         r = integer(t);
@@ -1426,7 +1426,7 @@ void powermod_list(std::vector<RCP<const Integer>> &pows, const RCP<const Intege
         mpz_powm(t.get_mpz_t(), a->as_mpz().get_mpz_t(), t.get_mpz_t(), m->as_mpz().get_mpz_t());
         if (b->is_negative()) {
             bool ret_val = mpz_invert(t.get_mpz_t(), t.get_mpz_t(), m->as_mpz().get_mpz_t());
-            if (!ret_val)
+            if (not ret_val)
                 return;
         }
         pows.push_back(integer(t));
@@ -1443,7 +1443,7 @@ void powermod_list(std::vector<RCP<const Integer>> &pows, const RCP<const Intege
         mpz_powm(t.get_mpz_t(), a->as_mpz().get_mpz_t(), t.get_mpz_t(), m->as_mpz().get_mpz_t());
         if (num->is_negative()) {
             bool ret_val = mpz_invert(t.get_mpz_t(), t.get_mpz_t(), m->as_mpz().get_mpz_t());
-            if (!ret_val)
+            if (not ret_val)
                 return;
         }
         r = integer(t);

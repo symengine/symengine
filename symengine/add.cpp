@@ -43,7 +43,7 @@ bool Add::is_canonical(const RCP<const Number> &coef,
 
         // e.g. {3x: 2}, this should rather be just {x: 6}
         if (is_a<Mul>(*p.first) and
-                !(rcp_static_cast<const Mul>(p.first)->coef_->is_one()))
+                not (rcp_static_cast<const Mul>(p.first)->coef_->is_one()))
             return false;
     }
     return true;
@@ -192,7 +192,7 @@ void Add::dict_add_term(umap_basic_num &d, const RCP<const Number> &coef,
     auto it = d.find(t);
     if (it == d.end()) {
         // Not found, add it in if it is nonzero:
-        if (!(coef->is_zero())) insert(d, t, coef);
+        if (not (coef->is_zero())) insert(d, t, coef);
     } else {
         iaddnum(outArg(it->second), coef);
         if (it->second->is_zero()) d.erase(it);
@@ -212,7 +212,7 @@ void Add::as_coef_term(const RCP<const Basic> &self,
         *coef = rcp_static_cast<const Number>(self);
         *term = one;
     } else {
-        SYMENGINE_ASSERT(!is_a<Add>(*self));
+        SYMENGINE_ASSERT(not is_a<Add>(*self));
         *coef = one;
         *term = self;
     }
@@ -363,7 +363,7 @@ RCP<const Basic> Add::subs(const map_basic_basic &subs_dict) const
 
 vec_basic Add::get_args() const {
     vec_basic args;
-    if (!coef_->is_exact_zero()) args.push_back(coef_);
+    if (not coef_->is_exact_zero()) args.push_back(coef_);
     for (auto &p: dict_) {
         args.push_back(Add::from_dict(zero, {{p.first, p.second}}));
     }

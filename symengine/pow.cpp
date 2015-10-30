@@ -56,8 +56,8 @@ bool Pow::is_canonical(const RCP<const Basic> &base, const RCP<const Basic> &exp
         is_a<Integer>(*exp))
         return false;
     // e.g. 0.5^2.0 should be represented as 0.25
-    if(is_a_Number(*base) and !rcp_static_cast<const Number>(base)->is_exact() and
-            is_a_Number(*exp) and !rcp_static_cast<const Number>(exp)->is_exact())
+    if(is_a_Number(*base) and not rcp_static_cast<const Number>(base)->is_exact() and
+            is_a_Number(*exp) and not rcp_static_cast<const Number>(exp)->is_exact())
         return false;
     return true;
 }
@@ -134,7 +134,7 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
                 mpz_fdiv_qr(q.get_mpz_t(), r.get_mpz_t(), num.get_mpz_t(),
                     den.get_mpz_t());
             } else {
-                if (is_a_Number(*a) and !rcp_static_cast<const Number>(a)->is_exact()) {
+                if (is_a_Number(*a) and not rcp_static_cast<const Number>(a)->is_exact()) {
                     return rcp_static_cast<const Number>(a)->pow(*rcp_static_cast<const Number>(b));
                 }
                 return make_rcp<const Pow>(a, b);
@@ -301,7 +301,7 @@ RCP<const Basic> pow_expand(const RCP<const Pow> &self)
         return r;
     }
 
-    if (! is_a<Integer>(*self->exp_) or ! is_a<Add>(*_base)) {
+    if (not  is_a<Integer>(*self->exp_) or not  is_a<Add>(*_base)) {
         if (neq(*_base, *self->base_)) {
             return pow(_base, self->exp_);
         } else {
@@ -318,7 +318,7 @@ RCP<const Basic> pow_expand(const RCP<const Pow> &self)
     RCP<const Add> base = rcp_static_cast<const Add>(_base);
     RCP<const Number> add_overall_coeff = zero;
     umap_basic_num base_dict = base->dict_;
-    if (! (base->coef_->is_zero())) {
+    if (not  (base->coef_->is_zero())) {
         // Add the numerical coefficient into the dictionary. This
         // allows a little bit easier treatment below.
         insert(base_dict, base->coef_, one);
@@ -369,7 +369,7 @@ RCP<const Basic> pow_expand(const RCP<const Pow> &self)
                         Mul::dict_add_term_new(outArg(overall_coeff), d, exp2, t);
                     }
                 }
-                if (!(i2->second->is_one())) {
+                if (not (i2->second->is_one())) {
                     if (is_a<Integer>(*(i2->second)) or is_a<Rational>(*(i2->second))) {
                         imulnum(outArg(overall_coeff),
                         pownum(i2->second,
@@ -388,7 +388,7 @@ RCP<const Basic> pow_expand(const RCP<const Pow> &self)
                 mulnum(rcp_static_cast<const Number>(term), coef2));
         } else {
             if (is_a<Mul>(*term) and
-                    !(rcp_static_cast<const Mul>(term)->coef_->is_one())) {
+                    not (rcp_static_cast<const Mul>(term)->coef_->is_one())) {
                 // Tidy up things like {2x: 3} -> {x: 6}
                 imulnum(outArg(coef2),
                         rcp_static_cast<const Mul>(term)->coef_);
@@ -456,7 +456,7 @@ bool Log::is_canonical(const RCP<const Basic> &arg)
     // Currently not implemented, however should be expanded as `-ipi + log(-arg)`
     if (is_a_Number(*arg) and rcp_static_cast<const Number>(arg)->is_negative())
         return false;
-    if (is_a_Number(*arg) and !rcp_static_cast<const Number>(arg)->is_exact())
+    if (is_a_Number(*arg) and not rcp_static_cast<const Number>(arg)->is_exact())
         return false;
     // log(num/den) = log(num) - log(den)
     if (is_a<Rational>(*arg))
@@ -515,7 +515,7 @@ RCP<const Basic> log(const RCP<const Basic> &arg)
     if (eq(*arg, *E)) return one;
     if (is_a_Number(*arg)) {
         RCP<const Number> _arg = rcp_static_cast<const Number>(arg);
-        if (!_arg->is_exact()) {
+        if (not _arg->is_exact()) {
             return _arg->get_eval().log(*_arg);
         } else if (_arg->is_negative()) {
             throw std::runtime_error("Imaginary Result. Yet to be implemented");

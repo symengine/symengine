@@ -25,7 +25,7 @@ bool order(const DenseMatrix &t, const std::vector<DenseMatrix> &basis, unsigned
         }
     }
 
-    return !eq;
+    return not eq;
 }
 
 bool is_minimum(const DenseMatrix &t, const std::vector<DenseMatrix> &basis, unsigned n)
@@ -34,7 +34,7 @@ bool is_minimum(const DenseMatrix &t, const std::vector<DenseMatrix> &basis, uns
         return true;
     }
 
-    return  !order(t, basis, n - 1) and is_minimum(t, basis, n - 1);
+    return  not order(t, basis, n - 1) and is_minimum(t, basis, n - 1);
 }
 
 // Solve the diophantine system Ax = 0 and return a basis set for solutions
@@ -80,7 +80,7 @@ void homogeneous_lde(std::vector<DenseMatrix> &basis, const DenseMatrix &A)
         t.transpose(transpose);
         A.mul_matrix(transpose, product);
 
-        if (product.eq(col_zero) and !t.eq(row_zero)) {
+        if (product.eq(col_zero) and not t.eq(row_zero)) {
             basis.push_back(t);
         } else {
             for (unsigned i = 0; i < q; i++) {
