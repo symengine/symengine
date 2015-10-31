@@ -217,7 +217,10 @@ TEST_CASE("Test NumberWrapper", "[number]")
             return integer(mpz_class(i_));
         };
         long number_to_long(const Number &x) const {
-            return std::stol(x.__str__(), nullptr);
+            long l;
+            std::istringstream ss(x.__str__());
+            ss >> l;
+            return l;
         }
         virtual RCP<const Number> add(const Number &x) const {
             return make_rcp<Long>(i_ + number_to_long(x));
