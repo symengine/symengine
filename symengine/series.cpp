@@ -7,6 +7,14 @@ using SymEngine::make_rcp;
 
 namespace SymEngine {
 
+UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const unsigned int &max, map_uint_mpz&& dict) :
+        var_{var}, prec_{precision} {
+
+    poly_ = univariate_polynomial(var_, max, std::move(dict));
+
+    SYMENGINE_ASSERT(UnivariateSeries::is_canonical(*poly_, prec_))
+}
+
 UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const map_uint_mpz& dict) :
         var_{var}, prec_{precision} {
 
@@ -97,4 +105,24 @@ std::string UnivariateSeries::__str__() const
         o << " + O(" << var_->get_name() << "**" << prec_ << ")";
     return o.str();
 }
+
+RCP<const UnivariateSeries> add_uni_series (const UnivariateSeries& a, const UnivariateSeries& b)
+{
+    map_uint_mpz dict;
+    SYMENGINE_ASSERT(a.var_->get_name() == b.var_->get_name())
+    unsigned int minprec = (a.prec_ < b.prec_)? a.prec_ : b.prec_;
+    for (auto &it : a.poly_->dict_)
+        if (it.first < minprec)
+            dict[it.first] = it.second;
+
+    unsigned int max = 0;
+    for (auto &it : b.poly_->dict_)
+        if (it.first < minprec) {
+            dict[it.first] += it.second;
+            if (dict[it.first] and it.first > max)
+                max = it.first;
+        }
+    return make_rcp<const UnivariateSeries>(a.var_, minprec, max, std::move(dict));
+}
+
 } // SymEngine

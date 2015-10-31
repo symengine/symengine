@@ -22,6 +22,7 @@ public:
 public:
     IMPLEMENT_TYPEID(UNIVARIATESERIES)
     //! Constructor of UnivariateSeries class
+    UnivariateSeries(const RCP<const Symbol> &var, const unsigned int& precision, const unsigned int& max_exp, map_uint_mpz&& dict);
     UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const map_uint_mpz &dict);
     //! Constructor using a dense vector of mpz_class coefficients
     UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const std::vector<mpz_class> &v);
@@ -45,13 +46,16 @@ public:
     std::string __str__() const;
     virtual vec_basic get_args() const { return {}; }
     virtual void accept(Visitor &v) const;
+
 };
+
 
 inline RCP<const UnivariateSeries> univariate_series(RCP<const Symbol> i,       unsigned int prec, const map_uint_mpz& dict)
 {
     return make_rcp<const UnivariateSeries>(i, prec, dict);
 }
 
-}  //SymEngine
+RCP<const UnivariateSeries> add_uni_series (const UnivariateSeries& a, const UnivariateSeries &b);
 
+}  //SymEngine
 #endif
