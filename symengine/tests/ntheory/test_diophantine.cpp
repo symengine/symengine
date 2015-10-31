@@ -26,7 +26,7 @@ bool vec_dense_matrix_eq_perm(const std::vector<DenseMatrix> &a,
             }
         }
         // If not found, then a != b
-        if (!found) return false;
+        if (not found) return false;
     }
     // If all elements were found, then a == b
     return true;

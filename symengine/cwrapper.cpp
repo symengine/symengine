@@ -125,7 +125,7 @@ void rational_set_ui(basic s, unsigned long a, unsigned long b)
 
 int rational_set(basic s, const basic a, const basic b)
 {
-    if (!is_a_Integer(a) || !is_a_Integer(b)) {
+    if (not is_a_Integer(a) or not is_a_Integer(b)) {
         return 0;
     }
     s->m = SymEngine::Rational::from_two_ints(
@@ -160,7 +160,7 @@ void complex_set_mpq(basic s, const mpq_t re, const mpq_t im)
 
 int basic_diff(basic s, const basic expr, basic const symbol)
 {
-    if (!is_a_Symbol(symbol))
+    if (not is_a_Symbol(symbol))
         return 0;
     s->m = expr->m->diff(rcp_static_cast<const Symbol>(symbol->m));
     return 1;
@@ -266,7 +266,7 @@ int vectorint_placement_new_check(void *data, size_t size)
 {
     CVectorInt *self = (CVectorInt*)data;
     if (size < sizeof(CVectorInt)) return 1;
-    if (!SymEngine::is_aligned(self)) return 2;
+    if (not SymEngine::is_aligned(self)) return 2;
     return 0;
 }
 

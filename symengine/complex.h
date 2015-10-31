@@ -65,14 +65,14 @@ public:
         const Number &im);
 
     //! \return `true` if `0`
-    virtual bool is_zero() const { return ((this->real_ == 0) && (this->imaginary_ == 0)); }
+    virtual bool is_zero() const { return ((this->real_ == 0) and (this->imaginary_ == 0)); }
     //! \return `true` if `1`
-    virtual bool is_one() const { return ((this->real_ == 1) && (this->imaginary_ == 0)); }
+    virtual bool is_one() const { return ((this->real_ == 1) and (this->imaginary_ == 0)); }
     //! \return `true` if `-1`
-    virtual bool is_minus_one() const { return ((this->real_ == -1) && (this->imaginary_ == 0)); }
+    virtual bool is_minus_one() const { return ((this->real_ == -1) and (this->imaginary_ == 0)); }
     //! \return `true` if both `real_` or `imaginary_` are zero
     // This is needed while printing inside `mul`.
-    inline bool is_reim_zero() const { return ((this->real_ == 0) || (this->imaginary_ == 0)); }
+    inline bool is_reim_zero() const { return ((this->real_ == 0) or (this->imaginary_ == 0)); }
     //! \return `true` if `real_`  is zero
     inline bool is_re_zero() const { return (this->real_ == 0); }
     /*! Add Complex

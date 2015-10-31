@@ -114,7 +114,7 @@ public:
     //! Overload check not equal (!=)
     bool operator!=(const Expression &other) const
     {
-        return !(*this == other);
+        return not (*this == other);
     }
     //! Method to get Basic from Expression
     const RCP<const Basic> &get_basic() const

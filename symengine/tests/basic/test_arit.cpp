@@ -326,7 +326,7 @@ TEST_CASE("Div: arit", "[arit]")
     REQUIRE(integer(2)->is_positive());
     REQUIRE(integer(0)->is_zero());
     REQUIRE(integer(1)->is_one());
-    REQUIRE(!(integer(-1)->is_positive()));
+    REQUIRE(not (integer(-1)->is_positive()));
     REQUIRE(integer(-1)->is_negative());
 
     RCP<const Basic> r1, r2;

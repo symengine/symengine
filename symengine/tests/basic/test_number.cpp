@@ -113,79 +113,79 @@ TEST_CASE("Test is_exact", "[number]")
     REQUIRE(n1->is_exact());
     REQUIRE(n1->is_zero());
     REQUIRE(n1->is_exact_zero());
-    REQUIRE(!n1->is_negative());
-    REQUIRE(!n1->is_positive());
+    REQUIRE(not n1->is_negative());
+    REQUIRE(not n1->is_positive());
 
     n1 = integer(-1);
     REQUIRE(n1->is_exact());
-    REQUIRE(!n1->is_zero());
-    REQUIRE(!n1->is_exact_zero());
+    REQUIRE(not n1->is_zero());
+    REQUIRE(not n1->is_exact_zero());
     REQUIRE(n1->is_negative());
-    REQUIRE(!n1->is_positive());
+    REQUIRE(not n1->is_positive());
 
     n1 = Rational::from_mpq(2);
     REQUIRE(n1->is_exact());
-    REQUIRE(!n1->is_zero());
-    REQUIRE(!n1->is_exact_zero());
-    REQUIRE(!n1->is_negative());
+    REQUIRE(not n1->is_zero());
+    REQUIRE(not n1->is_exact_zero());
+    REQUIRE(not n1->is_negative());
     REQUIRE(n1->is_positive());
 
     n1 = Complex::from_mpq(1, 2);
     REQUIRE(n1->is_exact());
-    REQUIRE(!n1->is_zero());
-    REQUIRE(!n1->is_exact_zero());
-    REQUIRE(!n1->is_negative());
-    REQUIRE(!n1->is_positive());
+    REQUIRE(not n1->is_zero());
+    REQUIRE(not n1->is_exact_zero());
+    REQUIRE(not n1->is_negative());
+    REQUIRE(not n1->is_positive());
 
     n1 = real_double(0.0);
-    REQUIRE(!n1->is_exact());
+    REQUIRE(not n1->is_exact());
     REQUIRE(n1->is_zero());
-    REQUIRE(!n1->is_exact_zero());
-    REQUIRE(!n1->is_negative());
-    REQUIRE(!n1->is_positive());
+    REQUIRE(not n1->is_exact_zero());
+    REQUIRE(not n1->is_negative());
+    REQUIRE(not n1->is_positive());
 
     n1 = real_double(1.0);
-    REQUIRE(!n1->is_exact());
-    REQUIRE(!n1->is_zero());
-    REQUIRE(!n1->is_exact_zero());
-    REQUIRE(!n1->is_negative());
+    REQUIRE(not n1->is_exact());
+    REQUIRE(not n1->is_zero());
+    REQUIRE(not n1->is_exact_zero());
+    REQUIRE(not n1->is_negative());
     REQUIRE(n1->is_positive());
 
     n1 = complex_double(1.0);
-    REQUIRE(!n1->is_exact());
-    REQUIRE(!n1->is_zero());
-    REQUIRE(!n1->is_exact_zero());
-    REQUIRE(!n1->is_negative());
-    REQUIRE(!n1->is_positive());
+    REQUIRE(not n1->is_exact());
+    REQUIRE(not n1->is_zero());
+    REQUIRE(not n1->is_exact_zero());
+    REQUIRE(not n1->is_negative());
+    REQUIRE(not n1->is_positive());
 
 #ifdef HAVE_SYMENGINE_MPFR
     mpfr_class a(100);
     mpfr_set_d(a.get_mpfr_t(), 0.0, MPFR_RNDN);
     n1 = real_mpfr(std::move(a));
-    REQUIRE(!n1->is_exact());
+    REQUIRE(not n1->is_exact());
     REQUIRE(n1->is_zero());
-    REQUIRE(!n1->is_exact_zero());
-    REQUIRE(!n1->is_negative());
-    REQUIRE(!n1->is_positive());
+    REQUIRE(not n1->is_exact_zero());
+    REQUIRE(not n1->is_negative());
+    REQUIRE(not n1->is_positive());
 
     a = mpfr_class(100);
     mpfr_set_d(a.get_mpfr_t(), 1.0, MPFR_RNDN);
     n1 = real_mpfr(std::move(a));
-    REQUIRE(!n1->is_exact());
-    REQUIRE(!n1->is_zero());
-    REQUIRE(!n1->is_exact_zero());
-    REQUIRE(!n1->is_negative());
+    REQUIRE(not n1->is_exact());
+    REQUIRE(not n1->is_zero());
+    REQUIRE(not n1->is_exact_zero());
+    REQUIRE(not n1->is_negative());
     REQUIRE(n1->is_positive());
 
 #ifdef HAVE_SYMENGINE_MPC
     mpc_class b(100);
     mpc_set_ui_ui(b.get_mpc_t(), 10, 7, MPFR_RNDN);
     n1 = complex_mpc(std::move(b));
-    REQUIRE(!n1->is_exact());
-    REQUIRE(!n1->is_zero());
-    REQUIRE(!n1->is_exact_zero());
-    REQUIRE(!n1->is_negative());
-    REQUIRE(!n1->is_positive());
+    REQUIRE(not n1->is_exact());
+    REQUIRE(not n1->is_zero());
+    REQUIRE(not n1->is_exact_zero());
+    REQUIRE(not n1->is_negative());
+    REQUIRE(not n1->is_positive());
 #endif //HAVE_SYMENGINE_MPC
 #endif //HAVE_SYMENGINE_MPFR
 }

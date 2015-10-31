@@ -52,7 +52,7 @@ std::size_t UnivariatePolynomial::__hash__() const
 
 bool UnivariatePolynomial::__eq__(const Basic &o) const
 {
-    if (eq(*var_, *(static_cast<const UnivariatePolynomial &>(o).var_)) &&
+    if (eq(*var_, *(static_cast<const UnivariatePolynomial &>(o).var_)) and
         map_uint_mpz_eq(dict_, static_cast<const UnivariatePolynomial &>(o).dict_))
         return true;
 
@@ -158,48 +158,48 @@ mpz_class UnivariatePolynomial::eval_bit(const int &x) const {
 }
 
 bool UnivariatePolynomial::is_zero() const {
-    if (dict_.size() == 1 && dict_.begin()->second == 0)
+    if (dict_.size() == 1 and dict_.begin()->second == 0)
         return true;
     return false;
 }
 
 bool UnivariatePolynomial::is_one() const {
-    if (dict_.size() == 1 && dict_.begin()->second == 1 &&
+    if (dict_.size() == 1 and dict_.begin()->second == 1 and
             dict_.begin()->first == 0)
         return true;
     return false;
 }
 
 bool UnivariatePolynomial::is_minus_one() const {
-    if (dict_.size() == 1 && dict_.begin()->second == -1 &&
+    if (dict_.size() == 1 and dict_.begin()->second == -1 and
             dict_.begin()->first == 0)
         return true;
     return false;
 }
 
 bool UnivariatePolynomial::is_integer() const {
-    if (dict_.size() == 1 && dict_.begin()->first == 0)
+    if (dict_.size() == 1 and dict_.begin()->first == 0)
         return true;
     return false;
 }
 
 bool UnivariatePolynomial::is_symbol() const {
-    if (dict_.size() == 1 && dict_.begin()->first == 1 &&
+    if (dict_.size() == 1 and dict_.begin()->first == 1 and
             dict_.begin()->second == 1)
         return true;
     return false;
 }
 
 bool UnivariatePolynomial::is_mul() const {
-    if (dict_.size() == 1 && dict_.begin()->first != 0 &&
-            dict_.begin()->second != 1 && dict_.begin()->second != 0)
+    if (dict_.size() == 1 and dict_.begin()->first != 0 and
+            dict_.begin()->second != 1 and dict_.begin()->second != 0)
         return true;
     return false;
 }
 
 bool UnivariatePolynomial::is_pow() const {
-    if (dict_.size() == 1 && dict_.begin()->second == 1 &&
-            dict_.begin()->first != 1 && dict_.begin()->first != 0)
+    if (dict_.size() == 1 and dict_.begin()->second == 1 and
+            dict_.begin()->first != 1 and dict_.begin()->first != 0)
         return true;
     return false;
 }
@@ -275,7 +275,7 @@ RCP<const UnivariatePolynomial> mul_uni_poly(RCP<const UnivariatePolynomial> a, 
     std::vector<mpz_class> v;
     mpz_class carry = 0;
 
-    while (r != 0 || carry != 0) {
+    while (r != 0 or carry != 0) {
         mpz_class b;
         mpz_and(b.get_mpz_t(), r.get_mpz_t(), mask.get_mpz_t());
         if (b < a2) {
