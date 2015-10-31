@@ -17,7 +17,7 @@ std::string MatrixBase::__str__() const {
 
 bool MatrixBase::eq(const MatrixBase &other) const
 {
-	if (this->nrows() != other.nrows() || this->ncols() != other.ncols())
+	if (this->nrows() != other.nrows() or this->ncols() != other.ncols())
         return false;
 
     for (unsigned i = 0; i < this->nrows(); i++)

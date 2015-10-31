@@ -48,7 +48,7 @@ TEST_CASE("Symbol hash: Basic", "[basic]")
 
     REQUIRE(x->__eq__(*x));
     REQUIRE(x->__eq__(*x2));
-    REQUIRE(!(x->__eq__(*y)));
+    REQUIRE(not (x->__eq__(*y)));
     REQUIRE(x->__neq__(*y));
 
     std::hash<Basic> hash_fn;
@@ -113,7 +113,7 @@ TEST_CASE("Add: basic", "[basic]")
     std::cout << "----------------------" << std::endl;
 
     REQUIRE(vec_basic_eq_perm(r->get_args(), {mul(integer(2), x), y}));
-    REQUIRE(!vec_basic_eq_perm(r->get_args(), {mul(integer(3), x), y}));
+    REQUIRE(not vec_basic_eq_perm(r->get_args(), {mul(integer(3), x), y}));
 
     r = add(mul(integer(5), x), integer(5));
     REQUIRE(vec_basic_eq_perm(r->get_args(), {mul(integer(5), x), integer(5)}));
@@ -635,12 +635,12 @@ TEST_CASE("has_symbol: Basic", "[basic]")
     r1 = add(x, pow(y, integer(2)));
     REQUIRE(has_symbol(*r1, x));
     REQUIRE(has_symbol(*r1, y));
-    REQUIRE(!has_symbol(*r1, z));
+    REQUIRE(not has_symbol(*r1, z));
 
     r1 = sin(add(x, pow(y, integer(2))));
     REQUIRE(has_symbol(*r1, x));
     REQUIRE(has_symbol(*r1, y));
-    REQUIRE(!has_symbol(*r1, z));
+    REQUIRE(not has_symbol(*r1, z));
 }
 
 TEST_CASE("free_symbols: Basic", "[basic]")

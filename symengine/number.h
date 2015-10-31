@@ -28,8 +28,8 @@ public:
     //! return true if the number is an exact representation
     //  false if the number is an approximation
     virtual bool is_exact() const { return true; };
-    //! \return true if the number is equal to 0 and not an approximation
-    inline bool is_exact_zero() const { return is_exact() && is_zero(); };
+    //! \return true if the number is equal to 0 and not an approximation 
+    inline bool is_exact_zero() const { return is_exact() and is_zero(); };
     //! Get `Evaluate` singleton to evaluate numerically
     virtual Evaluate& get_eval() const { throw std::runtime_error("Not Implemented."); };
 

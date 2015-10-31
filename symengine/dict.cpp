@@ -133,7 +133,7 @@ bool vec_basic_eq_perm(const vec_basic &a, const vec_basic &b)
             }
         }
         // If not found, then a != b
-        if (!found) return false;
+        if (not found) return false;
     }
     // If all elements were found, then a == b
     return true;

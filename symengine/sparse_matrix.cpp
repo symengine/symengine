@@ -28,7 +28,7 @@ CSRMatrix::CSRMatrix(unsigned row, unsigned col, std::vector<unsigned>&& p,
 bool CSRMatrix::eq(const MatrixBase &other) const
 {
     unsigned row = this->nrows();
-    if (row != other.nrows() || this->ncols() != other.ncols())
+    if (row != other.nrows() or this->ncols() != other.ncols())
         return false;
 
     if (is_a<CSRMatrix>(other)) {
@@ -42,7 +42,7 @@ bool CSRMatrix::eq(const MatrixBase &other) const
                 return false;
 
         for (unsigned i = 0; i < this->p_[row]; i++)
-            if ((this->j_[i] != o.j_[i]) || neq(*this->x_[i], *(o.x_[i])))
+            if ((this->j_[i] != o.j_[i]) or neq(*this->x_[i], *(o.x_[i])))
                 return false;
 
         return true;
@@ -53,7 +53,7 @@ bool CSRMatrix::eq(const MatrixBase &other) const
 
 bool CSRMatrix::is_canonical()
 {
-    if (p_.size() != row_ + 1 || j_.size() != p_[row_] || x_.size() != p_[row_])
+    if (p_.size() != row_ + 1 or j_.size() != p_[row_] or x_.size() != p_[row_])
         return false;
 
     if (p_[row_] != 0)   // Zero matrix is in canonical format
@@ -64,7 +64,7 @@ bool CSRMatrix::is_canonical()
 // Get and set elements
 RCP<const Basic> CSRMatrix::get(unsigned i, unsigned j) const
 {
-    SYMENGINE_ASSERT(i < row_ && j < col_);
+    SYMENGINE_ASSERT(i < row_ and j < col_);
 
     unsigned row_start = p_[i];
     unsigned row_end = p_[i + 1];
@@ -90,7 +90,7 @@ RCP<const Basic> CSRMatrix::get(unsigned i, unsigned j) const
 
 void CSRMatrix::set(unsigned i, unsigned j, const RCP<const Basic> &e)
 {
-    SYMENGINE_ASSERT(i < row_ && j < col_);
+    SYMENGINE_ASSERT(i < row_ and j < col_);
 
     unsigned k = p_[i];
     unsigned row_end = p_[i + 1];
@@ -104,7 +104,7 @@ void CSRMatrix::set(unsigned i, unsigned j, const RCP<const Basic> &e)
                 k++;
             }
             break;
-        } else if (j_[mid] >= j && j_[mid - 1] < j) {
+        } else if (j_[mid] >= j and j_[mid - 1] < j) {
             k = mid;
             break;
         } else if (j_[mid - 1] >= j) {
@@ -115,7 +115,7 @@ void CSRMatrix::set(unsigned i, unsigned j, const RCP<const Basic> &e)
     }
 
     if (neq(*e, *zero)) {
-        if (k < row_end && j_[k] == j) {
+        if (k < row_end and j_[k] == j) {
             x_[k] =  e;
         } else {  // j_[k] > j or k is the last non-zero element
             x_.insert(x_.begin() + k, e);
@@ -124,7 +124,7 @@ void CSRMatrix::set(unsigned i, unsigned j, const RCP<const Basic> &e)
                 p_[l]++;
         }
     } else { // e is zero
-        if (k < row_end && j_[k] == j) { // remove existing non-zero element
+        if (k < row_end and j_[k] == j) { // remove existing non-zero element
             x_.erase(x_.begin() + k);
             j_.erase(j_.begin() + k);
             for (unsigned l = i + 1; l <= row_; l++)
@@ -235,7 +235,7 @@ void CSRMatrix::csr_sum_duplicates(std::vector<unsigned>& p_,
             x = x_[jj];
             jj++;
 
-            while (jj < row_end && j_[jj] == j) {
+            while (jj < row_end and j_[jj] == j) {
                 x = add(x, x_[jj]);
                 jj++;
             }
@@ -319,7 +319,7 @@ bool CSRMatrix::csr_has_canonical_format(const std::vector<unsigned>& p_,
             return false;
     }
 
-    return csr_has_sorted_indices(p_, j_, row_) && !csr_has_duplicates(p_, j_, row_);
+    return csr_has_sorted_indices(p_, j_, row_) and not csr_has_duplicates(p_, j_, row_);
 }
 
 CSRMatrix CSRMatrix::from_coo(unsigned row, unsigned col,
@@ -464,7 +464,7 @@ void csr_diagonal(const CSRMatrix& A, DenseMatrix& D)
 {
     unsigned N = std::min(A.row_, A.col_);
 
-    SYMENGINE_ASSERT(D.nrows() == N && D.ncols() == 1);
+    SYMENGINE_ASSERT(D.nrows() == N and D.ncols() == 1);
 
     unsigned row_start;
     unsigned row_end;
@@ -496,7 +496,7 @@ void csr_diagonal(const CSRMatrix& A, DenseMatrix& D)
 // A[i, :] *= X[i]
 void csr_scale_rows(CSRMatrix& A, const DenseMatrix& X)
 {
-    SYMENGINE_ASSERT(A.row_ == X.nrows() && X.ncols() == 1);
+    SYMENGINE_ASSERT(A.row_ == X.nrows() and X.ncols() == 1);
 
     for(unsigned i = 0; i < A.row_; i++) {
         if (eq(*(X.get(i, 0)), *zero))
@@ -510,7 +510,7 @@ void csr_scale_rows(CSRMatrix& A, const DenseMatrix& X)
 // A[:,i] *= X[i]
 void csr_scale_columns(CSRMatrix& A, const DenseMatrix& X)
 {
-    SYMENGINE_ASSERT(A.col_ == X.nrows() && X.ncols() == 1);
+    SYMENGINE_ASSERT(A.col_ == X.nrows() and X.ncols() == 1);
 
     const unsigned nnz = A.p_[A.row_];
     unsigned i;
@@ -530,7 +530,7 @@ void csr_scale_columns(CSRMatrix& A, const DenseMatrix& X)
 void csr_binop_csr_canonical(const CSRMatrix& A, const CSRMatrix& B, CSRMatrix& C,
         RCP<const Basic>(&bin_op)(const RCP<const Basic>&, const RCP<const Basic>&))
 {
-    SYMENGINE_ASSERT(A.row_ == B.row_ && A.col_ == B.col_ && C.row_ == A.row_ && C.col_ == A.col_);
+    SYMENGINE_ASSERT(A.row_ == B.row_ and A.col_ == B.col_ and C.row_ == A.row_ and C.col_ == A.col_);
 
     //Method that works for canonical CSR matrices
     C.p_[0] = 0;
@@ -544,7 +544,7 @@ void csr_binop_csr_canonical(const CSRMatrix& A, const CSRMatrix& B, CSRMatrix& 
         B_end = B.p_[i + 1];
 
         //while not finished with either row
-        while (A_pos < A_end && B_pos < B_end) {
+        while (A_pos < A_end and B_pos < B_end) {
             unsigned A_j = A.j_[A_pos];
             unsigned B_j = B.j_[B_pos];
 

@@ -18,6 +18,7 @@
 #include <set>
 #include <unordered_map>
 #include <cassert>
+#include <ciso646>
 
 #include <symengine/symengine_config.h>
 
