@@ -48,16 +48,16 @@ TEST_CASE("Adding two UnivariateSeries", "[UnivariateSeries")
     RCP<const UnivariateSeries> e = add_uni_series(a, d);
     REQUIRE(e->__str__() == "3 + 5*x + O(x**2)");
 }
-/*
-TEST_CASE("Negative of a UnivariatePolynomial", "[UnivariatePolynomial")
+
+TEST_CASE("Negative of a UnivariateSeries", "[UnivariateSeries")
 {
     RCP<const Symbol> x  = symbol("x");
     map_uint_mpz adict_ = {{0, 1}, {1, 2}, {2, 1}};
-    const UnivariatePolynomial a(x, 2, std::move(adict_));
+    const UnivariateSeries a(x, 5, std::move(adict_));
 
-    RCP<const UnivariatePolynomial> b = neg_uni_poly(a);
+    RCP<const UnivariateSeries> b = neg_uni_series(a);
     //std::cout<<b->__str__()<<std::endl;
-    REQUIRE(b->__str__() == "-x**2 - 2*x - 1");
+    REQUIRE(b->__str__() == "-1 - 2*x - x**2 + O(x**5)");
 }
 
 TEST_CASE("Subtracting two UnivariatePolynomial", "[UnivariatePolynomial]")
@@ -65,14 +65,17 @@ TEST_CASE("Subtracting two UnivariatePolynomial", "[UnivariatePolynomial]")
     RCP<const Symbol> x  = symbol("x");
     map_uint_mpz adict_ = {{0, 1}, {1, 2}, {2, 1}};
     map_uint_mpz bdict_ = {{0, 2}, {1, 3}, {2, 4}};
-    const UnivariatePolynomial a(x, 2, std::move(adict_));
-    const UnivariatePolynomial b(x, 2, std::move(bdict_));
 
-    RCP<const Basic> c = sub_uni_poly(b, a);
-    //std::cout<<c->__str__();
-    REQUIRE(c->__str__() == "3*x**2 + x + 1");
+    const UnivariateSeries a(x, 5, std::move(adict_));
+    const UnivariateSeries b(x, 4, std::move(bdict_));
+    RCP<const UnivariateSeries> c = sub_uni_series(a, b);
+    REQUIRE(c->__str__() == "-1 - x - 3*x**2 + O(x**4)");
+
+    const UnivariateSeries d(x, 2, std::move(bdict_));
+    RCP<const UnivariateSeries> e = sub_uni_series(a, d);
+    REQUIRE(e->__str__() == "-1 - x + O(x**2)");
 }
-
+/*
 TEST_CASE("Multiplication of two UnivariatePolynomial", "[UnivariatePolynomial")
 {
     RCP<const Symbol> x  = symbol("x");

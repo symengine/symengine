@@ -7,6 +7,11 @@ using SymEngine::make_rcp;
 
 namespace SymEngine {
 
+UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const RCP<const UnivariatePolynomial> &poly) :
+        var_{var}, poly_{std::move(poly)} , prec_{precision} {
+    SYMENGINE_ASSERT(UnivariateSeries::is_canonical(*poly_, prec_))
+}
+
 UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const unsigned int &max, map_uint_mpz&& dict) :
         var_{var}, prec_{precision} {
 
@@ -123,6 +128,16 @@ RCP<const UnivariateSeries> add_uni_series (const UnivariateSeries& a, const Uni
                 max = it.first;
         }
     return make_rcp<const UnivariateSeries>(a.var_, minprec, max, std::move(dict));
+}
+
+RCP<const UnivariateSeries> neg_uni_series (const UnivariateSeries& a)
+{
+    return make_rcp<const UnivariateSeries>(a.var_, a.prec_, std::move(neg_uni_poly(*a.poly_)));
+}
+
+RCP<const UnivariateSeries> sub_uni_series (const UnivariateSeries& a, const UnivariateSeries& b)
+{
+    return add_uni_series(a, *neg_uni_series(b));
 }
 
 } // SymEngine
