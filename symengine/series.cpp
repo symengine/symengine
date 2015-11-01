@@ -25,7 +25,7 @@ UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned 
 UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const map_uint_mpz& dict) :
         var_{var}, prec_{precision} {
 
-    map_uint_mpz dict_trunc = {};
+    map_uint_mpz dict_trunc;
     unsigned int max = 0;
     std::copy_if(dict.begin(), dict.end(), std::inserter(dict_trunc, dict_trunc.end()),
         [&](const map_uint_mpz::value_type i)
