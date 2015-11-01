@@ -8,6 +8,7 @@ SYMENGINE_ENUM(REAL_MPFR, RealMPFR)
 #if defined(HAVE_SYMENGINE_MPC) || defined(SYMENGINE_INCLUDE_ALL)
 SYMENGINE_ENUM(COMPLEX_MPC, ComplexMPC)
 #endif
+SYMENGINE_ENUM(NUMBER_WRAPPER, NumberWrapper)
 SYMENGINE_ENUM(REAL_DOUBLE, RealDouble)
 // 'REAL_DOUBLE' returns the number of subclasses of Number.
 // All subclasses of Number must be added before it. Do not assign
