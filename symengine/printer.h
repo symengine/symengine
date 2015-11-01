@@ -139,6 +139,7 @@ public:
 #ifdef HAVE_SYMENGINE_MPC
     void bvisit(const ComplexMPC &x);
 #endif
+    void bvisit(const NumberWrapper &x);
 
     std::string parenthesizeLT(const RCP<const Basic> &x, PrecedenceEnum precedenceEnum);
     std::string parenthesizeLE(const RCP<const Basic> &x, PrecedenceEnum precedenceEnum);

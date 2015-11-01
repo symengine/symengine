@@ -3,7 +3,7 @@
  *  Basic Number class.
  *
  **/
- 
+
 #ifndef SYMENGINE_NUMBER_H
 #define SYMENGINE_NUMBER_H
 
@@ -108,6 +108,14 @@ inline bool is_a_Number(const Basic &b)
     // subclass of Number
     return b.get_type_code() <= REAL_DOUBLE;
 }
+
+class NumberWrapper : public Number {
+public:
+    IMPLEMENT_TYPEID(NUMBER_WRAPPER)
+    virtual std::string __str__() const { throw std::runtime_error("Not Implemented."); };
+    virtual RCP<const Number> eval(long bits)  const { throw std::runtime_error("Not Implemented."); };
+    virtual void accept(Visitor &v) const;
+};
 
 //! A class that will evaluate functions numerically.
 class Evaluate {
