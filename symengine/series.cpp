@@ -58,7 +58,7 @@ bool UnivariateSeries::is_canonical(const UnivariatePolynomial& poly, const unsi
 
 std::size_t UnivariateSeries::__hash__() const
 {
-    return poly_->__hash__() + std::size_t(prec_ * 84728863L);
+    return poly_->hash() + std::size_t(prec_ * 84728863L);
 }
 
 bool UnivariateSeries::__eq__(const Basic &other) const
@@ -127,7 +127,7 @@ RCP<const UnivariateSeries> add_uni_series (const UnivariateSeries& a, const Uni
         if (it.first >= minprec)
             break;
         dict[it.first] += it.second;
-        if (dict[it.first] and it.first > max)
+        if (dict[it.first] != 0 and it.first > max)
             max = it.first;
     }
     return make_rcp<const UnivariateSeries>(a.var_, minprec, max, std::move(dict));
@@ -155,7 +155,7 @@ RCP<const UnivariateSeries> mul_uni_series (const UnivariateSeries& a, const Uni
             for (const auto &bit : b.poly_->dict_) {
                 const unsigned int expsum = aexp + bit.first;
                 if (expsum < minprec)
-                    dict[expsum] += ait.second * bit.second;
+                    mpz_addmul(dict[expsum].get_mpz_t(), ait.second.get_mpz_t(), bit.second.get_mpz_t());
                 else
                     break;
                 if (expsum > max)
