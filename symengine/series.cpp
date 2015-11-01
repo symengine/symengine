@@ -1,4 +1,6 @@
 #include <exception>
+#include <algorithm>
+#include <iterator>
 #include <symengine/series.h>
 #include <symengine/dict.h>
 
