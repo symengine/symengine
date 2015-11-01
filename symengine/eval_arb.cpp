@@ -93,14 +93,14 @@ public:
 
     void bvisit(const Pow &x) {
         if (eq(*x.get_base(), *E)) {
-            apply(result_, *(x.exp_));
+            apply(result_, *(x.get_exp()));
             arb_exp(result_, result_, prec_);
         } else {
             arb_t b;
             arb_init(b);
 
-            apply(b, *(x.base_));
-            apply(result_, *(x.exp_));
+            apply(b, *(x.get_base()));
+            apply(result_, *(x.get_exp()));
             arb_pow(result_, b, result_, prec_);
 
             arb_clear(b);

@@ -186,7 +186,7 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
         // Convert (x**y)**b = x**(b*y), where 'b' is an integer. This holds for
         // any complex 'x', 'y' and integer 'b'.
         RCP<const Pow> A = rcp_static_cast<const Pow>(a);
-        return pow(A->base_, mul(A->exp_, b));
+        return pow(A->get_base(), mul(A->get_exp(), b));
     }
     return make_rcp<const Pow>(a, b);
 }
@@ -283,11 +283,11 @@ void multinomial_coefficients_mpz(int m, int n, map_vec_mpz &r)
 
 RCP<const Basic> pow_expand(const RCP<const Pow> &self)
 {
-    RCP<const Basic> _base = expand(self->base_);
+    RCP<const Basic> _base = expand(self->get_base());
     bool negative_pow = false;
 
-    if (is_a<Integer>(*self->exp_) and is_a<UnivariatePolynomial>(*_base)) {
-        int q = rcp_static_cast<const Integer>(self->exp_)->as_int();
+    if (is_a<Integer>(*self->get_exp()) and is_a<UnivariatePolynomial>(*_base)) {
+        int q = rcp_static_cast<const Integer>(self->get_exp())->as_int();
         RCP<const UnivariatePolynomial> p = rcp_static_cast<const UnivariatePolynomial>(_base);
         RCP<const UnivariatePolynomial> r = univariate_polynomial(p->var_, 0, {{0, 1}});
         while (q != 0) {
@@ -301,16 +301,16 @@ RCP<const Basic> pow_expand(const RCP<const Pow> &self)
         return r;
     }
 
-    if (not  is_a<Integer>(*self->exp_) or not  is_a<Add>(*_base)) {
-        if (neq(*_base, *self->base_)) {
-            return pow(_base, self->exp_);
+    if(not is_a<Integer>(*self->get_exp()) or not is_a<Add>(*_base)) {
+        if (neq(*_base, *self->get_base())) {
+            return pow(_base, self->get_exp());
         } else {
             return self;
         }
     }
 
     map_vec_mpz r;
-    int n = rcp_static_cast<const Integer>(self->exp_)->as_int();
+    int n = rcp_static_cast<const Integer>(self->get_exp())->as_int();
     if (n < 0) {
         n = -n;
         negative_pow = true;
@@ -326,7 +326,7 @@ RCP<const Basic> pow_expand(const RCP<const Pow> &self)
         if (base_dict.size() == 1) {
             // Eg: (0.0 + x * 5) ** 2 == 0.0 + (x * 5) ** 2
             return add(base->coef_, pow(mul(base_dict.begin()->first,
-                           base_dict.begin()->second), self->exp_));
+                           base_dict.begin()->second), self->get_exp()));
         }
         add_overall_coeff = base->coef_;
     }

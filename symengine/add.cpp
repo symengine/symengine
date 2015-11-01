@@ -135,8 +135,8 @@ RCP<const Basic> Add::from_dict(const RCP<const Number> &coef, umap_basic_num &&
             }
             map_basic_basic m;
             if (is_a<Pow>(*(p->first))) {
-                insert(m, rcp_static_cast<const Pow>(p->first)->base_,
-                    rcp_static_cast<const Pow>(p->first)->exp_);
+                insert(m, rcp_static_cast<const Pow>(p->first)->get_base(),
+                    rcp_static_cast<const Pow>(p->first)->get_exp());
             } else {
                 insert(m, p->first, one);
             }
@@ -168,8 +168,8 @@ RCP<const Basic> Add::from_dict(const RCP<const Number> &coef, umap_basic_num &&
                 }
             }
             if (is_a<Pow>(*p->first)) {
-                insert(m, rcp_static_cast<const Pow>(p->first)->base_,
-                    rcp_static_cast<const Pow>(p->first)->exp_);
+                insert(m, rcp_static_cast<const Pow>(p->first)->get_base(),
+                    rcp_static_cast<const Pow>(p->first)->get_exp());
             } else {
                 insert(m, p->first, one);
             }

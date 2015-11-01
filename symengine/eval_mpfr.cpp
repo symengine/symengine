@@ -71,12 +71,12 @@ public:
 
     void bvisit(const Pow &x) {
         if (eq(*x.get_base(), *E)) {
-            apply(result_, *(x.exp_));
+            apply(result_, *(x.get_exp()));
             mpfr_exp(result_, result_, rnd_);
         } else {
             mpfr_class b(mpfr_get_prec(result_));
-            apply(b.get_mpfr_t(), *(x.base_));
-            apply(result_, *(x.exp_));
+            apply(b.get_mpfr_t(), *(x.get_base()));
+            apply(result_, *(x.get_exp()));
             mpfr_pow(result_, b.get_mpfr_t(), result_, rnd_);
         }
     }
