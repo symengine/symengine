@@ -15,6 +15,7 @@
 #include <symengine/complex_double.h>
 #include <symengine/real_mpfr.h>
 #include <symengine/complex_mpc.h>
+#include <symengine/eval_double.h>
 
 using SymEngine::Basic;
 using SymEngine::Add;
@@ -76,6 +77,8 @@ using SymEngine::real_double;
 using SymEngine::complex_double;
 using SymEngine::RealDouble;
 using SymEngine::ComplexDouble;
+using SymEngine::Number;
+using SymEngine::eval_double;
 using SymEngine::is_a;
 
 #ifdef HAVE_SYMENGINE_MPFR
@@ -1803,56 +1806,43 @@ TEST_CASE("Abs: functions", "[functions]")
     REQUIRE(eq(*abs(x)->diff(y), *integer(0)));
 }
 
-// Test FunctionWrapper
-void dec_ref(void* obj);
-int comp(void* o1, void* o2);
+class MySin : public FunctionWrapper {
+public :
+    MySin(RCP<const Basic> arg) : FunctionWrapper("MySin", arg) {
 
-class DummyFunction {
-    public :
-        std::string name_;
-        std::string hash_;
-        vec_basic args_;
-        int count_;
-        inline DummyFunction(std::string name, std::string hash, vec_basic args)
-            : name_{name}, hash_{hash}, args_{args}, count_{0} {
+    }
+    RCP<const Number> eval(long bits) const {
+        return real_double(::sin(eval_double(*arg_[0])));
+    }
+    RCP<const Basic> create(const vec_basic &v) const {
+        if (eq(*zero, *v[0])) {
+            return zero;
+        } else {
+            return make_rcp<MySin>(v[0]);
         }
-        RCP<const Basic> getFunctionWrapper() {
-            ++count_;
-            return make_rcp<const FunctionWrapper>((void*)this, name_, hash_, args_, &dec_ref, &comp);
-        }
+    }
+    RCP<const Basic> diff(const RCP<const Symbol> &x) const {
+        return mul(cos(arg_[0]), arg_[0]->diff(x));
+    }
 };
-
-void dec_ref(void* obj)
-{
-    DummyFunction* o = (DummyFunction*)obj;
-    o->count_ = o->count_ - 1;
-}
-
-int comp(void* o1, void* o2)
-{
-    DummyFunction* d1 = (DummyFunction*)o1;
-    DummyFunction* d2 = (DummyFunction*)o2;
-    if (d1->name_ == d2->name_)
-        return 0;
-    else return d1->name_ < d2->name_ ? -1 : 1;
-}
 
 TEST_CASE("FunctionWrapper: functions", "[functions]")
 {
-    RCP<const Basic> x = symbol("x");
-    RCP<const Basic> y = symbol("y");
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Basic> e = make_rcp<MySin>(x);
+    RCP<const Basic> f;
 
-    DummyFunction a = DummyFunction("Foo", "hashFoo", {x, y});
-    DummyFunction b = DummyFunction("Bar", "hashBar", {y, y});
-    RCP<const Basic> wrap_a = a.getFunctionWrapper();
-    RCP<const Basic> wrap_b = b.getFunctionWrapper();
+    f = e->subs({{x, integer(0)}});
+    REQUIRE(eq(*f, *zero));
 
-    REQUIRE(wrap_a->compare(*wrap_b) == 1);
-    REQUIRE(wrap_b->compare(*wrap_a) == -1);
-    REQUIRE(wrap_a->compare(*wrap_a) == 0);
+    f = e->diff(x);
+    REQUIRE(eq(*f, *cos(x)));
 
-    wrap_a.reset();
-    REQUIRE(a.count_ == 0);
+    f = e->subs({{x, integer(1)}});
+    double d = eval_double(*f);
+    REQUIRE(std::fabs(d - 0.84147098480789) < 1e-12);
+
+    REQUIRE(e->__str__() == "MySin(x)");
 }
 /* ---------------------------- */
 

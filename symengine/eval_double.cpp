@@ -215,7 +215,7 @@ public:
         apply(*(x.eval(53)));
     }
 
-    void bvisit(const FunctionSymbol &x) {
+    void bvisit(const FunctionWrapper &x) {
         apply(*(x.eval(53)));
     }
 };
