@@ -60,7 +60,7 @@ TEST_CASE("Negative of a UnivariateSeries", "[UnivariateSeries")
     REQUIRE(b->__str__() == "-1 - 2*x - x**2 + O(x**5)");
 }
 
-TEST_CASE("Subtracting two UnivariatePolynomial", "[UnivariatePolynomial]")
+TEST_CASE("Subtracting two UnivariateSeries", "[UnivariateSeries]")
 {
     RCP<const Symbol> x  = symbol("x");
     map_uint_mpz adict_ = {{0, 1}, {1, 2}, {2, 1}};
@@ -75,22 +75,20 @@ TEST_CASE("Subtracting two UnivariatePolynomial", "[UnivariatePolynomial]")
     RCP<const UnivariateSeries> e = sub_uni_series(a, d);
     REQUIRE(e->__str__() == "-1 - x + O(x**2)");
 }
-/*
-TEST_CASE("Multiplication of two UnivariatePolynomial", "[UnivariatePolynomial")
+
+TEST_CASE("Multiplication of two UnivariateSeries", "[UnivariateSeries")
 {
     RCP<const Symbol> x  = symbol("x");
-    RCP<const UnivariatePolynomial> a = univariate_polynomial(x, 2, {{0, 1}, {1, 2}, {2, 1}});
-    RCP<const UnivariatePolynomial> b = univariate_polynomial(x, 2, {{0, -1}, {1, -2}, {2, -1}});
+    RCP<const UnivariateSeries> a = univariate_series(x, 5, {{0, 1}, {1, 2}, {2, 1}});
+    RCP<const UnivariateSeries> b = univariate_series(x, 3, {{0, -1}, {1, -2}, {2, -1}});
 
-    RCP<const UnivariatePolynomial> c = mul_uni_poly(a, a);
-    //std::cout<<c->__str__();
-    RCP<const UnivariatePolynomial> d = mul_uni_poly(a, b);
-    //std::cout<<c->__str__();
+    RCP<const UnivariateSeries> c = mul_uni_series(*a, *a);
+    RCP<const UnivariateSeries> d = mul_uni_series(*a, *b);
 
-    REQUIRE(c->__str__() == "x**4 + 4*x**3 + 6*x**2 + 4*x + 1");
-    REQUIRE(d->__str__() == "-x**4 - 4*x**3 - 6*x**2 - 4*x - 1");
+    REQUIRE(c->__str__() == "1 + 4*x + 6*x**2 + 4*x**3 + x**4 + O(x**5)");
+    REQUIRE(d->__str__() == "-1 - 4*x - 6*x**2 + O(x**3)");
 }
-
+/*
 TEST_CASE("UnivariatePolynomial get_args", "[UnivariatePolynomial")
 {
     RCP<const Symbol> x  = symbol("x");

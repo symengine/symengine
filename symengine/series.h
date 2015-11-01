@@ -59,6 +59,7 @@ inline RCP<const UnivariateSeries> univariate_series(RCP<const Symbol> i,       
 RCP<const UnivariateSeries> add_uni_series (const UnivariateSeries& a, const UnivariateSeries &b);
 RCP<const UnivariateSeries> neg_uni_series (const UnivariateSeries& a);
 RCP<const UnivariateSeries> sub_uni_series (const UnivariateSeries& a, const UnivariateSeries &b);
+RCP<const UnivariateSeries> mul_uni_series (const UnivariateSeries& a, const UnivariateSeries &b);
 
 }  //SymEngine
 #endif

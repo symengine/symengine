@@ -116,17 +116,20 @@ RCP<const UnivariateSeries> add_uni_series (const UnivariateSeries& a, const Uni
     map_uint_mpz dict;
     SYMENGINE_ASSERT(a.var_->get_name() == b.var_->get_name())
     unsigned int minprec = (a.prec_ < b.prec_)? a.prec_ : b.prec_;
-    for (auto &it : a.poly_->dict_)
-        if (it.first < minprec)
-            dict[it.first] = it.second;
+    for (auto &it : a.poly_->dict_) {
+        if (it.first >= minprec)
+            break;
+        dict[it.first] = it.second;
+    }
 
     unsigned int max = 0;
-    for (auto &it : b.poly_->dict_)
-        if (it.first < minprec) {
-            dict[it.first] += it.second;
-            if (dict[it.first] and it.first > max)
-                max = it.first;
-        }
+    for (auto &it : b.poly_->dict_) {
+        if (it.first >= minprec)
+            break;
+        dict[it.first] += it.second;
+        if (dict[it.first] and it.first > max)
+            max = it.first;
+    }
     return make_rcp<const UnivariateSeries>(a.var_, minprec, max, std::move(dict));
 }
 
@@ -138,6 +141,31 @@ RCP<const UnivariateSeries> neg_uni_series (const UnivariateSeries& a)
 RCP<const UnivariateSeries> sub_uni_series (const UnivariateSeries& a, const UnivariateSeries& b)
 {
     return add_uni_series(a, *neg_uni_series(b));
+}
+
+RCP<const UnivariateSeries> mul_uni_series (const UnivariateSeries& a, const UnivariateSeries& b)
+{
+    map_uint_mpz dict;
+    SYMENGINE_ASSERT(a.var_->get_name() == b.var_->get_name())
+    const unsigned int minprec = (a.prec_ < b.prec_)? a.prec_ : b.prec_;
+    unsigned int max = 0;
+    for (const auto &ait : a.poly_->dict_) {
+        const unsigned int aexp = ait.first;
+        if (aexp < minprec) {
+            for (const auto &bit : b.poly_->dict_) {
+                const unsigned int expsum = aexp + bit.first;
+                if (expsum < minprec)
+                    dict[expsum] += ait.second * bit.second;
+                else
+                    break;
+                if (expsum > max)
+                     max = expsum;
+            }
+        }
+        else
+            break;
+    }
+    return make_rcp<const UnivariateSeries>(a.var_, minprec, max, std::move(dict));
 }
 
 } // SymEngine
