@@ -1492,11 +1492,6 @@ RCP<const Basic> FunctionSymbol::subs(const map_basic_basic &subs_dict) const
     return create(v);
 }
 
-RCP<const Number> FunctionSymbol::eval(long bits) const
-{
-    throw std::runtime_error("Not Implemented/Defined");
-}
-
 RCP<const Basic> function_symbol(std::string name, const vec_basic &arg)
 {
     return make_rcp<const FunctionSymbol>(name, arg);
@@ -1507,52 +1502,21 @@ RCP<const Basic> function_symbol(std::string name, const RCP<const Basic> &arg)
     return make_rcp<const FunctionSymbol>(name, arg);
 }
 
-FunctionWrapper::FunctionWrapper(void* obj, std::string name, std::string hash, const vec_basic &arg,
-    void(*dec_ref)(void *), int(*comp)(void *, void *))
-    : FunctionSymbol(name, arg)
+FunctionWrapper::FunctionWrapper(std::string name, const RCP<const Basic> &arg)
+        : FunctionSymbol(name, arg)
 {
-    obj_ = obj;
-    hash_ = hash;
-    dec_ref_ = dec_ref;
-    comp_ = comp;
-    SYMENGINE_ASSERT(is_canonical(arg_))
+
 }
 
-FunctionWrapper::~FunctionWrapper()
+FunctionWrapper::FunctionWrapper(std::string name, const vec_basic &vec)
+        : FunctionSymbol(name, vec)
 {
-    (*dec_ref_)(obj_);
+
 }
 
-std::size_t FunctionWrapper::__hash__() const
+RCP<const Number> FunctionWrapper::eval(long bits) const
 {
-    std::size_t seed = 0;
-    hash_combine<std::string>(seed, hash_);
-    return seed;
-}
-
-int FunctionWrapper::compare(const Basic &o) const
-{
-    SYMENGINE_ASSERT(is_a<FunctionWrapper>(o))
-    const FunctionWrapper &s = static_cast<const FunctionWrapper &>(o);
-    return (*comp_)(obj_, s.obj_);
-}
-
-bool FunctionWrapper::__eq__(const Basic &o) const
-{
-    if (is_a<FunctionWrapper>(o) and
-        (*comp_)(obj_, static_cast<const FunctionWrapper &>(o).obj_) == 0)
-        return true;
-    return false;
-}
-
-RCP<const Basic> FunctionWrapper::diff(const RCP<const Symbol> &x) const
-{
-    for (auto &a : arg_) {
-        if (neq(*a->diff(x), *zero)) {
-            return Derivative::create(rcp_from_this(), {x});
-        }
-    }
-    return zero;
+    throw std::runtime_error("Not Implemented.");
 }
 
 /* ---------------------------- */

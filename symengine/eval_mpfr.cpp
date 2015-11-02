@@ -227,7 +227,7 @@ public:
         x.eval(mpfr_get_prec(result_))->accept(*this);
     }
 
-    void bvisit(const FunctionSymbol &x) {
+    void bvisit(const FunctionWrapper &x) {
         x.eval(mpfr_get_prec(result_))->accept(*this);
     }
 

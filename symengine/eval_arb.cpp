@@ -220,7 +220,7 @@ public:
         throw std::runtime_error("Not implemented.");
     }
 
-    void bvisit(const FunctionSymbol &x) {
+    void bvisit(const FunctionWrapper &x) {
         x.eval(prec_)->accept(*this);
     }
 
@@ -278,9 +278,6 @@ public:
         throw std::runtime_error("Not implemented.");
     };
     void bvisit(const UpperGamma &) {
-        throw std::runtime_error("Not implemented.");
-    };
-    void bvisit(const FunctionWrapper &) {
         throw std::runtime_error("Not implemented.");
     };
 

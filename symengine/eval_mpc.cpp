@@ -253,7 +253,7 @@ public:
         x.eval(mpc_get_prec(result_))->accept(*this);
     }
 
-    void bvisit(const FunctionSymbol &x) {
+    void bvisit(const FunctionWrapper &x) {
         x.eval(mpc_get_prec(result_))->accept(*this);
     }
 
