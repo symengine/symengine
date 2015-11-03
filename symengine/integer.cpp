@@ -3,10 +3,10 @@
 
 namespace SymEngine {
 
-Integer::Integer(int i)
+/*Integer::Integer(int i)
 {
     this->i = i;
-}
+}*/
 
 std::size_t Integer::__hash__() const
 {
@@ -141,4 +141,3 @@ int perfect_power(const Integer &n)
 }
 
 } // SymEngine
-

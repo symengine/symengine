@@ -23,7 +23,7 @@ public:
 public:
     IMPLEMENT_TYPEID(INTEGER)
     //! Constructor of Integer using `int`
-    Integer(int i);
+    //Integer(int i);
     //! Constructor of Integer using `mpz_class`
     Integer(mpz_class i);
     //! \return size of the hash
@@ -157,9 +157,9 @@ struct RCPIntegerKeyLess
 //! \return RCP<const Integer> from integral values
 template<typename T> inline
 typename std::enable_if<std::is_integral<T>::value, RCP<const Integer>>::type
-integer(T i)
+integer(T&& i)
 {
-    return make_rcp<const Integer>(mpz_class(i));
+    return make_rcp<const Integer>(std::forward<T>(i));
 }
 //! \return RCP<const Integer> from `mpz_class`
 inline RCP<const Integer> integer(mpz_class i)
@@ -178,7 +178,10 @@ int perfect_power(const Integer &n);
 //! Integer Absolute value
 RCP<const Integer> iabs(const Integer &n);
 
-inline Integer::Integer(mpz_class i) : i{i} {}
+inline Integer::Integer(mpz_class i)
+{
+  this->i = i;
+}
 
 } // SymEngine
 
