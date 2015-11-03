@@ -7,8 +7,6 @@
 #ifndef SYMENGINE_INTEGER_H
 #define SYMENGINE_INTEGER_H
 
-#include <type_traits>
-
 #include <symengine/basic.h>
 #include <symengine/number.h>
 
@@ -152,17 +150,11 @@ struct RCPIntegerKeyLess
         return false;
     }
 };
-//! \return RCP<const Integer> from integral values
-template<typename T> inline
-typename std::enable_if<std::is_integral<T>::value, RCP<const Integer>>::type
-integer(T&& i)
+//! \return RCP<const Integer> from integral values + mpz_class
+template<typename T>
+inline RCP<const Integer> integer(T&& i)
 {
     return make_rcp<const Integer>(std::forward<T>(i));
-}
-//! \return RCP<const Integer> from `mpz_class`
-inline RCP<const Integer> integer(mpz_class i)
-{
-    return make_rcp<const Integer>(i);
 }
 //! Integer Square root
 RCP<const Integer> isqrt(const Integer &n);
