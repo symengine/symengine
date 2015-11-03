@@ -41,6 +41,10 @@ public:
      * \param o - Object to be compared with
      * \return whether the 2 objects are equal
      * */
+
+    bool operator==(const UnivariateSeries &o) const {
+        return (eq(*var_, *o.var_) and poly_->__eq__(*o.poly_) and prec_ == o.prec_);
+    }
     bool __eq__(const Basic &o) const;
     int compare(const Basic &o) const;
 

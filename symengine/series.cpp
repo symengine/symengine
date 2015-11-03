@@ -11,15 +11,12 @@ namespace SymEngine {
 
 UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const RCP<const UnivariatePolynomial> &poly) :
         var_{var}, poly_{std::move(poly)} , prec_{precision} {
-    SYMENGINE_ASSERT(UnivariateSeries::is_canonical(*poly_, prec_))
 }
 
 UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const unsigned int &max, map_uint_mpz&& dict) :
         var_{var}, prec_{precision} {
 
     poly_ = univariate_polynomial(var_, max, std::move(dict));
-
-    SYMENGINE_ASSERT(UnivariateSeries::is_canonical(*poly_, prec_))
 }
 
 UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const map_uint_mpz& dict) :
@@ -38,8 +35,6 @@ UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned 
             return false;
         } );
     poly_ = univariate_polynomial(var_, max, std::move(dict_trunc));
-
-    SYMENGINE_ASSERT(UnivariateSeries::is_canonical(*poly_, prec_))
 }
 
 UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const std::vector<mpz_class> &v) :
@@ -49,8 +44,6 @@ UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned 
     std::copy_if(v.begin(), v.end(), std::back_inserter(vtrunc),
         [&](decltype(v[0]) i) { return i < prec_; } );
     poly_ = UnivariatePolynomial::create(var_, vtrunc);
-
-    SYMENGINE_ASSERT(UnivariateSeries::is_canonical(*poly_, prec_))
 }
 
 bool UnivariateSeries::is_canonical(const UnivariatePolynomial& poly, const unsigned int &prec)
@@ -68,7 +61,7 @@ bool UnivariateSeries::__eq__(const Basic &other) const
     if (not is_a<UnivariateSeries>(other))
         return false;
     const UnivariateSeries &o = static_cast<const UnivariateSeries &>(other);
-    return (eq(*var_, *o.var_) and poly_->__eq__(*o.poly_) and prec_ == o.prec_);
+    return operator==(o);
 }
 
 int UnivariateSeries::compare(const Basic &other) const
