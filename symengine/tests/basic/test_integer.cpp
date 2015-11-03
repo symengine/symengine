@@ -78,11 +78,4 @@ TEST_CASE("fix#461: integer", "[integer]")
     unsigned long ulmax = std::numeric_limits<unsigned long>::max();
     ir = integer(ulmax);
     REQUIRE(static_cast<mpz_class>(ulmax) == ir->as_mpz());
-
-    ir = integer(1024);
-    REQUIRE(1024 == ir->as_mpz());
-
-    ir = integer(20000ul);
-    REQUIRE(20000ul == ir->as_mpz());
-
 }
