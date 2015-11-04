@@ -12,22 +12,22 @@ environment:
     - BUILD_TYPE: "Debug"
       COMPILER: MSVC15
       PLATFORM: "Win32"
+    - BUILD_TYPE: "Debug"
+      COMPILER: MinGW
+    - BUILD_TYPE: "Debug"
+      COMPILER: MSVC15
+      PLATFORM: "x64"
+    - BUILD_TYPE: "Debug"
+      COMPILER: MinGW-w64
     - BUILD_TYPE: "Release"
       COMPILER: MSVC15
       PLATFORM: "Win32"
-    - BUILD_TYPE: "Debug"
-      COMPILER: MSVC15
-      PLATFORM: "x64"
-    - BUILD_TYPE: "Release"
-      COMPILER: MSVC15
-      PLATFORM: "x64"
-    - BUILD_TYPE: "Debug"
-      COMPILER: MinGW
     - BUILD_TYPE: "Release"
       COMPILER: MinGW
     - BUILD_TYPE: "Release"
-      COMPILER: MinGW-w64
-    - BUILD_TYPE: "Debug"
+      COMPILER: MSVC15
+      PLATFORM: "x64"
+    - BUILD_TYPE: "Release"
       COMPILER: MinGW-w64
 
 install:
