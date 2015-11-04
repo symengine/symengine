@@ -44,7 +44,7 @@ TEST_CASE("Adding two UnivariateSeries", "[UnivariateSeries")
     const UnivariateSeries b(x, 4, std::move(bdict_));
     RCP<const UnivariateSeries> c = add_uni_series(a, b);
     const UnivariateSeries d(x, 4, std::move(ddict_));
-    REQUIRE(c == d);
+    REQUIRE(*c == d);
 
     const UnivariateSeries e(x, 2, std::move(bdict_));
     RCP<const UnivariateSeries> f = add_uni_series(a, e);
