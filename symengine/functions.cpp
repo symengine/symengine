@@ -65,7 +65,7 @@ bool get_pi_shift(const RCP<const Basic> &arg,
             bool check_pi = false;
             RCP<const Basic> temp;
             *x = coef;
-            for (auto &p: s.dict_) {
+            for (const auto &p: s.dict_) {
                 temp = mul(p.second, integer(12));
                 if (is_a<Constant>(*p.first) and
                     eq(*(rcp_static_cast<const Constant>(p.first)), *pi)
@@ -153,7 +153,7 @@ bool could_extract_minus(const RCP<const Basic> &arg)
     }
     else if (is_a<Add>(*arg)) {
         const Add &s = static_cast<const Add &>(*arg);
-        for (auto &p: s.dict_) {
+        for (const auto &p: s.dict_) {
             if (is_a<Integer>(*p.second)) {
                 if (not (rcp_static_cast<const Integer>(p.second)->is_negative()))
                     return false;
@@ -1414,7 +1414,7 @@ bool FunctionSymbol::is_canonical(const vec_basic &arg)
 std::size_t FunctionSymbol::__hash__() const
 {
     std::size_t seed = FUNCTIONSYMBOL;
-    for (auto &a : arg_)
+    for (const auto &a : arg_)
         hash_combine<Basic>(seed, *a);
     hash_combine<std::string>(seed, name_);
     return seed;
@@ -1447,7 +1447,7 @@ RCP<const Basic> FunctionSymbol::diff(const RCP<const Symbol> &x) const
     std::string name;
     unsigned count  = 0;
     bool found_x = false;
-    for (auto &a : arg_) {
+    for (const auto &a : arg_) {
         if (eq(*a, *x)) {
             found_x = true;
             count++;
@@ -1531,7 +1531,7 @@ bool Derivative::is_canonical(const RCP<const Basic> &arg,
         const vec_basic &x) const
 {
     // Check that 'x' are Symbols:
-    for(auto &a: x)
+    for(const auto &a: x)
         if (not is_a<Symbol>(*a)) return false;
     if (is_a<FunctionSymbol>(*arg)) {
         RCP<const Symbol> s = rcp_static_cast<const Symbol>(x[0]);
@@ -1539,7 +1539,7 @@ bool Derivative::is_canonical(const RCP<const Basic> &arg,
         bool found_s = false;
         // 's' should be one of the args of the function
         // and should not appear anywhere else.
-        for (auto &a : f->get_args()) {
+        for (const auto &a : f->get_args()) {
             if (eq(*a, *s)) {
                 if(found_s) {
                     return false;
@@ -1603,7 +1603,7 @@ RCP<const Basic> Derivative::subs(const map_basic_basic &subs_dict) const
     auto it = subs_dict.find(rcp_from_this());
     if (it != subs_dict.end())
         return it->second;
-    for (auto &p: subs_dict) {
+    for (const auto &p: subs_dict) {
         subs = true;
         if (eq(*arg_->subs({{p.first, p.second}}), *arg_))
             continue;
@@ -1614,7 +1614,7 @@ RCP<const Basic> Derivative::subs(const map_basic_basic &subs_dict) const
             insert(n, p.first, p.second);
             continue;
         }
-        for (auto &d: x_) {
+        for (const auto &d: x_) {
             if (is_a<Symbol>(*d)) {
                 s = rcp_static_cast<const Symbol>(d);
                 // If p.first or p.second has non zero derivates wrt to s
@@ -1665,7 +1665,7 @@ std::size_t Subs::__hash__() const
 {
     std::size_t seed = SUBS;
     hash_combine<Basic>(seed, *arg_);
-    for (auto &p: dict_) {
+    for (const auto &p: dict_) {
         hash_combine<Basic>(seed, *p.first);
         hash_combine<Basic>(seed, *p.second);
     }
@@ -1693,7 +1693,7 @@ int Subs::compare(const Basic &o) const
 
 vec_basic Subs::get_variables() const {
     vec_basic v;
-    for (auto &p: dict_) {
+    for (const auto &p: dict_) {
         v.push_back(p.first);
     }
     return v;
@@ -1701,7 +1701,7 @@ vec_basic Subs::get_variables() const {
 
 vec_basic Subs::get_point() const {
     vec_basic v;
-    for (auto &p: dict_) {
+    for (const auto &p: dict_) {
         v.push_back(p.second);
     }
     return v;
@@ -1709,10 +1709,10 @@ vec_basic Subs::get_point() const {
 
 vec_basic Subs::get_args() const {
     vec_basic v = {arg_};
-    for (auto &p: dict_) {
+    for (const auto &p: dict_) {
         v.push_back(p.first);
     }
-    for (auto &p: dict_) {
+    for (const auto &p: dict_) {
         v.push_back(p.second);
     }
     return v;
@@ -1724,7 +1724,7 @@ RCP<const Basic> Subs::diff(const RCP<const Symbol> &x) const
     if (dict_.count(x) == 0) {
         diff = arg_->diff(x)->subs(dict_);
     }
-    for (auto &p: dict_) {
+    for (const auto &p: dict_) {
         t = p.second->diff(x);
         if (neq(*t, *zero)) {
             if (is_a<Symbol>(*p.first)) {
@@ -1743,9 +1743,9 @@ RCP<const Basic> Subs::subs(const map_basic_basic &subs_dict) const
     if (it != subs_dict.end())
         return it->second;
     map_basic_basic m, n;
-    for (auto &p: subs_dict) {
+    for (const auto &p: subs_dict) {
         bool found = false;
-        for (auto &s: dict_) {
+        for (const auto &s: dict_) {
             if (neq(*(s.first->subs({{p.first, p.second}})), *(s.first))) {
                 found = true;
                 break;
@@ -1757,7 +1757,7 @@ RCP<const Basic> Subs::subs(const map_basic_basic &subs_dict) const
             insert(n, p.first, p.second);
         }
     }
-    for (auto &s: dict_) {
+    for (const auto &s: dict_) {
         insert(m, s.first, s.second->subs(subs_dict));
     }
     return make_rcp<const Subs>(arg_->subs(n), m);
@@ -2439,7 +2439,7 @@ bool has_dup(const vec_basic &arg)
 {
     map_basic_basic d;
     auto it = d.end();
-    for (auto &p: arg) {
+    for (const auto &p: arg) {
         it = d.find(p);
         if (it == d.end()) {
             insert(d, p, one);
@@ -2459,7 +2459,7 @@ LeviCivita::LeviCivita(const vec_basic&& arg)
 bool LeviCivita::is_canonical(const vec_basic &arg)
 {
     bool are_int = true;
-    for (auto &p: arg) {
+    for (const auto &p: arg) {
         if (not (is_a_Number(*p))) {
             are_int = false;
             break;
@@ -2496,7 +2496,7 @@ int LeviCivita::compare(const Basic &o) const
 std::size_t LeviCivita::__hash__() const
 {
     std::size_t seed = LEVICIVITA;
-    for (auto &p: arg_) {
+    for (const auto &p: arg_) {
         hash_combine<Basic>(seed, *p);
     }
     return seed;
@@ -2519,7 +2519,7 @@ RCP<const Basic> levi_civita(const vec_basic &arg)
 {
     bool are_int = true;
     int len = 0;
-    for (auto &p: arg) {
+    for (const auto &p: arg) {
         if (not (is_a_Number(*p))) {
             are_int = false;
             break;

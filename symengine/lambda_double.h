@@ -77,7 +77,7 @@ public:
     void bvisit(const Add &x) {
         fn tmp = apply(*x.coef_);
         fn tmp1, tmp2;
-        for (auto &p: x.dict_) {
+        for (const auto &p: x.dict_) {
             tmp1 = apply(*(p.first));
             tmp2 = apply(*(p.second));
             tmp = [=](const std::vector<T> &x){ return tmp(x) + tmp1(x) * tmp2(x); };
@@ -88,7 +88,7 @@ public:
     void bvisit(const Mul &x) {
         fn tmp = apply(*x.coef_);
         fn tmp1, tmp2;
-        for (auto &p: x.dict_) {
+        for (const auto &p: x.dict_) {
             tmp1 = apply(*(p.first));
             tmp2 = apply(*(p.second));
             tmp = [=](const std::vector<T> &x){ return tmp(x) * std::pow(tmp1(x), tmp2(x)); };

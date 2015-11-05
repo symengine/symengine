@@ -29,7 +29,7 @@ bool Mul::is_canonical(const RCP<const Number> &coef,
         if (coef->is_one()) return false;
     }
     // Check that each term in 'dict' is in canonical form
-    for (auto &p: dict) {
+    for (const auto &p: dict) {
         if (p.first == null) return false;
         if (p.second == null) return false;
         // e.g. 2**3, (2/3)**4
@@ -73,7 +73,7 @@ std::size_t Mul::__hash__() const
 {
     std::size_t seed = MUL;
     hash_combine<Basic>(seed, *coef_);
-    for (auto &p: dict_) {
+    for (const auto &p: dict_) {
         hash_combine<Basic>(seed, *(p.first));
         hash_combine<Basic>(seed, *(p.second));
     }
@@ -327,7 +327,7 @@ RCP<const Basic> mul(const RCP<const Basic> &a, const RCP<const Basic> &b)
         if (not (A->coef_->is_one()) or not (B->coef_->is_one()))
             coef = mulnum(A->coef_, B->coef_);
         d = A->dict_;
-        for (auto &p: B->dict_)
+        for (const auto &p: B->dict_)
             Mul::dict_add_term_new(outArg(coef), d, p.second, p.first);
     } else if (SymEngine::is_a<Mul>(*a)) {
         RCP<const Basic> exp;
@@ -393,8 +393,8 @@ RCP<const Basic> mul_expand_two(const RCP<const Basic> &a, const RCP<const Basic
             (rcp_static_cast<const Add>(b))->dict_.size());
 #endif
         // Expand dicts first:
-        for (auto &p: (rcp_static_cast<const Add>(a))->dict_) {
-            for (auto &q: (rcp_static_cast<const Add>(b))->dict_) {
+        for (const auto &p: (rcp_static_cast<const Add>(a))->dict_) {
+            for (const auto &q: (rcp_static_cast<const Add>(b))->dict_) {
                 // The main bottleneck here is the mul(p.first, q.first) command
                 RCP<const Basic> term = mul(p.first, q.first);
                 if (is_a_Number(*term)) {
@@ -420,7 +420,7 @@ RCP<const Basic> mul_expand_two(const RCP<const Basic> &a, const RCP<const Basic
                     p.first);
         }
         // Handle the coefficient of "a":
-        for (auto &q: (rcp_static_cast<const Add>(b))->dict_) {
+        for (const auto &q: (rcp_static_cast<const Add>(b))->dict_) {
             Add::dict_add_term(d,
                     mulnum(rcp_static_cast<const Add>(a)->coef_, q.second),
                     q.first);
@@ -438,7 +438,7 @@ RCP<const Basic> mul_expand_two(const RCP<const Basic> &a, const RCP<const Basic
 #if defined(HAVE_SYMENGINE_RESERVE)
         d.reserve((rcp_static_cast<const Add>(b))->dict_.size());
 #endif
-        for (auto &q: (rcp_static_cast<const Add>(b))->dict_) {
+        for (const auto &q: (rcp_static_cast<const Add>(b))->dict_) {
             RCP<const Basic> term = mul(a_term, q.first);
             if (is_a_Number(*term)) {
                 iaddnum(outArg(coef), mulnum(mulnum(q.second, a_coef),
@@ -493,7 +493,7 @@ void Mul::power_num(const Ptr<RCP<const Number>> &coef, map_basic_basic &d,
     if (is_a<Integer>(*exp)) {
         // For eg. (3*y*(x**(1/2))**2 should be expanded to 9*x*y**2
         new_coef = pow(coef_, exp);
-        for (auto &p: dict_) {
+        for (const auto &p: dict_) {
             new_exp = mul(p.second, exp);
             if (is_a<Integer>(*new_exp) and is_a<Mul>(*p.first)) {
                 static_cast<const Mul &>(*p.first).power_num(coef, d, rcp_static_cast<const Number>(new_exp));
@@ -526,7 +526,7 @@ void Mul::power_num(const Ptr<RCP<const Number>> &coef, map_basic_basic &d,
     }  else if (is_a<Mul>(*new_coef)) {
         RCP<const Mul> tmp = rcp_static_cast<const Mul>(new_coef);
         imulnum(coef, tmp->coef_);
-        for (auto &q: tmp->dict_) {
+        for (const auto &q: tmp->dict_) {
             Mul::dict_add_term_new(coef, d, q.second, q.first);
         }
     } else {
@@ -540,7 +540,7 @@ RCP<const Basic> Mul::diff(const RCP<const Symbol> &x) const
 {
     RCP<const Number> overall_coef = zero;
     umap_basic_num add_dict;
-    for (auto &p: dict_) {
+    for (const auto &p: dict_) {
         RCP<const Number> coef = coef_;
         RCP<const Basic> factor = pow(p.first, p.second)->diff(x);
         if (is_a_Number(*factor) and
@@ -556,7 +556,7 @@ RCP<const Basic> Mul::diff(const RCP<const Symbol> &x) const
         } else if (is_a<Mul>(*factor)) {
             RCP<const Mul> tmp = rcp_static_cast<const Mul>(factor);
             imulnum(outArg(coef), tmp->coef_);
-            for (auto &q: tmp->dict_) {
+            for (const auto &q: tmp->dict_) {
                 Mul::dict_add_term_new(outArg(coef), d, q.second, q.first);
             }
         } else {
@@ -583,7 +583,7 @@ RCP<const Basic> Mul::subs(const map_basic_basic &subs_dict) const
 
     RCP<const Number> coef = coef_;
     map_basic_basic d;
-    for (auto &p: dict_) {
+    for (const auto &p: dict_) {
         RCP<const Basic> factor_old = pow(p.first, p.second);
         RCP<const Basic> factor = factor_old->subs(subs_dict);
         if (factor == factor_old) {
@@ -596,7 +596,7 @@ RCP<const Basic> Mul::subs(const map_basic_basic &subs_dict) const
         } else if (is_a<Mul>(*factor)) {
             RCP<const Mul> tmp = rcp_static_cast<const Mul>(factor);
             imulnum(outArg(coef), tmp->coef_);
-            for (auto &q: tmp->dict_) {
+            for (const auto &q: tmp->dict_) {
                 Mul::dict_add_term_new(outArg(coef), d, q.second, q.first);
             }
         } else {
@@ -611,7 +611,7 @@ RCP<const Basic> Mul::subs(const map_basic_basic &subs_dict) const
 vec_basic Mul::get_args() const {
     vec_basic args;
     if (not coef_->is_one()) args.push_back(coef_);
-    for (auto &p: dict_) {
+    for (const auto &p: dict_) {
         args.push_back(Mul::from_dict(one, {{p.first, p.second}}));
     }
     return args;

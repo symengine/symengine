@@ -58,13 +58,13 @@ public:
 #endif
     void bvisit(const Add &x) {
         T tmp = 0;
-        for (auto &p: x.get_args()) tmp = tmp + apply(*p);
+        for (const auto &p: x.get_args()) tmp += apply(*p);
         result_ = tmp;
     }
 
     void bvisit(const Mul &x) {
         T tmp = 1;
-        for (auto &p: x.get_args()) tmp = tmp * apply(*p);
+        for (const auto &p: x.get_args()) tmp *= apply(*p);
         result_ = tmp;
     }
 
@@ -301,12 +301,12 @@ std::vector<fn> init_eval_double()
     };
     table[ADD] = [](const Basic &x) {
         double tmp = 0;
-        for (auto &p: x.get_args()) tmp = tmp + eval_double_single_dispatch(*p);
+        for (const auto &p: x.get_args()) tmp += eval_double_single_dispatch(*p);
         return tmp;
     };
     table[MUL] = [](const Basic &x) {
         double tmp = 1;
-        for (auto &p: x.get_args()) tmp = tmp * eval_double_single_dispatch(*p);
+        for (const auto &p: x.get_args()) tmp *= eval_double_single_dispatch(*p);
         return tmp;
     };
     table[POW] = [](const Basic &x) {

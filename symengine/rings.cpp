@@ -16,14 +16,14 @@ void expr2poly(const RCP<const Basic> &p, umap_basic_num &syms, umap_vec_mpz &P)
         const umap_basic_num &d = rcp_static_cast<const Add>(p)->dict_;
         vec_int exp;
         mpz_class coef;
-        for (auto &p: d) {
+        for (const auto &p: d) {
             if (not is_a<Integer>(*p.second))
                     throw std::runtime_error("Not implemented.");
             coef = rcp_static_cast<const Integer>(p.second)->as_mpz();
             exp.assign(n, 0); // Initialize to [0]*n
             if (is_a<Mul>(*p.first)) {
                 const map_basic_basic &term = rcp_static_cast<const Mul>(p.first)->dict_;
-                for (auto &q: term) {
+                for (const auto &q: term) {
                     RCP<const Basic> sym = q.first;
                     if (not is_a<Integer>(*syms.at(sym)))
                             throw std::runtime_error("Not implemented.");
@@ -73,8 +73,8 @@ void poly_mul(const umap_vec_mpz &A, const umap_vec_mpz &B, umap_vec_mpz &C)
     std::cout << "C: " << C.load_factor() << " " << C.bucket_count() << " " << C.size() << " "
         << C.max_bucket_count() << std::endl;
         */
-    for (auto &a: A) {
-        for (auto &b: B) {
+    for (const auto &a: A) {
+        for (const auto &b: B) {
             monomial_mul(a.first, b.first, exp);
             mpz_addmul(C[exp].get_mpz_t(),a.second.get_mpz_t(),b.second.get_mpz_t());
         }
@@ -82,7 +82,7 @@ void poly_mul(const umap_vec_mpz &A, const umap_vec_mpz &B, umap_vec_mpz &C)
     /*
     std::cout << "C: " << C.load_factor() << " " << C.bucket_count() << " " << C.size() << " "
         << C.max_bucket_count() << std::endl;
-    for (std::size_t n=0; n < C.bucket_count(); n++) {
+    for (const std::size_t n=0; n < C.bucket_count(); n++) {
         std::cout << n << ": " << C.bucket_size(n) << "|";
         for (auto it = C.begin(n); it != C.end(n); ++it)
             std::cout << " " << it->first << myhash2(it->first) % C.bucket_count();

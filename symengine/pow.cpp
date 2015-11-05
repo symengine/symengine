@@ -338,7 +338,7 @@ RCP<const Basic> pow_expand(const RCP<const Pow> &self)
 #if defined(HAVE_SYMENGINE_RESERVE)
     rd.reserve(2*r.size());
 #endif
-    for (auto &p: r) {
+    for (const auto &p: r) {
         auto power = p.first.begin();
         auto i2 = base_dict.begin();
         map_basic_basic d;
@@ -357,7 +357,7 @@ RCP<const Basic> pow_expand(const RCP<const Pow> &self)
                     RCP<const Basic> exp2, t, tmp;
                     tmp = pow(base, exp);
                     if (is_a<Mul>(*tmp)) {
-                        for (auto &p: (rcp_static_cast<const Mul>(tmp))->dict_) {
+                        for (const auto &p: (rcp_static_cast<const Mul>(tmp))->dict_) {
                             Mul::dict_add_term_new(outArg(overall_coeff), d,
                                     p.second, p.first);
                         }
