@@ -143,7 +143,7 @@ void StrPrinter::bvisit(const Add &x) {
         o << this->apply(x.coef_);
         first = false;
     }
-    for (auto &p: dict) {
+    for (const auto &p: dict) {
         std::string t;
         if (eq(*(p.second), *one)) {
             t = this->apply(p.first);
@@ -181,7 +181,7 @@ void StrPrinter::bvisit(const Mul &x) {
         num = true;
     }
 
-    for (auto &p: dict) {
+    for (const auto &p: dict) {
         if ((is_a<Integer>(*p.second) and
              rcp_static_cast<const Integer>(p.second)->is_negative()) ||
             (is_a<Rational>(*p.second) and

@@ -26,7 +26,7 @@ bool Add::is_canonical(const RCP<const Number> &coef,
         if (coef->is_exact_zero()) return false;
     }
     // Check that each term in 'dict' is in canonical form
-    for (auto &p: dict) {
+    for (const auto &p: dict) {
         if (p.first == null) return false;
         if (p.second == null) return false;
         // e.g. 2*3
@@ -54,7 +54,7 @@ std::size_t Add::__hash__() const
     std::size_t seed = ADD;
     hash_combine<Basic>(seed, *coef_);
     map_basic_num ordered(dict_.begin(), dict_.end());
-    for (auto &p: ordered) {
+    for (const auto &p: ordered) {
         hash_combine<Basic>(seed, *(p.first));
         hash_combine<Basic>(seed, *(p.second));
     }
@@ -226,7 +226,7 @@ RCP<const Basic> add(const RCP<const Basic> &a, const RCP<const Basic> &b)
     if (SymEngine::is_a<Add>(*a) and SymEngine::is_a<Add>(*b)) {
         coef = (rcp_static_cast<const Add>(a))->coef_;
         d = (rcp_static_cast<const Add>(a))->dict_;
-        for (auto &p: (rcp_static_cast<const Add>(b))->dict_)
+        for (const auto &p: (rcp_static_cast<const Add>(b))->dict_)
             Add::dict_add_term(d, p.second, p.first);
         iaddnum(outArg(coef), rcp_static_cast<const Add>(b)->coef_);
     } else if (SymEngine::is_a<Add>(*a)) {
@@ -277,10 +277,10 @@ RCP<const Basic> add_expand(const RCP<const Add> &self)
     RCP<const Number> coef_overall = self->coef_;
     RCP<const Number> coef;
     RCP<const Basic> tmp, tmp2;
-    for (auto &p: self->dict_) {
+    for (const auto &p: self->dict_) {
         tmp = expand(p.first);
         if (is_a<Add>(*tmp)) {
-            for (auto &q: (rcp_static_cast<const Add>(tmp))->dict_) {
+            for (const auto &q: (rcp_static_cast<const Add>(tmp))->dict_) {
                 Add::as_coef_term(q.first, outArg(coef), outArg(tmp2));
                 Add::dict_add_term(d,
                         mulnum(mulnum(p.second, q.second), coef), tmp2);
@@ -300,7 +300,7 @@ RCP<const Basic> Add::diff(const RCP<const Symbol> &x) const
     SymEngine::umap_basic_num d;
     RCP<const Number> coef=zero, coef2;
     RCP<const Basic> t;
-    for (auto &p: dict_) {
+    for (const auto &p: dict_) {
         RCP<const Basic> term = p.first->diff(x);
         if (is_a<Integer>(*term) and rcp_static_cast<const Integer>(term)->is_zero()) {
             continue;
@@ -308,7 +308,7 @@ RCP<const Basic> Add::diff(const RCP<const Symbol> &x) const
             iaddnum(outArg(coef),
                     mulnum(p.second, rcp_static_cast<const Number>(term)));
         } else if (is_a<Add>(*term)) {
-            for (auto &q: (rcp_static_cast<const Add>(term))->dict_)
+            for (const auto &q: (rcp_static_cast<const Add>(term))->dict_)
                 Add::dict_add_term(d, mulnum(q.second, p.second), q.first);
             iaddnum(outArg(coef), mulnum(p.second, rcp_static_cast<const Add>(term)->coef_));
         } else {
@@ -339,7 +339,7 @@ RCP<const Basic> Add::subs(const map_basic_basic &subs_dict) const
     SymEngine::umap_basic_num d;
     RCP<const Number> coef=coef_, coef2;
     RCP<const Basic> t;
-    for (auto &p: dict_) {
+    for (const auto &p: dict_) {
         RCP<const Basic> term = p.first->subs(subs_dict);
         if (term == p.first) {
             Add::dict_add_term(d, p.second, p.first);
@@ -350,7 +350,7 @@ RCP<const Basic> Add::subs(const map_basic_basic &subs_dict) const
             iaddnum(outArg(coef),
                     mulnum(p.second, rcp_static_cast<const Number>(term)));
         } else if (is_a<Add>(*term) and p.second->is_one()) {
-            for (auto &q: (rcp_static_cast<const Add>(term))->dict_)
+            for (const auto &q: (rcp_static_cast<const Add>(term))->dict_)
                 Add::dict_add_term(d, q.second, q.first);
             iaddnum(outArg(coef), rcp_static_cast<const Add>(term)->coef_);
         } else {
@@ -364,7 +364,7 @@ RCP<const Basic> Add::subs(const map_basic_basic &subs_dict) const
 vec_basic Add::get_args() const {
     vec_basic args;
     if (not coef_->is_exact_zero()) args.push_back(coef_);
-    for (auto &p: dict_) {
+    for (const auto &p: dict_) {
         args.push_back(Add::from_dict(zero, {{p.first, p.second}}));
     }
     return args;
