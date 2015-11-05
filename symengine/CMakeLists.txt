@@ -21,6 +21,7 @@ set(SRC
     functions.cpp
     monomials.cpp
     polynomial.cpp
+    series.cpp
     rings.cpp
     ntheory.cpp
     dense_matrix.cpp
