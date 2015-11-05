@@ -66,3 +66,16 @@ TEST_CASE("iabs: integer", "[integer]")
     REQUIRE(eq(*iabs(*_i9), *integer(9)));
     REQUIRE(eq(*iabs(*i12), *integer(12)));
 }
+
+TEST_CASE("fix#461: integer", "[integer]")
+{
+    RCP<const Integer> ir;
+
+    long lmax = std::numeric_limits<long>::max();
+    ir = integer(lmax);
+    REQUIRE(static_cast<mpz_class>(lmax) == ir->as_mpz());
+
+    unsigned long ulmax = std::numeric_limits<unsigned long>::max();
+    ir = integer(ulmax);
+    REQUIRE(static_cast<mpz_class>(ulmax) == ir->as_mpz());
+}

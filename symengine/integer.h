@@ -7,6 +7,8 @@
 #ifndef SYMENGINE_INTEGER_H
 #define SYMENGINE_INTEGER_H
 
+#include <type_traits>
+
 #include <symengine/basic.h>
 #include <symengine/number.h>
 
@@ -152,12 +154,13 @@ struct RCPIntegerKeyLess
         return false;
     }
 };
-//! \return RCP<const Integer> from `int`
-inline RCP<const Integer> integer(int i)
+//! \return RCP<const Integer> from integral values
+template<typename T> inline
+typename std::enable_if<std::is_integral<T>::value, RCP<const Integer>>::type
+integer(T i)
 {
-    return make_rcp<const Integer>(i);
+    return make_rcp<const Integer>(mpz_class(i));
 }
-
 //! \return RCP<const Integer> from `mpz_class`
 inline RCP<const Integer> integer(mpz_class i)
 {
@@ -180,4 +183,3 @@ inline Integer::Integer(mpz_class i) : i{i} {}
 } // SymEngine
 
 #endif
-
