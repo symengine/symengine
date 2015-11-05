@@ -3,11 +3,6 @@
 
 namespace SymEngine {
 
-Integer::Integer(int i)
-{
-    this->i = i;
-}
-
 std::size_t Integer::__hash__() const
 {
     std::hash<long long int> hash_fn;
@@ -141,4 +136,3 @@ int perfect_power(const Integer &n)
 }
 
 } // SymEngine
-
