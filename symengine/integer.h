@@ -9,6 +9,8 @@
 
 #include <symengine/basic.h>
 #include <symengine/number.h>
+#include <gmpxx.h>
+#include <gmp.h>
 
 namespace SymEngine {
 
@@ -16,12 +18,12 @@ namespace SymEngine {
 class Integer : public Number {
 public:
     //! `i` : object of `mpz_class`
-    mpz_class i;
+    integer_class i;
 
 public:
     IMPLEMENT_TYPEID(INTEGER)
     //! Constructor of Integer using `mpz_class`
-    explicit Integer(mpz_class i);
+    explicit Integer(integer_class i);
     //! \return size of the hash
     virtual std::size_t __hash__() const;
     /*! Equality comparator
@@ -34,7 +36,7 @@ public:
     //! Convert to `int`, raise an exception if it does not fit
     signed long int as_int() const;
     //! Convert to `mpz_class`.
-    inline mpz_class as_mpz() const { return this->i; }
+    inline integer_class as_mpz() const { return this->i; }
     //! \return `true` if `0`
     inline virtual bool is_zero() const { return this->i == 0; }
     //! \return `true` if `1`
@@ -49,15 +51,15 @@ public:
     /* These are very fast methods for add/sub/mul/div/pow on Integers only */
     //! Fast Integer Addition
     inline RCP<const Integer> addint(const Integer &other) const {
-        return make_rcp<const Integer>(this->i + other.i);
+        return make_rcp<const Integer>(std::move(this->i + other.i));
     }
     //! Fast Integer Subtraction
     inline RCP<const Integer> subint(const Integer &other) const {
-        return make_rcp<const Integer>(this->i - other.i);
+        return make_rcp<const Integer>(std::move(this->i - other.i));
     }
     //! Fast Integer Multiplication
     inline RCP<const Integer> mulint(const Integer &other) const {
-        return make_rcp<const Integer>(this->i * other.i);
+        return make_rcp<const Integer>(std::move(this->i * other.i));
     }
     //!  Integer Division
     RCP<const Number> divint(const Integer &other) const;
@@ -65,19 +67,19 @@ public:
     RCP<const Number> pow_negint(const Integer &other) const;
     //! Fast Power Evaluation
     inline RCP<const Number> powint(const Integer &other) const {
-        if (not (other.i.fits_ulong_p())) {
+        if (not (fits_ulong_p(other.i))) {
             if (other.i > 0)
                 throw std::runtime_error("powint: 'exp' does not fit unsigned int.");
             else
                 return pow_negint(other);
         }
-        mpz_class tmp;
-        mpz_pow_ui(tmp.get_mpz_t(), this->i.get_mpz_t(), other.i.get_ui());
-        return make_rcp<const Integer>(tmp);
+        integer_class tmp;
+        mpz_pow_ui(get_mpz_t(tmp), (this->i).get_mpz_view(), get_ui(other.i));
+        return make_rcp<const Integer>(std::move(tmp));
     }
     //! \return negative of self.
     inline RCP<const Integer> neg() const {
-        return make_rcp<const Integer>(-i);
+        return make_rcp<const Integer>(std::move(-i));
     }
 
     /* These are general methods, overriden from the Number class, that need to
@@ -143,9 +145,7 @@ struct RCPIntegerKeyLess
     bool operator()(const RCP<const Integer> &a,
             const RCP<const Integer> &b) const
     {
-        if(mpz_cmp(b->as_mpz().get_mpz_t(), a->as_mpz().get_mpz_t()) == 1)
-            return true;
-        return false;
+        return a->as_mpz() < b->as_mpz();
     }
 };
 //! \return RCP<const Integer> from integral values + mpz_class
@@ -166,7 +166,7 @@ int perfect_power(const Integer &n);
 //! Integer Absolute value
 RCP<const Integer> iabs(const Integer &n);
 
-inline Integer::Integer(mpz_class i) : i{i} {}
+inline Integer::Integer(integer_class i_) : i{std::move(i_)} {}
 
 } // SymEngine
 

@@ -244,6 +244,7 @@ void Mul::dict_add_term_new(const Ptr<RCP<const Number>> &coef, map_basic_basic 
                 return;
             }
         } else if (is_a<Rational>(*it->second)) {
+<<<<<<< 63b89c4a3381984901b817327003b430b11a1696
             if (is_a<Integer>(*t) or is_a<Rational>(*t)) {
                 RCP<const Basic> res;
                 if (is_a<Integer>(*t)) {
@@ -263,6 +264,21 @@ void Mul::dict_add_term_new(const Ptr<RCP<const Number>> &coef, map_basic_basic 
                         Mul::dict_add_term_new(coef, d, p.second, p.first);
                     }
                     return;
+=======
+            if (is_a_Number(*t)) {
+                integer_class q, r, num, den;
+                num = get_num(rcp_static_cast<const Rational>(it->second)->i);
+                den = get_den(rcp_static_cast<const Rational>(it->second)->i);
+                // Here we make the exponent postive and a fraction between
+                // 0 and 1.
+                if (num > den or num < 0) {
+                    mpz_fdiv_qr(get_mpz_t(q), get_mpz_t(r), get_mpz_t(num),
+                                get_mpz_t(den));
+
+                    it->second = Rational::from_mpq(rational_class(r, den));
+                    imulnum(outArg(*coef), pownum(rcp_static_cast<const Number>(t),
+                                                  rcp_static_cast<const Number>(integer(std::move(q)))));
+>>>>>>> Use piranha::integer as the storage type for SymEngine::Integer optionally
                 }
             }
         }
@@ -302,7 +318,7 @@ void Mul::as_base_exp(const RCP<const Basic> &self, const Ptr<RCP<const Basic>> 
         // in case of Integers den = 1
         if (is_a<Rational>(*self)) {
             RCP<const Rational> self_new = rcp_static_cast<const Rational>(self);
-            if (abs(self_new->i.get_num()) < abs(self_new->i.get_den())) {
+            if (abs(get_num(self_new->i)) < abs(get_den(self_new->i))) {
                 *exp = minus_one;
                 *base = self_new->rdiv(*rcp_static_cast<const Number>(one));
             } else {

@@ -98,7 +98,7 @@ TEST_CASE("Evaluation of UnivariatePolynomial", "[UnivariatePolynomial]")
     RCP<const Symbol> x  = symbol("x");
     RCP<const UnivariatePolynomial> a = univariate_polynomial(x, 2, {{0, 1}, {1, 2}, {2, 1}});
 
-    REQUIRE(a->eval(2) == 9);
+    REQUIRE(a->eval(integer_class(2)) == 9);
     REQUIRE(a->eval_bit(3) == 81);
 }
 

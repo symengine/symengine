@@ -30,11 +30,11 @@ public:
     }
 
     void bvisit(const Integer &x) {
-        mpc_set_z(result_, x.i.get_mpz_t(), rnd_);
+        mpc_set_z(result_, get_mpz_t(x.i), rnd_);
     }
 
     void bvisit(const Rational &x) {
-        mpc_set_q(result_, x.i.get_mpq_t(), rnd_);
+        mpc_set_q(result_, get_mpq_t(x.i), rnd_);
     }
 
     void bvisit(const RealDouble &x) {
@@ -42,7 +42,7 @@ public:
     }
 
     void bvisit(const Complex &x) {
-        mpc_set_q_q(result_, x.real_.get_mpq_t(), x.imaginary_.get_mpq_t(), rnd_);
+        mpc_set_q_q(result_, get_mpq_t(x.real_), get_mpq_t(x.imaginary_), rnd_);
     }
 
     void bvisit(const ComplexDouble &x) {

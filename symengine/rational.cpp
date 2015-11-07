@@ -4,29 +4,29 @@
 
 namespace SymEngine {
 
-Rational::Rational(mpq_class i)
+Rational::Rational(rational_class i)
     : i{i}
 {
     SYMENGINE_ASSERT(is_canonical(this->i))
 }
 
-bool Rational::is_canonical(const mpq_class &i) const
+bool Rational::is_canonical(const rational_class &i) const
 {
-    mpq_class x = i;
-    x.canonicalize();
+    rational_class x = i;
+    canonicalize(x);
     // If 'x' is an integer, it should not be Rational:
-    if (x.get_den() == 1) return false;
+    if (get_den(x) == 1) return false;
     // if 'i' is not in canonical form:
-    if (x.get_num() != i.get_num()) return false;
-    if (x.get_den() != i.get_den()) return false;
+    if (get_num(x) != get_num(i)) return false;
+    if (get_den(x) != get_den(i)) return false;
     return true;
 }
 
-RCP<const Number> Rational::from_mpq(const mpq_class i)
+RCP<const Number> Rational::from_mpq(const rational_class i)
 {
     // If the result is an Integer, return an Integer:
-    if (i.get_den() == 1) {
-        return integer(i.get_num());
+    if (get_den(i) == 1) {
+        return integer(get_num(i));
     } else {
         return make_rcp<const Rational>(i);
     }
@@ -37,11 +37,11 @@ RCP<const Number> Rational::from_two_ints(const Integer &n,
 {
     if (d.i == 0)
         throw std::runtime_error("Rational: Division by zero.");
-    mpq_class q(n.i, d.i);
+    rational_class q(n.i, d.i);
 
     // This is potentially slow, but has to be done, since 'n/d' might not be
     // in canonical form.
-    q.canonicalize();
+    canonicalize(q);
 
     return Rational::from_mpq(q);
 }
@@ -50,7 +50,7 @@ RCP<const Number> Rational::from_two_ints(long n, long d)
 {
     if (d == 0)
         throw std::runtime_error("Rational: Division by zero.");
-    mpq_class q(n, d);
+    rational_class q(n, d);
 
     // This is potentially slow, but has to be done, since 'n/d' might not be
     // in canonical form.
@@ -64,8 +64,8 @@ std::size_t Rational::__hash__() const
     // only the least significant bits that fit into "signed long int" are
     // hashed:
     std::size_t seed = RATIONAL;
-    hash_combine<long long int>(seed, this->i.get_num().get_si());
-    hash_combine<long long int>(seed, this->i.get_den().get_si());
+    hash_combine<long long int>(seed, get_si(get_num(this->i)));
+    hash_combine<long long int>(seed, get_si(get_den(this->i)));
     return seed;
 }
 
@@ -96,31 +96,32 @@ void get_num_den(const Rational &rat,
             const Ptr<RCP<const Integer>> &num,
             const Ptr<RCP<const Integer>> &den)
 {
-    *num = integer((rat.i).get_num());
-    *den = integer((rat.i).get_den());
+    *num = integer(get_num(rat.i));
+    *den = integer(get_den(rat.i));
 }
 
 bool Rational::is_perfect_power(bool is_expected) const
 {
-    const mpz_class &num = i.get_num();
+    const integer_class &num = SymEngine::get_num(i);
     if (num == 0)
         return true;
     else if (num == 1)
-        return mpz_perfect_power_p(i.get_den().get_mpz_t()) != 0;
-    const mpz_class &den = i.get_den();
+        return mpz_perfect_power_p(get_mpz_t(SymEngine::get_den(i))) != 0;
+
+    const integer_class &den = SymEngine::get_den(i);
 
     if (not is_expected) {
-        if (mpz_cmpabs(num.get_mpz_t(), den.get_mpz_t()) > 0) {
-            if (mpz_perfect_power_p(den.get_mpz_t()) == 0)
+        if (mpz_cmpabs(get_mpz_t(num), get_mpz_t(den)) > 0) {
+            if (mpz_perfect_power_p(get_mpz_t(den)) == 0)
                 return false;
         }
         else {
-            if (mpz_perfect_power_p(num.get_mpz_t()) == 0)
+            if (mpz_perfect_power_p(get_mpz_t(num)) == 0)
                 return false;
         }
     }
-    mpz_class prod = num * den;
-    return mpz_perfect_power_p(prod.get_mpz_t()) != 0;
+    integer_class prod = num * den;
+    return mpz_perfect_power_p(get_mpz_t(prod)) != 0;
 }
 
 bool Rational::nth_root(const Ptr<RCP<const Number>> &the_rat, unsigned long n) const
@@ -128,11 +129,11 @@ bool Rational::nth_root(const Ptr<RCP<const Number>> &the_rat, unsigned long n) 
     if (n == 0)
         throw std::runtime_error("i_nth_root: Can not find Zeroth root");
 
-    mpq_class r;
-    int ret = mpz_root(r.get_num_mpz_t(), i.get_num_mpz_t(), n);
+    integer_class r;
+    int ret = mpz_root(get_mpz_t(SymEngine::get_num(r)), get_mpz_t(SymEngine::get_num(i)), n);
     if (ret == 0)
         return false;
-    ret = mpz_root(r.get_den_mpz_t(), i.get_den_mpz_t(), n);
+    ret = mpz_root(get_mpz_t(SymEngine::get_den(r)), get_mpz_t(SymEngine::get_den(i)), n);
     if (ret == 0)
         return false;
     // No need to canonicalize since `this` is in canonical form
@@ -145,9 +146,9 @@ RCP<const Basic> Rational::powrat(const Rational &other) const {
 }
 
 RCP<const Basic> Rational::rpowrat(const Integer &other) const {
-    if (not (i.get_den().fits_ulong_p()))
+    if (not (fits_ulong_p(SymEngine::get_den(i))))
         throw std::runtime_error("powrat: den of 'exp' does not fit ulong.");
-    unsigned long exp = i.get_den().get_ui();
+    unsigned long exp = get_ui(SymEngine::get_den(i));
     RCP<const Integer> res;
     if (other.is_negative()) {
         if (i_nth_root(outArg(res), *other.neg(), exp)) {
@@ -162,12 +163,12 @@ RCP<const Basic> Rational::rpowrat(const Integer &other) const {
             return res->powint(*get_num());
         }
     }
-    mpz_class q, r;
-    auto num = i.get_num();
-    auto den = i.get_den();
+    rational_class q, r;
+    auto num = SymEngine::get_num(i);
+    auto den = SymEngine::get_den(i);
 
-    mpz_fdiv_qr(q.get_mpz_t(), r.get_mpz_t(), num.get_mpz_t(),
-                den.get_mpz_t());
+    mpz_fdiv_qr(get_mpz_t(q), get_mpz_t(r), get_mpz_t(num),
+                get_mpz_t(den));
     // Here we make the exponent postive and a fraction between
     // 0 and 1. We multiply numerator and denominator appropriately
     // to achieve this
@@ -178,9 +179,9 @@ RCP<const Basic> Rational::rpowrat(const Integer &other) const {
         imulnum(outArg(coef), I);
         // if other.neg() is one, no need to add it to dict
         if (other.i != -1)
-            insert(surd, other.neg(), Rational::from_mpq(mpq_class(r, den)));
+            insert(surd, other.neg(), Rational::from_mpq(rational_class(r, den)));
     } else {
-        insert(surd, other.rcp_from_this(), Rational::from_mpq(mpq_class(r, den)));
+        insert(surd, other.rcp_from_this(), Rational::from_mpq(rational_class(r, den)));
     }
     return Mul::from_dict(coef, std::move(surd));
 }

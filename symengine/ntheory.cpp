@@ -23,9 +23,9 @@ namespace SymEngine {
 // Basic number theoretic functions
 RCP<const Integer> gcd(const Integer &a, const Integer &b)
 {
-    mpz_class g;
+    integer_class g;
 
-    mpz_gcd(g.get_mpz_t(), a.as_mpz().get_mpz_t(), b.as_mpz().get_mpz_t());
+    mpz_gcd(get_mpz_t(g), get_mpz_t(a.as_mpz()), get_mpz_t(b.as_mpz()));
 
     return integer(g);
 }
@@ -41,10 +41,10 @@ void gcd_ext(const Ptr<RCP<const Integer>> &g, const Ptr<RCP<const Integer>> &s,
     mpz_init(s_t);
     mpz_init(t_t);
 
-    mpz_gcdext(g_t, s_t, t_t, a.as_mpz().get_mpz_t(), b.as_mpz().get_mpz_t());
-    *g = integer(mpz_class(g_t));
-    *s = integer(mpz_class(s_t));
-    *t = integer(mpz_class(t_t));
+    mpz_gcdext(g_t, s_t, t_t, get_mpz_t(a.as_mpz()), get_mpz_t(b.as_mpz()));
+    *g = integer(integer_class(g_t));
+    *s = integer(integer_class(s_t));
+    *t = integer(integer_class(t_t));
 
     mpz_clear(g_t);
     mpz_clear(s_t);
@@ -53,9 +53,9 @@ void gcd_ext(const Ptr<RCP<const Integer>> &g, const Ptr<RCP<const Integer>> &s,
 
 RCP<const Integer> lcm(const Integer &a, const Integer &b)
 {
-    mpz_class c;
+    integer_class c;
 
-    mpz_lcm(c.get_mpz_t(), a.as_mpz().get_mpz_t(), b.as_mpz().get_mpz_t());
+    mpz_lcm(get_mpz_t(c), get_mpz_t(a.as_mpz()), get_mpz_t(b.as_mpz()));
 
     return integer(c);
 }
@@ -68,8 +68,8 @@ int mod_inverse(const Ptr<RCP<const Integer>> &b, const Integer &a,
 
     mpz_init(inv_t);
 
-    ret_val = mpz_invert(inv_t, a.as_mpz().get_mpz_t(), m.as_mpz().get_mpz_t());
-    *b = integer(mpz_class(inv_t));
+    ret_val = mpz_invert(inv_t, get_mpz_t(a.as_mpz()), get_mpz_t(m.as_mpz()));
+    *b = integer(integer_class(inv_t));
 
     mpz_clear(inv_t);
 
@@ -78,55 +78,55 @@ int mod_inverse(const Ptr<RCP<const Integer>> &b, const Integer &a,
 
 RCP<const Integer> mod(const Integer &n, const Integer &d)
 {
-    mpz_class q;
-    mpz_tdiv_r(q.get_mpz_t(), n.as_mpz().get_mpz_t(), d.as_mpz().get_mpz_t());
+    integer_class q;
+    mpz_tdiv_r(get_mpz_t(q), get_mpz_t(n.as_mpz()), get_mpz_t(d.as_mpz()));
     return integer(q);
 }
 
 RCP<const Integer> quotient(const Integer &n, const Integer &d)
 {
-    mpz_class q;
-    mpz_tdiv_q(q.get_mpz_t(), n.as_mpz().get_mpz_t(), d.as_mpz().get_mpz_t());
+    integer_class q;
+    mpz_tdiv_q(get_mpz_t(q), get_mpz_t(n.as_mpz()), get_mpz_t(d.as_mpz()));
     return integer(q);
 }
 
 void quotient_mod(const Ptr<RCP<const Integer>> &q, const Ptr<RCP<const Integer>> &r,
                     const Integer &n, const Integer &d)
 {
-    mpz_class _q, _r;
-    mpz_tdiv_qr(_q.get_mpz_t(), _r.get_mpz_t(), n.as_mpz().get_mpz_t(), d.as_mpz().get_mpz_t());
+    integer_class _q, _r;
+    mpz_tdiv_qr(get_mpz_t(_q), get_mpz_t(_r), get_mpz_t(n.as_mpz()), get_mpz_t(d.as_mpz()));
     *q = integer(_q);
     *r = integer(_r);
 }
 
 RCP<const Integer> mod_f(const Integer &n, const Integer &d)
 {
-    mpz_class q;
-    mpz_fdiv_r(q.get_mpz_t(), n.as_mpz().get_mpz_t(), d.as_mpz().get_mpz_t());
+    integer_class q;
+    mpz_fdiv_r(get_mpz_t(q), get_mpz_t(n.as_mpz()), get_mpz_t(d.as_mpz()));
     return integer(q);
 }
 
 RCP<const Integer> quotient_f(const Integer &n, const Integer &d)
 {
-    mpz_class q;
-    mpz_fdiv_q(q.get_mpz_t(), n.as_mpz().get_mpz_t(), d.as_mpz().get_mpz_t());
+    integer_class q;
+    mpz_fdiv_q(get_mpz_t(q), get_mpz_t(n.as_mpz()), get_mpz_t(d.as_mpz()));
     return integer(q);
 }
 
 void quotient_mod_f(const Ptr<RCP<const Integer>> &q, const Ptr<RCP<const Integer>> &r,
                     const Integer &n, const Integer &d)
 {
-    mpz_class _q, _r;
-    mpz_fdiv_qr(_q.get_mpz_t(), _r.get_mpz_t(), n.as_mpz().get_mpz_t(), d.as_mpz().get_mpz_t());
+    integer_class _q, _r;
+    mpz_fdiv_qr(get_mpz_t(_q), get_mpz_t(_r), get_mpz_t(n.as_mpz()), get_mpz_t(d.as_mpz()));
     *q = integer(_q);
     *r = integer(_r);
 }
 
 RCP<const Integer> fibonacci(unsigned long n)
 {
-    mpz_class f;
+    integer_class f;
 
-    mpz_fib_ui(f.get_mpz_t(), n);
+    mpz_fib_ui(get_mpz_t(f), n);
 
     return integer(f);
 }
@@ -141,8 +141,8 @@ void fibonacci2(const Ptr<RCP<const Integer>> &g, const Ptr<RCP<const Integer>> 
     mpz_init(s_t);
 
     mpz_fib2_ui(g_t, s_t, n);
-    *g = integer(mpz_class(g_t));
-    *s = integer(mpz_class(s_t));
+    *g = integer(integer_class(g_t));
+    *s = integer(integer_class(s_t));
 
     mpz_clear(g_t);
     mpz_clear(s_t);
@@ -150,9 +150,9 @@ void fibonacci2(const Ptr<RCP<const Integer>> &g, const Ptr<RCP<const Integer>> 
 
 RCP<const Integer> lucas(unsigned long n)
 {
-    mpz_class f;
+    integer_class f;
 
-    mpz_lucnum_ui(f.get_mpz_t(), n);
+    mpz_lucnum_ui(get_mpz_t(f), n);
 
     return integer(f);
 }
@@ -167,8 +167,8 @@ void lucas2(const Ptr<RCP<const Integer>> &g, const Ptr<RCP<const Integer>> &s,
     mpz_init(s_t);
 
     mpz_lucnum2_ui(g_t, s_t, n);
-    *g = integer(mpz_class(g_t));
-    *s = integer(mpz_class(s_t));
+    *g = integer(integer_class(g_t));
+    *s = integer(integer_class(s_t));
 
     mpz_clear(g_t);
     mpz_clear(s_t);
@@ -177,52 +177,52 @@ void lucas2(const Ptr<RCP<const Integer>> &g, const Ptr<RCP<const Integer>> &s,
 // Binomial Coefficient
 RCP<const Integer> binomial(const Integer &n, unsigned long k)
 {
-    mpz_class f;
+    integer_class f;
 
-    mpz_bin_ui(f.get_mpz_t(), n.as_mpz().get_mpz_t(), k);
-
+    mpz_bin_ui(get_mpz_t(f), get_mpz_t(n.as_mpz()), k);
+    
     return integer(f);
 }
 
 // Factorial
 RCP<const Integer> factorial(unsigned long n)
 {
-    mpz_class f;
+    integer_class f;
 
-    mpz_fac_ui(f.get_mpz_t(), n);
-
+    mpz_fac_ui(get_mpz_t(f), n);
+    
     return integer(f);
 }
 
 // Returns true if `b` divides `a` without reminder
 bool divides(const Integer &a, const Integer &b)
 {
-    return mpz_divisible_p(a.as_mpz().get_mpz_t(), b.as_mpz().get_mpz_t()) != 0;
+    return mpz_divisible_p(get_mpz_t(a.as_mpz()), get_mpz_t(b.as_mpz())) != 0;
 }
 
 // Prime functions
 int probab_prime_p(const Integer &a, int reps)
 {
-    return mpz_probab_prime_p(a.as_mpz().get_mpz_t(), reps);
+    return mpz_probab_prime_p(get_mpz_t(a.as_mpz()), reps);
 }
 
 RCP<const Integer> nextprime(const Integer &a)
 {
-    mpz_class c;
+    integer_class c;
 
-    mpz_nextprime(c.get_mpz_t(), a.as_mpz().get_mpz_t());
+    mpz_nextprime(get_mpz_t(c), get_mpz_t(a.as_mpz()));
 
     return integer(c);
 }
 
 // Factoring by Trial division using primes only
-int _factor_trial_division_sieve(mpz_class &factor, const mpz_class &N)
+int _factor_trial_division_sieve(integer_class &factor, const integer_class &N)
 {
-    mpz_class sqrtN;
-    sqrtN = sqrt(N);
-    if (not (sqrtN.fits_uint_p()))
+    integer_class sqrtN;
+    mpz_sqrt(get_mpz_t(sqrtN), get_mpz_t(N));
+    unsigned long limit = get_ui(sqrtN);
+    if (limit > std::numeric_limits<unsigned>::max())
         throw std::runtime_error("N too large to factor");
-    unsigned limit = sqrtN.get_ui();
     Sieve::iterator pi(limit);
     unsigned p;
     while ((p = pi.next_prime()) <= limit) {
@@ -235,20 +235,20 @@ int _factor_trial_division_sieve(mpz_class &factor, const mpz_class &N)
 }
 
 // Factor using lehman method.
-int _factor_lehman_method(mpz_class &rop, const mpz_class &n)
+int _factor_lehman_method(integer_class &rop, const integer_class &n)
 {
     if (n < 21)
         throw std::runtime_error("Require n >= 21 to use lehman method");
 
     int ret_val = 0;
-    mpz_class u_bound;
+    integer_class u_bound;
 
-    mpz_root(u_bound.get_mpz_t(), n.get_mpz_t(), 3);
+    mpz_root(get_mpz_t(u_bound), get_mpz_t(n), 3);
     u_bound = u_bound + 1;
 
-    Sieve::iterator pi(u_bound.get_ui());
+    Sieve::iterator pi(get_ui(u_bound));
     unsigned p;
-    while ((p = pi.next_prime()) <= u_bound.get_ui()) {
+    while ((p = pi.next_prime()) <= get_ui(u_bound)) {
         if (n % p == 0) {
             rop = n / p;
             ret_val = 1;
@@ -258,25 +258,23 @@ int _factor_lehman_method(mpz_class &rop, const mpz_class &n)
 
     if (not ret_val) {
 
-        mpz_class k, a, b, l;
-        mpf_class t;
+        integer_class k, a, b, l;
 
         k = 1;
 
         while (k <= u_bound) {
-            t = 2 * sqrt(k * n);
-            mpz_set_f(a.get_mpz_t(), t.get_mpf_t());
-            mpz_root(b.get_mpz_t(), n.get_mpz_t(), 6);
-            mpz_root(l.get_mpz_t(), k.get_mpz_t(), 2);
+            a = sqrt(4 * k * n);
+            mpz_root(get_mpz_t(b), get_mpz_t(n), 6);
+            mpz_root(get_mpz_t(l), get_mpz_t(k), 2);
             b = b / (4 * l);
             b = b + a;
 
             while (a <= b) {
                 l = a * a - 4 * k * n;
-                if (mpz_perfect_square_p(l.get_mpz_t())) {
-                    mpz_sqrt(b.get_mpz_t(), l.get_mpz_t());
+                if (mpz_perfect_square_p(get_mpz_t(l))) {
+                    mpz_sqrt(get_mpz_t(b), get_mpz_t(l));
                     b = a + b;
-                    mpz_gcd(rop.get_mpz_t(), n.get_mpz_t(), b.get_mpz_t());
+                    mpz_gcd(get_mpz_t(rop), get_mpz_t(n), get_mpz_t(b));
                     ret_val = 1;
                     break;
                 }
@@ -294,7 +292,7 @@ int _factor_lehman_method(mpz_class &rop, const mpz_class &n)
 int factor_lehman_method(const Ptr<RCP<const Integer>> &f, const Integer &n)
 {
     int ret_val;
-    mpz_class rop;
+    integer_class rop;
 
     ret_val = _factor_lehman_method(rop, n.as_mpz());
     *f = integer(rop);
@@ -302,13 +300,13 @@ int factor_lehman_method(const Ptr<RCP<const Integer>> &f, const Integer &n)
 }
 
 // Factor using Pollard's p-1 method
-int _factor_pollard_pm1_method(mpz_class &rop, const mpz_class &n,
-        const mpz_class &c, unsigned B)
+int _factor_pollard_pm1_method(integer_class &rop, const integer_class &n,
+        const integer_class &c, unsigned B)
 {
     if (n < 4 or B < 3)
         throw std::runtime_error("Require n > 3 and B > 2 to use Pollard's p-1 method");
 
-    mpz_class m, g, _c;
+    integer_class m, g, _c;
     _c = c;
 
     Sieve::iterator pi(B);
@@ -319,11 +317,11 @@ int _factor_pollard_pm1_method(mpz_class &rop, const mpz_class &n,
         while (m <= B / p) {
             m = m * p;
         }
-        mpz_powm(g.get_mpz_t(), _c.get_mpz_t(), m.get_mpz_t(), n.get_mpz_t());
-        mpz_set(_c.get_mpz_t(), g.get_mpz_t());
+        mpz_powm(get_mpz_t(g), get_mpz_t(_c), get_mpz_t(m), get_mpz_t(n));
+        mpz_set(get_mpz_t(_c), get_mpz_t(g));
     }
     _c = _c - 1;
-    mpz_gcd(rop.get_mpz_t(), _c.get_mpz_t(), n.get_mpz_t());
+    mpz_gcd(get_mpz_t(rop), get_mpz_t(_c), get_mpz_t(n));
 
     if (rop == 1 or rop == n)
         return 0;
@@ -335,7 +333,7 @@ int factor_pollard_pm1_method(const Ptr<RCP<const Integer>> &f, const Integer &n
         unsigned B, unsigned retries)
 {
     int ret_val = 0;
-    mpz_class rop, nm4, c;
+    integer_class rop, nm4, c;
     gmp_randstate_t state;
 
     gmp_randinit_default(state);
@@ -343,7 +341,7 @@ int factor_pollard_pm1_method(const Ptr<RCP<const Integer>> &f, const Integer &n
     nm4 = n.as_mpz() - 4;
 
     for (unsigned i = 0; i < retries and ret_val == 0; i++) {
-        mpz_urandomm(c.get_mpz_t(), state, nm4.get_mpz_t());
+        mpz_urandomm(get_mpz_t(c), state, get_mpz_t(nm4));
         c = c + 2;
         ret_val = _factor_pollard_pm1_method(rop, n.as_mpz(), c, B);
     }
@@ -355,13 +353,13 @@ int factor_pollard_pm1_method(const Ptr<RCP<const Integer>> &f, const Integer &n
 }
 
 // Factor using Pollard's rho method
-int _factor_pollard_rho_method(mpz_class &rop, const mpz_class &n,
-        const mpz_class &a, const mpz_class &s, unsigned steps = 10000)
+int _factor_pollard_rho_method(integer_class &rop, const integer_class &n,
+        const integer_class &a, const integer_class &s, unsigned steps = 10000)
 {
     if (n < 5)
         throw std::runtime_error("Require n > 4 to use pollard's-rho method");
 
-    mpz_class u, v, g, m;
+    integer_class u, v, g, m;
     u = s;
     v = s;
 
@@ -370,7 +368,7 @@ int _factor_pollard_rho_method(mpz_class &rop, const mpz_class &n,
         v = (v*v + a) % n;
         v = (v*v + a) % n;
         m = u - v;
-        mpz_gcd(g.get_mpz_t(), m.get_mpz_t(), n.get_mpz_t());
+        mpz_gcd(get_mpz_t(g), get_mpz_t(m), get_mpz_t(n));
 
         if (g == n)
             return 0;
@@ -386,7 +384,7 @@ int factor_pollard_rho_method(const Ptr<RCP<const Integer>> &f,
         const Integer &n, unsigned retries)
 {
     int ret_val = 0;
-    mpz_class rop, nm1, nm4, a, s;
+    integer_class rop, nm1, nm4, a, s;
     gmp_randstate_t state;
 
     gmp_randinit_default(state);
@@ -395,8 +393,8 @@ int factor_pollard_rho_method(const Ptr<RCP<const Integer>> &f,
     nm4 = n.as_mpz() - 4;
 
     for (unsigned i = 0; i < retries and ret_val == 0; i++) {
-        mpz_urandomm(a.get_mpz_t(), state, nm1.get_mpz_t());
-        mpz_urandomm(s.get_mpz_t(), state, nm4.get_mpz_t());
+        mpz_urandomm(get_mpz_t(a), state, get_mpz_t(nm1));
+        mpz_urandomm(get_mpz_t(s), state, get_mpz_t(nm4));
         s = s + 1;
         ret_val = _factor_pollard_rho_method(rop, n.as_mpz(), a, s);
     }
@@ -411,15 +409,15 @@ int factor_pollard_rho_method(const Ptr<RCP<const Integer>> &f,
 int factor(const Ptr<RCP<const Integer>> &f, const Integer &n, double B1)
 {
     int ret_val = 0;
-    mpz_class _n, _f;
+    integer_class _n, _f;
 
     _n = n.as_mpz();
 
 #ifdef HAVE_SYMENGINE_ECM
-    if (mpz_perfect_power_p(_n.get_mpz_t())) {
+    if (mpz_perfect_power_p(_get_mpz_t(n))) {
 
         unsigned long int i = 1;
-        mpz_class m, rem;
+        integer_class m, rem;
         rem = 1; // Any non zero number
         m = 2; // set `m` to 2**i, i = 1 at the begining
 
@@ -430,7 +428,7 @@ int factor(const Ptr<RCP<const Integer>> &f, const Integer &n, double B1)
         // eventually `rem` = 0 zero as `n` is a perfect power. `f_t` will
         // be set to a factor of `n` when that happens
         while (i > 1 and rem != 0) {
-            mpz_rootrem(_f.get_mpz_t(), rem.get_mpz_t(), _n.get_mpz_t(), i);
+            mpz_rootrem(_get_mpz_t(f), reget_mpz_t(m), _get_mpz_t(n), i);
             i--;
         }
 
@@ -438,14 +436,14 @@ int factor(const Ptr<RCP<const Integer>> &f, const Integer &n, double B1)
     }
     else {
 
-        if (mpz_probab_prime_p(_n.get_mpz_t(), 25) > 0) { // most probably, n is a prime
+        if (mpz_probab_prime_p(_get_mpz_t(n), 25) > 0) { // most probably, n is a prime
             ret_val = 0;
             _f = _n;
         }
         else {
 
             for (int i = 0; i < 10 and not ret_val; i++)
-                ret_val = ecm_factor(_f.get_mpz_t(), _n.get_mpz_t(), B1,
+                ret_val = ecm_factor(_get_mpz_t(f), _get_mpz_t(n), B1,
                         nullptr);
             if (not ret_val)
                 throw std::runtime_error("ECM failed to factor the given number");
@@ -463,7 +461,7 @@ int factor(const Ptr<RCP<const Integer>> &f, const Integer &n, double B1)
 int factor_trial_division(const Ptr<RCP<const Integer>> &f, const Integer &n)
 {
     int ret_val;
-    mpz_class factor;
+    integer_class factor;
     ret_val =_factor_trial_division_sieve(factor, n.as_mpz());
     if (ret_val == 1) *f = integer(factor);
     return ret_val;
@@ -471,15 +469,15 @@ int factor_trial_division(const Ptr<RCP<const Integer>> &f, const Integer &n)
 
 void prime_factors(std::vector<RCP<const Integer>> &prime_list, const Integer &n)
 {
-    mpz_class sqrtN;
-    mpz_class _n = n.as_mpz();
+    integer_class sqrtN;
+    integer_class _n = n.as_mpz();
     if (_n == 0) return;
     if (_n < 0) _n *= -1;
 
     sqrtN = sqrt(_n);
-    if (not sqrtN.fits_uint_p())
+    auto limit = get_ui(sqrtN);
+    if (not fits_ulong_p(sqrtN) or limit > std::numeric_limits<unsigned>::max())
         throw std::runtime_error("N too large to factor");
-    unsigned limit = sqrtN.get_ui();
     Sieve::iterator pi(limit);
     unsigned p;
 
@@ -496,16 +494,16 @@ void prime_factors(std::vector<RCP<const Integer>> &prime_list, const Integer &n
 
 void prime_factor_multiplicities(map_integer_uint &primes_mul, const Integer &n)
 {
-    mpz_class sqrtN;
-    mpz_class _n = n.as_mpz();
+    integer_class sqrtN;
+    integer_class _n = n.as_mpz();
     unsigned count;
     if (_n == 0) return;
     if (_n < 0) _n *= -1;
 
     sqrtN = sqrt(_n);
-    if (not sqrtN.fits_uint_p())
+    auto limit = get_ui(sqrtN);
+    if (not fits_ulong_p(sqrtN) or limit > std::numeric_limits<unsigned>::max())
         throw std::runtime_error("N too large to factor");
-    unsigned limit = sqrtN.get_ui();
     Sieve::iterator pi(limit);
 
     unsigned p;
@@ -640,7 +638,7 @@ RCP<const Number> bernoulli(unsigned long n)
     mpq_t a;
     mpq_init(a);
     fmpq_get_mpq(a, res);
-    mpq_class b (a);
+    rational_class b(mpq_class(a).get_str());
     fmpq_clear(res);
     mpq_clear(a);
     return Rational::from_mpq(b);
@@ -658,19 +656,19 @@ bool crt(const Ptr<RCP<const Integer>> &R, const std::vector<RCP<const Integer>>
     if (mod.size() == 0)
         throw std::runtime_error("Moduli vector cannot be empty");
 
-    mpz_class m, r, g, s, t;
+    integer_class m, r, g, s, t;
     m = mod[0]->as_mpz();
     r = rem[0]->as_mpz();
 
     for (unsigned i = 1; i < mod.size(); i++) {
-        mpz_gcdext(g.get_mpz_t(), s.get_mpz_t(), t.get_mpz_t(), m.get_mpz_t(), mod[i]->as_mpz().get_mpz_t());
+        mpz_gcdext(get_mpz_t(g), get_mpz_t(s), get_mpz_t(t), get_mpz_t(m), get_mpz_t(mod[i]->as_mpz()));
         // g = s * m + t * mod[i]
         t = rem[i]->as_mpz() - r;
-        if (not mpz_divisible_p (t.get_mpz_t(), g.get_mpz_t()))
+        if (not mpz_divisible_p(get_mpz_t(t), get_mpz_t(g)))
             return false;
         r += m * s * (t / g);           // r += m * (m**-1 mod[i]/g)* (rem[i] - r) / g
         m *= mod[i]->as_mpz() / g;
-        mpz_fdiv_r (r.get_mpz_t(), r.get_mpz_t(), m.get_mpz_t());
+        mpz_fdiv_r(get_mpz_t(r), get_mpz_t(r), get_mpz_t(m));
     }
     *R = integer(r);
     return true;
@@ -684,20 +682,20 @@ void _crt_cartesian(std::vector<RCP<const Integer>> &R, const std::vector<std::v
         throw std::runtime_error("Too few remainders");
     if (mod.size() == 0)
         throw std::runtime_error("Moduli vector cannot be empty");
-    mpz_class m, _m, r, s, t;
+    integer_class m, _m, r, s, t;
     m = mod[0]->as_mpz();
     R = rem[0];
 
     for (unsigned i = 1; i < mod.size(); i++) {
         std::vector<RCP<const Integer>> rem2;
-        mpz_invert(s.get_mpz_t(), m.get_mpz_t(), mod[i]->as_mpz().get_mpz_t());
+        mpz_invert(get_mpz_t(s), get_mpz_t(m), get_mpz_t(mod[i]->as_mpz()));
         _m = m;
         m *= mod[i]->as_mpz();
         for (auto & elem : R) {
             for (auto & _k : rem[i]) {
                 r = elem->as_mpz();
                 r += _m * s * (_k->as_mpz() - r);
-                mpz_fdiv_r (r.get_mpz_t(), r.get_mpz_t(), m.get_mpz_t());
+                mpz_fdiv_r(get_mpz_t(r), get_mpz_t(r), get_mpz_t(m));
                 rem2.push_back(integer(r));
             }
         }
@@ -706,22 +704,22 @@ void _crt_cartesian(std::vector<RCP<const Integer>> &R, const std::vector<std::v
 }
 
 // Tests whether n is a prime power and finds a prime p and e such that n = p**e.
-bool _prime_power(mpz_class &p, mpz_class &e, const mpz_class &n)
+bool _prime_power(integer_class &p, integer_class &e, const integer_class &n)
 {
     if (n < 2)
         return false;
-    mpz_class _n = n, temp;
+    integer_class _n = n, temp;
     e = 1;
     unsigned i = 2;
-    while (mpz_perfect_power_p(_n.get_mpz_t()) and _n >= 2) {
-        if (mpz_root(temp.get_mpz_t(), _n.get_mpz_t(), i) != 0) {
-            mpz_mul_ui(e.get_mpz_t(), e.get_mpz_t(), i);
+    while (mpz_perfect_power_p(get_mpz_t(_n)) and _n >= 2) {
+        if (mpz_root(get_mpz_t(temp), get_mpz_t(_n), i) != 0) {
+            mpz_mul_ui(get_mpz_t(e), get_mpz_t(e), i);
             _n = temp;
         } else {
             i++;
         }
     }
-    if (mpz_probab_prime_p(_n.get_mpz_t(), 25)) {
+    if (mpz_probab_prime_p(get_mpz_t(_n), 25)) {
         p = _n;
         return true;
     }
@@ -730,20 +728,20 @@ bool _prime_power(mpz_class &p, mpz_class &e, const mpz_class &n)
 
 // Computes a primitive root modulo p**e or 2*p**e where p is an odd prime.
 // References : Cohen H., A course in computational algebraic number theory (2009), pages 25-27.
-void _primitive_root(mpz_class &g, const mpz_class &p, const mpz_class &e,
+void _primitive_root(integer_class &g, const integer_class &p, const integer_class &e,
         bool even = false)
 {
     std::vector<RCP<const Integer>> primes;
     prime_factors(primes, *integer(p - 1));
 
-    mpz_class t;
+    integer_class t;
     g = 2;
     while (g < p) {
         bool root = true;
         for (const auto &it: primes) {
             t = it->as_mpz();
             t = (p - 1)/t;
-            mpz_powm(t.get_mpz_t(), g.get_mpz_t(), t.get_mpz_t(), p.get_mpz_t());
+            mpz_powm(get_mpz_t(t), get_mpz_t(g), get_mpz_t(t), get_mpz_t(p));
             if (t == 1) {           // If g**(p-1)/q is 1 then g is not a primitive root.
                root = false;
                break;
@@ -756,21 +754,21 @@ void _primitive_root(mpz_class &g, const mpz_class &p, const mpz_class &e,
 
     if (e > 1) {
         t = p * p;
-        mpz_class pm1 = p - 1;
-        mpz_powm(t.get_mpz_t(), g.get_mpz_t(), pm1.get_mpz_t(), t.get_mpz_t());
+        integer_class pm1 = p - 1;
+        mpz_powm(get_mpz_t(t), get_mpz_t(g), get_mpz_t(pm1), get_mpz_t(t));
         if (t == 1) {               // If g**(p-1) mod (p**2) == 1 then g + p is a primitive root.
             g += p;
         }
     }
     if (even and g % 2 == 0) {
-        mpz_pow_ui(t.get_mpz_t(), p.get_mpz_t(), e.get_ui());
+        mpz_pow_ui(get_mpz_t(t), get_mpz_t(p), get_ui(e));
         g += t;                     // If g is even then root of 2*p**e is g + p**e.
     }
 }
 
 bool primitive_root(const Ptr<RCP<const Integer>> &g, const Integer &n)
 {
-    mpz_class _n = n.as_mpz();
+    integer_class _n = n.as_mpz();
     if (_n < 0)
         _n = -_n;
     if (_n <= 1)
@@ -787,7 +785,7 @@ bool primitive_root(const Ptr<RCP<const Integer>> &g, const Integer &n)
         _n /= 2;
         even = true;
     }
-    mpz_class p, e;
+    integer_class p, e;
     if (not _prime_power(p, e, _n))
         return false;
     _primitive_root(_n, p, e, even);
@@ -799,19 +797,19 @@ bool primitive_root(const Ptr<RCP<const Integer>> &g, const Integer &n)
 // References :
 // [1] Cohen H., A course in computational algebraic number theory (1996), pages 25-27.
 // [2] Hackman P., Elementary number theory (2009), page 28.
-void _primitive_root_list(std::vector<RCP<const Integer>> &roots, const mpz_class &p,
-        const mpz_class &e, bool even = false)
+void _primitive_root_list(std::vector<RCP<const Integer>> &roots, const integer_class &p,
+        const integer_class &e, bool even = false)
 {
-    mpz_class g, h, d, t, pe2, n, pm1;
-    _primitive_root(g, p, 1, false); // Find one primitive root for p.
+    integer_class g, h, d, t, pe2, n, pm1;
+    _primitive_root(g, p, integer_class(1), false); // Find one primitive root for p.
     h = 1;
     pm1 = p - 1;
     // Generate other primitive roots for p. h = g**i and gcd(i, p-1) = 1. Ref[2]
-    mpz_pow_ui(n.get_mpz_t(), p.get_mpz_t(), e.get_ui());
+    mpz_pow_ui(get_mpz_t(n), get_mpz_t(p), get_ui(e));
     for (unsigned long i = 1; i < p; i++) {
         h *= g;
         h %= p;
-        mpz_gcd_ui(d.get_mpz_t(), pm1.get_mpz_t(), i);
+        mpz_gcd_ui(get_mpz_t(d), get_mpz_t(pm1), i);
         if (d == 1) {
             if (e == 1) {
                 if (even and h % 2 == 0)
@@ -819,16 +817,16 @@ void _primitive_root_list(std::vector<RCP<const Integer>> &roots, const mpz_clas
                 else
                     roots.push_back(integer(h));
             } else {
-                mpz_class pp = p * p;
+                integer_class pp = p * p;
                 // Find d such that (h + d*p)**(p-1) mod (p**2) == 1. Ref[1]
                 // h**(p-1) - 1 = d*p*h**(p-2)
                 // d = (h - h**(2-p)) / p
                 t = 2 - p;
-                mpz_powm(d.get_mpz_t(), h.get_mpz_t(), t.get_mpz_t(), pp.get_mpz_t());
+                mpz_powm(get_mpz_t(d), get_mpz_t(h), get_mpz_t(t), get_mpz_t(pp));
                 d = ((h - d) / p + p) % p;
                 t = h;
                 // t = h + i * p + j * p * p and i != d
-                mpz_pow_ui(pe2.get_mpz_t(), p.get_mpz_t(), e.get_ui() - 2);
+                mpz_pow_ui(get_mpz_t(pe2), get_mpz_t(p), get_ui(e) - 2);
                 for (unsigned long j = 0; j < pe2; j++) {
                     for (unsigned long i = 0; i < p; i++) {
                         if (i != d) {
@@ -847,7 +845,7 @@ void _primitive_root_list(std::vector<RCP<const Integer>> &roots, const mpz_clas
 
 void primitive_root_list(std::vector<RCP<const Integer>> &roots, const Integer &n)
 {
-    mpz_class _n = n.as_mpz();
+    integer_class _n = n.as_mpz();
     if (_n < 0)
         _n = -_n;
     if (_n <= 1)
@@ -864,7 +862,7 @@ void primitive_root_list(std::vector<RCP<const Integer>> &roots, const Integer &
         _n /= 2;
         even = true;
     }
-    mpz_class p, e;
+    integer_class p, e;
     if (not _prime_power(p, e, _n))
         return;
     _primitive_root_list(roots, p, e, even);
@@ -876,7 +874,7 @@ RCP<const Integer> totient(const RCP<const Integer> &n) {
     if (n->is_zero())
         return integer(1);
 
-    mpz_class phi = n->as_mpz(), p;
+    integer_class phi = n->as_mpz(), p;
     if (phi < 0)
         phi = -phi;
     map_integer_uint prime_mul;
@@ -884,7 +882,7 @@ RCP<const Integer> totient(const RCP<const Integer> &n) {
 
     for (const auto &it: prime_mul) {
         p = it.first->as_mpz();
-        mpz_divexact(phi.get_mpz_t(), phi.get_mpz_t(), p.get_mpz_t());
+        mpz_divexact(get_mpz_t(phi), get_mpz_t(phi), get_mpz_t(p));
         // phi is exactly divisible by p.
         phi *= p - 1;
     }
@@ -896,7 +894,7 @@ RCP<const Integer> carmichael(const RCP<const Integer> &n) {
         return integer(1);
 
     map_integer_uint prime_mul;
-    mpz_class lambda, t, p;
+    integer_class lambda, t, p;
     unsigned multiplicity;
 
     prime_factor_multiplicities(prime_mul, *n);
@@ -908,8 +906,8 @@ RCP<const Integer> carmichael(const RCP<const Integer> &n) {
             multiplicity--;
         }
         t = p - 1;
-        mpz_lcm(lambda.get_mpz_t(), lambda.get_mpz_t(), t.get_mpz_t());
-        mpz_pow_ui(t.get_mpz_t(), p.get_mpz_t(), multiplicity - 1);
+        mpz_lcm(get_mpz_t(lambda), get_mpz_t(lambda), get_mpz_t(t));
+        mpz_pow_ui(get_mpz_t(t), get_mpz_t(p), multiplicity - 1);
         // lambda and p are relatively prime.
         lambda = lambda * t;
     }
@@ -920,9 +918,9 @@ RCP<const Integer> carmichael(const RCP<const Integer> &n) {
 bool multiplicative_order(const Ptr<RCP<const Integer>> &o, const RCP<const Integer> &a,
         const RCP<const Integer> &n)
 {
-    mpz_class order, p, t;
-    mpz_class _a = a->as_mpz(), _n = n->as_mpz();
-    mpz_gcd(t.get_mpz_t(), _a.get_mpz_t(), _n.get_mpz_t());
+    integer_class order, p, t;
+    integer_class _a = a->as_mpz(), _n = n->as_mpz();
+    mpz_gcd(get_mpz_t(t), get_mpz_t(_a), get_mpz_t(_n));
     if (t != 1)
         return false;
 
@@ -934,11 +932,11 @@ bool multiplicative_order(const Ptr<RCP<const Integer>> &o, const RCP<const Inte
 
     for (const auto it : prime_mul) {
         p = it.first->as_mpz();
-        mpz_pow_ui(t.get_mpz_t(), p.get_mpz_t(), it.second);
-        mpz_divexact(order.get_mpz_t(), order.get_mpz_t(), t.get_mpz_t());
-        mpz_powm(t.get_mpz_t(), _a.get_mpz_t(), order.get_mpz_t(), _n.get_mpz_t());
+        mpz_pow_ui(get_mpz_t(t), get_mpz_t(p), it.second);
+        mpz_divexact(get_mpz_t(order), get_mpz_t(order), get_mpz_t(t));
+        mpz_powm(get_mpz_t(t), get_mpz_t(_a), get_mpz_t(order), get_mpz_t(_n));
         while (t != 1) {
-            mpz_powm(t.get_mpz_t(), t.get_mpz_t(), p.get_mpz_t(), _n.get_mpz_t());
+            mpz_powm(get_mpz_t(t), get_mpz_t(t), get_mpz_t(p), get_mpz_t(_n));
             order *= p;
         }
     }
@@ -947,53 +945,53 @@ bool multiplicative_order(const Ptr<RCP<const Integer>> &o, const RCP<const Inte
 }
 int legendre(const Integer &a, const Integer &n)
 {
-    return mpz_legendre(a.as_mpz().get_mpz_t(), n.as_mpz().get_mpz_t());
+    return mpz_legendre(get_mpz_t(a.as_mpz()), get_mpz_t(n.as_mpz()));
 }
 
 int jacobi(const Integer &a, const Integer &n)
 {
-    return mpz_jacobi(a.as_mpz().get_mpz_t(), n.as_mpz().get_mpz_t());
+    return mpz_jacobi(get_mpz_t(a.as_mpz()), get_mpz_t(n.as_mpz()));
 }
 
 int kronecker(const Integer &a, const Integer &n)
 {
-    return mpz_kronecker(a.as_mpz().get_mpz_t(), n.as_mpz().get_mpz_t());
+    return mpz_kronecker(get_mpz_t(a.as_mpz()), get_mpz_t(n.as_mpz()));
 }
 
-bool _sqrt_mod_tonelli_shanks(mpz_class &rop, const mpz_class &a, const mpz_class &p)
+bool _sqrt_mod_tonelli_shanks(integer_class &rop, const integer_class &a, const integer_class &p)
 {
     gmp_randstate_t state;
     gmp_randinit_default(state);
-    gmp_randseed(state, p.get_mpz_t());
+    gmp_randseed(state, get_mpz_t(p));
 
-    mpz_class n, y, b, q, pm1, t = 1;
+    integer_class n, y, b, q, pm1, t(1);
     pm1 = p - 1;
     unsigned e, m;
-    e = mpz_scan1 (pm1.get_mpz_t(), 0);
-    mpz_tdiv_q_2exp (q.get_mpz_t(), pm1.get_mpz_t(), e);    //p - 1 = 2**e*q
+    e = mpz_scan1(get_mpz_t(pm1), 0);
+    mpz_tdiv_q_2exp (get_mpz_t(q), get_mpz_t(pm1), e);    //p - 1 = 2**e*q
 
     while (t != -1) {
-        mpz_urandomm(n.get_mpz_t(), state, p.get_mpz_t());
-        t = mpz_legendre(n.get_mpz_t(), p.get_mpz_t());
+        mpz_urandomm(get_mpz_t(n), state, get_mpz_t(p));
+        t = mpz_legendre(get_mpz_t(n), get_mpz_t(p));
     }
-    mpz_powm(y.get_mpz_t(), n.get_mpz_t(), q.get_mpz_t(), p.get_mpz_t());   //y = n**q mod p
-    mpz_powm(b.get_mpz_t(), a.get_mpz_t(), q.get_mpz_t(), p.get_mpz_t());   //b = a**q mod p
+    mpz_powm(get_mpz_t(y), get_mpz_t(n), get_mpz_t(q), get_mpz_t(p));   //y = n**q mod p
+    mpz_powm(get_mpz_t(b), get_mpz_t(a), get_mpz_t(q), get_mpz_t(p));   //b = a**q mod p
     t = (q + 1) / 2;
-    mpz_powm(rop.get_mpz_t(), a.get_mpz_t(), t.get_mpz_t(), p.get_mpz_t());   //rop = a**((q + 1) / 2) mod p
+    mpz_powm(get_mpz_t(rop), get_mpz_t(a), get_mpz_t(t), get_mpz_t(p));   //rop = a**((q + 1) / 2) mod p
 
     while (b != 1) {
         m = 0;
         t = b;
         while (t != 1) {
-            mpz_powm_ui(t.get_mpz_t(), t.get_mpz_t(), 2, p.get_mpz_t());
+            mpz_powm_ui(get_mpz_t(t), get_mpz_t(t), 2, get_mpz_t(p));
             m++;                                                            //t = t**2 = b**2**(m)
         }
         if(m == e)
             return false;
         q = 2;
-        mpz_pow_ui(q.get_mpz_t(), q.get_mpz_t(), e - m - 1);    //q = 2**(e - m - 1)
-        mpz_powm(t.get_mpz_t(), y.get_mpz_t(), q.get_mpz_t(), p.get_mpz_t());   // t = y**(2**(e - m - 1))
-        mpz_powm_ui(y.get_mpz_t(), t.get_mpz_t(), 2, p.get_mpz_t());    //y = t**2
+        mpz_pow_ui(get_mpz_t(q), get_mpz_t(q), e - m - 1);    //q = 2**(e - m - 1)
+        mpz_powm(get_mpz_t(t), get_mpz_t(y), get_mpz_t(q), get_mpz_t(p));   // t = y**(2**(e - m - 1))
+        mpz_powm_ui(get_mpz_t(y), get_mpz_t(t), 2, get_mpz_t(p));    //y = t**2
         e = m;
         rop = (rop * t) % p;
         b = (b * y) % p;
@@ -1001,44 +999,44 @@ bool _sqrt_mod_tonelli_shanks(mpz_class &rop, const mpz_class &a, const mpz_clas
     return true;
 }
 
-bool _sqrt_mod_prime(mpz_class &rop, const mpz_class &a, const mpz_class &p)
+bool _sqrt_mod_prime(integer_class &rop, const integer_class &a, const integer_class &p)
 {
     if (p == 2) {
         rop = a % p;
         return true;
     }
-    int l = mpz_legendre(a.get_mpz_t(), p.get_mpz_t());
-    mpz_class t;
+    int l = mpz_legendre(get_mpz_t(a), get_mpz_t(p));
+    integer_class t;
     if (l == -1) {
         return false;
     } else if (l == 0) {
         rop = 0;
     } else if (p % 4 == 3) {
         t = (p + 1) / 4;
-        mpz_powm(rop.get_mpz_t(), a.get_mpz_t(), t.get_mpz_t(), p.get_mpz_t());
+        mpz_powm(get_mpz_t(rop), get_mpz_t(a), get_mpz_t(t), get_mpz_t(p));
     } else if (p % 8 == 5) {
         t = (p - 1) / 4;
-        mpz_powm(t.get_mpz_t(), a.get_mpz_t(), t.get_mpz_t(), p.get_mpz_t());
+        mpz_powm(get_mpz_t(t), get_mpz_t(a), get_mpz_t(t), get_mpz_t(p));
         if (t == 1) {
             t = (p + 3) / 8;
-            mpz_powm(rop.get_mpz_t(), a.get_mpz_t(), t.get_mpz_t(), p.get_mpz_t());
+            mpz_powm(get_mpz_t(rop), get_mpz_t(a), get_mpz_t(t), get_mpz_t(p));
         } else {
             t = (p - 5) / 8;
-            mpz_class t1 = 4 * a;
-            mpz_powm(t.get_mpz_t(), t1.get_mpz_t(), t.get_mpz_t(), p.get_mpz_t());
+            integer_class t1 = 4 * a;
+            mpz_powm(get_mpz_t(t), get_mpz_t(t1), get_mpz_t(t), get_mpz_t(p));
             rop = (2 * a * t) % p;
         }
     } else {
         if(p < 10000) { // If p < 10000, brute force is faster.
-            mpz_class sq = 1, _a;
-            mpz_fdiv_r(_a.get_mpz_t(), a.get_mpz_t(), p.get_mpz_t());
+            integer_class sq = integer_class(1), _a;
+            mpz_fdiv_r(get_mpz_t(_a), get_mpz_t(a), get_mpz_t(p));
             for(unsigned i = 1; i < p; i++) {
                 if (sq == _a) {
                     rop = i;
                     return true;
                 }
                 sq += 2 * i + 1;
-                mpz_fdiv_r(sq.get_mpz_t(), sq.get_mpz_t(), p.get_mpz_t());
+                mpz_fdiv_r(get_mpz_t(sq), get_mpz_t(sq), get_mpz_t(p));
             }
             return false;
         } else {
@@ -1050,20 +1048,20 @@ bool _sqrt_mod_prime(mpz_class &rop, const mpz_class &a, const mpz_class &p)
 
 // References : Menezes, Alfred J., Paul C. Van Oorschot, and Scott A. Vanstone. Handbook of applied cryptography. CRC press, 2010. pages 104 - 108
 // Calculates log = x mod q**k where g**x == a mod p and order(g, p) = n.
-void _discrete_log(mpz_class &log, const mpz_class &a, const mpz_class &g, const mpz_class &n,
-        const mpz_class &q, const unsigned &k, const mpz_class &p)
+void _discrete_log(integer_class &log, const integer_class &a, const integer_class &g, const integer_class &n,
+        const integer_class &q, const unsigned &k, const integer_class &p)
 {
     log = 0;
-    mpz_class gamma = a, alpha, _n, t, beta, qj = 1, m, l;
+    integer_class gamma = a, alpha, _n, t, beta, qj(1), m, l;
     _n = n / q;
-    mpz_powm(alpha.get_mpz_t(), g.get_mpz_t(), _n.get_mpz_t(), p.get_mpz_t());
-    mpz_sqrtrem(m.get_mpz_t(), t.get_mpz_t(), q.get_mpz_t());
+    mpz_powm(get_mpz_t(alpha), get_mpz_t(g), get_mpz_t(_n), get_mpz_t(p));
+    mpz_sqrtrem(get_mpz_t(m), get_mpz_t(t), get_mpz_t(q));
     if (t != 0)
         m++;    // m = ceiling(sqrt(q)).
     map_integer_uint table; // Table for lookup in baby-step giant-step algorithm
-    mpz_class alpha_j = 1, d, s;
+    integer_class alpha_j(1), d, s;
     s = -m;
-    mpz_powm(s.get_mpz_t(), alpha.get_mpz_t(), s.get_mpz_t(), p.get_mpz_t());
+    mpz_powm(get_mpz_t(s), get_mpz_t(alpha), get_mpz_t(s), get_mpz_t(p));
 
     for (unsigned j = 0; j < m; j++) {
         insert(table, integer(alpha_j), j);
@@ -1071,7 +1069,7 @@ void _discrete_log(mpz_class &log, const mpz_class &a, const mpz_class &g, const
     }
 
     for (unsigned long j = 0; j < k; j++) { // Pohlig-Hellman
-        mpz_powm(beta.get_mpz_t(), gamma.get_mpz_t(), _n.get_mpz_t(), p.get_mpz_t());
+        mpz_powm(get_mpz_t(beta), get_mpz_t(gamma), get_mpz_t(_n), get_mpz_t(p));
         // Baby-step giant-step algorithm for l = log_alpha(beta)
         d = beta;
         bool found = false;
@@ -1087,7 +1085,7 @@ void _discrete_log(mpz_class &log, const mpz_class &a, const mpz_class &g, const
         t = -l * qj;
 
         log -= t;
-        mpz_powm(t.get_mpz_t(), g.get_mpz_t(), t.get_mpz_t(), p.get_mpz_t());
+        mpz_powm(get_mpz_t(t), get_mpz_t(g), get_mpz_t(t), get_mpz_t(p));
         gamma *= t; //gamma *= g ** (-l * (q ** j))
         qj *= q;
     }
@@ -1095,23 +1093,23 @@ void _discrete_log(mpz_class &log, const mpz_class &a, const mpz_class &g, const
 
 // References : Johnston A., A generalised qth root algorithm.
 // Solution for x**n == a mod p**k where a != 0 mod p and p is an odd prime.
-bool _nthroot_mod1(std::vector<RCP<const Integer>> &roots, const mpz_class &a, const mpz_class &n,
-        const mpz_class &p, const unsigned k, bool all_roots = false)
+bool _nthroot_mod1(std::vector<RCP<const Integer>> &roots, const integer_class &a, const integer_class &n,
+        const integer_class &p, const unsigned k, bool all_roots = false)
 {
-    mpz_class _n, r, root, s, t, g = 0, pk, m, phi;
-    mpz_pow_ui(pk.get_mpz_t(), p.get_mpz_t(), k);
+    integer_class _n, r, root, s, t, g(0), pk, m, phi;
+    mpz_pow_ui(get_mpz_t(pk), get_mpz_t(p), k);
     phi = pk * (p - 1) / p;
-    mpz_gcd(m.get_mpz_t(), phi.get_mpz_t(), n.get_mpz_t());
+    mpz_gcd(get_mpz_t(m), get_mpz_t(phi), get_mpz_t(n));
     t = phi / m;
-    mpz_powm(t.get_mpz_t(), a.get_mpz_t(), t.get_mpz_t(), pk.get_mpz_t());
+    mpz_powm(get_mpz_t(t), get_mpz_t(a), get_mpz_t(t), get_mpz_t(pk));
     // Check whether a**(phi / gcd(phi, n)) == 1 mod p**k.
     if (t != 1) {
         return false;
     }
     // Solve x**n == a mod p first.
     t = p - 1;
-    mpz_gcdext(_n.get_mpz_t(), r.get_mpz_t(), s.get_mpz_t(), n.get_mpz_t(), t.get_mpz_t());
-    mpz_powm(s.get_mpz_t(), a.get_mpz_t(), r.get_mpz_t(), p.get_mpz_t());
+    mpz_gcdext(get_mpz_t(_n), get_mpz_t(r), get_mpz_t(s), get_mpz_t(n), get_mpz_t(t));
+    mpz_powm(get_mpz_t(s), get_mpz_t(a), get_mpz_t(r), get_mpz_t(p));
 
     // Solve x**(_n) == s mod p where _n | p - 1.
     if (_n == 1) {
@@ -1121,35 +1119,35 @@ bool _nthroot_mod1(std::vector<RCP<const Integer>> &roots, const mpz_class &a, c
     } else { // Ref[1]
         map_integer_uint prime_mul;
         prime_factor_multiplicities(prime_mul, *integer(_n));
-        mpz_class h, q, qt, z, v, x, s1 = s;
-        _primitive_root(g, p, 2);
+        integer_class h, q, qt, z, v, x, s1 = s;
+        _primitive_root(g, p, integer_class(2));
         unsigned c;
         for (const auto &it: prime_mul) {
             q = it.first->as_mpz();
-            mpz_pow_ui(qt.get_mpz_t(), q.get_mpz_t(), it.second);
+            mpz_pow_ui(get_mpz_t(qt), get_mpz_t(q), it.second);
             h = (p - 1) / q;
             c = 1;
             while (h % q == 0) {
                 c++;
                 h /= q;
             }
-            mpz_invert(t.get_mpz_t(), h.get_mpz_t(), qt.get_mpz_t());
+            mpz_invert(get_mpz_t(t), get_mpz_t(h), get_mpz_t(qt));
             z = t * -h;
             x = (1 + z) / qt;
-            mpz_powm(v.get_mpz_t(), s1.get_mpz_t(), x.get_mpz_t(), p.get_mpz_t());
+            mpz_powm(get_mpz_t(v), get_mpz_t(s1), get_mpz_t(x), get_mpz_t(p));
 
             if (c == it.second) {
                 s1 = v;
             } else {
-                mpz_powm(x.get_mpz_t(), s1.get_mpz_t(), h.get_mpz_t(), p.get_mpz_t());
+                mpz_powm(get_mpz_t(x), get_mpz_t(s1), get_mpz_t(h), get_mpz_t(p));
                 t = h * qt;
-                mpz_powm(r.get_mpz_t(), g.get_mpz_t(), t.get_mpz_t(), p.get_mpz_t());
-                mpz_pow_ui(qt.get_mpz_t(), q.get_mpz_t(), c - it.second);
+                mpz_powm(get_mpz_t(r), get_mpz_t(g), get_mpz_t(t), get_mpz_t(p));
+                mpz_pow_ui(get_mpz_t(qt), get_mpz_t(q), c - it.second);
                 _discrete_log(t, x, r, qt, q, c - it.second, p);
                 t = -z * t;
-                mpz_powm(r.get_mpz_t(), g.get_mpz_t(), t.get_mpz_t(), p.get_mpz_t());
+                mpz_powm(get_mpz_t(r), get_mpz_t(g), get_mpz_t(t), get_mpz_t(p));
                 v *= r;
-                mpz_fdiv_r(v.get_mpz_t(), v.get_mpz_t(), p.get_mpz_t());
+                mpz_fdiv_r(get_mpz_t(v), get_mpz_t(v), get_mpz_t(p));
                 s1 = v;
             }
         }
@@ -1158,19 +1156,19 @@ bool _nthroot_mod1(std::vector<RCP<const Integer>> &roots, const mpz_class &a, c
     r = n;
     unsigned c = 0;
     while(r % p == 0) {
-        mpz_divexact(r.get_mpz_t(), r.get_mpz_t(), p.get_mpz_t());
+        mpz_divexact(get_mpz_t(r), get_mpz_t(r), get_mpz_t(p));
         c++;
     }
 
     // Solve s == x**r mod p**k where (x**r)**(p**c)) == a mod p**k
-    mpz_class pc = n / r, pd = pc * p;
+    integer_class pc = n / r, pd = pc * p;
     if (c >= 1) {
-        mpz_powm(s.get_mpz_t(), root.get_mpz_t(), r.get_mpz_t(), p.get_mpz_t());
+        mpz_powm(get_mpz_t(s), get_mpz_t(root), get_mpz_t(r), get_mpz_t(p));
         // s == root**r mod p. Since s**(p**c) == 1 == a mod p**(c + 1), lift until p**k.
         for (unsigned d = c + 2; d <= k; d++) {
             t = 1 - pc;
             pd *= p;
-            mpz_powm(t.get_mpz_t(), s.get_mpz_t(), t.get_mpz_t(), pd.get_mpz_t());
+            mpz_powm(get_mpz_t(t), get_mpz_t(s), get_mpz_t(t), get_mpz_t(pd));
             t = (a * t - s) / pc;
             s += t;
         }
@@ -1179,18 +1177,18 @@ bool _nthroot_mod1(std::vector<RCP<const Integer>> &roots, const mpz_class &a, c
     }
 
     // Solve x**r == s mod p**k given that root**r == s mod p and r % p != 0.
-    mpz_class u;
+    integer_class u;
     pd = p;
     for (unsigned d = 2; d < 2 * k; d *= 2) { // Hensel lifting
         t = r - 1;
         pd *= pd;
         if (d > k)
             pd = pk;
-        mpz_powm(u.get_mpz_t(), root.get_mpz_t(), t.get_mpz_t(), pd.get_mpz_t());
+        mpz_powm(get_mpz_t(u), get_mpz_t(root), get_mpz_t(t), get_mpz_t(pd));
         t = r * u;
-        mpz_invert(t.get_mpz_t(), t.get_mpz_t(), pd.get_mpz_t());
+        mpz_invert(get_mpz_t(t), get_mpz_t(t), get_mpz_t(pd));
         root += (s - u * root) * t;
-        mpz_fdiv_r(root.get_mpz_t(), root.get_mpz_t(), pd.get_mpz_t());
+        mpz_fdiv_r(get_mpz_t(root), get_mpz_t(root), get_mpz_t(pd));
     }
     if (m != 1 and all_roots) {
         // All roots are generated by root*(g**(phi / gcd(phi , n)))**j
@@ -1198,14 +1196,14 @@ bool _nthroot_mod1(std::vector<RCP<const Integer>> &roots, const mpz_class &a, c
             t = -1;
         } else {
             if (g == 0)
-                _primitive_root(g, p, 2);
+                _primitive_root(g, p, integer_class(2));
             t = phi / m;
-            mpz_powm(t.get_mpz_t(), g.get_mpz_t(), t.get_mpz_t(), pk.get_mpz_t());
+            mpz_powm(get_mpz_t(t), get_mpz_t(g), get_mpz_t(t), get_mpz_t(pk));
         }
         for (unsigned j = 0; j < m; j++) {
             roots.push_back(integer(root));
             root *= t;
-            mpz_fdiv_r(root.get_mpz_t(), root.get_mpz_t(), pk.get_mpz_t());
+            mpz_fdiv_r(get_mpz_t(root), get_mpz_t(root), get_mpz_t(pk));
         }
     } else {
         roots.push_back(integer(root));
@@ -1214,18 +1212,18 @@ bool _nthroot_mod1(std::vector<RCP<const Integer>> &roots, const mpz_class &a, c
 }
 
 // Solution for x**n == a mod p**k.
-bool _nthroot_mod_prime_power(std::vector<RCP<const Integer>> &roots, const mpz_class &a, const mpz_class &n,
-        const mpz_class &p, const unsigned k, bool all_roots = false)
+bool _nthroot_mod_prime_power(std::vector<RCP<const Integer>> &roots, const integer_class &a, const integer_class &n,
+        const integer_class &p, const unsigned k, bool all_roots = false)
 {
-    mpz_class pk, root;
+    integer_class pk, root;
     std::vector<RCP<const Integer>> _roots;
     if (a % p != 0) {
         if (p == 2) {
-            mpz_class r = n, t, s, pc, pj;
+            integer_class r = n, t, s, pc, pj;
             pk = 0;
-            mpz_setbit(pk.get_mpz_t(), k);
-            unsigned c = mpz_scan1(n.get_mpz_t(), 0);
-            mpz_tdiv_q_2exp (r.get_mpz_t(), n.get_mpz_t(), c); // n = 2**c * r where r is odd.
+            mpz_setbit(get_mpz_t(pk), k);
+            unsigned c = mpz_scan1(get_mpz_t(n), 0);
+            mpz_tdiv_q_2exp (get_mpz_t(r), get_mpz_t(n), c); // n = 2**c * r where r is odd.
 
             // Handle special cases of k = 1 and k = 2.
             if (k == 1) {
@@ -1245,21 +1243,21 @@ bool _nthroot_mod_prime_power(std::vector<RCP<const Integer>> &roots, const mpz_
                 c = k - 2;  // Since x**(2**c) == x**(2**(k - 2)) mod 2**k, let c = k - 2.
             }
             t = 0; pc = 0;
-            mpz_setbit(t.get_mpz_t(), k - 2);
-            mpz_setbit(pc.get_mpz_t(), c);
+            mpz_setbit(get_mpz_t(t), k - 2);
+            mpz_setbit(get_mpz_t(pc), c);
 
-            mpz_invert(s.get_mpz_t(), r.get_mpz_t(), t.get_mpz_t());
+            mpz_invert(get_mpz_t(s), get_mpz_t(r), get_mpz_t(t));
             if (c == 0) {
                 // x**r == a mod 2**k and x**2**(k - 2) == 1 mod 2**k, implies x**(r * s) == x == a**s mod 2**k.
-                mpz_powm(root.get_mpz_t(), a.get_mpz_t(), s.get_mpz_t(), pk.get_mpz_t());
+                mpz_powm(get_mpz_t(root), get_mpz_t(a), get_mpz_t(s), get_mpz_t(pk));
                 roots.push_back(integer(root));
                 return true;
             }
 
             // First, solve for y**2**c == a mod 2**k where y == x**r
             t = 0;
-            mpz_setbit(t.get_mpz_t(), c + 2);
-            mpz_fdiv_r(t.get_mpz_t(), a.get_mpz_t(), t.get_mpz_t());
+            mpz_setbit(get_mpz_t(t), c + 2);
+            mpz_fdiv_r(get_mpz_t(t), get_mpz_t(a), get_mpz_t(t));
             // Check for a == y**2**c == 1 mod 2**(c + 2).
             if (t != 1)
                 return false;
@@ -1268,14 +1266,14 @@ bool _nthroot_mod_prime_power(std::vector<RCP<const Integer>> &roots, const mpz_
             // 1 is a root of x**2**c == 1 mod 2**(c + 2). Lift till 2**k.
             for (unsigned j = c + 2; j < k; j++) {
                 pj *= 2;
-                mpz_powm(t.get_mpz_t(), root.get_mpz_t(), pc.get_mpz_t(), pj.get_mpz_t());
+                mpz_powm(get_mpz_t(t), get_mpz_t(root), get_mpz_t(pc), get_mpz_t(pj));
                 t -= a;
                 if (t % pj != 0)
                     // Add 2**(j - c) by setting bit j - c = 1 (bit j - c is 0).
-                    mpz_setbit(root.get_mpz_t(), j - c);
+                    mpz_setbit(get_mpz_t(root), j - c);
             }
             // Solve x**r == root mod 2**k.
-            mpz_powm(root.get_mpz_t(), root.get_mpz_t(), s.get_mpz_t(), pk.get_mpz_t());
+            mpz_powm(get_mpz_t(root), get_mpz_t(root), get_mpz_t(s), get_mpz_t(pk));
 
             if (all_roots) {
                 // All roots are generated by, root * (j * (2**(k - c) +/- 1)).
@@ -1295,11 +1293,11 @@ bool _nthroot_mod_prime_power(std::vector<RCP<const Integer>> &roots, const mpz_
             return _nthroot_mod1(roots, a, n, p, k, all_roots);
         }
     } else {
-        mpz_class _a;
-        mpz_pow_ui(pk.get_mpz_t(), p.get_mpz_t(), k);
+        integer_class _a;
+        mpz_pow_ui(get_mpz_t(pk), get_mpz_t(p), k);
         _a = a % pk;
         unsigned m;
-        mpz_class pm;
+        integer_class pm;
         if (_a == 0) {
             if (not all_roots) {
                 roots.push_back(integer(0));
@@ -1309,20 +1307,20 @@ bool _nthroot_mod_prime_power(std::vector<RCP<const Integer>> &roots, const mpz_
             if (n >= k)
                 m = k - 1;
             else
-                m = k - 1 - (k - 1) / n.get_ui();
-            mpz_pow_ui(pm.get_mpz_t(), p.get_mpz_t(), m);
+                m = k - 1 - (k - 1) / get_ui(n);
+            mpz_pow_ui(get_mpz_t(pm), get_mpz_t(p), m);
         } else {
             unsigned r = 1;
-            mpz_divexact(_a.get_mpz_t(), _a.get_mpz_t(), p.get_mpz_t());
+            mpz_divexact(get_mpz_t(_a), get_mpz_t(_a), get_mpz_t(p));
             while (_a % p == 0) {
-                mpz_divexact(_a.get_mpz_t(), _a.get_mpz_t(), p.get_mpz_t());
+                mpz_divexact(get_mpz_t(_a), get_mpz_t(_a), get_mpz_t(p));
                 r++;
             }
             if (r < n or r % n != 0 or not _nthroot_mod_prime_power(_roots, _a, n, p, k - r, all_roots)) {
                 return false;
             }
-            m = r / n.get_ui();
-            mpz_pow_ui(pm.get_mpz_t(), p.get_mpz_t(), m);
+            m = r / get_ui(n);
+            mpz_pow_ui(get_mpz_t(pm), get_mpz_t(p), m);
             if (not all_roots) {
                 roots.push_back(integer(_roots.back()->as_mpz() * pm));
                 return true;
@@ -1330,11 +1328,11 @@ bool _nthroot_mod_prime_power(std::vector<RCP<const Integer>> &roots, const mpz_
             for (auto &it : _roots) {
                 it = integer (it->as_mpz() * pm);
             }
-            m = r - r / n.get_ui();
-            mpz_pow_ui(pm.get_mpz_t(), p.get_mpz_t(), m);
+            m = r - r / get_ui(n);
+            mpz_pow_ui(get_mpz_t(pm), get_mpz_t(p), m);
         }
-        mpz_class pkm;
-        mpz_pow_ui(pkm.get_mpz_t(), p.get_mpz_t(), k - m);
+        integer_class pkm;
+        mpz_pow_ui(get_mpz_t(pkm), get_mpz_t(p), k - m);
 
         for (const auto &it : _roots) {
             root = it->as_mpz();
@@ -1360,11 +1358,11 @@ bool nthroot_mod(const Ptr<RCP<const Integer>> &root, const RCP<const Integer> &
     prime_factor_multiplicities(prime_mul, *mod);
     std::vector<RCP<const Integer>> moduli;
     bool ret_val;
-    mpz_class _mod;
+    integer_class _mod;
 
     std::vector<RCP<const Integer>> rem;
     for (const auto &it: prime_mul) {
-        mpz_pow_ui(_mod.get_mpz_t(), it.first->as_mpz().get_mpz_t(), it.second);
+        mpz_pow_ui(get_mpz_t(_mod), get_mpz_t(it.first->as_mpz()), it.second);
         moduli.push_back(integer(_mod));
         ret_val = _nthroot_mod_prime_power(rem, a->as_mpz(), n->as_mpz(), it.first->as_mpz(), it.second, false);
         if(not ret_val) return false;
@@ -1386,11 +1384,11 @@ void nthroot_mod_list(std::vector<RCP<const Integer>> &roots, const RCP<const In
     prime_factor_multiplicities(prime_mul, *mod);
     std::vector<RCP<const Integer>> moduli;
     bool ret_val;
-    mpz_class _mod;
+    integer_class _mod;
 
     std::vector<std::vector<RCP<const Integer>>> rem;
     for (const auto &it: prime_mul) {
-        mpz_pow_ui(_mod.get_mpz_t(), it.first->as_mpz().get_mpz_t(), it.second);
+        mpz_pow_ui(get_mpz_t(_mod), get_mpz_t(it.first->as_mpz()), it.second);
         moduli.push_back(integer(_mod));
         std::vector<RCP<const Integer>> rem1;
         ret_val = _nthroot_mod_prime_power(rem1, a->as_mpz(), n->as_mpz(), it.first->as_mpz(), it.second, true);
@@ -1405,12 +1403,12 @@ bool powermod(const Ptr<RCP<const Integer>> &powm, const RCP<const Integer> &a,
         const RCP<const Number> &b, const RCP<const Integer> &m)
 {
     if(is_a<Integer>(*b)) {
-        mpz_class t = rcp_static_cast<const Integer>(b)->as_mpz();
+        integer_class t = rcp_static_cast<const Integer>(b)->as_mpz();
         if (b->is_negative())
             t *= -1;
-        mpz_powm(t.get_mpz_t(), a->as_mpz().get_mpz_t(), t.get_mpz_t(), m->as_mpz().get_mpz_t());
+        mpz_powm(get_mpz_t(t), get_mpz_t(a->as_mpz()), get_mpz_t(t), get_mpz_t(m->as_mpz()));
         if (b->is_negative()) {
-            bool ret_val = mpz_invert(t.get_mpz_t(), t.get_mpz_t(), m->as_mpz().get_mpz_t());
+            bool ret_val = mpz_invert(get_mpz_t(t), get_mpz_t(t), get_mpz_t(m->as_mpz()));
             if (not ret_val)
                 return false;
         }
@@ -1423,12 +1421,12 @@ bool powermod(const Ptr<RCP<const Integer>> &powm, const RCP<const Integer> &a,
             den = den->mulint(*integer(-1));
             num = num->mulint(*integer(-1));
         }
-        mpz_class t = num->as_mpz();
+        integer_class t = num->as_mpz();
         if (num->is_negative())
             t *= -1;
-        mpz_powm(t.get_mpz_t(), a->as_mpz().get_mpz_t(), t.get_mpz_t(), m->as_mpz().get_mpz_t());
+        mpz_powm(get_mpz_t(t), get_mpz_t(a->as_mpz()), get_mpz_t(t), get_mpz_t(m->as_mpz()));
         if (num->is_negative()) {
-            bool ret_val = mpz_invert(t.get_mpz_t(), t.get_mpz_t(), m->as_mpz().get_mpz_t());
+            bool ret_val = mpz_invert(get_mpz_t(t), get_mpz_t(t), get_mpz_t(m->as_mpz()));
             if (not ret_val)
                 return false;
         }
@@ -1442,12 +1440,12 @@ void powermod_list(std::vector<RCP<const Integer>> &pows, const RCP<const Intege
         const RCP<const Number> &b, const RCP<const Integer> &m)
 {
     if(is_a<Integer>(*b)) {
-        mpz_class t = rcp_static_cast<const Integer>(b)->as_mpz();
+        integer_class t = rcp_static_cast<const Integer>(b)->as_mpz();
         if (b->is_negative())
             t *= -1;
-        mpz_powm(t.get_mpz_t(), a->as_mpz().get_mpz_t(), t.get_mpz_t(), m->as_mpz().get_mpz_t());
+        mpz_powm(get_mpz_t(t), get_mpz_t(a->as_mpz()), get_mpz_t(t), get_mpz_t(m->as_mpz()));
         if (b->is_negative()) {
-            bool ret_val = mpz_invert(t.get_mpz_t(), t.get_mpz_t(), m->as_mpz().get_mpz_t());
+            bool ret_val = mpz_invert(get_mpz_t(t), get_mpz_t(t), get_mpz_t(m->as_mpz()));
             if (not ret_val)
                 return;
         }
@@ -1459,12 +1457,12 @@ void powermod_list(std::vector<RCP<const Integer>> &pows, const RCP<const Intege
             den = den->mulint(*integer(-1));
             num = num->mulint(*integer(-1));
         }
-        mpz_class t = num->as_mpz();
+        integer_class t = num->as_mpz();
         if (num->is_negative())
             t *= -1;
-        mpz_powm(t.get_mpz_t(), a->as_mpz().get_mpz_t(), t.get_mpz_t(), m->as_mpz().get_mpz_t());
+        mpz_powm(get_mpz_t(t), get_mpz_t(a->as_mpz()), get_mpz_t(t), get_mpz_t(m->as_mpz()));
         if (num->is_negative()) {
-            bool ret_val = mpz_invert(t.get_mpz_t(), t.get_mpz_t(), m->as_mpz().get_mpz_t());
+            bool ret_val = mpz_invert(get_mpz_t(t), get_mpz_t(t), get_mpz_t(m->as_mpz()));
             if (not ret_val)
                 return;
         }

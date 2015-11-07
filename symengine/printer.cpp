@@ -41,24 +41,24 @@ void StrPrinter::bvisit(const Complex &x) {
     if (x.real_ != 0) {
         s << x.real_;
         // Since Complex is in canonical form, imaginary_ is not 0.
-        if (sgn(x.imaginary_) == 1) {
+        if (sign(x.imaginary_) == 1) {
             s << " + ";
         } else {
             s << " - ";
         }
         // If imaginary_ is not 1 or -1, print the absolute value
-        if (x.imaginary_ != sgn(x.imaginary_)) {
+        if (x.imaginary_ != sign(x.imaginary_)) {
             s << abs(x.imaginary_);
             s << "*I";
         } else {
             s << "I";
         }
     } else {
-        if (x.imaginary_ != sgn(x.imaginary_)) {
+        if (x.imaginary_ != sign(x.imaginary_)) {
             s << x.imaginary_;
             s << "*I";
         } else {
-            if (sgn(x.imaginary_) == 1) {
+            if (sign(x.imaginary_) == 1) {
                 s << "I";
             } else {
                 s << "-I";

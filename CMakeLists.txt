@@ -91,6 +91,18 @@ if ((CMAKE_CXX_COMPILER_ID MATCHES Clang) AND (CMAKE_BUILD_TYPE STREQUAL "Releas
     endif()
 endif()
 
+
+set(INTEGER_CLASS "gmpxx"
+    CACHE BOOL "Integer class for symengine. Either gmpxx or piranha")
+
+if ("${INTEGER_CLASS}" MATCHES "piranha")
+    set(SYMENGINE_INTEGER_CLASS "PIRANHA")
+elseif ("${INTEGER_CLASS}" MATCHES "flint")
+    set(SYMENGINE_INTEGER_CLASS "FLINT")
+else()
+    set(SYMENGINE_INTEGER_CLASS "GMPXX")
+endif()
+
 # GMP
 find_package(GMP REQUIRED)
 include_directories(${GMP_INCLUDE_DIRS})

@@ -34,7 +34,7 @@ public:
     void bvisit(const Integer &x) {
         fmpz_t z_;
         fmpz_init(z_);
-        fmpz_set_mpz(z_, x.i.get_mpz_t());
+        fmpz_set_mpz(z_, get_mpz_t(x.i));
         arb_set_fmpz(result_, z_);
         fmpz_clear(z_);
     }
@@ -42,7 +42,7 @@ public:
     void bvisit(const Rational &x) {
         fmpq_t q_;
         fmpq_init(q_);
-        fmpq_set_mpq(q_, x.i.get_mpq_t());
+        fmpq_set_mpq(q_, get_mpq_t(x.i));
         arb_set_fmpq(result_, q_, prec_);
         fmpq_clear(q_);
     }

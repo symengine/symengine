@@ -14,7 +14,7 @@ void expr2poly(const RCP<const Basic> &p, umap_basic_num &syms, umap_vec_mpz &P)
         int n = syms.size();
         const umap_basic_num &d = rcp_static_cast<const Add>(p)->dict_;
         vec_int exp;
-        mpz_class coef;
+        integer_class coef;
         for (const auto &p: d) {
             if (not is_a<Integer>(*p.second))
                     throw std::runtime_error("Not implemented.");
@@ -75,7 +75,7 @@ void poly_mul(const umap_vec_mpz &A, const umap_vec_mpz &B, umap_vec_mpz &C)
     for (const auto &a: A) {
         for (const auto &b: B) {
             monomial_mul(a.first, b.first, exp);
-            mpz_addmul(C[exp].get_mpz_t(), a.second.get_mpz_t(), b.second.get_mpz_t());
+            mpz_addmul(get_mpz_t(C[exp]), get_mpz_t(a.second), get_mpz_t(b.second));
         }
     }
     /*

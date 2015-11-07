@@ -20,12 +20,15 @@ using SymEngine::zero;
 using SymEngine::Symbol;
 using SymEngine::Rational;
 using SymEngine::Integer;
+using SymEngine::integer_class;
+using SymEngine::rational_class;
 using SymEngine::Number;
 using SymEngine::Complex;
 using SymEngine::rcp_static_cast;
 using SymEngine::is_a;
 using SymEngine::RCPBasicKeyLess;
 using SymEngine::set_basic;
+using SymEngine::get_mpz_t;
 
 namespace SymEngine {
 
@@ -117,50 +120,50 @@ void symbol_set(basic s, char* c)
 
 void integer_set_si(basic s, long i)
 {
-    s->m = SymEngine::integer(mpz_class(i));
+    s->m = SymEngine::integer(std::move(integer_class(i)));
 }
 
 void integer_set_ui(basic s, unsigned long i)
 {
-    s->m = SymEngine::integer(mpz_class(i));
+    s->m = SymEngine::integer(std::move(integer_class(i)));
 }
 
 void integer_set_mpz(basic s, const mpz_t i)
 {
-    s->m = SymEngine::integer(mpz_class(i));
+    s->m = SymEngine::integer(std::move(integer_class(i)));
 }
 
 void integer_set_str(basic s, char* c)
 {
-    s->m = SymEngine::integer(mpz_class(c, 10));
+    s->m = SymEngine::integer(std::move(integer_class(c)));
 }
 
 signed long integer_get_si(const basic s)
 {
     SYMENGINE_ASSERT(is_a<Integer>(*(s->m)));
-    return mpz_get_si((rcp_static_cast<const Integer>(s->m))->as_mpz().get_mpz_t());
+    return mpz_get_si(get_mpz_t((rcp_static_cast<const Integer>(s->m))->as_mpz()));
 }
 
 unsigned long integer_get_ui(const basic s)
 {
     SYMENGINE_ASSERT(is_a<Integer>(*(s->m)));
-    return mpz_get_ui((rcp_static_cast<const Integer>(s->m))->as_mpz().get_mpz_t());
+    return mpz_get_ui(get_mpz_t((rcp_static_cast<const Integer>(s->m))->as_mpz()));
 }
 
 void integer_get_mpz(mpz_t a, const basic s)
 {
     SYMENGINE_ASSERT(is_a<Integer>(*(s->m)));
-    mpz_set(a, (rcp_static_cast<const Integer>(s->m))->as_mpz().get_mpz_t());
+    mpz_set(a, get_mpz_t((rcp_static_cast<const Integer>(s->m))->as_mpz()));
 }
 
 void rational_set_si(basic s, long a, long b)
 {
-    s->m = SymEngine::Rational::from_mpq(mpq_class(a, b));
+    s->m = SymEngine::Rational::from_mpq(rational_class(a, b));
 }
 
 void rational_set_ui(basic s, unsigned long a, unsigned long b)
 {
-    s->m = SymEngine::Rational::from_mpq(mpq_class(a, b));
+    s->m = SymEngine::Rational::from_mpq(rational_class(a, b));
 }
 
 int rational_set(basic s, const basic a, const basic b)
@@ -176,7 +179,8 @@ int rational_set(basic s, const basic a, const basic b)
 
 void rational_set_mpq(basic s, const mpq_t i)
 {
-    s->m = SymEngine::Rational::from_mpq(mpq_class(i));
+    // TODO: fix this
+    s->m = SymEngine::Rational::from_mpq(rational_class(mpq_class(i).get_str()));
 }
 
 void complex_set(basic s, const basic re, const basic im)
@@ -195,7 +199,8 @@ void complex_set_rat(basic s, const basic re, const basic im)
 
 void complex_set_mpq(basic s, const mpq_t re, const mpq_t im)
 {
-    s->m = SymEngine::Complex::from_mpq(mpq_class(re), mpq_class(im));
+    // TODO: fix this
+    s->m = SymEngine::Complex::from_mpq(rational_class(mpq_class(re).get_str()), rational_class(mpq_class(im).get_str()));
 }
 
 int basic_diff(basic s, const basic expr, basic const symbol)

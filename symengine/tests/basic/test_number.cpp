@@ -27,6 +27,8 @@ using SymEngine::Basic;
 using SymEngine::sqrt;
 using SymEngine::add;
 using SymEngine::eval_double;
+using SymEngine::integer_class;
+using SymEngine::rational_class;
 #ifdef HAVE_SYMENGINE_MPFR
 using SymEngine::mpfr_class;
 using SymEngine::real_mpfr;
@@ -132,14 +134,14 @@ TEST_CASE("Test is_exact", "[number]")
     REQUIRE(n1->is_negative());
     REQUIRE(not n1->is_positive());
 
-    n1 = Rational::from_mpq(2);
+    n1 = Rational::from_mpq(rational_class(2, 1));
     REQUIRE(n1->is_exact());
     REQUIRE(not n1->is_zero());
     REQUIRE(not n1->is_exact_zero());
     REQUIRE(not n1->is_negative());
     REQUIRE(n1->is_positive());
 
-    n1 = Complex::from_mpq(1, 2);
+    n1 = Complex::from_mpq(rational_class(1, 1), rational_class(1, 2));
     REQUIRE(n1->is_exact());
     REQUIRE(not n1->is_zero());
     REQUIRE(not n1->is_exact_zero());
@@ -214,7 +216,7 @@ TEST_CASE("Test NumberWrapper", "[number]")
             return ss.str();
         };
         virtual RCP<const Number> eval(long bits) const {
-            return integer(mpz_class(i_));
+            return integer(integer_class(i_));
         };
         long number_to_long(const Number &x) const {
             long l;
