@@ -391,7 +391,7 @@ int factor(const Ptr<RCP<const Integer>> &f, const Integer &n, double B1)
     _n = n.as_mpz();
 
 #ifdef HAVE_SYMENGINE_ECM
-    if (mpz_perfect_power_p(_get_mpz_t(n))) {
+    if (mpz_perfect_power_p(get_mpz_t(_n))) {
 
         unsigned long int i = 1;
         integer_class m, rem;
@@ -405,7 +405,7 @@ int factor(const Ptr<RCP<const Integer>> &f, const Integer &n, double B1)
         // eventually `rem` = 0 zero as `n` is a perfect power. `f_t` will
         // be set to a factor of `n` when that happens
         while (i > 1 and rem != 0) {
-            mpz_rootrem(_get_mpz_t(f), reget_mpz_t(m), _get_mpz_t(n), i);
+            mpz_rootrem(get_mpz_t(_f), get_mpz_t(rem), get_mpz_t(_n), i);
             i--;
         }
 
@@ -413,14 +413,14 @@ int factor(const Ptr<RCP<const Integer>> &f, const Integer &n, double B1)
     }
     else {
 
-        if (mpz_probab_prime_p(_get_mpz_t(n), 25) > 0) { // most probably, n is a prime
+        if (mpz_probab_prime_p(get_mpz_t(_n), 25) > 0) { // most probably, n is a prime
             ret_val = 0;
             _f = _n;
         }
         else {
 
             for (int i = 0; i < 10 and not ret_val; i++)
-                ret_val = ecm_factor(_get_mpz_t(f), _get_mpz_t(n), B1,
+                ret_val = ecm_factor(get_mpz_t(_f), get_mpz_t(_n), B1,
                         nullptr);
             if (not ret_val)
                 throw std::runtime_error("ECM failed to factor the given number");

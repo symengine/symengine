@@ -105,8 +105,8 @@ RCP<const Number> Complex::from_two_nums(const Number &re,
 RCP<const Number> pow_number(const Complex &x, unsigned long n)
 {
     unsigned long mask = 1;
-    rational_class r_re(1, 1);
-    rational_class r_im(0, 1);
+    rational_class r_re(1);
+    rational_class r_im(0);
 
     rational_class p_re = x.real_;
     rational_class p_im = x.imaginary_;
