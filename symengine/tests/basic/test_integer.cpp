@@ -6,6 +6,7 @@ using SymEngine::print_stack_on_segfault;
 using SymEngine::RCP;
 using SymEngine::Integer;
 using SymEngine::integer;
+using SymEngine::integer_class;
 using SymEngine::isqrt;
 
 TEST_CASE("isqrt: integer", "[integer]")
@@ -73,17 +74,17 @@ TEST_CASE("fix#461: integer", "[integer]")
 
     long lmax = std::numeric_limits<long>::max();
     ir = integer(lmax);
-    REQUIRE(static_cast<mpz_class>(lmax) == ir->as_mpz());
+    REQUIRE(integer_class(lmax) == ir->as_mpz());
 
     unsigned long ulmax = std::numeric_limits<unsigned long>::max();
     ir = integer(ulmax);
-    REQUIRE(static_cast<mpz_class>(ulmax) == ir->as_mpz());
+    REQUIRE(integer_class(ulmax) == ir->as_mpz());
 
     int imax = std::numeric_limits<int>::max();
     ir = integer(imax);
-    REQUIRE(static_cast<mpz_class>(imax) == ir->as_mpz());
+    REQUIRE(integer_class(imax) == ir->as_mpz());
 
-    mpz_class val = 12345;
+    integer_class val(12345);
     ir = integer(val);
     REQUIRE(val == ir->as_mpz());
 }

@@ -148,12 +148,20 @@ struct RCPIntegerKeyLess
         return a->as_mpz() < b->as_mpz();
     }
 };
-//! \return RCP<const Integer> from integral values + mpz_class
-template<typename T>
-inline RCP<const Integer> integer(T&& i)
+//! \return RCP<const Integer> from integral values
+template<typename T> inline
+typename std::enable_if<std::is_integral<T>::value, RCP<const Integer>>::type
+integer(T i)
 {
-    return make_rcp<const Integer>(std::forward<T>(i));
+    return make_rcp<const Integer>(std::move(integer_class(i)));
 }
+
+//! \return RCP<const Integer> from integer_class
+inline RCP<const Integer> integer(integer_class i)
+{
+    return make_rcp<const Integer>(std::move(i));
+}
+
 //! Integer Square root
 RCP<const Integer> isqrt(const Integer &n);
 //! Integer nth root

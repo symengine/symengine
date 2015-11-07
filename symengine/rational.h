@@ -151,7 +151,7 @@ public:
         if (not neg) {
             return Rational::from_mpq(std::move(val));
         } else {
-            return Rational::f-rom_mpq(std::move(1 / val));
+            return Rational::from_mpq(std::move(1 / val));
         }
     }
     /*! Raise Rationals to power `other`
