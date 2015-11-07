@@ -216,7 +216,7 @@ TEST_CASE("Test NumberWrapper", "[number]")
             return ss.str();
         };
         virtual RCP<const Number> eval(long bits) const {
-            return integer(integer_class(i_));
+            return integer(std::move(integer_class(i_)));
         };
         long number_to_long(const Number &x) const {
             long l;

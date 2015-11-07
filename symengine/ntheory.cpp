@@ -27,7 +27,7 @@ RCP<const Integer> gcd(const Integer &a, const Integer &b)
 
     mpz_gcd(get_mpz_t(g), get_mpz_t(a.as_mpz()), get_mpz_t(b.as_mpz()));
 
-    return integer(g);
+    return integer(std::move(g));
 }
 
 void gcd_ext(const Ptr<RCP<const Integer>> &g, const Ptr<RCP<const Integer>> &s,
@@ -57,22 +57,16 @@ RCP<const Integer> lcm(const Integer &a, const Integer &b)
 
     mpz_lcm(get_mpz_t(c), get_mpz_t(a.as_mpz()), get_mpz_t(b.as_mpz()));
 
-    return integer(c);
+    return integer(std::move(c));
 }
 
 int mod_inverse(const Ptr<RCP<const Integer>> &b, const Integer &a,
         const Integer &m)
 {
     int ret_val;
-    mpz_t inv_t;
-
-    mpz_init(inv_t);
-
-    ret_val = mpz_invert(inv_t, get_mpz_t(a.as_mpz()), get_mpz_t(m.as_mpz()));
-    *b = integer(integer_class(inv_t));
-
-    mpz_clear(inv_t);
-
+    integer_class inv_t;
+    ret_val = mpz_invert(get_mpz_t(inv_t), get_mpz_t(a.as_mpz()), get_mpz_t(m.as_mpz()));
+    *b = integer(std::move(inv_t));
     return ret_val;
 }
 
@@ -80,14 +74,14 @@ RCP<const Integer> mod(const Integer &n, const Integer &d)
 {
     integer_class q;
     mpz_tdiv_r(get_mpz_t(q), get_mpz_t(n.as_mpz()), get_mpz_t(d.as_mpz()));
-    return integer(q);
+    return integer(std::move(q));
 }
 
 RCP<const Integer> quotient(const Integer &n, const Integer &d)
 {
     integer_class q;
     mpz_tdiv_q(get_mpz_t(q), get_mpz_t(n.as_mpz()), get_mpz_t(d.as_mpz()));
-    return integer(q);
+    return integer(std::move(q));
 }
 
 void quotient_mod(const Ptr<RCP<const Integer>> &q, const Ptr<RCP<const Integer>> &r,
@@ -95,22 +89,22 @@ void quotient_mod(const Ptr<RCP<const Integer>> &q, const Ptr<RCP<const Integer>
 {
     integer_class _q, _r;
     mpz_tdiv_qr(get_mpz_t(_q), get_mpz_t(_r), get_mpz_t(n.as_mpz()), get_mpz_t(d.as_mpz()));
-    *q = integer(_q);
-    *r = integer(_r);
+    *q = integer(std::move(_q));
+    *r = integer(std::move(_r));
 }
 
 RCP<const Integer> mod_f(const Integer &n, const Integer &d)
 {
     integer_class q;
     mpz_fdiv_r(get_mpz_t(q), get_mpz_t(n.as_mpz()), get_mpz_t(d.as_mpz()));
-    return integer(q);
+    return integer(std::move(q));
 }
 
 RCP<const Integer> quotient_f(const Integer &n, const Integer &d)
 {
     integer_class q;
     mpz_fdiv_q(get_mpz_t(q), get_mpz_t(n.as_mpz()), get_mpz_t(d.as_mpz()));
-    return integer(q);
+    return integer(std::move(q));
 }
 
 void quotient_mod_f(const Ptr<RCP<const Integer>> &q, const Ptr<RCP<const Integer>> &r,
@@ -118,60 +112,43 @@ void quotient_mod_f(const Ptr<RCP<const Integer>> &q, const Ptr<RCP<const Intege
 {
     integer_class _q, _r;
     mpz_fdiv_qr(get_mpz_t(_q), get_mpz_t(_r), get_mpz_t(n.as_mpz()), get_mpz_t(d.as_mpz()));
-    *q = integer(_q);
-    *r = integer(_r);
+    *q = integer(std::move(_q));
+    *r = integer(std::move(_r));
 }
 
 RCP<const Integer> fibonacci(unsigned long n)
 {
     integer_class f;
-
     mpz_fib_ui(get_mpz_t(f), n);
-
-    return integer(f);
+    return integer(std::move(f));
 }
 
 void fibonacci2(const Ptr<RCP<const Integer>> &g, const Ptr<RCP<const Integer>> &s,
         unsigned long n)
 {
-    mpz_t g_t;
-    mpz_t s_t;
-
-    mpz_init(g_t);
-    mpz_init(s_t);
-
-    mpz_fib2_ui(g_t, s_t, n);
-    *g = integer(integer_class(g_t));
-    *s = integer(integer_class(s_t));
-
-    mpz_clear(g_t);
-    mpz_clear(s_t);
+    integer_class g_t;
+    integer_class s_t;
+    mpz_fib2_ui(get_mpz_t(g_t), get_mpz_t(s_t), n);
+    *g = integer(std::move(g_t));
+    *s = integer(std::move(s_t));
 }
 
 RCP<const Integer> lucas(unsigned long n)
 {
     integer_class f;
-
     mpz_lucnum_ui(get_mpz_t(f), n);
-
-    return integer(f);
+    return integer(std::move(f));
 }
 
 void lucas2(const Ptr<RCP<const Integer>> &g, const Ptr<RCP<const Integer>> &s,
         unsigned long n)
 {
-    mpz_t g_t;
-    mpz_t s_t;
+    integer_class g_t;
+    integer_class s_t;
 
-    mpz_init(g_t);
-    mpz_init(s_t);
-
-    mpz_lucnum2_ui(g_t, s_t, n);
-    *g = integer(integer_class(g_t));
-    *s = integer(integer_class(s_t));
-
-    mpz_clear(g_t);
-    mpz_clear(s_t);
+    mpz_lucnum2_ui(get_mpz_t(g_t), get_mpz_t(s_t), n);
+    *g = integer(std::move(g_t));
+    *s = integer(std::move(s_t));
 }
 
 // Binomial Coefficient
@@ -181,7 +158,7 @@ RCP<const Integer> binomial(const Integer &n, unsigned long k)
 
     mpz_bin_ui(get_mpz_t(f), get_mpz_t(n.as_mpz()), k);
     
-    return integer(f);
+    return integer(std::move(f));
 }
 
 // Factorial
@@ -191,7 +168,7 @@ RCP<const Integer> factorial(unsigned long n)
 
     mpz_fac_ui(get_mpz_t(f), n);
     
-    return integer(f);
+    return integer(std::move(f));
 }
 
 // Returns true if `b` divides `a` without reminder
@@ -212,7 +189,7 @@ RCP<const Integer> nextprime(const Integer &a)
 
     mpz_nextprime(get_mpz_t(c), get_mpz_t(a.as_mpz()));
 
-    return integer(c);
+    return integer(std::move(c));
 }
 
 // Factoring by Trial division using primes only
@@ -295,7 +272,7 @@ int factor_lehman_method(const Ptr<RCP<const Integer>> &f, const Integer &n)
     integer_class rop;
 
     ret_val = _factor_lehman_method(rop, n.as_mpz());
-    *f = integer(rop);
+    *f = integer(std::move(rop));
     return ret_val;
 }
 
@@ -347,7 +324,7 @@ int factor_pollard_pm1_method(const Ptr<RCP<const Integer>> &f, const Integer &n
     }
 
     if (ret_val != 0)
-        *f = integer(rop);
+        *f = integer(std::move(rop));
     gmp_randclear(state);
     return ret_val;
 }
@@ -400,7 +377,7 @@ int factor_pollard_rho_method(const Ptr<RCP<const Integer>> &f,
     }
 
     if (ret_val != 0)
-        *f = integer(rop);
+        *f = integer(std::move(rop));
     gmp_randclear(state);
     return ret_val;
 }
@@ -453,7 +430,7 @@ int factor(const Ptr<RCP<const Integer>> &f, const Integer &n, double B1)
     // B1 is discarded if gmp-ecm is not installed
     ret_val = _factor_trial_division_sieve(_f, _n);
 #endif // HAVE_SYMENGINE_ECM
-    *f = integer(_f);
+    *f = integer(std::move(_f));
 
     return ret_val;
 }
@@ -463,7 +440,7 @@ int factor_trial_division(const Ptr<RCP<const Integer>> &f, const Integer &n)
     int ret_val;
     integer_class factor;
     ret_val =_factor_trial_division_sieve(factor, n.as_mpz());
-    if (ret_val == 1) *f = integer(factor);
+    if (ret_val == 1) *f = integer(std::move(factor));
     return ret_val;
 }
 
@@ -489,7 +466,7 @@ void prime_factors(std::vector<RCP<const Integer>> &prime_list, const Integer &n
         if (_n == 1) break;
     }
     if (not (_n == 1))
-        prime_list.push_back(integer(_n));
+        prime_list.push_back(integer(std::move(_n)));
 }
 
 void prime_factor_multiplicities(map_integer_uint &primes_mul, const Integer &n)
@@ -519,7 +496,7 @@ void prime_factor_multiplicities(map_integer_uint &primes_mul, const Integer &n)
         }
     }
     if (not (_n == 1))
-        insert(primes_mul, integer(_n), 1);
+        insert(primes_mul, integer(std::move(_n)), 1);
 }
 
 std::vector<unsigned> Sieve::_primes = {2, 3, 5, 7, 11, 13, 17, 19, 23, 29};
@@ -670,7 +647,7 @@ bool crt(const Ptr<RCP<const Integer>> &R, const std::vector<RCP<const Integer>>
         m *= mod[i]->as_mpz() / g;
         mpz_fdiv_r(get_mpz_t(r), get_mpz_t(r), get_mpz_t(m));
     }
-    *R = integer(r);
+    *R = integer(std::move(r));
     return true;
 }
 
@@ -789,7 +766,7 @@ bool primitive_root(const Ptr<RCP<const Integer>> &g, const Integer &n)
     if (not _prime_power(p, e, _n))
         return false;
     _primitive_root(_n, p, e, even);
-    *g = integer(_n);
+    *g = integer(std::move(_n));
     return true;
 }
 
@@ -886,7 +863,7 @@ RCP<const Integer> totient(const RCP<const Integer> &n) {
         // phi is exactly divisible by p.
         phi *= p - 1;
     }
-    return integer(phi);
+    return integer(std::move(phi));
 }
 
 RCP<const Integer> carmichael(const RCP<const Integer> &n) {
@@ -911,7 +888,7 @@ RCP<const Integer> carmichael(const RCP<const Integer> &n) {
         // lambda and p are relatively prime.
         lambda = lambda * t;
     }
-    return integer(lambda);
+    return integer(std::move(lambda));
 }
 
 // References : Cohen H., A course in computational algebraic number theory (1996), page 25.
@@ -940,7 +917,7 @@ bool multiplicative_order(const Ptr<RCP<const Integer>> &o, const RCP<const Inte
             order *= p;
         }
     }
-    *o = integer(order);
+    *o = integer(std::move(order));
     return true;
 }
 int legendre(const Integer &a, const Integer &n)
@@ -1234,7 +1211,7 @@ bool _nthroot_mod_prime_power(std::vector<RCP<const Integer>> &roots, const inte
                 if (c > 0 and a % 4 == 3) {
                     return false;
                 }
-                roots.push_back(integer(a % 4));
+                roots.push_back(integer(std::move(a % 4)));
                 if (all_roots and c > 0)
                     roots.push_back(integer(3));
                 return true;
@@ -1358,12 +1335,12 @@ bool nthroot_mod(const Ptr<RCP<const Integer>> &root, const RCP<const Integer> &
     prime_factor_multiplicities(prime_mul, *mod);
     std::vector<RCP<const Integer>> moduli;
     bool ret_val;
-    integer_class _mod;
 
     std::vector<RCP<const Integer>> rem;
     for (const auto &it: prime_mul) {
+        integer_class _mod;
         mpz_pow_ui(get_mpz_t(_mod), get_mpz_t(it.first->as_mpz()), it.second);
-        moduli.push_back(integer(_mod));
+        moduli.push_back(integer(std::move(_mod)));
         ret_val = _nthroot_mod_prime_power(rem, a->as_mpz(), n->as_mpz(), it.first->as_mpz(), it.second, false);
         if(not ret_val) return false;
     }
@@ -1384,12 +1361,12 @@ void nthroot_mod_list(std::vector<RCP<const Integer>> &roots, const RCP<const In
     prime_factor_multiplicities(prime_mul, *mod);
     std::vector<RCP<const Integer>> moduli;
     bool ret_val;
-    integer_class _mod;
 
     std::vector<std::vector<RCP<const Integer>>> rem;
     for (const auto &it: prime_mul) {
+        integer_class _mod;
         mpz_pow_ui(get_mpz_t(_mod), get_mpz_t(it.first->as_mpz()), it.second);
-        moduli.push_back(integer(_mod));
+        moduli.push_back(integer(std::move(_mod)));
         std::vector<RCP<const Integer>> rem1;
         ret_val = _nthroot_mod_prime_power(rem1, a->as_mpz(), n->as_mpz(), it.first->as_mpz(), it.second, true);
         if(not ret_val) return;
@@ -1412,25 +1389,23 @@ bool powermod(const Ptr<RCP<const Integer>> &powm, const RCP<const Integer> &a,
             if (not ret_val)
                 return false;
         }
-        *powm = integer(t);
+        *powm = integer(std::move(t));
         return true;
     } else if (is_a<Rational>(*b)) {
         RCP<const Integer> num, den, r;
         get_num_den(static_cast<const Rational &>(*b), outArg(num), outArg(den));
         if (den->is_negative()) {
-            den = den->mulint(*integer(-1));
-            num = num->mulint(*integer(-1));
+            den = den->mulint(*minus_one);
+            num = num->mulint(*minus_one);
         }
-        integer_class t = num->as_mpz();
-        if (num->is_negative())
-            t *= -1;
+        integer_class t = abs(num->as_mpz());
         mpz_powm(get_mpz_t(t), get_mpz_t(a->as_mpz()), get_mpz_t(t), get_mpz_t(m->as_mpz()));
         if (num->is_negative()) {
             bool ret_val = mpz_invert(get_mpz_t(t), get_mpz_t(t), get_mpz_t(m->as_mpz()));
             if (not ret_val)
                 return false;
         }
-        r = integer(t);
+        r = integer(std::move(t));
         return nthroot_mod(powm, r, den, m);
     }
     return false;
@@ -1440,16 +1415,14 @@ void powermod_list(std::vector<RCP<const Integer>> &pows, const RCP<const Intege
         const RCP<const Number> &b, const RCP<const Integer> &m)
 {
     if(is_a<Integer>(*b)) {
-        integer_class t = rcp_static_cast<const Integer>(b)->as_mpz();
-        if (b->is_negative())
-            t *= -1;
+        integer_class t = abs(rcp_static_cast<const Integer>(b)->as_mpz());
         mpz_powm(get_mpz_t(t), get_mpz_t(a->as_mpz()), get_mpz_t(t), get_mpz_t(m->as_mpz()));
         if (b->is_negative()) {
             bool ret_val = mpz_invert(get_mpz_t(t), get_mpz_t(t), get_mpz_t(m->as_mpz()));
             if (not ret_val)
                 return;
         }
-        pows.push_back(integer(t));
+        pows.push_back(integer(std::move(t)));
     } else if (is_a<Rational>(*b)) {
         RCP<const Integer> num, den, r;
         get_num_den(static_cast<const Rational &>(*b), outArg(num), outArg(den));

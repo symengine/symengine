@@ -158,12 +158,12 @@ void integer_get_mpz(mpz_t a, const basic s)
 
 void rational_set_si(basic s, long a, long b)
 {
-    s->m = SymEngine::Rational::from_mpq(rational_class(a, b));
+    s->m = SymEngine::Rational::from_mpq(std::move(rational_class(a, b)));
 }
 
 void rational_set_ui(basic s, unsigned long a, unsigned long b)
 {
-    s->m = SymEngine::Rational::from_mpq(rational_class(a, b));
+    s->m = SymEngine::Rational::from_mpq(std::move(rational_class(a, b)));
 }
 
 int rational_set(basic s, const basic a, const basic b)
@@ -180,7 +180,7 @@ int rational_set(basic s, const basic a, const basic b)
 void rational_set_mpq(basic s, const mpq_t i)
 {
     // TODO: fix this
-    s->m = SymEngine::Rational::from_mpq(rational_class(mpq_class(i).get_str()));
+    s->m = SymEngine::Rational::from_mpq(std::move(rational_class(mpq_class(i).get_str())));
 }
 
 void complex_set(basic s, const basic re, const basic im)

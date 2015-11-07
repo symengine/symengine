@@ -48,7 +48,7 @@ RCP<const Number> Integer::divint(const Integer &other) const {
 
     // This is potentially slow, but has to be done, since q might not
     // be in canonical form.
-    //q.canonicalize();
+    canonicalize(q);
 
     return Rational::from_mpq(std::move(q));
 }

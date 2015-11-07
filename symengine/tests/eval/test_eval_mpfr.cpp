@@ -23,7 +23,7 @@ TEST_CASE("precision: eval_mpfr", "[eval_mpfr]")
     mpfr_t a;
     mpfr_init2(a, 53);
     RCP<const Basic> s = mul(pi, integer(1963319607));
-    RCP<const Basic> t = integer(integer_class(6167950454));
+    RCP<const Basic> t = integer(std::move(integer_class(6167950454)));
     RCP<const Basic> r = sub(s, t);
     // value of `r` is approximately 0.000000000149734291
 

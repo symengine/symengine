@@ -158,7 +158,7 @@ inline int sign(const piranha::rational &i) {
 #elif SYMENGINE_INTEGER_CLASS == SYMENGINE_FLINT
 
 inline mpz_srcptr get_mpz_t(const flint::fmpzxx &i) {
-    
+    return nullptr;
 }
 
 inline mpz_ptr get_mpz_t(flint::fmpzxx &i) {
@@ -206,18 +206,13 @@ inline mpq_srcptr get_mpq_t(const flint::fmpqxx &i) {
     return nullptr;
 }
 
-
 inline void canonicalize(flint::fmpqxx &i) {
     i.canonicalise();
 }
 
-
-
 inline double get_d(const flint::fmpqxx &i) {
     return i.to<double>();
 }
-
-
 
 inline int sign(const flint::fmpqxx &i) {
     return i.sgn();

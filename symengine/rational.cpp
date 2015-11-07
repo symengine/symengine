@@ -22,7 +22,7 @@ bool Rational::is_canonical(const rational_class &i) const
     return true;
 }
 
-RCP<const Number> Rational::from_mpq(const rational_class i)
+RCP<const Number> Rational::from_mpq(rational_class i)
 {
     // If the result is an Integer, return an Integer:
     if (get_den(i) == 1) {
@@ -43,7 +43,7 @@ RCP<const Number> Rational::from_two_ints(const Integer &n,
     // in canonical form.
     canonicalize(q);
 
-    return Rational::from_mpq(q);
+    return Rational::from_mpq(std::move(q));
 }
 
 RCP<const Number> Rational::from_two_ints(long n, long d)

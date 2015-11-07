@@ -69,12 +69,12 @@ public:
     inline RCP<const Number> powint(const Integer &other) const {
         if (not (fits_ulong_p(other.i))) {
             if (other.i > 0)
-                throw std::runtime_error("powint: 'exp' does not fit unsigned int.");
+                throw std::runtime_error("powint: 'exp' does not fit unsigned long.");
             else
                 return pow_negint(other);
         }
         integer_class tmp;
-        mpz_pow_ui(get_mpz_t(tmp), (this->i).get_mpz_view(), get_ui(other.i));
+        mpz_pow_ui(get_mpz_t(tmp), get_mpz_t(this->i), get_ui(other.i));
         return make_rcp<const Integer>(std::move(tmp));
     }
     //! \return negative of self.
