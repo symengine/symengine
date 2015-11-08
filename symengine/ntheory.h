@@ -25,13 +25,20 @@ RCP<const Integer> lcm(const Integer &a, const Integer &b);
 //! Extended GCD
 void gcd_ext(const Ptr<RCP<const Integer>> &g, const Ptr<RCP<const Integer>> &s,
         const Ptr<RCP<const Integer>> &t, const Integer &a, const Integer &b);
-//! modulo
+//! modulo round toward zero
 RCP<const Integer> mod(const Integer &n, const Integer &d);
-//! \return floor of quotient when `n` is divided by `d`
-RCP<const Integer> quotient_f(const Integer &n, const Integer &d);
-//! modulo and quotient
+//! \return quotient round toward zero when `n` is divided by `d`
+RCP<const Integer> quotient(const Integer &n, const Integer &d);
+//! \return modulo and quotient round toward zero
 void quotient_mod(const Ptr<RCP<const Integer>> &q, const Ptr<RCP<const Integer>> &r,
-        const Integer &a, const Integer &b);
+                  const Integer &a, const Integer &b);
+//! modulo round toward -inf
+RCP<const Integer> mod_f(const Integer &n, const Integer &d);
+//! \return quotient round toward -inf when `n` is divided by `d`
+RCP<const Integer> quotient_f(const Integer &n, const Integer &d);
+//! \return modulo and quotient round toward -inf
+void quotient_mod_f(const Ptr<RCP<const Integer>> &q, const Ptr<RCP<const Integer>> &r,
+                    const Integer &a, const Integer &b);
 //! inverse modulo
 int mod_inverse(const Ptr<RCP<const Integer>> &b, const Integer &a,
         const Integer &m);
