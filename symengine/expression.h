@@ -15,6 +15,7 @@
 #include <symengine/pow.h>
 #include <symengine/symbol.h>
 #include <symengine/real_double.h>
+#include <symengine/complex_double.h>
 
 namespace SymEngine
 {
@@ -27,9 +28,15 @@ private:
 public:
     //! Plain constructor of Expression
     Expression() : m_basic(integer(0)) {}
-    //! Construct Expression from `int`
-    //! cannot be explicit (needed so by Piranha)
-    Expression(int n) : m_basic(integer(n)) {}
+    //! Construct Expression from integral types
+    template <class T>
+    Expression(T n, typename std::enable_if<std::is_integral<T>::value>::type* = nullptr) : m_basic(integer(n)) {}
+    //! Construct Expression from floating point types
+    template <class T>
+    Expression(T n, typename std::enable_if<std::is_floating_point<T>::value>::type* = nullptr) : m_basic(real_double(n)) {}
+    //! Construct Expression from std::complex<> types
+    template <class T>
+    Expression(std::complex<T> n, typename std::enable_if<std::is_floating_point<T>::value>::type* = nullptr) : m_basic(complex_double(n)) {}
     //! Construct Expression from Basic
     //Expression(double n) : m_basic(RealDouble(n)) {}
 
@@ -126,6 +133,14 @@ public:
 
     //! Method to get Basic from Expression
     const RCP<const Basic> &get_basic() const
+    {
+        return m_basic;
+    }
+    operator const RCP<const Basic> &() const
+    {
+        return m_basic;
+    }
+    operator RCP<const Basic> &()
     {
         return m_basic;
     }
