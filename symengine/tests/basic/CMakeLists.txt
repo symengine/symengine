@@ -11,14 +11,14 @@ add_test(test_arit ${PROJECT_BINARY_DIR}/test_arit)
 add_executable(test_poly test_poly.cpp)
 target_link_libraries(test_poly symengine catch)
 add_test(test_poly ${PROJECT_BINARY_DIR}/test_poly)
-#
-#add_executable(test_polynomial test_polynomial.cpp)
-#target_link_libraries(test_polynomial symengine catch)
-#add_test(test_polynomial ${PROJECT_BINARY_DIR}/test_polynomial)
-#
-#add_executable(test_series test_series.cpp)
-#target_link_libraries(test_series symengine catch)
-#add_test(test_series ${PROJECT_BINARY_DIR}/test_series)
+
+add_executable(test_polynomial test_polynomial.cpp)
+target_link_libraries(test_polynomial symengine catch)
+add_test(test_polynomial ${PROJECT_BINARY_DIR}/test_polynomial)
+
+add_executable(test_series test_series.cpp)
+target_link_libraries(test_series symengine catch)
+add_test(test_series ${PROJECT_BINARY_DIR}/test_series)
 
 add_executable(test_series_generic test_series_generic.cpp)
 target_link_libraries(test_series_generic symengine catch)

@@ -26,6 +26,14 @@ typedef mpz_class integer_class;
 typedef mpq_class rational_class;
 #endif
 
+inline namespace literals
+{
+    inline integer_class operator "" _z(const char* str)
+    {
+        return integer_class(str);
+    }
+}
+
 // Helper functions for mpz_class
 inline double get_d(const mpz_class &i) {
     return i.get_d();
