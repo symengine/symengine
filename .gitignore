@@ -84,6 +84,7 @@ benchmarks/matrix_add1_ginac
 benchmarks/matrix_add2_ginac
 benchmarks/matrix_mul1_ginac
 benchmarks/matrix_mul2_ginac
+benchmarks/series
 benchmarks/symbench
 benchmarks/symbench_ginac
 benchmarks/lwbench

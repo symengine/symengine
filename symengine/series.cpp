@@ -76,7 +76,7 @@ std::string UnivariateSeries::__str__() const
 {
     std::ostringstream o;
     bool first = true;
-    for (auto it : poly_->dict_) {
+    for (const auto& it : poly_->dict_) {
         if (it.second == 0)
             continue;
         if (first) {
@@ -111,14 +111,14 @@ RCP<const UnivariateSeries> add_uni_series (const UnivariateSeries& a, const Uni
     map_uint_mpz dict;
     SYMENGINE_ASSERT(a.var_->get_name() == b.var_->get_name())
     unsigned int minprec = (a.prec_ < b.prec_)? a.prec_ : b.prec_;
-    for (auto &it : a.poly_->dict_) {
+    for (const auto &it : a.poly_->dict_) {
         if (it.first >= minprec)
             break;
         dict[it.first] = it.second;
     }
 
     unsigned int max = 0;
-    for (auto &it : b.poly_->dict_) {
+    for (const auto &it : b.poly_->dict_) {
         if (it.first >= minprec)
             break;
         dict[it.first] += it.second;

@@ -56,7 +56,7 @@ set(HEADERS
     basic-inl.h  dict.h           matrix.h     ntheory.h    rational.h complex.h
     visitor.h    eval_double.h    diophantine.h cwrapper.h  printer.h  real_double.h
     eval_mpfr.h  eval_arb.h       eval_mpc.h    complex_double.h
-    real_mpfr.h  complex_mpc.h    type_codes.inc lambda_double.h
+    real_mpfr.h  complex_mpc.h    type_codes.inc lambda_double.h series.h
 )
 
 # Configure SymEngine using our CMake options:
