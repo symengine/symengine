@@ -23,6 +23,11 @@ using SymEngine::rcp_dynamic_cast;
 using SymEngine::rcp_static_cast;
 using SymEngine::mod_inverse;
 using SymEngine::mod;
+using SymEngine::mod_f;
+using SymEngine::quotient;
+using SymEngine::quotient_f;
+using SymEngine::quotient_mod;
+using SymEngine::quotient_mod_f;
 using SymEngine::Number;
 using SymEngine::bernoulli;
 using SymEngine::crt;
@@ -106,17 +111,31 @@ TEST_CASE("test_modulo(): ntheory", "[ntheory]")
     RCP<const Integer> i5 = integer(5);
     RCP<const Integer> i3 = integer(3);
     RCP<const Integer> i8 = integer(8);
-    RCP<const Integer> i11 = integer(11);
-    RCP<const Number> b;
+    RCP<const Integer> im11 = integer(-11);
+    RCP<const Integer> b, c;
 
     b = mod(*i5, *i3);
     REQUIRE(eq(*b, *integer(2)));
 
-    b = mod(*i11, *i8);
-    REQUIRE(eq(*b, *integer(3)));
+    b = mod(*im11, *i8);
+    REQUIRE(eq(*b, *integer(-3)));
 
-    b = mod(*i11, *i3);
-    REQUIRE(eq(*b, *integer(2)));
+    b = mod_f(*im11, *i8);
+    REQUIRE(eq(*b, *i5));
+
+    b = quotient(*im11, *i5);
+    REQUIRE(eq(*b, *integer(-2)));
+
+    b = quotient_f(*im11, *i5);
+    REQUIRE(eq(*b, *integer(-3)));
+
+    quotient_mod(outArg(b), outArg(c), *im11, *i5);
+    REQUIRE(eq(*b, *integer(-2)));
+    REQUIRE(eq(*c, *integer(-1)));
+
+    quotient_mod_f(outArg(b), outArg(c), *im11, *i5);
+    REQUIRE(eq(*b, *integer(-3)));
+    REQUIRE(eq(*c, *integer(4)));
 }
 
 TEST_CASE("test_fibonacci_lucas(): ntheory", "[ntheory]")

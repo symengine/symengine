@@ -133,7 +133,7 @@ RCP<const Number> Complex::powcomp(const Integer &other) const {
     if (this->is_re_zero()) {
         // Imaginary Number raised to an integer power.
         RCP<const Number> im = Rational::from_mpq(this->imaginary_);
-        long rem = mod(other, *integer(4))->as_int();
+        long rem = mod_f(other, *integer(4))->as_int();
         RCP<const Number> res;
         if (rem == 0) {
             res = one;

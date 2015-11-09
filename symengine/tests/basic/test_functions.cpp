@@ -80,6 +80,7 @@ using SymEngine::ComplexDouble;
 using SymEngine::Number;
 using SymEngine::eval_double;
 using SymEngine::is_a;
+using SymEngine::neg;
 
 #ifdef HAVE_SYMENGINE_MPFR
 using SymEngine::real_mpfr;
@@ -193,6 +194,11 @@ TEST_CASE("Sin: functions", "[functions]")
     r2 = cos(y);
     REQUIRE(eq(*r1, *r2));
 
+    // sin(-pi/2 - y) = -cos(y)
+    r1 = sin(sub(neg(div(pi, i2)), y));
+    r2 = neg(cos(y));
+    REQUIRE(eq(*r1, *r2));
+
     // sin(12*pi + y + pi/2) = cos(y)
     r1 = sin(add(add(mul(i12, pi), y), div(pi, i2)));
     r2 = cos(y);
@@ -239,6 +245,11 @@ TEST_CASE("Cos: functions", "[functions]")
     r2 = mul(im1, sin(x));
     std::cout << *r1 << std::endl;
     std::cout << *r2 << std::endl;
+    REQUIRE(eq(*r1, *r2));
+
+    // cos(-pi) = -1
+    r1 = cos(neg(pi));
+    r2 = im1;
     REQUIRE(eq(*r1, *r2));
 
     // cos(-y) = cos(y)

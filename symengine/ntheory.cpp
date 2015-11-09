@@ -79,7 +79,30 @@ int mod_inverse(const Ptr<RCP<const Integer>> &b, const Integer &a,
 RCP<const Integer> mod(const Integer &n, const Integer &d)
 {
     mpz_class q;
-    mpz_mod(q.get_mpz_t(), n.as_mpz().get_mpz_t(), d.as_mpz().get_mpz_t());
+    mpz_tdiv_r(q.get_mpz_t(), n.as_mpz().get_mpz_t(), d.as_mpz().get_mpz_t());
+    return integer(q);
+}
+
+RCP<const Integer> quotient(const Integer &n, const Integer &d)
+{
+    mpz_class q;
+    mpz_tdiv_q(q.get_mpz_t(), n.as_mpz().get_mpz_t(), d.as_mpz().get_mpz_t());
+    return integer(q);
+}
+
+void quotient_mod(const Ptr<RCP<const Integer>> &q, const Ptr<RCP<const Integer>> &r,
+                    const Integer &n, const Integer &d)
+{
+    mpz_class _q, _r;
+    mpz_tdiv_qr(_q.get_mpz_t(), _r.get_mpz_t(), n.as_mpz().get_mpz_t(), d.as_mpz().get_mpz_t());
+    *q = integer(_q);
+    *r = integer(_r);
+}
+
+RCP<const Integer> mod_f(const Integer &n, const Integer &d)
+{
+    mpz_class q;
+    mpz_fdiv_r(q.get_mpz_t(), n.as_mpz().get_mpz_t(), d.as_mpz().get_mpz_t());
     return integer(q);
 }
 
@@ -90,8 +113,8 @@ RCP<const Integer> quotient_f(const Integer &n, const Integer &d)
     return integer(q);
 }
 
-void quotient_mod(const Ptr<RCP<const Integer>> &q, const Ptr<RCP<const Integer>> &r,
-        const Integer &n, const Integer &d)
+void quotient_mod_f(const Ptr<RCP<const Integer>> &q, const Ptr<RCP<const Integer>> &r,
+                    const Integer &n, const Integer &d)
 {
     mpz_class _q, _r;
     mpz_fdiv_qr(_q.get_mpz_t(), _r.get_mpz_t(), n.as_mpz().get_mpz_t(), d.as_mpz().get_mpz_t());

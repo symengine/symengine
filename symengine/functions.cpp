@@ -185,7 +185,7 @@ bool handle_minus(const RCP<const Basic> &arg,
 }
 
 // \return true of conjugate has to be returned finally else false
-bool eval(const RCP<const Basic> &arg, int period, bool odd, bool conj_odd, //input
+bool eval(const RCP<const Basic> &arg, unsigned period, bool odd, bool conj_odd, //input
             const Ptr<RCP<const Basic>>& rarg,int& index, int& sign) //output
 {
     bool check;
@@ -194,8 +194,7 @@ bool eval(const RCP<const Basic> &arg, int period, bool odd, bool conj_odd, //in
     RCP<const Basic> ret_arg;
     check = get_pi_shift(arg, outArg(n), outArg(r));
     if (check) {
-        int m = n->as_int();
-        m = m % (12*period);
+        int m = mod_f(*n, *integer(12*period))->as_int();
         sign = 1;
         if (eq(*r, *zero)) {
             index = m;
