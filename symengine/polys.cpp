@@ -7,19 +7,11 @@
 
 namespace SymEngine {
 
-#ifdef HAVE_SYMENGINE_PIRANHA
-Polynomial::Polynomial(const vec_symbol &vars, hash_set polys_set)
-    : vars_{vars}, polys_set_(polys_set) {
+Polynomial::Polynomial(const vec_symbol &vars, polys_set the_set)
+    : vars_{vars}, polys_set_(the_set) {
 
     SYMENGINE_ASSERT(is_canonical(polys_set_))
 }
-#else
-Polynomial::Polynomial(const vec_symbol &vars, unordered_set polys_set)
-    : vars_{vars}, polys_set_(polys_set) {
-
-    SYMENGINE_ASSERT(is_canonical(polys_set_))
-}
-#endif
 
 Polynomial::Polynomial(const RCP<const Basic> &p, umap_basic_num &vars) {
     //! TODO: Make more robust
@@ -90,11 +82,7 @@ Polynomial::Polynomial(const RCP<const Basic> &p, umap_basic_num &vars) {
     }
 }
 
-#ifdef HAVE_SYMENGINE_PIRANHA
-bool Polynomial::is_canonical(const hash_set& set)
-#else
-bool Polynomial::is_canonical(const unordered_set& set)
-#endif
+bool Polynomial::is_canonical(const polys_set& set)
 {
     for(auto &a: set) {
         int count = 0;
@@ -184,11 +172,7 @@ RCP<const Basic> Polynomial::diff(const RCP<const Symbol> &x) const
 }
 
 RCP<const Polynomial> add_poly(const Polynomial &a, const Polynomial &b) {
-#ifdef HAVE_SYMENGINE_PIRANHA
-    hash_set res = a.polys_set_;
-#else
-    unordered_set res = a.polys_set_;
-#endif
+    polys_set res = a.polys_set_;
 
     m_pair temp;
     for (auto &it : b.polys_set_) {
@@ -208,11 +192,7 @@ RCP<const Polynomial> add_poly(const Polynomial &a, const Polynomial &b) {
 }
 
 RCP<const Polynomial> sub_poly(const Polynomial &a, const Polynomial &b) {
-#ifdef HAVE_SYMENGINE_PIRANHA
-    hash_set res = a.polys_set_;
-#else
-    unordered_set res = a.polys_set_;
-#endif
+    polys_set res = a.polys_set_;
     m_pair temp;
     for (auto &it : b.polys_set_) {
         temp.first = it.first;
@@ -231,11 +211,7 @@ RCP<const Polynomial> sub_poly(const Polynomial &a, const Polynomial &b) {
 }
 
 RCP<const Polynomial> neg_poly(const Polynomial &a) {
-#ifdef HAVE_SYMENGINE_PIRANHA
-    hash_set res;
-#else
-    unordered_set res;
-#endif
+    polys_set res;
     m_pair temp;
     for (auto &it: a.polys_set_) {
         temp.first = it.first;
