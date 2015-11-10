@@ -337,25 +337,36 @@ RCP<const Basic> Add::subs(const map_basic_basic &subs_dict) const
         return it->second;
 
     SymEngine::umap_basic_num d;
-    RCP<const Number> coef=coef_, coef2;
+    RCP<const Number> coef, coef2;
     RCP<const Basic> t;
-    for (const auto &p: dict_) {
-        RCP<const Basic> term = p.first->subs(subs_dict);
-        if (term == p.first) {
-            Add::dict_add_term(d, p.second, p.first);
-        } else if (is_a<Integer>(*term) and
-                rcp_static_cast<const Integer>(term)->is_zero()) {
-            continue;
-        } else if (is_a_Number(*term)) {
-            iaddnum(outArg(coef),
-                    mulnum(p.second, rcp_static_cast<const Number>(term)));
-        } else if (is_a<Add>(*term) and p.second->is_one()) {
+
+    auto add_cterm = [&](const RCP<const Number>& c, const RCP<const Basic>& term) {
+        if (is_a_Number(*term)) {
+            iaddnum(outArg(coef), mulnum(c, rcp_static_cast<const Number>(term)));
+        } else if (is_a<Add>(*term) and c->is_one()) {
             for (const auto &q: (rcp_static_cast<const Add>(term))->dict_)
                 Add::dict_add_term(d, q.second, q.first);
             iaddnum(outArg(coef), rcp_static_cast<const Add>(term)->coef_);
         } else {
-            Add::as_coef_term(mul(p.second, term), outArg(coef2), outArg(t));
+            Add::as_coef_term(mul(c, term), outArg(coef2), outArg(t));
             Add::dict_add_term(d, coef2, t);
+        }
+    };
+
+    it = subs_dict.find(coef_);
+    if ( it != subs_dict.end() ) {
+        coef = zero;
+        add_cterm(one, it->second);
+    } else {
+        coef = coef_;
+    }
+
+    for (const auto &p: dict_) {
+        auto it = subs_dict.find(mul(p.first, p.second));
+        if (it != subs_dict.end()) {
+            add_cterm(one, it->second);
+        } else {
+            add_cterm(p.second, p.first->subs(subs_dict));
         }
     }
     return Add::from_dict(coef, std::move(d));
