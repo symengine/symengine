@@ -1,6 +1,6 @@
 /**
  *  \file pow.h
- *  Power Class 
+ *  Power Class
  *
  **/
 #ifndef SYMENGINE_POW_H
@@ -16,7 +16,7 @@
 namespace SymEngine {
 
 class Pow : public Basic {
-public: // TODO: make this private
+private:
     RCP<const Basic> base_, exp_; //! base**exp
 
 public:

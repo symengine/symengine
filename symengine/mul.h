@@ -50,7 +50,8 @@ public:
     void as_two_terms(const Ptr<RCP<const Basic>> &a,
             const Ptr<RCP<const Basic>> &b) const;
     //! Power all terms with the exponent `exp`
-    RCP<const Basic> power_all_terms(const RCP<const Basic> &exp) const;
+    void power_num(const Ptr<RCP<const Number>> &coef, map_basic_basic &d,
+                   const RCP<const Number> &exp) const;
 
     //! \return true if both `coef` and `dict` are in canonical form
     bool is_canonical(const RCP<const Number> &coef,

@@ -58,13 +58,13 @@ public:
 #endif
     void bvisit(const Add &x) {
         T tmp = 0;
-        for (auto &p: x.get_args()) tmp = tmp + apply(*p);
+        for (const auto &p: x.get_args()) tmp += apply(*p);
         result_ = tmp;
     }
 
     void bvisit(const Mul &x) {
         T tmp = 1;
-        for (auto &p: x.get_args()) tmp = tmp * apply(*p);
+        for (const auto &p: x.get_args()) tmp *= apply(*p);
         result_ = tmp;
     }
 
@@ -210,6 +210,14 @@ public:
     void bvisit(const Basic &) {
         throw std::runtime_error("Not implemented.");
     };
+
+    void bvisit(const NumberWrapper &x) {
+        apply(*(x.eval(53)));
+    }
+
+    void bvisit(const FunctionWrapper &x) {
+        apply(*(x.eval(53)));
+    }
 };
 
 class EvalRealDoubleVisitor : public EvalDoubleVisitor<double, EvalRealDoubleVisitor> {
@@ -218,7 +226,7 @@ public:
 
     // Classes not implemented are
     // Subs, UpperGamma, LowerGamma, Dirichlet_eta, Zeta
-    // LeviCivita, KroneckerDelta, FunctionSymbol, LambertW
+    // LeviCivita, KroneckerDelta, LambertW
     // Derivative, Complex, ComplexDouble, ComplexMPC
 
     using EvalDoubleVisitor::bvisit;
@@ -241,7 +249,7 @@ public:
 
     // Classes not implemented are
     // Subs, UpperGamma, LowerGamma, Dirichlet_eta, Zeta
-    // LeviCivita, KroneckerDelta, FunctionSymbol, LambertW
+    // LeviCivita, KroneckerDelta, LambertW
     // Derivative, ATan2, Gamma
 
     using EvalDoubleVisitor::bvisit;
@@ -293,17 +301,17 @@ std::vector<fn> init_eval_double()
     };
     table[ADD] = [](const Basic &x) {
         double tmp = 0;
-        for (auto &p: x.get_args()) tmp = tmp + eval_double_single_dispatch(*p);
+        for (const auto &p: x.get_args()) tmp += eval_double_single_dispatch(*p);
         return tmp;
     };
     table[MUL] = [](const Basic &x) {
         double tmp = 1;
-        for (auto &p: x.get_args()) tmp = tmp * eval_double_single_dispatch(*p);
+        for (const auto &p: x.get_args()) tmp *= eval_double_single_dispatch(*p);
         return tmp;
     };
     table[POW] = [](const Basic &x) {
-        double a = eval_double_single_dispatch(*(static_cast<const Pow &>(x)).base_);
-        double b = eval_double_single_dispatch(*(static_cast<const Pow &>(x)).exp_);
+        double a = eval_double_single_dispatch(*(static_cast<const Pow &>(x)).get_base());
+        double b = eval_double_single_dispatch(*(static_cast<const Pow &>(x)).get_exp());
         return ::pow(a, b);
     };
     table[SIN] = [](const Basic &x) {

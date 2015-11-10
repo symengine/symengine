@@ -23,41 +23,41 @@ bool Pow::is_canonical(const RCP<const Basic> &base, const RCP<const Basic> &exp
     if (base == null) return false;
     if (exp == null) return false;
     // e.g. 0**x
-    if (is_a<Integer>(*base) && rcp_static_cast<const Integer>(base)->is_zero())
+    if (is_a<Integer>(*base) and rcp_static_cast<const Integer>(base)->is_zero())
         return false;
     // e.g. 1**x
-    if (is_a<Integer>(*base) && rcp_static_cast<const Integer>(base)->is_one())
+    if (is_a<Integer>(*base) and rcp_static_cast<const Integer>(base)->is_one())
         return false;
-    // e.g. x**0
-    if (is_a<Integer>(*exp) && rcp_static_cast<const Integer>(exp)->is_zero())
+    // e.g. x**0.0
+    if (is_a_Number(*exp) and rcp_static_cast<const Number>(exp)->is_zero())
         return false;
     // e.g. x**1
-    if (is_a<Integer>(*exp) && rcp_static_cast<const Integer>(exp)->is_one())
+    if (is_a<Integer>(*exp) and rcp_static_cast<const Integer>(exp)->is_one())
         return false;
     // e.g. 2**3, (2/3)**4
-    if ((is_a<Integer>(*base) || is_a<Rational>(*base)) && is_a<Integer>(*exp))
+    if ((is_a<Integer>(*base) or is_a<Rational>(*base)) and is_a<Integer>(*exp))
         return false;
     // e.g. (x*y)**2, should rather be x**2*y**2
-    if (is_a<Mul>(*base) && is_a<Integer>(*exp))
+    if (is_a<Mul>(*base) and is_a<Integer>(*exp))
         return false;
     // e.g. (x**y)**2, should rather be x**(2*y)
-    if (is_a<Pow>(*base) && is_a<Integer>(*exp))
+    if (is_a<Pow>(*base) and is_a<Integer>(*exp))
         return false;
     // If exp is a rational, it should be between 0  and 1, i.e. we don't
     // allow things like 2**(-1/2) or 2**(3/2)
-    if ((is_a<Rational>(*base) || is_a<Integer>(*base)) &&
-        is_a<Rational>(*exp) &&
+    if ((is_a<Rational>(*base) or is_a<Integer>(*base)) and
+        is_a<Rational>(*exp) and
         (rcp_static_cast<const Rational>(exp)->i < 0 ||
         rcp_static_cast<const Rational>(exp)->i > 1))
         return false;
     // Purely Imaginary complex numbers with integral powers are expanded
     // e.g (2I)**3
-    if (is_a<Complex>(*base) && rcp_static_cast<const Complex>(base)->is_re_zero() &&
+    if (is_a<Complex>(*base) and rcp_static_cast<const Complex>(base)->is_re_zero() and
         is_a<Integer>(*exp))
         return false;
     // e.g. 0.5^2.0 should be represented as 0.25
-    if(is_a_Number(*base) && !rcp_static_cast<const Number>(base)->is_exact() &&
-            is_a_Number(*exp) && !rcp_static_cast<const Number>(exp)->is_exact())
+    if(is_a_Number(*base) and not rcp_static_cast<const Number>(base)->is_exact() and
+            is_a_Number(*exp) and not rcp_static_cast<const Number>(exp)->is_exact())
         return false;
     return true;
 }
@@ -72,8 +72,8 @@ std::size_t Pow::__hash__() const
 
 bool Pow::__eq__(const Basic &o) const
 {
-    if (is_a<Pow>(o) &&
-        eq(*base_, *(static_cast<const Pow &>(o).base_)) &&
+    if (is_a<Pow>(o) and
+        eq(*base_, *(static_cast<const Pow &>(o).base_)) and
         eq(*exp_, *(static_cast<const Pow &>(o).exp_)))
             return true;
 
@@ -93,21 +93,23 @@ int Pow::compare(const Basic &o) const
 
 RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
 {
-    if (eq(*b, *zero)) return one;
+    if (is_a_Number(*b) and rcp_static_cast<const Number>(b)->is_zero()) {
+        return pownum(rcp_static_cast<const Number>(b), zero);
+    }
     if (eq(*b, *one)) return a;
     if (eq(*a, *zero)) return zero;
     if (eq(*a, *one)) return one;
     if (eq(*a, *minus_one)) {
         if (is_a<Integer>(*b)) {
             return is_a<Integer>(*div(b, integer(2))) ? one : minus_one;
-        } else if (is_a<Rational>(*b) &&
-                    (rcp_static_cast<const Rational>(b)->i.get_num() == 1) &&
+        } else if (is_a<Rational>(*b) and
+                    (rcp_static_cast<const Rational>(b)->i.get_num() == 1) and
                     (rcp_static_cast<const Rational>(b)->i.get_den() == 2)) {
             return I;
         }
     }
 
-    if (is_a_Number(*a) && is_a_Number(*b)) {
+    if (is_a_Number(*a) and is_a_Number(*b)) {
         if (is_a<Integer>(*b)) {
             if (is_a<Rational>(*a)) {
                 RCP<const Rational> exp_new = rcp_static_cast<const Rational>(a);
@@ -128,11 +130,11 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
             num = rcp_static_cast<const Rational>(b)->i.get_num();
             den = rcp_static_cast<const Rational>(b)->i.get_den();
 
-            if (num > den || num < 0) {
+            if (num > den or num < 0) {
                 mpz_fdiv_qr(q.get_mpz_t(), r.get_mpz_t(), num.get_mpz_t(),
                     den.get_mpz_t());
             } else {
-                if (is_a_Number(*a) && !rcp_static_cast<const Number>(a)->is_exact()) {
+                if (is_a_Number(*a) and not rcp_static_cast<const Number>(a)->is_exact()) {
                     return rcp_static_cast<const Number>(a)->pow(*rcp_static_cast<const Number>(b));
                 }
                 return make_rcp<const Pow>(a, b);
@@ -152,7 +154,7 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
                 RCP<const Integer> exp_new = rcp_static_cast<const Integer>(a);
                 RCP<const Number> frac = exp_new->powint(Integer(q));
                 map_basic_basic surd;
-                if ((exp_new->is_negative()) && (2 * r == den)) {
+                if ((exp_new->is_negative()) and (2 * r == den)) {
                     frac = mulnum(frac, I);
                     exp_new = exp_new->mulint(*minus_one);
                     // if exp_new is one, no need to add it to dict
@@ -174,16 +176,17 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
             return rcp_static_cast<const Number>(a)->pow(*rcp_static_cast<const Number>(b));
         }
     }
-    if (is_a<Mul>(*a) && is_a<Integer>(*b)) {
-        // Convert (x*y)**b = x**b*y**b, where 'b' is an integer. This holds for
-        // any complex 'x', 'y' and integer 'b'.
-        return rcp_static_cast<const Mul>(a)->power_all_terms(b);
+    if (is_a<Mul>(*a) and is_a_Number(*b)) {
+        map_basic_basic d;
+        RCP<const Number> coef = one;
+        rcp_static_cast<const Mul>(a)->power_num(outArg(coef), d, rcp_static_cast<const Number>(b));
+        return Mul::from_dict(coef, std::move(d));
     }
-    if (is_a<Pow>(*a) && is_a<Integer>(*b)) {
+    if (is_a<Pow>(*a) and is_a<Integer>(*b)) {
         // Convert (x**y)**b = x**(b*y), where 'b' is an integer. This holds for
         // any complex 'x', 'y' and integer 'b'.
         RCP<const Pow> A = rcp_static_cast<const Pow>(a);
-        return pow(A->base_, mul(A->exp_, b));
+        return pow(A->get_base(), mul(A->get_exp(), b));
     }
     return make_rcp<const Pow>(a, b);
 }
@@ -280,11 +283,11 @@ void multinomial_coefficients_mpz(int m, int n, map_vec_mpz &r)
 
 RCP<const Basic> pow_expand(const RCP<const Pow> &self)
 {
-    RCP<const Basic> _base = expand(self->base_);
+    RCP<const Basic> _base = expand(self->get_base());
     bool negative_pow = false;
 
-    if (is_a<Integer>(*self->exp_) && is_a<UnivariatePolynomial>(*_base)) {
-        int q = rcp_static_cast<const Integer>(self->exp_)->as_int();
+    if (is_a<Integer>(*self->get_exp()) and is_a<UnivariatePolynomial>(*_base)) {
+        int q = rcp_static_cast<const Integer>(self->get_exp())->as_int();
         RCP<const UnivariatePolynomial> p = rcp_static_cast<const UnivariatePolynomial>(_base);
         RCP<const UnivariatePolynomial> r = univariate_polynomial(p->var_, 0, {{0, 1}});
         while (q != 0) {
@@ -298,26 +301,34 @@ RCP<const Basic> pow_expand(const RCP<const Pow> &self)
         return r;
     }
 
-    if (! is_a<Integer>(*self->exp_) || ! is_a<Add>(*_base)) {
-        if (neq(*_base, *self->base_)) {
-            return pow(_base, self->exp_);
+    if(not is_a<Integer>(*self->get_exp()) or not is_a<Add>(*_base)) {
+        if (neq(*_base, *self->get_base())) {
+            return pow(_base, self->get_exp());
         } else {
             return self;
         }
     }
 
     map_vec_mpz r;
-    int n = rcp_static_cast<const Integer>(self->exp_)->as_int();
+    int n = rcp_static_cast<const Integer>(self->get_exp())->as_int();
     if (n < 0) {
         n = -n;
         negative_pow = true;
     }
     RCP<const Add> base = rcp_static_cast<const Add>(_base);
+    RCP<const Number> add_overall_coeff = zero;
     umap_basic_num base_dict = base->dict_;
-    if (! (base->coef_->is_zero())) {
+    if (not  (base->coef_->is_zero())) {
         // Add the numerical coefficient into the dictionary. This
         // allows a little bit easier treatment below.
         insert(base_dict, base->coef_, one);
+    } else {
+        if (base_dict.size() == 1) {
+            // Eg: (0.0 + x * 5) ** 2 == 0.0 + (x * 5) ** 2
+            return add(base->coef_, pow(mul(base_dict.begin()->first,
+                           base_dict.begin()->second), self->get_exp()));
+        }
+        add_overall_coeff = base->coef_;
     }
     int m = base_dict.size();
     multinomial_coefficients_mpz(m, n, r);
@@ -327,8 +338,7 @@ RCP<const Basic> pow_expand(const RCP<const Pow> &self)
 #if defined(HAVE_SYMENGINE_RESERVE)
     rd.reserve(2*r.size());
 #endif
-    RCP<const Number> add_overall_coeff=zero;
-    for (auto &p: r) {
+    for (const auto &p: r) {
         auto power = p.first.begin();
         auto i2 = base_dict.begin();
         map_basic_basic d;
@@ -347,7 +357,7 @@ RCP<const Basic> pow_expand(const RCP<const Pow> &self)
                     RCP<const Basic> exp2, t, tmp;
                     tmp = pow(base, exp);
                     if (is_a<Mul>(*tmp)) {
-                        for (auto &p: (rcp_static_cast<const Mul>(tmp))->dict_) {
+                        for (const auto &p: (rcp_static_cast<const Mul>(tmp))->dict_) {
                             Mul::dict_add_term_new(outArg(overall_coeff), d,
                                     p.second, p.first);
                         }
@@ -359,8 +369,8 @@ RCP<const Basic> pow_expand(const RCP<const Pow> &self)
                         Mul::dict_add_term_new(outArg(overall_coeff), d, exp2, t);
                     }
                 }
-                if (!(i2->second->is_one())) {
-                    if (is_a<Integer>(*(i2->second)) || is_a<Rational>(*(i2->second))) {
+                if (not (i2->second->is_one())) {
+                    if (is_a<Integer>(*(i2->second)) or is_a<Rational>(*(i2->second))) {
                         imulnum(outArg(overall_coeff),
                         pownum(i2->second,
                             rcp_static_cast<const Number>(exp)));
@@ -377,8 +387,8 @@ RCP<const Basic> pow_expand(const RCP<const Pow> &self)
             iaddnum(outArg(add_overall_coeff),
                 mulnum(rcp_static_cast<const Number>(term), coef2));
         } else {
-            if (is_a<Mul>(*term) &&
-                    !(rcp_static_cast<const Mul>(term)->coef_->is_one())) {
+            if (is_a<Mul>(*term) and
+                    not (rcp_static_cast<const Mul>(term)->coef_->is_one())) {
                 // Tidy up things like {2x: 3} -> {x: 6}
                 imulnum(outArg(coef2),
                         rcp_static_cast<const Mul>(term)->coef_);
@@ -410,7 +420,7 @@ RCP<const Basic> Pow::subs(const map_basic_basic &subs_dict) const
         return it->second;
     RCP<const Basic> base_new = base_->subs(subs_dict);
     RCP<const Basic> exp_new = exp_->subs(subs_dict);
-    if (base_new == base_ && exp_new == exp_)
+    if (base_new == base_ and exp_new == exp_)
         return self;
     else
         return pow(base_new, exp_new);
@@ -435,18 +445,18 @@ bool Log::is_canonical(const RCP<const Basic> &arg)
 {
     if (arg == null) return false;
     //  log(0)
-    if (is_a<Integer>(*arg) && rcp_static_cast<const Integer>(arg)->is_zero())
+    if (is_a<Integer>(*arg) and rcp_static_cast<const Integer>(arg)->is_zero())
         return false;
     //  log(1)
-    if (is_a<Integer>(*arg) && rcp_static_cast<const Integer>(arg)->is_one())
+    if (is_a<Integer>(*arg) and rcp_static_cast<const Integer>(arg)->is_one())
         return false;
     // log(E)
     if (eq(*arg, *E))
         return false;
     // Currently not implemented, however should be expanded as `-ipi + log(-arg)`
-    if (is_a_Number(*arg) && rcp_static_cast<const Number>(arg)->is_negative())
+    if (is_a_Number(*arg) and rcp_static_cast<const Number>(arg)->is_negative())
         return false;
-    if (is_a_Number(*arg) && !rcp_static_cast<const Number>(arg)->is_exact())
+    if (is_a_Number(*arg) and not rcp_static_cast<const Number>(arg)->is_exact())
         return false;
     // log(num/den) = log(num) - log(den)
     if (is_a<Rational>(*arg))
@@ -463,7 +473,7 @@ std::size_t Log::__hash__() const
 
 bool Log::__eq__(const Basic &o) const
 {
-    if (is_a<Log>(o) &&
+    if (is_a<Log>(o) and
         eq(*arg_, *(static_cast<const Log &>(o).get_arg())))
             return true;
 
@@ -505,7 +515,7 @@ RCP<const Basic> log(const RCP<const Basic> &arg)
     if (eq(*arg, *E)) return one;
     if (is_a_Number(*arg)) {
         RCP<const Number> _arg = rcp_static_cast<const Number>(arg);
-        if (!_arg->is_exact()) {
+        if (not _arg->is_exact()) {
             return _arg->get_eval().log(*_arg);
         } else if (_arg->is_negative()) {
             throw std::runtime_error("Imaginary Result. Yet to be implemented");
@@ -513,7 +523,7 @@ RCP<const Basic> log(const RCP<const Basic> &arg)
     }
     if (is_a<Rational>(*arg)) {
         RCP<const Integer> num, den;
-        get_num_den(rcp_static_cast<const Rational>(arg), outArg(num), outArg(den));
+        get_num_den(static_cast<const Rational &>(*arg), outArg(num), outArg(den));
         return sub(log(num), log(den));
     }
     return make_rcp<const Log>(arg);

@@ -5,6 +5,7 @@
 #include <cstddef>
 #include <stdexcept>
 #include <string>
+#include <ciso646>
 
 #include <symengine/symengine_config.h>
 #include <symengine/symengine_assert.h>
@@ -12,11 +13,15 @@
 
 #if defined(WITH_SYMENGINE_RCP)
 
+#if defined(WITH_SYMENGINE_THREAD_SAFE)
+#include <atomic>
+#endif
+
 #else
 
 // Include all Teuchos headers here:
-#include "Teuchos_RCP.hpp"
-#include "Teuchos_TypeNameTraits.hpp"
+#include <symengine/teuchos/Teuchos_RCP.hpp>
+#include <symengine/teuchos/Teuchos_TypeNameTraits.hpp>
 
 #endif
 
@@ -74,11 +79,11 @@ public:
     }
     // Copy constructor
     RCP(const RCP<T> &rp) : ptr_(rp.ptr_) {
-        if (!is_null()) (ptr_->refcount_)++;
+        if (not is_null()) (ptr_->refcount_)++;
     }
     // Copy constructor
     template<class T2> RCP(const RCP<T2>& r_ptr) : ptr_(r_ptr.get()) {
-        if (!is_null()) (ptr_->refcount_)++;
+        if (not is_null()) (ptr_->refcount_)++;
     }
     // Move constructor
     RCP(RCP<T> &&rp) : ptr_(rp.ptr_) {
@@ -89,7 +94,7 @@ public:
         r_ptr._set_null();
     }
     ~RCP() {
-        if (ptr_ != nullptr && --(ptr_->refcount_) == 0) delete ptr_;
+        if (ptr_ != nullptr and --(ptr_->refcount_) == 0) delete ptr_;
     }
     T* operator->() const {
         SYMENGINE_ASSERT(ptr_ != nullptr)
@@ -111,8 +116,8 @@ public:
     // Copy assignment
     RCP<T>& operator=(const RCP<T> &r_ptr) {
         T *r_ptr_ptr_ = r_ptr.ptr_;
-        if (!r_ptr.is_null()) (r_ptr_ptr_->refcount_)++;
-        if (!is_null() && --(ptr_->refcount_) == 0) delete ptr_;
+        if (not r_ptr.is_null()) (r_ptr_ptr_->refcount_)++;
+        if (not is_null() and --(ptr_->refcount_) == 0) delete ptr_;
         ptr_ = r_ptr_ptr_;
         return *this;
     }
@@ -122,7 +127,7 @@ public:
         return *this;
     }
     void reset() {
-        if (!is_null() && --(ptr_->refcount_) == 0) delete ptr_;
+        if (not is_null() and --(ptr_->refcount_) == 0) delete ptr_;
         ptr_ = nullptr;
     }
     // Don't use this function directly:
@@ -148,7 +153,7 @@ inline RCP<T2> rcp_static_cast(const RCP<T1>& p1)
 template<class T2, class T1>
 inline RCP<T2> rcp_dynamic_cast(const RCP<T1>& p1)
 {
-    if (!p1.is_null()) {
+    if (not p1.is_null()) {
         T2 *p = nullptr;
         // Make the compiler check if the conversion is legal
         p = dynamic_cast<T2*>(p1.get());

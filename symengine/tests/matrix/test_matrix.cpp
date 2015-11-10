@@ -1224,7 +1224,7 @@ TEST_CASE("test_csr_eq(): matrices", "[matrices]")
     CSRMatrix C = CSRMatrix(3, 3, {0, 2, 3, 6}, {0, 2, 2, 0, 1, 2},
         {integer(0), integer(2), integer(3), integer(4), integer(5), integer(6)});
 
-    REQUIRE(!(A == C));
+    REQUIRE(not (A == C));
 }
 
 TEST_CASE("test_from_coo(): matrices", "[matrices]")
@@ -1290,7 +1290,7 @@ TEST_CASE("test_csr_scale_rows(): matrices", "[matrices]")
         {integer(1), integer(2), integer(-3), integer(12), integer(15), integer(18)}));
 
     X = DenseMatrix(3, 1, {integer(1), integer(0), integer(-1)});
-    SYMENGINE_CHECK_THROW(csr_scale_columns(A, X), std::runtime_error);
+    CHECK_THROWS_AS(csr_scale_columns(A, X), std::runtime_error);
 }
 
 TEST_CASE("test_csr_scale_columns(): matrices", "[matrices]")
@@ -1305,7 +1305,7 @@ TEST_CASE("test_csr_scale_columns(): matrices", "[matrices]")
         {integer(1), integer(6), integer(9), integer(4), integer(-5), integer(18)}));
 
     X = DenseMatrix(3, 1, {integer(0), integer(1), integer(-1)});
-    SYMENGINE_CHECK_THROW(csr_scale_columns(A, X), std::runtime_error);
+    CHECK_THROWS_AS(csr_scale_columns(A, X), std::runtime_error);
 }
 
 TEST_CASE("test_csr_binop_csr_canonical(): matrices", "[matrices]")
@@ -1416,7 +1416,7 @@ TEST_CASE("Test Jacobian", "[matrices]")
             integer(1), integer(1), integer(0), integer(0)}));
 
     X = DenseMatrix(4, 1, {mul(x, y), y, z, t});
-    SYMENGINE_CHECK_THROW(jacobian(A, X, J), std::runtime_error);
+    CHECK_THROWS_AS(jacobian(A, X, J), std::runtime_error);
 
     A = DenseMatrix(4, 1, {add(x, z), mul(y, z), add(mul(z, x), add(y, t)),
             add(x, y)});

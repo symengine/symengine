@@ -5,6 +5,11 @@ set -e
 # Echo each command
 set -x
 
+# Shippable currently does not clean the directory after previous builds
+# (https://github.com/Shippable/support/issues/238), so
+# we need to do it ourselves.
+git clean -dfx
+
 if [[ "${CC}" == "" ]]; then
     export CC=gcc
     export CXX=g++
@@ -12,6 +17,16 @@ fi
 if [[ "${TRAVIS_OS_NAME}" == "osx" ]] && [[ "${CC}" == "gcc" ]]; then
     export CC=gcc-4.8
     export CXX=g++-4.8
+fi
+
+if [[ "${TRAVIS_OS_NAME}" == "linux" ]] && [[ "${CC}" == "gcc" ]]; then
+    if [[ "${WITH_PIRANHA}" == "yes" ]]; then
+        export CC=gcc-4.8
+        export CXX=g++-4.8
+    else
+        export CC=gcc-4.7
+        export CXX=g++-4.7
+    fi
 fi
 
 export SOURCE_DIR=`pwd`
@@ -71,21 +86,9 @@ if [[ "${WITH_MPC}" == "yes" ]]; then
         sudo apt-get install libmpc-dev;
     fi
 fi
-# Install python using Miniconda.
-if [[ "${WITH_PYTHON}" == "yes" ]] || [[ "${PYTHON_INSTALL}" == "yes" ]]; then
-    if [[ "${TRAVIS_OS_NAME}" != "osx" ]]; then
-        wget https://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O miniconda.sh;
-    else
-        wget https://repo.continuum.io/miniconda/Miniconda-latest-MacOSX-x86_64.sh -O miniconda.sh;
-    fi
-    bash miniconda.sh -b -p $our_install_dir/miniconda;
-    export PATH="$our_install_dir/miniconda/bin:$PATH";
-    hash -r;
-    conda config --set always_yes yes --set changeps1 no;
-    conda update -q conda;
-    conda info -a;
-
-    conda create -q -n test-environment python="${PYTHON_VERSION}" pip cython sympy nose pytest;
-    source activate test-environment;
+if [[ "${WITH_PIRANHA}" == "yes" ]]; then
+    git clone https://github.com/bluescarni/piranha;
+    cd piranha && mkdir build && cd build;
+    cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$our_install_dir -DBUILD_TESTS=no ../ && make -j8 install && cd ../..;
 fi
 cd $SOURCE_DIR;

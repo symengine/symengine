@@ -23,6 +23,11 @@ using SymEngine::rcp_dynamic_cast;
 using SymEngine::rcp_static_cast;
 using SymEngine::mod_inverse;
 using SymEngine::mod;
+using SymEngine::mod_f;
+using SymEngine::quotient;
+using SymEngine::quotient_f;
+using SymEngine::quotient_mod;
+using SymEngine::quotient_mod_f;
 using SymEngine::Number;
 using SymEngine::bernoulli;
 using SymEngine::crt;
@@ -106,17 +111,31 @@ TEST_CASE("test_modulo(): ntheory", "[ntheory]")
     RCP<const Integer> i5 = integer(5);
     RCP<const Integer> i3 = integer(3);
     RCP<const Integer> i8 = integer(8);
-    RCP<const Integer> i11 = integer(11);
-    RCP<const Number> b;
+    RCP<const Integer> im11 = integer(-11);
+    RCP<const Integer> b, c;
 
     b = mod(*i5, *i3);
     REQUIRE(eq(*b, *integer(2)));
 
-    b = mod(*i11, *i8);
-    REQUIRE(eq(*b, *integer(3)));
+    b = mod(*im11, *i8);
+    REQUIRE(eq(*b, *integer(-3)));
 
-    b = mod(*i11, *i3);
-    REQUIRE(eq(*b, *integer(2)));
+    b = mod_f(*im11, *i8);
+    REQUIRE(eq(*b, *i5));
+
+    b = quotient(*im11, *i5);
+    REQUIRE(eq(*b, *integer(-2)));
+
+    b = quotient_f(*im11, *i5);
+    REQUIRE(eq(*b, *integer(-3)));
+
+    quotient_mod(outArg(b), outArg(c), *im11, *i5);
+    REQUIRE(eq(*b, *integer(-2)));
+    REQUIRE(eq(*c, *integer(-1)));
+
+    quotient_mod_f(outArg(b), outArg(c), *im11, *i5);
+    REQUIRE(eq(*b, *integer(-3)));
+    REQUIRE(eq(*c, *integer(4)));
 }
 
 TEST_CASE("test_fibonacci_lucas(): ntheory", "[ntheory]")
@@ -196,7 +215,7 @@ TEST_CASE("test_factor(): ntheory", "[ntheory]")
     REQUIRE(divides(*i122, *f));
     REQUIRE(factor(outArg(f), *i1001) > 0);
     REQUIRE(divides(*i1001, *f));
-    REQUIRE(!divides(*i1001, *i6));
+    REQUIRE(not divides(*i1001, *i6));
     REQUIRE(factor(outArg(f), *i900) > 0);
     REQUIRE(divides(*i900, *f));
 }
@@ -219,15 +238,15 @@ TEST_CASE("test_factor_lehman_method(): ntheory", "[ntheory]")
     REQUIRE(factor_lehman_method(outArg(f), *i47) == 0);
 
     REQUIRE(factor_lehman_method(outArg(f), *i21) > 0);
-    REQUIRE((divides(*i21, *f) && !eq(*f, *i1) && !eq(*f, *i21)));   //Lehman's method returns only a proper divisor when composite
+    REQUIRE((divides(*i21, *f) and not eq(*f, *i1) and not eq(*f, *i21)));   //Lehman's method returns only a proper divisor when composite
     REQUIRE(factor_lehman_method(outArg(f), *i121) > 0);
-    REQUIRE((divides(*i121, *f) && !eq(*f, *i1) && !eq(*f, *i121)));
+    REQUIRE((divides(*i121, *f) and not eq(*f, *i1) and not eq(*f, *i121)));
     REQUIRE(factor_lehman_method(outArg(f), *i122) > 0);
-    REQUIRE((divides(*i122, *f) && !eq(*f, *i1) && !eq(*f, *i122)));
+    REQUIRE((divides(*i122, *f) and not eq(*f, *i1) and not eq(*f, *i122)));
     REQUIRE(factor_lehman_method(outArg(f), *i900) > 0);
-    REQUIRE((divides(*i900, *f) && !eq(*f, *i1) && !eq(*f, *i900)));
+    REQUIRE((divides(*i900, *f) and not eq(*f, *i1) and not eq(*f, *i900)));
     REQUIRE(factor_lehman_method(outArg(f), *i1001) > 0);
-    REQUIRE((divides(*i1001, *f) && !eq(*f, *i1) && !eq(*f, *i1001)));
+    REQUIRE((divides(*i1001, *f) and not eq(*f, *i1) and not eq(*f, *i1001)));
 }
 
 TEST_CASE("test_factor_pollard_pm1_method(): ntheory", "[ntheory]")
@@ -246,11 +265,11 @@ TEST_CASE("test_factor_pollard_pm1_method(): ntheory", "[ntheory]")
     REQUIRE(factor_pollard_pm1_method(outArg(f), *i31) == 0);
     REQUIRE(factor_pollard_pm1_method(outArg(f), *i47) == 0);
 
-    REQUIRE((factor_pollard_pm1_method(outArg(f), *i121) == 0 || divides(*i121, *f)));
-    REQUIRE((factor_pollard_pm1_method(outArg(f), *i122) == 0 || divides(*i122, *f)));
-    REQUIRE((factor_pollard_pm1_method(outArg(f), *i900) == 0 || divides(*i900, *f)));
-    REQUIRE((factor_pollard_pm1_method(outArg(f), *i1001, 20) == 0 || divides(*i1001, *f)));
-    REQUIRE((factor_pollard_pm1_method(outArg(f), *i1850) == 0 || divides(*i1850, *f)));
+    REQUIRE((factor_pollard_pm1_method(outArg(f), *i121) == 0 or divides(*i121, *f)));
+    REQUIRE((factor_pollard_pm1_method(outArg(f), *i122) == 0 or divides(*i122, *f)));
+    REQUIRE((factor_pollard_pm1_method(outArg(f), *i900) == 0 or divides(*i900, *f)));
+    REQUIRE((factor_pollard_pm1_method(outArg(f), *i1001, 20) == 0 or divides(*i1001, *f)));
+    REQUIRE((factor_pollard_pm1_method(outArg(f), *i1850) == 0 or divides(*i1850, *f)));
 }
 
 TEST_CASE("test_factor_pollard_rho_method(): ntheory", "[ntheory]")
@@ -269,11 +288,11 @@ TEST_CASE("test_factor_pollard_rho_method(): ntheory", "[ntheory]")
     REQUIRE(factor_pollard_rho_method(outArg(f), *i31) == 0);
     REQUIRE(factor_pollard_rho_method(outArg(f), *i47) == 0);
 
-    REQUIRE((factor_pollard_rho_method(outArg(f), *i121) == 0 || divides(*i121, *f)));
-    REQUIRE((factor_pollard_rho_method(outArg(f), *i122) == 0 || divides(*i122, *f)));
-    REQUIRE((factor_pollard_rho_method(outArg(f), *i900) == 0 || divides(*i900, *f)));
-    REQUIRE((factor_pollard_rho_method(outArg(f), *i1001) == 0 || divides(*i1001, *f)));
-    REQUIRE((factor_pollard_rho_method(outArg(f), *i1850) == 0 || divides(*i1850, *f)));
+    REQUIRE((factor_pollard_rho_method(outArg(f), *i121) == 0 or divides(*i121, *f)));
+    REQUIRE((factor_pollard_rho_method(outArg(f), *i122) == 0 or divides(*i122, *f)));
+    REQUIRE((factor_pollard_rho_method(outArg(f), *i900) == 0 or divides(*i900, *f)));
+    REQUIRE((factor_pollard_rho_method(outArg(f), *i1001) == 0 or divides(*i1001, *f)));
+    REQUIRE((factor_pollard_rho_method(outArg(f), *i1850) == 0 or divides(*i1850, *f)));
 }
 
 TEST_CASE("test_sieve(): ntheory", "[ntheory]")
@@ -386,10 +405,10 @@ TEST_CASE("test_bernoulli(): ntheory", "[ntheory]")
     RCP<const Number> r2;
     #ifdef HAVE_SYMENGINE_ARB
         r1 = bernoulli(12);
-        r2 = Rational::from_two_ints(integer(-691), integer(2730));
+        r2 = Rational::from_two_ints(*integer(-691), *integer(2730));
         REQUIRE(eq(*r1, *r2));
     #else
-        SYMENGINE_CHECK_THROW(bernoulli(12), std::runtime_error)
+        CHECK_THROWS_AS(bernoulli(12), std::runtime_error);
     #endif
 }
 

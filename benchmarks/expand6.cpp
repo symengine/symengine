@@ -1,15 +1,13 @@
 #include <iostream>
 #include <chrono>
 
-#include "Teuchos_stacktrace.hpp"
-
 #include <symengine/basic.h>
 #include <symengine/add.h>
 #include <symengine/symbol.h>
 #include <symengine/mul.h>
 #include <symengine/pow.h>
 #include <symengine/integer.h>
-#include "symengine/constants.h"
+#include <symengine/constants.h>
 
 using SymEngine::Basic;
 using SymEngine::RCP;
@@ -21,7 +19,7 @@ using SymEngine::integer;
 
 int main(int argc, char* argv[])
 {
-    Teuchos::print_stack_on_segfault();
+    SymEngine::print_stack_on_segfault();
     int N;
     if (argc == 2) {
         N = std::atoi(argv[1]);

@@ -12,6 +12,7 @@
 #include <symengine/pow.h>
 #include <symengine/polynomial.h>
 #include <symengine/polys.h>
+#include <symengine/series.h>
 #include <symengine/functions.h>
 #include <symengine/symbol.h>
 #include <symengine/integer.h>

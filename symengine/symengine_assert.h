@@ -22,14 +22,5 @@ abort(); \
 #endif
 
 #define SYMENGINE_ERROR(description) std::cerr << description; std::cerr << "\n"; abort();
-#define SYMENGINE_CHECK_THROW(expression, exception) \
-try \
-{ \
-expression; \
-SYMENGINE_ERROR("expected exception not thrown");\
-} \
-catch(exception &) \
-{ \
-}
 
 #endif

@@ -1,7 +1,6 @@
 #include <iostream>
 #include <chrono>
-
-#include "Teuchos_stacktrace.hpp"
+#include <iomanip>
 
 #include <symengine/basic.h>
 #include <symengine/add.h>
@@ -10,6 +9,7 @@
 #include <symengine/mul.h>
 #include <symengine/pow.h>
 #include <symengine/constants.h>
+#include <symengine/real_double.h>
 #include <symengine/functions.h>
 
 using SymEngine::Basic;
@@ -19,6 +19,7 @@ using SymEngine::RCPBasicKeyLess;
 using SymEngine::vec_basic;
 using SymEngine::integer;
 using SymEngine::Integer;
+using SymEngine::Number;
 using SymEngine::symbol;
 using SymEngine::Symbol;
 using SymEngine::sin;
@@ -33,11 +34,15 @@ using SymEngine::one;
 using SymEngine::expand;
 using SymEngine::sub;
 using SymEngine::zero;
+using SymEngine::real_double;
+using SymEngine::iaddnum;
 
 double R1();
 double R2();
 double R3();
 double R5();
+double R7();
+double R8();
 double S1();
 double S2();
 double S3();
@@ -45,11 +50,13 @@ double S3a();
 
 int main(int argc, char* argv[])
 {
-    Teuchos::print_stack_on_segfault();
+    SymEngine::print_stack_on_segfault();
     std::cout << "Time for R1 : \t " << std::setw(15) << std::setprecision(9)  << std::fixed << R1() << std::endl;
     std::cout << "Time for R2 : \t " << std::setw(15) << std::setprecision(9)  << std::fixed << R2() << std::endl;
     std::cout << "Time for R3 : \t " << std::setw(15) << std::setprecision(9)  << std::fixed << R3() << std::endl;
-    std::cout << "Time for R4 : \t " << std::setw(15) << std::setprecision(9)  << std::fixed << R5() << std::endl;
+    std::cout << "Time for R5 : \t " << std::setw(15) << std::setprecision(9)  << std::fixed << R5() << std::endl;
+    std::cout << "Time for R7 : \t " << std::setw(15) << std::setprecision(9)  << std::fixed << R7() << std::endl;
+    std::cout << "Time for R8 : \t " << std::setw(15) << std::setprecision(9)  << std::fixed << R8() << std::endl;
     std::cout << "Time for S1 : \t " << std::setw(15) << std::setprecision(9)  << std::fixed << S1() << std::endl;
     std::cout << "Time for S2 : \t " << std::setw(15) << std::setprecision(9)  << std::fixed << S2() << std::endl;
     std::cout << "Time for S3 : \t " << std::setw(15) << std::setprecision(9)  << std::fixed << S3() << std::endl;
@@ -123,6 +130,47 @@ double R5()
 
     auto t1 = std::chrono::high_resolution_clock::now();
     std::set<RCP<const Basic>, RCPBasicKeyLess> s(v.begin(), v.end());
+    auto t2 = std::chrono::high_resolution_clock::now();
+    return std::chrono::duration_cast<std::chrono::nanoseconds>(t2-t1).count()/1000000000.0;
+}
+
+
+double R7()
+{
+    RCP<const Basic> x = symbol("x");
+    RCP<const Basic> f = add(pow(x, integer(24)),
+                             add(mul(integer(34), pow(x, integer(12))),
+                                 add(mul(integer(45), pow(x, integer(3))),
+                                     add(mul(integer(9), pow(x, integer(18))),
+                                         add(mul(integer(34), pow(x, integer(10))),
+                                             mul(integer(32), pow(x, integer(21))))))));
+    vec_basic v;
+    auto t1 = std::chrono::high_resolution_clock::now();
+    for (int i = 0; i < 10000; ++i) {
+        v.push_back(f->subs({{x, real_double(0.5)}}));
+    }
+    auto t2 = std::chrono::high_resolution_clock::now();
+    return std::chrono::duration_cast<std::chrono::nanoseconds>(t2-t1).count()/1000000000.0;
+}
+
+RCP<const Basic> right(const RCP<const Basic> &f, const RCP<const Number> &a,
+                       const RCP<const Number> &b, const RCP<const Basic> &x, int n)
+{
+    RCP<const Number> Deltax = b->sub(*a)->div(*integer(n));
+    RCP<const Number> c = a;
+    RCP<const Number> est = integer(0);
+    for (int i = 0; i < n; i++) {
+        iaddnum(outArg(c), Deltax);
+        iaddnum(outArg(est), rcp_static_cast<const Number>(f->subs({{x, c}})));
+    }
+    return mulnum(est, Deltax);
+}
+
+double R8()
+{
+    RCP<const Basic> x = symbol("x");
+    auto t1 = std::chrono::high_resolution_clock::now();
+    x = right(pow(x, integer(2)), integer(0), integer(5), x, 10000);
     auto t2 = std::chrono::high_resolution_clock::now();
     return std::chrono::duration_cast<std::chrono::nanoseconds>(t2-t1).count()/1000000000.0;
 }

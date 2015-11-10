@@ -15,6 +15,7 @@
 #include <symengine/complex_double.h>
 #include <symengine/real_mpfr.h>
 #include <symengine/complex_mpc.h>
+#include <symengine/eval_double.h>
 
 using SymEngine::Basic;
 using SymEngine::Add;
@@ -76,7 +77,10 @@ using SymEngine::real_double;
 using SymEngine::complex_double;
 using SymEngine::RealDouble;
 using SymEngine::ComplexDouble;
+using SymEngine::Number;
+using SymEngine::eval_double;
 using SymEngine::is_a;
+using SymEngine::neg;
 
 #ifdef HAVE_SYMENGINE_MPFR
 using SymEngine::real_mpfr;
@@ -190,6 +194,11 @@ TEST_CASE("Sin: functions", "[functions]")
     r2 = cos(y);
     REQUIRE(eq(*r1, *r2));
 
+    // sin(-pi/2 - y) = -cos(y)
+    r1 = sin(sub(neg(div(pi, i2)), y));
+    r2 = neg(cos(y));
+    REQUIRE(eq(*r1, *r2));
+
     // sin(12*pi + y + pi/2) = cos(y)
     r1 = sin(add(add(mul(i12, pi), y), div(pi, i2)));
     r2 = cos(y);
@@ -236,6 +245,11 @@ TEST_CASE("Cos: functions", "[functions]")
     r2 = mul(im1, sin(x));
     std::cout << *r1 << std::endl;
     std::cout << *r2 << std::endl;
+    REQUIRE(eq(*r1, *r2));
+
+    // cos(-pi) = -1
+    r1 = cos(neg(pi));
+    r2 = im1;
     REQUIRE(eq(*r1, *r2));
 
     // cos(-y) = cos(y)
@@ -784,9 +798,9 @@ TEST_CASE("Derivative: functions", "[functions]")
     f = function_symbol("f", x);
     RCP<const Derivative> r4 = Derivative::create(f, {x});
     REQUIRE(r4->is_canonical(function_symbol("f", {y, x}), {x}));
-    REQUIRE(!r4->is_canonical(function_symbol("f", y), {x}));
+    REQUIRE(not r4->is_canonical(function_symbol("f", y), {x}));
     REQUIRE(r4->is_canonical(function_symbol("f", x), {x, y, x, x}));
-    REQUIRE(!(r4->is_canonical(function_symbol("f", x), {pow(x, integer(2))})));
+    REQUIRE(not (r4->is_canonical(function_symbol("f", x), {pow(x, integer(2))})));
 
     // Test get_args()
     r1 = Derivative::create(function_symbol("f", {x, pow(y, integer(2))}), {x, x, y});
@@ -827,6 +841,9 @@ TEST_CASE("Subs: functions", "[functions]")
 
     r2 = r1->subs({{x, z}});
     r3 = Subs::create(Derivative::create(function_symbol("f", {y, x}), {x}), {{x, add(z, y)}});
+    REQUIRE(eq(*r2, *r3));
+
+    r2 = r1->subs({{r1, r3}});
     REQUIRE(eq(*r2, *r3));
 
     // Test Subs::diff
@@ -883,7 +900,7 @@ TEST_CASE("Get pi shift: functions", "[functions]")
     // arg = n*pi/12
     r = mul(pi, div(i2, integer(3)));
     b = get_pi_shift(r, outArg(n), outArg(r1));
-    REQUIRE((eq(*n, *i8) && (b == true) && eq(*r1, *zero)));
+    REQUIRE((eq(*n, *i8) and (b == true) and eq(*r1, *zero)));
 
     // arg neq n*pi/12 , n not an integer
     r = mul(pi, div(i2, integer(5)));
@@ -933,7 +950,7 @@ TEST_CASE("Get pi shift: functions", "[functions]")
     
     // arg = pi (it is neither of form add nor mul, just a symbol)
     b = get_pi_shift(pi, outArg(n), outArg(r1));
-    REQUIRE(((b == true) && eq(*n, *i12) && eq(*r1, *zero)));
+    REQUIRE(((b == true) and eq(*n, *i12) and eq(*r1, *zero)));
     
     // arg = theta + n*pi/12 (theta is an expression of >1 symbols)
     r = add(add(mul(i2, x), mul(i2, symbol("y"))), mul(pi, div(i2, integer(3))));
@@ -1800,56 +1817,43 @@ TEST_CASE("Abs: functions", "[functions]")
     REQUIRE(eq(*abs(x)->diff(y), *integer(0)));
 }
 
-// Test FunctionWrapper
-void dec_ref(void* obj);
-int comp(void* o1, void* o2);
+class MySin : public FunctionWrapper {
+public :
+    MySin(RCP<const Basic> arg) : FunctionWrapper("MySin", arg) {
 
-class DummyFunction {
-    public :
-        std::string name_;
-        std::string hash_;
-        vec_basic args_;
-        int count_;
-        inline DummyFunction(std::string name, std::string hash, vec_basic args)
-            : name_{name}, hash_{hash}, args_{args}, count_{0} {
+    }
+    RCP<const Number> eval(long bits) const {
+        return real_double(::sin(eval_double(*arg_[0])));
+    }
+    RCP<const Basic> create(const vec_basic &v) const {
+        if (eq(*zero, *v[0])) {
+            return zero;
+        } else {
+            return make_rcp<MySin>(v[0]);
         }
-        RCP<const Basic> getFunctionWrapper() {
-            ++count_;
-            return make_rcp<const FunctionWrapper>((void*)this, name_, hash_, args_, &dec_ref, &comp);
-        }
+    }
+    RCP<const Basic> diff(const RCP<const Symbol> &x) const {
+        return mul(cos(arg_[0]), arg_[0]->diff(x));
+    }
 };
-
-void dec_ref(void* obj)
-{
-    DummyFunction* o = (DummyFunction*)obj;
-    o->count_ = o->count_ - 1;
-}
-
-int comp(void* o1, void* o2)
-{
-    DummyFunction* d1 = (DummyFunction*)o1;
-    DummyFunction* d2 = (DummyFunction*)o2;
-    if (d1->name_ == d2->name_)
-        return 0;
-    else return d1->name_ < d2->name_ ? -1 : 1;
-}
 
 TEST_CASE("FunctionWrapper: functions", "[functions]")
 {
-    RCP<const Basic> x = symbol("x");
-    RCP<const Basic> y = symbol("y");
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Basic> e = make_rcp<MySin>(x);
+    RCP<const Basic> f;
 
-    DummyFunction a = DummyFunction("Foo", "hashFoo", {x, y});
-    DummyFunction b = DummyFunction("Bar", "hashBar", {y, y});
-    RCP<const Basic> wrap_a = a.getFunctionWrapper();
-    RCP<const Basic> wrap_b = b.getFunctionWrapper();
+    f = e->subs({{x, integer(0)}});
+    REQUIRE(eq(*f, *zero));
 
-    REQUIRE(wrap_a->compare(*wrap_b) == 1);
-    REQUIRE(wrap_b->compare(*wrap_a) == -1);
-    REQUIRE(wrap_a->compare(*wrap_a) == 0);
+    f = e->diff(x);
+    REQUIRE(eq(*f, *cos(x)));
 
-    wrap_a.reset();
-    REQUIRE(a.count_ == 0);
+    f = e->subs({{x, integer(1)}});
+    double d = eval_double(*f);
+    REQUIRE(std::fabs(d - 0.84147098480789) < 1e-12);
+
+    REQUIRE(e->__str__() == "MySin(x)");
 }
 /* ---------------------------- */
 
@@ -1911,7 +1915,7 @@ TEST_CASE("MPFR and MPC: functions", "[functions]")
     REQUIRE(mpfr_cmp_si(a.get_mpfr_t(), 106127506190503566) < 0);
 #else
     mpfr_set_si(a.get_mpfr_t(), 2, MPFR_RNDN);
-    SYMENGINE_CHECK_THROW(asin(real_mpfr(a)), std::runtime_error);
+    CHECK_THROWS_AS(asin(real_mpfr(a)), std::runtime_error);
 #endif //HAVE_SYMENGINE_MPC
 #endif //HAVE_SYMENGINE_MPFR
 }

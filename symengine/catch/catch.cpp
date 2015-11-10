@@ -5,7 +5,6 @@
 #include "catch.hpp"
 
 #include <symengine/symengine_config.h>
-#include <symengine/symengine_rcp.h>
 
 #if defined(HAVE_SYMENGINE_MPFR)
 #include <mpfr.h>
@@ -15,16 +14,8 @@
 #include <arb.h>
 #endif // HAVE_SYMENGINE_ARB
 
-#if defined(HAVE_SYMENGINE_MPC)
-#include <mpc.h>
-#endif // HAVE_SYMENGINE_MPC
-
-using SymEngine::print_stack_on_segfault;
-
 int main(int argc, char* const argv[])
 {
-	print_stack_on_segfault();
-
 	int result = Catch::Session().run( argc, argv );
 
 	#if defined(HAVE_SYMENGINE_MPFR)

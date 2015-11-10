@@ -22,6 +22,7 @@ set(SRC
     monomials.cpp
     polynomial.cpp
     polys.cpp
+    series.cpp
     rings.cpp
     ntheory.cpp
     dense_matrix.cpp
@@ -56,7 +57,7 @@ set(HEADERS
     basic-inl.h  dict.h           matrix.h     ntheory.h    rational.h complex.h
     visitor.h    eval_double.h    diophantine.h cwrapper.h  printer.h  real_double.h
     eval_mpfr.h  eval_arb.h       eval_mpc.h    complex_double.h
-    real_mpfr.h  complex_mpc.h    type_codes.inc
+    real_mpfr.h  complex_mpc.h    type_codes.inc lambda_double.h series.h
 )
 
 # Configure SymEngine using our CMake options:
@@ -70,6 +71,7 @@ add_library(symengine ${SRC})
 target_link_libraries(symengine teuchos ${LIBS})
 
 install(TARGETS symengine
+            EXPORT SymEngineTargets
             RUNTIME DESTINATION bin
             ARCHIVE DESTINATION lib
             LIBRARY DESTINATION lib
@@ -79,10 +81,5 @@ install(FILES ${HEADERS} "${symengine_BINARY_DIR}/symengine/symengine_config.h"
 
 if (BUILD_TESTS)
     add_subdirectory(catch)
-    # Include Catch headers:
-    include_directories(BEFORE ${catch_SOURCE_DIR})
     add_subdirectory(tests)
-endif()
-if (WITH_RUBY)
-    add_subdirectory(ruby)
 endif()

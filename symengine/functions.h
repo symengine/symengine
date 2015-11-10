@@ -55,7 +55,7 @@ bool inverse_lookup(umap_basic_basic &d, const RCP<const Basic> &t,
                    const Ptr<RCP<const Basic>>& index);
 
 // \return true of conjugate has to be returned finally else false
-bool eval(const RCP<const Basic> &arg, int period, bool odd, bool conj_odd, //input
+bool eval(const RCP<const Basic> &arg, unsigned period, bool odd, bool conj_odd, //input
             const Ptr<RCP<const Basic>>& rarg,int& index, int& sign); //output
 
 //! \return `sqrt` of the `arg`
@@ -543,6 +543,7 @@ public:
     virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
 
     virtual void accept(Visitor &v) const;
+    virtual RCP<const Basic> create(const vec_basic &x) const;
 };
 
 //! Create a new FunctionSymbol instance:
@@ -551,38 +552,16 @@ RCP<const Basic> function_symbol(std::string name,
 RCP<const Basic> function_symbol(std::string name,
         const vec_basic &arg);
 
-/*! Class to hold a pointer to a function object
-*   FunctionWrapper can be used to wrap any C/C++ object
-*   (eg: Python object through Python/C API) 
+/*! Use this class to define custom functions by overriding
+ *  the defaut behaviour for create, eval, diff, __eq__, compare etc.
 * */
 
 class FunctionWrapper: public FunctionSymbol {
-private:
-    void* obj_;
-    std::string hash_;
-    void (*dec_ref_)(void *);
-    int (*comp_)(void *, void *);
-
 public:
     IMPLEMENT_TYPEID(FUNCTIONWRAPPER)
-    /*! FunctionWrapper Constructor
-     * \param obj - Pointer to the function object
-     * \param name - Name of the function
-     * \param hash - Hash value of obj
-     * \param arg - Arguments of the function
-     * \param dec_ref - Function pointer to decrease the reference count
-     * \param comp - Function pointer to compare two function objects
-     * */
-    FunctionWrapper(void* obj, std::string name, std::string hash, const vec_basic &arg,
-        void (*dec_ref)(void *), int (*comp)(void *, void *));
-    ~FunctionWrapper();
-    virtual std::size_t __hash__() const;
-    virtual bool __eq__(const Basic &o) const;
-    virtual int compare(const Basic &o) const;
-    virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
-    //! \return Pointer to the function object
-    inline void* get_object() const { return obj_; }
-
+    FunctionWrapper(std::string name, const vec_basic &arg);
+    FunctionWrapper(std::string name, const RCP<const Basic> &arg);
+    virtual RCP<const Number> eval(long bits) const;
     virtual void accept(Visitor &v) const;
 };
 

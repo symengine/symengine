@@ -27,9 +27,6 @@ fi
 if [[ "${WITH_BFD}" != "" ]]; then
     cmake_line="$cmake_line -DWITH_BFD=${WITH_BFD}"
 fi
-if [[ "${WITH_PYTHON}" != "" ]]; then
-    cmake_line="$cmake_line -DWITH_PYTHON=${WITH_PYTHON}"
-fi
 if [[ "${WITH_SYMENGINE_ASSERT}" != "" ]]; then
     cmake_line="$cmake_line -DWITH_SYMENGINE_ASSERT=${WITH_SYMENGINE_ASSERT}"
 fi
@@ -54,24 +51,14 @@ fi
 if [[ "${WITH_MPC}" != "" ]]; then
     cmake_line="$cmake_line -DWITH_MPC=${WITH_MPC}"
 fi
+if [[ "${WITH_PIRANHA}" != "" ]]; then
+    cmake_line="$cmake_line -DWITH_PIRANHA=${WITH_PIRANHA}"
+fi
 if [[ "${BUILD_SHARED_LIBS}" != "" ]]; then
     cmake_line="$cmake_line -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}"
 fi
 if [[ "${WITH_RUBY}" != "" ]]; then
     cmake_line="$cmake_line -DWITH_RUBY=${WITH_RUBY}"
-fi
-if [[ "${PYTHON_INSTALL}" == "yes" ]]; then
-    git clean -dfx
-    pip install $SOURCE_DIR
-    mkdir -p empty
-    cd empty
-    cat << EOF | python
-import symengine
-if not symengine.test():
-    raise Exception('Tests failed')
-EOF
-    cd ..
-    exit 0
 fi
 
 if [[ "${CC}" == "clang"* ]] && [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
@@ -87,61 +74,21 @@ echo "Running make:"
 make
 echo "Running make install:"
 make install
-
 echo "Running tests in build directory:"
 # C++
-ctest --output-on-failure
-# Python
-if [[ "${WITH_PYTHON}" == "yes" ]]; then
-    cd symengine/python
-    nosetests -v
-    cd ../../
-fi
-# Ruby
-if [[ "${WITH_RUBY}" == "yes" ]]; then
-    RUBY_GEM_DIR="$SOURCE_DIR/symengine/ruby"
-    echo "Installing dependent gems"
-    cd $RUBY_GEM_DIR
-    bundle install
-    echo "Running RSpec tests for Ruby extension in $RUBY_GEM_DIR"
-    bundle exec rspec
-    cd $SOURCE_DIR
+if [[ "${TEST_CPP}" != "no" ]]; then
+    ctest --output-on-failure
 fi
 echo "Running tests using installed SymEngine:"
-# C++
-cd $SOURCE_DIR/symengine/tests/basic/
-extra_libs=""
-if [[ "${WITH_BFD}" != "" ]]; then
-    extra_libs="$extra_libs -lbfd"
-fi
-if [[ "${WITH_ECM}" != "" ]]; then
-    extra_libs="$extra_libs -lecm"
-fi
-if [[ "${WITH_PRIMESIEVE}" != "" ]]; then
-    extra_libs="$extra_libs -lprimesieve"
-fi
-if [[ "${WITH_ARB}" != "" ]]; then
-    extra_libs="$extra_libs -larb -lflint"
-fi
-if [[ "${WITH_MPC}" != "" ]]; then
-    extra_libs="$extra_libs -lmpc"
-fi
-if [[ "${WITH_MPFR}" == "yes" ]] || [[ "${WITH_MPC}" == "yes" ]] || [[ "${WITH_ARB}" == "yes" ]]; then
-    extra_libs="$extra_libs -lmpfr"
+
+if [[ "${TEST_CPP}" != "no" ]]; then
+    cd $SOURCE_DIR/benchmarks
+
+    compile_flags=`cmake --find-package -DNAME=SymEngine -DSymEngine_DIR=$our_install_dir/lib/cmake/symengine -DCOMPILER_ID=GNU -DLANGUAGE=CXX -DMODE=COMPILE`
+    link_flags=`cmake --find-package -DNAME=SymEngine -DSymEngine_DIR=$our_install_dir/lib/cmake/symengine  -DCOMPILER_ID=GNU -DLANGUAGE=CXX -DMODE=LINK`
+
+    ${CXX} -std=c++0x $compile_flags expand1.cpp $link_flags
+    export LD_LIBRARY_PATH=$our_install_dir/lib:$LD_LIBRARY_PATH
+    ./a.out
 fi
 
-extra_include_dirs="-I$SOURCE_DIR/symengine/teuchos -I$BUILD_DIR/symengine/teuchos -I$SOURCE_DIR/symengine/catch"
-
-${CXX} -std=c++0x -I$our_install_dir/include/ $extra_include_dirs -L$our_install_dir/lib -L$BUILD_DIR/symengine/catch test_basic.cpp  -lcatch -lsymengine -lteuchos $extra_libs -lgmpxx -lgmp
-export LD_LIBRARY_PATH=$our_install_dir/lib:$LD_LIBRARY_PATH
-./a.out
-# Python
-if [[ "${WITH_PYTHON}" == "yes" ]]; then
-    mkdir -p empty
-    cd empty
-    cat << EOF | python
-import symengine
-if not symengine.test():
-    raise Exception('Tests failed')
-EOF
-fi

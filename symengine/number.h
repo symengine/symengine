@@ -3,7 +3,7 @@
  *  Basic Number class.
  *
  **/
- 
+
 #ifndef SYMENGINE_NUMBER_H
 #define SYMENGINE_NUMBER_H
 
@@ -25,8 +25,11 @@ public:
     virtual bool is_negative() const = 0;
     //! \return true if positive
     virtual bool is_positive() const = 0;
-    //! return `true` if the number is exact
+    //! return true if the number is an exact representation
+    //  false if the number is an approximation
     virtual bool is_exact() const { return true; };
+    //! \return true if the number is equal to 0 and not an approximation 
+    inline bool is_exact_zero() const { return is_exact() and is_zero(); };
     //! Get `Evaluate` singleton to evaluate numerically
     virtual Evaluate& get_eval() const { throw std::runtime_error("Not Implemented."); };
 
@@ -105,6 +108,14 @@ inline bool is_a_Number(const Basic &b)
     // subclass of Number
     return b.get_type_code() <= REAL_DOUBLE;
 }
+
+class NumberWrapper : public Number {
+public:
+    IMPLEMENT_TYPEID(NUMBER_WRAPPER)
+    virtual std::string __str__() const { throw std::runtime_error("Not Implemented."); };
+    virtual RCP<const Number> eval(long bits)  const { throw std::runtime_error("Not Implemented."); };
+    virtual void accept(Visitor &v) const;
+};
 
 //! A class that will evaluate functions numerically.
 class Evaluate {

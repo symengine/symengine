@@ -89,14 +89,14 @@ public:
 
     void bvisit(const Pow &x) {
         if (eq(*x.get_base(), *E)) {
-            apply(result_, *(x.exp_));
+            apply(result_, *(x.get_exp()));
             mpc_exp(result_, result_, rnd_);
         } else {
             mpc_t t;
             mpc_init2(t, mpc_get_prec(result_));
 
-            apply(t, *(x.base_));
-            apply(result_, *(x.exp_));
+            apply(t, *(x.get_base()));
+            apply(result_, *(x.get_exp()));
             mpc_pow(result_, t, result_, rnd_);
 
             mpc_clear(t);
@@ -248,6 +248,14 @@ public:
         mpc_set_fr(result_, t, rnd_);
         mpfr_clear(t);
     };
+
+    void bvisit(const NumberWrapper &x) {
+        x.eval(mpc_get_prec(result_))->accept(*this);
+    }
+
+    void bvisit(const FunctionWrapper &x) {
+        x.eval(mpc_get_prec(result_))->accept(*this);
+    }
 
     // Classes not implemented are
     // Subs, UpperGamma, LowerGamma, Dirichlet_eta, Zeta

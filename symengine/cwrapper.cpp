@@ -10,6 +10,7 @@
 #include <symengine/pow.h>
 #include <symengine/add.h>
 #include <symengine/number.h>
+#include <symengine/complex.h>
 #include <symengine/constants.h>
 #include <symengine/visitor.h>
 
@@ -20,6 +21,7 @@ using SymEngine::Symbol;
 using SymEngine::Rational;
 using SymEngine::Integer;
 using SymEngine::Number;
+using SymEngine::Complex;
 using SymEngine::rcp_static_cast;
 using SymEngine::is_a;
 using SymEngine::RCPBasicKeyLess;
@@ -44,12 +46,12 @@ struct CRCPBasic {
 static_assert(sizeof(CRCPBasic) == sizeof(CRCPBasic_C), "Size of 'basic' is not correct");
 static_assert(std::alignment_of<CRCPBasic>::value == std::alignment_of<CRCPBasic_C>::value, "Alignment of 'basic' is not correct");
 
-void basic_init(basic s)
+void basic_new_stack(basic s)
 {
     new(s) CRCPBasic();
 }
 
-void basic_free(basic s)
+void basic_free_stack(basic s)
 {
     s->m.~RCP();
 }
@@ -123,12 +125,12 @@ void rational_set_ui(basic s, unsigned long a, unsigned long b)
 
 int rational_set(basic s, const basic a, const basic b)
 {
-    if (!is_a_Integer(a) || !is_a_Integer(b)) {
+    if (not is_a_Integer(a) or not is_a_Integer(b)) {
         return 0;
     }
     s->m = SymEngine::Rational::from_two_ints(
-            rcp_static_cast<const Integer>(a->m),
-            rcp_static_cast<const Integer>(b->m));
+            *(rcp_static_cast<const Integer>(a->m)),
+            *(rcp_static_cast<const Integer>(b->m)));
     return 1;
 }
 
@@ -137,9 +139,28 @@ void rational_set_mpq(basic s, const mpq_t i)
     s->m = SymEngine::Rational::from_mpq(mpq_class(i));
 }
 
+void complex_set(basic s, const basic re, const basic im)
+{
+    s->m = SymEngine::Complex::from_two_nums(
+            *(rcp_static_cast<const Number>(re->m)),
+            *(rcp_static_cast<const Number>(im->m)));
+}
+
+void complex_set_rat(basic s, const basic re, const basic im)
+{
+    s->m = SymEngine::Complex::from_two_rats(
+            *(rcp_static_cast<const Rational>(re->m)),
+            *(rcp_static_cast<const Rational>(im->m)));
+}
+
+void complex_set_mpq(basic s, const mpq_t re, const mpq_t im)
+{
+    s->m = SymEngine::Complex::from_mpq(mpq_class(re), mpq_class(im));
+}
+
 int basic_diff(basic s, const basic expr, basic const symbol)
 {
-    if (!is_a_Symbol(symbol))
+    if (not is_a_Symbol(symbol))
         return 0;
     s->m = expr->m->diff(rcp_static_cast<const Symbol>(symbol->m));
     return 1;
@@ -224,6 +245,10 @@ int is_a_Symbol(const basic c)
 {
     return is_a<Symbol>(*(c->m));
 }
+int is_a_Complex(const basic c)
+{
+    return is_a<Complex>(*(c->m));
+}
 
 
 // C wrapper for std::vector<int>
@@ -241,7 +266,7 @@ int vectorint_placement_new_check(void *data, size_t size)
 {
     CVectorInt *self = (CVectorInt*)data;
     if (size < sizeof(CVectorInt)) return 1;
-    if (!SymEngine::is_aligned(self)) return 2;
+    if (not SymEngine::is_aligned(self)) return 2;
     return 0;
 }
 
@@ -344,6 +369,43 @@ size_t setbasic_size(CSetBasic *self)
     return self->m.size();
 }
 
+// C Wrapper for map_basic_basic
+
+struct CMapBasicBasic {
+    SymEngine::map_basic_basic m;
+};
+
+CMapBasicBasic* mapbasicbasic_new()
+{
+    return new CMapBasicBasic;
+}
+
+void mapbasicbasic_free(CMapBasicBasic *self)
+{
+    delete self;
+}
+
+void mapbasicbasic_insert(CMapBasicBasic *self, const basic key, const basic mapped)
+{
+    (self->m)[key->m] = mapped->m;
+}
+
+int mapbasicbasic_get(CMapBasicBasic *self, const basic key, basic mapped)
+{
+    auto it = self->m.find(key->m);
+    if (it != self->m.end())
+    {
+        mapped->m = it->second;
+        return 1;
+    }
+    return 0;
+}
+
+size_t mapbasicbasic_size(CMapBasicBasic *self)
+{
+    return self->m.size();
+}
+
 // ----------------------
 
 void basic_get_args(const basic self, CVecBasic *args)
@@ -359,6 +421,16 @@ void basic_free_symbols(const basic self, CSetBasic *symbols)
 size_t basic_hash(const basic self)
 {
     return self->m->hash();
+}
+
+void basic_subs(basic s, const basic e, const CMapBasicBasic *mapbb)
+{
+    s->m = e->m->subs(mapbb->m);
+}
+
+void basic_subs2(basic s, const basic e, const basic a, const basic b)
+{
+    s->m = e->m->subs({{a->m, b->m}});
 }
 
 }

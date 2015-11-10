@@ -57,9 +57,9 @@ struct CRCPBasic_C
 //  CRCPBasic, which has the same size and alignment as RCP<const Basic> (see
 //  the above comment for details). That is then used by the user to allocate
 //  the memory needed for RCP<const Basic> on the stack. A 'basic' type should
-//  be initialized using basic_init(), before any function is called.
+//  be initialized using basic_new_stack(), before any function is called.
 //  Assignment should be done only by using basic_assign(). Before the variable
-//  goes out of scope, basic_free() must be called.
+//  goes out of scope, basic_free_stack() must be called.
 //
 //  For C, define a dummy struct with the right size, so that it can be
 //  allocated on the stack. For C++, the CRCPBasic is declared in cwrapper.cpp.
@@ -71,16 +71,21 @@ typedef struct CRCPBasic_C basic_struct;
 
 typedef basic_struct basic[1];
 
-//! Initialize a new basic instance.
-void basic_init(basic s);
-//! Assign value of b to a.
-void basic_assign(basic a, const basic b);
+//! Initialize a new basic instance. 's' is allocated on stack using the
+// 'basic' type, this function initializes an RCP<const Basic> on the stack
+// allocated variable. The 's' variable must be freed using basic_free_stack()
+void basic_new_stack(basic s);
 //! Free the C++ class wrapped by s.
-void basic_free(basic s);
+void basic_free_stack(basic s);
 
-// Use these two functions to allocate 'basic' on a heap:
+// Use these two functions to allocate and free 'basic' on a heap. The pointer
+// can then be used in all the other methods below (i.e. the methods that
+// accept 'basic s' work no matter if 's' is stack or heap allocated).
 basic_struct* basic_new_heap();
 void basic_free_heap(basic_struct *s);
+
+//! Assign value of b to a.
+void basic_assign(basic a, const basic b);
 
 //Returns the typeID of the basic struct
 TypeID basic_get_type(const basic s);
@@ -112,6 +117,13 @@ void rational_set_ui(basic s, unsigned long i, unsigned long j);
 //! Assign to s, a rational i, where is of type mpq_t.
 void rational_set_mpq(basic s, const mpq_t i);
 
+//! Assign to s, a complex re + i*im.
+void complex_set(basic s, const basic re, const basic im);
+//! Assign to s, a complex re + i*im, where re and im are rationals.
+void complex_set_rat(basic s, const basic re, const basic im);
+//! Assign to s, a complex re + i*im, where re and im are of type mpq.
+void complex_set_mpq(basic s, const mpq_t re, const mpq_t im);
+
 //! Assigns s = a + b.
 void basic_add(basic s, const basic a, const basic b);
 //! Assigns s = a - b.
@@ -142,10 +154,12 @@ void basic_str_free(char* s);
 
 //! Return 1 if s is an Integer, 0 if not.
 int is_a_Integer(const basic s);
-//! Return 1 if s is an Rational, 0 if not.
+//! Return 1 if s is a Rational, 0 if not.
 int is_a_Rational(const basic s);
-//! Return 1 if s is an Symbol, 0 if not.
+//! Return 1 if s is a Symbol, 0 if not.
 int is_a_Symbol(const basic s);
+//! Return 1 if s is a Complex, 0 if not.
+int is_a_Complex(const basic s);
 
 
 //! Wrapper for std::vector<int>
@@ -193,6 +207,17 @@ void setbasic_get(CSetBasic *self, int n, basic result);
 int setbasic_find(CSetBasic *self, basic value);
 size_t setbasic_size(CSetBasic *self);
 
+//! Wrapper for map_basic_basic
+
+typedef struct CMapBasicBasic CMapBasicBasic;
+
+CMapBasicBasic* mapbasicbasic_new();
+void mapbasicbasic_free(CMapBasicBasic *self);
+void mapbasicbasic_insert(CMapBasicBasic *self, const basic key, const basic mapped);
+//! Returns 1 if such a key exists in the map and get is successful, 0 if not
+int mapbasicbasic_get(CMapBasicBasic *self, const basic key, basic mapped);
+size_t mapbasicbasic_size(CMapBasicBasic *self);
+
 // -------------------------------------
 
 //! Returns a CVecBasic of vec_basic given by get_args
@@ -201,6 +226,12 @@ void basic_get_args(const basic self, CVecBasic *args);
 void basic_free_symbols(const basic self, CSetBasic *symbols);
 //! returns the hash of the Basic object
 size_t basic_hash(const basic self);
+//! substitutes all the keys with their mapped values
+//! in the given basic `e` and returns it through basic 's'
+void basic_subs(basic s, const basic e, const CMapBasicBasic * mapbb);
+//! substitutes a basic 'a' with another basic 'b',
+//! in the given basic 'e' and returns it through basic 's'
+void basic_subs2(basic s, const basic e, const basic a, const basic b);
 
 #ifdef __cplusplus
 }

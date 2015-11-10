@@ -1,8 +1,12 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 2.8.5)
 
 set(CMAKE_USER_MAKE_RULES_OVERRIDE ${CMAKE_SOURCE_DIR}/cmake/UserOverride.cmake)
 
 project(symengine)
+set(SYMENGINE_MAJOR_VERSION 0)
+set(SYMENGINE_MINOR_VERSION 1)
+set(SYMENGINE_PATCH_VERSION 0)
+set(SYMENGINE_VERSION ${SYMENGINE_MAJOR_VERSION}.${SYMENGINE_MINOR_VERSION}.${SYMENGINE_PATCH_VERSION})
 
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 
@@ -32,13 +36,11 @@ if (CMAKE_CXX_COMPILER_ID MATCHES Clang)
 endif()
 
 # Check c++11 support
-if (NOT(MSVC))
-    try_compile(CXX11 "${CMAKE_CURRENT_BINARY_DIR}/cxx" "${CMAKE_SOURCE_DIR}/cmake/checkcxx11.cpp"
-        COMPILE_DEFINITIONS "${CMAKE_CXX_FLAGS_RELEASE}" OUTPUT_VARIABLE CXX11_ERROR_LOG)
-    if (NOT ${CXX11})
-        message(FATAL_ERROR "Compiler does not support C++11 constructs. \n"
-            "CXX11 Error Log : \n${CXX11_ERROR_LOG}")
-    endif()
+try_compile(CXX11 "${CMAKE_CURRENT_BINARY_DIR}/cxx" "${CMAKE_SOURCE_DIR}/cmake/checkcxx11.cpp"
+	CMAKE_FLAGS "-DCOMPILE_DEFINITIONS=${CMAKE_CXX_FLAGS_RELEASE}" OUTPUT_VARIABLE CXX11_ERROR_LOG)
+if (NOT ${CXX11})
+	message(FATAL_ERROR "Compiler does not support C++11 constructs. \n"
+		"CXX11 Error Log : \n${CXX11_ERROR_LOG}")
 endif()
 
 set(HAVE_GCC_ABI_DEMANGLE yes
@@ -92,7 +94,8 @@ endif()
 # GMP
 find_package(GMP REQUIRED)
 include_directories(${GMP_INCLUDE_DIRS})
-set(LIBS ${LIBS} ${GMP_LIBRARIES})
+set(LIBS ${LIBS} ${GMP_TARGETS})
+set(PKGS ${PKGS} "GMP")
 
 # Check gmpxx
 if (NOT(MSVC))
@@ -115,8 +118,9 @@ set(WITH_ECM no
 if (WITH_ECM)
     find_package(ECM REQUIRED)
     include_directories(${ECM_INCLUDE_DIRS})
-    set(LIBS ${LIBS} ${ECM_LIBRARIES})
+    set(LIBS ${LIBS} ${ECM_TARGETS})
     set(HAVE_SYMENGINE_ECM yes)
+    set(PKGS ${PKGS} "ECM")
 endif()
 
 # PRIMESIEVE
@@ -126,8 +130,9 @@ set(WITH_PRIMESIEVE no
 if (WITH_PRIMESIEVE)
     find_package(PRIMESIEVE REQUIRED)
     include_directories(${PRIMESIEVE_INCLUDE_DIRS})
-    set(LIBS ${LIBS} ${PRIMESIEVE_LIBRARIES})
+    set(LIBS ${LIBS} ${PRIMESIEVE_TARGETS})
     set(HAVE_SYMENGINE_PRIMESIEVE yes)
+    set(PKGS ${PKGS} "PRIMESIEVE")
 endif()
 
 # ARB
@@ -148,7 +153,8 @@ set(HAVE_SYMENGINE_MPC False)
 if (WITH_ARB)
     find_package(FLINT REQUIRED)
     include_directories(${FLINT_INCLUDE_DIRS})
-    set(LIBS ${LIBS} ${FLINT_LIBRARIES})
+    set(LIBS ${LIBS} ${FLINT_TARGETS})
+    set(PKGS ${PKGS} "FLINT")
 
     # Workaround for https://github.com/fredrik-johansson/arb/issues/24
     include_directories(${FLINT_INCLUDE_DIRS}/flint)
@@ -157,16 +163,18 @@ if (WITH_ARB)
 
     find_package(ARB REQUIRED)
     include_directories(${ARB_INCLUDE_DIRS})
-    set(LIBS ${LIBS} ${ARB_LIBRARIES})
+    set(LIBS ${LIBS} ${ARB_TARGETS})
     set(HAVE_SYMENGINE_ARB True)
+    set(PKGS ${PKGS} "ARB")
 endif()
 
 if (WITH_MPC)
     find_package(MPC REQUIRED)
     include_directories(${MPC_INCLUDE_DIRS})
-    set(LIBS ${LIBS} ${MPC_LIBRARIES})
+    set(LIBS ${LIBS} ${MPC_TARGETS})
     set(HAVE_SYMENGINE_MPC True)
     set(WITH_MPFR yes)
+    set(PKGS ${PKGS} "MPC")
 endif()
 
 # Piranha
@@ -182,26 +190,29 @@ set(WITH_PTHREAD no
     CACHE BOOL "Build with PTHREAD")
 
 if (WITH_PIRANHA)
-    set(WITH_BOOST yes)
     set(WITH_PTHREAD yes)
     set(WITH_MPFR yes)
     set(CMAKE_CXX_FLAGS_RELEASE
         "${CMAKE_CXX_FLAGS_RELEASE} -DNDEBUG")
 
-    find_package(Piranha REQUIRED)
+    find_package(PIRANHA REQUIRED)
     include_directories(${PIRANHA_INCLUDE_DIRS})
     set(HAVE_SYMENGINE_PIRANHA yes)
+    set(PKGS ${PKGS} "PIRANHA")
+    set(BOOST_COMPONENTS ${BOOST_COMPONENTS} serialization iostreams)
+    set(WITH_BOOST yes)
 endif()
 
 if (WITH_PTHREAD)
     find_package(PTHREAD REQUIRED)
     include_directories(${PTHREAD_INCLUDE_DIRS})
-    set(LIBS ${LIBS} ${PTHREAD_LIBRARIES})
+    set(LIBS ${LIBS} ${PTHREAD_TARGETS})
     set(HAVE_SYMENGINE_PTHREAD yes)
+    set(PKGS ${PKGS} "PTHREAD")
 endif()
 
 if (WITH_BOOST)
-    find_package(Boost REQUIRED COMPONENTS date_time filesystem system)
+    find_package(Boost REQUIRED COMPONENTS ${BOOST_COMPONENTS})
     include_directories(${Boost_INCLUDE_DIRS})
     set(LIBS ${LIBS} ${Boost_LIBRARIES})
     set(HAVE_SYMENGINE_BOOST yes)
@@ -210,17 +221,10 @@ endif()
 if (WITH_MPFR)
     find_package(MPFR REQUIRED)
     include_directories(${MPFR_INCLUDE_DIRS})
-    set(LIBS ${LIBS} ${MPFR_LIBRARIES})
+    set(LIBS ${LIBS} ${MPFR_TARGETS})
     set(HAVE_SYMENGINE_MPFR True)
+    set(PKGS ${PKGS} "MPFR")
 endif()
-
-# Python
-set(WITH_PYTHON no
-    CACHE BOOL "Build with Python wrappers")
-
-#Ruby
-set(WITH_RUBY no
-    CACHE BOOL "Build with Ruby bindings")
 
 # BFD
 set(WITH_BFD no
@@ -230,14 +234,15 @@ if (WITH_BFD)
     find_package(BFD REQUIRED)
     find_package(LINKH REQUIRED)
     include_directories(${BFD_INCLUDE_DIRS} ${LINKH_INCLUDE_DIRS})
-    set(LIBS ${LIBS} ${BFD_LIBRARIES})
+    set(LIBS ${LIBS} ${BFD_TARGETS})
     set(HAVE_TEUCHOS_BFD yes)
     set(HAVE_TEUCHOS_LINK yes)
 
     set(HAVE_TEUCHOS_EXECINFO yes)
     find_package(EXECINFO REQUIRED)
     include_directories(${EXECINFO_INCLUDE_DIRS})
-    set(LIBS ${LIBS} ${EXECINFO_LIBRARIES})
+    set(LIBS ${LIBS} ${EXECINFO_TARGETS})
+    set(PKGS ${PKGS} "BFD" "LINKH" "EXECINFO")
 endif()
 
 # TCMalloc
@@ -246,7 +251,7 @@ set(WITH_TCMALLOC no
 
 if (WITH_TCMALLOC)
     find_package(TCMALLOC REQUIRED)
-    set(LIBS ${LIBS} ${TCMALLOC_LIBRARIES})
+    set(LIBS ${LIBS} ${TCMALLOC_TARGETS})
 
     if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
         set(CMAKE_CXX_FLAGS_DEBUG
@@ -254,6 +259,7 @@ if (WITH_TCMALLOC)
         set(CMAKE_CXX_FLAGS_RELEASE
             "${CMAKE_CXX_FLAGS_RELEASE} -fno-builtin-malloc -fno-builtin-calloc -fno-builtin-realloc -fno-builtin-free")
     endif()
+    set(PKGS ${PKGS} "TCMALLOC")
 
 endif()
 
@@ -309,13 +315,6 @@ if (WITH_OPENMP)
     endif()
 endif()
 
-
-if (WITH_RUBY)
-    find_package(Ruby REQUIRED)
-    include_directories(${RUBY_INCLUDE_DIRS})
-    set(LIBS ${LIBS} ${RUBY_LIBRARY})
-endif ()
-
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     # In Debug mode we use Teuchos::RCP and enable debugging checks that make
     # the usage 100% safe, as long as the Teuchos guidelines are followed.
@@ -328,24 +327,73 @@ endif()
 
 enable_testing()
 add_subdirectory(symengine)
+
+set(SymEngine_DIR ${PROJECT_BINARY_DIR} CACHE BOOL "SymEngine Build Directory")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR})
+
+if(WIN32 AND NOT CYGWIN)
+    set(DEF_INSTALL_CMAKE_DIR CMake)
+    set(DEF_INSTALL_CMAKE_DIR_REL ..)
+else()
+    set(DEF_INSTALL_CMAKE_DIR lib/cmake/symengine)
+    set(DEF_INSTALL_CMAKE_DIR_REL ../../..)
+endif()
+set(INSTALL_CMAKE_DIR ${DEF_INSTALL_CMAKE_DIR} CACHE PATH
+    "Installation directory for CMake files")
+
+export(TARGETS symengine teuchos FILE "${PROJECT_BINARY_DIR}/SymEngineTargets.cmake")
+foreach(PKG ${PKGS})
+    set(SYMENGINE_PKG_FINDS "${SYMENGINE_PKG_FINDS}\nset(SYMENGINE_${PKG}_LIBRARIES ${${PKG}_LIBRARIES})")
+    set(SYMENGINE_PKG_FINDS "${SYMENGINE_PKG_FINDS}\nset(SYMENGINE_${PKG}_INCLUDE_DIRS ${${PKG}_INCLUDE_DIRS})")
+endforeach()
+
+# ... for the build tree
+set(CONF_INCLUDE_DIRS ${PROJECT_SOURCE_DIR} ${PROJECT_BINARY_DIR}
+                           ${PROJECT_SOURCE_DIR}/symengine/teuchos ${PROJECT_BINARY_DIR}/symengine/teuchos)
+set(SYMENGINE_BUILD_TREE yes)
+configure_file(cmake/SymEngineConfig.cmake.in
+    "${PROJECT_BINARY_DIR}/SymEngineConfig.cmake" @ONLY)
+export(TARGETS symengine teuchos
+    FILE "${PROJECT_BINARY_DIR}/SymEngineTargets.cmake")
+
+# ... for the install tree
+set(SYMENGINE_BUILD_TREE no)
+configure_file(cmake/SymEngineConfig.cmake.in
+    "${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/SymEngineConfig.cmake" @ONLY)
+
+#include(CMakePackageConfigHelpers)
+#write_basic_package_version_file(
+#    "${CMAKE_CURRENT_BINARY_DIR}/SymEngineConfigVersion.cmake"
+#    VERSION ${SYMENGINE_VERSION}
+#    COMPATIBILITY AnyNewerVersion
+#)
+
+configure_file(cmake/SymEngineConfigVersion.cmake.in SymEngineConfigVersion.cmake @ONLY)
+
+install(FILES "${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/SymEngineConfig.cmake"
+              ${PROJECT_BINARY_DIR}/SymEngineConfigVersion.cmake
+              cmake/FindARB.cmake
+              cmake/FindBFD.cmake
+              cmake/FindECM.cmake
+              cmake/FindEXECINFO.cmake
+              cmake/FindFLINT.cmake
+              cmake/FindGMP.cmake
+              cmake/FindLINKH.cmake
+              cmake/FindMPC.cmake
+              cmake/FindMPFR.cmake
+              cmake/FindPIRANHA.cmake
+              cmake/FindPRIMESIEVE.cmake
+              cmake/FindPTHREAD.cmake
+              cmake/FindTCMALLOC.cmake
+              cmake/LibFindMacros.cmake
+        DESTINATION ${INSTALL_CMAKE_DIR})
+install(EXPORT SymEngineTargets DESTINATION ${INSTALL_CMAKE_DIR})
+
+file(COPY ${symengine_SOURCE_DIR}/cmake/ DESTINATION ${symengine_BINARY_DIR}/cmake)
+
 if (BUILD_BENCHMARKS)
     add_subdirectory(benchmarks)
 endif()
-
-if (WITH_PYTHON)
-    # We need to execute the find_package() commands here, so that the
-    # variables like ${PYTHON_INSTALL_PATH} are defined here and in all cmake
-    # files (as opposed to just subset of cmake files).
-    find_package(Python REQUIRED)
-    find_package(Cython REQUIRED)
-    add_subdirectory(symengine/python)
-endif ()
-
-if (WITH_PYTHON)
-    message("Copying source of python wrappers into: ${CMAKE_CURRENT_BINARY_DIR}/symengine/python/symengine")
-    file(COPY symengine/python/symengine/ DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/symengine/python/symengine)
-endif()
-
 
 # At the end we print a nice summary
 
@@ -389,21 +437,6 @@ if (WITH_BFD)
     message("LINKH_INCLUDE_DIRS: ${LINKH_INCLUDE_DIRS}")
     message("EXECINFO_INCLUDE_DIRS: ${EXECINFO_INCLUDE_DIRS}")
 endif()
-
-message("WITH_PYTHON: ${WITH_PYTHON}")
-if (WITH_PYTHON)
-    message("PYTHON_LIBRARY: ${PYTHON_LIBRARY}")
-    message("PYTHON_INCLUDE_PATH: ${PYTHON_INCLUDE_PATH}")
-    message("PYTHON_INSTALL_PATH: ${PYTHON_INSTALL_PATH}")
-
-    message("Cython path: ${CYTHON_BIN}")
-endif ()
-
-message("WITH_RUBY: ${WITH_RUBY}")
-if (WITH_RUBY)
-    message("RUBY_INCLUDE_DIRS: ${RUBY_INCLUDE_DIRS}")
-    message("RUBY_LIBRARY: ${RUBY_LIBRARY}")
-endif ()
 
 message("WITH_ECM: ${WITH_ECM}")
 if (WITH_ECM)

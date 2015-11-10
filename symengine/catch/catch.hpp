@@ -182,6 +182,8 @@
 #  define CATCH_NOEXCEPT_IS(x)
 #endif
 
+#include "Teuchos_stacktrace.hpp"
+
 namespace Catch {
 
     class NonCopyable {
@@ -5332,7 +5334,9 @@ namespace Catch {
         virtual void handleFatalErrorCondition( std::string const& message ) {
             ResultBuilder resultBuilder = makeUnexpectedResultBuilder();
             resultBuilder.setResultType( ResultWas::FatalErrorCondition );
-            resultBuilder << message;
+            std::ostringstream o;
+            o << message << std::endl << Teuchos::get_stacktrace(3);
+            resultBuilder << o.str();
             resultBuilder.captureExpression();
 
             handleUnfinishedSections();
