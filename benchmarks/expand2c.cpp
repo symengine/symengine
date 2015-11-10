@@ -25,10 +25,13 @@ using SymEngine::RCP;
 using SymEngine::print_stack_on_segfault;
 using SymEngine::Polynomial;
 using SymEngine::make_rcp;
+#ifdef HAVE_SYMENGINE_PIRANHA
 using SymEngine::mul_poly;
+#endif
 
 int main(int argc, char* argv[])
 {
+#ifdef HAVE_SYMENGINE_PIRANHA
     print_stack_on_segfault();
     RCP<const Basic> x = symbol("x");
     RCP<const Basic> y = symbol("y");
@@ -74,6 +77,7 @@ int main(int argc, char* argv[])
         << P3->polys_set_.size() << std::endl;
 
 
+#endif
 
     return 0;
 }

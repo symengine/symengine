@@ -48,8 +48,8 @@ Polynomial::Polynomial(const RCP<const Basic> &p, umap_basic_num &vars) {
                     }
                 }
             } else if (is_a<Pow>(*p.first)) {
-                RCP<const Basic> sym = rcp_static_cast<const Pow>(p.first)->base_;
-                RCP<const Basic> exp_ = rcp_static_cast<const Pow>(p.first)->exp_;
+                RCP<const Basic> sym = rcp_static_cast<const Pow>(p.first)->get_base();
+                RCP<const Basic> exp_ = rcp_static_cast<const Pow>(p.first)->get_exp();
                 if (!is_a<Integer>(*vars.at(sym)))
                         throw std::runtime_error("Not implemented.");
                 int i = rcp_static_cast<const Integer>(vars.at(sym))->as_int();
