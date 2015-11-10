@@ -104,11 +104,11 @@ TEST_CASE("Add: subs", "[subs]")
     r2 = add(add(integer(3), sin(integer(4))), sin(integer(1)));
     REQUIRE(eq(*r1->subs(d), *r2));
 
-    // (2+2*x).subs({2: y}) -> y+2*x
+    // (2+2*x).subs({2: y}) -> y+x*y
     d.clear();
     d[i2] = y;
     r1 = add(i2, mul(i2, x));
-    r2 = add(y, mul(i2, x));
+    r2 = add(y, mul(x, y));
     REQUIRE(eq(*r1->subs(d), *r2));
 
     // (1+2*x*y).subs({2*x*y: z}) -> 1+z

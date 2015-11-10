@@ -354,7 +354,7 @@ RCP<const Basic> Add::subs(const map_basic_basic &subs_dict) const
     };
 
     it = subs_dict.find(coef_);
-    if ( it != subs_dict.end() ) {
+    if (it != subs_dict.end()) {
         coef = zero;
         add_cterm(one, it->second);
     } else {
@@ -366,7 +366,12 @@ RCP<const Basic> Add::subs(const map_basic_basic &subs_dict) const
         if (it != subs_dict.end()) {
             add_cterm(one, it->second);
         } else {
-            add_cterm(p.second, p.first->subs(subs_dict));
+            it = subs_dict.find(p.second);
+            if (it != subs_dict.end()) {
+                add_cterm(one, mul(it->second, p.first->subs(subs_dict)));
+            } else {
+                add_cterm(p.second, p.first->subs(subs_dict));
+            }
         }
     }
     return Add::from_dict(coef, std::move(d));
