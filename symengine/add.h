@@ -44,6 +44,12 @@ public:
     */
     static void dict_add_term(umap_basic_num &d,
             const RCP<const Number> &coef, const RCP<const Basic> &t);
+    /*!
+    * Adds `(c*term)` to the number `coeff` (in case both are numbers) or dict `d` (as a pair `c, term`).
+    * In case `term` is `Add` and `c=1`, expands the `Add` into the `coeff` and `d`.
+    */
+    static void coef_dict_add_term(const Ptr<RCP<const Number>> &coef, umap_basic_num &d,
+            const RCP<const Number> &c, const RCP<const Basic> &term);
     //! Converts the add dict into two appropriate instances
     void as_two_terms(const Ptr<RCP<const Basic>> &a,
             const Ptr<RCP<const Basic>> &b) const;
