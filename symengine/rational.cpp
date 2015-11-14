@@ -44,6 +44,19 @@ RCP<const Number> Rational::from_two_ints(const Integer &n,
     return Rational::from_mpq(q);
 }
 
+RCP<const Number> Rational::from_two_ints(long n, long d)
+{
+    if (d == 0)
+        throw std::runtime_error("Rational: Division by zero.");
+    mpq_class q(n, d);
+
+    // This is potentially slow, but has to be done, since 'n/d' might not be
+    // in canonical form.
+    q.canonicalize();
+
+    return Rational::from_mpq(q);
+}
+
 std::size_t Rational::__hash__() const
 {
     // only the least significant bits that fit into "signed long int" are

@@ -42,6 +42,7 @@ public:
     * */
     static RCP<const Number> from_two_ints(const Integer &n,
             const Integer &d);
+    static RCP<const Number> from_two_ints(const long n, const long d);
     //! Convert to `mpq_class`.
     inline mpq_class as_mpq() const { return this->i; }
     //! \return `true` if `0`
@@ -234,6 +235,10 @@ void get_num_den(const Rational &rat,
         const Ptr<RCP<const Integer>> &num,
         const Ptr<RCP<const Integer>> &den);
 
+//! convenience creator from two longs
+inline RCP<const Number> rational(long n, long d) {
+    return Rational::from_two_ints(n, d);
+    }
 } // SymEngine
 
 #endif
