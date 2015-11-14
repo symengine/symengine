@@ -47,11 +47,30 @@ void preorder_traversal_stop(const Basic &b, StopVisitor<T> &v)
     }
 }
 
+template<class T>
+void preorder_traversal_skip_stop(const Basic &b, StopVisitor<T> &v)
+{
+    b.accept(v);
+    if (v.skip_ or v.stop_) return;
+    for (const auto &p: b.get_args()) {
+        preorder_traversal_stop(*p, v);
+        v.skip_ = false;
+        if (v.stop_) return;
+    }
+}
+
 bool has_symbol(const Basic &b, const RCP<const Symbol> &x)
 {
     HasSymbolVisitor v;
     return v.apply(b, x);
 }
+
+bool has_function_of_symbol(const Basic &b, const RCP<const Symbol> &x)
+{
+    HasFunctionOfSymbolVisitor v;
+    return v.apply(b, x);
+}
+
 
 RCP<const Basic> coeff(const Basic &b, const RCP<const Symbol> &x,
         const RCP<const Integer> &n)
