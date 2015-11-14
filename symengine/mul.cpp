@@ -244,7 +244,6 @@ void Mul::dict_add_term_new(const Ptr<RCP<const Number>> &coef, map_basic_basic 
                 return;
             }
         } else if (is_a<Rational>(*it->second)) {
-<<<<<<< 63b89c4a3381984901b817327003b430b11a1696
             if (is_a<Integer>(*t) or is_a<Rational>(*t)) {
                 RCP<const Basic> res;
                 if (is_a<Integer>(*t)) {
@@ -264,21 +263,6 @@ void Mul::dict_add_term_new(const Ptr<RCP<const Number>> &coef, map_basic_basic 
                         Mul::dict_add_term_new(coef, d, p.second, p.first);
                     }
                     return;
-=======
-            if (is_a_Number(*t)) {
-                integer_class q, r, num, den;
-                num = get_num(rcp_static_cast<const Rational>(it->second)->i);
-                den = get_den(rcp_static_cast<const Rational>(it->second)->i);
-                // Here we make the exponent postive and a fraction between
-                // 0 and 1.
-                if (num > den or num < 0) {
-                    mpz_fdiv_qr(get_mpz_t(q), get_mpz_t(r), get_mpz_t(num),
-                                get_mpz_t(den));
-
-                    it->second = Rational::from_mpq(std::move(rational_class(r, den)));
-                    imulnum(outArg(*coef), pownum(rcp_static_cast<const Number>(t),
-                                                  rcp_static_cast<const Number>(integer(std::move(q)))));
->>>>>>> Use piranha::integer as the storage type for SymEngine::Integer optionally
                 }
             }
         }
@@ -472,10 +456,15 @@ RCP<const Basic> Mul::subs(const map_basic_basic &subs_dict) const
     RCP<const Number> coef = coef_;
     map_basic_basic d;
     for (const auto &p: dict_) {
-        RCP<const Basic> factor_old = Mul::from_dict(one, {{p.first, p.second}});
+        RCP<const Basic> factor_old;
+        if (eq(*p.second, *one)) {
+            factor_old = p.first;
+        } else {
+            factor_old = make_rcp<Pow>(p.first, p.second);
+        }
         RCP<const Basic> factor = factor_old->subs(subs_dict);
         if (factor == factor_old) {
-            Mul::dict_add_term_new(outArg(coef), d, p.second, p.first);
+            Mul::dict_add_term(d, p.second, p.first);
         } else if (is_a_Number(*factor)) {
             if (rcp_static_cast<const Number>(factor)->is_zero()) {
                 return factor;

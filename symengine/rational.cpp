@@ -54,7 +54,7 @@ RCP<const Number> Rational::from_two_ints(long n, long d)
 
     // This is potentially slow, but has to be done, since 'n/d' might not be
     // in canonical form.
-    q.canonicalize();
+    canonicalize(q);
 
     return Rational::from_mpq(q);
 }

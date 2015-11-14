@@ -165,8 +165,35 @@ inline int sign(const piranha::rational &i) {
 }
 #elif SYMENGINE_INTEGER_CLASS == SYMENGINE_FLINT
 
-inline mpz_srcptr get_mpz_t(const flint::fmpzxx &i) {
-    return nullptr;
+class mpz_view_flint {
+
+public:
+    mpz_view_flint(const flint::fmpzxx &i) {
+        if (!COEFF_IS_MPZ(*i._fmpz()))
+        {
+            mpz_init_set_si(m, *i._fmpz());
+        }
+        else
+        {
+            ptr = COEFF_TO_PTR(*i._fmpz());
+        }
+    }
+    operator mpz_srcptr() const
+	{
+        if (ptr == nullptr) return m;
+        return ptr;
+	}
+    ~mpz_view_flint() {
+        if (ptr == nullptr) mpz_clear(m);
+    }
+
+private:
+    mpz_srcptr ptr = nullptr;
+    mpz_t m;
+};
+
+inline mpz_view_flint get_mpz_t(const flint::fmpzxx &i) {
+    return mpz_view_flint(i);
 }
 
 inline mpz_ptr get_mpz_t(flint::fmpzxx &i) {

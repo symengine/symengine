@@ -134,10 +134,8 @@ typedef struct
     }
 } vec_int_hash;
 
-typedef std::unordered_map<vec_int, mpz_class,
-        vec_int_hash> umap_vec_mpz;
 typedef std::unordered_map<vec_int, integer_class,
-        vec_int_hash, vec_int_eq> umap_vec_mpz;
+        vec_int_hash> umap_vec_mpz;
 
 } // SymEngine
 

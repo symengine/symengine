@@ -154,7 +154,7 @@ public:
         for (auto p = base_dict.begin(); p != base_dict.end(); ++p) {
             for (auto q = p; q != base_dict.end(); ++q) {
                 if (q == p) {
-                    _coef_dict_add_term(_mulnum(pownum((*p).second, two), multiply), pow((*p).first, two));
+                    _coef_dict_add_term(_mulnum(mulnum((*p).second, (*p).second), multiply), pow((*p).first, two));
                 } else {
                     _coef_dict_add_term(_mulnum(multiply, _mulnum((*p).second, _mulnum((*q).second, two))),
                         mul((*q).first, (*p).first));
@@ -243,7 +243,7 @@ public:
         if (is_a<Integer>(*self.get_exp()) && is_a<UnivariatePolynomial>(*_base)) {
             int q = rcp_static_cast<const Integer>(self.get_exp())->as_int();
             RCP<const UnivariatePolynomial> p = rcp_static_cast<const UnivariatePolynomial>(_base);
-            RCP<const UnivariatePolynomial> r = univariate_polynomial(p->var_, 0, {{0, 1}});
+            RCP<const UnivariatePolynomial> r = univariate_polynomial(p->var_, 0, {{0, integer_class(1)}});
             while (q != 0) {
                 if (q % 2 == 1) {
                     r = mul_uni_poly(r, p);
@@ -265,7 +265,7 @@ public:
             return;
         }
 
-        mpz_class n = rcp_static_cast<const Integer>(self.get_exp())->as_mpz();
+        integer_class n = rcp_static_cast<const Integer>(self.get_exp())->as_mpz();
         if (n < 0) {
             return _coef_dict_add_term(multiply, div(one, expand(pow(_base, integer(-n)))));
         }
@@ -281,7 +281,7 @@ public:
         if (n == 2) {
             return square_expand(base_dict);
         } else {
-            return pow_expand(base_dict, n.get_ui());
+            return pow_expand(base_dict, get_ui(n));
         }
     }
 

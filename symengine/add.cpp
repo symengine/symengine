@@ -324,7 +324,7 @@ RCP<const Basic> Add::subs(const map_basic_basic &subs_dict) const
     }
 
     for (const auto &p: dict_) {
-        auto it = subs_dict.find(Add::from_dict(zero, {{p.first, p.second}}));
+        auto it = subs_dict.find(Mul::from_dict(one, {{p.first, p.second}}));
         if (it != subs_dict.end()) {
             coef_dict_add_term(outArg(coef), d, one, it->second);
         } else {
