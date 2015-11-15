@@ -5,6 +5,7 @@
 #endif
 
 #include <symengine/cwrapper.h>
+#include <string.h>
 
 void test_cwrapper() {
     char* s;
