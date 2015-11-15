@@ -32,6 +32,10 @@ add_executable(test_integer test_integer.cpp)
 target_link_libraries(test_integer symengine catch)
 add_test(test_integer ${PROJECT_BINARY_DIR}/test_integer)
 
+add_executable(test_rational test_rational.cpp)
+target_link_libraries(test_rational symengine catch)
+add_test(test_rational ${PROJECT_BINARY_DIR}/test_rational)
+
 add_executable(test_number test_number.cpp)
 target_link_libraries(test_number symengine catch)
 add_test(test_number ${PROJECT_BINARY_DIR}/test_number)
