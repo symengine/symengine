@@ -127,12 +127,17 @@ bool Rational::r_nth_root(const Ptr<RCP<const Rational>> &the_rat, unsigned int 
     mpz_t rn, rd;
     mpz_init(rn);
     int ret = mpz_root(rn, i.get_num().get_mpz_t(), n);
-    if (ret == 0)
+    if (ret == 0) {
+        mpz_clear(rn);
         return false;
+    }
     mpz_init(rd);
     ret = mpz_root(rd, i.get_den().get_mpz_t(), n);
-    if (ret == 0)
+    if (ret == 0) {
+        mpz_clear(rn);
+        mpz_clear(rd);
         return false;
+    }
     mpq_t ratn, ratd;
     mpq_init(ratn);
     mpq_init(ratd);
