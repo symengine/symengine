@@ -315,7 +315,7 @@ public:
 };
 
 //! Expands `self`
-RCP<const Basic> expand2(const RCP<const Basic> &self) {
+RCP<const Basic> expand(const RCP<const Basic> &self) {
     ExpandVisitor v;
     v.apply(self);
     return Add::from_dict(v.coeff, std::move(v.d_));

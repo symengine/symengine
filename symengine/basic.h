@@ -214,8 +214,6 @@ bool is_a_sub(const Basic &b);
 
 //! Expands `self`
 RCP<const Basic> expand(const RCP<const Basic> &self);
-//! Expands `self`
-RCP<const Basic> expand2(const RCP<const Basic> &self);
 
 } // SymEngine
 

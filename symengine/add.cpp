@@ -292,30 +292,6 @@ RCP<const Basic> sub(const RCP<const Basic> &a, const RCP<const Basic> &b)
     return add(a, mul(minus_one, b));
 }
 
-RCP<const Basic> add_expand(const RCP<const Add> &self)
-{
-    umap_basic_num d;
-    RCP<const Number> coef_overall = self->coef_;
-    RCP<const Number> coef;
-    RCP<const Basic> tmp, tmp2;
-    for (const auto &p: self->dict_) {
-        tmp = expand(p.first);
-        if (is_a<Add>(*tmp)) {
-            for (const auto &q: (rcp_static_cast<const Add>(tmp))->dict_) {
-                Add::as_coef_term(q.first, outArg(coef), outArg(tmp2));
-                Add::dict_add_term(d,
-                        mulnum(mulnum(p.second, q.second), coef), tmp2);
-            }
-            iaddnum(outArg(coef_overall), mulnum(p.second,
-                        rcp_static_cast<const Add>(tmp)->coef_));
-        } else {
-            Add::as_coef_term(tmp, outArg(coef), outArg(tmp));
-            Add::dict_add_term(d, mulnum(p.second, coef), tmp);
-        }
-    }
-    return Add::from_dict(coef_overall, std::move(d));
-}
-
 RCP<const Basic> Add::diff(const RCP<const Symbol> &x) const
 {
     SymEngine::umap_basic_num d;

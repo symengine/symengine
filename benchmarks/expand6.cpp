@@ -16,7 +16,7 @@ using SymEngine::zero;
 using SymEngine::map_basic_basic;
 using SymEngine::sqrt;
 using SymEngine::integer;
-using SymEngine::expand2;
+using SymEngine::expand;
 
 int main(int argc, char* argv[])
 {
@@ -40,12 +40,12 @@ int main(int argc, char* argv[])
         e = add(e, s);
         f = add(f, s);
     }
-    e = expand2(pow(e, integer(2)));
+    e = expand(pow(e, integer(2)));
     map_basic_basic dict;
     insert(dict, a0, neg(f));
     e = e->subs(dict);
     auto t1 = std::chrono::high_resolution_clock::now();
-    e = expand2(e);
+    e = expand(e);
     auto t2 = std::chrono::high_resolution_clock::now();
 
     std::cout
