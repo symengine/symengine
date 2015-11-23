@@ -62,6 +62,9 @@ public:
         return ((this->i.get_den() < 0) and (this->i.get_num() > 0)) ||
                 ((this->i.get_den() > 0) and (this->i.get_num() < 0)) ; }
 
+    bool is_perfect_power(bool is_expected=false) const;
+    bool r_nth_root(const Ptr<RCP<const Rational>> &, unsigned int n) const;
+
     /*! Add Rationals
      * \param other of type Rational
      * */
@@ -236,9 +239,12 @@ void get_num_den(const Rational &rat,
         const Ptr<RCP<const Integer>> &den);
 
 //! convenience creator from two longs
-inline RCP<const Number> rational(long n, long d) {
-    return Rational::from_two_ints(n, d);
-    }
+inline RCP<const Rational> rational(long n, long d)
+{
+    mpq_class rat(n, d);
+    rat.canonicalize();
+    return make_rcp<const Rational>(rat);
+}
 } // SymEngine
 
 #endif
