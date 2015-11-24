@@ -95,13 +95,13 @@ void get_num_den(const Rational &rat,
 bool Rational::is_perfect_power(bool is_expected) const
 {
     const mpz_class &num = i.get_num();
-    if (mpz_cmp_ui(num.get_mpz_t(), 0) == 0)
+    if (num == 0)
         return true;
-    else if (mpz_cmp_ui(num.get_mpz_t(), 1) == 0)
+    else if (num == 1)
         return mpz_perfect_power_p(i.get_den().get_mpz_t()) != 0;
 
     const mpz_class &den = i.get_den();
-    if (mpz_cmp_ui(den.get_mpz_t(), 1) == 0)
+    if (den == 0)
         return mpz_perfect_power_p(num.get_mpz_t()) != 0;
     
     if (not is_expected) {
@@ -114,44 +114,23 @@ bool Rational::is_perfect_power(bool is_expected) const
                 return false;
         }
     }
-    mpz_t prod;
-    mpz_init(prod);
-    mpz_mul(prod, num.get_mpz_t(), den.get_mpz_t());
-    bool ret = mpz_perfect_power_p(prod) != 0;
-    mpz_clear(prod);
-    return ret;
+    mpz_class prod = num * den;
+    return mpz_perfect_power_p(prod.get_mpz_t()) != 0;
 }
 
 bool Rational::r_nth_root(const Ptr<RCP<const Rational>> &the_rat, unsigned int n) const
 {
-    mpz_t rn, rd;
-    mpz_init(rn);
-    int ret = mpz_root(rn, i.get_num().get_mpz_t(), n);
-    if (ret == 0) {
-        mpz_clear(rn);
+    mpz_class rn;
+    int ret = mpz_root(rn.get_mpz_t(), i.get_num().get_mpz_t(), n);
+    if (ret == 0)
         return false;
-    }
-    mpz_init(rd);
-    ret = mpz_root(rd, i.get_den().get_mpz_t(), n);
-    if (ret == 0) {
-        mpz_clear(rn);
-        mpz_clear(rd);
+    mpz_class rd;
+    ret = mpz_root(rd.get_mpz_t(), i.get_den().get_mpz_t(), n);
+    if (ret == 0)
         return false;
-    }
-    mpq_t ratn, ratd;
-    mpq_init(ratn);
-    mpq_init(ratd);
-    mpq_set_z(ratn, rn);
-    mpq_set_z(ratd, rd);
-    mpz_clear(rn);
-    mpz_clear(rd);
-    mpq_t t;
-    mpq_init(t);
-    mpq_div(t, ratn, ratd);
-    mpq_clear(ratn);
-    mpq_clear(ratd);
-    mpq_class res(t);
-    mpq_clear(t);
+    mpq_class res(rn);
+    res /= rd;
+    res.canonicalize();
     *the_rat = make_rcp<const Rational>(res);
     return true;
 }
