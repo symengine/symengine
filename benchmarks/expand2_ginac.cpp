@@ -24,13 +24,20 @@ using namespace GiNaC;
 //In [9]: %time g = f.expand()
 //CPU times: user 0.22 s, sys: 0.01 s, total: 0.22 s
 //Wall time: 0.22 s
-int main()
+int main(int argc, char* argv[])
 {
+    int N;
+    if (argc == 2) {
+        N = std::atoi(argv[1]);
+    } else {
+        N = 15;
+    }
+
     symbol x("x"), y("y"), z("z"), w("w");
-    ex e = pow(x + y + z + w, 15);
+    ex e = pow(x + y + z + w, N);
     ex f = e*(e + w);
-    std::cout << e << std::endl;
-    std::cout << f << std::endl;
+    //std::cout << e << std::endl;
+    //std::cout << f << std::endl;
 
     auto t1 = std::chrono::high_resolution_clock::now();
     ex g = f.expand();
