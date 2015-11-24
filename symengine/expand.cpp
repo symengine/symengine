@@ -3,6 +3,17 @@
 #include <symengine/pow.h>
 
 namespace SymEngine {
+
+inline RCP<const Number> _mulnum(const RCP<const Number> &x, const RCP<const Number> &y) {
+    if (eq(*x, *one)) return y;
+    if (eq(*y, *one)) return x;
+    return x->mul(*y);
+}
+
+inline void _imulnum(const Ptr<RCP<const Number>> &self, const RCP<const Number> &other) {
+    *self = _mulnum(*self, other);
+}
+
 class ExpandVisitor : public BaseVisitor<ExpandVisitor> {
 public:
     umap_basic_num d_;
@@ -30,9 +41,10 @@ public:
     }
 
     void bvisit(const Add &self) {
-        coeff = self.coef_;
+        RCP<const Number> _multiply = multiply;
+        iaddnum(outArg(coeff), _mulnum(multiply, self.coef_));
         for (auto &p: self.dict_) {
-            multiply = p.second;
+            multiply = _mulnum(_multiply, p.second);
             this->apply(p.first);
         }
     }
@@ -48,7 +60,7 @@ public:
                 return;
             }
         }
-        this->_add_dict_term(self.rcp_from_this());
+        this->_coef_dict_add_term(multiply, self.rcp_from_this());
     }
 
     void mul_expand_two(const RCP<const Basic> &a, const RCP<const Basic> &b) {
@@ -135,10 +147,10 @@ public:
             }
             return;
         }
-        _add_dict_term(mul(a, b));
+        _coef_dict_add_term(multiply, mul(a, b));
     }
 
-    void pow_expand_two(umap_basic_num &base_dict) {
+    void square_expand(umap_basic_num &base_dict) {
         long m = base_dict.size();
 #if defined(HAVE_SYMENGINE_RESERVE)
         d_.reserve(d_.size() + m * (m + 1) / 2);
@@ -148,13 +160,10 @@ public:
         for (auto p = base_dict.begin(); p != base_dict.end(); ++p) {
             for (auto q = p; q != base_dict.end(); ++q) {
                 if (q == p) {
-                    Add::as_coef_term(pow((*p).first, two), outArg(coef), outArg(t));
-                    _imulnum(outArg(coef), pownum((*p).second, two));
-                    Add::dict_add_term(d_, _mulnum(coef, multiply), t);
+                    _coef_dict_add_term(_mulnum(pownum((*p).second, two), multiply), pow((*p).first, two));
                 } else {
-                    Add::as_coef_term(mul((*q).first, (*p).first), outArg(coef), outArg(t));
-                    _imulnum(outArg(coef), _mulnum((*p).second, _mulnum((*q).second, two)));
-                    Add::dict_add_term(d_, _mulnum(coef, multiply), t);
+                    _coef_dict_add_term(_mulnum(multiply, _mulnum((*p).second, _mulnum((*q).second, two))),
+                        mul((*q).first, (*p).first));
                 }
             }
         }
@@ -178,7 +187,7 @@ public:
             RCP<const Number> overall_coeff = one;
             for (; power != p.first.end(); ++power, ++i2) {
                 if (*power > 0) {
-                    RCP<const Integer> exp = integer(*power);
+                    RCP<const Integer> exp = integer(std::move(*power));
                     RCP<const Basic> base = i2->first;
                     if (is_a<Integer>(*base)) {
                         _imulnum(outArg(overall_coeff),
@@ -243,13 +252,13 @@ public:
             RCP<const UnivariatePolynomial> r = univariate_polynomial(p->var_, 0, {{0, 1}});
             while (q != 0) {
                 if (q % 2 == 1) {
-                    _base = mul_uni_poly(r, p);
+                    r = mul_uni_poly(r, p);
                     q--;
                 }
                 p = mul_uni_poly(p, p);
                 q /= 2;
             }
-            _add_dict_term(_base);
+            _coef_dict_add_term(multiply, r);
             return;
         }
 
@@ -264,7 +273,7 @@ public:
 
         mpz_class n = rcp_static_cast<const Integer>(self.get_exp())->as_mpz();
         if (n < 0) {
-            return _add_dict_term(div(one, expand(pow(_base, integer(-n)))));
+            return _coef_dict_add_term(multiply, div(one, expand(pow(_base, integer(-n)))));
         }
         RCP<const Add> base = rcp_static_cast<const Add>(_base);
         umap_basic_num base_dict = base->dict_;
@@ -273,44 +282,28 @@ public:
             // allows a little bit easier treatment below.
             insert(base_dict, base->coef_, one);
         } else {
-            if (base_dict.size() == 1) {
-                // Eg: (0.0 + x * 5) ** 2 == 0.0 + (x * 5) ** 2
-                _base = add(base->coef_, expand(pow(mul(base_dict.begin()->first,
-                                                base_dict.begin()->second), self.get_exp())));
-                return _add_dict_term(_base);
-            }
+            iaddnum(outArg(coeff), base->coef_);
         }
         if (n == 2) {
-            return pow_expand_two(base_dict);
+            return square_expand(base_dict);
         } else {
             return pow_expand(base_dict, n.get_ui());
         }
     }
 
-    inline void _add_dict_term(const RCP<const Basic> a) {
-        if (is_a<Add>(*a)) {
-            for (auto &q: (rcp_static_cast<const Add>(a))->dict_) {
-                Add::dict_add_term(d_, _mulnum(q.second, multiply), q.first);
-            }
-            iaddnum(outArg(coeff), _mulnum(multiply, rcp_static_cast<const Add>(a)->coef_));
+    inline void _coef_dict_add_term(const RCP<const Number> &c, const RCP<const Basic> &term) {
+        if (is_a_Number(*term)) {
+            iaddnum(outArg(coeff), _mulnum(c, rcp_static_cast<const Number>(term)));
+        } else if (is_a<Add>(*term)) {
+            for (const auto &q: (rcp_static_cast<const Add>(term))->dict_)
+                Add::dict_add_term(d_, q.second, q.first);
+            iaddnum(outArg(coeff), rcp_static_cast<const Add>(term)->coef_);
         } else {
-            RCP<const Basic> term;
-            RCP<const Number> c;
-            Add::as_coef_term(a, outArg(c), outArg(term));
-            Add::dict_add_term(d_, _mulnum(multiply, c), term);
+            RCP<const Number> coef2;
+            RCP<const Basic> t;
+            Add::as_coef_term(mul(c, term), outArg(coef2), outArg(t));
+            Add::dict_add_term(d_, coef2, t);
         }
-    }
-
-    inline RCP<const Number> _mulnum(const RCP<const Number> &x, const RCP<const Number> &y) {
-        if (eq(*x, *one)) return y;
-        if (eq(*y, *one)) return x;
-        return x->mul(*y);
-    }
-
-    inline void _imulnum(const Ptr<RCP<const Number>> &self,
-                         const RCP<const Number> &other)
-    {
-        *self = _mulnum(*self, other);
     }
 };
 

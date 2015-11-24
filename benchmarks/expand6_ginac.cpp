@@ -39,9 +39,10 @@ int main(int argc, char* argv[])
         e = e + s;
         f = f + s;
     }
-    e = expand(pow(e, 2));
-    e = e.subs(a0 == -f);
+    f = -f;
     auto t1 = std::chrono::high_resolution_clock::now();
+    e = expand(pow(e, 2));
+    e = e.subs(a0 == f);
     e = expand(e);
     auto t2 = std::chrono::high_resolution_clock::now();
 

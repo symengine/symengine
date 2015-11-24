@@ -40,11 +40,10 @@ int main(int argc, char* argv[])
         e = add(e, s);
         f = add(f, s);
     }
-    e = expand(pow(e, integer(2)));
-    map_basic_basic dict;
-    insert(dict, a0, neg(f));
-    e = e->subs(dict);
+    f = neg(f);
     auto t1 = std::chrono::high_resolution_clock::now();
+    e = expand(pow(e, integer(2)));
+    e = e->subs({{a0, f}});
     e = expand(e);
     auto t2 = std::chrono::high_resolution_clock::now();
 
