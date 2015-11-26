@@ -31,7 +31,7 @@ TEST_CASE("Rational is_power, nth root", "[rational is_power, nth root]")
 {
     RCP<const Rational> q2_5 = rational(2,5);
     RCP<const Rational> qm1_27 = rational(-1, 27);
-    RCP<const Rational> q9_25 = rational(18,50);
+    RCP<const Rational> q9_25 = rational(9,25);
     RCP<const Rational> qm1_3 = rational(-1,3);
     RCP<const Rational> q3_5 = rational(3,5);
     RCP<const Rational> res;

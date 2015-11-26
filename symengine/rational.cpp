@@ -78,10 +78,16 @@ bool Rational::__eq__(const Basic &o) const
 
 int Rational::compare(const Basic &o) const
 {
-    SYMENGINE_ASSERT(is_a<Rational>(o))
-    const Rational &s = static_cast<const Rational &>(o);
-    if (i == s.i) return 0;
-    return i < s.i ? -1 : 1;
+    if (is_a<Rational>(o)) {
+        const Rational &s = static_cast<const Rational &>(o);
+        if (i == s.i) return 0;
+        return i < s.i ? -1 : 1;
+    }
+    if (is_a<Integer>(o)) {
+        const Integer &s = static_cast<const Integer &>(o);
+        return mpq_cmp_z(i.get_mpq_t(), s.as_mpz().get_mpz_t());
+    }
+    throw std::runtime_error("unhandled comparison of Rational");
 }
 
 void get_num_den(const Rational &rat,
@@ -103,7 +109,7 @@ bool Rational::is_perfect_power(bool is_expected) const
     const mpz_class &den = i.get_den();
     if (den == 0)
         return mpz_perfect_power_p(num.get_mpz_t()) != 0;
-    
+
     if (not is_expected) {
         if (mpz_cmpabs(num.get_mpz_t(), den.get_mpz_t()) > 0) {
             if (mpz_perfect_power_p(den.get_mpz_t()) == 0)
@@ -128,8 +134,7 @@ bool Rational::r_nth_root(const Ptr<RCP<const Rational>> &the_rat, unsigned int 
     ret = mpz_root(rd.get_mpz_t(), i.get_den().get_mpz_t(), n);
     if (ret == 0)
         return false;
-    mpq_class res(rn);
-    res /= rd;
+    mpq_class res(rn, rd);
     res.canonicalize();
     *the_rat = make_rcp<const Rational>(res);
     return true;
