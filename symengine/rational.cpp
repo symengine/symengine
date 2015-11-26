@@ -85,7 +85,8 @@ int Rational::compare(const Basic &o) const
     }
     if (is_a<Integer>(o)) {
         const Integer &s = static_cast<const Integer &>(o);
-        return mpq_cmp_z(i.get_mpq_t(), s.as_mpz().get_mpz_t());
+        mpq_class tmp(s.as_mpz());
+        return mpq_cmp(i.get_mpq_t(), tmp.get_mpq_t());
     }
     throw std::runtime_error("unhandled comparison of Rational");
 }
