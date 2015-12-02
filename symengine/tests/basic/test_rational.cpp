@@ -11,6 +11,7 @@ using SymEngine::integer;
 using SymEngine::Rational;
 using SymEngine::rational;
 using SymEngine::Number;
+using SymEngine::is_a;
 
 TEST_CASE("Rational", "[rational]")
 {
@@ -18,13 +19,21 @@ TEST_CASE("Rational", "[rational]")
     RCP<const Integer> i5 = integer(5);
     RCP<const Integer> i10 = integer(10);
     RCP<const Integer> i25 = integer(25);
-    
+
     RCP<const Number> q10_25 = Rational::from_two_ints(*i10, *i25);
     RCP<const Number> q2_5 = Rational::from_two_ints(*i2, *i5);
     RCP<const Number> q = rational(2, 5);
 
     REQUIRE(q10_25->__eq__(*q2_5));
     REQUIRE(q10_25->__eq__(*q));
+
+    RCP<const Number> r1 = rational(2, 1);
+    CHECK(is_a<Integer>(*r1));
+    CHECK(r1->__eq__(*integer(2)));
+
+    r1 = rational(9, 3);
+    CHECK(is_a<Integer>(*r1));
+    CHECK(r1->__eq__(*integer(3)));
 }
 
 TEST_CASE("Rational compare", "[rational compare]")
