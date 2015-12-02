@@ -18,7 +18,7 @@ TEST_CASE("Rational", "[rational]")
     RCP<const Integer> i5 = integer(5);
     RCP<const Integer> i10 = integer(10);
     RCP<const Integer> i25 = integer(25);
-    
+
     RCP<const Number> q10_25 = Rational::from_two_ints(*i10, *i25);
     RCP<const Number> q2_5 = Rational::from_two_ints(*i2, *i5);
     RCP<const Number> q = rational(2, 5);
