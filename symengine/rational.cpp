@@ -124,7 +124,7 @@ bool Rational::is_perfect_power(bool is_expected) const
     return mpz_perfect_power_p(prod.get_mpz_t()) != 0;
 }
 
-bool Rational::r_nth_root(const Ptr<RCP<const Rational>> &the_rat, unsigned int n) const
+bool Rational::nth_root(const Ptr<RCP<const Number>> &the_rat, unsigned int n) const
 {
     mpz_class rn;
     int ret = mpz_root(rn.get_mpz_t(), i.get_num().get_mpz_t(), n);
