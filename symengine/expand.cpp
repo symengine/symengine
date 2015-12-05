@@ -15,21 +15,18 @@ inline void _imulnum(const Ptr<RCP<const Number>> &self, const RCP<const Number>
 }
 
 class ExpandVisitor : public BaseVisitor<ExpandVisitor> {
-public:
+private:
     umap_basic_num d_;
     RCP<const Number> coeff = zero;
     RCP<const Number> multiply = one;
-
+public:
     ExpandVisitor() : BaseVisitor<ExpandVisitor>(this) {
 
     }
 
-    void apply(const RCP<const Basic> &b) {
-        b->accept(*this);
-    }
-
-    void apply(const Basic &b) {
+    RCP<const Basic> apply(const Basic &b) {
         b.accept(*this);
+        return Add::from_dict(coeff, std::move(d_));
     }
 
     void bvisit(const Basic &x) {
@@ -45,8 +42,9 @@ public:
         iaddnum(outArg(coeff), _mulnum(multiply, self.coef_));
         for (auto &p: self.dict_) {
             multiply = _mulnum(_multiply, p.second);
-            this->apply(p.first);
+            p.first->accept(*this);
         }
+        multiply = _multiply;
     }
 
     void bvisit(const Mul &self) {
@@ -310,8 +308,7 @@ public:
 //! Expands `self`
 RCP<const Basic> expand(const RCP<const Basic> &self) {
     ExpandVisitor v;
-    v.apply(self);
-    return Add::from_dict(v.coeff, std::move(v.d_));
+    return v.apply(*self);
 }
 
 } // SymEngine
