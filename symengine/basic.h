@@ -214,7 +214,8 @@ bool is_a_sub(const Basic &b);
 
 //! Expands `self`
 RCP<const Basic> expand(const RCP<const Basic> &self);
-
+umap_short_basic series(const RCP<const Basic> &ex, const RCP<const Symbol> &var, unsigned int prec);
+umap_short_basic series_invfunc(const RCP<const Basic> &ex, const RCP<const Symbol> &var, unsigned int prec);
 } // SymEngine
 
 /*! This `<<` overloaded function simply calls `p.__str__`, so it allows any Basic
