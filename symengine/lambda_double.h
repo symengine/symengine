@@ -20,8 +20,8 @@
 
 namespace SymEngine {
 
-template<typename T, typename U>
-class LambdaDoubleVisitor : public BaseVisitor<U> {
+template<typename T>
+class LambdaDoubleVisitor : public BaseVisitor<LambdaDoubleVisitor<T>> {
 protected:
 /*
    The 'result_' variable is assigned into at the very end of each visit()
@@ -35,8 +35,6 @@ protected:
     fn result_;
     vec_basic symbols;
 public:
-    LambdaDoubleVisitor(U *p) : BaseVisitor<U>(p) {
-    }
 
     void init(const vec_basic &x, const Basic &b) {
         symbols = x;
@@ -247,9 +245,8 @@ public:
 };
 
 
-class LambdaRealDoubleVisitor : public LambdaDoubleVisitor<double, LambdaRealDoubleVisitor> {
+class LambdaRealDoubleVisitor : public BaseVisitor<LambdaRealDoubleVisitor, LambdaDoubleVisitor<double>> {
 public:
-    LambdaRealDoubleVisitor() : LambdaDoubleVisitor(this) { };
 
     // Classes not implemented are
     // Subs, UpperGamma, LowerGamma, Dirichlet_eta, Zeta
@@ -270,9 +267,8 @@ public:
     };
 };
 
-class LambdaComplexDoubleVisitor : public LambdaDoubleVisitor<std::complex<double>, LambdaComplexDoubleVisitor> {
+class LambdaComplexDoubleVisitor : public BaseVisitor<LambdaComplexDoubleVisitor, LambdaDoubleVisitor<std::complex<double>>> {
 public:
-    LambdaComplexDoubleVisitor() : LambdaDoubleVisitor(this) { };
 
     // Classes not implemented are
     // Subs, UpperGamma, LowerGamma, Dirichlet_eta, Zeta

@@ -17,8 +17,8 @@
 
 namespace SymEngine {
 
-template <typename T, typename U>
-class EvalDoubleVisitor : public BaseVisitor<U> {
+template <typename T>
+class EvalDoubleVisitor : public BaseVisitor<EvalDoubleVisitor<T>> {
 protected:
     /*
        The 'result_' variable is assigned into at the very end of each visit()
@@ -29,7 +29,6 @@ protected:
     */
     T result_;
 public:
-    EvalDoubleVisitor(U *p) : BaseVisitor<U>(p) { }
 
     T apply(const Basic &b) {
         b.accept(*this);
@@ -220,9 +219,8 @@ public:
     }
 };
 
-class EvalRealDoubleVisitor : public EvalDoubleVisitor<double, EvalRealDoubleVisitor> {
+class EvalRealDoubleVisitor : public BaseVisitor<EvalRealDoubleVisitor, EvalDoubleVisitor<double>> {
 public:
-    EvalRealDoubleVisitor() : EvalDoubleVisitor(this) { };
 
     // Classes not implemented are
     // Subs, UpperGamma, LowerGamma, Dirichlet_eta, Zeta
@@ -243,9 +241,8 @@ public:
     };
 };
 
-class EvalComplexDoubleVisitor : public EvalDoubleVisitor<std::complex<double>, EvalComplexDoubleVisitor> {
+class EvalComplexDoubleVisitor : public BaseVisitor<EvalComplexDoubleVisitor, EvalDoubleVisitor<std::complex<double>>> {
 public:
-    EvalComplexDoubleVisitor() : EvalDoubleVisitor(this) { };
 
     // Classes not implemented are
     // Subs, UpperGamma, LowerGamma, Dirichlet_eta, Zeta
