@@ -1,3 +1,7 @@
+#include <symengine/symengine_config.h>
+
+#ifdef HAVE_SYMENGINE_PIRANHA
+
 #include "catch.hpp"
 #include <iostream>
 #include <chrono>
@@ -225,3 +229,5 @@ TEST_CASE("Expression series expansion: lambertw ", "[Expansion of lambertw]")
 
 
 } // SymEngine
+
+#endif
