@@ -1,3 +1,7 @@
+#include <symengine/symengine_config.h>
+
+#ifdef HAVE_SYMENGINE_PIRANHA
+
 #include <iostream>
 #include <chrono>
 
@@ -34,4 +38,4 @@ int main(int argc, char* argv[])
     return 0;
 }
 
-
+#endif
