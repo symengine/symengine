@@ -103,14 +103,15 @@ TEST_CASE("Expression series expansion: roots", "[Expansion of root(ex)]")
     RCP<const Number> q12 = rational(1,2);
     RCP<const Number> qm23 = rational(-2,3);
     RCP<const Integer> one = integer(1);
-    auto ex1 = pow(sub(one, x), q12);
+    RCP<const Integer> four = integer(4);
+    auto ex1 = pow(sub(four, x), q12);
     auto ex2 = pow(sub(one, x), qm23);
     auto ex3 = sqrt(sub(one, x));
     auto ex4 = pow(cos(x), q12);
     auto ex5 = pow(cos(x), qm23);
     auto ex6 = sqrt(cos(x));
 
-    REQUIRE(series(ex1, x, 12)[10]->__eq__(*rational(-2431,262144)));
+    REQUIRE(series(ex1, x, 8)[6]->__eq__(*rational(-21,2097152)));
     REQUIRE(series(ex2, x, 12)[10]->__eq__(*rational(1621477,4782969)));
     REQUIRE(series(ex3, x, 12)[10]->__eq__(*rational(-2431,262144)));
     REQUIRE(series(ex4, x, 100)[8]->__eq__(*rational(-559,645120)));

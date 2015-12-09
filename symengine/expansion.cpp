@@ -88,7 +88,7 @@ static const std::list<unsigned int>& step_list(unsigned int prec)
     return steps;
 }
 
-pp_t series_invert(const pp_t s, const RCP<const Symbol> &var, unsigned int prec)
+pp_t series_invert(const pp_t& s, const pp_t& var, unsigned int prec)
 {
     if (s == 0)
         throw std::runtime_error("series_invert: division by zero");
@@ -96,24 +96,21 @@ pp_t series_invert(const pp_t s, const RCP<const Symbol> &var, unsigned int prec
         return pp_t{1};
     const short ldeg = s.ldegree();
     const piranha::rational& co = s.find_cf({ldeg});
-    const std::string &varname = var->get_name();
-    const pp_t var_p{varname};
     pp_t p(co.pow(-1)), ss = s;
     if (ldeg != 0)
-        ss = s * var_p.pow(-ldeg);
+        ss = s * var.pow(-ldeg);
     auto steps = step_list(prec);
     for (const auto step : steps) {
-        pp_t::set_auto_truncate_degree(step, {varname});
+        pp_t::set_auto_truncate_degree(step);
         p -= p*(p*ss - 1);
     }
-    if (ldeg != 0) {
-        return p * var_p.pow(-ldeg);
-    }
+    if (ldeg != 0)
+        return p * var.pow(-ldeg);
     else
         return p;
 }
 
-pp_t series_reverse(const pp_t s, const RCP<const Symbol> &var, unsigned int prec)
+pp_t series_reverse(const pp_t& s, const pp_t& var, unsigned int prec)
 {
     const piranha::rational& co = s.find_cf({0});
     if (co != 0)
@@ -121,19 +118,18 @@ pp_t series_reverse(const pp_t s, const RCP<const Symbol> &var, unsigned int pre
     const piranha::rational& a = s.find_cf({1});
     if (a == 0)
         throw std::runtime_error("reversion of series with zero term of degree one");
-    const std::string &varname = var->get_name();
-    pp_t r(varname), v(varname);
+    const std::string& varname(var.get_symbol_set()[0].get_name());
+    pp_t r(var);
     r /= a;
     for (unsigned int i=2; i<prec; i++) {
-        pp_t::set_auto_truncate_degree(i+1, {varname});
+        pp_t::set_auto_truncate_degree(i+1);
         pp_t sp(s.subs(varname, r));
-        r -= (v.pow(i) * sp.find_cf({i}))/a;
+        r -= (var.pow(i) * sp.find_cf({i}))/a;
     }
-    pp_t::set_auto_truncate_degree(prec, {varname});
     return r;
 }
 
-pp_t series_nthroot(const pp_t s, int n, const RCP<const Symbol> &var, unsigned int prec)
+pp_t series_nthroot(const pp_t& s, int n, const pp_t& var, unsigned int prec)
 {
     if (n == 0)
         return pp_t{1};
@@ -145,10 +141,14 @@ pp_t series_nthroot(const pp_t s, int n, const RCP<const Symbol> &var, unsigned 
     piranha::rational ct(s.find_cf({0}));
     if (ct == 0)
         throw std::runtime_error("series_nthroot needs a constant term");
-    const std::string& varname = var->get_name();
     mpq_class cl_rat(ct.get_mpq_view());
     mpq_class cl_root(cl_rat);
     bool res;
+    bool do_inv = false;
+    if (n < 0) {
+        n = -n;
+        do_inv = true;
+    }
     if (mpz_cmp_ui(cl_rat.get_den_mpz_t(), 1) == 0) {
         // integer constant
         res = mpz_root(cl_root.get_num_mpz_t(), cl_rat.get_num_mpz_t(), n) != 0;
@@ -163,18 +163,12 @@ pp_t series_nthroot(const pp_t s, int n, const RCP<const Symbol> &var, unsigned 
     if (not res)
         throw std::runtime_error("constant term is not an nth power");
 
-    bool do_inv = false;
-    if (n < 0) {
-        n = -n;
-        do_inv = true;
-    }
     pp_t res_p{1}, sn(s/ct), ctroot(mpqc2prat(cl_root));
     auto steps = step_list(prec);
     for (const auto step : steps) {
-        pp_t::set_auto_truncate_degree(step, {varname});
+        pp_t::set_auto_truncate_degree(step);
         res_p += (res_p - (res_p.pow(n+1) * sn)) / n;
     }
-    pp_t::set_auto_truncate_degree(prec, {varname});
     if (do_inv)
         return res_p * ctroot;
     else
@@ -183,31 +177,31 @@ pp_t series_nthroot(const pp_t s, int n, const RCP<const Symbol> &var, unsigned 
 
 //========= elementary functions ==========
 
-pp_t series_atan(const pp_t s, const RCP<const Symbol> &var, unsigned int prec)
+pp_t series_atan(const pp_t& s, const pp_t& var, unsigned int prec)
 {
     pp_t res_p{0};
     if (s == 0)
         return res_p;
     if (s.find_cf({0}) != 0)
         throw std::logic_error("atan(const) not Implemented");
-    const std::string& varname = var->get_name();
+    const std::string& varname(var.get_symbol_set()[0].get_name());
     pp_t var_p(varname);
     if (s == var_p) {
         //! fast atan(x)
         short sign = 1;
         for (unsigned int i=1; i<prec; i+=2, sign*=-1) {
-            res_p += piranha::rational(sign, i) * var_p.pow(i);
+            res_p += piranha::rational(sign, i) * var.pow(i);
         }
         return res_p;
     }
     const pp_t& p = s.pow(2) + 1;
-    pp_t::set_auto_truncate_degree(prec-1, {varname});
+    pp_t::set_auto_truncate_degree(prec-1);
     res_p = s.partial(varname) * series_invert(p, var, prec-1);
-    pp_t::set_auto_truncate_degree(prec, {varname});
+    pp_t::set_auto_truncate_degree(prec);
     return res_p.integrate(varname);
 }
 
-pp_t series_tan(const pp_t s, const RCP<const Symbol> &var, unsigned int prec)
+pp_t series_tan(const pp_t& s, const pp_t& var, unsigned int prec)
 {
     if (s.find_cf({0}) != 0)
         throw std::logic_error("tan(const) not Implemented");
@@ -228,22 +222,22 @@ pp_t series_tan(const pp_t s, const RCP<const Symbol> &var, unsigned int prec)
     pp_t res_p{0};
     auto steps = step_list(prec);
     for (const auto step : steps) {
-        pp_t::set_auto_truncate_degree(step, {var->get_name()});
+        pp_t::set_auto_truncate_degree(step);
         res_p += (s - series_atan(res_p, var, step)) * (res_p.pow(2) + 1);
     }
     return res_p;
 }
 
-pp_t series_cot(const pp_t s, const RCP<const Symbol> &var, unsigned int prec)
+pp_t series_cot(const pp_t& s, const pp_t& var, unsigned int prec)
 {
     return series_invert(series_tan(s, var, prec), var, prec);
 }
 
-pp_t series_sin(const pp_t s, const RCP<const Symbol> &var, unsigned int prec)
+pp_t series_sin(const pp_t& s, const pp_t& var, unsigned int prec)
 {
-    pp_t var_p(var->get_name()), res_p{0};
+    pp_t res_p{0};
 
-    if (s == var_p) {
+    if (s == var) {
         //! fast sin(x)
         piranha::integer prod{1};
         for (unsigned int i=0; i<prec/2; i++) {
@@ -251,7 +245,7 @@ pp_t series_sin(const pp_t s, const RCP<const Symbol> &var, unsigned int prec)
             if (i != 0)
                 prod *= 1-j;
             prod *= j;
-            res_p += piranha::rational{1,prod} * var_p.pow(j);
+            res_p += piranha::rational{1,prod} * var.pow(j);
         }
         return res_p;
     }
@@ -263,33 +257,33 @@ pp_t series_sin(const pp_t s, const RCP<const Symbol> &var, unsigned int prec)
     return series_invert(t.pow(2) + 1, var, prec) * t * 2;
 }
 
-pp_t series_csc(const pp_t s, const RCP<const Symbol> &var, unsigned int prec)
+pp_t series_csc(const pp_t& s, const pp_t& var, unsigned int prec)
 {
     return series_invert(series_sin(s, var, prec), var, prec);
 }
 
-pp_t series_asin(const pp_t s, const RCP<const Symbol> &var, unsigned int prec)
+pp_t series_asin(const pp_t& s, const pp_t& var, unsigned int prec)
 {
     if (s.find_cf({0}) != 0)
         throw std::logic_error("asin(const) not Implemented");
 
-    const std::string& varname = var->get_name();
+    const std::string& varname(var.get_symbol_set()[0].get_name());
     const pp_t t((s.pow(2) - 1)*(-1));
     return (s.partial(varname) * series_nthroot(t, -2, var, prec-1)).integrate(varname);
 }
 
-pp_t series_cos(const pp_t s, const RCP<const Symbol> &var, unsigned int prec)
+pp_t series_cos(const pp_t& s, const pp_t& var, unsigned int prec)
 {
-    pp_t var_p(var->get_name()), res_p{1};
+    pp_t res_p{1};
 
-    if (s == var_p) {
+    if (s == var) {
         //! fast cos(x)
         piranha::integer prod{1};
         for (unsigned int i=1; i<=prec/2; i++) {
             const short j = 2*i;
             prod *= 1-j;
             prod *= j;
-            res_p += piranha::rational{1,prod} * var_p.pow(j);
+            res_p += piranha::rational{1,prod} * var.pow(j);
         }
         return res_p;
     }
@@ -301,21 +295,21 @@ pp_t series_cos(const pp_t s, const RCP<const Symbol> &var, unsigned int prec)
     return series_invert(t + 1, var, prec) * (-(t - 1));
 }
 
-pp_t series_sec(const pp_t s, const RCP<const Symbol> &var, unsigned int prec)
+pp_t series_sec(const pp_t& s, const pp_t& var, unsigned int prec)
 {
     return series_invert(series_cos(s, var, prec), var, prec);
 }
 
-pp_t series_log(const pp_t s, const RCP<const Symbol> &var, unsigned int prec)
+pp_t series_log(const pp_t& s, const pp_t& var, unsigned int prec)
 {
-    const std::string &varname = var->get_name();
-    pp_t var_p(varname), res_p{0};
+    const std::string& varname(var.get_symbol_set()[0].get_name());
+    pp_t res_p{0};
     if (s==1)
         return res_p;
-    if (s-1 == var_p) {
+    if (s-1 == var) {
         //! fast log(1+x)
         for (unsigned int i=1; i<prec; i++) {
-            res_p += piranha::rational{((i%2)==0)?-1:1,i} * var_p.pow(i);
+            res_p += piranha::rational{((i%2)==0)?-1:1,i} * var.pow(i);
         }
         return res_p;
     }
@@ -327,19 +321,18 @@ pp_t series_log(const pp_t s, const RCP<const Symbol> &var, unsigned int prec)
     return res_p.integrate(varname);
 }
 
-pp_t series_exp(const pp_t s, const RCP<const Symbol> &var, unsigned int prec)
+pp_t series_exp(const pp_t& s, const pp_t& var, unsigned int prec)
 {
-    const std::string &varname = var->get_name();
-    pp_t var_p(varname), res_p{1};
+    pp_t res_p{1};
     if (s == 0)
         return res_p;
 
-    if (s == var_p) {
+    if (s == var) {
         //! fast exp(x)
         piranha::rational coef{1,1};
         for (unsigned int i=1; i<prec; i++) {
             coef /= i;
-            res_p += coef * var_p.pow(i);
+            res_p += coef * var.pow(i);
         }
         return res_p;
     }
@@ -349,13 +342,13 @@ pp_t series_exp(const pp_t s, const RCP<const Symbol> &var, unsigned int prec)
 
     auto steps = step_list(prec);
     for (const auto step : steps) {
-        pp_t::set_auto_truncate_degree(step, {var->get_name()});
+        pp_t::set_auto_truncate_degree(step);
         res_p += res_p*(s - series_log(res_p, var, step));
     }
     return res_p;
 }
 
-pp_t series_lambertw(const pp_t s, const RCP<const Symbol> &var, unsigned int prec)
+pp_t series_lambertw(const pp_t& s, const pp_t& var, unsigned int prec)
 {
     if (s.find_cf({0}) != 0)
         throw std::logic_error("lambertw(const) not Implemented");
@@ -364,7 +357,7 @@ pp_t series_lambertw(const pp_t s, const RCP<const Symbol> &var, unsigned int pr
 
     auto steps = step_list(prec);
     for (const auto step : steps) {
-        pp_t::set_auto_truncate_degree(step, {var->get_name()});
+        pp_t::set_auto_truncate_degree(step);
         const pp_t e(series_exp(p1, var, step));
         const pp_t p2(e * p1 - s);
         const pp_t p3(series_invert(e * (p1 + 1), var, step));
@@ -373,7 +366,7 @@ pp_t series_lambertw(const pp_t s, const RCP<const Symbol> &var, unsigned int pr
     return p1;
 }
 
-pp_t series_sinh(const pp_t s, const RCP<const Symbol> &var, unsigned int prec)
+pp_t series_sinh(const pp_t& s, const pp_t& var, unsigned int prec)
 {
     if (s.find_cf({0}) != 0)
         throw std::logic_error("sinh(const) not Implemented");
@@ -383,7 +376,7 @@ pp_t series_sinh(const pp_t s, const RCP<const Symbol> &var, unsigned int prec)
     return (p1 - p2)/2;
 }
 
-pp_t series_cosh(const pp_t s, const RCP<const Symbol> &var, unsigned int prec)
+pp_t series_cosh(const pp_t& s, const pp_t& var, unsigned int prec)
 {
     if (s.find_cf({0}) != 0)
         throw std::logic_error("cosh(const) not Implemented");
@@ -393,44 +386,41 @@ pp_t series_cosh(const pp_t s, const RCP<const Symbol> &var, unsigned int prec)
     return (p1 + p2)/2;
 }
 
-pp_t series_atanh(const pp_t s, const RCP<const Symbol> &var, unsigned int prec)
+pp_t series_atanh(const pp_t& s, const pp_t& var, unsigned int prec)
 {
     if (s.find_cf({0}) != 0)
         throw std::logic_error("atanh(const) not Implemented");
 
-    const std::string &varname = var->get_name();
+    const std::string& varname(var.get_symbol_set()[0].get_name());
     const pp_t& p(-(s.pow(2)) + 1);
-    pp_t::set_auto_truncate_degree(prec-1, {varname});
-    pp_t res_p = s.partial(varname) * series_invert(p, var, prec-1);
-    pp_t::set_auto_truncate_degree(prec, {varname});
+    pp_t::set_auto_truncate_degree(prec-1);
+    const pp_t res_p(s.partial(varname) * series_invert(p, var, prec-1));
+    pp_t::set_auto_truncate_degree(prec);
     return res_p.integrate(varname);
-    return res_p;
 }
 
-pp_t series_asinh(const pp_t s, const RCP<const Symbol> &var, unsigned int prec)
+pp_t series_asinh(const pp_t& s, const pp_t& var, unsigned int prec)
 {
     if (s.find_cf({0}) != 0)
         throw std::logic_error("asinh(const) not Implemented");
 
-    const std::string &varname = var->get_name();
+    const std::string& varname(var.get_symbol_set()[0].get_name());
     const pp_t& p(series_nthroot(s.pow(2) + 1, 2, var, prec));
-    pp_t::set_auto_truncate_degree(prec-1, {varname});
-    pp_t res_p = s.partial(varname) * series_invert(p, var, prec-1);
-    pp_t::set_auto_truncate_degree(prec, {varname});
+    pp_t::set_auto_truncate_degree(prec-1);
+    const pp_t res_p(s.partial(varname) * series_invert(p, var, prec-1));
+    pp_t::set_auto_truncate_degree(prec);
     return res_p.integrate(varname);
-    return res_p;
 }
 
-pp_t series_tanh(const pp_t s, const RCP<const Symbol> &var, unsigned int prec)
+pp_t series_tanh(const pp_t& s, const pp_t& var, unsigned int prec)
 {
     if (s.find_cf({0}) != 0)
         throw std::logic_error("tanh(const) not Implemented");
 
-    const std::string &varname = var->get_name();
     pp_t res_p{s};
     auto steps = step_list(prec);
     for (const auto step : steps) {
-        pp_t::set_auto_truncate_degree(step, {varname});
+        pp_t::set_auto_truncate_degree(step);
         const pp_t p(s - series_atanh(res_p, var, step));
         res_p += -p * (res_p.pow(2) - 1);
     }
@@ -485,8 +475,9 @@ pp_t _series(const RCP<const Basic> &ex, const RCP<const Symbol> &var, unsigned 
     }
 
     if (is_a<Symbol>(*ex))
-        return pp_t(var->get_name());
+        return pp_t(dynamic_cast<const Symbol&>(*ex).get_name());
 
+    const pp_t var_p(var->get_name());
     if (is_a_sub<Function>(*ex)) {
         const Function& fun = static_cast<const Function&>(*ex);
         auto args = fun.get_args();
@@ -499,7 +490,7 @@ pp_t _series(const RCP<const Basic> &ex, const RCP<const Symbol> &var, unsigned 
             throw std::logic_error(std::string("No expansion for this function: ")
                                     + fun.__str__());
         auto series_inner = _series(args[0], var, prec);
-        return func(std::move(series_inner), var, prec);
+        return func(std::move(series_inner), var_p, prec);
     }
 
     if (is_a<Add>(*ex)) {
@@ -537,9 +528,9 @@ pp_t _series(const RCP<const Basic> &ex, const RCP<const Symbol> &var, unsigned 
                 return pbase.pow(sh);
             else {
                 if (sh == -1)
-                    return series_invert(pbase, var, prec);
+                    return series_invert(pbase, var_p, prec);
                 else
-                    return series_invert(pbase.pow(-sh), var, prec);
+                    return series_invert(pbase.pow(-sh), var_p, prec);
             }
         }
         if (is_a<Rational>(*exp)) {
@@ -552,25 +543,25 @@ pp_t _series(const RCP<const Basic> &ex, const RCP<const Symbol> &var, unsigned 
             const int den = expdenz.get_si();
             const pp_t proot(series_nthroot(
                         _series(base, var, prec),
-                        den, var, prec));
+                        den, var_p, prec));
             if (num == 1)
                 return proot;
             if (num > 0)
                 return proot.pow(num);
             else {
                 if (num == -1)
-                    return series_invert(proot, var, prec);
+                    return series_invert(proot, var_p, prec);
                 else
-                    return series_invert(proot.pow(-num), var, prec);
+                    return series_invert(proot.pow(-num), var_p, prec);
             }
         }
         if (is_a<Constant>(*base) and E->__eq__(*base)) {
             const pp_t pexp(_series(exp, var, prec));
-            return series_exp(pexp, var, prec);
+            return series_exp(pexp, var_p, prec);
         }
         const pp_t pexp(_series(exp, var, prec));
         const pp_t pbase(_series(base, var, prec));
-        return series_exp(pexp*series_log(pbase, var, prec), var, prec);
+        return series_exp(pexp*series_log(pbase, var_p, prec), var_p, prec);
     }
 
     std::string str("Unknown Basic type: ");
@@ -597,8 +588,7 @@ umap_short_basic series(const RCP<const Basic> &ex, const RCP<const Symbol> &var
     if (is_a<Symbol>(*ex))
         return {{0, ex}};
 
-    const std::string varname(var->get_name());
-    pp_t::set_auto_truncate_degree(prec, {varname});
+    pp_t::set_auto_truncate_degree(prec);
     return pp2vec(_series(ex, var, prec), prec);
 }
 
@@ -609,9 +599,8 @@ umap_short_basic series_invfunc(const RCP<const Basic> &ex, const RCP<const Symb
     if (is_a<Symbol>(*ex))
         return {{0, ex}};
 
-    const std::string varname(var->get_name());
-    pp_t::set_auto_truncate_degree(prec, {varname});
-    return pp2vec(series_reverse(_series(ex, var, prec), var, prec), prec);
+    pp_t::set_auto_truncate_degree(prec);
+    return pp2vec(series_reverse(_series(ex, var, prec), pp_t(var->get_name()), prec), prec);
 }
 
 } //SymEngine
