@@ -64,15 +64,15 @@ public:
     static RCP<const Number> from_two_nums(const Number &re,
         const Number &im);
 
-    //! \return `true` if `0`
+    //! \return false since imaginary cannot be zero
     virtual bool is_zero() const { return false; }
-    //! \return `true` if `1`
+    //! \return false since imaginary cannot be zero
     virtual bool is_one() const { return false; }
-    //! \return `true` if `-1`
+    //! \return false since imaginary cannot be zero
     virtual bool is_minus_one() const { return false; }
-    //! \return `true` if both `real_` or `imaginary_` are zero
+    //! \return `true` if both `real_` is zero
+    inline bool is_reim_zero() const { return (this->real_ == 0); }
     // This is needed while printing inside `mul`.
-    inline bool is_reim_zero() const { return ((this->real_ == 0); }
     //! \return `true` if `real_`  is zero
     inline bool is_re_zero() const { return (this->real_ == 0); }
     /*! Add Complex
