@@ -128,16 +128,8 @@ typedef struct
     }
 } vec_int_hash;
 
-typedef struct
-{
-    //! \return true if `x==y`
-    inline bool operator() (const vec_int &x, const vec_int &y) const {
-        return x == y;
-    }
-} vec_int_eq;
-
 typedef std::unordered_map<vec_int, mpz_class,
-        vec_int_hash, vec_int_eq> umap_vec_mpz;
+        vec_int_hash> umap_vec_mpz;
 
 } // SymEngine
 
