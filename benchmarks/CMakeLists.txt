@@ -46,3 +46,6 @@ target_link_libraries(expand6 symengine)
 
 add_executable(series series.cpp)
 target_link_libraries(series symengine)
+
+add_executable(series_expansion_sincos series_expansion_sincos.cpp)
+target_link_libraries(series_expansion_sincos symengine)

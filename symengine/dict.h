@@ -23,6 +23,7 @@ struct RCPIntegerKeyLess;
 
 typedef std::unordered_map<RCP<const Basic>, RCP<const Number>,
         RCPBasicHash, RCPBasicKeyEq> umap_basic_num;
+typedef std::unordered_map<short, RCP<const Basic>> umap_short_basic;
 typedef std::unordered_map<RCP<const Basic>, RCP<const Basic>,
         RCPBasicHash, RCPBasicKeyEq> umap_basic_basic;
 

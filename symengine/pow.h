@@ -7,6 +7,7 @@
 #define SYMENGINE_POW_H
 
 #include <symengine/basic.h>
+#include <symengine/functions.h>
 #include <symengine/dict.h>
 #include <symengine/mul.h>
 #include <symengine/integer.h>
@@ -62,7 +63,7 @@ inline RCP<const Basic> sqrt(const RCP<const Basic> &x) {
     return pow(x, div(one, integer(2)));
 }
 
-class Log : public Basic {
+class Log : public Function {
 // Logarithms are taken with the natural base, `e`. To get
 // a logarithm of a different base `b`, use `log(x, b)`,
 // which is essentially short-hand for `log(x)/log(b)`.
