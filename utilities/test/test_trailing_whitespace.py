@@ -92,5 +92,7 @@ exclude = set()
 
 check_directory_tree(BIN_PATH, test, set(["~",".sh"]), "*")
 check_directory_tree(SYMENGINE_PATH, test, exclude)
+check_directory_tree(SYMENGINE_PATH, test, exclude, "*.h")
 check_directory_tree(EXAMPLES_PATH, test, exclude)
+check_directory_tree(EXAMPLES_PATH, test, exclude, "*.h")
 print _report_failures()
