@@ -1,9 +1,32 @@
 from os import walk, sep, pardir
-from os.path import split, join, abspath, exists, isfile
+from os.path import split, join, abspath, exists, isfile , basename
 from glob import glob
 import re
 import random
 import ast
+import inspect
+ 
+_failed_expectations = []
+ 
+def _log_failure(msg=None):
+    (filename, line, funcname, contextlist) =  inspect.stack()[2][1:5]
+    filename = basename(filename)
+    context = contextlist[0]
+    _failed_expectations.append('file "%s", line %s, in %s()%s\n%s' % 
+        (filename, line, funcname, (('\n%s' % msg) if msg else ''), context))
+ 
+def _report_failures():
+    global _failed_expectations
+    if _failed_expectations:
+        (filename, line, funcname) =  inspect.stack()[1][1:4]
+        report = [
+            '\n\nassert_expectations() called from',
+            '"%s" line %s, in %s()\n' % (basename(filename), line, funcname),
+            'Failed Expectations:%s\n' % len(_failed_expectations)]
+        for i,failure in enumerate(_failed_expectations, start=1):
+            report.append('%d: %s' % (i, failure))
+        _failed_expectations = []
+    return ('\n'.join(report))
 
 SYMENGINE_PATH = abspath(join(split(__file__)[0], pardir, pardir))  # go to sympy/
 assert exists(SYMENGINE_PATH)
@@ -63,10 +86,11 @@ def test_this_file(fname, test_file):
 	test_set = set()
 	for idx, line in enumerate(test_file):
 		if line.endswith(" \n") or line.endswith("\t\n"):
-			assert False, message_space % (fname, idx + 1)
+			_log_failure( message_space % (fname, idx + 1))
 
 exclude = set()
 
 check_directory_tree(BIN_PATH, test, set(["~",".sh"]), "*")
 check_directory_tree(SYMENGINE_PATH, test, exclude)
 check_directory_tree(EXAMPLES_PATH, test, exclude)
+print _report_failures()
