@@ -70,8 +70,6 @@ public:
     virtual bool is_one() const { return false; }
     //! \return `false` since `imaginary_` cannot be zero
     virtual bool is_minus_one() const { return false; }
-    //! \return `true` if `real_` is zero (since `imaginary_` cannot be zero)
-    inline bool is_reim_zero() const { return (this->real_ == 0); }
     // This is needed while printing inside `mul`.
     //! \return `true` if `real_`  is zero
     inline bool is_re_zero() const { return (this->real_ == 0); }
