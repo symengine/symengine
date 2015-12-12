@@ -1,7 +1,7 @@
-#include <cmath>
 #include <valarray>
 #include <iterator>
 
+#include <symengine/basic.h>
 #include <symengine/ntheory.h>
 #include <symengine/rational.h>
 #include <symengine/mul.h>
