@@ -25,8 +25,6 @@
 #include <type_traits>
 #include <functional>
 
-
-
 #include <symengine/symengine_config.h>
 
 #ifdef WITH_SYMENGINE_THREAD_SAFE
