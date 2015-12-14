@@ -441,6 +441,7 @@ std::vector<std::string> init_str_printer_names() {
     names[LOWERGAMMA] = "lowergamma";
     names[UPPERGAMMA] = "uppergamma";
     names[ABS] = "abs";
+    names[ORDER] = "O";
     return names;
 }
 
