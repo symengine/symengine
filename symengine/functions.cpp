@@ -2963,4 +2963,17 @@ RCP<const Basic> abs(const RCP<const Basic> &arg)
     return make_rcp<const Abs>(arg);
 }
 
+
+std::size_t Order::__hash__() const
+{
+    std::size_t seed = ORDER;
+    hash_combine<Basic>(seed, *arg_);
+    return seed;
+}
+
+RCP<const Basic> O(const RCP<const Basic> &arg)
+{
+    return make_rcp<const Order>(arg);
+}
+
 } // SymEngine

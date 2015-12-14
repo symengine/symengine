@@ -1085,6 +1085,31 @@ public:
 RCP<const Basic> abs(const RCP<const Basic> &arg);
 
 
+class Order: public Function {
+/*!    The order function O(), part of power series
+ **/
+private:
+    RCP<const Basic> arg_;
+public:
+    IMPLEMENT_TYPEID(ORDER)
+    //! Abs Constructor
+    Order(const RCP<const Basic> &arg) : arg_(arg) {}
+    /*! Equality comparator
+     * \param o - Object to be compared with
+     * \return whether the 2 objects are equal
+     * */
+    virtual bool __eq__(const Basic &o) const { return false; }
+    inline RCP<const Basic> get_arg() const { return arg_; }
+    virtual vec_basic get_args() const { return {arg_}; }
+
+    virtual int compare(const Basic &o) const { return 0; }
+    virtual std::size_t __hash__() const;
+    virtual void accept(Visitor &v) const;
+};
+
+RCP<const Basic> O(const RCP<const Basic> &arg);
+
+
 } // SymEngine
 
 #endif
