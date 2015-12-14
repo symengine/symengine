@@ -19,6 +19,10 @@
 #include <unordered_map>
 #include <cassert>
 #include <ciso646>
+#include <cmath>
+#include <functional>
+#include <complex>
+#include <type_traits>
 
 #include <symengine/symengine_config.h>
 

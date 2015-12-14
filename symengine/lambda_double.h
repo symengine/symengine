@@ -1,9 +1,6 @@
 #ifndef SYMENGINE_LAMBDA_DOUBLE_H
 #define SYMENGINE_LAMBDA_DOUBLE_H
 
-#include <cmath>
-#include <functional>
-#include <complex>
 
 #include <symengine/basic.h>
 #include <symengine/symbol.h>
