@@ -1,7 +1,5 @@
 #include <symengine/symengine_config.h>
 
-#ifdef HAVE_SYMENGINE_PIRANHA
-
 #include "catch.hpp"
 #include <iostream>
 #include <chrono>
@@ -22,6 +20,7 @@ using SymEngine::cos;
 
 namespace SymEngine {
 
+#ifdef HAVE_SYMENGINE_PIRANHA
 static bool eq(const umap_short_basic& v1, const umap_short_basic& v2)
 {
     for (auto it : v2) {
@@ -228,7 +227,15 @@ TEST_CASE("Expression series expansion: lambertw ", "[Expansion of lambertw]")
     REQUIRE(series(ex2, x, 12)[10]->__eq__(*rational(-2993294,14175)));
 }
 
+#else
+TEST_CASE("Check error when expansion called without Piranha ", "[Expansion without Piranha]")
+{
+    RCP<const Symbol> x = symbol("x");
+    auto ex1 = lambertw(x);
+    REQUIRE_THROWS_AS(series(ex1, x, 10), std::runtime_error);
+}
+#endif
+
 
 } // SymEngine
 
-#endif
