@@ -7,11 +7,11 @@
 #include <symengine/symengine_config.h>
 
 #ifdef HAVE_SYMENGINE_PIRANHA
-
 #include <piranha/monomial.hpp>
 #include <piranha/polynomial.hpp>
 #include <piranha/mp_rational.hpp>
 #include <piranha/mp_integer.hpp>
+#endif
 
 #include <stdexcept>
 #include <memory>
@@ -38,6 +38,7 @@
 
 namespace SymEngine {
 
+#ifdef HAVE_SYMENGINE_PIRANHA
 using pp_t = piranha::polynomial<piranha::rational,piranha::monomial<short>>;
 
 //========== helpers ============
@@ -578,9 +579,11 @@ umap_short_basic pp2vec(const pp_t &p, unsigned int prec)
     }
     return map;
 }
+#endif // HAVE_SYMENGINE_PIRANHA
 
 umap_short_basic series(const RCP<const Basic> &ex, const RCP<const Symbol> &var, unsigned int prec)
 {
+#ifdef HAVE_SYMENGINE_PIRANHA
     if (prec == 0)
         return {{0, zero}};
     if (not has_symbol(*ex, var))
@@ -590,10 +593,14 @@ umap_short_basic series(const RCP<const Basic> &ex, const RCP<const Symbol> &var
 
     pp_t::set_auto_truncate_degree(prec);
     return pp2vec(_series(ex, var, prec), prec);
+#else
+    throw std::runtime_error("Series expansion is supported only with Piranha");
+#endif
 }
 
 umap_short_basic series_invfunc(const RCP<const Basic> &ex, const RCP<const Symbol> &var, unsigned int prec)
 {
+#ifdef HAVE_SYMENGINE_PIRANHA
     if (prec == 0)
         return {{0, zero}};
     if (is_a<Symbol>(*ex))
@@ -601,8 +608,9 @@ umap_short_basic series_invfunc(const RCP<const Basic> &ex, const RCP<const Symb
 
     pp_t::set_auto_truncate_degree(prec);
     return pp2vec(series_reverse(_series(ex, var, prec), pp_t(var->get_name()), prec), prec);
+#else
+    throw std::runtime_error("Series expansion is supported only with Piranha");
+#endif
 }
 
 } //SymEngine
-
-#endif // HAVE_SYMENGINE_PIRANHA
