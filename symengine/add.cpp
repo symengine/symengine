@@ -220,10 +220,15 @@ void Add::as_coef_term(const RCP<const Basic> &self,
         const Ptr<RCP<const Number>> &coef, const Ptr<RCP<const Basic>> &term)
 {
     if (is_a<Mul>(*self)) {
-        *coef = (rcp_static_cast<const Mul>(self))->coef_;
-        // We need to copy our 'dict_' here, as 'term' has to have its own.
-        map_basic_basic d2 = (rcp_static_cast<const Mul>(self))->dict_;
-        *term = Mul::from_dict(one, std::move(d2));
+        if (neq(*(rcp_static_cast<const Mul>(self)->coef_), *one)) {
+            *coef = (rcp_static_cast<const Mul>(self))->coef_;
+            // We need to copy our 'dict_' here, as 'term' has to have its own.
+            map_basic_basic d2 = (rcp_static_cast<const Mul>(self))->dict_;
+            *term = Mul::from_dict(one, std::move(d2));
+        } else {
+            *coef = one;
+            *term = self;
+        }
     } else if (is_a_Number(*self)) {
         *coef = rcp_static_cast<const Number>(self);
         *term = one;
@@ -285,30 +290,6 @@ RCP<const Basic> add(const RCP<const Basic> &a, const RCP<const Basic> &b)
 RCP<const Basic> sub(const RCP<const Basic> &a, const RCP<const Basic> &b)
 {
     return add(a, mul(minus_one, b));
-}
-
-RCP<const Basic> add_expand(const RCP<const Add> &self)
-{
-    umap_basic_num d;
-    RCP<const Number> coef_overall = self->coef_;
-    RCP<const Number> coef;
-    RCP<const Basic> tmp, tmp2;
-    for (const auto &p: self->dict_) {
-        tmp = expand(p.first);
-        if (is_a<Add>(*tmp)) {
-            for (const auto &q: (rcp_static_cast<const Add>(tmp))->dict_) {
-                Add::as_coef_term(q.first, outArg(coef), outArg(tmp2));
-                Add::dict_add_term(d,
-                        mulnum(mulnum(p.second, q.second), coef), tmp2);
-            }
-            iaddnum(outArg(coef_overall), mulnum(p.second,
-                        rcp_static_cast<const Add>(tmp)->coef_));
-        } else {
-            Add::as_coef_term(tmp, outArg(coef), outArg(tmp));
-            Add::dict_add_term(d, mulnum(p.second, coef), tmp);
-        }
-    }
-    return Add::from_dict(coef_overall, std::move(d));
 }
 
 RCP<const Basic> Add::diff(const RCP<const Symbol> &x) const

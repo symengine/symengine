@@ -35,6 +35,7 @@ set(SRC
     printer.cpp
     real_double.cpp
     complex_double.cpp
+    expand.cpp
 )
 
 if (WITH_MPFR)

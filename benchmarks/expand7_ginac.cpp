@@ -5,7 +5,6 @@
 // See this SO answer: http://stackoverflow.com/a/18696743/1895353
 
 #include <iostream>
-#include <sstream>
 #include <chrono>
 
 #include <ginac/ginac.h>
@@ -24,32 +23,23 @@ int main(int argc, char* argv[])
     if (argc == 2) {
         N = std::atoi(argv[1]);
     } else {
-        N = 100;
+        N = 20;
     }
 
-    ex e, f, s, a0, a1;
-    a0 = symbol("a0");
-    a1 = symbol("a1");
-    e = a0 + a1;
-    f = 0;
-    for (long long i = 2; i < N; i++) {
-        std::ostringstream o;
-        o << "a" << i;
-        s = symbol(o.str());
-        e = e + s;
-        f = f + s;
-    }
-    f = -f;
+    ex e, f, x, y;
+    x = symbol("x");
+    y = symbol("y");
+    e = pow((1+sqrt(ex(3))*x+sqrt(ex(5))*y), N);
+    f = e*(e+sqrt(ex(7)));
+
     auto t1 = std::chrono::high_resolution_clock::now();
-    e = expand(pow(e, 2));
-    e = e.subs(a0 == f);
-    e = expand(e);
+    f = expand(f);
     auto t2 = std::chrono::high_resolution_clock::now();
 
     std::cout
         << std::chrono::duration_cast<std::chrono::milliseconds>(t2-t1).count()
         << "ms" << std::endl;
-    std::cout << e << std::endl;
+    //std::cout << f << std::endl;
 
     return 0;
 }
