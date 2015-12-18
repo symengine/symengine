@@ -92,3 +92,5 @@ if [[ "${TEST_CPP}" != "no" ]]; then
     ./a.out
 fi
 
+echo "Checking whether all header files are installed:"
+python $SOURCE_DIR/bin/test_make_install.py $our_install_dir/include/symengine/ $SOURCE_DIR/symengine
