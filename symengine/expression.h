@@ -17,6 +17,7 @@
 #include <symengine/mul.h>
 #include <symengine/pow.h>
 #include <symengine/symbol.h>
+#include <symengine/visitor.h>
 
 namespace SymEngine
 {
@@ -131,6 +132,10 @@ inline Expression pow(const Expression &base, const Expression &exp)
 inline Expression expand(const Expression &arg)
 {
     return expand(arg.get_basic());
+}
+
+inline Expression coeff(Expression y, Expression x, Expression n) const {
+    return coeff(y.get_basic(), x.get_basic(), n.get_basic());
 }
 
 } // SymEngine
