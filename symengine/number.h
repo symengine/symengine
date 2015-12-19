@@ -36,13 +36,13 @@ public:
     //! Addition
     virtual RCP<const Number> add(const Number &other) const = 0;
     //! Subtraction
-    virtual RCP<const Number> sub(const Number &other) const = 0;
-    virtual RCP<const Number> rsub(const Number &other) const = 0;
+    virtual RCP<const Number> sub(const Number &other) const;
+    virtual RCP<const Number> rsub(const Number &other) const;
     //! Multiplication
     virtual RCP<const Number> mul(const Number &other) const = 0;
     //! Division
-    virtual RCP<const Number> div(const Number &other) const = 0;
-    virtual RCP<const Number> rdiv(const Number &other) const = 0;
+    virtual RCP<const Number> div(const Number &other) const;
+    virtual RCP<const Number> rdiv(const Number &other) const;
     //! Power
     virtual RCP<const Number> pow(const Number &other) const = 0;
     virtual RCP<const Number> rpow(const Number &other) const = 0;
