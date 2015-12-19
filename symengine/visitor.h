@@ -11,7 +11,6 @@
 #include <symengine/mul.h>
 #include <symengine/pow.h>
 #include <symengine/polynomial.h>
-#include <symengine/series.h>
 #include <symengine/functions.h>
 #include <symengine/symbol.h>
 #include <symengine/integer.h>
@@ -24,6 +23,8 @@
 #include <symengine/complex_mpc.h>
 
 namespace SymEngine {
+
+class UnivariateSeries;
 
 class Visitor {
 public:

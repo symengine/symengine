@@ -20,10 +20,6 @@ private:
     RCP<const Number> coeff = zero;
     RCP<const Number> multiply = one;
 public:
-    ExpandVisitor() : BaseVisitor<ExpandVisitor>(this) {
-
-    }
-
     RCP<const Basic> apply(const Basic &b) {
         b.accept(*this);
         return Add::from_dict(coeff, std::move(d_));

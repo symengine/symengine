@@ -7,6 +7,7 @@
 #define SYMENGINE_SERIES_H
 
 #include <symengine/polynomial.h>
+#include <symengine/visitor.h>
 
 namespace SymEngine {
 //! UnivariateSeries Class
@@ -64,6 +65,39 @@ RCP<const UnivariateSeries> add_uni_series (const UnivariateSeries& a, const Uni
 RCP<const UnivariateSeries> neg_uni_series (const UnivariateSeries& a);
 RCP<const UnivariateSeries> sub_uni_series (const UnivariateSeries& a, const UnivariateSeries &b);
 RCP<const UnivariateSeries> mul_uni_series (const UnivariateSeries& a, const UnivariateSeries &b);
+
+template <typename Poly, typename Coeff, typename SeriesClass, bool symbolic = false>
+class Series : public Number {
+private:
+    Poly p_;
+    std::string var_;
+    long degree_;
+public:
+    virtual std::size_t __hash__() const;
+
+    virtual bool __eq__(const Basic &o) const;
+
+    virtual int compare(const Basic &o) const;
+
+    virtual void accept(Visitor &v) const;
+
+    virtual bool is_zero() const { return false; }
+
+    virtual bool is_one() const { return false; }
+
+    virtual bool is_minus_one() const { return false; }
+
+    virtual bool is_negative() const { return false; }
+
+    virtual bool is_positive() const { return false; }
+
+    RCP<const SeriesClass> static series(RCP<const Basic> &x, const std::string &var, const long deg) {
+        class SeriesVisitor : public BaseVisitor<SeriesVisitor> {
+        public:
+            SeriesVisitor() : BaseVisitor(this) { };
+        };
+    }
+};
 
 }  //SymEngine
 #endif
