@@ -20,11 +20,10 @@
 #include <symengine/real_double.h>
 #include <symengine/complex_double.h>
 #include <symengine/real_mpfr.h>
-#include <symengine/complex_mpc.h>
+#include <symengine/series.h>
+#include <symengine/series_piranha.h>
 
 namespace SymEngine {
-
-class UnivariateSeries;
 
 class Visitor {
 public:
@@ -92,7 +91,7 @@ public:
         RCP<const Number> coef = zero;
         for (auto &p: x.dict_) {
             p.first->accept(*this);
-            if (coeff_ != zero) {
+            if (neq(*coeff_, *zero)) {
                 Add::coef_dict_add_term(outArg(coef), dict, p.second, coeff_);
             }
         }
