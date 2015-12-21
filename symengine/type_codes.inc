@@ -8,9 +8,12 @@ SYMENGINE_ENUM(REAL_MPFR, RealMPFR)
 #if defined(HAVE_SYMENGINE_MPC) || defined(SYMENGINE_INCLUDE_ALL)
 SYMENGINE_ENUM(COMPLEX_MPC, ComplexMPC)
 #endif
-SYMENGINE_ENUM(NUMBER_WRAPPER, NumberWrapper)
 SYMENGINE_ENUM(REAL_DOUBLE, RealDouble)
-// 'REAL_DOUBLE' returns the number of subclasses of Number.
+#if defined(HAVE_SYMENGINE_PIRANHA) || defined(SYMENGINE_INCLUDE_ALL)
+SYMENGINE_ENUM(URATPSERIESPIRANHA, URatPSeriesPiranha)
+#endif
+SYMENGINE_ENUM(NUMBER_WRAPPER, NumberWrapper)
+// 'NUMBER_WRAPPER' returns the number of subclasses of Number.
 // All subclasses of Number must be added before it. Do not assign
 // non subclasses of Number before it.
 SYMENGINE_ENUM(SYMBOL, Symbol)
@@ -56,6 +59,3 @@ SYMENGINE_ENUM(FUNCTIONWRAPPER, FunctionWrapper)
 SYMENGINE_ENUM(DERIVATIVE, Derivative)
 SYMENGINE_ENUM(SUBS, Subs)
 SYMENGINE_ENUM(ABS, Abs)
-#if defined(HAVE_SYMENGINE_PIRANHA) || defined(SYMENGINE_INCLUDE_ALL)
-SYMENGINE_ENUM(URATPSERIESPIRANHA, URatPSeriesPiranha)
-#endif

@@ -134,7 +134,7 @@ inline Expression expand(const Expression &arg)
     return expand(arg.get_basic());
 }
 
-inline Expression coeff(Expression y, Expression x, Expression n) const {
+inline Expression coeff(Expression y, Expression x, Expression n) {
     return coeff(y.get_basic(), x.get_basic(), n.get_basic());
 }
 
