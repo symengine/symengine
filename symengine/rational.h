@@ -55,12 +55,12 @@ public:
     inline bool is_int() const { return this->i.get_den() == 1; }
     //! \return `true` if positive
     inline virtual bool is_positive() const {
-        return ((this->i.get_den() > 0) and (this->i.get_num() > 0)) ||
-                ((this->i.get_den() < 0) and (this->i.get_num() < 0)) ; }
+        return this->i.get_num() > 0; 
+    }
     //! \return `true` if negative
     inline virtual bool is_negative() const {
-        return ((this->i.get_den() < 0) and (this->i.get_num() > 0)) ||
-                ((this->i.get_den() > 0) and (this->i.get_num() < 0)) ; }
+        return this->i.get_num() < 0; 
+    }
 
     virtual bool is_perfect_power(bool is_expected=false) const;
     virtual bool nth_root(const Ptr<RCP<const Number>> &, unsigned int n) const;
