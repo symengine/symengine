@@ -18,7 +18,7 @@ Pow::Pow(const RCP<const Basic> &base, const RCP<const Basic> &exp)
     SYMENGINE_ASSERT(is_canonical(base, exp))
 }
 
-bool Pow::is_canonical(const RCP<const Basic> &base, const RCP<const Basic> &exp)
+bool Pow::is_canonical(const RCP<const Basic> &base, const RCP<const Basic> &exp) const
 {
     if (base == null) return false;
     if (exp == null) return false;
@@ -318,7 +318,7 @@ Log::Log(const RCP<const Basic> &arg)
     SYMENGINE_ASSERT(is_canonical(arg))
 }
 
-bool Log::is_canonical(const RCP<const Basic> &arg)
+bool Log::is_canonical(const RCP<const Basic> &arg) const
 {
     if (arg == null) return false;
     //  log(0)

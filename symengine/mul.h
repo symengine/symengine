@@ -55,7 +55,7 @@ public:
 
     //! \return true if both `coef` and `dict` are in canonical form
     bool is_canonical(const RCP<const Number> &coef,
-            const map_basic_basic& dict);
+            const map_basic_basic& dict) const;
     //! Differentiate w.r.t Symbol `x`
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
     virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
