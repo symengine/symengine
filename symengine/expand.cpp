@@ -299,8 +299,8 @@ public:
         } else {
             RCP<const Number> coef2;
             RCP<const Basic> t;
-            Add::as_coef_term(mul(c, term), outArg(coef2), outArg(t));
-            Add::dict_add_term(d_, coef2, t);
+            Add::as_coef_term(term, outArg(coef2), outArg(t));
+            Add::dict_add_term(d_, _mulnum(c, coef2), t);
         }
     }
 };
