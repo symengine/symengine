@@ -204,10 +204,14 @@ void Add::coef_dict_add_term(const Ptr<RCP<const Number>> &coef, umap_basic_num 
 {
     if (is_a_Number(*term)) {
         iaddnum(coef, mulnum(c, rcp_static_cast<const Number>(term)));
-    } else if (is_a<Add>(*term) and c->is_one()) {
-        for (const auto &q: (rcp_static_cast<const Add>(term))->dict_)
-            Add::dict_add_term(d, q.second, q.first);
-        iaddnum(coef, rcp_static_cast<const Add>(term)->coef_);
+    } else if (is_a<Add>(*term)) {
+        if (c->is_one()) {
+            for (const auto &q: (rcp_static_cast<const Add>(term))->dict_)
+                Add::dict_add_term(d, q.second, q.first);
+            iaddnum(coef, rcp_static_cast<const Add>(term)->coef_);
+        } else {
+            Add::dict_add_term(d, c, term);
+        }
     } else {
         RCP<const Number> coef2;
         RCP<const Basic> t;
