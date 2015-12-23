@@ -197,6 +197,8 @@ public:
             result_ = std::atan2(0, -1);
         } else if (eq(x, *E)) {
             result_ = std::exp(1);
+        } else if (eq(x, *euler_const)) {
+            result_ = 0.5772156649015328606065; //use until polygamma or digamma is not implemented
         } else {
             throw std::runtime_error("Constant " + x.get_name() + " is not implemented.");
         }
@@ -420,6 +422,8 @@ std::vector<fn> init_eval_double()
             return ::atan2(0, -1);
         } else if (eq(x, *E)) {
             return ::exp(1);
+        } else if (eq(x, *euler_const)) {
+            return 0.5772156649015328606065; //use until polygamma or digamma is not implemented
         } else {
             throw std::runtime_error("Constant " + static_cast<const Constant &>(x).get_name() + " is not implemented.");
         }

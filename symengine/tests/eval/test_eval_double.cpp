@@ -49,16 +49,18 @@ using SymEngine::acoth;
 using SymEngine::log;
 using SymEngine::pi;
 using SymEngine::E;
+using SymEngine::euler_const;
 using SymEngine::vec_basic;
 
 TEST_CASE("eval_double: eval_double", "[eval_double]")
 {
-    RCP<const Basic> r1, r2, r3, r4;
+    RCP<const Basic> r1, r2, r3, r4,r5;
     r1 = sin(integer(1));
     r2 = sin(div(integer(1), integer(2)));
     r3 = div(one, integer(5));
     r4 = integer(5);
-
+    r5 = mul(euler_const,r4);
+    
     std::vector<std::pair<RCP<const Basic>, double>> vec = {
         { r1, 0.841470984808 },
         { r2, 0.479425538604 },
@@ -71,7 +73,9 @@ TEST_CASE("eval_double: eval_double", "[eval_double]")
         { add(sinh(one), add(cosh(one), add(tanh(one), coth(one)))), 4.792911269914 },
         { add(asinh(r4), add(acosh(r4), add(atanh(r3), acoth(r4)))), 5.010335118942 },
         { SymEngine::abs(log(div(pi, mul(E, integer(2))))), 0.548417294710 },
-        { SymEngine::atan2(r1, neg(r2)), 2.08867384922582 }
+        { SymEngine::atan2(r1, neg(r2)), 2.08867384922582 },
+        { mul(pi,mul(E,euler_const)), 4.92926836742289 },
+        { pow(r5,integer(8)), 4813.54354505117582 }
     };
 
     for (unsigned i = 0; i < vec.size(); i++) {
