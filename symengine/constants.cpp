@@ -46,7 +46,7 @@ RCP<const Number> I = Complex::from_two_nums(*zero, *one);
 
 RCP<const Constant> pi = constant("pi");
 RCP<const Constant> E = constant("E");
-RCP<const Constant> euler_const = constant("euler_const");
+RCP<const Constant> EulerGamma = constant("EulerGamma");
 
 // Global variables declared in functions.cpp
 // Look over https://github.com/sympy/symengine/issues/272
