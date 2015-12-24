@@ -287,7 +287,7 @@ public:
         } else if (x.__eq__(*E)) {
             arb_const_e(result_, prec_);
         } else if(x.__eq__(*euler_const)) {
-            arb_const_euler_const(result_, prec_);
+            arb_const_euler(result_, prec_);
         } else {
             throw std::runtime_error("Constant " + x.get_name() + " is not implemented.");
         }
