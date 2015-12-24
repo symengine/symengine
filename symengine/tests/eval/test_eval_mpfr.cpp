@@ -5,11 +5,12 @@
 #include <symengine/mul.h>
 #include <symengine/eval_mpfr.h>
 #include <symengine/constants.h>
-
+#include<iostream>
 using SymEngine::RCP;
 using SymEngine::Basic;
 using SymEngine::integer;
 using SymEngine::pi;
+using SymEngine::EulerGamma;
 using SymEngine::mul;
 using SymEngine::sub;
 using SymEngine::eval_mpfr;
@@ -41,5 +42,14 @@ TEST_CASE("precision: eval_mpfr", "[eval_mpfr]")
     REQUIRE(mpfr_cmp_d(a, 0.000000000149734291) == 1);
     REQUIRE(mpfr_cmp_d(a, 0.000000000149734292) == -1);
 
+    mpfr_init2(a, 5);
+    s = mul(EulerGamma, integer(100000000));
+    t = integer(mpz_class(57721566));
+    r = div(sub(s, t),integer(100000000));
+    // value of 'r' is approximately 0.00000000490153286060651209008240243104215933593992...
+    // should be rounded to 0
+    eval_mpfr(a, *r, MPFR_RNDN);
+    REQUIRE(mpfr_cmp_si(a, 0) == 0);
+    std::cout << "\n\n\n h i \n\n\n";
     mpfr_clear(a);
 }
