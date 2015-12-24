@@ -152,6 +152,10 @@ public:
         x.get_arg()->accept(*this);
         p = Series::series_asin(p, var, prec);
     }
+    void bvisit(const ACos &x) {
+        x.get_arg()->accept(*this);
+        p = Series::series_acos(p, var, prec);
+    }
     void bvisit(const ATan &x) {
         x.get_arg()->accept(*this);
         p = Series::series_atan(p, var, prec);

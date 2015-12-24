@@ -220,9 +220,15 @@ public:
         if (n == -1)
             return Series::series_invert(s, var, prec);
 
-        Coeff ct = Series::find_cf(s, var, 0);
-        if (ct == 0)
-            throw std::runtime_error("Series::series_nthroot needs a constant term");
+        const short ldeg = Series::ldegree(s);
+        if (ldeg % n != 0) {
+            throw std::runtime_error("Puiseux series not implemented.");
+        }
+        Poly ss = s;
+        if (ldeg != 0) {
+            ss = s * Series::pow(var, -ldeg, prec);
+        }
+        Coeff ct = Series::find_cf(ss, var, 0);
         bool do_inv = false;
         if (n < 0) {
             n = -n;
@@ -230,11 +236,14 @@ public:
         }
 
         Coeff ctroot = Series::root(ct, n);
-        Poly res_p(1), sn = s / ct;
+        Poly res_p(1), sn = ss / ct;
         auto steps = step_list(prec);
         for (const auto step : steps) {
             Poly t = Series::mul(Series::pow(res_p, n + 1, step), sn, step);
             res_p += (res_p - t) / n;
+        }
+        if (ldeg != 0) {
+            res_p *= Series::pow(var, ldeg / n, prec);
         }
         if (do_inv)
             return res_p * ctroot;
@@ -246,8 +255,6 @@ public:
         Poly res_p(0);
         if (s == 0)
             return res_p;
-        if (not symbolic and Series::find_cf(s, var, 0) != 0)
-            throw std::logic_error("atan(const) not Implemented");
 
         if (s == var) {
             //! fast atan(x)
@@ -257,14 +264,25 @@ public:
             }
             return res_p;
         }
-        const Poly &p = Series::pow(s, 2, prec - 1) + 1;
+        const Coeff c(Series::find_cf(s, var, 0));
+        const Poly p(Series::pow(s, 2, prec - 1) + 1);
         res_p = Series::mul(Series::diff(s, var), Series::series_invert(p, var, prec - 1), prec - 1);
-        return Series::integrate(res_p, var);
+
+        if (c != 0) {
+            // atan(s) = integrate(diff(s)*(1+s**2))
+            return Series::integrate(res_p, var);
+        } else {
+            return Series::integrate(res_p, var) + Series::atan(c);
+        }
     }
 
     static inline Poly series_tan(const Poly &s, const Poly& var, unsigned int prec) {
-        if (not symbolic and Series::find_cf(s, var, 0) != 0)
-            throw std::logic_error("tan(const) not Implemented");
+
+        Poly res_p(0), ss = s;
+        const Coeff c(Series::find_cf(s, var, 0));
+        if (c == 0) {
+            ss = s - c;
+        }
 
         // IDEA: use this to get tan(x) coefficients:
         //    # n -> [0, a(1), a(2), ..., a(n)] for n > 0.
@@ -279,13 +297,17 @@ public:
         //    ....return T
         //  Ref.: https://oeis.org/A000182
 
-        Poly res_p(0);
         auto steps = step_list(prec);
         for (const auto step : steps) {
             Poly t = Series::pow(res_p, 2, step) + 1;
-            res_p += Series::mul(s - Series::series_atan(res_p, var, step), t, step);
+            res_p += Series::mul(ss - Series::series_atan(res_p, var, step), t, step);
         }
-        return res_p;
+
+        if (c == 0) {
+            return res_p;
+        } else {
+            return Series::mul(res_p + Series::tan(c), Series::series_invert(1 - res_p * Series::tan(c), var, prec), prec);
+        }
     }
 
     static inline Poly series_cot(const Poly &s, const Poly& var, unsigned int prec) {
@@ -293,10 +315,9 @@ public:
     }
 
     static inline Poly series_sin(const Poly &s, const Poly& var, unsigned int prec) {
-        Poly res_p(0);
-
         if (s == var) {
             //! fast sin(x)
+            Poly res_p(0);
             Coeff prod(1);
             for (unsigned int i = 0; i < prec / 2; i++) {
                 const short j = 2 * i + 1;
@@ -308,11 +329,19 @@ public:
             return res_p;
         }
 
-        if (Series::find_cf(s, var, 0) != 0)
-            throw std::logic_error("sin(const) not Implemented");
-
-        const Poly t(Series::series_tan(s / 2, var, prec));
-        return Series::series_invert(Series::pow(t, 2, prec) + 1, var, prec) * t * 2;
+        const Coeff c(Series::find_cf(s, var, 0));
+        if (c == 0) {
+            // return 2*t/(1+t**2)
+            const Poly t(Series::series_tan(s / 2, var, prec));     // t = tan(s/2);
+            const Poly t2(Series::pow(t, 2, prec));
+            return Series::series_invert(t2 + 1, var, prec) * t * 2;
+        } else {
+            const Poly t(Series::series_tan((s - c) / 2, var, prec));     // t = tan(s/2);
+            const Poly t2(Series::pow(t, 2, prec));
+            // return sin(c)*cos(s) + cos(c)*sin(s)
+            return Series::sin(c) * (1 - t2) * Series::series_invert(t2 + 1, var, prec);
+                + Series::cos(c) * 2 * t * Series::series_invert(t2 + 1, var, prec);
+        }
     }
 
     static inline Poly series_csc(const Poly &s, const Poly& var, unsigned int prec) {
@@ -320,11 +349,22 @@ public:
     }
 
     static inline Poly series_asin(const Poly &s, const Poly& var, unsigned int prec) {
-        if (not symbolic and Series::find_cf(s, var, 0) != 0)
-            throw std::logic_error("asin(const) not Implemented");
+        const Coeff c(Series::find_cf(s, var, 0));
 
-        const Poly t(-Series::pow(s, 2, prec) + 1);
-        return Series::integrate(Series::diff(s, var) * Series::series_nthroot(t, -2, var, prec - 1), var);
+        // asin(s) = integrate(sqrt(1/(1-s**2))*diff(s))
+        const Poly t(-Series::pow(s, 2, prec - 1) + 1);
+        const Poly res_p(Series::integrate(Series::diff(s, var) * Series::series_nthroot(t, -2, var, prec - 1), var));
+
+        if (c != 0) {
+            return res_p + Series::asin(c);
+        } else {
+            return res_p;
+        }
+    }
+
+    static inline Poly series_acos(const Poly &s, const Poly& var, unsigned int prec) {
+        const Coeff c(Series::find_cf(s, var, 0));
+        return Series::acos(c) - series_asin(s-c, var, prec);
     }
 
     static inline Poly series_cos(const Poly &s, const Poly& var, unsigned int prec) {
@@ -341,11 +381,17 @@ public:
             return res_p;
         }
 
-        if (not symbolic and Series::find_cf(s, var, 0) != 0)
-            throw std::logic_error("cos(const) not Implemented");
-
-        Poly t(Series::pow(Series::series_tan(s / 2, var, prec), 2, prec));
-        return Series::series_invert(t + 1, var, prec) * (-(t - 1));
+        const Coeff c(Series::find_cf(s, var, 0));
+        const Poly t(Series::series_tan(s / 2, var, prec));     // t = tan(s/2);
+        const Poly t2(Series::pow(t, 2, prec));
+        if (c == 0) {
+            // return (1-t**2)/(1+t**2)
+            return Series::series_invert(t2 + 1, var, prec) * (1 - t2);
+        } else {
+            // return cos(c)*cos(s) - sin(c)*sin(s)
+            return Series::cos(c) * (1 - t2) * Series::series_invert(t2 + 1, var, prec);
+                - Series::sin(c) * 2 * t * Series::series_invert(t2 + 1, var, prec);
+        }
     }
 
     static inline Poly series_sec(const Poly &s, const Poly& var, unsigned int prec) {
@@ -364,10 +410,14 @@ public:
             return res_p;
         }
 
-        if (not symbolic and Series::find_cf(s, var, 0) != 1)
-            throw std::logic_error("log(const!=0) not Implemented");
+        const Coeff c(Series::find_cf(s, var, 0));
         res_p = Series::mul(Series::diff(s, var), Series::series_invert(s, var, prec), prec - 1);
-        return Series::integrate(res_p, var);
+        res_p = Series::integrate(res_p, var);
+
+        if (c != 1) {
+            res_p += Series::log(c);
+        }
+        return res_p;
     }
 
     static inline Poly series_exp(const Poly &s, const Poly& var, unsigned int prec) {
@@ -385,19 +435,25 @@ public:
             return res_p;
         }
 
-        if (not symbolic and Series::find_cf(s, var, 0) != 0)
-            throw std::logic_error("exp(const) not Implemented");
-
-        auto steps = step_list(prec);
+        const Coeff c(Series::find_cf(s, var, 0));
         Poly t = s + 1;
+        if (c != 0) {
+            // exp(s) = exp(c)*exp(s-c)
+            t = s - c + 1;
+        }
+        auto steps = step_list(prec);
         for (const auto step : steps) {
             res_p = Series::mul(res_p, t - Series::series_log(res_p, var, step), step);
         }
-        return res_p;
+        if (c != 0) {
+            return res_p * Series::exp(c);
+        } else {
+            return res_p;
+        }
     }
 
     static inline Poly series_lambertw(const Poly &s, const Poly& var, unsigned int prec) {
-        if (not symbolic and Series::find_cf(s, var, 0) != 0)
+        if (Series::find_cf(s, var, 0) != 0)
             throw std::logic_error("lambertw(const) not Implemented");
 
         Poly p1(0);
@@ -413,52 +469,110 @@ public:
     }
 
     static inline Poly series_sinh(const Poly &s, const Poly& var, unsigned int prec) {
-        if (not symbolic and Series::find_cf(s, var, 0) != 0)
-            throw std::logic_error("sinh(const) not Implemented");
-
-        const Poly p1(Series::series_exp(s, var, prec));
+        const Coeff c(Series::find_cf(s, var, 0));
+        const Poly p1(Series::series_exp(s-c, var, prec));
         const Poly p2(Series::series_invert(p1, var, prec));
-        return (p1 - p2) / 2;
+
+        if (c == 0) {
+            return (p1 - p2) / 2;
+        } else {
+            return Series::cosh(c) * (p1 - p2) / 2 + Series::sinh(c) * (p1 + p2) / 2;
+        }
     }
 
     static inline Poly series_cosh(const Poly &s, const Poly& var, unsigned int prec) {
-        if (not symbolic and Series::find_cf(s, var, 0) != 0)
-            throw std::logic_error("cosh(const) not Implemented");
-
-        const Poly p1(Series::series_exp(s, var, prec));
+        const Coeff c(Series::find_cf(s, var, 0));
+        const Poly p1(Series::series_exp(s-c, var, prec));
         const Poly p2(Series::series_invert(p1, var, prec));
-        return (p1 + p2) / 2;
+
+        if (c == 0) {
+            return (p1 + p2) / 2;
+        } else {
+            return Series::cosh(c) * (p1 + p2) / 2 + Series::sinh(c) * (p1 - p2) / 2;
+        }
     }
 
     static inline Poly series_atanh(const Poly &s, const Poly& var, unsigned int prec) {
-        if (not symbolic and Series::find_cf(s, var, 0) != 0)
-            throw std::logic_error("atanh(const) not Implemented");
-
-        const Poly &p(-(Series::pow(s, 2, prec - 1)) + 1);
+        const Coeff c(Series::find_cf(s, var, 0));
+        const Poly p(-(Series::pow(s, 2, prec - 1)) + 1);
         const Poly res_p(Series::mul(Series::diff(s, var), Series::series_invert(p, var, prec - 1), prec - 1));
-        return Series::integrate(res_p, var);
+
+        if (c == 0) {
+            return Series::integrate(res_p, var);
+        } else {
+            return Series::integrate(res_p, var) + Series::atanh(c);
+        }
     }
 
     static inline Poly series_asinh(const Poly &s, const Poly& var, unsigned int prec) {
-        if (not symbolic and Series::find_cf(s, var, 0) != 0)
-            throw std::logic_error("asinh(const) not Implemented");
+        const Coeff c(Series::find_cf(s, var, 0));
 
-        const Poly &p(Series::series_nthroot(Series::pow(s, 2, prec - 1) + 1, 2, var, prec - 1));
+        const Poly p(Series::series_nthroot(Series::pow(s, 2, prec - 1) + 1, 2, var, prec - 1));
         const Poly res_p(Series::diff(s, var) * Series::series_invert(p, var, prec - 1));
-        return Series::integrate(res_p, var);
+
+        if (c == 0) {
+            return Series::integrate(res_p, var);
+        } else {
+            return Series::integrate(res_p, var) + Series::asinh(c);
+        }
     }
 
     static inline Poly series_tanh(const Poly &s, const Poly& var, unsigned int prec) {
-        if (not symbolic and Series::find_cf(s, var, 0) != 0)
-            throw std::logic_error("tanh(const) not Implemented");
-
+        const Coeff c(Series::find_cf(s, var, 0));
         Poly res_p(s);
+        if (c != 0) {
+            res_p -= c;
+        }
         auto steps = step_list(prec);
         for (const auto step : steps) {
             const Poly p(s - Series::series_atanh(res_p, var, step));
             res_p += Series::mul(-p, Series::pow(res_p, 2, step) - 1, step);
         }
-        return res_p;
+        if (c != 0) {
+            return (res_p + Series::tanh(c)) * Series::series_invert(1 + Series::tanh(c) * res_p, var, prec);
+        } else {
+            return res_p;
+        }
+    }
+
+    static inline Coeff sin(const Coeff& c) {
+        throw std::runtime_error("sin(const) not implemented");
+    }
+    static inline Coeff cos(const Coeff& c) {
+        throw std::runtime_error("cos(const) not implemented");
+    }
+    static inline Coeff tan(const Coeff& c) {
+        throw std::runtime_error("tan(const) not implemented");
+    }
+    static inline Coeff asin(const Coeff& c) {
+        throw std::runtime_error("asin(const) not implemented");
+    }
+    static inline Coeff acos(const Coeff& c) {
+        throw std::runtime_error("acos(const) not implemented");
+    }
+    static inline Coeff atan(const Coeff& c) {
+        throw std::runtime_error("atan(const) not implemented");
+    }
+    static inline Coeff sinh(const Coeff& c) {
+        throw std::runtime_error("sinh(const) not implemented");
+    }
+    static inline Coeff cosh(const Coeff& c) {
+        throw std::runtime_error("cosh(const) not implemented");
+    }
+    static inline Coeff tanh(const Coeff& c) {
+        throw std::runtime_error("tanh(const) not implemented");
+    }
+    static inline Coeff asinh(const Coeff& c) {
+        throw std::runtime_error("asinh(const) not implemented");
+    }
+    static inline Coeff atanh(const Coeff& c) {
+        throw std::runtime_error("atanh(const) not implemented");
+    }
+    static inline Coeff exp(const Coeff& c) {
+        throw std::runtime_error("exp(const) not implemented");
+    }
+    static inline Coeff log(const Coeff& c) {
+        throw std::runtime_error("log(const) not implemented");
     }
 
     /*
