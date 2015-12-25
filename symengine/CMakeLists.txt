@@ -36,6 +36,7 @@ set(SRC
     real_double.cpp
     complex_double.cpp
     expand.cpp
+    expression.cpp
 )
 
 if (WITH_MPFR)

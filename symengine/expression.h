@@ -143,9 +143,11 @@ inline Expression expand(const Expression &arg)
     return expand(arg.get_basic());
 }
 
-inline Expression coeff(Expression y, Expression x, Expression n) {
+inline Expression coeff(const Expression &y, const Expression &x, const Expression &n) {
     return coeff(y.get_basic(), x.get_basic(), n.get_basic());
 }
+
+std::string poly_print(const Expression &x);
 
 } // SymEngine
 
@@ -153,6 +155,7 @@ inline Expression coeff(Expression y, Expression x, Expression n) {
 
 #include <piranha/math.hpp>
 #include <piranha/pow.hpp>
+#include <piranha/print_coefficient.hpp>
 namespace piranha {
     namespace math {
 
@@ -167,14 +170,22 @@ namespace piranha {
             }
         };
 
-        template <typename T, typename U>
-        struct pow_impl<T,U, typename std::enable_if<std::is_same<T, SymEngine::Expression>::value && std::is_integral<U>::value>::type>
-        {
+        template<typename T, typename U>
+        struct pow_impl<T, U, typename std::enable_if<
+                std::is_same<T, SymEngine::Expression>::value && std::is_integral<U>::value>::type> {
             SymEngine::Expression operator()(const SymEngine::Expression &x, const U &y) const {
                 return SymEngine::pow(SymEngine::Expression(x).get_basic(), SymEngine::integer(y));
             }
         };
     }
+
+    template <typename U>
+    struct print_coefficient_impl<U, typename std::enable_if<std::is_same<U, SymEngine::Expression>::value>::type>
+    {
+        auto operator()(std::ostream &os, const U &cf) const -> decltype(os << cf) {
+            return os << poly_print(cf);
+        }
+    };
 }
 #endif // HAVE_SYMENGINE_PIRANHA
 
