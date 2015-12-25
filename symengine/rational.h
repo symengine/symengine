@@ -59,9 +59,9 @@ public:
     inline virtual bool is_negative() const {
         return this->i.get_num() < 0; 
     }
-    //! \return negative of self.
+    //! \return negative of self
     inline RCP<const Number> neg() const {
-        return from_mpq(mpq_class(-1*this->i.get_num(),this->i.get_den()));
+        return from_mpq(-this->i);
     }
 
     virtual bool is_perfect_power(bool is_expected=false) const;
