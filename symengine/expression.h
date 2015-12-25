@@ -54,7 +54,7 @@ public:
     Expression &operator=(Expression &&other) SYMENGINE_NOEXCEPT
     {
         if (this != &other) {
-            *this = std::move(other);
+            this->m_basic = std::move(other.m_basic);
         }
         return *this;
     }

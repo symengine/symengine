@@ -53,11 +53,11 @@ piranha::rational URatPSeriesPiranha::convert(const Number &x) {
     throw std::runtime_error("Not Implemented");
 }
 pp_t URatPSeriesPiranha::mul(const pp_t &s, const pp_t &r, unsigned prec) {
-    pp_t::set_auto_truncate_degree(prec);
+    pp_t::set_auto_truncate_degree(prec - 1);
     return s * r;
 }
 pp_t URatPSeriesPiranha::pow(const pp_t &s, int n, unsigned prec) {
-    pp_t::set_auto_truncate_degree(prec);
+    pp_t::set_auto_truncate_degree(prec - 1);
     return s.pow(n);
 }
 unsigned URatPSeriesPiranha::ldegree(const pp_t &s) {
@@ -92,7 +92,7 @@ pp_t URatPSeriesPiranha::integrate(const pp_t &s, const pp_t &var) {
     return s.integrate(var.get_symbol_set()[0].get_name());
 }
 pp_t URatPSeriesPiranha::subs(const pp_t &s, const pp_t &var, const pp_t &r, unsigned prec) {
-    pp_t::set_auto_truncate_degree(prec);
+    pp_t::set_auto_truncate_degree(prec - 1);
     return s.subs(var.get_symbol_set()[0].get_name(), r);
 }
 
@@ -132,11 +132,11 @@ Expression UPSeriesPiranha::convert(const Number &x) {
     return Expression(x.rcp_from_this());
 }
 p_expr UPSeriesPiranha::mul(const p_expr &s, const p_expr &r, unsigned prec) {
-    p_expr::set_auto_truncate_degree(prec);
+    p_expr::set_auto_truncate_degree(prec - 1);
     return s * r;
 }
 p_expr UPSeriesPiranha::pow(const p_expr &s, int n, unsigned prec) {
-    p_expr::set_auto_truncate_degree(prec);
+    p_expr::set_auto_truncate_degree(prec - 1);
     return s.pow(n);
 }
 unsigned UPSeriesPiranha::ldegree(const p_expr &s) {
@@ -155,7 +155,7 @@ p_expr UPSeriesPiranha::integrate(const p_expr &s, const p_expr &var) {
     return s.integrate(var.get_symbol_set()[0].get_name());
 }
 p_expr UPSeriesPiranha::subs(const p_expr &s, const p_expr &var, const p_expr &r, unsigned prec) {
-    p_expr::set_auto_truncate_degree(prec);
+    p_expr::set_auto_truncate_degree(prec - 1);
     return s.subs(var.get_symbol_set()[0].get_name(), r);
 }
 
