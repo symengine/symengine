@@ -17,7 +17,6 @@
 #include <symengine/mul.h>
 #include <symengine/pow.h>
 #include <symengine/symbol.h>
-#include <symengine/visitor.h>
 
 namespace SymEngine
 {
@@ -107,6 +106,17 @@ public:
         m_basic = mul(m_basic, other.m_basic);
         return *this;
     }
+    //! Overload Division
+    friend Expression operator/(const Expression &a, const Expression &b)
+    {
+        return Expression(div(a.m_basic, b.m_basic));
+    }
+    //! Overload Division and assignment (/=)
+    Expression &operator/=(const Expression &other)
+    {
+        m_basic = div(m_basic, other.m_basic);
+        return *this;
+    }
     //! Overload check equality (==)
     bool operator==(const Expression &other) const
     {
@@ -124,8 +134,7 @@ public:
     }
 };
 
-inline Expression pow(const Expression &base, const Expression &exp)
-{
+inline Expression pow_ex(const Expression &base, const Expression &exp) {
     return pow(base.get_basic(), exp.get_basic());
 }
 
@@ -140,4 +149,33 @@ inline Expression coeff(Expression y, Expression x, Expression n) {
 
 } // SymEngine
 
-#endif
+#ifdef HAVE_SYMENGINE_PIRANHA
+
+#include <piranha/math.hpp>
+#include <piranha/pow.hpp>
+namespace piranha {
+    namespace math {
+
+        template<typename T>
+        struct partial_impl<T, typename std::enable_if<std::is_same<T, SymEngine::Expression>::value>::type> {
+            /// Call operator.
+            /**
+             * @return an instance of Expression constructed from zero.
+             */
+            SymEngine::Expression operator()(const SymEngine::Expression &, const std::string &) const {
+                return SymEngine::Expression(0);
+            }
+        };
+
+        template <typename T, typename U>
+        struct pow_impl<T,U, typename std::enable_if<std::is_same<T, SymEngine::Expression>::value && std::is_integral<U>::value>::type>
+        {
+            SymEngine::Expression operator()(const SymEngine::Expression &x, const U &y) const {
+                return SymEngine::pow(SymEngine::Expression(x).get_basic(), SymEngine::integer(y));
+            }
+        };
+    }
+}
+#endif // HAVE_SYMENGINE_PIRANHA
+
+#endif // SYMENGINE_EXPRESSION_H

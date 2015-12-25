@@ -80,10 +80,15 @@ public:
         }
     }
 
+#ifdef HAVE_SYMENGINE_PIRANHA
     void bvisit(const URatPSeriesPiranha &x) {
         precedence = PrecedenceEnum::Add;
     }
 
+    void bvisit(const UPSeriesPiranha &x) {
+        precedence = PrecedenceEnum::Add;
+    }
+#endif
     void bvisit(const ComplexDouble &x) {
         precedence = PrecedenceEnum::Add;
     }
@@ -126,7 +131,10 @@ public:
     void bvisit(const Mul &x);
     void bvisit(const Pow &x);
     void bvisit(const UnivariatePolynomial &x);
+#ifdef HAVE_SYMENGINE_PIRANHA
     void bvisit(const URatPSeriesPiranha &x);
+    void bvisit(const UPSeriesPiranha &x);
+#endif
     void bvisit(const Log &x);
     void bvisit(const Constant &x);
     void bvisit(const Function &x);

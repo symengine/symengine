@@ -95,4 +95,107 @@ pp_t URatPSeriesPiranha::subs(const pp_t &s, const pp_t &var, const pp_t &r, uns
     pp_t::set_auto_truncate_degree(prec);
     return s.subs(var.get_symbol_set()[0].get_name(), r);
 }
+
+UPSeriesPiranha::UPSeriesPiranha(p_expr p, const std::string varname, const unsigned degree)
+        : SeriesBase(std::move(p), varname, degree) {
+
+}
+RCP<const UPSeriesPiranha> UPSeriesPiranha::series(const RCP<const Basic> &t, const std::string &x,
+                                                         unsigned int prec) {
+    SeriesVisitor<p_expr, Expression, UPSeriesPiranha, false> visitor(p_expr(x), x, prec);
+    return visitor.series(t);
+}
+
+std::size_t UPSeriesPiranha::__hash__() const {
+    std::size_t seed = URATPSERIESPIRANHA;
+    hash_combine(seed, p_.hash());
+    hash_combine(seed, var_);
+    hash_combine(seed, degree_);
+    return seed;
+}
+
+int UPSeriesPiranha::compare(const Basic &o) const {
+    SYMENGINE_ASSERT(is_a<UPSeriesPiranha>(o))
+    const UPSeriesPiranha &s = static_cast<const UPSeriesPiranha &>(o);
+    if (var_ != s.var_)
+        return (var_ < s.var_) ? -1 : 1;
+    if (degree_ != s.degree_)
+        return (degree_ < s.degree_) ? -1 : 1;
+    if (p_ == s.p_)
+        return 0;
+    return (p_.hash() < s.p_.hash()) ? -1 : 1;
+}
+p_expr UPSeriesPiranha::var(const std::string &s) {
+    return p_expr(s);
+}
+Expression UPSeriesPiranha::convert(const Number &x) {
+    return Expression(x.rcp_from_this());
+}
+p_expr UPSeriesPiranha::mul(const p_expr &s, const p_expr &r, unsigned prec) {
+    p_expr::set_auto_truncate_degree(prec);
+    return s * r;
+}
+p_expr UPSeriesPiranha::pow(const p_expr &s, int n, unsigned prec) {
+    p_expr::set_auto_truncate_degree(prec);
+    return s.pow(n);
+}
+unsigned UPSeriesPiranha::ldegree(const p_expr &s) {
+    return s.ldegree();
+}
+Expression UPSeriesPiranha::find_cf(const p_expr &s, const p_expr &var, unsigned deg) {
+    return s.find_cf({deg});
+}
+Expression UPSeriesPiranha::root(Expression &c, unsigned n) {
+    return pow_ex(c, Expression(n));
+}
+p_expr UPSeriesPiranha::diff(const p_expr &s, const p_expr &var) {
+    return s.partial(var.get_symbol_set()[0].get_name());
+}
+p_expr UPSeriesPiranha::integrate(const p_expr &s, const p_expr &var) {
+    return s.integrate(var.get_symbol_set()[0].get_name());
+}
+p_expr UPSeriesPiranha::subs(const p_expr &s, const p_expr &var, const p_expr &r, unsigned prec) {
+    p_expr::set_auto_truncate_degree(prec);
+    return s.subs(var.get_symbol_set()[0].get_name(), r);
+}
+
+Expression UPSeriesPiranha::sin(const Expression& c) {
+    return SymEngine::sin(c.get_basic());
+}
+Expression UPSeriesPiranha::cos(const Expression& c) {
+    return SymEngine::cos(c.get_basic());
+}
+Expression UPSeriesPiranha::tan(const Expression& c) {
+    return SymEngine::tan(c.get_basic());
+}
+Expression UPSeriesPiranha::asin(const Expression& c) {
+    return SymEngine::asin(c.get_basic());
+}
+Expression UPSeriesPiranha::acos(const Expression& c) {
+    return SymEngine::acos(c.get_basic());
+}
+Expression UPSeriesPiranha::atan(const Expression& c) {
+    return SymEngine::atan(c.get_basic());
+}
+Expression UPSeriesPiranha::sinh(const Expression& c) {
+    return SymEngine::sinh(c.get_basic());
+}
+Expression UPSeriesPiranha::cosh(const Expression& c) {
+    return SymEngine::cosh(c.get_basic());
+}
+Expression UPSeriesPiranha::tanh(const Expression& c) {
+    return SymEngine::tanh(c.get_basic());
+}
+Expression UPSeriesPiranha::asinh(const Expression& c) {
+    return SymEngine::asinh(c.get_basic());
+}
+Expression UPSeriesPiranha::atanh(const Expression& c) {
+    return SymEngine::atanh(c.get_basic());
+}
+Expression UPSeriesPiranha::exp(const Expression& c) {
+    return SymEngine::exp(c.get_basic());
+}
+Expression UPSeriesPiranha::log(const Expression& c) {
+    return SymEngine::log(c.get_basic());
+}
 }

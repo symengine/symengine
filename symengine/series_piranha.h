@@ -3,12 +3,14 @@
 
 #include <symengine/series.h>
 #include <symengine/rational.h>
+#include <symengine/expression.h>
 
 #ifdef HAVE_SYMENGINE_PIRANHA
 #include <piranha/monomial.hpp>
 #include <piranha/polynomial.hpp>
 #include <piranha/mp_rational.hpp>
 #include <piranha/mp_integer.hpp>
+#include <piranha/math.hpp>
 
 namespace SymEngine {
 
@@ -38,6 +40,42 @@ public:
     static pp_t subs(const pp_t &s, const pp_t &var, const pp_t &r, unsigned prec);
 };
 
+using p_expr = piranha::polynomial<Expression,piranha::monomial<int>>;
+// Univariate Rational Coefficient Power SeriesBase using Piranha
+class UPSeriesPiranha : public SeriesBase<p_expr, Expression, UPSeriesPiranha, false> {
+public:
+    UPSeriesPiranha(const p_expr p, const std::string varname, const unsigned degree);
+    IMPLEMENT_TYPEID(UPSERIESPIRANHA)
+    virtual void accept(Visitor &v) const;
+    virtual int compare(const Basic &o) const;
+    virtual std::size_t __hash__() const;
+    static RCP<const UPSeriesPiranha> series(const RCP<const Basic> &t, const std::string &x,
+                                                unsigned int prec);
+    static p_expr var(const std::string &s);
+    static Expression convert(const Number &x);
+    static p_expr mul(const p_expr &s, const p_expr &r, unsigned prec);
+    static p_expr pow(const p_expr &s, int n, unsigned prec);
+    static unsigned ldegree(const p_expr &s);
+    static Expression find_cf(const p_expr &s, const p_expr &var, unsigned deg);
+    static Expression root(Expression &c, unsigned n);
+    static p_expr diff(const p_expr &s, const p_expr &var);
+    static p_expr integrate(const p_expr &s, const p_expr &var);
+    static p_expr subs(const p_expr &s, const p_expr &var, const p_expr &r, unsigned prec);
+
+    static Expression sin(const Expression& c);
+    static Expression cos(const Expression& c);
+    static Expression tan(const Expression& c);
+    static Expression asin(const Expression& c);
+    static Expression acos(const Expression& c);
+    static Expression atan(const Expression& c);
+    static Expression sinh(const Expression& c);
+    static Expression cosh(const Expression& c);
+    static Expression tanh(const Expression& c);
+    static Expression asinh(const Expression& c);
+    static Expression atanh(const Expression& c);
+    static Expression exp(const Expression& c);
+    static Expression log(const Expression& c);
+};
 } // SymEngine
 
 #endif // HAVE_SYMENGINE_PIRANHA

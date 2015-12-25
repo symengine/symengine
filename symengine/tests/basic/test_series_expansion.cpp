@@ -13,14 +13,23 @@
 
 using SymEngine::Basic;
 using SymEngine::Integer;
+using SymEngine::integer;
+using SymEngine::rational;
 using SymEngine::Symbol;
+using SymEngine::Number;
+using SymEngine::symbol;
 using SymEngine::Add;
+using SymEngine::RCP;
+using SymEngine::add;
 using SymEngine::sin;
 using SymEngine::cos;
-
-namespace SymEngine {
+using SymEngine::umap_short_basic;
 
 #ifdef HAVE_SYMENGINE_PIRANHA
+#include <symengine/series_piranha.h>
+
+using SymEngine::UPSeriesPiranha;
+
 static bool eq(const umap_short_basic& v1, const umap_short_basic& v2)
 {
     for (auto it : v2) {
@@ -227,6 +236,15 @@ TEST_CASE("Expression series expansion: lambertw ", "[Expansion of lambertw]")
     REQUIRE(series(ex2, x, 12)[10]->__eq__(*rational(-2993294,14175)));
 }
 
+TEST_CASE("Symbolic series expansion ", "[Expansion of sin]")
+{
+    RCP<const Symbol> x = symbol("x");
+    auto ex1 = UPSeriesPiranha::series(sin(add(x, integer(1))), "x", 10);
+    std::cout << ex1->__str__() << std::endl;
+    ex1 = UPSeriesPiranha::series(mul(sin(add(x, integer(1))), cos(add(x, integer(2)))), "x", 10);
+    std::cout << ex1->__str__() << std::endl;
+}
+
 #else
 TEST_CASE("Check error when expansion called without Piranha ", "[Expansion without Piranha]")
 {
@@ -235,7 +253,3 @@ TEST_CASE("Check error when expansion called without Piranha ", "[Expansion with
     REQUIRE_THROWS_AS(series(ex1, x, 10), std::runtime_error);
 }
 #endif
-
-
-} // SymEngine
-

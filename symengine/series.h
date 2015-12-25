@@ -188,12 +188,13 @@ public:
         }
         auto steps = step_list(prec);
         for (const auto step : steps) {
-            p = Series::mul(2 - Series::mul(p, ss, step), p, step);
+            p = Series::mul((Series::mul(p, ss, step)-Coeff(2))*(-1), p, step);
         }
-        if (ldeg != 0)
+        if (ldeg != 0) {
             return p * Series::pow(var, -ldeg, prec);
-        else
+        } else {
             return p;
+        }
     }
 
     static inline Poly series_reverse(const Poly &s, const Poly& var, unsigned int prec) {
@@ -268,7 +269,7 @@ public:
         const Poly p(Series::pow(s, 2, prec - 1) + 1);
         res_p = Series::mul(Series::diff(s, var), Series::series_invert(p, var, prec - 1), prec - 1);
 
-        if (c != 0) {
+        if (c == 0) {
             // atan(s) = integrate(diff(s)*(1+s**2))
             return Series::integrate(res_p, var);
         } else {
@@ -277,10 +278,9 @@ public:
     }
 
     static inline Poly series_tan(const Poly &s, const Poly& var, unsigned int prec) {
-
         Poly res_p(0), ss = s;
         const Coeff c(Series::find_cf(s, var, 0));
-        if (c == 0) {
+        if (c != 0) {
             ss = s - c;
         }
 
@@ -300,13 +300,13 @@ public:
         auto steps = step_list(prec);
         for (const auto step : steps) {
             Poly t = Series::pow(res_p, 2, step) + 1;
-            res_p += Series::mul(ss - Series::series_atan(res_p, var, step), t, step);
+            res_p += Series::mul(ss + Series::series_atan(res_p, var, step)*Coeff(-1), t, step);
         }
 
         if (c == 0) {
             return res_p;
         } else {
-            return Series::mul(res_p + Series::tan(c), Series::series_invert(1 - res_p * Series::tan(c), var, prec), prec);
+            return Series::mul(res_p + Series::tan(c), Series::series_invert((res_p * Series::tan(c)-1)*(-1), var, prec), prec);
         }
     }
 
@@ -339,8 +339,8 @@ public:
             const Poly t(Series::series_tan((s - c) / 2, var, prec));     // t = tan(s/2);
             const Poly t2(Series::pow(t, 2, prec));
             // return sin(c)*cos(s) + cos(c)*sin(s)
-            return Series::sin(c) * (1 - t2) * Series::series_invert(t2 + 1, var, prec);
-                + Series::cos(c) * 2 * t * Series::series_invert(t2 + 1, var, prec);
+            return (-Series::sin(c)) * (t2 + Coeff(-1)) * Series::series_invert(t2 + 1, var, prec)
+                + (Series::cos(c) * 2) * t * Series::series_invert(t2 + 1, var, prec);
         }
     }
 
@@ -352,7 +352,7 @@ public:
         const Coeff c(Series::find_cf(s, var, 0));
 
         // asin(s) = integrate(sqrt(1/(1-s**2))*diff(s))
-        const Poly t(-Series::pow(s, 2, prec - 1) + 1);
+        const Poly t((Series::pow(s, 2, prec - 1) - 1)*(-1));
         const Poly res_p(Series::integrate(Series::diff(s, var) * Series::series_nthroot(t, -2, var, prec - 1), var));
 
         if (c != 0) {
@@ -364,7 +364,7 @@ public:
 
     static inline Poly series_acos(const Poly &s, const Poly& var, unsigned int prec) {
         const Coeff c(Series::find_cf(s, var, 0));
-        return Series::acos(c) - series_asin(s-c, var, prec);
+        return (series_asin(s + (-c), var, prec) - Series::acos(c))*(-1);
     }
 
     static inline Poly series_cos(const Poly &s, const Poly& var, unsigned int prec) {
@@ -382,15 +382,17 @@ public:
         }
 
         const Coeff c(Series::find_cf(s, var, 0));
-        const Poly t(Series::series_tan(s / 2, var, prec));     // t = tan(s/2);
-        const Poly t2(Series::pow(t, 2, prec));
         if (c == 0) {
             // return (1-t**2)/(1+t**2)
-            return Series::series_invert(t2 + 1, var, prec) * (1 - t2);
+            const Poly t(Series::series_tan(s / 2, var, prec));     // t = tan(s/2);
+            const Poly t2(Series::pow(t, 2, prec));
+            return Series::series_invert(t2 + 1, var, prec) * ((t2 - 1) * -1);
         } else {
+            const Poly t(Series::series_tan((s - c)/ 2, var, prec));     // t = tan(s/2);
+            const Poly t2(Series::pow(t, 2, prec));
             // return cos(c)*cos(s) - sin(c)*sin(s)
-            return Series::cos(c) * (1 - t2) * Series::series_invert(t2 + 1, var, prec);
-                - Series::sin(c) * 2 * t * Series::series_invert(t2 + 1, var, prec);
+            return (-Series::cos(c)) * (t2 + Coeff(-1)) * Series::series_invert(t2 + 1, var, prec)
+                + (-Series::sin(c) * 2) * t * Series::series_invert(t2 + 1, var, prec);
         }
     }
 
@@ -494,7 +496,7 @@ public:
 
     static inline Poly series_atanh(const Poly &s, const Poly& var, unsigned int prec) {
         const Coeff c(Series::find_cf(s, var, 0));
-        const Poly p(-(Series::pow(s, 2, prec - 1)) + 1);
+        const Poly p((Series::pow(s, 2, prec - 1) - 1)*(-1));
         const Poly res_p(Series::mul(Series::diff(s, var), Series::series_invert(p, var, prec - 1), prec - 1));
 
         if (c == 0) {
@@ -526,7 +528,7 @@ public:
         auto steps = step_list(prec);
         for (const auto step : steps) {
             const Poly p(s - Series::series_atanh(res_p, var, step));
-            res_p += Series::mul(-p, Series::pow(res_p, 2, step) - 1, step);
+            res_p += Series::mul(p*(-1), Series::pow(res_p, 2, step) - 1, step);
         }
         if (c != 0) {
             return (res_p + Series::tanh(c)) * Series::series_invert(1 + Series::tanh(c) * res_p, var, prec);
