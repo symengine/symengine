@@ -17,7 +17,7 @@ Add::Add(const RCP<const Number> &coef, umap_basic_num&& dict)
 }
 
 bool Add::is_canonical(const RCP<const Number> &coef,
-        const umap_basic_num& dict)const
+        const umap_basic_num& dict) const
 {
     if (coef == null) return false;
     if (dict.size() == 0) return false;
