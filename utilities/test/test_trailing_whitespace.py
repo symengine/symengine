@@ -15,9 +15,11 @@ def _log_failure(msg=None):
     _failed_expectations.append('%s\n' % 
         ((('%s' % msg) if msg else '')))
  
+report = []
+ 
 def _report_failures():
     global _failed_expectations
-    report = []
+    global report
     if _failed_expectations:
         (filename, line, funcname) =  inspect.stack()[1][1:4]
         report = [
@@ -25,7 +27,7 @@ def _report_failures():
         for i,failure in enumerate(_failed_expectations, start=1):
             report.append('%d: %s' % (i, failure))
         _failed_expectations = []
-    if len(report) != 0:    
+    if len(report) != 0:
 		return ('\n'.join(report))
 
 SYMENGINE_PATH = abspath(join(split(__file__)[0], pardir, pardir))  # go to symengine/
@@ -89,4 +91,8 @@ exclude = set()
 check_directory_tree(BIN_PATH, test, set(["~",".sh"]), "*")
 check_directory_tree(SYMENGINE_PATH, test, set(["/build/","/doc/","/cmake/","/utilities"]))
 check_directory_tree(SYMENGINE_PATH, test, set(["/build/","/doc/","/cmake/","/utilities"]), "*.h")
+
 print _report_failures()
+
+if len(report) != 0:
+	raise Exception('Trailing Whitespaces present')
