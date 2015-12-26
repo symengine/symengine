@@ -854,14 +854,14 @@ TEST_CASE("Subs: functions", "[functions]")
     REQUIRE(eq(*r2, *r3));
 
     r2 = r1->diff(x);
-    r3 = Subs::create(Derivative::create(function_symbol("f", {add(y, y), _x}), {_x, _x}), 
+    r3 = Subs::create(Derivative::create(function_symbol("f", {add(y, y), _x}), {_x, _x}),
                         {{_x, add(x, y)}});
     REQUIRE(eq(*r2, *r3));
 
     r2 = r1->diff(y);
-    r3 = Subs::create(Derivative::create(function_symbol("f", {add(y, y), _x}), {_x, _x}), 
+    r3 = Subs::create(Derivative::create(function_symbol("f", {add(y, y), _x}), {_x, _x}),
                         {{_x, add(x, y)}});
-    r4 = Subs::create(Derivative::create(function_symbol("f", {add(y, y), _x}), {_x, y}), 
+    r4 = Subs::create(Derivative::create(function_symbol("f", {add(y, y), _x}), {_x, y}),
                         {{_x, add(x, y)}});
     r3 = add(r3, r4);
     REQUIRE(eq(*r2, *r3));
@@ -873,7 +873,7 @@ TEST_CASE("Get pi shift: functions", "[functions]")
     RCP<const Basic> r1;
     RCP<const Integer> n;
     bool b;
-    
+
     RCP<const Basic> i2 = integer(2);
     RCP<const Basic> i3 = integer(3);
     RCP<const Basic> i12 = integer(12);
@@ -881,22 +881,22 @@ TEST_CASE("Get pi shift: functions", "[functions]")
 
     RCP<const Basic> sq3 = sqrt(i3);
     RCP<const Basic> sq2 = sqrt(i2);
-    
+
     RCP<const Symbol> x = symbol("x");
-    
+
     // arg = k + n*pi
     r = add(i3, mul(i2, pi));
     b = get_pi_shift(r, outArg(n), outArg(r1));
     REQUIRE(b == true);
     REQUIRE(eq(*n, *integer(24)));
-    REQUIRE(eq(*r1, *i3)); 
-    
+    REQUIRE(eq(*r1, *i3));
+
     // arg = n*pi/12
     r = mul(pi, div(one, integer(12)));
     get_pi_shift(r, outArg(n), outArg(r1));
     REQUIRE(eq(*n, *one));
-    REQUIRE(eq(*r1, *zero)); 
-    
+    REQUIRE(eq(*r1, *zero));
+
     // arg = n*pi/12
     r = mul(pi, div(i2, integer(3)));
     b = get_pi_shift(r, outArg(n), outArg(r1));
@@ -916,28 +916,28 @@ TEST_CASE("Get pi shift: functions", "[functions]")
     r = mul(mul(pi, x), div(i2, integer(3)));
     b = get_pi_shift(r, outArg(n), outArg(r1));
     REQUIRE(b == false);
-    
+
     // arg = theta + n*pi/12 (theta is just another symbol)
     r = add(mul(i2, x), mul(pi, div(i2, integer(3))));
     b = get_pi_shift(r, outArg(n), outArg(r1));
-    REQUIRE(b == true); 
+    REQUIRE(b == true);
     REQUIRE(eq(*n, *i8));
     REQUIRE(eq(*r1, *mul(i2, x)));
 
     // arg = theta + n*pi/12 (theta is constant plus a symbol)
     r = add(i2, add(x, mul(pi, div(i2, integer(3)))));
     b = get_pi_shift(r, outArg(n), outArg(r1));
-    REQUIRE(b == true); 
+    REQUIRE(b == true);
     REQUIRE(eq(*n, *i8));
     REQUIRE(eq(*r1, *add(i2, x)));
-    
+
     // arg = theta + n*pi/12 (theta is an expression)
     r = add(i2, add(mul(x, i2), mul(pi, div(i2, integer(3)))));
     b = get_pi_shift(r, outArg(n), outArg(r1));
-    REQUIRE(b == true); 
+    REQUIRE(b == true);
     REQUIRE(eq(*n, *i8));
     REQUIRE(eq(*r1, *add(i2, mul(x, i2))));
-   
+
     // arg neq n*pi/12 (n is not integer)
     r = mul(pi, div(i2, integer(5)));
     b = get_pi_shift(r, outArg(n), outArg(r1));
@@ -947,15 +947,15 @@ TEST_CASE("Get pi shift: functions", "[functions]")
     r = mul(pow(pi, i2), div(i2, integer(3)));
     b = get_pi_shift(r, outArg(n), outArg(r1));
     REQUIRE(b == false);
-    
+
     // arg = pi (it is neither of form add nor mul, just a symbol)
     b = get_pi_shift(pi, outArg(n), outArg(r1));
     REQUIRE(((b == true) and eq(*n, *i12) and eq(*r1, *zero)));
-    
+
     // arg = theta + n*pi/12 (theta is an expression of >1 symbols)
     r = add(add(mul(i2, x), mul(i2, symbol("y"))), mul(pi, div(i2, integer(3))));
     b = get_pi_shift(r, outArg(n), outArg(r1));
-    REQUIRE(b == true); 
+    REQUIRE(b == true);
     REQUIRE(eq(*n, *i8));
     REQUIRE(eq(*r1, *add(mul(i2, x), mul(i2, symbol("y")))));
 }
@@ -1020,7 +1020,7 @@ TEST_CASE("Could extract minus: functions", "[functions]")
 {
     RCP<const Basic> x = symbol("x");
     RCP<const Basic> y = symbol("y");
-    
+
     RCP<const Basic> i2 = integer(2);
     RCP<const Basic> im1 = integer(-1);
     RCP<const Basic> r;
@@ -1028,27 +1028,27 @@ TEST_CASE("Could extract minus: functions", "[functions]")
 
     r = add(mul(im1, x), mul(im1, mul(i2, y)));
     b = could_extract_minus(r);
-    REQUIRE(b == true); 
+    REQUIRE(b == true);
 
     r = add(mul(im1, x), mul(i2, y));
     b = could_extract_minus(r);
-    REQUIRE(b == false); 
+    REQUIRE(b == false);
 
     r = mul(mul(x, integer(-10)), y);
     b = could_extract_minus(r);
-    REQUIRE(b == true); 
+    REQUIRE(b == true);
 
     r = mul(mul(x, i2), y);
     b = could_extract_minus(r);
-    REQUIRE(b == false);  
+    REQUIRE(b == false);
 
     r = add(mul(im1, x), mul(im1, div(mul(i2, y), integer(3))));
     b = could_extract_minus(r);
-    REQUIRE(b == true);    
+    REQUIRE(b == true);
 
     r = mul(div(x, i2), y);
     b = could_extract_minus(r);
-    REQUIRE(b == false);  
+    REQUIRE(b == false);
 
 }
 
@@ -1160,7 +1160,7 @@ TEST_CASE("Asec: functions", "[functions]")
     r1 = asec(div(i2, im1));
     r2 = mul(i2, div(pi,  i3));
     REQUIRE(eq(*r1, *r2));
-    
+
     r1 = asec(sqrt(i2));
     r2 = div(pi, mul(i2, i2));
     REQUIRE(eq(*r1, *r2));

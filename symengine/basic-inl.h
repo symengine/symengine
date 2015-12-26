@@ -10,7 +10,7 @@ inline std::size_t Basic::hash() const
     return hash_;
 }
 
-//! \return true if not equal    
+//! \return true if not equal
 inline bool Basic::__neq__(const Basic &o) const
 {
     return not (this->__eq__(o));

@@ -26,7 +26,7 @@ public:
      * \return whether the 2 objects are equal
      * */
     virtual bool __eq__(const Basic &o) const;
-    
+
     /*! Comparison operator
      * \param o - Object to be compared with
      * \return `0` if equal, `-1` , `1` according to string compare
