@@ -12,31 +12,29 @@ def _log_failure(msg=None):
     (filename, line, funcname, contextlist) =  inspect.stack()[2][1:5]
     filename = basename(filename)
     context = contextlist[0]
-    _failed_expectations.append('file "%s", line %s, in %s()%s\n%s' % 
-        (filename, line, funcname, (('\n%s' % msg) if msg else ''), context))
+    _failed_expectations.append('%s\n' % 
+        ((('%s' % msg) if msg else '')))
  
 def _report_failures():
     global _failed_expectations
     if _failed_expectations:
         (filename, line, funcname) =  inspect.stack()[1][1:4]
         report = [
-            '\n\nassert_expectations() called from',
-            '"%s" line %s, in %s()\n' % (basename(filename), line, funcname),
             'Failed Expectations:%s\n' % len(_failed_expectations)]
         for i,failure in enumerate(_failed_expectations, start=1):
             report.append('%d: %s' % (i, failure))
         _failed_expectations = []
     return ('\n'.join(report))
 
-SYMENGINE_PATH = abspath(join(split(__file__)[0], pardir, pardir))  # go to sympy/
+SYMENGINE_PATH = abspath(join(split(__file__)[0], pardir, pardir))  # go to symengine/
 assert exists(SYMENGINE_PATH)
 
 TOP_PATH = abspath(join(SYMENGINE_PATH, pardir))
 BIN_PATH = join(TOP_PATH, "bin")
-EXAMPLES_PATH = join(TOP_PATH, "examples")
+BENCHMARKS_PATH = join(TOP_PATH, "benchmarks")
 
-# Error messages
-message_space = "File contains trailing whitespace: %s, line %s."
+# Trailing whitespace location
+message_space = "%s, line %s."
 
 def check_directory_tree(base_path, file_check, exclusions=set(), pattern="*.cpp"):
     """
@@ -64,9 +62,6 @@ def check_files(files, file_check, exclusions=set(), pattern=None):
         if pattern is None or re.match(pattern, fname):
             file_check(fname)
             
-
-                
-#def test_files():
     """
     This test tests files and checks that:
       o no lines contains a trailing whitespace
@@ -93,6 +88,6 @@ exclude = set()
 check_directory_tree(BIN_PATH, test, set(["~",".sh"]), "*")
 check_directory_tree(SYMENGINE_PATH, test, exclude)
 check_directory_tree(SYMENGINE_PATH, test, exclude, "*.h")
-check_directory_tree(EXAMPLES_PATH, test, exclude)
-check_directory_tree(EXAMPLES_PATH, test, exclude, "*.h")
+check_directory_tree(BENCHMARKS_PATH, test, exclude)
+check_directory_tree(BENCHMARKS_PATH, test, exclude, "*.h")
 print _report_failures()
