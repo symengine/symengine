@@ -15,8 +15,6 @@ namespace SymEngine {
 Pow::Pow(const RCP<const Basic> &base, const RCP<const Basic> &exp)
     : base_{base}, exp_{exp}
 {
-    SYMENGINE_ASSERT (base != null)
-    SYMENGINE_ASSERT (exp != null)
     SYMENGINE_ASSERT(is_canonical(*base, *exp))
 }
 
@@ -315,7 +313,6 @@ RCP<const Basic> exp(const RCP<const Basic> &x)
 Log::Log(const RCP<const Basic> &arg)
     : arg_{arg}
 {
-    SYMENGINE_ASSERT(arg != null)
     SYMENGINE_ASSERT(is_canonical(*arg))
 }
 
