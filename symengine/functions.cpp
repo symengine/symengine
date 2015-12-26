@@ -2956,7 +2956,7 @@ RCP<const Basic> Beta::rewrite_as_gamma() const
 }
 inline RCP<const Basic> gamma_positive_int(const RCP<const Basic> &arg)
 {
-    SYMENGINE_ASSERT(is_a<Integer>(arg))
+    SYMENGINE_ASSERT(is_a<Integer>(*arg))
     RCP<const Integer> arg_ = rcp_static_cast<const Integer>(arg);
     SYMENGINE_ASSERT(arg_->is_positive())
     return factorial((arg_->subint(*one))->as_int());
