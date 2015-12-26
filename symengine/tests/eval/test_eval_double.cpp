@@ -59,7 +59,6 @@ TEST_CASE("eval_double: eval_double", "[eval_double]")
     r2 = sin(div(integer(1), integer(2)));
     r3 = div(one, integer(5));
     r4 = integer(5);
-    
     std::vector<std::pair<RCP<const Basic>, double>> vec = {
         { r1, 0.841470984808 },
         { r2, 0.479425538604 },
