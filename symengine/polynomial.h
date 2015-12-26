@@ -36,7 +36,7 @@ public:
     }
 
     //! \return true if canonical
-    bool is_canonical(const unsigned int &degree, const map_uint_mpz& dict);
+    bool is_canonical(const unsigned int &degree, const map_uint_mpz& dict) const;
     //! \return size of the hash
     std::size_t __hash__() const;
     /*! Equality comparator

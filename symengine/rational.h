@@ -35,7 +35,7 @@ public:
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
     //! \return true if canonical
-    bool is_canonical(const mpq_class &i);
+    bool is_canonical(const mpq_class &i) const;
 
     /*! Constructs Rational as n/d, where n, d can be any Integers. If n/d is an
     *   Integer, it will return an Integer instead.

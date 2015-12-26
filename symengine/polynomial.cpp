@@ -24,7 +24,7 @@ UnivariatePolynomial::UnivariatePolynomial(const RCP<const Symbol> &var, const s
     SYMENGINE_ASSERT(is_canonical(degree_, dict_))
 }
 
-bool UnivariatePolynomial::is_canonical(const unsigned int &degree_, const map_uint_mpz& dict)
+bool UnivariatePolynomial::is_canonical(const unsigned int &degree_, const map_uint_mpz& dict) const
 {
     map_uint_mpz ordered(dict.begin(), dict.end());
     unsigned int prev_degree = (--ordered.end())->first;

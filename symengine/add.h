@@ -58,7 +58,7 @@ public:
         const Ptr<RCP<const Number>> &coef, const Ptr<RCP<const Basic>> &term);
     //! \return `true` if it is in canonical form
     bool is_canonical(const RCP<const Number> &coef,
-            const umap_basic_num& dict);
+            const umap_basic_num& dict) const;
     //! Differentiates w.r.t Symbol `x`
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
     //! Substitutes the dict
