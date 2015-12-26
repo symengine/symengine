@@ -89,7 +89,7 @@ public:
         retval *= -1;
         return retval;
     }
-    //! Overload subtraction and assignment(-=)	
+    //! Overload subtraction and assignment(-=)
     Expression &operator-=(const Expression &other)
     {
         m_basic = sub(m_basic, other.m_basic);

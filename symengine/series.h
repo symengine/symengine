@@ -34,7 +34,7 @@ public:
     }
 
     //! \return true if canonical
-    bool is_canonical(const UnivariatePolynomial&, const unsigned int &);
+    bool is_canonical(const UnivariatePolynomial&, const unsigned int &) const;
     //! \return size of the hash
     std::size_t __hash__() const;
     /*! Equality comparator

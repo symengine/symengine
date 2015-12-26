@@ -17,7 +17,7 @@ Mul::Mul(const RCP<const Number> &coef, map_basic_basic&& dict)
 }
 
 bool Mul::is_canonical(const RCP<const Number> &coef,
-        const map_basic_basic& dict)
+        const map_basic_basic& dict) const
 {
     if (coef == null) return false;
     // e.g. 0*x*y
@@ -484,7 +484,7 @@ RCP<const Basic> Mul::subs(const map_basic_basic &subs_dict) const
     RCP<const Number> coef = coef_;
     map_basic_basic d;
     for (const auto &p: dict_) {
-        RCP<const Basic> factor_old = pow(p.first, p.second);
+        RCP<const Basic> factor_old = Mul::from_dict(one, {{p.first, p.second}});
         RCP<const Basic> factor = factor_old->subs(subs_dict);
         if (factor == factor_old) {
             Mul::dict_add_term_new(outArg(coef), d, p.second, p.first);

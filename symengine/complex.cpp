@@ -10,7 +10,7 @@ Complex::Complex(mpq_class real, mpq_class imaginary)
     SYMENGINE_ASSERT(is_canonical(this->real_, this->imaginary_))
 }
 
-bool Complex::is_canonical(const mpq_class &real, const mpq_class &imaginary)
+bool Complex::is_canonical(const mpq_class &real, const mpq_class &imaginary) const
 {
     mpq_class re = real;
     mpq_class im = imaginary;

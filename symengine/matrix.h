@@ -222,7 +222,7 @@ public:
     CSRMatrix(unsigned row, unsigned col, std::vector<unsigned>&& p,
         std::vector<unsigned>&& j, vec_basic&& x);
 
-    bool is_canonical();
+    bool is_canonical() const;
 
     virtual bool eq(const MatrixBase &other) const;
 

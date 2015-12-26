@@ -94,3 +94,9 @@ fi
 
 echo "Checking whether all header files are installed:"
 python $SOURCE_DIR/bin/test_make_install.py $our_install_dir/include/symengine/ $SOURCE_DIR/symengine
+
+cd ${SOURCE_DIR}
+if [[ "${TEST_TRAILING_WS}" == "yes" ]]; then
+    python utilities/test/test_trailing_whitespace.py
+fi
+

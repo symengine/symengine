@@ -17,7 +17,7 @@ Add::Add(const RCP<const Number> &coef, umap_basic_num&& dict)
 }
 
 bool Add::is_canonical(const RCP<const Number> &coef,
-        const umap_basic_num& dict)
+        const umap_basic_num& dict) const
 {
     if (coef == null) return false;
     if (dict.size() == 0) return false;
@@ -204,15 +204,19 @@ void Add::coef_dict_add_term(const Ptr<RCP<const Number>> &coef, umap_basic_num 
 {
     if (is_a_Number(*term)) {
         iaddnum(coef, mulnum(c, rcp_static_cast<const Number>(term)));
-    } else if (is_a<Add>(*term) and c->is_one()) {
-        for (const auto &q: (rcp_static_cast<const Add>(term))->dict_)
-            Add::dict_add_term(d, q.second, q.first);
-        iaddnum(coef, rcp_static_cast<const Add>(term)->coef_);
+    } else if (is_a<Add>(*term)) {
+        if (c->is_one()) {
+            for (const auto &q: (rcp_static_cast<const Add>(term))->dict_)
+                Add::dict_add_term(d, q.second, q.first);
+            iaddnum(coef, rcp_static_cast<const Add>(term)->coef_);
+        } else {
+            Add::dict_add_term(d, c, term);
+        }
     } else {
         RCP<const Number> coef2;
         RCP<const Basic> t;
-        Add::as_coef_term(mul(c, term), outArg(coef2), outArg(t));
-        Add::dict_add_term(d, coef2, t);
+        Add::as_coef_term(term, outArg(coef2), outArg(t));
+        Add::dict_add_term(d, mulnum(c, coef2), t);
     }
 }
 
@@ -345,7 +349,7 @@ RCP<const Basic> Add::subs(const map_basic_basic &subs_dict) const
     }
 
     for (const auto &p: dict_) {
-        auto it = subs_dict.find(mul(p.first, p.second));
+        auto it = subs_dict.find(Add::from_dict(zero, {{p.first, p.second}}));
         if (it != subs_dict.end()) {
             coef_dict_add_term(outArg(coef), d, one, it->second);
         } else {
