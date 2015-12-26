@@ -14,7 +14,7 @@ def _log_failure(msg=None):
     context = contextlist[0]
     _failed_expectations.append('%s\n' % 
         ((('%s' % msg) if msg else '')))
- 
+
 report = []
  
 def _report_failures():
@@ -28,7 +28,7 @@ def _report_failures():
             report.append('%d: %s' % (i, failure))
         _failed_expectations = []
     if len(report) != 0:
-		return ('\n'.join(report))
+        return ('\n'.join(report))
 
 SYMENGINE_PATH = abspath(join(split(__file__)[0], pardir, pardir))  # go to symengine/
 assert exists(SYMENGINE_PATH)
