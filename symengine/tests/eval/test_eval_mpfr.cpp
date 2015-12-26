@@ -42,13 +42,16 @@ TEST_CASE("precision: eval_mpfr", "[eval_mpfr]")
     REQUIRE(mpfr_cmp_d(a, 0.000000000149734291) == 1);
     REQUIRE(mpfr_cmp_d(a, 0.000000000149734292) == -1);
 
-    mpfr_init2(a, 12);
+    mpfr_init2(a, 100);
     s = mul(EulerGamma, integer(100000000));
     t = integer(mpz_class(57721566));
     r = div(sub(s, t),integer(100000000));
-    // value of 'r' is approximately 0.0000000049015328606065120900824024...
-    // should be rounded to 0
+    // value of `r` is approximately 0.0000000049015328606065120900824024...
+    
     eval_mpfr(a, *r, MPFR_RNDN);
-    REQUIRE(mpfr_cmp_si(a, 0) == 0);
+    // Check that value of `r` (`a`) starts with 0.00000000490153 
+    REQUIRE(mpfr_cmp_d(a, 0.00000000490153) == 1);
+    REQUIRE(mpfr_cmp_d(a, 0.00000000490154) == -1);
+    
     mpfr_clear(a);
 }
