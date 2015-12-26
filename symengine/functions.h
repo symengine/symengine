@@ -1055,6 +1055,42 @@ public:
 RCP<const Basic> uppergamma(const RCP<const Basic> &s, const RCP<const Basic> &x);
 
 
+class Beta: public Function {
+/*!    The beta function, also called the Euler integral
+ *     of the first kind, is a special function defined by
+ *
+ *   .. math::
+ *      \Beta(x,y) := \int^{1}_{0} t^{x-1} (1-t)^{y-1} \mathrm{d}t.
+ **/
+private:
+    RCP<const Basic> x_;
+    RCP<const Basic> y_;
+public:
+    IMPLEMENT_TYPEID(BETA)
+    //! Beta Constructor
+    Beta(const RCP<const Basic> &x, const RCP<const Basic> &y);
+    /*! Equality comparator
+     * \param o - Object to be compared with
+     * \return whether the 2 objects are equal
+     * */
+    virtual bool __eq__(const Basic &o) const;
+    virtual int compare(const Basic &o) const;
+    //! \return Size of the hash
+    virtual std::size_t __hash__() const;
+    //! \return `true` if canonical
+    bool is_canonical(const RCP<const Basic> &s, const RCP<const Basic> &x);
+    virtual vec_basic get_args() const { return {x_, y_}; }
+    
+    virtual void accept(Visitor &v) const;
+    
+    RCP<const Basic> rewrite_as_gamma() const;
+};
+
+//! Canonicalize Beta:
+RCP<const Basic> beta(const RCP<const Basic> &x, const RCP<const Basic> &y);
+inline RCP<const Basic> gamma_positive_int(const RCP<const Basic> &arg);
+inline RCP<const Basic> gamma_multiple_2(const RCP<const Basic>& arg);
+
 class Abs: public Function {
 /*!    The absolute value function
  **/
