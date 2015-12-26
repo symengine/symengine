@@ -827,6 +827,7 @@ TEST_CASE("Subs: functions", "[functions]")
     RCP<const Symbol> y = symbol("y");
     RCP<const Symbol> z = symbol("z");
     RCP<const Symbol> _x = symbol("_x");
+    RCP<const Symbol> __x = symbol("__x");
     RCP<const Basic> r1, r2, r3, r4;
 
     // Test Subs::subs
@@ -861,9 +862,9 @@ TEST_CASE("Subs: functions", "[functions]")
     r2 = r1->diff(y);
     r3 = Subs::create(Derivative::create(function_symbol("f", {add(y, y), _x}), {_x, _x}), 
                         {{_x, add(x, y)}});
-    r4 = Subs::create(Derivative::create(function_symbol("f", {add(y, y), _x}), {_x, y}), 
-                        {{_x, add(x, y)}});
-    r3 = add(r3, r4);
+    r4 = Subs::create(Derivative::create(function_symbol("f", {__x, _x}), {__x, _x}), 
+                        {{_x, add(x, y)}, {__x, add(y, y)}});
+    r3 = add(r3, add(r4, r4));
     REQUIRE(eq(*r2, *r3));
 }
 
