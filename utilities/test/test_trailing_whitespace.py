@@ -17,6 +17,7 @@ def _log_failure(msg=None):
  
 def _report_failures():
     global _failed_expectations
+    report = []
     if _failed_expectations:
         (filename, line, funcname) =  inspect.stack()[1][1:4]
         report = [
@@ -24,7 +25,8 @@ def _report_failures():
         for i,failure in enumerate(_failed_expectations, start=1):
             report.append('%d: %s' % (i, failure))
         _failed_expectations = []
-    return ('\n'.join(report))
+    if len(report) != 0:    
+		return ('\n'.join(report))
 
 SYMENGINE_PATH = abspath(join(split(__file__)[0], pardir, pardir))  # go to symengine/
 assert exists(SYMENGINE_PATH)
