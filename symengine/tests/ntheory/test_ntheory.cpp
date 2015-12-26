@@ -380,7 +380,7 @@ void _test_prime_factor_multiplicities(const RCP<const Integer> &a)
     REQUIRE(eq(*_a, *integer(1)));
 }
 
-TEST_CASE("test_prime_factor_multiplicities(): ntheory", "[ntheory]") 
+TEST_CASE("test_prime_factor_multiplicities(): ntheory", "[ntheory]")
 {
     RCP<const Integer> i2 = integer(2);
     RCP<const Integer> i3 = integer(3);
@@ -464,7 +464,7 @@ TEST_CASE("test_primitive_root(): ntheory", "[ntheory]")
     roots.clear();
     primitive_root_list(roots, *i100);
     REQUIRE(roots.size() == 0);
-    
+
     roots.clear();
     primitive_root_list(roots, *im22);
     REQUIRE(roots.size() == 4);

@@ -92,3 +92,7 @@ if [[ "${TEST_CPP}" != "no" ]]; then
     ./a.out
 fi
 
+cd ${SOURCE_DIR}
+if [[ "${TEST_TRAILING_WS}" == "yes" ]]; then
+    python utilities/test/test_trailing_whitespace.py
+fi

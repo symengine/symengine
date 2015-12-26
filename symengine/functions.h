@@ -443,7 +443,7 @@ class Zeta : public Function {
 //
 // .. math:: \zeta(s, a) = \sum_{n=0}^\infty \frac{1}{(n + a)^s},
 //
-// where the standard choice of argument for :math:`n + a` is used. 
+// where the standard choice of argument for :math:`n + a` is used.
 // If no value is passed for :math:`a`, by this function assumes a default value
 // of :math:`a = 1`, yielding the Riemann zeta function.
 
