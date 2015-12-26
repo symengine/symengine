@@ -33,7 +33,7 @@ public:
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
     //! \return `true` if canonical
-    bool is_canonical(const Basic &base, const Basic &exp);
+    bool is_canonical(const Basic &base, const Basic &exp) const;
     //! \return `base` of `base**exp`
     inline RCP<const Basic> get_base() const { return base_; }
     //! \return `exp` of `base**exp`
@@ -83,7 +83,7 @@ public:
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
     //! \return `true` if canonical
-    bool is_canonical(const Basic &arg);
+    bool is_canonical(const Basic &arg) const;
     //! \return `arg` of `log(arg)`
     inline RCP<const Basic> get_arg() const { return arg_; }
     virtual vec_basic get_args() const { return {arg_}; }

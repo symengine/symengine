@@ -51,7 +51,7 @@ bool CSRMatrix::eq(const MatrixBase &other) const
     }
 }
 
-bool CSRMatrix::is_canonical()
+bool CSRMatrix::is_canonical() const
 {
     if (p_.size() != row_ + 1 or j_.size() != p_[row_] or x_.size() != p_[row_])
         return false;

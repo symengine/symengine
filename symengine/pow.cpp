@@ -20,7 +20,7 @@ Pow::Pow(const RCP<const Basic> &base, const RCP<const Basic> &exp)
     SYMENGINE_ASSERT(is_canonical(*base, *exp))
 }
 
-bool Pow::is_canonical(const Basic &base, const Basic &exp)
+bool Pow::is_canonical(const Basic &base, const Basic &exp) const
 {
     // e.g. 0**x
     if (is_a<Integer>(base) and static_cast<const Integer&>(base).is_zero())
@@ -319,7 +319,7 @@ Log::Log(const RCP<const Basic> &arg)
     SYMENGINE_ASSERT(is_canonical(*arg))
 }
 
-bool Log::is_canonical(const Basic &arg)
+bool Log::is_canonical(const Basic &arg) const
 {
     //  log(0)
     if (is_a<Integer>(arg) and static_cast<const Integer&>(arg).is_zero())

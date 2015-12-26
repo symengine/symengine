@@ -351,7 +351,7 @@ public:
             return other.rpow(*this);
         }
     }
-    
+
     /*! Raise `other` to power RealDouble
      * \param other of type Integer
      * */
@@ -371,7 +371,7 @@ public:
         }
         return make_rcp<const RealDouble>(std::pow(other.i.get_d(), i));
     }
-    
+
     /*! Raise `other` to power RealDouble
      * \param other of type Complex
      * */
