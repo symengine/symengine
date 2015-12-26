@@ -72,19 +72,19 @@ def check_files(files, file_check, exclusions=set(), pattern=None):
 
 def test(fname):
 
-	with open(fname, "rt") as test_file:
-		test_this_file(fname, test_file)
+    with open(fname, "rt") as test_file:
+        test_this_file(fname, test_file)
 
-	with open(fname, "rt") as test_file:
-		source = test_file.read()
+    with open(fname, "rt") as test_file:
+        source = test_file.read()
 	
 def test_this_file(fname, test_file):
-	line = None  # to flag the case where there were no lines in file
-	tests = 0
-	test_set = set()
-	for idx, line in enumerate(test_file):
-		if line.endswith(" \n") or line.endswith("\t\n"):
-			_log_failure( message_space % (fname, idx + 1))
+    line = None  # to flag the case where there were no lines in file
+    tests = 0
+    test_set = set()
+    for idx, line in enumerate(test_file):
+        if line.endswith(" \n") or line.endswith("\t\n"):
+            _log_failure( message_space % (fname, idx + 1))
 
 exclude = set()
 
@@ -95,4 +95,4 @@ check_directory_tree(SYMENGINE_PATH, test, set(["/build/","/doc/","/cmake/","/ut
 print _report_failures()
 
 if len(report) != 0:
-	raise Exception('Trailing Whitespaces present')
+    raise Exception('Trailing Whitespaces present')
