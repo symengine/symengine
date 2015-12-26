@@ -2952,8 +2952,7 @@ RCP<const Basic> abs(const RCP<const Basic> &arg)
     } else if (is_a<Rational>(*arg)) {
         RCP<const Rational> arg_ = rcp_static_cast<const Rational>(arg);
         if (arg_->is_negative()) {
-            // TODO: make this faster by implementing Rational::neg()
-            return neg(arg_);
+            return arg_->neg();
         } else {
             return arg_;
         }
