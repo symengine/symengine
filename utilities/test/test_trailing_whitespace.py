@@ -31,7 +31,6 @@ assert exists(SYMENGINE_PATH)
 
 TOP_PATH = abspath(join(SYMENGINE_PATH, pardir))
 BIN_PATH = join(TOP_PATH, "bin")
-BENCHMARKS_PATH = join(TOP_PATH, "benchmarks")
 
 # Trailing whitespace location
 message_space = "%s, line %s."
@@ -86,8 +85,6 @@ def test_this_file(fname, test_file):
 exclude = set()
 
 check_directory_tree(BIN_PATH, test, set(["~",".sh"]), "*")
-check_directory_tree(SYMENGINE_PATH, test, exclude)
-check_directory_tree(SYMENGINE_PATH, test, exclude, "*.h")
-check_directory_tree(BENCHMARKS_PATH, test, exclude)
-check_directory_tree(BENCHMARKS_PATH, test, exclude, "*.h")
+check_directory_tree(SYMENGINE_PATH, test, set(["/build/","/doc/","/cmake/","/utilities"]))
+check_directory_tree(SYMENGINE_PATH, test, set(["/build/","/doc/","/cmake/","/utilities"]), "*.h")
 print _report_failures()
