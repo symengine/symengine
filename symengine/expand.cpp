@@ -138,9 +138,9 @@ public:
             }
             if (eq(*a_term, *one)) {
                 iaddnum(outArg(coeff),
-                        _mulnum(multiply, _mulnum(rcp_static_cast<const Add>(b)->coef_, a_coef)));
+                        _mulnum(rcp_static_cast<const Add>(b)->coef_, a_coef));
             } else {
-                Add::dict_add_term(d_, _mulnum(multiply, _mulnum(rcp_static_cast<const Add>(b)->coef_, a_coef)),
+                Add::dict_add_term(d_, _mulnum(rcp_static_cast<const Add>(b)->coef_, a_coef),
                                    a_term);
             }
             return;
