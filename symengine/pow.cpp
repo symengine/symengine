@@ -1,5 +1,4 @@
-#include <stdexcept>
-
+#include <symengine/basic.h>
 #include <symengine/pow.h>
 #include <symengine/add.h>
 #include <symengine/mul.h>

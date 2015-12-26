@@ -7,9 +7,6 @@
 #ifndef SYMENGINE_EXPRESSION_H
 #define SYMENGINE_EXPRESSION_H
 
-#include <iostream>
-#include <type_traits>
-
 #include <symengine/add.h>
 #include <symengine/basic.h>
 #include <symengine/symengine_rcp.h>
