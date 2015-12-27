@@ -2911,7 +2911,7 @@ bool Beta::is_canonical(const RCP<const Basic> &x, const RCP<const Basic> &y)
             return false;
         }
     }
-    return false;
+    return true;
 }
 
 std::size_t Beta::__hash__() const
@@ -2924,10 +2924,14 @@ std::size_t Beta::__hash__() const
 
 bool Beta::__eq__(const Basic &o) const
 {
-    if (is_a<Beta>(o) and
-        eq(*x_, *(static_cast<const Beta &>(o).x_)) and
+    if (is_a<Beta>(o)) {
+        if(eq(*x_, *(static_cast<const Beta &>(o).x_)) and
         eq(*y_, *(static_cast<const Beta &>(o).y_)))
-        return true;
+            return true;
+        if(eq(*y_, *(static_cast<const Beta &>(o).x_)) and
+        eq(*x_, *(static_cast<const Beta &>(o).y_)))
+            return true;
+    }
     return false;
 }
 
@@ -2952,7 +2956,7 @@ int Beta::compare(const Basic &o) const
 
 RCP<const Basic> Beta::rewrite_as_gamma() const
 {
-    return div(mul(gamma(x_),gamma(y_)),sub(add(x_,y_),one));
+    return div(mul(gamma(x_),gamma(y_)),add(x_,y_));
 }
 inline RCP<const Basic> gamma_positive_int(const RCP<const Basic> &arg)
 {
@@ -3043,6 +3047,21 @@ RCP<const Basic> beta(const RCP<const Basic> &x, const RCP<const Basic> &y)
         else{
             throw std::runtime_error("Complex Infinity not yet implemented");
         }
+    }
+    
+    if(is_a<const Rational>(*x) and (rcp_static_cast<const Rational>(x))->i.get_den() == 2) {
+            if(is_a<Integer>(*y)) {
+                RCP<const Integer> y_int = rcp_static_cast<const Integer>(y);
+                if(y_int->is_positive()) {
+                    return div(mul(gamma_multiple_2(x),gamma_positive_int(y)),gamma_multiple_2(add(x,y)));
+                }
+                else {
+                    throw std::runtime_error("Complex Infinity not yet implemented");
+                } 
+            }
+            if(is_a<const Rational>(*y) and (rcp_static_cast<const Rational>(y))->i.get_den() == 2) {
+                return div(mul(gamma_multiple_2(x),gamma_multiple_2(y)),gamma_positive_int(add(x,y)));
+            }
     }
     
     return make_rcp<const Beta>(x, y);
