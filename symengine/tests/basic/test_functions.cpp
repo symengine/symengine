@@ -66,6 +66,8 @@ using SymEngine::kronecker_delta;
 using SymEngine::levi_civita;
 using SymEngine::zeta;
 using SymEngine::dirichlet_eta;
+using SymEngine::Beta;
+using SymEngine::beta;
 using SymEngine::gamma;
 using SymEngine::lowergamma;
 using SymEngine::uppergamma;
@@ -1748,6 +1750,37 @@ TEST_CASE("Gamma: functions", "[functions]")
     r1 = gamma(div(integer(-15), i2));
     r2 = mul(div(integer(256), integer(2027025)), sqrt(pi));
     REQUIRE(eq(*r1, *r2));
+}
+
+TEST_CASE("Beta: functions", "[functions]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> i3 = integer(3);
+    RCP<const Basic> im1 = integer(-1);
+    RCP<const Basic> sqrt_pi = sqrt(pi);
+
+    RCP<const Basic> r1;
+    RCP<const Basic> r2;
+    RCP<const Basic> r3;
+
+    r1 = beta(i3, i2);
+    r2 = beta(i2, i3);
+    REQUIRE(eq(*r1, *r2));
+    r3 = div(mul(gamma(i3),gamma(i2)),gamma(add(i2,i3)));
+    REQUIRE(eq(*r1, *r3));
+	r2 = div(one,integer(12));
+    REQUIRE(eq(*r1, *r2));	
+
+    r1 = make_rcp<const Beta>(x,y);
+    r2 = make_rcp<const Beta>(y,x);
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = beta(div(one,i2),div(i3,i2));
+    r2 = div(pi,i2);
+    REQUIRE(eq(*r1,*r2));
 }
 
 TEST_CASE("Lowergamma: functions", "[functions]")
