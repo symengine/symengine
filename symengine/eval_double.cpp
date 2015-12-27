@@ -198,7 +198,7 @@ public:
         } else if (eq(x, *E)) {
             result_ = std::exp(1);
         } else if (eq(x, *EulerGamma)) {
-            result_ = 0.5772156649015328606065; //use until polygamma or digamma is not implemented
+            result_ = 0.5772156649015328606065; // use until polygamma or digamma is implemented
         } else {
             throw std::runtime_error("Constant " + x.get_name() + " is not implemented.");
         }
@@ -423,7 +423,7 @@ std::vector<fn> init_eval_double()
         } else if (eq(x, *E)) {
             return ::exp(1);
         } else if (eq(x, *EulerGamma)) {
-            return 0.5772156649015328606065; //use until polygamma or digamma is not implemented
+            return 0.5772156649015328606065; // use until polygamma or digamma is implemented
         } else {
             throw std::runtime_error("Constant " + static_cast<const Constant &>(x).get_name() + " is not implemented.");
         }
