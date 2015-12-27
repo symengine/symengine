@@ -14,49 +14,47 @@ namespace SymEngine {
 Pow::Pow(const RCP<const Basic> &base, const RCP<const Basic> &exp)
     : base_{base}, exp_{exp}
 {
-    SYMENGINE_ASSERT(is_canonical(base, exp))
+    SYMENGINE_ASSERT(is_canonical(*base, *exp))
 }
 
-bool Pow::is_canonical(const RCP<const Basic> &base, const RCP<const Basic> &exp) const
+bool Pow::is_canonical(const Basic &base, const Basic &exp) const
 {
-    if (base == null) return false;
-    if (exp == null) return false;
     // e.g. 0**x
-    if (is_a<Integer>(*base) and rcp_static_cast<const Integer>(base)->is_zero())
+    if (is_a<Integer>(base) and static_cast<const Integer&>(base).is_zero())
         return false;
     // e.g. 1**x
-    if (is_a<Integer>(*base) and rcp_static_cast<const Integer>(base)->is_one())
+    if (is_a<Integer>(base) and static_cast<const Integer&>(base).is_one())
         return false;
     // e.g. x**0.0
-    if (is_a_Number(*exp) and rcp_static_cast<const Number>(exp)->is_zero())
+    if (is_a_Number(exp) and static_cast<const Number&>(exp).is_zero())
         return false;
     // e.g. x**1
-    if (is_a<Integer>(*exp) and rcp_static_cast<const Integer>(exp)->is_one())
+    if (is_a<Integer>(exp) and static_cast<const Integer&>(exp).is_one())
         return false;
     // e.g. 2**3, (2/3)**4
-    if ((is_a<Integer>(*base) or is_a<Rational>(*base)) and is_a<Integer>(*exp))
+    if ((is_a<Integer>(base) or is_a<Rational>(base)) and is_a<Integer>(exp))
         return false;
     // e.g. (x*y)**2, should rather be x**2*y**2
-    if (is_a<Mul>(*base) and is_a<Integer>(*exp))
+    if (is_a<Mul>(base) and is_a<Integer>(exp))
         return false;
     // e.g. (x**y)**2, should rather be x**(2*y)
-    if (is_a<Pow>(*base) and is_a<Integer>(*exp))
+    if (is_a<Pow>(base) and is_a<Integer>(exp))
         return false;
     // If exp is a rational, it should be between 0  and 1, i.e. we don't
     // allow things like 2**(-1/2) or 2**(3/2)
-    if ((is_a<Rational>(*base) or is_a<Integer>(*base)) and
-        is_a<Rational>(*exp) and
-        (rcp_static_cast<const Rational>(exp)->i < 0 ||
-        rcp_static_cast<const Rational>(exp)->i > 1))
+    if ((is_a<Rational>(base) or is_a<Integer>(base)) and
+        is_a<Rational>(exp) and
+        (static_cast<const Rational&>(exp).i < 0 or
+        static_cast<const Rational&>(exp).i > 1))
         return false;
     // Purely Imaginary complex numbers with integral powers are expanded
     // e.g (2I)**3
-    if (is_a<Complex>(*base) and rcp_static_cast<const Complex>(base)->is_re_zero() and
-        is_a<Integer>(*exp))
+    if (is_a<Complex>(base) and static_cast<const Complex&>(base).is_re_zero() and
+        is_a<Integer>(exp))
         return false;
     // e.g. 0.5^2.0 should be represented as 0.25
-    if(is_a_Number(*base) and not rcp_static_cast<const Number>(base)->is_exact() and
-            is_a_Number(*exp) and not rcp_static_cast<const Number>(exp)->is_exact())
+    if(is_a_Number(base) and not static_cast<const Number&>(base).is_exact() and
+            is_a_Number(exp) and not static_cast<const Number&>(exp).is_exact())
         return false;
     return true;
 }
@@ -314,28 +312,27 @@ RCP<const Basic> exp(const RCP<const Basic> &x)
 Log::Log(const RCP<const Basic> &arg)
     : arg_{arg}
 {
-    SYMENGINE_ASSERT(is_canonical(arg))
+    SYMENGINE_ASSERT(is_canonical(*arg))
 }
 
-bool Log::is_canonical(const RCP<const Basic> &arg) const
+bool Log::is_canonical(const Basic &arg) const
 {
-    if (arg == null) return false;
     //  log(0)
-    if (is_a<Integer>(*arg) and rcp_static_cast<const Integer>(arg)->is_zero())
+    if (is_a<Integer>(arg) and static_cast<const Integer&>(arg).is_zero())
         return false;
     //  log(1)
-    if (is_a<Integer>(*arg) and rcp_static_cast<const Integer>(arg)->is_one())
+    if (is_a<Integer>(arg) and static_cast<const Integer&>(arg).is_one())
         return false;
     // log(E)
-    if (eq(*arg, *E))
+    if (eq(arg, *E))
         return false;
     // Currently not implemented, however should be expanded as `-ipi + log(-arg)`
-    if (is_a_Number(*arg) and rcp_static_cast<const Number>(arg)->is_negative())
+    if (is_a_Number(arg) and static_cast<const Number&>(arg).is_negative())
         return false;
-    if (is_a_Number(*arg) and not rcp_static_cast<const Number>(arg)->is_exact())
+    if (is_a_Number(arg) and not static_cast<const Number&>(arg).is_exact())
         return false;
     // log(num/den) = log(num) - log(den)
-    if (is_a<Rational>(*arg))
+    if (is_a<Rational>(arg))
         return false;
     return true;
 }
