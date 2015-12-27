@@ -1,4 +1,3 @@
-
 from os.path import join
 import sys
 from glob import glob
