@@ -55,7 +55,7 @@ template<class T>
 class StopVisitor : public BaseVisitor<T> {
 public:
     StopVisitor(T *p) : BaseVisitor<T>(p) { };
-    bool stop_;
+    bool stop_, skip_;
 };
 
 template<class T>
@@ -87,6 +87,38 @@ public:
 };
 
 bool has_symbol(const Basic &b, const RCP<const Symbol> &x);
+
+template<class T>
+void preorder_traversal_skip_stop(const Basic &b, StopVisitor<T> &v);
+
+class HasFunctionOfSymbolVisitor : public StopVisitor<HasFunctionOfSymbolVisitor> {
+private:
+    RCP<const Symbol> x_;
+    bool has_;
+public:
+    HasFunctionOfSymbolVisitor() : StopVisitor<HasFunctionOfSymbolVisitor>(this) { };
+
+    void bvisit(const Function &f) {
+        skip_ = true;
+        if (has_symbol(f, x_)) {
+            has_ = true;
+            stop_ = true;
+        }
+    }
+
+    void bvisit(const Basic &x) { };
+
+    bool apply(const Basic &b, const RCP<const Symbol> &x) {
+        x_ = x;
+        has_ = false;
+        skip_ = false;
+        stop_ = false;
+        preorder_traversal_skip_stop(b, *this);
+        return has_;
+    }
+};
+
+bool has_function_of_symbol(const Basic &b, const RCP<const Symbol> &x);
 
 class CoeffVisitor : public StopVisitor<CoeffVisitor> {
 private:
