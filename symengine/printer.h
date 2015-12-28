@@ -109,7 +109,7 @@ public:
 };
 
 class StrPrinter : public BaseVisitor<StrPrinter> {
-private:
+protected:
     std::string str_;
 public:
     static const std::vector<std::string> names_;

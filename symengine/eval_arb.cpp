@@ -18,7 +18,7 @@
 namespace SymEngine {
 
 class EvalArbVisitor : public BaseVisitor<EvalArbVisitor> {
-private:
+protected:
     long prec_;
     arb_ptr result_;
 public:

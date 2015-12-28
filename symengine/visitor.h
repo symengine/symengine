@@ -54,7 +54,7 @@ public:
 void preorder_traversal_stop(const Basic &b, StopVisitor &v);
 
 class HasSymbolVisitor : public BaseVisitor<HasSymbolVisitor, StopVisitor> {
-private:
+protected:
     RCP<const Symbol> x_;
     bool has_;
 public:
@@ -80,7 +80,7 @@ public:
 bool has_symbol(const Basic &b, const RCP<const Symbol> &x);
 
 class CoeffVisitor : public BaseVisitor<CoeffVisitor, StopVisitor> {
-private:
+protected:
     RCP<const Symbol> x_;
     RCP<const Integer> n_;
     RCP<const Basic> coeff_;

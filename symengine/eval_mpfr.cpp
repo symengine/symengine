@@ -16,7 +16,7 @@
 namespace SymEngine {
 
 class EvalMPFRVisitor : public BaseVisitor<EvalMPFRVisitor> {
-private:
+protected:
     mpfr_rnd_t rnd_;
     mpfr_ptr result_;
 public:
