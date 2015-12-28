@@ -146,7 +146,7 @@ Expression UPSeriesPiranha::find_cf(const p_expr &s, const p_expr &var, unsigned
     return s.find_cf({deg});
 }
 Expression UPSeriesPiranha::root(Expression &c, unsigned n) {
-    return pow_ex(c, Expression(n));
+    return pow_ex(c, 1/Expression(n));
 }
 p_expr UPSeriesPiranha::diff(const p_expr &s, const p_expr &var) {
     return s.partial(var.get_symbol_set()[0].get_name());

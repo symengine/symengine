@@ -315,33 +315,36 @@ public:
     }
 
     static inline Poly series_sin(const Poly &s, const Poly& var, unsigned int prec) {
-        if (s == var) {
-            //! fast sin(x)
-            Poly res_p(0);
-            Coeff prod(1);
-            for (unsigned int i = 0; i < prec / 2; i++) {
-                const short j = 2 * i + 1;
-                if (i != 0)
-                    prod /= 1 - j;
-                prod /= j;
-                res_p += Series::pow(var, j, j) * prod;
-            }
-            return res_p;
-        }
-
         const Coeff c(Series::find_cf(s, var, 0));
-        if (c == 0) {
-            // return 2*t/(1+t**2)
-            const Poly t(Series::series_tan(s / 2, var, prec));     // t = tan(s/2);
-            const Poly t2(Series::pow(t, 2, prec));
-            return Series::series_invert(t2 + 1, var, prec) * t * 2;
-        } else {
-            const Poly t(Series::series_tan((s - c) / 2, var, prec));     // t = tan(s/2);
-            const Poly t2(Series::pow(t, 2, prec));
-            // return sin(c)*cos(s) + cos(c)*sin(s)
-            return (-Series::sin(c)) * (t2 - 1) * Series::series_invert(t2 + 1, var, prec)
-                + (Series::cos(c) * 2) * t * Series::series_invert(t2 + 1, var, prec);
+
+        if (c != 0) {
+            const Poly t = s - c;
+            return Series::sin(c)*Series::series_cos(t, var, prec) + Series::cos(c)*Series::series_sin(t, var, prec);
         }
+        //! fast sin(x)
+        Poly res_p(0);
+        Coeff prod(1);
+        for (unsigned int i = 0; i < prec / 2; i++) {
+            const short j = 2 * i + 1;
+            if (i != 0)
+                prod /= 1 - j;
+            prod /= j;
+            res_p += Series::pow(s, j, prec) * prod;
+        }
+        return res_p;
+
+//        if (c == 0) {
+//            // return 2*t/(1+t**2)
+//            const Poly t(Series::series_tan(s / 2, var, prec));     // t = tan(s/2);
+//            const Poly t2(Series::pow(t, 2, prec));
+//            return Series::series_invert(t2 + 1, var, prec) * t * 2;
+//        } else {
+//            const Poly t(Series::series_tan((s - c) / 2, var, prec));     // t = tan(s/2);
+//            const Poly t2(Series::pow(t, 2, prec));
+//            // return sin(c)*cos(s) + cos(c)*sin(s)
+//            return (-Series::sin(c)) * (t2 - 1) * Series::series_invert(t2 + 1, var, prec)
+//                + (Series::cos(c) * 2) * t * Series::series_invert(t2 + 1, var, prec);
+//        }
     }
 
     static inline Poly series_csc(const Poly &s, const Poly& var, unsigned int prec) {
@@ -368,32 +371,34 @@ public:
     }
 
     static inline Poly series_cos(const Poly &s, const Poly& var, unsigned int prec) {
-        Poly res_p(1);
-        if (s == var) {
-            //! fast cos(x)
-            Coeff prod(1);
-            for (unsigned int i = 1; i <= prec / 2; i++) {
-                const short j = 2 * i;
-                prod /= 1 - j;
-                prod /= j;
-                res_p += Series::pow(var, j, j) * prod;
-            }
-            return res_p;
-        }
-
         const Coeff c(Series::find_cf(s, var, 0));
-        if (c == 0) {
-            // return (1-t**2)/(1+t**2)
-            const Poly t(Series::series_tan(s / 2, var, prec));     // t = tan(s/2);
-            const Poly t2(Series::pow(t, 2, prec));
-            return Series::series_invert(t2 + 1, var, prec) * ((t2 - 1) * -1);
-        } else {
-            const Poly t(Series::series_tan((s - c)/ 2, var, prec));     // t = tan(s/2);
-            const Poly t2(Series::pow(t, 2, prec));
-            // return cos(c)*cos(s) - sin(c)*sin(s)
-            return (-Series::cos(c)) * (t2 - 1) * Series::series_invert(t2 + 1, var, prec)
-                - Series::sin(c) * 2 * t * Series::series_invert(t2 + 1, var, prec);
+        if (c != 0) {
+            const Poly t = s - c;
+            return Series::cos(c)*Series::series_cos(t, var, prec) - Series::sin(c)*Series::series_sin(t, var, prec);
         }
+        Poly res_p(1);
+        Coeff prod(1);
+        for (unsigned int i = 1; i <= prec / 2; i++) {
+            const short j = 2 * i;
+            if (i != 0)
+                prod /= 1 - j;
+            prod /= j;
+            res_p += Series::pow(s, j, prec) * prod;
+        }
+        return res_p;
+//
+//        if (c == 0) {
+//            // return (1-t**2)/(1+t**2)
+//            const Poly t(Series::series_tan(s / 2, var, prec));     // t = tan(s/2);
+//            const Poly t2(Series::pow(t, 2, prec));
+//            return Series::series_invert(t2 + 1, var, prec) * ((t2 - 1) * -1);
+//        } else {
+//            const Poly t(Series::series_tan((s - c)/ 2, var, prec));     // t = tan(s/2);
+//            const Poly t2(Series::pow(t, 2, prec));
+//            // return cos(c)*cos(s) - sin(c)*sin(s)
+//            return (-Series::cos(c)) * (t2 - 1) * Series::series_invert(t2 + 1, var, prec)
+//                - Series::sin(c) * 2 * t * Series::series_invert(t2 + 1, var, prec);
+//        }
     }
 
     static inline Poly series_sec(const Poly &s, const Poly& var, unsigned int prec) {
