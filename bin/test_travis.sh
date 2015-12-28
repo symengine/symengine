@@ -93,10 +93,9 @@ if [[ "${TEST_CPP}" != "no" ]]; then
 fi
 
 echo "Checking whether all header files are installed:"
-python $SOURCE_DIR/bin/test_make_install.py $our_install_dir/include/symengine/ $SOURCE_DIR/symengine
+python $SOURCE_DIR/symengine/utilities/tests/test_make_install.py $our_install_dir/include/symengine/ $SOURCE_DIR/symengine
 
-cd ${SOURCE_DIR}
 if [[ "${TEST_TRAILING_WS}" == "yes" ]]; then
-    python utilities/test/test_trailing_whitespace.py
+    python $SOURCE_DIR/symengine/utilities/tests/test_trailing_whitespace.py
 fi
 

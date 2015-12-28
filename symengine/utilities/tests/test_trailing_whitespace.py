@@ -95,4 +95,4 @@ check_directory_tree(SYMENGINE_PATH, test, set(["/build/","/doc/","/cmake/","/ut
 print _report_failures()
 
 if len(report) != 0:
-    raise Exception('Trailing Whitespaces present')
+    raise Exception('Trailing whitespaces present')
