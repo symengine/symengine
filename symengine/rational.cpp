@@ -15,18 +15,18 @@ bool Rational::is_canonical(const rational_class &i) const
     rational_class x = i;
     canonicalize(x);
     // If 'x' is an integer, it should not be Rational:
-    if (get_den(x) == 1) return false;
+    if (SymEngine::get_den(x) == 1) return false;
     // if 'i' is not in canonical form:
-    if (get_num(x) != get_num(i)) return false;
-    if (get_den(x) != get_den(i)) return false;
+    if (SymEngine::get_num(x) != SymEngine::get_num(i)) return false;
+    if (SymEngine::get_den(x) != SymEngine::get_den(i)) return false;
     return true;
 }
 
 RCP<const Number> Rational::from_mpq(rational_class i)
 {
     // If the result is an Integer, return an Integer:
-    if (get_den(i) == 1) {
-        return integer(get_num(i));
+    if (SymEngine::get_den(i) == 1) {
+        return integer(SymEngine::get_num(i));
     } else {
         return make_rcp<const Rational>(i);
     }
@@ -64,8 +64,8 @@ std::size_t Rational::__hash__() const
     // only the least significant bits that fit into "signed long int" are
     // hashed:
     std::size_t seed = RATIONAL;
-    hash_combine<long long int>(seed, get_si(get_num(this->i)));
-    hash_combine<long long int>(seed, get_si(get_den(this->i)));
+    hash_combine<long long int>(seed, get_si(SymEngine::get_num(this->i)));
+    hash_combine<long long int>(seed, get_si(SymEngine::get_den(this->i)));
     return seed;
 }
 
@@ -96,8 +96,8 @@ void get_num_den(const Rational &rat,
             const Ptr<RCP<const Integer>> &num,
             const Ptr<RCP<const Integer>> &den)
 {
-    *num = integer(get_num(rat.i));
-    *den = integer(get_den(rat.i));
+    *num = integer(SymEngine::get_num(rat.i));
+    *den = integer(SymEngine::get_den(rat.i));
 }
 
 bool Rational::is_perfect_power(bool is_expected) const
@@ -129,7 +129,7 @@ bool Rational::nth_root(const Ptr<RCP<const Number>> &the_rat, unsigned long n) 
     if (n == 0)
         throw std::runtime_error("i_nth_root: Can not find Zeroth root");
 
-    integer_class r;
+    rational_class r;
     int ret = mpz_root(get_mpz_t(SymEngine::get_num(r)), get_mpz_t(SymEngine::get_num(i)), n);
     if (ret == 0)
         return false;
@@ -142,7 +142,7 @@ bool Rational::nth_root(const Ptr<RCP<const Number>> &the_rat, unsigned long n) 
 }
 
 RCP<const Basic> Rational::powrat(const Rational &other) const {
-    return SymEngine::mul(other.rpowrat(*get_num()), other.neg()->rpowrat(*get_den()));
+    return SymEngine::mul(other.rpowrat(*this->get_num()), other.neg()->rpowrat(*this->get_den()));
 }
 
 RCP<const Basic> Rational::rpowrat(const Integer &other) const {
@@ -163,7 +163,7 @@ RCP<const Basic> Rational::rpowrat(const Integer &other) const {
             return res->powint(*get_num());
         }
     }
-    rational_class q, r;
+    integer_class q, r;
     auto num = SymEngine::get_num(i);
     auto den = SymEngine::get_den(i);
 

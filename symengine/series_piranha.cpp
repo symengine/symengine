@@ -35,12 +35,12 @@ int URatPSeriesPiranha::compare(const Basic &o) const {
 }
 
 piranha::integer URatPSeriesPiranha::convert(const Integer &x) {
-    return piranha::integer(x.as_mpz().get_mpz_t());
+    return piranha::integer(get_mpz_t(x.i));
 }
 
-piranha::rational URatPSeriesPiranha::convert(const mpq_class &x) {
-    piranha::integer i1(x.get_num_mpz_t());
-    piranha::integer i2(x.get_den_mpz_t());
+piranha::rational URatPSeriesPiranha::convert(const rational_class &x) {
+    piranha::integer i1(get_mpz_t(get_num(x)));
+    piranha::integer i2(get_mpz_t(get_den(x)));
     piranha::rational r(i1);
     r /= i2;
     return r;
@@ -64,11 +64,11 @@ RCP<const Basic> URatPSeriesPiranha::as_basic() const {
     umap_basic_num dict_;
     for (const auto& it : p_) {
         if (it.first != 0) {
-            mpq_class cl_rat(it.first.get_mpq_view());
-            cl_rat.canonicalize();
+            rational_class cl_rat(it.first.get_mpq_view());
+            canonicalize(cl_rat);
             RCP<const Number> co_basic;
-            if (cl_rat.get_den() == 1)
-                co_basic = make_rcp<const Integer>(cl_rat.get_num());
+            if (get_den(cl_rat) == 1)
+                co_basic = make_rcp<const Integer>(get_num(cl_rat));
             else
                 co_basic = make_rcp<const Rational>(cl_rat);
             auto term = SymEngine::mul(SymEngine::pow(x, SymEngine::integer(it.second.degree())), co_basic);
@@ -84,11 +84,10 @@ umap_int_basic URatPSeriesPiranha::as_dict() const {
     umap_int_basic map;
     for (const auto& it : p_) {
         if (it.first != 0) {
-            mpq_class cl_rat(it.first.get_mpq_view());
-            cl_rat.canonicalize();
+            rational_class cl_rat(it.first.get_mpq_view());
             RCP<const Basic> basic;
-            if (cl_rat.get_den() == 1)
-                basic = make_rcp<const Integer>(cl_rat.get_num());
+            if (get_den(cl_rat) == 1)
+                basic = make_rcp<const Integer>(get_num(cl_rat));
             else
                 basic = make_rcp<const Rational>(cl_rat);
             map[it.second.degree()] = basic;
@@ -98,11 +97,10 @@ umap_int_basic URatPSeriesPiranha::as_dict() const {
 }
 
 RCP<const Basic> URatPSeriesPiranha::get_coeff(int i) const {
-    mpq_class cl_rat(p_.find_cf({i}).get_mpq_view());
-    cl_rat.canonicalize();
+    rational_class cl_rat(p_.find_cf({i}).get_mpq_view());
     RCP<const Basic> basic;
-    if (cl_rat.get_den() == 1)
-        basic = make_rcp<const Integer>(cl_rat.get_num());
+    if (get_den(cl_rat) == 1)
+        basic = make_rcp<const Integer>(get_num(cl_rat));
     else
         basic = make_rcp<const Rational>(cl_rat);
     return std::move(basic);
@@ -132,15 +130,14 @@ piranha::rational URatPSeriesPiranha::find_cf(const pp_t &s, const pp_t &var, un
 }
 
 piranha::rational URatPSeriesPiranha::root(piranha::rational &c, unsigned n) {
-    mpq_class cl_rat(c.get_mpq_view());
-    mpq_class cl_root;
+    rational_class cl_rat(c.get_mpq_view());
+    rational_class cl_root;
     bool res;
-    if (mpz_cmp_ui(cl_rat.get_den_mpz_t(), 1) == 0) {
+    if (get_den(cl_rat) == 1) {
         // integer constant
-        res = mpz_root(cl_root.get_num_mpz_t(), cl_rat.get_num_mpz_t(), n) != 0;
+        res = mpz_root(get_mpz_t(get_num(cl_root)), get_mpz_t(get_num(cl_rat)), n) != 0;
     }
     else {
-        cl_root.canonicalize();
         RCP<const Rational> cterm = make_rcp<const Rational>(cl_root);
         RCP<const Number> cout;
         res = cterm->nth_root(outArg(cout), n);

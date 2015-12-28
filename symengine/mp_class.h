@@ -1,6 +1,9 @@
 #ifndef SYMENGINE_INTEGER_CLASS_H
 #define SYMENGINE_INTEGER_CLASS_H
 
+#include <symengine/symengine_rcp.h>
+
+#include <piranha/mp_integer.hpp>
 #if SYMENGINE_INTEGER_CLASS == SYMENGINE_PIRANHA
 #include <piranha/mp_integer.hpp>
 #include <piranha/mp_rational.hpp>
@@ -25,14 +28,6 @@ typedef flint::fmpqxx rational_class;
 typedef mpz_class integer_class;
 typedef mpq_class rational_class;
 #endif
-
-inline namespace literals
-{
-    inline integer_class operator "" _z(const char* str)
-    {
-        return integer_class(str);
-    }
-}
 
 // Helper functions for mpz_class
 inline double get_d(const mpz_class &i) {
@@ -76,6 +71,14 @@ inline const mpz_class& get_num(const mpq_class &i) {
     return i.get_num();
 }
 
+inline mpz_class& get_den(mpq_class &i) {
+    return i.get_den();
+}
+
+inline mpz_class& get_num(mpq_class &i) {
+    return i.get_num();
+}
+
 inline mpq_srcptr get_mpq_t(const mpq_class &i) {
     return i.get_mpq_t();
 }
@@ -103,7 +106,7 @@ inline piranha::integer sqrt(const piranha::integer &i) {
 }
 
 inline mpz_ptr get_mpz_t(piranha::integer &i) {
-    return i.get_mpz_ptr();
+    return i._get_mpz_ptr();
 }
 
 inline auto get_mpz_t(const piranha::integer &i) -> decltype(i.get_mpz_view())  {
@@ -147,6 +150,15 @@ inline const piranha::integer& get_den(const piranha::rational &i) {
 inline const piranha::integer& get_num(const piranha::rational &i) {
     return i.num();
 }
+
+inline piranha::integer& get_den(piranha::rational &i) {
+    return i._den();
+}
+
+inline piranha::integer& get_num(piranha::rational &i) {
+    return i._num();
+}
+
 
 inline void canonicalize(piranha::rational &i) {
     i.canonicalise();

@@ -55,11 +55,16 @@ public:
     inline bool is_int() const { return this->i == 1; }
     //! \return `true` if positive
     inline virtual bool is_positive() const {
-        return get_num(this->i) > 0;
+        return i > 0;
     }
     //! \return `true` if negative
     inline virtual bool is_negative() const {
-        return get_num(this->i) < 0;
+        return i < 0;
+    }
+
+    //! \return negative of `this`
+    inline RCP<const Rational> neg() const {
+        return make_rcp<const Rational>(std::move(-i));
     }
 
     virtual bool is_perfect_power(bool is_expected=false) const;
@@ -139,12 +144,12 @@ public:
         bool neg = other.is_negative();
         integer_class exp_ = other.i;
         if (neg) exp_ = -exp_;
-        if (not (exp_.fits_ulong_p()))
+        if (not fits_ulong_p(exp_))
             throw std::runtime_error("powrat: 'exp' does not fit ulong.");
-        unsigned long exp = exp_.get_ui();
+        unsigned long exp = get_ui(exp_);
         rational_class val;
-        mpz_pow_ui(get_mpz_t(get_num(val)), get_mpz_t(get_num(i)), exp);
-        mpz_pow_ui(get_mpz_t(get_den(val)), get_mpz_t(get_num(i)), exp);
+        mpz_pow_ui(get_mpz_t(SymEngine::get_num(val)), get_mpz_t(SymEngine::get_num(i)), exp);
+        mpz_pow_ui(get_mpz_t(SymEngine::get_den(val)), get_mpz_t(SymEngine::get_den(i)), exp);
 
         // Since 'this' is in canonical form, so is this**other, so we simply
         // pass val into the constructor directly without canonicalizing:
@@ -231,6 +236,14 @@ public:
     virtual RCP<const Number> rpow(const Number &other) const {
         throw std::runtime_error("Not implemented.");
     };
+
+    RCP<const Integer> get_num() const {
+        return integer(SymEngine::get_num(i));
+    }
+
+    RCP<const Integer> get_den() const {
+        return integer(SymEngine::get_den(i));
+    }
 };
 
 //! returns the `num` and `den` of rational `rat` as `RCP<const Integer>`

@@ -21,8 +21,12 @@ using SymEngine::one;
 using SymEngine::zero;
 using SymEngine::integer;
 using SymEngine::vec_basic_eq_perm;
+using SymEngine::integer_class;
 
-using namespace SymEngine::literals;
+inline integer_class operator "" _z(const char* str)
+{
+    return integer_class(str);
+}
 
 TEST_CASE("Constructor of UnivariatePolynomial", "[UnivariatePolynomial]")
 {

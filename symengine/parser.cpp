@@ -40,6 +40,8 @@ class ExpressionParser {
     // cast overlaoded functions below to single_arg, double_arg before they can be used in the map
     single_arg_func single_casted_log = log;
     single_arg_func single_casted_zeta = zeta;
+    single_arg_func casted_sqrt = sqrt;
+    single_arg_func casted_abs = abs;
 
     double_arg_func double_casted_log = log;
     double_arg_func double_casted_zeta = zeta;
@@ -58,12 +60,12 @@ class ExpressionParser {
         {"asec", asec}, {"acsc", acsc}, {"acot", acot},
 
         {"sinh", sinh}, {"cosh", cosh}, {"tanh", tanh},
-        {"coth", coth}, // {"sech", sech}, {"csch", csch},
+        {"coth", coth},  {"sech", sech}, {"csch", csch},
 
         {"asinh", asinh}, {"acosh", acosh}, {"atanh", atanh},
-        {"asech", asech}, {"acoth", acoth}, // {"acsch", acsch},
+        {"asech", asech}, {"acoth", acoth},  {"acsch", acsch},
 
-        {"gamma", gamma}, {"sqrt", sqrt}, {"abs", abs}, {"exp", exp},
+        {"gamma", gamma}, {"sqrt", casted_sqrt}, {"abs", casted_abs}, {"exp", exp},
         {"lambertw", lambertw}, {"dirichlet_eta", dirichlet_eta},
         {"ln", single_casted_log}, {"log", single_casted_log}, {"zeta", single_casted_zeta}
     };

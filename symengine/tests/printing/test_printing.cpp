@@ -42,6 +42,12 @@ using SymEngine::complex_double;
 using SymEngine::BaseVisitor;
 using SymEngine::StrPrinter;
 using SymEngine::Sin;
+using SymEngine::integer_class;
+
+inline integer_class operator "" _z(const char* str)
+{
+    return integer_class(str);
+}
 
 namespace SymEngine {
 class MyStrPrinter : public BaseVisitor<MyStrPrinter, StrPrinter> {
@@ -53,8 +59,6 @@ public:
     }
 };
 }
-
-using namespace SymEngine::literals;
 
 TEST_CASE("test_printing(): printing", "[printing]")
 {

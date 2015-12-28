@@ -93,7 +93,7 @@ endif()
 
 
 set(INTEGER_CLASS "gmpxx"
-    CACHE BOOL "Integer class for symengine. Either gmpxx or piranha")
+    CACHE STRING "Integer class for symengine. Either gmpxx or piranha")
 
 if ("${INTEGER_CLASS}" MATCHES "piranha")
     set(SYMENGINE_INTEGER_CLASS "PIRANHA")
@@ -456,6 +456,7 @@ message("CMAKE_CXX_FLAGS_DEBUG:   ${CMAKE_CXX_FLAGS_DEBUG}")
 message("CMAKE_CXX_FLAGS_RELEASE: ${CMAKE_CXX_FLAGS_RELEASE}")
 message("CMAKE_INSTALL_PREFIX: ${CMAKE_INSTALL_PREFIX}")
 
+message("INTEGER_CLASS : ${SYMENGINE_INTEGER_CLASS}")
 message("WITH_SYMENGINE_ASSERT: ${WITH_SYMENGINE_ASSERT}")
 message("WITH_SYMENGINE_RCP: ${WITH_SYMENGINE_RCP}")
 if (NOT WITH_SYMENGINE_RCP)
