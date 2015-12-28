@@ -39,6 +39,20 @@ using SymEngine::function_symbol;
 using SymEngine::I;
 using SymEngine::real_double;
 using SymEngine::complex_double;
+using SymEngine::BaseVisitor;
+using SymEngine::StrPrinter;
+using SymEngine::Sin;
+
+namespace SymEngine {
+class MyStrPrinter : public BaseVisitor<MyStrPrinter, StrPrinter> {
+public:
+    using StrPrinter::bvisit;
+
+    void bvisit(const Sin &x) {
+        str_ = "MySin(" + this->apply(x.get_arg()) + ")";
+    }
+};
+}
 
 TEST_CASE("test_printing(): printing", "[printing]")
 {
@@ -314,4 +328,15 @@ TEST_CASE("test_floats(): printing", "[printing]")
     REQUIRE(p->__str__() == "(-10.0000000000000000000000 + 10.0000000000000000000000*I)/x");
 #endif
 #endif
+}
+
+TEST_CASE("test custom printing", "[printing]")
+{
+    SymEngine::MyStrPrinter printer;
+    RCP<const Basic> p;
+    RCP<const Symbol> x = symbol("x");
+    p = sin(x);
+    CHECK(printer.apply(p) == "MySin(x)");
+    p = cos(sin(x));
+    CHECK(printer.apply(p) == "cos(MySin(x))");
 }
