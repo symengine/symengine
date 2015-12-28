@@ -37,7 +37,7 @@ public:
     //! Add terms to dict
     static void dict_add_term(map_basic_basic &d,
         const RCP<const Basic> &exp, const RCP<const Basic> &t);
-    static void dict_add_term_new(const Ptr<RCP<const Number>> &coef, map_basic_basic &d, 
+    static void dict_add_term_new(const Ptr<RCP<const Number>> &coef, map_basic_basic &d,
         const RCP<const Basic> &exp, const RCP<const Basic> &t);
     //! Convert to a base and exponent form
     static void as_base_exp(const RCP<const Basic> &self,
@@ -55,7 +55,7 @@ public:
 
     //! \return true if both `coef` and `dict` are in canonical form
     bool is_canonical(const RCP<const Number> &coef,
-            const map_basic_basic& dict);
+            const map_basic_basic& dict) const;
     //! Differentiate w.r.t Symbol `x`
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
     virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;

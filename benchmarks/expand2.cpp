@@ -25,20 +25,26 @@ using SymEngine::rcp_dynamic_cast;
 
 int main(int argc, char* argv[])
 {
+    int N;
+    if (argc == 2) {
+        N = std::atoi(argv[1]);
+    } else {
+        N = 15;
+    }
     SymEngine::print_stack_on_segfault();
 
     RCP<const Basic> x = symbol("x");
     RCP<const Basic> y = symbol("y");
     RCP<const Basic> z = symbol("z");
     RCP<const Basic> w = symbol("w");
-    RCP<const Basic> i15 = integer(15);
+    RCP<const Basic> i = integer(N);
 
     RCP<const Basic> e, f, r;
 
-    e = pow(add(add(add(x, y), z), w), i15);
+    e = pow(add(add(add(x, y), z), w), i);
     f = mul(e, add(e, w));
 
-    std::cout << "Expanding: " << *f << std::endl;
+    //std::cout << "Expanding: " << *f << std::endl;
 
     auto t1 = std::chrono::high_resolution_clock::now();
     r = expand(f);

@@ -19,7 +19,7 @@ public:
     //! `degree` : Degree of UnivariatePolynomial
     //! `var_` : Variable of the uni-variate UnivariatePolynomial
     //! `dict_` : holds the UnivariatePolynomial
-    // UnivariatePolynomial x**2 + 2*x + 1 has dict_ = {{0, 1}, {1, 2}, {2, 1}} with var_ = "x" 
+    // UnivariatePolynomial x**2 + 2*x + 1 has dict_ = {{0, 1}, {1, 2}, {2, 1}} with var_ = "x"
     unsigned int degree_;
     RCP<const Symbol> var_;
     map_uint_mpz dict_;
@@ -36,7 +36,7 @@ public:
     }
 
     //! \return true if canonical
-    bool is_canonical(const unsigned int &degree, const map_uint_mpz& dict);
+    bool is_canonical(const unsigned int &degree, const map_uint_mpz& dict) const;
     //! \return size of the hash
     std::size_t __hash__() const;
     /*! Equality comparator
@@ -67,15 +67,15 @@ public:
     bool is_zero() const;
     //! \return `true` if `1`
     bool is_one() const;
-    //! \return `true` if `-1`    
+    //! \return `true` if `-1`
     bool is_minus_one() const;
-    //! \return `true` if integer  
+    //! \return `true` if integer
     bool is_integer() const;
-    //! \return `true` if symbol 
+    //! \return `true` if symbol
     bool is_symbol() const;
-    //! \return `true` if mul   
+    //! \return `true` if mul
     bool is_mul() const;
-    //! \return `true` if pow    
+    //! \return `true` if pow
     bool is_pow() const;
 
     virtual vec_basic get_args() const;

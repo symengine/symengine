@@ -1,5 +1,4 @@
-#include <stdexcept>
-
+#include <symengine/basic.h>
 #include <symengine/add.h>
 #include <symengine/symbol.h>
 #include <symengine/mul.h>
@@ -17,7 +16,7 @@ Add::Add(const RCP<const Number> &coef, umap_basic_num&& dict)
 }
 
 bool Add::is_canonical(const RCP<const Number> &coef,
-        const umap_basic_num& dict)
+        const umap_basic_num& dict) const
 {
     if (coef == null) return false;
     if (dict.size() == 0) return false;
@@ -204,15 +203,19 @@ void Add::coef_dict_add_term(const Ptr<RCP<const Number>> &coef, umap_basic_num 
 {
     if (is_a_Number(*term)) {
         iaddnum(coef, mulnum(c, rcp_static_cast<const Number>(term)));
-    } else if (is_a<Add>(*term) and c->is_one()) {
-        for (const auto &q: (rcp_static_cast<const Add>(term))->dict_)
-            Add::dict_add_term(d, q.second, q.first);
-        iaddnum(coef, rcp_static_cast<const Add>(term)->coef_);
+    } else if (is_a<Add>(*term)) {
+        if (c->is_one()) {
+            for (const auto &q: (rcp_static_cast<const Add>(term))->dict_)
+                Add::dict_add_term(d, q.second, q.first);
+            iaddnum(coef, rcp_static_cast<const Add>(term)->coef_);
+        } else {
+            Add::dict_add_term(d, c, term);
+        }
     } else {
         RCP<const Number> coef2;
         RCP<const Basic> t;
-        Add::as_coef_term(mul(c, term), outArg(coef2), outArg(t));
-        Add::dict_add_term(d, coef2, t);
+        Add::as_coef_term(term, outArg(coef2), outArg(t));
+        Add::dict_add_term(d, mulnum(c, coef2), t);
     }
 }
 
@@ -220,10 +223,15 @@ void Add::as_coef_term(const RCP<const Basic> &self,
         const Ptr<RCP<const Number>> &coef, const Ptr<RCP<const Basic>> &term)
 {
     if (is_a<Mul>(*self)) {
-        *coef = (rcp_static_cast<const Mul>(self))->coef_;
-        // We need to copy our 'dict_' here, as 'term' has to have its own.
-        map_basic_basic d2 = (rcp_static_cast<const Mul>(self))->dict_;
-        *term = Mul::from_dict(one, std::move(d2));
+        if (neq(*(rcp_static_cast<const Mul>(self)->coef_), *one)) {
+            *coef = (rcp_static_cast<const Mul>(self))->coef_;
+            // We need to copy our 'dict_' here, as 'term' has to have its own.
+            map_basic_basic d2 = (rcp_static_cast<const Mul>(self))->dict_;
+            *term = Mul::from_dict(one, std::move(d2));
+        } else {
+            *coef = one;
+            *term = self;
+        }
     } else if (is_a_Number(*self)) {
         *coef = rcp_static_cast<const Number>(self);
         *term = one;
@@ -287,30 +295,6 @@ RCP<const Basic> sub(const RCP<const Basic> &a, const RCP<const Basic> &b)
     return add(a, mul(minus_one, b));
 }
 
-RCP<const Basic> add_expand(const RCP<const Add> &self)
-{
-    umap_basic_num d;
-    RCP<const Number> coef_overall = self->coef_;
-    RCP<const Number> coef;
-    RCP<const Basic> tmp, tmp2;
-    for (const auto &p: self->dict_) {
-        tmp = expand(p.first);
-        if (is_a<Add>(*tmp)) {
-            for (const auto &q: (rcp_static_cast<const Add>(tmp))->dict_) {
-                Add::as_coef_term(q.first, outArg(coef), outArg(tmp2));
-                Add::dict_add_term(d,
-                        mulnum(mulnum(p.second, q.second), coef), tmp2);
-            }
-            iaddnum(outArg(coef_overall), mulnum(p.second,
-                        rcp_static_cast<const Add>(tmp)->coef_));
-        } else {
-            Add::as_coef_term(tmp, outArg(coef), outArg(tmp));
-            Add::dict_add_term(d, mulnum(p.second, coef), tmp);
-        }
-    }
-    return Add::from_dict(coef_overall, std::move(d));
-}
-
 RCP<const Basic> Add::diff(const RCP<const Symbol> &x) const
 {
     SymEngine::umap_basic_num d;
@@ -364,7 +348,7 @@ RCP<const Basic> Add::subs(const map_basic_basic &subs_dict) const
     }
 
     for (const auto &p: dict_) {
-        auto it = subs_dict.find(mul(p.first, p.second));
+        auto it = subs_dict.find(Add::from_dict(zero, {{p.first, p.second}}));
         if (it != subs_dict.end()) {
             coef_dict_add_term(outArg(coef), d, one, it->second);
         } else {

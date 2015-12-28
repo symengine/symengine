@@ -22,6 +22,7 @@ set(SRC
     monomials.cpp
     polynomial.cpp
     series.cpp
+    expansion.cpp
     rings.cpp
     ntheory.cpp
     dense_matrix.cpp
@@ -34,6 +35,7 @@ set(SRC
     printer.cpp
     real_double.cpp
     complex_double.cpp
+    expand.cpp
 )
 
 if (WITH_MPFR)

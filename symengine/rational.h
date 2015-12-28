@@ -35,7 +35,7 @@ public:
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
     //! \return true if canonical
-    bool is_canonical(const mpq_class &i);
+    bool is_canonical(const mpq_class &i) const;
 
     /*! Constructs Rational as n/d, where n, d can be any Integers. If n/d is an
     *   Integer, it will return an Integer instead.
@@ -45,22 +45,24 @@ public:
     static RCP<const Number> from_two_ints(const long n, const long d);
     //! Convert to `mpq_class`.
     inline mpq_class as_mpq() const { return this->i; }
-    //! \return `true` if `0`
-    virtual bool is_zero() const { return this->i == 0; }
-    //! \return `true` if `1`
-    virtual bool is_one() const { return this->i == 1; }
-    //! \return `true` if `-1`
-    virtual bool is_minus_one() const { return this->i == -1; }
-    //! \return `true` if denominator is `1`
-    inline bool is_int() const { return this->i.get_den() == 1; }
+    //! \return `true` if `num` is `0`
+    virtual bool is_zero() const { return this->i.get_num() == 0; }
+    //! \return `false` since `Rational` cannot be an `Integer` 
+    virtual bool is_one() const { return false; }
+    //! \return `false` since `Rational` cannot be an `Integer` 
+    virtual bool is_minus_one() const { return false; }
     //! \return `true` if positive
     inline virtual bool is_positive() const {
-        return ((this->i.get_den() > 0) and (this->i.get_num() > 0)) ||
-                ((this->i.get_den() < 0) and (this->i.get_num() < 0)) ; }
+        return this->i.get_num() > 0; 
+    }
     //! \return `true` if negative
     inline virtual bool is_negative() const {
-        return ((this->i.get_den() < 0) and (this->i.get_num() > 0)) ||
-                ((this->i.get_den() > 0) and (this->i.get_num() < 0)) ; }
+        return this->i.get_num() < 0; 
+    }
+    //! \return negative of self
+    inline RCP<const Number> neg() const {
+        return from_mpq(-this->i);
+    }
 
     virtual bool is_perfect_power(bool is_expected=false) const;
     virtual bool nth_root(const Ptr<RCP<const Number>> &, unsigned int n) const;

@@ -55,6 +55,7 @@ symengine/tests/basic/test_number
 symengine/tests/basic/test_poly
 symengine/tests/basic/test_polynomial
 symengine/tests/basic/test_series
+symengine/tests/basic/test_series_expansion
 symengine/tests/basic/test_subs
 symengine/tests/basic/test_rational
 symengine/tests/matrix/test_matrix
@@ -86,12 +87,15 @@ benchmarks/matrix_add2_ginac
 benchmarks/matrix_mul1_ginac
 benchmarks/matrix_mul2_ginac
 benchmarks/series
+benchmarks/series_expansion_sincos
 benchmarks/symbench
 benchmarks/symbench_ginac
 benchmarks/lwbench
 benchmarks/lwbench_ginac
 benchmarks/expand6
 benchmarks/expand6_ginac
+benchmarks/expand7
+benchmarks/expand7_ginac
 
 #rubygem
 symengine/ruby/Gemfile.lock
