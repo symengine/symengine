@@ -38,7 +38,7 @@
 namespace SymEngine {
 
 #ifdef HAVE_SYMENGINE_PIRANHA
-using pp_t = piranha::polynomial<piranha::rational,piranha::monomial<short>>;
+using pp_t = piranha::polynomial<piranha::rational, piranha::monomial<short>>;
 
 //========== helpers ============
 static inline RCP<const Number> prat2synum(const piranha::rational& p_rat)
@@ -246,7 +246,7 @@ pp_t series_sin(const pp_t& s, const pp_t& var, unsigned int prec)
             if (i != 0)
                 prod *= 1-j;
             prod *= j;
-            res_p += piranha::rational{1,prod} * var.pow(j);
+            res_p += piranha::rational{1, prod} * var.pow(j);
         }
         return res_p;
     }
@@ -284,7 +284,7 @@ pp_t series_cos(const pp_t& s, const pp_t& var, unsigned int prec)
             const short j = 2*i;
             prod *= 1-j;
             prod *= j;
-            res_p += piranha::rational{1,prod} * var.pow(j);
+            res_p += piranha::rational{1, prod} * var.pow(j);
         }
         return res_p;
     }
@@ -310,7 +310,7 @@ pp_t series_log(const pp_t& s, const pp_t& var, unsigned int prec)
     if (s-1 == var) {
         //! fast log(1+x)
         for (unsigned int i=1; i<prec; i++) {
-            res_p += piranha::rational{((i%2)==0)?-1:1,i} * var.pow(i);
+            res_p += piranha::rational{((i%2)==0)?-1:1, i} * var.pow(i);
         }
         return res_p;
     }
@@ -330,7 +330,7 @@ pp_t series_exp(const pp_t& s, const pp_t& var, unsigned int prec)
 
     if (s == var) {
         //! fast exp(x)
-        piranha::rational coef{1,1};
+        piranha::rational coef{1, 1};
         for (unsigned int i=1; i<prec; i++) {
             coef /= i;
             res_p += coef * var.pow(i);

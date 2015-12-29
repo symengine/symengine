@@ -1,7 +1,7 @@
 // To compile on a debian system you need to install libginac-dev first
 // $ sudo apt-get install libginac-dev
 // Then compile with the following command,
-// $ g++ -std=c++0x -o symbench_ginac -Wl,--no-as-needed `pkg-config --cflags --libs ginac` symbench_ginac.cpp
+// $ g++ -std=c++0x -o symbench_ginac -Wl, --no-as-needed `pkg-config --cflags --libs ginac` symbench_ginac.cpp
 // See this SO answer: http://stackoverflow.com/a/18696743/1895353
 
 #include <iostream>
@@ -63,7 +63,7 @@ ex hermite(numeric n, ex y)
 {
     if (n == 1) return 2*y;
     if (n == 0) return 1;
-    return expand(2*y*hermite(n-1,y) - 2*(n-1)*hermite(n-2,y));
+    return expand(2*y*hermite(n-1, y) - 2*(n-1)*hermite(n-2, y));
 }
 
 double R2()

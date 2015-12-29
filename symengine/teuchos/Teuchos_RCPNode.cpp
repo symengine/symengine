@@ -206,8 +206,8 @@ namespace Teuchos {
 
 void RCPNode::set_extra_data(
   const any &extra_data, const std::string& name
-  ,EPrePostDestruction destroy_when
-  ,bool force_unique
+  , EPrePostDestruction destroy_when
+  , bool force_unique
   )
 {
   if(extra_data_map_==NULL) {
@@ -218,17 +218,17 @@ void RCPNode::set_extra_data(
 #ifdef TEUCHOS_DEBUG
   TEUCHOS_TEST_FOR_EXCEPTION(
     (itr != extra_data_map_->end() && force_unique), std::invalid_argument
-    ,"Error, the type:name pair \'" << type_and_name
+    , "Error, the type:name pair \'" << type_and_name
     << "\' already exists and force_unique==true!" );
 #endif
   if (itr != extra_data_map_->end()) {
     // Change existing extra data
-    itr->second = extra_data_entry_t(extra_data,destroy_when);
+    itr->second = extra_data_entry_t(extra_data, destroy_when);
   }
   else {
     // Insert new extra data
     (*extra_data_map_)[type_and_name] =
-      extra_data_entry_t(extra_data,destroy_when);
+      extra_data_entry_t(extra_data, destroy_when);
   }
 }
 
@@ -238,15 +238,15 @@ any& RCPNode::get_extra_data( const std::string& type_name, const std::string& n
 #ifdef TEUCHOS_DEBUG
   TEUCHOS_TEST_FOR_EXCEPTION(
     extra_data_map_==NULL, std::invalid_argument
-    ,"Error, no extra data has been set yet!" );
+    , "Error, no extra data has been set yet!" );
 #endif
-  any *extra_data = get_optional_extra_data(type_name,name);
+  any *extra_data = get_optional_extra_data(type_name, name);
 #ifdef TEUCHOS_DEBUG
   if (!extra_data) {
     const std::string type_and_name( type_name + std::string(":") + name );
     TEUCHOS_TEST_FOR_EXCEPTION(
       extra_data == NULL, std::invalid_argument
-      ,"Error, the type:name pair \'" << type_and_name << "\' is not found!" );
+      , "Error, the type:name pair \'" << type_and_name << "\' is not found!" );
   }
 #endif
   return *extra_data;

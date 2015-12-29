@@ -124,14 +124,14 @@ TEST_CASE("Sin: functions", "[functions]")
     r2 = cos(x);
     REQUIRE(eq(*r1, *r2));
 
-    r1 = mul(i2,x)->diff(x);
+    r1 = mul(i2, x)->diff(x);
     r2 = i2;
     std::cout << *r1 << std::endl;
     std::cout << *r2 << std::endl;
     REQUIRE(eq(*r1, *r2));
 
-    r1 = sin(mul(i2,x))->diff(x);
-    r2 = mul(i2, cos(mul(i2,x)));
+    r1 = sin(mul(i2, x))->diff(x);
+    r2 = mul(i2, cos(mul(i2, x)));
     std::cout << *r1 << std::endl;
     std::cout << *r2 << std::endl;
     REQUIRE(eq(*r1, *r2));
@@ -1241,7 +1241,7 @@ TEST_CASE("atan: functions", "[functions]")
     r2 = div(pi, integer(-4));
     REQUIRE(eq(*r1, *r2));
 
-    r1 = atan(div(one,sqrt(i3)));
+    r1 = atan(div(one, sqrt(i3)));
     r2 = div(pi, integer(6));
     REQUIRE(eq(*r1, *r2));
 
@@ -1283,7 +1283,7 @@ TEST_CASE("Acot: functions", "[functions]")
     r2 = mul(i3, div(pi, integer(4)));
     REQUIRE(eq(*r1, *r2));
 
-    r1 = acot(div(one,sqrt(i3)));
+    r1 = acot(div(one, sqrt(i3)));
     r2 = div(pi, i3);
     REQUIRE(eq(*r1, *r2));
 
@@ -1334,7 +1334,7 @@ TEST_CASE("Atan2: functions", "[functions]")
     r2 = div(mul(i3, pi), integer(-4));
     REQUIRE(eq(*r1, *r2));
 
-    r1 = atan2(one,sqrt(i3));
+    r1 = atan2(one, sqrt(i3));
     r2 = div(pi, integer(6));
     REQUIRE(eq(*r1, *r2));
 
