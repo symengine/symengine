@@ -1,0 +1,1 @@
+/usr/bin/c++   -std=c++0x -Wall -Wextra -fno-common -fPIC -O3 -march=native -ffast-math -funroll-loops -Wno-unused-parameter    CMakeFiles/test_poly.dir/test_poly.cpp.o  -o test_poly -rdynamic ../../libsymengine.a ../../utilities/catch/libcatch.a ../../libsymengine.a ../../utilities/teuchos/libteuchos.a /usr/lib/x86_64-linux-gnu/libgmpxx.so /usr/lib/x86_64-linux-gnu/libgmp.so 

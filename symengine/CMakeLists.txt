@@ -1,4 +1,4 @@
-add_subdirectory(teuchos)
+add_subdirectory(utilities/teuchos)
 
 # Include Teuchos headers:
 include_directories(BEFORE ${teuchos_SOURCE_DIR})
@@ -81,6 +81,6 @@ install(FILES ${HEADERS} "${symengine_BINARY_DIR}/symengine/symengine_config.h"
     DESTINATION include/symengine)
 
 if (BUILD_TESTS)
-    add_subdirectory(catch)
+    add_subdirectory(utilities/catch)
     add_subdirectory(tests)
 endif()
