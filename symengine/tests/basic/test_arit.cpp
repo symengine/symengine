@@ -14,6 +14,7 @@
 #include <symengine/constants.h>
 #include <symengine/real_double.h>
 #include <symengine/complex_double.h>
+#include <symengine/diff.h>
 
 using SymEngine::Basic;
 using SymEngine::Add;
@@ -51,6 +52,7 @@ using SymEngine::ComplexDouble;
 using SymEngine::real_double;
 using SymEngine::complex_double;
 using SymEngine::is_a;
+using SymEngine::diff;
 
 TEST_CASE("Add: arit", "[arit]")
 {
@@ -981,4 +983,47 @@ TEST_CASE("Expand3: arit", "[arit]")
     std::cout
         << std::chrono::duration_cast<std::chrono::milliseconds>(t2-t1).count()
         << "ms" << std::endl;
+}
+
+TEST_CASE("diff", "[arit]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Basic> y = symbol("y");
+    RCP<const Basic> z = symbol("z");
+    RCP<const Basic> im1 = integer(-1);
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> i3 = integer(3);
+    RCP<const Basic> im3 = integer(-3);
+    RCP<const Basic> i4 = integer(4);
+    RCP<const Basic> i6 = integer(6);
+    RCP<const Basic> i9 = integer(9);
+    RCP<const Basic> i27 = integer(27);
+
+    RCP<const Basic> r1;
+    RCP<const Basic> r2;
+
+    r1 = sqrt(x);
+    r1 = diff(diff(r1, x), x);
+    r2 = mul(div(im1, i4), pow(x, div(im3, i2)));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = exp(pow(x, i3));
+    r1 = diff(r1, x);
+    r2 = mul(mul(i3, exp(pow(x, i3))), pow(x, i2));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = pow(x, x);
+    r1 = diff(r1, x);
+    r2 = mul(pow(x, x), add(log(x), one));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = pow(x, y);
+    r1 = diff(r1, x);
+    r2 = mul(pow(x, sub(y, one)), y);
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = pow(y, x);
+    r1 = diff(r1, x);
+    r2 = mul(pow(y, x), log(y));
+    REQUIRE(eq(*r1, *r2));
 }
