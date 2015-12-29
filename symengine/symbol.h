@@ -12,13 +12,21 @@ namespace SymEngine {
 
 class Symbol : public Basic {
 private:
-    //! name of Symbol
-    std::string name_;
+    //! name of the Symbol is global_symbols[name_counter_]
+    int name_counter_;
+    static std::map<int, std::string> global_symbols;
+    static std::map<int, std::size_t> global_symbols_hashes;
 
 public:
     IMPLEMENT_TYPEID(SYMBOL)
     //! Symbol Constructor
-    Symbol(const std::string &name);
+    Symbol(const std::string &name) {
+        name_counter_ = global_symbols.size();
+        global_symbols.insert(std::make_pair(name_counter_, name));
+        std::hash<std::string> hash_fn;
+        global_symbols_hashes.insert(std::make_pair(name_counter_, hash_fn(name)));
+    }
+
     //! \return Size of the hash
     virtual std::size_t __hash__() const;
     /*! Equality comparator
@@ -34,7 +42,7 @@ public:
     virtual int compare(const Basic &o) const;
     //! \return name of the Symbol.
     inline std::string get_name() const {
-        return name_;
+        return global_symbols[name_counter_];
     }
     /*! Differentiate w.r.t other symbol.
      * \param x - Symbol to be differentiated with.
