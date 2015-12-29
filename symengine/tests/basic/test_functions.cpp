@@ -1771,7 +1771,7 @@ TEST_CASE("Beta: functions", "[functions]")
     REQUIRE(eq(*r1, *r2));
     r3 = div(mul(gamma(i3),gamma(i2)),gamma(add(i2,i3)));
     REQUIRE(eq(*r1, *r3));
-	r2 = div(one,integer(12));
+    r2 = div(one,integer(12));
     REQUIRE(eq(*r1, *r2));	
 
     r1 = make_rcp<const Beta>(x,y);
