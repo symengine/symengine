@@ -12,7 +12,9 @@ enum class PrecedenceEnum {
 class Precedence : public BaseVisitor<Precedence> {
 public:
     PrecedenceEnum precedence;
+    Precedence() : BaseVisitor<Precedence>(this) {
 
+    }
     void bvisit(const Add &x) {
         precedence = PrecedenceEnum::Add;
     }
@@ -109,9 +111,10 @@ public:
 };
 
 class StrPrinter : public BaseVisitor<StrPrinter> {
-protected:
+private:
     std::string str_;
 public:
+    StrPrinter();
     static const std::vector<std::string> names_;
     void bvisit(const Basic &x);
     void bvisit(const Symbol &x);

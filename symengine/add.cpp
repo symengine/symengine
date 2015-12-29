@@ -248,14 +248,14 @@ RCP<const Basic> add(const RCP<const Basic> &a, const RCP<const Basic> &b)
     RCP<const Number> coef;
     RCP<const Basic> t;
     if (SymEngine::is_a<Add>(*a) and SymEngine::is_a<Add>(*b)) {
-        coef = (rcp_static_cast<const Add>(a))->coef_;
-        d = (rcp_static_cast<const Add>(a))->dict_;
-        for (const auto &p: (rcp_static_cast<const Add>(b))->dict_)
+        coef = (rcp_static_cast<const Add>(a))->get_coef_();
+        d = (rcp_static_cast<const Add>(a))->get_dict_();
+        for (const auto &p: (rcp_static_cast<const Add>(b))->get_dict_())
             Add::dict_add_term(d, p.second, p.first);
-        iaddnum(outArg(coef), rcp_static_cast<const Add>(b)->coef_);
+        iaddnum(outArg(coef), rcp_static_cast<const Add>(b)->get_coef_());
     } else if (SymEngine::is_a<Add>(*a)) {
-        coef = (rcp_static_cast<const Add>(a))->coef_;
-        d = (rcp_static_cast<const Add>(a))->dict_;
+        coef = (rcp_static_cast<const Add>(a))->get_coef_();
+        d = (rcp_static_cast<const Add>(a))->get_dict_();
         if (is_a_Number(*b)) {
             iaddnum(outArg(coef), rcp_static_cast<const Number>(b));
         } else {
@@ -264,8 +264,8 @@ RCP<const Basic> add(const RCP<const Basic> &a, const RCP<const Basic> &b)
             Add::dict_add_term(d, coef2, t);
         }
     } else if (SymEngine::is_a<Add>(*b)) {
-        coef = (rcp_static_cast<const Add>(b))->coef_;
-        d = (rcp_static_cast<const Add>(b))->dict_;
+        coef = (rcp_static_cast<const Add>(b))->get_coef_();
+        d = (rcp_static_cast<const Add>(b))->get_dict_();
         if (is_a_Number(*a)) {
             iaddnum(outArg(coef), rcp_static_cast<const Number>(a));
         } else {

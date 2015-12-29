@@ -55,8 +55,8 @@ bool get_pi_shift(const RCP<const Basic> &arg,
 {
     if (is_a<Add>(*arg)) {
         const Add &s = static_cast<const Add &>(*arg);
-        RCP<const Basic> coef = s.coef_;
-        int size = s.dict_.size();
+        RCP<const Basic> coef = s.get_coef_();
+        int size = s.get_dict_().size();
         if (size > 1) {
             // arg should be of form `theta + n*pi/12`
             // `n` is an integer
@@ -64,7 +64,7 @@ bool get_pi_shift(const RCP<const Basic> &arg,
             bool check_pi = false;
             RCP<const Basic> temp;
             *x = coef;
-            for (const auto &p: s.dict_) {
+            for (const auto &p: s.get_dict_()) {
                 temp = mul(p.second, integer(12));
                 if (is_a<Constant>(*p.first) and
                     eq(*(rcp_static_cast<const Constant>(p.first)), *pi)
@@ -84,7 +84,7 @@ bool get_pi_shift(const RCP<const Basic> &arg,
         else if (size == 1) {
             // arg should be of form `a + n*pi/12`
             // where `a` is a `Number`.
-            auto p = s.dict_.begin();
+            auto p = s.get_dict_().begin();
             RCP<const Basic> temp = mul(p->second, integer(12));
             if (is_a<Constant>(*p->first) and
                 eq(*(rcp_static_cast<const Constant>(p->first)), *pi) and
@@ -152,7 +152,7 @@ bool could_extract_minus(const RCP<const Basic> &arg)
     }
     else if (is_a<Add>(*arg)) {
         const Add &s = static_cast<const Add &>(*arg);
-        for (const auto &p: s.dict_) {
+        for (const auto &p: s.get_dict_()) {
             if (is_a<Integer>(*p.second)) {
                 if (not (rcp_static_cast<const Integer>(p.second)->is_negative()))
                     return false;

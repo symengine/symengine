@@ -12,7 +12,7 @@ void expr2poly(const RCP<const Basic> &p, umap_basic_num &syms, umap_vec_mpz &P)
 {
     if (is_a<Add>(*p)) {
         int n = syms.size();
-        const umap_basic_num &d = rcp_static_cast<const Add>(p)->dict_;
+        const umap_basic_num &d = rcp_static_cast<const Add>(p)->get_dict_();
         vec_int exp;
         mpz_class coef;
         for (const auto &p: d) {

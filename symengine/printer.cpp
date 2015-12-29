@@ -5,6 +5,9 @@
 
 namespace SymEngine {
 
+StrPrinter::StrPrinter() : BaseVisitor<StrPrinter>(this) {
+
+}
 void StrPrinter::bvisit(const Basic &x) {
     std::ostringstream s;
     s << "<" << typeName<Basic>(x) << " instance at " << (const void*)this << ">";
@@ -134,10 +137,10 @@ void StrPrinter::bvisit(const Add &x) {
     std::ostringstream o;
     bool first = true;
     std::map<RCP<const Basic>, RCP<const Number>,
-            RCPBasicKeyLessCmp> dict(x.dict_.begin(), x.dict_.end());
+            RCPBasicKeyLessCmp> dict(x.get_dict_().begin(), x.get_dict_().end());
 
-    if (neq(*(x.coef_), *zero)) {
-        o << this->apply(x.coef_);
+    if (neq(*(x.get_coef_()), *zero)) {
+        o << this->apply(x.get_coef_());
         first = false;
     }
     for (const auto &p: dict) {
