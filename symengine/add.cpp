@@ -55,7 +55,7 @@ std::size_t Add::__hash__() const
     for (const auto &p: dict_) {
         temp = p.first->hash();
         hash_combine<Basic>(temp, *(p.second));
-        seed += temp;
+        seed ^= temp;
     }
     return seed;
 }
