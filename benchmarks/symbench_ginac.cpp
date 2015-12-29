@@ -1,7 +1,7 @@
 // To compile on a debian system you need to install libginac-dev first
 // $ sudo apt-get install libginac-dev
 // Then compile with the following command,
-// $ g++ -std=c++0x -o symbench_ginac -Wl, --no-as-needed `pkg-config --cflags --libs ginac` symbench_ginac.cpp
+// $ g++ -std=c++0x -o symbench_ginac -Wl,--no-as-needed `pkg-config --cflags --libs ginac` symbench_ginac.cpp
 // See this SO answer: http://stackoverflow.com/a/18696743/1895353
 
 #include <iostream>
