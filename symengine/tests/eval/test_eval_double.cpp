@@ -72,9 +72,9 @@ TEST_CASE("eval_double: eval_double", "[eval_double]")
         { add(asinh(r4), add(acosh(r4), add(atanh(r3), acoth(r4)))), 5.010335118942 },
         { SymEngine::abs(log(div(pi, mul(E, integer(2))))), 0.548417294710 },
         { SymEngine::atan2(r1, neg(r2)), 2.08867384922582 },
-        { mul(pi,mul(E,EulerGamma)), 4.92926836742289 },
+        { mul(pi, mul(E, EulerGamma)), 4.92926836742289 },
         { pow(mul(EulerGamma, r4), integer(8)), 4813.54354505117582 },
-        { mul(EulerGamma ,integer(10)), 5.7721566490153286 }
+        { mul(EulerGamma, integer(10)), 5.7721566490153286 }
     };
 
     for (unsigned i = 0; i < vec.size(); i++) {
