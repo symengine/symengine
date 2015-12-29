@@ -692,11 +692,6 @@ TEST_CASE("Constants: eval_arb", "[eval_arb]")
 
     REQUIRE(arb_contains_mpfr(a, f));
     
-    eval_arb(a, *r1, 45);
-    eval_mpfr(f, *r1, MPFR_RNDN);
-
-    REQUIRE(arb_contains_mpfr(a, f));
-
     mpfr_clear(f);
     arb_clear(a);    
 }
