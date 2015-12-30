@@ -18,11 +18,11 @@
 namespace SymEngine {
 
 class EvalArbVisitor : public BaseVisitor<EvalArbVisitor> {
-protected:
+private:
     long prec_;
     arb_ptr result_;
 public:
-    EvalArbVisitor(long precision) : prec_{precision} { }
+    EvalArbVisitor(long precision) : BaseVisitor(this), prec_{precision} { }
 
     void apply(arb_ptr result, const Basic &b) {
         arb_ptr tmp = result_;

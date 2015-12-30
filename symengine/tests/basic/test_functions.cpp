@@ -215,6 +215,7 @@ TEST_CASE("Sin: functions", "[functions]")
     REQUIRE(is_a<RealDouble>(*r2));
     REQUIRE(std::abs(static_cast<const RealDouble &>(*r1).i - 0.841470984807897) < 1e-12);
     REQUIRE(std::abs(static_cast<const RealDouble &>(*r2).i + 0.416146836547142) < 1e-12);
+
 }
 
 TEST_CASE("Cos: functions", "[functions]")

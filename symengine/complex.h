@@ -83,13 +83,13 @@ public:
      * \param other of type Rational
      * */
     inline RCP<const Number> addcomp(const Rational &other) const {
-        return from_mpq(this->real_ + other.i, this->imaginary_);
+        return from_mpq(this->real_ + other.get_i(), this->imaginary_);
     }
     /*! Add Complex
      * \param other of type Integer
      * */
     inline RCP<const Number> addcomp(const Integer &other) const {
-        return from_mpq(this->real_ + other.i, this->imaginary_);
+        return from_mpq(this->real_ + other.get_i(), this->imaginary_);
     }
 
     /*! Subtract Complex
@@ -102,13 +102,13 @@ public:
      * \param other of type Rational
      * */
     inline RCP<const Number> subcomp(const Rational &other) const {
-        return from_mpq(this->real_ - other.i, this->imaginary_);
+        return from_mpq(this->real_ - other.get_i(), this->imaginary_);
     }
     /*! Subtract Complex
      * \param other of type Integer
      * */
     inline RCP<const Number> subcomp(const Integer &other) const {
-        return from_mpq(this->real_ - other.i, this->imaginary_);
+        return from_mpq(this->real_ - other.get_i(), this->imaginary_);
     }
     /*! Subtract Complex from other
      * \param other of type Complex
@@ -120,13 +120,13 @@ public:
      * \param other of type Rational
      * */
     inline RCP<const Number> rsubcomp(const Rational &other) const {
-        return from_mpq(other.i - this->real_, - this->imaginary_);
+        return from_mpq(other.get_i() - this->real_, - this->imaginary_);
     }
     /*! Subtract Complex from other
      * \param other of type Integer
      * */
     inline RCP<const Number> rsubcomp(const Integer &other) const {
-        return from_mpq(other.i - this->real_, - this->imaginary_);
+        return from_mpq(other.get_i() - this->real_, - this->imaginary_);
     }
 
     /*! Multiply Complex
@@ -140,13 +140,13 @@ public:
      * \param other of type Rational
      * */
     inline RCP<const Number> mulcomp(const Rational &other) const {
-        return from_mpq(this->real_ * other.i, this->imaginary_ * other.i);
+        return from_mpq(this->real_ * other.get_i(), this->imaginary_ * other.get_i());
     }
     /*! Multiply Complex
      * \param other of type Integer
      * */
     inline RCP<const Number> mulcomp(const Integer &other) const {
-        return from_mpq(this->real_ * other.i, this->imaginary_ * other.i);
+        return from_mpq(this->real_ * other.get_i(), this->imaginary_ * other.get_i());
     }
 
     /*! Divide Complex
@@ -168,7 +168,7 @@ public:
         if (other.is_zero()) {
             throw std::runtime_error("Divide by zero.");
         } else {
-            return from_mpq(this->real_ / other.i, this->imaginary_ / other.i);
+            return from_mpq(this->real_ / other.get_i(), this->imaginary_ / other.get_i());
         }
     }
     /*! Divide Complex
@@ -178,7 +178,7 @@ public:
         if (other.is_zero()) {
             throw std::runtime_error("Divide by zero.");
         } else {
-            return from_mpq(this->real_ / other.i, this->imaginary_ / other.i);
+            return from_mpq(this->real_ / other.get_i(), this->imaginary_ / other.get_i());
         }
     }
     /*! Divide other by the Complex
@@ -189,7 +189,7 @@ public:
         if (conjugate.get_num() == 0) {
             throw std::runtime_error("Divide by zero.");
         } else {
-            return from_mpq((this->real_ * other.i) / conjugate, (this->imaginary_ * (-other.i)) / conjugate);
+            return from_mpq((this->real_ * other.get_i()) / conjugate, (this->imaginary_ * (-other.get_i())) / conjugate);
         }
     }
     /*! Pow Complex

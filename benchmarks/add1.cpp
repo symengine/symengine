@@ -41,7 +41,7 @@ int main(int argc, char* argv[])
         << std::chrono::duration_cast<std::chrono::milliseconds>(t2-t1).count()
         << "ms" << std::endl;
     std::cout << "number of terms: "
-        << rcp_dynamic_cast<const Add>(a)->dict_.size() << std::endl;
+        << rcp_dynamic_cast<const Add>(a)->get_dict_().size() << std::endl;
 
     return 0;
 }

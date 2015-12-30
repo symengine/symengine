@@ -729,7 +729,7 @@ TEST_CASE("Expand1: arit", "[arit]")
         << std::chrono::duration_cast<std::chrono::milliseconds>(t2-t1).count()
         << "ms" << std::endl;
     std::cout << "number of terms: "
-        << rcp_dynamic_cast<const Add>(r2)->dict_.size() << std::endl;
+        << rcp_dynamic_cast<const Add>(r2)->get_dict_().size() << std::endl;
 }
 
 TEST_CASE("Expand2: arit", "[arit]")
@@ -910,21 +910,13 @@ TEST_CASE("Expand2: arit", "[arit]")
     r1 = add(r1, x);
     r2 = expand(pow(r1, i2));
     REQUIRE(is_a<Add>(*r2));
-    auto it = rcp_static_cast<const Add>(r2)->dict_.find(x);
-    REQUIRE(it != rcp_static_cast<const Add>(r2)->dict_.end());
+    auto it = rcp_static_cast<const Add>(r2)->get_dict_().find(x);
+    REQUIRE(it != rcp_static_cast<const Add>(r2)->get_dict_().end());
     REQUIRE(is_a<RealDouble>(*it->second));
     REQUIRE(std::abs(rcp_static_cast<const RealDouble>(it->second)->i - 0.4) < 1e-12);
 
     r1 = expand(pow(add(real_double(0.0), x), i2));
     r2 = add(real_double(0.0), pow(x, i2));
-    REQUIRE(eq(*r1, *r2));
-
-    r1 = expand(add(mul(i2, add(x, one)), mul(i3, mul(x, add(x, one)))));
-    r2 = add(i2, add(mul(i5, x), mul(i3, pow(x, i2))));
-    REQUIRE(eq(*r1, *r2));
-
-    r1 = expand(mul(i3, add(x, one)));
-    r2 = add(mul(i3, x), i3);
     REQUIRE(eq(*r1, *r2));
 }
 
@@ -951,7 +943,7 @@ TEST_CASE("Expand3: arit", "[arit]")
         << std::chrono::duration_cast<std::chrono::milliseconds>(t2-t1).count()
         << "ms" << std::endl;
     std::cout << "number of terms: "
-        << rcp_dynamic_cast<const Add>(r)->dict_.size() << std::endl;
+        << rcp_dynamic_cast<const Add>(r)->get_dict_().size() << std::endl;
 
     RCP<const Number> rc1, rc2, c1;
     rc1 = Rational::from_two_ints(*integer(2), *integer(1));
@@ -969,7 +961,7 @@ TEST_CASE("Expand3: arit", "[arit]")
         << std::chrono::duration_cast<std::chrono::milliseconds>(t2-t1).count()
         << "ms" << std::endl;
     std::cout << "number of terms: "
-        << rcp_dynamic_cast<const Add>(r)->dict_.size() << std::endl;
+        << rcp_dynamic_cast<const Add>(r)->get_dict_().size() << std::endl;
 
     e = pow(c1, integer(-40));
 

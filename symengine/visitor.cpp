@@ -34,7 +34,8 @@ void postorder_traversal(const Basic &b, Visitor &v)
     b.accept(v);
 }
 
-void preorder_traversal_stop(const Basic &b, StopVisitor &v)
+template<class T>
+void preorder_traversal_stop(const Basic &b, StopVisitor<T> &v)
 {
     b.accept(v);
     if (v.stop_) return;
@@ -60,6 +61,7 @@ RCP<const Basic> coeff(const Basic &b, const RCP<const Symbol> &x,
 class FreeSymbolsVisitor : public BaseVisitor<FreeSymbolsVisitor> {
 public:
     set_basic s;
+    FreeSymbolsVisitor() : BaseVisitor<FreeSymbolsVisitor>(this) { };
 
     void bvisit(const Symbol &x) {
         s.insert(x.rcp_from_this());

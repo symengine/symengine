@@ -5,6 +5,9 @@
 
 namespace SymEngine {
 
+StrPrinter::StrPrinter() : BaseVisitor<StrPrinter>(this) {
+
+}
 void StrPrinter::bvisit(const Basic &x) {
     std::ostringstream s;
     s << "<" << typeName<Basic>(x) << " instance at " << (const void*)this << ">";
@@ -17,13 +20,13 @@ void StrPrinter::bvisit(const Symbol &x) {
 
 void StrPrinter::bvisit(const Integer &x) {
     std::ostringstream s;
-    s << x.i;
+    s << x.get_i();
     str_ = s.str();
 }
 
 void StrPrinter::bvisit(const Rational &x) {
     std::ostringstream s;
-    s << x.i;
+    s << x.get_i();
     str_ = s.str();
 }
 
@@ -134,10 +137,10 @@ void StrPrinter::bvisit(const Add &x) {
     std::ostringstream o;
     bool first = true;
     std::map<RCP<const Basic>, RCP<const Number>,
-            RCPBasicKeyLessCmp> dict(x.dict_.begin(), x.dict_.end());
+            RCPBasicKeyLessCmp> dict(x.get_dict_().begin(), x.get_dict_().end());
 
-    if (neq(*(x.coef_), *zero)) {
-        o << this->apply(x.coef_);
+    if (neq(*(x.get_coef_()), *zero)) {
+        o << this->apply(x.get_coef_());
         first = false;
     }
     for (const auto &p: dict) {
@@ -169,12 +172,12 @@ void StrPrinter::bvisit(const Mul &x) {
     bool num = false;
     unsigned den = 0;
     std::map<RCP<const Basic>, RCP<const Basic>,
-            RCPBasicKeyLessCmp> dict(x.dict_.begin(), x.dict_.end());
+            RCPBasicKeyLessCmp> dict(x.get_dict_().begin(), x.get_dict_().end());
 
-    if (eq(*(x.coef_), *minus_one)) {
+    if (eq(*(x.get_coef_()), *minus_one)) {
         o << "-";
-    } else if (neq(*(x.coef_), *one)) {
-        o << parenthesizeLT(x.coef_, PrecedenceEnum::Mul) << "*";
+    } else if (neq(*(x.get_coef_()), *one)) {
+        o << parenthesizeLT(x.get_coef_(), PrecedenceEnum::Mul) << "*";
         num = true;
     }
 

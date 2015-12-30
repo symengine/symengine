@@ -20,6 +20,10 @@ private:
     RCP<const Number> coeff = zero;
     RCP<const Number> multiply = one;
 public:
+    ExpandVisitor() : BaseVisitor<ExpandVisitor>(this) {
+
+    }
+
     RCP<const Basic> apply(const Basic &b) {
         b.accept(*this);
         return Add::from_dict(coeff, std::move(d_));
@@ -35,8 +39,8 @@ public:
 
     void bvisit(const Add &self) {
         RCP<const Number> _multiply = multiply;
-        iaddnum(outArg(coeff), _mulnum(multiply, self.coef_));
-        for (auto &p: self.dict_) {
+        iaddnum(outArg(coeff), _mulnum(multiply, self.get_coef_()));
+        for (auto &p: self.get_dict_()) {
             multiply = _mulnum(_multiply, p.second);
             p.first->accept(*this);
         }
@@ -44,7 +48,7 @@ public:
     }
 
     void bvisit(const Mul &self) {
-        for(auto &p: self.dict_) {
+        for(auto &p: self.get_dict_()) {
             if (!is_a<Symbol>(*p.first)) {
                 RCP<const Basic> a, b;
                 self.as_two_terms(outArg(a), outArg(b));
@@ -60,17 +64,17 @@ public:
     void mul_expand_two(const RCP<const Basic> &a, const RCP<const Basic> &b) {
         // Both a and b are assumed to be expanded
         if (is_a<Add>(*a) && is_a<Add>(*b)) {
-            iaddnum(outArg(coeff), _mulnum(multiply, _mulnum(rcp_static_cast<const Add>(a)->coef_,
-                                                           rcp_static_cast<const Add>(b)->coef_)));
+            iaddnum(outArg(coeff), _mulnum(multiply, _mulnum(rcp_static_cast<const Add>(a)->get_coef_(),
+                                                           rcp_static_cast<const Add>(b)->get_coef_())));
             // Improves (x+1)**3*(x+2)**3*...(x+350)**3 expansion from 0.97s to 0.93s:
 #if defined(HAVE_SYMENGINE_RESERVE)
-            d_.reserve(d_.size() + (rcp_static_cast<const Add>(a))->dict_.size() *
-                                   (rcp_static_cast<const Add>(b))->dict_.size());
+            d_.reserve(d_.size() + (rcp_static_cast<const Add>(a))->get_dict_().size() *
+                                   (rcp_static_cast<const Add>(b))->get_dict_().size());
 #endif
             // Expand dicts first:
-            for (auto &p: (rcp_static_cast<const Add>(a))->dict_) {
+            for (auto &p: (rcp_static_cast<const Add>(a))->get_dict_()) {
                 RCP<const Number> temp = _mulnum(p.second, multiply);
-                for (auto &q: (rcp_static_cast<const Add>(b))->dict_) {
+                for (auto &q: (rcp_static_cast<const Add>(b))->get_dict_()) {
                     // The main bottleneck here is the mul(p.first, q.first) command
                     RCP<const Basic> term = mul(p.first, q.first);
                     if (is_a_Number(*term)) {
@@ -78,12 +82,12 @@ public:
                                 _mulnum(_mulnum(temp, q.second), rcp_static_cast<const Number>(term)));
                     } else {
                         if (is_a<Mul>(*term) &&
-                            !(rcp_static_cast<const Mul>(term)->coef_->is_one())) {
+                            !(rcp_static_cast<const Mul>(term)->get_coef_()->is_one())) {
                             // Tidy up things like {2x: 3} -> {x: 6}
                             RCP<const Number> coef2 =
-                                    rcp_static_cast<const Mul>(term)->coef_;
+                                    rcp_static_cast<const Mul>(term)->get_coef_();
                             // We make a copy of the dict_:
-                            map_basic_basic d2 = rcp_static_cast<const Mul>(term)->dict_;
+                            map_basic_basic d2 = rcp_static_cast<const Mul>(term)->get_dict_();
                             term = Mul::from_dict(one, std::move(d2));
                             Add::dict_add_term(d_, _mulnum(_mulnum(temp, q.second), coef2), term);
                         } else {
@@ -91,11 +95,11 @@ public:
                         }
                     }
                 }
-                Add::dict_add_term(d_, _mulnum(rcp_static_cast<const Add>(b)->coef_, temp), p.first);
+                Add::dict_add_term(d_, _mulnum(rcp_static_cast<const Add>(b)->get_coef_(), temp), p.first);
             }
             // Handle the coefficient of "a":
-            RCP<const Number> temp = _mulnum(rcp_static_cast<const Add>(a)->coef_, multiply);
-            for (auto &q: (rcp_static_cast<const Add>(b))->dict_) {
+            RCP<const Number> temp = _mulnum(rcp_static_cast<const Add>(a)->get_coef_(), multiply);
+            for (auto &q: (rcp_static_cast<const Add>(b))->get_dict_()) {
                 Add::dict_add_term(d_, _mulnum(temp, q.second), q.first);
             }
             return;
@@ -109,21 +113,21 @@ public:
             _imulnum(outArg(a_coef), multiply);
 
 #if defined(HAVE_SYMENGINE_RESERVE)
-            d_.reserve(d_.size() + (rcp_static_cast<const Add>(b))->dict_.size());
+            d_.reserve(d_.size() + (rcp_static_cast<const Add>(b))->get_dict_().size());
 #endif
-            for (auto &q: (rcp_static_cast<const Add>(b))->dict_) {
+            for (auto &q: (rcp_static_cast<const Add>(b))->get_dict_()) {
                 RCP<const Basic> term = mul(a_term, q.first);
                 if (is_a_Number(*term)) {
                     iaddnum(outArg(coeff), _mulnum(_mulnum(q.second, a_coef),
                                                   rcp_static_cast<const Number>(term)));
                 } else {
                     if (is_a<Mul>(*term) &&
-                        !(rcp_static_cast<const Mul>(term)->coef_->is_one())) {
+                        !(rcp_static_cast<const Mul>(term)->get_coef_()->is_one())) {
                         // Tidy up things like {2x: 3} -> {x: 6}
                         RCP<const Number> coef2 =
-                                rcp_static_cast<const Mul>(term)->coef_;
+                                rcp_static_cast<const Mul>(term)->get_coef_();
                         // We make a copy of the dict_:
-                        map_basic_basic d2 = rcp_static_cast<const Mul>(term)->dict_;
+                        map_basic_basic d2 = rcp_static_cast<const Mul>(term)->get_dict_();
                         term = Mul::from_dict(one, std::move(d2));
                         Add::dict_add_term(d_, _mulnum(_mulnum(q.second, a_coef), coef2), term);
                     } else {
@@ -134,9 +138,9 @@ public:
             }
             if (eq(*a_term, *one)) {
                 iaddnum(outArg(coeff),
-                        _mulnum(rcp_static_cast<const Add>(b)->coef_, a_coef));
+                        _mulnum(multiply, _mulnum(rcp_static_cast<const Add>(b)->get_coef_(), a_coef)));
             } else {
-                Add::dict_add_term(d_, _mulnum(rcp_static_cast<const Add>(b)->coef_, a_coef),
+                Add::dict_add_term(d_, _mulnum(multiply, _mulnum(rcp_static_cast<const Add>(b)->get_coef_(), a_coef)),
                                    a_term);
             }
             return;
@@ -193,11 +197,11 @@ public:
                         RCP<const Basic> exp2, t, tmp;
                         tmp = pow(base, exp);
                         if (is_a<Mul>(*tmp)) {
-                            for (auto &p: (rcp_static_cast<const Mul>(tmp))->dict_) {
+                            for (auto &p: (rcp_static_cast<const Mul>(tmp))->get_dict_()) {
                                 Mul::dict_add_term_new(outArg(overall_coeff), d,
                                                        p.second, p.first);
                             }
-                            _imulnum(outArg(overall_coeff), (rcp_static_cast<const Mul>(tmp))->coef_);
+                            _imulnum(outArg(overall_coeff), (rcp_static_cast<const Mul>(tmp))->get_coef_());
                         } else if (is_a_Number(*tmp)) {
                             _imulnum(outArg(overall_coeff), rcp_static_cast<const Number>(tmp));
                         } else {
@@ -224,12 +228,12 @@ public:
                         _mulnum(_mulnum(multiply, rcp_static_cast<const Number>(term)), coef2));
             } else {
                 if (is_a<Mul>(*term) &&
-                    !(rcp_static_cast<const Mul>(term)->coef_->is_one())) {
+                    !(rcp_static_cast<const Mul>(term)->get_coef_()->is_one())) {
                     // Tidy up things like {2x: 3} -> {x: 6}
                     _imulnum(outArg(coef2),
-                            rcp_static_cast<const Mul>(term)->coef_);
+                            rcp_static_cast<const Mul>(term)->get_coef_());
                     // We make a copy of the dict_:
-                    map_basic_basic d2 = rcp_static_cast<const Mul>(term)->dict_;
+                    map_basic_basic d2 = rcp_static_cast<const Mul>(term)->get_dict_();
                     term = Mul::from_dict(one, std::move(d2));
                 }
                 Add::dict_add_term(d_, _mulnum(multiply, coef2), term);
@@ -270,13 +274,13 @@ public:
             return _coef_dict_add_term(multiply, div(one, expand(pow(_base, integer(-n)))));
         }
         RCP<const Add> base = rcp_static_cast<const Add>(_base);
-        umap_basic_num base_dict = base->dict_;
-        if (!(base->coef_->is_zero())) {
+        umap_basic_num base_dict = base->get_dict_();
+        if (!(base->get_coef_()->is_zero())) {
             // Add the numerical coefficient into the dictionary. This
             // allows a little bit easier treatment below.
-            insert(base_dict, base->coef_, one);
+            insert(base_dict, base->get_coef_(), one);
         } else {
-            iaddnum(outArg(coeff), base->coef_);
+            iaddnum(outArg(coeff), base->get_coef_());
         }
         if (n == 2) {
             return square_expand(base_dict);
@@ -289,9 +293,9 @@ public:
         if (is_a_Number(*term)) {
             iaddnum(outArg(coeff), _mulnum(c, rcp_static_cast<const Number>(term)));
         } else if (is_a<Add>(*term)) {
-            for (const auto &q: (rcp_static_cast<const Add>(term))->dict_)
+            for (const auto &q: (rcp_static_cast<const Add>(term))->get_dict_())
                 Add::dict_add_term(d_, q.second, q.first);
-            iaddnum(outArg(coeff), rcp_static_cast<const Add>(term)->coef_);
+            iaddnum(outArg(coeff), rcp_static_cast<const Add>(term)->get_coef_());
         } else {
             RCP<const Number> coef2;
             RCP<const Basic> t;

@@ -12,7 +12,7 @@
 namespace SymEngine {
 
 class Mul : public Basic {
-public: // TODO: make this private
+private:
     RCP<const Number> coef_; //! The coefficient (e.g. `2` in `2*x*y`)
     map_basic_basic dict_;   //! the dictionary of the rest (e.g. `x*y` in `2*x*y`)
 
@@ -63,6 +63,10 @@ public:
     virtual vec_basic get_args() const;
 
     virtual void accept(Visitor &v) const;
+
+    inline const RCP<const Number>& get_coef_() const { return coef_; }
+
+    inline const map_basic_basic& get_dict_() const { return dict_; }
 };
 //! Multiplication
 RCP<const Basic> mul(const RCP<const Basic> &a,

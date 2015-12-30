@@ -68,14 +68,14 @@ public:
      * \param other of type Integer
      * */
     RCP<const Number> addcomp(const Integer &other) const {
-        return make_rcp<const ComplexDouble>(i + other.i.get_d());
+        return make_rcp<const ComplexDouble>(i + other.get_i().get_d());
     }
 
     /*! Add ComplexDoubles
      * \param other of type Rational
      * */
     RCP<const Number> addcomp(const Rational &other) const {
-        return make_rcp<const ComplexDouble>(i + other.i.get_d());
+        return make_rcp<const ComplexDouble>(i + other.get_i().get_d());
     }
 
     /*! Add ComplexDoubles
@@ -120,14 +120,14 @@ public:
      * \param other of type Integer
      * */
     RCP<const Number> subcomp(const Integer &other) const {
-        return make_rcp<const ComplexDouble>(i - other.i.get_d());
+        return make_rcp<const ComplexDouble>(i - other.get_i().get_d());
     }
 
     /*! Subtract ComplexDoubles
      * \param other of type Rational
      * */
     RCP<const Number> subcomp(const Rational &other) const {
-        return make_rcp<const ComplexDouble>(i - other.i.get_d());
+        return make_rcp<const ComplexDouble>(i - other.get_i().get_d());
     }
 
     /*! Subtract ComplexDoubles
@@ -172,14 +172,14 @@ public:
      * \param other of type Integer
      * */
     RCP<const Number> rsubcomp(const Integer &other) const {
-        return make_rcp<const ComplexDouble>(other.i.get_d() - i);
+        return make_rcp<const ComplexDouble>(other.get_i().get_d() - i);
     }
 
     /*! Subtract ComplexDoubles
      * \param other of type Rational
      * */
     RCP<const Number> rsubcomp(const Rational &other) const {
-        return make_rcp<const ComplexDouble>(other.i.get_d() - i);
+        return make_rcp<const ComplexDouble>(other.get_i().get_d() - i);
     }
 
     /*! Subtract ComplexDoubles
@@ -216,14 +216,14 @@ public:
      * \param other of type Integer
      * */
     RCP<const Number> mulcomp(const Integer &other) const {
-        return make_rcp<const ComplexDouble>(i * other.i.get_d());
+        return make_rcp<const ComplexDouble>(i * other.get_i().get_d());
     }
 
     /*! Multiply ComplexDoubles
      * \param other of type Rational
      * */
     RCP<const Number> mulcomp(const Rational &other) const {
-        return make_rcp<const ComplexDouble>(i * other.i.get_d());
+        return make_rcp<const ComplexDouble>(i * other.get_i().get_d());
     }
 
     /*! Multiply ComplexDoubles
@@ -268,14 +268,14 @@ public:
      * \param other of type Integer
      * */
     RCP<const Number> divcomp(const Integer &other) const {
-        return make_rcp<const ComplexDouble>(i / other.i.get_d());
+        return make_rcp<const ComplexDouble>(i / other.get_i().get_d());
     }
 
     /*! Divide ComplexDoubles
      * \param other of type Rational
      * */
     RCP<const Number> divcomp(const Rational &other) const {
-        return make_rcp<const ComplexDouble>(i / other.i.get_d());
+        return make_rcp<const ComplexDouble>(i / other.get_i().get_d());
     }
 
     /*! Divide ComplexDoubles
@@ -320,14 +320,14 @@ public:
      * \param other of type Integer
      * */
     RCP<const Number> rdivcomp(const Integer &other) const {
-        return make_rcp<const ComplexDouble>(other.i.get_d() / i);
+        return make_rcp<const ComplexDouble>(other.get_i().get_d() / i);
     }
 
     /*! Divide ComplexDoubles
      * \param other of type Rational
      * */
     RCP<const Number> rdivcomp(const Rational &other) const {
-        return make_rcp<const ComplexDouble>(other.i.get_d() / i);
+        return make_rcp<const ComplexDouble>(other.get_i().get_d() / i);
     }
 
     /*! Divide ComplexDoubles
@@ -363,14 +363,14 @@ public:
      * \param other of type Integer
      * */
     RCP<const Number> powcomp(const Integer &other) const {
-        return make_rcp<const ComplexDouble>((std::complex<double>)std::pow(i, other.i.get_d()));
+        return make_rcp<const ComplexDouble>((std::complex<double>)std::pow(i, other.get_i().get_d()));
     }
 
     /*! Raise ComplexDouble to power `other`
      * \param other of type Rational
      * */
     RCP<const Number> powcomp(const Rational &other) const {
-        return make_rcp<const ComplexDouble>((std::complex<double>)std::pow(i, other.i.get_d()));
+        return make_rcp<const ComplexDouble>((std::complex<double>)std::pow(i, other.get_i().get_d()));
     }
 
     /*! Raise ComplexDouble to power `other`
@@ -416,14 +416,14 @@ public:
      * \param other of type Integer
      * */
     RCP<const Number> rpowcomp(const Integer &other) const {
-        return make_rcp<const ComplexDouble>((std::complex<double>)std::pow(other.i.get_d(), i));
+        return make_rcp<const ComplexDouble>((std::complex<double>)std::pow(other.get_i().get_d(), i));
     }
 
     /*! Raise `other` to power ComplexDouble
      * \param other of type Rational
      * */
     RCP<const Number> rpowcomp(const Rational &other) const {
-        return make_rcp<const ComplexDouble>((std::complex<double>)std::pow(other.i.get_d(), i));
+        return make_rcp<const ComplexDouble>((std::complex<double>)std::pow(other.get_i().get_d(), i));
     }
 
     /*! Raise `other` to power ComplexDouble
