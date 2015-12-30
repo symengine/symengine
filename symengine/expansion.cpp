@@ -158,7 +158,7 @@ pp_t series_nthroot(const pp_t& s, int n, const pp_t& var, unsigned int prec)
         RCP<const Rational> cterm = make_rcp<const Rational>(cl_root);
         RCP<const Number> cout;
         res = cterm->nth_root(outArg(cout), n);
-        cl_root = dynamic_cast<const Rational&>(*cout).i;
+        cl_root = dynamic_cast<const Rational&>(*cout).get_i();
     }
     if (not res)
         throw std::runtime_error("constant term is not an nth power");
@@ -454,7 +454,7 @@ pp_t num2poly(const Number &num)
 {
     if (is_a<Integer>(num)) {
         const Integer& ii = static_cast<const Integer&>(num);
-        const piranha::integer bigint(ii.i.get_mpz_t());
+        const piranha::integer bigint(ii.get_i().get_mpz_t());
         return pp_t(bigint);
     }
     throw std::runtime_error("Unhandled type in num2poly");
@@ -496,8 +496,8 @@ pp_t _series(const RCP<const Basic> &ex, const RCP<const Symbol> &var, unsigned 
 
     if (is_a<Add>(*ex)) {
         const Add& A = static_cast<const Add&>(*ex);
-        pp_t p(num2poly(*(A.coef_)));
-        for (const auto& term : A.dict_) {
+        pp_t p(num2poly(*(A.get_coef_())));
+        for (const auto& term : A.get_dict_()) {
             const pp_t t2nd(num2poly(*(term.second)));
             const pp_t t1st(_series(term.first, var, prec));
             p += t1st * t2nd;
@@ -507,8 +507,8 @@ pp_t _series(const RCP<const Basic> &ex, const RCP<const Symbol> &var, unsigned 
 
     if (is_a<Mul>(*ex)) {
         const Mul& M = static_cast<const Mul&>(*ex);
-        pp_t p(num2poly(*(M.coef_)));
-        for (const auto& term : M.dict_) {
+        pp_t p(num2poly(*(M.get_coef_())));
+        for (const auto& term : M.get_dict_()) {
             p *= _series(pow(term.first, term.second), var, prec);
         }
         return p;
@@ -519,7 +519,7 @@ pp_t _series(const RCP<const Basic> &ex, const RCP<const Symbol> &var, unsigned 
         const RCP<const Basic>& base = P.get_base(), exp = P.get_exp();
         if (is_a<Integer>(*exp)) {
             const Integer& ii = (static_cast<const Integer&>(*exp));
-            if (not ii.i.fits_sint_p())
+            if (not ii.get_i().fits_sint_p())
                 throw std::runtime_error("series power exponent size");
             const int sh = ii.as_int();
             const pp_t pbase(_series(base, var, prec));
@@ -536,8 +536,8 @@ pp_t _series(const RCP<const Basic> &ex, const RCP<const Symbol> &var, unsigned 
         }
         if (is_a<Rational>(*exp)) {
             const Rational& rat = (static_cast<const Rational&>(*exp));
-            const mpz_class& expnumz = rat.i.get_num();
-            const mpz_class& expdenz = rat.i.get_den();
+            const mpz_class& expnumz = rat.get_i().get_num();
+            const mpz_class& expdenz = rat.get_i().get_den();
             if (not expnumz.fits_sint_p() or not expdenz.fits_sint_p())
                 throw std::runtime_error("series rational power exponent size");
             const int num = expnumz.get_si();

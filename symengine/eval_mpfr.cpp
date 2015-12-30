@@ -30,11 +30,11 @@ public:
     }
 
     void bvisit(const Integer &x) {
-        mpfr_set_z(result_, x.i.get_mpz_t(), rnd_);
+        mpfr_set_z(result_, x.get_i().get_mpz_t(), rnd_);
     }
 
     void bvisit(const Rational &x) {
-        mpfr_set_q(result_, x.i.get_mpq_t(), rnd_);
+        mpfr_set_q(result_, x.get_i().get_mpq_t(), rnd_);
     }
 
     void bvisit(const RealDouble &x) {

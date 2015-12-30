@@ -119,7 +119,7 @@ RCP<const Basic> Add::from_dict(const RCP<const Number> &coef, umap_basic_num &&
                     // unnecessary copy. We know the refcount_ is one, so
                     // nobody else is using the Mul except us.
                     const map_basic_basic &d2 =
-                        rcp_static_cast<const Mul>(p->first)->dict_;
+                        rcp_static_cast<const Mul>(p->first)->get_dict_();
                     map_basic_basic &d3 = const_cast<map_basic_basic &>(d2);
                     return Mul::from_dict(p->second, std::move(d3));
                 } else {
@@ -153,7 +153,7 @@ RCP<const Basic> Add::from_dict(const RCP<const Number> &coef, umap_basic_num &&
                     // unnecessary copy. We know the refcount_ is one, so
                     // nobody else is using the Mul except us.
                     const map_basic_basic &d2 =
-                        rcp_static_cast<const Mul>(p->first)->dict_;
+                        rcp_static_cast<const Mul>(p->first)->get_dict_();
                     map_basic_basic &d3 = const_cast<map_basic_basic &>(d2);
                     return Mul::from_dict(p->second, std::move(d3));
                 } else {
