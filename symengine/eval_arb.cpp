@@ -274,6 +274,9 @@ public:
     void bvisit(const Gamma &) {
         throw std::runtime_error("Not implemented.");
     };
+    void bvisit(const Gamma &) {
+        throw std::runtime_error("Not implemented.");
+    };
     void bvisit(const LowerGamma &) {
         throw std::runtime_error("Not implemented.");
     };

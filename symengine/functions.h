@@ -999,6 +999,49 @@ public:
 //! Canonicalize Gamma:
 RCP<const Basic> gamma(const RCP<const Basic> &arg);
 
+class PolyGamma: public Function {
+/*!    The polygamma function
+ *
+ *   .. math::
+ *      \PolyGamma(x) := \frac{\mathrm{d^{n+1}} }{\mathrm{d} x^{n+1}} ln(\Gamma(x))
+ *      \PolyGamma(x) := (-1)^{(n+1)} n! \zeta(n+1, x)
+ *
+ *  The ``polygamma`` function is given by the (n+1)st derivative of the 
+ *  logarithm of the gamma function gamma(z). It can also be expressed in
+ *  terms of the zeta function as given above.
+ **/
+private:
+    RCP<const Basic> n_;
+    RCP<const Basic> arg_;
+public:
+    IMPLEMENT_TYPEID(POLYGAMMA)
+    //! PolyGamma Constructor
+    PolyGamma(const RCP<const Basic> &arg);
+    /*! Equality comparator
+     * \param o - Object to be compared with
+     * \return whether the 2 objects are equal
+     * */
+    virtual bool __eq__(const Basic &o) const;
+    virtual int compare(const Basic &o) const;
+    //! \return Size of the hash
+    virtual std::size_t __hash__() const;
+    //! \return `true` if canonical
+    bool is_canonical(const RCP<const Basic> &arg) const;
+    virtual vec_basic get_args() const { return {n_, arg_}; }
+
+    virtual void accept(Visitor &v) const;
+
+    // http://mathworld.wolfram.com/PolygammaFunction.html
+    // RCP<const Basic> rewrite_as_zeta() const;
+    // WIP
+    // virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
+};
+
+//! Canonicalize PolyGamma:
+RCP<const Basic> polygamma(const RCP<const Basic> &n, const RCP<const Basic> &arg);
+// digamma function (n_ = 0), maybe make this a new function? DiGamma?
+RCP<const Basic> polygamma(const RCP<const Basic> &arg);
+
 class LowerGamma: public Function {
 //! The lower incomplete gamma function.
 private:

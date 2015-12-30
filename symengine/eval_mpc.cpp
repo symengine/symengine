@@ -260,7 +260,7 @@ public:
     // Classes not implemented are
     // Subs, UpperGamma, LowerGamma, Dirichlet_eta, Zeta
     // LeviCivita, KroneckerDelta, FunctionSymbol, LambertW
-    // Derivative, ATan2, Gamma
+    // Derivative, ATan2, Gamma, PolyGamma
     void bvisit(const Basic &) {
         throw std::runtime_error("Not implemented.");
     };
