@@ -70,7 +70,7 @@ public:
 
     inline const RCP<const Number>& get_coef_() const { return coef_; }
 
-	inline const umap_basic_num& get_dict_() const { return dict_; }    
+	inline const umap_basic_num& get_dict_() const { return dict_; }
 };
 
 //! \return Add made from `a + b`

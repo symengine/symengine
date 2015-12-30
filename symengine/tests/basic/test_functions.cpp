@@ -208,10 +208,13 @@ TEST_CASE("Sin: functions", "[functions]")
     r1 = sin(add(sub(mul(i12, pi), y), div(pi, i2)));
     r2 = cos(y);
     REQUIRE(eq(*r1, *r2));
-
+std::cout<<"ABCD"<<std::endl;
     r1 = sin(real_double(1.0));
+std::cout<<"ABCD"<<std::endl;
     r2 = sin(sub(div(pi, i2), real_double(2.0)));
+std::cout<<"ABCD"<<std::endl;
     REQUIRE(is_a<RealDouble>(*r1));
+std::cout<<"ABCD"<<std::endl;
     REQUIRE(is_a<RealDouble>(*r2));
     REQUIRE(std::abs(static_cast<const RealDouble &>(*r1).i - 0.841470984807897) < 1e-12);
     REQUIRE(std::abs(static_cast<const RealDouble &>(*r2).i + 0.416146836547142) < 1e-12);
