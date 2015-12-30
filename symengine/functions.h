@@ -1054,6 +1054,34 @@ public:
 //! Canonicalize UpperGamma:
 RCP<const Basic> uppergamma(const RCP<const Basic> &s, const RCP<const Basic> &x);
 
+class PolyGamma: public Function {
+//! The PolyGamma function.
+private:
+    RCP<const Basic> n_;
+    RCP<const Basic> x_;
+public:
+    IMPLEMENT_TYPEID(POLYGAMMA)
+    //! PolyGamma Constructor
+    PolyGamma(const RCP<const Basic> &n, const RCP<const Basic> &x);
+    /*! Equality comparator
+     * \param o - Object to be compared with
+     * \return whether the 2 objects are equal
+     * */
+    virtual bool __eq__(const Basic &o) const;
+    virtual int compare(const Basic &o) const;
+    //! \return Size of the hash
+    virtual std::size_t __hash__() const;
+    //! \return `true` if canonical
+    bool is_canonical(const RCP<const Basic> &n, const RCP<const Basic> &x);
+    virtual vec_basic get_args() const { return {n_, x_}; }
+    
+    virtual void accept(Visitor &v) const;
+    
+    RCP<const Basic> rewrite_as_zeta() const;
+};
+
+//! Canonicalize PolyGamma
+RCP<const Basic> polyGamma(const RCP<const Basic> &n, const RCP<const Basic> &x);
 
 class Abs: public Function {
 /*!    The absolute value function
