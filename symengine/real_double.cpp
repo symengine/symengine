@@ -107,6 +107,10 @@ class EvaluateRealDouble : public EvaluateDouble<RealDouble> {
         SYMENGINE_ASSERT(is_a<RealDouble>(x))
         return number(std::tgamma(static_cast<const RealDouble &>(x).i));
     }
+    virtual RCP<const Basic> polygamma(const Basic &x) const {
+        SYMENGINE_ASSERT(is_a<ComplexDouble>(x))
+        throw std::runtime_error("Not Implemented.");
+    }
     virtual RCP<const Basic> asin(const Basic &x) const {
         SYMENGINE_ASSERT(is_a<RealDouble>(x))
         double d = static_cast<const RealDouble &>(x).i;
@@ -183,6 +187,10 @@ class EvaluateRealDouble : public EvaluateDouble<RealDouble> {
 
 class EvaluateComplexDouble : public EvaluateDouble<ComplexDouble> {
     virtual RCP<const Basic> gamma(const Basic &x) const {
+        SYMENGINE_ASSERT(is_a<ComplexDouble>(x))
+        throw std::runtime_error("Not Implemented.");
+    }
+    virtual RCP<const Basic> polygamma(const Basic &x) const {
         SYMENGINE_ASSERT(is_a<ComplexDouble>(x))
         throw std::runtime_error("Not Implemented.");
     }

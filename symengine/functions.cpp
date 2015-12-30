@@ -2571,9 +2571,13 @@ bool Zeta::__eq__(const Basic &o) const
 }
 
 int Zeta::compare(const Basic &o) const
-{
+{   
+    // doubt, please guide
     SYMENGINE_ASSERT(is_a<Zeta>(o))
     return s_->__cmp__(*(static_cast<const Zeta &>(o).s_));
+    // shouldn't this also compare, the other parameter
+    // if two Zeta's have the same `s_`, but diferrent `a_`
+    // they'll be returned as equal
 }
 
 RCP<const Basic> Zeta::diff(const RCP<const Symbol> &x) const
@@ -2745,6 +2749,79 @@ RCP<const Basic> gamma(const RCP<const Basic> &arg)
         return static_cast<const Number &>(*arg).get_eval().gamma(*arg);
     }
     return make_rcp<const Gamma>(arg);
+}
+
+PolyGamma::PolyGamma(const RCP<const Basic> &n, const RCP<const Basic> &arg)
+    : n_{n}, arg_{arg}
+{
+    SYMENGINE_ASSERT(is_canonical(n_, arg_))
+}
+
+PolyGamma::PolyGamma(const RCP<const Basic> &arg)
+    : n_{zero}, arg_{arg}
+{
+    SYMENGINE_ASSERT(is_canonical(n_, arg_))
+}
+
+bool PolyGamma::is_canonical(const RCP<const Basic> &n, const RCP<const Basic> &arg) const
+{
+    if (eq(*arg, *zero)) return false;
+    if (eq(*arg, *one)) return false;
+    if (eq(*n, *zero)) return false;
+    if (eq(*n, *one)) return false;
+    return true;
+}
+
+std::size_t PolyGamma::__hash__() const
+{
+    std::size_t seed = POLYGAMMA;
+    hash_combine<Basic>(seed, *N_);
+    hash_combine<Basic>(seed, *arg_);
+    return seed;
+}
+
+bool PolyGamma::__eq__(const Basic &o) const
+{
+    if (is_a<PolyGamma>(o) and
+        eq(*n_, *(static_cast<const Zeta &>(o).n_)) and
+        eq(*arg_, *(static_cast<const Zeta &>(o).arg_)))
+        return true;
+    return false;
+}
+
+int PolyGamma::compare(const Basic &o) const
+{
+    SYMENGINE_ASSERT(is_a<PolyGamma>(o))
+    // not sure about this, please guide
+    if(eq(*arg_, *(o.arg_))
+        return n_->__cmp__(*(static_cast<const PolyGamma &>(o).n_));
+    return arg_->__cmp__(*(static_cast<const PolyGamma &>(o).arg_));
+}
+
+RCP<const Basic> PolyGamma::rewrite_as_zeta()
+{
+    if(n_ & 1)      // if (n+1) is even
+        return mul(factorial(n_), zeta(add(n_, one), arg_));
+    return mul(minus_one, mul(factorial(n_), zeta(add(n_, one), arg_)));
+}
+
+RCP<const Basic> polygamma(const RCP<const Basic> &n, const RCP<const Basic> &arg)
+{
+    // please check if i'm missing a case
+    if (is_a<Integer>(*n)) {
+        if (n->is_positive() || n->is_zero()) {
+            return rewrite_as_zeta();   // will be automatically reduced
+        }
+    }
+    // can't find information about cases where (n != int)
+    // but arg is some is some trivial value like 0 or 1
+
+    return make_rcp<const PolyGamma>(n, arg);
+}
+
+RCP<const Basic> polygamma(const RCP<const Basic> &arg)
+{
+    return polygamma(zero, arg);
 }
 
 LowerGamma::LowerGamma(const RCP<const Basic> &s, const RCP<const Basic> &x)

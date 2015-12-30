@@ -232,7 +232,7 @@ public:
     }
 
     // Classes not implemented are
-    // Subs, UpperGamma, LowerGamma, Dirichlet_eta, Zeta
+    // Subs, PolyGamma, UpperGamma, LowerGamma, Dirichlet_eta, Zeta
     // LeviCivita, KroneckerDelta, LambertW
     // Derivative, Complex, ComplexDouble, ComplexMPC
     void bvisit(const Basic &) {
