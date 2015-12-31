@@ -66,9 +66,6 @@ if [[ "${CC}" == "clang"* ]] && [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
 else
     CXXFLAGS="-Werror"
 fi
-if [[ "${WITH_LATEST_GCC}" != "" ]]; then
-    cmake_line="$cmake_line -DWITH_LATEST_GCC=${WITH_LATEST_GCC}"
-fi
 cmake $cmake_line ${SOURCE_DIR}
 
 echo "Current directory:"
