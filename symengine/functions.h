@@ -1055,7 +1055,14 @@ public:
 RCP<const Basic> uppergamma(const RCP<const Basic> &s, const RCP<const Basic> &x);
 
 class PolyGamma: public Function {
-//! The PolyGamma function.
+/*!    The polygamma function
+ *
+ *     It is a meromorphic function on `\mathbb{C}` and defined as the (n+1)-th
+ *     derivative of the logarithm of the gamma function:
+ *
+ *  .. math::
+ *  \psi^{(n)} (z) := \frac{\mathrm{d}^{n+1}}{\mathrm{d} z^{n+1}} \log\Gamma(z).
+ **/
 private:
     RCP<const Basic> n_;
     RCP<const Basic> x_;
@@ -1081,7 +1088,7 @@ public:
 };
 
 //! Canonicalize PolyGamma
-RCP<const Basic> polyGamma(const RCP<const Basic> &n, const RCP<const Basic> &x);
+RCP<const Basic> polygamma(const RCP<const Basic> &n, const RCP<const Basic> &x);
 
 class Abs: public Function {
 /*!    The absolute value function

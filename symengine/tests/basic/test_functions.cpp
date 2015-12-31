@@ -70,7 +70,7 @@ using SymEngine::dirichlet_eta;
 using SymEngine::gamma;
 using SymEngine::lowergamma;
 using SymEngine::uppergamma;
-using SymEngine::polyGamma;
+using SymEngine::polygamma;
 using SymEngine::PolyGamma;
 using SymEngine::abs;
 using SymEngine::Subs;
@@ -1812,15 +1812,15 @@ TEST_CASE("Polygamma: functions", "[functions]")
     RCP<const Basic> r1;
     RCP<const Basic> r2;
     
-    r1 = polyGamma(zero, one);
+    r1 = polygamma(zero, one);
     r2 = neg(EulerGamma);
     REQUIRE(eq(*r1, *r2));
     
-    r1 = polyGamma(zero, div(one, i2));
+    r1 = polygamma(zero, div(one, i2));
     r2 = sub(mul(im2, log(i2)), EulerGamma);
     REQUIRE(eq(*r1, *r2));
     
-    r1 = polyGamma(zero, div(one, i4));
+    r1 = polygamma(zero, div(one, i4));
     r2 = add(neg(div(pi, i3)), sub(mul(im3, log(i2)), EulerGamma));
     REQUIRE(eq(*r1, *r2));
     

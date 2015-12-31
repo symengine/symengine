@@ -2903,11 +2903,25 @@ PolyGamma::PolyGamma(const RCP<const Basic> &n, const RCP<const Basic> &x)
 
 bool PolyGamma::is_canonical(const RCP<const Basic> &n, const RCP<const Basic> &x)
 {
-    if ((is_a<Integer>(*n) and not (rcp_static_cast<const Integer>(n)->is_negative())) and
-        (is_a<Integer>(*x) and not (rcp_static_cast<const Integer>(x)->is_negative()))) {
+    if(is_a<Integer>(*n)) {
+        auto n_int = rcp_static_cast<const Integer>(n); 
+        if(n_int->is_negative()) {
             return false;
+        }
+        if(eq(*n_int, *zero) and is_a<Rational>(*x)) {
+            auto n_rat = rcp_static_cast<const Rational>(n);
+            auto num = n_rat->i.get_num();
+            auto den = n_rat->i.get_den();
+            if(den == 2 and (num == 1 or num == 3)) {
+                return false;
+            }
+            if(den == 4 and num == 1) {
+                return false;
+            }                
+        }
+        return true;
     }
-    return true;
+    return false;
 }
 
 std::size_t PolyGamma::__hash__() const
@@ -2935,7 +2949,9 @@ int PolyGamma::compare(const Basic &o) const
 
 RCP<const Basic> PolyGamma::rewrite_as_zeta() const
 {
-    SYMENGINE_ASSERT(is_a<Integer>(*n_))
+    if(not is_a<Integer>(*n_)) {
+        return rcp_from_this();    
+    }
     RCP<const Integer> n = rcp_static_cast<const Integer>(n_);
     if(not (n->is_positive())) {
         return rcp_from_this();
@@ -2946,7 +2962,7 @@ RCP<const Basic> PolyGamma::rewrite_as_zeta() const
         return mul(factorial(n->as_int()), zeta(add(n_, one), x_));
 }
 
-RCP<const Basic> polyGamma(const RCP<const Basic> &n_, const RCP<const Basic> &x_)
+RCP<const Basic> polygamma(const RCP<const Basic> &n_, const RCP<const Basic> &x_)
 {
     // Only special values are being evaluated    
     if(is_a_Number(*x_) and not (rcp_static_cast<const Number>(x_))->is_positive()) {
