@@ -93,11 +93,5 @@ if [[ "${WITH_PIRANHA}" == "yes" ]]; then
     git clone https://github.com/bluescarni/piranha;
     cd piranha && mkdir build && cd build;
     cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$our_install_dir -DBUILD_TESTS=no ../ && make -j8 install && cd ../..;
-fi
-if [[ "${WITH_LATEST_GCC}" == "yes" ]]; then
-	update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-5 20;
-	update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-5 20;
-	update-alternatives --config gcc;
-	update-alternatives --config g++;
 fi	
 cd $SOURCE_DIR;
