@@ -23,6 +23,9 @@ if [[ "${TRAVIS_OS_NAME}" == "linux" ]] && [[ "${CC}" == "gcc" ]]; then
     if [[ "${WITH_PIRANHA}" == "yes" ]]; then
         export CC=gcc-4.8
         export CXX=g++-4.8
+    elif [[ "${WITH_LATEST_GCC}" == "yes" ]]; then
+    	export CC=gcc-5
+    	export CXX=g++-5   
     else
         export CC=gcc-4.7
         export CXX=g++-4.7
@@ -91,4 +94,13 @@ if [[ "${WITH_PIRANHA}" == "yes" ]]; then
     cd piranha && mkdir build && cd build;
     cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$our_install_dir -DBUILD_TESTS=no ../ && make -j8 install && cd ../..;
 fi
+if [[ "${WITH_LATEST_GCC}" == "yes" ]]; then
+	sudo add-apt-repository ppa:ubuntu-toolchain-r/test;
+	sudo apt-get update;
+	sudo apt-get install gcc-5 g++-5;
+	sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-5 20;
+	sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-5 20;
+	sudo update-alternatives --config gcc;
+	sudo update-alternatives --config g++;
+fi	
 cd $SOURCE_DIR;
