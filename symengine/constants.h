@@ -66,6 +66,7 @@ extern RCP<const Number> I;
 extern RCP<const Constant> pi;
 extern RCP<const Constant> E;
 extern RCP<const Constant> EulerGamma;
+
 } // SymEngine
 
 #endif
