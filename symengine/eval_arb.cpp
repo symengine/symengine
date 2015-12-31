@@ -271,7 +271,7 @@ public:
     void bvisit(const Dirichlet_eta &) {
         throw std::runtime_error("Not implemented.");
     };
-    void bvisit(const Beta&) {
+    void bvisit(const Beta &) {
         throw std::runtime_error("Not implemented.");
     };
     void bvisit(const Gamma &) {
