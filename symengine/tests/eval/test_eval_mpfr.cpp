@@ -11,6 +11,7 @@ using SymEngine::Basic;
 using SymEngine::integer;
 using SymEngine::pi;
 using SymEngine::EulerGamma;
+using SymEngine::E;
 using SymEngine::mul;
 using SymEngine::sub;
 using SymEngine::eval_mpfr;
@@ -53,5 +54,14 @@ TEST_CASE("precision: eval_mpfr", "[eval_mpfr]")
     REQUIRE(mpfr_cmp_d(a, 0.00000000490153) == 1);
     REQUIRE(mpfr_cmp_d(a, 0.00000000490154) == -1);
     
+    mpfr_init2(a, 100);
+    r = div(E, integer(100000000));
+    // value of `r` is approximately 0.0000000271828..
+    
+    eval_mpfr(a, *r, MPFR_RNDN);
+    // Check that value of `r` (`a`) starts with 0.0000000271828
+    REQUIRE(mpfr_cmp_d(a, 0.0000000271828) == 1);
+    REQUIRE(mpfr_cmp_d(a, 0.0000000271829) == -1);
+       
     mpfr_clear(a);
 }

@@ -231,10 +231,14 @@ public:
             mpfr_clear(t);
         } else if (x.__eq__(*E)) {
             mpfr_t t;
-            mpfr_init2(t, mpc_get_prec(result_));
-            mpfr_const_euler(t, rnd_);
+            mpfr_t _one;
+            mpfr_init2 (_one, GMP_RNDD);
+            mpfr_init2(t, mpc_get_prec(result_));            
+            mpfr_set_d (_one, 1.0, GMP_RNDD);
+            mpfr_exp(t, _one, rnd_);
             mpc_set_fr(result_, t, rnd_);
             mpfr_clear(t);
+            mpfr_clear(_one);
         } else if (x.__eq__(*EulerGamma)) {
             mpfr_t t;
             mpfr_init2(t, mpc_get_prec(result_));
