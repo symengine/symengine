@@ -95,12 +95,9 @@ if [[ "${WITH_PIRANHA}" == "yes" ]]; then
     cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$our_install_dir -DBUILD_TESTS=no ../ && make -j8 install && cd ../..;
 fi
 if [[ "${WITH_LATEST_GCC}" == "yes" ]]; then
-	echo | sudo add-apt-repository ppa:ubuntu-toolchain-r/test;
-	sudo apt-get update;
-	sudo apt-get install gcc-5 g++-5;
-	sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-5 20;
-	sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-5 20;
-	sudo update-alternatives --config gcc;
-	sudo update-alternatives --config g++;
+	update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-5 20;
+	update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-5 20;
+	update-alternatives --config gcc;
+	update-alternatives --config g++;
 fi	
 cd $SOURCE_DIR;

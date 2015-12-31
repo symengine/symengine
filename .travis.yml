@@ -1,5 +1,5 @@
 language: cpp
-sudo: true
+sudo: false
 compiler:
   - gcc
   - clang
@@ -16,6 +16,8 @@ addons:
     - libmpc-dev
     - binutils-dev
     - g++-4.7
+    - gcc-5
+    - g++-5
 env:
   ## All these variables are sent into the bin/test_travis.sh script. See this
   ## script to know how they are used. Most of them are just passed to cmake,
