@@ -1,98 +1,72 @@
-from os import walk, sep, pardir
-from os.path import split, join, abspath, exists, isfile , basename
-from glob import glob
-import re
-import random
-import ast
-import inspect
- 
-_failed_expectations = []
- 
-def _log_failure(msg=None):
-    (filename, line, funcname, contextlist) =  inspect.stack()[2][1:5]
-    filename = basename(filename)
-    context = contextlist[0]
-    _failed_expectations.append('%s\n' % 
-        ((('%s' % msg) if msg else '')))
+from os import walk, pardir
+from os.path import split, join, abspath, exists
 
-report = []
- 
-def _report_failures():
-    global _failed_expectations
-    global report
-    if _failed_expectations:
-        (filename, line, funcname) =  inspect.stack()[1][1:4]
-        report = [
-            'Failed Expectations:%s\n' % len(_failed_expectations)]
-        for i,failure in enumerate(_failed_expectations, start=1):
-            report.append('%d: %s' % (i, failure))
-        _failed_expectations = []
-    if len(report) != 0:
-        return ('\n'.join(report))
 
-SYMENGINE_PATH = abspath(join(split(__file__)[0], pardir, pardir))  # go to symengine/
+### CHANGE THIS IF THIS FILE IS EVER MOVED 
+### RIGHT NOW IT'S IN symengine/symengine/utilities/tests/
+SYMENGINE_PATH = abspath(join(split(__file__)[0], pardir, pardir))
+BIN_PATH = join(abspath(join(SYMENGINE_PATH, pardir)), "bin")
 assert exists(SYMENGINE_PATH)
 
-TOP_PATH = abspath(join(SYMENGINE_PATH, pardir))
-BIN_PATH = join(TOP_PATH, "bin")
+class Check:
 
-# Trailing whitespace location
-message_space = "%s, line %s."
-
-def check_directory_tree(base_path, file_check, exclusions=set(), pattern="*.cpp"):
     """
-    Checks all files in the directory tree (with base_path as starting point)
-    with the file_check function provided, skipping files that contain
-    any of the strings in the set provided by exclusions.
+    A class which defines a particular 'check'.
+
+    Arguments
+    =========
+    checker_fx          : [function] takes in absolute filepath as argument and does the checking
+    root_dirs           : [list] directories on which the check will run recursively
+    included_filetypes  : [optional] [list] patterns, the file will be matched against
+    excluded_names      : [optional] [list] file won't be checked, if it's abs path is `in` excluded_names
+
     """
-    if not base_path:
-        return
-    for root, dirs, files in walk(base_path):
-        check_files(glob(join(root, pattern)), file_check, exclusions)
+    def __init__(self, checker_fx, root_dirs, included_filetypes=["."], excluded_names=[]):
 
-def check_files(files, file_check, exclusions=set(), pattern=None):
-    """
-    Checks all files with the file_check function provided, skipping files
-    that contain any of the strings in the set provided by exclusions.
-    """
-    if not files:
-        return
-    for fname in files:
-        if not exists(fname) or not isfile(fname):
-            continue
-        if any(ex in fname for ex in exclusions):
-            continue
-        if pattern is None or re.match(pattern, fname):
-            file_check(fname)
-            
-    """
-    This test tests files and checks that:
-      o no lines contains a trailing whitespace
-    """
+        self.fx = checker_fx
+        self.root_dirs = root_dirs
+        self.included_filetypes = included_filetypes
+        self.excluded_names = excluded_names
 
-def test(fname):
 
-    with open(fname, "rt") as test_file:
-        test_this_file(fname, test_file)
 
-    with open(fname, "rt") as test_file:
-        source = test_file.read()
-	
-def test_this_file(fname, test_file):
-    line = None  # to flag the case where there were no lines in file
-    tests = 0
-    test_set = set()
-    for idx, line in enumerate(test_file):
-        if line.endswith(" \n") or line.endswith("\t\n"):
-            _log_failure( message_space % (fname, idx + 1))
+######                 CONSTRUCT YOUR CHECK CLASSES HERE            ######
+all_checks = []
 
-exclude = set()
+# trailing whitespace check
+def trailing_whitespace_function(file_path):
 
-check_directory_tree(BIN_PATH, test, set(["~",".sh"]), "*")
-check_directory_tree(SYMENGINE_PATH, test, set(["/build/","/doc/","/cmake/","/utilities"]))
-check_directory_tree(SYMENGINE_PATH, test, set(["/build/","/doc/","/cmake/","/utilities"]), "*.h")
+    global Errors
+    with open(file_path) as file_ptr:
+        for line_num, line in enumerate(file_ptr):
+            if line.endswith(" \n") or line.endswith("\t\n"):
+                print "Trailing whitespace :", file_path, str(line_num + 1)
+                Errors = True
 
-print _report_failures()
+trailing_whitespace_check = Check(trailing_whitespace_function, [SYMENGINE_PATH])
+trailing_whitespace_check.excluded_names = ["/build/", "/doc/", "/cmake/", "/utilities"]
+trailing_whitespace_check.included_filetypes = [".cpp", ".h", ".py", ".sh"]
+all_checks.append(trailing_whitespace_check)
 
-if len(report) != 0:
-    raise Exception('Trailing whitespaces present')
+# another check
+
+########                         MAIN                              #######
+Errors = False
+for check in all_checks:
+
+    for base_dir in check.root_dirs:
+        for root, dirs, file_names in walk(base_dir):
+
+            for file_name in file_names:
+                
+                file_path = join(root, file_name)
+
+                if any(excluded_name in file_path for excluded_name in check.excluded_names):
+                    continue
+
+                if any(file_path.endswith(file_type) for file_type in check.included_filetypes):
+                    check.fx(file_path)
+if Errors:
+    print "Errors Listed above!"
+    exit(1)
+exit(0)
