@@ -185,7 +185,7 @@ bool handle_minus(const RCP<const Basic> &arg,
 
 // \return true of conjugate has to be returned finally else false
 bool eval(const RCP<const Basic> &arg, unsigned period, bool odd, bool conj_odd, //input
-            const Ptr<RCP<const Basic>>& rarg,int& index, int& sign) //output
+            const Ptr<RCP<const Basic>>& rarg, int& index, int& sign) //output
 {
     bool check;
     RCP<const Integer> n;
