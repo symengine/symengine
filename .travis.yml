@@ -26,7 +26,7 @@ env:
 
   ## Out of tree builds (default):
   # Debug build (with BFD)
-  - BUILD_TYPE="Debug" WITH_BFD="yes" TEST_TRAILING_WS="yes"
+  - BUILD_TYPE="Debug" WITH_BFD="yes" TEST_CODE_QUALITY="yes"
   # Debug build (with BFD and SYMENGINE_THREAD_SAFE)
   - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_SYMENGINE_THREAD_SAFE="yes"
   # Debug build (with BFD) with ECM
