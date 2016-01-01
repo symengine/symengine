@@ -212,7 +212,11 @@ public:
         if (x.__eq__(*pi)) {
             mpfr_const_pi(result_, rnd_);
         } else if (x.__eq__(*E)) {
-            mpfr_const_euler(result_, rnd_);
+            mpfr_t _one;
+            mpfr_init2 (_one, GMP_RNDD);
+            mpfr_set_d (_one, 1.0, GMP_RNDD);
+            mpfr_exp(result_, _one, rnd_);
+            mpfr_clear(_one);
         } else if (x.__eq__(*EulerGamma)) {
             mpfr_const_euler(result_, rnd_);
         } else {
