@@ -314,40 +314,6 @@ TEST_CASE("Mul: Basic", "[basic]")
     REQUIRE(vec_basic_eq(r->get_args(), {}));
 }
 
-TEST_CASE("Diff: Basic", "[basic]")
-{
-    RCP<const Basic> r1, r2;
-    RCP<const Symbol> x  = symbol("x");
-    RCP<const Symbol> y  = symbol("y");
-    RCP<const Basic> i2  = integer(2);
-    RCP<const Basic> i3  = integer(3);
-    RCP<const Basic> i5  = integer(5);
-    RCP<const Basic> i10  = integer(10);
-    r1 = integer(5);
-    r2 = r1->diff(x);
-    REQUIRE(eq(*r2, *zero));
-
-    r1 = Rational::from_two_ints(*integer(2), *integer(3));
-    r2 = r1->diff(x);
-    REQUIRE(eq(*r2, *zero));
-
-    r1 = pow(x, i3)->diff(x);
-    r2 = mul(i3, pow(x, i2));
-    REQUIRE(eq(*r1, *r2));
-
-    r1 = pow(add(x, y), i2)->diff(x);
-    r2 = mul(i2, add(x, y));
-    REQUIRE(eq(*r1, *r2));
-
-    r1 = add(add(i2, mul(i3, x)), mul(i5, pow(x, i2)));
-    REQUIRE(eq(*r1->diff(x), *add(i3, mul(i10, x))));
-    REQUIRE(eq(*r1->diff(x)->diff(x), *i10));
-
-    r1 = add(mul(mul(pow(x, y), pow(y, x)), i2), one)->diff(x);
-    r2 = add(mul(i2, mul(pow(x, y), mul(pow(y, x), log(y)))), mul(i2, mul(pow(x, y), mul(pow(y, x), div(y, x)))));
-    REQUIRE(eq(*r1, *r2));
-}
-
 TEST_CASE("compare: Basic", "[basic]")
 {
     RCP<const Basic> r1, r2;

@@ -7,8 +7,6 @@
 #ifndef SYMENGINE_DIFF_H
 #define SYMENGINE_DIFF_H
 
-#include <symengine/symengine_config.h>
-
 #include <symengine/basic.h>
 
 namespace SymEngine {
