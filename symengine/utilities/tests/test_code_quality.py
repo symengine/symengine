@@ -38,8 +38,8 @@ def trailing_whitespace_function(file_path):
                 print "Trailing whitespace :", file_path, str(line_num + 1)
                 errors = True
 
-trailing_whitespace_check = Check(trailing_whitespace_function, [SYMENGINE_PATH])
-trailing_whitespace_check.excluded_names = ["/build/", "/doc/", "/cmake/", "/utilities"]
+trailing_whitespace_check = Check(trailing_whitespace_function, [SYMENGINE_PATH, BIN_PATH])
+trailing_whitespace_check.excluded_names = ["/build/", "/doc/"]
 trailing_whitespace_check.included_filetypes = [".cpp", ".h", ".py", ".sh"]
 all_checks.append(trailing_whitespace_check)
 
