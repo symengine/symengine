@@ -518,7 +518,7 @@ TEST_CASE("test_multiplicative_order(): ntheory", "[ntheory]")
 TEST_CASE("test_legendre_jacobi_kronecker(): ntheory", "[ntheory]")
 {
     RCP<const Integer> im1 = integer(-1);
-    RCP<const Integer> i1 = integer(1);
+    RCP<const Integer> i1 = integer(1); 
     RCP<const Integer> i3 = integer(3);
     RCP<const Integer> i4 = integer(4);
     RCP<const Integer> i5 = integer(5);
@@ -634,4 +634,16 @@ TEST_CASE("test_powermod(): ntheory", "[ntheory]")
 
     powermod_list(powms, i15, i1->divint(*i18), i105);
     REQUIRE(powms.size() == 6);
+
+}
+
+TEST_CASE("test_quadratic_residue(): ntheory", "[ntheory]")
+{
+    
+    std::vector<int> residue = quadratic_residue(7);
+
+    std::cout << "Quadratic Residue:";
+    for (std::vector<int>::const_iterator i = residue.begin(); i != residue.end(); ++i)
+        std::cout << *i << ' ';
+
 }
