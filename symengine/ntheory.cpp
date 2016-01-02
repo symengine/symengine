@@ -1474,9 +1474,7 @@ void powermod_list(std::vector<RCP<const Integer>> &pows, const RCP<const Intege
     }
 }
 
-} // SymEngine
-
-std::vector<int> quadratic_residue(const Integer &n)
+std::vector<int> quadratic_residue(const Integer &a)
 {
     /*
         Returns the list of quadratic residues.
@@ -1492,8 +1490,7 @@ std::vector<int> quadratic_residue(const Integer &n)
     }
 
     std::vector<int> residue;
-
-    for( int i = 0; i <= powint( a,integer(2) ) ; i++)
+    for( int i = 0; i <= a.as_int()/2; i++)
     {
         residue.push_back( (int)pow(i,2) % a.as_int());
     }
@@ -1504,3 +1501,5 @@ std::vector<int> quadratic_residue(const Integer &n)
     return residue;
 
 }
+
+} // SymEngine

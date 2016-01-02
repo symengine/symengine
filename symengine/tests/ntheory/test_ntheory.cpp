@@ -640,7 +640,6 @@ TEST_CASE("test_powermod(): ntheory", "[ntheory]")
 TEST_CASE("test_quadratic_residue(): ntheory", "[ntheory]")
 {
 
-    std::vector<int> residue = quadratic_residue(7);
     std::vector<int> i1 = {0};
     std::vector<int> i2 = {0,1};
     std::vector<int> i3 = {0,1};
@@ -649,12 +648,20 @@ TEST_CASE("test_quadratic_residue(): ntheory", "[ntheory]")
     std::vector<int> i7 = {0,1,2,4};
     std::vector<int> i100 = {0,1,4,9,16,21,24,25,29,36,41,44,49,56,61,64,69,76,81,84,89,96};
 
+    const RCP<const Integer> a1 = integer(1);
+    const RCP<const Integer> a2 = integer(2);
+    const RCP<const Integer> a3 = integer(3);
+    const RCP<const Integer> a4 = integer(4);
+    const RCP<const Integer> a5 = integer(5);
+    const RCP<const Integer> a7 = integer(7);
+    const RCP<const Integer> a100 = integer(100);
+
     std::cout << "Quadratic Residue:"<<std::endl;
-    REQUIRE(quadratic_residue(1) == i1);
-    REQUIRE(quadratic_residue(2) == i2);
-    REQUIRE(quadratic_residue(3) == i3);
-    REQUIRE(quadratic_residue(4) == i4);
-    REQUIRE(quadratic_residue(5) == i5);
-    REQUIRE(quadratic_residue(7) == i7);
-    REQUIRE(quadratic_residue(100) == i100);
+    REQUIRE(quadratic_residue(*a1) == i1);
+    REQUIRE(quadratic_residue(*a2) == i2);
+    REQUIRE(quadratic_residue(*a3) == i3);
+    REQUIRE(quadratic_residue(*a4) == i4);
+    REQUIRE(quadratic_residue(*a5) == i5);
+    REQUIRE(quadratic_residue(*a7) == i7);
+    REQUIRE(quadratic_residue(*a100) == i100);
 }
