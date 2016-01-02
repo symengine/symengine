@@ -169,6 +169,8 @@ bool powermod(const Ptr<RCP<const Integer>> &powm, const RCP<const Integer> &a,
 //! All solutions to x**s == a**r mod m where b = r / s. Return false if none exists.
 void powermod_list(std::vector<RCP<const Integer>> &pows, const RCP<const Integer> &a,
         const RCP<const Number> &b, const RCP<const Integer> &m);
+//! Mobius Function
+int mobius(const Integer &a);
 }
 #endif
 
