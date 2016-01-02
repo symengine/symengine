@@ -10,7 +10,6 @@
 #include <symengine/functions.h>
 #include <symengine/polynomial.h>
 #include <symengine/printer.h>
-#include <symengine/numer_denom.cpp> // any other alternative?
 
 namespace SymEngine {
 
@@ -46,12 +45,6 @@ RCP<const Basic> Basic::subs(const map_basic_basic &subs_dict) const
 RCP<const Basic> Basic::diff(const RCP<const Symbol> &x) const
 {
     return Derivative::create(rcp_from_this(), {x});
-}
-
-void Basic::as_numer_denom(const Ptr<RCP<const Basic>> &numer, const Ptr<RCP<const Basic>> &denom) const
-{
-    NumerDenomVisitor v(numer, denom);
-    v.apply(*this);
 }
 
 } // SymEngine
