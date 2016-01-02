@@ -158,6 +158,9 @@ public:
     //! Returns the list of arguments
     virtual vec_basic get_args() const = 0;
 
+    //! Returns the numerator/denominator form of the expression
+    virtual void as_numer_denom(const Ptr<RCP<const Basic>> &numer, const Ptr<RCP<const Basic>> &denom) const;
+
     virtual void accept(Visitor &v) const = 0;
 };
 
