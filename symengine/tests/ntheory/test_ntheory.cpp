@@ -518,7 +518,7 @@ TEST_CASE("test_multiplicative_order(): ntheory", "[ntheory]")
 TEST_CASE("test_legendre_jacobi_kronecker(): ntheory", "[ntheory]")
 {
     RCP<const Integer> im1 = integer(-1);
-    RCP<const Integer> i1 = integer(1); 
+    RCP<const Integer> i1 = integer(1);
     RCP<const Integer> i3 = integer(3);
     RCP<const Integer> i4 = integer(4);
     RCP<const Integer> i5 = integer(5);
@@ -639,11 +639,22 @@ TEST_CASE("test_powermod(): ntheory", "[ntheory]")
 
 TEST_CASE("test_quadratic_residue(): ntheory", "[ntheory]")
 {
-    
+
     std::vector<int> residue = quadratic_residue(7);
+    std::vector<int> i1 = {0};
+    std::vector<int> i2 = {0,1};
+    std::vector<int> i3 = {0,1};
+    std::vector<int> i4 = {0,1};
+    std::vector<int> i5 = {0,1,4};
+    std::vector<int> i7 = {0,1,2,4};
+    std::vector<int> i100 = {0,1,4,9,16,21,24,25,29,36,41,44,49,56,61,64,69,76,81,84,89,96};
 
-    std::cout << "Quadratic Residue:";
-    for (std::vector<int>::const_iterator i = residue.begin(); i != residue.end(); ++i)
-        std::cout << *i << ' ';
-
+    std::cout << "Quadratic Residue:"<<std::endl;
+    REQUIRE(quadratic_residue(1) == i1);
+    REQUIRE(quadratic_residue(2) == i2);
+    REQUIRE(quadratic_residue(3) == i3);
+    REQUIRE(quadratic_residue(4) == i4);
+    REQUIRE(quadratic_residue(5) == i5);
+    REQUIRE(quadratic_residue(7) == i7);
+    REQUIRE(quadratic_residue(100) == i100);
 }

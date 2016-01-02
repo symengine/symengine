@@ -1478,7 +1478,7 @@ void powermod_list(std::vector<RCP<const Integer>> &pows, const RCP<const Intege
 
 std::vector<int> quadratic_residue(const int &a)
 {
-    /* 
+    /*
         Returns the list of quadratic residues.
         Examples
         ========
@@ -1486,17 +1486,21 @@ std::vector<int> quadratic_residue(const int &a)
         >>> quadratic_residues(7)
         [0, 1, 2, 4]
     */
-    
-    std::vector<int> residue; 
+
+    if (a < 1) {
+        throw std::runtime_error("quadratic_residue: Input must be > 0");
+    }
+
+    std::vector<int> residue;
 
     for( int i = 0; i <= pow( a,2 ) ; i++)
-    {   
+    {
         residue.push_back( (int)pow(i,2) % a);
-    }    
-        
+    }
+
     sort( residue.begin(), residue.end() );
     residue.erase( unique( residue.begin(), residue.end() ), residue.end() );
 
     return residue;
 
-}    
+}
