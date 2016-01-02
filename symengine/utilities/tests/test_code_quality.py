@@ -1,7 +1,7 @@
 from os import walk, pardir
 from os.path import split, join, abspath, exists
 
-### CHANGE THIS IF THIS FILE IS EVER MOVED 
+### CHANGE THIS IF THIS FILE IS EVER MOVED
 ### RIGHT NOW IT'S IN symengine/symengine/utilities/tests/
 SYMENGINE_PATH = abspath(join(split(__file__)[0], pardir, pardir))
 BIN_PATH = join(abspath(join(SYMENGINE_PATH, pardir)), "bin")
