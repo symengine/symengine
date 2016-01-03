@@ -18,11 +18,11 @@
 namespace SymEngine {
 
 class EvalArbVisitor : public BaseVisitor<EvalArbVisitor> {
-private:
+protected:
     long prec_;
     arb_ptr result_;
 public:
-    EvalArbVisitor(long precision) : BaseVisitor(this), prec_{precision} { }
+    EvalArbVisitor(long precision) : prec_{precision} { }
 
     void apply(arb_ptr result, const Basic &b) {
         arb_ptr tmp = result_;
@@ -289,6 +289,8 @@ public:
             arb_const_pi(result_, prec_);
         } else if (x.__eq__(*E)) {
             arb_const_e(result_, prec_);
+        } else if(x.__eq__(*EulerGamma)) {
+            arb_const_euler(result_, prec_);
         } else {
             throw std::runtime_error("Constant " + x.get_name() + " is not implemented.");
         }

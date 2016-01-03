@@ -16,11 +16,11 @@
 namespace SymEngine {
 
 class EvalMPCVisitor : public BaseVisitor<EvalMPCVisitor> {
-private:
+protected:
     mpfr_rnd_t rnd_;
     mpc_ptr result_;
 public:
-    EvalMPCVisitor(mpfr_rnd_t rnd) : BaseVisitor(this), rnd_{rnd} { }
+    EvalMPCVisitor(mpfr_rnd_t rnd) : rnd_{rnd} { }
 
     void apply(mpc_ptr result, const Basic &b) {
         mpc_ptr tmp = result_;
@@ -230,6 +230,12 @@ public:
             mpc_set_fr(result_, t, rnd_);
             mpfr_clear(t);
         } else if (x.__eq__(*E)) {
+            mpfr_t t;
+            mpfr_init2(t, mpc_get_prec(result_));
+            mpfr_const_euler(t, rnd_);
+            mpc_set_fr(result_, t, rnd_);
+            mpfr_clear(t);
+        } else if (x.__eq__(*EulerGamma)) {
             mpfr_t t;
             mpfr_init2(t, mpc_get_prec(result_));
             mpfr_const_euler(t, rnd_);

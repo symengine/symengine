@@ -6,7 +6,6 @@
 #ifndef SYMENGINE_COMPLEX_DOUBLE_H
 #define SYMENGINE_COMPLEX_DOUBLE_H
 
-#include <cmath>
 #include <symengine/basic.h>
 #include <symengine/number.h>
 #include <symengine/integer.h>

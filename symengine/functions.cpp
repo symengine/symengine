@@ -1,5 +1,4 @@
-#include <stdexcept>
-
+#include <symengine/basic.h>
 #include <symengine/add.h>
 #include <symengine/mul.h>
 #include <symengine/symbol.h>
@@ -186,7 +185,7 @@ bool handle_minus(const RCP<const Basic> &arg,
 
 // \return true of conjugate has to be returned finally else false
 bool eval(const RCP<const Basic> &arg, unsigned period, bool odd, bool conj_odd, //input
-            const Ptr<RCP<const Basic>>& rarg,int& index, int& sign) //output
+            const Ptr<RCP<const Basic>>& rarg, int& index, int& sign) //output
 {
     bool check;
     RCP<const Integer> n;
@@ -289,7 +288,7 @@ Sin::Sin(const RCP<const Basic> &arg)
     SYMENGINE_ASSERT(is_canonical(arg))
 }
 
-bool Sin::is_canonical(const RCP<const Basic> &arg)
+bool Sin::is_canonical(const RCP<const Basic> &arg) const
 {
     // e.g. sin(0)
     if (is_a<Integer>(*arg) and
@@ -368,7 +367,7 @@ Cos::Cos(const RCP<const Basic> &arg)
     SYMENGINE_ASSERT(is_canonical(arg))
 }
 
-bool Cos::is_canonical(const RCP<const Basic> &arg)
+bool Cos::is_canonical(const RCP<const Basic> &arg) const
 {
     // e.g. cos(0)
     if (is_a<Integer>(*arg) and
@@ -445,7 +444,7 @@ Tan::Tan(const RCP<const Basic> &arg)
     SYMENGINE_ASSERT(is_canonical(arg))
 }
 
-bool Tan::is_canonical(const RCP<const Basic> &arg)
+bool Tan::is_canonical(const RCP<const Basic> &arg) const
 {
     // TODO: Add further checks for +inf -inf cases
     if (is_a<Integer>(*arg) and
@@ -525,7 +524,7 @@ Cot::Cot(const RCP<const Basic> &arg)
     SYMENGINE_ASSERT(is_canonical(arg))
 }
 
-bool Cot::is_canonical(const RCP<const Basic> &arg)
+bool Cot::is_canonical(const RCP<const Basic> &arg) const
 {
     // TODO: Add further checks for +inf -inf cases
     if (is_a<Integer>(*arg) and
@@ -605,7 +604,7 @@ Csc::Csc(const RCP<const Basic> &arg)
     SYMENGINE_ASSERT(is_canonical(arg))
 }
 
-bool Csc::is_canonical(const RCP<const Basic> &arg)
+bool Csc::is_canonical(const RCP<const Basic> &arg) const
 {
     // e.g. Csc(0)
     if (is_a<Integer>(*arg) and
@@ -686,7 +685,7 @@ Sec::Sec(const RCP<const Basic> &arg)
     SYMENGINE_ASSERT(is_canonical(arg))
 }
 
-bool Sec::is_canonical(const RCP<const Basic> &arg)
+bool Sec::is_canonical(const RCP<const Basic> &arg) const
 {
     // e.g. Sec(0)
     if (is_a<Integer>(*arg) and
@@ -763,7 +762,7 @@ ASin::ASin(const RCP<const Basic> &arg)
     SYMENGINE_ASSERT(is_canonical(arg))
 }
 
-bool ASin::is_canonical(const RCP<const Basic> &arg)
+bool ASin::is_canonical(const RCP<const Basic> &arg) const
 {
     // TODO: Add further checks for +inf -inf cases
     if (eq(*arg, *zero) or eq(*arg, *one) or eq(*arg, *minus_one))
@@ -819,7 +818,7 @@ ACos::ACos(const RCP<const Basic> &arg)
     SYMENGINE_ASSERT(is_canonical(arg))
 }
 
-bool ACos::is_canonical(const RCP<const Basic> &arg)
+bool ACos::is_canonical(const RCP<const Basic> &arg) const
 {
     // TODO: Add further checks for +inf -inf cases
     if (eq(*arg, *zero) or eq(*arg, *one) or eq(*arg, *minus_one))
@@ -879,7 +878,7 @@ ASec::ASec(const RCP<const Basic> &arg)
     SYMENGINE_ASSERT(is_canonical(arg))
 }
 
-bool ASec::is_canonical(const RCP<const Basic> &arg)
+bool ASec::is_canonical(const RCP<const Basic> &arg) const
 {
     // TODO: Add further checks for +inf -inf cases
     if (eq(*arg, *one) or eq(*arg, *minus_one))
@@ -937,7 +936,7 @@ ACsc::ACsc(const RCP<const Basic> &arg)
     SYMENGINE_ASSERT(is_canonical(arg))
 }
 
-bool ACsc::is_canonical(const RCP<const Basic> &arg)
+bool ACsc::is_canonical(const RCP<const Basic> &arg) const
 {
     // TODO: Add further checks for +inf -inf cases
     if (eq(*arg, *one) or eq(*arg, *minus_one))
@@ -991,7 +990,7 @@ ATan::ATan(const RCP<const Basic> &arg)
     SYMENGINE_ASSERT(is_canonical(arg))
 }
 
-bool ATan::is_canonical(const RCP<const Basic> &arg)
+bool ATan::is_canonical(const RCP<const Basic> &arg) const
 {
     // TODO: Add further checks for +inf -inf cases
     if (eq(*arg, *zero) or eq(*arg, *one) or eq(*arg, *minus_one))
@@ -1046,7 +1045,7 @@ ACot::ACot(const RCP<const Basic> &arg)
     SYMENGINE_ASSERT(is_canonical(arg))
 }
 
-bool ACot::is_canonical(const RCP<const Basic> &arg)
+bool ACot::is_canonical(const RCP<const Basic> &arg) const
 {
     // TODO: Add further checks for +inf -inf cases
     if (eq(*arg, *zero) or eq(*arg, *one) or eq(*arg, *minus_one))
@@ -1107,7 +1106,7 @@ ATan2::ATan2(const RCP<const Basic> &num, const RCP<const Basic> &den)
 }
 
 bool ATan2::is_canonical(const RCP<const Basic> &num,
-                        const RCP<const Basic> &den)
+                        const RCP<const Basic> &den) const
 {
     if (eq(*num, *zero) or eq(*num, *den) or eq(*num, *mul(minus_one, den)))
         return false;
@@ -1346,7 +1345,7 @@ LambertW::LambertW(const RCP<const Basic> &arg)
     SYMENGINE_ASSERT(is_canonical(arg))
 }
 
-bool LambertW::is_canonical(const RCP<const Basic> &arg)
+bool LambertW::is_canonical(const RCP<const Basic> &arg) const
 {
     if (eq(*arg, *zero)) return false;
     if (eq(*arg, *E)) return false;
@@ -1405,7 +1404,7 @@ FunctionSymbol::FunctionSymbol(std::string name, const vec_basic &arg)
     SYMENGINE_ASSERT(is_canonical(arg_))
 }
 
-bool FunctionSymbol::is_canonical(const vec_basic &arg)
+bool FunctionSymbol::is_canonical(const vec_basic &arg) const
 {
     return true;
 }
@@ -1792,7 +1791,7 @@ Sinh::Sinh(const RCP<const Basic> &arg)
     SYMENGINE_ASSERT(is_canonical(arg))
 }
 
-bool Sinh::is_canonical(const RCP<const Basic> &arg)
+bool Sinh::is_canonical(const RCP<const Basic> &arg) const
 {
     // TODO: Add further checks for +inf -inf cases
     if (eq(*arg, *zero))
@@ -1858,7 +1857,7 @@ Cosh::Cosh(const RCP<const Basic> &arg)
     SYMENGINE_ASSERT(is_canonical(arg))
 }
 
-bool Cosh::is_canonical(const RCP<const Basic> &arg)
+bool Cosh::is_canonical(const RCP<const Basic> &arg) const
 {
     // TODO: Add further checks for +inf -inf cases
     if (eq(*arg, *zero))
@@ -1924,7 +1923,7 @@ Tanh::Tanh(const RCP<const Basic> &arg)
     SYMENGINE_ASSERT(is_canonical(arg))
 }
 
-bool Tanh::is_canonical(const RCP<const Basic> &arg)
+bool Tanh::is_canonical(const RCP<const Basic> &arg) const
 {
     // TODO: Add further checks for +inf -inf cases
     if (eq(*arg, *zero))
@@ -1992,7 +1991,7 @@ Coth::Coth(const RCP<const Basic> &arg)
     SYMENGINE_ASSERT(is_canonical(arg))
 }
 
-bool Coth::is_canonical(const RCP<const Basic> &arg)
+bool Coth::is_canonical(const RCP<const Basic> &arg) const
 {
     // TODO: Add further checks for +inf -inf cases
     if (eq(*arg, *zero))
@@ -2063,7 +2062,7 @@ ASinh::ASinh(const RCP<const Basic> &arg)
     SYMENGINE_ASSERT(is_canonical(arg))
 }
 
-bool ASinh::is_canonical(const RCP<const Basic> &arg)
+bool ASinh::is_canonical(const RCP<const Basic> &arg) const
 {
     // TODO: Add further checks for +inf -inf cases
     if (eq(*arg, *zero) or eq(*arg, *one) or eq(*arg, *minus_one))
@@ -2126,7 +2125,7 @@ ACosh::ACosh(const RCP<const Basic> &arg)
     SYMENGINE_ASSERT(is_canonical(arg))
 }
 
-bool ACosh::is_canonical(const RCP<const Basic> &arg)
+bool ACosh::is_canonical(const RCP<const Basic> &arg) const
 {
     // TODO: Add further checks for +inf -inf cases
     // TODO: Lookup into a cst table once complex is implemented
@@ -2175,7 +2174,7 @@ ATanh::ATanh(const RCP<const Basic> &arg)
     SYMENGINE_ASSERT(is_canonical(arg))
 }
 
-bool ATanh::is_canonical(const RCP<const Basic> &arg)
+bool ATanh::is_canonical(const RCP<const Basic> &arg) const
 {
     // TODO: Add further checks for +inf -inf cases
     if (eq(*arg, *zero))
@@ -2236,7 +2235,7 @@ ACoth::ACoth(const RCP<const Basic> &arg)
     SYMENGINE_ASSERT(is_canonical(arg))
 }
 
-bool ACoth::is_canonical(const RCP<const Basic> &arg)
+bool ACoth::is_canonical(const RCP<const Basic> &arg) const
 {
     // TODO: Add further checks for +inf -inf cases
     if (is_a_Number(*arg)) {
@@ -2294,7 +2293,7 @@ ASech::ASech(const RCP<const Basic> &arg)
     SYMENGINE_ASSERT(is_canonical(arg))
 }
 
-bool ASech::is_canonical(const RCP<const Basic> &arg)
+bool ASech::is_canonical(const RCP<const Basic> &arg) const
 {
     // TODO: Add further checks for +inf -inf cases
     // TODO: Lookup into a cst table once complex is implemented
@@ -2382,7 +2381,7 @@ KroneckerDelta::KroneckerDelta(const RCP<const Basic> &i, const RCP<const Basic>
     SYMENGINE_ASSERT(is_canonical(i_, j_))
 }
 
-bool KroneckerDelta::is_canonical(const RCP<const Basic> &i, const RCP<const Basic> &j)
+bool KroneckerDelta::is_canonical(const RCP<const Basic> &i, const RCP<const Basic> &j) const
 {
     RCP<const Basic> diff = expand(sub(i, j));
     if (eq(*diff, *zero)) {
@@ -2455,7 +2454,7 @@ LeviCivita::LeviCivita(const vec_basic&& arg)
     SYMENGINE_ASSERT(is_canonical(arg_))
 }
 
-bool LeviCivita::is_canonical(const vec_basic &arg)
+bool LeviCivita::is_canonical(const vec_basic &arg) const
 {
     bool are_int = true;
     for (const auto &p: arg) {
@@ -2547,7 +2546,7 @@ Zeta::Zeta(const RCP<const Basic> &s)
     SYMENGINE_ASSERT(is_canonical(s_, a_))
 }
 
-bool Zeta::is_canonical(const RCP<const Basic> &s, const RCP<const Basic> &a)
+bool Zeta::is_canonical(const RCP<const Basic> &s, const RCP<const Basic> &a) const
 {
     if (eq(*s, *zero)) return false;
     if (eq(*s, *one)) return false;
@@ -2614,7 +2613,7 @@ Dirichlet_eta::Dirichlet_eta(const RCP<const Basic> &s)
     SYMENGINE_ASSERT(is_canonical(s_))
 }
 
-bool Dirichlet_eta::is_canonical(const RCP<const Basic> &s)
+bool Dirichlet_eta::is_canonical(const RCP<const Basic> &s) const
 {
     if (eq(*s, *one)) return false;
     if (not (is_a<Zeta>(*zeta(s)))) return false;
@@ -2667,7 +2666,7 @@ Gamma::Gamma(const RCP<const Basic> &arg)
     SYMENGINE_ASSERT(is_canonical(arg_))
 }
 
-bool Gamma::is_canonical(const RCP<const Basic> &arg)
+bool Gamma::is_canonical(const RCP<const Basic> &arg) const
 {
     if (is_a<Integer>(*arg)) return false;
     if (is_a<Rational>(*arg) and
@@ -2770,7 +2769,7 @@ LowerGamma::LowerGamma(const RCP<const Basic> &s, const RCP<const Basic> &x)
     SYMENGINE_ASSERT(is_canonical(s_, x_))
 }
 
-bool LowerGamma::is_canonical(const RCP<const Basic> &s, const RCP<const Basic> &x)
+bool LowerGamma::is_canonical(const RCP<const Basic> &s, const RCP<const Basic> &x) const
 {
     // Only special values are evaluated
     if (eq(*s, *one)) return false;
@@ -2843,7 +2842,7 @@ UpperGamma::UpperGamma(const RCP<const Basic> &s, const RCP<const Basic> &x)
     SYMENGINE_ASSERT(is_canonical(s_, x_))
 }
 
-bool UpperGamma::is_canonical(const RCP<const Basic> &s, const RCP<const Basic> &x)
+bool UpperGamma::is_canonical(const RCP<const Basic> &s, const RCP<const Basic> &x) const
 {
     // Only special values are evaluated
     if (eq(*s, *one)) return false;
@@ -3052,7 +3051,7 @@ Abs::Abs(const RCP<const Basic> &arg)
     SYMENGINE_ASSERT(is_canonical(arg_))
 }
 
-bool Abs::is_canonical(const RCP<const Basic> &arg)
+bool Abs::is_canonical(const RCP<const Basic> &arg) const
 {
     if (is_a<Integer>(*arg) or is_a<Rational>(*arg)) return false;
     if (is_a_Number(*arg) and not static_cast<const Number &>(*arg).is_exact()) {

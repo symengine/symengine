@@ -1,5 +1,4 @@
-#include <stdexcept>
-
+#include <symengine/basic.h>
 #include <symengine/add.h>
 #include <symengine/symbol.h>
 #include <symengine/mul.h>
@@ -17,7 +16,7 @@ Add::Add(const RCP<const Number> &coef, umap_basic_num&& dict)
 }
 
 bool Add::is_canonical(const RCP<const Number> &coef,
-        const umap_basic_num& dict)
+        const umap_basic_num& dict) const
 {
     if (coef == null) return false;
     if (dict.size() == 0) return false;
@@ -51,12 +50,12 @@ bool Add::is_canonical(const RCP<const Number> &coef,
 
 std::size_t Add::__hash__() const
 {
-    std::size_t seed = ADD;
+    std::size_t seed = ADD, temp;
     hash_combine<Basic>(seed, *coef_);
-    map_basic_num ordered(dict_.begin(), dict_.end());
-    for (const auto &p: ordered) {
-        hash_combine<Basic>(seed, *(p.first));
-        hash_combine<Basic>(seed, *(p.second));
+    for (const auto &p: dict_) {
+        temp = p.first->hash();
+        hash_combine<Basic>(temp, *(p.second));
+        seed ^= temp;
     }
     return seed;
 }

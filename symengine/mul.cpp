@@ -1,5 +1,4 @@
-#include <stdexcept>
-
+#include <symengine/basic.h>
 #include <symengine/add.h>
 #include <symengine/mul.h>
 #include <symengine/symbol.h>
@@ -17,7 +16,7 @@ Mul::Mul(const RCP<const Number> &coef, map_basic_basic&& dict)
 }
 
 bool Mul::is_canonical(const RCP<const Number> &coef,
-        const map_basic_basic& dict)
+        const map_basic_basic& dict) const
 {
     if (coef == null) return false;
     // e.g. 0*x*y

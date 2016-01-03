@@ -8,7 +8,7 @@ Rational::Rational(mpq_class i)
     SYMENGINE_ASSERT(is_canonical(this->i))
 }
 
-bool Rational::is_canonical(const mpq_class &i)
+bool Rational::is_canonical(const mpq_class &i) const
 {
     mpq_class x = i;
     x.canonicalize();
