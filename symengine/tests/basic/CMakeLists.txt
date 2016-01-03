@@ -22,7 +22,7 @@ add_test(test_series ${PROJECT_BINARY_DIR}/test_series)
 
 add_executable(test_series_expansion test_series_expansion.cpp)
 target_link_libraries(test_series_expansion symengine catch)
-add_test(test_series ${PROJECT_BINARY_DIR}/test_series_expansion)
+add_test(test_series_expansion ${PROJECT_BINARY_DIR}/test_series_expansion)
 
 add_executable(test_functions test_functions.cpp)
 target_link_libraries(test_functions symengine catch)

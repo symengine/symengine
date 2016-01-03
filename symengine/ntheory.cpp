@@ -524,7 +524,7 @@ void prime_factor_multiplicities(map_integer_uint &primes_mul, const Integer &n)
         insert(primes_mul, integer(_n), 1);
 }
 
-std::vector<unsigned> Sieve::_primes = {2,3,5,7,11,13,17,19,23,29};
+std::vector<unsigned> Sieve::_primes = {2, 3, 5, 7, 11, 13, 17, 19, 23, 29};
 bool Sieve::_clear = true;
 unsigned Sieve::_sieve_size = 32 * 1024 * 8; //32K in bits
 
@@ -807,7 +807,7 @@ void _primitive_root_list(std::vector<RCP<const Integer>> &roots, const mpz_clas
     _primitive_root(g, p, 1, false); // Find one primitive root for p.
     h = 1;
     pm1 = p - 1;
-    // Generate other primitive roots for p. h = g**i and gcd(i,p-1) = 1. Ref[2]
+    // Generate other primitive roots for p. h = g**i and gcd(i, p-1) = 1. Ref[2]
     mpz_pow_ui(n.get_mpz_t(), p.get_mpz_t(), e.get_ui());
     for (unsigned long i = 1; i < p; i++) {
         h *= g;

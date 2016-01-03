@@ -680,18 +680,18 @@ TEST_CASE("Constants: eval_arb", "[eval_arb]")
 {
     arb_t a;
     arb_init(a);
-    
+
     RCP<const Basic> r1 = mul(EulerGamma, integer(100000000));
     RCP<const Basic> r2 = div(sub(r1, integer(57721566)), integer(100000000));
 
     eval_arb(a, *r1, 45);
-    
+
     mpfr_t f;
     mpfr_init2(f, 57);
     eval_mpfr(f, *r1, MPFR_RNDN);
 
     REQUIRE(arb_contains_mpfr(a, f));
-    
+
     mpfr_clear(f);
-    arb_clear(a);    
+    arb_clear(a);
 }
