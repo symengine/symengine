@@ -80,8 +80,6 @@ public:
 
     virtual vec_basic get_args() const;
 
-    virtual void accept(Visitor &v) const;
-
 }; //UnivariatePolynomial
 
 //! Adding two UnivariatePolynomial a and b

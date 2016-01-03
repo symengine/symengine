@@ -117,7 +117,6 @@ public:
     IMPLEMENT_TYPEID(NUMBER_WRAPPER)
     virtual std::string __str__() const { throw std::runtime_error("Not Implemented."); };
     virtual RCP<const Number> eval(long bits)  const { throw std::runtime_error("Not Implemented."); };
-    virtual void accept(Visitor &v) const;
 };
 
 //! A class that will evaluate functions numerically.

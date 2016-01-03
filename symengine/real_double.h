@@ -389,8 +389,6 @@ public:
             throw std::runtime_error("Not implemented.");
         }
     }
-
-    virtual void accept(Visitor &v) const;
 };
 
 RCP<const RealDouble> real_double(double x);

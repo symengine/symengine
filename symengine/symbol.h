@@ -43,8 +43,6 @@ public:
     virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
 
     virtual vec_basic get_args() const { return {}; }
-
-    virtual void accept(Visitor &v) const;
 };
 
 //! inline version to return `Symbol`

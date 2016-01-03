@@ -65,8 +65,6 @@ public:
     virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
 
     virtual vec_basic get_args() const;
-
-    virtual void accept(Visitor &v) const;
 };
 
 //! \return Add made from `a + b`
