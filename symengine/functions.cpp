@@ -2906,7 +2906,7 @@ bool PolyGamma::is_canonical(const RCP<const Basic> &n, const RCP<const Basic> &
     if(is_a<Integer>(*n)) {
         auto n_int = rcp_static_cast<const Integer>(n); 
         if(n_int->is_negative()) {
-            return false;
+            return true;
         }
         if(eq(*n_int, *zero) and is_a<Rational>(*x)) {
             auto n_rat = rcp_static_cast<const Rational>(n);
@@ -2919,9 +2919,8 @@ bool PolyGamma::is_canonical(const RCP<const Basic> &n, const RCP<const Basic> &
                 return false;
             }                
         }
-        return true;
     }
-    return false;
+    return true;
 }
 
 std::size_t PolyGamma::__hash__() const
