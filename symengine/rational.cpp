@@ -33,9 +33,9 @@ RCP<const Number> Rational::from_mpq(const mpq_class i)
 RCP<const Number> Rational::from_two_ints(const Integer &n,
             const Integer &d)
 {
-    if (d.i == 0)
+    if (d.get_i() == 0)
         throw std::runtime_error("Rational: Division by zero.");
-    mpq_class q(n.i, d.i);
+    mpq_class q(n.get_i(), d.get_i());
 
     // This is potentially slow, but has to be done, since 'n/d' might not be
     // in canonical form.
@@ -85,7 +85,7 @@ int Rational::compare(const Basic &o) const
     }
     if (is_a<Integer>(o)) {
         const Integer &s = static_cast<const Integer &>(o);
-        return i < s.i ? -1 : 1;
+        return i < s.get_i() ? -1 : 1;
     }
     throw std::runtime_error("unhandled comparison of Rational");
 }
@@ -94,8 +94,8 @@ void get_num_den(const Rational &rat,
             const Ptr<RCP<const Integer>> &num,
             const Ptr<RCP<const Integer>> &den)
 {
-    *num = integer((rat.i).get_num());
-    *den = integer((rat.i).get_den());
+    *num = integer((rat.get_i()).get_num());
+    *den = integer((rat.get_i()).get_den());
 }
 
 bool Rational::is_perfect_power(bool is_expected) const

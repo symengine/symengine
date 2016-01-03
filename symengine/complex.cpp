@@ -75,27 +75,27 @@ RCP<const Number> Complex::from_mpq(const mpq_class re, const mpq_class im)
 RCP<const Number> Complex::from_two_rats(const Rational &re,
             const Rational &im)
 {
-    return Complex::from_mpq(re.i, im.i);
+    return Complex::from_mpq(re.get_i(), im.get_i());
 }
 
 RCP<const Number> Complex::from_two_nums(const Number &re,
             const Number &im)
 {
     if (is_a<Integer>(re) and is_a<Integer>(im)) {
-        mpq_class re_mpq(static_cast<const Integer&>(re).i, static_cast<const Integer&>(*one).i);
-        mpq_class im_mpq(static_cast<const Integer&>(im).i, static_cast<const Integer&>(*one).i);
+        mpq_class re_mpq(static_cast<const Integer&>(re).get_i(), static_cast<const Integer&>(*one).get_i());
+        mpq_class im_mpq(static_cast<const Integer&>(im).get_i(), static_cast<const Integer&>(*one).get_i());
         return Complex::from_mpq(re_mpq, im_mpq);
     } else if (is_a<Rational>(re) and is_a<Integer>(im)) {
-        mpq_class re_mpq = static_cast<const Rational&>(re).i;
-        mpq_class im_mpq(static_cast<const Integer&>(im).i, static_cast<const Integer&>(*one).i);
+        mpq_class re_mpq = static_cast<const Rational&>(re).get_i();
+        mpq_class im_mpq(static_cast<const Integer&>(im).get_i(), static_cast<const Integer&>(*one).get_i());
         return Complex::from_mpq(re_mpq, im_mpq);
     } else if (is_a<Integer>(re) and is_a<Rational>(im)) {
-        mpq_class re_mpq(static_cast<const Integer&>(re).i, static_cast<const Integer&>(*one).i);
-        mpq_class im_mpq = static_cast<const Rational&>(im).i;
+        mpq_class re_mpq(static_cast<const Integer&>(re).get_i(), static_cast<const Integer&>(*one).get_i());
+        mpq_class im_mpq = static_cast<const Rational&>(im).get_i();
         return Complex::from_mpq(re_mpq, im_mpq);
     } else if (is_a<Rational>(re) and is_a<Rational>(im)) {
-        mpq_class re_mpq = static_cast<const Rational&>(re).i;
-        mpq_class im_mpq = static_cast<const Rational&>(im).i;
+        mpq_class re_mpq = static_cast<const Rational&>(re).get_i();
+        mpq_class im_mpq = static_cast<const Rational&>(im).get_i();
         return Complex::from_mpq(re_mpq, im_mpq);
     } else {
         throw std::runtime_error("Invalid Format: Expected Integer or Rational");

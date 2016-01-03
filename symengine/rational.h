@@ -14,7 +14,7 @@
 namespace SymEngine {
 //! Rational Class
 class Rational : public Number {
-public:
+private:
     //! `i` : object of `mpq_class`
     mpq_class i;
 
@@ -77,7 +77,7 @@ public:
      * \param other of type Integer
      * */
     inline RCP<const Number> addrat(const Integer &other) const {
-        return from_mpq(this->i + other.i);
+        return from_mpq(this->i + other.get_i());
     }
     /*! Subtract Rationals
      * \param other of type Rational
@@ -89,10 +89,10 @@ public:
      * \param other of type Integer
      * */
     inline RCP<const Number> subrat(const Integer &other) const {
-        return from_mpq(this->i - other.i);
+        return from_mpq(this->i - other.get_i());
     }
     inline RCP<const Number> rsubrat(const Integer &other) const {
-        return from_mpq(other.i - this->i);
+        return from_mpq(other.get_i() - this->i);
     }
     /*! Multiply Rationals
      * \param other of type Rational
@@ -104,7 +104,7 @@ public:
      * \param other of type Integer
      * */
     inline RCP<const Number> mulrat(const Integer &other) const {
-        return from_mpq(this->i * other.i);
+        return from_mpq(this->i * other.get_i());
     }
     /*! Divide Rationals
      * \param other of type Rational
@@ -120,17 +120,17 @@ public:
      * \param other of type Integer
      * */
     inline RCP<const Number> divrat(const Integer &other) const {
-        if (other.i == 0) {
+        if (other.get_i() == 0) {
             throw std::runtime_error("Division by zero");
         } else {
-            return from_mpq(this->i / other.i);
+            return from_mpq(this->i / other.get_i());
         }
     }
     inline RCP<const Number> rdivrat(const Integer &other) const {
         if (this->i == 0) {
             throw std::runtime_error("Division by zero");
         } else {
-            return from_mpq(other.i / this->i);
+            return from_mpq(other.get_i() / this->i);
         }
     }
     /*! Raise Rationals to power `other`
@@ -138,7 +138,7 @@ public:
      * */
     inline RCP<const Number> powrat(const Integer &other) const {
         bool neg = other.is_negative();
-        mpz_class exp_ = other.i;
+        mpz_class exp_ = other.get_i();
         if (neg) exp_ = -exp_;
         if (not (exp_.fits_ulong_p()))
             throw std::runtime_error("powrat: 'exp' does not fit unsigned int.");
@@ -152,12 +152,12 @@ public:
         // Since 'this' is in canonical form, so is this**other, so we simply
         // pass num/den into the constructor directly:
         if (not neg)
-            if (abs(den) == one->i)
+            if (abs(den) == one->get_i())
                 return integer(num*sgn(den));
             else
                 return make_rcp<const Rational>(mpq_class(num*sgn(den), abs(den)));
         else
-            if (abs(num) == one->i)
+            if (abs(num) == one->get_i())
                 return integer(den*sgn(num));
             else
                 return make_rcp<const Rational>(mpq_class(den*sgn(num), abs(num)));
@@ -233,6 +233,8 @@ public:
     };
 
     virtual void accept(Visitor &v) const;
+
+    inline const mpq_class& get_i() const { return i; };
 };
 
 //! returns the `num` and `den` of rational `rat` as `RCP<const Integer>`

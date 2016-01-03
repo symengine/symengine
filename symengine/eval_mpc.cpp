@@ -16,11 +16,11 @@
 namespace SymEngine {
 
 class EvalMPCVisitor : public BaseVisitor<EvalMPCVisitor> {
-protected:
+private:
     mpfr_rnd_t rnd_;
     mpc_ptr result_;
 public:
-    EvalMPCVisitor(mpfr_rnd_t rnd) : rnd_{rnd} { }
+    EvalMPCVisitor(mpfr_rnd_t rnd) : BaseVisitor(this), rnd_{rnd} { }
 
     void apply(mpc_ptr result, const Basic &b) {
         mpc_ptr tmp = result_;

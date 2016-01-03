@@ -36,28 +36,37 @@ public:
 void preorder_traversal(const Basic &b, Visitor &v);
 void postorder_traversal(const Basic &b, Visitor &v);
 
-template<class Derived, class Base = Visitor>
-class BaseVisitor : public Base {
+template<class T>
+class BaseVisitor : public Visitor {
 
 public:
+    T *p_;
+public:
+    BaseVisitor(T* p) : p_ {p} {
+
+    };
 #   define SYMENGINE_ENUM( TypeID , Class) \
-    virtual void visit(const Class &x) { static_cast<Derived*>(this)->bvisit(x); };
+    virtual void visit(const Class &x) { p_->bvisit(x); };
 #   include "symengine/type_codes.inc"
 #   undef SYMENGINE_ENUM
 };
 
-class StopVisitor : public Visitor {
+template<class T>
+class StopVisitor : public BaseVisitor<T> {
 public:
+    StopVisitor(T *p) : BaseVisitor<T>(p) { };
     bool stop_;
 };
 
-void preorder_traversal_stop(const Basic &b, StopVisitor &v);
+template<class T>
+void preorder_traversal_stop(const Basic &b, StopVisitor<T> &v);
 
-class HasSymbolVisitor : public BaseVisitor<HasSymbolVisitor, StopVisitor> {
-protected:
+class HasSymbolVisitor : public StopVisitor<HasSymbolVisitor> {
+private:
     RCP<const Symbol> x_;
     bool has_;
 public:
+    HasSymbolVisitor() : StopVisitor<HasSymbolVisitor>(this) { };
 
     void bvisit(const Symbol &x) {
         if (x_->__eq__(x)) {
@@ -79,12 +88,13 @@ public:
 
 bool has_symbol(const Basic &b, const RCP<const Symbol> &x);
 
-class CoeffVisitor : public BaseVisitor<CoeffVisitor, StopVisitor> {
-protected:
+class CoeffVisitor : public StopVisitor<CoeffVisitor> {
+private:
     RCP<const Symbol> x_;
     RCP<const Integer> n_;
     RCP<const Basic> coeff_;
 public:
+    CoeffVisitor() : StopVisitor<CoeffVisitor>(this) { };
 
     void bvisit(const Add &x) {
         // TODO: Implement coeff for Add

@@ -44,8 +44,8 @@ bool Pow::is_canonical(const Basic &base, const Basic &exp) const
     // allow things like 2**(-1/2) or 2**(3/2)
     if ((is_a<Rational>(base) or is_a<Integer>(base)) and
         is_a<Rational>(exp) and
-        (static_cast<const Rational&>(exp).i < 0 or
-        static_cast<const Rational&>(exp).i > 1))
+        (static_cast<const Rational&>(exp).get_i() < 0 or
+        static_cast<const Rational&>(exp).get_i() > 1))
         return false;
     // Purely Imaginary complex numbers with integral powers are expanded
     // e.g (2I)**3
@@ -100,8 +100,8 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
         if (is_a<Integer>(*b)) {
             return is_a<Integer>(*div(b, integer(2))) ? one : minus_one;
         } else if (is_a<Rational>(*b) and
-                    (rcp_static_cast<const Rational>(b)->i.get_num() == 1) and
-                    (rcp_static_cast<const Rational>(b)->i.get_den() == 2)) {
+                    (rcp_static_cast<const Rational>(b)->get_i().get_num() == 1) and
+                    (rcp_static_cast<const Rational>(b)->get_i().get_den() == 2)) {
             return I;
         }
     }
@@ -124,8 +124,8 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
             }
         } else if (is_a<Rational>(*b)) {
             mpz_class q, r, num, den;
-            num = rcp_static_cast<const Rational>(b)->i.get_num();
-            den = rcp_static_cast<const Rational>(b)->i.get_den();
+            num = rcp_static_cast<const Rational>(b)->get_i().get_num();
+            den = rcp_static_cast<const Rational>(b)->get_i().get_den();
 
             if (num > den or num < 0) {
                 mpz_fdiv_qr(q.get_mpz_t(), r.get_mpz_t(), num.get_mpz_t(),
@@ -142,10 +142,10 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
             if (is_a<Rational>(*a)) {
                 RCP<const Rational> exp_new = rcp_static_cast<const Rational>(a);
                 RCP<const Basic> frac =
-                    div(exp_new->powrat(Integer(q)), integer(exp_new->i.get_den()));
+                    div(exp_new->powrat(Integer(q)), integer(exp_new->get_i().get_den()));
                 RCP<const Basic> surds =
-                    mul(make_rcp<const Pow>(integer(exp_new->i.get_num()), div(integer(r), integer(den))),
-                        make_rcp<const Pow>(integer(exp_new->i.get_den()), sub(one, div(integer(r), integer(den)))));
+                    mul(make_rcp<const Pow>(integer(exp_new->get_i().get_num()), div(integer(r), integer(den))),
+                        make_rcp<const Pow>(integer(exp_new->get_i().get_den()), sub(one, div(integer(r), integer(den)))));
                 return mul(frac, surds);
             } else if (is_a<Integer>(*a)) {
                 RCP<const Integer> exp_new = rcp_static_cast<const Integer>(a);

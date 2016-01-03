@@ -11,6 +11,7 @@ namespace SymEngine {
 
 RealDouble::RealDouble(double i) {
     this->i = i;
+    std::cout<<this<<" WXYZ"<<std::endl;
 }
 
 std::size_t RealDouble::__hash__() const

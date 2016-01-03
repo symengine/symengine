@@ -16,11 +16,11 @@
 namespace SymEngine {
 
 class EvalMPFRVisitor : public BaseVisitor<EvalMPFRVisitor> {
-protected:
+private:
     mpfr_rnd_t rnd_;
     mpfr_ptr result_;
 public:
-    EvalMPFRVisitor(mpfr_rnd_t rnd) : rnd_{rnd} { }
+    EvalMPFRVisitor(mpfr_rnd_t rnd) : BaseVisitor(this), rnd_{rnd} { }
 
     void apply(mpfr_ptr result, const Basic &b) {
         mpfr_ptr tmp = result_;
@@ -30,11 +30,11 @@ public:
     }
 
     void bvisit(const Integer &x) {
-        mpfr_set_z(result_, x.i.get_mpz_t(), rnd_);
+        mpfr_set_z(result_, x.get_i().get_mpz_t(), rnd_);
     }
 
     void bvisit(const Rational &x) {
-        mpfr_set_q(result_, x.i.get_mpq_t(), rnd_);
+        mpfr_set_q(result_, x.get_i().get_mpq_t(), rnd_);
     }
 
     void bvisit(const RealDouble &x) {

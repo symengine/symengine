@@ -14,7 +14,7 @@ namespace SymEngine {
 
 //! Integer Class
 class Integer : public Number {
-public:
+private:
     //! `i` : object of `mpz_class`
     mpz_class i;
 
@@ -136,6 +136,8 @@ public:
     };
 
     virtual void accept(Visitor &v) const;
+
+    inline const mpz_class& get_i() const { return i; }
 };
 
 //! less operator (<) for Integers

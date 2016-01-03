@@ -55,8 +55,8 @@ bool get_pi_shift(const RCP<const Basic> &arg,
 {
     if (is_a<Add>(*arg)) {
         const Add &s = static_cast<const Add &>(*arg);
-        RCP<const Basic> coef = s.coef_;
-        int size = s.dict_.size();
+        RCP<const Basic> coef = s.get_coef_();
+        int size = s.get_dict_().size();
         if (size > 1) {
             // arg should be of form `theta + n*pi/12`
             // `n` is an integer
@@ -64,7 +64,7 @@ bool get_pi_shift(const RCP<const Basic> &arg,
             bool check_pi = false;
             RCP<const Basic> temp;
             *x = coef;
-            for (const auto &p: s.dict_) {
+            for (const auto &p: s.get_dict_()) {
                 temp = mul(p.second, integer(12));
                 if (is_a<Constant>(*p.first) and
                     eq(*(rcp_static_cast<const Constant>(p.first)), *pi)
@@ -84,7 +84,7 @@ bool get_pi_shift(const RCP<const Basic> &arg,
         else if (size == 1) {
             // arg should be of form `a + n*pi/12`
             // where `a` is a `Number`.
-            auto p = s.dict_.begin();
+            auto p = s.get_dict_().begin();
             RCP<const Basic> temp = mul(p->second, integer(12));
             if (is_a<Constant>(*p->first) and
                 eq(*(rcp_static_cast<const Constant>(p->first)), *pi) and
@@ -106,12 +106,12 @@ bool get_pi_shift(const RCP<const Basic> &arg,
     else if (is_a<Mul>(*arg)) {
         // `arg` is of the form `k*pi/12`
         const Mul &s = static_cast<const Mul &>(*arg);
-        RCP<const Basic> coef = s.coef_;
+        RCP<const Basic> coef = s.get_coef_();
         coef = mul(coef, integer(12));
-        auto p = s.dict_.begin();
+        auto p = s.get_dict_().begin();
         // dict should contain symbol `pi` only
         // and coeff should be a multiple of 12
-        if (s.dict_.size() == 1 and is_a<Constant>(*p->first) and
+        if (s.get_dict_().size() == 1 and is_a<Constant>(*p->first) and
                 eq(*(rcp_static_cast<const Constant>(p->first)), *pi) and
                 eq(*(rcp_static_cast<const Number>(p->second)), *one) and
                 is_a<Integer>(*coef)) {
@@ -139,7 +139,7 @@ bool could_extract_minus(const RCP<const Basic> &arg)
 {
     if (is_a<Mul>(*arg)) {
         const Mul &s = static_cast<const Mul &>(*arg);
-        RCP<const Basic> coef = s.coef_;
+        RCP<const Basic> coef = s.get_coef_();
         if (is_a<Integer>(*coef) and
               rcp_static_cast<const Integer>(coef)->is_negative())
             return true;
@@ -152,7 +152,7 @@ bool could_extract_minus(const RCP<const Basic> &arg)
     }
     else if (is_a<Add>(*arg)) {
         const Add &s = static_cast<const Add &>(*arg);
-        for (const auto &p: s.dict_) {
+        for (const auto &p: s.get_dict_()) {
             if (is_a<Integer>(*p.second)) {
                 if (not (rcp_static_cast<const Integer>(p.second)->is_negative()))
                     return false;
@@ -2670,7 +2670,7 @@ bool Gamma::is_canonical(const RCP<const Basic> &arg) const
 {
     if (is_a<Integer>(*arg)) return false;
     if (is_a<Rational>(*arg) and
-        (rcp_static_cast<const Rational>(arg)->i.get_den()) == 2) {
+        (rcp_static_cast<const Rational>(arg)->get_i().get_den()) == 2) {
         return false;
     }
     if (is_a_Number(*arg) and not static_cast<const Number &>(*arg).is_exact()) {
@@ -2711,10 +2711,10 @@ RCP<const Basic> gamma(const RCP<const Basic> &arg)
         }
     } else if (is_a<Rational>(*arg)) {
         RCP<const Rational> arg_ = rcp_static_cast<const Rational>(arg);
-        if ((arg_->i.get_den()) == 2) {
+        if ((arg_->get_i().get_den()) == 2) {
             RCP<const Integer> n, k;
             RCP<const Number> coeff;
-            n = quotient_f(*(integer(abs(arg_->i.get_num()))), *(integer(arg_->i.get_den())));
+            n = quotient_f(*(integer(abs(arg_->get_i().get_num()))), *(integer(arg_->get_i().get_den())));
             if (arg_->is_positive()) {
                 k = n;
                 coeff = one;
@@ -2758,7 +2758,7 @@ bool LowerGamma::is_canonical(const RCP<const Basic> &s, const RCP<const Basic> 
     // Only special values are evaluated
     if (eq(*s, *one)) return false;
     if (is_a<Integer>(*s) and
-        rcp_static_cast<const Integer>(s)->i > 1)
+        rcp_static_cast<const Integer>(s)->get_i() > 1)
         return false;
     if (is_a<Integer>(*mul(i2, s))) return false;
     return true;
@@ -2800,7 +2800,7 @@ RCP<const Basic> lowergamma(const RCP<const Basic> &s, const RCP<const Basic> &x
         RCP<const Integer> s_int = rcp_static_cast<const Integer>(s);
         if (s_int->is_one()) {
             return sub(one, exp(mul(minus_one, x)));
-        } else if (s_int->i > 1) {
+        } else if (s_int->get_i() > 1) {
             s_int = s_int->subint(*one);
             return sub(mul(s_int, lowergamma(s_int, x)), mul(pow(x, s_int), exp(mul(minus_one, x))));
         } else {
@@ -2831,7 +2831,7 @@ bool UpperGamma::is_canonical(const RCP<const Basic> &s, const RCP<const Basic> 
     // Only special values are evaluated
     if (eq(*s, *one)) return false;
     if (is_a<Integer>(*s) and
-        rcp_static_cast<const Integer>(s)->i > 1)
+        rcp_static_cast<const Integer>(s)->get_i() > 1)
         return false;
     if (is_a<Integer>(*mul(i2, s))) return false;
     return true;
@@ -2873,7 +2873,7 @@ RCP<const Basic> uppergamma(const RCP<const Basic> &s, const RCP<const Basic> &x
         RCP<const Integer> s_int = rcp_static_cast<const Integer>(s);
         if (s_int->is_one()) {
             return exp(mul(minus_one, x));
-        } else if (s_int->i > 1) {
+        } else if (s_int->get_i() > 1) {
             s_int = s_int->subint(*one);
             return add(mul(s_int, uppergamma(s_int, x)), mul(pow(x, s_int), exp(mul(minus_one, x))));
         } else {
