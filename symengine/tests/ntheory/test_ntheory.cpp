@@ -640,13 +640,13 @@ TEST_CASE("test_powermod(): ntheory", "[ntheory]")
 TEST_CASE("test_quadratic_residue(): ntheory", "[ntheory]")
 {
 
-    std::vector<int> i1 = {0};
-    std::vector<int> i2 = {0,1};
-    std::vector<int> i3 = {0,1};
-    std::vector<int> i4 = {0,1};
-    std::vector<int> i5 = {0,1,4};
-    std::vector<int> i7 = {0,1,2,4};
-    std::vector<int> i100 = {0,1,4,9,16,21,24,25,29,36,41,44,49,56,61,64,69,76,81,84,89,96};
+    std::vector<mpz_class> i1 = {0};
+    std::vector<mpz_class> i2 = {0,1};
+    std::vector<mpz_class> i3 = {0,1};
+    std::vector<mpz_class> i4 = {0,1};
+    std::vector<mpz_class> i5 = {0,1,4};
+    std::vector<mpz_class> i7 = {0,1,2,4};
+    std::vector<mpz_class> i100 = {0,1,4,9,16,21,24,25,29,36,41,44,49,56,61,64,69,76,81,84,89,96};
 
     const RCP<const Integer> a1 = integer(1);
     const RCP<const Integer> a2 = integer(2);
@@ -665,3 +665,4 @@ TEST_CASE("test_quadratic_residue(): ntheory", "[ntheory]")
     REQUIRE(quadratic_residue(*a7) == i7);
     REQUIRE(quadratic_residue(*a100) == i100);
 }
+

@@ -170,8 +170,8 @@ bool powermod(const Ptr<RCP<const Integer>> &powm, const RCP<const Integer> &a,
 void powermod_list(std::vector<RCP<const Integer>> &pows, const RCP<const Integer> &a,
         const RCP<const Number> &b, const RCP<const Integer> &m);
 
-//! Finds all Quadratic Residue of a Positive Integer
-std::vector<int> quadratic_residue(const Integer &a);
+//! Finds all Quadratic Residues of a Positive Integer
+std::vector<mpz_class> quadratic_residue(const Integer &a);
 
 }
 #endif

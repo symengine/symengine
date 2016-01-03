@@ -1474,7 +1474,7 @@ void powermod_list(std::vector<RCP<const Integer>> &pows, const RCP<const Intege
     }
 }
 
-std::vector<int> quadratic_residue(const Integer &a)
+std::vector<mpz_class> quadratic_residue(const Integer &a)
 {
     /*
         Returns the list of quadratic residues.
@@ -1489,10 +1489,10 @@ std::vector<int> quadratic_residue(const Integer &a)
         throw std::runtime_error("quadratic_residue: Input must be > 0");
     }
 
-    std::vector<int> residue;
-    for( int i = 0; i <= a.as_int()/2; i++)
+    std::vector<mpz_class> residue;
+    for( mpz_class i = 0; i <= a.as_int()/2; i++)
     {
-        residue.push_back( (int)pow(i,2) % a.as_int());
+        residue.push_back( (i*i) % a.as_int());
     }
 
     sort( residue.begin(), residue.end() );
