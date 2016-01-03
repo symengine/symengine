@@ -49,7 +49,7 @@ public:
     //! \return `true` if this number is an exact number
     inline virtual bool is_exact() const { return false; }
     //! Get `Evaluate` singleton to evaluate numerically
-    inline virtual Evaluate& get_eval() const;
+    virtual Evaluate& get_eval() const;
 
     //! \return `true` when equals to 0
     virtual bool is_zero() const { return this->i == 0.0; }
