@@ -841,9 +841,6 @@ class EvaluateMPFR : public Evaluate {
     virtual RCP<const Basic> gamma(Basic const &aConst) const {
         throw std::runtime_error("Not Implemented.");
     }
-    virtual RCP<const Basic> beta(Basic const &aConst) const {
-        throw std::runtime_error("Not Implemented.");
-    }
 };
 
 Evaluate& RealMPFR::get_eval() const

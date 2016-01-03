@@ -2729,8 +2729,7 @@ inline RCP<const Basic> gamma_multiple_2(const RCP<const Basic>& arg)
         }
     }
     int j = 1;
-    for (int i = 3; i < 2*k->as_int(); i = i + 2)
-    {
+    for (int i = 3; i < 2*k->as_int(); i = i + 2) {
         j = j * i;
     }
     coeff = mulnum(coeff, integer(j));
@@ -2932,8 +2931,7 @@ bool Beta::is_canonical(const RCP<const Basic> &x, const RCP<const Basic> &y)
 std::size_t Beta::__hash__() const
 {
     std::size_t seed = BETA;
-    hash_combine<Basic>(seed, *x_);
-    hash_combine<Basic>(seed, *y_);
+    hash_combine<Basic>(seed, *add(x_, y_));
     return seed;
 }
 

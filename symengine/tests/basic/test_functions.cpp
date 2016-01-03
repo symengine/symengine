@@ -1777,7 +1777,7 @@ TEST_CASE("Beta: functions", "[functions]")
     r1 = make_rcp<const Beta>(x,y);
     r2 = make_rcp<const Beta>(y,x);
     REQUIRE(eq(*r1, *r2));
-
+    REQUIRE(r1->__hash__() == r2->__hash__());
     r1 = beta(div(one,i2),div(i3,i2));
     r2 = div(pi,i2);
     REQUIRE(eq(*r1,*r2));
