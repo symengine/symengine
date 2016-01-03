@@ -47,17 +47,17 @@ public:
     inline mpq_class as_mpq() const { return this->i; }
     //! \return `true` if `num` is `0`
     virtual bool is_zero() const { return this->i.get_num() == 0; }
-    //! \return `false` since `Rational` cannot be an `Integer` 
+    //! \return `false` since `Rational` cannot be an `Integer`
     virtual bool is_one() const { return false; }
-    //! \return `false` since `Rational` cannot be an `Integer` 
+    //! \return `false` since `Rational` cannot be an `Integer`
     virtual bool is_minus_one() const { return false; }
     //! \return `true` if positive
     inline virtual bool is_positive() const {
-        return this->i.get_num() > 0; 
+        return this->i.get_num() > 0;
     }
     //! \return `true` if negative
     inline virtual bool is_negative() const {
-        return this->i.get_num() < 0; 
+        return this->i.get_num() < 0;
     }
     //! \return negative of self
     inline RCP<const Number> neg() const {

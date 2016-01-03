@@ -5,9 +5,6 @@
 
 namespace SymEngine {
 
-StrPrinter::StrPrinter() : BaseVisitor<StrPrinter>(this) {
-
-}
 void StrPrinter::bvisit(const Basic &x) {
     std::ostringstream s;
     s << "<" << typeName<Basic>(x) << " instance at " << (const void*)this << ">";
