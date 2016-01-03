@@ -58,6 +58,7 @@ symengine/tests/basic/test_series
 symengine/tests/basic/test_series_expansion
 symengine/tests/basic/test_subs
 symengine/tests/basic/test_rational
+symengine/tests/basic/test_as_numer_denom
 symengine/tests/matrix/test_matrix
 symengine/tests/ntheory/test_ntheory
 symengine/tests/ntheory/test_diophantine

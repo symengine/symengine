@@ -12,9 +12,6 @@
 
 namespace SymEngine {
 
-// need a .h file to fix this
-void as_numer_denom(const RCP<const Basic> &x, const Ptr<RCP<const Basic>> &numer, const Ptr<RCP<const Basic>> &denom);
-
 class NumerDenomVisitor : public BaseVisitor<NumerDenomVisitor> {
 private:
     Ptr<RCP<const Basic>> numer_, denom_;
@@ -40,6 +37,24 @@ public:
 
         *numer_ = num;
         *denom_ = den;
+    }
+
+    void bvisit(const Pow &x) {
+
+        RCP<const Basic> base_, exp_, num, den;
+        base_ = x.get_base();
+        exp_ = x.get_exp();
+        as_numer_denom(base_, outArg(num), outArg(den));
+
+        // if the exp is a negative numer, or is intuitively 'negative'
+        if ((is_a_Number(*exp_) and rcp_static_cast<const Number>(exp_)->is_negative()) or (could_extract_minus(exp_))) {
+            exp_ = mul(integer(-1), exp_);
+            *numer_ = pow(den, exp_);
+            *denom_ = pow(num, exp_);
+        } else {
+            *numer_ = pow(num, exp_);
+            *denom_ = pow(den, exp_);
+        }
     }
 
     void bvisit(const Rational &x) {
