@@ -145,7 +145,7 @@ public:
     std::string __str__() const;
 
     //! Returns the derivative of 'self' w.r.t Symbol `x`
-    virtual RCP<const Basic> diff2(const RCP<const Symbol> &x) const = 0;
+    virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const = 0;
 
     //! Substitutes 'subs_dict' into 'self'.
     virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;

@@ -381,13 +381,13 @@ static RCP<const Basic> diff(const CLASS &self, \
     }
 };
 
-#define DIFF2(CLASS) \
-RCP<const Basic> CLASS::diff2(const RCP<const Symbol> &x) const { \
+#define IMPLEMENT_DIFF(CLASS) \
+RCP<const Basic> CLASS::diff(const RCP<const Symbol> &x) const { \
     return DiffImplementation::diff(*this, x); \
 };
 
 
-#define SYMENGINE_ENUM(TypeID, Class) DIFF2(Class)
+#define SYMENGINE_ENUM(TypeID, Class) IMPLEMENT_DIFF(Class)
 #include "symengine/type_codes.inc"
 #undef SYMENGINE_ENUM
 
