@@ -83,6 +83,8 @@ enum TypeID {
     TypeID_Count
 };
 
+#include "basic-methods.inc"
+
 class Basic : public EnableRCPFromThis<Basic> {
 private:
     //! Private variables
@@ -144,9 +146,6 @@ public:
      */
     std::string __str__() const;
 
-    //! Returns the derivative of 'self' w.r.t Symbol `x`
-    virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const = 0;
-
     //! Substitutes 'subs_dict' into 'self'.
     virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
 
@@ -158,7 +157,7 @@ public:
     //! Returns the list of arguments
     virtual vec_basic get_args() const = 0;
 
-    virtual void accept(Visitor &v) const = 0;
+    SYMENGINE_INCLUDE_METHODS(=0)
 };
 
 //! Our hash:
@@ -256,14 +255,12 @@ void hash_combine(std::size_t& seed, const T& v);
 //! Inline members and functions
 #include "basic-inl.h"
 
-#include "basic-methods.inc"
-
 // Macro to define the type_code_id variable and its getter method
 #define IMPLEMENT_TYPEID(ID) \
 /*! Type_code_id shared by all instances */ \
 const static TypeID type_code_id = ID; \
 /*! Virtual function that gives the type_code_id of the object */ \
 virtual TypeID get_type_code() const { return type_code_id; }; \
-SYMENGINE_INCLUDE_METHODS
+SYMENGINE_INCLUDE_METHODS()
 
 #endif
