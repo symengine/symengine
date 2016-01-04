@@ -78,6 +78,13 @@ public:
 
     virtual vec_basic get_args() const;
 
+    inline RCP<const Symbol> get_var() const {
+        return var_;
+    }
+    inline const map_uint_mpz& get_dict() const {
+        return dict_;
+    };
+
 }; //UnivariatePolynomial
 
 //! Adding two UnivariatePolynomial a and b
