@@ -204,14 +204,19 @@ if (WITH_PIRANHA)
 endif()
 
 # BENCHMARKS
-set(BUILD_BENCHMARKS no
+set(BUILD_BENCHMARKS yes
     CACHE BOOL "Build SymEngine benchmarks")
 
+set(BUILD_BENCHMARKS_NONIUS no
+    CACHE BOOL "Build SymEngine Nonius benchmarks")
+
 if (BUILD_BENCHMARKS)
-    if(NOT WIN32)
-        set(WITH_PTHREAD yes)
+    if (BUILD_BENCHMARKS_NONIUS)
+        if(NOT WIN32)
+            set(WITH_PTHREAD yes)
+        endif()
+        set(WITH_BOOST yes)
     endif()
-    set(WITH_BOOST yes)
 endif()
 
 if (WITH_PTHREAD)
@@ -433,6 +438,7 @@ message("HAVE_SYMENGINE_RESERVE: ${HAVE_SYMENGINE_RESERVE}")
 message("WITH_SYMENGINE_THREAD_SAFE: ${WITH_SYMENGINE_THREAD_SAFE}")
 message("BUILD_TESTS: ${BUILD_TESTS}")
 message("BUILD_BENCHMARKS: ${BUILD_BENCHMARKS}")
+message("BUILD_BENCHMARKS_NONIUS: ${BUILD_BENCHMARKS_NONIUS}")
 
 message("GMP_INCLUDE_DIRS: ${GMP_INCLUDE_DIRS}")
 message("GMP_LIBRARIES: ${GMP_LIBRARIES}")
