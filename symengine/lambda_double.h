@@ -1,10 +1,6 @@
 #ifndef SYMENGINE_LAMBDA_DOUBLE_H
 #define SYMENGINE_LAMBDA_DOUBLE_H
 
-#include <cmath>
-#include <functional>
-#include <complex>
-
 #include <symengine/basic.h>
 #include <symengine/symbol.h>
 #include <symengine/add.h>
@@ -20,8 +16,8 @@
 
 namespace SymEngine {
 
-template<typename T, typename U>
-class LambdaDoubleVisitor : public BaseVisitor<U> {
+template<typename T>
+class LambdaDoubleVisitor : public BaseVisitor<LambdaDoubleVisitor<T>> {
 protected:
 /*
    The 'result_' variable is assigned into at the very end of each visit()
@@ -35,8 +31,6 @@ protected:
     fn result_;
     vec_basic symbols;
 public:
-    LambdaDoubleVisitor(U *p) : BaseVisitor<U>(p) {
-    }
 
     void init(const vec_basic &x, const Basic &b) {
         symbols = x;
@@ -77,7 +71,7 @@ public:
     void bvisit(const Add &x) {
         fn tmp = apply(*x.coef_);
         fn tmp1, tmp2;
-        for (auto &p: x.dict_) {
+        for (const auto &p: x.dict_) {
             tmp1 = apply(*(p.first));
             tmp2 = apply(*(p.second));
             tmp = [=](const std::vector<T> &x){ return tmp(x) + tmp1(x) * tmp2(x); };
@@ -88,7 +82,7 @@ public:
     void bvisit(const Mul &x) {
         fn tmp = apply(*x.coef_);
         fn tmp1, tmp2;
-        for (auto &p: x.dict_) {
+        for (const auto &p: x.dict_) {
             tmp1 = apply(*(p.first));
             tmp2 = apply(*(p.second));
             tmp = [=](const std::vector<T> &x){ return tmp(x) * std::pow(tmp1(x), tmp2(x)); };
@@ -247,9 +241,8 @@ public:
 };
 
 
-class LambdaRealDoubleVisitor : public LambdaDoubleVisitor<double, LambdaRealDoubleVisitor> {
+class LambdaRealDoubleVisitor : public BaseVisitor<LambdaRealDoubleVisitor, LambdaDoubleVisitor<double>> {
 public:
-    LambdaRealDoubleVisitor() : LambdaDoubleVisitor(this) { };
 
     // Classes not implemented are
     // Subs, UpperGamma, LowerGamma, Dirichlet_eta, Zeta
@@ -270,9 +263,8 @@ public:
     };
 };
 
-class LambdaComplexDoubleVisitor : public LambdaDoubleVisitor<std::complex<double>, LambdaComplexDoubleVisitor> {
+class LambdaComplexDoubleVisitor : public BaseVisitor<LambdaComplexDoubleVisitor, LambdaDoubleVisitor<std::complex<double>>> {
 public:
-    LambdaComplexDoubleVisitor() : LambdaDoubleVisitor(this) { };
 
     // Classes not implemented are
     // Subs, UpperGamma, LowerGamma, Dirichlet_eta, Zeta

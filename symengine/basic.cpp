@@ -32,16 +32,6 @@ std::string Basic::__str__() const
     return strPrinter.apply(*this);
 }
 
-RCP<const Basic> expand(const RCP<const Basic> &self)
-{
-    if (is_a<Symbol>(*self)) return self;
-    if (is_a_Number(*self)) return self;
-    if (is_a<Add>(*self)) return add_expand(rcp_static_cast<const Add>(self));
-    if (is_a<Mul>(*self)) return mul_expand(rcp_static_cast<const Mul>(self));
-    if (is_a<Pow>(*self)) return pow_expand(rcp_static_cast<const Pow>(self));
-    return self;
-}
-
 RCP<const Basic> Basic::subs(const map_basic_basic &subs_dict) const
 {
     RCP<const Basic> self = rcp_from_this();

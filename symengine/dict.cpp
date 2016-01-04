@@ -133,7 +133,7 @@ bool vec_basic_eq_perm(const vec_basic &a, const vec_basic &b)
             }
         }
         // If not found, then a != b
-        if (!found) return false;
+        if (not found) return false;
     }
     // If all elements were found, then a == b
     return true;
@@ -159,7 +159,7 @@ bool map_uint_mpz_eq(const map_uint_mpz &a,
     // Can't be equal if # of entries differ:
     if (a.size() != b.size()) return false;
     // Loop over keys in "a":
-    for (auto &p: a) {
+    for (const auto &p: a) {
         auto f = b.find(p.first);
         if (f == b.end()) return false; // no such element in "b"
         if (p.second != f->second) return false; // values not equal
@@ -183,4 +183,3 @@ int map_uint_mpz_compare(const map_uint_mpz &A, const map_uint_mpz &B)
 }
 
 }
-

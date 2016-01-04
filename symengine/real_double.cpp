@@ -3,7 +3,6 @@
  *  Class for RealDouble built on top of Number class
  *
  **/
-#include <cmath>
 #include <symengine/basic.h>
 #include <symengine/real_double.h>
 #include <symengine/complex_double.h>
@@ -111,7 +110,7 @@ class EvaluateRealDouble : public EvaluateDouble<RealDouble> {
     virtual RCP<const Basic> asin(const Basic &x) const {
         SYMENGINE_ASSERT(is_a<RealDouble>(x))
         double d = static_cast<const RealDouble &>(x).i;
-        if (d <= 1.0 && d >= -1.0) {
+        if (d <= 1.0 and d >= -1.0) {
             return number(std::asin(d));
         } else {
             return number(std::asin(std::complex<double>(d)));
@@ -120,7 +119,7 @@ class EvaluateRealDouble : public EvaluateDouble<RealDouble> {
     virtual RCP<const Basic> acos(const Basic &x) const {
         SYMENGINE_ASSERT(is_a<RealDouble>(x))
         double d = static_cast<const RealDouble &>(x).i;
-        if (d <= 1.0 && d >= -1.0) {
+        if (d <= 1.0 and d >= -1.0) {
             return number(std::acos(d));
         } else {
             return number(std::acos(std::complex<double>(d)));
@@ -129,7 +128,7 @@ class EvaluateRealDouble : public EvaluateDouble<RealDouble> {
     virtual RCP<const Basic> acsc(const Basic &x) const {
         SYMENGINE_ASSERT(is_a<RealDouble>(x))
         double d = static_cast<const RealDouble &>(x).i;
-        if (d >= 1.0 || d <= -1.0) {
+        if (d >= 1.0 or d <= -1.0) {
             return number(std::asin(1.0/d));
         } else {
             return number(std::asin(1.0/std::complex<double>(d)));
@@ -138,7 +137,7 @@ class EvaluateRealDouble : public EvaluateDouble<RealDouble> {
     virtual RCP<const Basic> asec(const Basic &x) const {
         SYMENGINE_ASSERT(is_a<RealDouble>(x))
         double d = static_cast<const RealDouble &>(x).i;
-        if (d >= 1.0 || d <= -1.0) {
+        if (d >= 1.0 or d <= -1.0) {
             return number(std::acos(1.0/d));
         } else {
             return number(std::acos(1.0/std::complex<double>(d)));
@@ -156,7 +155,7 @@ class EvaluateRealDouble : public EvaluateDouble<RealDouble> {
     virtual RCP<const Basic> atanh(const Basic &x) const {
         SYMENGINE_ASSERT(is_a<RealDouble>(x))
         double d = static_cast<const RealDouble &>(x).i;
-        if (d <= 1.0 && d >= -1.0) {
+        if (d <= 1.0 and d >= -1.0) {
             return number(std::atanh(d));
         } else {
             return number(std::atanh(std::complex<double>(d)));
@@ -165,7 +164,7 @@ class EvaluateRealDouble : public EvaluateDouble<RealDouble> {
     virtual RCP<const Basic> acoth(const Basic &x) const {
         SYMENGINE_ASSERT(is_a<RealDouble>(x))
         double d = static_cast<const RealDouble &>(x).i;
-        if (d >= 1.0 || d <= -1.0) {
+        if (d >= 1.0 or d <= -1.0) {
             return number(std::atanh(1.0/d));
         } else {
             return number(std::atanh(1.0/std::complex<double>(d)));

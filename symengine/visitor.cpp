@@ -1,5 +1,3 @@
-#include <cmath>
-
 #include <symengine/basic.h>
 #include <symengine/symbol.h>
 #include <symengine/add.h>
@@ -27,21 +25,20 @@ namespace SymEngine {
 void preorder_traversal(const Basic &b, Visitor &v)
 {
     b.accept(v);
-    for (auto &p: b.get_args()) preorder_traversal(*p, v);
+    for (const auto &p: b.get_args()) preorder_traversal(*p, v);
 }
 
 void postorder_traversal(const Basic &b, Visitor &v)
 {
-    for (auto &p: b.get_args()) postorder_traversal(*p, v);
+    for (const auto &p: b.get_args()) postorder_traversal(*p, v);
     b.accept(v);
 }
 
-template<class T>
-void preorder_traversal_stop(const Basic &b, StopVisitor<T> &v)
+void preorder_traversal_stop(const Basic &b, StopVisitor &v)
 {
     b.accept(v);
     if (v.stop_) return;
-    for (auto &p: b.get_args()) {
+    for (const auto &p: b.get_args()) {
         preorder_traversal_stop(*p, v);
         if (v.stop_) return;
     }
@@ -63,7 +60,6 @@ RCP<const Basic> coeff(const Basic &b, const RCP<const Symbol> &x,
 class FreeSymbolsVisitor : public BaseVisitor<FreeSymbolsVisitor> {
 public:
     set_basic s;
-    FreeSymbolsVisitor() : BaseVisitor<FreeSymbolsVisitor>(this) { };
 
     void bvisit(const Symbol &x) {
         s.insert(x.rcp_from_this());
@@ -71,17 +67,17 @@ public:
 
     void bvisit(const Subs &x) {
         set_basic set_ = free_symbols(*x.get_arg());
-        for (auto &p: x.get_variables()) {
+        for (const auto &p: x.get_variables()) {
             set_.erase(p);
         }
         s.insert(set_.begin(), set_.end());
-        for (auto &p: x.get_point()) {
+        for (const auto &p: x.get_point()) {
             p->accept(*this);
         }
     }
 
     void bvisit(const Basic &x) {
-        for (auto &p: x.get_args()) {
+        for (const auto &p: x.get_args()) {
             p->accept(*this);
         }
     }
@@ -98,4 +94,3 @@ set_basic free_symbols(const Basic &b) {
 }
 
 } // SymEngine
-

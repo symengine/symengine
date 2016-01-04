@@ -7,9 +7,6 @@
 #ifndef SYMENGINE_EXPRESSION_H
 #define SYMENGINE_EXPRESSION_H
 
-#include <iostream>
-#include <type_traits>
-
 #include <symengine/add.h>
 #include <symengine/basic.h>
 #include <symengine/symengine_rcp.h>
@@ -89,7 +86,7 @@ public:
         retval *= -1;
         return retval;
     }
-    //! Overload subtraction and assignment(-=)	
+    //! Overload subtraction and assignment(-=)
     Expression &operator-=(const Expression &other)
     {
         m_basic = sub(m_basic, other.m_basic);
@@ -114,7 +111,7 @@ public:
     //! Overload check not equal (!=)
     bool operator!=(const Expression &other) const
     {
-        return !(*this == other);
+        return not (*this == other);
     }
     //! Method to get Basic from Expression
     const RCP<const Basic> &get_basic() const

@@ -12,9 +12,7 @@ enum class PrecedenceEnum {
 class Precedence : public BaseVisitor<Precedence> {
 public:
     PrecedenceEnum precedence;
-    Precedence() : BaseVisitor<Precedence>(this) {
 
-    }
     void bvisit(const Add &x) {
         precedence = PrecedenceEnum::Add;
     }
@@ -33,13 +31,13 @@ public:
             if (it->second == 0) {
                 precedence = PrecedenceEnum::Atom;
             } else if (it->second == 1) {
-                if (it->first == 0 || it->first == 1) {
+                if (it->first == 0 or it->first == 1) {
                     precedence = PrecedenceEnum::Atom;
                 } else {
                     precedence = PrecedenceEnum::Pow;
                 }
             } else {
-                if (it->first == 0 && it->second >= 0) {
+                if (it->first == 0 and it->second >= 0) {
                     precedence = PrecedenceEnum::Atom;
                 } else {
                     precedence = PrecedenceEnum::Mul;
@@ -111,10 +109,9 @@ public:
 };
 
 class StrPrinter : public BaseVisitor<StrPrinter> {
-private:
+protected:
     std::string str_;
 public:
-    StrPrinter();
     static const std::vector<std::string> names_;
     void bvisit(const Basic &x);
     void bvisit(const Symbol &x);
@@ -139,6 +136,7 @@ public:
 #ifdef HAVE_SYMENGINE_MPC
     void bvisit(const ComplexMPC &x);
 #endif
+    void bvisit(const NumberWrapper &x);
 
     std::string parenthesizeLT(const RCP<const Basic> &x, PrecedenceEnum precedenceEnum);
     std::string parenthesizeLE(const RCP<const Basic> &x, PrecedenceEnum precedenceEnum);

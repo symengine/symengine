@@ -16,6 +16,14 @@ add_executable(test_polynomial test_polynomial.cpp)
 target_link_libraries(test_polynomial symengine catch)
 add_test(test_polynomial ${PROJECT_BINARY_DIR}/test_polynomial)
 
+add_executable(test_series test_series.cpp)
+target_link_libraries(test_series symengine catch)
+add_test(test_series ${PROJECT_BINARY_DIR}/test_series)
+
+add_executable(test_series_expansion test_series_expansion.cpp)
+target_link_libraries(test_series_expansion symengine catch)
+add_test(test_series_expansion ${PROJECT_BINARY_DIR}/test_series_expansion)
+
 add_executable(test_functions test_functions.cpp)
 target_link_libraries(test_functions symengine catch)
 add_test(test_functions ${PROJECT_BINARY_DIR}/test_functions)
@@ -27,6 +35,10 @@ add_test(test_subs ${PROJECT_BINARY_DIR}/test_subs)
 add_executable(test_integer test_integer.cpp)
 target_link_libraries(test_integer symengine catch)
 add_test(test_integer ${PROJECT_BINARY_DIR}/test_integer)
+
+add_executable(test_rational test_rational.cpp)
+target_link_libraries(test_rational symengine catch)
+add_test(test_rational ${PROJECT_BINARY_DIR}/test_rational)
 
 add_executable(test_number test_number.cpp)
 target_link_libraries(test_number symengine catch)

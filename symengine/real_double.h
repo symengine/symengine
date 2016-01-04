@@ -6,8 +6,6 @@
 #ifndef SYMENGINE_REAL_DOUBLE_H
 #define SYMENGINE_REAL_DOUBLE_H
 
-#include <cmath>
-#include <complex>
 #include <symengine/basic.h>
 #include <symengine/number.h>
 #include <symengine/integer.h>
@@ -351,7 +349,7 @@ public:
             return other.rpow(*this);
         }
     }
-    
+
     /*! Raise `other` to power RealDouble
      * \param other of type Integer
      * */
@@ -371,7 +369,7 @@ public:
         }
         return make_rcp<const RealDouble>(std::pow(other.i.get_d(), i));
     }
-    
+
     /*! Raise `other` to power RealDouble
      * \param other of type Complex
      * */

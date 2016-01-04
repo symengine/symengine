@@ -6,8 +6,6 @@
 #ifndef SYMENGINE_REAL_MPC_H
 #define SYMENGINE_REAL_MPC_H
 
-#include <cmath>
-#include <complex>
 #include <symengine/basic.h>
 #include <symengine/number.h>
 #include <symengine/integer.h>

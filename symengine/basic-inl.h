@@ -10,10 +10,10 @@ inline std::size_t Basic::hash() const
     return hash_;
 }
 
-//! \return true if not equal    
+//! \return true if not equal
 inline bool Basic::__neq__(const Basic &o) const
 {
-    return !(this->__eq__(o));
+    return not (this->__eq__(o));
 }
 
 //! \return true if  `a` equal `b`
@@ -24,7 +24,7 @@ inline bool eq(const Basic &a, const Basic &b)
 //! \return true if  `a` not equal `b`
 inline bool neq(const Basic &a, const Basic &b)
 {
-    return !(a.__eq__(b));
+    return not (a.__eq__(b));
 }
 
 //! Templatised version to check is_a type
