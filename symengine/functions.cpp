@@ -2903,25 +2903,28 @@ PolyGamma::PolyGamma(const RCP<const Basic> &n, const RCP<const Basic> &x)
 
 bool PolyGamma::is_canonical(const RCP<const Basic> &n, const RCP<const Basic> &x)
 {
-    if(is_a<Integer>(*n)) {
-        auto n_int = rcp_static_cast<const Integer>(n); 
-        if(n_int->is_negative()) {
-            return true;
+    if(is_a_Number(*x) and not (rcp_static_cast<const Number>(x))->is_positive()) {
+        return false;
+    }
+    if (eq(*n, *zero)) {
+        if(eq(*x, *one)) {
+        	return false;
         }
-        if(eq(*n_int, *zero) and is_a<Rational>(*x)) {
-            auto n_rat = rcp_static_cast<const Rational>(n);
-            auto num = n_rat->i.get_num();
-            auto den = n_rat->i.get_den();
+        if(is_a<Rational>(*x)) {
+            auto x_ = rcp_static_cast<const Rational>(x);
+            auto num = x_->i.get_num();
+            auto den = x_->i.get_den();
             if(den == 2 and (num == 1 or num == 3)) {
                 return false;
             }
             if(den == 4 and num == 1) {
                 return false;
-            }                
+            }
         }
     }
     return true;
 }
+
 
 std::size_t PolyGamma::__hash__() const
 {
@@ -2943,7 +2946,13 @@ bool PolyGamma::__eq__(const Basic &o) const
 int PolyGamma::compare(const Basic &o) const
 {
     SYMENGINE_ASSERT(is_a<PolyGamma>(o))
-    throw std::runtime_error("Not yet implemented");
+    const PolyGamma &pg = static_cast<const PolyGamma &>(o);
+    if (neq(*n_, *(pg.n_))) {
+        return n_->__cmp__(*(pg.n_));
+    }
+    else {
+        return x_->__cmp__(*(pg.x_));
+    }
 }
 
 RCP<const Basic> PolyGamma::rewrite_as_zeta() const
