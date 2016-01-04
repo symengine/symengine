@@ -567,6 +567,9 @@ public:
     inline RCP<const Basic> get_arg() const {
         return arg_;
     }
+    inline const map_basic_basic& get_dict() const {
+        return dict_;
+    };
     virtual vec_basic get_variables() const;
     virtual vec_basic get_point() const;
     virtual vec_basic get_args() const;
