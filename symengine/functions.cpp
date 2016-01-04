@@ -2917,6 +2917,9 @@ Beta::Beta(const RCP<const Basic> &x, const RCP<const Basic> &y)
 
 bool Beta::is_canonical(const RCP<const Basic> &x, const RCP<const Basic> &y)
 {
+    if(x->__cmp__(*y) == -1) {
+        return false;
+    }
     if (is_a<Integer>(*x) or (is_a<Rational>(*x) and
         (rcp_static_cast<const Rational>(x)->i.get_den()) == 2)) 
     {
@@ -2930,9 +2933,11 @@ bool Beta::is_canonical(const RCP<const Basic> &x, const RCP<const Basic> &y)
 
 std::size_t Beta::__hash__() const
 {
-    std::size_t seed = BETA;
-    hash_combine<Basic>(seed, *add(x_, y_));
-    return seed;
+    std::size_t seedx = BETA;
+    std::size_t seedy = BETA;
+    hash_combine<Basic>(seedx, *x_);
+    hash_combine<Basic>(seedy, *y_);
+    return seedx^seedy;
 }
 
 bool Beta::__eq__(const Basic &o) const
@@ -2951,31 +2956,25 @@ bool Beta::__eq__(const Basic &o) const
 int Beta::compare(const Basic &o) const
 {
     SYMENGINE_ASSERT(is_a<Beta>(o))
-    const Beta &lg = static_cast<const Beta &>(o);
-    if (eq(*x_, *(lg.x_))) {
+    const Beta &b = static_cast<const Beta &>(o);
+    if (eq(*x_, *(b.x_))) {
         return y_->__cmp__(*(static_cast<const Beta &>(o).y_));
     }
-    if (eq(*x_, *(lg.y_))) {
-        return y_->__cmp__(*(static_cast<const Beta &>(o).x_));
-    }
-    if (eq(*y_,*(lg.y_))) {
-        return x_->__cmp__(*(static_cast<const Beta&>(o).x_));
-    }
-    if (eq(*y_,*(lg.x_))) {
-        return x_->__cmp__(*(static_cast<const Beta&>(o).y_));
-    }
-    throw std::runtime_error("Not yet implemented");
+    return x_->__cmp__(*(static_cast<const Beta &>(o).x_));
 }
 
 RCP<const Basic> Beta::rewrite_as_gamma() const
 {
-    return div(mul(gamma(x_),gamma(y_)),add(x_,y_));
+    return div(mul(gamma(x_), gamma(y_)), add(x_, y_));
 }
 
 RCP<const Basic> beta(const RCP<const Basic> &x, const RCP<const Basic> &y)
 {
+    if(x->__cmp__(*y) == -1) {
+        return beta(y, x);
+    }
     // Only special values are being evaluated    
-    if(eq(*add(x,y),*one)) {
+    if(eq(*add(x, y), *one)) {
         throw std::runtime_error("Complex Infinity not yet implemented");
     }
 
@@ -2985,7 +2984,7 @@ RCP<const Basic> beta(const RCP<const Basic> &x, const RCP<const Basic> &y)
             if (is_a<Integer>(*y)) {
                 RCP<const Integer> y_int = rcp_static_cast<const Integer>(y);
                 if (y_int->is_positive()) {
-                    return div(mul(gamma_positive_int(x),gamma_positive_int(y)),gamma_positive_int(add(x,y)));
+                    return div(mul(gamma_positive_int(x), gamma_positive_int(y)), gamma_positive_int(add(x, y)));
                 }
                 else{
                     throw std::runtime_error("Complex Infinity not yet implemented");
@@ -2994,10 +2993,10 @@ RCP<const Basic> beta(const RCP<const Basic> &x, const RCP<const Basic> &y)
             else if(is_a<Rational>(*y)) {
                 RCP<const Rational> y_ = rcp_static_cast<const Rational>(y);
                 if ((y_->i.get_den()) == 2) {
-                    return div(mul(gamma_positive_int(x),gamma_multiple_2(y)),gamma_multiple_2(add(x,y)));
+                    return div(mul(gamma_positive_int(x), gamma_multiple_2(y)), gamma_multiple_2(add(x, y)));
                 }
                 else {
-                    return make_rcp<const Beta>(x,y);
+                    return make_rcp<const Beta>(x, y);
                 } 
             }
         }
@@ -3012,10 +3011,10 @@ RCP<const Basic> beta(const RCP<const Basic> &x, const RCP<const Basic> &y)
          if(is_a<Rational>(*x)) {
                 RCP<const Rational> x_ = rcp_static_cast<const Rational>(x);
                 if ((x_->i.get_den()) == 2) {
-                    return div(mul(gamma_positive_int(y),gamma_multiple_2(x)),gamma_multiple_2(add(x,y)));
+                    return div(mul(gamma_positive_int(y), gamma_multiple_2(x)), gamma_multiple_2(add(x, y)));
                 }
                 else {
-                    return make_rcp<const Beta>(x,y);
+                    return make_rcp<const Beta>(x, y);
                 } 
             }
         }
@@ -3028,14 +3027,14 @@ RCP<const Basic> beta(const RCP<const Basic> &x, const RCP<const Basic> &y)
             if(is_a<Integer>(*y)) {
                 RCP<const Integer> y_int = rcp_static_cast<const Integer>(y);
                 if(y_int->is_positive()) {
-                    return div(mul(gamma_multiple_2(x),gamma_positive_int(y)),gamma_multiple_2(add(x,y)));
+                    return div(mul(gamma_multiple_2(x), gamma_positive_int(y)), gamma_multiple_2(add(x, y)));
                 }
                 else {
                     throw std::runtime_error("Complex Infinity not yet implemented");
                 }
             }
             if(is_a<const Rational>(*y) and (rcp_static_cast<const Rational>(y))->i.get_den() == 2) {
-                return div(mul(gamma_multiple_2(x),gamma_multiple_2(y)),gamma_positive_int(add(x,y)));
+                return div(mul(gamma_multiple_2(x), gamma_multiple_2(y)), gamma_positive_int(add(x, y)));
             }
     }
 

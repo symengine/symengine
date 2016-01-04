@@ -1769,18 +1769,18 @@ TEST_CASE("Beta: functions", "[functions]")
     r1 = beta(i3, i2);
     r2 = beta(i2, i3);
     REQUIRE(eq(*r1, *r2));
-    r3 = div(mul(gamma(i3),gamma(i2)),gamma(add(i2,i3)));
+    r3 = div(mul(gamma(i3), gamma(i2)), gamma(add(i2, i3)));
     REQUIRE(eq(*r1, *r3));
-    r2 = div(one,integer(12));
+    r2 = div(one, integer(12));
     REQUIRE(eq(*r1, *r2));	
 
-    r1 = make_rcp<const Beta>(x,y);
-    r2 = make_rcp<const Beta>(y,x);
+    r1 = beta(x, y);
+    r2 = beta(y, x);
     REQUIRE(eq(*r1, *r2));
     REQUIRE(r1->__hash__() == r2->__hash__());
-    r1 = beta(div(one,i2),div(i3,i2));
-    r2 = div(pi,i2);
-    REQUIRE(eq(*r1,*r2));
+    r1 = beta(div(one, i2), div(i3, i2));
+    r2 = div(pi, i2);
+    REQUIRE(eq(*r1, *r2));
 }
 
 TEST_CASE("Lowergamma: functions", "[functions]")

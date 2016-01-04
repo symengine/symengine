@@ -1060,7 +1060,7 @@ class Beta: public Function {
  *     of the first kind, is a special function defined by
  *
  *   .. math::
- *      \Beta(x,y) := \int^{1}_{0} t^{x-1} (1-t)^{y-1} \mathrm{d}t.
+ *      \Beta(x, y) := \int^{1}_{0} t^{x-1} (1-t)^{y-1} \mathrm{d}t.
  **/
 private:
     RCP<const Basic> x_;
