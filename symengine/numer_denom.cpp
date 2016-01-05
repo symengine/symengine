@@ -25,18 +25,52 @@ public:
 
     void bvisit(const Mul &x) {
 
-        RCP<const Basic> num = one;
-        RCP<const Basic> den = one;
+        RCP<const Basic> curr_num = one;
+        RCP<const Basic> curr_den = one;
         RCP<const Basic> arg_num, arg_den;
 
         for (const auto &arg: x.get_args()) {
             as_numer_denom(arg, outArg(arg_num), outArg(arg_den));
-            num = mul(num, arg_num);
-            den = mul(den, arg_den);
+            curr_num = mul(curr_num, arg_num);
+            curr_den = mul(curr_den, arg_den);
         }
 
-        *numer_ = num;
-        *denom_ = den;
+        *numer_ = curr_num;
+        *denom_ = curr_den;
+    }
+
+    void bvisit(const Add &x) {
+
+        RCP<const Basic> curr_num = zero;
+        RCP<const Basic> curr_den = one;
+        RCP<const Basic> arg_num, arg_den, den_mul, divx;
+        RCP<const Basic> divx_num, divx_den;
+
+        for (const auto &arg: x.get_args()) {
+            as_numer_denom(arg, outArg(arg_num), outArg(arg_den));
+
+            divx = div(arg_den, curr_den);
+            as_numer_denom(divx, outArg(divx_num), outArg(divx_den));
+            if (eq(*divx_den, *one)) {
+                // the curr_den completely divides the arg_den 
+                // can be made more extensive
+                curr_den = arg_den;
+                curr_num = add(mul(curr_num, divx), arg_num);
+                continue;
+            }
+
+            divx = div(curr_den, arg_den);
+            as_numer_denom(divx, outArg(divx_num), outArg(divx_den));
+            // if (eq(*divx_den, *one)) {
+            //     curr_num = add(mul(arg_num, divx), curr_num);
+            //     continue;
+            // } !! The below two 'general' statements cover this case
+            curr_den = mul(curr_den, divx_den);
+            curr_num = add(mul(curr_num, divx_den), mul(arg_num, divx_num));
+        }
+
+        *numer_ = curr_num;
+        *denom_ = curr_den;
     }
 
     void bvisit(const Pow &x) {

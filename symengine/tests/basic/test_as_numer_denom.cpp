@@ -63,7 +63,7 @@ TEST_CASE("NumerDenom: Rational", "[as_numer_denom]")
 
     as_numer_denom(r6_m2, outArg(num), outArg(den));
     REQUIRE(eq(*num, *integer(-3)));
-    REQUIRE(eq(*den, *integer(1)));
+    REQUIRE(eq(*den, *one));
     REQUIRE(is_a<Integer>(*num));
 }
 
@@ -114,4 +114,36 @@ TEST_CASE("NumerDenom: Pow", "[as_numer_denom]")
     as_numer_denom(r1, outArg(num), outArg(den));
     REQUIRE(eq(*num, *pow(integer(5), mul(i3, x))));
     REQUIRE(eq(*den, *pow(integer(2), mul(i3, x))));
+}
+
+TEST_CASE("NumerDenom: Add", "[as_numer_denom]")
+{
+    RCP<const Symbol> x  = symbol("x");
+    RCP<const Symbol> y  = symbol("y");
+    RCP<const Symbol> z  = symbol("z");
+    RCP<const Basic> r1, num, den;
+
+    // (1/x^2) + x^2
+    r1 = add(pow(x, integer(2)), pow(x, integer(-2)));
+    as_numer_denom(r1, outArg(num), outArg(den));
+    REQUIRE(eq(*num, *add(pow(x, integer(4)), one))); // x^4 + 1
+    REQUIRE(eq(*den, *pow(x, integer(2))));                 // x^2
+
+    // (1/x^3) + (1/x^6)
+    r1 = add(pow(x, integer(-3)), pow(x, integer(-6)));
+    as_numer_denom(r1, outArg(num), outArg(den));
+    REQUIRE(eq(*num, *add(pow(x, integer(3)), one))); // x^3 + 1
+    REQUIRE(eq(*den, *pow(x, integer(6))));                 // x^6
+
+    // (x/4) + (y/6)
+    r1 = add(div(x, integer(4)), div(y, integer(6)));
+    as_numer_denom(r1, outArg(num), outArg(den));
+    REQUIRE(eq(*num, *add(mul(integer(3), x), mul(integer(2), y)))); // 3*x + 2*y
+    REQUIRE(eq(*den, *integer(12)));                 // 12
+
+    // (1/xy) + (1/yz)
+    r1 = add(div(one, mul(x, y)), div(one, mul(y, z)));
+    as_numer_denom(r1, outArg(num), outArg(den));
+    REQUIRE(eq(*num, *add(x, z))); // x + z
+    REQUIRE(eq(*den, *mul(x, mul(y, z))));                 // x*y*z
 }
