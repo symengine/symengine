@@ -507,7 +507,7 @@ void csr_scale_rows(CSRMatrix& A, const DenseMatrix& X)
 }
 
 // Scale the columns of a CSR matrix *in place*
-// A[:,i] *= X[i]
+// A[:, i] *= X[i]
 void csr_scale_columns(CSRMatrix& A, const DenseMatrix& X)
 {
     SYMENGINE_ASSERT(A.col_ == X.nrows() and X.ncols() == 1);

@@ -16,6 +16,8 @@ addons:
     - libmpc-dev
     - binutils-dev
     - g++-4.7
+    - gcc-5
+    - g++-5
 env:
   ## All these variables are sent into the bin/test_travis.sh script. See this
   ## script to know how they are used. Most of them are just passed to cmake,
@@ -25,8 +27,10 @@ env:
   ## executed.
 
   ## Out of tree builds (default):
+  # Debug build (with BFD) with LATEST_GCC
+  - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_LATEST_GCC="yes"
   # Debug build (with BFD)
-  - BUILD_TYPE="Debug" WITH_BFD="yes" TEST_TRAILING_WS="yes"
+  - BUILD_TYPE="Debug" WITH_BFD="yes" TEST_CODE_QUALITY="yes"
   # Debug build (with BFD and SYMENGINE_THREAD_SAFE)
   - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_SYMENGINE_THREAD_SAFE="yes"
   # Debug build (with BFD) with ECM
@@ -49,7 +53,6 @@ env:
   ## In-tree builds (we just check a few configurations to make sure they work):
   # Debug build:
   - BUILD_TYPE="Debug" WITH_BFD="yes" TEST_IN_TREE="yes"
-
 
 matrix:
   exclude:

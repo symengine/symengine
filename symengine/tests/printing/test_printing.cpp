@@ -82,7 +82,7 @@ TEST_CASE("test_printing(): printing", "[printing]")
     r = pow(div(symbol("x"), integer(2)), div(integer(1), integer(2)));
     REQUIRE(r->__str__() == "(1/2)**(1/2)*x**(1/2)");
 
-    r = pow(div(integer(3), integer(2)),div(integer(1), integer(2)));
+    r = pow(div(integer(3), integer(2)), div(integer(1), integer(2)));
     REQUIRE(r->__str__() == "(3/2)**(1/2)");
 
     r1 = mul(integer(12), pow(integer(196), div(integer(-1), integer(2))));

@@ -56,7 +56,7 @@ bool inverse_lookup(umap_basic_basic &d, const RCP<const Basic> &t,
 
 // \return true of conjugate has to be returned finally else false
 bool eval(const RCP<const Basic> &arg, unsigned period, bool odd, bool conj_odd, //input
-            const Ptr<RCP<const Basic>>& rarg,int& index, int& sign); //output
+            const Ptr<RCP<const Basic>>& rarg, int& index, int& sign); //output
 
 //! \return `sqrt` of the `arg`
 RCP<const Basic> sqrt(const RCP<const Basic> &arg);
