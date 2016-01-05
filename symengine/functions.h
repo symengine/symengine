@@ -1069,7 +1069,9 @@ private:
 public:
     IMPLEMENT_TYPEID(POLYGAMMA)
     //! PolyGamma Constructor
-    PolyGamma(const RCP<const Basic> &n, const RCP<const Basic> &x);
+    PolyGamma(const RCP<const Basic> &n, const RCP<const Basic> &x): n_{n}, x_{x} {
+        SYMENGINE_ASSERT(is_canonical(n_, x_))
+    }
     /*! Equality comparator
      * \param o - Object to be compared with
      * \return whether the 2 objects are equal

@@ -2894,13 +2894,6 @@ RCP<const Basic> uppergamma(const RCP<const Basic> &s, const RCP<const Basic> &x
     return make_rcp<const UpperGamma>(s, x);
 }
 
-
-PolyGamma::PolyGamma(const RCP<const Basic> &n, const RCP<const Basic> &x)
-    : n_{n}, x_{x}
-{
-    SYMENGINE_ASSERT(is_canonical(n_, x_))
-}
-
 bool PolyGamma::is_canonical(const RCP<const Basic> &n, const RCP<const Basic> &x)
 {
     if(is_a_Number(*x) and not (rcp_static_cast<const Number>(x))->is_positive()) {
