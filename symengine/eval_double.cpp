@@ -17,8 +17,8 @@
 
 namespace SymEngine {
 
-template <typename T>
-class EvalDoubleVisitor : public BaseVisitor<EvalDoubleVisitor<T>> {
+template <typename T, typename C>
+class EvalDoubleVisitor : public BaseVisitor<C> {
 protected:
     /*
        The 'result_' variable is assigned into at the very end of each visit()
@@ -31,7 +31,7 @@ protected:
 public:
 
     T apply(const Basic &b) {
-        b.accept(*this);
+        b.accept(*static_cast<C*>(this));
         return result_;
     }
 
@@ -221,7 +221,7 @@ public:
     }
 };
 
-class EvalRealDoubleVisitor : public BaseVisitor<EvalRealDoubleVisitor, EvalDoubleVisitor<double>> {
+class EvalRealDoubleVisitor : public EvalDoubleVisitor<double, EvalRealDoubleVisitor> {
 public:
 
     // Classes not implemented are
@@ -243,7 +243,8 @@ public:
     };
 };
 
-class EvalComplexDoubleVisitor : public BaseVisitor<EvalComplexDoubleVisitor, EvalDoubleVisitor<std::complex<double>>> {
+class EvalComplexDoubleVisitor : public EvalDoubleVisitor<std::complex<double>,
+    EvalComplexDoubleVisitor> {
 public:
 
     // Classes not implemented are
@@ -447,5 +448,14 @@ std::complex<double> eval_complex_double(const Basic &b) {
 double eval_double_single_dispatch(const Basic &b) {
     return table_eval_double[b.get_type_code()](b);
 }
+
+
+#define ACCEPT(CLASS) void CLASS::accept(EvalRealDoubleVisitor &v) const { \
+    v.bvisit(*this); \
+}
+
+#define SYMENGINE_ENUM(TypeID, Class) ACCEPT(Class)
+#include "symengine/type_codes.inc"
+#undef SYMENGINE_ENUM
 
 } // SymEngine
