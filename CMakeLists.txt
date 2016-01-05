@@ -361,7 +361,7 @@ endforeach()
 
 # ... for the build tree
 set(CONF_INCLUDE_DIRS ${PROJECT_SOURCE_DIR} ${PROJECT_BINARY_DIR}
-                           ${PROJECT_SOURCE_DIR}/symengine/teuchos ${PROJECT_BINARY_DIR}/symengine/teuchos)
+                           ${PROJECT_SOURCE_DIR}/symengine/utilities/teuchos ${PROJECT_BINARY_DIR}/symengine/utilities/teuchos)
 set(SYMENGINE_BUILD_TREE yes)
 configure_file(cmake/SymEngineConfig.cmake.in
     "${PROJECT_BINARY_DIR}/SymEngineConfig.cmake" @ONLY)

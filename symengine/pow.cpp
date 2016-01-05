@@ -278,14 +278,6 @@ void multinomial_coefficients_mpz(int m, int n, map_vec_mpz &r)
     }
 }
 
-RCP<const Basic> Pow::diff(const RCP<const Symbol> &x) const
-{
-    if (is_a_Number(*exp_))
-        return mul(mul(exp_, pow(base_, sub(exp_, one))), base_->diff(x));
-    else
-        return mul(pow(base_, exp_), mul(exp_, log(base_))->diff(x));
-}
-
 RCP<const Basic> Pow::subs(const map_basic_basic &subs_dict) const
 {
     RCP<const Pow> self = rcp_from_this_cast<const Pow>();
@@ -372,11 +364,6 @@ RCP<const Basic> Log::subs(const map_basic_basic &subs_dict) const
     } else {
         return log(arg_new);
     }
-}
-
-RCP<const Basic> Log::diff(const RCP<const Symbol> &x) const
-{
-    return mul(div(one, arg_), arg_->diff(x));
 }
 
 RCP<const Basic> log(const RCP<const Basic> &arg)
