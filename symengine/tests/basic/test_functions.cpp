@@ -1824,7 +1824,7 @@ TEST_CASE("Polygamma: functions", "[functions]")
     r2 = add(neg(div(pi, i3)), sub(mul(im3, log(i2)), EulerGamma));
     REQUIRE(eq(*r1, *r2));
     
-    r1 = SymEngine::rcp_dynamic_cast<const PolyGamma>(polygamma(i2, x))->rewrite_as_zeta(); 
+    r1 = SymEngine::rcp_dynamic_cast<const PolyGamma>(polygamma(i2, x))->rewrite_as_zeta();
     r2 = neg(mul(i2, zeta(i3, x)));
     REQUIRE(eq(*r1, *r2));
 }
