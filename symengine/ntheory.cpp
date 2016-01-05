@@ -1513,6 +1513,7 @@ bool is_quad_residue(const Integer &a , const Integer &p)
         throw std::runtime_error("is_quad_residue: Second parameter must be > 0");
 
     mpz_class a_final;
+    a_final = a.as_mpz();//This is causing SEGFAULT ?
 
     if(a.as_mpz() >= p.as_mpz() || a.as_mpz() < 0)
         a_final = a.as_mpz() % p.as_mpz();
@@ -1521,6 +1522,7 @@ bool is_quad_residue(const Integer &a , const Integer &p)
         return true;
 
     if(!probab_prime_p(p.as_mpz(),0))
+     {
         if((p.as_mpz() % 2 == 1 ) && jacobi(*integer(a_final),p) == -1)
             return false;
 
@@ -1531,6 +1533,7 @@ bool is_quad_residue(const Integer &a , const Integer &p)
         bool r = true;
         r = nthroot_mod(outArg(x), a1, integer(2), p1);
         return r;
+    }
 
     mpz_t expo;
     mpz_pow_ui(expo, a_final.get_mpz_t(), ((mpz_class)((p.as_mpz()-1)/2)).get_ui());

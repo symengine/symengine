@@ -666,3 +666,35 @@ TEST_CASE("test_quadratic_residues(): ntheory", "[ntheory]")
     REQUIRE(quadratic_residues(*a100) == i100);
 }
 
+TEST_CASE("test_is_quad_residue(): ntheory", "[ntheory]")
+{
+    const RCP<const Integer> a1 = integer(1);
+    const RCP<const Integer> a3 = integer(3);
+    const RCP<const Integer> a4 = integer(4);
+    const RCP<const Integer> a7 = integer(7);
+    const RCP<const Integer> a100 = integer(100);
+
+    const RCP<const Integer> t0 = integer(0);
+    const RCP<const Integer> t1 = integer(1);
+    const RCP<const Integer> t3 = integer(3);
+    const RCP<const Integer> t4 = integer(4);
+    const RCP<const Integer> nt5 = integer(-5);
+    const RCP<const Integer> t7 = integer(7);
+    const RCP<const Integer> t56 = integer(56);
+    const RCP<const Integer> t89 = integer(89);
+
+    REQUIRE(is_quad_residue(*t0,*a1) == true);
+    REQUIRE(is_quad_residue(*t1,*a1) == true);
+    REQUIRE(is_quad_residue(*t0,*a4) == true);
+    REQUIRE(is_quad_residue(*t1,*a4) == true);
+    REQUIRE(is_quad_residue(*t4,*a4) == true);
+    REQUIRE(is_quad_residue(*nt5,*a3) == true);
+    REQUIRE(is_quad_residue(*t4,*a7) == true);
+    REQUIRE(is_quad_residue(*t56,*a100) == true);
+    REQUIRE(is_quad_residue(*t7,*a100) == false);
+    REQUIRE(is_quad_residue(*nt5,*a4) == false);
+    REQUIRE(is_quad_residue(*t4,*a100) == true);
+    REQUIRE(is_quad_residue(*t89,*a100) == true);
+    REQUIRE(is_quad_residue(*t3,*a100) == false);
+}
+
