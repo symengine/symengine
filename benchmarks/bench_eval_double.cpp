@@ -36,6 +36,15 @@ NONIUS_BENCHMARK("eval_double", [](nonius::chronometer meter) {
     });
 })
 
+NONIUS_BENCHMARK("eval_double_visitor_pattern", [](nonius::chronometer meter) {
+    RCP<const Basic> e = get_eval_double_expression();
+    double r;
+
+    meter.measure([&](int i) {
+        r = eval_double_visitor_pattern(*e);
+    });
+})
+
 NONIUS_BENCHMARK("eval_double_single_dispatch", [](nonius::chronometer meter) {
     RCP<const Basic> e = get_eval_double_expression();
     double r;
