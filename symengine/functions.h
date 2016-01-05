@@ -1069,6 +1069,9 @@ public:
     IMPLEMENT_TYPEID(BETA)
     //! Beta Constructor
     Beta(const RCP<const Basic> &x, const RCP<const Basic> &y);
+    //! return `Beta` with ordered arguments
+    inline static RCP<const Beta> from_two_basic(const RCP<const Basic> &x, const RCP<const Basic> &y);
+
     /*! Equality comparator
      * \param o - Object to be compared with
      * \return whether the 2 objects are equal

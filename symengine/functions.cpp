@@ -2915,6 +2915,14 @@ Beta::Beta(const RCP<const Basic> &x, const RCP<const Basic> &y)
     SYMENGINE_ASSERT(is_canonical(x_, y_))
 }
 
+RCP<const Beta> Beta::from_two_basic(const RCP<const Basic> &x, const RCP<const Basic> &y) 
+{
+        if(x->__cmp__(*y) == -1) {
+            return make_rcp<const Beta>(y, x);
+        }
+        return make_rcp<const Beta>(x, y);
+}
+
 bool Beta::is_canonical(const RCP<const Basic> &x, const RCP<const Basic> &y)
 {
     if(x->__cmp__(*y) == -1) {
@@ -2970,9 +2978,6 @@ RCP<const Basic> Beta::rewrite_as_gamma() const
 
 RCP<const Basic> beta(const RCP<const Basic> &x, const RCP<const Basic> &y)
 {
-    if(x->__cmp__(*y) == -1) {
-        return beta(y, x);
-    }
     // Only special values are being evaluated    
     if(eq(*add(x, y), *one)) {
         throw std::runtime_error("Complex Infinity not yet implemented");
@@ -2996,7 +3001,7 @@ RCP<const Basic> beta(const RCP<const Basic> &x, const RCP<const Basic> &y)
                     return div(mul(gamma_positive_int(x), gamma_multiple_2(y)), gamma_multiple_2(add(x, y)));
                 }
                 else {
-                    return make_rcp<const Beta>(x, y);
+                    return Beta::from_two_basic(x, y);
                 } 
             }
         }
@@ -3038,7 +3043,7 @@ RCP<const Basic> beta(const RCP<const Basic> &x, const RCP<const Basic> &y)
             }
     }
 
-    return make_rcp<const Beta>(x, y);
+    return Beta::from_two_basic(x, y);
     
 }
 
