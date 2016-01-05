@@ -99,6 +99,7 @@ their default values indicated below:
         -DWITH_MPC:BOOL=OFF \                         # Install with MPC library
         -DBUILD_TESTS:BOOL=ON \                       # Build with tests
         -DBUILD_BENCHMARKS:BOOL=ON \                  # Build with benchmarks
+        -DBUILD_BENCHMARKS_NONIUS:BOOL=OFF \          # Build with Nonius benchmarks
         .
 
 If `OPENMP` is enabled, then `SYMENGINE_THREAD_SAFE` is also enabled automatically
@@ -110,6 +111,15 @@ If you want to use a different compiler, do:
     CC=clang CXX=clang++ cmake .
 
 and check that CMake picked it up.
+
+The Nonius based benchmarks (`BUILD_BENCHMARKS_NONIUS`) and Piranha
+(`WITH_PIRANHA`) depend on Boost, so they are off by default. The bechmarked
+code (both with and without Nonius) seems to depend on the order of which you
+execute the benchmarks in a given executable, due to internal malloc
+implementation. We have found that this order dependence is reduced by enabling
+`WITH_TCMALLOC=ON` and since it also speeds the benchmarks up, we recommend
+to always use TCMalloc when benchmarking (and the `Release` mode of SymEngine,
+which is the default).
 
 ### External Libraries
 

@@ -54,6 +54,9 @@ fi
 if [[ "${WITH_PIRANHA}" != "" ]]; then
     cmake_line="$cmake_line -DWITH_PIRANHA=${WITH_PIRANHA}"
 fi
+if [[ "${WITH_BENCHMARKS_NONIUS}" != "" ]]; then
+    cmake_line="$cmake_line -DBUILD_BENCHMARKS_NONIUS=${WITH_BENCHMARKS_NONIUS}"
+fi
 if [[ "${BUILD_SHARED_LIBS}" != "" ]]; then
     cmake_line="$cmake_line -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}"
 fi
