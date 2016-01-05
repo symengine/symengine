@@ -1118,7 +1118,7 @@ bool _nthroot_mod1(std::vector<RCP<const Integer>> &roots, const mpz_class &a, c
     if (_n == 1) {
         root = s;
     } else if (_n == 2) {
-        _sqrt_mod_prime(root, s, p);
+        (root, s, p);
     } else { // Ref[1]
         map_integer_uint prime_mul;
         prime_factor_multiplicities(prime_mul, *integer(_n));
@@ -1474,19 +1474,18 @@ void powermod_list(std::vector<RCP<const Integer>> &pows, const RCP<const Intege
     }
 }
 
-std::vector<mpz_class> quadratic_residue(const Integer &a)
+std::vector<mpz_class> quadratic_residues(const Integer &a)
 {
     /*
         Returns the list of quadratic residues.
-        Examples
+        Example
         ========
-        >>> from sympy.ntheory.residue_ntheory import quadratic_residues
         >>> quadratic_residues(7)
         [0, 1, 2, 4]
     */
 
-    if (a.as_int() < 1) {
-        throw std::runtime_error("quadratic_residue: Input must be > 0");
+    if (a.as_mpz() < 1) {
+        throw std::runtime_error("quadratic_residues: Input must be > 0");
     }
 
     std::vector<mpz_class> residue;
@@ -1500,6 +1499,41 @@ std::vector<mpz_class> quadratic_residue(const Integer &a)
 
     return residue;
 
+}
+
+bool is_quad_residue(const Integer &a , const Integer &p)
+{
+    /*
+    Returns true if ``a`` (mod ``p``) is in the set of squares mod ``p``,
+    i.e a % p in set([i**2 % p for i in range(p)]). If ``p`` is an odd
+    prime, an iterative method is used to make the determination.
+    */
+
+    if(p.as_mpz() < 1)
+        throw std::runtime_error("is_quad_residue: Second parameter must be > 0");
+
+    if(a.as_mpz() >= p.as_mpz() || a.as_mpz() < 0)
+        //a = *integer(a.as_mpz() % p.as_mpz());                        // assignment doesn't work
+
+    if(a.as_mpz() < 2 || p.as_mpz() < 3)
+        return true;
+
+    if(!probab_prime_p(p.as_mpz(),0))
+        if((p.as_mpz() % 2 == 1 ) && jacobi(a,p) == -1)
+            return false;
+
+        const RCP<const Integer> x;
+        const RCP<const Integer> a1 = integer(a.as_mpz());
+        const RCP<const Integer> p1 = integer(a.as_mpz());
+
+        bool r = true;
+        r = nthroot_mod(outArg(x), a1, integer(2), p1);
+        return r;
+
+    //mpz_t expo;
+    //mpz_pow_ui(expo, (a.as_mpz()).get_mpz_t(), (p.as_mpz()-1)/2);
+
+    //return *expo % p.as_mpz() == 1;                               //want to return pow(a, (p - 1) // 2, p) == 1  but using mpz
 }
 
 } // SymEngine

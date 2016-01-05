@@ -171,7 +171,10 @@ void powermod_list(std::vector<RCP<const Integer>> &pows, const RCP<const Intege
         const RCP<const Number> &b, const RCP<const Integer> &m);
 
 //! Finds all Quadratic Residues of a Positive Integer
-std::vector<mpz_class> quadratic_residue(const Integer &a);
+std::vector<mpz_class> quadratic_residues   (const Integer &a);
+
+//! Returns true if 'a' is a quadratic residue of 'p'
+bool is_quad_residue(const Integer &a , const Integer &p);
 
 }
 #endif
