@@ -56,4 +56,7 @@ target_link_libraries(series_expansion_sincos symengine)
 if (BUILD_BENCHMARKS_NONIUS)
     add_executable(bench bench.cpp)
     target_link_libraries(bench symengine)
+
+    add_executable(bench_eval_double bench_eval_double.cpp)
+    target_link_libraries(bench_eval_double symengine)
 endif()
