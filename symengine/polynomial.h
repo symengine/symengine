@@ -56,8 +56,6 @@ public:
     static void dict_add_term(map_uint_mpz &d,
             const mpz_class &coef, const unsigned int &n);
     mpz_class max_coef() const;
-    //! Differentiates w.r.t symbol `x`
-    virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
     //! Evaluates the UnivariatePolynomial at value x
     mpz_class eval(const mpz_class &x) const;
     //! Evaluates the UnivariatePolynomial at value 2**x
@@ -80,7 +78,12 @@ public:
 
     virtual vec_basic get_args() const;
 
-    virtual void accept(Visitor &v) const;
+    inline RCP<const Symbol> get_var() const {
+        return var_;
+    }
+    inline const map_uint_mpz& get_dict() const {
+        return dict_;
+    };
 
 }; //UnivariatePolynomial
 
