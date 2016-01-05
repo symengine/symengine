@@ -50,8 +50,6 @@ public:
 
     std::string __str__() const;
     virtual vec_basic get_args() const { return {}; }
-    virtual void accept(Visitor &v) const;
-
 };
 
 
