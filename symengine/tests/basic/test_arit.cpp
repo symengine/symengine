@@ -14,6 +14,7 @@
 #include <symengine/constants.h>
 #include <symengine/real_double.h>
 #include <symengine/complex_double.h>
+#include <symengine/diff.h>
 
 using SymEngine::Basic;
 using SymEngine::Add;
@@ -51,6 +52,7 @@ using SymEngine::ComplexDouble;
 using SymEngine::real_double;
 using SymEngine::complex_double;
 using SymEngine::is_a;
+using SymEngine::diff;
 
 TEST_CASE("Add: arit", "[arit]")
 {
