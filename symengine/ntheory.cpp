@@ -1118,7 +1118,7 @@ bool _nthroot_mod1(std::vector<RCP<const Integer>> &roots, const mpz_class &a, c
     if (_n == 1) {
         root = s;
     } else if (_n == 2) {
-        (root, s, p);
+        _sqrt_mod_prime(root, s, p);
     } else { // Ref[1]
         map_integer_uint prime_mul;
         prime_factor_multiplicities(prime_mul, *integer(_n));
@@ -1512,28 +1512,30 @@ bool is_quad_residue(const Integer &a , const Integer &p)
     if(p.as_mpz() < 1)
         throw std::runtime_error("is_quad_residue: Second parameter must be > 0");
 
-    if(a.as_mpz() >= p.as_mpz() || a.as_mpz() < 0)
-        //a = *integer(a.as_mpz() % p.as_mpz());                        // assignment doesn't work
+    mpz_class a_final;
 
-    if(a.as_mpz() < 2 || p.as_mpz() < 3)
+    if(a.as_mpz() >= p.as_mpz() || a.as_mpz() < 0)
+        a_final = a.as_mpz() % p.as_mpz();
+
+    if(a_final < 2 || p.as_mpz() < 3)
         return true;
 
     if(!probab_prime_p(p.as_mpz(),0))
-        if((p.as_mpz() % 2 == 1 ) && jacobi(a,p) == -1)
+        if((p.as_mpz() % 2 == 1 ) && jacobi(*integer(a_final),p) == -1)
             return false;
 
-        const RCP<const Integer> x;
-        const RCP<const Integer> a1 = integer(a.as_mpz());
-        const RCP<const Integer> p1 = integer(a.as_mpz());
+        RCP<const Integer> x;
+        const RCP<const Integer> a1 = integer(a_final);
+        const RCP<const Integer> p1 = integer(p.as_mpz());
 
         bool r = true;
         r = nthroot_mod(outArg(x), a1, integer(2), p1);
         return r;
 
-    //mpz_t expo;
-    //mpz_pow_ui(expo, (a.as_mpz()).get_mpz_t(), (p.as_mpz()-1)/2);
+    mpz_t expo;
+    mpz_pow_ui(expo, a_final.get_mpz_t(), ((mpz_class)((p.as_mpz()-1)/2)).get_ui());
 
-    //return *expo % p.as_mpz() == 1;                               //want to return pow(a, (p - 1) // 2, p) == 1  but using mpz
+    return mpz_get_ui(expo) % p.as_mpz() == 1;
 }
 
 } // SymEngine
