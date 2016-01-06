@@ -1,5 +1,6 @@
 from os import walk, pardir
 from os.path import split, join, abspath, exists
+import sys
 
 ### CHANGE THIS IF THIS FILE IS EVER MOVED
 ### RIGHT NOW IT'S IN symengine/symengine/utilities/tests/
@@ -57,5 +58,5 @@ for check in all_checks:
 
 if errors:
     print "Errors Listed above!"
-    exit(1)
-exit(0)
+    sys.exit(1)
+sys.exit(0)

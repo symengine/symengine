@@ -59,14 +59,10 @@ public:
     //! \return `true` if it is in canonical form
     bool is_canonical(const RCP<const Number> &coef,
             const umap_basic_num& dict) const;
-    //! Differentiates w.r.t Symbol `x`
-    virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
     //! Substitutes the dict
     virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
 
     virtual vec_basic get_args() const;
-
-    virtual void accept(Visitor &v) const;
 };
 
 //! \return Add made from `a + b`

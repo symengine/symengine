@@ -8,9 +8,4 @@
 
 namespace SymEngine {
 
-RCP<const Basic> Number::diff(const RCP<const Symbol> &x) const
-{
-    return zero;
-}
-
 } // SymEngine

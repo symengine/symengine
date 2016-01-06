@@ -295,30 +295,6 @@ RCP<const Basic> sub(const RCP<const Basic> &a, const RCP<const Basic> &b)
     return add(a, mul(minus_one, b));
 }
 
-RCP<const Basic> Add::diff(const RCP<const Symbol> &x) const
-{
-    SymEngine::umap_basic_num d;
-    RCP<const Number> coef=zero, coef2;
-    RCP<const Basic> t;
-    for (const auto &p: dict_) {
-        RCP<const Basic> term = p.first->diff(x);
-        if (is_a<Integer>(*term) and rcp_static_cast<const Integer>(term)->is_zero()) {
-            continue;
-        } else if (is_a_Number(*term)) {
-            iaddnum(outArg(coef),
-                    mulnum(p.second, rcp_static_cast<const Number>(term)));
-        } else if (is_a<Add>(*term)) {
-            for (const auto &q: (rcp_static_cast<const Add>(term))->dict_)
-                Add::dict_add_term(d, mulnum(q.second, p.second), q.first);
-            iaddnum(outArg(coef), mulnum(p.second, rcp_static_cast<const Add>(term)->coef_));
-        } else {
-            Add::as_coef_term(mul(p.second, term), outArg(coef2), outArg(t));
-            Add::dict_add_term(d, coef2, t);
-        }
-    }
-    return Add::from_dict(coef, std::move(d));
-}
-
 void Add::as_two_terms(const Ptr<RCP<const Basic>> &a,
             const Ptr<RCP<const Basic>> &b) const
 {
