@@ -967,9 +967,6 @@ public:
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &n, const RCP<const Basic> &x);
     virtual vec_basic get_args() const { return {n_, x_}; }
-    
-    virtual void accept(Visitor &v) const;
-    
     RCP<const Basic> rewrite_as_zeta() const;
 };
 
