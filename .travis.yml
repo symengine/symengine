@@ -30,7 +30,7 @@ env:
   # Debug build (with BFD) with LATEST_GCC
   - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_LATEST_GCC="yes"
   # Debug build (with BFD)
-  - BUILD_TYPE="Debug" WITH_BFD="yes" TEST_TRAILING_WS="yes"
+  - BUILD_TYPE="Debug" WITH_BFD="yes" TEST_CODE_QUALITY="yes"
   # Debug build (with BFD and SYMENGINE_THREAD_SAFE)
   - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_SYMENGINE_THREAD_SAFE="yes"
   # Debug build (with BFD) with ECM
@@ -59,7 +59,7 @@ matrix:
     - compiler: clang
     - os: osx
   include:
-    - env: BUILD_TYPE="Debug" WITH_BFD="yes" WITH_PIRANHA="yes"
+    - env: BUILD_TYPE="Debug" WITH_BFD="yes" WITH_PIRANHA="yes" WITH_BENCHMARKS_NONIUS="yes"
       compiler: gcc
       os: linux
       addons:

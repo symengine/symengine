@@ -34,11 +34,6 @@ int Constant::compare(const Basic &o) const
     return name_ < s.name_ ? -1 : 1;
 }
 
-RCP<const Basic> Constant::diff(const RCP<const Symbol> &x) const
-{
-    return zero;
-}
-
 RCP<const Integer> zero = integer(0);
 RCP<const Integer> one = integer(1);
 RCP<const Integer> minus_one = integer(-1);

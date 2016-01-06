@@ -1210,74 +1210,6 @@ RCP<const Basic> atan2(const RCP<const Basic> &num, const RCP<const Basic> &den)
 
 /* ---------------------------- */
 
-RCP<const Basic> Sin::diff(const RCP<const Symbol> &x) const
-{
-    return mul(cos(get_arg()), get_arg()->diff(x));
-}
-
-RCP<const Basic> Cos::diff(const RCP<const Symbol> &x) const
-{
-    return mul(mul(minus_one, sin(get_arg())), get_arg()->diff(x));
-}
-
-RCP<const Basic> Tan::diff(const RCP<const Symbol> &x) const
-{
-    RCP<const Integer> two = integer(2);
-    return mul(add(one, pow(tan(get_arg()), two)), get_arg()->diff(x));
-}
-
-RCP<const Basic> Cot::diff(const RCP<const Symbol> &x) const
-{
-    RCP<const Integer> two = integer(2);
-    return mul(mul(add(one, pow(cot(get_arg()), two)), minus_one), get_arg()->diff(x));
-}
-
-RCP<const Basic> Csc::diff(const RCP<const Symbol> &x) const
-{
-    return mul(mul(mul(cot(get_arg()), csc(get_arg())), minus_one), get_arg()->diff(x));
-}
-
-RCP<const Basic> Sec::diff(const RCP<const Symbol> &x) const
-{
-    return mul(mul(tan(get_arg()), sec(get_arg())), get_arg()->diff(x));
-}
-
-RCP<const Basic> ASin::diff(const RCP<const Symbol> &x) const
-{
-    return mul(div(one, sqrt(sub(one, pow(get_arg(), i2)))), get_arg()->diff(x));
-}
-
-RCP<const Basic> ACos::diff(const RCP<const Symbol> &x) const
-{
-    return mul(div(minus_one, sqrt(sub(one, pow(get_arg(), i2)))), get_arg()->diff(x));
-}
-
-RCP<const Basic> ASec::diff(const RCP<const Symbol> &x) const
-{
-    return mul(div(one, mul(pow(get_arg(), i2), sqrt(sub(one, div(one, pow(get_arg(), i2)))))), get_arg()->diff(x));
-}
-
-RCP<const Basic> ACsc::diff(const RCP<const Symbol> &x) const
-{
-    return mul(div(minus_one, mul(pow(get_arg(), i2), sqrt(sub(one, div(one, pow(get_arg(), i2)))))), get_arg()->diff(x));
-}
-
-RCP<const Basic> ATan::diff(const RCP<const Symbol> &x) const
-{
-    return mul(div(one, add(one, pow(get_arg(), i2))), get_arg()->diff(x));
-}
-
-RCP<const Basic> ACot::diff(const RCP<const Symbol> &x) const
-{
-    return mul(div(minus_one, add(one, pow(get_arg(), i2))), get_arg()->diff(x));
-}
-
-RCP<const Basic> ATan2::diff(const RCP<const Symbol> &x) const
-{
-    return mul(div(pow(den_, i2), add(pow(den_, i2), pow(num_, i2))),
-                div(num_, den_)->diff(x));
-}
-
 RCP<const Basic> Sin::create(const RCP<const Basic> &arg) const
 {
     return sin(arg);
@@ -1375,14 +1307,6 @@ int LambertW::compare(const Basic &o) const
     return arg_->__cmp__(*(static_cast<const LambertW &>(o).arg_));
 }
 
-RCP<const Basic> LambertW::diff(const RCP<const Symbol> &x) const
-{
-    // check http://en.wikipedia.org/wiki/Lambert_W_function#Derivative
-    // for the equation
-    RCP<const Basic> lambertw_val = lambertw(arg_);
-    return mul(div(lambertw_val, mul(arg_, add(lambertw_val, one))), arg_->diff(x));
-}
-
 RCP<const Basic> lambertw(const RCP<const Basic> &arg)
 {
     if (eq(*arg, *zero)) return zero;
@@ -1435,43 +1359,6 @@ int FunctionSymbol::compare(const Basic &o) const
         return vec_basic_compare(arg_, s.arg_);
     else
         return name_ < s.name_ ? -1 : 1;
-}
-
-RCP<const Basic> FunctionSymbol::diff(const RCP<const Symbol> &x) const
-{
-    RCP<const Basic> diff = zero, t;
-    RCP<const Basic> self = rcp_from_this();
-    RCP<const Symbol> s;
-    std::string name;
-    unsigned count  = 0;
-    bool found_x = false;
-    for (const auto &a : arg_) {
-        if (eq(*a, *x)) {
-            found_x = true;
-            count++;
-        } else if (count < 2 and neq(*a->diff(x), *zero)) {
-            count++;
-        }
-    }
-    if (count == 1 and found_x) {
-        return Derivative::create(self, {x});
-    }
-    for (unsigned i = 0; i < arg_.size(); i++) {
-        t = arg_[i]->diff(x);
-        if (neq(*t, *zero)) {
-            name = "x";
-            do {
-                name = "_" + name;
-                s = symbol(name);
-            } while (has_symbol(*self, s));
-            vec_basic v = arg_;
-            v[i] = s;
-            map_basic_basic m;
-            insert(m, v[i], arg_[i]);
-            diff = add(diff, mul(t, make_rcp<const Subs>(Derivative::create(create(v), {v[i]}), m)));
-        }
-    }
-    return diff;
 }
 
 RCP<const Basic> FunctionSymbol::create(const vec_basic &x) const {
@@ -1583,14 +1470,6 @@ int Derivative::compare(const Basic &o) const
     if (cmp != 0) return cmp;
     cmp = vec_basic_compare(x_, s.x_);
     return cmp;
-}
-
-RCP<const Basic> Derivative::diff(const RCP<const Symbol> &x) const
-{
-    if (eq(*(arg_->diff(x)), *zero)) return zero;
-    vec_basic t = x_;
-    t.push_back(x);
-    return Derivative::create(arg_, t);
 }
 
 RCP<const Basic> Derivative::subs(const map_basic_basic &subs_dict) const
@@ -1716,25 +1595,6 @@ vec_basic Subs::get_args() const {
     return v;
 }
 
-RCP<const Basic> Subs::diff(const RCP<const Symbol> &x) const
-{
-    RCP<const Basic> diff = zero, t;
-    if (dict_.count(x) == 0) {
-        diff = arg_->diff(x)->subs(dict_);
-    }
-    for (const auto &p: dict_) {
-        t = p.second->diff(x);
-        if (neq(*t, *zero)) {
-            if (is_a<Symbol>(*p.first)) {
-                diff = add(diff, mul(t, arg_->diff(rcp_static_cast<const Symbol>(p.first))->subs(dict_)));
-            } else {
-                return Derivative::create(rcp_from_this(), {x});
-            }
-        }
-    }
-    return diff;
-}
-
 RCP<const Basic> Subs::subs(const map_basic_basic &subs_dict) const
 {
     auto it = subs_dict.find(rcp_from_this());
@@ -1846,11 +1706,6 @@ RCP<const Basic>  Sinh::expand_as_exp() const
     return div(sub(exp(get_arg()), exp(mul(get_arg(), minus_one))), i2);
 }
 
-RCP<const Basic> Sinh::diff(const RCP<const Symbol> &x) const
-{
-    return mul(cosh(get_arg()), get_arg()->diff(x));
-}
-
 Cosh::Cosh(const RCP<const Basic> &arg)
     : HyperbolicFunction(arg)
 {
@@ -1910,11 +1765,6 @@ RCP<const Basic> cosh(const RCP<const Basic> &arg)
 RCP<const Basic>  Cosh::expand_as_exp() const
 {
     return div(add(exp(get_arg()), exp(mul(get_arg(), minus_one))), i2);
-}
-
-RCP<const Basic> Cosh::diff(const RCP<const Symbol> &x) const
-{
-    return mul(sinh(get_arg()), get_arg()->diff(x));
 }
 
 Tanh::Tanh(const RCP<const Basic> &arg)
@@ -1978,11 +1828,6 @@ RCP<const Basic>  Tanh::expand_as_exp() const
     RCP<const Basic> pos_exp = exp(get_arg());
     RCP<const Basic> neg_exp = exp(mul(minus_one, get_arg()));
     return div(sub(pos_exp, neg_exp), add(pos_exp, neg_exp));
-}
-
-RCP<const Basic> Tanh::diff(const RCP<const Symbol> &x) const
-{
-    return mul(sub(one, pow(tanh(get_arg()), i2)), get_arg()->diff(x));
 }
 
 Coth::Coth(const RCP<const Basic> &arg)
@@ -2051,11 +1896,6 @@ RCP<const Basic>  Coth::expand_as_exp() const
     return div(add(pos_exp, neg_exp), sub(pos_exp, neg_exp));
 }
 
-RCP<const Basic> Coth::diff(const RCP<const Symbol> &x) const
-{
-    return mul(div(minus_one, pow(sinh(get_arg()), i2)), get_arg()->diff(x));
-}
-
 ASinh::ASinh(const RCP<const Basic> &arg)
     : HyperbolicFunction(arg)
 {
@@ -2114,11 +1954,6 @@ RCP<const Basic> asinh(const RCP<const Basic> &arg)
     return make_rcp<const ASinh>(arg);
 }
 
-RCP<const Basic> ASinh::diff(const RCP<const Symbol> &x) const
-{
-    return mul(div(one, sqrt(add(pow(get_arg(), i2), one))), get_arg()->diff(x));
-}
-
 ACosh::ACosh(const RCP<const Basic> &arg)
     : HyperbolicFunction(arg)
 {
@@ -2161,11 +1996,6 @@ RCP<const Basic> acosh(const RCP<const Basic> &arg)
         return static_cast<const Number &>(*arg).get_eval().acosh(*arg);
     }
     return make_rcp<const ACosh>(arg);
-}
-
-RCP<const Basic> ACosh::diff(const RCP<const Symbol> &x) const
-{
-    return mul(div(one, sqrt(sub(pow(get_arg(), i2), one))), get_arg()->diff(x));
 }
 
 ATanh::ATanh(const RCP<const Basic> &arg)
@@ -2224,11 +2054,6 @@ RCP<const Basic> atanh(const RCP<const Basic> &arg)
     return make_rcp<const ATanh>(arg);
 }
 
-RCP<const Basic> ATanh::diff(const RCP<const Symbol> &x) const
-{
-    return mul(div(one, sub(one, pow(get_arg(), i2))), get_arg()->diff(x));
-}
-
 ACoth::ACoth(const RCP<const Basic> &arg)
     : HyperbolicFunction(arg)
 {
@@ -2282,11 +2107,6 @@ RCP<const Basic> acoth(const RCP<const Basic> &arg)
     return make_rcp<const ACoth>(arg);
 }
 
-RCP<const Basic> ACoth::diff(const RCP<const Symbol> &x) const
-{
-    return mul(div(one, sub(one, pow(get_arg(), i2))), get_arg()->diff(x));
-}
-
 ASech::ASech(const RCP<const Basic> &arg)
     : HyperbolicFunction(arg)
 {
@@ -2323,11 +2143,6 @@ RCP<const Basic> asech(const RCP<const Basic> &arg)
     // TODO: Lookup into a cst table once complex is implemented
     if (eq(*arg, *one)) return zero;
     return make_rcp<const ASech>(arg);
-}
-
-RCP<const Basic> ASech::diff(const RCP<const Symbol> &x) const
-{
-    return mul(div(minus_one, mul(sqrt(sub(one, pow(get_arg(), i2))), get_arg())), get_arg()->diff(x));
 }
 
 RCP<const Basic> Sinh::create(const RCP<const Basic> &arg) const
@@ -2574,12 +2389,6 @@ int Zeta::compare(const Basic &o) const
 {
     SYMENGINE_ASSERT(is_a<Zeta>(o))
     return s_->__cmp__(*(static_cast<const Zeta &>(o).s_));
-}
-
-RCP<const Basic> Zeta::diff(const RCP<const Symbol> &x) const
-{
-    // TODO: check if it is differentiated wrt s
-    return mul(mul(mul(minus_one, s_), zeta(add(s_, one), a_)), a_->diff(x));
 }
 
 RCP<const Basic> zeta(const RCP<const Basic> &s, const RCP<const Basic> &a)
@@ -2929,14 +2738,6 @@ int Abs::compare(const Basic &o) const
 {
     SYMENGINE_ASSERT(is_a<Abs>(o))
     return arg_->__cmp__(*(static_cast<const Abs &>(o).arg_));
-}
-
-RCP<const Basic> Abs::diff(const RCP<const Symbol> &x) const
-{
-    if (eq(*arg_->diff(x), *zero))
-        return zero;
-    else
-        return Derivative::create(rcp_from_this(), {x});
 }
 
 RCP<const Basic> abs(const RCP<const Basic> &arg)

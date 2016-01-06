@@ -39,15 +39,8 @@ public:
     inline std::string get_name() const {
         return name_;
     }
-    /*! Differentiate w.r.t other symbol.
-     * \param x - Symbol to be differentiated with.
-     * \return `1` if `name_` are equal, else `0`
-     * */
-    virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
 
     virtual vec_basic get_args() const { return {}; }
-
-    virtual void accept(Visitor &v) const;
 };
 
 //! inline version to return `Constant`

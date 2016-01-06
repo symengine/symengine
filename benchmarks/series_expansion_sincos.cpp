@@ -26,7 +26,7 @@ int main(int argc, char* argv[])
     RCP<const Symbol> x = symbol("x");
     int N = 1000;
     auto ex = mul(sin(x), cos(x));
-    
+
     auto t1 = std::chrono::high_resolution_clock::now();
     auto res = series(ex, x, N);
     auto t2 = std::chrono::high_resolution_clock::now();

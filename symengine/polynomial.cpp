@@ -123,18 +123,6 @@ mpz_class UnivariatePolynomial::max_coef() const {
     return curr;
 }
 
-RCP<const Basic> UnivariatePolynomial::diff(const RCP<const Symbol> &x) const
-{
-    if (var_->__eq__(*x)) {
-        map_uint_mpz d;
-        for (const auto &p : dict_) {
-            d[p.first - 1] = p.second * p.first;
-        }
-        return make_rcp<const UnivariatePolynomial>(var_, (--(d.end()))->first, std::move(d));
-    } else
-        return zero;
-}
-
 mpz_class UnivariatePolynomial::eval(const mpz_class &x) const {
     //TODO: Use Horner's Scheme
     mpz_class ans = 0;

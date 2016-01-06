@@ -177,7 +177,8 @@ TEST_CASE("Expression series expansion: atan, tan, asin, cot, sec, csc", "[Expan
     auto res2 = umap_short_basic{{-1, integer(1)}, {7, rational(-1051, 1814400)}};
     auto ex9 = sec(x);
     auto ex10 = csc(x);
-    
+
+
     REQUIRE(series(ex1, x, 20)[19]->__eq__(*rational(-1, 19)));
     REQUIRE(series(ex2, x, 40)[33]->__eq__(*rational(65536, 33)));
     REQUIRE(series(ex3, x, 20)[13]->__eq__(*rational(21844, 6081075)));
