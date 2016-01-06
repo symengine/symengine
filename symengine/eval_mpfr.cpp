@@ -208,6 +208,10 @@ public:
         mpfr_gamma(result_, result_, rnd_);
     };
 
+    void bvisit(const Beta &x) {
+        throw std::runtime_error("Not implemented.");
+    };
+
     void bvisit(const Constant &x) {
         if (x.__eq__(*pi)) {
             mpfr_const_pi(result_, rnd_);
