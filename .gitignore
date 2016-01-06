@@ -33,7 +33,7 @@ doc/html
 
 # Config Files
 symengine/symengine_config.h
-symengine/teuchos/Teuchos_config.h
+symengine/utilities/teuchos/Teuchos_config.h
 symengine/python/symengine/lib/config.pxi
 
 # Python build files
