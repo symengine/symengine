@@ -170,6 +170,9 @@ bool powermod(const Ptr<RCP<const Integer>> &powm, const RCP<const Integer> &a,
 void powermod_list(std::vector<RCP<const Integer>> &pows, const RCP<const Integer> &a,
         const RCP<const Number> &b, const RCP<const Integer> &m);
 //! Mobius Function
+// mu(n) = 1 if n is a square-free positive integer with an even number of prime factors
+// mu(n) = −1 if n is a square-free positive integer with an odd number of prime factors
+// mu(n) = 0 if n has a squared prime factor
 int mobius(const Integer &a);
 }
 #endif

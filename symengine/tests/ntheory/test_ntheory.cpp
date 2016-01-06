@@ -660,3 +660,4 @@ TEST_CASE("test_mobius(): ntheory", "[ntheory]")
     REQUIRE(mobius(*i9) == 0);
     REQUIRE(mobius(*i10) == 1);
 }
+
