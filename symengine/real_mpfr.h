@@ -307,8 +307,6 @@ public:
             throw std::runtime_error("Not implemented.");
         }
     }
-
-    virtual void accept(Visitor &v) const;
 };
 
 inline RCP<const RealMPFR> real_mpfr(mpfr_class x) {

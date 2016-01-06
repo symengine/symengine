@@ -66,29 +66,9 @@ else()
     set(SYMENGINE_SKIP_DEPENDENCIES no CACHE BOOL "Skip finding dependencies")
 endif()
 
-# For each package give hints with paths that symengine found when it was built
-# Priority is given for absolute path and then relative path
 foreach(PKG @PKGS@)
-    if (NOT SYMENGINE_SKIP_DEPENDENCIES)
-        foreach(LIB ${SYMENGINE_${PKG}_LIBRARIES})
-            get_filename_component(TEMP ${LIB} PATH)
-            # Add Absolute Path to the beginning
-            set(${PKG}_LIBRARIES ${TEMP} ${${PKG}_LIBRARIES})
-            file(RELATIVE_PATH TEMP ${SYMENGINE_INSTALL_CMAKE_DIR} ${TEMP})
-            # Add Relative Path to the end
-            set(${PKG}_LIBRARIES ${${PKG}_LIBRARIES} ${SYMENGINE_CMAKE_DIR}/${TEMP})
-        endforeach()
-        foreach(DIR ${SYMENGINE_${PKG}_INCLUDE_DIRS})
-            set(${PKG}_INCLUDE_DIRS ${DIR} ${${PKG}_INCLUDE_DIRS})
-            file(RELATIVE_PATH TEMP ${SYMENGINE_INSTALL_CMAKE_DIR} ${DIR})
-            set(${PKG}_INCLUDE_DIRS ${${PKG}_INCLUDE_DIRS} ${SYMENGINE_CMAKE_DIR}/${TEMP})
-        endforeach()
-        # Find the package using SymEngine's FindPKG modules
-        find_package(${PKG} REQUIRED)
-    endif()
-
-    set(SYMENGINE_INCLUDE_DIRS ${SYMENGINE_INCLUDE_DIRS} ${${PKG}_INCLUDE_DIRS})
-    set(SYMENGINE_LIBRARIES ${SYMENGINE_LIBRARIES} ${${PKG}_TARGETS})
+    set(SYMENGINE_INCLUDE_DIRS ${SYMENGINE_INCLUDE_DIRS} ${SYMENGINE_${PKG}_INCLUDE_DIRS})
+    set(SYMENGINE_LIBRARIES ${SYMENGINE_LIBRARIES} ${SYMENGINE_${PKG}_LIBRARIES})
 endforeach()
 
 #Use CMake provided find_package(BOOST) module

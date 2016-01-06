@@ -20,7 +20,7 @@ pwd
 echo "Running cmake:"
 # We build the command line here. If the variable is empty, we skip it,
 # otherwise we pass it to cmake.
-cmake_line="-DCMAKE_INSTALL_PREFIX=$our_install_dir -DCOMMON_DIR=$our_install_dir"
+cmake_line="-DCMAKE_INSTALL_PREFIX=$our_install_dir -DCMAKE_PREFIX_PATH=$our_install_dir"
 if [[ "${BUILD_TYPE}" != "" ]]; then
     cmake_line="$cmake_line -DCMAKE_BUILD_TYPE=${BUILD_TYPE}"
 fi
@@ -53,6 +53,9 @@ if [[ "${WITH_MPC}" != "" ]]; then
 fi
 if [[ "${WITH_PIRANHA}" != "" ]]; then
     cmake_line="$cmake_line -DWITH_PIRANHA=${WITH_PIRANHA}"
+fi
+if [[ "${WITH_BENCHMARKS_NONIUS}" != "" ]]; then
+    cmake_line="$cmake_line -DBUILD_BENCHMARKS_NONIUS=${WITH_BENCHMARKS_NONIUS}"
 fi
 if [[ "${BUILD_SHARED_LIBS}" != "" ]]; then
     cmake_line="$cmake_line -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}"
