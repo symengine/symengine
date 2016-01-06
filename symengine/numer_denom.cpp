@@ -52,7 +52,7 @@ public:
             divx = div(arg_den, curr_den);
             as_numer_denom(divx, outArg(divx_num), outArg(divx_den));
             if (eq(*divx_den, *one)) {
-                // the curr_den completely divides the arg_den 
+                // the curr_den completely divides the arg_den
                 // can be made more extensive
                 curr_den = arg_den;
                 curr_num = add(mul(curr_num, divx), arg_num);
@@ -89,6 +89,25 @@ public:
             *numer_ = pow(num, exp_);
             *denom_ = pow(den, exp_);
         }
+    }
+
+    void bvisit(const Complex &x) {
+
+        RCP<const Integer> den, den1, den2;
+        RCP<const Integer> num1, num2;
+
+        num1 = integer(x.real_.get_num());
+        num2 = integer(x.imaginary_.get_num());
+
+        den1 = integer(x.real_.get_den());
+        den2 = integer(x.imaginary_.get_den());
+        den = lcm(*den1, *den2);
+
+        num1 = rcp_static_cast<const Integer>(mul(num1, div(den, den1)));
+        num2 = rcp_static_cast<const Integer>(mul(num2, div(den, den2)));
+
+        *numer_ = Complex::from_two_nums(*num1, *num2);
+        *denom_ = den;
     }
 
     void bvisit(const Rational &x) {

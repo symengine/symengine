@@ -17,6 +17,7 @@
 using SymEngine::Basic;
 using SymEngine::Add;
 using SymEngine::Mul;
+using SymEngine::Complex;
 using SymEngine::Symbol;
 using SymEngine::symbol;
 using SymEngine::Integer;
@@ -126,24 +127,52 @@ TEST_CASE("NumerDenom: Add", "[as_numer_denom]")
     // (1/x^2) + x^2
     r1 = add(pow(x, integer(2)), pow(x, integer(-2)));
     as_numer_denom(r1, outArg(num), outArg(den));
-    REQUIRE(eq(*num, *add(pow(x, integer(4)), one))); // x^4 + 1
-    REQUIRE(eq(*den, *pow(x, integer(2))));                 // x^2
+    REQUIRE(eq(*num, *add(pow(x, integer(4)), one)));      // x^4 + 1
+    REQUIRE(eq(*den, *pow(x, integer(2))));                // x^2
 
     // (1/x^3) + (1/x^6)
     r1 = add(pow(x, integer(-3)), pow(x, integer(-6)));
     as_numer_denom(r1, outArg(num), outArg(den));
-    REQUIRE(eq(*num, *add(pow(x, integer(3)), one))); // x^3 + 1
+    REQUIRE(eq(*num, *add(pow(x, integer(3)), one)));       // x^3 + 1
     REQUIRE(eq(*den, *pow(x, integer(6))));                 // x^6
 
     // (x/4) + (y/6)
     r1 = add(div(x, integer(4)), div(y, integer(6)));
     as_numer_denom(r1, outArg(num), outArg(den));
     REQUIRE(eq(*num, *add(mul(integer(3), x), mul(integer(2), y)))); // 3*x + 2*y
-    REQUIRE(eq(*den, *integer(12)));                 // 12
+    REQUIRE(eq(*den, *integer(12)));                                 // 12
 
     // (1/xy) + (1/yz)
     r1 = add(div(one, mul(x, y)), div(one, mul(y, z)));
     as_numer_denom(r1, outArg(num), outArg(den));
-    REQUIRE(eq(*num, *add(x, z))); // x + z
-    REQUIRE(eq(*den, *mul(x, mul(y, z))));                 // x*y*z
+    REQUIRE(eq(*num, *add(x, z)));                  // x + z
+    REQUIRE(eq(*den, *mul(x, mul(y, z))));          // x*y*z
+}
+
+TEST_CASE("Complex: Basic", "[basic]")
+{
+    RCP<const Number> r1, r2, r3, c, cnum;
+    RCP<const Basic> num, den;
+
+    r1 = Rational::from_two_ints(*integer(2), *integer(4));
+    r2 = Rational::from_two_ints(*integer(7), *integer(6));
+    r3 = Rational::from_two_ints(*integer(-5), *integer(8));
+
+    c = Complex::from_two_nums(*r1, *r2);
+    cnum = Complex::from_two_nums(*integer(3), *integer(7));
+    as_numer_denom(c, outArg(num), outArg(den));
+    REQUIRE(eq(*num, *cnum));
+    REQUIRE(eq(*den, *integer(6)));
+
+    c = Complex::from_two_nums(*r1, *r3);
+    cnum = Complex::from_two_nums(*integer(4), *integer(-5));
+    as_numer_denom(c, outArg(num), outArg(den));
+    REQUIRE(eq(*num, *cnum));
+    REQUIRE(eq(*den, *integer(8)));
+
+    c = Complex::from_two_nums(*r2, *r3);
+    cnum = Complex::from_two_nums(*integer(28), *integer(-15));
+    as_numer_denom(c, outArg(num), outArg(den));
+    REQUIRE(eq(*num, *cnum));
+    REQUIRE(eq(*den, *integer(24)));
 }
