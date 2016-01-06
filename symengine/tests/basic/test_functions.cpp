@@ -1811,19 +1811,19 @@ TEST_CASE("Polygamma: functions", "[functions]")
 
     RCP<const Basic> r1;
     RCP<const Basic> r2;
-    
+
     r1 = polygamma(zero, one);
     r2 = neg(EulerGamma);
     REQUIRE(eq(*r1, *r2));
-    
+
     r1 = polygamma(zero, div(one, i2));
     r2 = sub(mul(im2, log(i2)), EulerGamma);
     REQUIRE(eq(*r1, *r2));
-    
+
     r1 = polygamma(zero, div(one, i4));
     r2 = add(neg(div(pi, i3)), sub(mul(im3, log(i2)), EulerGamma));
     REQUIRE(eq(*r1, *r2));
-    
+
     r1 = SymEngine::rcp_dynamic_cast<const PolyGamma>(polygamma(i2, x))->rewrite_as_zeta();
     r2 = neg(mul(i2, zeta(i3, x)));
     REQUIRE(eq(*r1, *r2));

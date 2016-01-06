@@ -2760,13 +2760,13 @@ int PolyGamma::compare(const Basic &o) const
 RCP<const Basic> PolyGamma::rewrite_as_zeta() const
 {
     if(not is_a<Integer>(*n_)) {
-        return rcp_from_this();    
+        return rcp_from_this();
     }
     RCP<const Integer> n = rcp_static_cast<const Integer>(n_);
     if(not (n->is_positive())) {
         return rcp_from_this();
     }
-    if((n->as_int() & 1) == 0) 
+    if((n->as_int() & 1) == 0)
         return neg(mul(factorial(n->as_int()), zeta(add(n_, one), x_)));
     else
         return mul(factorial(n->as_int()), zeta(add(n_, one), x_));
@@ -2774,7 +2774,7 @@ RCP<const Basic> PolyGamma::rewrite_as_zeta() const
 
 RCP<const Basic> polygamma(const RCP<const Basic> &n_, const RCP<const Basic> &x_)
 {
-    // Only special values are being evaluated    
+    // Only special values are being evaluated
     if(is_a_Number(*x_) and not (rcp_static_cast<const Number>(x_))->is_positive()) {
         throw std::runtime_error("Complex Infinity not yet implemented");
     }
@@ -2789,16 +2789,16 @@ RCP<const Basic> polygamma(const RCP<const Basic> &n_, const RCP<const Basic> &x
             if(den == 2) {
                 auto num = x->i.get_num();
                 if(num == 1) {
-                       return sub(mul(im2, log(i2)), EulerGamma);       
+                       return sub(mul(im2, log(i2)), EulerGamma);
                 }
                 if(num == 3) {
-                       return add(i2, sub(mul(im2, log(i2)), EulerGamma));                       
+                       return add(i2, sub(mul(im2, log(i2)), EulerGamma));
                 }
             }
             if(den == 4) {
                 auto num = x->i.get_num();
                 if(num == 1) {
-                       return add(neg(div(pi, i3)), sub(mul(im3, log(i2)), EulerGamma));                       
+                       return add(neg(div(pi, i3)), sub(mul(im3, log(i2)), EulerGamma));
                 }
             }
         }
