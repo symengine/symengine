@@ -45,7 +45,7 @@ TEST_CASE("precision: eval_mpfr", "[eval_mpfr]")
     mpfr_init2(a, 100);
     s = mul(EulerGamma, integer(100000000));
     t = integer(57721566);
-    r = div(sub(s, t),integer(100000000));
+    r = div(sub(s, t), integer(100000000));
     // value of `r` is approximately 0.0000000049015328606065120900824024...
 
     eval_mpfr(a, *r, MPFR_RNDN);

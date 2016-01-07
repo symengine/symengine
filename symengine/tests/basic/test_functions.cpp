@@ -49,6 +49,7 @@ using SymEngine::exp;
 using SymEngine::function_symbol;
 using SymEngine::Derivative;
 using SymEngine::pi;
+using SymEngine::EulerGamma;
 using SymEngine::RCP;
 using SymEngine::make_rcp;
 using SymEngine::print_stack_on_segfault;
@@ -67,6 +68,8 @@ using SymEngine::levi_civita;
 using SymEngine::zeta;
 using SymEngine::dirichlet_eta;
 using SymEngine::gamma;
+using SymEngine::polygamma;
+using SymEngine::PolyGamma;
 using SymEngine::lowergamma;
 using SymEngine::uppergamma;
 using SymEngine::abs;
@@ -1793,6 +1796,43 @@ TEST_CASE("Uppergamma: functions", "[functions]")
 
     r1 = uppergamma(mul(i2, i3), i2);
     r2 = mul(integer(872), exp(mul(im1, i2)));
+    REQUIRE(eq(*r1, *r2));
+}
+
+TEST_CASE("Polygamma: functions", "[functions]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> im2 = integer(-2);
+    RCP<const Basic> i3 = integer(3);
+    RCP<const Basic> im3 = integer(-3);
+    RCP<const Basic> i4 = integer(4);
+
+    RCP<const Basic> r1;
+    RCP<const Basic> r2;
+
+    r1 = polygamma(zero, one);
+    r2 = neg(EulerGamma);
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = polygamma(zero, div(one, i2));
+    r2 = sub(mul(im2, log(i2)), EulerGamma);
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = polygamma(zero, div(i3, i2));
+    r2 = add(i2, sub(mul(im2, log(i2)), EulerGamma));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = polygamma(zero, div(one, i4));
+    r2 = add(neg(div(pi, i3)), sub(mul(im3, log(i2)), EulerGamma));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = SymEngine::rcp_dynamic_cast<const PolyGamma>(polygamma(i2, x))->rewrite_as_zeta();
+    r2 = neg(mul(i2, zeta(i3, x)));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = SymEngine::rcp_dynamic_cast<const PolyGamma>(polygamma(i3, x))->rewrite_as_zeta();
+    r2 = mul(integer(6), zeta(i4, x));
     REQUIRE(eq(*r1, *r2));
 }
 
