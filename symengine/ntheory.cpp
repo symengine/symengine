@@ -1509,19 +1509,19 @@ bool is_quad_residue(const Integer &a , const Integer &p)
     prime, an iterative method is used to make the determination.
     */
 
-    if(p.as_mpz() < 1)
+
+    /*if(p.as_mpz() < 1)
         throw std::runtime_error("is_quad_residue: Second parameter must be > 0");
 
     mpz_class a_final;
     a_final = a.as_mpz();//This is causing SEGFAULT ?
-
     if(a.as_mpz() >= p.as_mpz() || a.as_mpz() < 0)
         a_final = a.as_mpz() % p.as_mpz();
 
     if(a_final < 2 || p.as_mpz() < 3)
         return true;
 
-    if(!probab_prime_p(p.as_mpz(),0))
+    if(!probab_prime_p(*integer(p.as_mpz()),0))
      {
         if((p.as_mpz() % 2 == 1 ) && jacobi(*integer(a_final),p) == -1)
             return false;
@@ -1536,9 +1536,38 @@ bool is_quad_residue(const Integer &a , const Integer &p)
     }
 
     mpz_t expo;
-    mpz_pow_ui(expo, a_final.get_mpz_t(), ((mpz_class)((p.as_mpz()-1)/2)).get_ui());
+    mpz_pow_ui(expo, a_final.get_mpz_t(), (p.as_mpz().get_ui()-1)/2;
 
-    return mpz_get_ui(expo) % p.as_mpz() == 1;
+    return mpz_get_ui(expo) % p.as_mpz() == 1;*/
+    long int p1 = p.as_int();
+    long int a1 = a.as_int();
+
+    if(p1 < 1)
+        throw std::runtime_error("is_quad_residue: Second parameter must be > 0");
+    if(a1 >= p1 || a1 < 0)
+        a1 = a1 % p1;
+    if(a1 < 0 && a1 > -p1)
+        a1 = a1 + p1;
+    if(a1 < 2 || p1 < 3)
+        return true;
+
+    int y = 0;
+    if(!probab_prime_p(*integer(p1),y))
+    {
+        if((p1 % 2 == 1 ) && jacobi(*integer(a1),p) == -1)
+            return false;
+
+        RCP<const Integer> x;
+        const RCP<const Integer> a2 = integer(a1);
+        const RCP<const Integer> p2 = integer(p1);
+
+        bool r = true;
+        r = nthroot_mod(outArg(x), a2, integer(2), p2);
+        return r;
+    }
+
+    return (static_cast<long int>(pow(a1,(p1-1)/2)) % p1) == 1;
+
 }
 
 } // SymEngine

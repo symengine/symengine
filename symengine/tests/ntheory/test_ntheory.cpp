@@ -683,6 +683,7 @@ TEST_CASE("test_is_quad_residue(): ntheory", "[ntheory]")
     const RCP<const Integer> t56 = integer(56);
     const RCP<const Integer> t89 = integer(89);
 
+    std::cout << "Is_Quadratic_Residue:"<<std::endl;
     REQUIRE(is_quad_residue(*t0,*a1) == true);
     REQUIRE(is_quad_residue(*t1,*a1) == true);
     REQUIRE(is_quad_residue(*t0,*a4) == true);
