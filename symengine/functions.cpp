@@ -2815,7 +2815,7 @@ RCP<const Basic> beta(const RCP<const Basic> &x, const RCP<const Basic> &y)
                 if ((x_->i.get_den()) == 2) {
                     return div(mul(gamma_positive_int(y), gamma_multiple_2(x)), gamma_multiple_2(add(x, y)));
                 } else {
-                    return make_rcp<const Beta>(x, y);
+                    return Beta::from_two_basic(x, y);
                 }
             }
         } else {
