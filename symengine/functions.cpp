@@ -2840,6 +2840,109 @@ RCP<const Basic> beta(const RCP<const Basic> &x, const RCP<const Basic> &y)
 }
 
 
+bool PolyGamma::is_canonical(const RCP<const Basic> &n, const RCP<const Basic> &x)
+{
+    if (is_a_Number(*x) and not (rcp_static_cast<const Number>(x))->is_positive()) {
+        return false;
+    }
+    if (eq(*n, *zero)) {
+        if (eq(*x, *one)) {
+            return false;
+        }
+        if (is_a<Rational>(*x)) {
+            auto x_ = rcp_static_cast<const Rational>(x);
+            auto num = x_->i.get_num();
+            auto den = x_->i.get_den();
+            if (den == 2 and (num == 1 or num == 3)) {
+                return false;
+            }
+            if (den == 4 and num == 1) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+std::size_t PolyGamma::__hash__() const
+{
+    std::size_t seed = POLYGAMMA;
+    hash_combine<Basic>(seed, *n_);
+    hash_combine<Basic>(seed, *x_);
+    return seed;
+}
+
+bool PolyGamma::__eq__(const Basic &o) const
+{
+    if (is_a<PolyGamma>(o) and
+        eq(*x_, *(static_cast<const PolyGamma &>(o).x_)) and
+        eq(*n_, *(static_cast<const PolyGamma &>(o).n_)))
+        return true;
+    return false;
+}
+
+int PolyGamma::compare(const Basic &o) const
+{
+    SYMENGINE_ASSERT(is_a<PolyGamma>(o))
+    const PolyGamma &pg = static_cast<const PolyGamma &>(o);
+    if (neq(*n_, *(pg.n_))) {
+        return n_->__cmp__(*(pg.n_));
+    } else {
+        return x_->__cmp__(*(pg.x_));
+    }
+}
+
+RCP<const Basic> PolyGamma::rewrite_as_zeta() const
+{
+    if (not is_a<Integer>(*n_)) {
+        return rcp_from_this();
+    }
+    RCP<const Integer> n = rcp_static_cast<const Integer>(n_);
+    if (not (n->is_positive())) {
+        return rcp_from_this();
+    }
+    if ((n->as_int() & 1) == 0) {
+        return neg(mul(factorial(n->as_int()), zeta(add(n_, one), x_)));
+    } else {
+        return mul(factorial(n->as_int()), zeta(add(n_, one), x_));
+    }
+}
+
+RCP<const Basic> polygamma(const RCP<const Basic> &n_, const RCP<const Basic> &x_)
+{
+    // Only special values are being evaluated
+    if (is_a_Number(*x_) and not (rcp_static_cast<const Number>(x_))->is_positive()) {
+        throw std::runtime_error("Complex Infinity not yet implemented");
+    }
+
+    if (eq(*n_, *zero)) {
+        if (eq(*x_, *one)) {
+            return neg(EulerGamma);
+        }
+        if (is_a<Rational>(*x_)) {
+            RCP<const Rational> x = rcp_static_cast<const Rational>(x_);
+            auto den = x->i.get_den();
+            if (den == 2) {
+                auto num = x->i.get_num();
+                if (num == 1) {
+                       return sub(mul(im2, log(i2)), EulerGamma);
+                }
+                if (num == 3) {
+                       return add(i2, sub(mul(im2, log(i2)), EulerGamma));
+                }
+            }
+            if (den == 4) {
+                auto num = x->i.get_num();
+                if (num == 1) {
+                       return add(neg(div(pi, i3)), sub(mul(im3, log(i2)), EulerGamma));
+                }
+            }
+        }
+    }
+    return make_rcp<const PolyGamma>(n_, x_);
+}
+
+
 Abs::Abs(const RCP<const Basic> &arg)
     : arg_{arg}
 {
