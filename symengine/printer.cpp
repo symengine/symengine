@@ -437,6 +437,7 @@ std::vector<std::string> init_str_printer_names() {
     names[LEVICIVITA] = "levicivita";
     names[LOWERGAMMA] = "lowergamma";
     names[UPPERGAMMA] = "uppergamma";
+    names[UPPERGAMMA] = "beta";
     names[ABS] = "abs";
     return names;
 }
