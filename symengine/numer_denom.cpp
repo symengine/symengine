@@ -53,7 +53,6 @@ public:
             as_numer_denom(divx, outArg(divx_num), outArg(divx_den));
             if (eq(*divx_den, *one)) {
                 // the curr_den completely divides the arg_den
-                // can be made more extensive
                 curr_den = arg_den;
                 curr_num = add(mul(curr_num, divx), arg_num);
                 continue;
@@ -61,10 +60,8 @@ public:
 
             divx = div(curr_den, arg_den);
             as_numer_denom(divx, outArg(divx_num), outArg(divx_den));
-            // if (eq(*divx_den, *one)) {
-            //     curr_num = add(mul(arg_num, divx), curr_num);
-            //     continue;
-            // } !! The below two 'general' statements cover this case
+            // the below two lines, cover the general case, as well as the case
+            // where arg_den completely divides curr_den
             curr_den = mul(curr_den, divx_den);
             curr_num = add(mul(curr_num, divx_den), mul(arg_num, divx_num));
         }
