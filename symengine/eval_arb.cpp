@@ -286,7 +286,7 @@ public:
             arb_const_pi(result_, prec_);
         } else if (x.__eq__(*E)) {
             arb_const_e(result_, prec_);
-        } else if(x.__eq__(*EulerGamma)) {
+        } else if (x.__eq__(*EulerGamma)) {
             arb_const_euler(result_, prec_);
         } else {
             throw std::runtime_error("Constant " + x.get_name() + " is not implemented.");
