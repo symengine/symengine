@@ -247,29 +247,24 @@ public:
     void bvisit(const ASinh &x) {
         apply(result_, *(x.get_arg()));
         arb_asinh(result_, result_, prec_);
-        //throw std::runtime_error("Not implemented.");
     };
     void bvisit(const ACosh &x) {
         apply(result_, *(x.get_arg()));
         arb_acosh(result_, result_, prec_);
-        //throw std::runtime_error("Not implemented.");
     };
     void bvisit(const ATanh &x) {
         apply(result_, *(x.get_arg()));
         arb_atanh(result_, result_, prec_);
-        //throw std::runtime_error("Not implemented.");
     };
     void bvisit(const ACoth &x) {
         apply(result_, *(x.get_arg()));
         arb_inv(result_, result_, prec_);
         arb_atanh(result_, result_, prec_);
-        //throw std::runtime_error("Not implemented.");
     };
     void bvisit(const ASech &x) {
         apply(result_, *(x.get_arg()));
         arb_inv(result_, result_, prec_);
         arb_acosh(result_, result_, prec_);
-        //throw std::runtime_error("Not implemented.");
     };
     void bvisit(const KroneckerDelta &) {
         throw std::runtime_error("Not implemented.");
@@ -278,9 +273,12 @@ public:
         throw std::runtime_error("Not implemented.");
     };
     void bvisit(const Zeta &x) {
+        arb_t one_;
+        arb_init(one_);
+        arb_set_ui(one_, 1);
         apply(result_, *(x.get_arg()));
-        arb_zeta(result_, result_, prec_);
-        //throw std::runtime_error("Not implemented.");
+        arb_hurwitz_zeta(result_, result_, one_, prec_);
+        arb_clear(one_);
     };
     void bvisit(const Dirichlet_eta &) {
         throw std::runtime_error("Not implemented.");
@@ -288,7 +286,6 @@ public:
     void bvisit(const Gamma &x) {
         apply(result_, *(x.get_arg()));
         arb_gamma(result_, result_, prec_);
-        //throw std::runtime_error("Not implemented.");
     };
     void bvisit(const LowerGamma &) {
         throw std::runtime_error("Not implemented.");

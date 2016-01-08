@@ -633,7 +633,7 @@ TEST_CASE("Cosh: eval_arb", "[eval_arb]")
     arb_clear(a);
 }
 
-TEST_CASE(", eval_arb", "[eval_arb]")
+TEST_CASE("Tanh, eval_arb", "[eval_arb]")
 {
     arb_t a;
     arb_init(a);
@@ -809,7 +809,6 @@ TEST_CASE("Asech: eval_arb", "[eval_arb]")
 
     mpfr_clear(f);
     arb_clear(a);
-    //arb_clear(b);
 }
 
 TEST_CASE("Abs: eval_arb", "[eval_arb]")
