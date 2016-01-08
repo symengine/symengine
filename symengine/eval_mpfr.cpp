@@ -210,7 +210,6 @@ public:
 
     void bvisit(const Beta &x) {
         apply(result_, *(x.rewrite_as_gamma()));
-        mpfr_gamma(result_, result_, rnd_);
     };
 
     void bvisit(const Constant &x) {
