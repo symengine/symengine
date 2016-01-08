@@ -370,6 +370,9 @@ public:
     }
 
     void bvisit(const Zeta &x) {
+        arb_t one_;
+        arb_init(one_);
+        arb_set_ui(one_, 1);
         apply(result_, *(x.get_arg()));
         arb_zeta(result_, result_, prec_);
     }
@@ -383,7 +386,8 @@ public:
     {
         apply(result_, *(x.get_args())[0]);
         arb_gamma(result_, result_, prec_);
-    };
+    }
+
     void bvisit(const LogGamma &x)
     {
         apply(result_, *(x.get_args())[0]);

@@ -893,7 +893,6 @@ TEST_CASE("Asech: eval_arb", "[eval_arb]")
 
     mpfr_clear(f);
     arb_clear(a);
-    //arb_clear(b);
 }
 
 TEST_CASE("Abs: eval_arb", "[eval_arb]")
