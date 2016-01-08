@@ -813,93 +813,93 @@ TEST_CASE("Asech: eval_arb", "[eval_arb]")
 
 TEST_CASE("Abs: eval_arb", "[eval_arb]")
 {
-arb_t a;
-arb_init(a);
+    arb_t a;
+    arb_init(a);
 
-RCP<const Basic> r1 = abs(integer(-34));
-eval_arb(a, *r1, 13);
+    RCP<const Basic> r1 = abs(integer(-34));
+    eval_arb(a, *r1, 13);
 
-mpfr_t f;
-mpfr_init2(f, 17);
-mpfr_set_d(f, abs(-34), MPFR_RNDN);
+    mpfr_t f;
+    mpfr_init2(f, 17);
+    mpfr_set_d(f, abs(-34), MPFR_RNDN);
 
-REQUIRE(arb_contains_mpfr(a, f));
+    REQUIRE(arb_contains_mpfr(a, f));
 
-r1 = abs(div(integer(1), integer(678)));
-eval_arb(a, *r1, 13);
+    r1 = abs(div(integer(1), integer(678)));
+    eval_arb(a, *r1, 13);
 
-mpfr_set_d(f, abs(1.0/678), MPFR_RNDN);
+    mpfr_set_d(f, abs(1.0/678), MPFR_RNDN);
 
-REQUIRE(arb_contains_mpfr(a, f));
+    REQUIRE(arb_contains_mpfr(a, f));
 
-r1 = abs(integer(16));
-eval_arb(a, *r1, 13);
+    r1 = abs(integer(16));
+    eval_arb(a, *r1, 13);
 
-mpfr_set_d(f, abs(16), MPFR_RNDN);
+    mpfr_set_d(f, abs(16), MPFR_RNDN);
 
-REQUIRE(arb_contains_mpfr(a, f));
-mpfr_clear(f);
-arb_clear(a);
+    REQUIRE(arb_contains_mpfr(a, f));
+    mpfr_clear(f);
+    arb_clear(a);
 }
 
 TEST_CASE("Zeta: eval_arb", "[eval_arb]")
 {
-arb_t a;
-arb_init(a);
+    arb_t a;
+    arb_init(a);
 
-RCP<const Basic> r1 = zeta(integer(-34));
-eval_arb(a, *r1, 13);
+    RCP<const Basic> r1 = zeta(integer(-34));
+    eval_arb(a, *r1, 13);
 
-mpfr_t f;
-mpfr_init2(f, 17);
-mpfr_set_d(f, zeta(-34), MPFR_RNDN);
+    mpfr_t f;
+    mpfr_init2(f, 17);
+    mpfr_set_d(f, zeta(-34), MPFR_RNDN);
 
-REQUIRE(arb_contains_mpfr(a, f));
+    REQUIRE(arb_contains_mpfr(a, f));
 
-r1 = zeta(div(integer(1), integer(678)));
-eval_arb(a, *r1, 13);
+    r1 = zeta(div(integer(1), integer(678)));
+    eval_arb(a, *r1, 13);
 
-mpfr_set_d(f, zeta(1.0/678), MPFR_RNDN);
+    mpfr_set_d(f, zeta(1.0/678), MPFR_RNDN);
 
-REQUIRE(arb_contains_mpfr(a, f));
+    REQUIRE(arb_contains_mpfr(a, f));
 
-r1 = zeta(idiv(integer(1), integer(-247)));
-eval_arb(a, *r1, 13);
+    r1 = zeta(idiv(integer(1), integer(-247)));
+    eval_arb(a, *r1, 13);
 
-mpfr_set_d(f, zeta(1.0/-247), MPFR_RNDN);
+    mpfr_set_d(f, zeta(1.0/-247), MPFR_RNDN);
 
-REQUIRE(arb_contains_mpfr(a, f));
-mpfr_clear(f);
-arb_clear(a);
+    REQUIRE(arb_contains_mpfr(a, f));
+    mpfr_clear(f);
+    arb_clear(a);
 }
 
 TEST_CASE("Gamma: eval_arb", "[eval_arb]")
 {
-arb_t a;
-arb_init(a);
+    arb_t a;
+    arb_init(a);
 
-RCP<const Basic> r1 = gamma(integer(-34));
-eval_arb(a, *r1, 13);
+    RCP<const Basic> r1 = gamma(integer(-34));
+    eval_arb(a, *r1, 13);
 
-mpfr_t f;
-mpfr_init2(f, 17);
-mpfr_set_d(f, gamma(-34), MPFR_RNDN);
+    mpfr_t f;
+    mpfr_init2(f, 17);
+    mpfr_set_d(f, gamma(-34), MPFR_RNDN);
 
-REQUIRE(arb_contains_mpfr(a, f));
+    REQUIRE(arb_contains_mpfr(a, f));
 
-r1 = gamma(div(integer(1), integer(678)));
-eval_arb(a, *r1, 13);
+    r1 = gamma(div(integer(1), integer(678)));
+    eval_arb(a, *r1, 13);
 
-mpfr_set_d(f, gamma(1.0/678), MPFR_RNDN);
+    mpfr_set_d(f, gamma(1.0/678), MPFR_RNDN);
 
-REQUIRE(arb_contains_mpfr(a, f));
+    REQUIRE(arb_contains_mpfr(a, f));
 
-r1 = gamma(idiv(integer(1), integer(-247)));
-eval_arb(a, *r1, 13);
+    r1 = gamma(idiv(integer(1), integer(-247)));
+    eval_arb(a, *r1, 13);
 
-mpfr_set_d(f, gamma(1.0/-247), MPFR_RNDN);
+    mpfr_set_d(f, gamma(1.0/-247), MPFR_RNDN);
 
-REQUIRE(arb_contains_mpfr(a, f));
-mpfr_clear(f);
-arb_clear(a);
+    REQUIRE(arb_contains_mpfr(a, f));
+    mpfr_clear(f);
+    arb_clear(a);
 }
