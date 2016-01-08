@@ -49,6 +49,7 @@ using SymEngine::exp;
 using SymEngine::function_symbol;
 using SymEngine::Derivative;
 using SymEngine::pi;
+using SymEngine::EulerGamma;
 using SymEngine::RCP;
 using SymEngine::make_rcp;
 using SymEngine::print_stack_on_segfault;
@@ -67,8 +68,12 @@ using SymEngine::levi_civita;
 using SymEngine::zeta;
 using SymEngine::dirichlet_eta;
 using SymEngine::gamma;
+using SymEngine::polygamma;
+using SymEngine::PolyGamma;
 using SymEngine::lowergamma;
 using SymEngine::uppergamma;
+using SymEngine::Beta;
+using SymEngine::beta;
 using SymEngine::abs;
 using SymEngine::Subs;
 using SymEngine::FunctionWrapper;
@@ -81,6 +86,7 @@ using SymEngine::Number;
 using SymEngine::eval_double;
 using SymEngine::is_a;
 using SymEngine::neg;
+using SymEngine::pi;
 
 #ifdef HAVE_SYMENGINE_MPFR
 using SymEngine::real_mpfr;
@@ -1793,6 +1799,87 @@ TEST_CASE("Uppergamma: functions", "[functions]")
 
     r1 = uppergamma(mul(i2, i3), i2);
     r2 = mul(integer(872), exp(mul(im1, i2)));
+    REQUIRE(eq(*r1, *r2));
+}
+
+TEST_CASE("Beta: functions", "[functions]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> i3 = integer(3);
+    RCP<const Basic> i4 = integer(4);
+    RCP<const Basic> im1 = integer(-1);
+
+    RCP<const Basic> r1;
+    RCP<const Basic> r2;
+    RCP<const Basic> r3;
+
+    r1 = beta(i3, i2);
+    r2 = beta(i2, i3);
+    REQUIRE(eq(*r1, *r2));
+    r3 = div(mul(gamma(i3), gamma(i2)), gamma(add(i2, i3)));
+    REQUIRE(eq(*r1, *r3));
+    r2 = div(one, integer(12));
+    REQUIRE(eq(*r1, *r2));	
+
+    r1 = beta(div(one, i2), i2);
+    r2 = beta(i2, div(one, i2));
+    REQUIRE(eq(*r1, *r2));
+    r3 = div(i4, i3);
+    REQUIRE(eq(*r3, *r1));
+
+    r1 = beta(div(integer(7), i2), div(integer(9), i2));
+    r2 = beta(div(integer(9), i2), div(integer(7), i2));
+    REQUIRE(eq(*r1, *r2));
+    r3 = div(mul(integer(5), pi), integer(2048));
+    REQUIRE(eq(*r3, *r1));
+
+    r1 = beta(div(one, i2), div(i3, i2));
+    r2 = div(pi, i2);
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = beta(x, y);
+    r2 = beta(y, x);
+    REQUIRE(eq(*r1, *r2));
+    REQUIRE(r1->__hash__() == r2->__hash__());
+}
+
+TEST_CASE("Polygamma: functions", "[functions]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> im2 = integer(-2);
+    RCP<const Basic> i3 = integer(3);
+    RCP<const Basic> im3 = integer(-3);
+    RCP<const Basic> i4 = integer(4);
+
+    RCP<const Basic> r1;
+    RCP<const Basic> r2;
+
+    r1 = polygamma(zero, one);
+    r2 = neg(EulerGamma);
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = polygamma(zero, div(one, i2));
+    r2 = sub(mul(im2, log(i2)), EulerGamma);
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = polygamma(zero, div(i3, i2));
+    r2 = add(i2, sub(mul(im2, log(i2)), EulerGamma));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = polygamma(zero, div(one, i4));
+    r2 = add(neg(div(pi, i3)), sub(mul(im3, log(i2)), EulerGamma));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = SymEngine::rcp_dynamic_cast<const PolyGamma>(polygamma(i2, x))->rewrite_as_zeta();
+    r2 = neg(mul(i2, zeta(i3, x)));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = SymEngine::rcp_dynamic_cast<const PolyGamma>(polygamma(i3, x))->rewrite_as_zeta();
+    r2 = mul(integer(6), zeta(i4, x));
     REQUIRE(eq(*r1, *r2));
 }
 

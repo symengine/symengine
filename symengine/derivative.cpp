@@ -47,6 +47,8 @@ static RCP<const Basic> diff(const CLASS &self, \
     DIFF0(UpperGamma)
     DIFF0(LowerGamma)
     DIFF0(Gamma)
+    DIFF0(Beta)
+    DIFF0(PolyGamma)
     DIFF0(LeviCivita)
 
 #endif

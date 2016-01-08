@@ -939,6 +939,77 @@ public:
 RCP<const Basic> uppergamma(const RCP<const Basic> &s, const RCP<const Basic> &x);
 
 
+class Beta: public Function {
+/*!    The beta function, also called the Euler integral
+ *     of the first kind, is a special function defined by
+ *
+ *   .. math::
+ *      \Beta(x, y) := \int^{1}_{0} t^{x-1} (1-t)^{y-1} \mathrm{d}t.
+ **/
+private:
+    RCP<const Basic> x_;
+    RCP<const Basic> y_;
+public:
+    IMPLEMENT_TYPEID(BETA)
+    //! Beta Constructor
+    Beta(const RCP<const Basic> &x, const RCP<const Basic> &y): x_{x}, y_{y} {
+        SYMENGINE_ASSERT(is_canonical(x_, y_))
+    }
+    //! return `Beta` with ordered arguments
+    static RCP<const Beta> from_two_basic(const RCP<const Basic> &x, const RCP<const Basic> &y);
+    /*! Equality comparator
+     * \param o - Object to be compared with
+     * \return whether the 2 objects are equal
+     * */
+    virtual bool __eq__(const Basic &o) const;
+    virtual int compare(const Basic &o) const;
+    //! \return Size of the hash
+    virtual std::size_t __hash__() const;
+    //! \return `true` if canonical
+    bool is_canonical(const RCP<const Basic> &s, const RCP<const Basic> &x);
+    virtual vec_basic get_args() const { return {x_, y_}; }
+    RCP<const Basic> rewrite_as_gamma() const;
+};
+
+//! Canonicalize Beta:
+RCP<const Basic> beta(const RCP<const Basic> &x, const RCP<const Basic> &y);
+
+
+class PolyGamma: public Function {
+/*!    The polygamma function
+ *
+ *     It is a meromorphic function on `\mathbb{C}` and defined as the (n+1)-th
+ *     derivative of the logarithm of the gamma function:
+ *
+ *  .. math::
+ *  \psi^{(n)} (z) := \frac{\mathrm{d}^{n+1}}{\mathrm{d} z^{n+1}} \log\Gamma(z).
+ **/
+private:
+    RCP<const Basic> n_;
+    RCP<const Basic> x_;
+public:
+    IMPLEMENT_TYPEID(POLYGAMMA)
+    //! PolyGamma Constructor
+    PolyGamma(const RCP<const Basic> &n, const RCP<const Basic> &x): n_{n}, x_{x} {
+        SYMENGINE_ASSERT(is_canonical(n_, x_))
+    }
+    /*! Equality comparator
+     * \param o - Object to be compared with
+     * \return whether the 2 objects are equal
+     * */
+    virtual bool __eq__(const Basic &o) const;
+    virtual int compare(const Basic &o) const;
+    //! \return Size of the hash
+    virtual std::size_t __hash__() const;
+    bool is_canonical(const RCP<const Basic> &n, const RCP<const Basic> &x);
+    virtual vec_basic get_args() const { return {n_, x_}; }
+    RCP<const Basic> rewrite_as_zeta() const;
+};
+
+//! Canonicalize PolyGamma
+RCP<const Basic> polygamma(const RCP<const Basic> &n, const RCP<const Basic> &x);
+
+
 class Abs: public Function {
 /*!    The absolute value function
  **/
