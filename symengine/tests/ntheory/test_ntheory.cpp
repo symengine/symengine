@@ -648,7 +648,7 @@ TEST_CASE("test_mobius(): ntheory", "[ntheory]")
     RCP<const Integer> i8 = integer(8);
     RCP<const Integer> i9 = integer(9);
     RCP<const Integer> i10 = integer(10);
-    
+
     REQUIRE(mobius(*i1) == 1);
     REQUIRE(mobius(*i2) == -1);
     REQUIRE(mobius(*i3) == -1);
