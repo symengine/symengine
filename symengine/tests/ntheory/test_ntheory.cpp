@@ -635,3 +635,28 @@ TEST_CASE("test_powermod(): ntheory", "[ntheory]")
     powermod_list(powms, i15, i1->divint(*i18), i105);
     REQUIRE(powms.size() == 6);
 }
+
+TEST_CASE("test_mobius(): ntheory", "[ntheory]")
+{
+    RCP<const Integer> i1 = integer(1);
+    RCP<const Integer> i2 = integer(2);
+    RCP<const Integer> i3 = integer(3);
+    RCP<const Integer> i4 = integer(4);
+    RCP<const Integer> i5 = integer(5);
+    RCP<const Integer> i6 = integer(6);
+    RCP<const Integer> i7 = integer(7);
+    RCP<const Integer> i8 = integer(8);
+    RCP<const Integer> i9 = integer(9);
+    RCP<const Integer> i10 = integer(10);
+
+    REQUIRE(mobius(*i1) == 1);
+    REQUIRE(mobius(*i2) == -1);
+    REQUIRE(mobius(*i3) == -1);
+    REQUIRE(mobius(*i4) == 0);
+    REQUIRE(mobius(*i5) == -1);
+    REQUIRE(mobius(*i6) == 1);
+    REQUIRE(mobius(*i7) == -1);
+    REQUIRE(mobius(*i8) == 0);
+    REQUIRE(mobius(*i9) == 0);
+    REQUIRE(mobius(*i10) == 1);
+}
