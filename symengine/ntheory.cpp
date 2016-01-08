@@ -1474,4 +1474,29 @@ void powermod_list(std::vector<RCP<const Integer>> &pows, const RCP<const Intege
     }
 }
 
+int mobius(const Integer &a)
+{
+    if (a.as_int() <= 0) {
+        throw std::runtime_error("mobius: Integer <= 0");
+    }
+    map_integer_uint prime_mul;
+    bool is_square_free = true;
+    prime_factor_multiplicities(prime_mul, a);
+    int num_prime_factors = prime_mul.size();
+    for (const auto &it: prime_mul) {
+        int p_freq = it.second;
+        if (p_freq > 1) {
+            is_square_free = false;
+            break;
+        }
+    }
+    if (!is_square_free) {
+        return 0;
+    } else if (num_prime_factors % 2 == 0) {
+        return 1;
+    } else {
+        return -1;
+    }
+}
+
 } // SymEngine
