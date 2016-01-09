@@ -3,7 +3,6 @@
  *  Class for ComplexMPC built on top of Number class
  *
  **/
-#include <cmath>
 #include <symengine/basic.h>
 #include <symengine/real_double.h>
 #include <symengine/complex_double.h>

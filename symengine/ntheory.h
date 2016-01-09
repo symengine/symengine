@@ -62,7 +62,7 @@ void lucas2(const Ptr<RCP<const Integer>> &g, const Ptr<RCP<const Integer>> &s,
         unsigned long n);
 
 //! Binomial Coefficient
-RCP<const Integer> binomial(const Integer &n,unsigned long k);
+RCP<const Integer> binomial(const Integer &n, unsigned long k);
 
 //! Factorial
 RCP<const Integer> factorial(unsigned long n);

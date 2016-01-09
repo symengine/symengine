@@ -9,7 +9,7 @@ Rational::Rational(mpq_class i)
     this->type_code_ = type_code_id;
 }
 
-bool Rational::is_canonical(const mpq_class &i)
+bool Rational::is_canonical(const mpq_class &i) const
 {
     mpq_class x = i;
     x.canonicalize();

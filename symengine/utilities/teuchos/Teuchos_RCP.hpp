@@ -724,11 +724,14 @@ inline
 Teuchos::RCP<T2>
 Teuchos::rcp_static_cast(const RCP<T1>& p1)
 {
+#if defined(TEUCHOS_DEBUG)
+  return rcp_dynamic_cast<T2>(p1, true);
+#else
   // Make the compiler check if the conversion is legal
   T2 *check = static_cast<T2*>(p1.get());
   return RCP<T2>(check, p1.access_private_node());
+#endif
 }
-
 
 template<class T2, class T1>
 inline

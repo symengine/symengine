@@ -50,7 +50,7 @@ UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned 
     this->type_code_ = type_code_id;
 }
 
-bool UnivariateSeries::is_canonical(const UnivariatePolynomial& poly, const unsigned int &prec)
+bool UnivariateSeries::is_canonical(const UnivariatePolynomial& poly, const unsigned int &prec) const
 {
     return true;
 }

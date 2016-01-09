@@ -134,8 +134,6 @@ public:
     virtual RCP<const Number> rpow(const Number &other) const {
         throw std::runtime_error("Not implemented.");
     };
-
-    virtual void accept(Visitor &v) const;
 };
 
 //! less operator (<) for Integers

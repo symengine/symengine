@@ -22,7 +22,7 @@ add_test(test_series ${PROJECT_BINARY_DIR}/test_series)
 
 add_executable(test_series_expansion test_series_expansion.cpp)
 target_link_libraries(test_series_expansion symengine catch)
-add_test(test_series ${PROJECT_BINARY_DIR}/test_series_expansion)
+add_test(test_series_expansion ${PROJECT_BINARY_DIR}/test_series_expansion)
 
 add_executable(test_functions test_functions.cpp)
 target_link_libraries(test_functions symengine catch)
@@ -43,3 +43,7 @@ add_test(test_rational ${PROJECT_BINARY_DIR}/test_rational)
 add_executable(test_number test_number.cpp)
 target_link_libraries(test_number symengine catch)
 add_test(test_number ${PROJECT_BINARY_DIR}/test_number)
+
+add_executable(test_as_numer_denom test_as_numer_denom.cpp)
+target_link_libraries(test_as_numer_denom symengine catch)
+add_test(test_as_numer_denom ${PROJECT_BINARY_DIR}/test_as_numer_denom)
