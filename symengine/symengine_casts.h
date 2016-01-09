@@ -54,7 +54,7 @@ template<typename T> struct remove_reference<T&> { typedef T type; };
 //   implicit_cast<ToType>(expr)
 
 template <typename To, typename From>
-inline To implicit_cast(const From &f){
+inline To implicit_cast(const From &f) {
     return f;
 }
 
@@ -77,7 +77,7 @@ inline To implicit_cast(const From &f){
 // You should design the code some other way not to need this.
 
 template <typename To, typename From>	 // use like this: down_cast<T*>(foo).
-inline To down_cast(From* f){				// only accept pointers.
+inline To down_cast(From* f) {				// only accept pointers.
     // Ensures that To is a sub-type of From *.  This test is here only
     // for compile-time type checking, and has no overhead in an
     // optimized build at run-time, as it will be optimized away
@@ -86,9 +86,8 @@ inline To down_cast(From* f){				// only accept pointers.
         implicit_cast<From*, To>(0);
     }
 
-#if defined(TEUCHOS_DEBUG) 
     SYMENGINE_ASSERT(f == NULL || dynamic_cast<To>(f) != NULL);  // debug mode only!
-#endif
+    
     return static_cast<To>(f);
 }
 
@@ -103,9 +102,8 @@ inline To down_cast(From& f) {
         implicit_cast<From*, ToAsPointer>(0);
     }
 
-#if defined(TEUCHOS_DEBUG) 
     SYMENGINE_ASSERT(dynamic_cast<ToAsPointer>(&f) != NULL); // debug mode only!
-#endif
+
     return *static_cast<ToAsPointer>(&f);
 }
 
