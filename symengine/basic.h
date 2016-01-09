@@ -257,16 +257,11 @@ void hash_combine(std::size_t& seed, const T& v);
 
 //! Inline members and functions
 #include "basic-inl.h"
+#include "cwrapper.h"
 
 // Macro to define the type_code_id variable and its getter method
-#define IMPLEMENT_TYPEID(ID) \
+#define IMPLEMENT_TYPEID(ID)\
 /*! Type_code_id shared by all instances */ \
 const static TypeID type_code_id = ID; \
-/*! Virtual function that gives the type_code_id of the object */
-
-
 SYMENGINE_INCLUDE_METHODS()
-
-
-
 #endif
