@@ -11,7 +11,7 @@ Complex::Complex(mpq_class real, mpq_class imaginary)
     this->type_code_ = type_code_id;
 }
 
-bool Complex::is_canonical(const mpq_class &real, const mpq_class &imaginary)
+bool Complex::is_canonical(const mpq_class &real, const mpq_class &imaginary) const
 {
     mpq_class re = real;
     mpq_class im = imaginary;

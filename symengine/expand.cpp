@@ -20,10 +20,6 @@ private:
     RCP<const Number> coeff = zero;
     RCP<const Number> multiply = one;
 public:
-    ExpandVisitor() : BaseVisitor<ExpandVisitor>(this) {
-
-    }
-
     RCP<const Basic> apply(const Basic &b) {
         b.accept(*this);
         return Add::from_dict(coeff, std::move(d_));
@@ -138,9 +134,9 @@ public:
             }
             if (eq(*a_term, *one)) {
                 iaddnum(outArg(coeff),
-                        _mulnum(multiply, _mulnum(rcp_static_cast<const Add>(b)->coef_, a_coef)));
+                        _mulnum(rcp_static_cast<const Add>(b)->coef_, a_coef));
             } else {
-                Add::dict_add_term(d_, _mulnum(multiply, _mulnum(rcp_static_cast<const Add>(b)->coef_, a_coef)),
+                Add::dict_add_term(d_, _mulnum(rcp_static_cast<const Add>(b)->coef_, a_coef),
                                    a_term);
             }
             return;
@@ -299,8 +295,8 @@ public:
         } else {
             RCP<const Number> coef2;
             RCP<const Basic> t;
-            Add::as_coef_term(mul(c, term), outArg(coef2), outArg(t));
-            Add::dict_add_term(d_, coef2, t);
+            Add::as_coef_term(term, outArg(coef2), outArg(t));
+            Add::dict_add_term(d_, _mulnum(c, coef2), t);
         }
     }
 };

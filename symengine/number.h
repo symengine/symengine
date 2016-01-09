@@ -28,7 +28,7 @@ public:
     //! return true if the number is an exact representation
     //  false if the number is an approximation
     virtual bool is_exact() const { return true; };
-    //! \return true if the number is equal to 0 and not an approximation 
+    //! \return true if the number is equal to 0 and not an approximation
     inline bool is_exact_zero() const { return is_exact() and is_zero(); };
     //! Get `Evaluate` singleton to evaluate numerically
     virtual Evaluate& get_eval() const { throw std::runtime_error("Not Implemented."); };
@@ -46,8 +46,6 @@ public:
     //! Power
     virtual RCP<const Number> pow(const Number &other) const = 0;
     virtual RCP<const Number> rpow(const Number &other) const = 0;
-    //! Differentiation w.r.t Symbol `x`
-    virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
 
     virtual vec_basic get_args() const { return {}; }
 
@@ -117,7 +115,6 @@ public:
     IMPLEMENT_TYPEID(NUMBER_WRAPPER)
     virtual std::string __str__() const { throw std::runtime_error("Not Implemented."); };
     virtual RCP<const Number> eval(long bits)  const { throw std::runtime_error("Not Implemented."); };
-    virtual void accept(Visitor &v) const;
 };
 
 //! A class that will evaluate functions numerically.

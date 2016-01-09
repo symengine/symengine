@@ -5,9 +5,6 @@
 
 namespace SymEngine {
 
-StrPrinter::StrPrinter() : BaseVisitor<StrPrinter>(this) {
-
-}
 void StrPrinter::bvisit(const Basic &x) {
     std::ostringstream s;
     s << "<" << typeName<Basic>(x) << " instance at " << (const void*)this << ">";
@@ -440,6 +437,8 @@ std::vector<std::string> init_str_printer_names() {
     names[LEVICIVITA] = "levicivita";
     names[LOWERGAMMA] = "lowergamma";
     names[UPPERGAMMA] = "uppergamma";
+    names[UPPERGAMMA] = "beta";
+    names[POLYGAMMA] = "polygamma";
     names[ABS] = "abs";
     return names;
 }

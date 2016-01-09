@@ -27,9 +27,8 @@
 #include <symengine/constants.h>
 
 //!TODO:
-//! - real coefficients
-//! - const
 //! - benchmark fast functions of short series (see ring_series.py)
+//! - real coefficients
 //! - Puiseux series (see ring_series.py)
 //! - multivariate expressions (see ring_series.py)
 //! - see "not implemented"
@@ -39,7 +38,7 @@
 namespace SymEngine {
 
 #ifdef HAVE_SYMENGINE_PIRANHA
-using pp_t = piranha::polynomial<piranha::rational,piranha::monomial<short>>;
+using pp_t = piranha::polynomial<piranha::rational, piranha::monomial<short>>;
 
 //========== helpers ============
 static inline RCP<const Number> prat2synum(const piranha::rational& p_rat)
@@ -53,8 +52,8 @@ static inline RCP<const Number> prat2synum(const piranha::rational& p_rat)
 
 static inline piranha::rational syrat2prat(const Rational& syrat)
 {
-    piranha::integer i1(syrat.as_mpq().get_num().get_mpz_t());
-    piranha::integer i2(syrat.as_mpq().get_den().get_mpz_t());
+    const piranha::integer i1(syrat.as_mpq().get_num().get_mpz_t());
+    const piranha::integer i2(syrat.as_mpq().get_den().get_mpz_t());
     piranha::rational r(i1);
     r /= i2;
     return r;
@@ -62,14 +61,14 @@ static inline piranha::rational syrat2prat(const Rational& syrat)
 
 static inline piranha::rational mpqc2prat(const mpq_class& the_mpqc)
 {
-    piranha::integer i1(the_mpqc.get_num_mpz_t());
-    piranha::integer i2(the_mpqc.get_den_mpz_t());
+    const piranha::integer i1(the_mpqc.get_num_mpz_t());
+    const piranha::integer i2(the_mpqc.get_den_mpz_t());
     piranha::rational r(i1);
     r /= i2;
     return r;
 }
 
-static const std::list<unsigned int>& step_list(unsigned int prec)
+static std::list<unsigned int> step_list(unsigned int prec)
 {
     static std::list<unsigned int> steps;
     if (not steps.empty()) {
@@ -100,7 +99,7 @@ pp_t series_invert(const pp_t& s, const pp_t& var, unsigned int prec)
     pp_t p(co.pow(-1)), ss = s;
     if (ldeg != 0)
         ss = s * var.pow(-ldeg);
-    auto steps = step_list(prec);
+    const auto& steps = step_list(prec);
     for (const auto step : steps) {
         pp_t::set_auto_truncate_degree(step);
         p -= p*(p*ss - 1);
@@ -124,7 +123,7 @@ pp_t series_reverse(const pp_t& s, const pp_t& var, unsigned int prec)
     r /= a;
     for (unsigned int i=2; i<prec; i++) {
         pp_t::set_auto_truncate_degree(i+1);
-        pp_t sp(s.subs(varname, r));
+        const pp_t sp(s.subs(varname, r));
         r -= (var.pow(i) * sp.find_cf({i}))/a;
     }
     return r;
@@ -139,10 +138,10 @@ pp_t series_nthroot(const pp_t& s, int n, const pp_t& var, unsigned int prec)
     if (n == -1)
         return series_invert(s, var, prec);
 
-    piranha::rational ct(s.find_cf({0}));
+    const piranha::rational ct(s.find_cf({0}));
     if (ct == 0)
         throw std::runtime_error("series_nthroot needs a constant term");
-    mpq_class cl_rat(ct.get_mpq_view());
+    const mpq_class cl_rat(ct.get_mpq_view());
     mpq_class cl_root(cl_rat);
     bool res;
     bool do_inv = false;
@@ -164,8 +163,9 @@ pp_t series_nthroot(const pp_t& s, int n, const pp_t& var, unsigned int prec)
     if (not res)
         throw std::runtime_error("constant term is not an nth power");
 
-    pp_t res_p{1}, sn(s/ct), ctroot(mpqc2prat(cl_root));
-    auto steps = step_list(prec);
+    pp_t res_p{1};
+    const pp_t sn(s/ct), ctroot(mpqc2prat(cl_root));
+    const auto& steps = step_list(prec);
     for (const auto step : steps) {
         pp_t::set_auto_truncate_degree(step);
         res_p += (res_p - (res_p.pow(n+1) * sn)) / n;
@@ -221,7 +221,7 @@ pp_t series_tan(const pp_t& s, const pp_t& var, unsigned int prec)
     //  Ref.: https://oeis.org/A000182
 
     pp_t res_p{0};
-    auto steps = step_list(prec);
+    const auto& steps = step_list(prec);
     for (const auto step : steps) {
         pp_t::set_auto_truncate_degree(step);
         res_p += (s - series_atan(res_p, var, step)) * (res_p.pow(2) + 1);
@@ -246,7 +246,7 @@ pp_t series_sin(const pp_t& s, const pp_t& var, unsigned int prec)
             if (i != 0)
                 prod *= 1-j;
             prod *= j;
-            res_p += piranha::rational{1,prod} * var.pow(j);
+            res_p += piranha::rational{1, prod} * var.pow(j);
         }
         return res_p;
     }
@@ -284,7 +284,7 @@ pp_t series_cos(const pp_t& s, const pp_t& var, unsigned int prec)
             const short j = 2*i;
             prod *= 1-j;
             prod *= j;
-            res_p += piranha::rational{1,prod} * var.pow(j);
+            res_p += piranha::rational{1, prod} * var.pow(j);
         }
         return res_p;
     }
@@ -292,7 +292,7 @@ pp_t series_cos(const pp_t& s, const pp_t& var, unsigned int prec)
     if (s.find_cf({0}) != 0)
         throw std::logic_error("cos(const) not Implemented");
 
-    pp_t t(series_tan(s/2, var, prec).pow(2));
+    const pp_t t(series_tan(s/2, var, prec).pow(2));
     return series_invert(t + 1, var, prec) * (-(t - 1));
 }
 
@@ -310,7 +310,7 @@ pp_t series_log(const pp_t& s, const pp_t& var, unsigned int prec)
     if (s-1 == var) {
         //! fast log(1+x)
         for (unsigned int i=1; i<prec; i++) {
-            res_p += piranha::rational{((i%2)==0)?-1:1,i} * var.pow(i);
+            res_p += piranha::rational{((i%2)==0)?-1:1, i} * var.pow(i);
         }
         return res_p;
     }
@@ -330,7 +330,7 @@ pp_t series_exp(const pp_t& s, const pp_t& var, unsigned int prec)
 
     if (s == var) {
         //! fast exp(x)
-        piranha::rational coef{1,1};
+        piranha::rational coef{1, 1};
         for (unsigned int i=1; i<prec; i++) {
             coef /= i;
             res_p += coef * var.pow(i);
@@ -341,7 +341,7 @@ pp_t series_exp(const pp_t& s, const pp_t& var, unsigned int prec)
     if (s.find_cf({0}) != 0)
         throw std::logic_error("exp(const) not Implemented");
 
-    auto steps = step_list(prec);
+    const auto& steps = step_list(prec);
     for (const auto step : steps) {
         pp_t::set_auto_truncate_degree(step);
         res_p += res_p*(s - series_log(res_p, var, step));
@@ -356,7 +356,7 @@ pp_t series_lambertw(const pp_t& s, const pp_t& var, unsigned int prec)
 
     pp_t p1{0};
 
-    auto steps = step_list(prec);
+    const auto& steps = step_list(prec);
     for (const auto step : steps) {
         pp_t::set_auto_truncate_degree(step);
         const pp_t e(series_exp(p1, var, step));
@@ -419,7 +419,7 @@ pp_t series_tanh(const pp_t& s, const pp_t& var, unsigned int prec)
         throw std::logic_error("tanh(const) not Implemented");
 
     pp_t res_p{s};
-    auto steps = step_list(prec);
+    const auto& steps = step_list(prec);
     for (const auto step : steps) {
         pp_t::set_auto_truncate_degree(step);
         const pp_t p(s - series_atanh(res_p, var, step));
@@ -481,16 +481,16 @@ pp_t _series(const RCP<const Basic> &ex, const RCP<const Symbol> &var, unsigned 
     const pp_t var_p(var->get_name());
     if (is_a_sub<Function>(*ex)) {
         const Function& fun = static_cast<const Function&>(*ex);
-        auto args = fun.get_args();
+        const auto& args = fun.get_args();
         if (args.size() > 1)
             throw std::logic_error("Expansion of multivar functions not Implemented");
         if (funcmap.size() == 0)
             build_funcmap();
-        series_func_t func = funcmap[fun.get_type_code()];
+        const series_func_t& func = funcmap[fun.get_type_code()];
         if (func == nullptr)
             throw std::logic_error(std::string("No expansion for this function: ")
                                     + fun.__str__());
-        auto series_inner = _series(args[0], var, prec);
+        const auto& series_inner = _series(args[0], var, prec);
         return func(std::move(series_inner), var_p, prec);
     }
 
@@ -573,7 +573,7 @@ pp_t _series(const RCP<const Basic> &ex, const RCP<const Symbol> &var, unsigned 
 umap_short_basic pp2vec(const pp_t &p, unsigned int prec)
 {
     umap_short_basic map;
-    for (auto it : p) {
+    for (const auto& it : p) {
         if (it.first != 0)
             map[it.second.degree()] = std::move(prat2synum(it.first));
     }

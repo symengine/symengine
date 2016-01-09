@@ -1,5 +1,4 @@
-#include <stdexcept>
-
+#include <symengine/basic.h>
 #include <symengine/add.h>
 #include <symengine/mul.h>
 #include <symengine/symbol.h>
@@ -186,7 +185,7 @@ bool handle_minus(const RCP<const Basic> &arg,
 
 // \return true of conjugate has to be returned finally else false
 bool eval(const RCP<const Basic> &arg, unsigned period, bool odd, bool conj_odd, //input
-            const Ptr<RCP<const Basic>>& rarg,int& index, int& sign) //output
+            const Ptr<RCP<const Basic>>& rarg, int& index, int& sign) //output
 {
     bool check;
     RCP<const Integer> n;
@@ -290,7 +289,7 @@ Sin::Sin(const RCP<const Basic> &arg)
     this->type_code_ = type_code_id;
 }
 
-bool Sin::is_canonical(const RCP<const Basic> &arg)
+bool Sin::is_canonical(const RCP<const Basic> &arg) const
 {
     // e.g. sin(0)
     if (is_a<Integer>(*arg) and
@@ -370,7 +369,7 @@ Cos::Cos(const RCP<const Basic> &arg)
     this->type_code_ = type_code_id;
 }
 
-bool Cos::is_canonical(const RCP<const Basic> &arg)
+bool Cos::is_canonical(const RCP<const Basic> &arg) const
 {
     // e.g. cos(0)
     if (is_a<Integer>(*arg) and
@@ -448,7 +447,7 @@ Tan::Tan(const RCP<const Basic> &arg)
     this->type_code_ = type_code_id;
 }
 
-bool Tan::is_canonical(const RCP<const Basic> &arg)
+bool Tan::is_canonical(const RCP<const Basic> &arg) const
 {
     // TODO: Add further checks for +inf -inf cases
     if (is_a<Integer>(*arg) and
@@ -529,7 +528,7 @@ Cot::Cot(const RCP<const Basic> &arg)
     this->type_code_ = type_code_id;
 }
 
-bool Cot::is_canonical(const RCP<const Basic> &arg)
+bool Cot::is_canonical(const RCP<const Basic> &arg) const
 {
     // TODO: Add further checks for +inf -inf cases
     if (is_a<Integer>(*arg) and
@@ -610,7 +609,7 @@ Csc::Csc(const RCP<const Basic> &arg)
     this->type_code_ = type_code_id;
 }
 
-bool Csc::is_canonical(const RCP<const Basic> &arg)
+bool Csc::is_canonical(const RCP<const Basic> &arg) const
 {
     // e.g. Csc(0)
     if (is_a<Integer>(*arg) and
@@ -692,7 +691,7 @@ Sec::Sec(const RCP<const Basic> &arg)
     this->type_code_ = type_code_id;
 }
 
-bool Sec::is_canonical(const RCP<const Basic> &arg)
+bool Sec::is_canonical(const RCP<const Basic> &arg) const
 {
     // e.g. Sec(0)
     if (is_a<Integer>(*arg) and
@@ -770,7 +769,7 @@ ASin::ASin(const RCP<const Basic> &arg)
     this->type_code_ = type_code_id;
 }
 
-bool ASin::is_canonical(const RCP<const Basic> &arg)
+bool ASin::is_canonical(const RCP<const Basic> &arg) const
 {
     // TODO: Add further checks for +inf -inf cases
     if (eq(*arg, *zero) or eq(*arg, *one) or eq(*arg, *minus_one))
@@ -827,7 +826,7 @@ ACos::ACos(const RCP<const Basic> &arg)
     this->type_code_ = type_code_id;
 }
 
-bool ACos::is_canonical(const RCP<const Basic> &arg)
+bool ACos::is_canonical(const RCP<const Basic> &arg) const
 {
     // TODO: Add further checks for +inf -inf cases
     if (eq(*arg, *zero) or eq(*arg, *one) or eq(*arg, *minus_one))
@@ -888,7 +887,7 @@ ASec::ASec(const RCP<const Basic> &arg)
     this->type_code_ = type_code_id;
 }
 
-bool ASec::is_canonical(const RCP<const Basic> &arg)
+bool ASec::is_canonical(const RCP<const Basic> &arg) const
 {
     // TODO: Add further checks for +inf -inf cases
     if (eq(*arg, *one) or eq(*arg, *minus_one))
@@ -947,7 +946,7 @@ ACsc::ACsc(const RCP<const Basic> &arg)
     this->type_code_ = type_code_id;
 }
 
-bool ACsc::is_canonical(const RCP<const Basic> &arg)
+bool ACsc::is_canonical(const RCP<const Basic> &arg) const
 {
     // TODO: Add further checks for +inf -inf cases
     if (eq(*arg, *one) or eq(*arg, *minus_one))
@@ -1002,7 +1001,7 @@ ATan::ATan(const RCP<const Basic> &arg)
     this->type_code_ = type_code_id;
 }
 
-bool ATan::is_canonical(const RCP<const Basic> &arg)
+bool ATan::is_canonical(const RCP<const Basic> &arg) const
 {
     // TODO: Add further checks for +inf -inf cases
     if (eq(*arg, *zero) or eq(*arg, *one) or eq(*arg, *minus_one))
@@ -1058,7 +1057,7 @@ ACot::ACot(const RCP<const Basic> &arg)
     this->type_code_ = type_code_id;
 }
 
-bool ACot::is_canonical(const RCP<const Basic> &arg)
+bool ACot::is_canonical(const RCP<const Basic> &arg) const
 {
     // TODO: Add further checks for +inf -inf cases
     if (eq(*arg, *zero) or eq(*arg, *one) or eq(*arg, *minus_one))
@@ -1120,7 +1119,7 @@ ATan2::ATan2(const RCP<const Basic> &num, const RCP<const Basic> &den)
 }
 
 bool ATan2::is_canonical(const RCP<const Basic> &num,
-                        const RCP<const Basic> &den)
+                        const RCP<const Basic> &den) const
 {
     if (eq(*num, *zero) or eq(*num, *den) or eq(*num, *mul(minus_one, den)))
         return false;
@@ -1136,7 +1135,7 @@ bool ATan2::__eq__(const Basic &o) const
 {
     if (is_a<ATan2>(o)) {
         const ATan2 &s = static_cast<const ATan2 &>(o);
-        if(eq(*num_, *(s.get_num())) and eq(*den_, *(s.get_den())))
+        if (eq(*num_, *(s.get_num())) and eq(*den_, *(s.get_den())))
             return true;
         else
             return false;
@@ -1224,74 +1223,6 @@ RCP<const Basic> atan2(const RCP<const Basic> &num, const RCP<const Basic> &den)
 
 /* ---------------------------- */
 
-RCP<const Basic> Sin::diff(const RCP<const Symbol> &x) const
-{
-    return mul(cos(get_arg()), get_arg()->diff(x));
-}
-
-RCP<const Basic> Cos::diff(const RCP<const Symbol> &x) const
-{
-    return mul(mul(minus_one, sin(get_arg())), get_arg()->diff(x));
-}
-
-RCP<const Basic> Tan::diff(const RCP<const Symbol> &x) const
-{
-    RCP<const Integer> two = integer(2);
-    return mul(add(one, pow(tan(get_arg()), two)), get_arg()->diff(x));
-}
-
-RCP<const Basic> Cot::diff(const RCP<const Symbol> &x) const
-{
-    RCP<const Integer> two = integer(2);
-    return mul(mul(add(one, pow(cot(get_arg()), two)), minus_one), get_arg()->diff(x));
-}
-
-RCP<const Basic> Csc::diff(const RCP<const Symbol> &x) const
-{
-    return mul(mul(mul(cot(get_arg()), csc(get_arg())), minus_one), get_arg()->diff(x));
-}
-
-RCP<const Basic> Sec::diff(const RCP<const Symbol> &x) const
-{
-    return mul(mul(tan(get_arg()), sec(get_arg())), get_arg()->diff(x));
-}
-
-RCP<const Basic> ASin::diff(const RCP<const Symbol> &x) const
-{
-    return mul(div(one, sqrt(sub(one, pow(get_arg(), i2)))), get_arg()->diff(x));
-}
-
-RCP<const Basic> ACos::diff(const RCP<const Symbol> &x) const
-{
-    return mul(div(minus_one, sqrt(sub(one, pow(get_arg(), i2)))), get_arg()->diff(x));
-}
-
-RCP<const Basic> ASec::diff(const RCP<const Symbol> &x) const
-{
-    return mul(div(one, mul(pow(get_arg(), i2), sqrt(sub(one, div(one, pow(get_arg(), i2)))))), get_arg()->diff(x));
-}
-
-RCP<const Basic> ACsc::diff(const RCP<const Symbol> &x) const
-{
-    return mul(div(minus_one, mul(pow(get_arg(), i2), sqrt(sub(one, div(one, pow(get_arg(), i2)))))), get_arg()->diff(x));
-}
-
-RCP<const Basic> ATan::diff(const RCP<const Symbol> &x) const
-{
-    return mul(div(one, add(one, pow(get_arg(), i2))), get_arg()->diff(x));
-}
-
-RCP<const Basic> ACot::diff(const RCP<const Symbol> &x) const
-{
-    return mul(div(minus_one, add(one, pow(get_arg(), i2))), get_arg()->diff(x));
-}
-
-RCP<const Basic> ATan2::diff(const RCP<const Symbol> &x) const
-{
-    return mul(div(pow(den_, i2), add(pow(den_, i2), pow(num_, i2))),
-                div(num_, den_)->diff(x));
-}
-
 RCP<const Basic> Sin::create(const RCP<const Basic> &arg) const
 {
     return sin(arg);
@@ -1360,7 +1291,7 @@ LambertW::LambertW(const RCP<const Basic> &arg)
     this->type_code_ = type_code_id;
 }
 
-bool LambertW::is_canonical(const RCP<const Basic> &arg)
+bool LambertW::is_canonical(const RCP<const Basic> &arg) const
 {
     if (eq(*arg, *zero)) return false;
     if (eq(*arg, *E)) return false;
@@ -1390,14 +1321,6 @@ int LambertW::compare(const Basic &o) const
     return arg_->__cmp__(*(static_cast<const LambertW &>(o).arg_));
 }
 
-RCP<const Basic> LambertW::diff(const RCP<const Symbol> &x) const
-{
-    // check http://en.wikipedia.org/wiki/Lambert_W_function#Derivative
-    // for the equation
-    RCP<const Basic> lambertw_val = lambertw(arg_);
-    return mul(div(lambertw_val, mul(arg_, add(lambertw_val, one))), arg_->diff(x));
-}
-
 RCP<const Basic> lambertw(const RCP<const Basic> &arg)
 {
     if (eq(*arg, *zero)) return zero;
@@ -1421,7 +1344,7 @@ FunctionSymbol::FunctionSymbol(std::string name, const vec_basic &arg)
     this->type_code_ = type_code_id;
 }
 
-bool FunctionSymbol::is_canonical(const vec_basic &arg)
+bool FunctionSymbol::is_canonical(const vec_basic &arg) const
 {
     return true;
 }
@@ -1452,43 +1375,6 @@ int FunctionSymbol::compare(const Basic &o) const
         return vec_basic_compare(arg_, s.arg_);
     else
         return name_ < s.name_ ? -1 : 1;
-}
-
-RCP<const Basic> FunctionSymbol::diff(const RCP<const Symbol> &x) const
-{
-    RCP<const Basic> diff = zero, t;
-    RCP<const Basic> self = rcp_from_this();
-    RCP<const Symbol> s;
-    std::string name;
-    unsigned count  = 0;
-    bool found_x = false;
-    for (const auto &a : arg_) {
-        if (eq(*a, *x)) {
-            found_x = true;
-            count++;
-        } else if (count < 2 and neq(*a->diff(x), *zero)) {
-            count++;
-        }
-    }
-    if (count == 1 and found_x) {
-        return Derivative::create(self, {x});
-    }
-    for (unsigned i = 0; i < arg_.size(); i++) {
-        t = arg_[i]->diff(x);
-        if (neq(*t, *zero)) {
-            name = "x";
-            do {
-                name = "_" + name;
-                s = symbol(name);
-            } while (has_symbol(*self, s));
-            vec_basic v = arg_;
-            v[i] = s;
-            map_basic_basic m;
-            insert(m, v[i], arg_[i]);
-            diff = add(diff, mul(t, make_rcp<const Subs>(Derivative::create(create(v), {v[i]}), m)));
-        }
-    }
-    return diff;
 }
 
 RCP<const Basic> FunctionSymbol::create(const vec_basic &x) const {
@@ -1557,7 +1443,7 @@ bool Derivative::is_canonical(const RCP<const Basic> &arg,
         // and should not appear anywhere else.
         for (const auto &a : f->get_args()) {
             if (eq(*a, *s)) {
-                if(found_s) {
+                if (found_s) {
                     return false;
                 } else {
                     found_s = true;
@@ -1601,14 +1487,6 @@ int Derivative::compare(const Basic &o) const
     if (cmp != 0) return cmp;
     cmp = vec_basic_compare(x_, s.x_);
     return cmp;
-}
-
-RCP<const Basic> Derivative::diff(const RCP<const Symbol> &x) const
-{
-    if (eq(*(arg_->diff(x)), *zero)) return zero;
-    vec_basic t = x_;
-    t.push_back(x);
-    return Derivative::create(arg_, t);
 }
 
 RCP<const Basic> Derivative::subs(const map_basic_basic &subs_dict) const
@@ -1735,25 +1613,6 @@ vec_basic Subs::get_args() const {
     return v;
 }
 
-RCP<const Basic> Subs::diff(const RCP<const Symbol> &x) const
-{
-    RCP<const Basic> diff = zero, t;
-    if (dict_.count(x) == 0) {
-        diff = arg_->diff(x)->subs(dict_);
-    }
-    for (const auto &p: dict_) {
-        t = p.second->diff(x);
-        if (neq(*t, *zero)) {
-            if (is_a<Symbol>(*p.first)) {
-                diff = add(diff, mul(t, arg_->diff(rcp_static_cast<const Symbol>(p.first))->subs(dict_)));
-            } else {
-                return Derivative::create(rcp_from_this(), {x});
-            }
-        }
-    }
-    return diff;
-}
-
 RCP<const Basic> Subs::subs(const map_basic_basic &subs_dict) const
 {
     auto it = subs_dict.find(rcp_from_this());
@@ -1811,7 +1670,7 @@ Sinh::Sinh(const RCP<const Basic> &arg)
     this->type_code_ = type_code_id;
 }
 
-bool Sinh::is_canonical(const RCP<const Basic> &arg)
+bool Sinh::is_canonical(const RCP<const Basic> &arg) const
 {
     // TODO: Add further checks for +inf -inf cases
     if (eq(*arg, *zero))
@@ -1866,11 +1725,6 @@ RCP<const Basic>  Sinh::expand_as_exp() const
     return div(sub(exp(get_arg()), exp(mul(get_arg(), minus_one))), i2);
 }
 
-RCP<const Basic> Sinh::diff(const RCP<const Symbol> &x) const
-{
-    return mul(cosh(get_arg()), get_arg()->diff(x));
-}
-
 Cosh::Cosh(const RCP<const Basic> &arg)
     : HyperbolicFunction(arg)
 {
@@ -1878,7 +1732,7 @@ Cosh::Cosh(const RCP<const Basic> &arg)
     this->type_code_ = type_code_id;
 }
 
-bool Cosh::is_canonical(const RCP<const Basic> &arg)
+bool Cosh::is_canonical(const RCP<const Basic> &arg) const
 {
     // TODO: Add further checks for +inf -inf cases
     if (eq(*arg, *zero))
@@ -1933,11 +1787,6 @@ RCP<const Basic>  Cosh::expand_as_exp() const
     return div(add(exp(get_arg()), exp(mul(get_arg(), minus_one))), i2);
 }
 
-RCP<const Basic> Cosh::diff(const RCP<const Symbol> &x) const
-{
-    return mul(sinh(get_arg()), get_arg()->diff(x));
-}
-
 Tanh::Tanh(const RCP<const Basic> &arg)
     : HyperbolicFunction(arg)
 {
@@ -1945,7 +1794,7 @@ Tanh::Tanh(const RCP<const Basic> &arg)
     this->type_code_ = type_code_id;
 }
 
-bool Tanh::is_canonical(const RCP<const Basic> &arg)
+bool Tanh::is_canonical(const RCP<const Basic> &arg) const
 {
     // TODO: Add further checks for +inf -inf cases
     if (eq(*arg, *zero))
@@ -2002,11 +1851,6 @@ RCP<const Basic>  Tanh::expand_as_exp() const
     return div(sub(pos_exp, neg_exp), add(pos_exp, neg_exp));
 }
 
-RCP<const Basic> Tanh::diff(const RCP<const Symbol> &x) const
-{
-    return mul(sub(one, pow(tanh(get_arg()), i2)), get_arg()->diff(x));
-}
-
 Coth::Coth(const RCP<const Basic> &arg)
     : HyperbolicFunction(arg)
 {
@@ -2014,7 +1858,7 @@ Coth::Coth(const RCP<const Basic> &arg)
     this->type_code_ = type_code_id;
 }
 
-bool Coth::is_canonical(const RCP<const Basic> &arg)
+bool Coth::is_canonical(const RCP<const Basic> &arg) const
 {
     // TODO: Add further checks for +inf -inf cases
     if (eq(*arg, *zero))
@@ -2074,11 +1918,6 @@ RCP<const Basic>  Coth::expand_as_exp() const
     return div(add(pos_exp, neg_exp), sub(pos_exp, neg_exp));
 }
 
-RCP<const Basic> Coth::diff(const RCP<const Symbol> &x) const
-{
-    return mul(div(minus_one, pow(sinh(get_arg()), i2)), get_arg()->diff(x));
-}
-
 ASinh::ASinh(const RCP<const Basic> &arg)
     : HyperbolicFunction(arg)
 {
@@ -2086,7 +1925,7 @@ ASinh::ASinh(const RCP<const Basic> &arg)
     this->type_code_ = type_code_id;
 }
 
-bool ASinh::is_canonical(const RCP<const Basic> &arg)
+bool ASinh::is_canonical(const RCP<const Basic> &arg) const
 {
     // TODO: Add further checks for +inf -inf cases
     if (eq(*arg, *zero) or eq(*arg, *one) or eq(*arg, *minus_one))
@@ -2138,11 +1977,6 @@ RCP<const Basic> asinh(const RCP<const Basic> &arg)
     return make_rcp<const ASinh>(arg);
 }
 
-RCP<const Basic> ASinh::diff(const RCP<const Symbol> &x) const
-{
-    return mul(div(one, sqrt(add(pow(get_arg(), i2), one))), get_arg()->diff(x));
-}
-
 ACosh::ACosh(const RCP<const Basic> &arg)
     : HyperbolicFunction(arg)
 {
@@ -2150,7 +1984,7 @@ ACosh::ACosh(const RCP<const Basic> &arg)
     this->type_code_ = type_code_id;
 }
 
-bool ACosh::is_canonical(const RCP<const Basic> &arg)
+bool ACosh::is_canonical(const RCP<const Basic> &arg) const
 {
     // TODO: Add further checks for +inf -inf cases
     // TODO: Lookup into a cst table once complex is implemented
@@ -2188,11 +2022,6 @@ RCP<const Basic> acosh(const RCP<const Basic> &arg)
     return make_rcp<const ACosh>(arg);
 }
 
-RCP<const Basic> ACosh::diff(const RCP<const Symbol> &x) const
-{
-    return mul(div(one, sqrt(sub(pow(get_arg(), i2), one))), get_arg()->diff(x));
-}
-
 ATanh::ATanh(const RCP<const Basic> &arg)
     : HyperbolicFunction(arg)
 {
@@ -2200,7 +2029,7 @@ ATanh::ATanh(const RCP<const Basic> &arg)
     this->type_code_ = type_code_id;
 }
 
-bool ATanh::is_canonical(const RCP<const Basic> &arg)
+bool ATanh::is_canonical(const RCP<const Basic> &arg) const
 {
     // TODO: Add further checks for +inf -inf cases
     if (eq(*arg, *zero))
@@ -2250,11 +2079,6 @@ RCP<const Basic> atanh(const RCP<const Basic> &arg)
     return make_rcp<const ATanh>(arg);
 }
 
-RCP<const Basic> ATanh::diff(const RCP<const Symbol> &x) const
-{
-    return mul(div(one, sub(one, pow(get_arg(), i2))), get_arg()->diff(x));
-}
-
 ACoth::ACoth(const RCP<const Basic> &arg)
     : HyperbolicFunction(arg)
 {
@@ -2262,7 +2086,7 @@ ACoth::ACoth(const RCP<const Basic> &arg)
     this->type_code_ = type_code_id;
 }
 
-bool ACoth::is_canonical(const RCP<const Basic> &arg)
+bool ACoth::is_canonical(const RCP<const Basic> &arg) const
 {
     // TODO: Add further checks for +inf -inf cases
     if (is_a_Number(*arg)) {
@@ -2309,11 +2133,6 @@ RCP<const Basic> acoth(const RCP<const Basic> &arg)
     return make_rcp<const ACoth>(arg);
 }
 
-RCP<const Basic> ACoth::diff(const RCP<const Symbol> &x) const
-{
-    return mul(div(one, sub(one, pow(get_arg(), i2))), get_arg()->diff(x));
-}
-
 ASech::ASech(const RCP<const Basic> &arg)
     : HyperbolicFunction(arg)
 {
@@ -2321,7 +2140,7 @@ ASech::ASech(const RCP<const Basic> &arg)
     this->type_code_ = type_code_id;
 }
 
-bool ASech::is_canonical(const RCP<const Basic> &arg)
+bool ASech::is_canonical(const RCP<const Basic> &arg) const
 {
     // TODO: Add further checks for +inf -inf cases
     // TODO: Lookup into a cst table once complex is implemented
@@ -2351,11 +2170,6 @@ RCP<const Basic> asech(const RCP<const Basic> &arg)
     // TODO: Lookup into a cst table once complex is implemented
     if (eq(*arg, *one)) return zero;
     return make_rcp<const ASech>(arg);
-}
-
-RCP<const Basic> ASech::diff(const RCP<const Symbol> &x) const
-{
-    return mul(div(minus_one, mul(sqrt(sub(one, pow(get_arg(), i2))), get_arg())), get_arg()->diff(x));
 }
 
 RCP<const Basic> Sinh::create(const RCP<const Basic> &arg) const
@@ -2410,7 +2224,7 @@ KroneckerDelta::KroneckerDelta(const RCP<const Basic> &i, const RCP<const Basic>
     this->type_code_ = type_code_id;
 }
 
-bool KroneckerDelta::is_canonical(const RCP<const Basic> &i, const RCP<const Basic> &j)
+bool KroneckerDelta::is_canonical(const RCP<const Basic> &i, const RCP<const Basic> &j) const
 {
     RCP<const Basic> diff = expand(sub(i, j));
     if (eq(*diff, *zero)) {
@@ -2484,7 +2298,7 @@ LeviCivita::LeviCivita(const vec_basic&& arg)
     this->type_code_ = type_code_id;
 }
 
-bool LeviCivita::is_canonical(const vec_basic &arg)
+bool LeviCivita::is_canonical(const vec_basic &arg) const
 {
     bool are_int = true;
     for (const auto &p: arg) {
@@ -2578,7 +2392,7 @@ Zeta::Zeta(const RCP<const Basic> &s)
     this->type_code_ = type_code_id;
 }
 
-bool Zeta::is_canonical(const RCP<const Basic> &s, const RCP<const Basic> &a)
+bool Zeta::is_canonical(const RCP<const Basic> &s, const RCP<const Basic> &a) const
 {
     if (eq(*s, *zero)) return false;
     if (eq(*s, *one)) return false;
@@ -2606,12 +2420,6 @@ int Zeta::compare(const Basic &o) const
 {
     SYMENGINE_ASSERT(is_a<Zeta>(o))
     return s_->__cmp__(*(static_cast<const Zeta &>(o).s_));
-}
-
-RCP<const Basic> Zeta::diff(const RCP<const Symbol> &x) const
-{
-    // TODO: check if it is differentiated wrt s
-    return mul(mul(mul(minus_one, s_), zeta(add(s_, one), a_)), a_->diff(x));
 }
 
 RCP<const Basic> zeta(const RCP<const Basic> &s, const RCP<const Basic> &a)
@@ -2645,7 +2453,7 @@ Dirichlet_eta::Dirichlet_eta(const RCP<const Basic> &s)
     SYMENGINE_ASSERT(is_canonical(s_))
 }
 
-bool Dirichlet_eta::is_canonical(const RCP<const Basic> &s)
+bool Dirichlet_eta::is_canonical(const RCP<const Basic> &s) const
 {
     if (eq(*s, *one)) return false;
     if (not (is_a<Zeta>(*zeta(s)))) return false;
@@ -2699,7 +2507,7 @@ Gamma::Gamma(const RCP<const Basic> &arg)
     this->type_code_ = type_code_id;
 }
 
-bool Gamma::is_canonical(const RCP<const Basic> &arg)
+bool Gamma::is_canonical(const RCP<const Basic> &arg) const
 {
     if (is_a<Integer>(*arg)) return false;
     if (is_a<Rational>(*arg) and
@@ -2733,44 +2541,59 @@ int Gamma::compare(const Basic &o) const
     return arg_->__cmp__(*(static_cast<const Gamma &>(o).arg_));
 }
 
+RCP<const Basic> gamma_positive_int(const RCP<const Basic> &arg)
+{
+    SYMENGINE_ASSERT(is_a<Integer>(*arg))
+    RCP<const Integer> arg_ = rcp_static_cast<const Integer>(arg);
+    SYMENGINE_ASSERT(arg_->is_positive())
+    return factorial((arg_->subint(*one))->as_int());
+}
+
+RCP<const Basic> gamma_multiple_2(const RCP<const Basic>& arg)
+{
+    SYMENGINE_ASSERT(is_a<Rational>(*arg))
+    RCP<const Rational> arg_ = rcp_static_cast<const Rational>(arg);
+    SYMENGINE_ASSERT(arg_->i.get_den() == 2)
+    RCP<const Integer> n, k;
+    RCP<const Number> coeff;
+    n = quotient_f(*(integer(abs(arg_->i.get_num()))), *(integer(arg_->i.get_den())));
+    if (arg_->is_positive()) {
+        k = n;
+        coeff = one;
+    } else {
+        n = n->addint(*one);
+        k = n;
+        if ((n->as_int() & 1) == 0) {
+            coeff = one;
+        } else {
+            coeff = minus_one;
+        }
+    }
+    int j = 1;
+    for (int i = 3; i < 2*k->as_int(); i = i + 2) {
+        j = j * i;
+    }
+    coeff = mulnum(coeff, integer(j));
+    if (arg_->is_positive()) {
+        return div(mul(coeff, sqrt(pi)), pow(i2, n));
+    } else {
+        return div(mul(pow(i2, n), sqrt(pi)), coeff);
+    }
+}
+
 RCP<const Basic> gamma(const RCP<const Basic> &arg)
 {
     if (is_a<Integer>(*arg)) {
         RCP<const Integer> arg_ = rcp_static_cast<const Integer>(arg);
         if (arg_->is_positive()) {
-            return factorial((arg_->subint(*one))->as_int());
+            return gamma_positive_int(arg);
         } else {
             throw std::runtime_error("Complex Infinity not yet implemented");
         }
     } else if (is_a<Rational>(*arg)) {
         RCP<const Rational> arg_ = rcp_static_cast<const Rational>(arg);
         if ((arg_->i.get_den()) == 2) {
-            RCP<const Integer> n, k;
-            RCP<const Number> coeff;
-            n = quotient_f(*(integer(abs(arg_->i.get_num()))), *(integer(arg_->i.get_den())));
-            if (arg_->is_positive()) {
-                k = n;
-                coeff = one;
-            } else {
-                n = n->addint(*one);
-                k = n;
-                if ((n->as_int() & 1) == 0) {
-                    coeff = one;
-                } else {
-                    coeff = minus_one;
-                }
-            }
-            int j = 1;
-            for (int i = 3; i < 2*k->as_int(); i = i + 2)
-            {
-                j = j * i;
-            }
-            coeff = mulnum(coeff, integer(j));
-            if (arg_->is_positive()) {
-                return div(mul(coeff, sqrt(pi)), pow(i2, n));
-            } else {
-                return div(mul(pow(i2, n), sqrt(pi)), coeff);
-            }
+            return gamma_multiple_2(arg);
         } else {
             return make_rcp<const Gamma>(arg);
         }
@@ -2787,7 +2610,7 @@ LowerGamma::LowerGamma(const RCP<const Basic> &s, const RCP<const Basic> &x)
     this->type_code_ = type_code_id;
 }
 
-bool LowerGamma::is_canonical(const RCP<const Basic> &s, const RCP<const Basic> &x)
+bool LowerGamma::is_canonical(const RCP<const Basic> &s, const RCP<const Basic> &x) const
 {
     // Only special values are evaluated
     if (eq(*s, *one)) return false;
@@ -2861,7 +2684,7 @@ UpperGamma::UpperGamma(const RCP<const Basic> &s, const RCP<const Basic> &x)
     this->type_code_ = type_code_id;
 }
 
-bool UpperGamma::is_canonical(const RCP<const Basic> &s, const RCP<const Basic> &x)
+bool UpperGamma::is_canonical(const RCP<const Basic> &s, const RCP<const Basic> &x) const
 {
     // Only special values are evaluated
     if (eq(*s, *one)) return false;
@@ -2930,6 +2753,230 @@ RCP<const Basic> uppergamma(const RCP<const Basic> &s, const RCP<const Basic> &x
 }
 
 
+RCP<const Beta> Beta::from_two_basic(const RCP<const Basic> &x, const RCP<const Basic> &y)
+{
+        if (x->__cmp__(*y) == -1) {
+            return make_rcp<const Beta>(y, x);
+        }
+        return make_rcp<const Beta>(x, y);
+}
+
+bool Beta::is_canonical(const RCP<const Basic> &x, const RCP<const Basic> &y)
+{
+    if (x->__cmp__(*y) == -1) {
+        return false;
+    }
+    if (is_a<Integer>(*x) or (is_a<Rational>(*x) and
+        (rcp_static_cast<const Rational>(x)->i.get_den()) == 2))
+    {
+        if (is_a<Integer>(*y) or (is_a<Rational>(*y) and
+        (rcp_static_cast<const Rational>(y)->i.get_den()) == 2)) {
+            return false;
+        }
+    }
+    return true;
+}
+
+std::size_t Beta::__hash__() const
+{
+    std::size_t seed = BETA;
+    hash_combine<Basic>(seed, *x_);
+    hash_combine<Basic>(seed, *y_);
+    return seed;
+}
+
+bool Beta::__eq__(const Basic &o) const
+{
+    if (is_a<Beta>(o)) {
+        if (eq(*x_, *(static_cast<const Beta &>(o).x_)) and
+            eq(*y_, *(static_cast<const Beta &>(o).y_))) {
+            return true;
+        }
+    }
+    return false;
+}
+
+int Beta::compare(const Basic &o) const
+{
+    SYMENGINE_ASSERT(is_a<Beta>(o))
+    const Beta &b = static_cast<const Beta &>(o);
+    if (eq(*x_, *(b.x_))) {
+        return y_->__cmp__(*(static_cast<const Beta &>(o).y_));
+    }
+    return x_->__cmp__(*(static_cast<const Beta &>(o).x_));
+}
+
+RCP<const Basic> Beta::rewrite_as_gamma() const
+{
+    return div(mul(gamma(x_), gamma(y_)), add(x_, y_));
+}
+
+RCP<const Basic> beta(const RCP<const Basic> &x, const RCP<const Basic> &y)
+{
+    // Only special values are being evaluated
+    if (eq(*add(x, y), *one)) {
+        throw std::runtime_error("Complex Infinity not yet implemented");
+    }
+
+    if (is_a<Integer>(*x)) {
+        RCP<const Integer> x_int = rcp_static_cast<const Integer>(x);
+        if (x_int->is_positive()) {
+            if (is_a<Integer>(*y)) {
+                RCP<const Integer> y_int = rcp_static_cast<const Integer>(y);
+                if (y_int->is_positive()) {
+                    return div(mul(gamma_positive_int(x), gamma_positive_int(y)), gamma_positive_int(add(x, y)));
+                } else {
+                    throw std::runtime_error("Complex Infinity not yet implemented");
+                }
+            } else if (is_a<Rational>(*y)) {
+                RCP<const Rational> y_ = rcp_static_cast<const Rational>(y);
+                if ((y_->i.get_den()) == 2) {
+                    return div(mul(gamma_positive_int(x), gamma_multiple_2(y)), gamma_multiple_2(add(x, y)));
+                } else {
+                    return Beta::from_two_basic(x, y);
+                }
+            }
+        } else {
+            throw std::runtime_error("Complex Infinity not yet implemented");
+        }
+    }
+
+    if (is_a<Integer>(*y)) {
+        RCP<const Integer> y_int = rcp_static_cast<const Integer>(y);
+        if (y_int->is_positive()) {
+         if (is_a<Rational>(*x)) {
+                RCP<const Rational> x_ = rcp_static_cast<const Rational>(x);
+                if ((x_->i.get_den()) == 2) {
+                    return div(mul(gamma_positive_int(y), gamma_multiple_2(x)), gamma_multiple_2(add(x, y)));
+                } else {
+                    return Beta::from_two_basic(x, y);
+                }
+            }
+        } else {
+            throw std::runtime_error("Complex Infinity not yet implemented");
+        }
+    }
+
+    if (is_a<const Rational>(*x) and (rcp_static_cast<const Rational>(x))->i.get_den() == 2) {
+            if (is_a<Integer>(*y)) {
+                RCP<const Integer> y_int = rcp_static_cast<const Integer>(y);
+                if (y_int->is_positive()) {
+                    return div(mul(gamma_multiple_2(x), gamma_positive_int(y)), gamma_multiple_2(add(x, y)));
+                } else {
+                    throw std::runtime_error("Complex Infinity not yet implemented");
+                }
+            }
+            if (is_a<const Rational>(*y) and (rcp_static_cast<const Rational>(y))->i.get_den() == 2) {
+                return div(mul(gamma_multiple_2(x), gamma_multiple_2(y)), gamma_positive_int(add(x, y)));
+            }
+    }
+    return Beta::from_two_basic(x, y);
+}
+
+
+bool PolyGamma::is_canonical(const RCP<const Basic> &n, const RCP<const Basic> &x)
+{
+    if (is_a_Number(*x) and not (rcp_static_cast<const Number>(x))->is_positive()) {
+        return false;
+    }
+    if (eq(*n, *zero)) {
+        if (eq(*x, *one)) {
+            return false;
+        }
+        if (is_a<Rational>(*x)) {
+            auto x_ = rcp_static_cast<const Rational>(x);
+            auto num = x_->i.get_num();
+            auto den = x_->i.get_den();
+            if (den == 2 and (num == 1 or num == 3)) {
+                return false;
+            }
+            if (den == 4 and num == 1) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+std::size_t PolyGamma::__hash__() const
+{
+    std::size_t seed = POLYGAMMA;
+    hash_combine<Basic>(seed, *n_);
+    hash_combine<Basic>(seed, *x_);
+    return seed;
+}
+
+bool PolyGamma::__eq__(const Basic &o) const
+{
+    if (is_a<PolyGamma>(o) and
+        eq(*x_, *(static_cast<const PolyGamma &>(o).x_)) and
+        eq(*n_, *(static_cast<const PolyGamma &>(o).n_)))
+        return true;
+    return false;
+}
+
+int PolyGamma::compare(const Basic &o) const
+{
+    SYMENGINE_ASSERT(is_a<PolyGamma>(o))
+    const PolyGamma &pg = static_cast<const PolyGamma &>(o);
+    if (neq(*n_, *(pg.n_))) {
+        return n_->__cmp__(*(pg.n_));
+    } else {
+        return x_->__cmp__(*(pg.x_));
+    }
+}
+
+RCP<const Basic> PolyGamma::rewrite_as_zeta() const
+{
+    if (not is_a<Integer>(*n_)) {
+        return rcp_from_this();
+    }
+    RCP<const Integer> n = rcp_static_cast<const Integer>(n_);
+    if (not (n->is_positive())) {
+        return rcp_from_this();
+    }
+    if ((n->as_int() & 1) == 0) {
+        return neg(mul(factorial(n->as_int()), zeta(add(n_, one), x_)));
+    } else {
+        return mul(factorial(n->as_int()), zeta(add(n_, one), x_));
+    }
+}
+
+RCP<const Basic> polygamma(const RCP<const Basic> &n_, const RCP<const Basic> &x_)
+{
+    // Only special values are being evaluated
+    if (is_a_Number(*x_) and not (rcp_static_cast<const Number>(x_))->is_positive()) {
+        throw std::runtime_error("Complex Infinity not yet implemented");
+    }
+
+    if (eq(*n_, *zero)) {
+        if (eq(*x_, *one)) {
+            return neg(EulerGamma);
+        }
+        if (is_a<Rational>(*x_)) {
+            RCP<const Rational> x = rcp_static_cast<const Rational>(x_);
+            auto den = x->i.get_den();
+            if (den == 2) {
+                auto num = x->i.get_num();
+                if (num == 1) {
+                       return sub(mul(im2, log(i2)), EulerGamma);
+                }
+                if (num == 3) {
+                       return add(i2, sub(mul(im2, log(i2)), EulerGamma));
+                }
+            }
+            if (den == 4) {
+                auto num = x->i.get_num();
+                if (num == 1) {
+                       return add(neg(div(pi, i3)), sub(mul(im3, log(i2)), EulerGamma));
+                }
+            }
+        }
+    }
+    return make_rcp<const PolyGamma>(n_, x_);
+}
+
+
 Abs::Abs(const RCP<const Basic> &arg)
     : arg_{arg}
 {
@@ -2937,7 +2984,7 @@ Abs::Abs(const RCP<const Basic> &arg)
     this->type_code_ = type_code_id;
 }
 
-bool Abs::is_canonical(const RCP<const Basic> &arg)
+bool Abs::is_canonical(const RCP<const Basic> &arg) const
 {
     if (is_a<Integer>(*arg) or is_a<Rational>(*arg)) return false;
     if (is_a_Number(*arg) and not static_cast<const Number &>(*arg).is_exact()) {
@@ -2967,14 +3014,6 @@ int Abs::compare(const Basic &o) const
     return arg_->__cmp__(*(static_cast<const Abs &>(o).arg_));
 }
 
-RCP<const Basic> Abs::diff(const RCP<const Symbol> &x) const
-{
-    if (eq(*arg_->diff(x), *zero))
-        return zero;
-    else
-        return Derivative::create(rcp_from_this(), {x});
-}
-
 RCP<const Basic> abs(const RCP<const Basic> &arg)
 {
     if (is_a<Integer>(*arg)) {
@@ -2987,8 +3026,7 @@ RCP<const Basic> abs(const RCP<const Basic> &arg)
     } else if (is_a<Rational>(*arg)) {
         RCP<const Rational> arg_ = rcp_static_cast<const Rational>(arg);
         if (arg_->is_negative()) {
-            // TODO: make this faster by implementing Rational::neg()
-            return neg(arg_);
+            return arg_->neg();
         } else {
             return arg_;
         }

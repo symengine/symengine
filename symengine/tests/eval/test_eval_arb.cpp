@@ -13,10 +13,12 @@
 #include <symengine/functions.h>
 #include <symengine/eval_arb.h>
 #include <symengine/constants.h>
+#include <symengine/eval_mpfr.h>
 
 using SymEngine::RCP;
 using SymEngine::Basic;
 using SymEngine::integer;
+using SymEngine::eval_mpfr;
 using SymEngine::div;
 using SymEngine::rcp_static_cast;
 using SymEngine::Rational;
@@ -38,6 +40,7 @@ using SymEngine::acsc;
 using SymEngine::asec;
 using SymEngine::acot;
 using SymEngine::E;
+using SymEngine::EulerGamma;
 using SymEngine::eval_arb;
 using SymEngine::print_stack_on_segfault;
 
@@ -625,7 +628,7 @@ TEST_CASE("Cosh: eval_arb", "[eval_arb]")
     arb_clear(a);
 }
 
-TEST_CASE(", eval_arb", "[eval_arb]")
+TEST_CASE("Tanh: eval_arb", "[eval_arb]")
 {
     arb_t a;
     arb_init(a);
@@ -669,6 +672,26 @@ TEST_CASE("Coth: eval_arb", "[eval_arb]")
     mpfr_set_d(f, -sinh(2*5)/(1 - cosh(2*5)), MPFR_RNDN);
 
     REQUIRE(arb_contains_mpfr(a, f));
+    mpfr_clear(f);
+    arb_clear(a);
+}
+
+TEST_CASE("Constants: eval_arb", "[eval_arb]")
+{
+    arb_t a;
+    arb_init(a);
+
+    RCP<const Basic> r1 = mul(EulerGamma, integer(100000000));
+    RCP<const Basic> r2 = div(sub(r1, integer(57721566)), integer(100000000));
+
+    eval_arb(a, *r1, 45);
+
+    mpfr_t f;
+    mpfr_init2(f, 57);
+    eval_mpfr(f, *r1, MPFR_RNDN);
+
+    REQUIRE(arb_contains_mpfr(a, f));
+
     mpfr_clear(f);
     arb_clear(a);
 }

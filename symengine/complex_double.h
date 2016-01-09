@@ -6,7 +6,6 @@
 #ifndef SYMENGINE_COMPLEX_DOUBLE_H
 #define SYMENGINE_COMPLEX_DOUBLE_H
 
-#include <cmath>
 #include <symengine/basic.h>
 #include <symengine/number.h>
 #include <symengine/integer.h>
@@ -455,8 +454,6 @@ public:
             throw std::runtime_error("Not implemented.");
         }
     }
-
-    virtual void accept(Visitor &v) const;
 };
 
 RCP<const ComplexDouble> complex_double(std::complex<double> x);
