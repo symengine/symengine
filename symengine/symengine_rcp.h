@@ -20,8 +20,8 @@
 #else
 
 // Include all Teuchos headers here:
-#include <symengine/teuchos/Teuchos_RCP.hpp>
-#include <symengine/teuchos/Teuchos_TypeNameTraits.hpp>
+#include <symengine/utilities/teuchos/Teuchos_RCP.hpp>
+#include <symengine/utilities/teuchos/Teuchos_TypeNameTraits.hpp>
 
 #endif
 

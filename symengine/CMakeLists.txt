@@ -1,4 +1,4 @@
-add_subdirectory(teuchos)
+add_subdirectory(utilities/teuchos)
 
 # Include Teuchos headers:
 include_directories(BEFORE ${teuchos_SOURCE_DIR})
@@ -37,6 +37,8 @@ set(SRC
     complex_double.cpp
     expand.cpp
     expression.cpp
+    numer_denom.cpp
+    derivative.cpp
 )
 
 if (WITH_MPFR)
@@ -64,6 +66,7 @@ set(HEADERS
     visitor.h    eval_double.h    diophantine.h cwrapper.h  printer.h  real_double.h
     eval_mpfr.h  eval_arb.h       eval_mpc.h    complex_double.h
     real_mpfr.h  complex_mpc.h    type_codes.inc lambda_double.h series.h series_piranha.h
+    basic-methods.inc
 )
 
 # Configure SymEngine using our CMake options:
@@ -86,6 +89,6 @@ install(FILES ${HEADERS} "${symengine_BINARY_DIR}/symengine/symengine_config.h"
     DESTINATION include/symengine)
 
 if (BUILD_TESTS)
-    add_subdirectory(catch)
+    add_subdirectory(utilities/catch)
     add_subdirectory(tests)
 endif()

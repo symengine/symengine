@@ -771,8 +771,8 @@ TEST_CASE("Expand2: arit", "[arit]")
     r2 = expand(r1);
     std::cout << *r2 << std::endl;
 
-    REQUIRE(eq(*r2, *add(add(add(mul(x,z), mul(y, z)), mul(x, w)), mul(y, w))));
-    REQUIRE(neq(*r2, *add(add(add(mul(y,z), mul(y,z)), mul(x, w)), mul(y, w))));
+    REQUIRE(eq(*r2, *add(add(add(mul(x, z), mul(y, z)), mul(x, w)), mul(y, w))));
+    REQUIRE(neq(*r2, *add(add(add(mul(y, z), mul(y, z)), mul(x, w)), mul(y, w))));
 
     r1 = pow(add(x, y), im1);       // 1/(x+y)
     std::cout << *r1 << std::endl;
@@ -917,6 +917,14 @@ TEST_CASE("Expand2: arit", "[arit]")
 
     r1 = expand(pow(add(real_double(0.0), x), i2));
     r2 = add(real_double(0.0), pow(x, i2));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = expand(add(mul(i2, add(x, one)), mul(i3, mul(x, add(x, one)))));
+    r2 = add(i2, add(mul(i5, x), mul(i3, pow(x, i2))));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = expand(mul(i3, add(x, one)));
+    r2 = add(mul(i3, x), i3);
     REQUIRE(eq(*r1, *r2));
 }
 

@@ -46,7 +46,7 @@ UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned 
     poly_ = UnivariatePolynomial::create(var_, vtrunc);
 }
 
-bool UnivariateSeries::is_canonical(const UnivariatePolynomial& poly, const unsigned int &prec)
+bool UnivariateSeries::is_canonical(const UnivariatePolynomial& poly, const unsigned int &prec) const
 {
     return true;
 }

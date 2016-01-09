@@ -36,7 +36,7 @@ public:
     }
 
     //! \return true if canonical
-    bool is_canonical(const UnivariatePolynomial&, const unsigned int &);
+    bool is_canonical(const UnivariatePolynomial&, const unsigned int &) const;
     //! \return size of the hash
     std::size_t __hash__() const;
     /*! Equality comparator
@@ -52,8 +52,6 @@ public:
 
     std::string __str__() const;
     virtual vec_basic get_args() const { return {}; }
-    virtual void accept(Visitor &v) const;
-
 };
 
 

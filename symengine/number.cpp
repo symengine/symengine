@@ -1,5 +1,4 @@
-#include <stdexcept>
-
+#include <symengine/basic.h>
 #include <symengine/add.h>
 #include <symengine/mul.h>
 #include <symengine/symbol.h>
@@ -9,11 +8,6 @@
 #include <symengine/integer.h>
 
 namespace SymEngine {
-
-RCP<const Basic> Number::diff(const RCP<const Symbol> &x) const
-{
-    return zero;
-}
 
 RCP<const Number> Number::sub(const Number &other) const {
     return add(*other.mul(*integer(-1)));

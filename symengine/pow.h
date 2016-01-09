@@ -33,19 +33,14 @@ public:
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
     //! \return `true` if canonical
-    bool is_canonical(const RCP<const Basic> &base,
-            const RCP<const Basic> &exp);
+    bool is_canonical(const Basic &base, const Basic &exp) const;
     //! \return `base` of `base**exp`
     inline RCP<const Basic> get_base() const { return base_; }
     //! \return `exp` of `base**exp`
     inline RCP<const Basic> get_exp() const { return exp_; }
-    //! Differentiate w.r.t Symbol `x`
-    virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
     virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
 
     virtual vec_basic get_args() const;
-
-    virtual void accept(Visitor &v) const;
 };
 
 //! \return Pow from `a` and `b`
@@ -84,15 +79,11 @@ public:
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
     //! \return `true` if canonical
-    bool is_canonical(const RCP<const Basic> &arg);
+    bool is_canonical(const Basic &arg) const;
     //! \return `arg` of `log(arg)`
     inline RCP<const Basic> get_arg() const { return arg_; }
     virtual vec_basic get_args() const { return {arg_}; }
-    //! Differentiate w.r.t Symbol `x`
-    virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
     virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
-
-    virtual void accept(Visitor &v) const;
 };
 
 //! Returns the Natural Logarithm from argument `arg`

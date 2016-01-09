@@ -38,8 +38,8 @@ TEST_CASE("Rational", "[rational]")
 
 TEST_CASE("Rational compare", "[rational compare]")
 {
-    RCP<const Number> q2_5 = rational(2,5);
-    RCP<const Number> q2_5a = rational(2,5);
+    RCP<const Number> q2_5 = rational(2, 5);
+    RCP<const Number> q2_5a = rational(2, 5);
     RCP<const Number> qm1_27 = rational(-1, 27);
     RCP<const Integer> im2 = integer(-2);
     RCP<const Integer> i0 = integer(0);
@@ -58,11 +58,11 @@ TEST_CASE("Rational compare", "[rational compare]")
 
 TEST_CASE("Rational is_power, nth root", "[rational is_power, nth root]")
 {
-    RCP<const Number> q2_5 = rational(2,5);
+    RCP<const Number> q2_5 = rational(2, 5);
     RCP<const Number> qm1_27 = rational(-1, 27);
-    RCP<const Number> q9_25 = rational(9,25);
-    RCP<const Number> qm1_3 = rational(-1,3);
-    RCP<const Number> q3_5 = rational(3,5);
+    RCP<const Number> q9_25 = rational(9, 25);
+    RCP<const Number> qm1_3 = rational(-1, 3);
+    RCP<const Number> q3_5 = rational(3, 5);
     RCP<const Number> res;
 
     REQUIRE(not q2_5->is_perfect_power());

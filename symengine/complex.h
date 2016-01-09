@@ -32,7 +32,7 @@ public:
      * */
     static RCP<const Number> from_mpq(const mpq_class re, const mpq_class im);
     //! \return true if canonical
-    bool is_canonical(const mpq_class &real, const mpq_class &imaginary);
+    bool is_canonical(const mpq_class &real, const mpq_class &imaginary) const;
     //! \return size of the hash
     virtual std::size_t __hash__() const;
     /*! Equality comparator
@@ -285,8 +285,6 @@ public:
     virtual RCP<const Number> rpow(const Number &other) const {
         throw std::runtime_error("Not implemented.");
     };
-
-    virtual void accept(Visitor &v) const;
 };
 
 } // SymEngine

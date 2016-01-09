@@ -1,5 +1,3 @@
-#include <cmath>
-
 #include <symengine/basic.h>
 #include <symengine/symbol.h>
 #include <symengine/add.h>

@@ -83,7 +83,7 @@ RCP<const Basic> hermite(RCP<const Integer> n, RCP<const Basic> y)
 {
     if (eq(*n, *one)) return mul(y, integer(2));
     if (eq(*n, *zero)) return one;
-    return expand(sub(mul(mul(integer(2), y), hermite(n->subint(*one), y)), 
+    return expand(sub(mul(mul(integer(2), y), hermite(n->subint(*one), y)),
         mul(integer(2), mul(n->subint(*one), hermite(n->subint(*integer(2)), y)))));
 }
 

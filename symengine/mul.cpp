@@ -1,5 +1,4 @@
-#include <stdexcept>
-
+#include <symengine/basic.h>
 #include <symengine/add.h>
 #include <symengine/mul.h>
 #include <symengine/symbol.h>
@@ -17,7 +16,7 @@ Mul::Mul(const RCP<const Number> &coef, map_basic_basic&& dict)
 }
 
 bool Mul::is_canonical(const RCP<const Number> &coef,
-        const map_basic_basic& dict)
+        const map_basic_basic& dict) const
 {
     if (coef == null) return false;
     // e.g. 0*x*y
@@ -436,44 +435,6 @@ void Mul::power_num(const Ptr<RCP<const Number>> &coef, map_basic_basic &d,
     }
 }
 
-RCP<const Basic> Mul::diff(const RCP<const Symbol> &x) const
-{
-    RCP<const Number> overall_coef = zero;
-    umap_basic_num add_dict;
-    for (const auto &p: dict_) {
-        RCP<const Number> coef = coef_;
-        RCP<const Basic> factor = pow(p.first, p.second)->diff(x);
-        if (is_a_Number(*factor) and
-                rcp_static_cast<const Number>(factor)->is_zero()) {
-            // overall_coef += factor is done to coerce overall_coef to the type of factor
-            iaddnum(outArg(overall_coef), rcp_static_cast<const Number>(factor));
-            continue;
-        }
-        map_basic_basic d = dict_;
-        d.erase(p.first);
-        if (is_a_Number(*factor)) {
-            imulnum(outArg(coef), rcp_static_cast<const Number>(factor));
-        } else if (is_a<Mul>(*factor)) {
-            RCP<const Mul> tmp = rcp_static_cast<const Mul>(factor);
-            imulnum(outArg(coef), tmp->coef_);
-            for (const auto &q: tmp->dict_) {
-                Mul::dict_add_term_new(outArg(coef), d, q.second, q.first);
-            }
-        } else {
-            RCP<const Basic> exp, t;
-            Mul::as_base_exp(factor, outArg(exp), outArg(t));
-            Mul::dict_add_term_new(outArg(coef), d, exp, t);
-        }
-        if (d.size() == 0) {
-            iaddnum(outArg(overall_coef), coef);
-        } else {
-            RCP<const Basic> mul = Mul::from_dict(one, std::move(d));
-            Add::dict_add_term(add_dict, coef, mul);
-        }
-    }
-    return Add::from_dict(overall_coef, std::move(add_dict));
-}
-
 RCP<const Basic> Mul::subs(const map_basic_basic &subs_dict) const
 {
     RCP<const Mul> self = rcp_from_this_cast<const Mul>();
@@ -484,7 +445,7 @@ RCP<const Basic> Mul::subs(const map_basic_basic &subs_dict) const
     RCP<const Number> coef = coef_;
     map_basic_basic d;
     for (const auto &p: dict_) {
-        RCP<const Basic> factor_old = pow(p.first, p.second);
+        RCP<const Basic> factor_old = Mul::from_dict(one, {{p.first, p.second}});
         RCP<const Basic> factor = factor_old->subs(subs_dict);
         if (factor == factor_old) {
             Mul::dict_add_term_new(outArg(coef), d, p.second, p.first);

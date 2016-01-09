@@ -56,5 +56,5 @@ install(TARGETS teuchos
 
 if (NOT WITH_SYMENGINE_RCP)
     install(FILES ${HEADERS} "${teuchos_BINARY_DIR}/Teuchos_config.h"
-        DESTINATION include/symengine/teuchos)
+        DESTINATION include/symengine/utilities/teuchos)
 endif()
