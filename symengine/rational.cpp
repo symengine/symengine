@@ -6,6 +6,7 @@ Rational::Rational(mpq_class i)
     : i{i}
 {
     SYMENGINE_ASSERT(is_canonical(this->i))
+    this->type_code_ = type_code_id;
 }
 
 bool Rational::is_canonical(const mpq_class &i)

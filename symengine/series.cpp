@@ -11,12 +11,14 @@ namespace SymEngine {
 
 UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const RCP<const UnivariatePolynomial> &poly) :
         var_{var}, poly_{std::move(poly)} , prec_{precision} {
+    this->type_code_ = type_code_id;
 }
 
 UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const unsigned int &max, map_uint_mpz&& dict) :
         var_{var}, prec_{precision} {
 
     poly_ = univariate_polynomial(var_, max, std::move(dict));
+    this->type_code_ = type_code_id;
 }
 
 UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const map_uint_mpz& dict) :
@@ -35,6 +37,7 @@ UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned 
             return false;
         } );
     poly_ = univariate_polynomial(var_, max, std::move(dict_trunc));
+    this->type_code_ = type_code_id;
 }
 
 UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const std::vector<mpz_class> &v) :
@@ -44,6 +47,7 @@ UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned 
     std::copy_if(v.begin(), v.end(), std::back_inserter(vtrunc),
         [&](decltype(v[0]) i) { return i < prec_; } );
     poly_ = UnivariatePolynomial::create(var_, vtrunc);
+    this->type_code_ = type_code_id;
 }
 
 bool UnivariateSeries::is_canonical(const UnivariatePolynomial& poly, const unsigned int &prec)
