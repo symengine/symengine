@@ -206,7 +206,7 @@ public:
         r /= a;
         for (unsigned int i = 2; i < prec; i++) {
             Poly sp = Series::subs(s, var, r, i + 1);
-            r -= Series::pow(var, i, i) * Series::find_cf(sp, var, i) / a;
+            r -= Series::pow(var, i, i + 1) * Series::find_cf(sp, var, i) / a;
         }
         return r;
     }
@@ -410,7 +410,7 @@ public:
         if (s == var + 1) {
             //! fast log(1+x)
             for (unsigned int i = 1; i < prec; i++) {
-                res_p += Series::pow(var, i, i) * Coeff(((i % 2) == 0) ? -1 : 1) / Coeff(i);
+                res_p += Series::pow(var, i, i + 1) * Coeff(((i % 2) == 0) ? -1 : 1) / Coeff(i);
             }
             return res_p;
         }
