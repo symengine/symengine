@@ -244,21 +244,14 @@ TEST_CASE("Expression series expansion: lambertw ", "[Expansion of lambertw]")
 TEST_CASE("Expansion of sin ", "[Symbolic series expansion]")
 {
     RCP<const Symbol> x = symbol("x");
-    auto ex1 = URatPSeriesPiranha::series(sin(add(x, integer(1))), "x", 10);
-    std::cout << ex1->__str__() << std::endl;
-    ex1 = URatPSeriesPiranha::series(mul(sin(add(x, integer(1))), cos(add(x, integer(2)))), "x", 10);
-    std::cout << ex1->__str__() << std::endl;
+    REQUIRE_THROWS_AS(URatPSeriesPiranha::series(sin(add(x, integer(1))), "x", 10), std::runtime_error);
+    REQUIRE_THROWS_AS(URatPSeriesPiranha::series(mul(sin(add(x, integer(1))), cos(add(x, integer(2)))), "x", 10), std::runtime_error);
 }
 
 TEST_CASE("Expansion of log ", "[Symbolic series expansion]")
 {
     RCP<const Symbol> x = symbol("x");
-    auto ex1 = URatPSeriesPiranha::series(log(add(x, integer(1))), "x", 10);
-    std::cout << ex1->__str__() << std::endl;
-    ex1 = URatPSeriesPiranha::series(atanh(x), "x", 10);
-    std::cout << ex1->__str__() << std::endl;
-    ex1 = URatPSeriesPiranha::series(cot(sin(x)), "x", 10);
-    std::cout << ex1->__str__() << std::endl;
+    REQUIRE_THROWS_AS(URatPSeriesPiranha::series(log(add(x, integer(2))), "x", 10), std::runtime_error);
 }
 
 #else
@@ -266,6 +259,6 @@ TEST_CASE("Check error when expansion called without Piranha ", "[Expansion with
 {
     RCP<const Symbol> x = symbol("x");
     auto ex1 = lambertw(x);
-    REQUIRE_THROWS_AS(series(ex1, x, 10), std::runtime_error);
+    REQUIRE_THROWS_AS(URatPSeriesPiranha::series(ex1, "x", 10), std::runtime_error);
 }
 #endif
