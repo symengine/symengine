@@ -30,7 +30,7 @@ int main(int argc, char* argv[])
     RCP<const Symbol> x = symbol("x");
     int N = 100;
     auto ex = sin(cos(add(x, integer(1))));
-    
+
     auto t1 = std::chrono::high_resolution_clock::now();
     auto ex1 = UPSeriesPiranha::series(ex, "x", N);
     auto t2 = std::chrono::high_resolution_clock::now();
