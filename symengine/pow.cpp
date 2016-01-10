@@ -123,45 +123,10 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
                 return rcp_static_cast<const Number>(a)->pow(*rcp_static_cast<const Number>(b));
             }
         } else if (is_a<Rational>(*b)) {
-            mpz_class q, r, num, den;
-            num = rcp_static_cast<const Rational>(b)->i.get_num();
-            den = rcp_static_cast<const Rational>(b)->i.get_den();
-
-            if (num > den or num < 0) {
-                mpz_fdiv_qr(q.get_mpz_t(), r.get_mpz_t(), num.get_mpz_t(),
-                    den.get_mpz_t());
-            } else {
-                if (is_a_Number(*a) and not rcp_static_cast<const Number>(a)->is_exact()) {
-                    return rcp_static_cast<const Number>(a)->pow(*rcp_static_cast<const Number>(b));
-                }
-                return make_rcp<const Pow>(a, b);
-            }
-            // Here we make the exponent postive and a fraction between
-            // 0 and 1. We multiply numerator and denominator appropriately
-            // to achieve this
             if (is_a<Rational>(*a)) {
-                RCP<const Rational> exp_new = rcp_static_cast<const Rational>(a);
-                RCP<const Basic> frac =
-                    div(exp_new->powrat(Integer(q)), integer(exp_new->i.get_den()));
-                RCP<const Basic> surds =
-                    mul(make_rcp<const Pow>(integer(exp_new->i.get_num()), div(integer(r), integer(den))),
-                        make_rcp<const Pow>(integer(exp_new->i.get_den()), sub(one, div(integer(r), integer(den)))));
-                return mul(frac, surds);
+                return static_cast<const Rational &>(*a).powrat(static_cast<const Rational &>(*b));
             } else if (is_a<Integer>(*a)) {
-                RCP<const Integer> exp_new = rcp_static_cast<const Integer>(a);
-                RCP<const Number> frac = exp_new->powint(Integer(q));
-                map_basic_basic surd;
-                if ((exp_new->is_negative()) and (2 * r == den)) {
-                    frac = mulnum(frac, I);
-                    exp_new = exp_new->mulint(*minus_one);
-                    // if exp_new is one, no need to add it to dict
-                    if (exp_new->is_one())
-                        return frac;
-                    surd[exp_new] = div(integer(r), integer(den));
-                } else {
-                    surd[exp_new] = div(integer(r), integer(den));
-                }
-                return make_rcp<const Mul>(frac, std::move(surd));
+                return static_cast<const Rational &>(*b).rpowrat(static_cast<const Integer &>(*a));
             } else if (is_a<Complex>(*a)) {
                 return make_rcp<const Pow>(a, b);
             } else {
