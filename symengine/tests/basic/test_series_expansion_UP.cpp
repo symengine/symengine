@@ -258,6 +258,6 @@ TEST_CASE("Check error when expansion called without Piranha ", "[Expansion with
 {
     RCP<const Symbol> x = symbol("x");
     auto ex1 = lambertw(x);
-    REQUIRE_THROWS_AS(series(ex1, x, 10), std::runtime_error);
+    REQUIRE_THROWS_AS(UPSeriesPiranha::series(ex1, "x", 10), std::runtime_error);
 }
 #endif
