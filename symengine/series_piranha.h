@@ -20,7 +20,6 @@ class URatPSeriesPiranha : public SeriesBase<pp_t, piranha::rational, URatPSerie
 public:
     URatPSeriesPiranha(const pp_t p, const std::string varname, const unsigned degree);
     IMPLEMENT_TYPEID(URATPSERIESPIRANHA)
-    virtual void accept(Visitor &v) const;
     virtual int compare(const Basic &o) const;
     virtual std::size_t __hash__() const;
     static RCP<const URatPSeriesPiranha> series(const RCP<const Basic> &t, const std::string &x,
@@ -46,7 +45,6 @@ class UPSeriesPiranha : public SeriesBase<p_expr, Expression, UPSeriesPiranha, f
 public:
     UPSeriesPiranha(const p_expr p, const std::string varname, const unsigned degree);
     IMPLEMENT_TYPEID(UPSERIESPIRANHA)
-    virtual void accept(Visitor &v) const;
     virtual int compare(const Basic &o) const;
     virtual std::size_t __hash__() const;
     static RCP<const UPSeriesPiranha> series(const RCP<const Basic> &t, const std::string &x,

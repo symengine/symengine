@@ -237,12 +237,23 @@ TEST_CASE("Expression series expansion: lambertw ", "[Expansion of lambertw]")
     REQUIRE(series(ex2, x, 12)[10]->__eq__(*rational(-2993294, 14175)));
 }
 
-TEST_CASE("Symbolic series expansion ", "[Expansion of sin]")
+TEST_CASE("Expansion of sin ", "[Symbolic series expansion]")
 {
     RCP<const Symbol> x = symbol("x");
     auto ex1 = UPSeriesPiranha::series(sin(add(x, integer(1))), "x", 10);
     std::cout << ex1->__str__() << std::endl;
     ex1 = UPSeriesPiranha::series(mul(sin(add(x, integer(1))), cos(add(x, integer(2)))), "x", 10);
+    std::cout << ex1->__str__() << std::endl;
+}
+
+TEST_CASE("Expansion of log ", "[Symbolic series expansion]")
+{
+    RCP<const Symbol> x = symbol("x");
+    auto ex1 = UPSeriesPiranha::series(log(add(x, integer(1))), "x", 10);
+    std::cout << ex1->__str__() << std::endl;
+    ex1 = UPSeriesPiranha::series(atanh(x), "x", 10);
+    std::cout << ex1->__str__() << std::endl;
+    ex1 = UPSeriesPiranha::series(cot(sin(x)), "x", 10);
     std::cout << ex1->__str__() << std::endl;
 }
 
