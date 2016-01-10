@@ -54,11 +54,15 @@ piranha::rational URatPSeriesPiranha::convert(const Number &x) {
 }
 pp_t URatPSeriesPiranha::mul(const pp_t &s, const pp_t &r, unsigned prec) {
     pp_t::set_auto_truncate_degree(prec - 1);
-    return s * r;
+    pp_t ret = s * r;
+    pp_t::unset_auto_truncate_degree();
+    return ret;
 }
 pp_t URatPSeriesPiranha::pow(const pp_t &s, int n, unsigned prec) {
     pp_t::set_auto_truncate_degree(prec - 1);
-    return s.pow(n);
+    pp_t ret = s.pow(n);
+    pp_t::unset_auto_truncate_degree();
+    return ret;
 }
 unsigned URatPSeriesPiranha::ldegree(const pp_t &s) {
     return s.ldegree();
@@ -93,7 +97,9 @@ pp_t URatPSeriesPiranha::integrate(const pp_t &s, const pp_t &var) {
 }
 pp_t URatPSeriesPiranha::subs(const pp_t &s, const pp_t &var, const pp_t &r, unsigned prec) {
     pp_t::set_auto_truncate_degree(prec - 1);
-    return s.subs(var.get_symbol_set()[0].get_name(), r);
+    pp_t ret = s.subs(var.get_symbol_set()[0].get_name(), r);
+    pp_t::unset_auto_truncate_degree();
+    return ret;
 }
 
 UPSeriesPiranha::UPSeriesPiranha(p_expr p, const std::string varname, const unsigned degree)
@@ -133,11 +139,15 @@ Expression UPSeriesPiranha::convert(const Number &x) {
 }
 p_expr UPSeriesPiranha::mul(const p_expr &s, const p_expr &r, unsigned prec) {
     p_expr::set_auto_truncate_degree(prec - 1);
-    return s * r;
+    p_expr ret = s * r;
+    p_expr::unset_auto_truncate_degree();
+    return ret;
 }
 p_expr UPSeriesPiranha::pow(const p_expr &s, int n, unsigned prec) {
     p_expr::set_auto_truncate_degree(prec - 1);
-    return s.pow(n);
+    p_expr ret = s.pow(n);
+    p_expr::unset_auto_truncate_degree();
+    return ret;
 }
 unsigned UPSeriesPiranha::ldegree(const p_expr &s) {
     return s.ldegree();
@@ -156,7 +166,9 @@ p_expr UPSeriesPiranha::integrate(const p_expr &s, const p_expr &var) {
 }
 p_expr UPSeriesPiranha::subs(const p_expr &s, const p_expr &var, const p_expr &r, unsigned prec) {
     p_expr::set_auto_truncate_degree(prec - 1);
-    return s.subs(var.get_symbol_set()[0].get_name(), r);
+    p_expr ret = s.subs(var.get_symbol_set()[0].get_name(), r);
+    p_expr::unset_auto_truncate_degree();
+    return ret;
 }
 
 Expression UPSeriesPiranha::sin(const Expression& c) {
