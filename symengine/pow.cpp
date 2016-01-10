@@ -306,6 +306,7 @@ Log::Log(const RCP<const Basic> &arg)
     : arg_{arg}
 {
     SYMENGINE_ASSERT(is_canonical(*arg))
+    this->type_code_=type_code_id;
 }
 
 bool Log::is_canonical(const Basic &arg) const

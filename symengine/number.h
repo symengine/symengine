@@ -113,6 +113,7 @@ inline bool is_a_Number(const Basic &b)
 class NumberWrapper : public Number {
 public:
     IMPLEMENT_TYPEID(NUMBER_WRAPPER)
+    NumberWrapper();
     virtual std::string __str__() const { throw std::runtime_error("Not Implemented."); };
     virtual RCP<const Number> eval(long bits)  const { throw std::runtime_error("Not Implemented."); };
 };
@@ -145,6 +146,7 @@ public:
     virtual RCP<const Basic> abs(const Basic &) const = 0;
 };
 
+inline NumberWrapper::NumberWrapper(){this->type_code_=type_code_id;}
 } // SymEngine
 
 #endif

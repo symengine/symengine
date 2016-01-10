@@ -2451,6 +2451,7 @@ Dirichlet_eta::Dirichlet_eta(const RCP<const Basic> &s)
     : s_{s}
 {
     SYMENGINE_ASSERT(is_canonical(s_))
+    this->type_code_ = type_code_id;
 }
 
 bool Dirichlet_eta::is_canonical(const RCP<const Basic> &s) const

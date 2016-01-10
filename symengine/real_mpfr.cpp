@@ -14,7 +14,7 @@
 namespace SymEngine {
 
 RealMPFR::RealMPFR(mpfr_class i) : i{std::move(i)} {
-
+    this->type_code_=type_code_id;
 }
 
 std::size_t RealMPFR::__hash__() const
