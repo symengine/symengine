@@ -209,7 +209,7 @@ TEST_CASE("Mul: arit", "[arit]")
     rc1 = Complex::from_two_nums(*one, *one);
     r1 = pow(rc1, x);
     r1 = mul(r1, pow(rc1, sub(div(i3, i2), x)));
-    r2 = mul(rc1, pow(rc1, div(one, i2)));
+    r2 = pow(rc1, div(i3, i2));
     REQUIRE(eq(*r1, *r2));
 
     r1 = real_double(0.1);
@@ -629,6 +629,26 @@ TEST_CASE("Pow: arit", "[arit]")
     r1 = pow(im3, div(i4, i3));
     r2 = pow(r1, i3);
     REQUIRE(eq(*r2, *integer(81)));
+
+    r1 = sqrt(div(one, i4));
+    r2 = div(one, i2);
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = sqrt(div(i3, i4));
+    r2 = div(sqrt(i3), i2);
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = sqrt(div(i4, i3));
+    r2 = div(mul(i2, sqrt(i3)), i3);
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = pow(integer(8), div(i2, i3));
+    r2 = i4;
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = mul(pow(integer(8), x), pow(integer(8), sub(div(i2, i3), x)));
+    r2 = i4;
+    REQUIRE(eq(*r1, *r2));
 
     r1 = real_double(0.1);
     r2 = Rational::from_mpq(mpq_class(1, 2));
