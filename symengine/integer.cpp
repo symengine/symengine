@@ -1,5 +1,7 @@
 #include <symengine/integer.h>
 #include <symengine/rational.h>
+#include <symengine/mul.h>
+#include <symengine/pow.h>
 
 namespace SymEngine {
 

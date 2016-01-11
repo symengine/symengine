@@ -50,7 +50,7 @@ public:
     virtual vec_basic get_args() const { return {}; }
 
     virtual bool is_perfect_power(bool is_expected=false) const { throw std::runtime_error("Not Implemented."); };
-    virtual bool nth_root(const Ptr<RCP<const Number>> &, unsigned int n) const { throw std::runtime_error("Not Implemented."); } ;
+    virtual bool nth_root(const Ptr<RCP<const Number>> &, unsigned long n) const { throw std::runtime_error("Not Implemented."); } ;
 };
 //! Add `self` and `other`
 inline RCP<const Number> addnum(const RCP<const Number> &self,
