@@ -669,9 +669,11 @@ TEST_CASE("test_quadratic_residues(): ntheory", "[ntheory]")
 TEST_CASE("test_is_quad_residue(): ntheory", "[ntheory]")
 {
     const RCP<const Integer> a1 = integer(1);
+    const RCP<const Integer> a2 = integer(2);
     const RCP<const Integer> a3 = integer(3);
     const RCP<const Integer> a4 = integer(4);
     const RCP<const Integer> a7 = integer(7);
+    const RCP<const Integer> a9 = integer(9);
     const RCP<const Integer> a100 = integer(100);
 
     const RCP<const Integer> t0 = integer(0);
@@ -686,11 +688,14 @@ TEST_CASE("test_is_quad_residue(): ntheory", "[ntheory]")
     std::cout << "Is_Quadratic_Residue:"<<std::endl;
     REQUIRE(is_quad_residue(*t0,*a1) == true);
     REQUIRE(is_quad_residue(*t1,*a1) == true);
+    REQUIRE(is_quad_residue(*t1,*a2) == true);
     REQUIRE(is_quad_residue(*t0,*a4) == true);
     REQUIRE(is_quad_residue(*t1,*a4) == true);
     REQUIRE(is_quad_residue(*t4,*a4) == true);
     REQUIRE(is_quad_residue(*nt5,*a3) == true);
     REQUIRE(is_quad_residue(*t4,*a7) == true);
+    REQUIRE(is_quad_residue(*t4,*a9) == true);
+    REQUIRE(is_quad_residue(*t7,*a9) == true);
     REQUIRE(is_quad_residue(*t56,*a100) == true);
     REQUIRE(is_quad_residue(*t7,*a100) == false);
     REQUIRE(is_quad_residue(*nt5,*a4) == false);
