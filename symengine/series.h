@@ -134,7 +134,13 @@ public:
             }
             p = o.p_;
         } else if (is_a<Integer>(other)) {
-            return make_rcp<Series>(Series::pow(p_, var_, deg), var_, deg);
+            if (other.is_negative()) {
+                p = Series::pow(p_, (static_cast<const Integer &>(other).neg()->as_int()), deg);
+                p = Series::series_invert(p, Series::var(var_), deg);
+                return make_rcp<Series>(p, var_, deg);
+            }
+            p = Series::pow(p_, (static_cast<const Integer &>(other).as_int()), deg);
+            return make_rcp<Series>(p, var_, deg);
         } else if (other.get_type_code() < Series::type_code_id) {
             p = Series::series(other.rcp_from_this(), var_, degree_)->p_;
         } else {
