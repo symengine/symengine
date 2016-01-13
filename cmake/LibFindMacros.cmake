@@ -35,12 +35,6 @@ function (libfind_library libname pkg)
         add_library(${libname} UNKNOWN IMPORTED)
         set_property(TARGET ${libname} PROPERTY IMPORTED_LOCATION ${${LIBNAME}_LIBRARY})
     endif()
-
-    if ("${${LIBNAME}_LIBRARY}" STREQUAL "${LIBNAME}_LIBRARY-NOTFOUND")
-        set(${LIBNAME}_LIBRARY_FOUND no)
-    else()
-        set(${LIBNAME}_LIBRARY_FOUND yes)
-    endif()
 endfunction()
 
 function (libfind_include HEADER pkg)

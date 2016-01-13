@@ -2,7 +2,7 @@ include(LibFindMacros)
 
 libfind_library(tcmalloc tcmalloc)
 set(TCMALLOC_TARGETS tcmalloc)
-if (NOT TCMALLOC_LIBRARY_FOUND)
+if (NOT TCMALLOC_LIBRARY)
     libfind_library(tcmalloc_minimal tcmalloc)
     set(TCMALLOC_LIBRARY ${TCMALLOC_MINIMAL_LIBRARY})
     set(TCMALLOC_TARGETS tcmalloc_minimal)
