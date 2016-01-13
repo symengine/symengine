@@ -28,38 +28,38 @@ env:
 
   ## Out of tree builds (default):
   # Debug build (with BFD) with LATEST_GCC
-  - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_LATEST_GCC="yes"
+  - BUILD_TYPE="Debug" WITH_BFD="no" WITH_LATEST_GCC="yes"
   # Debug build (with BFD)
-  - BUILD_TYPE="Debug" WITH_BFD="yes" TEST_CODE_QUALITY="yes"
+  - BUILD_TYPE="Debug" WITH_BFD="no" TEST_CODE_QUALITY="yes"
   # Debug build (with BFD and SYMENGINE_THREAD_SAFE)
-  - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_SYMENGINE_THREAD_SAFE="yes"
+  - BUILD_TYPE="Debug" WITH_BFD="no" WITH_SYMENGINE_THREAD_SAFE="yes"
   # Debug build (with BFD) with ECM
-  - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_ECM="yes"
+  - BUILD_TYPE="Debug" WITH_BFD="no" WITH_ECM="yes"
   # Debug build (with BFD) with PRIMESIEVE
-  - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_PRIMESIEVE="yes"
+  - BUILD_TYPE="Debug" WITH_BFD="no" WITH_PRIMESIEVE="yes"
   # Debug build (with BFD) with Arb
-  - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_ARB="yes"
+  - BUILD_TYPE="Debug" WITH_BFD="no" WITH_ARB="yes"
   # Debug build (with BFD) with MPC
-  - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_MPC="yes"
+  - BUILD_TYPE="Debug" WITH_BFD="no" WITH_MPC="yes"
   # Debug build (with BFD) with MPC
-  - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_MPFR="yes"
+  - BUILD_TYPE="Debug" WITH_BFD="no" WITH_MPFR="yes"
   # Debug build shared lib (with BFD)
-  - BUILD_TYPE="Debug" WITH_BFD="yes" BUILD_SHARED_LIBS="yes"
+  - BUILD_TYPE="Debug" WITH_BFD="no" BUILD_SHARED_LIBS="yes"
   # Release build (with BFD)
-  - WITH_BFD="yes"
+  - WITH_BFD="no"
   # Release build (with BFD and SHARED_LIBS)
-  - WITH_BFD="yes" BUILD_SHARED_LIBS="yes"
+  - WITH_BFD="no" BUILD_SHARED_LIBS="yes"
 
   ## In-tree builds (we just check a few configurations to make sure they work):
   # Debug build:
-  - BUILD_TYPE="Debug" WITH_BFD="yes" TEST_IN_TREE="yes"
+  - BUILD_TYPE="Debug" WITH_BFD="no" TEST_IN_TREE="yes"
 
 matrix:
   exclude:
     - compiler: clang
     - os: osx
   include:
-    - env: BUILD_TYPE="Debug" WITH_BFD="yes" WITH_PIRANHA="yes" WITH_BENCHMARKS_NONIUS="yes"
+    - env: BUILD_TYPE="Debug" WITH_BFD="no" WITH_PIRANHA="yes" WITH_BENCHMARKS_NONIUS="yes"
       compiler: gcc
       os: linux
       addons:
@@ -74,7 +74,7 @@ matrix:
           - libboost-serialization1.55-dev
           - libboost-iostreams1.55-dev
           - g++-4.8
-    - env: BUILD_TYPE="Debug" WITH_BFD="yes"
+    - env: BUILD_TYPE="Debug" WITH_BFD="no"
       compiler: clang
       os: linux
       addons:
