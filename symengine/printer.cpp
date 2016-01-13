@@ -378,10 +378,10 @@ void StrPrinter::bvisit(const Subs &x) {
             vars << ", ";
             point << ", ";
         }
-        vars << *(p->first);
-        point << *(p->second);
+        vars << apply(p->first);
+        point << apply(p->second);
     }
-    o << "Subs(" << this->apply(x.arg_) << ", (" << vars.str() << "), (" << point.str() << "))";
+    o << "Subs(" << apply(x.arg_) << ", (" << vars.str() << "), (" << point.str() << "))";
     str_ = o.str();
 }
 
