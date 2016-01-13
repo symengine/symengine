@@ -93,10 +93,17 @@ endif()
 
 # GMP
 find_package(GMP REQUIRED)
-include_directories(${GMP_INCLUDE_DIRS})
-set(LIBS ${LIBS} ${GMP_TARGETS})
-set(PKGS ${PKGS} "GMP")
+add_library(p::gmp INTERFACE IMPORTED)
+set_property(TARGET p::gmp PROPERTY INTERFACE_INCLUDE_DIRECTORIES
+    ${GMP_INCLUDE_DIR})
+set_property(TARGET p::gmp PROPERTY INTERFACE_LINK_LIBRARIES
+    ${GMP_LIBRARY})
 
+add_library(p::gmpxx INTERFACE IMPORTED)
+set_property(TARGET p::gmpxx PROPERTY INTERFACE_INCLUDE_DIRECTORIES
+    ${GMPXX_INCLUDE_DIR})
+set_property(TARGET p::gmpxx PROPERTY INTERFACE_LINK_LIBRARIES
+    ${GMPXX_LIBRARY} p::gmp)
 
 # TODO: Update this:
 # Check gmpxx

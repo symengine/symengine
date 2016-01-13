@@ -72,7 +72,10 @@ include_directories(BEFORE ${symengine_BINARY_DIR})
 include_directories(BEFORE ${symengine_SOURCE_DIR})
 
 add_library(symengine ${SRC})
-target_link_libraries(symengine teuchos ${LIBS})
+target_link_libraries(symengine
+    PUBLIC teuchos p::gmpxx ${LIBS}
+    )
+
 
 install(TARGETS symengine
             EXPORT SymEngineTargets
