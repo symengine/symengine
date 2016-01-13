@@ -49,7 +49,5 @@ function (libfind_include HEADER pkg)
     find_path(${PKG}_INCLUDE_DIR
         NAMES
             ${HEADER}
-        PATH_SUFFIXES
-            ${pkg}
     )
 endfunction()
