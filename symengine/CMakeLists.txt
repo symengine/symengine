@@ -75,6 +75,16 @@ add_library(symengine ${SRC})
 target_link_libraries(symengine
     PUBLIC teuchos p::gmpxx ${LIBS}
     )
+if(WITH_MPFR)
+    target_link_libraries(symengine
+        PUBLIC p::mpfr
+        )
+endif()
+if(WITH_ARB)
+    target_link_libraries(symengine
+        PUBLIC p::arb
+        )
+endif()
 
 
 install(TARGETS symengine

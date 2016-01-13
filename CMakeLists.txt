@@ -161,20 +161,26 @@ set(HAVE_SYMENGINE_MPC False)
 
 if (WITH_ARB)
     find_package(FLINT REQUIRED)
-    include_directories(${FLINT_INCLUDE_DIRS})
-    set(LIBS ${LIBS} ${FLINT_TARGETS})
-    set(PKGS ${PKGS} "FLINT")
+    add_library(p::flint INTERFACE IMPORTED)
+    set_property(TARGET p::flint PROPERTY INTERFACE_INCLUDE_DIRECTORIES
+        ${FLINT_INCLUDE_DIR})
+    set_property(TARGET p::flint PROPERTY INTERFACE_LINK_LIBRARIES
+        ${FLINT_LIBRARY} p::gmp)
 
-    # Workaround for https://github.com/fredrik-johansson/arb/issues/24
-    include_directories(${FLINT_INCLUDE_DIRS}/flint)
 
     set(WITH_MPFR yes)
 
     find_package(ARB REQUIRED)
-    include_directories(${ARB_INCLUDE_DIRS})
-    set(LIBS ${LIBS} ${ARB_TARGETS})
+    add_library(p::arb INTERFACE IMPORTED)
+    set_property(TARGET p::arb PROPERTY INTERFACE_INCLUDE_DIRECTORIES
+        ${ARB_INCLUDE_DIR})
+    set_property(TARGET p::arb PROPERTY INTERFACE_LINK_LIBRARIES
+        ${ARB_LIBRARY} p::flint p::mpfr)
     set(HAVE_SYMENGINE_ARB True)
-    set(PKGS ${PKGS} "ARB")
+
+    # Workaround for https://github.com/fredrik-johansson/arb/issues/24
+    set_property(TARGET p::arb APPEND PROPERTY INTERFACE_INCLUDE_DIRECTORIES
+        ${FLINT_INCLUDE_DIR}/flint)
 endif()
 
 if (WITH_MPC)
@@ -245,10 +251,13 @@ endif()
 
 if (WITH_MPFR)
     find_package(MPFR REQUIRED)
-    include_directories(${MPFR_INCLUDE_DIRS})
-    set(LIBS ${LIBS} ${MPFR_TARGETS})
+    add_library(p::mpfr INTERFACE IMPORTED)
+    set_property(TARGET p::mpfr PROPERTY INTERFACE_INCLUDE_DIRECTORIES
+        ${MPFR_INCLUDE_DIR})
+    set_property(TARGET p::mpfr PROPERTY INTERFACE_LINK_LIBRARIES
+        ${MPFR_LIBRARY} p::gmp)
+
     set(HAVE_SYMENGINE_MPFR True)
-    set(PKGS ${PKGS} "MPFR")
 endif()
 
 # BFD
