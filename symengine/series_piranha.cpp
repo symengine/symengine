@@ -10,7 +10,7 @@ URatPSeriesPiranha::URatPSeriesPiranha(pp_t p, const std::string varname, const 
 }
 RCP<const URatPSeriesPiranha> URatPSeriesPiranha::series(const RCP<const Basic> &t, const std::string &x,
                                                          unsigned int prec) {
-    SeriesVisitor<pp_t, piranha::rational, URatPSeriesPiranha, false> visitor(pp_t(x), x, prec);
+    SeriesVisitor<pp_t, piranha::rational, URatPSeriesPiranha> visitor(pp_t(x), x, prec);
     return visitor.series(t);
 }
 
@@ -123,7 +123,7 @@ UPSeriesPiranha::UPSeriesPiranha(p_expr p, const std::string varname, const unsi
 
 RCP<const UPSeriesPiranha> UPSeriesPiranha::series(const RCP<const Basic> &t, const std::string &x,
                                                          unsigned int prec) {
-    SeriesVisitor<p_expr, Expression, UPSeriesPiranha, false> visitor(p_expr(x), x, prec);
+    SeriesVisitor<p_expr, Expression, UPSeriesPiranha> visitor(p_expr(x), x, prec);
     return visitor.series(t);
 }
 

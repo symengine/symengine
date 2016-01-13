@@ -65,7 +65,7 @@ RCP<const UnivariateSeries> neg_uni_series (const UnivariateSeries& a);
 RCP<const UnivariateSeries> sub_uni_series (const UnivariateSeries& a, const UnivariateSeries &b);
 RCP<const UnivariateSeries> mul_uni_series (const UnivariateSeries& a, const UnivariateSeries &b);
 
-template <typename Poly, typename Coeff, typename Series, bool symbolic = false>
+template <typename Poly, typename Coeff, typename Series>
 class SeriesBase : public Number {
 public:
     Poly p_;
@@ -95,7 +95,7 @@ public:
         if (is_a<Series>(other)) {
             const Series &o = static_cast<const Series &>(other);
             long deg = std::min(degree_, o.degree_);
-            if (var_ != o.var_ and not symbolic) {
+            if (var_ != o.var_) {
                 throw std::runtime_error("Multivariate Series not implemented");
             }
             return make_rcp<Series>(p_ + o.p_, var_, deg);
@@ -111,7 +111,7 @@ public:
         if (is_a<Series>(other)) {
             const Series &o = static_cast<const Series &>(other);
             long deg = std::min(degree_, o.degree_);
-            if (var_ != o.var_ and not symbolic) {
+            if (var_ != o.var_) {
                 throw std::runtime_error("Multivariate Series not implemented");
             }
             return make_rcp<Series>(Series::mul(p_, o.p_, deg), var_, deg);
@@ -129,7 +129,7 @@ public:
         if (is_a<Series>(other)) {
             const Series &o = static_cast<const Series &>(other);
             deg = std::min(deg, o.degree_);
-            if (var_ != o.var_ and not symbolic) {
+            if (var_ != o.var_) {
                 throw std::runtime_error("Multivariate Series not implemented");
             }
             p = o.p_;
