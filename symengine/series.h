@@ -133,7 +133,9 @@ public:
                 throw std::runtime_error("Multivariate Series not implemented");
             }
             p = o.p_;
-        } else if (other.get_type_code() < Series::type_code_id){
+        } else if (is_a<Integer>(other)) {
+            return make_rcp<Series>(Series::pow(p_, var_, deg), var_, deg);
+        } else if (other.get_type_code() < Series::type_code_id) {
             p = Series::series(other.rcp_from_this(), var_, degree_)->p_;
         } else {
             return other.rpow(*this);

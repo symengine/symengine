@@ -6,8 +6,8 @@
 
 namespace SymEngine {
 
-template<typename Poly, typename Coeff, typename Series, bool symbolic = false>
-class SeriesVisitor : public BaseVisitor<SeriesVisitor<Poly, Coeff, Series, symbolic>> {
+template<typename Poly, typename Coeff, typename Series>
+class SeriesVisitor : public BaseVisitor<SeriesVisitor<Poly, Coeff, Series>> {
 private:
     Poly p;
     const Poly var;
@@ -87,7 +87,7 @@ public:
     }
 
     void bvisit(const Series &x) {
-        if (x.var_ != varname and not symbolic) {
+        if (x.var_ != varname) {
             throw std::runtime_error("Multivariate Series not implemented");
         }
         if (x.degree_ < prec) {
