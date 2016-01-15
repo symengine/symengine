@@ -20,9 +20,15 @@ add_executable(test_series test_series.cpp)
 target_link_libraries(test_series symengine catch)
 add_test(test_series ${PROJECT_BINARY_DIR}/test_series)
 
-add_executable(test_series_expansion test_series_expansion.cpp)
-target_link_libraries(test_series_expansion symengine catch)
-add_test(test_series_expansion ${PROJECT_BINARY_DIR}/test_series_expansion)
+if (WITH_PIRANHA)
+    add_executable(test_series_expansion_UP test_series_expansion_UP.cpp)
+    target_link_libraries(test_series_expansion_UP symengine catch)
+    add_test(test_series_expansion_UP ${PROJECT_BINARY_DIR}/test_series_expansion_UP)
+
+    add_executable(test_series_expansion_URatP test_series_expansion_URatP.cpp)
+    target_link_libraries(test_series_expansion_URatP symengine catch)
+    add_test(test_series_expansion_URatP ${PROJECT_BINARY_DIR}/test_series_expansion_URatP)
+endif()
 
 add_executable(test_functions test_functions.cpp)
 target_link_libraries(test_functions symengine catch)

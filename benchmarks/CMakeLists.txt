@@ -50,8 +50,13 @@ target_link_libraries(expand7 symengine)
 add_executable(series series.cpp)
 target_link_libraries(series symengine)
 
-add_executable(series_expansion_sincos series_expansion_sincos.cpp)
-target_link_libraries(series_expansion_sincos symengine)
+if (WITH_PIRANHA)
+    add_executable(series_expansion_sincos series_expansion_sincos.cpp)
+    target_link_libraries(series_expansion_sincos symengine)
+
+    add_executable(series_expansion_sinp series_expansion_sinp.cpp)
+    target_link_libraries(series_expansion_sinp symengine)
+endif()
 
 if (BUILD_BENCHMARKS_NONIUS)
     add_executable(bench bench.cpp)

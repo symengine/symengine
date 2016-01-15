@@ -313,6 +313,18 @@ void StrPrinter::bvisit(const UnivariatePolynomial &x) {
     }
     str_ = s.str();
 }
+#ifdef HAVE_SYMENGINE_PIRANHA
+void StrPrinter::bvisit(const URatPSeriesPiranha &x) {
+    std::ostringstream o;
+    o << x.p_ << " + O(" << x.var_ << "**" << x.degree_ << ")";
+    str_ = o.str();
+}
+void StrPrinter::bvisit(const UPSeriesPiranha &x) {
+    std::ostringstream o;
+    o << x.p_ << " + O(" << x.var_ << "**" << x.degree_ << ")";
+    str_ = o.str();
+}
+#endif
 
 void StrPrinter::bvisit(const Log &x) {
     str_ = "log(" + this->apply(x.get_arg()) + ")";
@@ -366,10 +378,10 @@ void StrPrinter::bvisit(const Subs &x) {
             vars << ", ";
             point << ", ";
         }
-        vars << *(p->first);
-        point << *(p->second);
+        vars << apply(p->first);
+        point << apply(p->second);
     }
-    o << "Subs(" << this->apply(x.arg_) << ", (" << vars.str() << "), (" << point.str() << "))";
+    o << "Subs(" << apply(x.arg_) << ", (" << vars.str() << "), (" << point.str() << "))";
     str_ = o.str();
 }
 
