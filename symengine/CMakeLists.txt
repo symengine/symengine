@@ -22,7 +22,6 @@ set(SRC
     monomials.cpp
     polynomial.cpp
     series.cpp
-    expansion.cpp
     rings.cpp
     ntheory.cpp
     dense_matrix.cpp
