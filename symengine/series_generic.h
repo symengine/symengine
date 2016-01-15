@@ -1,10 +1,10 @@
 /**
- *  \file series.h
+ *  \file series_generic.h
  *  Class for univariate series.
  *
  **/
-#ifndef SYMENGINE_SERIES_H
-#define SYMENGINE_SERIES_H
+#ifndef SYMENGINE_SERIES_GENERIC_H
+#define SYMENGINE_SERIES_GENERIC_H
 
 #include <list>
 
