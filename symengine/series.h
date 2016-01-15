@@ -10,12 +10,19 @@
 #include <list>
 
 #include <symengine/number.h>
+#include <symengine/dict.h>
 #include <symengine/integer.h>
 
 namespace SymEngine {
 
+class SeriesCoeffInterface {
+    virtual RCP<const Basic> as_basic() const =0;
+    virtual umap_int_basic as_dict() const =0;
+    virtual RCP<const Basic> get_coeff(int) const =0;
+};
+
 template <typename Poly, typename Coeff, typename Series>
-class SeriesBase : public Number {
+class SeriesBase : public Number, SeriesCoeffInterface {
 public:
     Poly p_;
     std::string var_;
