@@ -8,6 +8,7 @@
 #include <symengine/functions.h>
 #include <symengine/symbol.h>
 #include <symengine/mul.h>
+#include <symengine/series.h>
 
 using SymEngine::Basic;
 using SymEngine::Symbol;

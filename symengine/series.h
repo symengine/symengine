@@ -543,20 +543,11 @@ public:
     static inline Coeff log(const Coeff& c) {
         throw std::runtime_error("log(const) not implemented");
     }
-
-    /*
-     * int ldegree(Poly &s);
-     * Coeff& find_cf(Poly &s, int n);
-     * Poly var(const std::string &s);
-     * Poly pow(Poly &s, int n);
-     * Poly mul(Poly &a, Poly &b, unsigned prec);
-     * Poly diff(Poly &a, Poly &var);
-     * Poly integrate(Poly &a, Poly &var);
-     * Coeff root(Coeff &c, unsigned n);
-     * Poly subs(Poly &s, Poly &var, Poly& new, unsigned prec);
-     * Poly/Coeff convert(Number &n)
-     */
 };
+
+umap_int_basic series(const RCP<const Basic> &ex, const RCP<const Symbol> &var, unsigned int prec);
+
+umap_int_basic series_invfunc(const RCP<const Basic> &ex, const RCP<const Symbol> &var, unsigned int prec);
 
 }  //SymEngine
 #endif
