@@ -232,7 +232,8 @@ public:
         } else if (x.__eq__(*E)) {
             mpfr_t t;
             mpfr_init2(t, mpc_get_prec(result_));
-            mpfr_const_euler(t, rnd_);
+            mpfr_set_ui(t, 1, rnd_);
+            mpfr_exp(t, t, rnd_);
             mpc_set_fr(result_, t, rnd_);
             mpfr_clear(t);
         } else if (x.__eq__(*EulerGamma)) {
