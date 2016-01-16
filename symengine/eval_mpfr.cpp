@@ -19,6 +19,7 @@ class EvalMPFRVisitor : public BaseVisitor<EvalMPFRVisitor> {
 protected:
     mpfr_rnd_t rnd_;
     mpfr_ptr result_;
+    mpfr_ptr one_;
 public:
     EvalMPFRVisitor(mpfr_rnd_t rnd) : rnd_{rnd} { }
 
@@ -213,12 +214,15 @@ public:
     };
 
     void bvisit(const Constant &x) {
+
+        mpfr_init(one_);
+        mpfr_set_si(one_,1,rnd_);
         if (x.__eq__(*pi)) {
             mpfr_const_pi(result_, rnd_);
         } else if (x.__eq__(*E)) {
-            mpfr_const_euler(result_, rnd_);
+            mpfr_exp(result_,one_, rnd_);
         } else if (x.__eq__(*EulerGamma)) {
-            mpfr_const_euler(result_, rnd_);
+            mpfr_exp(result_,one_, rnd_);
         } else {
             throw std::runtime_error("Constant " + x.get_name() + " is not implemented.");
         }
