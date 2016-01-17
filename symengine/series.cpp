@@ -39,8 +39,15 @@ umap_int_basic series_invfunc(const RCP<const Basic> &ex, const RCP<const Symbol
     if (is_a<Symbol>(*ex))
         return {{0, ex}};
 
-    auto ser = UPSeriesPiranha::series(ex, var->get_name(), prec);
-    return ser->as_dict();
+    auto poly = UPSeriesPiranha::series_reverse(UPSeriesPiranha::series(ex, var->get_name(), prec)->p_, p_expr(var->get_name()), prec);
+    umap_int_basic map;
+    for (const auto& it : poly) {
+        if (it.first != 0) {
+            map[it.second.degree()] = it.first.get_basic();
+        }
+    }
+    return map;
+
 #else
     throw std::runtime_error("Series expansion is supported only with Piranha");
 #endif
