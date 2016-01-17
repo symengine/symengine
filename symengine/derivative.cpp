@@ -166,10 +166,25 @@ static RCP<const Basic> diff(const CLASS &self, \
 
     static RCP<const Basic> diff(const Derivative &self,
             const RCP<const Symbol> &x) {
-        if (eq(*(self.get_arg()->diff(x)), *zero)) return zero;
+        RCP<const Basic> ret = self.get_arg()->diff(x);
+        if (eq(*ret, *zero)) return zero;
         multiset_basic t = self.get_symbols();
-        t.insert(x);
-        return Derivative::create(self.get_arg(), t);
+        for (auto &p: t) {
+            // If x is already there in symbols multi-set add x to the symbols multi-set
+            if (eq(*p, *x)) {
+                t.insert(x);
+                return Derivative::create(self.get_arg(), t);
+            }
+        }
+        // Avoid cycles
+        if (is_a<Derivative>(*ret) && eq(*static_cast<const Derivative &>(*ret).get_arg(), *self.get_arg())) {
+            t.insert(x);
+            return Derivative::create(self.get_arg(), t);
+        }
+        for (auto &p: t) {
+            ret = ret->diff(rcp_static_cast<const Symbol>(p));
+        }
+        return ret;
     }
 
     static RCP<const Basic> diff(const FunctionSymbol &self,
