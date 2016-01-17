@@ -214,7 +214,7 @@ public:
 
     void bvisit(const Constant &x) {
 
-        mpfr_ptr one_;
+        mpfr_t one_;
         mpfr_init2(one_,mpfr_get_prec(result_));
         mpfr_set_si(one_,1,rnd_);
         if (x.__eq__(*pi)) {
