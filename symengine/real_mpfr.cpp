@@ -3,7 +3,6 @@
  *  Class for RealMPFR built on top of Number class
  *
  **/
-#include <cmath>
 #include <symengine/basic.h>
 #include <symengine/real_double.h>
 #include <symengine/complex_double.h>
@@ -650,7 +649,7 @@ class EvaluateMPFR : public Evaluate {
     virtual RCP<const Basic> asin(const Basic &x) const {
         SYMENGINE_ASSERT(is_a<RealMPFR>(x))
         mpfr_srcptr x_ = static_cast<const RealMPFR &>(x).i.get_mpfr_t();
-        if (mpfr_cmp_si(x_, 1) <= 0 && mpfr_cmp_si(x_, -1) >= 0) {
+        if (mpfr_cmp_si(x_, 1) <= 0 and mpfr_cmp_si(x_, -1) >= 0) {
             mpfr_class t(mpfr_get_prec(x_));
             mpfr_asin(t.get_mpfr_t(), x_, MPFR_RNDN);
             return real_mpfr(std::move(t));
@@ -667,7 +666,7 @@ class EvaluateMPFR : public Evaluate {
     virtual RCP<const Basic> acos(const Basic &x) const {
         SYMENGINE_ASSERT(is_a<RealMPFR>(x))
         mpfr_srcptr x_ = static_cast<const RealMPFR &>(x).i.get_mpfr_t();
-        if (mpfr_cmp_si(x_, 1) <= 0 && mpfr_cmp_si(x_, -1) >= 0) {
+        if (mpfr_cmp_si(x_, 1) <= 0 and mpfr_cmp_si(x_, -1) >= 0) {
             mpfr_class t(mpfr_get_prec(x_));
             mpfr_acos(t.get_mpfr_t(), x_, MPFR_RNDN);
             return real_mpfr(std::move(t));
@@ -697,7 +696,7 @@ class EvaluateMPFR : public Evaluate {
     virtual RCP<const Basic> asec(const Basic &x) const {
         SYMENGINE_ASSERT(is_a<RealMPFR>(x))
         mpfr_srcptr x_ = static_cast<const RealMPFR &>(x).i.get_mpfr_t();
-        if (mpfr_cmp_si(x_, 1) >= 0 || mpfr_cmp_si(x_, -1) <= 0) {
+        if (mpfr_cmp_si(x_, 1) >= 0 or mpfr_cmp_si(x_, -1) <= 0) {
             mpfr_class t(mpfr_get_prec(x_));
             mpfr_ui_div(t.get_mpfr_t(), 1, x_, MPFR_RNDN);
             mpfr_acos(t.get_mpfr_t(), t.get_mpfr_t(), MPFR_RNDN);
@@ -716,7 +715,7 @@ class EvaluateMPFR : public Evaluate {
     virtual RCP<const Basic> acsc(const Basic &x) const {
         SYMENGINE_ASSERT(is_a<RealMPFR>(x))
         mpfr_srcptr x_ = static_cast<const RealMPFR &>(x).i.get_mpfr_t();
-        if (mpfr_cmp_si(x_, 1) >= 0 || mpfr_cmp_si(x_, -1) <= 0) {
+        if (mpfr_cmp_si(x_, 1) >= 0 or mpfr_cmp_si(x_, -1) <= 0) {
             mpfr_class t(mpfr_get_prec(x_));
             mpfr_ui_div(t.get_mpfr_t(), 1, x_, MPFR_RNDN);
             mpfr_asin(t.get_mpfr_t(), t.get_mpfr_t(), MPFR_RNDN);
@@ -782,7 +781,7 @@ class EvaluateMPFR : public Evaluate {
     virtual RCP<const Basic> atanh(const Basic &x) const {
         SYMENGINE_ASSERT(is_a<RealMPFR>(x))
         mpfr_srcptr x_ = static_cast<const RealMPFR &>(x).i.get_mpfr_t();
-        if (mpfr_cmp_si(x_, 1) <= 0 && mpfr_cmp_si(x_, -1) >= 0) {
+        if (mpfr_cmp_si(x_, 1) <= 0 and mpfr_cmp_si(x_, -1) >= 0) {
             mpfr_class t(mpfr_get_prec(x_));
             mpfr_atanh(t.get_mpfr_t(), x_, MPFR_RNDN);
             return real_mpfr(std::move(t));
@@ -799,7 +798,7 @@ class EvaluateMPFR : public Evaluate {
     virtual RCP<const Basic> acoth(const Basic &x) const {
         SYMENGINE_ASSERT(is_a<RealMPFR>(x))
         mpfr_srcptr x_ = static_cast<const RealMPFR &>(x).i.get_mpfr_t();
-        if (mpfr_cmp_si(x_, 1) >= 0 || mpfr_cmp_si(x_, -1) <= 0) {
+        if (mpfr_cmp_si(x_, 1) >= 0 or mpfr_cmp_si(x_, -1) <= 0) {
             mpfr_class t(mpfr_get_prec(x_));
             mpfr_ui_div(t.get_mpfr_t(), 1, t.get_mpfr_t(), MPFR_RNDN);
             mpfr_atanh(t.get_mpfr_t(), x_, MPFR_RNDN);

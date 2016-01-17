@@ -39,6 +39,20 @@ using SymEngine::function_symbol;
 using SymEngine::I;
 using SymEngine::real_double;
 using SymEngine::complex_double;
+using SymEngine::BaseVisitor;
+using SymEngine::StrPrinter;
+using SymEngine::Sin;
+
+namespace SymEngine {
+class MyStrPrinter : public BaseVisitor<MyStrPrinter, StrPrinter> {
+public:
+    using StrPrinter::bvisit;
+
+    void bvisit(const Sin &x) {
+        str_ = "MySin(" + this->apply(x.get_arg()) + ")";
+    }
+};
+}
 
 TEST_CASE("test_printing(): printing", "[printing]")
 {
@@ -48,11 +62,11 @@ TEST_CASE("test_printing(): printing", "[printing]")
     RCP<const Symbol> y  = symbol("y");
     RCP<const Symbol> z  = symbol("z");
 
-    r = div(integer(12), pow(integer(196), div(integer(1), integer(2))));
-    REQUIRE(r->__str__() == "(3/49)*196**(1/2)");
+    r = div(integer(12), pow(integer(195), div(integer(1), integer(2))));
+    REQUIRE(r->__str__() == "(4/65)*195**(1/2)");
 
-    r = mul(integer(12), pow(integer(196), div(integer(1), integer(2))));
-    REQUIRE(r->__str__() == "12*196**(1/2)");
+    r = mul(integer(12), pow(integer(195), div(integer(1), integer(2))));
+    REQUIRE(r->__str__() == "12*195**(1/2)");
 
     r = mul(integer(23), mul(pow(integer(5), div(integer(1), integer(2))),
         pow(integer(7), div(integer(1), integer(2)))));
@@ -63,13 +77,13 @@ TEST_CASE("test_printing(): printing", "[printing]")
 
     r = mul(integer(23), mul(pow(div(integer(5), integer(2)), div(integer(1), integer(2))),
         pow(div(integer(7), integer(3)), div(integer(1), integer(2)))));
-    REQUIRE(r->__str__() == "23*(7/3)**(1/2)*(5/2)**(1/2)");
+    REQUIRE(r->__str__() == "(23/6)*2**(1/2)*3**(1/2)*5**(1/2)*7**(1/2)");
 
     r = pow(div(symbol("x"), integer(2)), div(integer(1), integer(2)));
-    REQUIRE(r->__str__() == "((1/2)*x)**(1/2)");
+    REQUIRE(r->__str__() == "(1/2)*2**(1/2)*x**(1/2)");
 
-    r = pow(div(integer(3), integer(2)),div(integer(1), integer(2)));
-    REQUIRE(r->__str__() == "(3/2)**(1/2)");
+    r = pow(div(integer(3), integer(2)), div(integer(1), integer(2)));
+    REQUIRE(r->__str__() == "(1/2)*2**(1/2)*3**(1/2)");
 
     r1 = mul(integer(12), pow(integer(196), div(integer(-1), integer(2))));
     r2 = mul(integer(294), pow(integer(196), div(integer(-1), integer(2))));
@@ -83,10 +97,10 @@ TEST_CASE("test_printing(): printing", "[printing]")
     REQUIRE(r2->__str__() == "-x*y");
     REQUIRE(r2->__str__() != "-1x*y");
 
-    r = mul(integer(-1), pow(integer(196), div(integer(1), integer(2))));
-    REQUIRE(r->__str__() == "-196**(1/2)");
+    r = mul(integer(-1), pow(integer(195), div(integer(1), integer(2))));
+    REQUIRE(r->__str__() == "-195**(1/2)");
     r = pow(integer(-6), div(integer(1), integer(2)));
-    REQUIRE(r->__str__() == "(-6)**(1/2)");
+    REQUIRE(r->__str__() == "I*6**(1/2)");
 
     RCP<const Number> rn1, rn2, rn3, c1, c2;
     rn1 = Rational::from_two_ints(*integer(2), *integer(4));
@@ -280,7 +294,7 @@ TEST_CASE("test_floats(): printing", "[printing]")
 
     p = real_double(0.00000011);
     p = mul(p, x);
-    bool pr = (p->__str__() == "1.1e-07*x") || (p->__str__() == "1.1e-007*x");
+    bool pr = (p->__str__() == "1.1e-07*x") or (p->__str__() == "1.1e-007*x");
     REQUIRE(pr == true);
 
     p = complex_double(std::complex<double>(0.1, 0.2));
@@ -309,4 +323,15 @@ TEST_CASE("test_floats(): printing", "[printing]")
     REQUIRE(p->__str__() == "(-10.0000000000000000000000 + 10.0000000000000000000000*I)/x");
 #endif
 #endif
+}
+
+TEST_CASE("test custom printing", "[printing]")
+{
+    SymEngine::MyStrPrinter printer;
+    RCP<const Basic> p;
+    RCP<const Symbol> x = symbol("x");
+    p = sin(x);
+    CHECK(printer.apply(p) == "MySin(x)");
+    p = cos(sin(x));
+    CHECK(printer.apply(p) == "cos(MySin(x))");
 }

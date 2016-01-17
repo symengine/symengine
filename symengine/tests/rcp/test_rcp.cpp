@@ -19,7 +19,7 @@ TEST_CASE("Test make_rcp", "[rcp]")
 {
     RCP<Mesh> m = make_rcp<Mesh>();
     Ptr<Mesh> p = m.ptr();
-    REQUIRE(!(m == null));
+    REQUIRE(not (m == null));
     REQUIRE(p->use_count() == 1);
     RCP<Mesh> m2 = m;
     REQUIRE(p->use_count() == 2);

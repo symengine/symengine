@@ -15,12 +15,12 @@ int main()
 {
     matrix A(3, 3), B(3, 3), C(3, 3);
 
-    A = symbol("a"), symbol("b"), symbol("c"), 
-        symbol("d"), symbol("e"), symbol("f"), 
+    A = symbol("a"), symbol("b"), symbol("c"),
+        symbol("d"), symbol("e"), symbol("f"),
         symbol("g"), symbol("h"), symbol("i");
 
-    B = symbol("x"), symbol("y"), symbol("z"), 
-        symbol("p"), symbol("q"), symbol("r"), 
+    B = symbol("x"), symbol("y"), symbol("z"),
+        symbol("p"), symbol("q"), symbol("r"),
         symbol("u"), symbol("v"), symbol("w");
 
     unsigned N = 10000;

@@ -55,8 +55,8 @@ bool inverse_lookup(umap_basic_basic &d, const RCP<const Basic> &t,
                    const Ptr<RCP<const Basic>>& index);
 
 // \return true of conjugate has to be returned finally else false
-bool eval(const RCP<const Basic> &arg, int period, bool odd, bool conj_odd, //input
-            const Ptr<RCP<const Basic>>& rarg,int& index, int& sign); //output
+bool eval(const RCP<const Basic> &arg, unsigned period, bool odd, bool conj_odd, //input
+            const Ptr<RCP<const Basic>>& rarg, int& index, int& sign); //output
 
 //! \return `sqrt` of the `arg`
 RCP<const Basic> sqrt(const RCP<const Basic> &arg);
@@ -74,13 +74,9 @@ public:
 
     virtual int compare(const Basic &o) const;
     //! \return `true` if canonical
-    bool is_canonical(const RCP<const Basic> &arg);
-    //! Differentiate w.r.t Symbol `x`
-    virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
+    bool is_canonical(const RCP<const Basic> &arg) const;
     //! \return Canonicalized sin
     virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
-
-    virtual void accept(Visitor &v) const;
 };
 
 //! Canonicalize Sin:
@@ -100,13 +96,9 @@ public:
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
     //! \return `true` if canonical
-    bool is_canonical(const RCP<const Basic> &arg);
-    //! Differentiate w.r.t Symbol `x`
-    virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
+    bool is_canonical(const RCP<const Basic> &arg) const;
     //! \return Canonicalized cos
     virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
-
-    virtual void accept(Visitor &v) const;
 };
 
 //! Canonicalize Cos:
@@ -126,13 +118,9 @@ public:
 
     virtual int compare(const Basic &o) const;
     //! \return `true` if canonical
-    bool is_canonical(const RCP<const Basic> &arg);
-    //! Differentiate w.r.t Symbol `x`
-    virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
+    bool is_canonical(const RCP<const Basic> &arg) const;
     //! \return Canonicalized tan
     virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
-
-    virtual void accept(Visitor &v) const;
 };
 //! Canonicalize Tan:
 RCP<const Basic> tan(const RCP<const Basic> &arg);
@@ -151,13 +139,9 @@ public:
 
     virtual int compare(const Basic &o) const;
     //! \return `true` if canonical
-    bool is_canonical(const RCP<const Basic> &arg);
-    //! Differentiate w.r.t Symbol `x`
-    virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
+    bool is_canonical(const RCP<const Basic> &arg) const;
     //! \return Canonicalized cot
     virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
-
-    virtual void accept(Visitor &v) const;
 };
 //! Canonicalize Cot:
 RCP<const Basic> cot(const RCP<const Basic> &arg);
@@ -176,13 +160,9 @@ public:
 
     virtual int compare(const Basic &o) const;
     //! \return `true` if canonical
-    bool is_canonical(const RCP<const Basic> &arg);
-    //! Differentiate w.r.t Symbol `x`
-    virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
+    bool is_canonical(const RCP<const Basic> &arg) const;
     //! \return Canonicalized csc
     virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
-
-    virtual void accept(Visitor &v) const;
 };
 //! Canonicalize Csc:
 RCP<const Basic> csc(const RCP<const Basic> &arg);
@@ -201,13 +181,9 @@ public:
 
     virtual int compare(const Basic &o) const;
     //! \return `true` if canonical
-    bool is_canonical(const RCP<const Basic> &arg);
-    //! Differentiate w.r.t Symbol `x`
-    virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
+    bool is_canonical(const RCP<const Basic> &arg) const;
     //! \return Canonicalized sec
     virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
-
-    virtual void accept(Visitor &v) const;
 };
 //! Canonicalize Sec:
 RCP<const Basic> sec(const RCP<const Basic> &arg);
@@ -225,13 +201,9 @@ public:
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
     //! \return `true` if canonical
-    bool is_canonical(const RCP<const Basic> &arg);
-    //! Differentiate w.r.t Symbol `x`
-    virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
+    bool is_canonical(const RCP<const Basic> &arg) const;
     //! \return Canonicalized asin
     virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
-
-    virtual void accept(Visitor &v) const;
 };
 
 //! Canonicalize ASin:
@@ -250,13 +222,9 @@ public:
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
     //! \return `true` if canonical
-    bool is_canonical(const RCP<const Basic> &arg);
-    //! Differentiate w.r.t Symbol `x`
-    virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
+    bool is_canonical(const RCP<const Basic> &arg) const;
     //! \return Canonicalized acos
     virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
-
-    virtual void accept(Visitor &v) const;
 };
 
 //! Canonicalize ACos:
@@ -275,13 +243,9 @@ public:
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
     //! \return `true` if canonical
-    bool is_canonical(const RCP<const Basic> &arg);
-    //! Differentiate w.r.t Symbol `x`
-    virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
+    bool is_canonical(const RCP<const Basic> &arg) const;
     //! \return Canonicalized asec
     virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
-
-    virtual void accept(Visitor &v) const;
 };
 
 //! Canonicalize ASec:
@@ -300,13 +264,9 @@ public:
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
     //! \return `true` if canonical
-    bool is_canonical(const RCP<const Basic> &arg);
-    //! Differentiate w.r.t Symbol `x`
-    virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
+    bool is_canonical(const RCP<const Basic> &arg) const;
     //! \return Canonicalized acsc
     virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
-
-    virtual void accept(Visitor &v) const;
 };
 
 //! Canonicalize ACsc:
@@ -325,13 +285,9 @@ public:
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
     //! \return `true` if canonical
-    bool is_canonical(const RCP<const Basic> &arg);
-    //! Differentiate w.r.t Symbol `x`
-    virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
+    bool is_canonical(const RCP<const Basic> &arg) const;
     //! \return Canonicalized atan
     virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
-
-    virtual void accept(Visitor &v) const;
 };
 
 //! Canonicalize ATan:
@@ -350,13 +306,9 @@ public:
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
     //! \return `true` if canonical
-    bool is_canonical(const RCP<const Basic> &arg);
-    //! Differentiate w.r.t Symbol `x`
-    virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
+    bool is_canonical(const RCP<const Basic> &arg) const;
     //! \return Canonicalized acot
     virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
-
-    virtual void accept(Visitor &v) const;
 };
 
 //! Canonicalize ACot:
@@ -377,7 +329,7 @@ public:
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
     //! \return `true` if canonical
-    bool is_canonical(const RCP<const Basic> &num, const RCP<const Basic> &den);
+    bool is_canonical(const RCP<const Basic> &num, const RCP<const Basic> &den) const;
     //! \return Size of the hash
     virtual std::size_t __hash__() const;
     //! \return `y` in `atan2(y, x)`
@@ -388,12 +340,8 @@ public:
     inline RCP<const Basic> get_den() const {
         return den_;
     }
-    //! Differentiate w.r.t Symbol `x`
-    virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
 
     virtual vec_basic get_args() const { return {num_, den_}; }
-
-    virtual void accept(Visitor &v) const;
 };
 
 //! Canonicalize ATan2:
@@ -425,11 +373,7 @@ public:
     inline RCP<const Basic> get_arg() const { return arg_; }
     virtual vec_basic get_args() const { return {arg_}; }
     //! \return `true` if canonical
-    bool is_canonical(const RCP<const Basic> &arg);
-    //! Differentiate w.r.t Symbol `x`
-    virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
-
-    virtual void accept(Visitor &v) const;
+    bool is_canonical(const RCP<const Basic> &arg) const;
 };
 
 //! Create a new LambertW instance:
@@ -443,7 +387,7 @@ class Zeta : public Function {
 //
 // .. math:: \zeta(s, a) = \sum_{n=0}^\infty \frac{1}{(n + a)^s},
 //
-// where the standard choice of argument for :math:`n + a` is used. 
+// where the standard choice of argument for :math:`n + a` is used.
 // If no value is passed for :math:`a`, by this function assumes a default value
 // of :math:`a = 1`, yielding the Riemann zeta function.
 
@@ -471,11 +415,7 @@ public:
     inline RCP<const Basic> get_a() const { return a_; }
     virtual vec_basic get_args() const { return {s_, a_}; }
     //! \return `true` if canonical
-    bool is_canonical(const RCP<const Basic> &s, const RCP<const Basic> &a);
-    //! Differentiate w.r.t Symbol `x`
-    virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
-
-    virtual void accept(Visitor &v) const;
+    bool is_canonical(const RCP<const Basic> &s, const RCP<const Basic> &a) const;
 };
 
 //! Create a new Zeta instance:
@@ -504,11 +444,9 @@ public:
     inline RCP<const Basic> get_s() const { return s_; }
     virtual vec_basic get_args() const { return {s_}; }
     //! \return `true` if canonical
-    bool is_canonical(const RCP<const Basic> &s);
+    bool is_canonical(const RCP<const Basic> &s) const;
     //! Rewrites in the form of zeta
     RCP<const Basic> rewrite_as_zeta() const;
-
-    virtual void accept(Visitor &v) const;
 };
 
 //! Create a new Dirichlet_eta instance:
@@ -537,12 +475,9 @@ public:
     //! \return `arg_`
     virtual vec_basic get_args() const { return arg_; }
     //! \return `true` if canonical
-    bool is_canonical(const vec_basic &arg);
-    //! Differentiate w.r.t Symbol `x`
-    virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
+    bool is_canonical(const vec_basic &arg) const;
     virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
-
-    virtual void accept(Visitor &v) const;
+    virtual RCP<const Basic> create(const vec_basic &x) const;
 };
 
 //! Create a new FunctionSymbol instance:
@@ -551,39 +486,16 @@ RCP<const Basic> function_symbol(std::string name,
 RCP<const Basic> function_symbol(std::string name,
         const vec_basic &arg);
 
-/*! Class to hold a pointer to a function object
-*   FunctionWrapper can be used to wrap any C/C++ object
-*   (eg: Python object through Python/C API) 
+/*! Use this class to define custom functions by overriding
+ *  the defaut behaviour for create, eval, diff, __eq__, compare etc.
 * */
 
 class FunctionWrapper: public FunctionSymbol {
-private:
-    void* obj_;
-    std::string hash_;
-    void (*dec_ref_)(void *);
-    int (*comp_)(void *, void *);
-
 public:
     IMPLEMENT_TYPEID(FUNCTIONWRAPPER)
-    /*! FunctionWrapper Constructor
-     * \param obj - Pointer to the function object
-     * \param name - Name of the function
-     * \param hash - Hash value of obj
-     * \param arg - Arguments of the function
-     * \param dec_ref - Function pointer to decrease the reference count
-     * \param comp - Function pointer to compare two function objects
-     * */
-    FunctionWrapper(void* obj, std::string name, std::string hash, const vec_basic &arg,
-        void (*dec_ref)(void *), int (*comp)(void *, void *));
-    ~FunctionWrapper();
-    virtual std::size_t __hash__() const;
-    virtual bool __eq__(const Basic &o) const;
-    virtual int compare(const Basic &o) const;
-    virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
-    //! \return Pointer to the function object
-    inline void* get_object() const { return obj_; }
-
-    virtual void accept(Visitor &v) const;
+    FunctionWrapper(std::string name, const vec_basic &arg);
+    FunctionWrapper(std::string name, const RCP<const Basic> &arg);
+    virtual RCP<const Number> eval(long bits) const;
 };
 
 /*! Derivative operator
@@ -628,10 +540,7 @@ public:
         return args;
     }
     bool is_canonical(const RCP<const Basic> &arg, const multiset_basic &x) const;
-    virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
     virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
-
-    virtual void accept(Visitor &v) const;
 };
 
 /*! Subs operator
@@ -658,15 +567,15 @@ public:
     inline RCP<const Basic> get_arg() const {
         return arg_;
     }
+    inline const map_basic_basic& get_dict() const {
+        return dict_;
+    };
     virtual vec_basic get_variables() const;
     virtual vec_basic get_point() const;
     virtual vec_basic get_args() const;
 
     bool is_canonical(const RCP<const Basic> &arg, const map_basic_basic &x) const;
-    virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
     virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
-
-    virtual void accept(Visitor &v) const;
 };
 
 
@@ -702,15 +611,11 @@ public:
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
     //! \return `true` if canonical
-    bool is_canonical(const RCP<const Basic> &arg);
-    //! Differentiate w.r.t Symbol `x`
-    virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
+    bool is_canonical(const RCP<const Basic> &arg) const;
     //! \return Canonicalized sinh
     virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
     //! expands sinh in terms of exp function
     virtual RCP<const Basic> expand_as_exp() const;
-
-    virtual void accept(Visitor &v) const;
 };
 
 //! Canonicalize Sinh:
@@ -729,15 +634,11 @@ public:
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
     //! \return `true` if canonical
-    bool is_canonical(const RCP<const Basic> &arg);
-    //! Differentiate w.r.t Symbol `x`
-    virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
+    bool is_canonical(const RCP<const Basic> &arg) const;
     //! \return Canonicalized cosh
     virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
     //! expands cosh in terms of exp function
     virtual RCP<const Basic> expand_as_exp() const;
-
-    virtual void accept(Visitor &v) const;
 };
 
 //! Canonicalize Cosh:
@@ -756,15 +657,11 @@ public:
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
     //! \return `true` if canonical
-    bool is_canonical(const RCP<const Basic> &arg);
-    //! Differentiate w.r.t Symbol `x`
-    virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
+    bool is_canonical(const RCP<const Basic> &arg) const;
     //! \return Canonicalized tanh
     virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
     //! expands tanh in terms of exp function
     virtual RCP<const Basic> expand_as_exp() const;
-
-    virtual void accept(Visitor &v) const;
 };
 
 //! Canonicalize Tanh:
@@ -783,15 +680,11 @@ public:
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
     //! \return `true` if canonical
-    bool is_canonical(const RCP<const Basic> &arg);
-    //! Differentiate w.r.t Symbol `x`
-    virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
+    bool is_canonical(const RCP<const Basic> &arg) const;
     //! \return Canonicalized coth
     virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
     //! expands coth in terms of exp function
     virtual RCP<const Basic> expand_as_exp() const;
-
-    virtual void accept(Visitor &v) const;
 };
 
 //! Canonicalize Coth:
@@ -810,13 +703,9 @@ public:
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
     //! \return `true` if canonical
-    bool is_canonical(const RCP<const Basic> &arg);
-    //! Differentiate w.r.t Symbol `x`
-    virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
+    bool is_canonical(const RCP<const Basic> &arg) const;
     //! \return Canonicalized asinh
     virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
-
-    virtual void accept(Visitor &v) const;
 };
 
 //! Canonicalize ASinh:
@@ -835,13 +724,9 @@ public:
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
     //! \return `true` if canonical
-    bool is_canonical(const RCP<const Basic> &arg);
-    //! Differentiate w.r.t Symbol `x`
-    virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
+    bool is_canonical(const RCP<const Basic> &arg) const;
     //! \return Canonicalized acosh
     virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
-
-    virtual void accept(Visitor &v) const;
 };
 
 //! Canonicalize ACosh:
@@ -860,13 +745,9 @@ public:
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
     //! \return `true` if canonical
-    bool is_canonical(const RCP<const Basic> &arg);
-    //! Differentiate w.r.t Symbol `x`
-    virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
+    bool is_canonical(const RCP<const Basic> &arg) const;
     //! \return Canonicalized atanh
     virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
-
-    virtual void accept(Visitor &v) const;
 };
 
 //! Canonicalize ATanh:
@@ -885,13 +766,9 @@ public:
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
     //! \return `true` if canonical
-    bool is_canonical(const RCP<const Basic> &arg);
-    //! Differentiate w.r.t Symbol `x`
-    virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
+    bool is_canonical(const RCP<const Basic> &arg) const;
     //! \return Canonicalized acoth
     virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
-
-    virtual void accept(Visitor &v) const;
 };
 
 //! Canonicalize ACoth:
@@ -910,13 +787,9 @@ public:
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
     //! \return `true` if canonical
-    bool is_canonical(const RCP<const Basic> &arg);
-    //! Differentiate w.r.t Symbol `x`
-    virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
+    bool is_canonical(const RCP<const Basic> &arg) const;
     //! \return Canonicalized asech
     virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
-
-    virtual void accept(Visitor &v) const;
 };
 
 //! Canonicalize ASech:
@@ -944,10 +817,8 @@ public:
     //! \return Size of the hash
     virtual std::size_t __hash__() const;
     //! \return `true` if canonical
-    bool is_canonical(const RCP<const Basic> &i, const RCP<const Basic> &j);
+    bool is_canonical(const RCP<const Basic> &i, const RCP<const Basic> &j) const;
     virtual vec_basic get_args() const { return {i_, j_}; }
-
-    virtual void accept(Visitor &v) const;
 };
 
 //! Canonicalize KroneckerDelta:
@@ -976,10 +847,8 @@ public:
     //! \return Size of the hash
     virtual std::size_t __hash__() const;
     //! \return `true` if canonical
-    bool is_canonical(const vec_basic &arg);
+    bool is_canonical(const vec_basic &arg) const;
     virtual vec_basic get_args() const { return arg_; }
-
-    virtual void accept(Visitor &v) const;
 };
 
 //! Canonicalize LeviCivita:
@@ -1011,10 +880,8 @@ public:
     //! \return Size of the hash
     virtual std::size_t __hash__() const;
     //! \return `true` if canonical
-    bool is_canonical(const RCP<const Basic> &arg);
+    bool is_canonical(const RCP<const Basic> &arg) const;
     virtual vec_basic get_args() const { return {arg_}; }
-
-    virtual void accept(Visitor &v) const;
 };
 
 //! Canonicalize Gamma:
@@ -1038,10 +905,8 @@ public:
     //! \return Size of the hash
     virtual std::size_t __hash__() const;
     //! \return `true` if canonical
-    bool is_canonical(const RCP<const Basic> &s, const RCP<const Basic> &x);
+    bool is_canonical(const RCP<const Basic> &s, const RCP<const Basic> &x) const;
     virtual vec_basic get_args() const { return {s_, x_}; }
-
-    virtual void accept(Visitor &v) const;
 };
 
 //! Canonicalize LowerGamma:
@@ -1066,14 +931,83 @@ public:
     //! \return Size of the hash
     virtual std::size_t __hash__() const;
     //! \return `true` if canonical
-    bool is_canonical(const RCP<const Basic> &s, const RCP<const Basic> &x);
+    bool is_canonical(const RCP<const Basic> &s, const RCP<const Basic> &x) const;
     virtual vec_basic get_args() const { return {s_, x_}; }
-
-    virtual void accept(Visitor &v) const;
 };
 
 //! Canonicalize UpperGamma:
 RCP<const Basic> uppergamma(const RCP<const Basic> &s, const RCP<const Basic> &x);
+
+
+class Beta: public Function {
+/*!    The beta function, also called the Euler integral
+ *     of the first kind, is a special function defined by
+ *
+ *   .. math::
+ *      \Beta(x, y) := \int^{1}_{0} t^{x-1} (1-t)^{y-1} \mathrm{d}t.
+ **/
+private:
+    RCP<const Basic> x_;
+    RCP<const Basic> y_;
+public:
+    IMPLEMENT_TYPEID(BETA)
+    //! Beta Constructor
+    Beta(const RCP<const Basic> &x, const RCP<const Basic> &y): x_{x}, y_{y} {
+        SYMENGINE_ASSERT(is_canonical(x_, y_))
+    }
+    //! return `Beta` with ordered arguments
+    static RCP<const Beta> from_two_basic(const RCP<const Basic> &x, const RCP<const Basic> &y);
+    /*! Equality comparator
+     * \param o - Object to be compared with
+     * \return whether the 2 objects are equal
+     * */
+    virtual bool __eq__(const Basic &o) const;
+    virtual int compare(const Basic &o) const;
+    //! \return Size of the hash
+    virtual std::size_t __hash__() const;
+    //! \return `true` if canonical
+    bool is_canonical(const RCP<const Basic> &s, const RCP<const Basic> &x);
+    virtual vec_basic get_args() const { return {x_, y_}; }
+    RCP<const Basic> rewrite_as_gamma() const;
+};
+
+//! Canonicalize Beta:
+RCP<const Basic> beta(const RCP<const Basic> &x, const RCP<const Basic> &y);
+
+
+class PolyGamma: public Function {
+/*!    The polygamma function
+ *
+ *     It is a meromorphic function on `\mathbb{C}` and defined as the (n+1)-th
+ *     derivative of the logarithm of the gamma function:
+ *
+ *  .. math::
+ *  \psi^{(n)} (z) := \frac{\mathrm{d}^{n+1}}{\mathrm{d} z^{n+1}} \log\Gamma(z).
+ **/
+private:
+    RCP<const Basic> n_;
+    RCP<const Basic> x_;
+public:
+    IMPLEMENT_TYPEID(POLYGAMMA)
+    //! PolyGamma Constructor
+    PolyGamma(const RCP<const Basic> &n, const RCP<const Basic> &x): n_{n}, x_{x} {
+        SYMENGINE_ASSERT(is_canonical(n_, x_))
+    }
+    /*! Equality comparator
+     * \param o - Object to be compared with
+     * \return whether the 2 objects are equal
+     * */
+    virtual bool __eq__(const Basic &o) const;
+    virtual int compare(const Basic &o) const;
+    //! \return Size of the hash
+    virtual std::size_t __hash__() const;
+    bool is_canonical(const RCP<const Basic> &n, const RCP<const Basic> &x);
+    virtual vec_basic get_args() const { return {n_, x_}; }
+    RCP<const Basic> rewrite_as_zeta() const;
+};
+
+//! Canonicalize PolyGamma
+RCP<const Basic> polygamma(const RCP<const Basic> &n, const RCP<const Basic> &x);
 
 
 class Abs: public Function {
@@ -1094,12 +1028,9 @@ public:
     //! \return Size of the hash
     virtual std::size_t __hash__() const;
     //! \return `true` if canonical
-    bool is_canonical(const RCP<const Basic> &arg);
+    bool is_canonical(const RCP<const Basic> &arg) const;
     inline RCP<const Basic> get_arg() const { return arg_; }
     virtual vec_basic get_args() const { return {arg_}; }
-    RCP<const Basic> diff(const RCP<const Symbol> &x) const;
-
-    virtual void accept(Visitor &v) const;
 };
 
 //! Canonicalize Abs:

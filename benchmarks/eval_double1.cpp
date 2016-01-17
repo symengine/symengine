@@ -1,8 +1,6 @@
 #include <iostream>
 #include <chrono>
 
-#include "Teuchos_stacktrace.hpp"
-
 #include <symengine/basic.h>
 #include <symengine/add.h>
 #include <symengine/symbol.h>
@@ -31,7 +29,7 @@ using SymEngine::eval_double;
 
 int main(int argc, char* argv[])
 {
-    Teuchos::print_stack_on_segfault();
+    SymEngine::print_stack_on_segfault();
 
     RCP<const Basic> e = sin(integer(1));
     double r, r_exact;

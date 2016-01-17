@@ -1,13 +1,13 @@
 # SymEngine
 
-[![Build Status](https://travis-ci.org/sympy/symengine.png?branch=master)](https://travis-ci.org/sympy/symengine)
+[![Build Status](https://travis-ci.org/symengine/symengine.png?branch=master)](https://travis-ci.org/symengine/symengine)
 
 SymEngine is a standalone fast C++ symbolic manipulation library. Optional thin
 wrappers allow usage of the library from other languages, e.g.:
 
 * C wrappers allow usage from C, or as a basis for other wrappers (the [symengine/cwrapper.h](https://github.com/sympy/symengine/tree/master/symengine/cwrapper.h) file)
-* Python wrappers allow easy usage from Python and integration with [SymPy](http://sympy.org/) and [Sage](http://www.sagemath.org/) (the [symengine/python](https://github.com/sympy/symengine/tree/master/symengine/python) directory)
-* Ruby wrappers (the [symengine/ruby](https://github.com/sympy/symengine/tree/master/symengine/ruby) directory)
+* Python wrappers allow easy usage from Python and integration with [SymPy](http://sympy.org/) and [Sage](http://www.sagemath.org/) (the [symengine.py](https://github.com/symengine/symengine.py) repository)
+* Ruby wrappers (the [symengine.rb](https://github.com/symengine/symengine.rb) repository)
 * Julia wrappers (the [SymEngine.jl](https://github.com/symengine/SymEngine.jl) repository)
 * ...
 
@@ -46,27 +46,6 @@ Run tests:
 
     ctest
 
-### Python Wrappers
-
-The optional Python wrappers can be turned on by
-
-    cmake -DWITH_PYTHON=yes .
-    make
-
-Use SymEngine from Python as follows:
-
-    >>> from symengine import var
-    >>> var("x y z")
-    (x, y, z)
-    >>> e = (x+y+z)**2
-    >>> e.expand()
-    2*x*y + 2*x*z + 2*y*z + x**2 + y**2 + z**2
-
-You can read Python tests in `symengine/tests` to see what features are
-implemented. Supported versions of Python are: 2.6, 2.7, 3.2, 3.3.
-You need Cython >= 0.19.1 in order to compile the wrappers. CMake
-will report at configure time if the Cython version is too old.
-
 ### Development
 
 The Travis-CI checks the code in both Release and Debug mode with all possible
@@ -97,6 +76,8 @@ For RPM based systems (Fedora etc.)
 
     yum install binutils-devel
 
+On OpenSuSE you will additionally need `glibc-devel`.
+
 ## CMake Options
 
 Here are all the `CMake` options that you can use to configure the build, with
@@ -104,8 +85,7 @@ their default values indicated below:
 
     cmake -DCMAKE_INSTALL_PREFIX:PATH="/usr/local" \  # Installation prefix
         -DCMAKE_BUILD_TYPE:STRING="Release" \         # Type of build, one of: Debug or Release
-        -DWITH_BFD:BOOL=OFF \                         # Install with BFD library (requires binutils-dev)
-        -DWITH_PYTHON:BOOL=OFF \                      # Build Python wrappers
+        -DWITH_BFD:BOOL=OFF \                         # Install with BFD library (requires binutils-dev)s
         -DWITH_SYMENGINE_ASSERT:BOOL=OFF \            # Test all SYMENGINE_ASSERT statements in the code
         -DWITH_SYMENGINE_RCP:BOOL=ON \                # Use our faster special implementation of RCP
         -DWITH_SYMENGINE_THREAD_SAFE:BOOL=OFF \       # Build with thread safety
@@ -115,8 +95,11 @@ their default values indicated below:
         -DWITH_TCMALLOC:BOOL=OFF \                    # Install with TCMalloc linked
         -DWITH_OPENMP:BOOL=OFF \                      # Install with OpenMP enabled
         -DWITH_PIRANHA:BOOL=OFF \                     # Install with Piranha library
+        -DWITH_MPFR:BOOL=OFF \                        # Install with MPFR library
+        -DWITH_MPC:BOOL=OFF \                         # Install with MPC library
         -DBUILD_TESTS:BOOL=ON \                       # Build with tests
         -DBUILD_BENCHMARKS:BOOL=ON \                  # Build with benchmarks
+        -DBUILD_BENCHMARKS_NONIUS:BOOL=OFF \          # Build with Nonius benchmarks
         .
 
 If `OPENMP` is enabled, then `SYMENGINE_THREAD_SAFE` is also enabled automatically
@@ -129,24 +112,30 @@ If you want to use a different compiler, do:
 
 and check that CMake picked it up.
 
+The Nonius based benchmarks (`BUILD_BENCHMARKS_NONIUS`) and Piranha
+(`WITH_PIRANHA`) depend on Boost, so they are off by default. The bechmarked
+code (both with and without Nonius) seems to depend on the order of which you
+execute the benchmarks in a given executable, due to internal malloc
+implementation. We have found that this order dependence is reduced by enabling
+`WITH_TCMALLOC=ON` and since it also speeds the benchmarks up, we recommend
+to always use TCMalloc when benchmarking (and the `Release` mode of SymEngine,
+which is the default).
+
 ### External Libraries
 
 There are three ways how to specify where external libraries are. In the lines
-below, change `PKG1`, `PKG2`, ... to the names of the external libraries (`GMP`, `ARB`, `PRIMESIEVE`,
-`BFD`, `FLINT`, `MPFR`, ...).
+below, change `PKG1`, `PKG2`, ... to the names of the external libraries
+(`GMP`, `ARB`, `PRIMESIEVE`, `BFD`, `FLINT`, `MPFR`, ...).
 
-1. `cmake -DPKG1_DIR=$HASHSTACK -DPKG2_DIR=$HASHSTACK .`
-2. `cmake -DPKG1_INCLUDE_DIRS=$HASHSTACK/include -DPKG1_LIBRARIES=$HASHSTACK/lib -DPKG2_DIR=$HASHSTACK .`
-3. `cmake -DCOMMON_DIR=$HASHSTACK .`
+1. `cmake -DCMAKE_PREFIX_PATH=$HASHSTACK .`
+2. `cmake -DPKG1_INCLUDE_DIRS=$HASHSTACK/include -DPKG1_LIBRARIES=$HASHSTACK/lib .`
 
-In the approach 1., you specify `PKG_DIR` as the base prefix, and the include
-files must be in `${PKG_DIR}/include` and libraries in `${PKG_DIR}/lib` (or
-`lib64`). In the approach 2., you specify the include and library directories
-separately (you can use approach 1. for some libraries and 2. for other
-libraries on the same command line). In the approach 3., you specify a common
-prefix for all libraries at once.
+In the approach 1., you specify a common prefix(es) for all libraries at once.
+Use specific prefix first and general later. In the approach 2., you specify
+the include and library directories separately (you can use approach 1. for
+some libraries and 2. for other libraries on the same command line).
 
-If all your libraries are installed in the same prefix, use 3. If they are
+If all your libraries are installed in the same prefix, use 1. If they are
 installed in separate locations, use 1. or 2.: if the given library has a
 common prefix for includes and libs, use 1., otherwise use 2.
 

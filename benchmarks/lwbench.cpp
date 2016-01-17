@@ -1,8 +1,7 @@
 #include <iostream>
 #include <chrono>
 #include <cstdlib>
-
-#include "Teuchos_stacktrace.hpp"
+#include <iomanip>
 
 #include "symengine/ntheory.h"
 #include <symengine/mul.h>
@@ -101,7 +100,7 @@ double E()
 
 int main(int argc, char* argv[])
 {
-    Teuchos::print_stack_on_segfault();
+    SymEngine::print_stack_on_segfault();
 
     std::cout << "Time for A : \t " << std::setw(15) << std::setprecision(9)  << std::fixed << A() << std::endl;
     std::cout << "Time for B : \t " << std::setw(15) << std::setprecision(9)  << std::fixed << B() << std::endl;

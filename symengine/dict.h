@@ -8,6 +8,7 @@
 #ifndef SYMENGINE_DICT_H
 #define SYMENGINE_DICT_H
 
+#define __GMPXX_USE_CXX11 1
 #include <gmpxx.h>
 
 namespace SymEngine {
@@ -22,6 +23,7 @@ struct RCPIntegerKeyLess;
 
 typedef std::unordered_map<RCP<const Basic>, RCP<const Number>,
         RCPBasicHash, RCPBasicKeyEq> umap_basic_num;
+typedef std::unordered_map<short, RCP<const Basic>> umap_short_basic;
 typedef std::unordered_map<RCP<const Basic>, RCP<const Basic>,
         RCPBasicHash, RCPBasicKeyEq> umap_basic_basic;
 
@@ -59,7 +61,7 @@ bool umap_eq(const T &a, const T &b)
     // Can't be equal if # of entries differ:
     if (a.size() != b.size()) return false;
     // Loop over keys in "a":
-    for (auto &p: a) {
+    for (const auto &p: a) {
         // O(1) lookup of the key in "b":
         auto f = b.find(p.first);
         if (f == b.end()) return false; // no such element in "b"
@@ -125,23 +127,15 @@ typedef struct
 {
     inline std::size_t operator() (const vec_int &k) const {
         std::size_t h = 0;
-        for (auto &p: k) {
+        for (const auto &p: k) {
             h = (h << 4) + p;
         }
         return h;
     }
 } vec_int_hash;
 
-typedef struct
-{
-    //! \return true if `x==y`
-    inline bool operator() (const vec_int &x, const vec_int &y) const {
-        return x == y;
-    }
-} vec_int_eq;
-
 typedef std::unordered_map<vec_int, mpz_class,
-        vec_int_hash, vec_int_eq> umap_vec_mpz;
+        vec_int_hash> umap_vec_mpz;
 
 } // SymEngine
 
@@ -158,4 +152,3 @@ std::ostream& operator<<(std::ostream& out, const SymEngine::vec_basic& d);
 std::ostream& operator<<(std::ostream& out, const SymEngine::set_basic& d);
 
 #endif
-

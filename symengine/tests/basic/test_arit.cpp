@@ -209,7 +209,7 @@ TEST_CASE("Mul: arit", "[arit]")
     rc1 = Complex::from_two_nums(*one, *one);
     r1 = pow(rc1, x);
     r1 = mul(r1, pow(rc1, sub(div(i3, i2), x)));
-    r2 = mul(rc1, pow(rc1, div(one, i2)));
+    r2 = pow(rc1, div(i3, i2));
     REQUIRE(eq(*r1, *r2));
 
     r1 = real_double(0.1);
@@ -326,7 +326,7 @@ TEST_CASE("Div: arit", "[arit]")
     REQUIRE(integer(2)->is_positive());
     REQUIRE(integer(0)->is_zero());
     REQUIRE(integer(1)->is_one());
-    REQUIRE(!(integer(-1)->is_positive()));
+    REQUIRE(not (integer(-1)->is_positive()));
     REQUIRE(integer(-1)->is_negative());
 
     RCP<const Basic> r1, r2;
@@ -630,6 +630,26 @@ TEST_CASE("Pow: arit", "[arit]")
     r2 = pow(r1, i3);
     REQUIRE(eq(*r2, *integer(81)));
 
+    r1 = sqrt(div(one, i4));
+    r2 = div(one, i2);
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = sqrt(div(i3, i4));
+    r2 = div(sqrt(i3), i2);
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = sqrt(div(i4, i3));
+    r2 = div(mul(i2, sqrt(i3)), i3);
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = pow(integer(8), div(i2, i3));
+    r2 = i4;
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = mul(pow(integer(8), x), pow(integer(8), sub(div(i2, i3), x)));
+    r2 = i4;
+    REQUIRE(eq(*r1, *r2));
+
     r1 = real_double(0.1);
     r2 = Rational::from_mpq(mpq_class(1, 2));
     r2 = pow(r1, r2);
@@ -647,6 +667,18 @@ TEST_CASE("Pow: arit", "[arit]")
 
     r1 = pow(x, real_double(0.0));
     r2 = real_double(1.0);
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = sqrt(mul(i2, x));
+    r2 = mul(sqrt(i2), sqrt(x));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = sqrt(mul(neg(i2), x));
+    r2 = mul(sqrt(i2), sqrt(neg(x)));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = pow(mul(sqrt(mul(y, x)), x), i2);
+    r2 = mul(pow(x, i3), y);
     REQUIRE(eq(*r1, *r2));
 }
 
@@ -759,8 +791,8 @@ TEST_CASE("Expand2: arit", "[arit]")
     r2 = expand(r1);
     std::cout << *r2 << std::endl;
 
-    REQUIRE(eq(*r2, *add(add(add(mul(x,z), mul(y, z)), mul(x, w)), mul(y, w))));
-    REQUIRE(neq(*r2, *add(add(add(mul(y,z), mul(y,z)), mul(x, w)), mul(y, w))));
+    REQUIRE(eq(*r2, *add(add(add(mul(x, z), mul(y, z)), mul(x, w)), mul(y, w))));
+    REQUIRE(neq(*r2, *add(add(add(mul(y, z), mul(y, z)), mul(x, w)), mul(y, w))));
 
     r1 = pow(add(x, y), im1);       // 1/(x+y)
     std::cout << *r1 << std::endl;
@@ -905,6 +937,14 @@ TEST_CASE("Expand2: arit", "[arit]")
 
     r1 = expand(pow(add(real_double(0.0), x), i2));
     r2 = add(real_double(0.0), pow(x, i2));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = expand(add(mul(i2, add(x, one)), mul(i3, mul(x, add(x, one)))));
+    r2 = add(i2, add(mul(i5, x), mul(i3, pow(x, i2))));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = expand(mul(i3, add(x, one)));
+    r2 = add(mul(i3, x), i3);
     REQUIRE(eq(*r1, *r2));
 }
 

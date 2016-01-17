@@ -34,11 +34,6 @@ int Constant::compare(const Basic &o) const
     return name_ < s.name_ ? -1 : 1;
 }
 
-RCP<const Basic> Constant::diff(const RCP<const Symbol> &x) const
-{
-    return zero;
-}
-
 RCP<const Integer> zero = integer(0);
 RCP<const Integer> one = integer(1);
 RCP<const Integer> minus_one = integer(-1);
@@ -46,6 +41,7 @@ RCP<const Number> I = Complex::from_two_nums(*zero, *one);
 
 RCP<const Constant> pi = constant("pi");
 RCP<const Constant> E = constant("E");
+RCP<const Constant> EulerGamma = constant("EulerGamma");
 
 // Global variables declared in functions.cpp
 // Look over https://github.com/sympy/symengine/issues/272
@@ -114,8 +110,8 @@ umap_basic_basic inverse_tct = {
     {mul(minus_one, add(one, sq2)), div(pow(i2, i3), im3)},
     {sub(sq2, one), pow(i2, i3)},
     {sub(one, sq2), pow(im2, i3)},
-    {sub(i2, sq3), mul(mul(i2,i2), i3)},
-    {sub(sq3, i2), mul(mul(im2,i2), i3)},
+    {sub(i2, sq3), mul(mul(i2, i2), i3)},
+    {sub(sq3, i2), mul(mul(im2, i2), i3)},
     {sqrt(add(i5, mul(i2, sqrt(i5)))), div(i5, i2)},
     {mul(minus_one, sqrt(add(i5, mul(i2, sqrt(i5))))), div(im5, i2)},
     {one, pow(i2, i2)},

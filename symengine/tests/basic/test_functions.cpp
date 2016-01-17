@@ -15,6 +15,7 @@
 #include <symengine/complex_double.h>
 #include <symengine/real_mpfr.h>
 #include <symengine/complex_mpc.h>
+#include <symengine/eval_double.h>
 
 using SymEngine::Basic;
 using SymEngine::Add;
@@ -48,6 +49,7 @@ using SymEngine::exp;
 using SymEngine::function_symbol;
 using SymEngine::Derivative;
 using SymEngine::pi;
+using SymEngine::EulerGamma;
 using SymEngine::RCP;
 using SymEngine::make_rcp;
 using SymEngine::print_stack_on_segfault;
@@ -66,8 +68,12 @@ using SymEngine::levi_civita;
 using SymEngine::zeta;
 using SymEngine::dirichlet_eta;
 using SymEngine::gamma;
+using SymEngine::polygamma;
+using SymEngine::PolyGamma;
 using SymEngine::lowergamma;
 using SymEngine::uppergamma;
+using SymEngine::Beta;
+using SymEngine::beta;
 using SymEngine::abs;
 using SymEngine::Subs;
 using SymEngine::FunctionWrapper;
@@ -76,7 +82,11 @@ using SymEngine::real_double;
 using SymEngine::complex_double;
 using SymEngine::RealDouble;
 using SymEngine::ComplexDouble;
+using SymEngine::Number;
+using SymEngine::eval_double;
 using SymEngine::is_a;
+using SymEngine::neg;
+using SymEngine::pi;
 
 #ifdef HAVE_SYMENGINE_MPFR
 using SymEngine::real_mpfr;
@@ -120,14 +130,14 @@ TEST_CASE("Sin: functions", "[functions]")
     r2 = cos(x);
     REQUIRE(eq(*r1, *r2));
 
-    r1 = mul(i2,x)->diff(x);
+    r1 = mul(i2, x)->diff(x);
     r2 = i2;
     std::cout << *r1 << std::endl;
     std::cout << *r2 << std::endl;
     REQUIRE(eq(*r1, *r2));
 
-    r1 = sin(mul(i2,x))->diff(x);
-    r2 = mul(i2, cos(mul(i2,x)));
+    r1 = sin(mul(i2, x))->diff(x);
+    r2 = mul(i2, cos(mul(i2, x)));
     std::cout << *r1 << std::endl;
     std::cout << *r2 << std::endl;
     REQUIRE(eq(*r1, *r2));
@@ -190,6 +200,11 @@ TEST_CASE("Sin: functions", "[functions]")
     r2 = cos(y);
     REQUIRE(eq(*r1, *r2));
 
+    // sin(-pi/2 - y) = -cos(y)
+    r1 = sin(sub(neg(div(pi, i2)), y));
+    r2 = neg(cos(y));
+    REQUIRE(eq(*r1, *r2));
+
     // sin(12*pi + y + pi/2) = cos(y)
     r1 = sin(add(add(mul(i12, pi), y), div(pi, i2)));
     r2 = cos(y);
@@ -236,6 +251,11 @@ TEST_CASE("Cos: functions", "[functions]")
     r2 = mul(im1, sin(x));
     std::cout << *r1 << std::endl;
     std::cout << *r2 << std::endl;
+    REQUIRE(eq(*r1, *r2));
+
+    // cos(-pi) = -1
+    r1 = cos(neg(pi));
+    r2 = im1;
     REQUIRE(eq(*r1, *r2));
 
     // cos(-y) = cos(y)
@@ -788,9 +808,9 @@ TEST_CASE("Derivative: functions", "[functions]")
     f = function_symbol("f", x);
     RCP<const Derivative> r4 = Derivative::create(f, {x});
     REQUIRE(r4->is_canonical(function_symbol("f", {y, x}), {x}));
-    REQUIRE(!r4->is_canonical(function_symbol("f", y), {x}));
-    REQUIRE(!r4->is_canonical(function_symbol("f", x), {x, y, x, x}));
-    REQUIRE(!(r4->is_canonical(function_symbol("f", x), {pow(x, integer(2))})));
+    REQUIRE(not r4->is_canonical(function_symbol("f", y), {x}));
+    REQUIRE(not r4->is_canonical(function_symbol("f", x), {x, y, x, x}));
+    REQUIRE(not (r4->is_canonical(function_symbol("f", x), {pow(x, integer(2))})));
 
     // Test get_args()
     r1 = Derivative::create(function_symbol("f", {x, y, pow(z, integer(2))}), {x, x, y});
@@ -834,6 +854,9 @@ TEST_CASE("Subs: functions", "[functions]")
     r3 = Subs::create(Derivative::create(function_symbol("f", {y, x}), {x}), {{x, add(z, y)}});
     REQUIRE(eq(*r2, *r3));
 
+    r2 = r1->subs({{r1, r3}});
+    REQUIRE(eq(*r2, *r3));
+
     // Test Subs::diff
     r1 = function_symbol("f", {add(y, y), add(x, y)})->diff(x);
 
@@ -842,12 +865,12 @@ TEST_CASE("Subs: functions", "[functions]")
     REQUIRE(eq(*r2, *r3));
 
     r2 = r1->diff(x);
-    r3 = Subs::create(Derivative::create(function_symbol("f", {add(y, y), _x}), {_x, _x}), 
+    r3 = Subs::create(Derivative::create(function_symbol("f", {add(y, y), _x}), {_x, _x}),
                         {{_x, add(x, y)}});
     REQUIRE(eq(*r2, *r3));
 
     r2 = r1->diff(y);
-    r3 = Subs::create(Derivative::create(function_symbol("f", {add(y, y), _x}), {_x, _x}), 
+    r3 = Subs::create(Derivative::create(function_symbol("f", {add(y, y), _x}), {_x, _x}),
                         {{_x, add(x, y)}});
     r4 = Subs::create(Derivative::create(function_symbol("f", {__x, _x}), {__x, _x}), 
                         {{_x, add(x, y)}, {__x, add(y, y)}});
@@ -861,7 +884,7 @@ TEST_CASE("Get pi shift: functions", "[functions]")
     RCP<const Basic> r1;
     RCP<const Integer> n;
     bool b;
-    
+
     RCP<const Basic> i2 = integer(2);
     RCP<const Basic> i3 = integer(3);
     RCP<const Basic> i12 = integer(12);
@@ -869,26 +892,26 @@ TEST_CASE("Get pi shift: functions", "[functions]")
 
     RCP<const Basic> sq3 = sqrt(i3);
     RCP<const Basic> sq2 = sqrt(i2);
-    
+
     RCP<const Symbol> x = symbol("x");
-    
+
     // arg = k + n*pi
     r = add(i3, mul(i2, pi));
     b = get_pi_shift(r, outArg(n), outArg(r1));
     REQUIRE(b == true);
     REQUIRE(eq(*n, *integer(24)));
-    REQUIRE(eq(*r1, *i3)); 
-    
+    REQUIRE(eq(*r1, *i3));
+
     // arg = n*pi/12
     r = mul(pi, div(one, integer(12)));
     get_pi_shift(r, outArg(n), outArg(r1));
     REQUIRE(eq(*n, *one));
-    REQUIRE(eq(*r1, *zero)); 
-    
+    REQUIRE(eq(*r1, *zero));
+
     // arg = n*pi/12
     r = mul(pi, div(i2, integer(3)));
     b = get_pi_shift(r, outArg(n), outArg(r1));
-    REQUIRE((eq(*n, *i8) && (b == true) && eq(*r1, *zero)));
+    REQUIRE((eq(*n, *i8) and (b == true) and eq(*r1, *zero)));
 
     // arg neq n*pi/12 , n not an integer
     r = mul(pi, div(i2, integer(5)));
@@ -904,28 +927,28 @@ TEST_CASE("Get pi shift: functions", "[functions]")
     r = mul(mul(pi, x), div(i2, integer(3)));
     b = get_pi_shift(r, outArg(n), outArg(r1));
     REQUIRE(b == false);
-    
+
     // arg = theta + n*pi/12 (theta is just another symbol)
     r = add(mul(i2, x), mul(pi, div(i2, integer(3))));
     b = get_pi_shift(r, outArg(n), outArg(r1));
-    REQUIRE(b == true); 
+    REQUIRE(b == true);
     REQUIRE(eq(*n, *i8));
     REQUIRE(eq(*r1, *mul(i2, x)));
 
     // arg = theta + n*pi/12 (theta is constant plus a symbol)
     r = add(i2, add(x, mul(pi, div(i2, integer(3)))));
     b = get_pi_shift(r, outArg(n), outArg(r1));
-    REQUIRE(b == true); 
+    REQUIRE(b == true);
     REQUIRE(eq(*n, *i8));
     REQUIRE(eq(*r1, *add(i2, x)));
-    
+
     // arg = theta + n*pi/12 (theta is an expression)
     r = add(i2, add(mul(x, i2), mul(pi, div(i2, integer(3)))));
     b = get_pi_shift(r, outArg(n), outArg(r1));
-    REQUIRE(b == true); 
+    REQUIRE(b == true);
     REQUIRE(eq(*n, *i8));
     REQUIRE(eq(*r1, *add(i2, mul(x, i2))));
-   
+
     // arg neq n*pi/12 (n is not integer)
     r = mul(pi, div(i2, integer(5)));
     b = get_pi_shift(r, outArg(n), outArg(r1));
@@ -935,15 +958,15 @@ TEST_CASE("Get pi shift: functions", "[functions]")
     r = mul(pow(pi, i2), div(i2, integer(3)));
     b = get_pi_shift(r, outArg(n), outArg(r1));
     REQUIRE(b == false);
-    
+
     // arg = pi (it is neither of form add nor mul, just a symbol)
     b = get_pi_shift(pi, outArg(n), outArg(r1));
-    REQUIRE(((b == true) && eq(*n, *i12) && eq(*r1, *zero)));
-    
+    REQUIRE(((b == true) and eq(*n, *i12) and eq(*r1, *zero)));
+
     // arg = theta + n*pi/12 (theta is an expression of >1 symbols)
     r = add(add(mul(i2, x), mul(i2, symbol("y"))), mul(pi, div(i2, integer(3))));
     b = get_pi_shift(r, outArg(n), outArg(r1));
-    REQUIRE(b == true); 
+    REQUIRE(b == true);
     REQUIRE(eq(*n, *i8));
     REQUIRE(eq(*r1, *add(mul(i2, x), mul(i2, symbol("y")))));
 }
@@ -1008,7 +1031,7 @@ TEST_CASE("Could extract minus: functions", "[functions]")
 {
     RCP<const Basic> x = symbol("x");
     RCP<const Basic> y = symbol("y");
-    
+
     RCP<const Basic> i2 = integer(2);
     RCP<const Basic> im1 = integer(-1);
     RCP<const Basic> r;
@@ -1016,27 +1039,27 @@ TEST_CASE("Could extract minus: functions", "[functions]")
 
     r = add(mul(im1, x), mul(im1, mul(i2, y)));
     b = could_extract_minus(r);
-    REQUIRE(b == true); 
+    REQUIRE(b == true);
 
     r = add(mul(im1, x), mul(i2, y));
     b = could_extract_minus(r);
-    REQUIRE(b == false); 
+    REQUIRE(b == false);
 
     r = mul(mul(x, integer(-10)), y);
     b = could_extract_minus(r);
-    REQUIRE(b == true); 
+    REQUIRE(b == true);
 
     r = mul(mul(x, i2), y);
     b = could_extract_minus(r);
-    REQUIRE(b == false);  
+    REQUIRE(b == false);
 
     r = add(mul(im1, x), mul(im1, div(mul(i2, y), integer(3))));
     b = could_extract_minus(r);
-    REQUIRE(b == true);    
+    REQUIRE(b == true);
 
     r = mul(div(x, i2), y);
     b = could_extract_minus(r);
-    REQUIRE(b == false);  
+    REQUIRE(b == false);
 
 }
 
@@ -1148,7 +1171,7 @@ TEST_CASE("Asec: functions", "[functions]")
     r1 = asec(div(i2, im1));
     r2 = mul(i2, div(pi,  i3));
     REQUIRE(eq(*r1, *r2));
-    
+
     r1 = asec(sqrt(i2));
     r2 = div(pi, mul(i2, i2));
     REQUIRE(eq(*r1, *r2));
@@ -1229,7 +1252,7 @@ TEST_CASE("atan: functions", "[functions]")
     r2 = div(pi, integer(-4));
     REQUIRE(eq(*r1, *r2));
 
-    r1 = atan(div(one,sqrt(i3)));
+    r1 = atan(div(one, sqrt(i3)));
     r2 = div(pi, integer(6));
     REQUIRE(eq(*r1, *r2));
 
@@ -1271,7 +1294,7 @@ TEST_CASE("Acot: functions", "[functions]")
     r2 = mul(i3, div(pi, integer(4)));
     REQUIRE(eq(*r1, *r2));
 
-    r1 = acot(div(one,sqrt(i3)));
+    r1 = acot(div(one, sqrt(i3)));
     r2 = div(pi, i3);
     REQUIRE(eq(*r1, *r2));
 
@@ -1322,7 +1345,7 @@ TEST_CASE("Atan2: functions", "[functions]")
     r2 = div(mul(i3, pi), integer(-4));
     REQUIRE(eq(*r1, *r2));
 
-    r1 = atan2(one,sqrt(i3));
+    r1 = atan2(one, sqrt(i3));
     r2 = div(pi, integer(6));
     REQUIRE(eq(*r1, *r2));
 
@@ -1784,6 +1807,87 @@ TEST_CASE("Uppergamma: functions", "[functions]")
     REQUIRE(eq(*r1, *r2));
 }
 
+TEST_CASE("Beta: functions", "[functions]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> i3 = integer(3);
+    RCP<const Basic> i4 = integer(4);
+    RCP<const Basic> im1 = integer(-1);
+
+    RCP<const Basic> r1;
+    RCP<const Basic> r2;
+    RCP<const Basic> r3;
+
+    r1 = beta(i3, i2);
+    r2 = beta(i2, i3);
+    REQUIRE(eq(*r1, *r2));
+    r3 = div(mul(gamma(i3), gamma(i2)), gamma(add(i2, i3)));
+    REQUIRE(eq(*r1, *r3));
+    r2 = div(one, integer(12));
+    REQUIRE(eq(*r1, *r2));	
+
+    r1 = beta(div(one, i2), i2);
+    r2 = beta(i2, div(one, i2));
+    REQUIRE(eq(*r1, *r2));
+    r3 = div(i4, i3);
+    REQUIRE(eq(*r3, *r1));
+
+    r1 = beta(div(integer(7), i2), div(integer(9), i2));
+    r2 = beta(div(integer(9), i2), div(integer(7), i2));
+    REQUIRE(eq(*r1, *r2));
+    r3 = div(mul(integer(5), pi), integer(2048));
+    REQUIRE(eq(*r3, *r1));
+
+    r1 = beta(div(one, i2), div(i3, i2));
+    r2 = div(pi, i2);
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = beta(x, y);
+    r2 = beta(y, x);
+    REQUIRE(eq(*r1, *r2));
+    REQUIRE(r1->__hash__() == r2->__hash__());
+}
+
+TEST_CASE("Polygamma: functions", "[functions]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> im2 = integer(-2);
+    RCP<const Basic> i3 = integer(3);
+    RCP<const Basic> im3 = integer(-3);
+    RCP<const Basic> i4 = integer(4);
+
+    RCP<const Basic> r1;
+    RCP<const Basic> r2;
+
+    r1 = polygamma(zero, one);
+    r2 = neg(EulerGamma);
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = polygamma(zero, div(one, i2));
+    r2 = sub(mul(im2, log(i2)), EulerGamma);
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = polygamma(zero, div(i3, i2));
+    r2 = add(i2, sub(mul(im2, log(i2)), EulerGamma));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = polygamma(zero, div(one, i4));
+    r2 = add(neg(div(pi, i3)), sub(mul(im3, log(i2)), EulerGamma));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = SymEngine::rcp_dynamic_cast<const PolyGamma>(polygamma(i2, x))->rewrite_as_zeta();
+    r2 = neg(mul(i2, zeta(i3, x)));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = SymEngine::rcp_dynamic_cast<const PolyGamma>(polygamma(i3, x))->rewrite_as_zeta();
+    r2 = mul(integer(6), zeta(i4, x));
+    REQUIRE(eq(*r1, *r2));
+}
+
 TEST_CASE("Abs: functions", "[functions]")
 {
     RCP<const Basic> i2 = integer(2);
@@ -1805,56 +1909,43 @@ TEST_CASE("Abs: functions", "[functions]")
     REQUIRE(eq(*abs(x)->diff(y), *integer(0)));
 }
 
-// Test FunctionWrapper
-void dec_ref(void* obj);
-int comp(void* o1, void* o2);
+class MySin : public FunctionWrapper {
+public :
+    MySin(RCP<const Basic> arg) : FunctionWrapper("MySin", arg) {
 
-class DummyFunction {
-    public :
-        std::string name_;
-        std::string hash_;
-        vec_basic args_;
-        int count_;
-        inline DummyFunction(std::string name, std::string hash, vec_basic args)
-            : name_{name}, hash_{hash}, args_{args}, count_{0} {
+    }
+    RCP<const Number> eval(long bits) const {
+        return real_double(::sin(eval_double(*arg_[0])));
+    }
+    RCP<const Basic> create(const vec_basic &v) const {
+        if (eq(*zero, *v[0])) {
+            return zero;
+        } else {
+            return make_rcp<MySin>(v[0]);
         }
-        RCP<const Basic> getFunctionWrapper() {
-            ++count_;
-            return make_rcp<const FunctionWrapper>((void*)this, name_, hash_, args_, &dec_ref, &comp);
-        }
+    }
+    RCP<const Basic> diff(const RCP<const Symbol> &x) const {
+        return mul(cos(arg_[0]), arg_[0]->diff(x));
+    }
 };
-
-void dec_ref(void* obj)
-{
-    DummyFunction* o = (DummyFunction*)obj;
-    o->count_ = o->count_ - 1;
-}
-
-int comp(void* o1, void* o2)
-{
-    DummyFunction* d1 = (DummyFunction*)o1;
-    DummyFunction* d2 = (DummyFunction*)o2;
-    if (d1->name_ == d2->name_)
-        return 0;
-    else return d1->name_ < d2->name_ ? -1 : 1;
-}
 
 TEST_CASE("FunctionWrapper: functions", "[functions]")
 {
-    RCP<const Basic> x = symbol("x");
-    RCP<const Basic> y = symbol("y");
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Basic> e = make_rcp<MySin>(x);
+    RCP<const Basic> f;
 
-    DummyFunction a = DummyFunction("Foo", "hashFoo", {x, y});
-    DummyFunction b = DummyFunction("Bar", "hashBar", {y, y});
-    RCP<const Basic> wrap_a = a.getFunctionWrapper();
-    RCP<const Basic> wrap_b = b.getFunctionWrapper();
+    f = e->subs({{x, integer(0)}});
+    REQUIRE(eq(*f, *zero));
 
-    REQUIRE(wrap_a->compare(*wrap_b) == 1);
-    REQUIRE(wrap_b->compare(*wrap_a) == -1);
-    REQUIRE(wrap_a->compare(*wrap_a) == 0);
+    f = e->diff(x);
+    REQUIRE(eq(*f, *cos(x)));
 
-    wrap_a.reset();
-    REQUIRE(a.count_ == 0);
+    f = e->subs({{x, integer(1)}});
+    double d = eval_double(*f);
+    REQUIRE(std::fabs(d - 0.84147098480789) < 1e-12);
+
+    REQUIRE(e->__str__() == "MySin(x)");
 }
 /* ---------------------------- */
 
@@ -1916,7 +2007,7 @@ TEST_CASE("MPFR and MPC: functions", "[functions]")
     REQUIRE(mpfr_cmp_si(a.get_mpfr_t(), 106127506190503566) < 0);
 #else
     mpfr_set_si(a.get_mpfr_t(), 2, MPFR_RNDN);
-    SYMENGINE_CHECK_THROW(asin(real_mpfr(a)), std::runtime_error);
+    CHECK_THROWS_AS(asin(real_mpfr(a)), std::runtime_error);
 #endif //HAVE_SYMENGINE_MPC
 #endif //HAVE_SYMENGINE_MPFR
 }

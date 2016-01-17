@@ -21,6 +21,8 @@
 #include <symengine/complex_double.h>
 #include <symengine/real_mpfr.h>
 #include <symengine/complex_mpc.h>
+#include <symengine/series.h>
+#include <symengine/series_piranha.h>
 
 namespace SymEngine {
 
@@ -35,37 +37,28 @@ public:
 void preorder_traversal(const Basic &b, Visitor &v);
 void postorder_traversal(const Basic &b, Visitor &v);
 
-template<class T>
-class BaseVisitor : public Visitor {
+template<class Derived, class Base = Visitor>
+class BaseVisitor : public Base {
 
 public:
-    T *p_;
-public:
-    BaseVisitor(T* p) : p_ {p} {
-
-    };
 #   define SYMENGINE_ENUM( TypeID , Class) \
-    virtual void visit(const Class &x) { p_->bvisit(x); };
+    virtual void visit(const Class &x) { static_cast<Derived*>(this)->bvisit(x); };
 #   include "symengine/type_codes.inc"
 #   undef SYMENGINE_ENUM
 };
 
-template<class T>
-class StopVisitor : public BaseVisitor<T> {
+class StopVisitor : public Visitor {
 public:
-    StopVisitor(T *p) : BaseVisitor<T>(p) { };
     bool stop_;
 };
 
-template<class T>
-void preorder_traversal_stop(const Basic &b, StopVisitor<T> &v);
+void preorder_traversal_stop(const Basic &b, StopVisitor &v);
 
-class HasSymbolVisitor : public StopVisitor<HasSymbolVisitor> {
-private:
+class HasSymbolVisitor : public BaseVisitor<HasSymbolVisitor, StopVisitor> {
+protected:
     RCP<const Symbol> x_;
     bool has_;
 public:
-    HasSymbolVisitor() : StopVisitor<HasSymbolVisitor>(this) { };
 
     void bvisit(const Symbol &x) {
         if (x_->__eq__(x)) {
@@ -87,24 +80,57 @@ public:
 
 bool has_symbol(const Basic &b, const RCP<const Symbol> &x);
 
-class CoeffVisitor : public StopVisitor<CoeffVisitor> {
-private:
+class CoeffVisitor : public BaseVisitor<CoeffVisitor, StopVisitor> {
+protected:
     RCP<const Symbol> x_;
-    RCP<const Integer> n_;
+    RCP<const Basic> n_;
     RCP<const Basic> coeff_;
 public:
-    CoeffVisitor() : StopVisitor<CoeffVisitor>(this) { };
 
     void bvisit(const Add &x) {
-        // TODO: Implement coeff for Add
+        umap_basic_num dict;
+        RCP<const Number> coef = zero;
+        for (auto &p: x.dict_) {
+            p.first->accept(*this);
+            if (neq(*coeff_, *zero)) {
+                Add::coef_dict_add_term(outArg(coef), dict, p.second, coeff_);
+            }
+        }
+        coeff_ = Add::from_dict(coef, std::move(dict));
+    }
+
+    void bvisit(const Mul &x) {
+        for (auto &p: x.dict_) {
+            if (eq(*p.first, *x_) and eq(*p.second, *n_)) {
+                map_basic_basic dict = x.dict_;
+                dict.erase(p.first);
+                coeff_ = Mul::from_dict(x.coef_, std::move(dict));
+                return;
+            }
+        }
+        coeff_ = zero;
+    }
+
+    void bvisit(const Pow &x) {
+        if (eq(*x.get_base(), *x_) and eq(*x.get_exp(), *n_)) {
+            coeff_ = one;
+        }
+    }
+
+    void bvisit(const Symbol &x) {
+        if (eq(x, *x_) and eq(*one, *n_)) {
+            coeff_ = one;
+        } else {
+            coeff_ = zero;
+        }
     }
 
     void bvisit(const Basic &x) {
-
+        coeff_ = zero;
     }
 
     RCP<const Basic> apply(const Basic &b, const RCP<const Symbol> &x,
-            const RCP<const Integer> &n) {
+            const RCP<const Basic> &n) {
         x_ = x;
         n_ = n;
         coeff_ = zero;
@@ -113,8 +139,8 @@ public:
     }
 };
 
-RCP<const Basic> coeff(const Basic &b, const RCP<const Symbol> &x,
-        const RCP<const Integer> &n);
+RCP<const Basic> coeff(const Basic &b, const RCP<const Basic> &x,
+        const RCP<const Basic> &n);
 
 set_basic free_symbols(const Basic &b);
 

@@ -10,7 +10,7 @@ Complex::Complex(mpq_class real, mpq_class imaginary)
     SYMENGINE_ASSERT(is_canonical(this->real_, this->imaginary_))
 }
 
-bool Complex::is_canonical(const mpq_class &real, const mpq_class &imaginary)
+bool Complex::is_canonical(const mpq_class &real, const mpq_class &imaginary) const
 {
     mpq_class re = real;
     mpq_class im = imaginary;
@@ -42,7 +42,7 @@ bool Complex::__eq__(const Basic &o) const
 {
     if (is_a<Complex>(o)) {
         const Complex &s = static_cast<const Complex &>(o);
-        return ((this->real_ == s.real_) && (this->imaginary_ == s.imaginary_));
+        return ((this->real_ == s.real_) and (this->imaginary_ == s.imaginary_));
     }
     return false;
 }
@@ -81,19 +81,19 @@ RCP<const Number> Complex::from_two_rats(const Rational &re,
 RCP<const Number> Complex::from_two_nums(const Number &re,
             const Number &im)
 {
-    if (is_a<Integer>(re) && is_a<Integer>(im)) {
+    if (is_a<Integer>(re) and is_a<Integer>(im)) {
         mpq_class re_mpq(static_cast<const Integer&>(re).i, static_cast<const Integer&>(*one).i);
         mpq_class im_mpq(static_cast<const Integer&>(im).i, static_cast<const Integer&>(*one).i);
         return Complex::from_mpq(re_mpq, im_mpq);
-    } else if (is_a<Rational>(re) && is_a<Integer>(im)) {
+    } else if (is_a<Rational>(re) and is_a<Integer>(im)) {
         mpq_class re_mpq = static_cast<const Rational&>(re).i;
         mpq_class im_mpq(static_cast<const Integer&>(im).i, static_cast<const Integer&>(*one).i);
         return Complex::from_mpq(re_mpq, im_mpq);
-    } else if (is_a<Integer>(re) && is_a<Rational>(im)) {
+    } else if (is_a<Integer>(re) and is_a<Rational>(im)) {
         mpq_class re_mpq(static_cast<const Integer&>(re).i, static_cast<const Integer&>(*one).i);
         mpq_class im_mpq = static_cast<const Rational&>(im).i;
         return Complex::from_mpq(re_mpq, im_mpq);
-    } else if (is_a<Rational>(re) && is_a<Rational>(im)) {
+    } else if (is_a<Rational>(re) and is_a<Rational>(im)) {
         mpq_class re_mpq = static_cast<const Rational&>(re).i;
         mpq_class im_mpq = static_cast<const Rational&>(im).i;
         return Complex::from_mpq(re_mpq, im_mpq);
@@ -113,7 +113,7 @@ RCP<const Number> pow_number(const Complex &x, unsigned long n)
 
     mpq_class tmp;
 
-    while (mask > 0 && n >= mask) {
+    while (mask > 0 and n >= mask) {
         if (n & mask) {
             // Multiply r by p
             tmp = r_re * p_re - r_im * p_im;
@@ -133,7 +133,7 @@ RCP<const Number> Complex::powcomp(const Integer &other) const {
     if (this->is_re_zero()) {
         // Imaginary Number raised to an integer power.
         RCP<const Number> im = Rational::from_mpq(this->imaginary_);
-        long rem = mod(other, *integer(4))->as_int();
+        long rem = mod_f(other, *integer(4))->as_int();
         RCP<const Number> res;
         if (rem == 0) {
             res = one;

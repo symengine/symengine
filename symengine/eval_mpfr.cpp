@@ -16,11 +16,11 @@
 namespace SymEngine {
 
 class EvalMPFRVisitor : public BaseVisitor<EvalMPFRVisitor> {
-private:
+protected:
     mpfr_rnd_t rnd_;
     mpfr_ptr result_;
 public:
-    EvalMPFRVisitor(mpfr_rnd_t rnd) : BaseVisitor(this), rnd_{rnd} { }
+    EvalMPFRVisitor(mpfr_rnd_t rnd) : rnd_{rnd} { }
 
     void apply(mpfr_ptr result, const Basic &b) {
         mpfr_ptr tmp = result_;
@@ -71,12 +71,12 @@ public:
 
     void bvisit(const Pow &x) {
         if (eq(*x.get_base(), *E)) {
-            apply(result_, *(x.exp_));
+            apply(result_, *(x.get_exp()));
             mpfr_exp(result_, result_, rnd_);
         } else {
             mpfr_class b(mpfr_get_prec(result_));
-            apply(b.get_mpfr_t(), *(x.base_));
-            apply(result_, *(x.exp_));
+            apply(b.get_mpfr_t(), *(x.get_base()));
+            apply(result_, *(x.get_exp()));
             mpfr_pow(result_, b.get_mpfr_t(), result_, rnd_);
         }
     }
@@ -208,10 +208,16 @@ public:
         mpfr_gamma(result_, result_, rnd_);
     };
 
+    void bvisit(const Beta &x) {
+        apply(result_, *(x.rewrite_as_gamma()));
+    };
+
     void bvisit(const Constant &x) {
         if (x.__eq__(*pi)) {
             mpfr_const_pi(result_, rnd_);
         } else if (x.__eq__(*E)) {
+            mpfr_const_euler(result_, rnd_);
+        } else if (x.__eq__(*EulerGamma)) {
             mpfr_const_euler(result_, rnd_);
         } else {
             throw std::runtime_error("Constant " + x.get_name() + " is not implemented.");
@@ -223,9 +229,17 @@ public:
         mpfr_abs(result_, result_, rnd_);
     };
 
+    void bvisit(const NumberWrapper &x) {
+        x.eval(mpfr_get_prec(result_))->accept(*this);
+    }
+
+    void bvisit(const FunctionWrapper &x) {
+        x.eval(mpfr_get_prec(result_))->accept(*this);
+    }
+
     // Classes not implemented are
     // Subs, UpperGamma, LowerGamma, Dirichlet_eta, Zeta
-    // LeviCivita, KroneckerDelta, FunctionSymbol, LambertW
+    // LeviCivita, KroneckerDelta, LambertW
     // Derivative, Complex, ComplexDouble, ComplexMPC
     void bvisit(const Basic &) {
         throw std::runtime_error("Not implemented.");

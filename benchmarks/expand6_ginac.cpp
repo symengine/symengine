@@ -5,6 +5,7 @@
 // See this SO answer: http://stackoverflow.com/a/18696743/1895353
 
 #include <iostream>
+#include <sstream>
 #include <chrono>
 
 #include <ginac/ginac.h>
@@ -36,12 +37,12 @@ int main(int argc, char* argv[])
         o << "a" << i;
         s = symbol(o.str());
         e = e + s;
-        f = f - s;
+        f = f + s;
     }
-    e = expand(e * e);
-    e = e.subs(a0 == f);
-
+    f = -f;
     auto t1 = std::chrono::high_resolution_clock::now();
+    e = expand(pow(e, 2));
+    e = e.subs(a0 == f);
     e = expand(e);
     auto t2 = std::chrono::high_resolution_clock::now();
 

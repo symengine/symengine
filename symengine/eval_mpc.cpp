@@ -16,11 +16,11 @@
 namespace SymEngine {
 
 class EvalMPCVisitor : public BaseVisitor<EvalMPCVisitor> {
-private:
+protected:
     mpfr_rnd_t rnd_;
     mpc_ptr result_;
 public:
-    EvalMPCVisitor(mpfr_rnd_t rnd) : BaseVisitor(this), rnd_{rnd} { }
+    EvalMPCVisitor(mpfr_rnd_t rnd) : rnd_{rnd} { }
 
     void apply(mpc_ptr result, const Basic &b) {
         mpc_ptr tmp = result_;
@@ -89,14 +89,14 @@ public:
 
     void bvisit(const Pow &x) {
         if (eq(*x.get_base(), *E)) {
-            apply(result_, *(x.exp_));
+            apply(result_, *(x.get_exp()));
             mpc_exp(result_, result_, rnd_);
         } else {
             mpc_t t;
             mpc_init2(t, mpc_get_prec(result_));
 
-            apply(t, *(x.base_));
-            apply(result_, *(x.exp_));
+            apply(t, *(x.get_base()));
+            apply(result_, *(x.get_exp()));
             mpc_pow(result_, t, result_, rnd_);
 
             mpc_clear(t);
@@ -235,6 +235,12 @@ public:
             mpfr_const_euler(t, rnd_);
             mpc_set_fr(result_, t, rnd_);
             mpfr_clear(t);
+        } else if (x.__eq__(*EulerGamma)) {
+            mpfr_t t;
+            mpfr_init2(t, mpc_get_prec(result_));
+            mpfr_const_euler(t, rnd_);
+            mpc_set_fr(result_, t, rnd_);
+            mpfr_clear(t);
         } else {
             throw std::runtime_error("Constant " + x.get_name() + " is not implemented.");
         }
@@ -248,6 +254,14 @@ public:
         mpc_set_fr(result_, t, rnd_);
         mpfr_clear(t);
     };
+
+    void bvisit(const NumberWrapper &x) {
+        x.eval(mpc_get_prec(result_))->accept(*this);
+    }
+
+    void bvisit(const FunctionWrapper &x) {
+        x.eval(mpc_get_prec(result_))->accept(*this);
+    }
 
     // Classes not implemented are
     // Subs, UpperGamma, LowerGamma, Dirichlet_eta, Zeta

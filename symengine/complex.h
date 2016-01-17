@@ -32,7 +32,7 @@ public:
      * */
     static RCP<const Number> from_mpq(const mpq_class re, const mpq_class im);
     //! \return true if canonical
-    bool is_canonical(const mpq_class &real, const mpq_class &imaginary);
+    bool is_canonical(const mpq_class &real, const mpq_class &imaginary) const;
     //! \return size of the hash
     virtual std::size_t __hash__() const;
     /*! Equality comparator
@@ -64,15 +64,13 @@ public:
     static RCP<const Number> from_two_nums(const Number &re,
         const Number &im);
 
-    //! \return `true` if `0`
-    virtual bool is_zero() const { return ((this->real_ == 0) && (this->imaginary_ == 0)); }
-    //! \return `true` if `1`
-    virtual bool is_one() const { return ((this->real_ == 1) && (this->imaginary_ == 0)); }
-    //! \return `true` if `-1`
-    virtual bool is_minus_one() const { return ((this->real_ == -1) && (this->imaginary_ == 0)); }
-    //! \return `true` if both `real_` or `imaginary_` are zero
+    //! \return `false` since `imaginary_` cannot be zero
+    virtual bool is_zero() const { return false; }
+    //! \return `false` since `imaginary_` cannot be zero
+    virtual bool is_one() const { return false; }
+    //! \return `false` since `imaginary_` cannot be zero
+    virtual bool is_minus_one() const { return false; }
     // This is needed while printing inside `mul`.
-    inline bool is_reim_zero() const { return ((this->real_ == 0) || (this->imaginary_ == 0)); }
     //! \return `true` if `real_`  is zero
     inline bool is_re_zero() const { return (this->real_ == 0); }
     /*! Add Complex
@@ -287,8 +285,6 @@ public:
     virtual RCP<const Number> rpow(const Number &other) const {
         throw std::runtime_error("Not implemented.");
     };
-
-    virtual void accept(Visitor &v) const;
 };
 
 } // SymEngine

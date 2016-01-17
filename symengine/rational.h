@@ -35,31 +35,46 @@ public:
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
     //! \return true if canonical
-    bool is_canonical(const mpq_class &i);
+    bool is_canonical(const mpq_class &i) const;
 
     /*! Constructs Rational as n/d, where n, d can be any Integers. If n/d is an
     *   Integer, it will return an Integer instead.
     * */
     static RCP<const Number> from_two_ints(const Integer &n,
             const Integer &d);
+    static RCP<const Number> from_two_ints(const long n, const long d);
     //! Convert to `mpq_class`.
     inline mpq_class as_mpq() const { return this->i; }
-    //! \return `true` if `0`
-    virtual bool is_zero() const { return this->i == 0; }
-    //! \return `true` if `1`
-    virtual bool is_one() const { return this->i == 1; }
-    //! \return `true` if `-1`
-    virtual bool is_minus_one() const { return this->i == -1; }
-    //! \return `true` if denominator is `1`
-    inline bool is_int() const { return this->i.get_den() == 1; }
+    //! \return `true` if `num` is `0`
+    virtual bool is_zero() const { return this->i.get_num() == 0; }
+    //! \return `false` since `Rational` cannot be an `Integer`
+    virtual bool is_one() const { return false; }
+    //! \return `false` since `Rational` cannot be an `Integer`
+    virtual bool is_minus_one() const { return false; }
     //! \return `true` if positive
     inline virtual bool is_positive() const {
-        return ((this->i.get_den() > 0) && (this->i.get_num() > 0)) ||
-                ((this->i.get_den() < 0) && (this->i.get_num() < 0)) ; }
+        return this->i.get_num() > 0;
+    }
     //! \return `true` if negative
     inline virtual bool is_negative() const {
-        return ((this->i.get_den() < 0) && (this->i.get_num() > 0)) ||
-                ((this->i.get_den() > 0) && (this->i.get_num() < 0)) ; }
+        return this->i.get_num() < 0;
+    }
+    //! \return negative of self
+    inline RCP<const Rational> neg() const {
+        return make_rcp<Rational>(-this->i);
+    }
+    //! \return numerator of self
+    inline RCP<const Integer> get_num() const {
+        return integer(this->i.get_num());
+    }
+    //! \return denominator of self
+    inline RCP<const Integer> get_den() const {
+        return integer(this->i.get_den());
+    }
+
+    virtual bool is_perfect_power(bool is_expected=false) const;
+    // \return true if there is a exact nth root of self.
+    virtual bool nth_root(const Ptr<RCP<const Number>> &, unsigned long n) const;
 
     /*! Add Rationals
      * \param other of type Rational
@@ -134,28 +149,29 @@ public:
         bool neg = other.is_negative();
         mpz_class exp_ = other.i;
         if (neg) exp_ = -exp_;
-        if (!(exp_.fits_ulong_p()))
-            throw std::runtime_error("powrat: 'exp' does not fit unsigned int.");
+        if (not (exp_.fits_ulong_p()))
+            throw std::runtime_error("powrat: 'exp' does not fit ulong.");
         unsigned long exp = exp_.get_ui();
-        mpz_class num;
-        mpz_pow_ui(num.get_mpz_t(), this->i.get_num().get_mpz_t(), exp);
-
-        mpz_class den;
-        mpz_pow_ui(den.get_mpz_t(), this->i.get_den().get_mpz_t(), exp);
+        mpq_class val;
+        mpz_pow_ui(val.get_num_mpz_t(), this->i.get_num_mpz_t(), exp);
+        mpz_pow_ui(val.get_den_mpz_t(), this->i.get_den_mpz_t(), exp);
 
         // Since 'this' is in canonical form, so is this**other, so we simply
-        // pass num/den into the constructor directly:
-        if (!neg)
-            if (abs(den) == one->i)
-                return integer(num*sgn(den));
-            else
-                return make_rcp<const Rational>(mpq_class(num*sgn(den), abs(den)));
-        else
-            if (abs(num) == one->i)
-                return integer(den*sgn(num));
-            else
-                return make_rcp<const Rational>(mpq_class(den*sgn(num), abs(num)));
+        // pass val into the constructor directly without canonicalizing:
+        if (not neg) {
+            return Rational::from_mpq(val);
+        } else {
+            return Rational::from_mpq(1 / val);
+        }
     }
+    /*! Raise Rationals to power `other`
+     * \param other power to be raised
+     * */
+    RCP<const Basic> powrat(const Rational &other) const;
+    /*! Raise Integer to power Rational
+     * \param other power to be raised
+     * */
+    RCP<const Basic> rpowrat(const Integer &other) const;
 
     //! Converts the param `other` appropriately and then calls `addrat`
     virtual RCP<const Number> add(const Number &other) const {
@@ -225,8 +241,6 @@ public:
     virtual RCP<const Number> rpow(const Number &other) const {
         throw std::runtime_error("Not implemented.");
     };
-
-    virtual void accept(Visitor &v) const;
 };
 
 //! returns the `num` and `den` of rational `rat` as `RCP<const Integer>`
@@ -234,6 +248,10 @@ void get_num_den(const Rational &rat,
         const Ptr<RCP<const Integer>> &num,
         const Ptr<RCP<const Integer>> &den);
 
+//! convenience creator from two longs
+inline RCP<const Number> rational(long n, long d) {
+    return Rational::from_two_ints(n, d);
+    }
 } // SymEngine
 
 #endif

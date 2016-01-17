@@ -48,7 +48,7 @@ TEST_CASE("Symbol hash: Basic", "[basic]")
 
     REQUIRE(x->__eq__(*x));
     REQUIRE(x->__eq__(*x2));
-    REQUIRE(!(x->__eq__(*y)));
+    REQUIRE(not (x->__eq__(*y)));
     REQUIRE(x->__neq__(*y));
 
     std::hash<Basic> hash_fn;
@@ -113,7 +113,7 @@ TEST_CASE("Add: basic", "[basic]")
     std::cout << "----------------------" << std::endl;
 
     REQUIRE(vec_basic_eq_perm(r->get_args(), {mul(integer(2), x), y}));
-    REQUIRE(!vec_basic_eq_perm(r->get_args(), {mul(integer(3), x), y}));
+    REQUIRE(not vec_basic_eq_perm(r->get_args(), {mul(integer(3), x), y}));
 
     r = add(mul(integer(5), x), integer(5));
     REQUIRE(vec_basic_eq_perm(r->get_args(), {mul(integer(5), x), integer(5)}));
@@ -163,7 +163,7 @@ TEST_CASE("Integer: Basic", "[basic]")
     REQUIRE(eq(*k, *integer(-5)));
     REQUIRE(neq(*k, *integer(12)));
 
-    SYMENGINE_CHECK_THROW(divnum(i, zero), std::runtime_error)
+    CHECK_THROWS_AS(divnum(i, zero), std::runtime_error);
 }
 
 TEST_CASE("Rational: Basic", "[basic]")
@@ -266,7 +266,7 @@ TEST_CASE("Rational: Basic", "[basic]")
 
     r1 = Rational::from_two_ints(*integer(2), *integer(3));
     r2 = zero;
-    SYMENGINE_CHECK_THROW(divnum(r1, r2), std::runtime_error)
+    CHECK_THROWS_AS(divnum(r1, r2), std::runtime_error);
 
     r1 = Rational::from_two_ints(*integer(3), *integer(5));
     REQUIRE(is_a<Rational>(*r1));
@@ -616,13 +616,13 @@ TEST_CASE("Complex: Basic", "[basic]")
     REQUIRE(eq(*c->imaginary_part(), *r2));
 
     // Explicit division by zero checks
-    SYMENGINE_CHECK_THROW(divnum(c1, integer(0)), std::runtime_error);
+    CHECK_THROWS_AS(divnum(c1, integer(0)), std::runtime_error);
 
     r3 = Rational::from_two_ints(*integer(0), *integer(1));
-    SYMENGINE_CHECK_THROW(divnum(c1, r3), std::runtime_error);
+    CHECK_THROWS_AS(divnum(c1, r3), std::runtime_error);
 
     c2 = Complex::from_two_nums(*r3, *r3);
-    SYMENGINE_CHECK_THROW(divnum(c1, c2), std::runtime_error);
+    CHECK_THROWS_AS(divnum(c1, c2), std::runtime_error);
 }
 
 TEST_CASE("has_symbol: Basic", "[basic]")
@@ -635,12 +635,12 @@ TEST_CASE("has_symbol: Basic", "[basic]")
     r1 = add(x, pow(y, integer(2)));
     REQUIRE(has_symbol(*r1, x));
     REQUIRE(has_symbol(*r1, y));
-    REQUIRE(!has_symbol(*r1, z));
+    REQUIRE(not has_symbol(*r1, z));
 
     r1 = sin(add(x, pow(y, integer(2))));
     REQUIRE(has_symbol(*r1, x));
     REQUIRE(has_symbol(*r1, y));
-    REQUIRE(!has_symbol(*r1, z));
+    REQUIRE(not has_symbol(*r1, z));
 }
 
 TEST_CASE("free_symbols: Basic", "[basic]")

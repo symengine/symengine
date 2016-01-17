@@ -5,6 +5,7 @@
 #endif
 
 #include <symengine/cwrapper.h>
+#include <string.h>
 
 void test_cwrapper() {
     char* s;
@@ -76,8 +77,7 @@ void test_basic() {
     basic_struct *y = basic_new_heap();
     symbol_set(y, "x");
 
-    // TODO: enable this once basic_eq() is implemented
-    //SYMENGINE_C_ASSERT(basic_eq(x, y))
+    SYMENGINE_C_ASSERT(basic_eq(x, y))
 
     basic_free_heap(y);
     basic_free_stack(x);

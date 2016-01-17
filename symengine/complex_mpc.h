@@ -6,8 +6,6 @@
 #ifndef SYMENGINE_REAL_MPC_H
 #define SYMENGINE_REAL_MPC_H
 
-#include <cmath>
-#include <complex>
 #include <symengine/basic.h>
 #include <symengine/number.h>
 #include <symengine/integer.h>
@@ -338,8 +336,6 @@ public:
             throw std::runtime_error("Not implemented.");
         }
     }
-
-    virtual void accept(Visitor &v) const;
 };
 
 inline RCP<const ComplexMPC> complex_mpc(mpc_class x) {

@@ -20,8 +20,6 @@ public:
 
 public:
     IMPLEMENT_TYPEID(INTEGER)
-    //! Constructor of Integer using `int`
-    Integer(int i);
     //! Constructor of Integer using `mpz_class`
     Integer(mpz_class i);
     //! \return size of the hash
@@ -67,7 +65,7 @@ public:
     RCP<const Number> pow_negint(const Integer &other) const;
     //! Fast Power Evaluation
     inline RCP<const Number> powint(const Integer &other) const {
-        if (!(other.i.fits_ulong_p())) {
+        if (not (other.i.fits_ulong_p())) {
             if (other.i > 0)
                 throw std::runtime_error("powint: 'exp' does not fit unsigned int.");
             else
@@ -136,8 +134,6 @@ public:
     virtual RCP<const Number> rpow(const Number &other) const {
         throw std::runtime_error("Not implemented.");
     };
-
-    virtual void accept(Visitor &v) const;
 };
 
 //! less operator (<) for Integers
@@ -152,16 +148,11 @@ struct RCPIntegerKeyLess
         return false;
     }
 };
-//! \return RCP<const Integer> from `int`
-inline RCP<const Integer> integer(int i)
+//! \return RCP<const Integer> from integral values + mpz_class
+template<typename T>
+inline RCP<const Integer> integer(T&& i)
 {
-    return make_rcp<const Integer>(i);
-}
-
-//! \return RCP<const Integer> from `mpz_class`
-inline RCP<const Integer> integer(mpz_class i)
-{
-    return make_rcp<const Integer>(i);
+    return make_rcp<const Integer>(std::forward<T>(i));
 }
 //! Integer Square root
 RCP<const Integer> isqrt(const Integer &n);
@@ -180,4 +171,3 @@ inline Integer::Integer(mpz_class i) : i{i} {}
 } // SymEngine
 
 #endif
-

@@ -95,7 +95,7 @@ TEST_CASE("test_get_set(): matrices", "[matrices]")
         {integer(2), integer(3), integer(4), integer(6)}));
 }
 
-TEST_CASE("test_dense_dense_addition(): matrices", "[matrices]") 
+TEST_CASE("test_dense_dense_addition(): matrices", "[matrices]")
 {
     DenseMatrix C = DenseMatrix(2, 2);
     DenseMatrix A = DenseMatrix(2, 2, {integer(1), integer(2),
@@ -145,7 +145,7 @@ TEST_CASE("test_dense_dense_addition(): matrices", "[matrices]")
         integer(-12), add(symbol("a"), symbol("c")), add(symbol("b"), symbol("d"))}));
 }
 
-TEST_CASE("test_add_dense_scalar(): matrices", "[matrices]") 
+TEST_CASE("test_add_dense_scalar(): matrices", "[matrices]")
 {
     // More tests should be added
     RCP<const Basic> k = integer(2);
@@ -159,7 +159,7 @@ TEST_CASE("test_add_dense_scalar(): matrices", "[matrices]")
                                    integer(5), integer(6)}));
 }
 
-TEST_CASE("test_dense_dense_multiplication(): matrices", "[matrices]") 
+TEST_CASE("test_dense_dense_multiplication(): matrices", "[matrices]")
 {
     DenseMatrix A = DenseMatrix(2, 2, {integer(1), integer(0),
                                        integer(0), integer(1)});
@@ -246,7 +246,7 @@ TEST_CASE("test_transpose_dense(): matrices", "[matrices]")
     REQUIRE(B == DenseMatrix(3, 1, {x, y, z}));
 }
 
-TEST_CASE("test_submatrix_dense(): matrices", "[matrices]") 
+TEST_CASE("test_submatrix_dense(): matrices", "[matrices]")
 {
     DenseMatrix A = DenseMatrix(3, 3, {symbol("a"), symbol("b"), symbol("c"),
                                        symbol("p"), symbol("q"), symbol("r"),
@@ -690,7 +690,7 @@ TEST_CASE("test_fraction_free_gaussian_elimination_solve(): matrices", "[matrice
                                    integer(2), integer(-1)}));
 }
 
-TEST_CASE("test_fraction_free_gauss_jordan_solve(): matrices", "[matrices]") 
+TEST_CASE("test_fraction_free_gauss_jordan_solve(): matrices", "[matrices]")
 {
     DenseMatrix A = DenseMatrix(2, 2, {integer(1), integer(1),
                                        integer(1), integer(-1)});
@@ -884,7 +884,7 @@ TEST_CASE("test_QR(): matrices", "[matrices]")
     QR(A, Q, R);
 }
 
-TEST_CASE("test_LDL(): matrices", "[matrices]") 
+TEST_CASE("test_LDL(): matrices", "[matrices]")
 {
     DenseMatrix A = DenseMatrix(3, 3, {integer(4), integer(12), integer(-16),
                                        integer(12), integer(37), integer(-43),
@@ -1224,7 +1224,7 @@ TEST_CASE("test_csr_eq(): matrices", "[matrices]")
     CSRMatrix C = CSRMatrix(3, 3, {0, 2, 3, 6}, {0, 2, 2, 0, 1, 2},
         {integer(0), integer(2), integer(3), integer(4), integer(5), integer(6)});
 
-    REQUIRE(!(A == C));
+    REQUIRE(not (A == C));
 }
 
 TEST_CASE("test_from_coo(): matrices", "[matrices]")
@@ -1290,7 +1290,7 @@ TEST_CASE("test_csr_scale_rows(): matrices", "[matrices]")
         {integer(1), integer(2), integer(-3), integer(12), integer(15), integer(18)}));
 
     X = DenseMatrix(3, 1, {integer(1), integer(0), integer(-1)});
-    SYMENGINE_CHECK_THROW(csr_scale_columns(A, X), std::runtime_error);
+    CHECK_THROWS_AS(csr_scale_columns(A, X), std::runtime_error);
 }
 
 TEST_CASE("test_csr_scale_columns(): matrices", "[matrices]")
@@ -1305,7 +1305,7 @@ TEST_CASE("test_csr_scale_columns(): matrices", "[matrices]")
         {integer(1), integer(6), integer(9), integer(4), integer(-5), integer(18)}));
 
     X = DenseMatrix(3, 1, {integer(0), integer(1), integer(-1)});
-    SYMENGINE_CHECK_THROW(csr_scale_columns(A, X), std::runtime_error);
+    CHECK_THROWS_AS(csr_scale_columns(A, X), std::runtime_error);
 }
 
 TEST_CASE("test_csr_binop_csr_canonical(): matrices", "[matrices]")
@@ -1387,11 +1387,11 @@ TEST_CASE("test_ones_zeros(): matrices", "[matrices]")
 
     ones(A, 1, 5);
     REQUIRE(A == DenseMatrix(1, 5,
-        {integer(1), integer(1), integer(1), integer(1),integer(1)}));
+        {integer(1), integer(1), integer(1), integer(1), integer(1)}));
 
     ones(A, 2, 3);
     REQUIRE(A == DenseMatrix(2, 3, {integer(1), integer(1), integer(1),
-                                   integer(1),integer(1), integer(1)}));
+                                   integer(1), integer(1), integer(1)}));
 
     zeros(A, 3, 2);
     REQUIRE(A == DenseMatrix(3, 2, {integer(0), integer(0),
@@ -1416,7 +1416,7 @@ TEST_CASE("Test Jacobian", "[matrices]")
             integer(1), integer(1), integer(0), integer(0)}));
 
     X = DenseMatrix(4, 1, {mul(x, y), y, z, t});
-    SYMENGINE_CHECK_THROW(jacobian(A, X, J), std::runtime_error);
+    CHECK_THROWS_AS(jacobian(A, X, J), std::runtime_error);
 
     A = DenseMatrix(4, 1, {add(x, z), mul(y, z), add(mul(z, x), add(y, t)),
             add(x, y)});

@@ -17,8 +17,8 @@
 
 namespace SymEngine {
 
-template <typename T, typename U>
-class EvalDoubleVisitor : public BaseVisitor<U> {
+template <typename T>
+class EvalDoubleVisitor : public BaseVisitor<EvalDoubleVisitor<T>> {
 protected:
     /*
        The 'result_' variable is assigned into at the very end of each visit()
@@ -29,7 +29,6 @@ protected:
     */
     T result_;
 public:
-    EvalDoubleVisitor(U *p) : BaseVisitor<U>(p) { }
 
     T apply(const Basic &b) {
         b.accept(*this);
@@ -58,13 +57,13 @@ public:
 #endif
     void bvisit(const Add &x) {
         T tmp = 0;
-        for (auto &p: x.get_args()) tmp = tmp + apply(*p);
+        for (const auto &p: x.get_args()) tmp += apply(*p);
         result_ = tmp;
     }
 
     void bvisit(const Mul &x) {
         T tmp = 1;
-        for (auto &p: x.get_args()) tmp = tmp * apply(*p);
+        for (const auto &p: x.get_args()) tmp *= apply(*p);
         result_ = tmp;
     }
 
@@ -197,6 +196,8 @@ public:
             result_ = std::atan2(0, -1);
         } else if (eq(x, *E)) {
             result_ = std::exp(1);
+        } else if (eq(x, *EulerGamma)) {
+            result_ = 0.5772156649015328606065; // use until polygamma or digamma is implemented
         } else {
             throw std::runtime_error("Constant " + x.get_name() + " is not implemented.");
         }
@@ -210,15 +211,22 @@ public:
     void bvisit(const Basic &) {
         throw std::runtime_error("Not implemented.");
     };
+
+    void bvisit(const NumberWrapper &x) {
+        apply(*(x.eval(53)));
+    }
+
+    void bvisit(const FunctionWrapper &x) {
+        apply(*(x.eval(53)));
+    }
 };
 
-class EvalRealDoubleVisitor : public EvalDoubleVisitor<double, EvalRealDoubleVisitor> {
+class EvalRealDoubleVisitor : public BaseVisitor<EvalRealDoubleVisitor, EvalDoubleVisitor<double>> {
 public:
-    EvalRealDoubleVisitor() : EvalDoubleVisitor(this) { };
 
     // Classes not implemented are
     // Subs, UpperGamma, LowerGamma, Dirichlet_eta, Zeta
-    // LeviCivita, KroneckerDelta, FunctionSymbol, LambertW
+    // LeviCivita, KroneckerDelta, LambertW
     // Derivative, Complex, ComplexDouble, ComplexMPC
 
     using EvalDoubleVisitor::bvisit;
@@ -235,13 +243,12 @@ public:
     };
 };
 
-class EvalComplexDoubleVisitor : public EvalDoubleVisitor<std::complex<double>, EvalComplexDoubleVisitor> {
+class EvalComplexDoubleVisitor : public BaseVisitor<EvalComplexDoubleVisitor, EvalDoubleVisitor<std::complex<double>>> {
 public:
-    EvalComplexDoubleVisitor() : EvalDoubleVisitor(this) { };
 
     // Classes not implemented are
     // Subs, UpperGamma, LowerGamma, Dirichlet_eta, Zeta
-    // LeviCivita, KroneckerDelta, FunctionSymbol, LambertW
+    // LeviCivita, KroneckerDelta, LambertW
     // Derivative, ATan2, Gamma
 
     using EvalDoubleVisitor::bvisit;
@@ -293,17 +300,17 @@ std::vector<fn> init_eval_double()
     };
     table[ADD] = [](const Basic &x) {
         double tmp = 0;
-        for (auto &p: x.get_args()) tmp = tmp + eval_double_single_dispatch(*p);
+        for (const auto &p: x.get_args()) tmp += eval_double_single_dispatch(*p);
         return tmp;
     };
     table[MUL] = [](const Basic &x) {
         double tmp = 1;
-        for (auto &p: x.get_args()) tmp = tmp * eval_double_single_dispatch(*p);
+        for (const auto &p: x.get_args()) tmp *= eval_double_single_dispatch(*p);
         return tmp;
     };
     table[POW] = [](const Basic &x) {
-        double a = eval_double_single_dispatch(*(static_cast<const Pow &>(x)).base_);
-        double b = eval_double_single_dispatch(*(static_cast<const Pow &>(x)).exp_);
+        double a = eval_double_single_dispatch(*(static_cast<const Pow &>(x)).get_base());
+        double b = eval_double_single_dispatch(*(static_cast<const Pow &>(x)).get_exp());
         return ::pow(a, b);
     };
     table[SIN] = [](const Basic &x) {
@@ -412,6 +419,8 @@ std::vector<fn> init_eval_double()
             return ::atan2(0, -1);
         } else if (eq(x, *E)) {
             return ::exp(1);
+        } else if (eq(x, *EulerGamma)) {
+            return 0.5772156649015328606065; // use until polygamma or digamma is implemented
         } else {
             throw std::runtime_error("Constant " + static_cast<const Constant &>(x).get_name() + " is not implemented.");
         }
