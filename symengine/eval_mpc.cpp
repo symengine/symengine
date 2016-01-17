@@ -233,7 +233,7 @@ public:
             mpfr_t t;
             mpfr_init2(t, mpc_get_prec(result_));
             mpfr_t one_;
-            mpfr_init(one_);
+            mpfr_init2(one_,mpc_get_prec(result_));
             mpfr_set_si(one_,1,rnd_);
             mpfr_exp(t,one_, rnd_);
             mpc_set_fr(result_, t, rnd_);
@@ -243,7 +243,7 @@ public:
             mpfr_t t;
             mpfr_init2(t, mpc_get_prec(result_));
             mpfr_t one_;
-            mpfr_init(one_);
+            mpfr_init2(one_,mpc_get_prec(result_));
             mpfr_set_si(one_,1,rnd_);
             mpfr_exp(t,one_, rnd_);
             mpc_set_fr(result_, t, rnd_);
