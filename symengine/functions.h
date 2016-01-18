@@ -514,14 +514,14 @@ private:
     // defined for the base type vector<RCP<Basic>>.
     // [1] http://stackoverflow.com/questions/14964909/how-to-cast-a-vector-of-shared-ptrs-of-a-derived-class-to-a-vector-of-share-ptrs
     // [2] http://stackoverflow.com/questions/114819/getting-a-vectorderived-into-a-function-that-expects-a-vectorbase
-    vec_basic x_; //! x, y, ...
+    multiset_basic x_; //! x, y, ...
 
 public:
     IMPLEMENT_TYPEID(DERIVATIVE)
-    Derivative(const RCP<const Basic> &arg, const vec_basic &x);
+    Derivative(const RCP<const Basic> &arg, const multiset_basic &x);
 
     static RCP<const Derivative> create(const RCP<const Basic> &arg,
-            const vec_basic &x) {
+            const multiset_basic &x) {
         return make_rcp<const Derivative>(arg, x);
     }
 
@@ -531,7 +531,7 @@ public:
     inline RCP<const Basic> get_arg() const {
         return arg_;
     }
-    inline vec_basic get_symbols() const {
+    inline multiset_basic get_symbols() const {
         return x_;
     }
     virtual vec_basic get_args() const {
@@ -539,7 +539,7 @@ public:
         args.insert(args.end(), x_.begin(), x_.end());
         return args;
     }
-    bool is_canonical(const RCP<const Basic> &arg, const vec_basic &x) const;
+    bool is_canonical(const RCP<const Basic> &arg, const multiset_basic &x) const;
     virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
 };
 

@@ -182,4 +182,43 @@ int map_uint_mpz_compare(const map_uint_mpz &A, const map_uint_mpz &B)
     return 0;
 }
 
+template<class T>
+bool set_eq(const T &A, const T &B)
+{
+    // Can't be equal if # of entries differ:
+    if (A.size() != B.size()) return false;
+    // Loop over elements in "a" and "b":
+    auto a = A.begin();
+    auto b = B.begin();
+    for (; a != A.end(); ++a, ++b) {
+        if (neq(**a, **b)) return false; // values not equal
+    }
+    return true;
+}
+
+template<class T>
+int set_compare(const T &A, const T &B)
+{
+    if (A.size() != B.size())
+        return (A.size() < B.size()) ? -1 : 1;
+    auto a = A.begin();
+    auto b = B.begin();
+    int cmp;
+    for (; a != A.end(); ++a, ++b) {
+        cmp = (*a)->__cmp__(**b);
+        if (cmp != 0) return cmp;
+    }
+    return 0;
+}
+
+bool multiset_basic_eq(const multiset_basic &a, const multiset_basic &b)
+{
+    return set_eq<multiset_basic>(a, b);
+}
+
+int multiset_basic_compare(const multiset_basic &a, const multiset_basic &b)
+{
+    return set_compare<multiset_basic>(a, b);
+}
+
 }

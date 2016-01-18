@@ -767,10 +767,14 @@ TEST_CASE("Derivative: functions", "[functions]")
 
     f = function_symbol("f", {x, y});
     r1 = f->diff(x)->diff(y);
-    r2 = Derivative::create(f, {x, y});
-    r3 = Derivative::create(f, {y, x});
+    r2 = f->diff(y)->diff(x);
+    r3 = f->diff(x)->diff(z);
     REQUIRE(eq(*r1, *r2));
     REQUIRE(neq(*r1, *r3));
+
+    r1 = Derivative::create(f, {x, y, x});
+    r2 = Derivative::create(f, {x, x, y});
+    REQUIRE(eq(*r1, *r2));
 
     f = function_symbol("f", pow(x, integer(2)));
     r1 = f->diff(x);
@@ -805,12 +809,12 @@ TEST_CASE("Derivative: functions", "[functions]")
     RCP<const Derivative> r4 = Derivative::create(f, {x});
     REQUIRE(r4->is_canonical(function_symbol("f", {y, x}), {x}));
     REQUIRE(not r4->is_canonical(function_symbol("f", y), {x}));
-    REQUIRE(r4->is_canonical(function_symbol("f", x), {x, y, x, x}));
+    REQUIRE(not r4->is_canonical(function_symbol("f", x), {x, y, x, x}));
     REQUIRE(not (r4->is_canonical(function_symbol("f", x), {pow(x, integer(2))})));
 
     // Test get_args()
-    r1 = Derivative::create(function_symbol("f", {x, pow(y, integer(2))}), {x, x, y});
-    REQUIRE(vec_basic_eq(r1->get_args(), {function_symbol("f", {x, pow(y, integer(2))}), x, x, y}));
+    r1 = Derivative::create(function_symbol("f", {x, y, pow(z, integer(2))}), {x, x, y});
+    REQUIRE(vec_basic_eq_perm(r1->get_args(), {function_symbol("f", {x, y, pow(z, integer(2))}), x, x, y}));
 
     // Test Derivative::subs
     r1 = Derivative::create(function_symbol("f", {x, add(y, y)}), {x});
@@ -833,6 +837,7 @@ TEST_CASE("Subs: functions", "[functions]")
     RCP<const Symbol> y = symbol("y");
     RCP<const Symbol> z = symbol("z");
     RCP<const Symbol> _x = symbol("_x");
+    RCP<const Symbol> __x = symbol("__x");
     RCP<const Basic> r1, r2, r3, r4;
 
     // Test Subs::subs
@@ -867,9 +872,9 @@ TEST_CASE("Subs: functions", "[functions]")
     r2 = r1->diff(y);
     r3 = Subs::create(Derivative::create(function_symbol("f", {add(y, y), _x}), {_x, _x}),
                         {{_x, add(x, y)}});
-    r4 = Subs::create(Derivative::create(function_symbol("f", {add(y, y), _x}), {_x, y}),
-                        {{_x, add(x, y)}});
-    r3 = add(r3, r4);
+    r4 = Subs::create(Derivative::create(function_symbol("f", {__x, _x}), {__x, _x}),
+                        {{_x, add(x, y)}, {__x, add(y, y)}});
+    r3 = add(r3, add(r4, r4));
     REQUIRE(eq(*r2, *r3));
 }
 

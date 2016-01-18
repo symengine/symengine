@@ -1406,36 +1406,41 @@ RCP<const Number> FunctionWrapper::eval(long bits) const
 
 /* ---------------------------- */
 
-Derivative::Derivative(const RCP<const Basic> &arg, const vec_basic &x)
+Derivative::Derivative(const RCP<const Basic> &arg, const multiset_basic &x)
     : arg_{arg}, x_{x}
 {
     SYMENGINE_ASSERT(is_canonical(arg, x))
 }
 
 bool Derivative::is_canonical(const RCP<const Basic> &arg,
-        const vec_basic &x) const
+        const multiset_basic &x) const
 {
     // Check that 'x' are Symbols:
     for(const auto &a: x)
         if (not is_a<Symbol>(*a)) return false;
     if (is_a<FunctionSymbol>(*arg)) {
-        RCP<const Symbol> s = rcp_static_cast<const Symbol>(x[0]);
-        RCP<const FunctionSymbol> f = rcp_static_cast<const FunctionSymbol>(arg);
-        bool found_s = false;
-        // 's' should be one of the args of the function
-        // and should not appear anywhere else.
-        for (const auto &a : f->get_args()) {
-            if (eq(*a, *s)) {
-                if (found_s) {
+        for (auto &p: x) {
+            RCP<const Symbol> s = rcp_static_cast<const Symbol>(p);
+            RCP<const FunctionSymbol> f = rcp_static_cast<const FunctionSymbol>(arg);
+            bool found_s = false;
+            // 's' should be one of the args of the function
+            // and should not appear anywhere else.
+            for (const auto &a : f->get_args()) {
+                if (eq(*a, *s)) {
+                    if (found_s) {
+                        return false;
+                    } else {
+                        found_s = true;
+                    }
+                } else if (neq(*a->diff(s), *zero)) {
                     return false;
-                } else {
-                    found_s = true;
                 }
-            } else if (neq(*a->diff(s), *zero)) {
+            }
+            if (!found_s) {
                 return false;
             }
         }
-        return found_s;
+        return true;
     } else if (is_a<Abs>(*arg)) {
         return true;
     } else if (is_a<FunctionWrapper>(*arg)) {
@@ -1448,8 +1453,9 @@ std::size_t Derivative::__hash__() const
 {
     std::size_t seed = DERIVATIVE;
     hash_combine<Basic>(seed, *arg_);
-    for(size_t i=0; i < x_.size(); i++)
-        hash_combine<Basic>(seed, *x_[i]);
+    for (auto &p: x_) {
+        hash_combine<Basic>(seed, *p);
+    }
     return seed;
 }
 
@@ -1457,7 +1463,7 @@ bool Derivative::__eq__(const Basic &o) const
 {
     if (is_a<Derivative>(o) and
             eq(*arg_, *(static_cast<const Derivative &>(o).arg_)) and
-            vec_basic_eq(x_, static_cast<const Derivative &>(o).x_))
+            multiset_basic_eq(x_, static_cast<const Derivative &>(o).x_))
         return true;
     return false;
 }
@@ -1468,7 +1474,7 @@ int Derivative::compare(const Basic &o) const
     const Derivative &s = static_cast<const Derivative &>(o);
     int cmp = arg_->__cmp__(*(s.arg_));
     if (cmp != 0) return cmp;
-    cmp = vec_basic_compare(x_, s.x_);
+    cmp = multiset_basic_compare(x_, s.x_);
     return cmp;
 }
 
@@ -1511,9 +1517,9 @@ RCP<const Basic> Derivative::subs(const map_basic_basic &subs_dict) const
             insert(m, p.first, p.second);
         }
     }
-    vec_basic sym = x_;
-    for (unsigned i = 0; i < sym.size(); i++) {
-        sym[i] = sym[i]->subs(n);
+    multiset_basic sym;
+    for (auto &p : x_) {
+        sym.insert(p->subs(n));
     }
     if (m.empty()) {
         return Derivative::create(arg_->subs(n), sym);
@@ -1562,7 +1568,7 @@ int Subs::compare(const Basic &o) const
 {
     SYMENGINE_ASSERT(is_a<Subs>(o))
     const Subs &s = static_cast<const Subs &>(o);
-    int cmp = arg_->__cmp__(*(arg_));
+    int cmp = arg_->__cmp__(*(s.arg_));
     if (cmp != 0) return cmp;
     cmp = map_compare(dict_, s.dict_);
     return cmp;
@@ -1618,7 +1624,15 @@ RCP<const Basic> Subs::subs(const map_basic_basic &subs_dict) const
     for (const auto &s: dict_) {
         insert(m, s.first, s.second->subs(subs_dict));
     }
-    return make_rcp<const Subs>(arg_->subs(n), m);
+    RCP<const Basic> presub = arg_->subs(n);
+    if (is_a<Subs>(*presub)) {
+        for (auto &q: static_cast<const Subs &>(*presub).dict_) {
+            insert(m, q.first, q.second);
+        }
+        return make_rcp<const Subs>(static_cast<const Subs &>(*presub).arg_, m);
+    } else {
+        return make_rcp<const Subs>(presub, m);
+    }
 }
 
 std::size_t HyperbolicFunction::__hash__() const
