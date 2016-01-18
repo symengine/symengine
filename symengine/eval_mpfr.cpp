@@ -213,15 +213,20 @@ public:
     };
 
     void bvisit(const Constant &x) {
+
+        mpfr_t one_;
+        mpfr_init2(one_,mpfr_get_prec(result_));
+        mpfr_set_si(one_,1,rnd_);
         if (x.__eq__(*pi)) {
             mpfr_const_pi(result_, rnd_);
         } else if (x.__eq__(*E)) {
-            mpfr_const_euler(result_, rnd_);
+            mpfr_exp(result_,one_, rnd_);
         } else if (x.__eq__(*EulerGamma)) {
-            mpfr_const_euler(result_, rnd_);
+            mpfr_exp(result_,one_, rnd_);
         } else {
             throw std::runtime_error("Constant " + x.get_name() + " is not implemented.");
         }
+        mpfr_clear(one_);
     }
 
     void bvisit(const Abs &x) {
