@@ -10,6 +10,7 @@ UnivariatePolynomial::UnivariatePolynomial(const RCP<const Symbol> &var, const u
      degree_{degree}, var_{var}, dict_{std::move(dict)} {
 
     SYMENGINE_ASSERT(is_canonical(degree_, dict_))
+    this->type_code_ = type_code_id;
 }
 
 UnivariatePolynomial::UnivariatePolynomial(const RCP<const Symbol> &var, const std::vector<mpz_class> &v) :
@@ -22,6 +23,7 @@ UnivariatePolynomial::UnivariatePolynomial(const RCP<const Symbol> &var, const s
     degree_ = v.size() - 1;
 
     SYMENGINE_ASSERT(is_canonical(degree_, dict_))
+    this->type_code_ = type_code_id;
 }
 
 bool UnivariatePolynomial::is_canonical(const unsigned int &degree_, const map_uint_mpz& dict) const

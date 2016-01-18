@@ -10,6 +10,7 @@ namespace SymEngine {
 Constant::Constant(const std::string &name)
     : name_{name}
 {
+    this->type_code_ = type_code_id;
 }
 
 std::size_t Constant::__hash__() const

@@ -86,6 +86,8 @@ enum TypeID {
 #include "basic-methods.inc"
 
 class Basic : public EnableRCPFromThis<Basic> {
+protected:
+    TypeID type_code_;
 private:
     //! Private variables
     // The hash_ is defined as mutable, because its value is initialized to 0
@@ -98,7 +100,7 @@ private:
     mutable std::size_t hash_; // This holds the hash value
 #endif // WITH_SYMENGINE_THREAD_SAFE
 public:
-    virtual TypeID get_type_code() const = 0;
+    inline TypeID get_type_code() const { return type_code_; };
     //! Constructor
     Basic() : hash_{0} {}
     //! Destructor must be explicitly defined as virtual here to avoid problems
@@ -255,13 +257,11 @@ void hash_combine(std::size_t& seed, const T& v);
 
 //! Inline members and functions
 #include "basic-inl.h"
+#include "cwrapper.h"
 
 // Macro to define the type_code_id variable and its getter method
-#define IMPLEMENT_TYPEID(ID) \
+#define IMPLEMENT_TYPEID(ID)\
 /*! Type_code_id shared by all instances */ \
 const static TypeID type_code_id = ID; \
-/*! Virtual function that gives the type_code_id of the object */ \
-virtual TypeID get_type_code() const { return type_code_id; }; \
 SYMENGINE_INCLUDE_METHODS()
-
 #endif

@@ -11,6 +11,7 @@ namespace SymEngine {
 
 RealDouble::RealDouble(double i) {
     this->i = i;
+    this->type_code_ = type_code_id;
 }
 
 std::size_t RealDouble::__hash__() const

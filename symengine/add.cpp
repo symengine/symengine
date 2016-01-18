@@ -13,6 +13,7 @@ Add::Add(const RCP<const Number> &coef, umap_basic_num&& dict)
     : coef_{coef}, dict_{std::move(dict)}
 {
     SYMENGINE_ASSERT(is_canonical(coef, dict_))
+    this->type_code_ = type_code_id;
 }
 
 bool Add::is_canonical(const RCP<const Number> &coef,

@@ -286,6 +286,7 @@ Sin::Sin(const RCP<const Basic> &arg)
     : TrigFunction(arg)
 {
     SYMENGINE_ASSERT(is_canonical(arg))
+    this->type_code_ = type_code_id;
 }
 
 bool Sin::is_canonical(const RCP<const Basic> &arg) const
@@ -365,6 +366,7 @@ Cos::Cos(const RCP<const Basic> &arg)
     : TrigFunction(arg)
 {
     SYMENGINE_ASSERT(is_canonical(arg))
+    this->type_code_ = type_code_id;
 }
 
 bool Cos::is_canonical(const RCP<const Basic> &arg) const
@@ -442,6 +444,7 @@ Tan::Tan(const RCP<const Basic> &arg)
     : TrigFunction(arg)
 {
     SYMENGINE_ASSERT(is_canonical(arg))
+    this->type_code_ = type_code_id;
 }
 
 bool Tan::is_canonical(const RCP<const Basic> &arg) const
@@ -522,6 +525,7 @@ Cot::Cot(const RCP<const Basic> &arg)
     : TrigFunction(arg)
 {
     SYMENGINE_ASSERT(is_canonical(arg))
+    this->type_code_ = type_code_id;
 }
 
 bool Cot::is_canonical(const RCP<const Basic> &arg) const
@@ -602,6 +606,7 @@ Csc::Csc(const RCP<const Basic> &arg)
     : TrigFunction(arg)
 {
     SYMENGINE_ASSERT(is_canonical(arg))
+    this->type_code_ = type_code_id;
 }
 
 bool Csc::is_canonical(const RCP<const Basic> &arg) const
@@ -683,6 +688,7 @@ Sec::Sec(const RCP<const Basic> &arg)
     : TrigFunction(arg)
 {
     SYMENGINE_ASSERT(is_canonical(arg))
+    this->type_code_ = type_code_id;
 }
 
 bool Sec::is_canonical(const RCP<const Basic> &arg) const
@@ -760,6 +766,7 @@ ASin::ASin(const RCP<const Basic> &arg)
     : TrigFunction(arg)
 {
     SYMENGINE_ASSERT(is_canonical(arg))
+    this->type_code_ = type_code_id;
 }
 
 bool ASin::is_canonical(const RCP<const Basic> &arg) const
@@ -816,6 +823,7 @@ ACos::ACos(const RCP<const Basic> &arg)
     : TrigFunction(arg)
 {
     SYMENGINE_ASSERT(is_canonical(arg))
+    this->type_code_ = type_code_id;
 }
 
 bool ACos::is_canonical(const RCP<const Basic> &arg) const
@@ -876,6 +884,7 @@ ASec::ASec(const RCP<const Basic> &arg)
     : TrigFunction(arg)
 {
     SYMENGINE_ASSERT(is_canonical(arg))
+    this->type_code_ = type_code_id;
 }
 
 bool ASec::is_canonical(const RCP<const Basic> &arg) const
@@ -934,6 +943,7 @@ ACsc::ACsc(const RCP<const Basic> &arg)
     : TrigFunction(arg)
 {
     SYMENGINE_ASSERT(is_canonical(arg))
+    this->type_code_ = type_code_id;
 }
 
 bool ACsc::is_canonical(const RCP<const Basic> &arg) const
@@ -988,6 +998,7 @@ ATan::ATan(const RCP<const Basic> &arg)
     : TrigFunction(arg)
 {
     SYMENGINE_ASSERT(is_canonical(arg))
+    this->type_code_ = type_code_id;
 }
 
 bool ATan::is_canonical(const RCP<const Basic> &arg) const
@@ -1043,6 +1054,7 @@ ACot::ACot(const RCP<const Basic> &arg)
     : TrigFunction(arg)
 {
     SYMENGINE_ASSERT(is_canonical(arg))
+    this->type_code_ = type_code_id;
 }
 
 bool ACot::is_canonical(const RCP<const Basic> &arg) const
@@ -1103,6 +1115,7 @@ ATan2::ATan2(const RCP<const Basic> &num, const RCP<const Basic> &den)
     : num_{num}, den_{den}
 {
     SYMENGINE_ASSERT(is_canonical(num, den))
+    this->type_code_ = type_code_id;
 }
 
 bool ATan2::is_canonical(const RCP<const Basic> &num,
@@ -1275,6 +1288,7 @@ LambertW::LambertW(const RCP<const Basic> &arg)
     : arg_{arg}
 {
     SYMENGINE_ASSERT(is_canonical(arg))
+    this->type_code_ = type_code_id;
 }
 
 bool LambertW::is_canonical(const RCP<const Basic> &arg) const
@@ -1320,12 +1334,14 @@ FunctionSymbol::FunctionSymbol(std::string name, const RCP<const Basic> &arg)
     : name_{name}, arg_{{arg}}
 {
     SYMENGINE_ASSERT(is_canonical(arg_))
+    this->type_code_ = type_code_id;
 }
 
 FunctionSymbol::FunctionSymbol(std::string name, const vec_basic &arg)
     : name_{name}, arg_{arg}
 {
     SYMENGINE_ASSERT(is_canonical(arg_))
+    this->type_code_ = type_code_id;
 }
 
 bool FunctionSymbol::is_canonical(const vec_basic &arg) const
@@ -1390,13 +1406,13 @@ RCP<const Basic> function_symbol(std::string name, const RCP<const Basic> &arg)
 FunctionWrapper::FunctionWrapper(std::string name, const RCP<const Basic> &arg)
         : FunctionSymbol(name, arg)
 {
-
+    this->type_code_ = type_code_id;
 }
 
 FunctionWrapper::FunctionWrapper(std::string name, const vec_basic &vec)
         : FunctionSymbol(name, vec)
 {
-
+    this->type_code_ = type_code_id;
 }
 
 RCP<const Number> FunctionWrapper::eval(long bits) const
@@ -1410,6 +1426,7 @@ Derivative::Derivative(const RCP<const Basic> &arg, const multiset_basic &x)
     : arg_{arg}, x_{x}
 {
     SYMENGINE_ASSERT(is_canonical(arg, x))
+    this->type_code_ = type_code_id;
 }
 
 bool Derivative::is_canonical(const RCP<const Basic> &arg,
@@ -1533,6 +1550,7 @@ Subs::Subs(const RCP<const Basic> &arg, const map_basic_basic &dict)
     : arg_{arg}, dict_{dict}
 {
     SYMENGINE_ASSERT(is_canonical(arg, dict))
+    this->type_code_ = type_code_id;
 }
 
 bool Subs::is_canonical(const RCP<const Basic> &arg,
@@ -1663,6 +1681,7 @@ Sinh::Sinh(const RCP<const Basic> &arg)
     : HyperbolicFunction(arg)
 {
     SYMENGINE_ASSERT(is_canonical(arg))
+    this->type_code_ = type_code_id;
 }
 
 bool Sinh::is_canonical(const RCP<const Basic> &arg) const
@@ -1724,6 +1743,7 @@ Cosh::Cosh(const RCP<const Basic> &arg)
     : HyperbolicFunction(arg)
 {
     SYMENGINE_ASSERT(is_canonical(arg))
+    this->type_code_ = type_code_id;
 }
 
 bool Cosh::is_canonical(const RCP<const Basic> &arg) const
@@ -1785,6 +1805,7 @@ Tanh::Tanh(const RCP<const Basic> &arg)
     : HyperbolicFunction(arg)
 {
     SYMENGINE_ASSERT(is_canonical(arg))
+    this->type_code_ = type_code_id;
 }
 
 bool Tanh::is_canonical(const RCP<const Basic> &arg) const
@@ -1848,6 +1869,7 @@ Coth::Coth(const RCP<const Basic> &arg)
     : HyperbolicFunction(arg)
 {
     SYMENGINE_ASSERT(is_canonical(arg))
+    this->type_code_ = type_code_id;
 }
 
 bool Coth::is_canonical(const RCP<const Basic> &arg) const
@@ -1914,6 +1936,7 @@ ASinh::ASinh(const RCP<const Basic> &arg)
     : HyperbolicFunction(arg)
 {
     SYMENGINE_ASSERT(is_canonical(arg))
+    this->type_code_ = type_code_id;
 }
 
 bool ASinh::is_canonical(const RCP<const Basic> &arg) const
@@ -1972,6 +1995,7 @@ ACosh::ACosh(const RCP<const Basic> &arg)
     : HyperbolicFunction(arg)
 {
     SYMENGINE_ASSERT(is_canonical(arg))
+    this->type_code_ = type_code_id;
 }
 
 bool ACosh::is_canonical(const RCP<const Basic> &arg) const
@@ -2016,6 +2040,7 @@ ATanh::ATanh(const RCP<const Basic> &arg)
     : HyperbolicFunction(arg)
 {
     SYMENGINE_ASSERT(is_canonical(arg))
+    this->type_code_ = type_code_id;
 }
 
 bool ATanh::is_canonical(const RCP<const Basic> &arg) const
@@ -2072,6 +2097,7 @@ ACoth::ACoth(const RCP<const Basic> &arg)
     : HyperbolicFunction(arg)
 {
     SYMENGINE_ASSERT(is_canonical(arg))
+    this->type_code_ = type_code_id;
 }
 
 bool ACoth::is_canonical(const RCP<const Basic> &arg) const
@@ -2125,6 +2151,7 @@ ASech::ASech(const RCP<const Basic> &arg)
     : HyperbolicFunction(arg)
 {
     SYMENGINE_ASSERT(is_canonical(arg))
+    this->type_code_ = type_code_id;
 }
 
 bool ASech::is_canonical(const RCP<const Basic> &arg) const
@@ -2208,6 +2235,7 @@ KroneckerDelta::KroneckerDelta(const RCP<const Basic> &i, const RCP<const Basic>
     :i_{i}, j_{j}
 {
     SYMENGINE_ASSERT(is_canonical(i_, j_))
+    this->type_code_ = type_code_id;
 }
 
 bool KroneckerDelta::is_canonical(const RCP<const Basic> &i, const RCP<const Basic> &j) const
@@ -2281,6 +2309,7 @@ LeviCivita::LeviCivita(const vec_basic&& arg)
     :arg_{std::move(arg)}
 {
     SYMENGINE_ASSERT(is_canonical(arg_))
+    this->type_code_ = type_code_id;
 }
 
 bool LeviCivita::is_canonical(const vec_basic &arg) const
@@ -2367,12 +2396,14 @@ Zeta::Zeta(const RCP<const Basic> &s, const RCP<const Basic> &a)
     : s_{s}, a_{a}
 {
     SYMENGINE_ASSERT(is_canonical(s_, a_))
+    this->type_code_ = type_code_id;
 }
 
 Zeta::Zeta(const RCP<const Basic> &s)
     : s_{s}, a_{one}
 {
     SYMENGINE_ASSERT(is_canonical(s_, a_))
+    this->type_code_ = type_code_id;
 }
 
 bool Zeta::is_canonical(const RCP<const Basic> &s, const RCP<const Basic> &a) const
@@ -2434,6 +2465,7 @@ Dirichlet_eta::Dirichlet_eta(const RCP<const Basic> &s)
     : s_{s}
 {
     SYMENGINE_ASSERT(is_canonical(s_))
+    this->type_code_ = type_code_id;
 }
 
 bool Dirichlet_eta::is_canonical(const RCP<const Basic> &s) const
@@ -2487,6 +2519,7 @@ Gamma::Gamma(const RCP<const Basic> &arg)
     : arg_{arg}
 {
     SYMENGINE_ASSERT(is_canonical(arg_))
+    this->type_code_ = type_code_id;
 }
 
 bool Gamma::is_canonical(const RCP<const Basic> &arg) const
@@ -2589,6 +2622,7 @@ LowerGamma::LowerGamma(const RCP<const Basic> &s, const RCP<const Basic> &x)
     : s_{s}, x_{x}
 {
     SYMENGINE_ASSERT(is_canonical(s_, x_))
+    this->type_code_ = type_code_id;
 }
 
 bool LowerGamma::is_canonical(const RCP<const Basic> &s, const RCP<const Basic> &x) const
@@ -2662,6 +2696,7 @@ UpperGamma::UpperGamma(const RCP<const Basic> &s, const RCP<const Basic> &x)
     : s_{s}, x_{x}
 {
     SYMENGINE_ASSERT(is_canonical(s_, x_))
+    this->type_code_ = type_code_id;
 }
 
 bool UpperGamma::is_canonical(const RCP<const Basic> &s, const RCP<const Basic> &x) const
@@ -2961,6 +2996,7 @@ Abs::Abs(const RCP<const Basic> &arg)
     : arg_{arg}
 {
     SYMENGINE_ASSERT(is_canonical(arg_))
+    this->type_code_ = type_code_id;
 }
 
 bool Abs::is_canonical(const RCP<const Basic> &arg) const

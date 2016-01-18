@@ -954,6 +954,7 @@ public:
     //! Beta Constructor
     Beta(const RCP<const Basic> &x, const RCP<const Basic> &y): x_{x}, y_{y} {
         SYMENGINE_ASSERT(is_canonical(x_, y_))
+        this->type_code_=type_code_id;
     }
     //! return `Beta` with ordered arguments
     static RCP<const Beta> from_two_basic(const RCP<const Basic> &x, const RCP<const Basic> &y);
@@ -992,6 +993,7 @@ public:
     //! PolyGamma Constructor
     PolyGamma(const RCP<const Basic> &n, const RCP<const Basic> &x): n_{n}, x_{x} {
         SYMENGINE_ASSERT(is_canonical(n_, x_))
+        this->type_code_=type_code_id;
     }
     /*! Equality comparator
      * \param o - Object to be compared with

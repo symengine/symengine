@@ -10,6 +10,7 @@ namespace SymEngine {
 
 ComplexDouble::ComplexDouble(std::complex<double> i) {
     this->i = i;
+    this->type_code_ = type_code_id;
 }
 //! Get the real part of the complex number
 RCP<const Number> ComplexDouble::real_part() const {

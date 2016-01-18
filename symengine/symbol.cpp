@@ -7,6 +7,7 @@ namespace SymEngine {
 Symbol::Symbol(const std::string &name)
     : name_{name}
 {
+    this->type_code_ = type_code_id;
 }
 
 std::size_t Symbol::__hash__() const
