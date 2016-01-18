@@ -8,18 +8,14 @@ namespace SymEngine {
 // Base class for matrices
 class MatrixBase {
 public:
-    MatrixBase()
-        : row_{0}, col_{0} {};
-    MatrixBase(unsigned row, unsigned col)
-        : row_{row}, col_{col} {};
     virtual ~MatrixBase() {};
 
     // Below methods should be implemented by the derived classes. If not
     // applicable, raise an exception
 
     // Get the # of rows and # of columns
-    unsigned nrows() const { return row_; }
-    unsigned ncols() const { return col_; }
+    virtual unsigned nrows() const =0;
+    virtual unsigned ncols() const =0;
     virtual bool eq(const MatrixBase &other) const;
 
     // Get and set elements
@@ -69,11 +65,6 @@ public:
 
     // Solve Ax = b using LU factorization
     virtual void LU_solve(const MatrixBase &b, MatrixBase &x) const = 0;
-
-protected:
-    // Stores the dimension of the Matrix
-    unsigned row_;
-    unsigned col_;
 };
 
 // ----------------------------- Dense Matrix --------------------------------//
@@ -90,6 +81,9 @@ public:
     // Get and set elements
     virtual RCP<const Basic> get(unsigned i, unsigned j) const;
     virtual void set(unsigned i, unsigned j, const RCP<const Basic> &e);
+
+    virtual unsigned nrows() const { return row_; }
+    virtual unsigned ncols() const { return col_; }
 
     virtual unsigned rank() const;
     virtual RCP<const Basic> det() const;
@@ -209,9 +203,12 @@ public:
     friend void ones(DenseMatrix &A, unsigned rows, unsigned cols);
     friend void zeros(DenseMatrix &A, unsigned rows, unsigned cols);
 
-protected:
+private:
     // Matrix elements are stored in row-major order
     vec_basic m_;
+    // Stores the dimension of the Matrix
+    unsigned row_;
+    unsigned col_;
 };
 
 // ----------------------------- Sparse Matrices -----------------------------//
@@ -230,6 +227,8 @@ public:
     virtual RCP<const Basic> get(unsigned i, unsigned j) const;
     virtual void set(unsigned i, unsigned j, const RCP<const Basic> &e);
 
+    virtual unsigned nrows() const { return row_; }
+    virtual unsigned ncols() const { return col_; }
     virtual unsigned rank() const;
     virtual RCP<const Basic> det() const;
     virtual void inv(MatrixBase &result) const;
@@ -309,10 +308,13 @@ public:
         CSRMatrix& C,
         RCP<const Basic> (&bin_op)(const RCP<const Basic>&, const RCP<const Basic>&));
 
-protected:
+private:
     std::vector<unsigned> p_;
     std::vector<unsigned> j_;
     vec_basic x_;
+    // Stores the dimension of the Matrix
+    unsigned row_;
+    unsigned col_;
 };
 
 // Return the Jacobian of the matrix
