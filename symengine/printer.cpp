@@ -5,9 +5,6 @@
 
 namespace SymEngine {
 
-StrPrinter::StrPrinter() : BaseVisitor<StrPrinter>(this) {
-
-}
 void StrPrinter::bvisit(const Basic &x) {
     std::ostringstream s;
     s << "<" << typeName<Basic>(x) << " instance at " << (const void*)this << ">";
@@ -316,6 +313,18 @@ void StrPrinter::bvisit(const UnivariatePolynomial &x) {
     }
     str_ = s.str();
 }
+#ifdef HAVE_SYMENGINE_PIRANHA
+void StrPrinter::bvisit(const URatPSeriesPiranha &x) {
+    std::ostringstream o;
+    o << x.p_ << " + O(" << x.var_ << "**" << x.degree_ << ")";
+    str_ = o.str();
+}
+void StrPrinter::bvisit(const UPSeriesPiranha &x) {
+    std::ostringstream o;
+    o << x.p_ << " + O(" << x.var_ << "**" << x.degree_ << ")";
+    str_ = o.str();
+}
+#endif
 
 //Polynomial printing
 void StrPrinter::bvisit(const Polynomial &x) {
@@ -458,9 +467,13 @@ void StrPrinter::bvisit(const FunctionSymbol &x) {
 
 void StrPrinter::bvisit(const Derivative &x) {
     std::ostringstream o;
-    o << "Derivative(";
-    vec_basic vec = x.get_args();
-    o << this->apply(vec) << ")";
+    o << "Derivative(" << this->apply(x.get_arg());
+    multiset_basic m1 = x.get_symbols();
+    std::multiset<RCP<const Basic>, RCPBasicKeyLessCmp> m2(m1.begin(), m1.end());
+    for (auto p = m2.begin(); p != m2.end(); p++) {
+        o << ", " << this->apply(*p);
+    }
+    o << ")";
     str_ = o.str();
 }
 
@@ -471,10 +484,10 @@ void StrPrinter::bvisit(const Subs &x) {
             vars << ", ";
             point << ", ";
         }
-        vars << *(p->first);
-        point << *(p->second);
+        vars << apply(p->first);
+        point << apply(p->second);
     }
-    o << "Subs(" << this->apply(x.arg_) << ", (" << vars.str() << "), (" << point.str() << "))";
+    o << "Subs(" << apply(x.arg_) << ", (" << vars.str() << "), (" << point.str() << "))";
     str_ = o.str();
 }
 
@@ -542,6 +555,8 @@ std::vector<std::string> init_str_printer_names() {
     names[LEVICIVITA] = "levicivita";
     names[LOWERGAMMA] = "lowergamma";
     names[UPPERGAMMA] = "uppergamma";
+    names[UPPERGAMMA] = "beta";
+    names[POLYGAMMA] = "polygamma";
     names[ABS] = "abs";
     return names;
 }

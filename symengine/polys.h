@@ -52,15 +52,11 @@ public:
 
     //! Evaluates the Polynomial at value x
     mpz_class eval(const vec_int &x) const;
-    //! Differentiates w.r.t symbol `x`
-    virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
 
     //! Get the Basic from the Polynomial
     RCP<const Basic> get_basic() const;
 
     virtual vec_basic get_args() const;
-
-    virtual void accept(Visitor &v) const;
 
 }; //Polynomial
 

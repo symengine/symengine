@@ -1,7 +1,7 @@
 // This tells Catch to provide a main() - only do this in one cpp file:
 // User defined macros can be added in this file
 
-#define CATCH_CONFIG_RUNNER 
+#define CATCH_CONFIG_RUNNER
 #include "catch.hpp"
 
 #include <symengine/symengine_config.h>

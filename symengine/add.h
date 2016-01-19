@@ -44,6 +44,12 @@ public:
     */
     static void dict_add_term(umap_basic_num &d,
             const RCP<const Number> &coef, const RCP<const Basic> &t);
+    /*!
+    * Adds `(c*term)` to the number `coeff` (in case both are numbers) or dict `d` (as a pair `c, term`).
+    * In case `term` is `Add` and `c=1`, expands the `Add` into the `coeff` and `d`.
+    */
+    static void coef_dict_add_term(const Ptr<RCP<const Number>> &coef, umap_basic_num &d,
+            const RCP<const Number> &c, const RCP<const Basic> &term);
     //! Converts the add dict into two appropriate instances
     void as_two_terms(const Ptr<RCP<const Basic>> &a,
             const Ptr<RCP<const Basic>> &b) const;
@@ -52,15 +58,11 @@ public:
         const Ptr<RCP<const Number>> &coef, const Ptr<RCP<const Basic>> &term);
     //! \return `true` if it is in canonical form
     bool is_canonical(const RCP<const Number> &coef,
-            const umap_basic_num& dict);
-    //! Differentiates w.r.t Symbol `x`
-    virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
+            const umap_basic_num& dict) const;
     //! Substitutes the dict
     virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
 
     virtual vec_basic get_args() const;
-
-    virtual void accept(Visitor &v) const;
 };
 
 //! \return Add made from `a + b`

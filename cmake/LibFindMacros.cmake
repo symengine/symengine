@@ -29,40 +29,11 @@ function (libfind_library libname pkg)
     find_library(${LIBNAME}_LIBRARY
         NAMES
             ${libname}
-        PATHS
-            ${${PKG}_LIB}
-            ${${PKG}_LIB_DIR}
-            ${${PKG}_LIBRARY}
-            ${${PKG}_LIBRARIES}
-        NO_DEFAULT_PATH
-    )
-
-    find_library(${LIBNAME}_LIBRARY
-        NAMES
-            ${libname}
-        PATHS
-            ${${PKG}_DIR}
-            ${COMMON_DIR}
-        PATH_SUFFIXES
-            lib
-            lib64
-        NO_DEFAULT_PATH
-    )
-
-    find_library(${LIBNAME}_LIBRARY
-        NAMES
-            ${libname}
     )
 
     if (NOT TARGET ${libname})
         add_library(${libname} UNKNOWN IMPORTED)
         set_property(TARGET ${libname} PROPERTY IMPORTED_LOCATION ${${LIBNAME}_LIBRARY})
-    endif()
-
-    if ("${${LIBNAME}_LIBRARY}" STREQUAL "${LIBNAME}_LIBRARY-NOTFOUND")
-        set(${LIBNAME}_LIBRARY_FOUND no)
-    else()
-        set(${LIBNAME}_LIBRARY_FOUND yes)
     endif()
 endfunction()
 
@@ -72,27 +43,5 @@ function (libfind_include HEADER pkg)
     find_path(${PKG}_INCLUDE_DIR
         NAMES
             ${HEADER}
-        PATHS
-            ${${PKG}_INCLUDE}
-            ${${PKG}_INCLUDE_DIRS}
-        NO_DEFAULT_PATH
-    )
-
-    find_path(${PKG}_INCLUDE_DIR
-        NAMES
-            ${HEADER}
-        PATHS
-            ${${PKG}_DIR}
-            ${COMMON_DIR}
-        PATH_SUFFIXES
-            include
-        NO_DEFAULT_PATH
-    )
-
-    find_path(${PKG}_INCLUDE_DIR
-        NAMES
-            ${HEADER}
-        PATH_SUFFIXES
-            ${pkg}
     )
 endfunction()

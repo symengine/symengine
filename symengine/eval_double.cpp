@@ -17,8 +17,8 @@
 
 namespace SymEngine {
 
-template <typename T, typename U>
-class EvalDoubleVisitor : public BaseVisitor<U> {
+template <typename T>
+class EvalDoubleVisitor : public BaseVisitor<EvalDoubleVisitor<T>> {
 protected:
     /*
        The 'result_' variable is assigned into at the very end of each visit()
@@ -29,7 +29,6 @@ protected:
     */
     T result_;
 public:
-    EvalDoubleVisitor(U *p) : BaseVisitor<U>(p) { }
 
     T apply(const Basic &b) {
         b.accept(*this);
@@ -197,6 +196,8 @@ public:
             result_ = std::atan2(0, -1);
         } else if (eq(x, *E)) {
             result_ = std::exp(1);
+        } else if (eq(x, *EulerGamma)) {
+            result_ = 0.5772156649015328606065; // use until polygamma or digamma is implemented
         } else {
             throw std::runtime_error("Constant " + x.get_name() + " is not implemented.");
         }
@@ -220,9 +221,8 @@ public:
     }
 };
 
-class EvalRealDoubleVisitor : public EvalDoubleVisitor<double, EvalRealDoubleVisitor> {
+class EvalRealDoubleVisitor : public BaseVisitor<EvalRealDoubleVisitor, EvalDoubleVisitor<double>> {
 public:
-    EvalRealDoubleVisitor() : EvalDoubleVisitor(this) { };
 
     // Classes not implemented are
     // Subs, UpperGamma, LowerGamma, Dirichlet_eta, Zeta
@@ -243,9 +243,8 @@ public:
     };
 };
 
-class EvalComplexDoubleVisitor : public EvalDoubleVisitor<std::complex<double>, EvalComplexDoubleVisitor> {
+class EvalComplexDoubleVisitor : public BaseVisitor<EvalComplexDoubleVisitor, EvalDoubleVisitor<std::complex<double>>> {
 public:
-    EvalComplexDoubleVisitor() : EvalDoubleVisitor(this) { };
 
     // Classes not implemented are
     // Subs, UpperGamma, LowerGamma, Dirichlet_eta, Zeta
@@ -420,6 +419,8 @@ std::vector<fn> init_eval_double()
             return ::atan2(0, -1);
         } else if (eq(x, *E)) {
             return ::exp(1);
+        } else if (eq(x, *EulerGamma)) {
+            return 0.5772156649015328606065; // use until polygamma or digamma is implemented
         } else {
             throw std::runtime_error("Constant " + static_cast<const Constant &>(x).get_name() + " is not implemented.");
         }

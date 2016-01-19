@@ -16,6 +16,7 @@ using SymEngine::zero;
 using SymEngine::map_basic_basic;
 using SymEngine::sqrt;
 using SymEngine::integer;
+using SymEngine::expand;
 
 int main(int argc, char* argv[])
 {
@@ -27,7 +28,6 @@ int main(int argc, char* argv[])
         N = 100;
     }
 
-    auto t1 = std::chrono::high_resolution_clock::now();
     RCP<const Basic> e, f, s, a0, a1;
     a0 = symbol("a0");
     a1 = symbol("a1");
@@ -38,15 +38,13 @@ int main(int argc, char* argv[])
         o << "a" << i;
         s = symbol(o.str());
         e = add(e, s);
-        f = sub(f, s);
+        f = add(f, s);
     }
-    e = expand(mul(e, e));
-    map_basic_basic dict;
-    insert(dict, a0, f);
-    e = e->subs(dict);
-
+    f = neg(f);
+    auto t1 = std::chrono::high_resolution_clock::now();
+    e = expand(pow(e, integer(2)));
+    e = e->subs({{a0, f}});
     e = expand(e);
-
     auto t2 = std::chrono::high_resolution_clock::now();
 
     std::cout

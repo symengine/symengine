@@ -27,6 +27,7 @@ struct RCPIntegerKeyLess;
 
 typedef std::unordered_map<RCP<const Basic>, RCP<const Number>,
         RCPBasicHash, RCPBasicKeyEq> umap_basic_num;
+typedef std::unordered_map<short, RCP<const Basic>> umap_short_basic;
 typedef std::unordered_map<RCP<const Basic>, RCP<const Basic>,
         RCPBasicHash, RCPBasicKeyEq> umap_basic_basic;
 
@@ -35,6 +36,7 @@ typedef std::vector<RCP<const Basic>> vec_basic;
 typedef std::vector<RCP<const Integer>> vec_integer;
 typedef std::vector<RCP<const Symbol>> vec_symbol;
 typedef std::set<RCP<const Basic>, RCPBasicKeyLess> set_basic;
+typedef std::multiset<RCP<const Basic>, RCPBasicKeyLess> multiset_basic;
 typedef std::map<vec_int, long long int> map_vec_int;
 typedef std::map<vec_int, mpz_class> map_vec_mpz;
 typedef std::map<RCP<const Basic>, RCP<const Number>,
@@ -147,6 +149,9 @@ bool vec_symbol_eq(const vec_symbol &a, const vec_symbol &b);
 bool vec_basic_eq_perm(const vec_basic &a, const vec_basic &b);
 //! \return true if the two dictionaries `a` and `b` are equal. Otherwise false.
 bool map_uint_mpz_eq(const map_uint_mpz &a, const map_uint_mpz &b);
+//! \return true if the two multisets `a` and `b` are equal. Otherwise false.
+bool multiset_basic_eq(const multiset_basic &a, const multiset_basic &b);
+
 
 //! \return -1, 0, 1 for a < b, a == b, a > b
 template<class T>
@@ -169,6 +174,8 @@ int map_compare(const T &A, const T &B)
 //! \return -1, 0, 1 for a < b, a == b, a > b
 int vec_basic_compare(const vec_basic &a, const vec_basic &b);
 //! \return -1, 0, 1 for a < b, a == b, a > b
+int multiset_basic_compare(const multiset_basic &a, const multiset_basic &b);
+//! \return -1, 0, 1 for a < b, a == b, a > b
 int map_uint_mpz_compare(const map_uint_mpz &a, const map_uint_mpz &b);
 
 
@@ -184,16 +191,8 @@ typedef struct
     }
 } vec_int_hash;
 
-typedef struct
-{
-    //! \return true if `x==y`
-    inline bool operator() (const vec_int &x, const vec_int &y) const {
-        return x == y;
-    }
-} vec_int_eq;
-
 typedef std::unordered_map<vec_int, mpz_class,
-        vec_int_hash, vec_int_eq> umap_vec_mpz;
+        vec_int_hash> umap_vec_mpz;
 
 } // SymEngine
 

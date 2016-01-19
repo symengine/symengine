@@ -20,6 +20,16 @@ add_executable(test_series test_series.cpp)
 target_link_libraries(test_series symengine catch)
 add_test(test_series ${PROJECT_BINARY_DIR}/test_series)
 
+if (WITH_PIRANHA)
+    add_executable(test_series_expansion_UP test_series_expansion_UP.cpp)
+    target_link_libraries(test_series_expansion_UP symengine catch)
+    add_test(test_series_expansion_UP ${PROJECT_BINARY_DIR}/test_series_expansion_UP)
+
+    add_executable(test_series_expansion_URatP test_series_expansion_URatP.cpp)
+    target_link_libraries(test_series_expansion_URatP symengine catch)
+    add_test(test_series_expansion_URatP ${PROJECT_BINARY_DIR}/test_series_expansion_URatP)
+endif()
+
 add_executable(test_functions test_functions.cpp)
 target_link_libraries(test_functions symengine catch)
 add_test(test_functions ${PROJECT_BINARY_DIR}/test_functions)
@@ -32,6 +42,14 @@ add_executable(test_integer test_integer.cpp)
 target_link_libraries(test_integer symengine catch)
 add_test(test_integer ${PROJECT_BINARY_DIR}/test_integer)
 
+add_executable(test_rational test_rational.cpp)
+target_link_libraries(test_rational symengine catch)
+add_test(test_rational ${PROJECT_BINARY_DIR}/test_rational)
+
 add_executable(test_number test_number.cpp)
 target_link_libraries(test_number symengine catch)
 add_test(test_number ${PROJECT_BINARY_DIR}/test_number)
+
+add_executable(test_as_numer_denom test_as_numer_denom.cpp)
+target_link_libraries(test_as_numer_denom symengine catch)
+add_test(test_as_numer_denom ${PROJECT_BINARY_DIR}/test_as_numer_denom)

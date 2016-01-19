@@ -16,11 +16,11 @@
 namespace SymEngine {
 
 class EvalMPFRVisitor : public BaseVisitor<EvalMPFRVisitor> {
-private:
+protected:
     mpfr_rnd_t rnd_;
     mpfr_ptr result_;
 public:
-    EvalMPFRVisitor(mpfr_rnd_t rnd) : BaseVisitor(this), rnd_{rnd} { }
+    EvalMPFRVisitor(mpfr_rnd_t rnd) : rnd_{rnd} { }
 
     void apply(mpfr_ptr result, const Basic &b) {
         mpfr_ptr tmp = result_;
@@ -208,10 +208,16 @@ public:
         mpfr_gamma(result_, result_, rnd_);
     };
 
+    void bvisit(const Beta &x) {
+        apply(result_, *(x.rewrite_as_gamma()));
+    };
+
     void bvisit(const Constant &x) {
         if (x.__eq__(*pi)) {
             mpfr_const_pi(result_, rnd_);
         } else if (x.__eq__(*E)) {
+            mpfr_const_euler(result_, rnd_);
+        } else if (x.__eq__(*EulerGamma)) {
             mpfr_const_euler(result_, rnd_);
         } else {
             throw std::runtime_error("Constant " + x.get_name() + " is not implemented.");

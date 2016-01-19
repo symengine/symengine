@@ -23,6 +23,10 @@ if [[ "${TRAVIS_OS_NAME}" == "linux" ]] && [[ "${CC}" == "gcc" ]]; then
     if [[ "${WITH_PIRANHA}" == "yes" ]]; then
         export CC=gcc-4.8
         export CXX=g++-4.8
+    elif [[ "${WITH_LATEST_GCC}" == "yes" ]]; then
+        export CC=gcc-5
+        export CXX=g++-5
+
     else
         export CC=gcc-4.7
         export CXX=g++-4.7
@@ -33,6 +37,14 @@ export SOURCE_DIR=`pwd`
 export our_install_dir="$HOME/our_usr"
 mkdir -p $our_install_dir
 cd $our_install_dir
+
+# check trailing whitespace:
+if !  egrep " $" -nr --include=\*.{cpp,h,inc}  --exclude-dir=*teuchos* $SOURCE_DIR ; then
+    echo No trailing whitespace;
+else
+    exit -1;
+fi
+# TODO: Add similar grep checks for space after comma,, space after `if`, space between `)` and `{` also
 
 if [[ "${TRAVIS_OS_NAME}" != "osx" ]]; then
     if [[ "${TRAVIS}" != "true" ]]; then

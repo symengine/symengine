@@ -20,6 +20,11 @@
 #include <unordered_map>
 #include <cassert>
 #include <ciso646>
+#include <cmath>
+#include <complex>
+#include <vector>
+#include <type_traits>
+#include <functional>
 
 #include <symengine/symengine_config.h>
 
@@ -78,6 +83,8 @@ enum TypeID {
     // must assign the correct count below).
     TypeID_Count
 };
+
+#include "basic-methods.inc"
 
 class Basic : public EnableRCPFromThis<Basic> {
 private:
@@ -140,9 +147,6 @@ public:
      */
     std::string __str__() const;
 
-    //! Returns the derivative of self
-    virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
-
     //! Substitutes 'subs_dict' into 'self'.
     virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
 
@@ -154,7 +158,7 @@ public:
     //! Returns the list of arguments
     virtual vec_basic get_args() const = 0;
 
-    virtual void accept(Visitor &v) const = 0;
+    SYMENGINE_INCLUDE_METHODS(=0)
 };
 
 //! Our hash:
@@ -215,7 +219,9 @@ bool is_a_sub(const Basic &b);
 
 //! Expands `self`
 RCP<const Basic> expand(const RCP<const Basic> &self);
-
+umap_short_basic series(const RCP<const Basic> &ex, const RCP<const Symbol> &var, unsigned int prec);
+umap_short_basic series_invfunc(const RCP<const Basic> &ex, const RCP<const Symbol> &var, unsigned int prec);
+void as_numer_denom(const RCP<const Basic> &x, const Ptr<RCP<const Basic>> &numer, const Ptr<RCP<const Basic>> &denom);
 } // SymEngine
 
 /*! This `<<` overloaded function simply calls `p.__str__`, so it allows any Basic
@@ -256,6 +262,7 @@ void hash_combine(std::size_t& seed, const T& v);
 /*! Type_code_id shared by all instances */ \
 const static TypeID type_code_id = ID; \
 /*! Virtual function that gives the type_code_id of the object */ \
-virtual TypeID get_type_code() const { return type_code_id; };
+virtual TypeID get_type_code() const { return type_code_id; }; \
+SYMENGINE_INCLUDE_METHODS()
 
 #endif

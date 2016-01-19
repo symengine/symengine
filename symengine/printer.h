@@ -12,9 +12,7 @@ enum class PrecedenceEnum {
 class Precedence : public BaseVisitor<Precedence> {
 public:
     PrecedenceEnum precedence;
-    Precedence() : BaseVisitor<Precedence>(this) {
 
-    }
     void bvisit(const Add &x) {
         precedence = PrecedenceEnum::Add;
     }
@@ -126,6 +124,15 @@ public:
         }
     }
 
+#ifdef HAVE_SYMENGINE_PIRANHA
+    void bvisit(const URatPSeriesPiranha &x) {
+        precedence = PrecedenceEnum::Add;
+    }
+
+    void bvisit(const UPSeriesPiranha &x) {
+        precedence = PrecedenceEnum::Add;
+    }
+#endif
     void bvisit(const ComplexDouble &x) {
         precedence = PrecedenceEnum::Add;
     }
@@ -155,10 +162,9 @@ public:
 };
 
 class StrPrinter : public BaseVisitor<StrPrinter> {
-private:
+protected:
     std::string str_;
 public:
-    StrPrinter();
     static const std::vector<std::string> names_;
     void bvisit(const Basic &x);
     void bvisit(const Symbol &x);
@@ -170,6 +176,10 @@ public:
     void bvisit(const Pow &x);
     void bvisit(const UnivariatePolynomial &x);
     void bvisit(const Polynomial &x);
+#ifdef HAVE_SYMENGINE_PIRANHA
+    void bvisit(const URatPSeriesPiranha &x);
+    void bvisit(const UPSeriesPiranha &x);
+#endif
     void bvisit(const Log &x);
     void bvisit(const Constant &x);
     void bvisit(const Function &x);
