@@ -7,17 +7,16 @@
 namespace SymEngine {
 
 // Constructors
-DenseMatrix::DenseMatrix()
-        : MatrixBase() {}
+DenseMatrix::DenseMatrix() {}
 
 DenseMatrix::DenseMatrix(unsigned row, unsigned col)
-        : MatrixBase(row, col)
+        : row_(row), col_(col)
 {
     m_ = std::vector<RCP<const Basic>>(row*col);
 }
 
 DenseMatrix::DenseMatrix(unsigned row, unsigned col, const vec_basic &l)
-        : MatrixBase(row, col), m_{l}
+        : m_{l}, row_(row), col_(col)
 {
     SYMENGINE_ASSERT(m_.size() == row*col)
 }

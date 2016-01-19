@@ -8,11 +8,10 @@
 
 namespace SymEngine {
 // ----------------------------- CSRMatrix ------------------------------------
-CSRMatrix::CSRMatrix()
-        : MatrixBase() {}
+CSRMatrix::CSRMatrix() {}
 
 CSRMatrix::CSRMatrix(unsigned row, unsigned col)
-        : MatrixBase(row, col)
+        : row_(row), col_(col)
 {
     p_ = std::vector<unsigned>(row + 1, 0);
     SYMENGINE_ASSERT(is_canonical());
@@ -20,7 +19,7 @@ CSRMatrix::CSRMatrix(unsigned row, unsigned col)
 
 CSRMatrix::CSRMatrix(unsigned row, unsigned col, std::vector<unsigned>&& p,
     std::vector<unsigned>&& j, vec_basic&& x)
-        : MatrixBase(row, col), p_{std::move(p)}, j_{std::move(j)}, x_{std::move(x)}
+        : p_{std::move(p)}, j_{std::move(j)}, x_{std::move(x)}, row_(row), col_(col)
 {
     SYMENGINE_ASSERT(is_canonical());
 }
