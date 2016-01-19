@@ -326,6 +326,108 @@ void StrPrinter::bvisit(const UPSeriesPiranha &x) {
 }
 #endif
 
+//Polynomial printing
+void StrPrinter::bvisit(const Polynomial &x) {
+    std::ostringstream s;
+    bool first = true;
+    int n_vars = x.vars_.size();
+    for (auto it = x.polys_set_.begin(); it != x.polys_set_.end();) {
+        int n_zero = 0, n_one = 0;
+#ifdef HAVE_SYMENGINE_PIRANHA
+        using ka = piranha::kronecker_array<long long>;
+        std::vector<long long> out(n_vars);
+        ka::decode(out, it->first);
+#else
+        vec_int out(n_vars);
+        out = vec_decode(it->first);
+#endif
+        for (auto &a: out) {
+            if (a == 0) {
+                n_zero++;
+            }
+            if (a == 1) {
+                n_one++;
+            }
+        }
+        if (it->second == 0) {
+            if (x.polys_set_.size() == 1)
+                s << "0";
+            ++it;
+        }
+#ifdef HAVE_SYMENGINE_PIRANHA
+        else if ((it->second).abs() == 1) {
+#else
+        else if ((abs(it->second)) == 1) {
+#endif
+            if (n_zero == n_vars) {
+                if (first)
+                    s << it->second;
+                else
+#ifdef HAVE_SYMENGINE_PIRANHA
+                    s << (it->second).abs();
+#else
+                    s << abs(it->second);
+#endif
+            } else {
+                if (first && it->second == -1) {
+                    s << "-";
+                    for (int i = 0; i < n_vars; i++){
+                        s << x.vars_[i]->__str__() << "**" << out[i];
+                        if (i != n_vars - 1) {
+                            s << "*";
+                        }
+                    }
+                } else {
+                    for (int i = 0; i < n_vars; i++){
+                        s << x.vars_[i]->__str__() << "**" << out[i];
+                        if (i != n_vars - 1) {
+                            s << "*";
+                        }
+                    }
+                }
+            }
+            if ((++it != x.polys_set_.end()) && (it->second != 0)) {
+                if (it->second < 0) {
+                    s << " - ";
+                } else {
+                    s << " + ";
+                }
+            }
+        }
+        else {
+            if (n_zero == n_vars) {
+                if (first)
+                    s << it->second;
+                else
+#ifdef HAVE_SYMENGINE_PIRANHA
+                    s << (it->second).abs();
+            } else {
+                s << (it->second).abs() << "*";
+#else
+                    s << abs(it->second);
+            } else {
+                s << abs(it->second) << "*";
+#endif
+                for (int i = 0; i < n_vars; i++){
+                    s << x.vars_[i]->__str__() << "**" << out[i];
+                    if (i != n_vars - 1) {
+                        s << "*";
+                    }
+                }
+            }
+            if ((++it != x.polys_set_.end()) && (it->second != 0)) {
+                if (it->second < 0) {
+                    s << " - ";
+                } else {
+                    s << " + ";
+                }
+            }
+        }
+        first = false;
+    }
+    str_ = s.str();
+}
+
 void StrPrinter::bvisit(const Log &x) {
     str_ = "log(" + this->apply(x.get_arg()) + ")";
 }

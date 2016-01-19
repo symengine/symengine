@@ -1,5 +1,6 @@
 #include <symengine/basic.h>
 #include <symengine/integer.h>
+#include <symengine/symbol.h>
 
 namespace SymEngine {
 
@@ -104,8 +105,63 @@ std::ostream& operator<<(std::ostream& out, const SymEngine::set_basic& d)
     return print_vec_rcp(out, d);
 }
 
+#if defined(HAVE_SYMENGINE_PIRANHA)
+std::ostream& operator<<(std::ostream& out, const SymEngine::hash_set& d)
+{
+    return print_map(out, d);
+}
+#endif
 
 namespace SymEngine {
+
+#if defined(HAVE_SYMENGINE_PIRANHA)
+bool hash_set_eq(const hash_set &a,
+        const hash_set &b)
+{
+    // Can't be equal if # of elements in set differ:
+    if (a.size() != b.size()) return false;
+    // Loop over elements in "a":
+    for (auto &p: a) {
+        auto f = b.find(p);
+        if (f == b.end()) return false; // no such element in "b"
+    }
+    return true;
+}
+
+#else
+bool unordered_set_eq(const unordered_set &a,
+        const unordered_set &b)
+{
+    // Can't be equal if # of elements in set differ:
+    if (a.size() != b.size()) return false;
+    // Loop over elements in "a":
+    for (auto &p: a) {
+        auto f = b.find(p);
+        if (f == b.end()) return false; // no such element in "b"
+    }
+    return true;
+}
+
+long long vec_encode(const vec_int &v) {
+    long long retval = 0;
+    int i = 1;
+    for(auto &a: v) {
+        retval += a*i;
+        i *= 10;
+    }
+    return retval;
+}
+
+vec_int vec_decode(const int code) {
+    vec_int v = {0};
+    int n = code;
+    while(n > 0) {
+        v.push_back(n % 10);
+        n = n/10;
+    }
+    return v;
+}
+#endif
 
 bool vec_basic_eq(const vec_basic &a, const vec_basic &b)
 {
@@ -114,6 +170,17 @@ bool vec_basic_eq(const vec_basic &a, const vec_basic &b)
     // Loop over elements in "a" and "b":
     for (size_t i = 0; i < a.size(); i++) {
         if (neq(*a[i], *b[i])) return false; // values not equal
+    }
+    return true;
+}
+
+bool vec_symbol_eq(const vec_symbol &a, const vec_symbol &b)
+{
+    // Can't be equal if # of entries differ:
+    if (a.size() != b.size()) return false;
+    // Loop over elements in "a" and "b":
+    for (size_t i = 0; i < a.size(); i++) {
+        if (a[i]->get_name() != b[i]->get_name()) return false; // values not equal
     }
     return true;
 }
@@ -195,6 +262,23 @@ bool set_eq(const T &A, const T &B)
     }
     return true;
 }
+
+#if defined(HAVE_SYMENGINE_PIRANHA)
+int hash_set_compare(const hash_set &A, const hash_set &B)
+{
+    if (A.size() != B.size())
+        return (A.size() < B.size()) ? -1 : 1;
+    auto a = A.begin();
+    auto b = B.begin();
+    for (; a != A.end(); ++a, ++b) {
+        if ((*a).first != (*b).first)
+            return ((*a).first < (*b).first) ? -1 : 1;
+        if ((*a).second != (*b).second)
+            return ((*a).second < (*b).second) ? -1 : 1;
+    }
+    return 0;
+}
+#endif
 
 template<class T>
 int set_compare(const T &A, const T &B)

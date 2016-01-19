@@ -401,6 +401,11 @@ static RCP<const Basic> diff(const CLASS &self, \
             return zero;
         }
     }
+
+    static RCP<const Basic> diff(const Polynomial &self,
+            const RCP<const Symbol> &x) {
+        throw::std::runtime_error("Not Implemented");
+    }
 };
 
 #define IMPLEMENT_DIFF(CLASS) \

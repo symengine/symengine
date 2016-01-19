@@ -48,6 +48,50 @@ public:
         }
     }
 
+    void bvisit(const Polynomial &x) {
+        if (x.polys_set_.size() == 1) {
+            auto it = x.polys_set_.begin();
+            int n_vars = x.vars_.size();
+            int n_zero = 0, n_one = 0;
+#ifdef HAVE_SYMENGINE_PIRANHA
+            using ka = piranha::kronecker_array<long long>;
+            std::vector<long long> out(n_vars);
+            ka::decode(out, it->first);
+#else
+            vec_int out(n_vars);
+            out = vec_decode(it->first);
+#endif
+            for (auto &a: out) {
+                if (a == 0) {
+                    n_zero++;
+                }
+                if (a == 1) {
+                    n_one++;
+                }
+            }
+            if (it->second == 0) {
+                precedence = PrecedenceEnum::Atom;
+            } 
+            else if (it->second == 1) {
+                if (n_zero == n_vars || ((n_zero == n_vars -1) && (n_one == 1))) {
+                    precedence = PrecedenceEnum::Atom;
+                } else if (n_zero == n_vars -1) {
+                    precedence = PrecedenceEnum::Pow;
+                } else {
+                    precedence = PrecedenceEnum::Mul;
+                }
+            } else {
+                if (n_zero == n_vars) {
+                    precedence = PrecedenceEnum::Atom;
+                } else {
+                    precedence = PrecedenceEnum::Mul;
+                }
+            }
+        } else {
+            precedence = PrecedenceEnum::Add;
+        }
+    }
+
     void bvisit(const Rational &x) {
         precedence = PrecedenceEnum::Add;
     }
@@ -131,6 +175,7 @@ public:
     void bvisit(const Mul &x);
     void bvisit(const Pow &x);
     void bvisit(const UnivariatePolynomial &x);
+    void bvisit(const Polynomial &x);
 #ifdef HAVE_SYMENGINE_PIRANHA
     void bvisit(const URatPSeriesPiranha &x);
     void bvisit(const UPSeriesPiranha &x);
