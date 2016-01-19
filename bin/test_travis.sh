@@ -99,7 +99,7 @@ echo "Checking whether all header files are installed:"
 python $SOURCE_DIR/symengine/utilities/tests/test_make_install.py $our_install_dir/include/symengine/ $SOURCE_DIR/symengine
 
 # check trailing whitespace:
-if !  egrep " $" -nr --include=\*.{cpp,h,inc}  --exclude-dir=*teuchos* $SOURCE_DIR ; then
+if !  egrep " $" -nr --include=\*.{cpp,h,inc}  --exclude-dir=*{teuchos,/build/}* $SOURCE_DIR ; then
     echo No trailing whitespace;
 else
     exit -1;
