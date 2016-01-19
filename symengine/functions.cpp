@@ -1404,6 +1404,11 @@ RCP<const Number> FunctionWrapper::eval(long bits) const
     throw std::runtime_error("Not Implemented.");
 }
 
+RCP<const Number> FunctionWrapper::eval(long bits) const
+{
+    throw std::runtime_error("Not Implemented.");
+}
+
 /* ---------------------------- */
 
 Derivative::Derivative(const RCP<const Basic> &arg, const multiset_basic &x)

@@ -1948,7 +1948,7 @@ public :
             return make_rcp<MySin>(v[0]);
         }
     }
-    RCP<const Basic> diff(const RCP<const Symbol> &x) const {
+    RCP<const Basic> diff_impl(const RCP<const Symbol> &x) const {
         return mul(cos(arg_[0]), arg_[0]->diff(x));
     }
 };
@@ -1956,20 +1956,20 @@ public :
 TEST_CASE("FunctionWrapper: functions", "[functions]")
 {
     RCP<const Symbol> x = symbol("x");
-    RCP<const Basic> e = make_rcp<MySin>(x);
+    RCP<const Basic> e = add(one, make_rcp<MySin>(x));
     RCP<const Basic> f;
 
     f = e->subs({{x, integer(0)}});
-    REQUIRE(eq(*f, *zero));
+    REQUIRE(eq(*f, *one));
 
     f = e->diff(x);
     REQUIRE(eq(*f, *cos(x)));
 
     f = e->subs({{x, integer(1)}});
     double d = eval_double(*f);
-    REQUIRE(std::fabs(d - 0.84147098480789) < 1e-12);
+    REQUIRE(std::fabs(d - 1.84147098480789) < 1e-12);
 
-    REQUIRE(e->__str__() == "MySin(x)");
+    REQUIRE(e->__str__() == "1 + MySin(x)");
 }
 /* ---------------------------- */
 

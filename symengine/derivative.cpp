@@ -43,7 +43,6 @@ static RCP<const Basic> diff(const CLASS &self, \
     DIFF0(UnivariateSeries)
     DIFF0(KroneckerDelta)
     DIFF0(Dirichlet_eta)
-    DIFF0(FunctionWrapper)
     DIFF0(UpperGamma)
     DIFF0(LowerGamma)
     DIFF0(Beta)
@@ -401,6 +400,12 @@ static RCP<const Basic> diff(const CLASS &self, \
             return zero;
         }
     }
+
+    static RCP<const Basic> diff(const FunctionWrapper &self,
+            const RCP<const Symbol> &x) {
+        return self.diff_impl(x);
+    }
+
 };
 
 #define IMPLEMENT_DIFF(CLASS) \
