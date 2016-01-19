@@ -1732,9 +1732,12 @@ TEST_CASE("Gamma: functions", "[functions]")
     RCP<const Basic> i3 = integer(3);
     RCP<const Basic> im1 = integer(-1);
     RCP<const Basic> sqrt_pi = sqrt(pi);
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
 
     RCP<const Basic> r1;
     RCP<const Basic> r2;
+    RCP<const Basic> r3;
 
     r1 = gamma(one);
     r2 = one;
@@ -1758,6 +1761,27 @@ TEST_CASE("Gamma: functions", "[functions]")
 
     r1 = gamma(div(integer(-15), i2));
     r2 = mul(div(integer(256), integer(2027025)), sqrt(pi));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = gamma(x)->diff(y);
+    REQUIRE(eq(*r1, *zero));
+
+    r1 = gamma(x)->diff(x);
+    r2 = mul(gamma(x), polygamma(zero, x));
+    REQUIRE(eq(*r1, *r2));
+
+    r3 = add(mul(x, x), y);
+    r1 = gamma(r3)->diff(x);
+    r2 = mul(mul(gamma(r3), polygamma(zero, r3)), mul(i2, x));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = gamma(r3)->diff(y);
+    r2 = mul(gamma(r3), polygamma(zero, r3));
+    REQUIRE(eq(*r1, *r2));
+
+    r3 = sub(im1, x);
+    r1 = gamma(r3)->diff(x);
+    r2 = neg((mul(gamma(r3), polygamma(zero, r3))));
     REQUIRE(eq(*r1, *r2));
 }
 

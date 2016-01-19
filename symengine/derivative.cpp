@@ -46,7 +46,6 @@ static RCP<const Basic> diff(const CLASS &self, \
     DIFF0(FunctionWrapper)
     DIFF0(UpperGamma)
     DIFF0(LowerGamma)
-    DIFF0(Gamma)
     DIFF0(Beta)
     DIFF0(PolyGamma)
     DIFF0(LeviCivita)
@@ -381,6 +380,12 @@ static RCP<const Basic> diff(const CLASS &self, \
         return mul(div(pow(self.get_den(), i2), add(pow(self.get_den(), i2),
             pow(self.get_num(), i2))), div(self.get_num(),
             self.get_den())->diff(x));
+    }
+
+    static RCP<const Basic> diff(const Gamma &self,
+            const RCP<const Symbol> &x) {
+        RCP<const Basic> gamma_arg = self.get_args()[0];
+        return mul(mul(self.rcp_from_this(), polygamma(zero, gamma_arg)), gamma_arg->diff(x));
     }
 
     static RCP<const Basic> diff(const UnivariatePolynomial &self,
