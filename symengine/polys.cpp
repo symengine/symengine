@@ -161,14 +161,7 @@ int Polynomial::compare(const Basic &o) const
 //TODO
 vec_basic Polynomial::get_args() const
 {
-    vec_basic args;
-    return args;
-}
-
-//TODO
-RCP<const Basic> Polynomial::diff(const RCP<const Symbol> &x) const
-{
-    return x;
+    throw::std::runtime_error("Not Implemented");
 }
 
 RCP<const Polynomial> add_poly(const Polynomial &a, const Polynomial &b) {
