@@ -13,19 +13,20 @@
 #include <stack>
 #include <map>
 #include <set>
+#include <string>
 
 namespace SymEngine {
 
 class expressionParser
 {
-    std::set<char> OPERATORS = {'-', '+', '*', '/', '^', '(', ')'};
-    std::map<char, int> opPrecedence =   {
-                                    {')', 0}, {'-', 1},  {'+', 1},
+    std::set<char> OPERATORS = {'-', '+', '*', '/', '^', '(', ')', ','};
+    std::map<char, int> op_precedence =   {
+                                    {')', 0}, {',', 0}, {'-', 1},  {'+', 1},
                                     {'*', 3}, {'/', 4}, {'^', 5}
                                     };
-    std::vector<int> operatorClose;
-    std::string S;
-    unsigned int Slen;
+    std::vector<int> operator_end;
+    std::string s;
+    unsigned int s_len;
 
 public:
 
@@ -40,7 +41,7 @@ public:
         {
             if (is_operator(iter))
             {
-                if (S[iter] != '(')
+                if (s[iter] != '(')
                 {
                     if (!result_set)
                     {
@@ -51,33 +52,34 @@ public:
                     }
                 }
 
-                switch(S[iter])
+                switch(s[iter])
                 {
                     case '+':
-                        result = add(result, parse_string(iter+1, operatorClose[iter]));
-                        iter = operatorClose[iter]-1;
+                        result = add(result, parse_string(iter+1, operator_end[iter]));
+                        iter = operator_end[iter]-1;
                         break;
                     case '*':
-                        result = mul(result, parse_string(iter+1, operatorClose[iter]));
-                        iter = operatorClose[iter]-1;
+                        result = mul(result, parse_string(iter+1, operator_end[iter]));
+                        iter = operator_end[iter]-1;
                         break;
                     case '-':
-                        result = sub(result, parse_string(iter+1, operatorClose[iter]));
-                        iter = operatorClose[iter]-1;
+                        result = sub(result, parse_string(iter+1, operator_end[iter]));
+                        iter = operator_end[iter]-1;
                         break;
                     case '/':
-                        result = div(result, parse_string(iter+1, operatorClose[iter]));
-                        iter = operatorClose[iter]-1;
+                        result = div(result, parse_string(iter+1, operator_end[iter]));
+                        iter = operator_end[iter]-1;
                         break;
                     case '^':
-                        result = pow(result, parse_string(iter+1, operatorClose[iter]));
-                        iter = operatorClose[iter]-1;
+                        result = pow(result, parse_string(iter+1, operator_end[iter]));
+                        iter = operator_end[iter]-1;
                         break;
                     case '(':
                         result = functionify(iter, expr);
-                        iter = operatorClose[iter]-1;
                         break;
                     case ')':
+                        continue;
+                    case ',':
                         continue;
                 }
 
@@ -86,9 +88,9 @@ public:
             }
             else
             {
-                expr += S[iter];
+                expr += s[iter];
 
-                int ascii = S[iter] - '0';
+                int ascii = s[iter] - '0';
                 if (ascii < 0 or ascii > 9)
                     expr_is_symbol = true;
 
@@ -105,67 +107,73 @@ public:
         return result;
     }
 
-    RCP<const Basic> parse(std::string &s)
+    RCP<const Basic> parse(std::string &in)
     {
-        std::stack<unsigned int> rBracket;
-        std::stack<std::pair<int, unsigned int> > opStack;
-        S = "";
+        std::stack<unsigned int> right_bracket;
+        std::stack<std::pair<int, unsigned int> > op_stack;
+        s = "";
 
-        for (unsigned int i = 0; i < s.length(); ++i)
+        for (unsigned int i = 0; i < in.length(); ++i)
         {
-            if (s[i] == ' ')
+            if (in[i] == ' ')
                 continue;
-            S += s[i];
+            s += in[i];
         }
 
-        Slen = S.length();
-        operatorClose.clear();
-        operatorClose.resize(Slen);
-        opStack.push(std::make_pair(-1, Slen));
+        s_len = s.length();
+        operator_end.clear();
+        operator_end.resize(s_len);
+        op_stack.push(std::make_pair(-1, s_len));
 
-        for (int i = Slen-1; i >= 0; i--)
+        for (int i = s_len-1; i >= 0; i--)
         {
             if (is_operator(i))
             {
-                char x = S[i];
+                char x = s[i];
                 if(x == '(')
                 {
-                    while(opStack.top().second != rBracket.top())
-                        opStack.pop();
-                    operatorClose[i] = rBracket.top();
-                    rBracket.pop();
-                    opStack.pop();
+                    while(op_stack.top().second != right_bracket.top())
+                        op_stack.pop();
+                    operator_end[i] = right_bracket.top();
+                    right_bracket.pop();
+                    op_stack.pop();
                 }
-                else if(x == ')')
-                {
-                    opStack.push(std::make_pair(opPrecedence[x], i));
-                    rBracket.push(i);
+                else if(x == ')' or x == ',')
+                {   
+                    if (x == ',')
+                    {
+                        operator_end[i] = right_bracket.top();
+                        right_bracket.pop();
+                    }
+                    op_stack.push(std::make_pair(op_precedence[x], i));
+                    right_bracket.push(i);
                 }
                 else
                 {
-                    while(opPrecedence[x] < opStack.top().first)
-                        opStack.pop();
+                    while(op_precedence[x] < op_stack.top().first)
+                        op_stack.pop();
 
-                    operatorClose[i] = opStack.top().second;
-                    opStack.push(std::make_pair(opPrecedence[x], i));
+                    operator_end[i] = op_stack.top().second;
+                    op_stack.push(std::make_pair(op_precedence[x], i));
                 }
             }
         }
-        return parse_string(0, Slen);
+        return parse_string(0, s_len);
     }
 
     bool is_operator(int iter)
     {
-        if (iter >= 0 and iter < (int)Slen)
-            if (OPERATORS.find(S[iter]) != OPERATORS.end())
+        if (iter >= 0 and iter < (int)s_len)
+            if (OPERATORS.find(s[iter]) != OPERATORS.end())
                 return true;
         return false;
     }
 
-    RCP<const Basic> functionify(unsigned int iter, std::string expr)
+    RCP<const Basic> functionify(unsigned int& iter, std::string expr)
     {
-        RCP<const Basic> inner = parse_string(iter+1, operatorClose[iter]);
+        RCP<const Basic> inner = parse_string(iter+1, operator_end[iter]);
 
+        iter = operator_end[iter]-1;
         if(expr == "") return inner;
         if(expr == "sin") return sin(inner);
 
