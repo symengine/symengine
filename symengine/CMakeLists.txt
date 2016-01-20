@@ -39,6 +39,7 @@ set(SRC
     expression.cpp
     numer_denom.cpp
     derivative.cpp
+    parser.cpp
 )
 
 if (WITH_MPFR)
