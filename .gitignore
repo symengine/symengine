@@ -56,6 +56,7 @@ symengine/tests/basic/test_poly
 symengine/tests/basic/test_polynomial
 symengine/tests/basic/test_series
 symengine/tests/basic/test_series_expansion
+symengine/tests/basic/test_series_generic
 symengine/tests/basic/test_subs
 symengine/tests/basic/test_rational
 symengine/tests/basic/test_as_numer_denom

@@ -1,7 +1,7 @@
 #include <exception>
 #include <algorithm>
 #include <iterator>
-#include <symengine/series.h>
+#include <symengine/series_generic.h>
 #include <symengine/dict.h>
 
 using SymEngine::RCP;

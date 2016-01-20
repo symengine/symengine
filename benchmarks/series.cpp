@@ -1,7 +1,7 @@
 #include <iostream>
 #include <chrono>
 
-#include <symengine/series.h>
+#include <symengine/series_generic.h>
 
 using SymEngine::Basic;
 using SymEngine::Symbol;
