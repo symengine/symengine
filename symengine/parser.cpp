@@ -11,17 +11,6 @@
 #include <symengine/visitor.h>
 #include <bits/stdc++.h>
 
-/*
-operator before any char (error)
-handle negative (-3*(-4))
-handle symbols? (how)
-handle all types of errors
-handle functions
-handle constants
-handle rationals/doubles entered
-give "not simplify" option
-*/
-
 namespace SymEngine {
 
 class expressionParser
@@ -39,16 +28,24 @@ public:
     {
         RCP<const Basic> result;
         bool result_set = false;
+        bool expr_is_symbol = false;
         std::string expr;
 
         for (uint iter = l; iter < h; ++iter)
         {
-            if (OPERATORS.find(s[iter]) != OPERATORS.end())
+            if (is_operator(s, iter))
             {
                 if (s[iter] != '(')
+                {
                     if (!result_set)
-                        result = integer(std::stoi(expr));
-                
+                    {
+                        if (expr_is_symbol)
+                            result = symbol(expr);
+                        else
+                            result = integer(std::stoi(expr));
+                    }
+                }
+
                 switch(s[iter])
                 {
                     case '+':
@@ -79,13 +76,23 @@ public:
                         continue;
                 }
                 result_set = true;
+                expr_is_symbol = false;
             }
             else
             {
                 expr += s[iter];
 
+                int ascii = s[iter] - '0';
+                if (ascii < 0 or ascii > 9)
+                    expr_is_symbol = true;
+
                 if (iter == h-1)
-                    result = integer(std::stoi(expr));
+                {
+                    if (expr_is_symbol)
+                        result = symbol(expr);
+                    else
+                        result = integer(std::stoi(expr));
+                }
             }
         }
 
@@ -95,7 +102,6 @@ public:
     RCP<const Basic> parse(std::string &s)
     {
         std::string copy;
-        char x;
         std::stack<uint> rBracket;
         std::stack<std::pair<int, uint> > opStack;
 
@@ -113,9 +119,9 @@ public:
 
         for (int i = newLength-1; i >= 0; i--)
         {
-            x = copy[i];
-            if (OPERATORS.find(x) != OPERATORS.end())
-            {   
+            if (is_operator(copy, i))
+            {
+                char x = copy[i];
                 if(x == '(')
                 {
                     while(opStack.top().second != rBracket.top())
@@ -127,7 +133,7 @@ public:
                 else if(x == ')')
                 {
                     opStack.push(std::make_pair(opPrecedence[x], i));
-                    rBracket.push(i);           
+                    rBracket.push(i);
                 }
                 else
                 {
@@ -140,6 +146,14 @@ public:
             }
         }
         return parse_string(copy, 0, newLength);
+    }
+
+    bool is_operator(std::string& s, int iter)
+    {
+        if (iter >= 0 and iter < (int)s.length())
+            if (OPERATORS.find(s[iter]) != OPERATORS.end())
+                return true;
+        return false;
     }
 };
 

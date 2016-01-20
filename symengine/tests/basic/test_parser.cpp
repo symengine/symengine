@@ -42,7 +42,7 @@ TEST_CASE("Parsing: integers, basic operations", "[parser]")
     s = "((3)+(1*0))";
     res = p.parse(s);
     REQUIRE(eq(*res, *integer(3)));
-    
+
     s = "((2))*(1+(2*3))";
     res = p.parse(s);
     REQUIRE(eq(*res, *integer(14)));
@@ -82,4 +82,43 @@ TEST_CASE("Parsing: integers, basic operations", "[parser]")
     s = "(1+2*(3+1)-5/(2+2))";
     res = p.parse(s);
     REQUIRE(eq(*res, *add(integer(9), div(integer(-5), integer(4)))));
+}
+
+TEST_CASE("Parsing: symbols", "[parser]")
+{
+    std::string s;
+    expressionParser p;
+    RCP<const Basic> res;
+    RCP<const Basic> x = symbol("x");
+    RCP<const Basic> y = symbol("y");
+    RCP<const Basic> w = symbol("w1");
+    RCP<const Basic> l = symbol("l0ngn4me");
+
+    s = "x + 2*y";
+    res = p.parse(s);
+    REQUIRE(eq(*res, *add(x, mul(integer(2), y))));
+
+    s = "w1*y";
+    res = p.parse(s);
+    REQUIRE(eq(*res, *mul(w ,y)));
+
+    s = "x^(3+w1)-2/y";
+    res = p.parse(s);
+    REQUIRE(eq(*res, *add(pow(x, add(integer(3), w)), div(integer(-2), y))));
+
+    s = "l0ngn4me - w1*y + 2^(x)";
+    res = p.parse(s);
+    REQUIRE(eq(*res, *add(add(l, neg(mul(w, y))), pow(integer(2), x))));
+
+    s = "4*x/8 - (w1*y)";
+    res = p.parse(s);
+    REQUIRE(eq(*res, *add(neg(mul(w, y)), div(x, integer(2)))));
+
+    s = "3*y + (2*y)";
+    res = p.parse(s);
+    REQUIRE(eq(*res, *mul(y, integer(5))));
+
+    s = "3*y/(1+x)";
+    res = p.parse(s);
+    REQUIRE(eq(*res, *div(mul(y, integer(3)), add(x, integer(1)))));
 }
