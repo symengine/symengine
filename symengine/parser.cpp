@@ -9,7 +9,10 @@
 #include <symengine/functions.h>
 #include <symengine/constants.h>
 #include <symengine/visitor.h>
-#include <bits/stdc++.h>
+#include <vector>
+#include <stack>
+#include <map>
+#include <set>
 
 namespace SymEngine {
 
@@ -21,21 +24,23 @@ class expressionParser
                                     {'*', 3}, {'/', 4}, {'^', 5}
                                     };
     std::vector<int> operatorClose;
+    std::string S;
+    unsigned int Slen;
 
 public:
 
-    RCP<const Basic> parse_string(std::string &s, uint l, uint h)
+    RCP<const Basic> parse_string(unsigned int l, unsigned int h)
     {
         RCP<const Basic> result;
         bool result_set = false;
         bool expr_is_symbol = false;
         std::string expr;
 
-        for (uint iter = l; iter < h; ++iter)
+        for (unsigned int iter = l; iter < h; ++iter)
         {
-            if (is_operator(s, iter))
+            if (is_operator(iter))
             {
-                if (s[iter] != '(')
+                if (S[iter] != '(')
                 {
                     if (!result_set)
                     {
@@ -46,43 +51,44 @@ public:
                     }
                 }
 
-                switch(s[iter])
+                switch(S[iter])
                 {
                     case '+':
-                        result = add(result, parse_string(s, iter+1, operatorClose[iter]));
-                        iter = operatorClose[iter]-1;
-                        break;
-                    case '(':
-                        result = parse_string(s, iter+1, operatorClose[iter]);
+                        result = add(result, parse_string(iter+1, operatorClose[iter]));
                         iter = operatorClose[iter]-1;
                         break;
                     case '*':
-                        result = mul(result, parse_string(s, iter+1, operatorClose[iter]));
+                        result = mul(result, parse_string(iter+1, operatorClose[iter]));
                         iter = operatorClose[iter]-1;
                         break;
                     case '-':
-                        result = sub(result, parse_string(s, iter+1, operatorClose[iter]));
+                        result = sub(result, parse_string(iter+1, operatorClose[iter]));
                         iter = operatorClose[iter]-1;
                         break;
                     case '/':
-                        result = div(result, parse_string(s, iter+1, operatorClose[iter]));
+                        result = div(result, parse_string(iter+1, operatorClose[iter]));
                         iter = operatorClose[iter]-1;
                         break;
                     case '^':
-                        result = pow(result, parse_string(s, iter+1, operatorClose[iter]));
+                        result = pow(result, parse_string(iter+1, operatorClose[iter]));
+                        iter = operatorClose[iter]-1;
+                        break;
+                    case '(':
+                        result = functionify(iter, expr);
                         iter = operatorClose[iter]-1;
                         break;
                     case ')':
                         continue;
                 }
+
                 result_set = true;
                 expr_is_symbol = false;
             }
             else
             {
-                expr += s[iter];
+                expr += S[iter];
 
-                int ascii = s[iter] - '0';
+                int ascii = S[iter] - '0';
                 if (ascii < 0 or ascii > 9)
                     expr_is_symbol = true;
 
@@ -101,27 +107,27 @@ public:
 
     RCP<const Basic> parse(std::string &s)
     {
-        std::string copy;
-        std::stack<uint> rBracket;
-        std::stack<std::pair<int, uint> > opStack;
+        std::stack<unsigned int> rBracket;
+        std::stack<std::pair<int, unsigned int> > opStack;
+        S = "";
 
-        for (uint i = 0; i < s.length(); ++i)
+        for (unsigned int i = 0; i < s.length(); ++i)
         {
             if (s[i] == ' ')
                 continue;
-            copy += s[i];
+            S += s[i];
         }
 
-        uint newLength = copy.length();
+        Slen = S.length();
         operatorClose.clear();
-        operatorClose.resize(newLength);
-        opStack.push(std::make_pair(-1, newLength));
+        operatorClose.resize(Slen);
+        opStack.push(std::make_pair(-1, Slen));
 
-        for (int i = newLength-1; i >= 0; i--)
+        for (int i = Slen-1; i >= 0; i--)
         {
-            if (is_operator(copy, i))
+            if (is_operator(i))
             {
-                char x = copy[i];
+                char x = S[i];
                 if(x == '(')
                 {
                     while(opStack.top().second != rBracket.top())
@@ -145,15 +151,25 @@ public:
                 }
             }
         }
-        return parse_string(copy, 0, newLength);
+        return parse_string(0, Slen);
     }
 
-    bool is_operator(std::string& s, int iter)
+    bool is_operator(int iter)
     {
-        if (iter >= 0 and iter < (int)s.length())
-            if (OPERATORS.find(s[iter]) != OPERATORS.end())
+        if (iter >= 0 and iter < (int)Slen)
+            if (OPERATORS.find(S[iter]) != OPERATORS.end())
                 return true;
         return false;
+    }
+
+    RCP<const Basic> functionify(unsigned int iter, std::string expr)
+    {
+        RCP<const Basic> inner = parse_string(iter+1, operatorClose[iter]);
+
+        if(expr == "") return inner;
+        if(expr == "sin") return sin(inner);
+
+        throw std::runtime_error("Unknown function " + expr);
     }
 };
 

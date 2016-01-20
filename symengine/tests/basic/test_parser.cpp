@@ -122,3 +122,16 @@ TEST_CASE("Parsing: symbols", "[parser]")
     res = p.parse(s);
     REQUIRE(eq(*res, *div(mul(y, integer(3)), add(x, integer(1)))));
 }
+
+TEST_CASE("Parsing: functions", "[parser]")
+{
+    std::string s;
+    expressionParser p;
+    RCP<const Basic> res;
+    RCP<const Basic> x = symbol("x");
+    RCP<const Basic> y = symbol("y");
+
+    s = "sin(x)";
+    res = p.parse(s);
+    REQUIRE(eq(*res, *sin(x)));
+}
