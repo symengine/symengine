@@ -14,39 +14,31 @@
 
 namespace SymEngine {
 
-umap_int_basic series(const RCP<const Basic> &ex, const RCP<const Symbol> &var, unsigned int prec)
+RCP<const SeriesCoeffInterface> series(const RCP<const Basic> &ex, const RCP<const Symbol> &var, unsigned int prec)
 {
 #ifdef HAVE_SYMENGINE_PIRANHA
     if (prec == 0)
-        return {{0, zero}};
+        return make_rcp<const UPSeriesPiranha>(p_expr{Expression()}, var->get_name(), prec);
     if (not has_symbol(*ex, var))
-        return {{0, ex}};
+        return make_rcp<const UPSeriesPiranha>(p_expr{Expression(ex)}, var->get_name(), prec);
     if (is_a<Symbol>(*ex))
-        return {{0, ex}};
+        return make_rcp<const UPSeriesPiranha>(p_expr{Expression(ex)}, var->get_name(), prec);
 
-    auto ser = UPSeriesPiranha::series(ex, var->get_name(), prec);
-    return ser->as_dict();
+    return UPSeriesPiranha::series(ex, var->get_name(), prec);
 #else
     throw std::runtime_error("Series expansion is supported only with Piranha");
 #endif
 }
 
-umap_int_basic series_invfunc(const RCP<const Basic> &ex, const RCP<const Symbol> &var, unsigned int prec)
+RCP<const SeriesCoeffInterface> series_invfunc(const RCP<const Basic> &ex, const RCP<const Symbol> &var, unsigned int prec)
 {
 #ifdef HAVE_SYMENGINE_PIRANHA
     if (prec == 0)
-        return {{0, zero}};
+        return make_rcp<const UPSeriesPiranha>(p_expr{Expression()}, var->get_name(), prec);
     if (is_a<Symbol>(*ex))
-        return {{0, ex}};
+        return make_rcp<const UPSeriesPiranha>(p_expr{Expression(ex)}, var->get_name(), prec);
 
-    auto poly = UPSeriesPiranha::series_reverse(UPSeriesPiranha::series(ex, var->get_name(), prec)->p_, p_expr(var->get_name()), prec);
-    umap_int_basic map;
-    for (const auto& it : poly) {
-        if (it.first != 0) {
-            map[it.second.degree()] = it.first.get_basic();
-        }
-    }
-    return map;
+    return make_rcp<const UPSeriesPiranha>(UPSeriesPiranha::series_reverse(UPSeriesPiranha::series(ex, var->get_name(), prec)->p_, p_expr(var->get_name()), prec), var->get_name(), prec);
 
 #else
     throw std::runtime_error("Series expansion is supported only with Piranha");

@@ -15,14 +15,14 @@
 
 namespace SymEngine {
 
-class SeriesCoeffInterface {
+class SeriesCoeffInterface : public Number {
     virtual RCP<const Basic> as_basic() const =0;
     virtual umap_int_basic as_dict() const =0;
     virtual RCP<const Basic> get_coeff(int) const =0;
 };
 
 template <typename Poly, typename Coeff, typename Series>
-class SeriesBase : public Number, SeriesCoeffInterface {
+class SeriesBase : public SeriesCoeffInterface {
 public:
     Poly p_;
     std::string var_;
@@ -545,9 +545,9 @@ public:
     }
 };
 
-umap_int_basic series(const RCP<const Basic> &ex, const RCP<const Symbol> &var, unsigned int prec);
+RCP<const SeriesCoeffInterface> series(const RCP<const Basic> &ex, const RCP<const Symbol> &var, unsigned int prec);
 
-umap_int_basic series_invfunc(const RCP<const Basic> &ex, const RCP<const Symbol> &var, unsigned int prec);
+RCP<const SeriesCoeffInterface> series_invfunc(const RCP<const Basic> &ex, const RCP<const Symbol> &var, unsigned int prec);
 
 }  //SymEngine
 #endif
