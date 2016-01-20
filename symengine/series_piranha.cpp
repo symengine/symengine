@@ -70,7 +70,8 @@ RCP<const Basic> URatPSeriesPiranha::as_basic() const {
                 co_basic = make_rcp<const Integer>(cl_rat.get_num());
             else
                 co_basic = make_rcp<const Rational>(cl_rat);
-            Add::dict_add_term(dict_, co_basic, SymEngine::pow(x, SymEngine::integer(it.second.degree())));
+            auto term = SymEngine::mul(SymEngine::pow(x, SymEngine::integer(it.second.degree())), co_basic);
+            Add::coef_dict_add_term(outArg(co_basic), dict_, one, term);
         }
     }
     return std::move(Add::from_dict(one, std::move(dict_)));
@@ -206,11 +207,9 @@ RCP<const Basic> UPSeriesPiranha::as_basic() const {
     umap_basic_num dict_;
     for (const auto& it : p_) {
         if (it.first != 0) {
-            const RCP<const Basic> &term = SymEngine::mul(SymEngine::pow(x, SymEngine::integer(it. second.degree())), it.first.get_basic());
+            auto term = SymEngine::mul(it.first.get_basic(), SymEngine::pow(x, SymEngine::integer(it. second.degree())));
             RCP<const Number> coef;
-            RCP<const Basic> t;
-            Add::as_coef_term(term, outArg(coef), outArg(t));
-            Add::dict_add_term(dict_, coef, t);
+            Add::coef_dict_add_term(outArg(coef), dict_, one, term);
         }
     }
     return std::move(Add::from_dict(one, std::move(dict_)));
