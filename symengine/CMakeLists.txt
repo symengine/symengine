@@ -120,6 +120,11 @@ if (WITH_TCMALLOC)
         PUBLIC p::tcmalloc
         )
 endif()
+if (WITH_EXECINFO)
+    target_link_libraries(symengine
+        PUBLIC p::execinfo
+        )
+endif()
 
 
 install(TARGETS symengine

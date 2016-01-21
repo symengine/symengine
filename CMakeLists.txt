@@ -283,9 +283,13 @@ if (WITH_BFD)
 
     set(HAVE_TEUCHOS_EXECINFO yes)
     find_package(EXECINFO REQUIRED)
-    include_directories(${EXECINFO_INCLUDE_DIRS})
-    set(LIBS ${LIBS} ${EXECINFO_TARGETS})
-    set(PKGS ${PKGS} "BFD" "LINKH" "EXECINFO")
+    add_library(p::execinfo INTERFACE IMPORTED)
+    set_property(TARGET p::execinfo PROPERTY INTERFACE_INCLUDE_DIRECTORIES
+        ${EXECINFO_INCLUDE_DIR})
+    if (EXECINFO_LIBRARY)
+        set_property(TARGET p::execinfo PROPERTY INTERFACE_LINK_LIBRARIES
+            ${EXECINFO_LIBRARY})
+    endif()
 endif()
 
 # TCMalloc
