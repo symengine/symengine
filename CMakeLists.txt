@@ -275,13 +275,22 @@ set(WITH_BFD no
 
 if (WITH_BFD)
     find_package(BFD REQUIRED)
+    add_library(p::bfd INTERFACE IMPORTED)
+    set_property(TARGET p::bfd PROPERTY INTERFACE_INCLUDE_DIRECTORIES
+        ${BFD_INCLUDE_DIR})
+    set_property(TARGET p::bfd PROPERTY INTERFACE_LINK_LIBRARIES
+        ${BFD_LIBRARY})
+
     find_package(LINKH REQUIRED)
-    include_directories(${BFD_INCLUDE_DIRS} ${LINKH_INCLUDE_DIRS})
-    set(LIBS ${LIBS} ${BFD_TARGETS})
+    add_library(p::linkh INTERFACE IMPORTED)
+    set_property(TARGET p::linkh PROPERTY INTERFACE_INCLUDE_DIRECTORIES
+        ${LINKH_INCLUDE_DIR})
+
     set(HAVE_TEUCHOS_BFD yes)
     set(HAVE_TEUCHOS_LINK yes)
 
     set(HAVE_TEUCHOS_EXECINFO yes)
+
     find_package(EXECINFO REQUIRED)
     add_library(p::execinfo INTERFACE IMPORTED)
     set_property(TARGET p::execinfo PROPERTY INTERFACE_INCLUDE_DIRECTORIES
@@ -290,6 +299,9 @@ if (WITH_BFD)
         set_property(TARGET p::execinfo PROPERTY INTERFACE_LINK_LIBRARIES
             ${EXECINFO_LIBRARY})
     endif()
+
+    set_property(TARGET p::bfd APPEND PROPERTY INTERFACE_LINK_LIBRARIES
+        p::linkh p::execinfo)
 endif()
 
 # TCMalloc

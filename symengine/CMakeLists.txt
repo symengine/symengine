@@ -120,9 +120,9 @@ if (WITH_TCMALLOC)
         PUBLIC p::tcmalloc
         )
 endif()
-if (WITH_EXECINFO)
+if (WITH_BFD)
     target_link_libraries(symengine
-        PUBLIC p::execinfo
+        PUBLIC p::bfd
         )
 endif()
 
