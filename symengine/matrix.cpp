@@ -5,11 +5,11 @@ namespace SymEngine {
 std::string MatrixBase::__str__() const {
     std::ostringstream o;
 
-    for (unsigned i = 0; i < row_; i++) {
+    for (unsigned i = 0; i < nrows(); i++) {
         o << "[";
-        for (unsigned j = 0; j < col_ - 1; j++)
+        for (unsigned j = 0; j < ncols() - 1; j++)
             o << *this->get(i, j) << ", ";
-        o << *this->get(i, col_ - 1) << "]" << std::endl;
+        o << *this->get(i, ncols() - 1) << "]" << std::endl;
     }
 
     return o.str();

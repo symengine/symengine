@@ -225,12 +225,7 @@ TEST_CASE("test_printing(): printing", "[printing]")
 
     f = function_symbol("f", {x, y});
     r = f->diff(x)->diff(y);
-    r1 = Derivative::create(f, {x, y});
-    r2 = Derivative::create(f, {y, x});
     REQUIRE(r->__str__() == "Derivative(f(x, y), x, y)");
-    REQUIRE(r1->__str__() == "Derivative(f(x, y), x, y)");
-    REQUIRE(r2->__str__() == "Derivative(f(x, y), y, x)");
-
     r1 = Subs::create(Derivative::create(function_symbol("f", {y, x}), {x}), {{x, add(x, y)}});
     REQUIRE(r1->__str__() == "Subs(Derivative(f(y, x), x), (x), (x + y))");
 }

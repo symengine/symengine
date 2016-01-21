@@ -2,7 +2,7 @@
 #include <iostream>
 #include <chrono>
 
-#include <symengine/series.h>
+#include <symengine/series_generic.h>
 #include <symengine/mul.h>
 #include <symengine/pow.h>
 #include <symengine/dict.h>

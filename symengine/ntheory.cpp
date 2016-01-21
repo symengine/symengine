@@ -590,7 +590,7 @@ void Sieve::_extend(unsigned limit)
 void Sieve::generate_primes(std::vector<unsigned> &primes, unsigned limit)
 {
     _extend(limit);
-    std::vector<unsigned>::iterator it = std::upper_bound (_primes.begin(), _primes.end(), limit);
+    auto it = std::upper_bound (_primes.begin(), _primes.end(), limit);
     //find the first position greater than limit and reserve space for the primes
     primes.reserve(it - _primes.begin());
     std::copy(_primes.begin(), it, std::back_inserter(primes));
@@ -693,11 +693,10 @@ void _crt_cartesian(std::vector<RCP<const Integer>> &R, const std::vector<std::v
         mpz_invert(s.get_mpz_t(), m.get_mpz_t(), mod[i]->as_mpz().get_mpz_t());
         _m = m;
         m *= mod[i]->as_mpz();
-        for (unsigned j = 0; j < R.size(); j++) {
-            for (unsigned k = 0;
-            k < rem[i].size(); k++) {
-                r = R[j]->as_mpz();
-                r += _m * s * (rem[i][k]->as_mpz() - r);
+        for (auto & elem : R) {
+            for (auto & _k : rem[i]) {
+                r = elem->as_mpz();
+                r += _m * s * (_k->as_mpz() - r);
                 mpz_fdiv_r (r.get_mpz_t(), r.get_mpz_t(), m.get_mpz_t());
                 rem2.push_back(integer(r));
             }
@@ -1471,6 +1470,31 @@ void powermod_list(std::vector<RCP<const Integer>> &pows, const RCP<const Intege
         }
         r = integer(t);
         nthroot_mod_list(pows, r, den, m);
+    }
+}
+
+int mobius(const Integer &a)
+{
+    if (a.as_int() <= 0) {
+        throw std::runtime_error("mobius: Integer <= 0");
+    }
+    map_integer_uint prime_mul;
+    bool is_square_free = true;
+    prime_factor_multiplicities(prime_mul, a);
+    int num_prime_factors = prime_mul.size();
+    for (const auto &it: prime_mul) {
+        int p_freq = it.second;
+        if (p_freq > 1) {
+            is_square_free = false;
+            break;
+        }
+    }
+    if (!is_square_free) {
+        return 0;
+    } else if (num_prime_factors % 2 == 0) {
+        return 1;
+    } else {
+        return -1;
     }
 }
 

@@ -46,7 +46,6 @@ static RCP<const Basic> diff(const CLASS &self, \
     DIFF0(FunctionWrapper)
     DIFF0(UpperGamma)
     DIFF0(LowerGamma)
-    DIFF0(Gamma)
     DIFF0(Beta)
     DIFF0(PolyGamma)
     DIFF0(LeviCivita)
@@ -166,10 +165,25 @@ static RCP<const Basic> diff(const CLASS &self, \
 
     static RCP<const Basic> diff(const Derivative &self,
             const RCP<const Symbol> &x) {
-        if (eq(*(self.get_arg()->diff(x)), *zero)) return zero;
-        vec_basic t = self.get_symbols();
-        t.push_back(x);
-        return Derivative::create(self.get_arg(), t);
+        RCP<const Basic> ret = self.get_arg()->diff(x);
+        if (eq(*ret, *zero)) return zero;
+        multiset_basic t = self.get_symbols();
+        for (auto &p: t) {
+            // If x is already there in symbols multi-set add x to the symbols multi-set
+            if (eq(*p, *x)) {
+                t.insert(x);
+                return Derivative::create(self.get_arg(), t);
+            }
+        }
+        // Avoid cycles
+        if (is_a<Derivative>(*ret) && eq(*static_cast<const Derivative &>(*ret).get_arg(), *self.get_arg())) {
+            t.insert(x);
+            return Derivative::create(self.get_arg(), t);
+        }
+        for (auto &p: t) {
+            ret = ret->diff(rcp_static_cast<const Symbol>(p));
+        }
+        return ret;
     }
 
     static RCP<const Basic> diff(const FunctionSymbol &self,
@@ -366,6 +380,12 @@ static RCP<const Basic> diff(const CLASS &self, \
         return mul(div(pow(self.get_den(), i2), add(pow(self.get_den(), i2),
             pow(self.get_num(), i2))), div(self.get_num(),
             self.get_den())->diff(x));
+    }
+
+    static RCP<const Basic> diff(const Gamma &self,
+            const RCP<const Symbol> &x) {
+        RCP<const Basic> gamma_arg = self.get_args()[0];
+        return mul(mul(self.rcp_from_this(), polygamma(zero, gamma_arg)), gamma_arg->diff(x));
     }
 
     static RCP<const Basic> diff(const UnivariatePolynomial &self,

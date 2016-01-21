@@ -27,10 +27,10 @@ TEST_CASE("Arithmetic of Expression", "[Expression]")
     std::cout << z << std::endl;
     REQUIRE(z == x + y + y);
     REQUIRE(z == x + 2 * y);
-    std::cout << pow(z, z) << std::endl;
-    std::cout << pow(z, 45) << std::endl;
+    std::cout << pow_ex(z, z) << std::endl;
+    std::cout << pow_ex(z, 45) << std::endl;
     auto t1 = std::chrono::high_resolution_clock::now();
-    auto res = expand(pow(z, 45) * pow(z, 45));
+    auto res = expand(pow_ex(z, 45) * pow_ex(z, 45));
     auto t2 = std::chrono::high_resolution_clock::now();
     std::cout
         << std::chrono::duration_cast<std::chrono::nanoseconds>(t2-t1).count()
