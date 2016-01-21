@@ -100,6 +100,11 @@ if(WITH_MPC)
         PUBLIC p::mpc
         )
 endif()
+if (WITH_PIRANHA)
+    target_link_libraries(symengine
+        PUBLIC p::piranha
+        )
+endif()
 
 
 install(TARGETS symengine

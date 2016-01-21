@@ -215,9 +215,10 @@ if (WITH_PIRANHA)
         "${CMAKE_CXX_FLAGS_RELEASE} -DNDEBUG")
 
     find_package(PIRANHA REQUIRED)
-    include_directories(${PIRANHA_INCLUDE_DIRS})
+    add_library(p::piranha INTERFACE IMPORTED)
+    set_property(TARGET p::piranha PROPERTY INTERFACE_INCLUDE_DIRECTORIES
+        ${PIRANHA_INCLUDE_DIR})
     set(HAVE_SYMENGINE_PIRANHA yes)
-    set(PKGS ${PKGS} "PIRANHA")
     set(BOOST_COMPONENTS ${BOOST_COMPONENTS} serialization iostreams)
     set(WITH_BOOST yes)
 endif()
