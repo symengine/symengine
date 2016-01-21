@@ -110,6 +110,11 @@ if (WITH_PRIMESIEVE)
         PUBLIC p::primesieve
         )
 endif()
+if (WITH_PTHREAD)
+    target_link_libraries(symengine
+        PUBLIC p::pthread
+        )
+endif()
 
 
 install(TARGETS symengine

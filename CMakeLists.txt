@@ -243,10 +243,12 @@ endif()
 
 if (WITH_PTHREAD)
     find_package(PTHREAD REQUIRED)
-    include_directories(${PTHREAD_INCLUDE_DIRS})
-    set(LIBS ${LIBS} ${PTHREAD_TARGETS})
+    add_library(p::pthread INTERFACE IMPORTED)
+    set_property(TARGET p::pthread PROPERTY INTERFACE_INCLUDE_DIRECTORIES
+        ${PTHREAD_INCLUDE_DIR})
+    set_property(TARGET p::pthread PROPERTY INTERFACE_LINK_LIBRARIES
+        ${PTHREAD_LIBRARY})
     set(HAVE_SYMENGINE_PTHREAD yes)
-    set(PKGS ${PKGS} "PTHREAD")
 endif()
 
 if (WITH_BOOST)
