@@ -170,6 +170,10 @@ TEST_CASE("Sin: functions", "[functions]")
     r2 = sin(y);
     REQUIRE(eq(*r1, *r2));
 
+    // sin(asin(x)) = x
+    r1 = sin(asin(x));
+    REQUIRE(eq(*r1, *x));
+
     // sin(pi + y) = -sin(y)
     r1 = sin(add(pi, y));
     r2 = mul(im1, sin(y));
@@ -262,6 +266,10 @@ TEST_CASE("Cos: functions", "[functions]")
     r1 = cos(mul(im1, y));
     r2 = cos(y);
     REQUIRE(eq(*r1, *r2));
+
+    // cos(acos(x)) = x
+    r1 = cos(acos(x));
+    REQUIRE(eq(*r1, *x));
 
     // cos(pi - y) = -cos(y)
     r1 = cos(sub(pi, y));
@@ -368,6 +376,10 @@ TEST_CASE("Tan: functions", "[functions]")
     r2 = mul(im1, tan(y));
     REQUIRE(eq(*r1, *r2));
 
+    // tan(atan(x)) = x
+    r1 = tan(atan(x));
+    REQUIRE(eq(*r1, *x));
+
     // tan(pi + y) = -tan(y)
     r1 = tan(add(pi, y));
     r2 = tan(y);
@@ -458,6 +470,10 @@ TEST_CASE("Cot: functions", "[functions]")
     r1 = cot(sub(pi, y));
     r2 = mul(im1, cot(y));
     REQUIRE(eq(*r1, *r2));
+
+    // cot(acot(x)) = x
+    r1 = cot(acot(x));
+    REQUIRE(eq(*r1, *x));
 
     // cot(pi + y) = -cot(y)
     r1 = cot(add(pi, y));
@@ -551,6 +567,10 @@ TEST_CASE("Csc: functions", "[functions]")
     r2 = csc(y);
     REQUIRE(eq(*r1, *r2));
 
+    // csc(acsc(x)) = x
+    r1 = csc(acsc(x));
+    REQUIRE(eq(*r1, *x));
+
     // csc(pi + y) = -csc(y)
     r1 = csc(add(pi, y));
     r2 = mul(im1, csc(y));
@@ -641,6 +661,10 @@ TEST_CASE("Sec: functions", "[functions]")
     r1 = sec(sub(pi, y));
     r2 = mul(im1, sec(y));
     REQUIRE(eq(*r1, *r2));
+
+    // sec(asec(x)) = x
+    r1 = sec(asec(x));
+    REQUIRE(eq(*r1, *x));
 
     // sec(pi + y) = -sec(y)
     r1 = sec(add(pi, y));
