@@ -95,6 +95,11 @@ if(WITH_ECM)
         PUBLIC p::ecm
         )
 endif()
+if(WITH_MPC)
+    target_link_libraries(symengine
+        PUBLIC p::mpc
+        )
+endif()
 
 
 install(TARGETS symengine

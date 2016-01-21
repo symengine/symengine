@@ -187,11 +187,13 @@ endif()
 
 if (WITH_MPC)
     find_package(MPC REQUIRED)
-    include_directories(${MPC_INCLUDE_DIRS})
-    set(LIBS ${LIBS} ${MPC_TARGETS})
+    add_library(p::mpc INTERFACE IMPORTED)
+    set_property(TARGET p::mpc PROPERTY INTERFACE_INCLUDE_DIRECTORIES
+        ${MPC_INCLUDE_DIR})
+    set_property(TARGET p::mpc PROPERTY INTERFACE_LINK_LIBRARIES
+        ${MPC_LIBRARY})
     set(HAVE_SYMENGINE_MPC True)
     set(WITH_MPFR yes)
-    set(PKGS ${PKGS} "MPC")
 endif()
 
 # Piranha
