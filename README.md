@@ -19,7 +19,7 @@ license (see the LICENSE file).
 
 ## Mailinglist, Chat
 
-We use the SymPy mailinglist: http://groups.google.com/group/sympy
+SymEngine mailinglist: http://groups.google.com/group/symengine
 
 [![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/sympy/symengine?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
