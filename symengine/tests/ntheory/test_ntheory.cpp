@@ -641,12 +641,12 @@ TEST_CASE("test_quadratic_residues(): ntheory", "[ntheory]")
 {
 
     std::vector<mpz_class> i1 = {0};
-    std::vector<mpz_class> i2 = {0,1};
-    std::vector<mpz_class> i3 = {0,1};
-    std::vector<mpz_class> i4 = {0,1};
-    std::vector<mpz_class> i5 = {0,1,4};
-    std::vector<mpz_class> i7 = {0,1,2,4};
-    std::vector<mpz_class> i100 = {0,1,4,9,16,21,24,25,29,36,41,44,49,56,61,64,69,76,81,84,89,96};
+    std::vector<mpz_class> i2 = {0, 1};
+    std::vector<mpz_class> i3 = {0, 1};
+    std::vector<mpz_class> i4 = {0, 1};
+    std::vector<mpz_class> i5 = {0, 1, 4};
+    std::vector<mpz_class> i7 = {0, 1, 2, 4};
+    std::vector<mpz_class> i100 = {0, 1, 4, 9, 16, 21, 24, 25, 29, 36, 41, 44, 49, 56, 61, 64, 69, 76, 81, 84, 89, 96};
 
     const RCP<const Integer> a1 = integer(1);
     const RCP<const Integer> a2 = integer(2);
@@ -686,21 +686,21 @@ TEST_CASE("test_is_quad_residue(): ntheory", "[ntheory]")
     const RCP<const Integer> t89 = integer(89);
 
     std::cout << "Is_Quadratic_Residue:"<<std::endl;
-    REQUIRE(is_quad_residue(*t0,*a1) == true);
-    REQUIRE(is_quad_residue(*t1,*a1) == true);
-    REQUIRE(is_quad_residue(*t1,*a2) == true);
-    REQUIRE(is_quad_residue(*t0,*a4) == true);
-    REQUIRE(is_quad_residue(*t1,*a4) == true);
-    REQUIRE(is_quad_residue(*t4,*a4) == true);
-    REQUIRE(is_quad_residue(*nt5,*a3) == true);
-    REQUIRE(is_quad_residue(*t4,*a7) == true);
-    REQUIRE(is_quad_residue(*t4,*a9) == true);
-    REQUIRE(is_quad_residue(*t7,*a9) == true);
-    REQUIRE(is_quad_residue(*t56,*a100) == true);
-    REQUIRE(is_quad_residue(*t7,*a100) == false);
-    REQUIRE(is_quad_residue(*nt5,*a4) == false);
-    REQUIRE(is_quad_residue(*t4,*a100) == true);
-    REQUIRE(is_quad_residue(*t89,*a100) == true);
-    REQUIRE(is_quad_residue(*t3,*a100) == false);
+    REQUIRE(is_quad_residue(*t0, *a1) == true);
+    REQUIRE(is_quad_residue(*t1, *a1) == true);
+    REQUIRE(is_quad_residue(*t1, *a2) == true);
+    REQUIRE(is_quad_residue(*t0, *a4) == true);
+    REQUIRE(is_quad_residue(*t1, *a4) == true);
+    REQUIRE(is_quad_residue(*t4, *a4) == true);
+    REQUIRE(is_quad_residue(*nt5, *a3) == true);
+    REQUIRE(is_quad_residue(*t4, *a7) == true);
+    REQUIRE(is_quad_residue(*t4, *a9) == true);
+    REQUIRE(is_quad_residue(*t7, *a9) == true);
+    REQUIRE(is_quad_residue(*t56, *a100) == true);
+    REQUIRE(is_quad_residue(*t7, *a100) == false);
+    REQUIRE(is_quad_residue(*nt5, *a4) == false);
+    REQUIRE(is_quad_residue(*t4, *a100) == true);
+    REQUIRE(is_quad_residue(*t89, *a100) == true);
+    REQUIRE(is_quad_residue(*t3, *a100) == false);
 }
 

@@ -62,7 +62,7 @@ void lucas2(const Ptr<RCP<const Integer>> &g, const Ptr<RCP<const Integer>> &s,
         unsigned long n);
 
 //! Binomial Coefficient
-RCP<const Integer> binomial(const Integer &n,unsigned long k);
+RCP<const Integer> binomial(const Integer &n, unsigned long k);
 
 //! Factorial
 RCP<const Integer> factorial(unsigned long n);
@@ -171,7 +171,7 @@ void powermod_list(std::vector<RCP<const Integer>> &pows, const RCP<const Intege
         const RCP<const Number> &b, const RCP<const Integer> &m);
 
 //! Finds all Quadratic Residues of a Positive Integer
-std::vector<mpz_class> quadratic_residues   (const Integer &a);
+std::vector<mpz_class> quadratic_residues(const Integer &a);
 
 //! Returns true if 'a' is a quadratic residue of 'p'
 bool is_quad_residue(const Integer &a , const Integer &p);

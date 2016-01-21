@@ -524,7 +524,7 @@ void prime_factor_multiplicities(map_integer_uint &primes_mul, const Integer &n)
         insert(primes_mul, integer(_n), 1);
 }
 
-std::vector<unsigned> Sieve::_primes = {2,3,5,7,11,13,17,19,23,29};
+std::vector<unsigned> Sieve::_primes = {2, 3, 5, 7, 11, 13, 17, 19, 23, 29};
 bool Sieve::_clear = true;
 unsigned Sieve::_sieve_size = 32 * 1024 * 8; //32K in bits
 
@@ -807,7 +807,7 @@ void _primitive_root_list(std::vector<RCP<const Integer>> &roots, const mpz_clas
     _primitive_root(g, p, 1, false); // Find one primitive root for p.
     h = 1;
     pm1 = p - 1;
-    // Generate other primitive roots for p. h = g**i and gcd(i,p-1) = 1. Ref[2]
+    // Generate other primitive roots for p. h = g**i and gcd(i, p-1) = 1. Ref[2]
     mpz_pow_ui(n.get_mpz_t(), p.get_mpz_t(), e.get_ui());
     for (unsigned long i = 1; i < p; i++) {
         h *= g;
@@ -1489,19 +1489,19 @@ std::vector<mpz_class> quadratic_residues(const Integer &a)
     }
 
     std::vector<mpz_class> residue;
-    for( mpz_class i = 0; i <= a.as_int()/2; i++)
+    for(mpz_class i = 0; i <= a.as_int()/2; i++)
     {
-        residue.push_back( (i*i) % a.as_int());
+        residue.push_back((i*i) % a.as_int());
     }
 
-    sort( residue.begin(), residue.end() );
-    residue.erase( unique( residue.begin(), residue.end() ), residue.end() );
+    sort(residue.begin(), residue.end());
+    residue.erase(unique(residue.begin(), residue.end()), residue.end());
 
     return residue;
 
 }
 
-bool is_quad_residue(const Integer &a , const Integer &p)
+bool is_quad_residue(const Integer &a, const Integer &p)
 {
     /*
     Returns true if ``a`` (mod ``p``) is in the set of squares mod ``p``,
@@ -1509,38 +1509,33 @@ bool is_quad_residue(const Integer &a , const Integer &p)
     not prime, an iterative method is used to make the determination.
     */
 
-
-    if(p.as_mpz() < 1)
+    mpz_class p2 = p.as_mpz();
+    if (p2 < 1)
         throw std::runtime_error("is_quad_residue: Second parameter must be > 0");
 
-    mpz_class a_final;
-    a_final = a.as_mpz();
-    if(a.as_mpz() >= p.as_mpz() || a.as_mpz() < 0)
-        a_final = a.as_mpz() % p.as_mpz();
-    if(a_final < 0 && a_final > -p.as_mpz())
-        a_final += p.as_mpz();
-    if(a_final < 2 || p.as_mpz() < 3)
+    mpz_class a_final = a.as_mpz();
+    if (a.as_mpz() >= p2 || a.as_mpz() < 0)
+        a_final = a.as_mpz() % p2;
+    if (a_final < 0 && a_final > -p2)
+        a_final += p2;
+    if (a_final < 2 || p2 < 3)
         return true;
 
-    if(!probab_prime_p(*integer(p.as_mpz()),0))
-     {
-        if((p.as_mpz() % 2 == 1 ) && jacobi(*integer(a_final),p) == -1)
+    if (!probab_prime_p(*integer(p2), 0)){
+        if((p2 % 2 == 1 ) && jacobi(*integer(a_final), p) == -1)
             return false;
 
         RCP<const Integer> x;
         const RCP<const Integer> a1 = integer(a_final);
-        const RCP<const Integer> p1 = integer(p.as_mpz());
+        const RCP<const Integer> p1 = integer(p2);
 
-        bool r = true;
-        r = nthroot_mod(outArg(x), a1, integer(2), p1);
-        return r;
+        return nthroot_mod(outArg(x), a1, integer(2), p1);
     }
 
-    mpz_t expo;
-    mpz_init(expo);
-    mpz_pow_ui(expo, a_final.get_mpz_t(), (p.as_mpz().get_ui()-1)/2);
+    mpz_class expo;
+    mpz_pow_ui(expo.get_mpz_t(), a_final.get_mpz_t(), (p2.get_ui()-1)/2);
 
-    return mpz_get_ui(expo) % p.as_mpz() == 1;
+    return mpz_get_ui(expo.get_mpz_t()) % p2 == 1;
 }
 
 
