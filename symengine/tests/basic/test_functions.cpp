@@ -1152,7 +1152,7 @@ TEST_CASE("Acos: functions", "[functions]")
     REQUIRE(eq(*r1, *r2));
 
     r1 = acos(div(im1, i2));
-    r2 = mul(i2, div(pi,  i3));
+    r2 = mul(i2, div(pi, i3));
     REQUIRE(eq(*r1, *r2));
 
     r1 = acos(div(sqrt(i2), i2));
@@ -1193,7 +1193,7 @@ TEST_CASE("Asec: functions", "[functions]")
     REQUIRE(eq(*r1, *r2));
 
     r1 = asec(div(i2, im1));
-    r2 = mul(i2, div(pi,  i3));
+    r2 = mul(i2, div(pi, i3));
     REQUIRE(eq(*r1, *r2));
 
     r1 = asec(sqrt(i2));

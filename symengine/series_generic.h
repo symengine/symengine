@@ -55,7 +55,7 @@ public:
 };
 
 
-inline RCP<const UnivariateSeries> univariate_series(RCP<const Symbol> i,       unsigned int prec, const map_uint_mpz& dict)
+inline RCP<const UnivariateSeries> univariate_series(RCP<const Symbol> i, unsigned int prec, const map_uint_mpz& dict)
 {
     return make_rcp<const UnivariateSeries>(i, prec, dict);
 }

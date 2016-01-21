@@ -955,7 +955,7 @@ TEST_CASE("test_determinant(): matrices", "[matrices]")
     M = DenseMatrix(4, 4, {integer(3), integer(-2), integer(0), integer(5),
                            integer(-2), integer(1), integer(-2), integer(2),
                            integer(0), integer(-2), integer(5), integer(0),
-                           integer(5),  integer(0), integer(3), integer(4)});
+                           integer(5), integer(0), integer(3), integer(4)});
     REQUIRE(eq(*det_bareis(M), *integer(-289)));
     REQUIRE(eq(*det_berkowitz(M), *integer(-289)));
 
@@ -980,7 +980,7 @@ TEST_CASE("test_determinant(): matrices", "[matrices]")
         integer(2), integer(0), integer(1), integer(1), integer(4),
         integer(2), integer(1), integer(1), integer(-1), integer(3),
         integer(3), integer(2), integer(-1), integer(1), integer(8),
-        integer(1), integer(1),  integer(1), integer(0), integer(6)});
+        integer(1), integer(1), integer(1), integer(0), integer(6)});
     REQUIRE(eq(*det_bareis(M), *integer(-55)));
     REQUIRE(eq(*det_berkowitz(M), *integer(-55)));
 
