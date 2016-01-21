@@ -1,10 +1,5 @@
 add_subdirectory(utilities/teuchos)
 
-# Include Teuchos headers:
-include_directories(BEFORE ${teuchos_SOURCE_DIR})
-# Include Teuchos config file (generated per build):
-include_directories(BEFORE ${teuchos_BINARY_DIR})
-
 set(SRC
     symengine_rcp.cpp
     basic.cpp
