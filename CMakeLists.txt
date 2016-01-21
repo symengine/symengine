@@ -440,7 +440,6 @@ install(FILES "${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/SymEngineConfig.cma
               cmake/FindPRIMESIEVE.cmake
               cmake/FindPTHREAD.cmake
               cmake/FindTCMALLOC.cmake
-              cmake/LibFindMacros.cmake
         DESTINATION ${INSTALL_CMAKE_DIR})
 install(EXPORT SymEngineTargets DESTINATION ${INSTALL_CMAKE_DIR})
 
