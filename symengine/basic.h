@@ -262,6 +262,6 @@ void hash_combine(std::size_t& seed, const T& v);
 const static TypeID type_code_id = ID; \
 /*! Virtual function that gives the type_code_id of the object */ \
 virtual TypeID get_type_code() const { return type_code_id; }; \
-SYMENGINE_INCLUDE_METHODS()
+SYMENGINE_INCLUDE_METHODS(;)
 
 #endif
