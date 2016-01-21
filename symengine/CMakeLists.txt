@@ -66,10 +66,6 @@ set(HEADERS
 
 # Configure SymEngine using our CMake options:
 configure_file(symengine_config.h.in symengine_config.h)
-# Include the config file:
-include_directories(BEFORE ${symengine_BINARY_DIR})
-# Include the source directory
-include_directories(BEFORE ${symengine_SOURCE_DIR})
 
 add_library(symengine ${SRC})
 target_link_libraries(symengine
@@ -125,6 +121,18 @@ if (WITH_BFD)
         PUBLIC p::bfd
         )
 endif()
+
+
+get_filename_component(CMAKE_CURRENT_SOURCE_DIR_PARENT ${CMAKE_CURRENT_SOURCE_DIR} DIRECTORY)
+get_filename_component(CMAKE_CURRENT_BINARY_DIR_PARENT ${CMAKE_CURRENT_BINARY_DIR} DIRECTORY)
+
+set_property(TARGET symengine APPEND PROPERTY INCLUDE_DIRECTORIES
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR_PARENT};${CMAKE_CURRENT_BINARY_DIR_PARENT}>
+)
+set_property(TARGET symengine APPEND PROPERTY INTERFACE_INCLUDE_DIRECTORIES
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR_PARENT};${CMAKE_CURRENT_BINARY_DIR_PARENT}>
+  $<INSTALL_INTERFACE:include/symengine>
+)
 
 
 install(TARGETS symengine
