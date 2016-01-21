@@ -115,6 +115,11 @@ if (WITH_PTHREAD)
         PUBLIC p::pthread
         )
 endif()
+if (WITH_TCMALLOC)
+    target_link_libraries(symengine
+        PUBLIC p::tcmalloc
+        )
+endif()
 
 
 install(TARGETS symengine

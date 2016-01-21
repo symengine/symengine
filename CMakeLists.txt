@@ -294,7 +294,9 @@ set(WITH_TCMALLOC no
 
 if (WITH_TCMALLOC)
     find_package(TCMALLOC REQUIRED)
-    set(LIBS ${LIBS} ${TCMALLOC_TARGETS})
+    add_library(p::tcmalloc INTERFACE IMPORTED)
+    set_property(TARGET p::tcmalloc PROPERTY INTERFACE_LINK_LIBRARIES
+        ${TCMALLOC_LIBRARY})
 
     if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
         set(CMAKE_CXX_FLAGS_DEBUG
@@ -302,8 +304,6 @@ if (WITH_TCMALLOC)
         set(CMAKE_CXX_FLAGS_RELEASE
             "${CMAKE_CXX_FLAGS_RELEASE} -fno-builtin-malloc -fno-builtin-calloc -fno-builtin-realloc -fno-builtin-free")
     endif()
-    set(PKGS ${PKGS} "TCMALLOC")
-
 endif()
 
 # Doxygen
