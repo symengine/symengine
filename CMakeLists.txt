@@ -253,8 +253,11 @@ endif()
 
 if (WITH_BOOST)
     find_package(Boost REQUIRED COMPONENTS ${BOOST_COMPONENTS})
-    include_directories(${Boost_INCLUDE_DIRS})
-    set(LIBS ${LIBS} ${Boost_LIBRARIES})
+    add_library(p::boost INTERFACE IMPORTED)
+    set_property(TARGET p::boost PROPERTY INTERFACE_INCLUDE_DIRECTORIES
+        ${BOOST_INCLUDE_DIRS})
+    set_property(TARGET p::boost PROPERTY INTERFACE_LINK_LIBRARIES
+        ${BOOST_LIBRARIES})
     set(HAVE_SYMENGINE_BOOST yes)
 endif()
 

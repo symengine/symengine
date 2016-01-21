@@ -78,7 +78,7 @@ include_directories(BEFORE ${symengine_SOURCE_DIR})
 
 add_library(symengine ${SRC})
 target_link_libraries(symengine
-    PUBLIC teuchos p::gmpxx ${LIBS}
+    PUBLIC teuchos p::gmpxx
     )
 if (WITH_MPFR)
     target_link_libraries(symengine
@@ -98,6 +98,11 @@ endif()
 if (WITH_MPC)
     target_link_libraries(symengine
         PUBLIC p::mpc
+        )
+endif()
+if (WITH_BOOST)
+    target_link_libraries(symengine
+        PUBLIC p::boost
         )
 endif()
 if (WITH_PIRANHA)
