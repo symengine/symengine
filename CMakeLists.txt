@@ -126,10 +126,12 @@ set(WITH_ECM no
 
 if (WITH_ECM)
     find_package(ECM REQUIRED)
-    include_directories(${ECM_INCLUDE_DIRS})
-    set(LIBS ${LIBS} ${ECM_TARGETS})
+    add_library(p::ecm INTERFACE IMPORTED)
+    set_property(TARGET p::ecm PROPERTY INTERFACE_INCLUDE_DIRECTORIES
+        ${ECM_INCLUDE_DIR})
+    set_property(TARGET p::ecm PROPERTY INTERFACE_LINK_LIBRARIES
+        ${ECM_LIBRARY})
     set(HAVE_SYMENGINE_ECM yes)
-    set(PKGS ${PKGS} "ECM")
 endif()
 
 # PRIMESIEVE

@@ -90,6 +90,11 @@ if(WITH_ARB)
         PUBLIC p::arb
         )
 endif()
+if(WITH_ECM)
+    target_link_libraries(symengine
+        PUBLIC p::ecm
+        )
+endif()
 
 
 install(TARGETS symengine
