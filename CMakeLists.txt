@@ -140,10 +140,12 @@ set(WITH_PRIMESIEVE no
 
 if (WITH_PRIMESIEVE)
     find_package(PRIMESIEVE REQUIRED)
-    include_directories(${PRIMESIEVE_INCLUDE_DIRS})
-    set(LIBS ${LIBS} ${PRIMESIEVE_TARGETS})
+    add_library(p::primesieve INTERFACE IMPORTED)
+    set_property(TARGET p::primesieve PROPERTY INTERFACE_INCLUDE_DIRECTORIES
+        ${PRIMESIEVE_INCLUDE_DIR})
+    set_property(TARGET p::primesieve PROPERTY INTERFACE_LINK_LIBRARIES
+        ${PRIMESIEVE_LIBRARY})
     set(HAVE_SYMENGINE_PRIMESIEVE yes)
-    set(PKGS ${PKGS} "PRIMESIEVE")
 endif()
 
 # ARB

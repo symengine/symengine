@@ -80,22 +80,22 @@ add_library(symengine ${SRC})
 target_link_libraries(symengine
     PUBLIC teuchos p::gmpxx ${LIBS}
     )
-if(WITH_MPFR)
+if (WITH_MPFR)
     target_link_libraries(symengine
         PUBLIC p::mpfr
         )
 endif()
-if(WITH_ARB)
+if (WITH_ARB)
     target_link_libraries(symengine
         PUBLIC p::arb
         )
 endif()
-if(WITH_ECM)
+if (WITH_ECM)
     target_link_libraries(symengine
         PUBLIC p::ecm
         )
 endif()
-if(WITH_MPC)
+if (WITH_MPC)
     target_link_libraries(symengine
         PUBLIC p::mpc
         )
@@ -103,6 +103,11 @@ endif()
 if (WITH_PIRANHA)
     target_link_libraries(symengine
         PUBLIC p::piranha
+        )
+endif()
+if (WITH_PRIMESIEVE)
+    target_link_libraries(symengine
+        PUBLIC p::primesieve
         )
 endif()
 
