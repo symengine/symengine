@@ -368,8 +368,8 @@ void StrPrinter::bvisit(const Derivative &x) {
     o << "Derivative(" << this->apply(x.get_arg());
     multiset_basic m1 = x.get_symbols();
     std::multiset<RCP<const Basic>, RCPBasicKeyLessCmp> m2(m1.begin(), m1.end());
-    for (auto p = m2.begin(); p != m2.end(); p++) {
-        o << ", " << this->apply(*p);
+    for (const auto & elem : m2) {
+        o << ", " << this->apply(elem);
     }
     o << ")";
     str_ = o.str();

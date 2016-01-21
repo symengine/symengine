@@ -1371,8 +1371,8 @@ RCP<const Basic> FunctionSymbol::subs(const map_basic_basic &subs_dict) const
     if (it != subs_dict.end())
         return it->second;
     vec_basic v = arg_;
-    for (unsigned i = 0; i < v.size(); i++) {
-        v[i] = v[i]->subs(subs_dict);
+    for (auto & elem : v) {
+        elem = elem->subs(subs_dict);
     }
     return create(v);
 }
