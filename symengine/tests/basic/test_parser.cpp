@@ -31,12 +31,12 @@ using SymEngine::RCP;
 using SymEngine::make_rcp;
 using SymEngine::has_symbol;
 using SymEngine::is_a;
-using SymEngine::expressionParser;
+using SymEngine::ExpressionParser;
 
 TEST_CASE("Parsing: integers, basic operations", "[parser]")
 {
     std::string s;
-    expressionParser p;
+    ExpressionParser p;
     RCP<const Basic> res;
 
     s = "((3)+(1*0))";
@@ -87,7 +87,7 @@ TEST_CASE("Parsing: integers, basic operations", "[parser]")
 TEST_CASE("Parsing: symbols", "[parser]")
 {
     std::string s;
-    expressionParser p;
+    ExpressionParser p;
     RCP<const Basic> res;
     RCP<const Basic> x = symbol("x");
     RCP<const Basic> y = symbol("y");
@@ -121,12 +121,16 @@ TEST_CASE("Parsing: symbols", "[parser]")
     s = "3*y/(1+x)";
     res = p.parse(s);
     REQUIRE(eq(*res, *div(mul(y, integer(3)), add(x, integer(1)))));
+
+    s = "y/x*x";
+    res = p.parse(s);
+    REQUIRE(eq(*res, *y));
 }
 
 TEST_CASE("Parsing: functions", "[parser]")
 {
     std::string s;
-    expressionParser p;
+    ExpressionParser p;
     RCP<const Basic> res;
     RCP<const Basic> x = symbol("x");
     RCP<const Basic> y = symbol("y");
@@ -134,4 +138,35 @@ TEST_CASE("Parsing: functions", "[parser]")
     s = "sin(x)";
     res = p.parse(s);
     REQUIRE(eq(*res, *sin(x)));
+
+    s = "arcsin(sin(x))";
+    res = p.parse(s);
+    REQUIRE(eq(*res, *asin(sin(x))));
+
+    s = "beta(x,y)";
+    res = p.parse(s);
+    REQUIRE(eq(*res, *beta(x,y)));
+
+    s = "beta(sin(x+3), gamma(2^y+sin(y)))";
+    res = p.parse(s);
+    REQUIRE(eq(*res, *beta(sin(add(x, integer(3))), gamma(add(sin(y), pow(integer(2), y))))));
+
+    s = "y^(abs(sin(3) + x)) + sinh(2)";
+    res = p.parse(s);
+    REQUIRE(eq(*res, *add(pow(y, abs(add(sin(integer(3)), x))), sinh(integer(2)))));
+
+    s = "2 + zeta(2, x) + zeta(ln(3))";
+    res = p.parse(s);
+    REQUIRE(eq(*res, *add(integer(2), add(zeta(integer(2), x), zeta(log(integer(3)))))));
+
+    // Shouldn't this be correct? a trivial check should be made in `sin`, to
+    // see if the parameter `Basic` `is_a<Asin>` and reduce automaticall?y?
+
+    // s = "sin(arcsin(x))";
+    // res = p.parse(s);
+    // REQUIRE(eq(*res, *x));
+
+    s = "log(x, gamma(y))*sin(3)";
+    res = p.parse(s);
+    REQUIRE(eq(*res, *mul(log(x, gamma(y)), sin(integer(3)))));
 }
