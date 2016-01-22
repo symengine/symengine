@@ -19,7 +19,7 @@ license (see the LICENSE file).
 
 ## Mailinglist, Chat
 
-We use the SymPy mailinglist: http://groups.google.com/group/sympy
+SymEngine mailinglist: http://groups.google.com/group/symengine
 
 [![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/sympy/symengine?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
@@ -99,6 +99,7 @@ their default values indicated below:
         -DWITH_MPC:BOOL=OFF \                         # Install with MPC library
         -DBUILD_TESTS:BOOL=ON \                       # Build with tests
         -DBUILD_BENCHMARKS:BOOL=ON \                  # Build with benchmarks
+        -DBUILD_BENCHMARKS_NONIUS:BOOL=OFF \          # Build with Nonius benchmarks
         .
 
 If `OPENMP` is enabled, then `SYMENGINE_THREAD_SAFE` is also enabled automatically
@@ -111,24 +112,30 @@ If you want to use a different compiler, do:
 
 and check that CMake picked it up.
 
+The Nonius based benchmarks (`BUILD_BENCHMARKS_NONIUS`) and Piranha
+(`WITH_PIRANHA`) depend on Boost, so they are off by default. The bechmarked
+code (both with and without Nonius) seems to depend on the order of which you
+execute the benchmarks in a given executable, due to internal malloc
+implementation. We have found that this order dependence is reduced by enabling
+`WITH_TCMALLOC=ON` and since it also speeds the benchmarks up, we recommend
+to always use TCMalloc when benchmarking (and the `Release` mode of SymEngine,
+which is the default).
+
 ### External Libraries
 
 There are three ways how to specify where external libraries are. In the lines
-below, change `PKG1`, `PKG2`, ... to the names of the external libraries (`GMP`, `ARB`, `PRIMESIEVE`,
-`BFD`, `FLINT`, `MPFR`, ...).
+below, change `PKG1`, `PKG2`, ... to the names of the external libraries
+(`GMP`, `ARB`, `PRIMESIEVE`, `BFD`, `FLINT`, `MPFR`, ...).
 
-1. `cmake -DPKG1_DIR=$HASHSTACK -DPKG2_DIR=$HASHSTACK .`
-2. `cmake -DPKG1_INCLUDE_DIRS=$HASHSTACK/include -DPKG1_LIBRARIES=$HASHSTACK/lib -DPKG2_DIR=$HASHSTACK .`
-3. `cmake -DCOMMON_DIR=$HASHSTACK .`
+1. `cmake -DCMAKE_PREFIX_PATH=$HASHSTACK .`
+2. `cmake -DPKG1_INCLUDE_DIRS=$HASHSTACK/include -DPKG1_LIBRARIES=$HASHSTACK/lib .`
 
-In the approach 1., you specify `PKG_DIR` as the base prefix, and the include
-files must be in `${PKG_DIR}/include` and libraries in `${PKG_DIR}/lib` (or
-`lib64`). In the approach 2., you specify the include and library directories
-separately (you can use approach 1. for some libraries and 2. for other
-libraries on the same command line). In the approach 3., you specify a common
-prefix for all libraries at once.
+In the approach 1., you specify a common prefix(es) for all libraries at once.
+Use specific prefix first and general later. In the approach 2., you specify
+the include and library directories separately (you can use approach 1. for
+some libraries and 2. for other libraries on the same command line).
 
-If all your libraries are installed in the same prefix, use 3. If they are
+If all your libraries are installed in the same prefix, use 1. If they are
 installed in separate locations, use 1. or 2.: if the given library has a
 common prefix for includes and libs, use 1., otherwise use 2.
 

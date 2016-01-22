@@ -33,7 +33,7 @@ doc/html
 
 # Config Files
 symengine/symengine_config.h
-symengine/teuchos/Teuchos_config.h
+symengine/utilities/teuchos/Teuchos_config.h
 symengine/python/symengine/lib/config.pxi
 
 # Python build files
@@ -56,8 +56,10 @@ symengine/tests/basic/test_poly
 symengine/tests/basic/test_polynomial
 symengine/tests/basic/test_series
 symengine/tests/basic/test_series_expansion
+symengine/tests/basic/test_series_generic
 symengine/tests/basic/test_subs
 symengine/tests/basic/test_rational
+symengine/tests/basic/test_as_numer_denom
 symengine/tests/matrix/test_matrix
 symengine/tests/ntheory/test_ntheory
 symengine/tests/ntheory/test_diophantine

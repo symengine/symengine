@@ -454,8 +454,6 @@ public:
             throw std::runtime_error("Not implemented.");
         }
     }
-
-    virtual void accept(Visitor &v) const;
 };
 
 RCP<const ComplexDouble> complex_double(std::complex<double> x);

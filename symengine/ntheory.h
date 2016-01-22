@@ -176,5 +176,10 @@ std::vector<mpz_class> quadratic_residues(const Integer &a);
 //! Returns true if 'a' is a quadratic residue of 'p'
 bool is_quad_residue(const Integer &a , const Integer &p);
 
+//! Mobius Function
+// mu(n) = 1 if n is a square-free positive integer with an even number of prime factors
+// mu(n) = −1 if n is a square-free positive integer with an odd number of prime factors
+// mu(n) = 0 if n has a squared prime factor
+int mobius(const Integer &a);
 }
 #endif

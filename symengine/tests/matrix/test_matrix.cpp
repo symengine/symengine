@@ -1387,11 +1387,11 @@ TEST_CASE("test_ones_zeros(): matrices", "[matrices]")
 
     ones(A, 1, 5);
     REQUIRE(A == DenseMatrix(1, 5,
-        {integer(1), integer(1), integer(1), integer(1),integer(1)}));
+        {integer(1), integer(1), integer(1), integer(1), integer(1)}));
 
     ones(A, 2, 3);
     REQUIRE(A == DenseMatrix(2, 3, {integer(1), integer(1), integer(1),
-                                   integer(1),integer(1), integer(1)}));
+                                   integer(1), integer(1), integer(1)}));
 
     zeros(A, 3, 2);
     REQUIRE(A == DenseMatrix(3, 2, {integer(0), integer(0),

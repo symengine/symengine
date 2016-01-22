@@ -179,17 +179,23 @@ void Mul::dict_add_term_new(const Ptr<RCP<const Number>> &coef, map_basic_basic 
                 imulnum(outArg(*coef), pownum(rcp_static_cast<const Number>(t),
                     rcp_static_cast<const Number>(exp)));
             } else if (is_a<Rational>(*exp)) {
-                // Here we make the exponent postive and a fraction between
-                // 0 and 1.
-                mpz_class q, r, num, den;
-                num = rcp_static_cast<const Rational>(exp)->i.get_num();
-                den = rcp_static_cast<const Rational>(exp)->i.get_den();
-                mpz_fdiv_qr(q.get_mpz_t(), r.get_mpz_t(), num.get_mpz_t(),
-                    den.get_mpz_t());
-
-                insert(d, t, Rational::from_mpq(mpq_class(r, den)));
-                imulnum(outArg(*coef), pownum(rcp_static_cast<const Number>(t),
-                    rcp_static_cast<const Number>(integer(q))));
+                RCP<const Basic> res;
+                if (is_a<Integer>(*t)) {
+                    res = static_cast<const Rational &>(*exp).rpowrat(static_cast<const Integer &>(*t));
+                } else {
+                    res = static_cast<const Rational &>(*t).powrat(static_cast<const Rational &>(*exp));
+                }
+                if (is_a_Number(*res)) {
+                    imulnum(outArg(*coef), rcp_static_cast<const Number>(res));
+                } else if (is_a<Mul>(*res)) {
+                    RCP<const Mul> m = rcp_static_cast<const Mul>(res);
+                    imulnum(outArg(*coef), m->coef_);
+                    for (auto &p:m->dict_) {
+                        Mul::dict_add_term_new(coef, d, p.second, p.first);
+                    }
+                } else {
+                    insert(d, t, exp);
+                }
             } else {
                 insert(d, t, exp);
             }
@@ -238,21 +244,26 @@ void Mul::dict_add_term_new(const Ptr<RCP<const Number>> &coef, map_basic_basic 
                 return;
             }
         } else if (is_a<Rational>(*it->second)) {
-            if (is_a_Number(*t)) {
-                mpz_class q, r, num, den;
-                num = rcp_static_cast<const Rational>(it->second)->i.get_num();
-                den = rcp_static_cast<const Rational>(it->second)->i.get_den();
-                // Here we make the exponent postive and a fraction between
-                // 0 and 1.
-                if (num > den or num < 0) {
-                    mpz_fdiv_qr(q.get_mpz_t(), r.get_mpz_t(), num.get_mpz_t(),
-                                den.get_mpz_t());
-
-                    it->second = Rational::from_mpq(mpq_class(r, den));
-                    imulnum(outArg(*coef), pownum(rcp_static_cast<const Number>(t),
-                                                  rcp_static_cast<const Number>(integer(q))));
+            if (is_a<Integer>(*t) or is_a<Rational>(*t)) {
+                RCP<const Basic> res;
+                if (is_a<Integer>(*t)) {
+                    res = static_cast<const Rational &>(*it->second).rpowrat(static_cast<const Integer &>(*t));
+                } else {
+                    res = static_cast<const Rational &>(*t).powrat(static_cast<const Rational &>(*it->second));
                 }
-                return;
+                if (is_a_Number(*res)) {
+                    d.erase(it);
+                    imulnum(outArg(*coef), rcp_static_cast<const Number>(res));
+                    return;
+                } else if (is_a<Mul>(*res)) {
+                    d.erase(it);
+                    RCP<const Mul> m = rcp_static_cast<const Mul>(res);
+                    imulnum(outArg(*coef), m->coef_);
+                    for (auto &p:m->dict_) {
+                        Mul::dict_add_term_new(coef, d, p.second, p.first);
+                    }
+                    return;
+                }
             }
         }
         if (is_a_Number(*it->second)) {
@@ -433,44 +444,6 @@ void Mul::power_num(const Ptr<RCP<const Number>> &coef, map_basic_basic &d,
         Mul::as_base_exp(new_coef, outArg(_exp), outArg(t));
         Mul::dict_add_term_new(coef, d, _exp, t);
     }
-}
-
-RCP<const Basic> Mul::diff(const RCP<const Symbol> &x) const
-{
-    RCP<const Number> overall_coef = zero;
-    umap_basic_num add_dict;
-    for (const auto &p: dict_) {
-        RCP<const Number> coef = coef_;
-        RCP<const Basic> factor = pow(p.first, p.second)->diff(x);
-        if (is_a_Number(*factor) and
-                rcp_static_cast<const Number>(factor)->is_zero()) {
-            // overall_coef += factor is done to coerce overall_coef to the type of factor
-            iaddnum(outArg(overall_coef), rcp_static_cast<const Number>(factor));
-            continue;
-        }
-        map_basic_basic d = dict_;
-        d.erase(p.first);
-        if (is_a_Number(*factor)) {
-            imulnum(outArg(coef), rcp_static_cast<const Number>(factor));
-        } else if (is_a<Mul>(*factor)) {
-            RCP<const Mul> tmp = rcp_static_cast<const Mul>(factor);
-            imulnum(outArg(coef), tmp->coef_);
-            for (const auto &q: tmp->dict_) {
-                Mul::dict_add_term_new(outArg(coef), d, q.second, q.first);
-            }
-        } else {
-            RCP<const Basic> exp, t;
-            Mul::as_base_exp(factor, outArg(exp), outArg(t));
-            Mul::dict_add_term_new(outArg(coef), d, exp, t);
-        }
-        if (d.size() == 0) {
-            iaddnum(outArg(overall_coef), coef);
-        } else {
-            RCP<const Basic> mul = Mul::from_dict(one, std::move(d));
-            Add::dict_add_term(add_dict, coef, mul);
-        }
-    }
-    return Add::from_dict(overall_coef, std::move(add_dict));
 }
 
 RCP<const Basic> Mul::subs(const map_basic_basic &subs_dict) const

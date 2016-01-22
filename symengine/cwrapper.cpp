@@ -223,7 +223,7 @@ void basic_expand(basic s, const basic a)
 char* basic_str(const basic s)
 {
     std::string str = s->m->__str__();
-    char *cc = new char[str.length()+1];
+    auto cc = new char[str.length()+1];
     std::strcpy(cc, str.c_str());
     return cc;
 }

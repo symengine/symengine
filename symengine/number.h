@@ -36,23 +36,21 @@ public:
     //! Addition
     virtual RCP<const Number> add(const Number &other) const = 0;
     //! Subtraction
-    virtual RCP<const Number> sub(const Number &other) const = 0;
-    virtual RCP<const Number> rsub(const Number &other) const = 0;
+    virtual RCP<const Number> sub(const Number &other) const;
+    virtual RCP<const Number> rsub(const Number &other) const;
     //! Multiplication
     virtual RCP<const Number> mul(const Number &other) const = 0;
     //! Division
-    virtual RCP<const Number> div(const Number &other) const = 0;
-    virtual RCP<const Number> rdiv(const Number &other) const = 0;
+    virtual RCP<const Number> div(const Number &other) const;
+    virtual RCP<const Number> rdiv(const Number &other) const;
     //! Power
     virtual RCP<const Number> pow(const Number &other) const = 0;
     virtual RCP<const Number> rpow(const Number &other) const = 0;
-    //! Differentiation w.r.t Symbol `x`
-    virtual RCP<const Basic> diff(const RCP<const Symbol> &x) const;
 
     virtual vec_basic get_args() const { return {}; }
 
     virtual bool is_perfect_power(bool is_expected=false) const { throw std::runtime_error("Not Implemented."); };
-    virtual bool nth_root(const Ptr<RCP<const Number>> &, unsigned int n) const { throw std::runtime_error("Not Implemented."); } ;
+    virtual bool nth_root(const Ptr<RCP<const Number>> &, unsigned long n) const { throw std::runtime_error("Not Implemented."); } ;
 };
 //! Add `self` and `other`
 inline RCP<const Number> addnum(const RCP<const Number> &self,
@@ -106,10 +104,10 @@ inline void idivnum(const Ptr<RCP<const Number>> &self,
 //! \return true if 'b' is a Number or any of its subclasses
 inline bool is_a_Number(const Basic &b)
 {
-    // `REAL_DOUBLE` is the last subclass of Number in TypeID
-    // An enum should be before `REAL_DOUBLE` iff it is a
+    // `NUMBER_WRAPPER` is the last subclass of Number in TypeID
+    // An enum should be before `NUMBER_WRAPPER` iff it is a
     // subclass of Number
-    return b.get_type_code() <= REAL_DOUBLE;
+    return b.get_type_code() <= NUMBER_WRAPPER;
 }
 
 class NumberWrapper : public Number {
@@ -117,7 +115,6 @@ public:
     IMPLEMENT_TYPEID(NUMBER_WRAPPER)
     virtual std::string __str__() const { throw std::runtime_error("Not Implemented."); };
     virtual RCP<const Number> eval(long bits)  const { throw std::runtime_error("Not Implemented."); };
-    virtual void accept(Visitor &v) const;
 };
 
 //! A class that will evaluate functions numerically.

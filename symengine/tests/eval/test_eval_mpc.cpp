@@ -44,7 +44,7 @@ TEST_CASE("eval: eval_mpc", "[eval_mpc]")
     mpc_set_fr_fr(b, real, imag, MPFR_RNDN);
 
     REQUIRE(mpc_cmp(a, b) == 0);
-    
+
     r = add(one, mul(EulerGamma, I));
     s = one;
     t = EulerGamma;
