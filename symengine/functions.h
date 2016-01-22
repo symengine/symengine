@@ -495,7 +495,9 @@ public:
     IMPLEMENT_TYPEID(FUNCTIONWRAPPER)
     FunctionWrapper(std::string name, const vec_basic &arg);
     FunctionWrapper(std::string name, const RCP<const Basic> &arg);
-    virtual RCP<const Number> eval(long bits) const;
+    virtual RCP<const Basic> create(const vec_basic &v) const = 0;
+    virtual RCP<const Number> eval(long bits) const = 0;
+    virtual RCP<const Basic> diff_impl(const RCP<const Symbol> &s) const = 0;
 };
 
 /*! Derivative operator

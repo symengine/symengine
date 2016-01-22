@@ -327,9 +327,12 @@ RCP<const Basic> sin(const RCP<const Basic> &arg)
     if (is_a_Number(*arg) and not static_cast<const Number &>(*arg).is_exact()) {
         return static_cast<const Number &>(*arg).get_eval().sin(*arg);
     }
+    if (is_a<ASin>(*arg)) {
+        return rcp_static_cast<const ASin>(arg)->get_arg();
+    }
+
     RCP<const Basic> ret_arg;
-    int index;
-    int sign;
+    int index, sign;
     bool conjugate = eval(arg, 2, 1, 0, //input
                           outArg(ret_arg), index, sign); //output
 
@@ -406,9 +409,12 @@ RCP<const Basic> cos(const RCP<const Basic> &arg)
     if (is_a_Number(*arg) and not static_cast<const Number &>(*arg).is_exact()) {
         return static_cast<const Number &>(*arg).get_eval().cos(*arg);
     }
+    if (is_a<ACos>(*arg)) {
+        return rcp_static_cast<const ACos>(arg)->get_arg();
+    }
+
     RCP<const Basic> ret_arg;
-    int index;
-    int sign;
+    int index, sign;
     bool conjugate =  eval(arg, 2, 0, 1, //input
                       outArg(ret_arg), index, sign); //output
 
@@ -484,9 +490,12 @@ RCP<const Basic> tan(const RCP<const Basic> &arg)
     if (is_a_Number(*arg) and not static_cast<const Number &>(*arg).is_exact()) {
         return static_cast<const Number &>(*arg).get_eval().tan(*arg);
     }
+    if (is_a<ATan>(*arg)) {
+        return rcp_static_cast<const ATan>(arg)->get_arg();
+    }
+
     RCP<const Basic> ret_arg;
-    int index;
-    int sign;
+    int index, sign;
     bool conjugate =  eval(arg, 1, 1, 1, //input
                       outArg(ret_arg), index, sign); //output
 
@@ -563,9 +572,12 @@ RCP<const Basic> cot(const RCP<const Basic> &arg)
     if (is_a_Number(*arg) and not static_cast<const Number &>(*arg).is_exact()) {
         return static_cast<const Number &>(*arg).get_eval().cot(*arg);
     }
+    if (is_a<ACot>(*arg)) {
+        return rcp_static_cast<const ACot>(arg)->get_arg();
+    }
+
     RCP<const Basic> ret_arg;
-    int index;
-    int sign;
+    int index, sign;
     bool conjugate =  eval(arg, 1, 1, 1, //input
                       outArg(ret_arg), index, sign); //output
 
@@ -643,9 +655,12 @@ RCP<const Basic> csc(const RCP<const Basic> &arg)
     if (is_a_Number(*arg) and not static_cast<const Number &>(*arg).is_exact()) {
         return static_cast<const Number &>(*arg).get_eval().csc(*arg);
     }
+    if (is_a<ACsc>(*arg)) {
+        return rcp_static_cast<const ACsc>(arg)->get_arg();
+    }
+
     RCP<const Basic> ret_arg;
-    int index;
-    int sign;
+    int index, sign;
     bool conjugate =  eval(arg, 2, 1, 0, //input
                       outArg(ret_arg), index, sign); //output
 
@@ -723,9 +738,12 @@ RCP<const Basic> sec(const RCP<const Basic> &arg)
     if (is_a_Number(*arg) and not static_cast<const Number &>(*arg).is_exact()) {
         return static_cast<const Number &>(*arg).get_eval().sec(*arg);
     }
+    if (is_a<ASec>(*arg)) {
+        return rcp_static_cast<const ASec>(arg)->get_arg();
+    }
+
     RCP<const Basic> ret_arg;
-    int index;
-    int sign;
+    int index, sign;
     bool conjugate =  eval(arg, 2, 0, 1, //input
                       outArg(ret_arg), index, sign); //output
 
@@ -1371,8 +1389,8 @@ RCP<const Basic> FunctionSymbol::subs(const map_basic_basic &subs_dict) const
     if (it != subs_dict.end())
         return it->second;
     vec_basic v = arg_;
-    for (unsigned i = 0; i < v.size(); i++) {
-        v[i] = v[i]->subs(subs_dict);
+    for (auto & elem : v) {
+        elem = elem->subs(subs_dict);
     }
     return create(v);
 }
@@ -1397,11 +1415,6 @@ FunctionWrapper::FunctionWrapper(std::string name, const vec_basic &vec)
         : FunctionSymbol(name, vec)
 {
 
-}
-
-RCP<const Number> FunctionWrapper::eval(long bits) const
-{
-    throw std::runtime_error("Not Implemented.");
 }
 
 /* ---------------------------- */

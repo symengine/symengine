@@ -170,6 +170,10 @@ TEST_CASE("Sin: functions", "[functions]")
     r2 = sin(y);
     REQUIRE(eq(*r1, *r2));
 
+    // sin(asin(x)) = x
+    r1 = sin(asin(x));
+    REQUIRE(eq(*r1, *x));
+
     // sin(pi + y) = -sin(y)
     r1 = sin(add(pi, y));
     r2 = mul(im1, sin(y));
@@ -262,6 +266,10 @@ TEST_CASE("Cos: functions", "[functions]")
     r1 = cos(mul(im1, y));
     r2 = cos(y);
     REQUIRE(eq(*r1, *r2));
+
+    // cos(acos(x)) = x
+    r1 = cos(acos(x));
+    REQUIRE(eq(*r1, *x));
 
     // cos(pi - y) = -cos(y)
     r1 = cos(sub(pi, y));
@@ -368,6 +376,10 @@ TEST_CASE("Tan: functions", "[functions]")
     r2 = mul(im1, tan(y));
     REQUIRE(eq(*r1, *r2));
 
+    // tan(atan(x)) = x
+    r1 = tan(atan(x));
+    REQUIRE(eq(*r1, *x));
+
     // tan(pi + y) = -tan(y)
     r1 = tan(add(pi, y));
     r2 = tan(y);
@@ -458,6 +470,10 @@ TEST_CASE("Cot: functions", "[functions]")
     r1 = cot(sub(pi, y));
     r2 = mul(im1, cot(y));
     REQUIRE(eq(*r1, *r2));
+
+    // cot(acot(x)) = x
+    r1 = cot(acot(x));
+    REQUIRE(eq(*r1, *x));
 
     // cot(pi + y) = -cot(y)
     r1 = cot(add(pi, y));
@@ -551,6 +567,10 @@ TEST_CASE("Csc: functions", "[functions]")
     r2 = csc(y);
     REQUIRE(eq(*r1, *r2));
 
+    // csc(acsc(x)) = x
+    r1 = csc(acsc(x));
+    REQUIRE(eq(*r1, *x));
+
     // csc(pi + y) = -csc(y)
     r1 = csc(add(pi, y));
     r2 = mul(im1, csc(y));
@@ -641,6 +661,10 @@ TEST_CASE("Sec: functions", "[functions]")
     r1 = sec(sub(pi, y));
     r2 = mul(im1, sec(y));
     REQUIRE(eq(*r1, *r2));
+
+    // sec(asec(x)) = x
+    r1 = sec(asec(x));
+    REQUIRE(eq(*r1, *x));
 
     // sec(pi + y) = -sec(y)
     r1 = sec(add(pi, y));
@@ -1948,7 +1972,7 @@ public :
             return make_rcp<MySin>(v[0]);
         }
     }
-    RCP<const Basic> diff(const RCP<const Symbol> &x) const {
+    RCP<const Basic> diff_impl(const RCP<const Symbol> &x) const {
         return mul(cos(arg_[0]), arg_[0]->diff(x));
     }
 };
@@ -1956,20 +1980,20 @@ public :
 TEST_CASE("FunctionWrapper: functions", "[functions]")
 {
     RCP<const Symbol> x = symbol("x");
-    RCP<const Basic> e = make_rcp<MySin>(x);
+    RCP<const Basic> e = add(one, make_rcp<MySin>(x));
     RCP<const Basic> f;
 
     f = e->subs({{x, integer(0)}});
-    REQUIRE(eq(*f, *zero));
+    REQUIRE(eq(*f, *one));
 
     f = e->diff(x);
     REQUIRE(eq(*f, *cos(x)));
 
     f = e->subs({{x, integer(1)}});
     double d = eval_double(*f);
-    REQUIRE(std::fabs(d - 0.84147098480789) < 1e-12);
+    REQUIRE(std::fabs(d - 1.84147098480789) < 1e-12);
 
-    REQUIRE(e->__str__() == "MySin(x)");
+    REQUIRE(e->__str__() == "1 + MySin(x)");
 }
 /* ---------------------------- */
 
