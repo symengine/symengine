@@ -1375,16 +1375,16 @@ bool nthroot_mod(const Ptr<RCP<const Integer>> &root, const RCP<const Integer> &
 }
 
 void nthroot_mod_list(std::vector<RCP<const Integer>> &roots, const RCP<const Integer> &a,
-        const RCP<const Integer> &n, const RCP<const Integer> &mod)
+        const RCP<const Integer> &n, const RCP<const Integer> &m)
 {
-    if (mod->as_mpz() <= 0) {
+    if (m->as_mpz() <= 0) {
         return;
-    } else if (mod->as_mpz() == 1) {
+    } else if (m->as_mpz() == 1) {
         roots.push_back(integer(0));
         return;
     }
     map_integer_uint prime_mul;
-    prime_factor_multiplicities(prime_mul, *mod);
+    prime_factor_multiplicities(prime_mul, *m);
     std::vector<RCP<const Integer>> moduli;
     bool ret_val;
     mpz_class _mod;
@@ -1515,13 +1515,11 @@ bool is_quad_residue(const Integer &a, const Integer &p)
 
     mpz_class a_final = a.as_mpz();
     if (a.as_mpz() >= p2 || a.as_mpz() < 0)
-        a_final = a.as_mpz() % p2;
-    if (a_final < 0 && a_final > -p2)
-        a_final += p2;
+        mpz_fdiv_r(a_final.get_mpz_t(), a.as_mpz().get_mpz_t(), p2.get_mpz_t());
     if (a_final < 2 || p2 < 3)
         return true;
 
-    if (!probab_prime_p(*integer(p2), 0)){
+    if (!probab_prime_p(*integer(p2))){
         if((p2 % 2 == 1 ) && jacobi(*integer(a_final), p) == -1)
             return false;
 
@@ -1532,10 +1530,7 @@ bool is_quad_residue(const Integer &a, const Integer &p)
         return nthroot_mod(outArg(x), a1, integer(2), p1);
     }
 
-    mpz_class expo;
-    mpz_pow_ui(expo.get_mpz_t(), a_final.get_mpz_t(), (p2.get_ui()-1)/2);
-
-    return mpz_get_ui(expo.get_mpz_t()) % p2 == 1;
+    return mpz_legendre(a_final.get_mpz_t(), p2.get_mpz_t()) == 1;
 }
 
 

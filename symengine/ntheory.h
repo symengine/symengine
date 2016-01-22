@@ -162,7 +162,7 @@ void nthroot_mod_list(std::vector<RCP<const Integer>> &roots, const RCP<const In
         const RCP<const Integer> &n, const RCP<const Integer> &m);
 //! A solution to x**n == a mod m. Return false if none exists.
 bool nthroot_mod(const Ptr<RCP<const Integer>> &root, const RCP<const Integer> &a,
-        const RCP<const Integer> &n, const RCP<const Integer> &mod);
+        const RCP<const Integer> &n, const RCP<const Integer> &m);
 //! A solution to x**s == a**r mod m where b = r / s. Return false if none exists.
 bool powermod(const Ptr<RCP<const Integer>> &powm, const RCP<const Integer> &a,
         const RCP<const Number> &b, const RCP<const Integer> &m);
