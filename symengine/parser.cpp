@@ -32,7 +32,7 @@ class ExpressionParser
     {
         RCP<const Basic> result;
         bool result_set = false;
-        bool expr_is_symbol = false;
+        bool is_not_numeric = false;
         std::string expr = "";
 
         for (unsigned int iter = l; iter < h; ++iter)
@@ -40,15 +40,8 @@ class ExpressionParser
             if (is_operator(iter))
             {
                 if (s[iter] != '(')
-                {
                     if (!result_set)
-                    {
-                        if (expr_is_symbol)
-                            result = symbol(expr);
-                        else
-                            result = integer(std::stoi(expr));
-                    }
-                }
+                        result = set_result(expr, is_not_numeric);
 
                 switch(s[iter])
                 {
@@ -82,7 +75,7 @@ class ExpressionParser
                 }
 
                 result_set = true;
-                expr_is_symbol = false;
+                is_not_numeric = false;
             }
             else
             {
@@ -90,15 +83,10 @@ class ExpressionParser
 
                 int ascii = s[iter] - '0';
                 if (ascii < 0 or ascii > 9)
-                    expr_is_symbol = true;
+                    is_not_numeric = true;
 
                 if (iter == h-1)
-                {
-                    if (expr_is_symbol)
-                        result = symbol(expr);
-                    else
-                        result = integer(std::stoi(expr));
-                }
+                    result = set_result(expr, is_not_numeric);
             }
         }
 
@@ -173,6 +161,21 @@ class ExpressionParser
 
         throw std::runtime_error("Unknown function " + expr);
         // remaining : levi_civita
+    }
+
+    RCP<const Basic> set_result(std::string &expr, bool& is_not_numeric)
+    {
+        if (expr == "") return zero;
+
+        if (is_not_numeric)
+        {
+            if (expr == "e") return E;
+            if (expr == "EulerGamma") return EulerGamma;
+            if (expr == "pi") return pi;
+            return symbol(expr);
+        }
+        else
+            return integer(std::stoi(expr));
     }
 
 public:

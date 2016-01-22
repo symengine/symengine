@@ -32,12 +32,17 @@ using SymEngine::make_rcp;
 using SymEngine::has_symbol;
 using SymEngine::is_a;
 using SymEngine::ExpressionParser;
+using SymEngine::pi;
 
 TEST_CASE("Parsing: integers, basic operations", "[parser]")
 {
     std::string s;
     ExpressionParser p;
     RCP<const Basic> res;
+
+    s = "-3-5";
+    res = p.parse(s);
+    REQUIRE(eq(*res, *integer(-8)));
 
     s = "((3)+(1*0))";
     res = p.parse(s);
@@ -139,6 +144,10 @@ TEST_CASE("Parsing: functions", "[parser]")
     res = p.parse(s);
     REQUIRE(eq(*res, *sin(x)));
 
+    s = "arcsin(-1)";
+    res = p.parse(s);
+    REQUIRE(eq(*res, *neg(div(pi, integer(2)))));
+
     s = "arcsin(sin(x))";
     res = p.parse(s);
     REQUIRE(eq(*res, *asin(sin(x))));
@@ -159,14 +168,31 @@ TEST_CASE("Parsing: functions", "[parser]")
     res = p.parse(s);
     REQUIRE(eq(*res, *add(integer(2), add(zeta(integer(2), x), zeta(log(integer(3)))))));
 
-    // Shouldn't this be correct? a trivial check should be made in `sin`, to
-    // see if the parameter `Basic` `is_a<Asin>` and reduce automaticall?y?
-
-    // s = "sin(arcsin(x))";
-    // res = p.parse(s);
-    // REQUIRE(eq(*res, *x));
+    s = "sin(arcsin(x)) + y";
+    res = p.parse(s);
+    REQUIRE(eq(*res, *add(x, y)));
 
     s = "log(x, gamma(y))*sin(3)";
     res = p.parse(s);
     REQUIRE(eq(*res, *mul(log(x, gamma(y)), sin(integer(3)))));
+}
+
+TEST_CASE("Parsing: constants", "[parser]")
+{
+    std::string s;
+    ExpressionParser p;
+    RCP<const Basic> res;
+    RCP<const Basic> x = symbol("x");
+
+    s = "sin(pi/2)";
+    res = p.parse(s);
+    REQUIRE(eq(*res, *one));
+
+    s = "log(e)";
+    res = p.parse(s);
+    REQUIRE(eq(*res, *one));
+
+    s = "ln(e/e) + sin(pi*2/2) + 3*x";
+    res = p.parse(s);
+    REQUIRE(eq(*res, *mul(integer(3), x)));
 }
