@@ -32,6 +32,8 @@ public:
     virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
     //! Substitute with `subs_dict`
     virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
+    //! \return simplified form if possible
+    RCP<const Basic> simplify_trig() const;
 };
 
 /*! \return `true` if `arg` is of form `theta + n*pi/12`
