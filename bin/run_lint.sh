@@ -34,3 +34,11 @@ else
     exit -1;
 fi
 
+# check space around `=` and `==`
+if ! egrep "^[^(//)]*[^\ (operator)]=[=][^\ ]" -nr --include=\*.{cpp,h,inc}  --exclude-dir=*teuchos* $SOURCE_DIR ; then
+    echo Space around = and == check passed;
+else
+    echo Space around = and == check failed;
+    exit -1;
+fi
+
