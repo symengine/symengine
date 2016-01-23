@@ -57,7 +57,7 @@ public:
             if(x.imaginary_ == 1) {
                 precedence = PrecedenceEnum::Atom;
             } else {
-                precedence = PrecedenceEnum::Mul;
+                precedence = PrecedenceEnum::Add;
             }
         } else {
             precedence = PrecedenceEnum::Add;

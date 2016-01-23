@@ -39,15 +39,22 @@ void StrPrinter::bvisit(const Complex &x) {
         }
         // If imaginary_ is not 1 or -1, print the absolute value
         if (x.imaginary_ != sgn(x.imaginary_)) {
-            s << abs(x.imaginary_);
-            s << "*I";
+            if (abs(x.imaginary_.get_den()) == 1)
+                s << abs(x.imaginary_.get_num()) << "*I";
+            else
+                s << abs(x.imaginary_.get_num()) << "*I/" << abs(x.imaginary_.get_den());
         } else {
             s << "I";
         }
     } else {
         if (x.imaginary_ != sgn(x.imaginary_)) {
-            s << x.imaginary_;
-            s << "*I";
+            if (sgn(x.imaginary_) != 1) {
+                s << "-";
+            }
+            if (abs(x.imaginary_.get_den()) == 1)
+                s << abs(x.imaginary_.get_num()) << "*I";
+            else
+                s << abs(x.imaginary_.get_num()) << "*I/" << abs(x.imaginary_.get_den());
         } else {
             if (sgn(x.imaginary_) == 1) {
                 s << "I";

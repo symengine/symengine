@@ -111,35 +111,34 @@ TEST_CASE("test_printing(): printing", "[printing]")
     c2 = Complex::from_two_rats(static_cast<const Rational&>(*rn1), static_cast<const Rational&>(*rn3));
     r1 = mul(c1, x);
     r2 = mul(c2, x);
-    REQUIRE(c1->__str__() == "1/2 + 5/7*I");
-    REQUIRE(c2->__str__() == "1/2 - 5/7*I");
-    REQUIRE(r1->__str__() == "(1/2 + 5/7*I)*x");
-    REQUIRE(r2->__str__() == "(1/2 - 5/7*I)*x");
+    REQUIRE(c1->__str__() == "1/2 + 5*I/7");
+    REQUIRE(c2->__str__() == "1/2 - 5*I/7");
+    REQUIRE(r1->__str__() == "(1/2 + 5*I/7)*x");
+    REQUIRE(r2->__str__() == "(1/2 - 5*I/7)*x");
     r1 = pow(x, c1);
     r2 = pow(x, c2);
-    REQUIRE(r1->__str__() == "x**(1/2 + 5/7*I)");
-    REQUIRE(r2->__str__() == "x**(1/2 - 5/7*I)");
+    REQUIRE(r1->__str__() == "x**(1/2 + 5*I/7)");
+    REQUIRE(r2->__str__() == "x**(1/2 - 5*I/7)");
 
 
     c1 = Complex::from_two_nums(*rn1, *rn2);
     c2 = Complex::from_two_nums(*rn1, *rn3);
-    REQUIRE(c1->__str__() == "1/2 + 5/7*I");
-    REQUIRE(c2->__str__() == "1/2 - 5/7*I");
+    REQUIRE(c1->__str__() == "1/2 + 5*I/7");
+    REQUIRE(c2->__str__() == "1/2 - 5*I/7");
 
     rn1 = Rational::from_two_ints(*integer(0), *integer(4));
     c1 = Complex::from_two_nums(*rn1, *rn2);
     c2 = Complex::from_two_nums(*rn1, *rn3);
     r1 = mul(c1, x);
     r2 = mul(c2, x);
-    REQUIRE(c1->__str__() == "5/7*I");
-    REQUIRE(c2->__str__() == "-5/7*I");
-    REQUIRE(r1->__str__() == "5/7*I*x");
-    REQUIRE(r2->__str__() == "-5/7*I*x");
+    REQUIRE(c1->__str__() == "5*I/7");
+    REQUIRE(c2->__str__() == "-5*I/7");
+    REQUIRE(r1->__str__() == "(5*I/7)*x");
+    REQUIRE(r2->__str__() == "(-5*I/7)*x");
     r1 = pow(x, c1);
     r2 = pow(x, c2);
-    REQUIRE(r1->__str__() == "x**(5/7*I)");
-    REQUIRE(r2->__str__() == "x**(-5/7*I)");
-
+    REQUIRE(r1->__str__() == "x**(5*I/7)");
+    REQUIRE(r2->__str__() == "x**(-5*I/7)");
 
 
     c1 = Complex::from_two_nums(*rn2, *rn1);
