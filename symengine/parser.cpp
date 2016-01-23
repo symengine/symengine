@@ -14,16 +14,61 @@
 #include <map>
 #include <set>
 #include <string>
-
+#include <functional>
 namespace SymEngine {
 
 class ExpressionParser
 {
     std::set<char> OPERATORS = {'-', '+', '*', '/', '^', '(', ')', ','};
-    std::map<char, int> op_precedence =   {
-                                    {')', 0}, {',', 0}, {'-', 1},  {'+', 1},
-                                    {'*', 3}, {'/', 4}, {'^', 5}
-                                    };
+    std::map<char, int> op_precedence = {
+        {')', 0}, {',', 0}, {'-', 1},  {'+', 1},
+        {'*', 3}, {'/', 4}, {'^', 5}
+    };
+    std::map<std::string, RCP<const Basic> > constants = {
+        {"e", E}, {"EulerGamma", EulerGamma}, {"pi", pi}
+    };
+
+    // reference : http://stackoverflow.com/questions/30393285/stdfunction-fails-to-distinguish-overloaded-functions
+    typedef RCP<const Basic> (*single_arg_func)(const RCP<const Basic>&);
+    typedef RCP<const Basic> (*double_arg_func)(const RCP<const Basic>&, const RCP<const Basic>&);
+
+    single_arg_func single_casted_log = log;       // as they are overloaded
+    single_arg_func single_casted_zeta = zeta;
+
+    std::map<   std::string,
+                std::function<RCP<const Basic>(const RCP<const Basic>&)>
+            >   single_arg_functions = {
+
+        {"sin", sin}, {"cos", cos}, {"tan", tan},
+        {"cot", cot}, {"csc", csc}, {"sec", sec},
+
+        {"arcsin", asin}, {"arccos", acos}, {"arctan", atan},
+        {"arcsec", asec}, {"arccsc", acsc}, {"arccot", acot},
+
+        {"sinh", sinh}, {"cosh", cosh}, {"tanh", tanh},
+        {"coth", coth}, // implement sech, csch
+
+        {"arcsinh", asinh}, {"arccosh", acosh}, {"arctanh", atanh},
+        {"arcsech", asech}, {"arccoth", acoth}, // implement acsch
+
+        {"gamma", gamma}, {"sqrt", sqrt}, {"abs", abs}, {"exp", exp},
+        {"lambertw", lambertw}, {"dirichlet_eta", dirichlet_eta},
+        {"ln", single_casted_log}, {"log", single_casted_log}, {"zeta", single_casted_zeta}
+    };
+
+    double_arg_func double_casted_log = log;       // as they are overloaded
+    double_arg_func double_casted_zeta = zeta;
+
+    std::map<   std::string,
+                std::function<RCP<const Basic>(const RCP<const Basic>&, const RCP<const Basic>&)>
+            >   double_arg_functions = {
+
+        {"log", double_casted_log}, {"zeta", double_casted_zeta},
+        {"pow", pow}, {"beta", beta}, {"uppergamma", uppergamma},
+        {"lowergamma", lowergamma}, {"kronecker_delta", kronecker_delta},
+        {"polygamma", polygamma}
+    };
+
     std::vector<int> operator_end;
     std::string s;
     unsigned int s_len;
@@ -108,56 +153,16 @@ class ExpressionParser
 
         if(expr == "") return param1;
 
-        if(expr == "sin") return sin(param1);
-        if(expr == "cos") return cos(param1);
-        if(expr == "tan") return tan(param1);
-        if(expr == "cot") return cot(param1);
-        if(expr == "csc") return csc(param1);
-        if(expr == "sec") return sec(param1);
-
-        if(expr == "arcsin") return asin(param1);
-        if(expr == "arccos") return acos(param1);
-        if(expr == "arctan") return atan(param1);
-        if(expr == "arcsec") return asec(param1);
-        if(expr == "arccsc") return acsc(param1);
-        if(expr == "arccot") return acot(param1);
-
-        if(expr == "sinh") return sinh(param1);
-        if(expr == "cosh") return cosh(param1);
-        if(expr == "tanh") return tanh(param1);
-        if(expr == "coth") return coth(param1);
-        // implement sech, csch ?
-
-        if(expr == "arcsinh") return asinh(param1);
-        if(expr == "arccosh") return acosh(param1);
-        if(expr == "arctanh") return atanh(param1);
-        if(expr == "arcsech") return asech(param1);
-        if(expr == "arccoth") return acoth(param1);
-        // implement acsch ?
-
-        if(expr == "gamma") return gamma(param1);
-        if(expr == "dirichlet_eta") return dirichlet_eta(param1);
-        if(expr == "lambertw") return lambertw(param1);
-        if(expr == "sqrt") return sqrt(param1);
-        if(expr == "abs") return abs(param1);
-        if(expr == "exprp") return exp(param1);
-        if(expr == "ln") return log(param1);
-
-        if(expr == "zeta") if(s[iter+1] != ',') return zeta(param1);
-        if(expr == "log") if(s[iter+1] != ',') return log(param1);
+        if (single_arg_functions.find(expr) != single_arg_functions.end())
+            if (s[iter+1] != ',')
+                return single_arg_functions[expr](param1);
 
         iter++;
         RCP<const Basic> param2 = parse_string(iter+1, operator_end[iter]);
         iter = operator_end[iter] - 1;
 
-        if(expr == "pow") return pow(param1, param2);
-        if(expr == "log") return log(param1, param2);
-        if(expr == "beta") return beta(param1, param2);
-        if(expr == "zeta") return zeta(param1, param2);
-        if(expr == "polygamma") return polygamma(param1, param2);
-        if(expr == "uppergamma") return uppergamma(param1, param2);
-        if(expr == "lowergamma") return lowergamma(param1, param2);
-        if(expr == "kronecker_delta") return kronecker_delta(param1, param2);
+        if (double_arg_functions.find(expr) != double_arg_functions.end())
+            return double_arg_functions[expr](param1, param2);
 
         throw std::runtime_error("Unknown function " + expr);
         // remaining : levi_civita
@@ -169,13 +174,12 @@ class ExpressionParser
 
         if (is_not_numeric)
         {
-            if (expr == "e") return E;
-            if (expr == "EulerGamma") return EulerGamma;
-            if (expr == "pi") return pi;
+            if (constants.find(expr) != constants.end())
+                return constants[expr];
             return symbol(expr);
         }
         else
-            return integer(std::stoi(expr));
+            return integer(std::atoi(expr.c_str()));
     }
 
 public:
