@@ -31,7 +31,7 @@ using SymEngine::umap_short_basic;
 #ifdef HAVE_SYMENGINE_PIRANHA
 #include <symengine/series_piranha.h>
 
-#define series_coeff(EX,SYM,PREC,COEFF) prat2synum(SymEngine::URatPSeriesPiranha::series(EX,SYM->get_name(),PREC)->p_.find_cf({COEFF}))
+#define series_coeff(EX, SYM, PREC, COEFF) prat2synum(SymEngine::URatPSeriesPiranha::series(EX, SYM->get_name(), PREC)->p_.find_cf({COEFF}))
 using SymEngine::URatPSeriesPiranha;
 
 static inline RCP<const Number> prat2synum(const piranha::rational& p_rat)

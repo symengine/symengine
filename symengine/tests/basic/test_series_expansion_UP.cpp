@@ -28,7 +28,7 @@ using SymEngine::umap_short_basic;
 #ifdef HAVE_SYMENGINE_PIRANHA
 #include <symengine/series_piranha.h>
 
-#define series_coeff(EX,SYM,PREC,COEFF) SymEngine::UPSeriesPiranha::series(EX,SYM->get_name(),PREC)->p_.find_cf({COEFF}).get_basic()
+#define series_coeff(EX, SYM, PREC, COEFF) SymEngine::UPSeriesPiranha::series(EX, SYM->get_name(), PREC)->p_.find_cf({COEFF}).get_basic()
 using SymEngine::UPSeriesPiranha;
 
 static bool expand_check_pairs(const RCP<const Basic> &ex, const RCP<const Symbol> &x, int prec, const umap_short_basic& pairs)
