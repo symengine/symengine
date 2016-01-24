@@ -22,7 +22,7 @@ public:
 public:
     IMPLEMENT_TYPEID(COMPLEX_DOUBLE)
     //! Constructor of ComplexDouble class
-    ComplexDouble(std::complex<double> i);
+    explicit ComplexDouble(std::complex<double> i);
     //! \return size of the hash
     virtual std::size_t __hash__() const;
     /*! Equality comparator

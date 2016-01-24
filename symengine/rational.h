@@ -21,7 +21,7 @@ public:
 public:
     IMPLEMENT_TYPEID(RATIONAL)
     //! Constructor of Rational class
-    Rational(mpq_class i);
+    explicit Rational(mpq_class i);
     /*! \param `i` must already be in mpq_class canonical form
     *   \return Integer or Rational depending on denumerator.
     * */
