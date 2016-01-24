@@ -25,7 +25,8 @@ class ExpressionParser
         {'*', 3}, {'/', 4}, {'^', 5}
     };
     std::map<std::string, RCP<const Basic> > constants = {
-        {"e", E}, {"EulerGamma", EulerGamma}, {"pi", pi}, {"i", I}
+
+        {"e", E}, {"E", E}, {"EulerGamma", EulerGamma}, {"pi", pi}, {"I", I}
     };
 
     // reference : http://stackoverflow.com/questions/30393285/stdfunction-fails-to-distinguish-overloaded-functions
@@ -39,17 +40,19 @@ class ExpressionParser
                 std::function<RCP<const Basic>(const RCP<const Basic>&)>
             >   single_arg_functions = {
 
+        {"", [](const RCP<const Basic>& x){return x;}},
+
         {"sin", sin}, {"cos", cos}, {"tan", tan},
         {"cot", cot}, {"csc", csc}, {"sec", sec},
 
-        {"arcsin", asin}, {"arccos", acos}, {"arctan", atan},
-        {"arcsec", asec}, {"arccsc", acsc}, {"arccot", acot},
+        {"asin", asin}, {"acos", acos}, {"atan", atan},
+        {"asec", asec}, {"acsc", acsc}, {"acot", acot},
 
         {"sinh", sinh}, {"cosh", cosh}, {"tanh", tanh},
         {"coth", coth}, // implement sech, csch
 
-        {"arcsinh", asinh}, {"arccosh", acosh}, {"arctanh", atanh},
-        {"arcsech", asech}, {"arccoth", acoth}, // implement acsch
+        {"asinh", asinh}, {"acosh", acosh}, {"atanh", atanh},
+        {"asech", asech}, {"acoth", acoth}, // implement acsch
 
         {"gamma", gamma}, {"sqrt", sqrt}, {"abs", abs}, {"exp", exp},
         {"lambertw", lambertw}, {"dirichlet_eta", dirichlet_eta},
@@ -148,24 +151,26 @@ class ExpressionParser
 
     RCP<const Basic> functionify(unsigned int& iter, const std::string& expr)
     {
-        RCP<const Basic> param1 = parse_string(iter+1, operator_end[iter]);
-        iter = operator_end[iter] - 1;
+        vec_basic params;
 
-        if(expr == "") return param1;
+        while (s[iter] != ')')
+        {
+            params.push_back(parse_string(iter+1, operator_end[iter]));
+            iter = operator_end[iter];
+        }
 
-        if (single_arg_functions.find(expr) != single_arg_functions.end())
-            if (s[iter+1] != ',')
-                return single_arg_functions[expr](param1);
+        // make this modular, scalable
+        // make map for all those functions which take in vec_basic args, like levi_civita
+        if (params.size() == 1)
+            if (single_arg_functions.find(expr) != single_arg_functions.end())
+                return single_arg_functions[expr](params[0]);
 
-        iter++;
-        RCP<const Basic> param2 = parse_string(iter+1, operator_end[iter]);
-        iter = operator_end[iter] - 1;
+        if (params.size() == 2)
+            if (double_arg_functions.find(expr) != double_arg_functions.end())
+                return double_arg_functions[expr](params[0], params[1]);
 
-        if (double_arg_functions.find(expr) != double_arg_functions.end())
-            return double_arg_functions[expr](param1, param2);
+        return function_symbol(expr, params);
 
-        throw std::runtime_error("Unknown function " + expr);
-        // remaining : levi_civita
     }
 
     RCP<const Basic> set_result(const std::string &expr, const bool& is_not_numeric)

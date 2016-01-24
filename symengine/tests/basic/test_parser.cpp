@@ -33,6 +33,7 @@ using SymEngine::has_symbol;
 using SymEngine::is_a;
 using SymEngine::ExpressionParser;
 using SymEngine::pi;
+using SymEngine::function_symbol;
 
 TEST_CASE("Parsing: integers, basic operations", "[parser]")
 {
@@ -144,11 +145,11 @@ TEST_CASE("Parsing: functions", "[parser]")
     res = p.parse(s);
     REQUIRE(eq(*res, *sin(x)));
 
-    s = "arcsin(-1)";
+    s = "asin(-1)";
     res = p.parse(s);
     REQUIRE(eq(*res, *neg(div(pi, integer(2)))));
 
-    s = "arcsin(sin(x))";
+    s = "asin(sin(x))";
     res = p.parse(s);
     REQUIRE(eq(*res, *asin(sin(x))));
 
@@ -168,7 +169,7 @@ TEST_CASE("Parsing: functions", "[parser]")
     res = p.parse(s);
     REQUIRE(eq(*res, *add(integer(2), add(zeta(integer(2), x), zeta(log(integer(3)))))));
 
-    s = "sin(arcsin(x)) + y";
+    s = "sin(asin(x)) + y";
     res = p.parse(s);
     REQUIRE(eq(*res, *add(x, y)));
 
@@ -196,7 +197,33 @@ TEST_CASE("Parsing: constants", "[parser]")
     res = p.parse(s);
     REQUIRE(eq(*res, *mul(integer(3), x)));
 
-    s = "(3+4*i)/(5+cos(pi/2)*i)";
+    s = "(3+4*I)/(5+cos(pi/2)*I)";
     res = p.parse(s);
     REQUIRE(eq(*res, *div(Complex::from_two_nums(*integer(3), *integer(4)), integer(5))));
+
+    s = "(2*I +6*I)*3*I + 4*I";
+    res = p.parse(s);
+    REQUIRE(eq(*res, *Complex::from_two_nums(*integer(-24), *integer(4))));
+}
+
+TEST_CASE("Parsing: function_symbols", "[parser]")
+{
+    std::string s;
+    ExpressionParser p;
+    RCP<const Basic> res;
+    RCP<const Basic> x = symbol("x");
+    RCP<const Basic> y = symbol("y");
+    RCP<const Basic> z = symbol("wt");
+
+    s = "f(x)";
+    res = p.parse(s);
+    REQUIRE(eq(*res, *function_symbol("f", x)));
+
+    s = "my_func(x, wt) + sin(f(y))";
+    res = p.parse(s);
+    REQUIRE(eq(*res, *add(function_symbol("my_func", {x, z}), sin(function_symbol("f", y)))));
+
+    s = "func(x, y, wt) + f(sin(x))";
+    res = p.parse(s);
+    REQUIRE(eq(*res, *add(function_symbol("func", {x, y, z}), function_symbol("f", sin(x)))));
 }
