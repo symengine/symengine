@@ -25,7 +25,7 @@ class ExpressionParser
         {'*', 3}, {'/', 4}, {'^', 5}
     };
     std::map<std::string, RCP<const Basic> > constants = {
-        {"e", E}, {"EulerGamma", EulerGamma}, {"pi", pi}
+        {"e", E}, {"EulerGamma", EulerGamma}, {"pi", pi}, {"i", I}
     };
 
     // reference : http://stackoverflow.com/questions/30393285/stdfunction-fails-to-distinguish-overloaded-functions
@@ -146,7 +146,7 @@ class ExpressionParser
         return false;
     }
 
-    RCP<const Basic> functionify(unsigned int& iter, std::string expr)
+    RCP<const Basic> functionify(unsigned int& iter, const std::string& expr)
     {
         RCP<const Basic> param1 = parse_string(iter+1, operator_end[iter]);
         iter = operator_end[iter] - 1;
@@ -168,7 +168,7 @@ class ExpressionParser
         // remaining : levi_civita
     }
 
-    RCP<const Basic> set_result(std::string &expr, bool& is_not_numeric)
+    RCP<const Basic> set_result(const std::string &expr, const bool& is_not_numeric)
     {
         if (expr == "") return zero;
 
@@ -184,7 +184,7 @@ class ExpressionParser
 
 public:
 
-    RCP<const Basic> parse(std::string &in)
+    RCP<const Basic> parse(const std::string &in)
     {
         std::stack<unsigned int> right_bracket;
         std::stack<std::pair<int, unsigned int> > op_stack;

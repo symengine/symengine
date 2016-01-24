@@ -195,4 +195,8 @@ TEST_CASE("Parsing: constants", "[parser]")
     s = "ln(e/e) + sin(pi*2/2) + 3*x";
     res = p.parse(s);
     REQUIRE(eq(*res, *mul(integer(3), x)));
+
+    s = "(3+4*i)/(5+cos(pi/2)*i)";
+    res = p.parse(s);
+    REQUIRE(eq(*res, *div(Complex::from_two_nums(*integer(3), *integer(4)), integer(5))));
 }
