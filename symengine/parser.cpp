@@ -208,6 +208,23 @@ class ExpressionParser {
         }
     }
 
+    bool operator_error(char prev, char current)
+    {
+        if (prev == '(') {
+            if (current == ')')
+                return true;
+
+        } else if (prev == '-') {
+            if (current != '(' and current != ',' and current != ')')
+                return true;
+
+        } else {
+            if(current != ')')
+                return true;
+        }
+        return false;
+    }
+
 public:
     // does all the preprocessing related to parsing
     RCP<const Basic> parse(const std::string &in)
@@ -216,6 +233,9 @@ public:
         std::stack<unsigned int> right_bracket;
         // stack to maintain operators, in order of their precedence (essentially how BODMAS was implemented)
         std::stack<std::pair<int, unsigned int> > op_stack;
+
+        bool last_char_was_op = false;
+        char last_char = 'x';
         s = "";
 
         // removing spaces from the string
@@ -227,7 +247,7 @@ public:
 
         s_len = s.length();
         operator_end.clear();
-        operator_end.resize(s_len);
+        operator_end.resize(s_len, -1);
         // the 'defacto' end of any operator
         // won't ever be pushed out of the stack
         op_stack.push(std::make_pair(-1, s_len));
@@ -242,6 +262,10 @@ public:
                         op_stack.pop();
                     // it's end is the index of the ')' (maybe pseudo created by a ',')
                     operator_end[i] = right_bracket.top();
+
+                    // this should never happen, every '(' should have a matcihng ')' in the bracket stack
+                    if (operator_end[i] == (int)s_len)
+                        throw std::runtime_error("Mismatching parantheses!");
                     right_bracket.pop();
                     op_stack.pop();
 
@@ -263,7 +287,15 @@ public:
                     operator_end[i] = op_stack.top().second;
                     op_stack.push(std::make_pair(op_precedence[x], i));
                 }
+
+                if(last_char_was_op and operator_error(last_char, x))
+                    throw std::runtime_error("Operator inconsistency!");
+                last_char_was_op = true;
+            } else {
+                last_char_was_op = false;
             }
+
+            last_char = s[i];
         }
         // final answer is parse_string from [0, len)
         return parse_string(0, s_len);
