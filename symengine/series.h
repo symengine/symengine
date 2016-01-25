@@ -10,12 +10,19 @@
 #include <list>
 
 #include <symengine/number.h>
+#include <symengine/dict.h>
 #include <symengine/integer.h>
 
 namespace SymEngine {
 
+class SeriesCoeffInterface : public Number {
+    virtual RCP<const Basic> as_basic() const =0;
+    virtual umap_int_basic as_dict() const =0;
+    virtual RCP<const Basic> get_coeff(int) const =0;
+};
+
 template <typename Poly, typename Coeff, typename Series>
-class SeriesBase : public Number {
+class SeriesBase : public SeriesCoeffInterface {
 public:
     Poly p_;
     std::string var_;
@@ -536,20 +543,11 @@ public:
     static inline Coeff log(const Coeff& c) {
         throw std::runtime_error("log(const) not implemented");
     }
-
-    /*
-     * int ldegree(Poly &s);
-     * Coeff& find_cf(Poly &s, int n);
-     * Poly var(const std::string &s);
-     * Poly pow(Poly &s, int n);
-     * Poly mul(Poly &a, Poly &b, unsigned prec);
-     * Poly diff(Poly &a, Poly &var);
-     * Poly integrate(Poly &a, Poly &var);
-     * Coeff root(Coeff &c, unsigned n);
-     * Poly subs(Poly &s, Poly &var, Poly& new, unsigned prec);
-     * Poly/Coeff convert(Number &n)
-     */
 };
+
+RCP<const SeriesCoeffInterface> series(const RCP<const Basic> &ex, const RCP<const Symbol> &var, unsigned int prec);
+
+RCP<const SeriesCoeffInterface> series_invfunc(const RCP<const Basic> &ex, const RCP<const Symbol> &var, unsigned int prec);
 
 }  //SymEngine
 #endif
