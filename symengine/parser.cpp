@@ -15,15 +15,18 @@
 #include <set>
 #include <string>
 #include <functional>
+
 namespace SymEngine {
 
-class ExpressionParser
-{
+class ExpressionParser {
+
+    // OPERATORS and op_precedence used internally, for parsing
     std::set<char> OPERATORS = {'-', '+', '*', '/', '^', '(', ')', ','};
     std::map<char, int> op_precedence = {
         {')', 0}, {',', 0}, {'-', 1},  {'+', 1},
         {'*', 3}, {'/', 4}, {'^', 5}
     };
+    // symengine supported constants
     std::map<std::string, RCP<const Basic> > constants = {
 
         {"e", E}, {"E", E}, {"EulerGamma", EulerGamma}, {"pi", pi}, {"I", I}
@@ -33,9 +36,14 @@ class ExpressionParser
     typedef RCP<const Basic> (*single_arg_func)(const RCP<const Basic>&);
     typedef RCP<const Basic> (*double_arg_func)(const RCP<const Basic>&, const RCP<const Basic>&);
 
-    single_arg_func single_casted_log = log;       // as they are overloaded
+    // cast overlaoded functions below to single_arg, double_arg before they can be used in the map
+    single_arg_func single_casted_log = log;
     single_arg_func single_casted_zeta = zeta;
 
+    double_arg_func double_casted_log = log;
+    double_arg_func double_casted_zeta = zeta;
+
+    // maps string to corresponding single argument function
     std::map<   std::string,
                 std::function<RCP<const Basic>(const RCP<const Basic>&)>
             >   single_arg_functions = {
@@ -59,80 +67,86 @@ class ExpressionParser
         {"ln", single_casted_log}, {"log", single_casted_log}, {"zeta", single_casted_zeta}
     };
 
-    double_arg_func double_casted_log = log;       // as they are overloaded
-    double_arg_func double_casted_zeta = zeta;
-
+    // maps string to corresponding double argument function
     std::map<   std::string,
                 std::function<RCP<const Basic>(const RCP<const Basic>&, const RCP<const Basic>&)>
             >   double_arg_functions = {
 
-        {"log", double_casted_log}, {"zeta", double_casted_zeta},
-        {"pow", pow}, {"beta", beta}, {"uppergamma", uppergamma},
-        {"lowergamma", lowergamma}, {"kronecker_delta", kronecker_delta},
-        {"polygamma", polygamma}
+        {"pow", pow}, {"beta", beta}, {"log", double_casted_log}, {"zeta", double_casted_zeta},
+        {"lowergamma", lowergamma}, {"uppergamma", uppergamma}, {"polygamma", polygamma},
+        {"kronecker_delta", kronecker_delta}
+
     };
 
+    // vector which stores where parsing 'ends' for a particular index
+    // eg. for a '(', it stores where the next ',' or ')' occurs, so as to know
+    // what part of the string is to be parsed 'together'
     std::vector<int> operator_end;
+
+    // the string to be parsed, obtained after removing all spaces from input string
     std::string s;
+    // it's length
     unsigned int s_len;
 
+    // parses a string from [l, r)
     RCP<const Basic> parse_string(unsigned int l, unsigned int h)
     {
+        // the result of a particular parse from l->h
         RCP<const Basic> result;
-        bool result_set = false;
-        bool is_not_numeric = false;
+        // the current expr being processed
         std::string expr = "";
+        // has the result been set even once?
+        bool result_set = false;
+        // is the current expr being parsed numeric?
+        bool is_not_numeric = false;
 
-        for (unsigned int iter = l; iter < h; ++iter)
-        {
-            if (is_operator(iter))
-            {
-                if (s[iter] != '(')
-                    if (!result_set)
+        for (unsigned int iter = l; iter < h; ++iter) {
+            if (is_operator(iter)) {
+                // if an operator is encountered, which is not '(' a result must be evaluated (if not already)!
+                if (!result_set)
+                    if (s[iter] != '(')
                         result = set_result(expr, is_not_numeric);
 
-                switch(s[iter])
-                {
-                    case '+':
-                        result = add(result, parse_string(iter+1, operator_end[iter]));
-                        iter = operator_end[iter]-1;
-                        break;
-                    case '*':
-                        result = mul(result, parse_string(iter+1, operator_end[iter]));
-                        iter = operator_end[iter]-1;
-                        break;
-                    case '-':
-                        result = sub(result, parse_string(iter+1, operator_end[iter]));
-                        iter = operator_end[iter]-1;
-                        break;
-                    case '/':
-                        result = div(result, parse_string(iter+1, operator_end[iter]));
-                        iter = operator_end[iter]-1;
-                        break;
-                    case '^':
-                        result = pow(result, parse_string(iter+1, operator_end[iter]));
-                        iter = operator_end[iter]-1;
-                        break;
-                    case '(':
-                        result = functionify(iter, expr);
-                        break;
-                    case ')':
-                        continue;
-                    case ',':
-                        continue;
+                // continue the parsing after operator_end[iter], as we have already parsed till there
+                // using the recursive call to parse_string
+                if (s[iter] == '+') {
+                    result = add(result, parse_string(iter+1, operator_end[iter]));
+                    iter = operator_end[iter]-1;
+
+                } else if (s[iter] == '*') {
+                    result = mul(result, parse_string(iter+1, operator_end[iter]));
+                    iter = operator_end[iter]-1;
+
+                } else if (s[iter] == '-') {
+                    result = sub(result, parse_string(iter+1, operator_end[iter]));
+                    iter = operator_end[iter]-1;
+
+                } else if (s[iter] == '/') {
+                    result = div(result, parse_string(iter+1, operator_end[iter]));
+                    iter = operator_end[iter]-1;
+
+                } else if (s[iter] == '^') {
+                    result = pow(result, parse_string(iter+1, operator_end[iter]));
+                    iter = operator_end[iter]-1;
+
+                } else if (s[iter] == '(') {
+                    result = functionify(iter, expr);
+
+                } else {
+                    continue;
                 }
-
+                // result has definitely been set
                 result_set = true;
-                is_not_numeric = false;
-            }
-            else
-            {
-                expr += s[iter];
 
+            } else {
+                // if not an operator, we append it to the current expr
+                expr += s[iter];
+                // check wether it's numeric or not
                 int ascii = s[iter] - '0';
                 if (ascii < 0 or ascii > 9)
                     is_not_numeric = true;
-
+                // if the parsing was to finish after this, result must be set
+                // occurs when no operator present eg. "3"
                 if (iter == h-1)
                     result = set_result(expr, is_not_numeric);
             }
@@ -141,6 +155,7 @@ class ExpressionParser
         return result;
     }
 
+    // returns true if the s[iter] is an operator
     bool is_operator(int iter)
     {
         if (iter >= 0 and iter < (int)s_len)
@@ -149,12 +164,13 @@ class ExpressionParser
         return false;
     }
 
+    // is called on detecting a "func(", thus "func" must be a type of
+    // function and everything inside arguments of the function
     RCP<const Basic> functionify(unsigned int& iter, const std::string& expr)
     {
         vec_basic params;
 
-        while (s[iter] != ')')
-        {
+        while (s[iter] != ')') {
             params.push_back(parse_string(iter+1, operator_end[iter]));
             iter = operator_end[iter];
         }
@@ -173,30 +189,37 @@ class ExpressionParser
 
     }
 
+    // return a <Basic> by parsing the 'expr' passed from parse_string
     RCP<const Basic> set_result(const std::string &expr, const bool& is_not_numeric)
     {
+        // for handling cases like "-2"
+        // expr will be "" in this case, but we must return 0
         if (expr == "") return zero;
 
-        if (is_not_numeric)
-        {
+        // if the expr wasn't numeric, it's either a constant, or a user declared symbol
+        // otherwise it's an integer (yet to add float/double support)
+        if (is_not_numeric) {
             if (constants.find(expr) != constants.end())
                 return constants[expr];
             return symbol(expr);
-        }
-        else
+
+        } else {
             return integer(std::atoi(expr.c_str()));
+        }
     }
 
 public:
-
+    // does all the preprocessing related to parsing
     RCP<const Basic> parse(const std::string &in)
     {
+        // stack to maintain right brackets, to match with corresponding left brackets
         std::stack<unsigned int> right_bracket;
+        // stack to maintain operators, in order of their precedence (essentially how BODMAS was implemented)
         std::stack<std::pair<int, unsigned int> > op_stack;
         s = "";
 
-        for (unsigned int i = 0; i < in.length(); ++i)
-        {
+        // removing spaces from the string
+        for (unsigned int i = 0; i < in.length(); ++i) {
             if (in[i] == ' ')
                 continue;
             s += in[i];
@@ -205,41 +228,44 @@ public:
         s_len = s.length();
         operator_end.clear();
         operator_end.resize(s_len);
+        // the 'defacto' end of any operator
+        // won't ever be pushed out of the stack
         op_stack.push(std::make_pair(-1, s_len));
 
-        for (int i = s_len-1; i >= 0; i--)
-        {
-            if (is_operator(i))
-            {
+        for (int i = s_len-1; i >= 0; i--) {
+            if (is_operator(i)) {
                 char x = s[i];
-                if(x == '(')
-                {
+
+                if(x == '(') {
+                    // find the matching right bracket in op_stack
                     while(op_stack.top().second != right_bracket.top())
                         op_stack.pop();
+                    // it's end is the index of the ')' (maybe pseudo created by a ',')
                     operator_end[i] = right_bracket.top();
                     right_bracket.pop();
                     op_stack.pop();
-                }
-                else if(x == ')' or x == ',')
-                {
-                    if (x == ',')
-                    {
+
+                } else if(x == ')' or x == ',') {
+                    // ',' acts as a pseudo ')', for the intended '('
+                    if (x == ',') {
+                        // it's end is the actual ')'
                         operator_end[i] = right_bracket.top();
                         right_bracket.pop();
                     }
                     op_stack.push(std::make_pair(op_precedence[x], i));
                     right_bracket.push(i);
-                }
-                else
-                {
+
+                } else {
+                    // if it's a normal operator, remove operators with higher precedence
                     while(op_precedence[x] < op_stack.top().first)
                         op_stack.pop();
-
+                    // whatever is on the top now, is it's 'end'
                     operator_end[i] = op_stack.top().second;
                     op_stack.push(std::make_pair(op_precedence[x], i));
                 }
             }
         }
+        // final answer is parse_string from [0, len)
         return parse_string(0, s_len);
     }
 };
