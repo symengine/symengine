@@ -91,6 +91,7 @@ their default values indicated below:
         -DWITH_SYMENGINE_THREAD_SAFE:BOOL=OFF \       # Build with thread safety
         -DWITH_ECM:BOOL=OFF \                         # Build with GMP-ECM library for integer factorization
         -DWITH_PRIMESIEVE:BOOL=OFF \                  # Install with Primesieve library
+        -DWITH_FLINT:BOOL=OFF \                       # Install with Flint library
         -DWITH_ARB:BOOL=OFF \                         # Install with ARB library
         -DWITH_TCMALLOC:BOOL=OFF \                    # Install with TCMalloc linked
         -DWITH_OPENMP:BOOL=OFF \                      # Install with OpenMP enabled
