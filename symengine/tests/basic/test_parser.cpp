@@ -34,6 +34,7 @@ using SymEngine::is_a;
 using SymEngine::ExpressionParser;
 using SymEngine::pi;
 using SymEngine::function_symbol;
+using SymEngine::real_double;
 
 TEST_CASE("Parsing: integers, basic operations", "[parser]")
 {
@@ -69,7 +70,7 @@ TEST_CASE("Parsing: integers, basic operations", "[parser]")
     res = p.parse(s);
     REQUIRE(eq(*res, *integer(106)));
 
-    s = "2^(3+2)+ 10";
+    s = "2**(3+2)+ 10";
     res = p.parse(s);
     REQUIRE(eq(*res, *integer(42)));
 
@@ -108,7 +109,7 @@ TEST_CASE("Parsing: symbols", "[parser]")
     res = p.parse(s);
     REQUIRE(eq(*res, *mul(w ,y)));
 
-    s = "x^(3+w1)-2/y";
+    s = "x**(3+w1)-2/y";
     res = p.parse(s);
     REQUIRE(eq(*res, *add(pow(x, add(integer(3), w)), div(integer(-2), y))));
 
@@ -226,4 +227,32 @@ TEST_CASE("Parsing: function_symbols", "[parser]")
     s = "func(x, y, wt) + f(sin(x))";
     res = p.parse(s);
     REQUIRE(eq(*res, *add(function_symbol("func", {x, y, z}), function_symbol("f", sin(x)))));
+}
+
+TEST_CASE("Parsing: doubles", "[parser]")
+{
+    std::string s;
+    ExpressionParser p;
+    RCP<const Basic> res;
+    RCP<const Basic> x = symbol("x");
+
+    s = "1.324";
+    res = p.parse(s);
+    REQUIRE(eq(*res, *real_double(1.324)));
+
+    s = "0.0324*x + 2*3";
+    res = p.parse(s);
+    REQUIRE(eq(*res, *add(mul(real_double(0.0324), x), integer(6))));
+
+    s = "1.324/(2+3)";
+    res = p.parse(s);
+    REQUIRE(eq(*res, *real_double(0.2648)));
+
+    // can you suggest more test cases
+    // i am still not clear about the fundamentals of realdouble
+
+    s = "sqrt(2.0)+5";
+    // s = "sqrt(2)+5" this fails! (will the user add `.0` to integers to get them `computed`)
+    res = p.parse(s);
+    REQUIRE(eq(*res, *real_double(sqrt(2) + 5)));
 }

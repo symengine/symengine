@@ -99,13 +99,15 @@ class ExpressionParser {
         bool result_set = false;
         // is the current expr being parsed numeric?
         bool is_not_numeric = false;
+        // number of '.' in the expression
+        int num_dots = 0;
 
         for (unsigned int iter = l; iter < h; ++iter) {
             if (is_operator(iter)) {
                 // if an operator is encountered, which is not '(' a result must be evaluated (if not already)!
                 if (!result_set)
                     if (s[iter] != '(')
-                        result = set_result(expr, is_not_numeric);
+                        result = set_result(expr, is_not_numeric, num_dots);
 
                 // continue the parsing after operator_end[iter], as we have already parsed till there
                 // using the recursive call to parse_string
@@ -142,13 +144,18 @@ class ExpressionParser {
                 // if not an operator, we append it to the current expr
                 expr += s[iter];
                 // check wether it's numeric or not
-                int ascii = s[iter] - '0';
-                if (ascii < 0 or ascii > 9)
-                    is_not_numeric = true;
+                if (s[iter] == '.') {
+                    num_dots++;
+
+                } else {
+                    int ascii = s[iter] - '0';
+                    if (ascii < 0 or ascii > 9)
+                        is_not_numeric = true;
+                }
                 // if the parsing was to finish after this, result must be set
                 // occurs when no operator present eg. "3"
                 if (iter == h-1)
-                    result = set_result(expr, is_not_numeric);
+                    result = set_result(expr, is_not_numeric, num_dots);
             }
         }
 
@@ -190,7 +197,7 @@ class ExpressionParser {
     }
 
     // return a <Basic> by parsing the 'expr' passed from parse_string
-    RCP<const Basic> set_result(const std::string &expr, const bool& is_not_numeric)
+    RCP<const Basic> set_result(const std::string &expr, const bool& is_not_numeric, const int& num_dots)
     {
         // for handling cases like "-2"
         // expr will be "" in this case, but we must return 0
@@ -204,7 +211,15 @@ class ExpressionParser {
             return symbol(expr);
 
         } else {
-            return integer(std::atoi(expr.c_str()));
+            if (num_dots > 1) {
+                throw std::runtime_error("Invalid symbol or number!");
+
+            } else if (num_dots == 1) {
+                return real_double(std::atof(expr.c_str()));
+
+            } else {
+                return integer(std::atoi(expr.c_str()));
+            }
         }
     }
 
@@ -240,11 +255,17 @@ public:
 
         // removing spaces from the string
         for (unsigned int i = 0; i < in.length(); ++i) {
-            if (in[i] == ' ')
+            if (in[i] == ' ') {
                 continue;
-            s += in[i];
-        }
 
+            } else if (in[i] == '*' and in[(i+1) % in.length()] == '*') {
+                s += '^';
+                i++;
+
+            } else {
+                s += in[i];
+            }
+        }
         s_len = s.length();
         operator_end.clear();
         operator_end.resize(s_len, -1);
