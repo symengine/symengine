@@ -25,10 +25,11 @@ unsigned int str_hash(const char* s, unsigned int seed = 0)
 }
 
 std::size_t URatPSeriesFlint::__hash__() const {
-    std::size_t seed = URATPSERIESPIRANHA;
+    std::hash<std::string> str_hash;
+    std::size_t seed = URATPSERIESFLINT;
     hash_combine(seed, var_);
     hash_combine(seed, degree_);
-    hash_combine(seed, str_hash(p_.to_string().c_str(), seed));
+    hash_combine(seed, str_hash(p_.to_string()));
     return seed;
 }
 
