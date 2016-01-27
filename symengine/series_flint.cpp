@@ -14,16 +14,6 @@ RCP<const URatPSeriesFlint> URatPSeriesFlint::series(const RCP<const Basic> &t, 
     return visitor.series(t);
 }
 
-unsigned int str_hash(const char* s, unsigned int seed = 0)
-{
-    unsigned int hash = seed;
-    while (*s)
-    {
-        hash = hash * 101  +  *s++;
-    }
-    return hash;
-}
-
 std::size_t URatPSeriesFlint::__hash__() const {
     std::hash<std::string> str_hash;
     std::size_t seed = URATPSERIESFLINT;
