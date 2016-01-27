@@ -39,6 +39,7 @@ set(SRC
     expression.cpp
     numer_denom.cpp
     derivative.cpp
+    parser.cpp
 )
 
 if (WITH_MPFR)
@@ -47,6 +48,10 @@ endif()
 
 if (WITH_MPC)
     set(SRC ${SRC} eval_mpc.cpp complex_mpc.cpp)
+endif()
+
+if (WITH_FLINT)
+    set(SRC ${SRC} series_flint.cpp)
 endif()
 
 if (WITH_ARB)
@@ -61,12 +66,12 @@ endif()
 set(HEADERS
     add.h        symengine_assert.h  functions.h  monomials.h  polynomial.h  number.h    rings.h
     basic.h      symengine_rcp.h     integer.h    mul.h        pow.h       constants.h
-    symbol.h     expression.h
+    symbol.h     expression.h        parser.h
     basic-inl.h  dict.h           matrix.h     ntheory.h    rational.h complex.h
     visitor.h    eval_double.h    diophantine.h cwrapper.h  printer.h  real_double.h
     eval_mpfr.h  eval_arb.h       eval_mpc.h     complex_double.h         series_visitor.h
     real_mpfr.h  complex_mpc.h    type_codes.inc lambda_double.h series.h series_piranha.h
-    series_generic.h              basic-methods.inc
+    basic-methods.inc   series_flint.h  series_generic.h
 )
 
 # Configure SymEngine using our CMake options:

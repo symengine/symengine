@@ -161,9 +161,19 @@ public:
         mpfr_sinh(result_, result_, rnd_);
     }
 
+    void bvisit(const Csch &x) {
+        apply(result_, *(x.get_arg()));
+        mpfr_csch(result_, result_, rnd_);
+    }
+
     void bvisit(const Cosh &x) {
         apply(result_, *(x.get_arg()));
         mpfr_cosh(result_, result_, rnd_);
+    }
+
+    void bvisit(const Sech &x) {
+        apply(result_, *(x.get_arg()));
+        mpfr_sech(result_, result_, rnd_);
     }
 
     void bvisit(const Tanh &x) {
@@ -180,6 +190,12 @@ public:
         apply(result_, *(x.get_arg()));
         mpfr_asinh(result_, result_, rnd_);
     }
+
+    void bvisit(const ACsch &x) {
+        apply(result_, *(x.get_arg()));
+        mpfr_ui_div(result_, 1, result_, rnd_);
+        mpfr_asinh(result_, result_, rnd_);
+    };
 
     void bvisit(const ACosh &x) {
         apply(result_, *(x.get_arg()));
@@ -216,7 +232,11 @@ public:
         if (x.__eq__(*pi)) {
             mpfr_const_pi(result_, rnd_);
         } else if (x.__eq__(*E)) {
-            mpfr_const_euler(result_, rnd_);
+            mpfr_t one_;
+            mpfr_init2(one_, mpfr_get_prec(result_));
+            mpfr_set_ui(one_, 1, rnd_);
+            mpfr_exp(result_, one_, rnd_);
+            mpfr_clear(one_);
         } else if (x.__eq__(*EulerGamma)) {
             mpfr_const_euler(result_, rnd_);
         } else {
@@ -235,6 +255,30 @@ public:
 
     void bvisit(const FunctionWrapper &x) {
         x.eval(mpfr_get_prec(result_))->accept(*this);
+    }
+
+    void bvisit(const Max &x) {
+        mpfr_class t(mpfr_get_prec (result_));
+        auto d = x.get_args();
+        auto p = d.begin();
+        apply(result_, *(*p));
+        p++;
+        for (; p != d.end();  p++) {
+            apply(t.get_mpfr_t(), *(*p));
+            mpfr_max(result_, result_, t.get_mpfr_t(), rnd_);
+        }
+    }
+
+    void bvisit(const Min &x) {
+        mpfr_class t(mpfr_get_prec (result_));
+        auto d = x.get_args();
+        auto p = d.begin();
+        apply(result_, *(*p));
+        p++;
+        for (; p != d.end();  p++) {
+            apply(t.get_mpfr_t(), *(*p));
+            mpfr_min(result_, result_, t.get_mpfr_t(), rnd_);
+        }
     }
 
     // Classes not implemented are

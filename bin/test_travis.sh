@@ -63,6 +63,9 @@ fi
 if [[ "${WITH_RUBY}" != "" ]]; then
     cmake_line="$cmake_line -DWITH_RUBY=${WITH_RUBY}"
 fi
+if [[ "${TEST_CPP}" != "" ]]; then
+    cmake_line="$cmake_line -DBUILD_BENCHMARKS=${TEST_CPP} -DBUILD_TESTS=${TEST_CPP}"
+fi
 
 if [[ "${CC}" == "clang"* ]] && [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
     CXXFLAGS=""
@@ -77,23 +80,25 @@ echo "Running make:"
 make
 echo "Running make install:"
 make install
+
+if [[ "${TEST_CPP}" == "no" ]]; then
+    exit 0;
+fi
+
 echo "Running tests in build directory:"
 # C++
-if [[ "${TEST_CPP}" != "no" ]]; then
-    ctest --output-on-failure
-fi
+ctest --output-on-failure
+
 echo "Running tests using installed SymEngine:"
 
-if [[ "${TEST_CPP}" != "no" ]]; then
-    cd $SOURCE_DIR/benchmarks
+cd $SOURCE_DIR/benchmarks
 
-    compile_flags=`cmake --find-package -DNAME=SymEngine -DSymEngine_DIR=$our_install_dir/lib/cmake/symengine -DCOMPILER_ID=GNU -DLANGUAGE=CXX -DMODE=COMPILE`
-    link_flags=`cmake --find-package -DNAME=SymEngine -DSymEngine_DIR=$our_install_dir/lib/cmake/symengine  -DCOMPILER_ID=GNU -DLANGUAGE=CXX -DMODE=LINK`
+compile_flags=`cmake --find-package -DNAME=SymEngine -DSymEngine_DIR=$our_install_dir/lib/cmake/symengine -DCOMPILER_ID=GNU -DLANGUAGE=CXX -DMODE=COMPILE`
+link_flags=`cmake --find-package -DNAME=SymEngine -DSymEngine_DIR=$our_install_dir/lib/cmake/symengine  -DCOMPILER_ID=GNU -DLANGUAGE=CXX -DMODE=LINK`
 
-    ${CXX} -std=c++0x $compile_flags expand1.cpp $link_flags
-    export LD_LIBRARY_PATH=$our_install_dir/lib:$LD_LIBRARY_PATH
-    ./a.out
-fi
+${CXX} -std=c++0x $compile_flags expand1.cpp $link_flags
+export LD_LIBRARY_PATH=$our_install_dir/lib:$LD_LIBRARY_PATH
+./a.out
 
 echo "Checking whether all header files are installed:"
 python $SOURCE_DIR/symengine/utilities/tests/test_make_install.py $our_install_dir/include/symengine/ $SOURCE_DIR/symengine

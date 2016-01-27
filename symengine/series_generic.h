@@ -9,32 +9,46 @@
 #include <list>
 
 #include <symengine/polynomial.h>
+#include <symengine/rational.h>
+#include <symengine/integer.h>
+#include <symengine/series.h>
+#include <symengine/expression.h>
 
 namespace SymEngine {
+using sp_expr = RCP<const UnivariatePolynomial> poly_; //Polynomial type
+//using sp_t = RCP //Coefficient type
 //! UnivariateSeries Class
-class UnivariateSeries : public Basic {
-public:
+class UnivariateSeries : public SeriesBase<UnivariatePolynomial, int, UnivariateSeries> {
+//public:
     //! `var_` : Variable of the UnivariateSeries
     //! `poly_` : holds the UnivariatePolynomial of the series
     //! `prec_` : precision of the UnivariateSeries, i.e. self = poly + O(var^prec)
     // UnivariateSeries 1 + 2*x + x**2 + O(x**5) has dict_ = {{0, 1}, {1, 2}, {2, 1}} with var_ = "x" and prec_ = 5
-    RCP<const Symbol> var_;
-    RCP<const UnivariatePolynomial> poly_;
-    unsigned int prec_;
+    //    RCP<const Symbol> var_;
+    //RCP<const UnivariatePolynomial> poly_;
+    //unsigned int prec_;
+    //data members now inherited from SeriesBase
 public:
     IMPLEMENT_TYPEID(UNIVARIATESERIES)
     //! Constructor of UnivariateSeries class
-    UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const RCP<const UnivariatePolynomial> &poly);
-    UnivariateSeries(const RCP<const Symbol> &var, const unsigned int& precision, const unsigned int& max_exp, map_uint_mpz&& dict);
-    UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const map_uint_mpz &dict);
-    //! Constructor using a dense vector of mpz_class coefficients
-    UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const std::vector<mpz_class> &v);
+    UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const sp_expr &poly);
+    static RCP<const UnivariateSeries> series(const RCP<const Basic> &t, const std::string &x, unsigned int prec);
+    static SymEngine::Integer convert(const Integer &x);
+    static SymEngine::Rational convert(const mpq_class &x);
+    //static pp_t var(const std::string &s);
+    static SymEngine::Rational convert(const Rational &x);
+    static SymEngine::Rational convert(const Number &x);
 
+    //   UnivariateSeries(const RCP<const Symbol> &var, const unsigned int& precision, const unsigned int& max_exp, map_uint_mpz&& dict);
+    //UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const map_uint_mpz &dict);
+    //! Constructor using a dense vector of mpz_class coefficients
+    //  UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const std::vector<mpz_class> &v);
+    /*
     static RCP<const UnivariateSeries> create(const RCP<const Symbol> &var,
             const unsigned int &prec, const std::vector<mpz_class> &v) {
         return make_rcp<const UnivariateSeries>(var, prec, v);
     }
-
+    */
     //! \return true if canonical
     bool is_canonical(const UnivariatePolynomial&, const unsigned int &) const;
     //! \return size of the hash
@@ -45,21 +59,24 @@ public:
      * */
 
     bool operator==(const UnivariateSeries &o) const {
-        return (eq(*var_, *o.var_) and poly_->__eq__(*o.poly_) and prec_ == o.prec_);
+        return (var_ == o.var_ and p_.__eq__(o.p_) and degree_ == o.degree_);
     }
     bool __eq__(const Basic &o) const;
     int compare(const Basic &o) const;
 
     std::string __str__() const;
     virtual vec_basic get_args() const { return {}; }
+
+    static sp_expr series_sin(const sp_expr &s, const sp_expr &var, unsigned int prec);
 };
 
-
+  /*
 inline RCP<const UnivariateSeries> univariate_series(RCP<const Symbol> i,       unsigned int prec, const map_uint_mpz& dict)
 {
     return make_rcp<const UnivariateSeries>(i, prec, dict);
 }
 
+  */
 RCP<const UnivariateSeries> add_uni_series (const UnivariateSeries& a, const UnivariateSeries &b);
 RCP<const UnivariateSeries> neg_uni_series (const UnivariateSeries& a);
 RCP<const UnivariateSeries> sub_uni_series (const UnivariateSeries& a, const UnivariateSeries &b);

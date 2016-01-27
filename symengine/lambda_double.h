@@ -180,9 +180,19 @@ public:
         result_ = [=](const std::vector<T> &x){ return std::sinh(tmp(x)); };
     };
 
+    void bvisit(const Csch &x) {
+        fn tmp = apply(*(x.get_arg()));
+        result_ = [=](const std::vector<T> &x){ return 1.0 / std::sinh(tmp(x)); };
+    };
+
     void bvisit(const Cosh &x) {
         fn tmp = apply(*(x.get_arg()));
         result_ = [=](const std::vector<T> &x){ return std::cosh(tmp(x)); };
+    };
+
+    void bvisit(const Sech &x) {
+        fn tmp = apply(*(x.get_arg()));
+        result_ = [=](const std::vector<T> &x){ return 1.0 / std::cosh(tmp(x)); };
     };
 
     void bvisit(const Tanh &x) {
@@ -198,6 +208,11 @@ public:
     void bvisit(const ASinh &x) {
         fn tmp = apply(*(x.get_arg()));
         result_ = [=](const std::vector<T> &x){ return std::asinh(tmp(x)); };
+    };
+
+    void bvisit(const ACsch &x) {
+        fn tmp = apply(*(x.get_arg()));
+        result_ = [=](const std::vector<T> &x){ return std::asinh(1.0 / tmp(x)); };
     };
 
     void bvisit(const ACosh &x) {
@@ -260,6 +275,38 @@ public:
     void bvisit(const Gamma &x) {
         fn tmp = apply(*(x.get_args()[0]));
         result_ = [=](const std::vector<double> &x){ return std::tgamma(tmp(x)); };
+    };
+
+    void bvisit(const Max &x) {
+        std::vector<fn> applys;
+        for (const auto &p: x.get_args()) {
+            applys.push_back(apply(*p));
+        }
+
+        result_ = [=](const std::vector<double> &x){
+
+            double result = applys[0](x);
+            for (unsigned int i = 0; i < applys.size(); i++) {
+                result = std::max(result, applys[i](x));
+            }
+            return result;
+        };
+    };
+
+    void bvisit(const Min &x) {
+        std::vector<fn> applys;
+        for (const auto &p: x.get_args()) {
+            applys.push_back(apply(*p));
+        }
+
+        result_ = [=](const std::vector<double> &x){
+
+            double result = applys[0](x);
+            for (unsigned int i = 0; i < applys.size(); i++) {
+                result = std::min(result, applys[i](x));
+            }
+            return result;
+        };
     };
 };
 

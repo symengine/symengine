@@ -133,10 +133,13 @@ public:
     virtual RCP<const Basic> asec(const Basic &) const = 0;
     virtual RCP<const Basic> acsc(const Basic &) const = 0;
     virtual RCP<const Basic> sinh(const Basic &) const = 0;
+    virtual RCP<const Basic> csch(const Basic &) const = 0;
     virtual RCP<const Basic> cosh(const Basic &) const = 0;
+    virtual RCP<const Basic> sech(const Basic &) const = 0;
     virtual RCP<const Basic> tanh(const Basic &) const = 0;
     virtual RCP<const Basic> coth(const Basic &) const = 0;
     virtual RCP<const Basic> asinh(const Basic &) const = 0;
+    virtual RCP<const Basic> acsch(const Basic &) const = 0;
     virtual RCP<const Basic> acosh(const Basic &) const = 0;
     virtual RCP<const Basic> atanh(const Basic &) const = 0;
     virtual RCP<const Basic> acoth(const Basic &) const = 0;

@@ -107,10 +107,7 @@ bool Rational::is_perfect_power(bool is_expected) const
         return true;
     else if (num == 1)
         return mpz_perfect_power_p(i.get_den().get_mpz_t()) != 0;
-
     const mpz_class &den = i.get_den();
-    if (den == 0)
-        return mpz_perfect_power_p(num.get_mpz_t()) != 0;
 
     if (not is_expected) {
         if (mpz_cmpabs(num.get_mpz_t(), den.get_mpz_t()) > 0) {
@@ -128,6 +125,9 @@ bool Rational::is_perfect_power(bool is_expected) const
 
 bool Rational::nth_root(const Ptr<RCP<const Number>> &the_rat, unsigned long n) const
 {
+    if (n == 0)
+        throw std::runtime_error("i_nth_root: Can not find Zeroth root");
+
     mpq_class r;
     int ret = mpz_root(r.get_num_mpz_t(), i.get_num_mpz_t(), n);
     if (ret == 0)

@@ -135,6 +135,11 @@ if (WITH_PRIMESIEVE)
     set(PKGS ${PKGS} "PRIMESIEVE")
 endif()
 
+# FLINT
+set(WITH_FLINT no
+    CACHE BOOL "Build with Flint")
+set(HAVE_SYMENGINE_FLINT False)
+
 # ARB
 set(WITH_ARB no
     CACHE BOOL "Build with Arb")
@@ -150,6 +155,19 @@ set(WITH_MPC no
     CACHE BOOL "Build with MPC")
 set(HAVE_SYMENGINE_MPC False)
 
+if (WITH_FLINT)
+    find_package(FLINT REQUIRED)
+    include_directories(${FLINT_INCLUDE_DIRS})
+    set(LIBS ${LIBS} ${FLINT_TARGETS})
+    set(HAVE_SYMENGINE_FLINT True)
+    set(PKGS ${PKGS} "FLINT")
+
+    # Workaround for https://github.com/fredrik-johansson/arb/issues/24
+    include_directories(${FLINT_INCLUDE_DIRS}/flint)
+
+    set(WITH_MPFR yes)
+endif()
+
 if (WITH_ARB)
     find_package(FLINT REQUIRED)
     include_directories(${FLINT_INCLUDE_DIRS})
@@ -159,6 +177,8 @@ if (WITH_ARB)
     # Workaround for https://github.com/fredrik-johansson/arb/issues/24
     include_directories(${FLINT_INCLUDE_DIRS}/flint)
 
+    set(WITH_FLINT yes)
+    set(HAVE_SYMENGINE_FLINT True)
     set(WITH_MPFR yes)
 
     find_package(ARB REQUIRED)
@@ -384,6 +404,7 @@ configure_file(cmake/SymEngineConfigVersion.cmake.in SymEngineConfigVersion.cmak
 
 install(FILES "${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/SymEngineConfig.cmake"
               ${PROJECT_BINARY_DIR}/SymEngineConfigVersion.cmake
+              cmake/FindFLINT.cmake
               cmake/FindARB.cmake
               cmake/FindBFD.cmake
               cmake/FindECM.cmake
@@ -461,6 +482,12 @@ message("WITH_PRIMESIEVE: ${WITH_PRIMESIEVE}")
 if (WITH_PRIMESIEVE)
     message("PRIMESIEVE_INCLUDE_DIRS: ${PRIMESIEVE_INCLUDE_DIRS}")
     message("PRIMESIEVE_LIBRARIES: ${PRIMESIEVE_LIBRARIES}")
+endif()
+
+message("WITH_FLINT: ${WITH_FLINT}")
+if (WITH_FLINT)
+    message("FLINT_INCLUDE_DIRS: ${FLINT_INCLUDE_DIRS}")
+    message("FLINT_LIBRARIES: ${FLINT_LIBRARIES}")
 endif()
 
 message("WITH_ARB: ${WITH_ARB}")

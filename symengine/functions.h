@@ -623,6 +623,30 @@ public:
 //! Canonicalize Sinh:
 RCP<const Basic> sinh(const RCP<const Basic> &arg);
 
+class Csch : public HyperbolicFunction {
+//! The hyperbolic cosecant function, `\frac{2}{e^x - e^{-x}}`.
+public:
+    IMPLEMENT_TYPEID(CSCH)
+    //! Csch Constructor
+    Csch(const RCP<const Basic> &arg);
+    /*! Equality comparator
+     * \param o - Object to be compared with
+     * \return whether the 2 objects are equal
+     * */
+    virtual bool __eq__(const Basic &o) const;
+    //! Compares `arg` with `o` returns greater than, equal or less than
+    virtual int compare(const Basic &o) const;
+    //! \return `true` if canonical
+    bool is_canonical(const RCP<const Basic> &arg) const;
+    //! \return Canonicalized csch
+    virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
+    //! expands csch in terms of exp function
+    virtual RCP<const Basic> expand_as_exp() const;
+};
+
+//! Canonicalize Csch:
+RCP<const Basic> csch(const RCP<const Basic> &arg);
+
 class Cosh : public HyperbolicFunction {
 //! The hyperbolic cosine function, `\frac{e^x + e^{-x}}{2}`.
 public:
@@ -645,6 +669,30 @@ public:
 
 //! Canonicalize Cosh:
 RCP<const Basic> cosh(const RCP<const Basic> &arg);
+
+class Sech : public HyperbolicFunction {
+//! The hyperbolic secant function, `\frac{2}{e^x + e^{-x}}`.
+public:
+    IMPLEMENT_TYPEID(SECH)
+    //! Sech Constructor
+    Sech(const RCP<const Basic> &arg);
+    /*! Equality comparator
+     * \param o - Object to be compared with
+     * \return whether the 2 objects are equal
+     * */
+    virtual bool __eq__(const Basic &o) const;
+    //! Compares `arg` with `o` returns greater than, equal or less than
+    virtual int compare(const Basic &o) const;
+    //! \return `true` if canonical
+    bool is_canonical(const RCP<const Basic> &arg) const;
+    //! \return Canonicalized sech
+    virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
+    //! expands sech in terms of exp function
+    virtual RCP<const Basic> expand_as_exp() const;
+};
+
+//! Canonicalize Sech:
+RCP<const Basic> sech(const RCP<const Basic> &arg);
 
 class Tanh : public HyperbolicFunction {
 //! The hyperbolic tangent function, `\frac{\sinh(x)}{\cosh(x)}`.
@@ -712,6 +760,27 @@ public:
 
 //! Canonicalize ASinh:
 RCP<const Basic> asinh(const RCP<const Basic> &arg);
+
+class ACsch: public HyperbolicFunction {
+//! The inverse hyperbolic cosecant function.
+public:
+    IMPLEMENT_TYPEID(ACSCH)
+    //! ACsch Constructor
+    ACsch(const RCP<const Basic> &arg);
+    /*! Equality comparator
+     * \param o - Object to be compared with
+     * \return whether the 2 objects are equal
+     * */
+    virtual bool __eq__(const Basic &o) const;
+    virtual int compare(const Basic &o) const;
+    //! \return `true` if canonical
+    bool is_canonical(const RCP<const Basic> &arg) const;
+    //! \return Canonicalized acsch
+    virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
+};
+
+//! Canonicalize ACsch:
+RCP<const Basic> acsch(const RCP<const Basic> &arg);
 
 class ACosh: public HyperbolicFunction {
 //! The inverse hyperbolic cosine function.
@@ -1038,6 +1107,51 @@ public:
 //! Canonicalize Abs:
 RCP<const Basic> abs(const RCP<const Basic> &arg);
 
+class Max: public Function {
+
+private:
+    vec_basic arg_;
+public:
+    IMPLEMENT_TYPEID(MAX)
+    //! Max Constructor
+    Max(const vec_basic&& arg);
+
+    virtual bool __eq__(const Basic &o) const;
+    virtual int compare(const Basic &o) const;
+    //! \return Size of the hash
+    virtual std::size_t __hash__() const;
+    //! \return `true` if canonical
+    bool is_canonical(const vec_basic &arg) const;
+    inline vec_basic get_args() const { return arg_; }
+};
+
+//! Canonicalize Max:
+RCP<const Basic> max(const vec_basic &arg);
+
+class Min: public Function {
+
+private:
+    vec_basic arg_;
+public:
+    IMPLEMENT_TYPEID(MIN)
+    //! Min Constructor
+    Min(const vec_basic&& arg);
+    Min(const RCP<const Basic> &arg, ...);
+
+    virtual bool __eq__(const Basic &o) const;
+    virtual int compare(const Basic &o) const;
+    //! \return Size of the hash
+    virtual std::size_t __hash__() const;
+    //! \return `true` if canonical
+    bool is_canonical(const vec_basic &arg) const;
+    inline vec_basic get_args() const { return arg_; }
+};
+
+//! Canonicalize Min:
+RCP<const Basic> min(const vec_basic &arg);
+
+//! \return simplified form if possible
+RCP<const Basic> trig_to_sqrt(const RCP<const Basic> &arg);
 
 } // SymEngine
 

@@ -179,9 +179,21 @@ public:
         mpc_sinh(result_, result_, rnd_);
     }
 
+    void bvisit(const Csch &x) {
+        apply(result_, *(x.get_arg()));
+        mpc_sinh(result_, result_, rnd_);
+        mpc_ui_div(result_, 1, result_, rnd_);
+    }
+
     void bvisit(const Cosh &x) {
         apply(result_, *(x.get_arg()));
         mpc_cosh(result_, result_, rnd_);
+    }
+
+    void bvisit(const Sech &x) {
+        apply(result_, *(x.get_arg()));
+        mpc_cosh(result_, result_, rnd_);
+        mpc_ui_div(result_, 1, result_, rnd_);
     }
 
     void bvisit(const Tanh &x) {
@@ -197,6 +209,12 @@ public:
 
     void bvisit(const ASinh &x) {
         apply(result_, *(x.get_arg()));
+        mpc_asinh(result_, result_, rnd_);
+    }
+
+    void bvisit(const ACsch &x) {
+        apply(result_, *(x.get_arg()));
+        mpc_ui_div(result_, 1, result_, rnd_);
         mpc_asinh(result_, result_, rnd_);
     }
 
@@ -232,7 +250,8 @@ public:
         } else if (x.__eq__(*E)) {
             mpfr_t t;
             mpfr_init2(t, mpc_get_prec(result_));
-            mpfr_const_euler(t, rnd_);
+            mpfr_set_ui(t, 1, rnd_);
+            mpfr_exp(t, t, rnd_);
             mpc_set_fr(result_, t, rnd_);
             mpfr_clear(t);
         } else if (x.__eq__(*EulerGamma)) {

@@ -1,6 +1,7 @@
 # SymEngine
 
 [![Build Status](https://travis-ci.org/symengine/symengine.png?branch=master)](https://travis-ci.org/symengine/symengine)
+[![Build status](https://ci.appveyor.com/api/projects/status/n7vqq2ilkw59o4bx/branch/master?svg=true)](https://ci.appveyor.com/project/certik/symengine/branch/master)
 
 SymEngine is a standalone fast C++ symbolic manipulation library. Optional thin
 wrappers allow usage of the library from other languages, e.g.:
@@ -91,6 +92,7 @@ their default values indicated below:
         -DWITH_SYMENGINE_THREAD_SAFE:BOOL=OFF \       # Build with thread safety
         -DWITH_ECM:BOOL=OFF \                         # Build with GMP-ECM library for integer factorization
         -DWITH_PRIMESIEVE:BOOL=OFF \                  # Install with Primesieve library
+        -DWITH_FLINT:BOOL=OFF \                       # Install with Flint library
         -DWITH_ARB:BOOL=OFF \                         # Install with ARB library
         -DWITH_TCMALLOC:BOOL=OFF \                    # Install with TCMalloc linked
         -DWITH_OPENMP:BOOL=OFF \                      # Install with OpenMP enabled
