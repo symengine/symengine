@@ -61,6 +61,8 @@ public:
         if (not s.get_coeff(0).is_zero()) {
             throw std::logic_error("sin(const) not Implemented");
         }
+        if (s.degree() > 8)
+            return fp_t(sin_series(s, prec));
         //! fast sin(x)
         fp_t res_p, monom(s), ssquare;
         ssquare = mullow(s, s, prec);
@@ -79,10 +81,11 @@ public:
     }
 
     static inline fp_t series_cos(const fp_t &s, const fp_t& var, unsigned int prec) {
-//        return fp_t(cos_series(s, prec));
         if (not s.get_coeff(0).is_zero()) {
             throw std::logic_error("cos(const) not Implemented");
         }
+        if (s.degree() > 8)
+            return fp_t(cos_series(s, prec));
         fp_t res_p, ssquare, monom;
         ssquare = mullow(s, s, prec);
         monom = ssquare;
