@@ -30,6 +30,12 @@ if (WITH_PIRANHA)
     add_test(test_series_expansion_URatP ${PROJECT_BINARY_DIR}/test_series_expansion_URatP)
 endif()
 
+if (WITH_FLINT)
+    add_executable(test_series_expansion_URatF test_series_expansion_URatF.cpp)
+    target_link_libraries(test_series_expansion_URatF symengine catch)
+    add_test(test_series_expansion_URatF ${PROJECT_BINARY_DIR}/test_series_expansion_URatF)
+endif()
+
 add_executable(test_functions test_functions.cpp)
 target_link_libraries(test_functions symengine catch)
 add_test(test_functions ${PROJECT_BINARY_DIR}/test_functions)
