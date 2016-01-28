@@ -62,7 +62,8 @@ public:
             throw std::logic_error("sin(const) not Implemented");
         }
         //! fast sin(x)
-        fp_t res_p, monom(s), ssquare(s*s);
+        fp_t res_p, monom(s), ssquare;
+        ssquare = mullow(s, s, prec);
         res_p.set_zero();
         flint::fmpqxx prod;
         prod.set_one();
@@ -72,7 +73,7 @@ public:
                 prod /= flint::fmpzxx(1-j);
             prod /= flint::fmpzxx(j);
             res_p += monom * prod;
-            monom *= ssquare;
+            monom = mullow(monom, ssquare, prec);
         }
         return res_p;
     }
@@ -82,7 +83,9 @@ public:
         if (not s.get_coeff(0).is_zero()) {
             throw std::logic_error("cos(const) not Implemented");
         }
-        fp_t res_p, ssquare(s*s), monom(s*s);
+        fp_t res_p, ssquare, monom;
+        ssquare = mullow(s, s, prec);
+        monom = ssquare;
         res_p.set_one();
         flint::fmpqxx prod;
         prod.set_one();
@@ -92,7 +95,7 @@ public:
                 prod /= flint::fmpzxx(1 - j);
             prod /= flint::fmpzxx(j);
             res_p += monom * prod;
-            monom *= ssquare;
+            monom = mullow(monom, ssquare, prec);
         }
         return res_p;
     }
