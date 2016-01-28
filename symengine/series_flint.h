@@ -6,6 +6,7 @@
 #include <symengine/expression.h>
 
 #ifdef HAVE_SYMENGINE_FLINT
+#include "flint.h"
 #include <flint/fmpq_polyxx.h>
 
 namespace SymEngine {
@@ -56,14 +57,48 @@ public:
     static inline fp_t series_exp(const fp_t &s, const fp_t& var, unsigned int   prec) {
         return fp_t(exp_series(s, prec));
     }
+    static inline fp_t series_sin(const fp_t &s, const fp_t& var, unsigned int prec) {
+        if (not s.get_coeff(0).is_zero()) {
+            throw std::logic_error("sin(const) not Implemented");
+        }
+        //! fast sin(x)
+        fp_t res_p, monom(s), ssquare(s*s);
+        res_p.set_zero();
+        flint::fmpqxx prod;
+        prod.set_one();
+        for (unsigned int i = 0; i < prec / 2; i++) {
+            const short j = 2 * i + 1;
+            if (i != 0)
+                prod /= flint::fmpzxx(1-j);
+            prod /= flint::fmpzxx(j);
+            res_p += monom * prod;
+            monom *= ssquare;
+        }
+        return res_p;
+    }
+
+    static inline fp_t series_cos(const fp_t &s, const fp_t& var, unsigned int prec) {
+//        return fp_t(cos_series(s, prec));
+        if (not s.get_coeff(0).is_zero()) {
+            throw std::logic_error("cos(const) not Implemented");
+        }
+        fp_t res_p, ssquare(s*s), monom(s*s);
+        res_p.set_one();
+        flint::fmpqxx prod;
+        prod.set_one();
+        for (unsigned int i = 1; i <= prec / 2; i++) {
+            const short j = 2 * i;
+            if (i != 0)
+                prod /= flint::fmpzxx(1 - j);
+            prod /= flint::fmpzxx(j);
+            res_p += monom * prod;
+            monom *= ssquare;
+        }
+        return res_p;
+    }
+
     static inline fp_t series_tan(const fp_t &s, const fp_t& var, unsigned int   prec) {
         return fp_t(tan_series(s, prec));
-    }
-    static inline fp_t series_cos(const fp_t &s, const fp_t& var, unsigned int   prec) {
-        return fp_t(cos_series(s, prec));
-    }
-    static inline fp_t series_sin(const fp_t &s, const fp_t& var, unsigned int   prec) {
-        return fp_t(sin_series(s, prec));
     }
     static inline fp_t series_atan(const fp_t &s, const fp_t& var, unsigned int   prec) {
         return fp_t(atan_series(s, prec));

@@ -26,6 +26,7 @@ std::size_t URatPSeriesFlint::__hash__() const {
 RCP<const Basic> URatPSeriesFlint::as_basic() const
 {
     RCP<const Symbol> x = symbol(var_);
+    RCP<const Number> zcoef;
     umap_basic_num dict_;
     mpq_class gc;
     for (int n=0; n<degree_; n++) {
@@ -39,10 +40,15 @@ RCP<const Basic> URatPSeriesFlint::as_basic() const
             else
                 basic = Rational::from_mpq(gc);
             auto term = SymEngine::mul(SymEngine::pow(x, SymEngine::integer(n)), basic);
+            if (n==0)
+                zcoef = basic;
             Add::coef_dict_add_term(outArg(basic), dict_, one, term);
         }
+        else
+            if (n==0)
+                zcoef = integer(0);
     }
-    return std::move(Add::from_dict(one, std::move(dict_)));
+    return std::move(Add::from_dict(zcoef, std::move(dict_)));
 }
 
 umap_int_basic URatPSeriesFlint::as_dict() const
