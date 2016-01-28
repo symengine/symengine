@@ -222,8 +222,10 @@ public:
         if (s == var) {
             //! fast atan(x)
             short sign = 1;
+            Poly monom(var), vsquare(var*var);
             for (unsigned int i = 1; i < prec; i += 2, sign *= -1) {
-                res_p += Series::pow(var, i, prec) * (Coeff(sign) / Coeff(i));
+                res_p += monom * (Coeff(sign) / Coeff(i));
+                monom *= vsquare;
             }
             return res_p;
         }
@@ -284,14 +286,15 @@ public:
             return Series::sin(c)*Series::series_cos(t, var, prec) + Series::cos(c)*Series::series_sin(t, var, prec);
         }
         //! fast sin(x)
-        Poly res_p(0);
+        Poly res_p(0), monom(s), ssquare(s*s);
         Coeff prod(1);
         for (unsigned int i = 0; i < prec / 2; i++) {
             const short j = 2 * i + 1;
             if (i != 0)
                 prod /= 1 - j;
             prod /= j;
-            res_p += Series::pow(s, j, prec) * prod;
+            res_p += monom * prod;
+            monom *= ssquare;
         }
         return res_p;
 
@@ -338,14 +341,15 @@ public:
             const Poly t = s - c;
             return Series::cos(c)*Series::series_cos(t, var, prec) - Series::sin(c)*Series::series_sin(t, var, prec);
         }
-        Poly res_p(1);
+        Poly res_p(1), ssquare(s*s), monom(s*s);
         Coeff prod(1);
         for (unsigned int i = 1; i <= prec / 2; i++) {
             const short j = 2 * i;
             if (i != 0)
                 prod /= 1 - j;
             prod /= j;
-            res_p += Series::pow(s, j, prec) * prod;
+            res_p += monom * prod;
+            monom *= ssquare;
         }
         return res_p;
 //
@@ -373,8 +377,10 @@ public:
             return res_p;
         if (s == var + 1) {
             //! fast log(1+x)
+            Poly monom(var);
             for (unsigned int i = 1; i < prec; i++) {
-                res_p += Series::pow(var, i, i + 1) * Coeff(((i % 2) == 0) ? -1 : 1) / Coeff(i);
+                res_p += monom * Coeff(((i % 2) == 0) ? -1 : 1) / Coeff(i);
+                monom *= var;
             }
             return res_p;
         }
@@ -397,9 +403,11 @@ public:
         if (s == var) {
             //! fast exp(x)
             Coeff coef(1);
+            Poly monom(var);
             for (unsigned int i = 1; i < prec; i++) {
                 coef /= i;
-                res_p += Series::pow(var, i, prec) * coef;
+                res_p += monom * coef;
+                monom *= var;
             }
             return res_p;
         }
