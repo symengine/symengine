@@ -16,6 +16,7 @@
 namespace SymEngine {
 
 class SeriesCoeffInterface : public Number {
+public:
     virtual RCP<const Basic> as_basic() const =0;
     virtual umap_int_basic as_dict() const =0;
     virtual RCP<const Basic> get_coeff(int) const =0;
