@@ -1,6 +1,5 @@
 #include <symengine/symengine_config.h>
 
-#ifdef HAVE_SYMENGINE_PIRANHA
 #include <symengine/series_piranha.h>
 
 #include <iostream>
@@ -43,6 +42,3 @@ int main(int argc, char* argv[])
 
     return 0;
 }
-#else
-int main() {}
-#endif
