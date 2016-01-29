@@ -287,15 +287,16 @@ public:
             return Series::sin(c)*Series::series_cos(t, var, prec) + Series::cos(c)*Series::series_sin(t, var, prec);
         }
         //! fast sin(x)
-        Poly res_p(0), monom(s), ssquare(s*s);
+        Poly res_p(0), monom(s);
+        Poly ssquare = Series::mul(s, s, prec);
         Coeff prod(1);
         for (unsigned int i = 0; i < prec / 2; i++) {
             const short j = 2 * i + 1;
             if (i != 0)
                 prod /= 1 - j;
             prod /= j;
-            res_p += monom * prod;
-            monom *= ssquare;
+            res_p += Series::mul(monom, Poly(prod), prec);
+            monom = Series::mul(monom, ssquare, prec);
         }
         return res_p;
 
@@ -342,15 +343,17 @@ public:
             const Poly t = s - c;
             return Series::cos(c)*Series::series_cos(t, var, prec) - Series::sin(c)*Series::series_sin(t, var, prec);
         }
-        Poly res_p(1), ssquare(s*s), monom(s*s);
+        Poly res_p(1);
+        Poly ssquare = Series::mul(s, s, prec);
+        Poly monom(ssquare);
         Coeff prod(1);
         for (unsigned int i = 1; i <= prec / 2; i++) {
             const short j = 2 * i;
             if (i != 0)
                 prod /= 1 - j;
             prod /= j;
-            res_p += monom * prod;
-            monom *= ssquare;
+            res_p += Series::mul(monom, Poly(prod), prec);
+            monom = Series::mul(monom, ssquare, prec);
         }
         return res_p;
 //
