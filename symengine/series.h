@@ -16,6 +16,9 @@
 namespace SymEngine {
 
 class SeriesCoeffInterface : public Number {
+public:
+    std::string var_;
+    long degree_;
     virtual RCP<const Basic> as_basic() const =0;
     virtual umap_int_basic as_dict() const =0;
     virtual RCP<const Basic> get_coeff(int) const =0;
@@ -25,11 +28,10 @@ template <typename Poly, typename Coeff, typename Series>
 class SeriesBase : public SeriesCoeffInterface {
 public:
     Poly p_;
-    std::string var_;
-    long degree_;
 public:
-    inline SeriesBase(Poly p, std::string var, long degree) : p_(std::move(p)), var_(var), degree_(degree) {
-
+    inline SeriesBase(Poly p, std::string var, long degree) : p_(std::move(p)) {
+        var_ = var;
+        degree_ = degree;
     }
     inline virtual bool is_zero() const { return false; }
 
