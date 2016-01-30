@@ -37,8 +37,7 @@ RCP<const SeriesCoeffInterface> series(const RCP<const Basic> &ex, const RCP<con
 #   endif
 
     return UPSeriesPiranha::series(ex, var->get_name(), prec);
-#else
-#   ifdef HAVE_SYMENGINE_FLINT
+#elif HAVE_SYMENGINE_FLINT
 //! TODO: call generic impl. where needed
     if (prec == 0)
         return URatPSeriesFlint::series(integer(0), var->get_name(), prec);
@@ -47,9 +46,8 @@ RCP<const SeriesCoeffInterface> series(const RCP<const Basic> &ex, const RCP<con
         throw std::runtime_error("Only univariate series expansion implemented with Flint");
     
     return URatPSeriesFlint::series(ex, var->get_name(), prec);
-#   else
+#else
     throw std::runtime_error("Series expansion is supported only with Piranha or Flint");
-#   endif
 #endif
 }
 
