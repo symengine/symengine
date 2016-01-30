@@ -791,97 +791,100 @@ RCP<const Basic> sec(const RCP<const Basic> &arg)
     }
 }
 /* ---------------------------- */
-RCP<const Basic> TrigFunction::simplify_trig() const
+
+// simplifies trigonometric functions wherever possible
+// currently deals with simplifications of type sin(acos())
+RCP<const Basic> trig_to_sqrt(const RCP<const Basic> &arg)
 {
     RCP<const Basic> i_arg;
 
-    if (is_a<Sin>(*rcp_from_this())) {
-        if (is_a<ACos>(*arg_)) {
-            i_arg = rcp_static_cast<const ACos>(arg_)->get_arg();
+    if (is_a<Sin>(*arg)) {
+        if (is_a<ACos>(*arg->get_args()[0])) {
+            i_arg = rcp_static_cast<const ACos>(arg->get_args()[0])->get_arg();
             return sqrt(sub(one, pow(i_arg, i2)));
-        } else if (is_a<ATan>(*arg_)) {
-            i_arg = rcp_static_cast<const ATan>(arg_)->get_arg();
+        } else if (is_a<ATan>(*arg->get_args()[0])) {
+            i_arg = rcp_static_cast<const ATan>(arg->get_args()[0])->get_arg();
             return div(i_arg, sqrt(add(one, pow(i_arg, i2))));
-        } else if (is_a<ASec>(*arg_)) {
-            i_arg = rcp_static_cast<const ASec>(arg_)->get_arg();
+        } else if (is_a<ASec>(*arg->get_args()[0])) {
+            i_arg = rcp_static_cast<const ASec>(arg->get_args()[0])->get_arg();
             return sqrt(sub(one, pow(i_arg, im2)));
-        } else if (is_a<ACot>(*arg_)) {
-            i_arg = rcp_static_cast<const ACot>(arg_)->get_arg();
+        } else if (is_a<ACot>(*arg->get_args()[0])) {
+            i_arg = rcp_static_cast<const ACot>(arg->get_args()[0])->get_arg();
             return div(one, mul(i_arg, sqrt(add(one, pow(i_arg, im2)))));
         }
-    } else if (is_a<Cos>(*rcp_from_this())) {
-        if (is_a<ASin>(*arg_)) {
-            i_arg = rcp_static_cast<const ASin>(arg_)->get_arg();
+    } else if (is_a<Cos>(*arg)) {
+        if (is_a<ASin>(*arg->get_args()[0])) {
+            i_arg = rcp_static_cast<const ASin>(arg->get_args()[0])->get_arg();
             return sqrt(sub(one, pow(i_arg, i2)));
-        } else if (is_a<ATan>(*arg_)) {
-            i_arg = rcp_static_cast<const ATan>(arg_)->get_arg();
+        } else if (is_a<ATan>(*arg->get_args()[0])) {
+            i_arg = rcp_static_cast<const ATan>(arg->get_args()[0])->get_arg();
             return div(one, sqrt(add(one, pow(i_arg, i2))));
-        } else if (is_a<ACsc>(*arg_)) {
-            i_arg = rcp_static_cast<const ACsc>(arg_)->get_arg();
+        } else if (is_a<ACsc>(*arg->get_args()[0])) {
+            i_arg = rcp_static_cast<const ACsc>(arg->get_args()[0])->get_arg();
             return sqrt(sub(one, pow(i_arg, im2)));
-        } else if (is_a<ACot>(*arg_)) {
-            i_arg = rcp_static_cast<const ACot>(arg_)->get_arg();
+        } else if (is_a<ACot>(*arg->get_args()[0])) {
+            i_arg = rcp_static_cast<const ACot>(arg->get_args()[0])->get_arg();
             return div(one, sqrt(add(one, pow(i_arg, im2))));
         }
-    } else if (is_a<Tan>(*rcp_from_this())) {
-        if (is_a<ASin>(*arg_)) {
-            i_arg = rcp_static_cast<const ASin>(arg_)->get_arg();
+    } else if (is_a<Tan>(*arg)) {
+        if (is_a<ASin>(*arg->get_args()[0])) {
+            i_arg = rcp_static_cast<const ASin>(arg->get_args()[0])->get_arg();
             return div(i_arg, sqrt(sub(one, pow(i_arg, i2))));
-        } else if (is_a<ACos>(*arg_)) {
-            i_arg = rcp_static_cast<const ACos>(arg_)->get_arg();
+        } else if (is_a<ACos>(*arg->get_args()[0])) {
+            i_arg = rcp_static_cast<const ACos>(arg->get_args()[0])->get_arg();
             return div(sqrt(sub(one, pow(i_arg, i2))), i_arg);
-        } else if (is_a<ACsc>(*arg_)) {
-            i_arg = rcp_static_cast<const ACsc>(arg_)->get_arg();
+        } else if (is_a<ACsc>(*arg->get_args()[0])) {
+            i_arg = rcp_static_cast<const ACsc>(arg->get_args()[0])->get_arg();
             return div(one, mul(i_arg, sqrt(sub(one, pow(i_arg, im2)))));
-        } else if (is_a<ASec>(*arg_)) {
-            i_arg = rcp_static_cast<const ASec>(arg_)->get_arg();
+        } else if (is_a<ASec>(*arg->get_args()[0])) {
+            i_arg = rcp_static_cast<const ASec>(arg->get_args()[0])->get_arg();
             return mul(i_arg, sqrt(sub(one, pow(i_arg, im2))));
         }
-    } else if (is_a<Csc>(*rcp_from_this())) {
-        if (is_a<ACos>(*arg_)) {
-            i_arg = rcp_static_cast<const ACos>(arg_)->get_arg();
+    } else if (is_a<Csc>(*arg)) {
+        if (is_a<ACos>(*arg->get_args()[0])) {
+            i_arg = rcp_static_cast<const ACos>(arg->get_args()[0])->get_arg();
             return div(one, sqrt(sub(one, pow(i_arg, i2))));
-        } else if (is_a<ATan>(*arg_)) {
-            i_arg = rcp_static_cast<const ATan>(arg_)->get_arg();
+        } else if (is_a<ATan>(*arg->get_args()[0])) {
+            i_arg = rcp_static_cast<const ATan>(arg->get_args()[0])->get_arg();
             return div(sqrt(add(one, pow(i_arg, i2))), i_arg);
-        } else if (is_a<ASec>(*arg_)) {
-            i_arg = rcp_static_cast<const ASec>(arg_)->get_arg();
+        } else if (is_a<ASec>(*arg->get_args()[0])) {
+            i_arg = rcp_static_cast<const ASec>(arg->get_args()[0])->get_arg();
             return div(one, sqrt(sub(one, pow(i_arg, im2))));
-        } else if (is_a<ACot>(*arg_)) {
-            i_arg = rcp_static_cast<const ACot>(arg_)->get_arg();
+        } else if (is_a<ACot>(*arg->get_args()[0])) {
+            i_arg = rcp_static_cast<const ACot>(arg->get_args()[0])->get_arg();
             return mul(i_arg, sqrt(add(one, pow(i_arg, im2))));
         }
-    } else if (is_a<Sec>(*rcp_from_this())) {
-        if (is_a<ASin>(*arg_)) {
-            i_arg = rcp_static_cast<const ASin>(arg_)->get_arg();
+    } else if (is_a<Sec>(*arg)) {
+        if (is_a<ASin>(*arg->get_args()[0])) {
+            i_arg = rcp_static_cast<const ASin>(arg->get_args()[0])->get_arg();
             return div(one, sqrt(sub(one, pow(i_arg, i2))));
-        } else if (is_a<ATan>(*arg_)) {
-            i_arg = rcp_static_cast<const ATan>(arg_)->get_arg();
+        } else if (is_a<ATan>(*arg->get_args()[0])) {
+            i_arg = rcp_static_cast<const ATan>(arg->get_args()[0])->get_arg();
             return sqrt(add(one, pow(i_arg, i2)));
-        } else if (is_a<ACsc>(*arg_)) {
-            i_arg = rcp_static_cast<const ACsc>(arg_)->get_arg();
+        } else if (is_a<ACsc>(*arg->get_args()[0])) {
+            i_arg = rcp_static_cast<const ACsc>(arg->get_args()[0])->get_arg();
             return div(one, sqrt(sub(one, pow(i_arg, im2))));
-        } else if (is_a<ACot>(*arg_)) {
-            i_arg = rcp_static_cast<const ACot>(arg_)->get_arg();
+        } else if (is_a<ACot>(*arg->get_args()[0])) {
+            i_arg = rcp_static_cast<const ACot>(arg->get_args()[0])->get_arg();
             return sqrt(add(one, pow(i_arg, im2)));
         }
-    } else if (is_a<Cot>(*rcp_from_this())) {
-        if (is_a<ASin>(*arg_)) {
-            i_arg = rcp_static_cast<const ASin>(arg_)->get_arg();
+    } else if (is_a<Cot>(*arg)) {
+        if (is_a<ASin>(*arg->get_args()[0])) {
+            i_arg = rcp_static_cast<const ASin>(arg->get_args()[0])->get_arg();
             return div(sqrt(sub(one, pow(i_arg, i2))), i_arg);
-        } else if (is_a<ACos>(*arg_)) {
-            i_arg = rcp_static_cast<const ACos>(arg_)->get_arg();
+        } else if (is_a<ACos>(*arg->get_args()[0])) {
+            i_arg = rcp_static_cast<const ACos>(arg->get_args()[0])->get_arg();
             return div(i_arg, sqrt(sub(one, pow(i_arg, i2))));
-        } else if (is_a<ACsc>(*arg_)) {
-            i_arg = rcp_static_cast<const ACsc>(arg_)->get_arg();
+        } else if (is_a<ACsc>(*arg->get_args()[0])) {
+            i_arg = rcp_static_cast<const ACsc>(arg->get_args()[0])->get_arg();
             return mul(i_arg, sqrt(sub(one, pow(i_arg, im2))));
-        } else if (is_a<ASec>(*arg_)) {
-            i_arg = rcp_static_cast<const ASec>(arg_)->get_arg();
+        } else if (is_a<ASec>(*arg->get_args()[0])) {
+            i_arg = rcp_static_cast<const ASec>(arg->get_args()[0])->get_arg();
             return div(one, mul(i_arg, sqrt(sub(one, pow(i_arg, im2)))));
         }
     }
 
-    return rcp_from_this();
+    return arg;
 }
 
 /* ---------------------------- */
