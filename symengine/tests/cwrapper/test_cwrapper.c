@@ -383,6 +383,75 @@ void test_subs() {
     basic_free_stack(z);
 }
 
+void test_constants() {
+    basic z, o, mo, i;
+    basic_new_stack(z);
+    basic_new_stack(o);
+    basic_new_stack(mo);
+    basic_new_stack(i);
+
+    integer_set_si(z, 0);
+    integer_set_si(o, 1);
+    integer_set_si(mo, -1);
+    complex_set(i, z, o);
+
+    basic zero, one, minus_one, iota;
+    basic_new_stack(zero);
+    basic_new_stack(one);
+    basic_new_stack(minus_one);
+    basic_new_stack(iota);
+
+    basic_const_zero(zero);
+    basic_const_one(one);
+    basic_const_minus_one(minus_one);
+    basic_const_I(iota);
+
+    SYMENGINE_C_ASSERT(basic_eq(z, zero));
+    SYMENGINE_C_ASSERT(basic_eq(o, one));
+    SYMENGINE_C_ASSERT(basic_eq(mo, minus_one));
+    SYMENGINE_C_ASSERT(basic_eq(i, iota));
+
+    basic_free_stack(z);
+    basic_free_stack(zero);
+    basic_free_stack(o);
+    basic_free_stack(one);
+    basic_free_stack(mo);
+    basic_free_stack(minus_one);
+    basic_free_stack(i);
+    basic_free_stack(iota);
+
+    basic custom, pi, e, euler_gamma;
+    basic_new_stack(custom);
+    basic_new_stack(pi);
+    basic_new_stack(e);
+    basic_new_stack(euler_gamma);
+
+    basic_const_set(custom, "custom");
+    basic_const_pi(pi);
+    basic_const_E(e);
+    basic_const_EulerGamma(euler_gamma);
+
+    char* s;
+    s = basic_str(custom);
+    SYMENGINE_C_ASSERT(strcmp(s, "custom") == 0);
+    basic_str_free(s);
+    s = basic_str(pi);
+    SYMENGINE_C_ASSERT(strcmp(s, "pi") == 0);
+    basic_str_free(s);
+    s = basic_str(e);
+    SYMENGINE_C_ASSERT(strcmp(s, "E") == 0);
+    basic_str_free(s);
+    s = basic_str(euler_gamma);
+    SYMENGINE_C_ASSERT(strcmp(s, "EulerGamma") == 0);
+    basic_str_free(s);
+
+    basic_free_stack(custom);
+    basic_free_stack(pi);
+    basic_free_stack(e);
+    basic_free_stack(euler_gamma);
+
+}
+
 int main(int argc, char* argv[])
 {
     test_cwrapper();
@@ -399,5 +468,6 @@ int main(int argc, char* argv[])
     test_hash();
     test_subs();
     test_subs2();
+    test_constants();
     return 0;
 }
