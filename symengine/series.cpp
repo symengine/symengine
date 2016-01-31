@@ -37,7 +37,7 @@ RCP<const SeriesCoeffInterface> series(const RCP<const Basic> &ex, const RCP<con
 #   endif
 
     return UPSeriesPiranha::series(ex, var->get_name(), prec);
-#elif HAVE_SYMENGINE_FLINT
+#elif defined(HAVE_SYMENGINE_FLINT)
 //! TODO: call generic impl. where needed
     if (prec == 0)
         return URatPSeriesFlint::series(integer(0), var->get_name(), prec);
