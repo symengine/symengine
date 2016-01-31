@@ -42,7 +42,7 @@ RCP<const SeriesCoeffInterface> series(const RCP<const Basic> &ex, const RCP<con
     if (prec == 0)
         return URatPSeriesFlint::series(integer(0), var->get_name(), prec);
 
-    if (syms.size > 1)
+    if (syms.size() > 1)
         throw std::runtime_error("Only univariate series expansion implemented with Flint");
     
     return URatPSeriesFlint::series(ex, var->get_name(), prec);
