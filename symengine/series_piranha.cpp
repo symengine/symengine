@@ -60,6 +60,7 @@ piranha::rational URatPSeriesPiranha::convert(const Number &x) {
 
 RCP<const Basic> URatPSeriesPiranha::as_basic() const {
     RCP<const Symbol> x = symbol(var_);
+    RCP<const Number> zcoef = integer(0);
     umap_basic_num dict_;
     for (const auto& it : p_) {
         if (it.first != 0) {
@@ -71,10 +72,12 @@ RCP<const Basic> URatPSeriesPiranha::as_basic() const {
             else
                 co_basic = make_rcp<const Rational>(cl_rat);
             auto term = SymEngine::mul(SymEngine::pow(x, SymEngine::integer(it.second.degree())), co_basic);
+            if (it.second.degree() != 0)
+                zcoef = co_basic;
             Add::coef_dict_add_term(outArg(co_basic), dict_, one, term);
         }
     }
-    return std::move(Add::from_dict(one, std::move(dict_)));
+    return std::move(Add::from_dict(zcoef, std::move(dict_)));
 }
 
 umap_int_basic URatPSeriesPiranha::as_dict() const {
@@ -209,6 +212,7 @@ RCP<const Basic> UPSeriesPiranha::as_basic() const {
         if (it.first != 0) {
             auto term = SymEngine::mul(it.first.get_basic(), SymEngine::pow(x, SymEngine::integer(it. second.degree())));
             RCP<const Number> coef;
+            coef = zero;
             Add::coef_dict_add_term(outArg(coef), dict_, one, term);
         }
     }

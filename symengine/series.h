@@ -16,6 +16,7 @@
 namespace SymEngine {
 
 class SeriesCoeffInterface : public Number {
+public:
     virtual RCP<const Basic> as_basic() const =0;
     virtual umap_int_basic as_dict() const =0;
     virtual RCP<const Basic> get_coeff(int) const =0;
@@ -54,10 +55,10 @@ public:
             if (var_ != o.var_) {
                 throw std::runtime_error("Multivariate Series not implemented");
             }
-            return make_rcp<Series>(p_ + o.p_, var_, deg);
+            return make_rcp<Series>(Poly(p_ + o.p_), var_, deg);
         } else if (other.get_type_code() < Series::type_code_id){
             Poly p = Series::series(other.rcp_from_this(), var_, degree_)->p_;
-            return make_rcp<Series>(p_ + p, var_, degree_);
+            return make_rcp<Series>(Poly(p_ + p), var_, degree_);
         } else {
             return other.add(*this);
         }
@@ -102,7 +103,7 @@ public:
         } else {
             return other.rpow(*this);
         }
-        p = Series::series_exp(p * Series::series_log(p_, Series::var(var_), deg),
+        p = Series::series_exp(Poly(p * Series::series_log(p_, Series::var(var_), deg)),
                                Series::var(var_), deg);
         return make_rcp<Series>(p, var_, deg);
     }
@@ -110,7 +111,7 @@ public:
     virtual RCP<const Number> rpow(const Number &other) const {
         if (other.get_type_code() < Series::type_code_id){
             Poly p = Series::series(other.rcp_from_this(), var_, degree_)->p_;
-            p = Series::series_exp(p_ * Series::series_log(p, Series::var(var_), degree_),
+            p = Series::series_exp(Poly(p_ * Series::series_log(p, Series::var(var_), degree_)),
                                    Series::var(var_), degree_);
             return make_rcp<Series>(p, var_, degree_);
         } else {

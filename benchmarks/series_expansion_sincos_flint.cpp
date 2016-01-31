@@ -1,6 +1,6 @@
 #include <symengine/symengine_config.h>
 
-#ifdef HAVE_SYMENGINE_PIRANHA
+#include <symengine/series_flint.h>
 
 #include <iostream>
 #include <chrono>
@@ -13,7 +13,10 @@
 using SymEngine::Basic;
 using SymEngine::Symbol;
 using SymEngine::symbol;
+using SymEngine::integer;
+using SymEngine::add;
 using SymEngine::mul;
+using SymEngine::pow;
 using SymEngine::sin;
 using SymEngine::cos;
 using SymEngine::RCP;
@@ -26,10 +29,11 @@ int main(int argc, char* argv[])
 
     RCP<const Symbol> x = symbol("x");
     int N = 1000;
-    auto ex = mul(sin(x), cos(x));
+    auto arg = add(x, pow(x, integer(2)));
+    auto ex = mul(sin(arg), cos(arg));
 
     auto t1 = std::chrono::high_resolution_clock::now();
-    auto res = series(ex, x, N);
+    auto res = SymEngine::URatPSeriesFlint::series(ex, "x", N);
     auto t2 = std::chrono::high_resolution_clock::now();
     //std::cout << *res[N-1] << std::endl;
     std::cout
@@ -38,8 +42,3 @@ int main(int argc, char* argv[])
 
     return 0;
 }
-#else
-
-int main(int, char*[]) {}
-
-#endif

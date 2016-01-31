@@ -13,6 +13,9 @@ SYMENGINE_ENUM(REAL_DOUBLE, RealDouble)
 SYMENGINE_ENUM(URATPSERIESPIRANHA, URatPSeriesPiranha)
 SYMENGINE_ENUM(UPSERIESPIRANHA, UPSeriesPiranha)
 #endif
+#if defined(HAVE_SYMENGINE_FLINT) || defined(SYMENGINE_INCLUDE_ALL)
+SYMENGINE_ENUM(URATPSERIESFLINT, URatPSeriesFlint)
+#endif
 SYMENGINE_ENUM(NUMBER_WRAPPER, NumberWrapper)
 // 'NUMBER_WRAPPER' returns the number of subclasses of Number.
 // All subclasses of Number must be added before it. Do not assign

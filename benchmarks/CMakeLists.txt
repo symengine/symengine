@@ -50,9 +50,14 @@ target_link_libraries(expand7 symengine)
 add_executable(series series.cpp)
 target_link_libraries(series symengine)
 
+if (WITH_FLINT)
+    add_executable(series_expansion_sincos_flint series_expansion_sincos_flint.cpp)
+    target_link_libraries(series_expansion_sincos_flint symengine)
+endif()
+
 if (WITH_PIRANHA)
-    add_executable(series_expansion_sincos series_expansion_sincos.cpp)
-    target_link_libraries(series_expansion_sincos symengine)
+    add_executable(series_expansion_sincos_piranha series_expansion_sincos_piranha.cpp)
+    target_link_libraries(series_expansion_sincos_piranha symengine)
 
     add_executable(series_expansion_sinp series_expansion_sinp.cpp)
     target_link_libraries(series_expansion_sinp symengine)
