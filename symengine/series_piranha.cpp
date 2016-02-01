@@ -72,7 +72,7 @@ RCP<const Basic> URatPSeriesPiranha::as_basic() const {
             else
                 co_basic = make_rcp<const Rational>(cl_rat);
             auto term = SymEngine::mul(SymEngine::pow(x, SymEngine::integer(it.second.degree())), co_basic);
-            if (it.second.degree() != 0)
+            if (it.second.degree() == 0)
                 zcoef = co_basic;
             Add::coef_dict_add_term(outArg(co_basic), dict_, one, term);
         }
