@@ -6,7 +6,7 @@
 #include <symengine/expression.h>
 
 #ifdef HAVE_SYMENGINE_FLINT
-#include "flint.h"
+#include <flint/flint.h>
 #include <flint/fmpq_polyxx.h>
 
 namespace SymEngine {

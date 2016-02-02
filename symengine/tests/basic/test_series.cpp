@@ -31,8 +31,7 @@ TEST_CASE("Expression series expansion interface", "[Expansion interface]")
     auto ex = div(integer(1), add(integer(1), x));
 
 //! TODO: remove this ifdef when we have a generic implementation of series
-//#if HAVE_SYMENGINE_PIRANHA || HAVE_SYMENGINE_FLINT
-#ifdef HAVE_SYMENGINE_PIRANHA
+#if defined(HAVE_SYMENGINE_PIRANHA) || defined(HAVE_SYMENGINE_FLINT)
     auto ser = series(ex, x, 10);
 
     REQUIRE(rcp_static_cast<const Number>(ser->get_coeff(7))->is_minus_one());
