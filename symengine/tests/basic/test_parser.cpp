@@ -35,6 +35,7 @@ using SymEngine::ExpressionParser;
 using SymEngine::pi;
 using SymEngine::function_symbol;
 using SymEngine::real_double;
+using SymEngine::E;
 
 TEST_CASE("Parsing: integers, basic operations", "[parser]")
 {
@@ -186,6 +187,10 @@ TEST_CASE("Parsing: constants", "[parser]")
     RCP<const Basic> res;
     RCP<const Basic> x = symbol("x");
 
+    s = "E*pi";
+    res = p.parse(s);
+    REQUIRE(eq(*res, *mul(E, pi)));
+
     s = "sin(pi/2)";
     res = p.parse(s);
     REQUIRE(eq(*res, *one));
@@ -227,6 +232,10 @@ TEST_CASE("Parsing: function_symbols", "[parser]")
     s = "func(x, y, wt) + f(sin(x))";
     res = p.parse(s);
     REQUIRE(eq(*res, *add(function_symbol("func", {x, y, z}), function_symbol("f", sin(x)))));
+
+    s = "f(g(2^x))";
+    res = p.parse(s);
+    REQUIRE(eq(*res, *function_symbol("f", function_symbol("g", pow(integer(2), x)))));
 }
 
 TEST_CASE("Parsing: doubles", "[parser]")
@@ -248,11 +257,7 @@ TEST_CASE("Parsing: doubles", "[parser]")
     res = p.parse(s);
     REQUIRE(eq(*res, *real_double(0.2648)));
 
-    // can you suggest more test cases
-    // i am still not clear about the fundamentals of realdouble
-
     s = "sqrt(2.0)+5";
-    // s = "sqrt(2)+5" this fails! (will the user add `.0` to integers to get them `computed`)
     res = p.parse(s);
     REQUIRE(eq(*res, *real_double(sqrt(2) + 5)));
 }

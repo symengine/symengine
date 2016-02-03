@@ -304,7 +304,7 @@ public:
                     // if it's a normal operator, remove operators with higher precedence
                     while(op_precedence[x] < op_stack.top().first)
                         op_stack.pop();
-                    // whatever is on the top now, is it's 'end'
+                    // whatever is on the top now, it's the 'end'
                     operator_end[i] = op_stack.top().second;
                     op_stack.push(std::make_pair(op_precedence[x], i));
                 }
@@ -312,6 +312,7 @@ public:
                 if(last_char_was_op and operator_error(last_char, x))
                     throw std::runtime_error("Operator inconsistency!");
                 last_char_was_op = true;
+
             } else {
                 last_char_was_op = false;
             }
