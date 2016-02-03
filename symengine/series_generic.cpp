@@ -9,10 +9,11 @@ using SymEngine::make_rcp;
 
 namespace SymEngine {
 
-UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const RCP<const UnivariatePolynomial> &poly) :
-        var_{var}, poly_{std::move(poly)} , prec_{precision} {
+UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const RCP<const UnivariatePolynomial> &poly)
+  : SeriesBase(*(poly), var->get_name(), precision) {
+  
 }
-
+  /*
 UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const unsigned int &max, map_uint_mpz&& dict) :
         var_{var}, prec_{precision} {
 
@@ -36,7 +37,7 @@ UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned 
         } );
     poly_ = univariate_polynomial(var_, max, std::move(dict_trunc));
 }
-
+  
 UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const std::vector<mpz_class> &v) :
         var_{var}, prec_{precision} {
 
@@ -45,7 +46,7 @@ UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned 
         [&](decltype(v[0]) i) { return i < prec_; } );
     poly_ = UnivariatePolynomial::create(var_, vtrunc);
 }
-
+  */
 bool UnivariateSeries::is_canonical(const UnivariatePolynomial& poly, const unsigned int &prec) const
 {
     return true;
