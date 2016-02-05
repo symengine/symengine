@@ -660,3 +660,28 @@ TEST_CASE("test_mobius(): ntheory", "[ntheory]")
     REQUIRE(mobius(*i9) == 0);
     REQUIRE(mobius(*i10) == 1);
 }
+
+TEST_CASE("test_mertens(): ntheory", "[ntheory]")
+{
+    RCP<const Integer> i1 = integer(1);
+    RCP<const Integer> i2 = integer(2);
+    RCP<const Integer> i4 = integer(4);
+    RCP<const Integer> i12 = integer(12);
+    RCP<const Integer> i13 = integer(13);
+    RCP<const Integer> i22 = integer(22);
+    RCP<const Integer> i31 = integer(31);
+    RCP<const Integer> i36 = integer(36);
+    RCP<const Integer> i39= integer(39);
+    RCP<const Integer> i113 = integer(113);
+
+    REQUIRE(mertens(*i1) == 1);
+    REQUIRE(mertens(*i2) == 0);
+    REQUIRE(mertens(*i4) == -1);
+    REQUIRE(mertens(*i12) == -2);
+    REQUIRE(mertens(*i13) == -3);
+    REQUIRE(mertens(*i22) == -1);
+    REQUIRE(mertens(*i31) == -4);
+    REQUIRE(mertens(*i36) == -1);
+    REQUIRE(mertens(*i39) == 0);
+    REQUIRE(mertens(*i113) == -5);
+}
