@@ -1498,4 +1498,15 @@ int mobius(const Integer &a)
     }
 }
 
+int mertens(const Integer &a){
+    if(a.as_int() <= 0){
+        throw std::runtime_error("mertens: Integer <= 0");
+    }
+    unsigned mertens = 0;
+    for(unsigned i = 1; i <= a.as_int(); i++){
+        RCP<const Integer> j = integer(i);
+        mertens = mertens + mobius(*j);
+    }
+    return mertens;
+}
 } // SymEngine
