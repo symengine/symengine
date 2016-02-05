@@ -1498,14 +1498,14 @@ int mobius(const Integer &a)
     }
 }
 
-int mertens(const Integer &a){
-    if(a.as_int() <= 0){
-        throw std::runtime_error("mertens: Integer <= 0");
+int mertens(const Integer &a)
+{
+    if(a.as_int() <= 0) {
+        throw std::runtime_error("mertens : Mertens function is only defined for positive integers!");
     }
     unsigned mertens = 0;
-    for(unsigned i = 1; i <= a.as_int(); i++){
-        RCP<const Integer> j = integer(i);
-        mertens = mertens + mobius(*j);
+    for(unsigned i = 1; i <= a.as_int(); i++) {
+        mertens += mobius(*integer(i));
     }
     return mertens;
 }
