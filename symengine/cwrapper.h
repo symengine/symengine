@@ -84,6 +84,19 @@ void basic_free_stack(basic s);
 basic_struct* basic_new_heap();
 void basic_free_heap(basic_struct *s);
 
+//! Use these functions to get the commonly used constants as basic.
+//! Assigns to s a SymEngine constant with name c
+void basic_const_set(basic s, char* c);
+
+void basic_const_zero(basic s);
+void basic_const_one(basic s);
+void basic_const_minus_one(basic s);
+void basic_const_I(basic s);
+
+void basic_const_pi(basic s);
+void basic_const_E(basic s);
+void basic_const_EulerGamma(basic s);
+
 //! Assign value of b to a.
 void basic_assign(basic a, const basic b);
 
