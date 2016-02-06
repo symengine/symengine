@@ -117,8 +117,8 @@ static RCP<const Basic> diff(const CLASS &self, \
 
     static RCP<const Basic> diff(const ACsch &self,
             const RCP<const Symbol> &x) {
-        return mul(div(minus_one, mul(sqrt(add(one, pow(self.get_arg(), i2))),
-                abs(self.get_arg()))), self.get_arg()->diff(x));
+        return mul(div(minus_one, mul(sqrt(add(one, div(one,pow(self.get_arg(), i2)))),
+                pow(self.get_arg(),i2))), self.get_arg()->diff(x));
     }
 
     static RCP<const Basic> diff(const ASinh &self,

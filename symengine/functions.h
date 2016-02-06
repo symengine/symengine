@@ -761,6 +761,27 @@ public:
 //! Canonicalize ASinh:
 RCP<const Basic> asinh(const RCP<const Basic> &arg);
 
+class ACsch: public HyperbolicFunction {
+//! The inverse hyperbolic cosecant function.
+public:
+    IMPLEMENT_TYPEID(ACSCH)
+    //! ACsch Constructor
+    ACsch(const RCP<const Basic> &arg);
+    /*! Equality comparator
+     * \param o - Object to be compared with
+     * \return whether the 2 objects are equal
+     * */
+    virtual bool __eq__(const Basic &o) const;
+    virtual int compare(const Basic &o) const;
+    //! \return `true` if canonical
+    bool is_canonical(const RCP<const Basic> &arg) const;
+    //! \return Canonicalized acsch
+    virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
+};
+
+//! Canonicalize ACsch:
+RCP<const Basic> acsch(const RCP<const Basic> &arg);
+
 class ACosh: public HyperbolicFunction {
 //! The inverse hyperbolic cosine function.
 public:
