@@ -1498,13 +1498,13 @@ int mobius(const Integer &a)
     }
 }
 
-int mertens(const Integer &a)
+int mertens(const int long a)
 {
-    if(a.as_int() <= 0) {
+    if (a <= 0) {
         throw std::runtime_error("mertens : Mertens function is only defined for positive integers!");
     }
     unsigned mertens = 0;
-    for(unsigned i = 1; i <= a.as_int(); i++) {
+    for (unsigned i = 1; i <= a; i++) {
         mertens += mobius(*integer(i));
     }
     return mertens;

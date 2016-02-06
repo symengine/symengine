@@ -176,7 +176,7 @@ void powermod_list(std::vector<RCP<const Integer>> &pows, const RCP<const Intege
 int mobius(const Integer &a);
 //Mertens Function
 //mertens(n) -> Sum of mobius(i) for i from 1 to n
-int mertens(const Integer &a);
+int mertens(const int long a);
 }
 #endif
 

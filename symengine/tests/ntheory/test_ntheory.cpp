@@ -36,6 +36,7 @@ using SymEngine::primitive_root_list;
 using SymEngine::multiplicative_order;
 using SymEngine::totient;
 using SymEngine::carmichael;
+using SymEngine::mertens;
 
 TEST_CASE("test_gcd_lcm(): ntheory", "[ntheory]")
 {
@@ -663,25 +664,16 @@ TEST_CASE("test_mobius(): ntheory", "[ntheory]")
 
 TEST_CASE("test_mertens(): ntheory", "[ntheory]")
 {
-    RCP<const Integer> i1 = integer(1);
-    RCP<const Integer> i2 = integer(2);
-    RCP<const Integer> i4 = integer(4);
-    RCP<const Integer> i12 = integer(12);
-    RCP<const Integer> i13 = integer(13);
-    RCP<const Integer> i22 = integer(22);
-    RCP<const Integer> i31 = integer(31);
-    RCP<const Integer> i36 = integer(36);
-    RCP<const Integer> i39= integer(39);
-    RCP<const Integer> i113 = integer(113);
-
-    REQUIRE(mertens(*i1) == 1);
-    REQUIRE(mertens(*i2) == 0);
-    REQUIRE(mertens(*i4) == -1);
-    REQUIRE(mertens(*i12) == -2);
-    REQUIRE(mertens(*i13) == -3);
-    REQUIRE(mertens(*i22) == -1);
-    REQUIRE(mertens(*i31) == -4);
-    REQUIRE(mertens(*i36) == -1);
-    REQUIRE(mertens(*i39) == 0);
-    REQUIRE(mertens(*i113) == -5);
+    CHECK_THROWS_AS(mertens(-1), std::runtime_error);
+    CHECK_THROWS_AS(mertens(-9), std::runtime_error);
+    REQUIRE(mertens(1) == 1);
+    REQUIRE(mertens(2) == 0);
+    REQUIRE(mertens(4) == -1);
+    REQUIRE(mertens(12) == -2);
+    REQUIRE(mertens(13) == -3);
+    REQUIRE(mertens(22) == -1);
+    REQUIRE(mertens(31) == -4);
+    REQUIRE(mertens(36) == -1);
+    REQUIRE(mertens(39) == 0);
+    REQUIRE(mertens(113) == -5);
 }
