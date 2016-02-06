@@ -737,10 +737,22 @@ class EvaluateMPFR : public Evaluate {
         mpfr_sinh(t.get_mpfr_t(), static_cast<const RealMPFR &>(x).i.get_mpfr_t(), MPFR_RNDN);
         return real_mpfr(std::move(t));
     }
+    virtual RCP<const Basic> csch(const Basic &x) const override {
+        SYMENGINE_ASSERT(is_a<RealMPFR>(x))
+        mpfr_class t(static_cast<const RealMPFR &>(x).i.get_prec());
+        mpfr_csch(t.get_mpfr_t(), static_cast<const RealMPFR &>(x).i.get_mpfr_t(), MPFR_RNDN);
+        return real_mpfr(std::move(t));
+    }
     virtual RCP<const Basic> cosh(const Basic &x) const override {
         SYMENGINE_ASSERT(is_a<RealMPFR>(x))
         mpfr_class t(static_cast<const RealMPFR &>(x).i.get_prec());
         mpfr_cosh(t.get_mpfr_t(), static_cast<const RealMPFR &>(x).i.get_mpfr_t(), MPFR_RNDN);
+        return real_mpfr(std::move(t));
+    }
+    virtual RCP<const Basic> sech(const Basic &x) const override {
+        SYMENGINE_ASSERT(is_a<RealMPFR>(x))
+        mpfr_class t(static_cast<const RealMPFR &>(x).i.get_prec());
+        mpfr_sech(t.get_mpfr_t(), static_cast<const RealMPFR &>(x).i.get_mpfr_t(), MPFR_RNDN);
         return real_mpfr(std::move(t));
     }
     virtual RCP<const Basic> tanh(const Basic &x) const override {

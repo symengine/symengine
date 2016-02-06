@@ -179,9 +179,21 @@ public:
         mpc_sinh(result_, result_, rnd_);
     }
 
+    void bvisit(const Csch &x) {
+        apply(result_, *(x.get_arg()));
+        mpc_sinh(result_, result_, rnd_);
+        mpc_ui_div(result_, 1, result_, rnd_);
+    }
+
     void bvisit(const Cosh &x) {
         apply(result_, *(x.get_arg()));
         mpc_cosh(result_, result_, rnd_);
+    }
+
+    void bvisit(const Sech &x) {
+        apply(result_, *(x.get_arg()));
+        mpc_cosh(result_, result_, rnd_);
+        mpc_ui_div(result_, 1, result_, rnd_);
     }
 
     void bvisit(const Tanh &x) {
@@ -197,6 +209,12 @@ public:
 
     void bvisit(const ASinh &x) {
         apply(result_, *(x.get_arg()));
+        mpc_asinh(result_, result_, rnd_);
+    }
+
+    void bvisit(const ACsch &x) {
+        apply(result_, *(x.get_arg()));
+        mpc_ui_div(result_, 1, result_, rnd_);
         mpc_asinh(result_, result_, rnd_);
     }
 
