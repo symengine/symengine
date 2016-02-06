@@ -634,7 +634,7 @@ public:
      * \return whether the 2 objects are equal
      * */
     virtual bool __eq__(const Basic &o) const;
-    //! Compares `arg` with `o` returns greater than, equal or less than 
+    //! Compares `arg` with `o` returns greater than, equal or less than
     virtual int compare(const Basic &o) const;
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &arg) const;
@@ -681,7 +681,7 @@ public:
      * \return whether the 2 objects are equal
      * */
     virtual bool __eq__(const Basic &o) const;
-    //! Compares `arg` with `o` returns greater than, equal or less than 
+    //! Compares `arg` with `o` returns greater than, equal or less than
     virtual int compare(const Basic &o) const;
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &arg) const;
@@ -802,8 +802,6 @@ public:
 
 //! Canonicalize ACosh:
 RCP<const Basic> acosh(const RCP<const Basic> &arg);
-
-
 
 class ATanh: public HyperbolicFunction {
 //! The inverse hyperbolic tangent function.

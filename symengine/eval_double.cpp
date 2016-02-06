@@ -183,7 +183,7 @@ public:
 
     void bvisit(const ACsch &x) {
         T tmp = apply(*(x.get_arg()));
-        result_ = std::acsch(1.0/tmp);
+        result_ = std::asinh(1.0/tmp);
     };    
 
     void bvisit(const ACosh &x) {

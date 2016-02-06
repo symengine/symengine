@@ -139,7 +139,6 @@ public:
     virtual RCP<const Basic> tanh(const Basic &) const = 0;
     virtual RCP<const Basic> coth(const Basic &) const = 0;
     virtual RCP<const Basic> asinh(const Basic &) const = 0;
-    virtual RCP<const Basic> acsch(const Basic &) const = 0;
     virtual RCP<const Basic> acosh(const Basic &) const = 0;
     virtual RCP<const Basic> atanh(const Basic &) const = 0;
     virtual RCP<const Basic> acoth(const Basic &) const = 0;

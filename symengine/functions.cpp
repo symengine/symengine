@@ -1879,7 +1879,7 @@ bool Csch::__eq__(const Basic &o) const
         return false;
 }
 
-int Csch::compare(const Basic &o) constraints
+int Csch::compare(const Basic &o) const
 {
     SYMENGINE_ASSERT(is_a<Csch>(o))
     const Csch &s = static_cast<const Csch &>(o);
@@ -1897,16 +1897,16 @@ RCP<const Basic> csch(const RCP<const Basic> &arg)
         if (not _arg->is_exact()) {
             return _arg->get_eval().csch(*_arg);
         } else if (_arg->is_negative()) {
-            return csch(zero->sub(*_arg));
+            return neg(csch(zero->sub(*_arg)));
         }
     }
     if (could_extract_minus(arg)) {
-        return csch(neg(arg));
+        return neg(csch(neg(arg)));
     }
     return make_rcp<const Csch>(arg);
 }
 
-RCP<const Basic>  Csc::expand_as_exp() const
+RCP<const Basic>  Csch::expand_as_exp() const
 {
     RCP<const Basic> pos_exp = exp(get_arg());
     RCP<const Basic> neg_exp = exp(mul(minus_one, get_arg()));
@@ -2006,7 +2006,7 @@ bool Sech::__eq__(const Basic &o) const
         return false;
 }
 
-int Sech::compare(const Basic &o) constraints
+int Sech::compare(const Basic &o) const
 {
     SYMENGINE_ASSERT(is_a<Sech>(o))
     const Sech &s = static_cast<const Sech &>(o);
@@ -2267,14 +2267,6 @@ RCP<const Basic> acsch(const RCP<const Basic> &arg)
 {
     if (eq(*arg, *one)) return log(add(one, sq2));
     if (eq(*arg, *minus_one)) return log(sub(sq2, one));
-    if (is_a_Number(*arg)) {
-        RCP<const Number> _arg = rcp_static_cast<const Number>(arg);
-        if (not _arg->is_exact()) {
-            return _arg->get_eval().acsch(*_arg);
-        } else if (_arg->is_negative()) {
-            return neg(acsch(zero->sub(*_arg)));
-        }
-    }
     if (could_extract_minus(arg)) {
         return neg(acsch(neg(arg)));
     }
@@ -2477,6 +2469,11 @@ RCP<const Basic> Sinh::create(const RCP<const Basic> &arg) const
     return sinh(arg);
 }
 
+RCP<const Basic> Csch::create(const RCP<const Basic> &arg) const
+{
+    return csch(arg);
+}
+
 RCP<const Basic> Cosh::create(const RCP<const Basic> &arg) const
 {
     return cosh(arg);
@@ -2500,6 +2497,11 @@ RCP<const Basic> Coth::create(const RCP<const Basic> &arg) const
 RCP<const Basic> ASinh::create(const RCP<const Basic> &arg) const
 {
     return asinh(arg);
+}
+
+RCP<const Basic> ACsch::create(const RCP<const Basic> &arg) const
+{
+    return acsch(arg);
 }
 
 RCP<const Basic> ACosh::create(const RCP<const Basic> &arg) const
