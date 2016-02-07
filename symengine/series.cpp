@@ -44,7 +44,7 @@ RCP<const SeriesCoeffInterface> series(const RCP<const Basic> &ex, const RCP<con
 
     if (syms.size() > 1)
         throw std::runtime_error("Only univariate series expansion implemented with Flint");
-    
+
     return URatPSeriesFlint::series(ex, var->get_name(), prec);
 #else
     throw std::runtime_error("Series expansion is supported only with Piranha or Flint");

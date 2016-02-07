@@ -22,7 +22,7 @@ public:
     virtual RCP<const Basic> as_basic() const;
     virtual umap_int_basic as_dict() const;
     virtual RCP<const Basic> get_coeff(int) const;
-    
+
     static RCP<const URatPSeriesFlint> series(const RCP<const Basic> &t, const std::string &x, unsigned int prec);
     static flint::fmpzxx convert(const Integer &x);
     static flint::fmpqxx convert(const mpq_class &x);

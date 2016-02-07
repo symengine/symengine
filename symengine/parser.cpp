@@ -242,7 +242,7 @@ class ExpressionParser {
 
 public:
     // does all the preprocessing related to parsing
-    RCP<const Basic> parse(const std::string &in)
+    RCP<const Basic> parse_expr(const std::string &in)
     {
         // stack to maintain right brackets, to match with corresponding left brackets
         std::stack<unsigned int> right_bracket;
