@@ -61,46 +61,14 @@ public:
         if (not s.get_coeff(0).is_zero()) {
             throw std::logic_error("sin(const) not Implemented");
         }
-        if (s.degree() > 8)
-            return fp_t(sin_series(s, prec));
-        //! fast sin(x)
-        fp_t res_p, monom(s), ssquare;
-        ssquare = mullow(s, s, prec);
-        res_p.set_zero();
-        flint::fmpqxx prod;
-        prod.set_one();
-        for (unsigned int i = 0; i < prec / 2; i++) {
-            const short j = 2 * i + 1;
-            if (i != 0)
-                prod /= flint::fmpzxx(1-j);
-            prod /= flint::fmpzxx(j);
-            res_p += monom * prod;
-            monom = mullow(monom, ssquare, prec);
-        }
-        return res_p;
+        return fp_t(sin_series(s, prec));
     }
 
     static inline fp_t series_cos(const fp_t &s, const fp_t& var, unsigned int prec) {
         if (not s.get_coeff(0).is_zero()) {
             throw std::logic_error("cos(const) not Implemented");
         }
-        if (s.degree() > 8)
-            return fp_t(cos_series(s, prec));
-        fp_t res_p, ssquare, monom;
-        ssquare = mullow(s, s, prec);
-        monom = ssquare;
-        res_p.set_one();
-        flint::fmpqxx prod;
-        prod.set_one();
-        for (unsigned int i = 1; i <= prec / 2; i++) {
-            const short j = 2 * i;
-            if (i != 0)
-                prod /= flint::fmpzxx(1 - j);
-            prod /= flint::fmpzxx(j);
-            res_p += monom * prod;
-            monom = mullow(monom, ssquare, prec);
-        }
-        return res_p;
+        return fp_t(cos_series(s, prec));
     }
 
     static inline fp_t series_tan(const fp_t &s, const fp_t& var, unsigned int   prec) {
