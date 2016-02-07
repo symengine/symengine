@@ -664,8 +664,6 @@ TEST_CASE("test_mobius(): ntheory", "[ntheory]")
 
 TEST_CASE("test_mertens(): ntheory", "[ntheory]")
 {
-    CHECK_THROWS_AS(mertens(-1), std::runtime_error);
-    CHECK_THROWS_AS(mertens(-9), std::runtime_error);
     REQUIRE(mertens(1) == 1);
     REQUIRE(mertens(2) == 0);
     REQUIRE(mertens(4) == -1);
