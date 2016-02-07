@@ -258,7 +258,7 @@ public:
             if (in[i] == ' ') {
                 continue;
 
-            } else if (in[i] == '*' and in[(i+1) % in.length()] == '*') {
+            } else if (in[i] == '*' and i+1 < in.length() and in[i+1] == '*') {
                 s += '^';
                 i++;
 
