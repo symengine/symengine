@@ -2,6 +2,31 @@
 #include <symengine/series_visitor.h>
 
 #ifdef HAVE_SYMENGINE_FLINT
+
+#include <csetjmp>
+#include <csignal>
+#include <cstdlib>
+#include <iostream>
+
+jmp_buf env;
+
+void on_sigabrt (int signum)
+{
+    longjmp (env, 1);
+    throw std::runtime_error("Flint abort caught in series_flint.cpp");
+}
+
+void try_and_catch_abort (std::function< void ()> func)
+{
+    if (setjmp (env) == 0) {
+        signal(SIGABRT, &on_sigabrt);
+        func();
+    }
+    else {
+        std::cout << "aborted\n";
+    }
+}
+
 namespace SymEngine {
 
 URatPSeriesFlint::URatPSeriesFlint(fp_t p, const std::string varname, const unsigned degree)
@@ -11,7 +36,15 @@ URatPSeriesFlint::URatPSeriesFlint(fp_t p, const std::string varname, const unsi
 RCP<const URatPSeriesFlint> URatPSeriesFlint::series(const RCP<const Basic> &t, const std::string &x, unsigned int prec) {
     fp_t p("2  0 1");
     SeriesVisitor<fp_t, flint::fmpqxx, URatPSeriesFlint> visitor(p, x, prec);
-    return visitor.series(t);
+    RCP<const URatPSeriesFlint> ret;
+
+    auto vseries = [&]() -> void
+    {
+        ret = visitor.series(t);
+    };
+
+    try_and_catch_abort(vseries);
+    return ret;
 }
 
 std::size_t URatPSeriesFlint::__hash__() const {
