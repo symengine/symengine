@@ -27,13 +27,12 @@ public:
 template <typename Poly, typename Coeff, typename Series>
 class SeriesBase : public SeriesCoeffInterface {
 protected:
-    std::string var_;
-    long degree_;
-    Poly p_;
+    const std::string var_;
+    const long degree_;
+    const Poly p_;
 public:
-    inline SeriesBase(Poly p, std::string var, long degree) : p_(std::move(p)) {
-        var_ = var;
-        degree_ = degree;
+    inline SeriesBase(Poly p, std::string var, long degree) : p_(std::move(p)), var_(var), degree_(degree) {
+        
     }
     inline virtual long get_degree() const { return degree_; }
 
