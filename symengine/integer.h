@@ -21,7 +21,7 @@ public:
 public:
     IMPLEMENT_TYPEID(INTEGER)
     //! Constructor of Integer using `mpz_class`
-    Integer(mpz_class i);
+    explicit Integer(mpz_class i);
     //! \return size of the hash
     virtual std::size_t __hash__() const;
     /*! Equality comparator

@@ -10,6 +10,7 @@ using SymEngine::RCP;
 using SymEngine::Basic;
 using SymEngine::integer;
 using SymEngine::pi;
+using SymEngine::E;
 using SymEngine::EulerGamma;
 using SymEngine::mul;
 using SymEngine::sub;
@@ -42,7 +43,7 @@ TEST_CASE("precision: eval_mpfr", "[eval_mpfr]")
     REQUIRE(mpfr_cmp_d(a, 0.000000000149734291) == 1);
     REQUIRE(mpfr_cmp_d(a, 0.000000000149734292) == -1);
 
-    mpfr_init2(a, 100);
+    mpfr_set_prec(a, 100);
     s = mul(EulerGamma, integer(100000000));
     t = integer(57721566);
     r = div(sub(s, t), integer(100000000));
@@ -52,6 +53,16 @@ TEST_CASE("precision: eval_mpfr", "[eval_mpfr]")
     // Check that value of `r` (`a`) starts with 0.00000000490153
     REQUIRE(mpfr_cmp_d(a, 0.00000000490153) == 1);
     REQUIRE(mpfr_cmp_d(a, 0.00000000490154) == -1);
+
+    mpfr_set_prec(a, 100);
+    s = mul(E, integer(100000));
+    t = integer(271828);
+    r = div(sub(s, t), integer(100000000));
+
+    eval_mpfr(a, *r, MPFR_RNDN);
+    // Check that value of `r` (`a`) starts with 0.00000000182845
+    REQUIRE(mpfr_cmp_d(a, 0.00000000182845) == 1);
+    REQUIRE(mpfr_cmp_d(a, 0.00000000182846) == -1);
 
     mpfr_clear(a);
 }

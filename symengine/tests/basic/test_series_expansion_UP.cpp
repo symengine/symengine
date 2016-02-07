@@ -28,8 +28,10 @@ using SymEngine::umap_short_basic;
 #ifdef HAVE_SYMENGINE_PIRANHA
 #include <symengine/series_piranha.h>
 
-#define series_coeff(EX,SYM,PREC,COEFF) SymEngine::UPSeriesPiranha::series(EX,SYM->get_name(),PREC)->p_.find_cf({COEFF}).get_basic()
 using SymEngine::UPSeriesPiranha;
+using SymEngine::p_expr;
+#define series_coeff(EX,SYM,PREC,COEFF) UPSeriesPiranha::series(EX,SYM->get_name(),PREC)->p_.find_cf({COEFF}).get_basic()
+#define invseries_coeff(EX,SYM,PREC,COEFF) UPSeriesPiranha::series_reverse(UPSeriesPiranha::series(EX,SYM->get_name(),PREC)->p_,p_expr(SYM->get_name()),PREC).find_cf({COEFF}).get_basic()
 
 static bool expand_check_pairs(const RCP<const Basic> &ex, const RCP<const Symbol> &x, int prec, const umap_short_basic& pairs)
 {
@@ -158,10 +160,10 @@ TEST_CASE("Expression series expansion: reversion ", "[Expansion of f^-1]")
     auto ex3 = sin(x);
     auto ex4 = mul(x, exp(x));
 
-    REQUIRE(series_invfunc(ex1, x, 20)[15]->__eq__(*integer(2674440)));
-    REQUIRE(series_invfunc(ex2, x, 20)[15]->__eq__(*integer(7752)));
-    REQUIRE(series_invfunc(ex3, x, 20)[15]->__eq__(*rational(143, 10240)));
-    REQUIRE(series_invfunc(ex4, x, 20)[10]->__eq__(*rational(-156250, 567)));
+    REQUIRE(invseries_coeff(ex1, x, 20, 15)->__eq__(*integer(2674440)));
+    REQUIRE(invseries_coeff(ex2, x, 20, 15)->__eq__(*integer(7752)));
+    REQUIRE(invseries_coeff(ex3, x, 20, 15)->__eq__(*rational(143, 10240)));
+    REQUIRE(invseries_coeff(ex4, x, 20, 10)->__eq__(*rational(-156250, 567)));
 }
 
 TEST_CASE("Expression series expansion: atan, tan, asin, cot, sec, csc", "[Expansion of tan, atan, asin, cot, sec, csc]")

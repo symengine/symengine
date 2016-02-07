@@ -25,7 +25,7 @@ public:
 public:
     IMPLEMENT_TYPEID(REAL_DOUBLE)
     //! Constructor of RealDouble class
-    RealDouble(double i);
+    explicit RealDouble(double i);
     //! \return size of the hash
     virtual std::size_t __hash__() const;
     /*! Equality comparator

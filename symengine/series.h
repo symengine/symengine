@@ -10,12 +10,20 @@
 #include <list>
 
 #include <symengine/number.h>
+#include <symengine/dict.h>
 #include <symengine/integer.h>
 
 namespace SymEngine {
 
+class SeriesCoeffInterface : public Number {
+public:
+    virtual RCP<const Basic> as_basic() const =0;
+    virtual umap_int_basic as_dict() const =0;
+    virtual RCP<const Basic> get_coeff(int) const =0;
+};
+
 template <typename Poly, typename Coeff, typename Series>
-class SeriesBase : public Number {
+class SeriesBase : public SeriesCoeffInterface {
 public:
     Poly p_;
     std::string var_;
@@ -47,10 +55,10 @@ public:
             if (var_ != o.var_) {
                 throw std::runtime_error("Multivariate Series not implemented");
             }
-            return make_rcp<Series>(p_ + o.p_, var_, deg);
+            return make_rcp<Series>(Poly(p_ + o.p_), var_, deg);
         } else if (other.get_type_code() < Series::type_code_id){
             Poly p = Series::series(other.rcp_from_this(), var_, degree_)->p_;
-            return make_rcp<Series>(p_ + p, var_, degree_);
+            return make_rcp<Series>(Poly(p_ + p), var_, degree_);
         } else {
             return other.add(*this);
         }
@@ -95,7 +103,7 @@ public:
         } else {
             return other.rpow(*this);
         }
-        p = Series::series_exp(p * Series::series_log(p_, Series::var(var_), deg),
+        p = Series::series_exp(Poly(p * Series::series_log(p_, Series::var(var_), deg)),
                                Series::var(var_), deg);
         return make_rcp<Series>(p, var_, deg);
     }
@@ -103,7 +111,7 @@ public:
     virtual RCP<const Number> rpow(const Number &other) const {
         if (other.get_type_code() < Series::type_code_id){
             Poly p = Series::series(other.rcp_from_this(), var_, degree_)->p_;
-            p = Series::series_exp(p_ * Series::series_log(p, Series::var(var_), degree_),
+            p = Series::series_exp(Poly(p_ * Series::series_log(p, Series::var(var_), degree_)),
                                    Series::var(var_), degree_);
             return make_rcp<Series>(p, var_, degree_);
         } else {
@@ -215,8 +223,10 @@ public:
         if (s == var) {
             //! fast atan(x)
             short sign = 1;
+            Poly monom(var), vsquare(var*var);
             for (unsigned int i = 1; i < prec; i += 2, sign *= -1) {
-                res_p += Series::pow(var, i, prec) * (Coeff(sign) / Coeff(i));
+                res_p += monom * (Coeff(sign) / Coeff(i));
+                monom *= vsquare;
             }
             return res_p;
         }
@@ -277,14 +287,16 @@ public:
             return Series::sin(c)*Series::series_cos(t, var, prec) + Series::cos(c)*Series::series_sin(t, var, prec);
         }
         //! fast sin(x)
-        Poly res_p(0);
+        Poly res_p(0), monom(s);
+        Poly ssquare = Series::mul(s, s, prec);
         Coeff prod(1);
         for (unsigned int i = 0; i < prec / 2; i++) {
             const short j = 2 * i + 1;
             if (i != 0)
                 prod /= 1 - j;
             prod /= j;
-            res_p += Series::pow(s, j, prec) * prod;
+            res_p += Series::mul(monom, Poly(prod), prec);
+            monom = Series::mul(monom, ssquare, prec);
         }
         return res_p;
 
@@ -332,13 +344,16 @@ public:
             return Series::cos(c)*Series::series_cos(t, var, prec) - Series::sin(c)*Series::series_sin(t, var, prec);
         }
         Poly res_p(1);
+        Poly ssquare = Series::mul(s, s, prec);
+        Poly monom(ssquare);
         Coeff prod(1);
         for (unsigned int i = 1; i <= prec / 2; i++) {
             const short j = 2 * i;
             if (i != 0)
                 prod /= 1 - j;
             prod /= j;
-            res_p += Series::pow(s, j, prec) * prod;
+            res_p += Series::mul(monom, Poly(prod), prec);
+            monom = Series::mul(monom, ssquare, prec);
         }
         return res_p;
 //
@@ -366,8 +381,10 @@ public:
             return res_p;
         if (s == var + 1) {
             //! fast log(1+x)
+            Poly monom(var);
             for (unsigned int i = 1; i < prec; i++) {
-                res_p += Series::pow(var, i, i + 1) * Coeff(((i % 2) == 0) ? -1 : 1) / Coeff(i);
+                res_p += monom * Coeff(((i % 2) == 0) ? -1 : 1) / Coeff(i);
+                monom *= var;
             }
             return res_p;
         }
@@ -390,9 +407,11 @@ public:
         if (s == var) {
             //! fast exp(x)
             Coeff coef(1);
+            Poly monom(var);
             for (unsigned int i = 1; i < prec; i++) {
                 coef /= i;
-                res_p += Series::pow(var, i, prec) * coef;
+                res_p += monom * coef;
+                monom *= var;
             }
             return res_p;
         }
@@ -536,20 +555,11 @@ public:
     static inline Coeff log(const Coeff& c) {
         throw std::runtime_error("log(const) not implemented");
     }
-
-    /*
-     * int ldegree(Poly &s);
-     * Coeff& find_cf(Poly &s, int n);
-     * Poly var(const std::string &s);
-     * Poly pow(Poly &s, int n);
-     * Poly mul(Poly &a, Poly &b, unsigned prec);
-     * Poly diff(Poly &a, Poly &var);
-     * Poly integrate(Poly &a, Poly &var);
-     * Coeff root(Coeff &c, unsigned n);
-     * Poly subs(Poly &s, Poly &var, Poly& new, unsigned prec);
-     * Poly/Coeff convert(Number &n)
-     */
 };
+
+RCP<const SeriesCoeffInterface> series(const RCP<const Basic> &ex, const RCP<const Symbol> &var, unsigned int prec);
+
+RCP<const SeriesCoeffInterface> series_invfunc(const RCP<const Basic> &ex, const RCP<const Symbol> &var, unsigned int prec);
 
 }  //SymEngine
 #endif

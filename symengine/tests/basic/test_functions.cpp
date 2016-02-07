@@ -174,6 +174,10 @@ TEST_CASE("Sin: functions", "[functions]")
     r1 = sin(asin(x));
     REQUIRE(eq(*r1, *x));
 
+    // sin(acsc(x)) = 1/x
+    r1 = sin(acsc(x));
+    REQUIRE(eq(*r1, *div(one, x)));
+
     // sin(pi + y) = -sin(y)
     r1 = sin(add(pi, y));
     r2 = mul(im1, sin(y));
@@ -270,6 +274,10 @@ TEST_CASE("Cos: functions", "[functions]")
     // cos(acos(x)) = x
     r1 = cos(acos(x));
     REQUIRE(eq(*r1, *x));
+
+    // cos(asec(x)) = 1/x
+    r1 = cos(asec(x));
+    REQUIRE(eq(*r1, *div(one, x)));
 
     // cos(pi - y) = -cos(y)
     r1 = cos(sub(pi, y));
@@ -380,6 +388,10 @@ TEST_CASE("Tan: functions", "[functions]")
     r1 = tan(atan(x));
     REQUIRE(eq(*r1, *x));
 
+    // tan(acot(x)) = 1/x
+    r1 = tan(acot(x));
+    REQUIRE(eq(*r1, *div(one, x)));
+
     // tan(pi + y) = -tan(y)
     r1 = tan(add(pi, y));
     r2 = tan(y);
@@ -474,6 +486,10 @@ TEST_CASE("Cot: functions", "[functions]")
     // cot(acot(x)) = x
     r1 = cot(acot(x));
     REQUIRE(eq(*r1, *x));
+
+    // cot(atan(x)) = 1/x
+    r1 = cot(atan(x));
+    REQUIRE(eq(*r1, *div(one, x)));
 
     // cot(pi + y) = -cot(y)
     r1 = cot(add(pi, y));
@@ -571,6 +587,10 @@ TEST_CASE("Csc: functions", "[functions]")
     r1 = csc(acsc(x));
     REQUIRE(eq(*r1, *x));
 
+    // csc(asin(x)) = 1/x
+    r1 = csc(asin(x));
+    REQUIRE(eq(*r1, *div(one, x)));
+
     // csc(pi + y) = -csc(y)
     r1 = csc(add(pi, y));
     r2 = mul(im1, csc(y));
@@ -666,6 +686,10 @@ TEST_CASE("Sec: functions", "[functions]")
     r1 = sec(asec(x));
     REQUIRE(eq(*r1, *x));
 
+    // sec(acos(x)) = 1/x
+    r1 = sec(acos(x));
+    REQUIRE(eq(*r1, *div(one, x)));
+
     // sec(pi + y) = -sec(y)
     r1 = sec(add(pi, y));
     r2 = mul(im1, sec(y));
@@ -705,6 +729,54 @@ TEST_CASE("Sec: functions", "[functions]")
     r1 = sec(add(sub(mul(i12, pi), y), div(pi, i2)));
     r2 = csc(y);
     REQUIRE(eq(*r1, *r2));
+}
+
+TEST_CASE("TrigFunction: trig_to_sqrt", "[functions]")
+{
+    RCP<const Basic> r1;
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> im2 = integer(-2);
+    RCP<const Basic> one_m_x2 = sub(one, pow(x, i2));
+    RCP<const Basic> one_m_xm2 = sub(one, pow(x, im2));
+    RCP<const Basic> one_p_x2 = add(one, pow(x, i2));
+    RCP<const Basic> one_p_xm2 = add(one, pow(x, im2));
+
+    r1 = sin(acos(x));
+    REQUIRE(eq(*trig_to_sqrt(r1), *sqrt(one_m_x2)));
+
+    r1 = sin(atan(x));
+    REQUIRE(eq(*trig_to_sqrt(r1), *div(x, sqrt(one_p_x2))));
+
+    r1 = cos(acsc(x));
+    REQUIRE(eq(*trig_to_sqrt(r1), *sqrt(one_m_xm2)));
+
+    r1 = cos(acot(x));
+    REQUIRE(eq(*trig_to_sqrt(r1), *div(one, sqrt(one_p_xm2))));
+
+    r1 = tan(acos(x));
+    REQUIRE(eq(*trig_to_sqrt(r1), *div(sqrt(one_m_x2), x)));
+
+    r1 = tan(asec(x));
+    REQUIRE(eq(*trig_to_sqrt(r1), *mul(x, sqrt(one_m_xm2))));
+
+    r1 = csc(atan(x));
+    REQUIRE(eq(*trig_to_sqrt(r1), *div(sqrt(one_p_x2), x)));
+
+    r1 = csc(asec(x));
+    REQUIRE(eq(*trig_to_sqrt(r1), *div(one, sqrt(one_m_xm2))));
+
+    r1 = sec(acos(x));
+    REQUIRE(eq(*trig_to_sqrt(r1), *div(one, x)));
+
+    r1 = sec(acot(x));
+    REQUIRE(eq(*trig_to_sqrt(r1), *sqrt(one_p_xm2)));
+
+    r1 = cot(asin(x));
+    REQUIRE(eq(*trig_to_sqrt(r1), *div(sqrt(one_m_x2), x)));
+
+    r1 = cot(acos(x));
+    REQUIRE(eq(*trig_to_sqrt(r1), *div(x, sqrt(one_m_x2))));
 }
 
 TEST_CASE("function_symbol: functions", "[functions]")

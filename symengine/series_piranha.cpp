@@ -58,6 +58,56 @@ piranha::rational URatPSeriesPiranha::convert(const Number &x) {
     throw std::runtime_error("Not Implemented");
 }
 
+RCP<const Basic> URatPSeriesPiranha::as_basic() const {
+    RCP<const Symbol> x = symbol(var_);
+    RCP<const Number> zcoef = integer(0);
+    umap_basic_num dict_;
+    for (const auto& it : p_) {
+        if (it.first != 0) {
+            mpq_class cl_rat(it.first.get_mpq_view());
+            cl_rat.canonicalize();
+            RCP<const Number> co_basic;
+            if (cl_rat.get_den() == 1)
+                co_basic = make_rcp<const Integer>(cl_rat.get_num());
+            else
+                co_basic = make_rcp<const Rational>(cl_rat);
+            auto term = SymEngine::mul(SymEngine::pow(x, SymEngine::integer(it.second.degree())), co_basic);
+            if (it.second.degree() == 0)
+                zcoef = co_basic;
+            Add::coef_dict_add_term(outArg(co_basic), dict_, one, term);
+        }
+    }
+    return std::move(Add::from_dict(zcoef, std::move(dict_)));
+}
+
+umap_int_basic URatPSeriesPiranha::as_dict() const {
+    umap_int_basic map;
+    for (const auto& it : p_) {
+        if (it.first != 0) {
+            mpq_class cl_rat(it.first.get_mpq_view());
+            cl_rat.canonicalize();
+            RCP<const Basic> basic;
+            if (cl_rat.get_den() == 1)
+                basic = make_rcp<const Integer>(cl_rat.get_num());
+            else
+                basic = make_rcp<const Rational>(cl_rat);
+            map[it.second.degree()] = basic;
+        }
+    }
+    return map;
+}
+
+RCP<const Basic> URatPSeriesPiranha::get_coeff(int i) const {
+    mpq_class cl_rat(p_.find_cf({i}).get_mpq_view());
+    cl_rat.canonicalize();
+    RCP<const Basic> basic;
+    if (cl_rat.get_den() == 1)
+        basic = make_rcp<const Integer>(cl_rat.get_num());
+    else
+        basic = make_rcp<const Rational>(cl_rat);
+    return std::move(basic);
+}
+
 pp_t URatPSeriesPiranha::mul(const pp_t &s, const pp_t &r, unsigned prec) {
     pp_t::set_auto_truncate_degree(prec - 1);
     pp_t ret = s * r;
@@ -153,6 +203,34 @@ p_expr UPSeriesPiranha::var(const std::string &s) {
 
 Expression UPSeriesPiranha::convert(const Number &x) {
     return Expression(x.rcp_from_this());
+}
+
+RCP<const Basic> UPSeriesPiranha::as_basic() const {
+    RCP<const Symbol> x = symbol(var_);
+    umap_basic_num dict_;
+    for (const auto& it : p_) {
+        if (it.first != 0) {
+            auto term = SymEngine::mul(it.first.get_basic(), SymEngine::pow(x, SymEngine::integer(it. second.degree())));
+            RCP<const Number> coef;
+            coef = zero;
+            Add::coef_dict_add_term(outArg(coef), dict_, one, term);
+        }
+    }
+    return std::move(Add::from_dict(one, std::move(dict_)));
+}
+
+umap_int_basic UPSeriesPiranha::as_dict() const {
+    umap_int_basic map;
+    for (const auto& it : p_) {
+        if (it.first != 0) {
+            map[it.second.degree()] = it.first.get_basic();
+        }
+    }
+    return map;
+}
+
+RCP<const Basic> UPSeriesPiranha::get_coeff(int i) const {
+    return p_.find_cf({i}).get_basic();
 }
 
 p_expr UPSeriesPiranha::mul(const p_expr &s, const p_expr &r, unsigned prec) {

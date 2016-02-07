@@ -14,7 +14,7 @@ private:
     const std::string varname;
     const unsigned prec;
 public:
-    inline SeriesVisitor(const Poly var_, const std::string varname_, const unsigned prec_)
+    inline SeriesVisitor(const Poly &var_, const std::string &varname_, const unsigned prec_)
             : var(var_), varname(varname_), prec(prec_) {
 
     }
@@ -82,7 +82,7 @@ public:
         } else if (eq(*E, *base)) {
             p = Series::series_exp(apply(exp), var, prec);
         } else {
-            p = Series::series_exp(apply(exp) * Series::series_log(apply(base), var, prec), var, prec);
+            p = Series::series_exp(Poly(apply(exp) * Series::series_log(apply(base), var, prec)), var, prec);
         }
     }
 
