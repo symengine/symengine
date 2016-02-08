@@ -104,6 +104,10 @@ class EvaluateDouble : public Evaluate {
         SYMENGINE_ASSERT(is_a<T>(x))
         return number(std::asinh(static_cast<const T &>(x).i));
     }
+    virtual RCP<const Basic> acsch(const Basic &x) const {
+        SYMENGINE_ASSERT(is_a<T>(x))
+        return number(std::asinh(1.0/static_cast<const T &>(x).i));
+    }
     virtual RCP<const Basic> abs(const Basic &x) const override {
         SYMENGINE_ASSERT(is_a<T>(x))
         return number(std::abs(static_cast<const T &>(x).i));

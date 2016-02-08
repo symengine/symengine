@@ -707,7 +707,7 @@ class EvaluateMPC : public Evaluate {
         SYMENGINE_ASSERT(is_a<ComplexMPC>(x))
         mpc_class t(static_cast<const ComplexMPC &>(x).i.get_prec());
         mpc_ui_div(t.get_mpc_t(), 1, static_cast<const ComplexMPC &>(x).i.get_mpc_t(), MPFR_RNDN);
-        mpc_atanh(t.get_mpc_t(), t.get_mpc_t(), MPFR_RNDN);
+        mpc_asinh(t.get_mpc_t(), t.get_mpc_t(), MPFR_RNDN);
         return complex_mpc(std::move(t));
     }
     virtual RCP<const Basic> acosh(const Basic &x) const {

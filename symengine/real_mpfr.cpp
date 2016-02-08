@@ -773,6 +773,14 @@ class EvaluateMPFR : public Evaluate {
         mpfr_asinh(t.get_mpfr_t(), static_cast<const RealMPFR &>(x).i.get_mpfr_t(), MPFR_RNDN);
         return real_mpfr(std::move(t));
     }
+    virtual RCP<const Basic> acsch(const Basic &x) const override {
+        SYMENGINE_ASSERT(is_a<RealMPFR>(x))
+        mpfr_srcptr x_ = static_cast<const RealMPFR &>(x).i.get_mpfr_t();
+        mpfr_class t(mpfr_get_prec(x_));
+        mpfr_ui_div(t.get_mpfr_t(), 1, t.get_mpfr_t(), MPFR_RNDN);
+        mpfr_asinh(t.get_mpfr_t(), x_, MPFR_RNDN);
+        return real_mpfr(std::move(t));
+    }
     virtual RCP<const Basic> acosh(const Basic &x) const override {
         SYMENGINE_ASSERT(is_a<RealMPFR>(x))
         mpfr_srcptr x_ = static_cast<const RealMPFR &>(x).i.get_mpfr_t();
