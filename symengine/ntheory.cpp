@@ -1500,8 +1500,8 @@ int mobius(const Integer &a)
 
 int mertens(const unsigned long a)
 {
-    unsigned mertens = 0;
-    for (unsigned i = 1; i <= a; i++) {
+    unsigned long mertens = 0;
+    for (unsigned long i = 1; i <= a; i++) {
         mertens += mobius(*integer(i));
     }
     return mertens;
