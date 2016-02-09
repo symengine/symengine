@@ -5,6 +5,15 @@
 
 namespace SymEngine {
 
+std::string ascii_art() {
+    std::string a = " _____           _____         _         \n"
+                    "|   __|_ _ _____|   __|___ ___|_|___ ___ \n"
+                    "|__   | | |     |   __|   | . | |   | -_|\n"
+                    "|_____|_  |_|_|_|_____|_|_|_  |_|_|_|___|\n"
+                    "      |___|               |___|          \n";
+    return a;
+}
+
 void StrPrinter::bvisit(const Basic &x) {
     std::ostringstream s;
     s << "<" << typeName<Basic>(x) << " instance at " << (const void*)this << ">";
