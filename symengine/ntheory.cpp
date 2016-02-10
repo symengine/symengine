@@ -1498,9 +1498,9 @@ int mobius(const Integer &a)
     }
 }
 
-int mertens(const unsigned long a)
+long mertens(const unsigned long a)
 {
-    unsigned long mertens = 0;
+    long mertens = 0;
     for (unsigned long i = 1; i <= a; i++) {
         mertens += mobius(*integer(i));
     }
