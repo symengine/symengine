@@ -3142,7 +3142,7 @@ RCP<const Basic> abs(const RCP<const Basic> &arg)
     return make_rcp<const Abs>(arg);
 }
 
-template<class T> 
+template<class T>
 void get_unnested_args(const vec_basic& args, vec_basic& unnested_args)
 {
     for (const auto &p: args) {
@@ -3233,7 +3233,7 @@ RCP<const Basic> max(const vec_basic &arg)
         }
     }
 
-    if (number_set) 
+    if (number_set)
         non_number_args.push_back(max_number);
 
     if (non_number_args.size() > 1) {
@@ -3325,7 +3325,7 @@ RCP<const Basic> min(const vec_basic &arg)
         }
     }
 
-    if (number_set) 
+    if (number_set)
         non_number_args.push_back(min_number);
 
     if (non_number_args.size() > 1) {

@@ -1047,7 +1047,7 @@ public:
     //! Max Constructor
     Max(const vec_basic&& arg);
     Max(const RCP<const Basic> &arg, ...);
-    
+
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
     //! \return Size of the hash
@@ -1069,7 +1069,7 @@ public:
     //! Min Constructor
     Min(const vec_basic&& arg);
     Min(const RCP<const Basic> &arg, ...);
-    
+
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
     //! \return Size of the hash
@@ -1083,7 +1083,7 @@ public:
 RCP<const Basic> min(const vec_basic &arg);
 
 //! Recursive function to fully unnest Min/Max
-template<class T> 
+template<class T>
 void get_unnested_args(const vec_basic& args, vec_basic& unnested_args);
 
 //! \return simplified form if possible

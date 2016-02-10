@@ -88,7 +88,9 @@ using SymEngine::is_a;
 using SymEngine::neg;
 using SymEngine::pi;
 using SymEngine::max;
+using SymEngine::min;
 using SymEngine::Max;
+using SymEngine::Min;
 using SymEngine::Rational;
 
 #ifdef HAVE_SYMENGINE_MPFR
@@ -2168,35 +2170,35 @@ TEST_CASE("max: functions", "[functions]")
     REQUIRE(eq(*res, *max({x, i2, y})));    // max(max(2, x), max(2/5, y)) == max(x, 2, y)
 }
 
-// TEST_CASE("min: functions", "[functions]")
-// {
-//     RCP<const Symbol> x = symbol("x");
-//     RCP<const Symbol> y = symbol("y");
-//     RCP<const Basic> r2_5 = Rational::from_two_ints(*integer(2), *integer(5));
-//     RCP<const Basic> rd = real_double(0.32);
-//     RCP<const Basic> i2 = integer(2);
+TEST_CASE("min: functions", "[functions]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    RCP<const Basic> r2_5 = Rational::from_two_ints(*integer(2), *integer(5));
+    RCP<const Basic> rd = real_double(0.32);
+    RCP<const Basic> i2 = integer(2);
 
-//     RCP<const Basic> res;
+    RCP<const Basic> res;
 
-//     res = min({x, y});
-//     REQUIRE(eq(*res, *min({y, x})));        // min(x, y) == min(y, x)
-//     REQUIRE(is_a<min>(*res));               // min(x, y) is a min
+    res = min({x, y});
+    REQUIRE(eq(*res, *min({y, x})));        // min(x, y) == min(y, x)
+    REQUIRE(is_a<Min>(*res));               // min(x, y) is a min
 
-//     res = min({x});
-//     REQUIRE(eq(*res, *x));                 // min(x) == x
-    
-//     res = min({i2, rd, r2_5});
-//     REQUIRE(eq(*res, *i2));                 // min(2, 2/5, 0.32) == 2
+    res = min({x});
+    REQUIRE(eq(*res, *x));                 // min(x) == x
 
-//     res = min({x, min({i2, y})});
-//     REQUIRE(eq(*res, *min({x, i2, y})));    // min(x, min(2, y)) == min(x, 2, y)
+    res = min({i2, rd, r2_5});
+    REQUIRE(eq(*res, *rd));                 // min(2, 2/5, 0.32) == 0.32
 
-//     res = min({min({x, min({y, i2})}), min({r2_5, rd})});
-//     REQUIRE(eq(*res, *min({x, i2, y})));    // min(min(x, min(y, 2)), min(2/5, 0.32)) == min(x, 2, y)
+    res = min({i2, rd, max({x})});
+    REQUIRE(eq(*res, *min({rd, x})));       // min(2, 0.32, max(x)) == min(0.32, x)
 
-//     res = min({i2, r2_5, x});
-//     REQUIRE(eq(*res, *min({i2, x})));       // min(2, 2/5, x) == min(2, x)
+    res = min({x, min({i2, y})});
+    REQUIRE(eq(*res, *min({x, i2, y})));    // min(x, min(2, y)) == min(x, 2, y)
 
-//     res = min({min({x, i2}), min({y, r2_5})});
-//     REQUIRE(eq(*res, *min({x, i2, y})));    // min(min(2, x), min(2/5, y)) == min(x, 2, y)
-// }
+    res = min({min({x, min({y, i2})}), min({r2_5, rd})});
+    REQUIRE(eq(*res, *min({x, rd, y})));    // min(min(x, min(y, 2)), min(2/5, 0.32)) == min(x, 0.32, y)
+
+    res = min({min({x, i2}), min({y, r2_5})});
+    REQUIRE(eq(*res, *min({x, r2_5, y})));    // min(min(2, x), min(2/5, y)) == min(x, 2/5, y)
+}
