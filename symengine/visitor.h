@@ -146,6 +146,50 @@ RCP<const Basic> coeff(const Basic &b, const RCP<const Basic> &x,
 
 set_basic free_symbols(const Basic &b);
 
+class NeedsSymbolicExpansionVisitor : public BaseVisitor<NeedsSymbolicExpansionVisitor, StopVisitor> {
+protected:
+    RCP<const Symbol> x_;
+    bool needs_;
+public:
+
+    void bvisit(const TrigFunction &f) {
+        auto arg = f.get_arg();
+        map_basic_basic subsx0{{x_, integer(0)}};
+        if (arg->subs(subsx0)->__neq__(*integer(0))) {
+            needs_ = true;
+            stop_ = true;
+        }
+    }
+
+    void bvisit(const HyperbolicFunction &f) {
+        auto arg = f.get_arg();
+        map_basic_basic subsx0{{x_, integer(0)}};
+        if (arg->subs(subsx0)->__neq__(*integer(0))) {
+            needs_ = true;
+            stop_ = true;
+        }
+    }
+
+    void bvisit(const Log &f) {
+        auto arg = f.get_arg();
+        map_basic_basic subsx0{{x_, integer(0)}};
+        if (arg->subs(subsx0)->__eq__(*integer(0))) {
+            needs_ = true;
+            stop_ = true;
+        }
+    }
+
+    void bvisit(const Basic &x) { }
+
+    bool apply(const Basic &b, const RCP<const Symbol> &x) {
+        x_ = x;
+        needs_ = false;
+        stop_ = false;
+        preorder_traversal_stop(b, *this);
+        return needs_;
+    }
+};
+
 } // SymEngine
 
 #endif
