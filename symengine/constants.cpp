@@ -86,6 +86,13 @@ RCP<const Basic> sin_table[] = {
         zero, mC0, mC1, mC2, mC3, mC4, minus_one, mC4, mC3, mC2, mC1, mC0
     };
 
+// cos_table[n] represents the value of cos(2*pi*n/24) for n = 0..23
+RCP<const Basic> cos_table[] = {
+        one, C4, C3, C2, C1, C0, zero, mC0, mC1, mC2, mC3, mC4,
+        minus_one, mC4, mC3, mC2, mC1, mC0, zero, C0, C1, C2, C3, C4 
+    };
+
+
 umap_basic_basic inverse_cst = {
     {C3, i3},
     {mC3, im3},
