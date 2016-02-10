@@ -3142,4 +3142,200 @@ RCP<const Basic> abs(const RCP<const Basic> &arg)
     return make_rcp<const Abs>(arg);
 }
 
+template<class T> 
+void get_unnested_args(const vec_basic& args, vec_basic& unnested_args)
+{
+    for (const auto &p: args) {
+        if (is_a<T>(*p)) {
+            get_unnested_args<T>(rcp_static_cast<const T>(p)->get_args(), unnested_args);
+        } else {
+            unnested_args.push_back(p);
+        }
+    }
+}
+
+Max::Max(const vec_basic&& arg)
+    :arg_{std::move(arg)}
+{
+    SYMENGINE_ASSERT(is_canonical(arg_))
+}
+
+bool Max::is_canonical(const vec_basic &arg) const
+{
+    if (arg.size() < 2)
+        return false;
+
+    bool non_number_exists = false;
+
+    for (const auto &p: arg) {
+        if (is_a<Complex>(*p) or is_a<Max>(*p))
+            return false;
+        if (not is_a_Number(*p))
+            non_number_exists = true;
+    }
+    return non_number_exists;   // all arguments cant be numbers
+}
+
+bool Max::__eq__(const Basic &o) const
+{
+    if (is_a<Max>(o) and
+        vec_basic_eq_perm(arg_, static_cast<const Max &>(o).arg_))
+        return true;
+    else
+        return false;
+}
+
+int Max::compare(const Basic &o) const
+{
+    SYMENGINE_ASSERT(is_a<Max>(o))
+    const Max &s = static_cast<const Max &>(o);
+    if (arg_.size() != s.arg_.size())
+        return (arg_.size() < s.arg_.size()) ? -1 : 1;
+    return vec_basic_compare(arg_, s.arg_);
+}
+
+std::size_t Max::__hash__() const
+{
+    std::size_t seed = MAX;
+    for (const auto &p: arg_) {
+        hash_combine<Basic>(seed, *p);
+    }
+    return seed;
+}
+
+RCP<const Basic> max(const vec_basic &arg)
+{
+    bool number_set = false;
+    RCP<const Number> max_number, difference;
+    vec_basic unnested_args;
+    vec_basic non_number_args;
+
+    // Max inside Max should never occur! We unnest them recursively
+    get_unnested_args<Max>(arg, unnested_args);
+
+    for (const auto &p: unnested_args) {
+        if (is_a<Complex>(*p))
+            throw std::runtime_error("Complex can't be passed to max!");
+
+        if (is_a_Number(*p)) {
+            if(not number_set) {
+                max_number = rcp_static_cast<const Number>(p);
+
+            } else {
+                difference = rcp_static_cast<const Number>(sub(p, max_number));
+                if (difference->is_positive())
+                    max_number = rcp_static_cast<const Number>(p);
+            }
+            number_set = true;
+
+        } else {
+            non_number_args.push_back(p);
+        }
+    }
+
+    if (number_set) 
+        non_number_args.push_back(max_number);
+
+    if (non_number_args.size() > 1) {
+        return make_rcp<const Max>(std::move(non_number_args));
+    } else if (non_number_args.size() == 1) {
+        return non_number_args[0];
+    } else {
+        throw std::runtime_error("Empty vec_basic passed to max!");
+    }
+
+}
+
+Min::Min(const vec_basic&& arg)
+    :arg_{std::move(arg)}
+{
+    SYMENGINE_ASSERT(is_canonical(arg_))
+}
+
+bool Min::is_canonical(const vec_basic &arg) const
+{
+    if (arg.size() < 2)
+        return false;
+
+    bool non_number_exists = false;
+
+    for (const auto &p: arg) {
+        if (is_a<Complex>(*p) or is_a<Min>(*p))
+            return false;
+        if (not is_a_Number(*p))
+            non_number_exists = true;
+    }
+    return non_number_exists;   // all arguments cant be numbers
+}
+
+bool Min::__eq__(const Basic &o) const
+{
+    if (is_a<Min>(o) and
+        vec_basic_eq_perm(arg_, static_cast<const Min &>(o).arg_))
+        return true;
+    else
+        return false;
+}
+
+int Min::compare(const Basic &o) const
+{
+    SYMENGINE_ASSERT(is_a<Min>(o))
+    const Min &s = static_cast<const Min &>(o);
+    if (arg_.size() != s.arg_.size())
+        return (arg_.size() < s.arg_.size()) ? -1 : 1;
+    return vec_basic_compare(arg_, s.arg_);
+}
+
+std::size_t Min::__hash__() const
+{
+    std::size_t seed = MIN;
+    for (const auto &p: arg_) {
+        hash_combine<Basic>(seed, *p);
+    }
+    return seed;
+}
+
+RCP<const Basic> min(const vec_basic &arg)
+{
+    bool number_set = false;
+    RCP<const Number> min_number, difference;
+    vec_basic unnested_args;
+    vec_basic non_number_args;
+
+    // Min inside Min should never occur! We unnest them recursively
+    get_unnested_args<Min>(arg, unnested_args);
+
+    for (const auto &p: unnested_args) {
+        if (is_a<Complex>(*p))
+            throw std::runtime_error("Complex can't be passed to min!");
+
+        if (is_a_Number(*p)) {
+            if(not number_set) {
+                min_number = rcp_static_cast<const Number>(p);
+
+            } else {
+                difference = rcp_static_cast<const Number>(sub(min_number, p));
+                if (difference->is_positive())
+                    min_number = rcp_static_cast<const Number>(p);
+            }
+            number_set = true;
+
+        } else {
+            non_number_args.push_back(p);
+        }
+    }
+
+    if (number_set) 
+        non_number_args.push_back(min_number);
+
+    if (non_number_args.size() > 1) {
+        return make_rcp<const Min>(std::move(non_number_args));
+    } else if (non_number_args.size() == 1) {
+        return non_number_args[0];
+    } else {
+        throw std::runtime_error("Empty vec_basic passed to max!");
+    }
+
+}
+
 } // SymEngine

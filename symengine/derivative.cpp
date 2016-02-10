@@ -48,6 +48,8 @@ static RCP<const Basic> diff(const CLASS &self, \
     DIFF0(Beta)
     DIFF0(PolyGamma)
     DIFF0(LeviCivita)
+    DIFF0(Max)
+    DIFF0(Min)
 
 #endif
 
