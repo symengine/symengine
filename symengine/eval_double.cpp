@@ -154,7 +154,7 @@ public:
     void bvisit(const Csch &x) {
         T tmp = apply(*(x.get_arg()));
         result_ = 1.0/std::sinh(tmp);
-    }; 
+    };
 
     void bvisit(const Cosh &x) {
         T tmp = apply(*(x.get_arg()));
@@ -184,7 +184,7 @@ public:
     void bvisit(const ACsch &x) {
         T tmp = apply(*(x.get_arg()));
         result_ = std::asinh(1.0/tmp);
-    };    
+    };
 
     void bvisit(const ACosh &x) {
         T tmp = apply(*(x.get_arg()));

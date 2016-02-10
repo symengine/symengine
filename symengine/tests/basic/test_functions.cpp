@@ -61,6 +61,7 @@ using SymEngine::sech;
 using SymEngine::tanh;
 using SymEngine::coth;
 using SymEngine::asinh;
+using SymEngine::acsch;
 using SymEngine::acosh;
 using SymEngine::atanh;
 using SymEngine::acoth;
@@ -1689,6 +1690,30 @@ TEST_CASE("Asinh: functions", "[functions]")
     r2 = div(i2, sqrt(add(mul(i4, pow(y, i2)), one)));
     REQUIRE(eq(*r1, *r2));
 }
+
+TEST_CASE("Acsch: functions", "[functions]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Basic> im1 = integer(-1);
+    RCP<const Basic> one = integer(1);
+    RCP<const Basic> i2 = integer(2);
+
+    RCP<const Basic> r1;
+    RCP<const Basic> r2;
+
+    r1 = acsch(one);
+    r2 = log(add(sqrt(i2), one));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = acsch(im1);
+    r2 = log(add(sqrt(i2), im1));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = acsch(x)->diff(x);
+    r2 = div(im1, mul(sqrt(add(one, div(one, pow(x, i2)))), pow(x, i2)));
+    REQUIRE(eq(*r1, *r2));
+}
+
 
 TEST_CASE("Acosh: functions", "[functions]")
 {
