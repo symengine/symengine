@@ -54,7 +54,7 @@ TEST_CASE("Expression series expansion interface", "[Expansion interface]")
     REQUIRE_THROWS_AS(series(ex5, x, 10), std::runtime_error);
     auto ex6 = add(integer(1), x);
     REQUIRE_THROWS_AS(series_invfunc(ex6, x, 10), std::runtime_error);
-    auto ex7 = lambertw(add(integer(1), x));
+    auto ex7 = lambertw(x);
     REQUIRE_THROWS_AS(series(ex7, x, 10), std::runtime_error);
 #endif
 }

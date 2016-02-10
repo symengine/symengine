@@ -170,6 +170,19 @@ public:
         }
     }
 
+    void bvisit(const Pow &pow) {
+        auto base = pow.get_base();
+        auto exp = pow.get_exp();
+        map_basic_basic subsx0{{x_, integer(0)}};
+        // exp(const) or x^-1
+        if ((base->__eq__(*E) and exp->subs(subsx0)->__neq__(*integer(0)))
+            or (is_a_Number(*exp) and static_cast<const Number&>(*exp).is_negative()
+                and base->subs(subsx0)->__eq__(*integer(0)))) {
+            needs_ = true;
+            stop_ = true;
+        }
+    }
+
     void bvisit(const Log &f) {
         auto arg = f.get_arg();
         map_basic_basic subsx0{{x_, integer(0)}};
@@ -178,6 +191,8 @@ public:
             stop_ = true;
         }
     }
+
+    void bvisit(const LambertW &x) { needs_ = true; stop_ = true; }
 
     void bvisit(const Basic &x) { }
 
