@@ -325,12 +325,12 @@ void StrPrinter::bvisit(const UnivariatePolynomial &x) {
 #ifdef HAVE_SYMENGINE_PIRANHA
 void StrPrinter::bvisit(const URatPSeriesPiranha &x) {
     std::ostringstream o;
-    o << x.p_ << " + O(" << x.var_ << "**" << x.degree_ << ")";
+    o << x.get_poly() << " + O(" << x.get_var() << "**" << x.get_degree() << ")";
     str_ = o.str();
 }
 void StrPrinter::bvisit(const UPSeriesPiranha &x) {
     std::ostringstream o;
-    o << x.p_ << " + O(" << x.var_ << "**" << x.degree_ << ")";
+    o << x.get_poly() << " + O(" << x.get_var() << "**" << x.get_degree() << ")";
     str_ = o.str();
 }
 #endif

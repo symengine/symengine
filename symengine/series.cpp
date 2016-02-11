@@ -59,7 +59,7 @@ RCP<const SeriesCoeffInterface> series_invfunc(const RCP<const Basic> &ex, const
     if (is_a<Symbol>(*ex))
         return make_rcp<const UPSeriesPiranha>(p_expr{Expression(ex)}, var->get_name(), prec);
 
-    return make_rcp<const UPSeriesPiranha>(UPSeriesPiranha::series_reverse(UPSeriesPiranha::series(ex, var->get_name(), prec)->p_, p_expr(var->get_name()), prec), var->get_name(), prec);
+    return make_rcp<const UPSeriesPiranha>(UPSeriesPiranha::series_reverse(UPSeriesPiranha::series(ex, var->get_name(), prec)->get_poly(), p_expr(var->get_name()), prec), var->get_name(), prec);
 
 #else
     throw std::runtime_error("Series expansion is supported only with Piranha");
