@@ -6,7 +6,7 @@
 
 #include <symengine/symengine_config.h>
 #include <symengine/series.h>
-#include <symengine/visitor.h>
+#include <symengine/series_visitor.h>
 
 #ifdef HAVE_SYMENGINE_PIRANHA
 #include <symengine/series_piranha.h>
