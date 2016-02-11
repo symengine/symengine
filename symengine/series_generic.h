@@ -9,11 +9,17 @@
 #include <list>
 
 #include <symengine/polynomial.h>
+#include <symengine/rational.h>
+#include <symengine/integer.h>
+#include <symengine/series.h>
+#include <symengine/expression.h>
 
 namespace SymEngine {
+using sp_expr = RCP<const UnivariatePolynomial> poly_; //Polynomial type
+//using sp_t = RCP //Coefficient type
 //! UnivariateSeries Class
-  class UnivariateSeries : public SeriesBase<UnivariatePolynomial,int,UnivariateSeries> {
-public:
+class UnivariateSeries : public SeriesBase<UnivariatePolynomial, int, UnivariateSeries> {
+//public:
     //! `var_` : Variable of the UnivariateSeries
     //! `poly_` : holds the UnivariatePolynomial of the series
     //! `prec_` : precision of the UnivariateSeries, i.e. self = poly + O(var^prec)
@@ -25,7 +31,14 @@ public:
 public:
     IMPLEMENT_TYPEID(UNIVARIATESERIES)
     //! Constructor of UnivariateSeries class
-    UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const RCP<const UnivariatePolynomial> &poly);
+    UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const sp_expr &poly);
+    static RCP<const UnivariateSeries> series(const RCP<const Basic> &t, const std::string &x, unsigned int prec);
+    static SymEngine::Integer convert(const Integer &x);
+    static SymEngine::Rational convert(const mpq_class &x);
+    //static pp_t var(const std::string &s);
+    static SymEngine::Rational convert(const Rational &x);
+    static SymEngine::Rational convert(const Number &x);
+
     //   UnivariateSeries(const RCP<const Symbol> &var, const unsigned int& precision, const unsigned int& max_exp, map_uint_mpz&& dict);
     //UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const map_uint_mpz &dict);
     //! Constructor using a dense vector of mpz_class coefficients
@@ -53,6 +66,8 @@ public:
 
     std::string __str__() const;
     virtual vec_basic get_args() const { return {}; }
+
+    static sp_expr series_sin(const sp_expr &s, const sp_expr &var, unsigned int prec);
 };
 
   /*

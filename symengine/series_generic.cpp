@@ -3,17 +3,43 @@
 #include <iterator>
 #include <symengine/series_generic.h>
 #include <symengine/dict.h>
+#include <symengine/series_visitor.h>
 
 using SymEngine::RCP;
 using SymEngine::make_rcp;
 
 namespace SymEngine {
 
-UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const RCP<const UnivariatePolynomial> &poly)
-  : SeriesBase(*(poly), var->get_name(), precision) {
+UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const sp_expr &poly)
+  : SeriesBase(std::move(poly), var->get_name(), precision) {
   
 }
-  /*
+RCP<const UnivariateSeries> UnivariateSeries::series(const RCP<const Basic> &t, const std::string &x,
+                                                         unsigned int prec) {
+    //throw std::runtime_error("Not Implemented");
+    SeriesVisitor<sp_expr, Integer, UnivariateSeries> visitor(sp_expr(x), x, prec);
+    return visitor.series(t);
+}
+
+SymEngine::Integer UnivariateSeries::convert(const Integer &x) {
+    return Integer(x.as_mpz().get_mpz_t());
+}
+SymEngine::Rational UnivariateSeries::convert(const mpq_class &x) {
+    return x.from_mpq();
+}
+
+SymEngine::Rational UnivariateSeries::convert(const Rational &x) {
+    return x;
+}
+SymEngine::Rational UnivariateSeries::convert(const Number &x) {
+    return x.as_mpz().from_mpq();
+}
+
+Expression UnivariateSeries::series_sin(const sp_expr &s, const sp_expr &var, unsigned int prec) {
+    throw std::runtime_error("Not Implemented");
+}
+
+/*
 UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const unsigned int &max, map_uint_mpz&& dict) :
         var_{var}, prec_{precision} {
 
