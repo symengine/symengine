@@ -431,7 +431,6 @@ TEST_CASE("Tan: functions", "[functions]")
     r1 = tan(add(sub(mul(i12, pi), y), div(pi, i2)));
     r2 = cot(y);
     REQUIRE(eq(*r1, *r2));
-
 }
 
 TEST_CASE("Cot: functions", "[functions]")
@@ -530,8 +529,6 @@ TEST_CASE("Cot: functions", "[functions]")
     r1 = cot(add(sub(mul(i12, pi), y), div(pi, i2)));
     r2 = tan(y);
     REQUIRE(eq(*r1, *r2));
-
-
 }
 
 TEST_CASE("Csc: functions", "[functions]")
@@ -630,7 +627,6 @@ TEST_CASE("Csc: functions", "[functions]")
     r1 = csc(add(sub(mul(i12, pi), y), div(pi, i2)));
     r2 = sec(y);
     REQUIRE(eq(*r1, *r2));
-
 }
 
 TEST_CASE("Sec: functions", "[functions]")
@@ -1077,9 +1073,6 @@ TEST_CASE("Sin table: functions", "[functions]")
     RCP<const Basic> i12 = integer(12);
     RCP<const Basic> im1 = integer(-1);
 
-    RCP<const Symbol> x = symbol("x");
-    RCP<const Symbol> y = symbol("y");
-
     RCP<const Basic> sq3 = sqrt(i3);
     RCP<const Basic> sq2 = sqrt(i2);
 
@@ -1120,7 +1113,59 @@ TEST_CASE("Sin table: functions", "[functions]")
     r1 = sin(mul(div(pi, i12), integer(5)));
     r2 = div(add(sq3, one), mul(i2, sq2));
     REQUIRE(eq(*r1, *r2));
+}
 
+TEST_CASE("Cos table: functions", "[functions]")
+{
+    RCP<const Basic> r1;
+    RCP<const Basic> r2;
+
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> i3 = integer(3);
+    RCP<const Basic> i12 = integer(12);
+    RCP<const Basic> i13 = integer(13);
+    RCP<const Basic> im1 = integer(-1);
+
+    RCP<const Basic> sq3 = sqrt(i3);
+    RCP<const Basic> sq2 = sqrt(i2);
+
+    // cos(2pi + pi/6) = sqrt(3)/2
+    r1 = cos(add(mul(pi, i2), mul(div(pi, i12), i2)));
+    r2 = div(sq3, i2);
+    REQUIRE(eq(*r1, *r2));
+
+    // cos(n*pi + pi/6) = sqrt(3)/2
+    r1 = cos(add(mul(pi, integer(10)), mul(div(pi, i12), i2)));
+    r2 = div(sq3, i2);
+    REQUIRE(eq(*r1, *r2));
+
+    // cos((2n-1)*pi) = -1
+    r1 = cos(mul(pi, i13));
+    REQUIRE(eq(*r1, *im1));
+
+    // cos(2pi + pi/2) = 0
+    r1 = cos(add(mul(pi, i2), div(pi, i2)));
+    REQUIRE(eq(*r1, *zero));
+
+    // cos(pi/3) = 1/2
+    r1 = cos(div(pi, integer(3)));
+    r2 = div(one, i2);
+    REQUIRE(eq(*r1, *r2));
+
+    // cos(pi/4) = 1/sqrt(2)
+    r1 = cos(div(pi, integer(4)));
+    r2 = div(sq2, i2);
+    REQUIRE(eq(*r1, *r2));
+
+    // cos(5*pi/12) = (sqrt(3) - 1)/(2*sqrt(2))
+    r1 = cos(mul(div(pi, i12), integer(5)));
+    r2 = div(sub(sq3, one), mul(i2, sq2));
+    REQUIRE(eq(*r1, *r2));
+
+    // cos(pi/12) = (sqrt(3) + 1)/(2*sqrt(2))
+    r1 = cos(div(pi, i12));
+    r2 = div(add(sq3, one), mul(i2, sq2));
+    REQUIRE(eq(*r1, *r2));
 }
 
 TEST_CASE("Could extract minus: functions", "[functions]")
@@ -1156,7 +1201,6 @@ TEST_CASE("Could extract minus: functions", "[functions]")
     r = mul(div(x, i2), y);
     b = could_extract_minus(r);
     REQUIRE(b == false);
-
 }
 
 TEST_CASE("Asin: functions", "[functions]")
@@ -1367,7 +1411,6 @@ TEST_CASE("atan: functions", "[functions]")
     r1 = atan(mul(im1, sqrt(add(i5, mul(i2, sqrt(i5))))));
     r2 = div(mul(pi, im2), i5);
     REQUIRE(eq(*r1, *r2));
-
 }
 
 TEST_CASE("Acot: functions", "[functions]")
@@ -1528,7 +1571,6 @@ TEST_CASE("Sinh: functions", "[functions]")
     r1 = sinh(mul(im1, x))->diff(x);
     r2 = mul(im1, cosh(x));
     REQUIRE(eq(*r1, *r2));
-
 }
 
 TEST_CASE("Cosh: functions", "[functions]")
