@@ -3,14 +3,10 @@
 
 #include <symengine/basic.h>
 #include <symengine/dict.h>
-#include <symengine/parser.cpp>
 
 namespace SymEngine {
 
-inline RCP<const Basic> parse(std::string& s) {
-	ExpressionParser p;
-	return p.parse_expr(s);
-}
+RCP<const Basic> parse(const std::string& s);
 
 } // SymEngine
 

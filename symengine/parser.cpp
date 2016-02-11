@@ -9,6 +9,7 @@
 #include <symengine/functions.h>
 #include <symengine/constants.h>
 #include <symengine/visitor.h>
+#include <symengine/parser.h>
 #include <vector>
 #include <stack>
 #include <map>
@@ -27,7 +28,7 @@ class ExpressionParser {
         {'*', 3}, {'/', 4}, {'^', 5}
     };
     // symengine supported constants
-    std::map<std::string, RCP<const Basic> > constants = {
+    std::map<const std::string, const RCP<const Basic> > constants = {
 
         {"e", E}, {"E", E}, {"EulerGamma", EulerGamma}, {"pi", pi}, {"I", I}
     };
@@ -44,9 +45,9 @@ class ExpressionParser {
     double_arg_func double_casted_zeta = zeta;
 
     // maps string to corresponding single argument function
-    std::map<   std::string,
-                std::function<RCP<const Basic>(const RCP<const Basic>&)>
-            >   single_arg_functions = {
+    std::map< std::string,
+              std::function<RCP<const Basic>(const RCP<const Basic>&)>
+            > single_arg_functions = {
 
         {"", [](const RCP<const Basic>& x){return x;}},
 
@@ -68,14 +69,13 @@ class ExpressionParser {
     };
 
     // maps string to corresponding double argument function
-    std::map<   std::string,
-                std::function<RCP<const Basic>(const RCP<const Basic>&, const RCP<const Basic>&)>
-            >   double_arg_functions = {
+    std::map< std::string,
+              std::function<RCP<const Basic>(const RCP<const Basic>&, const RCP<const Basic>&)>
+            > double_arg_functions = {
 
         {"pow", pow}, {"beta", beta}, {"log", double_casted_log}, {"zeta", double_casted_zeta},
         {"lowergamma", lowergamma}, {"uppergamma", uppergamma}, {"polygamma", polygamma},
         {"kronecker_delta", kronecker_delta}
-
     };
 
     // vector which stores where parsing 'ends' for a particular index
@@ -323,5 +323,10 @@ public:
         return parse_string(0, s_len);
     }
 };
+
+RCP<const Basic> parse(const std::string& s) {
+    ExpressionParser p;
+    return p.parse_expr(s);
+}
 
 } // SymEngine
