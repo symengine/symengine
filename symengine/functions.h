@@ -1046,7 +1046,6 @@ public:
     IMPLEMENT_TYPEID(MAX)
     //! Max Constructor
     Max(const vec_basic&& arg);
-    Max(const RCP<const Basic> &arg, ...);
 
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;

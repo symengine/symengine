@@ -3207,8 +3207,13 @@ RCP<const Basic> max(const vec_basic &arg)
 
             } else {
                 difference = rcp_static_cast<const Number>(sub(p, max_number));
-                if (difference->is_positive())
+
+                if (difference->is_zero() and not difference->is_exact()) {
+                    if (max_number->is_exact())
+                        max_number = rcp_static_cast<const Number>(p);
+                } else if (difference->is_positive()) {
                     max_number = rcp_static_cast<const Number>(p);
+                }
             }
             number_set = true;
 
@@ -3220,8 +3225,13 @@ RCP<const Basic> max(const vec_basic &arg)
 
                     } else {
                         difference = rcp_static_cast<const Number>(sub(l, max_number));
-                        if (difference->is_positive())
+
+                        if (difference->is_zero() and not difference->is_exact()) {
+                            if (max_number->is_exact())
+                                max_number = rcp_static_cast<const Number>(l);
+                        } else if (difference->is_positive()) {
                             max_number = rcp_static_cast<const Number>(l);
+                        }
                     }
                     number_set = true;
                 } else {
@@ -3310,8 +3320,13 @@ RCP<const Basic> min(const vec_basic &arg)
 
             } else {
                 difference = rcp_static_cast<const Number>(sub(min_number, p));
-                if (difference->is_positive())
+
+                if (difference->is_zero() and not difference->is_exact()) {
+                    if (min_number->is_exact())
+                        min_number = rcp_static_cast<const Number>(p);
+                } else if (difference->is_positive()) {
                     min_number = rcp_static_cast<const Number>(p);
+                }
             }
             number_set = true;
 
@@ -3323,8 +3338,13 @@ RCP<const Basic> min(const vec_basic &arg)
 
                     } else {
                         difference = rcp_static_cast<const Number>(sub(min_number, l));
-                        if (difference->is_positive())
+
+                        if (difference->is_zero() and not difference->is_exact()) {
+                            if (min_number->is_exact())
+                                min_number = rcp_static_cast<const Number>(l);
+                        } else if (difference->is_positive()) {
                             min_number = rcp_static_cast<const Number>(l);
+                        }
                     }
                     number_set = true;
                 } else {
