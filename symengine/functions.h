@@ -1082,10 +1082,6 @@ public:
 //! Canonicalize Min:
 RCP<const Basic> min(const vec_basic &arg);
 
-//! Recursive function to fully unnest Min/Max
-template<class T>
-void get_unnested_args(const vec_basic& args, vec_basic& unnested_args);
-
 //! \return simplified form if possible
 RCP<const Basic> trig_to_sqrt(const RCP<const Basic> &arg);
 

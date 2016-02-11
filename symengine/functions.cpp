@@ -3142,18 +3142,6 @@ RCP<const Basic> abs(const RCP<const Basic> &arg)
     return make_rcp<const Abs>(arg);
 }
 
-template<class T>
-void get_unnested_args(const vec_basic& args, vec_basic& unnested_args)
-{
-    for (const auto &p: args) {
-        if (is_a<T>(*p)) {
-            get_unnested_args<T>(rcp_static_cast<const T>(p)->get_args(), unnested_args);
-        } else {
-            unnested_args.push_back(p);
-        }
-    }
-}
-
 Max::Max(const vec_basic&& arg)
     :arg_{std::move(arg)}
 {
@@ -3207,13 +3195,9 @@ RCP<const Basic> max(const vec_basic &arg)
 {
     bool number_set = false;
     RCP<const Number> max_number, difference;
-    vec_basic unnested_args;
     vec_basic non_number_args;
 
-    // Max inside Max should never occur! We unnest them recursively
-    get_unnested_args<Max>(arg, unnested_args);
-
-    for (const auto &p: unnested_args) {
+    for (const auto &p: arg) {
         if (is_a<Complex>(*p))
             throw std::runtime_error("Complex can't be passed to max!");
 
@@ -3228,6 +3212,22 @@ RCP<const Basic> max(const vec_basic &arg)
             }
             number_set = true;
 
+        } else if (is_a<Max>(*p)) {
+            for (const auto &l: rcp_static_cast<const Max>(p)->get_args()) {
+                if (is_a_Number(*l)) {
+                    if(not number_set) {
+                        max_number = rcp_static_cast<const Number>(l);
+
+                    } else {
+                        difference = rcp_static_cast<const Number>(sub(l, max_number));
+                        if (difference->is_positive())
+                            max_number = rcp_static_cast<const Number>(l);
+                    }
+                    number_set = true;
+                } else {
+                    non_number_args.push_back(l);
+                }
+            }
         } else {
             non_number_args.push_back(p);
         }
@@ -3243,7 +3243,6 @@ RCP<const Basic> max(const vec_basic &arg)
     } else {
         throw std::runtime_error("Empty vec_basic passed to max!");
     }
-
 }
 
 Min::Min(const vec_basic&& arg)
@@ -3299,13 +3298,9 @@ RCP<const Basic> min(const vec_basic &arg)
 {
     bool number_set = false;
     RCP<const Number> min_number, difference;
-    vec_basic unnested_args;
     vec_basic non_number_args;
 
-    // Min inside Min should never occur! We unnest them recursively
-    get_unnested_args<Min>(arg, unnested_args);
-
-    for (const auto &p: unnested_args) {
+    for (const auto &p: arg) {
         if (is_a<Complex>(*p))
             throw std::runtime_error("Complex can't be passed to min!");
 
@@ -3320,6 +3315,22 @@ RCP<const Basic> min(const vec_basic &arg)
             }
             number_set = true;
 
+        } else if (is_a<Min>(*p)) {
+            for (const auto &l: rcp_static_cast<const Min>(p)->get_args()) {
+                if (is_a_Number(*l)) {
+                    if(not number_set) {
+                        min_number = rcp_static_cast<const Number>(l);
+
+                    } else {
+                        difference = rcp_static_cast<const Number>(sub(min_number, l));
+                        if (difference->is_positive())
+                            min_number = rcp_static_cast<const Number>(l);
+                    }
+                    number_set = true;
+                } else {
+                    non_number_args.push_back(l);
+                }
+            }
         } else {
             non_number_args.push_back(p);
         }
@@ -3335,7 +3346,6 @@ RCP<const Basic> min(const vec_basic &arg)
     } else {
         throw std::runtime_error("Empty vec_basic passed to max!");
     }
-
 }
 
 } // SymEngine
