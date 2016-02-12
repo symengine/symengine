@@ -3068,14 +3068,23 @@ RCP<const Basic> polygamma(const RCP<const Basic> &n_, const RCP<const Basic> &x
                 if (num == 1) {
                        return sub(mul(im2, log(i2)), EulerGamma);
                 }
-                if (num == 3) {
-                       return add(i2, sub(mul(im2, log(i2)), EulerGamma));
+            }
+            if (den == 3) {
+                auto num = x->i.get_num();
+                if (num == 1) {
+                       return add(neg(div(div(pi, i2), sqrt(i3))), sub(div(mul(im3, log(i3)), i2), EulerGamma));
+                }
+                if (num == 2) {
+                      return add(div(div(pi, i2), sqrt(i3)), sub(div(mul(im3, log(i3)), i2), EulerGamma));
                 }
             }
             if (den == 4) {
                 auto num = x->i.get_num();
                 if (num == 1) {
-                       return add(neg(div(pi, i3)), sub(mul(im3, log(i2)), EulerGamma));
+                       return add(neg(div(pi, i2)), sub(mul(im3, log(i2)), EulerGamma));
+                }
+                if (num == 3) {
+                       return add(div(pi, i2), sub(mul(im3, log(i2)), EulerGamma));
                 }
             }
         }
