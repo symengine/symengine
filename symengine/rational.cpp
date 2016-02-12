@@ -110,7 +110,7 @@ bool Rational::is_perfect_power(bool is_expected) const
 
     const mpz_class &den = i.get_den();
     if (den == 0)
-        return mpz_perfect_power_p(num.get_mpz_t()) != 0;
+        throw std::runtime_error("Rational: Division by zero.");
 
     if (not is_expected) {
         if (mpz_cmpabs(num.get_mpz_t(), den.get_mpz_t()) > 0) {
