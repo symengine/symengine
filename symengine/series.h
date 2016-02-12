@@ -20,18 +20,26 @@ public:
     virtual RCP<const Basic> as_basic() const =0;
     virtual umap_int_basic as_dict() const =0;
     virtual RCP<const Basic> get_coeff(int) const =0;
+    virtual long get_degree() const =0;
+    virtual const std::string& get_var() const =0;
 };
 
 template <typename Poly, typename Coeff, typename Series>
 class SeriesBase : public SeriesCoeffInterface {
-public:
-    Poly p_;
-    std::string var_;
-    long degree_;
+protected:
+    const std::string var_;
+    const long degree_;
+    const Poly p_;
 public:
     inline SeriesBase(Poly p, std::string var, long degree) : p_(std::move(p)), var_(var), degree_(degree) {
-
+        
     }
+    inline virtual long get_degree() const { return degree_; }
+
+    inline virtual const std::string& get_var() const { return var_; }
+
+    inline const Poly& get_poly() const { return p_; }
+
     inline virtual bool is_zero() const { return false; }
 
     inline virtual bool is_one() const { return false; }

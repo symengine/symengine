@@ -49,7 +49,7 @@ static RCP<const Number> fmpqxx2sym (flint::fmpqxx fc)
 static RCP<const Number> invseries_coeff (const RCP<const Basic>& ex, const RCP<const Symbol>& sym, unsigned int prec, int n)
 {
     auto ser =  URatPSeriesFlint::series(ex, sym->get_name(), prec);
-    auto serrev = URatPSeriesFlint::series_reverse(ser->p_, fp_t(sym->get_name().c_str()),prec);
+    auto serrev = URatPSeriesFlint::series_reverse(ser->get_poly(), fp_t(sym->get_name().c_str()),prec);
     return fmpqxx2sym(flint::fmpqxx(serrev.get_coeff(n)));
 }
 

@@ -87,13 +87,13 @@ public:
     }
 
     void bvisit(const Series &x) {
-        if (x.var_ != varname) {
+        if (x.get_var() != varname) {
             throw std::runtime_error("Multivariate Series not implemented");
         }
-        if (x.degree_ < prec) {
+        if (x.get_degree() < prec) {
             throw std::runtime_error("Series with lesser prec found");
         }
-        p = x.p_;
+        p = x.get_poly();
     }
     void bvisit(const Integer &x) {
         p = Series::convert(x);
