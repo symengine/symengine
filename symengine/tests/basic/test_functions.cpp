@@ -1139,7 +1139,7 @@ TEST_CASE("Cos table: functions", "[functions]")
     r2 = div(sq3, i2);
     REQUIRE(eq(*r1, *r2));
 
-    // cos((2n-1)*pi) = -1
+    // cos((2n - 1)*pi) = -1
     r1 = cos(mul(pi, i13));
     REQUIRE(eq(*r1, *im1));
 
@@ -1165,6 +1165,190 @@ TEST_CASE("Cos table: functions", "[functions]")
     // cos(pi/12) = (sqrt(3) + 1)/(2*sqrt(2))
     r1 = cos(div(pi, i12));
     r2 = div(add(sq3, one), mul(i2, sq2));
+    REQUIRE(eq(*r1, *r2));
+}
+
+TEST_CASE("Sec table: functions", "[functions]")
+{
+    RCP<const Basic> r1;
+    RCP<const Basic> r2;
+
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> i3 = integer(3);
+    RCP<const Basic> i12 = integer(12);
+    RCP<const Basic> i13 = integer(13);
+    RCP<const Basic> im1 = integer(-1);
+
+    RCP<const Basic> sq3 = sqrt(i3);
+    RCP<const Basic> sq2 = sqrt(i2);
+
+    // sec(2pi + pi/6) = 2/sqrt(3)
+    r1 = sec(add(mul(pi, i2), mul(div(pi, i12), i2)));
+    r2 = div(i2, sq3);
+    REQUIRE(eq(*r1, *r2));
+
+    // sec(n*pi + pi/6) = 2/sqrt(3)
+    r1 = sec(add(mul(pi, integer(10)), mul(div(pi, i12), i2)));
+    r2 = div(i2, sq3);
+    REQUIRE(eq(*r1, *r2));
+
+    // sec((2n - 1)*pi) = -1
+    r1 = sec(mul(pi, i13));
+    REQUIRE(eq(*r1, *im1));
+
+    // sec(pi/3) = 2
+    r1 = sec(div(pi, integer(3)));
+    REQUIRE(eq(*r1, *i2));
+
+    // sec(pi/4) = sqrt(2)
+    r1 = sec(div(pi, integer(4)));
+    REQUIRE(eq(*r1, *sq2));
+
+    // sec(5*pi/12) = (2*sqrt(2))/(sqrt(3) - 1)
+    r1 = sec(mul(div(pi, i12), integer(5)));
+    r2 = div(mul(i2, sq2), sub(sq3, one));
+    REQUIRE(eq(*r1, *r2));
+
+    // sec(pi/12) = (2*sqrt(2))/(sqrt(3) + 1)
+    r1 = sec(div(pi, i12));
+    r2 = div(mul(i2, sq2), add(sq3, one));
+    REQUIRE(eq(*r1, *r2));
+}
+
+TEST_CASE("Csc table: functions", "[functions]")
+{
+    RCP<const Basic> r1;
+    RCP<const Basic> r2;
+
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> i3 = integer(3);
+    RCP<const Basic> i12 = integer(12);
+    RCP<const Basic> im1 = integer(-1);
+
+    RCP<const Basic> sq3 = sqrt(i3);
+    RCP<const Basic> sq2 = sqrt(i2);
+
+    // csc(2pi + pi/6) = 2
+    r1 = csc(add(mul(pi, i2), mul(div(pi, i12), i2)));
+    REQUIRE(eq(*r1, *i2));
+
+    // csc(n*pi + pi/6) = 2
+    r1 = csc(add(mul(pi, integer(10)), mul(div(pi, i12), i2)));
+    REQUIRE(eq(*r1, *i2));
+
+    // csc(2pi + pi/2) = 1
+    r1 = csc(add(mul(pi, i2), div(pi, i2)));
+    REQUIRE(eq(*r1, *one));
+
+    // csc(pi/3) = 2/sqrt(3)
+    r1 = csc(div(pi, integer(3)));
+    r2 = div(i2, sq3);
+    REQUIRE(eq(*r1, *r2));
+
+    // csc(pi/4) = sqrt(2)
+    r1 = csc(div(pi, integer(4)));
+    REQUIRE(eq(*r1, *sq2));
+
+    // csc(pi/12) = (2*sqrt(2))/(sqrt(3) - 1)
+    r1 = csc(div(pi, i12));
+    r2 = div(mul(i2, sq2), sub(sq3, one));
+    REQUIRE(eq(*r1, *r2));
+
+    // csc(5*pi/12) = (2*sqrt(2))/(sqrt(3) + 1)
+    r1 = csc(mul(div(pi, i12), integer(5)));
+    r2 = div(mul(i2, sq2), add(sq3, one));
+    REQUIRE(eq(*r1, *r2));
+}
+
+TEST_CASE("Tan table: functions", "[functions]")
+{
+    RCP<const Basic> r1;
+    RCP<const Basic> r2;
+
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> i3 = integer(3);
+    RCP<const Basic> i12 = integer(12);
+    RCP<const Basic> i13 = integer(13);
+    RCP<const Basic> im1 = integer(-1);
+
+    RCP<const Basic> sq3 = sqrt(i3);
+    RCP<const Basic> sq2 = sqrt(i2);
+
+    // tan(2pi + pi/6) = 1/sqrt(3)
+    r1 = tan(add(mul(pi, i2), mul(div(pi, i12), i2)));
+    r2 = div(sq3, i3);
+    REQUIRE(eq(*r1, *r2));
+
+    // tan(n*pi + pi/6) = 1/sqrt(3)
+    r1 = tan(add(mul(pi, integer(10)), mul(div(pi, i12), i2)));
+    r2 = div(sq3, i3);
+    REQUIRE(eq(*r1, *r2));
+
+    // tan(n*pi) = 0
+    r1 = tan(mul(pi, i13));
+    REQUIRE(eq(*r1, *zero));
+
+    // tan(pi/3) = sq3
+    r1 = tan(div(pi, integer(3)));
+    REQUIRE(eq(*r1, *sq3));
+
+    // tan(pi/4) = 1
+    r1 = tan(div(pi, integer(4)));
+    REQUIRE(eq(*r1, *one));
+    
+    // tan(5*pi/12) = (1 + 3**(1/2))/(-1 + 3**(1/2))
+    r1 = tan(mul(div(integer(5), i12), pi));
+    r2 = div(add(one, sq3), add(im1, sq3));
+    REQUIRE(eq(*r1, *r2));
+
+    // tan(pi/12) = (-1 + 3**(1/2))/(1 + 3**(1/2))
+    r1 = tan(div(pi, i12));
+    r2 = div(sub(sq3, one), add(one, sq3));
+    REQUIRE(eq(*r1, *r2));
+}
+
+TEST_CASE("Cot table: functions", "[functions]")
+{
+    RCP<const Basic> r1;
+    RCP<const Basic> r2;
+
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> i3 = integer(3);
+    RCP<const Basic> i12 = integer(12);
+    RCP<const Basic> im1 = integer(-1);
+
+    RCP<const Basic> sq3 = sqrt(i3);
+    RCP<const Basic> sq2 = sqrt(i2);
+
+    // cot(2pi + pi/6) = sqrt(3)
+    r1 = cot(add(mul(pi, i2), mul(div(pi, i12), i2)));
+    REQUIRE(eq(*r1, *sq3));
+
+    // cot(n*pi + pi/6) = sqrt(3)
+    r1 = cot(add(mul(pi, integer(10)), mul(div(pi, i12), i2)));
+    REQUIRE(eq(*r1, *sq3));
+
+    // cot(pi/2) = 0
+    r1 = cot(div(pi, i2));
+    REQUIRE(eq(*r1, *zero));
+
+    // cot(pi/3) = 1/sq3
+    r1 = cot(div(pi, integer(3)));
+    r2 = div(one, sq3);
+    REQUIRE(eq(*r1, *r2));
+
+    // cot(pi/4) = 1
+    r1 = cot(div(pi, integer(4)));
+    REQUIRE(eq(*r1, *one));
+    
+    // cot(pi/12) = (1 + 3**(1/2))/(-1 + 3**(1/2))
+    r1 = cot(div(pi, i12));
+    r2 = div(add(one, sq3), sub(sq3, one));
+    REQUIRE(eq(*r1, *r2));
+    
+    // cot(5*pi/12) = (-1 + 3**(1/2))/(1 + 3**(1/2))
+    r1 = cot(div(mul(integer(5),pi), i12));
+    r2 = div(sub(sq3, one), add(one, sq3));
     REQUIRE(eq(*r1, *r2));
 }
 
