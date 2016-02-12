@@ -40,4 +40,21 @@ TEST_CASE("Expression series expansion interface", "[Expansion interface]")
 #else
     REQUIRE_THROWS_AS(series(ex, x, 10), std::runtime_error);
 #endif
+
+#ifndef HAVE_SYMENGINE_PIRANHA
+    auto ex1 = sin(add(integer(1), x));
+    REQUIRE_THROWS_AS(series(ex1, x, 10), std::runtime_error);
+    auto ex2 = log(x);
+    REQUIRE_THROWS_AS(series(ex2, x, 10), std::runtime_error);
+    auto ex3 = exp(add(integer(1), x));
+    REQUIRE_THROWS_AS(series(ex3, x, 10), std::runtime_error);
+    auto ex4 = tanh(add(integer(1), x));
+    REQUIRE_THROWS_AS(series(ex4, x, 10), std::runtime_error);
+    auto ex5 = div(integer(1), x);
+    REQUIRE_THROWS_AS(series(ex5, x, 10), std::runtime_error);
+    auto ex6 = add(integer(1), x);
+    REQUIRE_THROWS_AS(series_invfunc(ex6, x, 10), std::runtime_error);
+    auto ex7 = lambertw(x);
+    REQUIRE_THROWS_AS(series(ex7, x, 10), std::runtime_error);
+#endif
 }
