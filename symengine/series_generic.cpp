@@ -10,32 +10,37 @@ using SymEngine::make_rcp;
 
 namespace SymEngine {
 
-UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const sp_expr &poly)
-  : SeriesBase(std::move(poly), var->get_name(), precision) {
+UnivariateSeries::UnivariateSeries(const s_coef sp, const std::string varname, const unsigned degree)
+//UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const sp_expr &poly)
+        : SeriesBase(std::move(sp), varname, degree) {
   
 }
 RCP<const UnivariateSeries> UnivariateSeries::series(const RCP<const Basic> &t, const std::string &x,
                                                          unsigned int prec) {
-    //throw std::runtime_error("Not Implemented");
-    SeriesVisitor<sp_expr, Integer, UnivariateSeries> visitor(sp_expr(x), x, prec);
+    // throw std::runtime_error("Not Implemented");
+    SeriesVisitor<s_coef, Integer, UnivariateSeries> visitor(s_coef(std::stoi(x)), x, prec);
     return visitor.series(t);
 }
 
 SymEngine::Integer UnivariateSeries::convert(const Integer &x) {
-    return Integer(x.as_mpz().get_mpz_t());
+    throw std::runtime_error("Not Implemented");
+    // return RCP<Integer>(x.as_mpz());
 }
 SymEngine::Rational UnivariateSeries::convert(const mpq_class &x) {
-    return x.from_mpq();
+    throw std::runtime_error("Not Implemented");
+    // return x.from_mpq();
 }
 
 SymEngine::Rational UnivariateSeries::convert(const Rational &x) {
-    return x;
+    throw std::runtime_error("Not Implemented");
+    // return x;
 }
 SymEngine::Rational UnivariateSeries::convert(const Number &x) {
-    return x.as_mpz().from_mpq();
+    throw std::runtime_error("Not Implemented");
+    // return x.as_mpz().from_mpq();
 }
 
-Expression UnivariateSeries::series_sin(const sp_expr &s, const sp_expr &var, unsigned int prec) {
+Expression UnivariateSeries::series_sin(const s_coef &s, const s_coef &var, unsigned int prec) {
     throw std::runtime_error("Not Implemented");
 }
 

@@ -15,10 +15,10 @@
 #include <symengine/expression.h>
 
 namespace SymEngine {
-using sp_expr = RCP<const UnivariatePolynomial> poly_; //Polynomial type
+using s_coef = SymEngine::Expression; //Polynomial type
 //using sp_t = RCP //Coefficient type
 //! UnivariateSeries Class
-class UnivariateSeries : public SeriesBase<UnivariatePolynomial, int, UnivariateSeries> {
+class UnivariateSeries : public SeriesBase<s_coef, int, UnivariateSeries> {
 //public:
     //! `var_` : Variable of the UnivariateSeries
     //! `poly_` : holds the UnivariatePolynomial of the series
@@ -31,7 +31,7 @@ class UnivariateSeries : public SeriesBase<UnivariatePolynomial, int, Univariate
 public:
     IMPLEMENT_TYPEID(UNIVARIATESERIES)
     //! Constructor of UnivariateSeries class
-    UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const sp_expr &poly);
+    UnivariateSeries(const s_coef sp, const std::string varname, const unsigned degree);
     static RCP<const UnivariateSeries> series(const RCP<const Basic> &t, const std::string &x, unsigned int prec);
     static SymEngine::Integer convert(const Integer &x);
     static SymEngine::Rational convert(const mpq_class &x);
@@ -58,16 +58,16 @@ public:
      * \return whether the 2 objects are equal
      * */
 
-    bool operator==(const UnivariateSeries &o) const {
-        return (var_ == o.var_ and p_.__eq__(o.p_) and degree_ == o.degree_);
-    }
-    bool __eq__(const Basic &o) const;
+    /*bool operator==(const UnivariateSeries &o) const {
+        return (var_ == o.var_ and p_->__eq__(o.p_) and degree_ == o.degree_);
+    }*/
+    //bool __eq__(const Basic &o) const;
     int compare(const Basic &o) const;
 
     std::string __str__() const;
     virtual vec_basic get_args() const { return {}; }
 
-    static sp_expr series_sin(const sp_expr &s, const sp_expr &var, unsigned int prec);
+    static s_coef series_sin(const s_coef &s, const s_coef &var, unsigned int prec);
 };
 
   /*
