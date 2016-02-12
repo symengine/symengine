@@ -2441,9 +2441,6 @@ int LeviCivita::compare(const Basic &o) const
 {
     SYMENGINE_ASSERT(is_a<LeviCivita>(o))
     const LeviCivita &s = static_cast<const LeviCivita &>(o);
-    // # of elements
-    if (arg_.size() != s.arg_.size())
-        return (arg_.size() < s.arg_.size()) ? -1 : 1;
     return vec_basic_compare(arg_, s.arg_);
 }
 
@@ -3177,8 +3174,6 @@ int Max::compare(const Basic &o) const
 {
     SYMENGINE_ASSERT(is_a<Max>(o))
     const Max &s = static_cast<const Max &>(o);
-    if (arg_.size() != s.arg_.size())
-        return (arg_.size() < s.arg_.size()) ? -1 : 1;
     return vec_basic_compare(arg_, s.arg_);
 }
 
@@ -3206,7 +3201,7 @@ RCP<const Basic> max(const vec_basic &arg)
                 max_number = rcp_static_cast<const Number>(p);
 
             } else {
-                difference = rcp_static_cast<const Number>(sub(p, max_number));
+                difference = rcp_static_cast<const Number>(p)->sub(*max_number);
 
                 if (difference->is_zero() and not difference->is_exact()) {
                     if (max_number->is_exact())
@@ -3224,7 +3219,7 @@ RCP<const Basic> max(const vec_basic &arg)
                         max_number = rcp_static_cast<const Number>(l);
 
                     } else {
-                        difference = rcp_static_cast<const Number>(sub(l, max_number));
+                        difference = rcp_static_cast<const Number>(l)->sub(*max_number);
 
                         if (difference->is_zero() and not difference->is_exact()) {
                             if (max_number->is_exact())
@@ -3290,14 +3285,14 @@ int Min::compare(const Basic &o) const
 {
     SYMENGINE_ASSERT(is_a<Min>(o))
     const Min &s = static_cast<const Min &>(o);
-    if (arg_.size() != s.arg_.size())
-        return (arg_.size() < s.arg_.size()) ? -1 : 1;
     return vec_basic_compare(arg_, s.arg_);
 }
 
 std::size_t Min::__hash__() const
 {
     std::size_t seed = MIN;
+    // vec_basic sorted_arg = arg_;
+    // std::sort(sorted_arg.begin(), sorted_arg.end(), __cmp__);
     for (const auto &p: arg_) {
         hash_combine<Basic>(seed, *p);
     }
@@ -3319,7 +3314,7 @@ RCP<const Basic> min(const vec_basic &arg)
                 min_number = rcp_static_cast<const Number>(p);
 
             } else {
-                difference = rcp_static_cast<const Number>(sub(min_number, p));
+                difference = min_number->sub(*rcp_static_cast<const Number>(p));
 
                 if (difference->is_zero() and not difference->is_exact()) {
                     if (min_number->is_exact())
@@ -3337,7 +3332,7 @@ RCP<const Basic> min(const vec_basic &arg)
                         min_number = rcp_static_cast<const Number>(l);
 
                     } else {
-                        difference = rcp_static_cast<const Number>(sub(min_number, l));
+                        difference = min_number->sub(*rcp_static_cast<const Number>(l));
 
                         if (difference->is_zero() and not difference->is_exact()) {
                             if (min_number->is_exact())

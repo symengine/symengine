@@ -1064,7 +1064,7 @@ class Min: public Function {
 private:
     vec_basic arg_;
 public:
-    IMPLEMENT_TYPEID(MAX)
+    IMPLEMENT_TYPEID(MIN)
     //! Min Constructor
     Min(const vec_basic&& arg);
     Min(const RCP<const Basic> &arg, ...);
