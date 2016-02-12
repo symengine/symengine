@@ -86,6 +86,40 @@ public:
         }
     }
 
+    void bvisit(const Function &x) {
+        RCP<const Basic> d = x.rcp_from_this();
+        RCP<const Symbol> s = symbol(varname);
+
+        map_basic_basic m({{s, zero}});
+        Poly res_p(apply(d->subs(m)));
+        Coeff prod(1);
+
+        for (unsigned int i = 1; i < prec / 2; i++) {
+            const short j = 2 * i + 1;
+            prod /= 1 - j;
+            prod /= j;
+            d = d->diff(s);
+            res_p += Series::pow(var, i, prec) * (prod * apply(d->subs(m)));
+        }
+        p = res_p;
+    }
+
+    void bvisit(const Gamma &x) {
+        RCP<const Symbol> s = symbol(varname);
+        RCP<const Basic> arg = x.get_args()[0];
+        if (eq(*arg->subs({{s, zero}}), *zero)) {
+            RCP<const Basic> g = gamma(add(arg, one));
+            if (is_a<Gamma>(*g)) {
+                bvisit(static_cast<const Function &>(*g));
+                p += Series::pow(var, -1, prec);
+            } else {
+                g->accept(*this);
+            }
+        } else {
+            bvisit(static_cast<const Function &>(x));
+        }
+    }
+
     void bvisit(const Series &x) {
         if (x.get_var() != varname) {
             throw std::runtime_error("Multivariate Series not implemented");
