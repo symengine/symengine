@@ -335,3 +335,8 @@ TEST_CASE("test custom printing", "[printing]")
     p = cos(sin(x));
     CHECK(printer.apply(p) == "cos(MySin(x))");
 }
+
+TEST_CASE("Ascii Art", "[basic]")
+{
+    std::cout << SymEngine::ascii_art() << std::endl;
+}
