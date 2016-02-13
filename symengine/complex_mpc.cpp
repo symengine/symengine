@@ -664,10 +664,24 @@ class EvaluateMPC : public Evaluate {
         mpc_sinh(t.get_mpc_t(), static_cast<const ComplexMPC &>(x).i.get_mpc_t(), MPFR_RNDN);
         return complex_mpc(std::move(t));
     }
+    virtual RCP<const Basic> csch(const Basic &x) const {
+        SYMENGINE_ASSERT(is_a<ComplexMPC>(x))
+        mpc_class t(static_cast<const ComplexMPC &>(x).i.get_prec());
+        mpc_sinh(t.get_mpc_t(), static_cast<const ComplexMPC &>(x).i.get_mpc_t(), MPFR_RNDN);
+        mpc_ui_div(t.get_mpc_t(), 1, t.get_mpc_t(), MPFR_RNDN);
+        return complex_mpc(std::move(t));
+    }
     virtual RCP<const Basic> cosh(const Basic &x) const {
         SYMENGINE_ASSERT(is_a<ComplexMPC>(x))
         mpc_class t(static_cast<const ComplexMPC &>(x).i.get_prec());
         mpc_cosh(t.get_mpc_t(), static_cast<const ComplexMPC &>(x).i.get_mpc_t(), MPFR_RNDN);
+        return complex_mpc(std::move(t));
+    }
+    virtual RCP<const Basic> sech(const Basic &x) const {
+        SYMENGINE_ASSERT(is_a<ComplexMPC>(x))
+        mpc_class t(static_cast<const ComplexMPC &>(x).i.get_prec());
+        mpc_cosh(t.get_mpc_t(), static_cast<const ComplexMPC &>(x).i.get_mpc_t(), MPFR_RNDN);
+        mpc_ui_div(t.get_mpc_t(), 1, t.get_mpc_t(), MPFR_RNDN);
         return complex_mpc(std::move(t));
     }
     virtual RCP<const Basic> tanh(const Basic &x) const {
@@ -687,6 +701,13 @@ class EvaluateMPC : public Evaluate {
         SYMENGINE_ASSERT(is_a<ComplexMPC>(x))
         mpc_class t(static_cast<const ComplexMPC &>(x).i.get_prec());
         mpc_asinh(t.get_mpc_t(), static_cast<const ComplexMPC &>(x).i.get_mpc_t(), MPFR_RNDN);
+        return complex_mpc(std::move(t));
+    }
+    virtual RCP<const Basic> acsch(const Basic &x) const {
+        SYMENGINE_ASSERT(is_a<ComplexMPC>(x))
+        mpc_class t(static_cast<const ComplexMPC &>(x).i.get_prec());
+        mpc_ui_div(t.get_mpc_t(), 1, static_cast<const ComplexMPC &>(x).i.get_mpc_t(), MPFR_RNDN);
+        mpc_asinh(t.get_mpc_t(), t.get_mpc_t(), MPFR_RNDN);
         return complex_mpc(std::move(t));
     }
     virtual RCP<const Basic> acosh(const Basic &x) const {
