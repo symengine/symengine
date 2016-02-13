@@ -174,6 +174,9 @@ void powermod_list(std::vector<RCP<const Integer>> &pows, const RCP<const Intege
 // mu(n) = −1 if n is a square-free positive integer with an odd number of prime factors
 // mu(n) = 0 if n has a squared prime factor
 int mobius(const Integer &a);
+//Mertens Function
+//mertens(n) -> Sum of mobius(i) for i from 1 to n
+long mertens(const unsigned long a);
 }
 #endif
 
