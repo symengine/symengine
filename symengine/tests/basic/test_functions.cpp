@@ -2154,6 +2154,12 @@ TEST_CASE("max: functions", "[functions]")
     res = max({x});
     REQUIRE(eq(*res, *x));                  // max(x) == x
 
+    res = max({x, x});
+    REQUIRE(eq(*res, *x));                  // max(x, x) == x
+
+    res = max({x, x, max({x, y})});
+    REQUIRE(eq(*res, *max({x, y})));        // max(x, x, max(x, y)) == max(x,y)
+
     res = max({i2, rd, r2_5});
     REQUIRE(eq(*res, *i2));                 // max(2, 2/5, 0.32) == 2
 
@@ -2186,6 +2192,12 @@ TEST_CASE("min: functions", "[functions]")
 
     res = min({x});
     REQUIRE(eq(*res, *x));                  // min(x) == x
+
+    res = min({x, x});
+    REQUIRE(eq(*res, *x));                  // min(x, x) == x
+
+    res = min({x, x, min({x, y})});
+    REQUIRE(eq(*res, *min({x, y})));        // min(x, x, min(x, y)) == min(x,y)
 
     res = min({i2, rd, r2_5});
     REQUIRE(eq(*res, *rd));                 // min(2, 2/5, 0.32) == 0.32

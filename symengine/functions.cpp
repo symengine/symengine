@@ -3158,7 +3158,10 @@ bool Max::is_canonical(const vec_basic &arg) const
         if (not is_a_Number(*p))
             non_number_exists = true;
     }
-    return non_number_exists;   // all arguments cant be numbers
+    if (not std::is_sorted(arg.begin(), arg.end(), RCPBasicKeyLess()))
+        return false;
+
+    return non_number_exists ;   // all arguments cant be numbers
 }
 
 bool Max::__eq__(const Basic &o) const
@@ -3190,7 +3193,7 @@ RCP<const Basic> max(const vec_basic &arg)
 {
     bool number_set = false;
     RCP<const Number> max_number, difference;
-    vec_basic non_number_args;
+    vec_basic new_args;
 
     for (const auto &p: arg) {
         if (is_a<Complex>(*p))
@@ -3230,21 +3233,26 @@ RCP<const Basic> max(const vec_basic &arg)
                     }
                     number_set = true;
                 } else {
-                    non_number_args.push_back(l);
+                    new_args.push_back(l);
                 }
             }
         } else {
-            non_number_args.push_back(p);
+            new_args.push_back(p);
         }
     }
 
     if (number_set)
-        non_number_args.push_back(max_number);
+        new_args.push_back(max_number);
 
-    if (non_number_args.size() > 1) {
-        return make_rcp<const Max>(std::move(non_number_args));
-    } else if (non_number_args.size() == 1) {
-        return non_number_args[0];
+    // sort the elements
+    std::sort(new_args.begin(), new_args.end(), RCPBasicKeyLess());
+    // unique returns the iterator for the end position of the 'unique' vector, erase the rest of the vector
+    new_args.erase(std::unique(new_args.begin(), new_args.end(), RCPBasicKeyEq()), new_args.end());
+
+    if (new_args.size() > 1) {
+        return make_rcp<const Max>(std::move(new_args));
+    } else if (new_args.size() == 1) {
+        return new_args[0];
     } else {
         throw std::runtime_error("Empty vec_basic passed to max!");
     }
@@ -3269,6 +3277,9 @@ bool Min::is_canonical(const vec_basic &arg) const
         if (not is_a_Number(*p))
             non_number_exists = true;
     }
+    if (not std::is_sorted(arg.begin(), arg.end(), RCPBasicKeyLess()))
+        return false;
+
     return non_number_exists;   // all arguments cant be numbers
 }
 
@@ -3291,8 +3302,6 @@ int Min::compare(const Basic &o) const
 std::size_t Min::__hash__() const
 {
     std::size_t seed = MIN;
-    // vec_basic sorted_arg = arg_;
-    // std::sort(sorted_arg.begin(), sorted_arg.end(), __cmp__);
     for (const auto &p: arg_) {
         hash_combine<Basic>(seed, *p);
     }
@@ -3303,7 +3312,7 @@ RCP<const Basic> min(const vec_basic &arg)
 {
     bool number_set = false;
     RCP<const Number> min_number, difference;
-    vec_basic non_number_args;
+    vec_basic new_args;
 
     for (const auto &p: arg) {
         if (is_a<Complex>(*p))
@@ -3343,21 +3352,26 @@ RCP<const Basic> min(const vec_basic &arg)
                     }
                     number_set = true;
                 } else {
-                    non_number_args.push_back(l);
+                    new_args.push_back(l);
                 }
             }
         } else {
-            non_number_args.push_back(p);
+            new_args.push_back(p);
         }
     }
 
     if (number_set)
-        non_number_args.push_back(min_number);
+        new_args.push_back(min_number);
 
-    if (non_number_args.size() > 1) {
-        return make_rcp<const Min>(std::move(non_number_args));
-    } else if (non_number_args.size() == 1) {
-        return non_number_args[0];
+    // sort the elements
+    std::sort(new_args.begin(), new_args.end(), RCPBasicKeyLess());
+    // unique returns the iterator for the end position of the 'unique' vector, erase the rest of the vector
+    new_args.erase(std::unique(new_args.begin(), new_args.end(), RCPBasicKeyEq()), new_args.end());
+
+    if (new_args.size() > 1) {
+        return make_rcp<const Min>(std::move(new_args));
+    } else if (new_args.size() == 1) {
+        return new_args[0];
     } else {
         throw std::runtime_error("Empty vec_basic passed to max!");
     }
