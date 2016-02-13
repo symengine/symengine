@@ -1498,4 +1498,12 @@ int mobius(const Integer &a)
     }
 }
 
+long mertens(const unsigned long a)
+{
+    long mertens = 0;
+    for (unsigned long i = 1; i<= a; i++) {
+        mertens += mobius(*(integer(i)));
+    }
+    return mertens;
+}
 } // SymEngine
