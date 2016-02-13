@@ -3268,7 +3268,7 @@ RCP<const Basic> polygamma(const RCP<const Basic> &n_, const RCP<const Basic> &x
             if (den == 4) {
                 auto num = x->i.get_num();
                 if (num == 1) {
-                       return add(neg(div(pi, i3)), sub(mul(im3, log(i2)), EulerGamma));
+                       return add(neg(div(pi, i2)), sub(mul(im3, log(i2)), EulerGamma));
                 }
             }
         }
