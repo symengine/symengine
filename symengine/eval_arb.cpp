@@ -244,6 +244,26 @@ public:
         arb_coth(result_, result_, prec_);
     }
 
+    void bvisit(const Max &x) {
+        apply(result_, *(x.get_args()[0]));
+        arb_ptr tmp = result_;
+        for (const auto &p: x.get_args()) {
+            apply(tmp, *p);
+            if(arb_gt(tmp, result_))
+                arb_set(result_, tmp);
+        }
+    };
+
+    void bvisit(const Min &x) {
+        apply(result_, *(x.get_args()[0]));
+        arb_ptr tmp = result_;
+        for (const auto &p: x.get_args()) {
+            apply(tmp, *p);
+            if(arb_lt(tmp, result_))
+                arb_set(result_, tmp);
+        }
+    };
+
     void bvisit(const ASinh &) {
         throw std::runtime_error("Not implemented.");
     };
