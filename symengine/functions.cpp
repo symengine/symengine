@@ -3194,7 +3194,7 @@ RCP<const Basic> max(const vec_basic &arg)
 {
     bool number_set = false;
     RCP<const Number> max_number, difference;
-    vec_basic new_args;
+    set_basic new_args;
 
     for (const auto &p: arg) {
         if (is_a<Complex>(*p))
@@ -3234,26 +3234,24 @@ RCP<const Basic> max(const vec_basic &arg)
                     }
                     number_set = true;
                 } else {
-                    new_args.push_back(l);
+                    new_args.insert(l);
                 }
             }
         } else {
-            new_args.push_back(p);
+            new_args.insert(p);
         }
     }
 
     if (number_set)
-        new_args.push_back(max_number);
+        new_args.insert(max_number);
 
-    // sort the elements
-    std::sort(new_args.begin(), new_args.end(), RCPBasicKeyLess());
-    // unique returns the iterator for the end position of the 'unique' vector, erase the rest of the vector
-    new_args.erase(std::unique(new_args.begin(), new_args.end(), RCPBasicKeyEq()), new_args.end());
+    vec_basic final_args(new_args.size());
+    std::copy(new_args.begin(), new_args.end(), final_args.begin());
 
-    if (new_args.size() > 1) {
-        return make_rcp<const Max>(std::move(new_args));
-    } else if (new_args.size() == 1) {
-        return new_args[0];
+    if (final_args.size() > 1) {
+        return make_rcp<const Max>(std::move(final_args));
+    } else if (final_args.size() == 1) {
+        return final_args[0];
     } else {
         throw std::runtime_error("Empty vec_basic passed to max!");
     }
@@ -3313,7 +3311,7 @@ RCP<const Basic> min(const vec_basic &arg)
 {
     bool number_set = false;
     RCP<const Number> min_number, difference;
-    vec_basic new_args;
+    set_basic new_args;
 
     for (const auto &p: arg) {
         if (is_a<Complex>(*p))
@@ -3353,26 +3351,24 @@ RCP<const Basic> min(const vec_basic &arg)
                     }
                     number_set = true;
                 } else {
-                    new_args.push_back(l);
+                    new_args.insert(l);
                 }
             }
         } else {
-            new_args.push_back(p);
+            new_args.insert(p);
         }
     }
 
     if (number_set)
-        new_args.push_back(min_number);
+        new_args.insert(min_number);
 
-    // sort the elements
-    std::sort(new_args.begin(), new_args.end(), RCPBasicKeyLess());
-    // unique returns the iterator for the end position of the 'unique' vector, erase the rest of the vector
-    new_args.erase(std::unique(new_args.begin(), new_args.end(), RCPBasicKeyEq()), new_args.end());
+    vec_basic final_args(new_args.size());
+    std::copy(new_args.begin(), new_args.end(), final_args.begin());
 
-    if (new_args.size() > 1) {
-        return make_rcp<const Min>(std::move(new_args));
-    } else if (new_args.size() == 1) {
-        return new_args[0];
+    if (final_args.size() > 1) {
+        return make_rcp<const Min>(std::move(final_args));
+    } else if (final_args.size() == 1) {
+        return final_args[0];
     } else {
         throw std::runtime_error("Empty vec_basic passed to max!");
     }
