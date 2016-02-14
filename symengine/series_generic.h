@@ -6,13 +6,14 @@
 #ifndef SYMENGINE_SERIES_GENERIC_H
 #define SYMENGINE_SERIES_GENERIC_H
 
-#include <list>
+// #include <list>
 
-#include <symengine/polynomial.h>
+// #include <symengine/polynomial.h>
+#include <symengine/basic.h>
 #include <symengine/rational.h>
-#include <symengine/integer.h>
-#include <symengine/series.h>
 #include <symengine/expression.h>
+#include <symengine/series.h>
+
 
 namespace SymEngine {
 using s_coef = SymEngine::Expression; //Polynomial type
@@ -29,9 +30,9 @@ class UnivariateSeries : public SeriesBase<s_coef, int, UnivariateSeries> {
     //unsigned int prec_;
     //data members now inherited from SeriesBase
 public:
-    IMPLEMENT_TYPEID(UNIVARIATESERIES)
     //! Constructor of UnivariateSeries class
     UnivariateSeries(const s_coef sp, const std::string varname, const unsigned degree);
+    IMPLEMENT_TYPEID(UNIVARIATESERIES)
     virtual int compare(const Basic &o) const;
     virtual std::size_t __hash__() const;
     virtual RCP<const Basic> as_basic() const;
@@ -48,18 +49,18 @@ public:
     static s_coef mul(const s_coef &s, const s_coef &r, unsigned prec);
     static s_coef pow(const s_coef &s, int n, unsigned prec);
     static unsigned ldegree(const s_coef &s);
-    static SymEngine::Rational find_cf(const s_coef &s, const s_coef &var, unsigned deg);
-    static SymEngine::Rational root(SymEngine::Rational &c, unsigned n);
+    static s_coef find_cf(const s_coef &s, const s_coef &var, unsigned deg);
+    static s_coef root(s_coef &c, unsigned n);
     static s_coef diff(const s_coef &s, const s_coef &var);
     static s_coef integrate(const s_coef &s, const s_coef &var);
     static s_coef subs(const s_coef &s, const s_coef &var, const s_coef &r, unsigned prec);
     
     //! \return true if canonical
-    bool is_canonical(const UnivariatePolynomial&, const unsigned int &) const;
+    // bool is_canonical(const UnivariatePolynomial&, const unsigned int &) const;
     //! \return size of the hash
     
 
 };
 
 }  //SymEngine
-#endif
+#endif //SYMENGINE_SERIES_GENERIC_H
