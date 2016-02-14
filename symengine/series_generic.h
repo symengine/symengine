@@ -39,11 +39,11 @@ public:
     virtual RCP<const Basic> get_coeff(int) const;
 
     static RCP<const UnivariateSeries> series(const RCP<const Basic> &t, const std::string &x, unsigned int prec);
-    static SymEngine::Integer convert(const Integer &x);
-    static SymEngine::Rational convert(const mpq_class &x);
+    static s_coef convert(const Integer &x);
+    static s_coef convert(const mpq_class &x);
     static s_coef var(const std::string &s);
-    static SymEngine::Rational convert(const Rational &x);
-    static SymEngine::Rational convert(const Number &x);
+    static s_coef convert(const Rational &x);
+    static s_coef convert(const Number &x);
 
     static s_coef mul(const s_coef &s, const s_coef &r, unsigned prec);
     static s_coef pow(const s_coef &s, int n, unsigned prec);

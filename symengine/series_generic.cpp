@@ -22,12 +22,15 @@ RCP<const UnivariateSeries> UnivariateSeries::series(const RCP<const Basic> &t, 
     return visitor.series(t);
 }
 
-SymEngine::Integer UnivariateSeries::convert(const Integer &x) {
-    throw std::runtime_error("Not Implemented");
-    // return RCP<Integer>(x.as_mpz());
+s_coef UnivariateSeries::convert(const Integer &x) {
+    // throw std::runtime_error("Not Implemented");
+    return s_coef(x.as_int());
+    //return RCP<Integer>(x.as_mpz());
 }
-SymEngine::Rational UnivariateSeries::convert(const mpq_class &x) {
+s_coef UnivariateSeries::convert(const mpq_class &x) {
     throw std::runtime_error("Not Implemented");
+    // s_coef i1(x.get_num_mpz_t());
+    // return i1;
     // return x.from_mpq();
 }
 
@@ -35,13 +38,17 @@ s_coef UnivariateSeries::var(const std::string &s) {
     return s_coef(std::stoi(s));
 }
 
-SymEngine::Rational UnivariateSeries::convert(const Rational &x) {
-    throw std::runtime_error("Not Implemented");
+s_coef UnivariateSeries::convert(const Rational &x) {
+    // throw std::runtime_error("Not Implemented");
+    s_coef i1(x.get_num());
+    s_coef i2(x.get_den());
+    i1 /= i2;
+    return i1;
     // return x;
 }
-SymEngine::Rational UnivariateSeries::convert(const Number &x) {
+
+s_coef UnivariateSeries::convert(const Number &x) {
     throw std::runtime_error("Not Implemented");
-    // return x.as_mpz().from_mpq();
 }
 
 RCP<const Basic> UnivariateSeries::as_basic() const {
@@ -50,10 +57,34 @@ RCP<const Basic> UnivariateSeries::as_basic() const {
 
 umap_int_basic UnivariateSeries::as_dict() const {
     throw std::runtime_error("Not Implemented");
+    /*umap_int_basic map;
+    mpq_class gc;
+    for (int n=0; n<degree_; n++) {
+        const SymEngine::Integer fc(p_.get_coeff(n));
+        if (not fc.is_zero()) {
+            fmpq_get_mpq(gc.get_mpq_t(), fc._data().inner);
+            gc.canonicalize();
+            RCP<const Number> basic;
+            if (gc.get_den() == 1)
+                basic = integer(gc.get_num());
+            else
+                basic = Rational::from_mpq(gc);
+            map[n] = basic;
+        }
+    }
+    return map;*/
 }
 
-RCP<const Basic> UnivariateSeries::get_coeff(int) const {
+RCP<const Basic> UnivariateSeries::get_coeff(int i) const {
     throw std::runtime_error("Not Implemented");
+    /*mpq_class cl_rat(p_.find_cf({i}).get_mpq_view());
+    cl_rat.canonicalize();
+    RCP<const Basic> basic;
+    if (cl_rat.get_den() == 1)
+        basic = make_rcp<const Integer>(cl_rat.get_num());
+    else
+        basic = make_rcp<const Rational>(cl_rat);
+    return std::move(basic);*/
 }
 
 s_coef UnivariateSeries::mul(const s_coef &s, const s_coef &r, unsigned prec) {
