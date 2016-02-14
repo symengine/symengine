@@ -7,6 +7,7 @@
 #include <symengine/functions.h>
 #include <symengine/constants.h>
 #include <symengine/visitor.h>
+#include <algorithm>
 
 
 namespace SymEngine {
