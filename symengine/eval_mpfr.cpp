@@ -241,6 +241,24 @@ public:
         x.eval(mpfr_get_prec(result_))->accept(*this);
     }
 
+    void bvisit(const Max &x) {
+        apply(result_, *(x.get_args()[0]));
+        mpfr_ptr tmp = result_;
+        for (const auto &p: x.get_args()) {
+            apply(tmp, *p);
+            mpfr_max(result_, result_, tmp, rnd_);
+        }
+    };
+
+    void bvisit(const Min &x) {
+        apply(result_, *(x.get_args()[0]));
+        mpfr_ptr tmp = result_;
+        for (const auto &p: x.get_args()) {
+            apply(tmp, *p);
+            mpfr_min(result_, result_, tmp, rnd_);
+        }
+    };
+
     // Classes not implemented are
     // Subs, UpperGamma, LowerGamma, Dirichlet_eta, Zeta
     // LeviCivita, KroneckerDelta, LambertW

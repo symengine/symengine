@@ -1,6 +1,7 @@
 #include <cmath>
 #include <functional>
 #include <complex>
+#include <algorithm>
 
 #include <symengine/basic.h>
 #include <symengine/symbol.h>
@@ -240,6 +241,22 @@ public:
     void bvisit(const Gamma &x) {
         double tmp = apply(*(x.get_args()[0]));
         result_ = std::tgamma(tmp);
+    };
+
+    void bvisit(const Max &x) {
+        result_ = apply(*(x.get_args()[0]));
+        for (const auto &p: x.get_args()) {
+            double tmp = apply(*p);
+            result_ = std::max(result_, tmp);
+        }
+    };
+
+    void bvisit(const Min &x) {
+        result_ = apply(*(x.get_args()[0]));
+        for (const auto &p: x.get_args()) {
+            double tmp = apply(*p);
+            result_ = std::min(result_, tmp);
+        }
     };
 };
 
