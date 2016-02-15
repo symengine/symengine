@@ -10,8 +10,8 @@
 
 // #include <symengine/polynomial.h>
 #include <symengine/basic.h>
-#include <symengine/rational.h>
 #include <symengine/expression.h>
+#include <symengine/rational.h>
 #include <symengine/series.h>
 
 

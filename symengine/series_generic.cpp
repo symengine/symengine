@@ -11,7 +11,6 @@ using SymEngine::make_rcp;
 namespace SymEngine {
 
 UnivariateSeries::UnivariateSeries(const s_coef sp, const std::string varname, const unsigned degree)
-//UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const sp_expr &poly)
         : SeriesBase(std::move(sp), varname, degree) {
   
 }
@@ -22,11 +21,10 @@ RCP<const UnivariateSeries> UnivariateSeries::series(const RCP<const Basic> &t, 
     return visitor.series(t);
 }
 
-std::size_t UnivariateSeries::__hash__() const
-{
+std::size_t UnivariateSeries::__hash__() const {
     //return poly_->hash() + std::size_t(prec_ * 84728863L);
     std::size_t seed = UNIVARIATESERIES;
-    hash_combine(seed, p_);
+    hash_combine(seed, &p_.get_basic());
     hash_combine(seed, var_);
     hash_combine(seed, degree_);
     return seed;
@@ -144,9 +142,10 @@ s_coef UnivariateSeries::integrate(const s_coef &s, const s_coef &var) {
 }
 
 s_coef UnivariateSeries::subs(const s_coef &s, const s_coef &var, const s_coef &r, unsigned prec) {
-    throw std::runtime_error("Not Implemented");
-    /*Subs sb(s, {var});
-    return sb;*/
+    // throw std::runtime_error("Not Implemented");
+    map_basic_basic x{{r.get_basic(), var.get_basic()}};
+    s_coef sb = s.get_basic()->subs(x);
+    return sb;
 }
 
 /*bool UnivariateSeries::is_canonical(const UnivariatePolynomial& poly, const unsigned int &prec) const
