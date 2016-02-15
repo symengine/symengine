@@ -645,8 +645,8 @@ RCP<const Number> bernoulli(unsigned long n) {
     return Rational::from_mpq(b);
 #else
     // TODO: implement a faster algorithm
-    std::vector<mpq_class> v(n);
-    for (unsigned m = 0; m < n; ++m) {
+    std::vector<mpq_class> v(n+1);
+    for (unsigned m = 0; m <= n; ++m) {
         v[m] = mpq_class(1, m + 1);
 
         for (unsigned j = m; j >= 1; --j) {
