@@ -3210,13 +3210,7 @@ bool PolyGamma::is_canonical(const RCP<const Basic> &n, const RCP<const Basic> &
         if (is_a<Rational>(*x)) {
             auto x_ = rcp_static_cast<const Rational>(x);
             auto den = x_->i.get_den();
-            if (den == 2 and num == 1) {
-                return false;
-            }
-            if (den == 3 and (num == 1 or num == 2)) {
-                return false;
-            }
-            if (den == 4 and (num == 1 or num == 3)) {
+            if (den == 2 or den == 3 or den == 4) {
                 return false;
             }
         }
