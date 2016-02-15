@@ -91,15 +91,21 @@ public:
         RCP<const Symbol> s = symbol(varname);
 
         map_basic_basic m({{s, zero}});
-        Poly res_p(apply(d->subs(m)));
-        Coeff prod(1);
+        RCP<const Basic> const_term = d->subs(m);
+        if (const_term == d) {
+            p = Series::convert(*d);
+            return;
+        }
+        Poly res_p(apply(expand(const_term)));
+        Coeff prod, t;
+        prod = 1;
 
-        for (unsigned int i = 1; i < prec / 2; i++) {
-            const short j = 2 * i + 1;
-            prod /= 1 - j;
-            prod /= j;
+        for (unsigned int i = 1; i < prec; i++) {
+            // Workaround for flint
+            t = i;
+            prod /= t;
             d = d->diff(s);
-            res_p += Series::pow(var, i, prec) * (prod * apply(d->subs(m)));
+            res_p += Series::pow(var, i, prec) * (prod * apply(expand(d->subs(m))));
         }
         p = res_p;
     }
@@ -111,7 +117,7 @@ public:
             RCP<const Basic> g = gamma(add(arg, one));
             if (is_a<Gamma>(*g)) {
                 bvisit(static_cast<const Function &>(*g));
-                p += Series::pow(var, -1, prec);
+                p *= Series::pow(var, -1, prec);
             } else {
                 g->accept(*this);
             }
@@ -221,8 +227,15 @@ public:
     void bvisit(const Symbol &x) {
         p = Series::var(x.get_name());
     }
+    void bvisit(const Constant &x) {
+        p = Series::convert(x);
+    }
     void bvisit(const Basic &x) {
-        throw std::runtime_error("Not Implemented");
+        if (!has_symbol(x, symbol(varname))) {
+            p = Series::convert(x);
+        } else {
+            throw std::runtime_error("Not Implemented");
+        }
     }
 };
 
