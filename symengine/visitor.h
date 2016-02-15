@@ -55,6 +55,7 @@ public:
 };
 
 void preorder_traversal_stop(const Basic &b, StopVisitor &v);
+void postorder_traversal_stop(const Basic &b, StopVisitor &v);
 
 class HasSymbolVisitor : public BaseVisitor<HasSymbolVisitor, StopVisitor> {
 protected:

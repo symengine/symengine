@@ -151,9 +151,19 @@ public:
         result_ = std::sinh(tmp);
     };
 
+    void bvisit(const Csch &x) {
+        T tmp = apply(*(x.get_arg()));
+        result_ = 1.0/std::sinh(tmp);
+    };
+
     void bvisit(const Cosh &x) {
         T tmp = apply(*(x.get_arg()));
         result_ = std::cosh(tmp);
+    };
+
+    void bvisit(const Sech &x) {
+        T tmp = apply(*(x.get_arg()));
+        result_ = 1.0/std::cosh(tmp);
     };
 
     void bvisit(const Tanh &x) {
@@ -169,6 +179,11 @@ public:
     void bvisit(const ASinh &x) {
         T tmp = apply(*(x.get_arg()));
         result_ = std::asinh(tmp);
+    };
+
+    void bvisit(const ACsch &x) {
+        T tmp = apply(*(x.get_arg()));
+        result_ = std::asinh(1.0/tmp);
     };
 
     void bvisit(const ACosh &x) {
@@ -378,9 +393,17 @@ std::vector<fn> init_eval_double()
         double tmp = eval_double_single_dispatch(*(static_cast<const Sinh &>(x)).get_arg());
         return ::sinh(tmp);
     };
+    table[CSCH] = [](const Basic &x) {
+        double tmp = eval_double_single_dispatch(*(static_cast<const Csch &>(x)).get_arg());
+        return 1/::sinh(tmp);
+    };
     table[COSH] = [](const Basic &x) {
         double tmp = eval_double_single_dispatch(*(static_cast<const Cosh &>(x)).get_arg());
         return ::cosh(tmp);
+    };
+    table[SECH] = [](const Basic &x) {
+        double tmp = eval_double_single_dispatch(*(static_cast<const Sech &>(x)).get_arg());
+        return 1/::cosh(tmp);
     };
     table[TANH] = [](const Basic &x) {
         double tmp = eval_double_single_dispatch(*(static_cast<const Tanh &>(x)).get_arg());
@@ -393,6 +416,10 @@ std::vector<fn> init_eval_double()
     table[ASINH] = [](const Basic &x) {
         double tmp = eval_double_single_dispatch(*(static_cast<const ASinh &>(x)).get_arg());
         return ::asinh(tmp);
+    };
+    table[ACSCH] = [](const Basic &x) {
+        double tmp = eval_double_single_dispatch(*(static_cast<const ACsch &>(x)).get_arg());
+        return ::asinh(1/tmp);
     };
     table[ACOSH] = [](const Basic &x) {
         double tmp = eval_double_single_dispatch(*(static_cast<const ACosh &>(x)).get_arg());

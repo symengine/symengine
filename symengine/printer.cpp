@@ -447,10 +447,13 @@ std::vector<std::string> init_str_printer_names() {
     names[ACOT] = "acot";
     names[ATAN2] = "atan2";
     names[SINH] = "sinh";
+    names[CSCH] = "csch";
     names[COSH] = "cosh";
+    names[SECH] = "sech";
     names[TANH] = "tanh";
     names[COTH] = "coth";
     names[ASINH] = "asinh";
+    names[ACSCH] = "acsch";
     names[ACOSH] = "acosh";
     names[ATANH] = "atanh";
     names[ACOTH] = "acoth";
