@@ -85,6 +85,7 @@ using SymEngine::real_double;
 using SymEngine::complex_double;
 using SymEngine::RealDouble;
 using SymEngine::ComplexDouble;
+using SymEngine::rational;
 using SymEngine::Number;
 using SymEngine::eval_double;
 using SymEngine::is_a;
@@ -1835,6 +1836,7 @@ TEST_CASE("Zeta: functions", "[functions]")
 {
     RCP<const Symbol> x = symbol("x");
     RCP<const Basic> im1 = integer(-1);
+    RCP<const Basic> im3 = integer(-3);
     RCP<const Basic> i2 = integer(2);
 
     RCP<const Basic> r1;
@@ -1845,12 +1847,28 @@ TEST_CASE("Zeta: functions", "[functions]")
     REQUIRE(eq(*r1, *r2));
 
     r1 = zeta(zero, im1);
-    r2 = div(one, i2);
+    r2 = div(integer(3), i2);
     REQUIRE(eq(*r1, *r2));
 
     r1 = zeta(zero, i2);
     r2 = div(integer(-3), i2);
     REQUIRE(eq(*r1, *r2));
+
+    r1 = zeta(i2, i2);
+    r2 = add(div(pow(pi, i2), integer(6)), im1);
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = zeta(im3, i2);
+    r2 = rational(-119, 120);
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = zeta(integer(3), i2);
+    REQUIRE(r1->__str__() == "zeta(3, 2)");
+
+    r1 = zeta(x, i2);
+    REQUIRE(r1->__str__() == "zeta(x, 2)");
+
+    CHECK_THROWS_AS(zeta(one, i2), std::runtime_error);
 }
 
 
@@ -2067,6 +2085,10 @@ TEST_CASE("Polygamma: functions", "[functions]")
     r2 = sub(mul(im2, log(i2)), EulerGamma);
     REQUIRE(eq(*r1, *r2));
 
+    r1 = polygamma(zero, div(integer(5), i2));
+    r2 = add(sub(mul(im2, log(i2)), EulerGamma), div(integer(8), integer(3)));
+    REQUIRE(eq(*r1, *r2));
+
     r1 = polygamma(zero, div(one, i3));
     r2 = add(neg(div(div(pi, i2), sqrt(i3))), sub(div(mul(im3, log(i3)), i2), EulerGamma));
     REQUIRE(eq(*r1, *r2));
@@ -2081,6 +2103,10 @@ TEST_CASE("Polygamma: functions", "[functions]")
 
     r1 = polygamma(zero, div(i3, i4));
     r2 = add(div(pi, i2), sub(mul(im3, log(i2)), EulerGamma));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = polygamma(one, i3);
+    r2 = add(div(integer(-5), i4), div(pow(pi, i2), integer(6)));
     REQUIRE(eq(*r1, *r2));
 
     r1 = SymEngine::rcp_dynamic_cast<const PolyGamma>(polygamma(i2, x))->rewrite_as_zeta();

@@ -11,6 +11,7 @@
 using SymEngine::Basic;
 using SymEngine::Integer;
 using SymEngine::Rational;
+using SymEngine::rational;
 using SymEngine::print_stack_on_segfault;
 using SymEngine::RCP;
 using SymEngine::fibonacci;
@@ -37,6 +38,7 @@ using SymEngine::multiplicative_order;
 using SymEngine::totient;
 using SymEngine::carmichael;
 using SymEngine::mertens;
+using SymEngine::harmonic;
 
 TEST_CASE("test_gcd_lcm(): ntheory", "[ntheory]")
 {
@@ -670,4 +672,16 @@ TEST_CASE("test_mertens(): ntheory", "[ntheory]")
     REQUIRE(mertens(36) == -1);
     REQUIRE(mertens(39) == 0);
     REQUIRE(mertens(113) == -5);
+}
+
+TEST_CASE("test_harmonic(): ntheory", "[ntheory]")
+{
+    RCP<const Number> r1, r2;
+    r1 = harmonic(4, 1);
+    r2 = rational(25, 12);
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = harmonic(3, 2);
+    r2 = rational(49, 36);
+    REQUIRE(eq(*r1, *r2));
 }

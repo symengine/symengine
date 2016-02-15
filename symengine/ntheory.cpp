@@ -666,7 +666,7 @@ RCP<const Number> harmonic(unsigned long n, unsigned long m) {
         return Rational::from_mpq(res);
     } else {
         for (unsigned i = 1; i <= n; ++i) {
-            mpq_class t = 1;
+            mpq_class t(1, i);
             mpz_pow_ui(t.get_den_mpz_t(), t.get_den_mpz_t(), m);
             res += t;
         }
