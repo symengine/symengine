@@ -2537,11 +2537,8 @@ RCP<const Basic> zeta(const RCP<const Basic> &s, const RCP<const Basic> &a)
 {
     if (is_a_Number(*s)) {
         if (rcp_static_cast<const Number>(s)->is_zero()) {
-            if (is_a_Number(*a) and
-                rcp_static_cast<const Number>(a)->is_negative()) {
-                return sub(div(minus_one, i2), a);
-            } else {
-                return sub(div(one, i2), a);
+            if (is_a_Number(*a)) {
+               return sub(div(one, i2), a);
             }
         } else if (rcp_static_cast<const Number>(s)->is_one()) {
             throw std::runtime_error("Complex infinity is not yet implemented");
@@ -2666,6 +2663,17 @@ int Gamma::compare(const Basic &o) const
     return arg_->__cmp__(*(static_cast<const Gamma &>(o).arg_));
 }
 
+RCP<const Basic> Gamma::subs(const map_basic_basic &subs_dict) const
+{
+    auto it = subs_dict.find(rcp_from_this());
+    if (it != subs_dict.end())
+        return it->second;
+    RCP<const Basic> arg = arg_->subs(subs_dict);
+    if (arg == arg_)
+        return rcp_from_this();
+    else
+        return gamma(arg);
+}
 RCP<const Basic> gamma_positive_int(const RCP<const Basic> &arg)
 {
     SYMENGINE_ASSERT(is_a<Integer>(*arg))
@@ -3065,13 +3073,35 @@ RCP<const Basic> PolyGamma::rewrite_as_zeta() const
     }
 }
 
+RCP<const Basic> PolyGamma::subs(const map_basic_basic &subs_dict) const
+{
+    auto it = subs_dict.find(rcp_from_this());
+    if (it != subs_dict.end())
+        return it->second;
+    RCP<const Basic> n1 = n_->subs(subs_dict);
+    RCP<const Basic> x1 = x_->subs(subs_dict);
+    if (n1 == n_ and x1 == x_) {
+        return rcp_from_this();
+    } else {
+        return polygamma(n1, x1);
+    }
+}
+
 RCP<const Basic> polygamma(const RCP<const Basic> &n_, const RCP<const Basic> &x_)
 {
     // Only special values are being evaluated
     if (is_a_Number(*x_) and not (rcp_static_cast<const Number>(x_))->is_positive()) {
         throw std::runtime_error("Complex Infinity not yet implemented");
     }
-
+    if (is_a<Integer>(*n_) and is_a<Integer>(*x_)) {
+        auto n = static_cast<const Integer &>(*n_).as_int();
+        auto x = static_cast<const Integer &>(*x_).as_int();
+        if (n == 0) {
+            return sub(harmonic(x - 1, 1), EulerGamma);
+        } else if (n % 2 == 1) {
+            return mul(factorial(n), zeta(add(n_, one), x_));
+        }
+    }
     if (eq(*n_, *zero)) {
         if (eq(*x_, *one)) {
             return neg(EulerGamma);
