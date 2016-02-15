@@ -3187,10 +3187,13 @@ bool PolyGamma::is_canonical(const RCP<const Basic> &n, const RCP<const Basic> &
             auto x_ = rcp_static_cast<const Rational>(x);
             auto num = x_->i.get_num();
             auto den = x_->i.get_den();
-            if (den == 2 and (num == 1 or num == 3)) {
+            if (den == 2 and num == 1) {
                 return false;
             }
-            if (den == 4 and num == 1) {
+            if (den == 3 and (num == 1 or num == 2)) {
+                return false;
+            }
+            if (den == 4 and (num == 1 or num == 3)) {
                 return false;
             }
         }
@@ -3261,14 +3264,23 @@ RCP<const Basic> polygamma(const RCP<const Basic> &n_, const RCP<const Basic> &x
                 if (num == 1) {
                        return sub(mul(im2, log(i2)), EulerGamma);
                 }
-                if (num == 3) {
-                       return add(i2, sub(mul(im2, log(i2)), EulerGamma));
+            }
+            if (den == 3) {
+                auto num = x->i.get_num();
+                if (num == 1) {
+                       return add(neg(div(div(pi, i2), sqrt(i3))), sub(div(mul(im3, log(i3)), i2), EulerGamma));
+                }
+                if (num == 2) {
+                      return add(div(div(pi, i2), sqrt(i3)), sub(div(mul(im3, log(i3)), i2), EulerGamma));
                 }
             }
             if (den == 4) {
                 auto num = x->i.get_num();
                 if (num == 1) {
-                       return add(neg(div(pi, i3)), sub(mul(im3, log(i2)), EulerGamma));
+                       return add(neg(div(pi, i2)), sub(mul(im3, log(i2)), EulerGamma));
+                }
+                if (num == 3) {
+                       return add(div(pi, i2), sub(mul(im3, log(i2)), EulerGamma));
                 }
             }
         }

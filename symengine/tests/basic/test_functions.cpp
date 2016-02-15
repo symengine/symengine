@@ -2067,12 +2067,20 @@ TEST_CASE("Polygamma: functions", "[functions]")
     r2 = sub(mul(im2, log(i2)), EulerGamma);
     REQUIRE(eq(*r1, *r2));
 
-    r1 = polygamma(zero, div(i3, i2));
-    r2 = add(i2, sub(mul(im2, log(i2)), EulerGamma));
+    r1 = polygamma(zero, div(one, i3));
+    r2 = add(neg(div(div(pi, i2), sqrt(i3))), sub(div(mul(im3, log(i3)), i2), EulerGamma));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = polygamma(zero, div(i2, i3));
+    r2 = add(div(div(pi, i2), sqrt(i3)), sub(div(mul(im3, log(i3)), i2), EulerGamma));
     REQUIRE(eq(*r1, *r2));
 
     r1 = polygamma(zero, div(one, i4));
-    r2 = add(neg(div(pi, i3)), sub(mul(im3, log(i2)), EulerGamma));
+    r2 = add(neg(div(pi, i2)), sub(mul(im3, log(i2)), EulerGamma));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = polygamma(zero, div(i3, i4));
+    r2 = add(div(pi, i2), sub(mul(im3, log(i2)), EulerGamma));
     REQUIRE(eq(*r1, *r2));
 
     r1 = SymEngine::rcp_dynamic_cast<const PolyGamma>(polygamma(i2, x))->rewrite_as_zeta();
