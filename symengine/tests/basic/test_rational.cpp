@@ -73,5 +73,6 @@ TEST_CASE("Rational is_power, nth root", "[rational is_power, nth root]")
     REQUIRE(res->__eq__(*qm1_3));
     REQUIRE(q9_25->nth_root(outArg(res), 2));
     REQUIRE(res->__eq__(*q3_5));
+    CHECK_THROWS_AS(q9_25->nth_root(outArg(res), 0), std::runtime_error);
 }
 

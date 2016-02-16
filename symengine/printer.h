@@ -5,6 +5,8 @@
 
 namespace SymEngine {
 
+std::string ascii_art();
+
 enum class PrecedenceEnum {
     Add, Mul, Pow, Atom
 };

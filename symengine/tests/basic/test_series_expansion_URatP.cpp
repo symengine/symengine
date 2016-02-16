@@ -33,8 +33,8 @@ using SymEngine::umap_short_basic;
 
 using SymEngine::URatPSeriesPiranha;
 using SymEngine::pp_t;
-#define series_coeff(EX,SYM,PREC,COEFF) prat2synum(SymEngine::URatPSeriesPiranha::series(EX,SYM->get_name(),PREC)->p_.find_cf({COEFF}))
-#define invseries_coeff(EX,SYM,PREC,COEFF) prat2synum(URatPSeriesPiranha::series_reverse(URatPSeriesPiranha::series(EX,SYM->get_name(),PREC)->p_,pp_t(SYM->get_name()),PREC).find_cf({COEFF}))
+#define series_coeff(EX,SYM,PREC,COEFF) prat2synum(SymEngine::URatPSeriesPiranha::series(EX,SYM->get_name(),PREC)->get_poly().find_cf({COEFF}))
+#define invseries_coeff(EX,SYM,PREC,COEFF) prat2synum(URatPSeriesPiranha::series_reverse(URatPSeriesPiranha::series(EX,SYM->get_name(),PREC)->get_poly(),pp_t(SYM->get_name()),PREC).find_cf({COEFF}))
 
 static inline RCP<const Number> prat2synum(const piranha::rational& p_rat)
 {
@@ -50,7 +50,7 @@ static bool expand_check_pairs(const RCP<const Basic> &ex, const RCP<const Symbo
     auto ser = SymEngine::URatPSeriesPiranha::series(ex, x->get_name(), prec);
     for (auto it : pairs) {
         //std::cerr << it.first << ", " << *(it.second) << "::" << *(v1.at(it.first)) << std::endl;
-        if (not it.second->__eq__(*prat2synum(ser->p_.find_cf({it.first}))))
+        if (not it.second->__eq__(*prat2synum(ser->get_poly().find_cf({it.first}))))
             return false;
         }
     return true;

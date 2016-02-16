@@ -22,7 +22,7 @@ public:
     virtual RCP<const Basic> as_basic() const;
     virtual umap_int_basic as_dict() const;
     virtual RCP<const Basic> get_coeff(int) const;
-    
+
     static RCP<const URatPSeriesFlint> series(const RCP<const Basic> &t, const std::string &x, unsigned int prec);
     static flint::fmpzxx convert(const Integer &x);
     static flint::fmpqxx convert(const mpq_class &x);
@@ -43,97 +43,69 @@ public:
     static fp_t subs(const fp_t &s, const fp_t &var, const fp_t &r, unsigned prec);
 
     static inline fp_t series_invert(const fp_t &s, const fp_t& var, unsigned int   prec) {
-        if (not s.get_coeff(0).is_zero())
-            return fp_t(flint::inv_series(s, prec));
-        else
-            throw std::runtime_error("Flint cannot handle Laurent polynomials");
+        SYMENGINE_ASSERT(not s.get_coeff(0).is_zero());
+        return fp_t(flint::inv_series(s, prec));
     }
     static inline fp_t series_reverse(const fp_t &s, const fp_t& var, unsigned int   prec) {
+        SYMENGINE_ASSERT(s.get_coeff(0).is_zero()
+            and not s.get_coeff(1).is_zero());
         return fp_t(flint::revert_series(s, prec));
     }
     static inline fp_t series_log(const fp_t &s, const fp_t& var, unsigned int   prec) {
+        SYMENGINE_ASSERT(s.get_coeff(0).is_one());
         return fp_t(log_series(s, prec));
     }
     static inline fp_t series_exp(const fp_t &s, const fp_t& var, unsigned int   prec) {
+        SYMENGINE_ASSERT(s.get_coeff(0).is_zero());
         return fp_t(exp_series(s, prec));
     }
     static inline fp_t series_sin(const fp_t &s, const fp_t& var, unsigned int prec) {
-        if (not s.get_coeff(0).is_zero()) {
-            throw std::logic_error("sin(const) not Implemented");
-        }
-        if (s.degree() > 8)
-            return fp_t(sin_series(s, prec));
-        //! fast sin(x)
-        fp_t res_p, monom(s), ssquare;
-        ssquare = mullow(s, s, prec);
-        res_p.set_zero();
-        flint::fmpqxx prod;
-        prod.set_one();
-        for (unsigned int i = 0; i < prec / 2; i++) {
-            const short j = 2 * i + 1;
-            if (i != 0)
-                prod /= flint::fmpzxx(1-j);
-            prod /= flint::fmpzxx(j);
-            res_p += monom * prod;
-            monom = mullow(monom, ssquare, prec);
-        }
-        return res_p;
+        SYMENGINE_ASSERT(s.get_coeff(0).is_zero());
+        return fp_t(sin_series(s, prec));
     }
 
     static inline fp_t series_cos(const fp_t &s, const fp_t& var, unsigned int prec) {
-        if (not s.get_coeff(0).is_zero()) {
-            throw std::logic_error("cos(const) not Implemented");
-        }
-        if (s.degree() > 8)
-            return fp_t(cos_series(s, prec));
-        fp_t res_p, ssquare, monom;
-        ssquare = mullow(s, s, prec);
-        monom = ssquare;
-        res_p.set_one();
-        flint::fmpqxx prod;
-        prod.set_one();
-        for (unsigned int i = 1; i <= prec / 2; i++) {
-            const short j = 2 * i;
-            if (i != 0)
-                prod /= flint::fmpzxx(1 - j);
-            prod /= flint::fmpzxx(j);
-            res_p += monom * prod;
-            monom = mullow(monom, ssquare, prec);
-        }
-        return res_p;
+        SYMENGINE_ASSERT(s.get_coeff(0).is_zero());
+        return fp_t(cos_series(s, prec));
     }
 
     static inline fp_t series_tan(const fp_t &s, const fp_t& var, unsigned int   prec) {
+        SYMENGINE_ASSERT(s.get_coeff(0).is_zero());
         return fp_t(tan_series(s, prec));
     }
     static inline fp_t series_atan(const fp_t &s, const fp_t& var, unsigned int   prec) {
+        SYMENGINE_ASSERT(s.get_coeff(0).is_zero());
         return fp_t(atan_series(s, prec));
     }
     static inline fp_t series_atanh(const fp_t &s, const fp_t& var, unsigned int   prec) {
+        SYMENGINE_ASSERT(s.get_coeff(0).is_zero());
         return fp_t(atanh_series(s, prec));
     }
     static inline fp_t series_asin(const fp_t &s, const fp_t& var, unsigned int   prec) {
+        SYMENGINE_ASSERT(s.get_coeff(0).is_zero());
         return fp_t(asin_series(s, prec));
     }
     static inline fp_t series_asinh(const fp_t &s, const fp_t& var, unsigned int   prec) {
+        SYMENGINE_ASSERT(s.get_coeff(0).is_zero());
         return fp_t(asinh_series(s, prec));
     }
     static inline fp_t series_acos(const fp_t &s, const fp_t& var, unsigned int prec) {
         throw std::runtime_error("acos() not implemented");
     }
     static inline fp_t series_sinh(const fp_t &s, const fp_t& var, unsigned int   prec) {
+        SYMENGINE_ASSERT(s.get_coeff(0).is_zero());
         return fp_t(sinh_series(s, prec));
     }
     static inline fp_t series_cosh(const fp_t &s, const fp_t& var, unsigned int   prec) {
+        SYMENGINE_ASSERT(s.get_coeff(0).is_zero());
         return fp_t(cosh_series(s, prec));
     }
     static inline fp_t series_tanh(const fp_t &s, const fp_t& var, unsigned int   prec) {
+        SYMENGINE_ASSERT(s.get_coeff(0).is_zero());
         return fp_t(tanh_series(s, prec));
     }
     static inline fp_t series_lambertw(const fp_t &s, const fp_t& var, unsigned int prec) {
-        flint::fmpqxx c(s.get_coeff(0));
-        if (not c.is_zero())
-            throw std::logic_error("lambertw(const) not Implemented");
+        SYMENGINE_ASSERT(s.get_coeff(0).is_zero());
 
         fp_t p1;
         p1.set_zero();

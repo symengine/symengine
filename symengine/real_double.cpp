@@ -80,9 +80,17 @@ class EvaluateDouble : public Evaluate {
         SYMENGINE_ASSERT(is_a<T>(x))
         return number(std::sinh(static_cast<const T &>(x).i));
     }
+    virtual RCP<const Basic> csch(const Basic &x) const override {
+        SYMENGINE_ASSERT(is_a<T>(x))
+        return number(1.0/std::sinh(static_cast<const T &>(x).i));
+    }
     virtual RCP<const Basic> cosh(const Basic &x) const override {
         SYMENGINE_ASSERT(is_a<T>(x))
         return number(std::cosh(static_cast<const T &>(x).i));
+    }
+    virtual RCP<const Basic> sech(const Basic &x) const override {
+        SYMENGINE_ASSERT(is_a<T>(x))
+        return number(1.0/std::cosh(static_cast<const T &>(x).i));
     }
     virtual RCP<const Basic> tanh(const Basic &x) const override {
         SYMENGINE_ASSERT(is_a<T>(x))
@@ -95,6 +103,10 @@ class EvaluateDouble : public Evaluate {
     virtual RCP<const Basic> asinh(const Basic &x) const override {
         SYMENGINE_ASSERT(is_a<T>(x))
         return number(std::asinh(static_cast<const T &>(x).i));
+    }
+    virtual RCP<const Basic> acsch(const Basic &x) const override {
+        SYMENGINE_ASSERT(is_a<T>(x))
+        return number(std::asinh(1.0/static_cast<const T &>(x).i));
     }
     virtual RCP<const Basic> abs(const Basic &x) const override {
         SYMENGINE_ASSERT(is_a<T>(x))

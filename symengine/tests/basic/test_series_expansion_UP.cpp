@@ -30,15 +30,15 @@ using SymEngine::umap_short_basic;
 
 using SymEngine::UPSeriesPiranha;
 using SymEngine::p_expr;
-#define series_coeff(EX,SYM,PREC,COEFF) UPSeriesPiranha::series(EX,SYM->get_name(),PREC)->p_.find_cf({COEFF}).get_basic()
-#define invseries_coeff(EX,SYM,PREC,COEFF) UPSeriesPiranha::series_reverse(UPSeriesPiranha::series(EX,SYM->get_name(),PREC)->p_,p_expr(SYM->get_name()),PREC).find_cf({COEFF}).get_basic()
+#define series_coeff(EX,SYM,PREC,COEFF) UPSeriesPiranha::series(EX,SYM->get_name(),PREC)->get_poly().find_cf({COEFF}).get_basic()
+#define invseries_coeff(EX,SYM,PREC,COEFF) UPSeriesPiranha::series_reverse(UPSeriesPiranha::series(EX,SYM->get_name(),PREC)->get_poly(),p_expr(SYM->get_name()),PREC).find_cf({COEFF}).get_basic()
 
 static bool expand_check_pairs(const RCP<const Basic> &ex, const RCP<const Symbol> &x, int prec, const umap_short_basic& pairs)
 {
     auto ser = SymEngine::UPSeriesPiranha::series(ex, x->get_name(), prec);
     for (auto it : pairs) {
         //std::cerr << it.first << ", " << *(it.second) << "::" << *(v1.at(it.first)) << std::endl;
-        if (not it.second->__eq__(*(ser->p_.find_cf({it.first}).get_basic()
+        if (not it.second->__eq__(*(ser->get_poly().find_cf({it.first}).get_basic()
 )))
             return false;
         }

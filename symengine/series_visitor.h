@@ -87,13 +87,13 @@ public:
     }
 
     void bvisit(const Series &x) {
-        if (x.var_ != varname) {
+        if (x.get_var() != varname) {
             throw std::runtime_error("Multivariate Series not implemented");
         }
-        if (x.degree_ < prec) {
+        if (x.get_degree() < prec) {
             throw std::runtime_error("Series with lesser prec found");
         }
-        p = x.p_;
+        p = x.get_poly();
     }
     void bvisit(const Integer &x) {
         p = Series::convert(x);
@@ -189,6 +189,65 @@ public:
     }
     void bvisit(const Basic &x) {
         throw std::runtime_error("Not Implemented");
+    }
+};
+
+class NeedsSymbolicExpansionVisitor : public BaseVisitor<NeedsSymbolicExpansionVisitor, StopVisitor> {
+protected:
+    RCP<const Symbol> x_;
+    bool needs_;
+public:
+
+    void bvisit(const TrigFunction &f) {
+        auto arg = f.get_arg();
+        map_basic_basic subsx0{{x_, integer(0)}};
+        if (arg->subs(subsx0)->__neq__(*integer(0))) {
+            needs_ = true;
+            stop_ = true;
+        }
+    }
+
+    void bvisit(const HyperbolicFunction &f) {
+        auto arg = f.get_arg();
+        map_basic_basic subsx0{{x_, integer(0)}};
+        if (arg->subs(subsx0)->__neq__(*integer(0))) {
+            needs_ = true;
+            stop_ = true;
+        }
+    }
+
+    void bvisit(const Pow &pow) {
+        auto base = pow.get_base();
+        auto exp = pow.get_exp();
+        map_basic_basic subsx0{{x_, integer(0)}};
+        // exp(const) or x^-1
+        if ((base->__eq__(*E) and exp->subs(subsx0)->__neq__(*integer(0)))
+            or (is_a_Number(*exp) and static_cast<const Number&>(*exp).is_negative()
+                and base->subs(subsx0)->__eq__(*integer(0)))) {
+            needs_ = true;
+            stop_ = true;
+        }
+    }
+
+    void bvisit(const Log &f) {
+        auto arg = f.get_arg();
+        map_basic_basic subsx0{{x_, integer(0)}};
+        if (arg->subs(subsx0)->__eq__(*integer(0))) {
+            needs_ = true;
+            stop_ = true;
+        }
+    }
+
+    void bvisit(const LambertW &x) { needs_ = true; stop_ = true; }
+
+    void bvisit(const Basic &x) { }
+
+    bool apply(const Basic &b, const RCP<const Symbol> &x) {
+        x_ = x;
+        needs_ = false;
+        stop_ = false;
+        postorder_traversal_stop(b, *this);
+        return needs_;
     }
 };
 
