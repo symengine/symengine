@@ -465,6 +465,8 @@ std::vector<std::string> init_str_printer_names() {
     names[UPPERGAMMA] = "beta";
     names[POLYGAMMA] = "polygamma";
     names[ABS] = "abs";
+    names[MAX] = "max";
+    names[MIN] = "min";
     return names;
 }
 
