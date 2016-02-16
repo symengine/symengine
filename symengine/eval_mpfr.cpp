@@ -242,21 +242,25 @@ public:
     }
 
     void bvisit(const Max &x) {
-        apply(result_, *(x.get_args()[0]));
-        mpfr_ptr tmp = result_;
+        mpfr_ptr result = result_;
+        apply(result, *(x.get_args()[0]));
+        mpfr_t tmp = {*result};
         for (const auto &p: x.get_args()) {
             apply(tmp, *p);
-            mpfr_max(result_, result_, tmp, rnd_);
+            mpfr_max(result, result, tmp, rnd_);
         }
+        result_ = result;
     };
 
     void bvisit(const Min &x) {
-        apply(result_, *(x.get_args()[0]));
-        mpfr_ptr tmp = result_;
+        mpfr_ptr result = result_;
+        apply(result, *(x.get_args()[0]));
+        mpfr_t tmp = {*result};
         for (const auto &p: x.get_args()) {
             apply(tmp, *p);
-            mpfr_min(result_, result_, tmp, rnd_);
+            mpfr_min(result, result, tmp, rnd_);
         }
+        result_ = result;
     };
 
     // Classes not implemented are

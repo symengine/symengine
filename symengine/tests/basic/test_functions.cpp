@@ -92,6 +92,7 @@ using SymEngine::min;
 using SymEngine::Max;
 using SymEngine::Min;
 using SymEngine::Rational;
+using SymEngine::rcp_static_cast;
 
 #ifdef HAVE_SYMENGINE_MPFR
 using SymEngine::real_mpfr;
@@ -2146,6 +2147,11 @@ TEST_CASE("max: functions", "[functions]")
     RCP<const Basic> i2 = integer(2);
 
     RCP<const Basic> res;
+
+    res = max({x, y});                      // checking if elements stored in order
+    REQUIRE(eq(*(rcp_static_cast<const Max>(res)->get_args()[0]), *x));
+    res = max({y, x});
+    REQUIRE(eq(*(rcp_static_cast<const Max>(res)->get_args()[0]), *x));
 
     res = max({x, y});
     REQUIRE(eq(*res, *max({y, x})));        // max(x, y) == max(y, x)

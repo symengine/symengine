@@ -244,19 +244,21 @@ public:
     };
 
     void bvisit(const Max &x) {
-        result_ = apply(*(x.get_args()[0]));
+        double result = apply(*(x.get_args()[0]));
         for (const auto &p: x.get_args()) {
             double tmp = apply(*p);
-            result_ = std::max(result_, tmp);
+            result = std::max(result, tmp);
         }
+        result_ = result;
     };
 
     void bvisit(const Min &x) {
-        result_ = apply(*(x.get_args()[0]));
+        double result = apply(*(x.get_args()[0]));
         for (const auto &p: x.get_args()) {
             double tmp = apply(*p);
-            result_ = std::min(result_, tmp);
+            result = std::min(result, tmp);
         }
+        result_ = result;
     };
 };
 
@@ -445,6 +447,24 @@ std::vector<fn> init_eval_double()
     table[ABS] = [](const Basic &x) {
         double tmp = eval_double_single_dispatch(*(static_cast<const Abs &>(x)).get_arg());
         return std::abs(tmp);
+    };
+    table[MAX] = [](const Basic &x) {
+        double result;
+        result = eval_double_single_dispatch(*(static_cast<const Max &>(x).get_args()[0]));
+        for (const auto &p: static_cast<const Max &>(x).get_args()) {
+            double tmp = eval_double_single_dispatch(*p);
+            result = std::max(result, tmp);
+        }
+        return result;
+    };
+    table[MIN] = [](const Basic &x) {
+        double result;
+        result = eval_double_single_dispatch(*(static_cast<const Max &>(x).get_args()[0]));
+        for (const auto &p: static_cast<const Min &>(x).get_args()) {
+            double tmp = eval_double_single_dispatch(*p);
+            result = std::min(result, tmp);
+        }
+        return result;
     };
     return table;
 }

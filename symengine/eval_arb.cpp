@@ -246,7 +246,7 @@ public:
 
     void bvisit(const Max &x) {
         apply(result_, *(x.get_args()[0]));
-        arb_ptr tmp = result_;
+        arb_t tmp = {*result_};
         for (const auto &p: x.get_args()) {
             apply(tmp, *p);
             if(arb_gt(tmp, result_))
@@ -256,7 +256,7 @@ public:
 
     void bvisit(const Min &x) {
         apply(result_, *(x.get_args()[0]));
-        arb_ptr tmp = result_;
+        arb_t tmp = {*result_};
         for (const auto &p: x.get_args()) {
             apply(tmp, *p);
             if(arb_lt(tmp, result_))
