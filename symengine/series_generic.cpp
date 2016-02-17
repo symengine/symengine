@@ -52,10 +52,9 @@ s_coef UnivariateSeries::convert(const Integer &x) {
     return s_coef(x.as_int());
 }
 s_coef UnivariateSeries::convert(const mpq_class &x) {
-    throw std::runtime_error("Not Implemented");
-    // s_coef i1(x.get_num_mpz_t());
-    // return i1;
-    // return x.from_mpq();
+    s_coef i1(mpz_get_si(x.get_num_mpz_t()));
+    s_coef i2(mpz_get_si(x.get_den_mpz_t()));
+    return i1/i2;
 }
 
 s_coef UnivariateSeries::var(const std::string &s) {
