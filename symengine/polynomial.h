@@ -130,7 +130,7 @@ RCP<const MultivariatePolynomial> mul_mult_poly(const MultivariatePolynomial &a,
 
 class vec_hash{
 public:
-  operator()(std::vector<unsigned int> &v){
+  size_t operator()(std::vector<unsigned int> &v) const{
     unsigned int count = 0;
     for(int i = 0; i < v.size(); i++){
         count ^= v[i]
@@ -141,15 +141,10 @@ public:
 
 class sym_hash{
 public:
-  operator()(Symbols){
+  size_t operator()(Symbol &s) const{
     return s.__hash__();
   }
 }
-
-//Symbol hash function
- size_t sym_hash(Symbol s){
-   return s.__hash__();
- }
  
 //transfer to dict.cpp before issueing pull request
  bool map_uintvec_mpz_eq(const std::unordered_map<std::vector<unsigned int>, mpz_class, vec_hash> &a, const std::unordered_map<std::vector<unsigned int>, mpz_class, vec_hash> &b){
