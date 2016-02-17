@@ -180,9 +180,19 @@ public:
         result_ = [=](const std::vector<T> &x){ return std::sinh(tmp(x)); };
     };
 
+    void bvisit(const Csch &x) {
+        fn tmp = apply(*(x.get_arg()));
+        result_ = [=](const std::vector<T> &x){ return 1.0 / std::sinh(tmp(x)); };
+    };
+
     void bvisit(const Cosh &x) {
         fn tmp = apply(*(x.get_arg()));
         result_ = [=](const std::vector<T> &x){ return std::cosh(tmp(x)); };
+    };
+
+    void bvisit(const Sech &x) {
+        fn tmp = apply(*(x.get_arg()));
+        result_ = [=](const std::vector<T> &x){ return 1.0 / std::cosh(tmp(x)); };
     };
 
     void bvisit(const Tanh &x) {
@@ -198,6 +208,11 @@ public:
     void bvisit(const ASinh &x) {
         fn tmp = apply(*(x.get_arg()));
         result_ = [=](const std::vector<T> &x){ return std::asinh(tmp(x)); };
+    };
+
+    void bvisit(const ACsch &x) {
+        fn tmp = apply(*(x.get_arg()));
+        result_ = [=](const std::vector<T> &x){ return std::asinh(1.0 / tmp(x)); };
     };
 
     void bvisit(const ACosh &x) {

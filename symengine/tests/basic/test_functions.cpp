@@ -55,10 +55,13 @@ using SymEngine::make_rcp;
 using SymEngine::print_stack_on_segfault;
 using SymEngine::sqrt;
 using SymEngine::sinh;
+using SymEngine::csch;
 using SymEngine::cosh;
+using SymEngine::sech;
 using SymEngine::tanh;
 using SymEngine::coth;
 using SymEngine::asinh;
+using SymEngine::acsch;
 using SymEngine::acosh;
 using SymEngine::atanh;
 using SymEngine::acoth;
@@ -1531,6 +1534,28 @@ TEST_CASE("Sinh: functions", "[functions]")
 
 }
 
+TEST_CASE("Csch: functions", "[functions]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Basic> im1 = integer(-1);
+    RCP<const Basic> i2 = integer(2);
+
+    RCP<const Basic> r1;
+    RCP<const Basic> r2;
+
+    r1 = csch(im1);
+    r2 = mul(im1, csch(one));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = csch(x)->expand_as_exp();
+    r2 = div(i2, add(exp(x), mul(im1, exp(mul(im1, x)))));
+    REQUIRE(eq(*r1, *r2));
+    r1 = csch(mul(im1, x))->diff(x);
+    r2 = mul(csch(x), coth(x));
+    REQUIRE(eq(*r1, *r2));
+
+}
+
 TEST_CASE("Cosh: functions", "[functions]")
 {
     RCP<const Symbol> x = symbol("x");
@@ -1555,6 +1580,33 @@ TEST_CASE("Cosh: functions", "[functions]")
     r1 = cosh(mul(im1, x))->diff(x);
     r2 = mul(im1, sinh(mul(im1, x)));
     REQUIRE(eq(*r1, *r2));
+}
+
+TEST_CASE("Sech: functions", "[functions]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Basic> im1 = integer(-1);
+    RCP<const Basic> i2 = integer(2);
+
+    RCP<const Basic> r1;
+    RCP<const Basic> r2;
+
+    r1 = sech(zero);
+    r2 = one;
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = sech(im1);
+    r2 = sech(one);
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = sech(x)->expand_as_exp();
+    r2 = div(i2, add(exp(x), exp(mul(im1, x))));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = sech(mul(im1, x))->diff(x);
+    r2 = mul(im1, mul(sech(x), tanh(x)));
+    REQUIRE(eq(*r1, *r2));
+
 }
 
 TEST_CASE("Tanh: functions", "[functions]")
@@ -1638,6 +1690,30 @@ TEST_CASE("Asinh: functions", "[functions]")
     r2 = div(i2, sqrt(add(mul(i4, pow(y, i2)), one)));
     REQUIRE(eq(*r1, *r2));
 }
+
+TEST_CASE("Acsch: functions", "[functions]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Basic> im1 = integer(-1);
+    RCP<const Basic> one = integer(1);
+    RCP<const Basic> i2 = integer(2);
+
+    RCP<const Basic> r1;
+    RCP<const Basic> r2;
+
+    r1 = acsch(one);
+    r2 = log(add(sqrt(i2), one));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = acsch(im1);
+    r2 = log(add(sqrt(i2), im1));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = acsch(x)->diff(x);
+    r2 = div(im1, mul(sqrt(add(one, div(one, pow(x, i2)))), pow(x, i2)));
+    REQUIRE(eq(*r1, *r2));
+}
+
 
 TEST_CASE("Acosh: functions", "[functions]")
 {
@@ -1991,12 +2067,20 @@ TEST_CASE("Polygamma: functions", "[functions]")
     r2 = sub(mul(im2, log(i2)), EulerGamma);
     REQUIRE(eq(*r1, *r2));
 
-    r1 = polygamma(zero, div(i3, i2));
-    r2 = add(i2, sub(mul(im2, log(i2)), EulerGamma));
+    r1 = polygamma(zero, div(one, i3));
+    r2 = add(neg(div(div(pi, i2), sqrt(i3))), sub(div(mul(im3, log(i3)), i2), EulerGamma));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = polygamma(zero, div(i2, i3));
+    r2 = add(div(div(pi, i2), sqrt(i3)), sub(div(mul(im3, log(i3)), i2), EulerGamma));
     REQUIRE(eq(*r1, *r2));
 
     r1 = polygamma(zero, div(one, i4));
-    r2 = add(neg(div(pi, i3)), sub(mul(im3, log(i2)), EulerGamma));
+    r2 = add(neg(div(pi, i2)), sub(mul(im3, log(i2)), EulerGamma));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = polygamma(zero, div(i3, i4));
+    r2 = add(div(pi, i2), sub(mul(im3, log(i2)), EulerGamma));
     REQUIRE(eq(*r1, *r2));
 
     r1 = SymEngine::rcp_dynamic_cast<const PolyGamma>(polygamma(i2, x))->rewrite_as_zeta();

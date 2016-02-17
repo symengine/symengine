@@ -66,6 +66,46 @@ void basic_free_heap(basic_struct *s)
     delete s;
 }
 
+void basic_const_set(basic s, char* c)
+{
+    s->m = SymEngine::constant(std::string(c));
+}
+
+void basic_const_zero(basic s)
+{
+    s->m = SymEngine::zero;
+}
+
+void basic_const_one(basic s)
+{
+    s->m = SymEngine::one;
+}
+
+void basic_const_minus_one(basic s)
+{
+    s->m = SymEngine::minus_one;
+}
+
+void basic_const_I(basic s)
+{
+    s->m = SymEngine::I;
+}
+
+void basic_const_pi(basic s)
+{
+    s->m = SymEngine::pi;
+}
+
+void basic_const_E(basic s)
+{
+    s->m = SymEngine::E;
+}
+
+void basic_const_EulerGamma(basic s)
+{
+    s->m = SymEngine::EulerGamma;
+}
+
 TypeID basic_get_type(const basic s) {
     return static_cast<TypeID>(s->m->get_type_code());
 }

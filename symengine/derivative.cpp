@@ -115,6 +115,12 @@ static RCP<const Basic> diff(const CLASS &self, \
                 self.get_arg()->diff(x));
     }
 
+    static RCP<const Basic> diff(const ACsch &self,
+            const RCP<const Symbol> &x) {
+        return mul(div(minus_one, mul(sqrt(add(one, div(one,pow(self.get_arg(), i2)))),
+                pow(self.get_arg(),i2))), self.get_arg()->diff(x));
+    }
+
     static RCP<const Basic> diff(const ASinh &self,
             const RCP<const Symbol> &x) {
         return mul(div(one, sqrt(add(pow(self.get_arg(), i2), one))),
@@ -133,9 +139,19 @@ static RCP<const Basic> diff(const CLASS &self, \
                 self.get_arg()->diff(x));
     }
 
+    static RCP<const Basic> diff(const Sech &self,
+            const RCP<const Symbol> &x) {
+        return mul(mul(mul(minus_one,sech(self.get_arg())),tanh(self.get_arg())), self.get_arg()->diff(x));
+    }
+
     static RCP<const Basic> diff(const Cosh &self,
             const RCP<const Symbol> &x) {
         return mul(sinh(self.get_arg()), self.get_arg()->diff(x));
+    }
+
+    static RCP<const Basic> diff(const Csch &self,
+            const RCP<const Symbol> &x) {
+        return mul(mul(mul(minus_one,csch(self.get_arg())),coth(self.get_arg())), self.get_arg()->diff(x));
     }
 
     static RCP<const Basic> diff(const Sinh &self,

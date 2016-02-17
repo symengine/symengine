@@ -5,6 +5,15 @@
 
 namespace SymEngine {
 
+std::string ascii_art() {
+    std::string a = " _____           _____         _         \n"
+                    "|   __|_ _ _____|   __|___ ___|_|___ ___ \n"
+                    "|__   | | |     |   __|   | . | |   | -_|\n"
+                    "|_____|_  |_|_|_|_____|_|_|_  |_|_|_|___|\n"
+                    "      |___|               |___|          \n";
+    return a;
+}
+
 void StrPrinter::bvisit(const Basic &x) {
     std::ostringstream s;
     s << "<" << typeName<Basic>(x) << " instance at " << (const void*)this << ">";
@@ -316,12 +325,12 @@ void StrPrinter::bvisit(const UnivariatePolynomial &x) {
 #ifdef HAVE_SYMENGINE_PIRANHA
 void StrPrinter::bvisit(const URatPSeriesPiranha &x) {
     std::ostringstream o;
-    o << x.p_ << " + O(" << x.var_ << "**" << x.degree_ << ")";
+    o << x.get_poly() << " + O(" << x.get_var() << "**" << x.get_degree() << ")";
     str_ = o.str();
 }
 void StrPrinter::bvisit(const UPSeriesPiranha &x) {
     std::ostringstream o;
-    o << x.p_ << " + O(" << x.var_ << "**" << x.degree_ << ")";
+    o << x.get_poly() << " + O(" << x.get_var() << "**" << x.get_degree() << ")";
     str_ = o.str();
 }
 #endif
@@ -438,10 +447,13 @@ std::vector<std::string> init_str_printer_names() {
     names[ACOT] = "acot";
     names[ATAN2] = "atan2";
     names[SINH] = "sinh";
+    names[CSCH] = "csch";
     names[COSH] = "cosh";
+    names[SECH] = "sech";
     names[TANH] = "tanh";
     names[COTH] = "coth";
     names[ASINH] = "asinh";
+    names[ACSCH] = "acsch";
     names[ACOSH] = "acosh";
     names[ATANH] = "atanh";
     names[ACOTH] = "acoth";

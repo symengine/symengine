@@ -229,10 +229,18 @@ public:
         arb_sinh(result_, result_, prec_);
     }
 
+    void bvisit(const Csch &) {
+        throw std::runtime_error("Not implemented.");
+    };
+
     void bvisit(const Cosh &x) {
         apply(result_, *(x.get_arg()));
         arb_cosh(result_, result_, prec_);
     }
+
+    void bvisit(const Sech &) {
+        throw std::runtime_error("Not implemented.");
+    };
 
     void bvisit(const Tanh &x) {
         apply(result_, *(x.get_arg()));
@@ -245,6 +253,9 @@ public:
     }
 
     void bvisit(const ASinh &) {
+        throw std::runtime_error("Not implemented.");
+    };
+    void bvisit(const ACsch &) {
         throw std::runtime_error("Not implemented.");
     };
     void bvisit(const ACosh &) {
