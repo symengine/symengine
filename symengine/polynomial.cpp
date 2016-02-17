@@ -287,7 +287,7 @@ RCP<const UnivariatePolynomial> mul_uni_poly(RCP<const UnivariatePolynomial> a, 
       SYMENGINE_ASSERT(is_cannonical(vars, degrees_, dict_))
 }
 
-  bool MultivariatePolynomial::is_cannonical(std::set<Symbol> &vars, std::unorderd_map<Symbol, unsigned int> &degrees, std::unordered_map<std::vector<unsigned int>,mpz_class> &dict){
+  bool MultivariatePolynomial::is_cannonical(std::set<Symbol> &vars, std::unordered_map<Symbol, unsigned int> &degrees, std::unordered_map<std::vector<unsigned int>,mpz_class> &dict){
     //checks that the maximum degree of any variable is correct according to the dictionary
     unsigned int whichvar = 0; //keeps track of the index of the variable we are checking
     for(auto var : vars){

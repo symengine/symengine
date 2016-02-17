@@ -12,6 +12,9 @@
 #include <symengine/integer.h>
 #include <symengine/symbol.h>
 
+#include <vector>
+#include <unordered_map>
+
 namespace SymEngine {
 //! UnivariatePolynomial Class
 class UnivariatePolynomial : public Basic{
@@ -115,8 +118,8 @@ public:
     std::unordered_map<std::vector<unsigned int>, mpz_class, vec_hash> dict_;  //map_uintvec_mpz
 public:
     //constructor from components
-    MultivariatePolynomial(std::unordered_map<Symbol, unsigned int> &degrees, std::set<Symbol> &var, std::map<std::vecotr<unsigned int>, mpz_class> &dict);
-    bool is_canonical(std::unorderd_map<Symbol, unsigened int> &degrees, std::map<std::vector<unsigned int>,mpz_class> &dict);
+    MultivariatePolynomial(std::unordered_map<Symbol, unsigned int> &degrees, std::set<Symbol> &var, std::map<std::vector<unsigned int>, mpz_class> &dict);
+    bool is_canonical(std::unordered_map<Symbol, unsigned int> &degrees, std::map<std::vector<unsigned int>,mpz_class> &dict);
     std::size_t __hash__();
     bool __eq__(const Basic &o);
     int compare(const Basic &o);
@@ -130,10 +133,10 @@ RCP<const MultivariatePolynomial> mul_mult_poly(const MultivariatePolynomial &a,
 
 class vec_hash{
 public:
-  size_t operator()(std::vector<unsigned int> &v) const{
+  size_t operator()(const std::vector<unsigned int> &v) const{
     unsigned int count = 0;
     for(int i = 0; i < v.size(); i++){
-        count ^= v[i]
+      count ^= v[i];
     }
     return count;
     }  
@@ -141,10 +144,10 @@ public:
 
 class sym_hash{
 public:
-  size_t operator()(Symbol &s) const{
+  size_t operator()(const Symbol &s) const{
     return s.__hash__();
   }
-}
+};
  
 //transfer to dict.cpp before issueing pull request
  bool map_uintvec_mpz_eq(const std::unordered_map<std::vector<unsigned int>, mpz_class, vec_hash> &a, const std::unordered_map<std::vector<unsigned int>, mpz_class, vec_hash> &b){
@@ -159,7 +162,7 @@ public:
    return true;
 }
 
- bool map_uintvec_mpz_compare(const std::unordered_map<std::vector<unsigned int>, mpz_class, vec_hash> &a, const std::unordered_map<std::vector<unsigned int>, mpz_class, vec_hash> &b){
+ bool map_uintvec_mpz_compare(const std::unordered_map<std::vector<unsigned int>, mpz_class, vec_hash> &A, const std::unordered_map<std::vector<unsigned int>, mpz_class, vec_hash> &B){
     //copied from map_uinit_mpz_compare
     if (A.size() != B.size())
         return (A.size() < B.size()) ? -1 : 1;
