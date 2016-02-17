@@ -36,6 +36,7 @@ using SymEngine::primitive_root_list;
 using SymEngine::multiplicative_order;
 using SymEngine::totient;
 using SymEngine::carmichael;
+using SymEngine::mertens;
 
 TEST_CASE("test_gcd_lcm(): ntheory", "[ntheory]")
 {
@@ -659,4 +660,18 @@ TEST_CASE("test_mobius(): ntheory", "[ntheory]")
     REQUIRE(mobius(*i8) == 0);
     REQUIRE(mobius(*i9) == 0);
     REQUIRE(mobius(*i10) == 1);
+}
+
+TEST_CASE("test_mertens(): ntheory", "[ntheory]")
+{
+    REQUIRE(mertens(1) == 1);
+    REQUIRE(mertens(2) == 0);
+    REQUIRE(mertens(4) == -1);
+    REQUIRE(mertens(12) == -2);
+    REQUIRE(mertens(13) == -3);
+    REQUIRE(mertens(22) == -1);
+    REQUIRE(mertens(31) == -4);
+    REQUIRE(mertens(36) == -1);
+    REQUIRE(mertens(39) == 0);
+    REQUIRE(mertens(113) == -5);
 }
