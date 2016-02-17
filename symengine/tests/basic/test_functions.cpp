@@ -1973,6 +1973,10 @@ TEST_CASE("Gamma: functions", "[functions]")
     r1 = gamma(r3)->diff(x);
     r2 = neg((mul(gamma(r3), polygamma(zero, r3))));
     REQUIRE(eq(*r1, *r2));
+
+    r1 = gamma(add(x, y))->subs({{x, y}});
+    r2 = gamma(add(y, y));
+    REQUIRE(eq(*r1, *r2));
 }
 
 TEST_CASE("Lowergamma: functions", "[functions]")
@@ -2068,6 +2072,8 @@ TEST_CASE("Beta: functions", "[functions]")
 TEST_CASE("Polygamma: functions", "[functions]")
 {
     RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> _x = symbol("_x");
+    RCP<const Symbol> y = symbol("y");
     RCP<const Basic> i2 = integer(2);
     RCP<const Basic> im2 = integer(-2);
     RCP<const Basic> i3 = integer(3);
@@ -2115,6 +2121,35 @@ TEST_CASE("Polygamma: functions", "[functions]")
 
     r1 = SymEngine::rcp_dynamic_cast<const PolyGamma>(polygamma(i3, x))->rewrite_as_zeta();
     r2 = mul(integer(6), zeta(i4, x));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = polygamma(x, y)->subs({{x, zero}, {y, one}});
+    r2 = neg(EulerGamma);
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = polygamma(x, y)->subs({{y, x}});
+    r2 = polygamma(x, x);
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = polygamma(y, mul(x, i2))->diff(x);
+    r2 = mul(i2, polygamma(add(y, one), mul(x, i2)));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = polygamma(y, mul(x, i2))->diff(x);
+    r2 = mul(i2, polygamma(add(y, one), mul(x, i2)));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = polygamma(x, y)->diff(x);
+    r2 = Derivative::create(polygamma(x, y), {x});
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = polygamma(mul(i2, x), y)->diff(x);
+    r2 = mul(i2, Subs::create(Derivative::create(polygamma(_x, y), {_x}), {{_x, mul(i2, x)}}));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = polygamma(mul(i2, x), mul(i3, x))->diff(x);
+    r2 = mul(i2, Subs::create(Derivative::create(polygamma(_x, mul(i3, x)), {_x}), {{_x, mul(i2, x)}}));
+    r2 = add(r2, mul(i3, polygamma(add(mul(i2, x), one), mul(i3, x))));
     REQUIRE(eq(*r1, *r2));
 }
 

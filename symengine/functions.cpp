@@ -1572,6 +1572,16 @@ bool Derivative::is_canonical(const RCP<const Basic> &arg,
         return true;
     } else if (is_a<FunctionWrapper>(*arg)) {
         return true;
+    } else if (is_a<PolyGamma>(*arg)) {
+        bool found = false;
+        auto v = arg->get_args();
+        for (auto &p: x) {
+            if (has_symbol(*v[0], rcp_static_cast<const Symbol>(p))) {
+                found = true;
+                break;
+            }
+        }
+        return found;
     }
     return false;
 }
