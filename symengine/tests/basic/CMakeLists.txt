@@ -63,3 +63,7 @@ add_test(test_number ${PROJECT_BINARY_DIR}/test_number)
 add_executable(test_as_numer_denom test_as_numer_denom.cpp)
 target_link_libraries(test_as_numer_denom symengine catch)
 add_test(test_as_numer_denom ${PROJECT_BINARY_DIR}/test_as_numer_denom)
+
+add_executable(test_parser test_parser.cpp)
+target_link_libraries(test_parser symengine catch)
+add_test(test_parser ${PROJECT_BINARY_DIR}/test_parser)

@@ -161,9 +161,19 @@ public:
         mpfr_sinh(result_, result_, rnd_);
     }
 
+    void bvisit(const Csch &x) {
+        apply(result_, *(x.get_arg()));
+        mpfr_csch(result_, result_, rnd_);
+    }
+
     void bvisit(const Cosh &x) {
         apply(result_, *(x.get_arg()));
         mpfr_cosh(result_, result_, rnd_);
+    }
+
+    void bvisit(const Sech &x) {
+        apply(result_, *(x.get_arg()));
+        mpfr_sech(result_, result_, rnd_);
     }
 
     void bvisit(const Tanh &x) {
@@ -180,6 +190,12 @@ public:
         apply(result_, *(x.get_arg()));
         mpfr_asinh(result_, result_, rnd_);
     }
+
+    void bvisit(const ACsch &x) {
+        apply(result_, *(x.get_arg()));
+        mpfr_ui_div(result_, 1, result_, rnd_);
+        mpfr_asinh(result_, result_, rnd_);
+    };
 
     void bvisit(const ACosh &x) {
         apply(result_, *(x.get_arg()));

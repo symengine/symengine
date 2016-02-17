@@ -1847,6 +1847,72 @@ RCP<const Basic>  Sinh::expand_as_exp() const
     return div(sub(exp(get_arg()), exp(mul(get_arg(), minus_one))), i2);
 }
 
+Csch::Csch(const RCP<const Basic> &arg)
+    : HyperbolicFunction(arg)
+{
+    SYMENGINE_ASSERT(is_canonical(arg))
+}
+
+bool Csch::is_canonical(const RCP<const Basic> &arg) const
+{
+    // TODO: Add further checks for +inf -inf cases
+    if (eq(*arg, *zero))
+        return false;
+    if (is_a_Number(*arg)) {
+        if (static_cast<const Number &>(*arg).is_negative()) {
+            return false;
+        } else if (not static_cast<const Number &>(*arg).is_exact()) {
+            return false;
+        }
+    }
+    if (could_extract_minus(arg))
+        return false;
+    return true;
+}
+
+bool Csch::__eq__(const Basic &o) const
+{
+    if (is_a<Csch>(o) and
+        eq(*get_arg(), *(static_cast<const Csch &>(o).get_arg())))
+        return true;
+    else
+        return false;
+}
+
+int Csch::compare(const Basic &o) const
+{
+    SYMENGINE_ASSERT(is_a<Csch>(o))
+    const Csch &s = static_cast<const Csch &>(o);
+    return get_arg()->__cmp__(*(s.get_arg()));
+}
+
+RCP<const Basic> csch(const RCP<const Basic> &arg)
+{
+    if (eq(*arg, *zero)) {
+        // Answer is infinity. Yet to be implemented in SymEngine
+        throw std::runtime_error("Not implemented.");
+    }
+    if (is_a_Number(*arg)) {
+        RCP<const Number> _arg = rcp_static_cast<const Number>(arg);
+        if (not _arg->is_exact()) {
+            return _arg->get_eval().csch(*_arg);
+        } else if (_arg->is_negative()) {
+            return neg(csch(zero->sub(*_arg)));
+        }
+    }
+    if (could_extract_minus(arg)) {
+        return neg(csch(neg(arg)));
+    }
+    return make_rcp<const Csch>(arg);
+}
+
+RCP<const Basic>  Csch::expand_as_exp() const
+{
+    RCP<const Basic> pos_exp = exp(get_arg());
+    RCP<const Basic> neg_exp = exp(mul(minus_one, get_arg()));
+    return div(i2, sub(pos_exp, neg_exp));
+}
+
 Cosh::Cosh(const RCP<const Basic> &arg)
     : HyperbolicFunction(arg)
 {
@@ -1906,6 +1972,69 @@ RCP<const Basic> cosh(const RCP<const Basic> &arg)
 RCP<const Basic>  Cosh::expand_as_exp() const
 {
     return div(add(exp(get_arg()), exp(mul(get_arg(), minus_one))), i2);
+}
+
+Sech::Sech(const RCP<const Basic> &arg)
+    : HyperbolicFunction(arg)
+{
+    SYMENGINE_ASSERT(is_canonical(arg))
+}
+
+bool Sech::is_canonical(const RCP<const Basic> &arg) const
+{
+    // TODO: Add further checks for +inf -inf cases
+    if (eq(*arg, *zero))
+        return false;
+    if (is_a_Number(*arg)) {
+        if (static_cast<const Number &>(*arg).is_negative()) {
+            return false;
+        } else if (not static_cast<const Number &>(*arg).is_exact()) {
+            return false;
+        }
+    }
+    if (could_extract_minus(arg))
+        return false;
+    return true;
+}
+
+bool Sech::__eq__(const Basic &o) const
+{
+    if (is_a<Sech>(o) and
+        eq(*get_arg(), *(static_cast<const Sech &>(o).get_arg())))
+        return true;
+    else
+        return false;
+}
+
+int Sech::compare(const Basic &o) const
+{
+    SYMENGINE_ASSERT(is_a<Sech>(o))
+    const Sech &s = static_cast<const Sech &>(o);
+    return get_arg()->__cmp__(*(s.get_arg()));
+}
+
+RCP<const Basic> sech(const RCP<const Basic> &arg)
+{
+    if (eq(*arg, *zero)) return one;
+    if (is_a_Number(*arg)) {
+        RCP<const Number> _arg = rcp_static_cast<const Number>(arg);
+        if (not _arg->is_exact()) {
+            return _arg->get_eval().sech(*_arg);
+        } else if (_arg->is_negative()) {
+            return sech(zero->sub(*_arg));
+        }
+    }
+    if (could_extract_minus(arg)) {
+        return sech(neg(arg));
+    }
+    return make_rcp<const Sech>(arg);
+}
+
+RCP<const Basic>  Sech::expand_as_exp() const
+{
+    RCP<const Basic> pos_exp = exp(get_arg());
+    RCP<const Basic> neg_exp = exp(mul(minus_one, get_arg()));
+    return div(i2, add(pos_exp, neg_exp));
 }
 
 Tanh::Tanh(const RCP<const Basic> &arg)
@@ -2093,6 +2222,55 @@ RCP<const Basic> asinh(const RCP<const Basic> &arg)
         return neg(asinh(neg(arg)));
     }
     return make_rcp<const ASinh>(arg);
+}
+
+ACsch::ACsch(const RCP<const Basic> &arg)
+    : HyperbolicFunction(arg)
+{
+    SYMENGINE_ASSERT(is_canonical(arg))
+}
+
+bool ACsch::is_canonical(const RCP<const Basic> &arg) const
+{
+    // TODO: Add further checks for +inf -inf cases
+    if (eq(*arg, *one) or eq(*arg, *minus_one))
+        return false;
+    if (is_a_Number(*arg)) {
+        if (static_cast<const Number &>(*arg).is_negative()) {
+            return false;
+        } else if (not static_cast<const Number &>(*arg).is_exact()) {
+            return false;
+        }
+    }
+    if (could_extract_minus(arg))
+        return false;
+    return true;
+}
+
+bool ACsch::__eq__(const Basic &o) const
+{
+    if (is_a<ACsch>(o) and
+        eq(*get_arg(), *(static_cast<const ACsch &>(o).get_arg())))
+        return true;
+    else
+        return false;
+}
+
+int ACsch::compare(const Basic &o) const
+{
+    SYMENGINE_ASSERT(is_a<ACsch>(o))
+    const ACsch &s = static_cast<const ACsch &>(o);
+    return get_arg()->__cmp__(*(s.get_arg()));
+    }
+
+RCP<const Basic> acsch(const RCP<const Basic> &arg)
+{
+    if (eq(*arg, *one)) return log(add(one, sq2));
+    if (eq(*arg, *minus_one)) return log(sub(sq2, one));
+    if (could_extract_minus(arg)) {
+        return neg(acsch(neg(arg)));
+    }
+    return make_rcp<const ACsch>(arg);
 }
 
 ACosh::ACosh(const RCP<const Basic> &arg)
@@ -2291,9 +2469,19 @@ RCP<const Basic> Sinh::create(const RCP<const Basic> &arg) const
     return sinh(arg);
 }
 
+RCP<const Basic> Csch::create(const RCP<const Basic> &arg) const
+{
+    return csch(arg);
+}
+
 RCP<const Basic> Cosh::create(const RCP<const Basic> &arg) const
 {
     return cosh(arg);
+}
+
+RCP<const Basic> Sech::create(const RCP<const Basic> &arg) const
+{
+    return sech(arg);
 }
 
 RCP<const Basic> Tanh::create(const RCP<const Basic> &arg) const
@@ -2309,6 +2497,11 @@ RCP<const Basic> Coth::create(const RCP<const Basic> &arg) const
 RCP<const Basic> ASinh::create(const RCP<const Basic> &arg) const
 {
     return asinh(arg);
+}
+
+RCP<const Basic> ACsch::create(const RCP<const Basic> &arg) const
+{
+    return acsch(arg);
 }
 
 RCP<const Basic> ACosh::create(const RCP<const Basic> &arg) const
@@ -2994,10 +3187,13 @@ bool PolyGamma::is_canonical(const RCP<const Basic> &n, const RCP<const Basic> &
             auto x_ = rcp_static_cast<const Rational>(x);
             auto num = x_->i.get_num();
             auto den = x_->i.get_den();
-            if (den == 2 and (num == 1 or num == 3)) {
+            if (den == 2 and num == 1) {
                 return false;
             }
-            if (den == 4 and num == 1) {
+            if (den == 3 and (num == 1 or num == 2)) {
+                return false;
+            }
+            if (den == 4 and (num == 1 or num == 3)) {
                 return false;
             }
         }
@@ -3068,14 +3264,23 @@ RCP<const Basic> polygamma(const RCP<const Basic> &n_, const RCP<const Basic> &x
                 if (num == 1) {
                        return sub(mul(im2, log(i2)), EulerGamma);
                 }
-                if (num == 3) {
-                       return add(i2, sub(mul(im2, log(i2)), EulerGamma));
+            }
+            if (den == 3) {
+                auto num = x->i.get_num();
+                if (num == 1) {
+                       return add(neg(div(div(pi, i2), sqrt(i3))), sub(div(mul(im3, log(i3)), i2), EulerGamma));
+                }
+                if (num == 2) {
+                      return add(div(div(pi, i2), sqrt(i3)), sub(div(mul(im3, log(i3)), i2), EulerGamma));
                 }
             }
             if (den == 4) {
                 auto num = x->i.get_num();
                 if (num == 1) {
-                       return add(neg(div(pi, i3)), sub(mul(im3, log(i2)), EulerGamma));
+                       return add(neg(div(pi, i2)), sub(mul(im3, log(i2)), EulerGamma));
+                }
+                if (num == 3) {
+                       return add(div(pi, i2), sub(mul(im3, log(i2)), EulerGamma));
                 }
             }
         }
