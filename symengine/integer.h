@@ -17,12 +17,12 @@ namespace SymEngine {
 //! Integer Class
 class Integer : public Number {
 public:
-    //! `i` : object of `mpz_class`
+    //! `i` : object of `integer_class`
     integer_class i;
 
 public:
     IMPLEMENT_TYPEID(INTEGER)
-    //! Constructor of Integer using `mpz_class`
+    //! Constructor of Integer using `integer_class`
     explicit Integer(integer_class i);
     //! \return size of the hash
     virtual std::size_t __hash__() const;
@@ -35,7 +35,7 @@ public:
 
     //! Convert to `int`, raise an exception if it does not fit
     signed long int as_int() const;
-    //! Convert to `mpz_class`.
+    //! Convert to `integer_class`.
     inline integer_class as_mpz() const { return this->i; }
     //! \return `true` if `0`
     inline virtual bool is_zero() const { return this->i == 0; }

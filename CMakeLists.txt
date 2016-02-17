@@ -101,6 +101,7 @@ elseif ("${INTEGER_CLASS}" MATCHES "flint")
     set(SYMENGINE_INTEGER_CLASS "FLINT")
 else()
     set(SYMENGINE_INTEGER_CLASS "GMPXX")
+    set(WITH_GMPXX yes)
 endif()
 
 # GMP
@@ -110,7 +111,7 @@ set(LIBS ${LIBS} ${GMP_TARGETS})
 set(PKGS ${PKGS} "GMP")
 
 # Check gmpxx
-if (NOT(MSVC))
+if (NOT(MSVC) AND WITH_GMPXX)
     try_compile(GMPXX "${CMAKE_CURRENT_BINARY_DIR}/cxx" "${CMAKE_SOURCE_DIR}/cmake/checkgmpxx.cpp"
         CMAKE_FLAGS "-DCOMPILE_DEFINITIONS=${CMAKE_CXX_FLAGS_RELEASE}"
         CMAKE_FLAGS "-DINCLUDE_DIRECTORIES=${GMP_INCLUDE_DIRS}"

@@ -612,13 +612,10 @@ RCP<const Number> bernoulli(unsigned long n)
     fmpq_t res;
     fmpq_init(res);
     bernoulli_fmpq_ui(res, n);
-    mpq_t a;
-    mpq_init(a);
-    fmpq_get_mpq(a, res);
-    rational_class b(mpq_class(a).get_str());
+    rational_class a;
+    fmpq_get_mpq(get_mpq_t(a), res);
     fmpq_clear(res);
-    mpq_clear(a);
-    return Rational::from_mpq(b);
+    return Rational::from_mpq(std::move(a));
 #else
     throw std::runtime_error("Currently supported only if ARB is installed");
 #endif

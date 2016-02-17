@@ -138,7 +138,6 @@ integer_class UnivariatePolynomial::eval_bit(const int &x) const {
     //TODO: Use Horner's Scheme
     integer_class ans(0);
     for (const auto &p : dict_) {
-        // TODO: change mpz_class to integer_class
         integer_class t = integer_class(1) << x * p.first;
         ans += p.second * t;
     }
@@ -252,11 +251,10 @@ RCP<const UnivariatePolynomial> mul_uni_poly(RCP<const UnivariatePolynomial> a, 
 
     integer_class p = std::max(a->max_coef(), b->max_coef());
 
-    // TODO: remove mpz_class call
-    unsigned int N = bit_length(std::min(da + 1, db + 1)) + bit_length(mpz_class(get_mpz_t(p))) + 1;
+    unsigned int N = bit_length(std::min(da + 1, db + 1)) + bit_length(p) + 1;
 
-    // TODO: remove mpz_class call
-    integer_class a1(get_mpz_t(mpz_class(1) << N));
+    integer_class a1(1);
+    a1 <<= N;
     integer_class a2 = a1 / 2;
     integer_class mask = a1 - 1;
     integer_class sa = a->eval_bit(N);
@@ -276,8 +274,7 @@ RCP<const UnivariatePolynomial> mul_uni_poly(RCP<const UnivariatePolynomial> a, 
             v.push_back(b - a1 + carry);
             carry = 1;
         }
-        // TODO: remove mpz_class call
-        r = integer_class(get_mpz_t(mpz_class(get_mpz_t(r)) >> N));
+        r >>= N;
     }
 
     if (sign == -1)

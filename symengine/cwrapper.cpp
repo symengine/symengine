@@ -179,8 +179,7 @@ int rational_set(basic s, const basic a, const basic b)
 
 void rational_set_mpq(basic s, const mpq_t i)
 {
-    // TODO: fix this
-    s->m = SymEngine::Rational::from_mpq(std::move(rational_class(mpq_class(i).get_str())));
+    s->m = SymEngine::Rational::from_mpq(std::move(rational_class(i)));
 }
 
 void complex_set(basic s, const basic re, const basic im)
@@ -199,8 +198,7 @@ void complex_set_rat(basic s, const basic re, const basic im)
 
 void complex_set_mpq(basic s, const mpq_t re, const mpq_t im)
 {
-    // TODO: fix this
-    s->m = SymEngine::Complex::from_mpq(rational_class(mpq_class(re).get_str()), rational_class(mpq_class(im).get_str()));
+    s->m = SymEngine::Complex::from_mpq(rational_class(re), rational_class(im));
 }
 
 int basic_diff(basic s, const basic expr, basic const symbol)

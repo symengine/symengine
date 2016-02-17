@@ -3,7 +3,6 @@
 
 #include <symengine/symengine_rcp.h>
 
-#include <piranha/mp_integer.hpp>
 #if SYMENGINE_INTEGER_CLASS == SYMENGINE_PIRANHA
 #include <piranha/mp_integer.hpp>
 #include <piranha/mp_rational.hpp>
@@ -11,10 +10,13 @@
 #elif SYMENGINE_INTEGER_CLASS == SYMENGINE_FLINT
 #include <flint/fmpzxx.h>
 #include <flint/fmpqxx.h>
-#endif
 
+#else
 #define __GMPXX_USE_CXX11 1
 #include <gmpxx.h>
+#endif
+
+#include <gmp.h>
 
 namespace SymEngine {
 
@@ -29,6 +31,7 @@ typedef mpz_class integer_class;
 typedef mpq_class rational_class;
 #endif
 
+#if SYMENGINE_INTEGER_CLASS == SYMENGINE_GMPXX
 // Helper functions for mpz_class
 inline double get_d(const mpz_class &i) {
     return i.get_d();
@@ -95,7 +98,7 @@ inline int sign(const mpq_class &i) {
     return sgn(i);
 }
 
-#if SYMENGINE_INTEGER_CLASS == SYMENGINE_PIRANHA
+#elif SYMENGINE_INTEGER_CLASS == SYMENGINE_PIRANHA
 // Helper functions for piranha::integer
 inline piranha::integer abs(const piranha::integer &i) {
     return i.abs();

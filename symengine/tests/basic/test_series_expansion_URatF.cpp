@@ -37,13 +37,10 @@ using SymEngine::fp_t;
 
 static RCP<const Number> fmpqxx2sym (flint::fmpqxx fc)
 {
-    mpq_class gc;
-    fmpq_get_mpq(gc.get_mpq_t(), fc._data().inner);
+    rational_class gc;
+    fmpq_get_mpq(get_mpq_t(gc), fc._data().inner);
     gc.canonicalize();
-    if (gc.get_den() == 1)
-        return integer(gc.get_num());
-    else
-        return Rational::from_mpq(gc);
+    return Rational::from_mpq(std::move(gc));
 }
 
 static RCP<const Number> invseries_coeff (const RCP<const Basic>& ex, const RCP<const Symbol>& sym, unsigned int prec, int n)
