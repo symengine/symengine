@@ -242,26 +242,28 @@ public:
     }
 
     void bvisit(const Max &x) {
-        mpfr_ptr result = result_;
-        apply(result, *(x.get_args()[0]));
-        mpfr_t tmp = {*result};
-        for (const auto &p: x.get_args()) {
-            apply(tmp, *p);
-            mpfr_max(result, result, tmp, rnd_);
+        mpfr_class t(mpfr_get_prec (result_));
+        auto d = x.get_args();
+        auto p = d.begin();
+        apply(result_, *(*p));
+        p++;
+        for (; p != d.end();  p++) {
+            apply(t.get_mpfr_t(), *(*p));
+            mpfr_max(result_, result_, t.get_mpfr_t(), rnd_);
         }
-        result_ = result;
-    };
+    }
 
     void bvisit(const Min &x) {
-        mpfr_ptr result = result_;
-        apply(result, *(x.get_args()[0]));
-        mpfr_t tmp = {*result};
-        for (const auto &p: x.get_args()) {
-            apply(tmp, *p);
-            mpfr_min(result, result, tmp, rnd_);
+        mpfr_class t(mpfr_get_prec (result_));
+        auto d = x.get_args();
+        auto p = d.begin();
+        apply(result_, *(*p));
+        p++;
+        for (; p != d.end();  p++) {
+            apply(t.get_mpfr_t(), *(*p));
+            mpfr_min(result_, result_, t.get_mpfr_t(), rnd_);
         }
-        result_ = result;
-    };
+    }
 
     // Classes not implemented are
     // Subs, UpperGamma, LowerGamma, Dirichlet_eta, Zeta

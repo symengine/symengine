@@ -245,24 +245,42 @@ public:
     }
 
     void bvisit(const Max &x) {
-        apply(result_, *(x.get_args()[0]));
-        arb_t tmp = {*result_};
-        for (const auto &p: x.get_args()) {
-            apply(tmp, *p);
-            if(arb_gt(tmp, result_))
-                arb_set(result_, tmp);
+        arb_t t;
+        arb_init(t);
+
+        auto d = x.get_args();
+        auto p = d.begin();
+        apply(result_, *(*p));
+        p++;
+
+        for (; p != d.end(); p++) {
+
+            apply(t, *(*p));
+            if(arb_gt(t, result_))
+                arb_set(result_, t);
         }
-    };
+
+        arb_clear(t);
+    }
 
     void bvisit(const Min &x) {
-        apply(result_, *(x.get_args()[0]));
-        arb_t tmp = {*result_};
-        for (const auto &p: x.get_args()) {
-            apply(tmp, *p);
-            if(arb_lt(tmp, result_))
-                arb_set(result_, tmp);
+        arb_t t;
+        arb_init(t);
+
+        auto d = x.get_args();
+        auto p = d.begin();
+        apply(result_, *(*p));
+        p++;
+
+        for (; p != d.end(); p++) {
+
+            apply(t, *(*p));
+            if(arb_lt(t, result_))
+                arb_set(result_, t);
         }
-    };
+
+        arb_clear(t);
+    }
 
     void bvisit(const ASinh &) {
         throw std::runtime_error("Not implemented.");

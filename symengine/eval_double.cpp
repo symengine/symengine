@@ -244,18 +244,26 @@ public:
     };
 
     void bvisit(const Max &x) {
-        double result = apply(*(x.get_args()[0]));
-        for (const auto &p: x.get_args()) {
-            double tmp = apply(*p);
+        auto d = x.get_args();
+        auto p = d.begin();
+        double result = apply(*(*p));
+        p++;
+
+        for (; p != d.end(); p++) {
+            double tmp = apply(*(*p));
             result = std::max(result, tmp);
         }
         result_ = result;
     };
 
     void bvisit(const Min &x) {
-        double result = apply(*(x.get_args()[0]));
-        for (const auto &p: x.get_args()) {
-            double tmp = apply(*p);
+        auto d = x.get_args();
+        auto p = d.begin();
+        double result = apply(*(*p));
+        p++;
+
+        for (; p != d.end(); p++) {
+            double tmp = apply(*(*p));
             result = std::min(result, tmp);
         }
         result_ = result;

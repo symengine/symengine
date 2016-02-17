@@ -2146,12 +2146,12 @@ TEST_CASE("max: functions", "[functions]")
     RCP<const Basic> rd = real_double(0.32);
     RCP<const Basic> i2 = integer(2);
 
-    RCP<const Basic> res;
+    RCP<const Basic> res, tmp;
 
     res = max({x, y});                      // checking if elements stored in order
-    REQUIRE(eq(*(rcp_static_cast<const Max>(res)->get_args()[0]), *x));
+    tmp = rcp_static_cast<const Max>(res)->get_args()[0];
     res = max({y, x});
-    REQUIRE(eq(*(rcp_static_cast<const Max>(res)->get_args()[0]), *x));
+    REQUIRE(eq(*(rcp_static_cast<const Max>(res)->get_args()[0]), *tmp));
 
     res = max({x, y});
     REQUIRE(eq(*res, *max({y, x})));        // max(x, y) == max(y, x)
