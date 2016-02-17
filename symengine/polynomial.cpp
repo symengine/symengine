@@ -103,7 +103,7 @@ void UnivariatePolynomial::dict_add_term(map_uint_mpz &d, const mpz_class &coef,
 {
     auto it = d.find(n);
     if (it == d.end())
-        d[n] = coef;
+       d[n] = coef;
 }
 
 vec_basic UnivariatePolynomial::get_args() const {
@@ -282,4 +282,85 @@ RCP<const UnivariatePolynomial> mul_uni_poly(RCP<const UnivariatePolynomial> a, 
         return make_rcp<const UnivariatePolynomial>(a->var_, v);
 }
 
+  MultivariatePolynomial::MultivariatePolynomial( std::set<Symbol> vars, std::unordered_map<Symbol, unsigned int> &degrees, std::unordered_map<std::vecotr<unsigned int>, mpz_class> &dict) :
+     vars_{std::move(vars)}, degrees_{std::move(degrees)}, dict_{std::move(dict)} {
+      SYMENGINE_ASSERT(is_cannonical(vars, degrees_, dict_))
+}
+
+  bool MultivariatePolynomial::is_cannonical(std::set<Symbol> &vars, std::unorderd_map<Symbol, unsigned int> &degrees, std::unordered_map<std::vector<unsigned int>,mpz_class> &dict){
+    //checks that the maximum degree of any variable is correct according to the dictionary
+    unsigned int whichvar = 0; //keeps track of the index of the variable we are checking
+    for(auto var : vars){
+        unsigned int maxdegree = 0;
+        for(auto bucket : dict){
+	    if(bucket.first()[whichvar] > degrees.find(var))
+	        return false;
+	    else if(maxdegree < bucket.first()[whichvar] )
+	        maxdegree = bucket.first()[whichvar];
+        }
+        if(maxdegree != degrees.find(var))
+	    return false;
+        whichvar++;
+    }
+    return true;
+}
+
+std::size_t MultivariatePolynomial::__hash__(){
+  std::hash<std::string> hash_string;
+  std::size_t seed = 0;
+  for(auto var : vars_)
+    seed ^= hash_string(var.get_name()) + 0x9e3779b + (seed << 6) + (seed >> 2); //boost's method for combining hashes
+  for(auto bucket : dict_){
+    seed ^= vec_hash(bucket.first()) + 0x9e3779b + (seed << 6) + (seed >> 2);
+    seed ^= bucket.second() + 0x9e3779b + (seed << 6) + (seed >> 2);
+  }
+  return seed;
+}
+
+bool MultivariatePolynomial::__eq__(const Basic &o){
+  return set_eq<Symbol>(vars_, o.vars_) && map_uintvec_mpz_eq(dict_, o.dict));
+}
+
+int MultivariatePolynomial::compare(const Basic &o){
+  //copied from UnivariatePolynomial::compare and then modified.
+    const MultivariatePolynomial &s = static_cast<const MultivariatePolynomial&>(o);
+    
+    if (dict_.size() != s.dict_.size())
+        return (dict_.size() < s.dict_.size()) ? -1 : 1;
+
+    int cmp = set_compare<Symbol>(vars_, s.vars_);
+    if (cmp != 0)
+        return cmp;
+
+    return map_uintvec_mpz_compare(dict_, s.dict_); 
+}
+
+mpz_class MultivariatePolynomial::eval(std::map<Symbol, mpz_class> &vals){
+    mpz_class ans = 0;
+    for (auto bucket : dict_) {
+        mpz_class term = 1;
+        for(auto num : bucket.first()){
+	    mpz_class temp;
+            mpz_pow_ui(temp.get_mpz_t(), x.get_mpz_t(), p.first);
+	    term *= temp;
+      }
+      ans += term;
+    } 
+    return ans;
+}
+
+RCP<const MultivariatePolynomial> add_mult_poly(const MultivariatePolynomial &a, const MultivariatePolynomial &b){
+}
+
+RCP<const MultivariatePolynomial> neg_mult_poly(const MultivariatePolynomial &a){
+}
+
+RCP<const MultivariatePolynomial> sub_mult_poly(const MultivariatePolynomial &a, const MultivariatePolynomial &b){
+}
+
+RCP<const MultivariatePolynomial> mul_mult_poly(const MultivariatePolynomial &a, const MultivariatePolynomial &b){
+}
+
+
+  
 } // SymEngine

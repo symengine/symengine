@@ -101,6 +101,79 @@ inline RCP<const UnivariatePolynomial> univariate_polynomial(RCP<const Symbol> i
     return make_rcp<const UnivariatePolynomial>(i, deg, std::move(dict));
 }
 
+ class vec_hash;
+ class sym_hash;
+ 
+class MultivariatePolynomial : public Basic{
+public:
+    //vars: set of variables for th polynomial
+    //degrees: max degrees of the symbols
+    //dict: dictionary for sparse represntation of polynomial, x**1 * y**2 + 3 * x**4 * y ** 5
+    // is represented as {(1,2):1,(4,5):3}
+    std::set<Symbol> vars_;
+    std::unordered_map<Symbol, unsigned int,sym_hash> degrees_;
+    std::unordered_map<std::vector<unsigned int>, mpz_class, vec_hash> dict_;  //map_uintvec_mpz
+public:
+    //constructor from components
+    MultivariatePolynomial(std::unordered_map<Symbol, unsigned int> &degrees, std::set<Symbol> &var, std::map<std::vecotr<unsigned int>, mpz_class> &dict);
+    bool is_canonical(std::unorderd_map<Symbol, unsigened int> &degrees, std::map<std::vector<unsigned int>,mpz_class> &dict);
+    std::size_t __hash__();
+    bool __eq__(const Basic &o);
+    int compare(const Basic &o);
+    mpz_class eval(std::map<Symbol, mpz_class> &vals);   
+};
+
+RCP<const MultivariatePolynomial> add_mult_poly(const MultivariatePolynomial &a, const MultivariatePolynomial &b);
+RCP<const MultivariatePolynomial> neg_mult_poly(const MultivariatePolynomial &a);
+RCP<const MultivariatePolynomial> sub_mult_poly(const MultivariatePolynomial &a, const MultivariatePolynomial &b);
+RCP<const MultivariatePolynomial> mul_mult_poly(const MultivariatePolynomial &a, const MultivariatePolynomial &b);
+
+class vec_hash{
+public:
+  size_t operator()(std::vector<unsigned int> &v) const{
+    unsigned int count = 0;
+    for(int i = 0; i < v.size(); i++){
+        count ^= v[i]
+    }
+    return count;
+    }  
+};
+
+class sym_hash{
+public:
+  size_t operator()(Symbol &s) const{
+    return s.__hash__();
+  }
+}
+ 
+//transfer to dict.cpp before issueing pull request
+ bool map_uintvec_mpz_eq(const std::unordered_map<std::vector<unsigned int>, mpz_class, vec_hash> &a, const std::unordered_map<std::vector<unsigned int>, mpz_class, vec_hash> &b){
+   //same logic as map_uint_mpz_eq
+   if (a.size() != b.size())
+     return false;
+   for(const auto &p : a){
+     auto f = b.find(p.first);
+     if (f == b.end()) return false; // no such element in "b"
+     if (p.second != f->second) return false; // values not equal
+   }
+   return true;
+}
+
+ bool map_uintvec_mpz_compare(const std::unordered_map<std::vector<unsigned int>, mpz_class, vec_hash> &a, const std::unordered_map<std::vector<unsigned int>, mpz_class, vec_hash> &b){
+    //copied from map_uinit_mpz_compare
+    if (A.size() != B.size())
+        return (A.size() < B.size()) ? -1 : 1;
+    auto a = A.begin();
+    auto b = B.begin();
+    for (; a != A.end(); ++a, ++b) {
+        if (a->first != b->first)
+            return (a->first < b->first) ? -1 : 1;
+        if (a->second != b->second)
+            return (a->second < b->second) ? -1 : 1;
+    }
+    return 0;
+ }
+ 
 }  //SymEngine
 
 #endif
