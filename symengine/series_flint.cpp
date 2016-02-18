@@ -28,13 +28,13 @@ RCP<const Basic> URatPSeriesFlint::as_basic() const
     RCP<const Symbol> x = symbol(var_);
     RCP<const Number> zcoef;
     umap_basic_num dict_;
-    rational_class gc;
+    mpq_t gc;
+    mpq_init(gc);
     for (int n=0; n<degree_; n++) {
         const flint::fmpqxx fc(p_.get_coeff(n));
         if (not fc.is_zero()) {
-            fmpq_get_mpq(get_mpq_t(gc), fc._data().inner);
-            gc.canonicalize();
-            RCP<const Number> basic = Rational::from_mpq(gc);
+            fmpq_get_mpq(gc, fc._data().inner);
+            RCP<const Number> basic = Rational::from_mpq(std::move(rational_class(gc)));
             auto term = SymEngine::mul(SymEngine::pow(x, SymEngine::integer(n)), basic);
             if (n==0)
                 zcoef = basic;
@@ -44,32 +44,36 @@ RCP<const Basic> URatPSeriesFlint::as_basic() const
             if (n==0)
                 zcoef = integer(0);
     }
+    mpq_clear(gc);
     return std::move(Add::from_dict(zcoef, std::move(dict_)));
 }
 
 umap_int_basic URatPSeriesFlint::as_dict() const
 {
     umap_int_basic map;
-    rational_class gc;
+    mpq_t gc;
+    mpq_init(gc);
     for (int n=0; n<degree_; n++) {
         const flint::fmpqxx fc(p_.get_coeff(n));
         if (not fc.is_zero()) {
-            fmpq_get_mpq(get_mpq_t(gc), fc._data().inner);
-            gc.canonicalize();
-            RCP<const Number> basic = Rational::from_mpq(std::move(gc));
+            fmpq_get_mpq(gc, fc._data().inner);
+            RCP<const Number> basic = Rational::from_mpq(std::move(rational_class(gc)));
             map[n] = basic;
         }
     }
+    mpq_clear(gc);
     return map;
 }
 
 RCP<const Basic> URatPSeriesFlint::get_coeff(int n) const
 {
     const flint::fmpqxx fc(p_.get_coeff(n));
-    rational_class gc;
-    fmpq_get_mpq(get_mpq_t(gc), fc._data().inner);
-    gc.canonicalize();
-    return Rational::from_mpq(std::move(gc));
+    mpq_t gc;
+    mpq_init(gc);
+    fmpq_get_mpq(gc, fc._data().inner);
+    rational_class r(gc);
+    mpq_clear(gc);
+    return Rational::from_mpq(std::move(r));
 }
 
 int URatPSeriesFlint::compare(const Basic &o) const {
