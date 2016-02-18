@@ -11,9 +11,8 @@
 #include <symengine/basic.h>
 #include <symengine/integer.h>
 #include <symengine/symbol.h>
+#include <symengine/expression.h>
 
-#include <vector>
-#include <unordered_map>
 
 namespace SymEngine {
 //! UnivariatePolynomial Class
@@ -90,6 +89,33 @@ public:
 
 }; //UnivariatePolynomial
 
+class UnivariateExprPolynomial: public Basic {
+public:
+    unsigned int degree_;
+    RCP<const Symbol> var_;
+    map_uint_expr dict_;
+public:
+    IMPLEMENT_TYPEID(UNIVARIATEEXPRPOLYNOMIAL)
+    //! Constructor of UnivariatePolynomial class
+    /*UnivariateExprPolynomial(const RCP<const Symbol> &var, const unsigned int &degree, map_uint_expr&& dict);*/
+    //! Constructor using a dense vector of mpz_class coefficients
+    //UnivariateExprPolynomial(const RCP<const Symbol> &var, const std::vector<mpz_class> &v);
+    /*static RCP<const UnivariateExprPolynomial> create(const RCP<const Symbol> &var,
+            const std::vector<mpz_class> &v) {
+        return make_rcp<const UnivariateExprPolynomial>(var, v);
+    }*/
+
+    //! \return true if canonical
+    /*bool is_canonical(const unsigned int &degree, const map_uint_expr& dict) const;
+    //! \return size of the hash
+    std::size_t __hash__() const;*/
+    /*! Equality comparator
+     * \param o - Object to be compared with
+     * \return whether the 2 objects are equal
+     * */
+    /*bool __eq__(const Basic &o) const;*/
+}; //UnivariateExprPolynomial
+
 //! Adding two UnivariatePolynomial a and b
 RCP<const UnivariatePolynomial> add_uni_poly(const UnivariatePolynomial &a, const UnivariatePolynomial &b);
 //! Negative of a UnivariatePolynomial
@@ -104,8 +130,38 @@ inline RCP<const UnivariatePolynomial> univariate_polynomial(RCP<const Symbol> i
     return make_rcp<const UnivariatePolynomial>(i, deg, std::move(dict));
 }
 
- class vec_hash;
- class sym_hash;
+class sym_hash{
+public:
+  size_t operator()(const Symbol &s) const{
+    return s.__hash__();
+  }
+};
+
+class sym_compare{
+  public:
+  size_t operator()(const Symbol &a, const Symbol &b){
+    return a.compare(b);
+  }
+};
+
+class sym_eq{
+ public:
+  bool operator()(const Symbol &a, const Symbol &b){
+    return a.__eq__(b);
+  }
+};
+
+int umap_vec_mpz_compare(umap_vec_mpz &a, umap_vec_mpz &b){
+  if(a.size() < b.size())
+    return (a.size() < b.size()) ? -1 : 1;
+  return 0;
+};
+
+ 
+ typedef std::set<Symbol, sym_compare> set_sym;
+ typedef std::unordered_map<Symbol, unsigned int, sym_hash, sym_eq> umap_sym_uint;
+ 
+ 
  
 class MultivariatePolynomial : public Basic{
 public:
@@ -113,70 +169,26 @@ public:
     //degrees: max degrees of the symbols
     //dict: dictionary for sparse represntation of polynomial, x**1 * y**2 + 3 * x**4 * y ** 5
     // is represented as {(1,2):1,(4,5):3}
-    std::set<Symbol> vars_;
-    std::unordered_map<Symbol, unsigned int,sym_hash> degrees_;
-    std::unordered_map<std::vector<unsigned int>, mpz_class, vec_hash> dict_;  //map_uintvec_mpz
+    set_sym vars_;
+    umap_sym_uint degrees_;
+    umap_vec_mpz dict_;
 public:
     //constructor from components
-    MultivariatePolynomial(std::unordered_map<Symbol, unsigned int> &degrees, std::set<Symbol> &var, std::map<std::vector<unsigned int>, mpz_class> &dict);
-    bool is_canonical(std::unordered_map<Symbol, unsigned int> &degrees, std::map<std::vector<unsigned int>,mpz_class> &dict);
+    MultivariatePolynomial(set_sym &var, umap_sym_uint degrees, umap_vec_mpz &dict);
+    /*bool is_canonical(set_sym &vars, uamp_sym_uint &degrees, umap_vec_mpz &dict);
     std::size_t __hash__();
     bool __eq__(const Basic &o);
     int compare(const Basic &o);
-    mpz_class eval(std::map<Symbol, mpz_class> &vals);   
+    mpz_class eval(std::map<Symbol, mpz_class> &vals);*/   
 };
-
+/*
 RCP<const MultivariatePolynomial> add_mult_poly(const MultivariatePolynomial &a, const MultivariatePolynomial &b);
 RCP<const MultivariatePolynomial> neg_mult_poly(const MultivariatePolynomial &a);
 RCP<const MultivariatePolynomial> sub_mult_poly(const MultivariatePolynomial &a, const MultivariatePolynomial &b);
 RCP<const MultivariatePolynomial> mul_mult_poly(const MultivariatePolynomial &a, const MultivariatePolynomial &b);
-
-class vec_hash{
-public:
-  size_t operator()(const std::vector<unsigned int> &v) const{
-    unsigned int count = 0;
-    for(int i = 0; i < v.size(); i++){
-      count ^= v[i];
-    }
-    return count;
-    }  
-};
-
-class sym_hash{
-public:
-  size_t operator()(const Symbol &s) const{
-    return s.__hash__();
-  }
-};
+*/
  
-//transfer to dict.cpp before issueing pull request
- bool map_uintvec_mpz_eq(const std::unordered_map<std::vector<unsigned int>, mpz_class, vec_hash> &a, const std::unordered_map<std::vector<unsigned int>, mpz_class, vec_hash> &b){
-   //same logic as map_uint_mpz_eq
-   if (a.size() != b.size())
-     return false;
-   for(const auto &p : a){
-     auto f = b.find(p.first);
-     if (f == b.end()) return false; // no such element in "b"
-     if (p.second != f->second) return false; // values not equal
-   }
-   return true;
-}
 
- bool map_uintvec_mpz_compare(const std::unordered_map<std::vector<unsigned int>, mpz_class, vec_hash> &A, const std::unordered_map<std::vector<unsigned int>, mpz_class, vec_hash> &B){
-    //copied from map_uinit_mpz_compare
-    if (A.size() != B.size())
-        return (A.size() < B.size()) ? -1 : 1;
-    auto a = A.begin();
-    auto b = B.begin();
-    for (; a != A.end(); ++a, ++b) {
-        if (a->first != b->first)
-            return (a->first < b->first) ? -1 : 1;
-        if (a->second != b->second)
-            return (a->second < b->second) ? -1 : 1;
-    }
-    return 0;
- }
- 
 }  //SymEngine
 
 #endif

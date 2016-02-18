@@ -192,6 +192,48 @@ bool UnivariatePolynomial::is_pow() const {
     return false;
 }
 
+/* UnivariateExprPolynomial::UnivariateExprPolynomial(const RCP<const Symbol> &var, const unsigned int &degree, map_uint_expr&& dict) :
+     degree_{degree}, var_{var}, dict_{std::move(dict)} {
+
+    SYMENGINE_ASSERT(is_canonical(degree_, dict_))
+}
+
+bool UnivariateExprPolynomial::is_canonical(const unsigned int &degree_, const map_uint_expr& dict) const
+{
+    map_uint_expr ordered(dict.begin(), dict.end());
+    unsigned int prev_degree = (--ordered.end())->first;
+    if (prev_degree != degree_)
+        return false;
+
+    return true;
+}
+
+std::size_t UnivariateExprPolynomial::__hash__() const
+{
+    std::hash<std::string> hash_string;
+    std::size_t seed = UNIVARIATEEXPRPOLYNOMIAL;
+
+    seed += hash_string(this->var_->get_name());
+    for (const auto &it : this->dict_)
+    {
+        std::size_t temp = UNIVARIATEEXPRPOLYNOMIAL;
+        hash_combine<unsigned int>(temp, it.first);
+        hash_combine<Expression>(temp, it.second);
+        seed += temp;
+    }
+    return seed;
+}
+
+bool UnivariateExprPolynomial::__eq__(const Basic &o) const
+{
+    if (eq(*var_, *(static_cast<const UnivariateExprPolynomial &>(o).var_)) and
+        map_uint_mpz_eq(dict_, static_cast<const UnivariateExprPolynomial &>(o).dict_))
+        return true;
+
+    return false;
+} */
+
+
 RCP<const UnivariatePolynomial> add_uni_poly(const UnivariatePolynomial &a, const UnivariatePolynomial &b) {
     map_uint_mpz dict;
     for (const auto &it : a.dict_)
@@ -282,12 +324,18 @@ RCP<const UnivariatePolynomial> mul_uni_poly(RCP<const UnivariatePolynomial> a, 
         return make_rcp<const UnivariatePolynomial>(a->var_, v);
 }
 
-  MultivariatePolynomial::MultivariatePolynomial( std::set<Symbol> vars, std::unordered_map<Symbol, unsigned int> &degrees, std::unordered_map<std::vecotr<unsigned int>, mpz_class> &dict) :
-     vars_{std::move(vars)}, degrees_{std::move(degrees)}, dict_{std::move(dict)} {
-      SYMENGINE_ASSERT(is_cannonical(vars, degrees_, dict_))
-}
 
-  bool MultivariatePolynomial::is_cannonical(std::set<Symbol> &vars, std::unordered_map<Symbol, unsigned int> &degrees, std::unordered_map<std::vector<unsigned int>,mpz_class> &dict){
+  
+///Multivariate Polynomial///
+
+  
+  
+MultivariatePolynomial::MultivariatePolynomial( set_sym &vars, umap_sym_uint &degrees, umap_vec_mpz &dict) :
+  // vars_{std::move(vars)}, degrees_{std::move(degrees)}, dict_{std::move(dict)} {
+     SYMENGINE_ASSERT(is_cannonical(degrees_, dict_))
+}
+  /*  
+bool MultivariatePolynomial::is_cannonical(set_sym &vars, umap_sym_uint &degrees, umap_vec_mpz &dict){
     //checks that the maximum degree of any variable is correct according to the dictionary
     unsigned int whichvar = 0; //keeps track of the index of the variable we are checking
     for(auto var : vars){
@@ -318,7 +366,8 @@ std::size_t MultivariatePolynomial::__hash__(){
 }
 
 bool MultivariatePolynomial::__eq__(const Basic &o){
-  return set_eq<Symbol>(vars_, o.vars_) && map_uintvec_mpz_eq(dict_, o.dict));
+  
+  return set_eq<Symbol>(vars_, static_cast<MultivariatePolynomial>(o).vars_) && umap_eq<umap_vec_mpz>(dict_, static_cast<MultivariatePolynomial>(o).dict_));
 }
 
 int MultivariatePolynomial::compare(const Basic &o){
@@ -332,7 +381,7 @@ int MultivariatePolynomial::compare(const Basic &o){
     if (cmp != 0)
         return cmp;
 
-    return map_uintvec_mpz_compare(dict_, s.dict_); 
+    return umap_vec_mpz_compare(dict_, s.dict_); 
 }
 
 mpz_class MultivariatePolynomial::eval(std::map<Symbol, mpz_class> &vals){
@@ -348,7 +397,7 @@ mpz_class MultivariatePolynomial::eval(std::map<Symbol, mpz_class> &vals){
     } 
     return ans;
 }
-
+/*
 RCP<const MultivariatePolynomial> add_mult_poly(const MultivariatePolynomial &a, const MultivariatePolynomial &b){
 }
 
@@ -360,7 +409,7 @@ RCP<const MultivariatePolynomial> sub_mult_poly(const MultivariatePolynomial &a,
 
 RCP<const MultivariatePolynomial> mul_mult_poly(const MultivariatePolynomial &a, const MultivariatePolynomial &b){
 }
-
-
+*/
+  
   
 } // SymEngine
