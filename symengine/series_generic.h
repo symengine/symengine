@@ -6,19 +6,19 @@
 #ifndef SYMENGINE_SERIES_GENERIC_H
 #define SYMENGINE_SERIES_GENERIC_H
 
-#include <list>
-
-#include <symengine/polynomial.h>
-#include <symengine/rational.h>
-#include <symengine/integer.h>
-#include <symengine/series.h>
+// #include <list>
+// #include <symengine/polynomial.h>
+#include <symengine/basic.h>
 #include <symengine/expression.h>
+#include <symengine/rational.h>
+#include <symengine/series.h>
+
 
 namespace SymEngine {
-using sp_expr = RCP<const UnivariatePolynomial> poly_; //Polynomial type
+using s_coef = SymEngine::Expression; //Polynomial type
 //using sp_t = RCP //Coefficient type
 //! UnivariateSeries Class
-class UnivariateSeries : public SeriesBase<UnivariatePolynomial, int, UnivariateSeries> {
+class UnivariateSeries : public SeriesBase<s_coef, SymEngine::Expression, UnivariateSeries> {
 //public:
     //! `var_` : Variable of the UnivariateSeries
     //! `poly_` : holds the UnivariatePolynomial of the series
@@ -29,58 +29,41 @@ class UnivariateSeries : public SeriesBase<UnivariatePolynomial, int, Univariate
     //unsigned int prec_;
     //data members now inherited from SeriesBase
 public:
-    IMPLEMENT_TYPEID(UNIVARIATESERIES)
     //! Constructor of UnivariateSeries class
-    UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const sp_expr &poly);
+    UnivariateSeries(const s_coef sp, const std::string varname, const unsigned degree);
+    IMPLEMENT_TYPEID(UNIVARIATESERIES)
+    virtual int compare(const Basic &o) const;
+    virtual std::size_t __hash__() const;
+    virtual RCP<const Basic> as_basic() const;
+    virtual umap_int_basic as_dict() const;
+    virtual RCP<const Basic> get_coeff(int) const;
+
     static RCP<const UnivariateSeries> series(const RCP<const Basic> &t, const std::string &x, unsigned int prec);
-    static SymEngine::Integer convert(const Integer &x);
-    static SymEngine::Rational convert(const mpq_class &x);
-    //static pp_t var(const std::string &s);
-    static SymEngine::Rational convert(const Rational &x);
-    static SymEngine::Rational convert(const Number &x);
+    static s_coef convert(const Integer &x);
+    static s_coef convert(const mpq_class &x);
+    static s_coef var(const std::string &s);
+    static s_coef convert(const Rational &x);
+    static s_coef convert(const Number &x);
 
-    //   UnivariateSeries(const RCP<const Symbol> &var, const unsigned int& precision, const unsigned int& max_exp, map_uint_mpz&& dict);
-    //UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const map_uint_mpz &dict);
-    //! Constructor using a dense vector of mpz_class coefficients
-    //  UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const std::vector<mpz_class> &v);
-    /*
-    static RCP<const UnivariateSeries> create(const RCP<const Symbol> &var,
-            const unsigned int &prec, const std::vector<mpz_class> &v) {
-        return make_rcp<const UnivariateSeries>(var, prec, v);
-    }
-    */
+    static s_coef mul(const s_coef &s, const s_coef &r, unsigned prec);
+    static s_coef pow(const s_coef &s, int n, unsigned prec);
+    static unsigned ldegree(const s_coef &s);
+    static s_coef find_cf(const s_coef &s, const s_coef &var, unsigned deg);
+    static s_coef root(s_coef &c, unsigned n);
+    static s_coef diff(const s_coef &s, const s_coef &var);
+    static s_coef integrate(const s_coef &s, const s_coef &var);
+    static s_coef subs(const s_coef &s, const s_coef &var, const s_coef &r, unsigned prec);
+    
     //! \return true if canonical
-    bool is_canonical(const UnivariatePolynomial&, const unsigned int &) const;
+    // bool is_canonical(const UnivariatePolynomial&, const unsigned int &) const;
     //! \return size of the hash
-    std::size_t __hash__() const;
-    /*! Equality comparator
-     * \param o - Object to be compared with
-     * \return whether the 2 objects are equal
-     * */
 
-    bool operator==(const UnivariateSeries &o) const {
-        return (var_ == o.var_ and p_.__eq__(o.p_) and degree_ == o.degree_);
-    }
-    bool __eq__(const Basic &o) const;
-    int compare(const Basic &o) const;
-
-    std::string __str__() const;
-    virtual vec_basic get_args() const { return {}; }
-
-    static sp_expr series_sin(const sp_expr &s, const sp_expr &var, unsigned int prec);
 };
 
-  /*
-inline RCP<const UnivariateSeries> univariate_series(RCP<const Symbol> i,       unsigned int prec, const map_uint_mpz& dict)
+/*inline RCP<const UnivariateSeries> univariate_series(RCP<const Symbol> i, unsigned int prec, const map_uint_mpz& dict)
 {
     return make_rcp<const UnivariateSeries>(i, prec, dict);
-}
-
-  */
-RCP<const UnivariateSeries> add_uni_series (const UnivariateSeries& a, const UnivariateSeries &b);
-RCP<const UnivariateSeries> neg_uni_series (const UnivariateSeries& a);
-RCP<const UnivariateSeries> sub_uni_series (const UnivariateSeries& a, const UnivariateSeries &b);
-RCP<const UnivariateSeries> mul_uni_series (const UnivariateSeries& a, const UnivariateSeries &b);
+}*/
 
 }  //SymEngine
-#endif
+#endif //SYMENGINE_SERIES_GENERIC_H
