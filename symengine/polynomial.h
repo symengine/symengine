@@ -130,6 +130,65 @@ inline RCP<const UnivariatePolynomial> univariate_polynomial(RCP<const Symbol> i
     return make_rcp<const UnivariatePolynomial>(i, deg, std::move(dict));
 }
 
+class sym_hash{
+public:
+  size_t operator()(const Symbol &s) const{
+    return s.__hash__();
+  }
+};
+
+class sym_compare{
+  public:
+  size_t operator()(const Symbol &a, const Symbol &b){
+    return a.compare(b);
+  }
+};
+
+class sym_eq{
+ public:
+  bool operator()(const Symbol &a, const Symbol &b){
+    return a.__eq__(b);
+  }
+};
+
+int umap_vec_mpz_compare(umap_vec_mpz &a, umap_vec_mpz &b){
+  if(a.size() < b.size())
+    return (a.size() < b.size()) ? -1 : 1;
+  return 0;
+};
+
+ 
+ typedef std::set<Symbol, sym_compare> set_sym;
+ typedef std::unordered_map<Symbol, unsigned int, sym_hash, sym_eq> umap_sym_uint;
+ 
+ 
+ 
+class MultivariatePolynomial : public Basic{
+public:
+    //vars: set of variables for th polynomial
+    //degrees: max degrees of the symbols
+    //dict: dictionary for sparse represntation of polynomial, x**1 * y**2 + 3 * x**4 * y ** 5
+    // is represented as {(1,2):1,(4,5):3}
+    set_sym vars_;
+    umap_sym_uint degrees_;
+    umap_vec_mpz dict_;
+public:
+    //constructor from components
+    MultivariatePolynomial(set_sym &var, umap_sym_uint degrees, umap_vec_mpz &dict);
+    /*bool is_canonical(set_sym &vars, uamp_sym_uint &degrees, umap_vec_mpz &dict);
+    std::size_t __hash__();
+    bool __eq__(const Basic &o);
+    int compare(const Basic &o);
+    mpz_class eval(std::map<Symbol, mpz_class> &vals);*/   
+};
+/*
+RCP<const MultivariatePolynomial> add_mult_poly(const MultivariatePolynomial &a, const MultivariatePolynomial &b);
+RCP<const MultivariatePolynomial> neg_mult_poly(const MultivariatePolynomial &a);
+RCP<const MultivariatePolynomial> sub_mult_poly(const MultivariatePolynomial &a, const MultivariatePolynomial &b);
+RCP<const MultivariatePolynomial> mul_mult_poly(const MultivariatePolynomial &a, const MultivariatePolynomial &b);
+*/
+ 
+
 }  //SymEngine
 
 #endif
