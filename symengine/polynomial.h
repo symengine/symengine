@@ -1,7 +1,6 @@
 /**
  *  \file polynomial.h
  *  Class for sparse Polynomial: UnivariatePolynomial and Polynomial
- *
  **/
 #ifndef SYMENGINE_POLYNOMIALS_H
 #define SYMENGINE_POLYNOMIALS_H
@@ -12,7 +11,6 @@
 #include <symengine/integer.h>
 #include <symengine/symbol.h>
 #include <symengine/expression.h>
-
 
 namespace SymEngine {
 //! UnivariatePolynomial Class
@@ -93,27 +91,29 @@ class UnivariateExprPolynomial: public Basic {
 public:
     unsigned int degree_;
     RCP<const Symbol> var_;
-    map_uint_expr dict_;
+    map_uint_mpz_expr  dict_;
 public:
     IMPLEMENT_TYPEID(UNIVARIATEEXPRPOLYNOMIAL)
     //! Constructor of UnivariatePolynomial class
-    /*UnivariateExprPolynomial(const RCP<const Symbol> &var, const unsigned int &degree, map_uint_expr&& dict);*/
+    UnivariateExprPolynomial(const RCP<const Symbol> &var, const unsigned int &degree, map_uint_mpz_expr && dict);
     //! Constructor using a dense vector of mpz_class coefficients
-    //UnivariateExprPolynomial(const RCP<const Symbol> &var, const std::vector<mpz_class> &v);
-    /*static RCP<const UnivariateExprPolynomial> create(const RCP<const Symbol> &var,
+    UnivariateExprPolynomial(const RCP<const Symbol> &var, const std::vector<mpz_class> &v);
+    static RCP<const UnivariateExprPolynomial> create(const RCP<const Symbol> &var,
             const std::vector<mpz_class> &v) {
         return make_rcp<const UnivariateExprPolynomial>(var, v);
-    }*/
+    }
 
     //! \return true if canonical
-    /*bool is_canonical(const unsigned int &degree, const map_uint_expr& dict) const;
+    bool is_canonical(const unsigned int &degree, const map_uint_mpz_expr & dict) const;
     //! \return size of the hash
-    std::size_t __hash__() const;*/
+    std::size_t __hash__() const;
     /*! Equality comparator
      * \param o - Object to be compared with
      * \return whether the 2 objects are equal
      * */
-    /*bool __eq__(const Basic &o) const;*/
+    bool __eq__(const Basic &o) const;
+
+    int compare(const Basic &o) const;
 }; //UnivariateExprPolynomial
 
 //! Adding two UnivariatePolynomial a and b
