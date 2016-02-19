@@ -22,7 +22,6 @@ RCP<const UnivariateSeries> UnivariateSeries::series(const RCP<const Basic> &t, 
 }
 
 std::size_t UnivariateSeries::__hash__() const {
-    //return poly_->hash() + std::size_t(prec_ * 84728863L);
     std::size_t seed = UNIVARIATESERIES;
     hash_combine(seed, &p_.get_basic());
     hash_combine(seed, var_);
@@ -52,10 +51,9 @@ s_coef UnivariateSeries::convert(const Integer &x) {
     return s_coef(x.as_int());
 }
 s_coef UnivariateSeries::convert(const mpq_class &x) {
-    throw std::runtime_error("Not Implemented");
-    // s_coef i1(x.get_num_mpz_t());
-    // return i1;
-    // return x.from_mpq();
+    s_coef i1(mpz_get_si(x.get_num_mpz_t()));
+    s_coef i2(mpz_get_si(x.get_den_mpz_t()));
+    return i1/i2;
 }
 
 s_coef UnivariateSeries::var(const std::string &s) {
@@ -63,12 +61,10 @@ s_coef UnivariateSeries::var(const std::string &s) {
 }
 
 s_coef UnivariateSeries::convert(const Rational &x) {
-    // throw std::runtime_error("Not Implemented");
     s_coef i1(x.get_num());
     s_coef i2(x.get_den());
     i1 /= i2;
     return i1;
-    // return x;
 }
 
 s_coef UnivariateSeries::convert(const Number &x) {

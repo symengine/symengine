@@ -7,7 +7,6 @@
 #define SYMENGINE_SERIES_GENERIC_H
 
 // #include <list>
-
 // #include <symengine/polynomial.h>
 #include <symengine/basic.h>
 #include <symengine/expression.h>
@@ -19,7 +18,7 @@ namespace SymEngine {
 using s_coef = SymEngine::Expression; //Polynomial type
 //using sp_t = RCP //Coefficient type
 //! UnivariateSeries Class
-class UnivariateSeries : public SeriesBase<s_coef, int, UnivariateSeries> {
+class UnivariateSeries : public SeriesBase<s_coef, SymEngine::Expression, UnivariateSeries> {
 //public:
     //! `var_` : Variable of the UnivariateSeries
     //! `poly_` : holds the UnivariatePolynomial of the series
@@ -58,9 +57,13 @@ public:
     //! \return true if canonical
     // bool is_canonical(const UnivariatePolynomial&, const unsigned int &) const;
     //! \return size of the hash
-    
 
 };
+
+/*inline RCP<const UnivariateSeries> univariate_series(RCP<const Symbol> i, unsigned int prec, const map_uint_mpz& dict)
+{
+    return make_rcp<const UnivariateSeries>(i, prec, dict);
+}*/
 
 }  //SymEngine
 #endif //SYMENGINE_SERIES_GENERIC_H
