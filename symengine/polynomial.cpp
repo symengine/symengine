@@ -192,6 +192,48 @@ bool UnivariatePolynomial::is_pow() const {
     return false;
 }
 
+/* UnivariateExprPolynomial::UnivariateExprPolynomial(const RCP<const Symbol> &var, const unsigned int &degree, map_uint_expr&& dict) :
+     degree_{degree}, var_{var}, dict_{std::move(dict)} {
+
+    SYMENGINE_ASSERT(is_canonical(degree_, dict_))
+}
+
+bool UnivariateExprPolynomial::is_canonical(const unsigned int &degree_, const map_uint_expr& dict) const
+{
+    map_uint_expr ordered(dict.begin(), dict.end());
+    unsigned int prev_degree = (--ordered.end())->first;
+    if (prev_degree != degree_)
+        return false;
+
+    return true;
+}
+
+std::size_t UnivariateExprPolynomial::__hash__() const
+{
+    std::hash<std::string> hash_string;
+    std::size_t seed = UNIVARIATEEXPRPOLYNOMIAL;
+
+    seed += hash_string(this->var_->get_name());
+    for (const auto &it : this->dict_)
+    {
+        std::size_t temp = UNIVARIATEEXPRPOLYNOMIAL;
+        hash_combine<unsigned int>(temp, it.first);
+        hash_combine<Expression>(temp, it.second);
+        seed += temp;
+    }
+    return seed;
+}
+
+bool UnivariateExprPolynomial::__eq__(const Basic &o) const
+{
+    if (eq(*var_, *(static_cast<const UnivariateExprPolynomial &>(o).var_)) and
+        map_uint_mpz_eq(dict_, static_cast<const UnivariateExprPolynomial &>(o).dict_))
+        return true;
+
+    return false;
+} */
+
+
 RCP<const UnivariatePolynomial> add_uni_poly(const UnivariatePolynomial &a, const UnivariatePolynomial &b) {
     map_uint_mpz dict;
     for (const auto &it : a.dict_)
