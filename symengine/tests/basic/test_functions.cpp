@@ -2176,6 +2176,13 @@ TEST_CASE("MPFR and MPC: functions", "[functions]")
     REQUIRE(mpfr_cmp_si(a.get_mpfr_t(), -41614683654714239) > 0);
     REQUIRE(mpfr_cmp_si(a.get_mpfr_t(), -41614683654714238) < 0);
 
+    mpfr_set_ui(a.get_mpfr_t(), 3, MPFR_RNDN);
+    r1 = gamma(div(real_mpfr(a), i2));
+    REQUIRE(is_a<RealMPFR>(*r1));
+    mpfr_mul_ui(a.get_mpfr_t(), static_cast<const RealMPFR &>(*r1).i.get_mpfr_t(), p, MPFR_RNDN);
+    REQUIRE(mpfr_cmp_si(a.get_mpfr_t(), 88622692545275801) > 0);
+    REQUIRE(mpfr_cmp_si(a.get_mpfr_t(), 88622692545275802) < 0);
+
     mpfr_set_si(a.get_mpfr_t(), 0, MPFR_RNDN);
     r1 = asin(real_mpfr(a));
     REQUIRE(is_a<RealMPFR>(*r1));
