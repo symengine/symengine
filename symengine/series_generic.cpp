@@ -76,7 +76,6 @@ RCP<const Basic> UnivariateSeries::as_basic() const {
 }
 
 umap_int_basic UnivariateSeries::as_dict() const {
-    //throw std::runtime_error("Not Implemented");
     umap_int_basic map;
     mpq_class gc;
     for (int n = 0; n < degree_; n++) {

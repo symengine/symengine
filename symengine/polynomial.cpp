@@ -397,7 +397,7 @@ mpz_class MultivariatePolynomial::eval(std::map<Symbol, mpz_class> &vals){
     } 
     return ans;
 }
-/*
+
 RCP<const MultivariatePolynomial> add_mult_poly(const MultivariatePolynomial &a, const MultivariatePolynomial &b){
 }
 

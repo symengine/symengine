@@ -175,11 +175,11 @@ public:
 public:
     //constructor from components
     MultivariatePolynomial(set_sym &var, umap_sym_uint degrees, umap_vec_mpz &dict);
-    /*bool is_canonical(set_sym &vars, uamp_sym_uint &degrees, umap_vec_mpz &dict);
-    std::size_t __hash__();
-    bool __eq__(const Basic &o);
-    int compare(const Basic &o);
-    mpz_class eval(std::map<Symbol, mpz_class> &vals);*/   
+    // bool is_canonical(set_sym &vars, uamp_sym_uint &degrees, umap_vec_mpz &dict);
+    // std::size_t __hash__();
+    // bool __eq__(const Basic &o);
+    // int compare(const Basic &o);
+    // mpz_class eval(std::map<Symbol, mpz_class> &vals);
 };
 /*
 RCP<const MultivariatePolynomial> add_mult_poly(const MultivariatePolynomial &a, const MultivariatePolynomial &b);
