@@ -16,7 +16,6 @@ namespace SymEngine {
 class Basic;
 class Number;
 class Integer;
-class Expression;
 struct RCPBasicHash;
 struct RCPBasicKeyEq;
 struct RCPBasicKeyLess;
@@ -44,7 +43,6 @@ typedef std::map<RCP<const Integer>, unsigned,
         RCPIntegerKeyLess> map_integer_uint;
 typedef std::map<unsigned, mpz_class>
        map_uint_mpz;
-typedef std::map<unsigned, Expression> map_uint_expr;
 
 //! `insert(m, first, second)` is equivalent to `m[first] = second`, just faster,
 //! because no default constructor is called on the `second` type.
