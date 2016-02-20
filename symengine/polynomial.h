@@ -91,11 +91,11 @@ class UnivariateExprPolynomial: public Basic {
 public:
     unsigned int degree_;
     RCP<const Symbol> var_;
-    map_uint_mpz_expr  dict_;
+    map_uint_expr dict_;
 public:
     IMPLEMENT_TYPEID(UNIVARIATEEXPRPOLYNOMIAL)
     //! Constructor of UnivariatePolynomial class
-    UnivariateExprPolynomial(const RCP<const Symbol> &var, const unsigned int &degree, map_uint_mpz_expr && dict);
+    UnivariateExprPolynomial(const RCP<const Symbol> &var, const unsigned int &degree, map_uint_expr &&dict);
     //! Constructor using a dense vector of mpz_class coefficients
     UnivariateExprPolynomial(const RCP<const Symbol> &var, const std::vector<mpz_class> &v);
     static RCP<const UnivariateExprPolynomial> create(const RCP<const Symbol> &var,
@@ -103,9 +103,8 @@ public:
         return make_rcp<const UnivariateExprPolynomial>(var, v);
     }
 
-    //! \return true if canonical
-    bool is_canonical(const unsigned int &degree, const map_uint_mpz_expr & dict) const;
-    //! \return size of the hash
+    bool is_canonical(const unsigned int &degree, const map_uint_expr & dict) const;
+    
     std::size_t __hash__() const;
     /*! Equality comparator
      * \param o - Object to be compared with
@@ -114,6 +113,60 @@ public:
     bool __eq__(const Basic &o) const;
 
     int compare(const Basic &o) const;
+
+    //! Overload assignment operator
+    RCP<const UnivariateExprPolynomial> &operator=(cons Expression &) = default;
+    
+    //! Overload assignment operator for reference
+    RCP<const UnivariateExprPolynomial> &operator=(Expression &&other) SYMENGINE_NOEXCEPT
+    {
+        if (this != &other) {
+            this->m_basic = std::move(other.m_basic);
+        }
+        return *this;
+    }
+    
+    //! Destructor of Expression
+    ~Expression() SYMENGINE_NOEXCEPT {}
+    
+    //! Overload stream operator
+    friend std::ostream &operator<<(std::ostream &os, const UnivariateExprPolynomial &expr)
+    {
+        os << expr.m_basic->__str__();
+        return os;
+    }
+    //! Overload addition
+    friend Expression operator+(const Expression &a, const Expression &b)
+    {
+        return Expression(add(a.m_basic, b.m_basic));
+    }
+    //! Overload addition and assignment(+=)
+    Expression &operator+=(const Expression &other)
+    {
+        m_basic = add(m_basic, other.m_basic);
+        return *this;
+    }
+    //! Overload subtraction
+    friend Expression operator-(const Expression &a, const Expression &b)
+    {
+        return Expression(sub(a.m_basic, b.m_basic));
+    }
+    //! Overload unary negative
+    Expression operator-() const
+    {
+        Expression retval(*this);
+        retval *= -1;
+        return retval;
+    }
+    //! Overload subtraction and assignment(-=)
+    Expression &operator-=(const Expression &other)
+    {
+        m_basic = sub(m_basic, other.m_basic);
+        return *this;
+    }
+    //! Overload multiplication
+    friend Expression operator*(const Expression &a, const Expression &b)
+    
 }; //UnivariateExprPolynomial
 
 //! Adding two UnivariatePolynomial a and b
