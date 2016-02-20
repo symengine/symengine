@@ -192,13 +192,13 @@ bool UnivariatePolynomial::is_pow() const {
     return false;
 }
 
-/* UnivariateExprPolynomial::UnivariateExprPolynomial(const RCP<const Symbol> &var, const unsigned int &degree, map_uint_expr&& dict) :
+UnivariateExprPolynomial::UnivariateExprPolynomial(const RCP<const Symbol> &var, const unsigned int &degree, map_uint_expr &&dict) :
      degree_{degree}, var_{var}, dict_{std::move(dict)} {
 
     SYMENGINE_ASSERT(is_canonical(degree_, dict_))
 }
 
-bool UnivariateExprPolynomial::is_canonical(const unsigned int &degree_, const map_uint_expr& dict) const
+bool UnivariateExprPolynomial::is_canonical(const unsigned int &degree_, const map_uint_expr &dict) const
 {
     map_uint_expr ordered(dict.begin(), dict.end());
     unsigned int prev_degree = (--ordered.end())->first;
@@ -231,7 +231,7 @@ bool UnivariateExprPolynomial::__eq__(const Basic &o) const
         return true;
 
     return false;
-} */
+} 
 
 
 RCP<const UnivariatePolynomial> add_uni_poly(const UnivariatePolynomial &a, const UnivariatePolynomial &b) {
@@ -264,6 +264,7 @@ RCP<const UnivariatePolynomial> sub_uni_poly(const UnivariatePolynomial &a, cons
     RCP<const UnivariatePolynomial> c = univariate_polynomial(a.var_, (--(dict.end()))->first, std::move(dict));
     return c;
 }
+
 
 //Calculates bit length of number, used in mul_uni_poly() only
 template <typename T>
