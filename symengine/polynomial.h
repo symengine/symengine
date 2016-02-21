@@ -175,17 +175,6 @@ public:
         return *this;
     }   
     
-    /*friend UnivariateExprPolynomial operator/(const UnivariateExprPolynomial &a, const UnivariateExprPolynomial &b) 
-    {  
-        return UnivariateExprPolynomial(mul_uni_poly(a.upoly, pow(b.upoly, integer(-1))));
-    }   
-    
-    UnivariateExprPolynomial &operator/=(const UnivariateExprPolynomial &other)
-    {   
-        upoly = mul_uni_poly(upoly, pow(other.upoly, integer(-1)));
-        return *this;
-    }*/  
-    
     bool operator==(const UnivariateExprPolynomial &other) const
     {   
         return eq(*upoly, *other.upoly);
@@ -230,38 +219,6 @@ int umap_vec_mpz_compare(umap_vec_mpz &a, umap_vec_mpz &b){
     return (a.size() < b.size()) ? -1 : 1;
   return 0;
 };
-
- 
- typedef std::set<Symbol, sym_compare> set_sym;
- typedef std::unordered_map<Symbol, unsigned int, sym_hash, sym_eq> umap_sym_uint;
- 
- 
- 
-class MultivariatePolynomial : public Basic{
-public:
-    //vars: set of variables for th polynomial
-    //degrees: max degrees of the symbols
-    //dict: dictionary for sparse represntation of polynomial, x**1 * y**2 + 3 * x**4 * y ** 5
-    // is represented as {(1,2):1,(4,5):3}
-    set_sym vars_;
-    umap_sym_uint degrees_;
-    umap_vec_mpz dict_;
-public:
-    //constructor from components
-    MultivariatePolynomial(set_sym &var, umap_sym_uint degrees, umap_vec_mpz &dict);
-    // bool is_canonical(set_sym &vars, uamp_sym_uint &degrees, umap_vec_mpz &dict);
-    // std::size_t __hash__();
-    // bool __eq__(const Basic &o);
-    // int compare(const Basic &o);
-    // mpz_class eval(std::map<Symbol, mpz_class> &vals);
-};
-/*
-RCP<const MultivariatePolynomial> add_mult_poly(const MultivariatePolynomial &a, const MultivariatePolynomial &b);
-RCP<const MultivariatePolynomial> neg_mult_poly(const MultivariatePolynomial &a);
-RCP<const MultivariatePolynomial> sub_mult_poly(const MultivariatePolynomial &a, const MultivariatePolynomial &b);
-RCP<const MultivariatePolynomial> mul_mult_poly(const MultivariatePolynomial &a, const MultivariatePolynomial &b);
-*/
- 
 
 }  //SymEngine
 
