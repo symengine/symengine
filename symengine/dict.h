@@ -17,10 +17,14 @@ class Basic;
 class Number;
 class Integer;
 class Expression;
+class Symbol;
 struct RCPBasicHash;
 struct RCPBasicKeyEq;
 struct RCPBasicKeyLess;
 struct RCPIntegerKeyLess;
+struct RCPSymbolHash;
+struct RCPSymbolCompare;
+struct RCPSymbolEq
 
 typedef std::unordered_map<RCP<const Basic>, RCP<const Number>,
         RCPBasicHash, RCPBasicKeyEq> umap_basic_num;
@@ -139,7 +143,59 @@ typedef struct
 
 typedef std::unordered_map<vec_int, mpz_class,
         vec_int_hash> umap_vec_mpz;
+ 
+int umap_vec_mpz_compare(const umap_vec_mpz &a, const umap_vec_mpz &b){
+    if(a.size() < b.size())
+        return (a.size() < b.size()) ? -1 : 1;
+    return 0;
+};
 
+unsigned int mpz_hash(const mpz_class z){
+    return z.get_ui();
+}
+
+typedef std::vector<unsigned int> vec_uint;
+
+class vec_uint_hash{
+public:
+    std::size_t operator()(const vec_uint &v) const {
+        std::size_t h = 0;
+        for(unsigned int i : v){
+            h ^= i + 0x9e3779b + (h << 6) + (h >> 2);
+        }
+        return h;
+    }
+};
+
+
+class vec_uint_eq{
+public:
+    std::size_t operator()(const vec_uint &a, const vec_uint &b){
+        if(a.size() != b.size())
+            return false;
+        for(unsigned int i = 0; i < a.size(); i++){
+            if(a[i] != b[i])
+	        return false;
+        }
+    return true;
+    }
+};
+
+typedef std::set< RCP<const Symbol>, RCPSymbolCompare> set_sym;
+typedef std::unordered_map<RCP<const Symbol>, unsigned int, RCPSymbolHash, RCPSymbolEq> umap_sym_uint;
+typedef std::unordered_map<vec_uint, mpz_class, vec_uint_hash, vec_uint_eq> umap_uvec_mpz;
+ 
+template<class T>
+bool set_eq(const std::set<T> &a, const std::set<T> &b){
+    return a == b;
+}
+
+template<class T>
+    int set_compare(const std::set<T> &a, const std::set<T> &b){
+    return 0;
+}
+ 
+ 
 } // SymEngine
 
 

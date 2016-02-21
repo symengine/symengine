@@ -328,56 +328,54 @@ RCP<const UnivariatePolynomial> mul_uni_poly(RCP<const UnivariatePolynomial> a, 
   
 ///Multivariate Polynomial///
 
-  
-  
 MultivariatePolynomial::MultivariatePolynomial( set_sym &vars, umap_sym_uint &degrees, umap_uvec_mpz &dict) :
-   vars_{std::move(vars)}, degrees_{std::move(degrees)}, dict_{std::move(dict)} {
-     SYMENGINE_ASSERT(is_cannonical(degrees_, dict_))
+vars_{std::move(vars)}, degrees_{std::move(degrees)}, dict_{std::move(dict)} {
+    SYMENGINE_ASSERT(is_cannonical(degrees_, dict_))
 }
 
 RCP<const Basic> MultivariatePolynomial::from_dict(set_sym &s, umap_uvec_mpz &&d){
-  if(d.size() == 1){
-    map_basic_basic b;
-    int whichvar = 0;
-    for(auto sym : s){
-      b.insert( std::pair<RCP<const Basic>, RCP<const Basic>>(sym , make_rcp<Integer>(d.begin()->first[whichvar])) );
-      whichvar++;
+    if(d.size() == 1){
+        map_basic_basic b;
+        int whichvar = 0;
+        for(auto sym : s){
+            b.insert( std::pair<RCP<const Basic>, RCP<const Basic>>(sym , make_rcp<Integer>(d.begin()->first[whichvar])) );
+            whichvar++;
+        }
+        return Mul::from_dict(make_rcp<const Integer>(d.begin()->second), std::move(b));
     }
-    return Mul::from_dict(make_rcp<const Integer>(d.begin()->second), std::move(b));
-  }
-  else{
-    umap_sym_uint degs;
-    int whichvar = 0;
-    for(auto sym : s){
-      degs.insert(std::pair<RCP<const Symbol>, unsigned int>(sym,0));
-      for(auto bucket : d){
-	if(bucket.first[whichvar] > degs.find(sym)->second)
-	  degs.find(sym)->second = bucket.first[whichvar];
-      }
-      whichvar++;
+    else{
+        umap_sym_uint degs;
+        int whichvar = 0;
+        for(auto sym : s){
+            degs.insert(std::pair<RCP<const Symbol>, unsigned int>(sym,0));
+            for(auto bucket : d){
+                if(bucket.first[whichvar] > degs.find(sym)->second)
+	            degs.find(sym)->second = bucket.first[whichvar];
+            }
+            whichvar++;
+        }
+        return make_rcp<const MultivariatePolynomial>(s,degs,d);
     }
-    return make_rcp<const MultivariatePolynomial>(s,degs,d);
-  }
 }
   
 vec_basic  MultivariatePolynomial::get_args() const{
-  vec_basic args;
-  for(const auto &p : dict_){
-    args.push_back(MultivariatePolynomial::from_dict(vars_, {{p.first, p.second}}));
-  }
-  return args;
+    vec_basic args;
+    for(const auto &p : dict_){
+        args.push_back(MultivariatePolynomial::from_dict(vars_, {{p.first, p.second}}));
+    }
+    return args;
 }
   
-bool MultivariatePolynomial::is_canonical(set_sym &vars, umap_sym_uint &degrees, umap_uvec_mpz &dict){
+bool MultivariatePolynomial::is_canonical(const set_sym &vars, const umap_sym_uint &degrees, const umap_uvec_mpz &dict){
     //checks that the maximum degree of any variable is correct according to the dictionary
     unsigned int whichvar = 0; //keeps track of the index of the variable we are checking
     for(auto var : vars){
         unsigned int maxdegree = 0;
         for(auto bucket : dict){
-	  if(bucket.first[whichvar] > degrees.find(var)->second)
+	    if(bucket.first[whichvar] > degrees.find(var)->second)
 	        return false;
-	  else if(maxdegree < bucket.first[whichvar] )
-	    maxdegree = bucket.first[whichvar];
+	    else if(maxdegree < bucket.first[whichvar] )
+	        maxdegree = bucket.first[whichvar];
         }
         if(maxdegree != degrees.find(var)->second)
 	    return false;
@@ -387,31 +385,30 @@ bool MultivariatePolynomial::is_canonical(set_sym &vars, umap_sym_uint &degrees,
 }
 
 std::size_t MultivariatePolynomial::__hash__() const{
-  std::hash<std::string> hash_string;
-  std::size_t seed = 0;
-  for(auto var : vars_)
-    seed ^= hash_string(var->get_name()) + 0x9e3779b + (seed << 6) + (seed >> 2); //boost's method for combining hashes
-  for(auto bucket : dict_){
-    seed ^= vec_int_hash()(bucket.first) + 0x9e3779b + (seed << 6) + (seed >> 2);
-    seed ^= mpz_hash(bucket.second) + 0x9e3779b + (seed << 6) + (seed >> 2);
-  }
-  return seed;
+    std::hash<std::string> hash_string;
+    std::size_t seed = 0;
+    for(auto var : vars_)
+        seed ^= hash_string(var->get_name()) + 0x9e3779b + (seed << 6) + (seed >> 2); //boost's method for combining hashes
+    for(auto bucket : dict_){
+        seed ^= vec_int_hash()(bucket.first) + 0x9e3779b + (seed << 6) + (seed >> 2);
+        seed ^= mpz_hash(bucket.second) + 0x9e3779b + (seed << 6) + (seed >> 2);
+    }
+    return seed;
 }
 
 bool MultivariatePolynomial::__eq__(const Basic &o) const{
-  
-  return set_eq<RCP<const Symbol>>(vars_, rcp_static_cast<MultivariatePolynomial>(o)->vars_) && umap_eq<umap_vec_mpz>(dict_, rcp_static_cast<MultivariatePolynomial>(o)->dict_));
+    return set_eq<RCP<const Symbol>>(vars_, rcp_static_cast<MultivariatePolynomial>(o)->vars_) && umap_eq<umap_vec_mpz>(dict_, rcp_static_cast<MultivariatePolynomial>(o)->dict_));
 }
 
 int MultivariatePolynomial::compare(const Basic &o) const{
-  //copied from UnivariatePolynomial::compare and then modified.
+    //copied from UnivariatePolynomial::compare and then modified.
     const MultivariatePolynomial &s = static_cast<const MultivariatePolynomial&>(o);
     
     if (dict_.size() != s.dict_.size())
         return (dict_.size() < s.dict_.size()) ? -1 : 1;
 
     int cmp = set_compare<RCP<const Symbol>>(vars_, s.vars_);
-    if (cmp != 0)
+    if(cmp != 0)
         return cmp;
 
     return umap_vec_mpz_compare(dict_, s.dict_); 
@@ -419,16 +416,16 @@ int MultivariatePolynomial::compare(const Basic &o) const{
 
 mpz_class MultivariatePolynomial::eval(std::map<RCP<const Symbol>, mpz_class> &vals){
     mpz_class ans = 0;
-    for (auto bucket : dict_) {
+    for(auto bucket : dict_) {
         mpz_class term = 1;
         unsigned int whichvar = 0;
         for(auto sym : vars_){
-	  mpz_class temp;
-	  mpz_pow_ui(temp.get_mpz_t(), vals.find(sym)->second, bucket.first[whichvar] );
-	  term *= temp;
-	  whichvar++;
-      }
-      ans += term;
+            mpz_class temp;
+            mpz_pow_ui(temp.get_mpz_t(), vals.find(sym)->second, bucket.first[whichvar] );
+            term *= temp;
+            whichvar++;
+        }
+        ans += term;
     } 
     return ans;
 }

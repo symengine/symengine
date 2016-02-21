@@ -129,77 +129,6 @@ inline RCP<const UnivariatePolynomial> univariate_polynomial(RCP<const Symbol> i
     return make_rcp<const UnivariatePolynomial>(i, deg, std::move(dict));
 }
 
-class sym_hash{
-public:
-  size_t operator()(const RCP<const Symbol> s) const{
-    return s->__hash__();
-  }
-};
-
-class sym_compare{
-  public:
-  size_t operator()(const RCP<const Symbol> a, const RCP<const Symbol> b){
-    return a->compare(*b);
-  }
-};
-
-class sym_eq{
- public:
-  bool operator()(const RCP<const Symbol> a, const RCP<const Symbol> &b){
-    return a->__eq__(*b);
-  }
-};
-
-int umap_vec_mpz_compare(const umap_vec_mpz &a, const umap_vec_mpz &b){
-  if(a.size() < b.size())
-    return (a.size() < b.size()) ? -1 : 1;
-  return 0;
-};
-
-unsigned int mpz_hash(mpz_class z){
-  return z.get_ui();
- }
-
- typedef std::vector<unsigned int> vec_uint;
- 
- 
- class vec_uint_hash{
- public:
-   std::size_t operator()(const vec_uint &v) const {
-     std::size_t h = 0;
-     for(unsigned int i : v){
-       h ^= i + 0x9e3779b + (h << 6) + (h >> 2);
-     }
-     return h;
-   }
- };
-
- class vec_uint_eq{
- public:
-   std::size_t operator()(const vec_uint &a, const vec_uint &b){
-     if(a.size() != b.size())
-       return false;
-     for(unsigned int i = 0; i < a.size(); i++){
-       if(a[i] != b[i])
-	 return false;
-     }
-     return true;
-   }
- }
- 
- typedef std::set< RCP<const Symbol>, sym_compare> set_sym;
-typedef std::unordered_map<RCP<const Symbol>, unsigned int, sym_hash, sym_eq> umap_sym_uint;
- typedef std::unordered_map<vec_uint, mpz_class, vec_uint_hash, vec_uint_eq> umap_uvec_mpz;
- 
-template<class T>
-bool set_eq(const std::set<T> &a, const std::set<T> &b){
-  return a == b;
-}
-
-template<class T>
-int set_compare(std::set<T> &a, std::set<T> &b){
-  return 0;
-}
  
 class MultivariatePolynomial : public Basic{
 public:
@@ -216,7 +145,7 @@ public:
     MultivariatePolynomial(set_sym &var, umap_sym_uint &degrees, umap_uvec_mpz &dict);
     RCP<const Basic> from_dict(set_sym &s, umap_uvec_mpz &&d);
     vec_basic get_args() const;
-    bool is_canonical(set_sym &vars, umap_sym_uint &degrees, umap_uvec_mpz &dict);
+    bool is_canonical(const set_sym &vars, const umap_sym_uint &degrees, const umap_uvec_mpz &dict);
     std::size_t __hash__() const;
     bool __eq__(const Basic &o) const;
     int compare(const Basic &o) const;
