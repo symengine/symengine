@@ -73,37 +73,10 @@ RCP<const Basic> UnivariateSeries::as_basic() const {
 
 umap_int_basic UnivariateSeries::as_dict() const {
     umap_int_basic map;
-    mpq_class gc;
-    for (int n = 0; n < degree_; n++) {
-        const SymEngine::Integer fc(n);//get_coeff(n));
-        if (not fc.is_zero()) {
-            mpq_class cl_rat(fc.first.get_mpq_view());
-            //fmpq_get_mpq(gc.get_mpq_t(), fc._data().inner);
-            gc.canonicalize();
-            RCP<const Number> basic;
-            if (gc.get_den() == 1)
-                basic = integer(gc.get_num());
-            else
-                basic = Rational::from_mpq(gc);
-            map[n] = basic;
-        }
-    }
-    return map;
-    /*
-    umap_int_basic map;
-    for (const auto &it : p_) {
-        if (it.first != 0) {
-            mpq_class cl_rat(it.first.get_mpq_view());
-            cl_rat.canonicalize();
-            RCP<const Basic> basic;
-            if (cl_rat.get_den() == 1)
-                basic = make_rcp<const Integer>(cl_rat.get_num());
-            else
-                basic = make_rcp<const Rational>(cl_rat);
-            map[it.second.degree()] = basic;
-        }   
+    for (int i = 0; i < degree_; i++) {
+       map[i] = p_.get_univariate_poly()->dict_.at(i);
     } 
-    return map;*/
+    return map;
 }
 
 RCP<const Basic> UnivariateSeries::get_coeff(int i) const {
