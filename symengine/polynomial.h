@@ -13,7 +13,6 @@
 #include <symengine/symbol.h>
 #include <symengine/expression.h>
 
-
 namespace SymEngine {
 //! UnivariatePolynomial Class
 class UnivariatePolynomial : public Basic{
@@ -165,18 +164,32 @@ unsigned int mpz_hash(mpz_class z){
  
  
  class vec_uint_hash{
-   std::size_t operator() (const vec_uint &v){
+ public:
+   std::size_t operator()(const vec_uint &v) const {
      std::size_t h = 0;
      for(unsigned int i : v){
-       h ^= h + 0x9e3779b + h <<6 + h >> 2;
+       h ^= i + 0x9e3779b + (h << 6) + (h >> 2);
      }
      return h;
    }
+ };
+
+ class vec_uint_eq{
+ public:
+   std::size_t operator()(const vec_uint &a, const vec_uint &b){
+     if(a.size() != b.size())
+       return false;
+     for(unsigned int i = 0; i < a.size(); i++){
+       if(a[i] != b[i])
+	 return false;
+     }
+     return true;
+   }
  }
  
- typedef std::set<RCP<const Symbol>, sym_compare> set_sym;
- typedef std::unordered_map<RCP<const Symbol>, unsigned int, sym_hash, sym_eq> umap_sym_uint;
- typedef std::unordered_map<vec_uint, mpz_class, vec_uint_hash>;
+ typedef std::set< RCP<const Symbol>, sym_compare> set_sym;
+typedef std::unordered_map<RCP<const Symbol>, unsigned int, sym_hash, sym_eq> umap_sym_uint;
+ typedef std::unordered_map<vec_uint, mpz_class, vec_uint_hash, vec_uint_eq> umap_uvec_mpz;
  
 template<class T>
 bool set_eq(const std::set<T> &a, const std::set<T> &b){
@@ -196,14 +209,14 @@ public:
     // is represented as {(1,2):1,(4,5):3}
     set_sym vars_;
     umap_sym_uint degrees_;
-    umap_vec_mpz dict_;
+    umap_uvec_mpz dict_;
 public:
     IMPLEMENT_TYPEID(MULTIVARIATEPOLYNOMIAL)
     //constructor from components
-    MultivariatePolynomial(set_sym &var, umap_sym_uint &degrees, umap_vec_mpz &dict);
-    RCP<const Basic> from_dict(set_sym &s, umap_vec_mpz &&d);
+    MultivariatePolynomial(set_sym &var, umap_sym_uint &degrees, umap_uvec_mpz &dict);
+    RCP<const Basic> from_dict(set_sym &s, umap_uvec_mpz &&d);
     vec_basic get_args() const;
-    bool is_canonical(set_sym &vars, umap_sym_uint &degrees, umap_vec_mpz &dict);
+    bool is_canonical(set_sym &vars, umap_sym_uint &degrees, umap_uvec_mpz &dict);
     std::size_t __hash__() const;
     bool __eq__(const Basic &o) const;
     int compare(const Basic &o) const;

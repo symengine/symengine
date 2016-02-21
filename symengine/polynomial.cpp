@@ -330,12 +330,12 @@ RCP<const UnivariatePolynomial> mul_uni_poly(RCP<const UnivariatePolynomial> a, 
 
   
   
-MultivariatePolynomial::MultivariatePolynomial( set_sym &vars, umap_sym_uint &degrees, umap_vec_mpz &dict) :
+MultivariatePolynomial::MultivariatePolynomial( set_sym &vars, umap_sym_uint &degrees, umap_uvec_mpz &dict) :
    vars_{std::move(vars)}, degrees_{std::move(degrees)}, dict_{std::move(dict)} {
      SYMENGINE_ASSERT(is_cannonical(degrees_, dict_))
 }
 
-RCP<const Basic> MultivariatePolynomial::from_dict(set_sym &s, umap_vec_mpz &&d){
+RCP<const Basic> MultivariatePolynomial::from_dict(set_sym &s, umap_uvec_mpz &&d){
   if(d.size() == 1){
     map_basic_basic b;
     int whichvar = 0;
@@ -368,7 +368,7 @@ vec_basic  MultivariatePolynomial::get_args() const{
   return args;
 }
   
-bool MultivariatePolynomial::is_canonical(set_sym &vars, umap_sym_uint &degrees, umap_vec_mpz &dict){
+bool MultivariatePolynomial::is_canonical(set_sym &vars, umap_sym_uint &degrees, umap_uvec_mpz &dict){
     //checks that the maximum degree of any variable is correct according to the dictionary
     unsigned int whichvar = 0; //keeps track of the index of the variable we are checking
     for(auto var : vars){
