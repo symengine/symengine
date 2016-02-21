@@ -8,13 +8,13 @@ using SymEngine::make_rcp;
 
 namespace SymEngine {
 
-UnivariateSeries::UnivariateSeries(const SymEngine::UnivariateExprPolynomial sp, const std::string varname, const unsigned degree) :
+UnivariateSeries::UnivariateSeries(const UnivariateExprPolynomial sp, const std::string varname, const unsigned degree) :
     SeriesBase(std::move(sp), varname, degree) {
 }
 
 RCP<const UnivariateSeries> UnivariateSeries::series(const RCP<const Basic> &t, const std::string &x,
                                                          unsigned int prec) {
-    SeriesVisitor<SymEngine::UnivariateExprPolynomial, Integer, UnivariateSeries> visitor(SymEngine::UnivariateExprPolynomial(std::stoi(x)), x, prec);
+    SeriesVisitor<UnivariateExprPolynomial, Expression, UnivariateSeries> visitor(UnivariateExprPolynomial(std::stoi(x)), x, prec);
     return visitor.series(t);
 }
 
@@ -43,27 +43,27 @@ int UnivariateSeries::compare(const Basic &o) const {
     return poly_->compare(*o.poly_);*/
 }
 
-SymEngine::UnivariateExprPolynomial UnivariateSeries::convert(const Integer &x) {
-    return SymEngine::UnivariateExprPolynomial(x.as_int());
+Expression UnivariateSeries::convert(const Integer &x) {
+    return UnivariateExprPolynomial(x.as_int());
 }
-SymEngine::UnivariateExprPolynomial UnivariateSeries::convert(const mpq_class &x) {
-    SymEngine::UnivariateExprPolynomial i1(mpz_get_si(x.get_num_mpz_t()));
-    SymEngine::UnivariateExprPolynomial i2(mpz_get_si(x.get_den_mpz_t()));
+Expression UnivariateSeries::convert(const mpq_class &x) {
+    Expression i1(mpz_get_si(x.get_num_mpz_t()));
+    Expression i2(mpz_get_si(x.get_den_mpz_t()));
     return i1/i2;
 }
 
-SymEngine::UnivariateExprPolynomial UnivariateSeries::var(const std::string &s) {
-    return SymEngine::UnivariateExprPolynomial(std::stoi(s));
+UnivariateExprPolynomial UnivariateSeries::var(const std::string &s) {
+    return UnivariateExprPolynomial(std::stoi(s));
 }
 
-SymEngine::UnivariateExprPolynomial UnivariateSeries::convert(const Rational &x) {
-    SymEngine::UnivariateExprPolynomial i1(x.get_num());
-    SymEngine::UnivariateExprPolynomial i2(x.get_den());
+Expression UnivariateSeries::convert(const Rational &x) {
+    UnivariateExprPolynomial i1(x.get_num());
+    UnivariateExprPolynomial i2(x.get_den());
     i1 /= i2;
     return i1;
 }
 
-SymEngine::UnivariateExprPolynomial UnivariateSeries::convert(const Number &x) {
+Expression UnivariateSeries::convert(const Number &x) {
     throw std::runtime_error("Not Implemented");
 }
 
@@ -107,6 +107,7 @@ umap_int_basic UnivariateSeries::as_dict() const {
 }
 
 RCP<const Basic> UnivariateSeries::get_coeff(int i) const {
+    throw std::runtime_error("Not Implemented");
 /*    mpq_class cl_rat(p_.find_cf({i}).get_mpq_view());
     cl_rat.canonicalize();
     RCP<const Basic> basic;
@@ -117,37 +118,37 @@ RCP<const Basic> UnivariateSeries::get_coeff(int i) const {
     return std::move(basic);*/
 }
 
-SymEngine::UnivariateExprPolynomial UnivariateSeries::mul(const SymEngine::UnivariateExprPolynomial &s, const SymEngine::UnivariateExprPolynomial &r, unsigned prec) {
+UnivariateExprPolynomial UnivariateSeries::mul(const UnivariateExprPolynomial &s, const UnivariateExprPolynomial &r, unsigned prec) {
     // No prec mul
     return s * r;
 }
 
-SymEngine::UnivariateExprPolynomial UnivariateSeries::pow(const SymEngine::UnivariateExprPolynomial &s, int n, unsigned prec) {
+UnivariateExprPolynomial UnivariateSeries::pow(const UnivariateExprPolynomial &s, int n, unsigned prec) {
     // No prec mul
     return pow_ex(s, SymEngine::UnivariateExprPolynomial(n));
 }
 
-unsigned UnivariateSeries::ldegree(const SymEngine::UnivariateExprPolynomial &s) {
+unsigned UnivariateSeries::ldegree(const UnivariateExprPolynomial &s) {
     throw std::runtime_error("Not Implemented");
 }
 
-SymEngine::UnivariateExprPolynomial UnivariateSeries::find_cf(const SymEngine::UnivariateExprPolynomial &s, const SymEngine::UnivariateExprPolynomial &var, unsigned deg) {
+Expression UnivariateSeries::find_cf(const UnivariateExprPolynomial &s, const UnivariateExprPolynomial &var, unsigned deg) {
     return coeff(s, var, Expression(deg));
 }
 
-SymEngine::UnivariateExprPolynomial UnivariateSeries::root(SymEngine::UnivariateExprPolynomial &c, unsigned n) {
+Expression UnivariateSeries::root(UnivariateExprPolynomial &c, unsigned n) {
     return pow_ex(c, 1/Expression(n));
 }
 
-SymEngine::UnivariateExprPolynomial UnivariateSeries::diff(const SymEngine::UnivariateExprPolynomial &s, const SymEngine::UnivariateExprPolynomial &var) {
+UnivariateExprPolynomial UnivariateSeries::diff(const UnivariateExprPolynomial &s, const UnivariateExprPolynomial &var) {
     return diff(s.get_basic(), var.get_basic());
 }
 
-SymEngine::UnivariateExprPolynomial UnivariateSeries::integrate(const SymEngine::UnivariateExprPolynomial &s, const SymEngine::UnivariateExprPolynomial &var) {
+UnivariateExprPolynomial UnivariateSeries::integrate(const UnivariateExprPolynomial &s, const UnivariateExprPolynomial &var) {
     throw std::runtime_error("Not Implemented");
 }
 
-SymEngine::UnivariateExprPolynomial UnivariateSeries::subs(const SymEngine::UnivariateExprPolynomial &s, const SymEngine::UnivariateExprPolynomial &var, const SymEngine::UnivariateExprPolynomial &r, unsigned prec) {
+UnivariateExprPolynomial UnivariateSeries::subs(const UnivariateExprPolynomial &s, const UnivariateExprPolynomial &var, const UnivariateExprPolynomial &r, unsigned prec) {
     map_basic_basic x{{r.get_basic(), var.get_basic()}};
     SymEngine::UnivariateExprPolynomial sb = s.get_basic()->subs(x);
     return sb;

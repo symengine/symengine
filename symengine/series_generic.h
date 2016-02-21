@@ -14,10 +14,8 @@
 
 
 namespace SymEngine {
-using SymEngine::UnivariateExprPolynomial; //Polynomial type
-//using sp_t = RCP //Coefficient type
 //! UnivariateSeries Class
-class UnivariateSeries : public SeriesBase<SymEngine::UnivariateExprPolynomial, SymEngine::Expression, UnivariateSeries> {
+class UnivariateSeries : public SeriesBase<UnivariateExprPolynomial, Expression, UnivariateSeries> {
 //public:
     //! `var_` : Variable of the UnivariateSeries
     //! `poly_` : holds the UnivariatePolynomial of the series
@@ -29,7 +27,7 @@ class UnivariateSeries : public SeriesBase<SymEngine::UnivariateExprPolynomial, 
     //data members now inherited from SeriesBase
 public:
     //! Constructor of UnivariateSeries class
-    UnivariateSeries(const SymEngine::UnivariateExprPolynomial sp, const std::string varname, const unsigned degree);
+    UnivariateSeries(const UnivariateExprPolynomial sp, const std::string varname, const unsigned degree);
     IMPLEMENT_TYPEID(UNIVARIATESERIES)
     virtual int compare(const Basic &o) const;
     virtual std::size_t __hash__() const;
@@ -38,20 +36,22 @@ public:
     virtual RCP<const Basic> get_coeff(int) const;
 
     static RCP<const UnivariateSeries> series(const RCP<const Basic> &t, const std::string &x, unsigned int prec);
-    static SymEngine::UnivariateExprPolynomial convert(const Integer &x);
-    static SymEngine::UnivariateExprPolynomial convert(const mpq_class &x);
-    static SymEngine::UnivariateExprPolynomial var(const std::string &s);
-    static SymEngine::UnivariateExprPolynomial convert(const Rational &x);
-    static SymEngine::UnivariateExprPolynomial convert(const Number &x);
+    static Expression convert(const Integer &x);
+    static Expression convert(const mpq_class &x);
+    static UnivariateExprPolynomial var(const std::string &s);
+    static Expression convert(const Rational &x);
+    static Expression convert(const Number &x);
 
-    static SymEngine::UnivariateExprPolynomial mul(const SymEngine::UnivariateExprPolynomial &s, const SymEngine::UnivariateExprPolynomial &r, unsigned prec);
-    static SymEngine::UnivariateExprPolynomial pow(const SymEngine::UnivariateExprPolynomial &s, int n, unsigned prec);
-    static unsigned ldegree(const SymEngine::UnivariateExprPolynomial &s);
-    static SymEngine::UnivariateExprPolynomial find_cf(const SymEngine::UnivariateExprPolynomial &s, const SymEngine::UnivariateExprPolynomial &var, unsigned deg);
-    static SymEngine::UnivariateExprPolynomial root(SymEngine::UnivariateExprPolynomial &c, unsigned n);
-    static SymEngine::UnivariateExprPolynomial diff(const SymEngine::UnivariateExprPolynomial &s, const SymEngine::UnivariateExprPolynomial &var);
-    static SymEngine::UnivariateExprPolynomial integrate(const SymEngine::UnivariateExprPolynomial &s, const SymEngine::UnivariateExprPolynomial &var);
-    static SymEngine::UnivariateExprPolynomial subs(const SymEngine::UnivariateExprPolynomial &s, const SymEngine::UnivariateExprPolynomial &var, const SymEngine::UnivariateExprPolynomial &r, unsigned prec);
+    static UnivariateExprPolynomial mul(const UnivariateExprPolynomial &s, 
+        const UnivariateExprPolynomial &r, unsigned prec);
+    static UnivariateExprPolynomial pow(const UnivariateExprPolynomial &s, int n, unsigned prec);
+    static unsigned ldegree(const UnivariateExprPolynomial &s);
+    static Expression find_cf(const UnivariateExprPolynomial &s, const UnivariateExprPolynomial &var, unsigned deg);
+    static Expression root(Expression &c, unsigned n);
+    static UnivariateExprPolynomial diff(const UnivariateExprPolynomial &s, const UnivariateExprPolynomial &var);
+    static UnivariateExprPolynomial integrate(const UnivariateExprPolynomial &s, const UnivariateExprPolynomial &var);
+    static UnivariateExprPolynomial subs(const UnivariateExprPolynomial &s, 
+        const UnivariateExprPolynomial &var, const UnivariateExprPolynomial &r, unsigned prec);
     
     //! \return true if canonical
     // bool is_canonical(const UnivariatePolynomial&, const unsigned int &) const;
