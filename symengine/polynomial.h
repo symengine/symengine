@@ -45,7 +45,8 @@ public:
      * */
     bool __eq__(const Basic &o) const;
     int compare(const Basic &o) const;
-
+    std::string __str__() const;
+    
     /*! Creates appropriate instance (i.e Symbol, Integer,
     * Mul, Pow, UnivariatePolynomial) depending on the size of dictionary `d`.
     */
@@ -96,73 +97,76 @@ RCP<const UnivariatePolynomial> sub_uni_poly(const UnivariatePolynomial &a, cons
 //! Multiplying two UnivariatePolynomial a and b
 RCP<const UnivariatePolynomial> mul_uni_poly(RCP<const UnivariatePolynomial> a, RCP<const UnivariatePolynomial> b);
 
+inline RCP<const UnivariatePolynomial>  pow_exp(RCP<const UnivariatePolynomial> a, RCP<const UnivariatePolynomial> b);
+
+inline RCP<const UnivariatePolynomial> univariate_polynomial(RCP<const Symbol> i, unsigned int deg, map_uint_mpz&& dict)
+{
+    return make_rcp<const UnivariatePolynomial>(i, deg, std::move(dict));
+}
+
 class UnivariateExprPolynomial {
+private:
+    RCP<const UnivariatePolynomial> upoly;
 public:
-    //map_uint_expr dict_;
-    UnivariatePolynomial upoly;
-public:
-    IMPLEMENT_TYPEID(UNIVARIATEEXPRPOLYNOMIAL)
-    bool is_canonical(const unsigned int &degree, const map_uint_expr & dict) const;
-    std::size_t __hash__() const;
-    bool __eq__(const Basic &o) const;
-    int compare(const Basic &o) const;
+    // IMPLEMENT_TYPEID(UNIVARIATEEXPRPOLYNOMIAL)
    
     //! Construct UnivariateExprPolynomial from UnivariatePolynomial
 #if defined(HAVE_SYMENGINE_IS_CONSTRUCTIBLE)
-    template <typename T, typename = typename std::enable_if<std::is_constructible<RCP<const Basic>, T &&>::value>::type>
+    template <typename T, typename = typename std::enable_if<std::is_constructible<RCP<const UnivariatePolynomial>, T &&>::value>::type>
 #else
     template <typename T>
 #endif
     UnivariateExprPolynomial(T &&o) : upoly(std::forward<T>(o)) {}
     UnivariateExprPolynomial(const UnivariateExprPolynomial &) = default;
     UnivariateExprPolynomial(UnivariateExprPolynomial &&other) SYMENGINE_NOEXCEPT : upoly(std::move(other.upoly)) {}
-    ~UnivariateExprPolynomial() SYMENGINE_NOEXCEPT {}
-    //UnivariateExprPolynomial &operator=(const UnivariateExprPolynomial &) = default;
+    UnivariateExprPolynomial &operator=(const UnivariateExprPolynomial &) = default;
     UnivariateExprPolynomial &operator=(UnivariateExprPolynomial &&other) SYMENGINE_NOEXCEPT 
     {
         if (this != &other)
-            this->upoly = std::move(other.upoly);
+            this->upoly.ptr() = std::move(other.upoly.ptr());
         return *this;
     }
-    
+  
+    ~UnivariateExprPolynomial() SYMENGINE_NOEXCEPT {}
+     
     friend std::ostream &operator<<(std::ostream &os, const UnivariateExprPolynomial &expr)
     {
-        os << expr.upoly.__str__();
+        os << expr.upoly.ptr()->__str__();
         return os;
     }
     
     friend UnivariateExprPolynomial operator+(const UnivariateExprPolynomial &a, const UnivariateExprPolynomial &b)
     {
-        return UnivariateExprPolynomial(add_uni_poly(a.upoly, b.upoly));
+        return UnivariateExprPolynomial(add_uni_poly(*(a.upoly.ptr()), *(b.upoly.ptr())));
     }
     
     UnivariateExprPolynomial &operator+=(const UnivariateExprPolynomial &other)
     {
-        upoly = add_uni_poly(upoly, other.upoly);
+        upoly = add_uni_poly(*(upoly.ptr()), *(other.upoly.ptr()));
         return *this;
     }
     
     friend UnivariateExprPolynomial operator-(const UnivariateExprPolynomial &a, const UnivariateExprPolynomial &b)
     {
-        return UnivariateExprPolynomial(sub_uni_poly(a.upoly, b.upoly));
+        return UnivariateExprPolynomial(sub_uni_poly(*(a.upoly.ptr()), *(b.upoly.ptr())));
     }
     
     UnivariateExprPolynomial operator-() const
     {
         UnivariateExprPolynomial retval(*this);
-        neg_uni_poly(retval.upoly);
+        neg_uni_poly(*(retval.upoly.ptr()));
         return retval;
     }
     
     UnivariateExprPolynomial &operator-=(const UnivariateExprPolynomial &other)
     {
-        upoly = sub_uni_poly(upoly, other.upoly);
+        upoly = sub_uni_poly(*(upoly.ptr()), *(other.upoly.ptr()));
         return *this;
     }
     
     friend UnivariateExprPolynomial operator*(const UnivariateExprPolynomial &a, const UnivariateExprPolynomial &b)
     {   
-        return UnivariateExprPolynomial(mul_uni_poly(a.upoly, exp(b.upoly, -1)));
+          return UnivariateExprPolynomial(mul_uni_poly(a.upoly, b.upoly));
     }   
     
     UnivariateExprPolynomial &operator*=(const UnivariateExprPolynomial &other)
@@ -170,23 +174,23 @@ public:
         upoly = mul_uni_poly(upoly, other.upoly);
         return *this;
     }   
-    //! Overload Division
-    friend UnivariateExprPolynomial operator/(const UnivariateExprPolynomial &a, const UnivariateExprPolynomial &b) 
-    {   
-        return UnivariateExprPolynomial(mul_uni_poly(a.upoly, b.upoly));
+    
+    /*friend UnivariateExprPolynomial operator/(const UnivariateExprPolynomial &a, const UnivariateExprPolynomial &b) 
+    {  
+        return UnivariateExprPolynomial(mul_uni_poly(a.upoly, pow(b.upoly, integer(-1))));
     }   
-    //! Overload Division and assignment (/=)
+    
     UnivariateExprPolynomial &operator/=(const UnivariateExprPolynomial &other)
     {   
-        upoly = div(upoly, other.upoly);
+        upoly = mul_uni_poly(upoly, pow(other.upoly, integer(-1)));
         return *this;
-    }   
-    //! Overload check equality (==)
+    }*/  
+    
     bool operator==(const UnivariateExprPolynomial &other) const
     {   
         return eq(*upoly, *other.upoly);
     }   
-    //! Overload check not equal (!=)
+    
     bool operator!=(const UnivariateExprPolynomial &other) const
     {   
         return not (*this == other);
@@ -199,11 +203,6 @@ public:
  
 }; //UnivariateExprPolynomial
 
-
-inline RCP<const UnivariatePolynomial> univariate_polynomial(RCP<const Symbol> i, unsigned int deg, map_uint_mpz&& dict)
-{
-    return make_rcp<const UnivariatePolynomial>(i, deg, std::move(dict));
-}
 
 class sym_hash{
 public:
