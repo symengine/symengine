@@ -38,15 +38,15 @@ public:
     //! Convert to `integer_class`.
     inline integer_class as_mpz() const { return this->i; }
     //! \return `true` if `0`
-    inline virtual bool is_zero() const { return this->i == 0; }
+    inline virtual bool is_zero() const { return this->i == 0u; }
     //! \return `true` if `1`
-    inline virtual bool is_one() const { return this->i == 1; }
+    inline virtual bool is_one() const { return this->i == 1u; }
     //! \return `true` if `-1`
     inline virtual bool is_minus_one() const { return this->i == -1; }
     //! \return `true` if positive
-    inline virtual bool is_positive() const { return this->i > 0; }
+    inline virtual bool is_positive() const { return this->i > 0u; }
     //! \return `true` if negative
-    inline virtual bool is_negative() const { return this->i < 0; }
+    inline virtual bool is_negative() const { return this->i < 0u; }
 
     /* These are very fast methods for add/sub/mul/div/pow on Integers only */
     //! Fast Integer Addition
@@ -68,13 +68,13 @@ public:
     //! Fast Power Evaluation
     inline RCP<const Number> powint(const Integer &other) const {
         if (not (fits_ulong_p(other.i))) {
-            if (other.i > 0)
+            if (other.i > 0u)
                 throw std::runtime_error("powint: 'exp' does not fit unsigned long.");
             else
                 return pow_negint(other);
         }
         integer_class tmp;
-        mpz_pow_ui(get_mpz_t(tmp), get_mpz_t(this->i), get_ui(other.i));
+        mp_pow_ui(tmp, i, get_ui(other.i));
         return make_rcp<const Integer>(std::move(tmp));
     }
     //! \return negative of self.
@@ -168,9 +168,9 @@ RCP<const Integer> isqrt(const Integer &n);
 int i_nth_root(const Ptr<RCP<const Integer>> &r, const Integer &a,
         unsigned long int n);
 //! Perfect Square
-int perfect_square(const Integer &n);
+bool perfect_square(const Integer &n);
 //! Perfect Square
-int perfect_power(const Integer &n);
+bool perfect_power(const Integer &n);
 //! Integer Absolute value
 RCP<const Integer> iabs(const Integer &n);
 

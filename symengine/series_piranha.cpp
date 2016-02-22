@@ -135,7 +135,7 @@ piranha::rational URatPSeriesPiranha::root(piranha::rational &c, unsigned n) {
     bool res;
     if (get_den(cl_rat) == 1) {
         // integer constant
-        res = mpz_root(get_mpz_t(get_num(cl_root)), get_mpz_t(get_num(cl_rat)), n) != 0;
+        res = mp_root(get_num(cl_root), get_num(cl_rat), n);
     }
     else {
         RCP<const Rational> cterm = make_rcp<const Rational>(cl_root);

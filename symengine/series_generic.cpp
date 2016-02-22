@@ -150,7 +150,7 @@ RCP<const UnivariateSeries> mul_uni_series (const UnivariateSeries& a, const Uni
             for (const auto &bit : b.poly_->dict_) {
                 const unsigned int expsum = aexp + bit.first;
                 if (expsum < minprec)
-                    mpz_addmul(get_mpz_t(dict[expsum]), get_mpz_t(ait.second), get_mpz_t(bit.second));
+                    mp_addmul(dict[expsum], ait.second, bit.second);
                 else
                     break;
                 if (expsum > max)

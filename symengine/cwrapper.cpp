@@ -29,6 +29,8 @@ using SymEngine::is_a;
 using SymEngine::RCPBasicKeyLess;
 using SymEngine::set_basic;
 using SymEngine::get_mpz_t;
+using SymEngine::get_ui;
+using SymEngine::get_si;
 
 namespace SymEngine {
 
@@ -141,13 +143,13 @@ void integer_set_str(basic s, char* c)
 signed long integer_get_si(const basic s)
 {
     SYMENGINE_ASSERT(is_a<Integer>(*(s->m)));
-    return mpz_get_si(get_mpz_t((rcp_static_cast<const Integer>(s->m))->as_mpz()));
+    return get_si((rcp_static_cast<const Integer>(s->m))->as_mpz());
 }
 
 unsigned long integer_get_ui(const basic s)
 {
     SYMENGINE_ASSERT(is_a<Integer>(*(s->m)));
-    return mpz_get_ui(get_mpz_t((rcp_static_cast<const Integer>(s->m))->as_mpz()));
+    return get_ui((rcp_static_cast<const Integer>(s->m))->as_mpz());
 }
 
 void integer_get_mpz(mpz_t a, const basic s)

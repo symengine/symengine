@@ -125,10 +125,9 @@ integer_class UnivariatePolynomial::max_coef() const {
 
 integer_class UnivariatePolynomial::eval(const integer_class &x) const {
     //TODO: Use Horner's Scheme
-    integer_class ans(0);
+    integer_class ans(0), temp;
     for (const auto &p : dict_) {
-        integer_class temp;
-        mpz_pow_ui(get_mpz_t(temp), get_mpz_t(x), p.first);
+        mp_pow_ui(temp, x, p.first);
         ans += p.second * temp;
     }
     return ans;
@@ -266,6 +265,7 @@ RCP<const UnivariatePolynomial> mul_uni_poly(RCP<const UnivariatePolynomial> a, 
 
     while (r != 0 or carry != 0) {
         integer_class b;
+        //TODO:fix this
         mpz_and(get_mpz_t(b), get_mpz_t(r), get_mpz_t(mask));
         if (b < a2) {
             v.push_back(b + carry);
