@@ -429,6 +429,54 @@ mpz_class MultivariatePolynomial::eval(std::map<RCP<const Symbol>, mpz_class, RC
     } 
     return ans;
 }
+
+void reconcile_exps(vec_uint &v1, vec_uint &v2, set_sym &s, const set_sym &s1, const set_sym &s2){
+    auto a1 = s1.begin();
+    auto a2 = s2.begin();
+    unsigned int poscount = 0;
+    unsigned int b1 = 0;
+    unsigned int b2 = 0;
+    while(a1 != s1.end() && a2 != s2.end()){
+        if(0 == (*a1)->compare(**a2) && (a1 != s1.end() && a2 != s2.end())){
+	    v1[b1] = poscount;
+            v2[b2] = poscount;
+	    s.insert(*a1);
+	    a1++;
+	    a2++;
+	    b1++;
+     	    b2++;
+        } else if(-1 == (*a1)->compare(**a2)){
+	    v1[b1] = poscount;
+            s.insert(*a1);
+	    a1++;
+	    b1++;
+        } else if(1 == (*a1)->compare(**a2)){
+	    v2[b2] = poscount;
+	    s.insert(*a2);
+	    a2++;
+	    b2++;
+        }
+	poscount++;
+    }
+    if(a1 == s1.end()){
+        while(a2 != s2.end()){
+	    v2[b2] = poscount;
+	    s.insert(*a2);
+	    a2++;
+	    b2++;
+	    poscount++;
+        }
+    } else if(a2 == s2.end()){
+        while(a1 != s1.end()){
+            v1[b1] = poscount;
+            s.insert(*a1);
+            a1++;
+            b2++;
+            poscount++;
+        }
+    }
+}
+
 /*
 RCP<const MultivariatePolynomial> add_mult_poly(const MultivariatePolynomial &a, const MultivariatePolynomial &b){
 }
