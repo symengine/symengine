@@ -460,11 +460,15 @@ public:
         mpz_init_set(mp, other.get_mpz_t());
     }
     inline mpz_wrapper(mpz_wrapper&& other) {
-        mpz_init(mp);
+        mp->_mp_d = nullptr;
         mpz_swap(mp, other.get_mpz_t());
     }
     inline mpz_wrapper& operator=(const mpz_wrapper& other) {
-        mpz_set(mp, other.get_mpz_t());
+        if (mp->_mp_d == nullptr) {
+            mpz_init_set(mp, other.get_mpz_t());
+        } else {
+            mpz_set(mp, other.get_mpz_t());
+        }
         return *this;
     }
     inline mpz_wrapper& operator=(mpz_wrapper&& other) {
@@ -473,16 +477,26 @@ public:
     }
     template <typename T, typename std::enable_if<std::is_integral<T>::value && std::is_unsigned<T>::value,int>::type = 0>
     inline mpz_wrapper& operator=(T other) {
-        mpz_set_ui(mp, other);
+        if (mp->_mp_d == nullptr) {
+            mpz_init_set_ui(mp, other);
+        } else {
+            mpz_set_ui(mp, other);
+        }
         return *this;
     }
     template <typename T, typename std::enable_if<std::is_integral<T>::value && std::is_signed<T>::value,int>::type = 0>
     inline mpz_wrapper& operator=(T other) {
-        mpz_set_si(mp, other);
+        if (mp->_mp_d == nullptr) {
+            mpz_init_set_si(mp, other);
+        } else {
+            mpz_set_si(mp, other);
+        }
         return *this;
     }
     inline ~mpz_wrapper() {
-        mpz_clear(mp);
+        if (mp->_mp_d != nullptr) {
+            mpz_clear(mp);
+        }
     }
     inline mpz_ptr get_mpz_t() { return mp; }
     inline mpz_srcptr get_mpz_t() const { return mp; }

@@ -388,7 +388,7 @@ inline void mp_tdiv_qr(fmpz_wrapper &q, fmpz_wrapper &r, const fmpz_wrapper &a, 
 }
 
 inline void mp_addmul(fmpz_wrapper &r, const fmpz_wrapper &a, const fmpz_wrapper &b) {
-    fmpz_addmul(r, a, b);
+    fmpz_addmul(r.get_fmpz_t(), a.get_fmpz_t(), b.get_fmpz_t());
 }
 
 inline const fmpz_wrapper& get_den(const fmpq_wrapper &i) {
