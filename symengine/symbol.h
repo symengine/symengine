@@ -56,14 +56,14 @@ public:
 
 struct RCPSymbolCompare{
 public:
-    size_t operator()(const RCP<const Symbol> &a, const RCP<const Symbol> &b){
+    size_t operator()(const RCP<const Symbol> &a, const RCP<const Symbol> &b) const{
         return a->compare(*b);
     }
 };
 
 struct RCPSymbolEq{
 public:
-    bool operator()(const RCP<const Symbol> &a, const RCP<const Symbol> &b){
+    bool operator()(const RCP<const Symbol> &a, const RCP<const Symbol> &b) const{
         return a->__eq__(*b);
     }
 }; 

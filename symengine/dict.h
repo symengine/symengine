@@ -24,7 +24,7 @@ struct RCPBasicKeyLess;
 struct RCPIntegerKeyLess;
 struct RCPSymbolHash;
 struct RCPSymbolCompare;
-struct RCPSymbolEq
+struct RCPSymbolEq;
 
 typedef std::unordered_map<RCP<const Basic>, RCP<const Number>,
         RCPBasicHash, RCPBasicKeyEq> umap_basic_num;
@@ -170,7 +170,7 @@ public:
 
 class vec_uint_eq{
 public:
-    std::size_t operator()(const vec_uint &a, const vec_uint &b){
+    std::size_t operator()(const vec_uint &a, const vec_uint &b) const{
         if(a.size() != b.size())
             return false;
         for(unsigned int i = 0; i < a.size(); i++){
@@ -184,14 +184,58 @@ public:
 typedef std::set< RCP<const Symbol>, RCPSymbolCompare> set_sym;
 typedef std::unordered_map<RCP<const Symbol>, unsigned int, RCPSymbolHash, RCPSymbolEq> umap_sym_uint;
 typedef std::unordered_map<vec_uint, mpz_class, vec_uint_hash, vec_uint_eq> umap_uvec_mpz;
+
+int umap_uvec_mpz_compare(const umap_uvec_mpz &a, const umap_uvec_mpz &b){
+    if(a.size() < b.size())
+        return (a.size() < b.size()) ? -1 : 1;
+    return 0;
+}
+
+//coppied from umap_eq, with derefrencing of image in map removed.
+bool umap_uvec_mpz_eq(const umap_uvec_mpz &a, const umap_uvec_mpz &b){
+    // This follows the same algorithm as Python's dictionary comparison
+    // (a==b), which is implemented by "dict_equal" function in
+    // Objects/dictobject.c.
+
+    // Can't be equal if # of entries differ:
+    if (a.size() != b.size()) return false;
+    // Loop over keys in "a":
+    for (const auto &p: a) {
+        // O(1) lookup of the key in "b":
+        auto f = b.find(p.first);
+        if (f == b.end()) return false; // no such element in "b"
+        if (p.second != f->second) return false; // values not equal
+    }
+    return true;
+
+}
  
 template<class T>
-bool set_eq(const std::set<T> &a, const std::set<T> &b){
-    return a == b;
+bool set_eq(const T &A, const T &B)
+{
+    // Can't be equal if # of entries differ:
+    if (A.size() != B.size()) return false;
+    // Loop over elements in "a" and "b":
+    auto a = A.begin();
+    auto b = B.begin();
+    for (; a != A.end(); ++a, ++b) {
+        if (neq(**a, **b)) return false; // values not equal
+    }
+    return true;
 }
 
 template<class T>
-    int set_compare(const std::set<T> &a, const std::set<T> &b){
+int set_compare(const T &A, const T &B)
+{
+    if (A.size() != B.size())
+        return (A.size() < B.size()) ? -1 : 1;
+    auto a = A.begin();
+    auto b = B.begin();
+    int cmp;
+    for (; a != A.end(); ++a, ++b) {
+        cmp = (*a)->__cmp__(**b);
+        if (cmp != 0) return cmp;
+    }
     return 0;
 }
  

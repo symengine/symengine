@@ -142,14 +142,14 @@ public:
 public:
     IMPLEMENT_TYPEID(MULTIVARIATEPOLYNOMIAL)
     //constructor from components
-    MultivariatePolynomial(set_sym &var, umap_sym_uint &degrees, umap_uvec_mpz &dict);
-    RCP<const Basic> from_dict(set_sym &s, umap_uvec_mpz &&d);
+    MultivariatePolynomial(const set_sym &var, umap_sym_uint &degrees, umap_uvec_mpz &dict);
+    RCP<const Basic> from_dict(const set_sym &s, umap_uvec_mpz &&d) const;
     vec_basic get_args() const;
     bool is_canonical(const set_sym &vars, const umap_sym_uint &degrees, const umap_uvec_mpz &dict);
     std::size_t __hash__() const;
     bool __eq__(const Basic &o) const;
     int compare(const Basic &o) const;
-    mpz_class eval(std::map<RCP<const Symbol>, mpz_class> &vals);   
+    mpz_class eval(std::map<RCP<const Symbol>, mpz_class, RCPSymbolCompare> &vals);   
 };
 /*
 RCP<const MultivariatePolynomial> add_mult_poly(const MultivariatePolynomial &a, const MultivariatePolynomial &b);
