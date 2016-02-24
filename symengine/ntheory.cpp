@@ -376,8 +376,8 @@ int factor(const Ptr<RCP<const Integer>> &f, const Integer &n, double B1)
         // eventually `rem` = 0 zero as `n` is a perfect power. `f_t` will
         // be set to a factor of `n` when that happens
         while (i > 1 and rem != 0) {
-            mp_rootrem(f, rem, _n, i);
-            i--;
+            mp_rootrem(_f, rem, _n, i);
+            --i;
         }
 
         ret_val = 1;
