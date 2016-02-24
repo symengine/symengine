@@ -157,7 +157,7 @@ public:
 //f1 and f2 are vectors whose indicies are the positions in the arguments and whose values are the
 //positions in the output.  set_sym s is the set of symbols of the output, and
 // s1 and s2 are the sets of the symbols of the inputs.
-void reconcile_exps(vec_uint &v1, vec_uint &v2, set_sym &s, const set_sym &s1, const set_sym &s2);
+unsigned int reconcile_exps(vec_uint &v1, vec_uint &v2, set_sym &s, const set_sym &s1, const set_sym &s2);
 //translates vectors from one polynomial into vectors for another.
 vec_uint translate(vec_uint original, vec_uint translator);
 

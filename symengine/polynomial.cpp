@@ -430,7 +430,7 @@ mpz_class MultivariatePolynomial::eval(std::map<RCP<const Symbol>, mpz_class, RC
     return ans;
 }
 
-void reconcile_exps(vec_uint &v1, vec_uint &v2, set_sym &s, const set_sym &s1, const set_sym &s2){
+unsigned int reconcile_exps(vec_uint &v1, vec_uint &v2, set_sym &s, const set_sym &s1, const set_sym &s2){
     auto a1 = s1.begin();
     auto a2 = s2.begin();
     unsigned int poscount = 0;
@@ -475,11 +475,15 @@ void reconcile_exps(vec_uint &v1, vec_uint &v2, set_sym &s, const set_sym &s1, c
             poscount++;
         }
     }
+    return poscount; //return size of the new vectors
 }
 
-vec_uint translate(vec_uint original, vec_uint translator){
+vec_uint translate(vec_uint original, vec_uint translator, unsigned int size){
     vec_uint changed;
-    for(unsigned int i = 0; i < original.size(); i++){
+    for(unsigned int i = 0; i < size; i++){
+        changed[i] = 0;
+    }
+    for(unsigned int i = 0; i < original.size()){
         changed[translator[i]] = original[i];
     }
     return changed;
@@ -491,8 +495,12 @@ RCP<const MultivariatePolynomial> add_mult_poly(const MultivariatePolynomial &a,
     set_sym s;
     umap_uvec_mpz dict;
     umap_sym_uint degs;
-    reconcile_exps(v1,v2,s,a.vars_,b.vars_);
-    
+    unsigned int size; //size of the new vectors
+    size = reconcile_exps(v1,v2,s,a.vars_,b.vars_);
+    dict.insert(a.dict_.begin(), a.dict.end());
+    for(auto bucket : b.dict_){
+      
+    }    
     return make_rcp<const MultivariatePolynomial>(s,degs ,dict);
 }
 /*
