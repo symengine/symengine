@@ -434,44 +434,36 @@ unsigned int reconcile_exps(vec_uint &v1, vec_uint &v2, set_sym &s, const set_sy
     auto a1 = s1.begin();
     auto a2 = s2.begin();
     unsigned int poscount = 0;
-    unsigned int b1 = 0;
-    unsigned int b2 = 0;
     while(a1 != s1.end() && a2 != s2.end()){
         if(0 == (*a1)->compare(**a2) && (a1 != s1.end() && a2 != s2.end())){
-	    v1[b1] = poscount;
-            v2[b2] = poscount;
+            v1.insert(v1.end(), poscount);
+	    v2.insert(v2.end(), poscount);
 	    s.insert(*a1);
 	    a1++;
 	    a2++;
-	    b1++;
-     	    b2++;
         } else if(-1 == (*a1)->compare(**a2)){
-	    v1[b1] = poscount;
+	    v1.insert(v1.end(),poscount);
             s.insert(*a1);
 	    a1++;
-	    b1++;
         } else if(1 == (*a1)->compare(**a2)){
-	    v2[b2] = poscount;
+	    v2.insert(v2.end(),poscount);
 	    s.insert(*a2);
 	    a2++;
-	    b2++;
         }
 	poscount++;
     }
     if(a1 == s1.end()){
         while(a2 != s2.end()){
-	    v2[b2] = poscount;
+	    v2.insert(v2.end(),poscount);
 	    s.insert(*a2);
 	    a2++;
-	    b2++;
 	    poscount++;
         }
     } else if(a2 == s2.end()){
         while(a1 != s1.end()){
-            v1[b1] = poscount;
+	    v1.insert(v1.end(),poscount);
             s.insert(*a1);
             a1++;
-            b2++;
             poscount++;
         }
     }
@@ -481,9 +473,9 @@ unsigned int reconcile_exps(vec_uint &v1, vec_uint &v2, set_sym &s, const set_sy
 vec_uint translate(vec_uint original, vec_uint translator, unsigned int size){
     vec_uint changed;
     for(unsigned int i = 0; i < size; i++){
-        changed[i] = 0;
+        changed.insert(changed.end(), 0);
     }
-    for(unsigned int i = 0; i < original.size()){
+    for(unsigned int i = 0; i < original.size(); i++){
         changed[translator[i]] = original[i];
     }
     return changed;
@@ -497,10 +489,17 @@ RCP<const MultivariatePolynomial> add_mult_poly(const MultivariatePolynomial &a,
     umap_sym_uint degs;
     unsigned int size; //size of the new vectors
     size = reconcile_exps(v1,v2,s,a.vars_,b.vars_);
-    dict.insert(a.dict_.begin(), a.dict.end());
+    for(auto bucket : a.dict_){
+        dict.insert(std::pair<vec_uint, mpz_class>(translate(bucket.first,v1), bucket.second)); 
+    }
     for(auto bucket : b.dict_){
-      
-    }    
+        auto target = dict.find(translate(bucket.first,v2));
+        if(target != dict.end()){
+            target->second += bucket.second;
+        } else{
+            dict.insert(std::pair<vec_uint, mpz_class>(translate(bucket.first,v2),bucket.second));
+        }
+    }
     return make_rcp<const MultivariatePolynomial>(s,degs ,dict);
 }
 /*
