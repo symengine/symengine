@@ -440,6 +440,8 @@ TEST_CASE("Tan: functions", "[functions]")
     r1 = tan(add(sub(mul(i12, pi), y), div(pi, i2)));
     r2 = cot(y);
     REQUIRE(eq(*r1, *r2));
+
+    CHECK_THROWS_AS(tan(mul(integer(5), div(pi, i2))), std::runtime_error);
 }
 
 TEST_CASE("Cot: functions", "[functions]")
@@ -538,6 +540,8 @@ TEST_CASE("Cot: functions", "[functions]")
     r1 = cot(add(sub(mul(i12, pi), y), div(pi, i2)));
     r2 = tan(y);
     REQUIRE(eq(*r1, *r2));
+
+    CHECK_THROWS_AS(cot(mul(integer(7), pi)), std::runtime_error);
 }
 
 TEST_CASE("Csc: functions", "[functions]")
@@ -636,6 +640,8 @@ TEST_CASE("Csc: functions", "[functions]")
     r1 = csc(add(sub(mul(i12, pi), y), div(pi, i2)));
     r2 = sec(y);
     REQUIRE(eq(*r1, *r2));
+
+    CHECK_THROWS_AS(csc(mul(integer(7), pi)), std::runtime_error);
 }
 
 TEST_CASE("Sec: functions", "[functions]")
@@ -734,6 +740,8 @@ TEST_CASE("Sec: functions", "[functions]")
     r1 = sec(add(sub(mul(i12, pi), y), div(pi, i2)));
     r2 = csc(y);
     REQUIRE(eq(*r1, *r2));
+
+    CHECK_THROWS_AS(sec(mul(integer(7), div(pi, i2))), std::runtime_error);
 }
 
 TEST_CASE("TrigFunction: trig_to_sqrt", "[functions]")
