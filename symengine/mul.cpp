@@ -464,7 +464,8 @@ RCP<const Basic> Mul::subs(const map_basic_basic &subs_dict) const
         }
         RCP<const Basic> factor = factor_old->subs(subs_dict);
         if (factor == factor_old) {
-            Mul::dict_add_term(d, p.second, p.first);
+            // TODO: Check if Mul::dict_add_term is enough
+            Mul::dict_add_term_new(outArg(coef), d, p.second, p.first);
         } else if (is_a_Number(*factor)) {
             if (rcp_static_cast<const Number>(factor)->is_zero()) {
                 return factor;

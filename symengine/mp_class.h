@@ -21,7 +21,22 @@
 #include <gmp.h>
 
 namespace SymEngine {
-
+/*
+ * integer_class and rational_class are the storage classes for SymEngine::Integer
+ * and SymEngine::Rational respectively. There are 4 choices for the integer_class.
+ * mpz_class from libgmpxx, piranha::integer from piranha, mpz_wrapper which wraps
+ * mpz_t from libgmp and fmpz_wrapper which wraps fmpz_t from libflint. This choice
+ * is made at compile time with SYMENGINE_INTEGER_CLASS.
+ *
+ * Each of these classes has to have all the arithmetic operators overloaded with
+ * operands of these classes and C++ integer types except long long. Also, shift
+ * operators, move operators, string, integer and mpz_t constructors are also
+ * required.
+ *
+ * To add a new type, several non-member functions need to be defined for the new
+ * type. See mpz_wrapper implementation for all the non-member functions that need
+ * to be defined.
+ */
 
 #if SYMENGINE_INTEGER_CLASS == SYMENGINE_PIRANHA
 typedef piranha::integer integer_class;
