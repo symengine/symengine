@@ -192,11 +192,6 @@ bool UnivariatePolynomial::is_pow() const {
     return false;
 }
 
-inline RCP<const UnivariatePolynomial> pow_exp(RCP<const UnivariatePolynomial> a, RCP<const UnivariatePolynomial> b)
-{
-    
-}
-
 RCP<const UnivariatePolynomial> add_uni_poly(const UnivariatePolynomial &a, const UnivariatePolynomial &b) {
     map_uint_mpz dict;
     for (const auto &it : a.dict_)
