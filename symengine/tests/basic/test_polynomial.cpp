@@ -23,10 +23,7 @@ using SymEngine::integer;
 using SymEngine::vec_basic_eq_perm;
 using SymEngine::integer_class;
 
-inline integer_class operator "" _z(const char* str)
-{
-    return integer_class(str);
-}
+using namespace SymEngine::literals;
 
 TEST_CASE("Constructor of UnivariatePolynomial", "[UnivariatePolynomial]")
 {

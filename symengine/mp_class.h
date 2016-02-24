@@ -37,6 +37,15 @@ typedef mpz_class integer_class;
 typedef mpq_class rational_class;
 #endif
 
+// needs to be in a separate namespace to import the literals.
+// eg: using namespace SymEngine::literals;
+inline namespace literals {
+//! Literal for creating multiple precision integers
+    inline integer_class operator "" _z(const char *str) {
+        return integer_class(str);
+    }
+}
+
 #if SYMENGINE_INTEGER_CLASS == SYMENGINE_GMPXX || SYMENGINE_INTEGER_CLASS == SYMENGINE_GMP
 // Helper functions for mpz_class
 inline double get_d(const integer_class &i) {

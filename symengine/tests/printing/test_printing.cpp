@@ -44,10 +44,7 @@ using SymEngine::StrPrinter;
 using SymEngine::Sin;
 using SymEngine::integer_class;
 
-inline integer_class operator "" _z(const char* str)
-{
-    return integer_class(str);
-}
+using namespace SymEngine::literals;
 
 namespace SymEngine {
 class MyStrPrinter : public BaseVisitor<MyStrPrinter, StrPrinter> {
