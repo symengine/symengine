@@ -90,7 +90,7 @@ void basic_free_heap(basic_struct *s);
 //! This function creates a new SymEngine::Constant from a copy of
 //! the string in c, thus the caller is free to use c afterwards,
 //! and also the caller must free c.
-void basic_const_set(basic s, char* c);
+void basic_const_set(basic s, const char* c);
 
 void basic_const_zero(basic s);
 void basic_const_one(basic s);
