@@ -1,6 +1,7 @@
 #include <cmath>
 #include <functional>
 #include <complex>
+#include <algorithm>
 
 #include <symengine/basic.h>
 #include <symengine/symbol.h>
@@ -256,6 +257,32 @@ public:
         double tmp = apply(*(x.get_args()[0]));
         result_ = std::tgamma(tmp);
     };
+
+    void bvisit(const Max &x) {
+        auto d = x.get_args();
+        auto p = d.begin();
+        double result = apply(*(*p));
+        p++;
+
+        for (; p != d.end(); p++) {
+            double tmp = apply(*(*p));
+            result = std::max(result, tmp);
+        }
+        result_ = result;
+    };
+
+    void bvisit(const Min &x) {
+        auto d = x.get_args();
+        auto p = d.begin();
+        double result = apply(*(*p));
+        p++;
+
+        for (; p != d.end(); p++) {
+            double tmp = apply(*(*p));
+            result = std::min(result, tmp);
+        }
+        result_ = result;
+    };
 };
 
 class EvalComplexDoubleVisitor : public BaseVisitor<EvalComplexDoubleVisitor, EvalDoubleVisitor<std::complex<double>>> {
@@ -455,6 +482,24 @@ std::vector<fn> init_eval_double()
     table[ABS] = [](const Basic &x) {
         double tmp = eval_double_single_dispatch(*(static_cast<const Abs &>(x)).get_arg());
         return std::abs(tmp);
+    };
+    table[MAX] = [](const Basic &x) {
+        double result;
+        result = eval_double_single_dispatch(*(static_cast<const Max &>(x).get_args()[0]));
+        for (const auto &p: static_cast<const Max &>(x).get_args()) {
+            double tmp = eval_double_single_dispatch(*p);
+            result = std::max(result, tmp);
+        }
+        return result;
+    };
+    table[MIN] = [](const Basic &x) {
+        double result;
+        result = eval_double_single_dispatch(*(static_cast<const Max &>(x).get_args()[0]));
+        for (const auto &p: static_cast<const Min &>(x).get_args()) {
+            double tmp = eval_double_single_dispatch(*p);
+            result = std::min(result, tmp);
+        }
+        return result;
     };
     return table;
 }
