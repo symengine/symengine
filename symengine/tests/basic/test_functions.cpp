@@ -2045,6 +2045,19 @@ TEST_CASE("Beta: functions", "[functions]")
     r2 = beta(y, x);
     REQUIRE(eq(*r1, *r2));
     REQUIRE(r1->__hash__() == r2->__hash__());
+    
+    r1 = beta(x, y)->diff(x);
+    r2 = mul(beta(x, y), sub(polygamma(zero, x), polygamma(zero, add(x, y))));
+    REQUIRE(eq(*r1, *r2));
+    
+    r1 = beta(x, y)->diff(x);
+    r2 = beta(y, x)->diff(x);
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = beta(x, mul(x, x))->diff(x);
+    r2 = mul(beta(x, mul(x, x)), add(mul(mul(i2, x), polygamma(zero, mul(x, x))),
+            sub(polygamma(zero, x), mul(add(mul(i2, x), one), polygamma(zero, add(x, mul(x, x)))))));
+    REQUIRE(eq(*r1, *r2));
 }
 
 TEST_CASE("Polygamma: functions", "[functions]")
