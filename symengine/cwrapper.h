@@ -246,6 +246,12 @@ void basic_subs(basic s, const basic e, const CMapBasicBasic * mapbb);
 //! in the given basic 'e' and returns it through basic 's'
 void basic_subs2(basic s, const basic e, const basic a, const basic b);
 
+//! Wrapper for ascii_art()
+
+//! Returns a new char pointer to the ascii_art string
+//! The caller is responsible to free the pointer using 'basic_str_free'.
+char* ascii_art_str();
+
 #ifdef __cplusplus
 }
 #endif
