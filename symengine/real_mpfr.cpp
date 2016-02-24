@@ -858,8 +858,16 @@ class EvaluateMPFR : public Evaluate {
         return real_mpfr(std::move(t));
     }
 
-    virtual RCP<const Basic> gamma(Basic const &aConst) const override {
-        throw std::runtime_error("Not Implemented.");
+    virtual RCP<const Basic> gamma(const Basic &x) const override {
+        SYMENGINE_ASSERT(is_a<RealMPFR>(x))
+        mpfr_srcptr x_ = static_cast<const RealMPFR &>(x).i.get_mpfr_t();
+        if (mpfr_cmp_si(x_, 0) >= 0) {
+            mpfr_class t(mpfr_get_prec(x_));
+            mpfr_gamma(t.get_mpfr_t(), x_, MPFR_RNDN);
+            return real_mpfr(std::move(t));
+        } else {
+            throw std::runtime_error("Not Implemented.");
+        }
     }
 };
 

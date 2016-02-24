@@ -7,6 +7,7 @@
 #include <symengine/functions.h>
 #include <symengine/constants.h>
 #include <symengine/visitor.h>
+#include <algorithm>
 
 
 namespace SymEngine {
@@ -2634,9 +2635,6 @@ int LeviCivita::compare(const Basic &o) const
 {
     SYMENGINE_ASSERT(is_a<LeviCivita>(o))
     const LeviCivita &s = static_cast<const LeviCivita &>(o);
-    // # of elements
-    if (arg_.size() != s.arg_.size())
-        return (arg_.size() < s.arg_.size()) ? -1 : 1;
     return vec_basic_compare(arg_, s.arg_);
 }
 
@@ -3345,6 +3343,240 @@ RCP<const Basic> abs(const RCP<const Basic> &arg)
         return static_cast<const Number &>(*arg).get_eval().abs(*arg);
     }
     return make_rcp<const Abs>(arg);
+}
+
+Max::Max(const vec_basic&& arg)
+    :arg_{std::move(arg)}
+{
+    SYMENGINE_ASSERT(is_canonical(arg_))
+}
+
+bool Max::is_canonical(const vec_basic &arg) const
+{
+    if (arg.size() < 2)
+        return false;
+
+    bool non_number_exists = false;
+
+    for (const auto &p: arg) {
+        if (is_a<Complex>(*p) or is_a<Max>(*p))
+            return false;
+        if (not is_a_Number(*p))
+            non_number_exists = true;
+    }
+    if (not std::is_sorted(arg.begin(), arg.end(), RCPBasicKeyLess()))
+        return false;
+
+    return non_number_exists ;   // all arguments cant be numbers
+}
+
+bool Max::__eq__(const Basic &o) const
+{
+    if (is_a<Max>(o) and
+        vec_basic_eq_perm(arg_, static_cast<const Max &>(o).arg_))
+        return true;
+    else
+        return false;
+}
+
+int Max::compare(const Basic &o) const
+{
+    SYMENGINE_ASSERT(is_a<Max>(o))
+    const Max &s = static_cast<const Max &>(o);
+    return vec_basic_compare(arg_, s.arg_);
+}
+
+std::size_t Max::__hash__() const
+{
+    std::size_t seed = MAX;
+    for (const auto &p: arg_) {
+        hash_combine<Basic>(seed, *p);
+    }
+    return seed;
+}
+
+RCP<const Basic> max(const vec_basic &arg)
+{
+    bool number_set = false;
+    RCP<const Number> max_number, difference;
+    set_basic new_args;
+
+    for (const auto &p: arg) {
+        if (is_a<Complex>(*p))
+            throw std::runtime_error("Complex can't be passed to max!");
+
+        if (is_a_Number(*p)) {
+            if(not number_set) {
+                max_number = rcp_static_cast<const Number>(p);
+
+            } else {
+                difference = rcp_static_cast<const Number>(p)->sub(*max_number);
+
+                if (difference->is_zero() and not difference->is_exact()) {
+                    if (max_number->is_exact())
+                        max_number = rcp_static_cast<const Number>(p);
+                } else if (difference->is_positive()) {
+                    max_number = rcp_static_cast<const Number>(p);
+                }
+            }
+            number_set = true;
+
+        } else if (is_a<Max>(*p)) {
+            for (const auto &l: rcp_static_cast<const Max>(p)->get_args()) {
+                if (is_a_Number(*l)) {
+                    if(not number_set) {
+                        max_number = rcp_static_cast<const Number>(l);
+
+                    } else {
+                        difference = rcp_static_cast<const Number>(l)->sub(*max_number);
+
+                        if (difference->is_zero() and not difference->is_exact()) {
+                            if (max_number->is_exact())
+                                max_number = rcp_static_cast<const Number>(l);
+                        } else if (difference->is_positive()) {
+                            max_number = rcp_static_cast<const Number>(l);
+                        }
+                    }
+                    number_set = true;
+                } else {
+                    new_args.insert(l);
+                }
+            }
+        } else {
+            new_args.insert(p);
+        }
+    }
+
+    if (number_set)
+        new_args.insert(max_number);
+
+    vec_basic final_args(new_args.size());
+    std::copy(new_args.begin(), new_args.end(), final_args.begin());
+
+    if (final_args.size() > 1) {
+        return make_rcp<const Max>(std::move(final_args));
+    } else if (final_args.size() == 1) {
+        return final_args[0];
+    } else {
+        throw std::runtime_error("Empty vec_basic passed to max!");
+    }
+}
+
+Min::Min(const vec_basic&& arg)
+    :arg_{std::move(arg)}
+{
+    SYMENGINE_ASSERT(is_canonical(arg_))
+}
+
+bool Min::is_canonical(const vec_basic &arg) const
+{
+    if (arg.size() < 2)
+        return false;
+
+    bool non_number_exists = false;
+
+    for (const auto &p: arg) {
+        if (is_a<Complex>(*p) or is_a<Min>(*p))
+            return false;
+        if (not is_a_Number(*p))
+            non_number_exists = true;
+    }
+    if (not std::is_sorted(arg.begin(), arg.end(), RCPBasicKeyLess()))
+        return false;
+
+    return non_number_exists;   // all arguments cant be numbers
+}
+
+bool Min::__eq__(const Basic &o) const
+{
+    if (is_a<Min>(o) and
+        vec_basic_eq_perm(arg_, static_cast<const Min &>(o).arg_))
+        return true;
+    else
+        return false;
+}
+
+int Min::compare(const Basic &o) const
+{
+    SYMENGINE_ASSERT(is_a<Min>(o))
+    const Min &s = static_cast<const Min &>(o);
+    return vec_basic_compare(arg_, s.arg_);
+}
+
+std::size_t Min::__hash__() const
+{
+    std::size_t seed = MIN;
+    for (const auto &p: arg_) {
+        hash_combine<Basic>(seed, *p);
+    }
+    return seed;
+}
+
+RCP<const Basic> min(const vec_basic &arg)
+{
+    bool number_set = false;
+    RCP<const Number> min_number, difference;
+    set_basic new_args;
+
+    for (const auto &p: arg) {
+        if (is_a<Complex>(*p))
+            throw std::runtime_error("Complex can't be passed to min!");
+
+        if (is_a_Number(*p)) {
+            if(not number_set) {
+                min_number = rcp_static_cast<const Number>(p);
+
+            } else {
+                difference = min_number->sub(*rcp_static_cast<const Number>(p));
+
+                if (difference->is_zero() and not difference->is_exact()) {
+                    if (min_number->is_exact())
+                        min_number = rcp_static_cast<const Number>(p);
+                } else if (difference->is_positive()) {
+                    min_number = rcp_static_cast<const Number>(p);
+                }
+            }
+            number_set = true;
+
+        } else if (is_a<Min>(*p)) {
+            for (const auto &l: rcp_static_cast<const Min>(p)->get_args()) {
+                if (is_a_Number(*l)) {
+                    if(not number_set) {
+                        min_number = rcp_static_cast<const Number>(l);
+
+                    } else {
+                        difference = min_number->sub(*rcp_static_cast<const Number>(l));
+
+                        if (difference->is_zero() and not difference->is_exact()) {
+                            if (min_number->is_exact())
+                                min_number = rcp_static_cast<const Number>(l);
+                        } else if (difference->is_positive()) {
+                            min_number = rcp_static_cast<const Number>(l);
+                        }
+                    }
+                    number_set = true;
+                } else {
+                    new_args.insert(l);
+                }
+            }
+        } else {
+            new_args.insert(p);
+        }
+    }
+
+    if (number_set)
+        new_args.insert(min_number);
+
+    vec_basic final_args(new_args.size());
+    std::copy(new_args.begin(), new_args.end(), final_args.begin());
+
+    if (final_args.size() > 1) {
+        return make_rcp<const Min>(std::move(final_args));
+    } else if (final_args.size() == 1) {
+        return final_args[0];
+    } else {
+        throw std::runtime_error("Empty vec_basic passed to max!");
+    }
 }
 
 } // SymEngine

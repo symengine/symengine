@@ -276,6 +276,38 @@ public:
         fn tmp = apply(*(x.get_args()[0]));
         result_ = [=](const std::vector<double> &x){ return std::tgamma(tmp(x)); };
     };
+
+    void bvisit(const Max &x) {
+        std::vector<fn> applys;
+        for (const auto &p: x.get_args()) {
+            applys.push_back(apply(*p));
+        }
+
+        result_ = [=](const std::vector<double> &x){
+
+            double result = applys[0](x);
+            for (unsigned int i = 0; i < applys.size(); i++) {
+                result = std::max(result, applys[i](x));
+            }
+            return result;
+        };
+    };
+
+    void bvisit(const Min &x) {
+        std::vector<fn> applys;
+        for (const auto &p: x.get_args()) {
+            applys.push_back(apply(*p));
+        }
+
+        result_ = [=](const std::vector<double> &x){
+
+            double result = applys[0](x);
+            for (unsigned int i = 0; i < applys.size(); i++) {
+                result = std::min(result, applys[i](x));
+            }
+            return result;
+        };
+    };
 };
 
 class LambdaComplexDoubleVisitor : public BaseVisitor<LambdaComplexDoubleVisitor, LambdaDoubleVisitor<std::complex<double>>> {

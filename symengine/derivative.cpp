@@ -45,9 +45,10 @@ static RCP<const Basic> diff(const CLASS &self, \
     DIFF0(Dirichlet_eta)
     DIFF0(UpperGamma)
     DIFF0(LowerGamma)
-    DIFF0(Beta)
     DIFF0(PolyGamma)
     DIFF0(LeviCivita)
+    DIFF0(Max)
+    DIFF0(Min)
 
 #endif
 
@@ -421,7 +422,16 @@ static RCP<const Basic> diff(const CLASS &self, \
             const RCP<const Symbol> &x) {
         return self.diff_impl(x);
     }
-
+    static RCP<const Basic> diff(const Beta &self,
+            const RCP<const Symbol> &x) {
+        RCP<const Basic> beta_arg0 = self.get_args()[0];
+        RCP<const Basic> beta_arg1 = self.get_args()[1];
+        RCP<const Basic> diff_beta_arg0 = beta_arg0->diff(x);
+        RCP<const Basic> diff_beta_arg1 = beta_arg1->diff(x);
+        return mul(self.rcp_from_this(), add(mul(polygamma(zero, beta_arg0), diff_beta_arg0),
+                sub(mul(polygamma(zero, beta_arg1), diff_beta_arg1),
+                mul(polygamma(zero, add(beta_arg0, beta_arg1)), add(diff_beta_arg0, diff_beta_arg1)))));
+    }
 };
 
 #define IMPLEMENT_DIFF(CLASS) \
