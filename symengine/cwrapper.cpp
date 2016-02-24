@@ -261,6 +261,21 @@ void basic_abs(basic s, const basic a)
     s->m = SymEngine::abs(a->m);
 }
 
+void basic_sin(basic s, const basic a)
+{
+    s->m = SymEngine::sin(a->m);
+}
+
+void basic_cos(basic s, const basic a)
+{
+    s->m = SymEngine::cos(a->m);
+}
+
+void basic_tan(basic s, const basic a)
+{
+    s->m = SymEngine::tan(a->m);
+}
+
 void basic_expand(basic s, const basic a)
 {
     s->m = SymEngine::expand(a->m);

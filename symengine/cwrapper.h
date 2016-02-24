@@ -161,6 +161,12 @@ int basic_eq(const basic a, const basic b);
 int basic_neq(const basic a, const basic b);
 //! Assigns s = abs(a).
 void basic_abs(basic s, const basic a);
+//! Assigns s = sin(a).
+void basic_sin(basic s, const basic a);
+//! Assigns s = cos(a).
+void basic_cos(basic s, const basic a);
+//! Assigns s = tan(a).
+void basic_tan(basic s, const basic a);
 //! Expands the expr a and assigns to s.
 void basic_expand(basic s, const basic a);
 
