@@ -477,10 +477,25 @@ void reconcile_exps(vec_uint &v1, vec_uint &v2, set_sym &s, const set_sym &s1, c
     }
 }
 
-/*
-RCP<const MultivariatePolynomial> add_mult_poly(const MultivariatePolynomial &a, const MultivariatePolynomial &b){
+vec_uint translate(vec_uint original, vec_uint translator){
+    vec_uint changed;
+    for(unsigned int i = 0; i < original.size(); i++){
+        changed[translator[i]] = original[i];
+    }
+    return changed;
 }
 
+RCP<const MultivariatePolynomial> add_mult_poly(const MultivariatePolynomial &a, const MultivariatePolynomial &b){
+    vec_uint v1;
+    vec_uint v2;
+    set_sym s;
+    umap_uvec_mpz dict;
+    umap_sym_uint degs;
+    reconcile_exps(v1,v2,s,a.vars_,b.vars_);
+    
+    return make_rcp<const MultivariatePolynomial>(s,degs ,dict);
+}
+/*
 RCP<const MultivariatePolynomial> neg_mult_poly(const MultivariatePolynomial &a){
 }
 
