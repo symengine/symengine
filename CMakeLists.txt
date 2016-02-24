@@ -97,8 +97,10 @@ set(INTEGER_CLASS "gmpxx"
 
 if ("${INTEGER_CLASS}" MATCHES "piranha")
     set(SYMENGINE_INTEGER_CLASS "PIRANHA")
+    set(WITH_PIRANHA yes)
 elseif ("${INTEGER_CLASS}" MATCHES "flint")
     set(SYMENGINE_INTEGER_CLASS "FLINT")
+    set(WITH_FLINT yes)
 elseif ("${INTEGER_CLASS}" MATCHES "gmpxx")
     set(SYMENGINE_INTEGER_CLASS "GMPXX")
     set(WITH_GMPXX yes)

@@ -74,10 +74,12 @@ if [[ "${WITH_MPFR}" == "yes" ]] || [[ "${WITH_MPC}" == "yes" ]] || [[ "${WITH_A
         sudo apt-get install libmpfr-dev;
     fi
 fi
-if [[ "${WITH_ARB}" == "yes" ]]; then
+if [[ "${WITH_ARB}" == "yes" ]] || [[ "${WITH_FLINT}" == "yes" ]]; then
     wget https://raw.githubusercontent.com/symengine/dependencies/6a42d290071921a0a478c6883fc0ddd709d664c9/flint-2.4.4.tar.gz;
     tar -xzf flint-2.4.4.tar.gz;
     cd flint-2.4.4 && ./configure --prefix=$our_install_dir && make -j8 install && cd ..;
+fi
+if [[ "${WITH_ARB}" == "yes" ]]; then
     wget https://github.com/fredrik-johansson/arb/archive/2.6.0.tar.gz;
     tar -xzf 2.6.0.tar.gz;
     cd arb-2.6.0 && ./configure --prefix=$our_install_dir  --with-flint=$our_install_dir;
