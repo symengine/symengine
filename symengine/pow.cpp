@@ -19,9 +19,6 @@ Pow::Pow(const RCP<const Basic> &base, const RCP<const Basic> &exp)
 
 bool Pow::is_canonical(const Basic &base, const Basic &exp) const
 {
-    // e.g. 0**x
-    if (is_a<Integer>(base) and static_cast<const Integer&>(base).is_zero())
-        return false;
     // e.g. 1**x
     if (is_a<Integer>(base) and static_cast<const Integer&>(base).is_one())
         return false;
@@ -94,7 +91,16 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
         return pownum(rcp_static_cast<const Number>(b), zero);
     }
     if (eq(*b, *one)) return a;
-    if (eq(*a, *zero)) return zero;
+    if (eq(*a, *zero)) {
+        if (is_a_Number(*b)) {
+            if(static_cast<const Number &>(*b).is_negative())
+                throw std::runtime_error("pow: Zero cannot be raised to negative power");
+            else
+                return zero;
+        }
+        else
+            return zero;
+    }
     if (eq(*a, *one)) return one;
     if (eq(*a, *minus_one)) {
         if (is_a<Integer>(*b)) {
