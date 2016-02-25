@@ -37,12 +37,12 @@ bool UnivariateIntPolynomial::is_canonical(const unsigned int &degree_, const ma
 std::size_t UnivariateIntPolynomial::__hash__() const
 {
     std::hash<std::string> hash_string;
-    std::size_t seed = INTCOEFFPOLYNOMIAL;
+    std::size_t seed = UNIVARIATEINTPOLYNOMIAL;
 
     seed += hash_string(this->var_->get_name());
     for (const auto &it : this->dict_)
     {
-        std::size_t temp = INTCOEFFPOLYNOMIAL;
+        std::size_t temp = UNIVARIATEINTPOLYNOMIAL;
         hash_combine<unsigned int>(temp, it.first);
         hash_combine<long long int>(temp, it.second.get_si());
         seed += temp;
@@ -192,7 +192,7 @@ bool UnivariateIntPolynomial::is_pow() const {
     return false;
 }
 
-RCP<const UnivariateIntPolynomial> addpoly(const UnivariateIntPolynomial &a, const UnivariateIntPolynomial &b) {
+RCP<const UnivariateIntPolynomial> add_poly(const UnivariateIntPolynomial &a, const UnivariateIntPolynomial &b) {
     map_uint_mpz dict;
     for (const auto &it : a.dict_)
         dict[it.first] = it.second;
@@ -243,11 +243,11 @@ RCP<const UnivariateIntPolynomial> mul_poly(RCP<const UnivariateIntPolynomial> a
 
     int sign = 1;
     if ((--(a->dict_.end()))->second < 0) {
-        a = neg_uni_poly(*a);
+        a = neg_poly(*a);
         sign = -1 * sign;
     }
     if ((--(b->dict_.end()))->second < 0) {
-        b = neg_uni_poly(*b);
+        b = neg_poly(*b);
         sign = -1 * sign;
     }
 
@@ -322,7 +322,7 @@ std::size_t UnivariatePolynomial::__hash__() const
     {
         std::size_t temp = UNIVARIATEPOLYNOMIAL;
         hash_combine<unsigned int>(temp, it.first);
-        hash_combine<long long int>(temp, it.second.get_si());
+        hash_combine<Expression>(temp, it.second);
         seed += temp;
     }
     return seed;
@@ -392,7 +392,7 @@ vec_basic UnivariatePolynomial::get_args() const {
     return args;
 }
 
-mpz_class UnivariatePolynomial::max_coef() const {
+Expression UnivariatePolynomial::max_coef() const {
     Expression curr = dict_.begin()->second;
     for (const auto &it : dict_) {
         if (it.second > curr)
@@ -401,7 +401,7 @@ mpz_class UnivariatePolynomial::max_coef() const {
     return curr;
 }
 
-mpz_class UnivariatePolynomial::eval(const Expression &x) const {
+Expression UnivariatePolynomial::eval(const Expression &x) const {
     //TODO: Use Horner's Scheme
     Expression ans = 0;
     for (const auto &p : dict_) {
@@ -412,7 +412,7 @@ mpz_class UnivariatePolynomial::eval(const Expression &x) const {
     return ans;
 }
 
-mpz_class UnivariatePolynomial::eval_bit(const int &x) const {
+Expression UnivariatePolynomial::eval_bit(const int &x) const {
     //TODO: Use Horner's Scheme
     Expression ans = 0;
     for (const auto &p : dict_) {

@@ -89,7 +89,7 @@ public:
 }; //UnivariateIntPolynomial
 
 //! Adding two UnivariateIntPolynomial a and b
-RCP<const UnivariateIntPolynomial> add__poly(const UnivariateIntPolynomial &a, const UnivariateIntPolynomial &b);
+RCP<const UnivariateIntPolynomial> add_poly(const UnivariateIntPolynomial &a, const UnivariateIntPolynomial &b);
 //! Negative of a UnivariateIntPolynomial
 RCP<const UnivariateIntPolynomial> neg_poly(const UnivariateIntPolynomial &a);
 //! Subtracting two UnivariateIntPolynomial a and b
