@@ -1,5 +1,6 @@
 #include <symengine/basic.h>
 #include <symengine/integer.h>
+#include <symengine/expression.h>
 
 namespace SymEngine {
 
@@ -196,7 +197,7 @@ bool map_uint_Expr_eq(const map_uint_Expr &a,
     return true;
 }
 
-int map_uint_mpz_compare(const map_uint_Expr &A, const map_uint_Expr &B)
+int map_uint_Expr_compare(const map_uint_Expr &A, const map_uint_Expr &B)
 {
     if (A.size() != B.size())
         return (A.size() < B.size()) ? -1 : 1;

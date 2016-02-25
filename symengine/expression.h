@@ -120,6 +120,12 @@ public:
     {
         return eq(*m_basic, *other.m_basic);
     }
+
+    bool operator<(const Expression &other) const
+    {
+        return eq(*m_basic, *other.m_basic);
+    }
+     
     //! Overload check not equal (!=)
     bool operator!=(const Expression &other) const
     {

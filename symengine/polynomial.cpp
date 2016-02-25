@@ -37,12 +37,12 @@ bool UnivariateIntPolynomial::is_canonical(const unsigned int &degree_, const ma
 std::size_t UnivariateIntPolynomial::__hash__() const
 {
     std::hash<std::string> hash_string;
-    std::size_t seed = INTCOEFFPOLYNOMIAL;
+    std::size_t seed = UNIVARIATEINTPOLYNOMIAL;
 
     seed += hash_string(this->var_->get_name());
     for (const auto &it : this->dict_)
     {
-        std::size_t temp = INTCOEFFPOLYNOMIAL;
+        std::size_t temp = UNIVARIATEINTPOLYNOMIAL;
         hash_combine<unsigned int>(temp, it.first);
         hash_combine<long long int>(temp, it.second.get_si());
         seed += temp;
@@ -243,11 +243,11 @@ RCP<const UnivariateIntPolynomial> mul_poly(RCP<const UnivariateIntPolynomial> a
 
     int sign = 1;
     if ((--(a->dict_.end()))->second < 0) {
-        a = neg_uni_poly(*a);
+        a = neg_poly(*a);
         sign = -1 * sign;
     }
     if ((--(b->dict_.end()))->second < 0) {
-        b = neg_uni_poly(*b);
+        b = neg_poly(*b);
         sign = -1 * sign;
     }
 
