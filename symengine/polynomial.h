@@ -87,14 +87,14 @@ public:
     };
 
 }; //UnivariatePolynomial
-
+/*
 class UnivariateExprPolynomial: public Basic {
 public:
     unsigned int degree_;
     RCP<const Symbol> var_;
     map_uint_expr dict_;
 public:
-    IMPLEMENT_TYPEID(UNIVARIATEEXPRPOLYNOMIAL)
+    IMPLEMENT_TYPEID(UNIVARIATEEXPRPOLYNOMIAL)*/
     //! Constructor of UnivariatePolynomial class
     /*UnivariateExprPolynomial(const RCP<const Symbol> &var, const unsigned int &degree, map_uint_expr&& dict);*/
     //! Constructor using a dense vector of mpz_class coefficients
@@ -113,7 +113,7 @@ public:
      * \return whether the 2 objects are equal
      * */
     /*bool __eq__(const Basic &o) const;*/
-}; //UnivariateExprPolynomial
+//}; //UnivariateExprPolynomial
 
 //! Adding two UnivariatePolynomial a and b
 RCP<const UnivariatePolynomial> add_uni_poly(const UnivariatePolynomial &a, const UnivariatePolynomial &b);

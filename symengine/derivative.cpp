@@ -1,4 +1,4 @@
-#include <symengine/basic.h>
+.#include <symengine/basic.h>
 #include <symengine/symbol.h>
 #include <symengine/add.h>
 #include <symengine/integer.h>
@@ -422,6 +422,7 @@ static RCP<const Basic> diff(const CLASS &self, \
             const RCP<const Symbol> &x) {
         return self.diff_impl(x);
     }
+
     static RCP<const Basic> diff(const Beta &self,
             const RCP<const Symbol> &x) {
         RCP<const Basic> beta_arg0 = self.get_args()[0];
@@ -432,6 +433,31 @@ static RCP<const Basic> diff(const CLASS &self, \
                 sub(mul(polygamma(zero, beta_arg1), diff_beta_arg1),
                 mul(polygamma(zero, add(beta_arg0, beta_arg1)), add(diff_beta_arg0, diff_beta_arg1)))));
     }
+
+    static RCP<const Basic> diff(const MultivariatePolynomial &self, const RCP<const Symbol> &x){
+        if(self.vars_.find(x) != self.vars_.end()){
+            umap_uvec_mpz dict;
+            auto i = self.vars_.begin();
+            unsigned int index = 0;
+            while(!(*i)->__eq__(*x)){
+                index++;
+            } //find the index of the variable we are differentiating WRT.
+            for(auto bucket : self.dict_){
+                if(bucket.first[index] != 0){
+                    vec_uint v = bucket.first;
+                    v[index]--;
+                    dict.insert(std::pair<vec_uint, mpz_class>(v, bucket.second * bucket.first[index]));
+                }
+            }
+            umap_sym_uint degrees = self.degrees_;
+            if(degrees[x] >0)
+                degrees[x]--;
+            return make_rcp<const MultivariatePolynomial>(self.vars_, degrees, dict);
+        } else{
+            return zero;
+        }
+    }
+
 };
 
 #define IMPLEMENT_DIFF(CLASS) \

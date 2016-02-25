@@ -143,16 +143,9 @@ typedef struct
 
 typedef std::unordered_map<vec_int, mpz_class,
         vec_int_hash> umap_vec_mpz;
- 
-int umap_vec_mpz_compare(const umap_vec_mpz &a, const umap_vec_mpz &b){
-    if(a.size() < b.size())
-        return (a.size() < b.size()) ? -1 : 1;
-    return 0;
-};
 
-unsigned int mpz_hash(const mpz_class z){
-    return z.get_ui();
-}
+int umap_vec_mpz_compare(const umap_vec_mpz &a, const umap_vec_mpz &b);
+unsigned int mpz_hash(const mpz_class z);
 
 typedef std::vector<unsigned int> vec_uint;
 
@@ -185,30 +178,10 @@ typedef std::set< RCP<const Symbol>, RCPSymbolCompare> set_sym;
 typedef std::unordered_map<RCP<const Symbol>, unsigned int, RCPSymbolHash, RCPSymbolEq> umap_sym_uint;
 typedef std::unordered_map<vec_uint, mpz_class, vec_uint_hash, vec_uint_eq> umap_uvec_mpz;
 
-int umap_uvec_mpz_compare(const umap_uvec_mpz &a, const umap_uvec_mpz &b){
-    if(a.size() < b.size())
-        return (a.size() < b.size()) ? -1 : 1;
-    return 0;
-}
+int umap_uvec_mpz_compare(const umap_uvec_mpz &a, const umap_uvec_mpz &b);
 
 //coppied from umap_eq, with derefrencing of image in map removed.
-bool umap_uvec_mpz_eq(const umap_uvec_mpz &a, const umap_uvec_mpz &b){
-    // This follows the same algorithm as Python's dictionary comparison
-    // (a==b), which is implemented by "dict_equal" function in
-    // Objects/dictobject.c.
-
-    // Can't be equal if # of entries differ:
-    if (a.size() != b.size()) return false;
-    // Loop over keys in "a":
-    for (const auto &p: a) {
-        // O(1) lookup of the key in "b":
-        auto f = b.find(p.first);
-        if (f == b.end()) return false; // no such element in "b"
-        if (p.second != f->second) return false; // values not equal
-    }
-    return true;
-
-}
+bool umap_uvec_mpz_eq(const umap_uvec_mpz &a, const umap_uvec_mpz &b);
  
 template<class T>
 bool set_eq(const T &A, const T &B)

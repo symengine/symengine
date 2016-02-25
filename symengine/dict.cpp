@@ -182,8 +182,6 @@ int map_uint_mpz_compare(const map_uint_mpz &A, const map_uint_mpz &B)
     return 0;
 }
 
-
-
 bool multiset_basic_eq(const multiset_basic &a, const multiset_basic &b)
 {
     return set_eq<multiset_basic>(a, b);
@@ -194,4 +192,41 @@ int multiset_basic_compare(const multiset_basic &a, const multiset_basic &b)
     return set_compare<multiset_basic>(a, b);
 }
 
+
+int umap_vec_mpz_compare(const umap_vec_mpz &a, const umap_vec_mpz &b){
+    if(a.size() < b.size())
+        return (a.size() < b.size()) ? -1 : 1;
+    return 0;
+}
+
+unsigned int mpz_hash(const mpz_class z){
+    return z.get_ui();
+}
+
+int umap_uvec_mpz_compare(const umap_uvec_mpz &a, const umap_uvec_mpz &b){
+    if(a.size() < b.size())
+        return (a.size() < b.size()) ? -1 : 1;
+    return 0;
+}
+
+//coppied from umap_eq, with derefrencing of image in map removed.
+bool umap_uvec_mpz_eq(const umap_uvec_mpz &a, const umap_uvec_mpz &b){
+    // This follows the same algorithm as Python's dictionary comparison
+    // (a==b), which is implemented by "dict_equal" function in
+    // Objects/dictobject.c.
+
+    // Can't be equal if # of entries differ:
+    if (a.size() != b.size()) return false;
+    // Loop over keys in "a":
+    for (const auto &p: a) {
+        // O(1) lookup of the key in "b":
+        auto f = b.find(p.first);
+        if (f == b.end()) return false; // no such element in "b"
+        if (p.second != f->second) return false; // values not equal
+    }
+    return true;
+
+}
+
+  
 }

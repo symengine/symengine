@@ -487,17 +487,16 @@ RCP<const MultivariatePolynomial> add_mult_poly(const MultivariatePolynomial &a,
     set_sym s;
     umap_uvec_mpz dict;
     umap_sym_uint degs;
-    unsigned int size; //size of the new vectors
-    size = reconcile_exps(v1,v2,s,a.vars_,b.vars_);
+    unsigned int size = reconcile_exps(v1,v2,s,a.vars_,b.vars_);
     for(auto bucket : a.dict_){
-        dict.insert(std::pair<vec_uint, mpz_class>(translate(bucket.first,v1), bucket.second)); 
+        dict.insert(std::pair<vec_uint, mpz_class>(translate(bucket.first,v1,size), bucket.second)); 
     }
     for(auto bucket : b.dict_){
-        auto target = dict.find(translate(bucket.first,v2));
+        auto target = dict.find(translate(bucket.first,v2,size));
         if(target != dict.end()){
             target->second += bucket.second;
         } else{
-            dict.insert(std::pair<vec_uint, mpz_class>(translate(bucket.first,v2),bucket.second));
+            dict.insert(std::pair<vec_uint, mpz_class>(translate(bucket.first,v2,size),bucket.second));
         }
     }
     return make_rcp<const MultivariatePolynomial>(s,degs ,dict);
