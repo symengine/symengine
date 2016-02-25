@@ -20,6 +20,15 @@ pwd
 echo "Running cmake:"
 # We build the command line here. If the variable is empty, we skip it,
 # otherwise we pass it to cmake.
+
+# check trailing whitespace:
+if !  egrep " $" -nr --include=\*.{cpp,h,inc}  --exclude-dir=*{teuchos,/build/}* $SOURCE_DIR ; then
+    echo No trailing whitespace;
+else
+    exit -1;
+fi
+# TODO: Add similar grep checks for space after comma,, space after `if`, space between `)` and `{` also
+
 cmake_line="-DCMAKE_INSTALL_PREFIX=$our_install_dir -DCMAKE_PREFIX_PATH=$our_install_dir"
 if [[ "${BUILD_TYPE}" != "" ]]; then
     cmake_line="$cmake_line -DCMAKE_BUILD_TYPE=${BUILD_TYPE}"
@@ -102,11 +111,3 @@ export LD_LIBRARY_PATH=$our_install_dir/lib:$LD_LIBRARY_PATH
 
 echo "Checking whether all header files are installed:"
 python $SOURCE_DIR/symengine/utilities/tests/test_make_install.py $our_install_dir/include/symengine/ $SOURCE_DIR/symengine
-
-# check trailing whitespace:
-if !  egrep " $" -nr --include=\*.{cpp,h,inc}  --exclude-dir=*{teuchos,/build/}* $SOURCE_DIR ; then
-    echo No trailing whitespace;
-else
-    exit -1;
-fi
-# TODO: Add similar grep checks for space after comma,, space after `if`, space between `)` and `{` also
