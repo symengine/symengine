@@ -8,6 +8,42 @@ using SymEngine::make_rcp;
 
 namespace SymEngine {
 
+UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const RCP<const UnivariatePolynomial> &poly) :
+        var_{var}, poly_{std::move(poly)} , prec_{precision} {
+}
+
+UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const unsigned int &max, map_uint_mpz&& dict) :
+        var_{var}, prec_{precision} {
+
+    poly_ = univariate_polynomial(var_, max, std::move(dict));
+}
+
+UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const map_uint_mpz& dict) :
+        var_{var}, prec_{precision} {
+
+    map_uint_mpz dict_trunc;
+    unsigned int max = 0;
+    std::copy_if(dict.begin(), dict.end(), std::inserter(dict_trunc, dict_trunc.end()), [&](const map_uint_mpz::value_type i)
+        {
+            if (i.first < prec_) {
+                if (max < i.first)
+                    max = i.first;
+                return true;
+            }
+            return false;
+        } );
+    poly_ = univariate_polynomial(var_, max, std::move(dict_trunc));
+}
+
+UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const std::vector<mpz_class> &v) :
+        var_{var}, prec_{precision} {
+
+    std::vector<mpz_class> vtrunc;
+    std::copy_if(v.begin(), v.end(), std::back_inserter(vtrunc),
+        [&](decltype(v[0]) i) { return i < prec_; } );
+    poly_ = UnivariatePolynomial::create(var_, vtrunc);
+}
+
 RCP<const UnivariateSeries> UnivariateSeries::series(const RCP<const Basic> &t, const std::string &x, unsigned int prec) {
     SeriesVisitor<UnivariateExprPolynomial, Expression, UnivariateSeries> visitor(UnivariateExprPolynomial(std::stoi(x)), x, prec);
     return visitor.series(t);
