@@ -322,7 +322,7 @@ std::size_t UnivariatePolynomial::__hash__() const
     {
         std::size_t temp = UNIVARIATEPOLYNOMIAL;
         hash_combine<unsigned int>(temp, it.first);
-        hash_combine<Expression>(temp, it.second);
+        hash_combine<Basic>(temp, *(it.second.get_basic()));
         seed += temp;
     }
     return seed;
@@ -355,14 +355,16 @@ RCP<const Basic> UnivariatePolynomial::from_dict(const RCP<const Symbol> &var, m
 {
     if (d.size() == 1) {
         if (d.begin()->first == 0)
-            return integer(d.begin()->second);
+            // return integer(d.begin()->second);
+            return d.begin()->second.get_basic();
         else if (d.begin()->first == 1) {
             if (d.begin()->second == 0)
                 return zero;
             else if (d.begin()->second == 1)
                 return var;
             else
-                return Mul::from_dict(integer(d.begin()->second), {{var, one}});
+                return Mul::from_dict(integer(d.begin()->second), {{var, one}}); 
+                // Does not apply, because Mul is for integer coeffs - would, need integer to be Expression
         } else {
             if (d.begin()->second == 0)
                 return zero;
@@ -406,7 +408,7 @@ Expression UnivariatePolynomial::eval(const Expression &x) const {
     Expression ans = 0;
     for (const auto &p : dict_) {
         Expression temp;
-        mpz_pow_ui(temp.get_mpz_t(), x.get_mpz_t(), p.first);
+        temp = pow_ex(x, Expression(p.first));
         ans += p.second * temp;
     }
     return ans;
@@ -529,8 +531,8 @@ RCP<const UnivariatePolynomial> mul_uni_poly(RCP<const UnivariatePolynomial> a, 
         sign = -1 * sign;
     }
 
-    mpz_class p = std::max(a->max_coef(), b->max_coef());
-    unsigned int N = bit_length(std::min(da + 1, db + 1)) + bit_length(p) + 1;
+    Expression p = std::max(a->max_coef(), b->max_coef());
+    unsigned int N = bit_length(std::min(da + 1, db + 1)) + bit_length(*p.get_basic()) + 1;
 
     mpz_class a1 = 1 << N;
     mpz_class a2 = a1 / 2;
