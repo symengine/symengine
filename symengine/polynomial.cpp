@@ -355,24 +355,27 @@ RCP<const Basic> UnivariatePolynomial::from_dict(const RCP<const Symbol> &var, m
 {
     if (d.size() == 1) {
         if (d.begin()->first == 0)
-            // return integer(d.begin()->second);
             return d.begin()->second.get_basic();
         else if (d.begin()->first == 1) {
             if (d.begin()->second == 0)
                 return zero;
             else if (d.begin()->second == 1)
                 return var;
+            else if (is_a<Integer>(*d.begin()->second.get_basic()))
+                return Mul::from_dict(rcp_static_cast<const Integer>(d.begin()->second.get_basic()), 
+                    {{var, one}});
             else
-                return Mul::from_dict(integer(d.begin()->second), {{var, one}}); 
-                // Does not apply, because Mul is for integer coeffs - would, need integer to be Expression
+                return mul(d.begin()->second.get_basic(), var);
         } else {
             if (d.begin()->second == 0)
                 return zero;
             else if (d.begin()->second == 1)
                 return pow(var, integer(d.begin()->first));
-            else
-                return Mul::from_dict(integer(d.begin()->second),
+            else if (is_a<Integer>(*d.begin()->second.get_basic()))
+                return Mul::from_dict(rcp_static_cast<const Integer>(d.begin()->second.get_basic()),
                     {{var, integer(d.begin()->first)}});
+            else
+                return pow(mul(d.begin()->second.get_basic(), var), integer(d.begin()->first));
         }
     } else {
         return make_rcp<const UnivariatePolynomial>(var, (--(d.end()))->first, std::move(d));
@@ -416,13 +419,19 @@ Expression UnivariatePolynomial::eval(const Expression &x) const {
 
 Expression UnivariatePolynomial::eval_bit(const int &x) const {
     //TODO: Use Horner's Scheme
-    Expression ans = 0;
+    throw std::runtime_error("Not Implemented");
+    /*Expression ans = 0;
     for (const auto &p : dict_) {
-        Expression temp = 1;
-        temp <<= x * p.first;
-        ans += p.second * temp;
+        if(is_a<Integer>(*p.second.get_basic())) {
+            Expression temp = one;
+            temp <<= x * p.first;
+            ans += p.second * temp;
+        }
+        else {
+            ans += p.second;
+        }
     }
-    return ans;
+    return ans;*/
 }
 
 bool UnivariatePolynomial::is_zero() const {
@@ -502,7 +511,6 @@ RCP<const UnivariatePolynomial> sub_uni_poly(const UnivariatePolynomial &a, cons
     RCP<const UnivariatePolynomial> c = univariate_polynomial(a.var_, (--(dict.end()))->first, std::move(dict));
     return c;
 }
-
 
 //Calculates bit length of number, used in mul_uni_poly() only
 template <typename T>
