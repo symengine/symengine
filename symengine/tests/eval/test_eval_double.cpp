@@ -51,6 +51,8 @@ using SymEngine::pi;
 using SymEngine::E;
 using SymEngine::EulerGamma;
 using SymEngine::vec_basic;
+using SymEngine::max;
+using SymEngine::min;
 
 TEST_CASE("eval_double: eval_double", "[eval_double]")
 {
@@ -76,7 +78,9 @@ TEST_CASE("eval_double: eval_double", "[eval_double]")
         { SymEngine::atan2(r1, neg(r2)), 2.08867384922582 },
         { mul(pi, mul(E, EulerGamma)), 4.92926836742289 },
         { pow(mul(EulerGamma, r4), integer(8)), 4813.54354505117582 },
-        { mul(EulerGamma, integer(10)), 5.7721566490153286 }
+        { mul(EulerGamma, integer(10)), 5.7721566490153286 },
+        { max({r2, r1}), 0.841470984808},
+        { min({add(r1, r4), r2}), 0.479425538604},
     };
 
     for (unsigned i = 0; i < vec.size(); i++) {

@@ -13,6 +13,7 @@
 #include <symengine/complex.h>
 #include <symengine/constants.h>
 #include <symengine/visitor.h>
+#include <symengine/printer.h>
 
 using SymEngine::Basic;
 using SymEngine::RCP;
@@ -66,7 +67,7 @@ void basic_free_heap(basic_struct *s)
     delete s;
 }
 
-void basic_const_set(basic s, char* c)
+void basic_const_set(basic s, const char* c)
 {
     s->m = SymEngine::constant(std::string(c));
 }
@@ -471,6 +472,16 @@ void basic_subs(basic s, const basic e, const CMapBasicBasic *mapbb)
 void basic_subs2(basic s, const basic e, const basic a, const basic b)
 {
     s->m = e->m->subs({{a->m, b->m}});
+}
+
+// ----------------------
+
+char* ascii_art_str()
+{
+    std::string str = SymEngine::ascii_art();
+    auto cc = new char[str.length()+1];
+    std::strcpy(cc, str.c_str());
+    return cc;
 }
 
 }
