@@ -23,7 +23,7 @@ echo "Running cmake:"
 
 # check trailing whitespace:
 if ! egrep " $" -nr --include=\*.{cpp,h,inc}  --exclude-dir=*{teuchos,/build/}* $SOURCE_DIR ; then
-    echo No trailing whitespace;
+    echo "No trailing whitespace";
 else
     exit -1;
 fi
