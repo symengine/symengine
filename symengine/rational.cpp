@@ -24,9 +24,6 @@ bool Rational::is_canonical(const rational_class &i) const
 
 RCP<const Number> Rational::from_mpq(rational_class i)
 {
-#if SYMENGINE_INTEGER_CLASS == SYMENGINE_FLINT
-    canonicalize(i);
-#endif
     // If the result is an Integer, return an Integer:
     if (SymEngine::get_den(i) == 1) {
         return integer(SymEngine::get_num(i));
