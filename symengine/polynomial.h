@@ -274,6 +274,11 @@ public:
         return poly_;
     }   
     
+    std::size_t __hash__() const
+    {
+        return (*(poly_.ptr())).__hash__();
+    }
+    
     /*const RCP<const UnivariatePolynomial> get_basic() const
     {
         return poly_;
