@@ -330,7 +330,7 @@ RCP<const UnivariatePolynomial> mul_uni_poly(RCP<const UnivariatePolynomial> a, 
 
 MultivariatePolynomial::MultivariatePolynomial(const set_sym &vars, umap_sym_uint &degrees, umap_uvec_mpz &dict) :
 vars_{std::move(vars)}, degrees_{std::move(degrees)}, dict_{std::move(dict)} {
-    SYMENGINE_ASSERT(is_cannonical(degrees_, dict_))
+    SYMENGINE_ASSERT(is_canonical(vars_, degrees_, dict_))
 }
 
 RCP<const Basic> MultivariatePolynomial::from_dict(const set_sym &s, umap_uvec_mpz &&d) const{

@@ -5,7 +5,7 @@
 
 using SymEngine::Basic;
 using SymEngine::Symbol;
-using SymEngine::UnivariateSeries;
+//using SymEngine::UnivariateSeries;
 using SymEngine::symbol;
 using SymEngine::map_vec_int;
 using SymEngine::integer;

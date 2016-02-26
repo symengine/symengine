@@ -40,7 +40,7 @@ static RCP<const Basic> diff(const CLASS &self, \
     return Derivative::create(self.rcp_from_this(), {x}); \
 }
 
-    DIFF0(UnivariateSeries)
+    // DIFF0(UnivariateSeries)
     DIFF0(KroneckerDelta)
     DIFF0(Dirichlet_eta)
     DIFF0(UpperGamma)

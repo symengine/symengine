@@ -9,7 +9,7 @@ using SymEngine::RCP;
 using SymEngine::make_rcp;
 
 namespace SymEngine {
-
+  /*
 UnivariateSeries::UnivariateSeries(const s_coef sp, const std::string varname, const unsigned degree)
         : SeriesBase(std::move(sp), varname, degree) {
   
@@ -40,11 +40,11 @@ int UnivariateSeries::compare(const Basic &o) const
     if (p_ == s.p_)
         return 0;
     //return p.compare(*s.p_);
-    return p_.get_basic()->__cmp__(*s.p_.get_basic()); //__cmp__()
+    return p_.get_basic()->__cmp__(*s.p_.get_basic()); //__cmp__()*/
     /*if (not is_a<UnivariateSeries>(other))
         throw std::domain_error("cannot compare with UnivariateSeries");
     const UnivariateSeries &o = static_cast<const UnivariateSeries &>(other);
-    return poly_->compare(*o.poly_);*/
+    return poly_->compare(*o.poly_);*//*
 }
 
 s_coef UnivariateSeries::convert(const Integer &x) {
@@ -76,7 +76,7 @@ RCP<const Basic> UnivariateSeries::as_basic() const {
 }
 
 umap_int_basic UnivariateSeries::as_dict() const {
-    throw std::runtime_error("Not Implemented");
+    throw std::runtime_error("Not Implemented");*/
     /*umap_int_basic map;
     mpq_class gc;
     for (int n=0; n<degree_; n++) {
@@ -92,11 +92,11 @@ umap_int_basic UnivariateSeries::as_dict() const {
             map[n] = basic;
         }
     }
-    return map;*/
+    return map;*//*
 }
 
 RCP<const Basic> UnivariateSeries::get_coeff(int i) const {
-    throw std::runtime_error("Not Implemented");
+    throw std::runtime_error("Not Implemented");*/
     /*mpq_class cl_rat(p_.find_cf({i}).get_mpq_view());
     cl_rat.canonicalize();
     RCP<const Basic> basic;
@@ -104,7 +104,7 @@ RCP<const Basic> UnivariateSeries::get_coeff(int i) const {
         basic = make_rcp<const Integer>(cl_rat.get_num());
     else
         basic = make_rcp<const Rational>(cl_rat);
-    return std::move(basic);*/
+    return std::move(basic);*//*
 }
 
 s_coef UnivariateSeries::mul(const s_coef &s, const s_coef &r, unsigned prec) {
@@ -143,7 +143,7 @@ s_coef UnivariateSeries::subs(const s_coef &s, const s_coef &var, const s_coef &
     s_coef sb = s.get_basic()->subs(x);
     return sb;
 }
-
+ */
 /*bool UnivariateSeries::is_canonical(const UnivariatePolynomial& poly, const unsigned int &prec) const
 {
     return true;

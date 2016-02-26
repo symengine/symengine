@@ -14,7 +14,7 @@
 #include <symengine/series.h>
 
 
-namespace SymEngine {
+namespace SymEngine {/*
 using s_coef = SymEngine::Expression; //Polynomial type
 //using sp_t = RCP //Coefficient type
 //! UnivariateSeries Class
@@ -59,7 +59,7 @@ public:
     //! \return size of the hash
 
 };
-
+*/
 /*inline RCP<const UnivariateSeries> univariate_series(RCP<const Symbol> i, unsigned int prec, const map_uint_mpz& dict)
 {
     return make_rcp<const UnivariateSeries>(i, prec, dict);
