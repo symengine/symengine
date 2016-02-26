@@ -32,7 +32,7 @@ protected:
     const Poly p_;
 public:
     inline SeriesBase(Poly p, std::string var, long degree) : p_(std::move(p)), var_(var), degree_(degree) {
-        
+
     }
     inline virtual long get_degree() const { return degree_; }
 

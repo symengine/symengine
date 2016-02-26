@@ -72,7 +72,7 @@ void basic_free_heap(basic_struct *s)
     delete s;
 }
 
-void basic_const_set(basic s, char* c)
+void basic_const_set(basic s, const char* c)
 {
     s->m = SymEngine::constant(std::string(c));
 }
