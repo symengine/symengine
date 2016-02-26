@@ -135,6 +135,10 @@ if (WITH_PRIMESIEVE)
     set(PKGS ${PKGS} "PRIMESIEVE")
 endif()
 
+# CATCH
+set(WITH_CATCH no
+    CACHE BOOL "Build with Catch")
+
 # FLINT
 set(WITH_FLINT no
     CACHE BOOL "Build with Flint")
@@ -154,6 +158,14 @@ set(HAVE_SYMENGINE_MPFR False)
 set(WITH_MPC no
     CACHE BOOL "Build with MPC")
 set(HAVE_SYMENGINE_MPC False)
+
+if (WITH_CATCH)
+    set(HAVE_SYMENGINE_CATCH True)
+endif()
+
+if (DEFINED HAVE_SYENGINE_CATCH)
+    add_definitions( -DHAVE_SYMENGINE_CATCH=$(HAVE_SYMENGINE_CATCH) )
+endif()
 
 if (WITH_FLINT)
     find_package(FLINT REQUIRED)
@@ -483,6 +495,8 @@ if (WITH_PRIMESIEVE)
     message("PRIMESIEVE_INCLUDE_DIRS: ${PRIMESIEVE_INCLUDE_DIRS}")
     message("PRIMESIEVE_LIBRARIES: ${PRIMESIEVE_LIBRARIES}")
 endif()
+
+message("WITH_CATCH: ${WITH_CATCH}")
 
 message("WITH_FLINT: ${WITH_FLINT}")
 if (WITH_FLINT)

@@ -17,6 +17,14 @@
 
 #define TWOBLUECUBES_CATCH_SUPPRESS_WARNINGS_H_INCLUDED
 
+#ifdef HAVE_SYMENGINE_CATCH
+#   define SYMENGINE_DISABLE_CATCH_ALL false
+#else
+#   define SYMENGINE_DISABLE_CATCH_ALL true
+#endif
+
+//#   define SYMENGINE_DISABLE_CATCH_ALL true
+
 #ifdef __clang__
 #   ifdef __ICC // icpc defines the __clang__ macro
 #       pragma warning(push)
@@ -1582,13 +1590,15 @@ namespace Catch {
 #define INTERNAL_CATCH_TEST( expr, resultDisposition, macroName ) \
     do { \
         Catch::ResultBuilder __catchResult( macroName, CATCH_INTERNAL_LINEINFO, #expr, resultDisposition ); \
-        try { \
-            ( __catchResult->*expr ).endExpression(); \
+        if (!SYMENGINE_DISABLE_CATCH_ALL) { \
+            try { \
+                ( __catchResult->*expr ).endExpression(); \
+            } \
+            catch( ... ) { \
+                __catchResult.useActiveException( Catch::ResultDisposition::Normal ); \
+            } \
+            INTERNAL_CATCH_REACT( __catchResult ) \
         } \
-        catch( ... ) { \
-            __catchResult.useActiveException( Catch::ResultDisposition::Normal ); \
-        } \
-        INTERNAL_CATCH_REACT( __catchResult ) \
     } while( Catch::isTrue( false && (expr) ) ) // expr here is never evaluated at runtime but it forces the compiler to give it a look
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -1605,28 +1615,33 @@ namespace Catch {
 #define INTERNAL_CATCH_NO_THROW( expr, resultDisposition, macroName ) \
     do { \
         Catch::ResultBuilder __catchResult( macroName, CATCH_INTERNAL_LINEINFO, #expr, resultDisposition ); \
-        try { \
-            expr; \
-            __catchResult.captureResult( Catch::ResultWas::Ok ); \
+        if (!SYMENGINE_DISABLE_CATCH_ALL) { \
+            try { \
+                expr; \
+                __catchResult.captureResult( Catch::ResultWas::Ok ); \
+            } \
+            catch( ... ) { \
+                __catchResult.useActiveException( resultDisposition ); \
+            } \
+            INTERNAL_CATCH_REACT( __catchResult ) \
         } \
-        catch( ... ) { \
-            __catchResult.useActiveException( resultDisposition ); \
-        } \
-        INTERNAL_CATCH_REACT( __catchResult ) \
     } while( Catch::alwaysFalse() )
 
 ///////////////////////////////////////////////////////////////////////////////
 #define INTERNAL_CATCH_THROWS( expr, resultDisposition, macroName ) \
     do { \
         Catch::ResultBuilder __catchResult( macroName, CATCH_INTERNAL_LINEINFO, #expr, resultDisposition ); \
-        if( __catchResult.allowThrows() ) \
-            try { \
-                expr; \
-                __catchResult.captureResult( Catch::ResultWas::DidntThrowException ); \
+        if( __catchResult.allowThrows() ) { \
+            if (!SYMENGINE_DISABLE_CATCH_ALL) { \
+                try { \
+                    expr; \
+                    __catchResult.captureResult( Catch::ResultWas::DidntThrowException ); \
+                } \
+                catch( ... ) { \
+                    __catchResult.captureResult( Catch::ResultWas::Ok ); \
+                } \
             } \
-            catch( ... ) { \
-                __catchResult.captureResult( Catch::ResultWas::Ok ); \
-            } \
+        } \
         else \
             __catchResult.captureResult( Catch::ResultWas::Ok ); \
         INTERNAL_CATCH_REACT( __catchResult ) \
@@ -1636,17 +1651,20 @@ namespace Catch {
 #define INTERNAL_CATCH_THROWS_AS( expr, exceptionType, resultDisposition, macroName ) \
     do { \
         Catch::ResultBuilder __catchResult( macroName, CATCH_INTERNAL_LINEINFO, #expr, resultDisposition ); \
-        if( __catchResult.allowThrows() ) \
-            try { \
-                expr; \
-                __catchResult.captureResult( Catch::ResultWas::DidntThrowException ); \
+        if( __catchResult.allowThrows() ) { \
+            if (!SYMENGINE_DISABLE_CATCH_ALL) { \
+                try { \
+                    expr; \
+                    __catchResult.captureResult( Catch::ResultWas::DidntThrowException ); \
+                } \
+                catch( exceptionType ) { \
+                    __catchResult.captureResult( Catch::ResultWas::Ok ); \
+                } \
+                catch( ... ) { \
+                    __catchResult.useActiveException( resultDisposition ); \
+                } \
             } \
-            catch( exceptionType ) { \
-                __catchResult.captureResult( Catch::ResultWas::Ok ); \
-            } \
-            catch( ... ) { \
-                __catchResult.useActiveException( resultDisposition ); \
-            } \
+        } \
         else \
             __catchResult.captureResult( Catch::ResultWas::Ok ); \
         INTERNAL_CATCH_REACT( __catchResult ) \
@@ -1678,19 +1696,21 @@ namespace Catch {
 ///////////////////////////////////////////////////////////////////////////////
 #define INTERNAL_CHECK_THAT( arg, matcher, resultDisposition, macroName ) \
     do { \
-        Catch::ResultBuilder __catchResult( macroName, CATCH_INTERNAL_LINEINFO, #arg " " #matcher, resultDisposition ); \
-        try { \
-            std::string matcherAsString = ::Catch::Matchers::matcher.toString(); \
-            __catchResult \
-                .setLhs( Catch::toString( arg ) ) \
-                .setRhs( matcherAsString == Catch::Detail::unprintableString ? #matcher : matcherAsString ) \
-                .setOp( "matches" ) \
-                .setResultType( ::Catch::Matchers::matcher.match( arg ) ); \
-            __catchResult.captureExpression(); \
-        } catch( ... ) { \
-            __catchResult.useActiveException( resultDisposition | Catch::ResultDisposition::ContinueOnFailure ); \
+        if (!SYMENGINE_DISABLE_CATCH_ALL) { \
+            Catch::ResultBuilder __catchResult( macroName, CATCH_INTERNAL_LINEINFO, #arg " " #matcher, resultDisposition ); \
+            try { \
+                std::string matcherAsString = ::Catch::Matchers::matcher.toString(); \
+                __catchResult \
+                    .setLhs( Catch::toString( arg ) ) \
+                    .setRhs( matcherAsString == Catch::Detail::unprintableString ? #matcher : matcherAsString ) \
+                    .setOp( "matches" ) \
+                    .setResultType( ::Catch::Matchers::matcher.match( arg ) ); \
+                __catchResult.captureExpression(); \
+            } catch( ... ) { \
+                __catchResult.useActiveException( resultDisposition | Catch::ResultDisposition::ContinueOnFailure ); \
+            } \
+            INTERNAL_CATCH_REACT( __catchResult ) \
         } \
-        INTERNAL_CATCH_REACT( __catchResult ) \
     } while( Catch::alwaysFalse() )
 
 // #included from: internal/catch_section.h
@@ -2086,11 +2106,13 @@ namespace Catch {
             {}
 
             virtual std::string translate() const {
-                try {
-                    throw;
-                }
-                catch( T& ex ) {
-                    return m_translateFunction( ex );
+                if (!SYMENGINE_DISABLE_CATCH_ALL) {
+                    try {
+                        throw;
+                    }
+                    catch( T& ex ) {
+                        return m_translateFunction( ex );
+                    }
                 }
             }
 
@@ -4030,24 +4052,25 @@ namespace Clara {
                 typename std::vector<Arg>::const_iterator it = m_options.begin(), itEnd = m_options.end();
                 for(; it != itEnd; ++it ) {
                     Arg const& arg = *it;
-
-                    try {
-                        if( ( token.type == Parser::Token::ShortOpt && arg.hasShortName( token.data ) ) ||
-                            ( token.type == Parser::Token::LongOpt && arg.hasLongName( token.data ) ) ) {
-                            if( arg.takesArg() ) {
-                                if( i == tokens.size()-1 || tokens[i+1].type != Parser::Token::Positional )
-                                    errors.push_back( "Expected argument to option: " + token.data );
-                                else
-                                    arg.boundField.set( config, tokens[++i].data );
+                    if (!SYMENGINE_DISABLE_CATCH_ALL) {
+                        try {
+                            if( ( token.type == Parser::Token::ShortOpt && arg.hasShortName( token.data ) ) ||
+                                ( token.type == Parser::Token::LongOpt && arg.hasLongName( token.data ) ) ) {
+                                if( arg.takesArg() ) {
+                                    if( i == tokens.size()-1 || tokens[i+1].type != Parser::Token::Positional )
+                                        errors.push_back( "Expected argument to option: " + token.data );
+                                    else
+                                        arg.boundField.set( config, tokens[++i].data );
+                                }
+                                else {
+                                    arg.boundField.setFlag( config );
+                                }
+                                break;
                             }
-                            else {
-                                arg.boundField.setFlag( config );
-                            }
-                            break;
                         }
-                    }
-                    catch( std::exception& ex ) {
-                        errors.push_back( std::string( ex.what() ) + "\n- while parsing: (" + arg.commands() + ")" );
+                        catch( std::exception& ex ) {
+                            errors.push_back( std::string( ex.what() ) + "\n- while parsing: (" + arg.commands() + ")" );
+                        }
                     }
                 }
                 if( it == itEnd ) {
@@ -5378,27 +5401,29 @@ namespace Catch {
             m_reporter->sectionStarting( testCaseSection );
             Counts prevAssertions = m_totals.assertions;
             double duration = 0;
-            try {
-                m_lastAssertionInfo = AssertionInfo( "TEST_CASE", testCaseInfo.lineInfo, "", ResultDisposition::Normal );
-                TestCaseTracker::Guard guard( *m_testCaseTracker );
+            if (!SYMENGINE_DISABLE_CATCH_ALL) {
+                try {
+                    m_lastAssertionInfo = AssertionInfo( "TEST_CASE", testCaseInfo.lineInfo, "", ResultDisposition::Normal );
+                    TestCaseTracker::Guard guard( *m_testCaseTracker );
 
-                Timer timer;
-                timer.start();
-                if( m_reporter->getPreferences().shouldRedirectStdOut ) {
-                    StreamRedirect coutRedir( Catch::cout(), redirectedCout );
-                    StreamRedirect cerrRedir( Catch::cerr(), redirectedCerr );
-                    invokeActiveTestCase();
+                    Timer timer;
+                    timer.start();
+                    if( m_reporter->getPreferences().shouldRedirectStdOut ) {
+                        StreamRedirect coutRedir( Catch::cout(), redirectedCout );
+                        StreamRedirect cerrRedir( Catch::cerr(), redirectedCerr );
+                        invokeActiveTestCase();
+                    }
+                    else {
+                        invokeActiveTestCase();
+                    }
+                    duration = timer.getElapsedSeconds();
                 }
-                else {
-                    invokeActiveTestCase();
+                catch( TestFailureException& ) {
+                    // This just means the test was aborted due to failure
                 }
-                duration = timer.getElapsedSeconds();
-            }
-            catch( TestFailureException& ) {
-                // This just means the test was aborted due to failure
-            }
-            catch(...) {
-                makeUnexpectedResultBuilder().useActiveException();
+                catch(...) {
+                    makeUnexpectedResultBuilder().useActiveException();
+                }
             }
             handleUnfinishedSections();
             m_messages.clear();
@@ -5630,22 +5655,24 @@ namespace Catch {
         }
 
         int applyCommandLine( int argc, char* const argv[], OnUnusedOptions::DoWhat unusedOptionBehaviour = OnUnusedOptions::Fail ) {
-            try {
-                m_cli.setThrowOnUnrecognisedTokens( unusedOptionBehaviour == OnUnusedOptions::Fail );
-                m_unusedTokens = m_cli.parseInto( argc, argv, m_configData );
-                if( m_configData.showHelp )
-                    showHelp( m_configData.processName );
-                m_config.reset();
-            }
-            catch( std::exception& ex ) {
-                {
-                    Colour colourGuard( Colour::Red );
-                    Catch::cerr()   << "\nError(s) in input:\n"
-                                << Text( ex.what(), TextAttributes().setIndent(2) )
-                                << "\n\n";
+            if (!SYMENGINE_DISABLE_CATCH_ALL) {
+                try {
+                    m_cli.setThrowOnUnrecognisedTokens( unusedOptionBehaviour == OnUnusedOptions::Fail );
+                    m_unusedTokens = m_cli.parseInto( argc, argv, m_configData );
+                    if( m_configData.showHelp )
+                        showHelp( m_configData.processName );
+                    m_config.reset();
                 }
-                m_cli.usage( Catch::cout(), m_configData.processName );
-                return (std::numeric_limits<int>::max)();
+                catch( std::exception& ex ) {
+                    {
+                        Colour colourGuard( Colour::Red );
+                        Catch::cerr()   << "\nError(s) in input:\n"
+                                    << Text( ex.what(), TextAttributes().setIndent(2) )
+                                    << "\n\n";
+                    }
+                    m_cli.usage( Catch::cout(), m_configData.processName );
+                    return (std::numeric_limits<int>::max)();
+                }
             }
             return 0;
         }
@@ -5667,24 +5694,27 @@ namespace Catch {
             if( m_configData.showHelp )
                 return 0;
 
-            try
-            {
-                config(); // Force config to be constructed
+            if (!SYMENGINE_DISABLE_CATCH_ALL) {
+                try
+                {
+                    config(); // Force config to be constructed
 
-                std::srand( m_configData.rngSeed );
+                    std::srand( m_configData.rngSeed );
 
-                Runner runner( m_config );
+                    Runner runner( m_config );
 
-                // Handle list request
-                if( Option<std::size_t> listed = list( config() ) )
-                    return static_cast<int>( *listed );
+                    // Handle list request
+                    if( Option<std::size_t> listed = list( config() ) )
+                        return static_cast<int>( *listed );
 
-                return static_cast<int>( runner.runTests().assertions.failed );
+                    return static_cast<int>( runner.runTests().assertions.failed );
+                }
+                catch( std::exception& ex ) {
+                    Catch::cerr() << ex.what() << std::endl;
+                    return (std::numeric_limits<int>::max)();
+                }
             }
-            catch( std::exception& ex ) {
-                Catch::cerr() << ex.what() << std::endl;
-                return (std::numeric_limits<int>::max)();
-            }
+            return 0;
         }
 
         Clara::CommandLine<ConfigData> const& cli() const {
@@ -5921,45 +5951,50 @@ namespace Catch {
         }
 
         virtual std::string translateActiveException() const {
-            try {
-#ifdef __OBJC__
-                // In Objective-C try objective-c exceptions first
-                @try {
+            if (!SYMENGINE_DISABLE_CATCH_ALL) {
+                try {
+    #ifdef __OBJC__
+                    // In Objective-C try objective-c exceptions first
+                    @try {
+                        throw;
+                    }
+                    @catch (NSException *exception) {
+                        return Catch::toString( [exception description] );
+                    }
+    #else
+                    throw;
+    #endif
+                }
+                catch( TestFailureException& ) {
                     throw;
                 }
-                @catch (NSException *exception) {
-                    return Catch::toString( [exception description] );
+                catch( std::exception& ex ) {
+                    return ex.what();
                 }
-#else
-                throw;
-#endif
+                catch( std::string& msg ) {
+                    return msg;
+                }
+                catch( const char* msg ) {
+                    return msg;
+                }
+                catch(...) {
+                    return tryTranslators( m_translators.begin() );
+                }
             }
-            catch( TestFailureException& ) {
-                throw;
-            }
-            catch( std::exception& ex ) {
-                return ex.what();
-            }
-            catch( std::string& msg ) {
-                return msg;
-            }
-            catch( const char* msg ) {
-                return msg;
-            }
-            catch(...) {
-                return tryTranslators( m_translators.begin() );
-            }
+            return '\0';
         }
 
         std::string tryTranslators( std::vector<const IExceptionTranslator*>::const_iterator it ) const {
-            if( it == m_translators.end() )
-                return "Unknown exception";
+             if (!SYMENGINE_DISABLE_CATCH_ALL) {
+                if( it == m_translators.end() )
+                    return "Unknown exception";
 
-            try {
-                return (*it)->translate();
-            }
-            catch(...) {
-                return tryTranslators( it+1 );
+                try {
+                    return (*it)->translate();
+                }
+                catch(...) {
+                    return tryTranslators( it+1 );
+                }
             }
         }
 
@@ -7553,13 +7588,15 @@ namespace Catch {
     ITagAliasRegistry const& ITagAliasRegistry::get() { return TagAliasRegistry::get(); }
 
     RegistrarForTagAliases::RegistrarForTagAliases( char const* alias, char const* tag, SourceLineInfo const& lineInfo ) {
-        try {
-            TagAliasRegistry::get().add( alias, tag, lineInfo );
-        }
-        catch( std::exception& ex ) {
-            Colour colourGuard( Colour::Red );
-            Catch::cerr() << ex.what() << std::endl;
-            exit(1);
+        if (!SYMENGINE_DISABLE_CATCH_ALL) {
+            try {
+                TagAliasRegistry::get().add( alias, tag, lineInfo );
+            }
+            catch( std::exception& ex ) {
+                Colour colourGuard( Colour::Red );
+                Catch::cerr() << ex.what() << std::endl;
+                exit(1);
+            }
         }
     }
 
