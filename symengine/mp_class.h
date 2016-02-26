@@ -431,8 +431,8 @@ inline fmpz_wrapper& get_num(fmpq_wrapper &i) {
     return i.get_num();
 }
 
-inline mpq_srcptr get_mpq_t(const fmpq_wrapper &i) {
-    return nullptr;
+inline mpq_view_flint get_mpq_t(const fmpq_wrapper &i) {
+    return mpq_view_flint(i);
 }
 
 inline void canonicalize(fmpq_wrapper &i) {

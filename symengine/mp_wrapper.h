@@ -433,6 +433,25 @@ public:
         return fmpq_cmp(mp, other.get_fmpq_t()) >= 0;
     }
 };
+
+class mpq_view_flint {
+
+public:
+    mpq_view_flint(const fmpq_wrapper &i) {
+        mpq_init(m);
+        fmpq_get_mpq(m, i.get_fmpq_t());
+    }
+    operator mpq_srcptr() const
+    {
+        return m;
+    }
+    ~mpq_view_flint() {
+        mpq_clear(m);
+    }
+
+private:
+    mpq_t m;
+};
 #elif SYMENGINE_INTEGER_CLASS == SYMENGINE_GMP
 
 class mpz_wrapper {
