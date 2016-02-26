@@ -417,23 +417,6 @@ Expression UnivariatePolynomial::eval(const Expression &x) const {
     return ans;
 }
 
-Expression UnivariatePolynomial::eval_bit(const int &x) const {
-    //TODO: Use Horner's Scheme
-    throw std::runtime_error("Not Implemented");
-    /*Expression ans = 0;
-    for (const auto &p : dict_) {
-        if(is_a<Integer>(*p.second.get_basic())) {
-            Expression temp = one;
-            temp <<= x * p.first;
-            ans += p.second * temp;
-        }
-        else {
-            ans += p.second;
-        }
-    }
-    return ans;*/
-}
-
 bool UnivariatePolynomial::is_zero() const {
     if (dict_.size() == 1 and dict_.begin()->second == 0)
         return true;
@@ -513,52 +496,18 @@ RCP<const UnivariatePolynomial> sub_uni_poly(const UnivariatePolynomial &a, cons
 }
 
 RCP<const UnivariatePolynomial> mul_uni_poly(RCP<const UnivariatePolynomial> a, RCP<const UnivariatePolynomial> b) {
-    //TODO: Use `const RCP<const UnivariatePolynomial> &a` for input arguments,
-    //      even better is use `const UnivariatePolynomial &a`
-    throw std::runtime_error("Not Implemented");
-    /*unsigned int da = a->degree_;
-    unsigned int db = b->degree_;
-
-    int sign = 1;
-    if ((--(a->dict_.end()))->second < 0) {
-        a = neg_uni_poly(*a);
-        sign = -1 * sign;
-    }
-    if ((--(b->dict_.end()))->second < 0) {
-        b = neg_uni_poly(*b);
-        sign = -1 * sign;
-    }
-
-    Expression p = std::max(a->max_coef(), b->max_coef());
-    unsigned int N = bit_length(std::min(da + 1, db + 1)) + bit_length(*p.get_basic()) + 1;
-
-    mpz_class a1 = 1 << N;
-    mpz_class a2 = a1 / 2;
-    mpz_class mask = a1 - 1;
-    mpz_class sa = a->eval_bit(N);
-    mpz_class sb = b->eval_bit(N);
-    mpz_class r = sa*sb;
-
-    std::vector<mpz_class> v;
-    mpz_class carry = 0;
-
-    while (r != 0 or carry != 0) {
-        mpz_class b;
-        mpz_and(b.get_mpz_t(), r.get_mpz_t(), mask.get_mpz_t());
-        if (b < a2) {
-            v.push_back(b + carry);
-            carry = 0;
-        } else {
-            v.push_back(b - a1 + carry);
-            carry = 1;
+    // throw std::runtime_error("Not Implemented");
+    map_uint_Expr dict;
+    for (const auto &i1 : a->dict_) {
+        
+        for (const auto &i2 : b->dict_) {
+            Expression term = i1.second * i2.second;
+            dict[i1.first + i2.first] += term;
         }
-        r >>= N;
     }
 
-    if (sign == -1)
-        return neg_uni_poly(*make_rcp<const UnivariatePolynomial>(a->var_, v));
-    else
-        return make_rcp<const UnivariatePolynomial>(a->var_, v);*/
+    RCP<const UnivariatePolynomial> c = univariate_polynomial(a->var_, (--(dict.end()))->first, std::move(dict));
+    return c;
 }
 
 } // SymEngine

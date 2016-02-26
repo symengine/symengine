@@ -138,8 +138,6 @@ public:
     Expression max_coef() const;
     //! Evaluates the UnivariatePolynomial at value x
     Expression eval(const Expression &x) const;
-    //! Evaluates the UnivariatePolynomial at value 2**x
-    Expression eval_bit(const int &x) const;
 
     //! \return `true` if `0`
     bool is_zero() const;
