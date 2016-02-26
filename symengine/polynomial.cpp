@@ -512,21 +512,11 @@ RCP<const UnivariatePolynomial> sub_uni_poly(const UnivariatePolynomial &a, cons
     return c;
 }
 
-//Calculates bit length of number, used in mul_uni_poly() only
-template <typename T>
-unsigned int bit_length(T t){
-    unsigned int count = 0;
-    while (t > 0) {
-        count++;
-        t = t >> 1;
-    }
-    return count;
-}
-
 RCP<const UnivariatePolynomial> mul_uni_poly(RCP<const UnivariatePolynomial> a, RCP<const UnivariatePolynomial> b) {
     //TODO: Use `const RCP<const UnivariatePolynomial> &a` for input arguments,
     //      even better is use `const UnivariatePolynomial &a`
-    unsigned int da = a->degree_;
+    throw std::runtime_error("Not Implemented");
+    /*unsigned int da = a->degree_;
     unsigned int db = b->degree_;
 
     int sign = 1;
@@ -568,7 +558,7 @@ RCP<const UnivariatePolynomial> mul_uni_poly(RCP<const UnivariatePolynomial> a, 
     if (sign == -1)
         return neg_uni_poly(*make_rcp<const UnivariatePolynomial>(a->var_, v));
     else
-        return make_rcp<const UnivariatePolynomial>(a->var_, v);
+        return make_rcp<const UnivariatePolynomial>(a->var_, v);*/
 }
 
 } // SymEngine
