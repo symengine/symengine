@@ -71,6 +71,8 @@ using SymEngine::levi_civita;
 using SymEngine::zeta;
 using SymEngine::dirichlet_eta;
 using SymEngine::gamma;
+using SymEngine::loggamma;
+using SymEngine::LogGamma;
 using SymEngine::polygamma;
 using SymEngine::PolyGamma;
 using SymEngine::lowergamma;
@@ -1304,7 +1306,7 @@ TEST_CASE("Tan table: functions", "[functions]")
     // tan(pi/4) = 1
     r1 = tan(div(pi, integer(4)));
     REQUIRE(eq(*r1, *one));
-    
+
     // tan(5*pi/12) = (1 + 3**(1/2))/(-1 + 3**(1/2))
     r1 = tan(mul(div(integer(5), i12), pi));
     r2 = div(add(one, sq3), add(im1, sq3));
@@ -1349,12 +1351,12 @@ TEST_CASE("Cot table: functions", "[functions]")
     // cot(pi/4) = 1
     r1 = cot(div(pi, integer(4)));
     REQUIRE(eq(*r1, *one));
-    
+
     // cot(pi/12) = (1 + 3**(1/2))/(-1 + 3**(1/2))
     r1 = cot(div(pi, i12));
     r2 = div(add(one, sq3), sub(sq3, one));
     REQUIRE(eq(*r1, *r2));
-    
+
     // cot(5*pi/12) = (-1 + 3**(1/2))/(1 + 3**(1/2))
     r1 = cot(div(mul(integer(5),pi), i12));
     r2 = div(sub(sq3, one), add(one, sq3));
@@ -2189,6 +2191,39 @@ TEST_CASE("Gamma: functions", "[functions]")
     REQUIRE(eq(*r1, *r2));
 }
 
+TEST_CASE("LogGamma: functions", "[functions]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    RCP<const Basic> r1;
+    RCP<const Basic> r2;
+
+    r1 = loggamma(integer(1));
+    REQUIRE(eq(*r1, *zero));
+
+    r2 = loggamma(integer(2));
+    REQUIRE(eq(*r2, *zero));
+
+    r1 = loggamma(integer(3));
+    REQUIRE(eq(*r1, *log(integer(2))));
+
+    r1 = loggamma(x);
+    r1 = SymEngine::rcp_dynamic_cast<const LogGamma>(r1)->rewrite_as_intractable();
+    REQUIRE(eq(*r1, *log(gamma(x))));
+
+    r1 = loggamma(x)->diff(x);
+    r2 = polygamma(zero, x);
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = loggamma(x)->diff(y);
+    REQUIRE(eq(*r1, *zero));
+
+    r2 = mul(x, y);
+    r1 = loggamma(r2)->diff(x);
+    r2 = mul(polygamma(zero, r2), y);
+    REQUIRE(eq(*r1, *r2));
+}
+
 TEST_CASE("Lowergamma: functions", "[functions]")
 {
     RCP<const Basic> i2 = integer(2);
@@ -2255,7 +2290,7 @@ TEST_CASE("Beta: functions", "[functions]")
     r3 = div(mul(gamma(i3), gamma(i2)), gamma(add(i2, i3)));
     REQUIRE(eq(*r1, *r3));
     r2 = div(one, integer(12));
-    REQUIRE(eq(*r1, *r2));	
+    REQUIRE(eq(*r1, *r2));
 
     r1 = beta(div(one, i2), i2);
     r2 = beta(i2, div(one, i2));
@@ -2277,11 +2312,11 @@ TEST_CASE("Beta: functions", "[functions]")
     r2 = beta(y, x);
     REQUIRE(eq(*r1, *r2));
     REQUIRE(r1->__hash__() == r2->__hash__());
-    
+
     r1 = beta(x, y)->diff(x);
     r2 = mul(beta(x, y), sub(polygamma(zero, x), polygamma(zero, add(x, y))));
     REQUIRE(eq(*r1, *r2));
-    
+
     r1 = beta(x, y)->diff(x);
     r2 = beta(y, x)->diff(x);
     REQUIRE(eq(*r1, *r2));
