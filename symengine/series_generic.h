@@ -42,6 +42,7 @@ public:
     static Expression convert(const mpq_class &x);
     static Expression convert(const Rational &x);
     static Expression convert(const Number &x);
+    static map_uint_Expr convert_map(const map_uint_mpz &&d);
 
     static unsigned ldegree(const UnivariateExprPolynomial &s);
     static UnivariateExprPolynomial mul(const UnivariateExprPolynomial &s, const UnivariateExprPolynomial &r, unsigned prec);

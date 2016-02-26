@@ -274,9 +274,9 @@ public:
         return poly_;
     }   
     
-    /*const RCP<const Basic>& get_basic() const
+    /*const RCP<const UnivariatePolynomial> get_basic() const
     {
-        return null;
+        return poly_;
         //return make_rcp<const Symbol>("x");//make_rcp<const UnivariatePolynomial>(poly_->var_, poly_->get_args());
     }*/
 

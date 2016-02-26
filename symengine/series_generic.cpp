@@ -13,15 +13,15 @@ UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned 
 }
 
 UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const unsigned int &max, map_uint_mpz&& dict) :
-        var_{var}, prec_{precision} {
-
-    poly_ = univariate_polynomial(var_, max, std::move(dict));
+        SeriesBase(univariate_polynomial(var, max, convert_map(std::move(dict))), var->get_name(), precision) {
+    // poly_ = univariate_polynomial(var_, max, std::move(dict));
 }
 
-UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const map_uint_mpz& dict) :
-        var_{var}, prec_{precision} {
-
-    map_uint_mpz dict_trunc;
+UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const map_uint_mpz& dict) //:
+        // var_{var}, prec_{precision} 
+        {
+    throw std::runtime_error("Not Implemented");
+    /*map_uint_mpz dict_trunc;
     unsigned int max = 0;
     std::copy_if(dict.begin(), dict.end(), std::inserter(dict_trunc, dict_trunc.end()), [&](const map_uint_mpz::value_type i)
         {
@@ -32,16 +32,17 @@ UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned 
             }
             return false;
         } );
-    poly_ = univariate_polynomial(var_, max, std::move(dict_trunc));
+    poly_ = univariate_polynomial(var_, max, std::move(dict_trunc));*/
 }
 
-UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const std::vector<mpz_class> &v) :
-        var_{var}, prec_{precision} {
-
-    std::vector<mpz_class> vtrunc;
+UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const std::vector<mpz_class> &v) //:
+        //var_{var}, prec_{precision} 
+        {
+    throw std::runtime_error("Not Implemented");
+    /*std::vector<mpz_class> vtrunc;
     std::copy_if(v.begin(), v.end(), std::back_inserter(vtrunc),
         [&](decltype(v[0]) i) { return i < prec_; } );
-    poly_ = UnivariatePolynomial::create(var_, vtrunc);
+    poly_ = UnivariatePolynomial::create(var_, vtrunc);*/
 }
 
 RCP<const UnivariateSeries> UnivariateSeries::series(const RCP<const Basic> &t, const std::string &x, unsigned int prec) {
@@ -57,17 +58,18 @@ int UnivariateSeries::compare(const Basic &other) const {
     if (not is_a<UnivariateSeries>(other))
         throw std::domain_error("cannot compare with UnivariateSeries");
     const UnivariateSeries &o = static_cast<const UnivariateSeries &>(other);
-    return p_->compare(*(o.p_));
+    return p_ == (o.p_);
 }
 
 RCP<const Basic> UnivariateSeries::as_basic() const {
-    return p_.get_basic();
+    throw std::runtime_error("Not Implemented");
+    // return p_.get_basic();
 }
 
 umap_int_basic UnivariateSeries::as_dict() const {
     umap_int_basic map;
     for (int i = 0; i <= degree_; i++) {
-       map[i] = p_.get_univariate_poly()->dict_.at(i);
+       map[i] = p_.get_univariate_poly()->dict_.at(i).get_basic();
     } 
     return map;
 }
@@ -88,8 +90,9 @@ UnivariateExprPolynomial UnivariateSeries::var(const std::string &s) {
 }
 
 Expression UnivariateSeries::convert(const Integer &x) {
-    return UnivariateExprPolynomial(x.as_int());
+    return Expression(x.as_int());
 }
+
 Expression UnivariateSeries::convert(const mpq_class &x) {
     Expression i1(mpz_get_si(x.get_num_mpz_t()));
     Expression i2(mpz_get_si(x.get_den_mpz_t()));
@@ -97,8 +100,8 @@ Expression UnivariateSeries::convert(const mpq_class &x) {
 }
 
 Expression UnivariateSeries::convert(const Rational &x) {
-    UnivariateExprPolynomial i1(x.get_num());
-    UnivariateExprPolynomial i2(x.get_den());
+    Expression i1(x.get_num());
+    Expression i2(x.get_den());
     i1 /= i2;
     return i1;
 }
@@ -107,6 +110,14 @@ Expression UnivariateSeries::convert(const Number &x) {
     throw std::runtime_error("Not Implemented");
 }
 
+map_uint_Expr UnivariateSeries::convert_map(const map_uint_mpz &&d) {
+    map_uint_Expr dict;
+    for (const auto &it : *d) {
+        Expression term = it.second()->get_ui();
+        dict[it.first()] = term;
+    }
+    return dict;
+}
 
 unsigned UnivariateSeries::ldegree(const UnivariateExprPolynomial &s) {
     throw std::runtime_error("Not Implemented");
@@ -119,7 +130,8 @@ UnivariateExprPolynomial UnivariateSeries::mul(const UnivariateExprPolynomial &s
 
 UnivariateExprPolynomial UnivariateSeries::pow(const UnivariateExprPolynomial &s, int n, unsigned prec) {
     // No prec mul
-    return pow_ex(s, SymEngine::UnivariateExprPolynomial(n));
+    throw std::runtime_error("Not Implemented");
+    // return pow_ex(s, SymEngine::UnivariateExprPolynomial(n));
 }
 
 Expression UnivariateSeries::find_cf(const UnivariateExprPolynomial &s, const UnivariateExprPolynomial &var, unsigned deg) {
@@ -131,7 +143,7 @@ Expression UnivariateSeries::root(UnivariateExprPolynomial &c, unsigned n) {
 }
 
 UnivariateExprPolynomial UnivariateSeries::diff(const UnivariateExprPolynomial &s, const UnivariateExprPolynomial &var) {
-    return diff(s.get_basic(), var.get_basic());
+    return s.get_univariate_poly()->diff(var.get_univariate_poly()->get_var());
 }
 
 UnivariateExprPolynomial UnivariateSeries::integrate(const UnivariateExprPolynomial &s, const UnivariateExprPolynomial &var) {
