@@ -20,7 +20,7 @@ class UnivariateSeries : public SeriesBase<UnivariateExprPolynomial, Expression,
 public:
     IMPLEMENT_TYPEID(UNIVARIATESERIES)
     UnivariateSeries(const UnivariateExprPolynomial sp, const std::string varname, const unsigned degree) : SeriesBase(std::move(sp), varname, degree) {}
-    UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const RCP<const UnivariatePolynomial> &poly);
+    UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const UnivariateExprPolynomial poly);
     UnivariateSeries(const RCP<const Symbol> &var, const unsigned int& precision, const unsigned int& max_exp, map_uint_mpz&& dict);
     UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const map_uint_mpz &dict);
     //! Constructor using a dense vector of mpz_class coefficients
