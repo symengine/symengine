@@ -266,7 +266,7 @@ RCP<const UnivariatePolynomial> mul_uni_poly(RCP<const UnivariatePolynomial> a, 
     while (r != 0 or carry != 0) {
         integer_class b;
         //TODO:fix this
-        mpz_and(get_mpz_t(b), get_mpz_t(r), get_mpz_t(mask));
+        mp_and(b, r, mask);
         if (b < a2) {
             v.push_back(b + carry);
             carry = 0;
