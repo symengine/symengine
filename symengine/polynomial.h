@@ -162,9 +162,9 @@ unsigned int reconcile_exps(vec_uint &v1, vec_uint &v2, set_sym &s, const set_sy
 vec_uint translate(vec_uint original, vec_uint translator);
 
 RCP<const MultivariatePolynomial> add_mult_poly(const MultivariatePolynomial &a, const MultivariatePolynomial &b);
-/*RCP<const MultivariatePolynomial> neg_mult_poly(const MultivariatePolynomial &a);
+RCP<const MultivariatePolynomial> neg_mult_poly(const MultivariatePolynomial &a);
 RCP<const MultivariatePolynomial> sub_mult_poly(const MultivariatePolynomial &a, const MultivariatePolynomial &b);
-RCP<const MultivariatePolynomial> mul_mult_poly(const MultivariatePolynomial &a, const MultivariatePolynomial &b);
+/*RCP<const MultivariatePolynomial> mul_mult_poly(const MultivariatePolynomial &a, const MultivariatePolynomial &b);
 */
  
 

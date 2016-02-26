@@ -501,13 +501,22 @@ RCP<const MultivariatePolynomial> add_mult_poly(const MultivariatePolynomial &a,
     }
     return make_rcp<const MultivariatePolynomial>(s,degs ,dict);
 }
-/*
+
 RCP<const MultivariatePolynomial> neg_mult_poly(const MultivariatePolynomial &a){
+    umap_uvec_mpz dict;
+    set_sym s = a.vars_;
+    umap_sym_uint degs =a.degrees_
+      ;
+    for(auto bucket : a.dict_){
+        dict.insert(std::pair<vec_uint, mpz_class>(bucket.first, - bucket.second));
+    }
+    return make_rcp<const MultivariatePolynomial>(s, degs, dict);
 }
 
 RCP<const MultivariatePolynomial> sub_mult_poly(const MultivariatePolynomial &a, const MultivariatePolynomial &b){
+    return(add_mult_poly(a, *neg_mult_poly(b)));
 }
-
+/*
 RCP<const MultivariatePolynomial> mul_mult_poly(const MultivariatePolynomial &a, const MultivariatePolynomial &b){
 }
 */
