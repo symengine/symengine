@@ -14,6 +14,8 @@ using SymEngine::vec_basic;
 using SymEngine::complex_double;
 using SymEngine::LambdaRealDoubleVisitor;
 using SymEngine::LambdaComplexDoubleVisitor;
+using SymEngine::max;
+using SymEngine::min;
 
 TEST_CASE("Evaluate to double", "[lambda_double]")
 {
@@ -33,6 +35,18 @@ TEST_CASE("Evaluate to double", "[lambda_double]")
 
     d = v.call({1.5, -1.0, 2.0});
     REQUIRE(::fabs(d - 1.75) < 1e-12);
+
+    r = max({x, add(mul(y, z), integer(3))});
+    v.init({x, y, z}, *r);
+
+    d = v.call({4.0, 1.0, 2.5});
+    REQUIRE(::fabs(d - 5.5) < 1e-12);
+
+    r = min({pow(x, y), add(mul(y, z), integer(3))});
+    v.init({x, y, z}, *r);
+
+    d = v.call({4.0, 2.0, 2.5});
+    REQUIRE(::fabs(d - 8.0) < 1e-12);
 
     // Evaluating to double when there are complex doubles raise an exception
     CHECK_THROWS_AS(v.init({x}, *add(complex_double(std::complex<double>(1, 2)), x)), std::runtime_error);

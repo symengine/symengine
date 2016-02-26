@@ -452,6 +452,12 @@ void test_constants() {
 
 }
 
+void test_ascii_art() {
+    char* s = ascii_art_str();
+    SYMENGINE_C_ASSERT(strlen(s) > 0);
+    basic_str_free(s);
+}
+
 int main(int argc, char* argv[])
 {
     test_cwrapper();
@@ -469,5 +475,6 @@ int main(int argc, char* argv[])
     test_subs();
     test_subs2();
     test_constants();
+    test_ascii_art();
     return 0;
 }
