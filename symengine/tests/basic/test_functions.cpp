@@ -1304,7 +1304,7 @@ TEST_CASE("Tan table: functions", "[functions]")
     // tan(pi/4) = 1
     r1 = tan(div(pi, integer(4)));
     REQUIRE(eq(*r1, *one));
-    
+
     // tan(5*pi/12) = (1 + 3**(1/2))/(-1 + 3**(1/2))
     r1 = tan(mul(div(integer(5), i12), pi));
     r2 = div(add(one, sq3), add(im1, sq3));
@@ -1349,12 +1349,12 @@ TEST_CASE("Cot table: functions", "[functions]")
     // cot(pi/4) = 1
     r1 = cot(div(pi, integer(4)));
     REQUIRE(eq(*r1, *one));
-    
+
     // cot(pi/12) = (1 + 3**(1/2))/(-1 + 3**(1/2))
     r1 = cot(div(pi, i12));
     r2 = div(add(one, sq3), sub(sq3, one));
     REQUIRE(eq(*r1, *r2));
-    
+
     // cot(5*pi/12) = (-1 + 3**(1/2))/(1 + 3**(1/2))
     r1 = cot(div(mul(integer(5),pi), i12));
     r2 = div(sub(sq3, one), add(one, sq3));
@@ -2277,11 +2277,11 @@ TEST_CASE("Beta: functions", "[functions]")
     r2 = beta(y, x);
     REQUIRE(eq(*r1, *r2));
     REQUIRE(r1->__hash__() == r2->__hash__());
-    
+
     r1 = beta(x, y)->diff(x);
     r2 = mul(beta(x, y), sub(polygamma(zero, x), polygamma(zero, add(x, y))));
     REQUIRE(eq(*r1, *r2));
-    
+
     r1 = beta(x, y)->diff(x);
     r2 = beta(y, x)->diff(x);
     REQUIRE(eq(*r1, *r2));
