@@ -1306,8 +1306,8 @@ bool nthroot_mod(const Ptr<RCP<const Integer>> &root, const RCP<const Integer> &
     bool ret_val;
 
     std::vector<RCP<const Integer>> rem;
-    integer_class _mod;
     for (const auto &it: prime_mul) {
+        integer_class _mod;
         mp_pow_ui(_mod, it.first->as_mpz(), it.second);
         moduli.push_back(integer(std::move(_mod)));
         ret_val = _nthroot_mod_prime_power(rem, a->as_mpz(), n->as_mpz(), it.first->as_mpz(), it.second, false);
@@ -1332,8 +1332,8 @@ void nthroot_mod_list(std::vector<RCP<const Integer>> &roots, const RCP<const In
     bool ret_val;
 
     std::vector<std::vector<RCP<const Integer>>> rem;
-    integer_class _mod;
     for (const auto &it: prime_mul) {
+        integer_class _mod;
         mp_pow_ui(_mod, it.first->as_mpz(), it.second);
         moduli.push_back(integer(std::move(_mod)));
         std::vector<RCP<const Integer>> rem1;
