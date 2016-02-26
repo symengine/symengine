@@ -1058,6 +1058,9 @@ bool _nthroot_mod1(std::vector<RCP<const Integer>> &roots, const integer_class &
     // Solve x**n == a mod p first.
     t = p - 1;
     mp_gcdext(_n, r, s, n, t);
+    if (r < 0) {
+        mp_fdiv_r(r, r, t / _n);
+    }
     mp_powm(s, a, r, p);
 
     // Solve x**(_n) == s mod p where _n | p - 1.

@@ -34,6 +34,7 @@ using SymEngine::is_a;
 using SymEngine::pi;
 using SymEngine::function_symbol;
 using SymEngine::real_double;
+using SymEngine::RealDouble;
 using SymEngine::E;
 using SymEngine::parse;
 
@@ -236,6 +237,7 @@ TEST_CASE("Parsing: function_symbols", "[parser]")
 TEST_CASE("Parsing: doubles", "[parser]")
 {
     std::string s;
+    double d;
     RCP<const Basic> res;
     RCP<const Basic> x = symbol("x");
 
@@ -249,9 +251,13 @@ TEST_CASE("Parsing: doubles", "[parser]")
 
     s = "1.324/(2+3)";
     res = parse(s);
-    REQUIRE(eq(*res, *real_double(0.2648)));
+    REQUIRE(is_a<RealDouble>(*res));
+    d = static_cast<const RealDouble &>(*res).as_double();
+    REQUIRE(std::abs(d - 0.2648) < 1e-12);
 
     s = "sqrt(2.0)+5";
     res = parse(s);
-    REQUIRE(eq(*res, *real_double(sqrt(2) + 5)));
+    REQUIRE(is_a<RealDouble>(*res));
+    d = static_cast<const RealDouble &>(*res).as_double();
+    REQUIRE(std::abs(d - (::sqrt(2)+5)) < 1e-12);
 }
