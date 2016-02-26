@@ -626,22 +626,6 @@ public:
     }
 };
 
-inline mpz_wrapper abs(const mpz_wrapper &i) {
-    mpz_wrapper res;
-    mpz_abs(res.get_mpz_t(), i.get_mpz_t());
-    return res;
-}
-
-inline mpz_wrapper sqrt(const mpz_wrapper &i) {
-    mpz_wrapper res;
-    mpz_sqrt(res.get_mpz_t(), i.get_mpz_t());
-    return res;
-}
-
-inline int sgn(const mpz_wrapper &i) {
-    return mpz_sgn(i.get_mpz_t());
-}
-
 class mpq_wrapper {
 private:
     mpq_t mp;
@@ -788,16 +772,6 @@ public:
        mpq_canonicalize(mp);
     }
 };
-
-inline mpq_wrapper abs(const mpq_wrapper &i) {
-    mpq_wrapper res;
-    mpq_abs(res.get_mpq_t(), i.get_mpq_t());
-    return res;
-}
-
-inline int sgn(const mpq_wrapper &i) {
-    return mpq_sgn(i.get_mpq_t());
-}
 
 #endif
 } //SymEngine

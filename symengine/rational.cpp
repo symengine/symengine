@@ -64,8 +64,8 @@ std::size_t Rational::__hash__() const
     // only the least significant bits that fit into "signed long int" are
     // hashed:
     std::size_t seed = RATIONAL;
-    hash_combine<long long int>(seed, get_si(SymEngine::get_num(this->i)));
-    hash_combine<long long int>(seed, get_si(SymEngine::get_den(this->i)));
+    hash_combine<long long int>(seed, mp_get_si(SymEngine::get_num(this->i)));
+    hash_combine<long long int>(seed, mp_get_si(SymEngine::get_den(this->i)));
     return seed;
 }
 
@@ -146,9 +146,9 @@ RCP<const Basic> Rational::powrat(const Rational &other) const {
 }
 
 RCP<const Basic> Rational::rpowrat(const Integer &other) const {
-    if (not (fits_ulong_p(SymEngine::get_den(i))))
+    if (not (mp_fits_ulong_p(SymEngine::get_den(i))))
         throw std::runtime_error("powrat: den of 'exp' does not fit ulong.");
-    unsigned long exp = get_ui(SymEngine::get_den(i));
+    unsigned long exp = mp_get_ui(SymEngine::get_den(i));
     RCP<const Integer> res;
     if (other.is_negative()) {
         if (i_nth_root(outArg(res), *other.neg(), exp)) {

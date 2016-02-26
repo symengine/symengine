@@ -144,9 +144,9 @@ public:
         bool neg = other.is_negative();
         integer_class exp_ = other.i;
         if (neg) exp_ = -exp_;
-        if (not fits_ulong_p(exp_))
+        if (not mp_fits_ulong_p(exp_))
             throw std::runtime_error("powrat: 'exp' does not fit ulong.");
-        unsigned long exp = get_ui(exp_);
+        unsigned long exp = mp_get_ui(exp_);
         rational_class val;
         mp_pow_ui(SymEngine::get_num(val), SymEngine::get_num(i), exp);
         mp_pow_ui(SymEngine::get_den(val), SymEngine::get_den(i), exp);

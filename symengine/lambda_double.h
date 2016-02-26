@@ -47,12 +47,12 @@ public:
     }
 
     void bvisit(const Integer &x) {
-        T tmp = get_d(x.i);
+        T tmp = mp_get_d(x.i);
         result_ = [=](const std::vector<T> &x_){ return tmp; };
     }
 
     void bvisit(const Rational &x) {
-        T tmp = get_d(x.i);
+        T tmp = mp_get_d(x.i);
         result_ = [=](const std::vector<T> &x){ return tmp; };
     }
 
@@ -321,7 +321,7 @@ public:
     using LambdaDoubleVisitor::bvisit;
 
     void bvisit(const Complex &x) {
-        double t1 = get_d(x.real_), t2 = get_d(x.imaginary_);
+        double t1 = mp_get_d(x.real_), t2 =  mp_get_d(x.imaginary_);
         result_ = [=](const std::vector<std::complex<double>> &x){ return std::complex<double>(t1, t2); };
     };
 

@@ -169,8 +169,8 @@ RCP<const Integer> nextprime(const Integer &a)
 // Factoring by Trial division using primes only
 int _factor_trial_division_sieve(integer_class &factor, const integer_class &N)
 {
-    integer_class sqrtN = sqrt(N);
-    unsigned long limit = get_ui(sqrtN);
+    integer_class sqrtN = mp_sqrt(N);
+    unsigned long limit = mp_get_ui(sqrtN);
     if (limit > std::numeric_limits<unsigned>::max())
         throw std::runtime_error("N too large to factor");
     Sieve::iterator pi(limit);
@@ -196,9 +196,9 @@ int _factor_lehman_method(integer_class &rop, const integer_class &n)
     mp_root(u_bound, n, 3);
     u_bound = u_bound + 1;
 
-    Sieve::iterator pi(get_ui(u_bound));
+    Sieve::iterator pi(mp_get_ui(u_bound));
     unsigned p;
-    while ((p = pi.next_prime()) <= get_ui(u_bound)) {
+    while ((p = pi.next_prime()) <= mp_get_ui(u_bound)) {
         if (n % p == 0) {
             rop = n / p;
             ret_val = 1;
@@ -213,7 +213,7 @@ int _factor_lehman_method(integer_class &rop, const integer_class &n)
         k = 1;
 
         while (k <= u_bound) {
-            a = sqrt(4 * k * n);
+            a = mp_sqrt(4 * k * n);
             mp_root(b, n, 6);
             mp_root(l, k, 2);
             b = b / (4 * l);
@@ -222,7 +222,7 @@ int _factor_lehman_method(integer_class &rop, const integer_class &n)
             while (a <= b) {
                 l = a * a - 4 * k * n;
                 if (mp_perfect_square_p(l)) {
-                    b = a + sqrt(l);
+                    b = a + mp_sqrt(l);
                     mp_gcd(rop, n, b);
                     ret_val = 1;
                     break;
@@ -423,9 +423,9 @@ void prime_factors(std::vector<RCP<const Integer>> &prime_list, const Integer &n
     if (_n == 0) return;
     if (_n < 0) _n *= -1;
 
-    sqrtN = sqrt(_n);
-    auto limit = get_ui(sqrtN);
-    if (not fits_ulong_p(sqrtN) or limit > std::numeric_limits<unsigned>::max())
+    sqrtN = mp_sqrt(_n);
+    auto limit = mp_get_ui(sqrtN);
+    if (not mp_fits_ulong_p(sqrtN) or limit > std::numeric_limits<unsigned>::max())
         throw std::runtime_error("N too large to factor");
     Sieve::iterator pi(limit);
     unsigned p;
@@ -449,9 +449,9 @@ void prime_factor_multiplicities(map_integer_uint &primes_mul, const Integer &n)
     if (_n == 0) return;
     if (_n < 0) _n *= -1;
 
-    sqrtN = sqrt(_n);
-    auto limit = get_ui(sqrtN);
-    if (not fits_ulong_p(sqrtN) or limit > std::numeric_limits<unsigned>::max())
+    sqrtN = mp_sqrt(_n);
+    auto limit = mp_get_ui(sqrtN);
+    if (not mp_fits_ulong_p(sqrtN) or limit > std::numeric_limits<unsigned>::max())
         throw std::runtime_error("N too large to factor");
     Sieve::iterator pi(limit);
 
@@ -710,7 +710,7 @@ void _primitive_root(integer_class &g, const integer_class &p, const integer_cla
         }
     }
     if (even and g % 2 == 0) {
-        mp_pow_ui(t, p, get_ui(e));
+        mp_pow_ui(t, p, mp_get_ui(e));
         g += t;                     // If g is even then root of 2*p**e is g + p**e.
     }
 }
@@ -754,7 +754,7 @@ void _primitive_root_list(std::vector<RCP<const Integer>> &roots, const integer_
     h = 1;
     pm1 = p - 1;
     // Generate other primitive roots for p. h = g**i and gcd(i, p-1) = 1. Ref[2]
-    mp_pow_ui(n, p, get_ui(e));
+    mp_pow_ui(n, p, mp_get_ui(e));
     for (unsigned long i = 1; i < p; ++i) {
         h *= g;
         h %= p;
@@ -775,7 +775,7 @@ void _primitive_root_list(std::vector<RCP<const Integer>> &roots, const integer_
                 d = ((h - d) / p + p) % p;
                 t = h;
                 // t = h + i * p + j * p * p and i != d
-                mp_pow_ui(pe2, p, get_ui(e) - 2);
+                mp_pow_ui(pe2, p, mp_get_ui(e) - 2);
                 for (unsigned long j = 0; j < pe2; ++j) {
                     for (unsigned long i = 0; i < p; ++i) {
                         if (i != d) {
@@ -868,7 +868,7 @@ bool multiplicative_order(const Ptr<RCP<const Integer>> &o, const RCP<const Inte
         const RCP<const Integer> &n)
 {
     integer_class order, p, t;
-    integer_class _a = a->as_mpz(), _n = abs(n->as_mpz());
+    integer_class _a = a->as_mpz(), _n = mp_abs(n->as_mpz());
     mp_gcd(t, _a, _n);
     if (t != 1)
         return false;
@@ -1256,7 +1256,7 @@ bool _nthroot_mod_prime_power(std::vector<RCP<const Integer>> &roots, const inte
             if (n >= k)
                 m = k - 1;
             else
-                m = k - 1 - (k - 1) / get_ui(n);
+                m = k - 1 - (k - 1) / mp_get_ui(n);
             mp_pow_ui(pm, p, m);
         } else {
             unsigned r = 1;
@@ -1268,7 +1268,7 @@ bool _nthroot_mod_prime_power(std::vector<RCP<const Integer>> &roots, const inte
             if (r < n or r % n != 0 or not _nthroot_mod_prime_power(_roots, _a, n, p, k - r, all_roots)) {
                 return false;
             }
-            m = r / get_ui(n);
+            m = r / mp_get_ui(n);
             mp_pow_ui(pm, p, m);
             if (not all_roots) {
                 roots.push_back(integer(_roots.back()->as_mpz() * pm));
@@ -1277,7 +1277,7 @@ bool _nthroot_mod_prime_power(std::vector<RCP<const Integer>> &roots, const inte
             for (auto &it : _roots) {
                 it = integer (it->as_mpz() * pm);
             }
-            m = r - r / get_ui(n);
+            m = r - r / mp_get_ui(n);
             mp_pow_ui(pm, p, m);
         }
         integer_class pkm;
@@ -1370,7 +1370,7 @@ bool powermod(const Ptr<RCP<const Integer>> &powm, const RCP<const Integer> &a,
             den = den->mulint(*minus_one);
             num = num->mulint(*minus_one);
         }
-        integer_class t = abs(num->as_mpz());
+        integer_class t = mp_abs(num->as_mpz());
         mp_powm(t, a->as_mpz(), t, m->as_mpz());
         if (num->is_negative()) {
             bool ret_val = mp_invert(t, t, m->as_mpz());
@@ -1387,7 +1387,7 @@ void powermod_list(std::vector<RCP<const Integer>> &pows, const RCP<const Intege
         const RCP<const Number> &b, const RCP<const Integer> &m)
 {
     if(is_a<Integer>(*b)) {
-        integer_class t = abs(rcp_static_cast<const Integer>(b)->as_mpz());
+        integer_class t = mp_abs(rcp_static_cast<const Integer>(b)->as_mpz());
         mp_powm(t, a->as_mpz(), t, m->as_mpz());
         if (b->is_negative()) {
             bool ret_val = mp_invert(t, t, m->as_mpz());

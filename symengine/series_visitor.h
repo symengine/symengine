@@ -46,9 +46,9 @@ public:
         const RCP<const Basic>& base = x.get_base(), exp = x.get_exp();
         if (is_a<Integer>(*exp)) {
             const Integer& ii = (static_cast<const Integer&>(*exp));
-            if (not fits_slong_p(ii.i))
+            if (not mp_fits_slong_p(ii.i))
                 throw std::runtime_error("series power exponent size");
-            const int sh = get_si(ii.i);
+            const int sh = mp_get_si(ii.i);
             base->accept(*this);
             if (sh == 1) {
                 return;
@@ -64,10 +64,10 @@ public:
             const Rational &rat = (static_cast<const Rational &>(*exp));
             const integer_class &expnumz = get_num(rat.i);
             const integer_class &expdenz = get_den(rat.i);
-            if (not fits_slong_p(expnumz) or not fits_slong_p(expdenz))
+            if (not mp_fits_slong_p(expnumz) or not mp_fits_slong_p(expdenz))
                 throw std::runtime_error("series rational power exponent size");
-            const int num = get_si(expnumz);
-            const int den = get_si(expdenz);
+            const int num = mp_get_si(expnumz);
+            const int den = mp_get_si(expdenz);
             base->accept(*this);
             const Poly proot(Series::series_nthroot(apply(base), den, var, prec));
             if (num == 1) {

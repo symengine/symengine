@@ -2856,7 +2856,7 @@ RCP<const Basic> gamma_multiple_2(const RCP<const Basic>& arg)
     SYMENGINE_ASSERT(get_den(arg_->i) == 2)
     RCP<const Integer> n, k;
     RCP<const Number> coeff;
-    n = quotient_f(*(integer(abs(get_num(arg_->i)))), *(integer(get_den(arg_->i))));
+    n = quotient_f(*(integer(mp_abs(get_num(arg_->i)))), *(integer(get_den(arg_->i))));
     if (arg_->is_positive()) {
         k = n;
         coeff = one;

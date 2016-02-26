@@ -31,10 +31,10 @@ std::size_t Complex::__hash__() const
     // only the least significant bits that fit into "signed long int" are
     // hashed:
     std::size_t seed = COMPLEX;
-    hash_combine<long long int>(seed, get_si(get_num(this->real_)));
-    hash_combine<long long int>(seed, get_si(get_den(this->real_)));
-    hash_combine<long long int>(seed, get_si(get_num(this->imaginary_)));
-    hash_combine<long long int>(seed, get_si(get_den(this->imaginary_)));
+    hash_combine<long long int>(seed, mp_get_si(get_num(this->real_)));
+    hash_combine<long long int>(seed, mp_get_si(get_den(this->real_)));
+    hash_combine<long long int>(seed, mp_get_si(get_num(this->imaginary_)));
+    hash_combine<long long int>(seed, mp_get_si(get_den(this->imaginary_)));
     return seed;
 }
 

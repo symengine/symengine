@@ -281,7 +281,7 @@ public:
         if (n == 2) {
             return square_expand(base_dict);
         } else {
-            return pow_expand(base_dict, get_ui(n));
+            return pow_expand(base_dict, mp_get_ui(n));
         }
     }
 

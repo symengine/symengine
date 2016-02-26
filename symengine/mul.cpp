@@ -302,7 +302,7 @@ void Mul::as_base_exp(const RCP<const Basic> &self, const Ptr<RCP<const Basic>> 
         // in case of Integers den = 1
         if (is_a<Rational>(*self)) {
             RCP<const Rational> self_new = rcp_static_cast<const Rational>(self);
-            if (abs(get_num(self_new->i)) < abs(get_den(self_new->i))) {
+            if (mp_abs(get_num(self_new->i)) < mp_abs(get_den(self_new->i))) {
                 *exp = minus_one;
                 *base = self_new->rdiv(*rcp_static_cast<const Number>(one));
             } else {

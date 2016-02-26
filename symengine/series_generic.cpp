@@ -91,13 +91,13 @@ std::string UnivariateSeries::__str__() const
         }
         first = false;
         if (it.first == 0) {
-            o << abs(it.second);
+            o << mp_abs(it.second);
             continue;
         }
-        if (abs(it.second) == 1)
+        if (mp_abs(it.second) == 1)
             o << var_->get_name();
         else
-            o << abs(it.second) << "*" << var_->get_name();
+            o << mp_abs(it.second) << "*" << var_->get_name();
         if (it.first > 1)
             o << "**" << it.first;
     }

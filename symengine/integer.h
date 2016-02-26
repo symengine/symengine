@@ -67,14 +67,14 @@ public:
     RCP<const Number> pow_negint(const Integer &other) const;
     //! Fast Power Evaluation
     inline RCP<const Number> powint(const Integer &other) const {
-        if (not (fits_ulong_p(other.i))) {
+        if (not (mp_fits_ulong_p(other.i))) {
             if (other.i > 0u)
                 throw std::runtime_error("powint: 'exp' does not fit unsigned long.");
             else
                 return pow_negint(other);
         }
         integer_class tmp;
-        mp_pow_ui(tmp, i, get_ui(other.i));
+        mp_pow_ui(tmp, i, mp_get_ui(other.i));
         return make_rcp<const Integer>(std::move(tmp));
     }
     //! \return negative of self.

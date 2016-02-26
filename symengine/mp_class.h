@@ -63,7 +63,23 @@ inline namespace literals {
 
 #if SYMENGINE_INTEGER_CLASS == SYMENGINE_GMPXX || SYMENGINE_INTEGER_CLASS == SYMENGINE_GMP
 // Helper functions for mpz_class
-inline double get_d(const integer_class &i) {
+inline integer_class mp_abs(const integer_class &i) {
+    integer_class res;
+    mpz_abs(res.get_mpz_t(), i.get_mpz_t());
+    return res;
+}
+
+inline int mp_sign(const integer_class &i) {
+    return mpz_sgn(i.get_mpz_t());
+}
+
+inline integer_class mp_sqrt(const integer_class &i) {
+    integer_class res;
+    mpz_sqrt(res.get_mpz_t(), i.get_mpz_t());
+    return res;
+}
+
+inline double mp_get_d(const integer_class &i) {
     return i.get_d();
 }
 
@@ -71,24 +87,20 @@ inline void mp_demote(integer_class &i) {
 
 }
 
-inline bool fits_ulong_p(const integer_class &i) {
+inline bool mp_fits_ulong_p(const integer_class &i) {
     return i.fits_ulong_p() != 0;
 }
 
-inline bool fits_slong_p(const integer_class &i) {
+inline bool mp_fits_slong_p(const integer_class &i) {
     return i.fits_slong_p() != 0;
 }
 
-inline unsigned long get_ui(const integer_class &i) {
+inline unsigned long mp_get_ui(const integer_class &i) {
     return i.get_ui();
 }
 
-inline long get_si(const integer_class &i) {
+inline long mp_get_si(const integer_class &i) {
     return i.get_si();
-}
-
-inline int sign(const integer_class &i) {
-    return sgn(i);
 }
 
 inline mpz_srcptr get_mpz_t(const integer_class &i) {
@@ -177,21 +189,27 @@ inline void canonicalize(rational_class &i) {
     i.canonicalize();
 }
 
-inline double get_d(const rational_class &i) {
+inline double mp_get_d(const rational_class &i) {
     return i.get_d();
 }
 
-inline int sign(const rational_class &i) {
-    return sgn(i);
+inline int mp_sign(const rational_class &i) {
+    return mpq_sgn(i.get_mpq_t());
+}
+
+inline rational_class mp_abs(const rational_class &i) {
+    rational_class res;
+    mpq_abs(res.get_mpq_t(), i.get_mpq_t());
+    return res;
 }
 
 #elif SYMENGINE_INTEGER_CLASS == SYMENGINE_PIRANHA
 // Helper functions for piranha::integer
-inline piranha::integer abs(const piranha::integer &i) {
+inline piranha::integer mp_abs(const piranha::integer &i) {
     return i.abs();
 }
 
-inline piranha::integer sqrt(const piranha::integer &i) {
+inline piranha::integer mp_sqrt(const piranha::integer &i) {
     return i.sqrt();
 }
 
@@ -270,27 +288,27 @@ inline void mp_tdiv_qr(piranha::integer &q, piranha::integer &r, const piranha::
     mpz_tdiv_qr(_q, _r, get_mpz_t(a), get_mpz_t(b));
 }
 
-inline int sign(const piranha::integer &i) {
+inline int mp_sign(const piranha::integer &i) {
     return i.sign();
 }
 
-inline long get_si(const piranha::integer &i) {
+inline long mp_get_si(const piranha::integer &i) {
     return mpz_get_si(i.get_mpz_view());
 }
 
-inline unsigned long get_ui(const piranha::integer &i) {
+inline unsigned long mp_get_ui(const piranha::integer &i) {
     return mpz_get_ui(i.get_mpz_view());
 }
 
-inline double get_d(const piranha::integer &i) {
+inline double mp_get_d(const piranha::integer &i) {
     return mpz_get_d(i.get_mpz_view());
 }
 
-inline bool fits_ulong_p(const piranha::integer &i) {
+inline bool mp_fits_ulong_p(const piranha::integer &i) {
     return mpz_fits_ulong_p(i.get_mpz_view()) != 0;
 }
 
-inline bool fits_slong_p(const piranha::integer &i) {
+inline bool mp_fits_slong_p(const piranha::integer &i) {
     return mpz_fits_slong_p(i.get_mpz_view()) != 0;
 }
 
@@ -300,7 +318,7 @@ inline void mp_addmul(integer_class &r, const integer_class &a, const integer_cl
 
 // Helper functions for piranha::rational
 
-inline piranha::rational abs(const piranha::rational &i) {
+inline piranha::rational mp_abs(const piranha::rational &i) {
     return i.abs();
 }
 
@@ -325,7 +343,7 @@ inline void canonicalize(piranha::rational &i) {
     i.canonicalise();
 }
 
-inline double get_d(const piranha::rational &i) {
+inline double mp_get_d(const piranha::rational &i) {
     return mpq_get_d(i.get_mpq_view().get());
 }
 
@@ -333,7 +351,7 @@ inline auto get_mpq_t(const piranha::rational &i) -> decltype(i.get_mpq_view()) 
     return i.get_mpq_view();
 }
 
-inline int sign(const piranha::rational &i) {
+inline int mp_sign(const piranha::rational &i) {
     return i.num().sign();
 }
 #elif SYMENGINE_INTEGER_CLASS == SYMENGINE_FLINT
@@ -350,37 +368,37 @@ inline void mp_demote(fmpz_wrapper &i) {
     _fmpz_demote_val(i.get_fmpz_t());
 }
 
-inline int sign(const fmpz_wrapper &i) {
+inline int mp_sign(const fmpz_wrapper &i) {
     return fmpz_sgn(i.get_fmpz_t());
 }
 
-inline long get_si(const fmpz_wrapper &i) {
+inline long mp_get_si(const fmpz_wrapper &i) {
     return fmpz_get_si(i.get_fmpz_t());
 }
 
-inline unsigned long get_ui(const fmpz_wrapper &i) {
+inline unsigned long mp_get_ui(const fmpz_wrapper &i) {
     return fmpz_get_ui(i.get_fmpz_t());
 }
 
-inline bool fits_slong_p(const fmpz_wrapper &i) {
+inline bool mp_fits_slong_p(const fmpz_wrapper &i) {
     return fmpz_fits_si(i.get_fmpz_t());
 }
 
-inline bool fits_ulong_p(const fmpz_wrapper &i) {
+inline bool mp_fits_ulong_p(const fmpz_wrapper &i) {
     return fmpz_sgn(i.get_fmpz_t()) >= 0 && fmpz_abs_fits_ui(i.get_fmpz_t());
 }
 
-inline double get_d(const fmpz_wrapper &i) {
+inline double mp_get_d(const fmpz_wrapper &i) {
     return fmpz_get_d(i.get_fmpz_t());
 }
 
-inline fmpz_wrapper abs(const fmpz_wrapper &i) {
+inline fmpz_wrapper mp_abs(const fmpz_wrapper &i) {
     fmpz_wrapper res;
     fmpz_abs(res.get_fmpz_t(), i.get_fmpz_t());
     return res;
 }
 
-inline fmpz_wrapper sqrt(const fmpz_wrapper &i) {
+inline fmpz_wrapper mp_sqrt(const fmpz_wrapper &i) {
     fmpz_wrapper res;
     fmpz_sqrt(res.get_fmpz_t(), i.get_fmpz_t());
     return res;
@@ -463,15 +481,15 @@ inline void canonicalize(fmpq_wrapper &i) {
     fmpq_canonicalise(i.get_fmpq_t());
 }
 
-inline double get_d(const fmpq_wrapper &i) {
-    return get_d(i.get_num())/get_d(i.get_den());
+inline double mp_get_d(const fmpq_wrapper &i) {
+    return mp_get_d(i.get_num())/mp_get_d(i.get_den());
 }
 
-inline int sign(const fmpq_wrapper &i) {
+inline int mp_sign(const fmpq_wrapper &i) {
     return fmpq_sgn(i.get_fmpq_t());
 }
 
-inline fmpq_wrapper abs(const fmpq_wrapper &i) {
+inline fmpq_wrapper mp_abs(const fmpq_wrapper &i) {
     fmpq_wrapper res;
     fmpq_abs(res.get_fmpq_t(), i.get_fmpq_t());
     return res;

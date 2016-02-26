@@ -44,7 +44,7 @@ std::size_t UnivariatePolynomial::__hash__() const
     {
         std::size_t temp = UNIVARIATEPOLYNOMIAL;
         hash_combine<unsigned int>(temp, it.first);
-        hash_combine<long long int>(temp, get_si(it.second));
+        hash_combine<long long int>(temp, mp_get_si(it.second));
         seed += temp;
     }
     return seed;

@@ -10,7 +10,7 @@ std::size_t Integer::__hash__() const
     std::hash<long long int> hash_fn;
     // only the least significant bits that fit into "signed long int" are
     // hashed:
-    return hash_fn(((long long int)get_ui(this->i)) * sign(this->i));
+    return hash_fn(((long long int) mp_get_ui(this->i)) * mp_sign(this->i));
 }
 
 bool Integer::__eq__(const Basic &o) const
@@ -32,13 +32,13 @@ int Integer::compare(const Basic &o) const
 
 signed long int Integer::as_int() const
 {
-    // get_si() returns "signed long int", so that's what we return from
+    // mp_get_si() returns "signed long int", so that's what we return from
     // "as_int()" and we leave it to the user to do any possible further integer
     // conversions.
-    if (not (fits_slong_p(this->i))) {
+    if (not (mp_fits_slong_p(this->i))) {
         throw std::runtime_error("as_int: Integer larger than int");
     }
-    return get_si(this->i);
+    return mp_get_si(this->i);
 }
 
 RCP<const Number> Integer::divint(const Integer &other) const {
@@ -74,7 +74,7 @@ RCP<const Number> Integer::rdiv(const Number &other) const
 RCP<const Number> Integer::pow_negint(const Integer &other) const {
     RCP<const Number> tmp = powint(*other.neg());
     if (is_a<Integer>(*tmp)) {
-        rational_class q(sign(static_cast<const Integer &>(*tmp).i), abs(static_cast<const Integer &>(*tmp).i));
+        rational_class q(mp_sign(static_cast<const Integer &>(*tmp).i), mp_abs(static_cast<const Integer &>(*tmp).i));
         return make_rcp<const Rational>(std::move(q));
     } else {
         throw std::runtime_error("powint returned non-integer");
@@ -83,12 +83,12 @@ RCP<const Number> Integer::pow_negint(const Integer &other) const {
 
 RCP<const Integer> isqrt(const Integer &n)
 {
-    return integer(std::move(sqrt(n.as_mpz())));
+    return integer(std::move(mp_sqrt(n.as_mpz())));
 }
 
 RCP<const Integer> iabs(const Integer &n)
 {
-    return integer(std::move(abs(n.as_mpz())));
+    return integer(std::move(mp_abs(n.as_mpz())));
 }
 
 int i_nth_root(const Ptr<RCP<const Integer>> &r, const Integer &a,
