@@ -214,48 +214,60 @@ inline void mp_pow_ui(piranha::integer &res, const piranha::integer &i, unsigned
 inline void mp_powm(piranha::integer &res, const piranha::integer &a, const piranha::integer &b,
                     const piranha::integer &m)
 {
-    mpz_powm(get_mpz_t(res), get_mpz_t(a), get_mpz_t(b), get_mpz_t(m));
+    auto _res = get_mpz_t(res);
+    mpz_powm(_res, get_mpz_t(a), get_mpz_t(b), get_mpz_t(m));
 }
 
 inline bool mp_invert(piranha::integer &res, const piranha::integer &a,  const piranha::integer &m) {
-    return mpz_invert(get_mpz_t(res), get_mpz_t(a), get_mpz_t(m)) != 0;
+    auto _res = get_mpz_t(res);
+    return mpz_invert(_res, get_mpz_t(a), get_mpz_t(m)) != 0;
 }
 
 inline void mp_gcd(piranha::integer &g, const piranha::integer &a,  const piranha::integer &b) {
-    mpz_gcd(get_mpz_t(g), get_mpz_t(a), get_mpz_t(b));
+    g = piranha::integer::gcd(a, b);
 }
 
 inline void mp_gcdext(piranha::integer &g, piranha::integer &r, piranha::integer &s,
                         const piranha::integer &a,  const piranha::integer &b) {
-    mpz_gcdext(get_mpz_t(g), get_mpz_t(r), get_mpz_t(s), get_mpz_t(a), get_mpz_t(b));
+    auto _g = get_mpz_t(g);
+    auto _r = get_mpz_t(r);
+    auto _s = get_mpz_t(s);
+    mpz_gcdext(_g, _r, _s, get_mpz_t(a), get_mpz_t(b));
 }
 
 inline void mp_and(piranha::integer &res, const piranha::integer &a, const piranha::integer &b) {
-    mpz_and(get_mpz_t(res), get_mpz_t(a), get_mpz_t(b));
+    auto _res = get_mpz_t(res);
+    mpz_and(_res, get_mpz_t(a), get_mpz_t(b));
 }
 
 inline void mp_fdiv_r(piranha::integer &res, const piranha::integer &a, const piranha::integer &b) {
-    mpz_fdiv_r(get_mpz_t(res), get_mpz_t(a), get_mpz_t(b));
+    auto _res = get_mpz_t(res);
+    mpz_fdiv_r(_res, get_mpz_t(a), get_mpz_t(b));
 }
 
 inline void mp_fdiv_q(piranha::integer &res, const piranha::integer &a, const piranha::integer &b) {
-    mpz_fdiv_q(get_mpz_t(res), get_mpz_t(a), get_mpz_t(b));
+    auto _res = get_mpz_t(res);
+    mpz_fdiv_q(_res, get_mpz_t(a), get_mpz_t(b));
 }
 
 inline void mp_fdiv_qr(piranha::integer &q, piranha::integer &r, const piranha::integer &a, const piranha::integer &b) {
-    mpz_fdiv_qr(get_mpz_t(q), get_mpz_t(r), get_mpz_t(a), get_mpz_t(b));
+    auto _q = get_mpz_t(q);
+    mpz_fdiv_qr(_q, get_mpz_t(r), get_mpz_t(a), get_mpz_t(b));
 }
 
 inline void mp_divexact(piranha::integer &q, const piranha::integer &a, const piranha::integer &b) {
-    mpz_divexact(get_mpz_t(q), get_mpz_t(a), get_mpz_t(b));
+    piranha::integer::_divexact(q, a, b);
 }
 
 inline void mp_lcm(piranha::integer &q, const piranha::integer &a, const piranha::integer &b) {
-    mpz_lcm(get_mpz_t(q), get_mpz_t(a), get_mpz_t(b));
+    auto _q = get_mpz_t(q);
+    mpz_lcm(_q, get_mpz_t(a), get_mpz_t(b));
 }
 
 inline void mp_tdiv_qr(piranha::integer &q, piranha::integer &r, const piranha::integer &a, const piranha::integer &b) {
-    mpz_tdiv_qr(get_mpz_t(q), get_mpz_t(r), get_mpz_t(a), get_mpz_t(b));
+    auto _q = get_mpz_t(q);
+    auto _r = get_mpz_t(r);
+    mpz_tdiv_qr(_q, _r, get_mpz_t(a), get_mpz_t(b));
 }
 
 inline int sign(const piranha::integer &i) {
@@ -468,24 +480,30 @@ inline fmpq_wrapper abs(const fmpq_wrapper &i) {
 #endif
 
 inline bool mp_root(integer_class& res, const integer_class &i, unsigned long n) {
-    int ret = mpz_root(get_mpz_t(res), get_mpz_t(i), n);
+    auto _res = get_mpz_t(res);
+    int ret = mpz_root(_res, get_mpz_t(i), n);
     mp_demote(res);
     return ret != 0;
 }
 
 inline void mp_nextprime(integer_class& res, const integer_class &i) {
-    mpz_nextprime(get_mpz_t(res), get_mpz_t(i));
+    auto _res = get_mpz_t(res);
+    mpz_nextprime(_res, get_mpz_t(i));
     mp_demote(res);
 }
 
 inline void mp_sqrtrem(integer_class& a, integer_class& b, const integer_class &i) {
-    mpz_sqrtrem(get_mpz_t(a), get_mpz_t(b), get_mpz_t(i));
+    auto _a = get_mpz_t(a);
+    auto _b = get_mpz_t(b);
+    mpz_sqrtrem(_a, _b, get_mpz_t(i));
     mp_demote(a);
     mp_demote(b);
 }
 
 inline void mp_rootrem(integer_class& a, integer_class& b, const integer_class &i, unsigned long n) {
-    mpz_rootrem(get_mpz_t(a), get_mpz_t(b), get_mpz_t(i), n);
+    auto _a = get_mpz_t(a);
+    auto _b = get_mpz_t(b);
+    mpz_rootrem(_a, _b, get_mpz_t(i), n);
     mp_demote(a);
     mp_demote(b);
 }
@@ -517,7 +535,8 @@ inline void mp_lucnum2_ui(integer_class& a, integer_class& b, unsigned long n) {
 }
 
 inline void mp_bin_ui(integer_class& res, const integer_class& n, unsigned long r) {
-    mpz_bin_ui(get_mpz_t(res), get_mpz_t(n), r);
+    auto _res = get_mpz_t(res);
+    mpz_bin_ui(_res, get_mpz_t(n), r);
     mp_demote(res);
 }
 
@@ -555,7 +574,8 @@ inline bool mp_divisible_p(const integer_class &a, const integer_class &b) {
 }
 
 inline void mp_urandomm(integer_class &a, gmp_randstate_t &t, const integer_class &b) {
-    mpz_urandomm(get_mpz_t(a), t, get_mpz_t(b));
+    auto _a = get_mpz_t(a);
+    mpz_urandomm(_a, t, get_mpz_t(b));
     mp_demote(a);
 }
 
