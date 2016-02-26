@@ -95,6 +95,13 @@ endif()
 set(INTEGER_CLASS "gmpxx"
     CACHE STRING "Integer class for symengine. Either gmpxx or piranha")
 
+# Piranha
+set(WITH_PIRANHA no CACHE BOOL "Build with Piranha")
+
+# FLINT
+set(WITH_FLINT no CACHE BOOL "Build with Flint")
+set(HAVE_SYMENGINE_FLINT False)
+
 if ("${INTEGER_CLASS}" MATCHES "piranha")
     set(SYMENGINE_INTEGER_CLASS "PIRANHA")
     set(WITH_PIRANHA yes)
@@ -152,11 +159,6 @@ if (WITH_PRIMESIEVE)
     set(PKGS ${PKGS} "PRIMESIEVE")
 endif()
 
-# FLINT
-set(WITH_FLINT no
-    CACHE BOOL "Build with Flint")
-set(HAVE_SYMENGINE_FLINT False)
-
 # ARB
 set(WITH_ARB no
     CACHE BOOL "Build with Arb")
@@ -213,10 +215,6 @@ if (WITH_MPC)
     set(WITH_MPFR yes)
     set(PKGS ${PKGS} "MPC")
 endif()
-
-# Piranha
-set(WITH_PIRANHA no
-    CACHE BOOL "Build with Piranha")
 
 # Boost
 set(WITH_BOOST no
