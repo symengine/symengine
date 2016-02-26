@@ -1619,7 +1619,7 @@ namespace Catch {
 #define INTERNAL_CATCH_THROWS( expr, resultDisposition, macroName ) \
     do { \
         Catch::ResultBuilder __catchResult( macroName, CATCH_INTERNAL_LINEINFO, #expr, resultDisposition ); \
-        if( __catchResult.allowThrows() ) \
+        if( __catchResult.allowThrows() ) { \
             try { \
                 expr; \
                 __catchResult.captureResult( Catch::ResultWas::DidntThrowException ); \
@@ -1627,6 +1627,7 @@ namespace Catch {
             catch( ... ) { \
                 __catchResult.captureResult( Catch::ResultWas::Ok ); \
             } \
+        } \
         else \
             __catchResult.captureResult( Catch::ResultWas::Ok ); \
         INTERNAL_CATCH_REACT( __catchResult ) \
@@ -1636,7 +1637,7 @@ namespace Catch {
 #define INTERNAL_CATCH_THROWS_AS( expr, exceptionType, resultDisposition, macroName ) \
     do { \
         Catch::ResultBuilder __catchResult( macroName, CATCH_INTERNAL_LINEINFO, #expr, resultDisposition ); \
-        if( __catchResult.allowThrows() ) \
+        if( __catchResult.allowThrows() ) { \
             try { \
                 expr; \
                 __catchResult.captureResult( Catch::ResultWas::DidntThrowException ); \
@@ -1647,6 +1648,7 @@ namespace Catch {
             catch( ... ) { \
                 __catchResult.useActiveException( resultDisposition ); \
             } \
+        } \
         else \
             __catchResult.captureResult( Catch::ResultWas::Ok ); \
         INTERNAL_CATCH_REACT( __catchResult ) \
@@ -2086,12 +2088,16 @@ namespace Catch {
             {}
 
             virtual std::string translate() const {
+            #ifdef HAVE_SYMENGINE_CATCH
                 try {
+            #endif
                     throw;
+            #ifdef HAVE_SYMENGINE_CATCH
                 }
                 catch( T& ex ) {
                     return m_translateFunction( ex );
                 }
+            #endif
             }
 
         protected:
@@ -4030,8 +4036,9 @@ namespace Clara {
                 typename std::vector<Arg>::const_iterator it = m_options.begin(), itEnd = m_options.end();
                 for(; it != itEnd; ++it ) {
                     Arg const& arg = *it;
-
+                #ifdef HAVE_SYMENGINE_CATCH
                     try {
+                #endif
                         if( ( token.type == Parser::Token::ShortOpt && arg.hasShortName( token.data ) ) ||
                             ( token.type == Parser::Token::LongOpt && arg.hasLongName( token.data ) ) ) {
                             if( arg.takesArg() ) {
@@ -4045,10 +4052,12 @@ namespace Clara {
                             }
                             break;
                         }
+                #ifdef HAVE_SYMENGINE_CATCH
                     }
                     catch( std::exception& ex ) {
                         errors.push_back( std::string( ex.what() ) + "\n- while parsing: (" + arg.commands() + ")" );
                     }
+                #endif
                 }
                 if( it == itEnd ) {
                     if( token.type == Parser::Token::Positional || !m_throwOnUnrecognisedTokens )
@@ -5378,7 +5387,9 @@ namespace Catch {
             m_reporter->sectionStarting( testCaseSection );
             Counts prevAssertions = m_totals.assertions;
             double duration = 0;
+        #ifdef HAVE_SYMENGINE_CATCH
             try {
+        #endif
                 m_lastAssertionInfo = AssertionInfo( "TEST_CASE", testCaseInfo.lineInfo, "", ResultDisposition::Normal );
                 TestCaseTracker::Guard guard( *m_testCaseTracker );
 
@@ -5393,6 +5404,7 @@ namespace Catch {
                     invokeActiveTestCase();
                 }
                 duration = timer.getElapsedSeconds();
+        #ifdef HAVE_SYMENGINE_CATCH
             }
             catch( TestFailureException& ) {
                 // This just means the test was aborted due to failure
@@ -5400,6 +5412,7 @@ namespace Catch {
             catch(...) {
                 makeUnexpectedResultBuilder().useActiveException();
             }
+        #endif
             handleUnfinishedSections();
             m_messages.clear();
 
@@ -5630,12 +5643,15 @@ namespace Catch {
         }
 
         int applyCommandLine( int argc, char* const argv[], OnUnusedOptions::DoWhat unusedOptionBehaviour = OnUnusedOptions::Fail ) {
+        #ifdef HAVE_SYMENGINE_CATCH
             try {
+        #endif
                 m_cli.setThrowOnUnrecognisedTokens( unusedOptionBehaviour == OnUnusedOptions::Fail );
                 m_unusedTokens = m_cli.parseInto( argc, argv, m_configData );
                 if( m_configData.showHelp )
                     showHelp( m_configData.processName );
                 m_config.reset();
+        #ifdef HAVE_SYMENGINE_CATCH
             }
             catch( std::exception& ex ) {
                 {
@@ -5647,6 +5663,7 @@ namespace Catch {
                 m_cli.usage( Catch::cout(), m_configData.processName );
                 return (std::numeric_limits<int>::max)();
             }
+        #endif
             return 0;
         }
 
@@ -5666,9 +5683,10 @@ namespace Catch {
         int run() {
             if( m_configData.showHelp )
                 return 0;
-
+        #ifdef HAVE_SYMENGINE_CATCH
             try
             {
+        #endif
                 config(); // Force config to be constructed
 
                 std::srand( m_configData.rngSeed );
@@ -5680,11 +5698,14 @@ namespace Catch {
                     return static_cast<int>( *listed );
 
                 return static_cast<int>( runner.runTests().assertions.failed );
+        #ifdef HAVE_SYMENGINE_CATCH
             }
             catch( std::exception& ex ) {
                 Catch::cerr() << ex.what() << std::endl;
                 return (std::numeric_limits<int>::max)();
             }
+        #endif
+            return 0;
         }
 
         Clara::CommandLine<ConfigData> const& cli() const {
@@ -5921,7 +5942,9 @@ namespace Catch {
         }
 
         virtual std::string translateActiveException() const {
+        #ifdef HAVE_SYMENGINE_CATCH
             try {
+        #endif
 #ifdef __OBJC__
                 // In Objective-C try objective-c exceptions first
                 @try {
@@ -5933,6 +5956,7 @@ namespace Catch {
 #else
                 throw;
 #endif
+        #ifdef HAVE_SYMENGINE_CATCH
             }
             catch( TestFailureException& ) {
                 throw;
@@ -5949,18 +5973,23 @@ namespace Catch {
             catch(...) {
                 return tryTranslators( m_translators.begin() );
             }
+        #endif
+            return "";
         }
 
         std::string tryTranslators( std::vector<const IExceptionTranslator*>::const_iterator it ) const {
             if( it == m_translators.end() )
                 return "Unknown exception";
-
+        #ifdef HAVE_SYMENGINE_CATCH
             try {
+        #endif
                 return (*it)->translate();
+        #ifdef HAVE_SYMENGINE_CATCH
             }
             catch(...) {
                 return tryTranslators( it+1 );
             }
+        #endif
         }
 
     private:
@@ -7553,14 +7582,18 @@ namespace Catch {
     ITagAliasRegistry const& ITagAliasRegistry::get() { return TagAliasRegistry::get(); }
 
     RegistrarForTagAliases::RegistrarForTagAliases( char const* alias, char const* tag, SourceLineInfo const& lineInfo ) {
+    #ifdef HAVE_SYMENGINE_CATCH
         try {
+    #endif
             TagAliasRegistry::get().add( alias, tag, lineInfo );
+    #ifdef HAVE_SYMENGINE_CATCH
         }
         catch( std::exception& ex ) {
             Colour colourGuard( Colour::Red );
             Catch::cerr() << ex.what() << std::endl;
             exit(1);
         }
+    #endif
     }
 
 } // end namespace Catch
