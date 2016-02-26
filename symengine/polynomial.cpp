@@ -498,12 +498,9 @@ RCP<const UnivariatePolynomial> sub_uni_poly(const UnivariatePolynomial &a, cons
 RCP<const UnivariatePolynomial> mul_uni_poly(RCP<const UnivariatePolynomial> a, RCP<const UnivariatePolynomial> b) {
     // throw std::runtime_error("Not Implemented");
     map_uint_Expr dict;
-    for (const auto &i1 : a->dict_) {
-        for (const auto &i2 : b->dict_) {
-            Expression term = i1.second * i2.second;
-            dict[i1.first + i2.first] += term;
-        }
-    }
+    for (const auto &i1 : a->dict_)
+        for (const auto &i2 : b->dict_)
+            dict[i1.first + i2.first] += i1.second * i2.second;
     RCP<const UnivariatePolynomial> c = univariate_polynomial(a->var_, (--(dict.end()))->first, std::move(dict));
     return c;
 }
