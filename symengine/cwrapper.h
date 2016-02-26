@@ -153,12 +153,11 @@ void basic_div(basic s, const basic a, const basic b);
 void basic_pow(basic s, const basic a, const basic b);
 //! Assign to s, derivative of expr with respect to sym. Returns 0 if sym is not a symbol.
 int basic_diff(basic s, const basic expr, const basic sym);
-//! Assigns s = -a.
-void basic_neg(basic s, const basic a);
 //! Returns 1 if both basic are equal, 0 if not
 int basic_eq(const basic a, const basic b);
 //! Returns 1 if both basic are not equal, 0 if they are
 int basic_neq(const basic a, const basic b);
+
 //! Assigns s = abs(a).
 void basic_abs(basic s, const basic a);
 //! Assigns s = sin(a).
@@ -169,6 +168,8 @@ void basic_cos(basic s, const basic a);
 void basic_tan(basic s, const basic a);
 //! Expands the expr a and assigns to s.
 void basic_expand(basic s, const basic a);
+//! Assigns s = -a.
+void basic_neg(basic s, const basic a);
 
 //! Returns a new char pointer to the string representation of s.
 char* basic_str(const basic s);

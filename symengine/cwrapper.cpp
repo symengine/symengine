@@ -241,11 +241,6 @@ void basic_div(basic s, const basic a, const basic b)
     s->m = SymEngine::div(a->m, b->m);
 }
 
-void basic_neg(basic s, const basic a)
-{
-    s->m = SymEngine::neg(a->m);
-}
-
 int basic_eq(const basic a, const basic b)
 {
     return SymEngine::eq(*(a->m), *(b->m)) ? 1 : 0;
@@ -256,30 +251,19 @@ int basic_neq(const basic a, const basic b)
     return SymEngine::neq(*(a->m), *(b->m)) ? 1 : 0;
 }
 
-void basic_abs(basic s, const basic a)
-{
-    s->m = SymEngine::abs(a->m);
+
+#define IMPLEMENT_ONE_ARG_FUNC(func) \
+void basic_ ## func(basic s, const basic a) \
+{ \
+    s->m = SymEngine::func(a->m); \
 }
 
-void basic_sin(basic s, const basic a)
-{
-    s->m = SymEngine::sin(a->m);
-}
-
-void basic_cos(basic s, const basic a)
-{
-    s->m = SymEngine::cos(a->m);
-}
-
-void basic_tan(basic s, const basic a)
-{
-    s->m = SymEngine::tan(a->m);
-}
-
-void basic_expand(basic s, const basic a)
-{
-    s->m = SymEngine::expand(a->m);
-}
+IMPLEMENT_ONE_ARG_FUNC(abs);
+IMPLEMENT_ONE_ARG_FUNC(sin);
+IMPLEMENT_ONE_ARG_FUNC(cos);
+IMPLEMENT_ONE_ARG_FUNC(tan);
+IMPLEMENT_ONE_ARG_FUNC(expand);
+IMPLEMENT_ONE_ARG_FUNC(neg);
 
 char* basic_str(const basic s)
 {
