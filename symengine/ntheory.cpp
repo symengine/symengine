@@ -868,7 +868,7 @@ bool multiplicative_order(const Ptr<RCP<const Integer>> &o, const RCP<const Inte
         const RCP<const Integer> &n)
 {
     integer_class order, p, t;
-    integer_class _a = a->as_mpz(), _n = n->as_mpz();
+    integer_class _a = a->as_mpz(), _n = abs(n->as_mpz());
     mp_gcd(t, _a, _n);
     if (t != 1)
         return false;
