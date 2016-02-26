@@ -157,15 +157,16 @@ public:
 //f1 and f2 are vectors whose indicies are the positions in the arguments and whose values are the
 //positions in the output.  set_sym s is the set of symbols of the output, and
 // s1 and s2 are the sets of the symbols of the inputs.
-unsigned int reconcile_exps(vec_uint &v1, vec_uint &v2, set_sym &s, const set_sym &s1, const set_sym &s2);
+unsigned int reconcile(vec_uint &v1, vec_uint &v2, set_sym &s, const set_sym &s1, const set_sym &s2);
 //translates vectors from one polynomial into vectors for another.
 vec_uint translate(vec_uint original, vec_uint translator);
+vec_uint uint_vec_translate_and_add(const vec_uint &v1, const vec_uint &v2,const vec_uint &translator1, const vec_uint &translator2, const unsigned int size);
 
 RCP<const MultivariatePolynomial> add_mult_poly(const MultivariatePolynomial &a, const MultivariatePolynomial &b);
 RCP<const MultivariatePolynomial> neg_mult_poly(const MultivariatePolynomial &a);
 RCP<const MultivariatePolynomial> sub_mult_poly(const MultivariatePolynomial &a, const MultivariatePolynomial &b);
-/*RCP<const MultivariatePolynomial> mul_mult_poly(const MultivariatePolynomial &a, const MultivariatePolynomial &b);
-*/
+RCP<const MultivariatePolynomial> mul_mult_poly(const MultivariatePolynomial &a, const MultivariatePolynomial &b);
+
  
 
 }  //SymEngine
