@@ -85,7 +85,7 @@ public:
     }
     inline const map_uint_mpz& get_dict() const {
         return dict_;
-    };
+    }
 }; //UnivariateIntPolynomial
 
 //! Adding two UnivariateIntPolynomial a and b
@@ -105,7 +105,7 @@ inline RCP<const UnivariateIntPolynomial> univariate_int_polynomial(RCP<const Sy
 }
 
 
-class UnivariatePolynomial : public Basic{
+class UnivariatePolynomial : public Basic {
 public:
     unsigned int degree_;
     RCP<const Symbol> var_;
@@ -161,7 +161,7 @@ public:
     }
     inline const map_uint_Expr& get_dict() const {
         return dict_;
-    };
+    }
 }; //UnivariatePolynomial
 
 //! Adding two UnivariatePolynomial a and b
@@ -280,9 +280,10 @@ public:
         return (*(poly_.ptr())).__hash__();
     }
     
-    const RCP<const UnivariatePolynomial> get_basic() const
+    const RCP<const Basic> get_basic() const
     {
-        return poly_;
+        RCP<const Basic> basic;
+        return std::move(basic);
         //return make_rcp<const Symbol>("x");//make_rcp<const UnivariatePolynomial>(poly_->var_, poly_->get_args());
     }
 
@@ -293,21 +294,21 @@ public:
 }; //UnivariateExprPolynomial
 
 
-class sym_hash{
+class sym_hash {
 public:
-  size_t operator()(const Symbol &s) const{
+  size_t operator()(const Symbol &s) const {
     return s.__hash__();
   }
 };
 
-class sym_compare{
+class sym_compare {
   public:
   size_t operator()(const Symbol &a, const Symbol &b){
     return a.compare(b);
   }
 };
 
-class sym_eq{
+class sym_eq {
  public:
   bool operator()(const Symbol &a, const Symbol &b){
     return a.__eq__(b);
@@ -318,7 +319,7 @@ int umap_vec_mpz_compare(umap_vec_mpz &a, umap_vec_mpz &b){
   if(a.size() < b.size())
     return (a.size() < b.size()) ? -1 : 1;
   return 0;
-};
+}
 
 }  //SymEngine
 

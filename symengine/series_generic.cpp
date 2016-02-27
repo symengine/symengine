@@ -126,7 +126,7 @@ UnivariateExprPolynomial UnivariateSeries::pow(const UnivariateExprPolynomial &s
 }
 
 Expression UnivariateSeries::find_cf(const UnivariateExprPolynomial &s, const Expression &var, unsigned deg) {
-    return coeff(Expression(s), var, Expression(deg));
+    return coeff(Expression(s.get_univariate_poly().max_coeff), var, Expression(deg));
 }
 
 Expression UnivariateSeries::root(UnivariateExprPolynomial &c, unsigned n) {
