@@ -36,6 +36,8 @@ using SymEngine::function_symbol;
 using SymEngine::real_double;
 using SymEngine::E;
 using SymEngine::parse;
+using SymEngine::max;
+using SymEngine::min;
 
 TEST_CASE("Parsing: integers, basic operations", "[parser]")
 {
@@ -183,6 +185,18 @@ TEST_CASE("Parsing: functions", "[parser]")
     s = "loggamma(x)+loggamma(x)";
     res = parse(s);
     REQUIRE(eq(*res, *mul(integer(2), loggamma(x))));
+
+    s = "max(x, x, y)";
+    res = parse(s);
+    REQUIRE(eq(*res, *max({x, y})));
+
+    s = "max(x, y, max(x))";
+    res = parse(s);
+    REQUIRE(eq(*res, *max({x, y})));
+
+    s = "sin(max(log(x, y), min(x, y)))";
+    res = parse(s);
+    REQUIRE(eq(*res, *sin(max({log(x, y), min({x, y})}))));
 }
 
 TEST_CASE("Parsing: constants", "[parser]")
@@ -262,4 +276,30 @@ TEST_CASE("Parsing: doubles", "[parser]")
     s = "sqrt(2.0)+5";
     res = parse(s);
     REQUIRE(eq(*res, *real_double(sqrt(2) + 5)));
+}
+
+TEST_CASE("Parsing: errors", "[parser]")
+{
+    std::string s;
+
+    s = "x+y+";
+    CHECK_THROWS_AS(parse(s), std::runtime_error);
+
+    s = "x + (y))";
+    CHECK_THROWS_AS(parse(s), std::runtime_error);
+
+    s = "x + max((3, 2+1)";
+    CHECK_THROWS_AS(parse(s), std::runtime_error);
+
+    s = "2..33 + 2";
+    CHECK_THROWS_AS(parse(s), std::runtime_error);
+
+    s = "2 +- 3";
+    CHECK_THROWS_AS(parse(s), std::runtime_error);
+
+    s = "(2)(3)";
+    CHECK_THROWS_AS(parse(s), std::runtime_error);
+
+    s = "max(,3,2)";
+    CHECK_THROWS_AS(parse(s), std::runtime_error);
 }
