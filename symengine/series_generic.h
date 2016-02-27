@@ -25,8 +25,7 @@ public:
     UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const map_uint_mpz &dict);
     //! Constructor using a dense vector of mpz_class coefficients
     UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const std::vector<mpz_class> &v);
-    static RCP<const UnivariateSeries> create(const RCP<const Symbol> &var,
-            const unsigned int &prec, const std::vector<mpz_class> &v) {
+    static RCP<const UnivariateSeries> create(const RCP<const Symbol> &var, const unsigned int &prec, const std::vector<mpz_class> &v) {
         return make_rcp<const UnivariateSeries>(var, prec, v);
     }
       
@@ -42,7 +41,9 @@ public:
     static Expression convert(const mpq_class &x);
     static Expression convert(const Rational &x);
     static Expression convert(const Number &x);
-    static map_uint_Expr convert_map(const map_uint_mpz &&d);
+    map_uint_Expr convert_map(const map_uint_mpz &d);
+    RCP<const UnivariatePolynomial> convert_poly(const map_uint_mpz &d);
+    RCP<const UnivariatePolynomial> convert_vector(const std::vector<mpz_class> &v);
 
     static unsigned ldegree(const UnivariateExprPolynomial &s);
     static UnivariateExprPolynomial mul(const UnivariateExprPolynomial &s, const UnivariateExprPolynomial &r, unsigned prec);
@@ -66,10 +67,7 @@ public:
     static Expression acosh(const Expression &c);
     static Expression atanh(const Expression &c); 
     static Expression exp(const Expression &c); 
-    static Expression log(const Expression &c);  
-    
-    bool is_canonical(const UnivariatePolynomial&, const unsigned int &) const;
-
+    static Expression log(const Expression &c);
 };
 
 inline RCP<const UnivariateSeries> univariate_series(RCP<const Symbol> i, unsigned int prec, const map_uint_mpz& dict)

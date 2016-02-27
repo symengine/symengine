@@ -99,7 +99,7 @@ RCP<const UnivariateIntPolynomial> mul_poly(RCP<const UnivariateIntPolynomial> a
 
 inline RCP<const UnivariateIntPolynomial> pow_exp(RCP<const UnivariateIntPolynomial> a, RCP<const UnivariateIntPolynomial> b);
 
-inline RCP<const UnivariateIntPolynomial> int_coeff_polynomial(RCP<const Symbol> i, unsigned int deg, map_uint_mpz&& dict)
+inline RCP<const UnivariateIntPolynomial> univariate_int_polynomial(RCP<const Symbol> i, unsigned int deg, map_uint_mpz&& dict)
 {
     return make_rcp<const UnivariateIntPolynomial>(i, deg, std::move(dict));
 }
@@ -268,6 +268,7 @@ public:
     {   
         return not (*this == other);
     }   
+    
     //! Method to get UnivariatePolynomial from UnivariateExprPolynomial
     const RCP<const UnivariatePolynomial>& get_univariate_poly() const
     {   
@@ -279,11 +280,11 @@ public:
         return (*(poly_.ptr())).__hash__();
     }
     
-    /*const RCP<const UnivariatePolynomial> get_basic() const
+    const RCP<const UnivariatePolynomial> get_basic() const
     {
         return poly_;
         //return make_rcp<const Symbol>("x");//make_rcp<const UnivariatePolynomial>(poly_->var_, poly_->get_args());
-    }*/
+    }
 
     int compare(const UnivariateExprPolynomial &other)
     {
@@ -318,8 +319,6 @@ int umap_vec_mpz_compare(umap_vec_mpz &a, umap_vec_mpz &b){
     return (a.size() < b.size()) ? -1 : 1;
   return 0;
 };
-
-
 
 }  //SymEngine
 

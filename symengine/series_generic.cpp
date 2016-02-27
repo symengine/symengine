@@ -9,40 +9,16 @@ using SymEngine::make_rcp;
 namespace SymEngine {
 
 UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const UnivariateExprPolynomial poly) :
-        SeriesBase(std::move(poly), var->get_name(), precision) {
-}
+        SeriesBase(std::move(poly), var->get_name(), precision) {}
 
 UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const unsigned int &max, map_uint_mpz&& dict) :
-        SeriesBase(univariate_polynomial(var, max, convert_map(std::move(dict))), var->get_name(), precision) {
-}
+        SeriesBase(UnivariateExprPolynomial(univariate_polynomial(var, max, convert_map(dict))), var->get_name(), precision) {}
 
-/*UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const map_uint_mpz& dict) : 
-        SeriesBase(univariate_polynomial(var, var_{var}, prec_{precision} 
-        {
-    throw std::runtime_error("Not Implemented");
-    map_uint_mpz dict_trunc;
-    unsigned int max = 0;
-    std::copy_if(dict.begin(), dict.end(), std::inserter(dict_trunc, dict_trunc.end()), [&](const map_uint_mpz::value_type i)
-        {
-            if (i.first < prec_) {
-                if (max < i.first)
-                    max = i.first;
-                return true;
-            }
-            return false;
-        } );
-    poly_ = univariate_polynomial(var_, max, std::move(dict_trunc));
-}*/
+UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const map_uint_mpz& dict) :
+        SeriesBase(convert_poly(std::move(dict)), var->get_name(), precision) {}
 
-/*UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const std::vector<mpz_class> &v) //:
-        //var_{var}, prec_{precision} 
-        {
-    throw std::runtime_error("Not Implemented");
-    std::vector<mpz_class> vtrunc;
-    std::copy_if(v.begin(), v.end(), std::back_inserter(vtrunc),
-        [&](decltype(v[0]) i) { return i < prec_; } );
-    poly_ = UnivariatePolynomial::create(var_, vtrunc);
-}*/
+UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const std::vector<mpz_class> &v) :
+        SeriesBase(convert_vector(v), var->get_name(), precision) {}
 
 RCP<const UnivariateSeries> UnivariateSeries::series(const RCP<const Basic> &t, const std::string &x, unsigned int prec) {
     SeriesVisitor<UnivariateExprPolynomial, Expression, UnivariateSeries> visitor(UnivariateExprPolynomial(std::stoi(x)), x, prec);
@@ -67,9 +43,8 @@ RCP<const Basic> UnivariateSeries::as_basic() const {
 
 umap_int_basic UnivariateSeries::as_dict() const {
     umap_int_basic map;
-    for (int i = 0; i <= degree_; i++) {
+    for (int i = 0; i <= degree_; i++) 
        map[i] = p_.get_univariate_poly()->dict_.at(i).get_basic();
-    } 
     return map;
 }
 
@@ -109,13 +84,30 @@ Expression UnivariateSeries::convert(const Number &x) {
     throw std::runtime_error("Not Implemented");
 }
 
-map_uint_Expr UnivariateSeries::convert_map(const map_uint_mpz &&d) {
+map_uint_Expr UnivariateSeries::convert_map(const map_uint_mpz &d) {
     map_uint_Expr dict;
-    for (const auto &it : d) {
-        Expression term = it.second()->get_ui();
-        dict[it.first()] = term;
-    }
+    for (const auto &it : d)
+        dict[it.first] = Expression(it.second.get_ui());
     return dict;
+}
+
+RCP<const UnivariatePolynomial> UnivariateSeries::convert_poly(const map_uint_mpz &d) {
+    map_uint_Expr dict_trunc;
+    unsigned int max = 0;
+    for (const auto &it : d) {
+        if (it.first < prec_) {
+            if (max < it.first)
+                max = it.first;
+            dict_trunc[it.first] = it.second.get_ui();
+        }
+    }
+    return univariate_polynomial(symbol(var_), max, std::move(dict_trunc));
+}
+
+RCP<const UnivariatePolynomial> UnivariateSeries::convert_vector(const std::vector<mpz_class> &v) {
+    std::vector<Expression> vtrunc;
+    std::copy_if(v.begin(), v.end(), std::back_inserter(vtrunc), [&](decltype(v[0]) i) { return i < prec_; } );
+    return UnivariatePolynomial::create(symbol(var_), vtrunc);
 }
 
 unsigned UnivariateSeries::ldegree(const UnivariateExprPolynomial &s) {
@@ -156,55 +148,55 @@ UnivariateExprPolynomial UnivariateSeries::subs(const UnivariateExprPolynomial &
 }
 
 Expression UnivariateSeries::sin(const Expression& c) {
-    return SymEngine::sin(c.get_basic());
+    return sin(c.get_basic());
 }
 
 Expression UnivariateSeries::cos(const Expression& c) {
-    return SymEngine::cos(c.get_basic());
+    return cos(c.get_basic());
 }
 
 Expression UnivariateSeries::tan(const Expression& c) {
-    return SymEngine::tan(c.get_basic());
+    return tan(c.get_basic());
 }
 
 Expression UnivariateSeries::asin(const Expression& c) {
-    return SymEngine::asin(c.get_basic());
+    return asin(c.get_basic());
 }
 
 Expression UnivariateSeries::acos(const Expression& c) {
-    return SymEngine::acos(c.get_basic());
+    return acos(c.get_basic());
 }
 
 Expression UnivariateSeries::atan(const Expression& c) {
-    return SymEngine::atan(c.get_basic());
+    return atan(c.get_basic());
 }
 
 Expression UnivariateSeries::sinh(const Expression& c) {
-    return SymEngine::sinh(c.get_basic());
+    return sinh(c.get_basic());
 }
 
 Expression UnivariateSeries::cosh(const Expression& c) {
-    return SymEngine::cosh(c.get_basic());
+    return cosh(c.get_basic());
 }
 
 Expression UnivariateSeries::tanh(const Expression& c) {
-    return SymEngine::tanh(c.get_basic());
+    return tanh(c.get_basic());
 }
 
 Expression UnivariateSeries::asinh(const Expression& c) {
-    return SymEngine::asinh(c.get_basic());
+    return asinh(c.get_basic());
 }
 
 Expression UnivariateSeries::atanh(const Expression& c) {
-    return SymEngine::atanh(c.get_basic());
+    return atanh(c.get_basic());
 }
 
 Expression UnivariateSeries::exp(const Expression& c) {
-    return SymEngine::exp(c.get_basic());
+    return exp(c.get_basic());
 }
 
 Expression UnivariateSeries::log(const Expression& c) {
-    return SymEngine::log(c.get_basic());
+    return log(c.get_basic());
 }
 
 } // SymEngine
