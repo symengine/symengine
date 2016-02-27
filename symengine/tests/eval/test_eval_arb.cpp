@@ -698,6 +698,56 @@ TEST_CASE("Constants: eval_arb", "[eval_arb]")
     arb_clear(a);
 }
 
+TEST_CASE("Gamma: eval_arb", "[eval_arb]")
+{
+    arb_t a;
+    arb_init(a);
+
+    RCP<const Basic> r1 = gamma(integer(4));
+    RCP<const Basic> r2 = gamma(div(integer(5), integer(2)));
+
+    eval_arb(a, *r1, 45);
+
+    mpfr_t f;
+    mpfr_init2(f, 57);
+    eval_mpfr(f, *r1, MPFR_RNDN);
+
+    REQUIRE(arb_contains_mpfr(a, f));
+
+    eval_arb(a, *r2, 45);
+    eval_mpfr(f, *r2, MPFR_RNDN);
+
+    REQUIRE(arb_contains_mpfr(a, f));
+
+    mpfr_clear(f);
+    arb_clear(a);
+}
+
+TEST_CASE("LogGamma: eval_arb", "[eval_arb]")
+{
+    arb_t a;
+    arb_init(a);
+
+    RCP<const Basic> r1 = loggamma(integer(3));
+    RCP<const Basic> r2 = loggamma(integer(2));
+
+    eval_arb(a, *r1, 45);
+
+    mpfr_t f;
+    mpfr_init2(f, 57);
+    eval_mpfr(f, *r1, MPFR_RNDN);
+
+    REQUIRE(arb_contains_mpfr(a, f));
+
+    eval_arb(a, *r2, 45);
+    eval_mpfr(f, *r2, MPFR_RNDN);
+
+    REQUIRE(arb_contains_mpfr(a, f));
+
+    mpfr_clear(f);
+    arb_clear(a);
+}
+
 TEST_CASE("Min/Max: eval_arb", "[eval_arb]")
 {
     arb_t a;

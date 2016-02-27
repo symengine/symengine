@@ -3088,9 +3088,21 @@ int LogGamma::compare(const Basic &o) const
     return arg_->__cmp__(*(static_cast<const LogGamma &>(o).arg_));
 }
 
-RCP<const Basic> LogGamma::rewrite_as_intractable() const
+RCP<const Basic> LogGamma::rewrite_as_gamma() const
 {
     return log(gamma(arg_));
+}
+
+RCP<const Basic> LogGamma::subs(const map_basic_basic &subs_dict) const
+{
+    auto it = subs_dict.find(rcp_from_this());
+    if (it != subs_dict.end())
+        return it->second;
+    RCP<const Basic> arg = arg_->subs(subs_dict);
+    if (arg == arg_)
+        return rcp_from_this();
+    else
+        return loggamma(arg);
 }
 
 RCP<const Basic> loggamma(const RCP<const Basic> &arg)

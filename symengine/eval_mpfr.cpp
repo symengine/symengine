@@ -224,6 +224,12 @@ public:
         mpfr_gamma(result_, result_, rnd_);
     };
 
+    void bvisit(const LogGamma& x) {
+        apply(result_, *(x.get_args()[0]));
+        mpfr_gamma(result_, result_, rnd_);
+        mpfr_log(result_, result_, rnd_);
+    }
+
     void bvisit(const Beta &x) {
         apply(result_, *(x.rewrite_as_gamma()));
     };

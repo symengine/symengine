@@ -1034,7 +1034,8 @@ public:
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &arg) const;
     virtual vec_basic get_args() const { return {arg_}; }
-    RCP<const Basic> rewrite_as_intractable() const;
+    RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
+    RCP<const Basic> rewrite_as_gamma() const;
 };
 
 //! Canonicalize LogGamma:

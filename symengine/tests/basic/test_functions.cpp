@@ -2208,7 +2208,7 @@ TEST_CASE("LogGamma: functions", "[functions]")
     REQUIRE(eq(*r1, *log(integer(2))));
 
     r1 = loggamma(x);
-    r1 = SymEngine::rcp_dynamic_cast<const LogGamma>(r1)->rewrite_as_intractable();
+    r1 = SymEngine::rcp_dynamic_cast<const LogGamma>(r1)->rewrite_as_gamma();
     REQUIRE(eq(*r1, *log(gamma(x))));
 
     r1 = loggamma(x)->diff(x);
@@ -2221,6 +2221,14 @@ TEST_CASE("LogGamma: functions", "[functions]")
     r2 = mul(x, y);
     r1 = loggamma(r2)->diff(x);
     r2 = mul(polygamma(zero, r2), y);
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = loggamma(x)->subs({{x, y}});
+    r2 = loggamma(y);
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = loggamma(add(y, mul(x, y)))->subs({{y, x}});
+    r2 = loggamma(add(x, mul(x, x)));
     REQUIRE(eq(*r1, *r2));
 }
 
