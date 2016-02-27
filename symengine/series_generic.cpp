@@ -106,7 +106,12 @@ RCP<const UnivariatePolynomial> UnivariateSeries::convert_poly(const map_uint_mp
 
 RCP<const UnivariatePolynomial> UnivariateSeries::convert_vector(const std::vector<mpz_class> &v) {
     std::vector<Expression> vtrunc;
-    std::copy_if(v.begin(), v.end(), std::back_inserter(vtrunc), [&](decltype(v[0]) i) { return i < prec_; } );
+
+    for (const auto &it : v)
+        if (it.get_si() < prec_) 
+            vtrunc.push_back(it.get_si());
+
+    // std::copy_if(v.begin(), v.end(), std::back_inserter(vtrunc), [&](decltype(v[0]) i) { return i < prec_; } );
     return UnivariatePolynomial::create(symbol(var_), vtrunc);
 }
 
