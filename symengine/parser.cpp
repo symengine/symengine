@@ -58,10 +58,10 @@ class ExpressionParser {
         {"asec", asec}, {"acsc", acsc}, {"acot", acot},
 
         {"sinh", sinh}, {"cosh", cosh}, {"tanh", tanh},
-        {"coth", coth}, // {"sech", sech}, {"csch", csch},
+        {"coth", coth}, {"sech", sech}, {"csch", csch},
 
         {"asinh", asinh}, {"acosh", acosh}, {"atanh", atanh},
-        {"asech", asech}, {"acoth", acoth}, // {"acsch", acsch},
+        {"asech", asech}, {"acoth", acoth}, {"acsch", acsch},
 
         {"gamma", gamma}, {"sqrt", sqrt}, {"abs", abs}, {"exp", exp},
         {"lambertw", lambertw}, {"dirichlet_eta", dirichlet_eta},
@@ -76,6 +76,14 @@ class ExpressionParser {
         {"pow", pow}, {"beta", beta}, {"log", double_casted_log}, {"zeta", double_casted_zeta},
         {"lowergamma", lowergamma}, {"uppergamma", uppergamma}, {"polygamma", polygamma},
         {"kronecker_delta", kronecker_delta}
+    };
+
+    // maps string to corresponding multi argument function
+    std::map< std::string,
+              std::function<RCP<const Basic>(vec_basic&)>
+            > multi_arg_functions = {
+
+        {"max", max}, {"min", min}, {"levi_civita", levi_civita}
     };
 
     // vector which stores where parsing 'ends' for a particular index
@@ -101,6 +109,10 @@ class ExpressionParser {
         bool is_not_numeric = false;
         // number of '.' in the expression
         int num_dots = 0;
+
+        // a parse_string is called empty in scenarios like "x+"
+        if (l == h)
+            throw std::runtime_error("Expected token!");
 
         for (unsigned int iter = l; iter < h; ++iter) {
             if (is_operator(iter)) {
@@ -182,8 +194,6 @@ class ExpressionParser {
             iter = operator_end[iter];
         }
 
-        // make this modular, scalable
-        // make map for all those functions which take in vec_basic args, like levi_civita
         if (params.size() == 1)
             if (single_arg_functions.find(expr) != single_arg_functions.end())
                 return single_arg_functions[expr](params[0]);
@@ -191,6 +201,9 @@ class ExpressionParser {
         if (params.size() == 2)
             if (double_arg_functions.find(expr) != double_arg_functions.end())
                 return double_arg_functions[expr](params[0], params[1]);
+
+        if (multi_arg_functions.find(expr) != multi_arg_functions.end())
+                return multi_arg_functions[expr](params);
 
         return function_symbol(expr, params);
 
@@ -272,6 +285,7 @@ public:
         // the 'defacto' end of any operator
         // won't ever be pushed out of the stack
         op_stack.push(std::make_pair(-1, s_len));
+        right_bracket.push(s_len);
 
         for (int i = s_len-1; i >= 0; i--) {
             if (is_operator(i)) {
@@ -319,6 +333,10 @@ public:
 
             last_char = s[i];
         }
+        // extra right_brackets in the string
+        if (right_bracket.top() != s_len)
+            throw std::runtime_error("Mismatching parantheses!");
+
         // final answer is parse_string from [0, len)
         return parse_string(0, s_len);
     }
