@@ -258,6 +258,11 @@ public:
         result_ = std::tgamma(tmp);
     };
 
+    void bvisit(const LogGamma &x) {
+        double tmp = apply(*(x.get_args()[0]));
+        result_ = std::lgamma(tmp);
+    }
+
     void bvisit(const Max &x) {
         auto d = x.get_args();
         auto p = d.begin();
@@ -467,6 +472,10 @@ std::vector<fn> init_eval_double()
     table[GAMMA] = [](const Basic &x) {
         double tmp = eval_double_single_dispatch(*(static_cast<const Gamma &>(x)).get_args()[0]);
         return ::tgamma(tmp);
+    };
+    table[LOGGAMMA] = [](const Basic &x) {
+        double tmp = eval_double_single_dispatch(*(static_cast<const LogGamma &>(x)).get_args()[0]);
+        return ::lgamma(tmp);
     };
     table[CONSTANT] = [](const Basic &x) {
         if (eq(x, *pi)) {

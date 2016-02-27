@@ -74,25 +74,3 @@ TEST_CASE("eval: eval_mpc", "[eval_mpc]")
     mpc_clear(a);
     mpc_clear(b);
 }
-
-TEST_CASE("Gamma: eval_mpc", "[eval_mpc]")
-{
-    mpc_t a, b;
-    mpfr_t real, imag;
-    mpc_init2(a, 100);
-    mpc_init2(b, 100);
-    mpfr_init2(real, 100);
-    mpfr_init2(imag, 100);
-
-    RCP<const Basic> s = gamma(integer(3));
-    RCP<const Basic> t = loggamma(integer(3));
-    RCP<const Basic> r = add(integer(2), mul(log(integer(2)), I));
-
-    eval_mpc(a, *r, MPFR_RNDN);
-    eval_mpfr(real, *s, MPFR_RNDN);
-    eval_mpfr(imag, *t, MPFR_RNDN);
-
-    mpc_set_fr_fr(b, real, imag, MPFR_RNDN);
-
-    REQUIRE(mpc_cmp(a, b) == 0);
-}

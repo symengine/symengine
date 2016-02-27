@@ -45,6 +45,7 @@ using SymEngine::eval_arb;
 using SymEngine::print_stack_on_segfault;
 using SymEngine::min;
 using SymEngine::max;
+using SymEngine::loggamma;
 
 TEST_CASE("Integer: eval_arb", "[eval_arb]")
 {
@@ -728,7 +729,7 @@ TEST_CASE("LogGamma: eval_arb", "[eval_arb]")
     arb_t a;
     arb_init(a);
 
-    RCP<const Basic> r1 = loggamma(integer(3));
+    RCP<const Basic> r1 = loggamma(E);
     RCP<const Basic> r2 = loggamma(integer(2));
 
     eval_arb(a, *r1, 45);

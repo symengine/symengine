@@ -326,8 +326,7 @@ public:
     };
     void bvisit(const LogGamma &x){
         apply(result_, *(x.get_args())[0]);
-        arb_gamma(result_, result_, prec_);
-        arb_log(result_, result_, prec_);
+        arb_lgamma(result_, result_, prec_);
     }
     void bvisit(const LowerGamma &) {
         throw std::runtime_error("Not implemented.");

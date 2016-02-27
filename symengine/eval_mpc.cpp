@@ -266,21 +266,9 @@ public:
     }
 
     void bvisit(const Gamma &x) {
-        mpfr_t t;
-        mpfr_init2(t, mpc_get_prec(result_));
-        mpfr_gamma(t, t, rnd_);
-        mpc_set_fr(result_, t, rnd_);
-        mpfr_clear(t);
+        throw std::runtime_error("Not implemented");
     }
 
-    void bvisit(const LogGamma &x) {
-        mpfr_t t;
-        mpfr_init2(t, mpc_get_prec(result_));
-        mpfr_gamma(t, t, rnd_);
-        mpfr_log(t, t, rnd_);
-        mpc_set_fr(result_, t, rnd_);
-        mpfr_clear(t);
-    }
 
     void bvisit(const Abs &x) {
         mpfr_t t;

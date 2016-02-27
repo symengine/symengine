@@ -19,6 +19,7 @@ using SymEngine::eval_mpfr;
 using SymEngine::print_stack_on_segfault;
 using SymEngine::max;
 using SymEngine::min;
+using SymEngine::loggamma;
 
 TEST_CASE("precision: eval_mpfr", "[eval_mpfr]")
 {
@@ -81,6 +82,11 @@ TEST_CASE("precision: eval_mpfr", "[eval_mpfr]")
     eval_mpfr(a, *r, MPFR_RNDN);
     REQUIRE(mpfr_cmp_d(a, 0.69314718055995) == -1);
     REQUIRE(mpfr_cmp_d(a, 0.69314718055992) == 1);
+
+    r = loggamma(integer(5));
+    eval_mpfr(a, *r, MPFR_RNDN);
+    REQUIRE(mpfr_cmp_d(a, 3.17805383035) == -1);
+    REQUIRE(mpfr_cmp_d(a, 3.17805383033) == 1);
 
     mpfr_clear(a);
 }

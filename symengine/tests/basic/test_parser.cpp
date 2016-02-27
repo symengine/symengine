@@ -38,6 +38,7 @@ using SymEngine::E;
 using SymEngine::parse;
 using SymEngine::max;
 using SymEngine::min;
+using SymEngine::loggamma;
 
 TEST_CASE("Parsing: integers, basic operations", "[parser]")
 {
