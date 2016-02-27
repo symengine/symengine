@@ -125,11 +125,11 @@ UnivariateExprPolynomial UnivariateSeries::pow(const UnivariateExprPolynomial &s
     // return pow_ex(s, SymEngine::UnivariateExprPolynomial(n));
 }
 
-Expression UnivariateSeries::find_cf(const UnivariateExprPolynomial &s, const Expression &var, unsigned deg) {
-    return coeff(Expression(s.get_univariate_poly().max_coeff), var, Expression(deg));
+Expression UnivariateSeries::find_cf(const UnivariateExprPolynomial &s, const UnivariateExprPolynomial &var, unsigned deg) {
+    return (s.get_univariate_poly()->get_dict()).at(deg);
 }
 
-Expression UnivariateSeries::root(UnivariateExprPolynomial &c, unsigned n) {
+Expression UnivariateSeries::root(Expression &c, unsigned n) {
     return pow_ex(c, 1/Expression(n));
 }
 
