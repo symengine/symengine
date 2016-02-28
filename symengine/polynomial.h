@@ -281,9 +281,15 @@ public:
     
     const RCP<const Basic> get_basic() const
     {
-        RCP<const Basic> basic;
-        return std::move(basic);
-        //return make_rcp<const Symbol>("x");//make_rcp<const UnivariatePolynomial>(poly_->var_, poly_->get_args());
+        RCP<const Symbol> x = poly_->get_var();
+        umap_basic_num dict_;
+        for (const auto &it : poly_->get_dict()) {
+            if (it.first != 0) {
+                auto term = mul(it.second.get_basic(), pow_ex(Expression(x), Expression(it.first)).get_basic());
+                Add::coef_dict_add_term(outArg(zero), dict_, one, term);
+            }
+        }
+        return std::move(Add::from_dict(integer(0), std::move(dict_)));
     }
 
     int compare(const UnivariateExprPolynomial &other)
@@ -294,18 +300,13 @@ public:
 
 inline UnivariateExprPolynomial pow_poly(const UnivariateExprPolynomial &base, int exp) {
     UnivariateExprPolynomial p(1);
-    if(exp == 0) {
+    if(exp == 0) 
         return p;
-    }
-    else if (exp == 1) {
+    else if (exp == 1)
         return base;
-    }
-    else {
-        while(exp != 0) {
+    else 
+        for(; exp > 0; exp--)
             p *= base;
-            exp--;
-        }
-    }
     return p;
 }
 
