@@ -955,6 +955,7 @@ public:
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &arg) const;
     virtual vec_basic get_args() const { return {arg_}; }
+    RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
 };
 
 //! Canonicalize Gamma:
@@ -980,6 +981,7 @@ public:
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &s, const RCP<const Basic> &x) const;
     virtual vec_basic get_args() const { return {s_, x_}; }
+    RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
 };
 
 //! Canonicalize LowerGamma:
@@ -1006,6 +1008,7 @@ public:
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &s, const RCP<const Basic> &x) const;
     virtual vec_basic get_args() const { return {s_, x_}; }
+    RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
 };
 
 //! Canonicalize UpperGamma:
@@ -1042,6 +1045,7 @@ public:
     bool is_canonical(const RCP<const Basic> &s, const RCP<const Basic> &x);
     virtual vec_basic get_args() const { return {x_, y_}; }
     RCP<const Basic> rewrite_as_gamma() const;
+    RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
 };
 
 //! Canonicalize Beta:
@@ -1077,6 +1081,7 @@ public:
     bool is_canonical(const RCP<const Basic> &n, const RCP<const Basic> &x);
     virtual vec_basic get_args() const { return {n_, x_}; }
     RCP<const Basic> rewrite_as_zeta() const;
+    RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
 };
 
 //! Canonicalize PolyGamma

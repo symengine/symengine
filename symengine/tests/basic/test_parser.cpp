@@ -154,9 +154,9 @@ TEST_CASE("Parsing: functions", "[parser]")
     res = parse(s);
     REQUIRE(eq(*res, *asin(sin(x))));
 
-    s = "beta(x,y)";
+    s = "beta(x, y)";
     res = parse(s);
-    REQUIRE(eq(*res, *beta(x,y)));
+    REQUIRE(eq(*res, *beta(x, y)));
 
     s = "beta(sin(x+3), gamma(2^y+sin(y)))";
     res = parse(s);
