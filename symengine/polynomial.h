@@ -245,7 +245,10 @@ public:
         return UnivariateExprPolynomial(mul_uni_poly(a.poly_, b.poly_));
     }   
     
-    friend UnivariateExprPolynomial operator/(const UnivariateExprPolynomial &a, const Expression &b);
+    friend UnivariateExprPolynomial operator/(const UnivariateExprPolynomial &a, const Expression &b)
+    {
+        return UnivariateExprPolynomial(mul_uni_poly(a.poly_, UnivariateExprPolynomial(1/b).poly_));    
+    }
         
     UnivariateExprPolynomial &operator*=(const UnivariateExprPolynomial &other)
     {   
@@ -260,7 +263,7 @@ public:
     
     bool operator==(int i) const
     {
-      return 1;//eq(*poly_, 
+        return eq(*poly_, *(UnivariateExprPolynomial(i).poly_)); 
     }
      
     bool operator!=(const UnivariateExprPolynomial &other) const

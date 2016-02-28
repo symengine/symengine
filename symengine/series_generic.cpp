@@ -72,10 +72,10 @@ Expression UnivariateSeries::convert(const Rational &x) {
 }
 
 Expression UnivariateSeries::convert(const Number &x) {
-    //Expression i1(x.get_num());
+    //Expression i1(x));
     //Expression i2(x.get_den());
     //i1 /= i2;
-    //return i1;
+    //return Expression(x);
     throw std::runtime_error("Not Implemented");
 }
 
