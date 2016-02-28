@@ -730,7 +730,7 @@ TEST_CASE("LogGamma: eval_arb", "[eval_arb]")
     arb_init(a);
 
     RCP<const Basic> r1 = loggamma(E);
-    RCP<const Basic> r2 = loggamma(integer(2));
+    RCP<const Basic> r2 = loggamma(EulerGamma);
 
     eval_arb(a, *r1, 45);
 

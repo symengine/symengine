@@ -84,7 +84,7 @@ TEST_CASE("eval_double: eval_double", "[eval_double]")
         { min({add(r1, r4), r2}), 0.479425538604},
         { gamma(div(integer(4), integer(3))), 0.892979511569249211},
         { loggamma(div(integer(7), integer(2))), 1.200973602347074224 },
-        { loggamma(integer(3)), 0.693147180559945309 },
+        { loggamma(pi), 0.82769459232343710152 },
     };
 
     for (unsigned i = 0; i < vec.size(); i++) {

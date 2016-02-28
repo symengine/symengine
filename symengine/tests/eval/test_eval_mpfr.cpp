@@ -72,16 +72,16 @@ TEST_CASE("precision: eval_mpfr", "[eval_mpfr]")
     REQUIRE(mpfr_cmp_d(a, 3.00000000000001) == -1);
     REQUIRE(mpfr_cmp_d(a, 2.99999999999999) == 1);
 
-    r = min({integer(3), integer(2)});
+    r = min({sqrt(integer(3)), sqrt(integer(2))});
 
     eval_mpfr(a, *r, MPFR_RNDN);
-    REQUIRE(mpfr_cmp_d(a, 2.00000000000001) == -1);
-    REQUIRE(mpfr_cmp_d(a, 1.99999999999999) == 1);
+    REQUIRE(mpfr_cmp_d(a, 1.41421356238) == -1);
+    REQUIRE(mpfr_cmp_d(a, 1.41421356236) == 1);
 
-    r = loggamma(integer(3));
+    r = loggamma(E);
     eval_mpfr(a, *r, MPFR_RNDN);
-    REQUIRE(mpfr_cmp_d(a, 0.69314718055995) == -1);
-    REQUIRE(mpfr_cmp_d(a, 0.69314718055992) == 1);
+    REQUIRE(mpfr_cmp_d(a, 0.44946174183) == -1);
+    REQUIRE(mpfr_cmp_d(a, 0.44946174181) == 1);
 
     r = loggamma(integer(5));
     eval_mpfr(a, *r, MPFR_RNDN);
