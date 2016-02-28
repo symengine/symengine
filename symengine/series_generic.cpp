@@ -1,7 +1,5 @@
-#include <iterator>
 #include <symengine/series_generic.h>
 #include <symengine/series_visitor.h>
-#include <symengine/dict.h>
 #include <symengine/derivative.cpp>
 
 using SymEngine::RCP;
@@ -74,10 +72,11 @@ Expression UnivariateSeries::convert(const Rational &x) {
 }
 
 Expression UnivariateSeries::convert(const Number &x) {
-    Expression i1(x.get_num());
-    Expression i2(x.get_den());
-    i1 /= i2;
-    return i1;
+    //Expression i1(x.get_num());
+    //Expression i2(x.get_den());
+    //i1 /= i2;
+    //return i1;
+    throw std::runtime_error("Not Implemented");
 }
 
 map_uint_Expr UnivariateSeries::convert_map(const map_uint_mpz &d) {

@@ -7,8 +7,6 @@
 #define SYMENGINE_SERIES_GENERIC_H
 
 #include <symengine/polynomial.h>
-#include <symengine/basic.h>
-#include <symengine/expression.h>
 #include <symengine/rational.h>
 #include <symengine/series.h>
 

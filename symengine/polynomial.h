@@ -7,9 +7,6 @@
 
 #include <symengine/monomials.h>
 #include <symengine/dict.h>
-#include <symengine/basic.h>
-#include <symengine/integer.h>
-#include <symengine/symbol.h>
 #include <symengine/expression.h>
 #include <map>
 
@@ -195,9 +192,11 @@ public:
     ~UnivariateExprPolynomial() SYMENGINE_NOEXCEPT {}
     UnivariateExprPolynomial(const UnivariateExprPolynomial &) = default;
     UnivariateExprPolynomial(UnivariateExprPolynomial &&other) SYMENGINE_NOEXCEPT : poly_(std::move(other.poly_)) {}
-    UnivariateExprPolynomial(Expression expr);
-    UnivariateExprPolynomial(int i) : poly_(integer(i)) {}
-     
+    UnivariateExprPolynomial(int i) : poly_(UnivariatePolynomial::create(symbol("x"), {{0, Expression(i)}})) {}
+    UnivariateExprPolynomial(Expression expr) {
+        throw std::runtime_error("Not Implemented");
+    }
+    
     UnivariateExprPolynomial &operator=(const UnivariateExprPolynomial &) = default;
     UnivariateExprPolynomial &operator=(UnivariateExprPolynomial &&other) SYMENGINE_NOEXCEPT 
     {

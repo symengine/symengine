@@ -198,7 +198,7 @@ bool map_uint_Expr_eq(const map_uint_Expr &a,
 }
 
 
-/*int map_uint_Expr_compare(const map_uint_Expr &A, const map_uint_Expr &B)
+int map_uint_Expr_compare(const map_uint_Expr &A, const map_uint_Expr &B)
 {
     if (A.size() != B.size())
         return (A.size() < B.size()) ? -1 : 1;
@@ -211,7 +211,7 @@ bool map_uint_Expr_eq(const map_uint_Expr &a,
             return (a->second < b->second) ? -1 : 1;
     }
     return 0;
-}*/
+}
 
 template<class T>
 bool set_eq(const T &A, const T &B)
