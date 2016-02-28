@@ -66,13 +66,6 @@ Expression UnivariateSeries::convert(const Number &x) {
     return Expression(x.rcp_from_this());
 }
 
-map_uint_Expr UnivariateSeries::convert_map(const map_uint_mpz &d) {
-    map_uint_Expr dict;
-    for (const auto &it : d)
-        dict[it.first] = Expression(it.second.get_ui());
-    return dict;
-}
-
 RCP<const UnivariatePolynomial> UnivariateSeries::convert_poly(const map_uint_mpz &d) {
     map_uint_Expr dict_trunc;
     unsigned int max = 0;
