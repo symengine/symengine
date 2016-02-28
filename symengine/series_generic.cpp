@@ -47,7 +47,10 @@ umap_int_basic UnivariateSeries::as_dict() const {
 }
 
 RCP<const Basic> UnivariateSeries::get_coeff(int deg) const {
-    return p_.get_univariate_poly()->get_dict().at(deg).get_basic();
+    if(p_.get_univariate_poly()->get_dict().count(deg) == 0)
+        return zero;
+    else
+        return p_.get_univariate_poly()->get_dict().at(deg).get_basic();
 }
 
 UnivariateExprPolynomial UnivariateSeries::var(const std::string &s) {
@@ -98,7 +101,7 @@ UnivariateExprPolynomial UnivariateSeries::mul(const UnivariateExprPolynomial &s
 
 UnivariateExprPolynomial UnivariateSeries::pow(const UnivariateExprPolynomial &s, int n, unsigned prec) {
     // No prec mul
-    return pow_ex(Expression(s.get_basic()), Expression(n));
+    return pow_poly(s, n);
 }
 
 Expression UnivariateSeries::find_cf(const UnivariateExprPolynomial &s, const UnivariateExprPolynomial &var, unsigned deg) {

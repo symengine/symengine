@@ -208,7 +208,7 @@ int map_uint_Expr_compare(const map_uint_Expr &A, const map_uint_Expr &B)
         if (a->first != b->first)
             return (a->first < b->first) ? -1 : 1;
         if (a->second != b->second)
-            return (a->second < b->second) ? -1 : 1;
+            return (a->second.get_basic()->__cmp__(*b->second.get_basic())) ? -1 : 1;
     }
     return 0;
 }

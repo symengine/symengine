@@ -131,12 +131,7 @@ public:
     {
         return not (*this == other);
     }
-    //! Overload (>)
-    bool operator>(const Expression &other) const
-    {
-        return other.m_basic->compare(*m_basic);
-    }
-    //! Method to get Basic from Expression
+
     const RCP<const Basic> &get_basic() const
     {
         return m_basic;

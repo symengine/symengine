@@ -183,8 +183,10 @@ RCP<const UnivariateIntPolynomial> sub_poly(const UnivariateIntPolynomial &a, co
 template <typename T>
 unsigned int bit_length(T t) {
     unsigned int count = 0;
-    while (t > 0)
+    while (t > 0) {
         count++;
+        t = t >> 1;
+    }
     return count;
 }
 
@@ -339,7 +341,7 @@ vec_basic UnivariatePolynomial::get_args() const {
 Expression UnivariatePolynomial::max_coef() const {
     Expression curr = dict_.begin()->second;
     for (const auto &it : dict_)
-        if (it.second > curr)
+        if (curr.get_basic()->compare(*it.second.get_basic()))
             curr = it.second;
     return curr;
 }
