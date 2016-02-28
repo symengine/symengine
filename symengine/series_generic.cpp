@@ -176,7 +176,7 @@ Expression UnivariateSeries::log(const Expression& c) {
 
 RCP<const UnivariateSeries> add_uni_series (const UnivariateSeries& a, const UnivariateSeries &b) {
     map_uint_Expr dict;
-    SYMENGINE_ASSERT(a.get_var()->get_name() == b.get_var()->get_name())
+    SYMENGINE_ASSERT(a.get_var().get_name() == b.get_var().get_name())
     unsigned int minprec = (a.prec_ < b.prec_)? a.prec_ : b.prec_;
     for (const auto &it : a.get_poly().get_univariate_poly()->get_dict()) {
         if (it.first >= minprec)
