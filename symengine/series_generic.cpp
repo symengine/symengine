@@ -62,7 +62,6 @@ UnivariateExprPolynomial UnivariateSeries::var(const std::string &s) {
 }
 
 Expression UnivariateSeries::convert(const Number &x) {
-    // throw std::runtime_error("Not Implemented");
     return Expression(x.rcp_from_this());
 }
 
@@ -176,7 +175,7 @@ Expression UnivariateSeries::log(const Expression& c) {
 
 RCP<const UnivariateSeries> add_uni_series (const UnivariateSeries& a, const UnivariateSeries &b) {
     map_uint_Expr dict;
-    SYMENGINE_ASSERT(a.get_var().get_name() == b.get_var().get_name())
+    SYMENGINE_ASSERT(a == b)
     unsigned int minprec = (a.prec_ < b.prec_)? a.prec_ : b.prec_;
     for (const auto &it : a.get_poly().get_univariate_poly()->get_dict()) {
         if (it.first >= minprec)
@@ -205,7 +204,7 @@ RCP<const UnivariateSeries> sub_uni_series (const UnivariateSeries& a, const Uni
 
 RCP<const UnivariateSeries> mul_uni_series (const UnivariateSeries& a, const UnivariateSeries &b) {
     map_uint_Expr dict;
-    SYMENGINE_ASSERT(a.get_var()->get_name() == b.get_var()->get_name())
+    SYMENGINE_ASSERT(a == b)
     const unsigned int minprec = (a.prec_ < b.prec_)? a.prec_ : b.prec_;
     unsigned int max = 0;
     for (const auto &ait : a.get_poly().get_univariate_poly()->get_dict()) {
@@ -215,7 +214,6 @@ RCP<const UnivariateSeries> mul_uni_series (const UnivariateSeries& a, const Uni
                 const unsigned int expsum = aexp + bit.first;
                 if (expsum < minprec)
                     dict[expsum] += ait.second * bit.second;
-                    //mpz_addmul(dict[expsum].get_mpz_t(), ait.second.get_mpz_t(), bit.second.get_mpz_t());
                 else
                     break;
                 if (expsum > max)
