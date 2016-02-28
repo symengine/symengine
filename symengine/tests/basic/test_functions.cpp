@@ -2346,6 +2346,7 @@ TEST_CASE("Abs: functions", "[functions]")
     RCP<const Symbol> x = symbol("x");
     RCP<const Symbol> y = symbol("y");
 
+    REQUIRE(eq(*abs(x),*abs(neg(x))));
     REQUIRE(eq(*abs(one), *one));
     REQUIRE(eq(*abs(i2), *i2));
     REQUIRE(eq(*abs(im1), *one));
