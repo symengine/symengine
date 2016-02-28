@@ -116,7 +116,7 @@ public:
     UnivariatePolynomial(const RCP<const Symbol> &var, const unsigned int &degree, map_uint_Expr&& dict);
     //! Constructor using a dense vector of Expression
     UnivariatePolynomial(const RCP<const Symbol> &var, const std::vector<Expression> &v);
-
+    
     static RCP<const UnivariatePolynomial> create(const RCP<const Symbol> &var, const std::vector<Expression> &v) {
         return make_rcp<const UnivariatePolynomial>(var, v);
     }
@@ -195,9 +195,9 @@ public:
     ~UnivariateExprPolynomial() SYMENGINE_NOEXCEPT {}
     UnivariateExprPolynomial(const UnivariateExprPolynomial &) = default;
     UnivariateExprPolynomial(UnivariateExprPolynomial &&other) SYMENGINE_NOEXCEPT : poly_(std::move(other.poly_)) {}
-    UnivariateExprPolynomial(int i);    
     UnivariateExprPolynomial(Expression expr);
-    
+    UnivariateExprPolynomial(int i) : poly_(integer(i)) {}
+     
     UnivariateExprPolynomial &operator=(const UnivariateExprPolynomial &) = default;
     UnivariateExprPolynomial &operator=(UnivariateExprPolynomial &&other) SYMENGINE_NOEXCEPT 
     {
@@ -277,7 +277,7 @@ public:
     
     std::size_t __hash__() const
     {
-        return (*(poly_.ptr())).__hash__();
+        return (poly_.ptr())->__hash__();
     }
     
     const RCP<const Basic> get_basic() const
