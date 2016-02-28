@@ -43,7 +43,6 @@ public:
      * */
     bool __eq__(const Basic &o) const;
     int compare(const Basic &o) const;
-    std::string __str__() const;
     
     /*! Creates appropriate instance (i.e Symbol, Integer,
     * Mul, Pow, UnivariateIntPolynomial) depending on the size of dictionary `d`.
@@ -122,7 +121,6 @@ public:
     std::size_t __hash__() const;
     bool __eq__(const Basic &o) const;
     int compare(const Basic &o) const;
-    std::string __str__() const;
     
     /*! Creates appropriate instance (i.e Symbol, Integer,
     * Mul, Pow, UnivariatePolynomial) depending on the size of dictionary `d`.

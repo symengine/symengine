@@ -10,8 +10,8 @@ namespace SymEngine {
 UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const UnivariateExprPolynomial poly) :
         SeriesBase(std::move(poly), var->get_name(), precision) {}
 
-UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const unsigned int &max, map_uint_mpz&& dict) :
-        SeriesBase(UnivariateExprPolynomial(univariate_polynomial(var, max, convert_map(dict))), var->get_name(), precision) {}
+UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const unsigned int &max, map_uint_Expr &&dict) :
+        SeriesBase(UnivariateExprPolynomial(univariate_polynomial(var, max, std::move(dict))), var->get_name(), precision) {}
 
 UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const map_uint_mpz& dict) :
         SeriesBase(convert_poly(std::move(dict)), var->get_name(), precision) {}
@@ -33,6 +33,10 @@ int UnivariateSeries::compare(const Basic &other) const {
         throw std::domain_error("cannot compare with UnivariateSeries");
     const UnivariateSeries &o = static_cast<const UnivariateSeries &>(other);
     return p_ == (o.p_);
+}
+
+bool UnivariateSeries::operator==(const UnivariateSeries &other) const {
+    return p_ == (other.p_);
 }
 
 RCP<const Basic> UnivariateSeries::as_basic() const {
@@ -97,7 +101,7 @@ UnivariateExprPolynomial UnivariateSeries::mul(const UnivariateExprPolynomial &s
 }
 
 UnivariateExprPolynomial UnivariateSeries::pow(const UnivariateExprPolynomial &s, int n, unsigned prec) {
-    // No prec mul
+    // No prec pow
     return pow_ex(Expression(s.get_basic()), Expression(n));
 }
 
@@ -172,6 +176,60 @@ Expression UnivariateSeries::exp(const Expression& c) {
 
 Expression UnivariateSeries::log(const Expression& c) {
     return log(c.get_basic());
+}
+
+RCP<const UnivariateSeries> add_uni_series (const UnivariateSeries& a, const UnivariateSeries &b) {
+    map_uint_Expr dict;
+    SYMENGINE_ASSERT(a.get_var()->get_name() == b.get_var()->get_name())
+    unsigned int minprec = (a.prec_ < b.prec_)? a.prec_ : b.prec_;
+    for (const auto &it : a.get_poly().get_univariate_poly()->get_dict()) {
+        if (it.first >= minprec)
+            break;
+        dict[it.first] = it.second;
+    }
+
+    unsigned int max = 0;
+    for (const auto &it : b.get_poly().get_univariate_poly()->get_dict()) {
+        if (it.first >= minprec)
+            break;
+        dict[it.first] += it.second;
+        if (dict[it.first] != 0 and it.first > max)
+            max = it.first;
+    }
+    return make_rcp<const UnivariateSeries>(symbol(a.get_var()), minprec, max, std::move(dict));
+}
+
+RCP<const UnivariateSeries> neg_uni_series (const UnivariateSeries& a) {
+    return make_rcp<const UnivariateSeries>(symbol(a.get_var()), a.prec_, std::move(neg_uni_poly(*(a.get_poly().get_univariate_poly()))));
+}
+    
+RCP<const UnivariateSeries> sub_uni_series (const UnivariateSeries& a, const UnivariateSeries &b) {
+    return add_uni_series(a, *neg_uni_series(b));
+}
+
+RCP<const UnivariateSeries> mul_uni_series (const UnivariateSeries& a, const UnivariateSeries &b) {
+    map_uint_Expr dict;
+    SYMENGINE_ASSERT(a.get_var()->get_name() == b.get_var()->get_name())
+    const unsigned int minprec = (a.prec_ < b.prec_)? a.prec_ : b.prec_;
+    unsigned int max = 0;
+    for (const auto &ait : a.get_poly().get_univariate_poly()->get_dict()) {
+        const unsigned int aexp = ait.first;
+        if (aexp < minprec) {
+            for (const auto &bit : b.get_poly().get_univariate_poly()->get_dict()) {
+                const unsigned int expsum = aexp + bit.first;
+                if (expsum < minprec)
+                    dict[expsum] += ait.second * bit.second;
+                    //mpz_addmul(dict[expsum].get_mpz_t(), ait.second.get_mpz_t(), bit.second.get_mpz_t());
+                else
+                    break;
+                if (expsum > max)
+                     max = expsum;
+            }
+        }
+        else
+            break;
+    }
+    return make_rcp<const UnivariateSeries>(symbol(a.get_var()), minprec, max, std::move(dict));
 }
 
 } // SymEngine

@@ -14,12 +14,12 @@ namespace SymEngine {
 //! UnivariateSeries Class
 class UnivariateSeries : public SeriesBase<UnivariateExprPolynomial, Expression, UnivariateSeries> {
     // UnivariateSeries 1 + 2*x + x**2 + O(x**5) has dict_ = {{0, 1}, {1, 2}, {2, 1}} with var_ = "x" and prec_ = 5
-    unsigned int prec_;
 public:
+    unsigned int prec_;
     IMPLEMENT_TYPEID(UNIVARIATESERIES)
     UnivariateSeries(const UnivariateExprPolynomial sp, const std::string varname, const unsigned degree) : SeriesBase(std::move(sp), varname, degree) {}
     UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const UnivariateExprPolynomial poly);
-    UnivariateSeries(const RCP<const Symbol> &var, const unsigned int& precision, const unsigned int& max_exp, map_uint_mpz&& dict);
+    UnivariateSeries(const RCP<const Symbol> &var, const unsigned int& precision, const unsigned int& max_exp, map_uint_Expr &&dict);
     UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const map_uint_mpz &dict);
     //! Constructor using a dense vector of mpz_class coefficients
     UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const std::vector<mpz_class> &v);
@@ -30,6 +30,7 @@ public:
     static RCP<const UnivariateSeries> series(const RCP<const Basic> &t, const std::string &x, unsigned int prec);
     virtual std::size_t __hash__() const;
     virtual int compare(const Basic &o) const;
+    bool operator==(const UnivariateSeries &u) const;
     virtual RCP<const Basic> as_basic() const;
     virtual umap_int_basic as_dict() const;
     virtual RCP<const Basic> get_coeff(int) const;
@@ -63,6 +64,7 @@ public:
     static Expression atanh(const Expression &c); 
     static Expression exp(const Expression &c); 
     static Expression log(const Expression &c);
+    
 };
 
 inline RCP<const UnivariateSeries> univariate_series(RCP<const Symbol> i, unsigned int prec, const map_uint_mpz& dict)

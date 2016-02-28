@@ -152,6 +152,12 @@ bool UnivariateIntPolynomial::is_pow() const {
     return dict_.size() == 1 and dict_.begin()->second == 1 and dict_.begin()->first != 1 and dict_.begin()->first != 0;
 }
 
+//std::string __str__() const {
+    //std::string str;
+    //for (const auto &it : dict_)
+        //str += 
+    
+    
 RCP<const UnivariateIntPolynomial> add_poly(const UnivariateIntPolynomial &a, const UnivariateIntPolynomial &b) {
     map_uint_mpz dict;
     for (const auto &it : a.dict_)

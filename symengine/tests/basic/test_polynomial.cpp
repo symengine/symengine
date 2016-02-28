@@ -67,7 +67,7 @@ TEST_CASE("Subtracting two UnivariateIntPolynomial", "[UnivariateIntPolynomial]"
     const UnivariateIntPolynomial a(x, 2, std::move(adict_));
     const UnivariateIntPolynomial b(x, 2, std::move(bdict_));
 
-    RCP<const Basic> c = sub_uni_poly(b, a);
+    RCP<const Basic> c = sub_poly(b, a);
     //std::cout<<c->__str__();
     REQUIRE(c->__str__() == "3*x**2 + x + 1");
 }
@@ -243,7 +243,7 @@ TEST_CASE("Evaluation of UnivariatePolynomial", "[UnivariatePolynomial]")
     RCP<const UnivariatePolynomial> a = univariate_polynomial(x, 2, {{0, 1}, {1, 2}, {2, 1}});
 
     REQUIRE(a->eval(2) == 9);
-    REQUIRE(a->eval_bit(3) == 81);
+    //REQUIRE(a->eval_bit(3) == 81);
 }
 
 TEST_CASE("Derivative of UnivariatePolynomial", "[UnivariatePolynomial]")
