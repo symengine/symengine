@@ -1,7 +1,6 @@
-#include <iterator>
+// #include <iterator>
 #include <symengine/series_generic.h>
 #include <symengine/series_visitor.h>
-#include <symengine/dict.h>
 #include <symengine/derivative.cpp>
 
 using SymEngine::RCP;
