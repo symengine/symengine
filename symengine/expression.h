@@ -121,9 +121,14 @@ public:
         return eq(*m_basic, *other.m_basic);
     }
 
+    bool operator>=(const Expression &other) const
+    {
+        return m_basic->compare(*other.m_basic) == 1 || m_basic->compare(*other.m_basic) == 0;
+    }
+    
     bool operator<(const Expression &other) const
     {
-        return eq(*m_basic, *other.m_basic);
+        return m_basic->compare(*other.m_basic) == -1;
     }
      
     //! Overload check not equal (!=)

@@ -157,8 +157,8 @@ TEST_CASE("Univariate Int Polynomial expand", "[UnivariateIntPolynomial][expand]
     RCP<const Basic> b = make_rcp<const Pow>(a, integer(3));
     RCP<const Basic> c = expand(b);
 
+//    std::cout<<b->__str__()<<std::endl;
     REQUIRE(b->__str__() == "(x**3 + x**2 + x)**3");
-    std::cout<<b->__str__()<<std::endl;
     REQUIRE(c->__str__() == "x**9 + 3*x**8 + 6*x**7 + 7*x**6 + 6*x**5 + 3*x**4 + x**3");
     //std::cout<<c->__str__()<<std::endl;
 }
