@@ -32,6 +32,8 @@ using SymEngine::rcp_dynamic_cast;
 using SymEngine::map_basic_basic;
 using SymEngine::print_stack_on_segfault;
 using SymEngine::real_double;
+using SymEngine::kronecker_delta;
+using SymEngine::levi_civita;
 
 TEST_CASE("Symbol: subs", "[subs]")
 {
@@ -224,5 +226,64 @@ TEST_CASE("Trig: subs", "[subs]")
 
     r1 = mul(i2, sin(x));
     r2 = mul(i2, z);
+    REQUIRE(eq(*r1->subs(d), *r2));
+}
+
+TEST_CASE("KroneckerDelta: subs", "[subs]")
+{
+    RCP<const Basic> x = symbol("x");
+    RCP<const Basic> y = symbol("y");
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> i4 = integer(4);
+
+    RCP<const Basic> r1 = kronecker_delta(x, y);
+    RCP<const Basic> r2 = kronecker_delta(y, y);
+    RCP<const Basic> r3;
+    map_basic_basic d;
+    d[x] = y;
+    REQUIRE(eq(*r1->subs(d), *r2));
+
+    d.clear();
+    d[y] = x;
+    r2 = kronecker_delta(x, x);
+    REQUIRE(eq(*r1->subs(d), *r2));
+
+    r1 = kronecker_delta(add(x, i2), y);
+    r2 = kronecker_delta(i4, y);
+    r3 = kronecker_delta(add(x, i2), i2);
+    d.clear();
+    d[x] = i2;
+    REQUIRE(eq(*r1->subs(d), *r2));
+    d.clear();
+    d[y] = i2;
+    REQUIRE(eq(*r1->subs(d), *r3));
+}
+
+
+TEST_CASE("LeviCivita: subs", "[subs]")
+{
+    RCP<const Basic> x = symbol("x");
+    RCP<const Basic> y = symbol("y");
+    RCP<const Basic> z = symbol("z");
+
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> i4 = integer(4);
+
+    RCP<const Basic> r1 = levi_civita({x, y});
+    RCP<const Basic> r2 = levi_civita({y, y});
+    RCP<const Basic> r3;
+    map_basic_basic d;
+    d[x] = y;
+    REQUIRE(eq(*r1->subs(d), *r2));
+
+    r1 = levi_civita({x, one, y, i2});
+    d[x] = i4;
+    d[y] = one;
+    r2 = levi_civita({i4, one, one, i2});
+    REQUIRE(eq(*r1->subs(d), *r2));
+
+    d.clear();
+    d[z] = x;
+    r2 = levi_civita({x, one, y, i2});
     REQUIRE(eq(*r1->subs(d), *r2));
 }

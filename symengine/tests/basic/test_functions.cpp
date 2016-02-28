@@ -2255,7 +2255,7 @@ TEST_CASE("Beta: functions", "[functions]")
     r3 = div(mul(gamma(i3), gamma(i2)), gamma(add(i2, i3)));
     REQUIRE(eq(*r1, *r3));
     r2 = div(one, integer(12));
-    REQUIRE(eq(*r1, *r2));	
+    REQUIRE(eq(*r1, *r2));
 
     r1 = beta(div(one, i2), i2);
     r2 = beta(i2, div(one, i2));

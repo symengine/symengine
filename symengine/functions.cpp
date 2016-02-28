@@ -2569,6 +2569,20 @@ std::size_t KroneckerDelta::__hash__() const
     return seed;
 }
 
+RCP<const Basic> KroneckerDelta::subs(const map_basic_basic &subs_dict) const
+{
+    auto it = subs_dict.find(rcp_from_this());
+    if (it != subs_dict.end())
+        return it->second;
+    RCP<const Basic> i = i_->subs(subs_dict);
+    RCP<const Basic> j = j_->subs(subs_dict);
+    if (i == i_ and j == j_) {
+        return rcp_from_this();
+    } else {
+        return kronecker_delta(i, j);
+    }
+}
+
 RCP<const Basic> kronecker_delta(const RCP<const Basic> &i, const RCP<const Basic> &j)
 {
     // Expand is needed to simplify things like `i-(i+1)` to `-1`
@@ -2645,6 +2659,29 @@ std::size_t LeviCivita::__hash__() const
         hash_combine<Basic>(seed, *p);
     }
     return seed;
+}
+
+RCP<const Basic> LeviCivita::subs(const map_basic_basic &subs_dict) const
+{
+    auto it = subs_dict.find(rcp_from_this());
+    if (it != subs_dict.end())
+        return it->second;
+    vec_basic arg(arg_.size());
+    bool this_rcp = true;
+    auto it2 = arg.begin();
+    for (const auto& it: arg_) {
+        *it2 = ((it)->subs(subs_dict));
+        if (this_rcp) {
+            if (not(it == *it2))
+                this_rcp = false;
+        }
+        ++it2;
+    }
+
+    if (this_rcp)
+         return rcp_from_this();
+    else
+        return levi_civita(arg);
 }
 
 RCP<const Basic> eval_levicivita(const vec_basic &arg, int len)

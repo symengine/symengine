@@ -890,6 +890,7 @@ public:
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &i, const RCP<const Basic> &j) const;
     virtual vec_basic get_args() const { return {i_, j_}; }
+    RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
 };
 
 //! Canonicalize KroneckerDelta:
@@ -920,6 +921,7 @@ public:
     //! \return `true` if canonical
     bool is_canonical(const vec_basic &arg) const;
     virtual vec_basic get_args() const { return arg_; }
+    RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
 };
 
 //! Canonicalize LeviCivita:
