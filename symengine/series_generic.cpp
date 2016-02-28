@@ -54,29 +54,9 @@ UnivariateExprPolynomial UnivariateSeries::var(const std::string &s) {
     return UnivariateExprPolynomial(std::stoi(s));
 }
 
-Expression UnivariateSeries::convert(const Integer &x) {
-    return Expression(x.as_int());
-}
-
-Expression UnivariateSeries::convert(const mpq_class &x) {
-    Expression i1(mpz_get_si(x.get_num_mpz_t()));
-    Expression i2(mpz_get_si(x.get_den_mpz_t()));
-    return i1/i2;
-}
-
-Expression UnivariateSeries::convert(const Rational &x) {
-    Expression i1(x.get_num());
-    Expression i2(x.get_den());
-    i1 /= i2;
-    return i1;
-}
-
 Expression UnivariateSeries::convert(const Number &x) {
-    //Expression i1(x));
-    //Expression i2(x.get_den());
-    //i1 /= i2;
-    //return Expression(x);
-    throw std::runtime_error("Not Implemented");
+    // throw std::runtime_error("Not Implemented");
+    return Expression(x.rcp_from_this());
 }
 
 map_uint_Expr UnivariateSeries::convert_map(const map_uint_mpz &d) {

@@ -35,9 +35,6 @@ public:
     virtual RCP<const Basic> get_coeff(int) const;
     static UnivariateExprPolynomial var(const std::string &s);
       
-    static Expression convert(const Integer &x);
-    static Expression convert(const mpq_class &x);
-    static Expression convert(const Rational &x);
     static Expression convert(const Number &x);
     map_uint_Expr convert_map(const map_uint_mpz &d);
     RCP<const UnivariatePolynomial> convert_poly(const map_uint_mpz &d);
