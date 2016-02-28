@@ -286,7 +286,9 @@ public:
         for (const auto &it : poly_->get_dict()) {
             if (it.first != 0) {
                 auto term = mul(it.second.get_basic(), pow_ex(Expression(x), Expression(it.first)).get_basic());
-                Add::coef_dict_add_term(outArg(zero), dict_, one, term);
+                RCP<const Number> coef;
+                coef = zero;
+                Add::coef_dict_add_term(outArg((coef)), dict_, one, term);
             }
         }
         return std::move(Add::from_dict(integer(0), std::move(dict_)));
