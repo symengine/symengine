@@ -317,7 +317,7 @@ class sym_eq {
   }
 };
 
-int umap_vec_mpz_compare(umap_vec_mpz &a, umap_vec_mpz &b){
+inline int umap_vec_mpz_compare(umap_vec_mpz &a, umap_vec_mpz &b){
   if(a.size() < b.size())
     return (a.size() < b.size()) ? -1 : 1;
   return 0;
