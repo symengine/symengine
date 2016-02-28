@@ -3295,7 +3295,7 @@ Abs::Abs(const RCP<const Basic> &arg)
 
 bool Abs::is_canonical(const RCP<const Basic> &arg) const
 {
-    if (is_a<Integer>(*arg) or is_a<Rational>(*arg)) return false;
+    if (is_a<Integer>(*arg) or is_a<Rational>(*arg) or is_a<Complex>(*arg)) return false;
     if (is_a_Number(*arg) and not static_cast<const Number &>(*arg).is_exact()) {
         return false;
     }
