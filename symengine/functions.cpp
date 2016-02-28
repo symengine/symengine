@@ -3317,7 +3317,7 @@ std::size_t Abs::__hash__() const
 bool Abs::__eq__(const Basic &o) const
 {
     if (is_a<Abs>(o) and
-        eq(*arg_, *(static_cast<const Abs  &>(o).arg_)))
+        eq(*arg_, *(static_cast<const Abs &>(o).arg_)))
         return true;
     return false;
 }
@@ -3347,7 +3347,7 @@ RCP<const Basic> abs(const RCP<const Basic> &arg)
     } else if (is_a<Complex>(*arg)) {
         RCP<const Complex> arg_ = rcp_static_cast<const Complex>(arg);
         RCP<const Complex> conjugate = rcp_static_cast<const Complex>(sub((*arg_).real_part(),mul(I,(*arg_).imaginary_part())));
-        return sqrt(abs(((*arg_).mulcomp(*conjugate))));
+        return sqrt(((*arg_).mulcomp(*conjugate)));
     } else if (is_a_Number(*arg) and not static_cast<const Number &>(*arg).is_exact()) {
         return static_cast<const Number &>(*arg).get_eval().abs(*arg);
     }
