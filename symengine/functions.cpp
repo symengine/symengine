@@ -3053,12 +3053,11 @@ RCP<const Basic> uppergamma(const RCP<const Basic> &s, const RCP<const Basic> &x
 
 bool LogGamma::is_canonical(const RCP<const Basic> &arg) const
 {
-    if (is_a_Number(*arg) and not
-        static_cast<const Number &>(*arg).is_positive()) {
-        return false;
-    }
     if (is_a<Integer>(*arg)) {
         RCP<const Integer> arg_int = rcp_static_cast<const Integer>(arg);
+        if(not arg_int->is_positive()) {
+            return false;
+        }
         if (eq(*integer(1), *arg_int) or eq(*integer(2), *arg_int) or
             eq(*integer(3), *arg_int)) {
             return false;
@@ -3107,12 +3106,11 @@ RCP<const Basic> LogGamma::subs(const map_basic_basic &subs_dict) const
 
 RCP<const Basic> loggamma(const RCP<const Basic> &arg)
 {
-    if (is_a_Number(*arg) and not
-        static_cast<const Number &>(*arg).is_positive()) {
-        throw std::runtime_error("Infinity not yet implemented");
-    }
     if (is_a<Integer>(*arg)) {
         RCP<const Integer> arg_int = rcp_static_cast<const Integer>(arg);
+        if(not arg_int->is_positive()) {
+            throw std::runtime_error("Infinity not yet implemented");
+        }
         if (eq(*integer(1), *arg_int) or eq(*integer(2), *arg_int)) {
             return zero;
         }
