@@ -10,6 +10,7 @@
 #include <symengine/expression.h>
 #include <map>
 
+
 namespace SymEngine {
 
 class UnivariateIntPolynomial : public Basic{
@@ -168,8 +169,6 @@ RCP<const UnivariatePolynomial> sub_uni_poly(const UnivariatePolynomial &a, cons
 //! Multiplying two UnivariatePolynomial a and b
 RCP<const UnivariatePolynomial> mul_uni_poly(RCP<const UnivariatePolynomial> a, RCP<const UnivariatePolynomial> b);
 
-inline RCP<const UnivariatePolynomial> pow_exp(RCP<const UnivariatePolynomial> a, RCP<const UnivariatePolynomial> b);
-
 inline RCP<const UnivariatePolynomial> univariate_polynomial(RCP<const Symbol> i, unsigned int deg, map_uint_Expr&& dict)
 {
     return make_rcp<const UnivariatePolynomial>(i, deg, std::move(dict));
@@ -293,6 +292,22 @@ public:
     }
 }; //UnivariateExprPolynomial
 
+inline UnivariateExprPolynomial pow_poly(const UnivariateExprPolynomial &base, int exp) {
+    UnivariateExprPolynomial p(1);
+    if(exp == 0) {
+        return p;
+    }
+    else if (exp == 1) {
+        return base;
+    }
+    else {
+        while(exp != 0) {
+            p *= base;
+            exp--;
+        }
+    }
+    return p;
+}
 
 class sym_hash {
 public:
