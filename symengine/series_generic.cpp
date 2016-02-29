@@ -1,6 +1,5 @@
 #include <symengine/series_generic.h>
 #include <symengine/series_visitor.h>
-#include <symengine/derivative.cpp>
 
 using SymEngine::RCP;
 using SymEngine::make_rcp;
@@ -109,7 +108,7 @@ Expression UnivariateSeries::root(Expression &c, unsigned n) {
 }
 
 UnivariateExprPolynomial UnivariateSeries::diff(const UnivariateExprPolynomial &s, const UnivariateExprPolynomial &var) {
-    return UnivariateExprPolynomial(Expression(DiffImplementation::diff(*(s.get_univariate_poly()), var.get_univariate_poly()->get_var())));
+    return UnivariateExprPolynomial(Expression(s.get_univariate_poly()->diff(var.get_univariate_poly()->get_var())));
 }
 
 UnivariateExprPolynomial UnivariateSeries::integrate(const UnivariateExprPolynomial &s, const UnivariateExprPolynomial &var) {
