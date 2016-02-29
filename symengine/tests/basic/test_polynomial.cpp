@@ -7,6 +7,7 @@
 #include <symengine/pow.h>
 #include <symengine/dict.h>
 
+using SymEngine::Expression;
 using SymEngine::UnivariateIntPolynomial;
 using SymEngine::UnivariatePolynomial;
 using SymEngine::univariate_int_polynomial;
@@ -166,11 +167,19 @@ TEST_CASE("Univariate Int Polynomial expand", "[UnivariateIntPolynomial][expand]
 TEST_CASE("Constructor of UnivariatePolynomial", "[UnivariatePolynomial]")
 {
     RCP<const Symbol> x  = symbol("x");
-    RCP<const UnivariatePolynomial> P = univariate_polynomial(x, 2, {{0, 1}, {1, 2}, {2, 1}});
-    REQUIRE(P->__str__() == "x**2 + 2*x + 1");
+    Expression a(symbol("a"));
+    Expression b(integer(2));
+    Expression c(integer(1));
+    RCP<const UnivariatePolynomial> P = univariate_polynomial(x, 2, {{0, c}, {1, b}, {2, a}});
+    REQUIRE(P->__str__() == "a*x**2 + 2*x + 1");
 
     RCP<const UnivariatePolynomial> Q = UnivariatePolynomial::create(x, {1, 0, 2, 1});
     REQUIRE(Q->__str__() == "x**3 + 2*x**2 + 1");
+
+    RCP<const UnivariatePolynomial> R = univariate_polynomial(x, 2, {{0, c}, {1, b}, {2, a}, {3, c}});
+    REQUIRE(R->__str__() == "x**3 + a*x**2 + 2*x + 1");
+    // RCP<const UnivariatePolynomial> R = univariate_polynomial(x, 2, {{0, a}, {1, b}, {2, 1}});
+    // REQUIRE(R->__str__() == "x**2 + 2*x + a");
 }
 
 TEST_CASE("Adding two UnivariatePolynomial", "[UnivariatePolynomial]")
