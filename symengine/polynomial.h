@@ -8,7 +8,7 @@
 #include <symengine/monomials.h>
 #include <symengine/dict.h>
 #include <symengine/expression.h>
-#include <map>
+// #include <map>
 
 
 namespace SymEngine {

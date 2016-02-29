@@ -125,7 +125,7 @@ mpz_class UnivariateIntPolynomial::eval_bit(const int &x) const {
 }
 
 bool UnivariateIntPolynomial::is_zero() const {
-    return dict_.size() == 1 and dict_.begin()->second == 0;
+    return (dict_.size() == 1 and dict_.begin()->second == 0);
 }
 
 bool UnivariateIntPolynomial::is_one() const {
@@ -150,13 +150,7 @@ bool UnivariateIntPolynomial::is_mul() const {
 
 bool UnivariateIntPolynomial::is_pow() const {
     return dict_.size() == 1 and dict_.begin()->second == 1 and dict_.begin()->first != 1 and dict_.begin()->first != 0;
-}
-
-//std::string __str__() const {
-    //std::string str;
-    //for (const auto &it : dict_)
-        //str += 
-    
+}   
     
 RCP<const UnivariateIntPolynomial> add_poly(const UnivariateIntPolynomial &a, const UnivariateIntPolynomial &b) {
     map_uint_mpz dict;
@@ -183,7 +177,6 @@ RCP<const UnivariateIntPolynomial> sub_poly(const UnivariateIntPolynomial &a, co
 
     return univariate_int_polynomial(a.var_, (--(dict.end()))->first, std::move(dict));
 }
-
 
 //Calculates bit length of number, used in mul_poly() only
 template <typename T>

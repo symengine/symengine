@@ -163,9 +163,6 @@ TEST_CASE("Univariate Int Polynomial expand", "[UnivariateIntPolynomial][expand]
     //std::cout<<c->__str__()<<std::endl;
 }
 
-
-
-
 TEST_CASE("Constructor of UnivariatePolynomial", "[UnivariatePolynomial]")
 {
     RCP<const Symbol> x  = symbol("x");
