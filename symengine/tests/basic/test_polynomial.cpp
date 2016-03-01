@@ -171,42 +171,43 @@ TEST_CASE("Constructor of UnivariatePolynomial", "[UnivariatePolynomial]")
 {
     RCP<const Symbol> x  = symbol("x");
     Expression a(symbol("a"));
-    Expression b(integer(2));
-    Expression c(integer(1));
-    RCP<const UnivariatePolynomial> P = univariate_polynomial(x, 2, {{0, c}, {1, b}, {2, a}});
-    REQUIRE(P->__str__() == "a*x**2 + 2*x + 1");
+    Expression b(symbol("b"));
+    Expression c(symbol("c"));
+    Expression d(symbol("d"));
+    Expression num2(integer(2));
+    Expression num1(integer(1));
+    RCP<const UnivariatePolynomial> P = univariate_polynomial(x, 2, {{0, num1}, {1, num2}, {2, num1}});
+    REQUIRE(P->__str__() == "x**2 + 2*x + 1");
 
     RCP<const UnivariatePolynomial> Q = UnivariatePolynomial::create(x, {1, 0, 2, 1});
     REQUIRE(Q->__str__() == "x**3 + 2*x**2 + 1");
 
-    RCP<const UnivariatePolynomial> R = univariate_polynomial(x, 3, {{0, c}, {1, b}, {2, a}, {3, c}});
-    REQUIRE(R->__str__() == "x**3 + a*x**2 + 2*x + 1");
-    // RCP<const UnivariatePolynomial> R = univariate_polynomial(x, 2, {{0, a}, {1, b}, {2, 1}});
-    // REQUIRE(R->__str__() == "x**2 + 2*x + a");
+    RCP<const UnivariatePolynomial> R = univariate_polynomial(x, 3, {{0, d}, {1, c}, {2, b}, {3, a}});
+    REQUIRE(R->__str__() == "a*x**3 + b*x**2 + c*x + d");
 }
 
 TEST_CASE("Adding two UnivariatePolynomial", "[UnivariatePolynomial]")
 {
     RCP<const Symbol> x  = symbol("x");
-    map_uint_Expr adict_ = {{0, 1}, {1, 2}, {2, 1}};
-    map_uint_Expr bdict_ = {{0, 2}, {1, 3}, {2, 4}};
+    map_uint_Expr adict_ = {{0, 1}, {1, 2}, {2, symbol("a")}};
+    map_uint_Expr bdict_ = {{0, 2}, {1, 3}, {2, symbol("a")}};
     const UnivariatePolynomial a(x, 2, std::move(adict_));
     const UnivariatePolynomial b(x, 2, std::move(bdict_));
 
     RCP<const Basic> c = add_uni_poly(a, b);
     //std::cout<<c->__str__();
-    REQUIRE(c->__str__() == "5*x**2 + 5*x + 3");
+    REQUIRE(c->__str__() == "(2*a)*x**2 + 5*x + 3");
 }
 
 TEST_CASE("Negative of a UnivariatePolynomial", "[UnivariatePolynomial]")
 {
     RCP<const Symbol> x  = symbol("x");
-    map_uint_Expr adict_ = {{0, 1}, {1, 2}, {2, 1}};
+    map_uint_Expr adict_ = {{0, 1}, {1, symbol("a")}, {2, 1}};
     const UnivariatePolynomial a(x, 2, std::move(adict_));
 
     RCP<const UnivariatePolynomial> b = neg_uni_poly(a);
     //std::cout<<b->__str__()<<std::endl;
-    REQUIRE(b->__str__() == "-x**2 - 2*x - 1");
+    REQUIRE(b->__str__() == "-x**2 - a*x - 1");
 }
 
 TEST_CASE("Subtracting two UnivariatePolynomial", "[UnivariatePolynomial]")

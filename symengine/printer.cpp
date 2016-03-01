@@ -330,18 +330,8 @@ void StrPrinter::bvisit(const UnivariatePolynomial &x) {
     bool first = true;
     //we iterate over the map in reverse order so that highest degree gets printed first
     for (auto it = x.dict_.rbegin(); it != x.dict_.rend();) {
-        if(is_a<const Symbol>(*it->second.get_basic())) {
-            if (it->first == 0)
-                s << Expression(it->second.get_basic());
-            else if (it->first == 1) 
-                s << Expression(it->second.get_basic()) << "*" << x.var_->get_name();
-            else 
-                s << Expression(it->second.get_basic()) << "*" << x.var_->get_name() << "**"  << it->first;
-
-            if (++it != x.dict_.rend())
-                s << " + ";
-        }
-        else {
+        
+        if(is_a<const Integer>(*it->second.get_basic())) {
             //given a term in univariate polynomial, if coefficient is zero, print nothing
             if (it->second == 0) {
                 //except when it is the only term, say "0"
@@ -399,6 +389,35 @@ void StrPrinter::bvisit(const UnivariatePolynomial &x) {
                 }
                 if ((++it != x.dict_.rend()) and (it->second != 0)) {
                     if (it->second < 0) {
+                        s << " - ";
+                    } else {
+                        s << " + ";
+                    }
+                }
+            }
+        }
+        else {
+            if(is_a<const Symbol>(*it->second.get_basic())) {
+                if (it->first == 0)
+                    s << Expression(it->second.get_basic());
+                else if (it->first == 1) 
+                    s << Expression(it->second.get_basic()) << "*" << x.var_->get_name();
+                else 
+                    s << Expression(it->second.get_basic()) << "*" << x.var_->get_name() << "**"  << it->first;
+
+                if (++it != x.dict_.rend())
+                    s << " + ";
+            }
+            else { // For grouping un-like terms
+                if (it->first == 0)
+                    s << "(" << Expression(it->second.get_basic()) << ")";
+                else if (it->first == 1) 
+                    s << "(" << Expression(it->second.get_basic()) << ")" << "*" << x.var_->get_name();
+                else 
+                    s << "(" << Expression(it->second.get_basic()) << ")" << "*" << x.var_->get_name() << "**"  << it->first;
+
+                if (++it != x.dict_.rend()) {
+                    if (is_a<const Symbol>(*it->second.get_basic())) {
                         s << " - ";
                     } else {
                         s << " + ";
