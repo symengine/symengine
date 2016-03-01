@@ -391,10 +391,7 @@ void StrPrinter::bvisit(const UnivariatePolynomial &x) {
             //same logic is followed as above
             else {
                 if (it->first == 0) {
-                    if (first)
-                        s << Expression(it->second.get_basic());
-                    else
-                        s << Expression(abs(it->second.get_basic()));
+                    s << Expression(abs(it->second.get_basic()));
                 } else if (it->first == 1) {
                     s << Expression(abs(it->second.get_basic())) << "*" << x.var_->get_name();
                 } else {

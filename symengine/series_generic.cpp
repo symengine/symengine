@@ -13,10 +13,10 @@ UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned 
         SeriesBase(UnivariateExprPolynomial(univariate_polynomial(var, max, std::move(dict))), var->get_name(), precision) {}
 
 UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const map_uint_mpz& dict) :
-        SeriesBase(convert_poly(std::move(dict)), var->get_name(), precision) {}
+        SeriesBase(UnivariateExprPolynomial(convert_poly(std::move(dict))), var->get_name(), precision) {}
 
 UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const std::vector<mpz_class> &v) :
-        SeriesBase(convert_vector(v), var->get_name(), precision) {}
+        SeriesBase(UnivariateExprPolynomial(convert_vector(v)), var->get_name(), precision) {}
 
 RCP<const UnivariateSeries> UnivariateSeries::series(const RCP<const Basic> &t, const std::string &x, unsigned int prec) {
     SeriesVisitor<UnivariateExprPolynomial, Expression, UnivariateSeries> visitor(UnivariateExprPolynomial(std::stoi(x)), x, prec);
