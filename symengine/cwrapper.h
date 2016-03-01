@@ -163,6 +163,12 @@ int basic_neq(const basic a, const basic b);
 void basic_abs(basic s, const basic a);
 //! Expands the expr a and assigns to s.
 void basic_expand(basic s, const basic a);
+//! Assigns s = cot(a).
+void basic_cot(basic s, const basic a);
+//! Assigns s = sec(a).
+void basic_sec(basic s, const basic a);
+//! Assigns s = cosec(a).
+void basic_csc(basic s, const basic a);
 
 //! Returns a new char pointer to the string representation of s.
 char* basic_str(const basic s);
