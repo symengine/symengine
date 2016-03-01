@@ -30,20 +30,16 @@ class UnivariateSeries : public SeriesBase<s_coef, SymEngine::Expression, Univar
     //data members now inherited from SeriesBase
 public:
     //! Constructor of UnivariateSeries class
-    UnivariateSeries(const s_coef sp, const std::string varname, const unsigned degree);
-    IMPLEMENT_TYPEID(UNIVARIATESERIES)
-    virtual int compare(const Basic &o) const;
-    virtual std::size_t __hash__() const;
-    virtual RCP<const Basic> as_basic() const;
-    virtual umap_int_basic as_dict() const;
-    virtual RCP<const Basic> get_coeff(int) const;
+    UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const RCP<const UnivariatePolynomial> &poly);
+    UnivariateSeries(const RCP<const Symbol> &var, const unsigned int& precision, const unsigned int& max_exp, map_uint_mpz&& dict);
+    UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const map_uint_mpz &dict);
+    //! Constructor using a dense vector of integer_class coefficients
+    UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const std::vector<integer_class> &v);
 
-    static RCP<const UnivariateSeries> series(const RCP<const Basic> &t, const std::string &x, unsigned int prec);
-    static s_coef convert(const Integer &x);
-    static s_coef convert(const mpq_class &x);
-    static s_coef var(const std::string &s);
-    static s_coef convert(const Rational &x);
-    static s_coef convert(const Number &x);
+    static RCP<const UnivariateSeries> create(const RCP<const Symbol> &var,
+            const unsigned int &prec, const std::vector<integer_class> &v) {
+        return make_rcp<const UnivariateSeries>(var, prec, v);
+    }
 
     static s_coef mul(const s_coef &s, const s_coef &r, unsigned prec);
     static s_coef pow(const s_coef &s, int n, unsigned prec);

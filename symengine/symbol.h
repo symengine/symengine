@@ -56,8 +56,8 @@ public:
 
 struct RCPSymbolCompare{
 public:
-    size_t operator()(const RCP<const Symbol> &a, const RCP<const Symbol> &b) const{
-        return a->compare(*b);
+    bool operator()(const RCP<const Symbol> &a, const RCP<const Symbol> &b) const{
+        return (a->compare(*b) == -1);
     }
 };
 

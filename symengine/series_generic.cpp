@@ -67,12 +67,13 @@ s_coef UnivariateSeries::convert(const Rational &x) {
     return i1;
 }
 
-s_coef UnivariateSeries::convert(const Number &x) {
-    throw std::runtime_error("Not Implemented");
-}
+UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const std::vector<integer_class> &v) :
+        var_{var}, prec_{precision} {
 
-RCP<const Basic> UnivariateSeries::as_basic() const {
-    return p_.get_basic();
+    std::vector<integer_class> vtrunc;
+    std::copy_if(v.begin(), v.end(), std::back_inserter(vtrunc),
+        [&](decltype(v[0]) i) { return i < prec_; } );
+    poly_ = UnivariatePolynomial::create(var_, vtrunc);
 }
 
 umap_int_basic UnivariateSeries::as_dict() const {
@@ -117,8 +118,38 @@ s_coef UnivariateSeries::pow(const s_coef &s, int n, unsigned prec) {
     return pow_ex(s, s_coef(n));
 }
 
-unsigned UnivariateSeries::ldegree(const s_coef &s) {
-    throw std::runtime_error("Not Implemented");
+std::string UnivariateSeries::__str__() const
+{
+    std::ostringstream o;
+    bool first = true;
+    for (const auto& it : poly_->dict_) {
+        if (it.second == 0)
+            continue;
+        if (first) {
+            if (it.second < 0)
+                o << "-";
+        }
+        else {
+            if (it.second < 0)
+                o << " - ";
+            else
+                o << " + ";
+        }
+        first = false;
+        if (it.first == 0) {
+            o << mp_abs(it.second);
+            continue;
+        }
+        if (mp_abs(it.second) == 1)
+            o << var_->get_name();
+        else
+            o << mp_abs(it.second) << "*" << var_->get_name();
+        if (it.first > 1)
+            o << "**" << it.first;
+    }
+    if (o.str() != "0")
+        o << " + O(" << var_->get_name() << "**" << prec_ << ")";
+    return o.str();
 }
 
 s_coef UnivariateSeries::find_cf(const s_coef &s, const s_coef &var, unsigned deg) {
@@ -137,11 +168,29 @@ s_coef UnivariateSeries::integrate(const s_coef &s, const s_coef &var) {
     throw std::runtime_error("Not Implemented");
 }
 
-s_coef UnivariateSeries::subs(const s_coef &s, const s_coef &var, const s_coef &r, unsigned prec) {
-    // throw std::runtime_error("Not Implemented");
-    map_basic_basic x{{r.get_basic(), var.get_basic()}};
-    s_coef sb = s.get_basic()->subs(x);
-    return sb;
+RCP<const UnivariateSeries> mul_uni_series (const UnivariateSeries& a, const UnivariateSeries& b)
+{
+    map_uint_mpz dict;
+    SYMENGINE_ASSERT(a.var_->get_name() == b.var_->get_name())
+    const unsigned int minprec = (a.prec_ < b.prec_)? a.prec_ : b.prec_;
+    unsigned int max = 0;
+    for (const auto &ait : a.poly_->dict_) {
+        const unsigned int aexp = ait.first;
+        if (aexp < minprec) {
+            for (const auto &bit : b.poly_->dict_) {
+                const unsigned int expsum = aexp + bit.first;
+                if (expsum < minprec)
+                    mp_addmul(dict[expsum], ait.second, bit.second);
+                else
+                    break;
+                if (expsum > max)
+                     max = expsum;
+            }
+        }
+        else
+            break;
+    }
+    return make_rcp<const UnivariateSeries>(a.var_, minprec, max, std::move(dict));
 }
  */
 /*bool UnivariateSeries::is_canonical(const UnivariatePolynomial& poly, const unsigned int &prec) const
