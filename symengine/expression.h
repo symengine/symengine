@@ -123,12 +123,12 @@ public:
 
     bool operator>=(const Expression &other) const
     {
-        return m_basic->compare(*other.m_basic) == 1 || m_basic->compare(*other.m_basic) == 0;
+        return m_basic->__cmp__(*other.m_basic) == 1 || m_basic->__cmp__(*other.m_basic) == 0;
     }
     
     bool operator<(const Expression &other) const
     {
-        return m_basic->compare(*other.m_basic) == -1;
+        return m_basic->__cmp__(*other.m_basic) == -1;
     }
      
     //! Overload check not equal (!=)

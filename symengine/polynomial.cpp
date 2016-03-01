@@ -343,7 +343,7 @@ vec_basic UnivariatePolynomial::get_args() const {
 Expression UnivariatePolynomial::max_coef() const {
     Expression curr = dict_.begin()->second;
     for (const auto &it : dict_)
-        if (curr.get_basic()->compare(*it.second.get_basic()))
+        if (curr.get_basic()->__cmp__(*it.second.get_basic()))
             curr = it.second;
     return curr;
 }
