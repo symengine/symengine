@@ -19,11 +19,11 @@ public:
     IMPLEMENT_TYPEID(UNIVARIATESERIES)
     UnivariateSeries(const UnivariateExprPolynomial sp, const std::string varname, const unsigned degree) : SeriesBase(std::move(sp), varname, degree) {}
     UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const UnivariateExprPolynomial poly);
-    UnivariateSeries(const RCP<const Symbol> &var, const unsigned int& precision, const unsigned int& max_exp, map_uint_Expr &&dict);
+    UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const unsigned int &max_exp, map_uint_Expr &&dict);
     UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const map_uint_mpz &dict);
-    //! Constructor using a dense vector of mpz_class coefficients
-    UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const std::vector<mpz_class> &v);
-    static RCP<const UnivariateSeries> create(const RCP<const Symbol> &var, const unsigned int &prec, const std::vector<mpz_class> &v) {
+    //! Constructor using a dense vector of integer_class coefficients
+    UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const std::vector<integer_class> &v);
+    static RCP<const UnivariateSeries> create(const RCP<const Symbol> &var, const unsigned int &prec, const std::vector<integer_class> &v) {
         return make_rcp<const UnivariateSeries>(var, prec, v);
     }
       
@@ -34,11 +34,12 @@ public:
     virtual RCP<const Basic> as_basic() const;
     virtual umap_int_basic as_dict() const;
     virtual RCP<const Basic> get_coeff(int) const;
+    std::string __str__() const;
     static UnivariateExprPolynomial var(const std::string &s);
       
     static Expression convert(const Number &x);
     RCP<const UnivariatePolynomial> convert_poly(const map_uint_mpz &d);
-    RCP<const UnivariatePolynomial> convert_vector(const std::vector<mpz_class> &v);
+    RCP<const UnivariatePolynomial> convert_vector(const std::vector<integer_class> &v);
 
     static unsigned ldegree(const UnivariateExprPolynomial &s);
     static UnivariateExprPolynomial mul(const UnivariateExprPolynomial &s, const UnivariateExprPolynomial &r, unsigned prec);
@@ -63,7 +64,6 @@ public:
     static Expression atanh(const Expression &c); 
     static Expression exp(const Expression &c); 
     static Expression log(const Expression &c);
-    
 };
 
 inline RCP<const UnivariateSeries> univariate_series(RCP<const Symbol> i, unsigned int prec, const map_uint_mpz& dict)

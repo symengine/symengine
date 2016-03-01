@@ -40,6 +40,7 @@ set(SRC
     numer_denom.cpp
     derivative.cpp
     parser.cpp
+    mp_wrapper.cpp
 )
 
 if (WITH_MPFR)
@@ -66,7 +67,7 @@ endif()
 set(HEADERS
     add.h        symengine_assert.h  functions.h  monomials.h  polynomial.h  number.h    rings.h
     basic.h      symengine_rcp.h     integer.h    mul.h        pow.h       constants.h
-    symbol.h     expression.h        parser.h
+    symbol.h     expression.h        parser.h     mp_class.h   mp_wrapper.h
     basic-inl.h  dict.h           matrix.h     ntheory.h    rational.h complex.h
     visitor.h    eval_double.h    diophantine.h cwrapper.h  printer.h  real_double.h
     eval_mpfr.h  eval_arb.h       eval_mpc.h     complex_double.h         series_visitor.h

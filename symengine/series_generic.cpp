@@ -15,7 +15,7 @@ UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned 
 UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const map_uint_mpz& dict) :
         SeriesBase(UnivariateExprPolynomial(convert_poly(std::move(dict))), var->get_name(), precision) {}
 
-UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const std::vector<mpz_class> &v) :
+UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const std::vector<integer_class> &v) :
         SeriesBase(UnivariateExprPolynomial(convert_vector(v)), var->get_name(), precision) {}
 
 RCP<const UnivariateSeries> UnivariateSeries::series(const RCP<const Basic> &t, const std::string &x, unsigned int prec) {
@@ -77,7 +77,37 @@ RCP<const UnivariatePolynomial> UnivariateSeries::convert_poly(const map_uint_mp
     return univariate_polynomial(symbol(var_), max, std::move(dict_trunc));
 }
 
-RCP<const UnivariatePolynomial> UnivariateSeries::convert_vector(const std::vector<mpz_class> &v) {
+std::string UnivariateSeries::__str__() const
+{
+    std::ostringstream o;
+    bool first = true;
+    for (const auto& it : p_.get_univariate_poly()->get_dict()) {
+        if (it.second == 0)
+            continue;
+        if (it.second < 0)
+            o << "-";
+        else if (it.second < 0)
+            o << " - ";
+        else
+            o << " + ";
+        first = false;
+        if (it.first == 0) {
+            o << Expression(abs(it.second.get_basic()));
+            continue;
+        }
+        if (Expression(abs(it.second.get_basic())) == 1)
+            o << var_;
+        else
+            o << Expression(abs(it.second.get_basic())) << "*" << var_;
+        if (it.first > 1)
+            o << "**" << it.first;
+    }
+    if (o.str() != "0")
+        o << " + O(" << var_ << "**" << prec_ << ")";
+    return o.str();
+}
+
+RCP<const UnivariatePolynomial> UnivariateSeries::convert_vector(const std::vector<integer_class> &v) {
     std::vector<Expression> vtrunc;
     for (const auto &it : v)
         if (it.get_si() < prec_) 

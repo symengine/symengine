@@ -43,6 +43,8 @@ using SymEngine::E;
 using SymEngine::EulerGamma;
 using SymEngine::eval_arb;
 using SymEngine::print_stack_on_segfault;
+using SymEngine::min;
+using SymEngine::max;
 
 TEST_CASE("Integer: eval_arb", "[eval_arb]")
 {
@@ -689,6 +691,36 @@ TEST_CASE("Constants: eval_arb", "[eval_arb]")
     mpfr_t f;
     mpfr_init2(f, 57);
     eval_mpfr(f, *r1, MPFR_RNDN);
+
+    REQUIRE(arb_contains_mpfr(a, f));
+
+    mpfr_clear(f);
+    arb_clear(a);
+}
+
+TEST_CASE("Min/Max: eval_arb", "[eval_arb]")
+{
+    arb_t a;
+    arb_init(a);
+
+    RCP<const Basic> res;
+    RCP<const Basic> r1 = div(integer(3), integer(5));
+    RCP<const Basic> r2 = sub(r1, div(integer(57721566), integer(100000000)));
+
+    res = max({r1, r2});
+    eval_arb(a, *res, 45);
+
+    mpfr_t f;
+    mpfr_init2(f, 57);
+    eval_mpfr(f, *res, MPFR_RNDN);
+
+    REQUIRE(arb_contains_mpfr(a, f));
+
+    res = min({r1, r2});
+    eval_arb(a, *res, 45);
+
+    mpfr_init2(f, 57);
+    eval_mpfr(f, *res, MPFR_RNDN);
 
     REQUIRE(arb_contains_mpfr(a, f));
 

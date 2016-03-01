@@ -302,7 +302,7 @@ void Mul::as_base_exp(const RCP<const Basic> &self, const Ptr<RCP<const Basic>> 
         // in case of Integers den = 1
         if (is_a<Rational>(*self)) {
             RCP<const Rational> self_new = rcp_static_cast<const Rational>(self);
-            if (abs(self_new->i.get_num()) < abs(self_new->i.get_den())) {
+            if (mp_abs(get_num(self_new->i)) < mp_abs(get_den(self_new->i))) {
                 *exp = minus_one;
                 *base = self_new->rdiv(*rcp_static_cast<const Number>(one));
             } else {
@@ -456,9 +456,15 @@ RCP<const Basic> Mul::subs(const map_basic_basic &subs_dict) const
     RCP<const Number> coef = coef_;
     map_basic_basic d;
     for (const auto &p: dict_) {
-        RCP<const Basic> factor_old = Mul::from_dict(one, {{p.first, p.second}});
+        RCP<const Basic> factor_old;
+        if (eq(*p.second, *one)) {
+            factor_old = p.first;
+        } else {
+            factor_old = make_rcp<Pow>(p.first, p.second);
+        }
         RCP<const Basic> factor = factor_old->subs(subs_dict);
         if (factor == factor_old) {
+            // TODO: Check if Mul::dict_add_term is enough
             Mul::dict_add_term_new(outArg(coef), d, p.second, p.first);
         } else if (is_a_Number(*factor)) {
             if (rcp_static_cast<const Number>(factor)->is_zero()) {

@@ -25,6 +25,9 @@ using SymEngine::one;
 using SymEngine::zero;
 using SymEngine::integer;
 using SymEngine::vec_basic_eq_perm;
+using SymEngine::integer_class;
+
+using namespace SymEngine::literals;
 
 TEST_CASE("Constructor of UnivariateIntPolynomial", "[UnivariateIntPolynomial]")
 {
@@ -176,7 +179,7 @@ TEST_CASE("Constructor of UnivariatePolynomial", "[UnivariatePolynomial]")
     RCP<const UnivariatePolynomial> Q = UnivariatePolynomial::create(x, {1, 0, 2, 1});
     REQUIRE(Q->__str__() == "x**3 + 2*x**2 + 1");
 
-    RCP<const UnivariatePolynomial> R = univariate_polynomial(x, 2, {{0, c}, {1, b}, {2, a}, {3, c}});
+    RCP<const UnivariatePolynomial> R = univariate_polynomial(x, 3, {{0, c}, {1, b}, {2, a}, {3, c}});
     REQUIRE(R->__str__() == "x**3 + a*x**2 + 2*x + 1");
     // RCP<const UnivariatePolynomial> R = univariate_polynomial(x, 2, {{0, a}, {1, b}, {2, 1}});
     // REQUIRE(R->__str__() == "x**2 + 2*x + a");
@@ -249,7 +252,6 @@ TEST_CASE("Evaluation of UnivariatePolynomial", "[UnivariatePolynomial]")
     RCP<const UnivariatePolynomial> a = univariate_polynomial(x, 2, {{0, 1}, {1, 2}, {2, 1}});
 
     REQUIRE(a->eval(2) == 9);
-    //REQUIRE(a->eval_bit(3) == 81);
 }
 
 TEST_CASE("Derivative of UnivariatePolynomial", "[UnivariatePolynomial]")

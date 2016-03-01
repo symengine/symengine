@@ -11,7 +11,7 @@ UnivariateIntPolynomial::UnivariateIntPolynomial(const RCP<const Symbol> &var, c
     SYMENGINE_ASSERT(is_canonical(degree_, dict_))
 }
 
-UnivariateIntPolynomial::UnivariateIntPolynomial(const RCP<const Symbol> &var, const std::vector<mpz_class> &v) : var_{var} {
+UnivariateIntPolynomial::UnivariateIntPolynomial(const RCP<const Symbol> &var, const std::vector<integer_class> &v) : var_{var} {
     for (unsigned int i = 0; i < v.size(); i++)
         if (v[i] != 0)
             dict_add_term(dict_, v[i], i);
@@ -33,7 +33,7 @@ std::size_t UnivariateIntPolynomial::__hash__() const {
     {
         std::size_t temp = UNIVARIATEINTPOLYNOMIAL;
         hash_combine<unsigned int>(temp, it.first);
-        hash_combine<long long int>(temp, it.second.get_si());
+        hash_combine<long long int>(temp, mp_get_si(it.second));
         seed += temp;
     }
     return seed;
@@ -79,7 +79,7 @@ RCP<const Basic> UnivariateIntPolynomial::from_dict(const RCP<const Symbol> &var
         return make_rcp<const UnivariateIntPolynomial>(var, (--(d.end()))->first, std::move(d));
 }
 
-void UnivariateIntPolynomial::dict_add_term(map_uint_mpz &d, const mpz_class &coef, const unsigned int &n) {
+void UnivariateIntPolynomial::dict_add_term(map_uint_mpz &d, const integer_class &coef, const unsigned int &n) {
     auto it = d.find(n);
     if (it == d.end())
        d[n] = coef;
@@ -92,32 +92,32 @@ vec_basic UnivariateIntPolynomial::get_args() const {
     return args;
 }
 
-mpz_class UnivariateIntPolynomial::max_coef() const {
-    mpz_class curr = dict_.begin()->second;
+integer_class UnivariateIntPolynomial::max_coef() const {
+    integer_class curr = dict_.begin()->second;
     for (const auto &it : dict_)
         if (it.second > curr)
             curr = it.second;
     return curr;
 }
 
-mpz_class UnivariateIntPolynomial::eval(const mpz_class &x) const {
+integer_class UnivariateIntPolynomial::eval(const integer_class &x) const {
     //TODO: Use Horner's Scheme
-    mpz_class ans = 0;
+    integer_class ans = 0;
     for (const auto &p : dict_) 
     {
-        mpz_class temp;
+        integer_class temp;
         mpz_pow_ui(temp.get_mpz_t(), x.get_mpz_t(), p.first);
         ans += p.second * temp;
     }
     return ans;
 }
 
-mpz_class UnivariateIntPolynomial::eval_bit(const int &x) const {
+integer_class UnivariateIntPolynomial::eval_bit(const int &x) const {
     //TODO: Use Horner's Scheme
-    mpz_class ans = 0;
+    integer_class ans = 0;
     for (const auto &p : dict_) 
     {
-        mpz_class temp = 1;
+        integer_class temp = 1;
         temp <<= x * p.first;
         ans += p.second * temp;
     }
@@ -205,22 +205,25 @@ RCP<const UnivariateIntPolynomial> mul_poly(RCP<const UnivariateIntPolynomial> a
         sign = -1 * sign;
     }
 
-    mpz_class p = std::max(a->max_coef(), b->max_coef());
+    integer_class p = std::max(a->max_coef(), b->max_coef());
+
     unsigned int N = bit_length(std::min(da + 1, db + 1)) + bit_length(p) + 1;
 
-    mpz_class a1 = 1 << N;
-    mpz_class a2 = a1 / 2;
-    mpz_class mask = a1 - 1;
-    mpz_class sa = a->eval_bit(N);
-    mpz_class sb = b->eval_bit(N);
-    mpz_class r = sa*sb;
+    integer_class a1(1);
+    a1 <<= N;
+    integer_class a2 = a1 / 2;
+    integer_class mask = a1 - 1;
+    integer_class sa = a->eval_bit(N);
+    integer_class sb = b->eval_bit(N);
+    integer_class r = sa*sb;
 
-    std::vector<mpz_class> v;
-    mpz_class carry = 0;
+    std::vector<integer_class> v;
+    integer_class carry(0);
 
     while (r != 0 or carry != 0) {
-        mpz_class b;
-        mpz_and(b.get_mpz_t(), r.get_mpz_t(), mask.get_mpz_t());
+        integer_class b;
+        //TODO:fix this
+        mp_and(b, r, mask);
         if (b < a2) {
             v.push_back(b + carry);
             carry = 0;

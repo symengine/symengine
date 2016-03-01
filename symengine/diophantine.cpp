@@ -12,10 +12,10 @@ bool order(const DenseMatrix &t, const std::vector<DenseMatrix> &basis, unsigned
 
     for (unsigned j = 0; j < t.ncols(); j++) {
         SYMENGINE_ASSERT(is_a<Integer>(*t.get(0, j)));
-        mpz_class t_ = rcp_static_cast<const Integer>(t.get(0, j))->as_mpz();
+        integer_class t_ = rcp_static_cast<const Integer>(t.get(0, j))->as_mpz();
 
         SYMENGINE_ASSERT(is_a<Integer>(*basis[k].get(0, j)));
-        mpz_class b_ = rcp_static_cast<const Integer>(basis[k].get(0, j))->as_mpz();
+        integer_class b_ = rcp_static_cast<const Integer>(basis[k].get(0, j))->as_mpz();
 
         if (t_ < b_) {
             return false;

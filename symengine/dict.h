@@ -7,9 +7,8 @@
 
 #ifndef SYMENGINE_DICT_H
 #define SYMENGINE_DICT_H
-
-#define __GMPXX_USE_CXX11 1
-#include <gmpxx.h>
+#include <symengine/symengine_config.h>
+#include <symengine/mp_class.h>
 
 namespace SymEngine {
 
@@ -35,14 +34,14 @@ typedef std::vector<RCP<const Integer>> vec_integer;
 typedef std::set<RCP<const Basic>, RCPBasicKeyLess> set_basic;
 typedef std::multiset<RCP<const Basic>, RCPBasicKeyLess> multiset_basic;
 typedef std::map<vec_int, long long int> map_vec_int;
-typedef std::map<vec_int, mpz_class> map_vec_mpz;
+typedef std::map<vec_int, integer_class> map_vec_mpz;
 typedef std::map<RCP<const Basic>, RCP<const Number>,
         RCPBasicKeyLess> map_basic_num;
 typedef std::map<RCP<const Basic>, RCP<const Basic>,
         RCPBasicKeyLess> map_basic_basic;
 typedef std::map<RCP<const Integer>, unsigned,
         RCPIntegerKeyLess> map_integer_uint;
-typedef std::map<unsigned, mpz_class>
+typedef std::map<unsigned, integer_class>
        map_uint_mpz;
 typedef std::map<unsigned, Expression> map_uint_Expr;
 
@@ -137,7 +136,7 @@ typedef struct
     }
 } vec_int_hash;
 
-typedef std::unordered_map<vec_int, mpz_class,
+typedef std::unordered_map<vec_int, integer_class,
         vec_int_hash> umap_vec_mpz;
 
 } // SymEngine

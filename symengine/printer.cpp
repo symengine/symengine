@@ -41,24 +41,24 @@ void StrPrinter::bvisit(const Complex &x) {
     if (x.real_ != 0) {
         s << x.real_;
         // Since Complex is in canonical form, imaginary_ is not 0.
-        if (sgn(x.imaginary_) == 1) {
+        if (mp_sign(x.imaginary_) == 1) {
             s << " + ";
         } else {
             s << " - ";
         }
         // If imaginary_ is not 1 or -1, print the absolute value
-        if (x.imaginary_ != sgn(x.imaginary_)) {
-            s << abs(x.imaginary_);
+        if (x.imaginary_ != mp_sign(x.imaginary_)) {
+            s << mp_abs(x.imaginary_);
             s << "*I";
         } else {
             s << "I";
         }
     } else {
-        if (x.imaginary_ != sgn(x.imaginary_)) {
+        if (x.imaginary_ != mp_sign(x.imaginary_)) {
             s << x.imaginary_;
             s << "*I";
         } else {
-            if (sgn(x.imaginary_) == 1) {
+            if (mp_sign(x.imaginary_) == 1) {
                 s << "I";
             } else {
                 s << "-I";
@@ -257,7 +257,7 @@ void StrPrinter::bvisit(const UnivariateIntPolynomial &x) {
             ++it;
         }
         //if the coefficient of a term is +1 or -1
-        else if (abs(it->second) == 1) {
+        else if (mp_abs(it->second) == 1) {
             //if exponent is 0, then print only coefficient
             //in cases of -7, it is the only term, hence we print -7
             //in cases of x - 7, the '-' is considered earlier, hence print only 7
@@ -265,7 +265,7 @@ void StrPrinter::bvisit(const UnivariateIntPolynomial &x) {
                 if (first)
                     s << it->second;
                 else
-                    s << abs(it->second);
+                    s << mp_abs(it->second);
             }
             //if exponent is 1, print x instead of x**1
             else if (it->first == 1) {
@@ -299,15 +299,15 @@ void StrPrinter::bvisit(const UnivariateIntPolynomial &x) {
                 if (first)
                     s << it->second;
                 else
-                    s << abs(it->second);
+                    s << mp_abs(it->second);
             } else if (it->first == 1) {
                 if (first and it->second < 0) {
                     s << it->second << "*" << x.var_->get_name();
                 } else {
-                    s << abs(it->second) << "*" << x.var_->get_name();
+                    s << mp_abs(it->second) << "*" << x.var_->get_name();
                 }
             } else {
-                s << abs(it->second) << "*" << x.var_->get_name() << "**"  << it->first;
+                s << mp_abs(it->second) << "*" << x.var_->get_name() << "**" << it->first;
             }
             if ((++it != x.dict_.rend()) and (it->second != 0)) {
                 if (it->second < 0) {
@@ -559,6 +559,8 @@ std::vector<std::string> init_str_printer_names() {
     names[POLYGAMMA] = "polygamma";
     names[GAMMA] = "gamma";
     names[ABS] = "abs";
+    names[MAX] = "max";
+    names[MIN] = "min";
     return names;
 }
 
