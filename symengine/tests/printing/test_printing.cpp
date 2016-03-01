@@ -42,6 +42,9 @@ using SymEngine::complex_double;
 using SymEngine::BaseVisitor;
 using SymEngine::StrPrinter;
 using SymEngine::Sin;
+using SymEngine::integer_class;
+
+using namespace SymEngine::literals;
 
 namespace SymEngine {
 class MyStrPrinter : public BaseVisitor<MyStrPrinter, StrPrinter> {
@@ -242,43 +245,43 @@ TEST_CASE("test_univariate_polynomial(): printing", "[printing]")
     RCP<const Basic> p;
     RCP<const Symbol> x = symbol("x");
 
-    p = univariate_polynomial(x, 0, {{0, 0}});
+    p = univariate_polynomial(x, 0, {{0, 0_z}});
     REQUIRE(p->__str__() == "0");
     //std::cout<<p->__str__()<<std::endl;
-    p = univariate_polynomial(x, 0, {{0, 1}});
+    p = univariate_polynomial(x, 0, {{0, 1_z}});
     REQUIRE(p->__str__() == "1");
     //std::cout<<p->__str__()<<std::endl;
-    p = univariate_polynomial(x, 1, {{1, 1}});
+    p = univariate_polynomial(x, 1, {{1, 1_z}});
     REQUIRE(p->__str__() == "x");
     //std::cout<<p->__str__()<<std::endl;
-    p = univariate_polynomial(x, 1, {{0, 1}, {1, 2}});
+    p = univariate_polynomial(x, 1, {{0, 1_z}, {1, 2_z}});
     REQUIRE(p->__str__() == "2*x + 1");
     //std::cout<<p->__str__()<<std::endl;
-    p = univariate_polynomial(x, 1, {{0, -1}, {1, 2}});
+    p = univariate_polynomial(x, 1, {{0, -1_z}, {1, 2_z}});
     REQUIRE(p->__str__() == "2*x - 1");
     //std::cout<<p->__str__()<<std::endl;
-    p = univariate_polynomial(x, 0, {{0, -1}});
+    p = univariate_polynomial(x, 0, {{0, -1_z}});
     REQUIRE(p->__str__() == "-1");
     //std::cout<<p->__str__()<<std::endl;
-    p = univariate_polynomial(x, 1, {{1, -1}});
+    p = univariate_polynomial(x, 1, {{1, -1_z}});
     REQUIRE(p->__str__() == "-x");
     //std::cout<<p->__str__()<<std::endl;
-    p = univariate_polynomial(x, 1, {{0, -1}, {1, 1}});
+    p = univariate_polynomial(x, 1, {{0, -1_z}, {1, 1_z}});
     REQUIRE(p->__str__() == "x - 1");
     //std::cout<<p->__str__()<<std::endl;
-    p = univariate_polynomial(x, 2, {{0, 1}, {1, 1}, {2, 1}});
+    p = univariate_polynomial(x, 2, {{0, 1_z}, {1, 1_z}, {2, 1_z}});
     REQUIRE(p->__str__() == "x**2 + x + 1");
     //std::cout<<p->__str__()<<std::endl;
-    p = univariate_polynomial(x, 2, {{0, 1}, {1, -1}, {2, 1}});
+    p = univariate_polynomial(x, 2, {{0, 1_z}, {1, -1_z}, {2, 1_z}});
     REQUIRE(p->__str__() == "x**2 - x + 1");
     //std::cout<<p->__str__()<<std::endl;
-    p = univariate_polynomial(x, 2, {{0, 1}, {1, 2}, {2, 1}});
+    p = univariate_polynomial(x, 2, {{0, 1_z}, {1, 2_z}, {2, 1_z}});
     REQUIRE(p->__str__() == "x**2 + 2*x + 1");
     //std::cout<<p->__str__()<<std::endl;
-    p = univariate_polynomial(x, 2, {{1, 2}, {2, 1}});
+    p = univariate_polynomial(x, 2, {{1, 2_z}, {2, 1_z}});
     REQUIRE(p->__str__() == "x**2 + 2*x");
     //std::cout<<p->__str__()<<std::endl;
-    p = univariate_polynomial(x, 2, {{0, -1}, {1, -2}, {2, -1}});
+    p = univariate_polynomial(x, 2, {{0, -1_z}, {1, -2_z}, {2, -1_z}});
     //std::cout<<p->__str__()<<std::endl;
     REQUIRE(p->__str__() == "-x**2 - 2*x - 1");
 }

@@ -37,10 +37,10 @@ UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned 
     poly_ = univariate_polynomial(var_, max, std::move(dict_trunc));
 }
 
-UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const std::vector<mpz_class> &v) :
+UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const std::vector<integer_class> &v) :
         var_{var}, prec_{precision} {
 
-    std::vector<mpz_class> vtrunc;
+    std::vector<integer_class> vtrunc;
     std::copy_if(v.begin(), v.end(), std::back_inserter(vtrunc),
         [&](decltype(v[0]) i) { return i < prec_; } );
     poly_ = UnivariatePolynomial::create(var_, vtrunc);
@@ -91,13 +91,13 @@ std::string UnivariateSeries::__str__() const
         }
         first = false;
         if (it.first == 0) {
-            o << abs(it.second);
+            o << mp_abs(it.second);
             continue;
         }
-        if (abs(it.second) == 1)
+        if (mp_abs(it.second) == 1)
             o << var_->get_name();
         else
-            o << abs(it.second) << "*" << var_->get_name();
+            o << mp_abs(it.second) << "*" << var_->get_name();
         if (it.first > 1)
             o << "**" << it.first;
     }
@@ -150,7 +150,7 @@ RCP<const UnivariateSeries> mul_uni_series (const UnivariateSeries& a, const Uni
             for (const auto &bit : b.poly_->dict_) {
                 const unsigned int expsum = aexp + bit.first;
                 if (expsum < minprec)
-                    mpz_addmul(dict[expsum].get_mpz_t(), ait.second.get_mpz_t(), bit.second.get_mpz_t());
+                    mp_addmul(dict[expsum], ait.second, bit.second);
                 else
                     break;
                 if (expsum > max)

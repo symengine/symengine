@@ -37,12 +37,12 @@ public:
     }
 
     void bvisit(const Integer &x) {
-        T tmp = x.i.get_d();
+        T tmp = mp_get_d(x.i);
         result_ = tmp;
     }
 
     void bvisit(const Rational &x) {
-        T tmp = x.i.get_d();
+        T tmp = mp_get_d(x.i);
         result_ = tmp;
     }
 
@@ -296,7 +296,7 @@ public:
     using EvalDoubleVisitor::bvisit;
 
     void bvisit(const Complex &x) {
-        result_ = std::complex<double>(x.real_.get_d(), x.imaginary_.get_d());
+        result_ = std::complex<double>(mp_get_d(x.real_), mp_get_d(x.imaginary_));
     };
 
     void bvisit(const ComplexDouble &x) {
@@ -329,11 +329,11 @@ std::vector<fn> init_eval_double()
         throw std::runtime_error("Not implemented.");
     });
     table[INTEGER] = [](const Basic &x) {
-        double tmp = (static_cast<const Integer &>(x)).i.get_d();
+        double tmp = mp_get_d((static_cast<const Integer &>(x)).i);
         return tmp;
     };
     table[RATIONAL] = [](const Basic &x) {
-        double tmp = (static_cast<const Rational &>(x)).i.get_d();
+        double tmp = mp_get_d((static_cast<const Rational &>(x)).i);
         return tmp;
     };
     table[REAL_DOUBLE] = [](const Basic &x) {

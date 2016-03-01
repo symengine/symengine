@@ -61,11 +61,11 @@ The `RCP` pointer is released automatically. You never call the naked `delete`.
 Use C++ references for objects that you are **not** passing around. If the object
 is *not* modified, use `const A &a`:
 
-    void gcd(const Integer &a, const Integer &b)
+    RCP<const Integer> gcd(const Integer &a, const Integer &b)
     {
-        mpz_class g;
-        mpz_gcd(g.get_mpz_t(), a.as_mpz().get_mpz_t(), b.as_mpz().get_mpz_t());
-        ...
+        integer_class g;
+        mp_gcd(g, a.as_mpz(), b.as_mpz());
+        return integer(std::move(g));
     }
 
 If it *is* modified, use `A &a` (see the first argument):

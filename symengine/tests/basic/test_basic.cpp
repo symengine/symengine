@@ -39,6 +39,7 @@ using SymEngine::rcp_static_cast;
 using SymEngine::set_basic;
 using SymEngine::free_symbols;
 using SymEngine::function_symbol;
+using SymEngine::rational_class;
 
 TEST_CASE("Symbol hash: Basic", "[basic]")
 {
@@ -170,7 +171,7 @@ TEST_CASE("Rational: Basic", "[basic]")
 {
     RCP<const Number> r1, r2, r3;
     RCP<const Rational> r;
-    mpq_class a, b;
+    rational_class a, b;
 
     r1 = Rational::from_two_ints(*integer(5), *integer(6));
     std::cout << *r1 << std::endl;
@@ -271,7 +272,7 @@ TEST_CASE("Rational: Basic", "[basic]")
     r1 = Rational::from_two_ints(*integer(3), *integer(5));
     REQUIRE(is_a<Rational>(*r1));
     r = rcp_static_cast<const Rational>(r1);
-    a = mpq_class(3, 5);
+    a = rational_class(3, 5);
     b =  r->as_mpq();
     REQUIRE(a == b);
 }

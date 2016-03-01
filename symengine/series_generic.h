@@ -27,11 +27,11 @@ public:
     UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const RCP<const UnivariatePolynomial> &poly);
     UnivariateSeries(const RCP<const Symbol> &var, const unsigned int& precision, const unsigned int& max_exp, map_uint_mpz&& dict);
     UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const map_uint_mpz &dict);
-    //! Constructor using a dense vector of mpz_class coefficients
-    UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const std::vector<mpz_class> &v);
+    //! Constructor using a dense vector of integer_class coefficients
+    UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const std::vector<integer_class> &v);
 
     static RCP<const UnivariateSeries> create(const RCP<const Symbol> &var,
-            const unsigned int &prec, const std::vector<mpz_class> &v) {
+            const unsigned int &prec, const std::vector<integer_class> &v) {
         return make_rcp<const UnivariateSeries>(var, prec, v);
     }
 
