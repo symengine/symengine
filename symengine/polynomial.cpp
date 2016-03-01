@@ -515,7 +515,7 @@ unsigned int reconcile(vec_uint &v1, vec_uint &v2, set_sym &s, const set_sym &s1
     }
     return poscount; //return size of the new vectors
 }
-  /*
+
 unsigned int reconcile(vec_uint &v1, unsigned int &v2, set_sym &s, const set_sym &s1, const RCP<const Symbol> s2){
     auto a1 = s1.begin();
     unsigned int poscount = 0;
@@ -543,7 +543,7 @@ unsigned int reconcile(vec_uint &v1, unsigned int &v2, set_sym &s, const set_sym
         a1++;
         poscount++;
     }
-}*/
+}
 
 vec_uint translate(vec_uint original, vec_uint translator, unsigned int size){
     vec_uint changed;
@@ -554,6 +554,14 @@ vec_uint translate(vec_uint original, vec_uint translator, unsigned int size){
         changed[translator[i]] = original[i];
     }
     return changed;
+}
+
+vec_uint translate(unsigned int original, unsigned int translator, unsigned int size){
+    vec_uint changed;
+    for(unsigned int i = 0; i< size; i++){
+        changed.insert(changed.end(),0);
+    }
+    changed[translator] = original;
 }
 
 RCP<const MultivariatePolynomial> add_mult_poly(const MultivariatePolynomial &a, const MultivariatePolynomial &b){
@@ -643,7 +651,7 @@ RCP<const MultivariatePolynomial> mul_mult_poly(const MultivariatePolynomial &a,
     }
     return make_rcp<const MultivariatePolynomial>(s, degs, dict);    
 }
-  /*
+
 RCP<const MultivariatePolynomial> add_mult_poly(const MultivariatePolynomial &a, const UnivariatePolynomial &b){
     vec_uint v1;
     vec_uint v2;
@@ -660,5 +668,5 @@ RCP<const MultivariatePolynomial> add_mult_poly(const MultivariatePolynomial &a,
       auto target = dict.find(translate)
     }
 }
-  */
+
 } // SymEngine
