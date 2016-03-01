@@ -521,16 +521,16 @@ unsigned int reconcile(vec_uint &v1, unsigned int &v2, set_sym &s, const set_sym
     unsigned int poscount = 0;
     bool inserted = false;
     while(a1 != s1.end() && !inserted){
-        if(0 == (*a1)->compare(s2) ){
+        if(0 == (*a1)->compare(*s2) ){
             v1.insert(v1.end(), poscount);
 	    v2 = poscount;
 	    s.insert(*a1);
 	    a1++;
-        } else if(-1 == (*a1)->compare(s2)){
+        } else if(-1 == (*a1)->compare(*s2)){
 	    v1.insert(v1.end(),poscount);
             s.insert(*a1);
 	    a1++;
-        } else if(1 == (*a1)->compare(s2)){
+        } else if(1 == (*a1)->compare(*s2)){
 	    v2 = poscount;
 	    s.insert(s2);
 	    inserted = true;
@@ -543,6 +543,7 @@ unsigned int reconcile(vec_uint &v1, unsigned int &v2, set_sym &s, const set_sym
         a1++;
         poscount++;
     }
+    return poscount;
 }
 
 vec_uint translate(vec_uint original, vec_uint translator, unsigned int size){
@@ -562,6 +563,7 @@ vec_uint translate(unsigned int original, unsigned int translator, unsigned int 
         changed.insert(changed.end(),0);
     }
     changed[translator] = original;
+    return changed;
 }
 
 RCP<const MultivariatePolynomial> add_mult_poly(const MultivariatePolynomial &a, const MultivariatePolynomial &b){
@@ -654,19 +656,43 @@ RCP<const MultivariatePolynomial> mul_mult_poly(const MultivariatePolynomial &a,
 
 RCP<const MultivariatePolynomial> add_mult_poly(const MultivariatePolynomial &a, const UnivariatePolynomial &b){
     vec_uint v1;
-    vec_uint v2;
+    unsigned int v2;
     set_sym s;
     umap_uvec_mpz dict;
     umap_sym_uint degs;
-    set_sym s2;
-    s2.insert(b.var_);
-    unsigned int size = reconcile(v1,v2,s,a.vars_,s2);
+    unsigned int size = reconcile(v1,v2,s,a.vars_,b.var_);
     for(auto bucket : a.dict_){
         dict.insert(std::pair<vec_uint, mpz_class>(translate(bucket.first,v1,size),bucket.second ));
     }
     for(auto bucket : b.dict_){
-      auto target = dict.find(translate)
+        auto target = dict.find(translate(bucket.first, v2, size));
+	if(target != dict.end()){
+  	    target->second += bucket.second;
+	} else{
+ 	    dict.insert(std::pair<vec_uint, mpz_class>(translate(bucket.first, v2, size), bucket.second));
+	}
     }
+    unsigned int maxdegree = 0;
+    for(auto bucket : s){
+        maxdegree = 0;
+        if(a.degrees_.find(bucket) != a.degrees_.end()){
+	    maxdegree = a.degrees_.find(bucket)->second;
+	}
+        if(b.var_->__eq__(*bucket)){
+	    if(maxdegree < b.degree_)
+ 	        maxdegree = b.degree_;
+	}
+	degs.insert(std::pair<RCP<const Symbol>, unsigned int>(bucket, maxdegree));
+    }
+    return make_rcp<MultivariatePolynomial>(s,degs,dict);
 }
 
+RCP<const MultivariatePolynomial> sub_mult_poly(const MultivariatePolynomial &a, const UnivariatePolynomial &b){
+    return add_mult_poly(a, *neg_uni_poly(b));
+}
+
+RCP<const MultivariatePolynomial> sub_mult_poly(const UnivariatePolynomial &a, const MultivariatePolynomial &b){
+    return add_mult_poly(*neg_mult_poly(b),a);
+}
+  
 } // SymEngine
