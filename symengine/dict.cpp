@@ -199,7 +199,7 @@ int umap_vec_mpz_compare(const umap_vec_mpz &a, const umap_vec_mpz &b){
     return 0;
 }
 
-unsigned int mpz_hash(const mpz_class z){
+unsigned int mpz_hash(const integer_class z){
     return z.get_ui();
 }
 

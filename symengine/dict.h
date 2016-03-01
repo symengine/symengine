@@ -144,7 +144,7 @@ typedef std::unordered_map<vec_int, integer_class,
         vec_int_hash> umap_vec_mpz;
 
 int umap_vec_mpz_compare(const umap_vec_mpz &a, const umap_vec_mpz &b);
-unsigned int mpz_hash(const mpz_class z);
+unsigned int mpz_hash(const integer_class z);
 
 typedef std::vector<unsigned int> vec_uint;
 
@@ -188,13 +188,13 @@ public:
         }
         if(sum1 != sum2)
             return sum1 < sum2;
-        return a > b;
+        return a < b;
     }
 };
 
 typedef std::set< RCP<const Symbol>, RCPSymbolCompare> set_sym;
 typedef std::unordered_map<RCP<const Symbol>, unsigned int, RCPSymbolHash, RCPSymbolEq> umap_sym_uint;
-typedef std::unordered_map<vec_uint, mpz_class, vec_uint_hash, vec_uint_eq> umap_uvec_mpz;
+typedef std::unordered_map<vec_uint, integer_class, vec_uint_hash, vec_uint_eq> umap_uvec_mpz;
 
 int umap_uvec_mpz_compare(const umap_uvec_mpz &a, const umap_uvec_mpz &b);
 
