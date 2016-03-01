@@ -430,6 +430,21 @@ mpz_class MultivariatePolynomial::eval(std::map<RCP<const Symbol>, mpz_class, RC
     return ans;
 }
 
+std::string MultivariatePolynomial::toString() const{
+    std::ostringstream s;
+    for(auto it = dict_.begin(); it != dict_.end(); it++)
+    {
+      s << " + " << it->second;
+      unsigned int i = 0;
+      for(auto bucket:vars_)
+	{
+	  s << bucket->get_name() << "**" << it->first[i];
+	  i++;
+	}
+    }
+    return s.str();
+}
+
 unsigned int reconcile(vec_uint &v1, vec_uint &v2, set_sym &s, const set_sym &s1, const set_sym &s2){
     auto a1 = s1.begin();
     auto a2 = s2.begin();

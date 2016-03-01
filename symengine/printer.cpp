@@ -403,18 +403,7 @@ void StrPrinter::bvisit(const NumberWrapper &x) {
 }
 
 void StrPrinter::bvisit(const MultivariatePolynomial &x) {  
-    std::ostringstream s;
-    for(auto it = x.dict_.begin(); it != x.dict_.end(); it++)
-    {
-        s << " + " << it->second;
-        unsigned int i = 0;
-        for(auto bucket:x.vars_)
-        {
-            s << bucket->get_name() << "**" << it->first[i];
-            i++;
-        }
-    }
-    str_ = s.str();
+    str_ = x.toString();
 }
 
 std::string StrPrinter::parenthesizeLT(const RCP<const Basic> &x, PrecedenceEnum precedenceEnum) {
