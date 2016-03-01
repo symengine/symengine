@@ -163,7 +163,7 @@ public:
 
 class vec_uint_eq{
 public:
-    std::size_t operator()(const vec_uint &a, const vec_uint &b) const{
+    bool operator()(const vec_uint &a, const vec_uint &b) const{
         if(a.size() != b.size())
             return false;
         for(unsigned int i = 0; i < a.size(); i++){
@@ -171,6 +171,25 @@ public:
 	        return false;
         }
     return true;
+    }
+};
+
+class vec_uint_compare{
+public:
+    bool operator()(const vec_uint &a, const vec_uint &b) const{
+        if(a.size() != b.size())
+            return a.size() < b.size();
+        unsigned int sum1 = 0;
+        unsigned int sum2 = 0;
+        for(unsigned int x : a){
+            sum1 += x;
+        }
+        for(unsigned int x : b){
+            sum2 += x;
+        }
+        if(sum1 != sum2)
+            return sum1 < sum2;
+        return a > b;
     }
 };
 

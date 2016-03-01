@@ -432,16 +432,42 @@ mpz_class MultivariatePolynomial::eval(std::map<RCP<const Symbol>, mpz_class, RC
 
 std::string MultivariatePolynomial::toString() const{
     std::ostringstream s;
-    for(auto it = dict_.begin(); it != dict_.end(); it++)
-    {
-      s << " + " << it->second;
-      unsigned int i = 0;
-      for(auto bucket:vars_)
-	{
-	  s << bucket->get_name() << "**" << it->first[i];
-	  i++;
+    bool first = true; //is this the first term being printed out?
+    std::vector<vec_uint> v;
+    //To change the ordering in which the terms will print out, change
+    //vec_uint_compare in dict.h
+    for(auto bucket : dict_){
+        auto it = v.begin();
+	while(it != v.end() && vec_uint_compare()(bucket.first,*it)){
+	    it++;
+	}
+	v.insert(it, bucket.first);
+    }
+
+    for(vec_uint exps : v){
+        mpz_class c = dict_.find(exps)->second;
+	if(c != 0){
+	    if(c > 0 && !first)
+    	        s << "+ ";
+	    else if(c < 0)
+	        s << "- "; 
+            unsigned int i = 0;
+	    std::ostringstream expr;
+            for(auto it :vars_)
+            {
+   	        if(dict_.find(exps)->first[i] != 0)
+   	            expr << it->get_name() << "**" << dict_.find(exps)->first[i] << " ";
+	        i++;
+            }
+	    if(abs(c) != 1 || expr.str().empty())
+	        s << abs(c);
+	    s << expr.str();
+	    first = false;
 	}
     }
+    
+    if(s.str().empty())
+        s << "0";
     return s.str();
 }
 
