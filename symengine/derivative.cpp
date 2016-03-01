@@ -404,6 +404,12 @@ static RCP<const Basic> diff(const CLASS &self, \
         return mul(mul(self.rcp_from_this(), polygamma(zero, gamma_arg)), gamma_arg->diff(x));
     }
 
+    static RCP<const Basic> diff(const LogGamma &self,
+            const RCP<const Symbol> &x) {
+        RCP<const Basic> arg = self.get_args()[0];
+        return mul(polygamma(zero, arg), arg->diff(x));
+    }
+
     static RCP<const Basic> diff(const UnivariatePolynomial &self,
             const RCP<const Symbol> &x) {
         if (self.get_var()->__eq__(*x)) {

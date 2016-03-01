@@ -71,6 +71,8 @@ using SymEngine::levi_civita;
 using SymEngine::zeta;
 using SymEngine::dirichlet_eta;
 using SymEngine::gamma;
+using SymEngine::loggamma;
+using SymEngine::LogGamma;
 using SymEngine::polygamma;
 using SymEngine::PolyGamma;
 using SymEngine::lowergamma;
@@ -2189,6 +2191,47 @@ TEST_CASE("Gamma: functions", "[functions]")
     REQUIRE(eq(*r1, *r2));
 }
 
+TEST_CASE("LogGamma: functions", "[functions]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    RCP<const Basic> r1;
+    RCP<const Basic> r2;
+
+    r1 = loggamma(integer(1));
+    REQUIRE(eq(*r1, *zero));
+
+    r2 = loggamma(integer(2));
+    REQUIRE(eq(*r2, *zero));
+
+    r1 = loggamma(integer(3));
+    REQUIRE(eq(*r1, *log(integer(2))));
+
+    r1 = loggamma(x);
+    r1 = SymEngine::rcp_dynamic_cast<const LogGamma>(r1)->rewrite_as_gamma();
+    REQUIRE(eq(*r1, *log(gamma(x))));
+
+    r1 = loggamma(x)->diff(x);
+    r2 = polygamma(zero, x);
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = loggamma(x)->diff(y);
+    REQUIRE(eq(*r1, *zero));
+
+    r2 = mul(x, y);
+    r1 = loggamma(r2)->diff(x);
+    r2 = mul(polygamma(zero, r2), y);
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = loggamma(x)->subs({{x, y}});
+    r2 = loggamma(y);
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = loggamma(add(y, mul(x, y)))->subs({{y, x}});
+    r2 = loggamma(add(x, mul(x, x)));
+    REQUIRE(eq(*r1, *r2));
+}
+
 TEST_CASE("Lowergamma: functions", "[functions]")
 {
     RCP<const Basic> i2 = integer(2);
@@ -2255,7 +2298,7 @@ TEST_CASE("Beta: functions", "[functions]")
     r3 = div(mul(gamma(i3), gamma(i2)), gamma(add(i2, i3)));
     REQUIRE(eq(*r1, *r3));
     r2 = div(one, integer(12));
-    REQUIRE(eq(*r1, *r2));	
+    REQUIRE(eq(*r1, *r2));
 
     r1 = beta(div(one, i2), i2);
     r2 = beta(i2, div(one, i2));
