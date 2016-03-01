@@ -85,8 +85,12 @@ basic_struct* basic_new_heap();
 void basic_free_heap(basic_struct *s);
 
 //! Use these functions to get the commonly used constants as basic.
+
 //! Assigns to s a SymEngine constant with name c
-void basic_const_set(basic s, char* c);
+//! This function creates a new SymEngine::Constant from a copy of
+//! the string in c, thus the caller is free to use c afterwards,
+//! and also the caller must free c.
+void basic_const_set(basic s, const char* c);
 
 void basic_const_zero(basic s);
 void basic_const_one(basic s);
@@ -245,6 +249,12 @@ void basic_subs(basic s, const basic e, const CMapBasicBasic * mapbb);
 //! substitutes a basic 'a' with another basic 'b',
 //! in the given basic 'e' and returns it through basic 's'
 void basic_subs2(basic s, const basic e, const basic a, const basic b);
+
+//! Wrapper for ascii_art()
+
+//! Returns a new char pointer to the ascii_art string
+//! The caller is responsible to free the pointer using 'basic_str_free'.
+char* ascii_art_str();
 
 #ifdef __cplusplus
 }

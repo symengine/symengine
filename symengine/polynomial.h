@@ -8,8 +8,6 @@
 #include <symengine/monomials.h>
 #include <symengine/dict.h>
 #include <symengine/expression.h>
-// #include <map>
-
 
 namespace SymEngine {
 
@@ -26,11 +24,11 @@ public:
     IMPLEMENT_TYPEID(UNIVARIATEINTPOLYNOMIAL)
     //! Constructor of UnivariateIntPolynomial class
     UnivariateIntPolynomial(const RCP<const Symbol> &var, const unsigned int &degree, map_uint_mpz&& dict);
-    //! Constructor using a dense vector of mpz_class coefficients
-    UnivariateIntPolynomial(const RCP<const Symbol> &var, const std::vector<mpz_class> &v);
+    //! Constructor using a dense vector of integer_class coefficients
+    UnivariateIntPolynomial(const RCP<const Symbol> &var, const std::vector<integer_class> &v);
 
     static RCP<const UnivariateIntPolynomial> create(const RCP<const Symbol> &var,
-            const std::vector<mpz_class> &v) {
+            const std::vector<integer_class> &v) {
         return make_rcp<const UnivariateIntPolynomial>(var, v);
     }
 
@@ -53,12 +51,12 @@ public:
     * Adds coef*var_**n to the dict_
     */
     static void dict_add_term(map_uint_mpz &d,
-            const mpz_class &coef, const unsigned int &n);
-    mpz_class max_coef() const;
+            const integer_class &coef, const unsigned int &n);
+    integer_class max_coef() const;
     //! Evaluates the UnivariateIntPolynomial at value x
-    mpz_class eval(const mpz_class &x) const;
+    integer_class eval(const integer_class &x) const;
     //! Evaluates the UnivariateIntPolynomial at value 2**x
-    mpz_class eval_bit(const int &x) const;
+    integer_class eval_bit(const int &x) const;
 
     //! \return `true` if `0`
     bool is_zero() const;

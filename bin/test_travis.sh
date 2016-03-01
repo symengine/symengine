@@ -66,6 +66,9 @@ fi
 if [[ "${TEST_CPP}" != "" ]]; then
     cmake_line="$cmake_line -DBUILD_BENCHMARKS=${TEST_CPP} -DBUILD_TESTS=${TEST_CPP}"
 fi
+if [[ "${INTEGER_CLASS}" != "" ]]; then
+    cmake_line="$cmake_line -DINTEGER_CLASS=${INTEGER_CLASS}"
+fi
 
 if [[ "${CC}" == "clang"* ]] && [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
     CXXFLAGS=""

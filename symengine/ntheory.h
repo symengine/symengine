@@ -13,7 +13,7 @@ namespace SymEngine {
 
 // Prime Functions
 //! Probabilistic Prime
-int probab_prime_p(const Integer &a, int reps = 25);
+int probab_prime_p(const Integer &a, unsigned reps = 25);
 //! \return next prime after `a`
 RCP<const Integer> nextprime(const Integer &a);
 

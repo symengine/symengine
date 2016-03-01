@@ -24,6 +24,9 @@ using SymEngine::one;
 using SymEngine::zero;
 using SymEngine::integer;
 using SymEngine::vec_basic_eq_perm;
+using SymEngine::integer_class;
+
+using namespace SymEngine::literals;
 
 TEST_CASE("Constructor of UnivariateIntPolynomial", "[UnivariateIntPolynomial]")
 {
@@ -240,7 +243,6 @@ TEST_CASE("Evaluation of UnivariatePolynomial", "[UnivariatePolynomial]")
     RCP<const UnivariatePolynomial> a = univariate_polynomial(x, 2, {{0, 1}, {1, 2}, {2, 1}});
 
     REQUIRE(a->eval(2) == 9);
-    //REQUIRE(a->eval_bit(3) == 81);
 }
 
 TEST_CASE("Derivative of UnivariatePolynomial", "[UnivariatePolynomial]")

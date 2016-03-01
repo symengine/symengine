@@ -102,6 +102,8 @@ their default values indicated below:
         -DBUILD_TESTS:BOOL=ON \                       # Build with tests
         -DBUILD_BENCHMARKS:BOOL=ON \                  # Build with benchmarks
         -DBUILD_BENCHMARKS_NONIUS:BOOL=OFF \          # Build with Nonius benchmarks
+        -DINTEGER_CLASS:STRING=gmpxx \                # Choose storage type for Integer. one of gmp, gmpxx, 
+                                                        flint, piranha
         .
 
 If `OPENMP` is enabled, then `SYMENGINE_THREAD_SAFE` is also enabled automatically

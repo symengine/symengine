@@ -29,7 +29,7 @@ public:
     static RCP<const URatPSeriesPiranha> series(const RCP<const Basic> &t, const std::string &x,
                                                 unsigned int prec);
     static piranha::integer convert(const Integer &x);
-    static piranha::rational convert(const mpq_class &x);
+    static piranha::rational convert(const rational_class &x);
     static pp_t var(const std::string &s);
     static piranha::rational convert(const Rational &x);
     static piranha::rational convert(const Number &x);
