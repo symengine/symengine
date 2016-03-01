@@ -330,7 +330,6 @@ void StrPrinter::bvisit(const UnivariatePolynomial &x) {
     bool first = true;
     //we iterate over the map in reverse order so that highest degree gets printed first
     for (auto it = x.dict_.rbegin(); it != x.dict_.rend();) {
-        
         if(is_a<const Integer>(*it->second.get_basic())) {
             //given a term in univariate polynomial, if coefficient is zero, print nothing
             if (it->second == 0) {
@@ -339,7 +338,6 @@ void StrPrinter::bvisit(const UnivariatePolynomial &x) {
                     s << "0";
                 ++it;
             }
-
             //if the coefficient of a term is +1 or -1
             else if (Expression(abs(it->second.get_basic())) == Expression(1)) {
                 //if exponent is 0, then print only coefficient
@@ -360,7 +358,8 @@ void StrPrinter::bvisit(const UnivariatePolynomial &x) {
                     } else {
                         s << x.var_->get_name();
                     }
-                } else {
+                }
+                else {
                     if (first and it->second == -1) {
                         s << "-" << x.var_->get_name() << "**"  << it->first;
                     } else {
@@ -370,14 +369,14 @@ void StrPrinter::bvisit(const UnivariatePolynomial &x) {
                 //if next term is going to be 0, don't print +, so that x**3 + 0 + x becomes x**3 + x
                 //also consider that sign of term here itself to avoid prints like x + -1
                 if ((++it != x.dict_.rend()) and (it->second != 0)) {
-                    if (it->second < 0) {
+                    if (it->second < 0 or (is_a<Mul>(*it->second.get_basic()) and (rcp_static_cast<const Mul>(it->second.get_basic ()))->coef_->is_negative())
+                        or (is_a<Pow>(*it->second.get_basic()) and (rcp_static_cast<const Mul>((rcp_static_cast<const Pow>(it->second.get_basic()))->get_base()))->coef_->is_negative())) {
                         s << " - ";
                     } else {
                         s << " + ";
                     }
                 }
             }
-
             //same logic is followed as above
             else {
                 if (it->first == 0) {
@@ -388,7 +387,8 @@ void StrPrinter::bvisit(const UnivariatePolynomial &x) {
                     s << Expression(abs(it->second.get_basic())) << "*" << x.var_->get_name() << "**"  << it->first;
                 }
                 if ((++it != x.dict_.rend()) and (it->second != 0)) {
-                    if (it->second < 0) {
+                    if (it->second < 0 or (is_a<Mul>(*it->second.get_basic()) and (rcp_static_cast<const Mul>(it->second.get_basic()))->coef_->is_negative())
+                        or (is_a<Pow>(*it->second.get_basic()) and (rcp_static_cast<const Mul>((rcp_static_cast<const Pow>(it->second.get_basic()))->get_base()))->coef_->is_negative())) {
                         s << " - ";
                     } else {
                         s << " + ";
@@ -397,7 +397,7 @@ void StrPrinter::bvisit(const UnivariatePolynomial &x) {
             }
         }
         else {
-            if(is_a<const Symbol>(*it->second.get_basic())) {
+            if(is_a<const Symbol>(*it->second.get_basic())) { // stand-alone symbols
                 if (it->first == 0)
                     s << Expression(it->second.get_basic());
                 else if (it->first == 1) 
@@ -405,19 +405,54 @@ void StrPrinter::bvisit(const UnivariatePolynomial &x) {
                 else 
                     s << Expression(it->second.get_basic()) << "*" << x.var_->get_name() << "**"  << it->first;
 
-                if (++it != x.dict_.rend())
-                    s << " + ";
+                if (++it != x.dict_.rend()) {
+                    if (it->second < 0 or (is_a<Mul>(*it->second.get_basic()) and (rcp_static_cast<const Mul>(it->second.get_basic()))->coef_->is_negative())
+                        or (is_a<Pow>(*it->second.get_basic()) and (rcp_static_cast<const Mul>((rcp_static_cast<const Pow>(it->second.get_basic()))->get_base()))->coef_->is_negative())) {
+                        s << " - ";
+                    } else {
+                        s << " + ";
+                    }
+                }
             }
             else { // For grouping un-like terms
-                if (it->first == 0)
-                    s << "(" << Expression(it->second.get_basic()) << ")";
-                else if (it->first == 1) 
-                    s << "(" << Expression(it->second.get_basic()) << ")" << "*" << x.var_->get_name();
-                else 
-                    s << "(" << Expression(it->second.get_basic()) << ")" << "*" << x.var_->get_name() << "**"  << it->first;
+                if (it->first == 0) {
+                    if(first)
+                        s << Expression(it->second.get_basic());
+                    else
+                        s << "(" << Expression(it->second.get_basic()) << ")";
+                }
+                else if (it->first == 1) {
+                    if(is_a<Mul>(*it->second.get_basic()) and (rcp_static_cast<const Mul>(it->second.get_basic()))->coef_->is_negative()) {
+                        if(first)
+                            s << Expression(it->second.get_basic()) << "*" << x.var_->get_name();
+                        else {
+                            Expression b = it->second * -1;
+                            s << b << "*" << x.var_->get_name();
+                        }
+                    }
+                    else
+                        s << "(" << Expression(it->second.get_basic()) << ")" << "*" << x.var_->get_name();
+                }
+                else {
+                    if(is_a<Mul>(*it->second.get_basic())) {
+                        if (first)
+                            s << Expression(it->second.get_basic()) << "*" << x.var_->get_name() << "**"  << it->first;
+                        else if ((rcp_static_cast<const Mul>(it->second.get_basic()))->coef_->is_negative()) {
+                            Expression b = it->second * -1;
+                            s << b << "*" << x.var_->get_name();
+                        }
+                        else {
+                            s << "(" << Expression(it->second.get_basic()) << ")" << "*" << x.var_->get_name() << "**"  << it->first;
+                        }
+                    }
+                    else {
+                        s << "(" << Expression(it->second.get_basic()) << ")" << "*" << x.var_->get_name() << "**"  << it->first;
+                    }
+                }
 
-                if (++it != x.dict_.rend()) {
-                    if (is_a<const Symbol>(*it->second.get_basic())) {
+                if (++it != x.dict_.rend() and (it->second != 0)) {
+                    if (it->second < 0 or (is_a<Mul>(*it->second.get_basic()) and (rcp_static_cast<const Mul>(it->second.get_basic()))->coef_->is_negative())
+                        or (is_a<Pow>(*it->second.get_basic()) and (rcp_static_cast<const Mul>((rcp_static_cast<const Pow>(it->second.get_basic()))->get_base()))->coef_->is_negative())) {
                         s << " - ";
                     } else {
                         s << " + ";
