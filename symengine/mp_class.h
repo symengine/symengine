@@ -242,7 +242,7 @@ inline bool mp_invert(piranha::integer &res, const piranha::integer &a,  const p
 }
 
 inline void mp_gcd(piranha::integer &g, const piranha::integer &a,  const piranha::integer &b) {
-    g = piranha::integer::gcd(a, b);
+    piranha::integer::gcd(g, a, b);
 }
 
 inline void mp_gcdext(piranha::integer &g, piranha::integer &r, piranha::integer &s,
@@ -283,9 +283,7 @@ inline void mp_lcm(piranha::integer &q, const piranha::integer &a, const piranha
 }
 
 inline void mp_tdiv_qr(piranha::integer &q, piranha::integer &r, const piranha::integer &a, const piranha::integer &b) {
-    auto _q = get_mpz_t(q);
-    auto _r = get_mpz_t(r);
-    mpz_tdiv_qr(_q, _r, get_mpz_t(a), get_mpz_t(b));
+    piranha::integer::divrem(q, r, a, b);
 }
 
 inline int mp_sign(const piranha::integer &i) {
