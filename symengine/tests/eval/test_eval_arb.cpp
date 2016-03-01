@@ -450,17 +450,8 @@ TEST_CASE("Asec: eval_arb", "[eval_arb]")
 
     REQUIRE(arb_contains_mpfr(a, f));
 
-    r1 = asec(integer(0));
-    eval_arb(a, *r1, 13);           // `a` should be indeterminate
-
-    arb_t b;
-    arb_init(b);
-    arb_indeterminate(b);
-
-    REQUIRE(arb_contains(a, b));     // if true `a` is indeterminate as well
     mpfr_clear(f);
     arb_clear(a);
-    arb_clear(b);
 }
 
 TEST_CASE("ACsc: eval_arb", "[eval_arb]")
@@ -491,17 +482,8 @@ TEST_CASE("ACsc: eval_arb", "[eval_arb]")
 
     REQUIRE(arb_contains_mpfr(a, f));
 
-    r1 = acsc(integer(0));
-    eval_arb(a, *r1, 13);           // `a` should be indeterminate
-
-    arb_t b;
-    arb_init(b);
-    arb_indeterminate(b);
-
-    REQUIRE(arb_contains(a, b));     // if true, `a` is indeterminate as well
     mpfr_clear(f);
     arb_clear(a);
-    arb_clear(b);
 }
 
 TEST_CASE("ATan: eval_arb", "[eval_arb]")
