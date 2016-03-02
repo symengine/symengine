@@ -373,7 +373,7 @@ if (CMAKE_BUILD_TYPE STREQUAL "Debug")
 endif()
 
 if (WITH_COVERAGE)
-    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fprofile-arcs -ftest-coverage")
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} --coverage")
 endif()
 
 enable_testing()

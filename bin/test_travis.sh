@@ -96,8 +96,7 @@ echo "Running tests in build directory:"
 ctest --output-on-failure
 
 if [[ "${WITH_COVERAGE}" == "yes" ]]; then
-    pip install --user cpp-coveralls
-    coveralls --exclude cmake --exclude CMakeFiles --exclude symengine/utilities --gcov $GCOV_EXECUTABLE --gcov-options '\-lp'
+    coveralls --exclude cmake --exclude CMakeFiles --exclude symengine/utilities --gcov $GCOV_EXECUTABLE --gcov-options '\-lp' >/dev/null 2>&1
     exit 0;
 fi
 
