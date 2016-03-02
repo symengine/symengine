@@ -45,6 +45,7 @@ using SymEngine::eval_arb;
 using SymEngine::print_stack_on_segfault;
 using SymEngine::min;
 using SymEngine::max;
+using SymEngine::loggamma;
 
 TEST_CASE("Integer: eval_arb", "[eval_arb]")
 {
@@ -449,17 +450,8 @@ TEST_CASE("Asec: eval_arb", "[eval_arb]")
 
     REQUIRE(arb_contains_mpfr(a, f));
 
-    r1 = asec(integer(0));
-    eval_arb(a, *r1, 13);           // `a` should be indeterminate
-
-    arb_t b;
-    arb_init(b);
-    arb_indeterminate(b);
-
-    REQUIRE(arb_contains(a, b));     // if true `a` is indeterminate as well
     mpfr_clear(f);
     arb_clear(a);
-    arb_clear(b);
 }
 
 TEST_CASE("ACsc: eval_arb", "[eval_arb]")
@@ -490,17 +482,8 @@ TEST_CASE("ACsc: eval_arb", "[eval_arb]")
 
     REQUIRE(arb_contains_mpfr(a, f));
 
-    r1 = acsc(integer(0));
-    eval_arb(a, *r1, 13);           // `a` should be indeterminate
-
-    arb_t b;
-    arb_init(b);
-    arb_indeterminate(b);
-
-    REQUIRE(arb_contains(a, b));     // if true, `a` is indeterminate as well
     mpfr_clear(f);
     arb_clear(a);
-    arb_clear(b);
 }
 
 TEST_CASE("ATan: eval_arb", "[eval_arb]")
@@ -691,6 +674,56 @@ TEST_CASE("Constants: eval_arb", "[eval_arb]")
     mpfr_t f;
     mpfr_init2(f, 57);
     eval_mpfr(f, *r1, MPFR_RNDN);
+
+    REQUIRE(arb_contains_mpfr(a, f));
+
+    mpfr_clear(f);
+    arb_clear(a);
+}
+
+TEST_CASE("Gamma: eval_arb", "[eval_arb]")
+{
+    arb_t a;
+    arb_init(a);
+
+    RCP<const Basic> r1 = gamma(integer(4));
+    RCP<const Basic> r2 = gamma(div(integer(5), integer(2)));
+
+    eval_arb(a, *r1, 45);
+
+    mpfr_t f;
+    mpfr_init2(f, 57);
+    eval_mpfr(f, *r1, MPFR_RNDN);
+
+    REQUIRE(arb_contains_mpfr(a, f));
+
+    eval_arb(a, *r2, 45);
+    eval_mpfr(f, *r2, MPFR_RNDN);
+
+    REQUIRE(arb_contains_mpfr(a, f));
+
+    mpfr_clear(f);
+    arb_clear(a);
+}
+
+TEST_CASE("LogGamma: eval_arb", "[eval_arb]")
+{
+    arb_t a;
+    arb_init(a);
+
+    RCP<const Basic> r1 = loggamma(E);
+    RCP<const Basic> r2 = loggamma(EulerGamma);
+
+    eval_arb(a, *r1, 45);
+
+    mpfr_t f;
+    mpfr_init2(f, 57);
+    eval_mpfr(f, *r1, MPFR_RNDN);
+
+    REQUIRE(arb_contains_mpfr(a, f));
+
+    eval_arb(a, *r2, 45);
+    eval_mpfr(f, *r2, MPFR_RNDN);
 
     REQUIRE(arb_contains_mpfr(a, f));
 

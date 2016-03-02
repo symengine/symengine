@@ -33,6 +33,7 @@ using SymEngine::add;
 using SymEngine::Symbol;
 using SymEngine::Integer;
 using SymEngine::DenseMatrix;
+using SymEngine::loggamma;
 using SymEngine::Subs;
 using SymEngine::Derivative;
 using SymEngine::function_symbol;
@@ -326,6 +327,13 @@ TEST_CASE("test_floats(): printing", "[printing]")
     REQUIRE(p->__str__() == "(-10.0000000000000000000000 + 10.0000000000000000000000*I)/x");
 #endif
 #endif
+}
+
+TEST_CASE("test_functions(): printing", "[printing]")
+{
+    RCP<const Basic> x = symbol("x");
+    RCP<const Basic> p = loggamma(x);
+    REQUIRE(p->__str__() == "loggamma(x)");
 }
 
 TEST_CASE("test custom printing", "[printing]")
