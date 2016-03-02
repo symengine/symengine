@@ -226,7 +226,7 @@ void basic_acoth(basic s, const basic a);
 //! Assigns s = lambertw(a).
 void basic_lambertw(basic s, const basic a);
 //! Assigns s = zeta(a).
-void basic_azeta(basic s, const basic a);
+void basic_zeta(basic s, const basic a);
 //! Assigns s = dirichlet_eta(a).
 void basic_dirichlet_eta(basic s, const basic a);
 //! Assigns s = gamma(a).
