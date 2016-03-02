@@ -15,6 +15,8 @@ using SymEngine::complex_double;
 using SymEngine::LambdaRealDoubleVisitor;
 using SymEngine::LambdaComplexDoubleVisitor;
 using SymEngine::max;
+using SymEngine::gamma;
+using SymEngine::loggamma;
 using SymEngine::min;
 
 TEST_CASE("Evaluate to double", "[lambda_double]")
@@ -79,4 +81,31 @@ TEST_CASE("Evaluate to std::complex<double>", "[lambda_complex_double]")
 
     // Undefined symbols raise an exception
     CHECK_THROWS_AS(v.init({x}, *r), std::runtime_error);
+}
+
+TEST_CASE("Evaluate functions", "[lambda_gamma]")
+{
+    RCP<const Basic> x, y, z, r;
+    double d;
+    x = symbol("x");
+
+    r = gamma(x);
+
+    LambdaRealDoubleVisitor v;
+    v.init({x}, *r);
+
+    d = v.call({1.1});
+    REQUIRE(::fabs(d - 0.9513507698668) < 1e-12);
+
+    r = loggamma(x);
+    v.init({x}, *r);
+
+    d = v.call({1.3});
+    REQUIRE(::fabs(d + 0.10817480950786047) < 1e-12);
+
+    r = add(gamma(x), loggamma(x));
+    v.init({x}, *r);
+
+    d = v.call({1.1});
+    REQUIRE(::fabs(d - 0.901478328607033459) < 1e-12);
 }
