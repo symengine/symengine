@@ -458,6 +458,10 @@ void test_ascii_art() {
     basic_str_free(s);
 }
 
+void test_functions() {
+
+}
+
 int main(int argc, char* argv[])
 {
     test_cwrapper();
@@ -476,5 +480,6 @@ int main(int argc, char* argv[])
     test_subs2();
     test_constants();
     test_ascii_art();
+    test_functions();
     return 0;
 }
