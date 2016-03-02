@@ -165,6 +165,7 @@ unsigned int reconcile(vec_uint &v1, unsigned int &v2, set_sym &s, const set_sym
 vec_uint translate(vec_uint original, vec_uint translator, unsigned int size);
 vec_uint translate(unsigned int original, unsigned int translator, unsigned int size);
 vec_uint uint_vec_translate_and_add(const vec_uint &v1, const vec_uint &v2,const vec_uint &translator1, const vec_uint &translator2, const unsigned int size);
+vec_uint uint_vec_translate_and_add(const vec_uint &v1, const unsigned int v2, const vec_uint &translator1,const unsigned int &translator2, const unsigned int size);
 
 RCP<const MultivariatePolynomial> add_mult_poly(const MultivariatePolynomial &a, const MultivariatePolynomial &b);
 RCP<const MultivariatePolynomial> neg_mult_poly(const MultivariatePolynomial &a);
@@ -175,12 +176,12 @@ RCP<const MultivariatePolynomial> mul_mult_poly(const MultivariatePolynomial &a,
 RCP<const MultivariatePolynomial> add_mult_poly(const MultivariatePolynomial &a, const UnivariatePolynomial &b);
 RCP<const MultivariatePolynomial> sub_mult_poly(const MultivariatePolynomial &a, const UnivariatePolynomial &b);
 RCP<const MultivariatePolynomial> sub_mult_poly(const UnivariatePolynomial &a, const MultivariatePolynomial &b);
-/*RCP<const MultivariatePolynomial> mul_mult_poly(const MultivariatePolynomial &a, const UnivariatePolynomial &b);
+RCP<const MultivariatePolynomial> mul_mult_poly(const MultivariatePolynomial &a, const UnivariatePolynomial &b);
 
 RCP<const MultivariatePolynomial> add_mult_poly(const UnivariatePolynomial &a, const UnivariatePolynomial &b);
 RCP<const MultivariatePolynomial> sub_mult_poly(const UnivariatePolynomial &a, const UnivariatePolynomial &b);
 RCP<const MultivariatePolynomial> mul_mult_poly(const UnivariatePolynomial &a, const UnivariatePolynomial &b);
-*/
+
 
 }  //SymEngine
 
