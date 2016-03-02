@@ -1,4 +1,5 @@
 #include <symengine/symengine_config.h>
+#include <stdio.h>
 
 #if defined(HAVE_C_FUNCTION_NOT_FUNC)
 #define __func__ __FUNCTION__
@@ -459,7 +460,151 @@ void test_ascii_art() {
 }
 
 void test_functions() {
+    basic pi, e;
+    basic minus_one, minus_half, zero, one, two, four;
+    basic pi_div_two,pi_div_four;
+    basic e_minus_one;
+    basic ans;
 
+    basic_new_stack(pi);
+    basic_new_stack(e);
+    basic_new_stack(ans);
+    basic_new_stack(two);
+    basic_new_stack(pi_div_two);
+    basic_new_stack(four);
+    basic_new_stack(pi_div_four);
+    basic_new_stack(one);
+    basic_new_stack(minus_one);
+    basic_new_stack(zero);
+    basic_new_stack(e_minus_one);
+    basic_new_stack(minus_half);
+
+    basic_const_pi(pi);
+    basic_const_E(e);
+    integer_set_si(two, 2);
+    integer_set_si(four, 4);
+    integer_set_si(one, 1);
+    integer_set_si(minus_one, -1);
+    integer_set_si(zero, 0);
+    
+    basic_div(pi_div_two, pi, two);
+    basic_div(pi_div_four, pi, four);
+    basic_pow(e_minus_one, e, minus_one);
+    basic_mul(e_minus_one, e_minus_one, minus_one);
+    basic_div(minus_half, minus_one, two);
+
+    char* s;
+
+    basic_sin(ans, pi);
+    SYMENGINE_C_ASSERT(basic_eq(ans, zero));
+
+    basic_cos(ans, pi);
+    SYMENGINE_C_ASSERT(basic_eq(ans, minus_one));
+
+    basic_tan(ans, pi);
+    SYMENGINE_C_ASSERT(basic_eq(ans, zero));
+
+    basic_csc(ans, pi_div_two);
+    s = basic_str(ans);
+    SYMENGINE_C_ASSERT(basic_eq(ans, one));
+
+    basic_sec(ans, pi);
+    SYMENGINE_C_ASSERT(basic_eq(ans, minus_one));
+
+    basic_cot(ans, pi_div_four);
+    SYMENGINE_C_ASSERT(basic_eq(ans, one));
+
+    basic_asin(ans, one);
+    SYMENGINE_C_ASSERT(basic_eq(ans, pi_div_two));
+
+    basic_acos(ans, one);
+    SYMENGINE_C_ASSERT(basic_eq(ans, zero));
+
+    basic_atan(ans, one);
+    SYMENGINE_C_ASSERT(basic_eq(ans, pi_div_four));
+
+    basic_acot(ans, one);
+    SYMENGINE_C_ASSERT(basic_eq(ans, pi_div_four));
+
+    basic_acsc(ans, one);
+    SYMENGINE_C_ASSERT(basic_eq(ans, pi_div_two));
+
+    basic_asec(ans, one);
+    SYMENGINE_C_ASSERT(basic_eq(ans, zero));
+
+    basic_sinh(ans, zero);
+    SYMENGINE_C_ASSERT(basic_eq(ans, zero));
+
+    basic_cosh(ans, zero);
+    SYMENGINE_C_ASSERT(basic_eq(ans, one));
+
+    basic_tanh(ans, zero);
+    SYMENGINE_C_ASSERT(basic_eq(ans, zero));
+
+    basic_csch(ans, one);
+    s = basic_str(ans);
+    SYMENGINE_C_ASSERT(strcmp(s, "csch(1)") == 0);
+    basic_str_free(s);
+
+    basic_sech(ans, zero);
+    SYMENGINE_C_ASSERT(basic_eq(ans, one));
+
+    basic_coth(ans, one);
+    s = basic_str(ans);
+    SYMENGINE_C_ASSERT(strcmp(s, "coth(1)") == 0);
+    basic_str_free(s);
+
+    basic_asinh(ans, zero);
+    SYMENGINE_C_ASSERT(basic_eq(ans, zero));
+
+    basic_acosh(ans, one);
+    SYMENGINE_C_ASSERT(basic_eq(ans, zero));
+
+    basic_atanh(ans, zero);
+    SYMENGINE_C_ASSERT(basic_eq(ans, zero));
+
+    basic_acsch(ans, one);
+    s = basic_str(ans);
+    SYMENGINE_C_ASSERT(strcmp(s, "log(1 + 2**(1/2))") == 0);
+    basic_str_free(s);
+
+    basic_asech(ans, one);
+    SYMENGINE_C_ASSERT(basic_eq(ans, zero));
+
+    basic_acoth(ans, one);
+    s = basic_str(ans);
+    SYMENGINE_C_ASSERT(strcmp(s, "acoth(1)") == 0);
+    basic_str_free(s);
+
+    basic_lambertw(ans, e_minus_one);
+    s = basic_str(ans);
+    SYMENGINE_C_ASSERT(strcmp(s, "lambertw(-1/E)") == 0);
+    //SYMENGINE_C_ASSERT(basic_eq(ans, minus_one));
+    basic_str_free(s);
+
+    basic_zeta(ans, zero);
+    SYMENGINE_C_ASSERT(basic_eq(ans, minus_half));
+
+    basic_dirichlet_eta(ans, one);
+    s = basic_str(ans);
+    SYMENGINE_C_ASSERT(strcmp(s, "log(2)") == 0);
+    basic_str_free(s);
+
+    basic_gamma(ans, one);
+    SYMENGINE_C_ASSERT(basic_eq(ans, one));
+    
+    basic_free_stack(ans);
+    basic_free_stack(pi);
+    basic_free_stack(two);
+    basic_free_stack(pi_div_two);
+    basic_free_stack(four); 
+    basic_free_stack(pi_div_four);
+    basic_free_stack(one);
+    basic_free_stack(minus_one);
+    basic_free_stack(zero);
+    basic_free_stack(e);
+    basic_free_stack(e_minus_one);
+    basic_free_stack(minus_half);
 }
 
 int main(int argc, char* argv[])
