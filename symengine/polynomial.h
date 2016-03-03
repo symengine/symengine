@@ -17,7 +17,7 @@
 namespace SymEngine {
 
 class UnivariateIntPolynomial : public Basic{
-private:
+public:
     //! `degree` : Degree of UnivariateIntPolynomial
     //! `var_` : Variable of the uni-variate UnivariateIntPolynomial
     //! `dict_` : holds the UnivariateIntPolynomial

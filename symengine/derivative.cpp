@@ -446,8 +446,8 @@ static RCP<const Basic> diff(const CLASS &self, \
                 sub(mul(polygamma(zero, beta_arg1), diff_beta_arg1),
                 mul(polygamma(zero, add(beta_arg0, beta_arg1)), add(diff_beta_arg0, diff_beta_arg1)))));
     }
-
-    static RCP<const Basic> diff(const MultivariatePolynomial &self, const RCP<const Symbol> &x){
+  
+    static RCP<const Basic> diff(const MultivariateIntPolynomial &self, const RCP<const Symbol> &x){
         if(self.vars_.find(x) != self.vars_.end()){
             umap_uvec_mpz dict;
             auto i = self.vars_.begin();
@@ -465,7 +465,7 @@ static RCP<const Basic> diff(const CLASS &self, \
             umap_sym_uint degrees = self.degrees_;
             if(degrees[x] >0)
                 degrees[x]--;
-            return make_rcp<const MultivariatePolynomial>(self.vars_, degrees, dict);
+            return make_rcp<const MultivariateIntPolynomial>(self.vars_, degrees, dict);
         } else{
             return zero;
         }

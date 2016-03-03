@@ -197,6 +197,11 @@ bool map_uint_Expr_eq(const map_uint_Expr &a,
     return true;
 }
 
+bool multiset_basic_eq(const multiset_basic &a, const multiset_basic &b)
+{
+    return set_eq<multiset_basic>(a, b);
+}
+
 int map_uint_Expr_compare(const map_uint_Expr &A, const map_uint_Expr &B)
 {
     if (A.size() != B.size())
@@ -211,13 +216,13 @@ int map_uint_Expr_compare(const map_uint_Expr &A, const map_uint_Expr &B)
     }
     return 0;
 }
-
+  /*
 template<class T>
 bool set_eq(const T &A, const T &B)
 {
     return set_eq<multiset_basic>(a, b);
 }
-
+  */
 int multiset_basic_compare(const multiset_basic &a, const multiset_basic &b)
 {
     return set_compare<multiset_basic>(a, b);
@@ -231,7 +236,7 @@ int umap_vec_mpz_compare(const umap_vec_mpz &a, const umap_vec_mpz &b){
 }
 
 unsigned int mpz_hash(const integer_class z){
-    return mpz_get_ui(z.get_mpz_t());
+    return mp_get_ui(z);
 }
 
 int umap_uvec_mpz_compare(const umap_uvec_mpz &a, const umap_uvec_mpz &b){

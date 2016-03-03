@@ -544,7 +544,7 @@ void StrPrinter::bvisit(const NumberWrapper &x) {
     str_ = x.__str__();
 }
 
-void StrPrinter::bvisit(const MultivariatePolynomial &x) {  
+void StrPrinter::bvisit(const MultivariateIntPolynomial &x) {  
     str_ = x.toString();
 }
 
