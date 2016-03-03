@@ -96,7 +96,7 @@ echo "Running tests in build directory:"
 ctest --output-on-failure
 
 if [[ "${WITH_COVERAGE}" == "yes" ]]; then
-    coveralls --exclude cmake --exclude CMakeFiles --exclude symengine/utilities --gcov $GCOV_EXECUTABLE --gcov-options '\-lp' >/dev/null 2>&1
+    coveralls --exclude cmake --exclude CMakeFiles --exclude symengine/utilities --exclude symengine/tests --exclude benchmarks --gcov $GCOV_EXECUTABLE --gcov-options '\-lp' >/dev/null 2>&1
     exit 0;
 fi
 
