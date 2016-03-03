@@ -17,7 +17,7 @@
 namespace SymEngine {
 
 class UnivariateIntPolynomial : public Basic{
-public:
+private:
     //! `degree` : Degree of UnivariateIntPolynomial
     //! `var_` : Variable of the uni-variate UnivariateIntPolynomial
     //! `dict_` : holds the UnivariateIntPolynomial
@@ -198,7 +198,14 @@ public:
     std::size_t __hash__() const;
     bool __eq__(const Basic &o) const;
     int compare(const Basic &o) const;
-   
+    integer_class eval(std::map<RCP<const Symbol>, integer_class, RCPSymbolCompare> &vals);
+    std::string toString() const;
+};
+
+class UnivariateExprPolynomial {
+private:
+    RCP<const UnivariatePolynomial> poly_;
+public:
     //! Construct UnivariateExprPolynomial from UnivariatePolynomial
 #if defined(HAVE_SYMENGINE_IS_CONSTRUCTIBLE)
     template <typename T, typename = typename std::enable_if<std::is_constructible<RCP<const UnivariatePolynomial>, T &&>::value>::type>
