@@ -250,9 +250,9 @@ TEST_CASE("UnivariatePolynomial get_args", "[UnivariatePolynomial]")
 TEST_CASE("Evaluation of UnivariatePolynomial", "[UnivariatePolynomial]")
 {
     RCP<const Symbol> x  = symbol("x");
-    RCP<const UnivariatePolynomial> a = univariate_polynomial(x, 2, {{0, 1}, {1, 2}, {2, 1}});
+    RCP<const UnivariatePolynomial> a = univariate_polynomial(x, 2, {{0, 1}, {1, 2}, {2, symbol("a")}});
 
-    REQUIRE(a->eval(2) == 9);
+    REQUIRE(a->eval(2).get_basic()->__str__() == "5 + 4*a");
 }
 
 TEST_CASE("Derivative of UnivariatePolynomial", "[UnivariatePolynomial]")
