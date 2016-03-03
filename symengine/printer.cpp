@@ -99,6 +99,20 @@ void StrPrinter::bvisit(const ComplexDouble &x) {
     }
 }
 
+void StrPrinter::bvisit(const Interval &x) {
+    std::ostringstream s;
+    if(x.left_open_)
+        s<<"(";
+    else
+        s<<"[";
+    s<<x.start_<<", "<<x.end_;
+    if(x.right_open_)
+        s<<")";
+    else
+        s<<"]";
+    str_ = s.str();
+}
+
 #ifdef HAVE_SYMENGINE_MPFR
 void StrPrinter::bvisit(const RealMPFR &x) {
     mpfr_exp_t ex;
