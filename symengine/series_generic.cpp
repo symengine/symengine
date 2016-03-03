@@ -71,7 +71,7 @@ RCP<const UnivariatePolynomial> UnivariateSeries::convert_poly(const map_uint_mp
         if (it.first < prec_) {
             if (max < it.first)
                 max = it.first;
-            dict_trunc[it.first] = it.second.get_ui();
+            dict_trunc[it.first] = mp_get_ui(it.second);
         }
     }
     return univariate_polynomial(symbol(var_), max, std::move(dict_trunc));
@@ -110,8 +110,8 @@ std::string UnivariateSeries::__str__() const
 RCP<const UnivariatePolynomial> UnivariateSeries::convert_vector(const std::vector<integer_class> &v) {
     std::vector<Expression> vtrunc;
     for (const auto &it : v)
-        if (it.get_si() < prec_) 
-            vtrunc.push_back(it.get_si());
+        if (mp_get_si(it) < prec_) 
+            vtrunc.push_back(mp_get_si(it));
     return UnivariatePolynomial::create(symbol(var_), vtrunc);
 }
 
