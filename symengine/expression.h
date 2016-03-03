@@ -184,7 +184,7 @@ namespace piranha {
     struct print_coefficient_impl<U, typename std::enable_if<std::is_same<U, SymEngine::Expression>::value>::type>
     {
         auto operator()(std::ostream &os, const U &cf) const -> decltype(os << cf) {
-            return os << poly_print(cf);
+            return os << SymEngine::detail::poly_print(cf);
         }
     };
 }
