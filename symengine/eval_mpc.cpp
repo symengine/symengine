@@ -265,6 +265,11 @@ public:
         }
     }
 
+    void bvisit(const Gamma &x) {
+        throw std::runtime_error("Not implemented");
+    }
+
+
     void bvisit(const Abs &x) {
         mpfr_t t;
         mpfr_init2(t, mpc_get_prec(result_));

@@ -313,6 +313,8 @@ TEST_CASE("Mul: Basic", "[basic]")
 
     r = div(x, x);
     REQUIRE(vec_basic_eq(r->get_args(), {}));
+
+    CHECK_THROWS_AS(div(integer(1), zero), std::runtime_error);
 }
 
 TEST_CASE("Diff: Basic", "[basic]")

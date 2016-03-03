@@ -14,6 +14,7 @@
 #include <symengine/mul.h>
 #include <symengine/pow.h>
 #include <symengine/symbol.h>
+#include <symengine/real_double.h>
 
 namespace SymEngine
 {
@@ -36,6 +37,8 @@ public:
     //! cannot be explicit (needed so by Piranha)
     Expression(int n) : m_basic(integer(n)) {}
     //! Construct Expression from Basic
+    //Expression(double n) : m_basic(RealDouble(n)) {}
+
 #if defined(HAVE_SYMENGINE_IS_CONSTRUCTIBLE)
     template <typename T, typename = typename std::enable_if<std::is_constructible<RCP<const Basic>, T &&>::value>::type>
 #else
@@ -106,7 +109,7 @@ public:
     }
     //! Overload Division
     friend Expression operator/(const Expression &a, const Expression &b)
-    {
+    { 
         return Expression(div(a.m_basic, b.m_basic));
     }
     //! Overload Division and assignment (/=)
@@ -120,12 +123,23 @@ public:
     {
         return eq(*m_basic, *other.m_basic);
     }
+
+    bool operator>=(const Expression &other) const
+    {
+        return m_basic->__cmp__(*other.m_basic) == 1 || m_basic->__cmp__(*other.m_basic) == 0;
+    }
+    
+    bool operator<(const Expression &other) const
+    {
+        return m_basic->__cmp__(*other.m_basic) == -1;
+    }
+     
     //! Overload check not equal (!=)
     bool operator!=(const Expression &other) const
     {
         return not (*this == other);
     }
-    //! Method to get Basic from Expression
+
     const RCP<const Basic> &get_basic() const
     {
         return m_basic;
