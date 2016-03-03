@@ -188,7 +188,7 @@ public:
     UnivariateExprPolynomial(const UnivariateExprPolynomial &) = default;
     UnivariateExprPolynomial(UnivariateExprPolynomial &&other) SYMENGINE_NOEXCEPT : poly_(std::move(other.poly_)) {}
     UnivariateExprPolynomial(int i) : poly_(UnivariatePolynomial::create(symbol("x"), {{0, Expression(i)}})) {}
-    UnivariateExprPolynomial(RCP<const UnivariatePolynomial> p) : poly_(p) {}
+    UnivariateExprPolynomial(RCP<const UnivariatePolynomial> p) : poly_(std::move(p)) {}
     UnivariateExprPolynomial(Expression expr) {
         throw std::runtime_error("Not Implemented");
     }

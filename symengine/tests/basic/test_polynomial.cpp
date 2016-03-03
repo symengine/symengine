@@ -303,12 +303,12 @@ TEST_CASE("Bool checks specific UnivariatePolynomial cases", "[UnivariatePolynom
 TEST_CASE("Univariate Polynomial expand", "[UnivariatePolynomial][expand]")
 {
     RCP<const Symbol> x  = symbol("x");
-    RCP<const UnivariatePolynomial> a = univariate_polynomial(x, 3, {{1, 1}, {2, 1}, {3, 1}});
+    RCP<const UnivariatePolynomial> a = univariate_polynomial(x, 3, {{1, 1}, {2, 1}, {3, symbol("a")}});
     RCP<const Basic> b = make_rcp<const Pow>(a, integer(3));
     RCP<const Basic> c = expand(b);
 
-    REQUIRE(b->__str__() == "(x**3 + x**2 + x)**3");
+    REQUIRE(b->__str__() == "(a*x**3 + x**2 + x)**3");
     //std::cout<<b->__str__()<<std::endl;
-    REQUIRE(c->__str__() == "x**9 + 3*x**8 + 6*x**7 + 7*x**6 + 6*x**5 + 3*x**4 + x**3");
+    REQUIRE(c->__str__() == "(a**3)*x**9 + (3*a**2)*x**8 + (2*a + a*(1 + 2*a) + a**2)*x**7 + (1 + 6*a)*x**6 + (3 + 3*a)*x**5 + 3*x**4 + x**3");
     //std::cout<<c->__str__()<<std::endl;
 }
