@@ -29,8 +29,7 @@ std::size_t UnivariateIntPolynomial::__hash__() const {
     std::hash<std::string> hash_string;
     std::size_t seed = UNIVARIATEINTPOLYNOMIAL;
     seed += hash_string(this->var_->get_name());
-    for (const auto &it : this->dict_)
-    {
+    for (const auto &it : this->dict_) {
         std::size_t temp = UNIVARIATEINTPOLYNOMIAL;
         hash_combine<unsigned int>(temp, it.first);
         hash_combine<long long int>(temp, mp_get_si(it.second));
@@ -58,8 +57,7 @@ int UnivariateIntPolynomial::compare(const Basic &o) const {
 }
 
 RCP<const Basic> UnivariateIntPolynomial::from_dict(const RCP<const Symbol> &var, map_uint_mpz &&d) {
-    if (d.size() == 1) 
-    {
+    if (d.size() == 1) {
         if (d.begin()->first == 0)
             return integer(d.begin()->second);
         else if (d.begin()->first == 1) 
@@ -102,11 +100,9 @@ integer_class UnivariateIntPolynomial::max_coef() const {
 
 integer_class UnivariateIntPolynomial::eval(const integer_class &x) const {
     //TODO: Use Horner's Scheme
-    integer_class ans = 0;
-    for (const auto &p : dict_) 
-    {
-        integer_class temp;
-        mpz_pow_ui(temp.get_mpz_t(), x.get_mpz_t(), p.first);
+    integer_class ans(0), temp;
+    for (const auto &p : dict_) {
+        mp_pow_ui(temp, x, p.first);
         ans += p.second * temp;
     }
     return ans;
@@ -114,11 +110,9 @@ integer_class UnivariateIntPolynomial::eval(const integer_class &x) const {
 
 integer_class UnivariateIntPolynomial::eval_bit(const int &x) const {
     //TODO: Use Horner's Scheme
-    integer_class ans = 0;
-    for (const auto &p : dict_) 
-    {
-        integer_class temp = 1;
-        temp <<= x * p.first;
+    integer_class ans(0);
+    for (const auto &p : dict_) {
+        integer_class temp = integer_class(1) << x * p.first;
         ans += p.second * temp;
     }
     return ans;
