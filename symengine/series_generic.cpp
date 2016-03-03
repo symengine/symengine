@@ -142,7 +142,10 @@ UnivariateExprPolynomial UnivariateSeries::diff(const UnivariateExprPolynomial &
 }
 
 UnivariateExprPolynomial UnivariateSeries::integrate(const UnivariateExprPolynomial &s, const UnivariateExprPolynomial &var) {
-    throw std::runtime_error("Not Implemented");
+    map_uint_Expr dict;
+    for (auto &it : s.get_univariate_poly()->dict_)
+        dict.insert(std::pair<unsigned, Expression>(it.first + 1, it.second / (it.first + 1)));
+    return UnivariateExprPolynomial(univariate_polynomial(var.get_univariate_poly()->get_var(), (dict.end()--)->first, std::move(dict))); 
 }
 
 UnivariateExprPolynomial UnivariateSeries::subs(const UnivariateExprPolynomial &s, const UnivariateExprPolynomial &var, const UnivariateExprPolynomial &r, unsigned prec) {

@@ -14,6 +14,7 @@
 #include <symengine/mul.h>
 #include <symengine/pow.h>
 #include <symengine/symbol.h>
+#include <symengine/real_double.h>
 
 namespace SymEngine
 {
@@ -36,6 +37,8 @@ public:
     //! cannot be explicit (needed so by Piranha)
     Expression(int n) : m_basic(integer(n)) {}
     //! Construct Expression from Basic
+    //Expression(double n) : m_basic(RealDouble(n)) {}
+
 #if defined(HAVE_SYMENGINE_IS_CONSTRUCTIBLE)
     template <typename T, typename = typename std::enable_if<std::is_constructible<RCP<const Basic>, T &&>::value>::type>
 #else
