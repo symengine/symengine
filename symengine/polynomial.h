@@ -12,7 +12,7 @@
 namespace SymEngine {
 
 class UnivariateIntPolynomial : public Basic{
-public:
+private:
     //! `degree` : Degree of UnivariateIntPolynomial
     //! `var_` : Variable of the uni-variate UnivariateIntPolynomial
     //! `dict_` : holds the UnivariateIntPolynomial
@@ -74,7 +74,9 @@ public:
     bool is_pow() const;
 
     virtual vec_basic get_args() const;
-
+    inline unsigned int get_degree() const {
+        return degree_;
+    }
     inline RCP<const Symbol> get_var() const {
         return var_;
     }
@@ -94,14 +96,13 @@ RCP<const UnivariateIntPolynomial> mul_poly(RCP<const UnivariateIntPolynomial> a
 
 inline RCP<const UnivariateIntPolynomial> pow_exp(RCP<const UnivariateIntPolynomial> a, RCP<const UnivariateIntPolynomial> b);
 
-inline RCP<const UnivariateIntPolynomial> univariate_int_polynomial(RCP<const Symbol> i, unsigned int deg, map_uint_mpz&& dict)
-{
+inline RCP<const UnivariateIntPolynomial> univariate_int_polynomial(RCP<const Symbol> i, unsigned int deg, map_uint_mpz&& dict) {
     return make_rcp<const UnivariateIntPolynomial>(i, deg, std::move(dict));
 }
 
 
 class UnivariatePolynomial : public Basic {
-public:
+private:
     unsigned int degree_;
     RCP<const Symbol> var_;
     map_uint_Expr dict_;
@@ -167,8 +168,7 @@ RCP<const UnivariatePolynomial> sub_uni_poly(const UnivariatePolynomial &a, cons
 //! Multiplying two UnivariatePolynomial a and b
 RCP<const UnivariatePolynomial> mul_uni_poly(RCP<const UnivariatePolynomial> a, RCP<const UnivariatePolynomial> b);
 
-inline RCP<const UnivariatePolynomial> univariate_polynomial(RCP<const Symbol> i, unsigned int deg, map_uint_Expr&& dict)
-{
+inline RCP<const UnivariatePolynomial> univariate_polynomial(RCP<const Symbol> i, unsigned int deg, map_uint_Expr&& dict) {
     return make_rcp<const UnivariatePolynomial>(i, deg, std::move(dict));
 }
 
@@ -194,92 +194,76 @@ public:
     }
     
     UnivariateExprPolynomial &operator=(const UnivariateExprPolynomial &) = default;
-    UnivariateExprPolynomial &operator=(UnivariateExprPolynomial &&other) SYMENGINE_NOEXCEPT 
-    {
+    UnivariateExprPolynomial &operator=(UnivariateExprPolynomial &&other) SYMENGINE_NOEXCEPT {
         if (this != &other)
             this->poly_.ptr() = std::move(other.poly_.ptr());
         return *this;
     }
      
-    friend std::ostream &operator<<(std::ostream &os, const UnivariateExprPolynomial &expr)
-    {
+    friend std::ostream &operator<<(std::ostream &os, const UnivariateExprPolynomial &expr) {
         os << expr.poly_.ptr()->__str__();
         return os;
     }
     
-    friend UnivariateExprPolynomial operator+(const UnivariateExprPolynomial &a, const UnivariateExprPolynomial &b)
-    {
+    friend UnivariateExprPolynomial operator+(const UnivariateExprPolynomial &a, const UnivariateExprPolynomial &b) {
         return UnivariateExprPolynomial(add_uni_poly(*(a.poly_.ptr()), *(b.poly_.ptr())));
     }
     
-    UnivariateExprPolynomial &operator+=(const UnivariateExprPolynomial &other)
-    {
+    UnivariateExprPolynomial &operator+=(const UnivariateExprPolynomial &other) {
         poly_ = add_uni_poly(*(poly_.ptr()), *(other.poly_.ptr()));
         return *this;
     }
     
-    friend UnivariateExprPolynomial operator-(const UnivariateExprPolynomial &a, const UnivariateExprPolynomial &b)
-    {
+    friend UnivariateExprPolynomial operator-(const UnivariateExprPolynomial &a, const UnivariateExprPolynomial &b) {
         return UnivariateExprPolynomial(sub_uni_poly(*(a.poly_.ptr()), *(b.poly_.ptr())));
     }
     
-    UnivariateExprPolynomial operator-() const
-    {
+    UnivariateExprPolynomial operator-() const {
         UnivariateExprPolynomial retval(*this);
         neg_uni_poly(*(retval.poly_.ptr()));
         return retval;
     }
     
-    UnivariateExprPolynomial &operator-=(const UnivariateExprPolynomial &other)
-    {
+    UnivariateExprPolynomial &operator-=(const UnivariateExprPolynomial &other) {
         poly_ = sub_uni_poly(*(poly_.ptr()), *(other.poly_.ptr()));
         return *this;
     }
     
-    friend UnivariateExprPolynomial operator*(const UnivariateExprPolynomial &a, const UnivariateExprPolynomial &b)
-    {   
+    friend UnivariateExprPolynomial operator*(const UnivariateExprPolynomial &a, const UnivariateExprPolynomial &b) {   
         return UnivariateExprPolynomial(mul_uni_poly(a.poly_, b.poly_));
     }   
     
-    friend UnivariateExprPolynomial operator/(const UnivariateExprPolynomial &a, const Expression &b)
-    {
+    friend UnivariateExprPolynomial operator/(const UnivariateExprPolynomial &a, const Expression &b) {
         return UnivariateExprPolynomial(mul_uni_poly(a.poly_, UnivariateExprPolynomial(1/b).poly_));    
     }
         
-    UnivariateExprPolynomial &operator*=(const UnivariateExprPolynomial &other)
-    {   
+    UnivariateExprPolynomial &operator*=(const UnivariateExprPolynomial &other) {   
         poly_ = mul_uni_poly(poly_, other.poly_);
         return *this;
     }   
     
-    bool operator==(const UnivariateExprPolynomial &other) const
-    {   
+    bool operator==(const UnivariateExprPolynomial &other) const {   
         return eq(*poly_, *other.poly_);
     }   
     
-    bool operator==(int i) const
-    {
+    bool operator==(int i) const {
         return eq(*poly_, *(UnivariateExprPolynomial(i).poly_)); 
     }
      
-    bool operator!=(const UnivariateExprPolynomial &other) const
-    {   
+    bool operator!=(const UnivariateExprPolynomial &other) const {   
         return not (*this == other);
     }   
     
     //! Method to get UnivariatePolynomial from UnivariateExprPolynomial
-    const RCP<const UnivariatePolynomial>& get_univariate_poly() const
-    {   
+    const RCP<const UnivariatePolynomial>& get_univariate_poly() const {   
         return poly_;
     }   
     
-    std::size_t __hash__() const
-    {
+    std::size_t __hash__() const {
         return (poly_.ptr())->__hash__();
     }
     
-    const RCP<const Basic> get_basic() const
-    {
+    const RCP<const Basic> get_basic() const {
         RCP<const Symbol> x = poly_->get_var();
         umap_basic_num dict_;
         for (const auto &it : poly_->get_dict()) {
@@ -293,8 +277,7 @@ public:
         return std::move(Add::from_dict(integer(0), std::move(dict_)));
     }
 
-    int compare(const UnivariateExprPolynomial &other)
-    {
+    int compare(const UnivariateExprPolynomial &other) {
        return eq(*poly_, *other.poly_); 
     }
 }; //UnivariateExprPolynomial
@@ -320,19 +303,19 @@ public:
 
 class sym_compare {
   public:
-  size_t operator()(const Symbol &a, const Symbol &b){
+  size_t operator()(const Symbol &a, const Symbol &b) {
     return a.compare(b);
   }
 };
 
 class sym_eq {
  public:
-  bool operator()(const Symbol &a, const Symbol &b){
+  bool operator()(const Symbol &a, const Symbol &b) {
     return a.__eq__(b);
   }
 };
 
-inline int umap_vec_mpz_compare(umap_vec_mpz &a, umap_vec_mpz &b){
+inline int umap_vec_mpz_compare(umap_vec_mpz &a, umap_vec_mpz &b) {
   if(a.size() < b.size())
     return (a.size() < b.size()) ? -1 : 1;
   return 0;

@@ -45,7 +45,7 @@ RCP<const Basic> UnivariateSeries::as_basic() const {
 umap_int_basic UnivariateSeries::as_dict() const {
     umap_int_basic map;
     for (int i = 0; i <= degree_; i++) 
-       map[i] = p_.get_univariate_poly()->dict_.at(i).get_basic();
+       map[i] = p_.get_univariate_poly()->get_dict().at(i).get_basic();
     return map;
 }
 
@@ -143,7 +143,7 @@ UnivariateExprPolynomial UnivariateSeries::diff(const UnivariateExprPolynomial &
 
 UnivariateExprPolynomial UnivariateSeries::integrate(const UnivariateExprPolynomial &s, const UnivariateExprPolynomial &var) {
     map_uint_Expr dict;
-    for (auto &it : s.get_univariate_poly()->dict_)
+    for (auto &it : s.get_univariate_poly()->get_dict())
         dict.insert(std::pair<unsigned, Expression>(it.first + 1, it.second / (it.first + 1)));
     return UnivariateExprPolynomial(univariate_polynomial(var.get_univariate_poly()->get_var(), (dict.end()--)->first, std::move(dict))); 
 }

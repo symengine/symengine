@@ -154,28 +154,28 @@ bool UnivariateIntPolynomial::is_pow() const {
     
 RCP<const UnivariateIntPolynomial> add_poly(const UnivariateIntPolynomial &a, const UnivariateIntPolynomial &b) {
     map_uint_mpz dict;
-    for (const auto &it : a.dict_)
+    for (const auto &it : a.get_dict())
         dict[it.first] = it.second;
-    for (const auto &it : b.dict_)
+    for (const auto &it : b.get_dict())
         dict[it.first] += it.second;
-    return univariate_int_polynomial(a.var_, (--(dict.end()))->first, std::move(dict));
+    return univariate_int_polynomial(a.get_var(), (--(dict.end()))->first, std::move(dict));
 }
 
 RCP<const UnivariateIntPolynomial> neg_poly(const UnivariateIntPolynomial &a) {
     map_uint_mpz dict;
-    for (const auto &it : a.dict_)
+    for (const auto &it : a.get_dict())
         dict[it.first] = -1 * it.second;
-    return univariate_int_polynomial(a.var_, (--(dict.end()))->first, std::move(dict));
+    return univariate_int_polynomial(a.get_var(), (--(dict.end()))->first, std::move(dict));
 }
 
 RCP<const UnivariateIntPolynomial> sub_poly(const UnivariateIntPolynomial &a, const UnivariateIntPolynomial &b) {
     map_uint_mpz dict;
-    for (const auto &it : a.dict_)
+    for (const auto &it : a.get_dict())
         dict[it.first] = it.second;
-    for (const auto &it : b.dict_)
+    for (const auto &it : b.get_dict())
         dict[it.first] -= it.second;
 
-    return univariate_int_polynomial(a.var_, (--(dict.end()))->first, std::move(dict));
+    return univariate_int_polynomial(a.get_var(), (--(dict.end()))->first, std::move(dict));
 }
 
 //Calculates bit length of number, used in mul_poly() only
@@ -192,15 +192,15 @@ unsigned int bit_length(T t) {
 RCP<const UnivariateIntPolynomial> mul_poly(RCP<const UnivariateIntPolynomial> a, RCP<const UnivariateIntPolynomial> b) {
     //TODO: Use `const RCP<const UnivariateIntPolynomial> &a` for input arguments,
     //      even better is use `const UnivariateIntPolynomial &a`
-    unsigned int da = a->degree_;
-    unsigned int db = b->degree_;
+    unsigned int da = a->get_degree();
+    unsigned int db = b->get_degree();
 
     int sign = 1;
-    if ((--(a->dict_.end()))->second < 0) {
+    if ((--(a->get_dict().end()))->second < 0) {
         a = neg_poly(*a);
         sign = -1 * sign;
     }
-    if ((--(b->dict_.end()))->second < 0) {
+    if ((--(b->get_dict().end()))->second < 0) {
         b = neg_poly(*b);
         sign = -1 * sign;
     }
@@ -235,9 +235,9 @@ RCP<const UnivariateIntPolynomial> mul_poly(RCP<const UnivariateIntPolynomial> a
     }
 
     if (sign == -1)
-        return neg_poly(*make_rcp<const UnivariateIntPolynomial>(a->var_, v));
+        return neg_poly(*make_rcp<const UnivariateIntPolynomial>(a->get_var(), v));
     else
-        return make_rcp<const UnivariateIntPolynomial>(a->var_, v);
+        return make_rcp<const UnivariateIntPolynomial>(a->get_var(), v);
 }
 
 
@@ -391,35 +391,35 @@ bool UnivariatePolynomial::is_pow() const {
 
 RCP<const UnivariatePolynomial> add_uni_poly(const UnivariatePolynomial &a, const UnivariatePolynomial &b) {
     map_uint_Expr dict;
-    for (const auto &it : a.dict_)
+    for (const auto &it : a.get_dict())
         dict[it.first] = it.second;
-    for (const auto &it : b.dict_)
+    for (const auto &it : b.get_dict())
         dict[it.first] += it.second;
-    return univariate_polynomial(a.var_, (--(dict.end()))->first, std::move(dict));
+    return univariate_polynomial(a.get_var(), (--(dict.end()))->first, std::move(dict));
 }
 
 RCP<const UnivariatePolynomial> neg_uni_poly(const UnivariatePolynomial &a) {
     map_uint_Expr dict;
-    for (const auto &it : a.dict_)
+    for (const auto &it : a.get_dict())
         dict[it.first] = -1 * it.second;
-    return univariate_polynomial(a.var_, (--(dict.end()))->first, std::move(dict));
+    return univariate_polynomial(a.get_var(), (--(dict.end()))->first, std::move(dict));
 }
 
 RCP<const UnivariatePolynomial> sub_uni_poly(const UnivariatePolynomial &a, const UnivariatePolynomial &b) {
     map_uint_Expr dict;
-    for (const auto &it : a.dict_)
+    for (const auto &it : a.get_dict())
         dict[it.first] = it.second;
-    for (const auto &it : b.dict_)
+    for (const auto &it : b.get_dict())
         dict[it.first] -= it.second;
-    return univariate_polynomial(a.var_, (--(dict.end()))->first, std::move(dict));
+    return univariate_polynomial(a.get_var(), (--(dict.end()))->first, std::move(dict));
 }
 
 RCP<const UnivariatePolynomial> mul_uni_poly(RCP<const UnivariatePolynomial> a, RCP<const UnivariatePolynomial> b) {
     map_uint_Expr dict;
-    for (const auto &i1 : a->dict_)
-        for (const auto &i2 : b->dict_)
+    for (const auto &i1 : a->get_dict())
+        for (const auto &i2 : b->get_dict())
             dict[i1.first + i2.first] += i1.second * i2.second;
-    return univariate_polynomial(a->var_, (--(dict.end()))->first, std::move(dict));
+    return univariate_polynomial(a->get_var(), (--(dict.end()))->first, std::move(dict));
 }
 
 } // SymEngine
