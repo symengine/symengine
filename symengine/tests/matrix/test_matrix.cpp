@@ -36,6 +36,7 @@ TEST_CASE("test_get_set(): matrices", "[matrices]")
     A.set(1, 0, integer(0));
     REQUIRE(A == DenseMatrix(2, 2, {integer(1), integer(0),
                                    integer(0), integer(-2)}));
+    REQUIRE(A != DenseMatrix(2, 1, {integer(1), integer(-2)}));
 
     A.set(0, 1, integer(-2));
     REQUIRE(A == DenseMatrix(2, 2, {integer(1), integer(-2), integer(0),
