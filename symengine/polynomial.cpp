@@ -500,7 +500,7 @@ RCP<const Basic> MultivariateIntPolynomial::from_dict(const set_sym &s, umap_uve
         map_basic_basic b;
         int whichvar = 0;
         for(auto sym : s){
-            b.insert( std::pair<RCP<const Basic>, RCP<const Basic>>(sym , make_rcp<Integer>(d.begin()->first[whichvar])) );
+	    b.insert( std::pair<RCP<const Basic>, RCP<const Basic>>(sym , make_rcp<Integer>(integer_class(d.begin()->first[whichvar]))) );
             whichvar++;
         }
        return Mul::from_dict(make_rcp<const Integer>(d.begin()->second), std::move(b));
