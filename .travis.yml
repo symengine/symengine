@@ -38,13 +38,13 @@ env:
   # Debug build (with BFD) with PRIMESIEVE
   - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_PRIMESIEVE="yes"
   # Debug build (with BFD) with Arb
-  - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_ARB="yes"
+  - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_ARB="yes" INTEGER_CLASS="flint"
   # Debug build (with BFD) with MPC
   - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_MPC="yes"
   # Debug build (with BFD) with MPC
   - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_MPFR="yes" INTEGER_CLASS="gmp"
   # Debug build shared lib (with BFD)
-  - BUILD_TYPE="Debug" WITH_BFD="yes" BUILD_SHARED_LIBS="yes" WITH_FLINT="yes" INTEGER_CLASS="flint"
+  - BUILD_TYPE="Debug" WITH_BFD="yes" BUILD_SHARED_LIBS="yes"
   # Release build (with BFD)
   - WITH_BFD="yes"
   # Release build (with BFD and SHARED_LIBS)
@@ -59,7 +59,7 @@ matrix:
     - compiler: clang
     - os: osx
   include:
-    - env: BUILD_TYPE="Debug" WITH_BFD="yes" WITH_PIRANHA="yes" WITH_BENCHMARKS_NONIUS="yes"
+    - env: BUILD_TYPE="Debug" WITH_BFD="yes" WITH_PIRANHA="yes" WITH_BENCHMARKS_NONIUS="yes" WITH_COVERAGE="yes" TEST_IN_TREE="yes" WITH_FLINT="yes" WITH_MPC="yes"
       compiler: gcc
       os: linux
       addons:
@@ -70,6 +70,7 @@ matrix:
           packages:
           - libgmp-dev
           - libmpfr-dev
+          - libmpc-dev
           - binutils-dev
           - libboost-serialization1.55-dev
           - libboost-iostreams1.55-dev
