@@ -38,7 +38,7 @@ public:
     static UnivariateExprPolynomial var(const std::string &s);
       
     static Expression convert(const Number &x);
-    RCP<const UnivariatePolynomial> convert_poly(const map_uint_mpz &d);
+    RCP<const UnivariatePolynomial> convert_poly(const map_uint_mpz &&d);
     RCP<const UnivariatePolynomial> convert_vector(const std::vector<integer_class> &v);
 
     static unsigned ldegree(const UnivariateExprPolynomial &s);
