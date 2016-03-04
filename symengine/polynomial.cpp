@@ -577,13 +577,13 @@ int MultivariateIntPolynomial::compare(const Basic &o) const{
 }
 
 integer_class MultivariateIntPolynomial::eval(std::map<RCP<const Symbol>, integer_class, RCPSymbolCompare> &vals){
-    integer_class ans = 0;
+    integer_class ans(0);
     for(auto bucket : dict_) {
-        integer_class term = 1;
+        integer_class term(1);
         unsigned int whichvar = 0;
         for(auto sym : vars_){
             integer_class temp;
-            mpz_pow_ui(temp.get_mpz_t(), vals.find(sym)->second.get_mpz_t(), bucket.first[whichvar] );
+            mp_pow_ui(temp, vals.find(sym)->second, bucket.first[whichvar] );
             term *= temp;
             whichvar++;
         }
@@ -625,8 +625,8 @@ std::string MultivariateIntPolynomial::toString() const{
 	      }
 	        i++;
             }
-	    if(abs(c) != 1 || expr.str().empty())
-	        s << abs(c) << " ";
+	    if(mp_abs(c) != 1 || expr.str().empty())
+	        s << mp_abs(c) << " ";
 	    s << expr.str();
 	    first = false;
 	}
