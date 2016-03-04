@@ -32,7 +32,7 @@ TEST_CASE("Constructor of UnivariateSeries", "[UnivariateSeries")
     RCP<const UnivariateSeries> P = univariate_series(x, 2, adict_);
     REQUIRE(P->__str__() == "1 + 2*x + O(x**2)");
 
-    RCP<const UnivariateSeries> Q = UnivariateSeries::create(x, 5, {1_z, 1_z, 2_z, 1_z});
+    RCP<const UnivariateSeries> Q = UnivariateSeries::create(x, 5, {0_z, 1_z, 2_z, 1_z});
     REQUIRE(Q->__str__() == "1 + 2*x**2 + x**3 + O(x**5)");
 }
 
