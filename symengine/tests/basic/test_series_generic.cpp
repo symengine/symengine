@@ -28,11 +28,11 @@ using namespace SymEngine::literals;
 TEST_CASE("Constructor of UnivariateSeries", "[UnivariateSeries]")
 {
     RCP<const Symbol> x  = symbol("x");
-    map_uint_mpz adict_ = {{0, 1_z}, {1, 2_z}, {2, 1_z}};
+    map_uint_mpz adict_ = {{0, 1_z}, {1, 2_z}, {2, 0_z}};
     RCP<const UnivariateSeries> P = univariate_series(x, 2, adict_);
     REQUIRE(P->__str__() == "1 + 2*x + O(x**2)");
 
-    RCP<const UnivariateSeries> Q = UnivariateSeries::create(x, 5, {1_z, 0_z, 2_z, 1_z});
+    RCP<const UnivariateSeries> Q = UnivariateSeries::create(x, 5, {1_z, 1_z, 2_z, 1_z});
     REQUIRE(Q->__str__() == "1 + 2*x**2 + x**3 + O(x**5)");
 }
 
