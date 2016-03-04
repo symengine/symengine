@@ -52,6 +52,7 @@ using SymEngine::real_double;
 using SymEngine::complex_double;
 using SymEngine::rational_class;
 using SymEngine::is_a;
+using SymEngine::set_basic;
 
 TEST_CASE("Add: arit", "[arit]")
 {
@@ -122,7 +123,7 @@ TEST_CASE("Mul: arit", "[arit]")
     RCP<const Basic> y = symbol("y");
     RCP<const Basic> z = symbol("z");
     RCP<const Basic> im2 = integer(-2);
-    RCP<const Basic> i2 = integer(2);
+    RCP<const Integer> i2 = integer(2);
     RCP<const Basic> i3 = integer(3);
     RCP<const Basic> i4 = integer(4);
     RCP<const Basic> i6 = integer(6);
@@ -235,6 +236,17 @@ TEST_CASE("Mul: arit", "[arit]")
     r2 = mul(y, real_double(2.0));
     // (2*x**2*y) * (x**(-2.0)) == 2.0 * y
     REQUIRE(eq(*r1, *r2));
+
+    set_basic s;
+    rc1 = Complex::from_two_nums(*one, *one);
+    s.insert(rc1);
+    rc1 = Complex::from_two_nums(*i2, *one);
+    s.insert(rc1);
+    rc1 = Complex::from_two_nums(*one, *one);
+    s.insert(rc1);
+    REQUIRE(s.size() == 2);
+
+    CHECK_THROWS_AS(Complex::from_two_nums(*one, *real_double(1.0));, std::runtime_error);
 }
 
 TEST_CASE("Sub: arit", "[arit]")
