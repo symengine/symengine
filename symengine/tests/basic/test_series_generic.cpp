@@ -25,7 +25,7 @@ using SymEngine::vec_basic_eq_perm;
 
 using namespace SymEngine::literals;
 
-TEST_CASE("Constructor of UnivariateSeries", "[UnivariateSeries")
+TEST_CASE("Constructor of UnivariateSeries", "[UnivariateSeries]")
 {
     RCP<const Symbol> x  = symbol("x");
     map_uint_mpz adict_ = {{0, 1_z}, {1, 2_z}, {2, 1_z}};
@@ -36,7 +36,7 @@ TEST_CASE("Constructor of UnivariateSeries", "[UnivariateSeries")
     REQUIRE(Q->__str__() == "1 + 2*x**2 + x**3 + O(x**5)");
 }
 
-TEST_CASE("Adding two UnivariateSeries", "[UnivariateSeries")
+TEST_CASE("Adding two UnivariateSeries", "[UnivariateSeries]")
 {
     RCP<const Symbol> x  = symbol("x");
     map_uint_mpz adict_ = {{0, 1_z}, {1, 2_z}, {2, 1_z}};
@@ -55,7 +55,7 @@ TEST_CASE("Adding two UnivariateSeries", "[UnivariateSeries")
     REQUIRE(*f == g);
 }
 
-TEST_CASE("Negative of a UnivariateSeries", "[UnivariateSeries")
+TEST_CASE("Negative of a UnivariateSeries", "[UnivariateSeries]")
 {
     RCP<const Symbol> x  = symbol("x");
     map_uint_mpz adict_ = {{0, 1_z}, {1, 2_z}, {2, 1_z}};
@@ -87,7 +87,7 @@ TEST_CASE("Subtracting two UnivariateSeries", "[UnivariateSeries]")
     REQUIRE(*e == g);
 }
 
-TEST_CASE("Multiplication of two UnivariateSeries", "[UnivariateSeries")
+TEST_CASE("Multiplication of two UnivariateSeries", "[UnivariateSeries]")
 {
     RCP<const Symbol> x  = symbol("x");
     RCP<const UnivariateSeries> a = univariate_series(x, 5, {{0, 1_z}, {1, 2_z}, {2, 1_z}});
@@ -101,3 +101,9 @@ TEST_CASE("Multiplication of two UnivariateSeries", "[UnivariateSeries")
     REQUIRE(*c == *e);
     REQUIRE(*d == *f);
 }
+
+//TEST_CASE("Differentiation of UnivariateSeries", "[UnivariateSeries]")
+//{
+  //  RCP<const Symbol> x  = symbol("x");
+    //RCP<const UnivariateSeries> var = univariate_series(x, 1, {{0, 1_z}});
+    
