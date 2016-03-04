@@ -947,6 +947,14 @@ TEST_CASE("Expand2: arit", "[arit]")
     r1 = expand(mul(i3, add(x, one)));
     r2 = add(mul(i3, x), i3);
     REQUIRE(eq(*r1, *r2));
+
+    r1 = expand(pow(add(sqrt(add(x, y)), one), i2));
+    r2 = add(x, add(y, add(one, mul(i2, sqrt(add(x, y))))));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = expand(pow(add(mul(I, y), x), i3));
+    r2 = add(sub(pow(x, i3), mul(pow(y, i3), I)), sub(mul(mul(i3, I), mul(pow(x, i2), y)), mul(i3, mul(pow(y, i2), x))));
+    REQUIRE(eq(*r1, *r2));
 }
 
 TEST_CASE("Expand3: arit", "[arit]")

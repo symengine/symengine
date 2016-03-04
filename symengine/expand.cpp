@@ -206,14 +206,8 @@ public:
                         }
                     }
                     if (!(i2->second->is_one())) {
-                        if (is_a<Integer>(*(i2->second)) || is_a<Rational>(*(i2->second))) {
-                            _imulnum(outArg(overall_coeff),
-                                    pownum(i2->second,
-                                           rcp_static_cast<const Number>(exp)));
-                        } else if (is_a<Complex>(*(i2->second))) {
-                            RCP<const Number> tmp = rcp_static_cast<const Complex>(i2->second)->pow(*exp);
-                            _imulnum(outArg(overall_coeff), tmp);
-                        }
+                        _imulnum(outArg(overall_coeff), pownum(i2->second, 
+                                                                rcp_static_cast<const Number>(exp)));
                     }
                 }
             }
