@@ -345,6 +345,12 @@ std::vector<fn> init_eval_double()
         double tmp = (static_cast<const RealDouble &>(x)).i;
         return tmp;
     };
+#ifdef HAVE_SYMENGINE_MPFR
+    table[REAL_MPFR] = [](const Basic &x) {
+        double tmp = mpfr_get_d(static_cast<const RealMPFR &>(x).i.get_mpfr_t(), MPFR_RNDN);
+        return tmp;
+    };
+#endif
     table[ADD] = [](const Basic &x) {
         double tmp = 0;
         for (const auto &p: x.get_args()) tmp += eval_double_single_dispatch(*p);
@@ -416,10 +422,6 @@ std::vector<fn> init_eval_double()
         double num = eval_double_single_dispatch(*(static_cast<const ATan2 &>(x)).get_num());
         double den = eval_double_single_dispatch(*(static_cast<const ATan2 &>(x)).get_den());
         return ::atan2(num, den);
-    };
-    table[ACOT] = [](const Basic &x) {
-        double tmp = eval_double_single_dispatch(*(static_cast<const ACot &>(x)).get_arg());
-        return ::atan(1/tmp);
     };
     table[SINH] = [](const Basic &x) {
         double tmp = eval_double_single_dispatch(*(static_cast<const Sinh &>(x)).get_arg());
