@@ -372,6 +372,10 @@ if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(WITH_SYMENGINE_ASSERT yes) # Also enable assertions
 endif()
 
+if (WITH_COVERAGE)
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} --coverage")
+endif()
+
 enable_testing()
 add_subdirectory(symengine)
 
