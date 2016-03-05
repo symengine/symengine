@@ -98,6 +98,18 @@ RCP<const UnivariateIntPolynomial> UnivariateIntPolynomial::from_vec(const RCP<c
     return make_rcp<const UnivariatePolynomial>(var, degree, std::move(dict));
 }
 
+RCP<const UnivariateIntPolynomial> from_vec(const RCP<const Symbol> &var, const std::vector<integer_class> &v){
+    map_uint_mpz dict;
+    unsigned int degree = 0;
+    for(unsigned int i = 0; i < v.size(); i++){
+        if(0 != v[i]){
+  	    dict.insert(std::pair<unsigned int, integer_class>(i, v[i]));
+	    degree = i;
+        }
+    }
+    return make_rcp<const UnivariateIntPolynomial>(var, degree, std::move(dict));
+}
+
 void UnivariateIntPolynomial::dict_add_term(map_uint_mpz &d, const integer_class &coef, const unsigned int &n)
 {
     auto it = d.find(n);
