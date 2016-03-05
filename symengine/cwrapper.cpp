@@ -489,7 +489,6 @@ char* ascii_art_str()
     return cc;
 }
 
-<<<<<<< HEAD
 
 void ntheory_gcd(basic s, const basic a, const basic b)
 {

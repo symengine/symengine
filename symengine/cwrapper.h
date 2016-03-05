@@ -256,7 +256,6 @@ void basic_subs2(basic s, const basic e, const basic a, const basic b);
 //! The caller is responsible to free the pointer using 'basic_str_free'.
 char* ascii_art_str();
 
-<<<<<<< HEAD
 //! Greatest Common Divisor
 void ntheory_gcd(basic s, const basic a, const basic b);
 //! Least Common Multiple
