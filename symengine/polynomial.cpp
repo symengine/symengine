@@ -73,30 +73,13 @@ int UnivariatePolynomial::compare(const Basic &o) const
     return map_uint_mpz_compare(dict_, s.dict_);
 }
 
-RCP<const Basic> UnivariatePolynomial::from_dict(const RCP<const Symbol> &var, map_uint_mpz &&d)
+RCP<const UnivariatePolynomial> UnivariatePolynomial::from_dict(const RCP<const Symbol> &var, map_uint_mpz &&d)
 {
-    if (d.size() == 1) {
-        if (d.begin()->first == 0)
-            return integer(d.begin()->second);
-        else if (d.begin()->first == 1) {
-            if (d.begin()->second == 0)
-                return zero;
-            else if (d.begin()->second == 1)
-                return var;
-            else
-                return Mul::from_dict(integer(d.begin()->second), {{var, one}});
-        } else {
-            if (d.begin()->second == 0)
-                return zero;
-            else if (d.begin()->second == 1)
-                return pow(var, integer(d.begin()->first));
-            else
-                return Mul::from_dict(integer(d.begin()->second),
-                    {{var, integer(d.begin()->first)}});
-        }
-    } else {
-        return make_rcp<const UnivariatePolynomial>(var, (--(d.end()))->first, std::move(d));
+    for(auto itter = d.begin(); itter != d.end(); itter++){
+        if(0_z == itter->second)
+  	    d.erase(itter);
     }
+    return make_rcp<const UnivariatePolynomial>(var, (--(d.end()))->first, std::move(d));
 }
 
 void UnivariatePolynomial::dict_add_term(map_uint_mpz &d, const integer_class &coef, const unsigned int &n)
@@ -197,7 +180,7 @@ RCP<const UnivariatePolynomial> add_uni_poly(const UnivariatePolynomial &a, cons
     for (const auto &it : b.dict_)
         dict[it.first] += it.second;
 
-    RCP<const UnivariatePolynomial> c = univariate_polynomial(a.var_, (--(dict.end()))->first, std::move(dict));
+    RCP<const UnivariatePolynomial> c = UnivariatePolynomial::from_dict(a.var_, std::move(dict));
     return c;
 }
 
