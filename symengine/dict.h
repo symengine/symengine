@@ -43,7 +43,7 @@ typedef std::map<RCP<const Integer>, unsigned,
         RCPIntegerKeyLess> map_integer_uint;
 typedef std::map<unsigned, integer_class>
        map_uint_mpz;
-typedef std::map<unsigned, Expression> map_uint_Expr;
+typedef std::map<int, Expression> map_int_Expr;
 
 //! `insert(m, first, second)` is equivalent to `m[first] = second`, just faster,
 //! because no default constructor is called on the `second` type.
@@ -94,7 +94,7 @@ bool vec_basic_eq(const vec_basic &a, const vec_basic &b);
 bool vec_basic_eq_perm(const vec_basic &a, const vec_basic &b);
 //! \return true if the two dictionaries `a` and `b` are equal. Otherwise false.
 bool map_uint_mpz_eq(const map_uint_mpz &a, const map_uint_mpz &b);
-bool map_uint_Expr_eq(const map_uint_Expr &a, const map_uint_Expr &b);
+bool map_int_Expr_eq(const map_int_Expr &a, const map_int_Expr &b);
 //! \return true if the two multisets `a` and `b` are equal. Otherwise false.
 bool multiset_basic_eq(const multiset_basic &a, const multiset_basic &b);
 
@@ -122,7 +122,7 @@ int vec_basic_compare(const vec_basic &a, const vec_basic &b);
 int multiset_basic_compare(const multiset_basic &a, const multiset_basic &b);
 //! \return -1, 0, 1 for a < b, a == b, a > b
 int map_uint_mpz_compare(const map_uint_mpz &a, const map_uint_mpz &b);
-int map_uint_Expr_compare(const map_uint_Expr &a, const map_uint_Expr &b);
+int map_int_Expr_compare(const map_int_Expr &a, const map_int_Expr &b);
 
 //! Part of umap_vec_mpz:
 typedef struct

@@ -19,7 +19,7 @@ using SymEngine::RCP;
 using SymEngine::make_rcp;
 using SymEngine::print_stack_on_segfault;
 using SymEngine::map_uint_mpz;
-using SymEngine::map_uint_Expr;
+using SymEngine::map_int_Expr;
 using SymEngine::Basic;
 using SymEngine::one;
 using SymEngine::zero;
@@ -189,8 +189,8 @@ TEST_CASE("Constructor of UnivariatePolynomial", "[UnivariatePolynomial]")
 TEST_CASE("Adding two UnivariatePolynomial", "[UnivariatePolynomial]")
 {
     RCP<const Symbol> x  = symbol("x");
-    map_uint_Expr adict_ = {{0, 1}, {1, 2}, {2, symbol("a")}};
-    map_uint_Expr bdict_ = {{0, 2}, {1, 3}, {2, symbol("b")}};
+    map_int_Expr adict_ = {{0, 1}, {1, 2}, {2, symbol("a")}};
+    map_int_Expr bdict_ = {{0, 2}, {1, 3}, {2, symbol("b")}};
     const UnivariatePolynomial a(x, 2, std::move(adict_));
     const UnivariatePolynomial b(x, 2, std::move(bdict_));
 
@@ -202,7 +202,7 @@ TEST_CASE("Adding two UnivariatePolynomial", "[UnivariatePolynomial]")
 TEST_CASE("Negative of a UnivariatePolynomial", "[UnivariatePolynomial]")
 {
     RCP<const Symbol> x  = symbol("x");
-    map_uint_Expr adict_ = {{0, 1}, {1, symbol("a")}, {2, symbol("c")}};
+    map_int_Expr adict_ = {{0, 1}, {1, symbol("a")}, {2, symbol("c")}};
     const UnivariatePolynomial a(x, 2, std::move(adict_));
 
     RCP<const UnivariatePolynomial> b = neg_uni_poly(a);
@@ -213,8 +213,8 @@ TEST_CASE("Negative of a UnivariatePolynomial", "[UnivariatePolynomial]")
 TEST_CASE("Subtracting two UnivariatePolynomial", "[UnivariatePolynomial]")
 {
     RCP<const Symbol> x  = symbol("x");
-    map_uint_Expr adict_ = {{0, 1}, {1, 2}, {2, 1}};
-    map_uint_Expr bdict_ = {{0, 2}, {1, symbol("b")}, {2, symbol("a")}};
+    map_int_Expr adict_ = {{0, 1}, {1, 2}, {2, 1}};
+    map_int_Expr bdict_ = {{0, 2}, {1, symbol("b")}, {2, symbol("a")}};
     const UnivariatePolynomial a(x, 2, std::move(adict_));
     const UnivariatePolynomial b(x, 2, std::move(bdict_));
 

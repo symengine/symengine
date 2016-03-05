@@ -105,11 +105,11 @@ class UnivariatePolynomial : public Basic {
 private:
     unsigned int degree_;
     RCP<const Symbol> var_;
-    map_uint_Expr dict_;
+    map_int_Expr dict_;
 public:
     IMPLEMENT_TYPEID(UNIVARIATEPOLYNOMIAL)
     //! Constructor of UnivariatePolynomial class
-    UnivariatePolynomial(const RCP<const Symbol> &var, const unsigned int &degree, map_uint_Expr&& dict);
+    UnivariatePolynomial(const RCP<const Symbol> &var, const unsigned int &degree, map_int_Expr&& dict);
     //! Constructor using a dense vector of Expression
     UnivariatePolynomial(const RCP<const Symbol> &var, const std::vector<Expression> &v);
     
@@ -117,7 +117,7 @@ public:
         return make_rcp<const UnivariatePolynomial>(var, v);
     }
 
-    bool is_canonical(const unsigned int &degree, const map_uint_Expr& dict) const;
+    bool is_canonical(const unsigned int &degree, const map_int_Expr& dict) const;
     std::size_t __hash__() const;
     bool __eq__(const Basic &o) const;
     int compare(const Basic &o) const;
@@ -125,11 +125,11 @@ public:
     /*! Creates appropriate instance (i.e Symbol, Integer,
     * Mul, Pow, UnivariatePolynomial) depending on the size of dictionary `d`.
     */
-    static RCP<const Basic> from_dict(const RCP<const Symbol> &var, map_uint_Expr &&d);
+    static RCP<const Basic> from_dict(const RCP<const Symbol> &var, map_int_Expr &&d);
     /*!
     * Adds coef*var_**n to the dict_
     */
-    static void dict_add_term(map_uint_Expr &d, const Expression &coef, const unsigned int &n);
+    static void dict_add_term(map_int_Expr &d, const Expression &coef, const unsigned int &n);
     Expression max_coef() const;
     //! Evaluates the UnivariatePolynomial at value x
     Expression eval(const Expression &x) const;
@@ -154,7 +154,7 @@ public:
     inline RCP<const Symbol> get_var() const {
         return var_;
     }
-    inline const map_uint_Expr& get_dict() const {
+    inline const map_int_Expr& get_dict() const {
         return dict_;
     }
 }; //UnivariatePolynomial
@@ -168,7 +168,7 @@ RCP<const UnivariatePolynomial> sub_uni_poly(const UnivariatePolynomial &a, cons
 //! Multiplying two UnivariatePolynomial a and b
 RCP<const UnivariatePolynomial> mul_uni_poly(RCP<const UnivariatePolynomial> a, RCP<const UnivariatePolynomial> b);
 
-inline RCP<const UnivariatePolynomial> univariate_polynomial(RCP<const Symbol> i, unsigned int deg, map_uint_Expr&& dict) {
+inline RCP<const UnivariatePolynomial> univariate_polynomial(RCP<const Symbol> i, unsigned int deg, map_int_Expr&& dict) {
     return make_rcp<const UnivariatePolynomial>(i, deg, std::move(dict));
 }
 
@@ -189,9 +189,7 @@ public:
     UnivariateExprPolynomial(UnivariateExprPolynomial &&other) SYMENGINE_NOEXCEPT : poly_(std::move(other.poly_)) {}
     UnivariateExprPolynomial(int i) : poly_(UnivariatePolynomial::create(symbol("x"), {{0, Expression(i)}})) {}
     UnivariateExprPolynomial(RCP<const UnivariatePolynomial> p) : poly_(std::move(p)) {}
-    UnivariateExprPolynomial(Expression expr) : poly_(UnivariatePolynomial::create(symbol("x"), {{0, expr}})) {
-        
-    }
+    UnivariateExprPolynomial(Expression expr) : poly_(UnivariatePolynomial::create(symbol("x"), {{0, expr}})) { }
     
     UnivariateExprPolynomial &operator=(const UnivariateExprPolynomial &) = default;
     UnivariateExprPolynomial &operator=(UnivariateExprPolynomial &&other) SYMENGINE_NOEXCEPT {

@@ -183,8 +183,8 @@ int map_uint_mpz_compare(const map_uint_mpz &A, const map_uint_mpz &B)
     return 0;
 }
 
-bool map_uint_Expr_eq(const map_uint_Expr &a,
-        const map_uint_Expr &b)
+bool map_int_Expr_eq(const map_int_Expr &a,
+        const map_int_Expr &b)
 {
     // Can't be equal if # of entries differ:
     if (a.size() != b.size()) return false;
@@ -198,7 +198,7 @@ bool map_uint_Expr_eq(const map_uint_Expr &a,
 }
 
 
-int map_uint_Expr_compare(const map_uint_Expr &A, const map_uint_Expr &B)
+int map_int_Expr_compare(const map_int_Expr &A, const map_int_Expr &B)
 {
     if (A.size() != B.size())
         return (A.size() < B.size()) ? -1 : 1;

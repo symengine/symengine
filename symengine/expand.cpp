@@ -238,9 +238,8 @@ public:
     }
 
     void bvisit(const Pow &self) {
+        RCP<const Basic> _base = expand(self.get_base());
         if(is_a<const UnivariatePolynomial>(*self.get_base())) {
-            RCP<const Basic> _base = expand(self.get_base());
-
             if (is_a<Integer>(*self.get_exp()) && is_a<UnivariatePolynomial>(*_base)) {
                 int q = rcp_static_cast<const Integer>(self.get_exp())->as_int();
                 RCP<const UnivariatePolynomial> p = rcp_static_cast<const UnivariatePolynomial>(_base);
@@ -284,7 +283,6 @@ public:
         }
 
         else {
-            RCP<const Basic> _base = expand(self.get_base());
             if (is_a<Integer>(*self.get_exp()) && is_a<UnivariateIntPolynomial>(*_base)) {
                 int q = rcp_static_cast<const Integer>(self.get_exp())->as_int();
                 RCP<const UnivariateIntPolynomial> p = rcp_static_cast<const UnivariateIntPolynomial>(_base);
@@ -332,9 +330,9 @@ public:
     }
 
     inline void _coef_dict_add_term(const RCP<const Number> &c, const RCP<const Basic> &term) {
-        if (is_a_Number(*term)) 
+        if (is_a_Number(*term)) {
             iaddnum(outArg(coeff), _mulnum(c, rcp_static_cast<const Number>(term)));
-        else if (is_a<Add>(*term)) {
+        } else if (is_a<Add>(*term)) {
             for (const auto &q: (rcp_static_cast<const Add>(term))->dict_)
                 Add::dict_add_term(d_, q.second, q.first);
             iaddnum(outArg(coeff), rcp_static_cast<const Add>(term)->coef_);

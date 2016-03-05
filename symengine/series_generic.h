@@ -19,7 +19,7 @@ public:
     IMPLEMENT_TYPEID(UNIVARIATESERIES)
     UnivariateSeries(const UnivariateExprPolynomial sp, const std::string varname, const unsigned degree) : SeriesBase(std::move(sp), varname, degree) {}
     UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const UnivariateExprPolynomial poly);
-    UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const unsigned int &max_exp, map_uint_Expr &&dict);
+    UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const unsigned int &max_exp, map_int_Expr &&dict);
     UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const map_uint_mpz &dict);
     //! Constructor using a dense vector of integer_class coefficients
     UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const std::vector<integer_class> &v);
@@ -38,7 +38,7 @@ public:
     static UnivariateExprPolynomial var(const std::string &s);
       
     static Expression convert(const Number &x);
-    RCP<const UnivariatePolynomial> convert_poly(const map_uint_mpz &&d);
+    RCP<const UnivariatePolynomial> convert_poly(const map_uint_mpz &d);
     RCP<const UnivariatePolynomial> convert_vector(const std::vector<integer_class> &v);
 
     static unsigned ldegree(const UnivariateExprPolynomial &s);
