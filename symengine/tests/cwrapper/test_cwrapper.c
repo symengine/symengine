@@ -458,6 +458,69 @@ void test_ascii_art() {
     basic_str_free(s);
 }
 
+void test_ntheory() {
+    basic x1, x2, x3, x4, x5, x6, x7, x8,  i1, i2, i4, i5;
+
+    basic_new_stack(x1);
+    basic_new_stack(x2);
+    basic_new_stack(x3);
+    basic_new_stack(x4);
+    basic_new_stack(x5);
+    basic_new_stack(x6);
+    basic_new_stack(x7);
+    basic_new_stack(x8);
+    basic_new_stack(i1);
+    basic_new_stack(i2);
+    basic_new_stack(i4);
+    basic_new_stack(i5);
+
+    integer_set_si(i1, 1);
+    integer_set_si(i2, 2);
+    integer_set_si(i4, 4);
+    integer_set_si(i5, 5);
+
+    ntheory_gcd(x1, i2, i4);
+    SYMENGINE_C_ASSERT(basic_eq(x1, i2));
+    
+    ntheory_lcm(x2, i2, i4);
+    SYMENGINE_C_ASSERT(basic_eq(x2, i4));
+
+    ntheory_nextprime(x3, i4);
+    SYMENGINE_C_ASSERT(basic_eq(x3, i5));
+
+    ntheory_mod(x4, i5, i4);
+    SYMENGINE_C_ASSERT(basic_eq(x4, i1));
+
+    ntheory_quotient(x5, i5, i2);
+    SYMENGINE_C_ASSERT(basic_eq(x5, i2));
+
+    ntheory_fibonacci(x6, 5);
+    SYMENGINE_C_ASSERT(basic_eq(x6, i5));
+
+    ntheory_lucas(x7, 1);
+    SYMENGINE_C_ASSERT(basic_eq(x7, i1));
+    
+    ntheory_binomial(x8, i5, 1);
+    SYMENGINE_C_ASSERT(basic_eq(x8, i5));
+
+    basic_free_stack(x1);
+    basic_free_stack(x2);
+    basic_free_stack(x3);
+    basic_free_stack(x4);
+    basic_free_stack(x5);
+    basic_free_stack(x6);
+    basic_free_stack(x7);
+    basic_free_stack(x8);
+    basic_free_stack(i1);
+    basic_free_stack(i2);
+    basic_free_stack(i4);
+    basic_free_stack(i5);
+
+
+}
+
+
+
 int main(int argc, char* argv[])
 {
     test_cwrapper();
@@ -476,5 +539,6 @@ int main(int argc, char* argv[])
     test_subs2();
     test_constants();
     test_ascii_art();
+    test_ntheory();
     return 0;
 }
