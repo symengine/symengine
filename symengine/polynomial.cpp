@@ -177,7 +177,7 @@ bool UnivariateIntPolynomial::is_minus_one() const {
 }
 
 bool UnivariateIntPolynomial::is_integer() const {
-    if(dict_.empty())
+    if (dict_.empty())
         return true;
     if (dict_.size() == 1 and dict_.begin()->first == 0)
         return true;
