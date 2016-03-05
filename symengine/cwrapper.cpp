@@ -489,4 +489,10 @@ char* ascii_art_str()
     return cc;
 }
 
+//! Print stacktrace on segfault
+void symengine_print_stack_on_segfault()
+{
+    SymEngine::print_stack_on_segfault();
+}
+
 }

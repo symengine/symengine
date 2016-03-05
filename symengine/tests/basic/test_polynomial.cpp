@@ -300,7 +300,7 @@ TEST_CASE("Bool checks specific UnivariatePolynomial cases", "[UnivariatePolynom
 			not poly->is_mul() and not poly->is_pow()));
 }
 
-TEST_CASE("Univariate Polynomial expand", "[UnivariatePolynomial][expand]")
+TEST_CASE("Univariate Polynomial expand", "[UnivariateIntPolynomial][expand]")
 {
     RCP<const Symbol> x  = symbol("x");
     RCP<const UnivariatePolynomial> a = univariate_polynomial(x, 3, {{1, 1}, {2, 1}, {3, symbol("a")}});

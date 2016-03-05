@@ -69,6 +69,9 @@ fi
 if [[ "${INTEGER_CLASS}" != "" ]]; then
     cmake_line="$cmake_line -DINTEGER_CLASS=${INTEGER_CLASS}"
 fi
+if [[ "${WITH_COVERAGE}" != "" ]]; then
+    cmake_line="$cmake_line -DWITH_COVERAGE=${WITH_COVERAGE}"
+fi
 
 if [[ "${CC}" == "clang"* ]] && [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
     CXXFLAGS=""
@@ -92,6 +95,11 @@ echo "Running tests in build directory:"
 # C++
 ctest --output-on-failure
 
+if [[ "${WITH_COVERAGE}" == "yes" ]]; then
+    coveralls --exclude cmake --exclude CMakeFiles --exclude symengine/utilities --exclude benchmarks --gcov $GCOV_EXECUTABLE --gcov-options '\-lp' >/dev/null 2>&1
+    exit 0;
+fi
+
 echo "Running tests using installed SymEngine:"
 
 cd $SOURCE_DIR/benchmarks
@@ -113,3 +121,4 @@ else
     exit -1;
 fi
 # TODO: Add similar grep checks for space after comma,, space after `if`, space between `)` and `{` also
+

@@ -256,6 +256,9 @@ void basic_subs2(basic s, const basic e, const basic a, const basic b);
 //! The caller is responsible to free the pointer using 'basic_str_free'.
 char* ascii_art_str();
 
+//! Print stacktrace on segfault
+void symengine_print_stack_on_segfault();
+
 #ifdef __cplusplus
 }
 #endif
