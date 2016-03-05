@@ -49,7 +49,7 @@ public:
     /*! Creates appropriate instance (i.e Symbol, Integer,
     * Mul, Pow, UnivariateIntPolynomial) depending on the size of dictionary `d`.
     */
-    static RCP<const Basic> from_dict(const RCP<const Symbol> &var, map_uint_mpz &&d);
+    static RCP<const UnivariatePolynomial> from_dict(const RCP<const Symbol> &var, map_uint_mpz &&d);
     /*!
     * Adds coef*var_**n to the dict_
     */
