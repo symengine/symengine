@@ -246,10 +246,10 @@ public:
             RCP<const UnivariateIntPolynomial> r = univariate_int_polynomial(p->var_, 0, {{0, integer_class(1)}});
             while (q != 0) {
                 if (q % 2 == 1) {
-                    r = mul_uni_poly(r, p);
+                    r = mul_poly(r, p);
                     q--;
                 }
-                p = mul_uni_poly(p, p);
+                p = mul_poly(p, p);
                 q /= 2;
             }
             _coef_dict_add_term(multiply, r);

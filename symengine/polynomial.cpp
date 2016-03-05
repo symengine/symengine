@@ -190,7 +190,7 @@ bool UnivariateIntPolynomial::is_pow() const {
     return false;
 }
 
-RCP<const UnivariateIntPolynomial> add_uni_poly(const UnivariateIntPolynomial &a, const UnivariateIntPolynomial &b) {
+RCP<const UnivariateIntPolynomial> add_poly(const UnivariateIntPolynomial &a, const UnivariateIntPolynomial &b) {
     map_uint_mpz dict;
     for (const auto &it : a.dict_)
         dict[it.first] = it.second;
@@ -201,7 +201,7 @@ RCP<const UnivariateIntPolynomial> add_uni_poly(const UnivariateIntPolynomial &a
     return c;
 }
 
-RCP<const UnivariateIntPolynomial> neg_uni_poly(const UnivariateIntPolynomial &a) {
+RCP<const UnivariateIntPolynomial> neg_poly(const UnivariateIntPolynomial &a) {
     map_uint_mpz dict;
     for (const auto &it : a.dict_)
         dict[it.first] = -1 * it.second;
@@ -210,7 +210,7 @@ RCP<const UnivariateIntPolynomial> neg_uni_poly(const UnivariateIntPolynomial &a
     return c;
 }
 
-RCP<const UnivariateIntPolynomial> sub_uni_poly(const UnivariateIntPolynomial &a, const UnivariateIntPolynomial &b) {
+RCP<const UnivariateIntPolynomial> sub_poly(const UnivariateIntPolynomial &a, const UnivariateIntPolynomial &b) {
     map_uint_mpz dict;
     for (const auto &it : a.dict_)
         dict[it.first] = it.second;
@@ -221,7 +221,7 @@ RCP<const UnivariateIntPolynomial> sub_uni_poly(const UnivariateIntPolynomial &a
     return c;
 }
 
-//Calculates bit length of number, used in mul_uni_poly() only
+//Calculates bit length of number, used in mul_poly() only
 template <typename T>
 unsigned int bit_length(T t){
     unsigned int count = 0;
@@ -232,7 +232,7 @@ unsigned int bit_length(T t){
     return count;
 }
 
-RCP<const UnivariateIntPolynomial> mul_uni_poly(RCP<const UnivariateIntPolynomial> a, RCP<const UnivariateIntPolynomial> b) {
+RCP<const UnivariateIntPolynomial> mul_poly(RCP<const UnivariateIntPolynomial> a, RCP<const UnivariateIntPolynomial> b) {
     //TODO: Use `const RCP<const UnivariateIntPolynomial> &a` for input arguments,
     //      even better is use `const UnivariateIntPolynomial &a`
     unsigned int da = a->degree_;
@@ -240,11 +240,11 @@ RCP<const UnivariateIntPolynomial> mul_uni_poly(RCP<const UnivariateIntPolynomia
 
     int sign = 1;
     if ((--(a->dict_.end()))->second < 0) {
-        a = neg_uni_poly(*a);
+        a = neg_poly(*a);
         sign = -1 * sign;
     }
     if ((--(b->dict_.end()))->second < 0) {
-        b = neg_uni_poly(*b);
+        b = neg_poly(*b);
         sign = -1 * sign;
     }
 
@@ -278,7 +278,7 @@ RCP<const UnivariateIntPolynomial> mul_uni_poly(RCP<const UnivariateIntPolynomia
     }
 
     if (sign == -1)
-        return neg_uni_poly(*make_rcp<const UnivariateIntPolynomial>(a->var_, v));
+        return neg_poly(*make_rcp<const UnivariateIntPolynomial>(a->var_, v));
     else
         return make_rcp<const UnivariateIntPolynomial>(a->var_, v);
 }
