@@ -48,8 +48,8 @@ std::size_t UnivariateIntPolynomial::__hash__() const
 
 bool UnivariateIntPolynomial::__eq__(const Basic &o) const
 {
-    if (eq(*var_, *(static_cast<const UnivariateIntPolynomial &>(o).var_)) and
-        poly_dict_map_uint_mpz_eq(dict_, static_cast<const UnivariateIntPolynomial &>(o).dict_))
+    if (eq(*var_, *(static_cast<const UnivariatePolynomial &>(o).var_)) and
+        map_uint_mpz_eq(dict_, static_cast<const UnivariatePolynomial &>(o).dict_))
         return true;
 
     return false;
@@ -75,10 +75,13 @@ RCP<const UnivariatePolynomial> UnivariatePolynomial::from_dict(const RCP<const 
         if(0_z == itter->second)
   	    d.erase(itter);
     }
-    return make_rcp<const UnivariatePolynomial>(var, (--(d.end()))->first, std::move(d));
+    unsigned int degree = 0;
+    if(!d.empty())
+        degree =  (--(d.end()))->first;
+    return make_rcp<const UnivariatePolynomial>(var,degree, std::move(d));
 }
 
-RCP<const UnivariateIntPolynomial> from_vec(const RCP<const Symbol> &var, const std::vector<integer_class> &v){
+RCP<const UnivariateIntPolynomial> UnivariateIntPolynomial::from_vec(const RCP<const Symbol> &var, const std::vector<integer_class> &v){
     map_uint_mpz dict;
     unsigned int degree = 0;
     for (unsigned int i = 0; i < v.size(); i++) {
