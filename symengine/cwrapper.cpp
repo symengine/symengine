@@ -489,6 +489,7 @@ char* ascii_art_str()
     return cc;
 }
 
+<<<<<<< HEAD
 
 void ntheory_gcd(basic s, const basic a, const basic b)
 {
@@ -530,5 +531,10 @@ void ntheory_binomial(basic s, const basic a, unsigned long b)
     s->m = SymEngine::binomial(static_cast<const Integer &>(*(a->m)), b);
 }
 
+//! Print stacktrace on segfault
+void symengine_print_stack_on_segfault()
+{
+    SymEngine::print_stack_on_segfault();
+}
 
 }

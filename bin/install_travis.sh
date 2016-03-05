@@ -14,23 +14,33 @@ if [[ "${CC}" == "" ]]; then
     export CC=gcc
     export CXX=g++
 fi
+export GCOV_EXECUTABLE=gcov
+
 if [[ "${TRAVIS_OS_NAME}" == "osx" ]] && [[ "${CC}" == "gcc" ]]; then
     export CC=gcc-4.8
     export CXX=g++-4.8
+    export GCOV_EXECUTABLE=gcov-4.8
 fi
 
 if [[ "${TRAVIS_OS_NAME}" == "linux" ]] && [[ "${CC}" == "gcc" ]]; then
     if [[ "${WITH_PIRANHA}" == "yes" ]]; then
         export CC=gcc-4.8
         export CXX=g++-4.8
+        export GCOV_EXECUTABLE=gcov-4.8
     elif [[ "${WITH_LATEST_GCC}" == "yes" ]]; then
         export CC=gcc-5
         export CXX=g++-5
+        export GCOV_EXECUTABLE=gcov-5
 
     else
         export CC=gcc-4.7
         export CXX=g++-4.7
+        export GCOV_EXECUTABLE=gcov-4.7
     fi
+fi
+
+if [[ "${WITH_COVERAGE}" == "yes" ]]; then
+    pip install --user cpp-coveralls
 fi
 
 export SOURCE_DIR=`pwd`
