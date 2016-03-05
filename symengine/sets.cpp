@@ -13,11 +13,11 @@ namespace SymEngine {
 		rational_class end = e;
 		canonicalize(start);
 		canonicalize(end);
-		if(end < start) {
+		if (end < start) {
 			throw std::runtime_error("Empty set not implemented");
 		}
-		else if(end == start) {
-			if(left_open or right_open)
+		else if (end == start) {
+			if (left_open or right_open)
 				throw std::runtime_error("Empty set not implemented");
 		}
 		return true;
@@ -99,12 +99,12 @@ namespace SymEngine {
 	RCP<const Interval> Interval::interval_intersection(const Interval &second) const {
 		rational_class start, end;
 		bool left_open, right_open;
-		if((this->start_<=second.end_) and (this->end_ >= second.start_)) {
-			if(this->start_ < second.start_) {
+		if ((this->start_ <= second.end_) and (this->end_ >= second.start_)) {
+			if (this->start_ < second.start_) {
 				start = second.start_;
 				left_open = second.left_open_;
 			}
-			else if(this->start_ > second.start_) {
+			else if (this->start_ > second.start_) {
 				start = this->start_;
 				left_open = this->left_open_;
 			}
@@ -113,11 +113,11 @@ namespace SymEngine {
 				left_open = this->left_open_ or second.left_open_ ;
 			}
 
-			if(this->end_ < second.end_) {
+			if (this->end_ < second.end_) {
 				end = this->end_;
 				right_open = this->right_open_;
 			}
-			else if(this->end_ > second.end_) {
+			else if (this->end_ > second.end_) {
 				end = second.end_;
 				right_open = second.right_open_;
 			}
@@ -137,7 +137,7 @@ namespace SymEngine {
 		bool left_open, right_open;
 		start = std::max(this->start_, second.start_);
 		end = std::min(this->end_, second.end_);
-		if((end < start) or ((end == start) and
+		if ((end < start) or ((end == start) and
 			((end == this->end_ and this->right_open_) or
 			 (end == second.end_ and second.right_open_)))) {
 			throw std::runtime_error("not implemented");
