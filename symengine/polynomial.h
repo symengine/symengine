@@ -96,7 +96,7 @@ RCP<const UnivariateIntPolynomial> sub_uni_poly(const UnivariateIntPolynomial &a
 //! Multiplying two UnivariateIntPolynomial a and b
 RCP<const UnivariateIntPolynomial> mul_uni_poly(RCP<const UnivariateIntPolynomial> a, RCP<const UnivariateIntPolynomial> b);
 
-inline RCP<const UnivariateIntPolynomial> univariate_polynomial(RCP<const Symbol> i, unsigned int deg, map_uint_mpz&& dict)
+inline RCP<const UnivariateIntPolynomial> univariate_int_polynomial(RCP<const Symbol> i, unsigned int deg, map_uint_mpz&& dict)
 {
     return make_rcp<const UnivariateIntPolynomial>(i, deg, std::move(dict));
 }

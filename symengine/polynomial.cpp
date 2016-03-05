@@ -197,7 +197,7 @@ RCP<const UnivariateIntPolynomial> add_uni_poly(const UnivariateIntPolynomial &a
     for (const auto &it : b.dict_)
         dict[it.first] += it.second;
 
-    RCP<const UnivariateIntPolynomial> c = univariate_polynomial(a.var_, (--(dict.end()))->first, std::move(dict));
+    RCP<const UnivariateIntPolynomial> c = univariate_int_polynomial(a.var_, (--(dict.end()))->first, std::move(dict));
     return c;
 }
 
@@ -206,7 +206,7 @@ RCP<const UnivariateIntPolynomial> neg_uni_poly(const UnivariateIntPolynomial &a
     for (const auto &it : a.dict_)
         dict[it.first] = -1 * it.second;
 
-    RCP<const UnivariateIntPolynomial> c = univariate_polynomial(a.var_, (--(dict.end()))->first, std::move(dict));
+    RCP<const UnivariateIntPolynomial> c = univariate_int_polynomial(a.var_, (--(dict.end()))->first, std::move(dict));
     return c;
 }
 
@@ -217,7 +217,7 @@ RCP<const UnivariateIntPolynomial> sub_uni_poly(const UnivariateIntPolynomial &a
     for (const auto &it : b.dict_)
         dict[it.first] -= it.second;
 
-    RCP<const UnivariateIntPolynomial> c = univariate_polynomial(a.var_, (--(dict.end()))->first, std::move(dict));
+    RCP<const UnivariateIntPolynomial> c = univariate_int_polynomial(a.var_, (--(dict.end()))->first, std::move(dict));
     return c;
 }
 
