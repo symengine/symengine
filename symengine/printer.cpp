@@ -242,8 +242,8 @@ void StrPrinter::bvisit(const Pow &x) {
     str_ = o.str();
 }
 
-//UnivariatePolynomial printing, tests taken from SymPy and printing ensures that there is compatibility
-void StrPrinter::bvisit(const UnivariatePolynomial &x) {
+//UnivariateIntPolynomial printing, tests taken from SymPy and printing ensures that there is compatibility
+void StrPrinter::bvisit(const UnivariateIntPolynomial &x) {
     std::ostringstream s;
     //bool variable needed to take care of cases like -5, -x, -3*x etc.
     bool first = true;

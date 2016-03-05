@@ -9,7 +9,7 @@ using SymEngine::make_rcp;
 
 namespace SymEngine {
 
-UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const RCP<const UnivariatePolynomial> &poly) :
+UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const RCP<const UnivariateIntPolynomial> &poly) :
         var_{var}, poly_{std::move(poly)} , prec_{precision} {
 }
 
@@ -43,10 +43,10 @@ UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned 
     std::vector<integer_class> vtrunc;
     std::copy_if(v.begin(), v.end(), std::back_inserter(vtrunc),
         [&](decltype(v[0]) i) { return i < prec_; } );
-    poly_ = UnivariatePolynomial::create(var_, vtrunc);
+    poly_ = UnivariateIntPolynomial::create(var_, vtrunc);
 }
 
-bool UnivariateSeries::is_canonical(const UnivariatePolynomial& poly, const unsigned int &prec) const
+bool UnivariateSeries::is_canonical(const UnivariateIntPolynomial& poly, const unsigned int &prec) const
 {
     return true;
 }
