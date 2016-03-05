@@ -39,14 +39,14 @@ public:
     bool __eq__(const Basic &o) const;
     int compare(const Basic &o) const;
 
-    //creates a UnivariatePolynomial in cannonical form based on the dictionary.
-    static RCP<const UnivariatePolynomial> from_dict(const RCP<const Symbol> &var, map_uint_mpz &&d);
-    //create a UnivariatePolynomial from a dense vector of integer_class coefficients
-    static RCP<const UnivariatePolynomial> from_vec(const RCP<const Symbol> &var, const std::vector<integer_class> &v);
+    //creates a UnivariateIntPolynomial in cannonical form based on the dictionary.
+    static RCP<const UnivariateIntPolynomial> from_dict(const RCP<const Symbol> &var, map_uint_mpz &&d);
+    //create a UnivariateIntPolynomial from a dense vector of integer_class coefficients
+    static RCP<const UnivariateIntPolynomial> from_vec(const RCP<const Symbol> &var, const std::vector<integer_class> &v);
 
-    static RCP<const UnivariatePolynomial> create(const RCP<const Symbol> &var,
+    static RCP<const UnivariateIntPolynomial> create(const RCP<const Symbol> &var,
 						  const std::vector<integer_class> &v) {
-      return UnivariatePolynomial::from_vec(var, v);
+        return UnivariateIntPolynomial::from_vec(var, v);
     }
     
     /*!

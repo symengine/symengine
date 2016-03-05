@@ -68,20 +68,20 @@ int UnivariateIntPolynomial::compare(const Basic &o) const
     return map_uint_mpz_compare(dict_, s.dict_);
 }
 
-RCP<const UnivariatePolynomial> UnivariatePolynomial::from_dict(const RCP<const Symbol> &var, map_uint_mpz &&d)
+RCP<const UnivariateIntPolynomial> UnivariateIntPolynomial::from_dict(const RCP<const Symbol> &var, map_uint_mpz &&d)
 {
     auto itter = d.begin();
-    while(itter != d.end()){
-        if(integer_class(0) == itter->second){
+    while (itter != d.end()) {
+        if (integer_class(0) == itter->second) {
 	    auto toErase = itter;
 	    itter++;
 	    d.erase(toErase);
-        }else{
+        } else {
 	    itter++;
 	}
     }
     unsigned int degree = 0;
-    if(!d.empty())
+    if (!d.empty())
         degree = (--(d.end()))->first;
     return make_rcp<const UnivariateIntPolynomial>(var, degree, std::move(d));
 }
