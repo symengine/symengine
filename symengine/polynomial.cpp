@@ -290,7 +290,7 @@ RCP<const UnivariateIntPolynomial> mul_poly(RCP<const UnivariateIntPolynomial> a
     }
 
     if (sign == -1)
-        return neg_uni_poly(*UnivariateIntPolynomial::from_vec(a->var_, v));
+        return neg_poly(*UnivariateIntPolynomial::from_vec(a->var_, v));
     else
         return UnivariateIntPolynomial::from_vec(a->var_, v);
 }
