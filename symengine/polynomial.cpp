@@ -20,9 +20,15 @@ UnivariateIntPolynomial::UnivariateIntPolynomial(const RCP<const Symbol> &var, c
 }
 
 bool UnivariateIntPolynomial::is_canonical(const unsigned int &degree_, const map_uint_mpz& dict) const {
+    // map_uint_mpz ordered(dict.begin(), dict.end());
+    // unsigned int prev_degree = (--ordered.end())->first;
+    // return prev_degree == degree_;
     map_uint_mpz ordered(dict.begin(), dict.end());
     unsigned int prev_degree = (--ordered.end())->first;
-    return prev_degree == degree_;
+    if (prev_degree != degree_)
+        return false;
+
+    return true;
 }
 
 std::size_t UnivariateIntPolynomial::__hash__() const {
@@ -68,8 +74,24 @@ void UnivariateIntPolynomial::dict_add_term(map_uint_mpz &d, const integer_class
 
 vec_basic UnivariateIntPolynomial::get_args() const {
     vec_basic args;
-    for (const auto &p: dict_)
-        args.push_back(UnivariateIntPolynomial::from_dict(var_, {{p.first, p.second}}));
+    map_uint_mpz d;
+    for (const auto &p: dict_) {
+        // args.push_back(UnivariateIntPolynomial::from_dict(var_, {{p.first, p.second}}));
+        d = {{p.first, p.second}};
+        if (d.begin()->first == 0)
+            args.push_back( integer(d.begin()->second));
+        else if (d.begin()->first == 1) {
+            if (d.begin()->second == 1)
+                args.push_back(var_);
+            else
+                args.push_back(Mul::from_dict(integer(d.begin()->second), {{var_, one}}));
+        } else {
+            if (d.begin()->second == 1)
+              args.push_back( pow(var_, integer(d.begin()->first)));
+            else
+              args.push_back( Mul::from_dict(integer(d.begin()->second),{{var_, integer(d.begin()->first)}}));
+        }
+    }
     return args;
 }
 
@@ -234,7 +256,10 @@ UnivariatePolynomial::UnivariatePolynomial(const RCP<const Symbol> &var, const s
 bool UnivariatePolynomial::is_canonical(const unsigned int &degree_, const map_int_Expr& dict) const {
     map_int_Expr ordered(dict.begin(), dict.end());
     unsigned int prev_degree = (--ordered.end())->first;
-    return prev_degree == degree_;
+    if (prev_degree != degree_)
+        return false;
+
+    return true;
 }
 
 std::size_t UnivariatePolynomial::__hash__() const

@@ -119,9 +119,9 @@ std::string UnivariateSeries::__str__() const
 
 RCP<const UnivariatePolynomial> UnivariateSeries::convert_vector(const std::vector<integer_class> &v) {
     std::vector<Expression> vtrunc;
-    for (const auto &it : v)
-        if (mp_get_si(it) < prec_) 
-            vtrunc.push_back(mp_get_si(it));
+    for (unsigned int i = 0; i < v.size(); i++)
+        if (i < prec_) 
+            vtrunc.push_back(Expression(mp_get_si(v[i])));
     return UnivariatePolynomial::create(symbol(var_), vtrunc);
 }
 

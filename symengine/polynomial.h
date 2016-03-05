@@ -189,7 +189,7 @@ public:
     UnivariateExprPolynomial(UnivariateExprPolynomial &&other) SYMENGINE_NOEXCEPT : poly_(std::move(other.poly_)) {}
     UnivariateExprPolynomial(int i) : poly_(UnivariatePolynomial::create(symbol("x"), {{0, Expression(i)}})) {}
     UnivariateExprPolynomial(RCP<const UnivariatePolynomial> p) : poly_(std::move(p)) {}
-    UnivariateExprPolynomial(Expression expr) : poly_(UnivariatePolynomial::create(symbol("x"), {{0, expr}})) { }
+    UnivariateExprPolynomial(Expression expr) : poly_(UnivariatePolynomial::create(symbol("x"), {{0, expr}})) {}
     
     UnivariateExprPolynomial &operator=(const UnivariateExprPolynomial &) = default;
     UnivariateExprPolynomial &operator=(UnivariateExprPolynomial &&other) SYMENGINE_NOEXCEPT {
