@@ -493,26 +493,35 @@ char* ascii_art_str()
 
 void ntheory_gcd(basic s, const basic a, const basic b)
 {
+    SYMENGINE_ASSERT(is_a<Integer>(*(a->m)));
+    SYMENGINE_ASSERT(is_a<Integer>(*(b->m)));
     s->m = SymEngine::gcd(static_cast<const Integer &>(*(a->m)), static_cast<const Integer &>(*(b->m)));
 }
 
 void ntheory_lcm(basic s, const basic a, const basic b)
 {
+    SYMENGINE_ASSERT(is_a<Integer>(*(a->m)));
+    SYMENGINE_ASSERT(is_a<Integer>(*(b->m)));
     s->m = SymEngine::lcm(static_cast<const Integer &>(*(a->m)), static_cast<const Integer &>(*(b->m)));
 }
 
 void ntheory_nextprime(basic s, const basic a)
 {
+    SYMENGINE_ASSERT(is_a<Integer>(*(a->m)));
     s->m = SymEngine::nextprime(static_cast<const Integer &>(*(a->m)));
 }
 
 void ntheory_mod(basic s, const basic n, const basic d)
 {
+    SYMENGINE_ASSERT(is_a<Integer>(*(n->m)));
+    SYMENGINE_ASSERT(is_a<Integer>(*(d->m)));
     s->m = SymEngine::mod(static_cast<const Integer &>(*(n->m)), static_cast<const Integer &>(*(d->m)));
 }
 
 void ntheory_quotient(basic s, const basic n, const basic d)
 {
+    SYMENGINE_ASSERT(is_a<Integer>(*(n->m)));
+    SYMENGINE_ASSERT(is_a<Integer>(*(d->m)));
     s->m = SymEngine::quotient(static_cast<const Integer &>(*(n->m)), static_cast<const Integer &>(*(d->m)));
 }
 

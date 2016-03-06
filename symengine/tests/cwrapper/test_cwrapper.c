@@ -459,8 +459,7 @@ void test_ascii_art() {
 }
 
 void test_ntheory() {
-    basic x,  i1, i2, i4, i5;
-
+    basic x, i1, i2, i4, i5;
     basic_new_stack(x);
     basic_new_stack(i1);
     basic_new_stack(i2);
@@ -501,10 +500,7 @@ void test_ntheory() {
     basic_free_stack(i2);
     basic_free_stack(i4);
     basic_free_stack(i5);
-
 }
-
-
 
 int main(int argc, char* argv[])
 {
