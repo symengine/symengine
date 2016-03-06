@@ -14,9 +14,8 @@ UnivariateIntPolynomial::UnivariateIntPolynomial(const RCP<const Symbol> &var, c
 
 bool UnivariateIntPolynomial::is_canonical(const unsigned int &degree_, const map_uint_mpz& dict) const
 {
-    map_uint_mpz ordered(dict.begin(), dict.end());
-    if (ordered.size() != 0) {
-        unsigned int prev_degree = (--ordered.end())->first;
+    if (dict.size() != 0) {
+        unsigned int prev_degree = (--dict.end())->first;
         if (prev_degree != degree_)
             return false;
     } else if(0 != degree_)

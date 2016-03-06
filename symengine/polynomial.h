@@ -28,6 +28,11 @@ public:
     //! Constructor of UnivariatePolynomial class
     UnivariateIntPolynomial(const RCP<const Symbol> &var, const unsigned int &degree, map_uint_mpz&& dict);
 
+    static RCP<const UnivariateIntPolynomial> create(const RCP<const Symbol> &var,
+	   const std::vector<integer_class> &v) {
+        return UnivariateIntPolynomial::from_vec(var, v);
+    }
+
     //! \return true if canonical
     bool is_canonical(const unsigned int &degree, const map_uint_mpz& dict) const;
     //! \return size of the hash
