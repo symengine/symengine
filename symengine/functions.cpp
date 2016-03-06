@@ -1444,7 +1444,7 @@ RCP<const Basic> lambertw(const RCP<const Basic> &arg)
 {
     if (eq(*arg, *zero)) return zero;
     if (eq(*arg, *E)) return one;
-    if (eq(*arg, *div(one, E))) return minus_one;
+    if (eq(*arg, *div(neg(one), E))) return minus_one;
     if (eq(*arg, *div(log(i2), im2))) return mul(minus_one, log(i2));
     return make_rcp<const LambertW>(arg);
 }
