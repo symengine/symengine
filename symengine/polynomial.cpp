@@ -165,14 +165,16 @@ bool UnivariatePolynomial::is_zero() const {
 }
 
 bool UnivariateIntPolynomial::is_one() const {
-    if (dict_.size() == 1 and dict_.begin()->second == 1 and dict_.begin()->first == 0)
-            return true;
+    if (dict_.size() == 1 and dict_.begin()->second == 1 and
+	    dict_.begin()->first == 0)
+        return true;
     return false;
 }
 
 bool UnivariateIntPolynomial::is_minus_one() const {
-    if (dict_.size() == 1 and dict_.begin()->second == -1 and dict_.begin()->first == 0)
-            return true;
+    if (dict_.size() == 1 and dict_.begin()->second == -1 and
+	    dict_.begin()->first == 0)
+        return true;
     return false;
 }
 
@@ -185,21 +187,22 @@ bool UnivariateIntPolynomial::is_integer() const {
 }
 
 bool UnivariateIntPolynomial::is_symbol() const {
-    if (dict_.size() == 1 and dict_.begin()->first == 1 and dict_.begin()->second == 1)
+    if (dict_.size() == 1 and dict_.begin()->first == 1 and
+	    dict_.begin()->second == 1)
         return true;
     return false;
 }
 
 bool UnivariateIntPolynomial::is_mul() const {
-<<<<<<< HEAD
-    if (dict_.size() == 1 and dict_.begin()->first != 0 and dict_.begin()->second != 1 and dict_.begin()->second != 0)
+    if (dict_.size() == 1 and dict_.begin()->first != 0 and
+	    dict_.begin()->second != 1 and dict_.begin()->second != 0)
         return true;
     return false;
 }
 
 bool UnivariateIntPolynomial::is_pow() const {
-<<<<<<< HEAD
-    if (dict_.size() == 1 and dict_.begin()->second == 1 and dict_.begin()->first != 1 and dict_.begin()->first != 0)
+    if (dict_.size() == 1 and dict_.begin()->second == 1 and
+	    dict_.begin()->first != 1 and dict_.begin()->first != 0)
         return true;
     return false;
 }
