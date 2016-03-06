@@ -182,31 +182,6 @@ int map_uint_mpz_compare(const map_uint_mpz &A, const map_uint_mpz &B)
     return 0;
 }
 
-bool poly_dict_map_uint_mpz_eq(const map_uint_mpz &a, const map_uint_mpz &b){
-    //a is a subset of b
-    for(const auto &p : a){
-        if(0 != p.second){
-            auto f = b.find(p.first);
-            if(f == b.end())
-   	        return false;
-            else if(f->second != p.second)
- 	        return false;
-        }
-    }
-    //b is a subset of a
-    for(const auto &p : b){
-        if(0 != p.second){
-            auto f = a.find(p.first);
-            if(f == a.end())
- 	        return false;
-            else if(f->second != p.second)
-	        return false;
-	}
-   }
-   return true;
-}
-
-
 template<class T>
 bool set_eq(const T &A, const T &B)
 {
