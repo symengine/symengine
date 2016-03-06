@@ -145,8 +145,7 @@ TEST_CASE("Bool checks specific UnivariateIntPolynomial cases", "[UnivariateIntP
     REQUIRE((not m2->is_zero() and not m2->is_one() and not m2->is_minus_one() and not m2->is_integer() and not m2->is_symbol() and
 			m2->is_mul() and not m2->is_pow()));
     REQUIRE((not po->is_zero() and not po->is_one() and not po->is_minus_one() and not po->is_integer() and not po->is_symbol() and
-			not po->is_mul() and po->is_pow()));
-    REQUIRE((not poly->is_zero() and not poly->is_one() and not poly->is_minus_one() and not poly->is_integer() and not poly->is_symbol() and
+			not po->is_mul() and po->is_pow()));    REQUIRE((not poly->is_zero() and not poly->is_one() and not poly->is_minus_one() and not poly->is_integer() and not poly->is_symbol() and
 			not poly->is_mul() and not poly->is_pow()));
 }
 

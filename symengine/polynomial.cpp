@@ -71,9 +71,15 @@ int UnivariateIntPolynomial::compare(const Basic &o) const
 
 RCP<const UnivariatePolynomial> UnivariatePolynomial::from_dict(const RCP<const Symbol> &var, map_uint_mpz &&d)
 {
-    for(auto itter = d.begin(); itter != d.end(); itter++){
-        if(integer_class(0) == itter->second)
-  	    d.erase(itter);
+    auto itter = d.begin();
+    while(itter != d.end()){
+        if(integer_class(0) == itter->second){
+	    auto toErase = itter;
+	    itter++;
+	    d.erase(toErase);
+        }else{
+	    itter++;
+	}
     }
     unsigned int degree = 0;
     if(!d.empty())
