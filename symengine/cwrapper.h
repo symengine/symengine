@@ -266,7 +266,7 @@ void ntheory_nextprime(basic s, const basic a);
 void ntheory_mod(basic s, const basic n, const basic d);
 //! \return quotient round toward zero when `n` is divided by `d`
 void ntheory_quotient(basic s, const basic n, const basic d);
-//! Fibonacci number
+//! nth Fibonacci number //  fibonacci(0) = 0 and fibonacci(1) = 1
 void ntheory_fibonacci(basic s, unsigned long a);
 //! Lucas number
 void ntheory_lucas(basic s, unsigned long a);
