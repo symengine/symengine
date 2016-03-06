@@ -15,8 +15,14 @@ UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned 
 UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const map_uint_mpz& dict) :
         SeriesBase(std::move(UnivariateExprPolynomial(convert_poly(dict))), var->get_name(), precision), prec_{precision} {}
 
+UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, map_int_Expr &dict) :
+        SeriesBase(std::move(UnivariateExprPolynomial(univariate_polynomial(var, precision, std::move(dict)))), var->get_name(), precision), prec_{precision} {}
+
 UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const std::vector<integer_class> &v) :
         SeriesBase(UnivariateExprPolynomial(convert_vector(v)), var->get_name(), precision), prec_{precision} {}
+
+UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const std::vector<Expression> &v) :
+        SeriesBase(UnivariateExprPolynomial(UnivariatePolynomial::create(var, v)), var->get_name(), precision), prec_{precision} {}
 
 RCP<const UnivariateSeries> UnivariateSeries::series(const RCP<const Basic> &t, const std::string &x, unsigned int prec) {
     SeriesVisitor<UnivariateExprPolynomial, Expression, UnivariateSeries> visitor(UnivariateExprPolynomial(std::stoi(x)), x, prec);
@@ -25,12 +31,6 @@ RCP<const UnivariateSeries> UnivariateSeries::series(const RCP<const Basic> &t, 
 
 std::size_t UnivariateSeries::__hash__() const {
     return p_.__hash__() + std::size_t(prec_ * 84728863L);
-    // std::size_t seed = UNIVARIATESERIES;
-    // hash_combine(seed, p_.get_basic()->hash());
-    // hash_combine(seed, var_);
-    // hash_combine(seed, degree_);
-    // return seed;
-    
 }
 
 int UnivariateSeries::compare(const Basic &other) const {

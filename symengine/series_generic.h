@@ -21,8 +21,14 @@ public:
     UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const UnivariateExprPolynomial poly);
     UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const unsigned int &max_exp, map_int_Expr &&dict);
     UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const map_uint_mpz &dict);
-    //! Constructor using a dense vector of integer_class coefficients
+    UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, map_int_Expr &dict);
+    UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const std::vector<Expression> &v);
     UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const std::vector<integer_class> &v);
+    
+    static RCP<const UnivariateSeries> create(const RCP<const Symbol> &var, const unsigned int &prec, const std::vector<Expression> &e) {
+        return make_rcp<const UnivariateSeries>(var, prec, e);
+    }
+    //! Constructor using a dense vector of integer_class coefficients
     static RCP<const UnivariateSeries> create(const RCP<const Symbol> &var, const unsigned int &prec, const std::vector<integer_class> &v) {
         return make_rcp<const UnivariateSeries>(var, prec, v);
     }
@@ -66,8 +72,11 @@ public:
     static Expression log(const Expression &c);
 };
 
-inline RCP<const UnivariateSeries> univariate_series(RCP<const Symbol> i, unsigned int prec, const map_uint_mpz& dict)
-{
+inline RCP<const UnivariateSeries> univariate_series(RCP<const Symbol> i, unsigned int prec, const map_uint_mpz& dict) {
+    return make_rcp<const UnivariateSeries>(i, prec, dict);
+}
+
+inline RCP<const UnivariateSeries> univariate_series(RCP<const Symbol> i, unsigned int prec,  map_int_Expr& dict) {
     return make_rcp<const UnivariateSeries>(i, prec, dict);
 }
 
