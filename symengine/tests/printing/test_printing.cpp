@@ -44,6 +44,7 @@ using SymEngine::BaseVisitor;
 using SymEngine::StrPrinter;
 using SymEngine::Sin;
 using SymEngine::integer_class;
+using SymEngine::map_uint_mpz;
 
 using namespace SymEngine::literals;
 
