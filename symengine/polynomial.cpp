@@ -90,7 +90,7 @@ RCP<const UnivariateIntPolynomial> from_vec(const RCP<const Symbol> &var, const 
     map_uint_mpz dict;
     unsigned int degree = 0;
     for(unsigned int i = 0; i < v.size(); i++){
-        if (0 != v[i]){
+        if (0 != v[i]) {
   	    dict.insert(std::pair<unsigned int, integer_class>(i, v[i]));
 	    degree = i;
         }
@@ -113,15 +113,17 @@ vec_basic UnivariateIntPolynomial::get_args() const {
         if (d.begin()->first == 0)
             args.push_back( integer(d.begin()->second));
         else if (d.begin()->first == 1) {
-            if (d.begin()->second == 1)
+	    if (d.begin()->second == 1) {
                 args.push_back(var_);
-            else
+	    } else {
                 args.push_back(Mul::from_dict(integer(d.begin()->second), {{var_, one}}));
+	    }
         } else {
-            if (d.begin()->second == 1)
+            if (d.begin()->second == 1) {
 	        args.push_back( pow(var_, integer(d.begin()->first)));
-            else
+            } else {
 	        args.push_back( Mul::from_dict(integer(d.begin()->second),{{var_, integer(d.begin()->first)}}));
+            }
         }
     }
     if(dict_.empty())
