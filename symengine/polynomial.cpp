@@ -38,7 +38,7 @@ std::size_t UnivariateIntPolynomial::__hash__() const
     seed += hash_string(this->var_->get_name());
     for (const auto &it : this->dict_)
     {
-       std::size_t temp = UNIVARIATEINTPOLYNOMIAL;
+        std::size_t temp = UNIVARIATEINTPOLYNOMIAL;
         hash_combine<unsigned int>(temp, it.first);
         hash_combine<long long int>(temp, mp_get_si(it.second));
         seed += temp;
@@ -71,14 +71,20 @@ int UnivariateIntPolynomial::compare(const Basic &o) const
 
 RCP<const UnivariatePolynomial> UnivariatePolynomial::from_dict(const RCP<const Symbol> &var, map_uint_mpz &&d)
 {
-    for(auto itter = d.begin(); itter != d.end(); itter++){
-        if(0_z == itter->second)
-  	    d.erase(itter);
+    auto itter = d.begin();
+    while(itter != d.end()){
+        if(integer_class(0) == itter->second){
+	    auto toErase = itter;
+	    itter++;
+	    d.erase(toErase);
+        }else{
+	    itter++;
+	}
     }
     unsigned int degree = 0;
     if(!d.empty())
-        degree =  (--(d.end()))->first;
-    return make_rcp<const UnivariatePolynomial>(var,degree, std::move(d));
+        degree = (--(d.end()))->first;
+    return make_rcp<const UnivariateIntPolynomial>(var, degree, std::move(d));
 }
 
 RCP<const UnivariateIntPolynomial> UnivariateIntPolynomial::from_vec(const RCP<const Symbol> &var, const std::vector<integer_class> &v){
@@ -160,16 +166,14 @@ bool UnivariatePolynomial::is_zero() const {
 }
 
 bool UnivariateIntPolynomial::is_one() const {
-    if (dict_.size() == 1 and dict_.begin()->second == 1 and
-            dict_.begin()->first == 0)
-        return true;
+    if (dict_.size() == 1 and dict_.begin()->second == 1 and dict_.begin()->first == 0)
+            return true;
     return false;
 }
 
 bool UnivariateIntPolynomial::is_minus_one() const {
-    if (dict_.size() == 1 and dict_.begin()->second == -1 and
-            dict_.begin()->first == 0)
-        return true;
+    if (dict_.size() == 1 and dict_.begin()->second == -1 and dict_.begin()->first == 0)
+            return true;
     return false;
 }
 
@@ -182,23 +186,20 @@ bool UnivariateIntPolynomial::is_integer() const {
 }
 
 bool UnivariateIntPolynomial::is_symbol() const {
-    if (dict_.size() == 1 and dict_.begin()->first == 1 and
-            dict_.begin()->second == 1)
-        return true;
+    if (dict_.size() == 1 and dict_.begin()->first == 1 and dict_.begin()->second == 1)
+            return true;
     return false;
 }
 
 bool UnivariateIntPolynomial::is_mul() const {
-    if (dict_.size() == 1 and dict_.begin()->first != 0 and
-            dict_.begin()->second != 1 and dict_.begin()->second != 0)
-        return true;
+    if (dict_.size() == 1 and dict_.begin()->first != 0 and dict_.begin()->second != 1 and dict_.begin()->second != 0)
+            return true;
     return false;
 }
 
 bool UnivariateIntPolynomial::is_pow() const {
-    if (dict_.size() == 1 and dict_.begin()->second == 1 and
-            dict_.begin()->first != 1 and dict_.begin()->first != 0)
-        return true;
+    if (dict_.size() == 1 and dict_.begin()->second == 1 and dict_.begin()->first != 1 and dict_.begin()->first != 0)
+            return true;
     return false;
 }
 
