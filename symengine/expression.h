@@ -18,12 +18,6 @@
 namespace SymEngine
 {
 
-#ifdef HAVE_SYMENGINE_NOEXCEPT
-#  define SYMENGINE_NOEXCEPT noexcept
-#else
-#  define SYMENGINE_NOEXCEPT
-#endif
-
 class Expression
 {
 private:

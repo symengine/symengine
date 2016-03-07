@@ -242,8 +242,8 @@ void StrPrinter::bvisit(const Pow &x) {
     str_ = o.str();
 }
 
-//UnivariatePolynomial printing, tests taken from SymPy and printing ensures that there is compatibility
-void StrPrinter::bvisit(const UnivariatePolynomial &x) {
+//UnivariateIntPolynomial printing, tests taken from SymPy and printing ensures that there is compatibility
+void StrPrinter::bvisit(const UnivariateIntPolynomial &x) {
     std::ostringstream s;
     //bool variable needed to take care of cases like -5, -x, -3*x etc.
     bool first = true;
@@ -320,6 +320,8 @@ void StrPrinter::bvisit(const UnivariatePolynomial &x) {
         //corner cases of only first term handled successfully, switch the bool
         first = false;
     }
+    if (x.dict_.size() == 0)
+        s << "0";
     str_ = s.str();
 }
 #ifdef HAVE_SYMENGINE_PIRANHA

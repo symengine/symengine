@@ -21,16 +21,15 @@ using s_coef = SymEngine::Expression; //Polynomial type
 class UnivariateSeries : public SeriesBase<s_coef, SymEngine::Expression, UnivariateSeries> {
 //public:
     //! `var_` : Variable of the UnivariateSeries
-    //! `poly_` : holds the UnivariatePolynomial of the series
+    //! `poly_` : holds the UnivariateIntPolynomial of the series
     //! `prec_` : precision of the UnivariateSeries, i.e. self = poly + O(var^prec)
     // UnivariateSeries 1 + 2*x + x**2 + O(x**5) has dict_ = {{0, 1}, {1, 2}, {2, 1}} with var_ = "x" and prec_ = 5
-    //    RCP<const Symbol> var_;
-    //RCP<const UnivariatePolynomial> poly_;
-    //unsigned int prec_;
-    //data members now inherited from SeriesBase
+    RCP<const Symbol> var_;
+    RCP<const UnivariateIntPolynomial> poly_;
+    unsigned int prec_;
 public:
     //! Constructor of UnivariateSeries class
-    UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const RCP<const UnivariatePolynomial> &poly);
+    UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const RCP<const UnivariateIntPolynomial> &poly);
     UnivariateSeries(const RCP<const Symbol> &var, const unsigned int& precision, const unsigned int& max_exp, map_uint_mpz&& dict);
     UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const map_uint_mpz &dict);
     //! Constructor using a dense vector of integer_class coefficients
@@ -50,7 +49,7 @@ public:
     static s_coef subs(const s_coef &s, const s_coef &var, const s_coef &r, unsigned prec);
     
     //! \return true if canonical
-    // bool is_canonical(const UnivariatePolynomial&, const unsigned int &) const;
+    bool is_canonical(const UnivariateIntPolynomial&, const unsigned int &) const;
     //! \return size of the hash
 
 };

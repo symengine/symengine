@@ -1,4 +1,4 @@
-/*#include <exception>
+#include <exception>
 #include <algorithm>
 #include <iterator>*/
 #include <symengine/series_generic.h>
@@ -18,16 +18,12 @@ RCP<const UnivariateSeries> UnivariateSeries::series(const RCP<const Basic> &t, 
                                                          unsigned int prec) {
     // throw std::runtime_error("Not Implemented");
     SeriesVisitor<s_coef, Integer, UnivariateSeries> visitor(s_coef(std::stoi(x)), x, prec);
->>>>>>> 629f59b... Revert "merged with univariateseries, changing name of univariatePolynomial to UnivariateIntPolynomial"
     return visitor.series(t);
 }
 
-std::size_t UnivariateSeries::__hash__() const {
-    std::size_t seed = UNIVARIATESERIES;
-    hash_combine(seed, &p_.get_basic());
-    hash_combine(seed, var_);
-    hash_combine(seed, degree_);
-    return seed;
+
+UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const RCP<const UnivariateIntPolynomial> &poly) :
+        var_{var}, poly_{std::move(poly)} , prec_{precision} {
 }
 
 int UnivariateSeries::compare(const Basic &o) const
@@ -48,24 +44,27 @@ int UnivariateSeries::compare(const Basic &o) const
     return poly_->compare(*o.poly_);*//*
 }
 
-s_coef UnivariateSeries::convert(const Integer &x) {
-    return s_coef(x.as_int());
-}
-s_coef UnivariateSeries::convert(const mpq_class &x) {
-    s_coef i1(mpz_get_si(x.get_num_mpz_t()));
-    s_coef i2(mpz_get_si(x.get_den_mpz_t()));
-    return i1/i2;
+
+    poly_ = univariate_int_polynomial(var_, std::move(dict));
 }
 
 s_coef UnivariateSeries::var(const std::string &s) {
     return s_coef(std::stoi(s));
 }
 
-s_coef UnivariateSeries::convert(const Rational &x) {
-    s_coef i1(x.get_num());
-    s_coef i2(x.get_den());
-    i1 /= i2;
-    return i1;
+    map_uint_mpz dict_trunc;
+    unsigned int max = 0;
+    std::copy_if(dict.begin(), dict.end(), std::inserter(dict_trunc, dict_trunc.end()),
+        [&](const map_uint_mpz::value_type i)
+        {
+            if (i.first < prec_) {
+                if (max < i.first)
+                    max = i.first;
+                return true;
+            }
+            return false;
+        } );
+    poly_ = univariate_int_polynomial(var_, std::move(dict_trunc));
 }
 
 UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const std::vector<integer_class> &v) :
@@ -74,27 +73,13 @@ UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned 
     std::vector<integer_class> vtrunc;
     std::copy_if(v.begin(), v.end(), std::back_inserter(vtrunc),
         [&](decltype(v[0]) i) { return i < prec_; } );
-    poly_ = UnivariatePolynomial::create(var_, vtrunc);
+    poly_ = UnivariateIntPolynomial::create(var_, vtrunc);
 }
 
-umap_int_basic UnivariateSeries::as_dict() const {
-    throw std::runtime_error("Not Implemented");*/
-    /*umap_int_basic map;
-    mpq_class gc;
-    for (int n=0; n<degree_; n++) {
-        const SymEngine::Integer fc(p_.get_coeff(n));
-        if (not fc.is_zero()) {
-            fmpq_get_mpq(gc.get_mpq_t(), fc._data().inner);
-            gc.canonicalize();
-            RCP<const Number> basic;
-            if (gc.get_den() == 1)
-                basic = integer(gc.get_num());
-            else
-                basic = Rational::from_mpq(gc);
-            map[n] = basic;
-        }
-    }
-    return map;*//*
+
+bool UnivariateSeries::is_canonical(const UnivariateIntPolynomial& poly, const unsigned int &prec) const
+{
+    return true;
 }
 
 RCP<const Basic> UnivariateSeries::get_coeff(int i) const {
@@ -161,8 +146,9 @@ s_coef UnivariateSeries::root(s_coef &c, unsigned n) {
     return pow_ex(c, 1/Expression(n));
 }
 
-s_coef UnivariateSeries::diff(const s_coef &s, const s_coef &var) {
-    return diff(s.get_basic(), var.get_basic());
+RCP<const UnivariateSeries> neg_uni_series (const UnivariateSeries& a)
+{
+    return make_rcp<const UnivariateSeries>(a.var_, a.prec_, std::move(neg_poly(*a.poly_)));
 }
 
 s_coef UnivariateSeries::integrate(const s_coef &s, const s_coef &var) {

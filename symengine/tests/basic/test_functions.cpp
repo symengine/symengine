@@ -1723,7 +1723,7 @@ TEST_CASE("Lambertw: functions", "[functions]")
     r2 = zero;
     REQUIRE(eq(*r1, *r2));
 
-    r1 = lambertw(exp(im1));
+    r1 = lambertw(neg(exp(im1)));
     r2 = im1;
     REQUIRE(eq(*r1, *r2));
 

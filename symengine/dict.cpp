@@ -182,7 +182,8 @@ int map_uint_mpz_compare(const map_uint_mpz &A, const map_uint_mpz &B)
     return 0;
 }
 
-bool multiset_basic_eq(const multiset_basic &a, const multiset_basic &b)
+template<class T>
+bool set_eq(const T &A, const T &B)
 {
     return set_eq<multiset_basic>(a, b);
 }
