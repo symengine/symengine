@@ -80,14 +80,19 @@ TEST_CASE("Subtracting two UnivariateSeries", "[UnivariateSeries]")
     map_int_Expr gdict_ = {{0, -1}, {1, -1}};
 
     UnivariateSeries a(x, 5, adict_);
-    UnivariateSeries b(x, 2, bdict_);
+    UnivariateSeries b(x, 4, bdict_);
     RCP<const UnivariateSeries> c = sub_uni_series(a, b);
     UnivariateSeries f(x, 4, fdict_);
     REQUIRE(*c == f);
-    UnivariateSeries d(x, 3, bdict_);
+
+    UnivariateSeries d(x, 2, bdict_);
+    // REQUIRE(d.__str__() == "3x");
+    // REQUIRE(a.get_poly().get_univariate_poly()->__str__() == "3x");
 
     RCP<const UnivariateSeries> e = sub_uni_series(a, d);
-    UnivariateSeries g(x, 2, gdict_);
+    // REQUIRE(e->__str__() == "3x"); //correct
+    UnivariateSeries g(x, 2, std::move(gdict_));
+    REQUIRE(g.__str__() == "3x");
     REQUIRE(*e == g);
 }
 

@@ -19,7 +19,7 @@ UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned 
         SeriesBase(UnivariateExprPolynomial(convert_vector(v)), var->get_name(), precision), prec_{precision} {}
 
 UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const map_int_Expr &dict) :
-        SeriesBase(std::move(UnivariateExprPolynomial(univariate_polynomial(var, precision, std::move(dict)))), var->get_name(), precision), prec_{precision} {}
+        SeriesBase(UnivariateExprPolynomial(univariate_polynomial(var, (unsigned)(--dict.end())->first, std::move(dict))), var->get_name(), precision), prec_{precision} {}
 
 UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const std::vector<Expression> &v) :
         SeriesBase(UnivariateExprPolynomial(UnivariatePolynomial::create(var, v)), var->get_name(), precision), prec_{precision} {}
@@ -87,9 +87,14 @@ std::string UnivariateSeries::__str__() const
 {
     std::ostringstream o;
     bool first = true;
+    bool last = false;
     for (const auto& it : p_.get_univariate_poly()->get_dict()) {
-        if (it.second == 0)
+        if (it.second == 0) {
+            if((unsigned)it.first == prec_ and it.second == (--(p_.get_univariate_poly()->get_dict().end()))->second) {
+                last = true;
+            }
             continue;
+        }
         if (first) {
             if (it.second < 0)
                 o << "-";
@@ -112,7 +117,7 @@ std::string UnivariateSeries::__str__() const
         if (it.first > 1)
             o << "**" << it.first;
     }
-    if (o.str() != "0")
+    if (o.str() != "0" and (last == true or ((unsigned)(--(p_.get_univariate_poly()->get_dict().end()))->first) < prec_))
         o << " + O(" << var_ << "**" << prec_ << ")";
     return o.str();
 }
