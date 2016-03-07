@@ -1,6 +1,5 @@
 #include <algorithm>
 #include <limits>
-
 #include <symengine/printer.h>
 
 namespace SymEngine {
@@ -142,8 +141,7 @@ void StrPrinter::bvisit(const ComplexMPC &x) {
 void StrPrinter::bvisit(const Add &x) {
     std::ostringstream o;
     bool first = true;
-    std::map<RCP<const Basic>, RCP<const Number>,
-            RCPBasicKeyLessCmp> dict(x.dict_.begin(), x.dict_.end());
+    std::map<RCP<const Basic>, RCP<const Number>, RCPBasicKeyLessCmp> dict(x.dict_.begin(), x.dict_.end());
 
     if (neq(*(x.coef_), *zero)) {
         o << this->apply(x.coef_);
@@ -177,8 +175,7 @@ void StrPrinter::bvisit(const Mul &x) {
     std::ostringstream o, o2;
     bool num = false;
     unsigned den = 0;
-    std::map<RCP<const Basic>, RCP<const Basic>,
-            RCPBasicKeyLessCmp> dict(x.dict_.begin(), x.dict_.end());
+    std::map<RCP<const Basic>, RCP<const Basic>, RCPBasicKeyLessCmp> dict(x.dict_.begin(), x.dict_.end());
 
     if (eq(*(x.coef_), *minus_one)) {
         o << "-";
@@ -248,7 +245,7 @@ void StrPrinter::bvisit(const UnivariateIntPolynomial &x) {
     //bool variable needed to take care of cases like -5, -x, -3*x etc.
     bool first = true;
     //we iterate over the map in reverse order so that highest degree gets printed first
-    for (auto it = x.dict_.rbegin(); it != x.dict_.rend();) {
+    for (auto it = x.get_dict().rbegin(); it != x.get_dict().rend();) {
         //given a term in univariate polynomial, if coefficient is zero, print nothing
         if (it->second == 0) {
             //except when it is the only term, say "0"
@@ -272,20 +269,20 @@ void StrPrinter::bvisit(const UnivariateIntPolynomial &x) {
                 //in cases of -x, print -x
                 //in cases of x**2 - x, print x, the '-' is considered earlier
                 if (first and it->second == -1) {
-                    s << "-" << x.var_->get_name();
+                    s << "-" << x.get_var()->get_name();
                 } else {
-                    s << x.var_->get_name();
+                    s << x.get_var()->get_name();
                 }
             } else {
                 if (first and it->second == -1) {
-                    s << "-" << x.var_->get_name() << "**"  << it->first;
+                    s << "-" << x.get_var()->get_name() << "**"  << it->first;
                 } else {
-                    s << x.var_->get_name() << "**"  << it->first;
+                    s << x.get_var()->get_name() << "**"  << it->first;
                 }
             }
             //if next term is going to be 0, don't print +, so that x**3 + 0 + x becomes x**3 + x
             //also consider that sign of term here itself to avoid prints like x + -1
-            if ((++it != x.dict_.rend()) and (it->second != 0)) {
+            if ((++it != x.get_dict().rend()) and (it->second != 0)) {
                 if (it->second < 0) {
                     s << " - ";
                 } else {
@@ -302,14 +299,14 @@ void StrPrinter::bvisit(const UnivariateIntPolynomial &x) {
                     s << mp_abs(it->second);
             } else if (it->first == 1) {
                 if (first and it->second < 0) {
-                    s << it->second << "*" << x.var_->get_name();
+                    s << it->second << "*" << x.get_var()->get_name();
                 } else {
-                    s << mp_abs(it->second) << "*" << x.var_->get_name();
+                    s << mp_abs(it->second) << "*" << x.get_var()->get_name();
                 }
             } else {
-                s << mp_abs(it->second) << "*" << x.var_->get_name() << "**" << it->first;
+                s << mp_abs(it->second) << "*" << x.get_var()->get_name() << "**" << it->first;
             }
-            if ((++it != x.dict_.rend()) and (it->second != 0)) {
+            if ((++it != x.get_dict().rend()) and (it->second != 0)) {
                 if (it->second < 0) {
                     s << " - ";
                 } else {
@@ -320,10 +317,154 @@ void StrPrinter::bvisit(const UnivariateIntPolynomial &x) {
         //corner cases of only first term handled successfully, switch the bool
         first = false;
     }
-    if (x.dict_.size() == 0)
+    if (x.get_dict().size() == 0)
         s << "0";
     str_ = s.str();
 }
+
+//UnivariatePolynomial printing, tests taken from SymPy and printing ensures that there is compatibility
+void StrPrinter::bvisit(const UnivariatePolynomial &x) {
+    std::ostringstream s;
+    //bool variable needed to take care of cases like -5, -x, -3*x etc.
+    bool first = true;
+    //we iterate over the map in reverse order so that highest degree gets printed first
+    for (auto it = x.get_dict().rbegin(); it != x.get_dict().rend();) {
+        if(is_a<const Integer>(*it->second.get_basic())) {
+            //given a term in univariate polynomial, if coefficient is zero, print nothing
+            if (it->second == 0) {
+                //except when it is the only term, say "0"
+                if (it->first == 0)
+                    s << "0";
+                ++it;
+            }
+            //if the coefficient of a term is +1 or -1
+            else if (Expression(abs(it->second.get_basic())) == Expression(1)) {
+                //if exponent is 0, then print only coefficient
+                //in cases of -7, it is the only term, hence we print -7
+                //in cases of x - 7, the '-' is considered earlier, hence print only 7
+                if (it->first == 0) {
+                    if (first)
+                        s << it->second;
+                    else
+                        s << Expression(abs(it->second.get_basic()));
+                }
+                //if exponent is 1, print x instead of x**1
+                else if (it->first == 1) {
+                    //in cases of -x, print -x
+                    //in cases of x**2 - x, print x, the '-' is considered earlier
+                    if (first and it->second == -1) {
+                        s << "-" << x.get_var()->get_name();
+                    } else {
+                        s << x.get_var()->get_name();
+                    }
+                }
+                else {
+                    if (first and it->second == -1) {
+                        s << "-" << x.get_var()->get_name() << "**"  << it->first;
+                    } else {
+                        s << x.get_var()->get_name() << "**"  << it->first;
+                    }
+                }
+                //if next term is going to be 0, don't print +, so that x**3 + 0 + x becomes x**3 + x
+                //also consider that sign of term here itself to avoid prints like x + -1
+                if ((++it != x.get_dict().rend()) and (it->second != 0)) {
+                    if (it->second < 0 or (is_a<Mul>(*it->second.get_basic()) and (rcp_static_cast<const Mul>(it->second.get_basic ()))->coef_->is_negative())
+                        or (is_a<Pow>(*it->second.get_basic()) and (rcp_static_cast<const Mul>((rcp_static_cast<const Pow>(it->second.get_basic()))->get_base()))->coef_->is_negative())) {
+                        s << " - ";
+                    } else {
+                        s << " + ";
+                    }
+                }
+            }
+            //same logic is followed as above
+            else {
+                if (it->first == 0) {
+                    s << Expression(abs(it->second.get_basic()));
+                } else if (it->first == 1) {
+                    s << Expression(abs(it->second.get_basic())) << "*" << x.get_var()->get_name();
+                } else {
+                    s << Expression(abs(it->second.get_basic())) << "*" << x.get_var()->get_name() << "**"  << it->first;
+                }
+                if ((++it != x.get_dict().rend()) and (it->second != 0)) {
+                    if (it->second < 0 or (is_a<Mul>(*it->second.get_basic()) and (rcp_static_cast<const Mul>(it->second.get_basic()))->coef_->is_negative())
+                        or (is_a<Pow>(*it->second.get_basic()) and (rcp_static_cast<const Mul>((rcp_static_cast<const Pow>(it->second.get_basic()))->get_base()))->coef_->is_negative())) {
+                        s << " - ";
+                    } else {
+                        s << " + ";
+                    }
+                }
+            }
+        }
+        else {
+            if(is_a<const Symbol>(*it->second.get_basic())) { // stand-alone symbols
+                if (it->first == 0)
+                    s << Expression(it->second.get_basic());
+                else if (it->first == 1) 
+                    s << Expression(it->second.get_basic()) << "*" << x.get_var()->get_name();
+                else 
+                    s << Expression(it->second.get_basic()) << "*" << x.get_var()->get_name() << "**"  << it->first;
+
+                if (++it != x.get_dict().rend()) {
+                    if (it->second < 0 or (is_a<Mul>(*it->second.get_basic()) and (rcp_static_cast<const Mul>(it->second.get_basic()))->coef_->is_negative())
+                        or (is_a<Pow>(*it->second.get_basic()) and (rcp_static_cast<const Mul>((rcp_static_cast<const Pow>(it->second.get_basic()))->get_base()))->coef_->is_negative())) {
+                        s << " - ";
+                    } else {
+                        s << " + ";
+                    }
+                }
+            }
+            else { // For grouping un-like terms
+                if (it->first == 0) {
+                    if(first)
+                        s << Expression(it->second.get_basic());
+                    else
+                        s << "(" << Expression(it->second.get_basic()) << ")";
+                }
+                else if (it->first == 1) {
+                    if(is_a<Mul>(*it->second.get_basic()) and (rcp_static_cast<const Mul>(it->second.get_basic()))->coef_->is_negative()) {
+                        if(first)
+                            s << Expression(it->second.get_basic()) << "*" << x.get_var()->get_name();
+                        else {
+                            Expression b = it->second * -1;
+                            s << b << "*" << x.get_var()->get_name();
+                        }
+                    }
+                    else
+                        s << "(" << Expression(it->second.get_basic()) << ")" << "*" << x.get_var()->get_name();
+                }
+                else {
+                    if(is_a<Mul>(*it->second.get_basic())) {
+                        if (first)
+                            s << Expression(it->second.get_basic()) << "*" << x.get_var()->get_name() << "**"  << it->first;
+                        else if ((rcp_static_cast<const Mul>(it->second.get_basic()))->coef_->is_negative()) {
+                            Expression b = it->second * -1;
+                            s << b << "*" << x.get_var()->get_name();
+                        }
+                        else {
+                            s << "(" << Expression(it->second.get_basic()) << ")" << "*" << x.get_var()->get_name() << "**" << it->first;
+                        }
+                    }
+                    else {
+                        s << "(" << Expression(it->second.get_basic()) << ")" << "*" << x.get_var()->get_name() << "**"  << it->first;
+                    }
+                }
+
+                if (++it != x.get_dict().rend() and (it->second != 0)) {
+                    if (it->second < 0 or (is_a<Mul>(*it->second.get_basic()) and (rcp_static_cast<const Mul>(it->second.get_basic()))->coef_->is_negative())
+                        or (is_a<Pow>(*it->second.get_basic()) and (rcp_static_cast<const Mul>((rcp_static_cast<const Pow>(it->second.get_basic()))->get_base()))->coef_->is_negative())) {
+                        s << " - ";
+                    } else {
+                        s << " + ";
+                    }
+                }
+            }
+        }
+        //corner cases of only first term handled successfully, switch the bool
+        first = false;
+    }
+    str_ = s.str();
+}
+
 #ifdef HAVE_SYMENGINE_PIRANHA
 void StrPrinter::bvisit(const URatPSeriesPiranha &x) {
     std::ostringstream o;
@@ -388,8 +529,8 @@ void StrPrinter::bvisit(const Derivative &x) {
 
 void StrPrinter::bvisit(const Subs &x) {
     std::ostringstream o, vars, point;
-    for (auto p = x.dict_.begin(); p != x.dict_.end(); p++) {
-        if (p != x.dict_.begin()) {
+    for (auto p = x.get_dict().begin(); p != x.dict_.end(); p++) {
+        if (p != x.get_dict().begin()) {
             vars << ", ";
             point << ", ";
         }
