@@ -20,15 +20,13 @@ UnivariateIntPolynomial::UnivariateIntPolynomial(const RCP<const Symbol> &var, c
 }
 
 bool UnivariateIntPolynomial::is_canonical(const unsigned int &degree_, const map_uint_mpz& dict) const {
-    // map_uint_mpz ordered(dict.begin(), dict.end());
-    // unsigned int prev_degree = (--ordered.end())->first;
-    // return prev_degree == degree_;
     map_uint_mpz ordered(dict.begin(), dict.end());
     unsigned int prev_degree = (--ordered.end())->first;
-    if (prev_degree != degree_)
-        return false;
-
-    return true;
+    return prev_degree == degree_;
+    
+    //Check if dictionary contains terms with coeffienct 0
+    for (auto itter = dict.begin(); itter != dict.end(); itter++)
+        return 0 != itter->second;
 }
 
 std::size_t UnivariateIntPolynomial::__hash__() const {
@@ -76,7 +74,6 @@ vec_basic UnivariateIntPolynomial::get_args() const {
     vec_basic args;
     map_uint_mpz d;
     for (const auto &p: dict_) {
-        // args.push_back(UnivariateIntPolynomial::from_dict(var_, {{p.first, p.second}}));
         d = {{p.first, p.second}};
         if (d.begin()->first == 0)
             args.push_back( integer(d.begin()->second));
@@ -92,6 +89,8 @@ vec_basic UnivariateIntPolynomial::get_args() const {
               args.push_back( Mul::from_dict(integer(d.begin()->second),{{var_, integer(d.begin()->first)}}));
         }
     }
+    if (dict_.empty())
+        args.push_back(zero);
     return args;
 }
 

@@ -317,6 +317,8 @@ void StrPrinter::bvisit(const UnivariateIntPolynomial &x) {
         //corner cases of only first term handled successfully, switch the bool
         first = false;
     }
+    if (x.get_dict().size() == 0)
+        s << "0";
     str_ = s.str();
 }
 

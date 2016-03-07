@@ -26,9 +26,9 @@ public:
     UnivariateIntPolynomial(const RCP<const Symbol> &var, const unsigned int &degree, map_uint_mpz&& dict);
     //! Constructor using a dense vector of integer_class coefficients
     UnivariateIntPolynomial(const RCP<const Symbol> &var, const std::vector<integer_class> &v);
-
+    
     static RCP<const UnivariateIntPolynomial> create(const RCP<const Symbol> &var,
-            const std::vector<integer_class> &v) {
+	   const std::vector<integer_class> &v) {
         return make_rcp<const UnivariateIntPolynomial>(var, v);
     }
 
