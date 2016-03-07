@@ -577,10 +577,7 @@ void test_functions() {
     basic_str_free(s);
 
     basic_lambertw(ans, e_minus_one);
-    s = basic_str(ans);
-    SYMENGINE_C_ASSERT(strcmp(s, "lambertw(-1/E)") == 0);
-    //SYMENGINE_C_ASSERT(basic_eq(ans, minus_one));
-    basic_str_free(s);
+    SYMENGINE_C_ASSERT(basic_eq(ans, minus_one));
 
     basic_zeta(ans, zero);
     SYMENGINE_C_ASSERT(basic_eq(ans, minus_half));
