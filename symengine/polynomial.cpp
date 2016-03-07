@@ -523,29 +523,29 @@ vars_{std::move(vars)}, degrees_{std::move(degrees)}, dict_{std::move(dict)} {
     SYMENGINE_ASSERT(is_canonical(vars_, degrees_, dict_))
 }
 
-RCP<const Basic> MultivariateIntPolynomial::from_dict(const set_sym &s, umap_uvec_mpz &&d) const{
-    if(d.size() == 1){
-        map_basic_basic b;
-        int whichvar = 0;
-        for(auto sym : s){
-	    b.insert( std::pair<RCP<const Basic>, RCP<const Basic>>(sym , make_rcp<Integer>(integer_class(d.begin()->first[whichvar]))) );
-            whichvar++;
-        }
-       return Mul::from_dict(make_rcp<const Integer>(d.begin()->second), std::move(b));
+RCP<const MultivariateIntPolynomial> MultivariateIntPolynomial::from_dict(const set_sym &s, umap_uvec_mpz &&d) {
+    umap_sym_uint degs;
+
+    for (auto itter = d.begin(); itter != d.end(); itter++){
+      if (integer_class(0) == itter->second) {
+          auto toErase = itter;
+          itter++;
+          d.erase(toErase);
+      } else {
+          itter++;
+      }
     }
-    else{
-        umap_sym_uint degs;
-        int whichvar = 0;
-        for(auto sym : s){
-            degs.insert(std::pair<RCP<const Symbol>, unsigned int>(sym,0));
-            for(auto bucket : d){
-                if(bucket.first[whichvar] > degs.find(sym)->second)
-	            degs.find(sym)->second = bucket.first[whichvar];
-            }
-            whichvar++;
+    
+    int whichvar = 0;
+    for(auto sym : s){
+        degs.insert(std::pair<RCP<const Symbol>, unsigned int>(sym,0));
+        for(auto bucket : d){
+            if(bucket.first[whichvar] > degs.find(sym)->second)
+                degs.find(sym)->second = bucket.first[whichvar];
         }
-        return make_rcp<const MultivariateIntPolynomial>(s,degs,d);
+        whichvar++;
     }
+    return make_rcp<const MultivariateIntPolynomial>(s,degs,d);
 }
   
 vec_basic  MultivariateIntPolynomial::get_args() const{
@@ -557,6 +557,12 @@ vec_basic  MultivariateIntPolynomial::get_args() const{
 }
   
 bool MultivariateIntPolynomial::is_canonical(const set_sym &vars, const umap_sym_uint &degrees, const umap_uvec_mpz &dict){
+    //checks that the dictionary does not contain terms with coefficient 0
+    for (auto bucket : dict) {
+        if(integer_class(0) == bucket.second)
+	    return false;
+    }
+  
     //checks that the maximum degree of any variable is correct according to the dictionary
     unsigned int whichvar = 0; //keeps track of the index of the variable we are checking
     for(auto var : vars){

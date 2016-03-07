@@ -115,8 +115,9 @@ public:
 public:
     IMPLEMENT_TYPEID(MULTIVARIATEPOLYNOMIAL)
     //constructor from components
-    MultivariatePolynomial(const set_sym &var, umap_sym_uint &degrees, umap_uvec_mpz &dict);
-    RCP<const Basic> from_dict(const set_sym &s, umap_uvec_mpz &&d) const;
+    MultivariateIntPolynomial(const set_sym &var, umap_sym_uint &degrees, umap_uvec_mpz &dict);
+    //creates a MultivariateIntPolynomial in cannonical form based on dictionary d.
+    static RCP<const MultivariateIntPolynomial> from_dict(const set_sym &s, umap_uvec_mpz &&d);
     vec_basic get_args() const;
     bool is_canonical(const set_sym &vars, const umap_sym_uint &degrees, const umap_uvec_mpz &dict);
     std::size_t __hash__() const;
@@ -136,6 +137,7 @@ unsigned int reconcile(vec_uint &v1, vec_uint &v2, set_sym &s, const set_sym &s1
 unsigned int reconcile(vec_uint &v1, unsigned int &v2, set_sym &s, const set_sym &s1, const RCP<const Symbol> s2);
 //translates vectors from one polynomial into vectors for another.
 vec_uint translate(vec_uint original, vec_uint translator, unsigned int size);
+//tramslates terms of UnivariateIntPolynomial into vectors
 vec_uint translate(unsigned int original, unsigned int translator, unsigned int size);
 vec_uint uint_vec_translate_and_add(const vec_uint &v1, const vec_uint &v2,const vec_uint &translator1, const vec_uint &translator2, const unsigned int size);
 vec_uint uint_vec_translate_and_add(const vec_uint &v1, const unsigned int v2, const vec_uint &translator1,const unsigned int &translator2, const unsigned int size);
