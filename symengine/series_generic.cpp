@@ -1,4 +1,4 @@
-include <exception>
+#include <exception>
 #include <algorithm>
 #include <iterator>
 #include <symengine/series_generic.h>

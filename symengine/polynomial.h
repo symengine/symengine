@@ -48,11 +48,6 @@ public:
     static RCP<const UnivariateIntPolynomial> from_dict(const RCP<const Symbol> &var, map_uint_mpz &&d);
     //create a UnivariateIntPolynomial from a dense vector of integer_class coefficients
     static RCP<const UnivariateIntPolynomial> from_vec(const RCP<const Symbol> &var, const std::vector<integer_class> &v);
-
-    static RCP<const UnivariateIntPolynomial> create(const RCP<const Symbol> &var,
-						  const std::vector<integer_class> &v) {
-        return UnivariateIntPolynomial::from_vec(var, v);
-    }
     
     /*!
     * Adds coef*var_**n to the dict_
