@@ -25,7 +25,7 @@ public:
     map_uint_mpz dict_;
 public:
     IMPLEMENT_TYPEID(UNIVARIATEINTPOLYNOMIAL)
-    //! Constructor of UnivariatePolynomial class
+    //! Constructor of UnivariateIntPolynomial class
     UnivariateIntPolynomial(const RCP<const Symbol> &var, const unsigned int &degree, map_uint_mpz&& dict);
 
     static RCP<const UnivariateIntPolynomial> create(const RCP<const Symbol> &var,
