@@ -1,56 +1,28 @@
 #include <exception>
 #include <algorithm>
-#include <iterator>*/
+#include <iterator>
 #include <symengine/series_generic.h>
-#include <symengine/series_visitor.h>
-// #include <symengine/dict.h>
+#include <symengine/dict.h>
 
 using SymEngine::RCP;
 using SymEngine::make_rcp;
 
 namespace SymEngine {
-  /*
-UnivariateSeries::UnivariateSeries(const s_coef sp, const std::string varname, const unsigned degree)
-        : SeriesBase(std::move(sp), varname, degree) {
-  
-}
-RCP<const UnivariateSeries> UnivariateSeries::series(const RCP<const Basic> &t, const std::string &x,
-                                                         unsigned int prec) {
-    // throw std::runtime_error("Not Implemented");
-    SeriesVisitor<s_coef, Integer, UnivariateSeries> visitor(s_coef(std::stoi(x)), x, prec);
-    return visitor.series(t);
-}
 
 
 UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const RCP<const UnivariateIntPolynomial> &poly) :
         var_{var}, poly_{std::move(poly)} , prec_{precision} {
 }
 
-int UnivariateSeries::compare(const Basic &o) const
-{
-    SYMENGINE_ASSERT(is_a<UnivariateSeries>(o))
-    const UnivariateSeries &s = static_cast<const UnivariateSeries &>(o);
-    if (var_ != s.var_)
-        return (var_ < s.var_) ? -1 : 1;
-    if (degree_ != s.degree_)
-        return (degree_ < s.degree_) ? -1 : 1;
-    if (p_ == s.p_)
-        return 0;
-    //return p.compare(*s.p_);
-    return p_.get_basic()->__cmp__(*s.p_.get_basic()); //__cmp__()*/
-    /*if (not is_a<UnivariateSeries>(other))
-        throw std::domain_error("cannot compare with UnivariateSeries");
-    const UnivariateSeries &o = static_cast<const UnivariateSeries &>(other);
-    return poly_->compare(*o.poly_);*//*
-}
+UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const unsigned int &max, map_uint_mpz&& dict) :
+        var_{var}, prec_{precision} {
 
 
     poly_ = univariate_int_polynomial(var_, std::move(dict));
 }
 
-s_coef UnivariateSeries::var(const std::string &s) {
-    return s_coef(std::stoi(s));
-}
+UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const map_uint_mpz& dict) :
+        var_{var}, prec_{precision} {
 
     map_uint_mpz dict_trunc;
     unsigned int max = 0;
@@ -82,26 +54,25 @@ bool UnivariateSeries::is_canonical(const UnivariateIntPolynomial& poly, const u
     return true;
 }
 
-RCP<const Basic> UnivariateSeries::get_coeff(int i) const {
-    throw std::runtime_error("Not Implemented");*/
-    /*mpq_class cl_rat(p_.find_cf({i}).get_mpq_view());
-    cl_rat.canonicalize();
-    RCP<const Basic> basic;
-    if (cl_rat.get_den() == 1)
-        basic = make_rcp<const Integer>(cl_rat.get_num());
-    else
-        basic = make_rcp<const Rational>(cl_rat);
-    return std::move(basic);*//*
+std::size_t UnivariateSeries::__hash__() const
+{
+    return poly_->hash() + std::size_t(prec_ * 84728863L);
 }
 
-s_coef UnivariateSeries::mul(const s_coef &s, const s_coef &r, unsigned prec) {
-    // No prec mul
-    return s * r;
+bool UnivariateSeries::__eq__(const Basic &other) const
+{
+    if (not is_a<UnivariateSeries>(other))
+        return false;
+    const UnivariateSeries &o = static_cast<const UnivariateSeries &>(other);
+    return operator==(o);
 }
 
-s_coef UnivariateSeries::pow(const s_coef &s, int n, unsigned prec) {
-    // No prec mul
-    return pow_ex(s, s_coef(n));
+int UnivariateSeries::compare(const Basic &other) const
+{
+    if (not is_a<UnivariateSeries>(other))
+        throw std::domain_error("cannot compare with UnivariateSeries");
+    const UnivariateSeries &o = static_cast<const UnivariateSeries &>(other);
+    return poly_->compare(*o.poly_);
 }
 
 std::string UnivariateSeries::__str__() const
@@ -138,12 +109,26 @@ std::string UnivariateSeries::__str__() const
     return o.str();
 }
 
-s_coef UnivariateSeries::find_cf(const s_coef &s, const s_coef &var, unsigned deg) {
-    return coeff(s, var, Expression(deg));
-}
+RCP<const UnivariateSeries> add_uni_series (const UnivariateSeries& a, const UnivariateSeries& b)
+{
+    map_uint_mpz dict;
+    SYMENGINE_ASSERT(a.var_->get_name() == b.var_->get_name())
+    unsigned int minprec = (a.prec_ < b.prec_)? a.prec_ : b.prec_;
+    for (const auto &it : a.poly_->dict_) {
+        if (it.first >= minprec)
+            break;
+        dict[it.first] = it.second;
+    }
 
-s_coef UnivariateSeries::root(s_coef &c, unsigned n) {
-    return pow_ex(c, 1/Expression(n));
+    unsigned int max = 0;
+    for (const auto &it : b.poly_->dict_) {
+        if (it.first >= minprec)
+            break;
+        dict[it.first] += it.second;
+        if (dict[it.first] != 0 and it.first > max)
+            max = it.first;
+    }
+    return make_rcp<const UnivariateSeries>(a.var_, minprec, max, std::move(dict));
 }
 
 RCP<const UnivariateSeries> neg_uni_series (const UnivariateSeries& a)
@@ -151,8 +136,9 @@ RCP<const UnivariateSeries> neg_uni_series (const UnivariateSeries& a)
     return make_rcp<const UnivariateSeries>(a.var_, a.prec_, std::move(neg_poly(*a.poly_)));
 }
 
-s_coef UnivariateSeries::integrate(const s_coef &s, const s_coef &var) {
-    throw std::runtime_error("Not Implemented");
+RCP<const UnivariateSeries> sub_uni_series (const UnivariateSeries& a, const UnivariateSeries& b)
+{
+    return add_uni_series(a, *neg_uni_series(b));
 }
 
 RCP<const UnivariateSeries> mul_uni_series (const UnivariateSeries& a, const UnivariateSeries& b)
@@ -179,11 +165,5 @@ RCP<const UnivariateSeries> mul_uni_series (const UnivariateSeries& a, const Uni
     }
     return make_rcp<const UnivariateSeries>(a.var_, minprec, max, std::move(dict));
 }
- */
-/*bool UnivariateSeries::is_canonical(const UnivariatePolynomial& poly, const unsigned int &prec) const
-{
-    return true;
-}*/
-
 
 } // SymEngine

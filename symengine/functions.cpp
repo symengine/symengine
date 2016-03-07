@@ -3051,6 +3051,77 @@ RCP<const Basic> uppergamma(const RCP<const Basic> &s, const RCP<const Basic> &x
 }
 
 
+bool LogGamma::is_canonical(const RCP<const Basic> &arg) const
+{
+    if (is_a<Integer>(*arg)) {
+        RCP<const Integer> arg_int = rcp_static_cast<const Integer>(arg);
+        if(not arg_int->is_positive()) {
+            return false;
+        }
+        if (eq(*integer(1), *arg_int) or eq(*integer(2), *arg_int) or
+            eq(*integer(3), *arg_int)) {
+            return false;
+        }
+    }
+    return true;
+}
+
+std::size_t LogGamma::__hash__() const
+{
+    std::size_t seed = LOGGAMMA;
+    hash_combine<Basic>(seed, *arg_);
+    return seed;
+}
+
+bool LogGamma::__eq__(const Basic &o) const
+{
+    if (is_a<LogGamma>(o) and
+        eq(*arg_, *(static_cast<const LogGamma &>(o).arg_)))
+        return true;
+    return false;
+}
+
+int LogGamma::compare(const Basic &o) const
+{
+    SYMENGINE_ASSERT(is_a<LogGamma>(o))
+    return arg_->__cmp__(*(static_cast<const LogGamma &>(o).arg_));
+}
+
+RCP<const Basic> LogGamma::rewrite_as_gamma() const
+{
+    return log(gamma(arg_));
+}
+
+RCP<const Basic> LogGamma::subs(const map_basic_basic &subs_dict) const
+{
+    auto it = subs_dict.find(rcp_from_this());
+    if (it != subs_dict.end())
+        return it->second;
+    RCP<const Basic> arg = arg_->subs(subs_dict);
+    if (arg == arg_)
+        return rcp_from_this();
+    else
+        return loggamma(arg);
+}
+
+RCP<const Basic> loggamma(const RCP<const Basic> &arg)
+{
+    if (is_a<Integer>(*arg)) {
+        RCP<const Integer> arg_int = rcp_static_cast<const Integer>(arg);
+        if(not arg_int->is_positive()) {
+            throw std::runtime_error("Infinity not yet implemented");
+        }
+        if (eq(*integer(1), *arg_int) or eq(*integer(2), *arg_int)) {
+            return zero;
+        }
+        else if (eq(*integer(3), *arg_int)) {
+            return log(integer(2));
+        }
+    }
+    return make_rcp<const LogGamma>(arg);
+}
+
+
 RCP<const Beta> Beta::from_two_basic(const RCP<const Basic> &x, const RCP<const Basic> &y)
 {
         if (x->__cmp__(*y) == -1) {

@@ -857,7 +857,7 @@ RCP<const MultivariateIntPolynomial> mul_mult_poly(const MultivariateIntPolynomi
     return make_rcp<const MultivariateIntPolynomial>(s, degs, dict);
 }
 
-RCP<const MultivariateIntPolynomial> add_mult_poly(const MultivariateIntPolynomial &a, const UnivariatePolynomial &b){
+RCP<const MultivariateIntPolynomial> add_mult_poly(const MultivariateIntPolynomial &a, const UnivariateIntPolynomial &b){
     vec_uint v1;
     unsigned int v2;
     set_sym s;
@@ -890,15 +890,15 @@ RCP<const MultivariateIntPolynomial> add_mult_poly(const MultivariateIntPolynomi
     return make_rcp<MultivariateIntPolynomial>(s,degs,dict);
 }
 
-RCP<const MultivariateIntPolynomial> sub_mult_poly(const MultivariateIntPolynomial &a, const UnivariatePolynomial &b){
-    return add_mult_poly(a, *neg_uni_poly(b));
+RCP<const MultivariateIntPolynomial> sub_mult_poly(const MultivariateIntPolynomial &a, const UnivariateIntPolynomial &b){
+    return add_mult_poly(a, *neg_poly(b));
 }
 
-RCP<const MultivariateIntPolynomial> sub_mult_poly(const UnivariatePolynomial &a, const MultivariateIntPolynomial &b){
+RCP<const MultivariateIntPolynomial> sub_mult_poly(const UnivariateIntPolynomial &a, const MultivariateIntPolynomial &b){
     return add_mult_poly(*neg_mult_poly(b),a);
 }
 
-RCP<const MultivariateIntPolynomial> mul_mult_poly(const MultivariateIntPolynomial &a, const UnivariatePolynomial &b){
+RCP<const MultivariateIntPolynomial> mul_mult_poly(const MultivariateIntPolynomial &a, const UnivariateIntPolynomial &b){
     vec_uint v1;
     unsigned int v2;
     set_sym s;
@@ -927,7 +927,7 @@ RCP<const MultivariateIntPolynomial> mul_mult_poly(const MultivariateIntPolynomi
     return make_rcp<const MultivariateIntPolynomial>(s,degs,dict);
 }
 
-RCP<const MultivariateIntPolynomial> add_mult_poly(const UnivariatePolynomial &a, const UnivariatePolynomial &b){
+RCP<const MultivariateIntPolynomial> add_mult_poly(const UnivariateIntPolynomial &a, const UnivariateIntPolynomial &b){
     unsigned int v1;
     unsigned int v2;
     set_sym s;
@@ -984,11 +984,11 @@ RCP<const MultivariateIntPolynomial> add_mult_poly(const UnivariatePolynomial &a
     return make_rcp<MultivariateIntPolynomial>(s,degs,dict);
 }
 
-RCP<const MultivariateIntPolynomial> sub_mult_poly(const UnivariatePolynomial &a, const UnivariatePolynomial &b){
-    return add_mult_poly(a, *neg_uni_poly(b));
+RCP<const MultivariateIntPolynomial> sub_mult_poly(const UnivariateIntPolynomial &a, const UnivariateIntPolynomial &b){
+    return add_mult_poly(a, *neg_poly(b));
 }
 
-RCP<const MultivariateIntPolynomial> mul_mult_poly(const UnivariatePolynomial &a, const UnivariatePolynomial &b){
+RCP<const MultivariateIntPolynomial> mul_mult_poly(const UnivariateIntPolynomial &a, const UnivariateIntPolynomial &b){
     unsigned int v1;
     unsigned int v2;
     set_sym s;
