@@ -15,6 +15,7 @@
 #include <symengine/visitor.h>
 #include <symengine/printer.h>
 
+
 using SymEngine::Basic;
 using SymEngine::RCP;
 using SymEngine::zero;
@@ -265,6 +266,21 @@ void basic_expand(basic s, const basic a)
 {
     s->m = SymEngine::expand(a->m);
 }
+
+void basic_cot(basic s, const basic a)
+ {
+     s->m = SymEngine::cot(a->m);
+ }
+
+ void basic_csc(basic s, const basic a)
+ {
+     s->m = SymEngine::csc(a->m);
+ }
+ 
+void basic_sec(basic s, const basic a)
+ {
+     s->m = SymEngine::sec(a->m);
+ }
 
 char* basic_str(const basic s)
 {
