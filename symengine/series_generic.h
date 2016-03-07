@@ -17,11 +17,11 @@ class UnivariateSeries : public SeriesBase<UnivariateExprPolynomial, Expression,
 public:
     unsigned int prec_;
     IMPLEMENT_TYPEID(UNIVARIATESERIES)
-    UnivariateSeries(const UnivariateExprPolynomial sp, const std::string varname, const unsigned degree) : SeriesBase(std::move(sp), varname, degree) {}
-    UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const UnivariateExprPolynomial poly);
+    UnivariateSeries(const UnivariateExprPolynomial &sp, const std::string varname, const unsigned degree) : SeriesBase(std::move(sp), varname, degree) {}
+    UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const UnivariateExprPolynomial &poly);
     UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const unsigned int &max_exp, map_int_Expr &&dict);
     UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const map_uint_mpz &dict);
-    UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, map_int_Expr &dict);
+    UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const map_int_Expr &dict);
     UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const std::vector<Expression> &v);
     UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const std::vector<integer_class> &v);
     
@@ -76,7 +76,7 @@ inline RCP<const UnivariateSeries> univariate_series(RCP<const Symbol> i, unsign
     return make_rcp<const UnivariateSeries>(i, prec, dict);
 }
 
-inline RCP<const UnivariateSeries> univariate_series(RCP<const Symbol> i, unsigned int prec,  map_int_Expr& dict) {
+inline RCP<const UnivariateSeries> univariate_series(RCP<const Symbol> i, unsigned int prec, map_int_Expr& dict) {
     return make_rcp<const UnivariateSeries>(i, prec, dict);
 }
 

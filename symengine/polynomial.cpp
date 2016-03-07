@@ -240,7 +240,7 @@ RCP<const UnivariateIntPolynomial> mul_poly(RCP<const UnivariateIntPolynomial> a
 }
 
 
-UnivariatePolynomial::UnivariatePolynomial(const RCP<const Symbol> &var, const unsigned int &degree, map_int_Expr&& dict) :
+UnivariatePolynomial::UnivariatePolynomial(const RCP<const Symbol> &var, const unsigned int &degree, const map_int_Expr&& dict) :
      degree_{degree}, var_{var}, dict_{std::move(dict)} {
     SYMENGINE_ASSERT(is_canonical(degree_, dict_))
 }

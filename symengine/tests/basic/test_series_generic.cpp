@@ -52,7 +52,8 @@ TEST_CASE("Adding two UnivariateSeries", "[UnivariateSeries]")
     const UnivariateSeries d(x, 4, ddict_);
     REQUIRE(*c == d);
 
-    const UnivariateSeries e(x, 2, bdict_);
+    const UnivariateSeries e(x, 4, bdict_);
+
     RCP<const UnivariateSeries> f = add_uni_series(a, e);
     const UnivariateSeries g(x, 2, ddict_);
     REQUIRE(*f == g);
@@ -79,12 +80,12 @@ TEST_CASE("Subtracting two UnivariateSeries", "[UnivariateSeries]")
     map_int_Expr gdict_ = {{0, -1}, {1, -1}};
 
     UnivariateSeries a(x, 5, adict_);
-    UnivariateSeries b(x, 4, bdict_);
+    UnivariateSeries b(x, 2, bdict_);
     RCP<const UnivariateSeries> c = sub_uni_series(a, b);
     UnivariateSeries f(x, 4, fdict_);
     REQUIRE(*c == f);
+    UnivariateSeries d(x, 3, bdict_);
 
-    UnivariateSeries d(x, 2, bdict_);
     RCP<const UnivariateSeries> e = sub_uni_series(a, d);
     UnivariateSeries g(x, 2, gdict_);
     REQUIRE(*e == g);
