@@ -28,8 +28,8 @@ public:
     UnivariateIntPolynomial(const RCP<const Symbol> &var, const std::vector<integer_class> &v);
     
     static RCP<const UnivariateIntPolynomial> create(const RCP<const Symbol> &var,
-	   const std::vector<integer_class> &v) {
-        return make_rcp<const UnivariateIntPolynomial>(var, v);
+	        const std::vector<integer_class> &v) {
+        return UnivariateIntPolynomial::from_vec(var, v);
     }
 
     //! \return true if canonical
@@ -46,7 +46,9 @@ public:
     /*! Creates appropriate instance (i.e Symbol, Integer,
     * Mul, Pow, UnivariateIntPolynomial) depending on the size of dictionary `d`.
     */
-    static RCP<const Basic> from_dict(const RCP<const Symbol> &var, map_uint_mpz &&d);
+    static RCP<const UnivariateIntPolynomial> from_dict(const RCP<const Symbol> &var, map_uint_mpz &&d);
+    static RCP<const UnivariateIntPolynomial> from_vec(const RCP<const Symbol> &var, const std::vector<integer_class> &v);
+ 
     /*!
     * Adds coef*var_**n to the dict_
     */
@@ -116,8 +118,9 @@ public:
     //! Constructor using a dense vector of Expression
     UnivariatePolynomial(const RCP<const Symbol> &var, const std::vector<Expression> &v);
     
-    static RCP<const UnivariatePolynomial> create(const RCP<const Symbol> &var, const std::vector<Expression> &v) {
-        return make_rcp<const UnivariatePolynomial>(var, v);
+    static RCP<const UnivariatePolynomial> create(const RCP<const Symbol> &var, 
+            const std::vector<Expression> &v) {
+        return UnivariatePolynomial::from_vec(var, v);//return make_rcp<const UnivariatePolynomial>(var, v);
     }
 
     bool is_canonical(const unsigned int &degree, const map_int_Expr& dict) const;
@@ -129,6 +132,7 @@ public:
     * Mul, Pow, UnivariatePolynomial) depending on the size of dictionary `d`.
     */
     static RCP<const Basic> from_dict(const RCP<const Symbol> &var, map_int_Expr &&d);
+    static RCP<const UnivariatePolynomial> from_vec(const RCP<const Symbol> &var, const std::vector<Expression> &v);
     /*!
     * Adds coef*var_**n to the dict_
     */
