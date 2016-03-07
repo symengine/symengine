@@ -458,6 +458,50 @@ void test_ascii_art() {
     basic_str_free(s);
 }
 
+void test_ntheory() {
+    basic x, i1, i2, i4, i5;
+    basic_new_stack(x);
+    basic_new_stack(i1);
+    basic_new_stack(i2);
+    basic_new_stack(i4);
+    basic_new_stack(i5);
+
+    integer_set_si(i1, 1);
+    integer_set_si(i2, 2);
+    integer_set_si(i4, 4);
+    integer_set_si(i5, 5);
+
+    ntheory_gcd(x, i2, i4);
+    SYMENGINE_C_ASSERT(basic_eq(x, i2));
+    
+    ntheory_lcm(x, i2, i4);
+    SYMENGINE_C_ASSERT(basic_eq(x, i4));
+
+    ntheory_nextprime(x, i4);
+    SYMENGINE_C_ASSERT(basic_eq(x, i5));
+
+    ntheory_mod(x, i5, i4);
+    SYMENGINE_C_ASSERT(basic_eq(x, i1));
+
+    ntheory_quotient(x, i5, i2);
+    SYMENGINE_C_ASSERT(basic_eq(x, i2));
+
+    ntheory_fibonacci(x, 5);
+    SYMENGINE_C_ASSERT(basic_eq(x, i5));
+
+    ntheory_lucas(x, 1);
+    SYMENGINE_C_ASSERT(basic_eq(x, i1));
+    
+    ntheory_binomial(x, i5, 1);
+    SYMENGINE_C_ASSERT(basic_eq(x, i5));
+
+    basic_free_stack(x);
+    basic_free_stack(i1);
+    basic_free_stack(i2);
+    basic_free_stack(i4);
+    basic_free_stack(i5);
+}
+
 int main(int argc, char* argv[])
 {
     test_cwrapper();
@@ -476,5 +520,6 @@ int main(int argc, char* argv[])
     test_subs2();
     test_constants();
     test_ascii_art();
+    test_ntheory();
     return 0;
 }
