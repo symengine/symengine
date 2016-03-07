@@ -237,22 +237,26 @@ public:
         }
     }
 
+    void pow_expand(RCP<const UnivariatePolynomial> &x, unsigned long &i) {
+        RCP<const UnivariatePolynomial> r = univariate_polynomial(x->get_var(), 0, {{0, 1}});
+        while (i != 0) {
+            if (i % 2 == 1) {
+                r = mul_uni_poly(r, x); 
+                    i--;
+            }   
+            x = mul_uni_poly(x, x); 
+            i /= 2;
+        }   
+        _coef_dict_add_term(multiply, r); 
+    }
+    
     void bvisit(const Pow &self) {
         RCP<const Basic> _base = expand(self.get_base());
         if(is_a<const UnivariatePolynomial>(*self.get_base())) {
             if (is_a<Integer>(*self.get_exp()) && is_a<UnivariatePolynomial>(*_base)) {
-                int q = rcp_static_cast<const Integer>(self.get_exp())->as_int();
+                unsigned long q = rcp_static_cast<const Integer>(self.get_exp())->as_int();
                 RCP<const UnivariatePolynomial> p = rcp_static_cast<const UnivariatePolynomial>(_base);
-                RCP<const UnivariatePolynomial> r = univariate_polynomial(p->get_var(), 0, {{0, 1}});
-                while (q != 0) {
-                    if (q % 2 == 1) {
-                        r = mul_uni_poly(r, p);
-                        q--;
-                    }
-                    p = mul_uni_poly(p, p);
-                    q /= 2;
-                }
-                _coef_dict_add_term(multiply, r);
+                pow_expand(p, q);
                 return;
             }
 

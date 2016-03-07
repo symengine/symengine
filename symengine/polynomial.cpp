@@ -8,6 +8,7 @@ namespace SymEngine {
 
 UnivariateIntPolynomial::UnivariateIntPolynomial(const RCP<const Symbol> &var, const unsigned int &degree, map_uint_mpz&& dict) :
      degree_{degree}, var_{var}, dict_{std::move(dict)} {
+    
     SYMENGINE_ASSERT(is_canonical(degree_, dict_))
 }
 
@@ -25,8 +26,10 @@ bool UnivariateIntPolynomial::is_canonical(const unsigned int &degree_, const ma
     return prev_degree == degree_;
     
     //Check if dictionary contains terms with coeffienct 0
-    for (auto itter = dict.begin(); itter != dict.end(); itter++)
-        return 0 != itter->second;
+    for (auto iter = dict.begin(); iter != dict.end(); iter++)
+        if (iter->second == 0)
+            return false;
+    return true;
 }
 
 std::size_t UnivariateIntPolynomial::__hash__() const {
