@@ -46,8 +46,8 @@ std::size_t UnivariateIntPolynomial::__hash__() const
 
 bool UnivariateIntPolynomial::__eq__(const Basic &o) const
 {
-    if (eq(*var_, *(static_cast<const UnivariatePolynomial &>(o).var_)) and
-        map_uint_mpz_eq(dict_, static_cast<const UnivariatePolynomial &>(o).dict_))
+    if (eq(*var_, *(static_cast<const UnivariateIntPolynomial &>(o).var_)) and
+        map_uint_mpz_eq(dict_, static_cast<const UnivariateIntPolynomial &>(o).dict_))
         return true;
 
     return false;
@@ -70,13 +70,13 @@ int UnivariateIntPolynomial::compare(const Basic &o) const
 RCP<const UnivariatePolynomial> UnivariatePolynomial::from_dict(const RCP<const Symbol> &var, map_uint_mpz &&d)
 {
     auto itter = d.begin();
-    while(itter != d.end()){
-        if(integer_class(0) == itter->second){
-	    auto toErase = itter;
-	    itter++;
-	    d.erase(toErase);
-        }else{
-	    itter++;
+    while (itter != d.end()) {
+        if (integer_class(0) == itter->second) {
+            auto toErase = itter;
+            itter++;
+            d.erase(toErase);
+        } else {
+            itter++;
 	}
     }
     unsigned int degree = 0;
@@ -91,7 +91,7 @@ RCP<const UnivariateIntPolynomial> UnivariateIntPolynomial::from_vec(const RCP<c
     for(unsigned int i = 0; i < v.size(); i++) {
         if (0 != v[i]) {
   	    dict.insert(std::pair<unsigned int, integer_class>(i, v[i]));
-	    degree = i;
+            degree = i;
         }
     }
     return make_rcp<const UnivariatePolynomial>(var, degree, std::move(dict));
@@ -113,7 +113,7 @@ vec_basic UnivariateIntPolynomial::get_args() const {
             args.push_back( integer(d.begin()->second));
         }
         else if (d.begin()->first == 1) {
-            if (d.begin()->second == 1)
+            if (d.begin()->second == 1) {
                 args.push_back(var_);
             else
                 args.push_back(Mul::from_dict(integer(d.begin()->second), {{var_, one}}));
@@ -159,7 +159,7 @@ integer_class UnivariateIntPolynomial::eval_bit(const int &x) const {
     return ans;
 }
 
-bool UnivariatePolynomial::is_zero() const {
+bool UnivariateIntPolynomial::is_zero() const {
     if (dict_.empty())
         return true;
     return false;
