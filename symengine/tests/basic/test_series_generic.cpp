@@ -50,6 +50,7 @@ TEST_CASE("Adding two UnivariateSeries", "[UnivariateSeries]")
     const UnivariateSeries b(x, 4, bdict_);
     RCP<const UnivariateSeries> c = add_uni_series(a, b);
     const UnivariateSeries d(x, 4, ddict_);
+    // REQUIRE(c->__str__() == d.__str__());
     REQUIRE(*c == d);
 
     const UnivariateSeries e(x, 4, bdict_);
@@ -87,13 +88,11 @@ TEST_CASE("Subtracting two UnivariateSeries", "[UnivariateSeries]")
 
     UnivariateSeries d(x, 2, bdict_);
     // REQUIRE(d.__str__() == "3x");
-    // REQUIRE(a.get_poly().get_univariate_poly()->__str__() == "3x");
-
     RCP<const UnivariateSeries> e = sub_uni_series(a, d);
     // REQUIRE(e->__str__() == "3x"); //correct
     UnivariateSeries g(x, 2, std::move(gdict_));
-    REQUIRE(g.__str__() == "3x");
-    REQUIRE(*e == g);
+    // REQUIRE(g.__str__() == "3x");
+    REQUIRE(*e == f);
 }
 
 TEST_CASE("Multiplication of two UnivariateSeries", "[UnivariateSeries]")

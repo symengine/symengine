@@ -44,7 +44,7 @@ public:
     static UnivariateExprPolynomial var(const std::string &s);
       
     static Expression convert(const Number &x);
-    RCP<const UnivariatePolynomial> convert_poly(const map_uint_mpz &d);
+    RCP<const UnivariatePolynomial> convert_poly(const map_int_Expr &d, unsigned pr);
     RCP<const UnivariatePolynomial> convert_vector(const std::vector<integer_class> &v);
 
     static unsigned ldegree(const UnivariateExprPolynomial &s);
@@ -77,7 +77,7 @@ inline RCP<const UnivariateSeries> univariate_series(RCP<const Symbol> i, unsign
 }
 
 inline RCP<const UnivariateSeries> univariate_series(RCP<const Symbol> i, unsigned int prec, map_int_Expr& dict) {
-    return make_rcp<const UnivariateSeries>(i, prec, dict);
+    return make_rcp<const UnivariateSeries>(i, prec, std::move(dict));
 }
 
 RCP<const UnivariateSeries> add_uni_series (const UnivariateSeries& a, const UnivariateSeries &b);    

@@ -10,16 +10,16 @@ UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned 
         SeriesBase(std::move(poly), var->get_name(), precision), prec_{precision} {}
 
 UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const unsigned int &max, map_int_Expr &&dict) :
-        SeriesBase(UnivariateExprPolynomial(univariate_polynomial(var, max, std::move(dict))), var->get_name(), precision), prec_{precision} {}
+        SeriesBase(UnivariateExprPolynomial(univariate_polynomial(var, (int)max, std::move(dict))), var->get_name(), precision), prec_{precision} {}
 
 UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const map_uint_mpz& dict) :
-        SeriesBase(std::move(UnivariateExprPolynomial(convert_poly(dict))), var->get_name(), precision), prec_{precision} {}
+        SeriesBase(UnivariateExprPolynomial(0), var->get_name(), precision), prec_{precision} {}
 
 UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const std::vector<integer_class> &v) :
         SeriesBase(UnivariateExprPolynomial(convert_vector(v)), var->get_name(), precision), prec_{precision} {}
 
 UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const map_int_Expr &dict) :
-        SeriesBase(UnivariateExprPolynomial(univariate_polynomial(var, (unsigned)(--dict.end())->first, std::move(dict))), var->get_name(), precision), prec_{precision} {}
+        SeriesBase(UnivariateExprPolynomial(convert_poly(std::move(dict), precision)), var->get_name(), precision), prec_{precision} {}
 
 UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const std::vector<Expression> &v) :
         SeriesBase(UnivariateExprPolynomial(UnivariatePolynomial::create(var, v)), var->get_name(), precision), prec_{precision} {}
@@ -70,14 +70,14 @@ Expression UnivariateSeries::convert(const Number &x) {
     return Expression(x.rcp_from_this());
 }
 
-RCP<const UnivariatePolynomial> UnivariateSeries::convert_poly(const map_uint_mpz &d) {
+RCP<const UnivariatePolynomial> UnivariateSeries::convert_poly(const map_int_Expr &d, unsigned pr) {
     map_int_Expr dict_trunc;
     unsigned int max = 0;
     for (const auto &it : d) {
-        if (it.first < prec_) {
-            if (max < it.first)
-                max = it.first;
-            dict_trunc[it.first] = Expression(mp_get_ui(it.second));
+        if ((unsigned)it.first < pr) {
+            if (max < (unsigned)it.first)
+                max = (unsigned)it.first;
+            dict_trunc[it.first] = it.second;
         }
     }
     return univariate_polynomial(symbol(var_), max, std::move(dict_trunc));
@@ -225,31 +225,32 @@ Expression UnivariateSeries::log(const Expression& c) {
 }
 
 RCP<const UnivariateSeries> add_uni_series(const UnivariateSeries& a, const UnivariateSeries &b) {
-    UnivariateExprPolynomial c = a.get_poly() + b.get_poly();
-    int minprec = (a.prec_ < b.prec_)? a.prec_ : b.prec_;
-    return make_rcp<const UnivariateSeries>(a.get_poly().get_univariate_poly()->get_var(), minprec, c);
-//    map_int_Expr dict;
-//    SYMENGINE_ASSERT(a.get_var() == b.get_var())
-//    int minprec = (a.prec_ < b.prec_)? a.prec_ : b.prec_;
-//    for (const auto &it : a.get_poly().get_univariate_poly()->get_dict()) {
-//        if (it.first >= minprec)
-//            break;
-//        dict[it.first] = it.second;
-//    }
-//
-//    int max = 0;
-//    for (const auto &it : b.get_poly().get_univariate_poly()->get_dict()) {
-//        if (it.first >= minprec)
-//            break;
-//        dict[it.first] += it.second;
-//        if (dict[it.first] != 0 and it.first > max)
-//            max = it.first;
-//    }
-//    return make_rcp<const UnivariateSeries>(symbol(a.get_var()), minprec, max, std::move(dict));
+    // UnivariateExprPolynomial c = a.get_poly() + b.get_poly();
+    // std::cout << c.get_univariate_poly()->__str__() << std::endl;
+    // int minprec = (a.prec_ < b.prec_)? a.prec_ : b.prec_;
+    // return make_rcp<const UnivariateSeries>(a.get_poly().get_univariate_poly()->get_var(), minprec, c);
+   map_int_Expr dict;
+   SYMENGINE_ASSERT(a.get_var() == b.get_var())
+   int minprec = (a.prec_ < b.prec_)? a.prec_ : b.prec_;
+   for (const auto &it : a.get_poly().get_univariate_poly()->get_dict()) {
+       if (it.first >= minprec)
+           break;
+       dict[it.first] = it.second;
+   }
+
+   int max = 0;
+   for (const auto &it : b.get_poly().get_univariate_poly()->get_dict()) {
+       if (it.first >= minprec)
+           break;
+       dict[it.first] += it.second;
+       if (dict[it.first] != 0 and it.first > max)
+           max = it.first;
+   }
+   return make_rcp<const UnivariateSeries>(symbol(a.get_var()), minprec, max, std::move(dict));
 }
 
 RCP<const UnivariateSeries> neg_uni_series (const UnivariateSeries& a) {
-    return make_rcp<const UnivariateSeries>(symbol(a.get_var()), a.prec_, UnivariateExprPolynomial(neg_uni_poly(*(a.get_poly().get_univariate_poly()))));
+    return make_rcp<const UnivariateSeries>(symbol(a.get_var()), a.prec_, std::move(UnivariateExprPolynomial(neg_uni_poly(*(a.get_poly().get_univariate_poly())))));
 }
     
 RCP<const UnivariateSeries> sub_uni_series (const UnivariateSeries& a, const UnivariateSeries &b) {
