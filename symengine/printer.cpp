@@ -465,6 +465,7 @@ std::vector<std::string> init_str_printer_names() {
     names[DIRICHLET_ETA] = "dirichlet_eta";
     names[KRONECKERDELTA] = "kroneckerdelta";
     names[LEVICIVITA] = "levicivita";
+    names[ERF] = "erf";
     names[LOWERGAMMA] = "lowergamma";
     names[UPPERGAMMA] = "uppergamma";
     names[UPPERGAMMA] = "beta";

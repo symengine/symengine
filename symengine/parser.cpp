@@ -63,7 +63,7 @@ class ExpressionParser {
         {"asinh", asinh}, {"acosh", acosh}, {"atanh", atanh},
         {"asech", asech}, {"acoth", acoth},  {"acsch", acsch},
 
-        {"gamma", gamma}, {"sqrt", sqrt}, {"abs", abs}, {"exp", exp},
+        {"gamma", gamma}, {"sqrt", sqrt}, {"abs", abs}, {"exp", exp}, {"erf", erf},
         {"loggamma", loggamma}, {"lambertw", lambertw}, {"dirichlet_eta", dirichlet_eta},
         {"ln", single_casted_log}, {"log", single_casted_log}, {"zeta", single_casted_zeta}
     };
