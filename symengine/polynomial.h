@@ -103,7 +103,7 @@ inline RCP<const UnivariateIntPolynomial> univariate_int_polynomial(RCP<const Sy
 }
 
 inline RCP<const UnivariateIntPolynomial> univariate_int_polynomial(RCP<const Symbol> i, map_uint_mpz&& dict) {
-    return make_rcp<const UnivariateIntPolynomial>(i, (dict.end()--)->first, std::move(dict));
+    return UnivariateIntPolynomial::from_dict(i, std::move(dict));
 }
 
 class UnivariatePolynomial : public Basic {

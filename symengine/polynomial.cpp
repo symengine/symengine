@@ -21,9 +21,13 @@ UnivariateIntPolynomial::UnivariateIntPolynomial(const RCP<const Symbol> &var, c
 }
 
 bool UnivariateIntPolynomial::is_canonical(const unsigned int &degree_, const map_uint_mpz& dict) const {
-    map_uint_mpz ordered(dict.begin(), dict.end());
-    unsigned int prev_degree = (--ordered.end())->first;
-    return prev_degree == degree_;
+    if (dict.size() != 0) {
+        unsigned int prev_degree = (--dict.end())->first;
+        if (prev_degree != degree_)
+            return false;
+    } 
+    else if (0 != degree_)
+        return false;
     
     //Check if dictionary contains terms with coeffienct 0
     for (auto iter = dict.begin(); iter != dict.end(); iter++)
@@ -86,7 +90,7 @@ RCP<const UnivariateIntPolynomial> UnivariateIntPolynomial::from_vec(const RCP<c
     unsigned int degree = 0;
     for(unsigned int i = 0; i < v.size(); i++) {
         if (0 != v[i]) {
-        dict.insert(std::pair<unsigned int, integer_class>(i, v[i]));
+            dict.insert(std::pair<unsigned int, integer_class>(i, v[i]));
             degree = i;
         }
     }
@@ -125,9 +129,10 @@ vec_basic UnivariateIntPolynomial::get_args() const {
 
 integer_class UnivariateIntPolynomial::max_coef() const {
     integer_class curr = dict_.begin()->second;
-    for (const auto &it : dict_)
+    for (const auto &it : dict_) {
         if (it.second > curr)
             curr = it.second;
+    }
     return curr;
 }
 
@@ -152,7 +157,7 @@ integer_class UnivariateIntPolynomial::eval_bit(const int &x) const {
 }
 
 bool UnivariateIntPolynomial::is_zero() const {
-    return (dict_.size() == 1 and dict_.begin()->second == 0);
+    return dict_.empty();
 }
 
 bool UnivariateIntPolynomial::is_one() const {
@@ -164,11 +169,17 @@ bool UnivariateIntPolynomial::is_minus_one() const {
 }
 
 bool UnivariateIntPolynomial::is_integer() const {
-    return dict_.size() == 1 and dict_.begin()->first == 0;
+  if(dict_.empty())
+        return true;
+    if (dict_.size() == 1 and dict_.begin()->first == 0)
+        return true;
+    return false;  
+  //return dict_.empty() or (dict_.size() == 1 and dict_.begin()->first == 0);
 }
 
 bool UnivariateIntPolynomial::is_symbol() const {
-    return dict_.size() == 1 and dict_.begin()->first == 1 and dict_.begin()->second == 1;
+    return dict_.size() == 1 and dict_.begin()->first == 1 and
+        dict_.begin()->second == 1;
 }
 
 bool UnivariateIntPolynomial::is_mul() const {
@@ -185,14 +196,14 @@ RCP<const UnivariateIntPolynomial> add_poly(const UnivariateIntPolynomial &a, co
         dict[it.first] = it.second;
     for (const auto &it : b.get_dict())
         dict[it.first] += it.second;
-    return univariate_int_polynomial(a.get_var(), (--(dict.end()))->first, std::move(dict));
+    return UnivariateIntPolynomial::from_dict(a.get_var(), std::move(dict));
 }
 
 RCP<const UnivariateIntPolynomial> neg_poly(const UnivariateIntPolynomial &a) {
     map_uint_mpz dict;
     for (const auto &it : a.get_dict())
         dict[it.first] = -1 * it.second;
-    return univariate_int_polynomial(a.get_var(), (--(dict.end()))->first, std::move(dict));
+    return UnivariateIntPolynomial::from_dict(a.get_var(), std::move(dict));
 }
 
 RCP<const UnivariateIntPolynomial> sub_poly(const UnivariateIntPolynomial &a, const UnivariateIntPolynomial &b) {
@@ -201,8 +212,7 @@ RCP<const UnivariateIntPolynomial> sub_poly(const UnivariateIntPolynomial &a, co
         dict[it.first] = it.second;
     for (const auto &it : b.get_dict())
         dict[it.first] -= it.second;
-
-    return univariate_int_polynomial(a.get_var(), (--(dict.end()))->first, std::move(dict));
+    return UnivariateIntPolynomial::from_dict(a.get_var(), std::move(dict));
 }
 
 //Calculates bit length of number, used in mul_poly() only
@@ -262,9 +272,9 @@ RCP<const UnivariateIntPolynomial> mul_poly(RCP<const UnivariateIntPolynomial> a
     }
 
     if (sign == -1)
-        return neg_poly(*make_rcp<const UnivariateIntPolynomial>(a->get_var(), v));
+        return neg_poly(*UnivariateIntPolynomial::from_vec(a->get_var(), v));
     else
-        return make_rcp<const UnivariateIntPolynomial>(a->get_var(), v);
+        return UnivariateIntPolynomial::from_vec(a->get_var(), v);
 }
 
 
@@ -422,8 +432,8 @@ bool UnivariatePolynomial::is_symbol() const {
 }
 
 bool UnivariatePolynomial::is_mul() const {
-    return dict_.size() == 1 and dict_.begin()->first != 0 and
-            dict_.begin()->second != 1 and dict_.begin()->second != 0;
+    return dict_.size() == 1 and dict_.begin()->first != 0 and 
+        dict_.begin()->second != 1 and dict_.begin()->second != 0;
 }
 
 bool UnivariatePolynomial::is_pow() const {
