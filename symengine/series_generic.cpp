@@ -16,7 +16,7 @@ UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned 
 UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const unsigned int &max, map_uint_mpz&& dict) :
         var_{var}, prec_{precision} {
 
-    poly_ = univariate_int_polynomial(var_, max, std::move(dict));
+    poly_ = univariate_int_polynomial(var_, std::move(dict));
 }
 
 UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const map_uint_mpz& dict) :
@@ -34,7 +34,7 @@ UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned 
             }
             return false;
         } );
-    poly_ = univariate_int_polynomial(var_, max, std::move(dict_trunc));
+    poly_ = univariate_int_polynomial(var_, std::move(dict_trunc));
 }
 
 UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const std::vector<integer_class> &v) :
