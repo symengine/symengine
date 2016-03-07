@@ -15,6 +15,7 @@ using SymEngine::complex_double;
 using SymEngine::LambdaRealDoubleVisitor;
 using SymEngine::LambdaComplexDoubleVisitor;
 using SymEngine::max;
+using SymEngine::E;
 using SymEngine::gamma;
 using SymEngine::loggamma;
 using SymEngine::min;
@@ -108,4 +109,11 @@ TEST_CASE("Evaluate functions", "[lambda_gamma]")
 
     d = v.call({1.1});
     REQUIRE(::fabs(d - 0.901478328607033459) < 1e-12);
+
+    r = erf(x);
+    v.init({x}, *r);
+
+    d = v.call({1.1});
+    REQUIRE(::fabs(d - 0.88020506957408169) < 1e-12);
+
 }

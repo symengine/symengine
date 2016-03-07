@@ -46,6 +46,7 @@ using SymEngine::asinh;
 using SymEngine::acosh;
 using SymEngine::atanh;
 using SymEngine::acoth;
+using SymEngine::erf;
 using SymEngine::log;
 using SymEngine::pi;
 using SymEngine::E;
@@ -70,6 +71,7 @@ TEST_CASE("eval_double: eval_double", "[eval_double]")
         { mul(r1, r2), 0.403422680111 },
         { pow(r1, r2), 0.920580670898 },
         { tan(pow(r1, r2)), 1.314847038576 },
+        { erf(E), 0.9998790689599},
         { add(sin(r3), add(cos(r4), add(tan(r3), add(sec(integer(6)), add(csc(r4), cot(r4)))))), 0.387875350057 },
         { add(asin(r3), add(acos(r3), add(atan(r3), add(asec(integer(6)), add(acsc(r4), acot(r4)))))), 3.570293614860 },
         { add(add(sinh(one), add(cosh(one), add(tanh(one), coth(one)))), csch(r3)), 9.759732838729 },

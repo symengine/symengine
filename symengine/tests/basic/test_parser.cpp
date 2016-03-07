@@ -165,7 +165,7 @@ TEST_CASE("Parsing: functions", "[parser]")
     s = "erf(erf(x*y)) + y";
     res = parse(s);
     REQUIRE(eq(*res, *add(erf(erf(mul(x, y))), y)));
-    
+
     s = "beta(sin(x+3), gamma(2^y+sin(y)))";
     res = parse(s);
     REQUIRE(eq(*res, *beta(sin(add(x, integer(3))), gamma(add(sin(y), pow(integer(2), y))))));
