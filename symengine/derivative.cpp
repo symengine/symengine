@@ -421,7 +421,7 @@ static RCP<const Basic> diff(const CLASS &self, \
     static RCP<const Basic> diff(const UnivariatePolynomial &self,
             const RCP<const Symbol> &x) {
         if (self.get_var()->__eq__(*x)) {
-            map_uint_Expr d;
+            map_uint_mpz d;
             for (const auto &p : self.get_dict()) {
                 d[p.first - 1] = p.second * p.first;
             }
@@ -431,6 +431,7 @@ static RCP<const Basic> diff(const CLASS &self, \
             return zero;
         }
     }
+
     static RCP<const Basic> diff(const FunctionWrapper &self,
             const RCP<const Symbol> &x) {
         return self.diff_impl(x);

@@ -50,7 +50,6 @@ using SymEngine::log;
 using SymEngine::pi;
 using SymEngine::E;
 using SymEngine::EulerGamma;
-using SymEngine::loggamma;
 using SymEngine::vec_basic;
 using SymEngine::max;
 using SymEngine::min;
@@ -83,9 +82,6 @@ TEST_CASE("eval_double: eval_double", "[eval_double]")
         { mul(EulerGamma, integer(10)), 5.7721566490153286 },
         { max({r2, r1}), 0.841470984808},
         { min({add(r1, r4), r2}), 0.479425538604},
-        { gamma(div(integer(4), integer(3))), 0.892979511569249211},
-        { loggamma(div(integer(7), integer(2))), 1.200973602347074224 },
-        { loggamma(pi), 0.82769459232343710152 },
     };
 
     for (unsigned i = 0; i < vec.size(); i++) {

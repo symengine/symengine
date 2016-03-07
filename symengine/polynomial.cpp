@@ -40,8 +40,9 @@ std::size_t UnivariateIntPolynomial::__hash__() const
     std::size_t seed = UNIVARIATEINTPOLYNOMIAL;
 
     seed += hash_string(this->var_->get_name());
-    for (const auto &it : this->dict_) {
-        std::size_t temp = UNIVARIATEINTPOLYNOMIAL;
+    for (const auto &it : this->dict_)
+    {
+        std::size_t temp = UNIVARIATEPOLYNOMIAL;
         hash_combine<unsigned int>(temp, it.first);
         hash_combine<long long int>(temp, it.second.get_si());
         seed += temp;
@@ -71,7 +72,6 @@ int UnivariateIntPolynomial::compare(const Basic &o) const
 
     return map_uint_mpz_compare(dict_, s.dict_);
 }
-
 
 RCP<const Basic> UnivariateIntPolynomial::from_dict(const RCP<const Symbol> &var, map_uint_mpz &&d) {
     if (d.size() == 1) {
@@ -105,7 +105,7 @@ void UnivariateIntPolynomial::dict_add_term(map_uint_mpz &d, const mpz_class &co
        d[n] = coef;
 }
 
-vec_basic UnivariateIntPolynomial::get_args() const {
+vec_basic UnivariatePolynomial::get_args() const {
     vec_basic args;
     for (const auto &p: dict_) {
         args.push_back(UnivariateIntPolynomial::from_dict(var_, {{p.first, p.second}}));
@@ -136,14 +136,23 @@ mpz_class UnivariateIntPolynomial::eval_bit(const int &x) const {
     //TODO: Use Horner's Scheme
     integer_class ans(0);
     for (const auto &p : dict_) {
-        integer_class temp = integer_class(1) << x * p.first;
-        ans += p.second * temp;
+        integer_class t = integer_class(1) << x * p.first;
+        ans += p.second * t;
     }
     return ans;
 }
 
-bool UnivariateIntPolynomial::is_zero() const {
-    return (dict_.size() == 1 and dict_.begin()->second == 0);
+bool UnivariatePolynomial::is_zero() const {
+    if (dict_.size() == 1 and dict_.begin()->second == 0)
+        return true;
+    return false;
+}
+
+bool UnivariatePolynomial::is_one() const {
+    if (dict_.size() == 1 and dict_.begin()->second == 1 and
+            dict_.begin()->first == 0)
+        return true;
+    return false;
 }
 
 bool UnivariateIntPolynomial::is_one() const {
@@ -180,40 +189,44 @@ bool UnivariateIntPolynomial::is_mul() const {
     return false;
 }
 
+<<<<<<< HEAD
 bool UnivariateIntPolynomial::is_pow() const {
     return dict_.size() == 1 and dict_.begin()->second == 1 and dict_.begin()->first != 1 and dict_.begin()->first != 0;
 }
  
 RCP<const UnivariateIntPolynomial> add_poly(const UnivariateIntPolynomial &a, const UnivariateIntPolynomial &b) {
     map_uint_mpz dict;
-    for (const auto &it : a.get_dict())
+    for (const auto &it : a.dict_)
         dict[it.first] = it.second;
-    for (const auto &it : b.get_dict())
+    for (const auto &it : b.dict_)
         dict[it.first] += it.second;
 
     return univariate_int_polynomial(a.get_var(), (--(dict.end()))->first, std::move(dict));
 }
 
-RCP<const UnivariateIntPolynomial> neg_poly(const UnivariateIntPolynomial &a) {
+RCP<const UnivariatePolynomial> neg_uni_poly(const UnivariatePolynomial &a) {
     map_uint_mpz dict;
-    for (const auto &it : a.get_dict())
+    for (const auto &it : a.dict_)
         dict[it.first] = -1 * it.second;
-    return univariate_int_polynomial(a.get_var(), (--(dict.end()))->first, std::move(dict));
+
+    RCP<const UnivariatePolynomial> c = univariate_polynomial(a.var_, (--(dict.end()))->first, std::move(dict));
+    return c;
 }
 
-RCP<const UnivariateIntPolynomial> sub_poly(const UnivariateIntPolynomial &a, const UnivariateIntPolynomial &b) {
+RCP<const UnivariatePolynomial> sub_uni_poly(const UnivariatePolynomial &a, const UnivariatePolynomial &b) {
     map_uint_mpz dict;
-    for (const auto &it : a.get_dict())
+    for (const auto &it : a.dict_)
         dict[it.first] = it.second;
-    for (const auto &it : b.get_dict())
+    for (const auto &it : b.dict_)
         dict[it.first] -= it.second;
 
-    return univariate_int_polynomial(a.get_var(), (--(dict.end()))->first, std::move(dict));
+    RCP<const UnivariatePolynomial> c = univariate_polynomial(a.var_, (--(dict.end()))->first, std::move(dict));
+    return c;
 }
 
-//Calculates bit length of number, used in mul_poly() only
+//Calculates bit length of number, used in mul_uni_poly() only
 template <typename T>
-unsigned int bit_length(T t) {
+unsigned int bit_length(T t){
     unsigned int count = 0;
     while (t > 0) {
         count++;
@@ -222,19 +235,19 @@ unsigned int bit_length(T t) {
     return count;
 }
 
-RCP<const UnivariateIntPolynomial> mul_poly(RCP<const UnivariateIntPolynomial> a, RCP<const UnivariateIntPolynomial> b) {
-    //TODO: Use `const RCP<const UnivariateIntPolynomial> &a` for input arguments,
-    //      even better is use `const UnivariateIntPolynomial &a`
-    unsigned int da = a->get_degree();
-    unsigned int db = b->get_degree();
+RCP<const UnivariatePolynomial> mul_uni_poly(RCP<const UnivariatePolynomial> a, RCP<const UnivariatePolynomial> b) {
+    //TODO: Use `const RCP<const UnivariatePolynomial> &a` for input arguments,
+    //      even better is use `const UnivariatePolynomial &a`
+    unsigned int da = a->degree_;
+    unsigned int db = b->degree_;
 
     int sign = 1;
-    if ((--(a->get_dict().end()))->second < 0) {
-        a = neg_poly(*a);
+    if ((--(a->dict_.end()))->second < 0) {
+        a = neg_uni_poly(*a);
         sign = -1 * sign;
     }
-    if ((--(b->get_dict().end()))->second < 0) {
-        b = neg_poly(*b);
+    if ((--(b->dict_.end()))->second < 0) {
+        b = neg_uni_poly(*b);
         sign = -1 * sign;
     }
 
@@ -265,9 +278,9 @@ RCP<const UnivariateIntPolynomial> mul_poly(RCP<const UnivariateIntPolynomial> a
     }
 
     if (sign == -1)
-        return neg_poly(*make_rcp<const UnivariateIntPolynomial>(a->get_var(), v));
+        return neg_uni_poly(*make_rcp<const UnivariatePolynomial>(a->var_, v));
     else
-        return make_rcp<const UnivariateIntPolynomial>(a->get_var(), v);
+        return make_rcp<const UnivariatePolynomial>(a->var_, v);
 }
 
 
@@ -1007,6 +1020,5 @@ RCP<const MultivariateIntPolynomial> mul_mult_poly(const UnivariateIntPolynomial
     return make_rcp<MultivariateIntPolynomial>(s,degs,dict);
 
 }
-
 
 } // SymEngine

@@ -1,40 +1,41 @@
 /**
  *  \file polynomial.h
- *  Class for sparse Polynomial: UnivariateIntPolynomial and Polynomial
+ *  Class for sparse Polynomial: UnivariatePolynomial and Polynomial
+ *
  **/
 #ifndef SYMENGINE_POLYNOMIALS_H
 #define SYMENGINE_POLYNOMIALS_H
 
 #include <symengine/monomials.h>
 #include <symengine/dict.h>
-// #include <symengine/basic.h>
-// #include <symengine/integer.h>
-// #include <symengine/symbol.h>
+#include <symengine/basic.h>
+#include <symengine/integer.h>
+#include <symengine/symbol.h>
 #include <symengine/expression.h>
 // #include <map>
 
 
 namespace SymEngine {
-
+//! UnivariatePolynomial Class
 class UnivariateIntPolynomial : public Basic{
-private:
-    //! `degree` : Degree of UnivariateIntPolynomial
-    //! `var_` : Variable of the uni-variate UnivariateIntPolynomial
-    //! `dict_` : holds the UnivariateIntPolynomial
-    // UnivariateIntPolynomial x**2 + 2*x + 1 has dict_ = {{0, 1}, {1, 2}, {2, 1}} with var_ = "x"
+public:
+    //! `degree` : Degree of UnivariatePolynomial
+    //! `var_` : Variable of the uni-variate UnivariatePolynomial
+    //! `dict_` : holds the UnivariatePolynomial
+    // UnivariatePolynomial x**2 + 2*x + 1 has dict_ = {{0, 1}, {1, 2}, {2, 1}} with var_ = "x"
     unsigned int degree_;
     RCP<const Symbol> var_;
     map_uint_mpz dict_;
 public:
-    IMPLEMENT_TYPEID(UNIVARIATEINTPOLYNOMIAL)
-    //! Constructor of UnivariateIntPolynomial class
-    UnivariateIntPolynomial(const RCP<const Symbol> &var, const unsigned int &degree, map_uint_mpz&& dict);
-    //! Constructor using a dense vector of mpz_class coefficients
-    UnivariateIntPolynomial(const RCP<const Symbol> &var, const std::vector<mpz_class> &v);
+    IMPLEMENT_TYPEID(UNIVARIATEPOLYNOMIAL)
+    //! Constructor of UnivariatePolynomial class
+    UnivariatePolynomial(const RCP<const Symbol> &var, const unsigned int &degree, map_uint_mpz&& dict);
+    //! Constructor using a dense vector of integer_class coefficients
+    UnivariatePolynomial(const RCP<const Symbol> &var, const std::vector<integer_class> &v);
 
-    static RCP<const UnivariateIntPolynomial> create(const RCP<const Symbol> &var,
-            const std::vector<mpz_class> &v) {
-        return make_rcp<const UnivariateIntPolynomial>(var, v);
+    static RCP<const UnivariatePolynomial> create(const RCP<const Symbol> &var,
+            const std::vector<integer_class> &v) {
+        return make_rcp<const UnivariatePolynomial>(var, v);
     }
 
     //! \return true if canonical
@@ -47,9 +48,9 @@ public:
      * */
     bool __eq__(const Basic &o) const;
     int compare(const Basic &o) const;
-    
+
     /*! Creates appropriate instance (i.e Symbol, Integer,
-    * Mul, Pow, UnivariateIntPolynomial) depending on the size of dictionary `d`.
+    * Mul, Pow, UnivariatePolynomial) depending on the size of dictionary `d`.
     */
     static RCP<const Basic> from_dict(const RCP<const Symbol> &var, map_uint_mpz &&d);
     /*!
@@ -79,90 +80,42 @@ public:
     bool is_pow() const;
 
     virtual vec_basic get_args() const;
-    inline unsigned int get_degree() const {
-        return degree_;
-    }
+
     inline RCP<const Symbol> get_var() const {
         return var_;
     }
     inline const map_uint_mpz& get_dict() const {
         return dict_;
-    }
-}; //UnivariateIntPolynomial
+    };
 
-//! Adding two UnivariateIntPolynomial a and b
-RCP<const UnivariateIntPolynomial> add_poly(const UnivariateIntPolynomial &a, const UnivariateIntPolynomial &b);
-//! Negative of a UnivariateIntPolynomial
-RCP<const UnivariateIntPolynomial> neg_poly(const UnivariateIntPolynomial &a);
-//! Subtracting two UnivariateIntPolynomial a and b
-RCP<const UnivariateIntPolynomial> sub_poly(const UnivariateIntPolynomial &a, const UnivariateIntPolynomial &b);
-//! Multiplying two UnivariateIntPolynomial a and b
-RCP<const UnivariateIntPolynomial> mul_poly(RCP<const UnivariateIntPolynomial> a, RCP<const UnivariateIntPolynomial> b);
-
-inline RCP<const UnivariateIntPolynomial> pow_exp(RCP<const UnivariateIntPolynomial> a, RCP<const UnivariateIntPolynomial> b);
-
-inline RCP<const UnivariateIntPolynomial> univariate_int_polynomial(RCP<const Symbol> i, unsigned int deg, map_uint_mpz&& dict) {
-    return make_rcp<const UnivariateIntPolynomial>(i, deg, std::move(dict));
-}
-
-
-class UnivariatePolynomial : public Basic {
-private:
+}; //UnivariatePolynomial
+/*
+class UnivariateExprPolynomial: public Basic {
+public:
     unsigned int degree_;
     RCP<const Symbol> var_;
-    map_uint_Expr dict_;
+    map_uint_expr dict_;
 public:
-    IMPLEMENT_TYPEID(UNIVARIATEPOLYNOMIAL)
+    IMPLEMENT_TYPEID(UNIVARIATEEXPRPOLYNOMIAL)*/
     //! Constructor of UnivariatePolynomial class
-    UnivariatePolynomial(const RCP<const Symbol> &var, const unsigned int &degree, map_uint_Expr&& dict);
-    //! Constructor using a dense vector of Expression
-    UnivariatePolynomial(const RCP<const Symbol> &var, const std::vector<Expression> &v);
-    
-    static RCP<const UnivariatePolynomial> create(const RCP<const Symbol> &var, const std::vector<Expression> &v) {
-        return make_rcp<const UnivariatePolynomial>(var, v);
-    }
+    /*UnivariateExprPolynomial(const RCP<const Symbol> &var, const unsigned int &degree, map_uint_expr&& dict);*/
+    //! Constructor using a dense vector of mpz_class coefficients
+    //UnivariateExprPolynomial(const RCP<const Symbol> &var, const std::vector<mpz_class> &v);
+    /*static RCP<const UnivariateExprPolynomial> create(const RCP<const Symbol> &var,
+            const std::vector<mpz_class> &v) {
+        return make_rcp<const UnivariateExprPolynomial>(var, v);
+    }*/
 
-    bool is_canonical(const unsigned int &degree, const map_uint_Expr& dict) const;
-    std::size_t __hash__() const;
-    bool __eq__(const Basic &o) const;
-    int compare(const Basic &o) const;
-    
-    /*! Creates appropriate instance (i.e Symbol, Integer,
-    * Mul, Pow, UnivariatePolynomial) depending on the size of dictionary `d`.
-    */
-    static RCP<const Basic> from_dict(const RCP<const Symbol> &var, map_uint_Expr &&d);
-    /*!
-    * Adds coef*var_**n to the dict_
-    */
-    static void dict_add_term(map_uint_Expr &d, const Expression &coef, const unsigned int &n);
-    Expression max_coef() const;
-    //! Evaluates the UnivariatePolynomial at value x
-    Expression eval(const Expression &x) const;
-
-    //! \return `true` if `0`
-    bool is_zero() const;
-    //! \return `true` if `1`
-    bool is_one() const;
-    //! \return `true` if `-1`
-    bool is_minus_one() const;
-    //! \return `true` if integer
-    bool is_integer() const;
-    //! \return `true` if symbol
-    bool is_symbol() const;
-    //! \return `true` if mul
-    bool is_mul() const;
-    //! \return `true` if pow
-    bool is_pow() const;
-
-    virtual vec_basic get_args() const;
-
-    inline RCP<const Symbol> get_var() const {
-        return var_;
-    }
-    inline const map_uint_Expr& get_dict() const {
-        return dict_;
-    }
-}; //UnivariatePolynomial
+    //! \return true if canonical
+    /*bool is_canonical(const unsigned int &degree, const map_uint_expr& dict) const;
+    //! \return size of the hash
+    std::size_t __hash__() const;*/
+    /*! Equality comparator
+     * \param o - Object to be compared with
+     * \return whether the 2 objects are equal
+     * */
+    /*bool __eq__(const Basic &o) const;*/
+//}; //UnivariateExprPolynomial
 
 //! Adding two UnivariatePolynomial a and b
 RCP<const UnivariatePolynomial> add_uni_poly(const UnivariatePolynomial &a, const UnivariatePolynomial &b);
@@ -173,7 +126,8 @@ RCP<const UnivariatePolynomial> sub_uni_poly(const UnivariatePolynomial &a, cons
 //! Multiplying two UnivariatePolynomial a and b
 RCP<const UnivariatePolynomial> mul_uni_poly(RCP<const UnivariatePolynomial> a, RCP<const UnivariatePolynomial> b);
 
-inline RCP<const UnivariatePolynomial> univariate_polynomial(RCP<const Symbol> i, unsigned int deg, map_uint_Expr&& dict) {
+inline RCP<const UnivariatePolynomial> univariate_polynomial(RCP<const Symbol> i, unsigned int deg, map_uint_mpz&& dict)
+{
     return make_rcp<const UnivariatePolynomial>(i, deg, std::move(dict));
 }
 
@@ -365,19 +319,21 @@ vec_uint translate(unsigned int original, unsigned int translator, unsigned int 
 vec_uint uint_vec_translate_and_add(const vec_uint &v1, const vec_uint &v2,const vec_uint &translator1, const vec_uint &translator2, const unsigned int size);
 vec_uint uint_vec_translate_and_add(const vec_uint &v1, const unsigned int v2, const vec_uint &translator1,const unsigned int &translator2, const unsigned int size);
 
-RCP<const MultivariatePolynomial> add_mult_poly(const MultivariatePolynomial &a, const MultivariatePolynomial &b);
-RCP<const MultivariatePolynomial> neg_mult_poly(const MultivariatePolynomial &a);
-RCP<const MultivariatePolynomial> sub_mult_poly(const MultivariatePolynomial &a, const MultivariatePolynomial &b);
-RCP<const MultivariatePolynomial> mul_mult_poly(const MultivariatePolynomial &a, const MultivariatePolynomial &b);
 
-RCP<const MultivariatePolynomial> add_mult_poly(const MultivariatePolynomial &a, const UnivariatePolynomial &b);
-RCP<const MultivariatePolynomial> sub_mult_poly(const MultivariatePolynomial &a, const UnivariatePolynomial &b);
-RCP<const MultivariatePolynomial> sub_mult_poly(const UnivariatePolynomial &a, const MultivariatePolynomial &b);
-RCP<const MultivariatePolynomial> mul_mult_poly(const MultivariatePolynomial &a, const UnivariatePolynomial &b);
+RCP<const MultivariateIntPolynomial> add_mult_poly(const MultivariateIntPolynomial &a, const MultivariateIntPolynomial &b);
+RCP<const MultivariateIntPolynomial> neg_mult_poly(const MultivariateIntPolynomial &a);
+RCP<const MultivariateIntPolynomial> sub_mult_poly(const MultivariateIntPolynomial &a, const MultivariateIntPolynomial &b);
+RCP<const MultivariateIntPolynomial> mul_mult_poly(const MultivariateIntPolynomial &a, const MultivariateIntPolynomial &b);
 
-RCP<const MultivariatePolynomial> add_mult_poly(const UnivariatePolynomial &a, const UnivariatePolynomial &b);
-RCP<const MultivariatePolynomial> sub_mult_poly(const UnivariatePolynomial &a, const UnivariatePolynomial &b);
-RCP<const MultivariatePolynomial> mul_mult_poly(const UnivariatePolynomial &a, const UnivariatePolynomial &b);
+
+RCP<const MultivariateIntPolynomial> add_mult_poly(const MultivariateIntPolynomial &a, const UnivariateIntPolynomial &b);
+RCP<const MultivariateIntPolynomial> sub_mult_poly(const MultivariateIntPolynomial &a, const UnivariateIntPolynomial &b);
+RCP<const MultivariateIntPolynomial> sub_mult_poly(const UnivariateIntPolynomial &a, const MultivariateIntPolynomial &b);
+RCP<const MultivariateIntPolynomial> mul_mult_poly(const MultivariateIntPolynomial &a, const UnivariateIntPolynomial &b);
+
+RCP<const MultivariateIntPolynomial> add_mult_poly(const UnivariateIntPolynomial &a, const UnivariateIntPolynomial &b);
+RCP<const MultivariateIntPolynomial> sub_mult_poly(const UnivariateIntPolynomial &a, const UnivariateIntPolynomial &b);
+RCP<const MultivariateIntPolynomial> mul_mult_poly(const UnivariateIntPolynomial &a, const UnivariateIntPolynomial &b);
 
 }  //SymEngine
 

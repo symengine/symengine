@@ -780,8 +780,8 @@ public:
 std::ostream &operator<<(std::ostream &os, const SymEngine::fmpq_wrapper &f);
 std::ostream &operator<<(std::ostream &os, const SymEngine::fmpz_wrapper &f);
 #elif SYMENGINE_INTEGER_CLASS == SYMENGINE_GMP
-inline std::ostream &operator<<(std::ostream &os, const SymEngine::mpq_wrapper &f);
-inline std::ostream &operator<<(std::ostream &os, const SymEngine::mpz_wrapper &f);
+std::ostream &operator<<(std::ostream &os, const SymEngine::mpq_wrapper &f);
+std::ostream &operator<<(std::ostream &os, const SymEngine::mpz_wrapper &f);
 #endif
 
 #endif //SYMENGINE_MP_WRAPPER_H
