@@ -655,20 +655,20 @@ std::string MultivariateIntPolynomial::toString() const{
     	        s << "+ ";
 	    else if(c < 0)
 	        s << "- "; 
-            unsigned int i = 0;
+        unsigned int i = 0;
 	    std::ostringstream expr;
-            for(auto it :vars_)
-            {
+        for(auto it :vars_)
+        {
 	        if(dict_.find(exps)->first[i] != 0){
-		    expr << it->get_name();
-		    if(dict_.find(exps)->first[i] > 1)
-		        expr << "**" << dict_.find(exps)->first[i];
-		    expr << " ";
-	      }
+		        expr << it->get_name();
+		        if(dict_.find(exps)->first[i] > 1)
+		            expr << "**" << dict_.find(exps)->first[i];
+	            expr << " ";
+	        }
 	        i++;
-            }
+        }
 	    if(mp_abs(c) != 1 || expr.str().empty())
-	        s << mp_abs(c) << " ";
+	        s << mp_abs(c) << "*";
 	    s << expr.str();
 	    first = false;
 	}
