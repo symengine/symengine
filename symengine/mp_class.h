@@ -242,7 +242,7 @@ inline bool mp_invert(piranha::integer &res, const piranha::integer &a,  const p
 }
 
 inline void mp_gcd(piranha::integer &g, const piranha::integer &a,  const piranha::integer &b) {
-    g = piranha::integer::gcd(a, b);
+    g = piranha::math::gcd(a, b);
 }
 
 inline void mp_gcdext(piranha::integer &g, piranha::integer &r, piranha::integer &s,
