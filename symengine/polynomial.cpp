@@ -675,8 +675,10 @@ std::string MultivariateIntPolynomial::toString() const{
     }
     
     if(s.str().empty())
-        s << "0";
-    return s.str();
+        s << "0 ";
+    std::string final(s.str());
+    final.pop_back();
+    return final;
 }
 
 unsigned int reconcile(vec_uint &v1, vec_uint &v2, set_sym &s, const set_sym &s1, const set_sym &s2){

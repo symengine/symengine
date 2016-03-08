@@ -22,6 +22,7 @@ using SymEngine::zero;
 using SymEngine::integer;
 using SymEngine::vec_basic_eq_perm;
 using SymEngine::integer_class;
+using SymEngine::MultivariateIntPolynomial;
 using namespace SymEngine::literals;
 
 TEST_CASE("Constructor of UnivariateIntPolynomial", "[UnivariateIntPolynomial]")
@@ -161,3 +162,17 @@ TEST_CASE("Univariate Polynomial expand", "[UnivariateIntPolynomial][expand]")
     REQUIRE(c->__str__() == "x**9 + 3*x**8 + 6*x**7 + 7*x**6 + 6*x**5 + 3*x**4 + x**3");
     //std::cout<<c->__str__()<<std::endl;
 }
+
+TEST_CASE("Constructing MultivariateIntPolynomial using from_dict", "[MultivariateIntPolynomial]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+
+    RCP<const MultivariateIntPolynomial> P = MultivariateIntPolynomial::from_dict({x,y}, { {{1,2}, 1_z}, {{1,1}, 2_z}, {{0,1}, 2_z}, {{1,0}, 3_z} , {{0,0}, 0_z} });
+    REQUIRE(P->__str__() == "x y**2 + 2*x y + 3*x + 2*y");
+
+    RCP<const MultivariateIntPolynomial> P2 = MultivariateIntPolynomial::from_dict({x,y}, { {{0,0}, 0_z} });
+    REQUIRE(P2->__str__() == "0");
+
+}
+
