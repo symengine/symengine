@@ -86,14 +86,14 @@ public:
         if (not is_null()) (ptr_->refcount_)++;
     }
     // Move constructor
-    RCP(RCP<T> &&rp) : ptr_(rp.ptr_) {
+    RCP(RCP<T> &&rp) SYMENGINE_NOEXCEPT : ptr_(rp.ptr_) {
         rp.ptr_ = nullptr;
     }
     // Move constructor
-    template<class T2> RCP(RCP<T2>&& r_ptr) : ptr_(r_ptr.get()) {
+    template<class T2> RCP(RCP<T2>&& r_ptr) SYMENGINE_NOEXCEPT : ptr_(r_ptr.get()) {
         r_ptr._set_null();
     }
-    ~RCP() {
+    ~RCP() SYMENGINE_NOEXCEPT {
         if (ptr_ != nullptr and --(ptr_->refcount_) == 0) delete ptr_;
     }
     T* operator->() const {

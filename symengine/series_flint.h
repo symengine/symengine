@@ -25,7 +25,7 @@ public:
 
     static RCP<const URatPSeriesFlint> series(const RCP<const Basic> &t, const std::string &x, unsigned int prec);
     static flint::fmpzxx convert(const Integer &x);
-    static flint::fmpqxx convert(const mpq_class &x);
+    static flint::fmpqxx convert(const rational_class &x);
     static fp_t var(const std::string &s);
     static flint::fmpqxx convert(const Rational &x);
     static flint::fmpqxx convert(const Basic &x);

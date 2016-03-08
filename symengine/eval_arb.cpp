@@ -34,7 +34,7 @@ public:
     void bvisit(const Integer &x) {
         fmpz_t z_;
         fmpz_init(z_);
-        fmpz_set_mpz(z_, x.i.get_mpz_t());
+        fmpz_set_mpz(z_, get_mpz_t(x.i));
         arb_set_fmpz(result_, z_);
         fmpz_clear(z_);
     }
@@ -42,7 +42,7 @@ public:
     void bvisit(const Rational &x) {
         fmpq_t q_;
         fmpq_init(q_);
-        fmpq_set_mpq(q_, x.i.get_mpq_t());
+        fmpq_set_mpq(q_, get_mpq_t(x.i));
         arb_set_fmpq(result_, q_, prec_);
         fmpq_clear(q_);
     }
@@ -126,7 +126,7 @@ public:
         throw std::runtime_error("Symbol cannot be evaluated as an arb type.");
     }
 
-    void bvisit(const UnivariatePolynomial &x) {
+    void bvisit(const UnivariateIntPolynomial &x) {
         throw std::runtime_error("Not implemented.");
     }
 
@@ -252,6 +252,44 @@ public:
         arb_coth(result_, result_, prec_);
     }
 
+    void bvisit(const Max &x) {
+        arb_t t;
+        arb_init(t);
+
+        auto d = x.get_args();
+        auto p = d.begin();
+        apply(result_, *(*p));
+        p++;
+
+        for (; p != d.end(); p++) {
+
+            apply(t, *(*p));
+            if(arb_gt(t, result_))
+                arb_set(result_, t);
+        }
+
+        arb_clear(t);
+    }
+
+    void bvisit(const Min &x) {
+        arb_t t;
+        arb_init(t);
+
+        auto d = x.get_args();
+        auto p = d.begin();
+        apply(result_, *(*p));
+        p++;
+
+        for (; p != d.end(); p++) {
+
+            apply(t, *(*p));
+            if(arb_lt(t, result_))
+                arb_set(result_, t);
+        }
+
+        arb_clear(t);
+    }
+
     void bvisit(const ASinh &) {
         throw std::runtime_error("Not implemented.");
     };
@@ -282,9 +320,14 @@ public:
     void bvisit(const Dirichlet_eta &) {
         throw std::runtime_error("Not implemented.");
     };
-    void bvisit(const Gamma &) {
-        throw std::runtime_error("Not implemented.");
+    void bvisit(const Gamma &x) {
+        apply(result_, *(x.get_args())[0]);
+        arb_gamma(result_, result_, prec_);
     };
+    void bvisit(const LogGamma &x){
+        apply(result_, *(x.get_args())[0]);
+        arb_lgamma(result_, result_, prec_);
+    }
     void bvisit(const LowerGamma &) {
         throw std::runtime_error("Not implemented.");
     };

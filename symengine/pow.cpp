@@ -100,8 +100,8 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
         if (is_a<Integer>(*b)) {
             return is_a<Integer>(*div(b, integer(2))) ? one : minus_one;
         } else if (is_a<Rational>(*b) and
-                    (rcp_static_cast<const Rational>(b)->i.get_num() == 1) and
-                    (rcp_static_cast<const Rational>(b)->i.get_den() == 2)) {
+                    (get_num(rcp_static_cast<const Rational>(b)->i) == 1) and
+                    (get_den(rcp_static_cast<const Rational>(b)->i) == 2)) {
             return I;
         }
     }
@@ -204,7 +204,7 @@ void multinomial_coefficients_mpz(int m, int n, map_vec_mpz &r)
 {
     vec_int t;
     int j, tj, start, k;
-    mpz_class v;
+    integer_class v;
     if (m < 2)
         throw std::runtime_error("multinomial_coefficients: m >= 2 must hold.");
     if (n < 0)

@@ -45,8 +45,9 @@ static RCP<const Basic> diff(const CLASS &self, \
     DIFF0(Dirichlet_eta)
     DIFF0(UpperGamma)
     DIFF0(LowerGamma)
-    DIFF0(Beta)
     DIFF0(LeviCivita)
+    DIFF0(Max)
+    DIFF0(Min)
 
 #endif
 
@@ -422,15 +423,20 @@ static RCP<const Basic> diff(const CLASS &self, \
         return mul(polygamma(add(args[0], one), args[1]), args[1]->diff(x));
     }
 
-    static RCP<const Basic> diff(const UnivariatePolynomial &self,
+    static RCP<const Basic> diff(const LogGamma &self,
+            const RCP<const Symbol> &x) {
+        RCP<const Basic> arg = self.get_args()[0];
+        return mul(polygamma(zero, arg), arg->diff(x));
+    }
+
+    static RCP<const Basic> diff(const UnivariateIntPolynomial &self,
             const RCP<const Symbol> &x) {
         if (self.get_var()->__eq__(*x)) {
             map_uint_mpz d;
             for (const auto &p : self.get_dict()) {
                 d[p.first - 1] = p.second * p.first;
             }
-            return make_rcp<const UnivariatePolynomial>(self.get_var(),
-                    (--(d.end()))->first, std::move(d));
+            return UnivariateIntPolynomial::from_dict(self.get_var(), std::move(d));
         } else {
             return zero;
         }
@@ -440,7 +446,16 @@ static RCP<const Basic> diff(const CLASS &self, \
             const RCP<const Symbol> &x) {
         return self.diff_impl(x);
     }
-
+    static RCP<const Basic> diff(const Beta &self,
+            const RCP<const Symbol> &x) {
+        RCP<const Basic> beta_arg0 = self.get_args()[0];
+        RCP<const Basic> beta_arg1 = self.get_args()[1];
+        RCP<const Basic> diff_beta_arg0 = beta_arg0->diff(x);
+        RCP<const Basic> diff_beta_arg1 = beta_arg1->diff(x);
+        return mul(self.rcp_from_this(), add(mul(polygamma(zero, beta_arg0), diff_beta_arg0),
+                sub(mul(polygamma(zero, beta_arg1), diff_beta_arg1),
+                mul(polygamma(zero, add(beta_arg0, beta_arg1)), add(diff_beta_arg0, diff_beta_arg1)))));
+    }
 };
 
 #define IMPLEMENT_DIFF(CLASS) \

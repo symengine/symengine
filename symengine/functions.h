@@ -1012,6 +1012,38 @@ public:
 RCP<const Basic> uppergamma(const RCP<const Basic> &s, const RCP<const Basic> &x);
 
 
+class LogGamma: public Function {
+/*!    The loggamma function
+    The `loggamma` function implements the logarithm of the
+    gamma function i.e, `\log\Gamma(x)`.
+ **/
+private:
+    RCP<const Basic> arg_;
+public:
+    IMPLEMENT_TYPEID(LOGGAMMA)
+    //! LogGamma Constructor
+    LogGamma(const RCP<const Basic> &arg): arg_{arg} {
+        SYMENGINE_ASSERT(is_canonical(arg_))
+    }
+    /*! Equality comparator
+     * \param o - Object to be compared with
+     * \return whether the 2 objects are equal
+     * */
+    virtual bool __eq__(const Basic &o) const;
+    virtual int compare(const Basic &o) const;
+    //! \return Size of the hash
+    virtual std::size_t __hash__() const;
+    //! \return `true` if canonical
+    bool is_canonical(const RCP<const Basic> &arg) const;
+    virtual vec_basic get_args() const { return {arg_}; }
+    RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
+    RCP<const Basic> rewrite_as_gamma() const;
+};
+
+//! Canonicalize LogGamma:
+RCP<const Basic> loggamma(const RCP<const Basic> &arg);
+
+
 class Beta: public Function {
 /*!    The beta function, also called the Euler integral
  *     of the first kind, is a special function defined by
@@ -1110,6 +1142,50 @@ public:
 
 //! Canonicalize Abs:
 RCP<const Basic> abs(const RCP<const Basic> &arg);
+
+class Max: public Function {
+
+private:
+    vec_basic arg_;
+public:
+    IMPLEMENT_TYPEID(MAX)
+    //! Max Constructor
+    Max(const vec_basic&& arg);
+
+    virtual bool __eq__(const Basic &o) const;
+    virtual int compare(const Basic &o) const;
+    //! \return Size of the hash
+    virtual std::size_t __hash__() const;
+    //! \return `true` if canonical
+    bool is_canonical(const vec_basic &arg) const;
+    inline vec_basic get_args() const { return arg_; }
+};
+
+//! Canonicalize Max:
+RCP<const Basic> max(const vec_basic &arg);
+
+class Min: public Function {
+
+private:
+    vec_basic arg_;
+public:
+    IMPLEMENT_TYPEID(MIN)
+    //! Min Constructor
+    Min(const vec_basic&& arg);
+    Min(const RCP<const Basic> &arg, ...);
+
+    virtual bool __eq__(const Basic &o) const;
+    virtual int compare(const Basic &o) const;
+    //! \return Size of the hash
+    virtual std::size_t __hash__() const;
+    //! \return `true` if canonical
+    bool is_canonical(const vec_basic &arg) const;
+    inline vec_basic get_args() const { return arg_; }
+};
+
+//! Canonicalize Min:
+RCP<const Basic> min(const vec_basic &arg);
+
 //! \return simplified form if possible
 RCP<const Basic> trig_to_sqrt(const RCP<const Basic> &arg);
 

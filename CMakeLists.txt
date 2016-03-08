@@ -91,6 +91,30 @@ if ((CMAKE_CXX_COMPILER_ID MATCHES Clang) AND (CMAKE_BUILD_TYPE STREQUAL "Releas
     endif()
 endif()
 
+
+set(INTEGER_CLASS "gmpxx"
+    CACHE STRING "Integer class for symengine. Either gmpxx or piranha")
+
+# Piranha
+set(WITH_PIRANHA no CACHE BOOL "Build with Piranha")
+
+# FLINT
+set(WITH_FLINT no CACHE BOOL "Build with Flint")
+set(HAVE_SYMENGINE_FLINT False)
+
+if ("${INTEGER_CLASS}" MATCHES "piranha")
+    set(SYMENGINE_INTEGER_CLASS "PIRANHA")
+    set(WITH_PIRANHA yes)
+elseif ("${INTEGER_CLASS}" MATCHES "flint")
+    set(SYMENGINE_INTEGER_CLASS "FLINT")
+    set(WITH_FLINT yes)
+elseif ("${INTEGER_CLASS}" MATCHES "gmpxx")
+    set(SYMENGINE_INTEGER_CLASS "GMPXX")
+    set(WITH_GMPXX yes)
+else()
+    set(SYMENGINE_INTEGER_CLASS "GMP")
+endif()
+
 # GMP
 find_package(GMP REQUIRED)
 include_directories(${GMP_INCLUDE_DIRS})
@@ -98,7 +122,7 @@ set(LIBS ${LIBS} ${GMP_TARGETS})
 set(PKGS ${PKGS} "GMP")
 
 # Check gmpxx
-if (NOT(MSVC))
+if (NOT(MSVC) AND WITH_GMPXX)
     try_compile(GMPXX "${CMAKE_CURRENT_BINARY_DIR}/cxx" "${CMAKE_SOURCE_DIR}/cmake/checkgmpxx.cpp"
         CMAKE_FLAGS "-DCOMPILE_DEFINITIONS=${CMAKE_CXX_FLAGS_RELEASE}"
         CMAKE_FLAGS "-DINCLUDE_DIRECTORIES=${GMP_INCLUDE_DIRS}"
@@ -134,11 +158,6 @@ if (WITH_PRIMESIEVE)
     set(HAVE_SYMENGINE_PRIMESIEVE yes)
     set(PKGS ${PKGS} "PRIMESIEVE")
 endif()
-
-# FLINT
-set(WITH_FLINT no
-    CACHE BOOL "Build with Flint")
-set(HAVE_SYMENGINE_FLINT False)
 
 # ARB
 set(WITH_ARB no
@@ -196,10 +215,6 @@ if (WITH_MPC)
     set(WITH_MPFR yes)
     set(PKGS ${PKGS} "MPC")
 endif()
-
-# Piranha
-set(WITH_PIRANHA no
-    CACHE BOOL "Build with Piranha")
 
 # Boost
 set(WITH_BOOST no
@@ -357,6 +372,10 @@ if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(WITH_SYMENGINE_ASSERT yes) # Also enable assertions
 endif()
 
+if (WITH_COVERAGE)
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} --coverage")
+endif()
+
 enable_testing()
 add_subdirectory(symengine)
 
@@ -444,6 +463,7 @@ message("CMAKE_CXX_FLAGS_DEBUG:   ${CMAKE_CXX_FLAGS_DEBUG}")
 message("CMAKE_CXX_FLAGS_RELEASE: ${CMAKE_CXX_FLAGS_RELEASE}")
 message("CMAKE_INSTALL_PREFIX: ${CMAKE_INSTALL_PREFIX}")
 
+message("INTEGER_CLASS : ${SYMENGINE_INTEGER_CLASS}")
 message("WITH_SYMENGINE_ASSERT: ${WITH_SYMENGINE_ASSERT}")
 message("WITH_SYMENGINE_RCP: ${WITH_SYMENGINE_RCP}")
 if (NOT WITH_SYMENGINE_RCP)

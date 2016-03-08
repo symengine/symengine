@@ -21,7 +21,7 @@ using SymEngine::RCP;
 using SymEngine::Basic;
 using SymEngine::div;
 using SymEngine::pow;
-using SymEngine::univariate_polynomial;
+using SymEngine::univariate_int_polynomial;
 using SymEngine::mul;
 using SymEngine::integer;
 using SymEngine::print_stack_on_segfault;
@@ -33,6 +33,7 @@ using SymEngine::add;
 using SymEngine::Symbol;
 using SymEngine::Integer;
 using SymEngine::DenseMatrix;
+using SymEngine::loggamma;
 using SymEngine::Subs;
 using SymEngine::Derivative;
 using SymEngine::function_symbol;
@@ -42,6 +43,10 @@ using SymEngine::complex_double;
 using SymEngine::BaseVisitor;
 using SymEngine::StrPrinter;
 using SymEngine::Sin;
+using SymEngine::integer_class;
+using SymEngine::map_uint_mpz;
+
+using namespace SymEngine::literals;
 
 namespace SymEngine {
 class MyStrPrinter : public BaseVisitor<MyStrPrinter, StrPrinter> {
@@ -237,48 +242,48 @@ TEST_CASE("test_matrix(): printing", "[printing]")
     REQUIRE(A.__str__() == "[1, 0]\n[0, 1]\n");
 }
 
-TEST_CASE("test_univariate_polynomial(): printing", "[printing]")
+TEST_CASE("test_univariate_int_polynomial(): printing", "[printing]")
 {
     RCP<const Basic> p;
     RCP<const Symbol> x = symbol("x");
 
-    p = univariate_polynomial(x, 0, {{0, 0}});
+    p = univariate_int_polynomial(x, {{0, 0_z}});
     REQUIRE(p->__str__() == "0");
     //std::cout<<p->__str__()<<std::endl;
-    p = univariate_polynomial(x, 0, {{0, 1}});
+    p = univariate_int_polynomial(x, {{0, 1_z}});
     REQUIRE(p->__str__() == "1");
     //std::cout<<p->__str__()<<std::endl;
-    p = univariate_polynomial(x, 1, {{1, 1}});
+    p = univariate_int_polynomial(x, {{1, 1_z}});
     REQUIRE(p->__str__() == "x");
     //std::cout<<p->__str__()<<std::endl;
-    p = univariate_polynomial(x, 1, {{0, 1}, {1, 2}});
+    p = univariate_int_polynomial(x, {{0, 1_z}, {1, 2_z}});
     REQUIRE(p->__str__() == "2*x + 1");
     //std::cout<<p->__str__()<<std::endl;
-    p = univariate_polynomial(x, 1, {{0, -1}, {1, 2}});
+    p = univariate_int_polynomial(x, {{0, -1_z}, {1, 2_z}});
     REQUIRE(p->__str__() == "2*x - 1");
     //std::cout<<p->__str__()<<std::endl;
-    p = univariate_polynomial(x, 0, {{0, -1}});
+    p = univariate_int_polynomial(x, {{0, -1_z}});
     REQUIRE(p->__str__() == "-1");
     //std::cout<<p->__str__()<<std::endl;
-    p = univariate_polynomial(x, 1, {{1, -1}});
+    p = univariate_int_polynomial(x, {{1, -1_z}});
     REQUIRE(p->__str__() == "-x");
     //std::cout<<p->__str__()<<std::endl;
-    p = univariate_polynomial(x, 1, {{0, -1}, {1, 1}});
+    p = univariate_int_polynomial(x, {{0, -1_z}, {1, 1_z}});
     REQUIRE(p->__str__() == "x - 1");
     //std::cout<<p->__str__()<<std::endl;
-    p = univariate_polynomial(x, 2, {{0, 1}, {1, 1}, {2, 1}});
+    p = univariate_int_polynomial(x, {{0, 1_z}, {1, 1_z}, {2, 1_z}});
     REQUIRE(p->__str__() == "x**2 + x + 1");
     //std::cout<<p->__str__()<<std::endl;
-    p = univariate_polynomial(x, 2, {{0, 1}, {1, -1}, {2, 1}});
+    p = univariate_int_polynomial(x, {{0, 1_z}, {1, -1_z}, {2, 1_z}});
     REQUIRE(p->__str__() == "x**2 - x + 1");
     //std::cout<<p->__str__()<<std::endl;
-    p = univariate_polynomial(x, 2, {{0, 1}, {1, 2}, {2, 1}});
+    p = univariate_int_polynomial(x, {{0, 1_z}, {1, 2_z}, {2, 1_z}});
     REQUIRE(p->__str__() == "x**2 + 2*x + 1");
     //std::cout<<p->__str__()<<std::endl;
-    p = univariate_polynomial(x, 2, {{1, 2}, {2, 1}});
+    p = univariate_int_polynomial(x, {{1, 2_z}, {2, 1_z}});
     REQUIRE(p->__str__() == "x**2 + 2*x");
     //std::cout<<p->__str__()<<std::endl;
-    p = univariate_polynomial(x, 2, {{0, -1}, {1, -2}, {2, -1}});
+    p = univariate_int_polynomial(x, {{0, -1_z}, {1, -2_z}, {2, -1_z}});
     //std::cout<<p->__str__()<<std::endl;
     REQUIRE(p->__str__() == "-x**2 - 2*x - 1");
 }
@@ -323,6 +328,13 @@ TEST_CASE("test_floats(): printing", "[printing]")
     REQUIRE(p->__str__() == "(-10.0000000000000000000000 + 10.0000000000000000000000*I)/x");
 #endif
 #endif
+}
+
+TEST_CASE("test_functions(): printing", "[printing]")
+{
+    RCP<const Basic> x = symbol("x");
+    RCP<const Basic> p = loggamma(x);
+    REQUIRE(p->__str__() == "loggamma(x)");
 }
 
 TEST_CASE("test custom printing", "[printing]")

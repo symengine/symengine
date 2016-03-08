@@ -30,11 +30,11 @@ public:
     }
 
     void bvisit(const Integer &x) {
-        mpfr_set_z(result_, x.i.get_mpz_t(), rnd_);
+        mpfr_set_z(result_, get_mpz_t(x.i), rnd_);
     }
 
     void bvisit(const Rational &x) {
-        mpfr_set_q(result_, x.i.get_mpq_t(), rnd_);
+        mpfr_set_q(result_, get_mpq_t(x.i), rnd_);
     }
 
     void bvisit(const RealDouble &x) {
@@ -224,6 +224,11 @@ public:
         mpfr_gamma(result_, result_, rnd_);
     };
 
+    void bvisit(const LogGamma& x) {
+        apply(result_, *(x.get_args()[0]));
+        mpfr_lngamma(result_, result_, rnd_);
+    }
+
     void bvisit(const Beta &x) {
         apply(result_, *(x.rewrite_as_gamma()));
     };
@@ -255,6 +260,30 @@ public:
 
     void bvisit(const FunctionWrapper &x) {
         x.eval(mpfr_get_prec(result_))->accept(*this);
+    }
+
+    void bvisit(const Max &x) {
+        mpfr_class t(mpfr_get_prec (result_));
+        auto d = x.get_args();
+        auto p = d.begin();
+        apply(result_, *(*p));
+        p++;
+        for (; p != d.end();  p++) {
+            apply(t.get_mpfr_t(), *(*p));
+            mpfr_max(result_, result_, t.get_mpfr_t(), rnd_);
+        }
+    }
+
+    void bvisit(const Min &x) {
+        mpfr_class t(mpfr_get_prec (result_));
+        auto d = x.get_args();
+        auto p = d.begin();
+        apply(result_, *(*p));
+        p++;
+        for (; p != d.end();  p++) {
+            apply(t.get_mpfr_t(), *(*p));
+            mpfr_min(result_, result_, t.get_mpfr_t(), rnd_);
+        }
     }
 
     // Classes not implemented are

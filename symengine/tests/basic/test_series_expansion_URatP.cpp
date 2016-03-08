@@ -17,6 +17,7 @@ using SymEngine::Integer;
 using SymEngine::integer;
 using SymEngine::Rational;
 using SymEngine::rational;
+using SymEngine::rational_class;
 using SymEngine::Symbol;
 using SymEngine::Number;
 using SymEngine::symbol;
@@ -38,11 +39,8 @@ using SymEngine::pp_t;
 
 static inline RCP<const Number> prat2synum(const piranha::rational& p_rat)
 {
-    mpq_class cl_rat(p_rat.get_mpq_view());
-    cl_rat.canonicalize();
-    if (cl_rat.get_den() == 1)
-        return make_rcp<const Integer>(cl_rat.get_num());
-    return make_rcp<const Rational>(cl_rat);
+    rational_class cl_rat(p_rat.get_mpq_view());
+    return Rational::from_mpq(cl_rat);
 }
 
 static bool expand_check_pairs(const RCP<const Basic> &ex, const RCP<const Symbol> &x, int prec, const umap_short_basic& pairs)
