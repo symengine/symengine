@@ -72,11 +72,11 @@ public:
     static Expression log(const Expression &c);
 };
 
-inline RCP<const UnivariateSeries> univariate_series(RCP<const Symbol> i, unsigned int prec, const map_uint_mpz& dict) {
-    return make_rcp<const UnivariateSeries>(i, prec, dict);
-}
+// inline RCP<const UnivariateSeries> univariate_series(RCP<const Symbol> i, unsigned int prec, const map_uint_mpz& dict) {
+//     return make_rcp<const UnivariateSeries>(i, prec, dict);
+// }
 
-inline RCP<const UnivariateSeries> univariate_series(RCP<const Symbol> i, unsigned int prec, map_int_Expr& dict) {
+inline RCP<const UnivariateSeries> univariate_series(RCP<const Symbol> i, unsigned int prec, const map_int_Expr& dict) {
     return make_rcp<const UnivariateSeries>(i, prec, std::move(dict));
 }
 

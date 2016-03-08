@@ -50,14 +50,14 @@ TEST_CASE("Adding two UnivariateSeries", "[UnivariateSeries]")
     const UnivariateSeries b(x, 4, bdict_);
     RCP<const UnivariateSeries> c = add_uni_series(a, b);
     const UnivariateSeries d(x, 4, ddict_);
-    // REQUIRE(c->__str__() == d.__str__());
-    REQUIRE(*c == d);
+    REQUIRE(c->__str__() == d.__str__());
+    // REQUIRE(*c == d);
 
-    const UnivariateSeries e(x, 4, bdict_);
-
+    const UnivariateSeries e(x, 2, bdict_);
     RCP<const UnivariateSeries> f = add_uni_series(a, e);
     const UnivariateSeries g(x, 2, ddict_);
-    REQUIRE(*f == g);
+    REQUIRE(f->__str__() == g.__str__());
+    // REQUIRE(*f == g);
 }
 
 TEST_CASE("Negative of a UnivariateSeries", "[UnivariateSeries]")
@@ -69,7 +69,8 @@ TEST_CASE("Negative of a UnivariateSeries", "[UnivariateSeries]")
     const UnivariateSeries a(x, 5, adict_);
     RCP<const UnivariateSeries> b = neg_uni_series(a);
     const UnivariateSeries c(x, 5, bdict_);
-    REQUIRE(*b == c);
+    REQUIRE(b->__str__() == c.__str__());
+    // REQUIRE(*b == c);
 }
 
 TEST_CASE("Subtracting two UnivariateSeries", "[UnivariateSeries]")
@@ -84,15 +85,14 @@ TEST_CASE("Subtracting two UnivariateSeries", "[UnivariateSeries]")
     UnivariateSeries b(x, 4, bdict_);
     RCP<const UnivariateSeries> c = sub_uni_series(a, b);
     UnivariateSeries f(x, 4, fdict_);
-    REQUIRE(*c == f);
+    REQUIRE(c->__str__() == f.__str__());
+    // REQUIRE(*c == f);
 
     UnivariateSeries d(x, 2, bdict_);
-    // REQUIRE(d.__str__() == "3x");
     RCP<const UnivariateSeries> e = sub_uni_series(a, d);
-    // REQUIRE(e->__str__() == "3x"); //correct
     UnivariateSeries g(x, 2, std::move(gdict_));
-    // REQUIRE(g.__str__() == "3x");
-    REQUIRE(*e == f);
+    REQUIRE(e->__str__() == g.__str__());
+    // REQUIRE(*e == f);
 }
 
 TEST_CASE("Multiplication of two UnivariateSeries", "[UnivariateSeries]")
@@ -106,8 +106,10 @@ TEST_CASE("Multiplication of two UnivariateSeries", "[UnivariateSeries]")
     RCP<const UnivariateSeries> c = mul_uni_series(*a, *a);
     RCP<const UnivariateSeries> d = mul_uni_series(*a, *b);
 
-    REQUIRE(*c == *e);
-    REQUIRE(*d == *f);
+    REQUIRE(c->__str__() == e->__str__());
+    REQUIRE(d->__str__() == f->__str__());
+    // REQUIRE(*c == *e);
+    // REQUIRE(*d == *f);
 }
 
 //TEST_CASE("Differentiation of UnivariateSeries", "[UnivariateSeries]")
