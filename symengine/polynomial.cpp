@@ -350,32 +350,20 @@ RCP<const UnivariatePolynomial> UnivariatePolynomial::from_vec(const RCP<const S
 
 RCP<const Basic> UnivariatePolynomial::from_dict(const RCP<const Symbol> &var, map_int_Expr &&d)
 {
-    if (d.size() == 1) {
-        if (d.begin()->first == 0)
-            return d.begin()->second.get_basic();
-        else if (d.begin()->first == 1) {
-            if (d.begin()->second == 0)
-                return zero;
-            else if (d.begin()->second == 1)
-                return var;
-            else if (is_a<Integer>(*d.begin()->second.get_basic()))
-                return Mul::from_dict(rcp_static_cast<const Integer>(d.begin()->second.get_basic()), 
-                    {{var, one}});
-            else
-                return mul(d.begin()->second.get_basic(), var);
-        } else {
-            if (d.begin()->second == 0)
-                return zero;
-            else if (d.begin()->second == 1)
-                return pow(var, integer(d.begin()->first));
-            else if (is_a<Integer>(*d.begin()->second.get_basic()))
-                return Mul::from_dict(rcp_static_cast<const Integer>(d.begin()->second.get_basic()),
-                    {{var, integer(d.begin()->first)}});
-            else
-                return pow(mul(d.begin()->second.get_basic(), var), integer(d.begin()->first));
-        }
-    } else
-        return make_rcp<const UnivariatePolynomial>(var, (--(d.end()))->first, std::move(d));
+    auto iter = d.begin();
+    while (iter != d.end()) {
+        if (Expression(0) == iter->second) {
+            auto toErase = iter;
+            iter++;
+            d.erase(toErase);
+        } 
+        else 
+            iter++;
+    }
+    unsigned int degree = 0;
+    if(!d.empty())
+        degree = (--(d.end()))->first;
+    return make_rcp<const UnivariatePolynomial>(var, degree, std::move(d));
 }
 
 void UnivariatePolynomial::dict_add_term(map_int_Expr &d, const Expression &coef, const unsigned int &n)
