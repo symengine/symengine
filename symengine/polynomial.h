@@ -116,7 +116,7 @@ public:
     
     static RCP<const UnivariatePolynomial> create(const RCP<const Symbol> &var, 
             const std::vector<Expression> &v) {
-        return UnivariatePolynomial::from_vec(var, v);//return make_rcp<const UnivariatePolynomial>(var, v);
+        return UnivariatePolynomial::from_vec(var, v);
     }
 
     bool is_canonical(const unsigned int &degree, const map_int_Expr& dict) const;

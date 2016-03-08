@@ -105,21 +105,19 @@ void UnivariateIntPolynomial::dict_add_term(map_uint_mpz &d, const integer_class
 
 vec_basic UnivariateIntPolynomial::get_args() const {
     vec_basic args;
-    map_uint_mpz d;
     for (const auto &p: dict_) {
-        d = {{p.first, p.second}};
-        if (d.begin()->first == 0)
-            args.push_back( integer(d.begin()->second));
-        else if (d.begin()->first == 1) {
-            if (d.begin()->second == 1)
+        if (p.first == 0)
+            args.push_back( integer(p.second));
+        else if (p.first == 1) {
+            if (p.second == 1)
                 args.push_back(var_);
             else
-                args.push_back(Mul::from_dict(integer(d.begin()->second), {{var_, one}}));
+                args.push_back(Mul::from_dict(integer(p.second), {{var_, one}}));
         } else {
-            if (d.begin()->second == 1)
-              args.push_back( pow(var_, integer(d.begin()->first)));
+            if (p.second == 1)
+              args.push_back(pow(var_, integer(p.first)));
             else
-              args.push_back( Mul::from_dict(integer(d.begin()->second),{{var_, integer(d.begin()->first)}}));
+              args.push_back(Mul::from_dict(integer(p.second), {{var_, integer(p.first)}}));
         }
     }
     if (dict_.empty())
@@ -169,12 +167,11 @@ bool UnivariateIntPolynomial::is_minus_one() const {
 }
 
 bool UnivariateIntPolynomial::is_integer() const {
-  if(dict_.empty())
+    if(dict_.empty())
         return true;
     if (dict_.size() == 1 and dict_.begin()->first == 0)
         return true;
     return false;  
-  //return dict_.empty() or (dict_.size() == 1 and dict_.begin()->first == 0);
 }
 
 bool UnivariateIntPolynomial::is_symbol() const {
@@ -335,6 +332,7 @@ int UnivariatePolynomial::compare(const Basic &o) const
 
     return map_int_Expr_compare(dict_, s.dict_);
 }
+
 RCP<const UnivariatePolynomial> UnivariatePolynomial::from_vec(const RCP<const Symbol> &var, const std::vector<Expression> &v)
 {
     map_int_Expr dict;
@@ -375,8 +373,22 @@ void UnivariatePolynomial::dict_add_term(map_int_Expr &d, const Expression &coef
 
 vec_basic UnivariatePolynomial::get_args() const {
     vec_basic args;
-    for (const auto &p: dict_)
-        args.push_back(UnivariatePolynomial::from_dict(var_, {{p.first, p.second}}));
+    for (const auto &p: dict_) {
+        if (p.first == 0)
+            args.push_back(p.second.get_basic());
+        else if (p.first == 1) {
+            if (p.second == Expression(1))
+                args.push_back(var_);
+            else
+                args.push_back(Mul::from_dict(rcp_static_cast<const Integer>(p.second.get_basic()), {{var_, one}}));
+        }
+        else if (p.second == 1)
+            args.push_back(pow(var_, integer(p.first)));
+        else
+            args.push_back(Mul::from_dict(rcp_static_cast<const Integer>(p.second.get_basic()), {{var_, integer(p.first)}}));
+    }
+    if (dict_.empty())
+        args.push_back(Expression(0).get_basic());
     return args;
 }
 
@@ -384,7 +396,7 @@ Expression UnivariatePolynomial::max_coef() const {
     Expression curr = dict_.begin()->second;
     for (const auto &it : dict_)
         if (curr.get_basic()->__cmp__(*it.second.get_basic()))
-            curr = it.second;
+            curr = it.second; 
     return curr;
 }
 
