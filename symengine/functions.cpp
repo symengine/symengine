@@ -2839,6 +2839,18 @@ RCP<const Basic> erf(const RCP<const Basic> &arg)
     return make_rcp<Erf>(arg);
 }
 
+RCP<const Basic> Erf::subs(const map_basic_basic &subs_dict) const
+{
+    auto it = subs_dict.find(rcp_from_this());
+    if (it != subs_dict.end())
+        return it->second;
+    RCP<const Basic> arg = arg_->subs(subs_dict);
+    if (arg == arg_)
+        return rcp_from_this();
+    else
+        return erf(arg);
+}
+
 
 Gamma::Gamma(const RCP<const Basic> &arg)
     : arg_{arg}
