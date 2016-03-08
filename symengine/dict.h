@@ -95,7 +95,6 @@ bool map_uint_mpz_eq(const map_uint_mpz &a, const map_uint_mpz &b);
 //! \return true if the two multisets `a` and `b` are equal. Otherwise false.
 bool multiset_basic_eq(const multiset_basic &a, const multiset_basic &b);
 
-
 //! \return -1, 0, 1 for a < b, a == b, a > b
 template<class T>
 int map_compare(const T &A, const T &B)

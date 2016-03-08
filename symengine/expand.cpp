@@ -240,16 +240,16 @@ public:
     void bvisit(const Pow &self) {
         RCP<const Basic> _base = expand(self.get_base());
 
-        if (is_a<Integer>(*self.get_exp()) && is_a<UnivariatePolynomial>(*_base)) {
+        if (is_a<Integer>(*self.get_exp()) && is_a<UnivariateIntPolynomial>(*_base)) {
             int q = rcp_static_cast<const Integer>(self.get_exp())->as_int();
-            RCP<const UnivariatePolynomial> p = rcp_static_cast<const UnivariatePolynomial>(_base);
-            RCP<const UnivariatePolynomial> r = univariate_polynomial(p->var_, 0, {{0, integer_class(1)}});
+            RCP<const UnivariateIntPolynomial> p = rcp_static_cast<const UnivariateIntPolynomial>(_base);
+            RCP<const UnivariateIntPolynomial> r = univariate_int_polynomial(p->var_, {{0, integer_class(1)}});
             while (q != 0) {
                 if (q % 2 == 1) {
-                    r = mul_uni_poly(r, p);
+                    r = mul_poly(r, p);
                     q--;
                 }
-                p = mul_uni_poly(p, p);
+                p = mul_poly(p, p);
                 q /= 2;
             }
             _coef_dict_add_term(multiply, r);
