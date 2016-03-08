@@ -1,5 +1,4 @@
 #include <symengine/symengine_config.h>
-#include <stdio.h>
 
 #if defined(HAVE_C_FUNCTION_NOT_FUNC)
 #define __func__ __FUNCTION__
