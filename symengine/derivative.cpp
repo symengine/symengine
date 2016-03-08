@@ -459,7 +459,7 @@ static RCP<const Basic> diff(const CLASS &self, \
                 if(bucket.first[index] != 0){
                     vec_uint v = bucket.first;
                     v[index]--;
-                    dict.insert(std::pair<vec_uint, mpz_class>(v, bucket.second * bucket.first[index]));
+                    dict.insert(std::pair<vec_uint, integer_class>(v, bucket.second * bucket.first[index]));
                 }
             }
             umap_sym_uint degrees = self.degrees_;
