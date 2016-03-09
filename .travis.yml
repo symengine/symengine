@@ -131,4 +131,4 @@ install:
 script:
   - bin/test_travis.sh
 notifications:
-  email: false
+  email: true

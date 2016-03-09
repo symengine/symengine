@@ -91,7 +91,7 @@ std::string UnivariateSeries::__str__() const
         }
         first = false;
         if (it.first == 0) {
-            o << mp_abs(it.second).get_si();
+            o << mp_abs(it.second);
             continue;
         }
         if (mp_abs(it.second) == 1)
