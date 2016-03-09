@@ -158,7 +158,7 @@ int jacobi(const Integer &a, const Integer &n);
 //! Kronecker Function
 int kronecker(const Integer &a, const Integer &n);
 // Returns whether Solution for x**n == a mod p**k exists or not
-bool is_nthroot_mod_prime_power(const mpz_class &a, const mpz_class &n, const mpz_class &p, const unsigned k);
+bool is_nthroot_mod_prime_power(const integer_class &a, const integer_class &n, const integer_class &p, const unsigned k);
 //! All Solutions to x**n == a mod m. Return false if none exists.
 void nthroot_mod_list(std::vector<RCP<const Integer>> &roots, const RCP<const Integer> &a,
         const RCP<const Integer> &n, const RCP<const Integer> &m);
@@ -173,7 +173,7 @@ void powermod_list(std::vector<RCP<const Integer>> &pows, const RCP<const Intege
         const RCP<const Number> &b, const RCP<const Integer> &m);
 
 //! Finds all Quadratic Residues of a Positive Integer
-std::vector<mpz_class> quadratic_residues(const Integer &a);
+std::vector<integer_class> quadratic_residues(const Integer &a);
 
 //! Returns true if 'a' is a quadratic residue of 'p'
 bool is_quad_residue(const Integer &a , const Integer &p);

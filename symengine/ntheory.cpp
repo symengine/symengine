@@ -1163,6 +1163,23 @@ bool _nthroot_mod1(std::vector<RCP<const Integer>> &roots, const integer_class &
     return true;
 }
 
+// Checks if Solution for x**n == a mod p**k exists where a != 0 mod p and p is an odd prime.
+bool is_nthroot_mod1(const integer_class &a, const integer_class &n,
+        const integer_class &p, const unsigned k)
+{
+    integer_class t, pk, m, phi;
+    mp_pow_ui(pk, p, k);
+    phi = pk * (p - 1) / p;
+    mp_gcd(m, phi, n);
+    t = phi / m;
+    mp_powm(t, a, t, pk);
+    // Check whether a**(phi / gcd(phi, n)) == 1 mod p**k.
+    if (t != 1) {
+        return false;
+    }
+    return true;
+}
+
 // Solution for x**n == a mod p**k.
 bool _nthroot_mod_prime_power(std::vector<RCP<const Integer>> &roots, const integer_class &a, const integer_class &n,
         const integer_class &p, const unsigned k, bool all_roots = false)
@@ -1295,13 +1312,13 @@ bool _nthroot_mod_prime_power(std::vector<RCP<const Integer>> &roots, const inte
 }
 
 // Returns whether Solution for x**n == a mod p**k exists or not
-bool is_nthroot_mod_prime_power(const mpz_class &a, const mpz_class &n, const mpz_class &p, const unsigned k)
+bool is_nthroot_mod_prime_power(const integer_class &a, const integer_class &n, const integer_class &p, const unsigned k)
 {
-            mpz_class pk;
+            integer_class pk;
     if (a % p != 0) {
         if (p == 2) {
-            mpz_class t;
-            unsigned c = mpz_scan1(n.get_mpz_t(), 0);
+            integer_class t;
+            unsigned c = mp_scan1(n);
 
             // Handle special cases of k = 1 and k = 2.
             if (k == 1) {
@@ -1322,29 +1339,28 @@ bool is_nthroot_mod_prime_power(const mpz_class &a, const mpz_class &n, const mp
             }
 
             // First, solve for y**2**c == a mod 2**k where y == x**r
-            t = 0;
-            mpz_setbit(t.get_mpz_t(), c + 2);
-            mpz_fdiv_r(t.get_mpz_t(), a.get_mpz_t(), t.get_mpz_t());
+            t = integer_class(1) << (c + 2);
+            mp_fdiv_r(t, a, t);
             // Check for a == y**2**c == 1 mod 2**(c + 2).
             if (t != 1)
                 return false;
             return true;
         } else {
-            std::vector<RCP<const Integer>> roots;
-            return _nthroot_mod1(roots, a, n, p, k, false);
+            return is_nthroot_mod1(a, n, p, k);
         }
     } else {
-        mpz_class _a;
-        mpz_pow_ui(pk.get_mpz_t(), p.get_mpz_t(), k);
+        integer_class _a;
+        mp_pow_ui(pk, p, k);
         _a = a % pk;
+        integer_class pm;
         if (_a == 0) {
-                return true;
+            return true;
         } else {
             unsigned r = 1;
-            mpz_divexact(_a.get_mpz_t(), _a.get_mpz_t(), p.get_mpz_t());
+            mp_divexact(_a, _a, p);
             while (_a % p == 0) {
-                mpz_divexact(_a.get_mpz_t(), _a.get_mpz_t(), p.get_mpz_t());
-                r++;
+                mp_divexact(_a, _a, p);
+                ++r;
             }
             if (r < n or r % n != 0 or not is_nthroot_mod_prime_power(_a, n, p, k - r)) {
                 return false;
@@ -1477,7 +1493,7 @@ void powermod_list(std::vector<RCP<const Integer>> &pows, const RCP<const Intege
     }
 }
 
-std::vector<mpz_class> quadratic_residues(const Integer &a)
+std::vector<integer_class> quadratic_residues(const Integer &a)
 {
     /*
         Returns the list of quadratic residues.
@@ -1491,8 +1507,8 @@ std::vector<mpz_class> quadratic_residues(const Integer &a)
         throw std::runtime_error("quadratic_residues: Input must be > 0");
     }
 
-    std::vector<mpz_class> residue;
-    for(mpz_class i = 0; i <= a.as_int()/2; i++)
+    std::vector<integer_class> residue;
+    for(integer_class i = integer_class(0); i <= a.as_int()/2; i++)
     {
         residue.push_back((i*i) % a.as_int());
     }
@@ -1512,13 +1528,13 @@ bool is_quad_residue(const Integer &a, const Integer &p)
     not prime, an iterative method is used to make the determination.
     */
 
-    mpz_class p2 = p.as_mpz();
+    integer_class p2 = p.as_mpz();
     if (p2 < 1)
         throw std::runtime_error("is_quad_residue: Second parameter must be > 0");
 
-    mpz_class a_final = a.as_mpz();
+    integer_class a_final = a.as_mpz();
     if (a.as_mpz() >= p2 || a.as_mpz() < 0)
-        mpz_fdiv_r(a_final.get_mpz_t(), a.as_mpz().get_mpz_t(), p2.get_mpz_t());
+        mp_fdiv_r(a_final, a.as_mpz(), p2);
     if (a_final < 2 || p2 < 3)
         return true;
 
@@ -1540,7 +1556,7 @@ bool is_quad_residue(const Integer &a, const Integer &p)
         return true;
     }
 
-    return mpz_legendre(a_final.get_mpz_t(), p2.get_mpz_t()) == 1;
+    return mp_legendre(a_final, p2) == 1;
 }
 
 int mobius(const Integer &a)

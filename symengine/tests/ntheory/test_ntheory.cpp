@@ -37,6 +37,7 @@ using SymEngine::multiplicative_order;
 using SymEngine::totient;
 using SymEngine::carmichael;
 using SymEngine::mertens;
+using SymEngine::integer_class;
 
 TEST_CASE("test_gcd_lcm(): ntheory", "[ntheory]")
 {
@@ -641,13 +642,16 @@ TEST_CASE("test_powermod(): ntheory", "[ntheory]")
 TEST_CASE("test_quadratic_residues(): ntheory", "[ntheory]")
 {
 
-    std::vector<mpz_class> i1 = {0};
-    std::vector<mpz_class> i2 = {0, 1};
-    std::vector<mpz_class> i3 = {0, 1};
-    std::vector<mpz_class> i4 = {0, 1};
-    std::vector<mpz_class> i5 = {0, 1, 4};
-    std::vector<mpz_class> i7 = {0, 1, 2, 4};
-    std::vector<mpz_class> i100 = {0, 1, 4, 9, 16, 21, 24, 25, 29, 36, 41, 44, 49, 56, 61, 64, 69, 76, 81, 84, 89, 96};
+    std::vector<integer_class> i1 = {integer_class(0)};
+    std::vector<integer_class> i2 = {integer_class(0), integer_class(1)};
+    std::vector<integer_class> i3 = {integer_class(0), integer_class(1)};
+    std::vector<integer_class> i4 = {integer_class(0), integer_class(1)};
+    std::vector<integer_class> i5 = {integer_class(0), integer_class(1), integer_class(4)};
+    std::vector<integer_class> i7 = {integer_class(0), integer_class(1), integer_class(2), integer_class(4)};
+    std::vector<integer_class> i100 = {integer_class(0), integer_class(1), integer_class(4), integer_class(9), integer_class(16),
+                integer_class(21), integer_class(24), integer_class(25), integer_class(29), integer_class(36), integer_class(41),
+                integer_class(44), integer_class(49), integer_class(56), integer_class(61), integer_class(64), integer_class(69),
+                integer_class(76), integer_class(81), integer_class(84), integer_class(89), integer_class(96)};
 
     const RCP<const Integer> a1 = integer(1);
     const RCP<const Integer> a2 = integer(2);
