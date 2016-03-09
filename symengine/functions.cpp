@@ -3646,7 +3646,7 @@ RCP<const Basic> min(const vec_basic &arg)
     } else if (final_args.size() == 1) {
         return final_args[0];
     } else {
-        throw std::runtime_error("Empty vec_basic passed to max!");
+        throw std::runtime_error("Empty vec_basic passed to min!");
     }
 }
 
