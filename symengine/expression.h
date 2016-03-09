@@ -55,12 +55,6 @@ public:
     }
     //! Destructor of Expression
     ~Expression() SYMENGINE_NOEXCEPT {}
-    //! Overload stream operator
-    friend std::ostream &operator<<(std::ostream &os, const Expression &expr)
-    {
-        os << expr.m_basic->__str__();
-        return os;
-    }
     //! Overload addition
     friend Expression operator+(const Expression &a, const Expression &b)
     {
@@ -152,6 +146,8 @@ inline Expression coeff(const Expression &y, const Expression &x, const Expressi
 std::string poly_print(const Expression &x);
 
 } // SymEngine
+
+std::ostream &operator<<(std::ostream &os, const SymEngine::Expression &f);
 
 #ifdef HAVE_SYMENGINE_PIRANHA
 

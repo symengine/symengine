@@ -12,3 +12,8 @@ std::string poly_print(const Expression &x) {
 }
 
 } // SymEngine
+
+std::ostream &operator<<(std::ostream &os, const SymEngine::Expression &x) {
+    os << x.get_basic()->__str__();
+    return os;
+}
