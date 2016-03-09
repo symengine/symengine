@@ -592,9 +592,9 @@ RCP<const Number> bernoulli(unsigned long n) {
     return Rational::from_mpq(std::move(b));
 #else
     // TODO: implement a faster algorithm
-    std::vector<mpq_class> v(n+1);
+    std::vector<rational_class> v(n+1);
     for (unsigned m = 0; m <= n; ++m) {
-        v[m] = mpq_class(1, m + 1);
+        v[m] = rational_class(1, m + 1);
 
         for (unsigned j = m; j >= 1; --j) {
             v[j - 1] = j * (v[j - 1] - v[j]);
@@ -605,16 +605,16 @@ RCP<const Number> bernoulli(unsigned long n) {
 }
 
 RCP<const Number> harmonic(unsigned long n, unsigned long m) {
-    mpq_class res = 0;
+    rational_class res(0);
     if (m == 1) {
         for (unsigned i = 1; i <= n; ++i) {
-            res += mpq_class(1, i);
+            res += rational_class(1, i);
         }
         return Rational::from_mpq(res);
     } else {
         for (unsigned i = 1; i <= n; ++i) {
-            mpq_class t(1, i);
-            mpz_pow_ui(t.get_den_mpz_t(), t.get_den_mpz_t(), m);
+            rational_class t(1, i);
+            mp_pow_ui(get_den(t), get_den(t), m);
             res += t;
         }
         return Rational::from_mpq(res);

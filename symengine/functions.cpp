@@ -3289,7 +3289,7 @@ bool PolyGamma::is_canonical(const RCP<const Basic> &n, const RCP<const Basic> &
         }
         if (is_a<Rational>(*x)) {
             auto x_ = rcp_static_cast<const Rational>(x);
-            auto den = x_->i.get_den();
+            auto den = get_den(x_->i);
             if (den == 2 or den == 3 or den == 4) {
                 return false;
             }
@@ -3377,8 +3377,8 @@ RCP<const Basic> polygamma(const RCP<const Basic> &n_, const RCP<const Basic> &x
         }
         if (is_a<Rational>(*x_)) {
             RCP<const Rational> x = rcp_static_cast<const Rational>(x_);
-            const auto den = x->i.get_den();
-            const auto num = x->i.get_num();
+            const auto den = get_den(x->i);
+            const auto num = get_num(x->i);
             const auto r = num % den;
             RCP<const Basic> res;
             if (den == 2) {
@@ -3398,7 +3398,7 @@ RCP<const Basic> polygamma(const RCP<const Basic> &n_, const RCP<const Basic> &x
             } else {
                 return make_rcp<const PolyGamma>(n_, x_);
             }
-            rational_class a = 0, f(r, den);
+            rational_class a(0), f(r, den);
             for (unsigned long i = 0; i < (num - r) / den; ++i) {
                 a += 1 / (f + i);
             }
