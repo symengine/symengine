@@ -1347,6 +1347,67 @@ bool _nthroot_mod_prime_power(std::vector<RCP<const Integer>> &roots, const mpz_
     return true;
 }
 
+// Returns whether Solution for x**n == a mod p**k exists or not
+bool is_nthroot_mod_prime_power(const mpz_class &a, const mpz_class &n, const mpz_class &p, const unsigned k)
+{
+            mpz_class pk;
+    if (a % p != 0) {
+        if (p == 2) {
+            mpz_class t;
+            unsigned c = mpz_scan1(n.get_mpz_t(), 0);
+
+            // Handle special cases of k = 1 and k = 2.
+            if (k == 1) {
+                return true;
+            }
+            if (k == 2) {
+                if (c > 0 and a % 4 == 3) {
+                    return false;
+                }
+                return true;
+            }
+            if (c >= k - 2) {
+                c = k - 2;  // Since x**(2**c) == x**(2**(k - 2)) mod 2**k, let c = k - 2.
+            }
+            if (c == 0) {
+                // x**r == a mod 2**k and x**2**(k - 2) == 1 mod 2**k, implies x**(r * s) == x == a**s mod 2**k.
+                return true;
+            }
+
+            // First, solve for y**2**c == a mod 2**k where y == x**r
+            t = 0;
+            mpz_setbit(t.get_mpz_t(), c + 2);
+            mpz_fdiv_r(t.get_mpz_t(), a.get_mpz_t(), t.get_mpz_t());
+            // Check for a == y**2**c == 1 mod 2**(c + 2).
+            if (t != 1)
+                return false;
+            return true;
+        } else {
+            std::vector<RCP<const Integer>> roots;
+            return _nthroot_mod1(roots, a, n, p, k, false);
+        }
+    } else {
+        mpz_class _a;
+        mpz_pow_ui(pk.get_mpz_t(), p.get_mpz_t(), k);
+        _a = a % pk;
+        if (_a == 0) {
+                return true;
+        } else {
+            unsigned r = 1;
+            mpz_divexact(_a.get_mpz_t(), _a.get_mpz_t(), p.get_mpz_t());
+            while (_a % p == 0) {
+                mpz_divexact(_a.get_mpz_t(), _a.get_mpz_t(), p.get_mpz_t());
+                r++;
+            }
+            if (r < n or r % n != 0 or not is_nthroot_mod_prime_power(_a, n, p, k - r)) {
+                return false;
+            }
+            return true;
+        }
+    }
+    return true;
+}
+
 bool nthroot_mod(const Ptr<RCP<const Integer>> &root, const RCP<const Integer> &a,
         const RCP<const Integer> &n, const RCP<const Integer> &mod)
 {
@@ -1529,9 +1590,8 @@ bool is_quad_residue(const Integer &a, const Integer &p)
         prime_factor_multiplicities(prime_mul, *p1);
         bool ret_val;
 
-        std::vector<RCP<const Integer>> rem;
         for (const auto &it: prime_mul) {
-            ret_val = _nthroot_mod_prime_power(rem, a1->as_mpz(), integer(2)->as_mpz(), it.first->as_mpz(), it.second, false);
+            ret_val = is_nthroot_mod_prime_power(a1->as_mpz(), integer(2)->as_mpz(), it.first->as_mpz(), it.second);
             if(not ret_val) return false;
         }
         return true;
