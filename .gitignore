@@ -60,6 +60,7 @@ symengine/tests/basic/test_series_generic
 symengine/tests/basic/test_subs
 symengine/tests/basic/test_rational
 symengine/tests/basic/test_as_numer_denom
+symengine/tests/basic/test_parser
 symengine/tests/matrix/test_matrix
 symengine/tests/ntheory/test_ntheory
 symengine/tests/ntheory/test_diophantine
@@ -72,6 +73,8 @@ symengine/tests/eval/test_eval_mpfr
 symengine/tests/eval/test_eval_mpc
 symengine/tests/eval/test_lambda_double
 symengine/tests/expression/test_expression
+symengine/tests/basic/test_series_expansion_UP
+symengine/tests/basic/test_series_expansion_URatP
 
 # Benchmarks executables
 benchmarks/add1
@@ -98,6 +101,8 @@ benchmarks/expand6
 benchmarks/expand6_ginac
 benchmarks/expand7
 benchmarks/expand7_ginac
+benchmarks/series_expansion_sincos_piranha
+benchmarks/series_expansion_sinp
 
 #rubygem
 symengine/ruby/Gemfile.lock

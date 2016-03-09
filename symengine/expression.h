@@ -18,12 +18,6 @@
 namespace SymEngine
 {
 
-#ifdef HAVE_SYMENGINE_NOEXCEPT
-#  define SYMENGINE_NOEXCEPT noexcept
-#else
-#  define SYMENGINE_NOEXCEPT
-#endif
-
 class Expression
 {
 private:
@@ -33,6 +27,7 @@ public:
     //! Plain constructor of Expression
     Expression() : m_basic(integer(0)) {}
     //! Construct Expression from `int`
+    //! cannot be explicit (needed so by Piranha)
     Expression(int n) : m_basic(integer(n)) {}
     //! Construct Expression from Basic
 #if defined(HAVE_SYMENGINE_IS_CONSTRUCTIBLE)

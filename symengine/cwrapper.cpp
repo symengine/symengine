@@ -13,6 +13,7 @@
 #include <symengine/complex.h>
 #include <symengine/constants.h>
 #include <symengine/visitor.h>
+#include <symengine/printer.h>
 
 using SymEngine::Basic;
 using SymEngine::RCP;
@@ -20,12 +21,17 @@ using SymEngine::zero;
 using SymEngine::Symbol;
 using SymEngine::Rational;
 using SymEngine::Integer;
+using SymEngine::integer_class;
+using SymEngine::rational_class;
 using SymEngine::Number;
 using SymEngine::Complex;
 using SymEngine::rcp_static_cast;
 using SymEngine::is_a;
 using SymEngine::RCPBasicKeyLess;
 using SymEngine::set_basic;
+using SymEngine::get_mpz_t;
+using SymEngine::mp_get_ui;
+using SymEngine::mp_get_si;
 
 namespace SymEngine {
 
@@ -66,6 +72,46 @@ void basic_free_heap(basic_struct *s)
     delete s;
 }
 
+void basic_const_set(basic s, const char* c)
+{
+    s->m = SymEngine::constant(std::string(c));
+}
+
+void basic_const_zero(basic s)
+{
+    s->m = SymEngine::zero;
+}
+
+void basic_const_one(basic s)
+{
+    s->m = SymEngine::one;
+}
+
+void basic_const_minus_one(basic s)
+{
+    s->m = SymEngine::minus_one;
+}
+
+void basic_const_I(basic s)
+{
+    s->m = SymEngine::I;
+}
+
+void basic_const_pi(basic s)
+{
+    s->m = SymEngine::pi;
+}
+
+void basic_const_E(basic s)
+{
+    s->m = SymEngine::E;
+}
+
+void basic_const_EulerGamma(basic s)
+{
+    s->m = SymEngine::EulerGamma;
+}
+
 TypeID basic_get_type(const basic s) {
     return static_cast<TypeID>(s->m->get_type_code());
 }
@@ -77,50 +123,50 @@ void symbol_set(basic s, char* c)
 
 void integer_set_si(basic s, long i)
 {
-    s->m = SymEngine::integer(mpz_class(i));
+    s->m = SymEngine::integer(std::move(integer_class(i)));
 }
 
 void integer_set_ui(basic s, unsigned long i)
 {
-    s->m = SymEngine::integer(mpz_class(i));
+    s->m = SymEngine::integer(std::move(integer_class(i)));
 }
 
 void integer_set_mpz(basic s, const mpz_t i)
 {
-    s->m = SymEngine::integer(mpz_class(i));
+    s->m = SymEngine::integer(std::move(integer_class(i)));
 }
 
 void integer_set_str(basic s, char* c)
 {
-    s->m = SymEngine::integer(mpz_class(c, 10));
+    s->m = SymEngine::integer(std::move(integer_class(c)));
 }
 
 signed long integer_get_si(const basic s)
 {
     SYMENGINE_ASSERT(is_a<Integer>(*(s->m)));
-    return mpz_get_si((rcp_static_cast<const Integer>(s->m))->as_mpz().get_mpz_t());
+    return mp_get_si((rcp_static_cast<const Integer>(s->m))->as_mpz());
 }
 
 unsigned long integer_get_ui(const basic s)
 {
     SYMENGINE_ASSERT(is_a<Integer>(*(s->m)));
-    return mpz_get_ui((rcp_static_cast<const Integer>(s->m))->as_mpz().get_mpz_t());
+    return mp_get_ui((rcp_static_cast<const Integer>(s->m))->as_mpz());
 }
 
 void integer_get_mpz(mpz_t a, const basic s)
 {
     SYMENGINE_ASSERT(is_a<Integer>(*(s->m)));
-    mpz_set(a, (rcp_static_cast<const Integer>(s->m))->as_mpz().get_mpz_t());
+    mpz_set(a, get_mpz_t((rcp_static_cast<const Integer>(s->m))->as_mpz()));
 }
 
 void rational_set_si(basic s, long a, long b)
 {
-    s->m = SymEngine::Rational::from_mpq(mpq_class(a, b));
+    s->m = SymEngine::Rational::from_mpq(std::move(rational_class(a, b)));
 }
 
 void rational_set_ui(basic s, unsigned long a, unsigned long b)
 {
-    s->m = SymEngine::Rational::from_mpq(mpq_class(a, b));
+    s->m = SymEngine::Rational::from_mpq(std::move(rational_class(a, b)));
 }
 
 int rational_set(basic s, const basic a, const basic b)
@@ -136,7 +182,7 @@ int rational_set(basic s, const basic a, const basic b)
 
 void rational_set_mpq(basic s, const mpq_t i)
 {
-    s->m = SymEngine::Rational::from_mpq(mpq_class(i));
+    s->m = SymEngine::Rational::from_mpq(std::move(rational_class(i)));
 }
 
 void complex_set(basic s, const basic re, const basic im)
@@ -155,7 +201,7 @@ void complex_set_rat(basic s, const basic re, const basic im)
 
 void complex_set_mpq(basic s, const mpq_t re, const mpq_t im)
 {
-    s->m = SymEngine::Complex::from_mpq(mpq_class(re), mpq_class(im));
+    s->m = SymEngine::Complex::from_mpq(rational_class(re), rational_class(im));
 }
 
 int basic_diff(basic s, const basic expr, basic const symbol)
@@ -195,11 +241,6 @@ void basic_div(basic s, const basic a, const basic b)
     s->m = SymEngine::div(a->m, b->m);
 }
 
-void basic_neg(basic s, const basic a)
-{
-    s->m = SymEngine::neg(a->m);
-}
-
 int basic_eq(const basic a, const basic b)
 {
     return SymEngine::eq(*(a->m), *(b->m)) ? 1 : 0;
@@ -210,15 +251,44 @@ int basic_neq(const basic a, const basic b)
     return SymEngine::neq(*(a->m), *(b->m)) ? 1 : 0;
 }
 
-void basic_abs(basic s, const basic a)
-{
-    s->m = SymEngine::abs(a->m);
+
+#define IMPLEMENT_ONE_ARG_FUNC(func) \
+void basic_ ## func(basic s, const basic a) \
+{ \
+    s->m = SymEngine::func(a->m); \
 }
 
-void basic_expand(basic s, const basic a)
-{
-    s->m = SymEngine::expand(a->m);
-}
+IMPLEMENT_ONE_ARG_FUNC(expand);
+IMPLEMENT_ONE_ARG_FUNC(neg);
+IMPLEMENT_ONE_ARG_FUNC(abs);
+IMPLEMENT_ONE_ARG_FUNC(sin);
+IMPLEMENT_ONE_ARG_FUNC(cos);
+IMPLEMENT_ONE_ARG_FUNC(tan);
+IMPLEMENT_ONE_ARG_FUNC(csc);
+IMPLEMENT_ONE_ARG_FUNC(sec);
+IMPLEMENT_ONE_ARG_FUNC(cot);
+IMPLEMENT_ONE_ARG_FUNC(asin);
+IMPLEMENT_ONE_ARG_FUNC(acos);
+IMPLEMENT_ONE_ARG_FUNC(asec);
+IMPLEMENT_ONE_ARG_FUNC(acsc);
+IMPLEMENT_ONE_ARG_FUNC(atan);
+IMPLEMENT_ONE_ARG_FUNC(acot);
+IMPLEMENT_ONE_ARG_FUNC(sinh);
+IMPLEMENT_ONE_ARG_FUNC(cosh);
+IMPLEMENT_ONE_ARG_FUNC(tanh);
+IMPLEMENT_ONE_ARG_FUNC(csch);
+IMPLEMENT_ONE_ARG_FUNC(sech);
+IMPLEMENT_ONE_ARG_FUNC(coth);
+IMPLEMENT_ONE_ARG_FUNC(asinh);
+IMPLEMENT_ONE_ARG_FUNC(acosh);
+IMPLEMENT_ONE_ARG_FUNC(asech);
+IMPLEMENT_ONE_ARG_FUNC(acsch);
+IMPLEMENT_ONE_ARG_FUNC(atanh);
+IMPLEMENT_ONE_ARG_FUNC(acoth);
+IMPLEMENT_ONE_ARG_FUNC(lambertw);
+IMPLEMENT_ONE_ARG_FUNC(zeta);
+IMPLEMENT_ONE_ARG_FUNC(dirichlet_eta);
+IMPLEMENT_ONE_ARG_FUNC(gamma);
 
 char* basic_str(const basic s)
 {
@@ -431,6 +501,74 @@ void basic_subs(basic s, const basic e, const CMapBasicBasic *mapbb)
 void basic_subs2(basic s, const basic e, const basic a, const basic b)
 {
     s->m = e->m->subs({{a->m, b->m}});
+}
+
+// ----------------------
+
+char* ascii_art_str()
+{
+    std::string str = SymEngine::ascii_art();
+    auto cc = new char[str.length()+1];
+    std::strcpy(cc, str.c_str());
+    return cc;
+}
+
+// Cwrapper for ntheory 
+
+void ntheory_gcd(basic s, const basic a, const basic b)
+{
+    SYMENGINE_ASSERT(is_a<Integer>(*(a->m)));
+    SYMENGINE_ASSERT(is_a<Integer>(*(b->m)));
+    s->m = SymEngine::gcd(static_cast<const Integer &>(*(a->m)), static_cast<const Integer &>(*(b->m)));
+}
+
+void ntheory_lcm(basic s, const basic a, const basic b)
+{
+    SYMENGINE_ASSERT(is_a<Integer>(*(a->m)));
+    SYMENGINE_ASSERT(is_a<Integer>(*(b->m)));
+    s->m = SymEngine::lcm(static_cast<const Integer &>(*(a->m)), static_cast<const Integer &>(*(b->m)));
+}
+
+void ntheory_nextprime(basic s, const basic a)
+{
+    SYMENGINE_ASSERT(is_a<Integer>(*(a->m)));
+    s->m = SymEngine::nextprime(static_cast<const Integer &>(*(a->m)));
+}
+
+void ntheory_mod(basic s, const basic n, const basic d)
+{
+    SYMENGINE_ASSERT(is_a<Integer>(*(n->m)));
+    SYMENGINE_ASSERT(is_a<Integer>(*(d->m)));
+    s->m = SymEngine::mod(static_cast<const Integer &>(*(n->m)), static_cast<const Integer &>(*(d->m)));
+}
+
+void ntheory_quotient(basic s, const basic n, const basic d)
+{
+    SYMENGINE_ASSERT(is_a<Integer>(*(n->m)));
+    SYMENGINE_ASSERT(is_a<Integer>(*(d->m)));
+    s->m = SymEngine::quotient(static_cast<const Integer &>(*(n->m)), static_cast<const Integer &>(*(d->m)));
+}
+
+void ntheory_fibonacci(basic s, unsigned long a)
+{
+    s->m = SymEngine::fibonacci(a);
+}
+
+void ntheory_lucas(basic s, unsigned long a)
+{
+    s->m = SymEngine::lucas(a);
+}
+
+void ntheory_binomial(basic s, const basic a, unsigned long b)
+{
+    SYMENGINE_ASSERT(is_a<Integer>(*(a->m)));
+    s->m = SymEngine::binomial(static_cast<const Integer &>(*(a->m)), b);
+}
+
+//! Print stacktrace on segfault
+void symengine_print_stack_on_segfault()
+{
+    SymEngine::print_stack_on_segfault();
 }
 
 }

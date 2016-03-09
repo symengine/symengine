@@ -25,11 +25,11 @@ private:
 public:
     mpfr_ptr get_mpfr_t() { return mp; }
     mpfr_srcptr get_mpfr_t() const { return mp; }
-    mpfr_class(mpfr_t m) {
+    explicit mpfr_class(mpfr_t m) {
         mpfr_init2(mp, mpfr_get_prec(m));
         mpfr_set(mp, m, MPFR_RNDN);
     }
-    mpfr_class(mpfr_prec_t prec = 53) {
+    explicit mpfr_class(mpfr_prec_t prec = 53) {
         mpfr_init2(mp, prec);
     }
     mpfr_class(std::string s, mpfr_prec_t prec = 53, unsigned base = 10) {

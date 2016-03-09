@@ -91,6 +91,30 @@ if ((CMAKE_CXX_COMPILER_ID MATCHES Clang) AND (CMAKE_BUILD_TYPE STREQUAL "Releas
     endif()
 endif()
 
+
+set(INTEGER_CLASS "gmpxx"
+    CACHE STRING "Integer class for symengine. Either gmpxx or piranha")
+
+# Piranha
+set(WITH_PIRANHA no CACHE BOOL "Build with Piranha")
+
+# FLINT
+set(WITH_FLINT no CACHE BOOL "Build with Flint")
+set(HAVE_SYMENGINE_FLINT False)
+
+if ("${INTEGER_CLASS}" MATCHES "piranha")
+    set(SYMENGINE_INTEGER_CLASS "PIRANHA")
+    set(WITH_PIRANHA yes)
+elseif ("${INTEGER_CLASS}" MATCHES "flint")
+    set(SYMENGINE_INTEGER_CLASS "FLINT")
+    set(WITH_FLINT yes)
+elseif ("${INTEGER_CLASS}" MATCHES "gmpxx")
+    set(SYMENGINE_INTEGER_CLASS "GMPXX")
+    set(WITH_GMPXX yes)
+else()
+    set(SYMENGINE_INTEGER_CLASS "GMP")
+endif()
+
 # GMP
 find_package(GMP REQUIRED)
 include_directories(${GMP_INCLUDE_DIRS})
@@ -98,7 +122,7 @@ set(LIBS ${LIBS} ${GMP_TARGETS})
 set(PKGS ${PKGS} "GMP")
 
 # Check gmpxx
-if (NOT(MSVC))
+if (NOT(MSVC) AND WITH_GMPXX)
     try_compile(GMPXX "${CMAKE_CURRENT_BINARY_DIR}/cxx" "${CMAKE_SOURCE_DIR}/cmake/checkgmpxx.cpp"
         CMAKE_FLAGS "-DCOMPILE_DEFINITIONS=${CMAKE_CXX_FLAGS_RELEASE}"
         CMAKE_FLAGS "-DINCLUDE_DIRECTORIES=${GMP_INCLUDE_DIRS}"
@@ -150,6 +174,19 @@ set(WITH_MPC no
     CACHE BOOL "Build with MPC")
 set(HAVE_SYMENGINE_MPC False)
 
+if (WITH_FLINT)
+    find_package(FLINT REQUIRED)
+    include_directories(${FLINT_INCLUDE_DIRS})
+    set(LIBS ${LIBS} ${FLINT_TARGETS})
+    set(HAVE_SYMENGINE_FLINT True)
+    set(PKGS ${PKGS} "FLINT")
+
+    # Workaround for https://github.com/fredrik-johansson/arb/issues/24
+    include_directories(${FLINT_INCLUDE_DIRS}/flint)
+
+    set(WITH_MPFR yes)
+endif()
+
 if (WITH_ARB)
     find_package(FLINT REQUIRED)
     include_directories(${FLINT_INCLUDE_DIRS})
@@ -159,6 +196,8 @@ if (WITH_ARB)
     # Workaround for https://github.com/fredrik-johansson/arb/issues/24
     include_directories(${FLINT_INCLUDE_DIRS}/flint)
 
+    set(WITH_FLINT yes)
+    set(HAVE_SYMENGINE_FLINT True)
     set(WITH_MPFR yes)
 
     find_package(ARB REQUIRED)
@@ -176,10 +215,6 @@ if (WITH_MPC)
     set(WITH_MPFR yes)
     set(PKGS ${PKGS} "MPC")
 endif()
-
-# Piranha
-set(WITH_PIRANHA no
-    CACHE BOOL "Build with Piranha")
 
 # Boost
 set(WITH_BOOST no
@@ -337,6 +372,10 @@ if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(WITH_SYMENGINE_ASSERT yes) # Also enable assertions
 endif()
 
+if (WITH_COVERAGE)
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} --coverage")
+endif()
+
 enable_testing()
 add_subdirectory(symengine)
 
@@ -384,6 +423,7 @@ configure_file(cmake/SymEngineConfigVersion.cmake.in SymEngineConfigVersion.cmak
 
 install(FILES "${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/SymEngineConfig.cmake"
               ${PROJECT_BINARY_DIR}/SymEngineConfigVersion.cmake
+              cmake/FindFLINT.cmake
               cmake/FindARB.cmake
               cmake/FindBFD.cmake
               cmake/FindECM.cmake
@@ -423,6 +463,7 @@ message("CMAKE_CXX_FLAGS_DEBUG:   ${CMAKE_CXX_FLAGS_DEBUG}")
 message("CMAKE_CXX_FLAGS_RELEASE: ${CMAKE_CXX_FLAGS_RELEASE}")
 message("CMAKE_INSTALL_PREFIX: ${CMAKE_INSTALL_PREFIX}")
 
+message("INTEGER_CLASS : ${SYMENGINE_INTEGER_CLASS}")
 message("WITH_SYMENGINE_ASSERT: ${WITH_SYMENGINE_ASSERT}")
 message("WITH_SYMENGINE_RCP: ${WITH_SYMENGINE_RCP}")
 if (NOT WITH_SYMENGINE_RCP)
@@ -461,6 +502,12 @@ message("WITH_PRIMESIEVE: ${WITH_PRIMESIEVE}")
 if (WITH_PRIMESIEVE)
     message("PRIMESIEVE_INCLUDE_DIRS: ${PRIMESIEVE_INCLUDE_DIRS}")
     message("PRIMESIEVE_LIBRARIES: ${PRIMESIEVE_LIBRARIES}")
+endif()
+
+message("WITH_FLINT: ${WITH_FLINT}")
+if (WITH_FLINT)
+    message("FLINT_INCLUDE_DIRS: ${FLINT_INCLUDE_DIRS}")
+    message("FLINT_LIBRARIES: ${FLINT_LIBRARIES}")
 endif()
 
 message("WITH_ARB: ${WITH_ARB}")

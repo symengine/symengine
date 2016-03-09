@@ -18,21 +18,21 @@ public:
     //! `real_` : Real part of the complex Number
     //! `imaginary_` : Imaginary part of the complex Number
     // Complex Number is of the form `real + i(imaginary)`
-    mpq_class real_;
-    mpq_class imaginary_;
+    rational_class real_;
+    rational_class imaginary_;
 
 public:
     IMPLEMENT_TYPEID(COMPLEX)
     //! Constructor of Complex class
-    Complex(mpq_class real, mpq_class imaginary);
+    Complex(rational_class real, rational_class imaginary);
     /*! Creates an instance of Complex if imaginary part is non-zero
-     * \param `re` must already be in mpq_class canonical form
-     * \param `im` must already be in mpq_class canonical form
+     * \param `re` must already be in rational_class canonical form
+     * \param `im` must already be in rational_class canonical form
      * \return Complex or Rational depending on imaginary part.
      * */
-    static RCP<const Number> from_mpq(const mpq_class re, const mpq_class im);
+    static RCP<const Number> from_mpq(const rational_class re, const rational_class im);
     //! \return true if canonical
-    bool is_canonical(const mpq_class &real, const mpq_class &imaginary) const;
+    bool is_canonical(const rational_class &real, const rational_class &imaginary) const;
     //! \return size of the hash
     virtual std::size_t __hash__() const;
     /*! Equality comparator
@@ -153,8 +153,8 @@ public:
      * \param other of type Complex
      * */
     inline RCP<const Number> divcomp(const Complex &other) const {
-        mpq_class conjugate = other.real_*other.real_ + other.imaginary_*other.imaginary_;
-        if (conjugate.get_num() == 0) {
+        rational_class conjugate = other.real_*other.real_ + other.imaginary_*other.imaginary_;
+        if (get_num(conjugate) == 0) {
             throw std::runtime_error("Divide by zero.");
         } else {
             return from_mpq((this->real_ * other.real_ + this->imaginary_ * other.imaginary_)/ conjugate,
@@ -185,8 +185,8 @@ public:
      * \param other of type Integer
      * */
     inline RCP<const Number> rdivcomp(const Integer &other) const {
-        mpq_class conjugate = this->real_*this->real_ + this->imaginary_*this->imaginary_;
-        if (conjugate.get_num() == 0) {
+        rational_class conjugate = this->real_*this->real_ + this->imaginary_*this->imaginary_;
+        if (get_num(conjugate) == 0) {
             throw std::runtime_error("Divide by zero.");
         } else {
             return from_mpq((this->real_ * other.i) / conjugate, (this->imaginary_ * (-other.i)) / conjugate);

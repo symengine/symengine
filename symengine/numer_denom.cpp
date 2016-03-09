@@ -93,11 +93,11 @@ public:
         RCP<const Integer> den, den1, den2;
         RCP<const Integer> num1, num2;
 
-        num1 = integer(x.real_.get_num());
-        num2 = integer(x.imaginary_.get_num());
+        num1 = integer(get_num(x.real_));
+        num2 = integer(get_num(x.imaginary_));
 
-        den1 = integer(x.real_.get_den());
-        den2 = integer(x.imaginary_.get_den());
+        den1 = integer(get_den(x.real_));
+        den2 = integer(get_den(x.imaginary_));
         den = lcm(*den1, *den2);
 
         num1 = rcp_static_cast<const Integer>(mul(num1, div(den, den1)));
@@ -108,8 +108,8 @@ public:
     }
 
     void bvisit(const Rational &x) {
-        *numer_ = integer(x.i.get_num());
-        *denom_ = integer(x.i.get_den());
+        *numer_ = x.get_num();
+        *denom_ = x.get_den();
     }
 
     void bvisit(const Basic &x) {

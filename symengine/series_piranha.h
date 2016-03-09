@@ -22,10 +22,14 @@ public:
     IMPLEMENT_TYPEID(URATPSERIESPIRANHA)
     virtual int compare(const Basic &o) const;
     virtual std::size_t __hash__() const;
+    virtual RCP<const Basic> as_basic() const;
+    virtual umap_int_basic as_dict() const;
+    virtual RCP<const Basic> get_coeff(int) const;
+
     static RCP<const URatPSeriesPiranha> series(const RCP<const Basic> &t, const std::string &x,
                                                 unsigned int prec);
     static piranha::integer convert(const Integer &x);
-    static piranha::rational convert(const mpq_class &x);
+    static piranha::rational convert(const rational_class &x);
     static pp_t var(const std::string &s);
     static piranha::rational convert(const Rational &x);
     static piranha::rational convert(const Number &x);
@@ -47,6 +51,10 @@ public:
     IMPLEMENT_TYPEID(UPSERIESPIRANHA)
     virtual int compare(const Basic &o) const;
     virtual std::size_t __hash__() const;
+    virtual RCP<const Basic> as_basic() const;
+    virtual umap_int_basic as_dict() const;
+    virtual RCP<const Basic> get_coeff(int) const;
+
     static RCP<const UPSeriesPiranha> series(const RCP<const Basic> &t, const std::string &x,
                                                 unsigned int prec);
     static p_expr var(const std::string &s);

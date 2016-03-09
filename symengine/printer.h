@@ -5,6 +5,8 @@
 
 namespace SymEngine {
 
+std::string ascii_art();
+
 enum class PrecedenceEnum {
     Add, Mul, Pow, Atom
 };
@@ -25,7 +27,7 @@ public:
         precedence = PrecedenceEnum::Pow;
     }
 
-    void bvisit(const UnivariatePolynomial &x) {
+    void bvisit(const UnivariateIntPolynomial &x) {
         if (x.dict_.size() == 1) {
             auto it = x.dict_.begin();
             if (it->second == 0) {
@@ -130,7 +132,7 @@ public:
     void bvisit(const Add &x);
     void bvisit(const Mul &x);
     void bvisit(const Pow &x);
-    void bvisit(const UnivariatePolynomial &x);
+    void bvisit(const UnivariateIntPolynomial &x);
 #ifdef HAVE_SYMENGINE_PIRANHA
     void bvisit(const URatPSeriesPiranha &x);
     void bvisit(const UPSeriesPiranha &x);

@@ -15,17 +15,17 @@ namespace SymEngine {
 //! Rational Class
 class Rational : public Number {
 public:
-    //! `i` : object of `mpq_class`
-    mpq_class i;
+    //! `i` : object of `rational_class`
+    rational_class i;
 
 public:
     IMPLEMENT_TYPEID(RATIONAL)
     //! Constructor of Rational class
-    Rational(mpq_class i);
-    /*! \param `i` must already be in mpq_class canonical form
+    explicit Rational(rational_class i);
+    /*! \param `i` must already be in rational_class canonical form
     *   \return Integer or Rational depending on denumerator.
     * */
-    static RCP<const Number> from_mpq(const mpq_class i);
+    static RCP<const Number> from_mpq(rational_class i);
     //! \return size of the hash
     virtual std::size_t __hash__() const;
     /*! Equality comparator
@@ -35,7 +35,7 @@ public:
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
     //! \return true if canonical
-    bool is_canonical(const mpq_class &i) const;
+    bool is_canonical(const rational_class &i) const;
 
     /*! Constructs Rational as n/d, where n, d can be any Integers. If n/d is an
     *   Integer, it will return an Integer instead.
@@ -43,33 +43,28 @@ public:
     static RCP<const Number> from_two_ints(const Integer &n,
             const Integer &d);
     static RCP<const Number> from_two_ints(const long n, const long d);
-    //! Convert to `mpq_class`.
-    inline mpq_class as_mpq() const { return this->i; }
-    //! \return `true` if `num` is `0`
-    virtual bool is_zero() const { return this->i.get_num() == 0; }
-    //! \return `false` since `Rational` cannot be an `Integer`
-    virtual bool is_one() const { return false; }
-    //! \return `false` since `Rational` cannot be an `Integer`
-    virtual bool is_minus_one() const { return false; }
+    //! Convert to `rational_class`.
+    inline rational_class as_mpq() const { return this->i; }
+    //! \return `true` if `0`
+    virtual bool is_zero() const { return this->i == 0; }
+    //! \return `true` if `1`
+    virtual bool is_one() const { return this->i == 1; }
+    //! \return `true` if `-1`
+    virtual bool is_minus_one() const { return this->i == -1; }
+    //! \return `true` if denominator is `1`
+    inline bool is_int() const { return this->i == 1; }
     //! \return `true` if positive
     inline virtual bool is_positive() const {
-        return this->i.get_num() > 0;
+        return i > 0;
     }
     //! \return `true` if negative
     inline virtual bool is_negative() const {
-        return this->i.get_num() < 0;
+        return i < 0;
     }
-    //! \return negative of self
+
+    //! \return negative of `this`
     inline RCP<const Rational> neg() const {
-        return make_rcp<Rational>(-this->i);
-    }
-    //! \return numerator of self
-    inline RCP<const Integer> get_num() const {
-        return integer(this->i.get_num());
-    }
-    //! \return denominator of self
-    inline RCP<const Integer> get_den() const {
-        return integer(this->i.get_den());
+        return make_rcp<const Rational>(std::move(-i));
     }
 
     virtual bool is_perfect_power(bool is_expected=false) const;
@@ -80,40 +75,40 @@ public:
      * \param other of type Rational
      * */
     inline RCP<const Number> addrat(const Rational &other) const {
-        return from_mpq(this->i + other.i);
+        return from_mpq(std::move(this->i + other.i));
     }
     /*! Add Rationals
      * \param other of type Integer
      * */
     inline RCP<const Number> addrat(const Integer &other) const {
-        return from_mpq(this->i + other.i);
+        return from_mpq(std::move(this->i + other.i));
     }
     /*! Subtract Rationals
      * \param other of type Rational
      * */
     inline RCP<const Number> subrat(const Rational &other) const {
-        return from_mpq(this->i - other.i);
+        return from_mpq(std::move(this->i - other.i));
     }
     /*! Subtract Rationals
      * \param other of type Integer
      * */
     inline RCP<const Number> subrat(const Integer &other) const {
-        return from_mpq(this->i - other.i);
+        return from_mpq(std::move(this->i - other.i));
     }
     inline RCP<const Number> rsubrat(const Integer &other) const {
-        return from_mpq(other.i - this->i);
+        return from_mpq(std::move(other.i - this->i));
     }
     /*! Multiply Rationals
      * \param other of type Rational
      * */
     inline RCP<const Number> mulrat(const Rational &other) const {
-        return from_mpq(this->i * other.i);
+        return from_mpq(std::move(this->i * other.i));
     }
     /*! Multiply Rationals
      * \param other of type Integer
      * */
     inline RCP<const Number> mulrat(const Integer &other) const {
-        return from_mpq(this->i * other.i);
+        return from_mpq(std::move(this->i * other.i));
     }
     /*! Divide Rationals
      * \param other of type Rational
@@ -122,7 +117,7 @@ public:
         if (other.i == 0) {
             throw std::runtime_error("Division by zero");
         } else {
-            return from_mpq(this->i / other.i);
+            return from_mpq(std::move(this->i / other.i));
         }
     }
     /*! Divide Rationals
@@ -132,14 +127,14 @@ public:
         if (other.i == 0) {
             throw std::runtime_error("Division by zero");
         } else {
-            return from_mpq(this->i / other.i);
+            return from_mpq(std::move(this->i / other.i));
         }
     }
     inline RCP<const Number> rdivrat(const Integer &other) const {
         if (this->i == 0) {
             throw std::runtime_error("Division by zero");
         } else {
-            return from_mpq(other.i / this->i);
+            return from_mpq(std::move(other.i / this->i));
         }
     }
     /*! Raise Rationals to power `other`
@@ -147,21 +142,21 @@ public:
      * */
     inline RCP<const Number> powrat(const Integer &other) const {
         bool neg = other.is_negative();
-        mpz_class exp_ = other.i;
+        integer_class exp_ = other.i;
         if (neg) exp_ = -exp_;
-        if (not (exp_.fits_ulong_p()))
+        if (not mp_fits_ulong_p(exp_))
             throw std::runtime_error("powrat: 'exp' does not fit ulong.");
-        unsigned long exp = exp_.get_ui();
-        mpq_class val;
-        mpz_pow_ui(val.get_num_mpz_t(), this->i.get_num_mpz_t(), exp);
-        mpz_pow_ui(val.get_den_mpz_t(), this->i.get_den_mpz_t(), exp);
+        unsigned long exp = mp_get_ui(exp_);
+        rational_class val;
+        mp_pow_ui(SymEngine::get_num(val), SymEngine::get_num(i), exp);
+        mp_pow_ui(SymEngine::get_den(val), SymEngine::get_den(i), exp);
 
         // Since 'this' is in canonical form, so is this**other, so we simply
         // pass val into the constructor directly without canonicalizing:
         if (not neg) {
-            return Rational::from_mpq(val);
+            return Rational::from_mpq(std::move(val));
         } else {
-            return Rational::from_mpq(1 / val);
+            return Rational::from_mpq(std::move(1 / val));
         }
     }
     /*! Raise Rationals to power `other`
@@ -241,6 +236,14 @@ public:
     virtual RCP<const Number> rpow(const Number &other) const {
         throw std::runtime_error("Not implemented.");
     };
+
+    RCP<const Integer> get_num() const {
+        return integer(SymEngine::get_num(i));
+    }
+
+    RCP<const Integer> get_den() const {
+        return integer(SymEngine::get_den(i));
+    }
 };
 
 //! returns the `num` and `den` of rational `rat` as `RCP<const Integer>`

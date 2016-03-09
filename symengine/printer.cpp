@@ -5,6 +5,15 @@
 
 namespace SymEngine {
 
+std::string ascii_art() {
+    std::string a = " _____           _____         _         \n"
+                    "|   __|_ _ _____|   __|___ ___|_|___ ___ \n"
+                    "|__   | | |     |   __|   | . | |   | -_|\n"
+                    "|_____|_  |_|_|_|_____|_|_|_  |_|_|_|___|\n"
+                    "      |___|               |___|          \n";
+    return a;
+}
+
 void StrPrinter::bvisit(const Basic &x) {
     std::ostringstream s;
     s << "<" << typeName<Basic>(x) << " instance at " << (const void*)this << ">";
@@ -32,24 +41,24 @@ void StrPrinter::bvisit(const Complex &x) {
     if (x.real_ != 0) {
         s << x.real_;
         // Since Complex is in canonical form, imaginary_ is not 0.
-        if (sgn(x.imaginary_) == 1) {
+        if (mp_sign(x.imaginary_) == 1) {
             s << " + ";
         } else {
             s << " - ";
         }
         // If imaginary_ is not 1 or -1, print the absolute value
-        if (x.imaginary_ != sgn(x.imaginary_)) {
-            s << abs(x.imaginary_);
+        if (x.imaginary_ != mp_sign(x.imaginary_)) {
+            s << mp_abs(x.imaginary_);
             s << "*I";
         } else {
             s << "I";
         }
     } else {
-        if (x.imaginary_ != sgn(x.imaginary_)) {
+        if (x.imaginary_ != mp_sign(x.imaginary_)) {
             s << x.imaginary_;
             s << "*I";
         } else {
-            if (sgn(x.imaginary_) == 1) {
+            if (mp_sign(x.imaginary_) == 1) {
                 s << "I";
             } else {
                 s << "-I";
@@ -233,8 +242,8 @@ void StrPrinter::bvisit(const Pow &x) {
     str_ = o.str();
 }
 
-//UnivariatePolynomial printing, tests taken from SymPy and printing ensures that there is compatibility
-void StrPrinter::bvisit(const UnivariatePolynomial &x) {
+//UnivariateIntPolynomial printing, tests taken from SymPy and printing ensures that there is compatibility
+void StrPrinter::bvisit(const UnivariateIntPolynomial &x) {
     std::ostringstream s;
     //bool variable needed to take care of cases like -5, -x, -3*x etc.
     bool first = true;
@@ -248,7 +257,7 @@ void StrPrinter::bvisit(const UnivariatePolynomial &x) {
             ++it;
         }
         //if the coefficient of a term is +1 or -1
-        else if (abs(it->second) == 1) {
+        else if (mp_abs(it->second) == 1) {
             //if exponent is 0, then print only coefficient
             //in cases of -7, it is the only term, hence we print -7
             //in cases of x - 7, the '-' is considered earlier, hence print only 7
@@ -256,7 +265,7 @@ void StrPrinter::bvisit(const UnivariatePolynomial &x) {
                 if (first)
                     s << it->second;
                 else
-                    s << abs(it->second);
+                    s << mp_abs(it->second);
             }
             //if exponent is 1, print x instead of x**1
             else if (it->first == 1) {
@@ -290,15 +299,15 @@ void StrPrinter::bvisit(const UnivariatePolynomial &x) {
                 if (first)
                     s << it->second;
                 else
-                    s << abs(it->second);
+                    s << mp_abs(it->second);
             } else if (it->first == 1) {
                 if (first and it->second < 0) {
                     s << it->second << "*" << x.var_->get_name();
                 } else {
-                    s << abs(it->second) << "*" << x.var_->get_name();
+                    s << mp_abs(it->second) << "*" << x.var_->get_name();
                 }
             } else {
-                s << abs(it->second) << "*" << x.var_->get_name() << "**"  << it->first;
+                s << mp_abs(it->second) << "*" << x.var_->get_name() << "**" << it->first;
             }
             if ((++it != x.dict_.rend()) and (it->second != 0)) {
                 if (it->second < 0) {
@@ -311,17 +320,19 @@ void StrPrinter::bvisit(const UnivariatePolynomial &x) {
         //corner cases of only first term handled successfully, switch the bool
         first = false;
     }
+    if (x.dict_.size() == 0)
+        s << "0";
     str_ = s.str();
 }
 #ifdef HAVE_SYMENGINE_PIRANHA
 void StrPrinter::bvisit(const URatPSeriesPiranha &x) {
     std::ostringstream o;
-    o << x.p_ << " + O(" << x.var_ << "**" << x.degree_ << ")";
+    o << x.get_poly() << " + O(" << x.get_var() << "**" << x.get_degree() << ")";
     str_ = o.str();
 }
 void StrPrinter::bvisit(const UPSeriesPiranha &x) {
     std::ostringstream o;
-    o << x.p_ << " + O(" << x.var_ << "**" << x.degree_ << ")";
+    o << x.get_poly() << " + O(" << x.get_var() << "**" << x.get_degree() << ")";
     str_ = o.str();
 }
 #endif
@@ -438,10 +449,13 @@ std::vector<std::string> init_str_printer_names() {
     names[ACOT] = "acot";
     names[ATAN2] = "atan2";
     names[SINH] = "sinh";
+    names[CSCH] = "csch";
     names[COSH] = "cosh";
+    names[SECH] = "sech";
     names[TANH] = "tanh";
     names[COTH] = "coth";
     names[ASINH] = "asinh";
+    names[ACSCH] = "acsch";
     names[ACOSH] = "acosh";
     names[ATANH] = "atanh";
     names[ACOTH] = "acoth";
@@ -454,8 +468,12 @@ std::vector<std::string> init_str_printer_names() {
     names[LOWERGAMMA] = "lowergamma";
     names[UPPERGAMMA] = "uppergamma";
     names[UPPERGAMMA] = "beta";
+    names[LOGGAMMA] = "loggamma";
     names[POLYGAMMA] = "polygamma";
+    names[GAMMA] = "gamma";
     names[ABS] = "abs";
+    names[MAX] = "max";
+    names[MIN] = "min";
     return names;
 }
 

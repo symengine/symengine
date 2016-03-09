@@ -13,7 +13,7 @@ namespace SymEngine {
 
 // Prime Functions
 //! Probabilistic Prime
-int probab_prime_p(const Integer &a, int reps = 25);
+int probab_prime_p(const Integer &a, unsigned reps = 25);
 //! \return next prime after `a`
 RCP<const Integer> nextprime(const Integer &a);
 
@@ -157,6 +157,8 @@ int legendre(const Integer &a, const Integer &n);
 int jacobi(const Integer &a, const Integer &n);
 //! Kronecker Function
 int kronecker(const Integer &a, const Integer &n);
+// Returns whether Solution for x**n == a mod p**k exists or not
+bool is_nthroot_mod_prime_power(const mpz_class &a, const mpz_class &n, const mpz_class &p, const unsigned k);
 //! All Solutions to x**n == a mod m. Return false if none exists.
 void nthroot_mod_list(std::vector<RCP<const Integer>> &roots, const RCP<const Integer> &a,
         const RCP<const Integer> &n, const RCP<const Integer> &m);
@@ -181,5 +183,8 @@ bool is_quad_residue(const Integer &a , const Integer &p);
 // mu(n) = −1 if n is a square-free positive integer with an odd number of prime factors
 // mu(n) = 0 if n has a squared prime factor
 int mobius(const Integer &a);
+//Mertens Function
+//mertens(n) -> Sum of mobius(i) for i from 1 to n
+long mertens(const unsigned long a);
 }
 #endif
