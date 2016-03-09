@@ -25,8 +25,7 @@ bool UnivariateIntPolynomial::is_canonical(const unsigned int &degree_, const ma
         unsigned int prev_degree = (--dict.end())->first;
         if (prev_degree != degree_)
             return false;
-    } 
-    else if (0 != degree_)
+    } else if (0 != degree_)
         return false;
     
     //Check if dictionary contains terms with coeffienct 0
@@ -77,7 +76,7 @@ RCP<const UnivariateIntPolynomial> UnivariateIntPolynomial::from_dict(const RCP<
             d.erase(toErase);
         } else {
             itter++;
-      }
+        }
     }
     unsigned int degree = 0;
     if(!d.empty())
@@ -106,18 +105,20 @@ void UnivariateIntPolynomial::dict_add_term(map_uint_mpz &d, const integer_class
 vec_basic UnivariateIntPolynomial::get_args() const {
     vec_basic args;
     for (const auto &p: dict_) {
-        if (p.first == 0)
+        if (p.first == 0) {
             args.push_back( integer(p.second));
-        else if (p.first == 1) {
-            if (p.second == 1)
+        } else if (p.first == 1) {
+            if (p.second == 1) {
                 args.push_back(var_);
-            else
+            } else { 
                 args.push_back(Mul::from_dict(integer(p.second), {{var_, one}}));
-        } else {
-            if (p.second == 1)
-              args.push_back(pow(var_, integer(p.first)));
-            else
-              args.push_back(Mul::from_dict(integer(p.second), {{var_, integer(p.first)}}));
+            }
+          } else {
+            if (p.second == 1) {
+                args.push_back(pow(var_, integer(p.first)));
+            } else {
+                args.push_back(Mul::from_dict(integer(p.second), {{var_, integer(p.first)}}));
+            }
         }
     }
     if (dict_.empty())
@@ -171,20 +172,28 @@ bool UnivariateIntPolynomial::is_integer() const {
         return true;
     if (dict_.size() == 1 and dict_.begin()->first == 0)
         return true;
-    return false;  
+    return false;
 }
 
 bool UnivariateIntPolynomial::is_symbol() const {
-    return dict_.size() == 1 and dict_.begin()->first == 1 and
-        dict_.begin()->second == 1;
+    if (dict_.size() == 1 and dict_.begin()->first == 1 and
+        dict_.begin()->second == 1)
+        return true;
+    return false;
 }
 
 bool UnivariateIntPolynomial::is_mul() const {
-    return dict_.size() == 1 and dict_.begin()->first != 0 and dict_.begin()->second != 1 and dict_.begin()->second != 0;
+    if (dict_.size() == 1 and dict_.begin()->first != 0 and
+              dict_.begin()->second != 1 and dict_.begin()->second != 0)
+        return true;
+    return false;
 }
 
 bool UnivariateIntPolynomial::is_pow() const {
-    return dict_.size() == 1 and dict_.begin()->second == 1 and dict_.begin()->first != 1 and dict_.begin()->first != 0;
+    if (dict_.size() == 1 and dict_.begin()->second == 1 and
+              dict_.begin()->first != 1 and dict_.begin()->first != 0)
+        return true;
+    return false;
 }   
     
 RCP<const UnivariateIntPolynomial> add_poly(const UnivariateIntPolynomial &a, const UnivariateIntPolynomial &b) {

@@ -97,7 +97,7 @@ public:
     }
     //! Overload Division
     friend Expression operator/(const Expression &a, const Expression &b)
-    { 
+    {
         return Expression(div(a.m_basic, b.m_basic));
     }
     //! Overload Division and assignment (/=)
