@@ -279,10 +279,11 @@ public:
         }
 
         if (!is_a<Integer>(*self.get_exp()) || !is_a<Add>(*_base)) {
-            if (neq(*_base, *self.get_base()))
+            if (neq(*_base, *self.get_base())) {
                 Add::dict_add_term(d_, multiply, pow(_base, self.get_exp()));
-            else 
+            } else { 
                 Add::dict_add_term(d_, multiply, self.rcp_from_this());
+            }
             return;
         }
 

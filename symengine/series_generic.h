@@ -8,7 +8,6 @@
 
 #include <list>
 #include <symengine/polynomial.h>
-#include <gmp.h>
 
 namespace SymEngine {
 //! UnivariateSeries Class
