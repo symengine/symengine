@@ -2104,6 +2104,10 @@ TEST_CASE("Zeta: functions", "[functions]")
     r2 = rational(-119, 120);
     REQUIRE(eq(*r1, *r2));
 
+    r1 = zeta(integer(-5), integer(3));
+    r2 = rational(-8317, 252);
+    REQUIRE(eq(*r1, *r2));
+
     r1 = zeta(integer(3), i2);
     REQUIRE(r1->__str__() == "zeta(3, 2)");
 
