@@ -9,16 +9,16 @@
 #include <symengine/basic.h>
 #include <symengine/functions.h>
 #include <symengine/number.h>
-#include <symengine/integer.h>
 #include <symengine/rational.h>
+#include <symengine/complex.h>
 
 
 namespace SymEngine {
 
 class Interval : public Basic  {
 	public:
-		rational_class start_;
-		rational_class end_;
+		RCP<const Number> start_;
+		RCP<const Number> end_;
 		bool left_open_, right_open_;
 	public:
 		IMPLEMENT_TYPEID(INTERVAL)
@@ -27,11 +27,7 @@ class Interval : public Basic  {
 		virtual int compare(const Basic &o) const;
 		virtual vec_basic get_args() const { return {}; }
 
-		Interval(rational_class real, rational_class end, bool left_open = false, bool right_open = false);
-
-		static RCP<const Interval> from_mpq(const rational_class start, const rational_class end, const bool left_open = false, const bool right_open = false);
-
-		static RCP<const Interval> from_two_nums(const Number &start, const Number &end,  const bool left_open = false, const bool right_open = false);
+		Interval(const RCP<const Number> &start, const RCP<const Number> &end, const bool left_open = false, const bool right_open = false);
 
 		RCP<const Interval> open() const;
 
@@ -41,20 +37,26 @@ class Interval : public Basic  {
 
 		RCP<const Interval> Ropen() const;
 
-		bool is_canonical(const rational_class &start, const rational_class &end, bool left_open, bool right_open) const;
+		bool is_canonical(const RCP<const Number> &start, const RCP<const Number> &end, bool left_open, bool right_open) const;
 
-		RCP<const Interval> interval_union(const Interval &second) const;
+		RCP<const Interval> interval_union(const Interval &other) const;
 
-		RCP<const Interval> interval_intersection(const Interval &second) const;
+		RCP<const Interval> interval_intersection(const Interval &other) const;
 
-		bool is_subset(const Interval &second) const;
+		bool is_subset(const Interval &other) const;
 
-		bool is_proper_subset (const Interval &second) const;
+		bool is_proper_subset (const Interval &other) const;
 
-		bool is_superset(const Interval &second) const;
+		bool is_superset(const Interval &other) const;
 
-		bool is_proper_superset(const Interval &second) const;
+		bool is_proper_superset(const Interval &other) const;
 	};
+
+//! \return RCP<const Interval>
+inline RCP<const Interval> interval(const RCP<const Number> &start, const RCP<const Number> &end, const bool left_open = false, const bool right_open = false)
+{
+	return make_rcp<const Interval>(start, end, left_open, right_open);
+}
 
 }
 #endif

@@ -105,7 +105,7 @@ void StrPrinter::bvisit(const Interval &x) {
         s << "(";
     else
         s << "[";
-    s<<x.start_<<", "<<x.end_;
+    s<<*x.start_<<", "<<*x.end_;
     if (x.right_open_)
         s << ")";
     else
