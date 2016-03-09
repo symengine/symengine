@@ -1522,11 +1522,19 @@ bool is_quad_residue(const Integer &a, const Integer &p)
         if((p2 % 2 == 1 ) && jacobi(*integer(a_final), p) == -1)
             return false;
 
-        RCP<const Integer> x;
         const RCP<const Integer> a1 = integer(a_final);
         const RCP<const Integer> p1 = integer(p2);
 
-        return nthroot_mod(outArg(x), a1, integer(2), p1);
+        map_integer_uint prime_mul;
+        prime_factor_multiplicities(prime_mul, *p1);
+        bool ret_val;
+
+        std::vector<RCP<const Integer>> rem;
+        for (const auto &it: prime_mul) {
+            ret_val = _nthroot_mod_prime_power(rem, a1->as_mpz(), integer(2)->as_mpz(), it.first->as_mpz(), it.second, false);
+            if(not ret_val) return false;
+        }
+        return true;
     }
 
     return mpz_legendre(a_final.get_mpz_t(), p2.get_mpz_t()) == 1;
