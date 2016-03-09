@@ -604,7 +604,7 @@ RCP<const Number> bernoulli(unsigned long n) {
 #endif
 }
 
-RCP<const Number> harmonic(unsigned long n, unsigned long m) {
+RCP<const Number> harmonic(unsigned long n, long m) {
     rational_class res(0);
     if (m == 1) {
         for (unsigned i = 1; i <= n; ++i) {
@@ -613,9 +613,15 @@ RCP<const Number> harmonic(unsigned long n, unsigned long m) {
         return Rational::from_mpq(res);
     } else {
         for (unsigned i = 1; i <= n; ++i) {
-            rational_class t(1, i);
-            mp_pow_ui(get_den(t), get_den(t), m);
-            res += t;
+            if (m > 0) {
+                rational_class t(1u, i);
+                mp_pow_ui(get_den(t), get_den(t), m);
+                res += t;
+            } else {
+                integer_class t(i);
+                mp_pow_ui(t, t, -m);
+                res += t;
+            }
         }
         return Rational::from_mpq(res);
     }
