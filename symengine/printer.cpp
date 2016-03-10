@@ -369,7 +369,7 @@ void StrPrinter::bvisit(const UnivariatePolynomial &x) {
                 //if next term is going to be 0, don't print +, so that x**3 + 0 + x becomes x**3 + x
                 //also consider that sign of term here itself to avoid prints like x + -1
                 if ((++it != x.get_dict().rend()) and (it->second != 0)) {
-                    if (it->second < 0 or (is_a<Mul>(*it->second.get_basic()) and (rcp_static_cast<const Mul>(it->second.get_basic ()))->coef_->is_negative())
+                    if ((it->second.get_basic()->__cmp__(*Expression(0).get_basic()) < 0) or (is_a<Mul>(*it->second.get_basic()) and (rcp_static_cast<const Mul>(it->second.get_basic ()))->coef_->is_negative())
                         or (is_a<Pow>(*it->second.get_basic()) and (rcp_static_cast<const Mul>((rcp_static_cast<const Pow>(it->second.get_basic()))->get_base()))->coef_->is_negative())) {
                         s << " - ";
                     } else {
@@ -387,7 +387,7 @@ void StrPrinter::bvisit(const UnivariatePolynomial &x) {
                     s << Expression(abs(it->second.get_basic())) << "*" << x.get_var()->get_name() << "**"  << it->first;
                 }
                 if ((++it != x.get_dict().rend()) and (it->second != 0)) {
-                    if (it->second < 0 or (is_a<Mul>(*it->second.get_basic()) and (rcp_static_cast<const Mul>(it->second.get_basic()))->coef_->is_negative())
+                    if ((it->second.get_basic()->__cmp__(*Expression(0).get_basic()) < 0) or (is_a<Mul>(*it->second.get_basic()) and (rcp_static_cast<const Mul>(it->second.get_basic()))->coef_->is_negative())
                         or (is_a<Pow>(*it->second.get_basic()) and (rcp_static_cast<const Mul>((rcp_static_cast<const Pow>(it->second.get_basic()))->get_base()))->coef_->is_negative())) {
                         s << " - ";
                     } else {
@@ -406,7 +406,7 @@ void StrPrinter::bvisit(const UnivariatePolynomial &x) {
                     s << Expression(it->second.get_basic()) << "*" << x.get_var()->get_name() << "**"  << it->first;
 
                 if (++it != x.get_dict().rend()) {
-                    if (it->second < 0 or (is_a<Mul>(*it->second.get_basic()) and (rcp_static_cast<const Mul>(it->second.get_basic()))->coef_->is_negative())
+                    if ((it->second.get_basic()->__cmp__(*Expression(0).get_basic()) < 0)or (is_a<Mul>(*it->second.get_basic()) and (rcp_static_cast<const Mul>(it->second.get_basic()))->coef_->is_negative())
                         or (is_a<Pow>(*it->second.get_basic()) and (rcp_static_cast<const Mul>((rcp_static_cast<const Pow>(it->second.get_basic()))->get_base()))->coef_->is_negative())) {
                         s << " - ";
                     } else {
@@ -451,7 +451,7 @@ void StrPrinter::bvisit(const UnivariatePolynomial &x) {
                 }
 
                 if (++it != x.get_dict().rend() and (it->second != 0)) {
-                    if (it->second < 0 or (is_a<Mul>(*it->second.get_basic()) and (rcp_static_cast<const Mul>(it->second.get_basic()))->coef_->is_negative())
+                    if ((it->second.get_basic()->__cmp__(*Expression(0).get_basic()) < 0) or (is_a<Mul>(*it->second.get_basic()) and (rcp_static_cast<const Mul>(it->second.get_basic()))->coef_->is_negative())
                         or (is_a<Pow>(*it->second.get_basic()) and (rcp_static_cast<const Mul>((rcp_static_cast<const Pow>(it->second.get_basic()))->get_base()))->coef_->is_negative())) {
                         s << " - ";
                     } else {

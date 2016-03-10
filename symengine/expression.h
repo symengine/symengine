@@ -112,11 +112,6 @@ public:
         return eq(*m_basic, *other.m_basic);
     }
     
-    bool operator<(const Expression &other) const
-    {
-        return m_basic->__cmp__(*other.m_basic) == -1;
-    }
-     
     //! Overload check not equal (!=)
     bool operator!=(const Expression &other) const
     {
