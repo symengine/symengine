@@ -45,7 +45,6 @@ static RCP<const Basic> diff(const CLASS &self, \
     DIFF0(Dirichlet_eta)
     DIFF0(UpperGamma)
     DIFF0(LowerGamma)
-    DIFF0(PolyGamma)
     DIFF0(LeviCivita)
     DIFF0(Max)
     DIFF0(Min)
@@ -202,12 +201,19 @@ static RCP<const Basic> diff(const CLASS &self, \
         return ret;
     }
 
+    static inline RCP<const Symbol> get_dummy(const Basic &b, std::string name) {
+        RCP<const Symbol> s;        
+        do {
+            name = "_" + name;
+            s = symbol(name);
+        } while (has_symbol(b, s));
+        return s;
+    }
+
     static RCP<const Basic> diff(const FunctionSymbol &self,
             const RCP<const Symbol> &x) {
         RCP<const Basic> diff = zero, t;
         RCP<const Basic> self_ = self.rcp_from_this();
-        RCP<const Symbol> s;
-        std::string name;
         unsigned count  = 0;
         bool found_x = false;
         for (const auto &a : self.get_args()) {
@@ -224,13 +230,8 @@ static RCP<const Basic> diff(const CLASS &self, \
         for (unsigned i = 0; i < self.get_args().size(); i++) {
             t = self.get_args()[i]->diff(x);
             if (neq(*t, *zero)) {
-                name = "x";
-                do {
-                    name = "_" + name;
-                    s = symbol(name);
-                } while (has_symbol(*self_, s));
                 vec_basic v = self.get_args();
-                v[i] = s;
+                v[i] = get_dummy(self, "x");
                 map_basic_basic m;
                 insert(m, v[i], self.get_args()[i]);
                 diff = add(diff, mul(t,
@@ -402,6 +403,24 @@ static RCP<const Basic> diff(const CLASS &self, \
             const RCP<const Symbol> &x) {
         RCP<const Basic> gamma_arg = self.get_args()[0];
         return mul(mul(self.rcp_from_this(), polygamma(zero, gamma_arg)), gamma_arg->diff(x));
+    }
+
+    static RCP<const Basic> diff(const PolyGamma &self,
+            const RCP<const Symbol> &x) {
+        auto args = self.get_args();
+        auto f = args[0]->diff(x);
+        if (neq(*f, *zero)) {
+            auto g = args[1]->diff(x);
+            if (eq(*args[0], *x) and eq(*g, *zero)) {
+                return Derivative::create(self.rcp_from_this(), {x}); 
+            } else {
+                auto s = get_dummy(self, "x");
+                map_basic_basic m({{s, args[0]}});
+                f = mul(f, make_rcp<const Subs>(Derivative::create(polygamma(s, args[1]), {s}), m));
+                return add(mul(polygamma(add(args[0], one), args[1]), g), f);
+            }
+        }
+        return mul(polygamma(add(args[0], one), args[1]), args[1]->diff(x));
     }
 
     static RCP<const Basic> diff(const LogGamma &self,
