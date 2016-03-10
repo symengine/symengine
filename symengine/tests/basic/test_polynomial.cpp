@@ -42,8 +42,14 @@ TEST_CASE("Adding two UnivariateIntPolynomial", "[UnivariateIntPolynomial]")
     RCP<const Symbol> x  = symbol("x");
     RCP<const UnivariateIntPolynomial> a = univariate_int_polynomial(x, {{0, 1_z}, {1, 2_z}, {2, 1_z}});
     RCP<const UnivariateIntPolynomial> b = univariate_int_polynomial(x, {{0, 2_z}, {1, 3_z}, {2, 4_z}});
-    RCP<const Basic> c = add_poly(a, b);
+    RCP<const Basic> c;
 
+    // using add() returns RCP<const Basic> (must be casted if to be used further as a poly)
+    c = add(a, b);
+    REQUIRE(c->__str__() == "5*x**2 + 5*x + 3");
+
+    // using add_poly() returns RCP<const UnivariateIntPoly>
+    c = add_poly(a, b);
     REQUIRE(c->__str__() == "5*x**2 + 5*x + 3");
 }
 
@@ -62,7 +68,14 @@ TEST_CASE("Subtracting two UnivariateIntPolynomial", "[UnivariateIntPolynomial]"
     RCP<const UnivariateIntPolynomial> a = univariate_int_polynomial(x, {{0, 1_z}, {1, 2_z}, {2, 1_z}});
     RCP<const UnivariateIntPolynomial> b = univariate_int_polynomial(x, {{0, 2_z}, {1, 3_z}, {2, 4_z}});
 
-    RCP<const Basic> c = sub_poly(b, a);
+    RCP<const Basic> c;
+
+    // using sub() returns RCP<const Basic> (must be casted if to be used further as a poly)
+    c = sub(b, a);
+    REQUIRE(c->__str__() == "3*x**2 + x + 1");
+
+    // using sub_poly() returns RCP<const UnivariateIntPoly>
+    c = sub_poly(b, a);
     REQUIRE(c->__str__() == "3*x**2 + x + 1");
 }
 
@@ -73,9 +86,7 @@ TEST_CASE("Multiplication of two UnivariateIntPolynomial", "[UnivariateIntPolyno
     RCP<const UnivariateIntPolynomial> b = univariate_int_polynomial(x, {{0, -1_z}, {1, -2_z}, {2, -1_z}});
 
     RCP<const UnivariateIntPolynomial> c = mul_poly(a, a);
-    //std::cout<<c->__str__();
     RCP<const UnivariateIntPolynomial> d = mul_poly(a, b);
-    //std::cout<<c->__str__();
 
     REQUIRE(c->__str__() == "x**4 + 4*x**3 + 6*x**2 + 4*x + 1");
     REQUIRE(d->__str__() == "-x**4 - 4*x**3 - 6*x**2 - 4*x - 1");
@@ -106,9 +117,7 @@ TEST_CASE("Derivative of UnivariateIntPolynomial", "[UnivariateIntPolynomial]")
     RCP<const UnivariateIntPolynomial> a = univariate_int_polynomial(x, {{0, 1_z}, {1, 2_z}, {2, 1_z}});
 
     REQUIRE(a->diff(x)->__str__() == "2*x + 2");
-	//std::cout<<a->diff(x)->__str__()<<std::endl;
     REQUIRE(a->diff(y)->__str__() == "0");
-	//std::cout<<a->diff(y)->__str__()<<std::endl;
 }
 
 TEST_CASE("Bool checks specific UnivariateIntPolynomial cases", "[UnivariateIntPolynomial]")
@@ -152,7 +161,5 @@ TEST_CASE("Univariate Polynomial expand", "[UnivariateIntPolynomial][expand]")
     RCP<const Basic> c = expand(b);
 
     REQUIRE(b->__str__() == "(x**3 + x**2 + x)**3");
-    //std::cout<<b->__str__()<<std::endl;
     REQUIRE(c->__str__() == "x**9 + 3*x**8 + 6*x**7 + 7*x**6 + 6*x**5 + 3*x**4 + x**3");
-    //std::cout<<c->__str__()<<std::endl;
 }
