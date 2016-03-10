@@ -52,9 +52,6 @@ inline std::ostream& print_vec_rcp(std::ostream& out, T& d)
     return out;
 }
 
-} // SymEngine
-
-
 std::ostream& operator<<(std::ostream& out, const SymEngine::umap_basic_num& d)
 {
     return print_map_rcp(out, d);
@@ -104,9 +101,6 @@ std::ostream& operator<<(std::ostream& out, const SymEngine::set_basic& d)
 {
     return print_vec_rcp(out, d);
 }
-
-
-namespace SymEngine {
 
 bool vec_basic_eq(const vec_basic &a, const vec_basic &b)
 {

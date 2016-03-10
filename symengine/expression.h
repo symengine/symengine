@@ -140,9 +140,9 @@ inline Expression coeff(const Expression &y, const Expression &x, const Expressi
 
 std::string poly_print(const Expression &x);
 
-} // SymEngine
-
 std::ostream &operator<<(std::ostream &os, const SymEngine::Expression &f);
+
+} // SymEngine
 
 #ifdef HAVE_SYMENGINE_PIRANHA
 
