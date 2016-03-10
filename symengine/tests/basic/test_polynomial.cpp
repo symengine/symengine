@@ -176,3 +176,17 @@ TEST_CASE("Constructing MultivariateIntPolynomial using from_dict", "[Multivaria
 
 }
 
+TEST_CASE("Testing MultivariateIntPolynomial::__eq__()", "[MultivariateIntPolynomial]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    RCP<const MultivariateIntPolynomial> p1 = MultivariateIntPolynomial::from_dict({x,y}, {{{2,0},1_z}, {{1,1},1_z}, {{0,2},1_z}  });
+    RCP<const MultivariateIntPolynomial> p2 = MultivariateIntPolynomial::from_dict({x,y}, {{{2,0},1_z}, {{1,1},-1_z}, {{0,2},1_z}  });
+    RCP<const MultivariateIntPolynomial> p3 = MultivariateIntPolynomial::from_dict({x,y}, {{{2,0},2_z}, {{0,2},2_z}  });
+
+    std::cout << p1->toString() << " == " << add_mult_poly(*p1, *p2)->toString() << std::endl;
+    REQUIRE(p1->__eq__(*p1));
+    REQUIRE(!(p2->__eq__(*p1)));
+    REQUIRE(p3->__eq__( *add_mult_poly(*p1, *p2) ));
+
+}
