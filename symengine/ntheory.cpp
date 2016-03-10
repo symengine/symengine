@@ -578,8 +578,7 @@ unsigned Sieve::iterator::next_prime()
     return SymEngine::Sieve::_primes[_index++];
 }
 
-RCP<const Number> bernoulli(unsigned long n)
-{
+RCP<const Number> bernoulli(unsigned long n) {
 #ifdef HAVE_SYMENGINE_ARB
     fmpq_t res;
     fmpq_init(res);
@@ -592,8 +591,40 @@ RCP<const Number> bernoulli(unsigned long n)
     mpq_clear(a);
     return Rational::from_mpq(std::move(b));
 #else
-    throw std::runtime_error("Currently supported only if ARB is installed");
+    // TODO: implement a faster algorithm
+    std::vector<rational_class> v(n+1);
+    for (unsigned m = 0; m <= n; ++m) {
+        v[m] = rational_class(1, m + 1);
+
+        for (unsigned j = m; j >= 1; --j) {
+            v[j - 1] = j * (v[j - 1] - v[j]);
+        }
+    }
+    return Rational::from_mpq(v[0]);
 #endif
+}
+
+RCP<const Number> harmonic(unsigned long n, long m) {
+    rational_class res(0);
+    if (m == 1) {
+        for (unsigned i = 1; i <= n; ++i) {
+            res += rational_class(1, i);
+        }
+        return Rational::from_mpq(res);
+    } else {
+        for (unsigned i = 1; i <= n; ++i) {
+            if (m > 0) {
+                rational_class t(1u, i);
+                mp_pow_ui(get_den(t), get_den(t), m);
+                res += t;
+            } else {
+                integer_class t(i);
+                mp_pow_ui(t, t, -m);
+                res += t;
+            }
+        }
+        return Rational::from_mpq(res);
+    }
 }
 
 // References : Cohen H., A course in computational algebraic number theory (1996), page 21.

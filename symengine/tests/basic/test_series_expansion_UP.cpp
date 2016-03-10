@@ -10,6 +10,7 @@
 #include <symengine/symbol.h>
 #include <symengine/add.h>
 #include <symengine/pow.h>
+#include <symengine/constants.h>
 
 using SymEngine::Basic;
 using SymEngine::Integer;
@@ -24,6 +25,9 @@ using SymEngine::add;
 using SymEngine::sin;
 using SymEngine::cos;
 using SymEngine::umap_short_basic;
+using SymEngine::neg;
+using SymEngine::EulerGamma;
+using SymEngine::one;
 
 #ifdef HAVE_SYMENGINE_PIRANHA
 #include <symengine/series_piranha.h>
@@ -233,6 +237,15 @@ TEST_CASE("Expression series expansion: lambertw ", "[Expansion of lambertw]")
 
     REQUIRE(series_coeff(ex1, x, 10, 7)->__eq__(*rational(16807, 720)));
     REQUIRE(series_coeff(ex2, x, 12, 10)->__eq__(*rational(-2993294, 14175)));
+}
+
+TEST_CASE("Expression series expansion: gamma ", "[Expansion of gamma]")
+{
+    RCP<const Symbol> x = symbol("x");
+    auto ex1 = gamma(x);
+
+    REQUIRE(series_coeff(ex1, x, 10, -1)->__eq__(*one));
+    REQUIRE(series_coeff(ex1, x, 10, 0)->__eq__(*neg(EulerGamma)));
 }
 
 TEST_CASE("Expansion of sin ", "[Symbolic series expansion]")

@@ -28,7 +28,7 @@ public:
     static flint::fmpqxx convert(const rational_class &x);
     static fp_t var(const std::string &s);
     static flint::fmpqxx convert(const Rational &x);
-    static flint::fmpqxx convert(const Number &x);
+    static flint::fmpqxx convert(const Basic &x);
     static inline fp_t mul(const fp_t &s, const fp_t &r, unsigned prec) {
         return fp_t(flint::mullow(s, r, prec));
     }
