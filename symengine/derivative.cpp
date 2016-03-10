@@ -202,7 +202,7 @@ static RCP<const Basic> diff(const CLASS &self, \
     }
 
     static inline RCP<const Symbol> get_dummy(const Basic &b, std::string name) {
-        RCP<const Symbol> s;        
+        RCP<const Symbol> s;
         do {
             name = "_" + name;
             s = symbol(name);
@@ -412,7 +412,7 @@ static RCP<const Basic> diff(const CLASS &self, \
         if (neq(*f, *zero)) {
             auto g = args[1]->diff(x);
             if (eq(*args[0], *x) and eq(*g, *zero)) {
-                return Derivative::create(self.rcp_from_this(), {x}); 
+                return Derivative::create(self.rcp_from_this(), {x});
             } else {
                 auto s = get_dummy(self, "x");
                 map_basic_basic m({{s, args[0]}});
