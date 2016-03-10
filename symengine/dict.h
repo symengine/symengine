@@ -139,9 +139,6 @@ typedef struct
 typedef std::unordered_map<vec_int, integer_class,
         vec_int_hash> umap_vec_mpz;
 
-} // SymEngine
-
-
 std::ostream& operator<<(std::ostream& out, const SymEngine::umap_basic_num& d);
 std::ostream& operator<<(std::ostream& out, const SymEngine::vec_int& d);
 std::ostream& operator<<(std::ostream& out, const SymEngine::map_vec_int& d);
@@ -152,5 +149,7 @@ std::ostream& operator<<(std::ostream& out, const SymEngine::map_basic_basic& d)
 std::ostream& operator<<(std::ostream& out, const SymEngine::umap_basic_basic& d);
 std::ostream& operator<<(std::ostream& out, const SymEngine::vec_basic& d);
 std::ostream& operator<<(std::ostream& out, const SymEngine::set_basic& d);
+
+} // SymEngine
 
 #endif

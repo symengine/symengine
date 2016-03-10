@@ -219,7 +219,6 @@ bool is_a_sub(const Basic &b);
 //! Expands `self`
 RCP<const Basic> expand(const RCP<const Basic> &self);
 void as_numer_denom(const RCP<const Basic> &x, const Ptr<RCP<const Basic>> &numer, const Ptr<RCP<const Basic>> &denom);
-} // SymEngine
 
 /*! This `<<` overloaded function simply calls `p.__str__`, so it allows any Basic
     type to be printed.
@@ -227,6 +226,8 @@ void as_numer_denom(const RCP<const Basic> &x, const Ptr<RCP<const Basic>> &nume
     This prints using: `std::cout << *x;`
 */
 std::ostream& operator<<(std::ostream& out, const SymEngine::Basic& p);
+
+} // SymEngine
 
 //! Specialise `std::hash` for Basic.
 namespace std {
