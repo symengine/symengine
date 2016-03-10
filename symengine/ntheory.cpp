@@ -1195,7 +1195,7 @@ bool _nthroot_mod1(std::vector<RCP<const Integer>> &roots, const integer_class &
 }
 
 // Checks if Solution for x**n == a mod p**k exists where a != 0 mod p and p is an odd prime.
-bool is_nthroot_mod1(const integer_class &a, const integer_class &n,
+bool _is_nthroot_mod1(const integer_class &a, const integer_class &n,
         const integer_class &p, const unsigned k)
 {
     integer_class t, pk, m, phi;
@@ -1345,7 +1345,7 @@ bool _nthroot_mod_prime_power(std::vector<RCP<const Integer>> &roots, const inte
 // Returns whether Solution for x**n == a mod p**k exists or not
 bool is_nthroot_mod_prime_power(const integer_class &a, const integer_class &n, const integer_class &p, const unsigned k)
 {
-            integer_class pk;
+    integer_class pk;
     if (a % p != 0) {
         if (p == 2) {
             integer_class t;
@@ -1377,7 +1377,7 @@ bool is_nthroot_mod_prime_power(const integer_class &a, const integer_class &n, 
                 return false;
             return true;
         } else {
-            return is_nthroot_mod1(a, n, p, k);
+            return _is_nthroot_mod1(a, n, p, k);
         }
     } else {
         integer_class _a;
@@ -1566,7 +1566,7 @@ bool is_quad_residue(const Integer &a, const Integer &p)
     integer_class a_final = a.as_mpz();
     if (a.as_mpz() >= p2 || a.as_mpz() < 0)
         mp_fdiv_r(a_final, a.as_mpz(), p2);
-    if (a_final < 2 || p2 < 3)
+    if (a_final < 2)
         return true;
 
     if (!probab_prime_p(*integer(p2))){
