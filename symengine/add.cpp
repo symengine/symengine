@@ -5,7 +5,9 @@
 #include <symengine/pow.h>
 #include <symengine/complex.h>
 #include <symengine/functions.h>
+#include <symengine/polynomial.h>
 
+using SymEngine::is_a;
 
 namespace SymEngine {
 
@@ -247,13 +249,14 @@ RCP<const Basic> add(const RCP<const Basic> &a, const RCP<const Basic> &b)
     SymEngine::umap_basic_num d;
     RCP<const Number> coef;
     RCP<const Basic> t;
-    if (SymEngine::is_a<Add>(*a) and SymEngine::is_a<Add>(*b)) {
+
+    if (is_a<Add>(*a) and is_a<Add>(*b)) {
         coef = (rcp_static_cast<const Add>(a))->coef_;
         d = (rcp_static_cast<const Add>(a))->dict_;
         for (const auto &p: (rcp_static_cast<const Add>(b))->dict_)
             Add::dict_add_term(d, p.second, p.first);
         iaddnum(outArg(coef), rcp_static_cast<const Add>(b)->coef_);
-    } else if (SymEngine::is_a<Add>(*a)) {
+    } else if (is_a<Add>(*a)) {
         coef = (rcp_static_cast<const Add>(a))->coef_;
         d = (rcp_static_cast<const Add>(a))->dict_;
         if (is_a_Number(*b)) {
@@ -263,7 +266,7 @@ RCP<const Basic> add(const RCP<const Basic> &a, const RCP<const Basic> &b)
             Add::as_coef_term(b, outArg(coef2), outArg(t));
             Add::dict_add_term(d, coef2, t);
         }
-    } else if (SymEngine::is_a<Add>(*b)) {
+    } else if (is_a<Add>(*b)) {
         coef = (rcp_static_cast<const Add>(b))->coef_;
         d = (rcp_static_cast<const Add>(b))->dict_;
         if (is_a_Number(*a)) {
@@ -273,6 +276,8 @@ RCP<const Basic> add(const RCP<const Basic> &a, const RCP<const Basic> &b)
             Add::as_coef_term(a, outArg(coef2), outArg(t));
             Add::dict_add_term(d, coef2, t);
         }
+    } else if (is_a<UnivariateIntPolynomial>(*a) and is_a<UnivariateIntPolynomial>(*b)) {
+        return add_poly(rcp_static_cast<const UnivariateIntPolynomial>(a), rcp_static_cast<const UnivariateIntPolynomial>(b));
     } else {
         Add::as_coef_term(a, outArg(coef), outArg(t));
         Add::dict_add_term(d, coef, t);
@@ -291,7 +296,10 @@ RCP<const Basic> add(const RCP<const Basic> &a, const RCP<const Basic> &b)
 }
 
 RCP<const Basic> sub(const RCP<const Basic> &a, const RCP<const Basic> &b)
-{
+{   
+    if (is_a<UnivariateIntPolynomial>(*a) and is_a<UnivariateIntPolynomial>(*b))
+        return sub_poly(rcp_static_cast<const UnivariateIntPolynomial>(a), rcp_static_cast<const UnivariateIntPolynomial>(b));
+
     return add(a, mul(minus_one, b));
 }
 
