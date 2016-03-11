@@ -23,6 +23,7 @@ using SymEngine::integer;
 using SymEngine::vec_basic_eq_perm;
 using SymEngine::integer_class;
 using SymEngine::MultivariateIntPolynomial;
+using SymEngine::RCPSymbolCompare;
 using namespace SymEngine::literals;
 
 TEST_CASE("Constructor of UnivariateIntPolynomial", "[UnivariateIntPolynomial]")
@@ -176,7 +177,7 @@ TEST_CASE("Constructing MultivariateIntPolynomial using from_dict", "[Multivaria
 
 }
 
-TEST_CASE("Testing MultivariateIntPolynomial::__eq__()", "[MultivariateIntPolynomial]")
+TEST_CASE("Testing MultivariateIntPolynomial::__eq__(const Basic &o)", "[MultivariateIntPolynomial]")
 {
     RCP<const Symbol> x = symbol("x");
     RCP<const Symbol> y = symbol("y");
@@ -184,9 +185,23 @@ TEST_CASE("Testing MultivariateIntPolynomial::__eq__()", "[MultivariateIntPolyno
     RCP<const MultivariateIntPolynomial> p2 = MultivariateIntPolynomial::from_dict({x,y}, {{{2,0},1_z}, {{1,1},-1_z}, {{0,2},1_z}  });
     RCP<const MultivariateIntPolynomial> p3 = MultivariateIntPolynomial::from_dict({x,y}, {{{2,0},2_z}, {{0,2},2_z}  });
 
-    std::cout << p1->toString() << " == " << add_mult_poly(*p1, *p2)->toString() << std::endl;
     REQUIRE(p1->__eq__(*p1));
     REQUIRE(!(p2->__eq__(*p1)));
     REQUIRE(p3->__eq__( *add_mult_poly(*p1, *p2) ));
 
+}
+
+TEST_CASE("Testing MultivariateIntPolynomial::eval((std::map<RCP<const Symbol>, integer_class, RCPSymbolCompare> &vals)", "[MultivariateIntPolynomial]")
+{
+   RCP<const Symbol> x = symbol("x");
+   RCP<const Symbol> y = symbol("y");
+   RCP<const Symbol> z = symbol("z");
+   RCP<const MultivariateIntPolynomial> p = MultivariateIntPolynomial::from_dict( {x,y,z}, { {{2,0,0},1_z}, {{0,2,0},2_z}, {{0,0,2},3_z}, {{1,1,1},4_z}, {{1,1,0},1_z}, {{0,1,1},2_z}, {{1,0,0},1_z}, {{0,1,0},2_z}, {{0,0,1}, 3_z} , {{0,0,0},5} });
+   std::map<RCP<const Symbol>, integer_class, RCPSymbolCompare> m1 = {{x,1}, {y,2}, {z,5}};
+   std::map<RCP<const Symbol>, integer_class, RCPSymbolCompare> m2 = {{x,0}, {y,0}, {z,0}};
+   std::map<RCP<const Symbol>, integer_class, RCPSymbolCompare> m3 = {{x,-1}, {y,-2}, {z,-5}};
+
+   REQUIRE(171_z == p->eval(m1));
+   REQUIRE(5_z == p->eval(m2));
+   REQUIRE(51_z == p->eval(m3));
 }

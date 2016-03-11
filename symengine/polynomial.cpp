@@ -618,10 +618,10 @@ int MultivariateIntPolynomial::compare(const Basic &o) const{
     return umap_uvec_mpz_compare(dict_, s.dict_); 
 }
 
-integer_class MultivariateIntPolynomial::eval(std::map<RCP<const Symbol>, integer_class, RCPSymbolCompare> &vals){
+integer_class MultivariateIntPolynomial::eval(std::map<RCP<const Symbol>, integer_class, RCPSymbolCompare> &vals) const{
     integer_class ans(0);
     for(auto bucket : dict_) {
-        integer_class term(1);
+        integer_class term = bucket.second;
         unsigned int whichvar = 0;
         for(auto sym : vars_){
             integer_class temp;
