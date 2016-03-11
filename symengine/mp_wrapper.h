@@ -10,7 +10,7 @@
 #endif
 
 #define SYMENGINE_UI(f) f ## _ui
-#define SYMENGINE_SI(f) f ## _si 
+#define SYMENGINE_SI(f) f ## _si
 
 #define SYMENGINE_MPZ_WRAPPER_IMPLEMENT_RELATIONAL(op, func, val, rev_op) \
 template <typename T, typename std::enable_if<std::is_integral<T>::value && std::is_unsigned<T>::value,int>::type = 0> \
@@ -529,7 +529,7 @@ public:
 
     template <typename T, typename std::enable_if<std::is_integral<T>::value && std::is_unsigned<T>::value,int>::type = 0>
     inline friend mpz_wrapper operator-(const T b, const mpz_wrapper &a)
-    { 
+    {
         mpz_wrapper res;
         mpz_ui_sub(res.get_mpz_t(), b, a.get_mpz_t());
         return res;
@@ -545,7 +545,7 @@ public:
         mpz_neg(res.get_mpz_t(), mp);
         return res;
     }
-    
+
     inline mpz_wrapper operator++()
     {
         mpz_add_ui(mp, mp, 1);
@@ -568,7 +568,7 @@ public:
         --(*this);
         return orig;
     }
-    
+
     //! < operator
     SYMENGINE_MPZ_WRAPPER_IMPLEMENT_RELATIONAL(<, mpz_cmp, 0, >)
     //! <= operator

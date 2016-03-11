@@ -250,42 +250,42 @@ TEST_CASE("test_univariate_int_polynomial(): printing", "[printing]")
 
     p = univariate_int_polynomial(x, {{0, 0_z}});
     REQUIRE(p->__str__() == "0");
-    //std::cout<<p->__str__()<<std::endl;
+
     p = univariate_int_polynomial(x, {{0, 1_z}});
     REQUIRE(p->__str__() == "1");
-    //std::cout<<p->__str__()<<std::endl;
+
     p = univariate_int_polynomial(x, {{1, 1_z}});
     REQUIRE(p->__str__() == "x");
-    //std::cout<<p->__str__()<<std::endl;
+
     p = univariate_int_polynomial(x, {{0, 1_z}, {1, 2_z}});
     REQUIRE(p->__str__() == "2*x + 1");
-    //std::cout<<p->__str__()<<std::endl;
+
     p = univariate_int_polynomial(x, {{0, -1_z}, {1, 2_z}});
     REQUIRE(p->__str__() == "2*x - 1");
-    //std::cout<<p->__str__()<<std::endl;
+
     p = univariate_int_polynomial(x, {{0, -1_z}});
     REQUIRE(p->__str__() == "-1");
-    //std::cout<<p->__str__()<<std::endl;
+
     p = univariate_int_polynomial(x, {{1, -1_z}});
     REQUIRE(p->__str__() == "-x");
-    //std::cout<<p->__str__()<<std::endl;
+
     p = univariate_int_polynomial(x, {{0, -1_z}, {1, 1_z}});
     REQUIRE(p->__str__() == "x - 1");
-    //std::cout<<p->__str__()<<std::endl;
+
     p = univariate_int_polynomial(x, {{0, 1_z}, {1, 1_z}, {2, 1_z}});
     REQUIRE(p->__str__() == "x**2 + x + 1");
-    //std::cout<<p->__str__()<<std::endl;
+
     p = univariate_int_polynomial(x, {{0, 1_z}, {1, -1_z}, {2, 1_z}});
     REQUIRE(p->__str__() == "x**2 - x + 1");
-    //std::cout<<p->__str__()<<std::endl;
+
     p = univariate_int_polynomial(x, {{0, 1_z}, {1, 2_z}, {2, 1_z}});
     REQUIRE(p->__str__() == "x**2 + 2*x + 1");
-    //std::cout<<p->__str__()<<std::endl;
+
     p = univariate_int_polynomial(x, {{1, 2_z}, {2, 1_z}});
     REQUIRE(p->__str__() == "x**2 + 2*x");
-    //std::cout<<p->__str__()<<std::endl;
+
     p = univariate_int_polynomial(x, {{0, -1_z}, {1, -2_z}, {2, -1_z}});
-    //std::cout<<p->__str__()<<std::endl;
+
     REQUIRE(p->__str__() == "-x**2 - 2*x - 1");
 }
 
@@ -296,42 +296,29 @@ TEST_CASE("test_univariate_polynomial(): printing", "[printing]")
 
     p = univariate_polynomial(x, 0, {{0, 0}});
     REQUIRE(p->__str__() == "0");
-    //std::cout<<p->__str__()<<std::endl;
     p = univariate_polynomial(x, 0, {{0, 1}});
     REQUIRE(p->__str__() == "1");
-    //std::cout<<p->__str__()<<std::endl;
     p = univariate_polynomial(x, 1, {{1, 1}});
     REQUIRE(p->__str__() == "x");
-    //std::cout<<p->__str__()<<std::endl;
     p = univariate_polynomial(x, 1, {{0, 1}, {1, 2}});
     REQUIRE(p->__str__() == "2*x + 1");
-    //std::cout<<p->__str__()<<std::endl;
     p = univariate_polynomial(x, 1, {{0, -1}, {1, 2}});
     REQUIRE(p->__str__() == "2*x - 1");
-    //std::cout<<p->__str__()<<std::endl;
     p = univariate_polynomial(x, 0, {{0, -1}});
     REQUIRE(p->__str__() == "-1");
-    //std::cout<<p->__str__()<<std::endl;
     p = univariate_polynomial(x, 1, {{1, -1}});
     REQUIRE(p->__str__() == "-x");
-    //std::cout<<p->__str__()<<std::endl;
     p = univariate_polynomial(x, 1, {{0, -1}, {1, 1}});
     REQUIRE(p->__str__() == "x - 1");
-    //std::cout<<p->__str__()<<std::endl;
     p = univariate_polynomial(x, 2, {{0, 1}, {1, 1}, {2, 1}});
     REQUIRE(p->__str__() == "x**2 + x + 1");
-    //std::cout<<p->__str__()<<std::endl;
     p = univariate_polynomial(x, 2, {{0, 1}, {1, -1}, {2, 1}});
     REQUIRE(p->__str__() == "x**2 - x + 1");
-    //std::cout<<p->__str__()<<std::endl;
     p = univariate_polynomial(x, 2, {{0, 1}, {1, 2}, {2, 1}});
     REQUIRE(p->__str__() == "x**2 + 2*x + 1");
-    //std::cout<<p->__str__()<<std::endl;
     p = univariate_polynomial(x, 2, {{1, 2}, {2, 1}});
     REQUIRE(p->__str__() == "x**2 + 2*x");
-    //std::cout<<p->__str__()<<std::endl;
     p = univariate_polynomial(x, 2, {{0, -1}, {1, -2}, {2, -1}});
-    //std::cout<<p->__str__()<<std::endl;
     REQUIRE(p->__str__() == "-x**2 - 2*x - 1");
 }
 

@@ -54,7 +54,7 @@ piranha::rational URatPSeriesPiranha::convert(const Rational &x) {
     return convert(x.as_mpq());
 }
 
-piranha::rational URatPSeriesPiranha::convert(const Number &x) {
+piranha::rational URatPSeriesPiranha::convert(const Basic &x) {
     throw std::runtime_error("Not Implemented");
 }
 
@@ -198,7 +198,7 @@ p_expr UPSeriesPiranha::var(const std::string &s) {
     return p_expr(s);
 }
 
-Expression UPSeriesPiranha::convert(const Number &x) {
+Expression UPSeriesPiranha::convert(const Basic &x) {
     return Expression(x.rcp_from_this());
 }
 

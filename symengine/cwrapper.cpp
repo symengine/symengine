@@ -241,11 +241,6 @@ void basic_div(basic s, const basic a, const basic b)
     s->m = SymEngine::div(a->m, b->m);
 }
 
-void basic_neg(basic s, const basic a)
-{
-    s->m = SymEngine::neg(a->m);
-}
-
 int basic_eq(const basic a, const basic b)
 {
     return SymEngine::eq(*(a->m), *(b->m)) ? 1 : 0;
@@ -256,15 +251,44 @@ int basic_neq(const basic a, const basic b)
     return SymEngine::neq(*(a->m), *(b->m)) ? 1 : 0;
 }
 
-void basic_abs(basic s, const basic a)
-{
-    s->m = SymEngine::abs(a->m);
+
+#define IMPLEMENT_ONE_ARG_FUNC(func) \
+void basic_ ## func(basic s, const basic a) \
+{ \
+    s->m = SymEngine::func(a->m); \
 }
 
-void basic_expand(basic s, const basic a)
-{
-    s->m = SymEngine::expand(a->m);
-}
+IMPLEMENT_ONE_ARG_FUNC(expand);
+IMPLEMENT_ONE_ARG_FUNC(neg);
+IMPLEMENT_ONE_ARG_FUNC(abs);
+IMPLEMENT_ONE_ARG_FUNC(sin);
+IMPLEMENT_ONE_ARG_FUNC(cos);
+IMPLEMENT_ONE_ARG_FUNC(tan);
+IMPLEMENT_ONE_ARG_FUNC(csc);
+IMPLEMENT_ONE_ARG_FUNC(sec);
+IMPLEMENT_ONE_ARG_FUNC(cot);
+IMPLEMENT_ONE_ARG_FUNC(asin);
+IMPLEMENT_ONE_ARG_FUNC(acos);
+IMPLEMENT_ONE_ARG_FUNC(asec);
+IMPLEMENT_ONE_ARG_FUNC(acsc);
+IMPLEMENT_ONE_ARG_FUNC(atan);
+IMPLEMENT_ONE_ARG_FUNC(acot);
+IMPLEMENT_ONE_ARG_FUNC(sinh);
+IMPLEMENT_ONE_ARG_FUNC(cosh);
+IMPLEMENT_ONE_ARG_FUNC(tanh);
+IMPLEMENT_ONE_ARG_FUNC(csch);
+IMPLEMENT_ONE_ARG_FUNC(sech);
+IMPLEMENT_ONE_ARG_FUNC(coth);
+IMPLEMENT_ONE_ARG_FUNC(asinh);
+IMPLEMENT_ONE_ARG_FUNC(acosh);
+IMPLEMENT_ONE_ARG_FUNC(asech);
+IMPLEMENT_ONE_ARG_FUNC(acsch);
+IMPLEMENT_ONE_ARG_FUNC(atanh);
+IMPLEMENT_ONE_ARG_FUNC(acoth);
+IMPLEMENT_ONE_ARG_FUNC(lambertw);
+IMPLEMENT_ONE_ARG_FUNC(zeta);
+IMPLEMENT_ONE_ARG_FUNC(dirichlet_eta);
+IMPLEMENT_ONE_ARG_FUNC(gamma);
 
 char* basic_str(const basic s)
 {
@@ -487,6 +511,58 @@ char* ascii_art_str()
     auto cc = new char[str.length()+1];
     std::strcpy(cc, str.c_str());
     return cc;
+}
+
+// Cwrapper for ntheory
+
+void ntheory_gcd(basic s, const basic a, const basic b)
+{
+    SYMENGINE_ASSERT(is_a<Integer>(*(a->m)));
+    SYMENGINE_ASSERT(is_a<Integer>(*(b->m)));
+    s->m = SymEngine::gcd(static_cast<const Integer &>(*(a->m)), static_cast<const Integer &>(*(b->m)));
+}
+
+void ntheory_lcm(basic s, const basic a, const basic b)
+{
+    SYMENGINE_ASSERT(is_a<Integer>(*(a->m)));
+    SYMENGINE_ASSERT(is_a<Integer>(*(b->m)));
+    s->m = SymEngine::lcm(static_cast<const Integer &>(*(a->m)), static_cast<const Integer &>(*(b->m)));
+}
+
+void ntheory_nextprime(basic s, const basic a)
+{
+    SYMENGINE_ASSERT(is_a<Integer>(*(a->m)));
+    s->m = SymEngine::nextprime(static_cast<const Integer &>(*(a->m)));
+}
+
+void ntheory_mod(basic s, const basic n, const basic d)
+{
+    SYMENGINE_ASSERT(is_a<Integer>(*(n->m)));
+    SYMENGINE_ASSERT(is_a<Integer>(*(d->m)));
+    s->m = SymEngine::mod(static_cast<const Integer &>(*(n->m)), static_cast<const Integer &>(*(d->m)));
+}
+
+void ntheory_quotient(basic s, const basic n, const basic d)
+{
+    SYMENGINE_ASSERT(is_a<Integer>(*(n->m)));
+    SYMENGINE_ASSERT(is_a<Integer>(*(d->m)));
+    s->m = SymEngine::quotient(static_cast<const Integer &>(*(n->m)), static_cast<const Integer &>(*(d->m)));
+}
+
+void ntheory_fibonacci(basic s, unsigned long a)
+{
+    s->m = SymEngine::fibonacci(a);
+}
+
+void ntheory_lucas(basic s, unsigned long a)
+{
+    s->m = SymEngine::lucas(a);
+}
+
+void ntheory_binomial(basic s, const basic a, unsigned long b)
+{
+    SYMENGINE_ASSERT(is_a<Integer>(*(a->m)));
+    s->m = SymEngine::binomial(static_cast<const Integer &>(*(a->m)), b);
 }
 
 //! Print stacktrace on segfault
