@@ -338,19 +338,11 @@ bool UnivariatePolynomial::is_canonical(const unsigned int &degree_, const map_i
         if (!(dict.empty() or dict.size() == 1))
             return false;
     
-    if (dict.size() != 0) {
-        unsigned int prev_degree = (--dict.end())->first;
-        if (prev_degree != degree_) {
-            return false;
-        }
-    } else if (0 != degree_)
+    map_int_Expr ordered(dict.begin(), dict.end());
+    unsigned int prev_degree = (--ordered.end())->first;
+    if (prev_degree != degree_)
         return false;
-    
-    //Check if dictionary contains terms with coeffienct 0
-    for (auto iter : dict)
-        if (iter.second == 0)
-            return false;
-    return true;
+    return true;    
 }
 
 std::size_t UnivariatePolynomial::__hash__() const
