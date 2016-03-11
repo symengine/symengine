@@ -193,15 +193,25 @@ TEST_CASE("Testing MultivariateIntPolynomial::__eq__(const Basic &o)", "[Multiva
 
 TEST_CASE("Testing MultivariateIntPolynomial::eval((std::map<RCP<const Symbol>, integer_class, RCPSymbolCompare> &vals)", "[MultivariateIntPolynomial]")
 {
-   RCP<const Symbol> x = symbol("x");
-   RCP<const Symbol> y = symbol("y");
-   RCP<const Symbol> z = symbol("z");
-   RCP<const MultivariateIntPolynomial> p = MultivariateIntPolynomial::from_dict( {x,y,z}, { {{2,0,0},1_z}, {{0,2,0},2_z}, {{0,0,2},3_z}, {{1,1,1},4_z}, {{1,1,0},1_z}, {{0,1,1},2_z}, {{1,0,0},1_z}, {{0,1,0},2_z}, {{0,0,1}, 3_z} , {{0,0,0},5} });
-   std::map<RCP<const Symbol>, integer_class, RCPSymbolCompare> m1 = {{x,1}, {y,2}, {z,5}};
-   std::map<RCP<const Symbol>, integer_class, RCPSymbolCompare> m2 = {{x,0}, {y,0}, {z,0}};
-   std::map<RCP<const Symbol>, integer_class, RCPSymbolCompare> m3 = {{x,-1}, {y,-2}, {z,-5}};
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    RCP<const Symbol> z = symbol("z");
+    RCP<const MultivariateIntPolynomial> p = MultivariateIntPolynomial::from_dict( {x,y,z}, { {{2,0,0},1_z}, {{0,2,0},2_z}, {{0,0,2},3_z}, {{1,1,1},4_z}, {{1,1,0},1_z}, {{0,1,1},2_z}, {{1,0,0},1_z}, {{0,1,0},2_z}, {{0,0,1}, 3_z} , {{0,0,0},5} });
+    std::map<RCP<const Symbol>, integer_class, RCPSymbolCompare> m1 = {{x,1}, {y,2}, {z,5}};
+    std::map<RCP<const Symbol>, integer_class, RCPSymbolCompare> m2 = {{x,0}, {y,0}, {z,0}};
+    std::map<RCP<const Symbol>, integer_class, RCPSymbolCompare> m3 = {{x,-1}, {y,-2}, {z,-5}};
 
-   REQUIRE(171_z == p->eval(m1));
-   REQUIRE(5_z == p->eval(m2));
-   REQUIRE(51_z == p->eval(m3));
+    REQUIRE(171_z == p->eval(m1));
+    REQUIRE(5_z == p->eval(m2));
+    REQUIRE(51_z == p->eval(m3));
+}
+
+TEST_CASE("Testing MultivariateIntPolynomail neg_mult_poly", "[MultivariateIntPolynomial]"){
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    RCP<const Symbol> z = symbol("z");
+    RCP<const MultivariateIntPolynomial> p = MultivariateIntPolynomial::from_dict( {x,y,z}, { {{1,0,0}, 1_z}, {{0,1,0},-2_z}, {{0,0,1}, 3_z }  });
+    RCP<const MultivariateIntPolynomial> p2 = neg_mult_poly(*p);
+    REQUIRE(p2->__str__() == "- x + 2*y - 3*z");
+  
 }
