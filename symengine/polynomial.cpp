@@ -204,16 +204,14 @@ bool UnivariateIntPolynomial::is_pow() const {
 RCP<const UnivariateIntPolynomial> add_poly(const UnivariateIntPolynomial &a, const UnivariateIntPolynomial &b) {
     map_uint_mpz dict;
     RCP<const Symbol> var = symbol("");
-    if (!(a.get_var()->get_name() == "" and b.get_var()->get_name() == "")) {
-        if (a.get_var()->get_name() == "") {
-            var = b.get_var();
-        } else if (b.get_var()->get_name() == "") {
-            var = a.get_var();
-        } else if (!(a.get_var()->__eq__(*b.get_var()))) {
-            throw std::runtime_error("Error: variables must agree.");
-        } else {
-            var = a.get_var();
-        }
+    if (a.get_var()->get_name() == "") {
+        var = b.get_var();
+    } else if (b.get_var()->get_name() == "") {
+        var = a.get_var();
+    } else if (!(a.get_var()->__eq__(*b.get_var()))) {
+        throw std::runtime_error("Error: variables must agree.");
+    } else {
+        var = a.get_var();
     }
     for (const auto &it : a.get_dict())
         dict[it.first] = it.second;
@@ -232,16 +230,14 @@ RCP<const UnivariateIntPolynomial> neg_poly(const UnivariateIntPolynomial &a) {
 RCP<const UnivariateIntPolynomial> sub_poly(const UnivariateIntPolynomial &a, const UnivariateIntPolynomial &b) {
     map_uint_mpz dict;
     RCP<const Symbol> var = symbol("");
-    if (!(a.get_var()->get_name() == "" and b.get_var()->get_name() == "")) {
-        if (a.get_var()->get_name() == "") {
-            var = b.get_var();
-        } else if (b.get_var()->get_name() == "") {
-            var = a.get_var();
-        } else if (!(a.get_var()->__eq__(*b.get_var()))) {
-            throw std::runtime_error("Error: variables must agree.");
-        } else {
-            var = a.get_var();
-        }
+    if (a.get_var()->get_name() == "") {
+        var = b.get_var();
+    } else if (b.get_var()->get_name() == "") {
+        var = a.get_var();
+    } else if (!(a.get_var()->__eq__(*b.get_var()))) {
+        throw std::runtime_error("Error: variables must agree.");
+    } else {
+        var = a.get_var();
     }
     for (const auto &it : a.get_dict())
         dict[it.first] = it.second;
@@ -265,16 +261,14 @@ RCP<const UnivariateIntPolynomial> mul_poly(RCP<const UnivariateIntPolynomial> a
     //TODO: Use `const RCP<const UnivariateIntPolynomial> &a` for input arguments,
     //      even better is use `const UnivariateIntPolynomial &a`
     RCP<const Symbol> var = symbol("");
-    if (!(a->get_var()->get_name() == "" and b->get_var()->get_name() == "")) {
-        if (a->get_var()->get_name() == "") {
-            var = b->get_var();
-        } else if (b->get_var()->get_name() == "") {
-            var = a->get_var();
-        } else if (!(a->get_var()->__eq__(*b->get_var()))) {
-            throw std::runtime_error("Error: variables must agree.");
-        } else {
-            var = a->get_var();
-        }
+    if (a->get_var()->get_name() == "") {
+        var = b->get_var();
+    } else if (b->get_var()->get_name() == "") {
+        var = a->get_var();
+    } else if (!(a->get_var()->__eq__(*b->get_var()))) {
+        throw std::runtime_error("Error: variables must agree.");
+    } else {
+        var = a->get_var();
     }
     
     unsigned int da = a->get_degree();
@@ -506,16 +500,14 @@ bool UnivariatePolynomial::is_pow() const {
 RCP<const UnivariatePolynomial> add_uni_poly(const UnivariatePolynomial &a, const UnivariatePolynomial &b) {
     map_int_Expr dict;
     RCP<const Symbol> var = symbol("");
-    if (!(a.get_var()->get_name() == "" and b.get_var()->get_name() == "")) {
-        if (a.get_var()->get_name() == "") {
-            var = b.get_var();
-        } else if (b.get_var()->get_name() == "") {
-            var = a.get_var();
-        } else if (!(a.get_var()->__eq__(*b.get_var()))) {
-            throw std::runtime_error("Error: variables must agree.");
-        } else {
-            var = a.get_var();
-        }
+    if (a.get_var()->get_name() == "") {
+        var = b.get_var();
+    } else if (b.get_var()->get_name() == "") {
+        var = a.get_var();
+    } else if (!(a.get_var()->__eq__(*b.get_var()))) {
+        throw std::runtime_error("Error: variables must agree.");
+    } else {
+        var = a.get_var();
     }
     for (const auto &it : a.get_dict())
         dict[it.first] = it.second;
@@ -534,16 +526,14 @@ RCP<const UnivariatePolynomial> neg_uni_poly(const UnivariatePolynomial &a) {
 RCP<const UnivariatePolynomial> sub_uni_poly(const UnivariatePolynomial &a, const UnivariatePolynomial &b) {
     map_int_Expr dict;
     RCP<const Symbol> var = symbol("");
-    if (!(a.get_var()->get_name() == "" and b.get_var()->get_name() == "")) {
-        if (a.get_var()->get_name() == "") {
-            var = b.get_var();
-        } else if (b.get_var()->get_name() == "") {
-            var = a.get_var();
-        } else if (!(a.get_var()->__eq__(*b.get_var()))) {
-            throw std::runtime_error("Error: variables must agree.");
-        } else {
-            var = a.get_var();
-        }
+    if (a.get_var()->get_name() == "") {
+        var = b.get_var();
+    } else if (b.get_var()->get_name() == "") {
+        var = a.get_var();
+    } else if (!(a.get_var()->__eq__(*b.get_var()))) {
+        throw std::runtime_error("Error: variables must agree.");
+    } else {
+        var = a.get_var();
     }
     for (const auto &it : a.get_dict())
         dict[it.first] = it.second;
@@ -555,18 +545,15 @@ RCP<const UnivariatePolynomial> sub_uni_poly(const UnivariatePolynomial &a, cons
 RCP<const UnivariatePolynomial> mul_uni_poly(RCP<const UnivariatePolynomial> a, RCP<const UnivariatePolynomial> b) {
     map_int_Expr dict;
     RCP<const Symbol> var = symbol("");
-    if (!(a->get_var()->get_name() == "" and b->get_var()->get_name() == "")) {
-        if (a->get_var()->get_name() == "") {
-            var = b->get_var();
-        } else if (b->get_var()->get_name() == "") {
-            var = a->get_var();
-        } else if (!(a->get_var()->__eq__(*b->get_var()))) {
-            throw std::runtime_error("Error: variables must agree.");
-        } else {
-            var = a->get_var();
-        }
+    if (a->get_var()->get_name() == "") {
+        var = b->get_var();
+    } else if (b->get_var()->get_name() == "") {
+        var = a->get_var();
+    } else if (!(a->get_var()->__eq__(*b->get_var()))) {
+        throw std::runtime_error("Error: variables must agree.");
+    } else {
+        var = a->get_var();
     }
-    
     if (a->get_var() != b->get_var())
         throw std::runtime_error("Error: variables must agree.");
     if (a->get_dict().empty() and b->get_dict().empty())
