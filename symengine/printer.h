@@ -53,9 +53,8 @@ public:
     void bvisit(const UnivariatePolynomial &x) {
         if (x.get_dict().size() == 1) {
             auto it = x.get_dict().begin();
-            if (it->second == 0) {
-                precedence = PrecedenceEnum::Atom;
-            } else if (it->second == 1) {
+            precedence = PrecedenceEnum::Atom;
+            if (it->second == 1) {
                 if (it->first == 0 or it->first == 1) {
                     precedence = PrecedenceEnum::Atom;
                 } else {

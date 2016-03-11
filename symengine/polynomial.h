@@ -187,7 +187,7 @@ public:
     ~UnivariateExprPolynomial() SYMENGINE_NOEXCEPT {}
     UnivariateExprPolynomial(const UnivariateExprPolynomial &) = default;
     UnivariateExprPolynomial(UnivariateExprPolynomial &&other) SYMENGINE_NOEXCEPT : poly_(std::move(other.poly_)) {}
-    UnivariateExprPolynomial(int i) : poly_(UnivariatePolynomial::create(symbol("x"), {{0, Expression(i)}})) {}
+    UnivariateExprPolynomial(int i) : poly_(UnivariatePolynomial::create(symbol(""), {{0, Expression(i)}})) {}
     UnivariateExprPolynomial(RCP<const UnivariatePolynomial> p) : poly_(std::move(p)) {}
     UnivariateExprPolynomial(Expression expr) : poly_(UnivariatePolynomial::create(symbol(""), {{0, expr}})) {}
     UnivariateExprPolynomial &operator=(const UnivariateExprPolynomial &) = default;
@@ -278,33 +278,6 @@ public:
         return poly_->compare(*other.poly_); 
     }
 }; //UnivariateExprPolynomial
-
-class sym_hash {
-public:
-  size_t operator()(const Symbol &s) const {
-    return s.__hash__();
-  }
-};
-
-class sym_compare {
-  public:
-  size_t operator()(const Symbol &a, const Symbol &b) {
-    return a.compare(b);
-  }
-};
-
-class sym_eq {
- public:
-  bool operator()(const Symbol &a, const Symbol &b) {
-    return a.__eq__(b);
-  }
-};
-
-inline int umap_vec_mpz_compare(umap_vec_mpz &a, umap_vec_mpz &b) {
-  if(a.size() < b.size())
-    return (a.size() < b.size()) ? -1 : 1;
-  return 0;
-}
 
 }  //SymEngine
 
