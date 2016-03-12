@@ -215,7 +215,7 @@ TEST_CASE("Testing MultivariateIntPolynomial neg_mult_poly", "[MultivariateIntPo
     REQUIRE(p2->__str__() == "- x + 2*y - 3*z");
 }
 
-TEST_CASE("Testing addition, subtraction, multiplication with the same set of variables", "[MultivariateIntPolynomial]"){
+TEST_CASE("Testing addition, subtraction, multiplication of MultivariateIntPolynomials with the same set of variables", "[MultivariateIntPolynomial]"){
     RCP<const Symbol> x = symbol("x");
     RCP<const Symbol> y = symbol("y");
     RCP<const Symbol> z = symbol("z");
@@ -225,7 +225,21 @@ TEST_CASE("Testing addition, subtraction, multiplication with the same set of va
     REQUIRE(add_mult_poly(*p1,*p2)->__str__() == "2*x y**2 z**3 + 3*x**4 y + y z**2 + 7");
     REQUIRE(sub_mult_poly(*p1,*p2)->__str__() == "4*x**3 y**2 z + 3*x**4 y - y z**2 + 1");
     REQUIRE(mul_mult_poly(*p1,*p2)->__str__() == "- 4*x**6 y**4 z**2 + x**2 y**4 z**6 - 6*x**7 y**3 z + 3*x**5 y**3 z**3 + 2*x**3 y**3 z**3 + x y**3 z**5 + 3*x**4 y**2 z**2 - 2*x**3 y**2 z + 7*x y**2 z**3 + 9*x**4 y + 4*y z**2 + 12");
-    
+}
+
+TEST_CASE("Testing addition, subtraction, multiplication of MultivariteIntPolynomials with disjoint sets of varables", "[MultivariateIntPolynomial]"){
+    RCP<const Symbol> a = symbol("a");
+    RCP<const Symbol> b = symbol("b");
+    RCP<const Symbol> c = symbol("c");
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    RCP<const Symbol> z = symbol("z");
+    RCP<const MultivariateIntPolynomial> p1 = MultivariateIntPolynomial::from_dict({a,b,c}, {{{1,2,3},1_z}, {{3,2,1},2_z}, {{4,1,0},3_z },{{0,0,0},4} });
+    RCP<const MultivariateIntPolynomial> p2 = MultivariateIntPolynomial::from_dict({x,y,z}, {{{1,2,3},1_z},{{3,2,1},-2_z}, {{0,1,2},1_z}, {{0,0,0},3_z}});
+
+    REQUIRE(add_mult_poly(*p1,*p2)->__str__() == "2*a**3 b**2 c + a b**2 c**3 - 2*x**3 y**2 z + x y**2 z**3 + 3*a**4 b + y z**2 + 7");
+    REQUIRE(sub_mult_poly(*p1,*p2)->__str__() == "2*a**3 b**2 c + a b**2 c**3 + 2*x**3 y**2 z - x y**2 z**3 + 3*a**4 b - y z**2 + 1");
+    REQUIRE(mul_mult_poly(*p1,*p2)->__str__() == "- 4*a**3 b**2 c x**3 y**2 z + 2*a**3 b**2 c x y**2 z**3 - 2*a b**2 c**3 x**3 y**2 z + a b**2 c**3 x y**2 z**3 - 6*a**4 b x**3 y**2 z + 3*a**4 b x y**2 z**3 + 2*a**3 b**2 c y z**2 + a b**2 c**3 y z**2 + 3*a**4 b y z**2 + 6*a**3 b**2 c + 3*a b**2 c**3 - 8*x**3 y**2 z + 4*x y**2 z**3 + 9*a**4 b + 4*y z**2 + 12");
 }
 
 TEST_CASE("Testing derivative of MultivariateIntPolynomial", "[MultivariateIntPolynomial]"){
