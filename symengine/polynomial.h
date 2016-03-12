@@ -28,8 +28,7 @@ public:
     //! Constructor of UnivariateIntPolynomial class
     UnivariateIntPolynomial(const RCP<const Symbol> &var, const unsigned int &degree, map_uint_mpz&& dict);
 
-    static RCP<const UnivariateIntPolynomial> create(const RCP<const Symbol> &var,
-	   const std::vector<integer_class> &v) {
+    static RCP<const UnivariateIntPolynomial> create(const RCP<const Symbol> &var, const std::vector<integer_class> &v) {
         return UnivariateIntPolynomial::from_vec(var, v);
     }
 
@@ -48,12 +47,11 @@ public:
     static RCP<const UnivariateIntPolynomial> from_dict(const RCP<const Symbol> &var, map_uint_mpz &&d);
     //create a UnivariateIntPolynomial from a dense vector of integer_class coefficients
     static RCP<const UnivariateIntPolynomial> from_vec(const RCP<const Symbol> &var, const std::vector<integer_class> &v);
-    
+
     /*!
     * Adds coef*var_**n to the dict_
     */
-    static void dict_add_term(map_uint_mpz &d,
-            const integer_class &coef, const unsigned int &n);
+    static void dict_add_term(map_uint_mpz &d, const integer_class &coef, const unsigned int &n);
 
     integer_class max_abs_coef() const;
     //! Evaluates the UnivariateIntPolynomial at value x
@@ -97,8 +95,7 @@ RCP<const UnivariateIntPolynomial> sub_poly(const UnivariateIntPolynomial &a, co
 //! Multiplying two UnivariateIntPolynomial a and b
 RCP<const UnivariateIntPolynomial> mul_poly(const UnivariateIntPolynomial &a, const UnivariateIntPolynomial &b);
 
-inline RCP<const UnivariateIntPolynomial> univariate_int_polynomial(RCP<const Symbol> i, map_uint_mpz&& dict)
-{
+inline RCP<const UnivariateIntPolynomial> univariate_int_polynomial(RCP<const Symbol> i, map_uint_mpz&& dict) {
     return UnivariateIntPolynomial::from_dict(i, std::move(dict));
 }
 
