@@ -260,7 +260,7 @@ void StrPrinter::bvisit(const UnivariateIntPolynomial &x) {
             if (first) {
                 s << it->second;
             } else {
-                s << " " << _print_sign(it->second) << " " << abs(it->second);
+                s << " " << _print_sign(it->second) << " " << mp_abs(it->second);
             }
             first = false;
             continue;
