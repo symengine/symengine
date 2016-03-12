@@ -453,6 +453,7 @@ static RCP<const Basic> diff(const CLASS &self, \
             auto i = self.vars_.begin();
             unsigned int index = 0;
             while(!(*i)->__eq__(*x)){
+	      i++;
                 index++;
             } //find the index of the variable we are differentiating WRT.
             for(auto bucket : self.dict_){
@@ -462,10 +463,10 @@ static RCP<const Basic> diff(const CLASS &self, \
                     dict.insert(std::pair<vec_uint, integer_class>(v, bucket.second * bucket.first[index]));
                 }
             }
-            umap_sym_uint degrees = self.degrees_;
+	    /*            umap_sym_uint degrees = self.degrees_;
             if(degrees[x] >0)
-                degrees[x]--;
-            return make_rcp<const MultivariateIntPolynomial>(self.vars_, degrees, dict);
+	    degrees[x]--;*/ 
+            return MultivariateIntPolynomial::from_dict(self.vars_, std::move(dict));
         } else{
             return zero;
         }

@@ -206,12 +206,21 @@ TEST_CASE("Testing MultivariateIntPolynomial::eval((std::map<RCP<const Symbol>, 
     REQUIRE(51_z == p->eval(m3));
 }
 
-TEST_CASE("Testing MultivariateIntPolynomail neg_mult_poly", "[MultivariateIntPolynomial]"){
+TEST_CASE("Testing MultivariateIntPolynomial neg_mult_poly", "[MultivariateIntPolynomial]"){
     RCP<const Symbol> x = symbol("x");
     RCP<const Symbol> y = symbol("y");
     RCP<const Symbol> z = symbol("z");
     RCP<const MultivariateIntPolynomial> p = MultivariateIntPolynomial::from_dict( {x,y,z}, { {{1,0,0}, 1_z}, {{0,1,0},-2_z}, {{0,0,1}, 3_z }  });
     RCP<const MultivariateIntPolynomial> p2 = neg_mult_poly(*p);
     REQUIRE(p2->__str__() == "- x + 2*y - 3*z");
-  
+}
+
+TEST_CASE("Testing derivative of MultivariateIntPolynomial"){
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    RCP<const Symbol> z = symbol("z");
+    RCP<const MultivariateIntPolynomial> p = MultivariateIntPolynomial::from_dict({x,y}, { {{2,1},3_z}, {{1,2},2_z}, {{2,0},3_z}, {{0,2},2_z}, {{1,0}, 3_z}, {{0,1},2_z}, {{0,2},2_z}, {{0,0},5}  });
+    REQUIRE(p->diff(x)->__str__() == "6*x y + 2*y**2 + 6*x + 3");
+    REQUIRE(p->diff(y)->__str__() == "3*x**2 + 4*x y + 4*y + 2");
+    REQUIRE(p->diff(z)->__str__() == "0");
 }
