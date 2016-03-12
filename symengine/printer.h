@@ -61,8 +61,8 @@ public:
                     precedence = PrecedenceEnum::Pow;
                 }
             } else {
-                if (it->first == 0 and (it->second.get_basic()->__cmp__(*Expression(0).get_basic()) >= 0)) {
-                    precedence = PrecedenceEnum::Atom;
+                if (it->first == 0){
+                    it->second.get_basic()->accept(*this);
                 } else {
                     precedence = PrecedenceEnum::Mul;
                 }
