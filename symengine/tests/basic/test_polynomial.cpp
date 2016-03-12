@@ -215,7 +215,20 @@ TEST_CASE("Testing MultivariateIntPolynomial neg_mult_poly", "[MultivariateIntPo
     REQUIRE(p2->__str__() == "- x + 2*y - 3*z");
 }
 
-TEST_CASE("Testing derivative of MultivariateIntPolynomial"){
+TEST_CASE("Testing addition, subtraction, multiplication with the same set of variables", "[MultivariateIntPolynomial]"){
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    RCP<const Symbol> z = symbol("z");
+    RCP<const MultivariateIntPolynomial> p1 = MultivariateIntPolynomial::from_dict({x,y,z}, {{{1,2,3},1_z}, {{3,2,1},2_z}, {{4,1,0},3_z },{{0,0,0},4} });
+    RCP<const MultivariateIntPolynomial> p2 = MultivariateIntPolynomial::from_dict({x,y,z}, {{{1,2,3},1_z},{{3,2,1},-2_z}, {{0,1,2},1_z}, {{0,0,0},3_z}});
+
+    REQUIRE(add_mult_poly(*p1,*p2)->__str__() == "2*x y**2 z**3 + 3*x**4 y + y z**2 + 7");
+    REQUIRE(sub_mult_poly(*p1,*p2)->__str__() == "4*x**3 y**2 z + 3*x**4 y - y z**2 + 1");
+    REQUIRE(mul_mult_poly(*p1,*p2)->__str__() == "- 4*x**6 y**4 z**2 + x**2 y**4 z**6 - 6*x**7 y**3 z + 3*x**5 y**3 z**3 + 2*x**3 y**3 z**3 + x y**3 z**5 + 3*x**4 y**2 z**2 - 2*x**3 y**2 z + 7*x y**2 z**3 + 9*x**4 y + 4*y z**2 + 12");
+    
+}
+
+TEST_CASE("Testing derivative of MultivariateIntPolynomial", "[MultivariateIntPolynomial]"){
     RCP<const Symbol> x = symbol("x");
     RCP<const Symbol> y = symbol("y");
     RCP<const Symbol> z = symbol("z");
