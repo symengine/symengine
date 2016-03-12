@@ -54,7 +54,8 @@ public:
     */
     static void dict_add_term(map_uint_mpz &d,
             const integer_class &coef, const unsigned int &n);
-    integer_class max_coef() const;
+
+    integer_class max_abs_coef() const;
     //! Evaluates the UnivariateIntPolynomial at value x
     integer_class eval(const integer_class &x) const;
     //! Evaluates the UnivariateIntPolynomial at value 2**x
@@ -90,10 +91,11 @@ public:
 RCP<const UnivariateIntPolynomial> add_poly(const UnivariateIntPolynomial &a, const UnivariateIntPolynomial &b);
 //! Negative of a UnivariateIntPolynomial
 RCP<const UnivariateIntPolynomial> neg_poly(const UnivariateIntPolynomial &a);
+RCP<const UnivariateIntPolynomial> same_poly(const UnivariateIntPolynomial &a);
 //! Subtracting two UnivariateIntPolynomial a and b
 RCP<const UnivariateIntPolynomial> sub_poly(const UnivariateIntPolynomial &a, const UnivariateIntPolynomial &b);
 //! Multiplying two UnivariateIntPolynomial a and b
-RCP<const UnivariateIntPolynomial> mul_poly(const RCP<const UnivariateIntPolynomial> &a, const RCP<const UnivariateIntPolynomial> &b);
+RCP<const UnivariateIntPolynomial> mul_poly(const UnivariateIntPolynomial &a, const UnivariateIntPolynomial &b);
 
 inline RCP<const UnivariateIntPolynomial> univariate_int_polynomial(RCP<const Symbol> i, map_uint_mpz&& dict)
 {

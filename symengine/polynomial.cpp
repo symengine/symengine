@@ -130,11 +130,12 @@ vec_basic UnivariateIntPolynomial::get_args() const {
     return args;
 }
 
-integer_class UnivariateIntPolynomial::max_coef() const {
-    integer_class curr = dict_.begin()->second;
+integer_class UnivariateIntPolynomial::max_abs_coef() const {
+
+    integer_class curr(dict_.begin()->second);
     for (const auto &it : dict_) {
-        if (it.second > curr)
-            curr = it.second;
+            if (mp_abs(it.second) > mp_abs(curr))
+                curr = it.second;
     }
     return curr;
 }
@@ -250,23 +251,19 @@ unsigned int bit_length(T t){
     return count;
 }
 
-RCP<const UnivariateIntPolynomial> mul_poly(const RCP<const UnivariateIntPolynomial> &a, const RCP<const UnivariateIntPolynomial> &b) {
+RCP<const UnivariateIntPolynomial> mul_poly(const UnivariateIntPolynomial &a, const UnivariateIntPolynomial &b) {
 
-    unsigned int da = a->degree_;
-    unsigned int db = b->degree_;
-    RCP<const UnivariateIntPolynomial> a_n = a, b_n = b;
+    unsigned int da = a.degree_;
+    unsigned int db = b.degree_;
 
-    int sign = 1;
-    if ((--(a->dict_.end()))->second < 0) {
-        a_n = neg_poly(*a);
-        sign = -1 * sign;
-    }
-    if ((--(b->dict_.end()))->second < 0) {
-        b_n = neg_poly(*b);
-        sign = -1 * sign;
-    }
+    int a_sign = 1, b_sign = 1;
 
-    integer_class p = std::max(a_n->max_coef(), b_n->max_coef());
+    if ((--(a.dict_.end()))->second < 0)
+        a_sign = -1;
+    if ((--(b.dict_.end()))->second < 0)
+        b_sign = -1;
+
+    integer_class p = std::max(a.max_abs_coef(), b.max_abs_coef());
 
     unsigned int N = bit_length(std::min(da + 1, db + 1)) + bit_length(p) + 1;
 
@@ -274,8 +271,8 @@ RCP<const UnivariateIntPolynomial> mul_poly(const RCP<const UnivariateIntPolynom
     a1 <<= N;
     integer_class a2 = a1 / 2;
     integer_class mask = a1 - 1;
-    integer_class sa = a_n->eval_bit(N);
-    integer_class sb = b_n->eval_bit(N);
+    integer_class sa = a_sign * a.eval_bit(N);
+    integer_class sb = b_sign * b.eval_bit(N);
     integer_class r = sa*sb;
 
     std::vector<integer_class> v;
@@ -295,10 +292,10 @@ RCP<const UnivariateIntPolynomial> mul_poly(const RCP<const UnivariateIntPolynom
         r >>= N;
     }
 
-    if (sign == -1)
-        return neg_poly(*UnivariateIntPolynomial::from_vec(a_n->var_, v));
+    if (a_sign * b_sign == -1)
+        return neg_poly(*UnivariateIntPolynomial::from_vec(a.var_, v));
     else
-        return UnivariateIntPolynomial::from_vec(a_n->var_, v);
+        return UnivariateIntPolynomial::from_vec(a.var_, v);
 }
 
 } // SymEngine

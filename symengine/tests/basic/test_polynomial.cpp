@@ -75,8 +75,10 @@ TEST_CASE("Subtracting two UnivariateIntPolynomial", "[UnivariateIntPolynomial]"
 TEST_CASE("Multiplication of two UnivariateIntPolynomial", "[UnivariateIntPolynomial]")
 {
     RCP<const Symbol> x  = symbol("x");
-    RCP<const UnivariateIntPolynomial> a = univariate_int_polynomial(x, {{0, 1_z}, {1, 2_z}, {2, 1_z}});
-    RCP<const UnivariateIntPolynomial> b = univariate_int_polynomial(x, {{0, -1_z}, {1, -2_z}, {2, -1_z}});
+    map_uint_mpz adict_ = {{0, 1_z}, {1, 2_z}, {2, 1_z}};
+    map_uint_mpz bdict_ = {{0, -1_z}, {1, -2_z}, {2, -1_z}};
+    const UnivariateIntPolynomial a(x, 2, std::move(adict_));
+    const UnivariateIntPolynomial b(x, 2, std::move(bdict_));
 
     RCP<const UnivariateIntPolynomial> c = mul_poly(a, a);
     //std::cout<<c->__str__();
