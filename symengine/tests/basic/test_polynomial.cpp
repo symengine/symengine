@@ -246,7 +246,7 @@ TEST_CASE("Derivative of UnivariatePolynomial", "[UnivariatePolynomial]")
     RCP<const Symbol> x  = symbol("x");
     RCP<const Symbol> y  = symbol("y");
     RCP<const UnivariatePolynomial> a = univariate_polynomial(x, 2, {{0, 1}, {1, 2}, {2, symbol("a")}});
-    RCP<const UnivariatePolynomial> b = univariate_polynomial(x, 2, {{0, 1}, {1, 0}, {2, symbol("a")}});
+    RCP<const UnivariatePolynomial> b = univariate_polynomial(x, 0, {{0, 1}});
     
     REQUIRE(a->diff(x)->__str__() == "2*a*x + 2");
     REQUIRE(a->diff(y)->__str__() == "0");
