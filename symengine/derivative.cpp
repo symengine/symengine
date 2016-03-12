@@ -449,13 +449,17 @@ static RCP<const Basic> diff(const CLASS &self, \
         if (self.get_var()->__eq__(*x)) {
             map_int_Expr d;
             for (const auto &p : self.get_dict()) {
-                d[p.first - 1] = p.second * p.first;
+                if (p.first != 0) {
+                    d[p.first - 1] = p.second * p.first;
+                } else {
+                    d[0] = p.second;
+                }
+              
             }
             return make_rcp<const UnivariatePolynomial>(self.get_var(),
                     (--(d.end()))->first, std::move(d));
         } else {
             map_int_Expr d;
-            d[0] = Expression(0);
             return make_rcp<const UnivariatePolynomial>(self.get_var(), 0, std::move(d));
         }
     }
