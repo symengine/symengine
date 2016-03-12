@@ -3,105 +3,88 @@
 
 namespace SymEngine {
 
+namespace {
 template<class T>
-inline std::ostream& print_map(std::ostream& out, T& d)
-{
-    out << "{";
-    for (auto p = d.begin(); p != d.end(); p++) {
-        if (p != d.begin()) out << ", ";
-        out << (p->first) << ": " << (p->second);
+    inline std::ostream& print_map(std::ostream& out, T& d)
+    {
+        out << "{";
+        for (auto p = d.begin(); p != d.end(); p++) {
+            if (p != d.begin()) out << ", ";
+            out << (p->first) << ": " << (p->second);
+        }
+        out << "}";
+        return out;
     }
-    out << "}";
-    return out;
-}
 
 template<class T>
-inline std::ostream& print_map_rcp(std::ostream& out, T& d)
-{
-    out << "{";
-    for (auto p = d.begin(); p != d.end(); p++) {
-        if (p != d.begin()) out << ", ";
-        out << *(p->first) << ": " << *(p->second);
+    inline std::ostream& print_map_rcp(std::ostream& out, T& d)
+    {
+        out << "{";
+        for (auto p = d.begin(); p != d.end(); p++) {
+            if (p != d.begin()) out << ", ";
+            out << *(p->first) << ": " << *(p->second);
+        }
+        out << "}";
+        return out;
     }
-    out << "}";
-    return out;
-}
 
 template<class T>
-inline std::ostream& print_vec(std::ostream& out, T& d)
-{
-    out << "[";
-    for (auto p = d.begin(); p != d.end(); p++) {
-        if (p != d.begin()) out << ", ";
-        out << *p;
+    inline std::ostream& print_vec(std::ostream& out, T& d)
+    {
+        out << "[";
+        for (auto p = d.begin(); p != d.end(); p++) {
+            if (p != d.begin()) out << ", ";
+            out << *p;
+        }
+        out << "]";
+        return out;
     }
-    out << "]";
-    return out;
-}
 
 template<class T>
-inline std::ostream& print_vec_rcp(std::ostream& out, T& d)
-{
-    out << "[";
-    for (auto p = d.begin(); p != d.end(); p++) {
-        if (p != d.begin()) out << ", ";
-        out << **p;
+    inline std::ostream& print_vec_rcp(std::ostream& out, T& d)
+    {
+        out << "[";
+        for (auto p = d.begin(); p != d.end(); p++) {
+            if (p != d.begin()) out << ", ";
+            out << **p;
+        }
+        out << "]";
+        return out;
     }
-    out << "]";
-    return out;
-}
+
+} //anonymous namespace
 
 } // SymEngine
 
 
 std::ostream& operator<<(std::ostream& out, const SymEngine::umap_basic_num& d)
 {
-    return print_map_rcp(out, d);
-}
-
-std::ostream& operator<<(std::ostream& out, const SymEngine::vec_int& d)
-{
-    return SymEngine::print_vec(out, d);
-}
-
-std::ostream& operator<<(std::ostream& out, const SymEngine::map_vec_int& d)
-{
-    return SymEngine::print_map(out, d);
-}
-
-std::ostream& operator<<(std::ostream& out, const SymEngine::map_vec_mpz& d)
-{
-    return SymEngine::print_map(out, d);
-}
-
-std::ostream& operator<<(std::ostream& out, const SymEngine::umap_vec_mpz& d)
-{
-    return print_map(out, d);
+    return SymEngine::print_map_rcp(out, d);
 }
 
 std::ostream& operator<<(std::ostream& out, const SymEngine::map_basic_num& d)
 {
-    return print_map_rcp(out, d);
+    return SymEngine::print_map_rcp(out, d);
 }
 
 std::ostream& operator<<(std::ostream& out, const SymEngine::map_basic_basic& d)
 {
-    return print_map_rcp(out, d);
+    return SymEngine::print_map_rcp(out, d);
 }
 
 std::ostream& operator<<(std::ostream& out, const SymEngine::umap_basic_basic& d)
 {
-    return print_map_rcp(out, d);
+    return SymEngine::print_map_rcp(out, d);
 }
 
 std::ostream& operator<<(std::ostream& out, const SymEngine::vec_basic& d)
 {
-    return print_vec_rcp(out, d);
+    return SymEngine::print_vec_rcp(out, d);
 }
 
 std::ostream& operator<<(std::ostream& out, const SymEngine::set_basic& d)
 {
-    return print_vec_rcp(out, d);
+    return SymEngine::print_vec_rcp(out, d);
 }
 
 

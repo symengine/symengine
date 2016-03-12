@@ -140,10 +140,6 @@ typedef std::unordered_map<vec_int, integer_class,
 
 
 std::ostream& operator<<(std::ostream& out, const SymEngine::umap_basic_num& d);
-std::ostream& operator<<(std::ostream& out, const SymEngine::vec_int& d);
-std::ostream& operator<<(std::ostream& out, const SymEngine::map_vec_int& d);
-std::ostream& operator<<(std::ostream& out, const SymEngine::map_vec_mpz& d);
-std::ostream& operator<<(std::ostream& out, const SymEngine::umap_vec_mpz& d);
 std::ostream& operator<<(std::ostream& out, const SymEngine::map_basic_num& d);
 std::ostream& operator<<(std::ostream& out, const SymEngine::map_basic_basic& d);
 std::ostream& operator<<(std::ostream& out, const SymEngine::umap_basic_basic& d);

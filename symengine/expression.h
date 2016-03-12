@@ -139,7 +139,10 @@ inline Expression coeff(const Expression &y, const Expression &x, const Expressi
     return coeff(y.get_basic(), x.get_basic(), n.get_basic());
 }
 
-std::string poly_print(const Expression &x);
+namespace detail {
+    // This function must have external linkage
+    std::string poly_print(const Expression &x);
+}
 
 } // SymEngine
 
@@ -175,7 +178,7 @@ namespace piranha {
     struct print_coefficient_impl<U, typename std::enable_if<std::is_same<U, SymEngine::Expression>::value>::type>
     {
         auto operator()(std::ostream &os, const U &cf) const -> decltype(os << cf) {
-            return os << poly_print(cf);
+            return os << SymEngine::detail::poly_print(cf);
         }
     };
 }
