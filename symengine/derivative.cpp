@@ -439,7 +439,6 @@ static RCP<const Basic> diff(const CLASS &self, \
             return UnivariateIntPolynomial::from_dict(self.get_var(), std::move(d));
         } else {
             map_uint_mpz d;
-            d[0] = integer_class(0);
             return UnivariateIntPolynomial::from_dict(self.get_var(), std::move(d));
         }
     }
@@ -449,12 +448,8 @@ static RCP<const Basic> diff(const CLASS &self, \
         if (self.get_var()->__eq__(*x)) {
             map_int_Expr d;
             for (const auto &p : self.get_dict()) {
-                if (p.first != 0) {
+                if (p.first != 0) 
                     d[p.first - 1] = p.second * p.first;
-                } else {
-                    d[0] = p.second;
-                }
-              
             }
             return make_rcp<const UnivariatePolynomial>(self.get_var(),
                     (--(d.end()))->first, std::move(d));
