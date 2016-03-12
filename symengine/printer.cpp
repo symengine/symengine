@@ -240,80 +240,56 @@ void StrPrinter::bvisit(const Pow &x) {
     str_ = o.str();
 }
 
+char _print_sign(const integer_class &i) {
+    if (i < 0) {
+        return '-';
+    } else {
+        return '+';
+    }
+}
+
 //UnivariateIntPolynomial printing, tests taken from SymPy and printing ensures that there is compatibility
 void StrPrinter::bvisit(const UnivariateIntPolynomial &x) {
     std::ostringstream s;
     //bool variable needed to take care of cases like -5, -x, -3*x etc.
     bool first = true;
     //we iterate over the map in reverse order so that highest degree gets printed first
-    for (auto it = x.get_dict().rbegin(); it != x.get_dict().rend();) {
-        //given a term in univariate polynomial, if coefficient is zero, print nothing
-        if (it->second == 0) {
-            //except when it is the only term, say "0"
-            if (it->first == 0)
-                s << "0";
-            ++it;
+    for (auto it = x.get_dict().rbegin(); it != x.get_dict().rend();++it) {
+        //if exponent is 0, then print only coefficient
+        if (it->first == 0) {
+            if (first) {
+                s << it->second;
+            } else {
+                s << " " << _print_sign(it->second) << " " << abs(it->second);
+            }
+            first = false;
+            continue;
         }
         //if the coefficient of a term is +1 or -1
-        else if (mp_abs(it->second) == 1) {
-            //if exponent is 0, then print only coefficient
-            //in cases of -7, it is the only term, hence we print -7
-            //in cases of x - 7, the '-' is considered earlier, hence print only 7
-            if (it->first == 0) {
-                if (first)
-                    s << it->second;
-                else
-                    s << mp_abs(it->second);
-            }
-            //if exponent is 1, print x instead of x**1
-            else if (it->first == 1) {
-                //in cases of -x, print -x
-                //in cases of x**2 - x, print x, the '-' is considered earlier
-                if (first and it->second == -1) {
-                    s << "-" << x.get_var()->get_name();
-                } else {
-                    s << x.get_var()->get_name();
-                }
+        if (mp_abs(it->second) == 1) {
+            //in cases of -x, print -x
+            //in cases of x**2 - x, print - x
+            if (first) {
+                if (it->second == -1)
+                    s << "-";
+                s << x.get_var()->get_name();
             } else {
-                if (first and it->second == -1) {
-                    s << "-" << x.get_var()->get_name() << "**"  << it->first;
-                } else {
-                    s << x.get_var()->get_name() << "**"  << it->first;
-                }
-            }
-            //if next term is going to be 0, don't print +, so that x**3 + 0 + x becomes x**3 + x
-            //also consider that sign of term here itself to avoid prints like x + -1
-            if ((++it != x.get_dict().rend()) and (it->second != 0)) {
-                if (it->second < 0) {
-                    s << " - ";
-                } else {
-                    s << " + ";
-                }
+                s << " " << _print_sign(it->second) << " " << x.get_var()->get_name();
             }
         }
         //same logic is followed as above
         else {
-            if (it->first == 0) {
-                if (first)
-                    s << it->second;
-                else
-                    s << mp_abs(it->second);
-            } else if (it->first == 1) {
-                if (first and it->second < 0) {
-                    s << it->second << "*" << x.get_var()->get_name();
-                } else {
-                    s << mp_abs(it->second) << "*" << x.get_var()->get_name();
-                }
+            //in cases of -2*x, print -2*x
+            //in cases of x**2 - 2*x, print - 2*x
+            if (first) {
+                s << it->second << "*" << x.get_var()->get_name();
             } else {
-                s << mp_abs(it->second) << "*" << x.get_var()->get_name() << "**" << it->first;
+                s << " " << _print_sign(it->second) << " " << mp_abs(it->second) << "*" << x.get_var()->get_name();
             }
-            if ((++it != x.get_dict().rend()) and (it->second != 0)) {
-                if (it->second < 0) {
-                    s << " - ";
-                } else {
-                    s << " + ";
-                }
-            }
+        }
+        //if exponent is not 1, print the exponent;
+        if (it->first != 1) {
+            s << "**"  << it->first;
         }
         //corner cases of only first term handled successfully, switch the bool
         first = false;
@@ -329,136 +305,54 @@ void StrPrinter::bvisit(const UnivariatePolynomial &x) {
     //bool variable needed to take care of cases like -5, -x, -3*x etc.
     bool first = true;
     //we iterate over the map in reverse order so that highest degree gets printed first
-    for (auto it = x.get_dict().rbegin(); it != x.get_dict().rend();) {
-        if(is_a<const Integer>(*it->second.get_basic())) {
-            //given a term in univariate polynomial, if coefficient is zero, print nothing
-            if (it->second == 0) {
-                //except when it is the only term, say "0"
-                if (it->first == 0)
-                    s << "0";
-                ++it;
-            }
-            //if the coefficient of a term is +1 or -1
-            else if (Expression(abs(it->second.get_basic())) == Expression(1)) {
-                //if exponent is 0, then print only coefficient
-                //in cases of -7, it is the only term, hence we print -7
-                //in cases of x - 7, the '-' is considered earlier, hence print only 7
-                if (it->first == 0) {
-                    if (first)
-                        s << it->second;
-                    else
-                        s << Expression(abs(it->second.get_basic()));
-                }
-                //if exponent is 1, print x instead of x**1
-                else if (it->first == 1) {
-                    //in cases of -x, print -x
-                    //in cases of x**2 - x, print x, the '-' is considered earlier
-                    if (first and it->second == -1) {
-                        s << "-" << x.get_var()->get_name();
-                    } else {
-                        s << x.get_var()->get_name();
-                    }
-                }
-                else {
-                    if (first and it->second == -1) {
-                        s << "-" << x.get_var()->get_name() << "**"  << it->first;
-                    } else {
-                        s << x.get_var()->get_name() << "**"  << it->first;
-                    }
-                }
-                //if next term is going to be 0, don't print +, so that x**3 + 0 + x becomes x**3 + x
-                //also consider that sign of term here itself to avoid prints like x + -1
-                if ((++it != x.get_dict().rend()) and (it->second != 0)) {
-                    if ((it->second.get_basic()->__cmp__(*Expression(0).get_basic()) < 0) or (is_a<Mul>(*it->second.get_basic()) and (rcp_static_cast<const Mul>(it->second.get_basic ()))->coef_->is_negative())
-                        or (is_a<Pow>(*it->second.get_basic()) and (rcp_static_cast<const Mul>((rcp_static_cast<const Pow>(it->second.get_basic()))->get_base()))->coef_->is_negative())) {
-                        s << " - ";
-                    } else {
-                        s << " + ";
-                    }
-                }
-            }
-            //same logic is followed as above
-            else {
-                if (it->first == 0) {
-                    s << Expression(abs(it->second.get_basic()));
-                } else if (it->first == 1) {
-                    s << Expression(abs(it->second.get_basic())) << "*" << x.get_var()->get_name();
+    for (auto it = x.get_dict().rbegin(); it != x.get_dict().rend(); ++it) {
+        std::string t;
+        //if exponent is 0, then print only coefficient
+        if (it->first == 0) {
+            if (first) {
+                s << it->second;
+            } else {
+                t = parenthesizeLT(it->second.get_basic(), PrecedenceEnum::Mul);
+                if (t[0] == '-') {
+                    s << " - " << t.substr(1);
                 } else {
-                    s << Expression(abs(it->second.get_basic())) << "*" << x.get_var()->get_name() << "**"  << it->first;
+                    s << " + " << t;
                 }
-                if ((++it != x.get_dict().rend()) and (it->second != 0)) {
-                    if ((it->second.get_basic()->__cmp__(*Expression(0).get_basic()) < 0) or (is_a<Mul>(*it->second.get_basic()) and (rcp_static_cast<const Mul>(it->second.get_basic()))->coef_->is_negative())
-                        or (is_a<Pow>(*it->second.get_basic()) and (rcp_static_cast<const Mul>((rcp_static_cast<const Pow>(it->second.get_basic()))->get_base()))->coef_->is_negative())) {
-                        s << " - ";
-                    } else {
-                        s << " + ";
-                    }
-                }
+            }
+            first = false;
+            continue;
+        }
+        //if the coefficient of a term is +1 or -1
+        if (it->second == 1 or it->second == -1) {
+            //in cases of -x, print -x
+            //in cases of x**2 - x, print - x
+            if (first) {
+                if (it->second == -1)
+                    s << "-";
+            } else {
+                s << " " << _print_sign(static_cast<const Integer &>(*it->second.get_basic()).as_mpz()) << " ";
             }
         }
+        //same logic is followed as above
         else {
-            if(is_a<const Symbol>(*it->second.get_basic())) { // stand-alone symbols
-                if (it->first == 0)
-                    s << Expression(it->second.get_basic());
-                else if (it->first == 1) 
-                    s << Expression(it->second.get_basic()) << "*" << x.get_var()->get_name();
-                else 
-                    s << Expression(it->second.get_basic()) << "*" << x.get_var()->get_name() << "**"  << it->first;
-
-                if (++it != x.get_dict().rend()) {
-                    if ((it->second.get_basic()->__cmp__(*Expression(0).get_basic()) < 0)or (is_a<Mul>(*it->second.get_basic()) and (rcp_static_cast<const Mul>(it->second.get_basic()))->coef_->is_negative())
-                        or (is_a<Pow>(*it->second.get_basic()) and (rcp_static_cast<const Mul>((rcp_static_cast<const Pow>(it->second.get_basic()))->get_base()))->coef_->is_negative())) {
-                        s << " - ";
-                    } else {
-                        s << " + ";
-                    }
+            //in cases of -2*x, print -2*x
+            //in cases of x**2 - 2*x, print - 2*x
+            if (first) {
+                s << parenthesizeLT(it->second.get_basic(), PrecedenceEnum::Mul) << "*";
+            } else {
+                t = parenthesizeLT(it->second.get_basic(), PrecedenceEnum::Mul);
+                if (t[0] == '-') {
+                    s << " - " << t.substr(1);
+                } else {
+                    s << " + " << t;
                 }
+                s << "*";
             }
-            else { // For grouping un-like terms
-                if (it->first == 0) {
-                    if(first)
-                        s << Expression(it->second.get_basic());
-                    else
-                        s << "(" << Expression(it->second.get_basic()) << ")";
-                }
-                else if (it->first == 1) {
-                    if(is_a<Mul>(*it->second.get_basic()) and (rcp_static_cast<const Mul>(it->second.get_basic()))->coef_->is_negative()) {
-                        if(first)
-                            s << Expression(it->second.get_basic()) << "*" << x.get_var()->get_name();
-                        else {
-                            Expression b = it->second * -1;
-                            s << b << "*" << x.get_var()->get_name();
-                        }
-                    }
-                    else
-                        s << "(" << Expression(it->second.get_basic()) << ")" << "*" << x.get_var()->get_name();
-                }
-                else {
-                    if(is_a<Mul>(*it->second.get_basic())) {
-                        if (first)
-                            s << Expression(it->second.get_basic()) << "*" << x.get_var()->get_name() << "**"  << it->first;
-                        else if ((rcp_static_cast<const Mul>(it->second.get_basic()))->coef_->is_negative()) {
-                            Expression b = it->second * -1;
-                            s << b << "*" << x.get_var()->get_name();
-                        }
-                        else {
-                            s << "(" << Expression(it->second.get_basic()) << ")" << "*" << x.get_var()->get_name() << "**" << it->first;
-                        }
-                    }
-                    else {
-                        s << "(" << Expression(it->second.get_basic()) << ")" << "*" << x.get_var()->get_name() << "**"  << it->first;
-                    }
-                }
-
-                if (++it != x.get_dict().rend() and (it->second != 0)) {
-                    if ((it->second.get_basic()->__cmp__(*Expression(0).get_basic()) < 0) or (is_a<Mul>(*it->second.get_basic()) and (rcp_static_cast<const Mul>(it->second.get_basic()))->coef_->is_negative())
-                        or (is_a<Pow>(*it->second.get_basic()) and (rcp_static_cast<const Mul>((rcp_static_cast<const Pow>(it->second.get_basic()))->get_base()))->coef_->is_negative())) {
-                        s << " - ";
-                    } else {
-                        s << " + ";
-                    }
-                }
-            }
+        }
+        s << x.get_var()->get_name();
+        //if exponent is not 1, print the exponent;
+        if (it->first != 1) {
+            s << "**"  << it->first;
         }
         //corner cases of only first term handled successfully, switch the bool
         first = false;

@@ -220,7 +220,7 @@ TEST_CASE("Multiplication of two UnivariatePolynomial", "[UnivariatePolynomial]"
     RCP<const UnivariatePolynomial> c = mul_uni_poly(a, a);
     RCP<const UnivariatePolynomial> d = mul_uni_poly(a, b);
 
-    REQUIRE(c->__str__() == "(a**2)*x**4 + (2*a*b)*x**3 + (2*a + b**2)*x**2 + (2*b)*x + 1");
+    REQUIRE(c->__str__() == "a**2*x**4 + 2*a*b*x**3 + (2*a + b**2)*x**2 + 2*b*x + 1");
     REQUIRE(d->__str__() == "-a**2*x**4 + (-2*a - a*b)*x**3 + (-2*a - 2*b)*x**2 + (-2 - b)*x - 1");
 }
 
@@ -247,7 +247,7 @@ TEST_CASE("Derivative of UnivariatePolynomial", "[UnivariatePolynomial]")
     RCP<const Symbol> y  = symbol("y");
     RCP<const UnivariatePolynomial> a = univariate_polynomial(x, 2, {{0, 1}, {1, 2}, {2, symbol("a")}});
 
-    REQUIRE(a->diff(x)->__str__() == "(2*a)*x + 2");
+    REQUIRE(a->diff(x)->__str__() == "2*a*x + 2");
     REQUIRE(a->diff(y)->__str__() == "0");
 }
 
@@ -292,5 +292,5 @@ TEST_CASE("Univariate Polynomial expand", "[UnivariatePolynomial][expand]")
     RCP<const Basic> c = expand(b);
 
     REQUIRE(b->__str__() == "(a*x**3 + x**2 + x)**3");
-    REQUIRE(c->__str__() == "(a**3)*x**9 + (3*a**2)*x**8 + (2*a + a*(1 + 2*a) + a**2)*x**7 + (1 + 6*a)*x**6 + (3 + 3*a)*x**5 + 3*x**4 + x**3");
+    REQUIRE(c->__str__() == "a**3*x**9 + 3*a**2*x**8 + (2*a + a*(1 + 2*a) + a**2)*x**7 + (1 + 6*a)*x**6 + (3 + 3*a)*x**5 + 3*x**4 + x**3");
 }

@@ -30,21 +30,17 @@ public:
     void bvisit(const UnivariateIntPolynomial &x) {
         if (x.get_dict().size() == 1) {
             auto it = x.get_dict().begin();
-            if (it->second == 0) {
-                precedence = PrecedenceEnum::Atom;
-            } else if (it->second == 1) {
-                if (it->first == 0 or it->first == 1) {
+            if (it->second == 1) {
+                if (it->first == 1) {
                     precedence = PrecedenceEnum::Atom;
                 } else {
                     precedence = PrecedenceEnum::Pow;
                 }
             } else {
-                if (it->first == 0 and it->second >= 0) {
-                    precedence = PrecedenceEnum::Atom;
-                } else {
-                    precedence = PrecedenceEnum::Mul;
-                }
+                precedence = PrecedenceEnum::Mul;
             }
+        } else if (x.get_dict().size() == 0) {
+            precedence = PrecedenceEnum::Atom;
         } else {
             precedence = PrecedenceEnum::Add;
         }
@@ -61,7 +57,7 @@ public:
                     precedence = PrecedenceEnum::Pow;
                 }
             } else {
-                if (it->first == 0){
+                if (it->first == 0) {
                     it->second.get_basic()->accept(*this);
                 } else {
                     precedence = PrecedenceEnum::Mul;
