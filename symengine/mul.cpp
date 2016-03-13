@@ -327,7 +327,7 @@ RCP<const Basic> mul(const RCP<const Basic> &a, const RCP<const Basic> &b)
 {
     SymEngine::map_basic_basic d;
     RCP<const Number> coef = one;
-    if (SymEngine::is_a<Mul>(*a) and SymEngine::is_a<Mul>(*b)) {
+    if (is_a<Mul>(*a) and is_a<Mul>(*b)) {
         RCP<const Mul> A = rcp_static_cast<const Mul>(a);
         RCP<const Mul> B = rcp_static_cast<const Mul>(b);
         // This is important optimization, as coef=1 if Mul is inside an Add.
@@ -339,7 +339,7 @@ RCP<const Basic> mul(const RCP<const Basic> &a, const RCP<const Basic> &b)
         d = A->dict_;
         for (const auto &p: B->dict_)
             Mul::dict_add_term_new(outArg(coef), d, p.second, p.first);
-    } else if (SymEngine::is_a<Mul>(*a)) {
+    } else if (is_a<Mul>(*a)) {
         RCP<const Basic> exp;
         RCP<const Basic> t;
         coef = (rcp_static_cast<const Mul>(a))->coef_;
@@ -350,7 +350,7 @@ RCP<const Basic> mul(const RCP<const Basic> &a, const RCP<const Basic> &b)
             Mul::as_base_exp(b, outArg(exp), outArg(t));
             Mul::dict_add_term_new(outArg(coef), d, exp, t);
         }
-    } else if (SymEngine::is_a<Mul>(*b)) {
+    } else if (is_a<Mul>(*b)) {
         RCP<const Basic> exp;
         RCP<const Basic> t;
         coef = (rcp_static_cast<const Mul>(b))->coef_;

@@ -48,9 +48,11 @@ RCP<const Constant> EulerGamma = constant("EulerGamma");
 // for further details
 RCP<const Basic> i2 = integer(2);
 
+namespace {
 RCP<const Basic> sqrt_(const RCP<const Basic>& arg)
 {
     return pow(arg, div(one, i2));
+}
 }
 
 

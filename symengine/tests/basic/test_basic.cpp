@@ -77,7 +77,8 @@ TEST_CASE("Symbol dict: Basic", "[basic]")
     RCP<const Basic> x  = symbol("x");
     RCP<const Basic> x2 = symbol("x");
     RCP<const Basic> y  = symbol("y");
-    REQUIRE( x !=  x2);  // The instances are different...
+    bool p = (x != x2);
+    REQUIRE(p);  // The instances are different...
     REQUIRE(eq(*x, *x2));  // ...but equal in the SymPy sense
 
     insert(d, x, integer(2));

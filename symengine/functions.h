@@ -953,6 +953,8 @@ public:
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &arg) const;
     virtual vec_basic get_args() const { return {arg_}; }
+    //! Substitute with `subs_dict`
+    virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
 };
 
 //! Canonicalize Gamma:
@@ -1107,6 +1109,8 @@ public:
     bool is_canonical(const RCP<const Basic> &n, const RCP<const Basic> &x);
     virtual vec_basic get_args() const { return {n_, x_}; }
     RCP<const Basic> rewrite_as_zeta() const;
+    //! Substitute with `subs_dict`
+    virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
 };
 
 //! Canonicalize PolyGamma
