@@ -1161,11 +1161,11 @@ RCP<const MultivariateIntPolynomial> add_mult_poly(const MultivariateIntPolynomi
     set_sym s;
     umap_uvec_mpz dict;
 //  umap_sym_uint degs;
-    unsigned int size = reconcile(v1,v2,s,a.vars_,b.var_);
+    unsigned int size = reconcile(v1,v2,s,a.vars_,b.get_var());
     for(auto bucket : a.dict_){
         dict.insert(std::pair<vec_uint, integer_class>(translate(bucket.first,v1,size),bucket.second ));
     }
-    for(auto bucket : b.dict_){
+    for(auto bucket : b.get_dict()){
         auto target = dict.find(translate(bucket.first, v2, size));
 	if(target != dict.end()){
   	    target->second += bucket.second;
@@ -1207,7 +1207,7 @@ RCP<const MultivariateIntPolynomial> mul_mult_poly(const MultivariateIntPolynomi
     set_sym s;
     umap_uvec_mpz dict;
 //  umap_sym_uint degs;
-    unsigned int size = reconcile(v1,v2,s,a.vars_,b.var_);
+    unsigned int size = reconcile(v1,v2,s,a.vars_,b.get_var());
 /*  unsigned int maxdegree = 0;
     for(auto bucket : s){
         maxdegree = 0;
@@ -1218,7 +1218,7 @@ RCP<const MultivariateIntPolynomial> mul_mult_poly(const MultivariateIntPolynomi
 	degs.insert(std::pair<RCP<const Symbol>,unsigned int>(bucket,maxdegree));
     }*/
     for(auto a_bucket : a.dict_){
-        for(auto b_bucket : b.dict_){
+        for(auto b_bucket : b.get_dict()){
 	    vec_uint target = uint_vec_translate_and_add(a_bucket.first,b_bucket.first,v1,v2,size);
             if(dict.find(target) == dict.end()){
 	        dict.insert(std::pair<vec_uint, integer_class>(target, a_bucket.second * b_bucket.second));
@@ -1242,24 +1242,24 @@ RCP<const MultivariateIntPolynomial> add_mult_poly(const UnivariateIntPolynomial
     umap_uvec_mpz dict;
 //  umap_sym_uint degs;
     bool same = false; //are the variables of a and b the same?
-    if(0 == a.var_->compare(*b.var_)){
+    if(0 == a.get_var()->compare(*b.get_var())){
         v1 = 0;
         v2 = 0;
-        s.insert(a.var_);
+        s.insert(a.get_var());
 	same = true;
     }else{
-        if(-1 == a.var_->compare(*b.var_)){
+        if(-1 == a.get_var()->compare(*b.get_var())){
             v1 = 0;
             v2 = 1;
         }else{
             v2 = 0;
             v1 = 1;
         }
-	s.insert(a.var_);
-        s.insert(b.var_);
+	s.insert(a.get_var());
+        s.insert(b.get_var());
     }
 
-    for(auto bucket : a.dict_){
+    for(auto bucket : a.get_dict()){
         vec_uint v;
 	v.insert(v.end(),0);
 	if(!same)
@@ -1267,7 +1267,7 @@ RCP<const MultivariateIntPolynomial> add_mult_poly(const UnivariateIntPolynomial
 	v[v1] = bucket.first;
 	dict.insert(std::pair<vec_uint, integer_class>(v,bucket.second));
     }
-      for(auto bucket : b.dict_){
+    for(auto bucket : b.get_dict()){
         vec_uint v;
 	v.insert(v.end(),0);
 	if(!same)
@@ -1303,21 +1303,21 @@ RCP<const MultivariateIntPolynomial> mul_mult_poly(const UnivariateIntPolynomial
     umap_uvec_mpz dict;
 //  umap_sym_uint degs;
     bool same = false; //are the variables of a and b the same?
-    if(0 == a.var_->compare(*b.var_)){
+    if(0 == a.get_var()->compare(*b.get_var())){
         v1 = 0;
         v2 = 0;
-        s.insert(a.var_);
+        s.insert(a.get_var());
 	same = true;
     }else{
-        if(-1 == a.var_->compare(*b.var_)){
+      if(-1 == a.get_var()->compare(*b.get_var())){
             v1 = 0;
             v2 = 1;
         }else{
             v2 = 0;
             v1 = 1;
         }
-	s.insert(a.var_);
-	s.insert(b.var_);
+        s.insert(a.get_var());
+	s.insert(b.get_var());
     }
 
 /*  if(!same){
@@ -1326,9 +1326,9 @@ RCP<const MultivariateIntPolynomial> mul_mult_poly(const UnivariateIntPolynomial
     }else{
         degs.insert(std::pair<RCP<const Symbol>, unsigned int>(a.var_,a.degree_ + b.degree_));
     }*/
-      for(auto a_bucket : a.dict_){
-      for(auto b_bucket : b.dict_){
-	    vec_uint target;
+    for(auto a_bucket : a.get_dict()){
+        for(auto b_bucket : b.get_dict()){
+            vec_uint target;
 	    target.insert(target.end(),0);
 	    if(!same)
 	        target.insert(target.end(),0);
