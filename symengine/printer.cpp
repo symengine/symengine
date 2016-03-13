@@ -362,6 +362,44 @@ void StrPrinter::bvisit(const UnivariatePolynomial &x) {
     str_ = s.str();
 }
 
+void StrPrinter::bvisit(const UnivariateSeries &x) {
+    std::ostringstream o;
+    bool first = true;
+    bool last = false;
+    for (const auto& it : x.p_.get_univariate_poly()->get_dict()) {
+        if (it.second == 0) {
+            if((unsigned)it.first == prec_ and it.second == (--(x.p_.get_univariate_poly()->get_dict().end()))->second) {
+                last = true;
+            }
+            continue;
+        }
+        if (first) {
+            if (it.second.get_basic()->__cmp__(*Expression(0).get_basic()) < 0)
+                o << "-";
+        }
+        else {
+            if (it.second.get_basic()->__cmp__(*Expression(0).get_basic()) < 0)
+                o << " - ";
+            else
+                o << " + ";
+        }
+        first = false;
+        if (it.first == 0) {
+            o << Expression(abs(it.second.get_basic()));
+            continue;
+        }
+        if (Expression(abs(it.second.get_basic())) == 1)
+            o << var_;
+        else
+            o << Expression(abs(it.second.get_basic())) << "*" << var_;
+        if (it.first > 1)
+            o << "**" << it.first;
+    }
+    if (o.str() != "0" and (last == true or ((unsigned)(--(x.p_.get_univariate_poly()->get_dict().end()))->first) < prec_))
+        o << " + O(" << var_ << "**" << prec_ << ")";
+    return o.str();
+}
+
 #ifdef HAVE_SYMENGINE_PIRANHA
 void StrPrinter::bvisit(const URatPSeriesPiranha &x) {
     std::ostringstream o;

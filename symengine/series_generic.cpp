@@ -86,45 +86,6 @@ RCP<const UnivariatePolynomial> UnivariateSeries::convert_poly(const map_int_Exp
     return univariate_polynomial(symbol(var_), max, std::move(dict_trunc));
 }
 
-std::string UnivariateSeries::__str__() const
-{
-    std::ostringstream o;
-    bool first = true;
-    bool last = false;
-    for (const auto& it : p_.get_univariate_poly()->get_dict()) {
-        if (it.second == 0) {
-            if((unsigned)it.first == prec_ and it.second == (--(p_.get_univariate_poly()->get_dict().end()))->second) {
-                last = true;
-            }
-            continue;
-        }
-        if (first) {
-            if (it.second.get_basic()->__cmp__(*Expression(0).get_basic()) < 0)
-                o << "-";
-        }
-        else {
-            if (it.second.get_basic()->__cmp__(*Expression(0).get_basic()) < 0)
-                o << " - ";
-            else
-                o << " + ";
-        }
-        first = false;
-        if (it.first == 0) {
-            o << Expression(abs(it.second.get_basic()));
-            continue;
-        }
-        if (Expression(abs(it.second.get_basic())) == 1)
-            o << var_;
-        else
-            o << Expression(abs(it.second.get_basic())) << "*" << var_;
-        if (it.first > 1)
-            o << "**" << it.first;
-    }
-    if (o.str() != "0" and (last == true or ((unsigned)(--(p_.get_univariate_poly()->get_dict().end()))->first) < prec_))
-        o << " + O(" << var_ << "**" << prec_ << ")";
-    return o.str();
-}
-
 RCP<const UnivariatePolynomial> UnivariateSeries::convert_vector(const std::vector<integer_class> &v) {
     std::vector<Expression> vtrunc;
     for (unsigned int i = 0; i < v.size(); i++)
@@ -137,15 +98,11 @@ unsigned UnivariateSeries::ldegree(const UnivariateExprPolynomial &s) {
     return s.get_univariate_poly()->get_dict().begin()->first;
 }
 
-UnivariateExprPolynomial UnivariateSeries::mul(const UnivariateExprPolynomial &a, const UnivariateExprPolynomial &b) {
-    return a * b;
-}
-
-UnivariateExprPolynomial UnivariateSeries::mul_prec(const UnivariateExprPolynomial &a, const UnivariateExprPolynomial &b, unsigned prec) {
+UnivariateExprPolynomial UnivariateSeries::mul(const UnivariateExprPolynomial &a, const UnivariateExprPolynomial &b, unsigned prec) {
     
 }
 
-UnivariateExprPolynomial UnivariateSeries::pow(const UnivariateExprPolynomial &s, int n) {
+UnivariateExprPolynomial UnivariateSeries::pow(const UnivariateExprPolynomial &s, int n, unsigned prec) {
     return pow_poly(s, n);
 }
 

@@ -41,7 +41,6 @@ public:
     virtual RCP<const Basic> as_basic() const;
     virtual umap_int_basic as_dict() const;
     virtual RCP<const Basic> get_coeff(int) const;
-    std::string __str__() const;
     static UnivariateExprPolynomial var(const std::string &s);
       
     static Expression convert(const Number &x);
@@ -49,10 +48,8 @@ public:
     RCP<const UnivariatePolynomial> convert_vector(const std::vector<integer_class> &v);
 
     static unsigned ldegree(const UnivariateExprPolynomial &s);
-    static UnivariateExprPolynomial mul(const UnivariateExprPolynomial &s, const UnivariateExprPolynomial &r);
-    static UnivariateExprPolynomial mul_prec(const UnivariateExprPolynomial &s, const UnivariateExprPolynomial &r, unsigned prec);
-    static UnivariateExprPolynomial pow(const UnivariateExprPolynomial &s, int n);
-    static UnivariateExprPolynomial pow_prec(const UnivariateExprPolynomial &s, int n, unsigned prec);
+    static UnivariateExprPolynomial mul(const UnivariateExprPolynomial &s, const UnivariateExprPolynomial &r, unsigned prec);
+    static UnivariateExprPolynomial pow(const UnivariateExprPolynomial &s, int n, unsigned prec);
     static Expression find_cf(const UnivariateExprPolynomial &s, const UnivariateExprPolynomial &var, unsigned deg);
     static Expression root(Expression &c, unsigned n);
     static UnivariateExprPolynomial diff(const UnivariateExprPolynomial &s, const UnivariateExprPolynomial &var);
