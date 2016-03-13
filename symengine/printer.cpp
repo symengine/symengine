@@ -105,11 +105,18 @@ void StrPrinter::bvisit(const Interval &x) {
         s << "(";
     else
         s << "[";
-    s<<*x.start_<<", "<<*x.end_;
+    s << *x.start_ << ", " << *x.end_;
     if (x.right_open_)
         s << ")";
     else
         s << "]";
+    str_ = s.str();
+}
+
+
+void StrPrinter::bvisit(const EmptySet &x) {
+    std::ostringstream s;
+    s << "EmptySet";
     str_ = s.str();
 }
 

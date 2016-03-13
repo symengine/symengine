@@ -51,6 +51,7 @@ static RCP<const Basic> diff(const CLASS &self, \
     DIFF0(Max)
     DIFF0(Min)
     DIFF0(Interval)
+    DIFF0(EmptySet)
 
 #endif
 

@@ -1,6 +1,5 @@
 /**
  *  \file sets.h
- *  Polynomial Manipulation
  *
  **/
 #ifndef SYMENGINE_SETS_H
@@ -15,7 +14,48 @@
 
 namespace SymEngine {
 
-class Interval : public Basic  {
+class Set : public Basic {
+	public:
+		virtual bool is_Interval() const = 0;
+		virtual bool is_EmptySet() const = 0;
+		virtual bool is_FiniteSet() const = 0;
+		virtual RCP<const Set> _intersection(const Set &other) const = 0;
+		virtual RCP<const Set> _union(const Set &other) const = 0;
+		virtual bool is_subset(const Set &other) const = 0;
+		virtual bool is_proper_subset (const Set &other) const = 0;
+		virtual bool is_superset(const Set &other) const = 0;
+		virtual bool is_proper_superset(const Set &other) const = 0;
+};
+
+class EmptySet : public Set {
+	private:
+		EmptySet() {};
+	public:
+		IMPLEMENT_TYPEID(EMPTYSET)
+		//EmptySet(EmptySet const&) = delete;
+		//void operator=(EmptySet const&) = delete;	
+		static RCP<const EmptySet> getInstance();
+		virtual std::size_t __hash__() const;
+		virtual bool __eq__(const Basic &o) const;
+		virtual int compare(const Basic &o) const;
+		virtual vec_basic get_args() const { return {}; }
+
+		inline virtual bool is_Interval() const { return false; }
+
+		inline virtual bool is_EmptySet() const { return true; }
+
+		inline virtual bool is_FiniteSet() const { return true; }
+
+		virtual RCP<const Set> _intersection(const Set &other) const;
+		virtual RCP<const Set> _union(const Set &other) const;
+
+		virtual bool is_subset(const Set &other) const { return true; };
+		virtual bool is_proper_subset (const Set &other) const;
+		virtual bool is_superset(const Set &other) const { return false;};
+		virtual bool is_proper_superset(const Set &other) const { return false; };
+};
+
+class Interval : public Set {
 	public:
 		RCP<const Number> start_;
 		RCP<const Number> end_;
@@ -27,36 +67,50 @@ class Interval : public Basic  {
 		virtual int compare(const Basic &o) const;
 		virtual vec_basic get_args() const { return {}; }
 
+		inline virtual bool is_Interval() const { return true; }
+
+		inline virtual bool is_EmptySet() const { return false; }
+
+		inline virtual bool is_FiniteSet() const { return (eq(*start_, *end_) and not (left_open_ or right_open_)); }
+
 		Interval(const RCP<const Number> &start, const RCP<const Number> &end, const bool left_open = false, const bool right_open = false);
 
-		RCP<const Interval> open() const;
+		RCP<const Set> open() const;
 
-		RCP<const Interval> close() const;
+		RCP<const Set> close() const;
 
-		RCP<const Interval> Lopen() const;
+		RCP<const Set> Lopen() const;
 
-		RCP<const Interval> Ropen() const;
+		RCP<const Set> Ropen() const;
 
 		bool is_canonical(const RCP<const Number> &start, const RCP<const Number> &end, bool left_open, bool right_open) const;
 
-		RCP<const Interval> interval_union(const Interval &other) const;
+		virtual RCP<const Set> _union(const Set &other) const;
 
-		RCP<const Interval> interval_intersection(const Interval &other) const;
+		virtual RCP<const Set> _intersection(const Set &other) const;
 
-		bool is_subset(const Interval &other) const;
+		virtual bool is_subset(const Set &other) const;
 
-		bool is_proper_subset (const Interval &other) const;
+		virtual bool is_proper_subset (const Set &other) const;
 
-		bool is_superset(const Interval &other) const;
+		virtual bool is_superset(const Set &other) const;
 
-		bool is_proper_superset(const Interval &other) const;
-	};
+		virtual bool is_proper_superset(const Set &other) const;
 
-//! \return RCP<const Interval>
+};
+
+//! \return RCP<const Set>
 inline RCP<const Interval> interval(const RCP<const Number> &start, const RCP<const Number> &end, const bool left_open = false, const bool right_open = false)
 {
 	return make_rcp<const Interval>(start, end, left_open, right_open);
 }
+
+//! \return RCP<const Set>
+inline RCP<const EmptySet> emptyset()
+{
+	return EmptySet::getInstance();
+}
+
 
 }
 #endif

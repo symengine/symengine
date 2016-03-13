@@ -13,10 +13,10 @@ namespace SymEngine {
 			throw std::runtime_error("Complex set not implemented");
 		if (eq(*e, *s)) {
 			if (left_open or right_open)
-				throw std::runtime_error("Empty set not implemented");
+				throw std::runtime_error("Not a valid Interval");
 		}
 		else if (eq(*min({s, e}), *e)){
-			throw std::runtime_error("Empty set not implemented");
+			throw std::runtime_error("Not a valid Interval");
 		}
 		return true;
 	}
@@ -49,23 +49,25 @@ namespace SymEngine {
 			throw std::runtime_error("Not implemented");
 	}
 
-	RCP<const Interval> Interval::open() const {
+	RCP<const Set> Interval::open() const {
 		return interval(start_, end_, true, true);
 	}
 
-	RCP<const Interval> Interval::Lopen() const {
+	RCP<const Set> Interval::Lopen() const {
 		return interval(start_, end_, true, false);
 	}
 
-	RCP<const Interval> Interval::Ropen() const {
+	RCP<const Set> Interval::Ropen() const {
 		return interval(start_, end_, false, true);
 	}
 
-	RCP<const Interval> Interval::close() const {
+	RCP<const Set> Interval::close() const {
 		return interval(start_, end_, false, false);
 	}
 
-	RCP<const Interval> Interval::interval_intersection(const Interval &other) const {
+	RCP<const Set> Interval::_intersection(const Set &o) const {
+		SYMENGINE_ASSERT(is_a<Interval>(o));
+		const Interval &other = static_cast<const Interval &>(o);
 		RCP<const Number> start, end;
 		bool left_open, right_open;
 		RCP<const Basic> start_end, end_start;
@@ -108,11 +110,13 @@ namespace SymEngine {
 			return interval(start, end, left_open, right_open);
 		}
 		else {
-			throw std::runtime_error("Empty set not implemented");
+			return emptyset();
 		}
 	}
 
-	RCP<const Interval> Interval::interval_union(const Interval &other) const {
+	RCP<const Set> Interval::_union(const Set &o) const {
+		SYMENGINE_ASSERT(is_a<Interval>(o));
+		const Interval &other = static_cast<const Interval &>(o);
 		RCP<const Basic> start_start, end_end, m;
 		RCP<const Number> start, end;
 		bool left_open, right_open;
@@ -142,19 +146,78 @@ namespace SymEngine {
 		}
 	}
 
-	bool Interval::is_subset(const Interval &other) const {
-		return __eq__(*this->Interval::interval_intersection(other));
+	bool Interval::is_subset(const Set &o) const {
+		if (is_a<Interval>(o)) {
+			const Interval &other = static_cast<const Interval &>(o);
+			return this->__eq__(*this->_intersection(other));
+		}
+		else {
+			return o.is_superset(*this);
+		}
 	}
 
-	bool Interval::is_proper_subset(const Interval &other) const {
-		return __eq__(*this->Interval::interval_intersection(other)) and (not __eq__(other));
+	bool Interval::is_proper_subset(const Set &o) const {
+		if (is_a<Interval>(o)) {
+			const Interval &other = static_cast<const Interval &>(o);
+			return this->__eq__(*this->_intersection(other)) and (not this->__eq__(other));
+		}
+		else {
+			return o.is_proper_superset(*this);
+		}
 	}
 
-	bool Interval::is_superset(const Interval &other) const {
+	bool Interval::is_superset(const Set &other) const {
 		return other.is_subset(*this);
 	}
 
-	bool Interval::is_proper_superset(const Interval &other) const {
+	bool Interval::is_proper_superset(const Set &other) const {
 		return other.is_subset(*this) and (not __eq__(other));
+	}
+
+	RCP<const Set> EmptySet::_intersection(const Set &o) const {
+		return emptyset();
+	}
+
+	RCP<const Set> EmptySet::_union(const Set &o) const {
+		if (is_a<Interval>(o)) {
+			const Interval &other = static_cast<const Interval &>(o);
+			return interval(other.start_, other.end_, other.left_open_, other.right_open_);
+		}
+
+		throw std::runtime_error("Not implemented");
+	}
+
+	std::size_t EmptySet::__hash__() const {
+		std::size_t seed = EMPTYSET;
+		return seed;
+	}
+
+	bool EmptySet::__eq__(const Basic &o) const {
+		if (is_a<EmptySet>(o))
+			return true;
+		return false;
+	}
+
+	int EmptySet::compare(const Basic &o) const {
+		if (is_a<EmptySet>(o))
+			return 0;
+		throw std::runtime_error("Not implemented");
+	}
+
+	bool EmptySet::is_proper_subset(const Set &o) const {
+		if (is_a<EmptySet>(o)) {
+			return false;
+		}
+		return true;
+	}
+
+	RCP<const EmptySet> EmptySet::getInstance() {
+		static RCP<const EmptySet> a = rcp(new EmptySet());
+#if defined(WITH_SYMENGINE_RCP)
+		return a;
+#else
+		//a->set_weak_self_ptr(a.create_weak());
+		return a;
+#endif
 	}
 }
