@@ -22,6 +22,7 @@ using SymEngine::Basic;
 using SymEngine::div;
 using SymEngine::pow;
 using SymEngine::univariate_int_polynomial;
+using SymEngine::univariate_polynomial;
 using SymEngine::mul;
 using SymEngine::integer;
 using SymEngine::print_stack_on_segfault;
@@ -285,6 +286,39 @@ TEST_CASE("test_univariate_int_polynomial(): printing", "[printing]")
 
     p = univariate_int_polynomial(x, {{0, -1_z}, {1, -2_z}, {2, -1_z}});
 
+    REQUIRE(p->__str__() == "-x**2 - 2*x - 1");
+}
+
+TEST_CASE("test_univariate_polynomial(): printing", "[printing]")
+{
+    RCP<const Basic> p;
+    RCP<const Symbol> x = symbol("x");
+
+    p = univariate_polynomial(x, 0, {{0, 0}});
+    REQUIRE(p->__str__() == "0");
+    p = univariate_polynomial(x, 0, {{0, 1}});
+    REQUIRE(p->__str__() == "1");
+    p = univariate_polynomial(x, 1, {{1, 1}});
+    REQUIRE(p->__str__() == "x");
+    p = univariate_polynomial(x, 1, {{0, 1}, {1, 2}});
+    REQUIRE(p->__str__() == "2*x + 1");
+    p = univariate_polynomial(x, 1, {{0, -1}, {1, 2}});
+    REQUIRE(p->__str__() == "2*x - 1");
+    p = univariate_polynomial(x, 0, {{0, -1}});
+    REQUIRE(p->__str__() == "-1");
+    p = univariate_polynomial(x, 1, {{1, -1}});
+    REQUIRE(p->__str__() == "-x");
+    p = univariate_polynomial(x, 1, {{0, -1}, {1, 1}});
+    REQUIRE(p->__str__() == "x - 1");
+    p = univariate_polynomial(x, 2, {{0, 1}, {1, 1}, {2, 1}});
+    REQUIRE(p->__str__() == "x**2 + x + 1");
+    p = univariate_polynomial(x, 2, {{0, 1}, {1, -1}, {2, 1}});
+    REQUIRE(p->__str__() == "x**2 - x + 1");
+    p = univariate_polynomial(x, 2, {{0, 1}, {1, 2}, {2, 1}});
+    REQUIRE(p->__str__() == "x**2 + 2*x + 1");
+    p = univariate_polynomial(x, 2, {{1, 2}, {2, 1}});
+    REQUIRE(p->__str__() == "x**2 + 2*x");
+    p = univariate_polynomial(x, 2, {{0, -1}, {1, -2}, {2, -1}});
     REQUIRE(p->__str__() == "-x**2 - 2*x - 1");
 }
 

@@ -774,7 +774,6 @@ public:
 };
 
 #endif
-} //SymEngine
 
 #if SYMENGINE_INTEGER_CLASS == SYMENGINE_FLINT
 std::ostream &operator<<(std::ostream &os, const SymEngine::fmpq_wrapper &f);
@@ -783,5 +782,7 @@ std::ostream &operator<<(std::ostream &os, const SymEngine::fmpz_wrapper &f);
 std::ostream &operator<<(std::ostream &os, const SymEngine::mpq_wrapper &f);
 std::ostream &operator<<(std::ostream &os, const SymEngine::mpz_wrapper &f);
 #endif
+
+} //SymEngine
 
 #endif //SYMENGINE_MP_WRAPPER_H
