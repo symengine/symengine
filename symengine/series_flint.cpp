@@ -114,7 +114,7 @@ flint::fmpqxx URatPSeriesFlint::convert(const Rational &x) {
     return convert(x.as_mpq());
 }
 
-flint::fmpqxx URatPSeriesFlint::convert(const Number &x) {
+flint::fmpqxx URatPSeriesFlint::convert(const Basic &x) {
     throw std::runtime_error("Not Implemented");
 }
 

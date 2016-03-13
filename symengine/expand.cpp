@@ -20,20 +20,24 @@ private:
     RCP<const Number> coeff = zero;
     RCP<const Number> multiply = one;
 public:
-    RCP<const Basic> apply(const Basic &b) {
+    RCP<const Basic> apply(const Basic &b)
+    {
         b.accept(*this);
         return Add::from_dict(coeff, std::move(d_));
     }
 
-    void bvisit(const Basic &x) {
+    void bvisit(const Basic &x)
+    {
         Add::dict_add_term(d_, multiply, x.rcp_from_this());
     }
 
-    void bvisit(const Number &x) {
+    void bvisit(const Number &x)
+    {
         iaddnum(outArg(coeff), _mulnum(multiply, x.rcp_from_this_cast<const Number>()));
     }
 
-    void bvisit(const Add &self) {
+    void bvisit(const Add &self)
+    {
         RCP<const Number> _multiply = multiply;
         iaddnum(outArg(coeff), _mulnum(multiply, self.coef_));
         for (auto &p: self.dict_) {
@@ -43,7 +47,8 @@ public:
         multiply = _multiply;
     }
 
-    void bvisit(const Mul &self) {
+    void bvisit(const Mul &self)
+    {
         for(auto &p: self.dict_) {
             if (!is_a<Symbol>(*p.first)) {
                 RCP<const Basic> a, b;
@@ -57,7 +62,8 @@ public:
         this->_coef_dict_add_term(multiply, self.rcp_from_this());
     }
 
-    void mul_expand_two(const RCP<const Basic> &a, const RCP<const Basic> &b) {
+    void mul_expand_two(const RCP<const Basic> &a, const RCP<const Basic> &b)
+    {
         // Both a and b are assumed to be expanded
         if (is_a<Add>(*a) && is_a<Add>(*b)) {
             iaddnum(outArg(coeff), _mulnum(multiply, _mulnum(rcp_static_cast<const Add>(a)->coef_,
@@ -144,7 +150,8 @@ public:
         _coef_dict_add_term(multiply, mul(a, b));
     }
 
-    void square_expand(umap_basic_num &base_dict) {
+    void square_expand(umap_basic_num &base_dict)
+    {
         long m = base_dict.size();
 #if defined(HAVE_SYMENGINE_RESERVE)
         d_.reserve(d_.size() + m * (m + 1) / 2);
@@ -237,55 +244,79 @@ public:
         }
     }
 
-    void bvisit(const Pow &self) {
-        RCP<const Basic> _base = expand(self.get_base());
+    void pow_expand(RCP<const UnivariatePolynomial> &x, unsigned long &i)
+    {
+        RCP<const UnivariatePolynomial> r = univariate_polynomial(x->get_var(), 0, {{0, 1}});
+        while (i != 0) {
+            if (i % 2 == 1) {
+                r = mul_uni_poly(r, x); 
+                    i--;
+            }   
+            x = mul_uni_poly(x, x); 
+            i /= 2;
+        }   
+        _coef_dict_add_term(multiply, r); 
+    }
 
-        if (is_a<Integer>(*self.get_exp()) && is_a<UnivariateIntPolynomial>(*_base)) {
-            int q = rcp_static_cast<const Integer>(self.get_exp())->as_int();
-            RCP<const UnivariateIntPolynomial> p = rcp_static_cast<const UnivariateIntPolynomial>(_base);
-            RCP<const UnivariateIntPolynomial> r = univariate_int_polynomial(p->var_, {{0, integer_class(1)}});
-            while (q != 0) {
-                if (q % 2 == 1) {
-                    r = mul_poly(*r, *p);
-                    q--;
-                }
-                p = mul_poly(*p, *p);
-                q /= 2;
+    void pow_expand(RCP<const UnivariateIntPolynomial> &x, unsigned long &i)
+    {
+        RCP<const UnivariateIntPolynomial> r = univariate_int_polynomial(x->get_var(), {{0, integer_class(1)}});
+        while (i != 0) {
+            if (i % 2 == 1) {
+                r = mul_poly(*r, *x);
+                i--;
             }
-            _coef_dict_add_term(multiply, r);
+            x = mul_poly(*x, *x);
+            i /= 2;
+        }
+        _coef_dict_add_term(multiply, r);
+    }
+    
+    void bvisit(const Pow &self)
+    {
+        RCP<const Basic> _base = expand(self.get_base());
+        if (is_a<Integer>(*self.get_exp()) && is_a<UnivariatePolynomial>(*_base)) {
+            unsigned long q = rcp_static_cast<const Integer>(self.get_exp())->as_int();
+            RCP<const UnivariatePolynomial> p = rcp_static_cast<const UnivariatePolynomial>(_base);
+            pow_expand(p, q);
+            return;
+        }
+        if (is_a<Integer>(*self.get_exp()) && is_a<UnivariateIntPolynomial>(*_base)) {
+            unsigned long q = rcp_static_cast<const Integer>(self.get_exp())->as_int();
+            RCP<const UnivariateIntPolynomial> p = rcp_static_cast<const UnivariateIntPolynomial>(_base);
+            pow_expand(p, q);
             return;
         }
 
         if (!is_a<Integer>(*self.get_exp()) || !is_a<Add>(*_base)) {
             if (neq(*_base, *self.get_base())) {
                 Add::dict_add_term(d_, multiply, pow(_base, self.get_exp()));
-            } else {
+            } else { 
                 Add::dict_add_term(d_, multiply, self.rcp_from_this());
             }
             return;
         }
 
         integer_class n = rcp_static_cast<const Integer>(self.get_exp())->as_mpz();
-        if (n < 0) {
+        if (n < 0)
             return _coef_dict_add_term(multiply, div(one, expand(pow(_base, integer(-n)))));
-        }
         RCP<const Add> base = rcp_static_cast<const Add>(_base);
         umap_basic_num base_dict = base->dict_;
         if (!(base->coef_->is_zero())) {
             // Add the numerical coefficient into the dictionary. This
             // allows a little bit easier treatment below.
             insert(base_dict, base->coef_, one);
-        } else {
+        } 
+        else
             iaddnum(outArg(coeff), base->coef_);
-        }
-        if (n == 2) {
+        if (n == 2)
             return square_expand(base_dict);
-        } else {
+        else 
             return pow_expand(base_dict, mp_get_ui(n));
-        }
     }
 
-    inline void _coef_dict_add_term(const RCP<const Number> &c, const RCP<const Basic> &term) {
+    inline void _coef_dict_add_term(const RCP<const Number> &c, const RCP<const Basic> &term)
+    {
         if (is_a_Number(*term)) {
             iaddnum(outArg(coeff), _mulnum(c, rcp_static_cast<const Number>(term)));
         } else if (is_a<Add>(*term)) {
@@ -302,7 +333,8 @@ public:
 };
 
 //! Expands `self`
-RCP<const Basic> expand(const RCP<const Basic> &self) {
+RCP<const Basic> expand(const RCP<const Basic> &self)
+{
     ExpandVisitor v;
     return v.apply(*self);
 }

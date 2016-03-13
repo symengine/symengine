@@ -7,7 +7,6 @@
 #define SYMENGINE_SERIES_GENERIC_H
 
 #include <list>
-
 #include <symengine/polynomial.h>
 
 namespace SymEngine {

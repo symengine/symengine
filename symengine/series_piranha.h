@@ -32,7 +32,7 @@ public:
     static piranha::rational convert(const rational_class &x);
     static pp_t var(const std::string &s);
     static piranha::rational convert(const Rational &x);
-    static piranha::rational convert(const Number &x);
+    static piranha::rational convert(const Basic &x);
     static pp_t mul(const pp_t &s, const pp_t &r, unsigned prec);
     static pp_t pow(const pp_t &s, int n, unsigned prec);
     static unsigned ldegree(const pp_t &s);
@@ -58,7 +58,7 @@ public:
     static RCP<const UPSeriesPiranha> series(const RCP<const Basic> &t, const std::string &x,
                                                 unsigned int prec);
     static p_expr var(const std::string &s);
-    static Expression convert(const Number &x);
+    static Expression convert(const Basic &x);
     static p_expr mul(const p_expr &s, const p_expr &r, unsigned prec);
     static p_expr pow(const p_expr &s, int n, unsigned prec);
     static unsigned ldegree(const p_expr &s);
