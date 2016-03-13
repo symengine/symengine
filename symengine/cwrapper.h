@@ -153,16 +153,84 @@ void basic_div(basic s, const basic a, const basic b);
 void basic_pow(basic s, const basic a, const basic b);
 //! Assign to s, derivative of expr with respect to sym. Returns 0 if sym is not a symbol.
 int basic_diff(basic s, const basic expr, const basic sym);
-//! Assigns s = -a.
-void basic_neg(basic s, const basic a);
 //! Returns 1 if both basic are equal, 0 if not
 int basic_eq(const basic a, const basic b);
 //! Returns 1 if both basic are not equal, 0 if they are
 int basic_neq(const basic a, const basic b);
-//! Assigns s = abs(a).
-void basic_abs(basic s, const basic a);
+
 //! Expands the expr a and assigns to s.
 void basic_expand(basic s, const basic a);
+//! Assigns s = -a.
+void basic_neg(basic s, const basic a);
+
+//! Assigns s = abs(a).
+void basic_abs(basic s, const basic a);
+
+//! Assigns s = sin(a).
+void basic_sin(basic s, const basic a);
+//! Assigns s = cos(a).
+void basic_cos(basic s, const basic a);
+//! Assigns s = tan(a).
+void basic_tan(basic s, const basic a);
+
+//! Assigns s = asin(a).
+void basic_asin(basic s, const basic a);
+//! Assigns s = acos(a).
+void basic_acos(basic s, const basic a);
+//! Assigns s = atan(a).
+void basic_atan(basic s, const basic a);
+
+//! Assigns s = csc(a).
+void basic_csc(basic s, const basic a);
+//! Assigns s = sec(a).
+void basic_sec(basic s, const basic a);
+//! Assigns s = cot(a).
+void basic_cot(basic s, const basic a);
+
+//! Assigns s = acsc(a).
+void basic_acsc(basic s, const basic a);
+//! Assigns s = asec(a).
+void basic_asec(basic s, const basic a);
+//! Assigns s = acot(a).
+void basic_acot(basic s, const basic a);
+
+
+//! Assigns s = sinh(a).
+void basic_sinh(basic s, const basic a);
+//! Assigns s = cosh(a).
+void basic_cosh(basic s, const basic a);
+//! Assigns s = tanh(a).
+void basic_tanh(basic s, const basic a);
+
+//! Assigns s = asinh(a).
+void basic_asinh(basic s, const basic a);
+//! Assigns s = acosh(a).
+void basic_acosh(basic s, const basic a);
+//! Assigns s = atanh(a).
+void basic_atanh(basic s, const basic a);
+
+//! Assigns s = csch(a).
+void basic_csch(basic s, const basic a);
+//! Assigns s = sech(a).
+void basic_sech(basic s, const basic a);
+//! Assigns s = coth(a).
+void basic_coth(basic s, const basic a);
+
+//! Assigns s = acsch(a).
+void basic_acsch(basic s, const basic a);
+//! Assigns s = asech(a).
+void basic_asech(basic s, const basic a);
+//! Assigns s = acoth(a).
+void basic_acoth(basic s, const basic a);
+
+//! Assigns s = lambertw(a).
+void basic_lambertw(basic s, const basic a);
+//! Assigns s = zeta(a).
+void basic_zeta(basic s, const basic a);
+//! Assigns s = dirichlet_eta(a).
+void basic_dirichlet_eta(basic s, const basic a);
+//! Assigns s = gamma(a).
+void basic_gamma(basic s, const basic a);
 
 //! Returns a new char pointer to the string representation of s.
 char* basic_str(const basic s);
@@ -255,6 +323,24 @@ void basic_subs2(basic s, const basic e, const basic a, const basic b);
 //! Returns a new char pointer to the ascii_art string
 //! The caller is responsible to free the pointer using 'basic_str_free'.
 char* ascii_art_str();
+
+//! Wrapper for ntheory
+//! Greatest Common Divisor
+void ntheory_gcd(basic s, const basic a, const basic b);
+//! Least Common Multiple
+void ntheory_lcm(basic s, const basic a, const basic b);
+//! \return next prime after `a`
+void ntheory_nextprime(basic s, const basic a);
+//! modulo round toward zero
+void ntheory_mod(basic s, const basic n, const basic d);
+//! \return quotient round toward zero when `n` is divided by `d`
+void ntheory_quotient(basic s, const basic n, const basic d);
+//! nth Fibonacci number //  fibonacci(0) = 0 and fibonacci(1) = 1
+void ntheory_fibonacci(basic s, unsigned long a);
+//! Lucas number
+void ntheory_lucas(basic s, unsigned long a);
+//! Binomial Coefficient
+void ntheory_binomial(basic s, const basic a, unsigned long b);
 
 //! Print stacktrace on segfault
 void symengine_print_stack_on_segfault();
