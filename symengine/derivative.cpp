@@ -202,7 +202,7 @@ static RCP<const Basic> diff(const CLASS &self, \
     }
 
     static inline RCP<const Symbol> get_dummy(const Basic &b, std::string name) {
-        RCP<const Symbol> s;        
+        RCP<const Symbol> s;
         do {
             name = "_" + name;
             s = symbol(name);
@@ -412,7 +412,7 @@ static RCP<const Basic> diff(const CLASS &self, \
         if (neq(*f, *zero)) {
             auto g = args[1]->diff(x);
             if (eq(*args[0], *x) and eq(*g, *zero)) {
-                return Derivative::create(self.rcp_from_this(), {x}); 
+                return Derivative::create(self.rcp_from_this(), {x});
             } else {
                 auto s = get_dummy(self, "x");
                 map_basic_basic m({{s, args[0]}});
@@ -429,7 +429,7 @@ static RCP<const Basic> diff(const CLASS &self, \
         return mul(polygamma(zero, arg), arg->diff(x));
     }
 
-    static RCP<const Basic> diff(const UnivariateIntPolynomial &self,
+    static RCP<const Basic> diff(const UnivariateIntPolynomial &self, 
             const RCP<const Symbol> &x) {
         if (self.get_var()->__eq__(*x)) {
             map_uint_mpz d;
@@ -438,7 +438,24 @@ static RCP<const Basic> diff(const CLASS &self, \
             }
             return UnivariateIntPolynomial::from_dict(self.get_var(), std::move(d));
         } else {
-            return zero;
+            map_uint_mpz d;
+            return UnivariateIntPolynomial::from_dict(self.get_var(), std::move(d));
+        }
+    }
+
+    static RCP<const Basic> diff(const UnivariatePolynomial &self,
+            const RCP<const Symbol> &x) {
+        if (self.get_var()->__eq__(*x)) {
+            map_int_Expr d;
+            for (const auto &p : self.get_dict()) {
+                if (p.first != 0) 
+                    d[p.first - 1] = p.second * p.first;
+            }
+            return make_rcp<const UnivariatePolynomial>(self.get_var(),
+                    (--(d.end()))->first, std::move(d));
+        } else {
+            map_int_Expr d;
+            return make_rcp<const UnivariatePolynomial>(self.get_var(), 0, std::move(d));
         }
     }
 
@@ -446,6 +463,7 @@ static RCP<const Basic> diff(const CLASS &self, \
             const RCP<const Symbol> &x) {
         return self.diff_impl(x);
     }
+
     static RCP<const Basic> diff(const Beta &self,
             const RCP<const Symbol> &x) {
         RCP<const Basic> beta_arg0 = self.get_args()[0];

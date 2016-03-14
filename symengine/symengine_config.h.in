@@ -4,6 +4,9 @@
 /* Define if you want to enable SYMENGINE_RCP support in SymEngine */
 #cmakedefine WITH_SYMENGINE_RCP
 
+/* Define if you want to enable TEUCHOS support in SymEngine */
+#cmakedefine WITH_SYMENGINE_TEUCHOS
+
 /* Define if you want to enable SYMENGINE_THREAD_SAFE support in SymEngine */
 #cmakedefine WITH_SYMENGINE_THREAD_SAFE
 

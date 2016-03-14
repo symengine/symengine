@@ -513,7 +513,7 @@ char* ascii_art_str()
     return cc;
 }
 
-// Cwrapper for ntheory 
+// Cwrapper for ntheory
 
 void ntheory_gcd(basic s, const basic a, const basic b)
 {
