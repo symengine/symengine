@@ -124,7 +124,7 @@ public:
     /*! Creates appropriate instance (i.e Symbol, Integer,
     * Mul, Pow, UnivariatePolynomial) depending on the size of dictionary `d`.
     */
-    static RCP<const Basic> from_dict(const RCP<const Symbol> &var, map_int_Expr &&d);
+    static RCP<const UnivariatePolynomial> from_dict(const RCP<const Symbol> &var, map_int_Expr &&d);
     static RCP<const UnivariatePolynomial> from_vec(const RCP<const Symbol> &var, const std::vector<Expression> &v);
     /*!
     * Adds coef*var_**n to the dict_

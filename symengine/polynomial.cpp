@@ -415,7 +415,7 @@ RCP<const UnivariatePolynomial> UnivariatePolynomial::from_vec(const RCP<const S
     return make_rcp<const UnivariatePolynomial>(var, degree, std::move(dict));
 }
 
-RCP<const Basic> UnivariatePolynomial::from_dict(const RCP<const Symbol> &var, map_int_Expr &&d)
+RCP<const UnivariatePolynomial> UnivariatePolynomial::from_dict(const RCP<const Symbol> &var, map_int_Expr &&d)
 {
     auto iter = d.begin();
     while (iter != d.end()) {
