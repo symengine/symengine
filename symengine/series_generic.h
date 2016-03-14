@@ -16,7 +16,6 @@ namespace SymEngine {
 class UnivariateSeries : public SeriesBase<UnivariateExprPolynomial, Expression, UnivariateSeries> {
     // UnivariateSeries 1 + 2*x + x**2 + O(x**5) has dict_ = {{0, 1}, {1, 2}, {2, 1}} with var_ = "x" and prec_ = 5
 public:
-    unsigned int prec_;
     IMPLEMENT_TYPEID(UNIVARIATESERIES)
     UnivariateSeries(const UnivariateExprPolynomial &sp, const std::string varname, const unsigned degree) : SeriesBase(std::move(sp), varname, degree) {}
     UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const UnivariateExprPolynomial &poly);
