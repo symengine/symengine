@@ -10,7 +10,8 @@ using SymEngine::make_rcp;
 namespace SymEngine {
 
 RCP<const UnivariateSeries> UnivariateSeries::series(const RCP<const Basic> &t, const std::string &x, unsigned int prec) {
-    SeriesVisitor<UnivariateExprPolynomial, Expression, UnivariateSeries> visitor(UnivariateExprPolynomial(UnivariatePolynomial::create(symbol(x), {})), x, prec);
+    UnivariateExprPolynomial p(UnivariatePolynomial::create(symbol(x), {}));
+    SeriesVisitor<UnivariateExprPolynomial, Expression, UnivariateSeries> visitor(std::move(p), x, prec);
     return visitor.series(t);
 }
 
