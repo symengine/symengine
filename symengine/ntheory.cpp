@@ -1603,6 +1603,28 @@ bool is_quad_residue(const Integer &a, const Integer &p)
     return mp_legendre(a_final, p2) == 1;
 }
 
+bool is_nth_power_residue(const RCP<const Integer> &a, const RCP<const Integer> &n, const RCP<const Integer> &mod)
+    /*
+    Returns true if ``a`` (mod ``p``) is in the set of squares mod ``p``,
+    i.e a % p in set([i**n % p for i in range(p)]).
+    */
+{
+    if (mod->as_mpz() <= 0) {
+        return false;
+    } else if (mod->as_mpz() == 1) {
+        return true;
+    }
+    map_integer_uint prime_mul;
+    prime_factor_multiplicities(prime_mul, *mod);
+    bool ret_val;
+
+    for (const auto &it: prime_mul) {
+        ret_val = _is_nthroot_mod_prime_power(a->as_mpz(), n->as_mpz(), it.first->as_mpz(), it.second);
+        if(not ret_val) return false;
+    }
+    return true;
+}
+
 int mobius(const Integer &a)
 {
     if (a.as_int() <= 0) {
