@@ -1355,7 +1355,7 @@ bool _nthroot_mod_prime_power(std::vector<RCP<const Integer>> &roots, const inte
 } //anonymous namespace
 
 // Returns whether Solution for x**n == a mod p**k exists or not
-bool is_nthroot_mod_prime_power(const integer_class &a, const integer_class &n, const integer_class &p, const unsigned k)
+bool _is_nthroot_mod_prime_power(const integer_class &a, const integer_class &n, const integer_class &p, const unsigned k)
 {
     integer_class pk;
     if (a % p != 0) {
@@ -1405,7 +1405,7 @@ bool is_nthroot_mod_prime_power(const integer_class &a, const integer_class &n, 
                 mp_divexact(_a, _a, p);
                 ++r;
             }
-            if (r < n or r % n != 0 or not is_nthroot_mod_prime_power(_a, n, p, k - r)) {
+            if (r < n or r % n != 0 or not _is_nthroot_mod_prime_power(_a, n, p, k - r)) {
                 return false;
             }
             return true;
@@ -1572,9 +1572,10 @@ bool is_quad_residue(const Integer &a, const Integer &p)
     */
 
     integer_class p2 = p.as_mpz();
-    if (p2 < 1)
-        throw std::runtime_error("is_quad_residue: Second parameter must be > 0");
-
+    if (p2 == 0)
+        throw std::runtime_error("is_quad_residue: Second parameter must be non-zero");
+    if(p2 < 0)
+        p2 = -p2;
     integer_class a_final = a.as_mpz();
     if (a.as_mpz() >= p2 || a.as_mpz() < 0)
         mp_fdiv_r(a_final, a.as_mpz(), p2);
@@ -1593,7 +1594,7 @@ bool is_quad_residue(const Integer &a, const Integer &p)
         bool ret_val;
 
         for (const auto &it: prime_mul) {
-            ret_val = is_nthroot_mod_prime_power(a1->as_mpz(), integer(2)->as_mpz(), it.first->as_mpz(), it.second);
+            ret_val = _is_nthroot_mod_prime_power(a1->as_mpz(), integer(2)->as_mpz(), it.first->as_mpz(), it.second);
             if(not ret_val) return false;
         }
         return true;

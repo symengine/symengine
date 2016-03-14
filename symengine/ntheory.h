@@ -159,8 +159,6 @@ int legendre(const Integer &a, const Integer &n);
 int jacobi(const Integer &a, const Integer &n);
 //! Kronecker Function
 int kronecker(const Integer &a, const Integer &n);
-// Returns whether Solution for x**n == a mod p**k exists or not
-bool is_nthroot_mod_prime_power(const integer_class &a, const integer_class &n, const integer_class &p, const unsigned k);
 //! All Solutions to x**n == a mod m. Return false if none exists.
 void nthroot_mod_list(std::vector<RCP<const Integer>> &roots, const RCP<const Integer> &a,
         const RCP<const Integer> &n, const RCP<const Integer> &m);
@@ -179,7 +177,8 @@ std::vector<integer_class> quadratic_residues(const Integer &a);
 
 //! Returns true if 'a' is a quadratic residue of 'p'
 bool is_quad_residue(const Integer &a , const Integer &p);
-
+//! Returns true if 'a' is a nth power residue of 'p'
+bool is_nth_residue(const Integer &a , const Integer &p);
 //! Mobius Function
 // mu(n) = 1 if n is a square-free positive integer with an even number of prime factors
 // mu(n) = −1 if n is a square-free positive integer with an odd number of prime factors
