@@ -32,20 +32,20 @@ TEST_CASE("Interval : Basic", "[basic]")
     r1 = interval(zero, i20); // [0, 20]
     r2 = interval(im5, i2); // [-5, 2]
 
-    r3 = r1->_intersection(r2); // [0, 2]
+    r3 = r1->set_intersection(r2); // [0, 2]
     r4 = interval(zero, i2); // [0, 2]
     REQUIRE(eq(*r3, *r4));
 
     r3 = interval(im5, i2, true, true); // (-5, 2)
-    r4 = r3->_intersection(r2);
+    r4 = r3->set_intersection(r2);
     REQUIRE(eq(*r3, *r4));
 
-    r3 = r1->_union(r2); // [-5, 20]
+    r3 = r1->set_union(r2); // [-5, 20]
     r4 = interval(im5, i20);
     REQUIRE(eq(*r3, *r4));
 
     r3 = interval(integer(21), integer(22));
-    r4 = r1->_intersection(r3);
+    r4 = r1->set_intersection(r3);
     REQUIRE(eq(*r4, *emptyset()));
 
     r3 = interval(im5, i2, false, false); // (-5, 2)
@@ -60,10 +60,14 @@ TEST_CASE("Interval : Basic", "[basic]")
 
     r1 = interval(rat1, rat2);// [5/6, 500/6]
     r2 = interval(im5, i2); // [-5, 2]
-    r3 = r1->_intersection(r2);
+    r3 = r1->set_intersection(r2);
     r4 = interval(rat1, i2);
     REQUIRE(eq(*r3, *r4));
     REQUIRE(r4->__str__() == "[5/6, 2]");
+
+    REQUIRE(r4->compare(*r3) == 0);
+    r3 = interval(rat1, i2, true, true); // (5/6, 2)
+    REQUIRE(r4->compare(*r3) == 1);
 }
 
 TEST_CASE("EmptySet : Basic", "[basic]")

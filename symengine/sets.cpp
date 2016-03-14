@@ -32,20 +32,30 @@ std::size_t Interval::__hash__() const {
 bool Interval::__eq__(const Basic &o) const {
     if (is_a<Interval>(o)) {
         const Interval &s = static_cast<const Interval&>(o);
-        return ((eq(*this->start_, *s.start_) and eq(*this->end_, *s.end_)) and
-                ((this->left_open_ == s.left_open_) and (this->right_open_ == s.right_open_)));
+        return ((this->left_open_ == s.left_open_) and (this->right_open_ == s.right_open_) and
+                eq(*this->start_, *s.start_) and eq(*this->end_, *s.end_));
     }
     return false;
 }
 
-int Interval::compare(const Basic &o) const {
-    SYMENGINE_ASSERT(is_a<Interval>(o))
-    const Interval &s = static_cast<const Interval &>(o);
-    if ((eq(*this->start_, *s.start_) and eq(*this->end_, *s.end_)) and
-                ((this->left_open_ == s.left_open_) and (this->right_open_ == s.right_open_)))
-        return 0;
-    else
-        throw std::runtime_error("Not implemented");
+int Interval::compare(const Basic &s) const {
+    // compares two interval based on their length
+    SYMENGINE_ASSERT(is_a<Interval>(s))
+    const Interval &o = static_cast<const Interval &>(s);
+    auto this_abs = abs(start_->sub(*end_));
+    auto o_abs = abs(o.start_->sub(*o.end_));
+    auto min_abs = min({this_abs, o_abs});
+    int this_boundary = 2 - int(left_open_) - int(right_open_);
+    int o_boundary = 2 - int(o.left_open_) - int(o.right_open_);
+    if (eq(*this_abs, *o_abs)) {
+        if(this_boundary == o_boundary)
+            return 0;
+        return this_boundary < o_boundary ? -1 : 1;
+    } else if (eq(*this_abs, *min_abs)) {
+        return -1;
+    } else {
+        return 1;
+    }
 }
 
 RCP<const Set> Interval::open() const {
@@ -64,7 +74,7 @@ RCP<const Set> Interval::close() const {
     return interval(start_, end_, false, false);
 }
 
-RCP<const Set> Interval::_intersection(const RCP<const Set> &o) const {
+RCP<const Set> Interval::set_intersection(const RCP<const Set> &o) const {
     if (is_a<Interval>(*o)) {
         const Interval &other = static_cast<const Interval &>(*o);
         RCP<const Number> start, end;
@@ -108,10 +118,10 @@ RCP<const Set> Interval::_intersection(const RCP<const Set> &o) const {
             return emptyset();
         }
     } else
-        return (*o)._intersection(rcp_from_this_cast<const Set>());
+        return (*o).set_intersection(rcp_from_this_cast<const Set>());
 }
 
-RCP<const Set> Interval::_union(const RCP<const Set> &o) const {
+RCP<const Set> Interval::set_union(const RCP<const Set> &o) const {
     if (is_a<Interval>(*o)) {
         const Interval &other = static_cast<const Interval &>(*o);
         RCP<const Basic> start_start, end_end, m;
@@ -141,12 +151,12 @@ RCP<const Set> Interval::_union(const RCP<const Set> &o) const {
             return interval(start, end, left_open, right_open);
         }
     } else
-        return (*o)._union(rcp_from_this_cast<const Set>());
+        return (*o).set_union(rcp_from_this_cast<const Set>());
 }
 
 bool Interval::is_subset(const RCP<const Set> &o) const {
     if (is_a<Interval>(*o)) {
-        return this->__eq__(*this->_intersection(o));
+        return this->__eq__(*this->set_intersection(o));
     } else {
         return (*o).is_superset(rcp_from_this_cast<const Set>());
     }
@@ -154,7 +164,7 @@ bool Interval::is_subset(const RCP<const Set> &o) const {
 
 bool Interval::is_proper_subset(const RCP<const Set> &o) const {
     if (is_a<Interval>(*o)) {
-        return this->__eq__(*this->_intersection(o)) and (not this->__eq__(*o));
+        return this->__eq__(*this->set_intersection(o)) and (not this->__eq__(*o));
     } else {
         return (*o).is_proper_superset(rcp_from_this_cast<const Set>());
     }
@@ -168,11 +178,11 @@ bool Interval::is_proper_superset(const RCP<const Set> &o) const {
     return (*o).is_subset(rcp_from_this_cast<const Set>()) and (not __eq__(*o));
 }
 
-RCP<const Set> EmptySet::_intersection(const RCP<const Set> &o) const {
+RCP<const Set> EmptySet::set_intersection(const RCP<const Set> &o) const {
     return emptyset();
 }
 
-RCP<const Set> EmptySet::_union(const RCP<const Set> &o) const {
+RCP<const Set> EmptySet::set_union(const RCP<const Set> &o) const {
     return o;
 }
 
@@ -188,9 +198,8 @@ bool EmptySet::__eq__(const Basic &o) const {
 }
 
 int EmptySet::compare(const Basic &o) const {
-    if (is_a<EmptySet>(o))
-        return 0;
-    throw std::runtime_error("Not implemented");
+    SYMENGINE_ASSERT(is_a<EmptySet>(o))
+    return 0;
 }
 
 bool EmptySet::is_proper_subset(const RCP<const Set> &o) const {
