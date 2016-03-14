@@ -2347,8 +2347,8 @@ TEST_CASE("Abs: functions", "[functions]")
     RCP<const Symbol> x = symbol("x");
     RCP<const Symbol> y = symbol("y");
 
-    REQUIRE(eq(*abs(add(i2,mul(I,im1))), *sqrt(integer(5))));
-    REQUIRE(eq(*abs(add(i2,mul(I,i3))), *sqrt(integer(13))));
+    REQUIRE(eq(*abs(add(i2, mul(I, im1))), *sqrt(integer(5))));
+    REQUIRE(eq(*abs(add(i2, mul(I, i3))), *sqrt(integer(13))));
     REQUIRE(eq(*abs(x), *abs(neg(x))));
     REQUIRE(eq(*abs(one), *one));
     REQUIRE(eq(*abs(i2), *i2));
