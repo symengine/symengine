@@ -21,7 +21,6 @@ public:
     UnivariateSeries(const UnivariateExprPolynomial &sp, const std::string varname, const unsigned degree) : SeriesBase(std::move(sp), varname, degree) {}
     UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const UnivariateExprPolynomial &poly);
     UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const unsigned int &max_exp, map_int_Expr &&dict);
-    UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const map_uint_mpz &dict);
     UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const map_int_Expr &dict);
     UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const std::vector<Expression> &v);
     UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const std::vector<integer_class> &v);
@@ -42,7 +41,7 @@ public:
     virtual umap_int_basic as_dict() const;
     virtual RCP<const Basic> get_coeff(int) const;
     static UnivariateExprPolynomial var(const std::string &s);
-      
+
     static Expression convert(const Number &x);
     RCP<const UnivariatePolynomial> convert_poly(const map_int_Expr &d, unsigned pr);
     RCP<const UnivariatePolynomial> convert_vector(const std::vector<integer_class> &v);
