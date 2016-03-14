@@ -3468,8 +3468,7 @@ RCP<const Basic> abs(const RCP<const Basic> &arg)
         }
     } else if (is_a<Complex>(*arg)) {
         RCP<const Complex> arg_ = rcp_static_cast<const Complex>(arg);
-        RCP<const Complex> conjugate = rcp_static_cast<const Complex>(Complex::from_mpq(arg_->real_,  -arg_->imaginary_));
-        return sqrt(((*arg_).mulcomp(*conjugate)));
+        return sqrt(Rational::from_mpq(arg_->real_ * arg_->real_ + arg_->imaginary_ * arg_->imaginary_));
     } else if (is_a_Number(*arg) and not static_cast<const Number &>(*arg).is_exact()) {
         return static_cast<const Number &>(*arg).get_eval().abs(*arg);
     }
