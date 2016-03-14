@@ -9,21 +9,6 @@ using SymEngine::make_rcp;
 
 namespace SymEngine {
 
-UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const UnivariateExprPolynomial &poly) :
-        SeriesBase(std::move(poly), var->get_name(), precision) {}
-
-UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const unsigned int &max, map_int_Expr &&dict) :
-        SeriesBase(UnivariateExprPolynomial(univariate_polynomial(var, (int)max, std::move(dict))), var->get_name(), precision) {}
-
-UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const std::vector<integer_class> &v) :
-        SeriesBase(UnivariateExprPolynomial(convert_vector(v)), var->get_name(), precision) {}
-
-UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const map_int_Expr &dict) :
-        SeriesBase(UnivariateExprPolynomial(convert_poly(var, std::move(dict), precision)), var->get_name(), precision) {}
-
-UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const std::vector<Expression> &v) :
-        SeriesBase(UnivariateExprPolynomial(UnivariatePolynomial::create(var, v)), var->get_name(), precision) {}
-
 RCP<const UnivariateSeries> UnivariateSeries::series(const RCP<const Basic> &t, const std::string &x, unsigned int prec) {
     SeriesVisitor<UnivariateExprPolynomial, Expression, UnivariateSeries> visitor(UnivariateExprPolynomial(UnivariatePolynomial::create(symbol(x), {})), x, prec);
     return visitor.series(t);
@@ -230,19 +215,18 @@ RCP<const UnivariateSeries> add_uni_series(const UnivariateSeries& a, const Univ
        dict[it.first] = it.second;
    }
 
-   int max = 0;
    for (const auto &it : b.get_poly().get_univariate_poly()->get_dict()) {
        if (it.first >= minprec)
            break;
        dict[it.first] += it.second;
-       if (dict[it.first] != 0 and it.first > max)
-           max = it.first;
    }
-   return make_rcp<const UnivariateSeries>(symbol(a.get_var()), minprec, max, std::move(dict));
+
+   UnivariateExprPolynomial poly(univariate_polynomial(symbol(a.get_var()), minprec, std::move(dict)));
+   return make_rcp<const UnivariateSeries>(std::move(poly), a.get_var(), minprec);
 }
 
 RCP<const UnivariateSeries> neg_uni_series (const UnivariateSeries& a) {
-    return make_rcp<const UnivariateSeries>(symbol(a.get_var()), a.get_degree(), std::move(UnivariateExprPolynomial(neg_uni_poly(*(a.get_poly().get_univariate_poly())))));
+    return make_rcp<const UnivariateSeries>(std::move(UnivariateExprPolynomial(neg_uni_poly(*(a.get_poly().get_univariate_poly())))), a.get_var(), a.get_degree());
 }
     
 RCP<const UnivariateSeries> sub_uni_series (const UnivariateSeries& a, const UnivariateSeries &b) {
@@ -270,7 +254,8 @@ RCP<const UnivariateSeries> mul_uni_series (const UnivariateSeries& a, const Uni
         else
             break;
     }
-    return make_rcp<const UnivariateSeries>(symbol(a.get_var()), minprec, max, std::move(dict));
+    UnivariateExprPolynomial poly(univariate_polynomial(symbol(a.get_var()), minprec, std::move(dict)));
+    return make_rcp<const UnivariateSeries>(std::move(poly), a.get_var(), minprec);
 }
 
 } // SymEngine
