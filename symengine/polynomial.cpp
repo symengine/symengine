@@ -1019,10 +1019,11 @@ unsigned int reconcile(vec_uint &v1, unsigned int &v2, set_sym &s, const set_sym
         }
 	poscount++;
     }
-    if(a1 == s1.end()){
+    if(a1 == s1.end() && !inserted){
         v2 = poscount;
         s.insert(s2);
-    } else {
+		poscount++;
+    } else if(inserted) {
         while(a1 != s1.end()){
             v1.insert(v1.end(),poscount);
             s.insert(*a1);
