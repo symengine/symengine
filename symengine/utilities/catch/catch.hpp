@@ -182,7 +182,10 @@
 #  define CATCH_NOEXCEPT_IS(x)
 #endif
 
+#include <symengine/symengine_config.h>
+#ifdef HAVE_SYMENGINE_TEUCHOS
 #include "Teuchos_stacktrace.hpp"
+#endif
 
 namespace Catch {
 
@@ -5334,9 +5337,11 @@ namespace Catch {
         virtual void handleFatalErrorCondition( std::string const& message ) {
             ResultBuilder resultBuilder = makeUnexpectedResultBuilder();
             resultBuilder.setResultType( ResultWas::FatalErrorCondition );
+#ifdef HAVE_SYMENGINE_TEUCHOS
             std::ostringstream o;
             o << message << std::endl << Teuchos::get_stacktrace(3);
             resultBuilder << o.str();
+#endif
             resultBuilder.captureExpression();
 
             handleUnfinishedSections();

@@ -1,9 +1,10 @@
-add_subdirectory(utilities/teuchos)
-
-# Include Teuchos headers:
-include_directories(BEFORE ${teuchos_SOURCE_DIR})
-# Include Teuchos config file (generated per build):
-include_directories(BEFORE ${teuchos_BINARY_DIR})
+if (WITH_SYMENGINE_TEUCHOS)
+    add_subdirectory(utilities/teuchos)
+    # Include Teuchos headers:
+    include_directories(BEFORE ${teuchos_SOURCE_DIR})
+    # Include Teuchos config file (generated per build):
+    include_directories(BEFORE ${teuchos_BINARY_DIR})
+endif()
 
 set(SRC
     symengine_rcp.cpp
@@ -83,7 +84,10 @@ include_directories(BEFORE ${symengine_BINARY_DIR})
 include_directories(BEFORE ${symengine_SOURCE_DIR})
 
 add_library(symengine ${SRC})
-target_link_libraries(symengine teuchos ${LIBS})
+if (WITH_SYMENGINE_TEUCHOS)
+    target_link_libraries(symengine teuchos)
+endif()
+target_link_libraries(symengine ${LIBS})
 
 install(TARGETS symengine
             EXPORT SymEngineTargets
