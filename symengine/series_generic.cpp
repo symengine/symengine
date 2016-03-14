@@ -113,13 +113,18 @@ UnivariateExprPolynomial UnivariateSeries::mul(const UnivariateExprPolynomial &a
 }
 
 UnivariateExprPolynomial UnivariateSeries::pow(const UnivariateExprPolynomial &s, int n, unsigned prec) {
-    // return pow_poly(s, n);
+    if(is_a<const Constant>(*s.get_basic())) {
+        throw std::runtime_error("Polynomial cannot be a constant");
+    }
+    if(s.get_univariate_poly()->get_var() != symbol("x")) {
+        throw std::runtime_error("Polynomial is not x");
+    }
     if(n < 0) {
         throw std::runtime_error("Not implemented");
         // UnivariateExprPolynomial p1 = UnivariateSeries::pow(s, -n, prec);
         // return UnivariateExprPolynomial(1 /p1.get_univariate_poly());
     } else if(n == 0) {
-        return UnivariateExprPolynomial(0);
+        return UnivariateExprPolynomial(1);
     } else if(n == 1) {
         return UnivariateSeries::convert_poly(s.get_univariate_poly()->get_var(), s.get_univariate_poly()->get_dict(), prec);
     } else {
