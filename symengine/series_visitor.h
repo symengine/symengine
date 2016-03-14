@@ -200,6 +200,18 @@ public:
         x.get_arg()->accept(*this);
         p = Series::series_atan(p, var, prec);
     }
+    void bvisit(const ATan2 &x) {
+        // x.get_args()->accept(*this);
+        // p = Series::series_atan2(p, var, prec);
+    }
+    void bvisit(const ACsc &x) {
+        // x.get_args()->accept(*this);
+        // p = Series::series_acsc(p, var, prec);
+    }
+    void bvisit(const ACot &x) {
+        // x.get_args()->accept(*this);
+        // p = Series::series_acot(p, var, prec);
+    }
     void bvisit(const Sinh &x) {
         x.get_arg()->accept(*this);
         p = Series::series_sinh(p, var, prec);
@@ -219,6 +231,83 @@ public:
     void bvisit(const ATanh &x) {
         x.get_arg()->accept(*this);
         p = Series::series_atanh(p, var, prec);
+    }
+    void bvisit(const Csch &x) {
+        // x.get_args()->accept(*this);
+        // p = Series::series_csch(p, var, prec);
+    }
+    void bvisit(const Sech &x) {
+        // x.get_args()->accept(*this);
+        // p = Series::series_sech(p, var, prec);
+    }
+    void bvisit(const Coth &x) {
+        // x.get_args()->accept(*this);
+        // p = Series::series_coth(p, var, prec);
+    }
+    void bvisit(const ACsch &x) {
+        // x.get_args()->accept(*this);
+        // p = Series::series_acsch(p, var, prec);
+    }
+    void bvisit(const ACosh &x) {
+        // x.get_args()->accept(*this);
+        // p = Series::series_acosh(p, var, prec);
+    }
+    void bvisit(const ACoth &x) {
+        // x.get_args()->accept(*this);
+        // p = Series::series_acoth(p, var, prec);
+    }
+    void bvisit(const ASech &x) {
+        // x.get_args()->accept(*this);
+        // p = Series::series_asech(p, var, prec);
+    }
+    void bvisit(const Zeta &x) {
+        // x.get_args()->accept(*this);
+        // p = Series::series_zeta(p, var, prec);
+    }
+    void bvisit(const Dirichlet_eta &x) {
+
+    }
+    void bvisit(const KroneckerDelta &x) {
+
+    }
+    void bvisit(const LeviCivita &x) {
+
+    }
+    void bvisit(const PolyGamma &x) {
+
+    }
+    void bvisit(const LowerGamma &x) {
+
+    }
+    void bvisit(const UpperGamma &x) {
+
+    }
+    void bvisit(const LogGamma &x) {
+
+    }
+    void bvisit(const Beta &x) {
+
+    }
+    void bvisit(const FunctionSymbol &x) {
+
+    }
+    void bvisit(const FunctionWrapper &x) {
+
+    }
+    void bvisit(const Derivative &x) {
+
+    }
+    void bvisit(const Subs &x) {
+
+    }
+    void bvisit(const Abs &x) {
+
+    }
+    void bvisit(const Max &x) {
+
+    }
+    void bvisit(const Min &x) {
+
     }
     void bvisit(const LambertW &x) {
         x.get_arg()->accept(*this);
