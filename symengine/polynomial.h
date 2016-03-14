@@ -279,6 +279,20 @@ public:
     }
 }; //UnivariateExprPolynomial
 
+inline UnivariateExprPolynomial pow_poly(const UnivariateExprPolynomial &base, int exp) {
+    UnivariateExprPolynomial r(1);
+    UnivariateExprPolynomial p(base);
+    while (exp != 0) {
+        if (exp % 2 == 1) {    // q is odd
+            r *= p;
+            exp--;
+        }
+        p *= p;
+        exp /= 2;
+    }
+
+    return r;
+} 
 }  //SymEngine
 
 #endif
