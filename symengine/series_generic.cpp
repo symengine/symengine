@@ -19,7 +19,7 @@ UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned 
         SeriesBase(UnivariateExprPolynomial(convert_vector(v)), var->get_name(), precision), prec_{precision} {}
 
 UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const map_int_Expr &dict) :
-        SeriesBase(UnivariateExprPolynomial(convert_poly(std::move(dict), precision)), var->get_name(), precision), prec_{precision} {}
+        SeriesBase(UnivariateExprPolynomial(convert_poly(var, std::move(dict), precision)), var->get_name(), precision), prec_{precision} {}
 
 UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const std::vector<Expression> &v) :
         SeriesBase(UnivariateExprPolynomial(UnivariatePolynomial::create(var, v)), var->get_name(), precision), prec_{precision} {}
@@ -70,7 +70,7 @@ Expression UnivariateSeries::convert(const Number &x) {
     return Expression(x.rcp_from_this());
 }
 
-RCP<const UnivariatePolynomial> UnivariateSeries::convert_poly(const map_int_Expr &d, unsigned pr) {
+RCP<const UnivariatePolynomial> UnivariateSeries::convert_poly(const RCP<const Symbol> &var, const map_int_Expr &d, unsigned pr) {
     map_int_Expr dict_trunc;
     unsigned int max = 0;
     for (const auto &it : d) {
@@ -80,7 +80,7 @@ RCP<const UnivariatePolynomial> UnivariateSeries::convert_poly(const map_int_Exp
             dict_trunc[it.first] = it.second;
         }
     }
-    return univariate_polynomial(symbol(var_), max, std::move(dict_trunc));
+    return univariate_polynomial(var, max, std::move(dict_trunc));
 }
 
 RCP<const UnivariatePolynomial> UnivariateSeries::convert_vector(const std::vector<integer_class> &v) {
@@ -113,7 +113,22 @@ UnivariateExprPolynomial UnivariateSeries::mul(const UnivariateExprPolynomial &a
 }
 
 UnivariateExprPolynomial UnivariateSeries::pow(const UnivariateExprPolynomial &s, int n, unsigned prec) {
-    return pow_poly(s, n);
+    // return pow_poly(s, n);
+    if(n < 0) {
+        throw std::runtime_error("Not implemented");
+        // UnivariateExprPolynomial p1 = UnivariateSeries::pow(s, -n, prec);
+        // return 1 / p1;
+    } else if(n == 0) {
+        return UnivariateExprPolynomial(0);
+    } else if(n == 1) {
+        return UnivariateSeries::convert_poly(s.get_univariate_poly()->get_var(), s.get_univariate_poly()->get_dict(), prec);
+    } else {
+        UnivariateExprPolynomial p = s;
+        for(int i = 0; i < n; i++) {
+            p = UnivariateSeries::mul(s, p, prec);
+        }
+        return p;
+    }
 }
 
 Expression UnivariateSeries::find_cf(const UnivariateExprPolynomial &s, const UnivariateExprPolynomial &var, unsigned deg) {
