@@ -34,10 +34,13 @@ using SymEngine::is_a;
 using SymEngine::pi;
 using SymEngine::function_symbol;
 using SymEngine::real_double;
+using SymEngine::RealDouble;
 using SymEngine::E;
 using SymEngine::parse;
 using SymEngine::max;
 using SymEngine::min;
+using SymEngine::loggamma;
+using SymEngine::gamma;
 
 TEST_CASE("Parsing: integers, basic operations", "[parser]")
 {
@@ -178,6 +181,14 @@ TEST_CASE("Parsing: functions", "[parser]")
     res = parse(s);
     REQUIRE(eq(*res, *mul(log(x, gamma(y)), sin(integer(3)))));
 
+    s = "loggamma(x)*gamma(y)";
+    res = parse(s);
+    REQUIRE(eq(*res, *mul(loggamma(x), gamma(y))));
+
+    s = "loggamma(x)+loggamma(x)";
+    res = parse(s);
+    REQUIRE(eq(*res, *mul(integer(2), loggamma(x))));
+
     s = "max(x, x, y)";
     res = parse(s);
     REQUIRE(eq(*res, *max({x, y})));
@@ -250,6 +261,7 @@ TEST_CASE("Parsing: function_symbols", "[parser]")
 TEST_CASE("Parsing: doubles", "[parser]")
 {
     std::string s;
+    double d;
     RCP<const Basic> res;
     RCP<const Basic> x = symbol("x");
 
@@ -263,11 +275,15 @@ TEST_CASE("Parsing: doubles", "[parser]")
 
     s = "1.324/(2+3)";
     res = parse(s);
-    REQUIRE(eq(*res, *real_double(0.2648)));
+    REQUIRE(is_a<RealDouble>(*res));
+    d = static_cast<const RealDouble &>(*res).as_double();
+    REQUIRE(std::abs(d - 0.2648) < 1e-12);
 
     s = "sqrt(2.0)+5";
     res = parse(s);
-    REQUIRE(eq(*res, *real_double(sqrt(2) + 5)));
+    REQUIRE(is_a<RealDouble>(*res));
+    d = static_cast<const RealDouble &>(*res).as_double();
+    REQUIRE(std::abs(d - (::sqrt(2)+5)) < 1e-12);
 }
 
 TEST_CASE("Parsing: errors", "[parser]")

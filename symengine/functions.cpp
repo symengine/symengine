@@ -1444,7 +1444,7 @@ RCP<const Basic> lambertw(const RCP<const Basic> &arg)
 {
     if (eq(*arg, *zero)) return zero;
     if (eq(*arg, *E)) return one;
-    if (eq(*arg, *div(one, E))) return minus_one;
+    if (eq(*arg, *div(neg(one), E))) return minus_one;
     if (eq(*arg, *div(log(i2), im2))) return mul(minus_one, log(i2));
     return make_rcp<const LambertW>(arg);
 }
@@ -1573,6 +1573,16 @@ bool Derivative::is_canonical(const RCP<const Basic> &arg,
         return true;
     } else if (is_a<FunctionWrapper>(*arg)) {
         return true;
+    } else if (is_a<PolyGamma>(*arg)) {
+        bool found = false;
+        auto v = arg->get_args();
+        for (auto &p: x) {
+            if (has_symbol(*v[0], rcp_static_cast<const Symbol>(p))) {
+                found = true;
+                break;
+            }
+        }
+        return found;
     }
     return false;
 }
@@ -2697,6 +2707,10 @@ bool Zeta::is_canonical(const RCP<const Basic> &s, const RCP<const Basic> &a) co
 {
     if (eq(*s, *zero)) return false;
     if (eq(*s, *one)) return false;
+    if (is_a<Integer>(*s) and is_a<Integer>(*a)) {
+        auto s_ = static_cast<const Integer &>(*s).as_int();
+        if (s_ < 0 || s_ % 2 == 0) return false;
+    }
     return true;
 }
 
@@ -2727,17 +2741,27 @@ RCP<const Basic> zeta(const RCP<const Basic> &s, const RCP<const Basic> &a)
 {
     if (is_a_Number(*s)) {
         if (rcp_static_cast<const Number>(s)->is_zero()) {
-            if (is_a_Number(*a) and
-                rcp_static_cast<const Number>(a)->is_negative()) {
-                return sub(div(minus_one, i2), a);
-            } else {
-                return sub(div(one, i2), a);
-            }
+            return sub(div(one, i2), a);
         } else if (rcp_static_cast<const Number>(s)->is_one()) {
             throw std::runtime_error("Complex infinity is not yet implemented");
         } else if (is_a<Integer>(*s) and is_a<Integer>(*a)) {
-            // Implement Harmonic and simplify this
-            return make_rcp<const Zeta>(s, a);
+            auto s_ = static_cast<const Integer &>(*s).as_int();
+            auto a_ = static_cast<const Integer &>(*a).as_int();
+            RCP<const Basic> zeta;
+            if (s_ < 0) {
+                RCP<const Number> res = (s_ % 2 == 0) ? one : minus_one;
+                zeta = mulnum(res, divnum(bernoulli(-s_ + 1), integer(-s_ + 1)));
+            } else if (s_ % 2 == 0) {
+                RCP<const Number> b = bernoulli(s_);
+                RCP<const Number> f = factorial(s_);
+                zeta = divnum(pownum(integer(2), integer(s_ - 1)), f);
+                zeta = mul(zeta, mul(pow(pi, s), abs(b)));
+            } else {
+                return make_rcp<const Zeta>(s, a);
+            }
+            if (a_ < 0)
+                return add(zeta, harmonic(-a_, s_));
+            return sub(zeta, harmonic(a_ - 1, s_));
         }
     }
     return make_rcp<const Zeta>(s, a);
@@ -2811,7 +2835,7 @@ bool Gamma::is_canonical(const RCP<const Basic> &arg) const
 {
     if (is_a<Integer>(*arg)) return false;
     if (is_a<Rational>(*arg) and
-        (rcp_static_cast<const Rational>(arg)->i.get_den()) == 2) {
+        (get_den(rcp_static_cast<const Rational>(arg)->i)) == 2) {
         return false;
     }
     if (is_a_Number(*arg) and not static_cast<const Number &>(*arg).is_exact()) {
@@ -2841,6 +2865,17 @@ int Gamma::compare(const Basic &o) const
     return arg_->__cmp__(*(static_cast<const Gamma &>(o).arg_));
 }
 
+RCP<const Basic> Gamma::subs(const map_basic_basic &subs_dict) const
+{
+    auto it = subs_dict.find(rcp_from_this());
+    if (it != subs_dict.end())
+        return it->second;
+    RCP<const Basic> arg = arg_->subs(subs_dict);
+    if (arg == arg_)
+        return rcp_from_this();
+    else
+        return gamma(arg);
+}
 RCP<const Basic> gamma_positive_int(const RCP<const Basic> &arg)
 {
     SYMENGINE_ASSERT(is_a<Integer>(*arg))
@@ -2853,10 +2888,10 @@ RCP<const Basic> gamma_multiple_2(const RCP<const Basic>& arg)
 {
     SYMENGINE_ASSERT(is_a<Rational>(*arg))
     RCP<const Rational> arg_ = rcp_static_cast<const Rational>(arg);
-    SYMENGINE_ASSERT(arg_->i.get_den() == 2)
+    SYMENGINE_ASSERT(get_den(arg_->i) == 2)
     RCP<const Integer> n, k;
     RCP<const Number> coeff;
-    n = quotient_f(*(integer(abs(arg_->i.get_num()))), *(integer(arg_->i.get_den())));
+    n = quotient_f(*(integer(mp_abs(get_num(arg_->i)))), *(integer(get_den(arg_->i))));
     if (arg_->is_positive()) {
         k = n;
         coeff = one;
@@ -2892,7 +2927,7 @@ RCP<const Basic> gamma(const RCP<const Basic> &arg)
         }
     } else if (is_a<Rational>(*arg)) {
         RCP<const Rational> arg_ = rcp_static_cast<const Rational>(arg);
-        if ((arg_->i.get_den()) == 2) {
+        if ((get_den(arg_->i)) == 2) {
             return gamma_multiple_2(arg);
         } else {
             return make_rcp<const Gamma>(arg);
@@ -3051,6 +3086,77 @@ RCP<const Basic> uppergamma(const RCP<const Basic> &s, const RCP<const Basic> &x
 }
 
 
+bool LogGamma::is_canonical(const RCP<const Basic> &arg) const
+{
+    if (is_a<Integer>(*arg)) {
+        RCP<const Integer> arg_int = rcp_static_cast<const Integer>(arg);
+        if(not arg_int->is_positive()) {
+            return false;
+        }
+        if (eq(*integer(1), *arg_int) or eq(*integer(2), *arg_int) or
+            eq(*integer(3), *arg_int)) {
+            return false;
+        }
+    }
+    return true;
+}
+
+std::size_t LogGamma::__hash__() const
+{
+    std::size_t seed = LOGGAMMA;
+    hash_combine<Basic>(seed, *arg_);
+    return seed;
+}
+
+bool LogGamma::__eq__(const Basic &o) const
+{
+    if (is_a<LogGamma>(o) and
+        eq(*arg_, *(static_cast<const LogGamma &>(o).arg_)))
+        return true;
+    return false;
+}
+
+int LogGamma::compare(const Basic &o) const
+{
+    SYMENGINE_ASSERT(is_a<LogGamma>(o))
+    return arg_->__cmp__(*(static_cast<const LogGamma &>(o).arg_));
+}
+
+RCP<const Basic> LogGamma::rewrite_as_gamma() const
+{
+    return log(gamma(arg_));
+}
+
+RCP<const Basic> LogGamma::subs(const map_basic_basic &subs_dict) const
+{
+    auto it = subs_dict.find(rcp_from_this());
+    if (it != subs_dict.end())
+        return it->second;
+    RCP<const Basic> arg = arg_->subs(subs_dict);
+    if (arg == arg_)
+        return rcp_from_this();
+    else
+        return loggamma(arg);
+}
+
+RCP<const Basic> loggamma(const RCP<const Basic> &arg)
+{
+    if (is_a<Integer>(*arg)) {
+        RCP<const Integer> arg_int = rcp_static_cast<const Integer>(arg);
+        if(not arg_int->is_positive()) {
+            throw std::runtime_error("Infinity not yet implemented");
+        }
+        if (eq(*integer(1), *arg_int) or eq(*integer(2), *arg_int)) {
+            return zero;
+        }
+        else if (eq(*integer(3), *arg_int)) {
+            return log(integer(2));
+        }
+    }
+    return make_rcp<const LogGamma>(arg);
+}
+
+
 RCP<const Beta> Beta::from_two_basic(const RCP<const Basic> &x, const RCP<const Basic> &y)
 {
         if (x->__cmp__(*y) == -1) {
@@ -3065,10 +3171,10 @@ bool Beta::is_canonical(const RCP<const Basic> &x, const RCP<const Basic> &y)
         return false;
     }
     if (is_a<Integer>(*x) or (is_a<Rational>(*x) and
-        (rcp_static_cast<const Rational>(x)->i.get_den()) == 2))
+        (get_den(rcp_static_cast<const Rational>(x)->i)) == 2))
     {
         if (is_a<Integer>(*y) or (is_a<Rational>(*y) and
-        (rcp_static_cast<const Rational>(y)->i.get_den()) == 2)) {
+        (get_den(rcp_static_cast<const Rational>(y)->i)) == 2)) {
             return false;
         }
     }
@@ -3128,7 +3234,7 @@ RCP<const Basic> beta(const RCP<const Basic> &x, const RCP<const Basic> &y)
                 }
             } else if (is_a<Rational>(*y)) {
                 RCP<const Rational> y_ = rcp_static_cast<const Rational>(y);
-                if ((y_->i.get_den()) == 2) {
+                if (get_den(y_->i) == 2) {
                     return div(mul(gamma_positive_int(x), gamma_multiple_2(y)), gamma_multiple_2(add(x, y)));
                 } else {
                     return Beta::from_two_basic(x, y);
@@ -3144,7 +3250,7 @@ RCP<const Basic> beta(const RCP<const Basic> &x, const RCP<const Basic> &y)
         if (y_int->is_positive()) {
          if (is_a<Rational>(*x)) {
                 RCP<const Rational> x_ = rcp_static_cast<const Rational>(x);
-                if ((x_->i.get_den()) == 2) {
+                if (get_den(x_->i) == 2) {
                     return div(mul(gamma_positive_int(y), gamma_multiple_2(x)), gamma_multiple_2(add(x, y)));
                 } else {
                     return Beta::from_two_basic(x, y);
@@ -3155,7 +3261,7 @@ RCP<const Basic> beta(const RCP<const Basic> &x, const RCP<const Basic> &y)
         }
     }
 
-    if (is_a<const Rational>(*x) and (rcp_static_cast<const Rational>(x))->i.get_den() == 2) {
+    if (is_a<const Rational>(*x) and get_den(rcp_static_cast<const Rational>(x)->i) == 2) {
             if (is_a<Integer>(*y)) {
                 RCP<const Integer> y_int = rcp_static_cast<const Integer>(y);
                 if (y_int->is_positive()) {
@@ -3164,7 +3270,7 @@ RCP<const Basic> beta(const RCP<const Basic> &x, const RCP<const Basic> &y)
                     throw std::runtime_error("Complex Infinity not yet implemented");
                 }
             }
-            if (is_a<const Rational>(*y) and (rcp_static_cast<const Rational>(y))->i.get_den() == 2) {
+            if (is_a<const Rational>(*y) and get_den((rcp_static_cast<const Rational>(y))->i) == 2) {
                 return div(mul(gamma_multiple_2(x), gamma_multiple_2(y)), gamma_positive_int(add(x, y)));
             }
     }
@@ -3183,15 +3289,8 @@ bool PolyGamma::is_canonical(const RCP<const Basic> &n, const RCP<const Basic> &
         }
         if (is_a<Rational>(*x)) {
             auto x_ = rcp_static_cast<const Rational>(x);
-            auto num = x_->i.get_num();
-            auto den = x_->i.get_den();
-            if (den == 2 and num == 1) {
-                return false;
-            }
-            if (den == 3 and (num == 1 or num == 2)) {
-                return false;
-            }
-            if (den == 4 and (num == 1 or num == 3)) {
+            auto den = get_den(x_->i);
+            if (den == 2 or den == 3 or den == 4) {
                 return false;
             }
         }
@@ -3243,44 +3342,67 @@ RCP<const Basic> PolyGamma::rewrite_as_zeta() const
     }
 }
 
+RCP<const Basic> PolyGamma::subs(const map_basic_basic &subs_dict) const
+{
+    auto it = subs_dict.find(rcp_from_this());
+    if (it != subs_dict.end())
+        return it->second;
+    RCP<const Basic> n1 = n_->subs(subs_dict);
+    RCP<const Basic> x1 = x_->subs(subs_dict);
+    if (n1 == n_ and x1 == x_) {
+        return rcp_from_this();
+    } else {
+        return polygamma(n1, x1);
+    }
+}
+
 RCP<const Basic> polygamma(const RCP<const Basic> &n_, const RCP<const Basic> &x_)
 {
     // Only special values are being evaluated
     if (is_a_Number(*x_) and not (rcp_static_cast<const Number>(x_))->is_positive()) {
         throw std::runtime_error("Complex Infinity not yet implemented");
     }
-
+    if (is_a<Integer>(*n_) and is_a<Integer>(*x_)) {
+        auto n = static_cast<const Integer &>(*n_).as_int();
+        auto x = static_cast<const Integer &>(*x_).as_int();
+        if (n == 0) {
+            return sub(harmonic(x - 1, 1), EulerGamma);
+        } else if (n % 2 == 1) {
+            return mul(factorial(n), zeta(add(n_, one), x_));
+        }
+    }
     if (eq(*n_, *zero)) {
         if (eq(*x_, *one)) {
             return neg(EulerGamma);
         }
         if (is_a<Rational>(*x_)) {
             RCP<const Rational> x = rcp_static_cast<const Rational>(x_);
-            auto den = x->i.get_den();
+            const auto den = get_den(x->i);
+            const auto num = get_num(x->i);
+            const auto r = num % den;
+            RCP<const Basic> res;
             if (den == 2) {
-                auto num = x->i.get_num();
+                res = sub(mul(im2, log(i2)), EulerGamma);
+            } else if (den == 3) {
                 if (num == 1) {
-                       return sub(mul(im2, log(i2)), EulerGamma);
+                    res = add(neg(div(div(pi, i2), sqrt(i3))), sub(div(mul(im3, log(i3)), i2), EulerGamma));
+                } else {
+                    res = add(div(div(pi, i2), sqrt(i3)), sub(div(mul(im3, log(i3)), i2), EulerGamma));
                 }
-            }
-            if (den == 3) {
-                auto num = x->i.get_num();
+            } else if (den == 4) {
                 if (num == 1) {
-                       return add(neg(div(div(pi, i2), sqrt(i3))), sub(div(mul(im3, log(i3)), i2), EulerGamma));
+                    res = add(div(pi, im2), sub(mul(im3, log(i2)), EulerGamma));
+                } else {
+                    res = add(div(pi, i2), sub(mul(im3, log(i2)), EulerGamma));
                 }
-                if (num == 2) {
-                      return add(div(div(pi, i2), sqrt(i3)), sub(div(mul(im3, log(i3)), i2), EulerGamma));
-                }
+            } else {
+                return make_rcp<const PolyGamma>(n_, x_);
             }
-            if (den == 4) {
-                auto num = x->i.get_num();
-                if (num == 1) {
-                       return add(neg(div(pi, i2)), sub(mul(im3, log(i2)), EulerGamma));
-                }
-                if (num == 3) {
-                       return add(div(pi, i2), sub(mul(im3, log(i2)), EulerGamma));
-                }
+            rational_class a(0), f(r, den);
+            for (unsigned long i = 0; i < (num - r) / den; ++i) {
+                a += 1 / (f + i);
             }
+            return add(Rational::from_mpq(a), res);
         }
     }
     return make_rcp<const PolyGamma>(n_, x_);
@@ -3589,7 +3711,7 @@ RCP<const Basic> min(const vec_basic &arg)
     } else if (final_args.size() == 1) {
         return final_args[0];
     } else {
-        throw std::runtime_error("Empty vec_basic passed to max!");
+        throw std::runtime_error("Empty vec_basic passed to min!");
     }
 }
 

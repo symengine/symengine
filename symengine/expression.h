@@ -14,15 +14,10 @@
 #include <symengine/mul.h>
 #include <symengine/pow.h>
 #include <symengine/symbol.h>
+#include <symengine/real_double.h>
 
 namespace SymEngine
 {
-
-#ifdef HAVE_SYMENGINE_NOEXCEPT
-#  define SYMENGINE_NOEXCEPT noexcept
-#else
-#  define SYMENGINE_NOEXCEPT
-#endif
 
 class Expression
 {
@@ -36,6 +31,8 @@ public:
     //! cannot be explicit (needed so by Piranha)
     Expression(int n) : m_basic(integer(n)) {}
     //! Construct Expression from Basic
+    //Expression(double n) : m_basic(RealDouble(n)) {}
+
 #if defined(HAVE_SYMENGINE_IS_CONSTRUCTIBLE)
     template <typename T, typename = typename std::enable_if<std::is_constructible<RCP<const Basic>, T &&>::value>::type>
 #else
@@ -120,11 +117,13 @@ public:
     {
         return eq(*m_basic, *other.m_basic);
     }
+    
     //! Overload check not equal (!=)
     bool operator!=(const Expression &other) const
     {
         return not (*this == other);
     }
+
     //! Method to get Basic from Expression
     const RCP<const Basic> &get_basic() const
     {
@@ -145,7 +144,10 @@ inline Expression coeff(const Expression &y, const Expression &x, const Expressi
     return coeff(y.get_basic(), x.get_basic(), n.get_basic());
 }
 
-std::string poly_print(const Expression &x);
+namespace detail {
+    // This function must have external linkage
+    std::string poly_print(const Expression &x);
+}
 
 } // SymEngine
 
@@ -181,7 +183,7 @@ namespace piranha {
     struct print_coefficient_impl<U, typename std::enable_if<std::is_same<U, SymEngine::Expression>::value>::type>
     {
         auto operator()(std::ostream &os, const U &cf) const -> decltype(os << cf) {
-            return os << poly_print(cf);
+            return os << SymEngine::detail::poly_print(cf);
         }
     };
 }

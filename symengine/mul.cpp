@@ -302,7 +302,7 @@ void Mul::as_base_exp(const RCP<const Basic> &self, const Ptr<RCP<const Basic>> 
         // in case of Integers den = 1
         if (is_a<Rational>(*self)) {
             RCP<const Rational> self_new = rcp_static_cast<const Rational>(self);
-            if (abs(self_new->i.get_num()) < abs(self_new->i.get_den())) {
+            if (mp_abs(get_num(self_new->i)) < mp_abs(get_den(self_new->i))) {
                 *exp = minus_one;
                 *base = self_new->rdiv(*rcp_static_cast<const Number>(one));
             } else {
@@ -327,7 +327,7 @@ RCP<const Basic> mul(const RCP<const Basic> &a, const RCP<const Basic> &b)
 {
     SymEngine::map_basic_basic d;
     RCP<const Number> coef = one;
-    if (SymEngine::is_a<Mul>(*a) and SymEngine::is_a<Mul>(*b)) {
+    if (is_a<Mul>(*a) and is_a<Mul>(*b)) {
         RCP<const Mul> A = rcp_static_cast<const Mul>(a);
         RCP<const Mul> B = rcp_static_cast<const Mul>(b);
         // This is important optimization, as coef=1 if Mul is inside an Add.
@@ -339,7 +339,7 @@ RCP<const Basic> mul(const RCP<const Basic> &a, const RCP<const Basic> &b)
         d = A->dict_;
         for (const auto &p: B->dict_)
             Mul::dict_add_term_new(outArg(coef), d, p.second, p.first);
-    } else if (SymEngine::is_a<Mul>(*a)) {
+    } else if (is_a<Mul>(*a)) {
         RCP<const Basic> exp;
         RCP<const Basic> t;
         coef = (rcp_static_cast<const Mul>(a))->coef_;
@@ -350,7 +350,7 @@ RCP<const Basic> mul(const RCP<const Basic> &a, const RCP<const Basic> &b)
             Mul::as_base_exp(b, outArg(exp), outArg(t));
             Mul::dict_add_term_new(outArg(coef), d, exp, t);
         }
-    } else if (SymEngine::is_a<Mul>(*b)) {
+    } else if (is_a<Mul>(*b)) {
         RCP<const Basic> exp;
         RCP<const Basic> t;
         coef = (rcp_static_cast<const Mul>(b))->coef_;
@@ -382,6 +382,8 @@ RCP<const Basic> mul(const RCP<const Basic> &a, const RCP<const Basic> &b)
 
 RCP<const Basic> div(const RCP<const Basic> &a, const RCP<const Basic> &b)
 {
+    if(is_a_Number(*b) and rcp_static_cast<const Number>(b)->is_zero())
+        throw std::runtime_error("div: Division by zero");
     return mul(a, pow(b, minus_one));
 }
 
@@ -456,9 +458,15 @@ RCP<const Basic> Mul::subs(const map_basic_basic &subs_dict) const
     RCP<const Number> coef = coef_;
     map_basic_basic d;
     for (const auto &p: dict_) {
-        RCP<const Basic> factor_old = Mul::from_dict(one, {{p.first, p.second}});
+        RCP<const Basic> factor_old;
+        if (eq(*p.second, *one)) {
+            factor_old = p.first;
+        } else {
+            factor_old = make_rcp<Pow>(p.first, p.second);
+        }
         RCP<const Basic> factor = factor_old->subs(subs_dict);
         if (factor == factor_old) {
+            // TODO: Check if Mul::dict_add_term is enough
             Mul::dict_add_term_new(outArg(coef), d, p.second, p.first);
         } else if (is_a_Number(*factor)) {
             if (rcp_static_cast<const Number>(factor)->is_zero()) {

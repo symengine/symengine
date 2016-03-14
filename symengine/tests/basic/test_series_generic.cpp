@@ -20,25 +20,28 @@ using SymEngine::Basic;
 using SymEngine::one;
 using SymEngine::zero;
 using SymEngine::integer;
+using SymEngine::integer_class;
 using SymEngine::vec_basic_eq_perm;
 
-TEST_CASE("Constructor of UnivariateSeries", "[UnivariateSeries")
+using namespace SymEngine::literals;
+
+TEST_CASE("Constructor of UnivariateSeries", "[UnivariateSeries]")
 {
     RCP<const Symbol> x  = symbol("x");
-    map_uint_mpz adict_ = {{0, 1}, {1, 2}, {2, 1}};
+    map_uint_mpz adict_ = {{0, 1_z}, {1, 2_z}, {2, 1_z}};
     RCP<const UnivariateSeries> P = univariate_series(x, 2, adict_);
     REQUIRE(P->__str__() == "1 + 2*x + O(x**2)");
 
-    RCP<const UnivariateSeries> Q = UnivariateSeries::create(x, 5, {1, 0, 2, 1});
+    RCP<const UnivariateSeries> Q = UnivariateSeries::create(x, 5, {1_z, 0_z, 2_z, 1_z});
     REQUIRE(Q->__str__() == "1 + 2*x**2 + x**3 + O(x**5)");
 }
 
-TEST_CASE("Adding two UnivariateSeries", "[UnivariateSeries")
+TEST_CASE("Adding two UnivariateSeries", "[UnivariateSeries]")
 {
     RCP<const Symbol> x  = symbol("x");
-    map_uint_mpz adict_ = {{0, 1}, {1, 2}, {2, 1}};
-    map_uint_mpz bdict_ = {{0, 2}, {1, 3}, {2, 4}};
-    map_uint_mpz ddict_ = {{0, 3}, {1, 5}, {2, 5}};
+    map_uint_mpz adict_ = {{0, 1_z}, {1, 2_z}, {2, 1_z}};
+    map_uint_mpz bdict_ = {{0, 2_z}, {1, 3_z}, {2, 4_z}};
+    map_uint_mpz ddict_ = {{0, 3_z}, {1, 5_z}, {2, 5_z}};
 
     const UnivariateSeries a(x, 5, std::move(adict_));
     const UnivariateSeries b(x, 4, std::move(bdict_));
@@ -52,11 +55,11 @@ TEST_CASE("Adding two UnivariateSeries", "[UnivariateSeries")
     REQUIRE(*f == g);
 }
 
-TEST_CASE("Negative of a UnivariateSeries", "[UnivariateSeries")
+TEST_CASE("Negative of a UnivariateSeries", "[UnivariateSeries]")
 {
     RCP<const Symbol> x  = symbol("x");
-    map_uint_mpz adict_ = {{0, 1}, {1, 2}, {2, 1}};
-    map_uint_mpz bdict_ = {{0, -1}, {1, -2}, {2, -1}};
+    map_uint_mpz adict_ = {{0, 1_z}, {1, 2_z}, {2, 1_z}};
+    map_uint_mpz bdict_ = {{0, -1_z}, {1, -2_z}, {2, -1_z}};
 
     const UnivariateSeries a(x, 5, std::move(adict_));
     RCP<const UnivariateSeries> b = neg_uni_series(a);
@@ -67,10 +70,10 @@ TEST_CASE("Negative of a UnivariateSeries", "[UnivariateSeries")
 TEST_CASE("Subtracting two UnivariateSeries", "[UnivariateSeries]")
 {
     RCP<const Symbol> x  = symbol("x");
-    map_uint_mpz adict_ = {{0, 1}, {1, 2}, {2, 1}};
-    map_uint_mpz bdict_ = {{0, 2}, {1, 3}, {2, 4}};
-    map_uint_mpz fdict_ = {{0, -1}, {1, -1}, {2, -3}};
-    map_uint_mpz gdict_ = {{0, -1}, {1, -1}};
+    map_uint_mpz adict_ = {{0, 1_z}, {1, 2_z}, {2, 1_z}};
+    map_uint_mpz bdict_ = {{0, 2_z}, {1, 3_z}, {2, 4_z}};
+    map_uint_mpz fdict_ = {{0, -1_z}, {1, -1_z}, {2, -3_z}};
+    map_uint_mpz gdict_ = {{0, -1_z}, {1, -1_z}};
 
     const UnivariateSeries a(x, 5, std::move(adict_));
     const UnivariateSeries b(x, 4, std::move(bdict_));
@@ -84,13 +87,13 @@ TEST_CASE("Subtracting two UnivariateSeries", "[UnivariateSeries]")
     REQUIRE(*e == g);
 }
 
-TEST_CASE("Multiplication of two UnivariateSeries", "[UnivariateSeries")
+TEST_CASE("Multiplication of two UnivariateSeries", "[UnivariateSeries]")
 {
     RCP<const Symbol> x  = symbol("x");
-    RCP<const UnivariateSeries> a = univariate_series(x, 5, {{0, 1}, {1, 2}, {2, 1}});
-    RCP<const UnivariateSeries> b = univariate_series(x, 3, {{0, -1}, {1, -2}, {2, -1}});
-    RCP<const UnivariateSeries> e = univariate_series(x, 5, {{0, 1}, {1, 4}, {2, 6}, {3, 4}, {4, 1}});
-    RCP<const UnivariateSeries> f = univariate_series(x, 3, {{0, -1}, {1, -4}, {2, -6}});
+    RCP<const UnivariateSeries> a = univariate_series(x, 5, {{0, 1_z}, {1, 2_z}, {2, 1_z}});
+    RCP<const UnivariateSeries> b = univariate_series(x, 3, {{0, -1_z}, {1, -2_z}, {2, -1_z}});
+    RCP<const UnivariateSeries> e = univariate_series(x, 5, {{0, 1_z}, {1, 4_z}, {2, 6_z}, {3, 4_z}, {4, 1_z}});
+    RCP<const UnivariateSeries> f = univariate_series(x, 3, {{0, -1_z}, {1, -4_z}, {2, -6_z}});
 
     RCP<const UnivariateSeries> c = mul_uni_series(*a, *a);
     RCP<const UnivariateSeries> d = mul_uni_series(*a, *b);

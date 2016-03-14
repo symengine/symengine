@@ -50,7 +50,9 @@ using SymEngine::log;
 using SymEngine::pi;
 using SymEngine::E;
 using SymEngine::EulerGamma;
+using SymEngine::loggamma;
 using SymEngine::vec_basic;
+using SymEngine::rational_class;
 using SymEngine::max;
 using SymEngine::min;
 
@@ -81,6 +83,9 @@ TEST_CASE("eval_double: eval_double", "[eval_double]")
         { mul(EulerGamma, integer(10)), 5.7721566490153286 },
         { max({r2, r1}), 0.841470984808},
         { min({add(r1, r4), r2}), 0.479425538604},
+        { gamma(div(integer(4), integer(3))), 0.892979511569249211},
+        { loggamma(div(integer(7), integer(2))), 1.200973602347074224 },
+        { loggamma(pi), 0.82769459232343710152 },
     };
 
     for (unsigned i = 0; i < vec.size(); i++) {
@@ -117,8 +122,8 @@ TEST_CASE("eval_complex_double: eval_double", "[eval_double]")
     RCP<const Basic> r1, r2, r3, r4;
     r1 = sin(pow(integer(-5), div(integer(1), integer(2))));
     r2 = asin(Complex::from_two_nums(*integer(1), *integer(2)));
-    r3 = Complex::from_two_nums(*Rational::from_mpq(mpq_class(3, 5)), *Rational::from_mpq(mpq_class(4, 5)));
-    r4 = Complex::from_two_nums(*Rational::from_mpq(mpq_class(5, 13)), *Rational::from_mpq(mpq_class(12, 13)));
+    r3 = Complex::from_two_nums(*Rational::from_mpq(rational_class(3, 5)), *Rational::from_mpq(rational_class(4, 5)));
+    r4 = Complex::from_two_nums(*Rational::from_mpq(rational_class(5, 13)), *Rational::from_mpq(rational_class(12, 13)));
 
     std::vector<std::pair<RCP<const Basic>, std::complex<double>>> vec = {
         { r1, std::complex<double>(0.0, 4.624795545470) },
