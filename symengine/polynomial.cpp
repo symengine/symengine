@@ -906,6 +906,11 @@ RCP<const MultivariateIntPolynomial> add_mult_poly(const MultivariateIntPolynomi
     return MultivariateIntPolynomial::from_dict(s, std::move(dict));
 }
 
+RCP<const MultivariateIntPolynomial> add_mult_poly(const UnivariateIntPolynomial &a, const MultivariateIntPolynomial &b)
+{
+	return add_mult_poly(b, a);
+}
+
 RCP<const MultivariateIntPolynomial> sub_mult_poly(const MultivariateIntPolynomial &a, const UnivariateIntPolynomial &b){
     return add_mult_poly(a, *neg_poly(b));
 }
@@ -941,6 +946,11 @@ RCP<const MultivariateIntPolynomial> mul_mult_poly(const MultivariateIntPolynomi
         }
     }
     return MultivariateIntPolynomial::from_dict(s, std::move(dict));
+}
+
+RCP<const MultivariateIntPolynomial> mul_mult_poly(const UnivariateIntPolynomial &a, const MultivariateIntPolynomial &b)
+{
+	return mul_mult_poly(b, a);
 }
 
 RCP<const MultivariateIntPolynomial> add_mult_poly(const UnivariateIntPolynomial &a, const UnivariateIntPolynomial &b){
