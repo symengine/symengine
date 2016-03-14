@@ -15,9 +15,6 @@ UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned 
 UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const unsigned int &max, map_int_Expr &&dict) :
         SeriesBase(UnivariateExprPolynomial(univariate_polynomial(var, (int)max, std::move(dict))), var->get_name(), precision), prec_{precision} {}
 
-UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const map_uint_mpz& dict) :
-        SeriesBase(UnivariateExprPolynomial(0), var->get_name(), precision), prec_{precision} {}
-
 UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const std::vector<integer_class> &v) :
         SeriesBase(UnivariateExprPolynomial(convert_vector(v)), var->get_name(), precision), prec_{precision} {}
 
@@ -99,7 +96,20 @@ unsigned UnivariateSeries::ldegree(const UnivariateExprPolynomial &s) {
 }
 
 UnivariateExprPolynomial UnivariateSeries::mul(const UnivariateExprPolynomial &a, const UnivariateExprPolynomial &b, unsigned prec) {
-    
+    unsigned int exp;
+    map_int_Expr p;
+
+    for(auto &it1 : a.get_univariate_poly()->get_dict()) {
+        for(auto &it2 : b.get_univariate_poly()->get_dict()) {
+            exp = it1.first + it2.first;
+            if(exp < prec) {
+                p[exp] = it1.second * it2.second;
+            } else {
+                break;
+            }
+        }
+    }
+    return UnivariateExprPolynomial(UnivariatePolynomial::from_dict(a.get_univariate_poly()->get_var(), std::move(p)));
 }
 
 UnivariateExprPolynomial UnivariateSeries::pow(const UnivariateExprPolynomial &s, int n, unsigned prec) {
