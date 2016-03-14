@@ -49,7 +49,8 @@ RCP<const Basic> UnivariateSeries::get_coeff(int deg) const {
 }
 
 UnivariateExprPolynomial UnivariateSeries::var(const std::string &s) {
-    return UnivariateExprPolynomial(std::stoi(s));
+    UnivariateExprPolynomial p(UnivariatePolynomial::create(symbol(s), {0, 1}));
+    return p;
 }
 
 Expression UnivariateSeries::convert(const Number &x) {
