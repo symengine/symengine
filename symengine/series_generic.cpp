@@ -55,7 +55,7 @@ Expression UnivariateSeries::convert(const Number &x) {
     return Expression(x.rcp_from_this());
 }
 
-RCP<const UnivariatePolynomial> UnivariateSeries::convert_poly(const RCP<const Symbol> &var, const map_int_Expr &d, unsigned pr) {
+RCP<const UnivariatePolynomial> UnivariateSeries::trunc_poly(const RCP<const Symbol> &var, const map_int_Expr &d, unsigned pr) {
     map_int_Expr dict_trunc;
     unsigned int max = 0;
     for (const auto &it : d) {
@@ -66,14 +66,6 @@ RCP<const UnivariatePolynomial> UnivariateSeries::convert_poly(const RCP<const S
         }
     }
     return univariate_polynomial(var, max, std::move(dict_trunc));
-}
-
-RCP<const UnivariatePolynomial> UnivariateSeries::convert_vector(const std::vector<integer_class> &v) {
-    std::vector<Expression> vtrunc;
-    for (unsigned int i = 0; i < v.size(); i++)
-        if (i < get_degree())
-            vtrunc.push_back(Expression(mp_get_si(v[i])));
-    return UnivariatePolynomial::create(symbol(var_), vtrunc);
 }
 
 unsigned UnivariateSeries::ldegree(const UnivariateExprPolynomial &s) {
@@ -111,7 +103,7 @@ UnivariateExprPolynomial UnivariateSeries::pow(const UnivariateExprPolynomial &s
     } else if(n == 0) {
         return UnivariateExprPolynomial(1);
     } else if(n == 1) {
-        return UnivariateSeries::convert_poly(s.get_univariate_poly()->get_var(), s.get_univariate_poly()->get_dict(), prec);
+        return UnivariateSeries::trunc_poly(s.get_univariate_poly()->get_var(), s.get_univariate_poly()->get_dict(), prec);
     } else {
         UnivariateExprPolynomial p = s;
         for(int i = 0; i < n; i++) {
