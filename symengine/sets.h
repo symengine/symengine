@@ -52,7 +52,7 @@ public:
 
     virtual bool is_subset(const RCP<const Set> &o) const { return true; };
     virtual bool is_proper_subset (const RCP<const Set> &o) const;
-    virtual bool is_superset(const RCP<const Set> &o) const { return false;};
+    virtual bool is_superset(const RCP<const Set> &o) const;
     virtual bool is_proper_superset(const RCP<const Set> &o) const { return false; };
 };
 

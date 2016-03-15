@@ -42,19 +42,21 @@ int Interval::compare(const Basic &s) const {
     // compares two interval based on their length
     SYMENGINE_ASSERT(is_a<Interval>(s))
     const Interval &o = static_cast<const Interval &>(s);
-    auto this_abs = abs(start_->sub(*end_));
-    auto o_abs = abs(o.start_->sub(*o.end_));
-    auto min_abs = min({this_abs, o_abs});
-    int this_boundary = 2 - int(left_open_) - int(right_open_);
-    int o_boundary = 2 - int(o.left_open_) - int(o.right_open_);
-    if (eq(*this_abs, *o_abs)) {
-        if(this_boundary == o_boundary)
-            return 0;
-        return this_boundary < o_boundary ? -1 : 1;
-    } else if (eq(*this_abs, *min_abs)) {
+    if(left_open_ and not o.left_open_) {
+        return -1;
+    } else if (not left_open_ and o.left_open_) {
+        return 1;
+    } else if (right_open_ and not o.right_open_) {
+        return 1;
+    } else if (not right_open_ and o.right_open_) {
         return -1;
     } else {
-        return 1;
+        auto temp = start_->__cmp__(*(o.start_));
+        if (temp != 0) {
+            return temp;
+        } else {
+            return end_->__cmp__(*(o.end_));
+        }
     }
 }
 
@@ -207,6 +209,13 @@ bool EmptySet::is_proper_subset(const RCP<const Set> &o) const {
         return false;
     }
     return true;
+}
+
+bool EmptySet::is_superset(const RCP<const Set> &o) const {
+    if (is_a<EmptySet>(*o)) {
+        return true;
+    }
+    return false;
 }
 
 RCP<const EmptySet> EmptySet::getInstance() {

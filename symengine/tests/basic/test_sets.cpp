@@ -32,27 +32,27 @@ TEST_CASE("Interval : Basic", "[basic]")
     r1 = interval(zero, i20); // [0, 20]
     r2 = interval(im5, i2); // [-5, 2]
 
+    REQUIRE(r1->is_Interval());
+    REQUIRE(not r1->is_EmptySet());
+    REQUIRE(not r1->is_FiniteSet());
+
     r3 = r1->set_intersection(r2); // [0, 2]
     r4 = interval(zero, i2); // [0, 2]
     REQUIRE(eq(*r3, *r4));
-
     r3 = interval(im5, i2, true, true); // (-5, 2)
     r4 = r3->set_intersection(r2);
     REQUIRE(eq(*r3, *r4));
-
     r3 = r1->set_union(r2); // [-5, 20]
     r4 = interval(im5, i20);
     REQUIRE(eq(*r3, *r4));
-
     r3 = interval(integer(21), integer(22));
     r4 = r1->set_intersection(r3);
     REQUIRE(eq(*r4, *emptyset()));
-
     r3 = interval(im5, i2, false, false); // (-5, 2)
+
     REQUIRE(r3->is_subset(r2));
     REQUIRE(not r3->is_proper_subset(r2));
     REQUIRE(not r3->is_proper_superset(r2));
-
     r3 = interval(im5, i20);
     r4 = interval(zero, i2);
     REQUIRE(r3->is_superset(r4));
@@ -63,19 +63,33 @@ TEST_CASE("Interval : Basic", "[basic]")
     r3 = r1->set_intersection(r2);
     r4 = interval(rat1, i2);
     REQUIRE(eq(*r3, *r4));
-    REQUIRE(r4->__str__() == "[5/6, 2]");
 
+    REQUIRE(r4->__str__() == "[5/6, 2]");
     REQUIRE(r4->compare(*r3) == 0);
-    r3 = interval(rat1, i2, true, true); // (5/6, 2)
-    REQUIRE(r4->compare(*r3) == 1);
+
+    RCP<const Interval> r5 = interval(zero, one, false, false);
+    REQUIRE(eq(*r5->close(), *r5));
+    RCP<const Interval> r6 = interval(zero, one, true, false);
+    REQUIRE(eq(*r5->Lopen(), *r6));
+    r6 = interval(zero, one, false, true);
+    REQUIRE(eq(*r5->Ropen(), *r6));
+    r6 = interval(zero, one, true, true);
+    REQUIRE(eq(*r5->open(), *r6));
 }
 
 TEST_CASE("EmptySet : Basic", "[basic]")
 {
-    RCP<const Set> r1;
-    r1 = emptyset();
+    RCP<const Set> r1 = emptyset();
+    RCP<const Set> r2 = interval(zero, one);
 
     REQUIRE(r1->is_EmptySet());
     REQUIRE(not r1->is_Interval());
+    REQUIRE(r1->is_FiniteSet());
+    REQUIRE(r1->is_subset(r2));
+    REQUIRE(r1->is_proper_subset(r2));
+    REQUIRE(r1->is_superset(r1));
+    REQUIRE(r1->is_superset(r1));
+    REQUIRE(eq(*r1, *r1->set_intersection(r2)));
+    REQUIRE(eq(*r2, *r1->set_union(r2)));
     REQUIRE(r1->__str__() == "EmptySet");
 }
