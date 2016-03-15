@@ -53,7 +53,7 @@ UnivariateExprPolynomial UnivariateSeries::var(const std::string &s) {
     return p;
 }
 
-Expression UnivariateSeries::convert(const Number &x) {
+Expression UnivariateSeries::convert(const Basic &x) {
     return Expression(x.rcp_from_this());
 }
 

@@ -33,7 +33,7 @@ public:
     virtual RCP<const Basic> get_coeff(int) const;
     static UnivariateExprPolynomial var(const std::string &s);
 
-    static Expression convert(const Number &x);
+    static Expression convert(const Basic &x);
     static RCP<const UnivariatePolynomial> trunc_poly(const RCP<const Symbol> &var, const map_int_Expr &d, unsigned pr);
 
     static unsigned ldegree(const UnivariateExprPolynomial &s);
