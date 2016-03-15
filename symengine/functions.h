@@ -927,6 +927,11 @@ RCP<const Basic> levi_civita(const vec_basic &arg);
 
 
 class Erf: public Function {
+/*   The Gauss error function. This function is defined as:
+ *
+ *   .. math::
+ *      \mathrm{erf}(x) = \frac{2}{\sqrt{\pi}} \int_0^x e^{-t^2} \mathrm{d}t.
+ **/
 private:
     RCP<const Basic> arg_;
 public:

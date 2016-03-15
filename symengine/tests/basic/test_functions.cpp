@@ -2164,6 +2164,8 @@ TEST_CASE("Erf: functions", "[functions]")
     r2 = exp(neg(mul(r2, r2)));
     r2 = mul(div(i2, sqrt(pi)), r2);
     REQUIRE(eq(*r1->diff(x), *r2));
+
+    REQUIRE(eq(*erf(neg(x)), *neg(erf(x))));
 }
 
 TEST_CASE("Gamma: functions", "[functions]")

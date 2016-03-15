@@ -2806,6 +2806,7 @@ bool Erf::is_canonical(const RCP<const Basic> &arg) const
 {
     if (is_a<Integer>(*arg) and
         rcp_static_cast<const Integer>(arg)->is_zero()) return false;
+    if (could_extract_minus(arg)) return false;
     return true;
 }
 
@@ -2835,6 +2836,9 @@ RCP<const Basic> erf(const RCP<const Basic> &arg)
     if (is_a<Integer>(*arg) and
         rcp_static_cast<const Integer>(arg)->is_zero()) {
         return zero;
+    }
+    if (could_extract_minus(arg)) {
+        return neg(erf(neg(arg)));
     }
     return make_rcp<Erf>(arg);
 }
