@@ -3417,10 +3417,15 @@ Abs::Abs(const RCP<const Basic> &arg)
 
 bool Abs::is_canonical(const RCP<const Basic> &arg) const
 {
-    if (is_a<Integer>(*arg) or is_a<Rational>(*arg)) return false;
+    if (is_a<Integer>(*arg) or is_a<Rational>(*arg) or is_a<Complex>(*arg)) return false;
     if (is_a_Number(*arg) and not static_cast<const Number &>(*arg).is_exact()) {
         return false;
     }
+
+    if (could_extract_minus(arg)) {
+        return false;
+    }
+
     return true;
 }
 
@@ -3461,9 +3466,17 @@ RCP<const Basic> abs(const RCP<const Basic> &arg)
         } else {
             return arg_;
         }
+    } else if (is_a<Complex>(*arg)) {
+        RCP<const Complex> arg_ = rcp_static_cast<const Complex>(arg);
+        return sqrt(Rational::from_mpq(arg_->real_ * arg_->real_ + arg_->imaginary_ * arg_->imaginary_));
     } else if (is_a_Number(*arg) and not static_cast<const Number &>(*arg).is_exact()) {
         return static_cast<const Number &>(*arg).get_eval().abs(*arg);
     }
+
+    if (could_extract_minus(arg)) {
+        return abs(neg(arg));
+    }
+
     return make_rcp<const Abs>(arg);
 }
 
