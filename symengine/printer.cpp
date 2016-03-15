@@ -366,9 +366,9 @@ void StrPrinter::bvisit(const UnivariateSeries &x) {
     std::ostringstream o;
     bool first = true;
     bool last = false;
-    for (const auto& it : x.p_.get_univariate_poly()->get_dict()) {
+    for (const auto& it : x.get_poly().get_univariate_poly()->get_dict()) {
         if (it.second == 0) {
-            if((unsigned)it.first == prec_ and it.second == (--(x.p_.get_univariate_poly()->get_dict().end()))->second) {
+            if((unsigned)it.first == x.get_degree() and it.second == (--(x.get_poly().get_univariate_poly()->get_dict().end()))->second) {
                 last = true;
             }
             continue;
@@ -389,15 +389,15 @@ void StrPrinter::bvisit(const UnivariateSeries &x) {
             continue;
         }
         if (Expression(abs(it.second.get_basic())) == 1)
-            o << var_;
+            o << x.get_var();
         else
-            o << Expression(abs(it.second.get_basic())) << "*" << var_;
+            o << Expression(abs(it.second.get_basic())) << "*" << x.get_var();
         if (it.first > 1)
             o << "**" << it.first;
     }
-    if (o.str() != "0" and (last == true or ((unsigned)(--(x.p_.get_univariate_poly()->get_dict().end()))->first) < prec_))
-        o << " + O(" << var_ << "**" << prec_ << ")";
-    return o.str();
+    if (o.str() != "0" and (last == true or ((unsigned)(--(x.get_poly().get_univariate_poly()->get_dict().end()))->first) < x.get_degree()))
+        o << " + O(" << x.get_var() << "**" << x.get_degree() << ")";
+    str_ = o.str();
 }
 
 #ifdef HAVE_SYMENGINE_PIRANHA
