@@ -257,7 +257,7 @@ RCP<const UnivariateIntPolynomial> sub_poly(const UnivariateIntPolynomial &a, co
         dict[it.first] = it.second;
     for (const auto &it : b.get_dict())
         dict[it.first] -= it.second;
-    return UnivariateIntPolynomial::from_dict(a.get_var(), std::move(dict));
+    return UnivariateIntPolynomial::from_dict(var, std::move(dict));
 }
 
 //Calculates bit length of number, used in mul_poly() only
