@@ -96,7 +96,7 @@ echo "Running tests in build directory:"
 ctest --output-on-failure
 
 if [[ "${WITH_COVERAGE}" == "yes" ]]; then
-    bash <(curl -s https://codecov.io/bash)
+    bash <(curl -s https://codecov.io/bash) -x $GCOV_EXECUTABLE
     exit 0;
 fi
 
