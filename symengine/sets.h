@@ -7,10 +7,7 @@
 
 #include <symengine/basic.h>
 #include <symengine/functions.h>
-#include <symengine/number.h>
-#include <symengine/rational.h>
 #include <symengine/complex.h>
-
 
 namespace SymEngine {
 
@@ -34,7 +31,7 @@ public:
     IMPLEMENT_TYPEID(EMPTYSET)
     //EmptySet(EmptySet const&) = delete;
     void operator=(EmptySet const&) = delete;
-    static RCP<const EmptySet> getInstance();
+    static RCP<const Set> getInstance();
     virtual std::size_t __hash__() const;
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
@@ -79,7 +76,7 @@ public:
     RCP<const Set> Lopen() const;
     RCP<const Set> Ropen() const;
 
-    bool is_canonical(const RCP<const Number> &start, const RCP<const Number> &end, bool left_open, bool right_open) const;
+    static bool is_canonical(const RCP<const Number> &start, const RCP<const Number> &end, bool left_open, bool right_open);
 
     virtual RCP<const Set> set_union(const RCP<const Set> &o) const;
     virtual RCP<const Set> set_intersection(const RCP<const Set> &o) const;
@@ -90,15 +87,18 @@ public:
 };
 
 //! \return RCP<const Set>
-inline RCP<const Interval> interval(const RCP<const Number> &start, const RCP<const Number> &end, const bool left_open = false, const bool right_open = false)
+inline RCP<const Set> emptyset()
 {
-    return make_rcp<const Interval>(start, end, left_open, right_open);
+    return EmptySet::getInstance();
 }
 
 //! \return RCP<const Set>
-inline RCP<const EmptySet> emptyset()
+inline RCP<const Set> interval(const RCP<const Number> &start, const RCP<const Number> &end, const bool left_open = false, const bool right_open = false)
 {
-    return EmptySet::getInstance();
+    if(Interval::is_canonical(start, end, left_open, right_open)) {
+        return make_rcp<const Interval>(start, end, left_open, right_open);
+    }
+    return emptyset();
 }
 
 }

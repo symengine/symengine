@@ -1,21 +1,20 @@
 #include <symengine/sets.h>
-#include <symengine/integer.h>
 
 namespace SymEngine {
 
 Interval::Interval(const RCP<const Number> &start, const RCP<const Number> &end, const bool left_open, const bool right_open)
     : start_(start), end_(end), left_open_(left_open), right_open_(right_open) {
-        SYMENGINE_ASSERT(is_canonical(start_, end_, left_open_, right_open_));
+        SYMENGINE_ASSERT(Interval::is_canonical(start_, end_, left_open_, right_open_));
     }
 
-bool Interval::is_canonical(const RCP<const Number> &s, const RCP<const Number> &e, bool left_open, bool right_open) const {
+bool Interval::is_canonical(const RCP<const Number> &s, const RCP<const Number> &e, bool left_open, bool right_open) {
     if (is_a<Complex>(*s) or is_a<Complex>(*e))
         throw std::runtime_error("Complex set not implemented");
     if (eq(*e, *s)) {
         if (left_open or right_open)
-            throw std::runtime_error("Not a valid Interval");
+            return false;
     } else if (eq(*min({s, e}), *e)){
-        throw std::runtime_error("Not a valid Interval");
+        return false;
     }
     return true;
 }
@@ -218,7 +217,7 @@ bool EmptySet::is_superset(const RCP<const Set> &o) const {
     return false;
 }
 
-RCP<const EmptySet> EmptySet::getInstance() {
+RCP<const Set> EmptySet::getInstance() {
     static auto a = make_rcp<const EmptySet>();
     return a;
 }
