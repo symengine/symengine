@@ -39,10 +39,6 @@ if [[ "${TRAVIS_OS_NAME}" == "linux" ]] && [[ "${CC}" == "gcc" ]]; then
     fi
 fi
 
-if [[ "${WITH_COVERAGE}" == "yes" ]]; then
-    pip install --user cpp-coveralls
-fi
-
 export SOURCE_DIR=`pwd`
 export our_install_dir="$HOME/our_usr"
 mkdir -p $our_install_dir
