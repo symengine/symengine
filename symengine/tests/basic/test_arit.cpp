@@ -237,7 +237,7 @@ TEST_CASE("Mul: arit", "[arit]")
     // (2*x**2*y) * (x**(-2.0)) == 2.0 * y
     REQUIRE(eq(*r1, *r2));
 
-    set_basic s;
+    std::set<RCP<const Basic>, SymEngine::RCPBasicKeyLessCmp> s;
     rc1 = Complex::from_two_nums(*one, *one);
     s.insert(rc1);
     rc1 = Complex::from_two_nums(*i2, *one);
