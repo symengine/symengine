@@ -827,15 +827,25 @@ RCP<const MultivariateIntPolynomial> MultivariateIntPolynomial::from_dict(const 
 vec_basic  MultivariateIntPolynomial::get_args() const{
     vec_basic args;
     umap_uvec_mpz d;
-    for(const auto &p : dict_){
-        d = {{p.first, p.second}};
+    std::vector<vec_uint> v;
+    //To change the ordering in which the terms appear in the vector, change
+    //vec_uint_compare in dict.h
+    for(auto bucket : dict_){
+      auto it = v.begin();
+      while(it != v.end() && vec_uint_compare()(bucket.first,*it)){
+	it++;
+      }
+      v.insert(it, bucket.first);
+    }
+    for(const auto &p : v){
         map_basic_basic b;
         int whichvar = 0;
         for (auto sym : vars_) {
-            b.insert(std::pair<RCP<const Basic>, RCP<const Basic>>(sym, make_rcp<Integer>(integer_class(d.begin()->first[whichvar]))));
+	    if(integer_class(0) != p[whichvar])
+              b.insert(std::pair<RCP<const Basic>, RCP<const Basic>>(sym, make_rcp<Integer>(integer_class(p[whichvar]))));
             whichvar++;
         }
-	args.push_back(Mul::from_dict(make_rcp<const Integer>(d.begin()->second), std::move(b)));
+	args.push_back(Mul::from_dict(make_rcp<const Integer>(dict_.find(p)->second), std::move(b)));
     }
     return args;
 }

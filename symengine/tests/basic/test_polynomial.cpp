@@ -437,9 +437,14 @@ TEST_CASE("Testing addition, subtraction, multiplication of two UnivariateIntPol
     RCP<const UnivariateIntPolynomial> p2 = univariate_int_polynomial(x, {{0, 1_z}, {1, 1_z}});
     REQUIRE(add_mult_poly(*p1,*p2)->__str__() == "3*x**2 + 1");
     REQUIRE(sub_mult_poly(*p1,*p2)->__str__() == "3*x**2 - 2*x - 1");
-	REQUIRE(sub_mult_poly(*p2,*p1)->__str__() == "- 3*x**2 + 2*x + 1");
+    REQUIRE(sub_mult_poly(*p2,*p1)->__str__() == "- 3*x**2 + 2*x + 1");
     REQUIRE(mul_mult_poly(*p1,*p2)->__str__() == "3*x**3 + 2*x**2 - x");	
 }
 
-
-//Missing test of get_args
+TEST_CASE("Testing MultivariateIntPolynomial::get_args()"){
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    RCP<const Symbol> z = symbol("z");
+    RCP<const MultivariateIntPolynomial> p = MultivariateIntPolynomial::from_dict({x,y,z},{ {{0,0,0},1_z}, {{1,1,1},2_z}, {{0,0,2},1_z} });
+    REQUIRE(vec_basic_eq_perm(p->get_args(), {mul(integer(2),mul(x,mul(y,z))),pow(z,integer(2)), one}));
+}
