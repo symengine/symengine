@@ -55,7 +55,9 @@ TEST_CASE("Interval : Basic", "[basic]")
     r4 = interval(integer(3), i20, false, false);
     REQUIRE(r3->compare(*r4) == -1);
     CHECK_THROWS_AS(r3->set_union(r4), std::runtime_error);
+    CHECK_THROWS_AS(r4->set_union(r3), std::runtime_error);
 
+    r3 = interval(im5, i2, false, false); // [-5, 2]
     REQUIRE(r3->is_subset(r2));
     REQUIRE(not r3->is_subset(emptyset()));
     REQUIRE(not r3->is_proper_subset(emptyset()));
@@ -99,6 +101,7 @@ TEST_CASE("Interval : Basic", "[basic]")
     REQUIRE(eq(*r5->open(), *r2));
 
     REQUIRE(not r5->__eq__(*r2));
+    REQUIRE(r5->__hash__() != emptyset()->__hash__());
     REQUIRE(not r5->__eq__(*emptyset()));
 
     REQUIRE(r5->Lopen()->compare(*r5) == -1);
@@ -106,6 +109,8 @@ TEST_CASE("Interval : Basic", "[basic]")
     REQUIRE(r5->Ropen()->compare(*r5) == 1);
     REQUIRE(r5->compare(*r5->Ropen()) == -1);
 
+    REQUIRE(eq(*r5->get_args()[0], *r5->start_));
+    REQUIRE(eq(*r5->get_args()[1], *r5->end_));
     RCP<const Number> c1 = Complex::from_two_nums(*i2, *i20);
     CHECK_THROWS_AS(interval(c1, one), std::runtime_error);
 }

@@ -217,7 +217,7 @@ bool EmptySet::is_superset(const RCP<const Set> &o) const {
     return false;
 }
 
-RCP<const Set> EmptySet::getInstance() {
+RCP<const EmptySet> EmptySet::getInstance() {
     static auto a = make_rcp<const EmptySet>();
     return a;
 }

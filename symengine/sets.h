@@ -31,7 +31,7 @@ public:
     IMPLEMENT_TYPEID(EMPTYSET)
     //EmptySet(EmptySet const&) = delete;
     void operator=(EmptySet const&) = delete;
-    static RCP<const Set> getInstance();
+    static RCP<const EmptySet> getInstance();
     virtual std::size_t __hash__() const;
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
@@ -63,7 +63,7 @@ public:
     virtual std::size_t __hash__() const;
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
-    virtual vec_basic get_args() const { return {}; }
+    virtual vec_basic get_args() const { return {start_, end_}; }
 
     inline virtual bool is_Interval() const { return true; }
     inline virtual bool is_EmptySet() const { return false; }
