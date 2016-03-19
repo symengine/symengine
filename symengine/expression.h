@@ -37,8 +37,6 @@ public:
     //! Construct Expression from std::complex<> types
     template <class T>
     Expression(std::complex<T> n, typename std::enable_if<std::is_floating_point<T>::value>::type* = nullptr) : m_basic(complex_double(n)) {}
-    //! Construct Expression from Basic
-    //Expression(double n) : m_basic(RealDouble(n)) {}
 
 #if defined(HAVE_SYMENGINE_IS_CONSTRUCTIBLE)
     template <typename T, typename = typename std::enable_if<std::is_constructible<RCP<const Basic>, T &&>::value>::type>
@@ -133,14 +131,6 @@ public:
 
     //! Method to get Basic from Expression
     const RCP<const Basic> &get_basic() const
-    {
-        return m_basic;
-    }
-    operator const RCP<const Basic> &() const
-    {
-        return m_basic;
-    }
-    operator RCP<const Basic> &()
     {
         return m_basic;
     }

@@ -56,14 +56,3 @@ TEST_CASE("Arithmetic of Expression", "[Expression]")
         << "ns" << std::endl;
     std::cout << res << std::endl;
 }
-
-TEST_CASE("Conversion to RCP<const Basic>", "[Expression]")
-{
-    Expression e0 = symbol("x");
-    Expression e1 = sin(e0);
-    REQUIRE(eq(*e1.get_basic(), *sin(symbol("x"))));
-
-    e0 = pi;
-    e1 = sin(e0);
-    REQUIRE(e1 == 0);
-}
