@@ -159,7 +159,7 @@ bool could_extract_minus(const RCP<const Basic> &arg)
             if (is_a<Integer>(*p.second) and (rcp_static_cast<const Integer>(p.second)->is_negative())) {
               flag++;
             }
-            else if (is_a<Rational>(*p.second) and  (rcp_static_cast<const Integer>(p.second)->is_negative())) {
+            else if (is_a<Rational>(*p.second) and  (rcp_static_cast<const Rational>(p.second)->is_negative())) {
               flag++;
             }
             else
