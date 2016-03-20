@@ -152,21 +152,43 @@ bool could_extract_minus(const RCP<const Basic> &arg)
             return false;
     }
     else if (is_a<Add>(*arg)) {
+        int flag = 0;
         const Add &s = static_cast<const Add &>(*arg);
-        for (const auto &p: s.dict_) {
+        if(s.dict_.size()==2){
+          for (const auto &p : s.dict_) {
             if (is_a<Integer>(*p.second)) {
-                if (not (rcp_static_cast<const Integer>(p.second)->is_negative()))
-                    return false;
+                if (rcp_static_cast<const Integer>(p.second)->is_negative())
+                    flag++;
             }
             else if (is_a<Rational>(*p.second)) {
-                if (not (rcp_static_cast<const Rational>(p.second)->is_negative()))
-                    return false;
+                if (rcp_static_cast<const Rational>(p.second)->is_negative()) 
+                    flag++;
             }
-            else
-                return false;
+
+          }
+          if(flag){
+            return true;
+          }
+        return false;
         }
-        return true;
-    }
+        else {
+          for (const auto &p: s.dict_) {
+              std::cout<<'\n'<<*(rcp_static_cast<const Basic>(p.second))<<'\n'<<flag;
+              if (is_a<Integer>(*p.second)) {
+                  if (not (rcp_static_cast<const Integer>(p.second)->is_negative()))
+                      return false;
+              }
+              else if (is_a<Rational>(*p.second)) {
+                  if (not (rcp_static_cast<const Rational>(p.second)->is_negative()))
+                      return false;
+              }
+              else
+                return false;
+          }
+
+          return true;
+        }
+  }
     else
         return false;
 }
