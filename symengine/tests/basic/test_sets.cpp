@@ -20,6 +20,7 @@ using SymEngine::EmptySet;
 using SymEngine::emptyset;
 using SymEngine::rcp_dynamic_cast;
 using SymEngine::Complex;
+using SymEngine::symbol;
 
 TEST_CASE("Interval : Basic", "[basic]")
 {
@@ -113,6 +114,7 @@ TEST_CASE("Interval : Basic", "[basic]")
     REQUIRE(eq(*r5->get_args()[1], *r5->end_));
     RCP<const Number> c1 = Complex::from_two_nums(*i2, *i20);
     CHECK_THROWS_AS(interval(c1, one), std::runtime_error);
+    CHECK_THROWS_AS(r5->diff(symbol("x")), std::runtime_error);
 }
 
 TEST_CASE("EmptySet : Basic", "[basic]")
@@ -135,4 +137,5 @@ TEST_CASE("EmptySet : Basic", "[basic]")
     REQUIRE(not r1->is_proper_subset(r1));
     REQUIRE(not r1->__eq__(*r2));
     REQUIRE(r1->compare(*emptyset()) == 0);
+    CHECK_THROWS_AS(r1->diff(symbol("x")), std::runtime_error);
 }

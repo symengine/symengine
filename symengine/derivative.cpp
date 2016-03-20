@@ -50,8 +50,6 @@ static RCP<const Basic> diff(const CLASS &self, \
     DIFF0(LeviCivita)
     DIFF0(Max)
     DIFF0(Min)
-    DIFF0(Interval)
-    DIFF0(EmptySet)
 
 #endif
 
@@ -439,6 +437,11 @@ static RCP<const Basic> diff(const CLASS &self, \
         return mul(self.rcp_from_this(), add(mul(polygamma(zero, beta_arg0), diff_beta_arg0),
                 sub(mul(polygamma(zero, beta_arg1), diff_beta_arg1),
                 mul(polygamma(zero, add(beta_arg0, beta_arg1)), add(diff_beta_arg0, diff_beta_arg1)))));
+    }
+
+    static RCP<const Basic> diff(const Set &self,
+            const RCP<const Symbol> &x) {
+        throw std::runtime_error("Derivative doesn't exist.");
     }
 };
 

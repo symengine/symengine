@@ -87,7 +87,7 @@ public:
 };
 
 //! \return RCP<const Set>
-inline RCP<const Set> emptyset()
+inline RCP<const EmptySet> emptyset()
 {
     return EmptySet::getInstance();
 }
