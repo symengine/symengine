@@ -42,7 +42,7 @@ umap_int_basic UnivariateSeries::as_dict() const {
 }
 
 RCP<const Basic> UnivariateSeries::get_coeff(int deg) const {
-    if(p_.get_univariate_poly()->get_dict().count(deg) == 0)
+    if (p_.get_univariate_poly()->get_dict().count(deg) == 0)
         return zero;
     else
         return p_.get_univariate_poly()->get_dict().at(deg).get_basic();
@@ -78,10 +78,10 @@ UnivariateExprPolynomial UnivariateSeries::mul(const UnivariateExprPolynomial &a
     unsigned int exp;
     map_int_Expr p;
 
-    for(auto &it1 : a.get_univariate_poly()->get_dict()) {
-        for(auto &it2 : b.get_univariate_poly()->get_dict()) {
+    for (auto &it1 : a.get_univariate_poly()->get_dict()) {
+        for (auto &it2 : b.get_univariate_poly()->get_dict()) {
             exp = it1.first + it2.first;
-            if(exp < prec) {
+            if (exp < prec) {
                 p[exp] = it1.second * it2.second;
             } else {
                 break;
@@ -92,19 +92,15 @@ UnivariateExprPolynomial UnivariateSeries::mul(const UnivariateExprPolynomial &a
 }
 
 UnivariateExprPolynomial UnivariateSeries::pow(const UnivariateExprPolynomial &s, int n, unsigned prec) {
-    if(is_a<const Constant>(*s.get_basic())) {
+    if (is_a<const Constant>(*s.get_basic()))
         throw std::runtime_error("Polynomial cannot be a constant");
-    }
-    if(s.get_univariate_poly()->get_var() != symbol("x")) {
+    if (s.get_univariate_poly()->get_var() != symbol("x"))
         throw std::runtime_error("Polynomial is not x");
-    }
-    if(n < 0) {
+    if (n < 0) {
         throw std::runtime_error("Not implemented");
-        // UnivariateExprPolynomial p1 = UnivariateSeries::pow(s, -n, prec);
-        // return UnivariateExprPolynomial(1 /p1.get_univariate_poly());
-    } else if(n == 0) {
+    } else if (n == 0) {
         return UnivariateExprPolynomial(1);
-    } else if(n == 1) {
+    } else if (n == 1) {
         return UnivariateSeries::trunc_poly(s.get_univariate_poly()->get_var(), s.get_univariate_poly()->get_dict(), prec);
     } else {
         UnivariateExprPolynomial p = s;
@@ -125,7 +121,7 @@ Expression UnivariateSeries::root(Expression &c, unsigned n) {
 
 UnivariateExprPolynomial UnivariateSeries::diff(const UnivariateExprPolynomial &s, const UnivariateExprPolynomial &var) {
     RCP<const Basic> p = s.get_univariate_poly()->diff(var.get_univariate_poly()->get_var());
-    if(is_a<const UnivariatePolynomial>(*p))
+    if (is_a<const UnivariatePolynomial>(*p))
         return UnivariateExprPolynomial(rcp_static_cast<const UnivariatePolynomial>(p));
     else
         throw std::runtime_error("Not a UnivariatePolynomial");
