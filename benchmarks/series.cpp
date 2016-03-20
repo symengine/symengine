@@ -12,6 +12,9 @@ using SymEngine::integer;
 using SymEngine::integer_class;
 using SymEngine::RCP;
 using SymEngine::rcp_dynamic_cast;
+using SymEngine::Expression;
+using SymEngine::UnivariatePolynomial;
+using SymEngine::UnivariateExprPolynomial;
 
 int main(int argc, char* argv[])
 {
@@ -19,15 +22,17 @@ int main(int argc, char* argv[])
 
     RCP<const Symbol> x = symbol("x");
     RCP<const UnivariateSeries> a, c;
-    std::vector<integer_class> v;
+    std::vector<Expression> v;
     int N;
 
     N = 1000;
     for (int i=0; i<N; ++i) {
-        integer_class coef(i);
+        Expression coef(i);
         v.push_back(coef);
     }
-    a = UnivariateSeries::create(x, N, v);
+
+    UnivariateExprPolynomial p(UnivariatePolynomial::create(x, v));
+    a = UnivariateSeries::create(x, N, p);
     auto t1 = std::chrono::high_resolution_clock::now();
     c = mul_uni_series(*a, *a);
     auto t2 = std::chrono::high_resolution_clock::now();

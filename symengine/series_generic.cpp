@@ -204,18 +204,20 @@ RCP<const UnivariateSeries> add_uni_series(const UnivariateSeries& a, const Univ
    SYMENGINE_ASSERT(a.get_var() == b.get_var())
    int minprec = (a.get_degree() < b.get_degree())? a.get_degree() : b.get_degree();
    for (const auto &it : a.get_poly().get_univariate_poly()->get_dict()) {
-       if (it.first >= minprec)
+       if (it.first > minprec)
            break;
        dict[it.first] = it.second;
    }
 
+   int max = 0;
    for (const auto &it : b.get_poly().get_univariate_poly()->get_dict()) {
-       if (it.first >= minprec)
+       if (it.first > minprec)
            break;
        dict[it.first] += it.second;
+       if (dict[it.first] != 0 and it.first > max)
+            max = it.first;
    }
-
-   UnivariateExprPolynomial poly(univariate_polynomial(symbol(a.get_var()), minprec, std::move(dict)));
+   UnivariateExprPolynomial poly(univariate_polynomial(symbol(a.get_var()), max, std::move(dict)));
    return make_rcp<const UnivariateSeries>(std::move(poly), a.get_var(), minprec);
 }
 
@@ -248,7 +250,7 @@ RCP<const UnivariateSeries> mul_uni_series (const UnivariateSeries& a, const Uni
         else
             break;
     }
-    UnivariateExprPolynomial poly(univariate_polynomial(symbol(a.get_var()), minprec, std::move(dict)));
+    UnivariateExprPolynomial poly(univariate_polynomial(symbol(a.get_var()), max, std::move(dict)));
     return make_rcp<const UnivariateSeries>(std::move(poly), a.get_var(), minprec);
 }
 

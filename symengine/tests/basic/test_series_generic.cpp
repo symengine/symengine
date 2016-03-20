@@ -31,13 +31,13 @@ using namespace SymEngine::literals;
 TEST_CASE("Constructor of UnivariateSeries", "[UnivariateSeries]")
 {
     RCP<const Symbol> x  = symbol("x");
-    map_int_Expr adict_ = {{0, 1}, {1, 2}, {2, 0}};
+    map_int_Expr adict_ = {{0, 1}, {1, 2}, {2, 1}};
     UnivariateExprPolynomial apoly_(univariate_polynomial(x, 2, std::move(adict_)));
     RCP<const UnivariateSeries> P = univariate_series(x, 2, apoly_);
-    REQUIRE(P->__str__() == "1 + 2*x + O(x**2)");
+    REQUIRE(P->__str__() == "1 + 2*x + x**2");
 
     map_int_Expr bdict_ = {{0, 1}, {1, 0}, {2, 2}, {3, 1}};
-    UnivariateExprPolynomial bpoly_(univariate_polynomial(x, 3, std::move(bdict_)));
+    UnivariateExprPolynomial bpoly_(UnivariatePolynomial::from_dict(x, std::move(bdict_)));
     RCP<const UnivariateSeries> Q = UnivariateSeries::create(x, 5, bpoly_);
     REQUIRE(Q->__str__() == "1 + 2*x**2 + x**3 + O(x**5)");
 }
@@ -51,6 +51,7 @@ TEST_CASE("Adding two UnivariateSeries", "[UnivariateSeries]")
     UnivariateExprPolynomial bpoly_(univariate_polynomial(x, 2, std::move(bdict_)));
     map_int_Expr ddict_ = {{0, 3}, {1, 5}, {2, 5}};
     UnivariateExprPolynomial dpoly_(univariate_polynomial(x, 2, std::move(ddict_)));
+
 
     const UnivariateSeries a(apoly_, x->get_name(), 5);
     const UnivariateSeries b(bpoly_, x->get_name(), 4);
