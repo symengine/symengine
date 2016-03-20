@@ -57,14 +57,12 @@ TEST_CASE("Adding two UnivariateSeries", "[UnivariateSeries]")
     const UnivariateSeries b(bpoly_, x->get_name(), 4);
     RCP<const UnivariateSeries> c = add_uni_series(a, b);
     const UnivariateSeries d(dpoly_, x->get_name(), 4);
-    REQUIRE(c->__str__() == d.__str__());
-    // REQUIRE(*c == d);
+    REQUIRE(*c == d);
 
     const UnivariateSeries e(bpoly_, x->get_name(), 2);
     RCP<const UnivariateSeries> f = add_uni_series(a, e);
     const UnivariateSeries g(dpoly_, x->get_name(), 2);
-    REQUIRE(f->__str__() == g.__str__());
-    // REQUIRE(*f == g);
+    REQUIRE(*f == g);
 }
 
 TEST_CASE("Negative of a UnivariateSeries", "[UnivariateSeries]")
@@ -78,8 +76,7 @@ TEST_CASE("Negative of a UnivariateSeries", "[UnivariateSeries]")
     const UnivariateSeries a(apoly_, x->get_name(), 5);
     RCP<const UnivariateSeries> b = neg_uni_series(a);
     const UnivariateSeries c(bpoly_, x->get_name(), 5);
-    REQUIRE(b->__str__() == c.__str__());
-    // REQUIRE(*b == c);
+    REQUIRE(*b == c);
 }
 
 TEST_CASE("Subtracting two UnivariateSeries", "[UnivariateSeries]")
@@ -98,14 +95,12 @@ TEST_CASE("Subtracting two UnivariateSeries", "[UnivariateSeries]")
     UnivariateSeries b(bpoly_, x->get_name(), 4);
     RCP<const UnivariateSeries> c = sub_uni_series(a, b);
     UnivariateSeries f(fpoly_, x->get_name(), 4);
-    REQUIRE(c->__str__() == f.__str__());
-    // REQUIRE(*c == f);
+    REQUIRE(*c == f);
 
     UnivariateSeries d(bpoly_, x->get_name(), 2);
     RCP<const UnivariateSeries> e = sub_uni_series(a, d);
     UnivariateSeries g(gpoly_, x->get_name(), 2);
-    REQUIRE(e->__str__() == g.__str__());
-    // REQUIRE(*e == f);
+    REQUIRE(*e == f);
 }
 
 TEST_CASE("Multiplication of two UnivariateSeries", "[UnivariateSeries]")
@@ -124,10 +119,8 @@ TEST_CASE("Multiplication of two UnivariateSeries", "[UnivariateSeries]")
     RCP<const UnivariateSeries> c = mul_uni_series(*a, *a);
     RCP<const UnivariateSeries> d = mul_uni_series(*a, *b);
 
-    REQUIRE(c->__str__() == e->__str__());
-    REQUIRE(d->__str__() == f->__str__());
-    // REQUIRE(*c == *e);
-    // REQUIRE(*d == *f);
+    REQUIRE(*c == *e);
+    REQUIRE(*d == *f);
 }
 
 //TEST_CASE("Differentiation of UnivariateSeries", "[UnivariateSeries]")
