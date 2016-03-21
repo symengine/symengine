@@ -188,28 +188,19 @@ set(HAVE_SYMENGINE_MPC False)
 
 if (WITH_FLINT)
     find_package(FLINT REQUIRED)
-    include_directories(${FLINT_INCLUDE_DIRS})
-    set(LIBS ${LIBS} ${FLINT_TARGETS})
-    set(HAVE_SYMENGINE_FLINT True)
-    set(PKGS ${PKGS} "FLINT")
-
-    # Workaround for https://github.com/fredrik-johansson/arb/issues/24
-    include_directories(${FLINT_INCLUDE_DIRS}/flint)
-
-    set(WITH_MPFR yes)
-endif()
-
-if (WITH_ARB)
-    find_package(FLINT REQUIRED)
     add_library(p::flint INTERFACE IMPORTED)
     set_property(TARGET p::flint PROPERTY INTERFACE_INCLUDE_DIRECTORIES
         ${FLINT_INCLUDE_DIR})
     set_property(TARGET p::flint PROPERTY INTERFACE_LINK_LIBRARIES
         ${FLINT_LIBRARY} p::gmp)
 
-
-    set(WITH_FLINT yes)
     set(HAVE_SYMENGINE_FLINT True)
+
+    set(WITH_MPFR yes)
+endif()
+
+if (WITH_ARB)
+    set(WITH_FLINT yes)
     set(WITH_MPFR yes)
 
     find_package(ARB REQUIRED)
