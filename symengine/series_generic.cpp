@@ -96,9 +96,10 @@ UnivariateExprPolynomial UnivariateSeries::pow(const UnivariateExprPolynomial &s
         throw std::runtime_error("Polynomial cannot be a constant");
     if (s.get_univariate_poly()->get_var() != symbol("x"))
         throw std::runtime_error("Polynomial is not x");
-    if (n < 0) {
-        throw std::runtime_error("Not implemented");
-    } else if (n == 0) {
+    if (n < 0)
+        throw std::runtime_error("Not Implemented");
+    
+    if (n == 0) {
         return UnivariateExprPolynomial(1);
     } else if (n == 1) {
         return UnivariateSeries::trunc_poly(s.get_univariate_poly()->get_var(), s.get_univariate_poly()->get_dict(), prec);
@@ -130,8 +131,8 @@ UnivariateExprPolynomial UnivariateSeries::diff(const UnivariateExprPolynomial &
 UnivariateExprPolynomial UnivariateSeries::integrate(const UnivariateExprPolynomial &s, const UnivariateExprPolynomial &var) {
     map_int_Expr dict;
     for (auto &it : s.get_univariate_poly()->get_dict())
-        dict.insert(std::pair<unsigned, Expression>(it.first + 1, it.second / (it.first + 1)));
-    return UnivariateExprPolynomial(univariate_polynomial(var.get_univariate_poly()->get_var(), (dict.end()--)->first, std::move(dict))); 
+        dict.insert(std::pair<int, Expression>(it.first + 1, it.second / (it.first + 1)));
+    return UnivariateExprPolynomial(univariate_polynomial(var.get_univariate_poly()->get_var(), (--dict.end())->first, std::move(dict))); 
 }
 
 UnivariateExprPolynomial UnivariateSeries::subs(const UnivariateExprPolynomial &s, const UnivariateExprPolynomial &var, const UnivariateExprPolynomial &r, unsigned prec) {

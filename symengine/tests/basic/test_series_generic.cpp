@@ -123,7 +123,20 @@ TEST_CASE("Multiplication of two UnivariateSeries", "[UnivariateSeries]")
     REQUIRE(*d == *f);
 }
 
-//TEST_CASE("Differentiation of UnivariateSeries", "[UnivariateSeries]")
-//{
-  //  RCP<const Symbol> x  = symbol("x");
-    //RCP<const UnivariateSeries> var = univariate_series(x, 1, {{0, 1}});
+TEST_CASE("Differentiation of UnivariateSeries", "[UnivariateSeries]")
+{
+    RCP<const Symbol> x  = symbol("x");
+    UnivariateExprPolynomial a(univariate_polynomial(x, 2, {{0, 1}, {1, 2}, {2, 1}}));
+    UnivariateExprPolynomial b(univariate_polynomial(x, 1, {{0, 2}, {1, 2}}));
+    UnivariateExprPolynomial c(univariate_polynomial(x, 1, {{0, 2}, {1, 2}}));
+    REQUIRE(UnivariateSeries::diff(a, b) == c);
+}
+
+TEST_CASE("Integration of UnivariateSeries", "[UnivariateSeries]")
+{
+    RCP<const Symbol> x  = symbol("x");
+    UnivariateExprPolynomial a(univariate_polynomial(x, 2, {{0, 1}, {1, 2}, {2, 3}}));
+    UnivariateExprPolynomial b(univariate_polynomial(x, 1, {{0, 2}, {1, 2}}));
+    UnivariateExprPolynomial c(univariate_polynomial(x, 3, {{1, 1}, {2, 1}, {3, 1}}));
+    REQUIRE(UnivariateSeries::integrate(a, b) == c);
+}
