@@ -24,6 +24,7 @@
 #include <symengine/series_generic.h>
 #include <symengine/series.h>
 #include <symengine/series_piranha.h>
+#include <symengine/series_flint.h>
 
 namespace SymEngine {
 
@@ -54,6 +55,7 @@ public:
 };
 
 void preorder_traversal_stop(const Basic &b, StopVisitor &v);
+void postorder_traversal_stop(const Basic &b, StopVisitor &v);
 
 class HasSymbolVisitor : public BaseVisitor<HasSymbolVisitor, StopVisitor> {
 protected:

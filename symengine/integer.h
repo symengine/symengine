@@ -9,19 +9,21 @@
 
 #include <symengine/basic.h>
 #include <symengine/number.h>
+#include <gmpxx.h>
+#include <gmp.h>
 
 namespace SymEngine {
 
 //! Integer Class
 class Integer : public Number {
 public:
-    //! `i` : object of `mpz_class`
-    mpz_class i;
+    //! `i` : object of `integer_class`
+    integer_class i;
 
 public:
     IMPLEMENT_TYPEID(INTEGER)
-    //! Constructor of Integer using `mpz_class`
-    Integer(mpz_class i);
+    //! Constructor of Integer using `integer_class`
+    explicit Integer(integer_class i);
     //! \return size of the hash
     virtual std::size_t __hash__() const;
     /*! Equality comparator
@@ -33,31 +35,31 @@ public:
 
     //! Convert to `int`, raise an exception if it does not fit
     signed long int as_int() const;
-    //! Convert to `mpz_class`.
-    inline mpz_class as_mpz() const { return this->i; }
+    //! Convert to `integer_class`.
+    inline integer_class as_mpz() const { return this->i; }
     //! \return `true` if `0`
-    inline virtual bool is_zero() const { return this->i == 0; }
+    inline virtual bool is_zero() const { return this->i == 0u; }
     //! \return `true` if `1`
-    inline virtual bool is_one() const { return this->i == 1; }
+    inline virtual bool is_one() const { return this->i == 1u; }
     //! \return `true` if `-1`
     inline virtual bool is_minus_one() const { return this->i == -1; }
     //! \return `true` if positive
-    inline virtual bool is_positive() const { return this->i > 0; }
+    inline virtual bool is_positive() const { return this->i > 0u; }
     //! \return `true` if negative
-    inline virtual bool is_negative() const { return this->i < 0; }
+    inline virtual bool is_negative() const { return this->i < 0u; }
 
     /* These are very fast methods for add/sub/mul/div/pow on Integers only */
     //! Fast Integer Addition
     inline RCP<const Integer> addint(const Integer &other) const {
-        return make_rcp<const Integer>(this->i + other.i);
+        return make_rcp<const Integer>(std::move(this->i + other.i));
     }
     //! Fast Integer Subtraction
     inline RCP<const Integer> subint(const Integer &other) const {
-        return make_rcp<const Integer>(this->i - other.i);
+        return make_rcp<const Integer>(std::move(this->i - other.i));
     }
     //! Fast Integer Multiplication
     inline RCP<const Integer> mulint(const Integer &other) const {
-        return make_rcp<const Integer>(this->i * other.i);
+        return make_rcp<const Integer>(std::move(this->i * other.i));
     }
     //!  Integer Division
     RCP<const Number> divint(const Integer &other) const;
@@ -65,19 +67,19 @@ public:
     RCP<const Number> pow_negint(const Integer &other) const;
     //! Fast Power Evaluation
     inline RCP<const Number> powint(const Integer &other) const {
-        if (not (other.i.fits_ulong_p())) {
-            if (other.i > 0)
-                throw std::runtime_error("powint: 'exp' does not fit unsigned int.");
+        if (not (mp_fits_ulong_p(other.i))) {
+            if (other.i > 0u)
+                throw std::runtime_error("powint: 'exp' does not fit unsigned long.");
             else
                 return pow_negint(other);
         }
-        mpz_class tmp;
-        mpz_pow_ui(tmp.get_mpz_t(), this->i.get_mpz_t(), other.i.get_ui());
-        return make_rcp<const Integer>(tmp);
+        integer_class tmp;
+        mp_pow_ui(tmp, i, mp_get_ui(other.i));
+        return make_rcp<const Integer>(std::move(tmp));
     }
     //! \return negative of self.
     inline RCP<const Integer> neg() const {
-        return make_rcp<const Integer>(-i);
+        return make_rcp<const Integer>(std::move(-i));
     }
 
     /* These are general methods, overriden from the Number class, that need to
@@ -143,30 +145,36 @@ struct RCPIntegerKeyLess
     bool operator()(const RCP<const Integer> &a,
             const RCP<const Integer> &b) const
     {
-        if(mpz_cmp(b->as_mpz().get_mpz_t(), a->as_mpz().get_mpz_t()) == 1)
-            return true;
-        return false;
+        return a->as_mpz() < b->as_mpz();
     }
 };
-//! \return RCP<const Integer> from integral values + mpz_class
-template<typename T>
-inline RCP<const Integer> integer(T&& i)
+//! \return RCP<const Integer> from integral values
+template<typename T> inline
+typename std::enable_if<std::is_integral<T>::value, RCP<const Integer>>::type
+integer(T i)
 {
-    return make_rcp<const Integer>(std::forward<T>(i));
+    return make_rcp<const Integer>(std::move(integer_class(i)));
 }
+
+//! \return RCP<const Integer> from integer_class
+inline RCP<const Integer> integer(integer_class i)
+{
+    return make_rcp<const Integer>(std::move(i));
+}
+
 //! Integer Square root
 RCP<const Integer> isqrt(const Integer &n);
 //! Integer nth root
 int i_nth_root(const Ptr<RCP<const Integer>> &r, const Integer &a,
         unsigned long int n);
 //! Perfect Square
-int perfect_square(const Integer &n);
+bool perfect_square(const Integer &n);
 //! Perfect Square
-int perfect_power(const Integer &n);
+bool perfect_power(const Integer &n);
 //! Integer Absolute value
 RCP<const Integer> iabs(const Integer &n);
 
-inline Integer::Integer(mpz_class i) : i{i} {}
+inline Integer::Integer(integer_class i_) : i{std::move(i_)} {}
 
 } // SymEngine
 

@@ -5,6 +5,8 @@
 
 namespace SymEngine {
 
+std::string ascii_art();
+
 enum class PrecedenceEnum {
     Add, Mul, Pow, Atom
 };
@@ -25,20 +27,38 @@ public:
         precedence = PrecedenceEnum::Pow;
     }
 
+    void bvisit(const UnivariateIntPolynomial &x) {
+        if (x.get_dict().size() == 1) {
+            auto it = x.get_dict().begin();
+            if (it->second == 1) {
+                if (it->first == 1) {
+                    precedence = PrecedenceEnum::Atom;
+                } else {
+                    precedence = PrecedenceEnum::Pow;
+                }
+            } else {
+                precedence = PrecedenceEnum::Mul;
+            }
+        } else if (x.get_dict().size() == 0) {
+            precedence = PrecedenceEnum::Atom;
+        } else {
+            precedence = PrecedenceEnum::Add;
+        }
+    }
+
     void bvisit(const UnivariatePolynomial &x) {
-        if (x.dict_.size() == 1) {
-            auto it = x.dict_.begin();
-            if (it->second == 0) {
-                precedence = PrecedenceEnum::Atom;
-            } else if (it->second == 1) {
+        if (x.get_dict().size() == 1) {
+            auto it = x.get_dict().begin();
+            precedence = PrecedenceEnum::Atom;
+            if (it->second == 1) {
                 if (it->first == 0 or it->first == 1) {
                     precedence = PrecedenceEnum::Atom;
                 } else {
                     precedence = PrecedenceEnum::Pow;
                 }
             } else {
-                if (it->first == 0 and it->second >= 0) {
-                    precedence = PrecedenceEnum::Atom;
+                if (it->first == 0) {
+                    it->second.get_basic()->accept(*this);
                 } else {
                     precedence = PrecedenceEnum::Mul;
                 }
@@ -47,7 +67,7 @@ public:
             precedence = PrecedenceEnum::Add;
         }
     }
-
+    
     void bvisit(const Rational &x) {
         precedence = PrecedenceEnum::Add;
     }
@@ -130,6 +150,7 @@ public:
     void bvisit(const Add &x);
     void bvisit(const Mul &x);
     void bvisit(const Pow &x);
+    void bvisit(const UnivariateIntPolynomial &x);
     void bvisit(const UnivariatePolynomial &x);
 #ifdef HAVE_SYMENGINE_PIRANHA
     void bvisit(const URatPSeriesPiranha &x);

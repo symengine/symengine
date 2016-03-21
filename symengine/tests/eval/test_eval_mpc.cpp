@@ -57,6 +57,18 @@ TEST_CASE("eval: eval_mpc", "[eval_mpc]")
 
     REQUIRE(mpc_cmp(a, b) == 0);
 
+    r = add(one, mul(E, I));
+    s = one;
+    t = E;
+
+    eval_mpc(a, *r, MPFR_RNDN);
+    eval_mpfr(real, *s, MPFR_RNDN);
+    eval_mpfr(imag, *t, MPFR_RNDN);
+
+    mpc_set_fr_fr(b, real, imag, MPFR_RNDN);
+
+    REQUIRE(mpc_cmp(a, b) == 0);
+
     mpfr_clear(real);
     mpfr_clear(imag);
     mpc_clear(a);

@@ -1,4 +1,6 @@
-add_subdirectory(utilities/teuchos)
+if (WITH_SYMENGINE_TEUCHOS)
+    add_subdirectory(utilities/teuchos)
+endif()
 
 set(SRC
     symengine_rcp.cpp
@@ -16,8 +18,8 @@ set(SRC
     functions.cpp
     monomials.cpp
     polynomial.cpp
+    series.cpp
     series_generic.cpp
-    expansion.cpp
     rings.cpp
     ntheory.cpp
     dense_matrix.cpp
@@ -34,6 +36,8 @@ set(SRC
     expression.cpp
     numer_denom.cpp
     derivative.cpp
+    parser.cpp
+    mp_wrapper.cpp
 )
 
 if (WITH_MPFR)
@@ -42,6 +46,10 @@ endif()
 
 if (WITH_MPC)
     set(SRC ${SRC} eval_mpc.cpp complex_mpc.cpp)
+endif()
+
+if (WITH_FLINT)
+    set(SRC ${SRC} series_flint.cpp)
 endif()
 
 if (WITH_ARB)
@@ -56,12 +64,12 @@ endif()
 set(HEADERS
     add.h        symengine_assert.h  functions.h  monomials.h  polynomial.h  number.h    rings.h
     basic.h      symengine_rcp.h     integer.h    mul.h        pow.h       constants.h
-    symbol.h     expression.h
+    symbol.h     expression.h        parser.h     mp_class.h   mp_wrapper.h
     basic-inl.h  dict.h           matrix.h     ntheory.h    rational.h complex.h
     visitor.h    eval_double.h    diophantine.h cwrapper.h  printer.h  real_double.h
     eval_mpfr.h  eval_arb.h       eval_mpc.h     complex_double.h         series_visitor.h
     real_mpfr.h  complex_mpc.h    type_codes.inc lambda_double.h series.h series_piranha.h
-    series_generic.h              basic-methods.inc
+    basic-methods.inc   series_flint.h  series_generic.h
 )
 
 # Configure SymEngine using our CMake options:
@@ -69,8 +77,13 @@ configure_file(symengine_config.h.in symengine_config.h)
 
 add_library(symengine ${SRC})
 target_link_libraries(symengine
-    PUBLIC teuchos p::gmpxx
+    PUBLIC p::gmpxx
     )
+if (WITH_SYMENGINE_TEUCHOS)
+    target_link_libraries(symengine
+        PUBLIC teuchos
+    )
+endif()
 if (WITH_MPFR)
     target_link_libraries(symengine
         PUBLIC p::mpfr
@@ -133,7 +146,6 @@ set_property(TARGET symengine APPEND PROPERTY INTERFACE_INCLUDE_DIRECTORIES
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR_PARENT};${CMAKE_CURRENT_BINARY_DIR_PARENT}>
   $<INSTALL_INTERFACE:include/symengine>
 )
-
 
 install(TARGETS symengine
             EXPORT SymEngineTargets

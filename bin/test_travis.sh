@@ -63,6 +63,15 @@ fi
 if [[ "${WITH_RUBY}" != "" ]]; then
     cmake_line="$cmake_line -DWITH_RUBY=${WITH_RUBY}"
 fi
+if [[ "${TEST_CPP}" != "" ]]; then
+    cmake_line="$cmake_line -DBUILD_BENCHMARKS=${TEST_CPP} -DBUILD_TESTS=${TEST_CPP}"
+fi
+if [[ "${INTEGER_CLASS}" != "" ]]; then
+    cmake_line="$cmake_line -DINTEGER_CLASS=${INTEGER_CLASS}"
+fi
+if [[ "${WITH_COVERAGE}" != "" ]]; then
+    cmake_line="$cmake_line -DWITH_COVERAGE=${WITH_COVERAGE}"
+fi
 
 if [[ "${CC}" == "clang"* ]] && [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
     CXXFLAGS=""
@@ -77,24 +86,31 @@ echo "Running make:"
 make
 echo "Running make install:"
 make install
+
+if [[ "${TEST_CPP}" == "no" ]]; then
+    exit 0;
+fi
+
 echo "Running tests in build directory:"
 # C++
-if [[ "${TEST_CPP}" != "no" ]]; then
-    ctest --output-on-failure
+ctest --output-on-failure
+
+if [[ "${WITH_COVERAGE}" == "yes" ]]; then
+    bash <(curl -s https://codecov.io/bash) -x $GCOV_EXECUTABLE
+    exit 0;
 fi
+
 echo "Running tests using installed SymEngine:"
 
-if [[ "${TEST_CPP}" != "no" ]]; then
-    cd $SOURCE_DIR/benchmarks
+cd $SOURCE_DIR/benchmarks
 
-    compile_flags=`cmake --find-package -DNAME=SymEngine -DSymEngine_DIR=$our_install_dir/lib/cmake/symengine -DCOMPILER_ID=GNU -DLANGUAGE=CXX -DMODE=COMPILE`
-    link_flags=`cmake --find-package -DNAME=SymEngine -DSymEngine_DIR=$our_install_dir/lib/cmake/symengine  -DCOMPILER_ID=GNU -DLANGUAGE=CXX -DMODE=LINK`
+compile_flags=`cmake --find-package -DNAME=SymEngine -DSymEngine_DIR=$our_install_dir/lib/cmake/symengine -DCOMPILER_ID=GNU -DLANGUAGE=CXX -DMODE=COMPILE`
+link_flags=`cmake --find-package -DNAME=SymEngine -DSymEngine_DIR=$our_install_dir/lib/cmake/symengine  -DCOMPILER_ID=GNU -DLANGUAGE=CXX -DMODE=LINK`
 
 # TODO: get this to work again
-#    ${CXX} -std=c++0x $compile_flags expand1.cpp $link_flags
-#    export LD_LIBRARY_PATH=$our_install_dir/lib:$LD_LIBRARY_PATH
-#    ./a.out
-fi
+#${CXX} -std=c++0x $compile_flags expand1.cpp $link_flags
+#export LD_LIBRARY_PATH=$our_install_dir/lib:$LD_LIBRARY_PATH
+#./a.out
 
 echo "Checking whether all header files are installed:"
 python $SOURCE_DIR/symengine/utilities/tests/test_make_install.py $our_install_dir/include/symengine/ $SOURCE_DIR/symengine
@@ -106,3 +122,4 @@ else
     exit -1;
 fi
 # TODO: Add similar grep checks for space after comma,, space after `if`, space between `)` and `{` also
+

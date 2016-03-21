@@ -1,6 +1,7 @@
 #include <cmath>
 #include <functional>
 #include <complex>
+#include <algorithm>
 
 #include <symengine/basic.h>
 #include <symengine/symbol.h>
@@ -36,12 +37,12 @@ public:
     }
 
     void bvisit(const Integer &x) {
-        T tmp = x.i.get_d();
+        T tmp = mp_get_d(x.i);
         result_ = tmp;
     }
 
     void bvisit(const Rational &x) {
-        T tmp = x.i.get_d();
+        T tmp = mp_get_d(x.i);
         result_ = tmp;
     }
 
@@ -151,9 +152,19 @@ public:
         result_ = std::sinh(tmp);
     };
 
+    void bvisit(const Csch &x) {
+        T tmp = apply(*(x.get_arg()));
+        result_ = 1.0/std::sinh(tmp);
+    };
+
     void bvisit(const Cosh &x) {
         T tmp = apply(*(x.get_arg()));
         result_ = std::cosh(tmp);
+    };
+
+    void bvisit(const Sech &x) {
+        T tmp = apply(*(x.get_arg()));
+        result_ = 1.0/std::cosh(tmp);
     };
 
     void bvisit(const Tanh &x) {
@@ -169,6 +180,11 @@ public:
     void bvisit(const ASinh &x) {
         T tmp = apply(*(x.get_arg()));
         result_ = std::asinh(tmp);
+    };
+
+    void bvisit(const ACsch &x) {
+        T tmp = apply(*(x.get_arg()));
+        result_ = std::asinh(1.0/tmp);
     };
 
     void bvisit(const ACosh &x) {
@@ -241,6 +257,37 @@ public:
         double tmp = apply(*(x.get_args()[0]));
         result_ = std::tgamma(tmp);
     };
+
+    void bvisit(const LogGamma &x) {
+        double tmp = apply(*(x.get_args()[0]));
+        result_ = std::lgamma(tmp);
+    }
+
+    void bvisit(const Max &x) {
+        auto d = x.get_args();
+        auto p = d.begin();
+        double result = apply(*(*p));
+        p++;
+
+        for (; p != d.end(); p++) {
+            double tmp = apply(*(*p));
+            result = std::max(result, tmp);
+        }
+        result_ = result;
+    };
+
+    void bvisit(const Min &x) {
+        auto d = x.get_args();
+        auto p = d.begin();
+        double result = apply(*(*p));
+        p++;
+
+        for (; p != d.end(); p++) {
+            double tmp = apply(*(*p));
+            result = std::min(result, tmp);
+        }
+        result_ = result;
+    };
 };
 
 class EvalComplexDoubleVisitor : public BaseVisitor<EvalComplexDoubleVisitor, EvalDoubleVisitor<std::complex<double>>> {
@@ -254,7 +301,7 @@ public:
     using EvalDoubleVisitor::bvisit;
 
     void bvisit(const Complex &x) {
-        result_ = std::complex<double>(x.real_.get_d(), x.imaginary_.get_d());
+        result_ = std::complex<double>(mp_get_d(x.real_), mp_get_d(x.imaginary_));
     };
 
     void bvisit(const ComplexDouble &x) {
@@ -287,11 +334,11 @@ std::vector<fn> init_eval_double()
         throw std::runtime_error("Not implemented.");
     });
     table[INTEGER] = [](const Basic &x) {
-        double tmp = (static_cast<const Integer &>(x)).i.get_d();
+        double tmp = mp_get_d((static_cast<const Integer &>(x)).i);
         return tmp;
     };
     table[RATIONAL] = [](const Basic &x) {
-        double tmp = (static_cast<const Rational &>(x)).i.get_d();
+        double tmp = mp_get_d((static_cast<const Rational &>(x)).i);
         return tmp;
     };
     table[REAL_DOUBLE] = [](const Basic &x) {
@@ -378,9 +425,17 @@ std::vector<fn> init_eval_double()
         double tmp = eval_double_single_dispatch(*(static_cast<const Sinh &>(x)).get_arg());
         return ::sinh(tmp);
     };
+    table[CSCH] = [](const Basic &x) {
+        double tmp = eval_double_single_dispatch(*(static_cast<const Csch &>(x)).get_arg());
+        return 1/::sinh(tmp);
+    };
     table[COSH] = [](const Basic &x) {
         double tmp = eval_double_single_dispatch(*(static_cast<const Cosh &>(x)).get_arg());
         return ::cosh(tmp);
+    };
+    table[SECH] = [](const Basic &x) {
+        double tmp = eval_double_single_dispatch(*(static_cast<const Sech &>(x)).get_arg());
+        return 1/::cosh(tmp);
     };
     table[TANH] = [](const Basic &x) {
         double tmp = eval_double_single_dispatch(*(static_cast<const Tanh &>(x)).get_arg());
@@ -393,6 +448,10 @@ std::vector<fn> init_eval_double()
     table[ASINH] = [](const Basic &x) {
         double tmp = eval_double_single_dispatch(*(static_cast<const ASinh &>(x)).get_arg());
         return ::asinh(tmp);
+    };
+    table[ACSCH] = [](const Basic &x) {
+        double tmp = eval_double_single_dispatch(*(static_cast<const ACsch &>(x)).get_arg());
+        return ::asinh(1/tmp);
     };
     table[ACOSH] = [](const Basic &x) {
         double tmp = eval_double_single_dispatch(*(static_cast<const ACosh &>(x)).get_arg());
@@ -414,6 +473,10 @@ std::vector<fn> init_eval_double()
         double tmp = eval_double_single_dispatch(*(static_cast<const Gamma &>(x)).get_args()[0]);
         return ::tgamma(tmp);
     };
+    table[LOGGAMMA] = [](const Basic &x) {
+        double tmp = eval_double_single_dispatch(*(static_cast<const LogGamma &>(x)).get_args()[0]);
+        return ::lgamma(tmp);
+    };
     table[CONSTANT] = [](const Basic &x) {
         if (eq(x, *pi)) {
             return ::atan2(0, -1);
@@ -428,6 +491,24 @@ std::vector<fn> init_eval_double()
     table[ABS] = [](const Basic &x) {
         double tmp = eval_double_single_dispatch(*(static_cast<const Abs &>(x)).get_arg());
         return std::abs(tmp);
+    };
+    table[MAX] = [](const Basic &x) {
+        double result;
+        result = eval_double_single_dispatch(*(static_cast<const Max &>(x).get_args()[0]));
+        for (const auto &p: static_cast<const Max &>(x).get_args()) {
+            double tmp = eval_double_single_dispatch(*p);
+            result = std::max(result, tmp);
+        }
+        return result;
+    };
+    table[MIN] = [](const Basic &x) {
+        double result;
+        result = eval_double_single_dispatch(*(static_cast<const Max &>(x).get_args()[0]));
+        for (const auto &p: static_cast<const Min &>(x).get_args()) {
+            double tmp = eval_double_single_dispatch(*p);
+            result = std::min(result, tmp);
+        }
+        return result;
     };
     return table;
 }

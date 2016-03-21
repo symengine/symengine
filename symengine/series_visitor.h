@@ -14,7 +14,7 @@ private:
     const std::string varname;
     const unsigned prec;
 public:
-    inline SeriesVisitor(const Poly var_, const std::string varname_, const unsigned prec_)
+    inline SeriesVisitor(const Poly &var_, const std::string &varname_, const unsigned prec_)
             : var(var_), varname(varname_), prec(prec_) {
 
     }
@@ -46,9 +46,9 @@ public:
         const RCP<const Basic>& base = x.get_base(), exp = x.get_exp();
         if (is_a<Integer>(*exp)) {
             const Integer& ii = (static_cast<const Integer&>(*exp));
-            if (not ii.i.fits_sint_p())
+            if (not mp_fits_slong_p(ii.i))
                 throw std::runtime_error("series power exponent size");
-            const int sh = ii.as_int();
+            const int sh = mp_get_si(ii.i);
             base->accept(*this);
             if (sh == 1) {
                 return;
@@ -62,12 +62,12 @@ public:
 
         } else if (is_a<Rational>(*exp)) {
             const Rational &rat = (static_cast<const Rational &>(*exp));
-            const mpz_class &expnumz = rat.i.get_num();
-            const mpz_class &expdenz = rat.i.get_den();
-            if (not expnumz.fits_sint_p() or not expdenz.fits_sint_p())
+            const integer_class &expnumz = get_num(rat.i);
+            const integer_class &expdenz = get_den(rat.i);
+            if (not mp_fits_slong_p(expnumz) or not mp_fits_slong_p(expdenz))
                 throw std::runtime_error("series rational power exponent size");
-            const int num = expnumz.get_si();
-            const int den = expdenz.get_si();
+            const int num = mp_get_si(expnumz);
+            const int den = mp_get_si(expdenz);
             base->accept(*this);
             const Poly proot(Series::series_nthroot(apply(base), den, var, prec));
             if (num == 1) {
@@ -82,18 +82,58 @@ public:
         } else if (eq(*E, *base)) {
             p = Series::series_exp(apply(exp), var, prec);
         } else {
-            p = Series::series_exp(apply(exp) * Series::series_log(apply(base), var, prec), var, prec);
+            p = Series::series_exp(Poly(apply(exp) * Series::series_log(apply(base), var, prec)), var, prec);
+        }
+    }
+
+    void bvisit(const Function &x) {
+        RCP<const Basic> d = x.rcp_from_this();
+        RCP<const Symbol> s = symbol(varname);
+
+        map_basic_basic m({{s, zero}});
+        RCP<const Basic> const_term = d->subs(m);
+        if (const_term == d) {
+            p = Series::convert(*d);
+            return;
+        }
+        Poly res_p(apply(expand(const_term)));
+        Coeff prod, t;
+        prod = 1;
+
+        for (unsigned int i = 1; i < prec; i++) {
+            // Workaround for flint
+            t = i;
+            prod /= t;
+            d = d->diff(s);
+            res_p += Series::pow(var, i, prec) * (prod * apply(expand(d->subs(m))));
+        }
+        p = res_p;
+    }
+
+    void bvisit(const Gamma &x) {
+        RCP<const Symbol> s = symbol(varname);
+        RCP<const Basic> arg = x.get_args()[0];
+        if (eq(*arg->subs({{s, zero}}), *zero)) {
+            RCP<const Basic> g = gamma(add(arg, one));
+            if (is_a<Gamma>(*g)) {
+                bvisit(static_cast<const Function &>(*g));
+                p *= Series::pow(var, -1, prec);
+            } else {
+                g->accept(*this);
+            }
+        } else {
+            bvisit(static_cast<const Function &>(x));
         }
     }
 
     void bvisit(const Series &x) {
-        if (x.var_ != varname) {
+        if (x.get_var() != varname) {
             throw std::runtime_error("Multivariate Series not implemented");
         }
-        if (x.degree_ < prec) {
+        if (x.get_degree() < prec) {
             throw std::runtime_error("Series with lesser prec found");
         }
-        p = x.p_;
+        p = x.get_poly();
     }
     void bvisit(const Integer &x) {
         p = Series::convert(x);
@@ -187,8 +227,74 @@ public:
     void bvisit(const Symbol &x) {
         p = Series::var(x.get_name());
     }
+    void bvisit(const Constant &x) {
+        p = Series::convert(x);
+    }
     void bvisit(const Basic &x) {
-        throw std::runtime_error("Not Implemented");
+        if (!has_symbol(x, symbol(varname))) {
+            p = Series::convert(x);
+        } else {
+            throw std::runtime_error("Not Implemented");
+        }
+    }
+};
+
+class NeedsSymbolicExpansionVisitor : public BaseVisitor<NeedsSymbolicExpansionVisitor, StopVisitor> {
+protected:
+    RCP<const Symbol> x_;
+    bool needs_;
+public:
+
+    void bvisit(const TrigFunction &f) {
+        auto arg = f.get_arg();
+        map_basic_basic subsx0{{x_, integer(0)}};
+        if (arg->subs(subsx0)->__neq__(*integer(0))) {
+            needs_ = true;
+            stop_ = true;
+        }
+    }
+
+    void bvisit(const HyperbolicFunction &f) {
+        auto arg = f.get_arg();
+        map_basic_basic subsx0{{x_, integer(0)}};
+        if (arg->subs(subsx0)->__neq__(*integer(0))) {
+            needs_ = true;
+            stop_ = true;
+        }
+    }
+
+    void bvisit(const Pow &pow) {
+        auto base = pow.get_base();
+        auto exp = pow.get_exp();
+        map_basic_basic subsx0{{x_, integer(0)}};
+        // exp(const) or x^-1
+        if ((base->__eq__(*E) and exp->subs(subsx0)->__neq__(*integer(0)))
+            or (is_a_Number(*exp) and static_cast<const Number&>(*exp).is_negative()
+                and base->subs(subsx0)->__eq__(*integer(0)))) {
+            needs_ = true;
+            stop_ = true;
+        }
+    }
+
+    void bvisit(const Log &f) {
+        auto arg = f.get_arg();
+        map_basic_basic subsx0{{x_, integer(0)}};
+        if (arg->subs(subsx0)->__eq__(*integer(0))) {
+            needs_ = true;
+            stop_ = true;
+        }
+    }
+
+    void bvisit(const LambertW &x) { needs_ = true; stop_ = true; }
+
+    void bvisit(const Basic &x) { }
+
+    bool apply(const Basic &b, const RCP<const Symbol> &x) {
+        x_ = x;
+        needs_ = false;
+        stop_ = false;
+        postorder_traversal_stop(b, *this);
+        return needs_;
     }
 };
 

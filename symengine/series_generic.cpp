@@ -9,14 +9,14 @@ using SymEngine::make_rcp;
 
 namespace SymEngine {
 
-UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const RCP<const UnivariatePolynomial> &poly) :
+UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const RCP<const UnivariateIntPolynomial> &poly) :
         var_{var}, poly_{std::move(poly)} , prec_{precision} {
 }
 
 UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const unsigned int &max, map_uint_mpz&& dict) :
         var_{var}, prec_{precision} {
 
-    poly_ = univariate_polynomial(var_, max, std::move(dict));
+    poly_ = univariate_int_polynomial(var_, std::move(dict));
 }
 
 UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const map_uint_mpz& dict) :
@@ -34,19 +34,19 @@ UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned 
             }
             return false;
         } );
-    poly_ = univariate_polynomial(var_, max, std::move(dict_trunc));
+    poly_ = univariate_int_polynomial(var_, std::move(dict_trunc));
 }
 
-UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const std::vector<mpz_class> &v) :
+UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const std::vector<integer_class> &v) :
         var_{var}, prec_{precision} {
 
-    std::vector<mpz_class> vtrunc;
+    std::vector<integer_class> vtrunc;
     std::copy_if(v.begin(), v.end(), std::back_inserter(vtrunc),
         [&](decltype(v[0]) i) { return i < prec_; } );
-    poly_ = UnivariatePolynomial::create(var_, vtrunc);
+    poly_ = UnivariateIntPolynomial::create(var_, vtrunc);
 }
 
-bool UnivariateSeries::is_canonical(const UnivariatePolynomial& poly, const unsigned int &prec) const
+bool UnivariateSeries::is_canonical(const UnivariateIntPolynomial& poly, const unsigned int &prec) const
 {
     return true;
 }
@@ -76,7 +76,7 @@ std::string UnivariateSeries::__str__() const
 {
     std::ostringstream o;
     bool first = true;
-    for (const auto& it : poly_->dict_) {
+    for (const auto& it : poly_->get_dict()) {
         if (it.second == 0)
             continue;
         if (first) {
@@ -91,13 +91,13 @@ std::string UnivariateSeries::__str__() const
         }
         first = false;
         if (it.first == 0) {
-            o << abs(it.second);
+            o << mp_abs(it.second);
             continue;
         }
-        if (abs(it.second) == 1)
+        if (mp_abs(it.second) == 1)
             o << var_->get_name();
         else
-            o << abs(it.second) << "*" << var_->get_name();
+            o << mp_abs(it.second) << "*" << var_->get_name();
         if (it.first > 1)
             o << "**" << it.first;
     }
@@ -111,14 +111,14 @@ RCP<const UnivariateSeries> add_uni_series (const UnivariateSeries& a, const Uni
     map_uint_mpz dict;
     SYMENGINE_ASSERT(a.var_->get_name() == b.var_->get_name())
     unsigned int minprec = (a.prec_ < b.prec_)? a.prec_ : b.prec_;
-    for (const auto &it : a.poly_->dict_) {
+    for (const auto &it : a.poly_->get_dict()) {
         if (it.first >= minprec)
             break;
         dict[it.first] = it.second;
     }
 
     unsigned int max = 0;
-    for (const auto &it : b.poly_->dict_) {
+    for (const auto &it : b.poly_->get_dict()) {
         if (it.first >= minprec)
             break;
         dict[it.first] += it.second;
@@ -130,7 +130,7 @@ RCP<const UnivariateSeries> add_uni_series (const UnivariateSeries& a, const Uni
 
 RCP<const UnivariateSeries> neg_uni_series (const UnivariateSeries& a)
 {
-    return make_rcp<const UnivariateSeries>(a.var_, a.prec_, std::move(neg_uni_poly(*a.poly_)));
+    return make_rcp<const UnivariateSeries>(a.var_, a.prec_, std::move(neg_poly(*a.poly_)));
 }
 
 RCP<const UnivariateSeries> sub_uni_series (const UnivariateSeries& a, const UnivariateSeries& b)
@@ -144,13 +144,13 @@ RCP<const UnivariateSeries> mul_uni_series (const UnivariateSeries& a, const Uni
     SYMENGINE_ASSERT(a.var_->get_name() == b.var_->get_name())
     const unsigned int minprec = (a.prec_ < b.prec_)? a.prec_ : b.prec_;
     unsigned int max = 0;
-    for (const auto &ait : a.poly_->dict_) {
+    for (const auto &ait : a.poly_->get_dict()) {
         const unsigned int aexp = ait.first;
         if (aexp < minprec) {
-            for (const auto &bit : b.poly_->dict_) {
+            for (const auto &bit : b.poly_->get_dict()) {
                 const unsigned int expsum = aexp + bit.first;
                 if (expsum < minprec)
-                    mpz_addmul(dict[expsum].get_mpz_t(), ait.second.get_mpz_t(), bit.second.get_mpz_t());
+                    mp_addmul(dict[expsum], ait.second, bit.second);
                 else
                     break;
                 if (expsum > max)

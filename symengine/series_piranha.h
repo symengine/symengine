@@ -22,13 +22,17 @@ public:
     IMPLEMENT_TYPEID(URATPSERIESPIRANHA)
     virtual int compare(const Basic &o) const;
     virtual std::size_t __hash__() const;
+    virtual RCP<const Basic> as_basic() const;
+    virtual umap_int_basic as_dict() const;
+    virtual RCP<const Basic> get_coeff(int) const;
+
     static RCP<const URatPSeriesPiranha> series(const RCP<const Basic> &t, const std::string &x,
                                                 unsigned int prec);
     static piranha::integer convert(const Integer &x);
-    static piranha::rational convert(const mpq_class &x);
+    static piranha::rational convert(const rational_class &x);
     static pp_t var(const std::string &s);
     static piranha::rational convert(const Rational &x);
-    static piranha::rational convert(const Number &x);
+    static piranha::rational convert(const Basic &x);
     static pp_t mul(const pp_t &s, const pp_t &r, unsigned prec);
     static pp_t pow(const pp_t &s, int n, unsigned prec);
     static unsigned ldegree(const pp_t &s);
@@ -47,10 +51,14 @@ public:
     IMPLEMENT_TYPEID(UPSERIESPIRANHA)
     virtual int compare(const Basic &o) const;
     virtual std::size_t __hash__() const;
+    virtual RCP<const Basic> as_basic() const;
+    virtual umap_int_basic as_dict() const;
+    virtual RCP<const Basic> get_coeff(int) const;
+
     static RCP<const UPSeriesPiranha> series(const RCP<const Basic> &t, const std::string &x,
                                                 unsigned int prec);
     static p_expr var(const std::string &s);
-    static Expression convert(const Number &x);
+    static Expression convert(const Basic &x);
     static p_expr mul(const p_expr &s, const p_expr &r, unsigned prec);
     static p_expr pow(const p_expr &s, int n, unsigned prec);
     static unsigned ldegree(const p_expr &s);

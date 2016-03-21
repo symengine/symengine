@@ -7,6 +7,7 @@
 #include <symengine/functions.h>
 #include <symengine/constants.h>
 #include <symengine/visitor.h>
+#include <algorithm>
 
 
 namespace SymEngine {
@@ -327,9 +328,15 @@ RCP<const Basic> sin(const RCP<const Basic> &arg)
     if (is_a_Number(*arg) and not static_cast<const Number &>(*arg).is_exact()) {
         return static_cast<const Number &>(*arg).get_eval().sin(*arg);
     }
+
+    if (is_a<ASin>(*arg)) {
+        return rcp_static_cast<const ASin>(arg)->get_arg();
+    } else if (is_a<ACsc>(*arg)) {
+        return div(one, rcp_static_cast<const ACsc>(arg)->get_arg());
+    }
+
     RCP<const Basic> ret_arg;
-    int index;
-    int sign;
+    int index, sign;
     bool conjugate = eval(arg, 2, 1, 0, //input
                           outArg(ret_arg), index, sign); //output
 
@@ -406,9 +413,15 @@ RCP<const Basic> cos(const RCP<const Basic> &arg)
     if (is_a_Number(*arg) and not static_cast<const Number &>(*arg).is_exact()) {
         return static_cast<const Number &>(*arg).get_eval().cos(*arg);
     }
+
+    if (is_a<ACos>(*arg)) {
+        return rcp_static_cast<const ACos>(arg)->get_arg();
+    } else if (is_a<ASec>(*arg)) {
+        return div(one, rcp_static_cast<const ASec>(arg)->get_arg());
+    }
+
     RCP<const Basic> ret_arg;
-    int index;
-    int sign;
+    int index, sign;
     bool conjugate =  eval(arg, 2, 0, 1, //input
                       outArg(ret_arg), index, sign); //output
 
@@ -484,9 +497,15 @@ RCP<const Basic> tan(const RCP<const Basic> &arg)
     if (is_a_Number(*arg) and not static_cast<const Number &>(*arg).is_exact()) {
         return static_cast<const Number &>(*arg).get_eval().tan(*arg);
     }
+
+    if (is_a<ATan>(*arg)) {
+        return rcp_static_cast<const ATan>(arg)->get_arg();
+    } else if (is_a<ACot>(*arg)) {
+        return div(one, rcp_static_cast<const ACot>(arg)->get_arg());
+    }
+
     RCP<const Basic> ret_arg;
-    int index;
-    int sign;
+    int index, sign;
     bool conjugate =  eval(arg, 1, 1, 1, //input
                       outArg(ret_arg), index, sign); //output
 
@@ -563,9 +582,15 @@ RCP<const Basic> cot(const RCP<const Basic> &arg)
     if (is_a_Number(*arg) and not static_cast<const Number &>(*arg).is_exact()) {
         return static_cast<const Number &>(*arg).get_eval().cot(*arg);
     }
+
+    if (is_a<ACot>(*arg)) {
+        return rcp_static_cast<const ACot>(arg)->get_arg();
+    } else if (is_a<ATan>(*arg)) {
+        return div(one, rcp_static_cast<const ATan>(arg)->get_arg());
+    }
+
     RCP<const Basic> ret_arg;
-    int index;
-    int sign;
+    int index, sign;
     bool conjugate =  eval(arg, 1, 1, 1, //input
                       outArg(ret_arg), index, sign); //output
 
@@ -643,9 +668,15 @@ RCP<const Basic> csc(const RCP<const Basic> &arg)
     if (is_a_Number(*arg) and not static_cast<const Number &>(*arg).is_exact()) {
         return static_cast<const Number &>(*arg).get_eval().csc(*arg);
     }
+
+    if (is_a<ACsc>(*arg)) {
+        return rcp_static_cast<const ACsc>(arg)->get_arg();
+    } else if (is_a<ASin>(*arg)) {
+        return div(one, rcp_static_cast<const ASin>(arg)->get_arg());
+    }
+
     RCP<const Basic> ret_arg;
-    int index;
-    int sign;
+    int index, sign;
     bool conjugate =  eval(arg, 2, 1, 0, //input
                       outArg(ret_arg), index, sign); //output
 
@@ -723,9 +754,15 @@ RCP<const Basic> sec(const RCP<const Basic> &arg)
     if (is_a_Number(*arg) and not static_cast<const Number &>(*arg).is_exact()) {
         return static_cast<const Number &>(*arg).get_eval().sec(*arg);
     }
+
+    if (is_a<ASec>(*arg)) {
+        return rcp_static_cast<const ASec>(arg)->get_arg();
+    } else if (is_a<ACos>(*arg)) {
+        return div(one, rcp_static_cast<const ACos>(arg)->get_arg());
+    }
+
     RCP<const Basic> ret_arg;
-    int index;
-    int sign;
+    int index, sign;
     bool conjugate =  eval(arg, 2, 0, 1, //input
                       outArg(ret_arg), index, sign); //output
 
@@ -753,6 +790,102 @@ RCP<const Basic> sec(const RCP<const Basic> &arg)
             }
         }
     }
+}
+/* ---------------------------- */
+
+// simplifies trigonometric functions wherever possible
+// currently deals with simplifications of type sin(acos())
+RCP<const Basic> trig_to_sqrt(const RCP<const Basic> &arg)
+{
+    RCP<const Basic> i_arg;
+
+    if (is_a<Sin>(*arg)) {
+        if (is_a<ACos>(*arg->get_args()[0])) {
+            i_arg = rcp_static_cast<const ACos>(arg->get_args()[0])->get_arg();
+            return sqrt(sub(one, pow(i_arg, i2)));
+        } else if (is_a<ATan>(*arg->get_args()[0])) {
+            i_arg = rcp_static_cast<const ATan>(arg->get_args()[0])->get_arg();
+            return div(i_arg, sqrt(add(one, pow(i_arg, i2))));
+        } else if (is_a<ASec>(*arg->get_args()[0])) {
+            i_arg = rcp_static_cast<const ASec>(arg->get_args()[0])->get_arg();
+            return sqrt(sub(one, pow(i_arg, im2)));
+        } else if (is_a<ACot>(*arg->get_args()[0])) {
+            i_arg = rcp_static_cast<const ACot>(arg->get_args()[0])->get_arg();
+            return div(one, mul(i_arg, sqrt(add(one, pow(i_arg, im2)))));
+        }
+    } else if (is_a<Cos>(*arg)) {
+        if (is_a<ASin>(*arg->get_args()[0])) {
+            i_arg = rcp_static_cast<const ASin>(arg->get_args()[0])->get_arg();
+            return sqrt(sub(one, pow(i_arg, i2)));
+        } else if (is_a<ATan>(*arg->get_args()[0])) {
+            i_arg = rcp_static_cast<const ATan>(arg->get_args()[0])->get_arg();
+            return div(one, sqrt(add(one, pow(i_arg, i2))));
+        } else if (is_a<ACsc>(*arg->get_args()[0])) {
+            i_arg = rcp_static_cast<const ACsc>(arg->get_args()[0])->get_arg();
+            return sqrt(sub(one, pow(i_arg, im2)));
+        } else if (is_a<ACot>(*arg->get_args()[0])) {
+            i_arg = rcp_static_cast<const ACot>(arg->get_args()[0])->get_arg();
+            return div(one, sqrt(add(one, pow(i_arg, im2))));
+        }
+    } else if (is_a<Tan>(*arg)) {
+        if (is_a<ASin>(*arg->get_args()[0])) {
+            i_arg = rcp_static_cast<const ASin>(arg->get_args()[0])->get_arg();
+            return div(i_arg, sqrt(sub(one, pow(i_arg, i2))));
+        } else if (is_a<ACos>(*arg->get_args()[0])) {
+            i_arg = rcp_static_cast<const ACos>(arg->get_args()[0])->get_arg();
+            return div(sqrt(sub(one, pow(i_arg, i2))), i_arg);
+        } else if (is_a<ACsc>(*arg->get_args()[0])) {
+            i_arg = rcp_static_cast<const ACsc>(arg->get_args()[0])->get_arg();
+            return div(one, mul(i_arg, sqrt(sub(one, pow(i_arg, im2)))));
+        } else if (is_a<ASec>(*arg->get_args()[0])) {
+            i_arg = rcp_static_cast<const ASec>(arg->get_args()[0])->get_arg();
+            return mul(i_arg, sqrt(sub(one, pow(i_arg, im2))));
+        }
+    } else if (is_a<Csc>(*arg)) {
+        if (is_a<ACos>(*arg->get_args()[0])) {
+            i_arg = rcp_static_cast<const ACos>(arg->get_args()[0])->get_arg();
+            return div(one, sqrt(sub(one, pow(i_arg, i2))));
+        } else if (is_a<ATan>(*arg->get_args()[0])) {
+            i_arg = rcp_static_cast<const ATan>(arg->get_args()[0])->get_arg();
+            return div(sqrt(add(one, pow(i_arg, i2))), i_arg);
+        } else if (is_a<ASec>(*arg->get_args()[0])) {
+            i_arg = rcp_static_cast<const ASec>(arg->get_args()[0])->get_arg();
+            return div(one, sqrt(sub(one, pow(i_arg, im2))));
+        } else if (is_a<ACot>(*arg->get_args()[0])) {
+            i_arg = rcp_static_cast<const ACot>(arg->get_args()[0])->get_arg();
+            return mul(i_arg, sqrt(add(one, pow(i_arg, im2))));
+        }
+    } else if (is_a<Sec>(*arg)) {
+        if (is_a<ASin>(*arg->get_args()[0])) {
+            i_arg = rcp_static_cast<const ASin>(arg->get_args()[0])->get_arg();
+            return div(one, sqrt(sub(one, pow(i_arg, i2))));
+        } else if (is_a<ATan>(*arg->get_args()[0])) {
+            i_arg = rcp_static_cast<const ATan>(arg->get_args()[0])->get_arg();
+            return sqrt(add(one, pow(i_arg, i2)));
+        } else if (is_a<ACsc>(*arg->get_args()[0])) {
+            i_arg = rcp_static_cast<const ACsc>(arg->get_args()[0])->get_arg();
+            return div(one, sqrt(sub(one, pow(i_arg, im2))));
+        } else if (is_a<ACot>(*arg->get_args()[0])) {
+            i_arg = rcp_static_cast<const ACot>(arg->get_args()[0])->get_arg();
+            return sqrt(add(one, pow(i_arg, im2)));
+        }
+    } else if (is_a<Cot>(*arg)) {
+        if (is_a<ASin>(*arg->get_args()[0])) {
+            i_arg = rcp_static_cast<const ASin>(arg->get_args()[0])->get_arg();
+            return div(sqrt(sub(one, pow(i_arg, i2))), i_arg);
+        } else if (is_a<ACos>(*arg->get_args()[0])) {
+            i_arg = rcp_static_cast<const ACos>(arg->get_args()[0])->get_arg();
+            return div(i_arg, sqrt(sub(one, pow(i_arg, i2))));
+        } else if (is_a<ACsc>(*arg->get_args()[0])) {
+            i_arg = rcp_static_cast<const ACsc>(arg->get_args()[0])->get_arg();
+            return mul(i_arg, sqrt(sub(one, pow(i_arg, im2))));
+        } else if (is_a<ASec>(*arg->get_args()[0])) {
+            i_arg = rcp_static_cast<const ASec>(arg->get_args()[0])->get_arg();
+            return div(one, mul(i_arg, sqrt(sub(one, pow(i_arg, im2)))));
+        }
+    }
+
+    return arg;
 }
 
 /* ---------------------------- */
@@ -1311,7 +1444,7 @@ RCP<const Basic> lambertw(const RCP<const Basic> &arg)
 {
     if (eq(*arg, *zero)) return zero;
     if (eq(*arg, *E)) return one;
-    if (eq(*arg, *div(one, E))) return minus_one;
+    if (eq(*arg, *div(neg(one), E))) return minus_one;
     if (eq(*arg, *div(log(i2), im2))) return mul(minus_one, log(i2));
     return make_rcp<const LambertW>(arg);
 }
@@ -1399,11 +1532,6 @@ FunctionWrapper::FunctionWrapper(std::string name, const vec_basic &vec)
 
 }
 
-RCP<const Number> FunctionWrapper::eval(long bits) const
-{
-    throw std::runtime_error("Not Implemented.");
-}
-
 /* ---------------------------- */
 
 Derivative::Derivative(const RCP<const Basic> &arg, const multiset_basic &x)
@@ -1445,6 +1573,16 @@ bool Derivative::is_canonical(const RCP<const Basic> &arg,
         return true;
     } else if (is_a<FunctionWrapper>(*arg)) {
         return true;
+    } else if (is_a<PolyGamma>(*arg)) {
+        bool found = false;
+        auto v = arg->get_args();
+        for (auto &p: x) {
+            if (has_symbol(*v[0], rcp_static_cast<const Symbol>(p))) {
+                found = true;
+                break;
+            }
+        }
+        return found;
     }
     return false;
 }
@@ -1720,6 +1858,72 @@ RCP<const Basic>  Sinh::expand_as_exp() const
     return div(sub(exp(get_arg()), exp(mul(get_arg(), minus_one))), i2);
 }
 
+Csch::Csch(const RCP<const Basic> &arg)
+    : HyperbolicFunction(arg)
+{
+    SYMENGINE_ASSERT(is_canonical(arg))
+}
+
+bool Csch::is_canonical(const RCP<const Basic> &arg) const
+{
+    // TODO: Add further checks for +inf -inf cases
+    if (eq(*arg, *zero))
+        return false;
+    if (is_a_Number(*arg)) {
+        if (static_cast<const Number &>(*arg).is_negative()) {
+            return false;
+        } else if (not static_cast<const Number &>(*arg).is_exact()) {
+            return false;
+        }
+    }
+    if (could_extract_minus(arg))
+        return false;
+    return true;
+}
+
+bool Csch::__eq__(const Basic &o) const
+{
+    if (is_a<Csch>(o) and
+        eq(*get_arg(), *(static_cast<const Csch &>(o).get_arg())))
+        return true;
+    else
+        return false;
+}
+
+int Csch::compare(const Basic &o) const
+{
+    SYMENGINE_ASSERT(is_a<Csch>(o))
+    const Csch &s = static_cast<const Csch &>(o);
+    return get_arg()->__cmp__(*(s.get_arg()));
+}
+
+RCP<const Basic> csch(const RCP<const Basic> &arg)
+{
+    if (eq(*arg, *zero)) {
+        // Answer is infinity. Yet to be implemented in SymEngine
+        throw std::runtime_error("Not implemented.");
+    }
+    if (is_a_Number(*arg)) {
+        RCP<const Number> _arg = rcp_static_cast<const Number>(arg);
+        if (not _arg->is_exact()) {
+            return _arg->get_eval().csch(*_arg);
+        } else if (_arg->is_negative()) {
+            return neg(csch(zero->sub(*_arg)));
+        }
+    }
+    if (could_extract_minus(arg)) {
+        return neg(csch(neg(arg)));
+    }
+    return make_rcp<const Csch>(arg);
+}
+
+RCP<const Basic>  Csch::expand_as_exp() const
+{
+    RCP<const Basic> pos_exp = exp(get_arg());
+    RCP<const Basic> neg_exp = exp(mul(minus_one, get_arg()));
+    return div(i2, sub(pos_exp, neg_exp));
+}
+
 Cosh::Cosh(const RCP<const Basic> &arg)
     : HyperbolicFunction(arg)
 {
@@ -1779,6 +1983,69 @@ RCP<const Basic> cosh(const RCP<const Basic> &arg)
 RCP<const Basic>  Cosh::expand_as_exp() const
 {
     return div(add(exp(get_arg()), exp(mul(get_arg(), minus_one))), i2);
+}
+
+Sech::Sech(const RCP<const Basic> &arg)
+    : HyperbolicFunction(arg)
+{
+    SYMENGINE_ASSERT(is_canonical(arg))
+}
+
+bool Sech::is_canonical(const RCP<const Basic> &arg) const
+{
+    // TODO: Add further checks for +inf -inf cases
+    if (eq(*arg, *zero))
+        return false;
+    if (is_a_Number(*arg)) {
+        if (static_cast<const Number &>(*arg).is_negative()) {
+            return false;
+        } else if (not static_cast<const Number &>(*arg).is_exact()) {
+            return false;
+        }
+    }
+    if (could_extract_minus(arg))
+        return false;
+    return true;
+}
+
+bool Sech::__eq__(const Basic &o) const
+{
+    if (is_a<Sech>(o) and
+        eq(*get_arg(), *(static_cast<const Sech &>(o).get_arg())))
+        return true;
+    else
+        return false;
+}
+
+int Sech::compare(const Basic &o) const
+{
+    SYMENGINE_ASSERT(is_a<Sech>(o))
+    const Sech &s = static_cast<const Sech &>(o);
+    return get_arg()->__cmp__(*(s.get_arg()));
+}
+
+RCP<const Basic> sech(const RCP<const Basic> &arg)
+{
+    if (eq(*arg, *zero)) return one;
+    if (is_a_Number(*arg)) {
+        RCP<const Number> _arg = rcp_static_cast<const Number>(arg);
+        if (not _arg->is_exact()) {
+            return _arg->get_eval().sech(*_arg);
+        } else if (_arg->is_negative()) {
+            return sech(zero->sub(*_arg));
+        }
+    }
+    if (could_extract_minus(arg)) {
+        return sech(neg(arg));
+    }
+    return make_rcp<const Sech>(arg);
+}
+
+RCP<const Basic>  Sech::expand_as_exp() const
+{
+    RCP<const Basic> pos_exp = exp(get_arg());
+    RCP<const Basic> neg_exp = exp(mul(minus_one, get_arg()));
+    return div(i2, add(pos_exp, neg_exp));
 }
 
 Tanh::Tanh(const RCP<const Basic> &arg)
@@ -1966,6 +2233,55 @@ RCP<const Basic> asinh(const RCP<const Basic> &arg)
         return neg(asinh(neg(arg)));
     }
     return make_rcp<const ASinh>(arg);
+}
+
+ACsch::ACsch(const RCP<const Basic> &arg)
+    : HyperbolicFunction(arg)
+{
+    SYMENGINE_ASSERT(is_canonical(arg))
+}
+
+bool ACsch::is_canonical(const RCP<const Basic> &arg) const
+{
+    // TODO: Add further checks for +inf -inf cases
+    if (eq(*arg, *one) or eq(*arg, *minus_one))
+        return false;
+    if (is_a_Number(*arg)) {
+        if (static_cast<const Number &>(*arg).is_negative()) {
+            return false;
+        } else if (not static_cast<const Number &>(*arg).is_exact()) {
+            return false;
+        }
+    }
+    if (could_extract_minus(arg))
+        return false;
+    return true;
+}
+
+bool ACsch::__eq__(const Basic &o) const
+{
+    if (is_a<ACsch>(o) and
+        eq(*get_arg(), *(static_cast<const ACsch &>(o).get_arg())))
+        return true;
+    else
+        return false;
+}
+
+int ACsch::compare(const Basic &o) const
+{
+    SYMENGINE_ASSERT(is_a<ACsch>(o))
+    const ACsch &s = static_cast<const ACsch &>(o);
+    return get_arg()->__cmp__(*(s.get_arg()));
+    }
+
+RCP<const Basic> acsch(const RCP<const Basic> &arg)
+{
+    if (eq(*arg, *one)) return log(add(one, sq2));
+    if (eq(*arg, *minus_one)) return log(sub(sq2, one));
+    if (could_extract_minus(arg)) {
+        return neg(acsch(neg(arg)));
+    }
+    return make_rcp<const ACsch>(arg);
 }
 
 ACosh::ACosh(const RCP<const Basic> &arg)
@@ -2164,9 +2480,19 @@ RCP<const Basic> Sinh::create(const RCP<const Basic> &arg) const
     return sinh(arg);
 }
 
+RCP<const Basic> Csch::create(const RCP<const Basic> &arg) const
+{
+    return csch(arg);
+}
+
 RCP<const Basic> Cosh::create(const RCP<const Basic> &arg) const
 {
     return cosh(arg);
+}
+
+RCP<const Basic> Sech::create(const RCP<const Basic> &arg) const
+{
+    return sech(arg);
 }
 
 RCP<const Basic> Tanh::create(const RCP<const Basic> &arg) const
@@ -2182,6 +2508,11 @@ RCP<const Basic> Coth::create(const RCP<const Basic> &arg) const
 RCP<const Basic> ASinh::create(const RCP<const Basic> &arg) const
 {
     return asinh(arg);
+}
+
+RCP<const Basic> ACsch::create(const RCP<const Basic> &arg) const
+{
+    return acsch(arg);
 }
 
 RCP<const Basic> ACosh::create(const RCP<const Basic> &arg) const
@@ -2314,9 +2645,6 @@ int LeviCivita::compare(const Basic &o) const
 {
     SYMENGINE_ASSERT(is_a<LeviCivita>(o))
     const LeviCivita &s = static_cast<const LeviCivita &>(o);
-    // # of elements
-    if (arg_.size() != s.arg_.size())
-        return (arg_.size() < s.arg_.size()) ? -1 : 1;
     return vec_basic_compare(arg_, s.arg_);
 }
 
@@ -2379,6 +2707,10 @@ bool Zeta::is_canonical(const RCP<const Basic> &s, const RCP<const Basic> &a) co
 {
     if (eq(*s, *zero)) return false;
     if (eq(*s, *one)) return false;
+    if (is_a<Integer>(*s) and is_a<Integer>(*a)) {
+        auto s_ = static_cast<const Integer &>(*s).as_int();
+        if (s_ < 0 || s_ % 2 == 0) return false;
+    }
     return true;
 }
 
@@ -2409,17 +2741,27 @@ RCP<const Basic> zeta(const RCP<const Basic> &s, const RCP<const Basic> &a)
 {
     if (is_a_Number(*s)) {
         if (rcp_static_cast<const Number>(s)->is_zero()) {
-            if (is_a_Number(*a) and
-                rcp_static_cast<const Number>(a)->is_negative()) {
-                return sub(div(minus_one, i2), a);
-            } else {
-                return sub(div(one, i2), a);
-            }
+            return sub(div(one, i2), a);
         } else if (rcp_static_cast<const Number>(s)->is_one()) {
             throw std::runtime_error("Complex infinity is not yet implemented");
         } else if (is_a<Integer>(*s) and is_a<Integer>(*a)) {
-            // Implement Harmonic and simplify this
-            return make_rcp<const Zeta>(s, a);
+            auto s_ = static_cast<const Integer &>(*s).as_int();
+            auto a_ = static_cast<const Integer &>(*a).as_int();
+            RCP<const Basic> zeta;
+            if (s_ < 0) {
+                RCP<const Number> res = (s_ % 2 == 0) ? one : minus_one;
+                zeta = mulnum(res, divnum(bernoulli(-s_ + 1), integer(-s_ + 1)));
+            } else if (s_ % 2 == 0) {
+                RCP<const Number> b = bernoulli(s_);
+                RCP<const Number> f = factorial(s_);
+                zeta = divnum(pownum(integer(2), integer(s_ - 1)), f);
+                zeta = mul(zeta, mul(pow(pi, s), abs(b)));
+            } else {
+                return make_rcp<const Zeta>(s, a);
+            }
+            if (a_ < 0)
+                return add(zeta, harmonic(-a_, s_));
+            return sub(zeta, harmonic(a_ - 1, s_));
         }
     }
     return make_rcp<const Zeta>(s, a);
@@ -2493,7 +2835,7 @@ bool Gamma::is_canonical(const RCP<const Basic> &arg) const
 {
     if (is_a<Integer>(*arg)) return false;
     if (is_a<Rational>(*arg) and
-        (rcp_static_cast<const Rational>(arg)->i.get_den()) == 2) {
+        (get_den(rcp_static_cast<const Rational>(arg)->i)) == 2) {
         return false;
     }
     if (is_a_Number(*arg) and not static_cast<const Number &>(*arg).is_exact()) {
@@ -2523,6 +2865,17 @@ int Gamma::compare(const Basic &o) const
     return arg_->__cmp__(*(static_cast<const Gamma &>(o).arg_));
 }
 
+RCP<const Basic> Gamma::subs(const map_basic_basic &subs_dict) const
+{
+    auto it = subs_dict.find(rcp_from_this());
+    if (it != subs_dict.end())
+        return it->second;
+    RCP<const Basic> arg = arg_->subs(subs_dict);
+    if (arg == arg_)
+        return rcp_from_this();
+    else
+        return gamma(arg);
+}
 RCP<const Basic> gamma_positive_int(const RCP<const Basic> &arg)
 {
     SYMENGINE_ASSERT(is_a<Integer>(*arg))
@@ -2535,10 +2888,10 @@ RCP<const Basic> gamma_multiple_2(const RCP<const Basic>& arg)
 {
     SYMENGINE_ASSERT(is_a<Rational>(*arg))
     RCP<const Rational> arg_ = rcp_static_cast<const Rational>(arg);
-    SYMENGINE_ASSERT(arg_->i.get_den() == 2)
+    SYMENGINE_ASSERT(get_den(arg_->i) == 2)
     RCP<const Integer> n, k;
     RCP<const Number> coeff;
-    n = quotient_f(*(integer(abs(arg_->i.get_num()))), *(integer(arg_->i.get_den())));
+    n = quotient_f(*(integer(mp_abs(get_num(arg_->i)))), *(integer(get_den(arg_->i))));
     if (arg_->is_positive()) {
         k = n;
         coeff = one;
@@ -2574,7 +2927,7 @@ RCP<const Basic> gamma(const RCP<const Basic> &arg)
         }
     } else if (is_a<Rational>(*arg)) {
         RCP<const Rational> arg_ = rcp_static_cast<const Rational>(arg);
-        if ((arg_->i.get_den()) == 2) {
+        if ((get_den(arg_->i)) == 2) {
             return gamma_multiple_2(arg);
         } else {
             return make_rcp<const Gamma>(arg);
@@ -2733,6 +3086,77 @@ RCP<const Basic> uppergamma(const RCP<const Basic> &s, const RCP<const Basic> &x
 }
 
 
+bool LogGamma::is_canonical(const RCP<const Basic> &arg) const
+{
+    if (is_a<Integer>(*arg)) {
+        RCP<const Integer> arg_int = rcp_static_cast<const Integer>(arg);
+        if(not arg_int->is_positive()) {
+            return false;
+        }
+        if (eq(*integer(1), *arg_int) or eq(*integer(2), *arg_int) or
+            eq(*integer(3), *arg_int)) {
+            return false;
+        }
+    }
+    return true;
+}
+
+std::size_t LogGamma::__hash__() const
+{
+    std::size_t seed = LOGGAMMA;
+    hash_combine<Basic>(seed, *arg_);
+    return seed;
+}
+
+bool LogGamma::__eq__(const Basic &o) const
+{
+    if (is_a<LogGamma>(o) and
+        eq(*arg_, *(static_cast<const LogGamma &>(o).arg_)))
+        return true;
+    return false;
+}
+
+int LogGamma::compare(const Basic &o) const
+{
+    SYMENGINE_ASSERT(is_a<LogGamma>(o))
+    return arg_->__cmp__(*(static_cast<const LogGamma &>(o).arg_));
+}
+
+RCP<const Basic> LogGamma::rewrite_as_gamma() const
+{
+    return log(gamma(arg_));
+}
+
+RCP<const Basic> LogGamma::subs(const map_basic_basic &subs_dict) const
+{
+    auto it = subs_dict.find(rcp_from_this());
+    if (it != subs_dict.end())
+        return it->second;
+    RCP<const Basic> arg = arg_->subs(subs_dict);
+    if (arg == arg_)
+        return rcp_from_this();
+    else
+        return loggamma(arg);
+}
+
+RCP<const Basic> loggamma(const RCP<const Basic> &arg)
+{
+    if (is_a<Integer>(*arg)) {
+        RCP<const Integer> arg_int = rcp_static_cast<const Integer>(arg);
+        if(not arg_int->is_positive()) {
+            throw std::runtime_error("Infinity not yet implemented");
+        }
+        if (eq(*integer(1), *arg_int) or eq(*integer(2), *arg_int)) {
+            return zero;
+        }
+        else if (eq(*integer(3), *arg_int)) {
+            return log(integer(2));
+        }
+    }
+    return make_rcp<const LogGamma>(arg);
+}
+
+
 RCP<const Beta> Beta::from_two_basic(const RCP<const Basic> &x, const RCP<const Basic> &y)
 {
         if (x->__cmp__(*y) == -1) {
@@ -2747,10 +3171,10 @@ bool Beta::is_canonical(const RCP<const Basic> &x, const RCP<const Basic> &y)
         return false;
     }
     if (is_a<Integer>(*x) or (is_a<Rational>(*x) and
-        (rcp_static_cast<const Rational>(x)->i.get_den()) == 2))
+        (get_den(rcp_static_cast<const Rational>(x)->i)) == 2))
     {
         if (is_a<Integer>(*y) or (is_a<Rational>(*y) and
-        (rcp_static_cast<const Rational>(y)->i.get_den()) == 2)) {
+        (get_den(rcp_static_cast<const Rational>(y)->i)) == 2)) {
             return false;
         }
     }
@@ -2810,7 +3234,7 @@ RCP<const Basic> beta(const RCP<const Basic> &x, const RCP<const Basic> &y)
                 }
             } else if (is_a<Rational>(*y)) {
                 RCP<const Rational> y_ = rcp_static_cast<const Rational>(y);
-                if ((y_->i.get_den()) == 2) {
+                if (get_den(y_->i) == 2) {
                     return div(mul(gamma_positive_int(x), gamma_multiple_2(y)), gamma_multiple_2(add(x, y)));
                 } else {
                     return Beta::from_two_basic(x, y);
@@ -2826,7 +3250,7 @@ RCP<const Basic> beta(const RCP<const Basic> &x, const RCP<const Basic> &y)
         if (y_int->is_positive()) {
          if (is_a<Rational>(*x)) {
                 RCP<const Rational> x_ = rcp_static_cast<const Rational>(x);
-                if ((x_->i.get_den()) == 2) {
+                if (get_den(x_->i) == 2) {
                     return div(mul(gamma_positive_int(y), gamma_multiple_2(x)), gamma_multiple_2(add(x, y)));
                 } else {
                     return Beta::from_two_basic(x, y);
@@ -2837,7 +3261,7 @@ RCP<const Basic> beta(const RCP<const Basic> &x, const RCP<const Basic> &y)
         }
     }
 
-    if (is_a<const Rational>(*x) and (rcp_static_cast<const Rational>(x))->i.get_den() == 2) {
+    if (is_a<const Rational>(*x) and get_den(rcp_static_cast<const Rational>(x)->i) == 2) {
             if (is_a<Integer>(*y)) {
                 RCP<const Integer> y_int = rcp_static_cast<const Integer>(y);
                 if (y_int->is_positive()) {
@@ -2846,7 +3270,7 @@ RCP<const Basic> beta(const RCP<const Basic> &x, const RCP<const Basic> &y)
                     throw std::runtime_error("Complex Infinity not yet implemented");
                 }
             }
-            if (is_a<const Rational>(*y) and (rcp_static_cast<const Rational>(y))->i.get_den() == 2) {
+            if (is_a<const Rational>(*y) and get_den((rcp_static_cast<const Rational>(y))->i) == 2) {
                 return div(mul(gamma_multiple_2(x), gamma_multiple_2(y)), gamma_positive_int(add(x, y)));
             }
     }
@@ -2865,12 +3289,8 @@ bool PolyGamma::is_canonical(const RCP<const Basic> &n, const RCP<const Basic> &
         }
         if (is_a<Rational>(*x)) {
             auto x_ = rcp_static_cast<const Rational>(x);
-            auto num = x_->i.get_num();
-            auto den = x_->i.get_den();
-            if (den == 2 and (num == 1 or num == 3)) {
-                return false;
-            }
-            if (den == 4 and num == 1) {
+            auto den = get_den(x_->i);
+            if (den == 2 or den == 3 or den == 4) {
                 return false;
             }
         }
@@ -2922,35 +3342,67 @@ RCP<const Basic> PolyGamma::rewrite_as_zeta() const
     }
 }
 
+RCP<const Basic> PolyGamma::subs(const map_basic_basic &subs_dict) const
+{
+    auto it = subs_dict.find(rcp_from_this());
+    if (it != subs_dict.end())
+        return it->second;
+    RCP<const Basic> n1 = n_->subs(subs_dict);
+    RCP<const Basic> x1 = x_->subs(subs_dict);
+    if (n1 == n_ and x1 == x_) {
+        return rcp_from_this();
+    } else {
+        return polygamma(n1, x1);
+    }
+}
+
 RCP<const Basic> polygamma(const RCP<const Basic> &n_, const RCP<const Basic> &x_)
 {
     // Only special values are being evaluated
     if (is_a_Number(*x_) and not (rcp_static_cast<const Number>(x_))->is_positive()) {
         throw std::runtime_error("Complex Infinity not yet implemented");
     }
-
+    if (is_a<Integer>(*n_) and is_a<Integer>(*x_)) {
+        auto n = static_cast<const Integer &>(*n_).as_int();
+        auto x = static_cast<const Integer &>(*x_).as_int();
+        if (n == 0) {
+            return sub(harmonic(x - 1, 1), EulerGamma);
+        } else if (n % 2 == 1) {
+            return mul(factorial(n), zeta(add(n_, one), x_));
+        }
+    }
     if (eq(*n_, *zero)) {
         if (eq(*x_, *one)) {
             return neg(EulerGamma);
         }
         if (is_a<Rational>(*x_)) {
             RCP<const Rational> x = rcp_static_cast<const Rational>(x_);
-            auto den = x->i.get_den();
+            const auto den = get_den(x->i);
+            const auto num = get_num(x->i);
+            const auto r = num % den;
+            RCP<const Basic> res;
             if (den == 2) {
-                auto num = x->i.get_num();
+                res = sub(mul(im2, log(i2)), EulerGamma);
+            } else if (den == 3) {
                 if (num == 1) {
-                       return sub(mul(im2, log(i2)), EulerGamma);
+                    res = add(neg(div(div(pi, i2), sqrt(i3))), sub(div(mul(im3, log(i3)), i2), EulerGamma));
+                } else {
+                    res = add(div(div(pi, i2), sqrt(i3)), sub(div(mul(im3, log(i3)), i2), EulerGamma));
                 }
-                if (num == 3) {
-                       return add(i2, sub(mul(im2, log(i2)), EulerGamma));
-                }
-            }
-            if (den == 4) {
-                auto num = x->i.get_num();
+            } else if (den == 4) {
                 if (num == 1) {
-                       return add(neg(div(pi, i3)), sub(mul(im3, log(i2)), EulerGamma));
+                    res = add(div(pi, im2), sub(mul(im3, log(i2)), EulerGamma));
+                } else {
+                    res = add(div(pi, i2), sub(mul(im3, log(i2)), EulerGamma));
                 }
+            } else {
+                return make_rcp<const PolyGamma>(n_, x_);
             }
+            rational_class a(0), f(r, den);
+            for (unsigned long i = 0; i < (num - r) / den; ++i) {
+                a += 1 / (f + i);
+            }
+            return add(Rational::from_mpq(a), res);
         }
     }
     return make_rcp<const PolyGamma>(n_, x_);
@@ -2965,10 +3417,15 @@ Abs::Abs(const RCP<const Basic> &arg)
 
 bool Abs::is_canonical(const RCP<const Basic> &arg) const
 {
-    if (is_a<Integer>(*arg) or is_a<Rational>(*arg)) return false;
+    if (is_a<Integer>(*arg) or is_a<Rational>(*arg) or is_a<Complex>(*arg)) return false;
     if (is_a_Number(*arg) and not static_cast<const Number &>(*arg).is_exact()) {
         return false;
     }
+
+    if (could_extract_minus(arg)) {
+        return false;
+    }
+
     return true;
 }
 
@@ -3009,10 +3466,252 @@ RCP<const Basic> abs(const RCP<const Basic> &arg)
         } else {
             return arg_;
         }
+    } else if (is_a<Complex>(*arg)) {
+        RCP<const Complex> arg_ = rcp_static_cast<const Complex>(arg);
+        return sqrt(Rational::from_mpq(arg_->real_ * arg_->real_ + arg_->imaginary_ * arg_->imaginary_));
     } else if (is_a_Number(*arg) and not static_cast<const Number &>(*arg).is_exact()) {
         return static_cast<const Number &>(*arg).get_eval().abs(*arg);
     }
+
+    if (could_extract_minus(arg)) {
+        return abs(neg(arg));
+    }
+
     return make_rcp<const Abs>(arg);
+}
+
+Max::Max(const vec_basic&& arg)
+    :arg_{std::move(arg)}
+{
+    SYMENGINE_ASSERT(is_canonical(arg_))
+}
+
+bool Max::is_canonical(const vec_basic &arg) const
+{
+    if (arg.size() < 2)
+        return false;
+
+    bool non_number_exists = false;
+
+    for (const auto &p: arg) {
+        if (is_a<Complex>(*p) or is_a<Max>(*p))
+            return false;
+        if (not is_a_Number(*p))
+            non_number_exists = true;
+    }
+    if (not std::is_sorted(arg.begin(), arg.end(), RCPBasicKeyLess()))
+        return false;
+
+    return non_number_exists ;   // all arguments cant be numbers
+}
+
+bool Max::__eq__(const Basic &o) const
+{
+    if (is_a<Max>(o) and
+        vec_basic_eq_perm(arg_, static_cast<const Max &>(o).arg_))
+        return true;
+    else
+        return false;
+}
+
+int Max::compare(const Basic &o) const
+{
+    SYMENGINE_ASSERT(is_a<Max>(o))
+    const Max &s = static_cast<const Max &>(o);
+    return vec_basic_compare(arg_, s.arg_);
+}
+
+std::size_t Max::__hash__() const
+{
+    std::size_t seed = MAX;
+    for (const auto &p: arg_) {
+        hash_combine<Basic>(seed, *p);
+    }
+    return seed;
+}
+
+RCP<const Basic> max(const vec_basic &arg)
+{
+    bool number_set = false;
+    RCP<const Number> max_number, difference;
+    set_basic new_args;
+
+    for (const auto &p: arg) {
+        if (is_a<Complex>(*p))
+            throw std::runtime_error("Complex can't be passed to max!");
+
+        if (is_a_Number(*p)) {
+            if(not number_set) {
+                max_number = rcp_static_cast<const Number>(p);
+
+            } else {
+                difference = rcp_static_cast<const Number>(p)->sub(*max_number);
+
+                if (difference->is_zero() and not difference->is_exact()) {
+                    if (max_number->is_exact())
+                        max_number = rcp_static_cast<const Number>(p);
+                } else if (difference->is_positive()) {
+                    max_number = rcp_static_cast<const Number>(p);
+                }
+            }
+            number_set = true;
+
+        } else if (is_a<Max>(*p)) {
+            for (const auto &l: rcp_static_cast<const Max>(p)->get_args()) {
+                if (is_a_Number(*l)) {
+                    if(not number_set) {
+                        max_number = rcp_static_cast<const Number>(l);
+
+                    } else {
+                        difference = rcp_static_cast<const Number>(l)->sub(*max_number);
+
+                        if (difference->is_zero() and not difference->is_exact()) {
+                            if (max_number->is_exact())
+                                max_number = rcp_static_cast<const Number>(l);
+                        } else if (difference->is_positive()) {
+                            max_number = rcp_static_cast<const Number>(l);
+                        }
+                    }
+                    number_set = true;
+                } else {
+                    new_args.insert(l);
+                }
+            }
+        } else {
+            new_args.insert(p);
+        }
+    }
+
+    if (number_set)
+        new_args.insert(max_number);
+
+    vec_basic final_args(new_args.size());
+    std::copy(new_args.begin(), new_args.end(), final_args.begin());
+
+    if (final_args.size() > 1) {
+        return make_rcp<const Max>(std::move(final_args));
+    } else if (final_args.size() == 1) {
+        return final_args[0];
+    } else {
+        throw std::runtime_error("Empty vec_basic passed to max!");
+    }
+}
+
+Min::Min(const vec_basic&& arg)
+    :arg_{std::move(arg)}
+{
+    SYMENGINE_ASSERT(is_canonical(arg_))
+}
+
+bool Min::is_canonical(const vec_basic &arg) const
+{
+    if (arg.size() < 2)
+        return false;
+
+    bool non_number_exists = false;
+
+    for (const auto &p: arg) {
+        if (is_a<Complex>(*p) or is_a<Min>(*p))
+            return false;
+        if (not is_a_Number(*p))
+            non_number_exists = true;
+    }
+    if (not std::is_sorted(arg.begin(), arg.end(), RCPBasicKeyLess()))
+        return false;
+
+    return non_number_exists;   // all arguments cant be numbers
+}
+
+bool Min::__eq__(const Basic &o) const
+{
+    if (is_a<Min>(o) and
+        vec_basic_eq_perm(arg_, static_cast<const Min &>(o).arg_))
+        return true;
+    else
+        return false;
+}
+
+int Min::compare(const Basic &o) const
+{
+    SYMENGINE_ASSERT(is_a<Min>(o))
+    const Min &s = static_cast<const Min &>(o);
+    return vec_basic_compare(arg_, s.arg_);
+}
+
+std::size_t Min::__hash__() const
+{
+    std::size_t seed = MIN;
+    for (const auto &p: arg_) {
+        hash_combine<Basic>(seed, *p);
+    }
+    return seed;
+}
+
+RCP<const Basic> min(const vec_basic &arg)
+{
+    bool number_set = false;
+    RCP<const Number> min_number, difference;
+    set_basic new_args;
+
+    for (const auto &p: arg) {
+        if (is_a<Complex>(*p))
+            throw std::runtime_error("Complex can't be passed to min!");
+
+        if (is_a_Number(*p)) {
+            if(not number_set) {
+                min_number = rcp_static_cast<const Number>(p);
+
+            } else {
+                difference = min_number->sub(*rcp_static_cast<const Number>(p));
+
+                if (difference->is_zero() and not difference->is_exact()) {
+                    if (min_number->is_exact())
+                        min_number = rcp_static_cast<const Number>(p);
+                } else if (difference->is_positive()) {
+                    min_number = rcp_static_cast<const Number>(p);
+                }
+            }
+            number_set = true;
+
+        } else if (is_a<Min>(*p)) {
+            for (const auto &l: rcp_static_cast<const Min>(p)->get_args()) {
+                if (is_a_Number(*l)) {
+                    if(not number_set) {
+                        min_number = rcp_static_cast<const Number>(l);
+
+                    } else {
+                        difference = min_number->sub(*rcp_static_cast<const Number>(l));
+
+                        if (difference->is_zero() and not difference->is_exact()) {
+                            if (min_number->is_exact())
+                                min_number = rcp_static_cast<const Number>(l);
+                        } else if (difference->is_positive()) {
+                            min_number = rcp_static_cast<const Number>(l);
+                        }
+                    }
+                    number_set = true;
+                } else {
+                    new_args.insert(l);
+                }
+            }
+        } else {
+            new_args.insert(p);
+        }
+    }
+
+    if (number_set)
+        new_args.insert(min_number);
+
+    vec_basic final_args(new_args.size());
+    std::copy(new_args.begin(), new_args.end(), final_args.begin());
+
+    if (final_args.size() > 1) {
+        return make_rcp<const Min>(std::move(final_args));
+    } else if (final_args.size() == 1) {
+        return final_args[0];
+    } else {
+        throw std::runtime_error("Empty vec_basic passed to min!");
+    }
 }
 
 } // SymEngine

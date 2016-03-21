@@ -10,6 +10,7 @@
 #include <symengine/symbol.h>
 #include <symengine/add.h>
 #include <symengine/pow.h>
+#include <symengine/constants.h>
 
 using SymEngine::Basic;
 using SymEngine::Integer;
@@ -24,19 +25,24 @@ using SymEngine::add;
 using SymEngine::sin;
 using SymEngine::cos;
 using SymEngine::umap_short_basic;
+using SymEngine::neg;
+using SymEngine::EulerGamma;
+using SymEngine::one;
 
 #ifdef HAVE_SYMENGINE_PIRANHA
 #include <symengine/series_piranha.h>
 
-#define series_coeff(EX,SYM,PREC,COEFF) SymEngine::UPSeriesPiranha::series(EX,SYM->get_name(),PREC)->p_.find_cf({COEFF}).get_basic()
 using SymEngine::UPSeriesPiranha;
+using SymEngine::p_expr;
+#define series_coeff(EX,SYM,PREC,COEFF) UPSeriesPiranha::series(EX,SYM->get_name(),PREC)->get_poly().find_cf({COEFF}).get_basic()
+#define invseries_coeff(EX,SYM,PREC,COEFF) UPSeriesPiranha::series_reverse(UPSeriesPiranha::series(EX,SYM->get_name(),PREC)->get_poly(),p_expr(SYM->get_name()),PREC).find_cf({COEFF}).get_basic()
 
 static bool expand_check_pairs(const RCP<const Basic> &ex, const RCP<const Symbol> &x, int prec, const umap_short_basic& pairs)
 {
     auto ser = SymEngine::UPSeriesPiranha::series(ex, x->get_name(), prec);
     for (auto it : pairs) {
         //std::cerr << it.first << ", " << *(it.second) << "::" << *(v1.at(it.first)) << std::endl;
-        if (not it.second->__eq__(*(ser->p_.find_cf({it.first}).get_basic()
+        if (not it.second->__eq__(*(ser->get_poly().find_cf({it.first}).get_basic()
 )))
             return false;
         }
@@ -158,10 +164,10 @@ TEST_CASE("Expression series expansion: reversion ", "[Expansion of f^-1]")
     auto ex3 = sin(x);
     auto ex4 = mul(x, exp(x));
 
-    REQUIRE(series_invfunc(ex1, x, 20)[15]->__eq__(*integer(2674440)));
-    REQUIRE(series_invfunc(ex2, x, 20)[15]->__eq__(*integer(7752)));
-    REQUIRE(series_invfunc(ex3, x, 20)[15]->__eq__(*rational(143, 10240)));
-    REQUIRE(series_invfunc(ex4, x, 20)[10]->__eq__(*rational(-156250, 567)));
+    REQUIRE(invseries_coeff(ex1, x, 20, 15)->__eq__(*integer(2674440)));
+    REQUIRE(invseries_coeff(ex2, x, 20, 15)->__eq__(*integer(7752)));
+    REQUIRE(invseries_coeff(ex3, x, 20, 15)->__eq__(*rational(143, 10240)));
+    REQUIRE(invseries_coeff(ex4, x, 20, 10)->__eq__(*rational(-156250, 567)));
 }
 
 TEST_CASE("Expression series expansion: atan, tan, asin, cot, sec, csc", "[Expansion of tan, atan, asin, cot, sec, csc]")
@@ -231,6 +237,15 @@ TEST_CASE("Expression series expansion: lambertw ", "[Expansion of lambertw]")
 
     REQUIRE(series_coeff(ex1, x, 10, 7)->__eq__(*rational(16807, 720)));
     REQUIRE(series_coeff(ex2, x, 12, 10)->__eq__(*rational(-2993294, 14175)));
+}
+
+TEST_CASE("Expression series expansion: gamma ", "[Expansion of gamma]")
+{
+    RCP<const Symbol> x = symbol("x");
+    auto ex1 = gamma(x);
+
+    REQUIRE(series_coeff(ex1, x, 10, -1)->__eq__(*one));
+    REQUIRE(series_coeff(ex1, x, 10, 0)->__eq__(*neg(EulerGamma)));
 }
 
 TEST_CASE("Expansion of sin ", "[Symbolic series expansion]")

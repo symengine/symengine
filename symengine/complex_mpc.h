@@ -26,11 +26,11 @@ private:
 public:
     mpc_ptr get_mpc_t() { return mp; }
     mpc_srcptr get_mpc_t() const { return mp; }
-    mpc_class(mpc_t m) {
+    explicit mpc_class(mpc_t m) {
         mpc_init2(mp, mpc_get_prec(m));
         mpc_set(mp, m, MPFR_RNDN);
     }
-    mpc_class(mpfr_prec_t prec = 53) {
+    explicit mpc_class(mpfr_prec_t prec = 53) {
         mpc_init2(mp, prec);
     }
     mpc_class(std::string s, mpfr_prec_t prec = 53, unsigned base = 10) {

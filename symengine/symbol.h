@@ -18,7 +18,7 @@ private:
 public:
     IMPLEMENT_TYPEID(SYMBOL)
     //! Symbol Constructor
-    Symbol(const std::string &name);
+    explicit Symbol(const std::string &name);
     //! \return Size of the hash
     virtual std::size_t __hash__() const;
     /*! Equality comparator

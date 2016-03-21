@@ -30,11 +30,11 @@ public:
     }
 
     void bvisit(const Integer &x) {
-        mpc_set_z(result_, x.i.get_mpz_t(), rnd_);
+        mpc_set_z(result_, get_mpz_t(x.i), rnd_);
     }
 
     void bvisit(const Rational &x) {
-        mpc_set_q(result_, x.i.get_mpq_t(), rnd_);
+        mpc_set_q(result_, get_mpq_t(x.i), rnd_);
     }
 
     void bvisit(const RealDouble &x) {
@@ -42,7 +42,7 @@ public:
     }
 
     void bvisit(const Complex &x) {
-        mpc_set_q_q(result_, x.real_.get_mpq_t(), x.imaginary_.get_mpq_t(), rnd_);
+        mpc_set_q_q(result_, get_mpq_t(x.real_), get_mpq_t(x.imaginary_), rnd_);
     }
 
     void bvisit(const ComplexDouble &x) {
@@ -179,9 +179,21 @@ public:
         mpc_sinh(result_, result_, rnd_);
     }
 
+    void bvisit(const Csch &x) {
+        apply(result_, *(x.get_arg()));
+        mpc_sinh(result_, result_, rnd_);
+        mpc_ui_div(result_, 1, result_, rnd_);
+    }
+
     void bvisit(const Cosh &x) {
         apply(result_, *(x.get_arg()));
         mpc_cosh(result_, result_, rnd_);
+    }
+
+    void bvisit(const Sech &x) {
+        apply(result_, *(x.get_arg()));
+        mpc_cosh(result_, result_, rnd_);
+        mpc_ui_div(result_, 1, result_, rnd_);
     }
 
     void bvisit(const Tanh &x) {
@@ -197,6 +209,12 @@ public:
 
     void bvisit(const ASinh &x) {
         apply(result_, *(x.get_arg()));
+        mpc_asinh(result_, result_, rnd_);
+    }
+
+    void bvisit(const ACsch &x) {
+        apply(result_, *(x.get_arg()));
+        mpc_ui_div(result_, 1, result_, rnd_);
         mpc_asinh(result_, result_, rnd_);
     }
 
@@ -232,7 +250,8 @@ public:
         } else if (x.__eq__(*E)) {
             mpfr_t t;
             mpfr_init2(t, mpc_get_prec(result_));
-            mpfr_const_euler(t, rnd_);
+            mpfr_set_ui(t, 1, rnd_);
+            mpfr_exp(t, t, rnd_);
             mpc_set_fr(result_, t, rnd_);
             mpfr_clear(t);
         } else if (x.__eq__(*EulerGamma)) {
@@ -245,6 +264,11 @@ public:
             throw std::runtime_error("Constant " + x.get_name() + " is not implemented.");
         }
     }
+
+    void bvisit(const Gamma &x) {
+        throw std::runtime_error("Not implemented");
+    }
+
 
     void bvisit(const Abs &x) {
         mpfr_t t;
