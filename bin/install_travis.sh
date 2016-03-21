@@ -51,8 +51,8 @@ if [[ "${TRAVIS_OS_NAME}" != "osx" ]]; then
     fi
     cmake --version
     # Install cmake
-    wget --no-check-certificate -O- http://www.cmake.org/files/v3.3/cmake-3.3.0-Linux-x86_64.tar.gz | tar xz
-    export PATH="`pwd`/cmake-3.3.0-Linux-x86_64/bin/:$PATH"
+    wget --no-check-certificate -O- http://www.cmake.org/files/v3.5/cmake-3.5.0-Linux-x86_64.tar.gz | tar xz
+    export PATH="`pwd`/cmake-3.5.0-Linux-x86_64/bin/:$PATH"
     cmake --version
 else
     brew install cmake
