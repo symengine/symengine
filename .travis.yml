@@ -131,4 +131,5 @@ install:
 script:
   - bin/test_travis.sh
 notifications:
+  slack: ecs193:jUcubCRxGys1NdYESk9tjBWA
   email: false
