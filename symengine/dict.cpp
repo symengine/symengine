@@ -200,13 +200,6 @@ int multiset_basic_compare(const multiset_basic &a, const multiset_basic &b)
     return set_compare<multiset_basic>(a, b);
 }
 
-
-int umap_vec_mpz_compare(const umap_vec_mpz &a, const umap_vec_mpz &b){
-    if(a.size() < b.size())
-        return (a.size() < b.size()) ? -1 : 1;
-    return 0;
-}
-
 long mpz_hash(const integer_class z){
     return mp_get_si(z);
 }

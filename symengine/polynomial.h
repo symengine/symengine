@@ -327,9 +327,11 @@ RCP<const MultivariateIntPolynomial> mul_mult_poly(const MultivariateIntPolynomi
 
 
 RCP<const MultivariateIntPolynomial> add_mult_poly(const MultivariateIntPolynomial &a, const UnivariateIntPolynomial &b);
+RCP<const MultivariateIntPolynomial> add_mult_poly(const UnivariateIntPolynomial &a, const MultivariateIntPolynomial &b);
 RCP<const MultivariateIntPolynomial> sub_mult_poly(const MultivariateIntPolynomial &a, const UnivariateIntPolynomial &b);
 RCP<const MultivariateIntPolynomial> sub_mult_poly(const UnivariateIntPolynomial &a, const MultivariateIntPolynomial &b);
 RCP<const MultivariateIntPolynomial> mul_mult_poly(const MultivariateIntPolynomial &a, const UnivariateIntPolynomial &b);
+RCP<const MultivariateIntPolynomial> mul_mult_poly(const UnivariateIntPolynomial &a, const MultivariateIntPolynomial &b);
 
 RCP<const MultivariateIntPolynomial> add_mult_poly(const UnivariateIntPolynomial &a, const UnivariateIntPolynomial &b);
 RCP<const MultivariateIntPolynomial> sub_mult_poly(const UnivariateIntPolynomial &a, const UnivariateIntPolynomial &b);

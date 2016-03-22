@@ -324,20 +324,25 @@ TEST_CASE("Constructing MultivariateIntPolynomial using from_dict", "[Multivaria
 }
 
 TEST_CASE("Testing MultivariateIntPolynomial::__hash__() and compare", "[MultivariateIntPolynomial]"){
+    RCP<const Symbol> a = symbol("a");
+    RCP<const Symbol> b = symbol("b");
     RCP<const Symbol> x = symbol("x");
     RCP<const Symbol> y = symbol("y");
     RCP<const MultivariateIntPolynomial> p1 = MultivariateIntPolynomial::from_dict({x,y}, {{{2,0},1_z}, {{1,1},1_z}, {{0,2},1_z}  });
     RCP<const MultivariateIntPolynomial> p2 = MultivariateIntPolynomial::from_dict({x,y}, {{{2,0},1_z}, {{1,1},-1_z}, {{0,2},1_z}  });
     RCP<const MultivariateIntPolynomial> p3 = MultivariateIntPolynomial::from_dict({x,y}, {{{2,0},2_z}, {{0,2},2_z}  });
+    RCP<const MultivariateIntPolynomial> p4 = MultivariateIntPolynomial::from_dict({a,b}, {{{2,0},2_z}, {{0,2},2_z}  });
 
     //Only requre that the same polynomial hash to the same value and that different polynomials hash to different values
     //Don't want to require a polynomial to have a particular hash in case someone comes up with a better hash function
     REQUIRE(p3->__hash__() == add_mult_poly(*p1, *p2)->__hash__());
     REQUIRE(p1->__hash__() != p2->__hash__());
+    REQUIRE(p3->__hash__() != p4->__hash__());
 
     //Same for compare.
     REQUIRE(0 == p3->compare(*add_mult_poly(*p1, *p2)));
     REQUIRE(0 != p1->compare(*p2));
+    REQUIRE(0 != p3->compare(*p4));
 }
 
 TEST_CASE("Testing MultivariateIntPolynomial::__eq__(const Basic &o)", "[MultivariateIntPolynomial]")
@@ -386,8 +391,10 @@ TEST_CASE("Testing addition, subtraction, multiplication of MultivariateIntPolyn
     RCP<const MultivariateIntPolynomial> p2 = MultivariateIntPolynomial::from_dict({x,y,z}, {{{1,2,3},1_z},{{3,2,1},-2_z}, {{0,1,2},1_z}, {{0,0,0},3_z}});
 
     REQUIRE(add_mult_poly(*p1,*p2)->__str__() == "2*x y**2 z**3 + 3*x**4 y + y z**2 + 7");
+    REQUIRE(add_mult_poly(*p2,*p1)->__str__() == "2*x y**2 z**3 + 3*x**4 y + y z**2 + 7");
     REQUIRE(sub_mult_poly(*p1,*p2)->__str__() == "4*x**3 y**2 z + 3*x**4 y - y z**2 + 1");
     REQUIRE(mul_mult_poly(*p1,*p2)->__str__() == "- 4*x**6 y**4 z**2 + x**2 y**4 z**6 - 6*x**7 y**3 z + 3*x**5 y**3 z**3 + 2*x**3 y**3 z**3 + x y**3 z**5 + 3*x**4 y**2 z**2 - 2*x**3 y**2 z + 7*x y**2 z**3 + 9*x**4 y + 4*y z**2 + 12");
+    REQUIRE(mul_mult_poly(*p2,*p1)->__str__() == "- 4*x**6 y**4 z**2 + x**2 y**4 z**6 - 6*x**7 y**3 z + 3*x**5 y**3 z**3 + 2*x**3 y**3 z**3 + x y**3 z**5 + 3*x**4 y**2 z**2 - 2*x**3 y**2 z + 7*x y**2 z**3 + 9*x**4 y + 4*y z**2 + 12");
 }
 
 TEST_CASE("Testing addition, subtraction, multiplication of MultivariteIntPolynomials with disjoint sets of varables", "[MultivariateIntPolynomial]"){
@@ -401,8 +408,11 @@ TEST_CASE("Testing addition, subtraction, multiplication of MultivariteIntPolyno
     RCP<const MultivariateIntPolynomial> p2 = MultivariateIntPolynomial::from_dict({x,y,z}, {{{1,2,3},1_z},{{3,2,1},-2_z}, {{0,1,2},1_z}, {{0,0,0},3_z}});
 
     REQUIRE(add_mult_poly(*p1,*p2)->__str__() == "2*a**3 b**2 c + a b**2 c**3 - 2*x**3 y**2 z + x y**2 z**3 + 3*a**4 b + y z**2 + 7");
+    REQUIRE(add_mult_poly(*p2,*p1)->__str__() == "2*a**3 b**2 c + a b**2 c**3 - 2*x**3 y**2 z + x y**2 z**3 + 3*a**4 b + y z**2 + 7");
     REQUIRE(sub_mult_poly(*p1,*p2)->__str__() == "2*a**3 b**2 c + a b**2 c**3 + 2*x**3 y**2 z - x y**2 z**3 + 3*a**4 b - y z**2 + 1");
+    REQUIRE(sub_mult_poly(*p2,*p1)->__str__() == "- 2*a**3 b**2 c - a b**2 c**3 - 2*x**3 y**2 z + x y**2 z**3 - 3*a**4 b + y z**2 - 1");
     REQUIRE(mul_mult_poly(*p1,*p2)->__str__() == "- 4*a**3 b**2 c x**3 y**2 z + 2*a**3 b**2 c x y**2 z**3 - 2*a b**2 c**3 x**3 y**2 z + a b**2 c**3 x y**2 z**3 - 6*a**4 b x**3 y**2 z + 3*a**4 b x y**2 z**3 + 2*a**3 b**2 c y z**2 + a b**2 c**3 y z**2 + 3*a**4 b y z**2 + 6*a**3 b**2 c + 3*a b**2 c**3 - 8*x**3 y**2 z + 4*x y**2 z**3 + 9*a**4 b + 4*y z**2 + 12");
+    REQUIRE(mul_mult_poly(*p2,*p1)->__str__() == "- 4*a**3 b**2 c x**3 y**2 z + 2*a**3 b**2 c x y**2 z**3 - 2*a b**2 c**3 x**3 y**2 z + a b**2 c**3 x y**2 z**3 - 6*a**4 b x**3 y**2 z + 3*a**4 b x y**2 z**3 + 2*a**3 b**2 c y z**2 + a b**2 c**3 y z**2 + 3*a**4 b y z**2 + 6*a**3 b**2 c + 3*a b**2 c**3 - 8*x**3 y**2 z + 4*x y**2 z**3 + 9*a**4 b + 4*y z**2 + 12");
 }
 
 TEST_CASE("Testing derivative of MultivariateIntPolynomial", "[MultivariateIntPolynomial]"){
@@ -420,43 +430,49 @@ TEST_CASE("Testing addition, subtraction, multiplication of MultivariteIntPolyno
     RCP<const Symbol> x = symbol("x");
     RCP<const Symbol> y = symbol("y");
     RCP<const Symbol> z = symbol("z");
-	RCP<const MultivariateIntPolynomial> p1 = MultivariateIntPolynomial::from_dict({x,y,z}, { {{1,2,3}, 1_z}, {{3,2,1}, -2_z}, {{0,1,2}, 1_z}, {{0,0,0}, 3_z}, {{2,0,0}, 2_z} });
+    RCP<const MultivariateIntPolynomial> p1 = MultivariateIntPolynomial::from_dict({x,y,z}, { {{1,2,3}, 1_z}, {{3,2,1}, -2_z}, {{0,1,2}, 1_z}, {{0,0,0}, 3_z}, {{2,0,0}, 2_z}, {{1,0,0},1_z} });
     RCP<const UnivariateIntPolynomial> p2 = univariate_int_polynomial(x, {{1, 1_z}, {2, 1_z}});
-    REQUIRE(add_mult_poly(*p1,*p2)->__str__() == "- 2*x**3 y**2 z + x y**2 z**3 + y z**2 + 3*x**2 + x + 3");
-    REQUIRE(sub_mult_poly(*p1,*p2)->__str__() == "- 2*x**3 y**2 z + x y**2 z**3 + y z**2 + x**2 - x + 3");
-	REQUIRE(sub_mult_poly(*p2,*p1)->__str__() == "2*x**3 y**2 z - x y**2 z**3 - y z**2 - x**2 + x - 3");
-    REQUIRE(mul_mult_poly(*p1,*p2)->__str__() == "- 2*x**5 y**2 z + x**3 y**2 z**3 - 2*x**4 y**2 z + x**2 y**2 z**3 + x**2 y z**2 + 2*x**4 + x y z**2 + 2*x**3 + 3*x**2 + 3*x");	
+    RCP<const UnivariateIntPolynomial> p3 = univariate_int_polynomial(y, {{1, 1_z}, {2, 1_z}});
+    REQUIRE(add_mult_poly(*p1,*p2)->__str__() == "- 2*x**3 y**2 z + x y**2 z**3 + y z**2 + 3*x**2 + 2*x + 3");
+    REQUIRE(add_mult_poly(*p2,*p1)->__str__() == "- 2*x**3 y**2 z + x y**2 z**3 + y z**2 + 3*x**2 + 2*x + 3");
+    REQUIRE(sub_mult_poly(*p1,*p2)->__str__() == "- 2*x**3 y**2 z + x y**2 z**3 + y z**2 + x**2 + 3");
+    REQUIRE(sub_mult_poly(*p2,*p1)->__str__() == "2*x**3 y**2 z - x y**2 z**3 - y z**2 - x**2 - 3");
+    REQUIRE(mul_mult_poly(*p1,*p2)->__str__() == "- 2*x**5 y**2 z + x**3 y**2 z**3 - 2*x**4 y**2 z + x**2 y**2 z**3 + x**2 y z**2 + 2*x**4 + x y z**2 + 3*x**3 + 4*x**2 + 3*x");
+    REQUIRE(mul_mult_poly(*p2,*p1)->__str__() == "- 2*x**5 y**2 z + x**3 y**2 z**3 - 2*x**4 y**2 z + x**2 y**2 z**3 + x**2 y z**2 + 2*x**4 + x y z**2 + 3*x**3 + 4*x**2 + 3*x");
+
+    REQUIRE(add_mult_poly(*p1,*p3)->__str__() == "- 2*x**3 y**2 z + x y**2 z**3 + y z**2 + 2*x**2 + y**2 + x + y + 3");
 }
 
 TEST_CASE("Testing addition, subtraction, multiplication of MultivariteIntPolynomials with a UnivariateIntPolynomial whose variables are not in the variable set", "[MultivariateIntPolynomial][UnivariateIntPolynomial]")
 {
-	RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> x = symbol("x");
     RCP<const Symbol> y = symbol("y");
     RCP<const Symbol> z = symbol("z");
-	RCP<const MultivariateIntPolynomial> p1 = MultivariateIntPolynomial::from_dict({x,y}, { {{1,2}, 1_z}, {{2,1}, -2_z}, {{0,1}, 1_z}, {{0,0}, 3_z} });
+    RCP<const MultivariateIntPolynomial> p1 = MultivariateIntPolynomial::from_dict({x,y}, { {{1,2}, 1_z}, {{2,1}, -2_z}, {{0,1}, 1_z}, {{0,0}, 3_z} });
     RCP<const UnivariateIntPolynomial> p2 = univariate_int_polynomial(z, {{1, 1_z}, {2, 1_z}});
     REQUIRE(add_mult_poly(*p1,*p2)->__str__() == "- 2*x**2 y + x y**2 + z**2 + y + z + 3");
     REQUIRE(sub_mult_poly(*p1,*p2)->__str__() == "- 2*x**2 y + x y**2 - z**2 + y - z + 3");
-	REQUIRE(sub_mult_poly(*p2,*p1)->__str__() == "2*x**2 y - x y**2 + z**2 - y + z - 3");
+    REQUIRE(sub_mult_poly(*p2,*p1)->__str__() == "2*x**2 y - x y**2 + z**2 - y + z - 3");
     REQUIRE(mul_mult_poly(*p1,*p2)->__str__() == "- 2*x**2 y z**2 + x y**2 z**2 - 2*x**2 y z + x y**2 z + y z**2 + y z + 3*z**2 + 3*z");	
 }
 
 TEST_CASE("Testing addition, subtraction, multiplication of two UnivariateIntPolynomials with different variables", "[MultivariateIntPolynomial][UnivariateIntPolynomial]")
 {
-	RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> x = symbol("x");
     RCP<const Symbol> y = symbol("y");
-	RCP<const UnivariateIntPolynomial> p1 = univariate_int_polynomial(x, {{1, -1_z}, {2, 3_z}, {0, 0_z}});
+    RCP<const UnivariateIntPolynomial> p1 = univariate_int_polynomial(x, {{1, -1_z}, {2, 3_z}, {0, 0_z}});
     RCP<const UnivariateIntPolynomial> p2 = univariate_int_polynomial(y, {{0, 1_z}, {1, 1_z}});
     REQUIRE(add_mult_poly(*p1,*p2)->__str__() == "3*x**2 - x + y + 1");
     REQUIRE(sub_mult_poly(*p1,*p2)->__str__() == "3*x**2 - x - y - 1");
-	REQUIRE(sub_mult_poly(*p2,*p1)->__str__() == "- 3*x**2 + x + y + 1");
-    REQUIRE(mul_mult_poly(*p1,*p2)->__str__() == "3*x**2 y + 3*x**2 - x y - x");	
+    REQUIRE(sub_mult_poly(*p2,*p1)->__str__() == "- 3*x**2 + x + y + 1");
+    REQUIRE(mul_mult_poly(*p1,*p2)->__str__() == "3*x**2 y + 3*x**2 - x y - x");
+    REQUIRE(mul_mult_poly(*p2,*p1)->__str__() == "3*x**2 y + 3*x**2 - x y - x");
 }
 
 TEST_CASE("Testing addition, subtraction, multiplication of two UnivariateIntPolynomials with the same variables", "[MultivariateIntPolynomial][UnivariateIntPolynomial]")
 {
-	RCP<const Symbol> x = symbol("x");
-	RCP<const UnivariateIntPolynomial> p1 = univariate_int_polynomial(x, {{1, -1_z}, {2, 3_z}, {0, 0_z}});
+    RCP<const Symbol> x = symbol("x");
+    RCP<const UnivariateIntPolynomial> p1 = univariate_int_polynomial(x, {{1, -1_z}, {2, 3_z}, {0, 0_z}});
     RCP<const UnivariateIntPolynomial> p2 = univariate_int_polynomial(x, {{0, 1_z}, {1, 1_z}});
     REQUIRE(add_mult_poly(*p1,*p2)->__str__() == "3*x**2 + 1");
     REQUIRE(sub_mult_poly(*p1,*p2)->__str__() == "3*x**2 - 2*x - 1");
