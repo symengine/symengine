@@ -263,6 +263,11 @@ public:
         result_ = std::lgamma(tmp);
     }
 
+    void bvisit(const Erf &x) {
+        double tmp = apply(*(x.get_args()[0]));
+        result_ = std::erf(tmp);
+    }
+
     void bvisit(const Max &x) {
         auto d = x.get_args();
         auto p = d.begin();
@@ -478,6 +483,10 @@ std::vector<fn> init_eval_double()
     table[LOGGAMMA] = [](const Basic &x) {
         double tmp = eval_double_single_dispatch(*(static_cast<const LogGamma &>(x)).get_args()[0]);
         return ::lgamma(tmp);
+    };
+    table[ERF] = [](const Basic &x) {
+        double tmp = eval_double_single_dispatch(*(static_cast<const Erf &>(x)).get_args()[0]);
+        return ::erf(tmp);
     };
     table[CONSTANT] = [](const Basic &x) {
         if (eq(x, *pi)) {

@@ -2825,6 +2825,61 @@ RCP<const Basic> dirichlet_eta(const RCP<const Basic> &s)
     }
 }
 
+
+bool Erf::is_canonical(const RCP<const Basic> &arg) const
+{
+    if (is_a<Integer>(*arg) and
+        rcp_static_cast<const Integer>(arg)->is_zero()) return false;
+    if (could_extract_minus(arg)) return false;
+    return true;
+}
+
+std::size_t Erf::__hash__() const
+{
+    std::size_t seed = ERF;
+    hash_combine<Basic>(seed, *arg_);
+    return seed;
+}
+
+bool Erf::__eq__(const Basic &o) const
+{
+    if (is_a<Erf>(o) and
+        eq(*arg_, *(static_cast<const Erf &>(o).arg_)))
+        return true;
+    return false;
+}
+
+int Erf::compare(const Basic &o) const
+{
+    SYMENGINE_ASSERT(is_a<Erf>(o))
+    return arg_->__cmp__(*(static_cast<const Erf &>(o).arg_));
+}
+
+RCP<const Basic> erf(const RCP<const Basic> &arg)
+{
+    if (is_a<Integer>(*arg) and
+        rcp_static_cast<const Integer>(arg)->is_zero()) {
+        return zero;
+    }
+    if (could_extract_minus(arg)) {
+        return neg(erf(neg(arg)));
+    }
+    return make_rcp<Erf>(arg);
+}
+
+RCP<const Basic> Erf::subs(const map_basic_basic &subs_dict) const
+{
+    auto it = subs_dict.find(rcp_from_this());
+    if (it != subs_dict.end())
+        return it->second;
+    RCP<const Basic> arg = arg_->subs(subs_dict);
+    if (arg == arg_)
+        return rcp_from_this();
+    else
+        return erf(arg);
+}
+
+
 Gamma::Gamma(const RCP<const Basic> &arg)
     : arg_{arg}
 {

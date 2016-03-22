@@ -50,6 +50,7 @@ using SymEngine::function_symbol;
 using SymEngine::Derivative;
 using SymEngine::pi;
 using SymEngine::EulerGamma;
+using SymEngine::erf;
 using SymEngine::RCP;
 using SymEngine::make_rcp;
 using SymEngine::print_stack_on_segfault;
@@ -2161,6 +2162,33 @@ TEST_CASE("Dirichlet Eta: functions", "[functions]")
     r1 = dirichlet_eta(zero);
     r2 = div(one, i2);
     REQUIRE(eq(*r1, *r2));
+}
+
+TEST_CASE("Erf: functions", "[functions]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+
+    RCP<const Basic> r1;
+    RCP<const Basic> r2;
+
+    RCP<const Basic> i2 = integer(2);
+
+    r1 = erf(zero);
+    REQUIRE(eq(*r1, *zero));
+
+    r1 = erf(mul(i2, x));
+    r2 = exp(mul(integer(-4), (mul(x, x))));
+    r2 = div(mul(integer(4), r2), sqrt(pi));
+    REQUIRE(eq(*r1->diff(x), *r2));
+
+    r2 = add(x, y);
+    r1 = erf(r2);
+    r2 = exp(neg(mul(r2, r2)));
+    r2 = mul(div(i2, sqrt(pi)), r2);
+    REQUIRE(eq(*r1->diff(x), *r2));
+
+    REQUIRE(eq(*erf(neg(x)), *neg(erf(x))));
 }
 
 TEST_CASE("Gamma: functions", "[functions]")
