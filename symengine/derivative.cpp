@@ -12,6 +12,7 @@
 #include <symengine/polynomial.h>
 #include <symengine/complex_double.h>
 #include <symengine/complex_mpc.h>
+#include <symengine/sets.h>
 
 namespace SymEngine {
 
@@ -473,6 +474,11 @@ static RCP<const Basic> diff(const CLASS &self, \
         return mul(self.rcp_from_this(), add(mul(polygamma(zero, beta_arg0), diff_beta_arg0),
                 sub(mul(polygamma(zero, beta_arg1), diff_beta_arg1),
                 mul(polygamma(zero, add(beta_arg0, beta_arg1)), add(diff_beta_arg0, diff_beta_arg1)))));
+    }
+
+    static RCP<const Basic> diff(const Set &self,
+            const RCP<const Symbol> &x) {
+        throw std::runtime_error("Derivative doesn't exist.");
     }
 };
 

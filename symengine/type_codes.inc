@@ -21,6 +21,8 @@ SYMENGINE_ENUM(NUMBER_WRAPPER, NumberWrapper)
 // All subclasses of Number must be added before it. Do not assign
 // non subclasses of Number before it.
 SYMENGINE_ENUM(SYMBOL, Symbol)
+SYMENGINE_ENUM(EMPTYSET, EmptySet)
+SYMENGINE_ENUM(INTERVAL, Interval)
 SYMENGINE_ENUM(MUL, Mul)
 SYMENGINE_ENUM(ADD, Add)
 SYMENGINE_ENUM(POW, Pow)

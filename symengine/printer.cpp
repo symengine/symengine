@@ -98,6 +98,27 @@ void StrPrinter::bvisit(const ComplexDouble &x) {
     }
 }
 
+void StrPrinter::bvisit(const Interval &x) {
+    std::ostringstream s;
+    if (x.left_open_)
+        s << "(";
+    else
+        s << "[";
+    s << *x.start_ << ", " << *x.end_;
+    if (x.right_open_)
+        s << ")";
+    else
+        s << "]";
+    str_ = s.str();
+}
+
+
+void StrPrinter::bvisit(const EmptySet &x) {
+    std::ostringstream s;
+    s << "EmptySet";
+    str_ = s.str();
+}
+
 #ifdef HAVE_SYMENGINE_MPFR
 void StrPrinter::bvisit(const RealMPFR &x) {
     mpfr_exp_t ex;
@@ -152,7 +173,7 @@ void StrPrinter::bvisit(const Add &x) {
         std::string t;
         if (eq(*(p.second), *one)) {
             t = this->apply(p.first);
-        } else if(eq(*(p.second), *minus_one)) {
+        } else if (eq(*(p.second), *minus_one)) {
             t = "-" + parenthesizeLT(p.first, PrecedenceEnum::Mul);
         } else {
             t = parenthesizeLT(p.second, PrecedenceEnum::Mul) + "*" + parenthesizeLT(p.first, PrecedenceEnum::Mul);
@@ -190,7 +211,7 @@ void StrPrinter::bvisit(const Mul &x) {
              rcp_static_cast<const Integer>(p.second)->is_negative()) ||
             (is_a<Rational>(*p.second) and
              rcp_static_cast<const Rational>(p.second)->is_negative())) {
-            if(eq(*(p.second), *minus_one)) {
+            if (eq(*(p.second), *minus_one)) {
                 o2 << parenthesizeLT(p.first, PrecedenceEnum::Mul);
             } else {
                 o2 << parenthesizeLE(p.first, PrecedenceEnum::Pow);
@@ -200,7 +221,7 @@ void StrPrinter::bvisit(const Mul &x) {
             o2 << "*";
             den++;
         } else {
-            if(eq(*(p.second), *one)) {
+            if (eq(*(p.second), *one)) {
                 o << parenthesizeLT(p.first, PrecedenceEnum::Mul);
             } else {
                 o << parenthesizeLE(p.first, PrecedenceEnum::Pow);
@@ -444,7 +465,7 @@ void StrPrinter::bvisit(const NumberWrapper &x) {
 
 std::string StrPrinter::parenthesizeLT(const RCP<const Basic> &x, PrecedenceEnum precedenceEnum) {
     Precedence prec;
-    if(prec.getPrecedence(x) < precedenceEnum) {
+    if (prec.getPrecedence(x) < precedenceEnum) {
         return "(" + this->apply(x) + ")";
     } else {
         return this->apply(x);
@@ -453,7 +474,7 @@ std::string StrPrinter::parenthesizeLT(const RCP<const Basic> &x, PrecedenceEnum
 
 std::string StrPrinter::parenthesizeLE(const RCP<const Basic> &x, PrecedenceEnum precedenceEnum) {
     Precedence prec;
-    if(prec.getPrecedence(x) <= precedenceEnum) {
+    if (prec.getPrecedence(x) <= precedenceEnum) {
         return "(" + this->apply(x) + ")";
     } else {
         return this->apply(x);
