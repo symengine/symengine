@@ -283,7 +283,7 @@ inline UnivariateExprPolynomial pow_poly(const UnivariateExprPolynomial &base, i
     UnivariateExprPolynomial r(1);
     UnivariateExprPolynomial p(base);
     while (exp != 0) {
-        if (exp % 2 == 1) {    // q is odd
+        if (exp % 2 == 1) {
             r *= p;
             exp--;
         }
@@ -292,7 +292,8 @@ inline UnivariateExprPolynomial pow_poly(const UnivariateExprPolynomial &base, i
     }
 
     return r;
-} 
+}
+ 
 }  //SymEngine
 
 #endif

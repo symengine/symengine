@@ -364,39 +364,7 @@ void StrPrinter::bvisit(const UnivariatePolynomial &x) {
 
 void StrPrinter::bvisit(const UnivariateSeries &x) {
     std::ostringstream o;
-    bool first = true;
-    bool last = false;
-    for (const auto& it : x.get_poly().get_univariate_poly()->get_dict()) {
-        if (it.second == 0) {
-            if((unsigned)it.first == x.get_degree() and it.second == (--(x.get_poly().get_univariate_poly()->get_dict().end()))->second) {
-                last = true;
-            }
-            continue;
-        }
-        if (first) {
-            if (it.second.get_basic()->__cmp__(*Expression(0).get_basic()) < 0)
-                o << "-";
-        }
-        else {
-            if (it.second.get_basic()->__cmp__(*Expression(0).get_basic()) < 0)
-                o << " - ";
-            else
-                o << " + ";
-        }
-        first = false;
-        if (it.first == 0) {
-            o << Expression(abs(it.second.get_basic()));
-            continue;
-        }
-        if (Expression(abs(it.second.get_basic())) == 1)
-            o << x.get_var();
-        else
-            o << Expression(abs(it.second.get_basic())) << "*" << x.get_var();
-        if (it.first > 1)
-            o << "**" << it.first;
-    }
-    if (o.str() != "0" and (last == true or ((unsigned)(--(x.get_poly().get_univariate_poly()->get_dict().end()))->first) < x.get_degree()))
-        o << " + O(" << x.get_var() << "**" << x.get_degree() << ")";
+    o << x.get_poly() << " + O(" << x.get_var() << "**" << x.get_degree() << ")";
     str_ = o.str();
 }
 

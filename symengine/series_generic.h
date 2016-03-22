@@ -65,9 +65,5 @@ inline RCP<const UnivariateSeries> univariate_series(RCP<const Symbol> i, unsign
     return make_rcp<const UnivariateSeries>(std::move(s), i->get_name(), prec);
 }
 
-RCP<const UnivariateSeries> add_uni_series (const UnivariateSeries& a, const UnivariateSeries &b);
-RCP<const UnivariateSeries> neg_uni_series (const UnivariateSeries& a);
-RCP<const UnivariateSeries> sub_uni_series (const UnivariateSeries& a, const UnivariateSeries &b);
-RCP<const UnivariateSeries> mul_uni_series (const UnivariateSeries& a, const UnivariateSeries &b);
 }  //SymEngine
 #endif //SYMENGINE_SERIES_GENERIC_H
