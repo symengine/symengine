@@ -13,7 +13,7 @@ namespace SymEngine {
 
 // Prime Functions
 //! Probabilistic Prime
-int probab_prime_p(const Integer &a, int reps = 25);
+int probab_prime_p(const Integer &a, unsigned reps = 25);
 //! \return next prime after `a`
 RCP<const Integer> nextprime(const Integer &a);
 
@@ -139,6 +139,8 @@ public:
 
 //! Computes the Bernoulli number Bn as an exact fraction, for an isolated integer n
 RCP<const Number> bernoulli(unsigned long n);
+//! Computes the sum of the inverses of the first perfect mth powers
+RCP<const Number> harmonic(unsigned long n, long m = 1);
 //! Computes a primitive root. Returns false if no primitive root exists.
 //Primitive root calculated is the smallest when n is prime.
 bool primitive_root(const Ptr<RCP<const Integer>> &g, const Integer &n);

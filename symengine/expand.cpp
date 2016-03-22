@@ -154,7 +154,7 @@ public:
         for (auto p = base_dict.begin(); p != base_dict.end(); ++p) {
             for (auto q = p; q != base_dict.end(); ++q) {
                 if (q == p) {
-                    _coef_dict_add_term(_mulnum(pownum((*p).second, two), multiply), pow((*p).first, two));
+                    _coef_dict_add_term(_mulnum(mulnum((*p).second, (*p).second), multiply), pow((*p).first, two));
                 } else {
                     _coef_dict_add_term(_mulnum(multiply, _mulnum((*p).second, _mulnum((*q).second, two))),
                         mul((*q).first, (*p).first));
@@ -206,14 +206,8 @@ public:
                         }
                     }
                     if (!(i2->second->is_one())) {
-                        if (is_a<Integer>(*(i2->second)) || is_a<Rational>(*(i2->second))) {
-                            _imulnum(outArg(overall_coeff),
-                                    pownum(i2->second,
-                                           rcp_static_cast<const Number>(exp)));
-                        } else if (is_a<Complex>(*(i2->second))) {
-                            RCP<const Number> tmp = rcp_static_cast<const Complex>(i2->second)->pow(*exp);
-                            _imulnum(outArg(overall_coeff), tmp);
-                        }
+                        _imulnum(outArg(overall_coeff), pownum(i2->second, 
+                                                                rcp_static_cast<const Number>(exp)));
                     }
                 }
             }
@@ -237,52 +231,72 @@ public:
         }
     }
 
+    void pow_expand(RCP<const UnivariatePolynomial> &x, unsigned long &i) {
+        RCP<const UnivariatePolynomial> r = univariate_polynomial(x->get_var(), 0, {{0, 1}});
+        while (i != 0) {
+            if (i % 2 == 1) {
+                r = mul_uni_poly(r, x); 
+                    i--;
+            }   
+            x = mul_uni_poly(x, x); 
+            i /= 2;
+        }   
+        _coef_dict_add_term(multiply, r); 
+    }
+
+    void pow_expand(RCP<const UnivariateIntPolynomial> &x, unsigned long &i) {
+        RCP<const UnivariateIntPolynomial> r = univariate_int_polynomial(x->get_var(), {{0, integer_class(1)}});
+        while (i != 0) {
+            if (i % 2 == 1) {
+                r = mul_poly(r, x);
+                i--;
+            }
+            x = mul_poly(x, x);
+            i /= 2;
+        }
+        _coef_dict_add_term(multiply, r);
+    }
+    
     void bvisit(const Pow &self) {
         RCP<const Basic> _base = expand(self.get_base());
-
         if (is_a<Integer>(*self.get_exp()) && is_a<UnivariatePolynomial>(*_base)) {
-            int q = rcp_static_cast<const Integer>(self.get_exp())->as_int();
+            unsigned long q = rcp_static_cast<const Integer>(self.get_exp())->as_int();
             RCP<const UnivariatePolynomial> p = rcp_static_cast<const UnivariatePolynomial>(_base);
-            RCP<const UnivariatePolynomial> r = univariate_polynomial(p->var_, 0, {{0, 1}});
-            while (q != 0) {
-                if (q % 2 == 1) {
-                    r = mul_uni_poly(r, p);
-                    q--;
-                }
-                p = mul_uni_poly(p, p);
-                q /= 2;
-            }
-            _coef_dict_add_term(multiply, r);
+            pow_expand(p, q);
+            return;
+        }
+        if (is_a<Integer>(*self.get_exp()) && is_a<UnivariateIntPolynomial>(*_base)) {
+            unsigned long q = rcp_static_cast<const Integer>(self.get_exp())->as_int();
+            RCP<const UnivariateIntPolynomial> p = rcp_static_cast<const UnivariateIntPolynomial>(_base);
+            pow_expand(p, q);
             return;
         }
 
         if (!is_a<Integer>(*self.get_exp()) || !is_a<Add>(*_base)) {
             if (neq(*_base, *self.get_base())) {
                 Add::dict_add_term(d_, multiply, pow(_base, self.get_exp()));
-            } else {
+            } else { 
                 Add::dict_add_term(d_, multiply, self.rcp_from_this());
             }
             return;
         }
 
-        mpz_class n = rcp_static_cast<const Integer>(self.get_exp())->as_mpz();
-        if (n < 0) {
+        integer_class n = rcp_static_cast<const Integer>(self.get_exp())->as_mpz();
+        if (n < 0)
             return _coef_dict_add_term(multiply, div(one, expand(pow(_base, integer(-n)))));
-        }
         RCP<const Add> base = rcp_static_cast<const Add>(_base);
         umap_basic_num base_dict = base->dict_;
         if (!(base->coef_->is_zero())) {
             // Add the numerical coefficient into the dictionary. This
             // allows a little bit easier treatment below.
             insert(base_dict, base->coef_, one);
-        } else {
+        } 
+        else
             iaddnum(outArg(coeff), base->coef_);
-        }
-        if (n == 2) {
+        if (n == 2)
             return square_expand(base_dict);
-        } else {
-            return pow_expand(base_dict, n.get_ui());
-        }
+        else 
+            return pow_expand(base_dict, mp_get_ui(n));
     }
 
     inline void _coef_dict_add_term(const RCP<const Number> &c, const RCP<const Basic> &term) {

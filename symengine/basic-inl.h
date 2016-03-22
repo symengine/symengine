@@ -40,15 +40,15 @@ inline bool is_a_sub(const Basic &b)
     return dynamic_cast<const T *>(&b) != nullptr;
 }
 
-} // SymEngine
-
-// global namespace functions
 //! `<<` Operator
 inline std::ostream& operator<<(std::ostream& out, const SymEngine::Basic& p)
 {
     out << p.__str__();
     return out;
 }
+} // SymEngine
+
+// global namespace functions
 //! Templatised version to combine hash
 template <class T>
 inline void hash_combine(std::size_t& seed, const T& v)

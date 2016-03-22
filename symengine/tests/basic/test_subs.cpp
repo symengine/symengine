@@ -27,6 +27,7 @@ using SymEngine::multinomial_coefficients;
 using SymEngine::one;
 using SymEngine::zero;
 using SymEngine::sin;
+using SymEngine::erf;
 using SymEngine::RCP;
 using SymEngine::rcp_dynamic_cast;
 using SymEngine::map_basic_basic;
@@ -191,6 +192,29 @@ TEST_CASE("Pow: subs", "[subs]")
     r1 = pow(x, y);
     r2 = z;
     REQUIRE(eq(*r1->subs(d), *r2));
+}
+
+TEST_CASE("Erf: subs", "[subs]")
+{
+    RCP<const Basic> x = symbol("x");
+    RCP<const Basic> y = symbol("y");
+    RCP<const Basic> z = symbol("z");
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> r1 = erf(add(x, y));
+    RCP<const Basic> r2 = erf(mul(i2, x));
+    RCP<const Basic> r3 = erf(add(y, x));
+
+    map_basic_basic d;
+    d[y] = x;
+    REQUIRE(eq(*r1->subs(d), *r2));
+
+    d.clear();
+    d[z] = x;
+    REQUIRE(eq(*r1->subs(d), *r3));
+
+    d.clear();
+    d[y] = zero;
+    REQUIRE(eq(*r1->subs(d), *erf(x)));
 }
 
 TEST_CASE("Trig: subs", "[subs]")

@@ -28,17 +28,13 @@ RCP<const Basic> URatPSeriesFlint::as_basic() const
     RCP<const Symbol> x = symbol(var_);
     RCP<const Number> zcoef;
     umap_basic_num dict_;
-    mpq_class gc;
+    mpq_t gc;
+    mpq_init(gc);
     for (int n=0; n<degree_; n++) {
         const flint::fmpqxx fc(p_.get_coeff(n));
         if (not fc.is_zero()) {
-            fmpq_get_mpq(gc.get_mpq_t(), fc._data().inner);
-            gc.canonicalize();
-            RCP<const Number> basic;
-            if (gc.get_den() == 1)
-                basic = integer(gc.get_num());
-            else
-                basic = Rational::from_mpq(gc);
+            fmpq_get_mpq(gc, fc._data().inner);
+            RCP<const Number> basic = Rational::from_mpq(std::move(rational_class(gc)));
             auto term = SymEngine::mul(SymEngine::pow(x, SymEngine::integer(n)), basic);
             if (n==0)
                 zcoef = basic;
@@ -48,39 +44,36 @@ RCP<const Basic> URatPSeriesFlint::as_basic() const
             if (n==0)
                 zcoef = integer(0);
     }
+    mpq_clear(gc);
     return std::move(Add::from_dict(zcoef, std::move(dict_)));
 }
 
 umap_int_basic URatPSeriesFlint::as_dict() const
 {
     umap_int_basic map;
-    mpq_class gc;
+    mpq_t gc;
+    mpq_init(gc);
     for (int n=0; n<degree_; n++) {
         const flint::fmpqxx fc(p_.get_coeff(n));
         if (not fc.is_zero()) {
-            fmpq_get_mpq(gc.get_mpq_t(), fc._data().inner);
-            gc.canonicalize();
-            RCP<const Number> basic;
-            if (gc.get_den() == 1)
-                basic = integer(gc.get_num());
-            else
-                basic = Rational::from_mpq(gc);
+            fmpq_get_mpq(gc, fc._data().inner);
+            RCP<const Number> basic = Rational::from_mpq(std::move(rational_class(gc)));
             map[n] = basic;
         }
     }
+    mpq_clear(gc);
     return map;
 }
 
 RCP<const Basic> URatPSeriesFlint::get_coeff(int n) const
 {
     const flint::fmpqxx fc(p_.get_coeff(n));
-    mpq_class gc;
-    fmpq_get_mpq(gc.get_mpq_t(), fc._data().inner);
-    gc.canonicalize();
-    if (gc.get_den() == 1)
-        return integer(gc.get_num());
-    else
-        return Rational::from_mpq(gc);
+    mpq_t gc;
+    mpq_init(gc);
+    fmpq_get_mpq(gc, fc._data().inner);
+    rational_class r(gc);
+    mpq_clear(gc);
+    return Rational::from_mpq(std::move(r));
 }
 
 int URatPSeriesFlint::compare(const Basic &o) const {
@@ -97,16 +90,16 @@ int URatPSeriesFlint::compare(const Basic &o) const {
 
 flint::fmpzxx URatPSeriesFlint::convert(const Integer &x) {
     flint::fmpzxx r;
-    fmpz_set_mpz(r._data().inner, x.as_mpz().get_mpz_t());
+    fmpz_set_mpz(r._data().inner, get_mpz_t(x.as_mpz()));
     return r;
 }
 
-flint::fmpqxx URatPSeriesFlint::convert(const mpq_class &x) {
+flint::fmpqxx URatPSeriesFlint::convert(const rational_class &x) {
     flint::fmpqxx r;
     flint::fmpzxx i1;
-    fmpz_set_mpz(i1._data().inner, x.get_num_mpz_t());
+    fmpz_set_mpz(i1._data().inner, get_mpz_t(get_num(x)));
     flint::fmpzxx i2;
-    fmpz_set_mpz(i2._data().inner, x.get_den_mpz_t());
+    fmpz_set_mpz(i2._data().inner, get_mpz_t(get_den(x)));
     r.num() = i1;
     r.den() = i2;
     return r;
@@ -121,7 +114,7 @@ flint::fmpqxx URatPSeriesFlint::convert(const Rational &x) {
     return convert(x.as_mpq());
 }
 
-flint::fmpqxx URatPSeriesFlint::convert(const Number &x) {
+flint::fmpqxx URatPSeriesFlint::convert(const Basic &x) {
     throw std::runtime_error("Not Implemented");
 }
 

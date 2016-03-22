@@ -377,6 +377,13 @@ inline bool operator==(const SymEngine::MatrixBase &lhs,
     return lhs.eq(rhs);
 }
 
+// Test two matrices for equality
+inline bool operator!=(const SymEngine::MatrixBase &lhs,
+    const SymEngine::MatrixBase &rhs)
+{
+    return not lhs.eq(rhs);
+}
+
 } // SymEngine
 
 // Print Matrix

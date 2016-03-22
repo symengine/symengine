@@ -47,12 +47,12 @@ public:
     }
 
     void bvisit(const Integer &x) {
-        T tmp = x.i.get_d();
+        T tmp = mp_get_d(x.i);
         result_ = [=](const std::vector<T> &x_){ return tmp; };
     }
 
     void bvisit(const Rational &x) {
-        T tmp = x.i.get_d();
+        T tmp = mp_get_d(x.i);
         result_ = [=](const std::vector<T> &x){ return tmp; };
     }
 
@@ -277,6 +277,16 @@ public:
         result_ = [=](const std::vector<double> &x){ return std::tgamma(tmp(x)); };
     };
 
+    void bvisit(const LogGamma &x) {
+        fn tmp = apply(*(x.get_args()[0]));
+        result_ = [=](const std::vector<double> &x){ return std::lgamma(tmp(x)); };
+    };
+
+    void bvisit(const Erf &x) {
+        fn tmp = apply(*(x.get_args()[0]));
+        result_ = [=](const std::vector<double> &x){ return std::erf(tmp(x)); };
+    }
+
     void bvisit(const Max &x) {
         std::vector<fn> applys;
         for (const auto &p: x.get_args()) {
@@ -321,7 +331,7 @@ public:
     using LambdaDoubleVisitor::bvisit;
 
     void bvisit(const Complex &x) {
-        double t1 = x.real_.get_d(), t2 = x.imaginary_.get_d();
+        double t1 = mp_get_d(x.real_), t2 =  mp_get_d(x.imaginary_);
         result_ = [=](const std::vector<std::complex<double>> &x){ return std::complex<double>(t1, t2); };
     };
 

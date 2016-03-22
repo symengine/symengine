@@ -39,6 +39,9 @@ using SymEngine::rcp_static_cast;
 using SymEngine::set_basic;
 using SymEngine::free_symbols;
 using SymEngine::function_symbol;
+using SymEngine::rational_class;
+using SymEngine::pi;
+
 
 TEST_CASE("Symbol hash: Basic", "[basic]")
 {
@@ -76,7 +79,8 @@ TEST_CASE("Symbol dict: Basic", "[basic]")
     RCP<const Basic> x  = symbol("x");
     RCP<const Basic> x2 = symbol("x");
     RCP<const Basic> y  = symbol("y");
-    REQUIRE( x !=  x2);  // The instances are different...
+    bool p = (x != x2);
+    REQUIRE(p);  // The instances are different...
     REQUIRE(eq(*x, *x2));  // ...but equal in the SymPy sense
 
     insert(d, x, integer(2));
@@ -170,7 +174,7 @@ TEST_CASE("Rational: Basic", "[basic]")
 {
     RCP<const Number> r1, r2, r3;
     RCP<const Rational> r;
-    mpq_class a, b;
+    rational_class a, b;
 
     r1 = Rational::from_two_ints(*integer(5), *integer(6));
     std::cout << *r1 << std::endl;
@@ -271,7 +275,7 @@ TEST_CASE("Rational: Basic", "[basic]")
     r1 = Rational::from_two_ints(*integer(3), *integer(5));
     REQUIRE(is_a<Rational>(*r1));
     r = rcp_static_cast<const Rational>(r1);
-    a = mpq_class(3, 5);
+    a = rational_class(3, 5);
     b =  r->as_mpq();
     REQUIRE(a == b);
 }
@@ -312,6 +316,8 @@ TEST_CASE("Mul: Basic", "[basic]")
 
     r = div(x, x);
     REQUIRE(vec_basic_eq(r->get_args(), {}));
+
+    CHECK_THROWS_AS(div(integer(1), zero), std::runtime_error);
 }
 
 TEST_CASE("Diff: Basic", "[basic]")
@@ -669,3 +675,21 @@ TEST_CASE("free_symbols: Basic", "[basic]")
     REQUIRE(s.size() == 1);
     REQUIRE(s.count(x) == 1);
 }
+
+TEST_CASE("args: Basic", "[basic]")
+{
+    RCP<const Basic> r1;
+    RCP<const Symbol> x, y;
+    x = symbol("x");
+    y = symbol("y");
+
+    r1 = add(x, pow(y, x));
+    REQUIRE(vec_basic_eq_perm(r1->get_args(), {x, pow(y, x)}));
+
+    r1 = pi;
+    REQUIRE(r1->get_args().size() == 0);
+
+    r1 = log(pi);
+    REQUIRE(vec_basic_eq_perm(r1->get_args(), {pi}));
+}
+

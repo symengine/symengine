@@ -927,6 +927,38 @@ public:
 //! Canonicalize LeviCivita:
 RCP<const Basic> levi_civita(const vec_basic &arg);
 
+
+class Erf: public Function {
+/*   The Gauss error function. This function is defined as:
+ *
+ *   .. math::
+ *      \mathrm{erf}(x) = \frac{2}{\sqrt{\pi}} \int_0^x e^{-t^2} \mathrm{d}t.
+ **/
+private:
+    RCP<const Basic> arg_;
+public:
+    IMPLEMENT_TYPEID(ERF)
+    //! Erf Constructor
+    Erf(const RCP<const Basic> &arg): arg_{arg} {
+        SYMENGINE_ASSERT(is_canonical(arg_)) }
+    /*! Equality comparator
+     * \param o - Object to be compared with
+     * \return whether the 2 objects are equal
+     * */
+    virtual bool __eq__(const Basic &o) const;
+    virtual int compare(const Basic &o) const;
+    //! \return Size of the hash
+    virtual std::size_t __hash__() const;
+    //! \return `true` if canonical
+    bool is_canonical(const RCP<const Basic> &arg) const;
+    virtual vec_basic get_args() const { return {arg_}; }
+    RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
+};
+
+//! Canonicalize Erf:
+RCP<const Basic> erf(const RCP<const Basic> &arg);
+
+
 class Gamma: public Function {
 /*!    The gamma function
  *
@@ -955,7 +987,8 @@ public:
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &arg) const;
     virtual vec_basic get_args() const { return {arg_}; }
-    RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
+    //! Substitute with `subs_dict`
+    virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
 };
 
 //! Canonicalize Gamma:
@@ -1013,6 +1046,38 @@ public:
 
 //! Canonicalize UpperGamma:
 RCP<const Basic> uppergamma(const RCP<const Basic> &s, const RCP<const Basic> &x);
+
+
+class LogGamma: public Function {
+/*!    The loggamma function
+    The `loggamma` function implements the logarithm of the
+    gamma function i.e, `\log\Gamma(x)`.
+ **/
+private:
+    RCP<const Basic> arg_;
+public:
+    IMPLEMENT_TYPEID(LOGGAMMA)
+    //! LogGamma Constructor
+    LogGamma(const RCP<const Basic> &arg): arg_{arg} {
+        SYMENGINE_ASSERT(is_canonical(arg_))
+    }
+    /*! Equality comparator
+     * \param o - Object to be compared with
+     * \return whether the 2 objects are equal
+     * */
+    virtual bool __eq__(const Basic &o) const;
+    virtual int compare(const Basic &o) const;
+    //! \return Size of the hash
+    virtual std::size_t __hash__() const;
+    //! \return `true` if canonical
+    bool is_canonical(const RCP<const Basic> &arg) const;
+    virtual vec_basic get_args() const { return {arg_}; }
+    RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
+    RCP<const Basic> rewrite_as_gamma() const;
+};
+
+//! Canonicalize LogGamma:
+RCP<const Basic> loggamma(const RCP<const Basic> &arg);
 
 
 class Beta: public Function {
@@ -1081,7 +1146,8 @@ public:
     bool is_canonical(const RCP<const Basic> &n, const RCP<const Basic> &x);
     virtual vec_basic get_args() const { return {n_, x_}; }
     RCP<const Basic> rewrite_as_zeta() const;
-    RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
+    //! Substitute with `subs_dict`
+    virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
 };
 
 //! Canonicalize PolyGamma

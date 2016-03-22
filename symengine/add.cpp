@@ -247,13 +247,13 @@ RCP<const Basic> add(const RCP<const Basic> &a, const RCP<const Basic> &b)
     SymEngine::umap_basic_num d;
     RCP<const Number> coef;
     RCP<const Basic> t;
-    if (SymEngine::is_a<Add>(*a) and SymEngine::is_a<Add>(*b)) {
+    if (is_a<Add>(*a) and is_a<Add>(*b)) {
         coef = (rcp_static_cast<const Add>(a))->coef_;
         d = (rcp_static_cast<const Add>(a))->dict_;
         for (const auto &p: (rcp_static_cast<const Add>(b))->dict_)
             Add::dict_add_term(d, p.second, p.first);
         iaddnum(outArg(coef), rcp_static_cast<const Add>(b)->coef_);
-    } else if (SymEngine::is_a<Add>(*a)) {
+    } else if (is_a<Add>(*a)) {
         coef = (rcp_static_cast<const Add>(a))->coef_;
         d = (rcp_static_cast<const Add>(a))->dict_;
         if (is_a_Number(*b)) {
@@ -263,7 +263,7 @@ RCP<const Basic> add(const RCP<const Basic> &a, const RCP<const Basic> &b)
             Add::as_coef_term(b, outArg(coef2), outArg(t));
             Add::dict_add_term(d, coef2, t);
         }
-    } else if (SymEngine::is_a<Add>(*b)) {
+    } else if (is_a<Add>(*b)) {
         coef = (rcp_static_cast<const Add>(b))->coef_;
         d = (rcp_static_cast<const Add>(b))->dict_;
         if (is_a_Number(*a)) {
@@ -293,16 +293,6 @@ RCP<const Basic> add(const RCP<const Basic> &a, const RCP<const Basic> &b)
 RCP<const Basic> sub(const RCP<const Basic> &a, const RCP<const Basic> &b)
 {
     return add(a, mul(minus_one, b));
-}
-
-void Add::as_two_terms(const Ptr<RCP<const Basic>> &a,
-            const Ptr<RCP<const Basic>> &b) const
-{
-    auto p = dict_.begin();
-    *a = mul(p->first, p->second);
-    umap_basic_num d = dict_;
-    d.erase(p->first);
-    *b = Add::from_dict(coef_, std::move(d));
 }
 
 RCP<const Basic> Add::subs(const map_basic_basic &subs_dict) const

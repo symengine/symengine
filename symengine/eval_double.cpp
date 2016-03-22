@@ -37,12 +37,12 @@ public:
     }
 
     void bvisit(const Integer &x) {
-        T tmp = x.i.get_d();
+        T tmp = mp_get_d(x.i);
         result_ = tmp;
     }
 
     void bvisit(const Rational &x) {
-        T tmp = x.i.get_d();
+        T tmp = mp_get_d(x.i);
         result_ = tmp;
     }
 
@@ -258,6 +258,16 @@ public:
         result_ = std::tgamma(tmp);
     };
 
+    void bvisit(const LogGamma &x) {
+        double tmp = apply(*(x.get_args()[0]));
+        result_ = std::lgamma(tmp);
+    }
+
+    void bvisit(const Erf &x) {
+        double tmp = apply(*(x.get_args()[0]));
+        result_ = std::erf(tmp);
+    }
+
     void bvisit(const Max &x) {
         auto d = x.get_args();
         auto p = d.begin();
@@ -296,7 +306,7 @@ public:
     using EvalDoubleVisitor::bvisit;
 
     void bvisit(const Complex &x) {
-        result_ = std::complex<double>(x.real_.get_d(), x.imaginary_.get_d());
+        result_ = std::complex<double>(mp_get_d(x.real_), mp_get_d(x.imaginary_));
     };
 
     void bvisit(const ComplexDouble &x) {
@@ -329,17 +339,23 @@ std::vector<fn> init_eval_double()
         throw std::runtime_error("Not implemented.");
     });
     table[INTEGER] = [](const Basic &x) {
-        double tmp = (static_cast<const Integer &>(x)).i.get_d();
+        double tmp = mp_get_d((static_cast<const Integer &>(x)).i);
         return tmp;
     };
     table[RATIONAL] = [](const Basic &x) {
-        double tmp = (static_cast<const Rational &>(x)).i.get_d();
+        double tmp = mp_get_d((static_cast<const Rational &>(x)).i);
         return tmp;
     };
     table[REAL_DOUBLE] = [](const Basic &x) {
         double tmp = (static_cast<const RealDouble &>(x)).i;
         return tmp;
     };
+#ifdef HAVE_SYMENGINE_MPFR
+    table[REAL_MPFR] = [](const Basic &x) {
+        double tmp = mpfr_get_d(static_cast<const RealMPFR &>(x).i.get_mpfr_t(), MPFR_RNDN);
+        return tmp;
+    };
+#endif
     table[ADD] = [](const Basic &x) {
         double tmp = 0;
         for (const auto &p: x.get_args()) tmp += eval_double_single_dispatch(*p);
@@ -412,10 +428,6 @@ std::vector<fn> init_eval_double()
         double den = eval_double_single_dispatch(*(static_cast<const ATan2 &>(x)).get_den());
         return ::atan2(num, den);
     };
-    table[ACOT] = [](const Basic &x) {
-        double tmp = eval_double_single_dispatch(*(static_cast<const ACot &>(x)).get_arg());
-        return ::atan(1/tmp);
-    };
     table[SINH] = [](const Basic &x) {
         double tmp = eval_double_single_dispatch(*(static_cast<const Sinh &>(x)).get_arg());
         return ::sinh(tmp);
@@ -467,6 +479,14 @@ std::vector<fn> init_eval_double()
     table[GAMMA] = [](const Basic &x) {
         double tmp = eval_double_single_dispatch(*(static_cast<const Gamma &>(x)).get_args()[0]);
         return ::tgamma(tmp);
+    };
+    table[LOGGAMMA] = [](const Basic &x) {
+        double tmp = eval_double_single_dispatch(*(static_cast<const LogGamma &>(x)).get_args()[0]);
+        return ::lgamma(tmp);
+    };
+    table[ERF] = [](const Basic &x) {
+        double tmp = eval_double_single_dispatch(*(static_cast<const Erf &>(x)).get_args()[0]);
+        return ::erf(tmp);
     };
     table[CONSTANT] = [](const Basic &x) {
         if (eq(x, *pi)) {

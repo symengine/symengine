@@ -9,6 +9,7 @@ using SymEngine::UnivariateSeries;
 using SymEngine::symbol;
 using SymEngine::map_vec_int;
 using SymEngine::integer;
+using SymEngine::integer_class;
 using SymEngine::RCP;
 using SymEngine::rcp_dynamic_cast;
 
@@ -18,12 +19,12 @@ int main(int argc, char* argv[])
 
     RCP<const Symbol> x = symbol("x");
     RCP<const UnivariateSeries> a, c;
-    std::vector<mpz_class> v;
+    std::vector<integer_class> v;
     int N;
 
     N = 1000;
     for (int i=0; i<N; ++i) {
-        mpz_class coef(i);
+        integer_class coef(i);
         v.push_back(coef);
     }
     a = UnivariateSeries::create(x, N, v);

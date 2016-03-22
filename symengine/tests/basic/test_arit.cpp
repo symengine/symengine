@@ -50,7 +50,9 @@ using SymEngine::RealDouble;
 using SymEngine::ComplexDouble;
 using SymEngine::real_double;
 using SymEngine::complex_double;
+using SymEngine::rational_class;
 using SymEngine::is_a;
+using SymEngine::set_basic;
 
 TEST_CASE("Add: arit", "[arit]")
 {
@@ -102,13 +104,13 @@ TEST_CASE("Add: arit", "[arit]")
     REQUIRE(eq(*r3, *r2));
 
     r1 = real_double(0.1);
-    r2 = Rational::from_mpq(mpq_class(1, 2));
+    r2 = Rational::from_mpq(rational_class(1, 2));
     r3 = add(add(add(r1, r2), integer(1)), real_double(0.2));
     REQUIRE(is_a<RealDouble>(*r3));
     REQUIRE(std::abs(rcp_static_cast<const RealDouble>(r3)->i - 1.8) < 1e-12);
 
     r1 = complex_double(std::complex<double>(0.1, 0.2));
-    r2 = Complex::from_two_nums(*Rational::from_mpq(mpq_class(1, 2)), *Rational::from_mpq(mpq_class(7, 5)));
+    r2 = Complex::from_two_nums(*Rational::from_mpq(rational_class(1, 2)), *Rational::from_mpq(rational_class(7, 5)));
     r3 = add(add(add(r1, r2), integer(1)), real_double(0.4));
     REQUIRE(is_a<ComplexDouble>(*r3));
     REQUIRE(std::abs(rcp_static_cast<const ComplexDouble>(r3)->i.real() - 2.0) < 1e-12);
@@ -121,7 +123,7 @@ TEST_CASE("Mul: arit", "[arit]")
     RCP<const Basic> y = symbol("y");
     RCP<const Basic> z = symbol("z");
     RCP<const Basic> im2 = integer(-2);
-    RCP<const Basic> i2 = integer(2);
+    RCP<const Integer> i2 = integer(2);
     RCP<const Basic> i3 = integer(3);
     RCP<const Basic> i4 = integer(4);
     RCP<const Basic> i6 = integer(6);
@@ -213,13 +215,13 @@ TEST_CASE("Mul: arit", "[arit]")
     REQUIRE(eq(*r1, *r2));
 
     r1 = real_double(0.1);
-    r2 = Rational::from_mpq(mpq_class(1, 2));
+    r2 = Rational::from_mpq(rational_class(1, 2));
     r2 = mul(mul(mul(r1, r2), integer(3)), real_double(0.2));
     REQUIRE(is_a<RealDouble>(*r2));
     REQUIRE(std::abs(rcp_static_cast<const RealDouble>(r2)->i - 0.03) < 1e-12);
 
     r1 = complex_double(std::complex<double>(0.1, 0.2));
-    r2 = Complex::from_two_nums(*Rational::from_mpq(mpq_class(1, 2)), *Rational::from_mpq(mpq_class(7, 5)));
+    r2 = Complex::from_two_nums(*Rational::from_mpq(rational_class(1, 2)), *Rational::from_mpq(rational_class(7, 5)));
     r2 = mul(mul(mul(r1, r2), integer(5)), real_double(0.7));
     REQUIRE(is_a<ComplexDouble>(*r2));
     REQUIRE(std::abs(rcp_static_cast<const ComplexDouble>(r2)->i.real() + 0.805) < 1e-12);
@@ -234,6 +236,17 @@ TEST_CASE("Mul: arit", "[arit]")
     r2 = mul(y, real_double(2.0));
     // (2*x**2*y) * (x**(-2.0)) == 2.0 * y
     REQUIRE(eq(*r1, *r2));
+
+    std::set<RCP<const Basic>, SymEngine::RCPBasicKeyLessCmp> s;
+    rc1 = Complex::from_two_nums(*one, *one);
+    s.insert(rc1);
+    rc1 = Complex::from_two_nums(*i2, *one);
+    s.insert(rc1);
+    rc1 = Complex::from_two_nums(*one, *one);
+    s.insert(rc1);
+    REQUIRE(s.size() == 2);
+
+    CHECK_THROWS_AS(Complex::from_two_nums(*one, *real_double(1.0));, std::runtime_error);
 }
 
 TEST_CASE("Sub: arit", "[arit]")
@@ -300,13 +313,13 @@ TEST_CASE("Sub: arit", "[arit]")
     REQUIRE(eq(*r1, *r2));
 
     r1 = real_double(0.1);
-    r2 = Rational::from_mpq(mpq_class(1, 2));
+    r2 = Rational::from_mpq(rational_class(1, 2));
     r2 = sub(sub(sub(r1, r2), integer(3)), real_double(0.2));
     REQUIRE(is_a<RealDouble>(*r2));
     REQUIRE(std::abs(rcp_static_cast<const RealDouble>(r2)->i + 3.6) < 1e-12);
 
     r1 = real_double(0.1);
-    r2 = Complex::from_two_nums(*Rational::from_mpq(mpq_class(1, 2)), *Rational::from_mpq(mpq_class(7, 5)));
+    r2 = Complex::from_two_nums(*Rational::from_mpq(rational_class(1, 2)), *Rational::from_mpq(rational_class(7, 5)));
     r2 = sub(sub(sub(r1, r2), integer(1)), real_double(0.4));
     REQUIRE(is_a<ComplexDouble>(*r2));
     REQUIRE(std::abs(rcp_static_cast<const ComplexDouble>(r2)->i.real() + 1.8) < 1e-12);
@@ -408,13 +421,13 @@ TEST_CASE("Div: arit", "[arit]")
     REQUIRE(eq(*r1, *r2));
 
     r1 = real_double(0.1);
-    r2 = Rational::from_mpq(mpq_class(1, 2));
+    r2 = Rational::from_mpq(rational_class(1, 2));
     r2 = div(div(div(r1, r2), integer(3)), real_double(0.2));
     REQUIRE(is_a<RealDouble>(*r2));
     REQUIRE(std::abs(rcp_static_cast<const RealDouble>(r2)->i - 0.333333333333) < 1e-12);
 
     r1 = real_double(0.1);
-    r2 = Complex::from_two_nums(*Rational::from_mpq(mpq_class(1, 2)), *Rational::from_mpq(mpq_class(7, 5)));
+    r2 = Complex::from_two_nums(*Rational::from_mpq(rational_class(1, 2)), *Rational::from_mpq(rational_class(7, 5)));
     r2 = div(div(div(r1, r2), integer(2)), real_double(0.4));
     REQUIRE(is_a<ComplexDouble>(*r2));
     REQUIRE(std::abs(rcp_static_cast<const ComplexDouble>(r2)->i.real() - 0.0282805429864253) < 1e-12);
@@ -651,7 +664,7 @@ TEST_CASE("Pow: arit", "[arit]")
     REQUIRE(eq(*r1, *r2));
 
     r1 = real_double(0.1);
-    r2 = Rational::from_mpq(mpq_class(1, 2));
+    r2 = Rational::from_mpq(rational_class(1, 2));
     r2 = pow(r1, r2);
     REQUIRE(is_a<RealDouble>(*r2));
     REQUIRE(std::abs(rcp_static_cast<const RealDouble>(r2)->i - 0.316227766016) < 1e-12);
@@ -659,7 +672,7 @@ TEST_CASE("Pow: arit", "[arit]")
     REQUIRE(std::abs(rcp_static_cast<const RealDouble>(r2)->i - 0.501187233627) < 1e-12);
 
     r1 = real_double(-0.01);
-    r2 = pow(r1, Rational::from_mpq(mpq_class(1, 2)));
+    r2 = pow(r1, Rational::from_mpq(rational_class(1, 2)));
     r2 = pow(integer(2), r2);
     REQUIRE(is_a<ComplexDouble>(*r2));
     REQUIRE(std::abs(rcp_static_cast<const ComplexDouble>(r2)->i.real() - 0.997598696589298) < 1e-12);
@@ -945,6 +958,14 @@ TEST_CASE("Expand2: arit", "[arit]")
 
     r1 = expand(mul(i3, add(x, one)));
     r2 = add(mul(i3, x), i3);
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = expand(pow(add(sqrt(add(x, y)), one), i2));
+    r2 = add(x, add(y, add(one, mul(i2, sqrt(add(x, y))))));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = expand(pow(add(mul(I, y), x), i3));
+    r2 = add(sub(pow(x, i3), mul(pow(y, i3), I)), sub(mul(mul(i3, I), mul(pow(x, i2), y)), mul(i3, mul(pow(y, i2), x))));
     REQUIRE(eq(*r1, *r2));
 }
 

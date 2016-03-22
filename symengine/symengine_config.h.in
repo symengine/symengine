@@ -4,6 +4,9 @@
 /* Define if you want to enable SYMENGINE_RCP support in SymEngine */
 #cmakedefine WITH_SYMENGINE_RCP
 
+/* Define if you want to enable TEUCHOS support in SymEngine */
+#cmakedefine WITH_SYMENGINE_TEUCHOS
+
 /* Define if you want to enable SYMENGINE_THREAD_SAFE support in SymEngine */
 #cmakedefine WITH_SYMENGINE_THREAD_SAFE
 
@@ -48,3 +51,17 @@
 
 /* Define if the C++ compiler supports std::unordered_map<>::reserve() */
 #cmakedefine HAVE_SYMENGINE_RESERVE
+
+#define SYMENGINE_GMPXX 0
+#define SYMENGINE_PIRANHA 1
+#define SYMENGINE_FLINT 2
+#define SYMENGINE_GMP 3
+
+#define SYMENGINE_INTEGER_CLASS SYMENGINE_${SYMENGINE_INTEGER_CLASS}
+
+#ifdef HAVE_SYMENGINE_NOEXCEPT
+#  define SYMENGINE_NOEXCEPT noexcept
+#else
+#  define SYMENGINE_NOEXCEPT
+#endif
+

@@ -1,111 +1,89 @@
 #include <symengine/basic.h>
 #include <symengine/integer.h>
+#include <symengine/expression.h>
 
 namespace SymEngine {
 
+namespace {
 template<class T>
-inline std::ostream& print_map(std::ostream& out, T& d)
-{
-    out << "{";
-    for (auto p = d.begin(); p != d.end(); p++) {
-        if (p != d.begin()) out << ", ";
-        out << (p->first) << ": " << (p->second);
+    inline std::ostream& print_map(std::ostream& out, T& d)
+    {
+        out << "{";
+        for (auto p = d.begin(); p != d.end(); p++) {
+            if (p != d.begin()) out << ", ";
+            out << (p->first) << ": " << (p->second);
+        }
+        out << "}";
+        return out;
     }
-    out << "}";
-    return out;
-}
-
-template<class T>
-inline std::ostream& print_map_rcp(std::ostream& out, T& d)
-{
-    out << "{";
-    for (auto p = d.begin(); p != d.end(); p++) {
-        if (p != d.begin()) out << ", ";
-        out << *(p->first) << ": " << *(p->second);
-    }
-    out << "}";
-    return out;
-}
 
 template<class T>
-inline std::ostream& print_vec(std::ostream& out, T& d)
-{
-    out << "[";
-    for (auto p = d.begin(); p != d.end(); p++) {
-        if (p != d.begin()) out << ", ";
-        out << *p;
+    inline std::ostream& print_map_rcp(std::ostream& out, T& d)
+    {
+        out << "{";
+        for (auto p = d.begin(); p != d.end(); p++) {
+            if (p != d.begin()) out << ", ";
+            out << *(p->first) << ": " << *(p->second);
+        }
+        out << "}";
+        return out;
     }
-    out << "]";
-    return out;
-}
 
 template<class T>
-inline std::ostream& print_vec_rcp(std::ostream& out, T& d)
-{
-    out << "[";
-    for (auto p = d.begin(); p != d.end(); p++) {
-        if (p != d.begin()) out << ", ";
-        out << **p;
+    inline std::ostream& print_vec(std::ostream& out, T& d)
+    {
+        out << "[";
+        for (auto p = d.begin(); p != d.end(); p++) {
+            if (p != d.begin()) out << ", ";
+            out << *p;
+        }
+        out << "]";
+        return out;
     }
-    out << "]";
-    return out;
-}
 
-} // SymEngine
+template<class T>
+    inline std::ostream& print_vec_rcp(std::ostream& out, T& d)
+    {
+        out << "[";
+        for (auto p = d.begin(); p != d.end(); p++) {
+            if (p != d.begin()) out << ", ";
+            out << **p;
+        }
+        out << "]";
+        return out;
+    }
 
+} //anonymous namespace
 
 std::ostream& operator<<(std::ostream& out, const SymEngine::umap_basic_num& d)
 {
-    return print_map_rcp(out, d);
-}
-
-std::ostream& operator<<(std::ostream& out, const SymEngine::vec_int& d)
-{
-    return SymEngine::print_vec(out, d);
-}
-
-std::ostream& operator<<(std::ostream& out, const SymEngine::map_vec_int& d)
-{
-    return SymEngine::print_map(out, d);
-}
-
-std::ostream& operator<<(std::ostream& out, const SymEngine::map_vec_mpz& d)
-{
-    return SymEngine::print_map(out, d);
-}
-
-std::ostream& operator<<(std::ostream& out, const SymEngine::umap_vec_mpz& d)
-{
-    return print_map(out, d);
+    return SymEngine::print_map_rcp(out, d);
 }
 
 std::ostream& operator<<(std::ostream& out, const SymEngine::map_basic_num& d)
 {
-    return print_map_rcp(out, d);
+    return SymEngine::print_map_rcp(out, d);
 }
 
 std::ostream& operator<<(std::ostream& out, const SymEngine::map_basic_basic& d)
 {
-    return print_map_rcp(out, d);
+    return SymEngine::print_map_rcp(out, d);
 }
 
 std::ostream& operator<<(std::ostream& out, const SymEngine::umap_basic_basic& d)
 {
-    return print_map_rcp(out, d);
+    return SymEngine::print_map_rcp(out, d);
 }
 
 std::ostream& operator<<(std::ostream& out, const SymEngine::vec_basic& d)
 {
-    return print_vec_rcp(out, d);
+    return SymEngine::print_vec_rcp(out, d);
 }
 
 std::ostream& operator<<(std::ostream& out, const SymEngine::set_basic& d)
 {
-    return print_vec_rcp(out, d);
+    return SymEngine::print_vec_rcp(out, d);
 }
-
-
-namespace SymEngine {
 
 bool vec_basic_eq(const vec_basic &a, const vec_basic &b)
 {
@@ -178,6 +156,36 @@ int map_uint_mpz_compare(const map_uint_mpz &A, const map_uint_mpz &B)
             return (a->first < b->first) ? -1 : 1;
         if (a->second != b->second)
             return (a->second < b->second) ? -1 : 1;
+    }
+    return 0;
+}
+
+bool map_int_Expr_eq(const map_int_Expr &a,
+        const map_int_Expr &b)
+{
+    // Can't be equal if # of entries differ:
+    if (a.size() != b.size()) return false;
+    // Loop over keys in "a":
+    for (const auto &p: a) {
+        auto f = b.find(p.first);
+        if (f == b.end()) return false; // no such element in "b"
+        if (p.second != f->second) return false; // values not equal
+    }
+    return true;
+}
+
+
+int map_int_Expr_compare(const map_int_Expr &A, const map_int_Expr &B)
+{
+    if (A.size() != B.size())
+        return (A.size() < B.size()) ? -1 : 1;
+    auto a = A.begin();
+    auto b = B.begin();
+    for (; a != A.end(); ++a, ++b) {
+        if (a->first != b->first)
+            return (a->first < b->first) ? -1 : 1;
+        if (a->second != b->second)
+            return (a->second.get_basic()->__cmp__(*b->second.get_basic())) ? -1 : 1;
     }
     return 0;
 }
