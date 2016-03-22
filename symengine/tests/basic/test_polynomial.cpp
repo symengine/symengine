@@ -323,6 +323,23 @@ TEST_CASE("Constructing MultivariateIntPolynomial using from_dict", "[Multivaria
 
 }
 
+TEST_CASE("Testing MultivariateIntPolynomial::__hash__() and compare", "[MultivariateIntPolynomial]"){
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    RCP<const MultivariateIntPolynomial> p1 = MultivariateIntPolynomial::from_dict({x,y}, {{{2,0},1_z}, {{1,1},1_z}, {{0,2},1_z}  });
+    RCP<const MultivariateIntPolynomial> p2 = MultivariateIntPolynomial::from_dict({x,y}, {{{2,0},1_z}, {{1,1},-1_z}, {{0,2},1_z}  });
+    RCP<const MultivariateIntPolynomial> p3 = MultivariateIntPolynomial::from_dict({x,y}, {{{2,0},2_z}, {{0,2},2_z}  });
+
+    //Only requre that the same polynomial hash to the same value and that different polynomials hash to different values
+    //Don't want to require a polynomial to have a particular hash in case someone comes up with a better hash function
+    REQUIRE(p3->__hash__() == add_mult_poly(*p1, *p2)->__hash__());
+    REQUIRE(p1->__hash__() != p2->__hash__());
+
+    //Same for compare.
+    REQUIRE(0 == p3->compare(*add_mult_poly(*p1, *p2)));
+    REQUIRE(0 != p1->compare(*p2));
+}
+
 TEST_CASE("Testing MultivariateIntPolynomial::__eq__(const Basic &o)", "[MultivariateIntPolynomial]")
 {
     RCP<const Symbol> x = symbol("x");

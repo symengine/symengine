@@ -143,6 +143,107 @@ typedef struct
 typedef std::unordered_map<vec_int, integer_class,
         vec_int_hash> umap_vec_mpz;
 
+int umap_vec_mpz_compare(const umap_vec_mpz &a, const umap_vec_mpz &b);
+long mpz_hash(const integer_class z);
+
+typedef std::vector<unsigned int> vec_uint;
+
+class vec_uint_hash{
+public:
+    std::size_t operator()(const vec_uint &v) const {
+        std::size_t h = 0;
+        for(unsigned int i : v){
+            h ^= i + 0x9e3779b + (h << 6) + (h >> 2);
+        }
+        return h;
+    }
+};
+
+
+class vec_uint_eq{
+public:
+    bool operator()(const vec_uint &a, const vec_uint &b) const{
+        if(a.size() != b.size())
+            return false;
+        for(unsigned int i = 0; i < a.size(); i++){
+            if(a[i] != b[i])
+	        return false;
+        }
+    return true;
+    }
+};
+
+class vec_uint_compare{
+public:
+    bool operator()(const vec_uint &a, const vec_uint &b) const{
+        if(a.size() != b.size())
+            return a.size() < b.size();
+        unsigned int sum1 = 0;
+        unsigned int sum2 = 0;
+        for(unsigned int x : a){
+            sum1 += x;
+        }
+        for(unsigned int x : b){
+            sum2 += x;
+        }
+        if(sum1 != sum2)
+            return sum1 < sum2;
+        return a < b;
+    }
+};
+
+typedef std::set< RCP<const Symbol>, RCPSymbolCompare> set_sym;
+typedef std::unordered_map<RCP<const Symbol>, unsigned int, RCPSymbolHash, RCPSymbolEq> umap_sym_uint;
+typedef std::unordered_map<vec_uint, integer_class, vec_uint_hash, vec_uint_eq> umap_uvec_mpz;
+
+//Takes an unordered map of type M with key type K and returns a vector of K ordered by C.
+template<class K, class M, class C>
+std::vector<K> order_umap(const M &d){
+    std::vector<K> v;
+    for (auto bucket : d) {
+        auto iter = v.begin();
+        while(iter != v.end() && C()(bucket.first,*iter)){
+	    iter++;
+        }
+	v.insert(iter, bucket.first);
+    }
+    return v;
+}
+
+int umap_uvec_mpz_compare(const umap_uvec_mpz &a, const umap_uvec_mpz &b);
+
+//coppied from umap_eq, with derefrencing of image in map removed.
+bool umap_uvec_mpz_eq(const umap_uvec_mpz &a, const umap_uvec_mpz &b);
+ 
+template<class T>
+bool set_eq(const T &A, const T &B)
+{
+    // Can't be equal if # of entries differ:
+    if (A.size() != B.size()) return false;
+    // Loop over elements in "a" and "b":
+    auto a = A.begin();
+    auto b = B.begin();
+    for (; a != A.end(); ++a, ++b) {
+        if (neq(**a, **b)) return false; // values not equal
+    }
+    return true;
+}
+
+template<class T>
+int set_compare(const T &A, const T &B)
+{
+    if (A.size() != B.size())
+        return (A.size() < B.size()) ? -1 : 1;
+    auto a = A.begin();
+    auto b = B.begin();
+    int cmp;
+    for (; a != A.end(); ++a, ++b) {
+        cmp = (*a)->__cmp__(**b);
+        if (cmp != 0) return cmp;
+    }
+    return 0;
+}
+ 
 std::ostream& operator<<(std::ostream& out, const SymEngine::umap_basic_num& d);
 std::ostream& operator<<(std::ostream& out, const SymEngine::map_basic_num& d);
 std::ostream& operator<<(std::ostream& out, const SymEngine::map_basic_basic& d);

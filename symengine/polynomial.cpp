@@ -827,16 +827,9 @@ RCP<const MultivariateIntPolynomial> MultivariateIntPolynomial::from_dict(const 
 vec_basic  MultivariateIntPolynomial::get_args() const {
     vec_basic args;
     umap_uvec_mpz d;
-    std::vector<vec_uint> v;
     //To change the ordering in which the terms appear in the vector, change
     //vec_uint_compare in dict.h
-    for (auto bucket : dict_) {
-        auto it = v.begin();
-        while (it != v.end() && vec_uint_compare()(bucket.first,*it)) {
-            it++;
-        }
-        v.insert(it, bucket.first);
-    }
+    std::vector<vec_uint> v = order_umap<vec_uint, umap_uvec_mpz, vec_uint_compare>(dict_);
     for(const auto &p : v){
         map_basic_basic b;
         int whichvar = 0;
@@ -876,12 +869,15 @@ bool MultivariateIntPolynomial::is_canonical(const set_sym &vars, const umap_sym
 
 std::size_t MultivariateIntPolynomial::__hash__() const {
     std::hash<std::string> hash_string;
-    std::size_t seed = 0;
+    std::size_t seed = MULTIVARIATEINTPOLYNOMIAL;
     for (auto var : vars_)
         seed ^= hash_string(var->get_name()) + 0x9e3779b + (seed << 6) + (seed >> 2); //boost's method for combining hashes
-    for (auto bucket : dict_) {
-        seed ^= vec_uint_hash()(bucket.first) + 0x9e3779b + (seed << 6) + (seed >> 2);
-        seed ^= mpz_hash(bucket.second) + 0x9e3779b + (seed << 6) + (seed >> 2);
+
+    std::vector<vec_uint> v = order_umap<vec_uint, umap_uvec_mpz, vec_uint_compare>(dict_);
+    
+    for (auto vec : v) {
+        seed ^= vec_uint_hash()(dict_.find(vec)->first) + 0x9e3779b + (seed << 6) + (seed >> 2);
+        seed ^= mpz_hash(dict_.find(vec)->second) + 0x9e3779b + (seed << 6) + (seed >> 2);
     }
     return seed;
 }
@@ -893,9 +889,6 @@ bool MultivariateIntPolynomial::__eq__(const Basic &o) const {
 int MultivariateIntPolynomial::compare(const Basic &o) const {
     //copied from UnivariateIntPolynomial::compare and then modified.
     const MultivariateIntPolynomial &s = static_cast<const MultivariateIntPolynomial&>(o);
-    
-    if (dict_.size() != s.dict_.size())
-        return (dict_.size() < s.dict_.size()) ? -1 : 1;
 
     int cmp = set_compare<set_sym>(vars_, s.vars_);
     if (cmp != 0)
@@ -923,16 +916,9 @@ integer_class MultivariateIntPolynomial::eval(std::map<RCP<const Symbol>, intege
 std::string MultivariateIntPolynomial::toString() const {
     std::ostringstream s;
     bool first = true; //is this the first term being printed out?
-    std::vector<vec_uint> v;
     //To change the ordering in which the terms will print out, change
     //vec_uint_compare in dict.h
-    for (auto bucket : dict_) {
-        auto it = v.begin();
-	while (it != v.end() && vec_uint_compare()(bucket.first,*it)) {
-            it++;
-	}
-	v.insert(it, bucket.first);
-    }
+    std::vector<vec_uint> v = order_umap<vec_uint, umap_uvec_mpz, vec_uint_compare>(dict_);
 
     for (vec_uint exps : v) {
         integer_class c = dict_.find(exps)->second;

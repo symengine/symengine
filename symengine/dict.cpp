@@ -207,14 +207,43 @@ int umap_vec_mpz_compare(const umap_vec_mpz &a, const umap_vec_mpz &b){
     return 0;
 }
 
-unsigned int mpz_hash(const integer_class z){
-    return mp_get_ui(z);
+long mpz_hash(const integer_class z){
+    return mp_get_si(z);
 }
 
-int umap_uvec_mpz_compare(const umap_uvec_mpz &a, const umap_uvec_mpz &b){
-    if(a.size() < b.size())
-        return (a.size() < b.size()) ? -1 : 1;
-    return 0;
+int umap_uvec_mpz_compare(const umap_uvec_mpz &a, const umap_uvec_mpz &b) {
+    std::vector<vec_uint> va = order_umap<vec_uint, umap_uvec_mpz, vec_uint_compare>(a);
+    std::vector<vec_uint> vb = order_umap<vec_uint, umap_uvec_mpz, vec_uint_compare>(b);
+
+    if (va.empty())
+        if (!vb.empty())
+	    return -1;
+    if (vb.empty())
+        if (!va.empty())
+            return 1;
+    if (va.empty() && vb.empty())
+        return 0;
+
+    for (unsigned int i = 0; i < va.size() && i < vb.size(); i++) {
+        if (vec_uint_compare()(va[i], vb[i])) {
+            return -1; 
+        } else if (!vec_uint_compare()(va[i], vb[i]) && va[i] != vb[i]) {
+	    return 1;
+        } else {
+	    if (a.find(va[i])->second != b.find(vb[i])->second) {
+                if(a.find(va[i])->second < b.find(vb[i])->second) {
+		    return -1;
+                } else {
+		    return 1;
+		}
+	    }
+	}
+    }
+    if (va.size() < vb.size())
+        return -1;
+    if (vb.size() < va.size())
+        return 1;
+    return 0;	
 }
 
 //coppied from umap_eq, with derefrencing of image in map removed.
