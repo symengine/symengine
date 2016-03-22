@@ -42,7 +42,6 @@ static RCP<const Basic> diff(const CLASS &self, \
 }
 
     DIFF0(UnivariateSeries)
-    DIFF0(KroneckerDelta)
     DIFF0(Dirichlet_eta)
     DIFF0(UpperGamma)
     DIFF0(LowerGamma)
@@ -485,6 +484,29 @@ static RCP<const Basic> diff(const CLASS &self, \
     static RCP<const Basic> diff(const Set &self,
             const RCP<const Symbol> &x) {
         throw std::runtime_error("Derivative doesn't exist.");
+    }
+
+    static RCP<const Basic> diff(const KroneckerDelta &self,
+        const RCP<const Symbol> &x) {
+        auto args = self.get_args();
+        auto f = args[0]->diff(x);
+        auto g = args[1]->diff(x);
+        RCP<const Basic> a,b;
+        if (neq(*f, *zero)) {
+            auto s = get_dummy(self, "x");
+            map_basic_basic m({{s, args[0]}});
+            a = mul(f, make_rcp<const Subs>(Derivative::create(kronecker_delta(s, args[1]), {s}), m));
+        } else {
+            a = zero;
+        }
+        if (neq(*g, *zero)) {
+            auto s = get_dummy(self, "x");
+            map_basic_basic n({{s, args[1]}});
+            b = mul(g, make_rcp<const Subs>(Derivative::create(kronecker_delta(s, args[0]), {s}), n));
+        } else {
+            b = zero;
+        }
+        return add(a, b);
     }
 };
 

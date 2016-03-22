@@ -943,6 +943,8 @@ TEST_CASE("Derivative: functions", "[functions]")
     r2 = r1->subs({{y, z}});
     r3 = Derivative::create(function_symbol("f", {x, add(z, z)}), {x});
     REQUIRE(eq(*r2, *r3));
+
+    //r1 = Derivative::create(kronecker_delta(x, y), {y});
 }
 
 TEST_CASE("Subs: functions", "[functions]")
@@ -2063,12 +2065,33 @@ TEST_CASE("Kronecker Delta: functions", "[functions]")
 {
     RCP<const Symbol> i = symbol("i");
     RCP<const Symbol> j = symbol("j");
+    RCP<const Symbol> _x = symbol("_x");
 
     RCP<const Basic> r1;
     RCP<const Basic> r2;
 
     r1 = kronecker_delta(i, i);
     r2 = one;
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = kronecker_delta(i, i)->diff(i);
+    r2 = zero;
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = kronecker_delta(i, j)->diff(i);
+    r2 = Subs::create(Derivative::create(kronecker_delta(_x, j), {_x}), {{_x, i}});
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = kronecker_delta(i, j)->diff(j);
+    r2 = Subs::create(Derivative::create(kronecker_delta(_x, i), {_x}), {{_x, j}});
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = kronecker_delta(i, mul(j, j))->diff(j);
+    r2 = mul(j, mul(integer(2), Subs::create(Derivative::create(kronecker_delta(_x, i), {_x}), {{_x, mul(j, j)}})));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = kronecker_delta(mul(i, i), j)->diff(i);
+    r2 = mul(i, mul(integer(2), Subs::create(Derivative::create(kronecker_delta(_x, j), {_x}), {{_x, mul(i, i)}})));
     REQUIRE(eq(*r1, *r2));
 
     r1 = kronecker_delta(i, add(i, one));
