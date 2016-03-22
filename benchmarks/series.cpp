@@ -21,7 +21,6 @@ int main(int argc, char* argv[])
     SymEngine::print_stack_on_segfault();
 
     RCP<const Symbol> x = symbol("x");
-    RCP<const UnivariateSeries> a, c;
     std::vector<Expression> v;
     int N;
 
@@ -31,10 +30,9 @@ int main(int argc, char* argv[])
         v.push_back(coef);
     }
 
-    UnivariateExprPolynomial p(UnivariatePolynomial::create(x, v));
-    a = UnivariateSeries::create(x, N, p);
+    UnivariateExprPolynomial c, p(UnivariatePolynomial::create(x, v));
     auto t1 = std::chrono::high_resolution_clock::now();
-    c = mul_uni_series(*a, *a);
+    c = UnivariateSeries::mul(p, p, 1000);
     auto t2 = std::chrono::high_resolution_clock::now();
     //std::cout << *a << std::endl;
     std::cout
