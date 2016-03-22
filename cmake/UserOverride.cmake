@@ -19,7 +19,7 @@ endif ()
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     # g++
-    set(common "-std=c++0x -Wall -Wextra -fno-common")
+    set(common "-std=c++11 -Wall -Wextra -fno-common")
     if (NOT MINGW)
         set(common "${common} -fPIC")
     else()

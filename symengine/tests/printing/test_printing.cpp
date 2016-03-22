@@ -32,6 +32,7 @@ using SymEngine::Rational;
 using SymEngine::Number;
 using SymEngine::add;
 using SymEngine::Symbol;
+using SymEngine::erf;
 using SymEngine::Integer;
 using SymEngine::DenseMatrix;
 using SymEngine::Subs;
@@ -374,6 +375,20 @@ TEST_CASE("test_floats(): printing", "[printing]")
     REQUIRE(p->__str__() == "(-10.0000000000000000000000 + 10.0000000000000000000000*I)/x");
 #endif
 #endif
+}
+
+TEST_CASE("test_functions(): printing", "[printing]")
+{
+    RCP<const Basic> x = symbol("x");
+    RCP<const Basic> y = symbol("y");
+    RCP<const Basic> p = loggamma(x);
+    REQUIRE(p->__str__() == "loggamma(x)");
+
+    p = erf(x);
+    REQUIRE(p->__str__() == "erf(x)");
+
+    p = erf(add(x, y));
+    REQUIRE(p->__str__() == "erf(x + y)");
 }
 
 TEST_CASE("test custom printing", "[printing]")

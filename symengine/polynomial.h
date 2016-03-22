@@ -278,9 +278,11 @@ public:
     }
 }; //UnivariateExprPolynomial
 
-class MultivariateIntPolynomial : public Basic{
+
+//MultivariatePolynomials
+class MultivariateIntPolynomial : public Basic {
 public:
-    //vars: set of variables for th polynomial
+    //vars: set of variables for the polynomial
     //degrees: max degrees of the symbols
     //dict: dictionary for sparse represntation of polynomial, x**1 * y**2 + 3 * x**4 * y ** 5
     // is represented as {(1,2):1,(4,5):3}

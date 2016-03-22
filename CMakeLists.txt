@@ -347,6 +347,10 @@ set(WITH_SYMENGINE_THREAD_SAFE no
 set(BUILD_TESTS yes
     CACHE BOOL "Build SymEngine tests")
 
+# Teuchos
+set(WITH_SYMENGINE_TEUCHOS no
+    CACHE BOOL "Build with teuchos")
+
 # OpenMp
 set(WITH_OPENMP no
     CACHE BOOL "Build with OpenMP")
@@ -376,6 +380,10 @@ if (WITH_COVERAGE)
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} --coverage")
 endif()
 
+if ((NOT WITH_SYMENGINE_RCP) OR HAVE_TEUCHOS_BFD)
+    set(WITH_SYMENGINE_TEUCHOS yes)
+endif()
+
 enable_testing()
 add_subdirectory(symengine)
 
@@ -392,20 +400,27 @@ endif()
 set(INSTALL_CMAKE_DIR ${DEF_INSTALL_CMAKE_DIR} CACHE PATH
     "Installation directory for CMake files")
 
-export(TARGETS symengine teuchos FILE "${PROJECT_BINARY_DIR}/SymEngineTargets.cmake")
+if (TARGET teuchos)
+    set(SYMENGINE_TARGETS symengine teuchos)
+else()
+    set(SYMENGINE_TARGETS symengine)
+endif()
+
+export(TARGETS ${SYMENGINE_TARGETS} FILE "${PROJECT_BINARY_DIR}/SymEngineTargets.cmake")
 foreach(PKG ${PKGS})
     set(SYMENGINE_PKG_FINDS "${SYMENGINE_PKG_FINDS}\nset(SYMENGINE_${PKG}_LIBRARIES ${${PKG}_LIBRARIES})")
     set(SYMENGINE_PKG_FINDS "${SYMENGINE_PKG_FINDS}\nset(SYMENGINE_${PKG}_INCLUDE_DIRS ${${PKG}_INCLUDE_DIRS})")
 endforeach()
 
 # ... for the build tree
-set(CONF_INCLUDE_DIRS ${PROJECT_SOURCE_DIR} ${PROJECT_BINARY_DIR}
+set(CONF_INCLUDE_DIRS ${PROJECT_SOURCE_DIR} ${PROJECT_BINARY_DIR})
+if (TARGET teuchos)
+    set(CONF_INCLUDE_DIRS ${CONF_INCLUDE_DIRS}
                            ${PROJECT_SOURCE_DIR}/symengine/utilities/teuchos ${PROJECT_BINARY_DIR}/symengine/utilities/teuchos)
+endif()
 set(SYMENGINE_BUILD_TREE yes)
 configure_file(cmake/SymEngineConfig.cmake.in
     "${PROJECT_BINARY_DIR}/SymEngineConfig.cmake" @ONLY)
-export(TARGETS symengine teuchos
-    FILE "${PROJECT_BINARY_DIR}/SymEngineTargets.cmake")
 
 # ... for the install tree
 set(SYMENGINE_BUILD_TREE no)
@@ -466,6 +481,7 @@ message("CMAKE_INSTALL_PREFIX: ${CMAKE_INSTALL_PREFIX}")
 message("INTEGER_CLASS : ${SYMENGINE_INTEGER_CLASS}")
 message("WITH_SYMENGINE_ASSERT: ${WITH_SYMENGINE_ASSERT}")
 message("WITH_SYMENGINE_RCP: ${WITH_SYMENGINE_RCP}")
+message("WITH_SYMENGINE_TEUCHOS: ${WITH_SYMENGINE_TEUCHOS}")
 if (NOT WITH_SYMENGINE_RCP)
     message("HAVE_TEUCHOS_DEBUG: ${HAVE_TEUCHOS_DEBUG}")
     message("HAVE_TEUCHOS_DEBUG_RCP_NODE_TRACING: ${HAVE_TEUCHOS_DEBUG_RCP_NODE_TRACING}")

@@ -50,6 +50,7 @@ using SymEngine::function_symbol;
 using SymEngine::Derivative;
 using SymEngine::pi;
 using SymEngine::EulerGamma;
+using SymEngine::erf;
 using SymEngine::RCP;
 using SymEngine::make_rcp;
 using SymEngine::print_stack_on_segfault;
@@ -97,6 +98,7 @@ using SymEngine::Max;
 using SymEngine::Min;
 using SymEngine::Rational;
 using SymEngine::rcp_static_cast;
+using SymEngine::I;
 
 #ifdef HAVE_SYMENGINE_MPFR
 using SymEngine::real_mpfr;
@@ -2152,6 +2154,33 @@ TEST_CASE("Dirichlet Eta: functions", "[functions]")
     REQUIRE(eq(*r1, *r2));
 }
 
+TEST_CASE("Erf: functions", "[functions]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+
+    RCP<const Basic> r1;
+    RCP<const Basic> r2;
+
+    RCP<const Basic> i2 = integer(2);
+
+    r1 = erf(zero);
+    REQUIRE(eq(*r1, *zero));
+
+    r1 = erf(mul(i2, x));
+    r2 = exp(mul(integer(-4), (mul(x, x))));
+    r2 = div(mul(integer(4), r2), sqrt(pi));
+    REQUIRE(eq(*r1->diff(x), *r2));
+
+    r2 = add(x, y);
+    r1 = erf(r2);
+    r2 = exp(neg(mul(r2, r2)));
+    r2 = mul(div(i2, sqrt(pi)), r2);
+    REQUIRE(eq(*r1->diff(x), *r2));
+
+    REQUIRE(eq(*erf(neg(x)), *neg(erf(x))));
+}
+
 TEST_CASE("Gamma: functions", "[functions]")
 {
     RCP<const Basic> i2 = integer(2);
@@ -2281,7 +2310,7 @@ TEST_CASE("Beta: functions", "[functions]")
     r3 = div(mul(gamma(i3), gamma(i2)), gamma(add(i2, i3)));
     REQUIRE(eq(*r1, *r3));
     r2 = div(one, integer(12));
-    REQUIRE(eq(*r1, *r2));	
+    REQUIRE(eq(*r1, *r2));
 
     r1 = beta(div(one, i2), i2);
     r2 = beta(i2, div(one, i2));
@@ -2411,6 +2440,9 @@ TEST_CASE("Abs: functions", "[functions]")
     RCP<const Symbol> x = symbol("x");
     RCP<const Symbol> y = symbol("y");
 
+    REQUIRE(eq(*abs(add(i2, mul(I, im1))), *sqrt(integer(5))));
+    REQUIRE(eq(*abs(add(i2, mul(I, i3))), *sqrt(integer(13))));
+    REQUIRE(eq(*abs(x), *abs(neg(x))));
     REQUIRE(eq(*abs(one), *one));
     REQUIRE(eq(*abs(i2), *i2));
     REQUIRE(eq(*abs(im1), *one));

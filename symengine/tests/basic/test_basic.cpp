@@ -40,6 +40,8 @@ using SymEngine::set_basic;
 using SymEngine::free_symbols;
 using SymEngine::function_symbol;
 using SymEngine::rational_class;
+using SymEngine::pi;
+
 
 TEST_CASE("Symbol hash: Basic", "[basic]")
 {
@@ -671,3 +673,21 @@ TEST_CASE("free_symbols: Basic", "[basic]")
     REQUIRE(s.size() == 1);
     REQUIRE(s.count(x) == 1);
 }
+
+TEST_CASE("args: Basic", "[basic]")
+{
+    RCP<const Basic> r1;
+    RCP<const Symbol> x, y;
+    x = symbol("x");
+    y = symbol("y");
+
+    r1 = add(x, pow(y, x));
+    REQUIRE(vec_basic_eq_perm(r1->get_args(), {x, pow(y, x)}));
+
+    r1 = pi;
+    REQUIRE(r1->get_args().size() == 0);
+
+    r1 = log(pi);
+    REQUIRE(vec_basic_eq_perm(r1->get_args(), {pi}));
+}
+

@@ -12,6 +12,7 @@
 #include <symengine/polynomial.h>
 #include <symengine/complex_double.h>
 #include <symengine/complex_mpc.h>
+#include <symengine/sets.h>
 
 namespace SymEngine {
 
@@ -400,6 +401,12 @@ static RCP<const Basic> diff(const CLASS &self, \
             self.get_den())->diff(x));
     }
 
+    static RCP<const Basic> diff(const Erf &self,
+            const RCP<const Symbol> &x) {
+        RCP<const Basic> arg = self.get_args()[0];
+        return mul(div(mul(integer(2), exp(neg(mul(arg, arg)))), sqrt(pi)), arg->diff(x));
+    }
+
     static RCP<const Basic> diff(const Gamma &self,
             const RCP<const Symbol> &x) {
         RCP<const Basic> gamma_arg = self.get_args()[0];
@@ -489,26 +496,27 @@ static RCP<const Basic> diff(const CLASS &self, \
             umap_uvec_mpz dict;
             auto i = self.vars_.begin();
             unsigned int index = 0;
-            while(!(*i)->__eq__(*x)){
-	      i++;
+            while(!(*i)->__eq__(*x)) {
+	        i++;
                 index++;
             } //find the index of the variable we are differentiating WRT.
-            for(auto bucket : self.dict_){
-                if(bucket.first[index] != 0){
+            for(auto bucket : self.dict_) {
+                if(bucket.first[index] != 0) {
                     vec_uint v = bucket.first;
                     v[index]--;
                     dict.insert(std::pair<vec_uint, integer_class>(v, bucket.second * bucket.first[index]));
                 }
             }
-	    /*            umap_sym_uint degrees = self.degrees_;
-            if(degrees[x] >0)
-	    degrees[x]--;*/ 
             return MultivariateIntPolynomial::from_dict(self.vars_, std::move(dict));
-        } else{
+        } else {
             return zero;
         }
     }
 
+    static RCP<const Basic> diff(const Set &self,
+            const RCP<const Symbol> &x) {
+        throw std::runtime_error("Derivative doesn't exist.");
+    }
 };
 
 #define IMPLEMENT_DIFF(CLASS) \
