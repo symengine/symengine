@@ -25,8 +25,6 @@ using SymEngine::integer;
 using SymEngine::integer_class;
 using SymEngine::vec_basic_eq_perm;
 using SymEngine::Expression;
-using SymEngine::Add;
-using SymEngine::Mul;
 
 using namespace SymEngine::literals;
 
