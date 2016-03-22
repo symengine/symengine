@@ -707,7 +707,7 @@ TEST_CASE("test_is_quad_residue(): ntheory", "[ntheory]")
     REQUIRE(is_quad_residue(*t3, *a100) == false);
 }
 
-TEST_CASE("test_is_nth_power_residue(): ntheory", "[ntheory]")
+TEST_CASE("test_is_nth_residue(): ntheory", "[ntheory]")
 {
     RCP<const Integer> im1 = integer(-1);
     RCP<const Integer> i1 = integer(1);
@@ -729,18 +729,18 @@ TEST_CASE("test_is_nth_power_residue(): ntheory", "[ntheory]")
     RCP<const Integer> i100 = integer(100);
     RCP<const Integer> i105 = integer(105);
 
-    REQUIRE(is_nth_power_residue(im1, i2, i23) == false);
-    REQUIRE(is_nth_power_residue(im1, i2, i93) == false);
-    REQUIRE(is_nth_power_residue(i3, i2, i27) == false);
-    REQUIRE(is_nth_power_residue(i18, i2, i27) == false);
-    REQUIRE(is_nth_power_residue(i9, i4, i64) == false);
-    REQUIRE(is_nth_power_residue(im1, i2, i23) == false);
-    REQUIRE(is_nth_power_residue(i2, i3, i105) == false);
-    REQUIRE(is_nth_power_residue(i5, i1, i100) == true);
-    REQUIRE(is_nth_power_residue(im1, i2, i41) == true);
-    REQUIRE(is_nth_power_residue(i31, i4, i41) == true);
-    REQUIRE(is_nth_power_residue(i4, i2, i64) == true);
-    REQUIRE(is_nth_power_residue(i32, i10, i41) == true);
+    REQUIRE(is_nth_residue(im1, i2, i23) == false);
+    REQUIRE(is_nth_residue(im1, i2, i93) == false);
+    REQUIRE(is_nth_residue(i3, i2, i27) == false);
+    REQUIRE(is_nth_residue(i18, i2, i27) == false);
+    REQUIRE(is_nth_residue(i9, i4, i64) == false);
+    REQUIRE(is_nth_residue(im1, i2, i23) == false);
+    REQUIRE(is_nth_residue(i2, i3, i105) == false);
+    REQUIRE(is_nth_residue(i5, i1, i100) == true);
+    REQUIRE(is_nth_residue(im1, i2, i41) == true);
+    REQUIRE(is_nth_residue(i31, i4, i41) == true);
+    REQUIRE(is_nth_residue(i4, i2, i64) == true);
+    REQUIRE(is_nth_residue(i32, i10, i41) == true);
 }
 
 TEST_CASE("test_mobius(): ntheory", "[ntheory]")

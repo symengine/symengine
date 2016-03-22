@@ -1603,19 +1603,26 @@ bool is_quad_residue(const Integer &a, const Integer &p)
     return mp_legendre(a_final, p2) == 1;
 }
 
-bool is_nth_power_residue(const RCP<const Integer> &a, const RCP<const Integer> &n, const RCP<const Integer> &mod)
+bool is_nth_residue(const RCP<const Integer> &a, const RCP<const Integer> &n, const RCP<const Integer> &mod)
     /*
-    Returns true if ``a`` (mod ``p``) is in the set of squares mod ``p``,
-    i.e a % p in set([i**n % p for i in range(p)]).
+    Returns true if ``a`` (mod ``mod``) is in the set of squares mod ``mod``,
+    i.e a % mod in set([i**n % mod for i in range(mod)]).
     */
 {
-    if (mod->as_mpz() <= 0) {
+    integer_class _mod= mod->as_mpz();
+
+    if (_mod == 0) {
         return false;
-    } else if (mod->as_mpz() == 1) {
+    } else if (_mod == 1) {
         return true;
     }
+
+    if(_mod < 0)
+        _mod = -(_mod);
+
+    RCP<const Integer> mod2 = integer(_mod);
     map_integer_uint prime_mul;
-    prime_factor_multiplicities(prime_mul, *mod);
+    prime_factor_multiplicities(prime_mul, *mod2);
     bool ret_val;
 
     for (const auto &it: prime_mul) {
