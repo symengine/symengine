@@ -107,7 +107,7 @@ UnivariateExprPolynomial UnivariateSeries::pow(const UnivariateExprPolynomial &b
             exp = (exp - 1) / 2;
         }
     }
-    return x * y;
+    return mul(x, y, prec);
 }
 
 Expression UnivariateSeries::find_cf(const UnivariateExprPolynomial &s, const UnivariateExprPolynomial &var, unsigned deg) {

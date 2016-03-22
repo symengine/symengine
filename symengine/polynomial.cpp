@@ -93,7 +93,7 @@ RCP<const UnivariateIntPolynomial> UnivariateIntPolynomial::from_vec(const RCP<c
     map_uint_mpz dict;
     unsigned int degree = 0;
     for(unsigned int i = 0; i < v.size(); i++) {
-        if (0 != v[i]) {
+        if (v[i] != 0) {
             dict.insert(std::pair<unsigned int, integer_class>(i, v[i]));
             degree = i;
         }
@@ -407,7 +407,7 @@ RCP<const UnivariatePolynomial> UnivariatePolynomial::from_vec(const RCP<const S
     map_int_Expr dict;
     unsigned int degree = 0;
     for(unsigned int i = 0; i < v.size(); i++) {
-        if (Expression(0) != v[i]) {
+        if (v[i] != Expression(0)) {
             dict.insert(std::pair<int, Expression>(i, v[i]));
             degree = i;
         }   
