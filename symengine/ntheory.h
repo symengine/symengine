@@ -178,7 +178,7 @@ std::vector<integer_class> quadratic_residues(const Integer &a);
 //! Returns true if 'a' is a quadratic residue of 'p'
 bool is_quad_residue(const Integer &a , const Integer &p);
 //! Returns true if 'a' is a nth power residue of 'mod'
-bool is_nth_residue(const RCP<const Integer> &a, const RCP<const Integer> &n, const RCP<const Integer> &mod);
+bool is_nth_residue(const Integer &a, const Integer &n, const Integer &mod);
 //! Mobius Function
 // mu(n) = 1 if n is a square-free positive integer with an even number of prime factors
 // mu(n) = −1 if n is a square-free positive integer with an odd number of prime factors

@@ -1603,13 +1603,13 @@ bool is_quad_residue(const Integer &a, const Integer &p)
     return mp_legendre(a_final, p2) == 1;
 }
 
-bool is_nth_residue(const RCP<const Integer> &a, const RCP<const Integer> &n, const RCP<const Integer> &mod)
+bool is_nth_residue(const Integer &a, const Integer &n, const Integer &mod)
     /*
-    Returns true if ``a`` (mod ``mod``) is in the set of squares mod ``mod``,
+    Returns true if ``a`` (mod ``mod``) is in the set of nth powers mod ``mod``,
     i.e a % mod in set([i**n % mod for i in range(mod)]).
     */
 {
-    integer_class _mod= mod->as_mpz();
+    integer_class _mod= mod.as_mpz();
 
     if (_mod == 0) {
         return false;
@@ -1617,7 +1617,7 @@ bool is_nth_residue(const RCP<const Integer> &a, const RCP<const Integer> &n, co
         return true;
     }
 
-    if(_mod < 0)
+    if (_mod < 0)
         _mod = -(_mod);
 
     RCP<const Integer> mod2 = integer(_mod);
@@ -1626,7 +1626,7 @@ bool is_nth_residue(const RCP<const Integer> &a, const RCP<const Integer> &n, co
     bool ret_val;
 
     for (const auto &it: prime_mul) {
-        ret_val = _is_nthroot_mod_prime_power(a->as_mpz(), n->as_mpz(), it.first->as_mpz(), it.second);
+        ret_val = _is_nthroot_mod_prime_power(a.as_mpz(), n.as_mpz(), it.first->as_mpz(), it.second);
         if(not ret_val) return false;
     }
     return true;

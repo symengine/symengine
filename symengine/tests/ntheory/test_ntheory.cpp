@@ -709,38 +709,38 @@ TEST_CASE("test_is_quad_residue(): ntheory", "[ntheory]")
 
 TEST_CASE("test_is_nth_residue(): ntheory", "[ntheory]")
 {
-    RCP<const Integer> im1 = integer(-1);
-    RCP<const Integer> i1 = integer(1);
-    RCP<const Integer> i2 = integer(2);
-    RCP<const Integer> i3 = integer(3);
-    RCP<const Integer> i4 = integer(4);
-    RCP<const Integer> i5 = integer(5);
-    RCP<const Integer> i9 = integer(9);
-    RCP<const Integer> i10 = integer(10);
-    RCP<const Integer> i16 = integer(16);
-    RCP<const Integer> i18 = integer(18);
-    RCP<const Integer> i23 = integer(23);
-    RCP<const Integer> i27 = integer(27);
-    RCP<const Integer> i31 = integer(31);
-    RCP<const Integer> i32 = integer(32);
-    RCP<const Integer> i41 = integer(41);
-    RCP<const Integer> i64 = integer(64);
-    RCP<const Integer> i93 = integer(93);
-    RCP<const Integer> i100 = integer(100);
-    RCP<const Integer> i105 = integer(105);
+    const RCP<const Integer> im1 = integer(-1);
+    const RCP<const Integer> i1 = integer(1);
+    const RCP<const Integer> i2 = integer(2);
+    const RCP<const Integer> i3 = integer(3);
+    const RCP<const Integer> i4 = integer(4);
+    const RCP<const Integer> i5 = integer(5);
+    const RCP<const Integer> i9 = integer(9);
+    const RCP<const Integer> i10 = integer(10);
+    const RCP<const Integer> i16 = integer(16);
+    const RCP<const Integer> i18 = integer(18);
+    const RCP<const Integer> i23 = integer(23);
+    const RCP<const Integer> i27 = integer(27);
+    const RCP<const Integer> i31 = integer(31);
+    const RCP<const Integer> i32 = integer(32);
+    const RCP<const Integer> i41 = integer(41);
+    const RCP<const Integer> i64 = integer(64);
+    const RCP<const Integer> i93 = integer(93);
+    const RCP<const Integer> i100 = integer(100);
+    const RCP<const Integer> i105 = integer(105);
 
-    REQUIRE(is_nth_residue(im1, i2, i23) == false);
-    REQUIRE(is_nth_residue(im1, i2, i93) == false);
-    REQUIRE(is_nth_residue(i3, i2, i27) == false);
-    REQUIRE(is_nth_residue(i18, i2, i27) == false);
-    REQUIRE(is_nth_residue(i9, i4, i64) == false);
-    REQUIRE(is_nth_residue(im1, i2, i23) == false);
-    REQUIRE(is_nth_residue(i2, i3, i105) == false);
-    REQUIRE(is_nth_residue(i5, i1, i100) == true);
-    REQUIRE(is_nth_residue(im1, i2, i41) == true);
-    REQUIRE(is_nth_residue(i31, i4, i41) == true);
-    REQUIRE(is_nth_residue(i4, i2, i64) == true);
-    REQUIRE(is_nth_residue(i32, i10, i41) == true);
+    REQUIRE(is_nth_residue(*im1, *i2, *i23) == false);
+    REQUIRE(is_nth_residue(*im1, *i2, *i93) == false);
+    REQUIRE(is_nth_residue(*i3, *i2, *i27) == false);
+    REQUIRE(is_nth_residue(*i18, *i2, *i27) == false);
+    REQUIRE(is_nth_residue(*i9, *i4, *i64) == false);
+    REQUIRE(is_nth_residue(*im1, *i2, *i23) == false);
+    REQUIRE(is_nth_residue(*i2, *i3, *i105) == false);
+    REQUIRE(is_nth_residue(*i5, *i1, *i100) == true);
+    REQUIRE(is_nth_residue(*im1, *i2, *i41) == true);
+    REQUIRE(is_nth_residue(*i31, *i4, *i41) == true);
+    REQUIRE(is_nth_residue(*i4, *i2, *i64) == true);
+    REQUIRE(is_nth_residue(*i32, *i10, *i41) == true);
 }
 
 TEST_CASE("test_mobius(): ntheory", "[ntheory]")
