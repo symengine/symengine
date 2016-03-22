@@ -2666,18 +2666,15 @@ RCP<const Basic> LeviCivita::subs(const map_basic_basic &subs_dict) const
     auto it = subs_dict.find(rcp_from_this());
     if (it != subs_dict.end())
         return it->second;
-    vec_basic arg(arg_.size());
     bool this_rcp = true;
-    auto it2 = arg.begin();
-    for (const auto& it: arg_) {
-        *it2 = ((it)->subs(subs_dict));
-        if (this_rcp) {
-            if (not eq(*it, **it2))
-                this_rcp = false;
+    vec_basic arg = arg_;
+    for (auto it=arg.begin(); it != arg.end(); ++it) {
+        const auto temp = ((*it)->subs(subs_dict));
+        if (this_rcp and temp != *it) {
+             this_rcp = false;
         }
-        ++it2;
+        *it = temp;
     }
-
     if (this_rcp)
          return rcp_from_this();
     else
