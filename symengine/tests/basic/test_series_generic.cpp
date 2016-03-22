@@ -25,6 +25,8 @@ using SymEngine::integer;
 using SymEngine::integer_class;
 using SymEngine::vec_basic_eq_perm;
 using SymEngine::Expression;
+using SymEngine::Add;
+using SymEngine::Mul;
 
 using namespace SymEngine::literals;
 
@@ -36,14 +38,13 @@ TEST_CASE("Constructor of UnivariateSeries", "[UnivariateSeries]")
     RCP<const UnivariateSeries> P = univariate_series(x, 2, apoly_);
     REQUIRE(P->__str__() == "x**2 + 2*x + 1 + O(x**2)");
 
-
     map_int_Expr bdict_ = {{0, 1}, {1, 0}, {2, 2}, {3, 1}};
     UnivariateExprPolynomial bpoly_(UnivariatePolynomial::from_dict(x, std::move(bdict_)));
     RCP<const UnivariateSeries> Q = UnivariateSeries::create(x, 5, bpoly_);
     REQUIRE(Q->__str__() == "x**3 + 2*x**2 + 1 + O(x**5)");
 }
 
-/*TEST_CASE("Adding two UnivariateSeries", "[UnivariateSeries]")
+TEST_CASE("Adding two UnivariateSeries", "[UnivariateSeries]")
 {
     RCP<const Symbol> x  = symbol("x");
     map_int_Expr adict_ = {{0, 1}, {1, 2}, {2, 1}};
@@ -53,16 +54,16 @@ TEST_CASE("Constructor of UnivariateSeries", "[UnivariateSeries]")
     map_int_Expr ddict_ = {{0, 3}, {1, 5}, {2, 5}};
     UnivariateExprPolynomial dpoly_(univariate_polynomial(x, 2, std::move(ddict_)));
 
-    const UnivariateSeries a(apoly_, x->get_name(), 5);
-    const UnivariateSeries b(bpoly_, x->get_name(), 4);
-    RCP<const UnivariateSeries> c = add_uni_series(a, b);
-    const UnivariateSeries d(dpoly_, x->get_name(), 4);
-    REQUIRE(c->get_poly() == d.get_poly());
+    RCP<const UnivariateSeries> a = UnivariateSeries::create(x, 5, apoly_);
+    RCP<const UnivariateSeries> b = UnivariateSeries::create(x, 4, bpoly_);
+    RCP<const Basic> c = add(a, b);
+    RCP<const UnivariateSeries> d = UnivariateSeries::create(x, 4, dpoly_);
+    REQUIRE(c->__cmp__(*d));
 
-    const UnivariateSeries e(bpoly_, x->get_name(), 2);
-    RCP<const UnivariateSeries> f = add_uni_series(a, e);
-    const UnivariateSeries g(dpoly_, x->get_name(), 2);
-    REQUIRE(f->get_poly() == g.get_poly());
+    RCP<const UnivariateSeries> e = UnivariateSeries::create(x, 2, bpoly_);
+    RCP<const Basic> f = add(a, e);
+    RCP<const Basic> g = UnivariateSeries::create(x, 2, dpoly_);
+    REQUIRE(f->__cmp__(*g));
 }
 
 TEST_CASE("Negative of a UnivariateSeries", "[UnivariateSeries]")
@@ -73,10 +74,10 @@ TEST_CASE("Negative of a UnivariateSeries", "[UnivariateSeries]")
     map_int_Expr bdict_ = {{0, -1}, {1, -2}, {2, -1}};
     UnivariateExprPolynomial bpoly_(univariate_polynomial(x, 2, std::move(bdict_)));
 
-    const UnivariateSeries a(apoly_, x->get_name(), 5);
-    RCP<const UnivariateSeries> b = neg_uni_series(a);
-    const UnivariateSeries c(bpoly_, x->get_name(), 5);
-    REQUIRE(b->get_poly() == c.get_poly());
+    RCP<const UnivariateSeries> a = UnivariateSeries::create(x, 5, apoly_);
+    RCP<const Basic> b = neg(a);
+    RCP<const UnivariateSeries> c = UnivariateSeries::create(x, 5, bpoly_);
+    REQUIRE(b->__cmp__(*c));
 }
 
 TEST_CASE("Subtracting two UnivariateSeries", "[UnivariateSeries]")
@@ -91,17 +92,17 @@ TEST_CASE("Subtracting two UnivariateSeries", "[UnivariateSeries]")
     map_int_Expr gdict_ = {{0, -1}, {1, -1}};
     UnivariateExprPolynomial gpoly_(univariate_polynomial(x, 1, std::move(gdict_)));
 
-    UnivariateSeries a(apoly_, x->get_name(), 5);
-    UnivariateSeries b(bpoly_, x->get_name(), 4);
-    RCP<const UnivariateSeries> c = sub_uni_series(a, b);
-    UnivariateSeries f(fpoly_, x->get_name(), 4);
-    REQUIRE(c->get_poly() == f.get_poly());
+    RCP<const UnivariateSeries> a = UnivariateSeries::create(x, 5, apoly_);
+    RCP<const UnivariateSeries> b = UnivariateSeries::create(x, 4, bpoly_);
+    RCP<const Basic> c = sub(a, b);
+    RCP<const UnivariateSeries> f = UnivariateSeries::create(x, 4, fpoly_);
+    REQUIRE(c->__cmp__(*f));
 
-    UnivariateSeries d(bpoly_, x->get_name(), 2);
-    RCP<const UnivariateSeries> e = sub_uni_series(a, d);
-    UnivariateSeries g(gpoly_, x->get_name(), 2);
-    REQUIRE(e->get_poly() == f.get_poly());
-}*/
+    RCP<const UnivariateSeries> d = UnivariateSeries::create(x, 2, bpoly_);
+    RCP<const Basic> e = sub(a, d);
+    RCP<const UnivariateSeries> g = UnivariateSeries::create(x, 2, gpoly_);
+    REQUIRE(e->__cmp__(*f));
+}
 
 TEST_CASE("Multiplication of two UnivariateExprPolynomial with precision", "[UnivariateSeries]")
 {
