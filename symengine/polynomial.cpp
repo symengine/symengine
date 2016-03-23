@@ -160,16 +160,14 @@ integer_class UnivariateIntPolynomial::eval(const integer_class &x) const {
 integer_class UnivariateIntPolynomial::eval_bit(const int &x) const {
 
     unsigned int last_deg = dict_.rbegin()->first;
-    integer_class result(0), two_pow;
+    integer_class result(0);
 
     for (auto it = dict_.rbegin(); it != dict_.rend(); ++it) {
 
-        two_pow = integer_class(1) << x * (last_deg - (*it).first);
+        result = (*it).second + (result << x * (last_deg - (*it).first));
         last_deg = (*it).first;
-        result = (*it).second + two_pow * result;
     }
-    two_pow = integer_class(1) << x * last_deg;
-    result *= two_pow;
+    result = result << x * last_deg;
     
     return result;
 }
