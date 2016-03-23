@@ -18,8 +18,8 @@
 
 namespace SymEngine {
 
-template <typename T>
-class EvalDoubleVisitor : public BaseVisitor<EvalDoubleVisitor<T>> {
+template <typename T, typename C>
+class EvalDoubleVisitor : public BaseVisitor<C> {
 protected:
     /*
        The 'result_' variable is assigned into at the very end of each visit()
@@ -32,7 +32,7 @@ protected:
 public:
 
     T apply(const Basic &b) {
-        b.accept(*this);
+        b.accept(*static_cast<C*>(this));
         return result_;
     }
 
@@ -237,7 +237,8 @@ public:
     }
 };
 
-class EvalRealDoubleVisitor : public BaseVisitor<EvalRealDoubleVisitor, EvalDoubleVisitor<double>> {
+template <typename C>
+class EvalRealDoubleVisitor : public EvalDoubleVisitor<double, C> {
 public:
 
     // Classes not implemented are
@@ -245,17 +246,17 @@ public:
     // LeviCivita, KroneckerDelta, LambertW
     // Derivative, Complex, ComplexDouble, ComplexMPC
 
-    using EvalDoubleVisitor::bvisit;
+    using EvalDoubleVisitor<double, C>::bvisit;
 
     void bvisit(const ATan2 &x) {
-        double num = apply(*(x.get_num()));
-        double den = apply(*(x.get_den()));
-        result_ = std::atan2(num, den);
+        double num = this->apply(*(x.get_num()));
+        double den = this->apply(*(x.get_den()));
+        this->result_ = std::atan2(num, den);
     };
 
     void bvisit(const Gamma &x) {
-        double tmp = apply(*(x.get_args()[0]));
-        result_ = std::tgamma(tmp);
+        double tmp = this->apply(*(x.get_args()[0]));
+        this->result_ = std::tgamma(tmp);
     };
 
     void bvisit(const LogGamma &x) {
@@ -295,7 +296,14 @@ public:
     };
 };
 
-class EvalComplexDoubleVisitor : public BaseVisitor<EvalComplexDoubleVisitor, EvalDoubleVisitor<std::complex<double>>> {
+class EvalRealDoubleVisitorPattern : public EvalRealDoubleVisitor<EvalRealDoubleVisitorPattern> {
+};
+
+class EvalRealDoubleVisitorFinal : public EvalRealDoubleVisitor<EvalRealDoubleVisitorFinal> {
+};
+
+class EvalComplexDoubleVisitor : public EvalDoubleVisitor<std::complex<double>,
+    EvalComplexDoubleVisitor> {
 public:
 
     // Classes not implemented are
@@ -527,7 +535,7 @@ std::vector<fn> init_eval_double()
 const static std::vector<fn> table_eval_double = init_eval_double();
 
 double eval_double(const Basic &b) {
-    EvalRealDoubleVisitor v;
+    EvalRealDoubleVisitorFinal v;
     return v.apply(b);
 }
 
@@ -539,5 +547,19 @@ std::complex<double> eval_complex_double(const Basic &b) {
 double eval_double_single_dispatch(const Basic &b) {
     return table_eval_double[b.get_type_code()](b);
 }
+
+double eval_double_visitor_pattern(const Basic &b) {
+    EvalRealDoubleVisitorPattern v;
+    return v.apply(b);
+}
+
+
+#define ACCEPT(CLASS) void CLASS::accept(EvalRealDoubleVisitorFinal &v) const { \
+    v.bvisit(*this); \
+}
+
+#define SYMENGINE_ENUM(TypeID, Class) ACCEPT(Class)
+#include "symengine/type_codes.inc"
+#undef SYMENGINE_ENUM
 
 } // SymEngine
