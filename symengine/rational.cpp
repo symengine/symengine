@@ -103,9 +103,7 @@ void get_num_den(const Rational &rat,
 bool Rational::is_perfect_power(bool is_expected) const
 {
     const integer_class &num = SymEngine::get_num(i);
-    if (num == 0)
-        return true;
-    else if (num == 1)
+    if (num == 1)
         return mp_perfect_power_p(SymEngine::get_den(i));
 
     const integer_class &den = SymEngine::get_den(i);

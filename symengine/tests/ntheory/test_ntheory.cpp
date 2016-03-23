@@ -38,6 +38,7 @@ using SymEngine::multiplicative_order;
 using SymEngine::totient;
 using SymEngine::carmichael;
 using SymEngine::mertens;
+using SymEngine::integer_class;
 using SymEngine::harmonic;
 
 TEST_CASE("test_gcd_lcm(): ntheory", "[ntheory]")
@@ -633,6 +634,113 @@ TEST_CASE("test_powermod(): ntheory", "[ntheory]")
 
     powermod_list(powms, i15, i1->divint(*i18), i105);
     REQUIRE(powms.size() == 6);
+
+}
+
+TEST_CASE("test_quadratic_residues(): ntheory", "[ntheory]")
+{
+
+    std::vector<integer_class> i1 = {integer_class(0)};
+    std::vector<integer_class> i2 = {integer_class(0), integer_class(1)};
+    std::vector<integer_class> i3 = {integer_class(0), integer_class(1)};
+    std::vector<integer_class> i4 = {integer_class(0), integer_class(1)};
+    std::vector<integer_class> i5 = {integer_class(0), integer_class(1), integer_class(4)};
+    std::vector<integer_class> i7 = {integer_class(0), integer_class(1), integer_class(2), integer_class(4)};
+    std::vector<integer_class> i100 = {integer_class(0), integer_class(1), integer_class(4), integer_class(9), integer_class(16),
+                integer_class(21), integer_class(24), integer_class(25), integer_class(29), integer_class(36), integer_class(41),
+                integer_class(44), integer_class(49), integer_class(56), integer_class(61), integer_class(64), integer_class(69),
+                integer_class(76), integer_class(81), integer_class(84), integer_class(89), integer_class(96)};
+
+    const RCP<const Integer> a1 = integer(1);
+    const RCP<const Integer> a2 = integer(2);
+    const RCP<const Integer> a3 = integer(3);
+    const RCP<const Integer> a4 = integer(4);
+    const RCP<const Integer> a5 = integer(5);
+    const RCP<const Integer> a7 = integer(7);
+    const RCP<const Integer> a100 = integer(100);
+
+    std::cout << "Quadratic Residues:"<<std::endl;
+    REQUIRE(quadratic_residues(*a1) == i1);
+    REQUIRE(quadratic_residues(*a2) == i2);
+    REQUIRE(quadratic_residues(*a3) == i3);
+    REQUIRE(quadratic_residues(*a4) == i4);
+    REQUIRE(quadratic_residues(*a5) == i5);
+    REQUIRE(quadratic_residues(*a7) == i7);
+    REQUIRE(quadratic_residues(*a100) == i100);
+}
+
+TEST_CASE("test_is_quad_residue(): ntheory", "[ntheory]")
+{
+    const RCP<const Integer> a1 = integer(1);
+    const RCP<const Integer> a2 = integer(2);
+    const RCP<const Integer> a3 = integer(3);
+    const RCP<const Integer> a4 = integer(4);
+    const RCP<const Integer> a7 = integer(7);
+    const RCP<const Integer> a9 = integer(9);
+    const RCP<const Integer> a100 = integer(100);
+
+    const RCP<const Integer> t0 = integer(0);
+    const RCP<const Integer> t1 = integer(1);
+    const RCP<const Integer> t3 = integer(3);
+    const RCP<const Integer> t4 = integer(4);
+    const RCP<const Integer> nt5 = integer(-5);
+    const RCP<const Integer> t7 = integer(7);
+    const RCP<const Integer> t56 = integer(56);
+    const RCP<const Integer> t89 = integer(89);
+
+    std::cout << "Is_Quadratic_Residue:"<<std::endl;
+    REQUIRE(is_quad_residue(*t0, *a1) == true);
+    REQUIRE(is_quad_residue(*t1, *a1) == true);
+    REQUIRE(is_quad_residue(*t1, *a2) == true);
+    REQUIRE(is_quad_residue(*t0, *a4) == true);
+    REQUIRE(is_quad_residue(*t1, *a4) == true);
+    REQUIRE(is_quad_residue(*t4, *a4) == true);
+    REQUIRE(is_quad_residue(*nt5, *a3) == true);
+    REQUIRE(is_quad_residue(*t4, *a7) == true);
+    REQUIRE(is_quad_residue(*t4, *a9) == true);
+    REQUIRE(is_quad_residue(*t7, *a9) == true);
+    REQUIRE(is_quad_residue(*t56, *a100) == true);
+    REQUIRE(is_quad_residue(*t7, *a100) == false);
+    REQUIRE(is_quad_residue(*nt5, *a4) == false);
+    REQUIRE(is_quad_residue(*t4, *a100) == true);
+    REQUIRE(is_quad_residue(*t89, *a100) == true);
+    REQUIRE(is_quad_residue(*t3, *a100) == false);
+}
+
+TEST_CASE("test_is_nth_residue(): ntheory", "[ntheory]")
+{
+    const RCP<const Integer> im1 = integer(-1);
+    const RCP<const Integer> i1 = integer(1);
+    const RCP<const Integer> i2 = integer(2);
+    const RCP<const Integer> i3 = integer(3);
+    const RCP<const Integer> i4 = integer(4);
+    const RCP<const Integer> i5 = integer(5);
+    const RCP<const Integer> i9 = integer(9);
+    const RCP<const Integer> i10 = integer(10);
+    const RCP<const Integer> i16 = integer(16);
+    const RCP<const Integer> i18 = integer(18);
+    const RCP<const Integer> i23 = integer(23);
+    const RCP<const Integer> i27 = integer(27);
+    const RCP<const Integer> i31 = integer(31);
+    const RCP<const Integer> i32 = integer(32);
+    const RCP<const Integer> i41 = integer(41);
+    const RCP<const Integer> i64 = integer(64);
+    const RCP<const Integer> i93 = integer(93);
+    const RCP<const Integer> i100 = integer(100);
+    const RCP<const Integer> i105 = integer(105);
+
+    REQUIRE(is_nth_residue(*im1, *i2, *i23) == false);
+    REQUIRE(is_nth_residue(*im1, *i2, *i93) == false);
+    REQUIRE(is_nth_residue(*i3, *i2, *i27) == false);
+    REQUIRE(is_nth_residue(*i18, *i2, *i27) == false);
+    REQUIRE(is_nth_residue(*i9, *i4, *i64) == false);
+    REQUIRE(is_nth_residue(*im1, *i2, *i23) == false);
+    REQUIRE(is_nth_residue(*i2, *i3, *i105) == false);
+    REQUIRE(is_nth_residue(*i5, *i1, *i100) == true);
+    REQUIRE(is_nth_residue(*im1, *i2, *i41) == true);
+    REQUIRE(is_nth_residue(*i31, *i4, *i41) == true);
+    REQUIRE(is_nth_residue(*i4, *i2, *i64) == true);
+    REQUIRE(is_nth_residue(*i32, *i10, *i41) == true);
 }
 
 TEST_CASE("test_mobius(): ntheory", "[ntheory]")

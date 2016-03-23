@@ -282,6 +282,11 @@ public:
         result_ = [=](const std::vector<double> &x){ return std::lgamma(tmp(x)); };
     };
 
+    void bvisit(const Erf &x) {
+        fn tmp = apply(*(x.get_args()[0]));
+        result_ = [=](const std::vector<double> &x){ return std::erf(tmp(x)); };
+    }
+
     void bvisit(const Max &x) {
         std::vector<fn> applys;
         for (const auto &p: x.get_args()) {

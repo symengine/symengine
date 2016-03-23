@@ -261,7 +261,10 @@ public:
     void bvisit(const FunctionWrapper &x) {
         x.eval(mpfr_get_prec(result_))->accept(*this);
     }
-
+    void bvisit(const Erf &x) {
+        apply(result_, *(x.get_args()[0]));
+        mpfr_erf(result_, result_, rnd_);
+    }
     void bvisit(const Max &x) {
         mpfr_class t(mpfr_get_prec (result_));
         auto d = x.get_args();
