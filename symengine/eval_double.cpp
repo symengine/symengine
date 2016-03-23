@@ -247,16 +247,18 @@ public:
     // Derivative, Complex, ComplexDouble, ComplexMPC
 
     using EvalDoubleVisitor<double, C>::bvisit;
+    using EvalDoubleVisitor<double, C>::apply;
+    using EvalDoubleVisitor<double, C>::result_;
 
     void bvisit(const ATan2 &x) {
-        double num = this->apply(*(x.get_num()));
-        double den = this->apply(*(x.get_den()));
-        this->result_ = std::atan2(num, den);
+        double num = apply(*(x.get_num()));
+        double den = apply(*(x.get_den()));
+        result_ = std::atan2(num, den);
     };
 
     void bvisit(const Gamma &x) {
-        double tmp = this->apply(*(x.get_args()[0]));
-        this->result_ = std::tgamma(tmp);
+        double tmp = apply(*(x.get_args()[0]));
+        result_ = std::tgamma(tmp);
     };
 
     void bvisit(const LogGamma &x) {
