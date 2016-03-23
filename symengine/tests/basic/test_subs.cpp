@@ -284,40 +284,6 @@ TEST_CASE("KroneckerDelta: subs", "[subs]")
 }
 
 
-TEST_CASE("LeviCivita: subs", "[subs]")
-{
-    RCP<const Basic> x = symbol("x");
-    RCP<const Basic> y = symbol("y");
-    RCP<const Basic> z = symbol("z");
-
-    RCP<const Basic> i2 = integer(2);
-    RCP<const Basic> i4 = integer(4);
-
-    RCP<const Basic> r1 = levi_civita({x, y});
-    RCP<const Basic> r2 = levi_civita({y, y});
-    RCP<const Basic> r3;
-    map_basic_basic d;
-    d[x] = y;
-    REQUIRE(eq(*r1->subs(d), *r2));
-
-    r1 = levi_civita({x, one, y, i2});
-    d[x] = i4;
-    d[y] = one;
-    r2 = levi_civita({i4, one, one, i2});
-    REQUIRE(eq(*r1->subs(d), *r2));
-
-    d.clear();
-    d[z] = x;
-    r2 = levi_civita({x, one, y, i2});
-    REQUIRE(eq(*r1->subs(d), *r2));
-
-    d.clear();
-    r1 = levi_civita({x, one, x, i2});
-    d[x] = y;
-    d[y] = x;
-    REQUIRE(eq(*r1->subs(d), *r1));
-}
-
 TEST_CASE("Gamma: subs", "[subs]")
 {
     RCP<const Basic> x = symbol("x");
