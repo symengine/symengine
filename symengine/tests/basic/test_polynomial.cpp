@@ -415,6 +415,22 @@ TEST_CASE("Testing addition, subtraction, multiplication of MultivariteIntPolyno
     REQUIRE(mul_mult_poly(*p2,*p1)->__str__() == "- 4*a**3 b**2 c x**3 y**2 z + 2*a**3 b**2 c x y**2 z**3 - 2*a b**2 c**3 x**3 y**2 z + a b**2 c**3 x y**2 z**3 - 6*a**4 b x**3 y**2 z + 3*a**4 b x y**2 z**3 + 2*a**3 b**2 c y z**2 + a b**2 c**3 y z**2 + 3*a**4 b y z**2 + 6*a**3 b**2 c + 3*a b**2 c**3 - 8*x**3 y**2 z + 4*x y**2 z**3 + 9*a**4 b + 4*y z**2 + 12");
 }
 
+TEST_CASE("Testing addition, subtraction, multiplication of MultivariateIntPolynomials with an overlapping set of variables", "[MultivariateIntPolynomial]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    RCP<const Symbol> z = symbol("z");
+    RCP<const MultivariateIntPolynomial> p1 = MultivariateIntPolynomial::from_dict({x,y}, { {{1,2},1_z}, {{4,0},3_z},{{0,3},4_z} });
+    RCP<const MultivariateIntPolynomial> p2 = MultivariateIntPolynomial::from_dict({y,z}, { {{2,1},-2_z}, {{0,2},1_z}, {{1,0},3_z} });
+
+    REQUIRE(add_mult_poly(*p1,*p2)->__str__() == "3*x**4 + x y**2 + 4*y**3 - 2*y**2 z + z**2 + 3*y");
+    REQUIRE(add_mult_poly(*p2,*p1)->__str__() == "3*x**4 + x y**2 + 4*y**3 - 2*y**2 z + z**2 + 3*y");
+    REQUIRE(sub_mult_poly(*p1,*p2)->__str__() == "3*x**4 + x y**2 + 4*y**3 + 2*y**2 z - z**2 - 3*y");
+    REQUIRE(sub_mult_poly(*p2,*p1)->__str__() == "- 3*x**4 - x y**2 - 4*y**3 - 2*y**2 z + z**2 + 3*y");
+    REQUIRE(mul_mult_poly(*p1,*p2)->__str__() == "- 6*x**4 y**2 z + 3*x**4 z**2 - 2*x y**4 z - 8*y**5 z + 9*x**4 y + x y**2 z**2 + 4*y**3 z**2 + 3*x y**3 + 12*y**4");
+    REQUIRE(mul_mult_poly(*p2,*p1)->__str__() == "- 6*x**4 y**2 z + 3*x**4 z**2 - 2*x y**4 z - 8*y**5 z + 9*x**4 y + x y**2 z**2 + 4*y**3 z**2 + 3*x y**3 + 12*y**4");
+}
+
 TEST_CASE("Testing derivative of MultivariateIntPolynomial", "[MultivariateIntPolynomial]"){
     RCP<const Symbol> x = symbol("x");
     RCP<const Symbol> y = symbol("y");
