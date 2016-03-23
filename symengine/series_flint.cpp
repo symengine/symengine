@@ -123,7 +123,7 @@ fp_t URatPSeriesFlint::pow(const fp_t &s, int n, unsigned prec) {
         return fp_t(s.pow(unsigned(n)));
     else if (n < 0)
         return fp_t(s.inv_series(prec).pow(unsigned(-n)));
-    return fp_t(1);
+    return fp_t("1 1");
 }
 
 unsigned URatPSeriesFlint::ldegree(const fp_t &s) {
