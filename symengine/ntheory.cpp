@@ -962,8 +962,8 @@ bool _sqrt_mod_tonelli_shanks(integer_class &rop, const integer_class &a, const 
         if (m == e)
             return false;
         mp_pow_ui(q, integer_class(2), e - m - 1); // q = 2**(e - m - 1)
-        mp_powm(t, y, q, p); // t = y**(2**(e - m - 1))
-        mp_powm(y, t, integer_class(2), p); // y = t**2
+        mp_powm(t, y, q, p);                       // t = y**(2**(e - m - 1))
+        mp_powm(y, t, integer_class(2), p);        // y = t**2
         e = m;
         rop = (rop * t) % p;
         b = (b * y) % p;

@@ -160,7 +160,7 @@ bool handle_minus(const RCP<const Basic> &arg, const Ptr<RCP<const Basic>> &rarg
 
 // \return true of conjugate has to be returned finally else false
 bool eval(const RCP<const Basic> &arg, unsigned period, bool odd, bool conj_odd, // input
-          const Ptr<RCP<const Basic>> &rarg, int &index, int &sign) // output
+          const Ptr<RCP<const Basic>> &rarg, int &index, int &sign)              // output
 {
     bool check;
     RCP<const Integer> n;
@@ -300,7 +300,7 @@ RCP<const Basic> sin(const RCP<const Basic> &arg)
 
     RCP<const Basic> ret_arg;
     int index, sign;
-    bool conjugate = eval(arg, 2, 1, 0, // input
+    bool conjugate = eval(arg, 2, 1, 0,                  // input
                           outArg(ret_arg), index, sign); // output
 
     if (conjugate) {
@@ -380,7 +380,7 @@ RCP<const Basic> cos(const RCP<const Basic> &arg)
 
     RCP<const Basic> ret_arg;
     int index, sign;
-    bool conjugate = eval(arg, 2, 0, 1, // input
+    bool conjugate = eval(arg, 2, 0, 1,                  // input
                           outArg(ret_arg), index, sign); // output
 
     if (conjugate) {
@@ -459,7 +459,7 @@ RCP<const Basic> tan(const RCP<const Basic> &arg)
 
     RCP<const Basic> ret_arg;
     int index, sign;
-    bool conjugate = eval(arg, 1, 1, 1, // input
+    bool conjugate = eval(arg, 1, 1, 1,                  // input
                           outArg(ret_arg), index, sign); // output
 
     if (conjugate) {
@@ -536,7 +536,7 @@ RCP<const Basic> cot(const RCP<const Basic> &arg)
 
     RCP<const Basic> ret_arg;
     int index, sign;
-    bool conjugate = eval(arg, 1, 1, 1, // input
+    bool conjugate = eval(arg, 1, 1, 1,                  // input
                           outArg(ret_arg), index, sign); // output
 
     if (conjugate) {
@@ -613,7 +613,7 @@ RCP<const Basic> csc(const RCP<const Basic> &arg)
 
     RCP<const Basic> ret_arg;
     int index, sign;
-    bool conjugate = eval(arg, 2, 1, 0, // input
+    bool conjugate = eval(arg, 2, 1, 0,                  // input
                           outArg(ret_arg), index, sign); // output
 
     if (conjugate) {
@@ -690,7 +690,7 @@ RCP<const Basic> sec(const RCP<const Basic> &arg)
 
     RCP<const Basic> ret_arg;
     int index, sign;
-    bool conjugate = eval(arg, 2, 0, 1, // input
+    bool conjugate = eval(arg, 2, 0, 1,                  // input
                           outArg(ret_arg), index, sign); // output
 
     if (conjugate) {
