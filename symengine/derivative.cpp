@@ -122,12 +122,6 @@ public:
 		pow(self.get_arg(),i2))), self.get_arg()->diff(x));
     }
 
-    static RCP<const Basic> diff(const ACsch &self,
-            const RCP<const Symbol> &x) {
-        return mul(div(minus_one, mul(sqrt(add(one, div(one,pow(self.get_arg(), i2)))),
-                pow(self.get_arg(),i2))), self.get_arg()->diff(x));
-    }
-
     static RCP<const Basic> diff(const ASinh &self,
 	    const RCP<const Symbol> &x) {
         return mul(div(one, sqrt(add(pow(self.get_arg(), i2), one))),
@@ -148,11 +142,6 @@ public:
 
     static RCP<const Basic> diff(const Sech &self,
 	    const RCP<const Symbol> &x) {
-        return mul(mul(mul(minus_one,sech(self.get_arg())),tanh(self.get_arg())), self.get_arg()->diff(x));
-    }
-
-    static RCP<const Basic> diff(const Sech &self,
-            const RCP<const Symbol> &x) {
         return mul(mul(mul(minus_one,sech(self.get_arg())),tanh(self.get_arg())), self.get_arg()->diff(x));
     }
 
@@ -417,12 +406,6 @@ public:
         return mul(div(mul(integer(2), exp(neg(mul(arg, arg)))), sqrt(pi)), arg->diff(x));
     }
 
-    static RCP<const Basic> diff(const Erf &self,
-            const RCP<const Symbol> &x) {
-        RCP<const Basic> arg = self.get_args()[0];
-        return mul(div(mul(integer(2), exp(neg(mul(arg, arg)))), sqrt(pi)), arg->diff(x));
-    }
-
     static RCP<const Basic> diff(const Gamma &self,
 	    const RCP<const Symbol> &x) {
         RCP<const Basic> gamma_arg = self.get_args()[0];
@@ -481,6 +464,28 @@ public:
             map_int_Expr d;
             return make_rcp<const UnivariatePolynomial>(self.get_var(), 0, std::move(d));
         }
+    }
+
+    static RCP<const Basic> diff(const MultivariateIntPolynomial &self, const RCP<const Symbol> &x) {
+        if(self.vars_.find(x) != self.vars_.end()){
+            umap_uvec_mpz dict;
+            auto i = self.vars_.begin();
+            unsigned int index = 0;
+            while(!(*i)->__eq__(*x)) {
+	        i++;
+	        index++;
+            } //find the index of the variable we are differentiating WRT.
+            for(auto bucket : self.dict_) {
+	        if(bucket.first[index] != 0) {
+	            vec_uint v = bucket.first;
+	            v[index]--;
+	            dict.insert(std::pair<vec_uint, integer_class>(v, bucket.second * bucket.first[index]));
+	        }
+	    }
+        return MultivariateIntPolynomial::from_dict(self.vars_, std::move(dict));
+        } else {
+            return zero;
+	}
     }
 
     static RCP<const Basic> diff(const FunctionWrapper &self,

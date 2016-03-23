@@ -797,54 +797,6 @@ TEST_CASE("TrigFunction: trig_to_sqrt", "[functions]")
     REQUIRE(eq(*trig_to_sqrt(r1), *div(x, sqrt(one_m_x2))));
 }
 
-TEST_CASE("TrigFunction: trig_to_sqrt", "[functions]")
-{
-    RCP<const Basic> r1;
-    RCP<const Symbol> x = symbol("x");
-    RCP<const Basic> i2 = integer(2);
-    RCP<const Basic> im2 = integer(-2);
-    RCP<const Basic> one_m_x2 = sub(one, pow(x, i2));
-    RCP<const Basic> one_m_xm2 = sub(one, pow(x, im2));
-    RCP<const Basic> one_p_x2 = add(one, pow(x, i2));
-    RCP<const Basic> one_p_xm2 = add(one, pow(x, im2));
-
-    r1 = sin(acos(x));
-    REQUIRE(eq(*trig_to_sqrt(r1), *sqrt(one_m_x2)));
-
-    r1 = sin(atan(x));
-    REQUIRE(eq(*trig_to_sqrt(r1), *div(x, sqrt(one_p_x2))));
-
-    r1 = cos(acsc(x));
-    REQUIRE(eq(*trig_to_sqrt(r1), *sqrt(one_m_xm2)));
-
-    r1 = cos(acot(x));
-    REQUIRE(eq(*trig_to_sqrt(r1), *div(one, sqrt(one_p_xm2))));
-
-    r1 = tan(acos(x));
-    REQUIRE(eq(*trig_to_sqrt(r1), *div(sqrt(one_m_x2), x)));
-
-    r1 = tan(asec(x));
-    REQUIRE(eq(*trig_to_sqrt(r1), *mul(x, sqrt(one_m_xm2))));
-
-    r1 = csc(atan(x));
-    REQUIRE(eq(*trig_to_sqrt(r1), *div(sqrt(one_p_x2), x)));
-
-    r1 = csc(asec(x));
-    REQUIRE(eq(*trig_to_sqrt(r1), *div(one, sqrt(one_m_xm2))));
-
-    r1 = sec(acos(x));
-    REQUIRE(eq(*trig_to_sqrt(r1), *div(one, x)));
-
-    r1 = sec(acot(x));
-    REQUIRE(eq(*trig_to_sqrt(r1), *sqrt(one_p_xm2)));
-
-    r1 = cot(asin(x));
-    REQUIRE(eq(*trig_to_sqrt(r1), *div(sqrt(one_m_x2), x)));
-
-    r1 = cot(acos(x));
-    REQUIRE(eq(*trig_to_sqrt(r1), *div(x, sqrt(one_m_x2))));
-}
-
 TEST_CASE("function_symbol: functions", "[functions]")
 {
     RCP<const Symbol> x = symbol("x");

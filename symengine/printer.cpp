@@ -369,45 +369,11 @@ void StrPrinter::bvisit(const UnivariatePolynomial &x) {
                 }
                 s << "*";
             }
-            first = false;
-            continue;
-        }
-        //if the coefficient of a term is +1 or -1
-        if (it->second == 1 or it->second == -1) {
-	    //in cases of -x, print -x
-	    //in cases of x**2 - x, print - x
-	    if (first) {
-	        if (it->second == -1)
-	            s << "-";
-	    } else {
-	        s << " " << _print_sign(static_cast<const Integer &>(*it->second.get_basic()).as_mpz()) << " ";
-	    }
-        }
-        //same logic is followed as above
-        else {
-	    //in cases of -2*x, print -2*x
-	    //in cases of x**2 - 2*x, print - 2*x
-	    if (first) {
-	        s << parenthesizeLT(it->second.get_basic(), PrecedenceEnum::Mul) << "*";
-	    } else {
-	        t = parenthesizeLT(it->second.get_basic(), PrecedenceEnum::Mul);
-	        if (t[0] == '-') {
-	            s << " - " << t.substr(1);
-	        } else {
-	            s << " + " << t;
-	        }
-	        s << "*";
-	    }
         }
         s << x.get_var()->get_name();
         //if exponent is not 1, print the exponent;
         if (it->first != 1) {
 	    s << "**"  << it->first;
-        }
-        s << x.get_var()->get_name();
-        //if exponent is not 1, print the exponent;
-        if (it->first != 1) {
-            s << "**"  << it->first;
         }
         //corner cases of only first term handled successfully, switch the bool
         first = false;

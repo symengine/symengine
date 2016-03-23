@@ -16,6 +16,7 @@ class Basic;
 class Number;
 class Integer;
 class Expression;
+class Symbol;
 struct RCPBasicHash;
 struct RCPBasicKeyEq;
 struct RCPBasicKeyLess;
