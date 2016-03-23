@@ -320,9 +320,14 @@ public:
     void bvisit(const Dirichlet_eta &) {
         throw std::runtime_error("Not implemented.");
     };
-    void bvisit(const Gamma &) {
-        throw std::runtime_error("Not implemented.");
+    void bvisit(const Gamma &x) {
+        apply(result_, *(x.get_args())[0]);
+        arb_gamma(result_, result_, prec_);
     };
+    void bvisit(const LogGamma &x){
+        apply(result_, *(x.get_args())[0]);
+        arb_lgamma(result_, result_, prec_);
+    }
     void bvisit(const LowerGamma &) {
         throw std::runtime_error("Not implemented.");
     };

@@ -16,7 +16,6 @@ class Basic;
 class Number;
 class Integer;
 class Expression;
-class Symbol;
 struct RCPBasicHash;
 struct RCPBasicKeyEq;
 struct RCPBasicKeyLess;
@@ -47,7 +46,6 @@ typedef std::map<RCP<const Integer>, unsigned,
         RCPIntegerKeyLess> map_integer_uint;
 typedef std::map<unsigned, integer_class>
        map_uint_mpz;
-typedef std::map<unsigned, Expression> map_uint_expr;
 typedef std::map<int, Expression> map_int_Expr;
 
 //! `insert(m, first, second)` is equivalent to `m[first] = second`, just faster,
@@ -243,7 +241,6 @@ int set_compare(const T &A, const T &B)
     }
     return 0;
 }
-
 
 std::ostream& operator<<(std::ostream& out, const SymEngine::umap_basic_num& d);
 std::ostream& operator<<(std::ostream& out, const SymEngine::map_basic_num& d);

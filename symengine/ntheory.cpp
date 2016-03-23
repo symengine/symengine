@@ -1205,6 +1205,23 @@ bool _nthroot_mod1(std::vector<RCP<const Integer>> &roots, const integer_class &
     return true;
 }
 
+// Checks if Solution for x**n == a mod p**k exists where a != 0 mod p and p is an odd prime.
+bool _is_nthroot_mod1(const integer_class &a, const integer_class &n,
+        const integer_class &p, const unsigned k)
+{
+    integer_class t, pk, m, phi;
+    mp_pow_ui(pk, p, k);
+    phi = pk * (p - 1) / p;
+    mp_gcd(m, phi, n);
+    t = phi / m;
+    mp_powm(t, a, t, pk);
+    // Check whether a**(phi / gcd(phi, n)) == 1 mod p**k.
+    if (t != 1) {
+        return false;
+    }
+    return true;
+}
+
 // Solution for x**n == a mod p**k.
 bool _nthroot_mod_prime_power(std::vector<RCP<const Integer>> &roots, const integer_class &a, const integer_class &n,
             const integer_class &p, const unsigned k, bool all_roots = false)
@@ -1337,6 +1354,66 @@ bool _nthroot_mod_prime_power(std::vector<RCP<const Integer>> &roots, const inte
 }
 } //anonymous namespace
 
+// Returns whether Solution for x**n == a mod p**k exists or not
+bool _is_nthroot_mod_prime_power(const integer_class &a, const integer_class &n, const integer_class &p, const unsigned k)
+{
+    integer_class pk;
+    if (a % p != 0) {
+        if (p == 2) {
+            integer_class t;
+            unsigned c = mp_scan1(n);
+
+            // Handle special cases of k = 1 and k = 2.
+            if (k == 1) {
+                return true;
+            }
+            if (k == 2) {
+                if (c > 0 and a % 4 == 3) {
+                    return false;
+                }
+                return true;
+            }
+            if (c >= k - 2) {
+                c = k - 2;  // Since x**(2**c) == x**(2**(k - 2)) mod 2**k, let c = k - 2.
+            }
+            if (c == 0) {
+                // x**r == a mod 2**k and x**2**(k - 2) == 1 mod 2**k, implies x**(r * s) == x == a**s mod 2**k.
+                return true;
+            }
+
+            // First, solve for y**2**c == a mod 2**k where y == x**r
+            t = integer_class(1) << (c + 2);
+            mp_fdiv_r(t, a, t);
+            // Check for a == y**2**c == 1 mod 2**(c + 2).
+            if (t != 1)
+                return false;
+            return true;
+        } else {
+            return _is_nthroot_mod1(a, n, p, k);
+        }
+    } else {
+        integer_class _a;
+        mp_pow_ui(pk, p, k);
+        _a = a % pk;
+        integer_class pm;
+        if (_a == 0) {
+            return true;
+        } else {
+            unsigned r = 1;
+            mp_divexact(_a, _a, p);
+            while (_a % p == 0) {
+                mp_divexact(_a, _a, p);
+                ++r;
+            }
+            if (r < n or r % n != 0 or not _is_nthroot_mod_prime_power(_a, n, p, k - r)) {
+                return false;
+            }
+            return true;
+        }
+    }
+    return true;
+}
+
 bool nthroot_mod(const Ptr<RCP<const Integer>> &root, const RCP<const Integer> &a,
         const RCP<const Integer> &n, const RCP<const Integer> &mod)
 {
@@ -1364,16 +1441,16 @@ bool nthroot_mod(const Ptr<RCP<const Integer>> &root, const RCP<const Integer> &
 }
 
 void nthroot_mod_list(std::vector<RCP<const Integer>> &roots, const RCP<const Integer> &a,
-        const RCP<const Integer> &n, const RCP<const Integer> &mod)
+        const RCP<const Integer> &n, const RCP<const Integer> &m)
 {
-    if (mod->as_mpz() <= 0) {
+    if (m->as_mpz() <= 0) {
         return;
-    } else if (mod->as_mpz() == 1) {
+    } else if (m->as_mpz() == 1) {
         roots.push_back(integer(0));
         return;
     }
     map_integer_uint prime_mul;
-    prime_factor_multiplicities(prime_mul, *mod);
+    prime_factor_multiplicities(prime_mul, *m);
     std::vector<RCP<const Integer>> moduli;
     bool ret_val;
 
@@ -1457,6 +1534,102 @@ void powermod_list(std::vector<RCP<const Integer>> &pows, const RCP<const Intege
         r = integer(t);
         nthroot_mod_list(pows, r, den, m);
     }
+}
+
+std::vector<integer_class> quadratic_residues(const Integer &a)
+{
+    /*
+        Returns the list of quadratic residues.
+        Example
+        ========
+        >>> quadratic_residues(7)
+        [0, 1, 2, 4]
+    */
+
+    if (a.as_mpz() < 1) {
+        throw std::runtime_error("quadratic_residues: Input must be > 0");
+    }
+
+    std::vector<integer_class> residue;
+    for(integer_class i = integer_class(0); i <= a.as_int()/2; i++)
+    {
+        residue.push_back((i*i) % a.as_int());
+    }
+
+    sort(residue.begin(), residue.end());
+    residue.erase(unique(residue.begin(), residue.end()), residue.end());
+
+    return residue;
+
+}
+
+bool is_quad_residue(const Integer &a, const Integer &p)
+{
+    /*
+    Returns true if ``a`` (mod ``p``) is in the set of squares mod ``p``,
+    i.e a % p in set([i**2 % p for i in range(p)]). If ``p`` is an odd but
+    not prime, an iterative method is used to make the determination.
+    */
+
+    integer_class p2 = p.as_mpz();
+    if (p2 == 0)
+        throw std::runtime_error("is_quad_residue: Second parameter must be non-zero");
+    if(p2 < 0)
+        p2 = -p2;
+    integer_class a_final = a.as_mpz();
+    if (a.as_mpz() >= p2 || a.as_mpz() < 0)
+        mp_fdiv_r(a_final, a.as_mpz(), p2);
+    if (a_final < 2)
+        return true;
+
+    if (!probab_prime_p(*integer(p2))){
+        if((p2 % 2 == 1 ) && jacobi(*integer(a_final), p) == -1)
+            return false;
+
+        const RCP<const Integer> a1 = integer(a_final);
+        const RCP<const Integer> p1 = integer(p2);
+
+        map_integer_uint prime_mul;
+        prime_factor_multiplicities(prime_mul, *p1);
+        bool ret_val;
+
+        for (const auto &it: prime_mul) {
+            ret_val = _is_nthroot_mod_prime_power(a1->as_mpz(), integer(2)->as_mpz(), it.first->as_mpz(), it.second);
+            if(not ret_val) return false;
+        }
+        return true;
+    }
+
+    return mp_legendre(a_final, p2) == 1;
+}
+
+bool is_nth_residue(const Integer &a, const Integer &n, const Integer &mod)
+    /*
+    Returns true if ``a`` (mod ``mod``) is in the set of nth powers mod ``mod``,
+    i.e a % mod in set([i**n % mod for i in range(mod)]).
+    */
+{
+    integer_class _mod= mod.as_mpz();
+
+    if (_mod == 0) {
+        return false;
+    } else if (_mod == 1) {
+        return true;
+    }
+
+    if (_mod < 0)
+        _mod = -(_mod);
+
+    RCP<const Integer> mod2 = integer(_mod);
+    map_integer_uint prime_mul;
+    prime_factor_multiplicities(prime_mul, *mod2);
+    bool ret_val;
+
+    for (const auto &it: prime_mul) {
+        ret_val = _is_nthroot_mod_prime_power(a.as_mpz(), n.as_mpz(), it.first->as_mpz(), it.second);
+        if(not ret_val) return false;
+    }
+    return true;
 }
 
 int mobius(const Integer &a)

@@ -13,5 +13,4 @@ std::string poly_print(const Expression &x) {
 }
 }
 
-
 } // SymEngine

@@ -28,6 +28,7 @@ using SymEngine::vec_basic_eq_perm;
 using SymEngine::integer_class;
 using SymEngine::MultivariateIntPolynomial;
 using SymEngine::RCPSymbolCompare;
+
 using namespace SymEngine::literals;
 
 TEST_CASE("Constructor of UnivariateIntPolynomial", "[UnivariateIntPolynomial]")

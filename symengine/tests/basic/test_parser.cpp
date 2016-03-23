@@ -186,6 +186,14 @@ TEST_CASE("Parsing: functions", "[parser]")
     res = parse(s);
     REQUIRE(eq(*res, *mul(log(x, gamma(y)), sin(integer(3)))));
 
+    s = "loggamma(x)*gamma(y)";
+    res = parse(s);
+    REQUIRE(eq(*res, *mul(loggamma(x), gamma(y))));
+
+    s = "loggamma(x)+loggamma(x)";
+    res = parse(s);
+    REQUIRE(eq(*res, *mul(integer(2), loggamma(x))));
+
     s = "max(x, x, y)";
     res = parse(s);
     REQUIRE(eq(*res, *max({x, y})));
@@ -197,14 +205,6 @@ TEST_CASE("Parsing: functions", "[parser]")
     s = "sin(max(log(x, y), min(x, y)))";
     res = parse(s);
     REQUIRE(eq(*res, *sin(max({log(x, y), min({x, y})}))));
-
-    s = "loggamma(x)*gamma(y)";
-    res = parse(s);
-    REQUIRE(eq(*res, *mul(loggamma(x), gamma(y))));
-
-    s = "loggamma(x)+loggamma(x)";
-    res = parse(s);
-    REQUIRE(eq(*res, *mul(integer(2), loggamma(x))));
 }
 
 TEST_CASE("Parsing: constants", "[parser]")

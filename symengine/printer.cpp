@@ -48,7 +48,7 @@ void StrPrinter::bvisit(const Complex &x) {
         // If imaginary_ is not 1 or -1, print the absolute value
         if (x.imaginary_ != mp_sign(x.imaginary_)) {
             s << mp_abs(x.imaginary_);
-	    s << "*I";
+            s << "*I";
         } else {
             s << "I";
         }
@@ -162,7 +162,7 @@ void StrPrinter::bvisit(const ComplexMPC &x) {
 void StrPrinter::bvisit(const Add &x) {
     std::ostringstream o;
     bool first = true;
-    std::map<RCP<const Basic>, RCP<const Number>,
+    std::map<RCP<const Basic>, RCP<const Number>, 
             RCPBasicKeyLessCmp> dict(x.dict_.begin(), x.dict_.end());
 
     if (neq(*(x.coef_), *zero)) {
@@ -208,28 +208,28 @@ void StrPrinter::bvisit(const Mul &x) {
 
     for (const auto &p: dict) {
         if ((is_a<Integer>(*p.second) and
-	     rcp_static_cast<const Integer>(p.second)->is_negative()) ||
-	     (is_a<Rational>(*p.second) and
-	     rcp_static_cast<const Rational>(p.second)->is_negative())) {
-	    if (eq(*(p.second), *minus_one)) {
-	        o2 << parenthesizeLT(p.first, PrecedenceEnum::Mul);
-	    } else {
-	        o2 << parenthesizeLE(p.first, PrecedenceEnum::Pow);
-	        o2 << "**";
-	        o2 << parenthesizeLE(neg(p.second), PrecedenceEnum::Pow);
-	    }
-	    o2 << "*";
+             rcp_static_cast<const Integer>(p.second)->is_negative()) ||
+            (is_a<Rational>(*p.second) and
+             rcp_static_cast<const Rational>(p.second)->is_negative())) {
+            if (eq(*(p.second), *minus_one)) {
+                o2 << parenthesizeLT(p.first, PrecedenceEnum::Mul);
+            } else {
+                o2 << parenthesizeLE(p.first, PrecedenceEnum::Pow);
+                o2 << "**";
+                o2 << parenthesizeLE(neg(p.second), PrecedenceEnum::Pow);
+            }
+            o2 << "*";
             den++;
         } else {
-	    if (eq(*(p.second), *one)) {
-	        o << parenthesizeLT(p.first, PrecedenceEnum::Mul);
-	    } else {
-	        o << parenthesizeLE(p.first, PrecedenceEnum::Pow);
-	        o << "**";
-	        o << parenthesizeLE(p.second, PrecedenceEnum::Pow);
-	   }
-           o << "*";
-	   num = true;
+            if (eq(*(p.second), *one)) {
+                o << parenthesizeLT(p.first, PrecedenceEnum::Mul);
+            } else {
+                o << parenthesizeLE(p.first, PrecedenceEnum::Pow);
+                o << "**";
+                o << parenthesizeLE(p.second, PrecedenceEnum::Pow);
+            }
+            o << "*";
+            num = true;
         }
     }
 
@@ -279,24 +279,24 @@ void StrPrinter::bvisit(const UnivariateIntPolynomial &x) {
         //if exponent is 0, then print only coefficient
         if (it->first == 0) {
             if (first) {
-	        s << it->second;
-	    } else {
-	        s << " " << _print_sign(it->second) << " " << mp_abs(it->second);
-	    }
-	    first = false;
+                s << it->second;
+            } else {
+                s << " " << _print_sign(it->second) << " " << mp_abs(it->second);
+            }
+            first = false;
             continue;
         }
         //if the coefficient of a term is +1 or -1
         if (mp_abs(it->second) == 1) {
-	    //in cases of -x, print -x
-	    //in cases of x**2 - x, print - x
-	    if (first) {
-	        if (it->second == -1)
-	            s << "-";
-	       s << x.get_var()->get_name();
+            //in cases of -x, print -x
+            //in cases of x**2 - x, print - x
+            if (first) {
+                if (it->second == -1)
+                    s << "-";
+                s << x.get_var()->get_name();
             } else {
                 s << " " << _print_sign(it->second) << " " << x.get_var()->get_name();
-	   }
+            }
         }
         //same logic is followed as above
         else {
@@ -345,6 +345,35 @@ void StrPrinter::bvisit(const UnivariatePolynomial &x) {
         }
         //if the coefficient of a term is +1 or -1
         if (it->second == 1 or it->second == -1) {
+            //in cases of -x, print -x
+            //in cases of x**2 - x, print - x
+            if (first) {
+                if (it->second == -1)
+                    s << "-";
+            } else {
+                s << " " << _print_sign(static_cast<const Integer &>(*it->second.get_basic()).as_mpz()) << " ";
+            }
+        }
+        //same logic is followed as above
+        else {
+            //in cases of -2*x, print -2*x
+            //in cases of x**2 - 2*x, print - 2*x
+            if (first) {
+                s << parenthesizeLT(it->second.get_basic(), PrecedenceEnum::Mul) << "*";
+            } else {
+                t = parenthesizeLT(it->second.get_basic(), PrecedenceEnum::Mul);
+                if (t[0] == '-') {
+                    s << " - " << t.substr(1);
+                } else {
+                    s << " + " << t;
+                }
+                s << "*";
+            }
+            first = false;
+            continue;
+        }
+        //if the coefficient of a term is +1 or -1
+        if (it->second == 1 or it->second == -1) {
 	    //in cases of -x, print -x
 	    //in cases of x**2 - x, print - x
 	    if (first) {
@@ -374,6 +403,11 @@ void StrPrinter::bvisit(const UnivariatePolynomial &x) {
         //if exponent is not 1, print the exponent;
         if (it->first != 1) {
 	    s << "**"  << it->first;
+        }
+        s << x.get_var()->get_name();
+        //if exponent is not 1, print the exponent;
+        if (it->first != 1) {
+            s << "**"  << it->first;
         }
         //corner cases of only first term handled successfully, switch the bool
         first = false;

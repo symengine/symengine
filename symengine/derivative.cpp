@@ -122,6 +122,12 @@ public:
 		pow(self.get_arg(),i2))), self.get_arg()->diff(x));
     }
 
+    static RCP<const Basic> diff(const ACsch &self,
+            const RCP<const Symbol> &x) {
+        return mul(div(minus_one, mul(sqrt(add(one, div(one,pow(self.get_arg(), i2)))),
+                pow(self.get_arg(),i2))), self.get_arg()->diff(x));
+    }
+
     static RCP<const Basic> diff(const ASinh &self,
 	    const RCP<const Symbol> &x) {
         return mul(div(one, sqrt(add(pow(self.get_arg(), i2), one))),
@@ -145,13 +151,18 @@ public:
         return mul(mul(mul(minus_one,sech(self.get_arg())),tanh(self.get_arg())), self.get_arg()->diff(x));
     }
 
+    static RCP<const Basic> diff(const Sech &self,
+            const RCP<const Symbol> &x) {
+        return mul(mul(mul(minus_one,sech(self.get_arg())),tanh(self.get_arg())), self.get_arg()->diff(x));
+    }
+
     static RCP<const Basic> diff(const Cosh &self,
 	    const RCP<const Symbol> &x) {
         return mul(sinh(self.get_arg()), self.get_arg()->diff(x));
     }
 
     static RCP<const Basic> diff(const Csch &self,
-	    const RCP<const Symbol> &x) {
+            const RCP<const Symbol> &x) {
         return mul(mul(mul(minus_one,csch(self.get_arg())),coth(self.get_arg())), self.get_arg()->diff(x));
     }
 
@@ -205,8 +216,8 @@ public:
     static inline RCP<const Symbol> get_dummy(const Basic &b, std::string name) {
         RCP<const Symbol> s;
         do {
-	    name = "_" + name;
-	    s = symbol(name);
+            name = "_" + name;
+            s = symbol(name);
         } while (has_symbol(b, s));
         return s;
     }
@@ -229,17 +240,17 @@ public:
 	    return Derivative::create(self_, {x});
         }
         for (unsigned i = 0; i < self.get_args().size(); i++) {
-	    t = self.get_args()[i]->diff(x);
-	    if (neq(*t, *zero)) {
-	        vec_basic v = self.get_args();
-	        v[i] = get_dummy(self, "x");
-	        map_basic_basic m;
-	        insert(m, v[i], self.get_args()[i]);
-	        diff = add(diff, mul(t,
-		      make_rcp<const Subs>(Derivative::create(self.create(v),
-			      {v[i]}), m)));
-	    }
-	}
+            t = self.get_args()[i]->diff(x);
+            if (neq(*t, *zero)) {
+                vec_basic v = self.get_args();
+                v[i] = get_dummy(self, "x");
+                map_basic_basic m;
+                insert(m, v[i], self.get_args()[i]);
+                diff = add(diff, mul(t,
+                    make_rcp<const Subs>(Derivative::create(self.create(v),
+                            {v[i]}), m)));
+            }
+        }
         return diff;
     }
 
@@ -406,6 +417,12 @@ public:
         return mul(div(mul(integer(2), exp(neg(mul(arg, arg)))), sqrt(pi)), arg->diff(x));
     }
 
+    static RCP<const Basic> diff(const Erf &self,
+            const RCP<const Symbol> &x) {
+        RCP<const Basic> arg = self.get_args()[0];
+        return mul(div(mul(integer(2), exp(neg(mul(arg, arg)))), sqrt(pi)), arg->diff(x));
+    }
+
     static RCP<const Basic> diff(const Gamma &self,
 	    const RCP<const Symbol> &x) {
         RCP<const Basic> gamma_arg = self.get_args()[0];
@@ -413,56 +430,56 @@ public:
     }
 
     static RCP<const Basic> diff(const PolyGamma &self,
-	    const RCP<const Symbol> &x) {
+            const RCP<const Symbol> &x) {
         auto args = self.get_args();
         auto f = args[0]->diff(x);
         if (neq(*f, *zero)) {
-	    auto g = args[1]->diff(x);
-	    if (eq(*args[0], *x) and eq(*g, *zero)) {
-	        return Derivative::create(self.rcp_from_this(), {x});
-	    } else {
-	        auto s = get_dummy(self, "x");
-	        map_basic_basic m({{s, args[0]}});
-	        f = mul(f, make_rcp<const Subs>(Derivative::create(polygamma(s, args[1]), {s}), m));
-	        return add(mul(polygamma(add(args[0], one), args[1]), g), f);
-	    }
+            auto g = args[1]->diff(x);
+            if (eq(*args[0], *x) and eq(*g, *zero)) {
+                return Derivative::create(self.rcp_from_this(), {x});
+            } else {
+                auto s = get_dummy(self, "x");
+                map_basic_basic m({{s, args[0]}});
+                f = mul(f, make_rcp<const Subs>(Derivative::create(polygamma(s, args[1]), {s}), m));
+                return add(mul(polygamma(add(args[0], one), args[1]), g), f);
+            }
         }
         return mul(polygamma(add(args[0], one), args[1]), args[1]->diff(x));
     }
 
     static RCP<const Basic> diff(const LogGamma &self,
-	    const RCP<const Symbol> &x) {
+            const RCP<const Symbol> &x) {
         RCP<const Basic> arg = self.get_args()[0];
         return mul(polygamma(zero, arg), arg->diff(x));
     }
 
-    static RCP<const Basic> diff(const UnivariateIntPolynomial &self,
-	    const RCP<const Symbol> &x) {
+    static RCP<const Basic> diff(const UnivariateIntPolynomial &self, 
+            const RCP<const Symbol> &x) {
         if (self.get_var()->__eq__(*x)) {
-	    map_uint_mpz d;
-	    for (const auto &p : self.get_dict()) {
-	        d[p.first - 1] = p.second * p.first;
-	    }
-	    return UnivariateIntPolynomial::from_dict(self.get_var(), std::move(d));
+            map_uint_mpz d;
+            for (const auto &p : self.get_dict()) {
+                d[p.first - 1] = p.second * p.first;
+            }
+            return UnivariateIntPolynomial::from_dict(self.get_var(), std::move(d));
         } else {
-	    map_uint_mpz d;
-	    return UnivariateIntPolynomial::from_dict(self.get_var(), std::move(d));
+            map_uint_mpz d;
+            return UnivariateIntPolynomial::from_dict(self.get_var(), std::move(d));
         }
     }
 
     static RCP<const Basic> diff(const UnivariatePolynomial &self,
-	    const RCP<const Symbol> &x) {
+            const RCP<const Symbol> &x) {
         if (self.get_var()->__eq__(*x)) {
-	    map_int_Expr d;
-	    for (const auto &p : self.get_dict()) {
-	        if (p.first != 0)
-	            d[p.first - 1] = p.second * p.first;
-	    }
-	    return make_rcp<const UnivariatePolynomial>(self.get_var(),
-						    (--(d.end()))->first, std::move(d));
+            map_int_Expr d;
+            for (const auto &p : self.get_dict()) {
+                if (p.first != 0) 
+                    d[p.first - 1] = p.second * p.first;
+            }
+            return make_rcp<const UnivariatePolynomial>(self.get_var(),
+                    (--(d.end()))->first, std::move(d));
         } else {
-	    map_int_Expr d;
-	    return make_rcp<const UnivariatePolynomial>(self.get_var(), 0, std::move(d));
+            map_int_Expr d;
+            return make_rcp<const UnivariatePolynomial>(self.get_var(), 0, std::move(d));
         }
     }
 
@@ -471,41 +488,19 @@ public:
         return self.diff_impl(x);
     }
 
-    static RCP<const Basic> diff(const MultivariateIntPolynomial &self, const RCP<const Symbol> &x){
-        if(self.vars_.find(x) != self.vars_.end()){
-	    umap_uvec_mpz dict;
-	    auto i = self.vars_.begin();
-	    unsigned int index = 0;
-	    while(!(*i)->__eq__(*x)) {
-	        i++;
-	        index++;
-	    } //find the index of the variable we are differentiating WRT.
-	    for(auto bucket : self.dict_) {
-	        if(bucket.first[index] != 0) {
-	            vec_uint v = bucket.first;
-	            v[index]--;
-	            dict.insert(std::pair<vec_uint, integer_class>(v, bucket.second * bucket.first[index]));
-	    }
-	}
-	return MultivariateIntPolynomial::from_dict(self.vars_, std::move(dict));
-        } else {
-	    return zero;
-        }
-    }
-
     static RCP<const Basic> diff(const Beta &self,
-	    const RCP<const Symbol> &x) {
+            const RCP<const Symbol> &x) {
         RCP<const Basic> beta_arg0 = self.get_args()[0];
         RCP<const Basic> beta_arg1 = self.get_args()[1];
         RCP<const Basic> diff_beta_arg0 = beta_arg0->diff(x);
         RCP<const Basic> diff_beta_arg1 = beta_arg1->diff(x);
         return mul(self.rcp_from_this(), add(mul(polygamma(zero, beta_arg0), diff_beta_arg0),
-		sub(mul(polygamma(zero, beta_arg1), diff_beta_arg1),
-		mul(polygamma(zero, add(beta_arg0, beta_arg1)), add(diff_beta_arg0, diff_beta_arg1)))));
+                sub(mul(polygamma(zero, beta_arg1), diff_beta_arg1),
+                mul(polygamma(zero, add(beta_arg0, beta_arg1)), add(diff_beta_arg0, diff_beta_arg1)))));
     }
 
     static RCP<const Basic> diff(const Set &self,
-	    const RCP<const Symbol> &x) {
+            const RCP<const Symbol> &x) {
         throw std::runtime_error("Derivative doesn't exist.");
     }
 };

@@ -56,6 +56,7 @@ using SymEngine::log;
 using SymEngine::pi;
 using SymEngine::E;
 using SymEngine::EulerGamma;
+using SymEngine::loggamma;
 using SymEngine::vec_basic;
 using SymEngine::rational_class;
 using SymEngine::max;

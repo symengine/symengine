@@ -10,8 +10,8 @@ template<class T>
     {
         out << "{";
         for (auto p = d.begin(); p != d.end(); p++) {
- 	    if (p != d.begin()) out << ", ";
-	    out << (p->first) << ": " << (p->second);
+            if (p != d.begin()) out << ", ";
+            out << (p->first) << ": " << (p->second);
         }
         out << "}";
         return out;
@@ -22,11 +22,11 @@ template<class T>
     {
         out << "{";
         for (auto p = d.begin(); p != d.end(); p++) {
-	    if (p != d.begin()) out << ", ";
-	    out << *(p->first) << ": " << *(p->second);
-      }
-      out << "}";
-      return out;
+            if (p != d.begin()) out << ", ";
+            out << *(p->first) << ": " << *(p->second);
+        }
+        out << "}";
+        return out;
     }
 
 template<class T>
@@ -34,8 +34,8 @@ template<class T>
     {
         out << "[";
         for (auto p = d.begin(); p != d.end(); p++) {
-  	    if (p != d.begin()) out << ", ";
-	    out << *p;
+            if (p != d.begin()) out << ", ";
+            out << *p;
         }
         out << "]";
         return out;
@@ -46,8 +46,8 @@ template<class T>
     {
         out << "[";
         for (auto p = d.begin(); p != d.end(); p++) {
-	    if (p != d.begin()) out << ", ";
-	    out << **p;
+            if (p != d.begin()) out << ", ";
+            out << **p;
         }
         out << "]";
         return out;
@@ -161,7 +161,37 @@ int map_uint_mpz_compare(const map_uint_mpz &A, const map_uint_mpz &B)
 }
 
 bool map_int_Expr_eq(const map_int_Expr &a,
-	const map_int_Expr &b)
+        const map_int_Expr &b)
+{
+    // Can't be equal if # of entries differ:
+    if (a.size() != b.size()) return false;
+    // Loop over keys in "a":
+    for (const auto &p: a) {
+        auto f = b.find(p.first);
+        if (f == b.end()) return false; // no such element in "b"
+        if (p.second != f->second) return false; // values not equal
+    }
+    return true;
+}
+
+
+int map_int_Expr_compare(const map_int_Expr &A, const map_int_Expr &B)
+{
+    if (A.size() != B.size())
+        return (A.size() < B.size()) ? -1 : 1;
+    auto a = A.begin();
+    auto b = B.begin();
+    for (; a != A.end(); ++a, ++b) {
+        if (a->first != b->first)
+            return (a->first < b->first) ? -1 : 1;
+        if (a->second != b->second)
+            return (a->second.get_basic()->__cmp__(*b->second.get_basic())) ? -1 : 1;
+    }
+    return 0;
+}
+
+template<class T>
+bool set_eq(const T &A, const T &B)
 {
     // Can't be equal if # of entries differ:
     if (a.size() != b.size()) return false;
