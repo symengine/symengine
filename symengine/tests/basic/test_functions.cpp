@@ -1377,7 +1377,7 @@ TEST_CASE("Could extract minus: functions", "[functions]")
 {
     RCP<const Basic> x = symbol("x");
     RCP<const Basic> y = symbol("y");
-
+    RCP<const Basic> z = symbol("z");
     RCP<const Basic> i2 = integer(2);
     RCP<const Basic> im1 = integer(-1);
     RCP<const Basic> r;
@@ -1386,6 +1386,23 @@ TEST_CASE("Could extract minus: functions", "[functions]")
     r = add(mul(im1, x), mul(im1, mul(i2, y)));
     b = could_extract_minus(r);
     REQUIRE(b == true);
+
+
+    r = add(add(x, mul(im1, y)), mul(im1, z));
+    b = could_extract_minus(r);
+    REQUIRE(b == true);
+
+    r = add( add(mul(im1,x), y),z);
+    b = could_extract_minus(r);
+    REQUIRE(b == false);
+
+    r = add(x, mul(im1,mul(i2, y)));
+    b = could_extract_minus(r);
+    REQUIRE(b == true);
+
+    r = add(mul(im1,x),mul(i2,y));
+    b = could_extract_minus(r);
+    REQUIRE(b == false);
 
     r = add(mul(im1, x), mul(i2, y));
     b = could_extract_minus(r);
