@@ -7,6 +7,9 @@
 
 #include <symengine/monomials.h>
 #include <symengine/dict.h>
+#include <symengine/basic.h>
+#include <symengine/integer.h>
+#include <symengine/symbol.h>
 #include <symengine/expression.h>
 
 namespace SymEngine {
@@ -26,9 +29,9 @@ public:
     UnivariateIntPolynomial(const RCP<const Symbol> &var, const unsigned int &degree, map_uint_mpz&& dict);
     //! Constructor using a dense vector of integer_class coefficients
     UnivariateIntPolynomial(const RCP<const Symbol> &var, const std::vector<integer_class> &v);
-    
+
     static RCP<const UnivariateIntPolynomial> create(const RCP<const Symbol> &var,
-	        const std::vector<integer_class> &v) {
+	    const std::vector<integer_class> &v) {
         return UnivariateIntPolynomial::from_vec(var, v);
     }
 
@@ -42,14 +45,15 @@ public:
      * */
     bool __eq__(const Basic &o) const;
     int compare(const Basic &o) const;
-   
-    //creates a UnivariateIntPolynomial in cannonical form based on the dictionary. 
+
+    //creates a UnivariateIntPolynomial in cannonical form based on the dictionary.
     static RCP<const UnivariateIntPolynomial> from_dict(const RCP<const Symbol> &var, map_uint_mpz &&d);
     //create a UnivariateIntPolynomial from a dense vector of integer_class coefficients
     static RCP<const UnivariateIntPolynomial> from_vec(const RCP<const Symbol> &var, const std::vector<integer_class> &v);
+
     /*!
-    * Adds coef*var_**n to the dict_
-    */
+     * Adds coef*var_**n to the dict_
+     */
     static void dict_add_term(map_uint_mpz &d,
             const integer_class &coef, const unsigned int &n);
     integer_class max_coef() const;
@@ -109,9 +113,9 @@ public:
     UnivariatePolynomial(const RCP<const Symbol> &var, const unsigned int &degree, const map_int_Expr&& dict);
     //! Constructor using a dense vector of Expression
     UnivariatePolynomial(const RCP<const Symbol> &var, const std::vector<Expression> &v);
-    
-    static RCP<const UnivariatePolynomial> create(const RCP<const Symbol> &var, 
-            const std::vector<Expression> &v) {
+
+    static RCP<const UnivariatePolynomial> create(const RCP<const Symbol> &var,
+	    const std::vector<Expression> &v) {
         return UnivariatePolynomial::from_vec(var, v);
     }
 
@@ -119,15 +123,15 @@ public:
     std::size_t __hash__() const;
     bool __eq__(const Basic &o) const;
     int compare(const Basic &o) const;
-    
+
     /*! Creates appropriate instance (i.e Symbol, Integer,
-    * Mul, Pow, UnivariatePolynomial) depending on the size of dictionary `d`.
-    */
+     * Mul, Pow, UnivariatePolynomial) depending on the size of dictionary `d`.
+     */
     static RCP<const Basic> from_dict(const RCP<const Symbol> &var, map_int_Expr &&d);
     static RCP<const UnivariatePolynomial> from_vec(const RCP<const Symbol> &var, const std::vector<Expression> &v);
     /*!
-    * Adds coef*var_**n to the dict_
-    */
+     * Adds coef*var_**n to the dict_
+     */
     static void dict_add_term(map_int_Expr &d, const Expression &coef, const unsigned int &n);
     Expression max_coef() const;
     //! Evaluates the UnivariatePolynomial at value x
@@ -195,89 +199,88 @@ public:
             this->poly_ = std::move(other.poly_);
         return *this;
     }
-     
+
     friend std::ostream &operator<<(std::ostream &os, const UnivariateExprPolynomial &expr) {
         os << expr.poly_->__str__();
         return os;
     }
-    
+
     friend UnivariateExprPolynomial operator+(const UnivariateExprPolynomial &a, const UnivariateExprPolynomial &b) {
         return UnivariateExprPolynomial(add_uni_poly(*a.poly_, *b.poly_));
     }
-    
+
     UnivariateExprPolynomial &operator+=(const UnivariateExprPolynomial &other) {
         poly_ = add_uni_poly(*poly_, *other.poly_);
         return *this;
     }
-    
+
     friend UnivariateExprPolynomial operator-(const UnivariateExprPolynomial &a, const UnivariateExprPolynomial &b) {
         return UnivariateExprPolynomial(sub_uni_poly(*a.poly_, *b.poly_));
     }
-    
+
     UnivariateExprPolynomial operator-() const {
         UnivariateExprPolynomial retval(*this);
         neg_uni_poly(*(retval.poly_.ptr()));
         return retval;
     }
-    
+
     UnivariateExprPolynomial &operator-=(const UnivariateExprPolynomial &other) {
         poly_ = sub_uni_poly(*poly_, *other.poly_);
         return *this;
     }
-    
-    friend UnivariateExprPolynomial operator*(const UnivariateExprPolynomial &a, const UnivariateExprPolynomial &b) {   
+
+    friend UnivariateExprPolynomial operator*(const UnivariateExprPolynomial &a, const UnivariateExprPolynomial &b) {
         return UnivariateExprPolynomial(mul_uni_poly(a.poly_, b.poly_));
-    }   
-    
-    friend UnivariateExprPolynomial operator/(const UnivariateExprPolynomial &a, const Expression &b) {
-        return UnivariateExprPolynomial(mul_uni_poly(a.poly_, UnivariateExprPolynomial(1/b).poly_));    
     }
-        
-    UnivariateExprPolynomial &operator*=(const UnivariateExprPolynomial &other) {   
+
+    friend UnivariateExprPolynomial operator/(const UnivariateExprPolynomial &a, const Expression &b) {
+        return UnivariateExprPolynomial(mul_uni_poly(a.poly_, UnivariateExprPolynomial(1/b).poly_));
+    }
+
+    UnivariateExprPolynomial &operator*=(const UnivariateExprPolynomial &other) {
         poly_ = mul_uni_poly(poly_, other.poly_);
         return *this;
-    }   
-    
-    bool operator==(const UnivariateExprPolynomial &other) const {   
-        return eq(*poly_, *other.poly_);
-    }   
-    
-    bool operator==(int i) const {
-        return eq(*poly_, *(UnivariateExprPolynomial(i).poly_)); 
     }
-     
-    bool operator!=(const UnivariateExprPolynomial &other) const {   
+
+    bool operator==(const UnivariateExprPolynomial &other) const {
+        return eq(*poly_, *other.poly_);
+    }
+
+    bool operator==(int i) const {
+        return eq(*poly_, *(UnivariateExprPolynomial(i).poly_));
+    }
+
+    bool operator!=(const UnivariateExprPolynomial &other) const {
         return not (*this == other);
-    }   
-    
+    }
+
     //! Method to get UnivariatePolynomial from UnivariateExprPolynomial
-    const RCP<const UnivariatePolynomial>& get_univariate_poly() const {   
+    const RCP<const UnivariatePolynomial>& get_univariate_poly() const {
         return poly_;
-    }   
-    
+    }
+
     std::size_t __hash__() const {
         return poly_->hash();
     }
-    
+
     const RCP<const Basic> get_basic() const {
         RCP<const Symbol> x = poly_->get_var();
         umap_basic_num dict_;
         for (const auto &it : poly_->get_dict()) {
-            if (it.first != 0) {
-                auto term = mul(it.second.get_basic(), pow_ex(Expression(x), Expression(it.first)).get_basic());
-                RCP<const Number> coef;
-                coef = zero;
-                Add::coef_dict_add_term(outArg((coef)), dict_, one, term);
-            }
+	    if (it.first != 0) {
+	        auto term = mul(it.second.get_basic(), pow_ex(Expression(x), Expression(it.first)).get_basic());
+	        RCP<const Number> coef;
+	        coef = zero;
+	        Add::coef_dict_add_term(outArg((coef)), dict_, one, term);
+	    }
         }
         return std::move(Add::from_dict(integer(0), std::move(dict_)));
     }
 
     int compare(const UnivariateExprPolynomial &other) {
-        return poly_->compare(*other.poly_); 
+      return poly_->compare(*other.poly_);
     }
 }; //UnivariateExprPolynomial
-
 
 //MultivariatePolynomials
 class MultivariateIntPolynomial : public Basic {
@@ -290,7 +293,7 @@ public:
     umap_sym_uint degrees_;
     umap_uvec_mpz dict_;
 public:
-    IMPLEMENT_TYPEID(MULTIVARIATEPOLYNOMIAL)
+    IMPLEMENT_TYPEID(MULTIVARIATEINTPOLYNOMIAL)
     //constructor from components
     MultivariateIntPolynomial(const set_sym &var, umap_sym_uint &degrees, umap_uvec_mpz &dict);
     //creates a MultivariateIntPolynomial in cannonical form based on dictionary d.
@@ -310,7 +313,7 @@ public:
 //positions in the output.  set_sym s is the set of symbols of the output, and
 // s1 and s2 are the sets of the symbols of the inputs.
 unsigned int reconcile(vec_uint &v1, vec_uint &v2, set_sym &s, const set_sym &s1, const set_sym &s2);
-//same as above, but for reconcileing representation of a UnivariatePolynomial. 
+//same as above, but for reconcileing representation of a UnivariatePolynomial.
 unsigned int reconcile(vec_uint &v1, unsigned int &v2, set_sym &s, const set_sym &s1, const RCP<const Symbol> s2);
 //translates vectors from one polynomial into vectors for another.
 vec_uint translate(vec_uint original, vec_uint translator, unsigned int size);
@@ -319,12 +322,10 @@ vec_uint translate(unsigned int original, unsigned int translator, unsigned int 
 vec_uint uint_vec_translate_and_add(const vec_uint &v1, const vec_uint &v2,const vec_uint &translator1, const vec_uint &translator2, const unsigned int size);
 vec_uint uint_vec_translate_and_add(const vec_uint &v1, const unsigned int v2, const vec_uint &translator1,const unsigned int &translator2, const unsigned int size);
 
-
 RCP<const MultivariateIntPolynomial> add_mult_poly(const MultivariateIntPolynomial &a, const MultivariateIntPolynomial &b);
 RCP<const MultivariateIntPolynomial> neg_mult_poly(const MultivariateIntPolynomial &a);
 RCP<const MultivariateIntPolynomial> sub_mult_poly(const MultivariateIntPolynomial &a, const MultivariateIntPolynomial &b);
 RCP<const MultivariateIntPolynomial> mul_mult_poly(const MultivariateIntPolynomial &a, const MultivariateIntPolynomial &b);
-
 
 RCP<const MultivariateIntPolynomial> add_mult_poly(const MultivariateIntPolynomial &a, const UnivariateIntPolynomial &b);
 RCP<const MultivariateIntPolynomial> add_mult_poly(const UnivariateIntPolynomial &a, const MultivariateIntPolynomial &b);
@@ -336,6 +337,7 @@ RCP<const MultivariateIntPolynomial> mul_mult_poly(const UnivariateIntPolynomial
 RCP<const MultivariateIntPolynomial> add_mult_poly(const UnivariateIntPolynomial &a, const UnivariateIntPolynomial &b);
 RCP<const MultivariateIntPolynomial> sub_mult_poly(const UnivariateIntPolynomial &a, const UnivariateIntPolynomial &b);
 RCP<const MultivariateIntPolynomial> mul_mult_poly(const UnivariateIntPolynomial &a, const UnivariateIntPolynomial &b);
+
 
 }  //SymEngine
 

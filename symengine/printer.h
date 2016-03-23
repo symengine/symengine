@@ -30,63 +30,63 @@ public:
     void bvisit(const UnivariateIntPolynomial &x) {
         if (x.get_dict().size() == 1) {
             auto it = x.get_dict().begin();
-            if (it->second == 1) {
-                if (it->first == 1) {
-                    precedence = PrecedenceEnum::Atom;
-                } else {
-                    precedence = PrecedenceEnum::Pow;
-                }
-            } else {
-                precedence = PrecedenceEnum::Mul;
-            }
+	    if (it->second == 1) {
+	        if (it->first == 1) {
+	            precedence = PrecedenceEnum::Atom;
+	        } else {
+	            precedence = PrecedenceEnum::Pow;
+	        }
+	    } else {
+	        precedence = PrecedenceEnum::Mul;
+	    }
         } else if (x.get_dict().size() == 0) {
             precedence = PrecedenceEnum::Atom;
         } else {
-            precedence = PrecedenceEnum::Add;
+	    precedence = PrecedenceEnum::Add;
         }
     }
 
     void bvisit(const UnivariatePolynomial &x) {
         if (x.get_dict().size() == 1) {
-            auto it = x.get_dict().begin();
-            precedence = PrecedenceEnum::Atom;
-            if (it->second == 1) {
-                if (it->first == 0 or it->first == 1) {
-                    precedence = PrecedenceEnum::Atom;
-                } else {
-                    precedence = PrecedenceEnum::Pow;
-                }
-            } else {
-                if (it->first == 0) {
-                    it->second.get_basic()->accept(*this);
-                } else {
-                    precedence = PrecedenceEnum::Mul;
-                }
-            }
+	    auto it = x.get_dict().begin();
+	    precedence = PrecedenceEnum::Atom;
+	    if (it->second == 1) {
+	        if (it->first == 0 or it->first == 1) {
+	            precedence = PrecedenceEnum::Atom;
+	        } else {
+	            precedence = PrecedenceEnum::Pow;
+	        }
+	    } else {
+	        if (it->first == 0) {
+	            it->second.get_basic()->accept(*this);
+	        } else {
+	            precedence = PrecedenceEnum::Mul;
+	        }
+	    }
         } else {
-            precedence = PrecedenceEnum::Add;
+	    precedence = PrecedenceEnum::Add;
         }
     }
-    
+
     void bvisit(const Rational &x) {
         precedence = PrecedenceEnum::Add;
     }
 
     void bvisit(const Complex &x) {
-        if(x.is_re_zero()) {
-            if(x.imaginary_ == 1) {
-                precedence = PrecedenceEnum::Atom;
-            } else {
-                precedence = PrecedenceEnum::Mul;
-            }
+        if (x.is_re_zero()) {
+            if (x.imaginary_ == 1) {
+	        precedence = PrecedenceEnum::Atom;
+	    } else {
+	        precedence = PrecedenceEnum::Mul;
+	    }
         } else {
-            precedence = PrecedenceEnum::Add;
+	    precedence = PrecedenceEnum::Add;
         }
     }
 
     void bvisit(const Integer &x) {
         if (x.is_negative()) {
-            precedence = PrecedenceEnum::Mul;
+	    precedence = PrecedenceEnum::Mul;
         } else {
             precedence = PrecedenceEnum::Atom;
         }
@@ -94,13 +94,13 @@ public:
 
     void bvisit(const RealDouble &x) {
         if (x.is_negative()) {
-            precedence = PrecedenceEnum::Mul;
+	    precedence = PrecedenceEnum::Mul;
         } else {
-            precedence = PrecedenceEnum::Atom;
+	    precedence = PrecedenceEnum::Atom;
         }
     }
 
-#ifdef HAVE_SYMENGINE_PIRANHA
+    #ifdef HAVE_SYMENGINE_PIRANHA
     void bvisit(const URatPSeriesPiranha &x) {
         precedence = PrecedenceEnum::Add;
     }
@@ -108,24 +108,24 @@ public:
     void bvisit(const UPSeriesPiranha &x) {
         precedence = PrecedenceEnum::Add;
     }
-#endif
+    #endif
     void bvisit(const ComplexDouble &x) {
         precedence = PrecedenceEnum::Add;
     }
-#ifdef HAVE_SYMENGINE_MPFR
+    #ifdef HAVE_SYMENGINE_MPFR
     void bvisit(const RealMPFR &x) {
         if (x.is_negative()) {
-            precedence = PrecedenceEnum::Mul;
+	    precedence = PrecedenceEnum::Mul;
         } else {
-            precedence = PrecedenceEnum::Atom;
+	    precedence = PrecedenceEnum::Atom;
         }
     }
-#endif
-#ifdef HAVE_SYMENGINE_MPC
+    #endif
+    #ifdef HAVE_SYMENGINE_MPC
     void bvisit(const ComplexMPC &x) {
         precedence = PrecedenceEnum::Add;
     }
-#endif
+    #endif
 
     void bvisit(const Basic &x) {
         precedence = PrecedenceEnum::Atom;
@@ -153,11 +153,12 @@ public:
     void bvisit(const Mul &x);
     void bvisit(const Pow &x);
     void bvisit(const UnivariateIntPolynomial &x);
+    void bvisit(const MultivariateIntPolynomial &x);
     void bvisit(const UnivariatePolynomial &x);
-#ifdef HAVE_SYMENGINE_PIRANHA
+    #ifdef HAVE_SYMENGINE_PIRANHA
     void bvisit(const URatPSeriesPiranha &x);
     void bvisit(const UPSeriesPiranha &x);
-#endif
+    #endif
     void bvisit(const Log &x);
     void bvisit(const Constant &x);
     void bvisit(const Function &x);
@@ -166,12 +167,12 @@ public:
     void bvisit(const Subs &x);
     void bvisit(const RealDouble &x);
     void bvisit(const ComplexDouble &x);
-#ifdef HAVE_SYMENGINE_MPFR
+    #ifdef HAVE_SYMENGINE_MPFR
     void bvisit(const RealMPFR &x);
-#endif
-#ifdef HAVE_SYMENGINE_MPC
+    #endif
+    #ifdef HAVE_SYMENGINE_MPC
     void bvisit(const ComplexMPC &x);
-#endif
+    #endif
     void bvisit(const NumberWrapper &x);
 
     std::string parenthesizeLT(const RCP<const Basic> &x, PrecedenceEnum precedenceEnum);

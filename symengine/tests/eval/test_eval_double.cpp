@@ -57,6 +57,7 @@ using SymEngine::pi;
 using SymEngine::E;
 using SymEngine::EulerGamma;
 using SymEngine::vec_basic;
+using SymEngine::rational_class;
 using SymEngine::max;
 using SymEngine::min;
 using SymEngine::min;
