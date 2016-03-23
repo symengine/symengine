@@ -10,19 +10,21 @@
 #include <symengine/basic.h>
 #include <symengine/dict.h>
 
-namespace SymEngine {
+namespace SymEngine
+{
 
-class Add : public Basic {
-public: // TODO: make this private
+class Add : public Basic
+{
+    public:                  // TODO: make this private
     RCP<const Number> coef_; //! The coefficient (e.g. `2` in `2+x+y`)
-    umap_basic_num dict_; //! The dictionary of the rest (e.g. `x+y` in `2+x+y`)
+    umap_basic_num dict_;    //! The dictionary of the rest (e.g. `x+y` in `2+x+y`)
 
-public:
+    public:
     IMPLEMENT_TYPEID(ADD)
     /*! Constructs Add from a dictionary by copying the contents of the
         dictionary
     */
-    Add(const RCP<const Number> &coef, umap_basic_num&& dict);
+    Add(const RCP<const Number> &coef, umap_basic_num &&dict);
     //! \return Size of the hash
     virtual std::size_t __hash__() const;
     /*! Equality comparator
@@ -42,20 +44,18 @@ public:
     /*!
     * Adds `(coeff*t)` to the dict `d`
     */
-    static void dict_add_term(umap_basic_num &d,
-            const RCP<const Number> &coef, const RCP<const Basic> &t);
+    static void dict_add_term(umap_basic_num &d, const RCP<const Number> &coef, const RCP<const Basic> &t);
     /*!
     * Adds `(c*term)` to the number `coeff` (in case both are numbers) or dict `d` (as a pair `c, term`).
     * In case `term` is `Add` and `c=1`, expands the `Add` into the `coeff` and `d`.
     */
     static void coef_dict_add_term(const Ptr<RCP<const Number>> &coef, umap_basic_num &d,
-            const RCP<const Number> &c, const RCP<const Basic> &term);
+                                   const RCP<const Number> &c, const RCP<const Basic> &term);
     //! Converts into the form of coefficient and term
-    static void as_coef_term(const RCP<const Basic> &self,
-        const Ptr<RCP<const Number>> &coef, const Ptr<RCP<const Basic>> &term);
+    static void as_coef_term(const RCP<const Basic> &self, const Ptr<RCP<const Number>> &coef,
+                             const Ptr<RCP<const Basic>> &term);
     //! \return `true` if it is in canonical form
-    bool is_canonical(const RCP<const Number> &coef,
-            const umap_basic_num& dict) const;
+    bool is_canonical(const RCP<const Number> &coef, const umap_basic_num &dict) const;
     //! Substitutes the dict
     virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
 
@@ -63,11 +63,9 @@ public:
 };
 
 //! \return Add made from `a + b`
-RCP<const Basic> add(const RCP<const Basic> &a,
-        const RCP<const Basic> &b);
+RCP<const Basic> add(const RCP<const Basic> &a, const RCP<const Basic> &b);
 //! \return Add made from `a - b`
-RCP<const Basic> sub(const RCP<const Basic> &a,
-        const RCP<const Basic> &b);
+RCP<const Basic> sub(const RCP<const Basic> &a, const RCP<const Basic> &b);
 //! \return expanded version of Add
 RCP<const Basic> add_expand(const RCP<const Add> &self);
 

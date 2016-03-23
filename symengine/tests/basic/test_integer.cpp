@@ -61,7 +61,7 @@ TEST_CASE("iabs: integer", "[integer]")
 {
     RCP<const Integer> _i5 = integer(-5);
     RCP<const Integer> _i9 = integer(-9);
-    RCP<const Integer> i12 =  integer(12);
+    RCP<const Integer> i12 = integer(12);
 
     REQUIRE(eq(*iabs(*_i5), *integer(5)));
     REQUIRE(eq(*iabs(*_i9), *integer(9)));

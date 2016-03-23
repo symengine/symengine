@@ -115,5 +115,4 @@ TEST_CASE("Evaluate functions", "[lambda_gamma]")
 
     d = v.call({1.1});
     REQUIRE(::fabs(d - 0.88020506957408169) < 1e-12);
-
 }

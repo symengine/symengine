@@ -153,15 +153,12 @@ TEST_CASE("Mul: arit", "[arit]")
     r2 = mul(pow(x, add(add(x, y), z)), y);
     REQUIRE(eq(*r1, *r2));
 
-    r1 = mul(mul(i2, pow(y, mul(im2, pow(x, i2)))),
-             mul(i3, pow(y, mul(i2, pow(x, i2)))));
+    r1 = mul(mul(i2, pow(y, mul(im2, pow(x, i2)))), mul(i3, pow(y, mul(i2, pow(x, i2)))));
     r2 = i6;
     REQUIRE(eq(*r1, *r2));
 
-    r1 = mul(mul(mul(mul(div(i3, i2), pow(cos(pow(x, i2)), im2)), x),
-           sin(pow(x, i2))), cos(div(mul(i3, x), i4)));
-    r2 = mul(mul(mul(mul(div(i3, i2), pow(cos(pow(x, i2)), im2)), x),
-           sin(pow(x, i2))), cos(div(mul(i3, x), i4)));
+    r1 = mul(mul(mul(mul(div(i3, i2), pow(cos(pow(x, i2)), im2)), x), sin(pow(x, i2))), cos(div(mul(i3, x), i4)));
+    r2 = mul(mul(mul(mul(div(i3, i2), pow(cos(pow(x, i2)), im2)), x), sin(pow(x, i2))), cos(div(mul(i3, x), i4)));
     std::cout << *r1 << std::endl;
     std::cout << *r2 << std::endl;
     REQUIRE(eq(*r1, *r2));
@@ -339,7 +336,7 @@ TEST_CASE("Div: arit", "[arit]")
     REQUIRE(integer(2)->is_positive());
     REQUIRE(integer(0)->is_zero());
     REQUIRE(integer(1)->is_one());
-    REQUIRE(not (integer(-1)->is_positive()));
+    REQUIRE(not(integer(-1)->is_positive()));
     REQUIRE(integer(-1)->is_negative());
 
     RCP<const Basic> r1, r2;
@@ -546,13 +543,11 @@ TEST_CASE("Pow: arit", "[arit]")
     REQUIRE(eq(*r1, *r2));
 
     r1 = pow(div(i3, i2), div(integer(7), i2));
-    r2 = mul(div(integer(27), integer(16)), mul(pow(i2, div(integer(1), i2)),
-        pow(i3, div(integer(1), i2))));
+    r2 = mul(div(integer(27), integer(16)), mul(pow(i2, div(integer(1), i2)), pow(i3, div(integer(1), i2))));
     REQUIRE(eq(*r1, *r2));
 
     r1 = pow(div(i2, i3), div(integer(7), i2));
-    r2 = mul(div(integer(8), integer(81)), mul(pow(i2, div(integer(1), i2)),
-        pow(i3, div(integer(1), i2))));
+    r2 = mul(div(integer(8), integer(81)), mul(pow(i2, div(integer(1), i2)), pow(i3, div(integer(1), i2))));
     REQUIRE(eq(*r1, *r2));
 
     r1 = pow(i6, div(integer(7), i2));
@@ -560,8 +555,7 @@ TEST_CASE("Pow: arit", "[arit]")
     REQUIRE(eq(*r1, *r2));
 
     r1 = pow(div(i3, i2), div(integer(-7), i2));
-    r2 = mul(div(integer(8), integer(81)), mul(pow(i2, div(integer(1), i2)),
-        pow(i3, div(integer(1), i2))));
+    r2 = mul(div(integer(8), integer(81)), mul(pow(i2, div(integer(1), i2)), pow(i3, div(integer(1), i2))));
     REQUIRE(eq(*r1, *r2));
 
     r1 = pow(i6, div(integer(-7), i2));
@@ -569,8 +563,7 @@ TEST_CASE("Pow: arit", "[arit]")
     REQUIRE(eq(*r1, *r2));
 
     r1 = mul(pow(i3, div(i27, i4)), pow(i2, div(integer(-13), i6)));
-    r2 = mul(mul(div(integer(729), integer(8)), pow(i3, div(i3, i4))),
-        pow(i2, div(integer(5), i6)));
+    r2 = mul(mul(div(integer(729), integer(8)), pow(i3, div(i3, i4))), pow(i2, div(integer(5), i6)));
     REQUIRE(eq(*r1, *r2));
 
     r1 = div(integer(12), pow(integer(196), div(integer(1), integer(2))));
@@ -732,9 +725,7 @@ TEST_CASE("Multinomial: arit", "[arit]")
     auto t1 = std::chrono::high_resolution_clock::now();
     multinomial_coefficients(4, 20, r);
     auto t2 = std::chrono::high_resolution_clock::now();
-    std::cout
-        << std::chrono::duration_cast<std::chrono::milliseconds>(t2-t1).count()
-        << "ms" << std::endl;
+    std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1).count() << "ms" << std::endl;
 }
 
 TEST_CASE("Expand1: arit", "[arit]")
@@ -757,12 +748,9 @@ TEST_CASE("Expand1: arit", "[arit]")
     auto t1 = std::chrono::high_resolution_clock::now();
     r2 = expand(r1);
     auto t2 = std::chrono::high_resolution_clock::now();
-    //std::cout << *r2 << std::endl;
-    std::cout
-        << std::chrono::duration_cast<std::chrono::milliseconds>(t2-t1).count()
-        << "ms" << std::endl;
-    std::cout << "number of terms: "
-        << rcp_dynamic_cast<const Add>(r2)->dict_.size() << std::endl;
+    // std::cout << *r2 << std::endl;
+    std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1).count() << "ms" << std::endl;
+    std::cout << "number of terms: " << rcp_dynamic_cast<const Add>(r2)->dict_.size() << std::endl;
 }
 
 TEST_CASE("Expand2: arit", "[arit]")
@@ -807,7 +795,7 @@ TEST_CASE("Expand2: arit", "[arit]")
     REQUIRE(eq(*r2, *add(add(add(mul(x, z), mul(y, z)), mul(x, w)), mul(y, w))));
     REQUIRE(neq(*r2, *add(add(add(mul(y, z), mul(y, z)), mul(x, w)), mul(y, w))));
 
-    r1 = pow(add(x, y), im1);       // 1/(x+y)
+    r1 = pow(add(x, y), im1); // 1/(x+y)
     std::cout << *r1 << std::endl;
 
     r2 = expand(r1);
@@ -815,11 +803,11 @@ TEST_CASE("Expand2: arit", "[arit]")
 
     REQUIRE(eq(*r2, *r1));
 
-    r1 = pow(add(x, y), im2);       // 1/(x+y)^2
+    r1 = pow(add(x, y), im2); // 1/(x+y)^2
     std::cout << *r1 << std::endl;
 
     r2 = expand(r1);
-    std::cout << *r2 <<std::endl;
+    std::cout << *r2 << std::endl;
 
     REQUIRE(eq(*r2, *pow(add(add(pow(x, i2), mul(mul(i2, x), y)), pow(y, i2)), im1)));
     REQUIRE(neq(*r2, *r1));
@@ -851,14 +839,12 @@ TEST_CASE("Expand2: arit", "[arit]")
 
     r1 = pow(add(mul(i2, pow(x, i2)), mul(i3, y)), i2);
     r1 = expand(r1);
-    r2 = add(add(mul(i4, pow(x, i4)), mul(i12, mul(pow(x, i2), y))),
-            mul(i9, pow(y, i2)));
+    r2 = add(add(mul(i4, pow(x, i4)), mul(i12, mul(pow(x, i2), y))), mul(i9, pow(y, i2)));
     REQUIRE(eq(*r1, *r2));
 
     r1 = pow(add(add(pow(x, i3), pow(x, i2)), x), i2);
     r1 = expand(r1);
-    r2 = add(add(add(add(pow(x, i6), mul(i2, pow(x, i5))),
-                mul(i3, pow(x, i4))), mul(i2, pow(x, i3))), pow(x, i2));
+    r2 = add(add(add(add(pow(x, i6), mul(i2, pow(x, i5))), mul(i3, pow(x, i4))), mul(i2, pow(x, i3))), pow(x, i2));
     std::cout << *r1 << std::endl;
     std::cout << *r2 << std::endl;
     REQUIRE(eq(*r1, *r2));
@@ -988,11 +974,8 @@ TEST_CASE("Expand3: arit", "[arit]")
     r = expand(f);
     auto t2 = std::chrono::high_resolution_clock::now();
     std::cout << *r << std::endl;
-    std::cout
-        << std::chrono::duration_cast<std::chrono::milliseconds>(t2-t1).count()
-        << "ms" << std::endl;
-    std::cout << "number of terms: "
-        << rcp_dynamic_cast<const Add>(r)->dict_.size() << std::endl;
+    std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1).count() << "ms" << std::endl;
+    std::cout << "number of terms: " << rcp_dynamic_cast<const Add>(r)->dict_.size() << std::endl;
 
     RCP<const Number> rc1, rc2, c1;
     rc1 = Rational::from_two_ints(*integer(2), *integer(1));
@@ -1006,11 +989,8 @@ TEST_CASE("Expand3: arit", "[arit]")
     t2 = std::chrono::high_resolution_clock::now();
 
     std::cout << *r << std::endl;
-    std::cout
-        << std::chrono::duration_cast<std::chrono::milliseconds>(t2-t1).count()
-        << "ms" << std::endl;
-    std::cout << "number of terms: "
-        << rcp_dynamic_cast<const Add>(r)->dict_.size() << std::endl;
+    std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1).count() << "ms" << std::endl;
+    std::cout << "number of terms: " << rcp_dynamic_cast<const Add>(r)->dict_.size() << std::endl;
 
     e = pow(c1, integer(-40));
 
@@ -1019,7 +999,5 @@ TEST_CASE("Expand3: arit", "[arit]")
     t2 = std::chrono::high_resolution_clock::now();
 
     std::cout << *r << std::endl;
-    std::cout
-        << std::chrono::duration_cast<std::chrono::milliseconds>(t2-t1).count()
-        << "ms" << std::endl;
+    std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1).count() << "ms" << std::endl;
 }

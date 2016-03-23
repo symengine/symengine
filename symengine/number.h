@@ -9,12 +9,14 @@
 
 #include <symengine/basic.h>
 
-namespace SymEngine {
+namespace SymEngine
+{
 
 class Evaluate;
 
-class Number : public Basic {
-public:
+class Number : public Basic
+{
+    public:
     //! \return true if `0`
     virtual bool is_zero() const = 0;
     //! \return true if `1`
@@ -31,7 +33,7 @@ public:
     //! \return true if the number is equal to 0 and not an approximation
     inline bool is_exact_zero() const { return is_exact() and is_zero(); };
     //! Get `Evaluate` singleton to evaluate numerically
-    virtual Evaluate& get_eval() const { throw std::runtime_error("Not Implemented."); };
+    virtual Evaluate &get_eval() const { throw std::runtime_error("Not Implemented."); };
 
     //! Addition
     virtual RCP<const Number> add(const Number &other) const = 0;
@@ -49,54 +51,52 @@ public:
 
     virtual vec_basic get_args() const { return {}; }
 
-    virtual bool is_perfect_power(bool is_expected=false) const { throw std::runtime_error("Not Implemented."); };
-    virtual bool nth_root(const Ptr<RCP<const Number>> &, unsigned long n) const { throw std::runtime_error("Not Implemented."); } ;
+    virtual bool is_perfect_power(bool is_expected = false) const
+    {
+        throw std::runtime_error("Not Implemented.");
+    };
+    virtual bool nth_root(const Ptr<RCP<const Number>> &, unsigned long n) const
+    {
+        throw std::runtime_error("Not Implemented.");
+    };
 };
 //! Add `self` and `other`
-inline RCP<const Number> addnum(const RCP<const Number> &self,
-    const RCP<const Number> &other)
+inline RCP<const Number> addnum(const RCP<const Number> &self, const RCP<const Number> &other)
 {
     return self->add(*other);
 }
 //! Subtract `self` and `other`
-inline RCP<const Number> subnum(const RCP<const Number> &self,
-    const RCP<const Number> &other)
+inline RCP<const Number> subnum(const RCP<const Number> &self, const RCP<const Number> &other)
 {
     return self->sub(*other);
 }
 //! Multiply `self` and `other`
-inline RCP<const Number> mulnum(const RCP<const Number> &self,
-    const RCP<const Number> &other)
+inline RCP<const Number> mulnum(const RCP<const Number> &self, const RCP<const Number> &other)
 {
     return self->mul(*other);
 }
 //! Divide `self` and `other`
-inline RCP<const Number> divnum(const RCP<const Number> &self,
-    const RCP<const Number> &other)
+inline RCP<const Number> divnum(const RCP<const Number> &self, const RCP<const Number> &other)
 {
     return self->div(*other);
 }
 //! Raise `self` to power `other`
-inline RCP<const Number> pownum(const RCP<const Number> &self,
-    const RCP<const Number> &other)
+inline RCP<const Number> pownum(const RCP<const Number> &self, const RCP<const Number> &other)
 {
     return self->pow(*other);
 }
 
-inline void iaddnum(const Ptr<RCP<const Number>> &self,
-    const RCP<const Number> &other)
+inline void iaddnum(const Ptr<RCP<const Number>> &self, const RCP<const Number> &other)
 {
     *self = addnum(*self, other);
 }
 
-inline void imulnum(const Ptr<RCP<const Number>> &self,
-    const RCP<const Number> &other)
+inline void imulnum(const Ptr<RCP<const Number>> &self, const RCP<const Number> &other)
 {
     *self = mulnum(*self, other);
 }
 
-inline void idivnum(const Ptr<RCP<const Number>> &self,
-    const RCP<const Number> &other)
+inline void idivnum(const Ptr<RCP<const Number>> &self, const RCP<const Number> &other)
 {
     *self = divnum(*self, other);
 }
@@ -110,16 +110,18 @@ inline bool is_a_Number(const Basic &b)
     return b.get_type_code() <= NUMBER_WRAPPER;
 }
 
-class NumberWrapper : public Number {
-public:
+class NumberWrapper : public Number
+{
+    public:
     IMPLEMENT_TYPEID(NUMBER_WRAPPER)
     virtual std::string __str__() const { throw std::runtime_error("Not Implemented."); };
-    virtual RCP<const Number> eval(long bits)  const { throw std::runtime_error("Not Implemented."); };
+    virtual RCP<const Number> eval(long bits) const { throw std::runtime_error("Not Implemented."); };
 };
 
 //! A class that will evaluate functions numerically.
-class Evaluate {
-public:
+class Evaluate
+{
+    public:
     virtual RCP<const Basic> sin(const Basic &) const = 0;
     virtual RCP<const Basic> cos(const Basic &) const = 0;
     virtual RCP<const Basic> tan(const Basic &) const = 0;

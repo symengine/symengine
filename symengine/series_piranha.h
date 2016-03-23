@@ -12,12 +12,14 @@
 #include <piranha/mp_integer.hpp>
 #include <piranha/math.hpp>
 
-namespace SymEngine {
+namespace SymEngine
+{
 
-using pp_t = piranha::polynomial<piranha::rational,piranha::monomial<short>>;
+using pp_t = piranha::polynomial<piranha::rational, piranha::monomial<short>>;
 // Univariate Rational Coefficient Power SeriesBase using Piranha
-class URatPSeriesPiranha : public SeriesBase<pp_t, piranha::rational, URatPSeriesPiranha> {
-public:
+class URatPSeriesPiranha : public SeriesBase<pp_t, piranha::rational, URatPSeriesPiranha>
+{
+    public:
     URatPSeriesPiranha(const pp_t p, const std::string varname, const unsigned degree);
     IMPLEMENT_TYPEID(URATPSERIESPIRANHA)
     virtual int compare(const Basic &o) const;
@@ -26,8 +28,7 @@ public:
     virtual umap_int_basic as_dict() const;
     virtual RCP<const Basic> get_coeff(int) const;
 
-    static RCP<const URatPSeriesPiranha> series(const RCP<const Basic> &t, const std::string &x,
-                                                unsigned int prec);
+    static RCP<const URatPSeriesPiranha> series(const RCP<const Basic> &t, const std::string &x, unsigned int prec);
     static piranha::integer convert(const Integer &x);
     static piranha::rational convert(const rational_class &x);
     static pp_t var(const std::string &s);
@@ -43,10 +44,11 @@ public:
     static pp_t subs(const pp_t &s, const pp_t &var, const pp_t &r, unsigned prec);
 };
 
-using p_expr = piranha::polynomial<Expression,piranha::monomial<int>>;
+using p_expr = piranha::polynomial<Expression, piranha::monomial<int>>;
 // Univariate Rational Coefficient Power SeriesBase using Piranha
-class UPSeriesPiranha : public SeriesBase<p_expr, Expression, UPSeriesPiranha> {
-public:
+class UPSeriesPiranha : public SeriesBase<p_expr, Expression, UPSeriesPiranha>
+{
+    public:
     UPSeriesPiranha(const p_expr p, const std::string varname, const unsigned degree);
     IMPLEMENT_TYPEID(UPSERIESPIRANHA)
     virtual int compare(const Basic &o) const;
@@ -55,8 +57,7 @@ public:
     virtual umap_int_basic as_dict() const;
     virtual RCP<const Basic> get_coeff(int) const;
 
-    static RCP<const UPSeriesPiranha> series(const RCP<const Basic> &t, const std::string &x,
-                                                unsigned int prec);
+    static RCP<const UPSeriesPiranha> series(const RCP<const Basic> &t, const std::string &x, unsigned int prec);
     static p_expr var(const std::string &s);
     static Expression convert(const Basic &x);
     static p_expr mul(const p_expr &s, const p_expr &r, unsigned prec);
@@ -68,22 +69,22 @@ public:
     static p_expr integrate(const p_expr &s, const p_expr &var);
     static p_expr subs(const p_expr &s, const p_expr &var, const p_expr &r, unsigned prec);
 
-    static Expression sin(const Expression& c);
-    static Expression cos(const Expression& c);
-    static Expression tan(const Expression& c);
-    static Expression asin(const Expression& c);
-    static Expression acos(const Expression& c);
-    static Expression atan(const Expression& c);
-    static Expression sinh(const Expression& c);
-    static Expression cosh(const Expression& c);
-    static Expression tanh(const Expression& c);
-    static Expression asinh(const Expression& c);
-    static Expression atanh(const Expression& c);
-    static Expression exp(const Expression& c);
-    static Expression log(const Expression& c);
+    static Expression sin(const Expression &c);
+    static Expression cos(const Expression &c);
+    static Expression tan(const Expression &c);
+    static Expression asin(const Expression &c);
+    static Expression acos(const Expression &c);
+    static Expression atan(const Expression &c);
+    static Expression sinh(const Expression &c);
+    static Expression cosh(const Expression &c);
+    static Expression tanh(const Expression &c);
+    static Expression asinh(const Expression &c);
+    static Expression atanh(const Expression &c);
+    static Expression exp(const Expression &c);
+    static Expression log(const Expression &c);
 };
 } // SymEngine
 
 #endif // HAVE_SYMENGINE_PIRANHA
 
-#endif //SYMENGINE_SERIES_PIRANHA_H
+#endif // SYMENGINE_SERIES_PIRANHA_H

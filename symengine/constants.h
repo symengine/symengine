@@ -12,14 +12,16 @@
 #include <symengine/integer.h>
 #include <symengine/symbol.h>
 
-namespace SymEngine {
+namespace SymEngine
+{
 
-class Constant : public Basic {
-private:
+class Constant : public Basic
+{
+    private:
     //! name of Constant
     std::string name_;
 
-public:
+    public:
     IMPLEMENT_TYPEID(CONSTANT)
     //! Constant Constructor
     Constant(const std::string &name);
@@ -36,18 +38,13 @@ public:
      * */
     virtual int compare(const Basic &o) const;
     //! \return name of the Constant.
-    inline std::string get_name() const {
-        return name_;
-    }
+    inline std::string get_name() const { return name_; }
 
     virtual vec_basic get_args() const { return {}; }
 };
 
 //! inline version to return `Constant`
-inline RCP<const Constant> constant(const std::string &name)
-{
-    return make_rcp<const Constant>(name);
-}
+inline RCP<const Constant> constant(const std::string &name) { return make_rcp<const Constant>(name); }
 
 // Constant Numbers
 extern RCP<const Integer> zero;

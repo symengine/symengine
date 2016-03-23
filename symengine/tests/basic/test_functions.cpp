@@ -357,7 +357,6 @@ TEST_CASE("Tan: functions", "[functions]")
     RCP<const Basic> i3 = integer(3);
     RCP<const Basic> i12 = integer(12);
 
-
     RCP<const Basic> r1;
     RCP<const Basic> r2;
 
@@ -924,7 +923,7 @@ TEST_CASE("Derivative: functions", "[functions]")
     REQUIRE(r4->is_canonical(function_symbol("f", {y, x}), {x}));
     REQUIRE(not r4->is_canonical(function_symbol("f", y), {x}));
     REQUIRE(not r4->is_canonical(function_symbol("f", x), {x, y, x, x}));
-    REQUIRE(not (r4->is_canonical(function_symbol("f", x), {pow(x, integer(2))})));
+    REQUIRE(not(r4->is_canonical(function_symbol("f", x), {pow(x, integer(2))})));
 
     // Test get_args()
     r1 = Derivative::create(function_symbol("f", {x, y, pow(z, integer(2))}), {x, x, y});
@@ -979,15 +978,13 @@ TEST_CASE("Subs: functions", "[functions]")
     REQUIRE(eq(*r2, *r3));
 
     r2 = r1->diff(x);
-    r3 = Subs::create(Derivative::create(function_symbol("f", {add(y, y), _x}), {_x, _x}),
-                        {{_x, add(x, y)}});
+    r3 = Subs::create(Derivative::create(function_symbol("f", {add(y, y), _x}), {_x, _x}), {{_x, add(x, y)}});
     REQUIRE(eq(*r2, *r3));
 
     r2 = r1->diff(y);
-    r3 = Subs::create(Derivative::create(function_symbol("f", {add(y, y), _x}), {_x, _x}),
-                        {{_x, add(x, y)}});
+    r3 = Subs::create(Derivative::create(function_symbol("f", {add(y, y), _x}), {_x, _x}), {{_x, add(x, y)}});
     r4 = Subs::create(Derivative::create(function_symbol("f", {__x, _x}), {__x, _x}),
-                        {{_x, add(x, y)}, {__x, add(y, y)}});
+                      {{_x, add(x, y)}, {__x, add(y, y)}});
     r3 = add(r3, add(r4, r4));
     REQUIRE(eq(*r2, *r3));
 }
@@ -1369,7 +1366,7 @@ TEST_CASE("Cot table: functions", "[functions]")
     REQUIRE(eq(*r1, *r2));
 
     // cot(5*pi/12) = (-1 + 3**(1/2))/(1 + 3**(1/2))
-    r1 = cot(div(mul(integer(5),pi), i12));
+    r1 = cot(div(mul(integer(5), pi), i12));
     r2 = div(sub(sq3, one), add(one, sq3));
     REQUIRE(eq(*r1, *r2));
 }
@@ -1474,7 +1471,7 @@ TEST_CASE("Acos: functions", "[functions]")
     REQUIRE(eq(*r1, *r2));
 
     r1 = acos(div(im1, i2));
-    r2 = mul(i2, div(pi,  i3));
+    r2 = mul(i2, div(pi, i3));
     REQUIRE(eq(*r1, *r2));
 
     r1 = acos(div(sqrt(i2), i2));
@@ -1515,7 +1512,7 @@ TEST_CASE("Asec: functions", "[functions]")
     REQUIRE(eq(*r1, *r2));
 
     r1 = asec(div(i2, im1));
-    r2 = mul(i2, div(pi,  i3));
+    r2 = mul(i2, div(pi, i3));
     REQUIRE(eq(*r1, *r2));
 
     r1 = asec(sqrt(i2));
@@ -1524,8 +1521,8 @@ TEST_CASE("Asec: functions", "[functions]")
 
     r1 = asec(div(mul(i2, sqrt(i2)), add(sqrt(i3), i1)));
     r2 = mul(i5, div(pi, mul(i3, pow(i2, i2))));
-    std::cout<<*r1<<std::endl;
-    std::cout<<*r2<<std::endl;
+    std::cout << *r1 << std::endl;
+    std::cout << *r2 << std::endl;
     REQUIRE(eq(*r1, *r2));
 
     r1 = asec(div(integer(8), sqrt(sub(i5, sqrt(i5)))));
@@ -1798,7 +1795,6 @@ TEST_CASE("Csch: functions", "[functions]")
     r1 = csch(mul(im1, x))->diff(x);
     r2 = mul(csch(x), coth(x));
     REQUIRE(eq(*r1, *r2));
-
 }
 
 TEST_CASE("Cosh: functions", "[functions]")
@@ -1851,7 +1847,6 @@ TEST_CASE("Sech: functions", "[functions]")
     r1 = sech(mul(im1, x))->diff(x);
     r2 = mul(im1, mul(sech(x), tanh(x)));
     REQUIRE(eq(*r1, *r2));
-
 }
 
 TEST_CASE("Tanh: functions", "[functions]")
@@ -1877,8 +1872,8 @@ TEST_CASE("Tanh: functions", "[functions]")
 
     r1 = tanh(mul(im1, x))->diff(x);
     r2 = add(pow(tanh(x), i2), im1);
-    std::cout<<*r1<<std::endl;
-    std::cout<<*r2<<std::endl;
+    std::cout << *r1 << std::endl;
+    std::cout << *r2 << std::endl;
     // REQUIRE(eq(*r1, *r2));
 }
 
@@ -1958,7 +1953,6 @@ TEST_CASE("Acsch: functions", "[functions]")
     r2 = div(im1, mul(sqrt(add(one, div(one, pow(x, i2)))), pow(x, i2)));
     REQUIRE(eq(*r1, *r2));
 }
-
 
 TEST_CASE("Acosh: functions", "[functions]")
 {
@@ -2118,7 +2112,6 @@ TEST_CASE("Zeta: functions", "[functions]")
 
     CHECK_THROWS_AS(zeta(one, i2), std::runtime_error);
 }
-
 
 TEST_CASE("Levi Civita: functions", "[functions]")
 {
@@ -2301,7 +2294,6 @@ TEST_CASE("Lowergamma: functions", "[functions]")
     RCP<const Basic> i3 = integer(3);
     RCP<const Basic> im1 = integer(-1);
 
-
     RCP<const Basic> r1;
     RCP<const Basic> r2;
 
@@ -2323,7 +2315,6 @@ TEST_CASE("Uppergamma: functions", "[functions]")
     RCP<const Basic> i2 = integer(2);
     RCP<const Basic> i3 = integer(3);
     RCP<const Basic> im1 = integer(-1);
-
 
     RCP<const Basic> r1;
     RCP<const Basic> r2;
@@ -2393,8 +2384,9 @@ TEST_CASE("Beta: functions", "[functions]")
     REQUIRE(eq(*r1, *r2));
 
     r1 = beta(x, mul(x, x))->diff(x);
-    r2 = mul(beta(x, mul(x, x)), add(mul(mul(i2, x), polygamma(zero, mul(x, x))),
-            sub(polygamma(zero, x), mul(add(mul(i2, x), one), polygamma(zero, add(x, mul(x, x)))))));
+    r2 = mul(beta(x, mul(x, x)),
+             add(mul(mul(i2, x), polygamma(zero, mul(x, x))),
+                 sub(polygamma(zero, x), mul(add(mul(i2, x), one), polygamma(zero, add(x, mul(x, x)))))));
     REQUIRE(eq(*r1, *r2));
 }
 
@@ -2506,24 +2498,20 @@ TEST_CASE("Abs: functions", "[functions]")
     REQUIRE(eq(*abs(x)->diff(y), *integer(0)));
 }
 
-class MySin : public FunctionWrapper {
-public :
-    MySin(RCP<const Basic> arg) : FunctionWrapper("MySin", arg) {
-
-    }
-    RCP<const Number> eval(long bits) const {
-        return real_double(::sin(eval_double(*arg_[0])));
-    }
-    RCP<const Basic> create(const vec_basic &v) const {
+class MySin : public FunctionWrapper
+{
+    public:
+    MySin(RCP<const Basic> arg) : FunctionWrapper("MySin", arg) {}
+    RCP<const Number> eval(long bits) const { return real_double(::sin(eval_double(*arg_[0]))); }
+    RCP<const Basic> create(const vec_basic &v) const
+    {
         if (eq(*zero, *v[0])) {
             return zero;
         } else {
             return make_rcp<MySin>(v[0]);
         }
     }
-    RCP<const Basic> diff_impl(const RCP<const Symbol> &x) const {
-        return mul(cos(arg_[0]), arg_[0]->diff(x));
-    }
+    RCP<const Basic> diff_impl(const RCP<const Symbol> &x) const { return mul(cos(arg_[0]), arg_[0]->diff(x)); }
 };
 
 TEST_CASE("FunctionWrapper: functions", "[functions]")
@@ -2595,7 +2583,7 @@ TEST_CASE("MPFR and MPC: functions", "[functions]")
     REQUIRE(mpfr_cmp_si(a.get_mpfr_t(), 131695789692481670) > 0);
     REQUIRE(mpfr_cmp_si(a.get_mpfr_t(), 131695789692481671) < 0);
 
-    //Check asin(1.0 + 1.0*I)
+    // Check asin(1.0 + 1.0*I)
     mpc_class c(60);
     mpc_set_si_si(c.get_mpc_t(), 1, 1, MPFR_RNDN);
     r1 = asin(complex_mpc(c));
@@ -2612,8 +2600,8 @@ TEST_CASE("MPFR and MPC: functions", "[functions]")
 #else
     mpfr_set_si(a.get_mpfr_t(), 2, MPFR_RNDN);
     CHECK_THROWS_AS(asin(real_mpfr(a)), std::runtime_error);
-#endif //HAVE_SYMENGINE_MPC
-#endif //HAVE_SYMENGINE_MPFR
+#endif // HAVE_SYMENGINE_MPC
+#endif // HAVE_SYMENGINE_MPFR
 }
 
 TEST_CASE("max: functions", "[functions]")
@@ -2626,38 +2614,38 @@ TEST_CASE("max: functions", "[functions]")
 
     RCP<const Basic> res, tmp;
 
-    res = max({x, y});                      // checking if elements stored in order
+    res = max({x, y}); // checking if elements stored in order
     tmp = rcp_static_cast<const Max>(res)->get_args()[0];
     res = max({y, x});
     REQUIRE(eq(*(rcp_static_cast<const Max>(res)->get_args()[0]), *tmp));
 
     res = max({x, y});
-    REQUIRE(eq(*res, *max({y, x})));        // max(x, y) == max(y, x)
-    REQUIRE(is_a<Max>(*res));               // max(x, y) is a Max
+    REQUIRE(eq(*res, *max({y, x}))); // max(x, y) == max(y, x)
+    REQUIRE(is_a<Max>(*res));        // max(x, y) is a Max
 
     res = max({x});
-    REQUIRE(eq(*res, *x));                  // max(x) == x
+    REQUIRE(eq(*res, *x)); // max(x) == x
 
     res = max({x, x});
-    REQUIRE(eq(*res, *x));                  // max(x, x) == x
+    REQUIRE(eq(*res, *x)); // max(x, x) == x
 
     res = max({x, x, max({x, y})});
-    REQUIRE(eq(*res, *max({x, y})));        // max(x, x, max(x, y)) == max(x,y)
+    REQUIRE(eq(*res, *max({x, y}))); // max(x, x, max(x, y)) == max(x,y)
 
     res = max({i2, rd, r2_5});
-    REQUIRE(eq(*res, *i2));                 // max(2, 2/5, 0.32) == 2
+    REQUIRE(eq(*res, *i2)); // max(2, 2/5, 0.32) == 2
 
     res = max({x, max({i2, y})});
-    REQUIRE(eq(*res, *max({x, i2, y})));    // max(x, max(2, y)) == max(x, 2, y)
+    REQUIRE(eq(*res, *max({x, i2, y}))); // max(x, max(2, y)) == max(x, 2, y)
 
     res = max({max({x, max({y, i2})}), max({r2_5, rd})});
-    REQUIRE(eq(*res, *max({x, i2, y})));    // max(max(x, max(y, 2)), max(2/5, 0.32)) == max(x, 2, y)
+    REQUIRE(eq(*res, *max({x, i2, y}))); // max(max(x, max(y, 2)), max(2/5, 0.32)) == max(x, 2, y)
 
     res = max({i2, r2_5, x});
-    REQUIRE(eq(*res, *max({i2, x})));       // max(2, 2/5, x) == max(2, x)
+    REQUIRE(eq(*res, *max({i2, x}))); // max(2, 2/5, x) == max(2, x)
 
     res = max({max({x, i2}), max({y, r2_5})});
-    REQUIRE(eq(*res, *max({x, i2, y})));    // max(max(2, x), max(2/5, y)) == max(x, 2, y)
+    REQUIRE(eq(*res, *max({x, i2, y}))); // max(max(2, x), max(2/5, y)) == max(x, 2, y)
 }
 
 TEST_CASE("min: functions", "[functions]")
@@ -2671,30 +2659,30 @@ TEST_CASE("min: functions", "[functions]")
     RCP<const Basic> res;
 
     res = min({x, y});
-    REQUIRE(eq(*res, *min({y, x})));        // min(x, y) == min(y, x)
-    REQUIRE(is_a<Min>(*res));               // min(x, y) is a min
+    REQUIRE(eq(*res, *min({y, x}))); // min(x, y) == min(y, x)
+    REQUIRE(is_a<Min>(*res));        // min(x, y) is a min
 
     res = min({x});
-    REQUIRE(eq(*res, *x));                  // min(x) == x
+    REQUIRE(eq(*res, *x)); // min(x) == x
 
     res = min({x, x});
-    REQUIRE(eq(*res, *x));                  // min(x, x) == x
+    REQUIRE(eq(*res, *x)); // min(x, x) == x
 
     res = min({x, x, min({x, y})});
-    REQUIRE(eq(*res, *min({x, y})));        // min(x, x, min(x, y)) == min(x,y)
+    REQUIRE(eq(*res, *min({x, y}))); // min(x, x, min(x, y)) == min(x,y)
 
     res = min({i2, rd, r2_5});
-    REQUIRE(eq(*res, *rd));                 // min(2, 2/5, 0.32) == 0.32
+    REQUIRE(eq(*res, *rd)); // min(2, 2/5, 0.32) == 0.32
 
     res = min({i2, rd, max({x})});
-    REQUIRE(eq(*res, *min({rd, x})));       // min(2, 0.32, max(x)) == min(0.32, x)
+    REQUIRE(eq(*res, *min({rd, x}))); // min(2, 0.32, max(x)) == min(0.32, x)
 
     res = min({x, min({i2, y})});
-    REQUIRE(eq(*res, *min({x, i2, y})));    // min(x, min(2, y)) == min(x, 2, y)
+    REQUIRE(eq(*res, *min({x, i2, y}))); // min(x, min(2, y)) == min(x, 2, y)
 
     res = min({min({x, min({y, i2})}), min({r2_5, rd})});
-    REQUIRE(eq(*res, *min({x, rd, y})));    // min(min(x, min(y, 2)), min(2/5, 0.32)) == min(x, 0.32, y)
+    REQUIRE(eq(*res, *min({x, rd, y}))); // min(min(x, min(y, 2)), min(2/5, 0.32)) == min(x, 0.32, y)
 
     res = min({min({x, i2}), min({y, r2_5})});
-    REQUIRE(eq(*res, *min({x, r2_5, y})));  // min(min(2, x), min(2/5, y)) == min(x, 2/5, y)
+    REQUIRE(eq(*res, *min({x, r2_5, y}))); // min(min(2, x), min(2/5, y)) == min(x, 2/5, y)
 }

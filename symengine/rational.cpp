@@ -2,23 +2,23 @@
 #include <symengine/pow.h>
 #include <symengine/mul.h>
 
-namespace SymEngine {
-
-Rational::Rational(rational_class i)
-    : i{i}
+namespace SymEngine
 {
-    SYMENGINE_ASSERT(is_canonical(this->i))
-}
+
+Rational::Rational(rational_class i) : i{i} { SYMENGINE_ASSERT(is_canonical(this->i)) }
 
 bool Rational::is_canonical(const rational_class &i) const
 {
     rational_class x = i;
     canonicalize(x);
     // If 'x' is an integer, it should not be Rational:
-    if (SymEngine::get_den(x) == 1) return false;
+    if (SymEngine::get_den(x) == 1)
+        return false;
     // if 'i' is not in canonical form:
-    if (SymEngine::get_num(x) != SymEngine::get_num(i)) return false;
-    if (SymEngine::get_den(x) != SymEngine::get_den(i)) return false;
+    if (SymEngine::get_num(x) != SymEngine::get_num(i))
+        return false;
+    if (SymEngine::get_den(x) != SymEngine::get_den(i))
+        return false;
     return true;
 }
 
@@ -32,8 +32,7 @@ RCP<const Number> Rational::from_mpq(rational_class i)
     }
 }
 
-RCP<const Number> Rational::from_two_ints(const Integer &n,
-            const Integer &d)
+RCP<const Number> Rational::from_two_ints(const Integer &n, const Integer &d)
 {
     if (d.i == 0)
         throw std::runtime_error("Rational: Division by zero.");
@@ -82,7 +81,8 @@ int Rational::compare(const Basic &o) const
 {
     if (is_a<Rational>(o)) {
         const Rational &s = static_cast<const Rational &>(o);
-        if (i == s.i) return 0;
+        if (i == s.i)
+            return 0;
         return i < s.i ? -1 : 1;
     }
     if (is_a<Integer>(o)) {
@@ -92,9 +92,7 @@ int Rational::compare(const Basic &o) const
     throw std::runtime_error("unhandled comparison of Rational");
 }
 
-void get_num_den(const Rational &rat,
-            const Ptr<RCP<const Integer>> &num,
-            const Ptr<RCP<const Integer>> &den)
+void get_num_den(const Rational &rat, const Ptr<RCP<const Integer>> &num, const Ptr<RCP<const Integer>> &den)
 {
     *num = integer(SymEngine::get_num(rat.i));
     *den = integer(SymEngine::get_den(rat.i));
@@ -112,8 +110,7 @@ bool Rational::is_perfect_power(bool is_expected) const
         if (mpz_cmpabs(get_mpz_t(num), get_mpz_t(den)) > 0) {
             if (!mp_perfect_power_p(den))
                 return false;
-        }
-        else {
+        } else {
             if (!mp_perfect_power_p(num))
                 return false;
         }
@@ -139,12 +136,14 @@ bool Rational::nth_root(const Ptr<RCP<const Number>> &the_rat, unsigned long n) 
     return true;
 }
 
-RCP<const Basic> Rational::powrat(const Rational &other) const {
+RCP<const Basic> Rational::powrat(const Rational &other) const
+{
     return SymEngine::mul(other.rpowrat(*this->get_num()), other.neg()->rpowrat(*this->get_den()));
 }
 
-RCP<const Basic> Rational::rpowrat(const Integer &other) const {
-    if (not (mp_fits_ulong_p(SymEngine::get_den(i))))
+RCP<const Basic> Rational::rpowrat(const Integer &other) const
+{
+    if (not(mp_fits_ulong_p(SymEngine::get_den(i))))
         throw std::runtime_error("powrat: den of 'exp' does not fit ulong.");
     unsigned long exp = mp_get_ui(SymEngine::get_den(i));
     RCP<const Integer> res;

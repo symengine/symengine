@@ -4,7 +4,8 @@
 #include <symengine/add.h>
 #include <symengine/mul.h>
 
-namespace SymEngine {
+namespace SymEngine
+{
 
 bool order(const DenseMatrix &t, const std::vector<DenseMatrix> &basis, unsigned k)
 {
@@ -34,7 +35,7 @@ bool is_minimum(const DenseMatrix &t, const std::vector<DenseMatrix> &basis, uns
         return true;
     }
 
-    return  not order(t, basis, n - 1) and is_minimum(t, basis, n - 1);
+    return not order(t, basis, n - 1) and is_minimum(t, basis, n - 1);
 }
 
 // Solve the diophantine system Ax = 0 and return a basis set for solutions
@@ -90,13 +91,11 @@ void homogeneous_lde(std::vector<DenseMatrix> &basis, const DenseMatrix &A)
             T = t;
             for (unsigned i = 0; i < q; i++) {
                 SYMENGINE_ASSERT(is_a<Integer>(*T.get(0, i)));
-                T.set(0, i,
-                    rcp_static_cast<const Integer>(T.get(0, i))->addint(*one));
+                T.set(0, i, rcp_static_cast<const Integer>(T.get(0, i))->addint(*one));
 
                 if (i > 0) {
                     SYMENGINE_ASSERT(is_a<Integer>(*T.get(0, i - 1)));
-                    T.set(0, i - 1,
-                        rcp_static_cast<const Integer>(T.get(0, i - 1))->subint(*one));
+                    T.set(0, i - 1, rcp_static_cast<const Integer>(T.get(0, i - 1))->subint(*one));
                 }
 
                 dot = zero;
@@ -110,8 +109,7 @@ void homogeneous_lde(std::vector<DenseMatrix> &basis, const DenseMatrix &A)
                     dot = dot->addint(*p_j0->mulint(*A_ji));
                 }
 
-                if (F[i] == false and ((dot->is_negative() and is_minimum(T, basis, basis.size()))
-                        or t.eq(row_zero))) {
+                if (F[i] == false and ((dot->is_negative() and is_minimum(T, basis, basis.size())) or t.eq(row_zero))) {
                     P.push_back(T);
                     n = n + 1;
 
@@ -125,5 +123,4 @@ void homogeneous_lde(std::vector<DenseMatrix> &basis, const DenseMatrix &A)
         }
     }
 }
-
 }

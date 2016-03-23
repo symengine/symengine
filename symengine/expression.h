@@ -21,24 +21,27 @@ namespace SymEngine
 
 class Expression
 {
-private:
+    private:
     RCP<const Basic> m_basic;
 
-public:
+    public:
     //! Plain constructor of Expression
     Expression() : m_basic(integer(0)) {}
     //! Construct Expression from `int`
     //! cannot be explicit (needed so by Piranha)
     Expression(int n) : m_basic(integer(n)) {}
-    //! Construct Expression from Basic
-    //Expression(double n) : m_basic(RealDouble(n)) {}
+//! Construct Expression from Basic
+// Expression(double n) : m_basic(RealDouble(n)) {}
 
 #if defined(HAVE_SYMENGINE_IS_CONSTRUCTIBLE)
     template <typename T, typename = typename std::enable_if<std::is_constructible<RCP<const Basic>, T &&>::value>::type>
 #else
     template <typename T>
 #endif
-    Expression(T &&o) : m_basic(std::forward<T>(o)) {}
+    Expression(T &&o)
+        : m_basic(std::forward<T>(o))
+    {
+    }
     //! Construct Expression from Expression
     Expression(const Expression &) = default;
     //! Construct Expression from reference to Expression
@@ -113,40 +116,31 @@ public:
         return *this;
     }
     //! Overload check equality (==)
-    bool operator==(const Expression &other) const
-    {
-        return eq(*m_basic, *other.m_basic);
-    }
-    
+    bool operator==(const Expression &other) const { return eq(*m_basic, *other.m_basic); }
+
     //! Overload check not equal (!=)
-    bool operator!=(const Expression &other) const
-    {
-        return not (*this == other);
-    }
+    bool operator!=(const Expression &other) const { return not(*this == other); }
 
     //! Method to get Basic from Expression
-    const RCP<const Basic> &get_basic() const
-    {
-        return m_basic;
-    }
+    const RCP<const Basic> &get_basic() const { return m_basic; }
 };
 
-inline Expression pow_ex(const Expression &base, const Expression &exp) {
+inline Expression pow_ex(const Expression &base, const Expression &exp)
+{
     return pow(base.get_basic(), exp.get_basic());
 }
 
-inline Expression expand(const Expression &arg)
-{
-    return expand(arg.get_basic());
-}
+inline Expression expand(const Expression &arg) { return expand(arg.get_basic()); }
 
-inline Expression coeff(const Expression &y, const Expression &x, const Expression &n) {
+inline Expression coeff(const Expression &y, const Expression &x, const Expression &n)
+{
     return coeff(y.get_basic(), x.get_basic(), n.get_basic());
 }
 
-namespace detail {
-    // This function must have external linkage
-    std::string poly_print(const Expression &x);
+namespace detail
+{
+// This function must have external linkage
+std::string poly_print(const Expression &x);
 }
 
 } // SymEngine
@@ -156,36 +150,39 @@ namespace detail {
 #include <piranha/math.hpp>
 #include <piranha/pow.hpp>
 #include <piranha/print_coefficient.hpp>
-namespace piranha {
-    namespace math {
+namespace piranha
+{
+namespace math
+{
 
-        template<typename T>
-        struct partial_impl<T, typename std::enable_if<std::is_same<T, SymEngine::Expression>::value>::type> {
-            /// Call operator.
-            /**
-             * @return an instance of Expression constructed from zero.
-             */
-            SymEngine::Expression operator()(const SymEngine::Expression &, const std::string &) const {
-                return SymEngine::Expression(0);
-            }
-        };
-
-        template<typename T, typename U>
-        struct pow_impl<T, U, typename std::enable_if<
-                std::is_same<T, SymEngine::Expression>::value && std::is_integral<U>::value>::type> {
-            SymEngine::Expression operator()(const SymEngine::Expression &x, const U &y) const {
-                return SymEngine::pow(SymEngine::Expression(x).get_basic(), SymEngine::integer(y));
-            }
-        };
-    }
-
-    template <typename U>
-    struct print_coefficient_impl<U, typename std::enable_if<std::is_same<U, SymEngine::Expression>::value>::type>
+template <typename T>
+struct partial_impl<T, typename std::enable_if<std::is_same<T, SymEngine::Expression>::value>::type> {
+    /// Call operator.
+    /**
+     * @return an instance of Expression constructed from zero.
+     */
+    SymEngine::Expression operator()(const SymEngine::Expression &, const std::string &) const
     {
-        auto operator()(std::ostream &os, const U &cf) const -> decltype(os << cf) {
-            return os << SymEngine::detail::poly_print(cf);
-        }
-    };
+        return SymEngine::Expression(0);
+    }
+};
+
+template <typename T, typename U>
+struct pow_impl<T, U, typename std::enable_if<std::is_same<T, SymEngine::Expression>::value && std::is_integral<U>::value>::type> {
+    SymEngine::Expression operator()(const SymEngine::Expression &x, const U &y) const
+    {
+        return SymEngine::pow(SymEngine::Expression(x).get_basic(), SymEngine::integer(y));
+    }
+};
+}
+
+template <typename U>
+struct print_coefficient_impl<U, typename std::enable_if<std::is_same<U, SymEngine::Expression>::value>::type> {
+    auto operator()(std::ostream &os, const U &cf) const -> decltype(os << cf)
+    {
+        return os << SymEngine::detail::poly_print(cf);
+    }
+};
 }
 #endif // HAVE_SYMENGINE_PIRANHA
 

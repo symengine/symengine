@@ -11,7 +11,8 @@
 #include <symengine/polynomial.h>
 #include <symengine/printer.h>
 
-namespace SymEngine {
+namespace SymEngine
+{
 
 int Basic::__cmp__(const Basic &o) const
 {
@@ -42,10 +43,6 @@ RCP<const Basic> Basic::subs(const map_basic_basic &subs_dict) const
         return it->second;
 }
 
-RCP<const Basic> Basic::diff(const RCP<const Symbol> &x) const
-{
-    return Derivative::create(rcp_from_this(), {x});
-}
+RCP<const Basic> Basic::diff(const RCP<const Symbol> &x) const { return Derivative::create(rcp_from_this(), {x}); }
 
 } // SymEngine
-

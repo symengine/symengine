@@ -27,7 +27,7 @@ using namespace SymEngine::literals;
 
 TEST_CASE("Constructor of UnivariateSeries", "[UnivariateSeries]")
 {
-    RCP<const Symbol> x  = symbol("x");
+    RCP<const Symbol> x = symbol("x");
     map_uint_mpz adict_ = {{0, 1_z}, {1, 2_z}, {2, 1_z}};
     RCP<const UnivariateSeries> P = univariate_series(x, 2, adict_);
     REQUIRE(P->__str__() == "1 + 2*x + O(x**2)");
@@ -38,7 +38,7 @@ TEST_CASE("Constructor of UnivariateSeries", "[UnivariateSeries]")
 
 TEST_CASE("Adding two UnivariateSeries", "[UnivariateSeries]")
 {
-    RCP<const Symbol> x  = symbol("x");
+    RCP<const Symbol> x = symbol("x");
     map_uint_mpz adict_ = {{0, 1_z}, {1, 2_z}, {2, 1_z}};
     map_uint_mpz bdict_ = {{0, 2_z}, {1, 3_z}, {2, 4_z}};
     map_uint_mpz ddict_ = {{0, 3_z}, {1, 5_z}, {2, 5_z}};
@@ -57,7 +57,7 @@ TEST_CASE("Adding two UnivariateSeries", "[UnivariateSeries]")
 
 TEST_CASE("Negative of a UnivariateSeries", "[UnivariateSeries]")
 {
-    RCP<const Symbol> x  = symbol("x");
+    RCP<const Symbol> x = symbol("x");
     map_uint_mpz adict_ = {{0, 1_z}, {1, 2_z}, {2, 1_z}};
     map_uint_mpz bdict_ = {{0, -1_z}, {1, -2_z}, {2, -1_z}};
 
@@ -69,7 +69,7 @@ TEST_CASE("Negative of a UnivariateSeries", "[UnivariateSeries]")
 
 TEST_CASE("Subtracting two UnivariateSeries", "[UnivariateSeries]")
 {
-    RCP<const Symbol> x  = symbol("x");
+    RCP<const Symbol> x = symbol("x");
     map_uint_mpz adict_ = {{0, 1_z}, {1, 2_z}, {2, 1_z}};
     map_uint_mpz bdict_ = {{0, 2_z}, {1, 3_z}, {2, 4_z}};
     map_uint_mpz fdict_ = {{0, -1_z}, {1, -1_z}, {2, -3_z}};
@@ -89,7 +89,7 @@ TEST_CASE("Subtracting two UnivariateSeries", "[UnivariateSeries]")
 
 TEST_CASE("Multiplication of two UnivariateSeries", "[UnivariateSeries]")
 {
-    RCP<const Symbol> x  = symbol("x");
+    RCP<const Symbol> x = symbol("x");
     RCP<const UnivariateSeries> a = univariate_series(x, 5, {{0, 1_z}, {1, 2_z}, {2, 1_z}});
     RCP<const UnivariateSeries> b = univariate_series(x, 3, {{0, -1_z}, {1, -2_z}, {2, -1_z}});
     RCP<const UnivariateSeries> e = univariate_series(x, 5, {{0, 1_z}, {1, 4_z}, {2, 6_z}, {3, 4_z}, {4, 1_z}});

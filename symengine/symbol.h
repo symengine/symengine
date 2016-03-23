@@ -8,14 +8,16 @@
 
 #include <symengine/basic.h>
 
-namespace SymEngine {
+namespace SymEngine
+{
 
-class Symbol : public Basic {
-private:
+class Symbol : public Basic
+{
+    private:
     //! name of Symbol
     std::string name_;
 
-public:
+    public:
     IMPLEMENT_TYPEID(SYMBOL)
     //! Symbol Constructor
     explicit Symbol(const std::string &name);
@@ -33,18 +35,13 @@ public:
      * */
     virtual int compare(const Basic &o) const;
     //! \return name of the Symbol.
-    inline std::string get_name() const {
-        return name_;
-    }
+    inline std::string get_name() const { return name_; }
 
     virtual vec_basic get_args() const { return {}; }
 };
 
 //! inline version to return `Symbol`
-inline RCP<const Symbol> symbol(const std::string &name)
-{
-    return make_rcp<const Symbol>(name);
-}
+inline RCP<const Symbol> symbol(const std::string &name) { return make_rcp<const Symbol>(name); }
 
 } // SymEngine
 
