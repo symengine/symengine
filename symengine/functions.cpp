@@ -155,7 +155,7 @@ bool could_extract_minus(const RCP<const Basic> &arg)
         const Add &s = static_cast<const Add &>(*arg);
         int flag = 0;
         for (const auto &p: s.dict_) {
-            if(flag == 1)
+            if(flag)
               return true;
             if (is_a<Integer>(*p.second)) {
                 if (not (rcp_static_cast<const Integer>(p.second)->is_negative()))
