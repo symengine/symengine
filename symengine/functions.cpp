@@ -153,14 +153,21 @@ bool could_extract_minus(const RCP<const Basic> &arg)
     }
     else if (is_a<Add>(*arg)) {
         const Add &s = static_cast<const Add &>(*arg);
+        int flag = 0;
         for (const auto &p: s.dict_) {
+            if(flag)
+              return true;
             if (is_a<Integer>(*p.second)) {
                 if (not (rcp_static_cast<const Integer>(p.second)->is_negative()))
                     return false;
+                else
+                    flag++;
             }
             else if (is_a<Rational>(*p.second)) {
                 if (not (rcp_static_cast<const Rational>(p.second)->is_negative()))
                     return false;
+                else
+                    flag++;
             }
             else
                 return false;
@@ -170,7 +177,6 @@ bool could_extract_minus(const RCP<const Basic> &arg)
     else
         return false;
 }
-
 bool handle_minus(const RCP<const Basic> &arg,
                 const Ptr<RCP<const Basic>> &rarg)
 {
