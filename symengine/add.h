@@ -50,6 +50,9 @@ public:
     */
     static void coef_dict_add_term(const Ptr<RCP<const Number>> &coef, umap_basic_num &d,
             const RCP<const Number> &c, const RCP<const Basic> &term);
+    //! Converts the add dict into two appropriate instances
+    void as_two_terms(const Ptr<RCP<const Basic>> &a,
+            const Ptr<RCP<const Basic>> &b) const;
     //! Converts into the form of coefficient and term
     static void as_coef_term(const RCP<const Basic> &self,
         const Ptr<RCP<const Number>> &coef, const Ptr<RCP<const Basic>> &term);

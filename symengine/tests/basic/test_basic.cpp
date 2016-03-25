@@ -119,6 +119,12 @@ TEST_CASE("Add: basic", "[basic]")
     REQUIRE(vec_basic_eq_perm(r->get_args(), {mul(integer(2), x), y}));
     REQUIRE(not vec_basic_eq_perm(r->get_args(), {mul(integer(3), x), y}));
 
+    RCP<const Basic> term1, term2;
+    RCP<const Add> a1 = rcp_static_cast<const Add>(add(r, r));
+    a1->as_two_terms(outArg(term1), outArg(term2));
+    RCP<const Add> a2 = rcp_static_cast<const Add>(add(term1, term2));
+    REQUIRE(eq(*a1, *a2));
+
     r = add(mul(integer(5), x), integer(5));
     REQUIRE(vec_basic_eq_perm(r->get_args(), {mul(integer(5), x), integer(5)}));
 

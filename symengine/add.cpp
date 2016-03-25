@@ -295,6 +295,16 @@ RCP<const Basic> sub(const RCP<const Basic> &a, const RCP<const Basic> &b)
     return add(a, mul(minus_one, b));
 }
 
+void Add::as_two_terms(const Ptr<RCP<const Basic>> &a,
+            const Ptr<RCP<const Basic>> &b) const
+{
+    auto p = dict_.begin();
+    *a = mul(p->first, p->second);
+    umap_basic_num d = dict_;
+    d.erase(p->first);
+    *b = Add::from_dict(coef_, std::move(d));
+}
+
 RCP<const Basic> Add::subs(const map_basic_basic &subs_dict) const
 {
     RCP<const Add> self = rcp_from_this_cast<const Add>();
