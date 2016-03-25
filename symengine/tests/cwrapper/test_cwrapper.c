@@ -295,6 +295,9 @@ void test_get_type() {
     SYMENGINE_C_ASSERT(basic_get_type(x) == SYMENGINE_SYMBOL);
     SYMENGINE_C_ASSERT(basic_get_type(y) == SYMENGINE_INTEGER);
 
+    SYMENGINE_C_ASSERT(basic_get_class_id("Integer") == SYMENGINE_INTEGER);
+    SYMENGINE_C_ASSERT(basic_get_class_id("Add") == SYMENGINE_ADD);
+
     basic_free_stack(x);
     basic_free_stack(y);
 }
