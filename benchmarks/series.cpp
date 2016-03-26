@@ -5,7 +5,7 @@
 
 using SymEngine::Basic;
 using SymEngine::Symbol;
-using SymEngine::UnivariateSeries;
+//using SymEngine::UnivariateSeries;
 using SymEngine::symbol;
 using SymEngine::map_vec_int;
 using SymEngine::integer;
@@ -14,7 +14,7 @@ using SymEngine::RCP;
 using SymEngine::rcp_dynamic_cast;
 
 int main(int argc, char* argv[])
-{
+{/*
     SymEngine::print_stack_on_segfault();
 
     RCP<const Symbol> x = symbol("x");
@@ -35,6 +35,6 @@ int main(int argc, char* argv[])
     std::cout
         << std::chrono::duration_cast<std::chrono::milliseconds>(t2-t1).count()
         << "ms" << std::endl;
-
+*/
     return 0;
 }

@@ -1,3 +1,4 @@
+
 /**
  *  \file series_generic.h
  *  Class for univariate series.

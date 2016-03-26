@@ -759,4 +759,5 @@ TEST_CASE("Min/Max: eval_arb", "[eval_arb]")
 
     mpfr_clear(f);
     arb_clear(a);
+
 }

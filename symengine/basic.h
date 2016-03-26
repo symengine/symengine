@@ -24,6 +24,7 @@
 #include <vector>
 #include <type_traits>
 #include <functional>
+#include <string>
 
 #include <symengine/symengine_config.h>
 
