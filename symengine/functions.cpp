@@ -1587,7 +1587,8 @@ bool Derivative::is_canonical(const RCP<const Basic> &arg,
         bool found = false;
         auto v = arg->get_args();
         for (auto &p: x) {
-            if (has_symbol(*v[0], rcp_static_cast<const Symbol>(p))) {
+            if (has_symbol(*v[0], rcp_static_cast<const Symbol>(p)) or
+                    has_symbol(*v[1], rcp_static_cast<const Symbol>(p))) {
                 found = true;
                 break;
             }

@@ -491,22 +491,32 @@ static RCP<const Basic> diff(const CLASS &self, \
         auto args = self.get_args();
         auto f = args[0]->diff(x);
         auto g = args[1]->diff(x);
-        RCP<const Basic> a,b;
-        if (neq(*f, *zero)) {
-            auto s = get_dummy(self, "x");
+        if (neq(*f, *zero) and neq(*g, *zero)) {
+            RCP<const Basic> a,b;
+            auto s = get_dummy(self, "x1");
             map_basic_basic m({{s, args[0]}});
             a = mul(f, make_rcp<const Subs>(Derivative::create(kronecker_delta(s, args[1]), {s}), m));
+            s = get_dummy(self, "x2");
+            m = {{s, args[1]}};
+            b = mul(g, make_rcp<const Subs>(Derivative::create(kronecker_delta(args[0], s), {s}), m));
+            return add(a, b);
         } else {
-            a = zero;
+            if (eq(*f, *one) or eq(*g, *one)) {
+                return Derivative::create(self.rcp_from_this(), {x});
+            } else if (eq(*f, *zero) and eq(*g, *zero)) {
+                return zero;
+            } else {
+                auto s = get_dummy(self, "x");
+                map_basic_basic m;
+                if (neq(*f, *zero)) {
+                    m = {{s, args[0]}};
+                    return mul(f, make_rcp<const Subs>(Derivative::create(kronecker_delta(s, args[1]), {s}), m));
+                } else {
+                    m = {{s, args[1]}};
+                    return mul(g, make_rcp<const Subs>(Derivative::create(kronecker_delta(args[0], s), {s}), m));
+                }
+            }
         }
-        if (neq(*g, *zero)) {
-            auto s = get_dummy(self, "x");
-            map_basic_basic n({{s, args[1]}});
-            b = mul(g, make_rcp<const Subs>(Derivative::create(kronecker_delta(s, args[0]), {s}), n));
-        } else {
-            b = zero;
-        }
-        return add(a, b);
     }
 };
 
