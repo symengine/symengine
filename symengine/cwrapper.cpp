@@ -123,22 +123,22 @@ void symbol_set(basic s, char* c)
 
 void integer_set_si(basic s, long i)
 {
-    s->m = SymEngine::integer(std::move(integer_class(i)));
+    s->m = SymEngine::integer(integer_class(i));
 }
 
 void integer_set_ui(basic s, unsigned long i)
 {
-    s->m = SymEngine::integer(std::move(integer_class(i)));
+    s->m = SymEngine::integer(integer_class(i));
 }
 
 void integer_set_mpz(basic s, const mpz_t i)
 {
-    s->m = SymEngine::integer(std::move(integer_class(i)));
+    s->m = SymEngine::integer(integer_class(i));
 }
 
 void integer_set_str(basic s, char* c)
 {
-    s->m = SymEngine::integer(std::move(integer_class(c)));
+    s->m = SymEngine::integer(integer_class(c));
 }
 
 signed long integer_get_si(const basic s)
@@ -161,12 +161,12 @@ void integer_get_mpz(mpz_t a, const basic s)
 
 void rational_set_si(basic s, long a, long b)
 {
-    s->m = SymEngine::Rational::from_mpq(std::move(rational_class(a, b)));
+    s->m = SymEngine::Rational::from_mpq(rational_class(a, b));
 }
 
 void rational_set_ui(basic s, unsigned long a, unsigned long b)
 {
-    s->m = SymEngine::Rational::from_mpq(std::move(rational_class(a, b)));
+    s->m = SymEngine::Rational::from_mpq(rational_class(a, b));
 }
 
 int rational_set(basic s, const basic a, const basic b)
@@ -182,7 +182,7 @@ int rational_set(basic s, const basic a, const basic b)
 
 void rational_set_mpq(basic s, const mpq_t i)
 {
-    s->m = SymEngine::Rational::from_mpq(std::move(rational_class(i)));
+    s->m = SymEngine::Rational::from_mpq(rational_class(i));
 }
 
 void complex_set(basic s, const basic re, const basic im)
