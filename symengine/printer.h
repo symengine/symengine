@@ -67,7 +67,7 @@ public:
             precedence = PrecedenceEnum::Add;
         }
     }
-    
+
     void bvisit(const Rational &x) {
         precedence = PrecedenceEnum::Add;
     }
