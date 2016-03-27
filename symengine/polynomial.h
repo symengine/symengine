@@ -277,6 +277,13 @@ public:
     int compare(const UnivariateExprPolynomial &other) {
         return poly_->compare(*other.poly_); 
     }
+
+    Expression find_cf(int deg) const {
+        if (poly_->get_dict().find(deg) != poly_->get_dict().end())
+            return poly_->get_dict().at(deg);
+        else
+            return Expression(0);
+    } 
 }; //UnivariateExprPolynomial
 
 }  //SymEngine

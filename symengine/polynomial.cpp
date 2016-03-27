@@ -567,8 +567,6 @@ RCP<const UnivariatePolynomial> mul_uni_poly(RCP<const UnivariatePolynomial> a, 
     } else {
         var = a->get_var();
     }
-    if (a->get_var() != b->get_var())
-        throw std::runtime_error("Error: variables must agree.");
     if (a->get_dict().empty() and b->get_dict().empty())
         return univariate_polynomial(var, 0, {{0, 0}});
     for (const auto &i1 : a->get_dict())
