@@ -108,6 +108,8 @@ void basic_assign(basic a, const basic b);
 TypeID basic_get_type(const basic s);
 //! Returns the typeID of the class with the name c
 TypeID basic_get_class_id(const char * c);
+//! Returns the class name of with the typeid `id`
+char* basic_get_class_from_id(TypeID id);
 
 //! Assign to s, a symbol with string representation c.
 void symbol_set(basic s, char* c);

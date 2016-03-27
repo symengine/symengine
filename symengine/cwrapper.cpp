@@ -129,6 +129,23 @@ TypeID basic_get_class_id(const char * c)
     return names[std::string(c)];
 }
 
+char* basic_get_class_from_id(TypeID id)
+{
+    static std::map<TypeID, std::string> names = {
+        #define SYMENGINE_INCLUDE_ALL
+        #define SYMENGINE_ENUM(type, Class) {SYMENGINE_##type, xstr(Class)},
+        #include "symengine/type_codes.inc"
+        #undef SYMENGINE_ENUM
+        #undef SYMENGINE_INCLUDE_ALL
+        {SYMENGINE_TypeID_Count, ""}
+    };
+
+    std::string name = names[id];
+    auto cc = new char[name.length()+1];
+    std::strcpy(cc, name.c_str());
+    return cc;
+}
+
 TypeID basic_get_type(const basic s) {
     return static_cast<TypeID>(s->m->get_type_code());
 }
