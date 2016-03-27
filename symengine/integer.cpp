@@ -83,12 +83,12 @@ RCP<const Number> Integer::pow_negint(const Integer &other) const {
 
 RCP<const Integer> isqrt(const Integer &n)
 {
-    return integer(std::move(mp_sqrt(n.as_mpz())));
+    return integer(mp_sqrt(n.as_mpz()));
 }
 
 RCP<const Integer> iabs(const Integer &n)
 {
-    return integer(std::move(mp_abs(n.as_mpz())));
+    return integer(mp_abs(n.as_mpz()));
 }
 
 int i_nth_root(const Ptr<RCP<const Integer>> &r, const Integer &a,
