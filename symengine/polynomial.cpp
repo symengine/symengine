@@ -282,9 +282,10 @@ RCP<const UnivariateIntPolynomial> mul_poly(const UnivariateIntPolynomial &a, co
     if ((--(b.get_dict().end()))->second < 0)
         b_sign = -1;
 
-    integer_class p = std::max(a.max_abs_coef(), b.max_abs_coef());
+    integer_class p = a.max_abs_coef();
+    integer_class q = b.max_abs_coef();
 
-    unsigned int N = bit_length(std::min(da + 1, db + 1)) + bit_length(p) + 1;
+    unsigned int N = bit_length(std::min(da + 1, db + 1)) + bit_length(p) + bit_length(q);
 
     integer_class a1(1), b1;
     a1 <<= N;
