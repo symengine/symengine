@@ -90,15 +90,7 @@ RCP<const UnivariateIntPolynomial> UnivariateIntPolynomial::from_dict(const RCP<
 }
 
 RCP<const UnivariateIntPolynomial> UnivariateIntPolynomial::from_vec(const RCP<const Symbol> &var, const std::vector<integer_class> &v){
-    map_uint_mpz dict;
-    unsigned int degree = 0;
-    for(unsigned int i = 0; i < v.size(); i++) {
-        if (v[i] != 0) {
-            dict.insert(std::pair<unsigned int, integer_class>(i, v[i]));
-            degree = i;
-        }
-    }
-    return make_rcp<const UnivariateIntPolynomial>(var, degree, std::move(dict));
+    return make_rcp<const UnivariateIntPolynomial>(var, std::move(v));
 }
 
 void UnivariateIntPolynomial::dict_add_term(map_uint_mpz &d, const integer_class &coef, const unsigned int &n) {
@@ -404,15 +396,7 @@ int UnivariatePolynomial::compare(const Basic &o) const
 
 RCP<const UnivariatePolynomial> UnivariatePolynomial::from_vec(const RCP<const Symbol> &var, const std::vector<Expression> &v)
 {
-    map_int_Expr dict;
-    unsigned int degree = 0;
-    for(unsigned int i = 0; i < v.size(); i++) {
-        if (v[i] != Expression(0)) {
-            dict.insert(std::pair<int, Expression>(i, v[i]));
-            degree = i;
-        }   
-    }   
-    return make_rcp<const UnivariatePolynomial>(var, degree, std::move(dict));
+    return make_rcp<const UnivariatePolynomial>(var, std::move(v));
 }
 
 RCP<const UnivariatePolynomial> UnivariatePolynomial::from_dict(const RCP<const Symbol> &var, map_int_Expr &&d)
