@@ -239,7 +239,7 @@ int umap_uvec_mpz_compare(const umap_uvec_mpz &a, const umap_uvec_mpz &b) {
     return 0;
 }
 
-//coppied from umap_eq, with derefrencing of image in map removed.
+//Copied from umap_eq, with derefrencing of image in map removed.
 bool umap_uvec_mpz_eq(const umap_uvec_mpz &a, const umap_uvec_mpz &b){
     // This follows the same algorithm as Python's dictionary comparison
     // (a==b), which is implemented by "dict_equal" function in

@@ -192,7 +192,8 @@ public:
 };
 
 typedef std::set< RCP<const Symbol>, RCPSymbolCompare> set_sym;
-typedef std::unordered_map<RCP<const Symbol>, unsigned int, RCPSymbolHash, RCPSymbolEq> umap_sym_uint;
+typedef std::unordered_map<RCP<const Symbol>, unsigned int, RCPSymbolHash, RCPSymbolEq>
+    umap_sym_uint;
 typedef std::unordered_map<vec_uint, integer_class, vec_uint_hash, vec_uint_eq> umap_uvec_mpz;
 
 //Takes an unordered map of type M with key type K and returns a vector of K ordered by C.
