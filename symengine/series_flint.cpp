@@ -34,7 +34,7 @@ RCP<const Basic> URatPSeriesFlint::as_basic() const
         const flint::fmpqxx fc(p_.get_coeff(n));
         if (not fc.is_zero()) {
             fmpq_get_mpq(gc, fc._data().inner);
-            RCP<const Number> basic = Rational::from_mpq(std::move(rational_class(gc)));
+            RCP<const Number> basic = Rational::from_mpq(rational_class(gc));
             auto term = SymEngine::mul(SymEngine::pow(x, SymEngine::integer(n)), basic);
             if (n==0)
                 zcoef = basic;
@@ -57,7 +57,7 @@ umap_int_basic URatPSeriesFlint::as_dict() const
         const flint::fmpqxx fc(p_.get_coeff(n));
         if (not fc.is_zero()) {
             fmpq_get_mpq(gc, fc._data().inner);
-            RCP<const Number> basic = Rational::from_mpq(std::move(rational_class(gc)));
+            RCP<const Number> basic = Rational::from_mpq(rational_class(gc));
             map[n] = basic;
         }
     }

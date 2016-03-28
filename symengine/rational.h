@@ -64,7 +64,7 @@ public:
 
     //! \return negative of `this`
     inline RCP<const Rational> neg() const {
-        return make_rcp<const Rational>(std::move(-i));
+        return make_rcp<const Rational>(-i);
     }
 
     virtual bool is_perfect_power(bool is_expected=false) const;

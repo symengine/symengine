@@ -145,10 +145,6 @@ inline Expression expand(const Expression &arg)
     return expand(arg.get_basic());
 }
 
-inline Expression coeff(const Expression &y, const Expression &x, const Expression &n) {
-    return coeff(y.get_basic(), x.get_basic(), n.get_basic());
-}
-
 namespace detail {
     // This function must have external linkage
     std::string poly_print(const Expression &x);

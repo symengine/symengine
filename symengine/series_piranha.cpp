@@ -103,7 +103,7 @@ RCP<const Basic> URatPSeriesPiranha::get_coeff(int i) const {
         basic = make_rcp<const Integer>(get_num(cl_rat));
     else
         basic = make_rcp<const Rational>(cl_rat);
-    return std::move(basic);
+    return basic;
 }
 
 pp_t URatPSeriesPiranha::mul(const pp_t &s, const pp_t &r, unsigned prec) {
