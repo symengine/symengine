@@ -159,8 +159,7 @@ public:
     }
 
 #ifdef HAVE_SYMENGINE_PIRANHA
-    void bvisit(const URatPSeriesPiranha &x)
-    {
+    void bvisit(const URatPSeriesPiranha &x) {
         precedence = PrecedenceEnum::Add;
     }
 
@@ -169,13 +168,11 @@ public:
         precedence = PrecedenceEnum::Add;
     }
 #endif
-    void bvisit(const ComplexDouble &x)
-    {
+    void bvisit(const ComplexDouble &x) {
         precedence = PrecedenceEnum::Add;
     }
 #ifdef HAVE_SYMENGINE_MPFR
-    void bvisit(const RealMPFR &x)
-    {
+    void bvisit(const RealMPFR &x) {
         if (x.is_negative()) {
             precedence = PrecedenceEnum::Mul;
         } else {
@@ -184,8 +181,7 @@ public:
     }
 #endif
 #ifdef HAVE_SYMENGINE_MPC
-    void bvisit(const ComplexMPC &x)
-    {
+    void bvisit(const ComplexMPC &x) {
         precedence = PrecedenceEnum::Add;
     }
 #endif
@@ -223,9 +219,7 @@ public:
     void bvisit(const Pow &x);
     void bvisit(const UIntPoly &x);
     void bvisit(const MultivariateIntPolynomial &x);
-    void bvisit(const MultivariatePolynomial &x);
-    void bvisit(const UExprPoly &x);
-    void bvisit(const UnivariateSeries &x);
+    void bvisit(const UnivariatePolynomial &x);
 #ifdef HAVE_SYMENGINE_PIRANHA
     void bvisit(const URatPSeriesPiranha &x);
     void bvisit(const UPSeriesPiranha &x);

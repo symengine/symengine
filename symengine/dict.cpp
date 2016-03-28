@@ -94,7 +94,23 @@ std::ostream &operator<<(std::ostream &out, const SymEngine::set_basic &d)
 
 std::ostream &operator<<(std::ostream &out, const SymEngine::map_int_Expr &d)
 {
-    return SymEngine::print_map(out, d);
+    // Can't be equal if # of entries differ:
+    if (a.size() != b.size()) return false;
+    // Loop over elements in "a"
+    for (size_t i = 0; i < a.size(); i++) {
+        // Find the element a[i] in "b"
+        bool found = false;
+        for (size_t j = 0; j < a.size(); j++) {
+            if (eq(*a[i], *b[j])) {
+                found = true;
+                break;
+            }
+        }
+        // If not found, then a != b
+        if (not found) return false;
+    }
+    // If all elements were found, then a == b
+    return true;
 }
 
 bool vec_basic_eq(const vec_basic &a, const vec_basic &b)
@@ -102,7 +118,8 @@ bool vec_basic_eq(const vec_basic &a, const vec_basic &b)
     return vec_set_eq<vec_basic>(a, b);
 }
 
-int vec_basic_compare(const vec_basic &a, const vec_basic &b)
+bool map_uint_mpz_eq(const map_uint_mpz &a,
+        const map_uint_mpz &b)
 {
     return vec_set_compare<vec_basic>(a, b);
 }
@@ -160,19 +177,23 @@ int umap_uvec_mpz_compare(const umap_uvec_mpz &a, const umap_uvec_mpz &b)
     std::vector<vec_uint> va = order_umap<vec_uint, umap_uvec_mpz>(a);
     std::vector<vec_uint> vb = order_umap<vec_uint, umap_uvec_mpz>(b);
 
-    if (va.size() < vb.size())
-        return -1;
-    if (vb.size() < va.size())
-        return 1;
+    if (va.empty())
+        if (!vb.empty())
+            return -1;
+    if (vb.empty())
+        if (!va.empty())
+            return 1;
+    if (va.empty() && vb.empty())
+        return 0;
 
     for (unsigned int i = 0; i < va.size() && i < vb.size(); i++) {
-        if (va[i] < vb[i]) {
+        if (vec_uint_compare()(va[i], vb[i])) {
             return -1;
-        } else if (va[i] > vb[i]) {
+        } else if (!vec_uint_compare()(va[i], vb[i]) && va[i] != vb[i]) {
             return 1;
         } else {
             if (a.find(va[i])->second != b.find(vb[i])->second) {
-                if (a.find(va[i])->second < b.find(vb[i])->second) {
+                if(a.find(va[i])->second < b.find(vb[i])->second) {
                     return -1;
                 } else {
                     return 1;
