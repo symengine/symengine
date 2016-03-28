@@ -40,6 +40,8 @@ using SymEngine::set_basic;
 using SymEngine::free_symbols;
 using SymEngine::function_symbol;
 using SymEngine::rational_class;
+using SymEngine::pi;
+
 
 TEST_CASE("Symbol hash: Basic", "[basic]")
 {
@@ -116,6 +118,12 @@ TEST_CASE("Add: basic", "[basic]")
 
     REQUIRE(vec_basic_eq_perm(r->get_args(), {mul(integer(2), x), y}));
     REQUIRE(not vec_basic_eq_perm(r->get_args(), {mul(integer(3), x), y}));
+
+    RCP<const Basic> term1, term2;
+    RCP<const Add> a1 = rcp_static_cast<const Add>(add(r, r));
+    a1->as_two_terms(outArg(term1), outArg(term2));
+    RCP<const Add> a2 = rcp_static_cast<const Add>(add(term1, term2));
+    REQUIRE(eq(*a1, *a2));
 
     r = add(mul(integer(5), x), integer(5));
     REQUIRE(vec_basic_eq_perm(r->get_args(), {mul(integer(5), x), integer(5)}));
@@ -673,3 +681,21 @@ TEST_CASE("free_symbols: Basic", "[basic]")
     REQUIRE(s.size() == 1);
     REQUIRE(s.count(x) == 1);
 }
+
+TEST_CASE("args: Basic", "[basic]")
+{
+    RCP<const Basic> r1;
+    RCP<const Symbol> x, y;
+    x = symbol("x");
+    y = symbol("y");
+
+    r1 = add(x, pow(y, x));
+    REQUIRE(vec_basic_eq_perm(r1->get_args(), {x, pow(y, x)}));
+
+    r1 = pi;
+    REQUIRE(r1->get_args().size() == 0);
+
+    r1 = log(pi);
+    REQUIRE(vec_basic_eq_perm(r1->get_args(), {pi}));
+}
+

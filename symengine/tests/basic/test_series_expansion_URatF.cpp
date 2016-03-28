@@ -70,11 +70,14 @@ TEST_CASE("Expression series expansion: Add ", "[Expansion of Add]")
     auto z = add(integer(1), x);
     z = sub(z, pow(x, integer(2)));
     z = add(z, pow(x, integer(4)));
+    auto z1 = pow(add(integer(1), x), integer(0));
 
     auto vb = umap_short_basic{{0, integer(1)}, {1, integer(1)}, {2, integer(-1)}, {4, integer(1)}};
     REQUIRE(expand_check_pairs(z, x, 5, vb));
     auto vb1 = umap_short_basic{{0, integer(1)}, {1, integer(1)}, {2, integer(-1)}};
     REQUIRE(expand_check_pairs(z, x, 3, vb1));
+    REQUIRE(series_coeff(z1, x, 9, 0)->__eq__(*integer(1)));
+    REQUIRE(series_coeff(z1, x, 9, 1)->__eq__(*integer(0)));
 }
 
 TEST_CASE("Expression series expansion: sin, cos", "[Expansion of sin, cos]")

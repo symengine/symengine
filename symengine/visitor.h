@@ -25,6 +25,7 @@
 #include <symengine/series.h>
 #include <symengine/series_piranha.h>
 #include <symengine/series_flint.h>
+#include <symengine/sets.h>
 
 namespace SymEngine {
 

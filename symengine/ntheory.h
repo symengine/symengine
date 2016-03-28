@@ -171,6 +171,14 @@ bool powermod(const Ptr<RCP<const Integer>> &powm, const RCP<const Integer> &a,
 //! All solutions to x**s == a**r mod m where b = r / s. Return false if none exists.
 void powermod_list(std::vector<RCP<const Integer>> &pows, const RCP<const Integer> &a,
         const RCP<const Number> &b, const RCP<const Integer> &m);
+
+//! Finds all Quadratic Residues of a Positive Integer
+std::vector<integer_class> quadratic_residues(const Integer &a);
+
+//! Returns true if 'a' is a quadratic residue of 'p'
+bool is_quad_residue(const Integer &a , const Integer &p);
+//! Returns true if 'a' is a nth power residue of 'mod'
+bool is_nth_residue(const Integer &a, const Integer &n, const Integer &mod);
 //! Mobius Function
 // mu(n) = 1 if n is a square-free positive integer with an even number of prime factors
 // mu(n) = −1 if n is a square-free positive integer with an odd number of prime factors
@@ -181,4 +189,3 @@ int mobius(const Integer &a);
 long mertens(const unsigned long a);
 }
 #endif
-

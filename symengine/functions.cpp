@@ -2579,6 +2579,20 @@ std::size_t KroneckerDelta::__hash__() const
     return seed;
 }
 
+RCP<const Basic> KroneckerDelta::subs(const map_basic_basic &subs_dict) const
+{
+    auto it = subs_dict.find(rcp_from_this());
+    if (it != subs_dict.end())
+        return it->second;
+    RCP<const Basic> i = i_->subs(subs_dict);
+    RCP<const Basic> j = j_->subs(subs_dict);
+    if (i == i_ and j == j_) {
+        return rcp_from_this();
+    } else {
+        return kronecker_delta(i, j);
+    }
+}
+
 RCP<const Basic> kronecker_delta(const RCP<const Basic> &i, const RCP<const Basic> &j)
 {
     // Expand is needed to simplify things like `i-(i+1)` to `-1`
@@ -2656,6 +2670,7 @@ std::size_t LeviCivita::__hash__() const
     }
     return seed;
 }
+
 
 RCP<const Basic> eval_levicivita(const vec_basic &arg, int len)
 {
@@ -2825,6 +2840,61 @@ RCP<const Basic> dirichlet_eta(const RCP<const Basic> &s)
     }
 }
 
+
+bool Erf::is_canonical(const RCP<const Basic> &arg) const
+{
+    if (is_a<Integer>(*arg) and
+        rcp_static_cast<const Integer>(arg)->is_zero()) return false;
+    if (could_extract_minus(arg)) return false;
+    return true;
+}
+
+std::size_t Erf::__hash__() const
+{
+    std::size_t seed = ERF;
+    hash_combine<Basic>(seed, *arg_);
+    return seed;
+}
+
+bool Erf::__eq__(const Basic &o) const
+{
+    if (is_a<Erf>(o) and
+        eq(*arg_, *(static_cast<const Erf &>(o).arg_)))
+        return true;
+    return false;
+}
+
+int Erf::compare(const Basic &o) const
+{
+    SYMENGINE_ASSERT(is_a<Erf>(o))
+    return arg_->__cmp__(*(static_cast<const Erf &>(o).arg_));
+}
+
+RCP<const Basic> erf(const RCP<const Basic> &arg)
+{
+    if (is_a<Integer>(*arg) and
+        rcp_static_cast<const Integer>(arg)->is_zero()) {
+        return zero;
+    }
+    if (could_extract_minus(arg)) {
+        return neg(erf(neg(arg)));
+    }
+    return make_rcp<Erf>(arg);
+}
+
+RCP<const Basic> Erf::subs(const map_basic_basic &subs_dict) const
+{
+    auto it = subs_dict.find(rcp_from_this());
+    if (it != subs_dict.end())
+        return it->second;
+    RCP<const Basic> arg = arg_->subs(subs_dict);
+    if (arg == arg_)
+        return rcp_from_this();
+    else
+        return erf(arg);
+}
+
+
 Gamma::Gamma(const RCP<const Basic> &arg)
     : arg_{arg}
 {
@@ -2876,6 +2946,7 @@ RCP<const Basic> Gamma::subs(const map_basic_basic &subs_dict) const
     else
         return gamma(arg);
 }
+
 RCP<const Basic> gamma_positive_int(const RCP<const Basic> &arg)
 {
     SYMENGINE_ASSERT(is_a<Integer>(*arg))
@@ -2984,6 +3055,20 @@ int LowerGamma::compare(const Basic &o) const
     }
 }
 
+RCP<const Basic> LowerGamma::subs(const map_basic_basic &subs_dict) const
+{
+    auto it = subs_dict.find(rcp_from_this());
+    if (it != subs_dict.end())
+        return it->second;
+    RCP<const Basic> s = s_->subs(subs_dict);
+    RCP<const Basic> x = x_->subs(subs_dict);
+    if (x == x_ and s == s_) {
+        return rcp_from_this();
+    } else {
+        return lowergamma(s, x);
+    }
+}
+
 RCP<const Basic> lowergamma(const RCP<const Basic> &s, const RCP<const Basic> &x)
 {
     // Only special values are being evaluated
@@ -3054,6 +3139,20 @@ int UpperGamma::compare(const Basic &o) const
     }
     else {
         return x_->__cmp__(*(static_cast<const UpperGamma &>(o).x_));
+    }
+}
+
+RCP<const Basic> UpperGamma::subs(const map_basic_basic &subs_dict) const
+{
+    auto it = subs_dict.find(rcp_from_this());
+    if (it != subs_dict.end())
+        return it->second;
+    RCP<const Basic> s = s_->subs(subs_dict);
+    RCP<const Basic> x = x_->subs(subs_dict);
+    if (s == s_ and x == x_) {
+        return rcp_from_this();
+    } else {
+        return uppergamma(s, x);
     }
 }
 
@@ -3213,6 +3312,21 @@ int Beta::compare(const Basic &o) const
 RCP<const Basic> Beta::rewrite_as_gamma() const
 {
     return div(mul(gamma(x_), gamma(y_)), add(x_, y_));
+}
+
+RCP<const Basic> Beta::subs(const map_basic_basic &subs_dict) const
+{
+    auto it = subs_dict.find(rcp_from_this());
+    if (it != subs_dict.end())
+        return it->second;
+    RCP<const Basic> x = x_->subs(subs_dict);
+    RCP<const Basic> y = y_->subs(subs_dict);
+    if ((x == x_ and y == y_) or
+        (x == y_ and y == x_)) {
+        return rcp_from_this();
+    } else {
+        return beta(x, y);
+    }
 }
 
 RCP<const Basic> beta(const RCP<const Basic> &x, const RCP<const Basic> &y)
@@ -3417,10 +3531,15 @@ Abs::Abs(const RCP<const Basic> &arg)
 
 bool Abs::is_canonical(const RCP<const Basic> &arg) const
 {
-    if (is_a<Integer>(*arg) or is_a<Rational>(*arg)) return false;
+    if (is_a<Integer>(*arg) or is_a<Rational>(*arg) or is_a<Complex>(*arg)) return false;
     if (is_a_Number(*arg) and not static_cast<const Number &>(*arg).is_exact()) {
         return false;
     }
+
+    if (could_extract_minus(arg)) {
+        return false;
+    }
+
     return true;
 }
 
@@ -3461,9 +3580,17 @@ RCP<const Basic> abs(const RCP<const Basic> &arg)
         } else {
             return arg_;
         }
+    } else if (is_a<Complex>(*arg)) {
+        RCP<const Complex> arg_ = rcp_static_cast<const Complex>(arg);
+        return sqrt(Rational::from_mpq(arg_->real_ * arg_->real_ + arg_->imaginary_ * arg_->imaginary_));
     } else if (is_a_Number(*arg) and not static_cast<const Number &>(*arg).is_exact()) {
         return static_cast<const Number &>(*arg).get_eval().abs(*arg);
     }
+
+    if (could_extract_minus(arg)) {
+        return abs(neg(arg));
+    }
+
     return make_rcp<const Abs>(arg);
 }
 

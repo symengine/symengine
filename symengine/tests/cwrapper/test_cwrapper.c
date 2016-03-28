@@ -295,6 +295,14 @@ void test_get_type() {
     SYMENGINE_C_ASSERT(basic_get_type(x) == SYMENGINE_SYMBOL);
     SYMENGINE_C_ASSERT(basic_get_type(y) == SYMENGINE_INTEGER);
 
+    SYMENGINE_C_ASSERT(basic_get_class_id("Integer") == SYMENGINE_INTEGER);
+    SYMENGINE_C_ASSERT(basic_get_class_id("Add") == SYMENGINE_ADD);
+
+    char* s;
+    s = basic_get_class_from_id(SYMENGINE_INTEGER);
+    SYMENGINE_C_ASSERT(strcmp(s, "Integer") == 0);
+    basic_str_free(s);
+
     basic_free_stack(x);
     basic_free_stack(y);
 }

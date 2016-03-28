@@ -42,6 +42,7 @@ set(SRC
     derivative.cpp
     parser.cpp
     mp_wrapper.cpp
+    sets.cpp
 )
 
 if (WITH_MPFR)
@@ -73,7 +74,7 @@ set(HEADERS
     visitor.h    eval_double.h    diophantine.h cwrapper.h  printer.h  real_double.h
     eval_mpfr.h  eval_arb.h       eval_mpc.h     complex_double.h         series_visitor.h
     real_mpfr.h  complex_mpc.h    type_codes.inc lambda_double.h series.h series_piranha.h
-    basic-methods.inc   series_flint.h  series_generic.h
+    basic-methods.inc   series_flint.h  series_generic.h sets.h
 )
 
 # Configure SymEngine using our CMake options:

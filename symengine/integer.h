@@ -51,15 +51,15 @@ public:
     /* These are very fast methods for add/sub/mul/div/pow on Integers only */
     //! Fast Integer Addition
     inline RCP<const Integer> addint(const Integer &other) const {
-        return make_rcp<const Integer>(std::move(this->i + other.i));
+        return make_rcp<const Integer>(this->i + other.i);
     }
     //! Fast Integer Subtraction
     inline RCP<const Integer> subint(const Integer &other) const {
-        return make_rcp<const Integer>(std::move(this->i - other.i));
+        return make_rcp<const Integer>(this->i - other.i);
     }
     //! Fast Integer Multiplication
     inline RCP<const Integer> mulint(const Integer &other) const {
-        return make_rcp<const Integer>(std::move(this->i * other.i));
+        return make_rcp<const Integer>(this->i * other.i);
     }
     //!  Integer Division
     RCP<const Number> divint(const Integer &other) const;
@@ -79,7 +79,7 @@ public:
     }
     //! \return negative of self.
     inline RCP<const Integer> neg() const {
-        return make_rcp<const Integer>(std::move(-i));
+        return make_rcp<const Integer>(-i);
     }
 
     /* These are general methods, overriden from the Number class, that need to
@@ -153,7 +153,7 @@ template<typename T> inline
 typename std::enable_if<std::is_integral<T>::value, RCP<const Integer>>::type
 integer(T i)
 {
-    return make_rcp<const Integer>(std::move(integer_class(i)));
+    return make_rcp<const Integer>(integer_class(i));
 }
 
 //! \return RCP<const Integer> from integer_class
