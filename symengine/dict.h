@@ -52,7 +52,7 @@ typedef std::map<int, Expression> map_int_Expr;
 //! `insert(m, first, second)` is equivalent to `m[first] = second`, just faster,
 //! because no default constructor is called on the `second` type.
 template<typename T1, typename T2, typename T3> inline
-    void insert(T1 &m, const T2 &first, const T3 &second) {
+void insert(T1 &m, const T2 &first, const T3 &second) {
     m.insert(std::pair<T2, T3>(first, second));
 }
 
@@ -68,10 +68,10 @@ bool umap_eq(const T &a, const T &b)
     if (a.size() != b.size()) return false;
     // Loop over keys in "a":
     for (const auto &p: a) {
-	// O(1) lookup of the key in "b":
-	auto f = b.find(p.first);
-	if (f == b.end()) return false; // no such element in "b"
-	if (neq(*p.second, *f->second)) return false; // values not equal
+        // O(1) lookup of the key in "b":
+        auto f = b.find(p.first);
+        if (f == b.end()) return false; // no such element in "b"
+        if (neq(*p.second, *f->second)) return false; // values not equal
     }
     return true;
 }
@@ -86,8 +86,8 @@ bool map_eq(const T &A, const T &B)
     auto a = A.begin();
     auto b = B.begin();
     for (; a != A.end(); ++a, ++b) {
-	if (neq(*a->first, *b->first)) return false; // keys not equal
-	if (neq(*a->second, *b->second)) return false; // values not equal
+        if (neq(*a->first, *b->first)) return false; // keys not equal
+        if (neq(*a->second, *b->second)) return false; // values not equal
     }
     return true;
 }
@@ -112,10 +112,10 @@ int map_compare(const T &A, const T &B)
     auto b = B.begin();
     int cmp;
     for (; a != A.end(); ++a, ++b) {
-	cmp = a->first->__cmp__(*b->first);
-	if (cmp != 0) return cmp;
+        cmp = a->first->__cmp__(*b->first);
+        if (cmp != 0) return cmp;
         cmp = a->second->__cmp__(*b->second);
-	if (cmp != 0) return cmp;
+        if (cmp != 0) return cmp;
     }
     return 0;
 }
@@ -132,11 +132,11 @@ int map_int_Expr_compare(const map_int_Expr &a, const map_int_Expr &b);
 typedef struct
 {
     inline std::size_t operator() (const vec_int &k) const {
-    std::size_t h = 0;
-    for (const auto &p: k) {
-	h = (h << 4) + p;
-    }
-    return h;
+        std::size_t h = 0;
+        for (const auto &p: k) {
+            h = (h << 4) + p;
+        }
+        return h;
     }
 } vec_int_hash;
 
@@ -153,7 +153,7 @@ public:
     std::size_t operator()(const vec_uint &v) const {
         std::size_t h = 0;
         for (unsigned int i : v) {
-	    h ^= i + 0x9e3779b + (h << 6) + (h >> 2);
+            h ^= i + 0x9e3779b + (h << 6) + (h >> 2);
         }
         return h;
     }
@@ -163,10 +163,10 @@ class vec_uint_eq{
 public:
     bool operator()(const vec_uint &a, const vec_uint &b) const{
         if (a.size() != b.size())
- 	    return false;
+            return false;
         for (unsigned int i = 0; i < a.size(); i++) {
-	    if(a[i] != b[i])
-	      return false;
+            if(a[i] != b[i])
+              return false;
         }
         return true;
     }
@@ -176,17 +176,17 @@ class vec_uint_compare{
 public:
     bool operator()(const vec_uint &a, const vec_uint &b) const{
         if (a.size() != b.size())
-	    return a.size() < b.size();
+            return a.size() < b.size();
         unsigned int sum1 = 0;
         unsigned int sum2 = 0;
         for (unsigned int x : a) {
-	    sum1 += x;
+            sum1 += x;
         }
         for (unsigned int x : b) {
-	    sum2 += x;
+            sum2 += x;
         }
         if (sum1 != sum2)
-	    return sum1 < sum2;
+            return sum1 < sum2;
         return a < b;
     }
 };
@@ -202,7 +202,7 @@ template<class K, class M, class C>
     for (auto bucket : d) {
         auto iter = v.begin();
         while(iter != v.end() && C()(bucket.first,*iter)){
-	    iter++;
+            iter++;
         }
         v.insert(iter, bucket.first);
     }
@@ -232,13 +232,13 @@ template<class T>
 int set_compare(const T &A, const T &B)
 {
     if (A.size() != B.size())
-	return (A.size() < B.size()) ? -1 : 1;
+        return (A.size() < B.size()) ? -1 : 1;
     auto a = A.begin();
     auto b = B.begin();
     int cmp;
     for (; a != A.end(); ++a, ++b) {
-	cmp = (*a)->__cmp__(**b);
-	if (cmp != 0) return cmp;
+        cmp = (*a)->__cmp__(**b);
+        if (cmp != 0) return cmp;
     }
     return 0;
 }

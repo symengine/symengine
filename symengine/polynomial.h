@@ -198,7 +198,7 @@ public:
             this->poly_ = std::move(other.poly_);
         return *this;
     }
-
+    
     friend std::ostream &operator<<(std::ostream &os, const UnivariateExprPolynomial &expr) {
         os << expr.poly_->__str__();
         return os;
@@ -222,12 +222,12 @@ public:
         neg_uni_poly(*(retval.poly_.ptr()));
         return retval;
     }
-
+    
     UnivariateExprPolynomial &operator-=(const UnivariateExprPolynomial &other) {
         poly_ = sub_uni_poly(*poly_, *other.poly_);
         return *this;
     }
-
+    
     friend UnivariateExprPolynomial operator*(const UnivariateExprPolynomial &a, const UnivariateExprPolynomial &b) {   
         return UnivariateExprPolynomial(mul_uni_poly(a.poly_, b.poly_));
     }   
@@ -277,7 +277,7 @@ public:
     }
 
     int compare(const UnivariateExprPolynomial &other) {
-      return poly_->compare(*other.poly_);
+        return poly_->compare(*other.poly_);
     }
 }; //UnivariateExprPolynomial
 
