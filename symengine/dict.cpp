@@ -230,8 +230,12 @@ int umap_vec_expr_compare(const umap_vec_expr &a, const umap_vec_expr &b)
     return 0;
 }
 
-bool vec_basic_eq_perm(const vec_basic &a, const vec_basic &b)
-{
+//Copied from umap_eq, with derefrencing of image in map removed.
+bool umap_uvec_mpz_eq(const umap_uvec_mpz &a, const umap_uvec_mpz &b){
+    // This follows the same algorithm as Python's dictionary comparison
+    // (a==b), which is implemented by "dict_equal" function in
+    // Objects/dictobject.c.
+
     // Can't be equal if # of entries differ:
     if (a.size() != b.size())
         return false;
