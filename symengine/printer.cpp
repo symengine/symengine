@@ -55,17 +55,17 @@ void StrPrinter::bvisit(const Complex &x) {
     } else {
         if (x.imaginary_ != mp_sign(x.imaginary_)) {
             s << x.imaginary_;
-	    s << "*I";
+            s << "*I";
         } else {
             if (mp_sign(x.imaginary_) == 1) {
                 s << "I";
-	    } else {
-              s << "-I";
-	    }
-	}
+            } else {
+                s << "-I";
+            }
+        }
     }
     str_ = s.str();
-  }
+}
 
 void StrPrinter::bvisit(const RealDouble &x) {
     std::ostringstream s;
@@ -137,7 +137,7 @@ void StrPrinter::bvisit(const RealMPFR &x) {
     } else if (ex > -5) {
         s << "0.";
         for (int i = 0; i < -ex; ++i) {
-	    s << '0';
+            s << '0';
         }
         s << str_;
     } else {
@@ -244,7 +244,7 @@ void StrPrinter::bvisit(const Mul &x) {
         std::string s2 = o2.str();
         s2 = s2.substr(0, s2.size() - 1);
         if (den > 1) {
-	    str_ = s + "/(" + s2 + ")";
+            str_ = s + "/(" + s2 + ")";
         } else {
             str_ = s + "/" + s2;
         }
@@ -373,7 +373,7 @@ void StrPrinter::bvisit(const UnivariatePolynomial &x) {
         s << x.get_var()->get_name();
         //if exponent is not 1, print the exponent;
         if (it->first != 1) {
-	    s << "**"  << it->first;
+            s << "**"  << it->first;
         }
         //corner cases of only first term handled successfully, switch the bool
         first = false;

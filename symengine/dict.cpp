@@ -105,10 +105,10 @@ bool vec_basic_eq_perm(const vec_basic &a, const vec_basic &b)
         // Find the element a[i] in "b"
         bool found = false;
         for (size_t j = 0; j < a.size(); j++) {
-	    if (eq(*a[i], *b[j])) {
-	        found = true;
-	        break;
-	    }
+            if (eq(*a[i], *b[j])) {
+                found = true;
+                break;
+            }
         }
         // If not found, then a != b
         if (not found) return false;
@@ -132,7 +132,7 @@ int vec_basic_compare(const vec_basic &A, const vec_basic &B)
 }
 
 bool map_uint_mpz_eq(const map_uint_mpz &a,
-	const map_uint_mpz &b)
+        const map_uint_mpz &b)
 {
     // Can't be equal if # of entries differ:
     if (a.size() != b.size()) return false;
@@ -153,9 +153,9 @@ int map_uint_mpz_compare(const map_uint_mpz &A, const map_uint_mpz &B)
     auto b = B.begin();
     for (; a != A.end(); ++a, ++b) {
         if (a->first != b->first)
- 	    return (a->first < b->first) ? -1 : 1;
+            return (a->first < b->first) ? -1 : 1;
         if (a->second != b->second)
-	    return (a->second < b->second) ? -1 : 1;
+            return (a->second < b->second) ? -1 : 1;
     }
     return 0;
 }
@@ -210,27 +210,27 @@ int umap_uvec_mpz_compare(const umap_uvec_mpz &a, const umap_uvec_mpz &b) {
 
     if (va.empty())
         if (!vb.empty())
-	    return -1;
+            return -1;
     if (vb.empty())
         if (!va.empty())
-	    return 1;
+            return 1;
     if (va.empty() && vb.empty())
         return 0;
 
     for (unsigned int i = 0; i < va.size() && i < vb.size(); i++) {
         if (vec_uint_compare()(va[i], vb[i])) {
-	    return -1;
+            return -1;
         } else if (!vec_uint_compare()(va[i], vb[i]) && va[i] != vb[i]) {
-	    return 1;
+            return 1;
         } else {
-	    if (a.find(va[i])->second != b.find(vb[i])->second) {
-	        if(a.find(va[i])->second < b.find(vb[i])->second) {
-	            return -1;
-	        } else {
-	            return 1;
-	        }
-	    }
-	}
+            if (a.find(va[i])->second != b.find(vb[i])->second) {
+                if (a.find(va[i])->second < b.find(vb[i])->second) {
+                    return -1;
+                } else {
+                    return 1;
+                }
+            }
+        }
     }
     if (va.size() < vb.size())
         return -1;
@@ -239,7 +239,7 @@ int umap_uvec_mpz_compare(const umap_uvec_mpz &a, const umap_uvec_mpz &b) {
     return 0;
 }
 
-//coppied from umap_eq, with derefrencing of image in map removed.
+//Copied from umap_eq, with derefrencing of image in map removed.
 bool umap_uvec_mpz_eq(const umap_uvec_mpz &a, const umap_uvec_mpz &b){
     // This follows the same algorithm as Python's dictionary comparison
     // (a==b), which is implemented by "dict_equal" function in

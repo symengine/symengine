@@ -198,7 +198,7 @@ public:
             this->poly_ = std::move(other.poly_);
         return *this;
     }
-
+    
     friend std::ostream &operator<<(std::ostream &os, const UnivariateExprPolynomial &expr) {
         os << expr.poly_->__str__();
         return os;
@@ -222,12 +222,12 @@ public:
         neg_uni_poly(*(retval.poly_.ptr()));
         return retval;
     }
-
+    
     UnivariateExprPolynomial &operator-=(const UnivariateExprPolynomial &other) {
         poly_ = sub_uni_poly(*poly_, *other.poly_);
         return *this;
     }
-
+    
     friend UnivariateExprPolynomial operator*(const UnivariateExprPolynomial &a, const UnivariateExprPolynomial &b) {   
         return UnivariateExprPolynomial(mul_uni_poly(a.poly_, b.poly_));
     }   
@@ -277,7 +277,7 @@ public:
     }
 
     int compare(const UnivariateExprPolynomial &other) {
-      return poly_->compare(*other.poly_);
+        return poly_->compare(*other.poly_);
     }
 }; //UnivariateExprPolynomial
 
@@ -308,34 +308,49 @@ public:
 
 //reconciles the positioning of the exponents in the vectors in the umap_uvec_mpz dict_ of the arguments
 //with the positioning of the exponents in the correspondng vectors of the output of the function.
-//f1 and f2 are vectors whose indicies are the positions in the arguments and whose values are the
+//f1 and f2 are vectors whose indices are the positions in the arguments and whose values are the
 //positions in the output.  set_sym s is the set of symbols of the output, and
 // s1 and s2 are the sets of the symbols of the inputs.
 unsigned int reconcile(vec_uint &v1, vec_uint &v2, set_sym &s, const set_sym &s1, const set_sym &s2);
-//same as above, but for reconcileing representation of a UnivariatePolynomial.
-unsigned int reconcile(vec_uint &v1, unsigned int &v2, set_sym &s, const set_sym &s1, const RCP<const Symbol> s2);
+//same as above, but for reconciling representation of a UnivariatePolynomial.
+unsigned int reconcile(vec_uint &v1, unsigned int &v2, set_sym &s, const set_sym &s1,
+    const RCP<const Symbol> s2);
 //translates vectors from one polynomial into vectors for another.
 vec_uint translate(vec_uint original, vec_uint translator, unsigned int size);
-//tramslates terms of UnivariateIntPolynomial into vectors
+//translates terms of UnivariateIntPolynomial into vectors
 vec_uint translate(unsigned int original, unsigned int translator, unsigned int size);
-vec_uint uint_vec_translate_and_add(const vec_uint &v1, const vec_uint &v2,const vec_uint &translator1, const vec_uint &translator2, const unsigned int size);
-vec_uint uint_vec_translate_and_add(const vec_uint &v1, const unsigned int v2, const vec_uint &translator1,const unsigned int &translator2, const unsigned int size);
+vec_uint uint_vec_translate_and_add(const vec_uint &v1, const vec_uint &v2, 
+    const vec_uint &translator1, const vec_uint &translator2, const unsigned int size);
+vec_uint uint_vec_translate_and_add(const vec_uint &v1, const unsigned int v2, 
+    const vec_uint &translator1,const unsigned int &translator2, const unsigned int size);
 
-RCP<const MultivariateIntPolynomial> add_mult_poly(const MultivariateIntPolynomial &a, const MultivariateIntPolynomial &b);
+RCP<const MultivariateIntPolynomial> add_mult_poly(const MultivariateIntPolynomial &a, 
+    const MultivariateIntPolynomial &b);
 RCP<const MultivariateIntPolynomial> neg_mult_poly(const MultivariateIntPolynomial &a);
-RCP<const MultivariateIntPolynomial> sub_mult_poly(const MultivariateIntPolynomial &a, const MultivariateIntPolynomial &b);
-RCP<const MultivariateIntPolynomial> mul_mult_poly(const MultivariateIntPolynomial &a, const MultivariateIntPolynomial &b);
+RCP<const MultivariateIntPolynomial> sub_mult_poly(const MultivariateIntPolynomial &a, 
+    const MultivariateIntPolynomial &b);
+RCP<const MultivariateIntPolynomial> mul_mult_poly(const MultivariateIntPolynomial &a, 
+    const MultivariateIntPolynomial &b);
 
-RCP<const MultivariateIntPolynomial> add_mult_poly(const MultivariateIntPolynomial &a, const UnivariateIntPolynomial &b);
-RCP<const MultivariateIntPolynomial> add_mult_poly(const UnivariateIntPolynomial &a, const MultivariateIntPolynomial &b);
-RCP<const MultivariateIntPolynomial> sub_mult_poly(const MultivariateIntPolynomial &a, const UnivariateIntPolynomial &b);
-RCP<const MultivariateIntPolynomial> sub_mult_poly(const UnivariateIntPolynomial &a, const MultivariateIntPolynomial &b);
-RCP<const MultivariateIntPolynomial> mul_mult_poly(const MultivariateIntPolynomial &a, const UnivariateIntPolynomial &b);
-RCP<const MultivariateIntPolynomial> mul_mult_poly(const UnivariateIntPolynomial &a, const MultivariateIntPolynomial &b);
+RCP<const MultivariateIntPolynomial> add_mult_poly(const MultivariateIntPolynomial &a, 
+    const UnivariateIntPolynomial &b);
+RCP<const MultivariateIntPolynomial> add_mult_poly(const UnivariateIntPolynomial &a, 
+    const MultivariateIntPolynomial &b);
+RCP<const MultivariateIntPolynomial> sub_mult_poly(const MultivariateIntPolynomial &a, 
+    const UnivariateIntPolynomial &b);
+RCP<const MultivariateIntPolynomial> sub_mult_poly(const UnivariateIntPolynomial &a, 
+    const MultivariateIntPolynomial &b);
+RCP<const MultivariateIntPolynomial> mul_mult_poly(const MultivariateIntPolynomial &a, 
+    const UnivariateIntPolynomial &b);
+RCP<const MultivariateIntPolynomial> mul_mult_poly(const UnivariateIntPolynomial &a, 
+    const MultivariateIntPolynomial &b);
 
-RCP<const MultivariateIntPolynomial> add_mult_poly(const UnivariateIntPolynomial &a, const UnivariateIntPolynomial &b);
-RCP<const MultivariateIntPolynomial> sub_mult_poly(const UnivariateIntPolynomial &a, const UnivariateIntPolynomial &b);
-RCP<const MultivariateIntPolynomial> mul_mult_poly(const UnivariateIntPolynomial &a, const UnivariateIntPolynomial &b);
+RCP<const MultivariateIntPolynomial> add_mult_poly(const UnivariateIntPolynomial &a, 
+    const UnivariateIntPolynomial &b);
+RCP<const MultivariateIntPolynomial> sub_mult_poly(const UnivariateIntPolynomial &a, 
+    const UnivariateIntPolynomial &b);
+RCP<const MultivariateIntPolynomial> mul_mult_poly(const UnivariateIntPolynomial &a, 
+    const UnivariateIntPolynomial &b);
 
 
 }  //SymEngine
