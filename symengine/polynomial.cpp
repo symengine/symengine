@@ -815,9 +815,7 @@ unsigned int reconcile(vec_uint &v1, unsigned int &v2, set_sym &s, const set_sym
 
 vec_uint translate(vec_uint original, vec_uint translator, unsigned int size) {
     vec_uint changed;
-    for (unsigned int i = 0; i < size; i++) {
-        changed.insert(changed.end(), 0);
-    }
+    changed.resize(size, 0);
     for (unsigned int i = 0; i < original.size(); i++) {
         changed[translator[i]] = original[i];
     }
@@ -826,9 +824,7 @@ vec_uint translate(vec_uint original, vec_uint translator, unsigned int size) {
 
 vec_uint translate(unsigned int original, unsigned int translator, unsigned int size) {
     vec_uint changed;
-    for (unsigned int i = 0; i< size; i++) {
-        changed.insert(changed.end(),0);
-    }
+    changed.resize(size,0);
     changed[translator] = original;
     return changed;
 }
