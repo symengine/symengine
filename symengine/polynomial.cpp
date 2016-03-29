@@ -132,10 +132,10 @@ vec_basic UnivariateIntPolynomial::get_args() const {
 }
 
 integer_class UnivariateIntPolynomial::max_abs_coef() const {
-    integer_class curr(dict_.begin()->second);
+    integer_class curr(mp_abs(dict_.begin()->second));
     for (const auto &it : dict_) {
-        if (mp_abs(it.second) > mp_abs(curr))
-            curr = it.second;
+        if (mp_abs(it.second) > curr)
+            curr = mp_abs(it.second);
     }
     return curr;
 }
@@ -272,28 +272,23 @@ unsigned int bit_length(T t) {
 }
 
 RCP<const UnivariateIntPolynomial> mul_poly(const UnivariateIntPolynomial &a, const UnivariateIntPolynomial &b) {
-    unsigned int da = a.get_degree();
-    unsigned int db = b.get_degree();
-
-    int a_sign = 1, b_sign = 1;
+    bool neg = false;
 
     if ((--(a.get_dict().end()))->second < 0)
-        a_sign = -1;
+        neg = not neg;
     if ((--(b.get_dict().end()))->second < 0)
-        b_sign = -1;
+        neg = not neg;
 
-    integer_class p = a.max_abs_coef();
-    integer_class q = b.max_abs_coef();
-
-    unsigned int N = bit_length(std::min(da + 1, db + 1)) + bit_length(p) + bit_length(q);
-
+    unsigned int N = bit_length(std::min(a.get_degree() + 1, b.get_degree() + 1)) +
+                     bit_length(a.max_abs_coef()) + bit_length(b.max_abs_coef());
+    
     integer_class a1(1), b1;
     a1 <<= N;
     integer_class a2 = a1 / 2;
     integer_class mask = a1 - 1;
-    integer_class sa = a_sign * a.eval_bit(N);
-    integer_class sb = b_sign * b.eval_bit(N);
-    integer_class r = sa*sb;
+    integer_class a_val(a.eval_bit(N)), b_val(b.eval_bit(N));
+    integer_class s_val(a_val * b_val); 
+    integer_class r = mp_abs(s_val);
 
     std::vector<integer_class> v;
     integer_class carry(0);
@@ -311,7 +306,7 @@ RCP<const UnivariateIntPolynomial> mul_poly(const UnivariateIntPolynomial &a, co
         r >>= N;
     }
 
-    if (a_sign * b_sign == -1)
+    if (neg)
         return neg_poly(*UnivariateIntPolynomial::from_vec(a.get_var(), v));
     else
         return UnivariateIntPolynomial::from_vec(a.get_var(), v);
