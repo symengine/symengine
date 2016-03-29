@@ -2350,6 +2350,20 @@ std::size_t KroneckerDelta::__hash__() const
     return seed;
 }
 
+RCP<const Basic> KroneckerDelta::subs(const map_basic_basic &subs_dict) const
+{
+    auto it = subs_dict.find(rcp_from_this());
+    if (it != subs_dict.end())
+        return it->second;
+    RCP<const Basic> i = i_->subs(subs_dict);
+    RCP<const Basic> j = j_->subs(subs_dict);
+    if (i == i_ and j == j_) {
+        return rcp_from_this();
+    } else {
+        return kronecker_delta(i, j);
+    }
+}
+
 RCP<const Basic> kronecker_delta(const RCP<const Basic> &i, const RCP<const Basic> &j)
 {
     // Expand is needed to simplify things like `i-(i+1)` to `-1`
@@ -2675,6 +2689,7 @@ RCP<const Basic> Gamma::subs(const map_basic_basic &subs_dict) const
     else
         return gamma(arg);
 }
+
 RCP<const Basic> gamma_positive_int(const RCP<const Basic> &arg)
 {
     SYMENGINE_ASSERT(is_a<Integer>(*arg))
@@ -2781,6 +2796,20 @@ int LowerGamma::compare(const Basic &o) const
     }
 }
 
+RCP<const Basic> LowerGamma::subs(const map_basic_basic &subs_dict) const
+{
+    auto it = subs_dict.find(rcp_from_this());
+    if (it != subs_dict.end())
+        return it->second;
+    RCP<const Basic> s = s_->subs(subs_dict);
+    RCP<const Basic> x = x_->subs(subs_dict);
+    if (x == x_ and s == s_) {
+        return rcp_from_this();
+    } else {
+        return lowergamma(s, x);
+    }
+}
+
 RCP<const Basic> lowergamma(const RCP<const Basic> &s, const RCP<const Basic> &x)
 {
     // Only special values are being evaluated
@@ -2849,6 +2878,20 @@ int UpperGamma::compare(const Basic &o) const
         return s_->__cmp__(*(static_cast<const UpperGamma &>(o).s_));
     } else {
         return x_->__cmp__(*(static_cast<const UpperGamma &>(o).x_));
+    }
+}
+
+RCP<const Basic> UpperGamma::subs(const map_basic_basic &subs_dict) const
+{
+    auto it = subs_dict.find(rcp_from_this());
+    if (it != subs_dict.end())
+        return it->second;
+    RCP<const Basic> s = s_->subs(subs_dict);
+    RCP<const Basic> x = x_->subs(subs_dict);
+    if (s == s_ and x == x_) {
+        return rcp_from_this();
+    } else {
+        return uppergamma(s, x);
     }
 }
 
@@ -2994,6 +3037,20 @@ int Beta::compare(const Basic &o) const
 }
 
 RCP<const Basic> Beta::rewrite_as_gamma() const { return div(mul(gamma(x_), gamma(y_)), add(x_, y_)); }
+
+RCP<const Basic> Beta::subs(const map_basic_basic &subs_dict) const
+{
+    auto it = subs_dict.find(rcp_from_this());
+    if (it != subs_dict.end())
+        return it->second;
+    RCP<const Basic> x = x_->subs(subs_dict);
+    RCP<const Basic> y = y_->subs(subs_dict);
+    if ((x == x_ and y == y_) or (x == y_ and y == x_)) {
+        return rcp_from_this();
+    } else {
+        return beta(x, y);
+    }
+}
 
 RCP<const Basic> beta(const RCP<const Basic> &x, const RCP<const Basic> &y)
 {

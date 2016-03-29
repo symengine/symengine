@@ -905,6 +905,7 @@ class KroneckerDelta : public Function
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &i, const RCP<const Basic> &j) const;
     virtual vec_basic get_args() const { return {i_, j_}; }
+    RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
 };
 
 //! Canonicalize KroneckerDelta:
@@ -1031,6 +1032,7 @@ class LowerGamma : public Function
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &s, const RCP<const Basic> &x) const;
     virtual vec_basic get_args() const { return {s_, x_}; }
+    RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
 };
 
 //! Canonicalize LowerGamma:
@@ -1058,6 +1060,7 @@ class UpperGamma : public Function
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &s, const RCP<const Basic> &x) const;
     virtual vec_basic get_args() const { return {s_, x_}; }
+    RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
 };
 
 //! Canonicalize UpperGamma:
@@ -1127,6 +1130,7 @@ class Beta : public Function
     bool is_canonical(const RCP<const Basic> &s, const RCP<const Basic> &x);
     virtual vec_basic get_args() const { return {x_, y_}; }
     RCP<const Basic> rewrite_as_gamma() const;
+    RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
 };
 
 //! Canonicalize Beta:

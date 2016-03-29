@@ -15,6 +15,9 @@
 #include <symengine/visitor.h>
 #include <symengine/printer.h>
 
+#define xstr(s) str(s)
+#define str(s) #s
+
 using SymEngine::Basic;
 using SymEngine::RCP;
 using SymEngine::zero;
@@ -77,6 +80,43 @@ void basic_const_E(basic s) { s->m = SymEngine::E; }
 
 void basic_const_EulerGamma(basic s) { s->m = SymEngine::EulerGamma; }
 
+TypeID basic_get_class_id(const char *c)
+{
+    static std::map<std::string, TypeID> names = {
+#define SYMENGINE_INCLUDE_ALL
+#define SYMENGINE_ENUM(type, Class)                                                                               \
+    {                                                                                                             \
+        xstr(Class), SYMENGINE_##type                                                                             \
+    }                                                                                                             \
+    ,
+#include "symengine/type_codes.inc"
+#undef SYMENGINE_ENUM
+#undef SYMENGINE_INCLUDE_ALL
+        {"", SYMENGINE_TypeID_Count}};
+
+    return names[std::string(c)];
+}
+
+char *basic_get_class_from_id(TypeID id)
+{
+    static std::map<TypeID, std::string> names = {
+#define SYMENGINE_INCLUDE_ALL
+#define SYMENGINE_ENUM(type, Class)                                                                               \
+    {                                                                                                             \
+        SYMENGINE_##type, xstr(Class)                                                                             \
+    }                                                                                                             \
+    ,
+#include "symengine/type_codes.inc"
+#undef SYMENGINE_ENUM
+#undef SYMENGINE_INCLUDE_ALL
+        {SYMENGINE_TypeID_Count, ""}};
+
+    std::string name = names[id];
+    auto cc = new char[name.length() + 1];
+    std::strcpy(cc, name.c_str());
+    return cc;
+}
+
 TypeID basic_get_type(const basic s) { return static_cast<TypeID>(s->m->get_type_code()); }
 
 void symbol_set(basic s, char *c) { s->m = SymEngine::symbol(std::string(c)); }
@@ -107,14 +147,11 @@ void integer_get_mpz(mpz_t a, const basic s)
     mpz_set(a, get_mpz_t((rcp_static_cast<const Integer>(s->m))->as_mpz()));
 }
 
-void rational_set_si(basic s, long a, long b)
-{
-    s->m = SymEngine::Rational::from_mpq(std::move(rational_class(a, b)));
-}
+void rational_set_si(basic s, long a, long b) { s->m = SymEngine::Rational::from_mpq(rational_class(a, b)); }
 
 void rational_set_ui(basic s, unsigned long a, unsigned long b)
 {
-    s->m = SymEngine::Rational::from_mpq(std::move(rational_class(a, b)));
+    s->m = SymEngine::Rational::from_mpq(rational_class(a, b));
 }
 
 int rational_set(basic s, const basic a, const basic b)
@@ -127,10 +164,7 @@ int rational_set(basic s, const basic a, const basic b)
     return 1;
 }
 
-void rational_set_mpq(basic s, const mpq_t i)
-{
-    s->m = SymEngine::Rational::from_mpq(std::move(rational_class(i)));
-}
+void rational_set_mpq(basic s, const mpq_t i) { s->m = SymEngine::Rational::from_mpq(rational_class(i)); }
 
 void complex_set(basic s, const basic re, const basic im)
 {

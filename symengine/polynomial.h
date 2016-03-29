@@ -276,7 +276,7 @@ class UnivariateExprPolynomial
                 Add::coef_dict_add_term(outArg((coef)), dict_, one, term);
             }
         }
-        return std::move(Add::from_dict(integer(0), std::move(dict_)));
+        return Add::from_dict(integer(0), std::move(dict_));
     }
 
     int compare(const UnivariateExprPolynomial &other) { return poly_->compare(*other.poly_); }

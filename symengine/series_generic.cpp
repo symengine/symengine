@@ -132,7 +132,7 @@ RCP<const UnivariateSeries> add_uni_series(const UnivariateSeries &a, const Univ
 
 RCP<const UnivariateSeries> neg_uni_series(const UnivariateSeries &a)
 {
-    return make_rcp<const UnivariateSeries>(a.var_, a.prec_, std::move(neg_poly(*a.poly_)));
+    return make_rcp<const UnivariateSeries>(a.var_, a.prec_, neg_poly(*a.poly_));
 }
 
 RCP<const UnivariateSeries> sub_uni_series(const UnivariateSeries &a, const UnivariateSeries &b)

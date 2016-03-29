@@ -106,6 +106,8 @@ their default values indicated below:
         -DBUILD_BENCHMARKS_NONIUS:BOOL=OFF \          # Build with Nonius benchmarks
         -DINTEGER_CLASS:STRING=gmpxx \                # Choose storage type for Integer. one of gmp, gmpxx, 
                                                         flint, piranha
+        -DBUILD_SHARED_LIBS:BOOL=OFF \                # Build a shared library.
+        -DCMAKE_INSTALL_RPATH_USE_LINK_PATH:BOOL=OFF\ # Add dependencies to rpath when a shared lib is built
         .
 
 If `OPENMP` is enabled, then `SYMENGINE_THREAD_SAFE` is also enabled automatically
