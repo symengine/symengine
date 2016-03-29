@@ -36,7 +36,8 @@ using SymEngine::mp_get_si;
 namespace SymEngine
 {
 
-template <typename T> inline bool is_aligned(T *p, size_t n = alignof(T))
+template <typename T>
+inline bool is_aligned(T *p, size_t n = alignof(T))
 {
     return 0 == reinterpret_cast<uintptr_t>(p) % n;
 }

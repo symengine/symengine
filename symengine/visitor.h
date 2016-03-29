@@ -41,7 +41,8 @@ class Visitor
 void preorder_traversal(const Basic &b, Visitor &v);
 void postorder_traversal(const Basic &b, Visitor &v);
 
-template <class Derived, class Base = Visitor> class BaseVisitor : public Base
+template <class Derived, class Base = Visitor>
+class BaseVisitor : public Base
 {
 
     public:

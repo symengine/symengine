@@ -323,7 +323,11 @@ void zeros(DenseMatrix &A, unsigned rows, unsigned cols);
 
 // Returns true if `b` is exactly the type T.
 // Here T can be a DenseMatrix, CSRMatrix, etc.
-template <class T> inline bool is_a(const MatrixBase &b) { return typeid(T) == typeid(b); }
+template <class T>
+inline bool is_a(const MatrixBase &b)
+{
+    return typeid(T) == typeid(b);
+}
 
 // Test two matrices for equality
 inline bool operator==(const SymEngine::MatrixBase &lhs, const SymEngine::MatrixBase &rhs) { return lhs.eq(rhs); }

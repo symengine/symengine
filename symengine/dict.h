@@ -41,13 +41,15 @@ typedef std::map<int, Expression> map_int_Expr;
 
 //! `insert(m, first, second)` is equivalent to `m[first] = second`, just faster,
 //! because no default constructor is called on the `second` type.
-template <typename T1, typename T2, typename T3> inline void insert(T1 &m, const T2 &first, const T3 &second)
+template <typename T1, typename T2, typename T3>
+inline void insert(T1 &m, const T2 &first, const T3 &second)
 {
     m.insert(std::pair<T2, T3>(first, second));
 }
 
 //! \return true if the two dictionaries `a` and `b` are equal. Otherwise false.
-template <class T> bool umap_eq(const T &a, const T &b)
+template <class T>
+bool umap_eq(const T &a, const T &b)
 {
     // This follows the same algorithm as Python's dictionary comparison
     // (a==b), which is implemented by "dict_equal" function in
@@ -69,7 +71,8 @@ template <class T> bool umap_eq(const T &a, const T &b)
 }
 
 //! \return true if the two dictionaries `a` and `b` are equal. Otherwise false.
-template <class T> bool map_eq(const T &A, const T &B)
+template <class T>
+bool map_eq(const T &A, const T &B)
 {
     // Can't be equal if # of entries differ:
     if (A.size() != B.size())
@@ -97,7 +100,8 @@ bool map_int_Expr_eq(const map_int_Expr &a, const map_int_Expr &b);
 bool multiset_basic_eq(const multiset_basic &a, const multiset_basic &b);
 
 //! \return -1, 0, 1 for a < b, a == b, a > b
-template <class T> int map_compare(const T &A, const T &B)
+template <class T>
+int map_compare(const T &A, const T &B)
 {
     if (A.size() != B.size())
         return (A.size() < B.size()) ? -1 : 1;

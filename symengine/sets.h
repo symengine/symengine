@@ -41,7 +41,8 @@ class EmptySet : public Set
     virtual int compare(const Basic &o) const;
     virtual vec_basic get_args() const { return {}; }
 
-    template <typename T_, typename... Args> friend inline RCP<T_> make_rcp(Args &&... args);
+    template <typename T_, typename... Args>
+    friend inline RCP<T_> make_rcp(Args &&... args);
 
     inline virtual bool is_Interval() const { return false; }
     inline virtual bool is_EmptySet() const { return true; }

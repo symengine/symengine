@@ -13,7 +13,7 @@ AllowShortIfStatementsOnASingleLine: false
 AllowShortLoopsOnASingleLine: false
 AlwaysBreakAfterDefinitionReturnType: None
 AlwaysBreakBeforeMultilineStrings: false
-AlwaysBreakTemplateDeclarations: false
+AlwaysBreakTemplateDeclarations: true
 BinPackArguments: true
 BinPackParameters: true
 BreakBeforeBinaryOperators: All
@@ -40,9 +40,9 @@ ObjCBlockIndentWidth: 2
 ObjCSpaceAfterProperty: false
 ObjCSpaceBeforeProtocolList: true
 PenaltyBreakBeforeFirstCallParameter: 19
-PenaltyBreakComment: 60
+PenaltyBreakComment: 22312
 PenaltyBreakFirstLessLess: 120
-PenaltyBreakString: 100
+PenaltyBreakString: 2123
 PenaltyExcessCharacter: 2
 PenaltyReturnTypeOnItsOwnLine: 60
 PointerAlignment: Right
@@ -59,4 +59,3 @@ SpacesInSquareBrackets: false
 Standard:        Cpp11
 TabWidth:        4
 UseTab:          Never
-

@@ -26,7 +26,8 @@ class SeriesCoeffInterface : public Number
     virtual const std::string &get_var() const = 0;
 };
 
-template <typename Poly, typename Coeff, typename Series> class SeriesBase : public SeriesCoeffInterface
+template <typename Poly, typename Coeff, typename Series>
+class SeriesBase : public SeriesCoeffInterface
 {
     protected:
     const Poly p_;

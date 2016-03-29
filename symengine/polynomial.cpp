@@ -279,7 +279,8 @@ RCP<const UnivariateIntPolynomial> sub_poly(const UnivariateIntPolynomial &a, co
 }
 
 // Calculates bit length of number, used in mul_poly() only
-template <typename T> unsigned int bit_length(T t)
+template <typename T>
+unsigned int bit_length(T t)
 {
     unsigned int count = 0;
     while (t > 0) {

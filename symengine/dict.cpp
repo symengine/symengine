@@ -7,7 +7,8 @@ namespace SymEngine
 
 namespace
 {
-template <class T> inline std::ostream &print_map(std::ostream &out, T &d)
+template <class T>
+inline std::ostream &print_map(std::ostream &out, T &d)
 {
     out << "{";
     for (auto p = d.begin(); p != d.end(); p++) {
@@ -19,7 +20,8 @@ template <class T> inline std::ostream &print_map(std::ostream &out, T &d)
     return out;
 }
 
-template <class T> inline std::ostream &print_map_rcp(std::ostream &out, T &d)
+template <class T>
+inline std::ostream &print_map_rcp(std::ostream &out, T &d)
 {
     out << "{";
     for (auto p = d.begin(); p != d.end(); p++) {
@@ -31,7 +33,8 @@ template <class T> inline std::ostream &print_map_rcp(std::ostream &out, T &d)
     return out;
 }
 
-template <class T> inline std::ostream &print_vec(std::ostream &out, T &d)
+template <class T>
+inline std::ostream &print_vec(std::ostream &out, T &d)
 {
     out << "[";
     for (auto p = d.begin(); p != d.end(); p++) {
@@ -43,7 +46,8 @@ template <class T> inline std::ostream &print_vec(std::ostream &out, T &d)
     return out;
 }
 
-template <class T> inline std::ostream &print_vec_rcp(std::ostream &out, T &d)
+template <class T>
+inline std::ostream &print_vec_rcp(std::ostream &out, T &d)
 {
     out << "[";
     for (auto p = d.begin(); p != d.end(); p++) {
@@ -200,7 +204,8 @@ int map_int_Expr_compare(const map_int_Expr &A, const map_int_Expr &B)
     return 0;
 }
 
-template <class T> bool set_eq(const T &A, const T &B)
+template <class T>
+bool set_eq(const T &A, const T &B)
 {
     // Can't be equal if # of entries differ:
     if (A.size() != B.size())
@@ -215,7 +220,8 @@ template <class T> bool set_eq(const T &A, const T &B)
     return true;
 }
 
-template <class T> int set_compare(const T &A, const T &B)
+template <class T>
+int set_compare(const T &A, const T &B)
 {
     if (A.size() != B.size())
         return (A.size() < B.size()) ? -1 : 1;

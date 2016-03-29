@@ -19,7 +19,8 @@
 namespace SymEngine
 {
 
-template <typename T> class EvalDoubleVisitor : public BaseVisitor<EvalDoubleVisitor<T>>
+template <typename T>
+class EvalDoubleVisitor : public BaseVisitor<EvalDoubleVisitor<T>>
 {
     protected:
     /*

@@ -207,14 +207,16 @@ bool neq(const Basic &a, const Basic &b);
 /*! Returns true if `b` is exactly of type `T`. Example:
   `is_a<Symbol>(b)` : true if "b" is of type Symbol
 */
-template <class T> bool is_a(const Basic &b);
+template <class T>
+bool is_a(const Basic &b);
 
 /*! Returns true if `b` is of type T or any of its subclasses.
  * Example:
 
         is_a_sub<Symbol>(b)  // true if `b` is of type `Symbol` or any Symbol's subclass
 */
-template <class T> bool is_a_sub(const Basic &b);
+template <class T>
+bool is_a_sub(const Basic &b);
 
 //! Expands `self`
 RCP<const Basic> expand(const RCP<const Basic> &self);
@@ -232,7 +234,8 @@ std::ostream &operator<<(std::ostream &out, const SymEngine::Basic &p);
 //! Specialise `std::hash` for Basic.
 namespace std
 {
-template <> struct hash<SymEngine::Basic>;
+template <>
+struct hash<SymEngine::Basic>;
 }
 
 /*! Standard `hash_combine()` function. Example of usage:
@@ -250,7 +253,8 @@ template <> struct hash<SymEngine::Basic>;
         hash_combine<Basic>(seed2, *x);
         hash_combine<Basic>(seed2, *y);
 */
-template <class T> void hash_combine(std::size_t &seed, const T &v);
+template <class T>
+void hash_combine(std::size_t &seed, const T &v);
 
 //! Inline members and functions
 #include "basic-inl.h"

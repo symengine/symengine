@@ -42,7 +42,8 @@ RCP<const Number> number(std::complex<double> x) { return complex_double(x); };
 RCP<const Number> number(double x) { return real_double(x); };
 
 //! Evaluate functions with double precision
-template <class T> class EvaluateDouble : public Evaluate
+template <class T>
+class EvaluateDouble : public Evaluate
 {
     virtual RCP<const Basic> sin(const Basic &x) const override
     {

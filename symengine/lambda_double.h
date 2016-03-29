@@ -17,7 +17,8 @@
 namespace SymEngine
 {
 
-template <typename T> class LambdaDoubleVisitor : public BaseVisitor<LambdaDoubleVisitor<T>>
+template <typename T>
+class LambdaDoubleVisitor : public BaseVisitor<LambdaDoubleVisitor<T>>
 {
     protected:
     /*

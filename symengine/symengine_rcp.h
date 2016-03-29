@@ -33,12 +33,17 @@ namespace SymEngine
 
 // Ptr is always pointing to a valid object (can never be nullptr).
 
-template <class T> class Ptr
+template <class T>
+class Ptr
 {
     public:
     inline explicit Ptr(T *ptr) : ptr_(ptr) { SYMENGINE_ASSERT(ptr_ != nullptr) }
     inline Ptr(const Ptr<T> &ptr) : ptr_(ptr.ptr_) {}
-    template <class T2> inline Ptr(const Ptr<T2> &ptr) : ptr_(ptr.get()) {}
+    template <class T2>
+    inline Ptr(const Ptr<T2> &ptr)
+        : ptr_(ptr.get())
+    {
+    }
     Ptr<T> &operator=(const Ptr<T> &ptr)
     {
         ptr_ = ptr.get();
@@ -57,7 +62,11 @@ template <class T> class Ptr
     T *ptr_;
 };
 
-template <typename T> inline Ptr<T> outArg(T &arg) { return Ptr<T>(&arg); }
+template <typename T>
+inline Ptr<T> outArg(T &arg)
+{
+    return Ptr<T>(&arg);
+}
 
 /* RCP */
 
@@ -65,7 +74,8 @@ enum ENull { null };
 
 // RCP can be null. Functionally it should be equivalent to Teuchos::RCP.
 
-template <class T> class RCP
+template <class T>
+class RCP
 {
     public:
     RCP(ENull null_arg = null) : ptr_(nullptr) {}
@@ -81,7 +91,9 @@ template <class T> class RCP
             (ptr_->refcount_)++;
     }
     // Copy constructor
-    template <class T2> RCP(const RCP<T2> &r_ptr) : ptr_(r_ptr.get())
+    template <class T2>
+    RCP(const RCP<T2> &r_ptr)
+        : ptr_(r_ptr.get())
     {
         if (not is_null())
             (ptr_->refcount_)++;
@@ -89,7 +101,12 @@ template <class T> class RCP
     // Move constructor
     RCP(RCP<T> &&rp) SYMENGINE_NOEXCEPT : ptr_(rp.ptr_) { rp.ptr_ = nullptr; }
     // Move constructor
-    template <class T2> RCP(RCP<T2> &&r_ptr) SYMENGINE_NOEXCEPT : ptr_(r_ptr.get()) { r_ptr._set_null(); }
+    template <class T2>
+    RCP(RCP<T2> &&r_ptr)
+    SYMENGINE_NOEXCEPT : ptr_(r_ptr.get())
+    {
+        r_ptr._set_null();
+    }
     ~RCP() SYMENGINE_NOEXCEPT
     {
         if (ptr_ != nullptr and --(ptr_->refcount_) == 0)
@@ -108,8 +125,16 @@ template <class T> class RCP
     T *get() const { return ptr_; }
     Ptr<T> ptr() const { return Ptr<T>(get()); }
     bool is_null() const { return ptr_ == nullptr; }
-    template <class T2> bool operator==(const RCP<T2> &p2) { return ptr_ == p2.ptr_; }
-    template <class T2> bool operator!=(const RCP<T2> &p2) { return ptr_ != p2.ptr_; }
+    template <class T2>
+    bool operator==(const RCP<T2> &p2)
+    {
+        return ptr_ == p2.ptr_;
+    }
+    template <class T2>
+    bool operator!=(const RCP<T2> &p2)
+    {
+        return ptr_ != p2.ptr_;
+    }
     // Copy assignment
     RCP<T> &operator=(const RCP<T> &r_ptr)
     {
@@ -139,16 +164,22 @@ template <class T> class RCP
     T *ptr_;
 };
 
-template <class T> inline RCP<T> rcp(T *p) { return RCP<T>(p); }
+template <class T>
+inline RCP<T> rcp(T *p)
+{
+    return RCP<T>(p);
+}
 
-template <class T2, class T1> inline RCP<T2> rcp_static_cast(const RCP<T1> &p1)
+template <class T2, class T1>
+inline RCP<T2> rcp_static_cast(const RCP<T1> &p1)
 {
     // Make the compiler check if the conversion is legal
     T2 *check = static_cast<T2 *>(p1.get());
     return RCP<T2>(check);
 }
 
-template <class T2, class T1> inline RCP<T2> rcp_dynamic_cast(const RCP<T1> &p1)
+template <class T2, class T1>
+inline RCP<T2> rcp_dynamic_cast(const RCP<T1> &p1)
 {
     if (not p1.is_null()) {
         T2 *p = nullptr;
@@ -161,16 +192,25 @@ template <class T2, class T1> inline RCP<T2> rcp_dynamic_cast(const RCP<T1> &p1)
     throw std::runtime_error("rcp_dynamic_cast: cannot convert.");
 }
 
-template <class T2, class T1> inline RCP<T2> rcp_const_cast(const RCP<T1> &p1)
+template <class T2, class T1>
+inline RCP<T2> rcp_const_cast(const RCP<T1> &p1)
 {
     // Make the compiler check if the conversion is legal
     T2 *check = const_cast<T2 *>(p1.get());
     return RCP<T2>(check);
 }
 
-template <class T> inline bool operator==(const RCP<T> &p, ENull) { return p.get() == nullptr; }
+template <class T>
+inline bool operator==(const RCP<T> &p, ENull)
+{
+    return p.get() == nullptr;
+}
 
-template <typename T> std::string typeName(const T &t) { return "RCP<>"; }
+template <typename T>
+std::string typeName(const T &t)
+{
+    return "RCP<>";
+}
 
 void print_stack_on_segfault();
 
@@ -189,7 +229,8 @@ using Teuchos::print_stack_on_segfault;
 
 #endif
 
-template <class T> class EnableRCPFromThis
+template <class T>
+class EnableRCPFromThis
 {
     // Public interface
     public:
@@ -214,7 +255,8 @@ template <class T> class EnableRCPFromThis
     }
 
     //! Get RCP<T2> pointer to self (it will cast the pointer to T2)
-    template <class T2> inline RCP<const T2> rcp_from_this_cast() const
+    template <class T2>
+    inline RCP<const T2> rcp_from_this_cast() const
     {
 #if defined(WITH_SYMENGINE_RCP)
         return rcp(static_cast<const T2 *>(this));
@@ -262,13 +304,16 @@ template <class T> class EnableRCPFromThis
 #endif // WITH_SYMENGINE_RCP
 
 #if defined(WITH_SYMENGINE_RCP)
-    template <class T_> friend class RCP;
+    template <class T_>
+    friend class RCP;
 #endif
 
-    template <typename T_, typename... Args> friend inline RCP<T_> make_rcp(Args &&... args);
+    template <typename T_, typename... Args>
+    friend inline RCP<T_> make_rcp(Args &&... args);
 };
 
-template <typename T, typename... Args> inline RCP<T> make_rcp(Args &&... args)
+template <typename T, typename... Args>
+inline RCP<T> make_rcp(Args &&... args)
 {
 #if defined(WITH_SYMENGINE_RCP)
     return rcp(new T(std::forward<Args>(args)...));

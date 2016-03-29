@@ -522,10 +522,8 @@ class Derivative : public Basic
     // vector<RCP<Basic>>, so the compiler can't cast the derived type to the
     // base type when calling functions like vec_basic_eq() that are only
     // defined for the base type vector<RCP<Basic>>.
-    // [1]
-    // http://stackoverflow.com/questions/14964909/how-to-cast-a-vector-of-shared-ptrs-of-a-derived-class-to-a-vector-of-share-ptrs
-    // [2]
-    // http://stackoverflow.com/questions/114819/getting-a-vectorderived-into-a-function-that-expects-a-vectorbase
+    // [1]http://stackoverflow.com/questions/14964909/how-to-cast-a-vector-of-shared-ptrs-of-a-derived-class-to-a-vector-of-share-ptrs
+    // [2]http://stackoverflow.com/questions/114819/getting-a-vectorderived-into-a-function-that-expects-a-vectorbase
     multiset_basic x_; //! x, y, ...
 
     public:

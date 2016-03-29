@@ -31,8 +31,7 @@ class ExpressionParser
 
         {"e", E}, {"E", E}, {"EulerGamma", EulerGamma}, {"pi", pi}, {"I", I}};
 
-    // reference :
-    // http://stackoverflow.com/questions/30393285/stdfunction-fails-to-distinguish-overloaded-functions
+    // reference:http://stackoverflow.com/questions/30393285/stdfunction-fails-to-distinguish-overloaded-functions
     typedef RCP<const Basic> (*single_arg_func)(const RCP<const Basic> &);
     typedef RCP<const Basic> (*double_arg_func)(const RCP<const Basic> &, const RCP<const Basic> &);
 
