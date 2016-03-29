@@ -176,7 +176,7 @@ TEST_CASE("Expression series expansion: Add ", "[Expansion of Add]")
     auto vb = umap_short_basic{{0, integer(1)}, {1, integer(1)}, {2, integer(-1)}, {4, integer(1)}};
     REQUIRE(expand_check_pairs(z, x, 5, vb));
     auto vb1 = umap_short_basic{{0, integer(1)}, {1, integer(1)}, {2, integer(-1)}};
-    REQUIRE(expand_check_pairs(z, x, 4, vb1));
+    REQUIRE(expand_check_pairs(z, x, 3, vb1));
 }
 
 TEST_CASE("Expression series expansion: sin, cos", "[Expansion of sin, cos]")

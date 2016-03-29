@@ -10,7 +10,7 @@ using SymEngine::make_rcp;
 namespace SymEngine {
 
 RCP<const UnivariateSeries> UnivariateSeries::series(const RCP<const Basic> &t, const std::string &x, unsigned int prec) {
-    UnivariateExprPolynomial p(UnivariatePolynomial::create(symbol(x), {}));
+    UnivariateExprPolynomial p(UnivariatePolynomial::create(symbol(x), {0, 1}));
     SeriesVisitor<UnivariateExprPolynomial, Expression, UnivariateSeries> visitor(std::move(p), x, prec);
     return visitor.series(t);
 }
@@ -94,6 +94,9 @@ UnivariateExprPolynomial UnivariateSeries::pow(const UnivariateExprPolynomial &b
             return UnivariateExprPolynomial(1);
         }
     }
+    if(base == 0) {
+        return UnivariateExprPolynomial(0);
+    }
     UnivariateExprPolynomial x(base);
     UnivariateExprPolynomial y(1);
     while (exp > 1) {
@@ -111,7 +114,10 @@ UnivariateExprPolynomial UnivariateSeries::pow(const UnivariateExprPolynomial &b
 }
 
 Expression UnivariateSeries::find_cf(const UnivariateExprPolynomial &s, const UnivariateExprPolynomial &var, unsigned deg) {
-    return (s.get_univariate_poly()->get_dict()).at(deg);
+     if (s.get_univariate_poly()->get_dict().count(deg) == 0)
+        return Expression(0);
+    else
+        return (s.get_univariate_poly()->get_dict()).at(deg);
 }
 
 Expression UnivariateSeries::root(Expression &c, unsigned n) {
@@ -147,51 +153,51 @@ Expression UnivariateSeries::sin(const Expression& c) {
 }
 
 Expression UnivariateSeries::cos(const Expression& c) {
-    return cos(c.get_basic());
+    return SymEngine::cos(c.get_basic());
 }
 
 Expression UnivariateSeries::tan(const Expression& c) {
-    return tan(c.get_basic());
+    return SymEngine::tan(c.get_basic());
 }
 
 Expression UnivariateSeries::asin(const Expression& c) {
-    return asin(c.get_basic());
+    return SymEngine::asin(c.get_basic());
 }
 
 Expression UnivariateSeries::acos(const Expression& c) {
-    return acos(c.get_basic());
+    return SymEngine::acos(c.get_basic());
 }
 
 Expression UnivariateSeries::atan(const Expression& c) {
-    return atan(c.get_basic());
+    return SymEngine::atan(c.get_basic());
 }
 
 Expression UnivariateSeries::sinh(const Expression& c) {
-    return sinh(c.get_basic());
+    return SymEngine::sinh(c.get_basic());
 }
 
 Expression UnivariateSeries::cosh(const Expression& c) {
-    return cosh(c.get_basic());
+    return SymEngine::cosh(c.get_basic());
 }
 
 Expression UnivariateSeries::tanh(const Expression& c) {
-    return tanh(c.get_basic());
+    return SymEngine::tanh(c.get_basic());
 }
 
 Expression UnivariateSeries::asinh(const Expression& c) {
-    return asinh(c.get_basic());
+    return SymEngine::asinh(c.get_basic());
 }
 
 Expression UnivariateSeries::atanh(const Expression& c) {
-    return atanh(c.get_basic());
+    return SymEngine::atanh(c.get_basic());
 }
 
 Expression UnivariateSeries::exp(const Expression& c) {
-    return exp(c.get_basic());
+    return SymEngine::exp(c.get_basic());
 }
 
 Expression UnivariateSeries::log(const Expression& c) {
-    return log(c.get_basic());
+    return SymEngine::log(c.get_basic());
 }
 
 } // SymEngine

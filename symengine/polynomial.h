@@ -113,7 +113,7 @@ public:
     
     static RCP<const UnivariatePolynomial> create(const RCP<const Symbol> &var, 
             const std::vector<Expression> &v) {
-        return UnivariatePolynomial::from_vec(var, v);
+        return UnivariatePolynomial::from_vec(var, std::move(v));
     }
 
     bool is_canonical(const unsigned int &degree, const map_int_Expr& dict) const;
@@ -187,9 +187,9 @@ public:
     ~UnivariateExprPolynomial() SYMENGINE_NOEXCEPT {}
     UnivariateExprPolynomial(const UnivariateExprPolynomial &) = default;
     UnivariateExprPolynomial(UnivariateExprPolynomial &&other) SYMENGINE_NOEXCEPT : poly_(std::move(other.poly_)) {}
-    UnivariateExprPolynomial(int i) : poly_(UnivariatePolynomial::create(symbol(""), {{Expression(i)}})) {}
+    UnivariateExprPolynomial(int i) : poly_(UnivariatePolynomial::create(symbol(""), {Expression(i)})) {}
     UnivariateExprPolynomial(RCP<const UnivariatePolynomial> p) : poly_(std::move(p)) {}
-    UnivariateExprPolynomial(Expression expr) : poly_(UnivariatePolynomial::create(symbol(""), {{expr}})) {}
+    UnivariateExprPolynomial(Expression expr) : poly_(UnivariatePolynomial::create(symbol(""), {expr})) {}
     UnivariateExprPolynomial &operator=(const UnivariateExprPolynomial &) = default;
     UnivariateExprPolynomial &operator=(UnivariateExprPolynomial &&other) SYMENGINE_NOEXCEPT {
         if (this != &other)
