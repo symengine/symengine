@@ -380,6 +380,33 @@ RCP<const Basic> mul(const RCP<const Basic> &a, const RCP<const Basic> &b)
     return Mul::from_dict(coef, std::move(d));
 }
 
+RCP<const Basic> mul(const vec_basic &a)
+{
+    if (a.size() < 2) {
+        throw std::runtime_error("mul expected at least a vector with size two");
+    }
+    SymEngine::map_basic_basic d;
+    RCP<const Number> coef = one;
+    for(const auto &i: a) {
+        if (is_a<Mul>(*i)) {
+            RCP<const Basic> exp;
+            RCP<const Basic> t;
+            RCP<const Mul> A = rcp_static_cast<const Mul>(i);
+            coef = mulnum(coef, A->coef_);
+            for (const auto &p: A->dict_)
+                Mul::dict_add_term_new(outArg(coef), d, p.second, p.first);
+        } else if (is_a_Number(*i)) {
+            imulnum(outArg(coef), rcp_static_cast<const Number>(i));
+        } else {
+            RCP<const Basic> exp;
+            RCP<const Basic> t;
+            Mul::as_base_exp(i, outArg(exp), outArg(t));
+            Mul::dict_add_term_new(outArg(coef), d, exp, t);
+        }
+    }
+    return Mul::from_dict(coef, std::move(d));
+}
+
 RCP<const Basic> div(const RCP<const Basic> &a, const RCP<const Basic> &b)
 {
     if(is_a_Number(*b) and rcp_static_cast<const Number>(b)->is_zero())

@@ -63,6 +63,7 @@ public:
 //! Multiplication
 RCP<const Basic> mul(const RCP<const Basic> &a,
         const RCP<const Basic> &b);
+RCP<const Basic> mul(const vec_basic &a);
 //! Division
 RCP<const Basic> div(const RCP<const Basic> &a,
         const RCP<const Basic> &b);

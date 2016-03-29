@@ -77,12 +77,18 @@ TEST_CASE("Add: arit", "[arit]")
     r2 = mul(mul(i3, x), y);
     REQUIRE(eq(*r1, *r2));
 
+    r1 = add({mul(y, x), mul({i2, x, y})});
+    r2 = mul({i3, x, y});
+    REQUIRE(eq(*r1, *r2));
+
     r1 = add(add(x, x), x);
     r2 = mul(i3, x);
     REQUIRE(eq(*r1, *r2));
 
     r1 = add(add(x, x), x);
     r2 = mul(x, i3);
+    REQUIRE(eq(*r1, *r2));
+    r1 = add({x, x, x});
     REQUIRE(eq(*r1, *r2));
 
     r1 = add(x, one);
@@ -92,9 +98,13 @@ TEST_CASE("Add: arit", "[arit]")
     r1 = add(pow(x, y), z);
     r2 = add(z, pow(x, y));
     REQUIRE(eq(*r1, *r2));
+    r2 = add({z, pow(x, y)});
+    REQUIRE(eq(*r1, *r2));
 
     r1 = add(x, I);
     r2 = add(I, x);
+    REQUIRE(eq(*r1, *r2));
+    r2 = add({I, x});
     REQUIRE(eq(*r1, *r2));
 
     r1 = mul(x, I);
@@ -108,6 +118,8 @@ TEST_CASE("Add: arit", "[arit]")
     r3 = add(add(add(r1, r2), integer(1)), real_double(0.2));
     REQUIRE(is_a<RealDouble>(*r3));
     REQUIRE(std::abs(rcp_static_cast<const RealDouble>(r3)->i - 1.8) < 1e-12);
+    r3 = add({r1, r2, integer(1), real_double(0.2)});
+    REQUIRE(std::abs(rcp_static_cast<const RealDouble>(r3)->i - 1.8) < 1e-12);
 
     r1 = complex_double(std::complex<double>(0.1, 0.2));
     r2 = Complex::from_two_nums(*Rational::from_mpq(rational_class(1, 2)), *Rational::from_mpq(rational_class(7, 5)));
@@ -115,6 +127,15 @@ TEST_CASE("Add: arit", "[arit]")
     REQUIRE(is_a<ComplexDouble>(*r3));
     REQUIRE(std::abs(rcp_static_cast<const ComplexDouble>(r3)->i.real() - 2.0) < 1e-12);
     REQUIRE(std::abs(rcp_static_cast<const ComplexDouble>(r3)->i.imag() - 1.6) < 1e-12);
+    r3 = add({r1, r2, integer(1), real_double(0.4)});
+    REQUIRE(is_a<ComplexDouble>(*r3));
+    REQUIRE(std::abs(rcp_static_cast<const ComplexDouble>(r3)->i.real() - 2.0) < 1e-12);
+    REQUIRE(std::abs(rcp_static_cast<const ComplexDouble>(r3)->i.imag() - 1.6) < 1e-12);
+
+    r1 = add({i2, i3, i4});
+    REQUIRE(eq(*r1, *integer(9)));
+
+    CHECK_THROWS_AS(mul({one}), std::runtime_error);
 }
 
 TEST_CASE("Mul: arit", "[arit]")
@@ -137,25 +158,39 @@ TEST_CASE("Mul: arit", "[arit]")
     r2 = mul(pow(x, i2), pow(y, i2));
     REQUIRE(eq(*r1, *r2));
 
+    r1 = mul({mul(x, y), mul(y, x)});
+    r2 = mul({pow(x, i2), pow(y, i2)});
+    REQUIRE(eq(*r1, *r2));
+
     r1 = mul(pow(x, add(y, z)), z);
     r2 = mul(z, pow(x, add(z, y)));
+    REQUIRE(eq(*r1, *r2));
+    r1 = mul({pow(x, add({y, z})), z});
     REQUIRE(eq(*r1, *r2));
 
     r1 = mul(pow(x, y), pow(x, z));
     r2 = pow(x, add(y, z));
     REQUIRE(eq(*r1, *r2));
+    r1 = mul({pow(x, y), pow(x, z)});
+    REQUIRE(eq(*r1, *r2));
 
     r1 = mul(mul(pow(x, y), pow(x, z)), pow(x, x));
     r2 = pow(x, add(add(x, y), z));
+    REQUIRE(eq(*r1, *r2));
+    r1 = mul({pow(x, y), pow(x, z), pow(x, x)});
     REQUIRE(eq(*r1, *r2));
 
     r1 = mul(mul(mul(pow(x, y), pow(x, z)), pow(x, x)), y);
     r2 = mul(pow(x, add(add(x, y), z)), y);
     REQUIRE(eq(*r1, *r2));
+    r1 = mul({pow(x, y), pow(x, z), pow(x, x), y});
+    REQUIRE(eq(*r1, *r2));
 
     r1 = mul(mul(i2, pow(y, mul(im2, pow(x, i2)))),
              mul(i3, pow(y, mul(i2, pow(x, i2)))));
     r2 = i6;
+    REQUIRE(eq(*r1, *r2));
+    r1 = mul({mul({i2, pow(y, mul({im2, pow(x, i2)}))}), mul({i3, pow(y, mul({i2, pow(x, i2)}))})});
     REQUIRE(eq(*r1, *r2));
 
     r1 = mul(mul(mul(mul(div(i3, i2), pow(cos(pow(x, i2)), im2)), x),
@@ -165,11 +200,16 @@ TEST_CASE("Mul: arit", "[arit]")
     std::cout << *r1 << std::endl;
     std::cout << *r2 << std::endl;
     REQUIRE(eq(*r1, *r2));
+    r1 = mul({div(i3, i2), pow(cos(pow(x, i2)), im2), x,
+           sin(pow(x, i2)), cos(div(mul(i3, x), i4))});
+    REQUIRE(eq(*r1, *r2));
 
     mhalf = div(integer(-1), i2);
     r1 = mul(integer(12), pow(integer(196), mhalf));
     r2 = mul(integer(294), pow(integer(196), mhalf));
     REQUIRE(eq(*integer(18), *mul(r1, r2)));
+    r1 = mul({integer(12), pow(integer(196), mhalf), integer(294), pow(integer(196), mhalf)});
+    REQUIRE(eq(*integer(18), *r1));
 
     r1 = mul(mul(integer(12), pow(integer(196), mhalf)), pow(i3, mhalf));
     r2 = mul(mul(integer(294), pow(integer(196), mhalf)), pow(i3, mhalf));
@@ -180,9 +220,13 @@ TEST_CASE("Mul: arit", "[arit]")
     std::cout << *r1 << std::endl;
     std::cout << *r2 << std::endl;
     REQUIRE(eq(*r1, *r2));
+    r1 = mul({add(x, mul(y, I)), sub(x, mul(y, I))});
+    REQUIRE(eq(*r1, *r2));
 
     r1 = mul(mul(x, I), mul(y, I));
     r2 = mul(integer(-1), mul(x, y));
+    REQUIRE(eq(*r1, *r2));
+    r1 = mul({x, I, y, I});
     REQUIRE(eq(*r1, *r2));
 
     RCP<const Number> rc1, rc2, c1, c2;
@@ -198,6 +242,8 @@ TEST_CASE("Mul: arit", "[arit]")
     r1 = mul(r1, r2);
     r2 = mul(pow(x, i2), c2);
     REQUIRE(eq(*r1, *r2));
+    r1 = mul({x, c1, x, c1});
+    REQUIRE(eq(*r1, *r2));
 
     r1 = mul(sqrt(x), x);
     r2 = pow(x, div(i3, i2));
@@ -208,24 +254,33 @@ TEST_CASE("Mul: arit", "[arit]")
     std::cout << r1->__str__() << std::endl;
     REQUIRE(eq(*r1, *r2));
 
+    RCP<const Basic> r3;
     rc1 = Complex::from_two_nums(*one, *one);
     r1 = pow(rc1, x);
-    r1 = mul(r1, pow(rc1, sub(div(i3, i2), x)));
+    r3 = mul(r1, pow(rc1, sub(div(i3, i2), x)));
     r2 = pow(rc1, div(i3, i2));
-    REQUIRE(eq(*r1, *r2));
+    REQUIRE(eq(*r3, *r2));
+    r3 = mul({r1, pow(rc1, sub(div(i3, i2), x))});
+    REQUIRE(eq(*r3, *r2));
 
     r1 = real_double(0.1);
     r2 = Rational::from_mpq(rational_class(1, 2));
     r2 = mul(mul(mul(r1, r2), integer(3)), real_double(0.2));
     REQUIRE(is_a<RealDouble>(*r2));
     REQUIRE(std::abs(rcp_static_cast<const RealDouble>(r2)->i - 0.03) < 1e-12);
+    r2 = mul({r1, Rational::from_mpq(rational_class(1, 2)), integer(3), real_double(0.2)});
+    REQUIRE(std::abs(rcp_static_cast<const RealDouble>(r2)->i - 0.03) < 1e-12);
 
     r1 = complex_double(std::complex<double>(0.1, 0.2));
     r2 = Complex::from_two_nums(*Rational::from_mpq(rational_class(1, 2)), *Rational::from_mpq(rational_class(7, 5)));
-    r2 = mul(mul(mul(r1, r2), integer(5)), real_double(0.7));
-    REQUIRE(is_a<ComplexDouble>(*r2));
-    REQUIRE(std::abs(rcp_static_cast<const ComplexDouble>(r2)->i.real() + 0.805) < 1e-12);
-    REQUIRE(std::abs(rcp_static_cast<const ComplexDouble>(r2)->i.imag() - 0.84) < 1e-12);
+    r3 = mul(mul(mul(r1, r2), integer(5)), real_double(0.7));
+    REQUIRE(is_a<ComplexDouble>(*r3));
+    REQUIRE(std::abs(rcp_static_cast<const ComplexDouble>(r3)->i.real() + 0.805) < 1e-12);
+    REQUIRE(std::abs(rcp_static_cast<const ComplexDouble>(r3)->i.imag() - 0.84) < 1e-12);
+    r3 = mul({r1, r2, integer(5), real_double(0.7)});
+    REQUIRE(is_a<ComplexDouble>(*r3));
+    REQUIRE(std::abs(rcp_static_cast<const ComplexDouble>(r3)->i.real() + 0.805) < 1e-12);
+    REQUIRE(std::abs(rcp_static_cast<const ComplexDouble>(r3)->i.imag() - 0.84) < 1e-12);
 
     r1 = real_double(0.0);
     r2 = mul(r1, x);
@@ -235,6 +290,8 @@ TEST_CASE("Mul: arit", "[arit]")
     r1 = mul(r1, pow(x, real_double(-2.0)));
     r2 = mul(y, real_double(2.0));
     // (2*x**2*y) * (x**(-2.0)) == 2.0 * y
+    REQUIRE(eq(*r1, *r2));
+    r1 = mul({i2, pow(x, i2), y, pow(x, real_double(-2.0))});
     REQUIRE(eq(*r1, *r2));
 
     std::set<RCP<const Basic>, SymEngine::RCPBasicKeyLessCmp> s;
@@ -247,6 +304,8 @@ TEST_CASE("Mul: arit", "[arit]")
     REQUIRE(s.size() == 2);
 
     CHECK_THROWS_AS(Complex::from_two_nums(*one, *real_double(1.0));, std::runtime_error);
+
+    CHECK_THROWS_AS(mul({one}), std::runtime_error);
 }
 
 TEST_CASE("Sub: arit", "[arit]")

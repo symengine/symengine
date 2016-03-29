@@ -68,6 +68,7 @@ public:
 //! \return Add made from `a + b`
 RCP<const Basic> add(const RCP<const Basic> &a,
         const RCP<const Basic> &b);
+RCP<const Basic> add(const vec_basic &a);
 //! \return Add made from `a - b`
 RCP<const Basic> sub(const RCP<const Basic> &a,
         const RCP<const Basic> &b);
