@@ -43,51 +43,46 @@ public:
         p = temp;
     }
     void bvisit(const Pow &x) {
-        if(x.get_exp()->__cmp__(*integer(prec)) < 1) {
-            const RCP<const Basic>& base = x.get_base(), exp = x.get_exp();
-            if (is_a<Integer>(*exp)) {
-                const Integer& ii = (static_cast<const Integer&>(*exp));
-                if (not mp_fits_slong_p(ii.i))
-                    throw std::runtime_error("series power exponent size");
-                const int sh = mp_get_si(ii.i);
-                base->accept(*this);
-                if (sh == 1) {
-                    return;
-                } else if (sh > 0) {
-                    p = Series::pow(p, sh, prec);
-                } else if (sh == -1) {
-                    p = Series::series_invert(p, var, prec);
-                } else {
-                    p = Series::series_invert(Series::pow(p, -sh, prec), var, prec);
-                }
-
-            } else if (is_a<Rational>(*exp)) {
-                const Rational &rat = (static_cast<const Rational &>(*exp));
-                const integer_class &expnumz = get_num(rat.i);
-                const integer_class &expdenz = get_den(rat.i);
-                if (not mp_fits_slong_p(expnumz) or not mp_fits_slong_p(expdenz))
-                    throw std::runtime_error("series rational power exponent size");
-                const int num = mp_get_si(expnumz);
-                const int den = mp_get_si(expdenz);
-                base->accept(*this);
-                const Poly proot(Series::series_nthroot(apply(base), den, var, prec));
-                if (num == 1) {
-                    p = proot;
-                } else if (num > 0) {
-                    p = Series::pow(proot, num, prec);
-                } else if (num == -1) {
-                    p = Series::series_invert(proot, var, prec);
-                } else {
-                    p = Series::series_invert(Series::pow(proot, -num, prec), var, prec);
-                }
-            } else if (eq(*E, *base)) {
-                p = Series::series_exp(apply(exp), var, prec);
+        const RCP<const Basic>& base = x.get_base(), exp = x.get_exp();
+        if (is_a<Integer>(*exp)) {
+            const Integer& ii = (static_cast<const Integer&>(*exp));
+            if (not mp_fits_slong_p(ii.i))
+                throw std::runtime_error("series power exponent size");
+            const int sh = mp_get_si(ii.i);
+            base->accept(*this);
+            if (sh == 1) {
+                return;
+            } else if (sh > 0) {
+                p = Series::pow(p, sh, prec);
+            } else if (sh == -1) {
+                p = Series::series_invert(p, var, prec);
             } else {
-                p = Series::series_exp(Poly(apply(exp) * Series::series_log(apply(base), var, prec)), var, prec);
+                p = Series::series_invert(Series::pow(p, -sh, prec), var, prec);
             }
-        } //check for precision
-        else {
-            p = Series::pow(Poly(0), 1, prec);
+
+        } else if (is_a<Rational>(*exp)) {
+            const Rational &rat = (static_cast<const Rational &>(*exp));
+            const integer_class &expnumz = get_num(rat.i);
+            const integer_class &expdenz = get_den(rat.i);
+            if (not mp_fits_slong_p(expnumz) or not mp_fits_slong_p(expdenz))
+                throw std::runtime_error("series rational power exponent size");
+            const int num = mp_get_si(expnumz);
+            const int den = mp_get_si(expdenz);
+            base->accept(*this);
+            const Poly proot(Series::series_nthroot(apply(base), den, var, prec));
+            if (num == 1) {
+                p = proot;
+            } else if (num > 0) {
+                p = Series::pow(proot, num, prec);
+            } else if (num == -1) {
+                p = Series::series_invert(proot, var, prec);
+            } else {
+                p = Series::series_invert(Series::pow(proot, -num, prec), var, prec);
+            }
+        } else if (eq(*E, *base)) {
+            p = Series::series_exp(apply(exp), var, prec);
+        } else {
+            p = Series::series_exp(Poly(apply(exp) * Series::series_log(apply(base), var, prec)), var, prec);
         }
     }
 

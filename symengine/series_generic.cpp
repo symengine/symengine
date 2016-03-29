@@ -94,9 +94,6 @@ UnivariateExprPolynomial UnivariateSeries::pow(const UnivariateExprPolynomial &b
             return UnivariateExprPolynomial(1);
         }
     }
-    if(base == 0) {
-        return UnivariateExprPolynomial(0);
-    }
     UnivariateExprPolynomial x(base);
     UnivariateExprPolynomial y(1);
     while (exp > 1) {

@@ -331,7 +331,7 @@ UnivariatePolynomial::UnivariatePolynomial(const RCP<const Symbol> &var, const u
 
 UnivariatePolynomial::UnivariatePolynomial(const RCP<const Symbol> &var, const std::vector<Expression> &v) : var_{var} {
     for (unsigned int i = 0; i < v.size(); i++)
-        if (v[i] != 0 or v.size() == 1)
+        if (v[i] != 0)
             dict_add_term(dict_, v[i], i);
     degree_ = v.size() - 1;
     SYMENGINE_ASSERT(is_canonical(degree_, dict_))
@@ -463,7 +463,7 @@ Expression UnivariatePolynomial::eval(const Expression &x) const {
 }
 
 bool UnivariatePolynomial::is_zero() const {
-    return dict_.size() == 1 and dict_.begin()->second == 0;
+    return (dict_.size() == 1 and dict_.begin()->second == 0) or dict_.empty();
 }
 
 bool UnivariatePolynomial::is_one() const {
@@ -549,12 +549,14 @@ RCP<const UnivariatePolynomial> mul_uni_poly(RCP<const UnivariatePolynomial> a, 
     } else {
         var = a->get_var();
     }
-    if ((a->get_dict().empty() and b->get_dict().empty()) or a->is_zero() or b->is_zero())
+    if ((a->get_dict().empty() and b->get_dict().empty()) or a->is_zero() or b->is_zero()) {
         return univariate_polynomial(var, 0, {{0, 0}});
-    for (const auto &i1 : a->get_dict())
-        for (const auto &i2 : b->get_dict())
+    }
+    for (const auto &i1 : a->get_dict()) {
+        for (const auto &i2 : b->get_dict()) {
             dict[i1.first + i2.first] += i1.second * i2.second;
-
+        }
+    }
     return univariate_polynomial(var, (--(dict.end()))->first, std::move(dict));
 }
 
