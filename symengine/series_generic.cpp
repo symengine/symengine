@@ -81,7 +81,10 @@ UnivariateExprPolynomial UnivariateSeries::mul(const UnivariateExprPolynomial &a
             }
         }
     }
-    return UnivariateExprPolynomial(UnivariatePolynomial::from_dict(a.get_univariate_poly()->get_var(), std::move(p)));
+    if (a.get_univariate_poly()->get_var()->get_name() == "")
+        return UnivariateExprPolynomial(UnivariatePolynomial::from_dict(b.get_univariate_poly()->get_var(), std::move(p)));
+    else
+        return UnivariateExprPolynomial(UnivariatePolynomial::from_dict(a.get_univariate_poly()->get_var(), std::move(p)));
 }
 
 UnivariateExprPolynomial UnivariateSeries::pow(const UnivariateExprPolynomial &base, int exp, unsigned prec) {

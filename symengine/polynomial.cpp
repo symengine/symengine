@@ -508,7 +508,7 @@ RCP<const UnivariatePolynomial> add_uni_poly(const UnivariatePolynomial &a, cons
         dict[it.first] = it.second;
     for (const auto &it : b.get_dict())
         dict[it.first] += it.second;
-    return univariate_polynomial(var, (--(dict.end()))->first, std::move(dict));
+    return UnivariatePolynomial::from_dict(var, std::move(dict));
 }
 
 RCP<const UnivariatePolynomial> neg_uni_poly(const UnivariatePolynomial &a) {
@@ -534,7 +534,7 @@ RCP<const UnivariatePolynomial> sub_uni_poly(const UnivariatePolynomial &a, cons
         dict[it.first] = it.second;
     for (const auto &it : b.get_dict())
         dict[it.first] -= it.second;
-    return univariate_polynomial(var, (--(dict.end()))->first, std::move(dict));
+    return UnivariatePolynomial::from_dict(var, std::move(dict));
 }
 
 RCP<const UnivariatePolynomial> mul_uni_poly(RCP<const UnivariatePolynomial> a, RCP<const UnivariatePolynomial> b) {
@@ -557,7 +557,7 @@ RCP<const UnivariatePolynomial> mul_uni_poly(RCP<const UnivariatePolynomial> a, 
             dict[i1.first + i2.first] += i1.second * i2.second;
         }
     }
-    return univariate_polynomial(var, (--(dict.end()))->first, std::move(dict));
+    return UnivariatePolynomial::from_dict(var, std::move(dict));
 }
 
 } // SymEngine
