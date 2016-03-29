@@ -73,14 +73,14 @@ int UnivariateIntPolynomial::compare(const Basic &o) const {
 
 RCP<const UnivariateIntPolynomial> UnivariateIntPolynomial::from_dict(const RCP<const Symbol> &var, map_uint_mpz &&d)
 {
-    auto itter = d.begin();
-    while (itter != d.end()) {
-        if (integer_class(0) == itter->second) {
-            auto toErase = itter;
-            itter++;
+    auto iter = d.begin();
+    while (iter != d.end()) {
+        if (integer_class(0) == iter->second) {
+            auto toErase = iter;
+            iter++;
             d.erase(toErase);
         } else {
-            itter++;
+            iter++;
         }
     }
     unsigned int degree = 0;
@@ -586,14 +586,14 @@ vars_{std::move(vars)}, degrees_{std::move(degrees)}, dict_{std::move(dict)} {
 RCP<const MultivariateIntPolynomial> MultivariateIntPolynomial::from_dict(const set_sym &s,
         umap_uvec_mpz &&d) {
     umap_sym_uint degs;
-    auto itter = d.begin();
-    while (itter != d.end()) {
-        if (integer_class(0) == itter->second) {
-            auto toErase = itter;
-            itter++;
+    auto iter = d.begin();
+    while (iter != d.end()) {
+        if (integer_class(0) == iter->second) {
+            auto toErase = iter;
+            iter++;
             d.erase(toErase);
         } else {
-            itter++;
+            iter++;
         }
     }
 
