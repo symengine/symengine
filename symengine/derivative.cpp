@@ -485,18 +485,18 @@ static RCP<const Basic> diff(const CLASS &self, \
         if (self.vars_.find(x) != self.vars_.end()) {
             auto i = self.vars_.begin();
             unsigned int index = 0;
-            while(!(*i)->__eq__(*x)) {
+            while (!(*i)->__eq__(*x)) {
                 i++;
                 index++;
             } //find the index of the variable we are differentiating WRT.
-            for(auto bucket : self.dict_) {
-                if(bucket.first[index] != 0) {
+            for (auto bucket : self.dict_) {
+                if (bucket.first[index] != 0) {
                     vec_uint v = bucket.first;
                     v[index]--;
                     dict.insert(std::pair<vec_uint, integer_class>(v, bucket.second * bucket.first[index]));
                 }
             }
-        return MultivariateIntPolynomial::from_dict(self.vars_, std::move(dict));
+            return MultivariateIntPolynomial::from_dict(self.vars_, std::move(dict));
         } else {
             return zero;
         }

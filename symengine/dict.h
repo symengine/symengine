@@ -255,7 +255,7 @@ typedef std::unordered_map<vec_uint, integer_class, vec_uint_hash, vec_uint_eq> 
 
 //Takes an unordered map of type M with key type K and returns a vector of K ordered by C.
 template<class K, class M, class C>
-    std::vector<K> order_umap(const M &d){
+std::vector<K> order_umap(const M &d) {
     std::vector<K> v;
     for (auto bucket : d) {
         auto iter = v.begin();

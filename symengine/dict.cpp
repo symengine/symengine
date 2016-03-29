@@ -193,7 +193,7 @@ int umap_uvec_mpz_compare(const umap_uvec_mpz &a, const umap_uvec_mpz &b)
             return 1;
         } else {
             if (a.find(va[i])->second != b.find(vb[i])->second) {
-                if(a.find(va[i])->second < b.find(vb[i])->second) {
+                if (a.find(va[i])->second < b.find(vb[i])->second) {
                     return -1;
                 } else {
                     return 1;
