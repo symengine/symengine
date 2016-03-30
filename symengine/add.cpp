@@ -292,32 +292,13 @@ RCP<const Basic> add(const RCP<const Basic> &a, const RCP<const Basic> &b)
 
 RCP<const Basic> add(const vec_basic &a)
 {
-    if (a.size() < 2) {
-        throw std::runtime_error("add expected at least a vector with size two");
-    }
     SymEngine::umap_basic_num d;
-    RCP<const Number> coef;
-    RCP<const Basic> t;
+    RCP<const Number> coef = zero;
     for (const auto &i: a) {
-        if (is_a<Add>(*i)) {
-            for (const auto &p: (rcp_static_cast<const Add>(i))->dict_)
-                Add::dict_add_term(d, p.second, p.first);
-            iaddnum(outArg(coef), rcp_static_cast<const Add>(i)->coef_);
-        } else {
-            Add::as_coef_term(i, outArg(coef), outArg(t));
-            Add::dict_add_term(d, coef, t);
-        }
-    }
-    auto it = d.find(one);
-    if (it == d.end()) {
-        coef = zero;
-    } else {
-        coef = it->second;
-        d.erase(it);
+        Add::coef_dict_add_term(outArg(coef), d, one, i);
     }
     return Add::from_dict(coef, std::move(d));
 }
-
 
 RCP<const Basic> sub(const RCP<const Basic> &a, const RCP<const Basic> &b)
 {

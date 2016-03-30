@@ -135,7 +135,11 @@ TEST_CASE("Add: arit", "[arit]")
     r1 = add({i2, i3, i4});
     REQUIRE(eq(*r1, *integer(9)));
 
-    CHECK_THROWS_AS(mul({one}), std::runtime_error);
+    r1 = add({});
+    REQUIRE(eq(*r1, *zero));
+
+    r1 = add({i2});
+    REQUIRE(eq(*r1, *i2));
 }
 
 TEST_CASE("Mul: arit", "[arit]")
@@ -305,7 +309,11 @@ TEST_CASE("Mul: arit", "[arit]")
 
     CHECK_THROWS_AS(Complex::from_two_nums(*one, *real_double(1.0));, std::runtime_error);
 
-    CHECK_THROWS_AS(mul({one}), std::runtime_error);
+    r1 = mul({});
+    REQUIRE(eq(*r1, *one));
+
+    r1 = mul({i2});
+    REQUIRE(eq(*r1, *i2));
 }
 
 TEST_CASE("Sub: arit", "[arit]")
