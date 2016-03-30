@@ -22,9 +22,8 @@ UnivariateIntPolynomial::UnivariateIntPolynomial(const RCP<const Symbol> &var, c
 
 bool UnivariateIntPolynomial::is_canonical(const unsigned int &degree_, const map_uint_mpz& dict) const {
     if (var_->get_name() == "")
-        if (!(dict.empty() or dict.size() == 1))
+        if (!(dict.empty() or (dict.size() == 1 and dict.begin()->first == 0)))
             return false;
-    
     if (dict.size() != 0) {
         unsigned int prev_degree = (--dict.end())->first;
         if (prev_degree != degree_) {
@@ -347,8 +346,9 @@ UnivariatePolynomial::UnivariatePolynomial(const RCP<const Symbol> &var, const s
 
 bool UnivariatePolynomial::is_canonical(const unsigned int &degree_, const map_int_Expr& dict) const {
     if (var_->get_name() == "")
-        if (!((dict.empty() or dict.size() == 1) and dict.begin()->first == 0))
+        if (!(dict.empty() or (dict.size() == 1 and dict.begin()->first == 0)))
             return false;
+
     if (dict.size() != 0) {
         unsigned int prev_degree = (--dict.end())->first;
         if (prev_degree != degree_) {
