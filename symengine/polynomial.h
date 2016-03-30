@@ -124,7 +124,7 @@ public:
     /*! Creates appropriate instance (i.e Symbol, Integer,
     * Mul, Pow, UnivariatePolynomial) depending on the size of dictionary `d`.
     */
-    static RCP<const Basic> from_dict(const RCP<const Symbol> &var, map_int_Expr &&d);
+    static RCP<const UnivariatePolynomial> from_dict(const RCP<const Symbol> &var, map_int_Expr &&d);
     static RCP<const UnivariatePolynomial> from_vec(const RCP<const Symbol> &var, const std::vector<Expression> &v);
     /*!
     * Adds coef*var_**n to the dict_
@@ -168,8 +168,8 @@ RCP<const UnivariatePolynomial> sub_uni_poly(const UnivariatePolynomial &a, cons
 //! Multiplying two UnivariatePolynomial a and b
 RCP<const UnivariatePolynomial> mul_uni_poly(RCP<const UnivariatePolynomial> a, RCP<const UnivariatePolynomial> b);
 
-inline RCP<const UnivariatePolynomial> univariate_polynomial(RCP<const Symbol> i, unsigned int deg, const map_int_Expr&& dict) {
-    return make_rcp<const UnivariatePolynomial>(i, deg, std::move(dict));
+inline RCP<const UnivariatePolynomial> univariate_polynomial(RCP<const Symbol> i, map_int_Expr&& dict) {
+    return UnivariatePolynomial::from_dict(i, std::move(dict));
 }
 
 class UnivariateExprPolynomial {

@@ -295,31 +295,31 @@ TEST_CASE("test_univariate_polynomial(): printing", "[printing]")
     RCP<const Basic> p;
     RCP<const Symbol> x = symbol("x");
 
-    p = univariate_polynomial(x, 0, {{0, 0}});
+    p = univariate_polynomial(x, {{0, 0}});
     REQUIRE(p->__str__() == "0");
-    p = univariate_polynomial(x, 0, {{0, 1}});
+    p = univariate_polynomial(x, {{0, 1}});
     REQUIRE(p->__str__() == "1");
-    p = univariate_polynomial(x, 1, {{1, 1}});
+    p = univariate_polynomial(x, {{1, 1}});
     REQUIRE(p->__str__() == "x");
-    p = univariate_polynomial(x, 1, {{0, 1}, {1, 2}});
+    p = univariate_polynomial(x, {{0, 1}, {1, 2}});
     REQUIRE(p->__str__() == "2*x + 1");
-    p = univariate_polynomial(x, 1, {{0, -1}, {1, 2}});
+    p = univariate_polynomial(x, {{0, -1}, {1, 2}});
     REQUIRE(p->__str__() == "2*x - 1");
-    p = univariate_polynomial(x, 0, {{0, -1}});
+    p = univariate_polynomial(x, {{0, -1}});
     REQUIRE(p->__str__() == "-1");
-    p = univariate_polynomial(x, 1, {{1, -1}});
+    p = univariate_polynomial(x, {{1, -1}});
     REQUIRE(p->__str__() == "-x");
-    p = univariate_polynomial(x, 1, {{0, -1}, {1, 1}});
+    p = univariate_polynomial(x, {{0, -1}, {1, 1}});
     REQUIRE(p->__str__() == "x - 1");
-    p = univariate_polynomial(x, 2, {{0, 1}, {1, 1}, {2, 1}});
+    p = univariate_polynomial(x, {{0, 1}, {1, 1}, {2, 1}});
     REQUIRE(p->__str__() == "x**2 + x + 1");
-    p = univariate_polynomial(x, 2, {{0, 1}, {1, -1}, {2, 1}});
+    p = univariate_polynomial(x, {{0, 1}, {1, -1}, {2, 1}});
     REQUIRE(p->__str__() == "x**2 - x + 1");
-    p = univariate_polynomial(x, 2, {{0, 1}, {1, 2}, {2, 1}});
+    p = univariate_polynomial(x, {{0, 1}, {1, 2}, {2, 1}});
     REQUIRE(p->__str__() == "x**2 + 2*x + 1");
-    p = univariate_polynomial(x, 2, {{1, 2}, {2, 1}});
+    p = univariate_polynomial(x, {{1, 2}, {2, 1}});
     REQUIRE(p->__str__() == "x**2 + 2*x");
-    p = univariate_polynomial(x, 2, {{0, -1}, {1, -2}, {2, -1}});
+    p = univariate_polynomial(x, {{0, -1}, {1, -2}, {2, -1}});
     REQUIRE(p->__str__() == "-x**2 - 2*x - 1");
 }
 
