@@ -114,10 +114,14 @@ TEST_CASE("Derivative of UnivariateIntPolynomial", "[UnivariateIntPolynomial]")
 {
     RCP<const Symbol> x  = symbol("x");
     RCP<const Symbol> y  = symbol("y");
+    RCP<const Symbol> none  = symbol("");
     RCP<const UnivariateIntPolynomial> a = univariate_int_polynomial(x, {{0, 1_z}, {1, 2_z}, {2, 1_z}});
+    RCP<const UnivariateIntPolynomial> b = univariate_int_polynomial(none, {{0, 1_z}});
 
     REQUIRE(a->diff(x)->__str__() == "2*x + 2");
     REQUIRE(a->diff(y)->__str__() == "0");
+    CHECK_THROWS_AS(a->diff(none), std::runtime_error);
+    CHECK_THROWS_AS(b->diff(none), std::runtime_error);
 }
 
 TEST_CASE("Bool checks specific UnivariateIntPolynomial cases", "[UnivariateIntPolynomial]")
@@ -251,12 +255,16 @@ TEST_CASE("Derivative of UnivariatePolynomial", "[UnivariatePolynomial]")
 {
     RCP<const Symbol> x  = symbol("x");
     RCP<const Symbol> y  = symbol("y");
+    RCP<const Symbol> none  = symbol("");
     RCP<const UnivariatePolynomial> a = univariate_polynomial(x, 2, {{0, 1}, {1, 2}, {2, symbol("a")}});
     RCP<const UnivariatePolynomial> b = univariate_polynomial(x, 0, {{0, 1}});
+    RCP<const UnivariatePolynomial> c = univariate_polynomial(none, 0, {{0, 5}});
     
     REQUIRE(a->diff(x)->__str__() == "2*a*x + 2");
     REQUIRE(a->diff(y)->__str__() == "0");
     REQUIRE(b->diff(y)->__str__() == "0");
+    CHECK_THROWS_AS(b->diff(none), std::runtime_error);
+    CHECK_THROWS_AS(c->diff(none), std::runtime_error);
 }
 
 TEST_CASE("Bool checks specific UnivariatePolynomial cases", "[UnivariatePolynomial]")

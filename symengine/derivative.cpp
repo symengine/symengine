@@ -437,6 +437,9 @@ static RCP<const Basic> diff(const CLASS &self, \
 
     static RCP<const Basic> diff(const UnivariateIntPolynomial &self, 
             const RCP<const Symbol> &x) {
+        if(x->__eq__(*symbol("")))
+            throw std::runtime_error("Derivative can't be with respect to nothing");
+
         if (self.get_var()->__eq__(*x)) {
             map_uint_mpz d;
             for (const auto &p : self.get_dict()) {
@@ -451,6 +454,9 @@ static RCP<const Basic> diff(const CLASS &self, \
 
     static RCP<const Basic> diff(const UnivariatePolynomial &self,
             const RCP<const Symbol> &x) {
+        if(x->__eq__(*symbol("")))
+            throw std::runtime_error("Derivative can't be with respect to nothing");
+
         if (self.get_var()->__eq__(*x)) {
             map_int_Expr d;
             for (const auto &p : self.get_dict()) {
