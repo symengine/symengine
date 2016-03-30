@@ -112,7 +112,7 @@ TEST_CASE("Parsing: symbols", "[parser]")
 
     s = "w1*y";
     res = parse(s);
-    REQUIRE(eq(*res, *mul(w ,y)));
+    REQUIRE(eq(*res, *mul(w, y)));
 
     s = "x**(3+w1)-2/y";
     res = parse(s);
@@ -288,7 +288,7 @@ TEST_CASE("Parsing: doubles", "[parser]")
     res = parse(s);
     REQUIRE(is_a<RealDouble>(*res));
     d = static_cast<const RealDouble &>(*res).as_double();
-    REQUIRE(std::abs(d - (::sqrt(2)+5)) < 1e-12);
+    REQUIRE(std::abs(d - (::sqrt(2) + 5)) < 1e-12);
 }
 
 TEST_CASE("Parsing: errors", "[parser]")

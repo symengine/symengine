@@ -13,7 +13,8 @@
 #include <symengine/basic.h>
 #include <mpc.h>
 
-namespace SymEngine {
+namespace SymEngine
+{
 
 //! Evaluate expression `b` and store it in `result` with rounding mode rnd
 // Different precisions for real and imaginary parts of `result` is not supported

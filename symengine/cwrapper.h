@@ -10,21 +10,20 @@ extern "C" {
 #endif
 
 // Use SYMENGINE_C_ASSERT in C tests
-#define SYMENGINE_C_ASSERT(cond) \
-{ \
-if (0 == (cond)) { \
-    printf("SYMENGINE_C_ASSERT failed: %s \nfunction %s (), line number %d at\n%s\n",\
-            __FILE__, __func__, __LINE__, #cond); \
-    abort(); \
-    } \
-}
+#define SYMENGINE_C_ASSERT(cond)                                                                                                    \
+    {                                                                                                                               \
+        if (0 == (cond)) {                                                                                                          \
+            printf("SYMENGINE_C_ASSERT failed: %s \nfunction %s (), line number %d at\n%s\n", __FILE__, __func__, __LINE__, #cond); \
+            abort();                                                                                                                \
+        }                                                                                                                           \
+    }
 
 typedef enum {
-    #define SYMENGINE_INCLUDE_ALL
-    #define SYMENGINE_ENUM(type, Class) SYMENGINE_##type,
-    #include "symengine/type_codes.inc"
-    #undef SYMENGINE_ENUM
-    #undef SYMENGINE_INCLUDE_ALL
+#define SYMENGINE_INCLUDE_ALL
+#define SYMENGINE_ENUM(type, Class) SYMENGINE_##type,
+#include "symengine/type_codes.inc"
+#undef SYMENGINE_ENUM
+#undef SYMENGINE_INCLUDE_ALL
     SYMENGINE_TypeID_Count
 } TypeID;
 
@@ -44,8 +43,7 @@ typedef enum {
 // alignment is different on some platform, the compilation will fail --- in
 // that case one needs to modify the contents of this struct to adjust its size
 // and/or alignment.
-struct CRCPBasic_C
-{
+struct CRCPBasic_C {
     void *data;
 #if !defined(WITH_SYMENGINE_RCP)
     void *teuchos_handle;
@@ -81,7 +79,7 @@ void basic_free_stack(basic s);
 // Use these two functions to allocate and free 'basic' on a heap. The pointer
 // can then be used in all the other methods below (i.e. the methods that
 // accept 'basic s' work no matter if 's' is stack or heap allocated).
-basic_struct* basic_new_heap();
+basic_struct *basic_new_heap();
 void basic_free_heap(basic_struct *s);
 
 //! Use these functions to get the commonly used constants as basic.
@@ -90,7 +88,7 @@ void basic_free_heap(basic_struct *s);
 //! This function creates a new SymEngine::Constant from a copy of
 //! the string in c, thus the caller is free to use c afterwards,
 //! and also the caller must free c.
-void basic_const_set(basic s, const char* c);
+void basic_const_set(basic s, const char *c);
 
 void basic_const_zero(basic s);
 void basic_const_one(basic s);
@@ -103,16 +101,15 @@ void basic_const_EulerGamma(basic s);
 
 //! Assign value of b to a.
 void basic_assign(basic a, const basic b);
-
 //! Returns the typeID of the basic struct
 TypeID basic_get_type(const basic s);
 //! Returns the typeID of the class with the name c
-TypeID basic_get_class_id(const char * c);
+TypeID basic_get_class_id(const char *c);
 //! Returns the class name of with the typeid `id`
-char* basic_get_class_from_id(TypeID id);
+char *basic_get_class_from_id(TypeID id);
 
 //! Assign to s, a symbol with string representation c.
-void symbol_set(basic s, char* c);
+void symbol_set(basic s, char *c);
 
 //! Assign to s, a long.
 void integer_set_si(basic s, long i);
@@ -121,7 +118,7 @@ void integer_set_ui(basic s, unsigned long i);
 //! Assign to s, a mpz_t.
 void integer_set_mpz(basic s, const mpz_t i);
 //! Assign to s, an integer that has base 10 representation c.
-void integer_set_str(basic s, char* c);
+void integer_set_str(basic s, char *c);
 
 //! Returns signed long value of s.
 signed long integer_get_si(const basic s);
@@ -199,7 +196,6 @@ void basic_asec(basic s, const basic a);
 //! Assigns s = acot(a).
 void basic_acot(basic s, const basic a);
 
-
 //! Assigns s = sinh(a).
 void basic_sinh(basic s, const basic a);
 //! Assigns s = cosh(a).
@@ -238,9 +234,9 @@ void basic_dirichlet_eta(basic s, const basic a);
 void basic_gamma(basic s, const basic a);
 
 //! Returns a new char pointer to the string representation of s.
-char* basic_str(const basic s);
+char *basic_str(const basic s);
 //! Frees the string s
-void basic_str_free(char* s);
+void basic_str_free(char *s);
 
 //! Return 1 if s is an Integer, 0 if not.
 int is_a_Integer(const basic s);
@@ -251,12 +247,11 @@ int is_a_Symbol(const basic s);
 //! Return 1 if s is a Complex, 0 if not.
 int is_a_Complex(const basic s);
 
-
 //! Wrapper for std::vector<int>
 
 typedef struct CVectorInt CVectorInt;
 
-CVectorInt* vectorint_new();
+CVectorInt *vectorint_new();
 
 // 'data' must point to allocated memory of size 'size'. The function returns 0
 // if std::vector<int> can be initialized using placement new into 'data',
@@ -265,7 +260,7 @@ CVectorInt* vectorint_new();
 // that the 'data' and 'size' is properly allocated and aligned. Use
 // vectorint_placement_new() to do the actual allocation.
 int vectorint_placement_new_check(void *data, size_t size);
-CVectorInt* vectorint_placement_new(void *data);
+CVectorInt *vectorint_placement_new(void *data);
 
 void vectorint_placement_free(CVectorInt *self);
 
@@ -277,7 +272,7 @@ int vectorint_get(CVectorInt *self, int n);
 
 typedef struct CVecBasic CVecBasic;
 
-CVecBasic* vecbasic_new();
+CVecBasic *vecbasic_new();
 void vecbasic_free(CVecBasic *self);
 void vecbasic_push_back(CVecBasic *self, const basic value);
 void vecbasic_get(CVecBasic *self, int n, basic result);
@@ -287,7 +282,7 @@ size_t vecbasic_size(CVecBasic *self);
 
 typedef struct CSetBasic CSetBasic;
 
-CSetBasic* setbasic_new();
+CSetBasic *setbasic_new();
 void setbasic_free(CSetBasic *self);
 //! Returns 1 if insert is successful and 0 if set already contains the value
 //! and insertion is unsuccessful
@@ -301,7 +296,7 @@ size_t setbasic_size(CSetBasic *self);
 
 typedef struct CMapBasicBasic CMapBasicBasic;
 
-CMapBasicBasic* mapbasicbasic_new();
+CMapBasicBasic *mapbasicbasic_new();
 void mapbasicbasic_free(CMapBasicBasic *self);
 void mapbasicbasic_insert(CMapBasicBasic *self, const basic key, const basic mapped);
 //! Returns 1 if such a key exists in the map and get is successful, 0 if not
@@ -318,7 +313,7 @@ void basic_free_symbols(const basic self, CSetBasic *symbols);
 size_t basic_hash(const basic self);
 //! substitutes all the keys with their mapped values
 //! in the given basic `e` and returns it through basic 's'
-void basic_subs(basic s, const basic e, const CMapBasicBasic * mapbb);
+void basic_subs(basic s, const basic e, const CMapBasicBasic *mapbb);
 //! substitutes a basic 'a' with another basic 'b',
 //! in the given basic 'e' and returns it through basic 's'
 void basic_subs2(basic s, const basic e, const basic a, const basic b);
@@ -327,7 +322,7 @@ void basic_subs2(basic s, const basic e, const basic a, const basic b);
 
 //! Returns a new char pointer to the ascii_art string
 //! The caller is responsible to free the pointer using 'basic_str_free'.
-char* ascii_art_str();
+char *ascii_art_str();
 
 //! Wrapper for ntheory
 //! Greatest Common Divisor

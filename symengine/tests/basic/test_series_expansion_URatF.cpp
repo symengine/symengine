@@ -34,9 +34,9 @@ using SymEngine::umap_short_basic;
 
 using SymEngine::URatPSeriesFlint;
 using SymEngine::fp_t;
-#define series_coeff(EX,SYM,PREC,COEFF) SymEngine::URatPSeriesFlint::series(EX,SYM->get_name(),PREC)->get_coeff(COEFF)
+#define series_coeff(EX, SYM, PREC, COEFF) SymEngine::URatPSeriesFlint::series(EX, SYM->get_name(), PREC)->get_coeff(COEFF)
 
-static RCP<const Number> fmpqxx2sym (flint::fmpqxx fc)
+static RCP<const Number> fmpqxx2sym(flint::fmpqxx fc)
 {
     mpq_t gc;
     mpq_init(gc);
@@ -46,21 +46,21 @@ static RCP<const Number> fmpqxx2sym (flint::fmpqxx fc)
     return Rational::from_mpq(std::move(r));
 }
 
-static RCP<const Number> invseries_coeff (const RCP<const Basic>& ex, const RCP<const Symbol>& sym, unsigned int prec, int n)
+static RCP<const Number> invseries_coeff(const RCP<const Basic> &ex, const RCP<const Symbol> &sym, unsigned int prec, int n)
 {
-    auto ser =  URatPSeriesFlint::series(ex, sym->get_name(), prec);
-    auto serrev = URatPSeriesFlint::series_reverse(ser->get_poly(), fp_t(sym->get_name().c_str()),prec);
+    auto ser = URatPSeriesFlint::series(ex, sym->get_name(), prec);
+    auto serrev = URatPSeriesFlint::series_reverse(ser->get_poly(), fp_t(sym->get_name().c_str()), prec);
     return fmpqxx2sym(flint::fmpqxx(serrev.get_coeff(n)));
 }
 
-static bool expand_check_pairs(const RCP<const Basic> &ex, const RCP<const Symbol> &x, int prec, const umap_short_basic& pairs)
+static bool expand_check_pairs(const RCP<const Basic> &ex, const RCP<const Symbol> &x, int prec, const umap_short_basic &pairs)
 {
     auto ser = SymEngine::URatPSeriesFlint::series(ex, x->get_name(), prec);
     for (auto it : pairs) {
-        //std::cerr << it.first << ", " << *(it.second) << "::" << *(v1.at(it.first)) << std::endl;
+        // std::cerr << it.first << ", " << *(it.second) << "::" << *(v1.at(it.first)) << std::endl;
         if (not it.second->__eq__(*(ser->get_coeff(it.first))))
             return false;
-        }
+    }
     return true;
 }
 
@@ -106,10 +106,10 @@ TEST_CASE("Expression series expansion: division, inversion ", "[Expansion of 1/
     RCP<const Integer> one = integer(1);
     RCP<const Integer> two = integer(2);
     RCP<const Integer> three = integer(3);
-    auto ex1 = div(one, sub(one, x));                   // 1/(1-x)
-    auto ex2 = div(x, sub(sub(one, x), pow(x, two)));   // x/(1-x-x^2)
+    auto ex1 = div(one, sub(one, x));                               // 1/(1-x)
+    auto ex2 = div(x, sub(sub(one, x), pow(x, two)));               // x/(1-x-x^2)
     auto ex3 = div(pow(x, three), sub(one, mul(pow(x, two), two))); // x^3/(1-2x^2)
-    auto ex4 = div(one, sub(one, sin(x)));              // 1/(1-sin(x))
+    auto ex4 = div(one, sub(one, sin(x)));                          // 1/(1-sin(x))
     auto ex5 = div(one, x);
     auto ex6 = div(one, mul(x, sub(one, x)));
     auto res1 = umap_short_basic{{-1, integer(1)}};
@@ -210,14 +210,14 @@ TEST_CASE("Expression series expansion: atan, tan, asin, cot, sec, csc", "[Expan
     REQUIRE(series_coeff(ex6, x, 20, 16)->__eq__(*rational(1259743, 2048)));
     REQUIRE(series_coeff(ex9, x, 20, 8)->__eq__(*rational(277, 8064)));
 
-// These cannot be checked using catch.hpp
-// See https://github.com/philsquared/Catch/issues/553
-//    auto ex7 = cot(x);
-//    auto ex8 = cot(sin(x));
-//    auto ex10 = csc(x);
-//    REQUIRE_THROWS_AS(URatPSeriesFlint::series(ex7, "x", 10), std::runtime_error);
-//    REQUIRE_THROWS_AS(URatPSeriesFlint::series(ex8, "x", 10), std::runtime_error);
-//    REQUIRE_THROWS_AS(URatPSeriesFlint::series(ex10, "x", 10), std::runtime_error);
+    // These cannot be checked using catch.hpp
+    // See https://github.com/philsquared/Catch/issues/553
+    //    auto ex7 = cot(x);
+    //    auto ex8 = cot(sin(x));
+    //    auto ex10 = csc(x);
+    //    REQUIRE_THROWS_AS(URatPSeriesFlint::series(ex7, "x", 10), std::runtime_error);
+    //    REQUIRE_THROWS_AS(URatPSeriesFlint::series(ex8, "x", 10), std::runtime_error);
+    //    REQUIRE_THROWS_AS(URatPSeriesFlint::series(ex10, "x", 10), std::runtime_error);
 }
 
 TEST_CASE("Expression series expansion: sinh, cosh, tanh, asinh, atanh", "[Expansion of sinh, cosh, tanh, asinh, atanh]")

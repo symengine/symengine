@@ -28,14 +28,15 @@
 #include <symengine/symengine_config.h>
 
 #ifdef WITH_SYMENGINE_THREAD_SAFE
-#    include <atomic>
+#include <atomic>
 #endif
 
 #include <symengine/symengine_assert.h>
 #include <symengine/symengine_rcp.h>
 #include <symengine/dict.h>
 
-namespace SymEngine {
+namespace SymEngine
+{
 
 class Visitor;
 class Symbol;
@@ -72,11 +73,11 @@ class Symbol;
 */
 
 enum TypeID {
-    #define SYMENGINE_INCLUDE_ALL
-    #define SYMENGINE_ENUM(type, Class) type,
-    #include "symengine/type_codes.inc"
-    #undef SYMENGINE_ENUM
-    #undef SYMENGINE_INCLUDE_ALL
+#define SYMENGINE_INCLUDE_ALL
+#define SYMENGINE_ENUM(type, Class) type,
+#include "symengine/type_codes.inc"
+#undef SYMENGINE_ENUM
+#undef SYMENGINE_INCLUDE_ALL
     // The 'TypeID_Count' returns the number of elements in 'TypeID'. For this
     // to work, do not assign numbers to the elements above (or if you do, you
     // must assign the correct count below).
@@ -85,13 +86,14 @@ enum TypeID {
 
 #include "basic-methods.inc"
 
-class Basic : public EnableRCPFromThis<Basic> {
+class Basic : public EnableRCPFromThis<Basic>
+{
 private:
-    //! Private variables
-    // The hash_ is defined as mutable, because its value is initialized to 0
-    // in the constructor and then it can be changed in Basic::hash() to the
-    // current hash (which is always the same for the given instance). The
-    // state of the instance does not change, so we define hash_ as mutable.
+//! Private variables
+// The hash_ is defined as mutable, because its value is initialized to 0
+// in the constructor and then it can be changed in Basic::hash() to the
+// current hash (which is always the same for the given instance). The
+// state of the instance does not change, so we define hash_ as mutable.
 #if defined(WITH_SYMENGINE_THREAD_SAFE)
     mutable std::atomic<std::size_t> hash_; // This holds the hash value
 #else
@@ -100,20 +102,24 @@ private:
 public:
     virtual TypeID get_type_code() const = 0;
     //! Constructor
-    Basic() : hash_{0} {}
+    Basic() : hash_{0}
+    {
+    }
     //! Destructor must be explicitly defined as virtual here to avoid problems
     //! with undefined behavior while deallocating derived classes.
-    virtual ~Basic() {}
+    virtual ~Basic()
+    {
+    }
 
     //! Delete the copy constructor and assignment
-    Basic(const Basic&) = delete;
+    Basic(const Basic &) = delete;
     //! Assignment operator in continuation with above
-    Basic& operator=(const Basic&) = delete;
+    Basic &operator=(const Basic &) = delete;
 
     //! Delete the move constructor and assignment
-    Basic(Basic&&) = delete;
+    Basic(Basic &&) = delete;
     //! Assignment operator in continuation with above
-    Basic& operator=(Basic&&) = delete;
+    Basic &operator=(Basic &&) = delete;
 
     /*!  Implements the hash of the given SymEngine class.
          Use `std::hash` to get the hash. Example:
@@ -150,20 +156,22 @@ public:
     virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
 
     //! expands the special function in terms of exp function
-    virtual RCP<const Basic> expand_as_exp() const {
+    virtual RCP<const Basic> expand_as_exp() const
+    {
         throw std::runtime_error("Not implemented.");
     }
 
     //! Returns the list of arguments
     virtual vec_basic get_args() const = 0;
 
-    SYMENGINE_INCLUDE_METHODS(=0)
+    SYMENGINE_INCLUDE_METHODS(= 0)
 };
 
 //! Our hash:
 struct RCPBasicHash {
     //! Returns the hashed value.
-    long operator() (const RCP<const Basic> &k) const {
+    long operator()(const RCP<const Basic> &k) const
+    {
         return k->hash();
     }
 };
@@ -171,7 +179,8 @@ struct RCPBasicHash {
 //! Our comparison `(==)`
 struct RCPBasicKeyEq {
     //! Comparison Operator `==`
-    bool operator() (const RCP<const Basic> &x, const RCP<const Basic> &y) const {
+    bool operator()(const RCP<const Basic> &x, const RCP<const Basic> &y) const
+    {
         return x->__eq__(*y);
     }
 };
@@ -179,10 +188,13 @@ struct RCPBasicKeyEq {
 //! Our less operator `(<)`:
 struct RCPBasicKeyLess {
     //! true if `x < y`, false otherwise
-    bool operator() (const RCP<const Basic> &x, const RCP<const Basic> &y) const {
-        std::size_t xh=x->hash(), yh=y->hash();
-        if (xh != yh) return xh < yh;
-        if (x->__eq__(*y)) return false;
+    bool operator()(const RCP<const Basic> &x, const RCP<const Basic> &y) const
+    {
+        std::size_t xh = x->hash(), yh = y->hash();
+        if (xh != yh)
+            return xh < yh;
+        if (x->__eq__(*y))
+            return false;
         return x->__cmp__(*y) == -1;
     }
 };
@@ -190,8 +202,10 @@ struct RCPBasicKeyLess {
 //! Less operator `(<)` using cmp:
 struct RCPBasicKeyLessCmp {
     //! true if `x < y`, false otherwise
-    bool operator() (const RCP<const Basic> &x, const RCP<const Basic> &y) const {
-        if (x->__eq__(*y)) return false;
+    bool operator()(const RCP<const Basic> &x, const RCP<const Basic> &y) const
+    {
+        if (x->__eq__(*y))
+            return false;
         return x->__cmp__(*y) == -1;
     }
 };
@@ -206,7 +220,8 @@ bool neq(const Basic &a, const Basic &b);
 /*! Returns true if `b` is exactly of type `T`. Example:
   `is_a<Symbol>(b)` : true if "b" is of type Symbol
 */
-template <class T> bool is_a(const Basic &b);
+template <class T>
+bool is_a(const Basic &b);
 
 /*! Returns true if `b` is of type T or any of its subclasses.
  * Example:
@@ -225,13 +240,15 @@ void as_numer_denom(const RCP<const Basic> &x, const Ptr<RCP<const Basic>> &nume
 
     This prints using: `std::cout << *x;`
 */
-std::ostream& operator<<(std::ostream& out, const SymEngine::Basic& p);
+std::ostream &operator<<(std::ostream &out, const SymEngine::Basic &p);
 
 } // SymEngine
 
 //! Specialise `std::hash` for Basic.
-namespace std {
-    template<> struct hash<SymEngine::Basic>;
+namespace std
+{
+template <>
+struct hash<SymEngine::Basic>;
 }
 
 /*! Standard `hash_combine()` function. Example of usage:
@@ -250,17 +267,20 @@ namespace std {
         hash_combine<Basic>(seed2, *y);
 */
 template <class T>
-void hash_combine(std::size_t& seed, const T& v);
+void hash_combine(std::size_t &seed, const T &v);
 
 //! Inline members and functions
 #include "basic-inl.h"
 
 // Macro to define the type_code_id variable and its getter method
-#define IMPLEMENT_TYPEID(ID) \
-/*! Type_code_id shared by all instances */ \
-const static TypeID type_code_id = ID; \
-/*! Virtual function that gives the type_code_id of the object */ \
-virtual TypeID get_type_code() const { return type_code_id; }; \
-SYMENGINE_INCLUDE_METHODS(;)
+#define IMPLEMENT_TYPEID(ID)                                                                                                     \
+    /*! Type_code_id shared by all instances */                                                                                  \
+    const static TypeID type_code_id = ID;                                                                                       \
+    /*! Virtual function that gives the type_code_id of the object */                                                            \
+    virtual TypeID get_type_code() const                                                                                         \
+    {                                                                                                                            \
+        return type_code_id;                                                                                                     \
+    };                                                                                                                           \
+    SYMENGINE_INCLUDE_METHODS(;)
 
 #endif

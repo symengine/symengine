@@ -34,18 +34,21 @@ using SymEngine::one;
 
 using SymEngine::UPSeriesPiranha;
 using SymEngine::p_expr;
-#define series_coeff(EX,SYM,PREC,COEFF) UPSeriesPiranha::series(EX,SYM->get_name(),PREC)->get_poly().find_cf({COEFF}).get_basic()
-#define invseries_coeff(EX,SYM,PREC,COEFF) UPSeriesPiranha::series_reverse(UPSeriesPiranha::series(EX,SYM->get_name(),PREC)->get_poly(),p_expr(SYM->get_name()),PREC).find_cf({COEFF}).get_basic()
+#define series_coeff(EX, SYM, PREC, COEFF)                                                                                       \
+    UPSeriesPiranha::series(EX, SYM->get_name(), PREC)->get_poly().find_cf({COEFF}).get_basic()
+#define invseries_coeff(EX, SYM, PREC, COEFF)                                                                                      \
+    UPSeriesPiranha::series_reverse(UPSeriesPiranha::series(EX, SYM->get_name(), PREC)->get_poly(), p_expr(SYM->get_name()), PREC) \
+        .find_cf({COEFF})                                                                                                          \
+        .get_basic()
 
-static bool expand_check_pairs(const RCP<const Basic> &ex, const RCP<const Symbol> &x, int prec, const umap_short_basic& pairs)
+static bool expand_check_pairs(const RCP<const Basic> &ex, const RCP<const Symbol> &x, int prec, const umap_short_basic &pairs)
 {
     auto ser = SymEngine::UPSeriesPiranha::series(ex, x->get_name(), prec);
     for (auto it : pairs) {
-        //std::cerr << it.first << ", " << *(it.second) << "::" << *(v1.at(it.first)) << std::endl;
-        if (not it.second->__eq__(*(ser->get_poly().find_cf({it.first}).get_basic()
-)))
+        // std::cerr << it.first << ", " << *(it.second) << "::" << *(v1.at(it.first)) << std::endl;
+        if (not it.second->__eq__(*(ser->get_poly().find_cf({it.first}).get_basic())))
             return false;
-        }
+    }
     return true;
 }
 
@@ -88,10 +91,10 @@ TEST_CASE("Expression series expansion: division, inversion ", "[Expansion of 1/
     RCP<const Integer> one = integer(1);
     RCP<const Integer> two = integer(2);
     RCP<const Integer> three = integer(3);
-    auto ex1 = div(one, sub(one, x));                   // 1/(1-x)
-    auto ex2 = div(x, sub(sub(one, x), pow(x, two)));   // x/(1-x-x^2)
+    auto ex1 = div(one, sub(one, x));                               // 1/(1-x)
+    auto ex2 = div(x, sub(sub(one, x), pow(x, two)));               // x/(1-x-x^2)
     auto ex3 = div(pow(x, three), sub(one, mul(pow(x, two), two))); // x^3/(1-2x^2)
-    auto ex4 = div(one, sub(one, sin(x)));              // 1/(1-sin(x))
+    auto ex4 = div(one, sub(one, sin(x)));                          // 1/(1-sin(x))
     auto ex5 = div(one, x);
     auto ex6 = div(one, mul(x, sub(one, x)));
     auto res1 = umap_short_basic{{-1, integer(1)}};

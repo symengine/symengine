@@ -34,23 +34,27 @@ using SymEngine::umap_short_basic;
 
 using SymEngine::URatPSeriesPiranha;
 using SymEngine::pp_t;
-#define series_coeff(EX,SYM,PREC,COEFF) prat2synum(SymEngine::URatPSeriesPiranha::series(EX,SYM->get_name(),PREC)->get_poly().find_cf({COEFF}))
-#define invseries_coeff(EX,SYM,PREC,COEFF) prat2synum(URatPSeriesPiranha::series_reverse(URatPSeriesPiranha::series(EX,SYM->get_name(),PREC)->get_poly(),pp_t(SYM->get_name()),PREC).find_cf({COEFF}))
+#define series_coeff(EX, SYM, PREC, COEFF)                                                                                       \
+    prat2synum(SymEngine::URatPSeriesPiranha::series(EX, SYM->get_name(), PREC)->get_poly().find_cf({COEFF}))
+#define invseries_coeff(EX, SYM, PREC, COEFF)                                                                                    \
+    prat2synum(URatPSeriesPiranha::series_reverse(URatPSeriesPiranha::series(EX, SYM->get_name(), PREC)->get_poly(),             \
+                                                  pp_t(SYM->get_name()), PREC)                                                   \
+                   .find_cf({COEFF}))
 
-static inline RCP<const Number> prat2synum(const piranha::rational& p_rat)
+static inline RCP<const Number> prat2synum(const piranha::rational &p_rat)
 {
     rational_class cl_rat(p_rat.get_mpq_view());
     return Rational::from_mpq(cl_rat);
 }
 
-static bool expand_check_pairs(const RCP<const Basic> &ex, const RCP<const Symbol> &x, int prec, const umap_short_basic& pairs)
+static bool expand_check_pairs(const RCP<const Basic> &ex, const RCP<const Symbol> &x, int prec, const umap_short_basic &pairs)
 {
     auto ser = SymEngine::URatPSeriesPiranha::series(ex, x->get_name(), prec);
     for (auto it : pairs) {
-        //std::cerr << it.first << ", " << *(it.second) << "::" << *(v1.at(it.first)) << std::endl;
+        // std::cerr << it.first << ", " << *(it.second) << "::" << *(v1.at(it.first)) << std::endl;
         if (not it.second->__eq__(*prat2synum(ser->get_poly().find_cf({it.first}))))
             return false;
-        }
+    }
     return true;
 }
 
@@ -93,10 +97,10 @@ TEST_CASE("Expression series expansion: division, inversion ", "[Expansion of 1/
     RCP<const Integer> one = integer(1);
     RCP<const Integer> two = integer(2);
     RCP<const Integer> three = integer(3);
-    auto ex1 = div(one, sub(one, x));                   // 1/(1-x)
-    auto ex2 = div(x, sub(sub(one, x), pow(x, two)));   // x/(1-x-x^2)
+    auto ex1 = div(one, sub(one, x));                               // 1/(1-x)
+    auto ex2 = div(x, sub(sub(one, x), pow(x, two)));               // x/(1-x-x^2)
     auto ex3 = div(pow(x, three), sub(one, mul(pow(x, two), two))); // x^3/(1-2x^2)
-    auto ex4 = div(one, sub(one, sin(x)));              // 1/(1-sin(x))
+    auto ex4 = div(one, sub(one, sin(x)));                          // 1/(1-sin(x))
     auto ex5 = div(one, x);
     auto ex6 = div(one, mul(x, sub(one, x)));
     auto res1 = umap_short_basic{{-1, integer(1)}};

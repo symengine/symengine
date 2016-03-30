@@ -9,10 +9,10 @@
 #include <symengine/constants.h>
 #include <symengine/polynomial.h>
 
-namespace SymEngine {
+namespace SymEngine
+{
 
-Pow::Pow(const RCP<const Basic> &base, const RCP<const Basic> &exp)
-    : base_{base}, exp_{exp}
+Pow::Pow(const RCP<const Basic> &base, const RCP<const Basic> &exp) : base_{base}, exp_{exp}
 {
     SYMENGINE_ASSERT(is_canonical(*base, *exp))
 }
@@ -20,16 +20,16 @@ Pow::Pow(const RCP<const Basic> &base, const RCP<const Basic> &exp)
 bool Pow::is_canonical(const Basic &base, const Basic &exp) const
 {
     // e.g. 0**x
-    if (is_a<Integer>(base) and static_cast<const Integer&>(base).is_zero())
+    if (is_a<Integer>(base) and static_cast<const Integer &>(base).is_zero())
         return false;
     // e.g. 1**x
-    if (is_a<Integer>(base) and static_cast<const Integer&>(base).is_one())
+    if (is_a<Integer>(base) and static_cast<const Integer &>(base).is_one())
         return false;
     // e.g. x**0.0
-    if (is_a_Number(exp) and static_cast<const Number&>(exp).is_zero())
+    if (is_a_Number(exp) and static_cast<const Number &>(exp).is_zero())
         return false;
     // e.g. x**1
-    if (is_a<Integer>(exp) and static_cast<const Integer&>(exp).is_one())
+    if (is_a<Integer>(exp) and static_cast<const Integer &>(exp).is_one())
         return false;
     // e.g. 2**3, (2/3)**4
     if ((is_a<Integer>(base) or is_a<Rational>(base)) and is_a<Integer>(exp))
@@ -42,19 +42,16 @@ bool Pow::is_canonical(const Basic &base, const Basic &exp) const
         return false;
     // If exp is a rational, it should be between 0  and 1, i.e. we don't
     // allow things like 2**(-1/2) or 2**(3/2)
-    if ((is_a<Rational>(base) or is_a<Integer>(base)) and
-        is_a<Rational>(exp) and
-        (static_cast<const Rational&>(exp).i < 0 or
-        static_cast<const Rational&>(exp).i > 1))
+    if ((is_a<Rational>(base) or is_a<Integer>(base)) and is_a<Rational>(exp)
+        and (static_cast<const Rational &>(exp).i < 0 or static_cast<const Rational &>(exp).i > 1))
         return false;
     // Purely Imaginary complex numbers with integral powers are expanded
     // e.g (2I)**3
-    if (is_a<Complex>(base) and static_cast<const Complex&>(base).is_re_zero() and
-        is_a<Integer>(exp))
+    if (is_a<Complex>(base) and static_cast<const Complex &>(base).is_re_zero() and is_a<Integer>(exp))
         return false;
     // e.g. 0.5^2.0 should be represented as 0.25
-    if(is_a_Number(base) and not static_cast<const Number&>(base).is_exact() and
-            is_a_Number(exp) and not static_cast<const Number&>(exp).is_exact())
+    if (is_a_Number(base) and not static_cast<const Number &>(base).is_exact() and is_a_Number(exp)
+        and not static_cast<const Number &>(exp).is_exact())
         return false;
     return true;
 }
@@ -69,10 +66,8 @@ std::size_t Pow::__hash__() const
 
 bool Pow::__eq__(const Basic &o) const
 {
-    if (is_a<Pow>(o) and
-        eq(*base_, *(static_cast<const Pow &>(o).base_)) and
-        eq(*exp_, *(static_cast<const Pow &>(o).exp_)))
-            return true;
+    if (is_a<Pow>(o) and eq(*base_, *(static_cast<const Pow &>(o).base_)) and eq(*exp_, *(static_cast<const Pow &>(o).exp_)))
+        return true;
 
     return false;
 }
@@ -93,15 +88,17 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
     if (is_a_Number(*b) and rcp_static_cast<const Number>(b)->is_zero()) {
         return pownum(rcp_static_cast<const Number>(b), zero);
     }
-    if (eq(*b, *one)) return a;
-    if (eq(*a, *zero)) return zero;
-    if (eq(*a, *one)) return one;
+    if (eq(*b, *one))
+        return a;
+    if (eq(*a, *zero))
+        return zero;
+    if (eq(*a, *one))
+        return one;
     if (eq(*a, *minus_one)) {
         if (is_a<Integer>(*b)) {
             return is_a<Integer>(*div(b, integer(2))) ? one : minus_one;
-        } else if (is_a<Rational>(*b) and
-                    (get_num(rcp_static_cast<const Rational>(b)->i) == 1) and
-                    (get_den(rcp_static_cast<const Rational>(b)->i) == 2)) {
+        } else if (is_a<Rational>(*b) and (get_num(rcp_static_cast<const Rational>(b)->i) == 1)
+                   and (get_den(rcp_static_cast<const Rational>(b)->i) == 2)) {
             return I;
         }
     }
@@ -168,7 +165,8 @@ void multinomial_coefficients(int m, int n, map_vec_int &r)
     t.assign(m, 0);
     t[0] = n;
     r[t] = 1;
-    if (n == 0) return;
+    if (n == 0)
+        return;
     j = 0;
     while (j < m - 1) {
         tj = t[j];
@@ -177,7 +175,7 @@ void multinomial_coefficients(int m, int n, map_vec_int &r)
             t[0] = tj;
         }
         if (tj > 1) {
-            t[j+1] += 1;
+            t[j + 1] += 1;
             j = 0;
             start = 1;
             v = 0;
@@ -187,7 +185,7 @@ void multinomial_coefficients(int m, int n, map_vec_int &r)
             v = r[t];
             t[j] += 1;
         }
-        for (k=start; k<m; k++) {
+        for (k = start; k < m; k++) {
             if (t[k]) {
                 t[k] -= 1;
                 v += r[t];
@@ -195,7 +193,7 @@ void multinomial_coefficients(int m, int n, map_vec_int &r)
             }
         }
         t[0] -= 1;
-        r[t] = (v*tj) / (n-t[0]);
+        r[t] = (v * tj) / (n - t[0]);
     }
 }
 
@@ -212,7 +210,8 @@ void multinomial_coefficients_mpz(int m, int n, map_vec_mpz &r)
     t.assign(m, 0);
     t[0] = n;
     r[t] = 1;
-    if (n == 0) return;
+    if (n == 0)
+        return;
     j = 0;
     while (j < m - 1) {
         tj = t[j];
@@ -221,7 +220,7 @@ void multinomial_coefficients_mpz(int m, int n, map_vec_mpz &r)
             t[0] = tj;
         }
         if (tj > 1) {
-            t[j+1] += 1;
+            t[j + 1] += 1;
             j = 0;
             start = 1;
             v = 0;
@@ -231,7 +230,7 @@ void multinomial_coefficients_mpz(int m, int n, map_vec_mpz &r)
             v = r[t];
             t[j] += 1;
         }
-        for (k=start; k<m; k++) {
+        for (k = start; k < m; k++) {
             if (t[k]) {
                 t[k] -= 1;
                 v += r[t];
@@ -239,7 +238,7 @@ void multinomial_coefficients_mpz(int m, int n, map_vec_mpz &r)
             }
         }
         t[0] -= 1;
-        r[t] = (v*tj) / (n-t[0]);
+        r[t] = (v * tj) / (n - t[0]);
     }
 }
 
@@ -257,7 +256,8 @@ RCP<const Basic> Pow::subs(const map_basic_basic &subs_dict) const
         return pow(base_new, exp_new);
 }
 
-vec_basic Pow::get_args() const {
+vec_basic Pow::get_args() const
+{
     return {base_, exp_};
 }
 
@@ -266,8 +266,7 @@ RCP<const Basic> exp(const RCP<const Basic> &x)
     return pow(E, x);
 }
 
-Log::Log(const RCP<const Basic> &arg)
-    : arg_{arg}
+Log::Log(const RCP<const Basic> &arg) : arg_{arg}
 {
     SYMENGINE_ASSERT(is_canonical(*arg))
 }
@@ -275,18 +274,18 @@ Log::Log(const RCP<const Basic> &arg)
 bool Log::is_canonical(const Basic &arg) const
 {
     //  log(0)
-    if (is_a<Integer>(arg) and static_cast<const Integer&>(arg).is_zero())
+    if (is_a<Integer>(arg) and static_cast<const Integer &>(arg).is_zero())
         return false;
     //  log(1)
-    if (is_a<Integer>(arg) and static_cast<const Integer&>(arg).is_one())
+    if (is_a<Integer>(arg) and static_cast<const Integer &>(arg).is_one())
         return false;
     // log(E)
     if (eq(arg, *E))
         return false;
     // Currently not implemented, however should be expanded as `-ipi + log(-arg)`
-    if (is_a_Number(arg) and static_cast<const Number&>(arg).is_negative())
+    if (is_a_Number(arg) and static_cast<const Number &>(arg).is_negative())
         return false;
-    if (is_a_Number(arg) and not static_cast<const Number&>(arg).is_exact())
+    if (is_a_Number(arg) and not static_cast<const Number &>(arg).is_exact())
         return false;
     // log(num/den) = log(num) - log(den)
     if (is_a<Rational>(arg))
@@ -303,9 +302,8 @@ std::size_t Log::__hash__() const
 
 bool Log::__eq__(const Basic &o) const
 {
-    if (is_a<Log>(o) and
-        eq(*arg_, *(static_cast<const Log &>(o).get_arg())))
-            return true;
+    if (is_a<Log>(o) and eq(*arg_, *(static_cast<const Log &>(o).get_arg())))
+        return true;
 
     return false;
 }
@@ -336,8 +334,10 @@ RCP<const Basic> log(const RCP<const Basic> &arg)
     if (eq(*arg, *zero)) {
         throw std::runtime_error("log(0) is complex infinity. Yet to be implemented");
     }
-    if (eq(*arg, *one)) return zero;
-    if (eq(*arg, *E)) return one;
+    if (eq(*arg, *one))
+        return zero;
+    if (eq(*arg, *E))
+        return one;
     if (is_a_Number(*arg)) {
         RCP<const Number> _arg = rcp_static_cast<const Number>(arg);
         if (not _arg->is_exact()) {
