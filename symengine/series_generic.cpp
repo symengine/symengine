@@ -89,7 +89,7 @@ UnivariateExprPolynomial UnivariateSeries::mul(const UnivariateExprPolynomial &a
 
 UnivariateExprPolynomial UnivariateSeries::pow(const UnivariateExprPolynomial &base, int exp, unsigned prec) {
     if (exp < 0)
-            throw std::runtime_error("Not Implemented");
+        return UnivariateExprPolynomial(1) / Expression(pow(base, -exp, prec).get_basic());
     if (exp == 0) {
         if (base == 0) {
             throw std::runtime_error("Error: 0**0 is undefined.");
@@ -145,7 +145,7 @@ UnivariateExprPolynomial UnivariateSeries::integrate(const UnivariateExprPolynom
 }
 
 UnivariateExprPolynomial UnivariateSeries::subs(const UnivariateExprPolynomial &s, const UnivariateExprPolynomial &var, const UnivariateExprPolynomial &r, unsigned prec) {
-    throw std::runtime_error("Not Implemented");
+    throw std::runtime_error("Subs Not Implemented");
 }
 
 Expression UnivariateSeries::sin(const Expression& c) {
