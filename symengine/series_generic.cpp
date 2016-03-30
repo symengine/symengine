@@ -16,8 +16,8 @@ UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned 
 {
 }
 
-UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision,
-                                   const unsigned int &max, map_uint_mpz &&dict)
+UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const unsigned int &max,
+                                   map_uint_mpz &&dict)
     : var_{var}, prec_{precision}
 {
 
@@ -30,20 +30,18 @@ UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned 
 
     map_uint_mpz dict_trunc;
     unsigned int max = 0;
-    std::copy_if(dict.begin(), dict.end(), std::inserter(dict_trunc, dict_trunc.end()),
-                 [&](const map_uint_mpz::value_type i) {
-                     if (i.first < prec_) {
-                         if (max < i.first)
-                             max = i.first;
-                         return true;
-                     }
-                     return false;
-                 });
+    std::copy_if(dict.begin(), dict.end(), std::inserter(dict_trunc, dict_trunc.end()), [&](const map_uint_mpz::value_type i) {
+        if (i.first < prec_) {
+            if (max < i.first)
+                max = i.first;
+            return true;
+        }
+        return false;
+    });
     poly_ = univariate_int_polynomial(var_, std::move(dict_trunc));
 }
 
-UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision,
-                                   const std::vector<integer_class> &v)
+UnivariateSeries::UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const std::vector<integer_class> &v)
     : var_{var}, prec_{precision}
 {
 
@@ -57,7 +55,10 @@ bool UnivariateSeries::is_canonical(const UnivariateIntPolynomial &poly, const u
     return true;
 }
 
-std::size_t UnivariateSeries::__hash__() const { return poly_->hash() + std::size_t(prec_ * 84728863L); }
+std::size_t UnivariateSeries::__hash__() const
+{
+    return poly_->hash() + std::size_t(prec_ * 84728863L);
+}
 
 bool UnivariateSeries::__eq__(const Basic &other) const
 {

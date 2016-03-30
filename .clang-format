@@ -1,5 +1,5 @@
 Language:        Cpp
-AccessModifierOffset: 0
+AccessModifierOffset: -4
 AlignAfterOpenBracket: true
 AlignConsecutiveAssignments: false
 AlignEscapedNewlinesLeft: false
@@ -8,7 +8,7 @@ AlignTrailingComments: true
 AllowAllParametersOfDeclarationOnNextLine: true
 AllowShortBlocksOnASingleLine: false
 AllowShortCaseLabelsOnASingleLine: false
-AllowShortFunctionsOnASingleLine: All
+AllowShortFunctionsOnASingleLine: Empty
 AllowShortIfStatementsOnASingleLine: false
 AllowShortLoopsOnASingleLine: false
 AlwaysBreakAfterDefinitionReturnType: None
@@ -20,7 +20,7 @@ BreakBeforeBinaryOperators: All
 BreakBeforeBraces: Linux
 BreakBeforeTernaryOperators: true
 BreakConstructorInitializersBeforeComma: false
-ColumnLimit:     115
+ColumnLimit:     130
 ConstructorInitializerAllOnOneLineOrOnePerLine: false
 ConstructorInitializerIndentWidth: 4
 ContinuationIndentWidth: 4

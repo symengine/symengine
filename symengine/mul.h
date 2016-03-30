@@ -14,11 +14,11 @@ namespace SymEngine
 
 class Mul : public Basic
 {
-    public:                  // TODO: make this private
+public:                      // TODO: make this private
     RCP<const Number> coef_; //! The coefficient (e.g. `2` in `2*x*y`)
     map_basic_basic dict_;   //! the dictionary of the rest (e.g. `x*y` in `2*x*y`)
 
-    public:
+public:
     IMPLEMENT_TYPEID(MUL)
     //! Constructs Mul from a dictionary by copying the contents of the
     //! dictionary:
@@ -37,11 +37,10 @@ class Mul : public Basic
     static RCP<const Basic> from_dict(const RCP<const Number> &coef, map_basic_basic &&d);
     //! Add terms to dict
     static void dict_add_term(map_basic_basic &d, const RCP<const Basic> &exp, const RCP<const Basic> &t);
-    static void dict_add_term_new(const Ptr<RCP<const Number>> &coef, map_basic_basic &d,
-                                  const RCP<const Basic> &exp, const RCP<const Basic> &t);
+    static void dict_add_term_new(const Ptr<RCP<const Number>> &coef, map_basic_basic &d, const RCP<const Basic> &exp,
+                                  const RCP<const Basic> &t);
     //! Convert to a base and exponent form
-    static void as_base_exp(const RCP<const Basic> &self, const Ptr<RCP<const Basic>> &exp,
-                            const Ptr<RCP<const Basic>> &base);
+    static void as_base_exp(const RCP<const Basic> &self, const Ptr<RCP<const Basic>> &exp, const Ptr<RCP<const Basic>> &base);
     //! Rewrite as 2 terms
     /*!
         Example: if this=3*x**2*y**2*z**2`, then `a=x**2` and `b=3*y**2*z**2`

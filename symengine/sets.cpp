@@ -36,8 +36,8 @@ bool Interval::__eq__(const Basic &o) const
 {
     if (is_a<Interval>(o)) {
         const Interval &s = static_cast<const Interval &>(o);
-        return ((this->left_open_ == s.left_open_) and (this->right_open_ == s.right_open_)
-                and eq(*this->start_, *s.start_) and eq(*this->end_, *s.end_));
+        return ((this->left_open_ == s.left_open_) and (this->right_open_ == s.right_open_) and eq(*this->start_, *s.start_)
+                and eq(*this->end_, *s.end_));
     }
     return false;
 }
@@ -65,13 +65,25 @@ int Interval::compare(const Basic &s) const
     }
 }
 
-RCP<const Set> Interval::open() const { return interval(start_, end_, true, true); }
+RCP<const Set> Interval::open() const
+{
+    return interval(start_, end_, true, true);
+}
 
-RCP<const Set> Interval::Lopen() const { return interval(start_, end_, true, false); }
+RCP<const Set> Interval::Lopen() const
+{
+    return interval(start_, end_, true, false);
+}
 
-RCP<const Set> Interval::Ropen() const { return interval(start_, end_, false, true); }
+RCP<const Set> Interval::Ropen() const
+{
+    return interval(start_, end_, false, true);
+}
 
-RCP<const Set> Interval::close() const { return interval(start_, end_, false, false); }
+RCP<const Set> Interval::close() const
+{
+    return interval(start_, end_, false, false);
+}
 
 RCP<const Set> Interval::set_intersection(const RCP<const Set> &o) const
 {
@@ -143,10 +155,8 @@ RCP<const Set> Interval::set_union(const RCP<const Set> &o) const
                 end = this->end_;
             else
                 end = other.end_;
-            left_open = ((neq(*this->start_, *start) or this->left_open_)
-                         and (neq(*other.start_, *start) or other.left_open_));
-            right_open
-                = ((neq(*this->end_, *end) or this->right_open_) and (neq(*other.end_, *end) or other.right_open_));
+            left_open = ((neq(*this->start_, *start) or this->left_open_) and (neq(*other.start_, *start) or other.left_open_));
+            right_open = ((neq(*this->end_, *end) or this->right_open_) and (neq(*other.end_, *end) or other.right_open_));
             return interval(start, end, left_open, right_open);
         }
     } else
@@ -181,9 +191,15 @@ bool Interval::is_proper_superset(const RCP<const Set> &o) const
     return (*o).is_subset(rcp_from_this_cast<const Set>()) and (not __eq__(*o));
 }
 
-RCP<const Set> EmptySet::set_intersection(const RCP<const Set> &o) const { return emptyset(); }
+RCP<const Set> EmptySet::set_intersection(const RCP<const Set> &o) const
+{
+    return emptyset();
+}
 
-RCP<const Set> EmptySet::set_union(const RCP<const Set> &o) const { return o; }
+RCP<const Set> EmptySet::set_union(const RCP<const Set> &o) const
+{
+    return o;
+}
 
 std::size_t EmptySet::__hash__() const
 {

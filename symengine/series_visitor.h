@@ -10,18 +10,21 @@ namespace SymEngine
 template <typename Poly, typename Coeff, typename Series>
 class SeriesVisitor : public BaseVisitor<SeriesVisitor<Poly, Coeff, Series>>
 {
-    private:
+private:
     Poly p;
     const Poly var;
     const std::string varname;
     const unsigned prec;
 
-    public:
+public:
     inline SeriesVisitor(const Poly &var_, const std::string &varname_, const unsigned prec_)
         : var(var_), varname(varname_), prec(prec_)
     {
     }
-    RCP<const Series> series(const RCP<const Basic> &x) { return make_rcp<Series>(apply(x), varname, prec); }
+    RCP<const Series> series(const RCP<const Basic> &x)
+    {
+        return make_rcp<Series>(apply(x), varname, prec);
+    }
 
     Poly apply(const RCP<const Basic> &x)
     {
@@ -143,16 +146,37 @@ class SeriesVisitor : public BaseVisitor<SeriesVisitor<Poly, Coeff, Series>>
         }
         p = x.get_poly();
     }
-    void bvisit(const Integer &x) { p = Series::convert(x); }
-    void bvisit(const Rational &x) { p = Series::convert(x); }
-    void bvisit(const Complex &x) { p = Series::convert(x); }
-    void bvisit(const RealDouble &x) { p = Series::convert(x); }
-    void bvisit(const ComplexDouble &x) { p = Series::convert(x); }
+    void bvisit(const Integer &x)
+    {
+        p = Series::convert(x);
+    }
+    void bvisit(const Rational &x)
+    {
+        p = Series::convert(x);
+    }
+    void bvisit(const Complex &x)
+    {
+        p = Series::convert(x);
+    }
+    void bvisit(const RealDouble &x)
+    {
+        p = Series::convert(x);
+    }
+    void bvisit(const ComplexDouble &x)
+    {
+        p = Series::convert(x);
+    }
 #ifdef HAVE_SYMENGINE_MPFR
-    void bvisit(const RealMPFR &x) { p = Series::convert(x); }
+    void bvisit(const RealMPFR &x)
+    {
+        p = Series::convert(x);
+    }
 #endif
 #ifdef HAVE_SYMENGINE_MPC
-    void bvisit(const ComplexMPC &x) { p = Series::convert(x); }
+    void bvisit(const ComplexMPC &x)
+    {
+        p = Series::convert(x);
+    }
 #endif
     void bvisit(const Sin &x)
     {
@@ -234,8 +258,14 @@ class SeriesVisitor : public BaseVisitor<SeriesVisitor<Poly, Coeff, Series>>
         x.get_arg()->accept(*this);
         p = Series::series_lambertw(p, var, prec);
     }
-    void bvisit(const Symbol &x) { p = Series::var(x.get_name()); }
-    void bvisit(const Constant &x) { p = Series::convert(x); }
+    void bvisit(const Symbol &x)
+    {
+        p = Series::var(x.get_name());
+    }
+    void bvisit(const Constant &x)
+    {
+        p = Series::convert(x);
+    }
     void bvisit(const Basic &x)
     {
         if (!has_symbol(x, symbol(varname))) {
@@ -248,11 +278,11 @@ class SeriesVisitor : public BaseVisitor<SeriesVisitor<Poly, Coeff, Series>>
 
 class NeedsSymbolicExpansionVisitor : public BaseVisitor<NeedsSymbolicExpansionVisitor, StopVisitor>
 {
-    protected:
+protected:
     RCP<const Symbol> x_;
     bool needs_;
 
-    public:
+public:
     void bvisit(const TrigFunction &f)
     {
         auto arg = f.get_arg();
@@ -280,8 +310,7 @@ class NeedsSymbolicExpansionVisitor : public BaseVisitor<NeedsSymbolicExpansionV
         map_basic_basic subsx0{{x_, integer(0)}};
         // exp(const) or x^-1
         if ((base->__eq__(*E) and exp->subs(subsx0)->__neq__(*integer(0)))
-            or (is_a_Number(*exp) and static_cast<const Number &>(*exp).is_negative()
-                and base->subs(subsx0)->__eq__(*integer(0)))) {
+            or (is_a_Number(*exp) and static_cast<const Number &>(*exp).is_negative() and base->subs(subsx0)->__eq__(*integer(0)))) {
             needs_ = true;
             stop_ = true;
         }
@@ -303,7 +332,9 @@ class NeedsSymbolicExpansionVisitor : public BaseVisitor<NeedsSymbolicExpansionV
         stop_ = true;
     }
 
-    void bvisit(const Basic &x) {}
+    void bvisit(const Basic &x)
+    {
+    }
 
     bool apply(const Basic &b, const RCP<const Symbol> &x)
     {

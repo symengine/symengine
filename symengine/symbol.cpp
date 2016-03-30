@@ -5,7 +5,9 @@
 namespace SymEngine
 {
 
-Symbol::Symbol(const std::string &name) : name_{name} {}
+Symbol::Symbol(const std::string &name) : name_{name}
+{
+}
 
 std::size_t Symbol::__hash__() const
 {

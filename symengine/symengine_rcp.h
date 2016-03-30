@@ -36,9 +36,14 @@ namespace SymEngine
 template <class T>
 class Ptr
 {
-    public:
-    inline explicit Ptr(T *ptr) : ptr_(ptr) { SYMENGINE_ASSERT(ptr_ != nullptr) }
-    inline Ptr(const Ptr<T> &ptr) : ptr_(ptr.ptr_) {}
+public:
+    inline explicit Ptr(T *ptr) : ptr_(ptr)
+    {
+        SYMENGINE_ASSERT(ptr_ != nullptr)
+    }
+    inline Ptr(const Ptr<T> &ptr) : ptr_(ptr.ptr_)
+    {
+    }
     template <class T2>
     inline Ptr(const Ptr<T2> &ptr)
         : ptr_(ptr.get())
@@ -53,12 +58,28 @@ class Ptr
     inline Ptr(Ptr &&) = default;
     Ptr<T> &operator=(Ptr &&) = default;
 #endif
-    inline T *operator->() const { return ptr_; }
-    inline T &operator*() const { return *ptr_; }
-    inline T *get() const { return ptr_; }
-    inline T *getRawPtr() const { return get(); }
-    inline const Ptr<T> ptr() const { return *this; }
-    private:
+    inline T *operator->() const
+    {
+        return ptr_;
+    }
+    inline T &operator*() const
+    {
+        return *ptr_;
+    }
+    inline T *get() const
+    {
+        return ptr_;
+    }
+    inline T *getRawPtr() const
+    {
+        return get();
+    }
+    inline const Ptr<T> ptr() const
+    {
+        return *this;
+    }
+
+private:
     T *ptr_;
 };
 
@@ -77,8 +98,10 @@ enum ENull { null };
 template <class T>
 class RCP
 {
-    public:
-    RCP(ENull null_arg = null) : ptr_(nullptr) {}
+public:
+    RCP(ENull null_arg = null) : ptr_(nullptr)
+    {
+    }
     explicit RCP(T *p) : ptr_(p)
     {
         SYMENGINE_ASSERT(ptr_ != nullptr)
@@ -99,7 +122,10 @@ class RCP
             (ptr_->refcount_)++;
     }
     // Move constructor
-    RCP(RCP<T> &&rp) SYMENGINE_NOEXCEPT : ptr_(rp.ptr_) { rp.ptr_ = nullptr; }
+    RCP(RCP<T> &&rp) SYMENGINE_NOEXCEPT : ptr_(rp.ptr_)
+    {
+        rp.ptr_ = nullptr;
+    }
     // Move constructor
     template <class T2>
     RCP(RCP<T2> &&r_ptr)
@@ -122,9 +148,18 @@ class RCP
         SYMENGINE_ASSERT(ptr_ != nullptr)
         return *ptr_;
     }
-    T *get() const { return ptr_; }
-    Ptr<T> ptr() const { return Ptr<T>(get()); }
-    bool is_null() const { return ptr_ == nullptr; }
+    T *get() const
+    {
+        return ptr_;
+    }
+    Ptr<T> ptr() const
+    {
+        return Ptr<T>(get());
+    }
+    bool is_null() const
+    {
+        return ptr_ == nullptr;
+    }
     template <class T2>
     bool operator==(const RCP<T2> &p2)
     {
@@ -159,8 +194,12 @@ class RCP
         ptr_ = nullptr;
     }
     // Don't use this function directly:
-    void _set_null() { ptr_ = nullptr; }
-    private:
+    void _set_null()
+    {
+        ptr_ = nullptr;
+    }
+
+private:
     T *ptr_;
 };
 
@@ -233,7 +272,7 @@ template <class T>
 class EnableRCPFromThis
 {
     // Public interface
-    public:
+public:
     //! Get RCP<T> pointer to self (it will cast the pointer to T)
     inline RCP<T> rcp_from_this()
     {
@@ -275,7 +314,7 @@ class EnableRCPFromThis
     }
 
     // Everything below is private interface
-    private:
+private:
 #if defined(WITH_SYMENGINE_RCP)
 
 //! Public variables if defined with SYMENGINE_RCP
@@ -292,15 +331,24 @@ class EnableRCPFromThis
 #else
     mutable unsigned int refcount_; // reference counter
 #endif // WITH_SYMENGINE_THREAD_SAFE
-    public:
-    EnableRCPFromThis() : refcount_(0) {}
-    private:
+public:
+    EnableRCPFromThis() : refcount_(0)
+    {
+    }
+
+private:
 #else
     mutable RCP<T> weak_self_ptr_;
 
-    void set_weak_self_ptr(const RCP<T> &w) { weak_self_ptr_ = w; }
+    void set_weak_self_ptr(const RCP<T> &w)
+    {
+        weak_self_ptr_ = w;
+    }
 
-    void set_weak_self_ptr(const RCP<const T> &w) const { weak_self_ptr_ = rcp_const_cast<T>(w); }
+    void set_weak_self_ptr(const RCP<const T> &w) const
+    {
+        weak_self_ptr_ = rcp_const_cast<T>(w);
+    }
 #endif // WITH_SYMENGINE_RCP
 
 #if defined(WITH_SYMENGINE_RCP)

@@ -62,8 +62,7 @@ std::size_t Add::__hash__() const
 
 bool Add::__eq__(const Basic &o) const
 {
-    if (is_a<Add>(o) and eq(*coef_, *(static_cast<const Add &>(o).coef_))
-        and umap_eq(dict_, static_cast<const Add &>(o).dict_))
+    if (is_a<Add>(o) and eq(*coef_, *(static_cast<const Add &>(o).coef_)) and umap_eq(dict_, static_cast<const Add &>(o).dict_))
         return true;
 
     return false;
@@ -131,8 +130,7 @@ RCP<const Basic> Add::from_dict(const RCP<const Number> &coef, umap_basic_num &&
             }
             map_basic_basic m;
             if (is_a<Pow>(*(p->first))) {
-                insert(m, rcp_static_cast<const Pow>(p->first)->get_base(),
-                       rcp_static_cast<const Pow>(p->first)->get_exp());
+                insert(m, rcp_static_cast<const Pow>(p->first)->get_base(), rcp_static_cast<const Pow>(p->first)->get_exp());
             } else {
                 insert(m, p->first, one);
             }
@@ -162,8 +160,7 @@ RCP<const Basic> Add::from_dict(const RCP<const Number> &coef, umap_basic_num &&
                 }
             }
             if (is_a<Pow>(*p->first)) {
-                insert(m, rcp_static_cast<const Pow>(p->first)->get_base(),
-                       rcp_static_cast<const Pow>(p->first)->get_exp());
+                insert(m, rcp_static_cast<const Pow>(p->first)->get_base(), rcp_static_cast<const Pow>(p->first)->get_exp());
             } else {
                 insert(m, p->first, one);
             }
@@ -285,7 +282,10 @@ RCP<const Basic> add(const RCP<const Basic> &a, const RCP<const Basic> &b)
     return Add::from_dict(coef, std::move(d));
 }
 
-RCP<const Basic> sub(const RCP<const Basic> &a, const RCP<const Basic> &b) { return add(a, mul(minus_one, b)); }
+RCP<const Basic> sub(const RCP<const Basic> &a, const RCP<const Basic> &b)
+{
+    return add(a, mul(minus_one, b));
+}
 
 void Add::as_two_terms(const Ptr<RCP<const Basic>> &a, const Ptr<RCP<const Basic>> &b) const
 {

@@ -21,10 +21,10 @@ RCP<const Number> number(double x);
 //! RealDouble Class to hold double values
 class RealDouble : public Number
 {
-    public:
+public:
     double i;
 
-    public:
+public:
     IMPLEMENT_TYPEID(REAL_DOUBLE)
     //! Constructor of RealDouble class
     explicit RealDouble(double i);
@@ -37,24 +37,45 @@ class RealDouble : public Number
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
     //! \return `true` if positive
-    inline virtual bool is_positive() const { return i > 0; }
+    inline virtual bool is_positive() const
+    {
+        return i > 0;
+    }
     //! \return `true` if negative
-    inline virtual bool is_negative() const { return i < 0; }
+    inline virtual bool is_negative() const
+    {
+        return i < 0;
+    }
     //! \return self as a double
-    inline double as_double() const { return i; }
+    inline double as_double() const
+    {
+        return i;
+    }
     //! \return `true` if this number is an exact number
-    inline virtual bool is_exact() const { return false; }
+    inline virtual bool is_exact() const
+    {
+        return false;
+    }
     //! Get `Evaluate` singleton to evaluate numerically
     virtual Evaluate &get_eval() const;
 
     //! \return `true` when equals to 0
-    virtual bool is_zero() const { return this->i == 0.0; }
+    virtual bool is_zero() const
+    {
+        return this->i == 0.0;
+    }
     //! \return `false`
     // A double is not exactly equal to `1`
-    virtual bool is_one() const { return false; }
+    virtual bool is_one() const
+    {
+        return false;
+    }
     //! \return `false`
     // A double is not exactly equal to `-1`
-    virtual bool is_minus_one() const { return false; }
+    virtual bool is_minus_one() const
+    {
+        return false;
+    }
 
     /*! Add RealDoubles
      * \param other of type Integer
@@ -83,7 +104,10 @@ class RealDouble : public Number
     /*! Add RealDoubles
      * \param other of type RealDouble
      * */
-    RCP<const Number> addreal(const RealDouble &other) const { return make_rcp<const RealDouble>(i + other.i); }
+    RCP<const Number> addreal(const RealDouble &other) const
+    {
+        return make_rcp<const RealDouble>(i + other.i);
+    }
 
     //! Converts the param `other` appropriately and then calls `addreal`
     virtual RCP<const Number> add(const Number &other) const
@@ -128,7 +152,10 @@ class RealDouble : public Number
     /*! Subtract RealDoubles
      * \param other of type RealDouble
      * */
-    RCP<const Number> subreal(const RealDouble &other) const { return make_rcp<const RealDouble>(i - other.i); }
+    RCP<const Number> subreal(const RealDouble &other) const
+    {
+        return make_rcp<const RealDouble>(i - other.i);
+    }
 
     //! Converts the param `other` appropriately and then calls `subreal`
     virtual RCP<const Number> sub(const Number &other) const
@@ -211,7 +238,10 @@ class RealDouble : public Number
     /*! Multiply RealDoubles
      * \param other of type RealDouble
      * */
-    RCP<const Number> mulreal(const RealDouble &other) const { return make_rcp<const RealDouble>(i * other.i); }
+    RCP<const Number> mulreal(const RealDouble &other) const
+    {
+        return make_rcp<const RealDouble>(i * other.i);
+    }
 
     //! Converts the param `other` appropriately and then calls `mulreal`
     virtual RCP<const Number> mul(const Number &other) const
@@ -256,7 +286,10 @@ class RealDouble : public Number
     /*! Divide RealDoubles
      * \param other of type RealDouble
      * */
-    RCP<const Number> divreal(const RealDouble &other) const { return make_rcp<const RealDouble>(i / other.i); }
+    RCP<const Number> divreal(const RealDouble &other) const
+    {
+        return make_rcp<const RealDouble>(i / other.i);
+    }
 
     //! Converts the param `other` appropriately and then calls `divreal`
     virtual RCP<const Number> div(const Number &other) const

@@ -8,7 +8,9 @@ namespace SymEngine
 {
 
 // Constructors
-DenseMatrix::DenseMatrix() {}
+DenseMatrix::DenseMatrix()
+{
+}
 
 DenseMatrix::DenseMatrix(unsigned row, unsigned col) : row_(row), col_(col)
 {
@@ -33,9 +35,15 @@ void DenseMatrix::set(unsigned i, unsigned j, const RCP<const Basic> &e)
     m_[i * col_ + j] = e;
 }
 
-unsigned DenseMatrix::rank() const { throw std::runtime_error("Not implemented."); }
+unsigned DenseMatrix::rank() const
+{
+    throw std::runtime_error("Not implemented.");
+}
 
-RCP<const Basic> DenseMatrix::det() const { return det_bareis(*this); }
+RCP<const Basic> DenseMatrix::det() const
+{
+    return det_bareis(*this);
+}
 
 void DenseMatrix::inv(MatrixBase &result) const
 {
@@ -95,8 +103,7 @@ void DenseMatrix::transpose(MatrixBase &result) const
 }
 
 // Extract out a submatrix
-void DenseMatrix::submatrix(unsigned row_start, unsigned row_end, unsigned col_start, unsigned col_end,
-                            MatrixBase &result) const
+void DenseMatrix::submatrix(unsigned row_start, unsigned row_end, unsigned col_start, unsigned col_end, MatrixBase &result) const
 {
     if (is_a<DenseMatrix>(result)) {
         DenseMatrix &r = static_cast<DenseMatrix &>(result);
@@ -184,8 +191,7 @@ void transpose_dense(const DenseMatrix &A, DenseMatrix &B)
 }
 
 // ------------------------------- Submatrix ---------------------------------//
-void submatrix_dense(const DenseMatrix &A, unsigned row_start, unsigned row_end, unsigned col_start,
-                     unsigned col_end, DenseMatrix &B)
+void submatrix_dense(const DenseMatrix &A, unsigned row_start, unsigned row_end, unsigned col_start, unsigned col_end, DenseMatrix &B)
 {
     SYMENGINE_ASSERT(row_end >= row_start and col_end >= col_start);
     SYMENGINE_ASSERT(row_end < A.row_);
@@ -339,8 +345,7 @@ void fraction_free_gaussian_elimination(const DenseMatrix &A, DenseMatrix &B)
     for (unsigned i = 0; i < col - 1; i++)
         for (unsigned j = i + 1; j < A.row_; j++) {
             for (unsigned k = i + 1; k < col; k++) {
-                B.m_[j * col + k]
-                    = sub(mul(B.m_[i * col + i], B.m_[j * col + k]), mul(B.m_[j * col + i], B.m_[i * col + k]));
+                B.m_[j * col + k] = sub(mul(B.m_[i * col + i], B.m_[j * col + k]), mul(B.m_[j * col + i], B.m_[i * col + k]));
                 if (i > 0)
                     B.m_[j * col + k] = div(B.m_[j * col + k], B.m_[i * col - col + i - 1]);
             }
@@ -375,8 +380,7 @@ void pivoted_fraction_free_gaussian_elimination(const DenseMatrix &A, DenseMatri
 
         for (j = i + 1; j < row; j++) {
             for (k = i + 1; k < col; k++) {
-                B.m_[j * col + k]
-                    = sub(mul(B.m_[i * col + i], B.m_[j * col + k]), mul(B.m_[j * col + i], B.m_[i * col + k]));
+                B.m_[j * col + k] = sub(mul(B.m_[i * col + i], B.m_[j * col + k]), mul(B.m_[j * col + i], B.m_[i * col + k]));
                 if (i > 0)
                     B.m_[j * col + k] = div(B.m_[j * col + k], B.m_[i * col - col + i - 1]);
             }
@@ -447,8 +451,7 @@ void fraction_free_gauss_jordan_elimination(const DenseMatrix &A, DenseMatrix &B
             if (j != i)
                 for (k = 0; k < col; k++) {
                     if (k != i) {
-                        B.m_[j * col + k] = sub(mul(B.m_[i * col + i], B.m_[j * col + k]),
-                                                mul(B.m_[j * col + i], B.m_[i * col + k]));
+                        B.m_[j * col + k] = sub(mul(B.m_[i * col + i], B.m_[j * col + k]), mul(B.m_[j * col + i], B.m_[i * col + k]));
                         if (i > 0)
                             B.m_[j * col + k] = div(B.m_[j * col + k], d);
                     }
@@ -491,8 +494,7 @@ void pivoted_fraction_free_gauss_jordan_elimination(const DenseMatrix &A, DenseM
             if (j != i)
                 for (k = 0; k < col; k++) {
                     if (k != i) {
-                        B.m_[j * col + k] = sub(mul(B.m_[i * col + i], B.m_[j * col + k]),
-                                                mul(B.m_[j * col + i], B.m_[i * col + k]));
+                        B.m_[j * col + k] = sub(mul(B.m_[i * col + i], B.m_[j * col + k]), mul(B.m_[j * col + i], B.m_[i * col + k]));
                         if (i > 0)
                             B.m_[j * col + k] = div(B.m_[j * col + k], d);
                     }
@@ -577,15 +579,13 @@ void fraction_free_gaussian_elimination_solve(const DenseMatrix &A, const DenseM
     for (i = 0; i < col - 1; i++)
         for (j = i + 1; j < col; j++) {
             for (k = 0; k < bcol; k++) {
-                b_.m_[j * bcol + k]
-                    = sub(mul(A_.m_[i * col + i], b_.m_[j * bcol + k]), mul(A_.m_[j * col + i], b_.m_[i * bcol + k]));
+                b_.m_[j * bcol + k] = sub(mul(A_.m_[i * col + i], b_.m_[j * bcol + k]), mul(A_.m_[j * col + i], b_.m_[i * bcol + k]));
                 if (i > 0)
                     b_.m_[j * bcol + k] = div(b_.m_[j * bcol + k], A_.m_[i * col - col + i - 1]);
             }
 
             for (k = i + 1; k < col; k++) {
-                A_.m_[j * col + k]
-                    = sub(mul(A_.m_[i * col + i], A_.m_[j * col + k]), mul(A_.m_[j * col + i], A_.m_[i * col + k]));
+                A_.m_[j * col + k] = sub(mul(A_.m_[i * col + i], A_.m_[j * col + k]), mul(A_.m_[j * col + i], A_.m_[i * col + k]));
                 if (i > 0)
                     A_.m_[j * col + k] = div(A_.m_[j * col + k], A_.m_[i * col - col + i - 1]);
             }
@@ -621,16 +621,16 @@ void fraction_free_gauss_jordan_solve(const DenseMatrix &A, const DenseMatrix &b
         for (j = 0; j < col; j++)
             if (j != i) {
                 for (k = 0; k < bcol; k++) {
-                    b_.m_[j * bcol + k] = sub(mul(A_.m_[i * col + i], b_.m_[j * bcol + k]),
-                                              mul(A_.m_[j * col + i], b_.m_[i * bcol + k]));
+                    b_.m_[j * bcol + k]
+                        = sub(mul(A_.m_[i * col + i], b_.m_[j * bcol + k]), mul(A_.m_[j * col + i], b_.m_[i * bcol + k]));
                     if (i > 0)
                         b_.m_[j * bcol + k] = div(b_.m_[j * bcol + k], d);
                 }
 
                 for (k = 0; k < col; k++) {
                     if (k != i) {
-                        A_.m_[j * col + k] = sub(mul(A_.m_[i * col + i], A_.m_[j * col + k]),
-                                                 mul(A_.m_[j * col + i], A_.m_[i * col + k]));
+                        A_.m_[j * col + k]
+                            = sub(mul(A_.m_[i * col + i], A_.m_[j * col + k]), mul(A_.m_[j * col + i], A_.m_[i * col + k]));
                         if (i > 0)
                             A_.m_[j * col + k] = div(A_.m_[j * col + k], d);
                     }
@@ -705,8 +705,7 @@ void fraction_free_LU(const DenseMatrix &A, DenseMatrix &LU)
     for (i = 0; i < n - 1; i++)
         for (j = i + 1; j < n; j++)
             for (k = i + 1; k < n; k++) {
-                LU.m_[j * n + k]
-                    = sub(mul(LU.m_[i * n + i], LU.m_[j * n + k]), mul(LU.m_[j * n + i], LU.m_[i * n + k]));
+                LU.m_[j * n + k] = sub(mul(LU.m_[i * n + i], LU.m_[j * n + k]), mul(LU.m_[j * n + i], LU.m_[i * n + k]));
                 if (i)
                     LU.m_[j * n + k] = div(LU.m_[j * n + k], LU.m_[i * n - n + i - 1]);
             }
@@ -786,8 +785,7 @@ void fraction_free_LDU(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &D, Den
         for (i = k + 1; i < row; i++) {
             L.m_[i * col + k] = U.m_[i * col + k];
             for (j = k + 1; j < col; j++)
-                U.m_[i * col + j]
-                    = div(sub(mul(U.m_[k * col + k], U.m_[i * col + j]), mul(U.m_[k * col + j], U.m_[i * col + k])), old);
+                U.m_[i * col + j] = div(sub(mul(U.m_[k * col + k], U.m_[i * col + j]), mul(U.m_[k * col + j], U.m_[i * col + k])), old);
             U.m_[i * col + k] = zero; // Integer zero
         }
 
@@ -954,10 +952,9 @@ RCP<const Basic> det_bareis(const DenseMatrix &A)
     } else if (n == 3) {
         // if A = [[a, b, c], [d, e, f], [g, h, i]] then
         // det(A) = (aei + bfg + cdh) - (ceg + bdi + afh)
-        return sub(add(add(mul(mul(A.m_[0], A.m_[4]), A.m_[8]), mul(mul(A.m_[1], A.m_[5]), A.m_[6])),
-                       mul(mul(A.m_[2], A.m_[3]), A.m_[7])),
-                   add(add(mul(mul(A.m_[2], A.m_[4]), A.m_[6]), mul(mul(A.m_[1], A.m_[3]), A.m_[8])),
-                       mul(mul(A.m_[0], A.m_[5]), A.m_[7])));
+        return sub(
+            add(add(mul(mul(A.m_[0], A.m_[4]), A.m_[8]), mul(mul(A.m_[1], A.m_[5]), A.m_[6])), mul(mul(A.m_[2], A.m_[3]), A.m_[7])),
+            add(add(mul(mul(A.m_[2], A.m_[4]), A.m_[6]), mul(mul(A.m_[1], A.m_[3]), A.m_[8])), mul(mul(A.m_[0], A.m_[5]), A.m_[7])));
     } else {
         DenseMatrix B = DenseMatrix(n, n, A.m_);
         unsigned i, sign = 1;

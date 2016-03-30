@@ -22,7 +22,7 @@ namespace SymEngine
 template <typename T, typename C>
 class EvalDoubleVisitor : public BaseVisitor<C>
 {
-    protected:
+protected:
     /*
        The 'result_' variable is assigned into at the very end of each visit()
        methods below. The only place where these methods are called from is the
@@ -32,7 +32,7 @@ class EvalDoubleVisitor : public BaseVisitor<C>
     */
     T result_;
 
-    public:
+public:
     T apply(const Basic &b)
     {
         b.accept(*static_cast<C *>(this));
@@ -108,7 +108,10 @@ class EvalDoubleVisitor : public BaseVisitor<C>
         result_ = std::tan(tmp);
     }
 
-    void bvisit(const Symbol &) { throw std::runtime_error("Symbol cannot be evaluated."); };
+    void bvisit(const Symbol &)
+    {
+        throw std::runtime_error("Symbol cannot be evaluated.");
+    };
 
     void bvisit(const Log &x)
     {
@@ -261,17 +264,26 @@ class EvalDoubleVisitor : public BaseVisitor<C>
         result_ = std::abs(tmp);
     };
 
-    void bvisit(const Basic &) { throw std::runtime_error("Not implemented."); };
+    void bvisit(const Basic &)
+    {
+        throw std::runtime_error("Not implemented.");
+    };
 
-    void bvisit(const NumberWrapper &x) { apply(*(x.eval(53))); }
+    void bvisit(const NumberWrapper &x)
+    {
+        apply(*(x.eval(53)));
+    }
 
-    void bvisit(const FunctionWrapper &x) { apply(*(x.eval(53))); }
+    void bvisit(const FunctionWrapper &x)
+    {
+        apply(*(x.eval(53)));
+    }
 };
 
 template <typename C>
 class EvalRealDoubleVisitor : public EvalDoubleVisitor<double, C>
 {
-    public:
+public:
     // Classes not implemented are
     // Subs, UpperGamma, LowerGamma, Dirichlet_eta, Zeta
     // LeviCivita, KroneckerDelta, LambertW
@@ -345,7 +357,7 @@ class EvalRealDoubleVisitorFinal : public EvalRealDoubleVisitor<EvalRealDoubleVi
 
 class EvalComplexDoubleVisitor : public EvalDoubleVisitor<std::complex<double>, EvalComplexDoubleVisitor>
 {
-    public:
+public:
     // Classes not implemented are
     // Subs, UpperGamma, LowerGamma, Dirichlet_eta, Zeta
     // LeviCivita, KroneckerDelta, LambertW
@@ -353,9 +365,15 @@ class EvalComplexDoubleVisitor : public EvalDoubleVisitor<std::complex<double>, 
 
     using EvalDoubleVisitor::bvisit;
 
-    void bvisit(const Complex &x) { result_ = std::complex<double>(mp_get_d(x.real_), mp_get_d(x.imaginary_)); };
+    void bvisit(const Complex &x)
+    {
+        result_ = std::complex<double>(mp_get_d(x.real_), mp_get_d(x.imaginary_));
+    };
 
-    void bvisit(const ComplexDouble &x) { result_ = x.i; };
+    void bvisit(const ComplexDouble &x)
+    {
+        result_ = x.i;
+    };
 #ifdef HAVE_SYMENGINE_MPC
     void bvisit(const ComplexMPC &x)
     {
@@ -540,8 +558,7 @@ std::vector<fn> init_eval_double()
         } else if (eq(x, *EulerGamma)) {
             return 0.5772156649015328606065; // use until polygamma or digamma is implemented
         } else {
-            throw std::runtime_error("Constant " + static_cast<const Constant &>(x).get_name()
-                                     + " is not implemented.");
+            throw std::runtime_error("Constant " + static_cast<const Constant &>(x).get_name() + " is not implemented.");
         }
     };
     table[ABS] = [](const Basic &x) {
@@ -583,7 +600,10 @@ std::complex<double> eval_complex_double(const Basic &b)
     return v.apply(b);
 }
 
-double eval_double_single_dispatch(const Basic &b) { return table_eval_double[b.get_type_code()](b); }
+double eval_double_single_dispatch(const Basic &b)
+{
+    return table_eval_double[b.get_type_code()](b);
+}
 
 double eval_double_visitor_pattern(const Basic &b)
 {
@@ -591,8 +611,11 @@ double eval_double_visitor_pattern(const Basic &b)
     return v.apply(b);
 }
 
-#define ACCEPT(CLASS)                                                                                             \
-    void CLASS::accept(EvalRealDoubleVisitorFinal &v) const { v.bvisit(*this); }
+#define ACCEPT(CLASS)                                                                                                            \
+    void CLASS::accept(EvalRealDoubleVisitorFinal &v) const                                                                      \
+    {                                                                                                                            \
+        v.bvisit(*this);                                                                                                         \
+    }
 
 #define SYMENGINE_ENUM(TypeID, Class) ACCEPT(Class)
 #include "symengine/type_codes.inc"

@@ -37,14 +37,12 @@ RCP<const Integer> mod_f(const Integer &n, const Integer &d);
 //! \return quotient round toward -inf when `n` is divided by `d`
 RCP<const Integer> quotient_f(const Integer &n, const Integer &d);
 //! \return modulo and quotient round toward -inf
-void quotient_mod_f(const Ptr<RCP<const Integer>> &q, const Ptr<RCP<const Integer>> &r, const Integer &a,
-                    const Integer &b);
+void quotient_mod_f(const Ptr<RCP<const Integer>> &q, const Ptr<RCP<const Integer>> &r, const Integer &a, const Integer &b);
 //! inverse modulo
 int mod_inverse(const Ptr<RCP<const Integer>> &b, const Integer &a, const Integer &m);
 
 //! Chinese remainder function. Return true when a solution exists.
-bool crt(const Ptr<RCP<const Integer>> &R, const std::vector<RCP<const Integer>> &rem,
-         const std::vector<RCP<const Integer>> &mod);
+bool crt(const Ptr<RCP<const Integer>> &R, const std::vector<RCP<const Integer>> &rem, const std::vector<RCP<const Integer>> &mod);
 
 //! Fibonacci number
 RCP<const Integer> fibonacci(unsigned long n);
@@ -96,13 +94,13 @@ void prime_factor_multiplicities(map_integer_uint &primes, const Integer &n);
 class Sieve
 {
 
-    private:
+private:
     static std::vector<unsigned> _primes;
     static void _extend(unsigned limit);
     static unsigned _sieve_size;
     static bool _clear;
 
-    public:
+public:
     // Returns all primes up to the `limit` (including). The vector `primes` should
     // be empty on input and it will be filled with the primes.
     //! \param primes: holds all primes up to the `limit` (including).
@@ -118,11 +116,11 @@ class Sieve
     class iterator
     {
 
-        private:
+    private:
         unsigned _index;
         unsigned _limit;
 
-        public:
+    public:
         // Iterator that generates primes upto limit
         iterator(unsigned limit);
         // Iterator that generates primes with no limit.
@@ -156,14 +154,13 @@ int jacobi(const Integer &a, const Integer &n);
 //! Kronecker Function
 int kronecker(const Integer &a, const Integer &n);
 //! All Solutions to x**n == a mod m. Return false if none exists.
-void nthroot_mod_list(std::vector<RCP<const Integer>> &roots, const RCP<const Integer> &a,
-                      const RCP<const Integer> &n, const RCP<const Integer> &m);
+void nthroot_mod_list(std::vector<RCP<const Integer>> &roots, const RCP<const Integer> &a, const RCP<const Integer> &n,
+                      const RCP<const Integer> &m);
 //! A solution to x**n == a mod m. Return false if none exists.
 bool nthroot_mod(const Ptr<RCP<const Integer>> &root, const RCP<const Integer> &a, const RCP<const Integer> &n,
                  const RCP<const Integer> &m);
 //! A solution to x**s == a**r mod m where b = r / s. Return false if none exists.
-bool powermod(const Ptr<RCP<const Integer>> &powm, const RCP<const Integer> &a, const RCP<const Number> &b,
-              const RCP<const Integer> &m);
+bool powermod(const Ptr<RCP<const Integer>> &powm, const RCP<const Integer> &a, const RCP<const Number> &b, const RCP<const Integer> &m);
 //! All solutions to x**s == a**r mod m where b = r / s. Return false if none exists.
 void powermod_list(std::vector<RCP<const Integer>> &pows, const RCP<const Integer> &a, const RCP<const Number> &b,
                    const RCP<const Integer> &m);

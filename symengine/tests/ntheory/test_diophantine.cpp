@@ -43,8 +43,8 @@ TEST_CASE("test_homogeneous_lde()", "[diophantine]")
     // for Solving Systems of Linear Diophantine Equations. Information and
     // computation, 113(1):143-172, August 1994.
 
-    DenseMatrix A = DenseMatrix(2, 4, {integer(-1), integer(1), integer(2), integer(-3), integer(-1), integer(3),
-                                       integer(-2), integer(-1)});
+    DenseMatrix A
+        = DenseMatrix(2, 4, {integer(-1), integer(1), integer(2), integer(-3), integer(-1), integer(3), integer(-2), integer(-1)});
     homogeneous_lde(basis, A);
     true_basis = std::vector<DenseMatrix>{DenseMatrix(1, 4, {integer(0), integer(1), integer(1), integer(1)}),
                                           DenseMatrix(1, 4, {integer(4), integer(2), integer(1), integer(0)})};

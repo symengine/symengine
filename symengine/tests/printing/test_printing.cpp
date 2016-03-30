@@ -54,10 +54,13 @@ namespace SymEngine
 {
 class MyStrPrinter : public BaseVisitor<MyStrPrinter, StrPrinter>
 {
-    public:
+public:
     using StrPrinter::bvisit;
 
-    void bvisit(const Sin &x) { str_ = "MySin(" + this->apply(x.get_arg()) + ")"; }
+    void bvisit(const Sin &x)
+    {
+        str_ = "MySin(" + this->apply(x.get_arg()) + ")";
+    }
 };
 }
 
@@ -386,4 +389,7 @@ TEST_CASE("test custom printing", "[printing]")
     CHECK(printer.apply(p) == "cos(MySin(x))");
 }
 
-TEST_CASE("Ascii Art", "[basic]") { std::cout << SymEngine::ascii_art() << std::endl; }
+TEST_CASE("Ascii Art", "[basic]")
+{
+    std::cout << SymEngine::ascii_art() << std::endl;
+}

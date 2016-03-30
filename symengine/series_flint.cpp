@@ -115,9 +115,15 @@ fp_t URatPSeriesFlint::var(const std::string &s)
     return r;
 }
 
-flint::fmpqxx URatPSeriesFlint::convert(const Rational &x) { return convert(x.as_mpq()); }
+flint::fmpqxx URatPSeriesFlint::convert(const Rational &x)
+{
+    return convert(x.as_mpq());
+}
 
-flint::fmpqxx URatPSeriesFlint::convert(const Basic &x) { throw std::runtime_error("Not Implemented"); }
+flint::fmpqxx URatPSeriesFlint::convert(const Basic &x)
+{
+    throw std::runtime_error("Not Implemented");
+}
 
 fp_t URatPSeriesFlint::pow(const fp_t &s, int n, unsigned prec)
 {
@@ -149,10 +155,19 @@ flint::fmpqxx URatPSeriesFlint::root(flint::fmpqxx &c, unsigned n)
     return cl_root;
 }
 
-fp_t URatPSeriesFlint::diff(const fp_t &s, const fp_t &var) { return fp_t(s.derivative()); }
+fp_t URatPSeriesFlint::diff(const fp_t &s, const fp_t &var)
+{
+    return fp_t(s.derivative());
+}
 
-fp_t URatPSeriesFlint::integrate(const fp_t &s, const fp_t &var) { return fp_t(s.integral()); }
+fp_t URatPSeriesFlint::integrate(const fp_t &s, const fp_t &var)
+{
+    return fp_t(s.integral());
+}
 
-fp_t URatPSeriesFlint::subs(const fp_t &s, const fp_t &var, const fp_t &r, unsigned prec) { return fp_t(s(r)); }
+fp_t URatPSeriesFlint::subs(const fp_t &s, const fp_t &var, const fp_t &r, unsigned prec)
+{
+    return fp_t(s(r));
+}
 }
 #endif // HAVE_SYMENGINE_FLINT

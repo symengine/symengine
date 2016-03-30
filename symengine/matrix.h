@@ -9,7 +9,7 @@ namespace SymEngine
 // Base class for matrices
 class MatrixBase
 {
-    public:
+public:
     virtual ~MatrixBase(){};
 
     // Below methods should be implemented by the derived classes. If not
@@ -48,8 +48,7 @@ class MatrixBase
     virtual void transpose(MatrixBase &result) const = 0;
 
     // Extract out a submatrix
-    virtual void submatrix(unsigned row_start, unsigned row_end, unsigned col_start, unsigned col_end,
-                           MatrixBase &result) const = 0;
+    virtual void submatrix(unsigned row_start, unsigned row_end, unsigned col_start, unsigned col_end, MatrixBase &result) const = 0;
     // LU factorization
     virtual void LU(MatrixBase &L, MatrixBase &U) const = 0;
 
@@ -69,7 +68,7 @@ class MatrixBase
 // ----------------------------- Dense Matrix --------------------------------//
 class DenseMatrix : public MatrixBase
 {
-    public:
+public:
     // Constructors
     DenseMatrix();
     DenseMatrix(unsigned row, unsigned col);
@@ -82,8 +81,14 @@ class DenseMatrix : public MatrixBase
     virtual RCP<const Basic> get(unsigned i, unsigned j) const;
     virtual void set(unsigned i, unsigned j, const RCP<const Basic> &e);
 
-    virtual unsigned nrows() const { return row_; }
-    virtual unsigned ncols() const { return col_; }
+    virtual unsigned nrows() const
+    {
+        return row_;
+    }
+    virtual unsigned ncols() const
+    {
+        return col_;
+    }
 
     virtual unsigned rank() const;
     virtual RCP<const Basic> det() const;
@@ -105,8 +110,7 @@ class DenseMatrix : public MatrixBase
     virtual void transpose(MatrixBase &result) const;
 
     // Extract out a submatrix
-    virtual void submatrix(unsigned row_start, unsigned row_end, unsigned col_start, unsigned col_end,
-                           MatrixBase &result) const;
+    virtual void submatrix(unsigned row_start, unsigned row_end, unsigned col_start, unsigned col_end, MatrixBase &result) const;
 
     // LU factorization
     virtual void LU(MatrixBase &L, MatrixBase &U) const;
@@ -132,8 +136,8 @@ class DenseMatrix : public MatrixBase
     friend void mul_dense_dense(const DenseMatrix &A, const DenseMatrix &B, DenseMatrix &C);
     friend void mul_dense_scalar(const DenseMatrix &A, const RCP<const Basic> &k, DenseMatrix &C);
     friend void transpose_dense(const DenseMatrix &A, DenseMatrix &B);
-    friend void submatrix_dense(const DenseMatrix &A, unsigned row_start, unsigned row_end, unsigned col_start,
-                                unsigned col_end, DenseMatrix &B);
+    friend void submatrix_dense(const DenseMatrix &A, unsigned row_start, unsigned row_end, unsigned col_start, unsigned col_end,
+                                DenseMatrix &B);
 
     // Row operations
     friend void row_exchange_dense(DenseMatrix &A, unsigned i, unsigned j);
@@ -143,12 +147,10 @@ class DenseMatrix : public MatrixBase
     // Gaussian elimination
     friend void pivoted_gaussian_elimination(const DenseMatrix &A, DenseMatrix &B, std::vector<unsigned> &pivotlist);
     friend void fraction_free_gaussian_elimination(const DenseMatrix &A, DenseMatrix &B);
-    friend void pivoted_fraction_free_gaussian_elimination(const DenseMatrix &A, DenseMatrix &B,
-                                                           std::vector<unsigned> &pivotlist);
+    friend void pivoted_fraction_free_gaussian_elimination(const DenseMatrix &A, DenseMatrix &B, std::vector<unsigned> &pivotlist);
     friend void pivoted_gauss_jordan_elimination(const DenseMatrix &A, DenseMatrix &B, std::vector<unsigned> &pivotlist);
     friend void fraction_free_gauss_jordan_elimination(const DenseMatrix &A, DenseMatrix &B);
-    friend void pivoted_fraction_free_gauss_jordan_elimination(const DenseMatrix &A, DenseMatrix &B,
-                                                               std::vector<unsigned> &pivotlist);
+    friend void pivoted_fraction_free_gauss_jordan_elimination(const DenseMatrix &A, DenseMatrix &B, std::vector<unsigned> &pivotlist);
     friend unsigned pivot(DenseMatrix &B, unsigned r, unsigned c);
 
     // Ax = b
@@ -184,7 +186,7 @@ class DenseMatrix : public MatrixBase
     friend void ones(DenseMatrix &A, unsigned rows, unsigned cols);
     friend void zeros(DenseMatrix &A, unsigned rows, unsigned cols);
 
-    private:
+private:
     // Matrix elements are stored in row-major order
     vec_basic m_;
     // Stores the dimension of the Matrix
@@ -195,7 +197,7 @@ class DenseMatrix : public MatrixBase
 // ----------------------------- Sparse Matrices -----------------------------//
 class CSRMatrix : public MatrixBase
 {
-    public:
+public:
     CSRMatrix();
     CSRMatrix(unsigned row, unsigned col);
     CSRMatrix(unsigned row, unsigned col, std::vector<unsigned> &&p, std::vector<unsigned> &&j, vec_basic &&x);
@@ -208,8 +210,14 @@ class CSRMatrix : public MatrixBase
     virtual RCP<const Basic> get(unsigned i, unsigned j) const;
     virtual void set(unsigned i, unsigned j, const RCP<const Basic> &e);
 
-    virtual unsigned nrows() const { return row_; }
-    virtual unsigned ncols() const { return col_; }
+    virtual unsigned nrows() const
+    {
+        return row_;
+    }
+    virtual unsigned ncols() const
+    {
+        return col_;
+    }
     virtual unsigned rank() const;
     virtual RCP<const Basic> det() const;
     virtual void inv(MatrixBase &result) const;
@@ -230,8 +238,7 @@ class CSRMatrix : public MatrixBase
     virtual void transpose(MatrixBase &result) const;
 
     // Extract out a submatrix
-    virtual void submatrix(unsigned row_start, unsigned row_end, unsigned col_start, unsigned col_end,
-                           MatrixBase &result) const;
+    virtual void submatrix(unsigned row_start, unsigned row_end, unsigned col_start, unsigned col_end, MatrixBase &result) const;
 
     // LU factorization
     virtual void LU(MatrixBase &L, MatrixBase &U) const;
@@ -258,8 +265,8 @@ class CSRMatrix : public MatrixBase
 
     static bool csr_has_canonical_format(const std::vector<unsigned> &p_, const std::vector<unsigned> &j_, unsigned row_);
 
-    static CSRMatrix from_coo(unsigned row, unsigned col, const std::vector<unsigned> &i,
-                              const std::vector<unsigned> &j, const vec_basic &x);
+    static CSRMatrix from_coo(unsigned row, unsigned col, const std::vector<unsigned> &i, const std::vector<unsigned> &j,
+                              const vec_basic &x);
 
     friend void csr_matmat_pass1(const CSRMatrix &A, const CSRMatrix &B, CSRMatrix &C);
     friend void csr_matmat_pass2(const CSRMatrix &A, const CSRMatrix &B, CSRMatrix &C);
@@ -270,7 +277,7 @@ class CSRMatrix : public MatrixBase
     friend void csr_binop_csr_canonical(const CSRMatrix &A, const CSRMatrix &B, CSRMatrix &C,
                                         RCP<const Basic>(&bin_op)(const RCP<const Basic> &, const RCP<const Basic> &));
 
-    private:
+private:
     std::vector<unsigned> p_;
     std::vector<unsigned> j_;
     vec_basic x_;
@@ -330,7 +337,10 @@ inline bool is_a(const MatrixBase &b)
 }
 
 // Test two matrices for equality
-inline bool operator==(const SymEngine::MatrixBase &lhs, const SymEngine::MatrixBase &rhs) { return lhs.eq(rhs); }
+inline bool operator==(const SymEngine::MatrixBase &lhs, const SymEngine::MatrixBase &rhs)
+{
+    return lhs.eq(rhs);
+}
 
 // Test two matrices for equality
 inline bool operator!=(const SymEngine::MatrixBase &lhs, const SymEngine::MatrixBase &rhs)
@@ -341,6 +351,9 @@ inline bool operator!=(const SymEngine::MatrixBase &lhs, const SymEngine::Matrix
 } // SymEngine
 
 // Print Matrix
-inline std::ostream &operator<<(std::ostream &out, const SymEngine::MatrixBase &A) { return out << A.__str__(); }
+inline std::ostream &operator<<(std::ostream &out, const SymEngine::MatrixBase &A)
+{
+    return out << A.__str__();
+}
 
 #endif

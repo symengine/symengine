@@ -205,9 +205,11 @@ TEST_CASE("Test NumberWrapper", "[number]")
 {
     class Long : public NumberWrapper
     {
-        public:
+    public:
         long i_;
-        Long(long i) : i_(i) {}
+        Long(long i) : i_(i)
+        {
+        }
 
         virtual std::string __str__() const
         {
@@ -216,7 +218,10 @@ TEST_CASE("Test NumberWrapper", "[number]")
             return ss.str();
         };
 
-        virtual RCP<const Number> eval(long bits) const { return integer(integer_class(i_)); };
+        virtual RCP<const Number> eval(long bits) const
+        {
+            return integer(integer_class(i_));
+        };
         long number_to_long(const Number &x) const
         {
             long l;
@@ -224,12 +229,30 @@ TEST_CASE("Test NumberWrapper", "[number]")
             ss >> l;
             return l;
         }
-        virtual RCP<const Number> add(const Number &x) const { return make_rcp<Long>(i_ + number_to_long(x)); }
-        virtual RCP<const Number> sub(const Number &x) const { return make_rcp<Long>(i_ - number_to_long(x)); }
-        virtual RCP<const Number> rsub(const Number &x) const { return make_rcp<Long>(-i_ + number_to_long(x)); }
-        virtual RCP<const Number> mul(const Number &x) const { return make_rcp<Long>(i_ * number_to_long(x)); }
-        virtual RCP<const Number> div(const Number &x) const { return make_rcp<Long>(i_ / number_to_long(x)); }
-        virtual RCP<const Number> rdiv(const Number &x) const { return make_rcp<Long>(number_to_long(x) / i_); }
+        virtual RCP<const Number> add(const Number &x) const
+        {
+            return make_rcp<Long>(i_ + number_to_long(x));
+        }
+        virtual RCP<const Number> sub(const Number &x) const
+        {
+            return make_rcp<Long>(i_ - number_to_long(x));
+        }
+        virtual RCP<const Number> rsub(const Number &x) const
+        {
+            return make_rcp<Long>(-i_ + number_to_long(x));
+        }
+        virtual RCP<const Number> mul(const Number &x) const
+        {
+            return make_rcp<Long>(i_ * number_to_long(x));
+        }
+        virtual RCP<const Number> div(const Number &x) const
+        {
+            return make_rcp<Long>(i_ / number_to_long(x));
+        }
+        virtual RCP<const Number> rdiv(const Number &x) const
+        {
+            return make_rcp<Long>(number_to_long(x) / i_);
+        }
         virtual RCP<const Number> pow(const Number &x) const
         {
             return make_rcp<Long>(std::pow(i_, number_to_long(x)));
@@ -238,18 +261,39 @@ TEST_CASE("Test NumberWrapper", "[number]")
         {
             return make_rcp<Long>(std::pow(number_to_long(x), i_));
         }
-        virtual bool is_zero() const { return i_ == 0; }
+        virtual bool is_zero() const
+        {
+            return i_ == 0;
+        }
         //! \return true if `1`
-        virtual bool is_one() const { return i_ == 1; }
+        virtual bool is_one() const
+        {
+            return i_ == 1;
+        }
         //! \return true if `-1`
-        virtual bool is_minus_one() const { return i_ == -1; }
+        virtual bool is_minus_one() const
+        {
+            return i_ == -1;
+        }
         //! \return true if negative
-        virtual bool is_negative() const { return i_ < 0; }
+        virtual bool is_negative() const
+        {
+            return i_ < 0;
+        }
         //! \return true if positive
-        virtual bool is_positive() const { return i_ > 0; }
-        virtual std::size_t __hash__() const { return i_; };
+        virtual bool is_positive() const
+        {
+            return i_ > 0;
+        }
+        virtual std::size_t __hash__() const
+        {
+            return i_;
+        };
         //! true if `this` is equal to `o`.
-        virtual bool __eq__(const Basic &o) const { return i_ == static_cast<const Long &>(o).i_; };
+        virtual bool __eq__(const Basic &o) const
+        {
+            return i_ == static_cast<const Long &>(o).i_;
+        };
         virtual int compare(const Basic &o) const
         {
             long j = static_cast<const Long &>(o).i_;

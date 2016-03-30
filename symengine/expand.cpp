@@ -21,19 +21,22 @@ inline void _imulnum(const Ptr<RCP<const Number>> &self, const RCP<const Number>
 
 class ExpandVisitor : public BaseVisitor<ExpandVisitor>
 {
-    private:
+private:
     umap_basic_num d_;
     RCP<const Number> coeff = zero;
     RCP<const Number> multiply = one;
 
-    public:
+public:
     RCP<const Basic> apply(const Basic &b)
     {
         b.accept(*this);
         return Add::from_dict(coeff, std::move(d_));
     }
 
-    void bvisit(const Basic &x) { Add::dict_add_term(d_, multiply, x.rcp_from_this()); }
+    void bvisit(const Basic &x)
+    {
+        Add::dict_add_term(d_, multiply, x.rcp_from_this());
+    }
 
     void bvisit(const Number &x)
     {
@@ -70,12 +73,11 @@ class ExpandVisitor : public BaseVisitor<ExpandVisitor>
     {
         // Both a and b are assumed to be expanded
         if (is_a<Add>(*a) && is_a<Add>(*b)) {
-            iaddnum(outArg(coeff), _mulnum(multiply, _mulnum(rcp_static_cast<const Add>(a)->coef_,
-                                                             rcp_static_cast<const Add>(b)->coef_)));
+            iaddnum(outArg(coeff),
+                    _mulnum(multiply, _mulnum(rcp_static_cast<const Add>(a)->coef_, rcp_static_cast<const Add>(b)->coef_)));
 // Improves (x+1)**3*(x+2)**3*...(x+350)**3 expansion from 0.97s to 0.93s:
 #if defined(HAVE_SYMENGINE_RESERVE)
-            d_.reserve(d_.size()
-                       + (rcp_static_cast<const Add>(a))->dict_.size() * (rcp_static_cast<const Add>(b))->dict_.size());
+            d_.reserve(d_.size() + (rcp_static_cast<const Add>(a))->dict_.size() * (rcp_static_cast<const Add>(b))->dict_.size());
 #endif
             // Expand dicts first:
             for (auto &p : (rcp_static_cast<const Add>(a))->dict_) {
@@ -159,8 +161,7 @@ class ExpandVisitor : public BaseVisitor<ExpandVisitor>
                 if (q == p) {
                     _coef_dict_add_term(_mulnum(mulnum((*p).second, (*p).second), multiply), pow((*p).first, two));
                 } else {
-                    _coef_dict_add_term(_mulnum(multiply, _mulnum((*p).second, _mulnum((*q).second, two))),
-                                        mul((*q).first, (*p).first));
+                    _coef_dict_add_term(_mulnum(multiply, _mulnum((*p).second, _mulnum((*q).second, two))), mul((*q).first, (*p).first));
                 }
             }
         }

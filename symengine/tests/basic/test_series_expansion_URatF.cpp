@@ -34,8 +34,7 @@ using SymEngine::umap_short_basic;
 
 using SymEngine::URatPSeriesFlint;
 using SymEngine::fp_t;
-#define series_coeff(EX, SYM, PREC, COEFF)                                                                        \
-    SymEngine::URatPSeriesFlint::series(EX, SYM->get_name(), PREC)->get_coeff(COEFF)
+#define series_coeff(EX, SYM, PREC, COEFF) SymEngine::URatPSeriesFlint::series(EX, SYM->get_name(), PREC)->get_coeff(COEFF)
 
 static RCP<const Number> fmpqxx2sym(flint::fmpqxx fc)
 {
@@ -54,8 +53,7 @@ static RCP<const Number> invseries_coeff(const RCP<const Basic> &ex, const RCP<c
     return fmpqxx2sym(flint::fmpqxx(serrev.get_coeff(n)));
 }
 
-static bool expand_check_pairs(const RCP<const Basic> &ex, const RCP<const Symbol> &x, int prec,
-                               const umap_short_basic &pairs)
+static bool expand_check_pairs(const RCP<const Basic> &ex, const RCP<const Symbol> &x, int prec, const umap_short_basic &pairs)
 {
     auto ser = SymEngine::URatPSeriesFlint::series(ex, x->get_name(), prec);
     for (auto it : pairs) {
@@ -190,8 +188,7 @@ TEST_CASE("Expression series expansion: reversion ", "[Expansion of f^-1]")
     REQUIRE(invseries_coeff(ex4, x, 20, 10)->__eq__(*rational(-156250, 567)));
 }
 
-TEST_CASE("Expression series expansion: atan, tan, asin, cot, sec, csc",
-          "[Expansion of tan, atan, asin, cot, sec, csc]")
+TEST_CASE("Expression series expansion: atan, tan, asin, cot, sec, csc", "[Expansion of tan, atan, asin, cot, sec, csc]")
 {
     RCP<const Symbol> x = symbol("x");
     RCP<const Integer> one = integer(1);
@@ -223,8 +220,7 @@ TEST_CASE("Expression series expansion: atan, tan, asin, cot, sec, csc",
     //    REQUIRE_THROWS_AS(URatPSeriesFlint::series(ex10, "x", 10), std::runtime_error);
 }
 
-TEST_CASE("Expression series expansion: sinh, cosh, tanh, asinh, atanh",
-          "[Expansion of sinh, cosh, tanh, asinh, atanh]")
+TEST_CASE("Expression series expansion: sinh, cosh, tanh, asinh, atanh", "[Expansion of sinh, cosh, tanh, asinh, atanh]")
 {
     RCP<const Symbol> x = symbol("x");
     RCP<const Integer> one = integer(1);

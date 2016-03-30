@@ -20,16 +20,22 @@ class Function : public Basic
 class TrigFunction : public Function
 {
 
-    private:
+private:
     RCP<const Basic> arg_; //! The `arg` in `trigclass(arg)`
-    public:
+public:
     //! Constructor
     TrigFunction(RCP<const Basic> arg) : arg_{arg} {};
     //! \return Size of the hash
     virtual std::size_t __hash__() const;
     //! \return `arg_`
-    inline RCP<const Basic> get_arg() const { return arg_; }
-    virtual vec_basic get_args() const { return {arg_}; }
+    inline RCP<const Basic> get_arg() const
+    {
+        return arg_;
+    }
+    virtual vec_basic get_args() const
+    {
+        return {arg_};
+    }
     //! Method to construct classes with canonicalization
     virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
     //! Substitute with `subs_dict`
@@ -61,7 +67,7 @@ RCP<const Basic> sqrt(const RCP<const Basic> &arg);
 class Sin : public TrigFunction
 {
 
-    public:
+public:
     IMPLEMENT_TYPEID(SIN)
     //! Sin Constructor
     Sin(const RCP<const Basic> &arg);
@@ -84,7 +90,7 @@ RCP<const Basic> sin(const RCP<const Basic> &arg);
 class Cos : public TrigFunction
 {
 
-    public:
+public:
     IMPLEMENT_TYPEID(COS)
     //! Cos Constructor
     Cos(const RCP<const Basic> &arg);
@@ -106,7 +112,7 @@ RCP<const Basic> cos(const RCP<const Basic> &arg);
 class Tan : public TrigFunction
 {
 
-    public:
+public:
     IMPLEMENT_TYPEID(TAN)
     //! Tan Constructor
     Tan(const RCP<const Basic> &arg);
@@ -128,7 +134,7 @@ RCP<const Basic> tan(const RCP<const Basic> &arg);
 class Cot : public TrigFunction
 {
 
-    public:
+public:
     IMPLEMENT_TYPEID(COT)
     //! Cot Constructor
     Cot(const RCP<const Basic> &arg);
@@ -150,7 +156,7 @@ RCP<const Basic> cot(const RCP<const Basic> &arg);
 class Csc : public TrigFunction
 {
 
-    public:
+public:
     IMPLEMENT_TYPEID(CSC)
     //! Csc Constructor
     Csc(const RCP<const Basic> &arg);
@@ -172,7 +178,7 @@ RCP<const Basic> csc(const RCP<const Basic> &arg);
 class Sec : public TrigFunction
 {
 
-    public:
+public:
     IMPLEMENT_TYPEID(SEC)
     //! Sec Constructor
     Sec(const RCP<const Basic> &arg);
@@ -194,7 +200,7 @@ RCP<const Basic> sec(const RCP<const Basic> &arg);
 class ASin : public TrigFunction
 {
 
-    public:
+public:
     IMPLEMENT_TYPEID(ASIN)
     //! ASin Constructor
     ASin(const RCP<const Basic> &arg);
@@ -216,7 +222,7 @@ RCP<const Basic> asin(const RCP<const Basic> &arg);
 class ACos : public TrigFunction
 {
 
-    public:
+public:
     IMPLEMENT_TYPEID(ACOS)
     //! ACos Constructor
     ACos(const RCP<const Basic> &arg);
@@ -238,7 +244,7 @@ RCP<const Basic> acos(const RCP<const Basic> &arg);
 class ASec : public TrigFunction
 {
 
-    public:
+public:
     IMPLEMENT_TYPEID(ASEC)
     //! ASec Constructor
     ASec(const RCP<const Basic> &arg);
@@ -260,7 +266,7 @@ RCP<const Basic> asec(const RCP<const Basic> &arg);
 class ACsc : public TrigFunction
 {
 
-    public:
+public:
     IMPLEMENT_TYPEID(ACSC)
     //! ACsc Constructor
     ACsc(const RCP<const Basic> &arg);
@@ -282,7 +288,7 @@ RCP<const Basic> acsc(const RCP<const Basic> &arg);
 class ATan : public TrigFunction
 {
 
-    public:
+public:
     IMPLEMENT_TYPEID(ATAN)
     //! ATan Constructor
     ATan(const RCP<const Basic> &arg);
@@ -304,7 +310,7 @@ RCP<const Basic> atan(const RCP<const Basic> &arg);
 class ACot : public TrigFunction
 {
 
-    public:
+public:
     IMPLEMENT_TYPEID(ACOT)
     //! ACot Constructor
     ACot(const RCP<const Basic> &arg);
@@ -325,10 +331,10 @@ RCP<const Basic> acot(const RCP<const Basic> &arg);
 
 class ATan2 : public Function
 {
-    private:
+private:
     RCP<const Basic> num_; //! The `y` in `atan2(y, x)`
     RCP<const Basic> den_; //! The `x` in `atan2(y, x)`
-    public:
+public:
     IMPLEMENT_TYPEID(ATAN2)
     //! ATan2 Constructor
     ATan2(const RCP<const Basic> &num, const RCP<const Basic> &den);
@@ -343,11 +349,20 @@ class ATan2 : public Function
     //! \return Size of the hash
     virtual std::size_t __hash__() const;
     //! \return `y` in `atan2(y, x)`
-    inline RCP<const Basic> get_num() const { return num_; }
+    inline RCP<const Basic> get_num() const
+    {
+        return num_;
+    }
     //! \return `x` in `atan2(y, x)`
-    inline RCP<const Basic> get_den() const { return den_; }
+    inline RCP<const Basic> get_den() const
+    {
+        return den_;
+    }
 
-    virtual vec_basic get_args() const { return {num_, den_}; }
+    virtual vec_basic get_args() const
+    {
+        return {num_, den_};
+    }
 };
 
 //! Canonicalize ATan2:
@@ -360,10 +375,10 @@ class LambertW : public Function
     // of this inverse function, which is multivalued.
     // For more information, see:
     // http://en.wikipedia.org/wiki/Lambert_W_function
-    private:
+private:
     RCP<const Basic> arg_;
 
-    public:
+public:
     IMPLEMENT_TYPEID(LAMBERTW)
     //! LambertW Constructor
     LambertW(const RCP<const Basic> &arg);
@@ -376,8 +391,14 @@ class LambertW : public Function
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
     //! \return `arg_`
-    inline RCP<const Basic> get_arg() const { return arg_; }
-    virtual vec_basic get_args() const { return {arg_}; }
+    inline RCP<const Basic> get_arg() const
+    {
+        return arg_;
+    }
+    virtual vec_basic get_args() const
+    {
+        return {arg_};
+    }
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &arg) const;
 };
@@ -397,11 +418,11 @@ class Zeta : public Function
     // If no value is passed for :math:`a`, by this function assumes a default value
     // of :math:`a = 1`, yielding the Riemann zeta function.
 
-    private:
+private:
     RCP<const Basic> s_;
     RCP<const Basic> a_;
 
-    public:
+public:
     IMPLEMENT_TYPEID(ZETA)
     //! Zeta Constructor
     Zeta(const RCP<const Basic> &s, const RCP<const Basic> &a);
@@ -416,10 +437,19 @@ class Zeta : public Function
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
     //! \return `s_`
-    inline RCP<const Basic> get_s() const { return s_; }
+    inline RCP<const Basic> get_s() const
+    {
+        return s_;
+    }
     //! \return `a_`
-    inline RCP<const Basic> get_a() const { return a_; }
-    virtual vec_basic get_args() const { return {s_, a_}; }
+    inline RCP<const Basic> get_a() const
+    {
+        return a_;
+    }
+    virtual vec_basic get_args() const
+    {
+        return {s_, a_};
+    }
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &s, const RCP<const Basic> &a) const;
 };
@@ -432,10 +462,10 @@ class Dirichlet_eta : public Function
 {
     // See http://en.wikipedia.org/wiki/Dirichlet_eta_function
 
-    private:
+private:
     RCP<const Basic> s_;
 
-    public:
+public:
     IMPLEMENT_TYPEID(DIRICHLET_ETA)
     //! Dirichlet_eta Constructor
     Dirichlet_eta(const RCP<const Basic> &s);
@@ -448,8 +478,14 @@ class Dirichlet_eta : public Function
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
     //! \return `s_`
-    inline RCP<const Basic> get_s() const { return s_; }
-    virtual vec_basic get_args() const { return {s_}; }
+    inline RCP<const Basic> get_s() const
+    {
+        return s_;
+    }
+    virtual vec_basic get_args() const
+    {
+        return {s_};
+    }
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &s) const;
     //! Rewrites in the form of zeta
@@ -461,11 +497,11 @@ RCP<const Basic> dirichlet_eta(const RCP<const Basic> &s);
 
 class FunctionSymbol : public Function
 {
-    protected:
+protected:
     std::string name_; //! The `f` in `f(x+y, z)`
     vec_basic arg_;    //! The `x+y`, `z` in `f(x+y, z)`
 
-    public:
+public:
     IMPLEMENT_TYPEID(FUNCTIONSYMBOL)
     //! FunctionSymbol Constructors
     FunctionSymbol(std::string name, const vec_basic &arg);
@@ -479,9 +515,15 @@ class FunctionSymbol : public Function
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
     //! \return `name_`
-    inline std::string get_name() const { return name_; }
+    inline std::string get_name() const
+    {
+        return name_;
+    }
     //! \return `arg_`
-    virtual vec_basic get_args() const { return arg_; }
+    virtual vec_basic get_args() const
+    {
+        return arg_;
+    }
     //! \return `true` if canonical
     bool is_canonical(const vec_basic &arg) const;
     virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
@@ -498,7 +540,7 @@ RCP<const Basic> function_symbol(std::string name, const vec_basic &arg);
 
 class FunctionWrapper : public FunctionSymbol
 {
-    public:
+public:
     IMPLEMENT_TYPEID(FUNCTIONWRAPPER)
     FunctionWrapper(std::string name, const vec_basic &arg);
     FunctionWrapper(std::string name, const RCP<const Basic> &arg);
@@ -513,7 +555,7 @@ class FunctionWrapper : public FunctionSymbol
  * */
 class Derivative : public Basic
 {
-    private:
+private:
     RCP<const Basic> arg_; //! The expression to be differentiated
     // The symbols are declared as Basic (and checked by is_canonical() below),
     // to avoid issues with converting vector<RCP<Symbol>> to
@@ -526,7 +568,7 @@ class Derivative : public Basic
     // [2]http://stackoverflow.com/questions/114819/getting-a-vectorderived-into-a-function-that-expects-a-vectorbase
     multiset_basic x_; //! x, y, ...
 
-    public:
+public:
     IMPLEMENT_TYPEID(DERIVATIVE)
     Derivative(const RCP<const Basic> &arg, const multiset_basic &x);
 
@@ -538,8 +580,14 @@ class Derivative : public Basic
     virtual std::size_t __hash__() const;
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
-    inline RCP<const Basic> get_arg() const { return arg_; }
-    inline multiset_basic get_symbols() const { return x_; }
+    inline RCP<const Basic> get_arg() const
+    {
+        return arg_;
+    }
+    inline multiset_basic get_symbols() const
+    {
+        return x_;
+    }
     virtual vec_basic get_args() const
     {
         vec_basic args = {arg_};
@@ -556,11 +604,11 @@ class Derivative : public Basic
  * */
 class Subs : public Basic
 {
-    public:
+public:
     RCP<const Basic> arg_;
     map_basic_basic dict_;
 
-    public:
+public:
     IMPLEMENT_TYPEID(SUBS)
     Subs(const RCP<const Basic> &arg, const map_basic_basic &x);
 
@@ -572,8 +620,14 @@ class Subs : public Basic
     virtual std::size_t __hash__() const;
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
-    inline RCP<const Basic> get_arg() const { return arg_; }
-    inline const map_basic_basic &get_dict() const { return dict_; };
+    inline RCP<const Basic> get_arg() const
+    {
+        return arg_;
+    }
+    inline const map_basic_basic &get_dict() const
+    {
+        return dict_;
+    };
     virtual vec_basic get_variables() const;
     virtual vec_basic get_point() const;
     virtual vec_basic get_args() const;
@@ -585,16 +639,22 @@ class Subs : public Basic
 class HyperbolicFunction : public Function
 {
 
-    private:
+private:
     RCP<const Basic> arg_; //! The `arg` in `hyperbolicclass(arg)`
-    public:
+public:
     //! Constructor
     HyperbolicFunction(RCP<const Basic> arg) : arg_{arg} {};
     //! \return Size of the hash
     virtual std::size_t __hash__() const;
     //! \return `arg_`
-    inline RCP<const Basic> get_arg() const { return arg_; }
-    virtual vec_basic get_args() const { return {arg_}; }
+    inline RCP<const Basic> get_arg() const
+    {
+        return arg_;
+    }
+    virtual vec_basic get_args() const
+    {
+        return {arg_};
+    }
     //! Method to construct classes with canonicalization
     virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
     //! Substitute with `subs_dict`
@@ -604,7 +664,7 @@ class HyperbolicFunction : public Function
 class Sinh : public HyperbolicFunction
 {
     //! The hyperbolic sine function, `\frac{e^x - e^{-x}}{2}`.
-    public:
+public:
     IMPLEMENT_TYPEID(SINH)
     //! Sinh Constructor
     Sinh(const RCP<const Basic> &arg);
@@ -628,7 +688,7 @@ RCP<const Basic> sinh(const RCP<const Basic> &arg);
 class Csch : public HyperbolicFunction
 {
     //! The hyperbolic cosecant function, `\frac{2}{e^x - e^{-x}}`.
-    public:
+public:
     IMPLEMENT_TYPEID(CSCH)
     //! Csch Constructor
     Csch(const RCP<const Basic> &arg);
@@ -653,7 +713,7 @@ RCP<const Basic> csch(const RCP<const Basic> &arg);
 class Cosh : public HyperbolicFunction
 {
     //! The hyperbolic cosine function, `\frac{e^x + e^{-x}}{2}`.
-    public:
+public:
     IMPLEMENT_TYPEID(COSH)
     //! Cosh Constructor
     Cosh(const RCP<const Basic> &arg);
@@ -677,7 +737,7 @@ RCP<const Basic> cosh(const RCP<const Basic> &arg);
 class Sech : public HyperbolicFunction
 {
     //! The hyperbolic secant function, `\frac{2}{e^x + e^{-x}}`.
-    public:
+public:
     IMPLEMENT_TYPEID(SECH)
     //! Sech Constructor
     Sech(const RCP<const Basic> &arg);
@@ -702,7 +762,7 @@ RCP<const Basic> sech(const RCP<const Basic> &arg);
 class Tanh : public HyperbolicFunction
 {
     //! The hyperbolic tangent function, `\frac{\sinh(x)}{\cosh(x)}`.
-    public:
+public:
     IMPLEMENT_TYPEID(TANH)
     //! Tanh Constructor
     Tanh(const RCP<const Basic> &arg);
@@ -726,7 +786,7 @@ RCP<const Basic> tanh(const RCP<const Basic> &arg);
 class Coth : public HyperbolicFunction
 {
     //! The hyperbolic tangent function, `\frac{\cosh(x)}{\sinh(x)}`.
-    public:
+public:
     IMPLEMENT_TYPEID(COTH)
     //! Coth Constructor
     Coth(const RCP<const Basic> &arg);
@@ -750,7 +810,7 @@ RCP<const Basic> coth(const RCP<const Basic> &arg);
 class ASinh : public HyperbolicFunction
 {
     //! The inverse hyperbolic sine function.
-    public:
+public:
     IMPLEMENT_TYPEID(ASINH)
     //! ASinh Constructor
     ASinh(const RCP<const Basic> &arg);
@@ -772,7 +832,7 @@ RCP<const Basic> asinh(const RCP<const Basic> &arg);
 class ACsch : public HyperbolicFunction
 {
     //! The inverse hyperbolic cosecant function.
-    public:
+public:
     IMPLEMENT_TYPEID(ACSCH)
     //! ACsch Constructor
     ACsch(const RCP<const Basic> &arg);
@@ -794,7 +854,7 @@ RCP<const Basic> acsch(const RCP<const Basic> &arg);
 class ACosh : public HyperbolicFunction
 {
     //! The inverse hyperbolic cosine function.
-    public:
+public:
     IMPLEMENT_TYPEID(ACOSH)
     //! ACosh Constructor
     ACosh(const RCP<const Basic> &arg);
@@ -816,7 +876,7 @@ RCP<const Basic> acosh(const RCP<const Basic> &arg);
 class ATanh : public HyperbolicFunction
 {
     //! The inverse hyperbolic tangent function.
-    public:
+public:
     IMPLEMENT_TYPEID(ATANH)
     //! ATanh Constructor
     ATanh(const RCP<const Basic> &arg);
@@ -838,7 +898,7 @@ RCP<const Basic> atanh(const RCP<const Basic> &arg);
 class ACoth : public HyperbolicFunction
 {
     //! The inverse hyperbolic cotangent function.
-    public:
+public:
     IMPLEMENT_TYPEID(ACOTH)
     //! ACoth Constructor
     ACoth(const RCP<const Basic> &arg);
@@ -860,7 +920,7 @@ RCP<const Basic> acoth(const RCP<const Basic> &arg);
 class ASech : public HyperbolicFunction
 {
     //! The inverse hyperbolic secant function.
-    public:
+public:
     IMPLEMENT_TYPEID(ASECH)
     //! ASech Constructor
     ASech(const RCP<const Basic> &arg);
@@ -886,11 +946,11 @@ class KroneckerDelta : public Function
      * not equal or it returns `1` if `i` and `j` are equal.
      * http://en.wikipedia.org/wiki/Kronecker_delta
      **/
-    private:
+private:
     RCP<const Basic> i_;
     RCP<const Basic> j_;
 
-    public:
+public:
     IMPLEMENT_TYPEID(KRONECKERDELTA)
     //! KroneckerDelta Constructor
     KroneckerDelta(const RCP<const Basic> &i, const RCP<const Basic> &j);
@@ -904,7 +964,10 @@ class KroneckerDelta : public Function
     virtual std::size_t __hash__() const;
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &i, const RCP<const Basic> &j) const;
-    virtual vec_basic get_args() const { return {i_, j_}; }
+    virtual vec_basic get_args() const
+    {
+        return {i_, j_};
+    }
     RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
 };
 
@@ -919,10 +982,10 @@ class LeviCivita : public Function
      *
      *  Thus it represents an alternating pseudotensor.
      **/
-    private:
+private:
     vec_basic arg_;
 
-    public:
+public:
     IMPLEMENT_TYPEID(LEVICIVITA)
     //! LeviCivita Constructor
     LeviCivita(const vec_basic &&arg);
@@ -936,7 +999,10 @@ class LeviCivita : public Function
     virtual std::size_t __hash__() const;
     //! \return `true` if canonical
     bool is_canonical(const vec_basic &arg) const;
-    virtual vec_basic get_args() const { return arg_; }
+    virtual vec_basic get_args() const
+    {
+        return arg_;
+    }
 };
 
 //! Canonicalize LeviCivita:
@@ -949,13 +1015,16 @@ class Erf : public Function
      *   .. math::
      *      \mathrm{erf}(x) = \frac{2}{\sqrt{\pi}} \int_0^x e^{-t^2} \mathrm{d}t.
      **/
-    private:
+private:
     RCP<const Basic> arg_;
 
-    public:
+public:
     IMPLEMENT_TYPEID(ERF)
     //! Erf Constructor
-    Erf(const RCP<const Basic> &arg) : arg_{arg} { SYMENGINE_ASSERT(is_canonical(arg_)) }
+    Erf(const RCP<const Basic> &arg) : arg_{arg}
+    {
+        SYMENGINE_ASSERT(is_canonical(arg_))
+    }
     /*! Equality comparator
      * \param o - Object to be compared with
      * \return whether the 2 objects are equal
@@ -966,7 +1035,10 @@ class Erf : public Function
     virtual std::size_t __hash__() const;
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &arg) const;
-    virtual vec_basic get_args() const { return {arg_}; }
+    virtual vec_basic get_args() const
+    {
+        return {arg_};
+    }
     RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
 };
 
@@ -985,10 +1057,10 @@ class Gamma : public Function
      *  an integer. More general, `\Gamma(z)` is defined in the whole complex
      *  plane except at the negative integers where there are simple poles.
      **/
-    private:
+private:
     RCP<const Basic> arg_;
 
-    public:
+public:
     IMPLEMENT_TYPEID(GAMMA)
     //! Gamma Constructor
     Gamma(const RCP<const Basic> &arg);
@@ -1002,7 +1074,10 @@ class Gamma : public Function
     virtual std::size_t __hash__() const;
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &arg) const;
-    virtual vec_basic get_args() const { return {arg_}; }
+    virtual vec_basic get_args() const
+    {
+        return {arg_};
+    }
     //! Substitute with `subs_dict`
     virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
 };
@@ -1013,11 +1088,11 @@ RCP<const Basic> gamma(const RCP<const Basic> &arg);
 class LowerGamma : public Function
 {
     //! The lower incomplete gamma function.
-    private:
+private:
     RCP<const Basic> s_;
     RCP<const Basic> x_;
 
-    public:
+public:
     IMPLEMENT_TYPEID(LOWERGAMMA)
     //! LowerGamma Constructor
     LowerGamma(const RCP<const Basic> &s, const RCP<const Basic> &x);
@@ -1031,7 +1106,10 @@ class LowerGamma : public Function
     virtual std::size_t __hash__() const;
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &s, const RCP<const Basic> &x) const;
-    virtual vec_basic get_args() const { return {s_, x_}; }
+    virtual vec_basic get_args() const
+    {
+        return {s_, x_};
+    }
     RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
 };
 
@@ -1041,11 +1119,11 @@ RCP<const Basic> lowergamma(const RCP<const Basic> &s, const RCP<const Basic> &x
 class UpperGamma : public Function
 {
     //! The upper incomplete gamma function.
-    private:
+private:
     RCP<const Basic> s_;
     RCP<const Basic> x_;
 
-    public:
+public:
     IMPLEMENT_TYPEID(UPPERGAMMA)
     //! UpperGamma Constructor
     UpperGamma(const RCP<const Basic> &s, const RCP<const Basic> &x);
@@ -1059,7 +1137,10 @@ class UpperGamma : public Function
     virtual std::size_t __hash__() const;
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &s, const RCP<const Basic> &x) const;
-    virtual vec_basic get_args() const { return {s_, x_}; }
+    virtual vec_basic get_args() const
+    {
+        return {s_, x_};
+    }
     RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
 };
 
@@ -1072,13 +1153,16 @@ class LogGamma : public Function
         The `loggamma` function implements the logarithm of the
         gamma function i.e, `\log\Gamma(x)`.
      **/
-    private:
+private:
     RCP<const Basic> arg_;
 
-    public:
+public:
     IMPLEMENT_TYPEID(LOGGAMMA)
     //! LogGamma Constructor
-    LogGamma(const RCP<const Basic> &arg) : arg_{arg} { SYMENGINE_ASSERT(is_canonical(arg_)) }
+    LogGamma(const RCP<const Basic> &arg) : arg_{arg}
+    {
+        SYMENGINE_ASSERT(is_canonical(arg_))
+    }
     /*! Equality comparator
      * \param o - Object to be compared with
      * \return whether the 2 objects are equal
@@ -1089,7 +1173,10 @@ class LogGamma : public Function
     virtual std::size_t __hash__() const;
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &arg) const;
-    virtual vec_basic get_args() const { return {arg_}; }
+    virtual vec_basic get_args() const
+    {
+        return {arg_};
+    }
     RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
     RCP<const Basic> rewrite_as_gamma() const;
 };
@@ -1105,11 +1192,11 @@ class Beta : public Function
      *   .. math::
      *      \Beta(x, y) := \int^{1}_{0} t^{x-1} (1-t)^{y-1} \mathrm{d}t.
      **/
-    private:
+private:
     RCP<const Basic> x_;
     RCP<const Basic> y_;
 
-    public:
+public:
     IMPLEMENT_TYPEID(BETA)
     //! Beta Constructor
     Beta(const RCP<const Basic> &x, const RCP<const Basic> &y) : x_{x}, y_{y}
@@ -1128,7 +1215,10 @@ class Beta : public Function
     virtual std::size_t __hash__() const;
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &s, const RCP<const Basic> &x);
-    virtual vec_basic get_args() const { return {x_, y_}; }
+    virtual vec_basic get_args() const
+    {
+        return {x_, y_};
+    }
     RCP<const Basic> rewrite_as_gamma() const;
     RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
 };
@@ -1146,11 +1236,11 @@ class PolyGamma : public Function
      *  .. math::
      *  \psi^{(n)} (z) := \frac{\mathrm{d}^{n+1}}{\mathrm{d} z^{n+1}} \log\Gamma(z).
      **/
-    private:
+private:
     RCP<const Basic> n_;
     RCP<const Basic> x_;
 
-    public:
+public:
     IMPLEMENT_TYPEID(POLYGAMMA)
     //! PolyGamma Constructor
     PolyGamma(const RCP<const Basic> &n, const RCP<const Basic> &x) : n_{n}, x_{x}
@@ -1166,7 +1256,10 @@ class PolyGamma : public Function
     //! \return Size of the hash
     virtual std::size_t __hash__() const;
     bool is_canonical(const RCP<const Basic> &n, const RCP<const Basic> &x);
-    virtual vec_basic get_args() const { return {n_, x_}; }
+    virtual vec_basic get_args() const
+    {
+        return {n_, x_};
+    }
     RCP<const Basic> rewrite_as_zeta() const;
     //! Substitute with `subs_dict`
     virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
@@ -1179,10 +1272,10 @@ class Abs : public Function
 {
     /*!    The absolute value function
      **/
-    private:
+private:
     RCP<const Basic> arg_;
 
-    public:
+public:
     IMPLEMENT_TYPEID(ABS)
     //! Abs Constructor
     Abs(const RCP<const Basic> &arg);
@@ -1196,8 +1289,14 @@ class Abs : public Function
     virtual std::size_t __hash__() const;
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &arg) const;
-    inline RCP<const Basic> get_arg() const { return arg_; }
-    virtual vec_basic get_args() const { return {arg_}; }
+    inline RCP<const Basic> get_arg() const
+    {
+        return arg_;
+    }
+    virtual vec_basic get_args() const
+    {
+        return {arg_};
+    }
 };
 
 //! Canonicalize Abs:
@@ -1206,10 +1305,10 @@ RCP<const Basic> abs(const RCP<const Basic> &arg);
 class Max : public Function
 {
 
-    private:
+private:
     vec_basic arg_;
 
-    public:
+public:
     IMPLEMENT_TYPEID(MAX)
     //! Max Constructor
     Max(const vec_basic &&arg);
@@ -1220,7 +1319,10 @@ class Max : public Function
     virtual std::size_t __hash__() const;
     //! \return `true` if canonical
     bool is_canonical(const vec_basic &arg) const;
-    inline vec_basic get_args() const { return arg_; }
+    inline vec_basic get_args() const
+    {
+        return arg_;
+    }
 };
 
 //! Canonicalize Max:
@@ -1229,10 +1331,10 @@ RCP<const Basic> max(const vec_basic &arg);
 class Min : public Function
 {
 
-    private:
+private:
     vec_basic arg_;
 
-    public:
+public:
     IMPLEMENT_TYPEID(MIN)
     //! Min Constructor
     Min(const vec_basic &&arg);
@@ -1244,7 +1346,10 @@ class Min : public Function
     virtual std::size_t __hash__() const;
     //! \return `true` if canonical
     bool is_canonical(const vec_basic &arg) const;
-    inline vec_basic get_args() const { return arg_; }
+    inline vec_basic get_args() const
+    {
+        return arg_;
+    }
 };
 
 //! Canonicalize Min:

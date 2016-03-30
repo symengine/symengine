@@ -18,11 +18,11 @@ namespace SymEngine
 //! Integer Class
 class Integer : public Number
 {
-    public:
+public:
     //! `i` : object of `integer_class`
     integer_class i;
 
-    public:
+public:
     IMPLEMENT_TYPEID(INTEGER)
     //! Constructor of Integer using `integer_class`
     explicit Integer(integer_class i);
@@ -38,17 +38,35 @@ class Integer : public Number
     //! Convert to `int`, raise an exception if it does not fit
     signed long int as_int() const;
     //! Convert to `integer_class`.
-    inline integer_class as_mpz() const { return this->i; }
+    inline integer_class as_mpz() const
+    {
+        return this->i;
+    }
     //! \return `true` if `0`
-    inline virtual bool is_zero() const { return this->i == 0u; }
+    inline virtual bool is_zero() const
+    {
+        return this->i == 0u;
+    }
     //! \return `true` if `1`
-    inline virtual bool is_one() const { return this->i == 1u; }
+    inline virtual bool is_one() const
+    {
+        return this->i == 1u;
+    }
     //! \return `true` if `-1`
-    inline virtual bool is_minus_one() const { return this->i == -1; }
+    inline virtual bool is_minus_one() const
+    {
+        return this->i == -1;
+    }
     //! \return `true` if positive
-    inline virtual bool is_positive() const { return this->i > 0u; }
+    inline virtual bool is_positive() const
+    {
+        return this->i > 0u;
+    }
     //! \return `true` if negative
-    inline virtual bool is_negative() const { return this->i < 0u; }
+    inline virtual bool is_negative() const
+    {
+        return this->i < 0u;
+    }
 
     /* These are very fast methods for add/sub/mul/div/pow on Integers only */
     //! Fast Integer Addition
@@ -84,7 +102,10 @@ class Integer : public Number
         return make_rcp<const Integer>(std::move(tmp));
     }
     //! \return negative of self.
-    inline RCP<const Integer> neg() const { return make_rcp<const Integer>(std::move(-i)); }
+    inline RCP<const Integer> neg() const
+    {
+        return make_rcp<const Integer>(std::move(-i));
+    }
 
     /* These are general methods, overriden from the Number class, that need to
      * check types to decide what operation to do, and so are a bit slower. */
@@ -107,7 +128,10 @@ class Integer : public Number
         }
     };
 
-    virtual RCP<const Number> rsub(const Number &other) const { throw std::runtime_error("Not implemented."); };
+    virtual RCP<const Number> rsub(const Number &other) const
+    {
+        throw std::runtime_error("Not implemented.");
+    };
 
     //! Slower Multiplication
     virtual RCP<const Number> mul(const Number &other) const
@@ -140,7 +164,10 @@ class Integer : public Number
         }
     };
 
-    virtual RCP<const Number> rpow(const Number &other) const { throw std::runtime_error("Not implemented."); };
+    virtual RCP<const Number> rpow(const Number &other) const
+    {
+        throw std::runtime_error("Not implemented.");
+    };
 };
 
 //! less operator (<) for Integers
@@ -159,7 +186,10 @@ inline typename std::enable_if<std::is_integral<T>::value, RCP<const Integer>>::
 }
 
 //! \return RCP<const Integer> from integer_class
-inline RCP<const Integer> integer(integer_class i) { return make_rcp<const Integer>(std::move(i)); }
+inline RCP<const Integer> integer(integer_class i)
+{
+    return make_rcp<const Integer>(std::move(i));
+}
 
 //! Integer Square root
 RCP<const Integer> isqrt(const Integer &n);
@@ -172,7 +202,9 @@ bool perfect_power(const Integer &n);
 //! Integer Absolute value
 RCP<const Integer> iabs(const Integer &n);
 
-inline Integer::Integer(integer_class i_) : i{std::move(i_)} {}
+inline Integer::Integer(integer_class i_) : i{std::move(i_)}
+{
+}
 
 } // SymEngine
 

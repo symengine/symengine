@@ -23,18 +23,27 @@ namespace SymEngine
 
 class mpc_class
 {
-    private:
+private:
     mpc_t mp;
 
-    public:
-    mpc_ptr get_mpc_t() { return mp; }
-    mpc_srcptr get_mpc_t() const { return mp; }
+public:
+    mpc_ptr get_mpc_t()
+    {
+        return mp;
+    }
+    mpc_srcptr get_mpc_t() const
+    {
+        return mp;
+    }
     explicit mpc_class(mpc_t m)
     {
         mpc_init2(mp, mpc_get_prec(m));
         mpc_set(mp, m, MPFR_RNDN);
     }
-    explicit mpc_class(mpfr_prec_t prec = 53) { mpc_init2(mp, prec); }
+    explicit mpc_class(mpfr_prec_t prec = 53)
+    {
+        mpc_init2(mp, prec);
+    }
     mpc_class(std::string s, mpfr_prec_t prec = 53, unsigned base = 10)
     {
         mpc_init2(mp, prec);
@@ -67,7 +76,10 @@ class mpc_class
             mpc_clear(mp);
         }
     }
-    mpfr_prec_t get_prec() const { return mpc_get_prec(mp); }
+    mpfr_prec_t get_prec() const
+    {
+        return mpc_get_prec(mp);
+    }
 };
 
 RCP<const Number> number(mpfr_ptr x);
@@ -75,15 +87,21 @@ RCP<const Number> number(mpfr_ptr x);
 //! ComplexMPC Class to hold mpc_t values
 class ComplexMPC : public Number
 {
-    public:
+public:
     mpc_class i;
 
-    public:
+public:
     IMPLEMENT_TYPEID(COMPLEX_MPC)
     //! Constructor of ComplexMPC class
     ComplexMPC(mpc_class i);
-    inline mpc_class as_mpc() const { return i; }
-    inline mpfr_prec_t get_prec() const { return mpc_get_prec(i.get_mpc_t()); }
+    inline mpc_class as_mpc() const
+    {
+        return i;
+    }
+    inline mpfr_prec_t get_prec() const
+    {
+        return mpc_get_prec(i.get_mpc_t());
+    }
     //! \return size of the hash
     virtual std::size_t __hash__() const;
     /*! Equality comparator
@@ -97,22 +115,40 @@ class ComplexMPC : public Number
     //! Get the imaginary part of the complex number
     RCP<const Number> imaginary_part() const;
     //! \return `true` if positive
-    inline virtual bool is_positive() const { return false; }
+    inline virtual bool is_positive() const
+    {
+        return false;
+    }
     //! \return `true` if negative
-    inline virtual bool is_negative() const { return false; }
+    inline virtual bool is_negative() const
+    {
+        return false;
+    }
     //! \return `true` if this number is an exact number
-    inline virtual bool is_exact() const { return false; }
+    inline virtual bool is_exact() const
+    {
+        return false;
+    }
     //! Get `Evaluate` singleton to evaluate numerically
     virtual Evaluate &get_eval() const;
 
     //! \return `true` if equal to `0`
-    virtual bool is_zero() const { return mpc_cmp_si_si(i.get_mpc_t(), 0, 0) == 0; }
+    virtual bool is_zero() const
+    {
+        return mpc_cmp_si_si(i.get_mpc_t(), 0, 0) == 0;
+    }
     //! \return `false`
     // A mpc_t is not exactly equal to `1`
-    virtual bool is_one() const { return false; }
+    virtual bool is_one() const
+    {
+        return false;
+    }
     //! \return `false`
     // A mpc_t is not exactly equal to `-1`
-    virtual bool is_minus_one() const { return false; }
+    virtual bool is_minus_one() const
+    {
+        return false;
+    }
 
     /*! Add ComplexMPCs
      * \param other of type Integer
@@ -349,7 +385,10 @@ class ComplexMPC : public Number
     }
 };
 
-inline RCP<const ComplexMPC> complex_mpc(mpc_class x) { return rcp(new ComplexMPC(std::move(x))); }
+inline RCP<const ComplexMPC> complex_mpc(mpc_class x)
+{
+    return rcp(new ComplexMPC(std::move(x)));
+}
 }
 #else
 
@@ -357,7 +396,7 @@ namespace SymEngine
 {
 class ComplexMPC : public Number
 {
-    public:
+public:
     IMPLEMENT_TYPEID(COMPLEX_MPC)
 };
 }

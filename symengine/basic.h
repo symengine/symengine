@@ -88,7 +88,7 @@ enum TypeID {
 
 class Basic : public EnableRCPFromThis<Basic>
 {
-    private:
+private:
 //! Private variables
 // The hash_ is defined as mutable, because its value is initialized to 0
 // in the constructor and then it can be changed in Basic::hash() to the
@@ -99,13 +99,17 @@ class Basic : public EnableRCPFromThis<Basic>
 #else
     mutable std::size_t hash_; // This holds the hash value
 #endif // WITH_SYMENGINE_THREAD_SAFE
-    public:
+public:
     virtual TypeID get_type_code() const = 0;
     //! Constructor
-    Basic() : hash_{0} {}
+    Basic() : hash_{0}
+    {
+    }
     //! Destructor must be explicitly defined as virtual here to avoid problems
     //! with undefined behavior while deallocating derived classes.
-    virtual ~Basic() {}
+    virtual ~Basic()
+    {
+    }
 
     //! Delete the copy constructor and assignment
     Basic(const Basic &) = delete;
@@ -152,7 +156,10 @@ class Basic : public EnableRCPFromThis<Basic>
     virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
 
     //! expands the special function in terms of exp function
-    virtual RCP<const Basic> expand_as_exp() const { throw std::runtime_error("Not implemented."); }
+    virtual RCP<const Basic> expand_as_exp() const
+    {
+        throw std::runtime_error("Not implemented.");
+    }
 
     //! Returns the list of arguments
     virtual vec_basic get_args() const = 0;
@@ -163,13 +170,19 @@ class Basic : public EnableRCPFromThis<Basic>
 //! Our hash:
 struct RCPBasicHash {
     //! Returns the hashed value.
-    long operator()(const RCP<const Basic> &k) const { return k->hash(); }
+    long operator()(const RCP<const Basic> &k) const
+    {
+        return k->hash();
+    }
 };
 
 //! Our comparison `(==)`
 struct RCPBasicKeyEq {
     //! Comparison Operator `==`
-    bool operator()(const RCP<const Basic> &x, const RCP<const Basic> &y) const { return x->__eq__(*y); }
+    bool operator()(const RCP<const Basic> &x, const RCP<const Basic> &y) const
+    {
+        return x->__eq__(*y);
+    }
 };
 
 //! Our less operator `(<)`:
@@ -260,11 +273,14 @@ void hash_combine(std::size_t &seed, const T &v);
 #include "basic-inl.h"
 
 // Macro to define the type_code_id variable and its getter method
-#define IMPLEMENT_TYPEID(ID)                                                                                      \
-    /*! Type_code_id shared by all instances */                                                                   \
-    const static TypeID type_code_id = ID;                                                                        \
-    /*! Virtual function that gives the type_code_id of the object */                                             \
-    virtual TypeID get_type_code() const { return type_code_id; };                                                \
+#define IMPLEMENT_TYPEID(ID)                                                                                                     \
+    /*! Type_code_id shared by all instances */                                                                                  \
+    const static TypeID type_code_id = ID;                                                                                       \
+    /*! Virtual function that gives the type_code_id of the object */                                                            \
+    virtual TypeID get_type_code() const                                                                                         \
+    {                                                                                                                            \
+        return type_code_id;                                                                                                     \
+    };                                                                                                                           \
     SYMENGINE_INCLUDE_METHODS(;)
 
 #endif

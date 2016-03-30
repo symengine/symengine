@@ -16,7 +16,7 @@ using fp_t = flint::fmpq_polyxx;
 // Univariate Rational Coefficient Power SeriesBase using Flint
 class URatPSeriesFlint : public SeriesBase<fp_t, flint::fmpqxx, URatPSeriesFlint>
 {
-    public:
+public:
     URatPSeriesFlint(const fp_t p, const std::string varname, const unsigned degree);
     IMPLEMENT_TYPEID(URATPSERIESFLINT)
     virtual int compare(const Basic &o) const;
@@ -31,7 +31,10 @@ class URatPSeriesFlint : public SeriesBase<fp_t, flint::fmpqxx, URatPSeriesFlint
     static fp_t var(const std::string &s);
     static flint::fmpqxx convert(const Rational &x);
     static flint::fmpqxx convert(const Basic &x);
-    static inline fp_t mul(const fp_t &s, const fp_t &r, unsigned prec) { return fp_t(flint::mullow(s, r, prec)); }
+    static inline fp_t mul(const fp_t &s, const fp_t &r, unsigned prec)
+    {
+        return fp_t(flint::mullow(s, r, prec));
+    }
     static fp_t pow(const fp_t &s, int n, unsigned prec);
     static unsigned ldegree(const fp_t &s);
     static inline flint::fmpqxx find_cf(const fp_t &s, const fp_t &var, unsigned deg)

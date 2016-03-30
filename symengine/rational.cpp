@@ -5,7 +5,10 @@
 namespace SymEngine
 {
 
-Rational::Rational(rational_class i) : i{i} { SYMENGINE_ASSERT(is_canonical(this->i)) }
+Rational::Rational(rational_class i) : i{i}
+{
+    SYMENGINE_ASSERT(is_canonical(this->i))
+}
 
 bool Rational::is_canonical(const rational_class &i) const
 {

@@ -21,7 +21,7 @@ extern RCP<const Basic> i2;
 
 class DiffImplementation
 {
-    public:
+public:
 // Uncomment the following define in order to debug the methods:
 #define debug_methods
 #ifndef debug_methods
@@ -37,10 +37,10 @@ class DiffImplementation
 // This is useful to check that we have implemented all methods that we
 // wanted.
 
-#define DIFF0(CLASS)                                                                                              \
-    static RCP<const Basic> diff(const CLASS &self, const RCP<const Symbol> &x)                                   \
-    {                                                                                                             \
-        return Derivative::create(self.rcp_from_this(), {x});                                                     \
+#define DIFF0(CLASS)                                                                                                             \
+    static RCP<const Basic> diff(const CLASS &self, const RCP<const Symbol> &x)                                                  \
+    {                                                                                                                            \
+        return Derivative::create(self.rcp_from_this(), {x});                                                                    \
     }
 
     DIFF0(UnivariateSeries)
@@ -54,9 +54,15 @@ class DiffImplementation
 
 #endif
 
-    static RCP<const Basic> diff(const Number &self, const RCP<const Symbol> &x) { return zero; }
+    static RCP<const Basic> diff(const Number &self, const RCP<const Symbol> &x)
+    {
+        return zero;
+    }
 
-    static RCP<const Basic> diff(const Constant &self, const RCP<const Symbol> &x) { return zero; }
+    static RCP<const Basic> diff(const Constant &self, const RCP<const Symbol> &x)
+    {
+        return zero;
+    }
 
     static RCP<const Basic> diff(const Symbol &self, const RCP<const Symbol> &x)
     {
@@ -156,9 +162,7 @@ class DiffImplementation
             t = p.second->diff(x);
             if (neq(*t, *zero)) {
                 if (is_a<Symbol>(*p.first)) {
-                    diff = add(
-                        diff,
-                        mul(t, self.get_arg()->diff(rcp_static_cast<const Symbol>(p.first))->subs(self.get_dict())));
+                    diff = add(diff, mul(t, self.get_arg()->diff(rcp_static_cast<const Symbol>(p.first))->subs(self.get_dict())));
                 } else {
                     return Derivative::create(self.rcp_from_this(), {x});
                 }
@@ -348,8 +352,7 @@ class DiffImplementation
 
     static RCP<const Basic> diff(const ASec &self, const RCP<const Symbol> &x)
     {
-        return mul(div(one, mul(pow(self.get_arg(), i2), sqrt(sub(one, div(one, pow(self.get_arg(), i2)))))),
-                   self.get_arg()->diff(x));
+        return mul(div(one, mul(pow(self.get_arg(), i2), sqrt(sub(one, div(one, pow(self.get_arg(), i2)))))), self.get_arg()->diff(x));
     }
 
     static RCP<const Basic> diff(const ACsc &self, const RCP<const Symbol> &x)
@@ -450,10 +453,9 @@ class DiffImplementation
         RCP<const Basic> beta_arg1 = self.get_args()[1];
         RCP<const Basic> diff_beta_arg0 = beta_arg0->diff(x);
         RCP<const Basic> diff_beta_arg1 = beta_arg1->diff(x);
-        return mul(self.rcp_from_this(),
-                   add(mul(polygamma(zero, beta_arg0), diff_beta_arg0),
-                       sub(mul(polygamma(zero, beta_arg1), diff_beta_arg1),
-                           mul(polygamma(zero, add(beta_arg0, beta_arg1)), add(diff_beta_arg0, diff_beta_arg1)))));
+        return mul(self.rcp_from_this(), add(mul(polygamma(zero, beta_arg0), diff_beta_arg0),
+                                             sub(mul(polygamma(zero, beta_arg1), diff_beta_arg1),
+                                                 mul(polygamma(zero, add(beta_arg0, beta_arg1)), add(diff_beta_arg0, diff_beta_arg1)))));
     }
 
     static RCP<const Basic> diff(const Set &self, const RCP<const Symbol> &x)
@@ -462,8 +464,11 @@ class DiffImplementation
     }
 };
 
-#define IMPLEMENT_DIFF(CLASS)                                                                                     \
-    RCP<const Basic> CLASS::diff(const RCP<const Symbol> &x) const { return DiffImplementation::diff(*this, x); };
+#define IMPLEMENT_DIFF(CLASS)                                                                                                    \
+    RCP<const Basic> CLASS::diff(const RCP<const Symbol> &x) const                                                               \
+    {                                                                                                                            \
+        return DiffImplementation::diff(*this, x);                                                                               \
+    };
 
 #define SYMENGINE_ENUM(TypeID, Class) IMPLEMENT_DIFF(Class)
 #include "symengine/type_codes.inc"

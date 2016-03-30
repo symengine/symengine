@@ -34,16 +34,14 @@ using SymEngine::one;
 
 using SymEngine::UPSeriesPiranha;
 using SymEngine::p_expr;
-#define series_coeff(EX, SYM, PREC, COEFF)                                                                        \
+#define series_coeff(EX, SYM, PREC, COEFF)                                                                                       \
     UPSeriesPiranha::series(EX, SYM->get_name(), PREC)->get_poly().find_cf({COEFF}).get_basic()
-#define invseries_coeff(EX, SYM, PREC, COEFF)                                                                     \
-    UPSeriesPiranha::series_reverse(UPSeriesPiranha::series(EX, SYM->get_name(), PREC)->get_poly(),               \
-                                    p_expr(SYM->get_name()), PREC)                                                \
-        .find_cf({COEFF})                                                                                         \
+#define invseries_coeff(EX, SYM, PREC, COEFF)                                                                                      \
+    UPSeriesPiranha::series_reverse(UPSeriesPiranha::series(EX, SYM->get_name(), PREC)->get_poly(), p_expr(SYM->get_name()), PREC) \
+        .find_cf({COEFF})                                                                                                          \
         .get_basic()
 
-static bool expand_check_pairs(const RCP<const Basic> &ex, const RCP<const Symbol> &x, int prec,
-                               const umap_short_basic &pairs)
+static bool expand_check_pairs(const RCP<const Basic> &ex, const RCP<const Symbol> &x, int prec, const umap_short_basic &pairs)
 {
     auto ser = SymEngine::UPSeriesPiranha::series(ex, x->get_name(), prec);
     for (auto it : pairs) {
@@ -175,8 +173,7 @@ TEST_CASE("Expression series expansion: reversion ", "[Expansion of f^-1]")
     REQUIRE(invseries_coeff(ex4, x, 20, 10)->__eq__(*rational(-156250, 567)));
 }
 
-TEST_CASE("Expression series expansion: atan, tan, asin, cot, sec, csc",
-          "[Expansion of tan, atan, asin, cot, sec, csc]")
+TEST_CASE("Expression series expansion: atan, tan, asin, cot, sec, csc", "[Expansion of tan, atan, asin, cot, sec, csc]")
 {
     RCP<const Symbol> x = symbol("x");
     RCP<const Integer> one = integer(1);
@@ -208,8 +205,7 @@ TEST_CASE("Expression series expansion: atan, tan, asin, cot, sec, csc",
     REQUIRE(series_coeff(ex10, x, 20, 7)->__eq__(*rational(127, 604800)));
 }
 
-TEST_CASE("Expression series expansion: sinh, cosh, tanh, asinh, atanh",
-          "[Expansion of sinh, cosh, tanh, asinh, atanh]")
+TEST_CASE("Expression series expansion: sinh, cosh, tanh, asinh, atanh", "[Expansion of sinh, cosh, tanh, asinh, atanh]")
 {
     RCP<const Symbol> x = symbol("x");
     RCP<const Integer> one = integer(1);

@@ -18,12 +18,14 @@ namespace SymEngine
 
 class EvalMPFRVisitor : public BaseVisitor<EvalMPFRVisitor>
 {
-    protected:
+protected:
     mpfr_rnd_t rnd_;
     mpfr_ptr result_;
 
-    public:
-    EvalMPFRVisitor(mpfr_rnd_t rnd) : rnd_{rnd} {}
+public:
+    EvalMPFRVisitor(mpfr_rnd_t rnd) : rnd_{rnd}
+    {
+    }
 
     void apply(mpfr_ptr result, const Basic &b)
     {
@@ -33,13 +35,25 @@ class EvalMPFRVisitor : public BaseVisitor<EvalMPFRVisitor>
         result_ = tmp;
     }
 
-    void bvisit(const Integer &x) { mpfr_set_z(result_, get_mpz_t(x.i), rnd_); }
+    void bvisit(const Integer &x)
+    {
+        mpfr_set_z(result_, get_mpz_t(x.i), rnd_);
+    }
 
-    void bvisit(const Rational &x) { mpfr_set_q(result_, get_mpq_t(x.i), rnd_); }
+    void bvisit(const Rational &x)
+    {
+        mpfr_set_q(result_, get_mpq_t(x.i), rnd_);
+    }
 
-    void bvisit(const RealDouble &x) { mpfr_set_d(result_, x.i, rnd_); }
+    void bvisit(const RealDouble &x)
+    {
+        mpfr_set_d(result_, x.i, rnd_);
+    }
 
-    void bvisit(const RealMPFR &x) { mpfr_set(result_, x.i.get_mpfr_t(), rnd_); }
+    void bvisit(const RealMPFR &x)
+    {
+        mpfr_set(result_, x.i.get_mpfr_t(), rnd_);
+    }
 
     void bvisit(const Add &x)
     {
@@ -256,7 +270,10 @@ class EvalMPFRVisitor : public BaseVisitor<EvalMPFRVisitor>
         mpfr_lngamma(result_, result_, rnd_);
     }
 
-    void bvisit(const Beta &x) { apply(result_, *(x.rewrite_as_gamma())); };
+    void bvisit(const Beta &x)
+    {
+        apply(result_, *(x.rewrite_as_gamma()));
+    };
 
     void bvisit(const Constant &x)
     {
@@ -281,9 +298,15 @@ class EvalMPFRVisitor : public BaseVisitor<EvalMPFRVisitor>
         mpfr_abs(result_, result_, rnd_);
     };
 
-    void bvisit(const NumberWrapper &x) { x.eval(mpfr_get_prec(result_))->accept(*this); }
+    void bvisit(const NumberWrapper &x)
+    {
+        x.eval(mpfr_get_prec(result_))->accept(*this);
+    }
 
-    void bvisit(const FunctionWrapper &x) { x.eval(mpfr_get_prec(result_))->accept(*this); }
+    void bvisit(const FunctionWrapper &x)
+    {
+        x.eval(mpfr_get_prec(result_))->accept(*this);
+    }
     void bvisit(const Erf &x)
     {
         apply(result_, *(x.get_args()[0]));
@@ -319,7 +342,10 @@ class EvalMPFRVisitor : public BaseVisitor<EvalMPFRVisitor>
     // Subs, UpperGamma, LowerGamma, Dirichlet_eta, Zeta
     // LeviCivita, KroneckerDelta, LambertW
     // Derivative, Complex, ComplexDouble, ComplexMPC
-    void bvisit(const Basic &) { throw std::runtime_error("Not implemented."); };
+    void bvisit(const Basic &)
+    {
+        throw std::runtime_error("Not implemented.");
+    };
 };
 
 void eval_mpfr(mpfr_ptr result, const Basic &b, mpfr_rnd_t rnd)

@@ -9,7 +9,9 @@
 namespace SymEngine
 {
 // ----------------------------- CSRMatrix ------------------------------------
-CSRMatrix::CSRMatrix() {}
+CSRMatrix::CSRMatrix()
+{
+}
 
 CSRMatrix::CSRMatrix(unsigned row, unsigned col) : row_(row), col_(col)
 {
@@ -131,11 +133,20 @@ void CSRMatrix::set(unsigned i, unsigned j, const RCP<const Basic> &e)
     }
 }
 
-unsigned CSRMatrix::rank() const { throw std::runtime_error("Not implemented."); }
+unsigned CSRMatrix::rank() const
+{
+    throw std::runtime_error("Not implemented.");
+}
 
-RCP<const Basic> CSRMatrix::det() const { throw std::runtime_error("Not implemented."); }
+RCP<const Basic> CSRMatrix::det() const
+{
+    throw std::runtime_error("Not implemented.");
+}
 
-void CSRMatrix::inv(MatrixBase &result) const { throw std::runtime_error("Not implemented."); }
+void CSRMatrix::inv(MatrixBase &result) const
+{
+    throw std::runtime_error("Not implemented.");
+}
 
 void CSRMatrix::add_matrix(const MatrixBase &other, MatrixBase &result) const
 {
@@ -160,7 +171,10 @@ void CSRMatrix::mul_scalar(const RCP<const Basic> &k, MatrixBase &result) const
 }
 
 // Matrix transpose
-void CSRMatrix::transpose(MatrixBase &result) const { throw std::runtime_error("Not implemented."); }
+void CSRMatrix::transpose(MatrixBase &result) const
+{
+    throw std::runtime_error("Not implemented.");
+}
 
 // Extract out a submatrix
 void CSRMatrix::submatrix(unsigned row_start, unsigned row_end, unsigned col_start, unsigned col_end, MatrixBase &result) const
@@ -169,10 +183,16 @@ void CSRMatrix::submatrix(unsigned row_start, unsigned row_end, unsigned col_sta
 }
 
 // LU factorization
-void CSRMatrix::LU(MatrixBase &L, MatrixBase &U) const { throw std::runtime_error("Not implemented."); }
+void CSRMatrix::LU(MatrixBase &L, MatrixBase &U) const
+{
+    throw std::runtime_error("Not implemented.");
+}
 
 // LDL factorization
-void CSRMatrix::LDL(MatrixBase &L, MatrixBase &D) const { throw std::runtime_error("Not implemented."); }
+void CSRMatrix::LDL(MatrixBase &L, MatrixBase &D) const
+{
+    throw std::runtime_error("Not implemented.");
+}
 
 // Solve Ax = b using LU factorization
 void CSRMatrix::LU_solve(const MatrixBase &b, MatrixBase &x) const
@@ -181,7 +201,10 @@ void CSRMatrix::LU_solve(const MatrixBase &b, MatrixBase &x) const
 }
 
 // Fraction free LU factorization
-void CSRMatrix::FFLU(MatrixBase &LU) const { throw std::runtime_error("Not implemented."); }
+void CSRMatrix::FFLU(MatrixBase &LU) const
+{
+    throw std::runtime_error("Not implemented.");
+}
 
 // Fraction free LDU factorization
 void CSRMatrix::FFLDU(MatrixBase &L, MatrixBase &D, MatrixBase &U) const
@@ -236,9 +259,8 @@ void CSRMatrix::csr_sort_indices(std::vector<unsigned> &p_, std::vector<unsigned
             temp.push_back(std::make_pair(j_[jj], x_[jj]));
         }
 
-        std::sort(temp.begin(), temp.end(),
-                  [](const std::pair<unsigned, RCP<const Basic>> &x,
-                     const std::pair<unsigned, RCP<const Basic>> &y) { return x.first < y.first; });
+        std::sort(temp.begin(), temp.end(), [](const std::pair<unsigned, RCP<const Basic>> &x,
+                                               const std::pair<unsigned, RCP<const Basic>> &y) { return x.first < y.first; });
 
         for (unsigned jj = row_start, n = 0; jj < row_end; jj++, n++) {
             j_[jj] = temp[n].first;
@@ -280,8 +302,8 @@ bool CSRMatrix::csr_has_canonical_format(const std::vector<unsigned> &p_, const 
     return csr_has_sorted_indices(p_, j_, row_) and not csr_has_duplicates(p_, j_, row_);
 }
 
-CSRMatrix CSRMatrix::from_coo(unsigned row, unsigned col, const std::vector<unsigned> &i,
-                              const std::vector<unsigned> &j, const vec_basic &x)
+CSRMatrix CSRMatrix::from_coo(unsigned row, unsigned col, const std::vector<unsigned> &i, const std::vector<unsigned> &j,
+                              const vec_basic &x)
 {
     unsigned nnz = x.size();
     std::vector<unsigned> p_ = std::vector<unsigned>(row + 1, 0);

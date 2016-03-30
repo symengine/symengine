@@ -37,7 +37,10 @@ int URatPSeriesPiranha::compare(const Basic &o) const
     return (p_.hash() < s.p_.hash()) ? -1 : 1;
 }
 
-piranha::integer URatPSeriesPiranha::convert(const Integer &x) { return piranha::integer(get_mpz_t(x.i)); }
+piranha::integer URatPSeriesPiranha::convert(const Integer &x)
+{
+    return piranha::integer(get_mpz_t(x.i));
+}
 
 piranha::rational URatPSeriesPiranha::convert(const rational_class &x)
 {
@@ -48,11 +51,20 @@ piranha::rational URatPSeriesPiranha::convert(const rational_class &x)
     return r;
 }
 
-pp_t URatPSeriesPiranha::var(const std::string &s) { return pp_t(s); }
+pp_t URatPSeriesPiranha::var(const std::string &s)
+{
+    return pp_t(s);
+}
 
-piranha::rational URatPSeriesPiranha::convert(const Rational &x) { return convert(x.as_mpq()); }
+piranha::rational URatPSeriesPiranha::convert(const Rational &x)
+{
+    return convert(x.as_mpq());
+}
 
-piranha::rational URatPSeriesPiranha::convert(const Basic &x) { throw std::runtime_error("Not Implemented"); }
+piranha::rational URatPSeriesPiranha::convert(const Basic &x)
+{
+    throw std::runtime_error("Not Implemented");
+}
 
 RCP<const Basic> URatPSeriesPiranha::as_basic() const
 {
@@ -122,7 +134,10 @@ pp_t URatPSeriesPiranha::pow(const pp_t &s, int n, unsigned prec)
     return ret;
 }
 
-unsigned URatPSeriesPiranha::ldegree(const pp_t &s) { return s.ldegree(); }
+unsigned URatPSeriesPiranha::ldegree(const pp_t &s)
+{
+    return s.ldegree();
+}
 
 piranha::rational URatPSeriesPiranha::find_cf(const pp_t &s, const pp_t &var, unsigned deg)
 {
@@ -199,9 +214,15 @@ int UPSeriesPiranha::compare(const Basic &o) const
     return (p_.hash() < s.p_.hash()) ? -1 : 1;
 }
 
-p_expr UPSeriesPiranha::var(const std::string &s) { return p_expr(s); }
+p_expr UPSeriesPiranha::var(const std::string &s)
+{
+    return p_expr(s);
+}
 
-Expression UPSeriesPiranha::convert(const Basic &x) { return Expression(x.rcp_from_this()); }
+Expression UPSeriesPiranha::convert(const Basic &x)
+{
+    return Expression(x.rcp_from_this());
+}
 
 RCP<const Basic> UPSeriesPiranha::as_basic() const
 {
@@ -229,7 +250,10 @@ umap_int_basic UPSeriesPiranha::as_dict() const
     return map;
 }
 
-RCP<const Basic> UPSeriesPiranha::get_coeff(int i) const { return p_.find_cf({i}).get_basic(); }
+RCP<const Basic> UPSeriesPiranha::get_coeff(int i) const
+{
+    return p_.find_cf({i}).get_basic();
+}
 
 p_expr UPSeriesPiranha::mul(const p_expr &s, const p_expr &r, unsigned prec)
 {
@@ -248,11 +272,20 @@ p_expr UPSeriesPiranha::pow(const p_expr &s, int n, unsigned prec)
     return ret;
 }
 
-unsigned UPSeriesPiranha::ldegree(const p_expr &s) { return s.ldegree(); }
+unsigned UPSeriesPiranha::ldegree(const p_expr &s)
+{
+    return s.ldegree();
+}
 
-Expression UPSeriesPiranha::find_cf(const p_expr &s, const p_expr &var, unsigned deg) { return s.find_cf({deg}); }
+Expression UPSeriesPiranha::find_cf(const p_expr &s, const p_expr &var, unsigned deg)
+{
+    return s.find_cf({deg});
+}
 
-Expression UPSeriesPiranha::root(Expression &c, unsigned n) { return pow_ex(c, 1 / Expression(n)); }
+Expression UPSeriesPiranha::root(Expression &c, unsigned n)
+{
+    return pow_ex(c, 1 / Expression(n));
+}
 
 p_expr UPSeriesPiranha::diff(const p_expr &s, const p_expr &var)
 {
@@ -272,29 +305,68 @@ p_expr UPSeriesPiranha::subs(const p_expr &s, const p_expr &var, const p_expr &r
     return ret;
 }
 
-Expression UPSeriesPiranha::sin(const Expression &c) { return SymEngine::sin(c.get_basic()); }
+Expression UPSeriesPiranha::sin(const Expression &c)
+{
+    return SymEngine::sin(c.get_basic());
+}
 
-Expression UPSeriesPiranha::cos(const Expression &c) { return SymEngine::cos(c.get_basic()); }
+Expression UPSeriesPiranha::cos(const Expression &c)
+{
+    return SymEngine::cos(c.get_basic());
+}
 
-Expression UPSeriesPiranha::tan(const Expression &c) { return SymEngine::tan(c.get_basic()); }
+Expression UPSeriesPiranha::tan(const Expression &c)
+{
+    return SymEngine::tan(c.get_basic());
+}
 
-Expression UPSeriesPiranha::asin(const Expression &c) { return SymEngine::asin(c.get_basic()); }
+Expression UPSeriesPiranha::asin(const Expression &c)
+{
+    return SymEngine::asin(c.get_basic());
+}
 
-Expression UPSeriesPiranha::acos(const Expression &c) { return SymEngine::acos(c.get_basic()); }
+Expression UPSeriesPiranha::acos(const Expression &c)
+{
+    return SymEngine::acos(c.get_basic());
+}
 
-Expression UPSeriesPiranha::atan(const Expression &c) { return SymEngine::atan(c.get_basic()); }
+Expression UPSeriesPiranha::atan(const Expression &c)
+{
+    return SymEngine::atan(c.get_basic());
+}
 
-Expression UPSeriesPiranha::sinh(const Expression &c) { return SymEngine::sinh(c.get_basic()); }
+Expression UPSeriesPiranha::sinh(const Expression &c)
+{
+    return SymEngine::sinh(c.get_basic());
+}
 
-Expression UPSeriesPiranha::cosh(const Expression &c) { return SymEngine::cosh(c.get_basic()); }
+Expression UPSeriesPiranha::cosh(const Expression &c)
+{
+    return SymEngine::cosh(c.get_basic());
+}
 
-Expression UPSeriesPiranha::tanh(const Expression &c) { return SymEngine::tanh(c.get_basic()); }
+Expression UPSeriesPiranha::tanh(const Expression &c)
+{
+    return SymEngine::tanh(c.get_basic());
+}
 
-Expression UPSeriesPiranha::asinh(const Expression &c) { return SymEngine::asinh(c.get_basic()); }
+Expression UPSeriesPiranha::asinh(const Expression &c)
+{
+    return SymEngine::asinh(c.get_basic());
+}
 
-Expression UPSeriesPiranha::atanh(const Expression &c) { return SymEngine::atanh(c.get_basic()); }
+Expression UPSeriesPiranha::atanh(const Expression &c)
+{
+    return SymEngine::atanh(c.get_basic());
+}
 
-Expression UPSeriesPiranha::exp(const Expression &c) { return SymEngine::exp(c.get_basic()); }
+Expression UPSeriesPiranha::exp(const Expression &c)
+{
+    return SymEngine::exp(c.get_basic());
+}
 
-Expression UPSeriesPiranha::log(const Expression &c) { return SymEngine::log(c.get_basic()); }
+Expression UPSeriesPiranha::log(const Expression &c)
+{
+    return SymEngine::log(c.get_basic());
+}
 }

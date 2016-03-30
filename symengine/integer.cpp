@@ -85,9 +85,15 @@ RCP<const Number> Integer::pow_negint(const Integer &other) const
     }
 }
 
-RCP<const Integer> isqrt(const Integer &n) { return integer(std::move(mp_sqrt(n.as_mpz()))); }
+RCP<const Integer> isqrt(const Integer &n)
+{
+    return integer(std::move(mp_sqrt(n.as_mpz())));
+}
 
-RCP<const Integer> iabs(const Integer &n) { return integer(std::move(mp_abs(n.as_mpz()))); }
+RCP<const Integer> iabs(const Integer &n)
+{
+    return integer(std::move(mp_abs(n.as_mpz())));
+}
 
 int i_nth_root(const Ptr<RCP<const Integer>> &r, const Integer &a, unsigned long int n)
 {
@@ -103,8 +109,14 @@ int i_nth_root(const Ptr<RCP<const Integer>> &r, const Integer &a, unsigned long
     return ret_val;
 }
 
-bool perfect_square(const Integer &n) { return mp_perfect_square_p(n.as_mpz()); }
+bool perfect_square(const Integer &n)
+{
+    return mp_perfect_square_p(n.as_mpz());
+}
 
-bool perfect_power(const Integer &n) { return mp_perfect_power_p(n.as_mpz()); }
+bool perfect_power(const Integer &n)
+{
+    return mp_perfect_power_p(n.as_mpz());
+}
 
 } // SymEngine

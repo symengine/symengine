@@ -13,8 +13,11 @@
 #include <symengine/complex_double.h>
 #include <symengine/complex_mpc.h>
 
-#define ACCEPT(CLASS)                                                                                             \
-    void CLASS::accept(Visitor &v) const { v.visit(*this); }
+#define ACCEPT(CLASS)                                                                                                            \
+    void CLASS::accept(Visitor &v) const                                                                                         \
+    {                                                                                                                            \
+        v.visit(*this);                                                                                                          \
+    }
 
 namespace SymEngine
 {
@@ -76,10 +79,13 @@ RCP<const Basic> coeff(const Basic &b, const RCP<const Basic> &x, const RCP<cons
 
 class FreeSymbolsVisitor : public BaseVisitor<FreeSymbolsVisitor>
 {
-    public:
+public:
     set_basic s;
 
-    void bvisit(const Symbol &x) { s.insert(x.rcp_from_this()); }
+    void bvisit(const Symbol &x)
+    {
+        s.insert(x.rcp_from_this());
+    }
 
     void bvisit(const Subs &x)
     {

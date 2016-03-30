@@ -16,11 +16,11 @@ namespace SymEngine
 //! Rational Class
 class Rational : public Number
 {
-    public:
+public:
     //! `i` : object of `rational_class`
     rational_class i;
 
-    public:
+public:
     IMPLEMENT_TYPEID(RATIONAL)
     //! Constructor of Rational class
     explicit Rational(rational_class i);
@@ -45,22 +45,46 @@ class Rational : public Number
     static RCP<const Number> from_two_ints(const Integer &n, const Integer &d);
     static RCP<const Number> from_two_ints(const long n, const long d);
     //! Convert to `rational_class`.
-    inline rational_class as_mpq() const { return this->i; }
+    inline rational_class as_mpq() const
+    {
+        return this->i;
+    }
     //! \return `true` if `0`
-    virtual bool is_zero() const { return this->i == 0; }
+    virtual bool is_zero() const
+    {
+        return this->i == 0;
+    }
     //! \return `true` if `1`
-    virtual bool is_one() const { return this->i == 1; }
+    virtual bool is_one() const
+    {
+        return this->i == 1;
+    }
     //! \return `true` if `-1`
-    virtual bool is_minus_one() const { return this->i == -1; }
+    virtual bool is_minus_one() const
+    {
+        return this->i == -1;
+    }
     //! \return `true` if denominator is `1`
-    inline bool is_int() const { return this->i == 1; }
+    inline bool is_int() const
+    {
+        return this->i == 1;
+    }
     //! \return `true` if positive
-    inline virtual bool is_positive() const { return i > 0; }
+    inline virtual bool is_positive() const
+    {
+        return i > 0;
+    }
     //! \return `true` if negative
-    inline virtual bool is_negative() const { return i < 0; }
+    inline virtual bool is_negative() const
+    {
+        return i < 0;
+    }
 
     //! \return negative of `this`
-    inline RCP<const Rational> neg() const { return make_rcp<const Rational>(std::move(-i)); }
+    inline RCP<const Rational> neg() const
+    {
+        return make_rcp<const Rational>(std::move(-i));
+    }
 
     virtual bool is_perfect_power(bool is_expected = false) const;
     // \return true if there is a exact nth root of self.
@@ -69,28 +93,49 @@ class Rational : public Number
     /*! Add Rationals
      * \param other of type Rational
      * */
-    inline RCP<const Number> addrat(const Rational &other) const { return from_mpq(std::move(this->i + other.i)); }
+    inline RCP<const Number> addrat(const Rational &other) const
+    {
+        return from_mpq(std::move(this->i + other.i));
+    }
     /*! Add Rationals
      * \param other of type Integer
      * */
-    inline RCP<const Number> addrat(const Integer &other) const { return from_mpq(std::move(this->i + other.i)); }
+    inline RCP<const Number> addrat(const Integer &other) const
+    {
+        return from_mpq(std::move(this->i + other.i));
+    }
     /*! Subtract Rationals
      * \param other of type Rational
      * */
-    inline RCP<const Number> subrat(const Rational &other) const { return from_mpq(std::move(this->i - other.i)); }
+    inline RCP<const Number> subrat(const Rational &other) const
+    {
+        return from_mpq(std::move(this->i - other.i));
+    }
     /*! Subtract Rationals
      * \param other of type Integer
      * */
-    inline RCP<const Number> subrat(const Integer &other) const { return from_mpq(std::move(this->i - other.i)); }
-    inline RCP<const Number> rsubrat(const Integer &other) const { return from_mpq(std::move(other.i - this->i)); }
+    inline RCP<const Number> subrat(const Integer &other) const
+    {
+        return from_mpq(std::move(this->i - other.i));
+    }
+    inline RCP<const Number> rsubrat(const Integer &other) const
+    {
+        return from_mpq(std::move(other.i - this->i));
+    }
     /*! Multiply Rationals
      * \param other of type Rational
      * */
-    inline RCP<const Number> mulrat(const Rational &other) const { return from_mpq(std::move(this->i * other.i)); }
+    inline RCP<const Number> mulrat(const Rational &other) const
+    {
+        return from_mpq(std::move(this->i * other.i));
+    }
     /*! Multiply Rationals
      * \param other of type Integer
      * */
-    inline RCP<const Number> mulrat(const Integer &other) const { return from_mpq(std::move(this->i * other.i)); }
+    inline RCP<const Number> mulrat(const Integer &other) const
+    {
+        return from_mpq(std::move(this->i * other.i));
+    }
     /*! Divide Rationals
      * \param other of type Rational
      * */
@@ -226,18 +271,30 @@ class Rational : public Number
         }
     };
 
-    virtual RCP<const Number> rpow(const Number &other) const { throw std::runtime_error("Not implemented."); };
+    virtual RCP<const Number> rpow(const Number &other) const
+    {
+        throw std::runtime_error("Not implemented.");
+    };
 
-    RCP<const Integer> get_num() const { return integer(SymEngine::get_num(i)); }
+    RCP<const Integer> get_num() const
+    {
+        return integer(SymEngine::get_num(i));
+    }
 
-    RCP<const Integer> get_den() const { return integer(SymEngine::get_den(i)); }
+    RCP<const Integer> get_den() const
+    {
+        return integer(SymEngine::get_den(i));
+    }
 };
 
 //! returns the `num` and `den` of rational `rat` as `RCP<const Integer>`
 void get_num_den(const Rational &rat, const Ptr<RCP<const Integer>> &num, const Ptr<RCP<const Integer>> &den);
 
 //! convenience creator from two longs
-inline RCP<const Number> rational(long n, long d) { return Rational::from_two_ints(n, d); }
+inline RCP<const Number> rational(long n, long d)
+{
+    return Rational::from_two_ints(n, d);
+}
 } // SymEngine
 
 #endif

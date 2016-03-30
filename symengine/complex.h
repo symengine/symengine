@@ -16,14 +16,14 @@ namespace SymEngine
 //! Complex Class
 class Complex : public Number
 {
-    public:
+public:
     //! `real_` : Real part of the complex Number
     //! `imaginary_` : Imaginary part of the complex Number
     // Complex Number is of the form `real + i(imaginary)`
     rational_class real_;
     rational_class imaginary_;
 
-    public:
+public:
     IMPLEMENT_TYPEID(COMPLEX)
     //! Constructor of Complex class
     Complex(rational_class real, rational_class imaginary);
@@ -45,10 +45,16 @@ class Complex : public Number
     virtual int compare(const Basic &o) const;
     //! \returns `false`
     // False is returned because complex cannot be compared with zero
-    inline virtual bool is_positive() const { return false; }
+    inline virtual bool is_positive() const
+    {
+        return false;
+    }
     //! \returns `false`
     // False is returned because complex cannot be compared with zero
-    inline virtual bool is_negative() const { return false; }
+    inline virtual bool is_negative() const
+    {
+        return false;
+    }
 
     /*! Constructs Complex from re, im. If im is 0
      * it will return a Rational instead.
@@ -61,14 +67,26 @@ class Complex : public Number
     static RCP<const Number> from_two_nums(const Number &re, const Number &im);
 
     //! \return `false` since `imaginary_` cannot be zero
-    virtual bool is_zero() const { return false; }
+    virtual bool is_zero() const
+    {
+        return false;
+    }
     //! \return `false` since `imaginary_` cannot be zero
-    virtual bool is_one() const { return false; }
+    virtual bool is_one() const
+    {
+        return false;
+    }
     //! \return `false` since `imaginary_` cannot be zero
-    virtual bool is_minus_one() const { return false; }
+    virtual bool is_minus_one() const
+    {
+        return false;
+    }
     // This is needed while printing inside `mul`.
     //! \return `true` if `real_`  is zero
-    inline bool is_re_zero() const { return (this->real_ == 0); }
+    inline bool is_re_zero() const
+    {
+        return (this->real_ == 0);
+    }
     /*! Add Complex
      * \param other of type Complex
      * */
@@ -292,12 +310,21 @@ class Complex : public Number
     };
 
     //! Get the real part of the complex number
-    inline RCP<const Number> real_part() const { return Rational::from_mpq(real_); };
+    inline RCP<const Number> real_part() const
+    {
+        return Rational::from_mpq(real_);
+    };
 
     //! Get the imaginary part of the complex number
-    inline RCP<const Number> imaginary_part() const { return Rational::from_mpq(imaginary_); };
+    inline RCP<const Number> imaginary_part() const
+    {
+        return Rational::from_mpq(imaginary_);
+    };
 
-    virtual RCP<const Number> rpow(const Number &other) const { throw std::runtime_error("Not implemented."); };
+    virtual RCP<const Number> rpow(const Number &other) const
+    {
+        throw std::runtime_error("Not implemented.");
+    };
 };
 
 } // SymEngine

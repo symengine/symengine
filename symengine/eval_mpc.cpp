@@ -18,12 +18,14 @@ namespace SymEngine
 
 class EvalMPCVisitor : public BaseVisitor<EvalMPCVisitor>
 {
-    protected:
+protected:
     mpfr_rnd_t rnd_;
     mpc_ptr result_;
 
-    public:
-    EvalMPCVisitor(mpfr_rnd_t rnd) : rnd_{rnd} {}
+public:
+    EvalMPCVisitor(mpfr_rnd_t rnd) : rnd_{rnd}
+    {
+    }
 
     void apply(mpc_ptr result, const Basic &b)
     {
@@ -33,19 +35,40 @@ class EvalMPCVisitor : public BaseVisitor<EvalMPCVisitor>
         result_ = tmp;
     }
 
-    void bvisit(const Integer &x) { mpc_set_z(result_, get_mpz_t(x.i), rnd_); }
+    void bvisit(const Integer &x)
+    {
+        mpc_set_z(result_, get_mpz_t(x.i), rnd_);
+    }
 
-    void bvisit(const Rational &x) { mpc_set_q(result_, get_mpq_t(x.i), rnd_); }
+    void bvisit(const Rational &x)
+    {
+        mpc_set_q(result_, get_mpq_t(x.i), rnd_);
+    }
 
-    void bvisit(const RealDouble &x) { mpc_set_d(result_, x.i, rnd_); }
+    void bvisit(const RealDouble &x)
+    {
+        mpc_set_d(result_, x.i, rnd_);
+    }
 
-    void bvisit(const Complex &x) { mpc_set_q_q(result_, get_mpq_t(x.real_), get_mpq_t(x.imaginary_), rnd_); }
+    void bvisit(const Complex &x)
+    {
+        mpc_set_q_q(result_, get_mpq_t(x.real_), get_mpq_t(x.imaginary_), rnd_);
+    }
 
-    void bvisit(const ComplexDouble &x) { mpc_set_d_d(result_, x.i.real(), x.i.imag(), rnd_); }
+    void bvisit(const ComplexDouble &x)
+    {
+        mpc_set_d_d(result_, x.i.real(), x.i.imag(), rnd_);
+    }
 
-    void bvisit(const RealMPFR &x) { mpc_set_fr(result_, x.i.get_mpfr_t(), rnd_); }
+    void bvisit(const RealMPFR &x)
+    {
+        mpc_set_fr(result_, x.i.get_mpfr_t(), rnd_);
+    }
 
-    void bvisit(const ComplexMPC &x) { mpc_set(result_, x.i.get_mpc_t(), rnd_); }
+    void bvisit(const ComplexMPC &x)
+    {
+        mpc_set(result_, x.i.get_mpc_t(), rnd_);
+    }
 
     void bvisit(const Add &x)
     {
@@ -284,7 +307,10 @@ class EvalMPCVisitor : public BaseVisitor<EvalMPCVisitor>
         }
     }
 
-    void bvisit(const Gamma &x) { throw std::runtime_error("Not implemented"); }
+    void bvisit(const Gamma &x)
+    {
+        throw std::runtime_error("Not implemented");
+    }
 
     void bvisit(const Abs &x)
     {
@@ -296,15 +322,24 @@ class EvalMPCVisitor : public BaseVisitor<EvalMPCVisitor>
         mpfr_clear(t);
     };
 
-    void bvisit(const NumberWrapper &x) { x.eval(mpc_get_prec(result_))->accept(*this); }
+    void bvisit(const NumberWrapper &x)
+    {
+        x.eval(mpc_get_prec(result_))->accept(*this);
+    }
 
-    void bvisit(const FunctionWrapper &x) { x.eval(mpc_get_prec(result_))->accept(*this); }
+    void bvisit(const FunctionWrapper &x)
+    {
+        x.eval(mpc_get_prec(result_))->accept(*this);
+    }
 
     // Classes not implemented are
     // Subs, UpperGamma, LowerGamma, Dirichlet_eta, Zeta
     // LeviCivita, KroneckerDelta, FunctionSymbol, LambertW
     // Derivative, ATan2, Gamma
-    void bvisit(const Basic &) { throw std::runtime_error("Not implemented."); };
+    void bvisit(const Basic &)
+    {
+        throw std::runtime_error("Not implemented.");
+    };
 };
 
 void eval_mpc(mpc_ptr result, const Basic &b, mpfr_rnd_t rnd)

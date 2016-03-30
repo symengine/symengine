@@ -236,7 +236,10 @@ int set_compare(const T &A, const T &B)
     return 0;
 }
 
-bool multiset_basic_eq(const multiset_basic &a, const multiset_basic &b) { return set_eq<multiset_basic>(a, b); }
+bool multiset_basic_eq(const multiset_basic &a, const multiset_basic &b)
+{
+    return set_eq<multiset_basic>(a, b);
+}
 
 int multiset_basic_compare(const multiset_basic &a, const multiset_basic &b)
 {

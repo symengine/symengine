@@ -16,7 +16,7 @@ class Evaluate;
 
 class Number : public Basic
 {
-    public:
+public:
     //! \return true if `0`
     virtual bool is_zero() const = 0;
     //! \return true if `1`
@@ -29,11 +29,20 @@ class Number : public Basic
     virtual bool is_positive() const = 0;
     //! return true if the number is an exact representation
     //  false if the number is an approximation
-    virtual bool is_exact() const { return true; };
+    virtual bool is_exact() const
+    {
+        return true;
+    };
     //! \return true if the number is equal to 0 and not an approximation
-    inline bool is_exact_zero() const { return is_exact() and is_zero(); };
+    inline bool is_exact_zero() const
+    {
+        return is_exact() and is_zero();
+    };
     //! Get `Evaluate` singleton to evaluate numerically
-    virtual Evaluate &get_eval() const { throw std::runtime_error("Not Implemented."); };
+    virtual Evaluate &get_eval() const
+    {
+        throw std::runtime_error("Not Implemented.");
+    };
 
     //! Addition
     virtual RCP<const Number> add(const Number &other) const = 0;
@@ -49,7 +58,10 @@ class Number : public Basic
     virtual RCP<const Number> pow(const Number &other) const = 0;
     virtual RCP<const Number> rpow(const Number &other) const = 0;
 
-    virtual vec_basic get_args() const { return {}; }
+    virtual vec_basic get_args() const
+    {
+        return {};
+    }
 
     virtual bool is_perfect_power(bool is_expected = false) const
     {
@@ -112,16 +124,22 @@ inline bool is_a_Number(const Basic &b)
 
 class NumberWrapper : public Number
 {
-    public:
+public:
     IMPLEMENT_TYPEID(NUMBER_WRAPPER)
-    virtual std::string __str__() const { throw std::runtime_error("Not Implemented."); };
-    virtual RCP<const Number> eval(long bits) const { throw std::runtime_error("Not Implemented."); };
+    virtual std::string __str__() const
+    {
+        throw std::runtime_error("Not Implemented.");
+    };
+    virtual RCP<const Number> eval(long bits) const
+    {
+        throw std::runtime_error("Not Implemented.");
+    };
 };
 
 //! A class that will evaluate functions numerically.
 class Evaluate
 {
-    public:
+public:
     virtual RCP<const Basic> sin(const Basic &) const = 0;
     virtual RCP<const Basic> cos(const Basic &) const = 0;
     virtual RCP<const Basic> tan(const Basic &) const = 0;

@@ -20,12 +20,14 @@ namespace SymEngine
 
 class EvalArbVisitor : public BaseVisitor<EvalArbVisitor>
 {
-    protected:
+protected:
     long prec_;
     arb_ptr result_;
 
-    public:
-    EvalArbVisitor(long precision) : prec_{precision} {}
+public:
+    EvalArbVisitor(long precision) : prec_{precision}
+    {
+    }
 
     void apply(arb_ptr result, const Basic &b)
     {
@@ -135,17 +137,35 @@ class EvalArbVisitor : public BaseVisitor<EvalArbVisitor>
         arb_tan(result_, result_, prec_);
     }
 
-    void bvisit(const Symbol &x) { throw std::runtime_error("Symbol cannot be evaluated as an arb type."); }
+    void bvisit(const Symbol &x)
+    {
+        throw std::runtime_error("Symbol cannot be evaluated as an arb type.");
+    }
 
-    void bvisit(const UnivariateIntPolynomial &x) { throw std::runtime_error("Not implemented."); }
+    void bvisit(const UnivariateIntPolynomial &x)
+    {
+        throw std::runtime_error("Not implemented.");
+    }
 
-    void bvisit(const Complex &) { throw std::runtime_error("Not implemented."); }
+    void bvisit(const Complex &)
+    {
+        throw std::runtime_error("Not implemented.");
+    }
 
-    void bvisit(const ComplexDouble &x) { throw std::runtime_error("Not implemented."); }
+    void bvisit(const ComplexDouble &x)
+    {
+        throw std::runtime_error("Not implemented.");
+    }
 
-    void bvisit(const RealMPFR &x) { throw std::runtime_error("Not implemented."); }
+    void bvisit(const RealMPFR &x)
+    {
+        throw std::runtime_error("Not implemented.");
+    }
 #ifdef HAVE_SYMENGINE_MPC
-    void bvisit(const ComplexMPC &) { throw std::runtime_error("Not implemented."); };
+    void bvisit(const ComplexMPC &)
+    {
+        throw std::runtime_error("Not implemented.");
+    };
 #endif
     void bvisit(const Log &x)
     {
@@ -153,7 +173,10 @@ class EvalArbVisitor : public BaseVisitor<EvalArbVisitor>
         arb_log(result_, result_, prec_);
     }
 
-    void bvisit(const Derivative &) { throw std::runtime_error("Not implemented."); }
+    void bvisit(const Derivative &)
+    {
+        throw std::runtime_error("Not implemented.");
+    }
 
     void bvisit(const Cot &x)
     {
@@ -226,9 +249,15 @@ class EvalArbVisitor : public BaseVisitor<EvalArbVisitor>
         arb_clear(t);
     }
 
-    void bvisit(const LambertW &) { throw std::runtime_error("Not implemented."); }
+    void bvisit(const LambertW &)
+    {
+        throw std::runtime_error("Not implemented.");
+    }
 
-    void bvisit(const FunctionWrapper &x) { x.eval(prec_)->accept(*this); }
+    void bvisit(const FunctionWrapper &x)
+    {
+        x.eval(prec_)->accept(*this);
+    }
 
     void bvisit(const Sinh &x)
     {
@@ -236,7 +265,10 @@ class EvalArbVisitor : public BaseVisitor<EvalArbVisitor>
         arb_sinh(result_, result_, prec_);
     }
 
-    void bvisit(const Csch &) { throw std::runtime_error("Not implemented."); };
+    void bvisit(const Csch &)
+    {
+        throw std::runtime_error("Not implemented.");
+    };
 
     void bvisit(const Cosh &x)
     {
@@ -244,7 +276,10 @@ class EvalArbVisitor : public BaseVisitor<EvalArbVisitor>
         arb_cosh(result_, result_, prec_);
     }
 
-    void bvisit(const Sech &) { throw std::runtime_error("Not implemented."); };
+    void bvisit(const Sech &)
+    {
+        throw std::runtime_error("Not implemented.");
+    };
 
     void bvisit(const Tanh &x)
     {
@@ -298,16 +333,46 @@ class EvalArbVisitor : public BaseVisitor<EvalArbVisitor>
         arb_clear(t);
     }
 
-    void bvisit(const ASinh &) { throw std::runtime_error("Not implemented."); };
-    void bvisit(const ACsch &) { throw std::runtime_error("Not implemented."); };
-    void bvisit(const ACosh &) { throw std::runtime_error("Not implemented."); };
-    void bvisit(const ATanh &) { throw std::runtime_error("Not implemented."); };
-    void bvisit(const ACoth &) { throw std::runtime_error("Not implemented."); };
-    void bvisit(const ASech &) { throw std::runtime_error("Not implemented."); };
-    void bvisit(const KroneckerDelta &) { throw std::runtime_error("Not implemented."); };
-    void bvisit(const LeviCivita &) { throw std::runtime_error("Not implemented."); };
-    void bvisit(const Zeta &) { throw std::runtime_error("Not implemented."); };
-    void bvisit(const Dirichlet_eta &) { throw std::runtime_error("Not implemented."); };
+    void bvisit(const ASinh &)
+    {
+        throw std::runtime_error("Not implemented.");
+    };
+    void bvisit(const ACsch &)
+    {
+        throw std::runtime_error("Not implemented.");
+    };
+    void bvisit(const ACosh &)
+    {
+        throw std::runtime_error("Not implemented.");
+    };
+    void bvisit(const ATanh &)
+    {
+        throw std::runtime_error("Not implemented.");
+    };
+    void bvisit(const ACoth &)
+    {
+        throw std::runtime_error("Not implemented.");
+    };
+    void bvisit(const ASech &)
+    {
+        throw std::runtime_error("Not implemented.");
+    };
+    void bvisit(const KroneckerDelta &)
+    {
+        throw std::runtime_error("Not implemented.");
+    };
+    void bvisit(const LeviCivita &)
+    {
+        throw std::runtime_error("Not implemented.");
+    };
+    void bvisit(const Zeta &)
+    {
+        throw std::runtime_error("Not implemented.");
+    };
+    void bvisit(const Dirichlet_eta &)
+    {
+        throw std::runtime_error("Not implemented.");
+    };
     void bvisit(const Gamma &x)
     {
         apply(result_, *(x.get_args())[0]);
@@ -318,8 +383,14 @@ class EvalArbVisitor : public BaseVisitor<EvalArbVisitor>
         apply(result_, *(x.get_args())[0]);
         arb_lgamma(result_, result_, prec_);
     }
-    void bvisit(const LowerGamma &) { throw std::runtime_error("Not implemented."); };
-    void bvisit(const UpperGamma &) { throw std::runtime_error("Not implemented."); };
+    void bvisit(const LowerGamma &)
+    {
+        throw std::runtime_error("Not implemented.");
+    };
+    void bvisit(const UpperGamma &)
+    {
+        throw std::runtime_error("Not implemented.");
+    };
 
     void bvisit(const Constant &x)
     {
@@ -334,11 +405,20 @@ class EvalArbVisitor : public BaseVisitor<EvalArbVisitor>
         }
     }
 
-    void bvisit(const Abs &) { throw std::runtime_error("Not implemented."); };
+    void bvisit(const Abs &)
+    {
+        throw std::runtime_error("Not implemented.");
+    };
 
-    void bvisit(const Basic &) { throw std::runtime_error("Not implemented."); };
+    void bvisit(const Basic &)
+    {
+        throw std::runtime_error("Not implemented.");
+    };
 
-    void bvisit(const NumberWrapper &x) { x.eval(prec_)->accept(*this); }
+    void bvisit(const NumberWrapper &x)
+    {
+        x.eval(prec_)->accept(*this);
+    }
 };
 
 void eval_arb(arb_t result, const Basic &b, long precision)

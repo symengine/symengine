@@ -88,17 +88,16 @@ class ExpressionParser
         {"zeta", single_casted_zeta}};
 
     // maps string to corresponding double argument function
-    std::map<std::string, std::function<RCP<const Basic>(const RCP<const Basic> &, const RCP<const Basic> &)>> double_arg_functions
-        = {
+    std::map<std::string, std::function<RCP<const Basic>(const RCP<const Basic> &, const RCP<const Basic> &)>> double_arg_functions = {
 
-            {"pow", pow},
-            {"beta", beta},
-            {"log", double_casted_log},
-            {"zeta", double_casted_zeta},
-            {"lowergamma", lowergamma},
-            {"uppergamma", uppergamma},
-            {"polygamma", polygamma},
-            {"kronecker_delta", kronecker_delta}};
+        {"pow", pow},
+        {"beta", beta},
+        {"log", double_casted_log},
+        {"zeta", double_casted_zeta},
+        {"lowergamma", lowergamma},
+        {"uppergamma", uppergamma},
+        {"polygamma", polygamma},
+        {"kronecker_delta", kronecker_delta}};
 
     // maps string to corresponding multi argument function
     std::map<std::string, std::function<RCP<const Basic>(vec_basic &)>> multi_arg_functions = {
@@ -272,7 +271,7 @@ class ExpressionParser
         return false;
     }
 
-    public:
+public:
     // does all the preprocessing related to parsing
     RCP<const Basic> parse_expr(const std::string &in)
     {

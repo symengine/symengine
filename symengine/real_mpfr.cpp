@@ -14,7 +14,9 @@
 namespace SymEngine
 {
 
-RealMPFR::RealMPFR(mpfr_class i) : i{std::move(i)} {}
+RealMPFR::RealMPFR(mpfr_class i) : i{std::move(i)}
+{
+}
 
 std::size_t RealMPFR::__hash__() const
 {

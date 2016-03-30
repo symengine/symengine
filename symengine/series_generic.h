@@ -14,7 +14,7 @@ namespace SymEngine
 //! UnivariateSeries Class
 class UnivariateSeries : public Basic
 {
-    public:
+public:
     //! `var_` : Variable of the UnivariateSeries
     //! `poly_` : holds the UnivariateIntPolynomial of the series
     //! `prec_` : precision of the UnivariateSeries, i.e. self = poly + O(var^prec)
@@ -23,19 +23,16 @@ class UnivariateSeries : public Basic
     RCP<const UnivariateIntPolynomial> poly_;
     unsigned int prec_;
 
-    public:
+public:
     IMPLEMENT_TYPEID(UNIVARIATESERIES)
     //! Constructor of UnivariateSeries class
-    UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision,
-                     const RCP<const UnivariateIntPolynomial> &poly);
-    UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const unsigned int &max_exp,
-                     map_uint_mpz &&dict);
+    UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const RCP<const UnivariateIntPolynomial> &poly);
+    UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const unsigned int &max_exp, map_uint_mpz &&dict);
     UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const map_uint_mpz &dict);
     //! Constructor using a dense vector of integer_class coefficients
     UnivariateSeries(const RCP<const Symbol> &var, const unsigned int &precision, const std::vector<integer_class> &v);
 
-    static RCP<const UnivariateSeries> create(const RCP<const Symbol> &var, const unsigned int &prec,
-                                              const std::vector<integer_class> &v)
+    static RCP<const UnivariateSeries> create(const RCP<const Symbol> &var, const unsigned int &prec, const std::vector<integer_class> &v)
     {
         return make_rcp<const UnivariateSeries>(var, prec, v);
     }
@@ -57,7 +54,10 @@ class UnivariateSeries : public Basic
     int compare(const Basic &o) const;
 
     std::string __str__() const;
-    virtual vec_basic get_args() const { return {}; }
+    virtual vec_basic get_args() const
+    {
+        return {};
+    }
 };
 
 inline RCP<const UnivariateSeries> univariate_series(RCP<const Symbol> i, unsigned int prec, const map_uint_mpz &dict)

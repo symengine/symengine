@@ -20,7 +20,7 @@ namespace SymEngine
 template <typename T>
 class LambdaDoubleVisitor : public BaseVisitor<LambdaDoubleVisitor<T>>
 {
-    protected:
+protected:
     /*
        The 'result_' variable is assigned into at the very end of each visit()
        methods below. The only place where these methods are called from is the
@@ -33,7 +33,7 @@ class LambdaDoubleVisitor : public BaseVisitor<LambdaDoubleVisitor<T>>
     fn result_;
     vec_basic symbols;
 
-    public:
+public:
     void init(const vec_basic &x, const Basic &b)
     {
         symbols = x;
@@ -46,7 +46,10 @@ class LambdaDoubleVisitor : public BaseVisitor<LambdaDoubleVisitor<T>>
         return result_;
     }
 
-    T call(const std::vector<T> &vec) { return result_(vec); }
+    T call(const std::vector<T> &vec)
+    {
+        return result_(vec);
+    }
 
     void bvisit(const Integer &x)
     {
@@ -287,12 +290,15 @@ class LambdaDoubleVisitor : public BaseVisitor<LambdaDoubleVisitor<T>>
         result_ = [=](const std::vector<T> &x) { return std::abs(tmp(x)); };
     };
 
-    void bvisit(const Basic &) { throw std::runtime_error("Not implemented."); };
+    void bvisit(const Basic &)
+    {
+        throw std::runtime_error("Not implemented.");
+    };
 };
 
 class LambdaRealDoubleVisitor : public BaseVisitor<LambdaRealDoubleVisitor, LambdaDoubleVisitor<double>>
 {
-    public:
+public:
     // Classes not implemented are
     // Subs, UpperGamma, LowerGamma, Dirichlet_eta, Zeta
     // LeviCivita, KroneckerDelta, FunctionSymbol, LambertW
@@ -360,10 +366,9 @@ class LambdaRealDoubleVisitor : public BaseVisitor<LambdaRealDoubleVisitor, Lamb
     };
 };
 
-class LambdaComplexDoubleVisitor
-    : public BaseVisitor<LambdaComplexDoubleVisitor, LambdaDoubleVisitor<std::complex<double>>>
+class LambdaComplexDoubleVisitor : public BaseVisitor<LambdaComplexDoubleVisitor, LambdaDoubleVisitor<std::complex<double>>>
 {
-    public:
+public:
     // Classes not implemented are
     // Subs, UpperGamma, LowerGamma, Dirichlet_eta, Zeta
     // LeviCivita, KroneckerDelta, FunctionSymbol, LambertW

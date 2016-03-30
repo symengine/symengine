@@ -66,8 +66,7 @@ std::size_t Pow::__hash__() const
 
 bool Pow::__eq__(const Basic &o) const
 {
-    if (is_a<Pow>(o) and eq(*base_, *(static_cast<const Pow &>(o).base_))
-        and eq(*exp_, *(static_cast<const Pow &>(o).exp_)))
+    if (is_a<Pow>(o) and eq(*base_, *(static_cast<const Pow &>(o).base_)) and eq(*exp_, *(static_cast<const Pow &>(o).exp_)))
         return true;
 
     return false;
@@ -257,11 +256,20 @@ RCP<const Basic> Pow::subs(const map_basic_basic &subs_dict) const
         return pow(base_new, exp_new);
 }
 
-vec_basic Pow::get_args() const { return {base_, exp_}; }
+vec_basic Pow::get_args() const
+{
+    return {base_, exp_};
+}
 
-RCP<const Basic> exp(const RCP<const Basic> &x) { return pow(E, x); }
+RCP<const Basic> exp(const RCP<const Basic> &x)
+{
+    return pow(E, x);
+}
 
-Log::Log(const RCP<const Basic> &arg) : arg_{arg} { SYMENGINE_ASSERT(is_canonical(*arg)) }
+Log::Log(const RCP<const Basic> &arg) : arg_{arg}
+{
+    SYMENGINE_ASSERT(is_canonical(*arg))
+}
 
 bool Log::is_canonical(const Basic &arg) const
 {

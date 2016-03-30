@@ -12,7 +12,9 @@
 namespace SymEngine
 {
 
-ComplexMPC::ComplexMPC(mpc_class i) : i{std::move(i)} {}
+ComplexMPC::ComplexMPC(mpc_class i) : i{std::move(i)}
+{
+}
 
 std::size_t ComplexMPC::__hash__() const
 {
@@ -819,7 +821,10 @@ class EvaluateMPC : public Evaluate
         mpc_abs(t.get_mpfr_t(), static_cast<const ComplexMPC &>(x).i.get_mpc_t(), MPFR_RNDN);
         return real_mpfr(std::move(t));
     }
-    virtual RCP<const Basic> gamma(Basic const &aConst) const { throw std::runtime_error("Not Implemented."); }
+    virtual RCP<const Basic> gamma(Basic const &aConst) const
+    {
+        throw std::runtime_error("Not Implemented.");
+    }
 };
 
 Evaluate &ComplexMPC::get_eval() const

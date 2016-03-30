@@ -10,13 +10,12 @@ extern "C" {
 #endif
 
 // Use SYMENGINE_C_ASSERT in C tests
-#define SYMENGINE_C_ASSERT(cond)                                                                                  \
-    {                                                                                                             \
-        if (0 == (cond)) {                                                                                        \
-            printf("SYMENGINE_C_ASSERT failed: %s \nfunction %s (), line number %d at\n%s\n", __FILE__, __func__, \
-                   __LINE__, #cond);                                                                              \
-            abort();                                                                                              \
-        }                                                                                                         \
+#define SYMENGINE_C_ASSERT(cond)                                                                                                    \
+    {                                                                                                                               \
+        if (0 == (cond)) {                                                                                                          \
+            printf("SYMENGINE_C_ASSERT failed: %s \nfunction %s (), line number %d at\n%s\n", __FILE__, __func__, __LINE__, #cond); \
+            abort();                                                                                                                \
+        }                                                                                                                           \
     }
 
 typedef enum {

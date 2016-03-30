@@ -53,8 +53,7 @@ bool Mul::is_canonical(const RCP<const Number> &coef, const map_basic_basic &dic
         if (is_a<Mul>(*p.first)) {
             if (is_a<Integer>(*p.second))
                 return false;
-            if (neq(*static_cast<const Mul &>(*p.first).coef_, *one)
-                and neq(*static_cast<const Mul &>(*p.first).coef_, *minus_one))
+            if (neq(*static_cast<const Mul &>(*p.first).coef_, *one) and neq(*static_cast<const Mul &>(*p.first).coef_, *minus_one))
                 return false;
         }
         // e.g. x**2**y (={x**2:y}), which should be represented as x**(2y)
@@ -62,8 +61,8 @@ bool Mul::is_canonical(const RCP<const Number> &coef, const map_basic_basic &dic
         if (is_a<Pow>(*p.first))
             return false;
         // e.g. 0.5^2.0 should be represented as 0.25
-        if (is_a_Number(*p.first) and not rcp_static_cast<const Number>(p.first)->is_exact()
-            and is_a_Number(*p.second) and not rcp_static_cast<const Number>(p.second)->is_exact())
+        if (is_a_Number(*p.first) and not rcp_static_cast<const Number>(p.first)->is_exact() and is_a_Number(*p.second)
+            and not rcp_static_cast<const Number>(p.second)->is_exact())
             return false;
     }
     return true;
@@ -82,8 +81,7 @@ std::size_t Mul::__hash__() const
 
 bool Mul::__eq__(const Basic &o) const
 {
-    if (is_a<Mul>(o) and eq(*coef_, *(static_cast<const Mul &>(o).coef_))
-        and map_eq(dict_, static_cast<const Mul &>(o).dict_))
+    if (is_a<Mul>(o) and eq(*coef_, *(static_cast<const Mul &>(o).coef_)) and map_eq(dict_, static_cast<const Mul &>(o).dict_))
         return true;
 
     return false;
@@ -221,8 +219,7 @@ void Mul::dict_add_term_new(const Ptr<RCP<const Number>> &coef, map_basic_basic 
             // `pow` for Complex is not expanded by default
             if (is_a<Integer>(*t) or is_a<Rational>(*t)) {
                 if (not rcp_static_cast<const Integer>(it->second)->is_zero()) {
-                    imulnum(outArg(*coef),
-                            pownum(rcp_static_cast<const Number>(t), rcp_static_cast<const Number>(it->second)));
+                    imulnum(outArg(*coef), pownum(rcp_static_cast<const Number>(t), rcp_static_cast<const Number>(it->second)));
                 }
                 d.erase(it);
                 return;
@@ -381,7 +378,10 @@ RCP<const Basic> div(const RCP<const Basic> &a, const RCP<const Basic> &b)
     return mul(a, pow(b, minus_one));
 }
 
-RCP<const Basic> neg(const RCP<const Basic> &a) { return mul(minus_one, a); }
+RCP<const Basic> neg(const RCP<const Basic> &a)
+{
+    return mul(minus_one, a);
+}
 
 void Mul::power_num(const Ptr<RCP<const Number>> &coef, map_basic_basic &d, const RCP<const Number> &exp) const
 {

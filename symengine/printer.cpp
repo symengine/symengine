@@ -22,7 +22,10 @@ void StrPrinter::bvisit(const Basic &x)
     str_ = s.str();
 }
 
-void StrPrinter::bvisit(const Symbol &x) { str_ = x.get_name(); }
+void StrPrinter::bvisit(const Symbol &x)
+{
+    str_ = x.get_name();
+}
 
 void StrPrinter::bvisit(const Integer &x)
 {
@@ -410,9 +413,15 @@ void StrPrinter::bvisit(const UPSeriesPiranha &x)
 }
 #endif
 
-void StrPrinter::bvisit(const Log &x) { str_ = "log(" + this->apply(x.get_arg()) + ")"; }
+void StrPrinter::bvisit(const Log &x)
+{
+    str_ = "log(" + this->apply(x.get_arg()) + ")";
+}
 
-void StrPrinter::bvisit(const Constant &x) { str_ = x.get_name(); }
+void StrPrinter::bvisit(const Constant &x)
+{
+    str_ = x.get_name();
+}
 
 std::string StrPrinter::apply(const vec_basic &d)
 {
@@ -473,7 +482,10 @@ void StrPrinter::bvisit(const Subs &x)
     str_ = o.str();
 }
 
-void StrPrinter::bvisit(const NumberWrapper &x) { str_ = x.__str__(); }
+void StrPrinter::bvisit(const NumberWrapper &x)
+{
+    str_ = x.__str__();
+}
 
 std::string StrPrinter::parenthesizeLT(const RCP<const Basic> &x, PrecedenceEnum precedenceEnum)
 {

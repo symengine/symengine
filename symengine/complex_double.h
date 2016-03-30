@@ -18,10 +18,10 @@ namespace SymEngine
 //! Complex Double Class to hold std::complex<double> values
 class ComplexDouble : public Number
 {
-    public:
+public:
     std::complex<double> i;
 
-    public:
+public:
     IMPLEMENT_TYPEID(COMPLEX_DOUBLE)
     //! Constructor of ComplexDouble class
     explicit ComplexDouble(std::complex<double> i);
@@ -39,26 +39,47 @@ class ComplexDouble : public Number
     RCP<const Number> imaginary_part() const;
     //! \returns `false`
     // False is returned because complex cannot be compared with zero
-    inline virtual bool is_positive() const { return false; }
+    inline virtual bool is_positive() const
+    {
+        return false;
+    }
     //! \returns `false`
     // False is returned because complex cannot be compared with zero
-    inline virtual bool is_negative() const { return false; }
+    inline virtual bool is_negative() const
+    {
+        return false;
+    }
     //! \return self as a double
-    inline std::complex<double> as_complex_double() const { return i; }
+    inline std::complex<double> as_complex_double() const
+    {
+        return i;
+    }
     //! \returns `false`
     // False is returned because std::complex<double> is not exact
-    inline virtual bool is_exact() const { return false; }
+    inline virtual bool is_exact() const
+    {
+        return false;
+    }
     //! Get `Evaluate` singleton to evaluate numerically
     virtual Evaluate &get_eval() const;
 
     //! \return `true` if equal to `0`
-    virtual bool is_zero() const { return i == 0.0; }
+    virtual bool is_zero() const
+    {
+        return i == 0.0;
+    }
     //! \return `false`
     // A std::complex<double> is not exactly equal to `1`
-    virtual bool is_one() const { return false; }
+    virtual bool is_one() const
+    {
+        return false;
+    }
     //! \return `false`
     // A std::complex<double> is not exactly equal to `-1`
-    virtual bool is_minus_one() const { return false; }
+    virtual bool is_minus_one() const
+    {
+        return false;
+    }
 
     /*! Add ComplexDoubles
      * \param other of type Integer
@@ -87,7 +108,10 @@ class ComplexDouble : public Number
     /*! Add ComplexDoubles
      * \param other of type RealDouble
      * */
-    RCP<const Number> addcomp(const RealDouble &other) const { return make_rcp<const ComplexDouble>(i + other.i); }
+    RCP<const Number> addcomp(const RealDouble &other) const
+    {
+        return make_rcp<const ComplexDouble>(i + other.i);
+    }
 
     /*! Add ComplexDoubles
      * \param other of type ComplexDouble
@@ -142,7 +166,10 @@ class ComplexDouble : public Number
     /*! Subtract ComplexDoubles
      * \param other of type RealDouble
      * */
-    RCP<const Number> subcomp(const RealDouble &other) const { return make_rcp<const ComplexDouble>(i - other.i); }
+    RCP<const Number> subcomp(const RealDouble &other) const
+    {
+        return make_rcp<const ComplexDouble>(i - other.i);
+    }
 
     /*! Subtract ComplexDoubles
      * \param other of type ComplexDouble
@@ -245,7 +272,10 @@ class ComplexDouble : public Number
     /*! Multiply ComplexDoubles
      * \param other of type RealDouble
      * */
-    RCP<const Number> mulcomp(const RealDouble &other) const { return make_rcp<const ComplexDouble>(i * other.i); }
+    RCP<const Number> mulcomp(const RealDouble &other) const
+    {
+        return make_rcp<const ComplexDouble>(i * other.i);
+    }
 
     /*! Multiply ComplexDoubles
      * \param other of type ComplexDouble
@@ -300,7 +330,10 @@ class ComplexDouble : public Number
     /*! Divide ComplexDoubles
      * \param other of type RealDouble
      * */
-    RCP<const Number> divcomp(const RealDouble &other) const { return make_rcp<const ComplexDouble>(i / other.i); }
+    RCP<const Number> divcomp(const RealDouble &other) const
+    {
+        return make_rcp<const ComplexDouble>(i / other.i);
+    }
 
     /*! Divide ComplexDoubles
      * \param other of type ComplexDouble
@@ -397,8 +430,8 @@ class ComplexDouble : public Number
      * */
     RCP<const Number> powcomp(const Complex &other) const
     {
-        return make_rcp<const ComplexDouble>((std::complex<double>)std::pow(
-            i, std::complex<double>(mp_get_d(other.real_), mp_get_d(other.imaginary_))));
+        return make_rcp<const ComplexDouble>(
+            (std::complex<double>)std::pow(i, std::complex<double>(mp_get_d(other.real_), mp_get_d(other.imaginary_))));
     }
     /*! Raise ComplexDouble to power `other`
      * \param other of type RealDouble
@@ -455,8 +488,8 @@ class ComplexDouble : public Number
      * */
     RCP<const Number> rpowcomp(const Complex &other) const
     {
-        return make_rcp<const ComplexDouble>((std::complex<double>)std::pow(
-            std::complex<double>(mp_get_d(other.real_), mp_get_d(other.imaginary_)), i));
+        return make_rcp<const ComplexDouble>(
+            (std::complex<double>)std::pow(std::complex<double>(mp_get_d(other.real_), mp_get_d(other.imaginary_)), i));
     }
 
     /*! Raise `other` to power ComplexDouble

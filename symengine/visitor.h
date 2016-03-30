@@ -32,7 +32,7 @@ namespace SymEngine
 
 class Visitor
 {
-    public:
+public:
 #define SYMENGINE_ENUM(TypeID, Class) virtual void visit(const Class &) = 0;
 #include "symengine/type_codes.inc"
 #undef SYMENGINE_ENUM
@@ -45,16 +45,19 @@ template <class Derived, class Base = Visitor>
 class BaseVisitor : public Base
 {
 
-    public:
-#define SYMENGINE_ENUM(TypeID, Class)                                                                             \
-    virtual void visit(const Class &x) { static_cast<Derived *>(this)->bvisit(x); };
+public:
+#define SYMENGINE_ENUM(TypeID, Class)                                                                                            \
+    virtual void visit(const Class &x)                                                                                           \
+    {                                                                                                                            \
+        static_cast<Derived *>(this)->bvisit(x);                                                                                 \
+    };
 #include "symengine/type_codes.inc"
 #undef SYMENGINE_ENUM
 };
 
 class StopVisitor : public Visitor
 {
-    public:
+public:
     bool stop_;
 };
 
@@ -63,11 +66,11 @@ void postorder_traversal_stop(const Basic &b, StopVisitor &v);
 
 class HasSymbolVisitor : public BaseVisitor<HasSymbolVisitor, StopVisitor>
 {
-    protected:
+protected:
     RCP<const Symbol> x_;
     bool has_;
 
-    public:
+public:
     void bvisit(const Symbol &x)
     {
         if (x_->__eq__(x)) {
@@ -92,12 +95,12 @@ bool has_symbol(const Basic &b, const RCP<const Symbol> &x);
 
 class CoeffVisitor : public BaseVisitor<CoeffVisitor, StopVisitor>
 {
-    protected:
+protected:
     RCP<const Symbol> x_;
     RCP<const Basic> n_;
     RCP<const Basic> coeff_;
 
-    public:
+public:
     void bvisit(const Add &x)
     {
         umap_basic_num dict;
@@ -140,7 +143,10 @@ class CoeffVisitor : public BaseVisitor<CoeffVisitor, StopVisitor>
         }
     }
 
-    void bvisit(const Basic &x) { coeff_ = zero; }
+    void bvisit(const Basic &x)
+    {
+        coeff_ = zero;
+    }
 
     RCP<const Basic> apply(const Basic &b, const RCP<const Symbol> &x, const RCP<const Basic> &n)
     {

@@ -18,7 +18,7 @@ namespace SymEngine
 
 class SeriesCoeffInterface : public Number
 {
-    public:
+public:
     virtual RCP<const Basic> as_basic() const = 0;
     virtual umap_int_basic as_dict() const = 0;
     virtual RCP<const Basic> get_coeff(int) const = 0;
@@ -29,33 +29,59 @@ class SeriesCoeffInterface : public Number
 template <typename Poly, typename Coeff, typename Series>
 class SeriesBase : public SeriesCoeffInterface
 {
-    protected:
+protected:
     const Poly p_;
     const std::string var_;
     const long degree_;
 
-    public:
-    inline SeriesBase(Poly p, std::string var, long degree) : p_(std::move(p)), var_(var), degree_(degree) {}
-    inline virtual long get_degree() const { return degree_; }
+public:
+    inline SeriesBase(Poly p, std::string var, long degree) : p_(std::move(p)), var_(var), degree_(degree)
+    {
+    }
+    inline virtual long get_degree() const
+    {
+        return degree_;
+    }
 
-    inline virtual const std::string &get_var() const { return var_; }
+    inline virtual const std::string &get_var() const
+    {
+        return var_;
+    }
 
-    inline const Poly &get_poly() const { return p_; }
+    inline const Poly &get_poly() const
+    {
+        return p_;
+    }
 
-    inline virtual bool is_zero() const { return false; }
+    inline virtual bool is_zero() const
+    {
+        return false;
+    }
 
-    inline virtual bool is_one() const { return false; }
+    inline virtual bool is_one() const
+    {
+        return false;
+    }
 
-    inline virtual bool is_minus_one() const { return false; }
+    inline virtual bool is_minus_one() const
+    {
+        return false;
+    }
 
-    inline virtual bool is_negative() const { return false; }
+    inline virtual bool is_negative() const
+    {
+        return false;
+    }
 
-    inline virtual bool is_positive() const { return false; }
+    inline virtual bool is_positive() const
+    {
+        return false;
+    }
 
     inline virtual bool __eq__(const Basic &o) const
     {
-        return (is_a<Series>(o) and var_ == static_cast<const Series &>(o).var_
-                and p_ == static_cast<const Series &>(o).p_ and degree_ == static_cast<const Series &>(o).degree_);
+        return (is_a<Series>(o) and var_ == static_cast<const Series &>(o).var_ and p_ == static_cast<const Series &>(o).p_
+                and degree_ == static_cast<const Series &>(o).degree_);
     }
 
     virtual RCP<const Number> add(const Number &other) const
@@ -289,8 +315,7 @@ class SeriesBase : public SeriesCoeffInterface
         if (c == 0) {
             return res_p;
         } else {
-            return Series::mul(res_p + Series::tan(c),
-                               Series::series_invert(1 + res_p * (-Series::tan(c)), var, prec), prec);
+            return Series::mul(res_p + Series::tan(c), Series::series_invert(1 + res_p * (-Series::tan(c)), var, prec), prec);
         }
     }
 
@@ -550,19 +575,58 @@ class SeriesBase : public SeriesCoeffInterface
         }
     }
 
-    static inline Coeff sin(const Coeff &c) { throw std::runtime_error("sin(const) not implemented"); }
-    static inline Coeff cos(const Coeff &c) { throw std::runtime_error("cos(const) not implemented"); }
-    static inline Coeff tan(const Coeff &c) { throw std::runtime_error("tan(const) not implemented"); }
-    static inline Coeff asin(const Coeff &c) { throw std::runtime_error("asin(const) not implemented"); }
-    static inline Coeff acos(const Coeff &c) { throw std::runtime_error("acos(const) not implemented"); }
-    static inline Coeff atan(const Coeff &c) { throw std::runtime_error("atan(const) not implemented"); }
-    static inline Coeff sinh(const Coeff &c) { throw std::runtime_error("sinh(const) not implemented"); }
-    static inline Coeff cosh(const Coeff &c) { throw std::runtime_error("cosh(const) not implemented"); }
-    static inline Coeff tanh(const Coeff &c) { throw std::runtime_error("tanh(const) not implemented"); }
-    static inline Coeff asinh(const Coeff &c) { throw std::runtime_error("asinh(const) not implemented"); }
-    static inline Coeff atanh(const Coeff &c) { throw std::runtime_error("atanh(const) not implemented"); }
-    static inline Coeff exp(const Coeff &c) { throw std::runtime_error("exp(const) not implemented"); }
-    static inline Coeff log(const Coeff &c) { throw std::runtime_error("log(const) not implemented"); }
+    static inline Coeff sin(const Coeff &c)
+    {
+        throw std::runtime_error("sin(const) not implemented");
+    }
+    static inline Coeff cos(const Coeff &c)
+    {
+        throw std::runtime_error("cos(const) not implemented");
+    }
+    static inline Coeff tan(const Coeff &c)
+    {
+        throw std::runtime_error("tan(const) not implemented");
+    }
+    static inline Coeff asin(const Coeff &c)
+    {
+        throw std::runtime_error("asin(const) not implemented");
+    }
+    static inline Coeff acos(const Coeff &c)
+    {
+        throw std::runtime_error("acos(const) not implemented");
+    }
+    static inline Coeff atan(const Coeff &c)
+    {
+        throw std::runtime_error("atan(const) not implemented");
+    }
+    static inline Coeff sinh(const Coeff &c)
+    {
+        throw std::runtime_error("sinh(const) not implemented");
+    }
+    static inline Coeff cosh(const Coeff &c)
+    {
+        throw std::runtime_error("cosh(const) not implemented");
+    }
+    static inline Coeff tanh(const Coeff &c)
+    {
+        throw std::runtime_error("tanh(const) not implemented");
+    }
+    static inline Coeff asinh(const Coeff &c)
+    {
+        throw std::runtime_error("asinh(const) not implemented");
+    }
+    static inline Coeff atanh(const Coeff &c)
+    {
+        throw std::runtime_error("atanh(const) not implemented");
+    }
+    static inline Coeff exp(const Coeff &c)
+    {
+        throw std::runtime_error("exp(const) not implemented");
+    }
+    static inline Coeff log(const Coeff &c)
+    {
+        throw std::runtime_error("log(const) not implemented");
+    }
 };
 
 RCP<const SeriesCoeffInterface> series(const RCP<const Basic> &ex, const RCP<const Symbol> &var, unsigned int prec);

@@ -15,16 +15,18 @@ namespace SymEngine
 
 class NumerDenomVisitor : public BaseVisitor<NumerDenomVisitor>
 {
-    private:
+private:
     Ptr<RCP<const Basic>> numer_, denom_;
 
-    public:
-    NumerDenomVisitor(const Ptr<RCP<const Basic>> &numer, const Ptr<RCP<const Basic>> &denom)
-        : numer_{numer}, denom_{denom}
+public:
+    NumerDenomVisitor(const Ptr<RCP<const Basic>> &numer, const Ptr<RCP<const Basic>> &denom) : numer_{numer}, denom_{denom}
     {
     }
 
-    void apply(const Basic &b) { b.accept(*this); }
+    void apply(const Basic &b)
+    {
+        b.accept(*this);
+    }
 
     void bvisit(const Mul &x)
     {

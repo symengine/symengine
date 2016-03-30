@@ -983,8 +983,7 @@ TEST_CASE("Subs: functions", "[functions]")
 
     r2 = r1->diff(y);
     r3 = Subs::create(Derivative::create(function_symbol("f", {add(y, y), _x}), {_x, _x}), {{_x, add(x, y)}});
-    r4 = Subs::create(Derivative::create(function_symbol("f", {__x, _x}), {__x, _x}),
-                      {{_x, add(x, y)}, {__x, add(y, y)}});
+    r4 = Subs::create(Derivative::create(function_symbol("f", {__x, _x}), {__x, _x}), {{_x, add(x, y)}, {__x, add(y, y)}});
     r3 = add(r3, add(r4, r4));
     REQUIRE(eq(*r2, *r3));
 }
@@ -2384,9 +2383,8 @@ TEST_CASE("Beta: functions", "[functions]")
     REQUIRE(eq(*r1, *r2));
 
     r1 = beta(x, mul(x, x))->diff(x);
-    r2 = mul(beta(x, mul(x, x)),
-             add(mul(mul(i2, x), polygamma(zero, mul(x, x))),
-                 sub(polygamma(zero, x), mul(add(mul(i2, x), one), polygamma(zero, add(x, mul(x, x)))))));
+    r2 = mul(beta(x, mul(x, x)), add(mul(mul(i2, x), polygamma(zero, mul(x, x))),
+                                     sub(polygamma(zero, x), mul(add(mul(i2, x), one), polygamma(zero, add(x, mul(x, x)))))));
     REQUIRE(eq(*r1, *r2));
 }
 
@@ -2500,9 +2498,14 @@ TEST_CASE("Abs: functions", "[functions]")
 
 class MySin : public FunctionWrapper
 {
-    public:
-    MySin(RCP<const Basic> arg) : FunctionWrapper("MySin", arg) {}
-    RCP<const Number> eval(long bits) const { return real_double(::sin(eval_double(*arg_[0]))); }
+public:
+    MySin(RCP<const Basic> arg) : FunctionWrapper("MySin", arg)
+    {
+    }
+    RCP<const Number> eval(long bits) const
+    {
+        return real_double(::sin(eval_double(*arg_[0])));
+    }
     RCP<const Basic> create(const vec_basic &v) const
     {
         if (eq(*zero, *v[0])) {
@@ -2511,7 +2514,10 @@ class MySin : public FunctionWrapper
             return make_rcp<MySin>(v[0]);
         }
     }
-    RCP<const Basic> diff_impl(const RCP<const Symbol> &x) const { return mul(cos(arg_[0]), arg_[0]->diff(x)); }
+    RCP<const Basic> diff_impl(const RCP<const Symbol> &x) const
+    {
+        return mul(cos(arg_[0]), arg_[0]->diff(x));
+    }
 };
 
 TEST_CASE("FunctionWrapper: functions", "[functions]")

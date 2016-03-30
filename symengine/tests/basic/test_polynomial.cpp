@@ -137,18 +137,18 @@ TEST_CASE("Bool checks specific UnivariateIntPolynomial cases", "[UnivariateIntP
              and not z->is_mul() and not z->is_pow()));
     REQUIRE((not o->is_zero() and o->is_one() and not o->is_minus_one() and o->is_integer() and not o->is_symbol()
              and not o->is_mul() and not o->is_pow()));
-    REQUIRE((not mo->is_zero() and not mo->is_one() and mo->is_minus_one() and mo->is_integer()
-             and not mo->is_symbol() and not mo->is_mul() and not mo->is_pow()));
-    REQUIRE((not i->is_zero() and not i->is_one() and not i->is_minus_one() and i->is_integer()
-             and not i->is_symbol() and not i->is_mul() and not i->is_pow()));
-    REQUIRE((not s->is_zero() and not s->is_one() and not s->is_minus_one() and not s->is_integer()
-             and s->is_symbol() and not s->is_mul() and not s->is_pow()));
-    REQUIRE((not m1->is_zero() and not m1->is_one() and not m1->is_minus_one() and not m1->is_integer()
-             and not m1->is_symbol() and m1->is_mul() and not m1->is_pow()));
-    REQUIRE((not m2->is_zero() and not m2->is_one() and not m2->is_minus_one() and not m2->is_integer()
-             and not m2->is_symbol() and m2->is_mul() and not m2->is_pow()));
-    REQUIRE((not po->is_zero() and not po->is_one() and not po->is_minus_one() and not po->is_integer()
-             and not po->is_symbol() and not po->is_mul() and po->is_pow()));
+    REQUIRE((not mo->is_zero() and not mo->is_one() and mo->is_minus_one() and mo->is_integer() and not mo->is_symbol()
+             and not mo->is_mul() and not mo->is_pow()));
+    REQUIRE((not i->is_zero() and not i->is_one() and not i->is_minus_one() and i->is_integer() and not i->is_symbol()
+             and not i->is_mul() and not i->is_pow()));
+    REQUIRE((not s->is_zero() and not s->is_one() and not s->is_minus_one() and not s->is_integer() and s->is_symbol()
+             and not s->is_mul() and not s->is_pow()));
+    REQUIRE((not m1->is_zero() and not m1->is_one() and not m1->is_minus_one() and not m1->is_integer() and not m1->is_symbol()
+             and m1->is_mul() and not m1->is_pow()));
+    REQUIRE((not m2->is_zero() and not m2->is_one() and not m2->is_minus_one() and not m2->is_integer() and not m2->is_symbol()
+             and m2->is_mul() and not m2->is_pow()));
+    REQUIRE((not po->is_zero() and not po->is_one() and not po->is_minus_one() and not po->is_integer() and not po->is_symbol()
+             and not po->is_mul() and po->is_pow()));
     REQUIRE((not poly->is_zero() and not poly->is_one() and not poly->is_minus_one() and not poly->is_integer()
              and not poly->is_symbol() and not poly->is_mul() and not poly->is_pow()));
 }
@@ -221,8 +221,7 @@ TEST_CASE("Multiplication of two UnivariatePolynomial", "[UnivariatePolynomial]"
 {
     RCP<const Symbol> x = symbol("x");
     RCP<const UnivariatePolynomial> a = univariate_polynomial(x, 2, {{0, 1}, {1, symbol("b")}, {2, symbol("a")}});
-    RCP<const UnivariatePolynomial> b
-        = univariate_polynomial(x, 2, {{0, -1}, {1, -2}, {2, mul(integer(-1), symbol("a"))}});
+    RCP<const UnivariatePolynomial> b = univariate_polynomial(x, 2, {{0, -1}, {1, -2}, {2, mul(integer(-1), symbol("a"))}});
 
     RCP<const UnivariatePolynomial> c = mul_uni_poly(a, a);
     RCP<const UnivariatePolynomial> d = mul_uni_poly(a, b);
@@ -277,18 +276,18 @@ TEST_CASE("Bool checks specific UnivariatePolynomial cases", "[UnivariatePolynom
              and not z->is_mul() and not z->is_pow()));
     REQUIRE((not o->is_zero() and o->is_one() and not o->is_minus_one() and o->is_integer() and not o->is_symbol()
              and not o->is_mul() and not o->is_pow()));
-    REQUIRE((not mo->is_zero() and not mo->is_one() and mo->is_minus_one() and mo->is_integer()
-             and not mo->is_symbol() and not mo->is_mul() and not mo->is_pow()));
-    REQUIRE((not i->is_zero() and not i->is_one() and not i->is_minus_one() and i->is_integer()
-             and not i->is_symbol() and not i->is_mul() and not i->is_pow()));
-    REQUIRE((not s->is_zero() and not s->is_one() and not s->is_minus_one() and not s->is_integer()
-             and s->is_symbol() and not s->is_mul() and not s->is_pow()));
-    REQUIRE((not m1->is_zero() and not m1->is_one() and not m1->is_minus_one() and not m1->is_integer()
-             and not m1->is_symbol() and m1->is_mul() and not m1->is_pow()));
-    REQUIRE((not m2->is_zero() and not m2->is_one() and not m2->is_minus_one() and not m2->is_integer()
-             and not m2->is_symbol() and m2->is_mul() and not m2->is_pow()));
-    REQUIRE((not po->is_zero() and not po->is_one() and not po->is_minus_one() and not po->is_integer()
-             and not po->is_symbol() and not po->is_mul() and po->is_pow()));
+    REQUIRE((not mo->is_zero() and not mo->is_one() and mo->is_minus_one() and mo->is_integer() and not mo->is_symbol()
+             and not mo->is_mul() and not mo->is_pow()));
+    REQUIRE((not i->is_zero() and not i->is_one() and not i->is_minus_one() and i->is_integer() and not i->is_symbol()
+             and not i->is_mul() and not i->is_pow()));
+    REQUIRE((not s->is_zero() and not s->is_one() and not s->is_minus_one() and not s->is_integer() and s->is_symbol()
+             and not s->is_mul() and not s->is_pow()));
+    REQUIRE((not m1->is_zero() and not m1->is_one() and not m1->is_minus_one() and not m1->is_integer() and not m1->is_symbol()
+             and m1->is_mul() and not m1->is_pow()));
+    REQUIRE((not m2->is_zero() and not m2->is_one() and not m2->is_minus_one() and not m2->is_integer() and not m2->is_symbol()
+             and m2->is_mul() and not m2->is_pow()));
+    REQUIRE((not po->is_zero() and not po->is_one() and not po->is_minus_one() and not po->is_integer() and not po->is_symbol()
+             and not po->is_mul() and po->is_pow()));
     REQUIRE((not poly->is_zero() and not poly->is_one() and not poly->is_minus_one() and not poly->is_integer()
              and not poly->is_symbol() and not poly->is_mul() and not poly->is_pow()));
 }

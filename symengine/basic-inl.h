@@ -12,12 +12,21 @@ inline std::size_t Basic::hash() const
 }
 
 //! \return true if not equal
-inline bool Basic::__neq__(const Basic &o) const { return not(this->__eq__(o)); }
+inline bool Basic::__neq__(const Basic &o) const
+{
+    return not(this->__eq__(o));
+}
 
 //! \return true if  `a` equal `b`
-inline bool eq(const Basic &a, const Basic &b) { return a.__eq__(b); }
+inline bool eq(const Basic &a, const Basic &b)
+{
+    return a.__eq__(b);
+}
 //! \return true if  `a` not equal `b`
-inline bool neq(const Basic &a, const Basic &b) { return not(a.__eq__(b)); }
+inline bool neq(const Basic &a, const Basic &b)
+{
+    return not(a.__eq__(b));
+}
 
 //! Templatised version to check is_a type
 template <class T>
@@ -55,7 +64,10 @@ namespace std
 //! Specialise std::hash for Basic. We just call Basic.__hash__()
 template <>
 struct hash<SymEngine::Basic> {
-    std::size_t operator()(const SymEngine::Basic &b) const { return b.hash(); }
+    std::size_t operator()(const SymEngine::Basic &b) const
+    {
+        return b.hash();
+    }
 };
 }
 

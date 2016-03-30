@@ -12,14 +12,23 @@ enum class PrecedenceEnum { Add, Mul, Pow, Atom };
 
 class Precedence : public BaseVisitor<Precedence>
 {
-    public:
+public:
     PrecedenceEnum precedence;
 
-    void bvisit(const Add &x) { precedence = PrecedenceEnum::Add; }
+    void bvisit(const Add &x)
+    {
+        precedence = PrecedenceEnum::Add;
+    }
 
-    void bvisit(const Mul &x) { precedence = PrecedenceEnum::Mul; }
+    void bvisit(const Mul &x)
+    {
+        precedence = PrecedenceEnum::Mul;
+    }
 
-    void bvisit(const Pow &x) { precedence = PrecedenceEnum::Pow; }
+    void bvisit(const Pow &x)
+    {
+        precedence = PrecedenceEnum::Pow;
+    }
 
     void bvisit(const UnivariateIntPolynomial &x)
     {
@@ -64,7 +73,10 @@ class Precedence : public BaseVisitor<Precedence>
         }
     }
 
-    void bvisit(const Rational &x) { precedence = PrecedenceEnum::Add; }
+    void bvisit(const Rational &x)
+    {
+        precedence = PrecedenceEnum::Add;
+    }
 
     void bvisit(const Complex &x)
     {
@@ -98,11 +110,20 @@ class Precedence : public BaseVisitor<Precedence>
     }
 
 #ifdef HAVE_SYMENGINE_PIRANHA
-    void bvisit(const URatPSeriesPiranha &x) { precedence = PrecedenceEnum::Add; }
+    void bvisit(const URatPSeriesPiranha &x)
+    {
+        precedence = PrecedenceEnum::Add;
+    }
 
-    void bvisit(const UPSeriesPiranha &x) { precedence = PrecedenceEnum::Add; }
+    void bvisit(const UPSeriesPiranha &x)
+    {
+        precedence = PrecedenceEnum::Add;
+    }
 #endif
-    void bvisit(const ComplexDouble &x) { precedence = PrecedenceEnum::Add; }
+    void bvisit(const ComplexDouble &x)
+    {
+        precedence = PrecedenceEnum::Add;
+    }
 #ifdef HAVE_SYMENGINE_MPFR
     void bvisit(const RealMPFR &x)
     {
@@ -114,10 +135,16 @@ class Precedence : public BaseVisitor<Precedence>
     }
 #endif
 #ifdef HAVE_SYMENGINE_MPC
-    void bvisit(const ComplexMPC &x) { precedence = PrecedenceEnum::Add; }
+    void bvisit(const ComplexMPC &x)
+    {
+        precedence = PrecedenceEnum::Add;
+    }
 #endif
 
-    void bvisit(const Basic &x) { precedence = PrecedenceEnum::Atom; }
+    void bvisit(const Basic &x)
+    {
+        precedence = PrecedenceEnum::Atom;
+    }
 
     PrecedenceEnum getPrecedence(const RCP<const Basic> &x)
     {
@@ -128,10 +155,10 @@ class Precedence : public BaseVisitor<Precedence>
 
 class StrPrinter : public BaseVisitor<StrPrinter>
 {
-    protected:
+protected:
     std::string str_;
 
-    public:
+public:
     static const std::vector<std::string> names_;
     void bvisit(const Basic &x);
     void bvisit(const Symbol &x);

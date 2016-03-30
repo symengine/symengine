@@ -641,11 +641,10 @@ TEST_CASE("test_quadratic_residues(): ntheory", "[ntheory]")
     std::vector<integer_class> i5 = {integer_class(0), integer_class(1), integer_class(4)};
     std::vector<integer_class> i7 = {integer_class(0), integer_class(1), integer_class(2), integer_class(4)};
     std::vector<integer_class> i100
-        = {integer_class(0),  integer_class(1),  integer_class(4),  integer_class(9),  integer_class(16),
-           integer_class(21), integer_class(24), integer_class(25), integer_class(29), integer_class(36),
-           integer_class(41), integer_class(44), integer_class(49), integer_class(56), integer_class(61),
-           integer_class(64), integer_class(69), integer_class(76), integer_class(81), integer_class(84),
-           integer_class(89), integer_class(96)};
+        = {integer_class(0),  integer_class(1),  integer_class(4),  integer_class(9),  integer_class(16), integer_class(21),
+           integer_class(24), integer_class(25), integer_class(29), integer_class(36), integer_class(41), integer_class(44),
+           integer_class(49), integer_class(56), integer_class(61), integer_class(64), integer_class(69), integer_class(76),
+           integer_class(81), integer_class(84), integer_class(89), integer_class(96)};
 
     const RCP<const Integer> a1 = integer(1);
     const RCP<const Integer> a2 = integer(2);

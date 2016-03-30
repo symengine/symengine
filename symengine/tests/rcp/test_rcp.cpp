@@ -12,7 +12,7 @@ using SymEngine::EnableRCPFromThis;
 
 class Mesh : public EnableRCPFromThis<Mesh>
 {
-    public:
+public:
     int x, y;
 };
 
@@ -75,7 +75,7 @@ TEST_CASE("Test rcp_from_this const", "[rcp]")
 
 class Mesh2 : public EnableRCPFromThis<const Mesh2>
 {
-    public:
+public:
     int x, y;
 };
 

@@ -22,18 +22,27 @@ namespace SymEngine
 
 class mpfr_class
 {
-    private:
+private:
     mpfr_t mp;
 
-    public:
-    mpfr_ptr get_mpfr_t() { return mp; }
-    mpfr_srcptr get_mpfr_t() const { return mp; }
+public:
+    mpfr_ptr get_mpfr_t()
+    {
+        return mp;
+    }
+    mpfr_srcptr get_mpfr_t() const
+    {
+        return mp;
+    }
     explicit mpfr_class(mpfr_t m)
     {
         mpfr_init2(mp, mpfr_get_prec(m));
         mpfr_set(mp, m, MPFR_RNDN);
     }
-    explicit mpfr_class(mpfr_prec_t prec = 53) { mpfr_init2(mp, prec); }
+    explicit mpfr_class(mpfr_prec_t prec = 53)
+    {
+        mpfr_init2(mp, prec);
+    }
     mpfr_class(std::string s, mpfr_prec_t prec = 53, unsigned base = 10)
     {
         mpfr_init2(mp, prec);
@@ -66,7 +75,10 @@ class mpfr_class
             mpfr_clear(mp);
         }
     }
-    mpfr_prec_t get_prec() const { return mpfr_get_prec(mp); }
+    mpfr_prec_t get_prec() const
+    {
+        return mpfr_get_prec(mp);
+    }
 };
 
 RCP<const Number> number(mpfr_ptr x);
@@ -74,15 +86,21 @@ RCP<const Number> number(mpfr_ptr x);
 //! RealMPFR Class to hold mpfr_t values
 class RealMPFR : public Number
 {
-    public:
+public:
     mpfr_class i;
 
-    public:
+public:
     IMPLEMENT_TYPEID(REAL_MPFR)
     //! Constructor of RealMPFR class
     RealMPFR(mpfr_class i);
-    inline mpfr_class as_mpfr() const { return i; }
-    inline mpfr_prec_t get_prec() const { return mpfr_get_prec(i.get_mpfr_t()); }
+    inline mpfr_class as_mpfr() const
+    {
+        return i;
+    }
+    inline mpfr_prec_t get_prec() const
+    {
+        return mpfr_get_prec(i.get_mpfr_t());
+    }
     //! \return size of the hash
     virtual std::size_t __hash__() const;
     /*! Equality comparator
@@ -92,22 +110,40 @@ class RealMPFR : public Number
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
     //! \return `true` if positive
-    inline virtual bool is_positive() const { return mpfr_cmp_si(i.get_mpfr_t(), 0) > 0; }
+    inline virtual bool is_positive() const
+    {
+        return mpfr_cmp_si(i.get_mpfr_t(), 0) > 0;
+    }
     //! \return `true` if negative
-    inline virtual bool is_negative() const { return mpfr_cmp_si(i.get_mpfr_t(), 0) < 0; }
+    inline virtual bool is_negative() const
+    {
+        return mpfr_cmp_si(i.get_mpfr_t(), 0) < 0;
+    }
     //! \return `true` if this number is an exact number
-    inline virtual bool is_exact() const { return false; }
+    inline virtual bool is_exact() const
+    {
+        return false;
+    }
     //! Get `Evaluate` singleton to evaluate numerically
     virtual Evaluate &get_eval() const;
 
     //! \return if equal to `0`
-    virtual bool is_zero() const { return mpfr_cmp_si(i.get_mpfr_t(), 0) == 0; }
+    virtual bool is_zero() const
+    {
+        return mpfr_cmp_si(i.get_mpfr_t(), 0) == 0;
+    }
     //! \return `false`
     // A mpfr_t is not exactly equal to `1`
-    virtual bool is_one() const { return false; }
+    virtual bool is_one() const
+    {
+        return false;
+    }
     //! \return `false`
     // A mpfr_t is not exactly equal to `-1`
-    virtual bool is_minus_one() const { return false; }
+    virtual bool is_minus_one() const
+    {
+        return false;
+    }
 
     /*! Add RealMPFRs
      * \param other of type Integer
@@ -320,7 +356,10 @@ class RealMPFR : public Number
     }
 };
 
-inline RCP<const RealMPFR> real_mpfr(mpfr_class x) { return rcp(new RealMPFR(std::move(x))); }
+inline RCP<const RealMPFR> real_mpfr(mpfr_class x)
+{
+    return rcp(new RealMPFR(std::move(x)));
+}
 }
 #else
 
@@ -328,7 +367,7 @@ namespace SymEngine
 {
 class RealMPFR : public Number
 {
-    public:
+public:
     IMPLEMENT_TYPEID(REAL_MPFR)
 };
 }

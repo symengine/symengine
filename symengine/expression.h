@@ -22,12 +22,14 @@ namespace SymEngine
 
 class Expression
 {
-    private:
+private:
     RCP<const Basic> m_basic;
 
-    public:
+public:
     //! Plain constructor of Expression
-    Expression() : m_basic(integer(0)) {}
+    Expression() : m_basic(integer(0))
+    {
+    }
 
     //! Construct Expression from integral types
     template <class T>
@@ -60,7 +62,9 @@ class Expression
     //! Construct Expression from Expression
     Expression(const Expression &) = default;
     //! Construct Expression from reference to Expression
-    Expression(Expression &&other) SYMENGINE_NOEXCEPT : m_basic(std::move(other.m_basic)) {}
+    Expression(Expression &&other) SYMENGINE_NOEXCEPT : m_basic(std::move(other.m_basic))
+    {
+    }
     //! Overload assignment operator
     Expression &operator=(const Expression &) = default;
     //! Overload assignment operator for reference
@@ -72,7 +76,9 @@ class Expression
         return *this;
     }
     //! Destructor of Expression
-    ~Expression() SYMENGINE_NOEXCEPT {}
+    ~Expression() SYMENGINE_NOEXCEPT
+    {
+    }
     //! Overload stream operator
     friend std::ostream &operator<<(std::ostream &os, const Expression &expr)
     {
@@ -131,13 +137,22 @@ class Expression
         return *this;
     }
     //! Overload check equality (==)
-    bool operator==(const Expression &other) const { return eq(*m_basic, *other.m_basic); }
+    bool operator==(const Expression &other) const
+    {
+        return eq(*m_basic, *other.m_basic);
+    }
 
     //! Overload check not equal (!=)
-    bool operator!=(const Expression &other) const { return not(*this == other); }
+    bool operator!=(const Expression &other) const
+    {
+        return not(*this == other);
+    }
 
     //! Method to get Basic from Expression
-    const RCP<const Basic> &get_basic() const { return m_basic; }
+    const RCP<const Basic> &get_basic() const
+    {
+        return m_basic;
+    }
 };
 
 inline Expression pow_ex(const Expression &base, const Expression &exp)
@@ -145,7 +160,10 @@ inline Expression pow_ex(const Expression &base, const Expression &exp)
     return pow(base.get_basic(), exp.get_basic());
 }
 
-inline Expression expand(const Expression &arg) { return expand(arg.get_basic()); }
+inline Expression expand(const Expression &arg)
+{
+    return expand(arg.get_basic());
+}
 
 inline Expression coeff(const Expression &y, const Expression &x, const Expression &n)
 {

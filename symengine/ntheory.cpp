@@ -55,7 +55,10 @@ int mod_inverse(const Ptr<RCP<const Integer>> &b, const Integer &a, const Intege
     return ret_val;
 }
 
-RCP<const Integer> mod(const Integer &n, const Integer &d) { return integer(std::move(n.as_mpz() % d.as_mpz())); }
+RCP<const Integer> mod(const Integer &n, const Integer &d)
+{
+    return integer(std::move(n.as_mpz() % d.as_mpz()));
+}
 
 RCP<const Integer> quotient(const Integer &n, const Integer &d)
 {
@@ -141,10 +144,16 @@ RCP<const Integer> factorial(unsigned long n)
 }
 
 // Returns true if `b` divides `a` without reminder
-bool divides(const Integer &a, const Integer &b) { return mp_divisible_p(a.as_mpz(), b.as_mpz()) != 0; }
+bool divides(const Integer &a, const Integer &b)
+{
+    return mp_divisible_p(a.as_mpz(), b.as_mpz()) != 0;
+}
 
 // Prime functions
-int probab_prime_p(const Integer &a, unsigned reps) { return mp_probab_prime_p(a.as_mpz(), reps); }
+int probab_prime_p(const Integer &a, unsigned reps)
+{
+    return mp_probab_prime_p(a.as_mpz(), reps);
+}
 
 RCP<const Integer> nextprime(const Integer &a)
 {
@@ -293,8 +302,8 @@ int factor_pollard_pm1_method(const Ptr<RCP<const Integer>> &f, const Integer &n
 namespace
 {
 // Factor using Pollard's rho method
-int _factor_pollard_rho_method(integer_class &rop, const integer_class &n, const integer_class &a,
-                               const integer_class &s, unsigned steps = 10000)
+int _factor_pollard_rho_method(integer_class &rop, const integer_class &n, const integer_class &a, const integer_class &s,
+                               unsigned steps = 10000)
 {
     if (n < 5)
         throw std::runtime_error("Require n > 4 to use pollard's-rho method");
@@ -471,9 +480,15 @@ std::vector<unsigned> Sieve::_primes = {2, 3, 5, 7, 11, 13, 17, 19, 23, 29};
 bool Sieve::_clear = true;
 unsigned Sieve::_sieve_size = 32 * 1024 * 8; // 32K in bits
 
-void Sieve::set_clear(bool clear) { _clear = clear; }
+void Sieve::set_clear(bool clear)
+{
+    _clear = clear;
+}
 
-void Sieve::clear() { _primes.erase(_primes.begin() + 10, _primes.end()); }
+void Sieve::clear()
+{
+    _primes.erase(_primes.begin() + 10, _primes.end());
+}
 
 void Sieve::set_sieve_size(unsigned size)
 {
@@ -620,8 +635,7 @@ RCP<const Number> harmonic(unsigned long n, long m)
 }
 
 // References : Cohen H., A course in computational algebraic number theory (1996), page 21.
-bool crt(const Ptr<RCP<const Integer>> &R, const std::vector<RCP<const Integer>> &rem,
-         const std::vector<RCP<const Integer>> &mod)
+bool crt(const Ptr<RCP<const Integer>> &R, const std::vector<RCP<const Integer>> &rem, const std::vector<RCP<const Integer>> &mod)
 {
     if (mod.size() > rem.size())
         throw std::runtime_error("Too few remainders");
@@ -774,8 +788,7 @@ namespace
 // References :
 // [1] Cohen H., A course in computational algebraic number theory (1996), pages 25-27.
 // [2] Hackman P., Elementary number theory (2009), page 28.
-void _primitive_root_list(std::vector<RCP<const Integer>> &roots, const integer_class &p, const integer_class &e,
-                          bool even = false)
+void _primitive_root_list(std::vector<RCP<const Integer>> &roots, const integer_class &p, const integer_class &e, bool even = false)
 {
     integer_class g, h, d, t, pe2, n, pm1;
     _primitive_root(g, p, integer_class(1), false); // Find one primitive root for p.
@@ -922,11 +935,20 @@ bool multiplicative_order(const Ptr<RCP<const Integer>> &o, const RCP<const Inte
     *o = integer(std::move(order));
     return true;
 }
-int legendre(const Integer &a, const Integer &n) { return mp_legendre(a.as_mpz(), n.as_mpz()); }
+int legendre(const Integer &a, const Integer &n)
+{
+    return mp_legendre(a.as_mpz(), n.as_mpz());
+}
 
-int jacobi(const Integer &a, const Integer &n) { return mp_jacobi(a.as_mpz(), n.as_mpz()); }
+int jacobi(const Integer &a, const Integer &n)
+{
+    return mp_jacobi(a.as_mpz(), n.as_mpz());
+}
 
-int kronecker(const Integer &a, const Integer &n) { return mp_kronecker(a.as_mpz(), n.as_mpz()); }
+int kronecker(const Integer &a, const Integer &n)
+{
+    return mp_kronecker(a.as_mpz(), n.as_mpz());
+}
 
 namespace
 {
@@ -1066,8 +1088,8 @@ void _discrete_log(integer_class &log, const integer_class &a, const integer_cla
 
 // References : Johnston A., A generalised qth root algorithm.
 // Solution for x**n == a mod p**k where a != 0 mod p and p is an odd prime.
-bool _nthroot_mod1(std::vector<RCP<const Integer>> &roots, const integer_class &a, const integer_class &n,
-                   const integer_class &p, const unsigned k, bool all_roots = false)
+bool _nthroot_mod1(std::vector<RCP<const Integer>> &roots, const integer_class &a, const integer_class &n, const integer_class &p,
+                   const unsigned k, bool all_roots = false)
 {
     integer_class _n, r, root, s, t, g(0), pk, m, phi;
     mp_pow_ui(pk, p, k);
@@ -1422,8 +1444,8 @@ bool nthroot_mod(const Ptr<RCP<const Integer>> &root, const RCP<const Integer> &
     return true;
 }
 
-void nthroot_mod_list(std::vector<RCP<const Integer>> &roots, const RCP<const Integer> &a,
-                      const RCP<const Integer> &n, const RCP<const Integer> &m)
+void nthroot_mod_list(std::vector<RCP<const Integer>> &roots, const RCP<const Integer> &a, const RCP<const Integer> &n,
+                      const RCP<const Integer> &m)
 {
     if (m->as_mpz() <= 0) {
         return;
@@ -1451,8 +1473,7 @@ void nthroot_mod_list(std::vector<RCP<const Integer>> &roots, const RCP<const In
     std::sort(roots.begin(), roots.end(), SymEngine::RCPIntegerKeyLess());
 }
 
-bool powermod(const Ptr<RCP<const Integer>> &powm, const RCP<const Integer> &a, const RCP<const Number> &b,
-              const RCP<const Integer> &m)
+bool powermod(const Ptr<RCP<const Integer>> &powm, const RCP<const Integer> &a, const RCP<const Number> &b, const RCP<const Integer> &m)
 {
     if (is_a<Integer>(*b)) {
         integer_class t = rcp_static_cast<const Integer>(b)->as_mpz();

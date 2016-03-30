@@ -14,7 +14,7 @@ namespace SymEngine
 
 class UnivariateIntPolynomial : public Basic
 {
-    private:
+private:
     //! `degree` : Degree of UnivariateIntPolynomial
     //! `var_` : Variable of the uni-variate UnivariateIntPolynomial
     //! `dict_` : holds the UnivariateIntPolynomial
@@ -23,7 +23,7 @@ class UnivariateIntPolynomial : public Basic
     RCP<const Symbol> var_;
     map_uint_mpz dict_;
 
-    public:
+public:
     IMPLEMENT_TYPEID(UNIVARIATEINTPOLYNOMIAL)
     //! Constructor of UnivariateIntPolynomial class
     UnivariateIntPolynomial(const RCP<const Symbol> &var, const unsigned int &degree, map_uint_mpz &&dict);
@@ -77,9 +77,18 @@ class UnivariateIntPolynomial : public Basic
     bool is_pow() const;
 
     virtual vec_basic get_args() const;
-    inline unsigned int get_degree() const { return degree_; }
-    inline RCP<const Symbol> get_var() const { return var_; }
-    inline const map_uint_mpz &get_dict() const { return dict_; }
+    inline unsigned int get_degree() const
+    {
+        return degree_;
+    }
+    inline RCP<const Symbol> get_var() const
+    {
+        return var_;
+    }
+    inline const map_uint_mpz &get_dict() const
+    {
+        return dict_;
+    }
 }; // UnivariateIntPolynomial
 
 //! Adding two UnivariateIntPolynomial a and b
@@ -98,12 +107,12 @@ inline RCP<const UnivariateIntPolynomial> univariate_int_polynomial(RCP<const Sy
 
 class UnivariatePolynomial : public Basic
 {
-    private:
+private:
     unsigned int degree_;
     RCP<const Symbol> var_;
     map_int_Expr dict_;
 
-    public:
+public:
     IMPLEMENT_TYPEID(UNIVARIATEPOLYNOMIAL)
     //! Constructor of UnivariatePolynomial class
     UnivariatePolynomial(const RCP<const Symbol> &var, const unsigned int &degree, const map_int_Expr &&dict);
@@ -150,8 +159,14 @@ class UnivariatePolynomial : public Basic
 
     virtual vec_basic get_args() const;
 
-    inline RCP<const Symbol> get_var() const { return var_; }
-    inline const map_int_Expr &get_dict() const { return dict_; }
+    inline RCP<const Symbol> get_var() const
+    {
+        return var_;
+    }
+    inline const map_int_Expr &get_dict() const
+    {
+        return dict_;
+    }
 }; // UnivariatePolynomial
 
 //! Adding two UnivariatePolynomial a and b
@@ -163,18 +178,17 @@ RCP<const UnivariatePolynomial> sub_uni_poly(const UnivariatePolynomial &a, cons
 //! Multiplying two UnivariatePolynomial a and b
 RCP<const UnivariatePolynomial> mul_uni_poly(RCP<const UnivariatePolynomial> a, RCP<const UnivariatePolynomial> b);
 
-inline RCP<const UnivariatePolynomial> univariate_polynomial(RCP<const Symbol> i, unsigned int deg,
-                                                             const map_int_Expr &&dict)
+inline RCP<const UnivariatePolynomial> univariate_polynomial(RCP<const Symbol> i, unsigned int deg, const map_int_Expr &&dict)
 {
     return make_rcp<const UnivariatePolynomial>(i, deg, std::move(dict));
 }
 
 class UnivariateExprPolynomial
 {
-    private:
+private:
     RCP<const UnivariatePolynomial> poly_;
 
-    public:
+public:
 //! Construct UnivariateExprPolynomial from UnivariatePolynomial
 #if defined(HAVE_SYMENGINE_IS_CONSTRUCTIBLE)
     template <typename T, typename = typename std::enable_if<std::is_constructible<RCP<const UnivariatePolynomial>, T &&>::value>::type>
@@ -185,15 +199,25 @@ class UnivariateExprPolynomial
         : poly_(std::forward<T>(o))
     {
     }
-    UnivariateExprPolynomial() {}
-    ~UnivariateExprPolynomial() SYMENGINE_NOEXCEPT {}
+    UnivariateExprPolynomial()
+    {
+    }
+    ~UnivariateExprPolynomial() SYMENGINE_NOEXCEPT
+    {
+    }
     UnivariateExprPolynomial(const UnivariateExprPolynomial &) = default;
     UnivariateExprPolynomial(UnivariateExprPolynomial &&other) SYMENGINE_NOEXCEPT : poly_(std::move(other.poly_))
     {
     }
-    UnivariateExprPolynomial(int i) : poly_(UnivariatePolynomial::create(symbol(""), {{0, Expression(i)}})) {}
-    UnivariateExprPolynomial(RCP<const UnivariatePolynomial> p) : poly_(std::move(p)) {}
-    UnivariateExprPolynomial(Expression expr) : poly_(UnivariatePolynomial::create(symbol(""), {{0, expr}})) {}
+    UnivariateExprPolynomial(int i) : poly_(UnivariatePolynomial::create(symbol(""), {{0, Expression(i)}}))
+    {
+    }
+    UnivariateExprPolynomial(RCP<const UnivariatePolynomial> p) : poly_(std::move(p))
+    {
+    }
+    UnivariateExprPolynomial(Expression expr) : poly_(UnivariatePolynomial::create(symbol(""), {{0, expr}}))
+    {
+    }
     UnivariateExprPolynomial &operator=(const UnivariateExprPolynomial &) = default;
     UnivariateExprPolynomial &operator=(UnivariateExprPolynomial &&other) SYMENGINE_NOEXCEPT
     {
@@ -253,16 +277,31 @@ class UnivariateExprPolynomial
         return *this;
     }
 
-    bool operator==(const UnivariateExprPolynomial &other) const { return eq(*poly_, *other.poly_); }
+    bool operator==(const UnivariateExprPolynomial &other) const
+    {
+        return eq(*poly_, *other.poly_);
+    }
 
-    bool operator==(int i) const { return eq(*poly_, *(UnivariateExprPolynomial(i).poly_)); }
+    bool operator==(int i) const
+    {
+        return eq(*poly_, *(UnivariateExprPolynomial(i).poly_));
+    }
 
-    bool operator!=(const UnivariateExprPolynomial &other) const { return not(*this == other); }
+    bool operator!=(const UnivariateExprPolynomial &other) const
+    {
+        return not(*this == other);
+    }
 
     //! Method to get UnivariatePolynomial from UnivariateExprPolynomial
-    const RCP<const UnivariatePolynomial> &get_univariate_poly() const { return poly_; }
+    const RCP<const UnivariatePolynomial> &get_univariate_poly() const
+    {
+        return poly_;
+    }
 
-    std::size_t __hash__() const { return poly_->hash(); }
+    std::size_t __hash__() const
+    {
+        return poly_->hash();
+    }
 
     const RCP<const Basic> get_basic() const
     {
@@ -279,7 +318,10 @@ class UnivariateExprPolynomial
         return Add::from_dict(integer(0), std::move(dict_));
     }
 
-    int compare(const UnivariateExprPolynomial &other) { return poly_->compare(*other.poly_); }
+    int compare(const UnivariateExprPolynomial &other)
+    {
+        return poly_->compare(*other.poly_);
+    }
 }; // UnivariateExprPolynomial
 
 } // SymEngine
