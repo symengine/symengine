@@ -155,14 +155,14 @@ TEST_CASE("Integration of UnivariateSeries", "[UnivariateSeries]")
     REQUIRE(UnivariateSeries::integrate(a, b) == c);
 }
 
-#define series_coeff(EX,SYM,PREC,COEFF) UnivariateSeries::series(EX,SYM->get_name(),PREC)->get_poly().find_cf({COEFF}).get_basic()
+#define series_coeff(EX,SYM,PREC,COEFF) UnivariateSeries::series(EX,SYM->get_name(),PREC)->get_poly().find_cf(COEFF).get_basic()
 //#define invseries_coeff(EX,SYM,PREC,COEFF) UnivariateSeries::series_reverse(UnivariateSeries::series(EX,SYM->get_name(),PREC)->get_poly(),p_expr(SYM->get_name()),PREC).find_cf({COEFF}).get_basic()
 
 static bool expand_check_pairs(const RCP<const Basic> &ex, const RCP<const Symbol> &x, int prec, const umap_short_basic& pairs)
 {
     auto ser = SymEngine::UnivariateSeries::series(ex, x->get_name(), prec);
     for (auto it : pairs)
-        if (not it.second->__eq__(*(ser->get_poly().find_cf({it.first}).get_basic())))
+        if (not it.second->__eq__(*(ser->get_poly().find_cf(it.first).get_basic())))
             return false;
     return true;
 }
