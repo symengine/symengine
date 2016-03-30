@@ -356,8 +356,7 @@ bool UnivariatePolynomial::is_canonical(const unsigned int &degree_, const map_i
     return true;
 }
 
-std::size_t UnivariatePolynomial::__hash__() const
-{
+std::size_t UnivariatePolynomial::__hash__() const {
     std::hash<std::string> hash_string;
     std::size_t seed = UNIVARIATEPOLYNOMIAL;
 
@@ -372,14 +371,12 @@ std::size_t UnivariatePolynomial::__hash__() const
     return seed;
 }
 
-bool UnivariatePolynomial::__eq__(const Basic &o) const
-{
+bool UnivariatePolynomial::__eq__(const Basic &o) const {
     return eq(*var_, *(static_cast<const UnivariatePolynomial &>(o).var_)) and
         map_int_Expr_eq(dict_, static_cast<const UnivariatePolynomial &>(o).dict_);
 }
 
-int UnivariatePolynomial::compare(const Basic &o) const
-{
+int UnivariatePolynomial::compare(const Basic &o) const {
     const UnivariatePolynomial &s = static_cast<const UnivariatePolynomial &>(o);
 
     if (dict_.size() != s.dict_.size())
@@ -392,13 +389,11 @@ int UnivariatePolynomial::compare(const Basic &o) const
     return map_int_Expr_compare(dict_, s.dict_);
 }
 
-RCP<const UnivariatePolynomial> UnivariatePolynomial::from_vec(const RCP<const Symbol> &var, const std::vector<Expression> &v)
-{
+RCP<const UnivariatePolynomial> UnivariatePolynomial::from_vec(const RCP<const Symbol> &var, const std::vector<Expression> &v) {
     return make_rcp<const UnivariatePolynomial>(var, std::move(v));
 }
 
-RCP<const UnivariatePolynomial> UnivariatePolynomial::from_dict(const RCP<const Symbol> &var, map_int_Expr &&d)
-{
+RCP<const UnivariatePolynomial> UnivariatePolynomial::from_dict(const RCP<const Symbol> &var, map_int_Expr &&d) {
     auto iter = d.begin();
     while (iter != d.end()) {
         if (Expression(0) == iter->second) {
@@ -415,8 +410,7 @@ RCP<const UnivariatePolynomial> UnivariatePolynomial::from_dict(const RCP<const 
     return make_rcp<const UnivariatePolynomial>(var, degree, std::move(d));
 }
 
-void UnivariatePolynomial::dict_add_term(map_int_Expr &d, const Expression &coef, const unsigned int &n)
-{
+void UnivariatePolynomial::dict_add_term(map_int_Expr &d, const Expression &coef, const unsigned int &n) {
     auto it = d.find(n);
     if (it == d.end())
        d[n] = coef;

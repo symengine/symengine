@@ -155,14 +155,14 @@ TEST_CASE("Integration of UnivariateSeries", "[UnivariateSeries]")
     REQUIRE(UnivariateSeries::integrate(a, b) == c);
 }
 
-#define series_coeff(EX,SYM,PREC,COEFF) UnivariateSeries::series(EX,SYM->get_name(),PREC)->get_poly().find_cf({COEFF}).get_basic()
-//#define invseries_coeff(EX,SYM,PREC,COEFF) UnivariateSeries::series_reverse(UnivariateSeries::series(EX,SYM->get_name(),PREC)->get_poly(),p_expr(SYM->get_name()),PREC).find_cf({COEFF}).get_basic()
+#define series_coeff(EX, SYM, PREC, COEFF) UnivariateSeries::series(EX, SYM->get_name(), PREC)->get_poly().find_cf(COEFF).get_basic()
+#define invseries_coeff(EX, SYM, PREC, COEFF) UnivariateSeries::series_reverse(UnivariateSeries::series(EX, SYM->get_name(), PREC)->get_poly(), UnivariateExprPolynomial(SYM->get_name()), PREC).find_cf(COEFF).get_basic()
 
 static bool expand_check_pairs(const RCP<const Basic> &ex, const RCP<const Symbol> &x, int prec, const umap_short_basic& pairs)
 {
     auto ser = SymEngine::UnivariateSeries::series(ex, x->get_name(), prec);
     for (auto it : pairs)
-        if (not it.second->__eq__(*(ser->get_poly().find_cf({it.first}).get_basic())))
+        if (not it.second->__eq__(*(ser->get_poly().find_cf(it.first).get_basic())))
             return false;
     return true;
 }
@@ -281,10 +281,10 @@ TEST_CASE("Expression series expansion: reversion ", "[Expansion of f^-1]")
     auto ex3 = sin(x);
     auto ex4 = mul(x, exp(x));
 
-    //REQUIRE(invseries_coeff(ex1, x, 20, 15)->__eq__(*integer(2674440)));
-    //REQUIRE(invseries_coeff(ex2, x, 20, 15)->__eq__(*integer(7752)));
-    //REQUIRE(invseries_coeff(ex3, x, 20, 15)->__eq__(*rational(143, 10240)));
-    //REQUIRE(invseries_coeff(ex4, x, 20, 10)->__eq__(*rational(-156250, 567)));
+    REQUIRE(invseries_coeff(ex1, x, 20, 15)->__eq__(*integer(2674440)));
+    REQUIRE(invseries_coeff(ex2, x, 20, 15)->__eq__(*integer(7752)));
+    REQUIRE(invseries_coeff(ex3, x, 20, 15)->__eq__(*rational(143, 10240)));
+    REQUIRE(invseries_coeff(ex4, x, 20, 10)->__eq__(*rational(-156250, 567)));
 }
 
 TEST_CASE("Expression series expansion: atan, tan, asin, cot, sec, csc", "[Expansion of tan, atan, asin, cot, sec, csc]")

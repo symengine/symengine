@@ -188,6 +188,7 @@ public:
     UnivariateExprPolynomial(const UnivariateExprPolynomial &) = default;
     UnivariateExprPolynomial(UnivariateExprPolynomial &&other) SYMENGINE_NOEXCEPT : poly_(std::move(other.poly_)) {}
     UnivariateExprPolynomial(int i) : poly_(UnivariatePolynomial::create(symbol(""), {Expression(i)})) {}
+    UnivariateExprPolynomial(std::string varname) : poly_(UnivariatePolynomial::create(symbol(varname), {0 ,1})) {} 
     UnivariateExprPolynomial(RCP<const UnivariatePolynomial> p) : poly_(std::move(p)) {}
     UnivariateExprPolynomial(Expression expr) : poly_(UnivariatePolynomial::create(symbol(""), {expr})) {}
     UnivariateExprPolynomial &operator=(const UnivariateExprPolynomial &) = default;
@@ -238,7 +239,12 @@ public:
         poly_ = mul_uni_poly(poly_, other.poly_);
         return *this;
     }   
-    
+   
+    UnivariateExprPolynomial &operator/=(const Expression &other) {   
+        poly_ = mul_uni_poly(poly_, UnivariateExprPolynomial(1/other).poly_);
+        return *this;
+    }
+     
     bool operator==(const UnivariateExprPolynomial &other) const {   
         return eq(*poly_, *other.poly_);
     }   
