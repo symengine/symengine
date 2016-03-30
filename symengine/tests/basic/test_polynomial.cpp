@@ -474,7 +474,7 @@ TEST_CASE("Testing addition, subtraction, multiplication of MultivariateIntPolyn
     REQUIRE(add_mult_poly(*p1,*p3)->__str__() == "- 2*x**3 y**2 z + x y**2 z**3 + y z**2 + 2*x**2 + y**2 + x + y + 3");
 }
 
-TEST_CASE("Testing addition, subtraction, multiplication of MultivariteIntPolynomials with a UnivariateIntPolynomial whose variables are not in the variable set", "[MultivariateIntPolynomial][UnivariateIntPolynomial]")
+TEST_CASE("Testing addition, subtraction, multiplication of MultivariateIntPolynomials with a UnivariateIntPolynomial whose variables are not in the variable set", "[MultivariateIntPolynomial][UnivariateIntPolynomial]")
 {
     RCP<const Symbol> x = symbol("x");
     RCP<const Symbol> y = symbol("y");
