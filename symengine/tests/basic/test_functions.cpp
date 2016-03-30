@@ -943,6 +943,8 @@ TEST_CASE("Derivative: functions", "[functions]")
     r2 = r1->subs({{y, z}});
     r3 = Derivative::create(function_symbol("f", {x, add(z, z)}), {x});
     REQUIRE(eq(*r2, *r3));
+
+    //r1 = Derivative::create(kronecker_delta(x, y), {y});
 }
 
 TEST_CASE("Subs: functions", "[functions]")
@@ -2063,12 +2065,45 @@ TEST_CASE("Kronecker Delta: functions", "[functions]")
 {
     RCP<const Symbol> i = symbol("i");
     RCP<const Symbol> j = symbol("j");
+    RCP<const Symbol> _x = symbol("_x");
+    RCP<const Symbol> _x1 = symbol("_x1");
+    RCP<const Symbol> _x2 = symbol("_x2");
+    RCP<const Basic> i2 = integer(2);
 
     RCP<const Basic> r1;
     RCP<const Basic> r2;
 
     r1 = kronecker_delta(i, i);
     r2 = one;
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = kronecker_delta(i, j)->diff(i);
+    r2 = Derivative::create(kronecker_delta(i, j), {i});
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = kronecker_delta(i, j)->diff(j);
+    r2 = Derivative::create(kronecker_delta(i, j), {j});
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = kronecker_delta(i, mul(j, j))->diff(j);
+    r2 = mul(i2, mul(j, Subs::create(Derivative::create(kronecker_delta(i, _x), {_x}), {{_x, mul(j, j)}})));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = kronecker_delta(i, mul(j, j))->diff(i);
+    r2 = Derivative::create(kronecker_delta(i, mul(j, j)), {i});
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = kronecker_delta(mul(i, i), j)->diff(i);
+    r2 = mul(i2, mul(i, Subs::create(Derivative::create(kronecker_delta(_x, j), {_x}), {{_x, mul(i, i)}})));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = kronecker_delta(mul(i, i), j)->diff(j);
+    r2 = Derivative::create(kronecker_delta(mul(i, i), j), {j});
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = kronecker_delta(mul(i, i), i)->diff(i);
+    r2 = mul(i2, mul(i, Subs::create(Derivative::create(kronecker_delta(_x1, i), {_x1}), {{_x1, mul(i, i)}})));
+    r2 = add(r2, Subs::create(Derivative::create(kronecker_delta(mul(i, i), _x2), {_x2}), {{_x2, i}}));
     REQUIRE(eq(*r1, *r2));
 
     r1 = kronecker_delta(i, add(i, one));
