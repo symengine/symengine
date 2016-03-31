@@ -417,7 +417,7 @@ RCP<const UnivariatePolynomial> UnivariatePolynomial::from_dict(const RCP<const 
 {
     auto iter = d.begin();
     while (iter != d.end()) {
-        if (Expression(0) == iter->second and Expression(0) != iter->first) {
+        if (Expression(0) == iter->second) {
             auto toErase = iter;
             iter++;
             d.erase(toErase);
@@ -479,7 +479,7 @@ Expression UnivariatePolynomial::eval(const Expression &x) const {
 }
 
 bool UnivariatePolynomial::is_zero() const {
-    return dict_.size() == 1 and dict_.begin()->second == 0;
+    return dict_.empty();
 }
 
 bool UnivariatePolynomial::is_one() const {
@@ -491,6 +491,8 @@ bool UnivariatePolynomial::is_minus_one() const {
 }
 
 bool UnivariatePolynomial::is_integer() const {
+    if(dict_.empty())
+        return true;
     return dict_.size() == 1 and dict_.begin()->first == 0;
 }
 
