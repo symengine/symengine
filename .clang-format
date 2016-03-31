@@ -20,7 +20,7 @@ BreakBeforeBinaryOperators: All
 BreakBeforeBraces: Linux
 BreakBeforeTernaryOperators: true
 BreakConstructorInitializersBeforeComma: false
-ColumnLimit:     130
+ColumnLimit:     80
 ConstructorInitializerAllOnOneLineOrOnePerLine: false
 ConstructorInitializerIndentWidth: 4
 ContinuationIndentWidth: 4
@@ -43,7 +43,7 @@ PenaltyBreakBeforeFirstCallParameter: 19
 PenaltyBreakComment: 22312
 PenaltyBreakFirstLessLess: 120
 PenaltyBreakString: 2123
-PenaltyExcessCharacter: 2
+PenaltyExcessCharacter: 1000000
 PenaltyReturnTypeOnItsOwnLine: 60
 PointerAlignment: Right
 SpaceAfterCStyleCast: false
