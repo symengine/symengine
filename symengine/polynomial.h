@@ -353,6 +353,60 @@ RCP<const MultivariateIntPolynomial> mul_mult_poly(const UnivariateIntPolynomial
     const UnivariateIntPolynomial &b);
 
 
+//MultivariatePolynomial
+class MultivariatePolynomial : public Basic {
+public:
+    //vars: set of variables for the polynomial
+    //degrees: max degrees of the symbols
+    //dict: dictionary for sparse represntation of polynomial, x**1 * y**2 + 3 * x**4 * y ** 5
+    // is represented as {(1,2):1,(4,5):3}
+    set_sym vars_;
+    umap_sym_uint degrees_;
+    umap_uvec_expr dict_;
+public:
+    IMPLEMENT_TYPEID(MULTIVARIATEPOLYNOMIAL);
+    //constructor from components
+    MultivariatePolynomial(const set_sym &var, umap_sym_uint &degrees, umap_uvec_expr &dict);
+    //creates a MultivariatePolynomial in cannonical form based on dictionary d.
+    static RCP<const MultivariatePolynomial> from_dict(const set_sym &s, umap_uvec_expr &&d);
+    vec_basic get_args() const;
+    bool is_canonical(const set_sym &vars, const umap_sym_uint &degrees, const umap_uvec_expr &dict);
+    std::size_t __hash__() const;
+    bool __eq__(const Basic &o) const;
+    int compare(const Basic &o) const;
+    Expression eval(std::map<RCP<const Symbol>, Expression, RCPSymbolCompare> &vals) const;
+    //std::string toString() const;
+};
+
+RCP<const MultivariatePolynomial> add_mult_poly(const MultivariatePolynomial &a, 
+    const MultivariatePolynomial &b);
+RCP<const MultivariatePolynomial> neg_mult_poly(const MultivariatePolynomial &a);
+RCP<const MultivariatePolynomial> sub_mult_poly(const MultivariatePolynomial &a, 
+    const MultivariatePolynomial &b);
+RCP<const MultivariatePolynomial> mul_mult_poly(const MultivariatePolynomial &a, 
+    const MultivariatePolynomial &b);
+
+RCP<const MultivariatePolynomial> add_mult_poly(const MultivariatePolynomial &a, 
+    const UnivariatePolynomial &b);
+RCP<const MultivariatePolynomial> add_mult_poly(const UnivariatePolynomial &a, 
+    const MultivariatePolynomial &b);
+RCP<const MultivariatePolynomial> sub_mult_poly(const MultivariatePolynomial &a, 
+    const UnivariatePolynomial &b);
+RCP<const MultivariatePolynomial> sub_mult_poly(const UnivariatePolynomial &a, 
+    const MultivariatePolynomial &b);
+RCP<const MultivariatePolynomial> mul_mult_poly(const MultivariatePolynomial &a, 
+    const UnivariatePolynomial &b);
+RCP<const MultivariatePolynomial> mul_mult_poly(const UnivariatePolynomial &a, 
+    const MultivariatePolynomial &b);
+
+RCP<const MultivariatePolynomial> add_mult_poly(const UnivariatePolynomial &a, 
+    const UnivariatePolynomial &b);
+RCP<const MultivariatePolynomial> sub_mult_poly(const UnivariatePolynomial &a, 
+    const UnivariatePolynomial &b);
+RCP<const MultivariatePolynomial> mul_mult_poly(const UnivariatePolynomial &a, 
+    const UnivariatePolynomial &b);
+	
+	
 }  //SymEngine
 
 #endif

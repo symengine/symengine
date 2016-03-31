@@ -195,6 +195,7 @@ typedef std::set< RCP<const Symbol>, RCPSymbolCompare> set_sym;
 typedef std::unordered_map<RCP<const Symbol>, unsigned int, RCPSymbolHash, RCPSymbolEq>
     umap_sym_uint;
 typedef std::unordered_map<vec_uint, integer_class, vec_uint_hash, vec_uint_eq> umap_uvec_mpz;
+typedef std::unordered_map<vec_uint,Expression, vec_uint_hash, vec_uint_eq> umap_uvec_expr;
 
 //Takes an unordered map of type M with key type K and returns a vector of K ordered by C.
 template<class K, class M, class C>
@@ -212,8 +213,11 @@ std::vector<K> order_umap(const M &d) {
 
 int umap_uvec_mpz_compare(const umap_uvec_mpz &a, const umap_uvec_mpz &b);
 
-//coppied from umap_eq, with derefrencing of image in map removed.
+//copied from umap_eq, with derefrencing of image in map removed.
 bool umap_uvec_mpz_eq(const umap_uvec_mpz &a, const umap_uvec_mpz &b);
+
+int umap_uvec_expr_compare(const umap_uvec_expr &a, const umap_uvec_expr &b);
+bool umap_uvec_expr_eq(const umap_uvec_expr &a, const umap_uvec_expr &b);
 
 template<class T>
 bool set_eq(const T &A, const T &B)
