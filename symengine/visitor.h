@@ -46,10 +46,10 @@ class BaseVisitor : public Base
 {
 
 public:
-#define SYMENGINE_ENUM(TypeID, Class)                                                                                            \
-    virtual void visit(const Class &x)                                                                                           \
-    {                                                                                                                            \
-        static_cast<Derived *>(this)->bvisit(x);                                                                                 \
+#define SYMENGINE_ENUM(TypeID, Class)                                          \
+    virtual void visit(const Class &x)                                         \
+    {                                                                          \
+        static_cast<Derived *>(this)->bvisit(x);                               \
     };
 #include "symengine/type_codes.inc"
 #undef SYMENGINE_ENUM
@@ -148,7 +148,8 @@ public:
         coeff_ = zero;
     }
 
-    RCP<const Basic> apply(const Basic &b, const RCP<const Symbol> &x, const RCP<const Basic> &n)
+    RCP<const Basic> apply(const Basic &b, const RCP<const Symbol> &x,
+                           const RCP<const Basic> &n)
     {
         x_ = x;
         n_ = n;
@@ -158,7 +159,8 @@ public:
     }
 };
 
-RCP<const Basic> coeff(const Basic &b, const RCP<const Basic> &x, const RCP<const Basic> &n);
+RCP<const Basic> coeff(const Basic &b, const RCP<const Basic> &x,
+                       const RCP<const Basic> &n);
 
 set_basic free_symbols(const Basic &b);
 

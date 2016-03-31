@@ -17,7 +17,8 @@ private:
     const unsigned prec;
 
 public:
-    inline SeriesVisitor(const Poly &var_, const std::string &varname_, const unsigned prec_)
+    inline SeriesVisitor(const Poly &var_, const std::string &varname_,
+                         const unsigned prec_)
         : var(var_), varname(varname_), prec(prec_)
     {
     }
@@ -77,7 +78,8 @@ public:
             const int num = mp_get_si(expnumz);
             const int den = mp_get_si(expdenz);
             base->accept(*this);
-            const Poly proot(Series::series_nthroot(apply(base), den, var, prec));
+            const Poly proot(
+                Series::series_nthroot(apply(base), den, var, prec));
             if (num == 1) {
                 p = proot;
             } else if (num > 0) {
@@ -85,12 +87,15 @@ public:
             } else if (num == -1) {
                 p = Series::series_invert(proot, var, prec);
             } else {
-                p = Series::series_invert(Series::pow(proot, -num, prec), var, prec);
+                p = Series::series_invert(Series::pow(proot, -num, prec), var,
+                                          prec);
             }
         } else if (eq(*E, *base)) {
             p = Series::series_exp(apply(exp), var, prec);
         } else {
-            p = Series::series_exp(Poly(apply(exp) * Series::series_log(apply(base), var, prec)), var, prec);
+            p = Series::series_exp(
+                Poly(apply(exp) * Series::series_log(apply(base), var, prec)),
+                var, prec);
         }
     }
 
@@ -114,7 +119,8 @@ public:
             t = i;
             prod /= t;
             d = d->diff(s);
-            res_p += Series::pow(var, i, prec) * (prod * apply(expand(d->subs(m))));
+            res_p += Series::pow(var, i, prec)
+                     * (prod * apply(expand(d->subs(m))));
         }
         p = res_p;
     }
@@ -276,7 +282,8 @@ public:
     }
 };
 
-class NeedsSymbolicExpansionVisitor : public BaseVisitor<NeedsSymbolicExpansionVisitor, StopVisitor>
+class NeedsSymbolicExpansionVisitor
+    : public BaseVisitor<NeedsSymbolicExpansionVisitor, StopVisitor>
 {
 protected:
     RCP<const Symbol> x_;
@@ -310,7 +317,9 @@ public:
         map_basic_basic subsx0{{x_, integer(0)}};
         // exp(const) or x^-1
         if ((base->__eq__(*E) and exp->subs(subsx0)->__neq__(*integer(0)))
-            or (is_a_Number(*exp) and static_cast<const Number &>(*exp).is_negative() and base->subs(subsx0)->__eq__(*integer(0)))) {
+            or (is_a_Number(*exp)
+                and static_cast<const Number &>(*exp).is_negative()
+                and base->subs(subsx0)->__eq__(*integer(0)))) {
             needs_ = true;
             stop_ = true;
         }

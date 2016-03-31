@@ -98,7 +98,8 @@ public:
      * */
     RCP<const Number> addreal(const Complex &other) const
     {
-        return number(i + std::complex<double>(mp_get_d(other.real_), mp_get_d(other.imaginary_)));
+        return number(i + std::complex<double>(mp_get_d(other.real_),
+                                               mp_get_d(other.imaginary_)));
     }
 
     /*! Add RealDoubles
@@ -109,7 +110,8 @@ public:
         return make_rcp<const RealDouble>(i + other.i);
     }
 
-    //! Converts the param `other` appropriately and then calls `addreal`
+    //! Converts the param `other` appropriately and then calls
+    //! `addreal`
     virtual RCP<const Number> add(const Number &other) const
     {
         if (is_a<Rational>(other)) {
@@ -146,7 +148,8 @@ public:
      * */
     RCP<const Number> subreal(const Complex &other) const
     {
-        return number(i - std::complex<double>(mp_get_d(other.real_), mp_get_d(other.imaginary_)));
+        return number(i - std::complex<double>(mp_get_d(other.real_),
+                                               mp_get_d(other.imaginary_)));
     }
 
     /*! Subtract RealDoubles
@@ -157,7 +160,8 @@ public:
         return make_rcp<const RealDouble>(i - other.i);
     }
 
-    //! Converts the param `other` appropriately and then calls `subreal`
+    //! Converts the param `other` appropriately and then calls
+    //! `subreal`
     virtual RCP<const Number> sub(const Number &other) const
     {
         if (is_a<Rational>(other)) {
@@ -194,10 +198,12 @@ public:
      * */
     RCP<const Number> rsubreal(const Complex &other) const
     {
-        return number(-i + std::complex<double>(mp_get_d(other.real_), mp_get_d(other.imaginary_)));
+        return number(-i + std::complex<double>(mp_get_d(other.real_),
+                                                mp_get_d(other.imaginary_)));
     }
 
-    //! Converts the param `other` appropriately and then calls `subreal`
+    //! Converts the param `other` appropriately and then calls
+    //! `subreal`
     virtual RCP<const Number> rsub(const Number &other) const
     {
         if (is_a<Rational>(other)) {
@@ -232,7 +238,8 @@ public:
      * */
     RCP<const Number> mulreal(const Complex &other) const
     {
-        return number(i * std::complex<double>(mp_get_d(other.real_), mp_get_d(other.imaginary_)));
+        return number(i * std::complex<double>(mp_get_d(other.real_),
+                                               mp_get_d(other.imaginary_)));
     }
 
     /*! Multiply RealDoubles
@@ -243,7 +250,8 @@ public:
         return make_rcp<const RealDouble>(i * other.i);
     }
 
-    //! Converts the param `other` appropriately and then calls `mulreal`
+    //! Converts the param `other` appropriately and then calls
+    //! `mulreal`
     virtual RCP<const Number> mul(const Number &other) const
     {
         if (is_a<Rational>(other)) {
@@ -280,7 +288,8 @@ public:
      * */
     RCP<const Number> divreal(const Complex &other) const
     {
-        return number(i / std::complex<double>(mp_get_d(other.real_), mp_get_d(other.imaginary_)));
+        return number(i / std::complex<double>(mp_get_d(other.real_),
+                                               mp_get_d(other.imaginary_)));
     }
 
     /*! Divide RealDoubles
@@ -291,7 +300,8 @@ public:
         return make_rcp<const RealDouble>(i / other.i);
     }
 
-    //! Converts the param `other` appropriately and then calls `divreal`
+    //! Converts the param `other` appropriately and then calls
+    //! `divreal`
     virtual RCP<const Number> div(const Number &other) const
     {
         if (is_a<Rational>(other)) {
@@ -328,10 +338,13 @@ public:
      * */
     RCP<const Number> rdivreal(const Complex &other) const
     {
-        return number(std::complex<double>(mp_get_d(other.real_), mp_get_d(other.imaginary_)) / i);
+        return number(std::complex<double>(mp_get_d(other.real_),
+                                           mp_get_d(other.imaginary_))
+                      / i);
     }
 
-    //! Converts the param `other` appropriately and then calls `divreal`
+    //! Converts the param `other` appropriately and then calls
+    //! `divreal`
     virtual RCP<const Number> rdiv(const Number &other) const
     {
         if (is_a<Rational>(other)) {
@@ -369,7 +382,9 @@ public:
      * */
     RCP<const Number> powreal(const Complex &other) const
     {
-        return number(std::pow(i, std::complex<double>(mp_get_d(other.real_), mp_get_d(other.imaginary_))));
+        return number(
+            std::pow(i, std::complex<double>(mp_get_d(other.real_),
+                                             mp_get_d(other.imaginary_))));
     }
 
     /*! Raise RealDouble to power `other`
@@ -383,7 +398,8 @@ public:
         return make_rcp<const RealDouble>(std::pow(i, other.i));
     }
 
-    //! Converts the param `other` appropriately and then calls `powreal`
+    //! Converts the param `other` appropriately and then calls
+    //! `powreal`
     virtual RCP<const Number> pow(const Number &other) const
     {
         if (is_a<Rational>(other)) {
@@ -426,10 +442,13 @@ public:
      * */
     RCP<const Number> rpowreal(const Complex &other) const
     {
-        return number(std::pow(std::complex<double>(mp_get_d(other.real_), mp_get_d(other.imaginary_)), i));
+        return number(std::pow(std::complex<double>(mp_get_d(other.real_),
+                                                    mp_get_d(other.imaginary_)),
+                               i));
     }
 
-    //! Converts the param `other` appropriately and then calls `powreal`
+    //! Converts the param `other` appropriately and then calls
+    //! `powreal`
     virtual RCP<const Number> rpow(const Number &other) const
     {
         if (is_a<Rational>(other)) {

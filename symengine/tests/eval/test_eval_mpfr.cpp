@@ -33,16 +33,21 @@ TEST_CASE("precision: eval_mpfr", "[eval_mpfr]")
     // value of `r` is approximately 0.000000000149734291
 
     eval_mpfr(a, *r, MPFR_RNDN);
-    // `eval_mpfr` was done with a precision of 53 bits (precision of `a`) and rounding mode `MPFR_RNDN`
+    // `eval_mpfr` was done with a precision of 53 bits (precision of
+    // `a`) and
+    // rounding mode `MPFR_RNDN`
     // With 53 bit precision, `s` and `t` have the same value.
     // Hence value of `r` was  rounded down to `0.000000000000000`
     REQUIRE(mpfr_cmp_si(a, 0) == 0);
 
     mpfr_set_prec(a, 100);
     eval_mpfr(a, *r, MPFR_RNDN);
-    // `eval_mpfr` was done with a precision of 100 bits (precision of `a`) and rounding mode `MPFR_RNDN`
+    // `eval_mpfr` was done with a precision of 100 bits (precision of
+    // `a`) and
+    // rounding mode `MPFR_RNDN`
     // With 100 bit precision, `s` and `t` are not equal in value.
-    // Value of `r` is a positive quantity with value 0.000000000149734291.....
+    // Value of `r` is a positive quantity with value
+    // 0.000000000149734291.....
     REQUIRE(mpfr_cmp_si(a, 0) == 1);
 
     // Check that value of `r` (`a`) starts with 0.000000000149734291
@@ -52,7 +57,8 @@ TEST_CASE("precision: eval_mpfr", "[eval_mpfr]")
     s = mul(EulerGamma, integer(100000000));
     t = integer(57721566);
     r = div(sub(s, t), integer(100000000));
-    // value of `r` is approximately 0.0000000049015328606065120900824024...
+    // value of `r` is approximately
+    // 0.0000000049015328606065120900824024...
 
     eval_mpfr(a, *r, MPFR_RNDN);
     // Check that value of `r` (`a`) starts with 0.00000000490153

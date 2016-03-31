@@ -90,5 +90,7 @@ TEST_CASE("expand: poly", "[poly]")
     std::cout << "RESULT:" << std::endl;
     std::cout << C << std::endl;
     */
-    std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1).count() << "ms" << std::endl;
+    std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1)
+                     .count()
+              << "ms" << std::endl;
 }

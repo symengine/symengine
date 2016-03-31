@@ -17,10 +17,12 @@ namespace SymEngine
 
 using pp_t = piranha::polynomial<piranha::rational, piranha::monomial<short>>;
 // Univariate Rational Coefficient Power SeriesBase using Piranha
-class URatPSeriesPiranha : public SeriesBase<pp_t, piranha::rational, URatPSeriesPiranha>
+class URatPSeriesPiranha
+    : public SeriesBase<pp_t, piranha::rational, URatPSeriesPiranha>
 {
 public:
-    URatPSeriesPiranha(const pp_t p, const std::string varname, const unsigned degree);
+    URatPSeriesPiranha(const pp_t p, const std::string varname,
+                       const unsigned degree);
     IMPLEMENT_TYPEID(URATPSERIESPIRANHA)
     virtual int compare(const Basic &o) const;
     virtual std::size_t __hash__() const;
@@ -28,7 +30,8 @@ public:
     virtual umap_int_basic as_dict() const;
     virtual RCP<const Basic> get_coeff(int) const;
 
-    static RCP<const URatPSeriesPiranha> series(const RCP<const Basic> &t, const std::string &x, unsigned int prec);
+    static RCP<const URatPSeriesPiranha>
+    series(const RCP<const Basic> &t, const std::string &x, unsigned int prec);
     static piranha::integer convert(const Integer &x);
     static piranha::rational convert(const rational_class &x);
     static pp_t var(const std::string &s);
@@ -37,11 +40,13 @@ public:
     static pp_t mul(const pp_t &s, const pp_t &r, unsigned prec);
     static pp_t pow(const pp_t &s, int n, unsigned prec);
     static unsigned ldegree(const pp_t &s);
-    static piranha::rational find_cf(const pp_t &s, const pp_t &var, unsigned deg);
+    static piranha::rational find_cf(const pp_t &s, const pp_t &var,
+                                     unsigned deg);
     static piranha::rational root(piranha::rational &c, unsigned n);
     static pp_t diff(const pp_t &s, const pp_t &var);
     static pp_t integrate(const pp_t &s, const pp_t &var);
-    static pp_t subs(const pp_t &s, const pp_t &var, const pp_t &r, unsigned prec);
+    static pp_t subs(const pp_t &s, const pp_t &var, const pp_t &r,
+                     unsigned prec);
 };
 
 using p_expr = piranha::polynomial<Expression, piranha::monomial<int>>;
@@ -49,7 +54,8 @@ using p_expr = piranha::polynomial<Expression, piranha::monomial<int>>;
 class UPSeriesPiranha : public SeriesBase<p_expr, Expression, UPSeriesPiranha>
 {
 public:
-    UPSeriesPiranha(const p_expr p, const std::string varname, const unsigned degree);
+    UPSeriesPiranha(const p_expr p, const std::string varname,
+                    const unsigned degree);
     IMPLEMENT_TYPEID(UPSERIESPIRANHA)
     virtual int compare(const Basic &o) const;
     virtual std::size_t __hash__() const;
@@ -57,7 +63,8 @@ public:
     virtual umap_int_basic as_dict() const;
     virtual RCP<const Basic> get_coeff(int) const;
 
-    static RCP<const UPSeriesPiranha> series(const RCP<const Basic> &t, const std::string &x, unsigned int prec);
+    static RCP<const UPSeriesPiranha>
+    series(const RCP<const Basic> &t, const std::string &x, unsigned int prec);
     static p_expr var(const std::string &s);
     static Expression convert(const Basic &x);
     static p_expr mul(const p_expr &s, const p_expr &r, unsigned prec);
@@ -67,7 +74,8 @@ public:
     static Expression root(Expression &c, unsigned n);
     static p_expr diff(const p_expr &s, const p_expr &var);
     static p_expr integrate(const p_expr &s, const p_expr &var);
-    static p_expr subs(const p_expr &s, const p_expr &var, const p_expr &r, unsigned prec);
+    static p_expr subs(const p_expr &s, const p_expr &var, const p_expr &r,
+                       unsigned prec);
 
     static Expression sin(const Expression &c);
     static Expression cos(const Expression &c);

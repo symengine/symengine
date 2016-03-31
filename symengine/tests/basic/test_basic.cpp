@@ -128,7 +128,9 @@ TEST_CASE("Add: basic", "[basic]")
     REQUIRE(vec_basic_eq_perm(r->get_args(), {mul(integer(5), x), integer(5)}));
 
     r = add(add(mul(mul(integer(2), x), y), integer(5)), pow(x, integer(2)));
-    REQUIRE(vec_basic_eq_perm(r->get_args(), {integer(5), mul(mul(integer(2), x), y), pow(x, integer(2))}));
+    REQUIRE(vec_basic_eq_perm(
+        r->get_args(),
+        {integer(5), mul(mul(integer(2), x), y), pow(x, integer(2))}));
     std::cout << *r << std::endl;
 }
 
@@ -302,10 +304,12 @@ TEST_CASE("Mul: Basic", "[basic]")
     RCP<const Basic> r = mul(mul(x, y), mul(y, x));
     std::cout << *r << std::endl;
 
-    REQUIRE(vec_basic_eq_perm(r->get_args(), {pow(x, integer(2)), pow(y, integer(2))}));
+    REQUIRE(vec_basic_eq_perm(r->get_args(),
+                              {pow(x, integer(2)), pow(y, integer(2))}));
 
     r = mul(mul(pow(x, integer(3)), integer(2)), y);
-    REQUIRE(vec_basic_eq_perm(r->get_args(), {integer(2), pow(x, integer(3)), y}));
+    REQUIRE(
+        vec_basic_eq_perm(r->get_args(), {integer(2), pow(x, integer(3)), y}));
 
     r = add(x, x);
     REQUIRE(vec_basic_eq_perm(r->get_args(), {x, integer(2)}));
@@ -352,7 +356,8 @@ TEST_CASE("Diff: Basic", "[basic]")
     REQUIRE(eq(*r1->diff(x)->diff(x), *i10));
 
     r1 = add(mul(mul(pow(x, y), pow(y, x)), i2), one)->diff(x);
-    r2 = add(mul(i2, mul(pow(x, y), mul(pow(y, x), log(y)))), mul(i2, mul(pow(x, y), mul(pow(y, x), div(y, x)))));
+    r2 = add(mul(i2, mul(pow(x, y), mul(pow(y, x), log(y)))),
+             mul(i2, mul(pow(x, y), mul(pow(y, x), div(y, x)))));
     REQUIRE(eq(*r1, *r2));
 }
 
@@ -453,7 +458,8 @@ TEST_CASE("compare: Basic", "[basic]")
     CHECK(r2->compare(*r1) == 1);
     CHECK(r1->compare(*r1) == 0);
 
-    // These are specific to the order in the declaration of enum TypeID,
+    // These are specific to the order in the declaration of enum
+    // TypeID,
     // so we just make sure that if x < y, then y > x.
     r1 = add(x, z);
     r2 = mul(x, y);
@@ -508,9 +514,14 @@ TEST_CASE("Complex: Basic", "[basic]")
     c1 = Complex::from_two_nums(*r1, *r2);
     c2 = Complex::from_two_nums(*r1, *r3);
 
-    // Basic check for equality in Complex::from_two_nums and Complex::from_two_rats
-    REQUIRE(eq(*c1, *Complex::from_two_rats(static_cast<const Rational &>(*r1), static_cast<const Rational &>(*r2))));
-    REQUIRE(neq(*c2, *Complex::from_two_rats(static_cast<const Rational &>(*r1), static_cast<const Rational &>(*r2))));
+    // Basic check for equality in Complex::from_two_nums and
+    // Complex::from_two_rats
+    REQUIRE(
+        eq(*c1, *Complex::from_two_rats(static_cast<const Rational &>(*r1),
+                                        static_cast<const Rational &>(*r2))));
+    REQUIRE(
+        neq(*c2, *Complex::from_two_rats(static_cast<const Rational &>(*r1),
+                                         static_cast<const Rational &>(*r2))));
 
     // Checks for complex addition
     // Final result is int

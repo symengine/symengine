@@ -13,10 +13,10 @@
 #include <symengine/complex_double.h>
 #include <symengine/complex_mpc.h>
 
-#define ACCEPT(CLASS)                                                                                                            \
-    void CLASS::accept(Visitor &v) const                                                                                         \
-    {                                                                                                                            \
-        v.visit(*this);                                                                                                          \
+#define ACCEPT(CLASS)                                                          \
+    void CLASS::accept(Visitor &v) const                                       \
+    {                                                                          \
+        v.visit(*this);                                                        \
     }
 
 namespace SymEngine
@@ -68,7 +68,8 @@ bool has_symbol(const Basic &b, const RCP<const Symbol> &x)
     return v.apply(b, x);
 }
 
-RCP<const Basic> coeff(const Basic &b, const RCP<const Basic> &x, const RCP<const Basic> &n)
+RCP<const Basic> coeff(const Basic &b, const RCP<const Basic> &x,
+                       const RCP<const Basic> &n)
 {
     if (!is_a<Symbol>(*x)) {
         throw std::runtime_error("Not implemented for non Symbols.");

@@ -33,7 +33,8 @@ public:
     {
         return true;
     };
-    //! \return true if the number is equal to 0 and not an approximation
+    //! \return true if the number is equal to 0 and not an
+    //! approximation
     inline bool is_exact_zero() const
     {
         return is_exact() and is_zero();
@@ -73,42 +74,50 @@ public:
     };
 };
 //! Add `self` and `other`
-inline RCP<const Number> addnum(const RCP<const Number> &self, const RCP<const Number> &other)
+inline RCP<const Number> addnum(const RCP<const Number> &self,
+                                const RCP<const Number> &other)
 {
     return self->add(*other);
 }
 //! Subtract `self` and `other`
-inline RCP<const Number> subnum(const RCP<const Number> &self, const RCP<const Number> &other)
+inline RCP<const Number> subnum(const RCP<const Number> &self,
+                                const RCP<const Number> &other)
 {
     return self->sub(*other);
 }
 //! Multiply `self` and `other`
-inline RCP<const Number> mulnum(const RCP<const Number> &self, const RCP<const Number> &other)
+inline RCP<const Number> mulnum(const RCP<const Number> &self,
+                                const RCP<const Number> &other)
 {
     return self->mul(*other);
 }
 //! Divide `self` and `other`
-inline RCP<const Number> divnum(const RCP<const Number> &self, const RCP<const Number> &other)
+inline RCP<const Number> divnum(const RCP<const Number> &self,
+                                const RCP<const Number> &other)
 {
     return self->div(*other);
 }
 //! Raise `self` to power `other`
-inline RCP<const Number> pownum(const RCP<const Number> &self, const RCP<const Number> &other)
+inline RCP<const Number> pownum(const RCP<const Number> &self,
+                                const RCP<const Number> &other)
 {
     return self->pow(*other);
 }
 
-inline void iaddnum(const Ptr<RCP<const Number>> &self, const RCP<const Number> &other)
+inline void iaddnum(const Ptr<RCP<const Number>> &self,
+                    const RCP<const Number> &other)
 {
     *self = addnum(*self, other);
 }
 
-inline void imulnum(const Ptr<RCP<const Number>> &self, const RCP<const Number> &other)
+inline void imulnum(const Ptr<RCP<const Number>> &self,
+                    const RCP<const Number> &other)
 {
     *self = mulnum(*self, other);
 }
 
-inline void idivnum(const Ptr<RCP<const Number>> &self, const RCP<const Number> &other)
+inline void idivnum(const Ptr<RCP<const Number>> &self,
+                    const RCP<const Number> &other)
 {
     *self = divnum(*self, other);
 }

@@ -155,7 +155,8 @@ public:
     RCP<const Number> addreal(const ComplexDouble &other) const;
     RCP<const Number> addreal(const RealMPFR &other) const;
 
-    //! Converts the param `other` appropriately and then calls `addreal`
+    //! Converts the param `other` appropriately and then calls
+    //! `addreal`
     virtual RCP<const Number> add(const Number &other) const
     {
         if (is_a<Rational>(other)) {
@@ -182,7 +183,8 @@ public:
     RCP<const Number> subreal(const ComplexDouble &other) const;
     RCP<const Number> subreal(const RealMPFR &other) const;
 
-    //! Converts the param `other` appropriately and then calls `subreal`
+    //! Converts the param `other` appropriately and then calls
+    //! `subreal`
     virtual RCP<const Number> sub(const Number &other) const
     {
         if (is_a<Rational>(other)) {
@@ -208,7 +210,8 @@ public:
     RCP<const Number> rsubreal(const RealDouble &other) const;
     RCP<const Number> rsubreal(const ComplexDouble &other) const;
 
-    //! Converts the param `other` appropriately and then calls `subreal`
+    //! Converts the param `other` appropriately and then calls
+    //! `subreal`
     virtual RCP<const Number> rsub(const Number &other) const
     {
         if (is_a<Rational>(other)) {
@@ -233,7 +236,8 @@ public:
     RCP<const Number> mulreal(const ComplexDouble &other) const;
     RCP<const Number> mulreal(const RealMPFR &other) const;
 
-    //! Converts the param `other` appropriately and then calls `mulreal`
+    //! Converts the param `other` appropriately and then calls
+    //! `mulreal`
     virtual RCP<const Number> mul(const Number &other) const
     {
         if (is_a<Rational>(other)) {
@@ -260,7 +264,8 @@ public:
     RCP<const Number> divreal(const ComplexDouble &other) const;
     RCP<const Number> divreal(const RealMPFR &other) const;
 
-    //! Converts the param `other` appropriately and then calls `divreal`
+    //! Converts the param `other` appropriately and then calls
+    //! `divreal`
     virtual RCP<const Number> div(const Number &other) const
     {
         if (is_a<Rational>(other)) {
@@ -286,7 +291,8 @@ public:
     RCP<const Number> rdivreal(const RealDouble &other) const;
     RCP<const Number> rdivreal(const ComplexDouble &other) const;
 
-    //! Converts the param `other` appropriately and then calls `divreal`
+    //! Converts the param `other` appropriately and then calls
+    //! `divreal`
     virtual RCP<const Number> rdiv(const Number &other) const
     {
         if (is_a<Rational>(other)) {
@@ -311,7 +317,8 @@ public:
     RCP<const Number> powreal(const ComplexDouble &other) const;
     RCP<const Number> powreal(const RealMPFR &other) const;
 
-    //! Converts the param `other` appropriately and then calls `powreal`
+    //! Converts the param `other` appropriately and then calls
+    //! `powreal`
     virtual RCP<const Number> pow(const Number &other) const
     {
         if (is_a<Rational>(other)) {
@@ -337,7 +344,8 @@ public:
     RCP<const Number> rpowreal(const RealDouble &other) const;
     RCP<const Number> rpowreal(const ComplexDouble &other) const;
 
-    //! Converts the param `other` appropriately and then calls `powreal`
+    //! Converts the param `other` appropriately and then calls
+    //! `powreal`
     virtual RCP<const Number> rpow(const Number &other) const
     {
         if (is_a<Rational>(other)) {

@@ -49,26 +49,39 @@ class Symbol;
     Subclasses must implement these.
 
 */
-/*  Classes like Add, Mul, Pow are initialized through their constructor using
-    their internal representation. Add, Mul have a 'coeff' and 'dict', while
+/*  Classes like Add, Mul, Pow are initialized through their constructor
+   using
+    their internal representation. Add, Mul have a 'coeff' and 'dict',
+   while
     Pow has 'base' and 'exp'. There are restrictions on what 'coeff' and
-    'dict' can be (for example 'coeff' cannot be zero in Mul, and if Mul is
+    'dict' can be (for example 'coeff' cannot be zero in Mul, and if Mul
+   is
     used inside Add, then Mul's coeff must be one, etc.). All these
     restrictions are checked when SYMENGINE_ASSERT is enabled inside the
-    constructors using the is_canonical() method. That way, you don't have to
-    worry about creating Add/Mul/Pow with wrong arguments, as it will be caught
-    by the tests. In the Release mode no checks are done, so you can construct
-    Add/Mul/Pow very quickly. The idea is that depending on the algorithm, you
-    sometimes know that things are already canonical, so you simply pass it
+    constructors using the is_canonical() method. That way, you don't
+   have to
+    worry about creating Add/Mul/Pow with wrong arguments, as it will be
+   caught
+    by the tests. In the Release mode no checks are done, so you can
+   construct
+    Add/Mul/Pow very quickly. The idea is that depending on the
+   algorithm, you
+    sometimes know that things are already canonical, so you simply pass
+   it
     directly to Add/Mul/Pow and you avoid expensive type checking and
-    canonicalization. At the same time, you need to make sure that tests are
-    still running with SYMENGINE_ASSERT enabled, so that Add/Mul/Pow are never in
+    canonicalization. At the same time, you need to make sure that tests
+   are
+    still running with SYMENGINE_ASSERT enabled, so that Add/Mul/Pow are
+   never
+   in
     an inconsistent state.
 
-    Summary: always try to construct the expressions Add/Mul/Pow directly using
+    Summary: always try to construct the expressions Add/Mul/Pow
+   directly using
     their constructors and all the knowledge that you have for the given
     algorithm, that way things will be very fast. If you want slower but
-    simpler code, you can use the add(), mul(), pow() functions that peform
+    simpler code, you can use the add(), mul(), pow() functions that
+   peform
     general and possibly slow canonicalization first.
 */
 
@@ -78,8 +91,10 @@ enum TypeID {
 #include "symengine/type_codes.inc"
 #undef SYMENGINE_ENUM
 #undef SYMENGINE_INCLUDE_ALL
-    // The 'TypeID_Count' returns the number of elements in 'TypeID'. For this
-    // to work, do not assign numbers to the elements above (or if you do, you
+    // The 'TypeID_Count' returns the number of elements in 'TypeID'.
+    // For this
+    // to work, do not assign numbers to the elements above (or if you
+    // do, you
     // must assign the correct count below).
     TypeID_Count
 };
@@ -90,7 +105,8 @@ class Basic : public EnableRCPFromThis<Basic>
 {
 private:
 //! Private variables
-// The hash_ is defined as mutable, because its value is initialized to 0
+// The hash_ is defined as mutable, because its value is initialized to
+// 0
 // in the constructor and then it can be changed in Basic::hash() to the
 // current hash (which is always the same for the given instance). The
 // state of the instance does not change, so we define hash_ as mutable.
@@ -105,7 +121,8 @@ public:
     Basic() : hash_{0}
     {
     }
-    //! Destructor must be explicitly defined as virtual here to avoid problems
+    //! Destructor must be explicitly defined as virtual here to avoid
+    //! problems
     //! with undefined behavior while deallocating derived classes.
     virtual ~Basic()
     {
@@ -141,9 +158,13 @@ public:
     //! Comparison operator.
     int __cmp__(const Basic &o) const;
 
-    /*! Returns -1, 0, 1 for `this < o, this == o, this > o`. This method is used
-     when you want to sort things like `x+y+z` into canonical order. This
-     function assumes that `o` is the same type as `this`. Use ` __cmp__` if you
+    /*! Returns -1, 0, 1 for `this < o, this == o, this > o`. This
+     method is
+     used
+     when you want to sort things like `x+y+z` into canonical order.
+     This
+     function assumes that `o` is the same type as `this`. Use `
+     __cmp__` if you
      want general comparison.
      */
     virtual int compare(const Basic &o) const = 0;
@@ -226,16 +247,22 @@ bool is_a(const Basic &b);
 /*! Returns true if `b` is of type T or any of its subclasses.
  * Example:
 
-        is_a_sub<Symbol>(b)  // true if `b` is of type `Symbol` or any Symbol's subclass
+        is_a_sub<Symbol>(b)  // true if `b` is of type `Symbol` or any
+ Symbol's
+ subclass
 */
 template <class T>
 bool is_a_sub(const Basic &b);
 
 //! Expands `self`
 RCP<const Basic> expand(const RCP<const Basic> &self);
-void as_numer_denom(const RCP<const Basic> &x, const Ptr<RCP<const Basic>> &numer, const Ptr<RCP<const Basic>> &denom);
+void as_numer_denom(const RCP<const Basic> &x,
+                    const Ptr<RCP<const Basic>> &numer,
+                    const Ptr<RCP<const Basic>> &denom);
 
-/*! This `<<` overloaded function simply calls `p.__str__`, so it allows any Basic
+/*! This `<<` overloaded function simply calls `p.__str__`, so it allows
+   any
+   Basic
     type to be printed.
 
     This prints using: `std::cout << *x;`
@@ -273,14 +300,14 @@ void hash_combine(std::size_t &seed, const T &v);
 #include "basic-inl.h"
 
 // Macro to define the type_code_id variable and its getter method
-#define IMPLEMENT_TYPEID(ID)                                                                                                     \
-    /*! Type_code_id shared by all instances */                                                                                  \
-    const static TypeID type_code_id = ID;                                                                                       \
-    /*! Virtual function that gives the type_code_id of the object */                                                            \
-    virtual TypeID get_type_code() const                                                                                         \
-    {                                                                                                                            \
-        return type_code_id;                                                                                                     \
-    };                                                                                                                           \
+#define IMPLEMENT_TYPEID(ID)                                                   \
+    /*! Type_code_id shared by all instances */                                \
+    const static TypeID type_code_id = ID;                                     \
+    /*! Virtual function that gives the type_code_id of the object */          \
+    virtual TypeID get_type_code() const                                       \
+    {                                                                          \
+        return type_code_id;                                                   \
+    };                                                                         \
     SYMENGINE_INCLUDE_METHODS(;)
 
 #endif

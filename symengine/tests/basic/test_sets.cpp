@@ -29,7 +29,8 @@ TEST_CASE("Interval : Basic", "[basic]")
     RCP<const Number> i20 = integer(20);
     RCP<const Number> im5 = integer(-5);
     RCP<const Number> rat1 = Rational::from_two_ints(*integer(5), *integer(6));
-    RCP<const Number> rat2 = Rational::from_two_ints(*integer(500), *integer(6));
+    RCP<const Number> rat2
+        = Rational::from_two_ints(*integer(500), *integer(6));
 
     r1 = interval(zero, i20); // [0, 20]
     r2 = interval(im5, i2);   // [-5, 2]

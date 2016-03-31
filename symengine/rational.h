@@ -39,7 +39,8 @@ public:
     //! \return true if canonical
     bool is_canonical(const rational_class &i) const;
 
-    /*! Constructs Rational as n/d, where n, d can be any Integers. If n/d is an
+    /*! Constructs Rational as n/d, where n, d can be any Integers. If
+    * n/d is an
     *   Integer, it will return an Integer instead.
     * */
     static RCP<const Number> from_two_ints(const Integer &n, const Integer &d);
@@ -88,7 +89,8 @@ public:
 
     virtual bool is_perfect_power(bool is_expected = false) const;
     // \return true if there is a exact nth root of self.
-    virtual bool nth_root(const Ptr<RCP<const Number>> &, unsigned long n) const;
+    virtual bool nth_root(const Ptr<RCP<const Number>> &,
+                          unsigned long n) const;
 
     /*! Add Rationals
      * \param other of type Rational
@@ -182,8 +184,10 @@ public:
         mp_pow_ui(SymEngine::get_num(val), SymEngine::get_num(i), exp);
         mp_pow_ui(SymEngine::get_den(val), SymEngine::get_den(i), exp);
 
-        // Since 'this' is in canonical form, so is this**other, so we simply
-        // pass val into the constructor directly without canonicalizing:
+        // Since 'this' is in canonical form, so is this**other, so we
+        // simply
+        // pass val into the constructor directly without
+        // canonicalizing:
         if (not neg) {
             return Rational::from_mpq(std::move(val));
         } else {
@@ -221,7 +225,8 @@ public:
             return other.rsub(*this);
         }
     };
-    //! Converts the param `other` appropriately and then calls `rsubrat`
+    //! Converts the param `other` appropriately and then calls
+    //! `rsubrat`
     virtual RCP<const Number> rsub(const Number &other) const
     {
         if (is_a<Integer>(other)) {
@@ -252,7 +257,8 @@ public:
             return other.rdiv(*this);
         }
     };
-    //! Converts the param `other` appropriately and then calls `rdivrat`
+    //! Converts the param `other` appropriately and then calls
+    //! `rdivrat`
     virtual RCP<const Number> rdiv(const Number &other) const
     {
         if (is_a<Integer>(other)) {
@@ -287,8 +293,10 @@ public:
     }
 };
 
-//! returns the `num` and `den` of rational `rat` as `RCP<const Integer>`
-void get_num_den(const Rational &rat, const Ptr<RCP<const Integer>> &num, const Ptr<RCP<const Integer>> &den);
+//! returns the `num` and `den` of rational `rat` as `RCP<const
+//! Integer>`
+void get_num_den(const Rational &rat, const Ptr<RCP<const Integer>> &num,
+                 const Ptr<RCP<const Integer>> &den);
 
 //! convenience creator from two longs
 inline RCP<const Number> rational(long n, long d)

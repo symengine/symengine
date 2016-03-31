@@ -5,13 +5,17 @@
 namespace SymEngine
 {
 
-URatPSeriesPiranha::URatPSeriesPiranha(pp_t p, const std::string varname, const unsigned degree)
+URatPSeriesPiranha::URatPSeriesPiranha(pp_t p, const std::string varname,
+                                       const unsigned degree)
     : SeriesBase(std::move(p), varname, degree)
 {
 }
-RCP<const URatPSeriesPiranha> URatPSeriesPiranha::series(const RCP<const Basic> &t, const std::string &x, unsigned int prec)
+RCP<const URatPSeriesPiranha>
+URatPSeriesPiranha::series(const RCP<const Basic> &t, const std::string &x,
+                           unsigned int prec)
 {
-    SeriesVisitor<pp_t, piranha::rational, URatPSeriesPiranha> visitor(pp_t(x), x, prec);
+    SeriesVisitor<pp_t, piranha::rational, URatPSeriesPiranha> visitor(pp_t(x),
+                                                                       x, prec);
     return visitor.series(t);
 }
 
@@ -80,7 +84,9 @@ RCP<const Basic> URatPSeriesPiranha::as_basic() const
                 co_basic = make_rcp<const Integer>(get_num(cl_rat));
             else
                 co_basic = make_rcp<const Rational>(cl_rat);
-            auto term = SymEngine::mul(SymEngine::pow(x, SymEngine::integer(it.second.degree())), co_basic);
+            auto term = SymEngine::mul(
+                SymEngine::pow(x, SymEngine::integer(it.second.degree())),
+                co_basic);
             if (it.second.degree() == 0)
                 zcoef = co_basic;
             Add::coef_dict_add_term(outArg(co_basic), dict_, one, term);
@@ -139,7 +145,8 @@ unsigned URatPSeriesPiranha::ldegree(const pp_t &s)
     return s.ldegree();
 }
 
-piranha::rational URatPSeriesPiranha::find_cf(const pp_t &s, const pp_t &var, unsigned deg)
+piranha::rational URatPSeriesPiranha::find_cf(const pp_t &s, const pp_t &var,
+                                              unsigned deg)
 {
     return s.find_cf({deg});
 }
@@ -173,7 +180,8 @@ pp_t URatPSeriesPiranha::integrate(const pp_t &s, const pp_t &var)
     return s.integrate(var.get_symbol_set()[0].get_name());
 }
 
-pp_t URatPSeriesPiranha::subs(const pp_t &s, const pp_t &var, const pp_t &r, unsigned prec)
+pp_t URatPSeriesPiranha::subs(const pp_t &s, const pp_t &var, const pp_t &r,
+                              unsigned prec)
 {
     pp_t::set_auto_truncate_degree(prec - 1);
     pp_t ret = s.subs(var.get_symbol_set()[0].get_name(), r);
@@ -181,14 +189,18 @@ pp_t URatPSeriesPiranha::subs(const pp_t &s, const pp_t &var, const pp_t &r, uns
     return ret;
 }
 
-UPSeriesPiranha::UPSeriesPiranha(p_expr p, const std::string varname, const unsigned degree)
+UPSeriesPiranha::UPSeriesPiranha(p_expr p, const std::string varname,
+                                 const unsigned degree)
     : SeriesBase(std::move(p), varname, degree)
 {
 }
 
-RCP<const UPSeriesPiranha> UPSeriesPiranha::series(const RCP<const Basic> &t, const std::string &x, unsigned int prec)
+RCP<const UPSeriesPiranha> UPSeriesPiranha::series(const RCP<const Basic> &t,
+                                                   const std::string &x,
+                                                   unsigned int prec)
 {
-    SeriesVisitor<p_expr, Expression, UPSeriesPiranha> visitor(p_expr(x), x, prec);
+    SeriesVisitor<p_expr, Expression, UPSeriesPiranha> visitor(p_expr(x), x,
+                                                               prec);
     return visitor.series(t);
 }
 
@@ -230,7 +242,9 @@ RCP<const Basic> UPSeriesPiranha::as_basic() const
     umap_basic_num dict_;
     for (const auto &it : p_) {
         if (it.first != 0) {
-            auto term = SymEngine::mul(it.first.get_basic(), SymEngine::pow(x, SymEngine::integer(it.second.degree())));
+            auto term = SymEngine::mul(
+                it.first.get_basic(),
+                SymEngine::pow(x, SymEngine::integer(it.second.degree())));
             RCP<const Number> coef;
             coef = zero;
             Add::coef_dict_add_term(outArg(coef), dict_, one, term);
@@ -277,7 +291,8 @@ unsigned UPSeriesPiranha::ldegree(const p_expr &s)
     return s.ldegree();
 }
 
-Expression UPSeriesPiranha::find_cf(const p_expr &s, const p_expr &var, unsigned deg)
+Expression UPSeriesPiranha::find_cf(const p_expr &s, const p_expr &var,
+                                    unsigned deg)
 {
     return s.find_cf({deg});
 }
@@ -297,7 +312,8 @@ p_expr UPSeriesPiranha::integrate(const p_expr &s, const p_expr &var)
     return s.integrate(var.get_symbol_set()[0].get_name());
 }
 
-p_expr UPSeriesPiranha::subs(const p_expr &s, const p_expr &var, const p_expr &r, unsigned prec)
+p_expr UPSeriesPiranha::subs(const p_expr &s, const p_expr &var,
+                             const p_expr &r, unsigned prec)
 {
     p_expr::set_auto_truncate_degree(prec - 1);
     p_expr ret = s.subs(var.get_symbol_set()[0].get_name(), r);

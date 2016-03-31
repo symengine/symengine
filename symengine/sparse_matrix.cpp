@@ -8,7 +8,8 @@
 
 namespace SymEngine
 {
-// ----------------------------- CSRMatrix ------------------------------------
+// ----------------------------- CSRMatrix
+// ------------------------------------
 CSRMatrix::CSRMatrix()
 {
 }
@@ -19,7 +20,8 @@ CSRMatrix::CSRMatrix(unsigned row, unsigned col) : row_(row), col_(col)
     SYMENGINE_ASSERT(is_canonical());
 }
 
-CSRMatrix::CSRMatrix(unsigned row, unsigned col, std::vector<unsigned> &&p, std::vector<unsigned> &&j, vec_basic &&x)
+CSRMatrix::CSRMatrix(unsigned row, unsigned col, std::vector<unsigned> &&p,
+                     std::vector<unsigned> &&j, vec_basic &&x)
     : p_{std::move(p)}, j_{std::move(j)}, x_{std::move(x)}, row_(row), col_(col)
 {
     SYMENGINE_ASSERT(is_canonical());
@@ -177,7 +179,9 @@ void CSRMatrix::transpose(MatrixBase &result) const
 }
 
 // Extract out a submatrix
-void CSRMatrix::submatrix(unsigned row_start, unsigned row_end, unsigned col_start, unsigned col_end, MatrixBase &result) const
+void CSRMatrix::submatrix(unsigned row_start, unsigned row_end,
+                          unsigned col_start, unsigned col_end,
+                          MatrixBase &result) const
 {
     throw std::runtime_error("Not implemented.");
 }
@@ -212,7 +216,9 @@ void CSRMatrix::FFLDU(MatrixBase &L, MatrixBase &D, MatrixBase &U) const
     throw std::runtime_error("Not implemented.");
 }
 
-void CSRMatrix::csr_sum_duplicates(std::vector<unsigned> &p_, std::vector<unsigned> &j_, vec_basic &x_, unsigned row_)
+void CSRMatrix::csr_sum_duplicates(std::vector<unsigned> &p_,
+                                   std::vector<unsigned> &j_, vec_basic &x_,
+                                   unsigned row_)
 {
     unsigned nnz = 0;
     unsigned row_end = 0;
@@ -245,7 +251,9 @@ void CSRMatrix::csr_sum_duplicates(std::vector<unsigned> &p_, std::vector<unsign
     x_.resize(nnz);
 }
 
-void CSRMatrix::csr_sort_indices(std::vector<unsigned> &p_, std::vector<unsigned> &j_, vec_basic &x_, unsigned row_)
+void CSRMatrix::csr_sort_indices(std::vector<unsigned> &p_,
+                                 std::vector<unsigned> &j_, vec_basic &x_,
+                                 unsigned row_)
 {
     std::vector<std::pair<unsigned, RCP<const Basic>>> temp;
 
@@ -259,8 +267,11 @@ void CSRMatrix::csr_sort_indices(std::vector<unsigned> &p_, std::vector<unsigned
             temp.push_back(std::make_pair(j_[jj], x_[jj]));
         }
 
-        std::sort(temp.begin(), temp.end(), [](const std::pair<unsigned, RCP<const Basic>> &x,
-                                               const std::pair<unsigned, RCP<const Basic>> &y) { return x.first < y.first; });
+        std::sort(temp.begin(), temp.end(),
+                  [](const std::pair<unsigned, RCP<const Basic>> &x,
+                     const std::pair<unsigned, RCP<const Basic>> &y) {
+                      return x.first < y.first;
+                  });
 
         for (unsigned jj = row_start, n = 0; jj < row_end; jj++, n++) {
             j_[jj] = temp[n].first;
@@ -270,7 +281,9 @@ void CSRMatrix::csr_sort_indices(std::vector<unsigned> &p_, std::vector<unsigned
 }
 
 // Assumes that the indices are sorted
-bool CSRMatrix::csr_has_duplicates(const std::vector<unsigned> &p_, const std::vector<unsigned> &j_, unsigned row_)
+bool CSRMatrix::csr_has_duplicates(const std::vector<unsigned> &p_,
+                                   const std::vector<unsigned> &j_,
+                                   unsigned row_)
 {
     for (unsigned i = 0; i < row_; i++) {
         for (unsigned j = p_[i]; j < p_[i + 1] - 1; j++) {
@@ -281,7 +294,9 @@ bool CSRMatrix::csr_has_duplicates(const std::vector<unsigned> &p_, const std::v
     return false;
 }
 
-bool CSRMatrix::csr_has_sorted_indices(const std::vector<unsigned> &p_, const std::vector<unsigned> &j_, unsigned row_)
+bool CSRMatrix::csr_has_sorted_indices(const std::vector<unsigned> &p_,
+                                       const std::vector<unsigned> &j_,
+                                       unsigned row_)
 {
     for (unsigned i = 0; i < row_; i++) {
         for (unsigned jj = p_[i]; jj < p_[i + 1] - 1; jj++) {
@@ -292,17 +307,22 @@ bool CSRMatrix::csr_has_sorted_indices(const std::vector<unsigned> &p_, const st
     return true;
 }
 
-bool CSRMatrix::csr_has_canonical_format(const std::vector<unsigned> &p_, const std::vector<unsigned> &j_, unsigned row_)
+bool CSRMatrix::csr_has_canonical_format(const std::vector<unsigned> &p_,
+                                         const std::vector<unsigned> &j_,
+                                         unsigned row_)
 {
     for (unsigned i = 0; i < row_; i++) {
         if (p_[i] > p_[i + 1])
             return false;
     }
 
-    return csr_has_sorted_indices(p_, j_, row_) and not csr_has_duplicates(p_, j_, row_);
+    return csr_has_sorted_indices(p_, j_, row_)
+           and not csr_has_duplicates(p_, j_, row_);
 }
 
-CSRMatrix CSRMatrix::from_coo(unsigned row, unsigned col, const std::vector<unsigned> &i, const std::vector<unsigned> &j,
+CSRMatrix CSRMatrix::from_coo(unsigned row, unsigned col,
+                              const std::vector<unsigned> &i,
+                              const std::vector<unsigned> &j,
                               const vec_basic &x)
 {
     unsigned nnz = x.size();
@@ -344,7 +364,8 @@ CSRMatrix CSRMatrix::from_coo(unsigned row, unsigned col, const std::vector<unsi
     // Remove duplicates
     csr_sum_duplicates(p_, j_, x_, row);
 
-    CSRMatrix B = CSRMatrix(row, col, std::move(p_), std::move(j_), std::move(x_));
+    CSRMatrix B
+        = CSRMatrix(row, col, std::move(p_), std::move(j_), std::move(x_));
     return B;
 }
 
@@ -372,7 +393,8 @@ void csr_matmat_pass1(const CSRMatrix &A, const CSRMatrix &B, CSRMatrix &C)
 
         unsigned next_nnz = nnz + row_nnz;
 
-        // Addition overflow: http://www.cplusplus.com/articles/DE18T05o/
+        // Addition overflow:
+        // http://www.cplusplus.com/articles/DE18T05o/
         if (next_nnz < nnz) {
             throw std::overflow_error("nnz of the result is too large");
         }
@@ -505,10 +527,13 @@ void csr_scale_columns(CSRMatrix &A, const DenseMatrix &X)
 // Compute C = A (binary_op) B for CSR matrices that are in the
 // canonical CSR format. Matrix dimensions of A and B should be the
 // same. C will be in canonical format as well.
-void csr_binop_csr_canonical(const CSRMatrix &A, const CSRMatrix &B, CSRMatrix &C,
-                             RCP<const Basic>(&bin_op)(const RCP<const Basic> &, const RCP<const Basic> &))
+void csr_binop_csr_canonical(
+    const CSRMatrix &A, const CSRMatrix &B, CSRMatrix &C,
+    RCP<const Basic>(&bin_op)(const RCP<const Basic> &,
+                              const RCP<const Basic> &))
 {
-    SYMENGINE_ASSERT(A.row_ == B.row_ and A.col_ == B.col_ and C.row_ == A.row_ and C.col_ == A.col_);
+    SYMENGINE_ASSERT(A.row_ == B.row_ and A.col_ == B.col_ and C.row_ == A.row_
+                     and C.col_ == A.col_);
 
     // Method that works for canonical CSR matrices
     C.p_[0] = 0;

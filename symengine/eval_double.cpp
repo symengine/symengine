@@ -24,10 +24,14 @@ class EvalDoubleVisitor : public BaseVisitor<C>
 {
 protected:
     /*
-       The 'result_' variable is assigned into at the very end of each visit()
-       methods below. The only place where these methods are called from is the
-       line 'b.accept(*this)' in apply() and the 'result_' is immediately
-       returned. Thus no corruption can happen and apply() can be safely called
+       The 'result_' variable is assigned into at the very end of each
+       visit()
+       methods below. The only place where these methods are called from
+       is the
+       line 'b.accept(*this)' in apply() and the 'result_' is
+       immediately
+       returned. Thus no corruption can happen and apply() can be safely
+       called
        recursively.
     */
     T result_;
@@ -252,9 +256,11 @@ public:
         } else if (eq(x, *E)) {
             result_ = std::exp(1);
         } else if (eq(x, *EulerGamma)) {
-            result_ = 0.5772156649015328606065; // use until polygamma or digamma is implemented
+            result_ = 0.5772156649015328606065; // use until polygamma or
+                                                // digamma is implemented
         } else {
-            throw std::runtime_error("Constant " + x.get_name() + " is not implemented.");
+            throw std::runtime_error("Constant " + x.get_name()
+                                     + " is not implemented.");
         }
     };
 
@@ -347,15 +353,18 @@ public:
     };
 };
 
-class EvalRealDoubleVisitorPattern : public EvalRealDoubleVisitor<EvalRealDoubleVisitorPattern>
+class EvalRealDoubleVisitorPattern
+    : public EvalRealDoubleVisitor<EvalRealDoubleVisitorPattern>
 {
 };
 
-class EvalRealDoubleVisitorFinal : public EvalRealDoubleVisitor<EvalRealDoubleVisitorFinal>
+class EvalRealDoubleVisitorFinal
+    : public EvalRealDoubleVisitor<EvalRealDoubleVisitorFinal>
 {
 };
 
-class EvalComplexDoubleVisitor : public EvalDoubleVisitor<std::complex<double>, EvalComplexDoubleVisitor>
+class EvalComplexDoubleVisitor
+    : public EvalDoubleVisitor<std::complex<double>, EvalComplexDoubleVisitor>
 {
 public:
     // Classes not implemented are
@@ -367,7 +376,8 @@ public:
 
     void bvisit(const Complex &x)
     {
-        result_ = std::complex<double>(mp_get_d(x.real_), mp_get_d(x.imaginary_));
+        result_
+            = std::complex<double>(mp_get_d(x.real_), mp_get_d(x.imaginary_));
     };
 
     void bvisit(const ComplexDouble &x)
@@ -397,7 +407,9 @@ typedef std::function<double(const Basic &)> fn;
 std::vector<fn> init_eval_double()
 {
     std::vector<fn> table;
-    table.assign(TypeID_Count, [](const Basic &x) -> double { throw std::runtime_error("Not implemented."); });
+    table.assign(TypeID_Count, [](const Basic &x) -> double {
+        throw std::runtime_error("Not implemented.");
+    });
     table[INTEGER] = [](const Basic &x) {
         double tmp = mp_get_d((static_cast<const Integer &>(x)).i);
         return tmp;
@@ -412,7 +424,8 @@ std::vector<fn> init_eval_double()
     };
 #ifdef HAVE_SYMENGINE_MPFR
     table[REAL_MPFR] = [](const Basic &x) {
-        double tmp = mpfr_get_d(static_cast<const RealMPFR &>(x).i.get_mpfr_t(), MPFR_RNDN);
+        double tmp = mpfr_get_d(static_cast<const RealMPFR &>(x).i.get_mpfr_t(),
+                                MPFR_RNDN);
         return tmp;
     };
 #endif
@@ -429,125 +442,157 @@ std::vector<fn> init_eval_double()
         return tmp;
     };
     table[POW] = [](const Basic &x) {
-        double a = eval_double_single_dispatch(*(static_cast<const Pow &>(x)).get_base());
-        double b = eval_double_single_dispatch(*(static_cast<const Pow &>(x)).get_exp());
+        double a = eval_double_single_dispatch(
+            *(static_cast<const Pow &>(x)).get_base());
+        double b = eval_double_single_dispatch(
+            *(static_cast<const Pow &>(x)).get_exp());
         return ::pow(a, b);
     };
     table[SIN] = [](const Basic &x) {
-        double tmp = eval_double_single_dispatch(*(static_cast<const Sin &>(x)).get_arg());
+        double tmp = eval_double_single_dispatch(
+            *(static_cast<const Sin &>(x)).get_arg());
         return ::sin(tmp);
     };
     table[COS] = [](const Basic &x) {
-        double tmp = eval_double_single_dispatch(*(static_cast<const Cos &>(x)).get_arg());
+        double tmp = eval_double_single_dispatch(
+            *(static_cast<const Cos &>(x)).get_arg());
         return ::cos(tmp);
     };
     table[TAN] = [](const Basic &x) {
-        double tmp = eval_double_single_dispatch(*(static_cast<const Tan &>(x)).get_arg());
+        double tmp = eval_double_single_dispatch(
+            *(static_cast<const Tan &>(x)).get_arg());
         return ::tan(tmp);
     };
     table[LOG] = [](const Basic &x) {
-        double tmp = eval_double_single_dispatch(*(static_cast<const Log &>(x)).get_arg());
+        double tmp = eval_double_single_dispatch(
+            *(static_cast<const Log &>(x)).get_arg());
         return ::log(tmp);
     };
     table[COT] = [](const Basic &x) {
-        double tmp = eval_double_single_dispatch(*(static_cast<const Cot &>(x)).get_arg());
+        double tmp = eval_double_single_dispatch(
+            *(static_cast<const Cot &>(x)).get_arg());
         return 1 / ::tan(tmp);
     };
     table[CSC] = [](const Basic &x) {
-        double tmp = eval_double_single_dispatch(*(static_cast<const Csc &>(x)).get_arg());
+        double tmp = eval_double_single_dispatch(
+            *(static_cast<const Csc &>(x)).get_arg());
         return 1 / ::sin(tmp);
     };
     table[SEC] = [](const Basic &x) {
-        double tmp = eval_double_single_dispatch(*(static_cast<const Sec &>(x)).get_arg());
+        double tmp = eval_double_single_dispatch(
+            *(static_cast<const Sec &>(x)).get_arg());
         return 1 / ::cos(tmp);
     };
     table[ASIN] = [](const Basic &x) {
-        double tmp = eval_double_single_dispatch(*(static_cast<const ASin &>(x)).get_arg());
+        double tmp = eval_double_single_dispatch(
+            *(static_cast<const ASin &>(x)).get_arg());
         return ::asin(tmp);
     };
     table[ACOS] = [](const Basic &x) {
-        double tmp = eval_double_single_dispatch(*(static_cast<const ACos &>(x)).get_arg());
+        double tmp = eval_double_single_dispatch(
+            *(static_cast<const ACos &>(x)).get_arg());
         return ::acos(tmp);
     };
     table[ASEC] = [](const Basic &x) {
-        double tmp = eval_double_single_dispatch(*(static_cast<const ASec &>(x)).get_arg());
+        double tmp = eval_double_single_dispatch(
+            *(static_cast<const ASec &>(x)).get_arg());
         return ::acos(1 / tmp);
     };
     table[ACSC] = [](const Basic &x) {
-        double tmp = eval_double_single_dispatch(*(static_cast<const ACsc &>(x)).get_arg());
+        double tmp = eval_double_single_dispatch(
+            *(static_cast<const ACsc &>(x)).get_arg());
         return ::asin(1 / tmp);
     };
     table[ATAN] = [](const Basic &x) {
-        double tmp = eval_double_single_dispatch(*(static_cast<const ATan &>(x)).get_arg());
+        double tmp = eval_double_single_dispatch(
+            *(static_cast<const ATan &>(x)).get_arg());
         return ::atan(tmp);
     };
     table[ACOT] = [](const Basic &x) {
-        double tmp = eval_double_single_dispatch(*(static_cast<const ACot &>(x)).get_arg());
+        double tmp = eval_double_single_dispatch(
+            *(static_cast<const ACot &>(x)).get_arg());
         return ::atan(1 / tmp);
     };
     table[ATAN2] = [](const Basic &x) {
-        double num = eval_double_single_dispatch(*(static_cast<const ATan2 &>(x)).get_num());
-        double den = eval_double_single_dispatch(*(static_cast<const ATan2 &>(x)).get_den());
+        double num = eval_double_single_dispatch(
+            *(static_cast<const ATan2 &>(x)).get_num());
+        double den = eval_double_single_dispatch(
+            *(static_cast<const ATan2 &>(x)).get_den());
         return ::atan2(num, den);
     };
     table[SINH] = [](const Basic &x) {
-        double tmp = eval_double_single_dispatch(*(static_cast<const Sinh &>(x)).get_arg());
+        double tmp = eval_double_single_dispatch(
+            *(static_cast<const Sinh &>(x)).get_arg());
         return ::sinh(tmp);
     };
     table[CSCH] = [](const Basic &x) {
-        double tmp = eval_double_single_dispatch(*(static_cast<const Csch &>(x)).get_arg());
+        double tmp = eval_double_single_dispatch(
+            *(static_cast<const Csch &>(x)).get_arg());
         return 1 / ::sinh(tmp);
     };
     table[COSH] = [](const Basic &x) {
-        double tmp = eval_double_single_dispatch(*(static_cast<const Cosh &>(x)).get_arg());
+        double tmp = eval_double_single_dispatch(
+            *(static_cast<const Cosh &>(x)).get_arg());
         return ::cosh(tmp);
     };
     table[SECH] = [](const Basic &x) {
-        double tmp = eval_double_single_dispatch(*(static_cast<const Sech &>(x)).get_arg());
+        double tmp = eval_double_single_dispatch(
+            *(static_cast<const Sech &>(x)).get_arg());
         return 1 / ::cosh(tmp);
     };
     table[TANH] = [](const Basic &x) {
-        double tmp = eval_double_single_dispatch(*(static_cast<const Tanh &>(x)).get_arg());
+        double tmp = eval_double_single_dispatch(
+            *(static_cast<const Tanh &>(x)).get_arg());
         return ::tanh(tmp);
     };
     table[COTH] = [](const Basic &x) {
-        double tmp = eval_double_single_dispatch(*(static_cast<const Coth &>(x)).get_arg());
+        double tmp = eval_double_single_dispatch(
+            *(static_cast<const Coth &>(x)).get_arg());
         return 1 / ::tanh(tmp);
     };
     table[ASINH] = [](const Basic &x) {
-        double tmp = eval_double_single_dispatch(*(static_cast<const ASinh &>(x)).get_arg());
+        double tmp = eval_double_single_dispatch(
+            *(static_cast<const ASinh &>(x)).get_arg());
         return ::asinh(tmp);
     };
     table[ACSCH] = [](const Basic &x) {
-        double tmp = eval_double_single_dispatch(*(static_cast<const ACsch &>(x)).get_arg());
+        double tmp = eval_double_single_dispatch(
+            *(static_cast<const ACsch &>(x)).get_arg());
         return ::asinh(1 / tmp);
     };
     table[ACOSH] = [](const Basic &x) {
-        double tmp = eval_double_single_dispatch(*(static_cast<const ACosh &>(x)).get_arg());
+        double tmp = eval_double_single_dispatch(
+            *(static_cast<const ACosh &>(x)).get_arg());
         return ::acosh(tmp);
     };
     table[ATANH] = [](const Basic &x) {
-        double tmp = eval_double_single_dispatch(*(static_cast<const ATanh &>(x)).get_arg());
+        double tmp = eval_double_single_dispatch(
+            *(static_cast<const ATanh &>(x)).get_arg());
         return ::atanh(tmp);
     };
     table[ACOTH] = [](const Basic &x) {
-        double tmp = eval_double_single_dispatch(*(static_cast<const ACoth &>(x)).get_arg());
+        double tmp = eval_double_single_dispatch(
+            *(static_cast<const ACoth &>(x)).get_arg());
         return std::atanh(1 / tmp);
     };
     table[ASECH] = [](const Basic &x) {
-        double tmp = eval_double_single_dispatch(*(static_cast<const ASech &>(x)).get_arg());
+        double tmp = eval_double_single_dispatch(
+            *(static_cast<const ASech &>(x)).get_arg());
         return ::acosh(1 / tmp);
     };
     table[GAMMA] = [](const Basic &x) {
-        double tmp = eval_double_single_dispatch(*(static_cast<const Gamma &>(x)).get_args()[0]);
+        double tmp = eval_double_single_dispatch(
+            *(static_cast<const Gamma &>(x)).get_args()[0]);
         return ::tgamma(tmp);
     };
     table[LOGGAMMA] = [](const Basic &x) {
-        double tmp = eval_double_single_dispatch(*(static_cast<const LogGamma &>(x)).get_args()[0]);
+        double tmp = eval_double_single_dispatch(
+            *(static_cast<const LogGamma &>(x)).get_args()[0]);
         return ::lgamma(tmp);
     };
     table[ERF] = [](const Basic &x) {
-        double tmp = eval_double_single_dispatch(*(static_cast<const Erf &>(x)).get_args()[0]);
+        double tmp = eval_double_single_dispatch(
+            *(static_cast<const Erf &>(x)).get_args()[0]);
         return ::erf(tmp);
     };
     table[CONSTANT] = [](const Basic &x) {
@@ -556,18 +601,24 @@ std::vector<fn> init_eval_double()
         } else if (eq(x, *E)) {
             return ::exp(1);
         } else if (eq(x, *EulerGamma)) {
-            return 0.5772156649015328606065; // use until polygamma or digamma is implemented
+            return 0.5772156649015328606065; // use until polygamma or
+                                             // digamma
+                                             // is implemented
         } else {
-            throw std::runtime_error("Constant " + static_cast<const Constant &>(x).get_name() + " is not implemented.");
+            throw std::runtime_error(
+                "Constant " + static_cast<const Constant &>(x).get_name()
+                + " is not implemented.");
         }
     };
     table[ABS] = [](const Basic &x) {
-        double tmp = eval_double_single_dispatch(*(static_cast<const Abs &>(x)).get_arg());
+        double tmp = eval_double_single_dispatch(
+            *(static_cast<const Abs &>(x)).get_arg());
         return std::abs(tmp);
     };
     table[MAX] = [](const Basic &x) {
         double result;
-        result = eval_double_single_dispatch(*(static_cast<const Max &>(x).get_args()[0]));
+        result = eval_double_single_dispatch(
+            *(static_cast<const Max &>(x).get_args()[0]));
         for (const auto &p : static_cast<const Max &>(x).get_args()) {
             double tmp = eval_double_single_dispatch(*p);
             result = std::max(result, tmp);
@@ -576,7 +627,8 @@ std::vector<fn> init_eval_double()
     };
     table[MIN] = [](const Basic &x) {
         double result;
-        result = eval_double_single_dispatch(*(static_cast<const Max &>(x).get_args()[0]));
+        result = eval_double_single_dispatch(
+            *(static_cast<const Max &>(x).get_args()[0]));
         for (const auto &p : static_cast<const Min &>(x).get_args()) {
             double tmp = eval_double_single_dispatch(*p);
             result = std::min(result, tmp);
@@ -611,10 +663,10 @@ double eval_double_visitor_pattern(const Basic &b)
     return v.apply(b);
 }
 
-#define ACCEPT(CLASS)                                                                                                            \
-    void CLASS::accept(EvalRealDoubleVisitorFinal &v) const                                                                      \
-    {                                                                                                                            \
-        v.bvisit(*this);                                                                                                         \
+#define ACCEPT(CLASS)                                                          \
+    void CLASS::accept(EvalRealDoubleVisitorFinal &v) const                    \
+    {                                                                          \
+        v.bvisit(*this);                                                       \
     }
 
 #define SYMENGINE_ENUM(TypeID, Class) ACCEPT(Class)

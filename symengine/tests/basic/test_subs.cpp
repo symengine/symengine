@@ -97,7 +97,8 @@ TEST_CASE("Add: subs", "[subs]")
     d.clear();
     d[x] = integer(5);
     r1 = add(mul(integer(12), add(integer(3), sin(x))), sin(integer(4)));
-    r2 = add(mul(integer(12), add(integer(3), sin(integer(5)))), sin(integer(4)));
+    r2 = add(mul(integer(12), add(integer(3), sin(integer(5)))),
+             sin(integer(4)));
     REQUIRE(eq(*r1->subs(d), *r2));
 
     d.clear();

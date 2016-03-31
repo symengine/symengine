@@ -41,7 +41,8 @@ RCP<const Number> Rational::from_two_ints(const Integer &n, const Integer &d)
         throw std::runtime_error("Rational: Division by zero.");
     rational_class q(n.i, d.i);
 
-    // This is potentially slow, but has to be done, since 'n/d' might not be
+    // This is potentially slow, but has to be done, since 'n/d' might
+    // not be
     // in canonical form.
     canonicalize(q);
 
@@ -54,7 +55,8 @@ RCP<const Number> Rational::from_two_ints(long n, long d)
         throw std::runtime_error("Rational: Division by zero.");
     rational_class q(n, d);
 
-    // This is potentially slow, but has to be done, since 'n/d' might not be
+    // This is potentially slow, but has to be done, since 'n/d' might
+    // not be
     // in canonical form.
     canonicalize(q);
 
@@ -63,7 +65,8 @@ RCP<const Number> Rational::from_two_ints(long n, long d)
 
 std::size_t Rational::__hash__() const
 {
-    // only the least significant bits that fit into "signed long int" are
+    // only the least significant bits that fit into "signed long int"
+    // are
     // hashed:
     std::size_t seed = RATIONAL;
     hash_combine<long long int>(seed, mp_get_si(SymEngine::get_num(this->i)));
@@ -95,7 +98,8 @@ int Rational::compare(const Basic &o) const
     throw std::runtime_error("unhandled comparison of Rational");
 }
 
-void get_num_den(const Rational &rat, const Ptr<RCP<const Integer>> &num, const Ptr<RCP<const Integer>> &den)
+void get_num_den(const Rational &rat, const Ptr<RCP<const Integer>> &num,
+                 const Ptr<RCP<const Integer>> &den)
 {
     *num = integer(SymEngine::get_num(rat.i));
     *den = integer(SymEngine::get_den(rat.i));
@@ -122,7 +126,8 @@ bool Rational::is_perfect_power(bool is_expected) const
     return mp_perfect_power_p(prod);
 }
 
-bool Rational::nth_root(const Ptr<RCP<const Number>> &the_rat, unsigned long n) const
+bool Rational::nth_root(const Ptr<RCP<const Number>> &the_rat,
+                        unsigned long n) const
 {
     if (n == 0)
         throw std::runtime_error("i_nth_root: Can not find Zeroth root");
@@ -141,7 +146,8 @@ bool Rational::nth_root(const Ptr<RCP<const Number>> &the_rat, unsigned long n) 
 
 RCP<const Basic> Rational::powrat(const Rational &other) const
 {
-    return SymEngine::mul(other.rpowrat(*this->get_num()), other.neg()->rpowrat(*this->get_den()));
+    return SymEngine::mul(other.rpowrat(*this->get_num()),
+                          other.neg()->rpowrat(*this->get_den()));
 }
 
 RCP<const Basic> Rational::rpowrat(const Integer &other) const
@@ -178,9 +184,11 @@ RCP<const Basic> Rational::rpowrat(const Integer &other) const
         imulnum(outArg(coef), I);
         // if other.neg() is one, no need to add it to dict
         if (other.i != -1)
-            insert(surd, other.neg(), Rational::from_mpq(rational_class(r, den)));
+            insert(surd, other.neg(),
+                   Rational::from_mpq(rational_class(r, den)));
     } else {
-        insert(surd, other.rcp_from_this(), Rational::from_mpq(rational_class(r, den)));
+        insert(surd, other.rcp_from_this(),
+               Rational::from_mpq(rational_class(r, den)));
     }
     return Mul::from_dict(coef, std::move(surd));
 }

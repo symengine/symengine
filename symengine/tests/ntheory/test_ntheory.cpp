@@ -242,8 +242,9 @@ TEST_CASE("test_factor_lehman_method(): ntheory", "[ntheory]")
     REQUIRE(factor_lehman_method(outArg(f), *i47) == 0);
 
     REQUIRE(factor_lehman_method(outArg(f), *i21) > 0);
-    REQUIRE((divides(*i21, *f) and not eq(*f, *i1) and not eq(*f, *i21))); // Lehman's method returns only a proper
-                                                                           // divisor when composite
+    REQUIRE((divides(*i21, *f) and not eq(*f, *i1)
+             and not eq(*f, *i21))); // Lehman's method returns only a proper
+    // divisor when composite
     REQUIRE(factor_lehman_method(outArg(f), *i121) > 0);
     REQUIRE((divides(*i121, *f) and not eq(*f, *i1) and not eq(*f, *i121)));
     REQUIRE(factor_lehman_method(outArg(f), *i122) > 0);
@@ -270,11 +271,16 @@ TEST_CASE("test_factor_pollard_pm1_method(): ntheory", "[ntheory]")
     REQUIRE(factor_pollard_pm1_method(outArg(f), *i31) == 0);
     REQUIRE(factor_pollard_pm1_method(outArg(f), *i47) == 0);
 
-    REQUIRE((factor_pollard_pm1_method(outArg(f), *i121) == 0 or divides(*i121, *f)));
-    REQUIRE((factor_pollard_pm1_method(outArg(f), *i122) == 0 or divides(*i122, *f)));
-    REQUIRE((factor_pollard_pm1_method(outArg(f), *i900) == 0 or divides(*i900, *f)));
-    REQUIRE((factor_pollard_pm1_method(outArg(f), *i1001, 20) == 0 or divides(*i1001, *f)));
-    REQUIRE((factor_pollard_pm1_method(outArg(f), *i1850) == 0 or divides(*i1850, *f)));
+    REQUIRE((factor_pollard_pm1_method(outArg(f), *i121) == 0
+             or divides(*i121, *f)));
+    REQUIRE((factor_pollard_pm1_method(outArg(f), *i122) == 0
+             or divides(*i122, *f)));
+    REQUIRE((factor_pollard_pm1_method(outArg(f), *i900) == 0
+             or divides(*i900, *f)));
+    REQUIRE((factor_pollard_pm1_method(outArg(f), *i1001, 20) == 0
+             or divides(*i1001, *f)));
+    REQUIRE((factor_pollard_pm1_method(outArg(f), *i1850) == 0
+             or divides(*i1850, *f)));
 }
 
 TEST_CASE("test_factor_pollard_rho_method(): ntheory", "[ntheory]")
@@ -293,11 +299,16 @@ TEST_CASE("test_factor_pollard_rho_method(): ntheory", "[ntheory]")
     REQUIRE(factor_pollard_rho_method(outArg(f), *i31) == 0);
     REQUIRE(factor_pollard_rho_method(outArg(f), *i47) == 0);
 
-    REQUIRE((factor_pollard_rho_method(outArg(f), *i121) == 0 or divides(*i121, *f)));
-    REQUIRE((factor_pollard_rho_method(outArg(f), *i122) == 0 or divides(*i122, *f)));
-    REQUIRE((factor_pollard_rho_method(outArg(f), *i900) == 0 or divides(*i900, *f)));
-    REQUIRE((factor_pollard_rho_method(outArg(f), *i1001) == 0 or divides(*i1001, *f)));
-    REQUIRE((factor_pollard_rho_method(outArg(f), *i1850) == 0 or divides(*i1850, *f)));
+    REQUIRE((factor_pollard_rho_method(outArg(f), *i121) == 0
+             or divides(*i121, *f)));
+    REQUIRE((factor_pollard_rho_method(outArg(f), *i122) == 0
+             or divides(*i122, *f)));
+    REQUIRE((factor_pollard_rho_method(outArg(f), *i900) == 0
+             or divides(*i900, *f)));
+    REQUIRE((factor_pollard_rho_method(outArg(f), *i1001) == 0
+             or divides(*i1001, *f)));
+    REQUIRE((factor_pollard_rho_method(outArg(f), *i1850) == 0
+             or divides(*i1850, *f)));
 }
 
 TEST_CASE("test_sieve(): ntheory", "[ntheory]")
@@ -307,8 +318,11 @@ TEST_CASE("test_sieve(): ntheory", "[ntheory]")
     auto t1 = std::chrono::high_resolution_clock::now();
     SymEngine::Sieve::generate_primes(v, MAX);
     auto t2 = std::chrono::high_resolution_clock::now();
-    std::cout << std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count() << "us" << std::endl;
-    std::cout << "Number of primes up to " << MAX << ": " << v.size() << std::endl;
+    std::cout << std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1)
+                     .count()
+              << "us" << std::endl;
+    std::cout << "Number of primes up to " << MAX << ": " << v.size()
+              << std::endl;
     REQUIRE(v.size() == 9593);
 }
 
@@ -322,7 +336,9 @@ TEST_CASE("test_sieve_iterator(): ntheory", "[ntheory]")
         count++;
     }
     auto t2 = std::chrono::high_resolution_clock::now();
-    std::cout << std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count() << "us" << std::endl;
+    std::cout << std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1)
+                     .count()
+              << "us" << std::endl;
     std::cout << "Number of primes up to " << MAX << ": " << count << std::endl;
     REQUIRE(count == 9593);
 }
@@ -466,7 +482,8 @@ TEST_CASE("test_primitive_root(): ntheory", "[ntheory]")
     primitive_root_list(roots, *im22);
     REQUIRE(roots.size() == 4);
     v = {integer(7), integer(13), integer(17), integer(19)};
-    bool same = std::equal(v.begin(), v.end(), roots.begin(), SymEngine::RCPBasicKeyEq());
+    bool same = std::equal(v.begin(), v.end(), roots.begin(),
+                           SymEngine::RCPBasicKeyEq());
     REQUIRE(same == true);
 }
 
@@ -596,8 +613,10 @@ TEST_CASE("test_nthroot_mod(): ntheory", "[ntheory]")
     roots.clear();
     nthroot_mod_list(roots, i9, i2, i27);
     REQUIRE(roots.size() == 6);
-    v = {integer(3), integer(6), integer(12), integer(15), integer(21), integer(24)};
-    bool same = std::equal(v.begin(), v.end(), roots.begin(), SymEngine::RCPBasicKeyEq());
+    v = {integer(3),  integer(6),  integer(12),
+         integer(15), integer(21), integer(24)};
+    bool same = std::equal(v.begin(), v.end(), roots.begin(),
+                           SymEngine::RCPBasicKeyEq());
     REQUIRE(same == true);
 
     roots.clear();
@@ -638,13 +657,19 @@ TEST_CASE("test_quadratic_residues(): ntheory", "[ntheory]")
     std::vector<integer_class> i2 = {integer_class(0), integer_class(1)};
     std::vector<integer_class> i3 = {integer_class(0), integer_class(1)};
     std::vector<integer_class> i4 = {integer_class(0), integer_class(1)};
-    std::vector<integer_class> i5 = {integer_class(0), integer_class(1), integer_class(4)};
-    std::vector<integer_class> i7 = {integer_class(0), integer_class(1), integer_class(2), integer_class(4)};
+    std::vector<integer_class> i5
+        = {integer_class(0), integer_class(1), integer_class(4)};
+    std::vector<integer_class> i7 = {integer_class(0), integer_class(1),
+                                     integer_class(2), integer_class(4)};
     std::vector<integer_class> i100
-        = {integer_class(0),  integer_class(1),  integer_class(4),  integer_class(9),  integer_class(16), integer_class(21),
-           integer_class(24), integer_class(25), integer_class(29), integer_class(36), integer_class(41), integer_class(44),
-           integer_class(49), integer_class(56), integer_class(61), integer_class(64), integer_class(69), integer_class(76),
-           integer_class(81), integer_class(84), integer_class(89), integer_class(96)};
+        = {integer_class(0),  integer_class(1),  integer_class(4),
+           integer_class(9),  integer_class(16), integer_class(21),
+           integer_class(24), integer_class(25), integer_class(29),
+           integer_class(36), integer_class(41), integer_class(44),
+           integer_class(49), integer_class(56), integer_class(61),
+           integer_class(64), integer_class(69), integer_class(76),
+           integer_class(81), integer_class(84), integer_class(89),
+           integer_class(96)};
 
     const RCP<const Integer> a1 = integer(1);
     const RCP<const Integer> a2 = integer(2);

@@ -85,11 +85,22 @@ RCP<const Basic> mC6 = mul(minus_one, C6);
 
 // sin_table[n] represents the value of sin(2*pi*n/24) for n = 0..23
 RCP<const Basic> sin_table[]
-    = {zero, C0, C1, C2, C3, C4, one, C4, C3, C2, C1, C0, zero, mC0, mC1, mC2, mC3, mC4, minus_one, mC4, mC3, mC2, mC1, mC0};
+    = {zero, C0,  C1,  C2,  C3,  C4,  one,       C4,  C3,  C2,  C1,  C0,
+       zero, mC0, mC1, mC2, mC3, mC4, minus_one, mC4, mC3, mC2, mC1, mC0};
 
 umap_basic_basic inverse_cst = {
-    {C3, i3}, {mC3, im3}, {C2, mul(i2, i2)}, {mC2, mul(im2, i2)}, {C4, integer(12)},          {mC4, integer(-12)},
-    {C5, i5}, {mC5, im5}, {C6, integer(10)}, {mC6, integer(-10)}, {div(one, i2), integer(6)}, {div(minus_one, i2), integer(-6)},
+    {C3, i3},
+    {mC3, im3},
+    {C2, mul(i2, i2)},
+    {mC2, mul(im2, i2)},
+    {C4, integer(12)},
+    {mC4, integer(-12)},
+    {C5, i5},
+    {mC5, im5},
+    {C6, integer(10)},
+    {mC6, integer(-10)},
+    {div(one, i2), integer(6)},
+    {div(minus_one, i2), integer(-6)},
 };
 
 umap_basic_basic inverse_tct = {

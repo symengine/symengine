@@ -9,7 +9,8 @@ namespace SymEngine
 std::size_t Integer::__hash__() const
 {
     std::hash<long long int> hash_fn;
-    // only the least significant bits that fit into "signed long int" are
+    // only the least significant bits that fit into "signed long int"
+    // are
     // hashed:
     return hash_fn(((long long int)mp_get_ui(this->i)) * mp_sign(this->i));
 }
@@ -34,8 +35,10 @@ int Integer::compare(const Basic &o) const
 
 signed long int Integer::as_int() const
 {
-    // mp_get_si() returns "signed long int", so that's what we return from
-    // "as_int()" and we leave it to the user to do any possible further integer
+    // mp_get_si() returns "signed long int", so that's what we return
+    // from
+    // "as_int()" and we leave it to the user to do any possible further
+    // integer
     // conversions.
     if (not(mp_fits_slong_p(this->i))) {
         throw std::runtime_error("as_int: Integer larger than int");
@@ -64,7 +67,8 @@ RCP<const Number> Integer::rdiv(const Number &other) const
         }
         rational_class q((static_cast<const Integer &>(other)).i, this->i);
 
-        // This is potentially slow, but has to be done, since q might not
+        // This is potentially slow, but has to be done, since q might
+        // not
         // be in canonical form.
         canonicalize(q);
 
@@ -78,7 +82,8 @@ RCP<const Number> Integer::pow_negint(const Integer &other) const
 {
     RCP<const Number> tmp = powint(*other.neg());
     if (is_a<Integer>(*tmp)) {
-        rational_class q(mp_sign(static_cast<const Integer &>(*tmp).i), mp_abs(static_cast<const Integer &>(*tmp).i));
+        rational_class q(mp_sign(static_cast<const Integer &>(*tmp).i),
+                         mp_abs(static_cast<const Integer &>(*tmp).i));
         return make_rcp<const Rational>(std::move(q));
     } else {
         throw std::runtime_error("powint returned non-integer");
@@ -95,7 +100,8 @@ RCP<const Integer> iabs(const Integer &n)
     return integer(std::move(mp_abs(n.as_mpz())));
 }
 
-int i_nth_root(const Ptr<RCP<const Integer>> &r, const Integer &a, unsigned long int n)
+int i_nth_root(const Ptr<RCP<const Integer>> &r, const Integer &a,
+               unsigned long int n)
 {
     if (n == 0)
         throw std::runtime_error("i_nth_root: Can not find Zeroth root");

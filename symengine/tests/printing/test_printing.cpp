@@ -78,14 +78,16 @@ TEST_CASE("test_printing(): printing", "[printing]")
     r = mul(integer(12), pow(integer(195), div(integer(1), integer(2))));
     REQUIRE(r->__str__() == "12*195**(1/2)");
 
-    r = mul(integer(23), mul(pow(integer(5), div(integer(1), integer(2))), pow(integer(7), div(integer(1), integer(2)))));
+    r = mul(integer(23), mul(pow(integer(5), div(integer(1), integer(2))),
+                             pow(integer(7), div(integer(1), integer(2)))));
     REQUIRE(r->__str__() == "23*5**(1/2)*7**(1/2)");
 
     r = mul(integer(2), pow(symbol("x"), integer(2)));
     REQUIRE(r->__str__() == "2*x**2");
 
-    r = mul(integer(23), mul(pow(div(integer(5), integer(2)), div(integer(1), integer(2))),
-                             pow(div(integer(7), integer(3)), div(integer(1), integer(2)))));
+    r = mul(integer(23),
+            mul(pow(div(integer(5), integer(2)), div(integer(1), integer(2))),
+                pow(div(integer(7), integer(3)), div(integer(1), integer(2)))));
     REQUIRE(r->__str__() == "(23/6)*2**(1/2)*3**(1/2)*5**(1/2)*7**(1/2)");
 
     r = pow(div(symbol("x"), integer(2)), div(integer(1), integer(2)));
@@ -116,8 +118,10 @@ TEST_CASE("test_printing(): printing", "[printing]")
     rn2 = Rational::from_two_ints(*integer(5), *integer(7));
     rn3 = Rational::from_two_ints(*integer(-5), *integer(7));
 
-    c1 = Complex::from_two_rats(static_cast<const Rational &>(*rn1), static_cast<const Rational &>(*rn2));
-    c2 = Complex::from_two_rats(static_cast<const Rational &>(*rn1), static_cast<const Rational &>(*rn3));
+    c1 = Complex::from_two_rats(static_cast<const Rational &>(*rn1),
+                                static_cast<const Rational &>(*rn2));
+    c2 = Complex::from_two_rats(static_cast<const Rational &>(*rn1),
+                                static_cast<const Rational &>(*rn3));
     r1 = mul(c1, x);
     r2 = mul(c2, x);
     REQUIRE(c1->__str__() == "1/2 + 5/7*I");
@@ -232,13 +236,15 @@ TEST_CASE("test_printing(): printing", "[printing]")
     f = function_symbol("f", {x, y});
     r = f->diff(x)->diff(y);
     REQUIRE(r->__str__() == "Derivative(f(x, y), x, y)");
-    r1 = Subs::create(Derivative::create(function_symbol("f", {y, x}), {x}), {{x, add(x, y)}});
+    r1 = Subs::create(Derivative::create(function_symbol("f", {y, x}), {x}),
+                      {{x, add(x, y)}});
     REQUIRE(r1->__str__() == "Subs(Derivative(f(y, x), x), (x), (x + y))");
 }
 
 TEST_CASE("test_matrix(): printing", "[printing]")
 {
-    DenseMatrix A = DenseMatrix(2, 2, {integer(1), integer(0), integer(0), integer(1)});
+    DenseMatrix A
+        = DenseMatrix(2, 2, {integer(1), integer(0), integer(0), integer(1)});
     REQUIRE(A.__str__() == "[1, 0]\n[0, 1]\n");
 }
 
@@ -359,7 +365,8 @@ TEST_CASE("test_floats(): printing", "[printing]")
     mpc_set_si_si(m2.get_mpc_t(), -10, 10, MPC_RNDNN);
     p = SymEngine::complex_mpc(m2);
     p = div(p, x);
-    REQUIRE(p->__str__() == "(-10.0000000000000000000000 + 10.0000000000000000000000*I)/x");
+    REQUIRE(p->__str__() == "(-10.0000000000000000000000 + "
+                            "10.0000000000000000000000*I)/x");
 #endif
 #endif
 }

@@ -288,7 +288,8 @@ public:
         } else if (x.__eq__(*EulerGamma)) {
             mpfr_const_euler(result_, rnd_);
         } else {
-            throw std::runtime_error("Constant " + x.get_name() + " is not implemented.");
+            throw std::runtime_error("Constant " + x.get_name()
+                                     + " is not implemented.");
         }
     }
 

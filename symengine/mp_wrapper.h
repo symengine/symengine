@@ -12,62 +12,83 @@
 #define SYMENGINE_UI(f) f##_ui
 #define SYMENGINE_SI(f) f##_si
 
-#define SYMENGINE_MPZ_WRAPPER_IMPLEMENT_RELATIONAL(op, func, val, rev_op)                                                        \
-    template <typename T, typename std::enable_if<std::is_integral<T>::value && std::is_unsigned<T>::value, int>::type = 0>      \
-    inline friend bool operator op(const mpz_wrapper &a, const T b)                                                              \
-    {                                                                                                                            \
-        return SYMENGINE_UI(func)(a.get_mpz_t(), b) op val;                                                                      \
-    }                                                                                                                            \
-    template <typename T, typename std::enable_if<std::is_integral<T>::value, int>::type = 0>                                    \
-    inline friend bool operator op(const T a, const mpz_wrapper &b)                                                              \
-    {                                                                                                                            \
-        return b rev_op a;                                                                                                       \
-    }                                                                                                                            \
-    template <typename T, typename std::enable_if<std::is_integral<T>::value && std::is_signed<T>::value, int>::type = 0>        \
-    inline friend bool operator op(const mpz_wrapper &a, const T b)                                                              \
-    {                                                                                                                            \
-        return SYMENGINE_SI(func)(a.get_mpz_t(), b) op val;                                                                      \
-    }                                                                                                                            \
-    inline friend bool operator op(const mpz_wrapper &a, const mpz_wrapper &b)                                                   \
-    {                                                                                                                            \
-        return func(a.get_mpz_t(), b.get_mpz_t()) op val;                                                                        \
+#define SYMENGINE_MPZ_WRAPPER_IMPLEMENT_RELATIONAL(op, func, val, rev_op)      \
+    template <typename T,                                                      \
+              typename std::enable_if<std::is_integral<T>::value               \
+                                          && std::is_unsigned<T>::value,       \
+                                      int>::type                               \
+              = 0>                                                             \
+    inline friend bool operator op(const mpz_wrapper &a, const T b)            \
+    {                                                                          \
+        return SYMENGINE_UI(func)(a.get_mpz_t(), b) op val;                    \
+    }                                                                          \
+    template <typename T,                                                      \
+              typename std::enable_if<std::is_integral<T>::value, int>::type   \
+              = 0>                                                             \
+    inline friend bool operator op(const T a, const mpz_wrapper &b)            \
+    {                                                                          \
+        return b rev_op a;                                                     \
+    }                                                                          \
+    template <typename T,                                                      \
+              typename std::enable_if<std::is_integral<T>::value               \
+                                          && std::is_signed<T>::value,         \
+                                      int>::type                               \
+              = 0>                                                             \
+    inline friend bool operator op(const mpz_wrapper &a, const T b)            \
+    {                                                                          \
+        return SYMENGINE_SI(func)(a.get_mpz_t(), b) op val;                    \
+    }                                                                          \
+    inline friend bool operator op(const mpz_wrapper &a, const mpz_wrapper &b) \
+    {                                                                          \
+        return func(a.get_mpz_t(), b.get_mpz_t()) op val;                      \
     }
 
-#define SYMENGINE_MPZ_WRAPPER_IMPLEMENT_IN_PLACE(op, func)                                                                       \
-    inline mpz_wrapper operator op(const mpz_wrapper &a)                                                                         \
-    {                                                                                                                            \
-        func(get_mpz_t(), get_mpz_t(), a.get_mpz_t());                                                                           \
-        return *this;                                                                                                            \
-    }                                                                                                                            \
-    template <typename T, typename std::enable_if<std::is_integral<T>::value && std::is_unsigned<T>::value, int>::type = 0>      \
-    inline mpz_wrapper operator op(const T a)                                                                                    \
-    {                                                                                                                            \
-        SYMENGINE_UI(func)(get_mpz_t(), get_mpz_t(), a);                                                                         \
-        return *this;                                                                                                            \
+#define SYMENGINE_MPZ_WRAPPER_IMPLEMENT_IN_PLACE(op, func)                     \
+    inline mpz_wrapper operator op(const mpz_wrapper &a)                       \
+    {                                                                          \
+        func(get_mpz_t(), get_mpz_t(), a.get_mpz_t());                         \
+        return *this;                                                          \
+    }                                                                          \
+    template <typename T,                                                      \
+              typename std::enable_if<std::is_integral<T>::value               \
+                                          && std::is_unsigned<T>::value,       \
+                                      int>::type                               \
+              = 0>                                                             \
+    inline mpz_wrapper operator op(const T a)                                  \
+    {                                                                          \
+        SYMENGINE_UI(func)(get_mpz_t(), get_mpz_t(), a);                       \
+        return *this;                                                          \
     }
 
-#define SYMENGINE_MPZ_WRAPPER_IMPLEMENT_NON_COMMUTATIVE(op, func, op_eq)                                                         \
-    template <typename T, typename std::enable_if<std::is_integral<T>::value && std::is_unsigned<T>::value, int>::type = 0>      \
-    inline friend mpz_wrapper operator op(const mpz_wrapper &a, const T b)                                                       \
-    {                                                                                                                            \
-        mpz_wrapper res;                                                                                                         \
-        SYMENGINE_UI(func)(res.get_mpz_t(), a.get_mpz_t(), b);                                                                   \
-        return res;                                                                                                              \
-    }                                                                                                                            \
-    inline friend mpz_wrapper operator op(const mpz_wrapper &a, const mpz_wrapper &b)                                            \
-    {                                                                                                                            \
-        mpz_wrapper res;                                                                                                         \
-        func(res.get_mpz_t(), a.get_mpz_t(), b.get_mpz_t());                                                                     \
-        return res;                                                                                                              \
-    }                                                                                                                            \
+#define SYMENGINE_MPZ_WRAPPER_IMPLEMENT_NON_COMMUTATIVE(op, func, op_eq)       \
+    template <typename T,                                                      \
+              typename std::enable_if<std::is_integral<T>::value               \
+                                          && std::is_unsigned<T>::value,       \
+                                      int>::type                               \
+              = 0>                                                             \
+    inline friend mpz_wrapper operator op(const mpz_wrapper &a, const T b)     \
+    {                                                                          \
+        mpz_wrapper res;                                                       \
+        SYMENGINE_UI(func)(res.get_mpz_t(), a.get_mpz_t(), b);                 \
+        return res;                                                            \
+    }                                                                          \
+    inline friend mpz_wrapper operator op(const mpz_wrapper &a,                \
+                                          const mpz_wrapper &b)                \
+    {                                                                          \
+        mpz_wrapper res;                                                       \
+        func(res.get_mpz_t(), a.get_mpz_t(), b.get_mpz_t());                   \
+        return res;                                                            \
+    }                                                                          \
     SYMENGINE_MPZ_WRAPPER_IMPLEMENT_IN_PLACE(op_eq, func)
 
-#define SYMENGINE_MPZ_WRAPPER_IMPLEMENT_COMMUTATIVE(op, func, op_eq)                                                             \
-    SYMENGINE_MPZ_WRAPPER_IMPLEMENT_NON_COMMUTATIVE(op, func, op_eq)                                                             \
-    template <typename T, typename std::enable_if<std::is_integral<T>::value, int>::type = 0>                                    \
-    inline friend mpz_wrapper operator op(const T a, mpz_wrapper &b)                                                             \
-    {                                                                                                                            \
-        return b op a;                                                                                                           \
+#define SYMENGINE_MPZ_WRAPPER_IMPLEMENT_COMMUTATIVE(op, func, op_eq)           \
+    SYMENGINE_MPZ_WRAPPER_IMPLEMENT_NON_COMMUTATIVE(op, func, op_eq)           \
+    template <typename T,                                                      \
+              typename std::enable_if<std::is_integral<T>::value, int>::type   \
+              = 0>                                                             \
+    inline friend mpz_wrapper operator op(const T a, mpz_wrapper &b)           \
+    {                                                                          \
+        return b op a;                                                         \
     }
 
 namespace SymEngine
@@ -81,13 +102,21 @@ private:
     fmpz_t mp;
 
 public:
-    template <typename T, typename std::enable_if<std::is_integral<T>::value && std::is_unsigned<T>::value, int>::type = 0>
+    template <typename T,
+              typename std::enable_if<std::is_integral<T>::value
+                                          && std::is_unsigned<T>::value,
+                                      int>::type
+              = 0>
     inline fmpz_wrapper(const T i)
     {
         fmpz_init(mp);
         fmpz_set_ui(mp, i);
     }
-    template <typename T, typename std::enable_if<std::is_integral<T>::value && std::is_signed<T>::value, int>::type = 0>
+    template <typename T,
+              typename std::enable_if<std::is_integral<T>::value
+                                          && std::is_signed<T>::value,
+                                      int>::type
+              = 0>
     inline fmpz_wrapper(const T i)
     {
         fmpz_init(mp);
@@ -144,7 +173,8 @@ public:
     {
         return mp;
     }
-    inline friend fmpz_wrapper operator+(const fmpz_wrapper &a, const fmpz_wrapper &b)
+    inline friend fmpz_wrapper operator+(const fmpz_wrapper &a,
+                                         const fmpz_wrapper &b)
     {
         fmpz_wrapper res;
         fmpz_add(res.get_fmpz_t(), a.get_fmpz_t(), b.get_fmpz_t());
@@ -155,7 +185,8 @@ public:
         fmpz_add(mp, mp, a.get_fmpz_t());
         return *this;
     }
-    inline friend fmpz_wrapper operator-(const fmpz_wrapper &a, const fmpz_wrapper &b)
+    inline friend fmpz_wrapper operator-(const fmpz_wrapper &a,
+                                         const fmpz_wrapper &b)
     {
         fmpz_wrapper res;
         fmpz_sub(res.get_fmpz_t(), a.get_fmpz_t(), b.get_fmpz_t());
@@ -172,7 +203,8 @@ public:
         fmpz_neg(res.get_fmpz_t(), mp);
         return res;
     }
-    inline friend fmpz_wrapper operator*(const fmpz_wrapper &a, const fmpz_wrapper &b)
+    inline friend fmpz_wrapper operator*(const fmpz_wrapper &a,
+                                         const fmpz_wrapper &b)
     {
         fmpz_wrapper res;
         fmpz_mul(res.get_fmpz_t(), a.get_fmpz_t(), b.get_fmpz_t());
@@ -183,7 +215,8 @@ public:
         fmpz_mul(mp, mp, a.get_fmpz_t());
         return *this;
     }
-    inline friend fmpz_wrapper operator/(const fmpz_wrapper &a, const fmpz_wrapper &b)
+    inline friend fmpz_wrapper operator/(const fmpz_wrapper &a,
+                                         const fmpz_wrapper &b)
     {
         fmpz_wrapper res;
         fmpz_tdiv_q(res.get_fmpz_t(), a.get_fmpz_t(), b.get_fmpz_t());
@@ -194,10 +227,12 @@ public:
         fmpz_tdiv_q(mp, mp, a.get_fmpz_t());
         return *this;
     }
-    inline friend fmpz_wrapper operator%(const fmpz_wrapper &a, const fmpz_wrapper &b)
+    inline friend fmpz_wrapper operator%(const fmpz_wrapper &a,
+                                         const fmpz_wrapper &b)
     {
         fmpz_wrapper res, tmp;
-        fmpz_tdiv_qr(tmp.get_fmpz_t(), res.get_fmpz_t(), a.get_fmpz_t(), b.get_fmpz_t());
+        fmpz_tdiv_qr(tmp.get_fmpz_t(), res.get_fmpz_t(), a.get_fmpz_t(),
+                     b.get_fmpz_t());
         return res;
     }
     inline fmpz_wrapper operator%=(const fmpz_wrapper &a)
@@ -343,13 +378,21 @@ public:
         fmpq_init(mp);
         fmpq_set(mp, m);
     }
-    template <typename T, typename std::enable_if<std::is_integral<T>::value && std::is_unsigned<T>::value, int>::type = 0>
+    template <typename T,
+              typename std::enable_if<std::is_integral<T>::value
+                                          && std::is_unsigned<T>::value,
+                                      int>::type
+              = 0>
     fmpq_wrapper(const T i)
     {
         fmpq_init(mp);
         fmpz_set_ui(fmpq_numref(mp), i);
     }
-    template <typename T, typename std::enable_if<std::is_integral<T>::value && std::is_signed<T>::value, int>::type = 0>
+    template <typename T,
+              typename std::enable_if<std::is_integral<T>::value
+                                          && std::is_signed<T>::value,
+                                      int>::type
+              = 0>
     fmpq_wrapper(const T i)
     {
         fmpq_init(mp);
@@ -506,12 +549,20 @@ private:
     mpz_t mp;
 
 public:
-    template <typename T, typename std::enable_if<std::is_integral<T>::value && std::is_unsigned<T>::value, int>::type = 0>
+    template <typename T,
+              typename std::enable_if<std::is_integral<T>::value
+                                          && std::is_unsigned<T>::value,
+                                      int>::type
+              = 0>
     mpz_wrapper(const T i)
     {
         mpz_init_set_ui(mp, i);
     }
-    template <typename T, typename std::enable_if<std::is_integral<T>::value && std::is_signed<T>::value, int>::type = 0>
+    template <typename T,
+              typename std::enable_if<std::is_integral<T>::value
+                                          && std::is_signed<T>::value,
+                                      int>::type
+              = 0>
     mpz_wrapper(const T i)
     {
         mpz_init_set_si(mp, i);
@@ -551,7 +602,11 @@ public:
         mpz_swap(mp, other.get_mpz_t());
         return *this;
     }
-    template <typename T, typename std::enable_if<std::is_integral<T>::value && std::is_unsigned<T>::value, int>::type = 0>
+    template <typename T,
+              typename std::enable_if<std::is_integral<T>::value
+                                          && std::is_unsigned<T>::value,
+                                      int>::type
+              = 0>
     inline mpz_wrapper &operator=(T other)
     {
         if (mp->_mp_d == nullptr) {
@@ -561,7 +616,11 @@ public:
         }
         return *this;
     }
-    template <typename T, typename std::enable_if<std::is_integral<T>::value && std::is_signed<T>::value, int>::type = 0>
+    template <typename T,
+              typename std::enable_if<std::is_integral<T>::value
+                                          && std::is_signed<T>::value,
+                                      int>::type
+              = 0>
     inline mpz_wrapper &operator=(T other)
     {
         if (mp->_mp_d == nullptr) {
@@ -593,7 +652,11 @@ public:
     //! - operator
     SYMENGINE_MPZ_WRAPPER_IMPLEMENT_NON_COMMUTATIVE(-, mpz_sub, -= )
 
-    template <typename T, typename std::enable_if<std::is_integral<T>::value && std::is_unsigned<T>::value, int>::type = 0>
+    template <typename T,
+              typename std::enable_if<std::is_integral<T>::value
+                                          && std::is_unsigned<T>::value,
+                                      int>::type
+              = 0>
     inline friend mpz_wrapper operator-(const T b, const mpz_wrapper &a)
     {
         mpz_wrapper res;
@@ -720,13 +783,21 @@ public:
         mpq_init(mp);
         mpq_set(mp, m);
     }
-    template <typename T, typename std::enable_if<std::is_integral<T>::value && std::is_unsigned<T>::value, int>::type = 0>
+    template <typename T,
+              typename std::enable_if<std::is_integral<T>::value
+                                          && std::is_unsigned<T>::value,
+                                      int>::type
+              = 0>
     mpq_wrapper(const T i)
     {
         mpq_init(mp);
         mpz_set_ui(mpq_numref(mp), i);
     }
-    template <typename T, typename std::enable_if<std::is_integral<T>::value && std::is_signed<T>::value, int>::type = 0>
+    template <typename T,
+              typename std::enable_if<std::is_integral<T>::value
+                                          && std::is_signed<T>::value,
+                                      int>::type
+              = 0>
     mpq_wrapper(const T i)
     {
         mpq_init(mp);

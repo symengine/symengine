@@ -68,7 +68,8 @@ public:
         return this->i < 0u;
     }
 
-    /* These are very fast methods for add/sub/mul/div/pow on Integers only */
+    /* These are very fast methods for add/sub/mul/div/pow on Integers
+     * only */
     //! Fast Integer Addition
     inline RCP<const Integer> addint(const Integer &other) const
     {
@@ -93,7 +94,8 @@ public:
     {
         if (not(mp_fits_ulong_p(other.i))) {
             if (other.i > 0u)
-                throw std::runtime_error("powint: 'exp' does not fit unsigned long.");
+                throw std::runtime_error(
+                    "powint: 'exp' does not fit unsigned long.");
             else
                 return pow_negint(other);
         }
@@ -107,8 +109,10 @@ public:
         return make_rcp<const Integer>(std::move(-i));
     }
 
-    /* These are general methods, overriden from the Number class, that need to
-     * check types to decide what operation to do, and so are a bit slower. */
+    /* These are general methods, overriden from the Number class, that
+     * need to
+     * check types to decide what operation to do, and so are a bit
+     * slower. */
     //! Slower Addition
     virtual RCP<const Number> add(const Number &other) const
     {
@@ -173,14 +177,17 @@ public:
 //! less operator (<) for Integers
 struct RCPIntegerKeyLess {
     //! \return true according to `<` operator
-    bool operator()(const RCP<const Integer> &a, const RCP<const Integer> &b) const
+    bool operator()(const RCP<const Integer> &a,
+                    const RCP<const Integer> &b) const
     {
         return a->as_mpz() < b->as_mpz();
     }
 };
 //! \return RCP<const Integer> from integral values
 template <typename T>
-inline typename std::enable_if<std::is_integral<T>::value, RCP<const Integer>>::type integer(T i)
+inline typename std::enable_if<std::is_integral<T>::value,
+                               RCP<const Integer>>::type
+integer(T i)
 {
     return make_rcp<const Integer>(integer_class(i));
 }
@@ -194,7 +201,8 @@ inline RCP<const Integer> integer(integer_class i)
 //! Integer Square root
 RCP<const Integer> isqrt(const Integer &n);
 //! Integer nth root
-int i_nth_root(const Ptr<RCP<const Integer>> &r, const Integer &a, unsigned long int n);
+int i_nth_root(const Ptr<RCP<const Integer>> &r, const Integer &a,
+               unsigned long int n);
 //! Perfect Square
 bool perfect_square(const Integer &n);
 //! Perfect Square

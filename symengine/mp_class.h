@@ -23,19 +23,33 @@
 namespace SymEngine
 {
 /*
- * integer_class and rational_class are the storage classes for SymEngine::Integer
- * and SymEngine::Rational respectively. There are 4 choices for the integer_class.
- * mpz_class from libgmpxx, piranha::integer from piranha, mpz_wrapper which wraps
- * mpz_t from libgmp and fmpz_wrapper which wraps fmpz_t from libflint. This choice
+ * integer_class and rational_class are the storage classes for
+ * SymEngine::Integer
+ * and SymEngine::Rational respectively. There are 4 choices for the
+ * integer_class.
+ * mpz_class from libgmpxx, piranha::integer from piranha, mpz_wrapper
+ * which
+ * wraps
+ * mpz_t from libgmp and fmpz_wrapper which wraps fmpz_t from libflint.
+ * This
+ * choice
  * is made at compile time with SYMENGINE_INTEGER_CLASS.
  *
- * Each of these classes has to have all the arithmetic operators overloaded with
- * operands of these classes and C++ integer types except long long. Also, shift
- * operators, move operators, string, integer and mpz_t constructors are also
+ * Each of these classes has to have all the arithmetic operators
+ * overloaded
+ * with
+ * operands of these classes and C++ integer types except long long.
+ * Also, shift
+ * operators, move operators, string, integer and mpz_t constructors are
+ * also
  * required.
  *
- * To add a new type, several non-member functions need to be defined for the new
- * type. See mpz_wrapper implementation for all the non-member functions that need
+ * To add a new type, several non-member functions need to be defined
+ * for the
+ * new
+ * type. See mpz_wrapper implementation for all the non-member functions
+ * that
+ * need
  * to be defined.
  */
 
@@ -64,7 +78,8 @@ inline integer_class operator"" _z(const char *str)
 }
 }
 
-#if SYMENGINE_INTEGER_CLASS == SYMENGINE_GMPXX || SYMENGINE_INTEGER_CLASS == SYMENGINE_GMP
+#if SYMENGINE_INTEGER_CLASS == SYMENGINE_GMPXX                                 \
+    || SYMENGINE_INTEGER_CLASS == SYMENGINE_GMP
 // Helper functions for mpz_class
 inline integer_class mp_abs(const integer_class &i)
 {
@@ -124,67 +139,81 @@ inline mpz_ptr get_mpz_t(integer_class &i)
     return i.get_mpz_t();
 }
 
-inline void mp_pow_ui(integer_class &res, const integer_class &i, unsigned long n)
+inline void mp_pow_ui(integer_class &res, const integer_class &i,
+                      unsigned long n)
 {
     mpz_pow_ui(res.get_mpz_t(), i.get_mpz_t(), n);
 }
 
-inline void mp_powm(integer_class &res, const integer_class &a, const integer_class &b, const integer_class &m)
+inline void mp_powm(integer_class &res, const integer_class &a,
+                    const integer_class &b, const integer_class &m)
 {
     mpz_powm(res.get_mpz_t(), a.get_mpz_t(), b.get_mpz_t(), m.get_mpz_t());
 }
 
-inline bool mp_invert(integer_class &res, const integer_class &a, const integer_class &m)
+inline bool mp_invert(integer_class &res, const integer_class &a,
+                      const integer_class &m)
 {
     return mpz_invert(res.get_mpz_t(), a.get_mpz_t(), m.get_mpz_t()) != 0;
 }
 
-inline void mp_gcd(integer_class &res, const integer_class &a, const integer_class &b)
+inline void mp_gcd(integer_class &res, const integer_class &a,
+                   const integer_class &b)
 {
     mpz_gcd(res.get_mpz_t(), a.get_mpz_t(), b.get_mpz_t());
 }
 
-inline void mp_gcdext(integer_class &res, integer_class &r, integer_class &s, const integer_class &a, const integer_class &b)
+inline void mp_gcdext(integer_class &res, integer_class &r, integer_class &s,
+                      const integer_class &a, const integer_class &b)
 {
-    mpz_gcdext(res.get_mpz_t(), r.get_mpz_t(), s.get_mpz_t(), a.get_mpz_t(), b.get_mpz_t());
+    mpz_gcdext(res.get_mpz_t(), r.get_mpz_t(), s.get_mpz_t(), a.get_mpz_t(),
+               b.get_mpz_t());
 }
 
-inline void mp_and(integer_class &res, const integer_class &a, const integer_class &b)
+inline void mp_and(integer_class &res, const integer_class &a,
+                   const integer_class &b)
 {
     mpz_and(res.get_mpz_t(), a.get_mpz_t(), b.get_mpz_t());
 }
 
-inline void mp_fdiv_r(integer_class &res, const integer_class &a, const integer_class &b)
+inline void mp_fdiv_r(integer_class &res, const integer_class &a,
+                      const integer_class &b)
 {
     mpz_fdiv_r(res.get_mpz_t(), a.get_mpz_t(), b.get_mpz_t());
 }
 
-inline void mp_fdiv_q(integer_class &res, const integer_class &a, const integer_class &b)
+inline void mp_fdiv_q(integer_class &res, const integer_class &a,
+                      const integer_class &b)
 {
     mpz_fdiv_q(res.get_mpz_t(), a.get_mpz_t(), b.get_mpz_t());
 }
 
-inline void mp_fdiv_qr(integer_class &q, integer_class &r, const integer_class &a, const integer_class &b)
+inline void mp_fdiv_qr(integer_class &q, integer_class &r,
+                       const integer_class &a, const integer_class &b)
 {
     mpz_fdiv_qr(q.get_mpz_t(), r.get_mpz_t(), a.get_mpz_t(), b.get_mpz_t());
 }
 
-inline void mp_divexact(integer_class &q, const integer_class &a, const integer_class &b)
+inline void mp_divexact(integer_class &q, const integer_class &a,
+                        const integer_class &b)
 {
     mpz_divexact(q.get_mpz_t(), a.get_mpz_t(), b.get_mpz_t());
 }
 
-inline void mp_lcm(integer_class &q, const integer_class &a, const integer_class &b)
+inline void mp_lcm(integer_class &q, const integer_class &a,
+                   const integer_class &b)
 {
     mpz_lcm(q.get_mpz_t(), a.get_mpz_t(), b.get_mpz_t());
 }
 
-inline void mp_tdiv_qr(integer_class &q, integer_class &r, const integer_class &a, const integer_class &b)
+inline void mp_tdiv_qr(integer_class &q, integer_class &r,
+                       const integer_class &a, const integer_class &b)
 {
     mpz_tdiv_qr(q.get_mpz_t(), r.get_mpz_t(), a.get_mpz_t(), b.get_mpz_t());
 }
 
-inline void mp_addmul(integer_class &r, const integer_class &a, const integer_class &b)
+inline void mp_addmul(integer_class &r, const integer_class &a,
+                      const integer_class &b)
 {
     mpz_addmul(r.get_mpz_t(), a.get_mpz_t(), b.get_mpz_t());
 }
@@ -263,29 +292,35 @@ inline auto get_mpz_t(const piranha::integer &i) -> decltype(i.get_mpz_view())
     return i.get_mpz_view();
 }
 
-inline void mp_pow_ui(piranha::integer &res, const piranha::integer &i, unsigned long n)
+inline void mp_pow_ui(piranha::integer &res, const piranha::integer &i,
+                      unsigned long n)
 {
     res = i.pow(n);
 }
 
-inline void mp_powm(piranha::integer &res, const piranha::integer &a, const piranha::integer &b, const piranha::integer &m)
+inline void mp_powm(piranha::integer &res, const piranha::integer &a,
+                    const piranha::integer &b, const piranha::integer &m)
 {
     auto _res = get_mpz_t(res);
     mpz_powm(_res, get_mpz_t(a), get_mpz_t(b), get_mpz_t(m));
 }
 
-inline bool mp_invert(piranha::integer &res, const piranha::integer &a, const piranha::integer &m)
+inline bool mp_invert(piranha::integer &res, const piranha::integer &a,
+                      const piranha::integer &m)
 {
     auto _res = get_mpz_t(res);
     return mpz_invert(_res, get_mpz_t(a), get_mpz_t(m)) != 0;
 }
 
-inline void mp_gcd(piranha::integer &g, const piranha::integer &a, const piranha::integer &b)
+inline void mp_gcd(piranha::integer &g, const piranha::integer &a,
+                   const piranha::integer &b)
 {
     piranha::integer::gcd(g, a, b);
 }
 
-inline void mp_gcdext(piranha::integer &g, piranha::integer &r, piranha::integer &s, const piranha::integer &a, const piranha::integer &b)
+inline void mp_gcdext(piranha::integer &g, piranha::integer &r,
+                      piranha::integer &s, const piranha::integer &a,
+                      const piranha::integer &b)
 {
     auto _g = get_mpz_t(g);
     auto _r = get_mpz_t(r);
@@ -293,42 +328,49 @@ inline void mp_gcdext(piranha::integer &g, piranha::integer &r, piranha::integer
     mpz_gcdext(_g, _r, _s, get_mpz_t(a), get_mpz_t(b));
 }
 
-inline void mp_and(piranha::integer &res, const piranha::integer &a, const piranha::integer &b)
+inline void mp_and(piranha::integer &res, const piranha::integer &a,
+                   const piranha::integer &b)
 {
     auto _res = get_mpz_t(res);
     mpz_and(_res, get_mpz_t(a), get_mpz_t(b));
 }
 
-inline void mp_fdiv_r(piranha::integer &res, const piranha::integer &a, const piranha::integer &b)
+inline void mp_fdiv_r(piranha::integer &res, const piranha::integer &a,
+                      const piranha::integer &b)
 {
     auto _res = get_mpz_t(res);
     mpz_fdiv_r(_res, get_mpz_t(a), get_mpz_t(b));
 }
 
-inline void mp_fdiv_q(piranha::integer &res, const piranha::integer &a, const piranha::integer &b)
+inline void mp_fdiv_q(piranha::integer &res, const piranha::integer &a,
+                      const piranha::integer &b)
 {
     auto _res = get_mpz_t(res);
     mpz_fdiv_q(_res, get_mpz_t(a), get_mpz_t(b));
 }
 
-inline void mp_fdiv_qr(piranha::integer &q, piranha::integer &r, const piranha::integer &a, const piranha::integer &b)
+inline void mp_fdiv_qr(piranha::integer &q, piranha::integer &r,
+                       const piranha::integer &a, const piranha::integer &b)
 {
     auto _q = get_mpz_t(q);
     mpz_fdiv_qr(_q, get_mpz_t(r), get_mpz_t(a), get_mpz_t(b));
 }
 
-inline void mp_divexact(piranha::integer &q, const piranha::integer &a, const piranha::integer &b)
+inline void mp_divexact(piranha::integer &q, const piranha::integer &a,
+                        const piranha::integer &b)
 {
     piranha::integer::_divexact(q, a, b);
 }
 
-inline void mp_lcm(piranha::integer &q, const piranha::integer &a, const piranha::integer &b)
+inline void mp_lcm(piranha::integer &q, const piranha::integer &a,
+                   const piranha::integer &b)
 {
     auto _q = get_mpz_t(q);
     mpz_lcm(_q, get_mpz_t(a), get_mpz_t(b));
 }
 
-inline void mp_tdiv_qr(piranha::integer &q, piranha::integer &r, const piranha::integer &a, const piranha::integer &b)
+inline void mp_tdiv_qr(piranha::integer &q, piranha::integer &r,
+                       const piranha::integer &a, const piranha::integer &b)
 {
     piranha::integer::divrem(q, r, a, b);
 }
@@ -363,7 +405,8 @@ inline bool mp_fits_slong_p(const piranha::integer &i)
     return mpz_fits_slong_p(i.get_mpz_view()) != 0;
 }
 
-inline void mp_addmul(integer_class &r, const integer_class &a, const integer_class &b)
+inline void mp_addmul(integer_class &r, const integer_class &a,
+                      const integer_class &b)
 {
     piranha::math::multiply_accumulate(r, a, b);
 }
@@ -480,62 +523,77 @@ inline void mp_pow_ui(fmpz_wrapper &res, const fmpz_wrapper &i, unsigned long n)
     fmpz_pow_ui(res.get_fmpz_t(), i.get_fmpz_t(), n);
 }
 
-inline void mp_powm(fmpz_wrapper &res, const fmpz_wrapper &a, const fmpz_wrapper &b, const fmpz_wrapper &m)
+inline void mp_powm(fmpz_wrapper &res, const fmpz_wrapper &a,
+                    const fmpz_wrapper &b, const fmpz_wrapper &m)
 {
     fmpz_powm(res.get_fmpz_t(), a.get_fmpz_t(), b.get_fmpz_t(), m.get_fmpz_t());
 }
 
-inline bool mp_invert(fmpz_wrapper &res, const fmpz_wrapper &a, const fmpz_wrapper &m)
+inline bool mp_invert(fmpz_wrapper &res, const fmpz_wrapper &a,
+                      const fmpz_wrapper &m)
 {
     return fmpz_invmod(res.get_fmpz_t(), a.get_fmpz_t(), m.get_fmpz_t()) != 0;
 }
 
-inline void mp_gcd(fmpz_wrapper &res, const fmpz_wrapper &a, const fmpz_wrapper &b)
+inline void mp_gcd(fmpz_wrapper &res, const fmpz_wrapper &a,
+                   const fmpz_wrapper &b)
 {
     fmpz_gcd(res.get_fmpz_t(), a.get_fmpz_t(), b.get_fmpz_t());
 }
 
-inline void mp_gcdext(fmpz_wrapper &g, fmpz_wrapper &r, fmpz_wrapper &s, const fmpz_wrapper &a, const fmpz_wrapper &b)
+inline void mp_gcdext(fmpz_wrapper &g, fmpz_wrapper &r, fmpz_wrapper &s,
+                      const fmpz_wrapper &a, const fmpz_wrapper &b)
 {
-    fmpz_xgcd(g.get_fmpz_t(), r.get_fmpz_t(), s.get_fmpz_t(), a.get_fmpz_t(), b.get_fmpz_t());
+    fmpz_xgcd(g.get_fmpz_t(), r.get_fmpz_t(), s.get_fmpz_t(), a.get_fmpz_t(),
+              b.get_fmpz_t());
 }
 
-inline void mp_and(fmpz_wrapper &res, const fmpz_wrapper &a, const fmpz_wrapper &b)
+inline void mp_and(fmpz_wrapper &res, const fmpz_wrapper &a,
+                   const fmpz_wrapper &b)
 {
     fmpz_and(res.get_fmpz_t(), a.get_fmpz_t(), b.get_fmpz_t());
 }
 
-inline void mp_fdiv_r(fmpz_wrapper &res, const fmpz_wrapper &a, const fmpz_wrapper &b)
+inline void mp_fdiv_r(fmpz_wrapper &res, const fmpz_wrapper &a,
+                      const fmpz_wrapper &b)
 {
     fmpz_fdiv_r(res.get_fmpz_t(), a.get_fmpz_t(), b.get_fmpz_t());
 }
 
-inline void mp_fdiv_q(fmpz_wrapper &res, const fmpz_wrapper &a, const fmpz_wrapper &b)
+inline void mp_fdiv_q(fmpz_wrapper &res, const fmpz_wrapper &a,
+                      const fmpz_wrapper &b)
 {
     fmpz_fdiv_q(res.get_fmpz_t(), a.get_fmpz_t(), b.get_fmpz_t());
 }
 
-inline void mp_fdiv_qr(fmpz_wrapper &q, fmpz_wrapper &r, const fmpz_wrapper &a, const fmpz_wrapper &b)
+inline void mp_fdiv_qr(fmpz_wrapper &q, fmpz_wrapper &r, const fmpz_wrapper &a,
+                       const fmpz_wrapper &b)
 {
-    fmpz_fdiv_qr(q.get_fmpz_t(), r.get_fmpz_t(), a.get_fmpz_t(), b.get_fmpz_t());
+    fmpz_fdiv_qr(q.get_fmpz_t(), r.get_fmpz_t(), a.get_fmpz_t(),
+                 b.get_fmpz_t());
 }
 
-inline void mp_divexact(fmpz_wrapper &q, const fmpz_wrapper &a, const fmpz_wrapper &b)
+inline void mp_divexact(fmpz_wrapper &q, const fmpz_wrapper &a,
+                        const fmpz_wrapper &b)
 {
     fmpz_divexact(q.get_fmpz_t(), a.get_fmpz_t(), b.get_fmpz_t());
 }
 
-inline void mp_lcm(fmpz_wrapper &q, const fmpz_wrapper &a, const fmpz_wrapper &b)
+inline void mp_lcm(fmpz_wrapper &q, const fmpz_wrapper &a,
+                   const fmpz_wrapper &b)
 {
     fmpz_lcm(q.get_fmpz_t(), a.get_fmpz_t(), b.get_fmpz_t());
 }
 
-inline void mp_tdiv_qr(fmpz_wrapper &q, fmpz_wrapper &r, const fmpz_wrapper &a, const fmpz_wrapper &b)
+inline void mp_tdiv_qr(fmpz_wrapper &q, fmpz_wrapper &r, const fmpz_wrapper &a,
+                       const fmpz_wrapper &b)
 {
-    fmpz_tdiv_qr(q.get_fmpz_t(), r.get_fmpz_t(), a.get_fmpz_t(), b.get_fmpz_t());
+    fmpz_tdiv_qr(q.get_fmpz_t(), r.get_fmpz_t(), a.get_fmpz_t(),
+                 b.get_fmpz_t());
 }
 
-inline void mp_addmul(fmpz_wrapper &r, const fmpz_wrapper &a, const fmpz_wrapper &b)
+inline void mp_addmul(fmpz_wrapper &r, const fmpz_wrapper &a,
+                      const fmpz_wrapper &b)
 {
     fmpz_addmul(r.get_fmpz_t(), a.get_fmpz_t(), b.get_fmpz_t());
 }
@@ -604,7 +662,8 @@ inline void mp_nextprime(integer_class &res, const integer_class &i)
     mp_demote(res);
 }
 
-inline void mp_sqrtrem(integer_class &a, integer_class &b, const integer_class &i)
+inline void mp_sqrtrem(integer_class &a, integer_class &b,
+                       const integer_class &i)
 {
     auto _a = get_mpz_t(a);
     auto _b = get_mpz_t(b);
@@ -613,7 +672,8 @@ inline void mp_sqrtrem(integer_class &a, integer_class &b, const integer_class &
     mp_demote(b);
 }
 
-inline void mp_rootrem(integer_class &a, integer_class &b, const integer_class &i, unsigned long n)
+inline void mp_rootrem(integer_class &a, integer_class &b,
+                       const integer_class &i, unsigned long n)
 {
     auto _a = get_mpz_t(a);
     auto _b = get_mpz_t(b);
@@ -653,7 +713,8 @@ inline void mp_lucnum2_ui(integer_class &a, integer_class &b, unsigned long n)
     mp_demote(b);
 }
 
-inline void mp_bin_ui(integer_class &res, const integer_class &n, unsigned long r)
+inline void mp_bin_ui(integer_class &res, const integer_class &n,
+                      unsigned long r)
 {
     auto _res = get_mpz_t(res);
     mpz_bin_ui(_res, get_mpz_t(n), r);
@@ -701,7 +762,8 @@ inline bool mp_divisible_p(const integer_class &a, const integer_class &b)
     return mpz_divisible_p(get_mpz_t(a), get_mpz_t(b)) != 0;
 }
 
-inline void mp_urandomm(integer_class &a, gmp_randstate_t &t, const integer_class &b)
+inline void mp_urandomm(integer_class &a, gmp_randstate_t &t,
+                        const integer_class &b)
 {
     auto _a = get_mpz_t(a);
     mpz_urandomm(_a, t, get_mpz_t(b));

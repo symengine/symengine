@@ -32,7 +32,8 @@ TEST_CASE("Constructor of UnivariateSeries", "[UnivariateSeries]")
     RCP<const UnivariateSeries> P = univariate_series(x, 2, adict_);
     REQUIRE(P->__str__() == "1 + 2*x + O(x**2)");
 
-    RCP<const UnivariateSeries> Q = UnivariateSeries::create(x, 5, {1_z, 0_z, 2_z, 1_z});
+    RCP<const UnivariateSeries> Q
+        = UnivariateSeries::create(x, 5, {1_z, 0_z, 2_z, 1_z});
     REQUIRE(Q->__str__() == "1 + 2*x**2 + x**3 + O(x**5)");
 }
 
@@ -90,10 +91,14 @@ TEST_CASE("Subtracting two UnivariateSeries", "[UnivariateSeries]")
 TEST_CASE("Multiplication of two UnivariateSeries", "[UnivariateSeries]")
 {
     RCP<const Symbol> x = symbol("x");
-    RCP<const UnivariateSeries> a = univariate_series(x, 5, {{0, 1_z}, {1, 2_z}, {2, 1_z}});
-    RCP<const UnivariateSeries> b = univariate_series(x, 3, {{0, -1_z}, {1, -2_z}, {2, -1_z}});
-    RCP<const UnivariateSeries> e = univariate_series(x, 5, {{0, 1_z}, {1, 4_z}, {2, 6_z}, {3, 4_z}, {4, 1_z}});
-    RCP<const UnivariateSeries> f = univariate_series(x, 3, {{0, -1_z}, {1, -4_z}, {2, -6_z}});
+    RCP<const UnivariateSeries> a
+        = univariate_series(x, 5, {{0, 1_z}, {1, 2_z}, {2, 1_z}});
+    RCP<const UnivariateSeries> b
+        = univariate_series(x, 3, {{0, -1_z}, {1, -2_z}, {2, -1_z}});
+    RCP<const UnivariateSeries> e = univariate_series(
+        x, 5, {{0, 1_z}, {1, 4_z}, {2, 6_z}, {3, 4_z}, {4, 1_z}});
+    RCP<const UnivariateSeries> f
+        = univariate_series(x, 3, {{0, -1_z}, {1, -4_z}, {2, -6_z}});
 
     RCP<const UnivariateSeries> c = mul_uni_series(*a, *a);
     RCP<const UnivariateSeries> d = mul_uni_series(*a, *b);

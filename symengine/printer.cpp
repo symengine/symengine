@@ -18,7 +18,8 @@ std::string ascii_art()
 void StrPrinter::bvisit(const Basic &x)
 {
     std::ostringstream s;
-    s << "<" << typeName<Basic>(x) << " instance at " << (const void *)this << ">";
+    s << "<" << typeName<Basic>(x) << " instance at " << (const void *)this
+      << ">";
     str_ = s.str();
 }
 
@@ -141,7 +142,8 @@ void StrPrinter::bvisit(const RealMPFR &x)
         str_ = str_.substr(1, str_.length() - 1);
     }
     if (ex > 6) {
-        s << str_.at(0) << '.' << str_.substr(1, str_.length() - 1) << 'e' << (ex - 1);
+        s << str_.at(0) << '.' << str_.substr(1, str_.length() - 1) << 'e'
+          << (ex - 1);
     } else if (ex > 0) {
         s << str_.substr(0, (unsigned long)ex) << ".";
         s << str_.substr((unsigned long)ex, str_.length() - ex);
@@ -152,7 +154,8 @@ void StrPrinter::bvisit(const RealMPFR &x)
         }
         s << str_;
     } else {
-        s << str_.at(0) << '.' << str_.substr(1, str_.length() - 1) << 'e' << (ex - 1);
+        s << str_.at(0) << '.' << str_.substr(1, str_.length() - 1) << 'e'
+          << (ex - 1);
     }
     mpfr_free_str(c);
     str_ = s.str();
@@ -175,7 +178,8 @@ void StrPrinter::bvisit(const Add &x)
 {
     std::ostringstream o;
     bool first = true;
-    std::map<RCP<const Basic>, RCP<const Number>, RCPBasicKeyLessCmp> dict(x.dict_.begin(), x.dict_.end());
+    std::map<RCP<const Basic>, RCP<const Number>, RCPBasicKeyLessCmp> dict(
+        x.dict_.begin(), x.dict_.end());
 
     if (neq(*(x.coef_), *zero)) {
         o << this->apply(x.coef_);
@@ -188,7 +192,8 @@ void StrPrinter::bvisit(const Add &x)
         } else if (eq(*(p.second), *minus_one)) {
             t = "-" + parenthesizeLT(p.first, PrecedenceEnum::Mul);
         } else {
-            t = parenthesizeLT(p.second, PrecedenceEnum::Mul) + "*" + parenthesizeLT(p.first, PrecedenceEnum::Mul);
+            t = parenthesizeLT(p.second, PrecedenceEnum::Mul) + "*"
+                + parenthesizeLT(p.first, PrecedenceEnum::Mul);
         }
 
         if (not first) {
@@ -210,7 +215,8 @@ void StrPrinter::bvisit(const Mul &x)
     std::ostringstream o, o2;
     bool num = false;
     unsigned den = 0;
-    std::map<RCP<const Basic>, RCP<const Basic>, RCPBasicKeyLessCmp> dict(x.dict_.begin(), x.dict_.end());
+    std::map<RCP<const Basic>, RCP<const Basic>, RCPBasicKeyLessCmp> dict(
+        x.dict_.begin(), x.dict_.end());
 
     if (eq(*(x.coef_), *minus_one)) {
         o << "-";
@@ -220,8 +226,10 @@ void StrPrinter::bvisit(const Mul &x)
     }
 
     for (const auto &p : dict) {
-        if ((is_a<Integer>(*p.second) and rcp_static_cast<const Integer>(p.second)->is_negative())
-            || (is_a<Rational>(*p.second) and rcp_static_cast<const Rational>(p.second)->is_negative())) {
+        if ((is_a<Integer>(*p.second)
+             and rcp_static_cast<const Integer>(p.second)->is_negative())
+            || (is_a<Rational>(*p.second)
+                and rcp_static_cast<const Rational>(p.second)->is_negative())) {
             if (eq(*(p.second), *minus_one)) {
                 o2 << parenthesizeLT(p.first, PrecedenceEnum::Mul);
             } else {
@@ -282,20 +290,25 @@ char _print_sign(const integer_class &i)
     }
 }
 
-// UnivariateIntPolynomial printing, tests taken from SymPy and printing ensures that there is compatibility
+// UnivariateIntPolynomial printing, tests taken from SymPy and printing
+// ensures
+// that there is compatibility
 void StrPrinter::bvisit(const UnivariateIntPolynomial &x)
 {
     std::ostringstream s;
     // bool variable needed to take care of cases like -5, -x, -3*x etc.
     bool first = true;
-    // we iterate over the map in reverse order so that highest degree gets printed first
+    // we iterate over the map in reverse order so that highest degree
+    // gets
+    // printed first
     for (auto it = x.get_dict().rbegin(); it != x.get_dict().rend(); ++it) {
         // if exponent is 0, then print only coefficient
         if (it->first == 0) {
             if (first) {
                 s << it->second;
             } else {
-                s << " " << _print_sign(it->second) << " " << mp_abs(it->second);
+                s << " " << _print_sign(it->second) << " "
+                  << mp_abs(it->second);
             }
             first = false;
             continue;
@@ -309,7 +322,8 @@ void StrPrinter::bvisit(const UnivariateIntPolynomial &x)
                     s << "-";
                 s << x.get_var()->get_name();
             } else {
-                s << " " << _print_sign(it->second) << " " << x.get_var()->get_name();
+                s << " " << _print_sign(it->second) << " "
+                  << x.get_var()->get_name();
             }
         }
         // same logic is followed as above
@@ -319,14 +333,16 @@ void StrPrinter::bvisit(const UnivariateIntPolynomial &x)
             if (first) {
                 s << it->second << "*" << x.get_var()->get_name();
             } else {
-                s << " " << _print_sign(it->second) << " " << mp_abs(it->second) << "*" << x.get_var()->get_name();
+                s << " " << _print_sign(it->second) << " " << mp_abs(it->second)
+                  << "*" << x.get_var()->get_name();
             }
         }
         // if exponent is not 1, print the exponent;
         if (it->first != 1) {
             s << "**" << it->first;
         }
-        // corner cases of only first term handled successfully, switch the bool
+        // corner cases of only first term handled successfully, switch
+        // the bool
         first = false;
     }
     if (x.get_dict().size() == 0)
@@ -334,13 +350,17 @@ void StrPrinter::bvisit(const UnivariateIntPolynomial &x)
     str_ = s.str();
 }
 
-// UnivariatePolynomial printing, tests taken from SymPy and printing ensures that there is compatibility
+// UnivariatePolynomial printing, tests taken from SymPy and printing
+// ensures
+// that there is compatibility
 void StrPrinter::bvisit(const UnivariatePolynomial &x)
 {
     std::ostringstream s;
     // bool variable needed to take care of cases like -5, -x, -3*x etc.
     bool first = true;
-    // we iterate over the map in reverse order so that highest degree gets printed first
+    // we iterate over the map in reverse order so that highest degree
+    // gets
+    // printed first
     for (auto it = x.get_dict().rbegin(); it != x.get_dict().rend(); ++it) {
         std::string t;
         // if exponent is 0, then print only coefficient
@@ -366,7 +386,10 @@ void StrPrinter::bvisit(const UnivariatePolynomial &x)
                 if (it->second == -1)
                     s << "-";
             } else {
-                s << " " << _print_sign(static_cast<const Integer &>(*it->second.get_basic()).as_mpz()) << " ";
+                s << " " << _print_sign(static_cast<const Integer &>(
+                                            *it->second.get_basic())
+                                            .as_mpz())
+                  << " ";
             }
         }
         // same logic is followed as above
@@ -374,7 +397,8 @@ void StrPrinter::bvisit(const UnivariatePolynomial &x)
             // in cases of -2*x, print -2*x
             // in cases of x**2 - 2*x, print - 2*x
             if (first) {
-                s << parenthesizeLT(it->second.get_basic(), PrecedenceEnum::Mul) << "*";
+                s << parenthesizeLT(it->second.get_basic(), PrecedenceEnum::Mul)
+                  << "*";
             } else {
                 t = parenthesizeLT(it->second.get_basic(), PrecedenceEnum::Mul);
                 if (t[0] == '-') {
@@ -390,7 +414,8 @@ void StrPrinter::bvisit(const UnivariatePolynomial &x)
         if (it->first != 1) {
             s << "**" << it->first;
         }
-        // corner cases of only first term handled successfully, switch the bool
+        // corner cases of only first term handled successfully, switch
+        // the bool
         first = false;
     }
     if (x.get_dict().size() == 0)
@@ -402,13 +427,15 @@ void StrPrinter::bvisit(const UnivariatePolynomial &x)
 void StrPrinter::bvisit(const URatPSeriesPiranha &x)
 {
     std::ostringstream o;
-    o << x.get_poly() << " + O(" << x.get_var() << "**" << x.get_degree() << ")";
+    o << x.get_poly() << " + O(" << x.get_var() << "**" << x.get_degree()
+      << ")";
     str_ = o.str();
 }
 void StrPrinter::bvisit(const UPSeriesPiranha &x)
 {
     std::ostringstream o;
-    o << x.get_poly() << " + O(" << x.get_var() << "**" << x.get_degree() << ")";
+    o << x.get_poly() << " + O(" << x.get_var() << "**" << x.get_degree()
+      << ")";
     str_ = o.str();
 }
 #endif
@@ -459,7 +486,8 @@ void StrPrinter::bvisit(const Derivative &x)
     std::ostringstream o;
     o << "Derivative(" << this->apply(x.get_arg());
     multiset_basic m1 = x.get_symbols();
-    std::multiset<RCP<const Basic>, RCPBasicKeyLessCmp> m2(m1.begin(), m1.end());
+    std::multiset<RCP<const Basic>, RCPBasicKeyLessCmp> m2(m1.begin(),
+                                                           m1.end());
     for (const auto &elem : m2) {
         o << ", " << this->apply(elem);
     }
@@ -478,7 +506,8 @@ void StrPrinter::bvisit(const Subs &x)
         vars << apply(p->first);
         point << apply(p->second);
     }
-    o << "Subs(" << apply(x.arg_) << ", (" << vars.str() << "), (" << point.str() << "))";
+    o << "Subs(" << apply(x.arg_) << ", (" << vars.str() << "), ("
+      << point.str() << "))";
     str_ = o.str();
 }
 
@@ -487,7 +516,8 @@ void StrPrinter::bvisit(const NumberWrapper &x)
     str_ = x.__str__();
 }
 
-std::string StrPrinter::parenthesizeLT(const RCP<const Basic> &x, PrecedenceEnum precedenceEnum)
+std::string StrPrinter::parenthesizeLT(const RCP<const Basic> &x,
+                                       PrecedenceEnum precedenceEnum)
 {
     Precedence prec;
     if (prec.getPrecedence(x) < precedenceEnum) {
@@ -497,7 +527,8 @@ std::string StrPrinter::parenthesizeLT(const RCP<const Basic> &x, PrecedenceEnum
     }
 }
 
-std::string StrPrinter::parenthesizeLE(const RCP<const Basic> &x, PrecedenceEnum precedenceEnum)
+std::string StrPrinter::parenthesizeLE(const RCP<const Basic> &x,
+                                       PrecedenceEnum precedenceEnum)
 {
     Precedence prec;
     if (prec.getPrecedence(x) <= precedenceEnum) {

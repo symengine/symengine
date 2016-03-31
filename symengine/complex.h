@@ -32,9 +32,11 @@ public:
      * \param `im` must already be in rational_class canonical form
      * \return Complex or Rational depending on imaginary part.
      * */
-    static RCP<const Number> from_mpq(const rational_class re, const rational_class im);
+    static RCP<const Number> from_mpq(const rational_class re,
+                                      const rational_class im);
     //! \return true if canonical
-    bool is_canonical(const rational_class &real, const rational_class &imaginary) const;
+    bool is_canonical(const rational_class &real,
+                      const rational_class &imaginary) const;
     //! \return size of the hash
     virtual std::size_t __hash__() const;
     /*! Equality comparator
@@ -59,7 +61,8 @@ public:
     /*! Constructs Complex from re, im. If im is 0
      * it will return a Rational instead.
      * */
-    static RCP<const Number> from_two_rats(const Rational &re, const Rational &im);
+    static RCP<const Number> from_two_rats(const Rational &re,
+                                           const Rational &im);
 
     /*! Constructs Complex from re, im. If im is 0
      * it will return a Rational instead.
@@ -92,7 +95,8 @@ public:
      * */
     inline RCP<const Number> addcomp(const Complex &other) const
     {
-        return from_mpq(this->real_ + other.real_, this->imaginary_ + other.imaginary_);
+        return from_mpq(this->real_ + other.real_,
+                        this->imaginary_ + other.imaginary_);
     }
     /*! Add Complex
      * \param other of type Rational
@@ -114,7 +118,8 @@ public:
      * */
     inline RCP<const Number> subcomp(const Complex &other) const
     {
-        return from_mpq(this->real_ - other.real_, this->imaginary_ - other.imaginary_);
+        return from_mpq(this->real_ - other.real_,
+                        this->imaginary_ - other.imaginary_);
     }
     /*! Subtract Complex
      * \param other of type Rational
@@ -135,7 +140,8 @@ public:
      * */
     inline RCP<const Number> rsubcomp(const Complex &other) const
     {
-        return from_mpq(other.real_ - this->real_, other.imaginary_ - this->imaginary_);
+        return from_mpq(other.real_ - this->real_,
+                        other.imaginary_ - this->imaginary_);
     }
     /*! Subtract Complex from other
      * \param other of type Rational
@@ -157,8 +163,9 @@ public:
      * */
     inline RCP<const Number> mulcomp(const Complex &other) const
     {
-        return from_mpq(this->real_ * other.real_ - this->imaginary_ * other.imaginary_,
-                        this->real_ * other.imaginary_ + this->imaginary_ * other.real_);
+        return from_mpq(
+            this->real_ * other.real_ - this->imaginary_ * other.imaginary_,
+            this->real_ * other.imaginary_ + this->imaginary_ * other.real_);
     }
     /*! Multiply Complex
      * \param other of type Rational
@@ -180,12 +187,17 @@ public:
      * */
     inline RCP<const Number> divcomp(const Complex &other) const
     {
-        rational_class conjugate = other.real_ * other.real_ + other.imaginary_ * other.imaginary_;
+        rational_class conjugate
+            = other.real_ * other.real_ + other.imaginary_ * other.imaginary_;
         if (get_num(conjugate) == 0) {
             throw std::runtime_error("Divide by zero.");
         } else {
-            return from_mpq((this->real_ * other.real_ + this->imaginary_ * other.imaginary_) / conjugate,
-                            (-this->real_ * other.imaginary_ + this->imaginary_ * other.real_) / conjugate);
+            return from_mpq((this->real_ * other.real_
+                             + this->imaginary_ * other.imaginary_)
+                                / conjugate,
+                            (-this->real_ * other.imaginary_
+                             + this->imaginary_ * other.real_)
+                                / conjugate);
         }
     }
     /*! Divide Complex
@@ -215,11 +227,13 @@ public:
      * */
     inline RCP<const Number> rdivcomp(const Integer &other) const
     {
-        rational_class conjugate = this->real_ * this->real_ + this->imaginary_ * this->imaginary_;
+        rational_class conjugate
+            = this->real_ * this->real_ + this->imaginary_ * this->imaginary_;
         if (get_num(conjugate) == 0) {
             throw std::runtime_error("Divide by zero.");
         } else {
-            return from_mpq((this->real_ * other.i) / conjugate, (this->imaginary_ * (-other.i)) / conjugate);
+            return from_mpq((this->real_ * other.i) / conjugate,
+                            (this->imaginary_ * (-other.i)) / conjugate);
         }
     }
     /*! Pow Complex
@@ -227,7 +241,8 @@ public:
      * */
     RCP<const Number> powcomp(const Integer &other) const;
 
-    //! Converts the param `other` appropriately and then calls `addcomp`
+    //! Converts the param `other` appropriately and then calls
+    //! `addcomp`
     virtual RCP<const Number> add(const Number &other) const
     {
         if (is_a<Rational>(other)) {
@@ -240,7 +255,8 @@ public:
             return other.add(*this);
         }
     };
-    //! Converts the param `other` appropriately and then calls `subcomp`
+    //! Converts the param `other` appropriately and then calls
+    //! `subcomp`
     virtual RCP<const Number> sub(const Number &other) const
     {
         if (is_a<Rational>(other)) {
@@ -253,7 +269,8 @@ public:
             return other.rsub(*this);
         }
     };
-    //! Converts the param `other` appropriately and then calls `rsubcomp`
+    //! Converts the param `other` appropriately and then calls
+    //! `rsubcomp`
     virtual RCP<const Number> rsub(const Number &other) const
     {
         if (is_a<Rational>(other)) {
@@ -264,7 +281,8 @@ public:
             throw std::runtime_error("Not implemented.");
         }
     };
-    //! Converts the param `other` appropriately and then calls `mulcomp`
+    //! Converts the param `other` appropriately and then calls
+    //! `mulcomp`
     virtual RCP<const Number> mul(const Number &other) const
     {
         if (is_a<Rational>(other)) {
@@ -277,7 +295,8 @@ public:
             return other.mul(*this);
         }
     };
-    //! Converts the param `other` appropriately and then calls `divcomp`
+    //! Converts the param `other` appropriately and then calls
+    //! `divcomp`
     virtual RCP<const Number> div(const Number &other) const
     {
         if (is_a<Rational>(other)) {
@@ -290,7 +309,8 @@ public:
             return other.rdiv(*this);
         }
     };
-    //! Converts the param `other` appropriately and then calls `rdivcomp`
+    //! Converts the param `other` appropriately and then calls
+    //! `rdivcomp`
     virtual RCP<const Number> rdiv(const Number &other) const
     {
         if (is_a<Integer>(other)) {
@@ -299,7 +319,8 @@ public:
             throw std::runtime_error("Not implemented.");
         }
     };
-    //! Converts the param `other` appropriately and then calls `powcomp`
+    //! Converts the param `other` appropriately and then calls
+    //! `powcomp`
     virtual RCP<const Number> pow(const Number &other) const
     {
         if (is_a<Integer>(other)) {
