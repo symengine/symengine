@@ -98,7 +98,7 @@ TEST_CASE("Add: subs", "[subs]")
     d[x] = integer(5);
     r1 = add(mul(integer(12), add(integer(3), sin(x))), sin(integer(4)));
     r2 = add(mul(integer(12), add(integer(3), sin(integer(5)))),
-            sin(integer(4)));
+             sin(integer(4)));
     REQUIRE(eq(*r1->subs(d), *r2));
 
     d.clear();
@@ -283,7 +283,6 @@ TEST_CASE("KroneckerDelta: subs", "[subs]")
     REQUIRE(eq(*r1->subs(d), *r3));
 }
 
-
 TEST_CASE("Gamma: subs", "[subs]")
 {
     RCP<const Basic> x = symbol("x");
@@ -293,7 +292,7 @@ TEST_CASE("Gamma: subs", "[subs]")
     RCP<const Basic> r1 = gamma(add(x, y));
     RCP<const Basic> r2 = gamma(mul(i2, x));
     RCP<const Basic> r3 = gamma(add(y, x));
-    
+
     map_basic_basic d;
     d[y] = x;
     REQUIRE(eq(*r1->subs(d), *r2));
@@ -303,7 +302,7 @@ TEST_CASE("Gamma: subs", "[subs]")
     REQUIRE(eq(*r1->subs(d), *r3));
 
     d.clear();
-    d[y] = zero;    
+    d[y] = zero;
     REQUIRE(eq(*r1->subs(d), *gamma(x)));
 }
 
@@ -317,7 +316,7 @@ TEST_CASE("LowerGamma: subs", "[subs]")
     RCP<const Basic> r1 = lowergamma(add(x, z), y);
     RCP<const Basic> r2 = lowergamma(x, y);
     RCP<const Basic> r3 = lowergamma(add(x, x), add(y, one));
-    
+
     map_basic_basic d;
     d[x] = one;
     REQUIRE(eq(*lowergamma(x, y)->subs(d), *lowergamma(one, y)));
@@ -350,7 +349,7 @@ TEST_CASE("UpperGamma: subs", "[subs]")
     RCP<const Basic> r1 = uppergamma(add(x, z), y);
     RCP<const Basic> r2 = uppergamma(x, y);
     RCP<const Basic> r3 = uppergamma(add(x, x), add(y, one));
-    
+
     map_basic_basic d;
     d[x] = one;
     REQUIRE(eq(*uppergamma(x, y)->subs(d), *uppergamma(one, y)));
@@ -383,7 +382,7 @@ TEST_CASE("PolyGamma: subs", "[subs]")
     RCP<const Basic> r1 = polygamma(add(x, z), y);
     RCP<const Basic> r2 = polygamma(x, y);
     RCP<const Basic> r3 = polygamma(add(x, x), add(y, one));
-    
+
     map_basic_basic d;
     d[x] = one;
     REQUIRE(eq(*polygamma(x, y)->subs(d), *polygamma(one, y)));
@@ -416,7 +415,7 @@ TEST_CASE("Beta: subs", "[subs]")
     RCP<const Basic> r1 = beta(add(x, z), y);
     RCP<const Basic> r2 = beta(x, y);
     RCP<const Basic> r3 = beta(add(x, x), add(y, one));
-    
+
     map_basic_basic d;
     d[x] = one;
     REQUIRE(eq(*beta(x, y)->subs(d), *beta(y, one)));
