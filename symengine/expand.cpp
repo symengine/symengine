@@ -206,7 +206,7 @@ public:
                         }
                     }
                     if (!(i2->second->is_one())) {
-                        _imulnum(outArg(overall_coeff), pownum(i2->second, 
+                        _imulnum(outArg(overall_coeff), pownum(i2->second,
                                                                 rcp_static_cast<const Number>(exp)));
                     }
                 }
@@ -235,13 +235,13 @@ public:
         RCP<const UnivariatePolynomial> r = univariate_polynomial(x->get_var(), 0, {{0, 1}});
         while (i != 0) {
             if (i % 2 == 1) {
-                r = mul_uni_poly(r, x); 
+                r = mul_uni_poly(r, x);
                     i--;
-            }   
-            x = mul_uni_poly(x, x); 
+            }
+            x = mul_uni_poly(x, x);
             i /= 2;
-        }   
-        _coef_dict_add_term(multiply, r); 
+        }
+        _coef_dict_add_term(multiply, r);
     }
 
     void pow_expand(RCP<const UnivariateIntPolynomial> &x, unsigned long &i) {
@@ -256,7 +256,7 @@ public:
         }
         _coef_dict_add_term(multiply, r);
     }
-    
+
     void bvisit(const Pow &self) {
         RCP<const Basic> _base = expand(self.get_base());
         if (is_a<Integer>(*self.get_exp()) && is_a<UnivariatePolynomial>(*_base)) {
@@ -275,7 +275,7 @@ public:
         if (!is_a<Integer>(*self.get_exp()) || !is_a<Add>(*_base)) {
             if (neq(*_base, *self.get_base())) {
                 Add::dict_add_term(d_, multiply, pow(_base, self.get_exp()));
-            } else { 
+            } else {
                 Add::dict_add_term(d_, multiply, self.rcp_from_this());
             }
             return;
@@ -290,12 +290,12 @@ public:
             // Add the numerical coefficient into the dictionary. This
             // allows a little bit easier treatment below.
             insert(base_dict, base->coef_, one);
-        } 
+        }
         else
             iaddnum(outArg(coeff), base->coef_);
         if (n == 2)
             return square_expand(base_dict);
-        else 
+        else
             return pow_expand(base_dict, mp_get_ui(n));
     }
 

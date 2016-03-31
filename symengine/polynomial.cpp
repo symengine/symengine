@@ -8,7 +8,7 @@ namespace SymEngine {
 
 UnivariateIntPolynomial::UnivariateIntPolynomial(const RCP<const Symbol> &var, const unsigned int &degree, map_uint_mpz&& dict) :
      degree_{degree}, var_{var}, dict_{std::move(dict)} {
-    
+
     SYMENGINE_ASSERT(is_canonical(degree_, dict_))
 }
 
@@ -24,7 +24,7 @@ bool UnivariateIntPolynomial::is_canonical(const unsigned int &degree_, const ma
     if (var_->get_name() == "")
         if (!(dict.empty() or dict.size() == 1))
             return false;
-    
+
     if (dict.size() != 0) {
         unsigned int prev_degree = (--dict.end())->first;
         if (prev_degree != degree_) {
@@ -32,7 +32,7 @@ bool UnivariateIntPolynomial::is_canonical(const unsigned int &degree_, const ma
         }
     } else if (degree_ != 0)
         return false;
-    
+
     //Check if dictionary contains terms with coeffienct 0
     for (auto iter : dict)
         if (iter.second == 0)
@@ -115,7 +115,7 @@ vec_basic UnivariateIntPolynomial::get_args() const {
         } else if (p.first == 1) {
             if (p.second == 1) {
                 args.push_back(var_);
-            } else { 
+            } else {
                 args.push_back(Mul::from_dict(integer(p.second), {{var_, one}}));
             }
           } else {
@@ -168,7 +168,7 @@ integer_class UnivariateIntPolynomial::eval_bit(const int &x) const {
         last_deg = (*it).first;
     }
     result = result << x * last_deg;
-    
+
     return result;
 }
 
@@ -211,8 +211,8 @@ bool UnivariateIntPolynomial::is_pow() const {
               dict_.begin()->first != 1 and dict_.begin()->first != 0)
         return true;
     return false;
-}   
-    
+}
+
 RCP<const UnivariateIntPolynomial> add_poly(const UnivariateIntPolynomial &a, const UnivariateIntPolynomial &b) {
     map_uint_mpz dict;
     RCP<const Symbol> var = symbol("");
@@ -282,7 +282,7 @@ RCP<const UnivariateIntPolynomial> mul_poly(RCP<const UnivariateIntPolynomial> a
     } else {
         var = a->get_var();
     }
-    
+
     unsigned int da = a->get_degree();
     unsigned int db = b->get_degree();
 
@@ -356,7 +356,7 @@ bool UnivariatePolynomial::is_canonical(const unsigned int &degree_, const map_i
         }
     } else if (degree_ != 0)
         return false;
-    
+
     //Check if dictionary contains terms with coeffienct 0
     for (auto iter : dict)
         if (iter.first != 0 and iter.second == 0)
@@ -408,8 +408,8 @@ RCP<const UnivariatePolynomial> UnivariatePolynomial::from_vec(const RCP<const S
         if (Expression(0) != v[i]) {
             dict.insert(std::pair<int, Expression>(i, v[i]));
             degree = i;
-        }   
-    }   
+        }
+    }
     return make_rcp<const UnivariatePolynomial>(var, degree, std::move(dict));
 }
 
@@ -421,8 +421,8 @@ RCP<const Basic> UnivariatePolynomial::from_dict(const RCP<const Symbol> &var, m
             auto toErase = iter;
             iter++;
             d.erase(toErase);
-        } 
-        else 
+        }
+        else
             iter++;
     }
     unsigned int degree = 0;
@@ -463,7 +463,7 @@ Expression UnivariatePolynomial::max_coef() const {
     Expression curr = dict_.begin()->second;
     for (const auto &it : dict_)
         if (curr.get_basic()->__cmp__(*it.second.get_basic()))
-            curr = it.second; 
+            curr = it.second;
     return curr;
 }
 
@@ -499,7 +499,7 @@ bool UnivariatePolynomial::is_symbol() const {
 }
 
 bool UnivariatePolynomial::is_mul() const {
-    return dict_.size() == 1 and dict_.begin()->first != 0 and 
+    return dict_.size() == 1 and dict_.begin()->first != 0 and
         dict_.begin()->second != 1 and dict_.begin()->second != 0;
 }
 

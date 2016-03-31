@@ -162,7 +162,7 @@ void StrPrinter::bvisit(const ComplexMPC &x) {
 void StrPrinter::bvisit(const Add &x) {
     std::ostringstream o;
     bool first = true;
-    std::map<RCP<const Basic>, RCP<const Number>, 
+    std::map<RCP<const Basic>, RCP<const Number>,
             RCPBasicKeyLessCmp> dict(x.dict_.begin(), x.dict_.end());
 
     if (neq(*(x.coef_), *zero)) {
