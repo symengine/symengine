@@ -290,6 +290,16 @@ RCP<const Basic> add(const RCP<const Basic> &a, const RCP<const Basic> &b)
     return Add::from_dict(coef, std::move(d));
 }
 
+RCP<const Basic> add(const vec_basic &a)
+{
+    SymEngine::umap_basic_num d;
+    RCP<const Number> coef = zero;
+    for (const auto &i: a) {
+        Add::coef_dict_add_term(outArg(coef), d, one, i);
+    }
+    return Add::from_dict(coef, std::move(d));
+}
+
 RCP<const Basic> sub(const RCP<const Basic> &a, const RCP<const Basic> &b)
 {
     return add(a, mul(minus_one, b));
