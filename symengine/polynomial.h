@@ -101,13 +101,13 @@ inline RCP<const UnivariateIntPolynomial> univariate_int_polynomial(RCP<const Sy
 
 class UnivariatePolynomial : public Basic {
 private:
-    unsigned int degree_;
+    int degree_;
     RCP<const Symbol> var_;
     map_int_Expr dict_;
 public:
     IMPLEMENT_TYPEID(UNIVARIATEPOLYNOMIAL)
     //! Constructor of UnivariatePolynomial class
-    UnivariatePolynomial(const RCP<const Symbol> &var, const unsigned int &degree, const map_int_Expr&& dict);
+    UnivariatePolynomial(const RCP<const Symbol> &var, const int &degree, const map_int_Expr&& dict);
     //! Constructor using a dense vector of Expression
     UnivariatePolynomial(const RCP<const Symbol> &var, const std::vector<Expression> &v);
     
@@ -116,7 +116,7 @@ public:
         return UnivariatePolynomial::from_vec(var, v);
     }
 
-    bool is_canonical(const unsigned int &degree, const map_int_Expr& dict) const;
+    bool is_canonical(const int &degree, const map_int_Expr& dict) const;
     std::size_t __hash__() const;
     bool __eq__(const Basic &o) const;
     int compare(const Basic &o) const;
@@ -150,7 +150,9 @@ public:
     bool is_pow() const;
 
     virtual vec_basic get_args() const;
-
+    inline int get_degree() const {
+        return degree_;
+    }
     inline RCP<const Symbol> get_var() const {
         return var_;
     }

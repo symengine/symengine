@@ -372,8 +372,10 @@ void StrPrinter::bvisit(const UnivariatePolynomial &x) {
         }
         s << x.get_var()->get_name();
         //if exponent is not 1, print the exponent;
-        if (it->first != 1) {
+        if (it->first > 1) {
             s << "**"  << it->first;
+        } else if(it->first < 0) {
+            s << "**(" << it->first <<")";
         }
         //corner cases of only first term handled successfully, switch the bool
         first = false;

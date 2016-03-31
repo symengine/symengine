@@ -181,6 +181,13 @@ TEST_CASE("Constructor of UnivariatePolynomial", "[UnivariatePolynomial]")
 
     RCP<const UnivariatePolynomial> R = univariate_polynomial(x, 3, {{0, d}, {1, c}, {2, b}, {3, a}});
     REQUIRE(R->__str__() == "a*x**3 + b*x**2 + c*x + d"); 
+
+    R = univariate_polynomial(x, -1, {{-1, d}});
+    REQUIRE(R->__str__() == "d*x**(-1)");
+    REQUIRE(not (R->__str__() == "d*x**-1"));
+
+    R = univariate_polynomial(x, 1, {{-2, d}, {-1, c}, {0, b}, {1, a}});
+    REQUIRE(R->__str__() == "a*x + b + c*x**(-1) + d*x**(-2)");
 }
 
 TEST_CASE("Adding two UnivariatePolynomial", "[UnivariatePolynomial]")

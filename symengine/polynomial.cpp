@@ -332,7 +332,7 @@ RCP<const UnivariateIntPolynomial> mul_poly(RCP<const UnivariateIntPolynomial> a
 }
 
 
-UnivariatePolynomial::UnivariatePolynomial(const RCP<const Symbol> &var, const unsigned int &degree, const map_int_Expr&& dict) :
+UnivariatePolynomial::UnivariatePolynomial(const RCP<const Symbol> &var, const int &degree, const map_int_Expr&& dict) :
      degree_{degree}, var_{var}, dict_{std::move(dict)} {
     SYMENGINE_ASSERT(is_canonical(degree_, dict_))
 }
@@ -345,12 +345,12 @@ UnivariatePolynomial::UnivariatePolynomial(const RCP<const Symbol> &var, const s
     SYMENGINE_ASSERT(is_canonical(degree_, dict_))
 }
 
-bool UnivariatePolynomial::is_canonical(const unsigned int &degree_, const map_int_Expr& dict) const {
+bool UnivariatePolynomial::is_canonical(const int &degree_, const map_int_Expr& dict) const {
     if (var_->get_name() == "")
         if (!((dict.empty() or dict.size() == 1) and dict.begin()->first == 0))
             return false;
     if (dict.size() != 0) {
-        unsigned int prev_degree = (--dict.end())->first;
+        int prev_degree = (--dict.end())->first;
         if (prev_degree != degree_) {
             return false;
         }
