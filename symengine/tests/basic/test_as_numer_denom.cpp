@@ -139,8 +139,9 @@ TEST_CASE("NumerDenom: Add", "[as_numer_denom]")
     // (x/4) + (y/6)
     r1 = add(div(x, integer(4)), div(y, integer(6)));
     as_numer_denom(r1, outArg(num), outArg(den));
-    REQUIRE(eq(*num, *add(mul(integer(3), x), mul(integer(2), y)))); // 3*x + 2*y
-    REQUIRE(eq(*den, *integer(12)));                                 // 12
+    REQUIRE(
+        eq(*num, *add(mul(integer(3), x), mul(integer(2), y)))); // 3*x + 2*y
+    REQUIRE(eq(*den, *integer(12)));                             // 12
 
     // (1/xy) + (1/yz)
     r1 = add(div(one, mul(x, y)), div(one, mul(y, z)));

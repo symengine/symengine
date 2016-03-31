@@ -5,12 +5,14 @@
 namespace SymEngine
 {
 
-Complex::Complex(rational_class real, rational_class imaginary) : real_{real}, imaginary_{imaginary}
+Complex::Complex(rational_class real, rational_class imaginary)
+    : real_{real}, imaginary_{imaginary}
 {
     SYMENGINE_ASSERT(is_canonical(this->real_, this->imaginary_))
 }
 
-bool Complex::is_canonical(const rational_class &real, const rational_class &imaginary) const
+bool Complex::is_canonical(const rational_class &real,
+                           const rational_class &imaginary) const
 {
     rational_class re = real;
     rational_class im = imaginary;
@@ -33,7 +35,8 @@ bool Complex::is_canonical(const rational_class &real, const rational_class &ima
 
 std::size_t Complex::__hash__() const
 {
-    // only the least significant bits that fit into "signed long int" are
+    // only the least significant bits that fit into "signed long int"
+    // are
     // hashed:
     std::size_t seed = COMPLEX;
     hash_combine<long long int>(seed, mp_get_si(get_num(this->real_)));
@@ -47,7 +50,8 @@ bool Complex::__eq__(const Basic &o) const
 {
     if (is_a<Complex>(o)) {
         const Complex &s = static_cast<const Complex &>(o);
-        return ((this->real_ == s.real_) and (this->imaginary_ == s.imaginary_));
+        return ((this->real_ == s.real_)
+                and (this->imaginary_ == s.imaginary_));
     }
     return false;
 }
@@ -67,7 +71,8 @@ int Complex::compare(const Basic &o) const
     }
 }
 
-RCP<const Number> Complex::from_mpq(const rational_class re, const rational_class im)
+RCP<const Number> Complex::from_mpq(const rational_class re,
+                                    const rational_class im)
 {
     // It is assumed that `re` and `im` are already in canonical form.
     if (get_num(im) == 0) {
@@ -85,15 +90,19 @@ RCP<const Number> Complex::from_two_rats(const Rational &re, const Rational &im)
 RCP<const Number> Complex::from_two_nums(const Number &re, const Number &im)
 {
     if (is_a<Integer>(re) and is_a<Integer>(im)) {
-        rational_class re_mpq(static_cast<const Integer &>(re).i, static_cast<const Integer &>(*one).i);
-        rational_class im_mpq(static_cast<const Integer &>(im).i, static_cast<const Integer &>(*one).i);
+        rational_class re_mpq(static_cast<const Integer &>(re).i,
+                              static_cast<const Integer &>(*one).i);
+        rational_class im_mpq(static_cast<const Integer &>(im).i,
+                              static_cast<const Integer &>(*one).i);
         return Complex::from_mpq(re_mpq, im_mpq);
     } else if (is_a<Rational>(re) and is_a<Integer>(im)) {
         rational_class re_mpq = static_cast<const Rational &>(re).i;
-        rational_class im_mpq(static_cast<const Integer &>(im).i, static_cast<const Integer &>(*one).i);
+        rational_class im_mpq(static_cast<const Integer &>(im).i,
+                              static_cast<const Integer &>(*one).i);
         return Complex::from_mpq(re_mpq, im_mpq);
     } else if (is_a<Integer>(re) and is_a<Rational>(im)) {
-        rational_class re_mpq(static_cast<const Integer &>(re).i, static_cast<const Integer &>(*one).i);
+        rational_class re_mpq(static_cast<const Integer &>(re).i,
+                              static_cast<const Integer &>(*one).i);
         rational_class im_mpq = static_cast<const Rational &>(im).i;
         return Complex::from_mpq(re_mpq, im_mpq);
     } else if (is_a<Rational>(re) and is_a<Rational>(im)) {
@@ -101,7 +110,8 @@ RCP<const Number> Complex::from_two_nums(const Number &re, const Number &im)
         rational_class im_mpq = static_cast<const Rational &>(im).i;
         return Complex::from_mpq(re_mpq, im_mpq);
     } else {
-        throw std::runtime_error("Invalid Format: Expected Integer or Rational");
+        throw std::runtime_error(
+            "Invalid Format: Expected Integer or Rational");
     }
 }
 

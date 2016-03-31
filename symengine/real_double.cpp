@@ -273,7 +273,8 @@ class EvaluateComplexDouble : public EvaluateDouble<ComplexDouble>
     virtual RCP<const Basic> acoth(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<ComplexDouble>(x))
-        return number(std::atanh(1.0 / static_cast<const ComplexDouble &>(x).i));
+        return number(
+            std::atanh(1.0 / static_cast<const ComplexDouble &>(x).i));
     }
     virtual RCP<const Basic> log(const Basic &x) const override
     {

@@ -105,14 +105,17 @@ public:
         return (eq(*start_, *end_) and not(left_open_ or right_open_));
     }
 
-    Interval(const RCP<const Number> &start, const RCP<const Number> &end, const bool left_open = false, const bool right_open = false);
+    Interval(const RCP<const Number> &start, const RCP<const Number> &end,
+             const bool left_open = false, const bool right_open = false);
 
     RCP<const Set> open() const;
     RCP<const Set> close() const;
     RCP<const Set> Lopen() const;
     RCP<const Set> Ropen() const;
 
-    static bool is_canonical(const RCP<const Number> &start, const RCP<const Number> &end, bool left_open, bool right_open);
+    static bool is_canonical(const RCP<const Number> &start,
+                             const RCP<const Number> &end, bool left_open,
+                             bool right_open);
 
     virtual RCP<const Set> set_union(const RCP<const Set> &o) const;
     virtual RCP<const Set> set_intersection(const RCP<const Set> &o) const;
@@ -129,7 +132,9 @@ inline RCP<const EmptySet> emptyset()
 }
 
 //! \return RCP<const Set>
-inline RCP<const Set> interval(const RCP<const Number> &start, const RCP<const Number> &end, const bool left_open = false,
+inline RCP<const Set> interval(const RCP<const Number> &start,
+                               const RCP<const Number> &end,
+                               const bool left_open = false,
                                const bool right_open = false)
 {
     if (Interval::is_canonical(start, end, left_open, right_open)) {

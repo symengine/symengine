@@ -52,8 +52,10 @@ struct CRCPBasic {
     SymEngine::RCP<const SymEngine::Basic> m;
 };
 
-static_assert(sizeof(CRCPBasic) == sizeof(CRCPBasic_C), "Size of 'basic' is not correct");
-static_assert(std::alignment_of<CRCPBasic>::value == std::alignment_of<CRCPBasic_C>::value,
+static_assert(sizeof(CRCPBasic) == sizeof(CRCPBasic_C),
+              "Size of 'basic' is not correct");
+static_assert(std::alignment_of<CRCPBasic>::value
+                  == std::alignment_of<CRCPBasic_C>::value,
               "Alignment of 'basic' is not correct");
 
 void basic_new_stack(basic s)
@@ -120,10 +122,10 @@ TypeID basic_get_class_id(const char *c)
 {
     static std::map<std::string, TypeID> names = {
 #define SYMENGINE_INCLUDE_ALL
-#define SYMENGINE_ENUM(type, Class)                                                                                              \
-    {                                                                                                                            \
-        xstr(Class), SYMENGINE_##type                                                                                            \
-    }                                                                                                                            \
+#define SYMENGINE_ENUM(type, Class)                                            \
+    {                                                                          \
+        xstr(Class), SYMENGINE_##type                                          \
+    }                                                                          \
     ,
 #include "symengine/type_codes.inc"
 #undef SYMENGINE_ENUM
@@ -137,10 +139,10 @@ char *basic_get_class_from_id(TypeID id)
 {
     static std::map<TypeID, std::string> names = {
 #define SYMENGINE_INCLUDE_ALL
-#define SYMENGINE_ENUM(type, Class)                                                                                              \
-    {                                                                                                                            \
-        SYMENGINE_##type, xstr(Class)                                                                                            \
-    }                                                                                                                            \
+#define SYMENGINE_ENUM(type, Class)                                            \
+    {                                                                          \
+        SYMENGINE_##type, xstr(Class)                                          \
+    }                                                                          \
     ,
 #include "symengine/type_codes.inc"
 #undef SYMENGINE_ENUM
@@ -216,7 +218,9 @@ int rational_set(basic s, const basic a, const basic b)
     if (not is_a_Integer(a) or not is_a_Integer(b)) {
         return 0;
     }
-    s->m = SymEngine::Rational::from_two_ints(*(rcp_static_cast<const Integer>(a->m)), *(rcp_static_cast<const Integer>(b->m)));
+    s->m = SymEngine::Rational::from_two_ints(
+        *(rcp_static_cast<const Integer>(a->m)),
+        *(rcp_static_cast<const Integer>(b->m)));
     return 1;
 }
 
@@ -227,12 +231,16 @@ void rational_set_mpq(basic s, const mpq_t i)
 
 void complex_set(basic s, const basic re, const basic im)
 {
-    s->m = SymEngine::Complex::from_two_nums(*(rcp_static_cast<const Number>(re->m)), *(rcp_static_cast<const Number>(im->m)));
+    s->m = SymEngine::Complex::from_two_nums(
+        *(rcp_static_cast<const Number>(re->m)),
+        *(rcp_static_cast<const Number>(im->m)));
 }
 
 void complex_set_rat(basic s, const basic re, const basic im)
 {
-    s->m = SymEngine::Complex::from_two_rats(*(rcp_static_cast<const Rational>(re->m)), *(rcp_static_cast<const Rational>(im->m)));
+    s->m = SymEngine::Complex::from_two_rats(
+        *(rcp_static_cast<const Rational>(re->m)),
+        *(rcp_static_cast<const Rational>(im->m)));
 }
 
 void complex_set_mpq(basic s, const mpq_t re, const mpq_t im)
@@ -288,10 +296,10 @@ int basic_neq(const basic a, const basic b)
     return SymEngine::neq(*(a->m), *(b->m)) ? 1 : 0;
 }
 
-#define IMPLEMENT_ONE_ARG_FUNC(func)                                                                                             \
-    void basic_##func(basic s, const basic a)                                                                                    \
-    {                                                                                                                            \
-        s->m = SymEngine::func(a->m);                                                                                            \
+#define IMPLEMENT_ONE_ARG_FUNC(func)                                           \
+    void basic_##func(basic s, const basic a)                                  \
+    {                                                                          \
+        s->m = SymEngine::func(a->m);                                          \
     }
 
 IMPLEMENT_ONE_ARG_FUNC(expand);
@@ -380,7 +388,8 @@ int vectorint_placement_new_check(void *data, size_t size)
 CVectorInt *vectorint_placement_new(void *data)
 {
 #if defined(WITH_SYMENGINE_ASSERT)
-    // if (size < sizeof(CVectorInt)) return 1; // Requires the 'size' argument
+    // if (size < sizeof(CVectorInt)) return 1; // Requires the 'size'
+    // argument
     CVectorInt *self = (CVectorInt *)data;
     SYMENGINE_ASSERT(SymEngine::is_aligned(self));
 #endif
@@ -491,7 +500,8 @@ void mapbasicbasic_free(CMapBasicBasic *self)
     delete self;
 }
 
-void mapbasicbasic_insert(CMapBasicBasic *self, const basic key, const basic mapped)
+void mapbasicbasic_insert(CMapBasicBasic *self, const basic key,
+                          const basic mapped)
 {
     (self->m)[key->m] = mapped->m;
 }
@@ -554,14 +564,16 @@ void ntheory_gcd(basic s, const basic a, const basic b)
 {
     SYMENGINE_ASSERT(is_a<Integer>(*(a->m)));
     SYMENGINE_ASSERT(is_a<Integer>(*(b->m)));
-    s->m = SymEngine::gcd(static_cast<const Integer &>(*(a->m)), static_cast<const Integer &>(*(b->m)));
+    s->m = SymEngine::gcd(static_cast<const Integer &>(*(a->m)),
+                          static_cast<const Integer &>(*(b->m)));
 }
 
 void ntheory_lcm(basic s, const basic a, const basic b)
 {
     SYMENGINE_ASSERT(is_a<Integer>(*(a->m)));
     SYMENGINE_ASSERT(is_a<Integer>(*(b->m)));
-    s->m = SymEngine::lcm(static_cast<const Integer &>(*(a->m)), static_cast<const Integer &>(*(b->m)));
+    s->m = SymEngine::lcm(static_cast<const Integer &>(*(a->m)),
+                          static_cast<const Integer &>(*(b->m)));
 }
 
 void ntheory_nextprime(basic s, const basic a)
@@ -574,14 +586,16 @@ void ntheory_mod(basic s, const basic n, const basic d)
 {
     SYMENGINE_ASSERT(is_a<Integer>(*(n->m)));
     SYMENGINE_ASSERT(is_a<Integer>(*(d->m)));
-    s->m = SymEngine::mod(static_cast<const Integer &>(*(n->m)), static_cast<const Integer &>(*(d->m)));
+    s->m = SymEngine::mod(static_cast<const Integer &>(*(n->m)),
+                          static_cast<const Integer &>(*(d->m)));
 }
 
 void ntheory_quotient(basic s, const basic n, const basic d)
 {
     SYMENGINE_ASSERT(is_a<Integer>(*(n->m)));
     SYMENGINE_ASSERT(is_a<Integer>(*(d->m)));
-    s->m = SymEngine::quotient(static_cast<const Integer &>(*(n->m)), static_cast<const Integer &>(*(d->m)));
+    s->m = SymEngine::quotient(static_cast<const Integer &>(*(n->m)),
+                               static_cast<const Integer &>(*(d->m)));
 }
 
 void ntheory_fibonacci(basic s, unsigned long a)

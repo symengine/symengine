@@ -12,7 +12,8 @@
 namespace SymEngine
 {
 
-Pow::Pow(const RCP<const Basic> &base, const RCP<const Basic> &exp) : base_{base}, exp_{exp}
+Pow::Pow(const RCP<const Basic> &base, const RCP<const Basic> &exp)
+    : base_{base}, exp_{exp}
 {
     SYMENGINE_ASSERT(is_canonical(*base, *exp))
 }
@@ -40,17 +41,22 @@ bool Pow::is_canonical(const Basic &base, const Basic &exp) const
     // e.g. (x**y)**2, should rather be x**(2*y)
     if (is_a<Pow>(base) and is_a<Integer>(exp))
         return false;
-    // If exp is a rational, it should be between 0  and 1, i.e. we don't
+    // If exp is a rational, it should be between 0  and 1, i.e. we
+    // don't
     // allow things like 2**(-1/2) or 2**(3/2)
     if ((is_a<Rational>(base) or is_a<Integer>(base)) and is_a<Rational>(exp)
-        and (static_cast<const Rational &>(exp).i < 0 or static_cast<const Rational &>(exp).i > 1))
+        and (static_cast<const Rational &>(exp).i < 0
+             or static_cast<const Rational &>(exp).i > 1))
         return false;
-    // Purely Imaginary complex numbers with integral powers are expanded
+    // Purely Imaginary complex numbers with integral powers are
+    // expanded
     // e.g (2I)**3
-    if (is_a<Complex>(base) and static_cast<const Complex &>(base).is_re_zero() and is_a<Integer>(exp))
+    if (is_a<Complex>(base) and static_cast<const Complex &>(base).is_re_zero()
+        and is_a<Integer>(exp))
         return false;
     // e.g. 0.5^2.0 should be represented as 0.25
-    if (is_a_Number(base) and not static_cast<const Number &>(base).is_exact() and is_a_Number(exp)
+    if (is_a_Number(base) and not static_cast<const Number &>(base).is_exact()
+        and is_a_Number(exp)
         and not static_cast<const Number &>(exp).is_exact())
         return false;
     return true;
@@ -66,7 +72,8 @@ std::size_t Pow::__hash__() const
 
 bool Pow::__eq__(const Basic &o) const
 {
-    if (is_a<Pow>(o) and eq(*base_, *(static_cast<const Pow &>(o).base_)) and eq(*exp_, *(static_cast<const Pow &>(o).exp_)))
+    if (is_a<Pow>(o) and eq(*base_, *(static_cast<const Pow &>(o).base_))
+        and eq(*exp_, *(static_cast<const Pow &>(o).exp_)))
         return true;
 
     return false;
@@ -97,7 +104,8 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
     if (eq(*a, *minus_one)) {
         if (is_a<Integer>(*b)) {
             return is_a<Integer>(*div(b, integer(2))) ? one : minus_one;
-        } else if (is_a<Rational>(*b) and (get_num(rcp_static_cast<const Rational>(b)->i) == 1)
+        } else if (is_a<Rational>(*b)
+                   and (get_num(rcp_static_cast<const Rational>(b)->i) == 1)
                    and (get_den(rcp_static_cast<const Rational>(b)->i) == 2)) {
             return I;
         }
@@ -106,7 +114,8 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
     if (is_a_Number(*a) and is_a_Number(*b)) {
         if (is_a<Integer>(*b)) {
             if (is_a<Rational>(*a)) {
-                RCP<const Rational> exp_new = rcp_static_cast<const Rational>(a);
+                RCP<const Rational> exp_new
+                    = rcp_static_cast<const Rational>(a);
                 return exp_new->powrat(*rcp_static_cast<const Integer>(b));
             } else if (is_a<Integer>(*a)) {
                 RCP<const Integer> exp_new = rcp_static_cast<const Integer>(a);
@@ -117,32 +126,39 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
                 RCP<const Number> res = exp_new->pow(*pow_new);
                 return res;
             } else {
-                return rcp_static_cast<const Number>(a)->pow(*rcp_static_cast<const Number>(b));
+                return rcp_static_cast<const Number>(a)
+                    ->pow(*rcp_static_cast<const Number>(b));
             }
         } else if (is_a<Rational>(*b)) {
             if (is_a<Rational>(*a)) {
-                return static_cast<const Rational &>(*a).powrat(static_cast<const Rational &>(*b));
+                return static_cast<const Rational &>(*a)
+                    .powrat(static_cast<const Rational &>(*b));
             } else if (is_a<Integer>(*a)) {
-                return static_cast<const Rational &>(*b).rpowrat(static_cast<const Integer &>(*a));
+                return static_cast<const Rational &>(*b)
+                    .rpowrat(static_cast<const Integer &>(*a));
             } else if (is_a<Complex>(*a)) {
                 return make_rcp<const Pow>(a, b);
             } else {
-                return rcp_static_cast<const Number>(a)->pow(*rcp_static_cast<const Number>(b));
+                return rcp_static_cast<const Number>(a)
+                    ->pow(*rcp_static_cast<const Number>(b));
             }
         } else if (is_a<Complex>(*b)) {
             return make_rcp<const Pow>(a, b);
         } else {
-            return rcp_static_cast<const Number>(a)->pow(*rcp_static_cast<const Number>(b));
+            return rcp_static_cast<const Number>(a)
+                ->pow(*rcp_static_cast<const Number>(b));
         }
     }
     if (is_a<Mul>(*a) and is_a_Number(*b)) {
         map_basic_basic d;
         RCP<const Number> coef = one;
-        rcp_static_cast<const Mul>(a)->power_num(outArg(coef), d, rcp_static_cast<const Number>(b));
+        rcp_static_cast<const Mul>(a)
+            ->power_num(outArg(coef), d, rcp_static_cast<const Number>(b));
         return Mul::from_dict(coef, std::move(d));
     }
     if (is_a<Pow>(*a) and is_a<Integer>(*b)) {
-        // Convert (x**y)**b = x**(b*y), where 'b' is an integer. This holds for
+        // Convert (x**y)**b = x**(b*y), where 'b' is an integer. This
+        // holds for
         // any complex 'x', 'y' and integer 'b'.
         RCP<const Pow> A = rcp_static_cast<const Pow>(a);
         return pow(A->get_base(), mul(A->get_exp(), b));
@@ -282,7 +298,8 @@ bool Log::is_canonical(const Basic &arg) const
     // log(E)
     if (eq(arg, *E))
         return false;
-    // Currently not implemented, however should be expanded as `-ipi + log(-arg)`
+    // Currently not implemented, however should be expanded as `-ipi +
+    // log(-arg)`
     if (is_a_Number(arg) and static_cast<const Number &>(arg).is_negative())
         return false;
     if (is_a_Number(arg) and not static_cast<const Number &>(arg).is_exact())
@@ -332,7 +349,8 @@ RCP<const Basic> Log::subs(const map_basic_basic &subs_dict) const
 RCP<const Basic> log(const RCP<const Basic> &arg)
 {
     if (eq(*arg, *zero)) {
-        throw std::runtime_error("log(0) is complex infinity. Yet to be implemented");
+        throw std::runtime_error(
+            "log(0) is complex infinity. Yet to be implemented");
     }
     if (eq(*arg, *one))
         return zero;
@@ -348,7 +366,8 @@ RCP<const Basic> log(const RCP<const Basic> &arg)
     }
     if (is_a<Rational>(*arg)) {
         RCP<const Integer> num, den;
-        get_num_den(static_cast<const Rational &>(*arg), outArg(num), outArg(den));
+        get_num_den(static_cast<const Rational &>(*arg), outArg(num),
+                    outArg(den));
         return sub(log(num), log(den));
     }
     return make_rcp<const Log>(arg);

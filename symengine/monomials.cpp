@@ -14,13 +14,15 @@ void monomial_mul(const vec_int &A, const vec_int &B, vec_int &C)
 }
 
 /*
-// Other implementation of monomial_mul() are below. Those are slightly slower,
+// Other implementation of monomial_mul() are below. Those are slightly
+slower,
 // so they are commented out.
 
 // This is slightly slower than monomial_mul
 void monomial_mul2(const vec_int &A, const vec_int &B, vec_int &C)
 {
-    std::transform(A.begin(), A.end(), B.begin(), C.begin(), std::plus<int>());
+    std::transform(A.begin(), A.end(), B.begin(), C.begin(),
+std::plus<int>());
 }
 
 // The same as monomial_mul2

@@ -93,7 +93,8 @@ inline Ptr<T> outArg(T &arg)
 
 enum ENull { null };
 
-// RCP can be null. Functionally it should be equivalent to Teuchos::RCP.
+// RCP can be null. Functionally it should be equivalent to
+// Teuchos::RCP.
 
 template <class T>
 class RCP
@@ -283,7 +284,8 @@ public:
 #endif
     }
 
-    //! Get RCP<const T> pointer to self (it will cast the pointer to const T)
+    //! Get RCP<const T> pointer to self (it will cast the pointer to
+    //! const T)
     inline RCP<const T> rcp_from_this() const
     {
 #if defined(WITH_SYMENGINE_RCP)
@@ -318,7 +320,8 @@ private:
 #if defined(WITH_SYMENGINE_RCP)
 
 //! Public variables if defined with SYMENGINE_RCP
-// The reference counter is defined either as "unsigned int" (faster, but
+// The reference counter is defined either as "unsigned int" (faster,
+// but
 // not thread safe) or as std::atomic<unsigned int> (slower, but thread
 // safe). Semantically they are almost equivalent, except that the
 // pre-decrement operator `operator--()` returns a copy for std::atomic

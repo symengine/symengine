@@ -33,25 +33,35 @@ public:
 
     //! Construct Expression from integral types
     template <class T>
-    Expression(T n, typename std::enable_if<std::is_integral<T>::value>::type * = nullptr)
+    Expression(
+        T n,
+        typename std::enable_if<std::is_integral<T>::value>::type * = nullptr)
         : m_basic(integer(n))
     {
     }
     //! Construct Expression from floating point types
     template <class T>
-    Expression(T n, typename std::enable_if<std::is_floating_point<T>::value>::type * = nullptr)
+    Expression(T n,
+               typename std::enable_if<std::is_floating_point<T>::value>::type
+                   * = nullptr)
         : m_basic(real_double(n))
     {
     }
     //! Construct Expression from std::complex<> types
     template <class T>
-    Expression(std::complex<T> n, typename std::enable_if<std::is_floating_point<T>::value>::type * = nullptr)
+    Expression(std::complex<T> n,
+               typename std::enable_if<std::is_floating_point<T>::value>::type
+                   * = nullptr)
         : m_basic(complex_double(n))
     {
     }
 
 #if defined(HAVE_SYMENGINE_IS_CONSTRUCTIBLE)
-    template <typename T, typename = typename std::enable_if<std::is_constructible<RCP<const Basic>, T &&>::value>::type>
+    template <
+        typename T,
+        typename
+        = typename std::enable_if<std::is_constructible<RCP<const Basic>,
+                                                        T &&>::value>::type>
 #else
     template <typename T>
 #endif
@@ -62,7 +72,8 @@ public:
     //! Construct Expression from Expression
     Expression(const Expression &) = default;
     //! Construct Expression from reference to Expression
-    Expression(Expression &&other) SYMENGINE_NOEXCEPT : m_basic(std::move(other.m_basic))
+    Expression(Expression &&other) SYMENGINE_NOEXCEPT
+        : m_basic(std::move(other.m_basic))
     {
     }
     //! Overload assignment operator
@@ -165,7 +176,8 @@ inline Expression expand(const Expression &arg)
     return expand(arg.get_basic());
 }
 
-inline Expression coeff(const Expression &y, const Expression &x, const Expression &n)
+inline Expression coeff(const Expression &y, const Expression &x,
+                        const Expression &n)
 {
     return coeff(y.get_basic(), x.get_basic(), n.get_basic());
 }
@@ -189,28 +201,39 @@ namespace math
 {
 
 template <typename T>
-struct partial_impl<T, typename std::enable_if<std::is_same<T, SymEngine::Expression>::value>::type> {
+struct partial_impl<T, typename std::
+                           enable_if<std::is_same<T, SymEngine::Expression>::
+                                         value>::type> {
     /// Call operator.
     /**
      * @return an instance of Expression constructed from zero.
      */
-    SymEngine::Expression operator()(const SymEngine::Expression &, const std::string &) const
+    SymEngine::Expression operator()(const SymEngine::Expression &,
+                                     const std::string &) const
     {
         return SymEngine::Expression(0);
     }
 };
 
 template <typename T, typename U>
-struct pow_impl<T, U, typename std::enable_if<std::is_same<T, SymEngine::Expression>::value && std::is_integral<U>::value>::type> {
-    SymEngine::Expression operator()(const SymEngine::Expression &x, const U &y) const
+struct pow_impl<T, U,
+                typename std::
+                    enable_if<std::is_same<T, SymEngine::Expression>::value
+                              && std::is_integral<U>::value>::type> {
+    SymEngine::Expression operator()(const SymEngine::Expression &x,
+                                     const U &y) const
     {
-        return SymEngine::pow(SymEngine::Expression(x).get_basic(), SymEngine::integer(y));
+        return SymEngine::pow(SymEngine::Expression(x).get_basic(),
+                              SymEngine::integer(y));
     }
 };
 }
 
 template <typename U>
-struct print_coefficient_impl<U, typename std::enable_if<std::is_same<U, SymEngine::Expression>::value>::type> {
+struct print_coefficient_impl<U, typename std::
+                                     enable_if<std::is_same<U, SymEngine::
+                                                                   Expression>::
+                                                   value>::type> {
     auto operator()(std::ostream &os, const U &cf) const -> decltype(os << cf)
     {
         return os << SymEngine::detail::poly_print(cf);

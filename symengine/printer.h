@@ -192,8 +192,10 @@ public:
 #endif
     void bvisit(const NumberWrapper &x);
 
-    std::string parenthesizeLT(const RCP<const Basic> &x, PrecedenceEnum precedenceEnum);
-    std::string parenthesizeLE(const RCP<const Basic> &x, PrecedenceEnum precedenceEnum);
+    std::string parenthesizeLT(const RCP<const Basic> &x,
+                               PrecedenceEnum precedenceEnum);
+    std::string parenthesizeLE(const RCP<const Basic> &x,
+                               PrecedenceEnum precedenceEnum);
 
     std::string apply(const RCP<const Basic> &b);
     std::string apply(const vec_basic &v);

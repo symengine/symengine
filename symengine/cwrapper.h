@@ -10,12 +10,15 @@ extern "C" {
 #endif
 
 // Use SYMENGINE_C_ASSERT in C tests
-#define SYMENGINE_C_ASSERT(cond)                                                                                                    \
-    {                                                                                                                               \
-        if (0 == (cond)) {                                                                                                          \
-            printf("SYMENGINE_C_ASSERT failed: %s \nfunction %s (), line number %d at\n%s\n", __FILE__, __func__, __LINE__, #cond); \
-            abort();                                                                                                                \
-        }                                                                                                                           \
+#define SYMENGINE_C_ASSERT(cond)                                               \
+    {                                                                          \
+        if (0 == (cond)) {                                                     \
+            printf("SYMENGINE_C_ASSERT failed: %s \nfunction %s (), "          \
+                   "line "                                                     \
+                   "number %d at\n%s\n",                                       \
+                   __FILE__, __func__, __LINE__, #cond);                       \
+            abort();                                                           \
+        }                                                                      \
     }
 
 typedef enum {
@@ -27,21 +30,34 @@ typedef enum {
     SYMENGINE_TypeID_Count
 } TypeID;
 
-// The size of 'CRCPBasic_C' must be the same as CRCPBasic (which contains a
-// single RCP<const Basic> member) *and* they must have the same alignment
-// (because we allocate CRCPBasic into the memory occupied by this struct in
-// cwrapper.cpp). We cannot use C++ in this file, so we need to use C tools to
-// arrive at the correct size and alignment.  The size of the RCP object on
-// most platforms (with WITH_SYMENGINE_RCP on) should be just the size of the
-// 'T *ptr_' pointer that it contains (as there is no virtual function table)
-// and the alignment should also be of a pointer.  So we just put 'void *data'
-// as the only member of the struct, that should have the correct size and
-// alignment. With WITH_SYMENGINE_RCP off (i.e. using Teuchos::RCP), we have to
+// The size of 'CRCPBasic_C' must be the same as CRCPBasic (which
+// contains a
+// single RCP<const Basic> member) *and* they must have the same
+// alignment
+// (because we allocate CRCPBasic into the memory occupied by this
+// struct in
+// cwrapper.cpp). We cannot use C++ in this file, so we need to use C
+// tools to
+// arrive at the correct size and alignment.  The size of the RCP object
+// on
+// most platforms (with WITH_SYMENGINE_RCP on) should be just the size
+// of the
+// 'T *ptr_' pointer that it contains (as there is no virtual function
+// table)
+// and the alignment should also be of a pointer.  So we just put 'void
+// *data'
+// as the only member of the struct, that should have the correct size
+// and
+// alignment. With WITH_SYMENGINE_RCP off (i.e. using Teuchos::RCP), we
+// have to
 // add additional members into the structure.
 //
-// However, this is checked at compile time in cwrapper.cpp, so if the size or
-// alignment is different on some platform, the compilation will fail --- in
-// that case one needs to modify the contents of this struct to adjust its size
+// However, this is checked at compile time in cwrapper.cpp, so if the
+// size or
+// alignment is different on some platform, the compilation will fail
+// --- in
+// that case one needs to modify the contents of this struct to adjust
+// its size
 // and/or alignment.
 struct CRCPBasic_C {
     void *data;
@@ -52,15 +68,21 @@ struct CRCPBasic_C {
 };
 
 //! 'basic' is internally implemented as a size 1 array of the type
-//  CRCPBasic, which has the same size and alignment as RCP<const Basic> (see
-//  the above comment for details). That is then used by the user to allocate
-//  the memory needed for RCP<const Basic> on the stack. A 'basic' type should
-//  be initialized using basic_new_stack(), before any function is called.
-//  Assignment should be done only by using basic_assign(). Before the variable
+//  CRCPBasic, which has the same size and alignment as RCP<const Basic>
+//  (see
+//  the above comment for details). That is then used by the user to
+//  allocate
+//  the memory needed for RCP<const Basic> on the stack. A 'basic' type
+//  should
+//  be initialized using basic_new_stack(), before any function is
+//  called.
+//  Assignment should be done only by using basic_assign(). Before the
+//  variable
 //  goes out of scope, basic_free_stack() must be called.
 //
 //  For C, define a dummy struct with the right size, so that it can be
-//  allocated on the stack. For C++, the CRCPBasic is declared in cwrapper.cpp.
+//  allocated on the stack. For C++, the CRCPBasic is declared in
+//  cwrapper.cpp.
 #ifdef __cplusplus
 typedef struct CRCPBasic basic_struct;
 #else
@@ -70,14 +92,18 @@ typedef struct CRCPBasic_C basic_struct;
 typedef basic_struct basic[1];
 
 //! Initialize a new basic instance. 's' is allocated on stack using the
-// 'basic' type, this function initializes an RCP<const Basic> on the stack
-// allocated variable. The 's' variable must be freed using basic_free_stack()
+// 'basic' type, this function initializes an RCP<const Basic> on the
+// stack
+// allocated variable. The 's' variable must be freed using
+// basic_free_stack()
 void basic_new_stack(basic s);
 //! Free the C++ class wrapped by s.
 void basic_free_stack(basic s);
 
-// Use these two functions to allocate and free 'basic' on a heap. The pointer
-// can then be used in all the other methods below (i.e. the methods that
+// Use these two functions to allocate and free 'basic' on a heap. The
+// pointer
+// can then be used in all the other methods below (i.e. the methods
+// that
 // accept 'basic s' work no matter if 's' is stack or heap allocated).
 basic_struct *basic_new_heap();
 void basic_free_heap(basic_struct *s);
@@ -127,7 +153,8 @@ unsigned long integer_get_ui(const basic s);
 //! Returns s as a mpz_t.
 void integer_get_mpz(mpz_t a, const basic s);
 
-//! Assign to s, a rational i/j. Returns 0 if either i or j is not an integer.
+//! Assign to s, a rational i/j. Returns 0 if either i or j is not an
+//! integer.
 int rational_set(basic s, const basic i, const basic j);
 //! Assign to s, a rational i/j, where i and j are signed longs.
 void rational_set_si(basic s, long i, long j);
@@ -153,7 +180,9 @@ void basic_mul(basic s, const basic a, const basic b);
 void basic_div(basic s, const basic a, const basic b);
 //! Assigns s = a ** b.
 void basic_pow(basic s, const basic a, const basic b);
-//! Assign to s, derivative of expr with respect to sym. Returns 0 if sym is not a symbol.
+//! Assign to s, derivative of expr with respect to sym. Returns 0 if
+//! sym is not
+//! a symbol.
 int basic_diff(basic s, const basic expr, const basic sym);
 //! Returns 1 if both basic are equal, 0 if not
 int basic_eq(const basic a, const basic b);
@@ -253,10 +282,14 @@ typedef struct CVectorInt CVectorInt;
 
 CVectorInt *vectorint_new();
 
-// 'data' must point to allocated memory of size 'size'. The function returns 0
-// if std::vector<int> can be initialized using placement new into 'data',
-// otherwise 1 if 'size' is too small or 2 if 'data' is not properly aligned.
-// No memory is leaked either way. Use vectorint_placement_new_check() to check
+// 'data' must point to allocated memory of size 'size'. The function
+// returns 0
+// if std::vector<int> can be initialized using placement new into
+// 'data',
+// otherwise 1 if 'size' is too small or 2 if 'data' is not properly
+// aligned.
+// No memory is leaked either way. Use vectorint_placement_new_check()
+// to check
 // that the 'data' and 'size' is properly allocated and aligned. Use
 // vectorint_placement_new() to do the actual allocation.
 int vectorint_placement_new_check(void *data, size_t size);
@@ -284,7 +317,8 @@ typedef struct CSetBasic CSetBasic;
 
 CSetBasic *setbasic_new();
 void setbasic_free(CSetBasic *self);
-//! Returns 1 if insert is successful and 0 if set already contains the value
+//! Returns 1 if insert is successful and 0 if set already contains the
+//! value
 //! and insertion is unsuccessful
 int setbasic_insert(CSetBasic *self, const basic value);
 void setbasic_get(CSetBasic *self, int n, basic result);
@@ -298,8 +332,10 @@ typedef struct CMapBasicBasic CMapBasicBasic;
 
 CMapBasicBasic *mapbasicbasic_new();
 void mapbasicbasic_free(CMapBasicBasic *self);
-void mapbasicbasic_insert(CMapBasicBasic *self, const basic key, const basic mapped);
-//! Returns 1 if such a key exists in the map and get is successful, 0 if not
+void mapbasicbasic_insert(CMapBasicBasic *self, const basic key,
+                          const basic mapped);
+//! Returns 1 if such a key exists in the map and get is successful, 0
+//! if not
 int mapbasicbasic_get(CMapBasicBasic *self, const basic key, basic mapped);
 size_t mapbasicbasic_size(CMapBasicBasic *self);
 
@@ -321,7 +357,8 @@ void basic_subs2(basic s, const basic e, const basic a, const basic b);
 //! Wrapper for ascii_art()
 
 //! Returns a new char pointer to the ascii_art string
-//! The caller is responsible to free the pointer using 'basic_str_free'.
+//! The caller is responsible to free the pointer using
+//! 'basic_str_free'.
 char *ascii_art_str();
 
 //! Wrapper for ntheory

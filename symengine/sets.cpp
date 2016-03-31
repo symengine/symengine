@@ -3,13 +3,17 @@
 namespace SymEngine
 {
 
-Interval::Interval(const RCP<const Number> &start, const RCP<const Number> &end, const bool left_open, const bool right_open)
+Interval::Interval(const RCP<const Number> &start, const RCP<const Number> &end,
+                   const bool left_open, const bool right_open)
     : start_(start), end_(end), left_open_(left_open), right_open_(right_open)
 {
-    SYMENGINE_ASSERT(Interval::is_canonical(start_, end_, left_open_, right_open_));
+    SYMENGINE_ASSERT(
+        Interval::is_canonical(start_, end_, left_open_, right_open_));
 }
 
-bool Interval::is_canonical(const RCP<const Number> &s, const RCP<const Number> &e, bool left_open, bool right_open)
+bool Interval::is_canonical(const RCP<const Number> &s,
+                            const RCP<const Number> &e, bool left_open,
+                            bool right_open)
 {
     if (is_a<Complex>(*s) or is_a<Complex>(*e))
         throw std::runtime_error("Complex set not implemented");
@@ -36,8 +40,9 @@ bool Interval::__eq__(const Basic &o) const
 {
     if (is_a<Interval>(o)) {
         const Interval &s = static_cast<const Interval &>(o);
-        return ((this->left_open_ == s.left_open_) and (this->right_open_ == s.right_open_) and eq(*this->start_, *s.start_)
-                and eq(*this->end_, *s.end_));
+        return ((this->left_open_ == s.left_open_)
+                and (this->right_open_ == s.right_open_)
+                and eq(*this->start_, *s.start_) and eq(*this->end_, *s.end_));
     }
     return false;
 }
@@ -143,7 +148,8 @@ RCP<const Set> Interval::set_union(const RCP<const Set> &o) const
         end_end = min({this->end_, other.end_});
         m = min({start_start, end_end});
         if ((eq(*end_end, *start_start) and eq(*end_end, *m)
-             and ((eq(*end_end, *this->end_) and this->right_open_) or (eq(*end_end, *other.end_) and other.right_open_)))
+             and ((eq(*end_end, *this->end_) and this->right_open_)
+                  or (eq(*end_end, *other.end_) and other.right_open_)))
             or (eq(*end_end, *m) and not eq(*end_end, *start_start))) {
             throw std::runtime_error("not implemented");
         } else {
@@ -155,8 +161,10 @@ RCP<const Set> Interval::set_union(const RCP<const Set> &o) const
                 end = this->end_;
             else
                 end = other.end_;
-            left_open = ((neq(*this->start_, *start) or this->left_open_) and (neq(*other.start_, *start) or other.left_open_));
-            right_open = ((neq(*this->end_, *end) or this->right_open_) and (neq(*other.end_, *end) or other.right_open_));
+            left_open = ((neq(*this->start_, *start) or this->left_open_)
+                         and (neq(*other.start_, *start) or other.left_open_));
+            right_open = ((neq(*this->end_, *end) or this->right_open_)
+                          and (neq(*other.end_, *end) or other.right_open_));
             return interval(start, end, left_open, right_open);
         }
     } else
@@ -175,7 +183,8 @@ bool Interval::is_subset(const RCP<const Set> &o) const
 bool Interval::is_proper_subset(const RCP<const Set> &o) const
 {
     if (is_a<Interval>(*o)) {
-        return this->__eq__(*this->set_intersection(o)) and (not this->__eq__(*o));
+        return this->__eq__(*this->set_intersection(o))
+               and (not this->__eq__(*o));
     } else {
         return (*o).is_proper_superset(rcp_from_this_cast<const Set>());
     }

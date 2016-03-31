@@ -19,7 +19,9 @@ private:
     Ptr<RCP<const Basic>> numer_, denom_;
 
 public:
-    NumerDenomVisitor(const Ptr<RCP<const Basic>> &numer, const Ptr<RCP<const Basic>> &denom) : numer_{numer}, denom_{denom}
+    NumerDenomVisitor(const Ptr<RCP<const Basic>> &numer,
+                      const Ptr<RCP<const Basic>> &denom)
+        : numer_{numer}, denom_{denom}
     {
     }
 
@@ -67,7 +69,8 @@ public:
 
             divx = div(curr_den, arg_den);
             as_numer_denom(divx, outArg(divx_num), outArg(divx_den));
-            // the below two lines, cover the general case, as well as the case
+            // the below two lines, cover the general case, as well as
+            // the case
             // where arg_den completely divides curr_den
             curr_den = mul(curr_den, divx_den);
             curr_num = add(mul(curr_num, divx_den), mul(arg_num, divx_num));
@@ -86,7 +89,9 @@ public:
         as_numer_denom(base_, outArg(num), outArg(den));
 
         // if the exp is a negative numer, or is intuitively 'negative'
-        if ((is_a_Number(*exp_) and rcp_static_cast<const Number>(exp_)->is_negative()) or (could_extract_minus(exp_))) {
+        if ((is_a_Number(*exp_)
+             and rcp_static_cast<const Number>(exp_)->is_negative())
+            or (could_extract_minus(exp_))) {
             exp_ = mul(integer(-1), exp_);
             *numer_ = pow(den, exp_);
             *denom_ = pow(num, exp_);
@@ -129,7 +134,9 @@ public:
     }
 };
 
-void as_numer_denom(const RCP<const Basic> &x, const Ptr<RCP<const Basic>> &numer, const Ptr<RCP<const Basic>> &denom)
+void as_numer_denom(const RCP<const Basic> &x,
+                    const Ptr<RCP<const Basic>> &numer,
+                    const Ptr<RCP<const Basic>> &denom)
 {
     NumerDenomVisitor v(numer, denom);
     v.apply(*x);

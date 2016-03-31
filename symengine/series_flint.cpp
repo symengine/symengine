@@ -5,11 +5,14 @@
 namespace SymEngine
 {
 
-URatPSeriesFlint::URatPSeriesFlint(fp_t p, const std::string varname, const unsigned degree)
+URatPSeriesFlint::URatPSeriesFlint(fp_t p, const std::string varname,
+                                   const unsigned degree)
     : SeriesBase(std::move(p), varname, degree)
 {
 }
-RCP<const URatPSeriesFlint> URatPSeriesFlint::series(const RCP<const Basic> &t, const std::string &x, unsigned int prec)
+RCP<const URatPSeriesFlint> URatPSeriesFlint::series(const RCP<const Basic> &t,
+                                                     const std::string &x,
+                                                     unsigned int prec)
 {
     fp_t p("2  0 1");
     SeriesVisitor<fp_t, flint::fmpqxx, URatPSeriesFlint> visitor(p, x, prec);
@@ -38,7 +41,8 @@ RCP<const Basic> URatPSeriesFlint::as_basic() const
         if (not fc.is_zero()) {
             fmpq_get_mpq(gc, fc._data().inner);
             RCP<const Number> basic = Rational::from_mpq(rational_class(gc));
-            auto term = SymEngine::mul(SymEngine::pow(x, SymEngine::integer(n)), basic);
+            auto term = SymEngine::mul(SymEngine::pow(x, SymEngine::integer(n)),
+                                       basic);
             if (n == 0)
                 zcoef = basic;
             Add::coef_dict_add_term(outArg(basic), dict_, one, term);
@@ -165,7 +169,8 @@ fp_t URatPSeriesFlint::integrate(const fp_t &s, const fp_t &var)
     return fp_t(s.integral());
 }
 
-fp_t URatPSeriesFlint::subs(const fp_t &s, const fp_t &var, const fp_t &r, unsigned prec)
+fp_t URatPSeriesFlint::subs(const fp_t &s, const fp_t &var, const fp_t &r,
+                            unsigned prec)
 {
     return fp_t(s(r));
 }

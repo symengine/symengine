@@ -102,7 +102,9 @@ public:
      * */
     RCP<const Number> addcomp(const Complex &other) const
     {
-        return make_rcp<const ComplexDouble>(i + std::complex<double>(mp_get_d(other.real_), mp_get_d(other.imaginary_)));
+        return make_rcp<const ComplexDouble>(
+            i + std::complex<double>(mp_get_d(other.real_),
+                                     mp_get_d(other.imaginary_)));
     }
 
     /*! Add ComplexDoubles
@@ -121,7 +123,8 @@ public:
         return make_rcp<const ComplexDouble>(i + other.i);
     }
 
-    //! Converts the param `other` appropriately and then calls `addcomp`
+    //! Converts the param `other` appropriately and then calls
+    //! `addcomp`
     virtual RCP<const Number> add(const Number &other) const
     {
         if (is_a<Rational>(other)) {
@@ -160,7 +163,9 @@ public:
      * */
     RCP<const Number> subcomp(const Complex &other) const
     {
-        return make_rcp<const ComplexDouble>(i - std::complex<double>(mp_get_d(other.real_), mp_get_d(other.imaginary_)));
+        return make_rcp<const ComplexDouble>(
+            i - std::complex<double>(mp_get_d(other.real_),
+                                     mp_get_d(other.imaginary_)));
     }
 
     /*! Subtract ComplexDoubles
@@ -179,7 +184,8 @@ public:
         return make_rcp<const ComplexDouble>(i - other.i);
     }
 
-    //! Converts the param `other` appropriately and then calls `subcomp`
+    //! Converts the param `other` appropriately and then calls
+    //! `subcomp`
     virtual RCP<const Number> sub(const Number &other) const
     {
         if (is_a<Rational>(other)) {
@@ -218,7 +224,9 @@ public:
      * */
     RCP<const Number> rsubcomp(const Complex &other) const
     {
-        return make_rcp<const ComplexDouble>(-i + std::complex<double>(mp_get_d(other.real_), mp_get_d(other.imaginary_)));
+        return make_rcp<const ComplexDouble>(
+            -i + std::complex<double>(mp_get_d(other.real_),
+                                      mp_get_d(other.imaginary_)));
     }
 
     /*! Subtract ComplexDoubles
@@ -229,7 +237,8 @@ public:
         return make_rcp<const ComplexDouble>(other.i - i);
     }
 
-    //! Converts the param `other` appropriately and then calls `subcomp`
+    //! Converts the param `other` appropriately and then calls
+    //! `subcomp`
     virtual RCP<const Number> rsub(const Number &other) const
     {
         if (is_a<Rational>(other)) {
@@ -266,7 +275,9 @@ public:
      * */
     RCP<const Number> mulcomp(const Complex &other) const
     {
-        return make_rcp<const ComplexDouble>(i * std::complex<double>(mp_get_d(other.real_), mp_get_d(other.imaginary_)));
+        return make_rcp<const ComplexDouble>(
+            i * std::complex<double>(mp_get_d(other.real_),
+                                     mp_get_d(other.imaginary_)));
     }
 
     /*! Multiply ComplexDoubles
@@ -285,7 +296,8 @@ public:
         return make_rcp<const ComplexDouble>(i * other.i);
     }
 
-    //! Converts the param `other` appropriately and then calls `mulcomp`
+    //! Converts the param `other` appropriately and then calls
+    //! `mulcomp`
     virtual RCP<const Number> mul(const Number &other) const
     {
         if (is_a<Rational>(other)) {
@@ -324,7 +336,9 @@ public:
      * */
     RCP<const Number> divcomp(const Complex &other) const
     {
-        return make_rcp<const ComplexDouble>(i / std::complex<double>(mp_get_d(other.real_), mp_get_d(other.imaginary_)));
+        return make_rcp<const ComplexDouble>(
+            i / std::complex<double>(mp_get_d(other.real_),
+                                     mp_get_d(other.imaginary_)));
     }
 
     /*! Divide ComplexDoubles
@@ -343,7 +357,8 @@ public:
         return make_rcp<const ComplexDouble>(i / other.i);
     }
 
-    //! Converts the param `other` appropriately and then calls `divcomp`
+    //! Converts the param `other` appropriately and then calls
+    //! `divcomp`
     virtual RCP<const Number> div(const Number &other) const
     {
         if (is_a<Rational>(other)) {
@@ -382,7 +397,10 @@ public:
      * */
     RCP<const Number> rdivcomp(const Complex &other) const
     {
-        return make_rcp<const ComplexDouble>(std::complex<double>(mp_get_d(other.real_), mp_get_d(other.imaginary_)) / i);
+        return make_rcp<const ComplexDouble>(
+            std::complex<double>(mp_get_d(other.real_),
+                                 mp_get_d(other.imaginary_))
+            / i);
     }
 
     /*! Divide ComplexDoubles
@@ -393,7 +411,8 @@ public:
         return make_rcp<const ComplexDouble>(other.i / i);
     }
 
-    //! Converts the param `other` appropriately and then calls `divcomp`
+    //! Converts the param `other` appropriately and then calls
+    //! `divcomp`
     virtual RCP<const Number> rdiv(const Number &other) const
     {
         if (is_a<Rational>(other)) {
@@ -414,7 +433,8 @@ public:
      * */
     RCP<const Number> powcomp(const Integer &other) const
     {
-        return make_rcp<const ComplexDouble>((std::complex<double>)std::pow(i, mp_get_d(other.i)));
+        return make_rcp<const ComplexDouble>(
+            (std::complex<double>)std::pow(i, mp_get_d(other.i)));
     }
 
     /*! Raise ComplexDouble to power `other`
@@ -422,7 +442,8 @@ public:
      * */
     RCP<const Number> powcomp(const Rational &other) const
     {
-        return make_rcp<const ComplexDouble>((std::complex<double>)std::pow(i, mp_get_d(other.i)));
+        return make_rcp<const ComplexDouble>(
+            (std::complex<double>)std::pow(i, mp_get_d(other.i)));
     }
 
     /*! Raise ComplexDouble to power `other`
@@ -430,15 +451,17 @@ public:
      * */
     RCP<const Number> powcomp(const Complex &other) const
     {
-        return make_rcp<const ComplexDouble>(
-            (std::complex<double>)std::pow(i, std::complex<double>(mp_get_d(other.real_), mp_get_d(other.imaginary_))));
+        return make_rcp<const ComplexDouble>((std::complex<double>)std::pow(
+            i, std::complex<double>(mp_get_d(other.real_),
+                                    mp_get_d(other.imaginary_))));
     }
     /*! Raise ComplexDouble to power `other`
      * \param other of type RealDouble
      * */
     RCP<const Number> powcomp(const RealDouble &other) const
     {
-        return make_rcp<const ComplexDouble>((std::complex<double>)std::pow(i, other.i));
+        return make_rcp<const ComplexDouble>(
+            (std::complex<double>)std::pow(i, other.i));
     }
 
     /*! Raise ComplexDouble to power `other`
@@ -446,10 +469,12 @@ public:
      * */
     RCP<const Number> powcomp(const ComplexDouble &other) const
     {
-        return make_rcp<const ComplexDouble>((std::complex<double>)std::pow(i, other.i));
+        return make_rcp<const ComplexDouble>(
+            (std::complex<double>)std::pow(i, other.i));
     }
 
-    //! Converts the param `other` appropriately and then calls `powcomp`
+    //! Converts the param `other` appropriately and then calls
+    //! `powcomp`
     virtual RCP<const Number> pow(const Number &other) const
     {
         if (is_a<Rational>(other)) {
@@ -472,7 +497,8 @@ public:
      * */
     RCP<const Number> rpowcomp(const Integer &other) const
     {
-        return make_rcp<const ComplexDouble>((std::complex<double>)std::pow(mp_get_d(other.i), i));
+        return make_rcp<const ComplexDouble>(
+            (std::complex<double>)std::pow(mp_get_d(other.i), i));
     }
 
     /*! Raise `other` to power ComplexDouble
@@ -480,7 +506,8 @@ public:
      * */
     RCP<const Number> rpowcomp(const Rational &other) const
     {
-        return make_rcp<const ComplexDouble>((std::complex<double>)std::pow(mp_get_d(other.i), i));
+        return make_rcp<const ComplexDouble>(
+            (std::complex<double>)std::pow(mp_get_d(other.i), i));
     }
 
     /*! Raise `other` to power ComplexDouble
@@ -488,8 +515,10 @@ public:
      * */
     RCP<const Number> rpowcomp(const Complex &other) const
     {
-        return make_rcp<const ComplexDouble>(
-            (std::complex<double>)std::pow(std::complex<double>(mp_get_d(other.real_), mp_get_d(other.imaginary_)), i));
+        return make_rcp<const ComplexDouble>((std::complex<double>)std::pow(
+            std::complex<double>(mp_get_d(other.real_),
+                                 mp_get_d(other.imaginary_)),
+            i));
     }
 
     /*! Raise `other` to power ComplexDouble
@@ -497,10 +526,12 @@ public:
      * */
     RCP<const Number> rpowcomp(const RealDouble &other) const
     {
-        return make_rcp<const ComplexDouble>((std::complex<double>)std::pow(other.i, i));
+        return make_rcp<const ComplexDouble>(
+            (std::complex<double>)std::pow(other.i, i));
     }
 
-    //! Converts the param `other` appropriately and then calls `powcomp`
+    //! Converts the param `other` appropriately and then calls
+    //! `powcomp`
     virtual RCP<const Number> rpow(const Number &other) const
     {
         if (is_a<Rational>(other)) {

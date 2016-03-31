@@ -303,7 +303,8 @@ public:
             mpc_set_fr(result_, t, rnd_);
             mpfr_clear(t);
         } else {
-            throw std::runtime_error("Constant " + x.get_name() + " is not implemented.");
+            throw std::runtime_error("Constant " + x.get_name()
+                                     + " is not implemented.");
         }
     }
 

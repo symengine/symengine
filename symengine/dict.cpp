@@ -76,7 +76,8 @@ std::ostream &operator<<(std::ostream &out, const SymEngine::map_basic_basic &d)
     return SymEngine::print_map_rcp(out, d);
 }
 
-std::ostream &operator<<(std::ostream &out, const SymEngine::umap_basic_basic &d)
+std::ostream &operator<<(std::ostream &out,
+                         const SymEngine::umap_basic_basic &d)
 {
     return SymEngine::print_map_rcp(out, d);
 }
@@ -199,7 +200,8 @@ int map_int_Expr_compare(const map_int_Expr &A, const map_int_Expr &B)
         if (a->first != b->first)
             return (a->first < b->first) ? -1 : 1;
         if (a->second != b->second)
-            return (a->second.get_basic()->__cmp__(*b->second.get_basic())) ? -1 : 1;
+            return (a->second.get_basic()->__cmp__(*b->second.get_basic())) ? -1
+                                                                            : 1;
     }
     return 0;
 }
