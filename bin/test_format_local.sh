@@ -4,7 +4,7 @@ if [ ! -f ".clang-format" ]; then
 fi
 
 if [ "$(uname)" == "Darwin" ]; then
-    # Do something under Mac OS X platform 
+    # Do something under Mac OS X platform
     CLANG="clang-format"
 elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
     # Do something under GNU/Linux platform

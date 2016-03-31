@@ -2,7 +2,7 @@
 
 if [[ "${TRAVIS_OS_NAME}" == "linux" ]] && \
    [[ "${CC}" == "gcc" ]] && [[ "${TEST_CLANG_FORMAT}" == "yes" ]]; then
-    
+
     RETURN=0
     CLANG="clang-format-3.7"
 
