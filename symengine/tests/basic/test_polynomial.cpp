@@ -235,6 +235,11 @@ TEST_CASE("Multiplication of two UnivariatePolynomial", "[UnivariatePolynomial]"
 
     REQUIRE(c->__str__() == "a**2*x**4 + 2*a*b*x**3 + (2*a + b**2)*x**2 + 2*b*x + 1");
     REQUIRE(d->__str__() == "-a**2*x**4 + (-2*a - a*b)*x**3 + (-2*a - 2*b)*x**2 + (-2 - b)*x - 1");
+
+    a = univariate_polynomial(x, 1, {{-2,5}, {-1,3}, {0, 1}, {1, 2}});
+
+    c = mul_uni_poly(a,b);
+    REQUIRE(c->__str__() == "-2*a*x**3 + (-4 - a)*x**2 + (-4 - 3*a)*x + (-7 - 5*a) - 13*x**(-1) - 5*x**(-2)");
 }
 
 TEST_CASE("UnivariatePolynomial get_args", "[UnivariatePolynomial]")
@@ -252,6 +257,9 @@ TEST_CASE("Evaluation of UnivariatePolynomial", "[UnivariatePolynomial]")
     RCP<const UnivariatePolynomial> a = univariate_polynomial(x, 2, {{0, 1}, {1, 2}, {2, symbol("a")}});
 
     REQUIRE(a->eval(2).get_basic()->__str__() == "5 + 4*a");
+
+     a = univariate_polynomial(x, 1, {{-2,5}, {-1,3}, {0, 1}, {1, 2}});
+     REQUIRE(a->eval(2).get_basic()->__str__() == "31/4");
 }
 
 TEST_CASE("Derivative of UnivariatePolynomial", "[UnivariatePolynomial]")
@@ -264,6 +272,9 @@ TEST_CASE("Derivative of UnivariatePolynomial", "[UnivariatePolynomial]")
     REQUIRE(a->diff(x)->__str__() == "2*a*x + 2");
     REQUIRE(a->diff(y)->__str__() == "0");
     REQUIRE(b->diff(y)->__str__() == "0");
+
+    a = univariate_polynomial(x, 2, {{-2,5}, {-1,3}, {0, 1}, {1, 2}, {2, symbol("a")}});
+    REQUIRE(a->diff(x)->__str__() == "2*a*x + 2 - 3*x**(-2) - 10*x**(-3)");
 }
 
 TEST_CASE("Bool checks specific UnivariatePolynomial cases", "[UnivariatePolynomial]")
@@ -278,6 +289,7 @@ TEST_CASE("Bool checks specific UnivariatePolynomial cases", "[UnivariatePolynom
     RCP<const UnivariatePolynomial> m2 = univariate_polynomial(x, 3, {{3, 5}});
     RCP<const UnivariatePolynomial> po = univariate_polynomial(x, 5, {{5, 1}});
     RCP<const UnivariatePolynomial> poly = univariate_polynomial(x, 2, {{0, 1}, {1, 2}, {2, 1}});
+    RCP<const UnivariatePolynomial> neg = univariate_polynomial(x, 1, {{-2,5}, {-1,3}, {0, 1}, {1, 2}});
 
     REQUIRE((z->is_zero() and not z->is_one() and not z->is_minus_one() and z->is_integer() and not z->is_symbol() and
             not z->is_mul() and not z->is_pow()));
@@ -297,6 +309,8 @@ TEST_CASE("Bool checks specific UnivariatePolynomial cases", "[UnivariatePolynom
             not po->is_mul() and po->is_pow()));
     REQUIRE((not poly->is_zero() and not poly->is_one() and not poly->is_minus_one() and not poly->is_integer() and not poly->is_symbol() and
             not poly->is_mul() and not poly->is_pow()));
+    REQUIRE((not neg->is_zero() and not neg->is_one() and not neg->is_minus_one() and not neg->is_integer() and not neg->is_symbol() and
+            not neg->is_mul() and not neg->is_pow()));
 }
 
 TEST_CASE("Univariate Polynomial expand", "[UnivariatePolynomial][expand]")
