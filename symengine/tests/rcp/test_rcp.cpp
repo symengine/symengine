@@ -10,7 +10,8 @@ using SymEngine::EnableRCPFromThis;
 
 // This is the canonical use of EnableRCPFromThis:
 
-class Mesh : public EnableRCPFromThis<Mesh> {
+class Mesh : public EnableRCPFromThis<Mesh>
+{
 public:
     int x, y;
 };
@@ -19,7 +20,7 @@ TEST_CASE("Test make_rcp", "[rcp]")
 {
     RCP<Mesh> m = make_rcp<Mesh>();
     Ptr<Mesh> p = m.ptr();
-    REQUIRE(not (m == null));
+    REQUIRE(not(m == null));
     REQUIRE(p->use_count() == 1);
     RCP<Mesh> m2 = m;
     REQUIRE(p->use_count() == 2);
@@ -72,7 +73,8 @@ TEST_CASE("Test rcp_from_this const", "[rcp]")
 // 'RCP<const Mesh2>' out of rcp_from_this(). But it is legitimate code, so we
 // test it as well.
 
-class Mesh2 : public EnableRCPFromThis<const Mesh2> {
+class Mesh2 : public EnableRCPFromThis<const Mesh2>
+{
 public:
     int x, y;
 };

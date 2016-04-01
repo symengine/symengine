@@ -11,7 +11,8 @@
 #include <symengine/polynomial.h>
 #include <symengine/printer.h>
 
-namespace SymEngine {
+namespace SymEngine
+{
 
 int Basic::__cmp__(const Basic &o) const
 {
@@ -20,8 +21,10 @@ int Basic::__cmp__(const Basic &o) const
     if (a == b) {
         return this->compare(o);
     } else {
-        // We return the order given by the numerical value of the TypeID enum type.
-        // The types don't need to be ordered in any given way, they just need to be ordered.
+        // We return the order given by the numerical value of the TypeID enum
+        // type.
+        // The types don't need to be ordered in any given way, they just need
+        // to be ordered.
         return a < b ? -1 : 1;
     }
 }
@@ -48,4 +51,3 @@ RCP<const Basic> Basic::diff(const RCP<const Symbol> &x) const
 }
 
 } // SymEngine
-
