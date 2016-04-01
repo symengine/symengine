@@ -62,14 +62,9 @@ typedef std::unordered_map<vec_int, Expression, vec_int_hash> umap_vec_expr;
 //! `insert(m, first, second)` is equivalent to `m[first] = second`, just
 //! faster,
 //! because no default constructor is called on the `second` type.
-<<<<<<< b3bdecd15db3fa46a726b9548a462ecd188e2902
 template <typename T1, typename T2, typename T3>
 inline void insert(T1 &m, const T2 &first, const T3 &second)
 {
-=======
-template<typename T1, typename T2, typename T3> inline
-void insert(T1 &m, const T2 &first, const T3 &second) {
->>>>>>> whitespace fixes
     m.insert(std::pair<T2, T3>(first, second));
 }
 
@@ -86,7 +81,6 @@ bool umap_eq(const T &a, const T &b)
     if (a.size() != b.size())
         return false;
     // Loop over keys in "a":
-<<<<<<< b3bdecd15db3fa46a726b9548a462ecd188e2902
     for (const auto &p : a) {
         // O(1) lookup of the key in "b":
         auto f = b.find(p.first);
@@ -94,13 +88,6 @@ bool umap_eq(const T &a, const T &b)
             return false; // no such element in "b"
         if (neq(*p.second, *f->second))
             return false; // values not equal
-=======
-    for (const auto &p: a) {
-        // O(1) lookup of the key in "b":
-        auto f = b.find(p.first);
-        if (f == b.end()) return false; // no such element in "b"
-        if (neq(*p.second, *f->second)) return false; // values not equal
->>>>>>> whitespace fixes
     }
     return true;
 }
@@ -252,6 +239,7 @@ typedef std::set< RCP<const Symbol>, RCPSymbolCompare> set_sym;
 typedef std::unordered_map<RCP<const Symbol>, unsigned int, RCPSymbolHash, RCPSymbolEq>
     umap_sym_uint;
 typedef std::unordered_map<vec_uint, integer_class, vec_uint_hash, vec_uint_eq> umap_uvec_mpz;
+typedef std::unordered_map<vec_uint,Expression, vec_uint_hash, vec_uint_eq> umap_uvec_expr;
 
 //Takes an unordered map of type M with key type K and returns a vector of K ordered by C.
 template<class K, class M, class C>

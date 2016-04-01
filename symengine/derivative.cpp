@@ -502,6 +502,28 @@ static RCP<const Basic> diff(const CLASS &self, \
         }
     }
 
+    static RCP<const Basic> diff(const MultivariatePolynomial &self, const RCP<const Symbol> &x) {
+        if (self.vars_.find(x) != self.vars_.end()) {
+            umap_uvec_expr dict;
+            auto i = self.vars_.begin();
+            unsigned int index = 0;
+            while (!(*i)->__eq__(*x)) {
+                i++;
+                index++;
+            } //find the index of the variable we are differentiating WRT.
+            for (auto bucket : self.dict_) {
+                if (bucket.first[index] != 0) {
+                    vec_uint v = bucket.first;
+                    v[index]--;
+                    dict.insert(std::pair<vec_uint, Expression>(v, bucket.second * bucket.first[index]));
+                }
+            }
+            return MultivariatePolynomial::from_dict(self.vars_, std::move(dict));
+        } else {
+            return zero;
+        }
+    }    
+
     static RCP<const Basic> diff(const FunctionWrapper &self,
             const RCP<const Symbol> &x) {
         return self.diff_impl(x);
