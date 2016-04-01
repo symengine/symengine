@@ -1,8 +1,8 @@
-#include <symengine/polynomial.h>
 #include <symengine/add.h>
-#include <symengine/mul.h>
-#include <symengine/pow.h>
 #include <symengine/constants.h>
+#include <symengine/mul.h>
+#include <symengine/polynomial.h>
+#include <symengine/pow.h>
 
 namespace SymEngine
 {
@@ -27,8 +27,7 @@ UnivariateIntPolynomial::UnivariateIntPolynomial(
     SYMENGINE_ASSERT(is_canonical(degree_, dict_))
 }
 
-bool UnivariateIntPolynomial::is_canonical(const unsigned int &degree_,
-                                           const map_uint_mpz &dict) const
+bool UnivariateIntPolynomial::is_canonical(const unsigned int &degree_, const map_uint_mpz &dict) const
 {
     if (var_->get_name() == "")
         if (!(dict.empty() or dict.size() == 1))
