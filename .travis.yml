@@ -10,6 +10,7 @@ addons:
   apt:
     sources:
     - ubuntu-toolchain-r-test
+    - llvm-toolchain-precise-3.7
     packages:
     - libgmp-dev
     - libmpfr-dev
@@ -18,6 +19,7 @@ addons:
     - g++-4.7
     - gcc-5
     - g++-5
+    - clang-format-3.7
 env:
   ## All these variables are sent into the bin/test_travis.sh script. See this
   ## script to know how they are used. Most of them are just passed to cmake,
@@ -28,7 +30,7 @@ env:
 
   ## Out of tree builds (default):
   # Debug build (with BFD) with LATEST_GCC
-  - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_LATEST_GCC="yes"
+  - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_LATEST_GCC="yes" TEST_CLANG_FORMAT="yes"
   # Debug build (with BFD)
   - BUILD_TYPE="Debug" WITH_BFD="yes"
   # Debug build (with BFD and SYMENGINE_THREAD_SAFE)
@@ -129,6 +131,7 @@ matrix:
 install:
   - source bin/install_travis.sh
 script:
+  - bin/travis_clang.sh
   - bin/test_travis.sh
 notifications:
   email: false

@@ -81,7 +81,6 @@ TEST_CASE("expand: poly", "[poly]")
     auto t2 = std::chrono::high_resolution_clock::now();
     std::cout << "poly_mul stop" << std::endl;
 
-
     /*
     std::cout << *e << std::endl;
     std::cout << *f1 << std::endl;
@@ -91,7 +90,7 @@ TEST_CASE("expand: poly", "[poly]")
     std::cout << "RESULT:" << std::endl;
     std::cout << C << std::endl;
     */
-    std::cout
-        << std::chrono::duration_cast<std::chrono::milliseconds>(t2-t1).count()
-        << "ms" << std::endl;
+    std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1)
+                     .count()
+              << "ms" << std::endl;
 }
