@@ -245,6 +245,12 @@ TEST_CASE("Evaluation of UnivariatePolynomial", "[UnivariatePolynomial]")
     RCP<const UnivariatePolynomial> a = univariate_polynomial(x, 2, {{0, 1}, {1, 2}, {2, symbol("a")}});
 
     REQUIRE(a->eval(2).get_basic()->__str__() == "5 + 4*a");
+
+    a = univariate_polynomial(x, 2, {{-1, 5}, {0, 1}, {1, symbol("a")}, {2, 3}});
+    REQUIRE(a->eval(2).get_basic()->__str__() == "31/2 + 2*a");
+
+    a = univariate_polynomial(x, 2, {{-1, symbol("a")}, {0, 1}, {1, 5}, {2, 3}});
+    REQUIRE(a->eval(3).get_basic()->__str__() == "43 + (1/3)*a");
 }
 
 TEST_CASE("Derivative of UnivariatePolynomial", "[UnivariatePolynomial]")
