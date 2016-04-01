@@ -326,6 +326,45 @@ TEST_CASE("Mul: Basic", "[basic]")
     CHECK_THROWS_AS(div(integer(1), zero), std::runtime_error);
 }
 
+TEST_CASE("Pow: basic", "[basic]")
+{
+    RCP<const Basic> r1, r2;
+    RCP<const Symbol> x  = symbol("x");
+    RCP<const Symbol> y  = symbol("y");
+    RCP<const Basic> i2  = integer(2);
+    RCP<const Basic> i5  = integer(5);
+    RCP<const Basic> im1  = integer(-1);
+
+    r1 = pow(x, i2);
+    r2 = mul(x, x);
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = pow(x, im1);
+    r2 = div(one, x);
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = pow(x, one);
+    REQUIRE(eq(*r1, *x));
+
+    r1 = pow(one, i5);
+    REQUIRE(eq(*r1, *one));
+
+    r1 = pow(i5, i2);
+    REQUIRE(eq(*r1, *integer(25)));
+
+    r1 = pow(integer(36), div(one, i2));
+    REQUIRE(eq(*r1, *integer(6)));
+
+    r1 = pow(zero, i5);
+    REQUIRE(eq(*r1, *zero));
+
+    CHECK_THROWS_AS(pow(zero, zero), std::runtime_error);
+
+    CHECK_THROWS_AS(pow(zero, im1), std::runtime_error);
+
+    CHECK_THROWS_AS(pow(zero, div(im1, i5)), std::runtime_error);
+}
+
 TEST_CASE("Diff: Basic", "[basic]")
 {
     RCP<const Basic> r1, r2;

@@ -80,6 +80,8 @@ inline RCP<const Number> divnum(const RCP<const Number> &self,
 inline RCP<const Number> pownum(const RCP<const Number> &self,
     const RCP<const Number> &other)
 {
+    if(self->is_zero() and other->is_zero())
+        throw std::runtime_error("Indeterminate");
     return self->pow(*other);
 }
 
