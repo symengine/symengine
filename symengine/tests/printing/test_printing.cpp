@@ -51,12 +51,15 @@ using SymEngine::map_uint_mpz;
 
 using namespace SymEngine::literals;
 
-namespace SymEngine {
-class MyStrPrinter : public BaseVisitor<MyStrPrinter, StrPrinter> {
+namespace SymEngine
+{
+class MyStrPrinter : public BaseVisitor<MyStrPrinter, StrPrinter>
+{
 public:
     using StrPrinter::bvisit;
 
-    void bvisit(const Sin &x) {
+    void bvisit(const Sin &x)
+    {
         str_ = "MySin(" + this->apply(x.get_arg()) + ")";
     }
 };
@@ -66,9 +69,9 @@ TEST_CASE("test_printing(): printing", "[printing]")
 {
     RCP<const Basic> r, r1, r2;
     RCP<const Integer> i = integer(-1);
-    RCP<const Symbol> x  = symbol("x");
-    RCP<const Symbol> y  = symbol("y");
-    RCP<const Symbol> z  = symbol("z");
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    RCP<const Symbol> z = symbol("z");
 
     r = div(integer(12), pow(integer(195), div(integer(1), integer(2))));
     REQUIRE(r->__str__() == "(4/65)*195**(1/2)");
@@ -77,14 +80,15 @@ TEST_CASE("test_printing(): printing", "[printing]")
     REQUIRE(r->__str__() == "12*195**(1/2)");
 
     r = mul(integer(23), mul(pow(integer(5), div(integer(1), integer(2))),
-        pow(integer(7), div(integer(1), integer(2)))));
+                             pow(integer(7), div(integer(1), integer(2)))));
     REQUIRE(r->__str__() == "23*5**(1/2)*7**(1/2)");
 
     r = mul(integer(2), pow(symbol("x"), integer(2)));
     REQUIRE(r->__str__() == "2*x**2");
 
-    r = mul(integer(23), mul(pow(div(integer(5), integer(2)), div(integer(1), integer(2))),
-        pow(div(integer(7), integer(3)), div(integer(1), integer(2)))));
+    r = mul(integer(23),
+            mul(pow(div(integer(5), integer(2)), div(integer(1), integer(2))),
+                pow(div(integer(7), integer(3)), div(integer(1), integer(2)))));
     REQUIRE(r->__str__() == "(23/6)*2**(1/2)*3**(1/2)*5**(1/2)*7**(1/2)");
 
     r = pow(div(symbol("x"), integer(2)), div(integer(1), integer(2)));
@@ -115,8 +119,10 @@ TEST_CASE("test_printing(): printing", "[printing]")
     rn2 = Rational::from_two_ints(*integer(5), *integer(7));
     rn3 = Rational::from_two_ints(*integer(-5), *integer(7));
 
-    c1 = Complex::from_two_rats(static_cast<const Rational&>(*rn1), static_cast<const Rational&>(*rn2));
-    c2 = Complex::from_two_rats(static_cast<const Rational&>(*rn1), static_cast<const Rational&>(*rn3));
+    c1 = Complex::from_two_rats(static_cast<const Rational &>(*rn1),
+                                static_cast<const Rational &>(*rn2));
+    c2 = Complex::from_two_rats(static_cast<const Rational &>(*rn1),
+                                static_cast<const Rational &>(*rn3));
     r1 = mul(c1, x);
     r2 = mul(c2, x);
     REQUIRE(c1->__str__() == "1/2 + 5/7*I");
@@ -127,7 +133,6 @@ TEST_CASE("test_printing(): printing", "[printing]")
     r2 = pow(x, c2);
     REQUIRE(r1->__str__() == "x**(1/2 + 5/7*I)");
     REQUIRE(r2->__str__() == "x**(1/2 - 5/7*I)");
-
 
     c1 = Complex::from_two_nums(*rn1, *rn2);
     c2 = Complex::from_two_nums(*rn1, *rn3);
@@ -147,8 +152,6 @@ TEST_CASE("test_printing(): printing", "[printing]")
     r2 = pow(x, c2);
     REQUIRE(r1->__str__() == "x**(5/7*I)");
     REQUIRE(r2->__str__() == "x**(-5/7*I)");
-
-
 
     c1 = Complex::from_two_nums(*rn2, *rn1);
     c2 = Complex::from_two_nums(*rn3, *rn1);
@@ -171,16 +174,16 @@ TEST_CASE("test_printing(): printing", "[printing]")
     REQUIRE(c1->__str__() == "5/7 - I");
 
     r1 = mul(c1, x);
-    REQUIRE(r1->__str__() == "(5/7 - I)*x" );
+    REQUIRE(r1->__str__() == "(5/7 - I)*x");
 
     r1 = mul(integer(2), x);
-    REQUIRE(r1->__str__() == "2*x" );
+    REQUIRE(r1->__str__() == "2*x");
 
     r1 = mul(mul(integer(2), pow(symbol("x"), div(integer(2), integer(3)))), y);
-    REQUIRE(r1->__str__() == "2*x**(2/3)*y" );
+    REQUIRE(r1->__str__() == "2*x**(2/3)*y");
 
     r1 = mul(x, y);
-    REQUIRE(r1->__str__() == "x*y" );
+    REQUIRE(r1->__str__() == "x*y");
 
     r = div(x, add(x, y));
     r1 = div(x, pow(add(x, y), div(integer(2), integer(3))));
@@ -200,8 +203,8 @@ TEST_CASE("test_printing(): printing", "[printing]")
     r1 = pow(integer(3), mul(integer(2), x));
     r2 = pow(integer(3), mul(integer(-1), x));
     REQUIRE(r->__str__() == "y**(x**2)");
-    REQUIRE(r1->__str__() == "3**(2*x)" );
-    REQUIRE(r2->__str__() == "3**(-x)" );
+    REQUIRE(r1->__str__() == "3**(2*x)");
+    REQUIRE(r2->__str__() == "3**(-x)");
 
     r1 = pow(mul(integer(2), x), y);
     r2 = pow(mul(x, y), z);
@@ -234,14 +237,15 @@ TEST_CASE("test_printing(): printing", "[printing]")
     f = function_symbol("f", {x, y});
     r = f->diff(x)->diff(y);
     REQUIRE(r->__str__() == "Derivative(f(x, y), x, y)");
-    r1 = Subs::create(Derivative::create(function_symbol("f", {y, x}), {x}), {{x, add(x, y)}});
+    r1 = Subs::create(Derivative::create(function_symbol("f", {y, x}), {x}),
+                      {{x, add(x, y)}});
     REQUIRE(r1->__str__() == "Subs(Derivative(f(y, x), x), (x), (x + y))");
 }
 
 TEST_CASE("test_matrix(): printing", "[printing]")
 {
-    DenseMatrix A = DenseMatrix(2, 2, {integer(1), integer(0), integer(0),
-        integer(1)});
+    DenseMatrix A
+        = DenseMatrix(2, 2, {integer(1), integer(0), integer(0), integer(1)});
     REQUIRE(A.__str__() == "[1, 0]\n[0, 1]\n");
 }
 
@@ -329,7 +333,7 @@ TEST_CASE("test_univariate_polynomial(): printing", "[printing]")
     p = univariate_polynomial(x, -1, {{-1, d}});
 
     REQUIRE(p->__str__() == "d*x**(-1)");
-    REQUIRE(not (p->__str__() == "d*x**-1"));
+    REQUIRE(not(p->__str__() == "d*x**-1"));
 
     p = univariate_polynomial(x, 1, {{-2, d}, {-1, c}, {0, b}, {1, a}});
     REQUIRE(p->__str__() == "a*x + b + c*x**(-1) + d*x**(-2)");
@@ -337,7 +341,8 @@ TEST_CASE("test_univariate_polynomial(): printing", "[printing]")
 
 TEST_CASE("test_floats(): printing", "[printing]")
 {
-    RCP<const Basic> p;;
+    RCP<const Basic> p;
+    ;
     RCP<const Basic> x = symbol("x");
 
     p = real_double(11111.11);
@@ -372,7 +377,8 @@ TEST_CASE("test_floats(): printing", "[printing]")
     mpc_set_si_si(m2.get_mpc_t(), -10, 10, MPC_RNDNN);
     p = SymEngine::complex_mpc(m2);
     p = div(p, x);
-    REQUIRE(p->__str__() == "(-10.0000000000000000000000 + 10.0000000000000000000000*I)/x");
+    REQUIRE(p->__str__()
+            == "(-10.0000000000000000000000 + 10.0000000000000000000000*I)/x");
 #endif
 #endif
 }
