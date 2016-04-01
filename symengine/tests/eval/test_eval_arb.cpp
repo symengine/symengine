@@ -87,7 +87,7 @@ TEST_CASE("Rational: eval_arb", "[eval_arb]")
 
     mpfr_t f;
     mpfr_init2(f, 17);
-    mpfr_set_d(f, 22.0/7, MPFR_RNDN);
+    mpfr_set_d(f, 22.0 / 7, MPFR_RNDN);
 
     eval_arb(a, *q, 10);
 
@@ -106,7 +106,7 @@ TEST_CASE("Rational: eval_arb", "[eval_arb]")
     q = div(x, y);
     eval_arb(a, *q, 10);
 
-    mpfr_set_d(f, (double)x_/y_, MPFR_RNDN);
+    mpfr_set_d(f, (double)x_ / y_, MPFR_RNDN);
 
     REQUIRE(arb_contains_mpfr(a, f));
     mpfr_clear(f);
@@ -124,7 +124,7 @@ TEST_CASE("Add: eval_arb", "[eval_arb]")
 
     mpfr_t f;
     mpfr_init2(f, 17);
-    mpfr_set_d(f, sqrt(3) + 223.0/71, MPFR_RNDN);
+    mpfr_set_d(f, sqrt(3) + 223.0 / 71, MPFR_RNDN);
 
     REQUIRE(arb_contains_mpfr(a, f));
 
@@ -132,7 +132,7 @@ TEST_CASE("Add: eval_arb", "[eval_arb]")
     r1 = add(sqrt(integer(7)), q);
     eval_arb(a, *r1, 10);
 
-    mpfr_set_d(f, sqrt(7) + 34.0/7100, MPFR_RNDN);
+    mpfr_set_d(f, sqrt(7) + 34.0 / 7100, MPFR_RNDN);
 
     REQUIRE(arb_contains_mpfr(a, f));
     mpfr_clear(f);
@@ -150,7 +150,7 @@ TEST_CASE("Mul: eval_arb", "[eval_arb]")
 
     mpfr_t f;
     mpfr_init2(f, 17);
-    mpfr_set_d(f, sqrt(15)*377.0/120, MPFR_RNDN);
+    mpfr_set_d(f, sqrt(15) * 377.0 / 120, MPFR_RNDN);
 
     REQUIRE(arb_contains_mpfr(a, f));
 
@@ -158,7 +158,7 @@ TEST_CASE("Mul: eval_arb", "[eval_arb]")
     r1 = mul(sqrt(integer(2317)), q);
     eval_arb(a, *r1, 8);
 
-    mpfr_set_d(f, sqrt(2317)*9001.0/71, MPFR_RNDN);
+    mpfr_set_d(f, sqrt(2317) * 9001.0 / 71, MPFR_RNDN);
 
     REQUIRE(arb_contains_mpfr(a, f));
     mpfr_clear(f);
@@ -177,7 +177,7 @@ TEST_CASE("Pow: eval_arb", "[eval_arb]")
 
     mpfr_t f;
     mpfr_init2(f, 17);
-    mpfr_set_d(f, pow(377.0/120, 34.0/1257), MPFR_RNDN);
+    mpfr_set_d(f, pow(377.0 / 120, 34.0 / 1257), MPFR_RNDN);
 
     REQUIRE(arb_contains_mpfr(a, f));
 
@@ -186,14 +186,14 @@ TEST_CASE("Pow: eval_arb", "[eval_arb]")
     r1 = pow(b, e);
     eval_arb(a, *r1, 10);
 
-    mpfr_set_d(f, pow(120.0/377, 97.0/34), MPFR_RNDN);
+    mpfr_set_d(f, pow(120.0 / 377, 97.0 / 34), MPFR_RNDN);
 
     REQUIRE(arb_contains_mpfr(a, f));
 
     r1 = pow(E, e);
     eval_arb(a, *r1, 12);
 
-    mpfr_set_d(f, exp(97.0/34), MPFR_RNDN);
+    mpfr_set_d(f, exp(97.0 / 34), MPFR_RNDN);
 
     REQUIRE(arb_contains_mpfr(a, f));
     mpfr_clear(f);
@@ -215,10 +215,10 @@ TEST_CASE("Sin: eval_arb", "[eval_arb]")
     REQUIRE(arb_contains_mpfr(a, f));
 
     RCP<const Basic> q = div(integer(3), integer(5));
-    r1 = add(sin(integer(2)), sin(q));  // r1 = sin(2) + sin(3/5)
+    r1 = add(sin(integer(2)), sin(q)); // r1 = sin(2) + sin(3/5)
     eval_arb(a, *r1, 10);
 
-    mpfr_set_d(f, sin(2) + sin(3.0/5), MPFR_RNDN);
+    mpfr_set_d(f, sin(2) + sin(3.0 / 5), MPFR_RNDN);
 
     REQUIRE(arb_contains_mpfr(a, f));
     mpfr_clear(f);
@@ -240,10 +240,10 @@ TEST_CASE("Cos: eval_arb", "[eval_arb]")
     REQUIRE(arb_contains_mpfr(a, f));
 
     RCP<const Basic> q = div(integer(7), integer(3));
-    r1 = mul(cos(integer(-1)), cos(q));  // r1 = cos(-1)*cos(7/3)
+    r1 = mul(cos(integer(-1)), cos(q)); // r1 = cos(-1)*cos(7/3)
     eval_arb(a, *r1, 13);
 
-    mpfr_set_d(f, cos(-1)*cos(7.0/3), MPFR_RNDN);
+    mpfr_set_d(f, cos(-1) * cos(7.0 / 3), MPFR_RNDN);
 
     REQUIRE(arb_contains_mpfr(a, f));
     mpfr_clear(f);
@@ -268,7 +268,7 @@ TEST_CASE("Tan: eval_arb", "[eval_arb]")
     r1 = add(tan(integer(2)), mul(tan(integer(3)), tan(integer(7))));
     eval_arb(a, *r1, 14);
 
-    mpfr_set_d(f, tan(2) + tan(3)*tan(7), MPFR_RNDN);
+    mpfr_set_d(f, tan(2) + tan(3) * tan(7), MPFR_RNDN);
 
     REQUIRE(arb_contains_mpfr(a, f));
     mpfr_clear(f);
@@ -285,15 +285,15 @@ TEST_CASE("Csc: eval_arb", "[eval_arb]")
 
     mpfr_t f;
     mpfr_init2(f, 17);
-    mpfr_set_d(f, 1/sin(2), MPFR_RNDN);
+    mpfr_set_d(f, 1 / sin(2), MPFR_RNDN);
 
     REQUIRE(arb_contains_mpfr(a, f));
 
     RCP<const Basic> q = div(integer(3), integer(5));
-    r1 = add(csc(integer(2)), csc(q));  // r1 = csc(2) + csc(3/5)
+    r1 = add(csc(integer(2)), csc(q)); // r1 = csc(2) + csc(3/5)
     eval_arb(a, *r1, 10);
 
-    mpfr_set_d(f, 1/sin(2) + 1/sin(3.0/5), MPFR_RNDN);
+    mpfr_set_d(f, 1 / sin(2) + 1 / sin(3.0 / 5), MPFR_RNDN);
 
     REQUIRE(arb_contains_mpfr(a, f));
     mpfr_clear(f);
@@ -310,15 +310,15 @@ TEST_CASE("Sec: eval_arb", "[eval_arb]")
 
     mpfr_t f;
     mpfr_init2(f, 17);
-    mpfr_set_d(f, 1/cos(-1), MPFR_RNDN);
+    mpfr_set_d(f, 1 / cos(-1), MPFR_RNDN);
 
     REQUIRE(arb_contains_mpfr(a, f));
 
     RCP<const Basic> q = div(integer(7), integer(3));
-    r1 = mul(sec(integer(-1)), sec(q));  // r1 = sec(-1)*sec(7/3)
+    r1 = mul(sec(integer(-1)), sec(q)); // r1 = sec(-1)*sec(7/3)
     eval_arb(a, *r1, 13);
 
-    mpfr_set_d(f, 1/cos(-1)*1/cos(7.0/3), MPFR_RNDN);
+    mpfr_set_d(f, 1 / cos(-1) * 1 / cos(7.0 / 3), MPFR_RNDN);
 
     REQUIRE(arb_contains_mpfr(a, f));
     mpfr_clear(f);
@@ -335,7 +335,7 @@ TEST_CASE("Cot: eval_arb", "[eval_arb]")
 
     mpfr_t f;
     mpfr_init2(f, 17);
-    mpfr_set_d(f, 1/tan(1239), MPFR_RNDN);
+    mpfr_set_d(f, 1 / tan(1239), MPFR_RNDN);
 
     REQUIRE(arb_contains_mpfr(a, f));
 
@@ -343,7 +343,7 @@ TEST_CASE("Cot: eval_arb", "[eval_arb]")
     r1 = add(cot(integer(2)), mul(cot(integer(3)), cot(integer(7))));
     eval_arb(a, *r1, 14);
 
-    mpfr_set_d(f, 1/tan(2) + 1/tan(3)*1/tan(7), MPFR_RNDN);
+    mpfr_set_d(f, 1 / tan(2) + 1 / tan(3) * 1 / tan(7), MPFR_RNDN);
 
     REQUIRE(arb_contains_mpfr(a, f));
     mpfr_clear(f);
@@ -367,7 +367,7 @@ TEST_CASE("Log: eval_arb", "[eval_arb]")
     r1 = add(log(integer(2)), log(div(integer(3), integer(73))));
     eval_arb(a, *r1, 14);
 
-    mpfr_set_d(f, log(2) + log(3.0/73), MPFR_RNDN);
+    mpfr_set_d(f, log(2) + log(3.0 / 73), MPFR_RNDN);
 
     REQUIRE(arb_contains_mpfr(a, f));
     mpfr_clear(f);
@@ -408,7 +408,7 @@ TEST_CASE("Acos: eval_arb", "[eval_arb]")
 
     mpfr_t f;
     mpfr_init2(f, 17);
-    mpfr_set_d(f, acos(sqrt(3)/2), MPFR_RNDN);
+    mpfr_set_d(f, acos(sqrt(3) / 2), MPFR_RNDN);
 
     REQUIRE(arb_contains_mpfr(a, f));
 
@@ -432,21 +432,21 @@ TEST_CASE("Asec: eval_arb", "[eval_arb]")
 
     mpfr_t f;
     mpfr_init2(f, 17);
-    mpfr_set_d(f, acos(1.0/23), MPFR_RNDN);
+    mpfr_set_d(f, acos(1.0 / 23), MPFR_RNDN);
 
     REQUIRE(arb_contains_mpfr(a, f));
 
     r1 = asec(integer(-1));
     eval_arb(a, *r1, 13);
 
-    mpfr_set_d(f, acos(1.0/-1), MPFR_RNDN);
+    mpfr_set_d(f, acos(1.0 / -1), MPFR_RNDN);
 
     REQUIRE(arb_contains_mpfr(a, f));
 
     r1 = asec(integer(1));
     eval_arb(a, *r1, 13);
 
-    mpfr_set_d(f, acos(1.0/1), MPFR_RNDN);
+    mpfr_set_d(f, acos(1.0 / 1), MPFR_RNDN);
 
     REQUIRE(arb_contains_mpfr(a, f));
 
@@ -464,21 +464,21 @@ TEST_CASE("ACsc: eval_arb", "[eval_arb]")
 
     mpfr_t f;
     mpfr_init2(f, 17);
-    mpfr_set_d(f, asin(1.0/-34), MPFR_RNDN);
+    mpfr_set_d(f, asin(1.0 / -34), MPFR_RNDN);
 
     REQUIRE(arb_contains_mpfr(a, f));
 
     r1 = acsc(integer(-1));
     eval_arb(a, *r1, 13);
 
-    mpfr_set_d(f, asin(1.0/-1), MPFR_RNDN);
+    mpfr_set_d(f, asin(1.0 / -1), MPFR_RNDN);
 
     REQUIRE(arb_contains_mpfr(a, f));
 
     r1 = acsc(integer(16));
     eval_arb(a, *r1, 13);
 
-    mpfr_set_d(f, asin(1.0/16), MPFR_RNDN);
+    mpfr_set_d(f, asin(1.0 / 16), MPFR_RNDN);
 
     REQUIRE(arb_contains_mpfr(a, f));
 
@@ -520,21 +520,21 @@ TEST_CASE("ACot: eval_arb", "[eval_arb]")
 
     mpfr_t f;
     mpfr_init2(f, 17);
-    mpfr_set_d(f, atan(1.0/-34), MPFR_RNDN);
+    mpfr_set_d(f, atan(1.0 / -34), MPFR_RNDN);
 
     REQUIRE(arb_contains_mpfr(a, f));
 
     r1 = acot(integer(591));
     eval_arb(a, *r1, 13);
 
-    mpfr_set_d(f, atan(1.0/591), MPFR_RNDN);
+    mpfr_set_d(f, atan(1.0 / 591), MPFR_RNDN);
 
     REQUIRE(arb_contains_mpfr(a, f));
 
     r1 = acot(integer(16));
     eval_arb(a, *r1, 13);
 
-    mpfr_set_d(f, atan(1.0/16), MPFR_RNDN);
+    mpfr_set_d(f, atan(1.0 / 16), MPFR_RNDN);
 
     REQUIRE(arb_contains_mpfr(a, f));
     mpfr_clear(f);
@@ -582,7 +582,7 @@ TEST_CASE("Sinh: eval_arb", "[eval_arb]")
     r1 = sinh(mul(integer(-5), sqrt(integer(3))));
     eval_arb(a, *r1, 15);
 
-    mpfr_set_d(f, sinh(-5*sqrt(3)), MPFR_RNDN);
+    mpfr_set_d(f, sinh(-5 * sqrt(3)), MPFR_RNDN);
 
     REQUIRE(arb_contains_mpfr(a, f));
     mpfr_clear(f);
@@ -606,7 +606,7 @@ TEST_CASE("Cosh: eval_arb", "[eval_arb]")
     r1 = cosh(div(integer(5), sqrt(integer(3))));
     eval_arb(a, *r1, 15);
 
-    mpfr_set_d(f, cosh(5.0/sqrt(3)), MPFR_RNDN);
+    mpfr_set_d(f, cosh(5.0 / sqrt(3)), MPFR_RNDN);
 
     REQUIRE(arb_contains_mpfr(a, f));
     mpfr_clear(f);
@@ -647,14 +647,14 @@ TEST_CASE("Coth: eval_arb", "[eval_arb]")
 
     mpfr_t f;
     mpfr_init2(f, 17);
-    mpfr_set_d(f, -sinh(2*40)/(1 - cosh(2*40)), MPFR_RNDN);
+    mpfr_set_d(f, -sinh(2 * 40) / (1 - cosh(2 * 40)), MPFR_RNDN);
 
     REQUIRE(arb_contains_mpfr(a, f));
 
     r1 = coth(integer(5));
     eval_arb(a, *r1, 15);
 
-    mpfr_set_d(f, -sinh(2*5)/(1 - cosh(2*5)), MPFR_RNDN);
+    mpfr_set_d(f, -sinh(2 * 5) / (1 - cosh(2 * 5)), MPFR_RNDN);
 
     REQUIRE(arb_contains_mpfr(a, f));
     mpfr_clear(f);

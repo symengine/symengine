@@ -27,30 +27,36 @@
 #include <symengine/series_flint.h>
 #include <symengine/sets.h>
 
-namespace SymEngine {
+namespace SymEngine
+{
 
-class Visitor {
+class Visitor
+{
 public:
-#   define SYMENGINE_ENUM( TypeID , Class) \
-    virtual void visit(const Class &) = 0;
-#   include "symengine/type_codes.inc"
-#   undef SYMENGINE_ENUM
+#define SYMENGINE_ENUM(TypeID, Class) virtual void visit(const Class &) = 0;
+#include "symengine/type_codes.inc"
+#undef SYMENGINE_ENUM
 };
 
 void preorder_traversal(const Basic &b, Visitor &v);
 void postorder_traversal(const Basic &b, Visitor &v);
 
-template<class Derived, class Base = Visitor>
-class BaseVisitor : public Base {
+template <class Derived, class Base = Visitor>
+class BaseVisitor : public Base
+{
 
 public:
-#   define SYMENGINE_ENUM( TypeID , Class) \
-    virtual void visit(const Class &x) { static_cast<Derived*>(this)->bvisit(x); };
-#   include "symengine/type_codes.inc"
-#   undef SYMENGINE_ENUM
+#define SYMENGINE_ENUM(TypeID, Class)                                          \
+    virtual void visit(const Class &x)                                         \
+    {                                                                          \
+        static_cast<Derived *>(this)->bvisit(x);                               \
+    };
+#include "symengine/type_codes.inc"
+#undef SYMENGINE_ENUM
 };
 
-class StopVisitor : public Visitor {
+class StopVisitor : public Visitor
+{
 public:
     bool stop_;
 };
@@ -58,22 +64,25 @@ public:
 void preorder_traversal_stop(const Basic &b, StopVisitor &v);
 void postorder_traversal_stop(const Basic &b, StopVisitor &v);
 
-class HasSymbolVisitor : public BaseVisitor<HasSymbolVisitor, StopVisitor> {
+class HasSymbolVisitor : public BaseVisitor<HasSymbolVisitor, StopVisitor>
+{
 protected:
     RCP<const Symbol> x_;
     bool has_;
-public:
 
-    void bvisit(const Symbol &x) {
+public:
+    void bvisit(const Symbol &x)
+    {
         if (x_->__eq__(x)) {
             has_ = true;
             stop_ = true;
         }
     }
 
-    void bvisit(const Basic &x) { };
+    void bvisit(const Basic &x){};
 
-    bool apply(const Basic &b, const RCP<const Symbol> &x) {
+    bool apply(const Basic &b, const RCP<const Symbol> &x)
+    {
         x_ = x;
         has_ = false;
         stop_ = false;
@@ -84,17 +93,19 @@ public:
 
 bool has_symbol(const Basic &b, const RCP<const Symbol> &x);
 
-class CoeffVisitor : public BaseVisitor<CoeffVisitor, StopVisitor> {
+class CoeffVisitor : public BaseVisitor<CoeffVisitor, StopVisitor>
+{
 protected:
     RCP<const Symbol> x_;
     RCP<const Basic> n_;
     RCP<const Basic> coeff_;
-public:
 
-    void bvisit(const Add &x) {
+public:
+    void bvisit(const Add &x)
+    {
         umap_basic_num dict;
         RCP<const Number> coef = zero;
-        for (auto &p: x.dict_) {
+        for (auto &p : x.dict_) {
             p.first->accept(*this);
             if (neq(*coeff_, *zero)) {
                 Add::coef_dict_add_term(outArg(coef), dict, p.second, coeff_);
@@ -103,8 +114,9 @@ public:
         coeff_ = Add::from_dict(coef, std::move(dict));
     }
 
-    void bvisit(const Mul &x) {
-        for (auto &p: x.dict_) {
+    void bvisit(const Mul &x)
+    {
+        for (auto &p : x.dict_) {
             if (eq(*p.first, *x_) and eq(*p.second, *n_)) {
                 map_basic_basic dict = x.dict_;
                 dict.erase(p.first);
@@ -115,13 +127,15 @@ public:
         coeff_ = zero;
     }
 
-    void bvisit(const Pow &x) {
+    void bvisit(const Pow &x)
+    {
         if (eq(*x.get_base(), *x_) and eq(*x.get_exp(), *n_)) {
             coeff_ = one;
         }
     }
 
-    void bvisit(const Symbol &x) {
+    void bvisit(const Symbol &x)
+    {
         if (eq(x, *x_) and eq(*one, *n_)) {
             coeff_ = one;
         } else {
@@ -129,12 +143,14 @@ public:
         }
     }
 
-    void bvisit(const Basic &x) {
+    void bvisit(const Basic &x)
+    {
         coeff_ = zero;
     }
 
     RCP<const Basic> apply(const Basic &b, const RCP<const Symbol> &x,
-            const RCP<const Basic> &n) {
+                           const RCP<const Basic> &n)
+    {
         x_ = x;
         n_ = n;
         coeff_ = zero;
@@ -144,7 +160,7 @@ public:
 };
 
 RCP<const Basic> coeff(const Basic &b, const RCP<const Basic> &x,
-        const RCP<const Basic> &n);
+                       const RCP<const Basic> &n);
 
 set_basic free_symbols(const Basic &b);
 
