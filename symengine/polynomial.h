@@ -303,7 +303,6 @@ public:
     bool __eq__(const Basic &o) const;
     int compare(const Basic &o) const;
     integer_class eval(std::map<RCP<const Symbol>, integer_class, RCPSymbolCompare> &vals) const;
-    std::string toString() const;
 };
 
 //reconciles the positioning of the exponents in the vectors in the umap_uvec_mpz dict_ of the arguments
@@ -375,7 +374,6 @@ public:
     bool __eq__(const Basic &o) const;
     int compare(const Basic &o) const;
     Expression eval(std::map<RCP<const Symbol>, Expression, RCPSymbolCompare> &vals) const;
-    //std::string toString() const;
 };
 
 RCP<const MultivariatePolynomial> add_mult_poly(const MultivariatePolynomial &a, 

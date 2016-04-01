@@ -67,7 +67,59 @@ public:
             precedence = PrecedenceEnum::Add;
         }
     }
-    
+
+    void bvisit(const MultivariateIntPolynomial &x){
+        if (0 == x.dict_.size()){
+            precedence = PrecedenceEnum::Atom;
+        } else if (1 == x.dict_.size()) {
+            auto iter = x.dict_.begin();
+            precedence = PrecedenceEnum::Atom;
+            bool first = true; //true if there are no nonzero exponents, false otherwise
+            for (unsigned int exp : iter->first) {
+                if (exp > 0) {
+                    if (first && exp > 1) 
+                        precedence = PrecedenceEnum::Pow;
+                    if (!first) 
+                        precedence = PrecedenceEnum::Mul;
+                first = false;
+                }
+            }
+            if (!first) {
+                if (iter->second != 1)
+                    precedence = PrecedenceEnum::Mul;
+            }
+        } else {
+            precedence = PrecedenceEnum::Add;
+        }
+    }
+
+    void bvisit(const MultivariatePolynomial &x){
+        if (0 == x.dict_.size()){
+            precedence = PrecedenceEnum::Atom;
+        } else if (1 == x.dict_.size()) {
+            auto iter = x.dict_.begin();
+            precedence = PrecedenceEnum::Atom;
+            bool first = true; //true if there are no nonzero exponents, false otherwise
+            for (unsigned int exp : iter->first) {
+                if (exp > 0) {
+                    if (first && exp > 1) 
+                        precedence = PrecedenceEnum::Pow;
+                    if (!first) 
+                        precedence = PrecedenceEnum::Mul;
+                first = false;
+                }
+            }
+            if (first) {
+                iter->second.get_basic()->accept(*this);
+            } else {
+                if (iter->second != 1)
+                    precedence = PrecedenceEnum::Mul;
+            }
+        } else {
+            precedence = PrecedenceEnum::Add;
+        }
+    }    
+
     void bvisit(const Rational &x) {
         precedence = PrecedenceEnum::Add;
     }
@@ -154,6 +206,7 @@ public:
     void bvisit(const Pow &x);
     void bvisit(const UnivariateIntPolynomial &x);
     void bvisit(const MultivariateIntPolynomial &x);
+    void bvisit(const MultivariatePolynomial &x);
     void bvisit(const UnivariatePolynomial &x);
 #ifdef HAVE_SYMENGINE_PIRANHA
     void bvisit(const URatPSeriesPiranha &x);

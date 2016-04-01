@@ -703,46 +703,6 @@ integer_class MultivariateIntPolynomial::eval(std::map<RCP<const Symbol>, intege
     return ans;
 }
 
-std::string MultivariateIntPolynomial::toString() const {
-    std::ostringstream s;
-    bool first = true; //is this the first term being printed out?
-    //To change the ordering in which the terms will print out, change
-    //vec_uint_compare in dict.h
-    std::vector<vec_uint> v = order_umap<vec_uint, umap_uvec_mpz, vec_uint_compare>(dict_);
-
-    for (vec_uint exps : v) {
-        integer_class c = dict_.find(exps)->second;
-        if (c != 0) {
-            if (c > 0 && !first) {
-                s << "+ ";
-            } else if (c < 0) {
-                s << "- ";
-            }
-            unsigned int i = 0;
-            std::ostringstream expr;
-            for (auto it : vars_) {
-                if (dict_.find(exps)->first[i] != 0) {
-                    expr << it->get_name();
-                    if (dict_.find(exps)->first[i] > 1)
-                        expr << "**" << dict_.find(exps)->first[i];
-                    expr << " ";
-                }
-                i++;
-            }
-            if (mp_abs(c) != 1 || expr.str().empty())
-                s << mp_abs(c) << "*";
-            s << expr.str();
-            first = false;
-        }
-    }
-
-    if (s.str().empty())
-        s << "0 ";
-    std::string final(s.str());
-    final.pop_back();
-    return final;
-}
-
 unsigned int reconcile(vec_uint &v1, vec_uint &v2, set_sym &s, const set_sym &s1, const set_sym &s2) {
     auto a1 = s1.begin();
     auto a2 = s2.begin();
@@ -1211,49 +1171,6 @@ Expression MultivariatePolynomial::eval(std::map<RCP<const Symbol>, Expression,
     }
     return ans;
 }
-
-//not sure how to determine if a coeficinet has a leading -.
-/*
-std::string MultivariatePolynomial::toString() const {
-    std::ostringstream s;
-    bool first = true; //is this the first term being printed out?
-    //To change the ordering in which the terms will print out, change
-    //vec_uint_compare in dict.h
-    std::vector<vec_uint> v = order_umap<vec_uint, umap_uvec_mpz, vec_uint_compare>(dict_);
-
-    for (vec_uint exps : v) {
-        Expression c = dict_.find(exps)->second;
-        if (c != Expression(0)) {
-            if (c > 0 && !first) {
-                s << "+ ";
-            } else if (c < 0) {
-                s << "- ";
-            }
-            unsigned int i = 0;
-            std::ostringstream expr;
-            for (auto it : vars_) {
-                if (dict_.find(exps)->first[i] != 0) {
-                    expr << it->get_name();
-                    if (dict_.find(exps)->first[i] > 1)
-                        expr << "**" << dict_.find(exps)->first[i];
-                    expr << " ";
-                }
-                i++;
-            }
-            if (mp_abs(c) != 1 || expr.str().empty())
-                s << mp_abs(c) << "*";
-            s << expr.str();
-            first = false;
-        }
-    }
-
-    if (s.str().empty())
-        s << "0 ";
-    std::string final(s.str());
-    final.pop_back();
-    return final;
-}
-*/
 
 RCP<const MultivariatePolynomial> add_mult_poly(const MultivariatePolynomial &a,
         const MultivariatePolynomial &b) {
