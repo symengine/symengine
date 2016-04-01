@@ -36,7 +36,8 @@ TEST_CASE("Expression series expansion interface", "[Expansion interface]")
 
     REQUIRE(rcp_static_cast<const Number>(ser->get_coeff(7))->is_minus_one());
     REQUIRE(rcp_static_cast<const Number>(ser->as_dict()[8])->is_one());
-    REQUIRE(ser->as_basic()->__str__()=="1 - x + x**2 - x**3 + x**4 - x**5 + x**6 - x**7 + x**8 - x**9");
+    REQUIRE(ser->as_basic()->__str__()
+            == "1 - x + x**2 - x**3 + x**4 - x**5 + x**6 - x**7 + x**8 - x**9");
 #else
     REQUIRE_THROWS_AS(series(ex, x, 10), std::runtime_error);
 #endif
