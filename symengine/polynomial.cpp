@@ -536,14 +536,18 @@ Expression UnivariatePolynomial::max_coef() const
 
 Expression UnivariatePolynomial::eval(const Expression &x) const
 {
-    // TODO: Use Horner's Scheme
-    Expression ans = 0;
-    for (const auto &p : dict_) {
-        Expression temp;
-        temp = pow_ex(x, Expression(p.first));
-        ans += p.second * temp;
+    int last_deg = dict_.rbegin()->first;
+    Expression result, x_pow;
+
+    for (auto it = dict_.rbegin(); it != dict_.rend(); ++it) {
+        x_pow = pow_ex(x, last_deg - it->first);
+        last_deg = it->first;
+        result = it->second + expand(x_pow * result);
     }
-    return ans;
+    x_pow = pow_ex(x, last_deg);
+    result = expand(result * x_pow);
+
+    return result;
 }
 
 bool UnivariatePolynomial::is_zero() const
