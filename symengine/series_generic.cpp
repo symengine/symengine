@@ -180,7 +180,10 @@ UnivariateSeries::subs(const UnivariateExprPolynomial &s,
                        const UnivariateExprPolynomial &var,
                        const UnivariateExprPolynomial &r, unsigned prec)
 {
-    throw std::runtime_error("Subs Not Implemented");
+    UnivariateExprPolynomial result(r.get_univariate_poly()->get_var()->get_name());
+    for (auto &i : s.get_univariate_poly()->get_dict())
+        result += i.second * pow(r, i.first, prec);
+    return result;
 }
 
 Expression UnivariateSeries::sin(const Expression& c)

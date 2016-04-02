@@ -378,7 +378,8 @@ public:
         return poly_->compare(*other.poly_);
     }
 
-    Expression find_cf(int deg) const {
+    Expression find_cf(int deg) const 
+    {
         if (poly_->get_dict().find(deg) != poly_->get_dict().end()) {
             return poly_->get_dict().at(deg);
         } else {
