@@ -1,13 +1,14 @@
 #include <symengine/basic.h>
 #include <symengine/monomials.h>
 
-namespace SymEngine {
+namespace SymEngine
+{
 
 // This is the fastest implementation:
 void monomial_mul(const vec_int &A, const vec_int &B, vec_int &C)
 {
     size_t n = A.size();
-    for(size_t i = 0; i < n; ++i) {
+    for (size_t i = 0; i < n; ++i) {
         C[i] = A[i] + B[i];
     }
 }

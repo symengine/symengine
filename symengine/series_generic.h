@@ -11,16 +11,24 @@
 #include <symengine/rational.h>
 #include <symengine/series.h>
 
-namespace SymEngine {
+namespace SymEngine
+{
 //! UnivariateSeries Class
-class UnivariateSeries : public SeriesBase<UnivariateExprPolynomial, Expression, UnivariateSeries> {
+class UnivariateSeries : public SeriesBase<UnivariateExprPolynomial, Expression, UnivariateSeries>
+{
     // UnivariateSeries 1 + 2*x + x**2 + O(x**5) has dict_ = {{0, 1}, {1, 2}, {2, 1}} with var_ = "x" and prec_ = 5
 public:
     IMPLEMENT_TYPEID(UNIVARIATESERIES)
-    UnivariateSeries(const UnivariateExprPolynomial &sp, const std::string varname, const unsigned degree) : 
-        SeriesBase(std::move(sp), varname, degree) {}
+    UnivariateSeries(const UnivariateExprPolynomial &sp,
+                     const std::string varname, const unsigned degree) 
+        : SeriesBase(std::move(sp), varname, degree)
+    {
+    }
     
-    static RCP<const UnivariateSeries> create(const RCP<const Symbol> &var, const unsigned int &prec, const UnivariateExprPolynomial &s) {
+    static RCP<const UnivariateSeries>
+    create(const RCP<const Symbol> &var, const unsigned int &prec,
+           const UnivariateExprPolynomial &s) 
+    {
         return make_rcp<const UnivariateSeries>(std::move(s), var->get_name(), prec);
     }
       
@@ -61,9 +69,12 @@ public:
     static Expression log(const Expression &c);
 };
 
-inline RCP<const UnivariateSeries> univariate_series(RCP<const Symbol> i, unsigned int prec, const UnivariateExprPolynomial& s) {
+inline RCP<const UnivariateSeries> univariate_series(RCP<const Symbol> i,
+                                                     unsigned int prec,
+                                                     const UnivariateExprPolynomial& s)
+{
     return make_rcp<const UnivariateSeries>(std::move(s), i->get_name(), prec);
 }
 
-}  //SymEngine
-#endif //SYMENGINE_SERIES_GENERIC_H
+}  // SymEngine
+#endif
