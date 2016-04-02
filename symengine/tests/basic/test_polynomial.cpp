@@ -2,10 +2,10 @@
 #include <chrono>
 #include <iostream>
 
-#include <symengine/dict.h>
-#include <symengine/mul.h>
 #include <symengine/polynomial.h>
+#include <symengine/mul.h>
 #include <symengine/pow.h>
+#include <symengine/dict.h>
 
 using SymEngine::Expression;
 using SymEngine::UnivariateIntPolynomial;
@@ -306,8 +306,13 @@ TEST_CASE("Adding two UnivariatePolynomial", "[UnivariatePolynomial]")
     RCP<const Basic> c = add_uni_poly(a, b);
     REQUIRE(c->__str__() == "(a + b)*x**2 + 5*x + 3");
 
-    // RCP<const UnivariateIntPolynomial> a = univariate_int_polynomial(x, {{1,
-    // 1_z}, {2, 1_z}, {3, 1_z}});
+    RCP<const UnivariatePolynomial> d
+        = univariate_polynomial(none, 0, {{0, 2}});
+    REQUIRE(add_uni_poly(a, *d)->__str__() == "a*x**2 + 2*x + 3");
+    REQUIRE(add_uni_poly(*d, a)->__str__() == "a*x**2 + 2*x + 3");
+
+    d = univariate_polynomial(y, 1, {{0, 2}, {1, 4}});
+    CHECK_THROWS_AS(add_uni_poly(a, *d), std::runtime_error);
 }
 
 TEST_CASE("Negative of a UnivariatePolynomial", "[UnivariatePolynomial]")
@@ -318,11 +323,20 @@ TEST_CASE("Negative of a UnivariatePolynomial", "[UnivariatePolynomial]")
 
     RCP<const UnivariatePolynomial> b = neg_uni_poly(a);
     REQUIRE(b->__str__() == "-c*x**2 - a*x - 1");
+
+    RCP<const UnivariatePolynomial> c
+        = univariate_polynomial(x, 0, std::map<int, Expression>{});
+    REQUIRE(neg_uni_poly(*c)->__str__() == "0");
+
+    c = univariate_polynomial(x, 0, {{0, 2}});
+    REQUIRE(neg_uni_poly(*c)->__str__() == "-2");
 }
 
 TEST_CASE("Subtracting two UnivariatePolynomial", "[UnivariatePolynomial]")
 {
     RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    RCP<const Symbol> none = symbol("");
     map_int_Expr adict_ = {{0, 1}, {1, 2}, {2, 1}};
     map_int_Expr bdict_ = {{0, 2}, {1, symbol("b")}, {2, symbol("a")}};
     const UnivariatePolynomial a(x, 2, std::move(adict_));
@@ -330,12 +344,22 @@ TEST_CASE("Subtracting two UnivariatePolynomial", "[UnivariatePolynomial]")
 
     RCP<const Basic> c = sub_uni_poly(b, a);
     REQUIRE(c->__str__() == "(-1 + a)*x**2 + (-2 + b)*x + 1");
+
+    RCP<const UnivariatePolynomial> d
+        = univariate_polynomial(none, 0, {{0, 2}});
+    REQUIRE(sub_uni_poly(a, *d)->__str__() == "x**2 + 2*x - 1");
+    REQUIRE(sub_uni_poly(*d, a)->__str__() == "-x**2 - 2*x + 1");
+
+    d = univariate_polynomial(y, 1, {{0, 2}, {1, 4}});
+    CHECK_THROWS_AS(sub_uni_poly(a, *d), std::runtime_error);
 }
 
 TEST_CASE("Multiplication of two UnivariatePolynomial",
           "[UnivariatePolynomial]")
 {
     RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    RCP<const Symbol> none = symbol("");
     RCP<const UnivariatePolynomial> a = univariate_polynomial(
         x, 2, {{0, 1}, {1, symbol("b")}, {2, symbol("a")}});
     RCP<const UnivariatePolynomial> b = univariate_polynomial(
@@ -348,6 +372,17 @@ TEST_CASE("Multiplication of two UnivariatePolynomial",
             == "a**2*x**4 + 2*a*b*x**3 + (2*a + b**2)*x**2 + 2*b*x + 1");
     REQUIRE(d->__str__() == "-a**2*x**4 + (-2*a - a*b)*x**3 + (-2*a - "
                             "2*b)*x**2 + (-2 - b)*x - 1");
+
+    RCP<const UnivariatePolynomial> f
+        = univariate_polynomial(none, 0, {{0, 2}});
+    REQUIRE(mul_uni_poly(a, f)->__str__() == "2*a*x**2 + 2*b*x + 2");
+    REQUIRE(mul_uni_poly(f, a)->__str__() == "2*a*x**2 + 2*b*x + 2");
+
+    f = univariate_polynomial(y, 1, {{0, 2}, {1, 4}});
+    CHECK_THROWS_AS(mul_uni_poly(a, f), std::runtime_error);
+
+    f = univariate_polynomial(x, 0, std::map<int, Expression>{});
+    REQUIRE(mul_uni_poly(a, f)->__str__() == "0");
 }
 
 TEST_CASE("Comparing two UnivariatePolynomial", "[UnivariatePolynomial]")
@@ -389,6 +424,13 @@ TEST_CASE("UnivariatePolynomial get_args", "[UnivariatePolynomial]")
                               {one, mul(integer(2), x), pow(x, integer(2))}));
     REQUIRE(not vec_basic_eq_perm(
         a->get_args(), {one, mul(integer(3), x), pow(x, integer(2))}));
+
+    a = univariate_polynomial(x, 2, {{0, 1}, {1, 1}, {2, 2}});
+    REQUIRE(vec_basic_eq_perm(a->get_args(), {one, x,
+        mul(integer(2), pow(x, integer(2)))}));
+
+    a = univariate_polynomial(x, 0, std::map<int, Expression>{});
+    REQUIRE(vec_basic_eq_perm(a->get_args(), {zero}));
 }
 
 TEST_CASE("UnivariatePolynomial max_coef", "[UnivariatePolynomial]")
