@@ -32,6 +32,7 @@ using namespace SymEngine::literals;
 TEST_CASE("Constructor of UnivariateIntPolynomial", "[UnivariateIntPolynomial]")
 {
     RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> none = symbol("");
     RCP<const UnivariateIntPolynomial> P
         = univariate_int_polynomial(x, {{0, 1_z}, {1, 2_z}, {2, 1_z}});
     REQUIRE(P->__str__() == "x**2 + 2*x + 1");
@@ -39,6 +40,14 @@ TEST_CASE("Constructor of UnivariateIntPolynomial", "[UnivariateIntPolynomial]")
     RCP<const UnivariateIntPolynomial> Q
         = UnivariateIntPolynomial::create(x, {1_z, 0_z, 2_z, 1_z});
     REQUIRE(Q->__str__() == "x**3 + 2*x**2 + 1");
+
+    RCP<const UnivariateIntPolynomial> R
+        = univariate_int_polynomial(none, {{0, 2_z}});
+    REQUIRE(R->__str__() == "2");
+
+    RCP<const UnivariateIntPolynomial> S = univariate_int_polynomial(
+        none, std::map<unsigned int, integer_class>{});
+    REQUIRE(S->__str__() == "0");
 }
 
 TEST_CASE("Adding two UnivariateIntPolynomial", "[UnivariateIntPolynomial]")
@@ -124,10 +133,17 @@ TEST_CASE("Derivative of UnivariateIntPolynomial", "[UnivariateIntPolynomial]")
 {
     RCP<const Symbol> x = symbol("x");
     RCP<const Symbol> y = symbol("y");
+    RCP<const Symbol> none = symbol("");
     RCP<const UnivariateIntPolynomial> a
         = univariate_int_polynomial(x, {{0, 1_z}, {1, 2_z}, {2, 1_z}});
 
     REQUIRE(a->diff(x)->__str__() == "2*x + 2");
+    REQUIRE(a->diff(y)->__str__() == "0");
+
+    a = univariate_int_polynomial(none, {{0, 1_z}});
+    REQUIRE(a->diff(y)->__str__() == "0");
+    a = univariate_int_polynomial(none,
+                                  std::map<unsigned int, integer_class>{});
     REQUIRE(a->diff(y)->__str__() == "0");
 }
 
@@ -201,6 +217,7 @@ TEST_CASE("Univariate Int Polynomial expand",
 TEST_CASE("Constructor of UnivariatePolynomial", "[UnivariatePolynomial]")
 {
     RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> none = symbol("");
     Expression a(symbol("a"));
     Expression b(symbol("b"));
     Expression c(symbol("c"));
@@ -219,6 +236,10 @@ TEST_CASE("Constructor of UnivariatePolynomial", "[UnivariatePolynomial]")
     RCP<const UnivariatePolynomial> R
         = univariate_polynomial(x, {{0, d}, {1, c}, {2, b}, {3, a}});
     REQUIRE(R->__str__() == "a*x**3 + b*x**2 + c*x + d");
+
+    RCP<const UnivariatePolynomial> T
+        = univariate_polynomial(none, std::map<int, Expression>{});
+    REQUIRE(T->__str__() == "0");
 }
 
 TEST_CASE("Adding two UnivariatePolynomial", "[UnivariatePolynomial]")
@@ -299,12 +320,20 @@ TEST_CASE("Derivative of UnivariatePolynomial", "[UnivariatePolynomial]")
 {
     RCP<const Symbol> x = symbol("x");
     RCP<const Symbol> y = symbol("y");
+    RCP<const Symbol> none = symbol("");
     RCP<const UnivariatePolynomial> a
         = univariate_polynomial(x, {{0, 1}, {1, 2}, {2, symbol("a")}});
     RCP<const UnivariatePolynomial> b = univariate_polynomial(x, {{0, 1}});
+    RCP<const UnivariatePolynomial> c
+        = univariate_polynomial(none, {{0, 5}});
+
     REQUIRE(a->diff(x)->__str__() == "2*a*x + 2");
     REQUIRE(a->diff(y)->__str__() == "0");
     REQUIRE(b->diff(y)->__str__() == "0");
+    REQUIRE(c->diff(x)->__str__() == "0");
+
+    c = univariate_polynomial(none, std::map<int, Expression>{});
+    REQUIRE(c->diff(x)->__str__() == "0");
 }
 
 TEST_CASE("Bool checks specific UnivariatePolynomial cases",
