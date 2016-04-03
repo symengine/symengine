@@ -52,10 +52,10 @@ bool UnivariateIntPolynomial::is_canonical(const unsigned int &degree_,
 std::size_t UnivariateIntPolynomial::__hash__() const
 {
     std::hash<std::string> hash_string;
-    std::size_t seed = UNIVARIATEINTPOLYNOMIAL, temp;
+    std::size_t seed = UNIVARIATEINTPOLYNOMIAL;
     seed += hash_string(this->var_->get_name());
     for (const auto &it : this->dict_) {
-        temp = UNIVARIATEINTPOLYNOMIAL;
+        std::size_t temp = UNIVARIATEINTPOLYNOMIAL;
         hash_combine<unsigned int>(temp, it.first);
         hash_combine<long long int>(temp, mp_get_si(it.second));
         seed += temp;
@@ -90,10 +90,10 @@ RCP<const UnivariateIntPolynomial>
 UnivariateIntPolynomial::from_dict(const RCP<const Symbol> &var,
                                    map_uint_mpz &&d)
 {
-    auto itter = d.begin(), toErase = d.begin();
+    auto itter = d.begin();
     while (itter != d.end()) {
         if (integer_class(0) == itter->second) {
-            toErase = itter;
+            auto toErase = itter;
             itter++;
             d.erase(toErase);
         } else {
@@ -158,7 +158,8 @@ vec_basic UnivariateIntPolynomial::get_args() const
     return args;
 }
 
-integer_class UnivariateIntPolynomial::max_abs_coef() const {
+integer_class UnivariateIntPolynomial::max_abs_coef() const
+{
     integer_class curr(mp_abs(dict_.begin()->second));
     for (const auto &it : dict_) {
         if (mp_abs(it.second) > curr)
@@ -311,27 +312,37 @@ unsigned int bit_length(T t)
     return count;
 }
 
-RCP<const UnivariateIntPolynomial> mul_poly(const UnivariateIntPolynomial &a, const UnivariateIntPolynomial &b)
+RCP<const UnivariateIntPolynomial> mul_poly(const UnivariateIntPolynomial &a,
+                                            const UnivariateIntPolynomial &b)
 {
-    bool neg = false;
-
-    if (!(a.get_var()->__eq__(*b.get_var())))
+    RCP<const Symbol> var = symbol("");
+    if (a.get_var()->get_name() == "") {
+        var = b.get_var();
+    } else if (b.get_var()->get_name() == "") {
+        var = a.get_var();
+    } else if (!(a.get_var()->__eq__(*b.get_var()))) {
         throw std::runtime_error("Error: variables must agree.");
+    } else {
+        var = a.get_var();
+    }
+
+    bool neg = false;
 
     if ((--(a.get_dict().end()))->second < 0)
         neg = not neg;
     if ((--(b.get_dict().end()))->second < 0)
         neg = not neg;
 
-    unsigned int N = bit_length(std::min(a.get_degree() + 1, b.get_degree() + 1)) +
-                     bit_length(a.max_abs_coef()) + bit_length(b.max_abs_coef());
-    
+    unsigned int N
+        = bit_length(std::min(a.get_degree() + 1, b.get_degree() + 1))
+          + bit_length(a.max_abs_coef()) + bit_length(b.max_abs_coef());
+
     integer_class a1(1), b1;
     a1 <<= N;
     integer_class a2 = a1 / 2;
     integer_class mask = a1 - 1;
     integer_class a_val(a.eval_bit(N)), b_val(b.eval_bit(N));
-    integer_class s_val(a_val * b_val); 
+    integer_class s_val(a_val * b_val);
     integer_class r = mp_abs(s_val);
 
     std::vector<integer_class> v;

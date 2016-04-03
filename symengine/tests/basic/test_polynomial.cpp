@@ -94,7 +94,7 @@ TEST_CASE("Subtracting two UnivariateIntPolynomial",
 TEST_CASE("Multiplication of two UnivariateIntPolynomial",
           "[UnivariateIntPolynomial]")
 {
-    RCP<const Symbol> x  = symbol("x");
+    RCP<const Symbol> x = symbol("x");
     map_uint_mpz adict_ = {{0, 1_z}, {1, 2_z}, {2, 1_z}};
     map_uint_mpz bdict_ = {{0, -1_z}, {1, -2_z}, {2, -1_z}};
     map_uint_mpz edict_ = {{0, 5_z}, {1, -2_z}, {2, -1_z}};
