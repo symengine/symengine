@@ -27,6 +27,7 @@ using SymEngine::integer;
 using SymEngine::vec_basic_eq_perm;
 using SymEngine::integer_class;
 using SymEngine::MultivariateIntPolynomial;
+using SymEngine::MultivariatePolynomial;
 using SymEngine::RCPSymbolCompare;
 
 using namespace SymEngine::literals;
@@ -522,4 +523,23 @@ TEST_CASE("Testing MultivariateIntPolynomial::get_args()"){
         {{0,0,0},1_z}, {{1,1,1},2_z}, {{0,0,2},1_z} });
     REQUIRE(vec_basic_eq_perm(p->get_args(), {mul(integer(2),mul(x,mul(y,z))),pow(z,integer(2)), 
         one}));
+}
+
+TEST_CASE("Constructing MultivariatePolynomial using from_dict", "[MultivariatePolynomial]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+	Expression a(symbol("a")); //a
+	Expression negB( - Expression(symbol("b")));//-b
+	Expression num1(integer(2));//2
+	Expression negNum(integer(-3));//-3
+	Expression comp(integer(1) + Expression(symbol("c")));//(1+c)
+	Expression negComp(integer(-1) - Expression(symbol("d"))); //(-1 + d)
+	RCP<const MultivariatePolynomial> p1 = MultivariatePolynomial::from_dict({x,y}, { {{1,1}, a}, {{1,2}, negB}, {{2,1}, num1} });
+	RCP<const MultivariatePolynomial> p2 = MultivariatePolynomial::from_dict({x,y}, { {{0,1}, negNum}, {{1,0}, comp}, {{0,0}, negComp} });
+	RCP<const MultivariatePolynomial> p3 = MultivariatePolynomial::from_dict({x,y}, { {{0,0}, Expression(integer(0))} });
+	
+    REQUIRE(p1->__str__() == "2*x**2 y - b*x y**2 + a*x y");
+    REQUIRE(p2->__str__() == "(1 + c)*x - 3*y + (-1 - d)");
+    REQUIRE(p3->__str__() == "0");
 }
