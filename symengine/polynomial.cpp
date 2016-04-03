@@ -1,8 +1,8 @@
-#include <symengine/polynomial.h>
 #include <symengine/add.h>
-#include <symengine/mul.h>
-#include <symengine/pow.h>
 #include <symengine/constants.h>
+#include <symengine/mul.h>
+#include <symengine/polynomial.h>
+#include <symengine/pow.h>
 
 namespace SymEngine
 {
@@ -536,18 +536,13 @@ Expression UnivariatePolynomial::max_coef() const
 
 Expression UnivariatePolynomial::eval(const Expression &x) const
 {
-    int last_deg = dict_.rbegin()->first;
-    Expression result, x_pow;
-
-    for (auto it = dict_.rbegin(); it != dict_.rend(); ++it) {
-        x_pow = pow_ex(x, last_deg - it->first);
-        last_deg = it->first;
-        result = it->second + expand(x_pow * result);
+    Expression ans = 0;
+    for (const auto &p : dict_) {
+        Expression temp;
+        temp = pow_ex(x, Expression(p.first));
+        ans += p.second * temp;
     }
-    x_pow = pow_ex(x, last_deg);
-    result = expand(result * x_pow);
-
-    return result;
+    return ans;
 }
 
 bool UnivariatePolynomial::is_zero() const

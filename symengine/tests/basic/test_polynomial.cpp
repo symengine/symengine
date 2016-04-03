@@ -1,9 +1,9 @@
 #include "catch.hpp"
-#include <iostream>
 #include <chrono>
+#include <iostream>
 
-#include <symengine/polynomial.h>
 #include <symengine/mul.h>
+#include <symengine/polynomial.h>
 #include <symengine/pow.h>
 #include <symengine/dict.h>
 
