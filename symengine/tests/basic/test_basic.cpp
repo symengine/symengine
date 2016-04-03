@@ -40,24 +40,25 @@ using SymEngine::set_basic;
 using SymEngine::free_symbols;
 using SymEngine::function_symbol;
 using SymEngine::rational_class;
+using SymEngine::pi;
 
 TEST_CASE("Symbol hash: Basic", "[basic]")
 {
-    RCP<const Symbol> x  = symbol("x");
+    RCP<const Symbol> x = symbol("x");
     RCP<const Symbol> x2 = symbol("x");
-    RCP<const Symbol> y  = symbol("y");
+    RCP<const Symbol> y = symbol("y");
 
     REQUIRE(x->__eq__(*x));
     REQUIRE(x->__eq__(*x2));
-    REQUIRE(not (x->__eq__(*y)));
+    REQUIRE(not(x->__eq__(*y)));
     REQUIRE(x->__neq__(*y));
 
     std::hash<Basic> hash_fn;
     // Hashes of x and x2 must be the same:
     REQUIRE(hash_fn(*x) == hash_fn(*x2));
     // Hashes of x and y can but don't have to be different:
-    if (hash_fn(*x) != hash_fn(*y)) REQUIRE(x->__neq__(*y));
-
+    if (hash_fn(*x) != hash_fn(*y))
+        REQUIRE(x->__neq__(*y));
 
     std::size_t seed1 = 0;
     hash_combine<std::string>(seed1, "x");
@@ -74,12 +75,12 @@ TEST_CASE("Symbol hash: Basic", "[basic]")
 TEST_CASE("Symbol dict: Basic", "[basic]")
 {
     umap_basic_num d;
-    RCP<const Basic> x  = symbol("x");
+    RCP<const Basic> x = symbol("x");
     RCP<const Basic> x2 = symbol("x");
-    RCP<const Basic> y  = symbol("y");
+    RCP<const Basic> y = symbol("y");
     bool p = (x != x2);
-    REQUIRE(p);  // The instances are different...
-    REQUIRE(eq(*x, *x2));  // ...but equal in the SymPy sense
+    REQUIRE(p);           // The instances are different...
+    REQUIRE(eq(*x, *x2)); // ...but equal in the SymPy sense
 
     insert(d, x, integer(2));
     insert(d, y, integer(3));
@@ -92,8 +93,8 @@ TEST_CASE("Symbol dict: Basic", "[basic]")
 TEST_CASE("Add: basic", "[basic]")
 {
     umap_basic_num m, m2;
-    RCP<const Basic> x  = symbol("x");
-    RCP<const Basic> y  = symbol("y");
+    RCP<const Basic> x = symbol("x");
+    RCP<const Basic> y = symbol("y");
     insert(m, x, integer(2));
     insert(m, y, integer(3));
 
@@ -117,12 +118,19 @@ TEST_CASE("Add: basic", "[basic]")
     REQUIRE(vec_basic_eq_perm(r->get_args(), {mul(integer(2), x), y}));
     REQUIRE(not vec_basic_eq_perm(r->get_args(), {mul(integer(3), x), y}));
 
+    RCP<const Basic> term1, term2;
+    RCP<const Add> a1 = rcp_static_cast<const Add>(add(r, r));
+    a1->as_two_terms(outArg(term1), outArg(term2));
+    RCP<const Add> a2 = rcp_static_cast<const Add>(add(term1, term2));
+    REQUIRE(eq(*a1, *a2));
+
     r = add(mul(integer(5), x), integer(5));
     REQUIRE(vec_basic_eq_perm(r->get_args(), {mul(integer(5), x), integer(5)}));
 
     r = add(add(mul(mul(integer(2), x), y), integer(5)), pow(x, integer(2)));
-    REQUIRE(vec_basic_eq_perm(r->get_args(),
-                {integer(5), mul(mul(integer(2), x), y), pow(x, integer(2))}));
+    REQUIRE(vec_basic_eq_perm(
+        r->get_args(),
+        {integer(5), mul(mul(integer(2), x), y), pow(x, integer(2))}));
     std::cout << *r << std::endl;
 }
 
@@ -274,15 +282,15 @@ TEST_CASE("Rational: Basic", "[basic]")
     REQUIRE(is_a<Rational>(*r1));
     r = rcp_static_cast<const Rational>(r1);
     a = rational_class(3, 5);
-    b =  r->as_mpq();
+    b = r->as_mpq();
     REQUIRE(a == b);
 }
 
 TEST_CASE("Mul: Basic", "[basic]")
 {
     map_basic_basic m, m2;
-    RCP<const Basic> x  = symbol("x");
-    RCP<const Basic> y  = symbol("y");
+    RCP<const Basic> x = symbol("x");
+    RCP<const Basic> y = symbol("y");
     insert(m, x, integer(2));
     insert(m, y, integer(3));
 
@@ -297,11 +305,11 @@ TEST_CASE("Mul: Basic", "[basic]")
     std::cout << *r << std::endl;
 
     REQUIRE(vec_basic_eq_perm(r->get_args(),
-                {pow(x, integer(2)), pow(y, integer(2))}));
+                              {pow(x, integer(2)), pow(y, integer(2))}));
 
     r = mul(mul(pow(x, integer(3)), integer(2)), y);
-    REQUIRE(vec_basic_eq_perm(r->get_args(),
-                {integer(2), pow(x, integer(3)), y}));
+    REQUIRE(
+        vec_basic_eq_perm(r->get_args(), {integer(2), pow(x, integer(3)), y}));
 
     r = add(x, x);
     REQUIRE(vec_basic_eq_perm(r->get_args(), {x, integer(2)}));
@@ -321,12 +329,12 @@ TEST_CASE("Mul: Basic", "[basic]")
 TEST_CASE("Diff: Basic", "[basic]")
 {
     RCP<const Basic> r1, r2;
-    RCP<const Symbol> x  = symbol("x");
-    RCP<const Symbol> y  = symbol("y");
-    RCP<const Basic> i2  = integer(2);
-    RCP<const Basic> i3  = integer(3);
-    RCP<const Basic> i5  = integer(5);
-    RCP<const Basic> i10  = integer(10);
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> i3 = integer(3);
+    RCP<const Basic> i5 = integer(5);
+    RCP<const Basic> i10 = integer(10);
     r1 = integer(5);
     r2 = r1->diff(x);
     REQUIRE(eq(*r2, *zero));
@@ -348,19 +356,20 @@ TEST_CASE("Diff: Basic", "[basic]")
     REQUIRE(eq(*r1->diff(x)->diff(x), *i10));
 
     r1 = add(mul(mul(pow(x, y), pow(y, x)), i2), one)->diff(x);
-    r2 = add(mul(i2, mul(pow(x, y), mul(pow(y, x), log(y)))), mul(i2, mul(pow(x, y), mul(pow(y, x), div(y, x)))));
+    r2 = add(mul(i2, mul(pow(x, y), mul(pow(y, x), log(y)))),
+             mul(i2, mul(pow(x, y), mul(pow(y, x), div(y, x)))));
     REQUIRE(eq(*r1, *r2));
 }
 
 TEST_CASE("compare: Basic", "[basic]")
 {
     RCP<const Basic> r1, r2;
-    RCP<const Symbol> x  = symbol("x");
-    RCP<const Symbol> y  = symbol("y");
-    RCP<const Symbol> z  = symbol("z");
-    RCP<const Basic> i2  = integer(2);
-    RCP<const Basic> im2  = integer(-2);
-    RCP<const Basic> i3  = integer(3);
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    RCP<const Symbol> z = symbol("z");
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> im2 = integer(-2);
+    RCP<const Basic> i3 = integer(3);
     CHECK(x->compare(*x) == 0);
     CHECK(x->compare(*y) == -1);
     CHECK(x->compare(*z) == -1);
@@ -380,18 +389,18 @@ TEST_CASE("compare: Basic", "[basic]")
 
     r1 = mul(x, y);
     r2 = mul(x, z);
-//    CHECK(r1->compare(*r2) == -1);
-//    CHECK(r2->compare(*r1) == 1);
+    //    CHECK(r1->compare(*r2) == -1);
+    //    CHECK(r2->compare(*r1) == 1);
 
     r1 = mul(y, x);
     r2 = mul(x, z);
-//    CHECK(r1->compare(*r2) == -1);
-//    CHECK(r2->compare(*r1) == 1);
+    //    CHECK(r1->compare(*r2) == -1);
+    //    CHECK(r2->compare(*r1) == 1);
 
     r1 = mul(y, x);
     r2 = mul(x, z);
-//    CHECK(r1->compare(*r2) == -1);
-//    CHECK(r2->compare(*r1) == 1);
+    //    CHECK(r1->compare(*r2) == -1);
+    //    CHECK(r2->compare(*r1) == 1);
 
     r1 = mul(mul(y, x), z);
     r2 = mul(x, z);
@@ -430,8 +439,8 @@ TEST_CASE("compare: Basic", "[basic]")
 
     r1 = add(x, y);
     r2 = add(x, z);
-//    CHECK(r1->compare(*r2) == -1);
-//    CHECK(r2->compare(*r1) == 1);
+    //    CHECK(r1->compare(*r2) == -1);
+    //    CHECK(r2->compare(*r1) == 1);
 
     r1 = add(x, y);
     r2 = add(x, y);
@@ -504,9 +513,14 @@ TEST_CASE("Complex: Basic", "[basic]")
     c1 = Complex::from_two_nums(*r1, *r2);
     c2 = Complex::from_two_nums(*r1, *r3);
 
-    // Basic check for equality in Complex::from_two_nums and Complex::from_two_rats
-    REQUIRE(eq(*c1, *Complex::from_two_rats(static_cast<const Rational&>(*r1), static_cast<const Rational&>(*r2))));
-    REQUIRE(neq(*c2, *Complex::from_two_rats(static_cast<const Rational&>(*r1), static_cast<const Rational&>(*r2))));
+    // Basic check for equality in Complex::from_two_nums and
+    // Complex::from_two_rats
+    REQUIRE(
+        eq(*c1, *Complex::from_two_rats(static_cast<const Rational &>(*r1),
+                                        static_cast<const Rational &>(*r2))));
+    REQUIRE(
+        neq(*c2, *Complex::from_two_rats(static_cast<const Rational &>(*r1),
+                                         static_cast<const Rational &>(*r2))));
 
     // Checks for complex addition
     // Final result is int
@@ -672,4 +686,21 @@ TEST_CASE("free_symbols: Basic", "[basic]")
     s = free_symbols(*r1);
     REQUIRE(s.size() == 1);
     REQUIRE(s.count(x) == 1);
+}
+
+TEST_CASE("args: Basic", "[basic]")
+{
+    RCP<const Basic> r1;
+    RCP<const Symbol> x, y;
+    x = symbol("x");
+    y = symbol("y");
+
+    r1 = add(x, pow(y, x));
+    REQUIRE(vec_basic_eq_perm(r1->get_args(), {x, pow(y, x)}));
+
+    r1 = pi;
+    REQUIRE(r1->get_args().size() == 0);
+
+    r1 = log(pi);
+    REQUIRE(vec_basic_eq_perm(r1->get_args(), {pi}));
 }

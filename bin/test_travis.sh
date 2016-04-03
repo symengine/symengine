@@ -96,7 +96,7 @@ echo "Running tests in build directory:"
 ctest --output-on-failure
 
 if [[ "${WITH_COVERAGE}" == "yes" ]]; then
-    coveralls --exclude cmake --exclude CMakeFiles --exclude symengine/utilities --exclude benchmarks --gcov $GCOV_EXECUTABLE --gcov-options '\-lp' >/dev/null 2>&1
+    bash <(curl -s https://codecov.io/bash) -x $GCOV_EXECUTABLE
     exit 0;
 fi
 
@@ -113,12 +113,3 @@ export LD_LIBRARY_PATH=$our_install_dir/lib:$LD_LIBRARY_PATH
 
 echo "Checking whether all header files are installed:"
 python $SOURCE_DIR/symengine/utilities/tests/test_make_install.py $our_install_dir/include/symengine/ $SOURCE_DIR/symengine
-
-# check trailing whitespace:
-if !  egrep " $" -nr --include=\*.{cpp,h,inc}  --exclude-dir=*{teuchos,/build/}* $SOURCE_DIR ; then
-    echo No trailing whitespace;
-else
-    exit -1;
-fi
-# TODO: Add similar grep checks for space after comma,, space after `if`, space between `)` and `{` also
-

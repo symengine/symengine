@@ -49,6 +49,7 @@ Testing
 # Test executables
 symengine/tests/basic/test_arit
 symengine/tests/basic/test_basic
+symengine/tests/basic/test_sets
 symengine/tests/basic/test_functions
 symengine/tests/basic/test_integer
 symengine/tests/basic/test_number
