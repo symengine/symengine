@@ -8,7 +8,8 @@ if [ "$(uname)" == "Darwin" ]; then
     CLANG="clang-format"
 elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
     # Do something under GNU/Linux platform
-    CLANG="clang-format-3.7"
+command -v clang-format-3.7 >/dev/null && CLANG="clang-format-3.7" || CLANG="clang-format"
+
 elif [ "$(expr substr $(uname -s) 1 10)" == "MINGW32_NT" ]; then
     # Do something under Windows NT platform
     CLANG="clang-format.exe"

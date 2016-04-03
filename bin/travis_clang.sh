@@ -11,7 +11,7 @@ if [[ "${TRAVIS_OS_NAME}" == "linux" ]] && \
         exit 1
     fi
 
-    FILES=`git diff master --name-only | grep -E "\.(cpp|h)$"`
+    FILES=`grep -E "\.(cpp|h)$"`
 
     for FILE in $FILES; do
 
