@@ -1057,6 +1057,7 @@ RCP<const MultivariatePolynomial> MultivariatePolynomial::from_dict(const set_sy
     umap_sym_uint degs;
     auto iter = d.begin();
     while (iter != d.end()) {
+        iter->second = expand(iter->second);
         if (Expression(0) == iter->second) {
             auto toErase = iter;
             iter++;
