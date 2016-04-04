@@ -29,6 +29,7 @@ using SymEngine::integer_class;
 using SymEngine::MultivariateIntPolynomial;
 using SymEngine::MultivariatePolynomial;
 using SymEngine::RCPSymbolCompare;
+using SymEngine::Integer;
 
 using namespace SymEngine::literals;
 
@@ -542,4 +543,41 @@ TEST_CASE("Constructing MultivariatePolynomial using from_dict", "[MultivariateP
     REQUIRE(p1->__str__() == "2*x**2 y - b*x y**2 + a*x y");
     REQUIRE(p2->__str__() == "(1 + c)*x - 3*y + (-1 - d)");
     REQUIRE(p3->__str__() == "0");
+}
+
+TEST_CASE("Testing MultivariatePolynomial::__eq__(), __hash__, and compare", "[MultivariatePolynomial]"){
+    RCP<const Symbol> a = symbol("a");
+    RCP<const Symbol> b = symbol("b");
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    RCP<const Symbol> i = symbol("i");
+    RCP<const Symbol> j = symbol("j");
+    RCP<const Integer> two = make_rcp<const Integer>(2);
+    Expression sum(add(i,j));
+    Expression difference(sub(mul(two,i),j));
+    RCP<const MultivariatePolynomial> p1 = MultivariatePolynomial::from_dict({x,y},
+        {{{2,0},sum}, {{1,1},difference}, {{0,2}, sum}  });
+    RCP<const MultivariatePolynomial> p2 = MultivariatePolynomial::from_dict({x,y},
+        {{{2,0},sum}, {{1,1}, difference * -1}, {{0,2},sum}  });
+    RCP<const MultivariatePolynomial> p3 = MultivariatePolynomial::from_dict({x,y},
+        {{{2,0},sum *2}, {{0,2},sum*2}  });
+    RCP<const MultivariatePolynomial> p4 = MultivariatePolynomial::from_dict({a,b},
+        {{{2,0},sum *2}, {{0,2},sum*2}  });
+
+    REQUIRE(p1->__eq__(*p1));
+    REQUIRE(!(p2->__eq__(*p1)));
+    REQUIRE(p3->__eq__( *add_mult_poly(*p1, *p2) ));
+
+    //Only requre that the same polynomial hash to the same value and that different polynomials
+    //hash to different values
+    //Don't want to require a polynomial to have a particular hash in case someone comes up with
+    //a better hash function
+    REQUIRE(p3->__hash__() == add_mult_poly(*p1, *p2)->__hash__());
+    REQUIRE(p1->__hash__() != p2->__hash__());
+    REQUIRE(p3->__hash__() != p4->__hash__());
+
+    //Same for compare.
+    REQUIRE(0 == p3->compare(*add_mult_poly(*p1, *p2)));
+    REQUIRE(0 != p1->compare(*p2));
+    REQUIRE(0 != p3->compare(*p4));
 }
