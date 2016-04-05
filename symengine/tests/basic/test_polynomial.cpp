@@ -450,7 +450,7 @@ TEST_CASE("Testing derivative of MultivariateIntPolynomial", "[MultivariateIntPo
     RCP<const Symbol> z = symbol("z");
     RCP<const MultivariateIntPolynomial> p = MultivariateIntPolynomial::from_dict({x,y}, 
         { {{2,1},3_z}, {{1,2},2_z}, {{2,0},3_z}, {{0,2},2_z}, {{1,0}, 3_z}, {{0,1},2_z}, 
-        {{0,2},2_z}, {{0,0},5_z}  });
+        {{0,0},5_z}  });
     REQUIRE(p->diff(x)->__str__() == "6*x y + 2*y**2 + 6*x + 3");
     REQUIRE(p->diff(y)->__str__() == "3*x**2 + 4*x y + 4*y + 2");
     REQUIRE(p->diff(z)->__str__() == "0");
@@ -516,7 +516,7 @@ TEST_CASE("Testing addition, subtraction, multiplication of two UnivariateIntPol
     REQUIRE(mul_mult_poly(*p1,*p2)->__str__() == "3*x**3 + 2*x**2 - x");	
 }
 
-TEST_CASE("Testing MultivariateIntPolynomial::get_args()"){
+TEST_CASE("Testing MultivariateIntPolynomial::get_args()","[MultivariateIntPolynomial]"){
     RCP<const Symbol> x = symbol("x");
     RCP<const Symbol> y = symbol("y");
     RCP<const Symbol> z = symbol("z");
@@ -580,4 +580,49 @@ TEST_CASE("Testing MultivariatePolynomial::__eq__(), __hash__, and compare", "[M
     REQUIRE(0 == p3->compare(*add_mult_poly(*p1, *p2)));
     REQUIRE(0 != p1->compare(*p2));
     REQUIRE(0 != p3->compare(*p4));
+}
+
+TEST_CASE("Testing MultivariatePolynomial::eval", "[MultivariatePolynomial]"){
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    RCP<const Symbol> z = symbol("z");
+    RCP<const Symbol> a = symbol("a");
+    RCP<const Symbol> b = symbol("b");
+    RCP<const Symbol> c = symbol("c");
+    RCP<const Integer> two = make_rcp<const Integer>(2);
+    Expression expr1(add(a,b));
+    Expression expr2(sub(mul(two,a),b));
+    Expression expr3(mul(a,c));
+    Expression expr4(div(b,a));
+    Expression expr5(add(b,c));
+    Expression expr6(mul(a,b));
+    Expression expr7(div(a,b));
+
+    RCP<const MultivariatePolynomial> p = MultivariatePolynomial::from_dict( {x,y,z}, { {{2,0,0},expr1}, 
+        {{0,2,0},expr2}, {{0,0,2},expr3}, {{1,1,1},expr4}, {{1,1,0},expr1}, {{0,1,1},expr2}, 
+        {{1,0,0},expr1}, {{0,1,0},expr2}, {{0,0,1},expr3}, {{0,0,0},expr4} });
+    std::map<RCP<const Symbol>, Expression, RCPSymbolCompare> m1 = {{x,Expression(0)}, {y,Expression(0)},
+        {z,Expression(0)}};
+    std::map<RCP<const Symbol>, Expression, RCPSymbolCompare> m2 = {{x, expr5}, {y,expr6}, {z,expr7}};
+    REQUIRE( p->eval(m1).get_basic()->__str__() == "b/a" );
+    REQUIRE(p->eval(m2).get_basic()->__str__() == "b/a + (a + b)*(b + c) + (a + b)*(b + c)**2 + a**2*(2*a - b) + a*b*(b + c) + a**2*c/b + a**3*c/b**2 + a*b*(2*a - b) + a**2*b**2*(2*a - b) + a*b*(a + b)*(b + c)");
+}
+
+TEST_CASE("Testing derivative of MultivariatePolynomial", "[MultivariatePolynomial]"){
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    RCP<const Symbol> z = symbol("z");
+    RCP<const Symbol> a = symbol("a");
+    RCP<const Symbol> b = symbol("b");
+    RCP<const Symbol> c = symbol("c");
+    RCP<const Integer> two = make_rcp<const Integer>(2);
+    Expression expr1(add(a,b));
+    Expression expr2(sub(mul(two,a),b));
+    Expression expr3(mul(a,c));
+    Expression expr4(div(b,a));
+    RCP<const MultivariatePolynomial> p = MultivariatePolynomial::from_dict({x,y}, 
+        { {{2,1},expr1}, {{1,2},expr2}, {{2,0},expr3}, {{0,2},expr4}, {{1,0}, expr1}, {{0,1},expr2}, {{0,0},expr3}  });
+    REQUIRE(p->diff(x)->__str__() == "(2*a + 2*b)*x y + (2*a - b)*y**2 + 2*a*c*x + (a + b)");
+    REQUIRE(p->diff(y)->__str__() == "(a + b)*x**2 + (4*a - 2*b)*x y + 2*b/a*y + (2*a - b)");
+    REQUIRE(p->diff(z)->__str__() == "0");
 }
