@@ -283,7 +283,7 @@ public:
     void pow_expand(RCP<const UnivariatePolynomial> &x, unsigned long &i)
     {
         RCP<const UnivariatePolynomial> r
-            = univariate_polynomial(x->get_var(), 0, {{0, 1}});
+            = univariate_polynomial(x->get_var(), {{0, 1}});
         while (i != 0) {
             if (i % 2 == 1) {
                 r = mul_uni_poly(r, x);

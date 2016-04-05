@@ -459,8 +459,8 @@ UnivariatePolynomial::from_vec(const RCP<const Symbol> &var,
     return make_rcp<const UnivariatePolynomial>(var, degree, std::move(dict));
 }
 
-RCP<const Basic> UnivariatePolynomial::from_dict(const RCP<const Symbol> &var,
-                                                 map_int_Expr &&d)
+RCP<const UnivariatePolynomial>
+UnivariatePolynomial::from_dict(const RCP<const Symbol> &var, map_int_Expr &&d)
 {
     auto iter = d.begin();
     while (iter != d.end()) {
@@ -534,7 +534,7 @@ Expression UnivariatePolynomial::eval(const Expression &x) const
 
 bool UnivariatePolynomial::is_zero() const
 {
-    return dict_.size() == 1 and dict_.begin()->second == 0;
+    return dict_.empty();
 }
 
 bool UnivariatePolynomial::is_one() const
@@ -551,6 +551,8 @@ bool UnivariatePolynomial::is_minus_one() const
 
 bool UnivariatePolynomial::is_integer() const
 {
+    if (dict_.empty())
+        return true;
     return dict_.size() == 1 and dict_.begin()->first == 0;
 }
 
@@ -590,7 +592,7 @@ RCP<const UnivariatePolynomial> add_uni_poly(const UnivariatePolynomial &a,
         dict[it.first] = it.second;
     for (const auto &it : b.get_dict())
         dict[it.first] += it.second;
-    return univariate_polynomial(var, (--(dict.end()))->first, std::move(dict));
+    return univariate_polynomial(var, std::move(dict));
 }
 
 RCP<const UnivariatePolynomial> neg_uni_poly(const UnivariatePolynomial &a)
@@ -598,8 +600,7 @@ RCP<const UnivariatePolynomial> neg_uni_poly(const UnivariatePolynomial &a)
     map_int_Expr dict;
     for (const auto &it : a.get_dict())
         dict[it.first] = -1 * it.second;
-    return univariate_polynomial(a.get_var(), (--(dict.end()))->first,
-                                 std::move(dict));
+    return univariate_polynomial(a.get_var(), std::move(dict));
 }
 
 RCP<const UnivariatePolynomial> sub_uni_poly(const UnivariatePolynomial &a,
@@ -620,7 +621,7 @@ RCP<const UnivariatePolynomial> sub_uni_poly(const UnivariatePolynomial &a,
         dict[it.first] = it.second;
     for (const auto &it : b.get_dict())
         dict[it.first] -= it.second;
-    return univariate_polynomial(var, (--(dict.end()))->first, std::move(dict));
+    return univariate_polynomial(var, std::move(dict));
 }
 
 RCP<const UnivariatePolynomial> mul_uni_poly(RCP<const UnivariatePolynomial> a,
@@ -640,11 +641,11 @@ RCP<const UnivariatePolynomial> mul_uni_poly(RCP<const UnivariatePolynomial> a,
     if (a->get_var() != b->get_var())
         throw std::runtime_error("Error: variables must agree.");
     if (a->get_dict().empty() and b->get_dict().empty())
-        return univariate_polynomial(var, 0, {{0, 0}});
+        return univariate_polynomial(var, {{0, 0}});
     for (const auto &i1 : a->get_dict())
         for (const auto &i2 : b->get_dict())
             dict[i1.first + i2.first] += i1.second * i2.second;
-    return univariate_polynomial(var, (--(dict.end()))->first, std::move(dict));
+    return univariate_polynomial(var, std::move(dict));
 }
 
 } // SymEngine
