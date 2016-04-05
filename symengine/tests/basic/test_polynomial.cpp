@@ -626,3 +626,27 @@ TEST_CASE("Testing derivative of MultivariatePolynomial", "[MultivariatePolynomi
     REQUIRE(p->diff(y)->__str__() == "(a + b)*x**2 + (4*a - 2*b)*x y + 2*b/a*y + (2*a - b)");
     REQUIRE(p->diff(z)->__str__() == "0");
 }
+
+TEST_CASE("Testing MultivariatePolynomial::get_args()","[MultivariatePolynomial]"){
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    RCP<const Symbol> z = symbol("z");
+    RCP<const Symbol> a = symbol("a");
+    RCP<const Symbol> b = symbol("b");
+    RCP<const Symbol> c = symbol("c");
+    RCP<const Integer> two = make_rcp<const Integer>(2);
+    Expression expr1(add(a,b));
+    Expression expr2(sub(mul(two,a),b));
+    Expression expr3(mul(a,c));
+    Expression expr4(pow(b,a));
+    RCP<const MultivariatePolynomial> p1 = MultivariatePolynomial::from_dict({x,y,z},{ 
+        {{0,0,0},Expression(1)}, {{1,1,1},Expression(2)}, {{0,0,2},Expression(1)} });
+    RCP<const MultivariatePolynomial> p2 = MultivariatePolynomial::from_dict({x,y,z},{ 
+        {{0,0,0},expr1}, {{1,1,1},expr2}, {{0,0,2},expr3}, {{0,2,0},expr4}} );
+    REQUIRE(vec_basic_eq_perm(p1->get_args(), {mul(integer(2),mul(x,mul(y,z))),pow(z,integer(2)),
+        one}));
+    REQUIRE(vec_basic_eq_perm(p2->get_args(), {mul(expr2.get_basic(), mul(x, mul(y,z))), 
+        mul(expr4.get_basic(), pow(y,integer(2))), mul(expr3.get_basic(),pow(z,integer(2))), 
+        expr1.get_basic()  }));
+
+}
