@@ -76,7 +76,7 @@ UnivariateSeries::trunc_poly(const RCP<const Symbol> &var,
             dict_trunc[it.first] = it.second;
         }
     }
-    return univariate_polynomial(var, max, std::move(dict_trunc));
+    return univariate_polynomial(var, std::move(dict_trunc));
 }
 
 unsigned UnivariateSeries::ldegree(const UnivariateExprPolynomial &s)
@@ -172,7 +172,7 @@ UnivariateSeries::integrate(const UnivariateExprPolynomial &s,
             throw std::runtime_error("Not Implemented");
         }
     }
-    return UnivariateExprPolynomial(univariate_polynomial(var.get_univariate_poly()->get_var(), (--dict.end())->first, std::move(dict))); 
+    return UnivariateExprPolynomial(univariate_polynomial(var.get_univariate_poly()->get_var(), std::move(dict))); 
 }
 
 UnivariateExprPolynomial

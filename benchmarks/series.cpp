@@ -16,7 +16,7 @@ using SymEngine::Expression;
 using SymEngine::UnivariatePolynomial;
 using SymEngine::UnivariateExprPolynomial;
 
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
     SymEngine::print_stack_on_segfault();
 
@@ -25,7 +25,7 @@ int main(int argc, char* argv[])
     int N;
 
     N = 1000;
-    for (int i=0; i<N; ++i) {
+    for (int i = 0; i < N; ++i) {
         Expression coef(i);
         v.push_back(coef);
     }
@@ -34,10 +34,10 @@ int main(int argc, char* argv[])
     auto t1 = std::chrono::high_resolution_clock::now();
     c = UnivariateSeries::mul(p, p, 1000);
     auto t2 = std::chrono::high_resolution_clock::now();
-    //std::cout << *a << std::endl;
-    std::cout
-        << std::chrono::duration_cast<std::chrono::milliseconds>(t2-t1).count()
-        << "ms" << std::endl;
+    // std::cout << *a << std::endl;
+    std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1)
+                     .count()
+              << "ms" << std::endl;
 
     return 0;
 }

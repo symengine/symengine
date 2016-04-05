@@ -482,14 +482,15 @@ public:
         if (self.get_var()->__eq__(*x)) {
             map_uint_mpz d;
             for (const auto &p : self.get_dict()) {
-                d[p.first - 1] = p.second * p.first;
+                if (p.first != 0)
+                    d[p.first - 1] = p.second * p.first;
             }
-            return UnivariateIntPolynomial::from_dict(self.get_var(),
-                                                      std::move(d));
+            return make_rcp<const UnivariateIntPolynomial>(
+                self.get_var(), (--(d.end()))->first, std::move(d));
         } else {
             map_uint_mpz d;
-            return UnivariateIntPolynomial::from_dict(self.get_var(),
-                                                      std::move(d));
+            return make_rcp<const UnivariateIntPolynomial>(self.get_var(), 0,
+                                                           std::move(d));
         }
     }
 

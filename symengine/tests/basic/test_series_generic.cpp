@@ -37,7 +37,7 @@ TEST_CASE("Create UnivariateSeries", "[UnivariateSeries]")
 {
     RCP<const Symbol> x  = symbol("x");
     map_int_Expr adict_ = {{0, 1}, {1, 2}, {2, 1}};
-    UnivariateExprPolynomial apoly_(univariate_polynomial(x, 2, std::move(adict_)));
+    UnivariateExprPolynomial apoly_(univariate_polynomial(x, std::move(adict_)));
     RCP<const UnivariateSeries> P = univariate_series(x, 2, apoly_);
     REQUIRE(P->__str__() == "x**2 + 2*x + 1 + O(x**2)");
 
@@ -51,11 +51,11 @@ TEST_CASE("Adding two UnivariateSeries", "[UnivariateSeries]")
 {
     RCP<const Symbol> x  = symbol("x");
     map_int_Expr adict_ = {{0, 1}, {1, 2}, {2, 1}};
-    UnivariateExprPolynomial apoly_(univariate_polynomial(x, 2, std::move(adict_)));
+    UnivariateExprPolynomial apoly_(univariate_polynomial(x, std::move(adict_)));
     map_int_Expr bdict_ = {{0, 2}, {1, 3}, {2, 4}};
-    UnivariateExprPolynomial bpoly_(univariate_polynomial(x, 2, std::move(bdict_)));
+    UnivariateExprPolynomial bpoly_(univariate_polynomial(x, std::move(bdict_)));
     map_int_Expr ddict_ = {{0, 3}, {1, 5}, {2, 5}};
-    UnivariateExprPolynomial dpoly_(univariate_polynomial(x, 2, std::move(ddict_)));
+    UnivariateExprPolynomial dpoly_(univariate_polynomial(x, std::move(ddict_)));
 
     RCP<const UnivariateSeries> a = UnivariateSeries::create(x, 5, apoly_);
     RCP<const UnivariateSeries> b = UnivariateSeries::create(x, 4, bpoly_);
@@ -73,9 +73,9 @@ TEST_CASE("Negative of a UnivariateSeries", "[UnivariateSeries]")
 {
     RCP<const Symbol> x  = symbol("x");
     map_int_Expr adict_ = {{0, 1}, {1, 2}, {2, 1}};
-    UnivariateExprPolynomial apoly_(univariate_polynomial(x, 2, std::move(adict_)));
+    UnivariateExprPolynomial apoly_(univariate_polynomial(x, std::move(adict_)));
     map_int_Expr bdict_ = {{0, -1}, {1, -2}, {2, -1}};
-    UnivariateExprPolynomial bpoly_(univariate_polynomial(x, 2, std::move(bdict_)));
+    UnivariateExprPolynomial bpoly_(univariate_polynomial(x, std::move(bdict_)));
 
     RCP<const UnivariateSeries> a = UnivariateSeries::create(x, 5, apoly_);
     RCP<const Basic> b = neg(a);
@@ -87,13 +87,13 @@ TEST_CASE("Subtracting two UnivariateSeries", "[UnivariateSeries]")
 {
     RCP<const Symbol> x  = symbol("x");
     map_int_Expr adict_ = {{0, 1}, {1, 2}, {2, 1}};
-    UnivariateExprPolynomial apoly_(univariate_polynomial(x, 2, std::move(adict_)));
+    UnivariateExprPolynomial apoly_(univariate_polynomial(x, std::move(adict_)));
     map_int_Expr bdict_ = {{0, 2}, {1, 3}, {2, 4}};
-    UnivariateExprPolynomial bpoly_(univariate_polynomial(x, 2, std::move(bdict_)));
+    UnivariateExprPolynomial bpoly_(univariate_polynomial(x, std::move(bdict_)));
     map_int_Expr fdict_ = {{0, -1}, {1, -1}, {2, -3}};
-    UnivariateExprPolynomial fpoly_(univariate_polynomial(x, 2, std::move(fdict_)));
+    UnivariateExprPolynomial fpoly_(univariate_polynomial(x, std::move(fdict_)));
     map_int_Expr gdict_ = {{0, -1}, {1, -1}};
-    UnivariateExprPolynomial gpoly_(univariate_polynomial(x, 1, std::move(gdict_)));
+    UnivariateExprPolynomial gpoly_(univariate_polynomial(x, std::move(gdict_)));
 
     RCP<const UnivariateSeries> a = UnivariateSeries::create(x, 3, apoly_);
     RCP<const UnivariateSeries> b = UnivariateSeries::create(x, 4, bpoly_);
@@ -110,10 +110,10 @@ TEST_CASE("Subtracting two UnivariateSeries", "[UnivariateSeries]")
 TEST_CASE("Multiplication of two UnivariateExprPolynomial with precision", "[UnivariateSeries]")
 {
     RCP<const Symbol> x  = symbol("x");
-    UnivariateExprPolynomial a(univariate_polynomial(x, 2, {{0, 1}, {1, 2}, {2, 1}}));
-    UnivariateExprPolynomial b(univariate_polynomial(x, 2, {{0, -1}, {1, -2}, {2, -1}}));
-    UnivariateExprPolynomial c(univariate_polynomial(x, 3, {{0, 1}, {1, 4}, {2, 6}, {3, 4}}));
-    UnivariateExprPolynomial d(univariate_polynomial(x, 4, {{0, -1}, {1, -4}, {2, -6}, {3, -4}, {4, -1}}));
+    UnivariateExprPolynomial a(univariate_polynomial(x, {{0, 1}, {1, 2}, {2, 1}}));
+    UnivariateExprPolynomial b(univariate_polynomial(x, {{0, -1}, {1, -2}, {2, -1}}));
+    UnivariateExprPolynomial c(univariate_polynomial(x, {{0, 1}, {1, 4}, {2, 6}, {3, 4}}));
+    UnivariateExprPolynomial d(univariate_polynomial(x, {{0, -1}, {1, -4}, {2, -6}, {3, -4}, {4, -1}}));
     
     UnivariateExprPolynomial e = UnivariateSeries::mul(a, a, 4);
     UnivariateExprPolynomial f = UnivariateSeries::mul(a, b, 5);
@@ -125,10 +125,10 @@ TEST_CASE("Multiplication of two UnivariateExprPolynomial with precision", "[Uni
 TEST_CASE("Exponentiation of UnivariateExprPolynomial with precision", "[UnivariateSeries]")
 {
     RCP<const Symbol> x  = symbol("x");
-    UnivariateExprPolynomial a(univariate_polynomial(x, 2, {{0, 1}, {1, 2}, {2, 1}}));
-    UnivariateExprPolynomial b(univariate_polynomial(x, 2, {{0, -1}, {1, -2}, {2, -1}}));
-    UnivariateExprPolynomial c(univariate_polynomial(x, 3, {{0, 1}, {1, 4}, {2, 6}, {3, 4}}));
-    UnivariateExprPolynomial d(univariate_polynomial(x, 4, {{0, -1}, {1, -6}, {2, -15}, {3, -20}, {4, -15}}));
+    UnivariateExprPolynomial a(univariate_polynomial(x, {{0, 1}, {1, 2}, {2, 1}}));
+    UnivariateExprPolynomial b(univariate_polynomial(x, {{0, -1}, {1, -2}, {2, -1}}));
+    UnivariateExprPolynomial c(univariate_polynomial(x, {{0, 1}, {1, 4}, {2, 6}, {3, 4}}));
+    UnivariateExprPolynomial d(univariate_polynomial(x, {{0, -1}, {1, -6}, {2, -15}, {3, -20}, {4, -15}}));
     
     UnivariateExprPolynomial e = UnivariateSeries::pow(a, 2, 4);
     UnivariateExprPolynomial f = UnivariateSeries::pow(b, 3, 5);
@@ -140,18 +140,18 @@ TEST_CASE("Exponentiation of UnivariateExprPolynomial with precision", "[Univari
 TEST_CASE("Differentiation of UnivariateSeries", "[UnivariateSeries]")
 {
     RCP<const Symbol> x  = symbol("x");
-    UnivariateExprPolynomial a(univariate_polynomial(x, 2, {{0, 1}, {1, 2}, {2, 1}}));
-    UnivariateExprPolynomial b(univariate_polynomial(x, 0, {{0, 1}}));
-    UnivariateExprPolynomial c(univariate_polynomial(x, 1, {{0, 2}, {1, 2}}));
+    UnivariateExprPolynomial a(univariate_polynomial(x, {{0, 1}, {1, 2}, {2, 1}}));
+    UnivariateExprPolynomial b(univariate_polynomial(x, {{0, 1}}));
+    UnivariateExprPolynomial c(univariate_polynomial(x, {{0, 2}, {1, 2}}));
     REQUIRE(UnivariateSeries::diff(a, b) == c);
 }
 
 TEST_CASE("Integration of UnivariateSeries", "[UnivariateSeries]")
 {
     RCP<const Symbol> x  = symbol("x");
-    UnivariateExprPolynomial a(univariate_polynomial(x, 2, {{0, 1}, {1, 2}, {2, 3}}));
-    UnivariateExprPolynomial b(univariate_polynomial(x, 0, {{0, 1}}));
-    UnivariateExprPolynomial c(univariate_polynomial(x, 3, {{1, 1}, {2, 1}, {3, 1}}));
+    UnivariateExprPolynomial a(univariate_polynomial(x, {{0, 1}, {1, 2}, {2, 3}}));
+    UnivariateExprPolynomial b(univariate_polynomial(x, {{0, 1}}));
+    UnivariateExprPolynomial c(univariate_polynomial(x, {{1, 1}, {2, 1}, {3, 1}}));
     REQUIRE(UnivariateSeries::integrate(a, b) == c);
 }
 
