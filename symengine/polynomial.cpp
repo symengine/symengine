@@ -1087,16 +1087,22 @@ vec_basic  MultivariatePolynomial::get_args() const {
     std::vector<vec_uint> v = order_umap<vec_uint, umap_uvec_expr, vec_uint_compare>(dict_);
     for(const auto &p : v){
         map_basic_basic b;
-	b.insert(std::pair<RCP<const Basic>, RCP<const Basic>>( (dict_.find(p)->second).get_basic(),
-            make_rcp<const Integer>(integer_class(1)) ) );
+	RCP<const Number> coef;
+	if(is_a_Number( *( (dict_.find(p)->second).get_basic()  ) ) ) {
+            coef = rcp_static_cast<const Number> ( (dict_.find(p)->second).get_basic() );
+        } else {
+            b.insert(std::pair<RCP<const Basic>, RCP<const Basic>>( (dict_.find(p)->second).get_basic(),
+                make_rcp<const Integer>(integer_class(1)) ) );
+            coef = make_rcp<const Integer>(1);
+        }
         int whichvar = 0;
         for (auto sym : vars_) {
-            if (Expression(0) != p[whichvar])
+            if (0 != p[whichvar])
                 b.insert(std::pair<RCP<const Basic>, RCP<const Basic>>(sym,
                     make_rcp<Integer>(integer_class(p[whichvar]))));
             whichvar++;
         }
-        args.push_back(Mul::from_dict(make_rcp<const Integer>(integer_class(1)), std::move(b)));
+        args.push_back(Mul::from_dict(coef, std::move(b)));
     }
     return args;
 }
