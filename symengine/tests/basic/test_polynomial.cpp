@@ -95,16 +95,33 @@ TEST_CASE("Multiplication of two UnivariateIntPolynomial",
           "[UnivariateIntPolynomial]")
 {
     RCP<const Symbol> x = symbol("x");
-    RCP<const UnivariateIntPolynomial> a
-        = univariate_int_polynomial(x, {{0, 1_z}, {1, 2_z}, {2, 1_z}});
-    RCP<const UnivariateIntPolynomial> b
-        = univariate_int_polynomial(x, {{0, -1_z}, {1, -2_z}, {2, -1_z}});
+    map_uint_mpz adict_ = {{0, 1_z}, {1, 2_z}, {2, 1_z}};
+    map_uint_mpz bdict_ = {{0, -1_z}, {1, -2_z}, {2, -1_z}};
+    map_uint_mpz edict_ = {{0, 5_z}, {1, -2_z}, {2, -1_z}};
+    map_uint_mpz fdict_ = {{0, 6_z}, {1, -2_z}, {2, 3_z}};
+    map_uint_mpz kdict_ = {{0, -1_z}, {1, -2_z}, {2, -100_z}};
+
+    const UnivariateIntPolynomial a(x, 2, std::move(adict_));
+    const UnivariateIntPolynomial b(x, 2, std::move(bdict_));
+    const UnivariateIntPolynomial e(x, 2, std::move(edict_));
+    const UnivariateIntPolynomial f(x, 2, std::move(fdict_));
+    const UnivariateIntPolynomial k(x, 2, std::move(kdict_));
 
     RCP<const UnivariateIntPolynomial> c = mul_poly(a, a);
     RCP<const UnivariateIntPolynomial> d = mul_poly(a, b);
+    RCP<const UnivariateIntPolynomial> g = mul_poly(e, e);
+    RCP<const UnivariateIntPolynomial> h = mul_poly(e, f);
+    RCP<const UnivariateIntPolynomial> i = mul_poly(f, f);
+    RCP<const UnivariateIntPolynomial> l = mul_poly(k, f);
+    RCP<const UnivariateIntPolynomial> m = mul_poly(k, k);
 
     REQUIRE(c->__str__() == "x**4 + 4*x**3 + 6*x**2 + 4*x + 1");
     REQUIRE(d->__str__() == "-x**4 - 4*x**3 - 6*x**2 - 4*x - 1");
+    REQUIRE(g->__str__() == "x**4 + 4*x**3 - 6*x**2 - 20*x + 25");
+    REQUIRE(h->__str__() == "-3*x**4 - 4*x**3 + 13*x**2 - 22*x + 30");
+    REQUIRE(i->__str__() == "9*x**4 - 12*x**3 + 40*x**2 - 24*x + 36");
+    REQUIRE(l->__str__() == "-300*x**4 + 194*x**3 - 599*x**2 - 10*x - 6");
+    REQUIRE(m->__str__() == "10000*x**4 + 400*x**3 + 204*x**2 + 4*x + 1");
 }
 
 TEST_CASE("UnivariateIntPolynomial get_args", "[UnivariateIntPolynomial]")
