@@ -404,6 +404,79 @@ RCP<const MultivariatePolynomial> sub_mult_poly(const UnivariatePolynomial &a,
 RCP<const MultivariatePolynomial> mul_mult_poly(const UnivariatePolynomial &a, 
     const UnivariatePolynomial &b);
 	
+
+
+class MultivariateExprPolynomial {
+private:
+    RCP<const MultivariatePolynomial> poly_;
+public:
+    MultivariateExprPolynomial() {}
+    ~MultivariateExprPolynomial() SYMENGINE_NOEXCEPT {}
+    MultivariateExprPolynomial(const MultivariateExprPolynomial &) = default;
+    MultivariateExprPolynomial(MultivariateExprPolynomial &&other) SYMENGINE_NOEXCEPT : poly_(std::move(other.poly_)) {}
+    MultivariateExprPolynomial(RCP<const MultivariatePolynomial> p) : poly_(std::move(p)) {}
+
+    MultivariateExprPolynomial &operator=(const MultivariateExprPolynomial &) = default;
+    MultivariateExprPolynomial &operator=(MultivariateExprPolynomial &&other) SYMENGINE_NOEXCEPT {
+        if (this != &other)
+            this->poly_ = std::move(other.poly_);
+        return *this;
+    }
+    
+    friend std::ostream &operator<<(std::ostream &os, const MultivariateExprPolynomial &expr) {
+        os << expr.poly_->__str__();
+        return os;
+    }
+    
+    friend MultivariateExprPolynomial operator+(const MultivariateExprPolynomial &a, const MultivariateExprPolynomial &b) {
+        return MultivariateExprPolynomial(add_mult_poly(*a.poly_, *b.poly_));
+    }
+    
+    MultivariateExprPolynomial &operator+=(const MultivariateExprPolynomial &other) {
+        poly_ = add_mult_poly(*poly_, *other.poly_);
+        return *this;
+    }
+    
+    friend MultivariateExprPolynomial operator-(const MultivariateExprPolynomial &a, const MultivariateExprPolynomial &b) {
+        return MultivariateExprPolynomial(sub_mult_poly(*a.poly_, *b.poly_));
+    }
+    
+    MultivariateExprPolynomial operator-() const {
+        MultivariateExprPolynomial retval(*this);
+        neg_mult_poly(*(retval.poly_.ptr()));
+        return retval;
+    }
+    
+    MultivariateExprPolynomial &operator-=(const MultivariateExprPolynomial &other) {
+        poly_ = sub_mult_poly(*poly_, *other.poly_);
+        return *this;
+    }
+    
+    friend MultivariateExprPolynomial operator*(const MultivariateExprPolynomial &a, const MultivariateExprPolynomial &b) {   
+        return MultivariateExprPolynomial(mul_mult_poly(*(a.poly_), *(b.poly_)));
+    }   
+        
+    MultivariateExprPolynomial &operator*=(const MultivariateExprPolynomial &other) {   
+        poly_ = mul_mult_poly(*poly_, *(other.poly_));
+        return *this;
+    }   
+    
+    bool operator==(const MultivariateExprPolynomial &other) const {   
+        return eq(*poly_, *other.poly_);
+    }   
+
+    bool operator!=(const MultivariateExprPolynomial &other) const {   
+        return not (*this == other);
+    }   
+
+    const RCP<const Basic> get_basic() const {
+        return poly_;
+    }
+
+}; //MultivariateExprPolynomial
+
+
+
 	
 }  //SymEngine
 
