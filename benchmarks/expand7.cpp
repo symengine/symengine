@@ -18,7 +18,7 @@ using SymEngine::map_basic_basic;
 using SymEngine::sqrt;
 using SymEngine::integer;
 
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
     SymEngine::print_stack_on_segfault();
     int N;
@@ -29,16 +29,17 @@ int main(int argc, char* argv[])
     }
 
     RCP<const Basic> x = symbol("x"), y = symbol("y"), e, f;
-    e = pow(add(one, add(mul(sqrt(integer(3)), x), mul(sqrt(integer(5)), y))), integer(N));
+    e = pow(add(one, add(mul(sqrt(integer(3)), x), mul(sqrt(integer(5)), y))),
+            integer(N));
     f = mul(e, add(e, sqrt(integer(7))));
     auto t1 = std::chrono::high_resolution_clock::now();
     f = expand(f);
     auto t2 = std::chrono::high_resolution_clock::now();
 
-    std::cout
-        << std::chrono::duration_cast<std::chrono::milliseconds>(t2-t1).count()
-        << "ms" << std::endl;
-    //std::cout << f->__str__() << std::endl;
+    std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1)
+                     .count()
+              << "ms" << std::endl;
+    // std::cout << f->__str__() << std::endl;
 
     return 0;
 }

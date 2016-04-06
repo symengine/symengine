@@ -23,7 +23,7 @@ using SymEngine::RCP;
 using SymEngine::series;
 using SymEngine::rcp_dynamic_cast;
 
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
     SymEngine::print_stack_on_segfault();
 
@@ -35,10 +35,10 @@ int main(int argc, char* argv[])
     auto t1 = std::chrono::high_resolution_clock::now();
     auto res = SymEngine::URatPSeriesPiranha::series(ex, "x", N);
     auto t2 = std::chrono::high_resolution_clock::now();
-    //std::cout << *res[N-1] << std::endl;
-    std::cout
-        << std::chrono::duration_cast<std::chrono::milliseconds>(t2-t1).count()
-        << "ms" << std::endl;
+    // std::cout << *res[N-1] << std::endl;
+    std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1)
+                     .count()
+              << "ms" << std::endl;
 
     return 0;
 }
