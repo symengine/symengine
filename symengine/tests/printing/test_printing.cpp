@@ -1,25 +1,26 @@
 #include "catch.hpp"
 #include <chrono>
 
-#include <symengine/basic.h>
-#include <symengine/integer.h>
-#include <symengine/mul.h>
-#include <symengine/pow.h>
-#include <symengine/polynomial.h>
-#include <symengine/symbol.h>
-#include <symengine/rational.h>
-#include <symengine/complex.h>
 #include <symengine/add.h>
-#include <symengine/matrix.h>
-#include <symengine/printer.h>
-#include <symengine/real_double.h>
+#include <symengine/basic.h>
+#include <symengine/complex.h>
 #include <symengine/complex_double.h>
-#include <symengine/real_mpfr.h>
 #include <symengine/complex_mpc.h>
+#include <symengine/integer.h>
+#include <symengine/matrix.h>
+#include <symengine/mul.h>
+#include <symengine/polynomial.h>
+#include <symengine/pow.h>
+#include <symengine/printer.h>
+#include <symengine/rational.h>
+#include <symengine/real_double.h>
+#include <symengine/real_mpfr.h>
+#include <symengine/symbol.h>
 
 using SymEngine::RCP;
 using SymEngine::Basic;
 using SymEngine::div;
+using SymEngine::Expression;
 using SymEngine::pow;
 using SymEngine::univariate_int_polynomial;
 using SymEngine::univariate_polynomial;
@@ -298,6 +299,10 @@ TEST_CASE("test_univariate_polynomial(): printing", "[printing]")
 {
     RCP<const Basic> p;
     RCP<const Symbol> x = symbol("x");
+    Expression a(symbol("a"));
+    Expression b(symbol("b"));
+    Expression c(symbol("c"));
+    Expression d(symbol("d"));
 
     p = univariate_polynomial(x, {{0, 0}});
     REQUIRE(p->__str__() == "0");
@@ -325,6 +330,13 @@ TEST_CASE("test_univariate_polynomial(): printing", "[printing]")
     REQUIRE(p->__str__() == "x**2 + 2*x");
     p = univariate_polynomial(x, {{0, -1}, {1, -2}, {2, -1}});
     REQUIRE(p->__str__() == "-x**2 - 2*x - 1");
+    p = univariate_polynomial(x, {{-1, d}});
+
+    REQUIRE(p->__str__() == "d*x**(-1)");
+    REQUIRE(not(p->__str__() == "d*x**-1"));
+
+    p = univariate_polynomial(x, {{-2, d}, {-1, c}, {0, b}, {1, a}});
+    REQUIRE(p->__str__() == "a*x + b + c*x**(-1) + d*x**(-2)");
 }
 
 TEST_CASE("test_floats(): printing", "[printing]")
