@@ -817,6 +817,49 @@ TEST_CASE("Testing addition, subtraction, multiplication of UnivariatePolynomial
     REQUIRE(mul_mult_poly(*p2,*p1)->__str__() == "(2*a*b + 2*a*c - b*c - b**2)*x**2 y + (2*b - b**2/a)*x**2 + (a*b + a*c + b*c + b**2)*x y + (b + b**2/a)*x + (a*c**2 + a*b*c)*y + b*c");
 }
 
+TEST_CASE("Testing addition, subtraction, multiplication of MultivariatePolynomials with a UnivariatePolynomial whose variable are in the variable set", "[MultivariatePolynomial][UnivariatePolynomial]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    Expression a(symbol("a")); //a
+    Expression negB( - Expression(symbol("b")));//-b
+    Expression negNum(integer(-3));//-3
+    Expression comp1(integer(1) + Expression(symbol("c")));//(1+c)
+    Expression comp4(integer(-4) - Expression(symbol("f"))); //(-4 - f)
+
+    RCP<const MultivariatePolynomial> p1 = MultivariatePolynomial::from_dict({x,y}, { {{1,1}, a}, {{1,0}, negB}, {{0,0}, negNum} });
+    RCP<const UnivariatePolynomial> p2 = univariate_polynomial(y, 2, {{0, comp4}, {1, Expression(integer(2))}, {2, comp1}});
+
+    REQUIRE(add_mult_poly(*p1,*p2)->__str__() == "a*x y + (1 + c)*y**2 - b*x + 2*y + (-7 - f)");
+    REQUIRE(add_mult_poly(*p2,*p1)->__str__() == "a*x y + (1 + c)*y**2 - b*x + 2*y + (-7 - f)");
+    REQUIRE(sub_mult_poly(*p1,*p2)->__str__() == "a*x y + (-1 - c)*y**2 - b*x - 2*y + (1 + f)");
+    REQUIRE(sub_mult_poly(*p2,*p1)->__str__() == "- a*x y + (1 + c)*y**2 + b*x + 2*y + (-1 - f)");
+    REQUIRE(mul_mult_poly(*p1,*p2)->__str__() == "(a + a*c)*x y**3 + (2*a - b - b*c)*x y**2 + (-4*a - 2*b - a*f)*x y + (-3 - 3*c)*y**2 + (4*b + b*f)*x - 6*y + (12 + 3*f)");
+    REQUIRE(mul_mult_poly(*p2,*p1)->__str__() == "(a + a*c)*x y**3 + (2*a - b - b*c)*x y**2 + (-4*a - 2*b - a*f)*x y + (-3 - 3*c)*y**2 + (4*b + b*f)*x - 6*y + (12 + 3*f)");
+}
+
+TEST_CASE("Testing addition, subtraction, multiplication of MultivariatePolynomials with a UnivariatePolynomial whose variables are not in the variable set", "[MultivariatePolynomial][UnivariatePolynomial]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    RCP<const Symbol> z = symbol("z");
+    Expression a(symbol("a")); //a
+    Expression negB( - Expression(symbol("b")));//-b
+    Expression negNum(integer(-3));//-3
+    Expression comp1(integer(1) + Expression(symbol("c")));//(1+c)
+    Expression comp4(integer(-4) - Expression(symbol("f"))); //(-4 - f)
+
+    RCP<const MultivariatePolynomial> p1 = MultivariatePolynomial::from_dict({x,y}, { {{1,1}, a}, {{1,0}, negB}, {{0,0}, negNum} });
+    RCP<const UnivariatePolynomial> p2 = univariate_polynomial(z, 2, {{0, comp4}, {1, Expression(integer(2))}, {2, comp1}});
+
+    REQUIRE(add_mult_poly(*p1,*p2)->__str__() == "a*x y + (1 + c)*z**2 - b*x + 2*z + (-7 - f)");
+    REQUIRE(add_mult_poly(*p2,*p1)->__str__() == "a*x y + (1 + c)*z**2 - b*x + 2*z + (-7 - f)");
+    REQUIRE(sub_mult_poly(*p1,*p2)->__str__() == "a*x y + (-1 - c)*z**2 - b*x - 2*z + (1 + f)");
+    REQUIRE(sub_mult_poly(*p2,*p1)->__str__() == "- a*x y + (1 + c)*z**2 + b*x + 2*z + (-1 - f)");
+    REQUIRE(mul_mult_poly(*p1,*p2)->__str__() == "(a + a*c)*x y z**2 + 2*a*x y z + (-b - b*c)*x z**2 + (-4*a - a*f)*x y - 2*b*x z + (-3 - 3*c)*z**2 + (4*b + b*f)*x - 6*z + (12 + 3*f)");
+    REQUIRE(mul_mult_poly(*p2,*p1)->__str__() == "(a + a*c)*x y z**2 + 2*a*x y z + (-b - b*c)*x z**2 + (-4*a - a*f)*x y - 2*b*x z + (-3 - 3*c)*z**2 + (4*b + b*f)*x - 6*z + (12 + 3*f)");  
+}
+
 TEST_CASE("Testing Precedence of MultivariatePolynomial","[MultivariatePolynomial]"){
     RCP<const Symbol> x = symbol("x");
     RCP<const Symbol> y = symbol("y");
@@ -851,3 +894,4 @@ TEST_CASE("Testing Precedence of MultivariatePolynomial","[MultivariatePolynomia
     REQUIRE(Prec.getPrecedence(p6) == PrecedenceEnum::Pow);
     REQUIRE(Prec.getPrecedence(p7) == PrecedenceEnum::Mul);
 }
+
