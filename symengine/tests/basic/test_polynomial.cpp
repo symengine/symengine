@@ -29,6 +29,7 @@ using SymEngine::integer_class;
 using SymEngine::MultivariateIntPolynomial;
 using SymEngine::MultivariatePolynomial;
 using SymEngine::RCPSymbolCompare;
+using SymEngine::Integer;
 
 using namespace SymEngine::literals;
 
@@ -547,6 +548,42 @@ TEST_CASE("Constructing MultivariatePolynomial using from_dict", "[MultivariateP
     REQUIRE(p3->__str__() == "0");
 }
 
+TEST_CASE("Testing MultivariatePolynomial::__eq__(), __hash__, and compare", "[MultivariatePolynomial]"){
+    RCP<const Symbol> a = symbol("a");
+    RCP<const Symbol> b = symbol("b");
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    RCP<const Symbol> i = symbol("i");
+    RCP<const Symbol> j = symbol("j");
+    RCP<const Integer> two = make_rcp<const Integer>(2);
+    Expression sum(add(i,j));
+    Expression difference(sub(mul(two,i),j));
+    RCP<const MultivariatePolynomial> p1 = MultivariatePolynomial::from_dict({x,y},
+        {{{2,0},sum}, {{1,1},difference}, {{0,2}, sum}  });
+    RCP<const MultivariatePolynomial> p2 = MultivariatePolynomial::from_dict({x,y},
+        {{{2,0},sum}, {{1,1}, difference * -1}, {{0,2},sum}  });
+    RCP<const MultivariatePolynomial> p3 = MultivariatePolynomial::from_dict({x,y},
+        {{{2,0},sum *2}, {{0,2},sum*2}  });
+    RCP<const MultivariatePolynomial> p4 = MultivariatePolynomial::from_dict({a,b},
+        {{{2,0},sum *2}, {{0,2},sum*2}  });
+
+    REQUIRE(p1->__eq__(*p1));
+    REQUIRE(!(p2->__eq__(*p1)));
+    REQUIRE(p3->__eq__( *add_mult_poly(*p1, *p2) ));
+
+    //Only requre that the same polynomial hash to the same value and that different polynomials
+    //hash to different values
+    //Don't want to require a polynomial to have a particular hash in case someone comes up with
+    //a better hash function
+    REQUIRE(p3->__hash__() == add_mult_poly(*p1, *p2)->__hash__());
+    REQUIRE(p1->__hash__() != p2->__hash__());
+    REQUIRE(p3->__hash__() != p4->__hash__());
+
+    //Same for compare.
+    REQUIRE(0 == p3->compare(*add_mult_poly(*p1, *p2)));
+    REQUIRE(0 != p1->compare(*p2));
+    REQUIRE(0 != p3->compare(*p4));
+}
 
 
 TEST_CASE("Testing MultivariatePolynomial neg_mult_poly", "[MultivariatePolynomial]"){
@@ -565,7 +602,7 @@ TEST_CASE("Testing MultivariatePolynomial neg_mult_poly", "[MultivariatePolynomi
     RCP<const MultivariatePolynomial> p2 = MultivariatePolynomial::from_dict({x,y}, { {{1,0}, comp1}, {{0,0}, comp2}, {{2,2}, comp3}, {{3,4}, comp4} });
     RCP<const MultivariatePolynomial> p3 = MultivariatePolynomial::from_dict({x,y}, { {{0,0}, Expression(integer(0))} });
     REQUIRE(neg_mult_poly(*p1)->__str__() == "- 2*x**2 y + b*x y**2 - a*x y + 3*y");
-    REQUIRE(neg_mult_poly(*p2)->__str__() == "- (-4 - f)*x**3 y**4 - (-3 + e)*x**2 y**2 - (1 + c)*x - (2 - d)");
+    REQUIRE(neg_mult_poly(*p2)->__str__() == "(4 + f)*x**3 y**4 + (3 - e)*x**2 y**2 + (-1 - c)*x + (-2 + d)");
     REQUIRE(neg_mult_poly(*p3)->__str__() == "0");
 }
 
@@ -587,12 +624,12 @@ TEST_CASE("Testing addition, subtraction, multiplication of MultivariatePolynomi
     REQUIRE(add_mult_poly(*p1,*p2)->__str__() == "2*x**2 y + a*x y + (1 - b + c)*x - 3*y + (-4 - f)");
     REQUIRE(add_mult_poly(*p2,*p1)->__str__() == "2*x**2 y + a*x y + (1 - b + c)*x - 3*y + (-4 - f)");
     REQUIRE(add_mult_poly(*p1,*p3)->__str__() == p1->__str__());
-    REQUIRE(sub_mult_poly(*p1,*p2)->__str__() == "2*x**2 y + a*x y + (-b - (1 + c))*x - 3*y - (-4 - f)");
+    REQUIRE(sub_mult_poly(*p1,*p2)->__str__() == "2*x**2 y + a*x y + (-1 - b - c)*x - 3*y + (4 + f)");
     REQUIRE(sub_mult_poly(*p2,*p1)->__str__() == "- 2*x**2 y - a*x y + (1 + b + c)*x + 3*y + (-4 - f)");
     REQUIRE(sub_mult_poly(*p1,*p3)->__str__() == p1->__str__());
 
-    REQUIRE(mul_mult_poly(*p1,*p2)->__str__() ==  "2*(1 + c)*x**3 y + (a*(1 + c) + 2*(-4 - f))*x**2 y - b*(1 + c)*x**2 + (a*(-4 - f) - 3*(1 + c))*x y - b*(-4 - f)*x - 3*(-4 - f)*y");
-    REQUIRE(mul_mult_poly(*p2,*p1)->__str__() ==  "2*(1 + c)*x**3 y + (a*(1 + c) + 2*(-4 - f))*x**2 y - b*(1 + c)*x**2 + (a*(-4 - f) - 3*(1 + c))*x y - b*(-4 - f)*x - 3*(-4 - f)*y");
+    REQUIRE(mul_mult_poly(*p1,*p2)->__str__() ==  "(2 + 2*c)*x**3 y + (-8 + a - 2*f + a*c)*x**2 y + (-b - b*c)*x**2 + (-3 - 4*a - 3*c - a*f)*x y + (4*b + b*f)*x + (12 + 3*f)*y");
+    REQUIRE(mul_mult_poly(*p2,*p1)->__str__() ==  "(2 + 2*c)*x**3 y + (-8 + a - 2*f + a*c)*x**2 y + (-b - b*c)*x**2 + (-3 - 4*a - 3*c - a*f)*x y + (4*b + b*f)*x + (12 + 3*f)*y");
     REQUIRE(mul_mult_poly(*p1,*p3)->__str__() ==  "0");
     REQUIRE(mul_mult_poly(*p2,*p3)->__str__() ==  "0");
 
@@ -615,10 +652,10 @@ TEST_CASE("Testing addition, subtraction, multiplication of MultivaritePolynomia
 
     REQUIRE(add_mult_poly(*p1,*p2)->__str__() == "(-4 - f)*m**2 n + a*x y + (1 + c)*m - b*x - 3");
     REQUIRE(add_mult_poly(*p2,*p1)->__str__() == "(-4 - f)*m**2 n + a*x y + (1 + c)*m - b*x - 3");
-    REQUIRE(sub_mult_poly(*p1,*p2)->__str__() == "- (-4 - f)*m**2 n + a*x y - (1 + c)*m - b*x - 3");
+    REQUIRE(sub_mult_poly(*p1,*p2)->__str__() == "(4 + f)*m**2 n + a*x y + (-1 - c)*m - b*x - 3");
     REQUIRE(sub_mult_poly(*p2,*p1)->__str__() == "(-4 - f)*m**2 n - a*x y + (1 + c)*m + b*x + 3");
-    REQUIRE(mul_mult_poly(*p1,*p2)->__str__() == "a*(-4 - f)*m**2 n x y - b*(-4 - f)*m**2 n x - 3*(-4 - f)*m**2 n + a*(1 + c)*m x y - b*(1 + c)*m x - 3*(1 + c)*m");
-    REQUIRE(mul_mult_poly(*p2,*p1)->__str__() == "a*(-4 - f)*m**2 n x y - b*(-4 - f)*m**2 n x - 3*(-4 - f)*m**2 n + a*(1 + c)*m x y - b*(1 + c)*m x - 3*(1 + c)*m");
+    REQUIRE(mul_mult_poly(*p1,*p2)->__str__() == "(-4*a - a*f)*m**2 n x y + (4*b + b*f)*m**2 n x + (12 + 3*f)*m**2 n + (a + a*c)*m x y + (-b - b*c)*m x + (-3 - 3*c)*m");
+    REQUIRE(mul_mult_poly(*p2,*p1)->__str__() == "(-4*a - a*f)*m**2 n x y + (4*b + b*f)*m**2 n x + (12 + 3*f)*m**2 n + (a + a*c)*m x y + (-b - b*c)*m x + (-3 - 3*c)*m");
 }
 
 TEST_CASE("Testing addition, subtraction, multiplication of MultivariatePolynomials with an overlapping set of variables", "[MultivariatePolynomial]")
@@ -637,8 +674,8 @@ TEST_CASE("Testing addition, subtraction, multiplication of MultivariatePolynomi
 
     REQUIRE(add_mult_poly(*p1,*p2)->__str__() == "(-4 - f)*y**2 z + a*x y - b*x + (1 + c)*y - 3");
     REQUIRE(add_mult_poly(*p2,*p1)->__str__() == "(-4 - f)*y**2 z + a*x y - b*x + (1 + c)*y - 3");
-    REQUIRE(sub_mult_poly(*p1,*p2)->__str__() == "- (-4 - f)*y**2 z + a*x y - b*x - (1 + c)*y - 3");
+    REQUIRE(sub_mult_poly(*p1,*p2)->__str__() == "(4 + f)*y**2 z + a*x y - b*x + (-1 - c)*y - 3");
     REQUIRE(sub_mult_poly(*p2,*p1)->__str__() == "(-4 - f)*y**2 z - a*x y + b*x + (1 + c)*y + 3");
-    REQUIRE(mul_mult_poly(*p1,*p2)->__str__() == "a*(-4 - f)*x y**3 z - b*(-4 - f)*x y**2 z + a*(1 + c)*x y**2 - 3*(-4 - f)*y**2 z - b*(1 + c)*x y - 3*(1 + c)*y");
-    REQUIRE(mul_mult_poly(*p2,*p1)->__str__() == "a*(-4 - f)*x y**3 z - b*(-4 - f)*x y**2 z + a*(1 + c)*x y**2 - 3*(-4 - f)*y**2 z - b*(1 + c)*x y - 3*(1 + c)*y");
+    REQUIRE(mul_mult_poly(*p1,*p2)->__str__() == "(-4*a - a*f)*x y**3 z + (4*b + b*f)*x y**2 z + (a + a*c)*x y**2 + (12 + 3*f)*y**2 z + (-b - b*c)*x y + (-3 - 3*c)*y");
+    REQUIRE(mul_mult_poly(*p2,*p1)->__str__() == "(-4*a - a*f)*x y**3 z + (4*b + b*f)*x y**2 z + (a + a*c)*x y**2 + (12 + 3*f)*y**2 z + (-b - b*c)*x y + (-3 - 3*c)*y");
 }
