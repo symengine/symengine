@@ -1,8 +1,8 @@
-#include <symengine/polynomial.h>
 #include <symengine/add.h>
-#include <symengine/mul.h>
-#include <symengine/pow.h>
 #include <symengine/constants.h>
+#include <symengine/mul.h>
+#include <symengine/polynomial.h>
+#include <symengine/pow.h>
 
 namespace SymEngine
 {
@@ -358,7 +358,7 @@ RCP<const UnivariateIntPolynomial> mul_poly(const UnivariateIntPolynomial &a,
 }
 
 UnivariatePolynomial::UnivariatePolynomial(const RCP<const Symbol> &var,
-                                           const unsigned int &degree,
+                                           const int &degree,
                                            const map_int_Expr &&dict)
     : degree_{degree}, var_{var}, dict_{std::move(dict)}
 {
@@ -376,7 +376,7 @@ UnivariatePolynomial::UnivariatePolynomial(const RCP<const Symbol> &var,
     SYMENGINE_ASSERT(is_canonical(degree_, dict_))
 }
 
-bool UnivariatePolynomial::is_canonical(const unsigned int &degree_,
+bool UnivariatePolynomial::is_canonical(const int &degree_,
                                         const map_int_Expr &dict) const
 {
     if (var_->get_name() == "")
@@ -384,7 +384,7 @@ bool UnivariatePolynomial::is_canonical(const unsigned int &degree_,
             return false;
 
     if (dict.size() != 0) {
-        unsigned int prev_degree = (--dict.end())->first;
+        int prev_degree = (--dict.end())->first;
         if (prev_degree != degree_) {
             return false;
         }
@@ -505,7 +505,6 @@ Expression UnivariatePolynomial::max_coef() const
 
 Expression UnivariatePolynomial::eval(const Expression &x) const
 {
-    // TODO: Use Horner's Scheme
     Expression ans = 0;
     for (const auto &p : dict_) {
         Expression temp;
