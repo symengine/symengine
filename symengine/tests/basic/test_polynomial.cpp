@@ -524,7 +524,8 @@ TEST_CASE("Testing Precedence of MultivariateIntPolynomial","[MultivariateIntPol
     RCP<const Symbol> y = symbol("y");
     RCP<const Symbol> a = symbol("a");
     Precedence Prec;
-    RCP<const MultivariateIntPolynomial> p1 = MultivariateIntPolynomial::from_dict({x,y},{});
+    RCP<const MultivariateIntPolynomial> p1 = MultivariateIntPolynomial::from_dict({x,y},
+        { {{0,0},0_z} });
     RCP<const MultivariateIntPolynomial> p2 = MultivariateIntPolynomial::from_dict({x,y},
         { {{1,0},2_z},{{0,0},1_z} });
     RCP<const MultivariateIntPolynomial> p3 = MultivariateIntPolynomial::from_dict({x,y},
@@ -634,8 +635,8 @@ TEST_CASE("Testing MultivariatePolynomial::eval", "[MultivariatePolynomial]"){
     std::map<RCP<const Symbol>, Expression, RCPSymbolCompare> m1 = {{x,Expression(0)}, {y,Expression(0)},
         {z,Expression(0)}};
     std::map<RCP<const Symbol>, Expression, RCPSymbolCompare> m2 = {{x, expr5}, {y,expr6}, {z,expr7}};
-    REQUIRE( p->eval(m1).get_basic()->__str__() == "b/a" );
-    REQUIRE(p->eval(m2).get_basic()->__str__() == "b/a + (a + b)*(b + c) + (a + b)*(b + c)**2 + a**2*(2*a - b) + a*b*(b + c) + a**2*c/b + a**3*c/b**2 + a*b*(2*a - b) + a**2*b**2*(2*a - b) + a*b*(a + b)*(b + c)");
+    REQUIRE(p->eval(m1).get_basic()->__str__() == "b/a");
+    REQUIRE(expand(p->eval(m2)).get_basic()->__str__() == "b/a + a*b + a*b**2 + a*b**3 + a*c + a*c**2 + a**2*b + a**2*b**2 - a**2*b**3 + 2*a**3*b**2 + b*c + b*c**2 + 2*b**2*c + 3*a*b*c + a*b**2*c + a**2*c/b + a**2*b*c + a**3*c/b**2 + 2*a**3 + b**2 + b**3");
 }
 
 TEST_CASE("Testing derivative of MultivariatePolynomial", "[MultivariatePolynomial]"){
@@ -873,7 +874,8 @@ TEST_CASE("Testing Precedence of MultivariatePolynomial","[MultivariatePolynomia
     Expression expr4(pow(b,a));
     Expression expr5(a);
     Precedence Prec;
-    RCP<const MultivariatePolynomial> p1 = MultivariatePolynomial::from_dict({x,y},{});
+    RCP<const MultivariatePolynomial> p1 = MultivariatePolynomial::from_dict({x,y},
+        { {{0,0},Expression(0)} });
     RCP<const MultivariatePolynomial> p2 = MultivariatePolynomial::from_dict({x,y},
         { {{1,0},expr1},{{0,0},expr2} });
     RCP<const MultivariatePolynomial> p3 = MultivariatePolynomial::from_dict({x,y},

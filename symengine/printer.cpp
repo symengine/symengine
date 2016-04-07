@@ -531,7 +531,7 @@ void StrPrinter::bvisit(const MultivariatePolynomial &x){
                 }
                 i++;
             }
-            if ( ( neq(*c.get_basic(), Integer(1)) && neq(*c.get_basic(), Integer(-1)) )  || expr.str().empty())
+            if ( ( neq(*c.get_basic(), Integer(integer_class(1))) && neq(*c.get_basic(), Integer(integer_class(-1))) )  || expr.str().empty())
                 s << t << "*";
             s << expr.str();
             first = false;
