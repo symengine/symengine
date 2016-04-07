@@ -147,27 +147,43 @@ TEST_CASE("Symbol dict: Basic", "[basic]")
     sb.insert(i2);
     sb.insert(y);
 
+    auto check_map_str =
+        [](std::string to_chk, std::vector<std::string> key, std::vector<std::string> val)
+    {
+        if (key.size() != val.size())
+            return false;
+        for (unsigned i = 0; i < key.size(); i++)
+        {
+            if (to_chk.find(key[i] + std::string(": " + val[i])) == std::string::npos)
+                return false;
+        }
+        return true;
+    };
+
     buffer.str("");
     buffer << ubn;
-    REQUIRE(buffer.str() == "{y: 3, x: 2}");
+    REQUIRE(check_map_str(buffer.str(), {"x", "y"}, {"2", "3"}));
     buffer.str("");
     buffer << mbn;
-    REQUIRE(buffer.str() == "{x: 2, y: 3}");
+    REQUIRE(check_map_str(buffer.str(), {"x", "y"}, {"2", "3"}));
     buffer.str("");
     buffer << mbb;
-    REQUIRE(buffer.str() == "{x: 2, y: 3}");
+    REQUIRE(check_map_str(buffer.str(), {"x", "y"}, {"2", "3"}));
     buffer.str("");
     buffer << ubb;
-    REQUIRE(buffer.str() == "{y: 3, x: 2}");
+    REQUIRE(check_map_str(buffer.str(), {"x", "y"}, {"2", "3"}));
     buffer.str("");
     buffer << ubb;
-    REQUIRE(buffer.str() == "{y: 3, x: 2}");
+    REQUIRE(check_map_str(buffer.str(), {"x", "y"}, {"2", "3"}));
     buffer.str("");
     buffer << vb;
-    REQUIRE(buffer.str() == "[x, 3]");
+    bool check_vec_str;
+    check_vec_str = buffer.str() == "[x, 3]" or buffer.str() == "[3, x]";
+    REQUIRE(check_vec_str);
     buffer.str("");
     buffer << sb;
-    REQUIRE(buffer.str() == "[2, y]");
+    check_vec_str = buffer.str() == "[2, y]" or buffer.str() == "[y, 2]";
+    REQUIRE(check_vec_str);
 
     map_uint_mpz a = {{0, 1_z}, {1, 2_z}, {2, 1_z}};
     map_uint_mpz b = {{0, 1_z}, {2, 1_z}, {1, 2_z}};
