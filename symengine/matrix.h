@@ -52,9 +52,10 @@ public:
     virtual void transpose(MatrixBase &result) const = 0;
 
     // Extract out a submatrix
-    virtual void submatrix(unsigned row_start, unsigned row_end,
-                           unsigned col_start, unsigned col_end,
-                           MatrixBase &result) const = 0;
+    virtual void submatrix(MatrixBase &result,
+                           unsigned row_start, unsigned col_start,
+                           unsigned row_end, unsigned col_end,
+                           unsigned row_step = 1, unsigned col_step = 1) const = 0;
     // LU factorization
     virtual void LU(MatrixBase &L, MatrixBase &U) const = 0;
 
@@ -118,9 +119,10 @@ public:
     virtual void transpose(MatrixBase &result) const;
 
     // Extract out a submatrix
-    virtual void submatrix(unsigned row_start, unsigned row_end,
-                           unsigned col_start, unsigned col_end,
-                           MatrixBase &result) const;
+    virtual void submatrix(MatrixBase &result,
+                           unsigned row_start, unsigned col_start,
+                           unsigned row_end, unsigned col_end,
+                           unsigned row_step = 1, unsigned col_step = 1) const;
 
     // LU factorization
     virtual void LU(MatrixBase &L, MatrixBase &U) const;
@@ -140,6 +142,16 @@ public:
     // Return the Jacobian of the matrix
     friend void jacobian(const DenseMatrix &A, const DenseMatrix &x,
                          DenseMatrix &result);
+    // Return the Jacobian of the matrix using sdiff
+    friend void sjacobian(const DenseMatrix &A, const DenseMatrix &x,
+                         DenseMatrix &result);
+
+    // Differentiate the matrix element-wise
+    friend void diff(const DenseMatrix &A, const RCP<const Symbol> &x,
+                         DenseMatrix &result);
+    // Differentiate the matrix element-wise using SymPy compatible diff
+    friend void sdiff(const DenseMatrix &A, const RCP<const Basic> &x,
+                         DenseMatrix &result);
 
     // Friend functions related to Matrix Operations
     friend void add_dense_dense(const DenseMatrix &A, const DenseMatrix &B,
@@ -151,9 +163,10 @@ public:
     friend void mul_dense_scalar(const DenseMatrix &A,
                                  const RCP<const Basic> &k, DenseMatrix &C);
     friend void transpose_dense(const DenseMatrix &A, DenseMatrix &B);
-    friend void submatrix_dense(const DenseMatrix &A, unsigned row_start,
-                                unsigned row_end, unsigned col_start,
-                                unsigned col_end, DenseMatrix &B);
+    friend void submatrix_dense(const DenseMatrix &A, DenseMatrix &B,
+                                unsigned row_start, unsigned col_start,
+                                unsigned row_end, unsigned col_end,
+                                unsigned row_step = 1, unsigned col_step = 1);
 
     // Row operations
     friend void row_exchange_dense(DenseMatrix &A, unsigned i, unsigned j);
@@ -276,9 +289,10 @@ public:
     virtual void transpose(MatrixBase &result) const;
 
     // Extract out a submatrix
-    virtual void submatrix(unsigned row_start, unsigned row_end,
-                           unsigned col_start, unsigned col_end,
-                           MatrixBase &result) const;
+    virtual void submatrix(MatrixBase &result,
+                           unsigned row_start, unsigned col_start,
+                           unsigned row_end, unsigned col_end,
+                           unsigned row_step = 1, unsigned col_step = 1) const;
 
     // LU factorization
     virtual void LU(MatrixBase &L, MatrixBase &U) const;
@@ -344,6 +358,15 @@ private:
 
 // Return the Jacobian of the matrix
 void jacobian(const DenseMatrix &A, const DenseMatrix &x, DenseMatrix &result);
+// Return the Jacobian of the matrix using sdiff
+void sjacobian(const DenseMatrix &A, const DenseMatrix &x, DenseMatrix &result);
+
+// Differentiate all the elements
+void diff(const DenseMatrix &A, const RCP<const Symbol> &x,
+                         DenseMatrix &result);
+// Differentiate all the elements using SymPy compatible diff
+void sdiff(const DenseMatrix &A, const RCP<const Basic> &x,
+                         DenseMatrix &result);
 
 // Matrix Factorization
 void LU(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &U);
