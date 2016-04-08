@@ -170,6 +170,7 @@ public:
     void bvisit(const Add &x);
     void bvisit(const Mul &x);
     void bvisit(const Pow &x);
+    void bvisit(const Infinity &x);
     void bvisit(const UnivariateIntPolynomial &x);
     void bvisit(const UnivariatePolynomial &x);
 #ifdef HAVE_SYMENGINE_PIRANHA

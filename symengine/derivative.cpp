@@ -13,6 +13,7 @@
 #include <symengine/complex_double.h>
 #include <symengine/complex_mpc.h>
 #include <symengine/sets.h>
+#include <symengine/infinity.h>
 
 namespace SymEngine
 {
@@ -515,6 +516,11 @@ public:
                                  const RCP<const Symbol> &x)
     {
         return self.diff_impl(x);
+    }
+
+    static RCP<const Basic> diff(const Infinity &self,
+            const RCP<const Symbol> &x) {
+        throw std::runtime_error("Derivative doesn't exist.");
     }
 
     static RCP<const Basic> diff(const Beta &self, const RCP<const Symbol> &x)

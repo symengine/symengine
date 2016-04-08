@@ -28,6 +28,18 @@ void StrPrinter::bvisit(const Symbol &x)
     str_ = x.get_name();
 }
 
+void StrPrinter::bvisit(const Infinity &x)
+{
+    std::ostringstream s;
+    if (x.is_negative())
+        s << "-oo";
+    else if (x.is_positive())
+        s << "+oo";
+    else
+        s << "zoo";
+    str_ = s.str();
+}
+
 void StrPrinter::bvisit(const Integer &x)
 {
     std::ostringstream s;
