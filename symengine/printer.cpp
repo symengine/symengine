@@ -28,12 +28,12 @@ void StrPrinter::bvisit(const Symbol &x)
     str_ = x.get_name();
 }
 
-void StrPrinter::bvisit(const Infinity &x)
+void StrPrinter::bvisit(const Infinit &x)
 {
     std::ostringstream s;
-    if (x.is_negative())
+    if (x.is_negative_infinity())
         s << "-oo";
-    else if (x.is_positive())
+    else if (x.is_positive_infinity())
         s << "+oo";
     else
         s << "zoo";

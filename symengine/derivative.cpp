@@ -518,7 +518,7 @@ public:
         return self.diff_impl(x);
     }
 
-    static RCP<const Basic> diff(const Infinity &self,
+    static RCP<const Basic> diff(const Infinit &self,
             const RCP<const Symbol> &x) {
         throw std::runtime_error("Derivative doesn't exist.");
     }
