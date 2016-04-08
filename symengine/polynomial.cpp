@@ -31,7 +31,7 @@ bool UnivariateIntPolynomial::is_canonical(const unsigned int &degree_,
                                            const map_uint_mpz &dict) const
 {
     if (var_->get_name() == "")
-        if (!(dict.empty() or dict.size() == 1))
+        if (!(dict.empty() or (dict.size() == 1 and dict.begin()->first == 0)))
             return false;
 
     if (dict.size() != 0) {
@@ -158,19 +158,18 @@ vec_basic UnivariateIntPolynomial::get_args() const
     return args;
 }
 
-integer_class UnivariateIntPolynomial::max_coef() const
+integer_class UnivariateIntPolynomial::max_abs_coef() const
 {
-    integer_class curr = dict_.begin()->second;
+    integer_class curr(mp_abs(dict_.begin()->second));
     for (const auto &it : dict_) {
-        if (it.second > curr)
-            curr = it.second;
+        if (mp_abs(it.second) > curr)
+            curr = mp_abs(it.second);
     }
     return curr;
 }
 
 integer_class UnivariateIntPolynomial::eval(const integer_class &x) const
 {
-
     unsigned int last_deg = dict_.rbegin()->first;
     integer_class result(0), x_pow;
 
@@ -188,7 +187,6 @@ integer_class UnivariateIntPolynomial::eval(const integer_class &x) const
 
 integer_class UnivariateIntPolynomial::eval_bit(const int &x) const
 {
-
     unsigned int last_deg = dict_.rbegin()->first;
     integer_class result(0);
 
@@ -314,74 +312,61 @@ unsigned int bit_length(T t)
     return count;
 }
 
-RCP<const UnivariateIntPolynomial>
-mul_poly(RCP<const UnivariateIntPolynomial> a,
-         RCP<const UnivariateIntPolynomial> b)
+RCP<const UnivariateIntPolynomial> mul_poly(const UnivariateIntPolynomial &a,
+                                            const UnivariateIntPolynomial &b)
 {
-    // TODO: Use `const RCP<const UnivariateIntPolynomial> &a` for input
-    // arguments,
-    //      even better is use `const UnivariateIntPolynomial &a`
     RCP<const Symbol> var = symbol("");
-    if (a->get_var()->get_name() == "") {
-        var = b->get_var();
-    } else if (b->get_var()->get_name() == "") {
-        var = a->get_var();
-    } else if (!(a->get_var()->__eq__(*b->get_var()))) {
+    if (a.get_var()->get_name() == "") {
+        var = b.get_var();
+    } else if (b.get_var()->get_name() == "") {
+        var = a.get_var();
+    } else if (!(a.get_var()->__eq__(*b.get_var()))) {
         throw std::runtime_error("Error: variables must agree.");
     } else {
-        var = a->get_var();
+        var = a.get_var();
     }
 
-    unsigned int da = a->get_degree();
-    unsigned int db = b->get_degree();
+    bool neg = false;
 
-    int sign = 1;
-    if ((--(a->get_dict().end()))->second < 0) {
-        a = neg_poly(*a);
-        sign = -1 * sign;
-    }
-    if ((--(b->get_dict().end()))->second < 0) {
-        b = neg_poly(*b);
-        sign = -1 * sign;
-    }
+    if ((--(a.get_dict().end()))->second < 0)
+        neg = not neg;
+    if ((--(b.get_dict().end()))->second < 0)
+        neg = not neg;
 
-    integer_class p = std::max(a->max_coef(), b->max_coef());
+    unsigned int N
+        = bit_length(std::min(a.get_degree() + 1, b.get_degree() + 1))
+          + bit_length(a.max_abs_coef()) + bit_length(b.max_abs_coef());
 
-    unsigned int N = bit_length(std::min(da + 1, db + 1)) + bit_length(p) + 1;
-
-    integer_class a1(1);
+    integer_class a1(1), b1;
     a1 <<= N;
     integer_class a2 = a1 / 2;
     integer_class mask = a1 - 1;
-    integer_class sa = a->eval_bit(N);
-    integer_class sb = b->eval_bit(N);
-    integer_class r = sa * sb;
+    integer_class a_val(a.eval_bit(N)), b_val(b.eval_bit(N));
+    integer_class s_val(a_val * b_val);
+    integer_class r = mp_abs(s_val);
 
     std::vector<integer_class> v;
     integer_class carry(0);
 
     while (r != 0 or carry != 0) {
-        integer_class b;
-        // TODO:fix this
-        mp_and(b, r, mask);
-        if (b < a2) {
-            v.push_back(b + carry);
+        mp_and(b1, r, mask);
+        if (b1 < a2) {
+            v.push_back(b1 + carry);
             carry = 0;
         } else {
-            v.push_back(b - a1 + carry);
+            v.push_back(b1 - a1 + carry);
             carry = 1;
         }
         r >>= N;
     }
-
-    if (sign == -1)
+    if (neg)
         return neg_poly(*UnivariateIntPolynomial::from_vec(var, v));
     else
         return UnivariateIntPolynomial::from_vec(var, v);
 }
 
 UnivariatePolynomial::UnivariatePolynomial(const RCP<const Symbol> &var,
-                                           const unsigned int &degree,
+                                           const int &degree,
                                            const map_int_Expr &&dict)
     : degree_{degree}, var_{var}, dict_{std::move(dict)}
 {
@@ -399,14 +384,15 @@ UnivariatePolynomial::UnivariatePolynomial(const RCP<const Symbol> &var,
     SYMENGINE_ASSERT(is_canonical(degree_, dict_))
 }
 
-bool UnivariatePolynomial::is_canonical(const unsigned int &degree_,
+bool UnivariatePolynomial::is_canonical(const int &degree_,
                                         const map_int_Expr &dict) const
 {
     if (var_->get_name() == "")
-        if (!((dict.empty() or dict.size() == 1) and dict.begin()->first == 0))
+        if (!(dict.empty() or (dict.size() == 1 and dict.begin()->first == 0)))
             return false;
+
     if (dict.size() != 0) {
-        unsigned int prev_degree = (--dict.end())->first;
+        int prev_degree = (--dict.end())->first;
         if (prev_degree != degree_) {
             return false;
         }
@@ -472,8 +458,8 @@ UnivariatePolynomial::from_vec(const RCP<const Symbol> &var,
     return make_rcp<const UnivariatePolynomial>(var, degree, std::move(dict));
 }
 
-RCP<const Basic> UnivariatePolynomial::from_dict(const RCP<const Symbol> &var,
-                                                 map_int_Expr &&d)
+RCP<const UnivariatePolynomial>
+UnivariatePolynomial::from_dict(const RCP<const Symbol> &var, map_int_Expr &&d)
 {
     auto iter = d.begin();
     while (iter != d.end()) {
@@ -535,7 +521,6 @@ Expression UnivariatePolynomial::max_coef() const
 
 Expression UnivariatePolynomial::eval(const Expression &x) const
 {
-    // TODO: Use Horner's Scheme
     Expression ans = 0;
     for (const auto &p : dict_) {
         Expression temp;
@@ -547,7 +532,7 @@ Expression UnivariatePolynomial::eval(const Expression &x) const
 
 bool UnivariatePolynomial::is_zero() const
 {
-    return dict_.size() == 1 and dict_.begin()->second == 0;
+    return dict_.empty();
 }
 
 bool UnivariatePolynomial::is_one() const
@@ -564,6 +549,8 @@ bool UnivariatePolynomial::is_minus_one() const
 
 bool UnivariatePolynomial::is_integer() const
 {
+    if (dict_.empty())
+        return true;
     return dict_.size() == 1 and dict_.begin()->first == 0;
 }
 
@@ -603,7 +590,7 @@ RCP<const UnivariatePolynomial> add_uni_poly(const UnivariatePolynomial &a,
         dict[it.first] = it.second;
     for (const auto &it : b.get_dict())
         dict[it.first] += it.second;
-    return univariate_polynomial(var, (--(dict.end()))->first, std::move(dict));
+    return univariate_polynomial(var, std::move(dict));
 }
 
 RCP<const UnivariatePolynomial> neg_uni_poly(const UnivariatePolynomial &a)
@@ -611,8 +598,7 @@ RCP<const UnivariatePolynomial> neg_uni_poly(const UnivariatePolynomial &a)
     map_int_Expr dict;
     for (const auto &it : a.get_dict())
         dict[it.first] = -1 * it.second;
-    return univariate_polynomial(a.get_var(), (--(dict.end()))->first,
-                                 std::move(dict));
+    return univariate_polynomial(a.get_var(), std::move(dict));
 }
 
 RCP<const UnivariatePolynomial> sub_uni_poly(const UnivariatePolynomial &a,
@@ -633,7 +619,7 @@ RCP<const UnivariatePolynomial> sub_uni_poly(const UnivariatePolynomial &a,
         dict[it.first] = it.second;
     for (const auto &it : b.get_dict())
         dict[it.first] -= it.second;
-    return univariate_polynomial(var, (--(dict.end()))->first, std::move(dict));
+    return univariate_polynomial(var, std::move(dict));
 }
 
 RCP<const UnivariatePolynomial> mul_uni_poly(RCP<const UnivariatePolynomial> a,
@@ -650,12 +636,16 @@ RCP<const UnivariatePolynomial> mul_uni_poly(RCP<const UnivariatePolynomial> a,
     } else {
         var = a->get_var();
     }
-    if (a->get_dict().empty() or b->get_dict().empty())
-        return univariate_polynomial(var, 0, {{0, 0}});
+
+    if (a->get_var() != b->get_var())
+        throw std::runtime_error("Error: variables must agree.");
+    if (a->get_dict().empty() and b->get_dict().empty())
+        return univariate_polynomial(var, {{0, 0}});
+
     for (const auto &i1 : a->get_dict())
         for (const auto &i2 : b->get_dict())
             dict[i1.first + i2.first] += i1.second * i2.second;
-    return univariate_polynomial(var, (--(dict.end()))->first, std::move(dict));
+    return univariate_polynomial(var, std::move(dict));
 }
 
 } // SymEngine
