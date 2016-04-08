@@ -1,9 +1,9 @@
 #include "catch.hpp"
-#include <iostream>
 #include <chrono>
+#include <iostream>
 
-#include <symengine/polynomial.h>
 #include <symengine/mul.h>
+#include <symengine/polynomial.h>
 #include <symengine/pow.h>
 #include <symengine/dict.h>
 
@@ -97,16 +97,33 @@ TEST_CASE("Multiplication of two UnivariateIntPolynomial",
           "[UnivariateIntPolynomial]")
 {
     RCP<const Symbol> x = symbol("x");
-    RCP<const UnivariateIntPolynomial> a
-        = univariate_int_polynomial(x, {{0, 1_z}, {1, 2_z}, {2, 1_z}});
-    RCP<const UnivariateIntPolynomial> b
-        = univariate_int_polynomial(x, {{0, -1_z}, {1, -2_z}, {2, -1_z}});
+    map_uint_mpz adict_ = {{0, 1_z}, {1, 2_z}, {2, 1_z}};
+    map_uint_mpz bdict_ = {{0, -1_z}, {1, -2_z}, {2, -1_z}};
+    map_uint_mpz edict_ = {{0, 5_z}, {1, -2_z}, {2, -1_z}};
+    map_uint_mpz fdict_ = {{0, 6_z}, {1, -2_z}, {2, 3_z}};
+    map_uint_mpz kdict_ = {{0, -1_z}, {1, -2_z}, {2, -100_z}};
+
+    const UnivariateIntPolynomial a(x, 2, std::move(adict_));
+    const UnivariateIntPolynomial b(x, 2, std::move(bdict_));
+    const UnivariateIntPolynomial e(x, 2, std::move(edict_));
+    const UnivariateIntPolynomial f(x, 2, std::move(fdict_));
+    const UnivariateIntPolynomial k(x, 2, std::move(kdict_));
 
     RCP<const UnivariateIntPolynomial> c = mul_poly(a, a);
     RCP<const UnivariateIntPolynomial> d = mul_poly(a, b);
+    RCP<const UnivariateIntPolynomial> g = mul_poly(e, e);
+    RCP<const UnivariateIntPolynomial> h = mul_poly(e, f);
+    RCP<const UnivariateIntPolynomial> i = mul_poly(f, f);
+    RCP<const UnivariateIntPolynomial> l = mul_poly(k, f);
+    RCP<const UnivariateIntPolynomial> m = mul_poly(k, k);
 
     REQUIRE(c->__str__() == "x**4 + 4*x**3 + 6*x**2 + 4*x + 1");
     REQUIRE(d->__str__() == "-x**4 - 4*x**3 - 6*x**2 - 4*x - 1");
+    REQUIRE(g->__str__() == "x**4 + 4*x**3 - 6*x**2 - 20*x + 25");
+    REQUIRE(h->__str__() == "-3*x**4 - 4*x**3 + 13*x**2 - 22*x + 30");
+    REQUIRE(i->__str__() == "9*x**4 - 12*x**3 + 40*x**2 - 24*x + 36");
+    REQUIRE(l->__str__() == "-300*x**4 + 194*x**3 - 599*x**2 - 10*x - 6");
+    REQUIRE(m->__str__() == "10000*x**4 + 400*x**3 + 204*x**2 + 4*x + 1");
 }
 
 TEST_CASE("UnivariateIntPolynomial get_args", "[UnivariateIntPolynomial]")
@@ -226,8 +243,9 @@ TEST_CASE("Constructor of UnivariatePolynomial", "[UnivariatePolynomial]")
     Expression d(symbol("d"));
     Expression num2(integer(2));
     Expression num1(integer(1));
+
     RCP<const UnivariatePolynomial> P
-        = univariate_polynomial(x, 2, {{0, num1}, {1, num2}, {2, num1}});
+        = univariate_polynomial(x, {{0, num1}, {1, num2}, {2, num1}});
     REQUIRE(P->__str__() == "x**2 + 2*x + 1");
 
     RCP<const UnivariatePolynomial> Q
@@ -235,11 +253,18 @@ TEST_CASE("Constructor of UnivariatePolynomial", "[UnivariatePolynomial]")
     REQUIRE(Q->__str__() == "x**3 + 2*x**2 + 1");
 
     RCP<const UnivariatePolynomial> R
-        = univariate_polynomial(x, 3, {{0, d}, {1, c}, {2, b}, {3, a}});
+        = univariate_polynomial(x, {{0, d}, {1, c}, {2, b}, {3, a}});
     REQUIRE(R->__str__() == "a*x**3 + b*x**2 + c*x + d");
 
+    R = univariate_polynomial(x, {{-1, d}});
+    REQUIRE(R->__str__() == "d*x**(-1)");
+    REQUIRE(not(R->__str__() == "d*x**-1"));
+
+    R = univariate_polynomial(x, {{-2, d}, {-1, c}, {0, b}, {1, a}});
+    REQUIRE(R->__str__() == "a*x + b + c*x**(-1) + d*x**(-2)");
+
     RCP<const UnivariatePolynomial> T
-        = univariate_polynomial(none, 0, std::map<int, Expression>{});
+        = univariate_polynomial(none, std::map<int, Expression>{});
     REQUIRE(T->__str__() == "0");
 }
 
@@ -280,11 +305,12 @@ TEST_CASE("Subtracting two UnivariatePolynomial", "[UnivariatePolynomial]")
 TEST_CASE("Multiplication of two UnivariatePolynomial",
           "[UnivariatePolynomial]")
 {
+
     RCP<const Symbol> x = symbol("x");
     RCP<const UnivariatePolynomial> a = univariate_polynomial(
-        x, 2, {{0, 1}, {1, symbol("b")}, {2, symbol("a")}});
+        x, {{0, 1}, {1, symbol("b")}, {2, symbol("a")}});
     RCP<const UnivariatePolynomial> b = univariate_polynomial(
-        x, 2, {{0, -1}, {1, -2}, {2, mul(integer(-1), symbol("a"))}});
+        x, {{0, -1}, {1, -2}, {2, mul(integer(-1), symbol("a"))}});
 
     RCP<const UnivariatePolynomial> c = mul_uni_poly(a, a);
     RCP<const UnivariatePolynomial> d = mul_uni_poly(a, b);
@@ -293,13 +319,19 @@ TEST_CASE("Multiplication of two UnivariatePolynomial",
             == "a**2*x**4 + 2*a*b*x**3 + (2*a + b**2)*x**2 + 2*b*x + 1");
     REQUIRE(d->__str__() == "-a**2*x**4 + (-2*a - a*b)*x**3 + (-2*a - "
                             "2*b)*x**2 + (-2 - b)*x - 1");
+
+    a = univariate_polynomial(x, {{-2, 5}, {-1, 3}, {0, 1}, {1, 2}});
+
+    c = mul_uni_poly(a, b);
+    REQUIRE(c->__str__() == "-2*a*x**3 + (-4 - a)*x**2 + (-4 - 3*a)*x + (-7 - "
+                            "5*a) - 13*x**(-1) - 5*x**(-2)");
 }
 
 TEST_CASE("UnivariatePolynomial get_args", "[UnivariatePolynomial]")
 {
     RCP<const Symbol> x = symbol("x");
     RCP<const UnivariatePolynomial> a
-        = univariate_polynomial(x, 2, {{0, 1}, {1, 2}, {2, 1}});
+        = univariate_polynomial(x, {{0, 1}, {1, 2}, {2, 1}});
 
     REQUIRE(vec_basic_eq_perm(a->get_args(),
                               {one, mul(integer(2), x), pow(x, integer(2))}));
@@ -311,9 +343,12 @@ TEST_CASE("Evaluation of UnivariatePolynomial", "[UnivariatePolynomial]")
 {
     RCP<const Symbol> x = symbol("x");
     RCP<const UnivariatePolynomial> a
-        = univariate_polynomial(x, 2, {{0, 1}, {1, 2}, {2, symbol("a")}});
+        = univariate_polynomial(x, {{0, 1}, {1, 2}, {2, symbol("a")}});
 
     REQUIRE(a->eval(2).get_basic()->__str__() == "5 + 4*a");
+
+    a = univariate_polynomial(x, {{-2, 5}, {-1, 3}, {0, 1}, {1, 2}});
+    REQUIRE(a->eval(2).get_basic()->__str__() == "31/4");
 }
 
 TEST_CASE("Derivative of UnivariatePolynomial", "[UnivariatePolynomial]")
@@ -322,17 +357,22 @@ TEST_CASE("Derivative of UnivariatePolynomial", "[UnivariatePolynomial]")
     RCP<const Symbol> y = symbol("y");
     RCP<const Symbol> none = symbol("");
     RCP<const UnivariatePolynomial> a
-        = univariate_polynomial(x, 2, {{0, 1}, {1, 2}, {2, symbol("a")}});
-    RCP<const UnivariatePolynomial> b = univariate_polynomial(x, 0, {{0, 1}});
+        = univariate_polynomial(x, {{0, 1}, {1, 2}, {2, symbol("a")}});
+    RCP<const UnivariatePolynomial> b = univariate_polynomial(x, {{0, 1}});
     RCP<const UnivariatePolynomial> c
-        = univariate_polynomial(none, 0, {{0, 5}});
+        = univariate_polynomial(none, {{0, 5}});
 
     REQUIRE(a->diff(x)->__str__() == "2*a*x + 2");
     REQUIRE(a->diff(y)->__str__() == "0");
     REQUIRE(b->diff(y)->__str__() == "0");
+
+    a = univariate_polynomial(
+        x, {{-2, 5}, {-1, 3}, {0, 1}, {1, 2}, {2, symbol("a")}});
+    REQUIRE(a->diff(x)->__str__() == "2*a*x + 2 - 3*x**(-2) - 10*x**(-3)");
+
     REQUIRE(c->diff(x)->__str__() == "0");
 
-    c = univariate_polynomial(none, 0, std::map<int, Expression>{});
+    c = univariate_polynomial(none, std::map<int, Expression>{});
     REQUIRE(c->diff(x)->__str__() == "0");
 }
 
@@ -340,16 +380,18 @@ TEST_CASE("Bool checks specific UnivariatePolynomial cases",
           "[UnivariatePolynomial]")
 {
     RCP<const Symbol> x = symbol("x");
-    RCP<const UnivariatePolynomial> z = univariate_polynomial(x, 0, {{0, 0}});
-    RCP<const UnivariatePolynomial> o = univariate_polynomial(x, 0, {{0, 1}});
-    RCP<const UnivariatePolynomial> mo = univariate_polynomial(x, 0, {{0, -1}});
-    RCP<const UnivariatePolynomial> i = univariate_polynomial(x, 0, {{0, 6}});
-    RCP<const UnivariatePolynomial> s = univariate_polynomial(x, 1, {{1, 1}});
-    RCP<const UnivariatePolynomial> m1 = univariate_polynomial(x, 1, {{1, 6}});
-    RCP<const UnivariatePolynomial> m2 = univariate_polynomial(x, 3, {{3, 5}});
-    RCP<const UnivariatePolynomial> po = univariate_polynomial(x, 5, {{5, 1}});
+    RCP<const UnivariatePolynomial> z = univariate_polynomial(x, {{0, 0}});
+    RCP<const UnivariatePolynomial> o = univariate_polynomial(x, {{0, 1}});
+    RCP<const UnivariatePolynomial> mo = univariate_polynomial(x, {{0, -1}});
+    RCP<const UnivariatePolynomial> i = univariate_polynomial(x, {{0, 6}});
+    RCP<const UnivariatePolynomial> s = univariate_polynomial(x, {{1, 1}});
+    RCP<const UnivariatePolynomial> m1 = univariate_polynomial(x, {{1, 6}});
+    RCP<const UnivariatePolynomial> m2 = univariate_polynomial(x, {{3, 5}});
+    RCP<const UnivariatePolynomial> po = univariate_polynomial(x, {{5, 1}});
     RCP<const UnivariatePolynomial> poly
-        = univariate_polynomial(x, 2, {{0, 1}, {1, 2}, {2, 1}});
+        = univariate_polynomial(x, {{0, 1}, {1, 2}, {2, 1}});
+    RCP<const UnivariatePolynomial> neg
+        = univariate_polynomial(x, {{-2, 5}, {-1, 3}, {0, 1}, {1, 2}});
 
     REQUIRE((z->is_zero() and not z->is_one() and not z->is_minus_one()
              and z->is_integer() and not z->is_symbol() and not z->is_mul()
@@ -379,13 +421,17 @@ TEST_CASE("Bool checks specific UnivariatePolynomial cases",
              and not poly->is_minus_one() and not poly->is_integer()
              and not poly->is_symbol() and not poly->is_mul()
              and not poly->is_pow()));
+    REQUIRE((not neg->is_zero() and not neg->is_one()
+             and not neg->is_minus_one() and not neg->is_integer()
+             and not neg->is_symbol() and not neg->is_mul()
+             and not neg->is_pow()));
 }
 
 TEST_CASE("Univariate Polynomial expand", "[UnivariatePolynomial][expand]")
 {
     RCP<const Symbol> x = symbol("x");
     RCP<const UnivariatePolynomial> a
-        = univariate_polynomial(x, 3, {{1, 1}, {2, 1}, {3, symbol("a")}});
+        = univariate_polynomial(x, {{1, 1}, {2, 1}, {3, symbol("a")}});
     RCP<const Basic> b = make_rcp<const Pow>(a, integer(3));
     RCP<const Basic> c = expand(b);
 

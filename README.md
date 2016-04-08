@@ -41,9 +41,10 @@ Install SymEngine:
 
     cmake .
     make
+    make install
 
 This will configure and build SymEngine in the default Release mode with all
-code and compiler optimizations on.
+code and compiler optimizations on and then install it on your system.
 
 Run tests:
 
@@ -104,7 +105,7 @@ their default values indicated below:
         -DBUILD_TESTS:BOOL=ON \                       # Build with tests
         -DBUILD_BENCHMARKS:BOOL=ON \                  # Build with benchmarks
         -DBUILD_BENCHMARKS_NONIUS:BOOL=OFF \          # Build with Nonius benchmarks
-        -DINTEGER_CLASS:STRING=gmpxx \                # Choose storage type for Integer. one of gmp, gmpxx, 
+        -DINTEGER_CLASS:STRING=gmpxx \                # Choose storage type for Integer. one of gmp, gmpxx,
                                                         flint, piranha
         -DBUILD_SHARED_LIBS:BOOL=OFF \                # Build a shared library.
         -DCMAKE_INSTALL_RPATH_USE_LINK_PATH:BOOL=OFF\ # Add dependencies to rpath when a shared lib is built

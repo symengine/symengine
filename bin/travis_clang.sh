@@ -11,7 +11,7 @@ if [[ "${TRAVIS_OS_NAME}" == "linux" ]] && \
         exit 1
     fi
 
-    FILES=`git diff master --name-only | grep -E "\.(cpp|h)$"`
+    FILES=`git ls-files | grep -E "\.(cpp|h|hpp)$" | grep -Ev "symengine/utilities" | grep -Ev "cmake/"`
 
     for FILE in $FILES; do
 
