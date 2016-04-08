@@ -65,9 +65,11 @@ extern RCP<const Number> I;
 extern RCP<const Constant> pi;
 extern RCP<const Constant> E;
 extern RCP<const Constant> EulerGamma;
-// extern RCP<const Constant> Infinity;
-// extern RCP<const Constant> NegativeInfinity;
-// extern RCP<const Constant> ComplexInfinity;
+
+//Infinit
+// extern RCP<const Infinit> Inf;
+// extern RCP<const Infinit> NegInf;
+// extern RCP<const Infinit> ComplexInf;
 } // SymEngine
 
 #endif

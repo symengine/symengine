@@ -1,5 +1,4 @@
 #include <symengine/infinity.h>
-#include <symengine/constants.h>
 
 namespace SymEngine
 {
@@ -48,7 +47,7 @@ std::size_t Infinit::__hash__() const
 
 bool Infinit::__eq__(const Basic &o) const
 {
-	if(eq(*_direction, *zero))
+	if(is_unsigned_infinity())
 		return false;
 
 	if (is_a<Infinit>(o))
@@ -81,6 +80,60 @@ bool Infinit::is_positive_infinity() const
 bool Infinit::is_negative_infinity() const
 {
 	return _direction->is_negative();
+}
+
+RCP<const Number> Infinit::add(const Number &other) const
+{
+	if (is_unsigned_infinity())
+		throw std::runtime_error("NaN not yet implemented.");
+
+	if (is_positive_infinity())
+	{
+		if (is_a<Infinit>(other))
+		{
+			const Infinit &s = static_cast<const Infinit &>(other);
+
+			if(s.is_positive_infinity())
+				return make_rcp<const Infinit>(+1); //Think about what to do with direction
+			else
+				throw std::runtime_error("NaN not yet implemented.");
+		}
+		else
+			return make_rcp<const Infinit>(+1);
+	}
+	else
+	{
+		if (is_a<Infinit>(other))
+		{
+			const Infinit &s = static_cast<const Infinit &>(other);
+
+			if (s.is_negative_infinity())
+				return make_rcp<const Infinit>(-1); //Think about what to do with direction
+			else
+				throw std::runtime_error("NaN not yet implemented.");
+		}
+		else
+			return make_rcp<const Infinit>(-1);
+	}
+}
+
+RCP<const Number> Infinit::mul(const Number &other) const
+{
+	if(is_a<Infinit>(other))
+	{
+		const Infinit &s = static_cast<const Infinit &>(other);
+
+		return make_rcp<const Infinit>(this->_direction->mul(*(s._direction)));
+	}
+	else
+	{
+		if(other.is_positive())
+			return make_rcp<const Infinit>(this->_direction);
+		else if(other.is_negative())
+			return make_rcp<const Infinit>(this->_direction->mul(*minus_one));
+		else
+			throw std::runtime_error("NaN not yet implemented.");
+	}
 }
 
 } //SymEngine

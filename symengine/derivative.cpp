@@ -520,7 +520,7 @@ public:
 
     static RCP<const Basic> diff(const Infinit &self,
             const RCP<const Symbol> &x) {
-        throw std::runtime_error("Derivative doesn't exist.");
+        return zero;
     }
 
     static RCP<const Basic> diff(const Beta &self, const RCP<const Symbol> &x)
