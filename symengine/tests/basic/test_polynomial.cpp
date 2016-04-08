@@ -583,7 +583,7 @@ TEST_CASE("Testing MultivariatePolynomial::__eq__(), __hash__, and compare", "[M
     RCP<const Symbol> y = symbol("y");
     RCP<const Symbol> i = symbol("i");
     RCP<const Symbol> j = symbol("j");
-    RCP<const Integer> two = make_rcp<const Integer>(2);
+    RCP<const Integer> two = make_rcp<const Integer>(integer_class(2));
     Expression sum(add(i,j));
     Expression difference(sub(mul(two,i),j));
     RCP<const MultivariatePolynomial> p1 = MultivariatePolynomial::from_dict({x,y},
@@ -620,7 +620,7 @@ TEST_CASE("Testing MultivariatePolynomial::eval", "[MultivariatePolynomial]"){
     RCP<const Symbol> a = symbol("a");
     RCP<const Symbol> b = symbol("b");
     RCP<const Symbol> c = symbol("c");
-    RCP<const Integer> two = make_rcp<const Integer>(2);
+    RCP<const Integer> two = make_rcp<const Integer>(integer_class(2));
     Expression expr1(add(a,b));
     Expression expr2(sub(mul(two,a),b));
     Expression expr3(mul(a,c));
@@ -636,7 +636,7 @@ TEST_CASE("Testing MultivariatePolynomial::eval", "[MultivariatePolynomial]"){
         {z,Expression(0)}};
     std::map<RCP<const Symbol>, Expression, RCPSymbolCompare> m2 = {{x, expr5}, {y,expr6}, {z,expr7}};
     REQUIRE(p->eval(m1).get_basic()->__str__() == "b/a");
-    REQUIRE(expand(p->eval(m2)).get_basic()->__str__() == "b/a + a*b + a*b**2 + a*b**3 + a*c + a*c**2 + a**2*b + a**2*b**2 - a**2*b**3 + 2*a**3*b**2 + b*c + b*c**2 + 2*b**2*c + 3*a*b*c + a*b**2*c + a**2*c/b + a**2*b*c + a**3*c/b**2 + 2*a**3 + b**2 + b**3");
+    REQUIRE(p->eval(m2).get_basic()->__str__() == "b/a + a*b + a*b**2 + a*b**3 + a*c + a*c**2 + a**2*b + a**2*b**2 - a**2*b**3 + 2*a**3*b**2 + b*c + b*c**2 + 2*b**2*c + 3*a*b*c + a*b**2*c + a**2*c/b + a**2*b*c + a**3*c/b**2 + 2*a**3 + b**2 + b**3");
 }
 
 TEST_CASE("Testing derivative of MultivariatePolynomial", "[MultivariatePolynomial]"){
@@ -646,7 +646,7 @@ TEST_CASE("Testing derivative of MultivariatePolynomial", "[MultivariatePolynomi
     RCP<const Symbol> a = symbol("a");
     RCP<const Symbol> b = symbol("b");
     RCP<const Symbol> c = symbol("c");
-    RCP<const Integer> two = make_rcp<const Integer>(2);
+    RCP<const Integer> two = make_rcp<const Integer>(integer_class(2));
     Expression expr1(add(a,b));
     Expression expr2(sub(mul(two,a),b));
     Expression expr3(mul(a,c));
@@ -665,7 +665,7 @@ TEST_CASE("Testing MultivariatePolynomial::get_args()","[MultivariatePolynomial]
     RCP<const Symbol> a = symbol("a");
     RCP<const Symbol> b = symbol("b");
     RCP<const Symbol> c = symbol("c");
-    RCP<const Integer> two = make_rcp<const Integer>(2);
+    RCP<const Integer> two = make_rcp<const Integer>(integer_class(2));
     Expression expr1(add(a,b));
     Expression expr2(sub(mul(two,a),b));
     Expression expr3(mul(a,c));
@@ -780,7 +780,7 @@ TEST_CASE("Testing addition, subtraction, multiplication of UnivariatePolynomial
     RCP<const Symbol> a = symbol("a");
     RCP<const Symbol> b = symbol("b");
     RCP<const Symbol> c = symbol("c");
-    RCP<const Integer> two = make_rcp<const Integer>(2);
+    RCP<const Integer> two = make_rcp<const Integer>(integer_class(2));
     Expression expr1(add(a,b));
     Expression expr2(sub(mul(two,a),b));
     Expression expr3(mul(a,c));
@@ -802,7 +802,7 @@ TEST_CASE("Testing addition, subtraction, multiplication of UnivariatePolynomial
     RCP<const Symbol> a = symbol("a");
     RCP<const Symbol> b = symbol("b");
     RCP<const Symbol> c = symbol("c");
-    RCP<const Integer> two = make_rcp<const Integer>(2);
+    RCP<const Integer> two = make_rcp<const Integer>(integer_class(2));
     Expression expr1(add(a,b));
     Expression expr2(sub(mul(two,a),b));
     Expression expr3(mul(a,c));
@@ -867,7 +867,7 @@ TEST_CASE("Testing Precedence of MultivariatePolynomial","[MultivariatePolynomia
     RCP<const Symbol> a = symbol("a");
     RCP<const Symbol> b = symbol("b");
     RCP<const Symbol> c = symbol("c");
-    RCP<const Integer> two = make_rcp<const Integer>(2);
+    RCP<const Integer> two = make_rcp<const Integer>(integer_class(2));
     Expression expr1(add(a,b));
     Expression expr2(sub(mul(two,a),b));
     Expression expr3(mul(a,c));
