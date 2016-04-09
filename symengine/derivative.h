@@ -22,3 +22,4 @@ RCP<const Basic> sdiff(const RCP<const Basic> &arg, const RCP<const Basic> &x);
 } // namespace SymEngine
 
 #endif // SYMENGINE_DERIVATIVE_H
+

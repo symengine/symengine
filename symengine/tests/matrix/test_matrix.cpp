@@ -45,6 +45,13 @@ TEST_CASE("test_get_set(): matrices", "[matrices]")
     REQUIRE(A == DenseMatrix(
                      2, 2, {integer(1), integer(-2), integer(0), integer(-2)}));
 
+    DenseMatrix C(A);
+    C.set(0, 0, integer(0));
+    REQUIRE(A == DenseMatrix(
+                     2, 2, {integer(1), integer(-2), integer(0), integer(-2)}));
+    REQUIRE(C == DenseMatrix(
+                     2, 2, {integer(0), integer(-2), integer(0), integer(-2)}));
+
     // Test for CSRMatrix
     CSRMatrix B = CSRMatrix(3, 3, {0, 2, 3, 6}, {0, 2, 2, 0, 1, 2},
                             {integer(1), integer(2), integer(3), integer(4),

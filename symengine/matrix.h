@@ -78,6 +78,7 @@ class DenseMatrix : public MatrixBase
 public:
     // Constructors
     DenseMatrix();
+    DenseMatrix(const DenseMatrix&);
     DenseMatrix(unsigned row, unsigned col);
     DenseMatrix(unsigned row, unsigned col, const vec_basic &l);
 

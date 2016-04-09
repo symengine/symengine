@@ -12,6 +12,11 @@ DenseMatrix::DenseMatrix()
 {
 }
 
+DenseMatrix::DenseMatrix(const DenseMatrix &x)
+    : m_(x.m_), row_(x.row_), col_(x.col_)
+{
+}
+
 DenseMatrix::DenseMatrix(unsigned row, unsigned col) : row_(row), col_(col)
 {
     m_ = std::vector<RCP<const Basic>>(row * col);
