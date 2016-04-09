@@ -671,7 +671,7 @@ TEST_CASE("Testing derivative of MultivariatePolynomial", "[MultivariatePolynomi
     RCP<const MultivariatePolynomial> q2 = MultivariatePolynomial::from_dict({x,y},
         { {{2,0},expr1}, {{1,1},expr2 * 2}, {{0,1},expr4 * 2}, {{0,0},expr2} });
     RCP<const MultivariatePolynomial> q3 = MultivariatePolynomial::from_dict({x,y},
-        { {{0,0},Expression(0)} })
+        { {{0,0},Expression(0)} });
 
     REQUIRE(eq(*(p->diff(x)),*q1));
     REQUIRE(eq(*(p->diff(y)),*q2));
