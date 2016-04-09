@@ -485,10 +485,13 @@ TEST_CASE("UnivariatePolynomial max_coef", "[UnivariatePolynomial]")
     RCP<const UnivariatePolynomial> b
         = univariate_polynomial(x, {{0, 2}, {1, 2}, {2, symbol("b")}});
 
+    Expression c(symbol("a"));
+    Expression d(symbol("b"));
+
     REQUIRE(a->max_coef() == 4);
     REQUIRE(not(a->max_coef() == 2));
-    REQUIRE(b->max_coef() == symbol("b"));
-    REQUIRE(not(b->max_coef() == symbol("a")));
+    REQUIRE(b->max_coef() == d);
+    REQUIRE(not(b->max_coef() == c));
     REQUIRE(not(b->max_coef() == 2));
 }
 
