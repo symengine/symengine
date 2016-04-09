@@ -166,7 +166,7 @@ public:
     friend void submatrix_dense(const DenseMatrix &A, DenseMatrix &B,
                                 unsigned row_start, unsigned col_start,
                                 unsigned row_end, unsigned col_end,
-                                unsigned row_step = 1, unsigned col_step = 1);
+                                unsigned row_step, unsigned col_step);
 
     // Row operations
     friend void row_exchange_dense(DenseMatrix &A, unsigned i, unsigned j);
@@ -367,6 +367,12 @@ void diff(const DenseMatrix &A, const RCP<const Symbol> &x,
 // Differentiate all the elements using SymPy compatible diff
 void sdiff(const DenseMatrix &A, const RCP<const Basic> &x,
                          DenseMatrix &result);
+
+// Get submatrix from a DenseMatrix
+void submatrix_dense(const DenseMatrix &A, DenseMatrix &B,
+                                unsigned row_start, unsigned col_start,
+                                unsigned row_end, unsigned col_end,
+                                unsigned row_step = 1, unsigned col_step = 1);
 
 // Matrix Factorization
 void LU(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &U);
