@@ -670,10 +670,12 @@ TEST_CASE("Testing derivative of MultivariatePolynomial", "[MultivariatePolynomi
         { {{1,1},expr1 * 2}, {{0,2},expr2}, {{1,0},expr3 * 2},  {{0,0}, expr1}, });
     RCP<const MultivariatePolynomial> q2 = MultivariatePolynomial::from_dict({x,y},
         { {{2,0},expr1}, {{1,1},expr2 * 2}, {{0,1},expr4 * 2}, {{0,0},expr2} });
+    RCP<const MultivariatePolynomial> q3 = MultivariatePolynomial::from_dict({x,y},
+        { {{0,0},Expression(0)} })
 
     REQUIRE(eq(*(p->diff(x)),*q1));
     REQUIRE(eq(*(p->diff(y)),*q2));
-    REQUIRE(eq(*(p->diff(z)),*zero));
+    REQUIRE(eq(*(p->diff(z)),*q3));
 }
 
 TEST_CASE("Testing MultivariatePolynomial::get_args()","[MultivariatePolynomial]"){

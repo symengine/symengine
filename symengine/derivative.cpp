@@ -506,7 +506,9 @@ static RCP<const Basic> diff(const CLASS &self, \
             }
             return MultivariatePolynomial::from_dict(self.vars_, std::move(dict));
         } else {
-            return zero;
+            vec_uint v;
+            v.resize(self.vars_.size(), 0); 
+            return MultivariatePolynomial::from_dict(self.vars_, { {v,Expression(0)} });
         }
     }    
 

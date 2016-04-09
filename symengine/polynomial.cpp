@@ -1055,6 +1055,7 @@ vars_{std::move(vars)}, degrees_{std::move(degrees)}, dict_{std::move(dict)} {
 RCP<const MultivariatePolynomial> MultivariatePolynomial::from_dict(const set_sym &s,
         umap_uvec_expr &&d) {
     umap_sym_uint degs;
+    //remove terms with zero coefficients
     auto iter = d.begin();
     while (iter != d.end()) {
         iter->second = expand(iter->second);
@@ -1067,6 +1068,7 @@ RCP<const MultivariatePolynomial> MultivariatePolynomial::from_dict(const set_sy
         }
     }
 
+    //set the degree of each variable
     int whichvar = 0;
     for (auto sym : s) {
         degs.insert(std::pair<RCP<const Symbol>, unsigned int>(sym,0));
