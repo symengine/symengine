@@ -145,18 +145,11 @@ int vec_basic_compare(const vec_basic &A, const vec_basic &B)
 
 bool map_uint_mpz_eq(const map_uint_mpz &a, const map_uint_mpz &b)
 {
-    // Can't be equal if # of entries differ:
-    if (a.size() != b.size())
-        return false;
-    // Loop over keys in "a":
-    for (const auto &p : a) {
-        auto f = b.find(p.first);
-        if (f == b.end())
-            return false; // no such element in "b"
-        if (p.second != f->second)
-            return false; // values not equal
-    }
-    return true;
+    return a.size() == b.size()
+        and std::equal(a.begin(), a.end(), b.begin(), [] (const std::pair<unsigned, integer_class> &u,
+                                                         const std::pair<unsigned, integer_class> &v)
+                                                            { return u.first == v.first
+                                                                and u.second == v.second; });
 }
 
 int map_uint_mpz_compare(const map_uint_mpz &A, const map_uint_mpz &B)
@@ -176,18 +169,11 @@ int map_uint_mpz_compare(const map_uint_mpz &A, const map_uint_mpz &B)
 
 bool map_int_Expr_eq(const map_int_Expr &a, const map_int_Expr &b)
 {
-    // Can't be equal if # of entries differ:
-    if (a.size() != b.size())
-        return false;
-    // Loop over keys in "a":
-    for (const auto &p : a) {
-        auto f = b.find(p.first);
-        if (f == b.end())
-            return false; // no such element in "b"
-        if (p.second != f->second)
-            return false; // values not equal
-    }
-    return true;
+    return a.size() == b.size()
+        and std::equal(a.begin(), a.end(), b.begin(), [] (const std::pair<unsigned, Expression> &u,
+                                                         const std::pair<unsigned, Expression> &v)
+                                                            { return u.first == v.first
+                                                                and u.second == v.second; });
 }
 
 int map_int_Expr_compare(const map_int_Expr &A, const map_int_Expr &B)

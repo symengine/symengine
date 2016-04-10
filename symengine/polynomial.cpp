@@ -350,11 +350,10 @@ RCP<const UnivariateIntPolynomial> mul_poly(const UnivariateIntPolynomial &a,
         }
         r >>= N;
     }
-
     if (neg)
-        return neg_poly(*UnivariateIntPolynomial::from_vec(a.get_var(), v));
+        return neg_poly(*UnivariateIntPolynomial::from_vec(var, v));
     else
-        return UnivariateIntPolynomial::from_vec(a.get_var(), v);
+        return UnivariateIntPolynomial::from_vec(var, v);
 }
 
 UnivariatePolynomial::UnivariatePolynomial(const RCP<const Symbol> &var,
@@ -621,8 +620,9 @@ RCP<const UnivariatePolynomial> mul_uni_poly(RCP<const UnivariatePolynomial> a,
         var = a->get_var();
     }
     
-    if (a->get_dict().empty() and b->get_dict().empty())
+	if (a->get_dict().empty() and b->get_dict().empty())
         return univariate_polynomial(var, {{0, 0}});
+
     for (const auto &i1 : a->get_dict())
         for (const auto &i2 : b->get_dict())
             dict[i1.first + i2.first] += i1.second * i2.second;
