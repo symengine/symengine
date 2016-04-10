@@ -454,7 +454,7 @@ UnivariatePolynomial::from_dict(const RCP<const Symbol> &var, map_int_Expr &&d)
         } else
             iter++;
     }
-    unsigned int degree = 0;
+    int degree = 0;
     if (!d.empty())
         degree = (--(d.end()))->first;
     return make_rcp<const UnivariatePolynomial>(var, degree, std::move(d));
@@ -462,7 +462,7 @@ UnivariatePolynomial::from_dict(const RCP<const Symbol> &var, map_int_Expr &&d)
 
 void UnivariatePolynomial::dict_add_term(map_int_Expr &d,
                                          const Expression &coef,
-                                         const unsigned int &n)
+                                         const int &n)
 {
     auto it = d.find(n);
     if (it == d.end())

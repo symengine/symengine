@@ -158,7 +158,7 @@ public:
     * Adds coef*var_**n to the dict_
     */
     static void dict_add_term(map_int_Expr &d, const Expression &coef,
-                              const unsigned int &n);
+                              const int &n);
     Expression max_coef() const;
     //! Evaluates the UnivariatePolynomial at value x
     Expression eval(const Expression &x) const;
@@ -255,8 +255,29 @@ public:
     {
     }
     UnivariateExprPolynomial(Expression expr)
-        : poly_(UnivariatePolynomial::create(symbol(""), {expr}))
     {
+        if(is_a<Pow>(*expr.get_basic())) {
+            const RCP<const Basic> &base = static_cast<const Pow &>(*expr.get_basic()).get_base(),
+                exp = static_cast<const Pow &>(*expr.get_basic()).get_exp();
+            if (is_a<Integer>(*exp)) {
+                const Integer &ii = (static_cast<const Integer &>(*exp));
+                if (not mp_fits_slong_p(ii.i))
+                    throw std::runtime_error("invalid power exponent size");
+                const int sh = mp_get_si(ii.i);
+                if(sh < 0 and is_a<const Symbol>(*base)) { // to handle negative exponentials
+                    map_int_Expr e;
+                    e[sh] = 1;
+                    poly_ = UnivariatePolynomial::from_dict(make_rcp<const Symbol>
+                        (static_cast<const Symbol &>(*base).get_name()), std::move(e));
+                }
+                else
+                    poly_ = UnivariatePolynomial::create(symbol(""), {expr});
+            }
+            else
+                poly_ = UnivariatePolynomial::create(symbol(""), {expr});
+        }
+        else
+            poly_ = UnivariatePolynomial::create(symbol(""), {expr});
     }
     UnivariateExprPolynomial &operator=(const UnivariateExprPolynomial &)
         = default;

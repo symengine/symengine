@@ -79,7 +79,7 @@ UnivariateSeries::trunc_poly(const RCP<const Symbol> &var,
     return univariate_polynomial(var, std::move(dict_trunc));
 }
 
-unsigned UnivariateSeries::ldegree(const UnivariateExprPolynomial &s)
+int UnivariateSeries::ldegree(const UnivariateExprPolynomial &s)
 {
     return s.get_univariate_poly()->get_dict().begin()->first;
 }
@@ -91,8 +91,8 @@ UnivariateSeries::mul(const UnivariateExprPolynomial &a,
     map_int_Expr p;
     for (auto &it1 : a.get_univariate_poly()->get_dict()) {
         for (auto &it2 : b.get_univariate_poly()->get_dict()) {
-            unsigned int exp = it1.first + it2.first;
-            if (exp < prec) {
+            int exp = it1.first + it2.first;
+            if (exp < (int)prec) {
                 p[exp] += it1.second * it2.second;
             } else {
                 break;
@@ -110,7 +110,7 @@ UnivariateSeries::pow(const UnivariateExprPolynomial &base, int exp,
                       unsigned prec)
 {
     if (exp < 0)
-        return UnivariateExprPolynomial(1) / Expression(pow(base, -exp, prec).get_basic());
+        return UnivariateExprPolynomial(1) / Expression(UnivariateSeries::pow(base, -exp, prec).get_basic());
     if (exp == 0) {
         if (base == 0) {
             throw std::runtime_error("Error: 0**0 is undefined.");
@@ -118,6 +118,7 @@ UnivariateSeries::pow(const UnivariateExprPolynomial &base, int exp,
             return UnivariateExprPolynomial(1);
         }
     }
+
     UnivariateExprPolynomial x(base);
     UnivariateExprPolynomial y(1);
     while (exp > 1) {
@@ -136,7 +137,7 @@ UnivariateSeries::pow(const UnivariateExprPolynomial &base, int exp,
 
 Expression UnivariateSeries::find_cf(const UnivariateExprPolynomial &s,
                                      const UnivariateExprPolynomial &var,
-                                     unsigned deg)
+                                     int deg)
 {
     if (s.get_univariate_poly()->get_dict().count(deg) == 0)
         return Expression(0);

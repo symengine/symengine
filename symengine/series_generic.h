@@ -44,10 +44,10 @@ public:
     static Expression convert(const Basic &x);
     static RCP<const UnivariatePolynomial> trunc_poly(const RCP<const Symbol> &var, const map_int_Expr &d, unsigned pr);
 
-    static unsigned ldegree(const UnivariateExprPolynomial &s);
+    static int ldegree(const UnivariateExprPolynomial &s);
     static UnivariateExprPolynomial mul(const UnivariateExprPolynomial &s, const UnivariateExprPolynomial &r, unsigned prec);
     static UnivariateExprPolynomial pow(const UnivariateExprPolynomial &s, int n, unsigned prec);
-    static Expression find_cf(const UnivariateExprPolynomial &s, const UnivariateExprPolynomial &var, unsigned deg);
+    static Expression find_cf(const UnivariateExprPolynomial &s, const UnivariateExprPolynomial &var, int deg);
     static Expression root(Expression &c, unsigned n);
     static UnivariateExprPolynomial diff(const UnivariateExprPolynomial &s, const UnivariateExprPolynomial &var);
     static UnivariateExprPolynomial integrate(const UnivariateExprPolynomial &s, const UnivariateExprPolynomial &var);
