@@ -29,17 +29,18 @@ TEST_CASE("Interval : Basic", "[basic]")
     RCP<const Number> i20 = integer(20);
     RCP<const Number> im5 = integer(-5);
     RCP<const Number> rat1 = Rational::from_two_ints(*integer(5), *integer(6));
-    RCP<const Number> rat2 = Rational::from_two_ints(*integer(500), *integer(6));
+    RCP<const Number> rat2
+        = Rational::from_two_ints(*integer(500), *integer(6));
 
     r1 = interval(zero, i20); // [0, 20]
-    r2 = interval(im5, i2); // [-5, 2]
+    r2 = interval(im5, i2);   // [-5, 2]
 
     REQUIRE(r1->is_Interval());
     REQUIRE(not r1->is_EmptySet());
     REQUIRE(not r1->is_FiniteSet());
 
     r3 = r1->set_intersection(r2); // [0, 2]
-    r4 = interval(zero, i2); // [0, 2]
+    r4 = interval(zero, i2);       // [0, 2]
     REQUIRE(eq(*r3, *r4));
     r3 = interval(im5, i2, true, true); // (-5, 2)
     r4 = r3->set_intersection(r2);
@@ -69,8 +70,8 @@ TEST_CASE("Interval : Basic", "[basic]")
     REQUIRE(r3->is_superset(r4));
     REQUIRE(r3->is_proper_superset(r4));
 
-    r1 = interval(rat1, rat2);// [5/6, 500/6]
-    r2 = interval(im5, i2); // [-5, 2]
+    r1 = interval(rat1, rat2); // [5/6, 500/6]
+    r2 = interval(im5, i2);    // [-5, 2]
     r3 = r1->set_intersection(r2);
     r4 = interval(rat1, i2);
     REQUIRE(eq(*r3, *r4));
