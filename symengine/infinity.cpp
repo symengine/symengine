@@ -1,4 +1,5 @@
 #include <symengine/infinity.h>
+#include <symengine/constants.h>
 
 namespace SymEngine
 {
@@ -115,6 +116,9 @@ RCP<const Number> Infinit::sub(const Number &other) const
 
 RCP<const Number> Infinit::mul(const Number &other) const
 {
+	if(is_a<Complex>(other))
+		throw std::runtime_error("Multiplation with Complex not implemented");
+
 	if(is_a<Infinit>(other))
 	{
 		const Infinit &s = static_cast<const Infinit &>(other);
@@ -128,10 +132,13 @@ RCP<const Number> Infinit::mul(const Number &other) const
 		else if(other.is_negative())
 			return make_rcp<const Infinit>(this->_direction->mul(*minus_one));
 		else
-			throw std::runtime_error("NaN not yet implemented.");
+			throw std::runtime_error("Indeterminate Expression: `0 * Infinity` encountered");
 	}
 }
 
+RCP<const Number> Infinit::div(const Number &other) const {return zero;}
+RCP<const Number> Infinit::pow(const Number &other) const {return zero;}
+RCP<const Number> Infinit::rpow(const Number &other) const {return zero;}
 // RCP<const Number> Infinit::pow(const Number &other) const
 // {
 

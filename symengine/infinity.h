@@ -89,9 +89,9 @@ public:
 	RCP<const Number> add(const Number &other) const;
 	RCP<const Number> sub(const Number &other) const;
 	RCP<const Number> mul(const Number &other) const;
-	RCP<const Number> div(const Number &other) const{return zero;}
-	RCP<const Number> pow(const Number &other) const{return zero;}
-	RCP<const Number> rpow(const Number &other) const{return zero;}
+	RCP<const Number> div(const Number &other) const;
+	RCP<const Number> pow(const Number &other) const;
+	RCP<const Number> rpow(const Number &other) const;
 };
 
 } //SymEngine

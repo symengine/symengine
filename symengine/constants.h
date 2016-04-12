@@ -9,6 +9,7 @@
 
 #include <symengine/basic.h>
 #include <symengine/number.h>
+//#include <symengine/infinity.h>
 #include <symengine/integer.h>
 #include <symengine/symbol.h>
 
@@ -66,7 +67,7 @@ extern RCP<const Constant> pi;
 extern RCP<const Constant> E;
 extern RCP<const Constant> EulerGamma;
 
-//Infinit
+//Infinity
 // extern RCP<const Infinit> Inf;
 // extern RCP<const Infinit> NegInf;
 // extern RCP<const Infinit> ComplexInf;
