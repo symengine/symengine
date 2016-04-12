@@ -384,23 +384,3 @@ TEST_CASE("Expression series expansion: gamma ", "[Expansion of gamma]")
     REQUIRE(series_coeff(ex1, x, 10, -1)->__eq__(*one));
     REQUIRE(series_coeff(ex1, x, 10, 0)->__eq__(*neg(EulerGamma)));
 }
-
-TEST_CASE("Expansion of sin ", "[Symbolic series expansion]")
-{
-    RCP<const Symbol> x = symbol("x");
-    REQUIRE_THROWS_AS(
-        UnivariateSeries::series(sin(add(x, integer(1))), "x", 10),
-        std::runtime_error);
-    REQUIRE_THROWS_AS(
-        UnivariateSeries::series(
-            mul(sin(add(x, integer(1))), cos(add(x, integer(2)))), "x", 10),
-        std::runtime_error);
-}
-
-TEST_CASE("Expansion of log ", "[Symbolic series expansion]")
-{
-    RCP<const Symbol> x = symbol("x");
-    REQUIRE_THROWS_AS(
-        UnivariateSeries::series(log(add(x, integer(2))), "x", 10),
-        std::runtime_error);
-}
