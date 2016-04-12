@@ -1,12 +1,9 @@
 #!/usr/bin/env bash
 
 echo "Entering travis_clang.sh"
-echo "TRAVIS_OS_NAME=${TRAVIS_OS_NAME}"
-echo "CC=${CC}"
 echo "TEST_CLANG_FORMAT=${TEST_CLANG_FORMAT}"
 
-if [[ "${TRAVIS_OS_NAME}" == "linux" ]] && \
-   [[ "${CC}" == "gcc-5" ]] && [[ "${TEST_CLANG_FORMAT}" == "yes" ]]; then
+if [[ "${TEST_CLANG_FORMAT}" == "yes" ]]; then
 
     RETURN=0
     CLANG="clang-format-3.7"
