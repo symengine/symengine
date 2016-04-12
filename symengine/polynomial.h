@@ -257,7 +257,7 @@ public:
     }
     UnivariateExprPolynomial(Expression expr)
     {
-        if(is_a<Pow>(*expr.get_basic())) {
+        if (is_a<Pow>(*expr.get_basic())) {
             const RCP<const Basic> &base = static_cast<const Pow &>(*expr.get_basic()).get_base(),
                 exp = static_cast<const Pow &>(*expr.get_basic()).get_exp();
             if (is_a<Integer>(*exp)) {
@@ -265,21 +265,23 @@ public:
                 if (not mp_fits_slong_p(ii.i))
                     throw std::runtime_error("invalid power exponent size");
                 const int sh = mp_get_si(ii.i);
-                if(sh < 0 and is_a<const Symbol>(*base)) { // to handle negative exponentials
+				// to handle negative exponentials
+                if (sh < 0 and is_a<const Symbol>(*base)) {
                     map_int_Expr e;
                     e[sh] = 1;
                     poly_ = UnivariatePolynomial::from_dict(make_rcp<const Symbol>
                         (static_cast<const Symbol &>(*base).get_name()), std::move(e));
-                }
-                else
+                } else {
                     poly_ = UnivariatePolynomial::create(symbol(""), {expr});
-            }
-            else
+				}
+            } else {
                 poly_ = UnivariatePolynomial::create(symbol(""), {expr});
-        }
-        else
+			}
+        } else {
             poly_ = UnivariatePolynomial::create(symbol(""), {expr});
+		}
     }
+
     UnivariateExprPolynomial &operator=(const UnivariateExprPolynomial &)
         = default;
     UnivariateExprPolynomial &
