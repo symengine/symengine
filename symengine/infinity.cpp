@@ -20,6 +20,12 @@ Infinit::Infinit(const int val)
 	SYMENGINE_ASSERT(is_canonical(_direction));
 }
 
+Infinit::Infinit(const Infinit &inf)
+{
+	_direction = inf.get_direction();
+	SYMENGINE_ASSERT(is_canonical(_direction))
+}
+
 RCP<const Infinit> Infinit::from_number(const RCP<const Number> &num)
 {
 	return make_rcp<Infinit>(num);
@@ -27,6 +33,7 @@ RCP<const Infinit> Infinit::from_number(const RCP<const Number> &num)
 
 RCP<const Infinit> Infinit::from_int(const int val)
 {
+	SYMENGINE_ASSERT(val >= -1 && val <= 1)
 	return make_rcp<Infinit>(val);
 }
 
@@ -84,37 +91,26 @@ bool Infinit::is_negative_infinity() const
 
 RCP<const Number> Infinit::add(const Number &other) const
 {
-	if (is_unsigned_infinity())
-		throw std::runtime_error("NaN not yet implemented.");
+	if(not is_a<Infinit>(other))
+		return make_rcp<const Infinit>(*this);
 
-	if (is_positive_infinity())
+	const Infinit &s = static_cast<const Infinit &>(other);
+
+	if(not eq(*s.get_direction(), *_direction))
 	{
-		if (is_a<Infinit>(other))
-		{
-			const Infinit &s = static_cast<const Infinit &>(other);
-
-			if(s.is_positive_infinity())
-				return make_rcp<const Infinit>(+1); //Think about what to do with direction
-			else
-				throw std::runtime_error("NaN not yet implemented.");
-		}
+		if (is_unsigned_infinity() or s.is_unsigned_infinity())
+			throw std::runtime_error("Indeterminate Expression: `unsigned_infinity +- infinity` encountered");
 		else
-			return make_rcp<const Infinit>(+1);
+			throw std::runtime_error("Indeterminate Expression: `infinity +- infinity` encountered. Directions don't match");
 	}
 	else
-	{
-		if (is_a<Infinit>(other))
-		{
-			const Infinit &s = static_cast<const Infinit &>(other);
+		return make_rcp<const Infinit>(*this);
+}
 
-			if (s.is_negative_infinity())
-				return make_rcp<const Infinit>(-1); //Think about what to do with direction
-			else
-				throw std::runtime_error("NaN not yet implemented.");
-		}
-		else
-			return make_rcp<const Infinit>(-1);
-	}
+
+RCP<const Number> Infinit::sub(const Number &other) const
+{
+	return this->add(*other.mul(*minus_one));
 }
 
 RCP<const Number> Infinit::mul(const Number &other) const
@@ -135,5 +131,10 @@ RCP<const Number> Infinit::mul(const Number &other) const
 			throw std::runtime_error("NaN not yet implemented.");
 	}
 }
+
+// RCP<const Number> Infinit::pow(const Number &other) const
+// {
+
+// }
 
 } //SymEngine
