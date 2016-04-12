@@ -18,9 +18,6 @@ if [[ "${TRAVIS_OS_NAME}" == "linux" ]] && \
 
     FILES=`git ls-files | grep -E "\.(cpp|h|hpp)$" | grep -Ev "symengine/utilities" | grep -Ev "cmake/"`
 
-    echo "FILES="
-    echo $FILES
-
     for FILE in $FILES; do
         echo "Processing: $FILE"
 
