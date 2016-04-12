@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+echo "Entering travis_clang.sh"
+echo "TRAVIS_OS_NAME=${TRAVIS_OS_NAME}"
+echo "CC=${CC}"
+echo "TEST_CLANG_FORMAT=${TEST_CLANG_FORMAT}"
+
 if [[ "${TRAVIS_OS_NAME}" == "linux" ]] && \
    [[ "${CC}" == "gcc" ]] && [[ "${TEST_CLANG_FORMAT}" == "yes" ]]; then
 
@@ -12,6 +17,9 @@ if [[ "${TRAVIS_OS_NAME}" == "linux" ]] && \
     fi
 
     FILES=`git ls-files | grep -E "\.(cpp|h|hpp)$" | grep -Ev "symengine/utilities" | grep -Ev "cmake/"`
+
+    echo "FILES="
+    echo $FILES
 
     for FILE in $FILES; do
         echo "Processing: $FILE"
