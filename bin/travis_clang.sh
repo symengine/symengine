@@ -14,6 +14,7 @@ if [[ "${TRAVIS_OS_NAME}" == "linux" ]] && \
     FILES=`git ls-files | grep -E "\.(cpp|h|hpp)$" | grep -Ev "symengine/utilities" | grep -Ev "cmake/"`
 
     for FILE in $FILES; do
+        echo "Processing: $FILE"
 
         $CLANG $FILE | cmp  $FILE >/dev/null
 
