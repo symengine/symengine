@@ -6,7 +6,7 @@ echo "CC=${CC}"
 echo "TEST_CLANG_FORMAT=${TEST_CLANG_FORMAT}"
 
 if [[ "${TRAVIS_OS_NAME}" == "linux" ]] && \
-   [[ "${CC}" == "gcc" ]] && [[ "${TEST_CLANG_FORMAT}" == "yes" ]]; then
+   [[ "${CC}" == "gcc-5" ]] && [[ "${TEST_CLANG_FORMAT}" == "yes" ]]; then
 
     RETURN=0
     CLANG="clang-format-3.7"
