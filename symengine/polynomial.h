@@ -319,9 +319,7 @@ public:
 
     UnivariateExprPolynomial operator-() const
     {
-        UnivariateExprPolynomial retval(*this);
-        neg_uni_poly(*(retval.poly_.ptr()));
-        return retval;
+        return neg_uni_poly(*this->poly_);
     }
 
     UnivariateExprPolynomial &operator-=(const UnivariateExprPolynomial &other)
