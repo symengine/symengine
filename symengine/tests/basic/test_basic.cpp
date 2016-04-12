@@ -14,6 +14,7 @@
 #include <symengine/functions.h>
 #include <symengine/visitor.h>
 #include <symengine/eval_double.h>
+#include <symengine/derivative.h>
 
 using SymEngine::Basic;
 using SymEngine::Add;
@@ -54,6 +55,9 @@ using SymEngine::free_symbols;
 using SymEngine::function_symbol;
 using SymEngine::rational_class;
 using SymEngine::pi;
+using SymEngine::diff;
+using SymEngine::sdiff;
+
 using namespace SymEngine::literals;
 
 TEST_CASE("Symbol hash: Basic", "[basic]")
@@ -502,6 +506,14 @@ TEST_CASE("Diff: Basic", "[basic]")
     r1 = add(mul(mul(pow(x, y), pow(y, x)), i2), one)->diff(x);
     r2 = add(mul(i2, mul(pow(x, y), mul(pow(y, x), log(y)))),
              mul(i2, mul(pow(x, y), mul(pow(y, x), div(y, x)))));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = sdiff(add(pow(x, i2), x), pow(x, i2));
+    r2 = one;
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = sdiff(add(pow(x, i2), x), x);
+    r2 = diff(add(pow(x, i2), x), x);
     REQUIRE(eq(*r1, *r2));
 }
 
