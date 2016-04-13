@@ -125,6 +125,8 @@ TEST_CASE("Multiplication of two UnivariateExprPolynomial with precision", "[Uni
 TEST_CASE("Exponentiation of UnivariateExprPolynomial with precision", "[UnivariateSeries]")
 {
     RCP<const Symbol> x  = symbol("x");
+    UnivariateExprPolynomial zero(univariate_polynomial(symbol(""), {{0, 0}}));
+    UnivariateExprPolynomial one(univariate_polynomial(symbol(""), {{0, 1}}));
     UnivariateExprPolynomial a(univariate_polynomial(x, {{0, 1}, {1, 2}, {2, 1}}));
     UnivariateExprPolynomial b(univariate_polynomial(x, {{0, -1}, {1, -2}, {2, -1}}));
     UnivariateExprPolynomial c(univariate_polynomial(x, {{0, 1}, {1, 4}, {2, 6}, {3, 4}}));
@@ -132,39 +134,40 @@ TEST_CASE("Exponentiation of UnivariateExprPolynomial with precision", "[Univari
     
     UnivariateExprPolynomial e = UnivariateSeries::pow(a, 2, 4);
     UnivariateExprPolynomial f = UnivariateSeries::pow(b, 3, 5);
-
+    UnivariateExprPolynomial g = UnivariateSeries::pow(a, 0, 2);
+    
     REQUIRE(e == c);
     REQUIRE(f == d);
+    REQUIRE(g == one);
+    REQUIRE_THROWS_AS(UnivariateSeries::pow(zero, 0, 1), std::runtime_error);
 }
 
 TEST_CASE("Differentiation of UnivariateSeries", "[UnivariateSeries]")
 {
     RCP<const Symbol> x  = symbol("x");
     UnivariateExprPolynomial a(univariate_polynomial(x, {{0, 1}, {1, 2}, {2, 1}}));
-    UnivariateExprPolynomial b(univariate_polynomial(x, {{0, 1}}));
-    UnivariateExprPolynomial c(univariate_polynomial(x, {{0, 2}, {1, 2}}));
-    REQUIRE(UnivariateSeries::diff(a, b) == c);
+    UnivariateExprPolynomial b(univariate_polynomial(x, {{0, 2}, {1, 2}}));
+    REQUIRE(UnivariateSeries::diff(a, UnivariateSeries::var("x")) == b);
 }
 
 TEST_CASE("Integration of UnivariateSeries", "[UnivariateSeries]")
 {
     RCP<const Symbol> x  = symbol("x");
-    UnivariateExprPolynomial a(univariate_polynomial(x, {{0, 1}, {1, 2}, {2, 3}}));
-    UnivariateExprPolynomial b(univariate_polynomial(x, {{0, 1}}));
+    UnivariateExprPolynomial a(univariate_polynomial(x, {{-1, 1}}));
+    UnivariateExprPolynomial b(univariate_polynomial(x, {{0, 1}, {1, 2}, {2, 3}}));
     UnivariateExprPolynomial c(univariate_polynomial(x, {{1, 1}, {2, 1}, {3, 1}}));
-    REQUIRE(UnivariateSeries::integrate(a, b) == c);
+    REQUIRE_THROWS_AS(UnivariateSeries::integrate(a, UnivariateSeries::var("x")), std::runtime_error);
+    REQUIRE(UnivariateSeries::integrate(b, UnivariateSeries::var("x")) == c);
 }
 
-#define series_coeff(EX, SYM, PREC, COEFF)                                     \
-    UnivariateSeries::series(EX, SYM->get_name(), PREC)                         \
-        ->get_poly()                                                           \
-        .find_cf(COEFF)                                                      \
-        .get_basic()
-#define invseries_coeff(EX, SYM, PREC, COEFF)                                  \
-    UnivariateSeries::series_reverse(                                           \
-        UnivariateSeries::series(EX, SYM->get_name(), PREC)->get_poly(),        \
-        UnivariateExprPolynomial(SYM->get_name()), PREC)                       \
-        .find_cf(COEFF)                                                      \
+#define series_coeff(EX, SYM, PREC, COEFF)                                  \
+    UnivariateSeries::series(EX, SYM->get_name(), PREC)                     \
+        ->get_coeff(COEFF)                                                     
+#define invseries_coeff(EX, SYM, PREC, COEFF)                               \
+    UnivariateSeries::series_reverse(                                       \
+        UnivariateSeries::series(EX, SYM->get_name(), PREC)->get_poly(),    \
+        UnivariateExprPolynomial(SYM->get_name()), PREC)                    \
+        .find_cf(COEFF)                                                     \
         .get_basic()
 
 static bool expand_check_pairs(const RCP<const Basic> &ex,
@@ -174,7 +177,7 @@ static bool expand_check_pairs(const RCP<const Basic> &ex,
     auto ser = SymEngine::UnivariateSeries::series(ex, x->get_name(), prec);
     for (auto it : pairs) {
         if (not it.second->__eq__(
-                *(ser->get_poly().find_cf(it.first).get_basic())))
+                *(ser->get_coeff(it.first))))
             return false;
     }
     return true;
