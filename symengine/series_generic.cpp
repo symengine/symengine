@@ -63,22 +63,6 @@ Expression UnivariateSeries::convert(const Basic &x)
     return Expression(x.rcp_from_this());
 }
 
-RCP<const UnivariatePolynomial>
-UnivariateSeries::trunc_poly(const RCP<const Symbol> &var,
-                             const map_int_Expr &d, unsigned prec)
-{
-    map_int_Expr dict_trunc;
-    unsigned int max = 0;
-    for (const auto &it : d) {
-        if ((unsigned)it.first < prec) {
-            if (max < (unsigned)it.first)
-                max = (unsigned)it.first;
-            dict_trunc[it.first] = it.second;
-        }
-    }
-    return univariate_polynomial(var, std::move(dict_trunc));
-}
-
 int UnivariateSeries::ldegree(const UnivariateExprPolynomial &s)
 {
     return s.get_univariate_poly()->get_dict().begin()->first;
