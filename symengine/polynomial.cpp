@@ -397,7 +397,7 @@ bool UnivariatePolynomial::is_canonical(const int &degree_,
     return true;
 }
 
-std::size_t UnivariatePolynomial::__hash__() const 
+std::size_t UnivariatePolynomial::__hash__() const
 {
     std::hash<std::string> hash_string;
     std::size_t seed = UNIVARIATEPOLYNOMIAL;

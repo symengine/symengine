@@ -110,7 +110,7 @@ UnivariateSeries::pow(const UnivariateExprPolynomial &base, int exp,
                       unsigned prec)
 {
     if (exp < 0)
-        return UnivariateExprPolynomial(1) / Expression(UnivariateSeries::pow(base, -exp, prec).get_basic());
+        return UnivariateSeries::pow(UnivariateExprPolynomial::inverse(base), -exp, prec);
     if (exp == 0) {
         if (base == 0) {
             throw std::runtime_error("Error: 0**0 is undefined.");
