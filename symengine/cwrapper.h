@@ -113,8 +113,7 @@ char *basic_get_class_from_id(TypeID id);
 
 //! Assign to s, a symbol with string representation c.
 //! This function creates a new SymEngine::Symbol from a copy of
-//! the string in c, thus the caller is free to use c afterwards,
-//! and also the caller must free c.
+//! the string in c, thus the caller is free to use c afterwards.
 void symbol_set(basic s, const char *c);
 
 //! Assign to s, a long.
