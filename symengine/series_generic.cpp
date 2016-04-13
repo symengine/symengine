@@ -3,6 +3,8 @@
 #include <iterator>
 #include <symengine/series_generic.h>
 #include <symengine/dict.h>
+#include <symengine/series_visitor.h>
+
 
 using SymEngine::RCP;
 using SymEngine::make_rcp;
@@ -179,6 +181,246 @@ RCP<const UnivariateSeries> mul_uni_series(const UnivariateSeries &a,
     }
     return make_rcp<const UnivariateSeries>(a.var_, minprec, max,
                                             std::move(dict));
+}
+
+RCP<const MultivariateSeries> MultivariateSeries::series(const RCP<const Basic> &t,
+                                                     const std::string &x,
+                                                     unsigned int prec)
+{
+    MultivariateExprPolynomial p(MultivariatePolynomial::from_dict({symbol(x)}, { {{0}, 1} }));
+    SeriesVisitor<MultivariateExprPolynomial, Expression, MultivariateSeries> visitor(std::move(p), x, prec);
+    return visitor.series(t);
+}
+
+std::size_t MultivariateSeries::__hash__() const
+{
+    return p_.get_basic()->hash() + std::size_t(get_degree() * 84728863L);
+}
+
+int MultivariateSeries::compare(const Basic &other) const
+{
+    SYMENGINE_ASSERT(is_a<MultivariateSeries>(other))
+    const MultivariateSeries &o = static_cast<const MultivariateSeries &>(other);
+    return p_.get_basic()->__cmp__(*o.p_.get_basic());
+}
+
+RCP<const Basic> MultivariateSeries::as_basic() const
+{
+    return p_.get_basic();
+}
+
+umap_int_basic MultivariateSeries::as_dict() const
+{
+    umap_int_basic map;
+    // for (int i = 0; i <= get_degree(); i++)
+       // map[i] = p_.get_basic()->get_dict().at(i).get_basic();
+    return map;
+}
+
+RCP<const Basic> MultivariateSeries::get_coeff(int deg) const
+{
+    // if (p_.get_basic()->get_dict().count(deg) == 0)
+        return zero;
+    // else
+        // return p_.get_basic()->get_dict().at(deg).get_basic();
+}
+
+MultivariateExprPolynomial MultivariateSeries::var(const std::string &s)
+{
+    return MultivariateExprPolynomial(MultivariatePolynomial::from_dict({symbol(s)}, { {{0}, 1} }));
+}
+
+Expression MultivariateSeries::convert(const Basic &x)
+{
+    return Expression(x.rcp_from_this());
+}
+
+int MultivariateSeries::ldegree(const MultivariateExprPolynomial &s)
+{
+    //temp
+    return 0;
+    // return s.get_basic()->get_dict().begin()->first[];
+}
+
+MultivariateExprPolynomial
+MultivariateSeries::mul(const MultivariateExprPolynomial &a,
+                      const MultivariateExprPolynomial &b, unsigned prec)
+{
+    return a*b;
+/*
+    map_int_Expr p;
+
+    for (auto &it1 : a.get_dict()) {
+
+        for (auto &it2 : b.get_dict()) {
+            int exp = it1.first + it2.first;
+            if (exp < (int)prec) {
+                p[exp] += it1.second * it2.second;
+            } else {
+                break;
+            }
+        }
+    }
+    if (a.get_basic()->var_->get_name() == "")
+        return MultivariateExprPolynomial(MultivariatePolynomial::from_dict(b.get_basic()->var_, std::move(p)));
+    else
+        return MultivariateExprPolynomial(MultivariatePolynomial::from_dict(a.get_basic()->var_, std::move(p)));
+*/}
+
+MultivariateExprPolynomial
+MultivariateSeries::pow(const MultivariateExprPolynomial &base, int exp,
+                      unsigned prec)
+{
+    //can't do negative exp at this time
+    if (exp < 0)
+            throw std::runtime_error("Error: Exp is negative (Not implemented yet).");
+
+    //     return MultivariateSeries::pow(MultivariateExprPolynomial::inverse(base), -exp, prec);
+    if (exp == 0) {
+        if (base == 0) {
+            throw std::runtime_error("Error: 0**0 is undefined.");
+        } else {
+            return MultivariateExprPolynomial(1);
+        }
+    }
+
+    MultivariateExprPolynomial x(base);
+    MultivariateExprPolynomial y(1);
+    while (exp > 1) {
+        if (exp % 2 == 0) { 
+            x = mul(x, x, prec);
+            exp /= 2;
+        } 
+        else {
+            y = mul(x, y, prec);
+            x = mul(x, x, prec);
+            exp = (exp - 1) / 2;
+        }
+    }
+    return mul(x, y, prec);
+}
+
+Expression MultivariateSeries::find_cf(const MultivariateExprPolynomial &s,
+                                     const MultivariateExprPolynomial &var,
+                                     int deg)
+{
+    return Expression(integer(0));
+
+    /*
+    if (s.get_dict().count(deg) == 0)
+        return Expression(0);
+    else
+
+        return (s.get_dict()).at(deg);*/
+}
+
+Expression MultivariateSeries::root(Expression &c, unsigned n)
+{
+    return pow_ex(c, 1/Expression(n));
+}
+
+MultivariateExprPolynomial
+MultivariateSeries::diff(const MultivariateExprPolynomial &s,
+                       const MultivariateExprPolynomial &var)
+{
+    RCP<const Basic> p = s.get_basic()->diff(var.get_var());
+    if (is_a<const MultivariatePolynomial>(*p))
+        return MultivariateExprPolynomial(rcp_static_cast<const MultivariatePolynomial>(p));
+    else
+        throw std::runtime_error("Not a MultivariatePolynomial");
+}
+
+MultivariateExprPolynomial
+MultivariateSeries::integrate(const MultivariateExprPolynomial &s,
+                            const MultivariateExprPolynomial &var)
+{
+    map_int_Expr dict;
+
+    for (auto &it : s.get_dict()) {
+        if (it.first[0] != -1) {
+            dict.insert(std::pair<int, Expression>(it.first[0] + 1, it.second / (it.first[0] + 1)));
+        } else {
+            throw std::runtime_error("Not Implemented");
+        }
+    }
+    return MultivariateExprPolynomial(MultivariatePolynomial::from_dict(s.get_vars(), std::move(dict))); 
+}
+
+MultivariateExprPolynomial
+MultivariateSeries::subs(const MultivariateExprPolynomial &s,
+                       const MultivariateExprPolynomial &var,
+                       const MultivariateExprPolynomial &r, unsigned prec)
+{
+    MultivariateExprPolynomial 
+    result(r.get_basic()->var_->get_name());
+    for (auto &i : s.get_dict())
+        result += i.second * pow(r, i.first, prec);
+    return result;
+}
+
+Expression MultivariateSeries::sin(const Expression& c)
+{
+    return SymEngine::sin(c.get_basic());
+}
+
+Expression MultivariateSeries::cos(const Expression& c)
+{
+    return SymEngine::cos(c.get_basic());
+}
+
+Expression MultivariateSeries::tan(const Expression& c)
+{
+    return SymEngine::tan(c.get_basic());
+}
+
+Expression MultivariateSeries::asin(const Expression& c)
+{
+    return SymEngine::asin(c.get_basic());
+}
+
+Expression MultivariateSeries::acos(const Expression& c)
+{
+    return SymEngine::acos(c.get_basic());
+}
+
+Expression MultivariateSeries::atan(const Expression& c)
+{
+    return SymEngine::atan(c.get_basic());
+}
+
+Expression MultivariateSeries::sinh(const Expression& c)
+{
+    return SymEngine::sinh(c.get_basic());
+}
+
+Expression MultivariateSeries::cosh(const Expression& c)
+{
+    return SymEngine::cosh(c.get_basic());
+}
+
+Expression MultivariateSeries::tanh(const Expression& c)
+{
+    return SymEngine::tanh(c.get_basic());
+}
+
+Expression MultivariateSeries::asinh(const Expression& c)
+{
+    return SymEngine::asinh(c.get_basic());
+}
+
+Expression MultivariateSeries::atanh(const Expression& c)
+{
+    return SymEngine::atanh(c.get_basic());
+}
+
+Expression MultivariateSeries::exp(const Expression& c)
+{
+    return SymEngine::exp(c.get_basic());
+}
+
+Expression MultivariateSeries::log(const Expression& c)
+{
+    return SymEngine::log(c.get_basic());
 }
 
 } // SymEngine

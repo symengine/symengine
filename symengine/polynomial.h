@@ -510,6 +510,15 @@ public:
     MultivariateExprPolynomial(const MultivariateExprPolynomial &) = default;
     MultivariateExprPolynomial(MultivariateExprPolynomial &&other) SYMENGINE_NOEXCEPT : poly_(std::move(other.poly_)) {}
     MultivariateExprPolynomial(RCP<const MultivariatePolynomial> p) : poly_(std::move(p)) {}
+    MultivariateExprPolynomial(int i)
+    {
+        poly_ = MultivariatePolynomial::from_dict({symbol("")}, { {{0},Expression(i)} });
+    }
+
+    MultivariateExprPolynomial(Expression e)
+    {
+        poly_ = MultivariatePolynomial::from_dict({symbol("")}, { {{0}, e} });
+    }
 
     MultivariateExprPolynomial &operator=(const MultivariateExprPolynomial &) = default;
     MultivariateExprPolynomial &operator=(MultivariateExprPolynomial &&other) SYMENGINE_NOEXCEPT {
@@ -550,6 +559,11 @@ public:
     friend MultivariateExprPolynomial operator*(const MultivariateExprPolynomial &a, const MultivariateExprPolynomial &b) {   
         return MultivariateExprPolynomial(mul_mult_poly(*(a.poly_), *(b.poly_)));
     }   
+
+
+    friend MultivariateExprPolynomial operator/(const MultivariateExprPolynomial &a, const Expression &b) {   
+        return a * (1/b);
+    }   
         
     MultivariateExprPolynomial &operator*=(const MultivariateExprPolynomial &other) {   
         poly_ = mul_mult_poly(*poly_, *(other.poly_));
@@ -566,6 +580,21 @@ public:
 
     const RCP<const Basic> get_basic() const {
         return poly_;
+    }
+
+    const umap_uvec_expr get_dict() const
+    {
+        return poly_->dict_;
+    }
+
+    const RCP<const Symbol> get_var() const
+    {
+        return *((poly_->vars_).begin());
+    }
+
+    const set_sym get_vars() const
+    {
+        return poly_->vars_;
     }
 
 }; //MultivariateExprPolynomial
