@@ -310,7 +310,6 @@ Expression MultivariateSeries::find_cf(const MultivariateExprPolynomial &s,
     if (s.get_dict().count(deg) == 0)
         return Expression(0);
     else
-
         return (s.get_dict()).at(deg);*/
 }
 
