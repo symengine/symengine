@@ -503,10 +503,12 @@ public:
                 if (p.first != 0)
                     d[p.first - 1] = p.second * p.first;
             }
-            return UnivariatePolynomial::from_dict(self.get_var(), std::move(d));
+            return make_rcp<const UnivariatePolynomial>(
+                self.get_var(), (--(d.end()))->first, std::move(d));
         } else {
             map_int_Expr d;
-            return UnivariatePolynomial::from_dict(self.get_var(), std::move(d));
+            return make_rcp<const UnivariatePolynomial>(self.get_var(), 0,
+                                                        std::move(d));
         }
     }
 

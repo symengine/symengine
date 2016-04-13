@@ -156,7 +156,7 @@ UnivariateSeries::diff(const UnivariateExprPolynomial &s,
 {
     RCP<const Basic> p = s.get_univariate_poly()->diff(var.get_univariate_poly()->get_var());
     if (is_a<const UnivariatePolynomial>(*p))
-        return UnivariateExprPolynomial(rcp_static_cast<const UnivariatePolynomial>(p));
+        return UnivariateExprPolynomial(std::move(rcp_static_cast<const UnivariatePolynomial>(p)));
     else
         throw std::runtime_error("Not a UnivariatePolynomial");
 }
