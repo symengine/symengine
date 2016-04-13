@@ -592,14 +592,16 @@ public:
 #include "symengine/type_codes.inc"
 #undef SYMENGINE_ENUM
 
-RCP<const Basic> diff(const RCP<const Basic> &arg, const RCP<const Symbol> &x) {
+RCP<const Basic> diff(const RCP<const Basic> &arg, const RCP<const Symbol> &x)
+{
     return arg->diff(x);
 }
 
 //! SymPy style differentiation for non-symbol variables
 // Since SymPy's differentiation makes no sense mathematically, it is
 // defined separately here for compatibility
-RCP<const Basic> sdiff(const RCP<const Basic> &arg, const RCP<const Basic> &x) {
+RCP<const Basic> sdiff(const RCP<const Basic> &arg, const RCP<const Basic> &x)
+{
     if (is_a<Symbol>(*x)) {
         return arg->diff(rcp_static_cast<const Symbol>(x));
     } else {

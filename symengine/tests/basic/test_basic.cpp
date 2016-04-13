@@ -151,14 +151,13 @@ TEST_CASE("Symbol dict: Basic", "[basic]")
     sb.insert(i2);
     sb.insert(y);
 
-    auto check_map_str =
-        [](std::string to_chk, std::vector<std::string> key, std::vector<std::string> val)
-    {
+    auto check_map_str = [](std::string to_chk, std::vector<std::string> key,
+                            std::vector<std::string> val) {
         if (key.size() != val.size())
             return false;
-        for (unsigned i = 0; i < key.size(); i++)
-        {
-            if (to_chk.find(key[i] + std::string(": " + val[i])) == std::string::npos)
+        for (unsigned i = 0; i < key.size(); i++) {
+            if (to_chk.find(key[i] + std::string(": " + val[i]))
+                == std::string::npos)
                 return false;
         }
         return true;

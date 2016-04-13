@@ -112,14 +112,15 @@ void DenseMatrix::transpose(MatrixBase &result) const
 }
 
 // Extract out a submatrix
-void DenseMatrix::submatrix(MatrixBase &result,
-                            unsigned row_start, unsigned col_start,
-                            unsigned row_end, unsigned col_end,
-                            unsigned row_step, unsigned col_step) const
+void DenseMatrix::submatrix(MatrixBase &result, unsigned row_start,
+                            unsigned col_start, unsigned row_end,
+                            unsigned col_end, unsigned row_step,
+                            unsigned col_step) const
 {
     if (is_a<DenseMatrix>(result)) {
         DenseMatrix &r = static_cast<DenseMatrix &>(result);
-        submatrix_dense(*this, r, row_start, col_start, row_end, col_end, row_step, col_step);
+        submatrix_dense(*this, r, row_start, col_start, row_end, col_end,
+                        row_step, col_step);
     }
 }
 
@@ -196,7 +197,8 @@ void jacobian(const DenseMatrix &A, const DenseMatrix &x, DenseMatrix &result)
         }
     }
     if (error) {
-        throw std::runtime_error("'x' must contain Symbols only. "
+        throw std::runtime_error(
+            "'x' must contain Symbols only. "
             "Use sjacobian for SymPy style differentiation");
     }
 }
@@ -216,7 +218,10 @@ void sjacobian(const DenseMatrix &A, const DenseMatrix &x, DenseMatrix &result)
             } else {
                 // TODO: Use a dummy symbol
                 const RCP<const Symbol> x_ = symbol("x_");
-                result.m_[i * result.col_ + j] = A.m_[i]->subs({{x.m_[j], x_}})->diff(x_)->subs({{x_, x.m_[j]}});
+                result.m_[i * result.col_ + j] = A.m_[i]
+                                                     ->subs({{x.m_[j], x_}})
+                                                     ->diff(x_)
+                                                     ->subs({{x_, x.m_[j]}});
             }
         }
     }
@@ -242,14 +247,16 @@ void sdiff(const DenseMatrix &A, const RCP<const Basic> &x, DenseMatrix &result)
     for (unsigned i = 0; i < result.row_; i++) {
         for (unsigned j = 0; j < result.col_; j++) {
             if (is_a<Symbol>(*x)) {
-                const RCP<const Symbol> x_
-                    = rcp_static_cast<const Symbol>(x);
-                result.m_[i * result.col_ + j] = A.m_[i * result.col_ + j]->diff(x_);
+                const RCP<const Symbol> x_ = rcp_static_cast<const Symbol>(x);
+                result.m_[i * result.col_ + j]
+                    = A.m_[i * result.col_ + j]->diff(x_);
             } else {
                 // TODO: Use a dummy symbol
                 const RCP<const Symbol> x_ = symbol("_x");
-                result.m_[i * result.col_ + j] =
-                    A.m_[i * result.col_ + j]->subs({{x, x_}})->diff(x_)->subs({{x_, x}});
+                result.m_[i * result.col_ + j] = A.m_[i * result.col_ + j]
+                                                     ->subs({{x, x_}})
+                                                     ->diff(x_)
+                                                     ->subs({{x_, x}});
             }
         }
     }
@@ -266,9 +273,8 @@ void transpose_dense(const DenseMatrix &A, DenseMatrix &B)
 }
 
 // ------------------------------- Submatrix ---------------------------------//
-void submatrix_dense(const DenseMatrix &A, DenseMatrix &B,
-                     unsigned row_start, unsigned col_start,
-                     unsigned row_end, unsigned col_end,
+void submatrix_dense(const DenseMatrix &A, DenseMatrix &B, unsigned row_start,
+                     unsigned col_start, unsigned row_end, unsigned col_end,
                      unsigned row_step, unsigned col_step)
 {
     SYMENGINE_ASSERT(row_end >= row_start and col_end >= col_start);
