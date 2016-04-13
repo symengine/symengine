@@ -39,8 +39,9 @@ RCP<const Basic> UnivariateSeries::as_basic() const
 umap_int_basic UnivariateSeries::as_dict() const
 {
     umap_int_basic map;
-    for (int i = 0; i <= get_degree(); i++)
-       map[i] = p_.get_univariate_poly()->get_dict().at(i).get_basic();
+    for (const auto &it : p_.get_univariate_poly()->get_dict())
+        if(it.second != 0)
+            map[it.first] = it.second.get_basic();
     return map;
 }
 
