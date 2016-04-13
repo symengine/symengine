@@ -78,8 +78,7 @@ public:
         precedence = PrecedenceEnum::Add;
     }
 
-    void bvisit(const Complex &x)
-    {
+    void bvisit(const Complex &x) {
         if (x.is_re_zero()) {
             if (x.imaginary_ == 1) {
                 precedence = PrecedenceEnum::Atom;
@@ -171,6 +170,7 @@ public:
     void bvisit(const Mul &x);
     void bvisit(const Pow &x);
     void bvisit(const UnivariateIntPolynomial &x);
+    void bvisit(const MultivariateIntPolynomial &x);
     void bvisit(const UnivariatePolynomial &x);
 #ifdef HAVE_SYMENGINE_PIRANHA
     void bvisit(const URatPSeriesPiranha &x);
