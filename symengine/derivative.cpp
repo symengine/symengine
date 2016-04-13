@@ -503,8 +503,11 @@ public:
                 if (p.first != 0)
                     d[p.first - 1] = p.second * p.first;
             }
+            int degree = 0;
+            if (!d.empty())
+                degree = (--(d.end()))->first;
             return make_rcp<const UnivariatePolynomial>(
-                self.get_var(), (--(d.end()))->first, std::move(d));
+                self.get_var(), degree, std::move(d));
         } else {
             map_int_Expr d;
             return make_rcp<const UnivariatePolynomial>(self.get_var(), 0,
