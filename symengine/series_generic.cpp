@@ -187,7 +187,7 @@ RCP<const MultivariateSeries> MultivariateSeries::series(const RCP<const Basic> 
                                                      const std::string &x,
                                                      unsigned int prec)
 {
-    MultivariateExprPolynomial p(MultivariatePolynomial::from_dict({symbol(x)}, { {{0}, 1} }));
+    MultivariateExprPolynomial p(MultivariatePolynomial::from_dict({symbol(x)}, { {{1}, 1} }));
     SeriesVisitor<MultivariateExprPolynomial, Expression, MultivariateSeries> visitor(std::move(p), x, prec);
     return visitor.series(t);
 }
@@ -227,7 +227,7 @@ RCP<const Basic> MultivariateSeries::get_coeff(int deg) const
 
 MultivariateExprPolynomial MultivariateSeries::var(const std::string &s)
 {
-    return MultivariateExprPolynomial(MultivariatePolynomial::from_dict({symbol(s)}, { {{0}, 1} }));
+    return MultivariateExprPolynomial(MultivariatePolynomial::from_dict({symbol(s)}, { {{1}, 1} }));
 }
 
 Expression MultivariateSeries::convert(const Basic &x)
@@ -334,30 +334,32 @@ MultivariateExprPolynomial
 MultivariateSeries::integrate(const MultivariateExprPolynomial &s,
                             const MultivariateExprPolynomial &var)
 {
-    map_int_Expr dict;
-
+    umap_uvec_expr dict;
+    set_sym vars;
+    vec_uint translator1;
+    unsigned int translator2;
+    unsigned int size = reconcile(translator1, translator2, vars, s.get_vars(), var.get_var());
     for (auto &it : s.get_dict()) {
-        if (it.first[0] != -1) {
-            dict.insert(std::pair<int, Expression>(it.first[0] + 1, it.second / (it.first[0] + 1)));
-        } else {
-            throw std::runtime_error("Not Implemented");
-        }
+        vec_uint v = translate(it.first, translator1, size);
+        v[translator2]++;
+        dict.insert(std::pair<vec_uint, Expression>(v, it.second / (v[translator2])));
     }
-    return MultivariateExprPolynomial(MultivariatePolynomial::from_dict(s.get_vars(), std::move(dict))); 
+    return MultivariateExprPolynomial(MultivariatePolynomial::from_dict(vars, std::move(dict))); 
 }
-
+/*
 MultivariateExprPolynomial
 MultivariateSeries::subs(const MultivariateExprPolynomial &s,
                        const MultivariateExprPolynomial &var,
                        const MultivariateExprPolynomial &r, unsigned prec)
 {
     MultivariateExprPolynomial 
-    result(r.get_basic()->var_->get_name());
-    for (auto &i : s.get_dict())
+    result(r.get_var());
+    for (auto &i : s.get_dict()) {       
         result += i.second * pow(r, i.first, prec);
+    }
     return result;
 }
-
+*/
 Expression MultivariateSeries::sin(const Expression& c)
 {
     return SymEngine::sin(c.get_basic());
