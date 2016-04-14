@@ -48,21 +48,6 @@ TEST_CASE("Create UnivariateSeries", "[UnivariateSeries]")
     REQUIRE(Q->__str__() == "x**3 + 2*x**2 + 1 + O(x**5)");
 }
 
-TEST_CASE("UnivariateSeries compare, as_basic, as_dict", "[UnivariateSeries]")
-{
-    RCP<const Symbol> x = symbol("x");
-    UnivariateExprPolynomial P(univariate_polynomial(x, {{0, 1}, {1, 2}}));
-    UnivariateExprPolynomial Q(univariate_polynomial(x, {{0, 1}, {1, symbol("b")}, {2, 1}}));
-    RCP<const UnivariateSeries> R = univariate_series(x, 4, P);
-    RCP<const UnivariateSeries> S = univariate_series(x, 5, Q);
-    umap_int_basic m = {{0, integer(1)}, {1, integer(2)}};
-
-    REQUIRE(R->compare(*R) == 0);
-    REQUIRE(R->compare(*S) == -1);
-    REQUIRE(S->as_basic()->__eq__(*S->as_basic()) == true);
-    REQUIRE(umap_eq(R->as_dict(), m) == true);
-}
-
 TEST_CASE("Adding two UnivariateSeries", "[UnivariateSeries]")
 {
     RCP<const Symbol> x  = symbol("x");
@@ -174,6 +159,21 @@ TEST_CASE("Integration of UnivariateSeries", "[UnivariateSeries]")
     UnivariateExprPolynomial c(univariate_polynomial(x, {{1, 1}, {2, 1}, {3, 1}}));
     REQUIRE_THROWS_AS(UnivariateSeries::integrate(a, UnivariateSeries::var("x")), std::runtime_error);
     REQUIRE(UnivariateSeries::integrate(b, UnivariateSeries::var("x")) == c);
+}
+
+TEST_CASE("UnivariateSeries: compare, as_basic, as_dict", "[UnivariateSeries]")
+{
+    RCP<const Symbol> x = symbol("x");
+    UnivariateExprPolynomial P(univariate_polynomial(x, {{0, 1}, {1, 2}}));
+    UnivariateExprPolynomial Q(univariate_polynomial(x, {{0, 1}, {1, symbol("b")}, {2, 1}}));
+    RCP<const UnivariateSeries> R = univariate_series(x, 4, P);
+    RCP<const UnivariateSeries> S = univariate_series(x, 5, Q);
+    umap_int_basic m = {{0, integer(1)}, {1, integer(2)}};
+
+    REQUIRE(R->compare(*R) == 0);
+    REQUIRE(R->compare(*S) == -1);
+    REQUIRE(S->as_basic()->__eq__(*S->as_basic()) == true);
+    REQUIRE(umap_eq(R->as_dict(), m) == true);
 }
 
 #define series_coeff(EX, SYM, PREC, COEFF)                                  \

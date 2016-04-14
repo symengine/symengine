@@ -381,10 +381,19 @@ public:
 
     static UnivariateExprPolynomial inverse(const UnivariateExprPolynomial &p)
     {
-        map_int_Expr dict;
-        for (const auto &it : p.get_univariate_poly()->get_dict())
-            dict[-it.first] = 1/ it.second;
-        return UnivariateExprPolynomial(univariate_polynomial(p.get_univariate_poly()->get_var(), std::move(dict)));
+        if(p.get_univariate_poly()->get_dict().size() == 0)
+            return UnivariateExprPolynomial(0);
+        else if(p.get_univariate_poly()->get_dict().size() == 1) {
+            map_int_Expr dict;
+            dict[-(p.get_univariate_poly()->get_dict().begin()->first)] = 1 / p.get_univariate_poly()->get_dict().begin()->second;
+            return UnivariateExprPolynomial(univariate_polynomial(p.get_univariate_poly()->get_var(), std::move(dict)));
+        }
+        else {
+            map_int_Expr dict;
+            Expression f = pow_ex(Expression(p.get_basic()), Expression(-1));
+            dict[-1] = f;
+            return UnivariateExprPolynomial(univariate_polynomial(p.get_univariate_poly()->get_var(), std::move(dict)));
+        }
     }
 
     Expression find_cf(int deg) const 
