@@ -71,3 +71,7 @@ add_test(test_parser ${PROJECT_BINARY_DIR}/test_parser)
 add_executable(test_sets test_sets.cpp)
 target_link_libraries(test_sets symengine catch)
 add_test(test_sets ${PROJECT_BINARY_DIR}/test_sets)
+
+add_executable(test_infinity test_infinity.cpp)
+target_link_libraries(test_infinity symengine catch)
+add_test(test_infinity ${PROJECT_BINARY_DIR}/test_infinity)

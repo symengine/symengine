@@ -519,7 +519,8 @@ public:
     }
 
     static RCP<const Basic> diff(const Infinit &self,
-            const RCP<const Symbol> &x) {
+                                 const RCP<const Symbol> &x)
+    {
         return zero;
     }
 
