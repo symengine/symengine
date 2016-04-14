@@ -43,7 +43,10 @@ bool Infinit::is_canonical(const RCP<const Number> &num) const
 	if(is_a<Complex>(*num) || is_a<ComplexDouble>(*num))
 		throw std::runtime_error("Not implemented for all directions");
 
-	return true;
+	if(num->is_one() || num->is_zero() || num->is_minus_one())
+		return true;
+
+	return false;
 }
 
 std::size_t Infinit::__hash__() const
