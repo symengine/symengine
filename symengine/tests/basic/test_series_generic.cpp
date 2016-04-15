@@ -46,6 +46,11 @@ TEST_CASE("Create UnivariateSeries", "[UnivariateSeries]")
     UnivariateExprPolynomial bpoly_(UnivariatePolynomial::from_dict(x, std::move(bdict_)));
     RCP<const UnivariateSeries> Q = UnivariateSeries::create(x, 5, bpoly_);
     REQUIRE(Q->__str__() == "x**3 + 2*x**2 + 1 + O(x**5)");
+
+    map_int_Expr cdict_ = {{0, symbol("c")}, {1, symbol("b")}, {2, symbol("a")}};
+    UnivariateExprPolynomial cpoly_(univariate_polynomial(x, std::move(cdict_)));
+    RCP<const UnivariateSeries> R = UnivariateSeries::create(x, 3, cpoly_);
+    REQUIRE(R->__str__() == "a*x**2 + b*x + c + O(x**3)");
 }
 
 TEST_CASE("Adding two UnivariateSeries", "[UnivariateSeries]")
@@ -77,11 +82,19 @@ TEST_CASE("Negative of a UnivariateSeries", "[UnivariateSeries]")
     UnivariateExprPolynomial apoly_(univariate_polynomial(x, std::move(adict_)));
     map_int_Expr bdict_ = {{0, -1}, {1, -2}, {2, -1}};
     UnivariateExprPolynomial bpoly_(univariate_polynomial(x, std::move(bdict_)));
+    map_int_Expr cdict_ = {{0, 1}, {1, symbol("a")}};
+    UnivariateExprPolynomial cpoly_(univariate_polynomial(x, std::move(adict_)));
+    map_int_Expr ddict_ = {{0, -1}, {1, mul(integer(-1), symbol("a"))}};
+    UnivariateExprPolynomial dpoly_(univariate_polynomial(x, std::move(bdict_)));
 
     RCP<const UnivariateSeries> a = UnivariateSeries::create(x, 5, apoly_);
     RCP<const Basic> b = neg(a);
     RCP<const UnivariateSeries> c = UnivariateSeries::create(x, 5, bpoly_);
+    RCP<const UnivariateSeries> d = UnivariateSeries::create(x, 5, cpoly_);
+    RCP<const Basic> e = neg(d);
+    RCP<const UnivariateSeries> f = UnivariateSeries::create(x, 5, dpoly_);
     REQUIRE(b->__cmp__(*c));
+    REQUIRE(e->__cmp__(*f));
 }
 
 TEST_CASE("Subtracting two UnivariateSeries", "[UnivariateSeries]")
@@ -205,6 +218,8 @@ TEST_CASE("Expression series expansion: Add ", "[Expansion of Add]")
     auto z = add(integer(1), x);
     z = sub(z, pow(x, integer(2)));
     z = add(z, pow(x, integer(4)));
+    auto a = sub(integer(1), pow(symbol("x"), integer(2)));
+    a = add(symbol("a"), a);
 
     auto vb = umap_short_basic{
         {0, integer(1)}, {1, integer(1)}, {2, integer(-1)}, {4, integer(1)}};
@@ -212,6 +227,9 @@ TEST_CASE("Expression series expansion: Add ", "[Expansion of Add]")
     auto vb1
         = umap_short_basic{{0, integer(1)}, {1, integer(1)}, {2, integer(-1)}};
     REQUIRE(expand_check_pairs(z, x, 3, vb1));
+    auto vc = umap_short_basic{
+        {0, add(integer(1), symbol("a"))}, {1, integer(0)}, {2, integer(-1)}};
+    REQUIRE(expand_check_pairs(a, x, 5, vc));
 }
 
 TEST_CASE("Expression series expansion: sin, cos", "[Expansion of sin, cos]")
@@ -224,6 +242,7 @@ TEST_CASE("Expression series expansion: sin, cos", "[Expansion of sin, cos]")
     auto z4 = mul(sin(x), cos(x));
     auto z5 = sin(atan(x));
     auto z6 = cos(div(x, sub(one, x)));
+    auto z7 = sin(mul(symbol("a"), x));
 
     REQUIRE(series_coeff(z1, x, 10, 9)->__eq__(*rational(1, 362880)));
     auto res = umap_short_basic{{0, integer(1)}, {2, rational(-1, 2)}};
@@ -232,6 +251,7 @@ TEST_CASE("Expression series expansion: sin, cos", "[Expansion of sin, cos]")
     REQUIRE(series_coeff(z4, x, 12, 11)->__eq__(*rational(-4, 155925)));
     REQUIRE(series_coeff(z5, x, 30, 27)->__eq__(*rational(-1300075, 8388608)));
     REQUIRE(series_coeff(z6, x, 15, 11)->__eq__(*rational(-125929, 362880)));
+    REQUIRE(series_coeff(z7, x, 10, 9)->__eq__(*mul((pow(symbol("a"), integer(9))), rational(1, 362880))));
 }
 
 TEST_CASE("Expression series expansion: division, inversion ",
@@ -248,8 +268,10 @@ TEST_CASE("Expression series expansion: division, inversion ",
     auto ex4 = div(one, sub(one, sin(x)));                     // 1/(1-sin(x))
     auto ex5 = div(one, x);
     auto ex6 = div(one, mul(x, sub(one, x)));
+    auto ex7 = div(one, mul(symbol("a"), x));
     auto res1 = umap_short_basic{{-1, integer(1)}};
     auto res2 = umap_short_basic{{-1, integer(1)}, {0, integer(1)}};
+    auto res3 = umap_short_basic{{-1, div(integer(1), symbol("a"))}};
 
     REQUIRE(series_coeff(ex1, x, 100, 99)->__eq__(*integer(1)));
     REQUIRE(series_coeff(ex2, x, 100, 35)->__eq__(*integer(9227465)));
@@ -257,6 +279,7 @@ TEST_CASE("Expression series expansion: division, inversion ",
     REQUIRE(series_coeff(ex4, x, 20, 10)->__eq__(*rational(1382, 14175)));
     REQUIRE(expand_check_pairs(ex5, x, 8, res1));
     REQUIRE(expand_check_pairs(ex6, x, 8, res2));
+    REQUIRE(expand_check_pairs(ex7, x, 8, res3));
 }
 
 TEST_CASE("Expression series expansion: roots", "[Expansion of root(ex)]")
