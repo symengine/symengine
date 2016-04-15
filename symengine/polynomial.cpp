@@ -460,8 +460,7 @@ UnivariatePolynomial::from_dict(const RCP<const Symbol> &var, map_int_Expr &&d)
 }
 
 void UnivariatePolynomial::dict_add_term(map_int_Expr &d,
-                                         const Expression &coef,
-                                         const int &n)
+                                         const Expression &coef, const int &n)
 {
     auto it = d.find(n);
     if (it == d.end())

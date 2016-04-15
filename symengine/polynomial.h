@@ -5,9 +5,8 @@
 #ifndef SYMENGINE_POLYNOMIALS_H
 #define SYMENGINE_POLYNOMIALS_H
 
-#include <symengine/monomials.h>
-#include <symengine/dict.h>
 #include <symengine/expression.h>
+#include <symengine/monomials.h>
 
 namespace SymEngine
 {
@@ -228,8 +227,7 @@ public:
 #else
     template <typename T>
 #endif
-    UnivariateExprPolynomial(T &&o)
-        : poly_(std::forward<T>(o))
+    UnivariateExprPolynomial(T &&o) : poly_(std::forward<T>(o))
     {
     }
     UnivariateExprPolynomial()
@@ -248,7 +246,7 @@ public:
     {
     }
     UnivariateExprPolynomial(std::string varname)
-        : poly_(UnivariatePolynomial::create(symbol(varname), {0 ,1}))
+        : poly_(UnivariatePolynomial::create(symbol(varname), {0, 1}))
     {
     }
     UnivariateExprPolynomial(RCP<const UnivariatePolynomial> p)
@@ -327,7 +325,7 @@ public:
 
     UnivariateExprPolynomial &operator/=(const Expression &other)
     {
-        poly_ = mul_uni_poly(poly_, UnivariateExprPolynomial(1/other).poly_);
+        poly_ = mul_uni_poly(poly_, UnivariateExprPolynomial(1 / other).poly_);
         return *this;
     }
 
@@ -370,8 +368,7 @@ public:
                 RCP<const Number> coef;
                 coef = zero;
                 Add::coef_dict_add_term(outArg((coef)), dict_, one, term);
-            }
-            else
+            } else
                 coeff = rcp_static_cast<const Number>(it.second.get_basic());
         }
         return Add::from_dict(coeff, std::move(dict_));

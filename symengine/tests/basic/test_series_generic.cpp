@@ -1,11 +1,8 @@
 #include "catch.hpp"
-#include <iostream>
 #include <chrono>
+#include <iostream>
 
 #include <symengine/series_generic.h>
-#include <symengine/mul.h>
-#include <symengine/pow.h>
-#include <symengine/dict.h>
 
 using SymEngine::UnivariatePolynomial;
 using SymEngine::UnivariateExprPolynomial;
@@ -36,32 +33,39 @@ using namespace SymEngine::literals;
 
 TEST_CASE("Create UnivariateSeries", "[UnivariateSeries]")
 {
-    RCP<const Symbol> x  = symbol("x");
+    RCP<const Symbol> x = symbol("x");
     map_int_Expr adict_ = {{0, 1}, {1, 2}, {2, 1}};
-    UnivariateExprPolynomial apoly_(univariate_polynomial(x, std::move(adict_)));
+    UnivariateExprPolynomial apoly_(
+        univariate_polynomial(x, std::move(adict_)));
     RCP<const UnivariateSeries> P = univariate_series(x, 2, apoly_);
     REQUIRE(P->__str__() == "x**2 + 2*x + 1 + O(x**2)");
 
     map_int_Expr bdict_ = {{0, 1}, {1, 0}, {2, 2}, {3, 1}};
-    UnivariateExprPolynomial bpoly_(UnivariatePolynomial::from_dict(x, std::move(bdict_)));
+    UnivariateExprPolynomial bpoly_(
+        UnivariatePolynomial::from_dict(x, std::move(bdict_)));
     RCP<const UnivariateSeries> Q = UnivariateSeries::create(x, 5, bpoly_);
     REQUIRE(Q->__str__() == "x**3 + 2*x**2 + 1 + O(x**5)");
 
-    map_int_Expr cdict_ = {{0, symbol("c")}, {1, symbol("b")}, {2, symbol("a")}};
-    UnivariateExprPolynomial cpoly_(univariate_polynomial(x, std::move(cdict_)));
+    map_int_Expr cdict_
+        = {{0, symbol("c")}, {1, symbol("b")}, {2, symbol("a")}};
+    UnivariateExprPolynomial cpoly_(
+        univariate_polynomial(x, std::move(cdict_)));
     RCP<const UnivariateSeries> R = UnivariateSeries::create(x, 3, cpoly_);
     REQUIRE(R->__str__() == "a*x**2 + b*x + c + O(x**3)");
 }
 
 TEST_CASE("Adding two UnivariateSeries", "[UnivariateSeries]")
 {
-    RCP<const Symbol> x  = symbol("x");
+    RCP<const Symbol> x = symbol("x");
     map_int_Expr adict_ = {{0, 1}, {1, 2}, {2, 1}};
-    UnivariateExprPolynomial apoly_(univariate_polynomial(x, std::move(adict_)));
+    UnivariateExprPolynomial apoly_(
+        univariate_polynomial(x, std::move(adict_)));
     map_int_Expr bdict_ = {{0, 2}, {1, 3}, {2, 4}};
-    UnivariateExprPolynomial bpoly_(univariate_polynomial(x, std::move(bdict_)));
+    UnivariateExprPolynomial bpoly_(
+        univariate_polynomial(x, std::move(bdict_)));
     map_int_Expr ddict_ = {{0, 3}, {1, 5}, {2, 5}};
-    UnivariateExprPolynomial dpoly_(univariate_polynomial(x, std::move(ddict_)));
+    UnivariateExprPolynomial dpoly_(
+        univariate_polynomial(x, std::move(ddict_)));
 
     RCP<const UnivariateSeries> a = UnivariateSeries::create(x, 5, apoly_);
     RCP<const UnivariateSeries> b = UnivariateSeries::create(x, 4, bpoly_);
@@ -77,15 +81,19 @@ TEST_CASE("Adding two UnivariateSeries", "[UnivariateSeries]")
 
 TEST_CASE("Negative of a UnivariateSeries", "[UnivariateSeries]")
 {
-    RCP<const Symbol> x  = symbol("x");
+    RCP<const Symbol> x = symbol("x");
     map_int_Expr adict_ = {{0, 1}, {1, 2}, {2, 1}};
-    UnivariateExprPolynomial apoly_(univariate_polynomial(x, std::move(adict_)));
+    UnivariateExprPolynomial apoly_(
+        univariate_polynomial(x, std::move(adict_)));
     map_int_Expr bdict_ = {{0, -1}, {1, -2}, {2, -1}};
-    UnivariateExprPolynomial bpoly_(univariate_polynomial(x, std::move(bdict_)));
+    UnivariateExprPolynomial bpoly_(
+        univariate_polynomial(x, std::move(bdict_)));
     map_int_Expr cdict_ = {{0, 1}, {1, symbol("a")}};
-    UnivariateExprPolynomial cpoly_(univariate_polynomial(x, std::move(adict_)));
+    UnivariateExprPolynomial cpoly_(
+        univariate_polynomial(x, std::move(adict_)));
     map_int_Expr ddict_ = {{0, -1}, {1, mul(integer(-1), symbol("a"))}};
-    UnivariateExprPolynomial dpoly_(univariate_polynomial(x, std::move(bdict_)));
+    UnivariateExprPolynomial dpoly_(
+        univariate_polynomial(x, std::move(bdict_)));
 
     RCP<const UnivariateSeries> a = UnivariateSeries::create(x, 5, apoly_);
     RCP<const Basic> b = neg(a);
@@ -99,15 +107,19 @@ TEST_CASE("Negative of a UnivariateSeries", "[UnivariateSeries]")
 
 TEST_CASE("Subtracting two UnivariateSeries", "[UnivariateSeries]")
 {
-    RCP<const Symbol> x  = symbol("x");
+    RCP<const Symbol> x = symbol("x");
     map_int_Expr adict_ = {{0, 1}, {1, 2}, {2, 1}};
-    UnivariateExprPolynomial apoly_(univariate_polynomial(x, std::move(adict_)));
+    UnivariateExprPolynomial apoly_(
+        univariate_polynomial(x, std::move(adict_)));
     map_int_Expr bdict_ = {{0, 2}, {1, 3}, {2, 4}};
-    UnivariateExprPolynomial bpoly_(univariate_polynomial(x, std::move(bdict_)));
+    UnivariateExprPolynomial bpoly_(
+        univariate_polynomial(x, std::move(bdict_)));
     map_int_Expr fdict_ = {{0, -1}, {1, -1}, {2, -3}};
-    UnivariateExprPolynomial fpoly_(univariate_polynomial(x, std::move(fdict_)));
+    UnivariateExprPolynomial fpoly_(
+        univariate_polynomial(x, std::move(fdict_)));
     map_int_Expr gdict_ = {{0, -1}, {1, -1}};
-    UnivariateExprPolynomial gpoly_(univariate_polynomial(x, std::move(gdict_)));
+    UnivariateExprPolynomial gpoly_(
+        univariate_polynomial(x, std::move(gdict_)));
 
     RCP<const UnivariateSeries> a = UnivariateSeries::create(x, 3, apoly_);
     RCP<const UnivariateSeries> b = UnivariateSeries::create(x, 4, bpoly_);
@@ -121,13 +133,18 @@ TEST_CASE("Subtracting two UnivariateSeries", "[UnivariateSeries]")
     REQUIRE(e->__cmp__(*f));
 }
 
-TEST_CASE("Multiplication of two UnivariateExprPolynomial with precision", "[UnivariateSeries]")
+TEST_CASE("Multiplication of two UnivariateExprPolynomial with precision",
+          "[UnivariateSeries]")
 {
-    RCP<const Symbol> x  = symbol("x");
-    UnivariateExprPolynomial a(univariate_polynomial(x, {{0, 1}, {1, 2}, {2, 1}}));
-    UnivariateExprPolynomial b(univariate_polynomial(x, {{0, -1}, {1, -2}, {2, -1}}));
-    UnivariateExprPolynomial c(univariate_polynomial(x, {{0, 1}, {1, 4}, {2, 6}, {3, 4}}));
-    UnivariateExprPolynomial d(univariate_polynomial(x, {{0, -1}, {1, -4}, {2, -6}, {3, -4}, {4, -1}}));
+    RCP<const Symbol> x = symbol("x");
+    UnivariateExprPolynomial a(
+        univariate_polynomial(x, {{0, 1}, {1, 2}, {2, 1}}));
+    UnivariateExprPolynomial b(
+        univariate_polynomial(x, {{0, -1}, {1, -2}, {2, -1}}));
+    UnivariateExprPolynomial c(
+        univariate_polynomial(x, {{0, 1}, {1, 4}, {2, 6}, {3, 4}}));
+    UnivariateExprPolynomial d(univariate_polynomial(
+        x, {{0, -1}, {1, -4}, {2, -6}, {3, -4}, {4, -1}}));
 
     UnivariateExprPolynomial e = UnivariateSeries::mul(a, a, 4);
     UnivariateExprPolynomial f = UnivariateSeries::mul(a, b, 5);
@@ -136,15 +153,20 @@ TEST_CASE("Multiplication of two UnivariateExprPolynomial with precision", "[Uni
     REQUIRE(f == d);
 }
 
-TEST_CASE("Exponentiation of UnivariateExprPolynomial with precision", "[UnivariateSeries]")
+TEST_CASE("Exponentiation of UnivariateExprPolynomial with precision",
+          "[UnivariateSeries]")
 {
-    RCP<const Symbol> x  = symbol("x");
+    RCP<const Symbol> x = symbol("x");
     UnivariateExprPolynomial zero(univariate_polynomial(symbol(""), {{0, 0}}));
     UnivariateExprPolynomial one(univariate_polynomial(symbol(""), {{0, 1}}));
-    UnivariateExprPolynomial a(univariate_polynomial(x, {{0, 1}, {1, 2}, {2, 1}}));
-    UnivariateExprPolynomial b(univariate_polynomial(x, {{0, -1}, {1, -2}, {2, -1}}));
-    UnivariateExprPolynomial c(univariate_polynomial(x, {{0, 1}, {1, 4}, {2, 6}, {3, 4}}));
-    UnivariateExprPolynomial d(univariate_polynomial(x, {{0, -1}, {1, -6}, {2, -15}, {3, -20}, {4, -15}}));
+    UnivariateExprPolynomial a(
+        univariate_polynomial(x, {{0, 1}, {1, 2}, {2, 1}}));
+    UnivariateExprPolynomial b(
+        univariate_polynomial(x, {{0, -1}, {1, -2}, {2, -1}}));
+    UnivariateExprPolynomial c(
+        univariate_polynomial(x, {{0, 1}, {1, 4}, {2, 6}, {3, 4}}));
+    UnivariateExprPolynomial d(univariate_polynomial(
+        x, {{0, -1}, {1, -6}, {2, -15}, {3, -20}, {4, -15}}));
 
     UnivariateExprPolynomial e = UnivariateSeries::pow(a, 2, 4);
     UnivariateExprPolynomial f = UnivariateSeries::pow(b, 3, 5);
@@ -158,19 +180,24 @@ TEST_CASE("Exponentiation of UnivariateExprPolynomial with precision", "[Univari
 
 TEST_CASE("Differentiation of UnivariateSeries", "[UnivariateSeries]")
 {
-    RCP<const Symbol> x  = symbol("x");
-    UnivariateExprPolynomial a(univariate_polynomial(x, {{0, 1}, {1, 2}, {2, 1}}));
+    RCP<const Symbol> x = symbol("x");
+    UnivariateExprPolynomial a(
+        univariate_polynomial(x, {{0, 1}, {1, 2}, {2, 1}}));
     UnivariateExprPolynomial b(univariate_polynomial(x, {{0, 2}, {1, 2}}));
     REQUIRE(UnivariateSeries::diff(a, UnivariateSeries::var("x")) == b);
 }
 
 TEST_CASE("Integration of UnivariateSeries", "[UnivariateSeries]")
 {
-    RCP<const Symbol> x  = symbol("x");
+    RCP<const Symbol> x = symbol("x");
     UnivariateExprPolynomial a(univariate_polynomial(x, {{-1, 1}}));
-    UnivariateExprPolynomial b(univariate_polynomial(x, {{0, 1}, {1, 2}, {2, 3}}));
-    UnivariateExprPolynomial c(univariate_polynomial(x, {{1, 1}, {2, 1}, {3, 1}}));
-    REQUIRE_THROWS_AS(UnivariateSeries::integrate(a, UnivariateSeries::var("x")), std::runtime_error);
+    UnivariateExprPolynomial b(
+        univariate_polynomial(x, {{0, 1}, {1, 2}, {2, 3}}));
+    UnivariateExprPolynomial c(
+        univariate_polynomial(x, {{1, 1}, {2, 1}, {3, 1}}));
+    REQUIRE_THROWS_AS(
+        UnivariateSeries::integrate(a, UnivariateSeries::var("x")),
+        std::runtime_error);
     REQUIRE(UnivariateSeries::integrate(b, UnivariateSeries::var("x")) == c);
 }
 
@@ -178,7 +205,8 @@ TEST_CASE("UnivariateSeries: compare, as_basic, as_dict", "[UnivariateSeries]")
 {
     RCP<const Symbol> x = symbol("x");
     UnivariateExprPolynomial P(univariate_polynomial(x, {{0, 1}, {1, 2}}));
-    UnivariateExprPolynomial Q(univariate_polynomial(x, {{0, 1}, {1, symbol("b")}, {2, 1}}));
+    UnivariateExprPolynomial Q(
+        univariate_polynomial(x, {{0, 1}, {1, symbol("b")}, {2, 1}}));
     RCP<const UnivariateSeries> R = univariate_series(x, 4, P);
     RCP<const UnivariateSeries> S = univariate_series(x, 5, Q);
     umap_int_basic m = {{0, integer(1)}, {1, integer(2)}};
@@ -189,14 +217,13 @@ TEST_CASE("UnivariateSeries: compare, as_basic, as_dict", "[UnivariateSeries]")
     REQUIRE(umap_eq(R->as_dict(), m) == true);
 }
 
-#define series_coeff(EX, SYM, PREC, COEFF)                                  \
-    UnivariateSeries::series(EX, SYM->get_name(), PREC)                     \
-        ->get_coeff(COEFF)
-#define invseries_coeff(EX, SYM, PREC, COEFF)                               \
-    UnivariateSeries::series_reverse(                                       \
-        UnivariateSeries::series(EX, SYM->get_name(), PREC)->get_poly(),    \
-        UnivariateExprPolynomial(SYM->get_name()), PREC)                    \
-        .find_cf(COEFF)                                                     \
+#define series_coeff(EX, SYM, PREC, COEFF)                                     \
+    UnivariateSeries::series(EX, SYM->get_name(), PREC)->get_coeff(COEFF)
+#define invseries_coeff(EX, SYM, PREC, COEFF)                                  \
+    UnivariateSeries::series_reverse(                                          \
+        UnivariateSeries::series(EX, SYM->get_name(), PREC)->get_poly(),       \
+        UnivariateExprPolynomial(SYM->get_name()), PREC)                       \
+        .find_cf(COEFF)                                                        \
         .get_basic()
 
 static bool expand_check_pairs(const RCP<const Basic> &ex,
@@ -205,8 +232,7 @@ static bool expand_check_pairs(const RCP<const Basic> &ex,
 {
     auto ser = SymEngine::UnivariateSeries::series(ex, x->get_name(), prec);
     for (auto it : pairs) {
-        if (not it.second->__eq__(
-                *(ser->get_coeff(it.first))))
+        if (not it.second->__eq__(*(ser->get_coeff(it.first))))
             return false;
     }
     return true;
@@ -251,7 +277,9 @@ TEST_CASE("Expression series expansion: sin, cos", "[Expansion of sin, cos]")
     REQUIRE(series_coeff(z4, x, 12, 11)->__eq__(*rational(-4, 155925)));
     REQUIRE(series_coeff(z5, x, 30, 27)->__eq__(*rational(-1300075, 8388608)));
     REQUIRE(series_coeff(z6, x, 15, 11)->__eq__(*rational(-125929, 362880)));
-    REQUIRE(series_coeff(z7, x, 10, 9)->__eq__(*mul((pow(symbol("a"), integer(9))), rational(1, 362880))));
+    REQUIRE(series_coeff(z7, x, 10, 9)
+                ->__eq__(
+                    *mul((pow(symbol("a"), integer(9))), rational(1, 362880))));
 }
 
 TEST_CASE("Expression series expansion: division, inversion ",

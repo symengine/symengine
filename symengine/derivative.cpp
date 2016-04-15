@@ -1,18 +1,18 @@
-#include <symengine/basic.h>
-#include <symengine/symbol.h>
 #include <symengine/add.h>
-#include <symengine/integer.h>
-#include <symengine/rational.h>
+#include <symengine/basic.h>
 #include <symengine/complex.h>
-#include <symengine/mul.h>
-#include <symengine/pow.h>
-#include <symengine/functions.h>
-#include <symengine/constants.h>
-#include <symengine/visitor.h>
-#include <symengine/polynomial.h>
 #include <symengine/complex_double.h>
 #include <symengine/complex_mpc.h>
+#include <symengine/constants.h>
+#include <symengine/functions.h>
+#include <symengine/integer.h>
+#include <symengine/mul.h>
+#include <symengine/polynomial.h>
+#include <symengine/pow.h>
+#include <symengine/rational.h>
 #include <symengine/sets.h>
+#include <symengine/symbol.h>
+#include <symengine/visitor.h>
 
 namespace SymEngine
 {
@@ -509,8 +509,8 @@ public:
             int degree = 0;
             if (!d.empty())
                 degree = (--(d.end()))->first;
-            return make_rcp<const UnivariatePolynomial>(
-                self.get_var(), degree, std::move(d));
+            return make_rcp<const UnivariatePolynomial>(self.get_var(), degree,
+                                                        std::move(d));
         } else {
             map_int_Expr d;
             return make_rcp<const UnivariatePolynomial>(self.get_var(), 0,

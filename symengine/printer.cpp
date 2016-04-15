@@ -419,9 +419,11 @@ void StrPrinter::bvisit(const UnivariatePolynomial &x)
     str_ = s.str();
 }
 
-void StrPrinter::bvisit(const UnivariateSeries &x) {
+void StrPrinter::bvisit(const UnivariateSeries &x)
+{
     std::ostringstream o;
-    o << x.get_poly() << " + O(" << x.get_var() << "**" << x.get_degree() << ")";
+    o << x.get_poly() << " + O(" << x.get_var() << "**" << x.get_degree()
+      << ")";
     str_ = o.str();
 }
 
