@@ -36,21 +36,4 @@ TEST_CASE("Expression series expansion interface", "[Expansion interface]")
     REQUIRE(rcp_static_cast<const Number>(ser->as_dict()[8])->is_one());
     REQUIRE(ser->as_basic()->__str__()
             == "1 - x + x**2 - x**3 + x**4 - x**5 + x**6 - x**7 + x**8 - x**9");
-
-#ifndef HAVE_SYMENGINE_PIRANHA
-    auto ex1 = sin(add(integer(1), x));
-    REQUIRE_THROWS_AS(series(ex1, x, 10), std::runtime_error);
-    auto ex2 = log(x);
-    REQUIRE_THROWS_AS(series(ex2, x, 10), std::runtime_error);
-    auto ex3 = exp(add(integer(1), x));
-    REQUIRE_THROWS_AS(series(ex3, x, 10), std::runtime_error);
-    auto ex4 = tanh(add(integer(1), x));
-    REQUIRE_THROWS_AS(series(ex4, x, 10), std::runtime_error);
-    auto ex5 = div(integer(1), x);
-    REQUIRE_THROWS_AS(series(ex5, x, 10), std::runtime_error);
-    auto ex6 = add(integer(1), x);
-    REQUIRE_THROWS_AS(series_invfunc(ex6, x, 10), std::runtime_error);
-    auto ex7 = lambertw(x);
-    REQUIRE_THROWS_AS(series(ex7, x, 10), std::runtime_error);
-#endif
 }
