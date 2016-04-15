@@ -1,19 +1,19 @@
-#include <symengine/basic.h>
-#include <symengine/symbol.h>
 #include <symengine/add.h>
-#include <symengine/integer.h>
-#include <symengine/rational.h>
+#include <symengine/basic.h>
 #include <symengine/complex.h>
-#include <symengine/mul.h>
-#include <symengine/pow.h>
-#include <symengine/functions.h>
-#include <symengine/constants.h>
-#include <symengine/visitor.h>
-#include <symengine/polynomial.h>
 #include <symengine/complex_double.h>
 #include <symengine/complex_mpc.h>
-#include <symengine/sets.h>
+#include <symengine/constants.h>
+#include <symengine/functions.h>
 #include <symengine/infinity.h>
+#include <symengine/integer.h>
+#include <symengine/mul.h>
+#include <symengine/polynomial.h>
+#include <symengine/pow.h>
+#include <symengine/rational.h>
+#include <symengine/sets.h>
+#include <symengine/symbol.h>
+#include <symengine/visitor.h>
 
 namespace SymEngine
 {

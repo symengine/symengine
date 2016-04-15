@@ -1,6 +1,7 @@
 #include "catch.hpp"
 #include <iostream>
 
+#include <SymEngine/complex.h>
 #include <symengine/basic.h>
 #include <symengine/infinity.h>
 #include <symengine/symengine_rcp.h>
@@ -20,6 +21,9 @@ using SymEngine::infinit;
 using SymEngine::rcp_dynamic_cast;
 using SymEngine::Complex;
 using SymEngine::symbol;
+using SymEngine::Inf;
+using SymEngine::NegInf;
+using SymEngine::ComplexInf;
 
 TEST_CASE("Constructors for Infinity", "[Infinity]")
 {
@@ -50,4 +54,27 @@ TEST_CASE("Constructors for Infinity", "[Infinity]")
     b = Infinit::from_direction(im1);
     REQUIRE(a->__str__() == "+oo");
     REQUIRE(b->__str__() == "-oo");
+
+    Infinit inf = Infinit();
+    REQUIRE(inf.__str__() == "+oo");
+}
+
+TEST_CASE("Hash Size for Infinity", "[Infinity]")
+{
+    RCP<const Infinit> a = infinit(1);
+    RCP<const Infinit> b = infinit(0);
+
+    // REQUIRE(a->__hash__() == b->__hash__());
+    // REQUIRE(a->__hash__() == infinit(1)->__hash__());
+}
+
+TEST_CASE("Infinity Constants", "[Infinity]")
+{
+    RCP<const Infinit> a = Inf;
+    RCP<const Infinit> b = NegInf;
+    RCP<const Infinit> c = ComplexInf;
+
+    REQUIRE(a->__str__() == "+oo");
+    REQUIRE(b->__str__() == "-oo");
+    REQUIRE(c->__str__() == "zoo");
 }

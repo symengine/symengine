@@ -7,8 +7,6 @@
 #define SYMENGINE_INFINITY_H
 
 #include <symengine/basic.h>
-#include <symengine/complex.h>
-#include <symengine/complex_double.h>
 #include <symengine/number.h>
 
 namespace SymEngine

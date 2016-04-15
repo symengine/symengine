@@ -1,5 +1,7 @@
-#include <symengine/infinity.h>
+#include <symengine/complex.h>
+#include <symengine/complex_double.h>
 #include <symengine/constants.h>
+#include <symengine/infinity.h>
 
 namespace SymEngine
 {

@@ -1,10 +1,10 @@
+#include <symengine/add.h>
+#include <symengine/complex.h>
 #include <symengine/constants.h>
 #include <symengine/functions.h>
-#include <symengine/complex.h>
-#include <symengine/mul.h>
-#include <symengine/add.h>
-#include <symengine/pow.h>
 #include <symengine/infinity.h>
+#include <symengine/mul.h>
+#include <symengine/pow.h>
 
 namespace SymEngine
 {
