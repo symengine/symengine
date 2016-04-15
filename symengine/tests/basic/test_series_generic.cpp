@@ -128,7 +128,7 @@ TEST_CASE("Multiplication of two UnivariateExprPolynomial with precision", "[Uni
     UnivariateExprPolynomial b(univariate_polynomial(x, {{0, -1}, {1, -2}, {2, -1}}));
     UnivariateExprPolynomial c(univariate_polynomial(x, {{0, 1}, {1, 4}, {2, 6}, {3, 4}}));
     UnivariateExprPolynomial d(univariate_polynomial(x, {{0, -1}, {1, -4}, {2, -6}, {3, -4}, {4, -1}}));
-    
+
     UnivariateExprPolynomial e = UnivariateSeries::mul(a, a, 4);
     UnivariateExprPolynomial f = UnivariateSeries::mul(a, b, 5);
 
@@ -145,11 +145,11 @@ TEST_CASE("Exponentiation of UnivariateExprPolynomial with precision", "[Univari
     UnivariateExprPolynomial b(univariate_polynomial(x, {{0, -1}, {1, -2}, {2, -1}}));
     UnivariateExprPolynomial c(univariate_polynomial(x, {{0, 1}, {1, 4}, {2, 6}, {3, 4}}));
     UnivariateExprPolynomial d(univariate_polynomial(x, {{0, -1}, {1, -6}, {2, -15}, {3, -20}, {4, -15}}));
-    
+
     UnivariateExprPolynomial e = UnivariateSeries::pow(a, 2, 4);
     UnivariateExprPolynomial f = UnivariateSeries::pow(b, 3, 5);
     UnivariateExprPolynomial g = UnivariateSeries::pow(a, 0, 2);
-    
+
     REQUIRE(e == c);
     REQUIRE(f == d);
     REQUIRE(g == one);
@@ -191,7 +191,7 @@ TEST_CASE("UnivariateSeries: compare, as_basic, as_dict", "[UnivariateSeries]")
 
 #define series_coeff(EX, SYM, PREC, COEFF)                                  \
     UnivariateSeries::series(EX, SYM->get_name(), PREC)                     \
-        ->get_coeff(COEFF)                                                     
+        ->get_coeff(COEFF)
 #define invseries_coeff(EX, SYM, PREC, COEFF)                               \
     UnivariateSeries::series_reverse(                                       \
         UnivariateSeries::series(EX, SYM->get_name(), PREC)->get_poly(),    \

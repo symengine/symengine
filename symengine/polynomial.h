@@ -247,7 +247,7 @@ public:
         : poly_(UnivariatePolynomial::create(symbol(""), {Expression(i)}))
     {
     }
-    UnivariateExprPolynomial(std::string varname) 
+    UnivariateExprPolynomial(std::string varname)
         : poly_(UnivariatePolynomial::create(symbol(varname), {0 ,1}))
     {
     }
@@ -323,14 +323,14 @@ public:
     {
         poly_ = mul_uni_poly(poly_, other.poly_);
         return *this;
-    }   
-   
-    UnivariateExprPolynomial &operator/=(const Expression &other) 
+    }
+
+    UnivariateExprPolynomial &operator/=(const Expression &other)
     {
         poly_ = mul_uni_poly(poly_, UnivariateExprPolynomial(1/other).poly_);
         return *this;
     }
-     
+
     bool operator==(const UnivariateExprPolynomial &other) const
     {
         return eq(*poly_, *other.poly_);
@@ -379,14 +379,14 @@ public:
         return poly_->compare(*other.poly_);
     }
 
-    Expression find_cf(int deg) const 
+    Expression find_cf(int deg) const
     {
         if (poly_->get_dict().find(deg) != poly_->get_dict().end()) {
             return poly_->get_dict().at(deg);
         } else {
             return Expression(0);
         }
-    } 
+    }
 }; // UnivariateExprPolynomial
 
 } // SymEngine

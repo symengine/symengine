@@ -111,10 +111,10 @@ UnivariateSeries::pow(const UnivariateExprPolynomial &base, int exp,
     UnivariateExprPolynomial x(base);
     UnivariateExprPolynomial y(1);
     while (exp > 1) {
-        if (exp % 2 == 0) { 
+        if (exp % 2 == 0) {
             x = mul(x, x, prec);
             exp /= 2;
-        } 
+        }
         else {
             y = mul(x, y, prec);
             x = mul(x, x, prec);
@@ -162,7 +162,7 @@ UnivariateSeries::integrate(const UnivariateExprPolynomial &s,
             throw std::runtime_error("Not Implemented");
         }
     }
-    return UnivariateExprPolynomial(univariate_polynomial(var.get_univariate_poly()->get_var(), std::move(dict))); 
+    return UnivariateExprPolynomial(univariate_polynomial(var.get_univariate_poly()->get_var(), std::move(dict)));
 }
 
 UnivariateExprPolynomial
