@@ -271,7 +271,7 @@ TEST_CASE("Expression series expansion: division, inversion ",
     auto ex7 = div(one, mul(symbol("a"), x));
     auto res1 = umap_short_basic{{-1, integer(1)}};
     auto res2 = umap_short_basic{{-1, integer(1)}, {0, integer(1)}};
-    auto res3 = umap_short_basic{{-1, symbol("a")}};
+    auto res3 = umap_short_basic{{-1, div(integer(1), symbol("a"))}};
 
     REQUIRE(series_coeff(ex1, x, 100, 99)->__eq__(*integer(1)));
     REQUIRE(series_coeff(ex2, x, 100, 35)->__eq__(*integer(9227465)));
@@ -279,7 +279,7 @@ TEST_CASE("Expression series expansion: division, inversion ",
     REQUIRE(series_coeff(ex4, x, 20, 10)->__eq__(*rational(1382, 14175)));
     REQUIRE(expand_check_pairs(ex5, x, 8, res1));
     REQUIRE(expand_check_pairs(ex6, x, 8, res2));
-    REQUIRE(expand_check_pairs(ex7, x, 5, res3));
+    REQUIRE(expand_check_pairs(ex7, x, 8, res3));
 }
 
 TEST_CASE("Expression series expansion: roots", "[Expansion of root(ex)]")
