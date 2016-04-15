@@ -46,6 +46,11 @@ TEST_CASE("Create UnivariateSeries", "[UnivariateSeries]")
     UnivariateExprPolynomial bpoly_(UnivariatePolynomial::from_dict(x, std::move(bdict_)));
     RCP<const UnivariateSeries> Q = UnivariateSeries::create(x, 5, bpoly_);
     REQUIRE(Q->__str__() == "x**3 + 2*x**2 + 1 + O(x**5)");
+
+    map_int_Expr cdict_ = {{0, symbol("c")}, {1, symbol("b")}, {2, symbol("a")}};
+    UnivariateExprPolynomial cpoly_(univariate_polynomial(x, std::move(cdict_)));
+    RCP<const UnivariateSeries> R = UnivariateSeries::create(x, 3, cpoly_);
+    REQUIRE(R->__str__() == "a*x**2 + b*x + c + O(x**3)");
 }
 
 TEST_CASE("Adding two UnivariateSeries", "[UnivariateSeries]")
@@ -77,11 +82,19 @@ TEST_CASE("Negative of a UnivariateSeries", "[UnivariateSeries]")
     UnivariateExprPolynomial apoly_(univariate_polynomial(x, std::move(adict_)));
     map_int_Expr bdict_ = {{0, -1}, {1, -2}, {2, -1}};
     UnivariateExprPolynomial bpoly_(univariate_polynomial(x, std::move(bdict_)));
+    map_int_Expr cdict_ = {{0, 1}, {1, symbol("a")}};
+    UnivariateExprPolynomial cpoly_(univariate_polynomial(x, std::move(adict_)));
+    map_int_Expr ddict_ = {{0, -1}, {1, mul(integer(-1), symbol("a"))}};
+    UnivariateExprPolynomial dpoly_(univariate_polynomial(x, std::move(bdict_)));
 
     RCP<const UnivariateSeries> a = UnivariateSeries::create(x, 5, apoly_);
     RCP<const Basic> b = neg(a);
     RCP<const UnivariateSeries> c = UnivariateSeries::create(x, 5, bpoly_);
+    RCP<const UnivariateSeries> d = UnivariateSeries::create(x, 5, cpoly_);
+    RCP<const Basic> e = neg(d);
+    RCP<const UnivariateSeries> f = UnivariateSeries::create(x, 5, dpoly_);
     REQUIRE(b->__cmp__(*c));
+    REQUIRE(e->__cmp__(*f));
 }
 
 TEST_CASE("Subtracting two UnivariateSeries", "[UnivariateSeries]")
