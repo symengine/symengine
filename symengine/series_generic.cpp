@@ -94,8 +94,12 @@ UnivariateExprPolynomial
 UnivariateSeries::pow(const UnivariateExprPolynomial &base, int exp,
                       unsigned prec)
 {
-    if (exp < 0)
-        return UnivariateSeries::pow(UnivariateExprPolynomial::inverse(base), -exp, prec);
+    SYMENGINE_ASSERT(dict.size() == 1)
+    if (exp < 0) {
+        map_int_Expr dict;
+        dict[-(base.get_univariate_poly()->get_dict().begin()->first)] = 1 / base.get_univariate_poly()->get_dict().begin()->second;
+        return pow(UnivariateExprPolynomial(univariate_polynomial(base.get_univariate_poly()->get_var(), std::move(dict))), -exp, prec);
+    }
     if (exp == 0) {
         if (base == 0) {
             throw std::runtime_error("Error: 0**0 is undefined.");
