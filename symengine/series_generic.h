@@ -20,18 +20,18 @@ class UnivariateSeries : public SeriesBase<UnivariateExprPolynomial, Expression,
 public:
     IMPLEMENT_TYPEID(UNIVARIATESERIES)
     UnivariateSeries(const UnivariateExprPolynomial &sp,
-                     const std::string varname, const unsigned degree) 
+                     const std::string varname, const unsigned degree)
         : SeriesBase(std::move(sp), varname, degree)
     {
     }
-    
+
     static RCP<const UnivariateSeries>
     create(const RCP<const Symbol> &var, const unsigned int &prec,
-           const UnivariateExprPolynomial &s) 
+           const UnivariateExprPolynomial &s)
     {
         return make_rcp<const UnivariateSeries>(std::move(s), var->get_name(), prec);
     }
-      
+
     static RCP<const UnivariateSeries> series(const RCP<const Basic> &t, const std::string &x, unsigned int prec);
     virtual std::size_t __hash__() const;
     virtual int compare(const Basic &o) const;
@@ -51,20 +51,20 @@ public:
     static UnivariateExprPolynomial diff(const UnivariateExprPolynomial &s, const UnivariateExprPolynomial &var);
     static UnivariateExprPolynomial integrate(const UnivariateExprPolynomial &s, const UnivariateExprPolynomial &var);
     static UnivariateExprPolynomial subs(const UnivariateExprPolynomial &s, const UnivariateExprPolynomial &var, const UnivariateExprPolynomial &r, unsigned prec);
-   
-    static Expression sin(const Expression &c); 
-    static Expression cos(const Expression &c); 
-    static Expression tan(const Expression &c); 
-    static Expression asin(const Expression &c); 
-    static Expression acos(const Expression &c); 
-    static Expression atan(const Expression &c); 
-    static Expression sinh(const Expression &c); 
-    static Expression cosh(const Expression &c); 
-    static Expression tanh(const Expression &c); 
-    static Expression asinh(const Expression &c); 
+
+    static Expression sin(const Expression &c);
+    static Expression cos(const Expression &c);
+    static Expression tan(const Expression &c);
+    static Expression asin(const Expression &c);
+    static Expression acos(const Expression &c);
+    static Expression atan(const Expression &c);
+    static Expression sinh(const Expression &c);
+    static Expression cosh(const Expression &c);
+    static Expression tanh(const Expression &c);
+    static Expression asinh(const Expression &c);
     static Expression acosh(const Expression &c);
-    static Expression atanh(const Expression &c); 
-    static Expression exp(const Expression &c); 
+    static Expression atanh(const Expression &c);
+    static Expression exp(const Expression &c);
     static Expression log(const Expression &c);
 };
 

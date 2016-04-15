@@ -619,7 +619,7 @@ RCP<const UnivariatePolynomial> mul_uni_poly(RCP<const UnivariatePolynomial> a,
     } else {
         var = a->get_var();
     }
-    
+
     if (a->get_dict().empty() and b->get_dict().empty())
         return univariate_polynomial(var, {{0, 0}});
 
