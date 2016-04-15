@@ -136,21 +136,20 @@ RCP<const Number> Infinit::mul(const Number &other) const
     }
 }
 
+// TODO
 RCP<const Number> Infinit::div(const Number &other) const
 {
     return zero;
 }
+// TODO
 RCP<const Number> Infinit::pow(const Number &other) const
 {
     return zero;
 }
+// TODO
 RCP<const Number> Infinit::rpow(const Number &other) const
 {
     return zero;
 }
-// RCP<const Number> Infinit::pow(const Number &other) const
-// {
-
-// }
 
 } // SymEngine
