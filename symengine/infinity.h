@@ -92,9 +92,9 @@ public:
     RCP<const Number> add(const Number &other) const;
     RCP<const Number> sub(const Number &other) const;
     RCP<const Number> mul(const Number &other) const;
-    RCP<const Number> div(const Number &other) const;
-    RCP<const Number> pow(const Number &other) const;
-    RCP<const Number> rpow(const Number &other) const;
+    RCP<const Number> div(const Number &other) const; //TODO
+    RCP<const Number> pow(const Number &other) const; //TODO
+    RCP<const Number> rpow(const Number &other) const; //TODO
 };
 
 inline RCP<const Infinit> infinit(const int &n = 1)

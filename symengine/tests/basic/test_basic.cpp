@@ -14,6 +14,7 @@
 #include <symengine/functions.h>
 #include <symengine/visitor.h>
 #include <symengine/eval_double.h>
+#include <symengine/derivative.h>
 
 using SymEngine::Basic;
 using SymEngine::Add;
@@ -21,7 +22,20 @@ using SymEngine::Mul;
 using SymEngine::Symbol;
 using SymEngine::symbol;
 using SymEngine::umap_basic_num;
+using SymEngine::map_basic_num;
 using SymEngine::map_basic_basic;
+using SymEngine::umap_basic_basic;
+using SymEngine::map_uint_mpz;
+using SymEngine::map_uint_mpz_eq;
+using SymEngine::map_uint_mpz_compare;
+using SymEngine::map_int_Expr;
+using SymEngine::map_int_Expr_eq;
+using SymEngine::map_int_Expr_compare;
+using SymEngine::multiset_basic;
+using SymEngine::multiset_basic_eq;
+using SymEngine::multiset_basic_compare;
+using SymEngine::vec_basic;
+using SymEngine::set_basic;
 using SymEngine::Integer;
 using SymEngine::integer;
 using SymEngine::Rational;
@@ -41,6 +55,10 @@ using SymEngine::free_symbols;
 using SymEngine::function_symbol;
 using SymEngine::rational_class;
 using SymEngine::pi;
+using SymEngine::diff;
+using SymEngine::sdiff;
+
+using namespace SymEngine::literals;
 
 TEST_CASE("Symbol hash: Basic", "[basic]")
 {
@@ -74,20 +92,149 @@ TEST_CASE("Symbol hash: Basic", "[basic]")
 
 TEST_CASE("Symbol dict: Basic", "[basic]")
 {
-    umap_basic_num d;
+    umap_basic_num ubn;
+    map_basic_num mbn;
+    umap_basic_basic ubb;
+    map_basic_basic mbb;
+    vec_basic vb;
+    set_basic sb;
     RCP<const Basic> x = symbol("x");
     RCP<const Basic> x2 = symbol("x");
     RCP<const Basic> y = symbol("y");
+    RCP<const Number> i2 = integer(2);
+    RCP<const Number> i3 = integer(3);
     bool p = (x != x2);
     REQUIRE(p);           // The instances are different...
     REQUIRE(eq(*x, *x2)); // ...but equal in the SymPy sense
 
-    insert(d, x, integer(2));
-    insert(d, y, integer(3));
+    std::stringstream buffer;
+    buffer << ubn;
+    REQUIRE(buffer.str() == "{}");
+    insert(ubn, x, i2);
+    buffer.str("");
+    buffer << ubn;
+    REQUIRE(buffer.str() == "{x: 2}");
+    insert(ubn, y, i3);
+    buffer.str("");
+    buffer << mbn;
+    REQUIRE(buffer.str() == "{}");
+    insert(mbn, x, i2);
+    insert(mbn, y, i3);
+    buffer.str("");
+    buffer << mbb;
+    REQUIRE(buffer.str() == "{}");
+    insert(mbb, x, i2);
+    insert(mbb, y, i3);
+    buffer.str("");
+    buffer << ubb;
+    REQUIRE(buffer.str() == "{}");
+    insert(ubb, x, i2);
+    insert(ubb, y, i3);
+    buffer.str("");
+    buffer << vb;
+    REQUIRE(buffer.str() == "[]");
+    vb.push_back(x);
+    vb.push_back(i3);
+    buffer.str("");
+    buffer << vb;
+    REQUIRE(buffer.str() == "[x, 3]");
+    REQUIRE(vec_basic_eq(vb, {x, i3}));
+    REQUIRE(vec_basic_compare(vb, {x, i3}) == 0);
+    REQUIRE(not vec_basic_eq(vb, {i3, x}));
+    REQUIRE(vec_basic_eq_perm(vb, {i3, x}));
+    REQUIRE(not vec_basic_eq(vb, {i3}));
+    REQUIRE(not vec_basic_eq_perm(vb, {i3}));
+    REQUIRE(vec_basic_compare(vb, {i3}) == 1);
+    buffer.str("");
+    buffer << sb;
+    REQUIRE(buffer.str() == "[]");
+    sb.insert(i2);
+    sb.insert(y);
 
-    // Test printing:
-    std::cout << d << std::endl;
-    std::cout << *x << std::endl;
+    auto check_map_str = [](std::string to_chk, std::vector<std::string> key,
+                            std::vector<std::string> val) {
+        if (key.size() != val.size())
+            return false;
+        for (unsigned i = 0; i < key.size(); i++) {
+            if (to_chk.find(key[i] + std::string(": " + val[i]))
+                == std::string::npos)
+                return false;
+        }
+        return true;
+    };
+
+    buffer.str("");
+    buffer << ubn;
+    REQUIRE(check_map_str(buffer.str(), {"x", "y"}, {"2", "3"}));
+    buffer.str("");
+    buffer << mbn;
+    REQUIRE(check_map_str(buffer.str(), {"x", "y"}, {"2", "3"}));
+    buffer.str("");
+    buffer << mbb;
+    REQUIRE(check_map_str(buffer.str(), {"x", "y"}, {"2", "3"}));
+    buffer.str("");
+    buffer << ubb;
+    REQUIRE(check_map_str(buffer.str(), {"x", "y"}, {"2", "3"}));
+    buffer.str("");
+    buffer << ubb;
+    REQUIRE(check_map_str(buffer.str(), {"x", "y"}, {"2", "3"}));
+    buffer.str("");
+    buffer << vb;
+    bool check_vec_str;
+    check_vec_str = buffer.str() == "[x, 3]" or buffer.str() == "[3, x]";
+    REQUIRE(check_vec_str);
+    buffer.str("");
+    buffer << sb;
+    check_vec_str = buffer.str() == "[2, y]" or buffer.str() == "[y, 2]";
+    REQUIRE(check_vec_str);
+
+    map_uint_mpz a = {{0, 1_z}, {1, 2_z}, {2, 1_z}};
+    map_uint_mpz b = {{0, 1_z}, {2, 1_z}, {1, 2_z}};
+    REQUIRE(map_uint_mpz_eq(a, b) == true);
+    REQUIRE(map_uint_mpz_compare(a, b) == 0);
+    b = {{0, 1_z}, {2, 1_z}};
+    REQUIRE(map_uint_mpz_eq(a, b) == false);
+    REQUIRE(map_uint_mpz_compare(a, b) == 1);
+    b = {{0, 1_z}, {3, 1_z}, {1, 2_z}};
+    REQUIRE(map_uint_mpz_eq(a, b) == false);
+    REQUIRE(map_uint_mpz_compare(a, b) == -1);
+    b = {{0, 1_z}, {3, 1_z}, {1, 2_z}};
+    REQUIRE(map_uint_mpz_eq(a, b) == false);
+    REQUIRE(map_uint_mpz_compare(a, b) == -1);
+    b = {{0, 1_z}, {1, 1_z}, {2, 3_z}};
+    REQUIRE(map_uint_mpz_eq(a, b) == false);
+    REQUIRE(map_uint_mpz_compare(a, b) == 1);
+
+    map_int_Expr adict = {{0, 1}, {1, 2}, {2, x}};
+    map_int_Expr bdict = {{0, 1}, {1, 2}, {2, x}};
+    REQUIRE(map_int_Expr_eq(adict, bdict) == true);
+    REQUIRE(map_int_Expr_compare(adict, bdict) == 0);
+    bdict = {{0, 1}, {1, 1}, {2, x}};
+    REQUIRE(map_int_Expr_eq(adict, bdict) == false);
+    REQUIRE(map_int_Expr_compare(adict, bdict) == -1);
+    adict = {{0, 1}, {1, 1}, {3, x}};
+    REQUIRE(map_int_Expr_eq(adict, bdict) == false);
+    REQUIRE(map_int_Expr_compare(adict, bdict) == 1);
+    bdict = {{0, 1}, {1, 3}};
+    REQUIRE(map_int_Expr_eq(adict, bdict) == false);
+    REQUIRE(map_int_Expr_compare(adict, bdict) == 1);
+
+    multiset_basic msba, msbb;
+    msba.insert(x);
+    msba.insert(y);
+    msba.insert(i2);
+    msbb.insert(y);
+    msbb.insert(i2);
+    REQUIRE(not multiset_basic_eq(msba, msbb));
+    REQUIRE(multiset_basic_compare(msba, msbb) == 1);
+    msbb.insert(x);
+    REQUIRE(multiset_basic_eq(msba, msbb));
+    REQUIRE(multiset_basic_compare(msba, msbb) == 0);
+    msbb.insert(i3);
+    REQUIRE(not multiset_basic_eq(msba, msbb));
+    REQUIRE(multiset_basic_compare(msba, msbb) == -1);
+    REQUIRE(not multiset_basic_eq(msba, {x, y, i3}));
+    REQUIRE(multiset_basic_compare(msba, {x, y, i3}) == -1);
 }
 
 TEST_CASE("Add: basic", "[basic]")
@@ -358,6 +505,14 @@ TEST_CASE("Diff: Basic", "[basic]")
     r1 = add(mul(mul(pow(x, y), pow(y, x)), i2), one)->diff(x);
     r2 = add(mul(i2, mul(pow(x, y), mul(pow(y, x), log(y)))),
              mul(i2, mul(pow(x, y), mul(pow(y, x), div(y, x)))));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = sdiff(add(pow(x, i2), x), pow(x, i2));
+    r2 = one;
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = sdiff(add(pow(x, i2), x), x);
+    r2 = diff(add(pow(x, i2), x), x);
     REQUIRE(eq(*r1, *r2));
 }
 

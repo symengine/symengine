@@ -14,7 +14,7 @@ elif [ "$(expr substr $(uname -s) 1 10)" == "MINGW32_NT" ]; then
     CLANG="clang-format.exe"
 fi
 
-FILES=`git diff master --name-only | grep -E "\.(cpp|h)$"`
+FILES=`git ls-files | grep -E "\.(cpp|h|hpp)$" | grep -Ev "symengine/utilities" | grep -Ev "cmake/"`
 
 for FILE in $FILES; do
     echo Formatting $FILE

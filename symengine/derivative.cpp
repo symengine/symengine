@@ -1,3 +1,4 @@
+#include <symengine/derivative.h>
 #include <symengine/add.h>
 #include <symengine/basic.h>
 #include <symengine/complex.h>
@@ -483,14 +484,15 @@ public:
         if (self.get_var()->__eq__(*x)) {
             map_uint_mpz d;
             for (const auto &p : self.get_dict()) {
-                d[p.first - 1] = p.second * p.first;
+                if (p.first != 0)
+                    d[p.first - 1] = p.second * p.first;
             }
-            return UnivariateIntPolynomial::from_dict(self.get_var(),
-                                                      std::move(d));
+            return make_rcp<const UnivariateIntPolynomial>(
+                self.get_var(), (--(d.end()))->first, std::move(d));
         } else {
             map_uint_mpz d;
-            return UnivariateIntPolynomial::from_dict(self.get_var(),
-                                                      std::move(d));
+            return make_rcp<const UnivariateIntPolynomial>(self.get_var(), 0,
+                                                           std::move(d));
         }
     }
 
@@ -596,5 +598,23 @@ public:
 #define SYMENGINE_ENUM(TypeID, Class) IMPLEMENT_DIFF(Class)
 #include "symengine/type_codes.inc"
 #undef SYMENGINE_ENUM
+
+RCP<const Basic> diff(const RCP<const Basic> &arg, const RCP<const Symbol> &x)
+{
+    return arg->diff(x);
+}
+
+//! SymPy style differentiation for non-symbol variables
+// Since SymPy's differentiation makes no sense mathematically, it is
+// defined separately here for compatibility
+RCP<const Basic> sdiff(const RCP<const Basic> &arg, const RCP<const Basic> &x)
+{
+    if (is_a<Symbol>(*x)) {
+        return arg->diff(rcp_static_cast<const Symbol>(x));
+    } else {
+        RCP<const Symbol> d = DiffImplementation::get_dummy(*arg, "x");
+        return arg->subs({{x, d}})->diff(d)->subs({{d, x}});
+    }
+}
 
 } // SymEngine

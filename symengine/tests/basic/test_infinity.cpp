@@ -80,7 +80,7 @@ TEST_CASE("Infinity Constants", "[Infinity]")
     REQUIRE(c->__str__() == "zoo");
 }
 
-TEST_CASE("Boolean tests for Infinity", "[Infinity")
+TEST_CASE("Boolean tests for Infinity", "[Infinity]")
 {
     RCP<const Infinit> a = Inf;
     RCP<const Infinit> b = NegInf;
@@ -98,4 +98,34 @@ TEST_CASE("Boolean tests for Infinity", "[Infinity")
              && not c->is_negative_infinity() && not c->is_positive_infinity()
              && c->is_unsigned_infinity() && not c->is_positive()
              && not c->is_negative()));
+}
+
+TEST_CASE("Comparing Infinitys", "[Infinity]")
+{
+    RCP<const Infinit> a = Inf;
+    RCP<const Infinit> b = NegInf;
+    RCP<const Infinit> c = ComplexInf;
+
+    REQUIRE(a.compare(*b) == 1);
+    REQUIRE(c.compare(*c) == 0);
+}
+
+TEST_CASE("Checking arguments returned", "[Infinity]")
+{
+
+}
+
+TEST_CASE("Adding to Infinity", "[Infinity]")
+{
+
+}
+
+TEST_CASE("Subtracting from Infinity", "[Infinity]")
+{
+
+}
+
+TEST_CASE("Multiplication with Infinity", "[Infinity]")
+{
+
 }

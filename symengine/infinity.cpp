@@ -61,9 +61,6 @@ std::size_t Infinit::__hash__() const
 
 bool Infinit::__eq__(const Basic &o) const
 {
-    if (is_unsigned_infinity())
-        return false;
-
     if (is_a<Infinit>(o)) {
         const Infinit &s = static_cast<const Infinit &>(o);
         return eq(*_direction, *(s.get_direction()));

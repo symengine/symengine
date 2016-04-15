@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 
-if [[ "${TRAVIS_OS_NAME}" == "linux" ]] && \
-   [[ "${CC}" == "gcc" ]] && [[ "${TEST_CLANG_FORMAT}" == "yes" ]]; then
+echo "Entering travis_clang.sh"
+echo "TEST_CLANG_FORMAT=${TEST_CLANG_FORMAT}"
+
+if [[ "${TEST_CLANG_FORMAT}" == "yes" ]]; then
 
     RETURN=0
     CLANG="clang-format-3.7"
@@ -11,9 +13,10 @@ if [[ "${TRAVIS_OS_NAME}" == "linux" ]] && \
         exit 1
     fi
 
-    FILES=`git diff master --name-only | grep -E "\.(cpp|h)$"`
+    FILES=`git ls-files | grep -E "\.(cpp|h|hpp)$" | grep -Ev "symengine/utilities" | grep -Ev "cmake/"`
 
     for FILE in $FILES; do
+        echo "Processing: $FILE"
 
         $CLANG $FILE | cmp  $FILE >/dev/null
 
