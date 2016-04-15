@@ -40,6 +40,7 @@ RCP<const Infinit> Infinit::from_int(const int val)
     return make_rcp<Infinit>(val);
 }
 
+//! Canonical when the direction is -1, 0 or 1.
 bool Infinit::is_canonical(const RCP<const Number> &num) const
 {
     if (is_a<Complex>(*num) || is_a<ComplexDouble>(*num))
@@ -53,7 +54,7 @@ bool Infinit::is_canonical(const RCP<const Number> &num) const
 
 std::size_t Infinit::__hash__() const
 {
-    std::size_t seed = INFINITY;
+    std::size_t seed = INFINIT;
     hash_combine<Basic>(seed, *_direction);
     return seed;
 }
@@ -65,8 +66,7 @@ bool Infinit::__eq__(const Basic &o) const
 
     if (is_a<Infinit>(o)) {
         const Infinit &s = static_cast<const Infinit &>(o);
-        if (eq(*_direction, *(s.get_direction())))
-            return true;
+        return eq(*_direction, *(s.get_direction()));
     }
 
     return false;

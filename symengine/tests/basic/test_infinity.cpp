@@ -20,7 +20,6 @@ using SymEngine::Infinit;
 using SymEngine::infinit;
 using SymEngine::rcp_dynamic_cast;
 using SymEngine::Complex;
-using SymEngine::symbol;
 using SymEngine::Inf;
 using SymEngine::NegInf;
 using SymEngine::ComplexInf;
@@ -64,8 +63,10 @@ TEST_CASE("Hash Size for Infinity", "[Infinity]")
     RCP<const Infinit> a = infinit(1);
     RCP<const Infinit> b = infinit(0);
 
-    // REQUIRE(a->__hash__() == b->__hash__());
-    // REQUIRE(a->__hash__() == infinit(1)->__hash__());
+    REQUIRE(not eq(*a, *b));
+    REQUIRE(not(a->__hash__() == b->__hash__()));
+    REQUIRE(eq(*a, *infinit()));
+    REQUIRE(a->__hash__() == infinit(1)->__hash__());
 }
 
 TEST_CASE("Infinity Constants", "[Infinity]")
@@ -77,4 +78,24 @@ TEST_CASE("Infinity Constants", "[Infinity]")
     REQUIRE(a->__str__() == "+oo");
     REQUIRE(b->__str__() == "-oo");
     REQUIRE(c->__str__() == "zoo");
+}
+
+TEST_CASE("Boolean tests for Infinity", "[Infinity")
+{
+    RCP<const Infinit> a = Inf;
+    RCP<const Infinit> b = NegInf;
+    RCP<const Infinit> c = ComplexInf;
+
+    REQUIRE((not a->is_zero() && not a->is_one() && not a->is_minus_one()
+             && not a->is_negative_infinity() && a->is_positive_infinity()
+             && not a->is_unsigned_infinity() && a->is_positive()
+             && not a->is_negative()));
+    REQUIRE((not b->is_zero() && not b->is_one() && not b->is_minus_one()
+             && b->is_negative_infinity() && not b->is_positive_infinity()
+             && not b->is_unsigned_infinity() && not b->is_positive()
+             && b->is_negative()));
+    REQUIRE((not c->is_zero() && not c->is_one() && not c->is_minus_one()
+             && not c->is_negative_infinity() && not c->is_positive_infinity()
+             && c->is_unsigned_infinity() && not c->is_positive()
+             && not c->is_negative()));
 }
