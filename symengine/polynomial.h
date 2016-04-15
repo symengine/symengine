@@ -361,6 +361,7 @@ public:
     {
         RCP<const Symbol> x = poly_->get_var();
         umap_basic_num dict_;
+        RCP<const Number> coeff;
         for (const auto &it : poly_->get_dict()) {
             if (it.first != 0) {
                 auto term = mul(
@@ -370,8 +371,10 @@ public:
                 coef = zero;
                 Add::coef_dict_add_term(outArg((coef)), dict_, one, term);
             }
+            else
+                coeff = rcp_static_cast<const Number>(it.second.get_basic());
         }
-        return Add::from_dict(integer(0), std::move(dict_));
+        return Add::from_dict(coeff, std::move(dict_));
     }
 
     int compare(const UnivariateExprPolynomial &other)
