@@ -650,13 +650,13 @@ RCP<const UnivariatePolynomial> mul_uni_poly(RCP<const UnivariatePolynomial> a,
 
 ///Multivariate Polynomial///
 
-MultivariateIntPolynomial::MultivariateIntPolynomial(const set_sym &vars, umap_sym_uint &degrees,
+MultivariateIntPolynomial::MultivariateIntPolynomial(const vec_sym &vars, umap_sym_uint &degrees,
         umap_uvec_mpz &dict) :
 vars_{std::move(vars)}, degrees_{std::move(degrees)}, dict_{std::move(dict)} {
     SYMENGINE_ASSERT(is_canonical(vars_, degrees_, dict_))
 }
 
-RCP<const MultivariateIntPolynomial> MultivariateIntPolynomial::from_dict(const set_sym &s,
+RCP<const MultivariateIntPolynomial> MultivariateIntPolynomial::from_dict(const vec_sym &s,
         umap_uvec_mpz &&d) {
     umap_sym_uint degs;
     //Remove terms with zero coefficients
@@ -704,8 +704,13 @@ vec_basic  MultivariateIntPolynomial::get_args() const {
     return args;
 }
 
-bool MultivariateIntPolynomial::is_canonical(const set_sym &vars, const umap_sym_uint &degrees, 
+bool MultivariateIntPolynomial::is_canonical(const vec_sym &vars, const umap_sym_uint &degrees, 
         const umap_uvec_mpz &dict) {
+    //checks that vars is in order defined by Symbol::compare
+    for (unsigned int i = 1; i < vars.size(); i++) {
+        if (1 != vars[i]->compare(*vars[i-1]))
+            return false;
+    }
     //checks that the dictionary does not contain terms with coefficient 0
     for (auto bucket : dict) {
         if (integer_class(0) == bucket.second)
@@ -746,7 +751,7 @@ std::size_t MultivariateIntPolynomial::__hash__() const {
 }
 
 bool MultivariateIntPolynomial::__eq__(const Basic &o) const {
-    return ( set_eq<set_sym>(vars_, static_cast<const MultivariateIntPolynomial &>(o).vars_)
+    return ( (vars_ ==  static_cast<const MultivariateIntPolynomial &>(o).vars_)
         && umap_uvec_mpz_eq(dict_, static_cast<const MultivariateIntPolynomial &>(o).dict_) );
 }
 
@@ -754,7 +759,7 @@ int MultivariateIntPolynomial::compare(const Basic &o) const {
     //copied from UnivariateIntPolynomial::compare and then modified.
     const MultivariateIntPolynomial &s = static_cast<const MultivariateIntPolynomial&>(o);
 
-    int cmp = set_compare<set_sym>(vars_, s.vars_);
+    int cmp = set_compare<vec_sym>(vars_, s.vars_);
     if (cmp != 0)
         return cmp;
 
@@ -778,7 +783,7 @@ integer_class MultivariateIntPolynomial::eval(std::map<RCP<const Symbol>, intege
     return ans;
 }
 
-unsigned int reconcile(vec_uint &v1, vec_uint &v2, set_sym &s, const set_sym &s1, const set_sym &s2) {
+unsigned int reconcile(vec_uint &v1, vec_uint &v2, vec_sym &s, const vec_sym &s1, const vec_sym &s2) {
     auto a1 = s1.begin();
     auto a2 = s2.begin();
     unsigned int poscount = 0;
@@ -786,16 +791,16 @@ unsigned int reconcile(vec_uint &v1, vec_uint &v2, set_sym &s, const set_sym &s1
         if (0 == (*a1)->compare(**a2) && (a1 != s1.end() && a2 != s2.end())) {
             v1.insert(v1.end(), poscount);
             v2.insert(v2.end(), poscount);
-            s.insert(*a1);
+            s.push_back(*a1);
             a1++;
             a2++;
         } else if (-1 == (*a1)->compare(**a2)) {
             v1.insert(v1.end(),poscount);
-            s.insert(*a1);
+            s.push_back(*a1);
             a1++;
         } else if (1 == (*a1)->compare(**a2)) {
             v2.insert(v2.end(),poscount);
-            s.insert(*a2);
+            s.push_back(*a2);
             a2++;
         }
             poscount++;
@@ -803,14 +808,14 @@ unsigned int reconcile(vec_uint &v1, vec_uint &v2, set_sym &s, const set_sym &s1
     if (a1 == s1.end()) {
         while (a2 != s2.end()) {
             v2.insert(v2.end(),poscount);
-            s.insert(*a2);
+            s.push_back(*a2);
             a2++;
             poscount++;
         }
     } else if (a2 == s2.end()) {
         while (a1 != s1.end()) {
             v1.insert(v1.end(),poscount);
-            s.insert(*a1);
+            s.push_back(*a1);
             a1++;
             poscount++;
         }
@@ -818,7 +823,7 @@ unsigned int reconcile(vec_uint &v1, vec_uint &v2, set_sym &s, const set_sym &s1
     return poscount; //return size of the new vectors
 }
 
-unsigned int reconcile(vec_uint &v1, unsigned int &v2, set_sym &s, const set_sym &s1, 
+unsigned int reconcile(vec_uint &v1, unsigned int &v2, vec_sym &s, const vec_sym &s1, 
         const RCP<const Symbol> s2) {
     auto a1 = s1.begin();
     unsigned int poscount = 0;
@@ -827,28 +832,28 @@ unsigned int reconcile(vec_uint &v1, unsigned int &v2, set_sym &s, const set_sym
         if (0 == (*a1)->compare(*s2) ) {
             v1.insert(v1.end(), poscount);
             v2 = poscount;
-            s.insert(*a1);
+            s.push_back(*a1);
             a1++;
             inserted = true;
         } else if (-1 == (*a1)->compare(*s2)) {
             v1.insert(v1.end(),poscount);
-            s.insert(*a1);
+            s.push_back(*a1);
             a1++;
         } else if (1 == (*a1)->compare(*s2)) {
             v2 = poscount;
-            s.insert(s2);
+            s.push_back(s2);
             inserted = true;
         }
         poscount++;
     }
     if (a1 == s1.end() && !inserted) {
         v2 = poscount;
-        s.insert(s2);
+        s.push_back(s2);
         poscount++;
     } else if (inserted) {
         while (a1 != s1.end()) {
             v1.insert(v1.end(),poscount);
-            s.insert(*a1);
+            s.push_back(*a1);
             a1++;
             poscount++;
         }
@@ -876,7 +881,7 @@ RCP<const MultivariateIntPolynomial> add_mult_poly(const MultivariateIntPolynomi
         const MultivariateIntPolynomial &b) {
     vec_uint v1;
     vec_uint v2;
-    set_sym s;
+    vec_sym s;
     umap_uvec_mpz dict;
     umap_sym_uint degs;
     unsigned int size = reconcile(v1,v2,s,a.vars_,b.vars_);
@@ -927,7 +932,7 @@ vec_uint uint_vec_translate_and_add(const vec_uint &v1, const unsigned int v2,
 
 RCP<const MultivariateIntPolynomial> neg_mult_poly(const MultivariateIntPolynomial &a) {
     umap_uvec_mpz dict;
-    set_sym s = a.vars_;
+    vec_sym s = a.vars_;
     for (auto bucket : a.dict_) {
         dict.insert(std::pair<vec_uint, integer_class>(bucket.first, - bucket.second));
     }
@@ -943,7 +948,7 @@ RCP<const MultivariateIntPolynomial> mul_mult_poly(const MultivariateIntPolynomi
         const MultivariateIntPolynomial &b) {
     vec_uint v1;
     vec_uint v2;
-    set_sym s;
+    vec_sym s;
     umap_uvec_mpz dict;
     unsigned int size = reconcile(v1,v2,s,a.vars_,b.vars_);
     for (auto a_bucket : a.dict_) {
@@ -964,7 +969,7 @@ RCP<const MultivariateIntPolynomial> add_mult_poly(const MultivariateIntPolynomi
         const UnivariateIntPolynomial &b) {
     vec_uint v1;
     unsigned int v2;
-    set_sym s;
+    vec_sym s;
     umap_uvec_mpz dict;
     unsigned int size = reconcile(v1,v2,s,a.vars_,b.get_var());
     for (auto bucket : a.dict_) {
@@ -1002,7 +1007,7 @@ RCP<const MultivariateIntPolynomial> mul_mult_poly(const MultivariateIntPolynomi
         const UnivariateIntPolynomial &b) {
     vec_uint v1;
     unsigned int v2;
-    set_sym s;
+    vec_sym s;
     umap_uvec_mpz dict;
     unsigned int size = reconcile(v1,v2,s,a.vars_,b.get_var());
     for (auto a_bucket : a.dict_) {
@@ -1028,24 +1033,26 @@ RCP<const MultivariateIntPolynomial> add_mult_poly(const UnivariateIntPolynomial
         const UnivariateIntPolynomial &b) {
     unsigned int v1;
     unsigned int v2;
-    set_sym s;
+    vec_sym s;
     umap_uvec_mpz dict;
     bool same = false; //are the variables of a and b the same?
     if (0 == a.get_var()->compare(*b.get_var())) {
         v1 = 0;
         v2 = 0;
-        s.insert(a.get_var());
+        s.push_back(a.get_var());
         same = true;
     } else {
         if (-1 == a.get_var()->compare(*b.get_var())) {
             v1 = 0;
+            s.push_back(a.get_var());
             v2 = 1;
+            s.push_back(b.get_var());
         } else {
             v2 = 0;
+            s.push_back(b.get_var());
             v1 = 1;
+            s.push_back(a.get_var());
         }
-        s.insert(a.get_var());
-        s.insert(b.get_var());
     }
 
     for (auto bucket : a.get_dict()) {
@@ -1081,24 +1088,26 @@ RCP<const MultivariateIntPolynomial> mul_mult_poly(const UnivariateIntPolynomial
         const UnivariateIntPolynomial &b) {
     unsigned int v1;
     unsigned int v2;
-    set_sym s;
+    vec_sym s;
     umap_uvec_mpz dict;
     bool same = false; //are the variables of a and b the same?
     if (0 == a.get_var()->compare(*b.get_var())) {
         v1 = 0;
         v2 = 0;
-        s.insert(a.get_var());
+        s.push_back(a.get_var());
         same = true;
     } else {
         if (-1 == a.get_var()->compare(*b.get_var())) {
             v1 = 0;
+            s.push_back(a.get_var());
             v2 = 1;
+            s.push_back(b.get_var());
         } else {
             v2 = 0;
+            s.push_back(b.get_var());
             v1 = 1;
+            s.push_back(a.get_var());
         }
-        s.insert(a.get_var());
-        s.insert(b.get_var());
     }
     for (auto a_bucket : a.get_dict()) {
         for (auto b_bucket : b.get_dict()) {
@@ -1121,13 +1130,13 @@ RCP<const MultivariateIntPolynomial> mul_mult_poly(const UnivariateIntPolynomial
 }
 
 //MultivariatePolynomial
-MultivariatePolynomial::MultivariatePolynomial(const set_sym &vars, umap_sym_uint &degrees,
+MultivariatePolynomial::MultivariatePolynomial(const vec_sym &vars, umap_sym_uint &degrees,
         umap_uvec_expr &dict) :
 vars_{std::move(vars)}, degrees_{std::move(degrees)}, dict_{std::move(dict)} {
     SYMENGINE_ASSERT(is_canonical(vars_, degrees_, dict_))
 }
 
-RCP<const MultivariatePolynomial> MultivariatePolynomial::from_dict(const set_sym &s,
+RCP<const MultivariatePolynomial> MultivariatePolynomial::from_dict(const vec_sym &s,
         umap_uvec_expr &&d) {
     umap_sym_uint degs;
     //remove terms with zero coefficients
@@ -1175,8 +1184,13 @@ vec_basic  MultivariatePolynomial::get_args() const {
     return args;
 }
 
-bool MultivariatePolynomial::is_canonical(const set_sym &vars, const umap_sym_uint &degrees, 
+bool MultivariatePolynomial::is_canonical(const vec_sym &vars, const umap_sym_uint &degrees, 
         const umap_uvec_expr &dict) {
+    //checks that vars is in order defined by Symbol::compare
+    for (unsigned int i = 1; i < vars.size(); i++) {
+        if (1 != vars[i]->compare(*vars[i-1]))
+            return false;
+    }
     //checks that the dictionary does not contain terms with coefficient 0
     for (auto bucket : dict) {
         if (Expression(0) == bucket.second)
@@ -1217,7 +1231,7 @@ std::size_t MultivariatePolynomial::__hash__() const {
 }
 
 bool MultivariatePolynomial::__eq__(const Basic &o) const {
-    return ( set_eq<set_sym>(vars_, static_cast<const MultivariatePolynomial &>(o).vars_)
+    return ( (vars_ == static_cast<const MultivariatePolynomial &>(o).vars_)
         && umap_uvec_expr_eq(dict_, static_cast<const MultivariatePolynomial &>(o).dict_) );
 }
 
@@ -1225,7 +1239,7 @@ int MultivariatePolynomial::compare(const Basic &o) const {
     //copied from UnivariateIntPolynomial::compare and then modified.
     const MultivariatePolynomial &s = static_cast<const MultivariatePolynomial&>(o);
 
-    int cmp = set_compare<set_sym>(vars_, s.vars_);
+    int cmp = set_compare<vec_sym>(vars_, s.vars_);
     if (cmp != 0)
         return cmp;
 
@@ -1251,7 +1265,7 @@ RCP<const MultivariatePolynomial> add_mult_poly(const MultivariatePolynomial &a,
         const MultivariatePolynomial &b) {
     vec_uint v1;
     vec_uint v2;
-    set_sym s;
+    vec_sym s;
     umap_uvec_expr dict;
     umap_sym_uint degs;
     unsigned int size = reconcile(v1,v2,s,a.vars_,b.vars_);
@@ -1273,7 +1287,7 @@ RCP<const MultivariatePolynomial> add_mult_poly(const MultivariatePolynomial &a,
 
 RCP<const MultivariatePolynomial> neg_mult_poly(const MultivariatePolynomial &a) {
     umap_uvec_expr dict;
-    set_sym s = a.vars_;
+    vec_sym s = a.vars_;
     for (auto bucket : a.dict_) {
         dict.insert(std::pair<vec_uint, Expression>(bucket.first, - bucket.second));
     }
@@ -1289,7 +1303,7 @@ RCP<const MultivariatePolynomial> mul_mult_poly(const MultivariatePolynomial &a,
         const MultivariatePolynomial &b) {
     vec_uint v1;
     vec_uint v2;
-    set_sym s;
+    vec_sym s;
     umap_uvec_expr dict;
     unsigned int size = reconcile(v1,v2,s,a.vars_,b.vars_);
     for (auto a_bucket : a.dict_) {
@@ -1310,7 +1324,7 @@ RCP<const MultivariatePolynomial> add_mult_poly(const MultivariatePolynomial &a,
         const UnivariatePolynomial &b) {
     vec_uint v1;
     unsigned int v2;
-    set_sym s;
+    vec_sym s;
     umap_uvec_expr dict;
     unsigned int size = reconcile(v1,v2,s,a.vars_,b.get_var());
     for (auto bucket : a.dict_) {
@@ -1348,7 +1362,7 @@ RCP<const MultivariatePolynomial> mul_mult_poly(const MultivariatePolynomial &a,
         const UnivariatePolynomial &b) {
     vec_uint v1;
     unsigned int v2;
-    set_sym s;
+    vec_sym s;
     umap_uvec_expr dict;
     unsigned int size = reconcile(v1,v2,s,a.vars_,b.get_var());
     for (auto a_bucket : a.dict_) {
@@ -1374,24 +1388,26 @@ RCP<const MultivariatePolynomial> add_mult_poly(const UnivariatePolynomial &a,
         const UnivariatePolynomial &b) {
     unsigned int v1;
     unsigned int v2;
-    set_sym s;
+    vec_sym s;
     umap_uvec_expr dict;
     bool same = false; //are the variables of a and b the same?
     if (0 == a.get_var()->compare(*b.get_var())) {
         v1 = 0;
         v2 = 0;
-        s.insert(a.get_var());
+        s.push_back(a.get_var());
         same = true;
     } else {
         if (-1 == a.get_var()->compare(*b.get_var())) {
             v1 = 0;
+            s.push_back(a.get_var());
             v2 = 1;
+            s.push_back(b.get_var());
         } else {
             v2 = 0;
+            s.push_back(b.get_var());
             v1 = 1;
+            s.push_back(a.get_var());
         }
-        s.insert(a.get_var());
-        s.insert(b.get_var());
     }
 
     for (auto bucket : a.get_dict()) {
@@ -1427,24 +1443,26 @@ RCP<const MultivariatePolynomial> mul_mult_poly(const UnivariatePolynomial &a,
         const UnivariatePolynomial &b) {
     unsigned int v1;
     unsigned int v2;
-    set_sym s;
+    vec_sym s;
     umap_uvec_expr dict;
     bool same = false; //are the variables of a and b the same?
     if (0 == a.get_var()->compare(*b.get_var())) {
         v1 = 0;
         v2 = 0;
-        s.insert(a.get_var());
+        s.push_back(a.get_var());
         same = true;
     } else {
         if (-1 == a.get_var()->compare(*b.get_var())) {
             v1 = 0;
+            s.push_back(a.get_var());
             v2 = 1;
+            s.push_back(b.get_var());
         } else {
             v2 = 0;
+            s.push_back(b.get_var());
             v1 = 1;
+            s.push_back(a.get_var());
         }
-        s.insert(a.get_var());
-        s.insert(b.get_var());
     }
     for (auto a_bucket : a.get_dict()) {
         for (auto b_bucket : b.get_dict()) {
