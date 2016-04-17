@@ -1078,7 +1078,7 @@ TEST_CASE("Testing addition, subtraction, multiplication of MultivaritePolynomia
 
     RCP<const MultivariatePolynomial> p1 = MultivariatePolynomial::from_dict({x,y}, { {{1,1}, a},
         {{1,0}, negB}, {{0,0}, negNum} });
-    RCP<const MultivariatePolynomial> p2 = MultivariatePolynomial::from_dict({m,n}, {
+    RCP<const MultivariatePolynomial> p2 = MultivariatePolynomial::from_dict({n,m}, {
         {{1,0}, comp1}, {{2,1}, comp4} });
 
     RCP<const MultivariatePolynomial> q1 = MultivariatePolynomial::from_dict({m,n,x,y}, {
