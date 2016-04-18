@@ -25,6 +25,8 @@ using SymEngine::Complex;
 using SymEngine::Inf;
 using SymEngine::NegInf;
 using SymEngine::ComplexInf;
+using SymEngine::Symbol;
+using SymEngine::symbol;
 
 TEST_CASE("Constructors for Infinity", "[Infinity]")
 {
@@ -58,6 +60,10 @@ TEST_CASE("Constructors for Infinity", "[Infinity]")
 
     Infinit inf = Infinit();
     REQUIRE(inf.__str__() == "+oo");
+
+    //! Checking copy constructor
+    Infinit inf2 = Infinit(*NegInf);
+    REQUIRE(inf2.__str__() == "-oo");
 }
 
 TEST_CASE("Hash Size for Infinity", "[Infinity]")
@@ -114,6 +120,7 @@ TEST_CASE("Comparing Infinitys", "[Infinity]")
     REQUIRE(a->compare(*c) == 1);
     REQUIRE(not c->__eq__(*a));
     REQUIRE(b->__eq__(*b));
+    REQUIRE(not c->__eq__(*zero));
 }
 
 TEST_CASE("Checking arguments returned", "[Infinity]")
@@ -128,6 +135,13 @@ TEST_CASE("Checking arguments returned", "[Infinity]")
     REQUIRE(eq(*a->get_args()[0], *one));
     REQUIRE(eq(*b->get_args()[0], *minus_one));
     REQUIRE(eq(*c->get_args()[0], *zero));
+}
+
+TEST_CASE("Check Derivative", "[Infinity]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Infinit> b = NegInf;
+    REQUIRE(eq(*b->diff(x), *zero));
 }
 
 TEST_CASE("Adding to Infinity", "[Infinity]")

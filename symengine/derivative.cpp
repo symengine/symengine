@@ -6,7 +6,6 @@
 #include <symengine/complex_mpc.h>
 #include <symengine/constants.h>
 #include <symengine/functions.h>
-#include <symengine/infinity.h>
 #include <symengine/integer.h>
 #include <symengine/mul.h>
 #include <symengine/polynomial.h>
@@ -518,12 +517,6 @@ public:
                                  const RCP<const Symbol> &x)
     {
         return self.diff_impl(x);
-    }
-
-    static RCP<const Basic> diff(const Infinit &self,
-                                 const RCP<const Symbol> &x)
-    {
-        return zero;
     }
 
     static RCP<const Basic> diff(const Beta &self, const RCP<const Symbol> &x)
