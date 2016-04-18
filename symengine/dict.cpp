@@ -336,4 +336,73 @@ bool umap_uvec_expr_eq(const umap_uvec_expr &a, const umap_uvec_expr &b)
     }
     return true;
 }
+
+
+
+int umap_vec_expr_compare(const umap_vec_expr &a, const umap_vec_expr &b)
+{
+    std::vector<vec_int> va
+        = order_umap<vec_int, umap_vec_expr, vec_int_compare>(a);
+    std::vector<vec_int> vb
+        = order_umap<vec_int, umap_vec_expr, vec_int_compare>(b);
+
+    if (va.empty())
+        if (!vb.empty())
+            return -1;
+    if (vb.empty())
+        if (!va.empty())
+            return 1;
+    if (va.empty() && vb.empty())
+        return 0;
+
+    for (unsigned int i = 0; i < va.size() && i < vb.size(); i++) {
+        if (vec_int_compare()(va[i], vb[i])) {
+            return -1;
+        } else if (!vec_int_compare()(va[i], vb[i]) && va[i] != vb[i]) {
+            return 1;
+        } else {
+            if (a.find(va[i])->second != b.find(vb[i])->second) {
+                return (a.find(va[i])->second)
+                    .get_basic()
+                    ->__cmp__(*((b.find(vb[i])->second).get_basic()));
+                /*
+                                if (a.find(va[i])->second <
+                   b.find(vb[i])->second) { //probably will want to replace this
+                   with compare
+                                    return -1;
+                                } else {
+                                    return 1;
+                                }*/
+            }
+        }
+    }
+    if (va.size() < vb.size())
+        return -1;
+    if (vb.size() < va.size())
+        return 1;
+    return 0;
+}
+
+// Copied from umap_eq, with derefrencing of image in map removed.
+bool umap_vec_expr_eq(const umap_vec_expr &a, const umap_vec_expr &b)
+{
+    // This follows the same algorithm as Python's dictionary comparison
+    // (a==b), which is implemented by "dict_equal" function in
+    // Objects/dictobject.c.
+
+    // Can't be equal if # of entries differ:
+    if (a.size() != b.size())
+        return false;
+    // Loop over keys in "a":
+    for (const auto &p : a) {
+        // O(1) lookup of the key in "b":
+        auto f = b.find(p.first);
+        if (f == b.end())
+            return false; // no such element in "b"
+        if (p.second != f->second)
+            return false; // values not equal
+    }
+    return true;
+}
+
 }

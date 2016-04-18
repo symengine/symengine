@@ -217,6 +217,50 @@ typedef std::unordered_map<vec_uint, integer_class, vec_uint_hash, vec_uint_eq>
 typedef std::unordered_map<vec_uint, Expression, vec_uint_hash, vec_uint_eq>
     umap_uvec_expr;
 
+
+typedef std::vector<int> vec_int;
+
+class vec_int_eq
+{
+public:
+    bool operator()(const vec_int &a, const vec_int &b) const
+    {
+        if (a.size() != b.size())
+            return false;
+        for (unsigned int i = 0; i < a.size(); i++) {
+            if (a[i] != b[i])
+                return false;
+        }
+        return true;
+    }
+};
+
+class vec_int_compare
+{
+public:
+    bool operator()(const vec_int &a, const vec_int &b) const
+    {
+        if (a.size() != b.size())
+            return a.size() < b.size();
+        int sum1 = 0;
+        int sum2 = 0;
+        for (int x : a) {
+            sum1 += x;
+        }
+        for (int x : b) {
+            sum2 += x;
+        }
+        if (sum1 != sum2)
+            return sum1 < sum2;
+        return a < b;
+    }
+};
+
+typedef std::unordered_map<RCP<const Symbol>, int, RCPSymbolHash, RCPSymbolEq>
+    umap_sym_int;
+typedef std::unordered_map<vec_int, Expression, vec_int_hash, vec_int_eq>
+    umap_vec_expr;
+
 // Takes an unordered map of type M with key type K and returns a vector of K
 // ordered by C.
 template <class K, class M, class C>
@@ -240,6 +284,9 @@ bool umap_uvec_mpz_eq(const umap_uvec_mpz &a, const umap_uvec_mpz &b);
 
 int umap_uvec_expr_compare(const umap_uvec_expr &a, const umap_uvec_expr &b);
 bool umap_uvec_expr_eq(const umap_uvec_expr &a, const umap_uvec_expr &b);
+
+int umap_vec_expr_compare(const umap_vec_expr &a, const umap_vec_expr &b);
+bool umap_vec_expr_eq(const umap_vec_expr &a, const umap_vec_expr &b);
 
 template <class T>
 bool set_eq(const T &A, const T &B)

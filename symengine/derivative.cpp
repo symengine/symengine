@@ -545,7 +545,7 @@ public:
                                  const RCP<const Symbol> &x)
     {
         if (self.vars_.find(x) != self.vars_.end()) {
-            umap_uvec_expr dict;
+            umap_vec_expr dict;
             auto i = self.vars_.begin();
             unsigned int index = 0;
             while (!(*i)->__eq__(*x)) {
@@ -554,16 +554,16 @@ public:
             } // find the index of the variable we are differentiating WRT.
             for (auto bucket : self.dict_) {
                 if (bucket.first[index] != 0) {
-                    vec_uint v = bucket.first;
+                    vec_int v = bucket.first;
                     v[index]--;
-                    dict.insert(std::pair<vec_uint, Expression>(
+                    dict.insert(std::pair<vec_int, Expression>(
                         v, bucket.second * bucket.first[index]));
                 }
             }
             return MultivariatePolynomial::from_dict(self.vars_,
                                                      std::move(dict));
         } else {
-            vec_uint v;
+            vec_int v;
             v.resize(self.vars_.size(), 0);
             return MultivariatePolynomial::from_dict(self.vars_,
                                                      {{v, Expression(0)}});

@@ -440,6 +440,23 @@ vec_uint uint_vec_translate_and_add(const vec_uint &v1, const unsigned int v2,
                                     const unsigned int &translator2,
                                     const unsigned int size);
 
+unsigned int reconcile(vec_int &v1, vec_int &v2, set_sym &s,
+                       const set_sym &s1, const set_sym &s2);
+unsigned int reconcile(vec_int &v1, unsigned int &v2, set_sym &s,
+                       const set_sym &s1, const RCP<const Symbol> s2);
+
+vec_int translate(vec_int original, vec_uint translator, unsigned int size);
+vec_int translate(int original, unsigned int translator,
+                   unsigned int size);
+vec_int int_vec_translate_and_add(const vec_int &v1, const vec_int &v2,
+                                    const vec_uint &translator1,
+                                    const vec_uint &translator2,
+                                    const unsigned int size);
+vec_int int_vec_translate_and_add(const vec_int &v1, const unsigned int v2,
+                                    const vec_uint &translator1,
+                                    const unsigned int &translator2,
+                                    const unsigned int size);
+
 RCP<const MultivariateIntPolynomial>
 add_mult_poly(const MultivariateIntPolynomial &a,
               const MultivariateIntPolynomial &b);
@@ -491,21 +508,21 @@ public:
     // * x**4 * y ** 5
     // is represented as {(1,2):1,(4,5):3}
     set_sym vars_;
-    umap_sym_uint degrees_;
-    umap_uvec_expr dict_;
+    umap_sym_int degrees_;
+    umap_vec_expr dict_;
 
 public:
     IMPLEMENT_TYPEID(MULTIVARIATEPOLYNOMIAL);
     // constructor from components
-    MultivariatePolynomial(const set_sym &var, umap_sym_uint &degrees,
-                           umap_uvec_expr &dict);
+    MultivariatePolynomial(const set_sym &var, umap_sym_int &degrees,
+                           umap_vec_expr &dict);
     // creates a MultivariatePolynomial in cannonical form based on dictionary
     // d.
     static RCP<const MultivariatePolynomial> from_dict(const set_sym &s,
-                                                       umap_uvec_expr &&d);
+                                                       umap_vec_expr &&d);
     vec_basic get_args() const;
-    bool is_canonical(const set_sym &vars, const umap_sym_uint &degrees,
-                      const umap_uvec_expr &dict);
+    bool is_canonical(const set_sym &vars, const umap_sym_int &degrees,
+                      const umap_vec_expr &dict);
     std::size_t __hash__() const;
     bool __eq__(const Basic &o) const;
     int compare(const Basic &o) const;
