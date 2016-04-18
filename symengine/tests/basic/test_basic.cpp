@@ -14,6 +14,7 @@
 #include <symengine/functions.h>
 #include <symengine/visitor.h>
 #include <symengine/eval_double.h>
+#include <symengine/derivative.h>
 
 using SymEngine::Basic;
 using SymEngine::Add;
@@ -54,6 +55,9 @@ using SymEngine::free_symbols;
 using SymEngine::function_symbol;
 using SymEngine::rational_class;
 using SymEngine::pi;
+using SymEngine::diff;
+using SymEngine::sdiff;
+
 using namespace SymEngine::literals;
 
 TEST_CASE("Symbol hash: Basic", "[basic]")
@@ -147,14 +151,13 @@ TEST_CASE("Symbol dict: Basic", "[basic]")
     sb.insert(i2);
     sb.insert(y);
 
-    auto check_map_str =
-        [](std::string to_chk, std::vector<std::string> key, std::vector<std::string> val)
-    {
+    auto check_map_str = [](std::string to_chk, std::vector<std::string> key,
+                            std::vector<std::string> val) {
         if (key.size() != val.size())
             return false;
-        for (unsigned i = 0; i < key.size(); i++)
-        {
-            if (to_chk.find(key[i] + std::string(": " + val[i])) == std::string::npos)
+        for (unsigned i = 0; i < key.size(); i++) {
+            if (to_chk.find(key[i] + std::string(": " + val[i]))
+                == std::string::npos)
                 return false;
         }
         return true;
@@ -502,6 +505,14 @@ TEST_CASE("Diff: Basic", "[basic]")
     r1 = add(mul(mul(pow(x, y), pow(y, x)), i2), one)->diff(x);
     r2 = add(mul(i2, mul(pow(x, y), mul(pow(y, x), log(y)))),
              mul(i2, mul(pow(x, y), mul(pow(y, x), div(y, x)))));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = sdiff(add(pow(x, i2), x), pow(x, i2));
+    r2 = one;
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = sdiff(add(pow(x, i2), x), x);
+    r2 = diff(add(pow(x, i2), x), x);
     REQUIRE(eq(*r1, *r2));
 }
 
