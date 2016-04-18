@@ -1,19 +1,19 @@
-#include <symengine/basic.h>
-#include <symengine/derivative.h>
-#include <symengine/symbol.h>
 #include <symengine/add.h>
-#include <symengine/integer.h>
-#include <symengine/rational.h>
+#include <symengine/basic.h>
 #include <symengine/complex.h>
-#include <symengine/mul.h>
-#include <symengine/pow.h>
-#include <symengine/functions.h>
-#include <symengine/constants.h>
-#include <symengine/visitor.h>
-#include <symengine/polynomial.h>
 #include <symengine/complex_double.h>
 #include <symengine/complex_mpc.h>
+#include <symengine/constants.h>
+#include <symengine/derivative.h>
+#include <symengine/functions.h>
+#include <symengine/integer.h>
+#include <symengine/mul.h>
+#include <symengine/polynomial.h>
+#include <symengine/pow.h>
+#include <symengine/rational.h>
 #include <symengine/sets.h>
+#include <symengine/symbol.h>
+#include <symengine/visitor.h>
 
 namespace SymEngine
 {
@@ -513,7 +513,9 @@ public:
         }
     }
 
-    static RCP<const Basic> diff(const MultivariateIntPolynomial &self, const RCP<const Symbol> &x) {
+    static RCP<const Basic> diff(const MultivariateIntPolynomial &self,
+                                 const RCP<const Symbol> &x)
+    {
         if (self.vars_.find(x) != self.vars_.end()) {
             umap_uvec_mpz dict;
             auto i = self.vars_.begin();
@@ -521,23 +523,27 @@ public:
             while (!(*i)->__eq__(*x)) {
                 i++;
                 index++;
-            } //find the index of the variable we are differentiating WRT.
+            } // find the index of the variable we are differentiating WRT.
             for (auto bucket : self.dict_) {
                 if (bucket.first[index] != 0) {
                     vec_uint v = bucket.first;
                     v[index]--;
-                    dict.insert(std::pair<vec_uint, integer_class>(v, bucket.second * bucket.first[index]));
+                    dict.insert(std::pair<vec_uint, integer_class>(
+                        v, bucket.second * bucket.first[index]));
                 }
             }
-            return MultivariateIntPolynomial::from_dict(self.vars_, std::move(dict));
+            return MultivariateIntPolynomial::from_dict(self.vars_,
+                                                        std::move(dict));
         } else {
             vec_uint v;
             v.resize(self.vars_.size(), 0);
-            return MultivariateIntPolynomial::from_dict(self.vars_, { {v,0_z} });
+            return MultivariateIntPolynomial::from_dict(self.vars_, {{v, 0_z}});
         }
     }
 
-    static RCP<const Basic> diff(const MultivariatePolynomial &self, const RCP<const Symbol> &x) {
+    static RCP<const Basic> diff(const MultivariatePolynomial &self,
+                                 const RCP<const Symbol> &x)
+    {
         if (self.vars_.find(x) != self.vars_.end()) {
             umap_uvec_expr dict;
             auto i = self.vars_.begin();
@@ -545,21 +551,24 @@ public:
             while (!(*i)->__eq__(*x)) {
                 i++;
                 index++;
-            } //find the index of the variable we are differentiating WRT.
+            } // find the index of the variable we are differentiating WRT.
             for (auto bucket : self.dict_) {
                 if (bucket.first[index] != 0) {
                     vec_uint v = bucket.first;
                     v[index]--;
-                    dict.insert(std::pair<vec_uint, Expression>(v, bucket.second * bucket.first[index]));
+                    dict.insert(std::pair<vec_uint, Expression>(
+                        v, bucket.second * bucket.first[index]));
                 }
             }
-            return MultivariatePolynomial::from_dict(self.vars_, std::move(dict));
+            return MultivariatePolynomial::from_dict(self.vars_,
+                                                     std::move(dict));
         } else {
             vec_uint v;
-            v.resize(self.vars_.size(), 0); 
-            return MultivariatePolynomial::from_dict(self.vars_, { {v,Expression(0)} });
+            v.resize(self.vars_.size(), 0);
+            return MultivariatePolynomial::from_dict(self.vars_,
+                                                     {{v, Expression(0)}});
         }
-    }    
+    }
 
     static RCP<const Basic> diff(const FunctionWrapper &self,
                                  const RCP<const Symbol> &x)

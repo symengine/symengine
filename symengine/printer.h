@@ -73,20 +73,22 @@ public:
         }
     }
 
-    void bvisit(const MultivariateIntPolynomial &x){
-        if (0 == x.dict_.size()){
+    void bvisit(const MultivariateIntPolynomial &x)
+    {
+        if (0 == x.dict_.size()) {
             precedence = PrecedenceEnum::Atom;
         } else if (1 == x.dict_.size()) {
             auto iter = x.dict_.begin();
             precedence = PrecedenceEnum::Atom;
-            bool first = true; //true if there are no nonzero exponents, false otherwise
+            bool first = true; // true if there are no nonzero exponents, false
+                               // otherwise
             for (unsigned int exp : iter->first) {
                 if (exp > 0) {
-                    if (first && exp > 1) 
+                    if (first && exp > 1)
                         precedence = PrecedenceEnum::Pow;
-                    if (!first) 
+                    if (!first)
                         precedence = PrecedenceEnum::Mul;
-                first = false;
+                    first = false;
                 }
             }
             if (!first) {
@@ -98,20 +100,22 @@ public:
         }
     }
 
-    void bvisit(const MultivariatePolynomial &x){
-        if (0 == x.dict_.size()){
+    void bvisit(const MultivariatePolynomial &x)
+    {
+        if (0 == x.dict_.size()) {
             precedence = PrecedenceEnum::Atom;
         } else if (1 == x.dict_.size()) {
             auto iter = x.dict_.begin();
             precedence = PrecedenceEnum::Atom;
-            bool first = true; //true if there are no nonzero exponents, false otherwise
+            bool first = true; // true if there are no nonzero exponents, false
+                               // otherwise
             for (unsigned int exp : iter->first) {
                 if (exp > 0) {
-                    if (first && exp > 1) 
+                    if (first && exp > 1)
                         precedence = PrecedenceEnum::Pow;
-                    if (!first) 
+                    if (!first)
                         precedence = PrecedenceEnum::Mul;
-                first = false;
+                    first = false;
                 }
             }
             if (first) {
@@ -123,13 +127,15 @@ public:
         } else {
             precedence = PrecedenceEnum::Add;
         }
-    }    
+    }
 
-    void bvisit(const Rational &x) {
+    void bvisit(const Rational &x)
+    {
         precedence = PrecedenceEnum::Add;
     }
 
-    void bvisit(const Complex &x) {
+    void bvisit(const Complex &x)
+    {
         if (x.is_re_zero()) {
             if (x.imaginary_ == 1) {
                 precedence = PrecedenceEnum::Atom;
