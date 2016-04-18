@@ -1,3 +1,4 @@
+#include <climits>
 #include <exception>
 #include <algorithm>
 #include <iterator>
@@ -219,10 +220,16 @@ umap_int_basic MultivariateSeries::as_dict() const
 
 RCP<const Basic> MultivariateSeries::get_coeff(int deg) const
 {
-    // if (p_.get_basic()->get_dict().count(deg) == 0)
-        return zero;
-    // else
-        // return p_.get_basic()->get_dict().at(deg).get_basic();
+    //going to be very inefficient with unordered map
+    umap_uvec_expr d;
+    for (auto bucket : p_.get_poly()->dict_) {
+        if (bucket.first[whichvar] == deg) {
+            vec_uint exps = bucket.first;
+            exps[whichvar] = 0;
+            d.insert(std::pair<vec_uint, Expression>(exps, bucket.second));
+        }
+    }
+    return MultivariatePolynomial::from_dict(p_.get_vars(),std::move(d));
 }
 
 MultivariateExprPolynomial MultivariateSeries::var(const std::string &s)
@@ -237,9 +244,13 @@ Expression MultivariateSeries::convert(const Basic &x)
 
 int MultivariateSeries::ldegree(const MultivariateExprPolynomial &s)
 {
-    //temp
-    return 0;
-    // return s.get_basic()->get_dict().begin()->first[];
+    unsigned int min = UINT_MAX;
+    for (auto bucket : s.get_poly()->dict_) {
+        for(unsigned int i = 0; i < bucket.first.size(); i++)
+            if (bucket.first[i] < min)
+                min = bucket.first[i];
+    }
+    return min;
 }
 
 MultivariateExprPolynomial
@@ -304,13 +315,35 @@ Expression MultivariateSeries::find_cf(const MultivariateExprPolynomial &s,
                                      const MultivariateExprPolynomial &var,
                                      int deg)
 {
-    return Expression(integer(0));
-
-    /*
-    if (s.get_dict().count(deg) == 0)
-        return Expression(0);
-    else
-        return (s.get_dict()).at(deg);*/
+    //going to be very inefficient with unordered map
+    unsigned int i = 0;
+    bool is_outside = false; // if var is outside of variable set of s 
+    for (auto variable : s.get_poly()->vars_) {
+        if (0 == variable->compare(*(var.get_var())))
+            break;
+        if (-1 == variable->compare(*(var.get_var()))) {
+            is_outside = true;
+        }
+        i++;
+    }
+    if (s.get_poly()->vars_.size() == i)
+        is_outside = true;
+    if (is_outside) {
+        if(0 == deg) {
+            return Expression(s.get_basic());
+        } else {
+            return Expression(0);
+        }
+    }
+    umap_uvec_expr d;    
+    for (auto bucket : s.get_poly()->dict_) {
+        if (bucket.first[i] == deg) {
+            vec_uint exps = bucket.first;
+            exps[i] = 0;
+            d.insert(std::pair<vec_uint, Expression>(exps, bucket.second));
+        }
+    }
+    return Expression(MultivariatePolynomial::from_dict(s.get_vars(), std::move(d)));
 }
 
 Expression MultivariateSeries::root(Expression &c, unsigned n)

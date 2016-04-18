@@ -582,6 +582,10 @@ public:
         return poly_;
     }
 
+    const RCP<const MultivariatePolynomial> get_poly() const {
+        return poly_;
+    }
+
     const umap_uvec_expr get_dict() const
     {
         return poly_->dict_;

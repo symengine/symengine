@@ -98,13 +98,14 @@ RCP<const UnivariateSeries> mul_uni_series(const UnivariateSeries &a,
 //! MultivariateSeries Class
 class MultivariateSeries : public SeriesBase<MultivariateExprPolynomial, Expression, MultivariateSeries>
 {
-    // MultivariateSeries 1 + 2*x + x**2 + O(x**5) has dict_ = {{0, 1}, {1, 2}, {2, 1}} with var_ = "x" and prec_ = 5
+    unsigned int whichvar; // index of the variable we are expanding around in the set.
+
 public:
     IMPLEMENT_TYPEID(MULTIVARIATESERIES)
     MultivariateSeries(const MultivariateExprPolynomial &sp,
                      const std::string varname, const unsigned degree) 
         : SeriesBase(std::move(sp), varname, degree)
-    {
+    {        
     }
     
     static RCP<const MultivariateSeries>
