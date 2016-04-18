@@ -1,4 +1,5 @@
 #include <symengine/basic.h>
+#include <symengine/derivative.h>
 #include <symengine/symbol.h>
 #include <symengine/add.h>
 #include <symengine/integer.h>
@@ -638,5 +639,23 @@ public:
 #define SYMENGINE_ENUM(TypeID, Class) IMPLEMENT_DIFF(Class)
 #include "symengine/type_codes.inc"
 #undef SYMENGINE_ENUM
+
+RCP<const Basic> diff(const RCP<const Basic> &arg, const RCP<const Symbol> &x)
+{
+    return arg->diff(x);
+}
+
+//! SymPy style differentiation for non-symbol variables
+// Since SymPy's differentiation makes no sense mathematically, it is
+// defined separately here for compatibility
+RCP<const Basic> sdiff(const RCP<const Basic> &arg, const RCP<const Basic> &x)
+{
+    if (is_a<Symbol>(*x)) {
+        return arg->diff(rcp_static_cast<const Symbol>(x));
+    } else {
+        RCP<const Symbol> d = DiffImplementation::get_dummy(*arg, "x");
+        return arg->subs({{x, d}})->diff(d)->subs({{d, x}});
+    }
+}
 
 } // SymEngine

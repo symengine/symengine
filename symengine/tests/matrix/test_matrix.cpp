@@ -7,6 +7,7 @@
 #include <symengine/add.h>
 #include <symengine/mul.h>
 #include <symengine/pow.h>
+#include <symengine/functions.h>
 
 using SymEngine::print_stack_on_segfault;
 using SymEngine::RCP;
@@ -14,6 +15,7 @@ using SymEngine::integer;
 using SymEngine::DenseMatrix;
 using SymEngine::Basic;
 using SymEngine::symbol;
+using SymEngine::Symbol;
 using SymEngine::is_a;
 using SymEngine::Add;
 using SymEngine::minus_one;
@@ -23,6 +25,7 @@ using SymEngine::sub;
 using SymEngine::eye;
 using SymEngine::diag;
 using SymEngine::vec_basic;
+using SymEngine::function_symbol;
 
 TEST_CASE("test_get_set(): matrices", "[matrices]")
 {
@@ -41,6 +44,13 @@ TEST_CASE("test_get_set(): matrices", "[matrices]")
     A.set(0, 1, integer(-2));
     REQUIRE(A == DenseMatrix(
                      2, 2, {integer(1), integer(-2), integer(0), integer(-2)}));
+
+    DenseMatrix C(A);
+    C.set(0, 0, integer(0));
+    REQUIRE(A == DenseMatrix(
+                     2, 2, {integer(1), integer(-2), integer(0), integer(-2)}));
+    REQUIRE(C == DenseMatrix(
+                     2, 2, {integer(0), integer(-2), integer(0), integer(-2)}));
 
     // Test for CSRMatrix
     CSRMatrix B = CSRMatrix(3, 3, {0, 2, 3, 6}, {0, 2, 2, 0, 1, 2},
@@ -262,7 +272,7 @@ TEST_CASE("test_submatrix_dense(): matrices", "[matrices]")
                                        symbol("p"), symbol("q"), symbol("r"),
                                        symbol("u"), symbol("v"), symbol("w")});
     DenseMatrix B = DenseMatrix(3, 2);
-    submatrix_dense(A, 0, 2, 1, 2, B);
+    submatrix_dense(A, B, 0, 1, 2, 2);
 
     REQUIRE(B == DenseMatrix(3, 2, {symbol("b"), symbol("c"), symbol("q"),
                                     symbol("r"), symbol("v"), symbol("w")}));
@@ -272,7 +282,7 @@ TEST_CASE("test_submatrix_dense(): matrices", "[matrices]")
                            integer(9), integer(10), integer(11), integer(12),
                            integer(13), integer(14), integer(15), integer(16)});
     B = DenseMatrix(3, 3);
-    submatrix_dense(A, 1, 3, 1, 3, B);
+    submatrix_dense(A, B, 1, 1, 3, 3);
 
     REQUIRE(B == DenseMatrix(3, 3, {integer(6), integer(7), integer(8),
                                     integer(10), integer(11), integer(12),
@@ -1433,7 +1443,7 @@ TEST_CASE("Test Jacobian", "[matrices]")
 {
     DenseMatrix A, X, J;
     RCP<const Basic> x = symbol("x"), y = symbol("y"), z = symbol("z"),
-                     t = symbol("t");
+                     t = symbol("t"), f = function_symbol("f", x);
     A = DenseMatrix(
         4, 1, {add(x, z), mul(y, z), add(mul(z, x), add(y, t)), add(x, y)});
     X = DenseMatrix(4, 1, {x, y, z, t});
@@ -1444,7 +1454,7 @@ TEST_CASE("Test Jacobian", "[matrices]")
                                     integer(1), x, integer(1), integer(1),
                                     integer(1), integer(0), integer(0)}));
 
-    X = DenseMatrix(4, 1, {mul(x, y), y, z, t});
+    X = DenseMatrix(4, 1, {f, y, z, t});
     CHECK_THROWS_AS(jacobian(A, X, J), std::runtime_error);
 
     A = DenseMatrix(
@@ -1455,4 +1465,28 @@ TEST_CASE("Test Jacobian", "[matrices]")
     REQUIRE(J == DenseMatrix(4, 3, {integer(1), integer(0), integer(1),
                                     integer(0), z, y, z, integer(1), x,
                                     integer(1), integer(1), integer(0)}));
+
+    A = DenseMatrix(2, 1, {mul(f, y), pow(y, integer(2))});
+    X = DenseMatrix(2, 1, {f, y});
+    J = DenseMatrix(2, 2);
+    sjacobian(A, X, J);
+    REQUIRE(J == DenseMatrix(2, 2, {y, f, integer(0), mul(integer(2), y)}));
+}
+
+TEST_CASE("Test Diff", "[matrices]")
+{
+    DenseMatrix A, J;
+    RCP<const Symbol> x = symbol("x"), y = symbol("y"), z = symbol("z"),
+                      t = symbol("t");
+    auto f = function_symbol("f", x);
+    A = DenseMatrix(
+        2, 2, {add(x, z), mul(y, z), add(mul(z, x), add(y, t)), add(x, y)});
+    J = DenseMatrix(2, 2);
+    diff(A, x, J);
+    REQUIRE(J == DenseMatrix(2, 2, {integer(1), integer(0), z, integer(1)}));
+
+    A = DenseMatrix(
+        2, 2, {add(f, z), mul(f, x), add(mul(z, f), add(y, t)), add(f, y)});
+    sdiff(A, f, J);
+    REQUIRE(J == DenseMatrix(2, 2, {integer(1), x, z, integer(1)}));
 }
