@@ -150,6 +150,7 @@ TEST_CASE("Adding to Infinity", "[Infinity]")
 
 TEST_CASE("Subtracting from Infinity", "[Infinity]")
 {
+    REQUIRE(eq(*Inf->sub(*NegInf), *Inf));
 }
 
 TEST_CASE("Multiplication with Infinity", "[Infinity]")

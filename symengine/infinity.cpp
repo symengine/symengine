@@ -94,7 +94,7 @@ bool Infinit::is_negative_infinity() const
 RCP<const Number> Infinit::add(const Number &other) const
 {
     if (not is_a<Infinit>(other))
-        return make_rcp<const Infinit>(*this);
+        return rcp_from_this_cast<Number>();
 
     const Infinit &s = static_cast<const Infinit &>(other);
 
@@ -108,12 +108,7 @@ RCP<const Number> Infinit::add(const Number &other) const
                                      "infinity` encountered. Directions don't "
                                      "match");
     } else
-        return make_rcp<const Infinit>(*this);
-}
-
-RCP<const Number> Infinit::sub(const Number &other) const
-{
-    return this->add(*other.mul(*minus_one));
+        return rcp_from_this_cast<Number>();
 }
 
 RCP<const Number> Infinit::mul(const Number &other) const
@@ -127,7 +122,7 @@ RCP<const Number> Infinit::mul(const Number &other) const
         return make_rcp<const Infinit>(this->_direction->mul(*(s._direction)));
     } else {
         if (other.is_positive())
-            return make_rcp<const Infinit>(this->_direction);
+            return rcp_from_this_cast<Number>();
         else if (other.is_negative())
             return make_rcp<const Infinit>(this->_direction->mul(*minus_one));
         else
