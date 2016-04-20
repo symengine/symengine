@@ -519,7 +519,10 @@ public:
     {
         poly_ = MultivariatePolynomial::from_dict({symbol("")}, { {{0}, e} });
     }
-
+    MultivariateExprPolynomial(RCP<const Symbol> s)
+    {
+        poly_ = MultivariatePolynomial::from_dict({symbol("")}, { {{0},Expression(s)} });
+    }
     MultivariateExprPolynomial &operator=(const MultivariateExprPolynomial &) = default;
     MultivariateExprPolynomial &operator=(MultivariateExprPolynomial &&other) SYMENGINE_NOEXCEPT {
         if (this != &other)

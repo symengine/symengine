@@ -104,8 +104,12 @@ public:
     IMPLEMENT_TYPEID(MULTIVARIATESERIES)
     MultivariateSeries(const MultivariateExprPolynomial &sp,
                      const std::string varname, const unsigned degree) 
-        : SeriesBase(std::move(sp), varname, degree)
-    {        
+        : SeriesBase(std::move(sp), varname, degree), whichvar(0)
+    {
+    }
+    
+    std::string to_string() const {
+        return p_.get_basic()->__str__();
     }
     
     static RCP<const MultivariateSeries>

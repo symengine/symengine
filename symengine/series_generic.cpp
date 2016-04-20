@@ -378,7 +378,7 @@ MultivariateSeries::integrate(const MultivariateExprPolynomial &s,
     }
     return MultivariateExprPolynomial(MultivariatePolynomial::from_dict(vars, std::move(dict))); 
 }
-/*
+
 MultivariateExprPolynomial
 MultivariateSeries::subs(const MultivariateExprPolynomial &s,
                        const MultivariateExprPolynomial &var,
@@ -387,11 +387,11 @@ MultivariateSeries::subs(const MultivariateExprPolynomial &s,
     MultivariateExprPolynomial 
     result(r.get_var());
     for (auto &i : s.get_dict()) {       
-        result += i.second * pow(r, i.first, prec);
+        result += i.second * pow(r, i.first[0], prec);
     }
     return result;
 }
-*/
+
 Expression MultivariateSeries::sin(const Expression& c)
 {
     return SymEngine::sin(c.get_basic());
