@@ -87,6 +87,7 @@ using SymEngine::vec_basic;
 using SymEngine::real_double;
 using SymEngine::complex_double;
 using SymEngine::RealDouble;
+using SymEngine::Complex;
 using SymEngine::ComplexDouble;
 using SymEngine::rational;
 using SymEngine::Number;
@@ -245,6 +246,7 @@ TEST_CASE("Sin: functions", "[functions]")
             < 1e-12);
     REQUIRE(std::abs(static_cast<const RealDouble &>(*r2).i + 0.416146836547142)
             < 1e-12);
+
 }
 
 TEST_CASE("Cos: functions", "[functions]")
@@ -285,6 +287,11 @@ TEST_CASE("Cos: functions", "[functions]")
     // cos(-y) = cos(y)
     r1 = cos(mul(im1, y));
     r2 = cos(y);
+    REQUIRE(eq(*r1, *r2));
+    
+    // cos(x - 12) = cos(12 - x)
+    r1 = cos(sub(x, i12));
+    r2 = cos(sub(i12, x));
     REQUIRE(eq(*r1, *r2));
 
     // cos(acos(x)) = x
@@ -1400,34 +1407,56 @@ TEST_CASE("Could extract minus: functions", "[functions]")
     RCP<const Basic> x = symbol("x");
     RCP<const Basic> y = symbol("y");
 
-    RCP<const Basic> i2 = integer(2);
-    RCP<const Basic> im1 = integer(-1);
-    RCP<const Basic> r;
-    bool b;
+    RCP<const Number> i2 = integer(2);
+    RCP<const Number> im1 = integer(-1);
+    RCP<const Basic> r, s;
+    bool b, c;
 
     r = add(mul(im1, x), mul(im1, mul(i2, y)));
-    b = could_extract_minus(r);
+    b = could_extract_minus(*r);
     REQUIRE(b == true);
 
     r = add(mul(im1, x), mul(i2, y));
-    b = could_extract_minus(r);
-    REQUIRE(b == false);
+    s = add(x, mul(mul(i2, y), im1));
+    b = could_extract_minus(*r);
+    c = could_extract_minus(*s);
+    REQUIRE(b != c);
 
     r = mul(mul(x, integer(-10)), y);
-    b = could_extract_minus(r);
+    b = could_extract_minus(*r);
     REQUIRE(b == true);
 
     r = mul(mul(x, i2), y);
-    b = could_extract_minus(r);
+    b = could_extract_minus(*r);
     REQUIRE(b == false);
 
     r = add(mul(im1, x), mul(im1, div(mul(i2, y), integer(3))));
-    b = could_extract_minus(r);
+    b = could_extract_minus(*r);
     REQUIRE(b == true);
 
     r = mul(div(x, i2), y);
-    b = could_extract_minus(r);
+    b = could_extract_minus(*r);
     REQUIRE(b == false);
+
+    r = Complex::from_two_nums(*i2, *im1);
+    b = could_extract_minus(*r);
+    REQUIRE(b == false);
+
+    r = Complex::from_two_nums(*im1, *i2);
+    b = could_extract_minus(*r);
+    REQUIRE(b == true);
+
+    r = Complex::from_two_nums(*zero, *i2);
+    b = could_extract_minus(*r);
+    REQUIRE(b == false);
+
+    r = Complex::from_two_nums(*zero, *im1);
+    b = could_extract_minus(*r);
+    REQUIRE(b == true);
+
+    r = im1;
+    b = could_extract_minus(*r);
+    REQUIRE(b == true);
 }
 
 TEST_CASE("Asin: functions", "[functions]")
@@ -1542,6 +1571,7 @@ TEST_CASE("Asec: functions", "[functions]")
 
     r1 = asec(div(i2, im1));
     r2 = mul(i2, div(pi, i3));
+    std::cout << r1->__str__() << std::endl;
     REQUIRE(eq(*r1, *r2));
 
     r1 = asec(sqrt(i2));
