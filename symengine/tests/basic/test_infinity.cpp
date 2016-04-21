@@ -27,6 +27,7 @@ using SymEngine::NegInf;
 using SymEngine::ComplexInf;
 using SymEngine::Symbol;
 using SymEngine::symbol;
+using SymEngine::Complex;
 
 TEST_CASE("Constructors for Infinity", "[Infinity]")
 {
@@ -64,6 +65,9 @@ TEST_CASE("Constructors for Infinity", "[Infinity]")
     //! Checking copy constructor
     Infinit inf2 = Infinit(*NegInf);
     REQUIRE(inf2.__str__() == "-oo");
+
+    RCP<const Number> cx = Complex::from_two_nums(*integer(1), *integer(1));
+    CHECK_THROWS_AS(Infinit::from_direction(cx), std::runtime_error);
 }
 
 TEST_CASE("Hash Size for Infinity", "[Infinity]")
@@ -146,6 +150,19 @@ TEST_CASE("Check Derivative", "[Infinity]")
 
 TEST_CASE("Adding to Infinity", "[Infinity]")
 {
+    RCP<const Infinit> a = Inf;
+    RCP<const Infinit> b = NegInf;
+    RCP<const Infinit> c = ComplexInf;
+
+    RCP<const Number> n1 = a->add(*one);
+    REQUIRE(n1->__str__() == "+oo");
+    n1 = b->add(*b);
+    REQUIRE(n1->__str__() == "-oo");
+    n1 = c->add(*minus_one);
+    REQUIRE(n1->__str__() == "zoo");
+    CHECK_THROWS_AS(c->add(*c), std::runtime_error);
+    CHECK_THROWS_AS(c->add(*a), std::runtime_error);
+    CHECK_THROWS_AS(b->add(*a), std::runtime_error);
 }
 
 TEST_CASE("Subtracting from Infinity", "[Infinity]")
@@ -155,4 +172,32 @@ TEST_CASE("Subtracting from Infinity", "[Infinity]")
 
 TEST_CASE("Multiplication with Infinity", "[Infinity]")
 {
+    RCP<const Infinit> a = Inf;
+    RCP<const Infinit> b = NegInf;
+    RCP<const Infinit> c = ComplexInf;
+
+    RCP<const Number> n1 = b->mul(*integer(-10));
+    REQUIRE(n1->__str__() == "+oo");
+    n1 = c->mul(*integer(5));
+    REQUIRE(n1->__str__() == "zoo");
+    n1 = c->mul(*integer(-5));
+    REQUIRE(n1->__str__() == "zoo");
+
+    RCP<const Number> n2 = a->mul(*a);
+    REQUIRE(n2->__str__() == "+oo");
+    n2 = b->mul(*a);
+    REQUIRE(n2->__str__() == "-oo");
+    n2 = b->mul(*c);
+    REQUIRE(n2->__str__() == "zoo");
+    n2 = b->mul(*b);
+    REQUIRE(n2->__str__() == "+oo");
+    n2 = c->mul(*c);
+    REQUIRE(n2->__str__() == "zoo");
+
+    CHECK_THROWS_AS(a->mul(*zero), std::runtime_error);
+    CHECK_THROWS_AS(b->mul(*zero), std::runtime_error);
+    CHECK_THROWS_AS(c->mul(*zero), std::runtime_error);
+
+    RCP<const Number> cx = Complex::from_two_nums(*integer(1), *integer(1));
+    CHECK_THROWS_AS(c->mul(*cx), std::runtime_error);
 }

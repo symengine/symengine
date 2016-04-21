@@ -107,6 +107,10 @@ RCP<const Number> Infinit::add(const Number &other) const
             throw std::runtime_error("Indeterminate Expression: `infinity +- "
                                      "infinity` encountered. Directions don't "
                                      "match");
+    } else if (is_unsigned_infinity()) {
+        throw std::runtime_error("Indeterminate Expression: "
+                                 "`unsigned_infinity +- unsigned infinity` "
+                                 "encountered");
     } else
         return rcp_from_this_cast<Number>();
 }
