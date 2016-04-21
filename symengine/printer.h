@@ -173,6 +173,7 @@ public:
     void bvisit(const Infinit &x);
     void bvisit(const UnivariateIntPolynomial &x);
     void bvisit(const UnivariatePolynomial &x);
+    void bvisit(const UnivariateSeries &x);
 #ifdef HAVE_SYMENGINE_PIRANHA
     void bvisit(const URatPSeriesPiranha &x);
     void bvisit(const UPSeriesPiranha &x);
