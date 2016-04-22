@@ -246,7 +246,6 @@ TEST_CASE("Sin: functions", "[functions]")
             < 1e-12);
     REQUIRE(std::abs(static_cast<const RealDouble &>(*r2).i + 0.416146836547142)
             < 1e-12);
-
 }
 
 TEST_CASE("Cos: functions", "[functions]")
@@ -288,7 +287,7 @@ TEST_CASE("Cos: functions", "[functions]")
     r1 = cos(mul(im1, y));
     r2 = cos(y);
     REQUIRE(eq(*r1, *r2));
-    
+
     // cos(x - 12) = cos(12 - x)
     r1 = cos(sub(x, i12));
     r2 = cos(sub(i12, x));

@@ -132,7 +132,7 @@ bool could_extract_minus(const Basic &arg)
     if (is_a_Number(arg)) {
         if (static_cast<const Number &>(arg).is_negative()) {
             return true;
-        // TODO: see #915
+            // TODO: see #915
         } else if (is_a<Complex>(arg)) {
             const Complex &c = static_cast<const Complex &>(arg);
             return c.real_ < 0 or (c.real_ == 0 and c.imaginary_ < 0);
@@ -161,7 +161,8 @@ bool handle_minus(const RCP<const Basic> &arg,
     if (is_a<Mul>(*arg)) {
         const Mul &s = static_cast<const Mul &>(*arg);
         // Check for -Add instances to transform -(-x + 2*y) to (x - 2*y)
-        if (s.coef_->is_minus_one() && s.dict_.size() == 1 && eq(*s.dict_.begin()->second, *one)) {
+        if (s.coef_->is_minus_one() && s.dict_.size() == 1
+            && eq(*s.dict_.begin()->second, *one)) {
             return not handle_minus(mul(minus_one, arg), rarg);
         } else if (could_extract_minus(*s.coef_)) {
             *rarg = mul(minus_one, arg);
