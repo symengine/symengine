@@ -52,10 +52,10 @@ public:
     virtual void transpose(MatrixBase &result) const = 0;
 
     // Extract out a submatrix
-    virtual void submatrix(MatrixBase &result,
-                           unsigned row_start, unsigned col_start,
-                           unsigned row_end, unsigned col_end,
-                           unsigned row_step = 1, unsigned col_step = 1) const = 0;
+    virtual void submatrix(MatrixBase &result, unsigned row_start,
+                           unsigned col_start, unsigned row_end,
+                           unsigned col_end, unsigned row_step = 1,
+                           unsigned col_step = 1) const = 0;
     // LU factorization
     virtual void LU(MatrixBase &L, MatrixBase &U) const = 0;
 
@@ -78,7 +78,7 @@ class DenseMatrix : public MatrixBase
 public:
     // Constructors
     DenseMatrix();
-    DenseMatrix(const DenseMatrix&);
+    DenseMatrix(const DenseMatrix &);
     DenseMatrix(unsigned row, unsigned col);
     DenseMatrix(unsigned row, unsigned col, const vec_basic &l);
 
@@ -120,10 +120,10 @@ public:
     virtual void transpose(MatrixBase &result) const;
 
     // Extract out a submatrix
-    virtual void submatrix(MatrixBase &result,
-                           unsigned row_start, unsigned col_start,
-                           unsigned row_end, unsigned col_end,
-                           unsigned row_step = 1, unsigned col_step = 1) const;
+    virtual void submatrix(MatrixBase &result, unsigned row_start,
+                           unsigned col_start, unsigned row_end,
+                           unsigned col_end, unsigned row_step = 1,
+                           unsigned col_step = 1) const;
 
     // LU factorization
     virtual void LU(MatrixBase &L, MatrixBase &U) const;
@@ -145,14 +145,14 @@ public:
                          DenseMatrix &result);
     // Return the Jacobian of the matrix using sdiff
     friend void sjacobian(const DenseMatrix &A, const DenseMatrix &x,
-                         DenseMatrix &result);
+                          DenseMatrix &result);
 
     // Differentiate the matrix element-wise
     friend void diff(const DenseMatrix &A, const RCP<const Symbol> &x,
-                         DenseMatrix &result);
+                     DenseMatrix &result);
     // Differentiate the matrix element-wise using SymPy compatible diff
     friend void sdiff(const DenseMatrix &A, const RCP<const Basic> &x,
-                         DenseMatrix &result);
+                      DenseMatrix &result);
 
     // Friend functions related to Matrix Operations
     friend void add_dense_dense(const DenseMatrix &A, const DenseMatrix &B,
@@ -290,10 +290,10 @@ public:
     virtual void transpose(MatrixBase &result) const;
 
     // Extract out a submatrix
-    virtual void submatrix(MatrixBase &result,
-                           unsigned row_start, unsigned col_start,
-                           unsigned row_end, unsigned col_end,
-                           unsigned row_step = 1, unsigned col_step = 1) const;
+    virtual void submatrix(MatrixBase &result, unsigned row_start,
+                           unsigned col_start, unsigned row_end,
+                           unsigned col_end, unsigned row_step = 1,
+                           unsigned col_step = 1) const;
 
     // LU factorization
     virtual void LU(MatrixBase &L, MatrixBase &U) const;
@@ -364,16 +364,15 @@ void sjacobian(const DenseMatrix &A, const DenseMatrix &x, DenseMatrix &result);
 
 // Differentiate all the elements
 void diff(const DenseMatrix &A, const RCP<const Symbol> &x,
-                         DenseMatrix &result);
+          DenseMatrix &result);
 // Differentiate all the elements using SymPy compatible diff
 void sdiff(const DenseMatrix &A, const RCP<const Basic> &x,
-                         DenseMatrix &result);
+           DenseMatrix &result);
 
 // Get submatrix from a DenseMatrix
-void submatrix_dense(const DenseMatrix &A, DenseMatrix &B,
-                                unsigned row_start, unsigned col_start,
-                                unsigned row_end, unsigned col_end,
-                                unsigned row_step = 1, unsigned col_step = 1);
+void submatrix_dense(const DenseMatrix &A, DenseMatrix &B, unsigned row_start,
+                     unsigned col_start, unsigned row_end, unsigned col_end,
+                     unsigned row_step = 1, unsigned col_step = 1);
 
 // Matrix Factorization
 void LU(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &U);

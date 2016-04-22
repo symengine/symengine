@@ -1466,20 +1466,18 @@ TEST_CASE("Test Jacobian", "[matrices]")
                                     integer(0), z, y, z, integer(1), x,
                                     integer(1), integer(1), integer(0)}));
 
-    A = DenseMatrix(
-        2, 1, {mul(f, y), pow(y, integer(2))});
+    A = DenseMatrix(2, 1, {mul(f, y), pow(y, integer(2))});
     X = DenseMatrix(2, 1, {f, y});
     J = DenseMatrix(2, 2);
     sjacobian(A, X, J);
     REQUIRE(J == DenseMatrix(2, 2, {y, f, integer(0), mul(integer(2), y)}));
-
 }
 
 TEST_CASE("Test Diff", "[matrices]")
 {
     DenseMatrix A, J;
     RCP<const Symbol> x = symbol("x"), y = symbol("y"), z = symbol("z"),
-                     t = symbol("t");
+                      t = symbol("t");
     auto f = function_symbol("f", x);
     A = DenseMatrix(
         2, 2, {add(x, z), mul(y, z), add(mul(z, x), add(y, t)), add(x, y)});

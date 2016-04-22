@@ -1,19 +1,18 @@
-#include <symengine/basic.h>
-#include <symengine/derivative.h>
-#include <symengine/symbol.h>
 #include <symengine/add.h>
-#include <symengine/integer.h>
-#include <symengine/rational.h>
+#include <symengine/basic.h>
 #include <symengine/complex.h>
-#include <symengine/mul.h>
-#include <symengine/pow.h>
-#include <symengine/functions.h>
-#include <symengine/constants.h>
-#include <symengine/visitor.h>
-#include <symengine/polynomial.h>
 #include <symengine/complex_double.h>
 #include <symengine/complex_mpc.h>
+#include <symengine/constants.h>
+#include <symengine/functions.h>
+#include <symengine/integer.h>
+#include <symengine/mul.h>
+#include <symengine/polynomial.h>
+#include <symengine/pow.h>
+#include <symengine/rational.h>
 #include <symengine/sets.h>
+#include <symengine/symbol.h>
+#include <symengine/visitor.h>
 
 namespace SymEngine
 {
@@ -486,8 +485,11 @@ public:
                 if (p.first != 0)
                     d[p.first - 1] = p.second * p.first;
             }
+            int degree = 0;
+            if (!d.empty())
+                degree = (--(d.end()))->first;
             return make_rcp<const UnivariateIntPolynomial>(
-                self.get_var(), (--(d.end()))->first, std::move(d));
+                self.get_var(), degree, std::move(d));
         } else {
             map_uint_mpz d;
             return make_rcp<const UnivariateIntPolynomial>(self.get_var(), 0,
@@ -504,8 +506,11 @@ public:
                 if (p.first != 0)
                     d[p.first - 1] = p.second * p.first;
             }
-            return make_rcp<const UnivariatePolynomial>(
-                self.get_var(), (--(d.end()))->first, std::move(d));
+            int degree = 0;
+            if (!d.empty())
+                degree = (--(d.end()))->first;
+            return make_rcp<const UnivariatePolynomial>(self.get_var(), degree,
+                                                        std::move(d));
         } else {
             map_int_Expr d;
             return make_rcp<const UnivariatePolynomial>(self.get_var(), 0,
@@ -592,14 +597,16 @@ public:
 #include "symengine/type_codes.inc"
 #undef SYMENGINE_ENUM
 
-RCP<const Basic> diff(const RCP<const Basic> &arg, const RCP<const Symbol> &x) {
+RCP<const Basic> diff(const RCP<const Basic> &arg, const RCP<const Symbol> &x)
+{
     return arg->diff(x);
 }
 
 //! SymPy style differentiation for non-symbol variables
 // Since SymPy's differentiation makes no sense mathematically, it is
 // defined separately here for compatibility
-RCP<const Basic> sdiff(const RCP<const Basic> &arg, const RCP<const Basic> &x) {
+RCP<const Basic> sdiff(const RCP<const Basic> &arg, const RCP<const Basic> &x)
+{
     if (is_a<Symbol>(*x)) {
         return arg->diff(rcp_static_cast<const Symbol>(x));
     } else {
