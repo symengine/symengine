@@ -315,7 +315,7 @@ Expression MultivariateSeries::convert(const Basic &x)
 
 int MultivariateSeries::ldegree(const MultivariateExprPolynomial &s)
 {
-    int min = UINT_MAX;
+    int min = INT_MAX;
     for (auto bucket : s.get_poly()->dict_) {
         for(unsigned int i = 0; i < bucket.first.size(); i++)
             if (bucket.first[i] < min)
