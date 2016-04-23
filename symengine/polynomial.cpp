@@ -110,16 +110,7 @@ RCP<const UnivariateIntPolynomial>
 UnivariateIntPolynomial::from_vec(const RCP<const Symbol> &var,
                                   const std::vector<integer_class> &v)
 {
-    map_uint_mpz dict;
-    unsigned int degree = 0;
-    for (unsigned int i = 0; i < v.size(); i++) {
-        if (0 != v[i]) {
-            dict.insert(std::pair<unsigned int, integer_class>(i, v[i]));
-            degree = i;
-        }
-    }
-    return make_rcp<const UnivariateIntPolynomial>(var, degree,
-                                                   std::move(dict));
+    return make_rcp<const UnivariateIntPolynomial>(var, std::move(v));
 }
 
 void UnivariateIntPolynomial::dict_add_term(map_uint_mpz &d,
@@ -447,15 +438,7 @@ RCP<const UnivariatePolynomial>
 UnivariatePolynomial::from_vec(const RCP<const Symbol> &var,
                                const std::vector<Expression> &v)
 {
-    map_int_Expr dict;
-    unsigned int degree = 0;
-    for (unsigned int i = 0; i < v.size(); i++) {
-        if (Expression(0) != v[i]) {
-            dict.insert(std::pair<int, Expression>(i, v[i]));
-            degree = i;
-        }
-    }
-    return make_rcp<const UnivariatePolynomial>(var, degree, std::move(dict));
+    return make_rcp<const UnivariatePolynomial>(var, std::move(v));
 }
 
 RCP<const UnivariatePolynomial>
@@ -470,15 +453,14 @@ UnivariatePolynomial::from_dict(const RCP<const Symbol> &var, map_int_Expr &&d)
         } else
             iter++;
     }
-    unsigned int degree = 0;
+    int degree = 0;
     if (!d.empty())
         degree = (--(d.end()))->first;
     return make_rcp<const UnivariatePolynomial>(var, degree, std::move(d));
 }
 
 void UnivariatePolynomial::dict_add_term(map_int_Expr &d,
-                                         const Expression &coef,
-                                         const unsigned int &n)
+                                         const Expression &coef, const int &n)
 {
     auto it = d.find(n);
     if (it == d.end())
@@ -637,8 +619,6 @@ RCP<const UnivariatePolynomial> mul_uni_poly(RCP<const UnivariatePolynomial> a,
         var = a->get_var();
     }
 
-    if (a->get_var() != b->get_var())
-        throw std::runtime_error("Error: variables must agree.");
     if (a->get_dict().empty() and b->get_dict().empty())
         return univariate_polynomial(var, {{0, 0}});
 
