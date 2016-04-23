@@ -178,9 +178,10 @@ void CSRMatrix::transpose(MatrixBase &result) const
 }
 
 // Extract out a submatrix
-void CSRMatrix::submatrix(unsigned row_start, unsigned row_end,
-                          unsigned col_start, unsigned col_end,
-                          MatrixBase &result) const
+void CSRMatrix::submatrix(MatrixBase &result, unsigned row_start,
+                          unsigned col_start, unsigned row_end,
+                          unsigned col_end, unsigned row_step,
+                          unsigned col_step) const
 {
     throw std::runtime_error("Not implemented.");
 }

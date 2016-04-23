@@ -5,9 +5,8 @@
 #ifndef SYMENGINE_POLYNOMIALS_H
 #define SYMENGINE_POLYNOMIALS_H
 
-#include <symengine/monomials.h>
-#include <symengine/dict.h>
 #include <symengine/expression.h>
+#include <symengine/monomials.h>
 
 namespace SymEngine
 {
@@ -158,7 +157,7 @@ public:
     * Adds coef*var_**n to the dict_
     */
     static void dict_add_term(map_int_Expr &d, const Expression &coef,
-                              const unsigned int &n);
+                              const int &n);
     Expression max_coef() const;
     //! Evaluates the UnivariatePolynomial at value x
     Expression eval(const Expression &x) const;
@@ -228,8 +227,7 @@ public:
 #else
     template <typename T>
 #endif
-    UnivariateExprPolynomial(T &&o)
-        : poly_(std::forward<T>(o))
+    UnivariateExprPolynomial(T &&o) : poly_(std::forward<T>(o))
     {
     }
     UnivariateExprPolynomial()
@@ -244,7 +242,11 @@ public:
     {
     }
     UnivariateExprPolynomial(int i)
-        : poly_(UnivariatePolynomial::create(symbol(""), {{0, Expression(i)}}))
+        : poly_(UnivariatePolynomial::create(symbol(""), {Expression(i)}))
+    {
+    }
+    UnivariateExprPolynomial(std::string varname)
+        : poly_(UnivariatePolynomial::create(symbol(varname), {0, 1}))
     {
     }
     UnivariateExprPolynomial(RCP<const UnivariatePolynomial> p)
@@ -252,7 +254,7 @@ public:
     {
     }
     UnivariateExprPolynomial(Expression expr)
-        : poly_(UnivariatePolynomial::create(symbol(""), {{0, expr}}))
+        : poly_(UnivariatePolynomial::create(symbol(""), {expr}))
     {
     }
     UnivariateExprPolynomial &operator=(const UnivariateExprPolynomial &)
@@ -292,9 +294,7 @@ public:
 
     UnivariateExprPolynomial operator-() const
     {
-        UnivariateExprPolynomial retval(*this);
-        neg_uni_poly(*(retval.poly_.ptr()));
-        return retval;
+        return neg_uni_poly(*this->poly_);
     }
 
     UnivariateExprPolynomial &operator-=(const UnivariateExprPolynomial &other)
@@ -319,6 +319,12 @@ public:
     UnivariateExprPolynomial &operator*=(const UnivariateExprPolynomial &other)
     {
         poly_ = mul_uni_poly(poly_, other.poly_);
+        return *this;
+    }
+
+    UnivariateExprPolynomial &operator/=(const Expression &other)
+    {
+        poly_ = mul_uni_poly(poly_, UnivariateExprPolynomial(1 / other).poly_);
         return *this;
     }
 
@@ -352,6 +358,7 @@ public:
     {
         RCP<const Symbol> x = poly_->get_var();
         umap_basic_num dict_;
+        RCP<const Number> coeff;
         for (const auto &it : poly_->get_dict()) {
             if (it.first != 0) {
                 auto term = mul(
@@ -360,236 +367,409 @@ public:
                 RCP<const Number> coef;
                 coef = zero;
                 Add::coef_dict_add_term(outArg((coef)), dict_, one, term);
-            }
+            } else
+                coeff = rcp_static_cast<const Number>(it.second.get_basic());
         }
-        return Add::from_dict(integer(0), std::move(dict_));
+        return Add::from_dict(coeff, std::move(dict_));
     }
 
-    int compare(const UnivariateExprPolynomial &other) {
+    int compare(const UnivariateExprPolynomial &other)
+    {
         return poly_->compare(*other.poly_);
+    }
+
+    Expression find_cf(int deg) const
+    {
+        if (poly_->get_dict().find(deg) != poly_->get_dict().end()) {
+            return poly_->get_dict().at(deg);
+        } else {
+            return Expression(0);
+        }
     }
 }; // UnivariateExprPolynomial
 
-//MultivariatePolynomials
-class MultivariateIntPolynomial : public Basic {
+// MultivariatePolynomials
+class MultivariateIntPolynomial : public Basic
+{
 public:
-    //vars: set of variables for the polynomial
-    //degrees: max degrees of the symbols
-    //dict: dictionary for sparse represntation of polynomial, x**1 * y**2 + 3 * x**4 * y ** 5
+    // vars: set of variables for the polynomial
+    // degrees: max degrees of the symbols
+    // dict: dictionary for sparse represntation of polynomial, x**1 * y**2 + 3
+    // * x**4 * y ** 5
     // is represented as {(1,2):1,(4,5):3}
     set_sym vars_;
     umap_sym_uint degrees_;
     umap_uvec_mpz dict_;
+
 public:
     IMPLEMENT_TYPEID(MULTIVARIATEINTPOLYNOMIAL)
-    //constructor from components
-    MultivariateIntPolynomial(const set_sym &var, umap_sym_uint &degrees, umap_uvec_mpz &dict);
-    //creates a MultivariateIntPolynomial in cannonical form based on dictionary d.
-    static RCP<const MultivariateIntPolynomial> from_dict(const set_sym &s, umap_uvec_mpz &&d);
+    // constructor from components
+    MultivariateIntPolynomial(const set_sym &var, umap_sym_uint &degrees,
+                              umap_uvec_mpz &dict);
+    // creates a MultivariateIntPolynomial in cannonical form based on
+    // dictionary d.
+    static RCP<const MultivariateIntPolynomial> from_dict(const set_sym &s,
+                                                          umap_uvec_mpz &&d);
     vec_basic get_args() const;
-    bool is_canonical(const set_sym &vars, const umap_sym_uint &degrees, const umap_uvec_mpz &dict);
+    bool is_canonical(const set_sym &vars, const umap_sym_uint &degrees,
+                      const umap_uvec_mpz &dict);
     std::size_t __hash__() const;
     bool __eq__(const Basic &o) const;
     int compare(const Basic &o) const;
-    integer_class eval(std::map<RCP<const Symbol>, integer_class, RCPSymbolCompare> &vals) const;
+    integer_class eval(std::map<RCP<const Symbol>, integer_class,
+                                RCPSymbolCompare> &vals) const;
 };
 
-//reconciles the positioning of the exponents in the vectors in the umap_uvec_mpz dict_ of the arguments
-//with the positioning of the exponents in the correspondng vectors of the output of the function.
-//v1 and v2 are vectors whose indices are the positions in the arguments and whose values are the
-//positions in the output.  set_sym s is the set of symbols of the output, and
+// reconciles the positioning of the exponents in the vectors in the
+// umap_uvec_mpz dict_ of the arguments
+// with the positioning of the exponents in the correspondng vectors of the
+// output of the function.
+// v1 and v2 are vectors whose indices are the positions in the arguments and
+// whose values are the
+// positions in the output.  set_sym s is the set of symbols of the output, and
 // s1 and s2 are the sets of the symbols of the inputs.
-unsigned int reconcile(vec_uint &v1, vec_uint &v2, set_sym &s, const set_sym &s1, const set_sym &s2);
-//same as above, but for reconciling representation of a UnivariatePolynomial.
-unsigned int reconcile(vec_uint &v1, unsigned int &v2, set_sym &s, const set_sym &s1,
-    const RCP<const Symbol> s2);
-//translates vectors of exponents from one polynomial into vectors of exponents for another.
-//i.e. a polynomial if one of the addends is a polynomial in x,y and the sum is a polynomial
-//in x,y,z, we will need to translate vectors with two elements to vectors with three elements.
-//This situation can arise when we want to preform operations with two polynomials in different
-//variables
-//translator is the vector generated by the reconcile function and size is the size of the
-//resulting vector.
+unsigned int reconcile(vec_uint &v1, vec_uint &v2, set_sym &s,
+                       const set_sym &s1, const set_sym &s2);
+// same as above, but for reconciling representation of a UnivariatePolynomial.
+unsigned int reconcile(vec_uint &v1, unsigned int &v2, set_sym &s,
+                       const set_sym &s1, const RCP<const Symbol> s2);
+// translates vectors of exponents from one polynomial into vectors of exponents
+// for another.
+// i.e. a polynomial if one of the addends is a polynomial in x,y and the sum is
+// a polynomial
+// in x,y,z, we will need to translate vectors with two elements to vectors with
+// three elements.
+// This situation can arise when we want to preform operations with two
+// polynomials in different
+// variables
+// translator is the vector generated by the reconcile function and size is the
+// size of the
+// resulting vector.
 vec_uint translate(vec_uint original, vec_uint translator, unsigned int size);
-//translates terms of UnivariateIntPolynomial into vectors
-vec_uint translate(unsigned int original, unsigned int translator, unsigned int size);
-vec_uint uint_vec_translate_and_add(const vec_uint &v1, const vec_uint &v2, 
-    const vec_uint &translator1, const vec_uint &translator2, const unsigned int size);
-vec_uint uint_vec_translate_and_add(const vec_uint &v1, const unsigned int v2, 
-    const vec_uint &translator1,const unsigned int &translator2, const unsigned int size);
+// translates terms of UnivariateIntPolynomial into vectors
+vec_uint translate(unsigned int original, unsigned int translator,
+                   unsigned int size);
+vec_uint uint_vec_translate_and_add(const vec_uint &v1, const vec_uint &v2,
+                                    const vec_uint &translator1,
+                                    const vec_uint &translator2,
+                                    const unsigned int size);
+vec_uint uint_vec_translate_and_add(const vec_uint &v1, const unsigned int v2,
+                                    const vec_uint &translator1,
+                                    const unsigned int &translator2,
+                                    const unsigned int size);
 
-RCP<const MultivariateIntPolynomial> add_mult_poly(const MultivariateIntPolynomial &a, 
-    const MultivariateIntPolynomial &b);
-RCP<const MultivariateIntPolynomial> neg_mult_poly(const MultivariateIntPolynomial &a);
-RCP<const MultivariateIntPolynomial> sub_mult_poly(const MultivariateIntPolynomial &a, 
-    const MultivariateIntPolynomial &b);
-RCP<const MultivariateIntPolynomial> mul_mult_poly(const MultivariateIntPolynomial &a, 
-    const MultivariateIntPolynomial &b);
+unsigned int reconcile(vec_int &v1, vec_int &v2, set_sym &s, const set_sym &s1,
+                       const set_sym &s2);
+unsigned int reconcile(vec_int &v1, unsigned int &v2, set_sym &s,
+                       const set_sym &s1, const RCP<const Symbol> s2);
 
-RCP<const MultivariateIntPolynomial> add_mult_poly(const MultivariateIntPolynomial &a, 
-    const UnivariateIntPolynomial &b);
-RCP<const MultivariateIntPolynomial> add_mult_poly(const UnivariateIntPolynomial &a, 
-    const MultivariateIntPolynomial &b);
-RCP<const MultivariateIntPolynomial> sub_mult_poly(const MultivariateIntPolynomial &a, 
-    const UnivariateIntPolynomial &b);
-RCP<const MultivariateIntPolynomial> sub_mult_poly(const UnivariateIntPolynomial &a, 
-    const MultivariateIntPolynomial &b);
-RCP<const MultivariateIntPolynomial> mul_mult_poly(const MultivariateIntPolynomial &a, 
-    const UnivariateIntPolynomial &b);
-RCP<const MultivariateIntPolynomial> mul_mult_poly(const UnivariateIntPolynomial &a, 
-    const MultivariateIntPolynomial &b);
+vec_int translate(vec_int original, vec_uint translator, unsigned int size);
+vec_int translate(int original, unsigned int translator, unsigned int size);
+vec_int int_vec_translate_and_add(const vec_int &v1, const vec_int &v2,
+                                  const vec_uint &translator1,
+                                  const vec_uint &translator2,
+                                  const unsigned int size);
+vec_int int_vec_translate_and_add(const vec_int &v1, const unsigned int v2,
+                                  const vec_uint &translator1,
+                                  const unsigned int &translator2,
+                                  const unsigned int size);
 
-RCP<const MultivariateIntPolynomial> add_mult_poly(const UnivariateIntPolynomial &a, 
-    const UnivariateIntPolynomial &b);
-RCP<const MultivariateIntPolynomial> sub_mult_poly(const UnivariateIntPolynomial &a, 
-    const UnivariateIntPolynomial &b);
-RCP<const MultivariateIntPolynomial> mul_mult_poly(const UnivariateIntPolynomial &a, 
-    const UnivariateIntPolynomial &b);
+RCP<const MultivariateIntPolynomial>
+add_mult_poly(const MultivariateIntPolynomial &a,
+              const MultivariateIntPolynomial &b);
+RCP<const MultivariateIntPolynomial>
+neg_mult_poly(const MultivariateIntPolynomial &a);
+RCP<const MultivariateIntPolynomial>
+sub_mult_poly(const MultivariateIntPolynomial &a,
+              const MultivariateIntPolynomial &b);
+RCP<const MultivariateIntPolynomial>
+mul_mult_poly(const MultivariateIntPolynomial &a,
+              const MultivariateIntPolynomial &b);
 
+RCP<const MultivariateIntPolynomial>
+add_mult_poly(const MultivariateIntPolynomial &a,
+              const UnivariateIntPolynomial &b);
+RCP<const MultivariateIntPolynomial>
+add_mult_poly(const UnivariateIntPolynomial &a,
+              const MultivariateIntPolynomial &b);
+RCP<const MultivariateIntPolynomial>
+sub_mult_poly(const MultivariateIntPolynomial &a,
+              const UnivariateIntPolynomial &b);
+RCP<const MultivariateIntPolynomial>
+sub_mult_poly(const UnivariateIntPolynomial &a,
+              const MultivariateIntPolynomial &b);
+RCP<const MultivariateIntPolynomial>
+mul_mult_poly(const MultivariateIntPolynomial &a,
+              const UnivariateIntPolynomial &b);
+RCP<const MultivariateIntPolynomial>
+mul_mult_poly(const UnivariateIntPolynomial &a,
+              const MultivariateIntPolynomial &b);
 
-//MultivariatePolynomial
-class MultivariatePolynomial : public Basic {
+RCP<const MultivariateIntPolynomial>
+add_mult_poly(const UnivariateIntPolynomial &a,
+              const UnivariateIntPolynomial &b);
+RCP<const MultivariateIntPolynomial>
+sub_mult_poly(const UnivariateIntPolynomial &a,
+              const UnivariateIntPolynomial &b);
+RCP<const MultivariateIntPolynomial>
+mul_mult_poly(const UnivariateIntPolynomial &a,
+              const UnivariateIntPolynomial &b);
+
+// MultivariatePolynomial
+class MultivariatePolynomial : public Basic
+{
 public:
-    //vars: set of variables for the polynomial
-    //degrees: max degrees of the symbols
-    //dict: dictionary for sparse represntation of polynomial, x**1 * y**2 + 3 * x**4 * y ** 5
+    // vars: set of variables for the polynomial
+    // degrees: max degrees of the symbols
+    // dict: dictionary for sparse represntation of polynomial, x**1 * y**2 + 3
+    // * x**4 * y ** 5
     // is represented as {(1,2):1,(4,5):3}
     set_sym vars_;
-    umap_sym_uint degrees_;
-    umap_uvec_expr dict_;
+    umap_sym_int degrees_;
+    umap_vec_expr dict_;
+
 public:
     IMPLEMENT_TYPEID(MULTIVARIATEPOLYNOMIAL);
-    //constructor from components
-    MultivariatePolynomial(const set_sym &var, umap_sym_uint &degrees, umap_uvec_expr &dict);
-    //creates a MultivariatePolynomial in cannonical form based on dictionary d.
-    static RCP<const MultivariatePolynomial> from_dict(const set_sym &s, umap_uvec_expr &&d);
+    // constructor from components
+    MultivariatePolynomial(const set_sym &var, umap_sym_int &degrees,
+                           umap_vec_expr &dict);
+    // creates a MultivariatePolynomial in cannonical form based on dictionary
+    // d.
+    static RCP<const MultivariatePolynomial> from_dict(const set_sym &s,
+                                                       umap_vec_expr &&d);
     vec_basic get_args() const;
-    bool is_canonical(const set_sym &vars, const umap_sym_uint &degrees, const umap_uvec_expr &dict);
+    bool is_canonical(const set_sym &vars, const umap_sym_int &degrees,
+                      const umap_vec_expr &dict);
     std::size_t __hash__() const;
     bool __eq__(const Basic &o) const;
     int compare(const Basic &o) const;
-    Expression eval(std::map<RCP<const Symbol>, Expression, RCPSymbolCompare> &vals) const;
+    Expression
+    eval(std::map<RCP<const Symbol>, Expression, RCPSymbolCompare> &vals) const;
 };
 
-RCP<const MultivariatePolynomial> add_mult_poly(const MultivariatePolynomial &a, 
-    const MultivariatePolynomial &b);
-RCP<const MultivariatePolynomial> neg_mult_poly(const MultivariatePolynomial &a);
-RCP<const MultivariatePolynomial> sub_mult_poly(const MultivariatePolynomial &a, 
-    const MultivariatePolynomial &b);
-RCP<const MultivariatePolynomial> mul_mult_poly(const MultivariatePolynomial &a, 
-    const MultivariatePolynomial &b);
+RCP<const MultivariatePolynomial>
+add_mult_poly(const MultivariatePolynomial &a, const MultivariatePolynomial &b);
+RCP<const MultivariatePolynomial>
+neg_mult_poly(const MultivariatePolynomial &a);
+RCP<const MultivariatePolynomial>
+sub_mult_poly(const MultivariatePolynomial &a, const MultivariatePolynomial &b);
+RCP<const MultivariatePolynomial>
+mul_mult_poly(const MultivariatePolynomial &a, const MultivariatePolynomial &b);
 
-RCP<const MultivariatePolynomial> add_mult_poly(const MultivariatePolynomial &a, 
-    const UnivariatePolynomial &b);
-RCP<const MultivariatePolynomial> add_mult_poly(const UnivariatePolynomial &a, 
-    const MultivariatePolynomial &b);
-RCP<const MultivariatePolynomial> sub_mult_poly(const MultivariatePolynomial &a, 
-    const UnivariatePolynomial &b);
-RCP<const MultivariatePolynomial> sub_mult_poly(const UnivariatePolynomial &a, 
-    const MultivariatePolynomial &b);
-RCP<const MultivariatePolynomial> mul_mult_poly(const MultivariatePolynomial &a, 
-    const UnivariatePolynomial &b);
-RCP<const MultivariatePolynomial> mul_mult_poly(const UnivariatePolynomial &a, 
-    const MultivariatePolynomial &b);
+RCP<const MultivariatePolynomial> add_mult_poly(const MultivariatePolynomial &a,
+                                                const UnivariatePolynomial &b);
+RCP<const MultivariatePolynomial>
+add_mult_poly(const UnivariatePolynomial &a, const MultivariatePolynomial &b);
+RCP<const MultivariatePolynomial> sub_mult_poly(const MultivariatePolynomial &a,
+                                                const UnivariatePolynomial &b);
+RCP<const MultivariatePolynomial>
+sub_mult_poly(const UnivariatePolynomial &a, const MultivariatePolynomial &b);
+RCP<const MultivariatePolynomial> mul_mult_poly(const MultivariatePolynomial &a,
+                                                const UnivariatePolynomial &b);
+RCP<const MultivariatePolynomial>
+mul_mult_poly(const UnivariatePolynomial &a, const MultivariatePolynomial &b);
 
-RCP<const MultivariatePolynomial> add_mult_poly(const UnivariatePolynomial &a, 
-    const UnivariatePolynomial &b);
-RCP<const MultivariatePolynomial> sub_mult_poly(const UnivariatePolynomial &a, 
-    const UnivariatePolynomial &b);
-RCP<const MultivariatePolynomial> mul_mult_poly(const UnivariatePolynomial &a, 
-    const UnivariatePolynomial &b);
-	
+RCP<const MultivariatePolynomial> add_mult_poly(const UnivariatePolynomial &a,
+                                                const UnivariatePolynomial &b);
+RCP<const MultivariatePolynomial> sub_mult_poly(const UnivariatePolynomial &a,
+                                                const UnivariatePolynomial &b);
+RCP<const MultivariatePolynomial> mul_mult_poly(const UnivariatePolynomial &a,
+                                                const UnivariatePolynomial &b);
 
-
-class MultivariateExprPolynomial {
+class MultivariateExprPolynomial
+{
 private:
     RCP<const MultivariatePolynomial> poly_;
+
 public:
-    MultivariateExprPolynomial() {}
-    ~MultivariateExprPolynomial() SYMENGINE_NOEXCEPT {}
-    MultivariateExprPolynomial(const MultivariateExprPolynomial &) = default;
-    MultivariateExprPolynomial(MultivariateExprPolynomial &&other) SYMENGINE_NOEXCEPT : poly_(std::move(other.poly_)) {}
-    MultivariateExprPolynomial(RCP<const MultivariatePolynomial> p) : poly_(std::move(p)) {}
-    MultivariateExprPolynomial(int i)
+    MultivariateExprPolynomial()
     {
-        poly_ = MultivariatePolynomial::from_dict({symbol("")}, { {{0},Expression(i)} });
+    }
+    ~MultivariateExprPolynomial() SYMENGINE_NOEXCEPT
+    {
+    }
+    MultivariateExprPolynomial(const MultivariateExprPolynomial &) = default;
+    MultivariateExprPolynomial(MultivariateExprPolynomial &&other)
+        SYMENGINE_NOEXCEPT : poly_(std::move(other.poly_))
+    {
+    }
+    MultivariateExprPolynomial(RCP<const MultivariatePolynomial> p)
+        : poly_(std::move(p))
+    {
+    }
+    explicit MultivariateExprPolynomial(int i)
+    {
+        set_sym s;
+        vec_int v;
+        poly_ = MultivariatePolynomial::from_dict(s, {{v, Expression(i)}});
     }
 
-    MultivariateExprPolynomial(Expression e)
+    explicit MultivariateExprPolynomial(Expression e)
     {
-        poly_ = MultivariatePolynomial::from_dict({symbol("")}, { {{0}, e} });
+        set_sym s;
+        vec_int v;
+        poly_ = MultivariatePolynomial::from_dict(s, {{v, e}});
     }
-    MultivariateExprPolynomial(RCP<const Symbol> s)
+    explicit MultivariateExprPolynomial(RCP<const Symbol> sym)
     {
-        poly_ = MultivariatePolynomial::from_dict({symbol("")}, { {{0},Expression(s)} });
+        set_sym s;
+        vec_int v;
+        poly_ = MultivariatePolynomial::from_dict(s, {{v, Expression(sym)}});
     }
-    MultivariateExprPolynomial &operator=(const MultivariateExprPolynomial &) = default;
-    MultivariateExprPolynomial &operator=(MultivariateExprPolynomial &&other) SYMENGINE_NOEXCEPT {
+    MultivariateExprPolynomial &operator=(const MultivariateExprPolynomial &)
+        = default;
+    MultivariateExprPolynomial &
+    operator=(MultivariateExprPolynomial &&other) SYMENGINE_NOEXCEPT
+    {
         if (this != &other)
             this->poly_ = std::move(other.poly_);
         return *this;
     }
-    
-    friend std::ostream &operator<<(std::ostream &os, const MultivariateExprPolynomial &expr) {
+
+    MultivariateExprPolynomial & operator=(const Expression &other)
+    {
+        return *this = MultivariateExprPolynomial(other);
+    }
+
+    friend std::ostream &operator<<(std::ostream &os,
+                                    const MultivariateExprPolynomial &expr)
+    {
         os << expr.poly_->__str__();
         return os;
     }
-    
-    friend MultivariateExprPolynomial operator+(const MultivariateExprPolynomial &a, const MultivariateExprPolynomial &b) {
+
+    friend MultivariateExprPolynomial
+    operator+(const MultivariateExprPolynomial &a,
+              const MultivariateExprPolynomial &b)
+    {
         return MultivariateExprPolynomial(add_mult_poly(*a.poly_, *b.poly_));
     }
-    
-    MultivariateExprPolynomial &operator+=(const MultivariateExprPolynomial &other) {
+
+    friend MultivariateExprPolynomial operator+(const MultivariateExprPolynomial &a, const Expression &b)
+    {
+        return a + MultivariateExprPolynomial(b);
+    }
+
+    friend MultivariateExprPolynomial operator+(const Expression &a, const MultivariateExprPolynomial &b)
+    {
+        return MultivariateExprPolynomial(a) + b;
+    }
+
+    MultivariateExprPolynomial &
+    operator+=(const MultivariateExprPolynomial &other)
+    {
         poly_ = add_mult_poly(*poly_, *other.poly_);
         return *this;
     }
-    
-    friend MultivariateExprPolynomial operator-(const MultivariateExprPolynomial &a, const MultivariateExprPolynomial &b) {
+
+    MultivariateExprPolynomial &
+    operator+=(const Expression &other)
+    {
+        *this += MultivariateExprPolynomial(other);
+        return *this;
+    }
+
+    friend MultivariateExprPolynomial
+    operator-(const MultivariateExprPolynomial &a,
+              const MultivariateExprPolynomial &b)
+    {
         return MultivariateExprPolynomial(sub_mult_poly(*a.poly_, *b.poly_));
     }
-    
-    MultivariateExprPolynomial operator-() const {
+
+    friend MultivariateExprPolynomial operator-(const Expression &a, const MultivariateExprPolynomial &b)
+    {
+        return MultivariateExprPolynomial(a) - b;
+    }
+
+    friend MultivariateExprPolynomial operator-(const MultivariateExprPolynomial &a, const Expression &b)
+    {
+        return a - MultivariateExprPolynomial(b);
+    }
+
+
+    MultivariateExprPolynomial operator-() const
+    {
         MultivariateExprPolynomial retval(*this);
         neg_mult_poly(*(retval.poly_.ptr()));
         return retval;
     }
-    
-    MultivariateExprPolynomial &operator-=(const MultivariateExprPolynomial &other) {
+
+    MultivariateExprPolynomial &
+    operator-=(const MultivariateExprPolynomial &other)
+    {
         poly_ = sub_mult_poly(*poly_, *other.poly_);
         return *this;
     }
+
+    MultivariateExprPolynomial & operator-=(const Expression &other){
+        *this -= MultivariateExprPolynomial(other);
+        return *this;
+    }
+
+    friend MultivariateExprPolynomial
+    operator*(const MultivariateExprPolynomial &a,
+              const MultivariateExprPolynomial &b)
+    {
+        return MultivariateExprPolynomial(
+            mul_mult_poly(*(a.poly_), *(b.poly_)));
+    }
+
+    friend MultivariateExprPolynomial
+    operator*(const MultivariateExprPolynomial &a,
+              const Expression &b)
+    {
+        return a * MultivariateExprPolynomial(b);
+    }
+
+    friend MultivariateExprPolynomial
+    operator*(const Expression &a,
+              const MultivariateExprPolynomial &b)
+    {
+        return MultivariateExprPolynomial(a) * b;
+    }
     
-    friend MultivariateExprPolynomial operator*(const MultivariateExprPolynomial &a, const MultivariateExprPolynomial &b) {   
-        return MultivariateExprPolynomial(mul_mult_poly(*(a.poly_), *(b.poly_)));
-    }   
 
-
-    friend MultivariateExprPolynomial operator/(const MultivariateExprPolynomial &a, const Expression &b) {   
+    friend MultivariateExprPolynomial operator/(const MultivariateExprPolynomial &a, const Expression &b)
+    {
         return a * (1/b);
-    }   
-        
-    MultivariateExprPolynomial &operator*=(const MultivariateExprPolynomial &other) {   
+    }
+
+    MultivariateExprPolynomial &
+    operator*=(const MultivariateExprPolynomial &other)
+    {
         poly_ = mul_mult_poly(*poly_, *(other.poly_));
         return *this;
-    }   
-    
-    bool operator==(const MultivariateExprPolynomial &other) const {   
+    }
+
+    bool operator==(const MultivariateExprPolynomial &other) const
+    {
         return eq(*poly_, *other.poly_);
-    }   
+    }
 
-    bool operator!=(const MultivariateExprPolynomial &other) const {   
-        return not (*this == other);
-    }   
+    bool operator==(const Expression &other) const
+    {
+        if (poly_->dict_.size() > 1)
+            return false;
+        if (poly_->dict_.size() == 0) {
+            if (other == Expression(0)) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        return poly_->dict_.begin()->second == other;
+    }
 
-    const RCP<const Basic> get_basic() const {
-        return poly_;
+    bool operator!=(const MultivariateExprPolynomial &other) const
+    {
+        return not(*this == other);
     }
 
     const RCP<const MultivariatePolynomial> get_poly() const {
         return poly_;
     }
 
-    const umap_uvec_expr get_dict() const
+    const umap_vec_expr get_dict() const
     {
         return poly_->dict_;
     }
@@ -604,11 +784,13 @@ public:
         return poly_->vars_;
     }
 
-}; //MultivariateExprPolynomial
+    const RCP<const Basic> get_basic() const
+    {
+        return poly_;
+    }
 
+}; // MultivariateExprPolynomial
 
-
-	
-}  //SymEngine
+} // SymEngine
 
 #endif

@@ -127,49 +127,63 @@ bool get_pi_shift(const RCP<const Basic> &arg, const Ptr<RCP<const Integer>> &n,
     }
 }
 
-bool could_extract_minus(const RCP<const Basic> &arg)
+bool could_extract_minus(const Basic &arg)
 {
-    if (is_a<Mul>(*arg)) {
-        const Mul &s = static_cast<const Mul &>(*arg);
-        RCP<const Basic> coef = s.coef_;
-        if (is_a<Integer>(*coef)
-            and rcp_static_cast<const Integer>(coef)->is_negative())
+    if (is_a_Number(arg)) {
+        if (static_cast<const Number &>(arg).is_negative()) {
             return true;
-
-        else if (is_a<Rational>(*coef)
-                 and rcp_static_cast<const Rational>(coef)->is_negative())
-            return true;
-        else
+            // TODO: see #915
+        } else if (is_a<Complex>(arg)) {
+            const Complex &c = static_cast<const Complex &>(arg);
+            return c.real_ < 0 or (c.real_ == 0 and c.imaginary_ < 0);
+        } else {
             return false;
-    } else if (is_a<Add>(*arg)) {
-        const Add &s = static_cast<const Add &>(*arg);
-        for (const auto &p : s.dict_) {
-            if (is_a<Integer>(*p.second)) {
-                if (not(rcp_static_cast<const Integer>(p.second)
-                            ->is_negative()))
-                    return false;
-            } else if (is_a<Rational>(*p.second)) {
-                if (not(rcp_static_cast<const Rational>(p.second)
-                            ->is_negative()))
-                    return false;
-            } else
-                return false;
         }
-        return true;
-    } else
+    } else if (is_a<Mul>(arg)) {
+        const Mul &s = static_cast<const Mul &>(arg);
+        return could_extract_minus(*s.coef_);
+    } else if (is_a<Add>(arg)) {
+        const Add &s = static_cast<const Add &>(arg);
+        if (s.coef_->is_zero()) {
+            map_basic_num d(s.dict_.begin(), s.dict_.end());
+            return could_extract_minus(*d.begin()->second);
+        } else {
+            return could_extract_minus(*s.coef_);
+        }
+    } else {
         return false;
+    }
 }
 
 bool handle_minus(const RCP<const Basic> &arg,
                   const Ptr<RCP<const Basic>> &rarg)
 {
-    if (could_extract_minus(arg)) {
+    if (is_a<Mul>(*arg)) {
+        const Mul &s = static_cast<const Mul &>(*arg);
+        // Check for -Add instances to transform -(-x + 2*y) to (x - 2*y)
+        if (s.coef_->is_minus_one() && s.dict_.size() == 1
+            && eq(*s.dict_.begin()->second, *one)) {
+            return not handle_minus(mul(minus_one, arg), rarg);
+        } else if (could_extract_minus(*s.coef_)) {
+            *rarg = mul(minus_one, arg);
+            return true;
+        }
+    } else if (is_a<Add>(*arg)) {
+        if (could_extract_minus(*arg)) {
+            const Add &s = static_cast<const Add &>(*arg);
+            umap_basic_num d = s.dict_;
+            for (auto &p : d) {
+                p.second = p.second->mul(*minus_one);
+            }
+            *rarg = Add::from_dict(s.coef_->mul(*minus_one), std::move(d));
+            return true;
+        }
+    } else if (could_extract_minus(*arg)) {
         *rarg = mul(minus_one, arg);
         return true;
-    } else {
-        *rarg = arg;
-        return false;
     }
+    *rarg = arg;
+    return false;
 }
 
 // \return true of conjugate has to be returned finally else false
@@ -980,11 +994,7 @@ RCP<const Basic> acos(const RCP<const Basic> &arg)
     RCP<const Basic> index;
     bool b = inverse_lookup(inverse_cst, arg, outArg(index));
     if (b) {
-        if (could_extract_minus(index)) {
-            return add(pi, div(pi, index));
-        } else {
-            return sub(div(pi, i2), div(pi, index));
-        }
+        return sub(div(pi, i2), div(pi, index));
     } else {
         return make_rcp<const ACos>(arg);
     }
@@ -1040,11 +1050,7 @@ RCP<const Basic> asec(const RCP<const Basic> &arg)
     RCP<const Basic> index;
     bool b = inverse_lookup(inverse_cst, div(one, arg), outArg(index));
     if (b) {
-        if (could_extract_minus(index)) {
-            return add(pi, div(pi, index));
-        } else {
-            return sub(div(pi, i2), div(pi, index));
-        }
+        return sub(div(pi, i2), div(pi, index));
     } else {
         return make_rcp<const ASec>(arg);
     }
@@ -1219,11 +1225,7 @@ RCP<const Basic> acot(const RCP<const Basic> &arg)
     RCP<const Basic> index;
     bool b = inverse_lookup(inverse_tct, arg, outArg(index));
     if (b) {
-        if (could_extract_minus(index)) {
-            return add(pi, div(pi, index));
-        } else {
-            return sub(div(pi, i2), div(pi, index));
-        }
+        return sub(div(pi, i2), div(pi, index));
     } else {
         return make_rcp<const ACot>(arg);
     }
@@ -1835,7 +1837,7 @@ bool Sinh::is_canonical(const RCP<const Basic> &arg) const
             return false;
         }
     }
-    if (could_extract_minus(arg))
+    if (could_extract_minus(*arg))
         return false;
     return true;
 }
@@ -1868,7 +1870,7 @@ RCP<const Basic> sinh(const RCP<const Basic> &arg)
             return neg(sinh(zero->sub(*_arg)));
         }
     }
-    if (could_extract_minus(arg)) {
+    if (could_extract_minus(*arg)) {
         return neg(sinh(neg(arg)));
     }
     return make_rcp<const Sinh>(arg);
@@ -1896,7 +1898,7 @@ bool Csch::is_canonical(const RCP<const Basic> &arg) const
             return false;
         }
     }
-    if (could_extract_minus(arg))
+    if (could_extract_minus(*arg))
         return false;
     return true;
 }
@@ -1931,7 +1933,7 @@ RCP<const Basic> csch(const RCP<const Basic> &arg)
             return neg(csch(zero->sub(*_arg)));
         }
     }
-    if (could_extract_minus(arg)) {
+    if (could_extract_minus(*arg)) {
         return neg(csch(neg(arg)));
     }
     return make_rcp<const Csch>(arg);
@@ -1961,7 +1963,7 @@ bool Cosh::is_canonical(const RCP<const Basic> &arg) const
             return false;
         }
     }
-    if (could_extract_minus(arg))
+    if (could_extract_minus(*arg))
         return false;
     return true;
 }
@@ -1994,7 +1996,7 @@ RCP<const Basic> cosh(const RCP<const Basic> &arg)
             return cosh(zero->sub(*_arg));
         }
     }
-    if (could_extract_minus(arg)) {
+    if (could_extract_minus(*arg)) {
         return cosh(neg(arg));
     }
     return make_rcp<const Cosh>(arg);
@@ -2022,7 +2024,7 @@ bool Sech::is_canonical(const RCP<const Basic> &arg) const
             return false;
         }
     }
-    if (could_extract_minus(arg))
+    if (could_extract_minus(*arg))
         return false;
     return true;
 }
@@ -2055,7 +2057,7 @@ RCP<const Basic> sech(const RCP<const Basic> &arg)
             return sech(zero->sub(*_arg));
         }
     }
-    if (could_extract_minus(arg)) {
+    if (could_extract_minus(*arg)) {
         return sech(neg(arg));
     }
     return make_rcp<const Sech>(arg);
@@ -2085,7 +2087,7 @@ bool Tanh::is_canonical(const RCP<const Basic> &arg) const
             return false;
         }
     }
-    if (could_extract_minus(arg))
+    if (could_extract_minus(*arg))
         return false;
     return true;
 }
@@ -2118,7 +2120,7 @@ RCP<const Basic> tanh(const RCP<const Basic> &arg)
             return neg(tanh(zero->sub(*_arg)));
         }
     }
-    if (could_extract_minus(arg)) {
+    if (could_extract_minus(*arg)) {
         return neg(tanh(neg(arg)));
     }
     return make_rcp<const Tanh>(arg);
@@ -2148,7 +2150,7 @@ bool Coth::is_canonical(const RCP<const Basic> &arg) const
             return false;
         }
     }
-    if (could_extract_minus(arg))
+    if (could_extract_minus(*arg))
         return false;
     return true;
 }
@@ -2183,7 +2185,7 @@ RCP<const Basic> coth(const RCP<const Basic> &arg)
             return neg(coth(zero->sub(*_arg)));
         }
     }
-    if (could_extract_minus(arg)) {
+    if (could_extract_minus(*arg)) {
         return neg(coth(neg(arg)));
     }
     return make_rcp<const Coth>(arg);
@@ -2213,7 +2215,7 @@ bool ASinh::is_canonical(const RCP<const Basic> &arg) const
             return false;
         }
     }
-    if (could_extract_minus(arg))
+    if (could_extract_minus(*arg))
         return false;
     return true;
 }
@@ -2250,7 +2252,7 @@ RCP<const Basic> asinh(const RCP<const Basic> &arg)
             return neg(asinh(zero->sub(*_arg)));
         }
     }
-    if (could_extract_minus(arg)) {
+    if (could_extract_minus(*arg)) {
         return neg(asinh(neg(arg)));
     }
     return make_rcp<const ASinh>(arg);
@@ -2273,7 +2275,7 @@ bool ACsch::is_canonical(const RCP<const Basic> &arg) const
             return false;
         }
     }
-    if (could_extract_minus(arg))
+    if (could_extract_minus(*arg))
         return false;
     return true;
 }
@@ -2300,7 +2302,7 @@ RCP<const Basic> acsch(const RCP<const Basic> &arg)
         return log(add(one, sq2));
     if (eq(*arg, *minus_one))
         return log(sub(sq2, one));
-    if (could_extract_minus(arg)) {
+    if (could_extract_minus(*arg)) {
         return neg(acsch(neg(arg)));
     }
     return make_rcp<const ACsch>(arg);
@@ -2369,7 +2371,7 @@ bool ATanh::is_canonical(const RCP<const Basic> &arg) const
             return false;
         }
     }
-    if (could_extract_minus(arg))
+    if (could_extract_minus(*arg))
         return false;
     return true;
 }
@@ -2402,7 +2404,7 @@ RCP<const Basic> atanh(const RCP<const Basic> &arg)
             return neg(atanh(zero->sub(*_arg)));
         }
     }
-    if (could_extract_minus(arg)) {
+    if (could_extract_minus(*arg)) {
         return neg(atanh(neg(arg)));
     }
     return make_rcp<const ATanh>(arg);
@@ -2423,7 +2425,7 @@ bool ACoth::is_canonical(const RCP<const Basic> &arg) const
             return false;
         }
     }
-    if (could_extract_minus(arg))
+    if (could_extract_minus(*arg))
         return false;
     return true;
 }
@@ -2454,7 +2456,7 @@ RCP<const Basic> acoth(const RCP<const Basic> &arg)
             return neg(acoth(zero->sub(*_arg)));
         }
     }
-    if (could_extract_minus(arg)) {
+    if (could_extract_minus(*arg)) {
         return neg(acoth(neg(arg)));
     }
     return make_rcp<const ACoth>(arg);
@@ -2870,7 +2872,7 @@ bool Erf::is_canonical(const RCP<const Basic> &arg) const
 {
     if (is_a<Integer>(*arg) and rcp_static_cast<const Integer>(arg)->is_zero())
         return false;
-    if (could_extract_minus(arg))
+    if (could_extract_minus(*arg))
         return false;
     return true;
 }
@@ -2901,7 +2903,7 @@ RCP<const Basic> erf(const RCP<const Basic> &arg)
         and rcp_static_cast<const Integer>(arg)->is_zero()) {
         return zero;
     }
-    if (could_extract_minus(arg)) {
+    if (could_extract_minus(*arg)) {
         return neg(erf(neg(arg)));
     }
     return make_rcp<Erf>(arg);
@@ -3586,7 +3588,7 @@ bool Abs::is_canonical(const RCP<const Basic> &arg) const
         return false;
     }
 
-    if (could_extract_minus(arg)) {
+    if (could_extract_minus(*arg)) {
         return false;
     }
 
@@ -3638,7 +3640,7 @@ RCP<const Basic> abs(const RCP<const Basic> &arg)
         return static_cast<const Number &>(*arg).get_eval().abs(*arg);
     }
 
-    if (could_extract_minus(arg)) {
+    if (could_extract_minus(*arg)) {
         return abs(neg(arg));
     }
 
