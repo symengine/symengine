@@ -5,9 +5,9 @@
 #ifndef SYMENGINE_POLYNOMIALS_H
 #define SYMENGINE_POLYNOMIALS_H
 
-#include <symengine/monomials.h>
-#include <symengine/dict.h>
 #include <symengine/expression.h>
+#include <symengine/dict.h>
+#include <symengine/monomials.h>
 
 namespace SymEngine
 {
@@ -440,22 +440,21 @@ vec_uint uint_vec_translate_and_add(const vec_uint &v1, const unsigned int v2,
                                     const unsigned int &translator2,
                                     const unsigned int size);
 
-unsigned int reconcile(vec_int &v1, vec_int &v2, set_sym &s,
-                       const set_sym &s1, const set_sym &s2);
+unsigned int reconcile(vec_int &v1, vec_int &v2, set_sym &s, const set_sym &s1,
+                       const set_sym &s2);
 unsigned int reconcile(vec_int &v1, unsigned int &v2, set_sym &s,
                        const set_sym &s1, const RCP<const Symbol> s2);
 
 vec_int translate(vec_int original, vec_uint translator, unsigned int size);
-vec_int translate(int original, unsigned int translator,
-                   unsigned int size);
+vec_int translate(int original, unsigned int translator, unsigned int size);
 vec_int int_vec_translate_and_add(const vec_int &v1, const vec_int &v2,
-                                    const vec_uint &translator1,
-                                    const vec_uint &translator2,
-                                    const unsigned int size);
+                                  const vec_uint &translator1,
+                                  const vec_uint &translator2,
+                                  const unsigned int size);
 vec_int int_vec_translate_and_add(const vec_int &v1, const unsigned int v2,
-                                    const vec_uint &translator1,
-                                    const unsigned int &translator2,
-                                    const unsigned int size);
+                                  const vec_uint &translator1,
+                                  const unsigned int &translator2,
+                                  const unsigned int size);
 
 RCP<const MultivariateIntPolynomial>
 add_mult_poly(const MultivariateIntPolynomial &a,
@@ -580,7 +579,22 @@ public:
         : poly_(std::move(p))
     {
     }
+    explicit MultivariateExprPolynomial(int i)
+    {
+        set_sym s;
+        poly_ = MultivariatePolynomial::from_dict(s, {{{0}, Expression(i)}});
+    }
 
+    explicit MultivariateExprPolynomial(Expression e)
+    {
+        set_sym s;
+        poly_ = MultivariatePolynomial::from_dict(s, {{{0}, e}});
+    }
+    explicit MultivariateExprPolynomial(RCP<const Symbol> sym)
+    {
+        set_sym s;
+        poly_ = MultivariatePolynomial::from_dict(s, {{{0}, Expression(sym)}});
+    }
     MultivariateExprPolynomial &operator=(const MultivariateExprPolynomial &)
         = default;
     MultivariateExprPolynomial &
@@ -651,6 +665,20 @@ public:
     bool operator==(const MultivariateExprPolynomial &other) const
     {
         return eq(*poly_, *other.poly_);
+    }
+
+    bool operator==(const Expression &other) const
+    {
+        if (poly_->dict_.size() > 1)
+            return false;
+        if (poly_->dict_.size() == 0) {
+            if (other == Expression(0)) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        return poly_->dict_.begin()->second == other;
     }
 
     bool operator!=(const MultivariateExprPolynomial &other) const

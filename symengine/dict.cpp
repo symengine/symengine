@@ -337,8 +337,6 @@ bool umap_uvec_expr_eq(const umap_uvec_expr &a, const umap_uvec_expr &b)
     return true;
 }
 
-
-
 int umap_vec_expr_compare(const umap_vec_expr &a, const umap_vec_expr &b)
 {
     std::vector<vec_int> va
@@ -404,5 +402,4 @@ bool umap_vec_expr_eq(const umap_vec_expr &a, const umap_vec_expr &b)
     }
     return true;
 }
-
 }

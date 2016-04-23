@@ -3,9 +3,9 @@
 #include <iostream>
 
 #include <symengine/mul.h>
+#include <symengine/dict.h>
 #include <symengine/polynomial.h>
 #include <symengine/pow.h>
-#include <symengine/dict.h>
 #include <symengine/printer.h>
 
 using SymEngine::Expression;
@@ -29,10 +29,14 @@ using SymEngine::vec_basic_eq_perm;
 using SymEngine::integer_class;
 using SymEngine::MultivariateIntPolynomial;
 using SymEngine::MultivariatePolynomial;
+using SymEngine::MultivariateExprPolynomial;
 using SymEngine::RCPSymbolCompare;
 using SymEngine::Integer;
 using SymEngine::Precedence;
 using SymEngine::PrecedenceEnum;
+using SymEngine::set_sym;
+using SymEngine::vec_uint;
+using SymEngine::vec_int;
 
 using namespace SymEngine::literals;
 
@@ -620,6 +624,16 @@ TEST_CASE("Constructing MultivariateIntPolynomial using from_dict",
     RCP<const MultivariateIntPolynomial> P2
         = MultivariateIntPolynomial::from_dict({x, y}, {{{0, 0}, 0_z}});
     REQUIRE(P2->__str__() == "0");
+
+    set_sym s;
+    vec_uint v;
+    RCP<const MultivariateIntPolynomial> P3
+        = MultivariateIntPolynomial::from_dict(s, {{v, 0_z}});
+    REQUIRE(P3->__str__() == "0");
+
+    RCP<const MultivariateIntPolynomial> P4
+        = MultivariateIntPolynomial::from_dict(s, {{v, 5_z}});
+    REQUIRE(P4->__str__() == "5");
 }
 
 TEST_CASE("Testing MultivariateIntPolynomial::__hash__() and compare",
@@ -672,10 +686,21 @@ TEST_CASE("Testing MultivariateIntPolynomial::__eq__(const Basic &o)",
     RCP<const MultivariateIntPolynomial> p3
         = MultivariateIntPolynomial::from_dict({x, y},
                                                {{{2, 0}, 2_z}, {{0, 2}, 2_z}});
+    RCP<const MultivariateIntPolynomial> p4
+        = MultivariateIntPolynomial::from_dict({x}, {{{0}, 5_z}});
+    RCP<const MultivariateIntPolynomial> p5
+        = MultivariateIntPolynomial::from_dict({y}, {{{0}, 5_z}});
+    RCP<const MultivariateIntPolynomial> p6
+        = MultivariateIntPolynomial::from_dict({x}, {{{0}, 0_z}});
+    RCP<const MultivariateIntPolynomial> p7
+        = MultivariateIntPolynomial::from_dict({y}, {{{0}, 0_z}});
 
     REQUIRE(p1->__eq__(*p1));
     REQUIRE(!(p2->__eq__(*p1)));
     REQUIRE(p3->__eq__(*add_mult_poly(*p1, *p2)));
+    REQUIRE(p4->__eq__(*p5));
+    REQUIRE(p6->__eq__(*p7));
+    REQUIRE(!p5->__eq__(*p6));
 }
 
 TEST_CASE("Testing MultivariateIntPolynomial::eval((std::map<RCP<const "
@@ -953,6 +978,27 @@ TEST_CASE("Testing addition, subtraction, multiplication of two "
     REQUIRE(mul_mult_poly(*p1, *p2)->__str__() == "3*x**3 + 2*x**2 - x");
 }
 
+TEST_CASE("Testing addition, subtraction, and multiplication of "
+          "MultivariateIntPolynomials with empty variable sets",
+          "[MultivariateIntPolynomial]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    set_sym s;
+    vec_uint v;
+    RCP<const MultivariateIntPolynomial> p1
+        = MultivariateIntPolynomial::from_dict(s, {{v, 2_z}});
+    RCP<const MultivariateIntPolynomial> p2
+        = MultivariateIntPolynomial::from_dict(
+            {x, y}, {{{0, 0}, 5_z}, {{0, 1}, 1_z}, {{1, 0}, 1_z}});
+    REQUIRE(add_mult_poly(*p1, *p2)->__str__() == "x + y + 7");
+    REQUIRE(add_mult_poly(*p2, *p1)->__str__() == "x + y + 7");
+    REQUIRE(sub_mult_poly(*p1, *p2)->__str__() == "- x - y - 3");
+    REQUIRE(sub_mult_poly(*p2, *p1)->__str__() == "x + y + 3");
+    REQUIRE(mul_mult_poly(*p1, *p2)->__str__() == "2*x + 2*y + 10");
+    REQUIRE(mul_mult_poly(*p2, *p1)->__str__() == "2*x + 2*y + 10");
+}
+
 TEST_CASE("Testing Precedence of MultivariateIntPolynomial",
           "[MultivariateIntPolynomial]")
 {
@@ -1008,6 +1054,8 @@ TEST_CASE("Constructing MultivariatePolynomial using from_dict",
     Expression comp2(integer(2) - Expression(symbol("d")));  //(2 - d)
     Expression comp3(integer(-3) + Expression(symbol("e"))); //(-3 + e)
     Expression comp4(integer(-4) - Expression(symbol("f"))); //(-4 - f)
+    set_sym s;
+    vec_int v;
 
     RCP<const MultivariatePolynomial> p1 = MultivariatePolynomial::from_dict(
         {x, y},
@@ -1017,11 +1065,17 @@ TEST_CASE("Constructing MultivariatePolynomial using from_dict",
         {{{1, 0}, comp1}, {{0, 0}, comp2}, {{2, 2}, comp3}, {{3, 4}, comp4}});
     RCP<const MultivariatePolynomial> p3 = MultivariatePolynomial::from_dict(
         {x, y}, {{{0, 0}, Expression(integer(0))}});
+    RCP<const MultivariatePolynomial> p4
+        = MultivariatePolynomial::from_dict(s, {{v, Expression(0)}});
+    RCP<const MultivariatePolynomial> p5
+        = MultivariatePolynomial::from_dict(s, {{v, comp1}});
 
     REQUIRE(p1->__str__() == "2*x**2 y - b*x y**2 + a*x y - 3*y");
     REQUIRE(p2->__str__()
             == "(-4 - f)*x**3 y**4 + (-3 + e)*x**2 y**2 + (1 + c)*x + (2 - d)");
     REQUIRE(p3->__str__() == "0");
+    REQUIRE(p4->__str__() == "0");
+    REQUIRE(p5->__str__() == "(1 + c)");
 }
 
 TEST_CASE("Testing MultivariatePolynomial::__eq__(), __hash__, and compare",
@@ -1044,10 +1098,23 @@ TEST_CASE("Testing MultivariatePolynomial::__eq__(), __hash__, and compare",
         {x, y}, {{{2, 0}, sum * 2}, {{0, 2}, sum * 2}});
     RCP<const MultivariatePolynomial> p4 = MultivariatePolynomial::from_dict(
         {a, b}, {{{2, 0}, sum * 2}, {{0, 2}, sum * 2}});
+    set_sym s;
+    vec_int v;
+    RCP<const MultivariatePolynomial> p5
+        = MultivariatePolynomial::from_dict(s, {{v, Expression(0)}});
+    RCP<const MultivariatePolynomial> p6
+        = MultivariatePolynomial::from_dict({x, y}, {{{0, 0}, Expression(0)}});
+    RCP<const MultivariatePolynomial> p7
+        = MultivariatePolynomial::from_dict(s, {{v, sum}});
+    RCP<const MultivariatePolynomial> p8
+        = MultivariatePolynomial::from_dict({x, y}, {{{0, 0}, sum}});
 
     REQUIRE(p1->__eq__(*p1));
     REQUIRE(!(p2->__eq__(*p1)));
     REQUIRE(p3->__eq__(*add_mult_poly(*p1, *p2)));
+    REQUIRE(p5->__eq__(*p6));
+    REQUIRE(p7->__eq__(*p8));
+    REQUIRE(!p6->__eq__(*p7));
 
     // Only requre that the same polynomial hash to the same value and that
     // different polynomials
@@ -1595,6 +1662,48 @@ TEST_CASE("Testing addition, subtraction, multiplication of "
     REQUIRE(eq(*mul_mult_poly(*p2, *p1), *q4));
 }
 
+TEST_CASE("Testing addition, subtraction, multiplication of "
+          "MultivariatePolynomial with empty set of variables ",
+          "[MultivariatePolynomial]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    RCP<const Symbol> a = symbol("a");
+    RCP<const Symbol> b = symbol("b");
+    RCP<const Symbol> c = symbol("c");
+    RCP<const Integer> two = make_rcp<const Integer>(integer_class(2));
+    Expression expr1(add(a, b));
+    Expression expr2(sub(mul(two, a), b));
+    Expression expr3(mul(a, c));
+    Expression expr4(pow(b, a));
+
+    set_sym s;
+    vec_int v;
+    RCP<const MultivariatePolynomial> p1
+        = MultivariatePolynomial::from_dict(s, {{v, expr1}});
+    RCP<const MultivariatePolynomial> p2 = MultivariatePolynomial::from_dict(
+        {x, y}, {{{0, 0}, expr2}, {{0, 1}, expr3}, {{1, 0}, expr4}});
+
+    RCP<const MultivariatePolynomial> q1 = MultivariatePolynomial::from_dict(
+        {x, y}, {{{0, 0}, expr2 + expr1}, {{0, 1}, expr3}, {{1, 0}, expr4}});
+    RCP<const MultivariatePolynomial> q2 = MultivariatePolynomial::from_dict(
+        {x, y}, {{{0, 0}, expr2 - expr1}, {{0, 1}, expr3}, {{1, 0}, expr4}});
+    RCP<const MultivariatePolynomial> q3 = MultivariatePolynomial::from_dict(
+        {x, y},
+        {{{0, 0}, expr1 - expr2}, {{0, 1}, -1 * expr3}, {{1, 0}, -1 * expr4}});
+    RCP<const MultivariatePolynomial> q4
+        = MultivariatePolynomial::from_dict({x, y}, {{{0, 0}, expr2 * expr1},
+                                                     {{0, 1}, expr3 * expr1},
+                                                     {{1, 0}, expr4 * expr1}});
+
+    REQUIRE(eq(*add_mult_poly(*p1, *p2), *q1));
+    REQUIRE(eq(*add_mult_poly(*p2, *p1), *q1));
+    REQUIRE(eq(*sub_mult_poly(*p1, *p2), *q3));
+    REQUIRE(eq(*sub_mult_poly(*p2, *p1), *q2));
+    REQUIRE(eq(*mul_mult_poly(*p1, *p2), *q4));
+    REQUIRE(eq(*mul_mult_poly(*p2, *p1), *q4));
+}
+
 TEST_CASE("Testing Precedence of MultivariatePolynomial",
           "[MultivariatePolynomial]")
 {
@@ -1631,4 +1740,22 @@ TEST_CASE("Testing Precedence of MultivariatePolynomial",
     REQUIRE(Prec.getPrecedence(p5) == PrecedenceEnum::Mul);
     REQUIRE(Prec.getPrecedence(p6) == PrecedenceEnum::Pow);
     REQUIRE(Prec.getPrecedence(p7) == PrecedenceEnum::Mul);
+}
+
+TEST_CASE("Testing equality of MultivariateExprPolynomials with Expressions",
+          "[MultivariateExprPolynomial],[Expression]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    RCP<const Symbol> a = symbol("a");
+    RCP<const Symbol> b = symbol("b");
+    RCP<const Symbol> c = symbol("c");
+    RCP<const Integer> two = make_rcp<const Integer>(integer_class(2));
+    Expression expr1(mul(a, c));
+    MultivariateExprPolynomial p1(
+        MultivariatePolynomial::from_dict({x, y}, {{{0, 0}, Expression(0)}}));
+    MultivariateExprPolynomial p2(
+        MultivariatePolynomial::from_dict({x, y}, {{{0, 0}, expr1}}));
+    REQUIRE(p1 == 0);
+    REQUIRE(p2 == expr1);
 }

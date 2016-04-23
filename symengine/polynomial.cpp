@@ -715,6 +715,11 @@ bool MultivariateIntPolynomial::is_canonical(const set_sym &vars,
                                              const umap_sym_uint &degrees,
                                              const umap_uvec_mpz &dict)
 {
+    // checks that if vars is empty, polynomial is a constant
+    if (vars.empty()) {
+        if (degrees.size() > 1)
+            return false;
+    }
     // checks that the dictionary does not contain terms with coefficient 0
     for (auto bucket : dict) {
         if (integer_class(0) == bucket.second)
@@ -763,11 +768,41 @@ std::size_t MultivariateIntPolynomial::__hash__() const
 
 bool MultivariateIntPolynomial::__eq__(const Basic &o) const
 {
-    return (
-        set_eq<set_sym>(vars_,
-                        static_cast<const MultivariateIntPolynomial &>(o).vars_)
-        && umap_uvec_mpz_eq(
-               dict_, static_cast<const MultivariateIntPolynomial &>(o).dict_));
+    // compare constants without regards to vars
+    if (1 == dict_.size()
+        && 1
+               == static_cast<const MultivariateIntPolynomial &>(o)
+                      .dict_.size()) {
+        if (dict_.begin()->second
+            != static_cast<const MultivariateIntPolynomial &>(o)
+                   .dict_.begin()
+                   ->second)
+            return false;
+        vec_uint v1;
+        v1.resize(vars_.size(), 0);
+        vec_uint v2;
+        v2.resize(
+            static_cast<const MultivariateIntPolynomial &>(o).vars_.size(), 0);
+        if (dict_.begin()->first == v1
+            || static_cast<const MultivariateIntPolynomial &>(
+                   o).dict_.begin()
+                       ->first
+                   == v2)
+            return true;
+        return false;
+    } else if (0 == dict_.size()
+               && 0
+                      == static_cast<const MultivariateIntPolynomial &>(o)
+                             .dict_.size()) {
+        return true;
+    } else {
+        return (
+            set_eq<set_sym>(
+                vars_, static_cast<const MultivariateIntPolynomial &>(o).vars_)
+            && umap_uvec_mpz_eq(
+                   dict_,
+                   static_cast<const MultivariateIntPolynomial &>(o).dict_));
+    }
 }
 
 int MultivariateIntPolynomial::compare(const Basic &o) const
@@ -901,10 +936,9 @@ vec_uint translate(unsigned int original, unsigned int translator,
     return changed;
 }
 
-
-//ints not unsigned
-unsigned int reconcile(vec_int &v1, vec_int &v2, set_sym &s,
-                       const set_sym &s1, const set_sym &s2)
+// ints not unsigned
+unsigned int reconcile(vec_int &v1, vec_int &v2, set_sym &s, const set_sym &s1,
+                       const set_sym &s2)
 {
     auto a1 = s1.begin();
     auto a2 = s2.begin();
@@ -994,8 +1028,7 @@ vec_int translate(vec_int original, vec_uint translator, unsigned int size)
     return changed;
 }
 
-vec_int translate(int original, unsigned int translator,
-                   unsigned int size)
+vec_int translate(int original, unsigned int translator, unsigned int size)
 {
     vec_int changed;
     changed.resize(size, 0);
@@ -1004,9 +1037,9 @@ vec_int translate(int original, unsigned int translator,
 }
 
 vec_int int_vec_translate_and_add(const vec_int &v1, const vec_int &v2,
-                                    const vec_uint &translator1,
-                                    const vec_uint &translator2,
-                                    const unsigned int size)
+                                  const vec_uint &translator1,
+                                  const vec_uint &translator2,
+                                  const unsigned int size)
 {
     vec_int result;
     for (unsigned int i = 0; i < size; i++) {
@@ -1022,9 +1055,9 @@ vec_int int_vec_translate_and_add(const vec_int &v1, const vec_int &v2,
 }
 
 vec_int int_vec_translate_and_add(const vec_int &v1, const int v2,
-                                    const vec_uint &translator1,
-                                    const unsigned int &translator2,
-                                    const unsigned int size)
+                                  const vec_uint &translator1,
+                                  const unsigned int &translator2,
+                                  const unsigned int size)
 {
     vec_int result;
     for (unsigned int i = 0; i < size; i++) {
@@ -1037,9 +1070,7 @@ vec_int int_vec_translate_and_add(const vec_int &v1, const int v2,
     return result;
 }
 
-//end
-
-
+// end
 
 RCP<const MultivariateIntPolynomial>
 add_mult_poly(const MultivariateIntPolynomial &a,
@@ -1390,6 +1421,10 @@ bool MultivariatePolynomial::is_canonical(const set_sym &vars,
                                           const umap_sym_int &degrees,
                                           const umap_vec_expr &dict)
 {
+    // checks that if vars is empty, polynomial is a constant
+    if (vars.empty())
+        if (1 < dict.size())
+            return false;
     // checks that the dictionary does not contain terms with coefficient 0
     for (auto bucket : dict) {
         if (Expression(0) == bucket.second)
@@ -1428,8 +1463,8 @@ std::size_t MultivariatePolynomial::__hash__() const
         = order_umap<vec_int, umap_vec_expr, vec_int_compare>(dict_);
 
     for (auto vec : v) {
-        seed ^= vec_int_hash()(dict_.find(vec)->first) + 0x9e3779b
-                + (seed << 6) + (seed >> 2);
+        seed ^= vec_int_hash()(dict_.find(vec)->first) + 0x9e3779b + (seed << 6)
+                + (seed >> 2);
         seed ^= (dict_.find(vec)->second).get_basic()->__hash__() + 0x9e3779b
                 + (seed << 6) + (seed >> 2);
     }
@@ -1438,11 +1473,37 @@ std::size_t MultivariatePolynomial::__hash__() const
 
 bool MultivariatePolynomial::__eq__(const Basic &o) const
 {
-    return (
-        set_eq<set_sym>(vars_,
-                        static_cast<const MultivariatePolynomial &>(o).vars_)
-        && umap_vec_expr_eq(
-               dict_, static_cast<const MultivariatePolynomial &>(o).dict_));
+    // compare constants without regard to vars
+    if (1 == dict_.size()
+        && 1 == static_cast<const MultivariatePolynomial &>(o).dict_.size()) {
+        if (dict_.begin()->second
+            != static_cast<const MultivariatePolynomial &>(o)
+                   .dict_.begin()
+                   ->second)
+            return false;
+        vec_int v1;
+        v1.resize(vars_.size(), 0);
+        vec_int v2;
+        v2.resize(static_cast<const MultivariatePolynomial &>(o).vars_.size(),
+                  0);
+        if (dict_.begin()->first == v1
+            && static_cast<const MultivariatePolynomial &>(
+                   o).dict_.begin()
+                       ->first
+                   == v2)
+            return true;
+        return false;
+    } else if (dict_.size() == 0
+               && static_cast<const MultivariatePolynomial &>(o).dict_.size()
+                      == 0) {
+        return true;
+    } else {
+        return (set_eq<set_sym>(
+                    vars_, static_cast<const MultivariatePolynomial &>(o).vars_)
+                && umap_vec_expr_eq(
+                       dict_,
+                       static_cast<const MultivariatePolynomial &>(o).dict_));
+    }
 }
 
 int MultivariatePolynomial::compare(const Basic &o) const
