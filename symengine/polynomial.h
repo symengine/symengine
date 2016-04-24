@@ -600,18 +600,21 @@ public:
     explicit MultivariateExprPolynomial(int i)
     {
         set_sym s;
-        poly_ = MultivariatePolynomial::from_dict(s, {{{0}, Expression(i)}});
+        vec_int v;
+        poly_ = MultivariatePolynomial::from_dict(s, {{v, Expression(i)}});
     }
 
     explicit MultivariateExprPolynomial(Expression e)
     {
         set_sym s;
-        poly_ = MultivariatePolynomial::from_dict(s, {{{0}, e}});
+        vec_int v;
+        poly_ = MultivariatePolynomial::from_dict(s, {{v, e}});
     }
     explicit MultivariateExprPolynomial(RCP<const Symbol> sym)
     {
         set_sym s;
-        poly_ = MultivariatePolynomial::from_dict(s, {{{0}, Expression(sym)}});
+        vec_int v;
+        poly_ = MultivariatePolynomial::from_dict(s, {{v, Expression(sym)}});
     }
     MultivariateExprPolynomial &operator=(const MultivariateExprPolynomial &)
         = default;

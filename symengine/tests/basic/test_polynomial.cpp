@@ -3,7 +3,6 @@
 #include <iostream>
 
 #include <symengine/mul.h>
-#include <symengine/dict.h>
 #include <symengine/polynomial.h>
 #include <symengine/pow.h>
 #include <symengine/printer.h>
