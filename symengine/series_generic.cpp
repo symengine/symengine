@@ -328,26 +328,35 @@ MultivariateExprPolynomial
 MultivariateSeries::mul(const MultivariateExprPolynomial &a,
                       const MultivariateExprPolynomial &b, unsigned prec)
 {
-    return a*b;
-/*
-    map_int_Expr p;
-
-    for (auto &it1 : a.get_dict()) {
-
-        for (auto &it2 : b.get_dict()) {
-            int exp = it1.first + it2.first;
-            if (exp < (int)prec) {
-                p[exp] += it1.second * it2.second;
-            } else {
-                break;
+    umap_vec_expr d;
+    set_sym s;
+    vec_uint translator1;
+    vec_uint translator2;
+    unsigned int size = reconcile(translator1, translator2, s, a.get_poly()->vars_, b.get_poly()->vars_);
+    for (auto bucket1 : a.get_poly()->dict_) {
+        for (auto bucket2 : b.get_poly()->dict_) {
+            vec_int target = int_vec_translate_and_add(bucket1.first, bucket2.first, translator1, translator2, size );
+            //uses prec tor restrict first variable of a, if it exists.  Otherwise uses the first variable of b.  If both a and b have empty variable sets, then they are both constant,
+            // so prec gives no restriction, i.e. restrictor = 0.
+            unsigned int restrictor = 0;
+            if (translator1.size() > 0) {
+                restrictor = target[translator1[0]];
+            } else if (translator2.size() > 0) {
+                restrictor = target[translator2[0]];
+            }
+            if (restrictor < prec) {
+                if (d.find(target) == d.end()) {
+                    d.insert(std::pair<vec_int, Expression>(target, bucket1.second * bucket2.second));
+                } else {
+                    d.find(target)->second += bucket1.second * bucket2.second;
+                }
             }
         }
-    }
-    if (a.get_basic()->var_->get_name() == "")
-        return MultivariateExprPolynomial(MultivariatePolynomial::from_dict(b.get_basic()->var_, std::move(p)));
-    else
-        return MultivariateExprPolynomial(MultivariatePolynomial::from_dict(a.get_basic()->var_, std::move(p)));
-*/}
+    } 
+
+
+    return MultivariateExprPolynomial(MultivariatePolynomial::from_dict(s,std::move(d)));
+}
 
 MultivariateExprPolynomial
 MultivariateSeries::pow(const MultivariateExprPolynomial &base, int exp,
