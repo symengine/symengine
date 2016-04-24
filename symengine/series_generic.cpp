@@ -353,11 +353,8 @@ MultivariateExprPolynomial
 MultivariateSeries::pow(const MultivariateExprPolynomial &base, int exp,
                       unsigned prec)
 {
-    //can't do negative exp at this time
     if (exp < 0)
-            throw std::runtime_error("Error: Exp is negative (Not implemented yet).");
-
-    //     return MultivariateSeries::pow(MultivariateExprPolynomial::inverse(base), -exp, prec);
+        return pow(MultivariateSeries::series_invert(base, MultivariateSeries::var(base.get_var()->get_name()), prec) , -exp, prec);
     if (exp == 0) {
         if (base == 0) {
             throw std::runtime_error("Error: 0**0 is undefined.");
