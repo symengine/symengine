@@ -5,10 +5,10 @@
 #include <symengine/add.h>
 #include <symengine/pow.h>
 
-namespace SymEngine {
+namespace SymEngine
+{
 
-Constant::Constant(const std::string &name)
-    : name_{name}
+Constant::Constant(const std::string &name) : name_{name}
 {
 }
 
@@ -30,7 +30,8 @@ int Constant::compare(const Basic &o) const
 {
     SYMENGINE_ASSERT(is_a<Constant>(o))
     const Constant &s = static_cast<const Constant &>(o);
-    if (name_ == s.name_) return 0;
+    if (name_ == s.name_)
+        return 0;
     return name_ < s.name_ ? -1 : 1;
 }
 
@@ -48,11 +49,13 @@ RCP<const Constant> EulerGamma = constant("EulerGamma");
 // for further details
 RCP<const Basic> i2 = integer(2);
 
-RCP<const Basic> sqrt_(const RCP<const Basic>& arg)
+namespace
+{
+RCP<const Basic> sqrt_(const RCP<const Basic> &arg)
 {
     return pow(arg, div(one, i2));
 }
-
+}
 
 RCP<const Basic> i3 = integer(3);
 RCP<const Basic> i5 = integer(5);
@@ -81,10 +84,9 @@ RCP<const Basic> mC5 = mul(minus_one, C5);
 RCP<const Basic> mC6 = mul(minus_one, C6);
 
 // sin_table[n] represents the value of sin(2*pi*n/24) for n = 0..23
-RCP<const Basic> sin_table[] = {
-        zero, C0, C1, C2, C3, C4, one, C4, C3, C2, C1, C0,
-        zero, mC0, mC1, mC2, mC3, mC4, minus_one, mC4, mC3, mC2, mC1, mC0
-    };
+RCP<const Basic> sin_table[]
+    = {zero, C0,  C1,  C2,  C3,  C4,  one,       C4,  C3,  C2,  C1,  C0,
+       zero, mC0, mC1, mC2, mC3, mC4, minus_one, mC4, mC3, mC2, mC1, mC0};
 
 umap_basic_basic inverse_cst = {
     {C3, i3},

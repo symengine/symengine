@@ -2,6 +2,7 @@
 // User defined macros can be added in this file
 
 #define CATCH_CONFIG_RUNNER
+#define CATCH_CONFIG_SFINAE
 #include "catch.hpp"
 
 #include <symengine/symengine_config.h>

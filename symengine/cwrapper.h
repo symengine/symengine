@@ -10,21 +10,22 @@ extern "C" {
 #endif
 
 // Use SYMENGINE_C_ASSERT in C tests
-#define SYMENGINE_C_ASSERT(cond) \
-{ \
-if (0 == (cond)) { \
-    printf("SYMENGINE_C_ASSERT failed: %s \nfunction %s (), line number %d at\n%s\n",\
-            __FILE__, __func__, __LINE__, #cond); \
-    abort(); \
-    } \
-}
+#define SYMENGINE_C_ASSERT(cond)                                               \
+    {                                                                          \
+        if (0 == (cond)) {                                                     \
+            printf("SYMENGINE_C_ASSERT failed: %s \nfunction %s (), line "     \
+                   "number %d at\n%s\n",                                       \
+                   __FILE__, __func__, __LINE__, #cond);                       \
+            abort();                                                           \
+        }                                                                      \
+    }
 
 typedef enum {
-    #define SYMENGINE_INCLUDE_ALL
-    #define SYMENGINE_ENUM(type, Class) SYMENGINE_##type,
-    #include "symengine/type_codes.inc"
-    #undef SYMENGINE_ENUM
-    #undef SYMENGINE_INCLUDE_ALL
+#define SYMENGINE_INCLUDE_ALL
+#define SYMENGINE_ENUM(type, Class) SYMENGINE_##type,
+#include "symengine/type_codes.inc"
+#undef SYMENGINE_ENUM
+#undef SYMENGINE_INCLUDE_ALL
     SYMENGINE_TypeID_Count
 } TypeID;
 
@@ -44,8 +45,7 @@ typedef enum {
 // alignment is different on some platform, the compilation will fail --- in
 // that case one needs to modify the contents of this struct to adjust its size
 // and/or alignment.
-struct CRCPBasic_C
-{
+struct CRCPBasic_C {
     void *data;
 #if !defined(WITH_SYMENGINE_RCP)
     void *teuchos_handle;
@@ -81,7 +81,7 @@ void basic_free_stack(basic s);
 // Use these two functions to allocate and free 'basic' on a heap. The pointer
 // can then be used in all the other methods below (i.e. the methods that
 // accept 'basic s' work no matter if 's' is stack or heap allocated).
-basic_struct* basic_new_heap();
+basic_struct *basic_new_heap();
 void basic_free_heap(basic_struct *s);
 
 //! Use these functions to get the commonly used constants as basic.
@@ -90,7 +90,7 @@ void basic_free_heap(basic_struct *s);
 //! This function creates a new SymEngine::Constant from a copy of
 //! the string in c, thus the caller is free to use c afterwards,
 //! and also the caller must free c.
-void basic_const_set(basic s, const char* c);
+void basic_const_set(basic s, const char *c);
 
 void basic_const_zero(basic s);
 void basic_const_one(basic s);
@@ -104,10 +104,15 @@ void basic_const_EulerGamma(basic s);
 //! Assign value of b to a.
 void basic_assign(basic a, const basic b);
 
-//Returns the typeID of the basic struct
+//! Returns the typeID of the basic struct
 TypeID basic_get_type(const basic s);
+//! Returns the typeID of the class with the name c
+TypeID basic_get_class_id(const char *c);
+//! Returns the class name of with the typeid `id`
+char *basic_get_class_from_id(TypeID id);
+
 //! Assign to s, a symbol with string representation c.
-void symbol_set(basic s, char* c);
+void symbol_set(basic s, char *c);
 
 //! Assign to s, a long.
 void integer_set_si(basic s, long i);
@@ -116,7 +121,7 @@ void integer_set_ui(basic s, unsigned long i);
 //! Assign to s, a mpz_t.
 void integer_set_mpz(basic s, const mpz_t i);
 //! Assign to s, an integer that has base 10 representation c.
-void integer_set_str(basic s, char* c);
+void integer_set_str(basic s, char *c);
 
 //! Returns signed long value of s.
 signed long integer_get_si(const basic s);
@@ -151,23 +156,91 @@ void basic_mul(basic s, const basic a, const basic b);
 void basic_div(basic s, const basic a, const basic b);
 //! Assigns s = a ** b.
 void basic_pow(basic s, const basic a, const basic b);
-//! Assign to s, derivative of expr with respect to sym. Returns 0 if sym is not a symbol.
+//! Assign to s, derivative of expr with respect to sym. Returns 0 if sym is not
+//! a symbol.
 int basic_diff(basic s, const basic expr, const basic sym);
-//! Assigns s = -a.
-void basic_neg(basic s, const basic a);
 //! Returns 1 if both basic are equal, 0 if not
 int basic_eq(const basic a, const basic b);
 //! Returns 1 if both basic are not equal, 0 if they are
 int basic_neq(const basic a, const basic b);
-//! Assigns s = abs(a).
-void basic_abs(basic s, const basic a);
+
 //! Expands the expr a and assigns to s.
 void basic_expand(basic s, const basic a);
+//! Assigns s = -a.
+void basic_neg(basic s, const basic a);
+
+//! Assigns s = abs(a).
+void basic_abs(basic s, const basic a);
+
+//! Assigns s = sin(a).
+void basic_sin(basic s, const basic a);
+//! Assigns s = cos(a).
+void basic_cos(basic s, const basic a);
+//! Assigns s = tan(a).
+void basic_tan(basic s, const basic a);
+
+//! Assigns s = asin(a).
+void basic_asin(basic s, const basic a);
+//! Assigns s = acos(a).
+void basic_acos(basic s, const basic a);
+//! Assigns s = atan(a).
+void basic_atan(basic s, const basic a);
+
+//! Assigns s = csc(a).
+void basic_csc(basic s, const basic a);
+//! Assigns s = sec(a).
+void basic_sec(basic s, const basic a);
+//! Assigns s = cot(a).
+void basic_cot(basic s, const basic a);
+
+//! Assigns s = acsc(a).
+void basic_acsc(basic s, const basic a);
+//! Assigns s = asec(a).
+void basic_asec(basic s, const basic a);
+//! Assigns s = acot(a).
+void basic_acot(basic s, const basic a);
+
+//! Assigns s = sinh(a).
+void basic_sinh(basic s, const basic a);
+//! Assigns s = cosh(a).
+void basic_cosh(basic s, const basic a);
+//! Assigns s = tanh(a).
+void basic_tanh(basic s, const basic a);
+
+//! Assigns s = asinh(a).
+void basic_asinh(basic s, const basic a);
+//! Assigns s = acosh(a).
+void basic_acosh(basic s, const basic a);
+//! Assigns s = atanh(a).
+void basic_atanh(basic s, const basic a);
+
+//! Assigns s = csch(a).
+void basic_csch(basic s, const basic a);
+//! Assigns s = sech(a).
+void basic_sech(basic s, const basic a);
+//! Assigns s = coth(a).
+void basic_coth(basic s, const basic a);
+
+//! Assigns s = acsch(a).
+void basic_acsch(basic s, const basic a);
+//! Assigns s = asech(a).
+void basic_asech(basic s, const basic a);
+//! Assigns s = acoth(a).
+void basic_acoth(basic s, const basic a);
+
+//! Assigns s = lambertw(a).
+void basic_lambertw(basic s, const basic a);
+//! Assigns s = zeta(a).
+void basic_zeta(basic s, const basic a);
+//! Assigns s = dirichlet_eta(a).
+void basic_dirichlet_eta(basic s, const basic a);
+//! Assigns s = gamma(a).
+void basic_gamma(basic s, const basic a);
 
 //! Returns a new char pointer to the string representation of s.
-char* basic_str(const basic s);
+char *basic_str(const basic s);
 //! Frees the string s
-void basic_str_free(char* s);
+void basic_str_free(char *s);
 
 //! Return 1 if s is an Integer, 0 if not.
 int is_a_Integer(const basic s);
@@ -178,12 +251,11 @@ int is_a_Symbol(const basic s);
 //! Return 1 if s is a Complex, 0 if not.
 int is_a_Complex(const basic s);
 
-
 //! Wrapper for std::vector<int>
 
 typedef struct CVectorInt CVectorInt;
 
-CVectorInt* vectorint_new();
+CVectorInt *vectorint_new();
 
 // 'data' must point to allocated memory of size 'size'. The function returns 0
 // if std::vector<int> can be initialized using placement new into 'data',
@@ -192,7 +264,7 @@ CVectorInt* vectorint_new();
 // that the 'data' and 'size' is properly allocated and aligned. Use
 // vectorint_placement_new() to do the actual allocation.
 int vectorint_placement_new_check(void *data, size_t size);
-CVectorInt* vectorint_placement_new(void *data);
+CVectorInt *vectorint_placement_new(void *data);
 
 void vectorint_placement_free(CVectorInt *self);
 
@@ -204,7 +276,7 @@ int vectorint_get(CVectorInt *self, int n);
 
 typedef struct CVecBasic CVecBasic;
 
-CVecBasic* vecbasic_new();
+CVecBasic *vecbasic_new();
 void vecbasic_free(CVecBasic *self);
 void vecbasic_push_back(CVecBasic *self, const basic value);
 void vecbasic_get(CVecBasic *self, int n, basic result);
@@ -214,7 +286,7 @@ size_t vecbasic_size(CVecBasic *self);
 
 typedef struct CSetBasic CSetBasic;
 
-CSetBasic* setbasic_new();
+CSetBasic *setbasic_new();
 void setbasic_free(CSetBasic *self);
 //! Returns 1 if insert is successful and 0 if set already contains the value
 //! and insertion is unsuccessful
@@ -228,9 +300,10 @@ size_t setbasic_size(CSetBasic *self);
 
 typedef struct CMapBasicBasic CMapBasicBasic;
 
-CMapBasicBasic* mapbasicbasic_new();
+CMapBasicBasic *mapbasicbasic_new();
 void mapbasicbasic_free(CMapBasicBasic *self);
-void mapbasicbasic_insert(CMapBasicBasic *self, const basic key, const basic mapped);
+void mapbasicbasic_insert(CMapBasicBasic *self, const basic key,
+                          const basic mapped);
 //! Returns 1 if such a key exists in the map and get is successful, 0 if not
 int mapbasicbasic_get(CMapBasicBasic *self, const basic key, basic mapped);
 size_t mapbasicbasic_size(CMapBasicBasic *self);
@@ -245,7 +318,7 @@ void basic_free_symbols(const basic self, CSetBasic *symbols);
 size_t basic_hash(const basic self);
 //! substitutes all the keys with their mapped values
 //! in the given basic `e` and returns it through basic 's'
-void basic_subs(basic s, const basic e, const CMapBasicBasic * mapbb);
+void basic_subs(basic s, const basic e, const CMapBasicBasic *mapbb);
 //! substitutes a basic 'a' with another basic 'b',
 //! in the given basic 'e' and returns it through basic 's'
 void basic_subs2(basic s, const basic e, const basic a, const basic b);
@@ -254,7 +327,28 @@ void basic_subs2(basic s, const basic e, const basic a, const basic b);
 
 //! Returns a new char pointer to the ascii_art string
 //! The caller is responsible to free the pointer using 'basic_str_free'.
-char* ascii_art_str();
+char *ascii_art_str();
+
+//! Wrapper for ntheory
+//! Greatest Common Divisor
+void ntheory_gcd(basic s, const basic a, const basic b);
+//! Least Common Multiple
+void ntheory_lcm(basic s, const basic a, const basic b);
+//! \return next prime after `a`
+void ntheory_nextprime(basic s, const basic a);
+//! modulo round toward zero
+void ntheory_mod(basic s, const basic n, const basic d);
+//! \return quotient round toward zero when `n` is divided by `d`
+void ntheory_quotient(basic s, const basic n, const basic d);
+//! nth Fibonacci number //  fibonacci(0) = 0 and fibonacci(1) = 1
+void ntheory_fibonacci(basic s, unsigned long a);
+//! Lucas number
+void ntheory_lucas(basic s, unsigned long a);
+//! Binomial Coefficient
+void ntheory_binomial(basic s, const basic a, unsigned long b);
+
+//! Print stacktrace on segfault
+void symengine_print_stack_on_segfault();
 
 #ifdef __cplusplus
 }

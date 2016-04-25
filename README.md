@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.org/symengine/symengine.png?branch=master)](https://travis-ci.org/symengine/symengine)
 [![Build status](https://ci.appveyor.com/api/projects/status/n7vqq2ilkw59o4bx/branch/master?svg=true)](https://ci.appveyor.com/project/certik/symengine/branch/master)
+[![codecov.io](https://codecov.io/github/symengine/symengine/coverage.svg?branch=master)](https://codecov.io/github/symengine/symengine?branch=master)
 
 SymEngine is a standalone fast C++ symbolic manipulation library. Optional thin
 wrappers allow usage of the library from other languages, e.g.:
@@ -10,6 +11,7 @@ wrappers allow usage of the library from other languages, e.g.:
 * Python wrappers allow easy usage from Python and integration with [SymPy](http://sympy.org/) and [Sage](http://www.sagemath.org/) (the [symengine.py](https://github.com/symengine/symengine.py) repository)
 * Ruby wrappers (the [symengine.rb](https://github.com/symengine/symengine.rb) repository)
 * Julia wrappers (the [SymEngine.jl](https://github.com/symengine/SymEngine.jl) repository)
+* Haskell wrappers (the [symengine.hs](https://github.com/symengine/symengine.hs) repository)
 * ...
 
 ## License
@@ -39,9 +41,10 @@ Install SymEngine:
 
     cmake .
     make
+    make install
 
 This will configure and build SymEngine in the default Release mode with all
-code and compiler optimizations on.
+code and compiler optimizations on and then install it on your system.
 
 Run tests:
 
@@ -102,6 +105,10 @@ their default values indicated below:
         -DBUILD_TESTS:BOOL=ON \                       # Build with tests
         -DBUILD_BENCHMARKS:BOOL=ON \                  # Build with benchmarks
         -DBUILD_BENCHMARKS_NONIUS:BOOL=OFF \          # Build with Nonius benchmarks
+        -DINTEGER_CLASS:STRING=gmpxx \                # Choose storage type for Integer. one of gmp, gmpxx,
+                                                        flint, piranha
+        -DBUILD_SHARED_LIBS:BOOL=OFF \                # Build a shared library.
+        -DCMAKE_INSTALL_RPATH_USE_LINK_PATH:BOOL=OFF\ # Add dependencies to rpath when a shared lib is built
         .
 
 If `OPENMP` is enabled, then `SYMENGINE_THREAD_SAFE` is also enabled automatically

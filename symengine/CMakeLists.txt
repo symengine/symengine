@@ -1,9 +1,10 @@
-add_subdirectory(utilities/teuchos)
-
-# Include Teuchos headers:
-include_directories(BEFORE ${teuchos_SOURCE_DIR})
-# Include Teuchos config file (generated per build):
-include_directories(BEFORE ${teuchos_BINARY_DIR})
+if (WITH_SYMENGINE_TEUCHOS)
+    add_subdirectory(utilities/teuchos)
+    # Include Teuchos headers:
+    include_directories(BEFORE ${teuchos_SOURCE_DIR})
+    # Include Teuchos config file (generated per build):
+    include_directories(BEFORE ${teuchos_BINARY_DIR})
+endif()
 
 set(SRC
     symengine_rcp.cpp
@@ -40,6 +41,8 @@ set(SRC
     numer_denom.cpp
     derivative.cpp
     parser.cpp
+    mp_wrapper.cpp
+    sets.cpp
 )
 
 if (WITH_MPFR)
@@ -66,12 +69,12 @@ endif()
 set(HEADERS
     add.h        symengine_assert.h  functions.h  monomials.h  polynomial.h  number.h    rings.h
     basic.h      symengine_rcp.h     integer.h    mul.h        pow.h       constants.h
-    symbol.h     expression.h        parser.h
+    symbol.h     expression.h        parser.h     mp_class.h   mp_wrapper.h
     basic-inl.h  dict.h           matrix.h     ntheory.h    rational.h complex.h
     visitor.h    eval_double.h    diophantine.h cwrapper.h  printer.h  real_double.h
     eval_mpfr.h  eval_arb.h       eval_mpc.h     complex_double.h         series_visitor.h
     real_mpfr.h  complex_mpc.h    type_codes.inc lambda_double.h series.h series_piranha.h
-    basic-methods.inc   series_flint.h  series_generic.h
+    basic-methods.inc   series_flint.h  series_generic.h sets.h  derivative.h
 )
 
 # Configure SymEngine using our CMake options:
@@ -82,7 +85,10 @@ include_directories(BEFORE ${symengine_BINARY_DIR})
 include_directories(BEFORE ${symengine_SOURCE_DIR})
 
 add_library(symengine ${SRC})
-target_link_libraries(symengine teuchos ${LIBS})
+if (WITH_SYMENGINE_TEUCHOS)
+    target_link_libraries(symengine teuchos)
+endif()
+target_link_libraries(symengine ${LIBS})
 
 install(TARGETS symengine
             EXPORT SymEngineTargets

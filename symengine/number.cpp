@@ -7,21 +7,26 @@
 #include <symengine/functions.h>
 #include <symengine/integer.h>
 
-namespace SymEngine {
+namespace SymEngine
+{
 
-RCP<const Number> Number::sub(const Number &other) const {
+RCP<const Number> Number::sub(const Number &other) const
+{
     return add(*other.mul(*integer(-1)));
 }
 
-RCP<const Number> Number::rsub(const Number &other) const {
+RCP<const Number> Number::rsub(const Number &other) const
+{
     return mul(*integer(-1))->add(other);
 }
 
-RCP<const Number> Number::div(const Number &other) const {
+RCP<const Number> Number::div(const Number &other) const
+{
     return mul(*other.pow(*integer(-1)));
 }
 
-RCP<const Number> Number::rdiv(const Number &other) const {
+RCP<const Number> Number::rdiv(const Number &other) const
+{
     return other.mul(*pow(*integer(-1)));
 }
 

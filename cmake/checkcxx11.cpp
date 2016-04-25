@@ -134,6 +134,20 @@ std::string typeName(const T &t)
     return "RCP<>";
 }
 
+long double operator "" _mul2(long double x) {
+    return 2*x;
+}
+
+class A {
+public:
+    virtual void print();
+};
+
+class B : public A {
+public:
+    virtual void print() override;
+};
+
 int main() {
     return 0;
 }

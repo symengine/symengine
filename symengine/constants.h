@@ -12,9 +12,11 @@
 #include <symengine/integer.h>
 #include <symengine/symbol.h>
 
-namespace SymEngine {
+namespace SymEngine
+{
 
-class Constant : public Basic {
+class Constant : public Basic
+{
 private:
     //! name of Constant
     std::string name_;
@@ -36,11 +38,15 @@ public:
      * */
     virtual int compare(const Basic &o) const;
     //! \return name of the Constant.
-    inline std::string get_name() const {
+    inline std::string get_name() const
+    {
         return name_;
     }
 
-    virtual vec_basic get_args() const { return {}; }
+    virtual vec_basic get_args() const
+    {
+        return {};
+    }
 };
 
 //! inline version to return `Constant`

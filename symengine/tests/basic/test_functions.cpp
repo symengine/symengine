@@ -50,6 +50,7 @@ using SymEngine::function_symbol;
 using SymEngine::Derivative;
 using SymEngine::pi;
 using SymEngine::EulerGamma;
+using SymEngine::erf;
 using SymEngine::RCP;
 using SymEngine::make_rcp;
 using SymEngine::print_stack_on_segfault;
@@ -71,6 +72,8 @@ using SymEngine::levi_civita;
 using SymEngine::zeta;
 using SymEngine::dirichlet_eta;
 using SymEngine::gamma;
+using SymEngine::loggamma;
+using SymEngine::LogGamma;
 using SymEngine::polygamma;
 using SymEngine::PolyGamma;
 using SymEngine::lowergamma;
@@ -84,7 +87,9 @@ using SymEngine::vec_basic;
 using SymEngine::real_double;
 using SymEngine::complex_double;
 using SymEngine::RealDouble;
+using SymEngine::Complex;
 using SymEngine::ComplexDouble;
+using SymEngine::rational;
 using SymEngine::Number;
 using SymEngine::eval_double;
 using SymEngine::is_a;
@@ -96,6 +101,7 @@ using SymEngine::Max;
 using SymEngine::Min;
 using SymEngine::Rational;
 using SymEngine::rcp_static_cast;
+using SymEngine::I;
 
 #ifdef HAVE_SYMENGINE_MPFR
 using SymEngine::real_mpfr;
@@ -236,8 +242,10 @@ TEST_CASE("Sin: functions", "[functions]")
     r2 = sin(sub(div(pi, i2), real_double(2.0)));
     REQUIRE(is_a<RealDouble>(*r1));
     REQUIRE(is_a<RealDouble>(*r2));
-    REQUIRE(std::abs(static_cast<const RealDouble &>(*r1).i - 0.841470984807897) < 1e-12);
-    REQUIRE(std::abs(static_cast<const RealDouble &>(*r2).i + 0.416146836547142) < 1e-12);
+    REQUIRE(std::abs(static_cast<const RealDouble &>(*r1).i - 0.841470984807897)
+            < 1e-12);
+    REQUIRE(std::abs(static_cast<const RealDouble &>(*r2).i + 0.416146836547142)
+            < 1e-12);
 }
 
 TEST_CASE("Cos: functions", "[functions]")
@@ -278,6 +286,11 @@ TEST_CASE("Cos: functions", "[functions]")
     // cos(-y) = cos(y)
     r1 = cos(mul(im1, y));
     r2 = cos(y);
+    REQUIRE(eq(*r1, *r2));
+
+    // cos(x - 12) = cos(12 - x)
+    r1 = cos(sub(x, i12));
+    r2 = cos(sub(i12, x));
     REQUIRE(eq(*r1, *r2));
 
     // cos(acos(x)) = x
@@ -337,8 +350,10 @@ TEST_CASE("Cos: functions", "[functions]")
     r2 = cos(sub(div(pi, i2), real_double(2.0)));
     REQUIRE(is_a<RealDouble>(*r1));
     REQUIRE(is_a<RealDouble>(*r2));
-    REQUIRE(std::abs(static_cast<const RealDouble &>(*r1).i - 0.540302305868140) < 1e-12);
-    REQUIRE(std::abs(static_cast<const RealDouble &>(*r2).i - 0.909297426825682) < 1e-12);
+    REQUIRE(std::abs(static_cast<const RealDouble &>(*r1).i - 0.540302305868140)
+            < 1e-12);
+    REQUIRE(std::abs(static_cast<const RealDouble &>(*r2).i - 0.909297426825682)
+            < 1e-12);
 }
 
 TEST_CASE("Tan: functions", "[functions]")
@@ -351,7 +366,6 @@ TEST_CASE("Tan: functions", "[functions]")
     RCP<const Basic> i1 = integer(1);
     RCP<const Basic> i3 = integer(3);
     RCP<const Basic> i12 = integer(12);
-
 
     RCP<const Basic> r1;
     RCP<const Basic> r2;
@@ -440,6 +454,8 @@ TEST_CASE("Tan: functions", "[functions]")
     r1 = tan(add(sub(mul(i12, pi), y), div(pi, i2)));
     r2 = cot(y);
     REQUIRE(eq(*r1, *r2));
+
+    CHECK_THROWS_AS(tan(mul(integer(5), div(pi, i2))), std::runtime_error);
 }
 
 TEST_CASE("Cot: functions", "[functions]")
@@ -538,6 +554,8 @@ TEST_CASE("Cot: functions", "[functions]")
     r1 = cot(add(sub(mul(i12, pi), y), div(pi, i2)));
     r2 = tan(y);
     REQUIRE(eq(*r1, *r2));
+
+    CHECK_THROWS_AS(cot(mul(integer(7), pi)), std::runtime_error);
 }
 
 TEST_CASE("Csc: functions", "[functions]")
@@ -636,6 +654,8 @@ TEST_CASE("Csc: functions", "[functions]")
     r1 = csc(add(sub(mul(i12, pi), y), div(pi, i2)));
     r2 = sec(y);
     REQUIRE(eq(*r1, *r2));
+
+    CHECK_THROWS_AS(csc(mul(integer(7), pi)), std::runtime_error);
 }
 
 TEST_CASE("Sec: functions", "[functions]")
@@ -734,6 +754,8 @@ TEST_CASE("Sec: functions", "[functions]")
     r1 = sec(add(sub(mul(i12, pi), y), div(pi, i2)));
     r2 = csc(y);
     REQUIRE(eq(*r1, *r2));
+
+    CHECK_THROWS_AS(sec(mul(integer(7), div(pi, i2))), std::runtime_error);
 }
 
 TEST_CASE("TrigFunction: trig_to_sqrt", "[functions]")
@@ -902,7 +924,8 @@ TEST_CASE("Derivative: functions", "[functions]")
 
     r1 = function_symbol("f", add(_x, x))->diff(_x);
     std::cout << *f << " " << *r1 << std::endl;
-    r2 = Subs::create(Derivative::create(function_symbol("f", __x), {__x}), {{__x, add(_x, x)}});
+    r2 = Subs::create(Derivative::create(function_symbol("f", __x), {__x}),
+                      {{__x, add(_x, x)}});
     REQUIRE(eq(*r1, *r2));
 
     // Test is_canonical()
@@ -911,16 +934,22 @@ TEST_CASE("Derivative: functions", "[functions]")
     REQUIRE(r4->is_canonical(function_symbol("f", {y, x}), {x}));
     REQUIRE(not r4->is_canonical(function_symbol("f", y), {x}));
     REQUIRE(not r4->is_canonical(function_symbol("f", x), {x, y, x, x}));
-    REQUIRE(not (r4->is_canonical(function_symbol("f", x), {pow(x, integer(2))})));
+    REQUIRE(
+        not(r4->is_canonical(function_symbol("f", x), {pow(x, integer(2))})));
 
     // Test get_args()
-    r1 = Derivative::create(function_symbol("f", {x, y, pow(z, integer(2))}), {x, x, y});
-    REQUIRE(vec_basic_eq_perm(r1->get_args(), {function_symbol("f", {x, y, pow(z, integer(2))}), x, x, y}));
+    r1 = Derivative::create(function_symbol("f", {x, y, pow(z, integer(2))}),
+                            {x, x, y});
+    REQUIRE(vec_basic_eq_perm(
+        r1->get_args(),
+        {function_symbol("f", {x, y, pow(z, integer(2))}), x, x, y}));
 
     // Test Derivative::subs
     r1 = Derivative::create(function_symbol("f", {x, add(y, y)}), {x});
     r2 = r1->subs({{x, y}});
-    r3 = Subs::create(Derivative::create(function_symbol("f", {x, add(y, y)}), {x}), {{x, y}});
+    r3 = Subs::create(
+        Derivative::create(function_symbol("f", {x, add(y, y)}), {x}),
+        {{x, y}});
     REQUIRE(eq(*r2, *r3));
 
     r2 = r1->subs({{x, z}});
@@ -930,6 +959,8 @@ TEST_CASE("Derivative: functions", "[functions]")
     r2 = r1->subs({{y, z}});
     r3 = Derivative::create(function_symbol("f", {x, add(z, z)}), {x});
     REQUIRE(eq(*r2, *r3));
+
+    // r1 = Derivative::create(kronecker_delta(x, y), {y});
 }
 
 TEST_CASE("Subs: functions", "[functions]")
@@ -942,17 +973,22 @@ TEST_CASE("Subs: functions", "[functions]")
     RCP<const Basic> r1, r2, r3, r4;
 
     // Test Subs::subs
-    r1 = Subs::create(Derivative::create(function_symbol("f", {y, x}), {x}), {{x, add(x, y)}});
-    r2 = Subs::create(Derivative::create(function_symbol("f", {y, x}), {x}), {{x, z}, {y, z}});
-    r3 = Subs::create(Derivative::create(function_symbol("f", {y, x}), {x}), {{y, z}, {x, z}});
+    r1 = Subs::create(Derivative::create(function_symbol("f", {y, x}), {x}),
+                      {{x, add(x, y)}});
+    r2 = Subs::create(Derivative::create(function_symbol("f", {y, x}), {x}),
+                      {{x, z}, {y, z}});
+    r3 = Subs::create(Derivative::create(function_symbol("f", {y, x}), {x}),
+                      {{y, z}, {x, z}});
     REQUIRE(eq(*r2, *r3));
 
     r2 = r1->subs({{y, z}});
-    r3 = Subs::create(Derivative::create(function_symbol("f", {z, x}), {x}), {{x, add(x, z)}});
+    r3 = Subs::create(Derivative::create(function_symbol("f", {z, x}), {x}),
+                      {{x, add(x, z)}});
     REQUIRE(eq(*r2, *r3));
 
     r2 = r1->subs({{x, z}});
-    r3 = Subs::create(Derivative::create(function_symbol("f", {y, x}), {x}), {{x, add(z, y)}});
+    r3 = Subs::create(Derivative::create(function_symbol("f", {y, x}), {x}),
+                      {{x, add(z, y)}});
     REQUIRE(eq(*r2, *r3));
 
     r2 = r1->subs({{r1, r3}});
@@ -966,15 +1002,18 @@ TEST_CASE("Subs: functions", "[functions]")
     REQUIRE(eq(*r2, *r3));
 
     r2 = r1->diff(x);
-    r3 = Subs::create(Derivative::create(function_symbol("f", {add(y, y), _x}), {_x, _x}),
-                        {{_x, add(x, y)}});
+    r3 = Subs::create(
+        Derivative::create(function_symbol("f", {add(y, y), _x}), {_x, _x}),
+        {{_x, add(x, y)}});
     REQUIRE(eq(*r2, *r3));
 
     r2 = r1->diff(y);
-    r3 = Subs::create(Derivative::create(function_symbol("f", {add(y, y), _x}), {_x, _x}),
-                        {{_x, add(x, y)}});
-    r4 = Subs::create(Derivative::create(function_symbol("f", {__x, _x}), {__x, _x}),
-                        {{_x, add(x, y)}, {__x, add(y, y)}});
+    r3 = Subs::create(
+        Derivative::create(function_symbol("f", {add(y, y), _x}), {_x, _x}),
+        {{_x, add(x, y)}});
+    r4 = Subs::create(
+        Derivative::create(function_symbol("f", {__x, _x}), {__x, _x}),
+        {{_x, add(x, y)}, {__x, add(y, y)}});
     r3 = add(r3, add(r4, r4));
     REQUIRE(eq(*r2, *r3));
 }
@@ -1065,7 +1104,8 @@ TEST_CASE("Get pi shift: functions", "[functions]")
     REQUIRE(((b == true) and eq(*n, *i12) and eq(*r1, *zero)));
 
     // arg = theta + n*pi/12 (theta is an expression of >1 symbols)
-    r = add(add(mul(i2, x), mul(i2, symbol("y"))), mul(pi, div(i2, integer(3))));
+    r = add(add(mul(i2, x), mul(i2, symbol("y"))),
+            mul(pi, div(i2, integer(3))));
     b = get_pi_shift(r, outArg(n), outArg(r1));
     REQUIRE(b == true);
     REQUIRE(eq(*n, *i8));
@@ -1356,7 +1396,7 @@ TEST_CASE("Cot table: functions", "[functions]")
     REQUIRE(eq(*r1, *r2));
 
     // cot(5*pi/12) = (-1 + 3**(1/2))/(1 + 3**(1/2))
-    r1 = cot(div(mul(integer(5),pi), i12));
+    r1 = cot(div(mul(integer(5), pi), i12));
     r2 = div(sub(sq3, one), add(one, sq3));
     REQUIRE(eq(*r1, *r2));
 }
@@ -1366,34 +1406,56 @@ TEST_CASE("Could extract minus: functions", "[functions]")
     RCP<const Basic> x = symbol("x");
     RCP<const Basic> y = symbol("y");
 
-    RCP<const Basic> i2 = integer(2);
-    RCP<const Basic> im1 = integer(-1);
-    RCP<const Basic> r;
-    bool b;
+    RCP<const Number> i2 = integer(2);
+    RCP<const Number> im1 = integer(-1);
+    RCP<const Basic> r, s;
+    bool b, c;
 
     r = add(mul(im1, x), mul(im1, mul(i2, y)));
-    b = could_extract_minus(r);
+    b = could_extract_minus(*r);
     REQUIRE(b == true);
 
     r = add(mul(im1, x), mul(i2, y));
-    b = could_extract_minus(r);
-    REQUIRE(b == false);
+    s = add(x, mul(mul(i2, y), im1));
+    b = could_extract_minus(*r);
+    c = could_extract_minus(*s);
+    REQUIRE(b != c);
 
     r = mul(mul(x, integer(-10)), y);
-    b = could_extract_minus(r);
+    b = could_extract_minus(*r);
     REQUIRE(b == true);
 
     r = mul(mul(x, i2), y);
-    b = could_extract_minus(r);
+    b = could_extract_minus(*r);
     REQUIRE(b == false);
 
     r = add(mul(im1, x), mul(im1, div(mul(i2, y), integer(3))));
-    b = could_extract_minus(r);
+    b = could_extract_minus(*r);
     REQUIRE(b == true);
 
     r = mul(div(x, i2), y);
-    b = could_extract_minus(r);
+    b = could_extract_minus(*r);
     REQUIRE(b == false);
+
+    r = Complex::from_two_nums(*i2, *im1);
+    b = could_extract_minus(*r);
+    REQUIRE(b == false);
+
+    r = Complex::from_two_nums(*im1, *i2);
+    b = could_extract_minus(*r);
+    REQUIRE(b == true);
+
+    r = Complex::from_two_nums(*zero, *i2);
+    b = could_extract_minus(*r);
+    REQUIRE(b == false);
+
+    r = Complex::from_two_nums(*zero, *im1);
+    b = could_extract_minus(*r);
+    REQUIRE(b == true);
+
+    r = im1;
+    b = could_extract_minus(*r);
+    REQUIRE(b == true);
 }
 
 TEST_CASE("Asin: functions", "[functions]")
@@ -1434,14 +1496,19 @@ TEST_CASE("Asin: functions", "[functions]")
 
     r1 = asin(real_double(0.5));
     REQUIRE(is_a<RealDouble>(*r1));
-    REQUIRE(std::abs(static_cast<const RealDouble &>(*r1).i - 0.523598775598299) < 1e-12);
+    REQUIRE(std::abs(static_cast<const RealDouble &>(*r1).i - 0.523598775598299)
+            < 1e-12);
 
     r1 = asin(complex_double(std::complex<double>(1, 1)));
     r2 = asin(real_double(2.0));
     REQUIRE(is_a<ComplexDouble>(*r1));
     REQUIRE(is_a<ComplexDouble>(*r2));
-    REQUIRE(std::abs(std::abs(static_cast<const ComplexDouble &>(*r1).i) - 1.2530681300031) < 1e-10);
-    REQUIRE(std::abs(std::abs(static_cast<const ComplexDouble &>(*r2).i) - 2.0498241882037) < 1e-10);
+    REQUIRE(std::abs(std::abs(static_cast<const ComplexDouble &>(*r1).i)
+                     - 1.2530681300031)
+            < 1e-10);
+    REQUIRE(std::abs(std::abs(static_cast<const ComplexDouble &>(*r2).i)
+                     - 2.0498241882037)
+            < 1e-10);
 }
 
 TEST_CASE("Acos: functions", "[functions]")
@@ -1461,7 +1528,7 @@ TEST_CASE("Acos: functions", "[functions]")
     REQUIRE(eq(*r1, *r2));
 
     r1 = acos(div(im1, i2));
-    r2 = mul(i2, div(pi,  i3));
+    r2 = mul(i2, div(pi, i3));
     REQUIRE(eq(*r1, *r2));
 
     r1 = acos(div(sqrt(i2), i2));
@@ -1502,7 +1569,8 @@ TEST_CASE("Asec: functions", "[functions]")
     REQUIRE(eq(*r1, *r2));
 
     r1 = asec(div(i2, im1));
-    r2 = mul(i2, div(pi,  i3));
+    r2 = mul(i2, div(pi, i3));
+    std::cout << r1->__str__() << std::endl;
     REQUIRE(eq(*r1, *r2));
 
     r1 = asec(sqrt(i2));
@@ -1511,8 +1579,8 @@ TEST_CASE("Asec: functions", "[functions]")
 
     r1 = asec(div(mul(i2, sqrt(i2)), add(sqrt(i3), i1)));
     r2 = mul(i5, div(pi, mul(i3, pow(i2, i2))));
-    std::cout<<*r1<<std::endl;
-    std::cout<<*r2<<std::endl;
+    std::cout << *r1 << std::endl;
+    std::cout << *r2 << std::endl;
     REQUIRE(eq(*r1, *r2));
 
     r1 = asec(div(integer(8), sqrt(sub(i5, sqrt(i5)))));
@@ -1723,7 +1791,7 @@ TEST_CASE("Lambertw: functions", "[functions]")
     r2 = zero;
     REQUIRE(eq(*r1, *r2));
 
-    r1 = lambertw(exp(im1));
+    r1 = lambertw(neg(exp(im1)));
     r2 = im1;
     REQUIRE(eq(*r1, *r2));
 
@@ -1785,7 +1853,6 @@ TEST_CASE("Csch: functions", "[functions]")
     r1 = csch(mul(im1, x))->diff(x);
     r2 = mul(csch(x), coth(x));
     REQUIRE(eq(*r1, *r2));
-
 }
 
 TEST_CASE("Cosh: functions", "[functions]")
@@ -1838,7 +1905,6 @@ TEST_CASE("Sech: functions", "[functions]")
     r1 = sech(mul(im1, x))->diff(x);
     r2 = mul(im1, mul(sech(x), tanh(x)));
     REQUIRE(eq(*r1, *r2));
-
 }
 
 TEST_CASE("Tanh: functions", "[functions]")
@@ -1864,8 +1930,8 @@ TEST_CASE("Tanh: functions", "[functions]")
 
     r1 = tanh(mul(im1, x))->diff(x);
     r2 = add(pow(tanh(x), i2), im1);
-    std::cout<<*r1<<std::endl;
-    std::cout<<*r2<<std::endl;
+    std::cout << *r1 << std::endl;
+    std::cout << *r2 << std::endl;
     // REQUIRE(eq(*r1, *r2));
 }
 
@@ -1946,7 +2012,6 @@ TEST_CASE("Acsch: functions", "[functions]")
     REQUIRE(eq(*r1, *r2));
 }
 
-
 TEST_CASE("Acosh: functions", "[functions]")
 {
     RCP<const Symbol> x = symbol("x");
@@ -2000,14 +2065,19 @@ TEST_CASE("Atanh: functions", "[functions]")
 
     r1 = atanh(real_double(0.5));
     REQUIRE(is_a<RealDouble>(*r1));
-    REQUIRE(std::abs(static_cast<const RealDouble &>(*r1).i - 0.549306144334055) < 1e-12);
+    REQUIRE(std::abs(static_cast<const RealDouble &>(*r1).i - 0.549306144334055)
+            < 1e-12);
 
     r1 = atanh(complex_double(std::complex<double>(1, 1)));
     r2 = atanh(real_double(2.0));
     REQUIRE(is_a<ComplexDouble>(*r1));
     REQUIRE(is_a<ComplexDouble>(*r2));
-    REQUIRE(std::abs(std::abs(static_cast<const ComplexDouble &>(*r1).i) - 1.09390752881482) < 1e-12);
-    REQUIRE(std::abs(std::abs(static_cast<const ComplexDouble &>(*r2).i) - 1.66407281705924) < 1e-12);
+    REQUIRE(std::abs(std::abs(static_cast<const ComplexDouble &>(*r1).i)
+                     - 1.09390752881482)
+            < 1e-12);
+    REQUIRE(std::abs(std::abs(static_cast<const ComplexDouble &>(*r2).i)
+                     - 1.66407281705924)
+            < 1e-12);
 }
 
 TEST_CASE("Acoth: functions", "[functions]")
@@ -2050,12 +2120,53 @@ TEST_CASE("Kronecker Delta: functions", "[functions]")
 {
     RCP<const Symbol> i = symbol("i");
     RCP<const Symbol> j = symbol("j");
+    RCP<const Symbol> _x = symbol("_x");
+    RCP<const Symbol> _x1 = symbol("_x1");
+    RCP<const Symbol> _x2 = symbol("_x2");
+    RCP<const Basic> i2 = integer(2);
 
     RCP<const Basic> r1;
     RCP<const Basic> r2;
 
     r1 = kronecker_delta(i, i);
     r2 = one;
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = kronecker_delta(i, j)->diff(i);
+    r2 = Derivative::create(kronecker_delta(i, j), {i});
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = kronecker_delta(i, j)->diff(j);
+    r2 = Derivative::create(kronecker_delta(i, j), {j});
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = kronecker_delta(i, mul(j, j))->diff(j);
+    r2 = mul(i2, mul(j, Subs::create(
+                            Derivative::create(kronecker_delta(i, _x), {_x}),
+                            {{_x, mul(j, j)}})));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = kronecker_delta(i, mul(j, j))->diff(i);
+    r2 = Derivative::create(kronecker_delta(i, mul(j, j)), {i});
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = kronecker_delta(mul(i, i), j)->diff(i);
+    r2 = mul(i2, mul(i, Subs::create(
+                            Derivative::create(kronecker_delta(_x, j), {_x}),
+                            {{_x, mul(i, i)}})));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = kronecker_delta(mul(i, i), j)->diff(j);
+    r2 = Derivative::create(kronecker_delta(mul(i, i), j), {j});
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = kronecker_delta(mul(i, i), i)->diff(i);
+    r2 = mul(i2, mul(i, Subs::create(
+                            Derivative::create(kronecker_delta(_x1, i), {_x1}),
+                            {{_x1, mul(i, i)}})));
+    r2 = add(r2, Subs::create(
+                     Derivative::create(kronecker_delta(mul(i, i), _x2), {_x2}),
+                     {{_x2, i}}));
     REQUIRE(eq(*r1, *r2));
 
     r1 = kronecker_delta(i, add(i, one));
@@ -2067,6 +2178,7 @@ TEST_CASE("Zeta: functions", "[functions]")
 {
     RCP<const Symbol> x = symbol("x");
     RCP<const Basic> im1 = integer(-1);
+    RCP<const Basic> im3 = integer(-3);
     RCP<const Basic> i2 = integer(2);
 
     RCP<const Basic> r1;
@@ -2077,14 +2189,33 @@ TEST_CASE("Zeta: functions", "[functions]")
     REQUIRE(eq(*r1, *r2));
 
     r1 = zeta(zero, im1);
-    r2 = div(one, i2);
+    r2 = div(integer(3), i2);
     REQUIRE(eq(*r1, *r2));
 
     r1 = zeta(zero, i2);
     r2 = div(integer(-3), i2);
     REQUIRE(eq(*r1, *r2));
-}
 
+    r1 = zeta(i2, i2);
+    r2 = add(div(pow(pi, i2), integer(6)), im1);
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = zeta(im3, i2);
+    r2 = rational(-119, 120);
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = zeta(integer(-5), integer(3));
+    r2 = rational(-8317, 252);
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = zeta(integer(3), i2);
+    REQUIRE(r1->__str__() == "zeta(3, 2)");
+
+    r1 = zeta(x, i2);
+    REQUIRE(r1->__str__() == "zeta(x, 2)");
+
+    CHECK_THROWS_AS(zeta(one, i2), std::runtime_error);
+}
 
 TEST_CASE("Levi Civita: functions", "[functions]")
 {
@@ -2128,6 +2259,33 @@ TEST_CASE("Dirichlet Eta: functions", "[functions]")
     r1 = dirichlet_eta(zero);
     r2 = div(one, i2);
     REQUIRE(eq(*r1, *r2));
+}
+
+TEST_CASE("Erf: functions", "[functions]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+
+    RCP<const Basic> r1;
+    RCP<const Basic> r2;
+
+    RCP<const Basic> i2 = integer(2);
+
+    r1 = erf(zero);
+    REQUIRE(eq(*r1, *zero));
+
+    r1 = erf(mul(i2, x));
+    r2 = exp(mul(integer(-4), (mul(x, x))));
+    r2 = div(mul(integer(4), r2), sqrt(pi));
+    REQUIRE(eq(*r1->diff(x), *r2));
+
+    r2 = add(x, y);
+    r1 = erf(r2);
+    r2 = exp(neg(mul(r2, r2)));
+    r2 = mul(div(i2, sqrt(pi)), r2);
+    REQUIRE(eq(*r1->diff(x), *r2));
+
+    REQUIRE(eq(*erf(neg(x)), *neg(erf(x))));
 }
 
 TEST_CASE("Gamma: functions", "[functions]")
@@ -2187,6 +2345,51 @@ TEST_CASE("Gamma: functions", "[functions]")
     r1 = gamma(r3)->diff(x);
     r2 = neg((mul(gamma(r3), polygamma(zero, r3))));
     REQUIRE(eq(*r1, *r2));
+
+    r1 = gamma(add(x, y))->subs({{x, y}});
+    r2 = gamma(add(y, y));
+    REQUIRE(eq(*r1, *r2));
+}
+
+TEST_CASE("LogGamma: functions", "[functions]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    RCP<const Basic> r1;
+    RCP<const Basic> r2;
+
+    r1 = loggamma(integer(1));
+    REQUIRE(eq(*r1, *zero));
+
+    r2 = loggamma(integer(2));
+    REQUIRE(eq(*r2, *zero));
+
+    r1 = loggamma(integer(3));
+    REQUIRE(eq(*r1, *log(integer(2))));
+
+    r1 = loggamma(x);
+    r1 = SymEngine::rcp_dynamic_cast<const LogGamma>(r1)->rewrite_as_gamma();
+    REQUIRE(eq(*r1, *log(gamma(x))));
+
+    r1 = loggamma(x)->diff(x);
+    r2 = polygamma(zero, x);
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = loggamma(x)->diff(y);
+    REQUIRE(eq(*r1, *zero));
+
+    r2 = mul(x, y);
+    r1 = loggamma(r2)->diff(x);
+    r2 = mul(polygamma(zero, r2), y);
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = loggamma(x)->subs({{x, y}});
+    r2 = loggamma(y);
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = loggamma(add(y, mul(x, y)))->subs({{y, x}});
+    r2 = loggamma(add(x, mul(x, x)));
+    REQUIRE(eq(*r1, *r2));
 }
 
 TEST_CASE("Lowergamma: functions", "[functions]")
@@ -2194,7 +2397,6 @@ TEST_CASE("Lowergamma: functions", "[functions]")
     RCP<const Basic> i2 = integer(2);
     RCP<const Basic> i3 = integer(3);
     RCP<const Basic> im1 = integer(-1);
-
 
     RCP<const Basic> r1;
     RCP<const Basic> r2;
@@ -2217,7 +2419,6 @@ TEST_CASE("Uppergamma: functions", "[functions]")
     RCP<const Basic> i2 = integer(2);
     RCP<const Basic> i3 = integer(3);
     RCP<const Basic> im1 = integer(-1);
-
 
     RCP<const Basic> r1;
     RCP<const Basic> r2;
@@ -2255,7 +2456,7 @@ TEST_CASE("Beta: functions", "[functions]")
     r3 = div(mul(gamma(i3), gamma(i2)), gamma(add(i2, i3)));
     REQUIRE(eq(*r1, *r3));
     r2 = div(one, integer(12));
-    REQUIRE(eq(*r1, *r2));	
+    REQUIRE(eq(*r1, *r2));
 
     r1 = beta(div(one, i2), i2);
     r2 = beta(i2, div(one, i2));
@@ -2287,14 +2488,19 @@ TEST_CASE("Beta: functions", "[functions]")
     REQUIRE(eq(*r1, *r2));
 
     r1 = beta(x, mul(x, x))->diff(x);
-    r2 = mul(beta(x, mul(x, x)), add(mul(mul(i2, x), polygamma(zero, mul(x, x))),
-            sub(polygamma(zero, x), mul(add(mul(i2, x), one), polygamma(zero, add(x, mul(x, x)))))));
+    r2 = mul(
+        beta(x, mul(x, x)),
+        add(mul(mul(i2, x), polygamma(zero, mul(x, x))),
+            sub(polygamma(zero, x), mul(add(mul(i2, x), one),
+                                        polygamma(zero, add(x, mul(x, x)))))));
     REQUIRE(eq(*r1, *r2));
 }
 
 TEST_CASE("Polygamma: functions", "[functions]")
 {
     RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> _x = symbol("_x");
+    RCP<const Symbol> y = symbol("y");
     RCP<const Basic> i2 = integer(2);
     RCP<const Basic> im2 = integer(-2);
     RCP<const Basic> i3 = integer(3);
@@ -2312,12 +2518,18 @@ TEST_CASE("Polygamma: functions", "[functions]")
     r2 = sub(mul(im2, log(i2)), EulerGamma);
     REQUIRE(eq(*r1, *r2));
 
+    r1 = polygamma(zero, div(integer(5), i2));
+    r2 = add(sub(mul(im2, log(i2)), EulerGamma), div(integer(8), integer(3)));
+    REQUIRE(eq(*r1, *r2));
+
     r1 = polygamma(zero, div(one, i3));
-    r2 = add(neg(div(div(pi, i2), sqrt(i3))), sub(div(mul(im3, log(i3)), i2), EulerGamma));
+    r2 = add(neg(div(div(pi, i2), sqrt(i3))),
+             sub(div(mul(im3, log(i3)), i2), EulerGamma));
     REQUIRE(eq(*r1, *r2));
 
     r1 = polygamma(zero, div(i2, i3));
-    r2 = add(div(div(pi, i2), sqrt(i3)), sub(div(mul(im3, log(i3)), i2), EulerGamma));
+    r2 = add(div(div(pi, i2), sqrt(i3)),
+             sub(div(mul(im3, log(i3)), i2), EulerGamma));
     REQUIRE(eq(*r1, *r2));
 
     r1 = polygamma(zero, div(one, i4));
@@ -2328,12 +2540,50 @@ TEST_CASE("Polygamma: functions", "[functions]")
     r2 = add(div(pi, i2), sub(mul(im3, log(i2)), EulerGamma));
     REQUIRE(eq(*r1, *r2));
 
-    r1 = SymEngine::rcp_dynamic_cast<const PolyGamma>(polygamma(i2, x))->rewrite_as_zeta();
+    r1 = polygamma(one, i3);
+    r2 = add(div(integer(-5), i4), div(pow(pi, i2), integer(6)));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = SymEngine::rcp_dynamic_cast<const PolyGamma>(polygamma(i2, x))
+             ->rewrite_as_zeta();
     r2 = neg(mul(i2, zeta(i3, x)));
     REQUIRE(eq(*r1, *r2));
 
-    r1 = SymEngine::rcp_dynamic_cast<const PolyGamma>(polygamma(i3, x))->rewrite_as_zeta();
+    r1 = SymEngine::rcp_dynamic_cast<const PolyGamma>(polygamma(i3, x))
+             ->rewrite_as_zeta();
     r2 = mul(integer(6), zeta(i4, x));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = polygamma(x, y)->subs({{x, zero}, {y, one}});
+    r2 = neg(EulerGamma);
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = polygamma(x, y)->subs({{y, x}});
+    r2 = polygamma(x, x);
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = polygamma(y, mul(x, i2))->diff(x);
+    r2 = mul(i2, polygamma(add(y, one), mul(x, i2)));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = polygamma(y, mul(x, i2))->diff(x);
+    r2 = mul(i2, polygamma(add(y, one), mul(x, i2)));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = polygamma(x, y)->diff(x);
+    r2 = Derivative::create(polygamma(x, y), {x});
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = polygamma(mul(i2, x), y)->diff(x);
+    r2 = mul(i2, Subs::create(Derivative::create(polygamma(_x, y), {_x}),
+                              {{_x, mul(i2, x)}}));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = polygamma(mul(i2, x), mul(i3, x))->diff(x);
+    r2 = mul(i2,
+             Subs::create(Derivative::create(polygamma(_x, mul(i3, x)), {_x}),
+                          {{_x, mul(i2, x)}}));
+    r2 = add(r2, mul(i3, polygamma(add(mul(i2, x), one), mul(i3, x))));
     REQUIRE(eq(*r1, *r2));
 }
 
@@ -2346,6 +2596,9 @@ TEST_CASE("Abs: functions", "[functions]")
     RCP<const Symbol> x = symbol("x");
     RCP<const Symbol> y = symbol("y");
 
+    REQUIRE(eq(*abs(add(i2, mul(I, im1))), *sqrt(integer(5))));
+    REQUIRE(eq(*abs(add(i2, mul(I, i3))), *sqrt(integer(13))));
+    REQUIRE(eq(*abs(x), *abs(neg(x))));
     REQUIRE(eq(*abs(one), *one));
     REQUIRE(eq(*abs(i2), *i2));
     REQUIRE(eq(*abs(im1), *one));
@@ -2358,22 +2611,26 @@ TEST_CASE("Abs: functions", "[functions]")
     REQUIRE(eq(*abs(x)->diff(y), *integer(0)));
 }
 
-class MySin : public FunctionWrapper {
-public :
-    MySin(RCP<const Basic> arg) : FunctionWrapper("MySin", arg) {
-
+class MySin : public FunctionWrapper
+{
+public:
+    MySin(RCP<const Basic> arg) : FunctionWrapper("MySin", arg)
+    {
     }
-    RCP<const Number> eval(long bits) const {
+    RCP<const Number> eval(long bits) const
+    {
         return real_double(::sin(eval_double(*arg_[0])));
     }
-    RCP<const Basic> create(const vec_basic &v) const {
+    RCP<const Basic> create(const vec_basic &v) const
+    {
         if (eq(*zero, *v[0])) {
             return zero;
         } else {
             return make_rcp<MySin>(v[0]);
         }
     }
-    RCP<const Basic> diff_impl(const RCP<const Symbol> &x) const {
+    RCP<const Basic> diff_impl(const RCP<const Symbol> &x) const
+    {
         return mul(cos(arg_[0]), arg_[0]->diff(x));
     }
 };
@@ -2414,17 +2671,23 @@ TEST_CASE("MPFR and MPC: functions", "[functions]")
     REQUIRE(is_a<RealMPFR>(*r1));
     REQUIRE(is_a<RealMPFR>(*r2));
 
-    mpfr_mul_ui(a.get_mpfr_t(), static_cast<const RealMPFR &>(*r1).i.get_mpfr_t(), p, MPFR_RNDN);
+    mpfr_mul_ui(a.get_mpfr_t(),
+                static_cast<const RealMPFR &>(*r1).i.get_mpfr_t(), p,
+                MPFR_RNDN);
     REQUIRE(mpfr_cmp_si(a.get_mpfr_t(), 84147098480789650) > 0);
     REQUIRE(mpfr_cmp_si(a.get_mpfr_t(), 84147098480789651) < 0);
-    mpfr_mul_ui(a.get_mpfr_t(), static_cast<const RealMPFR &>(*r2).i.get_mpfr_t(), p, MPFR_RNDN);
+    mpfr_mul_ui(a.get_mpfr_t(),
+                static_cast<const RealMPFR &>(*r2).i.get_mpfr_t(), p,
+                MPFR_RNDN);
     REQUIRE(mpfr_cmp_si(a.get_mpfr_t(), -41614683654714239) > 0);
     REQUIRE(mpfr_cmp_si(a.get_mpfr_t(), -41614683654714238) < 0);
 
     mpfr_set_ui(a.get_mpfr_t(), 3, MPFR_RNDN);
     r1 = gamma(div(real_mpfr(a), i2));
     REQUIRE(is_a<RealMPFR>(*r1));
-    mpfr_mul_ui(a.get_mpfr_t(), static_cast<const RealMPFR &>(*r1).i.get_mpfr_t(), p, MPFR_RNDN);
+    mpfr_mul_ui(a.get_mpfr_t(),
+                static_cast<const RealMPFR &>(*r1).i.get_mpfr_t(), p,
+                MPFR_RNDN);
     REQUIRE(mpfr_cmp_si(a.get_mpfr_t(), 88622692545275801) > 0);
     REQUIRE(mpfr_cmp_si(a.get_mpfr_t(), 88622692545275802) < 0);
 
@@ -2447,7 +2710,7 @@ TEST_CASE("MPFR and MPC: functions", "[functions]")
     REQUIRE(mpfr_cmp_si(a.get_mpfr_t(), 131695789692481670) > 0);
     REQUIRE(mpfr_cmp_si(a.get_mpfr_t(), 131695789692481671) < 0);
 
-    //Check asin(1.0 + 1.0*I)
+    // Check asin(1.0 + 1.0*I)
     mpc_class c(60);
     mpc_set_si_si(c.get_mpc_t(), 1, 1, MPFR_RNDN);
     r1 = asin(complex_mpc(c));
@@ -2464,8 +2727,8 @@ TEST_CASE("MPFR and MPC: functions", "[functions]")
 #else
     mpfr_set_si(a.get_mpfr_t(), 2, MPFR_RNDN);
     CHECK_THROWS_AS(asin(real_mpfr(a)), std::runtime_error);
-#endif //HAVE_SYMENGINE_MPC
-#endif //HAVE_SYMENGINE_MPFR
+#endif // HAVE_SYMENGINE_MPC
+#endif // HAVE_SYMENGINE_MPFR
 }
 
 TEST_CASE("max: functions", "[functions]")
@@ -2478,38 +2741,42 @@ TEST_CASE("max: functions", "[functions]")
 
     RCP<const Basic> res, tmp;
 
-    res = max({x, y});                      // checking if elements stored in order
+    res = max({x, y}); // checking if elements stored in order
     tmp = rcp_static_cast<const Max>(res)->get_args()[0];
     res = max({y, x});
     REQUIRE(eq(*(rcp_static_cast<const Max>(res)->get_args()[0]), *tmp));
 
     res = max({x, y});
-    REQUIRE(eq(*res, *max({y, x})));        // max(x, y) == max(y, x)
-    REQUIRE(is_a<Max>(*res));               // max(x, y) is a Max
+    REQUIRE(eq(*res, *max({y, x}))); // max(x, y) == max(y, x)
+    REQUIRE(is_a<Max>(*res));        // max(x, y) is a Max
 
     res = max({x});
-    REQUIRE(eq(*res, *x));                  // max(x) == x
+    REQUIRE(eq(*res, *x)); // max(x) == x
 
     res = max({x, x});
-    REQUIRE(eq(*res, *x));                  // max(x, x) == x
+    REQUIRE(eq(*res, *x)); // max(x, x) == x
 
     res = max({x, x, max({x, y})});
-    REQUIRE(eq(*res, *max({x, y})));        // max(x, x, max(x, y)) == max(x,y)
+    REQUIRE(eq(*res, *max({x, y}))); // max(x, x, max(x, y)) == max(x,y)
 
     res = max({i2, rd, r2_5});
-    REQUIRE(eq(*res, *i2));                 // max(2, 2/5, 0.32) == 2
+    REQUIRE(eq(*res, *i2)); // max(2, 2/5, 0.32) == 2
 
     res = max({x, max({i2, y})});
-    REQUIRE(eq(*res, *max({x, i2, y})));    // max(x, max(2, y)) == max(x, 2, y)
+    REQUIRE(eq(*res, *max({x, i2, y}))); // max(x, max(2, y)) == max(x, 2, y)
 
     res = max({max({x, max({y, i2})}), max({r2_5, rd})});
-    REQUIRE(eq(*res, *max({x, i2, y})));    // max(max(x, max(y, 2)), max(2/5, 0.32)) == max(x, 2, y)
+    REQUIRE(eq(
+        *res,
+        *max({x, i2,
+              y}))); // max(max(x, max(y, 2)), max(2/5, 0.32)) == max(x, 2, y)
 
     res = max({i2, r2_5, x});
-    REQUIRE(eq(*res, *max({i2, x})));       // max(2, 2/5, x) == max(2, x)
+    REQUIRE(eq(*res, *max({i2, x}))); // max(2, 2/5, x) == max(2, x)
 
     res = max({max({x, i2}), max({y, r2_5})});
-    REQUIRE(eq(*res, *max({x, i2, y})));    // max(max(2, x), max(2/5, y)) == max(x, 2, y)
+    REQUIRE(eq(
+        *res, *max({x, i2, y}))); // max(max(2, x), max(2/5, y)) == max(x, 2, y)
 }
 
 TEST_CASE("min: functions", "[functions]")
@@ -2523,30 +2790,36 @@ TEST_CASE("min: functions", "[functions]")
     RCP<const Basic> res;
 
     res = min({x, y});
-    REQUIRE(eq(*res, *min({y, x})));        // min(x, y) == min(y, x)
-    REQUIRE(is_a<Min>(*res));               // min(x, y) is a min
+    REQUIRE(eq(*res, *min({y, x}))); // min(x, y) == min(y, x)
+    REQUIRE(is_a<Min>(*res));        // min(x, y) is a min
 
     res = min({x});
-    REQUIRE(eq(*res, *x));                  // min(x) == x
+    REQUIRE(eq(*res, *x)); // min(x) == x
 
     res = min({x, x});
-    REQUIRE(eq(*res, *x));                  // min(x, x) == x
+    REQUIRE(eq(*res, *x)); // min(x, x) == x
 
     res = min({x, x, min({x, y})});
-    REQUIRE(eq(*res, *min({x, y})));        // min(x, x, min(x, y)) == min(x,y)
+    REQUIRE(eq(*res, *min({x, y}))); // min(x, x, min(x, y)) == min(x,y)
 
     res = min({i2, rd, r2_5});
-    REQUIRE(eq(*res, *rd));                 // min(2, 2/5, 0.32) == 0.32
+    REQUIRE(eq(*res, *rd)); // min(2, 2/5, 0.32) == 0.32
 
     res = min({i2, rd, max({x})});
-    REQUIRE(eq(*res, *min({rd, x})));       // min(2, 0.32, max(x)) == min(0.32, x)
+    REQUIRE(eq(*res, *min({rd, x}))); // min(2, 0.32, max(x)) == min(0.32, x)
 
     res = min({x, min({i2, y})});
-    REQUIRE(eq(*res, *min({x, i2, y})));    // min(x, min(2, y)) == min(x, 2, y)
+    REQUIRE(eq(*res, *min({x, i2, y}))); // min(x, min(2, y)) == min(x, 2, y)
 
     res = min({min({x, min({y, i2})}), min({r2_5, rd})});
-    REQUIRE(eq(*res, *min({x, rd, y})));    // min(min(x, min(y, 2)), min(2/5, 0.32)) == min(x, 0.32, y)
+    REQUIRE(eq(
+        *res,
+        *min(
+            {x, rd,
+             y}))); // min(min(x, min(y, 2)), min(2/5, 0.32)) == min(x, 0.32, y)
 
     res = min({min({x, i2}), min({y, r2_5})});
-    REQUIRE(eq(*res, *min({x, r2_5, y})));  // min(min(2, x), min(2/5, y)) == min(x, 2/5, y)
+    REQUIRE(eq(
+        *res,
+        *min({x, r2_5, y}))); // min(min(2, x), min(2/5, y)) == min(x, 2/5, y)
 }

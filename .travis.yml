@@ -10,6 +10,7 @@ addons:
   apt:
     sources:
     - ubuntu-toolchain-r-test
+    - llvm-toolchain-precise-3.7
     packages:
     - libgmp-dev
     - libmpfr-dev
@@ -18,6 +19,7 @@ addons:
     - g++-4.7
     - gcc-5
     - g++-5
+    - clang-format-3.7
 env:
   ## All these variables are sent into the bin/test_travis.sh script. See this
   ## script to know how they are used. Most of them are just passed to cmake,
@@ -28,7 +30,7 @@ env:
 
   ## Out of tree builds (default):
   # Debug build (with BFD) with LATEST_GCC
-  - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_LATEST_GCC="yes"
+  - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_LATEST_GCC="yes" TEST_CLANG_FORMAT="yes"
   # Debug build (with BFD)
   - BUILD_TYPE="Debug" WITH_BFD="yes"
   # Debug build (with BFD and SYMENGINE_THREAD_SAFE)
@@ -38,11 +40,11 @@ env:
   # Debug build (with BFD) with PRIMESIEVE
   - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_PRIMESIEVE="yes"
   # Debug build (with BFD) with Arb
-  - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_ARB="yes"
+  - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_ARB="yes" INTEGER_CLASS="flint"
   # Debug build (with BFD) with MPC
   - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_MPC="yes"
   # Debug build (with BFD) with MPC
-  - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_MPFR="yes"
+  - BUILD_TYPE="Debug" WITH_BFD="yes" WITH_MPFR="yes" INTEGER_CLASS="gmp"
   # Debug build shared lib (with BFD)
   - BUILD_TYPE="Debug" WITH_BFD="yes" BUILD_SHARED_LIBS="yes"
   # Release build (with BFD)
@@ -59,7 +61,23 @@ matrix:
     - compiler: clang
     - os: osx
   include:
-    - env: BUILD_TYPE="Debug" WITH_BFD="yes" WITH_PIRANHA="yes" WITH_BENCHMARKS_NONIUS="yes"
+    - env: BUILD_TYPE="Debug" WITH_BFD="yes" WITH_PIRANHA="yes" WITH_BENCHMARKS_NONIUS="yes" WITH_COVERAGE="yes" TEST_IN_TREE="yes" WITH_FLINT="yes" WITH_MPC="yes"
+      compiler: gcc
+      os: linux
+      addons:
+        apt:
+          sources:
+          - ubuntu-toolchain-r-test
+          - boost-latest
+          packages:
+          - libgmp-dev
+          - libmpfr-dev
+          - libmpc-dev
+          - binutils-dev
+          - libboost-serialization1.55-dev
+          - libboost-iostreams1.55-dev
+          - g++-4.8
+    - env: BUILD_TYPE="Debug" WITH_BFD="yes" WITH_PIRANHA="yes" INTEGER_CLASS="piranha"
       compiler: gcc
       os: linux
       addons:
@@ -113,6 +131,7 @@ matrix:
 install:
   - source bin/install_travis.sh
 script:
+  - bin/travis_clang.sh
   - bin/test_travis.sh
 notifications:
   email: false
