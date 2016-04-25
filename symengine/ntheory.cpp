@@ -6,19 +6,20 @@
 #include <symengine/rational.h>
 #include <symengine/mul.h>
 #ifdef HAVE_SYMENGINE_ECM
-#  include <ecm.h>
+#include <ecm.h>
 #endif // HAVE_SYMENGINE_ECM
 #ifdef HAVE_SYMENGINE_PRIMESIEVE
-#  include <primesieve.hpp>
+#include <primesieve.hpp>
 #endif // HAVE_SYMENGINE_PRIMESIEVE
 #ifdef HAVE_SYMENGINE_ARB
-#  include "arb.h"
-#  include "bernoulli.h"
-#  include "rational.h"
+#include "arb.h"
+#include "bernoulli.h"
+#include "rational.h"
 #endif // HAVE_SYMENGINE_ARB
 #include <symengine/dict.h>
 
-namespace SymEngine {
+namespace SymEngine
+{
 
 // Basic number theoretic functions
 RCP<const Integer> gcd(const Integer &a, const Integer &b)
@@ -29,7 +30,8 @@ RCP<const Integer> gcd(const Integer &a, const Integer &b)
 }
 
 void gcd_ext(const Ptr<RCP<const Integer>> &g, const Ptr<RCP<const Integer>> &s,
-        const Ptr<RCP<const Integer>> &t, const Integer &a, const Integer &b)
+             const Ptr<RCP<const Integer>> &t, const Integer &a,
+             const Integer &b)
 {
     integer_class g_, s_, t_;
     mp_gcdext(g_, s_, t_, a.as_mpz(), b.as_mpz());
@@ -46,7 +48,7 @@ RCP<const Integer> lcm(const Integer &a, const Integer &b)
 }
 
 int mod_inverse(const Ptr<RCP<const Integer>> &b, const Integer &a,
-        const Integer &m)
+                const Integer &m)
 {
     int ret_val;
     integer_class inv_t;
@@ -65,8 +67,9 @@ RCP<const Integer> quotient(const Integer &n, const Integer &d)
     return integer(std::move(n.as_mpz() / d.as_mpz()));
 }
 
-void quotient_mod(const Ptr<RCP<const Integer>> &q, const Ptr<RCP<const Integer>> &r,
-                    const Integer &n, const Integer &d)
+void quotient_mod(const Ptr<RCP<const Integer>> &q,
+                  const Ptr<RCP<const Integer>> &r, const Integer &n,
+                  const Integer &d)
 {
     integer_class _q, _r;
     mp_tdiv_qr(_q, _r, n.as_mpz(), d.as_mpz());
@@ -88,8 +91,9 @@ RCP<const Integer> quotient_f(const Integer &n, const Integer &d)
     return integer(std::move(q));
 }
 
-void quotient_mod_f(const Ptr<RCP<const Integer>> &q, const Ptr<RCP<const Integer>> &r,
-                    const Integer &n, const Integer &d)
+void quotient_mod_f(const Ptr<RCP<const Integer>> &q,
+                    const Ptr<RCP<const Integer>> &r, const Integer &n,
+                    const Integer &d)
 {
     integer_class _q, _r;
     mp_fdiv_qr(_q, _r, n.as_mpz(), d.as_mpz());
@@ -104,8 +108,8 @@ RCP<const Integer> fibonacci(unsigned long n)
     return integer(std::move(f));
 }
 
-void fibonacci2(const Ptr<RCP<const Integer>> &g, const Ptr<RCP<const Integer>> &s,
-        unsigned long n)
+void fibonacci2(const Ptr<RCP<const Integer>> &g,
+                const Ptr<RCP<const Integer>> &s, unsigned long n)
 {
     integer_class g_t;
     integer_class s_t;
@@ -122,7 +126,7 @@ RCP<const Integer> lucas(unsigned long n)
 }
 
 void lucas2(const Ptr<RCP<const Integer>> &g, const Ptr<RCP<const Integer>> &s,
-        unsigned long n)
+            unsigned long n)
 {
     integer_class g_t;
     integer_class s_t;
@@ -166,7 +170,8 @@ RCP<const Integer> nextprime(const Integer &a)
     return integer(std::move(c));
 }
 
-namespace {
+namespace
+{
 // Factoring by Trial division using primes only
 int _factor_trial_division_sieve(integer_class &factor, const integer_class &N)
 {
@@ -237,7 +242,7 @@ int _factor_lehman_method(integer_class &rop, const integer_class &n)
 
     return ret_val;
 }
-} //anonymous namespace
+} // anonymous namespace
 
 int factor_lehman_method(const Ptr<RCP<const Integer>> &f, const Integer &n)
 {
@@ -249,13 +254,15 @@ int factor_lehman_method(const Ptr<RCP<const Integer>> &f, const Integer &n)
     return ret_val;
 }
 
-namespace {
+namespace
+{
 // Factor using Pollard's p-1 method
 int _factor_pollard_pm1_method(integer_class &rop, const integer_class &n,
-            const integer_class &c, unsigned B)
+                               const integer_class &c, unsigned B)
 {
     if (n < 4 or B < 3)
-        throw std::runtime_error("Require n > 3 and B > 2 to use Pollard's p-1 method");
+        throw std::runtime_error(
+            "Require n > 3 and B > 2 to use Pollard's p-1 method");
 
     integer_class m, _c;
     _c = c;
@@ -280,8 +287,8 @@ int _factor_pollard_pm1_method(integer_class &rop, const integer_class &n,
 }
 }
 
-int factor_pollard_pm1_method(const Ptr<RCP<const Integer>> &f, const Integer &n,
-        unsigned B, unsigned retries)
+int factor_pollard_pm1_method(const Ptr<RCP<const Integer>> &f,
+                              const Integer &n, unsigned B, unsigned retries)
 {
     int ret_val = 0;
     integer_class rop, nm4, c;
@@ -303,10 +310,12 @@ int factor_pollard_pm1_method(const Ptr<RCP<const Integer>> &f, const Integer &n
     return ret_val;
 }
 
-namespace {
+namespace
+{
 // Factor using Pollard's rho method
 int _factor_pollard_rho_method(integer_class &rop, const integer_class &n,
-            const integer_class &a, const integer_class &s, unsigned steps = 10000)
+                               const integer_class &a, const integer_class &s,
+                               unsigned steps = 10000)
 {
     if (n < 5)
         throw std::runtime_error("Require n > 4 to use pollard's-rho method");
@@ -316,9 +325,9 @@ int _factor_pollard_rho_method(integer_class &rop, const integer_class &n,
     v = s;
 
     for (unsigned i = 0; i < steps; ++i) {
-        u = (u*u + a) % n;
-        v = (v*v + a) % n;
-        v = (v*v + a) % n;
+        u = (u * u + a) % n;
+        v = (v * v + a) % n;
+        v = (v * v + a) % n;
         m = u - v;
         mp_gcd(g, m, n);
 
@@ -334,7 +343,7 @@ int _factor_pollard_rho_method(integer_class &rop, const integer_class &n,
 }
 
 int factor_pollard_rho_method(const Ptr<RCP<const Integer>> &f,
-        const Integer &n, unsigned retries)
+                              const Integer &n, unsigned retries)
 {
     int ret_val = 0;
     integer_class rop, nm1, nm4, a, s;
@@ -372,7 +381,7 @@ int factor(const Ptr<RCP<const Integer>> &f, const Integer &n, double B1)
         unsigned long int i = 1;
         integer_class m, rem;
         rem = 1; // Any non zero number
-        m = 2; // set `m` to 2**i, i = 1 at the begining
+        m = 2;   // set `m` to 2**i, i = 1 at the begining
 
         // calculate log2n, this can be improved
         for (; m < _n; ++i)
@@ -386,21 +395,19 @@ int factor(const Ptr<RCP<const Integer>> &f, const Integer &n, double B1)
         }
 
         ret_val = 1;
-    }
-    else {
+    } else {
 
         if (mp_probab_prime_p(_n, 25) > 0) { // most probably, n is a prime
             ret_val = 0;
             _f = _n;
-        }
-        else {
+        } else {
 
             for (int i = 0; i < 10 and not ret_val; ++i)
-                ret_val = ecm_factor(get_mpz_t(_f), get_mpz_t(_n), B1,
-                        nullptr);
-                mp_demote(_f);
+                ret_val = ecm_factor(get_mpz_t(_f), get_mpz_t(_n), B1, nullptr);
+            mp_demote(_f);
             if (not ret_val)
-                throw std::runtime_error("ECM failed to factor the given number");
+                throw std::runtime_error(
+                    "ECM failed to factor the given number");
         }
     }
 #else
@@ -416,21 +423,26 @@ int factor_trial_division(const Ptr<RCP<const Integer>> &f, const Integer &n)
 {
     int ret_val;
     integer_class factor;
-    ret_val =_factor_trial_division_sieve(factor, n.as_mpz());
-    if (ret_val == 1) *f = integer(std::move(factor));
+    ret_val = _factor_trial_division_sieve(factor, n.as_mpz());
+    if (ret_val == 1)
+        *f = integer(std::move(factor));
     return ret_val;
 }
 
-void prime_factors(std::vector<RCP<const Integer>> &prime_list, const Integer &n)
+void prime_factors(std::vector<RCP<const Integer>> &prime_list,
+                   const Integer &n)
 {
     integer_class sqrtN;
     integer_class _n = n.as_mpz();
-    if (_n == 0) return;
-    if (_n < 0) _n *= -1;
+    if (_n == 0)
+        return;
+    if (_n < 0)
+        _n *= -1;
 
     sqrtN = mp_sqrt(_n);
     auto limit = mp_get_ui(sqrtN);
-    if (not mp_fits_ulong_p(sqrtN) or limit > std::numeric_limits<unsigned>::max())
+    if (not mp_fits_ulong_p(sqrtN)
+        or limit > std::numeric_limits<unsigned>::max())
         throw std::runtime_error("N too large to factor");
     Sieve::iterator pi(limit);
     unsigned p;
@@ -440,9 +452,10 @@ void prime_factors(std::vector<RCP<const Integer>> &prime_list, const Integer &n
             prime_list.push_back(integer(p));
             _n = _n / p;
         }
-        if (_n == 1) break;
+        if (_n == 1)
+            break;
     }
-    if (not (_n == 1))
+    if (not(_n == 1))
         prime_list.push_back(integer(std::move(_n)));
 }
 
@@ -451,12 +464,15 @@ void prime_factor_multiplicities(map_integer_uint &primes_mul, const Integer &n)
     integer_class sqrtN;
     integer_class _n = n.as_mpz();
     unsigned count;
-    if (_n == 0) return;
-    if (_n < 0) _n *= -1;
+    if (_n == 0)
+        return;
+    if (_n < 0)
+        _n *= -1;
 
     sqrtN = mp_sqrt(_n);
     auto limit = mp_get_ui(sqrtN);
-    if (not mp_fits_ulong_p(sqrtN) or limit > std::numeric_limits<unsigned>::max())
+    if (not mp_fits_ulong_p(sqrtN)
+        or limit > std::numeric_limits<unsigned>::max())
         throw std::runtime_error("N too large to factor");
     Sieve::iterator pi(limit);
 
@@ -464,21 +480,22 @@ void prime_factor_multiplicities(map_integer_uint &primes_mul, const Integer &n)
     while ((p = pi.next_prime()) <= limit) {
         count = 0;
         while (_n % p == 0) { // when a prime factor is found, we divide
-            ++count;                     // _n by that prime as much as we can
+            ++count;          // _n by that prime as much as we can
             _n = _n / p;
         }
         if (count > 0) {
             insert(primes_mul, integer(p), count);
-            if (_n == 1) break;
+            if (_n == 1)
+                break;
         }
     }
-    if (not (_n == 1))
+    if (not(_n == 1))
         insert(primes_mul, integer(std::move(_n)), 1);
 }
 
 std::vector<unsigned> Sieve::_primes = {2, 3, 5, 7, 11, 13, 17, 19, 23, 29};
 bool Sieve::_clear = true;
-unsigned Sieve::_sieve_size = 32 * 1024 * 8; //32K in bits
+unsigned Sieve::_sieve_size = 32 * 1024 * 8; // 32K in bits
 
 void Sieve::set_clear(bool clear)
 {
@@ -490,11 +507,12 @@ void Sieve::clear()
     _primes.erase(_primes.begin() + 10, _primes.end());
 }
 
-void Sieve::set_sieve_size(unsigned size) {
+void Sieve::set_sieve_size(unsigned size)
+{
 #ifdef HAVE_SYMENGINE_PRIMESIEVE
     primesieve::set_sieve_size(size);
 #else
-    _sieve_size = size * 1024 * 8; //size in bits
+    _sieve_size = size * 1024 * 8; // size in bits
 #endif
 }
 
@@ -518,17 +536,21 @@ void Sieve::_extend(unsigned limit)
     for (; start <= limit; start += 2 * segment) {
         unsigned finish = std::min(start + segment * 2 + 1, limit);
         is_prime[std::slice(0, segment, 1)] = true;
-        //considering only odd integers. An odd number n corresponds to n-start/2 in the array.
-        for (unsigned index = 1; index < _primes.size() and
-                    _primes[index] * _primes[index] <= finish; ++index) {
+        // considering only odd integers. An odd number n corresponds to
+        // n-start/2 in the array.
+        for (unsigned index = 1; index < _primes.size()
+                                 and _primes[index] * _primes[index] <= finish;
+             ++index) {
             unsigned n = _primes[index];
             unsigned multiple = (start / n + 1) * n;
             if (multiple % 2 == 0)
                 multiple += n;
             if (multiple > finish)
                 continue;
-            std::slice sl = std::slice((multiple-start)/ 2, 1 + (finish - multiple) / (2 * n), n);
-            //starting from n*n, all the odd multiples of n are marked not prime.
+            std::slice sl = std::slice((multiple - start) / 2,
+                                       1 + (finish - multiple) / (2 * n), n);
+            // starting from n*n, all the odd multiples of n are marked not
+            // prime.
             is_prime[sl] = false;
         }
         for (unsigned n = start + 1; n <= finish; n += 2) {
@@ -542,8 +564,9 @@ void Sieve::_extend(unsigned limit)
 void Sieve::generate_primes(std::vector<unsigned> &primes, unsigned limit)
 {
     _extend(limit);
-    auto it = std::upper_bound (_primes.begin(), _primes.end(), limit);
-    //find the first position greater than limit and reserve space for the primes
+    auto it = std::upper_bound(_primes.begin(), _primes.end(), limit);
+    // find the first position greater than limit and reserve space for the
+    // primes
     primes.reserve(it - _primes.begin());
     std::copy(_primes.begin(), it, std::back_inserter(primes));
     if (_clear)
@@ -576,14 +599,15 @@ unsigned Sieve::iterator::next_prime()
             extend_to = _limit;
         }
         _extend(extend_to);
-        if (_index >= _primes.size()) {     //the next prime is greater than _limit
+        if (_index >= _primes.size()) { // the next prime is greater than _limit
             return _limit + 1;
         }
     }
     return SymEngine::Sieve::_primes[_index++];
 }
 
-RCP<const Number> bernoulli(unsigned long n) {
+RCP<const Number> bernoulli(unsigned long n)
+{
 #ifdef HAVE_SYMENGINE_ARB
     fmpq_t res;
     fmpq_init(res);
@@ -597,7 +621,7 @@ RCP<const Number> bernoulli(unsigned long n) {
     return Rational::from_mpq(std::move(b));
 #else
     // TODO: implement a faster algorithm
-    std::vector<rational_class> v(n+1);
+    std::vector<rational_class> v(n + 1);
     for (unsigned m = 0; m <= n; ++m) {
         v[m] = rational_class(1, m + 1);
 
@@ -609,7 +633,8 @@ RCP<const Number> bernoulli(unsigned long n) {
 #endif
 }
 
-RCP<const Number> harmonic(unsigned long n, long m) {
+RCP<const Number> harmonic(unsigned long n, long m)
+{
     rational_class res(0);
     if (m == 1) {
         for (unsigned i = 1; i <= n; ++i) {
@@ -632,9 +657,11 @@ RCP<const Number> harmonic(unsigned long n, long m) {
     }
 }
 
-// References : Cohen H., A course in computational algebraic number theory (1996), page 21.
-bool crt(const Ptr<RCP<const Integer>> &R, const std::vector<RCP<const Integer>> &rem,
-       const std::vector<RCP<const Integer>> &mod)
+// References : Cohen H., A course in computational algebraic number theory
+// (1996), page 21.
+bool crt(const Ptr<RCP<const Integer>> &R,
+         const std::vector<RCP<const Integer>> &rem,
+         const std::vector<RCP<const Integer>> &mod)
 {
     if (mod.size() > rem.size())
         throw std::runtime_error("Too few remainders");
@@ -651,7 +678,7 @@ bool crt(const Ptr<RCP<const Integer>> &R, const std::vector<RCP<const Integer>>
         t = rem[i]->as_mpz() - r;
         if (not mp_divisible_p(t, g))
             return false;
-        r += m * s * (t / g);           // r += m * (m**-1 mod[i]/g)* (rem[i] - r) / g
+        r += m * s * (t / g); // r += m * (m**-1 mod[i]/g)* (rem[i] - r) / g
         m *= mod[i]->as_mpz() / g;
         mp_fdiv_r(r, r, m);
     }
@@ -659,10 +686,13 @@ bool crt(const Ptr<RCP<const Integer>> &R, const std::vector<RCP<const Integer>>
     return true;
 }
 
-namespace {
-// Crt over a cartesian product of vectors (Assuming that moduli are pairwise relatively prime).
-void _crt_cartesian(std::vector<RCP<const Integer>> &R, const std::vector<std::vector<RCP<const Integer>>> &rem,
-            const std::vector<RCP<const Integer>> &mod)
+namespace
+{
+// Crt over a cartesian product of vectors (Assuming that moduli are pairwise
+// relatively prime).
+void _crt_cartesian(std::vector<RCP<const Integer>> &R,
+                    const std::vector<std::vector<RCP<const Integer>>> &rem,
+                    const std::vector<RCP<const Integer>> &mod)
 {
     if (mod.size() > rem.size())
         throw std::runtime_error("Too few remainders");
@@ -677,8 +707,8 @@ void _crt_cartesian(std::vector<RCP<const Integer>> &R, const std::vector<std::v
         mp_invert(s, m, mod[i]->as_mpz());
         _m = m;
         m *= mod[i]->as_mpz();
-        for (auto & elem : R) {
-            for (auto & _k : rem[i]) {
+        for (auto &elem : R) {
+            for (auto &_k : rem[i]) {
                 r = elem->as_mpz();
                 r += _m * s * (_k->as_mpz() - r);
                 mp_fdiv_r(r, r, m);
@@ -689,7 +719,8 @@ void _crt_cartesian(std::vector<RCP<const Integer>> &R, const std::vector<std::v
     }
 }
 
-// Tests whether n is a prime power and finds a prime p and e such that n = p**e.
+// Tests whether n is a prime power and finds a prime p and e such that n =
+// p**e.
 bool _prime_power(integer_class &p, integer_class &e, const integer_class &n)
 {
     if (n < 2)
@@ -713,9 +744,10 @@ bool _prime_power(integer_class &p, integer_class &e, const integer_class &n)
 }
 
 // Computes a primitive root modulo p**e or 2*p**e where p is an odd prime.
-// References : Cohen H., A course in computational algebraic number theory (2009), pages 25-27.
-void _primitive_root(integer_class &g, const integer_class &p, const integer_class &e,
-            bool even = false)
+// References : Cohen H., A course in computational algebraic number theory
+// (2009), pages 25-27.
+void _primitive_root(integer_class &g, const integer_class &p,
+                     const integer_class &e, bool even = false)
 {
     std::vector<RCP<const Integer>> primes;
     prime_factors(primes, *integer(p - 1));
@@ -724,11 +756,11 @@ void _primitive_root(integer_class &g, const integer_class &p, const integer_cla
     g = 2;
     while (g < p) {
         bool root = true;
-        for (const auto &it: primes) {
+        for (const auto &it : primes) {
             t = it->as_mpz();
-            t = (p - 1)/t;
+            t = (p - 1) / t;
             mp_powm(t, g, t, p);
-            if (t == 1) {           // If g**(p-1)/q is 1 then g is not a primitive root.
+            if (t == 1) { // If g**(p-1)/q is 1 then g is not a primitive root.
                 root = false;
                 break;
             }
@@ -742,17 +774,18 @@ void _primitive_root(integer_class &g, const integer_class &p, const integer_cla
         t = p * p;
         integer_class pm1 = p - 1;
         mp_powm(t, g, pm1, t);
-        if (t == 1) {               // If g**(p-1) mod (p**2) == 1 then g + p is a primitive root.
+        if (t == 1) { // If g**(p-1) mod (p**2) == 1 then g + p is a primitive
+                      // root.
             g += p;
         }
     }
     if (even and g % 2 == 0) {
         mp_pow_ui(t, p, mp_get_ui(e));
-        g += t;                     // If g is even then root of 2*p**e is g + p**e.
+        g += t; // If g is even then root of 2*p**e is g + p**e.
     }
 }
 
-} //anonymous namespace
+} // anonymous namespace
 
 bool primitive_root(const Ptr<RCP<const Integer>> &g, const Integer &n)
 {
@@ -768,7 +801,7 @@ bool primitive_root(const Ptr<RCP<const Integer>> &g, const Integer &n)
     bool even = false;
     if (_n % 2 == 0) {
         if (_n % 4 == 0) {
-            return false;    // If n mod 4 == 0 and n > 4, then no primitive roots.
+            return false; // If n mod 4 == 0 and n > 4, then no primitive roots.
         }
         _n /= 2;
         even = true;
@@ -781,19 +814,24 @@ bool primitive_root(const Ptr<RCP<const Integer>> &g, const Integer &n)
     return true;
 }
 
-namespace {
+namespace
+{
 // Computes primitive roots modulo p**e or 2*p**e where p is an odd prime.
 // References :
-// [1] Cohen H., A course in computational algebraic number theory (1996), pages 25-27.
+// [1] Cohen H., A course in computational algebraic number theory (1996), pages
+// 25-27.
 // [2] Hackman P., Elementary number theory (2009), page 28.
-void _primitive_root_list(std::vector<RCP<const Integer>> &roots, const integer_class &p,
-            const integer_class &e, bool even = false)
+void _primitive_root_list(std::vector<RCP<const Integer>> &roots,
+                          const integer_class &p, const integer_class &e,
+                          bool even = false)
 {
     integer_class g, h, d, t, pe2, n, pm1;
-    _primitive_root(g, p, integer_class(1), false); // Find one primitive root for p.
+    _primitive_root(g, p, integer_class(1),
+                    false); // Find one primitive root for p.
     h = 1;
     pm1 = p - 1;
-    // Generate other primitive roots for p. h = g**i and gcd(i, p-1) = 1. Ref[2]
+    // Generate other primitive roots for p. h = g**i and gcd(i, p-1) = 1.
+    // Ref[2]
     mp_pow_ui(n, p, mp_get_ui(e));
     for (unsigned long i = 1; i < p; ++i) {
         h *= g;
@@ -831,9 +869,10 @@ void _primitive_root_list(std::vector<RCP<const Integer>> &roots, const integer_
         }
     }
 } //_primitive_root_list
-} //anonymous namespace
+} // anonymous namespace
 
-void primitive_root_list(std::vector<RCP<const Integer>> &roots, const Integer &n)
+void primitive_root_list(std::vector<RCP<const Integer>> &roots,
+                         const Integer &n)
 {
     integer_class _n = n.as_mpz();
     if (_n < 0)
@@ -847,7 +886,7 @@ void primitive_root_list(std::vector<RCP<const Integer>> &roots, const Integer &
     bool even = false;
     if (_n % 2 == 0) {
         if (_n % 4 == 0) {
-            return;    // If n%4 == 0 and n > 4, then no primitive roots.
+            return; // If n%4 == 0 and n > 4, then no primitive roots.
         }
         _n /= 2;
         even = true;
@@ -860,7 +899,8 @@ void primitive_root_list(std::vector<RCP<const Integer>> &roots, const Integer &
     return;
 }
 
-RCP<const Integer> totient(const RCP<const Integer> &n) {
+RCP<const Integer> totient(const RCP<const Integer> &n)
+{
     if (n->is_zero())
         return integer(1);
 
@@ -870,7 +910,7 @@ RCP<const Integer> totient(const RCP<const Integer> &n) {
     map_integer_uint prime_mul;
     prime_factor_multiplicities(prime_mul, *n);
 
-    for (const auto &it: prime_mul) {
+    for (const auto &it : prime_mul) {
         p = it.first->as_mpz();
         mp_divexact(phi, phi, p);
         // phi is exactly divisible by p.
@@ -879,7 +919,8 @@ RCP<const Integer> totient(const RCP<const Integer> &n) {
     return integer(std::move(phi));
 }
 
-RCP<const Integer> carmichael(const RCP<const Integer> &n) {
+RCP<const Integer> carmichael(const RCP<const Integer> &n)
+{
     if (n->is_zero())
         return integer(1);
 
@@ -892,7 +933,9 @@ RCP<const Integer> carmichael(const RCP<const Integer> &n) {
     for (const auto it : prime_mul) {
         p = it.first->as_mpz();
         multiplicity = it.second;
-        if (p == 2 and multiplicity > 2) {     // For powers of 2 greater than 4 divide by 2.
+        if (p == 2
+            and multiplicity
+                    > 2) { // For powers of 2 greater than 4 divide by 2.
             multiplicity--;
         }
         t = p - 1;
@@ -904,9 +947,11 @@ RCP<const Integer> carmichael(const RCP<const Integer> &n) {
     return integer(std::move(lambda));
 }
 
-// References : Cohen H., A course in computational algebraic number theory (1996), page 25.
-bool multiplicative_order(const Ptr<RCP<const Integer>> &o, const RCP<const Integer> &a,
-        const RCP<const Integer> &n)
+// References : Cohen H., A course in computational algebraic number theory
+// (1996), page 25.
+bool multiplicative_order(const Ptr<RCP<const Integer>> &o,
+                          const RCP<const Integer> &a,
+                          const RCP<const Integer> &n)
 {
     integer_class order, p, t;
     integer_class _a = a->as_mpz(), _n = mp_abs(n->as_mpz());
@@ -948,8 +993,10 @@ int kronecker(const Integer &a, const Integer &n)
     return mp_kronecker(a.as_mpz(), n.as_mpz());
 }
 
-namespace {
-bool _sqrt_mod_tonelli_shanks(integer_class &rop, const integer_class &a, const integer_class &p)
+namespace
+{
+bool _sqrt_mod_tonelli_shanks(integer_class &rop, const integer_class &a,
+                              const integer_class &p)
 {
     gmp_randstate_t state;
     gmp_randinit_default(state);
@@ -959,30 +1006,30 @@ bool _sqrt_mod_tonelli_shanks(integer_class &rop, const integer_class &a, const 
     pm1 = p - 1;
     unsigned e, m;
     e = mp_scan1(pm1);
-    q = pm1 >> e;    //p - 1 = 2**e*q
+    q = pm1 >> e; // p - 1 = 2**e*q
 
     while (t != -1) {
         mp_urandomm(n, state, p);
         mp_demote(n);
         t = mp_legendre(n, p);
     }
-    mp_powm(y, n, q, p);   //y = n**q mod p
-    mp_powm(b, a, q, p);   //b = a**q mod p
+    mp_powm(y, n, q, p); // y = n**q mod p
+    mp_powm(b, a, q, p); // b = a**q mod p
     t = (q + 1) / 2;
-    mp_powm(rop, a, t, p);   //rop = a**((q + 1) / 2) mod p
+    mp_powm(rop, a, t, p); // rop = a**((q + 1) / 2) mod p
 
     while (b != 1) {
         m = 0;
         t = b;
         while (t != 1) {
             mp_powm(t, t, integer_class(2), p);
-            ++m;                                                            //t = t**2 = b**2**(m)
+            ++m; // t = t**2 = b**2**(m)
         }
-        if(m == e)
+        if (m == e)
             return false;
-        mp_pow_ui(q, integer_class(2), e - m - 1);    //q = 2**(e - m - 1)
-        mp_powm(t, y, q, p);   // t = y**(2**(e - m - 1))
-        mp_powm(y, t, integer_class(2), p);    //y = t**2
+        mp_pow_ui(q, integer_class(2), e - m - 1); // q = 2**(e - m - 1)
+        mp_powm(t, y, q, p);                       // t = y**(2**(e - m - 1))
+        mp_powm(y, t, integer_class(2), p);        // y = t**2
         e = m;
         rop = (rop * t) % p;
         b = (b * y) % p;
@@ -990,7 +1037,8 @@ bool _sqrt_mod_tonelli_shanks(integer_class &rop, const integer_class &a, const 
     return true;
 }
 
-bool _sqrt_mod_prime(integer_class &rop, const integer_class &a, const integer_class &p)
+bool _sqrt_mod_prime(integer_class &rop, const integer_class &a,
+                     const integer_class &p)
 {
     if (p == 2) {
         rop = a % p;
@@ -1018,10 +1066,10 @@ bool _sqrt_mod_prime(integer_class &rop, const integer_class &a, const integer_c
             rop = (2 * a * t) % p;
         }
     } else {
-        if(p < 10000) { // If p < 10000, brute force is faster.
+        if (p < 10000) { // If p < 10000, brute force is faster.
             integer_class sq = integer_class(1), _a;
             mp_fdiv_r(_a, a, p);
-            for(unsigned i = 1; i < p; ++i) {
+            for (unsigned i = 1; i < p; ++i) {
                 if (sq == _a) {
                     rop = i;
                     return true;
@@ -1037,10 +1085,13 @@ bool _sqrt_mod_prime(integer_class &rop, const integer_class &a, const integer_c
     return true;
 }
 
-// References : Menezes, Alfred J., Paul C. Van Oorschot, and Scott A. Vanstone. Handbook of applied cryptography. CRC press, 2010. pages 104 - 108
+// References : Menezes, Alfred J., Paul C. Van Oorschot, and Scott A. Vanstone.
+// Handbook of applied cryptography. CRC press, 2010. pages 104 - 108
 // Calculates log = x mod q**k where g**x == a mod p and order(g, p) = n.
-void _discrete_log(integer_class &log, const integer_class &a, const integer_class &g, const integer_class &n,
-            const integer_class &q, const unsigned &k, const integer_class &p)
+void _discrete_log(integer_class &log, const integer_class &a,
+                   const integer_class &g, const integer_class &n,
+                   const integer_class &q, const unsigned &k,
+                   const integer_class &p)
 {
     log = 0;
     integer_class gamma = a, alpha, _n, t, beta, qj(1), m, l;
@@ -1048,8 +1099,9 @@ void _discrete_log(integer_class &log, const integer_class &a, const integer_cla
     mp_powm(alpha, g, _n, p);
     mp_sqrtrem(m, t, q);
     if (t != 0)
-        ++m;    // m = ceiling(sqrt(q)).
-    map_integer_uint table; // Table for lookup in baby-step giant-step algorithm
+        ++m; // m = ceiling(sqrt(q)).
+    map_integer_uint
+        table; // Table for lookup in baby-step giant-step algorithm
     integer_class alpha_j(1), d, s;
     s = -m;
     mp_powm(s, alpha, s, p);
@@ -1064,7 +1116,7 @@ void _discrete_log(integer_class &log, const integer_class &a, const integer_cla
         // Baby-step giant-step algorithm for l = log_alpha(beta)
         d = beta;
         bool found = false;
-        for (unsigned i = 0; not found &&i < m; ++i) {
+        for (unsigned i = 0; not found && i < m; ++i) {
             if (table.find(integer(d)) != table.end()) {
                 l = i * m + table[integer(d)];
                 found = true;
@@ -1077,15 +1129,17 @@ void _discrete_log(integer_class &log, const integer_class &a, const integer_cla
 
         log -= t;
         mp_powm(t, g, t, p);
-        gamma *= t; //gamma *= g ** (-l * (q ** j))
+        gamma *= t; // gamma *= g ** (-l * (q ** j))
         qj *= q;
     }
 }
 
 // References : Johnston A., A generalised qth root algorithm.
 // Solution for x**n == a mod p**k where a != 0 mod p and p is an odd prime.
-bool _nthroot_mod1(std::vector<RCP<const Integer>> &roots, const integer_class &a, const integer_class &n,
-            const integer_class &p, const unsigned k, bool all_roots = false)
+bool _nthroot_mod1(std::vector<RCP<const Integer>> &roots,
+                   const integer_class &a, const integer_class &n,
+                   const integer_class &p, const unsigned k,
+                   bool all_roots = false)
 {
     integer_class _n, r, root, s, t, g(0), pk, m, phi;
     mp_pow_ui(pk, p, k);
@@ -1116,7 +1170,7 @@ bool _nthroot_mod1(std::vector<RCP<const Integer>> &roots, const integer_class &
         integer_class h, q, qt, z, v, x, s1 = s;
         _primitive_root(g, p, integer_class(2));
         unsigned c;
-        for (const auto &it: prime_mul) {
+        for (const auto &it : prime_mul) {
             q = it.first->as_mpz();
             mp_pow_ui(qt, q, it.second);
             h = (p - 1) / q;
@@ -1149,7 +1203,7 @@ bool _nthroot_mod1(std::vector<RCP<const Integer>> &roots, const integer_class &
     }
     r = n;
     unsigned c = 0;
-    while(r % p == 0) {
+    while (r % p == 0) {
         mp_divexact(r, r, p);
         ++c;
     }
@@ -1158,7 +1212,8 @@ bool _nthroot_mod1(std::vector<RCP<const Integer>> &roots, const integer_class &
     integer_class pc = n / r, pd = pc * p;
     if (c >= 1) {
         mp_powm(s, root, r, p);
-        // s == root**r mod p. Since s**(p**c) == 1 == a mod p**(c + 1), lift until p**k.
+        // s == root**r mod p. Since s**(p**c) == 1 == a mod p**(c + 1), lift
+        // until p**k.
         for (unsigned d = c + 2; d <= k; ++d) {
             t = 1 - pc;
             pd *= p;
@@ -1205,9 +1260,10 @@ bool _nthroot_mod1(std::vector<RCP<const Integer>> &roots, const integer_class &
     return true;
 }
 
-// Checks if Solution for x**n == a mod p**k exists where a != 0 mod p and p is an odd prime.
+// Checks if Solution for x**n == a mod p**k exists where a != 0 mod p and p is
+// an odd prime.
 bool _is_nthroot_mod1(const integer_class &a, const integer_class &n,
-        const integer_class &p, const unsigned k)
+                      const integer_class &p, const unsigned k)
 {
     integer_class t, pk, m, phi;
     mp_pow_ui(pk, p, k);
@@ -1223,8 +1279,10 @@ bool _is_nthroot_mod1(const integer_class &a, const integer_class &n,
 }
 
 // Solution for x**n == a mod p**k.
-bool _nthroot_mod_prime_power(std::vector<RCP<const Integer>> &roots, const integer_class &a, const integer_class &n,
-            const integer_class &p, const unsigned k, bool all_roots = false)
+bool _nthroot_mod_prime_power(std::vector<RCP<const Integer>> &roots,
+                              const integer_class &a, const integer_class &n,
+                              const integer_class &p, const unsigned k,
+                              bool all_roots = false)
 {
     integer_class pk, root;
     std::vector<RCP<const Integer>> _roots;
@@ -1250,14 +1308,16 @@ bool _nthroot_mod_prime_power(std::vector<RCP<const Integer>> &roots, const inte
                 return true;
             }
             if (c >= k - 2) {
-                c = k - 2;  // Since x**(2**c) == x**(2**(k - 2)) mod 2**k, let c = k - 2.
+                c = k - 2; // Since x**(2**c) == x**(2**(k - 2)) mod 2**k, let c
+                           // = k - 2.
             }
             t = integer_class(1) << (k - 2);
             pc = integer_class(1) << c;
 
             mp_invert(s, r, t);
             if (c == 0) {
-                // x**r == a mod 2**k and x**2**(k - 2) == 1 mod 2**k, implies x**(r * s) == x == a**s mod 2**k.
+                // x**r == a mod 2**k and x**2**(k - 2) == 1 mod 2**k, implies
+                // x**(r * s) == x == a**s mod 2**k.
                 mp_powm(root, a, s, pk);
                 roots.push_back(integer(root));
                 return true;
@@ -1286,7 +1346,7 @@ bool _nthroot_mod_prime_power(std::vector<RCP<const Integer>> &roots, const inte
             if (all_roots) {
                 // All roots are generated by, root * (j * (2**(k - c) +/- 1)).
                 t = pk / pc * root;
-                for (unsigned i = 0 ; i < 2; ++i) {
+                for (unsigned i = 0; i < 2; ++i) {
                     for (unsigned long j = 0; j < pc; ++j) {
                         roots.push_back(integer(root));
                         root += t;
@@ -1324,7 +1384,9 @@ bool _nthroot_mod_prime_power(std::vector<RCP<const Integer>> &roots, const inte
                 mp_divexact(_a, _a, p);
                 ++r;
             }
-            if (r < n or r % n != 0 or not _nthroot_mod_prime_power(_roots, _a, n, p, k - r, all_roots)) {
+            if (r < n or r % n != 0
+                or not _nthroot_mod_prime_power(_roots, _a, n, p, k - r,
+                                                all_roots)) {
                 return false;
             }
             m = r / mp_get_ui(n);
@@ -1334,7 +1396,7 @@ bool _nthroot_mod_prime_power(std::vector<RCP<const Integer>> &roots, const inte
                 return true;
             }
             for (auto &it : _roots) {
-                it = integer (it->as_mpz() * pm);
+                it = integer(it->as_mpz() * pm);
             }
             m = r - r / mp_get_ui(n);
             mp_pow_ui(pm, p, m);
@@ -1352,10 +1414,11 @@ bool _nthroot_mod_prime_power(std::vector<RCP<const Integer>> &roots, const inte
     }
     return true;
 }
-} //anonymous namespace
+} // anonymous namespace
 
 // Returns whether Solution for x**n == a mod p**k exists or not
-bool _is_nthroot_mod_prime_power(const integer_class &a, const integer_class &n, const integer_class &p, const unsigned k)
+bool _is_nthroot_mod_prime_power(const integer_class &a, const integer_class &n,
+                                 const integer_class &p, const unsigned k)
 {
     integer_class pk;
     if (a % p != 0) {
@@ -1374,10 +1437,12 @@ bool _is_nthroot_mod_prime_power(const integer_class &a, const integer_class &n,
                 return true;
             }
             if (c >= k - 2) {
-                c = k - 2;  // Since x**(2**c) == x**(2**(k - 2)) mod 2**k, let c = k - 2.
+                c = k - 2; // Since x**(2**c) == x**(2**(k - 2)) mod 2**k, let c
+                           // = k - 2.
             }
             if (c == 0) {
-                // x**r == a mod 2**k and x**2**(k - 2) == 1 mod 2**k, implies x**(r * s) == x == a**s mod 2**k.
+                // x**r == a mod 2**k and x**2**(k - 2) == 1 mod 2**k, implies
+                // x**(r * s) == x == a**s mod 2**k.
                 return true;
             }
 
@@ -1405,7 +1470,8 @@ bool _is_nthroot_mod_prime_power(const integer_class &a, const integer_class &n,
                 mp_divexact(_a, _a, p);
                 ++r;
             }
-            if (r < n or r % n != 0 or not _is_nthroot_mod_prime_power(_a, n, p, k - r)) {
+            if (r < n or r % n != 0
+                or not _is_nthroot_mod_prime_power(_a, n, p, k - r)) {
                 return false;
             }
             return true;
@@ -1414,8 +1480,9 @@ bool _is_nthroot_mod_prime_power(const integer_class &a, const integer_class &n,
     return true;
 }
 
-bool nthroot_mod(const Ptr<RCP<const Integer>> &root, const RCP<const Integer> &a,
-        const RCP<const Integer> &n, const RCP<const Integer> &mod)
+bool nthroot_mod(const Ptr<RCP<const Integer>> &root,
+                 const RCP<const Integer> &a, const RCP<const Integer> &n,
+                 const RCP<const Integer> &mod)
 {
     if (mod->as_mpz() <= 0) {
         return false;
@@ -1429,19 +1496,23 @@ bool nthroot_mod(const Ptr<RCP<const Integer>> &root, const RCP<const Integer> &
     bool ret_val;
 
     std::vector<RCP<const Integer>> rem;
-    for (const auto &it: prime_mul) {
+    for (const auto &it : prime_mul) {
         integer_class _mod;
         mp_pow_ui(_mod, it.first->as_mpz(), it.second);
         moduli.push_back(integer(std::move(_mod)));
-        ret_val = _nthroot_mod_prime_power(rem, a->as_mpz(), n->as_mpz(), it.first->as_mpz(), it.second, false);
-        if(not ret_val) return false;
+        ret_val
+            = _nthroot_mod_prime_power(rem, a->as_mpz(), n->as_mpz(),
+                                       it.first->as_mpz(), it.second, false);
+        if (not ret_val)
+            return false;
     }
     crt(root, rem, moduli);
     return true;
 }
 
-void nthroot_mod_list(std::vector<RCP<const Integer>> &roots, const RCP<const Integer> &a,
-        const RCP<const Integer> &n, const RCP<const Integer> &m)
+void nthroot_mod_list(std::vector<RCP<const Integer>> &roots,
+                      const RCP<const Integer> &a, const RCP<const Integer> &n,
+                      const RCP<const Integer> &m)
 {
     if (m->as_mpz() <= 0) {
         return;
@@ -1455,13 +1526,15 @@ void nthroot_mod_list(std::vector<RCP<const Integer>> &roots, const RCP<const In
     bool ret_val;
 
     std::vector<std::vector<RCP<const Integer>>> rem;
-    for (const auto &it: prime_mul) {
+    for (const auto &it : prime_mul) {
         integer_class _mod;
         mp_pow_ui(_mod, it.first->as_mpz(), it.second);
         moduli.push_back(integer(std::move(_mod)));
         std::vector<RCP<const Integer>> rem1;
-        ret_val = _nthroot_mod_prime_power(rem1, a->as_mpz(), n->as_mpz(), it.first->as_mpz(), it.second, true);
-        if(not ret_val) return;
+        ret_val = _nthroot_mod_prime_power(rem1, a->as_mpz(), n->as_mpz(),
+                                           it.first->as_mpz(), it.second, true);
+        if (not ret_val)
+            return;
         rem.push_back(rem1);
     }
     _crt_cartesian(roots, rem, moduli);
@@ -1469,9 +1542,9 @@ void nthroot_mod_list(std::vector<RCP<const Integer>> &roots, const RCP<const In
 }
 
 bool powermod(const Ptr<RCP<const Integer>> &powm, const RCP<const Integer> &a,
-        const RCP<const Number> &b, const RCP<const Integer> &m)
+              const RCP<const Number> &b, const RCP<const Integer> &m)
 {
-    if(is_a<Integer>(*b)) {
+    if (is_a<Integer>(*b)) {
         integer_class t = rcp_static_cast<const Integer>(b)->as_mpz();
         if (b->is_negative())
             t *= -1;
@@ -1485,7 +1558,8 @@ bool powermod(const Ptr<RCP<const Integer>> &powm, const RCP<const Integer> &a,
         return true;
     } else if (is_a<Rational>(*b)) {
         RCP<const Integer> num, den, r;
-        get_num_den(static_cast<const Rational &>(*b), outArg(num), outArg(den));
+        get_num_den(static_cast<const Rational &>(*b), outArg(num),
+                    outArg(den));
         if (den->is_negative()) {
             den = den->mulint(*minus_one);
             num = num->mulint(*minus_one);
@@ -1503,10 +1577,11 @@ bool powermod(const Ptr<RCP<const Integer>> &powm, const RCP<const Integer> &a,
     return false;
 }
 
-void powermod_list(std::vector<RCP<const Integer>> &pows, const RCP<const Integer> &a,
-        const RCP<const Number> &b, const RCP<const Integer> &m)
+void powermod_list(std::vector<RCP<const Integer>> &pows,
+                   const RCP<const Integer> &a, const RCP<const Number> &b,
+                   const RCP<const Integer> &m)
 {
-    if(is_a<Integer>(*b)) {
+    if (is_a<Integer>(*b)) {
         integer_class t = mp_abs(rcp_static_cast<const Integer>(b)->as_mpz());
         mp_powm(t, a->as_mpz(), t, m->as_mpz());
         if (b->is_negative()) {
@@ -1517,7 +1592,8 @@ void powermod_list(std::vector<RCP<const Integer>> &pows, const RCP<const Intege
         pows.push_back(integer(std::move(t)));
     } else if (is_a<Rational>(*b)) {
         RCP<const Integer> num, den, r;
-        get_num_den(static_cast<const Rational &>(*b), outArg(num), outArg(den));
+        get_num_den(static_cast<const Rational &>(*b), outArg(num),
+                    outArg(den));
         if (den->is_negative()) {
             den = den->mulint(*integer(-1));
             num = num->mulint(*integer(-1));
@@ -1551,16 +1627,14 @@ std::vector<integer_class> quadratic_residues(const Integer &a)
     }
 
     std::vector<integer_class> residue;
-    for(integer_class i = integer_class(0); i <= a.as_int()/2; i++)
-    {
-        residue.push_back((i*i) % a.as_int());
+    for (integer_class i = integer_class(0); i <= a.as_int() / 2; i++) {
+        residue.push_back((i * i) % a.as_int());
     }
 
     sort(residue.begin(), residue.end());
     residue.erase(unique(residue.begin(), residue.end()), residue.end());
 
     return residue;
-
 }
 
 bool is_quad_residue(const Integer &a, const Integer &p)
@@ -1573,8 +1647,9 @@ bool is_quad_residue(const Integer &a, const Integer &p)
 
     integer_class p2 = p.as_mpz();
     if (p2 == 0)
-        throw std::runtime_error("is_quad_residue: Second parameter must be non-zero");
-    if(p2 < 0)
+        throw std::runtime_error(
+            "is_quad_residue: Second parameter must be non-zero");
+    if (p2 < 0)
         p2 = -p2;
     integer_class a_final = a.as_mpz();
     if (a.as_mpz() >= p2 || a.as_mpz() < 0)
@@ -1582,8 +1657,8 @@ bool is_quad_residue(const Integer &a, const Integer &p)
     if (a_final < 2)
         return true;
 
-    if (!probab_prime_p(*integer(p2))){
-        if((p2 % 2 == 1 ) && jacobi(*integer(a_final), p) == -1)
+    if (!probab_prime_p(*integer(p2))) {
+        if ((p2 % 2 == 1) && jacobi(*integer(a_final), p) == -1)
             return false;
 
         const RCP<const Integer> a1 = integer(a_final);
@@ -1593,9 +1668,12 @@ bool is_quad_residue(const Integer &a, const Integer &p)
         prime_factor_multiplicities(prime_mul, *p1);
         bool ret_val;
 
-        for (const auto &it: prime_mul) {
-            ret_val = _is_nthroot_mod_prime_power(a1->as_mpz(), integer(2)->as_mpz(), it.first->as_mpz(), it.second);
-            if(not ret_val) return false;
+        for (const auto &it : prime_mul) {
+            ret_val = _is_nthroot_mod_prime_power(
+                a1->as_mpz(), integer(2)->as_mpz(), it.first->as_mpz(),
+                it.second);
+            if (not ret_val)
+                return false;
         }
         return true;
     }
@@ -1604,12 +1682,12 @@ bool is_quad_residue(const Integer &a, const Integer &p)
 }
 
 bool is_nth_residue(const Integer &a, const Integer &n, const Integer &mod)
-    /*
-    Returns true if ``a`` (mod ``mod``) is in the set of nth powers mod ``mod``,
-    i.e a % mod in set([i**n % mod for i in range(mod)]).
-    */
+/*
+Returns true if ``a`` (mod ``mod``) is in the set of nth powers mod ``mod``,
+i.e a % mod in set([i**n % mod for i in range(mod)]).
+*/
 {
-    integer_class _mod= mod.as_mpz();
+    integer_class _mod = mod.as_mpz();
 
     if (_mod == 0) {
         return false;
@@ -1625,9 +1703,11 @@ bool is_nth_residue(const Integer &a, const Integer &n, const Integer &mod)
     prime_factor_multiplicities(prime_mul, *mod2);
     bool ret_val;
 
-    for (const auto &it: prime_mul) {
-        ret_val = _is_nthroot_mod_prime_power(a.as_mpz(), n.as_mpz(), it.first->as_mpz(), it.second);
-        if(not ret_val) return false;
+    for (const auto &it : prime_mul) {
+        ret_val = _is_nthroot_mod_prime_power(a.as_mpz(), n.as_mpz(),
+                                              it.first->as_mpz(), it.second);
+        if (not ret_val)
+            return false;
     }
     return true;
 }
@@ -1641,7 +1721,7 @@ int mobius(const Integer &a)
     bool is_square_free = true;
     prime_factor_multiplicities(prime_mul, a);
     int num_prime_factors = prime_mul.size();
-    for (const auto &it: prime_mul) {
+    for (const auto &it : prime_mul) {
         int p_freq = it.second;
         if (p_freq > 1) {
             is_square_free = false;
@@ -1660,7 +1740,7 @@ int mobius(const Integer &a)
 long mertens(const unsigned long a)
 {
     long mertens = 0;
-    for (unsigned long i = 1; i<= a; ++i) {
+    for (unsigned long i = 1; i <= a; ++i) {
         mertens += mobius(*(integer(i)));
     }
     return mertens;

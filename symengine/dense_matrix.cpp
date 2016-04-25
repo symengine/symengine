@@ -4,34 +4,41 @@
 #include <symengine/integer.h>
 #include <symengine/pow.h>
 
-namespace SymEngine {
+namespace SymEngine
+{
 
 // Constructors
-DenseMatrix::DenseMatrix() {}
-
-DenseMatrix::DenseMatrix(unsigned row, unsigned col)
-        : row_(row), col_(col)
+DenseMatrix::DenseMatrix()
 {
-    m_ = std::vector<RCP<const Basic>>(row*col);
+}
+
+DenseMatrix::DenseMatrix(const DenseMatrix &x)
+    : m_(x.m_), row_(x.row_), col_(x.col_)
+{
+}
+
+DenseMatrix::DenseMatrix(unsigned row, unsigned col) : row_(row), col_(col)
+{
+    m_ = std::vector<RCP<const Basic>>(row * col);
 }
 
 DenseMatrix::DenseMatrix(unsigned row, unsigned col, const vec_basic &l)
-        : m_{l}, row_(row), col_(col)
+    : m_{l}, row_(row), col_(col)
 {
-    SYMENGINE_ASSERT(m_.size() == row*col)
+    SYMENGINE_ASSERT(m_.size() == row * col)
 }
 
 // Get and set elements
 RCP<const Basic> DenseMatrix::get(unsigned i, unsigned j) const
 {
     SYMENGINE_ASSERT(i < row_ and j < col_);
-    return m_[i*col_ + j];
+    return m_[i * col_ + j];
 }
 
 void DenseMatrix::set(unsigned i, unsigned j, const RCP<const Basic> &e)
 {
     SYMENGINE_ASSERT(i < row_ and j < col_);
-    m_[i*col_ + j] = e;
+    m_[i * col_ + j] = e;
 }
 
 unsigned DenseMatrix::rank() const
@@ -65,7 +72,8 @@ void DenseMatrix::add_matrix(const MatrixBase &other, MatrixBase &result) const
 
 void DenseMatrix::mul_matrix(const MatrixBase &other, MatrixBase &result) const
 {
-    SYMENGINE_ASSERT(row_ == result.nrows() and other.ncols() == result.ncols());
+    SYMENGINE_ASSERT(row_ == result.nrows()
+                     and other.ncols() == result.ncols());
 
     if (is_a<DenseMatrix>(other) and is_a<DenseMatrix>(result)) {
         const DenseMatrix &o = static_cast<const DenseMatrix &>(other);
@@ -75,7 +83,8 @@ void DenseMatrix::mul_matrix(const MatrixBase &other, MatrixBase &result) const
 }
 
 // Add a scalar
-void DenseMatrix::add_scalar(const RCP<const Basic> &k, MatrixBase &result) const
+void DenseMatrix::add_scalar(const RCP<const Basic> &k,
+                             MatrixBase &result) const
 {
     if (is_a<DenseMatrix>(result)) {
         DenseMatrix &r = static_cast<DenseMatrix &>(result);
@@ -84,7 +93,8 @@ void DenseMatrix::add_scalar(const RCP<const Basic> &k, MatrixBase &result) cons
 }
 
 // Multiply by a scalar
-void DenseMatrix::mul_scalar(const RCP<const Basic> &k, MatrixBase &result) const
+void DenseMatrix::mul_scalar(const RCP<const Basic> &k,
+                             MatrixBase &result) const
 {
     if (is_a<DenseMatrix>(result)) {
         DenseMatrix &r = static_cast<DenseMatrix &>(result);
@@ -102,15 +112,15 @@ void DenseMatrix::transpose(MatrixBase &result) const
 }
 
 // Extract out a submatrix
-void DenseMatrix::submatrix( unsigned row_start,
-                        unsigned row_end,
-                        unsigned col_start,
-                        unsigned col_end,
-                        MatrixBase &result) const
+void DenseMatrix::submatrix(MatrixBase &result, unsigned row_start,
+                            unsigned col_start, unsigned row_end,
+                            unsigned col_end, unsigned row_step,
+                            unsigned col_step) const
 {
     if (is_a<DenseMatrix>(result)) {
         DenseMatrix &r = static_cast<DenseMatrix &>(result);
-        submatrix_dense(*this, row_start, row_end, col_start, col_end, r);
+        submatrix_dense(*this, r, row_start, col_start, row_end, col_end,
+                        row_step, col_step);
     }
 }
 
@@ -154,9 +164,10 @@ void DenseMatrix::FFLU(MatrixBase &LU) const
 }
 
 // Fraction free LDU factorization
-void DenseMatrix::FFLDU(MatrixBase&L, MatrixBase &D, MatrixBase &U) const
+void DenseMatrix::FFLDU(MatrixBase &L, MatrixBase &D, MatrixBase &U) const
 {
-    if (is_a<DenseMatrix>(L) and is_a<DenseMatrix>(D) and is_a<DenseMatrix>(U)) {
+    if (is_a<DenseMatrix>(L) and is_a<DenseMatrix>(D)
+        and is_a<DenseMatrix>(U)) {
         DenseMatrix &L_ = static_cast<DenseMatrix &>(L);
         DenseMatrix &D_ = static_cast<DenseMatrix &>(D);
         DenseMatrix &U_ = static_cast<DenseMatrix &>(U);
@@ -166,25 +177,90 @@ void DenseMatrix::FFLDU(MatrixBase&L, MatrixBase &D, MatrixBase &U) const
 
 // ---------------------------- Jacobian -------------------------------------//
 
-void jacobian(const DenseMatrix &A, const DenseMatrix &x,
-        DenseMatrix &result)
+void jacobian(const DenseMatrix &A, const DenseMatrix &x, DenseMatrix &result)
 {
     SYMENGINE_ASSERT(A.col_ == 1);
     SYMENGINE_ASSERT(x.col_ == 1);
     SYMENGINE_ASSERT(A.row_ == result.nrows() and x.row_ == result.ncols());
+    bool error = false;
+#pragma omp parallel for
     for (unsigned i = 0; i < result.row_; i++) {
         for (unsigned j = 0; j < result.col_; j++) {
             if (is_a<Symbol>(*(x.m_[j]))) {
-                const RCP<const Symbol> x_ = rcp_static_cast<const Symbol>(
-                        x.m_[j]);
-                result.m_[i*result.col_ + j] = A.m_[i]->diff(x_);
+                const RCP<const Symbol> x_
+                    = rcp_static_cast<const Symbol>(x.m_[j]);
+                result.m_[i * result.col_ + j] = A.m_[i]->diff(x_);
             } else {
-                throw std::runtime_error("'x' must contain Symbols only");
+                error = true;
+                break;
+            }
+        }
+    }
+    if (error) {
+        throw std::runtime_error(
+            "'x' must contain Symbols only. "
+            "Use sjacobian for SymPy style differentiation");
+    }
+}
+
+void sjacobian(const DenseMatrix &A, const DenseMatrix &x, DenseMatrix &result)
+{
+    SYMENGINE_ASSERT(A.col_ == 1);
+    SYMENGINE_ASSERT(x.col_ == 1);
+    SYMENGINE_ASSERT(A.row_ == result.nrows() and x.row_ == result.ncols());
+#pragma omp parallel for
+    for (unsigned i = 0; i < result.row_; i++) {
+        for (unsigned j = 0; j < result.col_; j++) {
+            if (is_a<Symbol>(*(x.m_[j]))) {
+                const RCP<const Symbol> x_
+                    = rcp_static_cast<const Symbol>(x.m_[j]);
+                result.m_[i * result.col_ + j] = A.m_[i]->diff(x_);
+            } else {
+                // TODO: Use a dummy symbol
+                const RCP<const Symbol> x_ = symbol("x_");
+                result.m_[i * result.col_ + j] = A.m_[i]
+                                                     ->subs({{x.m_[j], x_}})
+                                                     ->diff(x_)
+                                                     ->subs({{x_, x.m_[j]}});
             }
         }
     }
 }
 
+// ---------------------------- Diff -------------------------------------//
+
+void diff(const DenseMatrix &A, const RCP<const Symbol> &x, DenseMatrix &result)
+{
+    SYMENGINE_ASSERT(A.row_ == result.nrows() and A.col_ == result.ncols());
+#pragma omp parallel for
+    for (unsigned i = 0; i < result.row_; i++) {
+        for (unsigned j = 0; j < result.col_; j++) {
+            result.m_[i * result.col_ + j] = A.m_[i * result.col_ + j]->diff(x);
+        }
+    }
+}
+
+void sdiff(const DenseMatrix &A, const RCP<const Basic> &x, DenseMatrix &result)
+{
+    SYMENGINE_ASSERT(A.row_ == result.nrows() and A.col_ == result.ncols());
+#pragma omp parallel for
+    for (unsigned i = 0; i < result.row_; i++) {
+        for (unsigned j = 0; j < result.col_; j++) {
+            if (is_a<Symbol>(*x)) {
+                const RCP<const Symbol> x_ = rcp_static_cast<const Symbol>(x);
+                result.m_[i * result.col_ + j]
+                    = A.m_[i * result.col_ + j]->diff(x_);
+            } else {
+                // TODO: Use a dummy symbol
+                const RCP<const Symbol> x_ = symbol("_x");
+                result.m_[i * result.col_ + j] = A.m_[i * result.col_ + j]
+                                                     ->subs({{x, x_}})
+                                                     ->diff(x_)
+                                                     ->subs({{x_, x}});
+            }
+        }
+    }
+}
 
 // ----------------------------- Matrix Transpose ----------------------------//
 void transpose_dense(const DenseMatrix &A, DenseMatrix &B)
@@ -193,43 +269,44 @@ void transpose_dense(const DenseMatrix &A, DenseMatrix &B)
 
     for (unsigned i = 0; i < A.row_; i++)
         for (unsigned j = 0; j < A.col_; j++)
-            B.m_[j*B.col_ + i] = A.m_[i*A.col_ + j];
+            B.m_[j * B.col_ + i] = A.m_[i * A.col_ + j];
 }
 
 // ------------------------------- Submatrix ---------------------------------//
-void submatrix_dense(const DenseMatrix &A, unsigned row_start, unsigned row_end,
-        unsigned col_start, unsigned col_end, DenseMatrix &B)
+void submatrix_dense(const DenseMatrix &A, DenseMatrix &B, unsigned row_start,
+                     unsigned col_start, unsigned row_end, unsigned col_end,
+                     unsigned row_step, unsigned col_step)
 {
     SYMENGINE_ASSERT(row_end >= row_start and col_end >= col_start);
     SYMENGINE_ASSERT(row_end < A.row_);
     SYMENGINE_ASSERT(col_end < A.col_);
-    SYMENGINE_ASSERT(B.row_ == row_end - row_start + 1 and
-            B.col_ == col_end - col_start + 1);
+    SYMENGINE_ASSERT(B.row_ == row_end - row_start + 1
+                     and B.col_ == col_end - col_start + 1);
 
     unsigned row = B.row_, col = B.col_;
 
-    for (unsigned i = 0; i < row; i++)
-        for (unsigned j = 0; j < col; j++)
-            B.m_[i*col + j] =
-                A.m_[(row_start + i)*A.col_ + col_start + j];
+    for (unsigned i = 0; i < row; i += row_step)
+        for (unsigned j = 0; j < col; j += col_step)
+            B.m_[i * col + j] = A.m_[(row_start + i) * A.col_ + col_start + j];
 }
 
 // ------------------------------- Matrix Addition ---------------------------//
 void add_dense_dense(const DenseMatrix &A, const DenseMatrix &B, DenseMatrix &C)
 {
-    SYMENGINE_ASSERT(A.row_ == B.row_ and A.col_ == B.col_ and
-        A.row_ == C.row_ and A.col_ == C.col_);
+    SYMENGINE_ASSERT(A.row_ == B.row_ and A.col_ == B.col_ and A.row_ == C.row_
+                     and A.col_ == C.col_);
 
     unsigned row = A.row_, col = A.col_;
 
     for (unsigned i = 0; i < row; i++) {
         for (unsigned j = 0; j < col; j++) {
-            C.m_[i*col + j] = add(A.m_[i*col + j], B.m_[i*col + j]);
+            C.m_[i * col + j] = add(A.m_[i * col + j], B.m_[i * col + j]);
         }
     }
 }
 
-void add_dense_scalar(const DenseMatrix &A, const RCP<const Basic> &k, DenseMatrix &B)
+void add_dense_scalar(const DenseMatrix &A, const RCP<const Basic> &k,
+                      DenseMatrix &B)
 {
     SYMENGINE_ASSERT(A.row_ == B.row_ and A.col_ == B.col_);
 
@@ -237,30 +314,32 @@ void add_dense_scalar(const DenseMatrix &A, const RCP<const Basic> &k, DenseMatr
 
     for (unsigned i = 0; i < row; i++) {
         for (unsigned j = 0; j < col; j++) {
-            B.m_[i*col + j] = add(A.m_[i*col + j], k);
+            B.m_[i * col + j] = add(A.m_[i * col + j], k);
         }
     }
 }
 
 // ------------------------------- Matrix Multiplication ---------------------//
-void mul_dense_dense(const DenseMatrix &A, const DenseMatrix &B,
-        DenseMatrix &C)
+void mul_dense_dense(const DenseMatrix &A, const DenseMatrix &B, DenseMatrix &C)
 {
-    SYMENGINE_ASSERT(A.col_ == B.row_ and C.row_ == A.row_ and C.col_ == B.col_);
+    SYMENGINE_ASSERT(A.col_ == B.row_ and C.row_ == A.row_
+                     and C.col_ == B.col_);
 
     unsigned row = A.row_, col = B.col_;
 
-    for (unsigned r = 0; r<row; r++) {
-        for (unsigned c = 0; c<col; c++) {
-            C.m_[r*col + c] = zero; // Integer Zero
-            for (unsigned k = 0; k<A.col_; k++)
-                C.m_[r*col + c] = add(C.m_[r*col + c],
-                    mul(A.m_[r*A.col_ + k], B.m_[k*col + c]));
+    for (unsigned r = 0; r < row; r++) {
+        for (unsigned c = 0; c < col; c++) {
+            C.m_[r * col + c] = zero; // Integer Zero
+            for (unsigned k = 0; k < A.col_; k++)
+                C.m_[r * col + c]
+                    = add(C.m_[r * col + c],
+                          mul(A.m_[r * A.col_ + k], B.m_[k * col + c]));
         }
     }
 }
 
-void mul_dense_scalar(const DenseMatrix &A, const RCP<const Basic> &k, DenseMatrix& B)
+void mul_dense_scalar(const DenseMatrix &A, const RCP<const Basic> &k,
+                      DenseMatrix &B)
 {
     SYMENGINE_ASSERT(A.col_ == B.col_ and A.row_ == B.row_);
 
@@ -268,20 +347,20 @@ void mul_dense_scalar(const DenseMatrix &A, const RCP<const Basic> &k, DenseMatr
 
     for (unsigned i = 0; i < row; i++) {
         for (unsigned j = 0; j < col; j++) {
-            B.m_[i*col + j] = mul(A.m_[i*col + j], k);
+            B.m_[i * col + j] = mul(A.m_[i * col + j], k);
         }
     }
 }
 
 // -------------------------------- Row Operations ---------------------------//
-void row_exchange_dense(DenseMatrix &A , unsigned i, unsigned j)
+void row_exchange_dense(DenseMatrix &A, unsigned i, unsigned j)
 {
     SYMENGINE_ASSERT(i != j and i < A.row_ and j < A.row_);
 
     unsigned col = A.col_;
 
     for (unsigned k = 0; k < A.col_; k++)
-        std::swap(A.m_[i*col + k], A.m_[j*col + k]);
+        std::swap(A.m_[i * col + k], A.m_[j * col + k]);
 }
 
 void row_mul_scalar_dense(DenseMatrix &A, unsigned i, RCP<const Basic> &c)
@@ -291,23 +370,23 @@ void row_mul_scalar_dense(DenseMatrix &A, unsigned i, RCP<const Basic> &c)
     unsigned col = A.col_;
 
     for (unsigned j = 0; j < A.col_; j++)
-        A.m_[i*col + j] = mul(c, A.m_[i*col + j]);
+        A.m_[i * col + j] = mul(c, A.m_[i * col + j]);
 }
 
 void row_add_row_dense(DenseMatrix &A, unsigned i, unsigned j,
-    RCP<const Basic> &c)
+                       RCP<const Basic> &c)
 {
     SYMENGINE_ASSERT(i != j and i < A.row_ and j < A.row_);
 
     unsigned col = A.col_;
 
     for (unsigned k = 0; k < A.col_; k++)
-        A.m_[i*col + k] = add(A.m_[i*col + k], mul(c, A.m_[j*col + k]));
+        A.m_[i * col + k] = add(A.m_[i * col + k], mul(c, A.m_[j * col + k]));
 }
 
 // ------------------------------ Gaussian Elimination -----------------------//
 void pivoted_gaussian_elimination(const DenseMatrix &A, DenseMatrix &B,
-    std::vector<unsigned> &pivotlist)
+                                  std::vector<unsigned> &pivotlist)
 {
     SYMENGINE_ASSERT(A.row_ == B.row_ and A.col_ == B.col_);
     SYMENGINE_ASSERT(pivotlist.size() == A.row_);
@@ -333,14 +412,15 @@ void pivoted_gaussian_elimination(const DenseMatrix &A, DenseMatrix &B,
             std::swap(pivotlist[k], pivotlist[index]);
         }
 
-        scale = div(one, B.m_[index*col + i]);
+        scale = div(one, B.m_[index * col + i]);
         row_mul_scalar_dense(B, index, scale);
 
         for (j = i + 1; j < row; j++) {
             for (k = i + 1; k < col; k++)
-                B.m_[j*col + k] = sub(B.m_[j*col + k],
-                    mul(B.m_[j*col + i], B.m_[i*col + k]));
-            B.m_[j*col + i] = zero;
+                B.m_[j * col + k]
+                    = sub(B.m_[j * col + k],
+                          mul(B.m_[j * col + i], B.m_[i * col + k]));
+            B.m_[j * col + i] = zero;
         }
 
         index++;
@@ -360,19 +440,20 @@ void fraction_free_gaussian_elimination(const DenseMatrix &A, DenseMatrix &B)
     for (unsigned i = 0; i < col - 1; i++)
         for (unsigned j = i + 1; j < A.row_; j++) {
             for (unsigned k = i + 1; k < col; k++) {
-                B.m_[j*col + k] = sub(mul(B.m_[i*col + i], B.m_[j*col + k]),
-                    mul(B.m_[j*col + i], B.m_[i*col + k]));
+                B.m_[j * col + k]
+                    = sub(mul(B.m_[i * col + i], B.m_[j * col + k]),
+                          mul(B.m_[j * col + i], B.m_[i * col + k]));
                 if (i > 0)
-                    B.m_[j*col + k] = div(B.m_[j*col + k],
-                        B.m_[i*col - col + i - 1]);
+                    B.m_[j * col + k]
+                        = div(B.m_[j * col + k], B.m_[i * col - col + i - 1]);
             }
-            B.m_[j*col + i] = zero;
+            B.m_[j * col + i] = zero;
         }
 }
 
 // Pivoted version of `fraction_free_gaussian_elimination`
-void pivoted_fraction_free_gaussian_elimination(const DenseMatrix &A,
-    DenseMatrix &B, std::vector<unsigned> &pivotlist)
+void pivoted_fraction_free_gaussian_elimination(
+    const DenseMatrix &A, DenseMatrix &B, std::vector<unsigned> &pivotlist)
 {
     SYMENGINE_ASSERT(A.row_ == B.row_ and A.col_ == B.col_);
     SYMENGINE_ASSERT(pivotlist.size() == A.row_);
@@ -398,12 +479,14 @@ void pivoted_fraction_free_gaussian_elimination(const DenseMatrix &A,
 
         for (j = i + 1; j < row; j++) {
             for (k = i + 1; k < col; k++) {
-                B.m_[j*col + k] = sub(mul(B.m_[i*col + i], B.m_[j*col + k]),
-                    mul(B.m_[j*col + i], B.m_[i*col + k]));
+                B.m_[j * col + k]
+                    = sub(mul(B.m_[i * col + i], B.m_[j * col + k]),
+                          mul(B.m_[j * col + i], B.m_[i * col + k]));
                 if (i > 0)
-                    B.m_[j*col + k] = div(B.m_[j*col + k], B.m_[i*col - col + i - 1]);
+                    B.m_[j * col + k]
+                        = div(B.m_[j * col + k], B.m_[i * col - col + i - 1]);
             }
-            B.m_[j*col + i] = zero;
+            B.m_[j * col + i] = zero;
         }
 
         index++;
@@ -411,7 +494,7 @@ void pivoted_fraction_free_gaussian_elimination(const DenseMatrix &A,
 }
 
 void pivoted_gauss_jordan_elimination(const DenseMatrix &A, DenseMatrix &B,
-    std::vector<unsigned> &pivotlist)
+                                      std::vector<unsigned> &pivotlist)
 {
     SYMENGINE_ASSERT(A.row_ == B.row_ and A.col_ == B.col_);
     SYMENGINE_ASSERT(pivotlist.size() == A.row_);
@@ -436,14 +519,14 @@ void pivoted_gauss_jordan_elimination(const DenseMatrix &A, DenseMatrix &B,
             std::swap(pivotlist[k], pivotlist[index]);
         }
 
-        scale = div(one, B.m_[index*col + i]);
+        scale = div(one, B.m_[index * col + i]);
         row_mul_scalar_dense(B, index, scale);
 
         for (j = 0; j < row; j++) {
             if (j == index)
                 continue;
 
-            scale = mul(minus_one, B.m_[j*col + i]);
+            scale = mul(minus_one, B.m_[j * col + i]);
             row_add_row_dense(B, j, index, scale);
         }
 
@@ -454,7 +537,8 @@ void pivoted_gauss_jordan_elimination(const DenseMatrix &A, DenseMatrix &B,
 // Algorithm 2, page 13, Nakos, G. C., Turner, P. R., Williams, R. M. (1997).
 // Fraction-free algorithms for linear and polynomial equations.
 // ACM SIGSAM Bulletin, 31(3), 11–19. doi:10.1145/271130.271133.
-void fraction_free_gauss_jordan_elimination(const DenseMatrix &A, DenseMatrix &B)
+void fraction_free_gauss_jordan_elimination(const DenseMatrix &A,
+                                            DenseMatrix &B)
 {
     SYMENGINE_ASSERT(A.row_ == B.row_ and A.col_ == B.col_);
 
@@ -466,25 +550,26 @@ void fraction_free_gauss_jordan_elimination(const DenseMatrix &A, DenseMatrix &B
 
     for (i = 0; i < col; i++) {
         if (i > 0)
-            d = B.m_[i*col - col + i - 1];
+            d = B.m_[i * col - col + i - 1];
         for (j = 0; j < row; j++)
             if (j != i)
                 for (k = 0; k < col; k++) {
                     if (k != i) {
-                        B.m_[j*col + k] = sub(mul(B.m_[i*col + i], B.m_[j*col + k]),
-                            mul(B.m_[j*col + i], B.m_[i*col + k]));
+                        B.m_[j * col + k]
+                            = sub(mul(B.m_[i * col + i], B.m_[j * col + k]),
+                                  mul(B.m_[j * col + i], B.m_[i * col + k]));
                         if (i > 0)
-                            B.m_[j*col + k] = div(B.m_[j*col + k], d);
+                            B.m_[j * col + k] = div(B.m_[j * col + k], d);
                     }
                 }
         for (j = 0; j < row; j++)
             if (j != i)
-                B.m_[j*col + i] = zero;
+                B.m_[j * col + i] = zero;
     }
 }
 
-void pivoted_fraction_free_gauss_jordan_elimination(const DenseMatrix &A,
-        DenseMatrix &B, std::vector<unsigned> &pivotlist)
+void pivoted_fraction_free_gauss_jordan_elimination(
+    const DenseMatrix &A, DenseMatrix &B, std::vector<unsigned> &pivotlist)
 {
     SYMENGINE_ASSERT(A.row_ == B.row_ and A.col_ == B.col_);
     SYMENGINE_ASSERT(pivotlist.size() == A.row_);
@@ -511,22 +596,23 @@ void pivoted_fraction_free_gauss_jordan_elimination(const DenseMatrix &A,
         }
 
         if (i > 0)
-            d = B.m_[i*col - col + i - 1];
+            d = B.m_[i * col - col + i - 1];
         for (j = 0; j < row; j++) {
             if (j != i)
                 for (k = 0; k < col; k++) {
                     if (k != i) {
-                        B.m_[j*col + k] = sub(mul(B.m_[i*col + i], B.m_[j*col + k]),
-                            mul(B.m_[j*col + i], B.m_[i*col + k]));
+                        B.m_[j * col + k]
+                            = sub(mul(B.m_[i * col + i], B.m_[j * col + k]),
+                                  mul(B.m_[j * col + i], B.m_[i * col + k]));
                         if (i > 0)
-                            B.m_[j*col + k] = div(B.m_[j*col + k], d);
+                            B.m_[j * col + k] = div(B.m_[j * col + k], d);
                     }
                 }
         }
 
         for (j = 0; j < row; j++)
             if (j != i)
-                B.m_[j*col + i] = zero;
+                B.m_[j * col + i] = zero;
 
         index++;
     }
@@ -536,9 +622,9 @@ unsigned pivot(DenseMatrix &B, unsigned r, unsigned c)
 {
     unsigned k = r;
 
-    if (eq(*(B.m_[r*B.col_ + c]), *zero))
+    if (eq(*(B.m_[r * B.col_ + c]), *zero))
         for (k = r; k < B.row_; k++)
-            if (neq(*(B.m_[k*B.col_ + c]), *zero))
+            if (neq(*(B.m_[k * B.col_ + c]), *zero))
                 break;
     return k;
 }
@@ -553,11 +639,11 @@ void diagonal_solve(const DenseMatrix &A, const DenseMatrix &b, DenseMatrix &x)
 
     // No checks are done to see if the diagonal entries are zero
     for (unsigned i = 0; i < A.col_; i++)
-        x.m_[i] = div(b.m_[i], A.m_[i*A.col_ + i]);
+        x.m_[i] = div(b.m_[i], A.m_[i * A.col_ + i]);
 }
 
 void back_substitution(const DenseMatrix &U, const DenseMatrix &b,
-    DenseMatrix &x)
+                       DenseMatrix &x)
 {
     SYMENGINE_ASSERT(U.row_ == U.col_);
     SYMENGINE_ASSERT(b.row_ == U.row_ and b.col_ == 1);
@@ -568,13 +654,13 @@ void back_substitution(const DenseMatrix &U, const DenseMatrix &b,
 
     for (int i = col - 1; i >= 0; i--) {
         for (unsigned j = i + 1; j < col; j++)
-            x.m_[i] = sub(x.m_[i], mul(U.m_[i*col + j], x.m_[j]));
-        x.m_[i] = div(x.m_[i], U.m_[i*col + i]);
+            x.m_[i] = sub(x.m_[i], mul(U.m_[i * col + j], x.m_[j]));
+        x.m_[i] = div(x.m_[i], U.m_[i * col + i]);
     }
 }
 
 void forward_substitution(const DenseMatrix &A, const DenseMatrix &b,
-    DenseMatrix &x)
+                          DenseMatrix &x)
 {
     SYMENGINE_ASSERT(A.row_ == A.col_);
     SYMENGINE_ASSERT(b.row_ == A.row_ and b.col_ == 1);
@@ -585,15 +671,16 @@ void forward_substitution(const DenseMatrix &A, const DenseMatrix &b,
 
     for (unsigned i = 0; i < col - 1; i++)
         for (unsigned j = i + 1; j < col; j++) {
-            x.m_[j] = sub(mul(A.m_[i*col + i], x.m_[j]),
-                mul(A.m_[j*col + i], x.m_[i]));
+            x.m_[j] = sub(mul(A.m_[i * col + i], x.m_[j]),
+                          mul(A.m_[j * col + i], x.m_[i]));
             if (i > 0)
-                x.m_[j] = div(x.m_[j], A.m_[i*col - col + i - 1]);
+                x.m_[j] = div(x.m_[j], A.m_[i * col - col + i - 1]);
         }
 }
 
 void fraction_free_gaussian_elimination_solve(const DenseMatrix &A,
-    const DenseMatrix &b, DenseMatrix &x)
+                                              const DenseMatrix &b,
+                                              DenseMatrix &x)
 {
     SYMENGINE_ASSERT(A.row_ == A.col_);
     SYMENGINE_ASSERT(b.row_ == A.row_ and x.row_ == A.row_);
@@ -606,38 +693,41 @@ void fraction_free_gaussian_elimination_solve(const DenseMatrix &A,
     for (i = 0; i < col - 1; i++)
         for (j = i + 1; j < col; j++) {
             for (k = 0; k < bcol; k++) {
-                b_.m_[j*bcol + k] = sub(mul(A_.m_[i*col + i], b_.m_[j*bcol + k]),
-                    mul(A_.m_[j*col + i], b_.m_[i*bcol + k]));
-                if(i > 0)
-                    b_.m_[j*bcol + k] = div(b_.m_[j*bcol + k],
-                        A_.m_[i*col - col + i - 1]);
+                b_.m_[j * bcol + k]
+                    = sub(mul(A_.m_[i * col + i], b_.m_[j * bcol + k]),
+                          mul(A_.m_[j * col + i], b_.m_[i * bcol + k]));
+                if (i > 0)
+                    b_.m_[j * bcol + k] = div(b_.m_[j * bcol + k],
+                                              A_.m_[i * col - col + i - 1]);
             }
 
             for (k = i + 1; k < col; k++) {
-                A_.m_[j*col + k] = sub(mul(A_.m_[i*col + i], A_.m_[j*col + k]),
-                    mul(A_.m_[j*col + i], A_.m_[i*col + k]));
-                if (i> 0)
-                    A_.m_[j*col + k] =
-                        div(A_.m_[j*col + k], A_.m_[i*col - col + i - 1]);
+                A_.m_[j * col + k]
+                    = sub(mul(A_.m_[i * col + i], A_.m_[j * col + k]),
+                          mul(A_.m_[j * col + i], A_.m_[i * col + k]));
+                if (i > 0)
+                    A_.m_[j * col + k]
+                        = div(A_.m_[j * col + k], A_.m_[i * col - col + i - 1]);
             }
-            A_.m_[j*col + i] = zero;
+            A_.m_[j * col + i] = zero;
         }
 
-    for (i = 0; i < col*bcol; i++)
+    for (i = 0; i < col * bcol; i++)
         x.m_[i] = zero; // Integer zero;
 
     for (k = 0; k < bcol; k++) {
         for (i = col - 1; i >= 0; i--) {
             for (j = i + 1; j < col; j++)
-                b_.m_[i*bcol + k] = sub(b_.m_[i*bcol + k], mul(A_.m_[i*col + j],
-                    x.m_[j*bcol + k]));
-            x.m_[i*bcol + k] = div(b_.m_[i*bcol + k], A_.m_[i*col + i]);
+                b_.m_[i * bcol + k]
+                    = sub(b_.m_[i * bcol + k],
+                          mul(A_.m_[i * col + j], x.m_[j * bcol + k]));
+            x.m_[i * bcol + k] = div(b_.m_[i * bcol + k], A_.m_[i * col + i]);
         }
     }
 }
 
-void fraction_free_gauss_jordan_solve(const DenseMatrix &A, const DenseMatrix &b,
-    DenseMatrix &x)
+void fraction_free_gauss_jordan_solve(const DenseMatrix &A,
+                                      const DenseMatrix &b, DenseMatrix &x)
 {
     SYMENGINE_ASSERT(A.row_ == A.col_);
     SYMENGINE_ASSERT(b.row_ == A.row_ and x.row_ == A.row_);
@@ -650,40 +740,41 @@ void fraction_free_gauss_jordan_solve(const DenseMatrix &A, const DenseMatrix &b
 
     for (i = 0; i < col; i++) {
         if (i > 0)
-            d = A_.m_[i*col - col + i - 1];
+            d = A_.m_[i * col - col + i - 1];
         for (j = 0; j < col; j++)
             if (j != i) {
                 for (k = 0; k < bcol; k++) {
-                    b_.m_[j*bcol + k] = sub(mul(A_.m_[i*col + i], b_.m_[j*bcol + k]),
-                        mul(A_.m_[j*col + i], b_.m_[i*bcol + k]));
+                    b_.m_[j * bcol + k]
+                        = sub(mul(A_.m_[i * col + i], b_.m_[j * bcol + k]),
+                              mul(A_.m_[j * col + i], b_.m_[i * bcol + k]));
                     if (i > 0)
-                        b_.m_[j*bcol + k] = div(b_.m_[j*bcol + k], d);
+                        b_.m_[j * bcol + k] = div(b_.m_[j * bcol + k], d);
                 }
 
                 for (k = 0; k < col; k++) {
                     if (k != i) {
-                        A_.m_[j*col + k] =
-                            sub(mul(A_.m_[i*col + i], A_.m_[j*col + k]),
-                                    mul(A_.m_[j*col + i], A_.m_[i*col + k]));
+                        A_.m_[j * col + k]
+                            = sub(mul(A_.m_[i * col + i], A_.m_[j * col + k]),
+                                  mul(A_.m_[j * col + i], A_.m_[i * col + k]));
                         if (i > 0)
-                            A_.m_[j*col + k] = div(A_.m_[j*col + k], d);
+                            A_.m_[j * col + k] = div(A_.m_[j * col + k], d);
                     }
                 }
             }
 
         for (j = 0; j < col; j++)
             if (j != i)
-                A_.m_[j*col + i] = zero;
+                A_.m_[j * col + i] = zero;
     }
 
     // No checks are done to see if the diagonal entries are zero
     for (k = 0; k < bcol; k++)
         for (i = 0; i < col; i++)
-            x.m_[i*bcol + k] = div(b_.m_[i*bcol + k], A_.m_[i*col + i]);
+            x.m_[i * bcol + k] = div(b_.m_[i * bcol + k], A_.m_[i * col + i]);
 }
 
 void fraction_free_LU_solve(const DenseMatrix &A, const DenseMatrix &b,
-    DenseMatrix &x)
+                            DenseMatrix &x)
 {
     DenseMatrix LU = DenseMatrix(A.nrows(), A.ncols());
     DenseMatrix x_ = DenseMatrix(b.nrows(), 1);
@@ -730,7 +821,8 @@ void LDL_solve(const DenseMatrix &A, const DenseMatrix &b, DenseMatrix &x)
 // substitutions respectively.
 void fraction_free_LU(const DenseMatrix &A, DenseMatrix &LU)
 {
-    SYMENGINE_ASSERT(A.row_ == A.col_ and LU.row_ == LU.col_ and A.row_ == LU.row_);
+    SYMENGINE_ASSERT(A.row_ == A.col_ and LU.row_ == LU.col_
+                     and A.row_ == LU.row_);
 
     unsigned n = A.row_;
     unsigned i, j, k;
@@ -740,18 +832,21 @@ void fraction_free_LU(const DenseMatrix &A, DenseMatrix &LU)
     for (i = 0; i < n - 1; i++)
         for (j = i + 1; j < n; j++)
             for (k = i + 1; k < n; k++) {
-                LU.m_[j*n + k] = sub(mul(LU.m_[i*n + i], LU.m_[j*n + k]),
-                    mul(LU.m_[j*n + i], LU.m_[i*n + k]));
+                LU.m_[j * n + k] = sub(mul(LU.m_[i * n + i], LU.m_[j * n + k]),
+                                       mul(LU.m_[j * n + i], LU.m_[i * n + k]));
                 if (i)
-                    LU.m_[j*n + k] = div(LU.m_[j*n + k], LU.m_[i*n - n + i - 1]);
+                    LU.m_[j * n + k]
+                        = div(LU.m_[j * n + k], LU.m_[i * n - n + i - 1]);
             }
 }
 
-// SymPy LUDecomposition algorithm, in sympy.matrices.matrices.Matrix.LUdecomposition
+// SymPy LUDecomposition algorithm, in
+// sympy.matrices.matrices.Matrix.LUdecomposition
 // with no pivoting
 void LU(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &U)
 {
-    SYMENGINE_ASSERT(A.row_ == A.col_ and L.row_ == L.col_ and U.row_ == U.col_);
+    SYMENGINE_ASSERT(A.row_ == A.col_ and L.row_ == L.col_
+                     and U.row_ == U.col_);
     SYMENGINE_ASSERT(A.row_ == L.row_ and A.row_ == U.row_);
 
     unsigned n = A.row_;
@@ -763,38 +858,39 @@ void LU(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &U)
     for (j = 0; j < n; j++) {
         for (i = 0; i < j; i++)
             for (k = 0; k < i; k++)
-                U.m_[i*n + j] = sub(U.m_[i*n + j],
-                    mul(U.m_[i*n + k], U.m_[k*n + j]));
+                U.m_[i * n + j] = sub(U.m_[i * n + j],
+                                      mul(U.m_[i * n + k], U.m_[k * n + j]));
 
         for (i = j; i < n; i++) {
             for (k = 0; k < j; k++)
-                U.m_[i*n + j] = sub(U.m_[i*n + j],
-                    mul(U.m_[i*n + k], U.m_[k*n + j]));
+                U.m_[i * n + j] = sub(U.m_[i * n + j],
+                                      mul(U.m_[i * n + k], U.m_[k * n + j]));
         }
 
-        scale = div(one, U.m_[j*n + j]);
+        scale = div(one, U.m_[j * n + j]);
 
         for (i = j + 1; i < n; i++)
-            U.m_[i*n + j] = mul(U.m_[i*n + j], scale);
+            U.m_[i * n + j] = mul(U.m_[i * n + j], scale);
     }
 
-    for(i = 0; i < n; i++) {
-        for(j = 0; j < i; j++) {
-            L.m_[i*n + j] = U.m_[i*n + j];
-            U.m_[i*n + j] = zero; // Integer zero
+    for (i = 0; i < n; i++) {
+        for (j = 0; j < i; j++) {
+            L.m_[i * n + j] = U.m_[i * n + j];
+            U.m_[i * n + j] = zero; // Integer zero
         }
-        L.m_[i*n + i] = one; // Integer one
+        L.m_[i * n + i] = one; // Integer one
         for (j = i + 1; j < n; j++)
-            L.m_[i*n + j] = zero; // Integer zero
+            L.m_[i * n + j] = zero; // Integer zero
     }
 }
 
 // SymPy's fraction free LU decomposition, without pivoting
 // sympy.matrices.matrices.MatrixBase.LUdecompositionFF
-// W. Zhou & D.J. Jeffrey, "Fraction-free matrix factors: new forms for LU and QR factors".
+// W. Zhou & D.J. Jeffrey, "Fraction-free matrix factors: new forms for LU and
+// QR factors".
 // Frontiers in Computer Science in China, Vol 2, no. 1, pp. 67-80, 2008.
 void fraction_free_LDU(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &D,
-        DenseMatrix &U)
+                       DenseMatrix &U)
 {
     SYMENGINE_ASSERT(A.row_ == L.row_ and A.row_ == U.row_);
     SYMENGINE_ASSERT(A.col_ == L.col_ and A.col_ == U.col_);
@@ -809,30 +905,32 @@ void fraction_free_LDU(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &D,
     for (i = 0; i < row; i++)
         for (j = 0; j < row; j++)
             if (i != j)
-                L.m_[i*col + j] = zero;
+                L.m_[i * col + j] = zero;
             else
-                L.m_[i*col + i] = one;
+                L.m_[i * col + i] = one;
 
     // Initialize D
-    for (i = 0; i < row*row; i++)
+    for (i = 0; i < row * row; i++)
         D.m_[i] = zero; // Integer zero
 
     for (k = 0; k < row - 1; k++) {
-        L.m_[k*col + k] = U.m_[k*col + k];
-        D.m_[k*col + k] = mul(old, U.m_[k*col + k]);
+        L.m_[k * col + k] = U.m_[k * col + k];
+        D.m_[k * col + k] = mul(old, U.m_[k * col + k]);
 
         for (i = k + 1; i < row; i++) {
-            L.m_[i*col + k] = U.m_[i*col + k];
+            L.m_[i * col + k] = U.m_[i * col + k];
             for (j = k + 1; j < col; j++)
-                U.m_[i*col + j] = div(sub(mul(U.m_[k*col + k], U.m_[i*col + j]),
-                    mul(U.m_[k*col + j], U.m_[i*col + k])), old);
-            U.m_[i*col + k] = zero; // Integer zero
+                U.m_[i * col + j]
+                    = div(sub(mul(U.m_[k * col + k], U.m_[i * col + j]),
+                              mul(U.m_[k * col + j], U.m_[i * col + k])),
+                          old);
+            U.m_[i * col + k] = zero; // Integer zero
         }
 
-        old = U.m_[k*col + k];
+        old = U.m_[k * col + k];
     }
 
-    D.m_[row*col - col + row - 1] = old;
+    D.m_[row * col - col + row - 1] = old;
 }
 
 // SymPy's QRecomposition in sympy.matrices.matrices.MatrixBase.QRdecomposition
@@ -842,31 +940,32 @@ void QR(const DenseMatrix &A, DenseMatrix &Q, DenseMatrix &R)
     unsigned row = A.row_;
     unsigned col = A.col_;
 
-    SYMENGINE_ASSERT(Q.row_ == row and Q.col_ == col and R.row_ == col and R.col_ == col);
+    SYMENGINE_ASSERT(Q.row_ == row and Q.col_ == col and R.row_ == col
+                     and R.col_ == col);
 
     unsigned i, j, k;
     RCP<const Basic> t;
-    std::vector<RCP<const Basic>> tmp (row);
+    std::vector<RCP<const Basic>> tmp(row);
 
     // Initialize Q
-    for (i = 0; i < row*col; i++)
+    for (i = 0; i < row * col; i++)
         Q.m_[i] = zero;
 
     // Initialize R
-    for (i = 0; i < col*col; i++)
+    for (i = 0; i < col * col; i++)
         R.m_[i] = zero;
 
     for (j = 0; j < col; j++) {
         // Use submatrix for this
         for (k = 0; k < row; k++)
-            tmp[k] = A.m_[k*col + j];
+            tmp[k] = A.m_[k * col + j];
 
         for (i = 0; i < j; i++) {
             t = zero;
             for (k = 0; k < row; k++)
-                t = add(t, mul(A.m_[k*col + j], Q.m_[k*col + i]));
+                t = add(t, mul(A.m_[k * col + j], Q.m_[k * col + i]));
             for (k = 0; k < row; k++)
-                tmp[k] = expand(sub(tmp[k], mul(Q.m_[k*col + i], t)));
+                tmp[k] = expand(sub(tmp[k], mul(Q.m_[k * col + i], t)));
         }
 
         // calculate norm
@@ -876,15 +975,15 @@ void QR(const DenseMatrix &A, DenseMatrix &Q, DenseMatrix &R)
 
         t = pow(t, div(one, integer(2)));
 
-        R.m_[j*col + j] = t;
+        R.m_[j * col + j] = t;
         for (k = 0; k < row; k++)
-            Q.m_[k*col + j] = div(tmp[k], t);
+            Q.m_[k * col + j] = div(tmp[k], t);
 
         for (i = 0; i < j; i++) {
             t = zero;
             for (k = 0; k < row; k++)
-                t = add(t, mul(Q.m_[k*col + i], A.m_[k*col + j]));
-            R.m_[i*col + j] = t;
+                t = add(t, mul(Q.m_[k * col + i], A.m_[k * col + j]));
+            R.m_[i * col + j] = t;
         }
     }
 }
@@ -905,26 +1004,26 @@ void LDL(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &D)
     // Initialize D
     for (i = 0; i < col; i++)
         for (j = 0; j < col; j++)
-            D.m_[i*col + j] = zero; // Integer zero
+            D.m_[i * col + j] = zero; // Integer zero
 
     // Initialize L
     for (i = 0; i < col; i++)
         for (j = 0; j < col; j++)
-            L.m_[i*col + j] = (i != j) ? zero : one;
+            L.m_[i * col + j] = (i != j) ? zero : one;
 
     for (i = 0; i < col; i++) {
         for (j = 0; j < i; j++) {
             sum = zero;
             for (k = 0; k < j; k++)
-                sum = add(sum, mul(mul(L.m_[i*col + k], L.m_[j*col + k]),
-                    D.m_[k*col + k]));
-            L.m_[i*col + j] = mul(div(one, D.m_[j*col + j]),
-                sub(A.m_[i*col + j], sum));
+                sum = add(sum, mul(mul(L.m_[i * col + k], L.m_[j * col + k]),
+                                   D.m_[k * col + k]));
+            L.m_[i * col + j]
+                = mul(div(one, D.m_[j * col + j]), sub(A.m_[i * col + j], sum));
         }
         sum = zero;
         for (k = 0; k < i; k++)
-            sum = add(sum, mul(pow(L.m_[i*col + k], i2), D.m_[k*col + k]));
-        D.m_[i*col + i] = sub(A.m_[i*col + i], sum);
+            sum = add(sum, mul(pow(L.m_[i * col + k], i2), D.m_[k * col + k]));
+        D.m_[i * col + i] = sub(A.m_[i * col + i], sum);
     }
 }
 
@@ -942,22 +1041,22 @@ void cholesky(const DenseMatrix &A, DenseMatrix &L)
 
     // Initialize L
     for (i = 0; i < col; i++)
-        for(j = 0; j < col; j++)
-            L.m_[i*col + j] = zero;
+        for (j = 0; j < col; j++)
+            L.m_[i * col + j] = zero;
 
     for (i = 0; i < col; i++) {
         for (j = 0; j < i; j++) {
             sum = zero;
-            for(k = 0; k < j; k++)
-                sum = add(sum, mul(L.m_[i*col + k], L.m_[j*col + k]));
+            for (k = 0; k < j; k++)
+                sum = add(sum, mul(L.m_[i * col + k], L.m_[j * col + k]));
 
-            L.m_[i*col + j] = mul(div(one, L.m_[j*col + j]),
-                sub(A.m_[i*col + j], sum));
+            L.m_[i * col + j]
+                = mul(div(one, L.m_[j * col + j]), sub(A.m_[i * col + j], sum));
         }
         sum = zero;
         for (k = 0; k < i; k++)
-            sum = add(sum, pow(L.m_[i*col + k], i2));
-        L.m_[i*col + i] = pow(sub(A.m_[i*col + i], sum), half);
+            sum = add(sum, pow(L.m_[i * col + k], i2));
+        L.m_[i * col + i] = pow(sub(A.m_[i * col + i], sum), half);
     }
 }
 
@@ -972,7 +1071,7 @@ bool is_symmetric_dense(const DenseMatrix &A)
 
     for (unsigned i = 0; i < col; i++)
         for (unsigned j = i + 1; j < col; j++)
-            if (not eq(*(A.m_[j*col + i]), *(A.m_[i*col + j]))) {
+            if (not eq(*(A.m_[j * col + i]), *(A.m_[i * col + j]))) {
                 sym = false;
                 break;
             }
@@ -989,37 +1088,27 @@ RCP<const Basic> det_bareis(const DenseMatrix &A)
 
     if (n == 1) {
         return A.m_[0];
-    } else if(n == 2) {
+    } else if (n == 2) {
         // If A = [[a, b], [c, d]] then det(A) = ad - bc
         return sub(mul(A.m_[0], A.m_[3]), mul(A.m_[1], A.m_[2]));
     } else if (n == 3) {
         // if A = [[a, b, c], [d, e, f], [g, h, i]] then
         // det(A) = (aei + bfg + cdh) - (ceg + bdi + afh)
-        return  sub(
-                    add(
-                        add(
-                            mul(mul(A.m_[0], A.m_[4]), A.m_[8]),
-                            mul(mul(A.m_[1], A.m_[5]), A.m_[6])
-                        ),
-                        mul(mul(A.m_[2], A.m_[3]), A.m_[7])
-                    ),
-                    add(
-                        add(
-                            mul(mul(A.m_[2], A.m_[4]), A.m_[6]),
-                            mul(mul(A.m_[1], A.m_[3]), A.m_[8])
-                        ),
-                        mul(mul(A.m_[0], A.m_[5]), A.m_[7])
-                    )
-                );
+        return sub(add(add(mul(mul(A.m_[0], A.m_[4]), A.m_[8]),
+                           mul(mul(A.m_[1], A.m_[5]), A.m_[6])),
+                       mul(mul(A.m_[2], A.m_[3]), A.m_[7])),
+                   add(add(mul(mul(A.m_[2], A.m_[4]), A.m_[6]),
+                           mul(mul(A.m_[1], A.m_[3]), A.m_[8])),
+                       mul(mul(A.m_[0], A.m_[5]), A.m_[7])));
     } else {
         DenseMatrix B = DenseMatrix(n, n, A.m_);
         unsigned i, sign = 1;
         RCP<const Basic> d;
 
         for (unsigned k = 0; k < n - 1; k++) {
-            if (eq(*(B.m_[k*n + k]), *zero)) {
+            if (eq(*(B.m_[k * n + k]), *zero)) {
                 for (i = k + 1; i < n; i++)
-                    if (neq(*(B.m_[i*n + k]), *zero)) {
+                    if (neq(*(B.m_[i * n + k]), *zero)) {
                         row_exchange_dense(B, i, k);
                         sign *= -1;
                         break;
@@ -1030,16 +1119,16 @@ RCP<const Basic> det_bareis(const DenseMatrix &A)
 
             for (i = k + 1; i < n; i++) {
                 for (unsigned j = k + 1; j < n; j++) {
-                    d = sub(mul(B.m_[k*n + k], B.m_[i*n + j]),
-                            mul(B.m_[i*n + k], B.m_[k*n + j]));
+                    d = sub(mul(B.m_[k * n + k], B.m_[i * n + j]),
+                            mul(B.m_[i * n + k], B.m_[k * n + j]));
                     if (k > 0)
-                        d = div(d, B.m_[(k-1)*n + k - 1]);
-                    B.m_[i*n + j] = d;
+                        d = div(d, B.m_[(k - 1) * n + k - 1]);
+                    B.m_[i * n + j] = d;
                 }
             }
         }
 
-       return (sign == 1) ? B.m_[n*n - 1] : mul(minus_one, B.m_[n*n - 1]);
+        return (sign == 1) ? B.m_[n * n - 1] : mul(minus_one, B.m_[n * n - 1]);
     }
 }
 
@@ -1065,10 +1154,10 @@ void berkowitz(const DenseMatrix &A, std::vector<DenseMatrix> &polys)
         DenseMatrix C = DenseMatrix(k, 1);
 
         // Initialize T and C
-        for (i = 0; i < n*(n + 1); i++)
+        for (i = 0; i < n * (n + 1); i++)
             T.m_[i] = zero;
         for (i = 0; i < k; i++)
-            C.m_[i] = A.m_[i*col + k];
+            C.m_[i] = A.m_[i * col + k];
         items.push_back(C);
 
         for (i = 0; i < n - 2; i++) {
@@ -1076,7 +1165,8 @@ void berkowitz(const DenseMatrix &A, std::vector<DenseMatrix> &polys)
             for (l = 0; l < k; l++) {
                 B.m_[l] = zero;
                 for (m = 0; m < k; m++)
-                    B.m_[l] = add(B.m_[l], mul(A.m_[l*col + m], items[i].m_[m]));
+                    B.m_[l]
+                        = add(B.m_[l], mul(A.m_[l * col + m], items[i].m_[m]));
             }
             items.push_back(B);
         }
@@ -1085,15 +1175,15 @@ void berkowitz(const DenseMatrix &A, std::vector<DenseMatrix> &polys)
         for (i = 0; i < n - 1; i++) {
             RCP<const Basic> element = zero;
             for (l = 0; l < k; l++)
-                element = add(element, mul(A.m_[k*col + l], items[i].m_[l]));
+                element = add(element, mul(A.m_[k * col + l], items[i].m_[l]));
             items_.push_back(mul(minus_one, element));
         }
-        items_.insert(items_.begin(), mul(minus_one, A.m_[k*col + k]));
+        items_.insert(items_.begin(), mul(minus_one, A.m_[k * col + k]));
         items_.insert(items_.begin(), one);
 
         for (i = 0; i < n; i++) {
             for (l = 0; l < n - i + 1; l++)
-                T.m_[(i + l)*n + i] = items_[l];
+                T.m_[(i + l) * n + i] = items_[l];
         }
 
         transforms.push_back(T);
@@ -1101,7 +1191,7 @@ void berkowitz(const DenseMatrix &A, std::vector<DenseMatrix> &polys)
 
     polys.push_back(DenseMatrix(2, 1, {one, mul(A.m_[0], minus_one)}));
 
-    for(i = 0; i < col - 1; i++) {
+    for (i = 0; i < col - 1; i++) {
         unsigned t_row = transforms[col - 2 - i].nrows();
         unsigned t_col = transforms[col - 2 - i].ncols();
         DenseMatrix B = DenseMatrix(t_row, 1);
@@ -1110,7 +1200,8 @@ void berkowitz(const DenseMatrix &A, std::vector<DenseMatrix> &polys)
             B.m_[l] = zero;
             for (m = 0; m < t_col; m++) {
                 B.m_[l] = add(B.m_[l],
-                    mul(transforms[col - 2 - i].m_[l*t_col + m], polys[i].m_[m]));
+                              mul(transforms[col - 2 - i].m_[l * t_col + m],
+                                  polys[i].m_[m]));
                 B.m_[l] = expand(B.m_[l]);
             }
         }
@@ -1144,7 +1235,8 @@ void char_poly(const DenseMatrix &A, DenseMatrix &B)
 
 void inverse_fraction_free_LU(const DenseMatrix &A, DenseMatrix &B)
 {
-    SYMENGINE_ASSERT(A.row_ == A.col_ and B.row_ == B.col_ and B.row_ == A.row_);
+    SYMENGINE_ASSERT(A.row_ == A.col_ and B.row_ == B.col_
+                     and B.row_ == A.row_);
 
     unsigned n = A.row_, i;
     DenseMatrix LU = DenseMatrix(n, n);
@@ -1153,7 +1245,7 @@ void inverse_fraction_free_LU(const DenseMatrix &A, DenseMatrix &B)
     DenseMatrix x_ = DenseMatrix(n, 1);
 
     // Initialize matrices
-    for (i = 0; i < n*n; i++) {
+    for (i = 0; i < n * n; i++) {
         LU.m_[i] = zero;
         B.m_[i] = zero;
     }
@@ -1175,15 +1267,16 @@ void inverse_fraction_free_LU(const DenseMatrix &A, DenseMatrix &B)
         back_substitution(LU, x_, x);
 
         for (i = 0; i < n; i++)
-            B.m_[i*n + j] = x.m_[i];
+            B.m_[i * n + j] = x.m_[i];
 
         e.m_[j] = zero;
     }
 }
 
-void inverse_LU(const DenseMatrix &A, DenseMatrix&B)
+void inverse_LU(const DenseMatrix &A, DenseMatrix &B)
 {
-    SYMENGINE_ASSERT(A.row_ == A.col_ and B.row_ == B.col_ and B.row_ == A.row_);
+    SYMENGINE_ASSERT(A.row_ == A.col_ and B.row_ == B.col_
+                     and B.row_ == A.row_);
 
     unsigned n = A.row_, i;
     DenseMatrix L = DenseMatrix(n, n);
@@ -1193,7 +1286,7 @@ void inverse_LU(const DenseMatrix &A, DenseMatrix&B)
     DenseMatrix x_ = DenseMatrix(n, 1);
 
     // Initialize matrices
-    for (i = 0; i < n*n; i++) {
+    for (i = 0; i < n * n; i++) {
         L.m_[i] = zero;
         U.m_[i] = zero;
         B.m_[i] = zero;
@@ -1217,7 +1310,7 @@ void inverse_LU(const DenseMatrix &A, DenseMatrix&B)
         back_substitution(U, x_, x);
 
         for (i = 0; i < n; i++)
-            B.m_[i*n + j] = x.m_[i];
+            B.m_[i * n + j] = x.m_[i];
 
         e.m_[j] = zero;
     }
@@ -1225,7 +1318,8 @@ void inverse_LU(const DenseMatrix &A, DenseMatrix&B)
 
 void inverse_gauss_jordan(const DenseMatrix &A, DenseMatrix &B)
 {
-    SYMENGINE_ASSERT(A.row_ == A.col_ and B.row_ == B.col_ and B.row_ == A.row_);
+    SYMENGINE_ASSERT(A.row_ == A.col_ and B.row_ == B.col_
+                     and B.row_ == A.row_);
 
     unsigned n = A.row_;
     DenseMatrix e = DenseMatrix(n, n);
@@ -1234,11 +1328,11 @@ void inverse_gauss_jordan(const DenseMatrix &A, DenseMatrix &B)
     for (unsigned i = 0; i < n; i++)
         for (unsigned j = 0; j < n; j++) {
             if (i != j) {
-                e.m_[i*n + j] = zero;
+                e.m_[i * n + j] = zero;
             } else {
-                e.m_[i*n + i] = one;
+                e.m_[i * n + i] = one;
             }
-            B.m_[i*n + j] = zero;
+            B.m_[i * n + j] = zero;
         }
 
     fraction_free_gauss_jordan_solve(A, e, B);
@@ -1274,9 +1368,9 @@ void diag(DenseMatrix &A, vec_basic &v, int k)
         for (unsigned i = 0; i < A.row_; i++) {
             for (unsigned j = 0; j < A.col_; j++) {
                 if (j != (unsigned)k) {
-                    A.m_[i*A.col_ + j] = zero;
+                    A.m_[i * A.col_ + j] = zero;
                 } else {
-                    A.m_[i*A.col_ + j] = v[k - k_];
+                    A.m_[i * A.col_ + j] = v[k - k_];
                 }
             }
             k++;
@@ -1287,9 +1381,9 @@ void diag(DenseMatrix &A, vec_basic &v, int k)
         for (unsigned j = 0; j < A.col_; j++) {
             for (unsigned i = 0; i < A.row_; i++) {
                 if (i != (unsigned)k) {
-                    A.m_[i*A.col_ + j] = zero;
+                    A.m_[i * A.col_ + j] = zero;
                 } else {
-                    A.m_[i*A.col_ + j] = v[k - k_];
+                    A.m_[i * A.col_ + j] = v[k - k_];
                 }
             }
             k++;
@@ -1304,7 +1398,7 @@ void ones(DenseMatrix &A, unsigned rows, unsigned cols)
 
     for (unsigned i = 0; i < rows; i++) {
         for (unsigned j = 0; j < cols; j++) {
-            A.m_[i*cols + j] = one;
+            A.m_[i * cols + j] = one;
         }
     }
 }
@@ -1316,7 +1410,7 @@ void zeros(DenseMatrix &A, unsigned rows, unsigned cols)
 
     for (unsigned i = 0; i < rows; i++) {
         for (unsigned j = 0; j < cols; j++) {
-            A.m_[i*cols + j] = zero;
+            A.m_[i * cols + j] = zero;
         }
     }
 }

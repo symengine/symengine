@@ -18,7 +18,7 @@ using SymEngine::sqrt;
 using SymEngine::integer;
 using SymEngine::expand;
 
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
     SymEngine::print_stack_on_segfault();
     int N;
@@ -47,9 +47,9 @@ int main(int argc, char* argv[])
     e = expand(e);
     auto t2 = std::chrono::high_resolution_clock::now();
 
-    std::cout
-        << std::chrono::duration_cast<std::chrono::milliseconds>(t2-t1).count()
-        << "ms" << std::endl;
+    std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1)
+                     .count()
+              << "ms" << std::endl;
     std::cout << e->__str__() << std::endl;
 
     return 0;

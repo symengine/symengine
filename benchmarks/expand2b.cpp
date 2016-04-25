@@ -23,7 +23,7 @@ using SymEngine::umap_vec_mpz;
 using SymEngine::RCP;
 using SymEngine::print_stack_on_segfault;
 
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
     print_stack_on_segfault();
     RCP<const Basic> x = symbol("x");
@@ -54,7 +54,6 @@ int main(int argc, char* argv[])
     auto t2 = std::chrono::high_resolution_clock::now();
     std::cout << "poly_mul stop" << std::endl;
 
-
     /*
     std::cout << *e << std::endl;
     std::cout << *f1 << std::endl;
@@ -64,13 +63,10 @@ int main(int argc, char* argv[])
     std::cout << "RESULT:" << std::endl;
     std::cout << C << std::endl;
     */
-    std::cout
-        << std::chrono::duration_cast<std::chrono::milliseconds>(t2-t1).count()
-        << "ms" << std::endl;
-    std::cout << "number of terms: "
-        << C.size() << std::endl;
-
-
+    std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1)
+                     .count()
+              << "ms" << std::endl;
+    std::cout << "number of terms: " << C.size() << std::endl;
 
     return 0;
 }
