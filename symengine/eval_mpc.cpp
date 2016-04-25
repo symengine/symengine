@@ -13,51 +13,65 @@
 
 #ifdef HAVE_SYMENGINE_MPC
 
-namespace SymEngine {
+namespace SymEngine
+{
 
-class EvalMPCVisitor : public BaseVisitor<EvalMPCVisitor> {
+class EvalMPCVisitor : public BaseVisitor<EvalMPCVisitor>
+{
 protected:
     mpfr_rnd_t rnd_;
     mpc_ptr result_;
-public:
-    EvalMPCVisitor(mpfr_rnd_t rnd) : rnd_{rnd} { }
 
-    void apply(mpc_ptr result, const Basic &b) {
+public:
+    EvalMPCVisitor(mpfr_rnd_t rnd) : rnd_{rnd}
+    {
+    }
+
+    void apply(mpc_ptr result, const Basic &b)
+    {
         mpc_ptr tmp = result_;
         result_ = result;
         b.accept(*this);
         result_ = tmp;
     }
 
-    void bvisit(const Integer &x) {
+    void bvisit(const Integer &x)
+    {
         mpc_set_z(result_, get_mpz_t(x.i), rnd_);
     }
 
-    void bvisit(const Rational &x) {
+    void bvisit(const Rational &x)
+    {
         mpc_set_q(result_, get_mpq_t(x.i), rnd_);
     }
 
-    void bvisit(const RealDouble &x) {
+    void bvisit(const RealDouble &x)
+    {
         mpc_set_d(result_, x.i, rnd_);
     }
 
-    void bvisit(const Complex &x) {
+    void bvisit(const Complex &x)
+    {
         mpc_set_q_q(result_, get_mpq_t(x.real_), get_mpq_t(x.imaginary_), rnd_);
     }
 
-    void bvisit(const ComplexDouble &x) {
+    void bvisit(const ComplexDouble &x)
+    {
         mpc_set_d_d(result_, x.i.real(), x.i.imag(), rnd_);
     }
 
-    void bvisit(const RealMPFR &x) {
+    void bvisit(const RealMPFR &x)
+    {
         mpc_set_fr(result_, x.i.get_mpfr_t(), rnd_);
     }
 
-    void bvisit(const ComplexMPC &x) {
+    void bvisit(const ComplexMPC &x)
+    {
         mpc_set(result_, x.i.get_mpc_t(), rnd_);
     }
 
-    void bvisit(const Add &x) {
+    void bvisit(const Add &x)
+    {
         mpc_t t;
         mpc_init2(t, mpc_get_prec(result_));
 
@@ -65,14 +79,15 @@ public:
         auto p = d.begin();
         apply(result_, *(*p));
         p++;
-        for (; p != d.end();  p++) {
+        for (; p != d.end(); p++) {
             apply(t, *(*p));
             mpc_add(result_, result_, t, rnd_);
         }
         mpc_clear(t);
     }
 
-    void bvisit(const Mul &x) {
+    void bvisit(const Mul &x)
+    {
         mpc_t t;
         mpc_init2(t, mpc_get_prec(result_));
 
@@ -80,14 +95,15 @@ public:
         auto p = d.begin();
         apply(result_, *(*p));
         p++;
-        for (; p != d.end();  p++) {
+        for (; p != d.end(); p++) {
             apply(t, *(*p));
             mpc_mul(result_, result_, t, rnd_);
         }
         mpc_clear(t);
     }
 
-    void bvisit(const Pow &x) {
+    void bvisit(const Pow &x)
+    {
         if (eq(*x.get_base(), *E)) {
             apply(result_, *(x.get_exp()));
             mpc_exp(result_, result_, rnd_);
@@ -103,144 +119,170 @@ public:
         }
     }
 
-    void bvisit(const Sin &x) {
+    void bvisit(const Sin &x)
+    {
         apply(result_, *(x.get_arg()));
         mpc_sin(result_, result_, rnd_);
     }
 
-    void bvisit(const Cos &x) {
+    void bvisit(const Cos &x)
+    {
         apply(result_, *(x.get_arg()));
         mpc_cos(result_, result_, rnd_);
     }
 
-    void bvisit(const Tan &x) {
+    void bvisit(const Tan &x)
+    {
         apply(result_, *(x.get_arg()));
         mpc_tan(result_, result_, rnd_);
     }
 
-    void bvisit(const Log &x) {
+    void bvisit(const Log &x)
+    {
         apply(result_, *(x.get_arg()));
         mpc_log(result_, result_, rnd_);
     }
 
-    void bvisit(const Cot &x) {
+    void bvisit(const Cot &x)
+    {
         apply(result_, *(x.get_arg()));
         mpc_tan(result_, result_, rnd_);
         mpc_ui_div(result_, 1, result_, rnd_);
     }
 
-    void bvisit(const Csc &x) {
+    void bvisit(const Csc &x)
+    {
         apply(result_, *(x.get_arg()));
         mpc_sin(result_, result_, rnd_);
         mpc_ui_div(result_, 1, result_, rnd_);
     }
 
-    void bvisit(const Sec &x) {
+    void bvisit(const Sec &x)
+    {
         apply(result_, *(x.get_arg()));
         mpc_cos(result_, result_, rnd_);
         mpc_ui_div(result_, 1, result_, rnd_);
     }
 
-    void bvisit(const ASin &x) {
+    void bvisit(const ASin &x)
+    {
         apply(result_, *(x.get_arg()));
         mpc_asin(result_, result_, rnd_);
     }
 
-    void bvisit(const ACos &x) {
+    void bvisit(const ACos &x)
+    {
         apply(result_, *(x.get_arg()));
         mpc_acos(result_, result_, rnd_);
     }
 
-    void bvisit(const ASec &x) {
+    void bvisit(const ASec &x)
+    {
         apply(result_, *(x.get_arg()));
         mpc_ui_div(result_, 1, result_, rnd_);
         mpc_asin(result_, result_, rnd_);
     }
 
-    void bvisit(const ACsc &x) {
+    void bvisit(const ACsc &x)
+    {
         apply(result_, *(x.get_arg()));
         mpc_ui_div(result_, 1, result_, rnd_);
         mpc_acos(result_, result_, rnd_);
     }
 
-    void bvisit(const ATan &x) {
+    void bvisit(const ATan &x)
+    {
         apply(result_, *(x.get_arg()));
         mpc_atan(result_, result_, rnd_);
     }
 
-    void bvisit(const ACot &x) {
+    void bvisit(const ACot &x)
+    {
         apply(result_, *(x.get_arg()));
         mpc_ui_div(result_, 1, result_, rnd_);
         mpc_atan(result_, result_, rnd_);
     }
 
-    void bvisit(const Sinh &x) {
+    void bvisit(const Sinh &x)
+    {
         apply(result_, *(x.get_arg()));
         mpc_sinh(result_, result_, rnd_);
     }
 
-    void bvisit(const Csch &x) {
+    void bvisit(const Csch &x)
+    {
         apply(result_, *(x.get_arg()));
         mpc_sinh(result_, result_, rnd_);
         mpc_ui_div(result_, 1, result_, rnd_);
     }
 
-    void bvisit(const Cosh &x) {
+    void bvisit(const Cosh &x)
+    {
         apply(result_, *(x.get_arg()));
         mpc_cosh(result_, result_, rnd_);
     }
 
-    void bvisit(const Sech &x) {
+    void bvisit(const Sech &x)
+    {
         apply(result_, *(x.get_arg()));
         mpc_cosh(result_, result_, rnd_);
         mpc_ui_div(result_, 1, result_, rnd_);
     }
 
-    void bvisit(const Tanh &x) {
+    void bvisit(const Tanh &x)
+    {
         apply(result_, *(x.get_arg()));
         mpc_tanh(result_, result_, rnd_);
     }
 
-    void bvisit(const Coth &x) {
+    void bvisit(const Coth &x)
+    {
         apply(result_, *(x.get_arg()));
         mpc_tanh(result_, result_, rnd_);
         mpc_ui_div(result_, 1, result_, rnd_);
     }
 
-    void bvisit(const ASinh &x) {
+    void bvisit(const ASinh &x)
+    {
         apply(result_, *(x.get_arg()));
         mpc_asinh(result_, result_, rnd_);
     }
 
-    void bvisit(const ACsch &x) {
+    void bvisit(const ACsch &x)
+    {
         apply(result_, *(x.get_arg()));
         mpc_ui_div(result_, 1, result_, rnd_);
         mpc_asinh(result_, result_, rnd_);
     }
 
-    void bvisit(const ACosh &x) {
+    void bvisit(const ACosh &x)
+    {
         apply(result_, *(x.get_arg()));
         mpc_acosh(result_, result_, rnd_);
     }
 
-    void bvisit(const ATanh &x) {
+    void bvisit(const ATanh &x)
+    {
         apply(result_, *(x.get_arg()));
         mpc_atanh(result_, result_, rnd_);
     }
 
-    void bvisit(const ACoth &x) {
+    void bvisit(const ACoth &x)
+    {
         apply(result_, *(x.get_arg()));
         mpc_ui_div(result_, 1, result_, rnd_);
         mpc_atanh(result_, result_, rnd_);
     }
 
-    void bvisit(const ASech &x) {
+    void bvisit(const ASech &x)
+    {
         apply(result_, *(x.get_arg()));
         mpc_ui_div(result_, 1, result_, rnd_);
         mpc_acosh(result_, result_, rnd_);
     };
 
-    void bvisit(const Constant &x) {
+    void bvisit(const Constant &x)
+    {
         if (x.__eq__(*pi)) {
             mpfr_t t;
             mpfr_init2(t, mpc_get_prec(result_));
@@ -261,16 +303,18 @@ public:
             mpc_set_fr(result_, t, rnd_);
             mpfr_clear(t);
         } else {
-            throw std::runtime_error("Constant " + x.get_name() + " is not implemented.");
+            throw std::runtime_error("Constant " + x.get_name()
+                                     + " is not implemented.");
         }
     }
 
-    void bvisit(const Gamma &x) {
+    void bvisit(const Gamma &x)
+    {
         throw std::runtime_error("Not implemented");
     }
 
-
-    void bvisit(const Abs &x) {
+    void bvisit(const Abs &x)
+    {
         mpfr_t t;
         mpfr_init2(t, mpc_get_prec(result_));
         apply(result_, *(x.get_arg()));
@@ -279,11 +323,13 @@ public:
         mpfr_clear(t);
     };
 
-    void bvisit(const NumberWrapper &x) {
+    void bvisit(const NumberWrapper &x)
+    {
         x.eval(mpc_get_prec(result_))->accept(*this);
     }
 
-    void bvisit(const FunctionWrapper &x) {
+    void bvisit(const FunctionWrapper &x)
+    {
         x.eval(mpc_get_prec(result_))->accept(*this);
     }
 
@@ -291,10 +337,10 @@ public:
     // Subs, UpperGamma, LowerGamma, Dirichlet_eta, Zeta
     // LeviCivita, KroneckerDelta, FunctionSymbol, LambertW
     // Derivative, ATan2, Gamma
-    void bvisit(const Basic &) {
+    void bvisit(const Basic &)
+    {
         throw std::runtime_error("Not implemented.");
     };
-
 };
 
 void eval_mpc(mpc_ptr result, const Basic &b, mpfr_rnd_t rnd)
