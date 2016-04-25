@@ -701,8 +701,12 @@ bool MultivariateIntPolynomial::is_canonical(const set_sym &vars,
             return false;
     }
     // checks that the dictionary does not contain terms with coefficient 0
+    // also check that size of each vector of exponents is equal to the
+    // number of variables
     for (auto bucket : dict) {
         if (integer_class(0) == bucket.second)
+            return false;
+        if (bucket.first.size() != vars.size())
             return false;
     }
 
@@ -1406,8 +1410,12 @@ bool MultivariatePolynomial::is_canonical(const set_sym &vars,
         if (1 < dict.size())
             return false;
     // checks that the dictionary does not contain terms with coefficient 0
+    // and that the size of each vector of exponents does not exceed the
+    // the number of variables
     for (auto bucket : dict) {
         if (Expression(0) == bucket.second)
+            return false;
+        if (bucket.first.size() != vars.size())
             return false;
     }
 
