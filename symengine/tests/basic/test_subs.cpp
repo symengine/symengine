@@ -27,11 +27,14 @@ using SymEngine::multinomial_coefficients;
 using SymEngine::one;
 using SymEngine::zero;
 using SymEngine::sin;
+using SymEngine::erf;
 using SymEngine::RCP;
 using SymEngine::rcp_dynamic_cast;
 using SymEngine::map_basic_basic;
 using SymEngine::print_stack_on_segfault;
 using SymEngine::real_double;
+using SymEngine::kronecker_delta;
+using SymEngine::levi_civita;
 
 TEST_CASE("Symbol: subs", "[subs]")
 {
@@ -95,7 +98,7 @@ TEST_CASE("Add: subs", "[subs]")
     d[x] = integer(5);
     r1 = add(mul(integer(12), add(integer(3), sin(x))), sin(integer(4)));
     r2 = add(mul(integer(12), add(integer(3), sin(integer(5)))),
-            sin(integer(4)));
+             sin(integer(4)));
     REQUIRE(eq(*r1->subs(d), *r2));
 
     d.clear();
@@ -191,6 +194,29 @@ TEST_CASE("Pow: subs", "[subs]")
     REQUIRE(eq(*r1->subs(d), *r2));
 }
 
+TEST_CASE("Erf: subs", "[subs]")
+{
+    RCP<const Basic> x = symbol("x");
+    RCP<const Basic> y = symbol("y");
+    RCP<const Basic> z = symbol("z");
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> r1 = erf(add(x, y));
+    RCP<const Basic> r2 = erf(mul(i2, x));
+    RCP<const Basic> r3 = erf(add(y, x));
+
+    map_basic_basic d;
+    d[y] = x;
+    REQUIRE(eq(*r1->subs(d), *r2));
+
+    d.clear();
+    d[z] = x;
+    REQUIRE(eq(*r1->subs(d), *r3));
+
+    d.clear();
+    d[y] = zero;
+    REQUIRE(eq(*r1->subs(d), *erf(x)));
+}
+
 TEST_CASE("Trig: subs", "[subs]")
 {
     RCP<const Basic> x = symbol("x");
@@ -225,4 +251,189 @@ TEST_CASE("Trig: subs", "[subs]")
     r1 = mul(i2, sin(x));
     r2 = mul(i2, z);
     REQUIRE(eq(*r1->subs(d), *r2));
+}
+
+TEST_CASE("KroneckerDelta: subs", "[subs]")
+{
+    RCP<const Basic> x = symbol("x");
+    RCP<const Basic> y = symbol("y");
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> i4 = integer(4);
+
+    RCP<const Basic> r1 = kronecker_delta(x, y);
+    RCP<const Basic> r2 = kronecker_delta(y, y);
+    RCP<const Basic> r3;
+    map_basic_basic d;
+    d[x] = y;
+    REQUIRE(eq(*r1->subs(d), *r2));
+
+    d.clear();
+    d[y] = x;
+    r2 = kronecker_delta(x, x);
+    REQUIRE(eq(*r1->subs(d), *r2));
+
+    r1 = kronecker_delta(add(x, i2), y);
+    r2 = kronecker_delta(i4, y);
+    r3 = kronecker_delta(add(x, i2), i2);
+    d.clear();
+    d[x] = i2;
+    REQUIRE(eq(*r1->subs(d), *r2));
+    d.clear();
+    d[y] = i2;
+    REQUIRE(eq(*r1->subs(d), *r3));
+}
+
+TEST_CASE("Gamma: subs", "[subs]")
+{
+    RCP<const Basic> x = symbol("x");
+    RCP<const Basic> y = symbol("y");
+    RCP<const Basic> z = symbol("z");
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> r1 = gamma(add(x, y));
+    RCP<const Basic> r2 = gamma(mul(i2, x));
+    RCP<const Basic> r3 = gamma(add(y, x));
+
+    map_basic_basic d;
+    d[y] = x;
+    REQUIRE(eq(*r1->subs(d), *r2));
+
+    d.clear();
+    d[z] = x;
+    REQUIRE(eq(*r1->subs(d), *r3));
+
+    d.clear();
+    d[y] = zero;
+    REQUIRE(eq(*r1->subs(d), *gamma(x)));
+}
+
+TEST_CASE("LowerGamma: subs", "[subs]")
+{
+    RCP<const Basic> x = symbol("x");
+    RCP<const Basic> y = symbol("y");
+    RCP<const Basic> z = symbol("z");
+    RCP<const Basic> w = symbol("w");
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> r1 = lowergamma(add(x, z), y);
+    RCP<const Basic> r2 = lowergamma(x, y);
+    RCP<const Basic> r3 = lowergamma(add(x, x), add(y, one));
+
+    map_basic_basic d;
+    d[x] = one;
+    REQUIRE(eq(*lowergamma(x, y)->subs(d), *lowergamma(one, y)));
+
+    d.clear();
+    d[z] = x;
+    d[y] = add(y, one);
+    REQUIRE(eq(*r1->subs(d), *r3));
+
+    d.clear();
+    d[z] = zero;
+    d[y] = one;
+    REQUIRE(eq(*r1->subs(d), *lowergamma(x, one)));
+
+    d.clear();
+    d[w] = one;
+    d[z] = i2;
+    d[y] = add(add(x, y), one);
+    r2 = lowergamma(add(x, i2), add(add(x, y), one));
+    REQUIRE(eq(*r1->subs(d), *r2));
+}
+
+TEST_CASE("UpperGamma: subs", "[subs]")
+{
+    RCP<const Basic> x = symbol("x");
+    RCP<const Basic> y = symbol("y");
+    RCP<const Basic> z = symbol("z");
+    RCP<const Basic> w = symbol("w");
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> r1 = uppergamma(add(x, z), y);
+    RCP<const Basic> r2 = uppergamma(x, y);
+    RCP<const Basic> r3 = uppergamma(add(x, x), add(y, one));
+
+    map_basic_basic d;
+    d[x] = one;
+    REQUIRE(eq(*uppergamma(x, y)->subs(d), *uppergamma(one, y)));
+
+    d.clear();
+    d[z] = x;
+    d[y] = add(y, one);
+    REQUIRE(eq(*r1->subs(d), *r3));
+
+    d.clear();
+    d[z] = zero;
+    d[y] = one;
+    REQUIRE(eq(*r1->subs(d), *uppergamma(x, one)));
+
+    d.clear();
+    d[w] = one;
+    d[z] = i2;
+    d[y] = add(add(x, y), one);
+    r2 = uppergamma(add(x, i2), add(add(x, y), one));
+    REQUIRE(eq(*r1->subs(d), *r2));
+}
+
+TEST_CASE("PolyGamma: subs", "[subs]")
+{
+    RCP<const Basic> x = symbol("x");
+    RCP<const Basic> y = symbol("y");
+    RCP<const Basic> z = symbol("z");
+    RCP<const Basic> w = symbol("w");
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> r1 = polygamma(add(x, z), y);
+    RCP<const Basic> r2 = polygamma(x, y);
+    RCP<const Basic> r3 = polygamma(add(x, x), add(y, one));
+
+    map_basic_basic d;
+    d[x] = one;
+    REQUIRE(eq(*polygamma(x, y)->subs(d), *polygamma(one, y)));
+
+    d.clear();
+    d[z] = x;
+    d[y] = add(y, one);
+    REQUIRE(eq(*r1->subs(d), *r3));
+
+    d.clear();
+    d[z] = zero;
+    d[y] = one;
+    REQUIRE(eq(*r1->subs(d), *polygamma(x, one)));
+
+    d.clear();
+    d[w] = one;
+    d[z] = i2;
+    d[y] = add(add(x, y), one);
+    r2 = polygamma(add(x, i2), add(add(x, y), one));
+    REQUIRE(eq(*r1->subs(d), *r2));
+}
+
+TEST_CASE("Beta: subs", "[subs]")
+{
+    RCP<const Basic> x = symbol("x");
+    RCP<const Basic> y = symbol("y");
+    RCP<const Basic> z = symbol("z");
+    RCP<const Basic> w = symbol("w");
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> r1 = beta(add(x, z), y);
+    RCP<const Basic> r2 = beta(x, y);
+    RCP<const Basic> r3 = beta(add(x, x), add(y, one));
+
+    map_basic_basic d;
+    d[x] = one;
+    REQUIRE(eq(*beta(x, y)->subs(d), *beta(y, one)));
+
+    d.clear();
+    d[z] = zero;
+    d[y] = x;
+    d[x] = y;
+    REQUIRE(eq(*r1->subs(d), *beta(x, y)));
+
+    d.clear();
+    d[z] = zero;
+    d[y] = one;
+    REQUIRE(eq(*r1->subs(d), *beta(x, one)));
+
+    d.clear();
+    d[w] = one;
+    d[z] = i2;
+    d[y] = i2;
+    REQUIRE(eq(*r1->subs(d), *beta(i2, add(i2, x))));
 }

@@ -10,6 +10,7 @@
 #include <symengine/symbol.h>
 #include <symengine/add.h>
 #include <symengine/pow.h>
+#include <symengine/constants.h>
 
 using SymEngine::Basic;
 using SymEngine::Integer;
@@ -24,24 +25,39 @@ using SymEngine::add;
 using SymEngine::sin;
 using SymEngine::cos;
 using SymEngine::umap_short_basic;
+using SymEngine::neg;
+using SymEngine::EulerGamma;
+using SymEngine::one;
 
 #ifdef HAVE_SYMENGINE_PIRANHA
 #include <symengine/series_piranha.h>
 
 using SymEngine::UPSeriesPiranha;
 using SymEngine::p_expr;
-#define series_coeff(EX,SYM,PREC,COEFF) UPSeriesPiranha::series(EX,SYM->get_name(),PREC)->get_poly().find_cf({COEFF}).get_basic()
-#define invseries_coeff(EX,SYM,PREC,COEFF) UPSeriesPiranha::series_reverse(UPSeriesPiranha::series(EX,SYM->get_name(),PREC)->get_poly(),p_expr(SYM->get_name()),PREC).find_cf({COEFF}).get_basic()
+#define series_coeff(EX, SYM, PREC, COEFF)                                     \
+    UPSeriesPiranha::series(EX, SYM->get_name(), PREC)                         \
+        ->get_poly()                                                           \
+        .find_cf({COEFF})                                                      \
+        .get_basic()
+#define invseries_coeff(EX, SYM, PREC, COEFF)                                  \
+    UPSeriesPiranha::series_reverse(                                           \
+        UPSeriesPiranha::series(EX, SYM->get_name(), PREC)->get_poly(),        \
+        p_expr(SYM->get_name()), PREC)                                         \
+        .find_cf({COEFF})                                                      \
+        .get_basic()
 
-static bool expand_check_pairs(const RCP<const Basic> &ex, const RCP<const Symbol> &x, int prec, const umap_short_basic& pairs)
+static bool expand_check_pairs(const RCP<const Basic> &ex,
+                               const RCP<const Symbol> &x, int prec,
+                               const umap_short_basic &pairs)
 {
     auto ser = SymEngine::UPSeriesPiranha::series(ex, x->get_name(), prec);
     for (auto it : pairs) {
-        //std::cerr << it.first << ", " << *(it.second) << "::" << *(v1.at(it.first)) << std::endl;
-        if (not it.second->__eq__(*(ser->get_poly().find_cf({it.first}).get_basic()
-)))
+        // std::cerr << it.first << ", " << *(it.second) << "::" <<
+        // *(v1.at(it.first)) << std::endl;
+        if (not it.second->__eq__(
+                *(ser->get_poly().find_cf({it.first}).get_basic())))
             return false;
-        }
+    }
     return true;
 }
 
@@ -52,9 +68,11 @@ TEST_CASE("Expression series expansion: Add ", "[Expansion of Add]")
     z = sub(z, pow(x, integer(2)));
     z = add(z, pow(x, integer(4)));
 
-    auto vb = umap_short_basic{{0, integer(1)}, {1, integer(1)}, {2, integer(-1)}, {4, integer(1)}};
+    auto vb = umap_short_basic{
+        {0, integer(1)}, {1, integer(1)}, {2, integer(-1)}, {4, integer(1)}};
     REQUIRE(expand_check_pairs(z, x, 5, vb));
-    auto vb1 = umap_short_basic{{0, integer(1)}, {1, integer(1)}, {2, integer(-1)}};
+    auto vb1
+        = umap_short_basic{{0, integer(1)}, {1, integer(1)}, {2, integer(-1)}};
     REQUIRE(expand_check_pairs(z, x, 3, vb1));
 }
 
@@ -78,16 +96,18 @@ TEST_CASE("Expression series expansion: sin, cos", "[Expansion of sin, cos]")
     REQUIRE(series_coeff(z6, x, 15, 11)->__eq__(*rational(-125929, 362880)));
 }
 
-TEST_CASE("Expression series expansion: division, inversion ", "[Expansion of 1/ex]")
+TEST_CASE("Expression series expansion: division, inversion ",
+          "[Expansion of 1/ex]")
 {
     RCP<const Symbol> x = symbol("x");
     RCP<const Integer> one = integer(1);
     RCP<const Integer> two = integer(2);
     RCP<const Integer> three = integer(3);
-    auto ex1 = div(one, sub(one, x));                   // 1/(1-x)
-    auto ex2 = div(x, sub(sub(one, x), pow(x, two)));   // x/(1-x-x^2)
-    auto ex3 = div(pow(x, three), sub(one, mul(pow(x, two), two))); // x^3/(1-2x^2)
-    auto ex4 = div(one, sub(one, sin(x)));              // 1/(1-sin(x))
+    auto ex1 = div(one, sub(one, x));                 // 1/(1-x)
+    auto ex2 = div(x, sub(sub(one, x), pow(x, two))); // x/(1-x-x^2)
+    auto ex3
+        = div(pow(x, three), sub(one, mul(pow(x, two), two))); // x^3/(1-2x^2)
+    auto ex4 = div(one, sub(one, sin(x)));                     // 1/(1-sin(x))
     auto ex5 = div(one, x);
     auto ex6 = div(one, mul(x, sub(one, x)));
     auto res1 = umap_short_basic{{-1, integer(1)}};
@@ -166,7 +186,8 @@ TEST_CASE("Expression series expansion: reversion ", "[Expansion of f^-1]")
     REQUIRE(invseries_coeff(ex4, x, 20, 10)->__eq__(*rational(-156250, 567)));
 }
 
-TEST_CASE("Expression series expansion: atan, tan, asin, cot, sec, csc", "[Expansion of tan, atan, asin, cot, sec, csc]")
+TEST_CASE("Expression series expansion: atan, tan, asin, cot, sec, csc",
+          "[Expansion of tan, atan, asin, cot, sec, csc]")
 {
     RCP<const Symbol> x = symbol("x");
     RCP<const Integer> one = integer(1);
@@ -179,7 +200,8 @@ TEST_CASE("Expression series expansion: atan, tan, asin, cot, sec, csc", "[Expan
     auto ex7 = cot(x);
     auto ex8 = cot(sin(x));
     auto res1 = umap_short_basic{{-1, integer(1)}, {1, rational(-1, 3)}};
-    auto res2 = umap_short_basic{{-1, integer(1)}, {7, rational(-1051, 1814400)}};
+    auto res2
+        = umap_short_basic{{-1, integer(1)}, {7, rational(-1051, 1814400)}};
     auto ex9 = sec(x);
     auto ex10 = csc(x);
 
@@ -198,7 +220,8 @@ TEST_CASE("Expression series expansion: atan, tan, asin, cot, sec, csc", "[Expan
     REQUIRE(series_coeff(ex10, x, 20, 7)->__eq__(*rational(127, 604800)));
 }
 
-TEST_CASE("Expression series expansion: sinh, cosh, tanh, asinh, atanh", "[Expansion of sinh, cosh, tanh, asinh, atanh]")
+TEST_CASE("Expression series expansion: sinh, cosh, tanh, asinh, atanh",
+          "[Expansion of sinh, cosh, tanh, asinh, atanh]")
 {
     RCP<const Symbol> x = symbol("x");
     RCP<const Integer> one = integer(1);
@@ -235,12 +258,22 @@ TEST_CASE("Expression series expansion: lambertw ", "[Expansion of lambertw]")
     REQUIRE(series_coeff(ex2, x, 12, 10)->__eq__(*rational(-2993294, 14175)));
 }
 
+TEST_CASE("Expression series expansion: gamma ", "[Expansion of gamma]")
+{
+    RCP<const Symbol> x = symbol("x");
+    auto ex1 = gamma(x);
+
+    REQUIRE(series_coeff(ex1, x, 10, -1)->__eq__(*one));
+    REQUIRE(series_coeff(ex1, x, 10, 0)->__eq__(*neg(EulerGamma)));
+}
+
 TEST_CASE("Expansion of sin ", "[Symbolic series expansion]")
 {
     RCP<const Symbol> x = symbol("x");
     auto ex1 = UPSeriesPiranha::series(sin(add(x, integer(1))), "x", 10);
     std::cout << ex1->__str__() << std::endl;
-    ex1 = UPSeriesPiranha::series(mul(sin(add(x, integer(1))), cos(add(x, integer(2)))), "x", 10);
+    ex1 = UPSeriesPiranha::series(
+        mul(sin(add(x, integer(1))), cos(add(x, integer(2)))), "x", 10);
     std::cout << ex1->__str__() << std::endl;
 }
 
@@ -256,10 +289,12 @@ TEST_CASE("Expansion of log ", "[Symbolic series expansion]")
 }
 
 #else
-TEST_CASE("Check error when expansion called without Piranha ", "[Expansion without Piranha]")
+TEST_CASE("Check error when expansion called without Piranha ",
+          "[Expansion without Piranha]")
 {
     RCP<const Symbol> x = symbol("x");
     auto ex1 = lambertw(x);
-    REQUIRE_THROWS_AS(UPSeriesPiranha::series(ex1, "x", 10), std::runtime_error);
+    REQUIRE_THROWS_AS(UPSeriesPiranha::series(ex1, "x", 10),
+                      std::runtime_error);
 }
 #endif

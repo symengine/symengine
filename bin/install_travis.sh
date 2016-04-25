@@ -14,22 +14,28 @@ if [[ "${CC}" == "" ]]; then
     export CC=gcc
     export CXX=g++
 fi
+export GCOV_EXECUTABLE=gcov
+
 if [[ "${TRAVIS_OS_NAME}" == "osx" ]] && [[ "${CC}" == "gcc" ]]; then
     export CC=gcc-4.8
     export CXX=g++-4.8
+    export GCOV_EXECUTABLE=gcov-4.8
 fi
 
 if [[ "${TRAVIS_OS_NAME}" == "linux" ]] && [[ "${CC}" == "gcc" ]]; then
     if [[ "${WITH_PIRANHA}" == "yes" ]]; then
         export CC=gcc-4.8
         export CXX=g++-4.8
+        export GCOV_EXECUTABLE=gcov-4.8
     elif [[ "${WITH_LATEST_GCC}" == "yes" ]]; then
         export CC=gcc-5
         export CXX=g++-5
+        export GCOV_EXECUTABLE=gcov-5
 
     else
         export CC=gcc-4.7
         export CXX=g++-4.7
+        export GCOV_EXECUTABLE=gcov-4.7
     fi
 fi
 
@@ -74,10 +80,12 @@ if [[ "${WITH_MPFR}" == "yes" ]] || [[ "${WITH_MPC}" == "yes" ]] || [[ "${WITH_A
         sudo apt-get install libmpfr-dev;
     fi
 fi
-if [[ "${WITH_ARB}" == "yes" ]]; then
+if [[ "${WITH_ARB}" == "yes" ]] || [[ "${WITH_FLINT}" == "yes" ]]; then
     wget https://raw.githubusercontent.com/symengine/dependencies/6a42d290071921a0a478c6883fc0ddd709d664c9/flint-2.4.4.tar.gz;
     tar -xzf flint-2.4.4.tar.gz;
     cd flint-2.4.4 && ./configure --prefix=$our_install_dir && make -j8 install && cd ..;
+fi
+if [[ "${WITH_ARB}" == "yes" ]]; then
     wget https://github.com/fredrik-johansson/arb/archive/2.6.0.tar.gz;
     tar -xzf 2.6.0.tar.gz;
     cd arb-2.6.0 && ./configure --prefix=$our_install_dir  --with-flint=$our_install_dir;

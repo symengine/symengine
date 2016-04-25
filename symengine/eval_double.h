@@ -7,7 +7,8 @@
 
 #include <symengine/basic.h>
 
-namespace SymEngine {
+namespace SymEngine
+{
 
 /*
  * We have two implementations, the visitor pattern (eval_double) and
@@ -17,6 +18,8 @@ namespace SymEngine {
 double eval_double(const Basic &b);
 
 double eval_double_single_dispatch(const Basic &b);
+
+double eval_double_visitor_pattern(const Basic &b);
 
 std::complex<double> eval_complex_double(const Basic &b);
 
