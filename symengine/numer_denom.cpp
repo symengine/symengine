@@ -88,10 +88,7 @@ public:
         as_numer_denom(base_, outArg(num), outArg(den));
 
         // if the exp is a negative numer, or is intuitively 'negative'
-        if ((is_a_Number(*exp_)
-             and rcp_static_cast<const Number>(exp_)->is_negative())
-            or (could_extract_minus(exp_))) {
-            exp_ = mul(integer(-1), exp_);
+        if (handle_minus(exp_, outArg(exp_))) {
             *numer_ = pow(den, exp_);
             *denom_ = pow(num, exp_);
         } else {

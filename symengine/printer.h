@@ -230,6 +230,7 @@ public:
     void bvisit(const MultivariateIntPolynomial &x);
     void bvisit(const MultivariatePolynomial &x);
     void bvisit(const UnivariatePolynomial &x);
+    void bvisit(const UnivariateSeries &x);
 #ifdef HAVE_SYMENGINE_PIRANHA
     void bvisit(const URatPSeriesPiranha &x);
     void bvisit(const UPSeriesPiranha &x);

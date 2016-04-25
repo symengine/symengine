@@ -5,9 +5,8 @@
 #ifndef SYMENGINE_POLYNOMIALS_H
 #define SYMENGINE_POLYNOMIALS_H
 
-#include <symengine/monomials.h>
-#include <symengine/dict.h>
 #include <symengine/expression.h>
+#include <symengine/monomials.h>
 
 namespace SymEngine
 {
@@ -158,7 +157,7 @@ public:
     * Adds coef*var_**n to the dict_
     */
     static void dict_add_term(map_int_Expr &d, const Expression &coef,
-                              const unsigned int &n);
+                              const int &n);
     Expression max_coef() const;
     //! Evaluates the UnivariatePolynomial at value x
     Expression eval(const Expression &x) const;
@@ -243,7 +242,11 @@ public:
     {
     }
     UnivariateExprPolynomial(int i)
-        : poly_(UnivariatePolynomial::create(symbol(""), {{0, Expression(i)}}))
+        : poly_(UnivariatePolynomial::create(symbol(""), {Expression(i)}))
+    {
+    }
+    UnivariateExprPolynomial(std::string varname)
+        : poly_(UnivariatePolynomial::create(symbol(varname), {0, 1}))
     {
     }
     UnivariateExprPolynomial(RCP<const UnivariatePolynomial> p)
@@ -251,7 +254,7 @@ public:
     {
     }
     UnivariateExprPolynomial(Expression expr)
-        : poly_(UnivariatePolynomial::create(symbol(""), {{0, expr}}))
+        : poly_(UnivariatePolynomial::create(symbol(""), {expr}))
     {
     }
     UnivariateExprPolynomial &operator=(const UnivariateExprPolynomial &)
@@ -291,9 +294,7 @@ public:
 
     UnivariateExprPolynomial operator-() const
     {
-        UnivariateExprPolynomial retval(*this);
-        neg_uni_poly(*(retval.poly_.ptr()));
-        return retval;
+        return neg_uni_poly(*this->poly_);
     }
 
     UnivariateExprPolynomial &operator-=(const UnivariateExprPolynomial &other)
@@ -318,6 +319,12 @@ public:
     UnivariateExprPolynomial &operator*=(const UnivariateExprPolynomial &other)
     {
         poly_ = mul_uni_poly(poly_, other.poly_);
+        return *this;
+    }
+
+    UnivariateExprPolynomial &operator/=(const Expression &other)
+    {
+        poly_ = mul_uni_poly(poly_, UnivariateExprPolynomial(1 / other).poly_);
         return *this;
     }
 
@@ -351,6 +358,7 @@ public:
     {
         RCP<const Symbol> x = poly_->get_var();
         umap_basic_num dict_;
+        RCP<const Number> coeff;
         for (const auto &it : poly_->get_dict()) {
             if (it.first != 0) {
                 auto term = mul(
@@ -359,14 +367,24 @@ public:
                 RCP<const Number> coef;
                 coef = zero;
                 Add::coef_dict_add_term(outArg((coef)), dict_, one, term);
-            }
+            } else
+                coeff = rcp_static_cast<const Number>(it.second.get_basic());
         }
-        return Add::from_dict(integer(0), std::move(dict_));
+        return Add::from_dict(coeff, std::move(dict_));
     }
 
     int compare(const UnivariateExprPolynomial &other)
     {
         return poly_->compare(*other.poly_);
+    }
+
+    Expression find_cf(int deg) const
+    {
+        if (poly_->get_dict().find(deg) != poly_->get_dict().end()) {
+            return poly_->get_dict().at(deg);
+        } else {
+            return Expression(0);
+        }
     }
 }; // UnivariateExprPolynomial
 
@@ -440,22 +458,21 @@ vec_uint uint_vec_translate_and_add(const vec_uint &v1, const unsigned int v2,
                                     const unsigned int &translator2,
                                     const unsigned int size);
 
-unsigned int reconcile(vec_int &v1, vec_int &v2, set_sym &s,
-                       const set_sym &s1, const set_sym &s2);
+unsigned int reconcile(vec_int &v1, vec_int &v2, set_sym &s, const set_sym &s1,
+                       const set_sym &s2);
 unsigned int reconcile(vec_int &v1, unsigned int &v2, set_sym &s,
                        const set_sym &s1, const RCP<const Symbol> s2);
 
 vec_int translate(vec_int original, vec_uint translator, unsigned int size);
-vec_int translate(int original, unsigned int translator,
-                   unsigned int size);
+vec_int translate(int original, unsigned int translator, unsigned int size);
 vec_int int_vec_translate_and_add(const vec_int &v1, const vec_int &v2,
-                                    const vec_uint &translator1,
-                                    const vec_uint &translator2,
-                                    const unsigned int size);
+                                  const vec_uint &translator1,
+                                  const vec_uint &translator2,
+                                  const unsigned int size);
 vec_int int_vec_translate_and_add(const vec_int &v1, const unsigned int v2,
-                                    const vec_uint &translator1,
-                                    const unsigned int &translator2,
-                                    const unsigned int size);
+                                  const vec_uint &translator1,
+                                  const unsigned int &translator2,
+                                  const unsigned int size);
 
 RCP<const MultivariateIntPolynomial>
 add_mult_poly(const MultivariateIntPolynomial &a,
@@ -580,7 +597,25 @@ public:
         : poly_(std::move(p))
     {
     }
+    explicit MultivariateExprPolynomial(int i)
+    {
+        set_sym s;
+        vec_int v;
+        poly_ = MultivariatePolynomial::from_dict(s, {{v, Expression(i)}});
+    }
 
+    explicit MultivariateExprPolynomial(Expression e)
+    {
+        set_sym s;
+        vec_int v;
+        poly_ = MultivariatePolynomial::from_dict(s, {{v, e}});
+    }
+    explicit MultivariateExprPolynomial(RCP<const Symbol> sym)
+    {
+        set_sym s;
+        vec_int v;
+        poly_ = MultivariatePolynomial::from_dict(s, {{v, Expression(sym)}});
+    }
     MultivariateExprPolynomial &operator=(const MultivariateExprPolynomial &)
         = default;
     MultivariateExprPolynomial &
@@ -651,6 +686,20 @@ public:
     bool operator==(const MultivariateExprPolynomial &other) const
     {
         return eq(*poly_, *other.poly_);
+    }
+
+    bool operator==(const Expression &other) const
+    {
+        if (poly_->dict_.size() > 1)
+            return false;
+        if (poly_->dict_.size() == 0) {
+            if (other == Expression(0)) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        return poly_->dict_.begin()->second == other;
     }
 
     bool operator!=(const MultivariateExprPolynomial &other) const

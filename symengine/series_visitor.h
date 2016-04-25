@@ -266,7 +266,11 @@ public:
     }
     void bvisit(const Symbol &x)
     {
-        p = Series::var(x.get_name());
+        if (x.get_name() == varname) {
+            p = Series::var(x.get_name());
+        } else {
+            p = Series::convert(x);
+        }
     }
     void bvisit(const Constant &x)
     {

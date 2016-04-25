@@ -217,7 +217,6 @@ typedef std::unordered_map<vec_uint, integer_class, vec_uint_hash, vec_uint_eq>
 typedef std::unordered_map<vec_uint, Expression, vec_uint_hash, vec_uint_eq>
     umap_uvec_expr;
 
-
 typedef std::vector<int> vec_int;
 
 class vec_int_eq

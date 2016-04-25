@@ -59,16 +59,13 @@ RCP<const SeriesCoeffInterface> series(const RCP<const Basic> &ex,
         return URatPSeriesFlint::series(integer(0), var->get_name(), prec);
 
     if (syms.size() > 1)
-        throw std::runtime_error(
-            "Only univariate series expansion implemented with Flint");
+        return UnivariateSeries::series(ex, var->get_name(), prec);
 
     if (needs_symbolic_constants(ex, var))
-        throw std::runtime_error(
-            "Series expansion of this expression not implemented with Flint");
+        return UnivariateSeries::series(ex, var->get_name(), prec);
     return URatPSeriesFlint::series(ex, var->get_name(), prec);
 #else
-    throw std::runtime_error(
-        "Series expansion is supported only with Piranha or Flint");
+    return UnivariateSeries::series(ex, var->get_name(), prec);
 #endif
 }
 
