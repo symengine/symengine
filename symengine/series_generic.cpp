@@ -306,6 +306,9 @@ Expression MultivariateSeries::convert(const Basic &x)
 
 int MultivariateSeries::ldegree(const MultivariateExprPolynomial &s)
 {
+    //if is a constant polynomial, should have ldegree 0
+    if (s.get_poly()->vars_.size() == 0)
+        return 0;
     int min = INT_MAX;
     for (auto bucket : s.get_poly()->dict_) {
         for(unsigned int i = 0; i < bucket.first.size(); i++)
