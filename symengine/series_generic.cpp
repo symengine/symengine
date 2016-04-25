@@ -291,16 +291,7 @@ umap_int_basic MultivariateSeries::as_dict() const
 
 RCP<const Basic> MultivariateSeries::get_coeff(int deg) const
 {
-    //going to be very inefficient with unordered map
-    umap_vec_expr d;
-    for (auto bucket : p_.get_poly()->dict_) {
-        if (bucket.first[whichvar] == deg) {
-            vec_int exps = bucket.first;
-            exps[whichvar] = 0;
-            d.insert(std::pair<vec_int, Expression>(exps, bucket.second));
-        }
-    }
-    return MultivariatePolynomial::from_dict(p_.get_vars(),std::move(d));
+    return find_cf(p_, MultivariateSeries::var(var_), deg).get_basic();
 }
 
 MultivariateExprPolynomial MultivariateSeries::var(const std::string &s)
@@ -403,11 +394,19 @@ Expression MultivariateSeries::find_cf(const MultivariateExprPolynomial &s,
         }
         i++;
     }
+    vec_int v;
+    v.resize(s.get_poly()->vars_.size(),0);
     if (s.get_poly()->vars_.size() == i)
         is_outside = true;
     if (is_outside) {
         if(0 == deg) {
-            return Expression(s.get_basic());
+            if (s.get_poly()->dict_.size() == 0) {
+                return Expression(0);
+            } else if ((s.get_poly()->dict_.size() == 1) && (s.get_poly()->dict_.begin()->first == v) ) {
+                return s.get_poly()->dict_.begin()->second;
+            } else {
+                return Expression(s.get_basic());
+            }
         } else {
             return Expression(0);
         }
@@ -422,7 +421,7 @@ Expression MultivariateSeries::find_cf(const MultivariateExprPolynomial &s,
     }
     if (d.size() == 0) {
         return Expression(0);
-    } else if (d.size() == 1) {
+    } else if ((d.size() == 1) && (d.begin()->first == v)) {
         return d.begin()->second;
     } else {
         return Expression(MultivariatePolynomial::from_dict(s.get_vars(), std::move(d)));
