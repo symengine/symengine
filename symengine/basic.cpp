@@ -10,6 +10,7 @@
 #include <symengine/functions.h>
 #include <symengine/polynomial.h>
 #include <symengine/printer.h>
+#include <symengine/subs.h>
 
 namespace SymEngine
 {
@@ -37,12 +38,8 @@ std::string Basic::__str__() const
 
 RCP<const Basic> Basic::subs(const map_basic_basic &subs_dict) const
 {
-    RCP<const Basic> self = rcp_from_this();
-    auto it = subs_dict.find(self);
-    if (it == subs_dict.end())
-        return self;
-    else
-        return it->second;
+    SubsVisitor s(subs_dict);
+    return s.apply(*this);
 }
 
 RCP<const Basic> Basic::diff(const RCP<const Symbol> &x) const
