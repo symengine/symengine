@@ -227,7 +227,8 @@ public:
 #else
     template <typename T>
 #endif
-    UnivariateExprPolynomial(T &&o) : poly_(std::forward<T>(o))
+    UnivariateExprPolynomial(T &&o)
+        : poly_(std::forward<T>(o))
     {
     }
     UnivariateExprPolynomial()

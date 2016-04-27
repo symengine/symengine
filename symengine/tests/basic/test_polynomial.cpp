@@ -1199,13 +1199,12 @@ TEST_CASE("Testing derivative of MultivariatePolynomial",
                                                      {{0, 0}, expr3}});
 
     RCP<const MultivariatePolynomial> q1
-        = MultivariatePolynomial::from_dict({x, y},
-                                            {
-                                                {{1, 1}, expr1 * 2},
-                                                {{0, 2}, expr2},
-                                                {{1, 0}, expr3 * 2},
-                                                {{0, 0}, expr1},
-                                            });
+        = MultivariatePolynomial::from_dict({x, y}, {
+                                                        {{1, 1}, expr1 * 2},
+                                                        {{0, 2}, expr2},
+                                                        {{1, 0}, expr3 * 2},
+                                                        {{0, 0}, expr1},
+                                                    });
     RCP<const MultivariatePolynomial> q2
         = MultivariatePolynomial::from_dict({x, y}, {{{2, 0}, expr1},
                                                      {{1, 1}, expr2 * 2},

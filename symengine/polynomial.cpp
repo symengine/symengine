@@ -768,8 +768,8 @@ bool MultivariateIntPolynomial::__eq__(const Basic &o) const
         v2.resize(
             static_cast<const MultivariateIntPolynomial &>(o).vars_.size(), 0);
         if (dict_.begin()->first == v1
-            || static_cast<const MultivariateIntPolynomial &>(
-                   o).dict_.begin()
+            || static_cast<const MultivariateIntPolynomial &>(o)
+                       .dict_.begin()
                        ->first
                    == v2)
             return true;
@@ -1475,8 +1475,8 @@ bool MultivariatePolynomial::__eq__(const Basic &o) const
         v2.resize(static_cast<const MultivariatePolynomial &>(o).vars_.size(),
                   0);
         if (dict_.begin()->first == v1
-            && static_cast<const MultivariatePolynomial &>(
-                   o).dict_.begin()
+            && static_cast<const MultivariatePolynomial &>(o)
+                       .dict_.begin()
                        ->first
                    == v2)
             return true;

@@ -26,13 +26,11 @@ struct RCPSymbolCompare;
 struct RCPSymbolEq;
 
 typedef std::unordered_map<RCP<const Basic>, RCP<const Number>, RCPBasicHash,
-                           RCPBasicKeyEq>
-    umap_basic_num;
+                           RCPBasicKeyEq> umap_basic_num;
 typedef std::unordered_map<short, RCP<const Basic>> umap_short_basic;
 typedef std::unordered_map<int, RCP<const Basic>> umap_int_basic;
 typedef std::unordered_map<RCP<const Basic>, RCP<const Basic>, RCPBasicHash,
-                           RCPBasicKeyEq>
-    umap_basic_basic;
+                           RCPBasicKeyEq> umap_basic_basic;
 
 typedef std::vector<int> vec_int;
 typedef std::vector<RCP<const Basic>> vec_basic;
@@ -210,8 +208,7 @@ public:
 
 typedef std::set<RCP<const Symbol>, RCPSymbolCompare> set_sym;
 typedef std::unordered_map<RCP<const Symbol>, unsigned int, RCPSymbolHash,
-                           RCPSymbolEq>
-    umap_sym_uint;
+                           RCPSymbolEq> umap_sym_uint;
 typedef std::unordered_map<vec_uint, integer_class, vec_uint_hash, vec_uint_eq>
     umap_uvec_mpz;
 typedef std::unordered_map<vec_uint, Expression, vec_uint_hash, vec_uint_eq>
