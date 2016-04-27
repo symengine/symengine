@@ -46,6 +46,7 @@ class BaseVisitor : public Base
 {
 
 public:
+    using Base::Base;
 #define SYMENGINE_ENUM(TypeID, Class)                                          \
     virtual void visit(const Class &x)                                         \
     {                                                                          \

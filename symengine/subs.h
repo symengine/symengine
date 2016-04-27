@@ -10,16 +10,18 @@ class SubsVisitor : public BaseVisitor<SubsVisitor>
 {
 protected:
     RCP<const Basic> result_;
-    const map_basic_basic& subs_dict_;
+    const map_basic_basic &subs_dict_;
 
 public:
-    SubsVisitor(const map_basic_basic &subs_dict) : subs_dict_(subs_dict) {
+    SubsVisitor(const map_basic_basic &subs_dict) : subs_dict_(subs_dict)
+    {
     }
     // TODO : Polynomials, Series, Sets
     void bvisit(const Basic &x)
     {
         result_ = x.rcp_from_this();
     }
+
     void bvisit(const Add &x)
     {
         SymEngine::umap_basic_num d;
@@ -42,15 +44,16 @@ public:
                 it = subs_dict_.find(p.second);
                 if (it != subs_dict_.end()) {
                     Add::coef_dict_add_term(outArg(coef), d, one,
-                                       mul(it->second, apply(p.first)));
+                                            mul(it->second, apply(p.first)));
                 } else {
                     Add::coef_dict_add_term(outArg(coef), d, p.second,
-                                       apply(p.first));
+                                            apply(p.first));
                 }
             }
         }
         result_ = Add::from_dict(coef, std::move(d));
     }
+
     void bvisit(const Mul &x)
     {
         RCP<const Number> coef = x.coef_;
@@ -86,6 +89,7 @@ public:
         }
         result_ = Mul::from_dict(coef, std::move(d));
     }
+
     void bvisit(const Pow &x)
     {
         RCP<const Basic> base_new = apply(x.get_base());
@@ -95,6 +99,7 @@ public:
         else
             result_ = pow(base_new, exp_new);
     }
+
     void bvisit(const OneArgFunction &x)
     {
         apply(x.get_arg());
@@ -104,6 +109,7 @@ public:
             result_ = x.create(result_);
         }
     }
+
     void bvisit(const TwoArgFunction &x)
     {
         RCP<const Basic> a = apply(x.get_arg1());
@@ -113,21 +119,27 @@ public:
         else
             result_ = x.create(a, b);
     }
-    void bvisit(const MultiArgFunction &x) {
+
+    void bvisit(const MultiArgFunction &x)
+    {
         vec_basic v = x.get_args();
         for (auto &elem : v) {
             elem = apply(elem);
         }
         result_ = x.create(v);
     }
-    void bvisit(const FunctionSymbol &x) {
+
+    void bvisit(const FunctionSymbol &x)
+    {
         vec_basic v = x.get_args();
         for (auto &elem : v) {
             elem = apply(elem);
         }
         result_ = x.create(v);
     }
-    void bvisit(const Derivative &x) {
+
+    void bvisit(const Derivative &x)
+    {
 
         RCP<const Symbol> s;
         map_basic_basic m, n;
@@ -139,7 +151,8 @@ public:
             // If p.first and p.second are symbols and arg_ is
             // independent of p.second, p.first can be replaced
             if (is_a<Symbol>(*p.first) and is_a<Symbol>(*p.second)
-                and eq(*x.get_arg()->diff(rcp_static_cast<const Symbol>(p.second)),
+                and eq(*x.get_arg()->diff(
+                           rcp_static_cast<const Symbol>(p.second)),
                        *zero)) {
                 insert(n, p.first, p.second);
                 continue;
@@ -155,7 +168,8 @@ public:
                         break;
                     }
                 } else {
-                    result_ = make_rcp<const Subs>(x.rcp_from_this(), subs_dict_);
+                    result_
+                        = make_rcp<const Subs>(x.rcp_from_this(), subs_dict_);
                     return;
                 }
             }
@@ -172,12 +186,13 @@ public:
         if (m.empty()) {
             result_ = Derivative::create(x.get_arg()->subs(n), sym);
         } else {
-            result_ = make_rcp<const Subs>(Derivative::create(x.get_arg()->subs(n), sym), m);
+            result_ = make_rcp<const Subs>(
+                Derivative::create(x.get_arg()->subs(n), sym), m);
         }
-
     }
 
-    void bvisit(const Subs &x) {
+    void bvisit(const Subs &x)
+    {
         map_basic_basic m, n;
         for (const auto &p : subs_dict_) {
             bool found = false;
@@ -201,7 +216,8 @@ public:
             for (auto &q : static_cast<const Subs &>(*presub).get_dict()) {
                 insert(m, q.first, q.second);
             }
-            result_ = make_rcp<const Subs>(static_cast<const Subs &>(*presub).get_arg(), m);
+            result_ = make_rcp<const Subs>(
+                static_cast<const Subs &>(*presub).get_arg(), m);
         } else {
             result_ = make_rcp<const Subs>(presub, m);
         }
@@ -221,6 +237,22 @@ public:
             x->accept(*this);
         }
         return result_;
+    }
+};
+
+class MSubsVisitor : public BaseVisitor<MSubsVisitor, SubsVisitor>
+{
+public:
+    using SubsVisitor::bvisit;
+
+    MSubsVisitor(const map_basic_basic &d)
+        : BaseVisitor<MSubsVisitor, SubsVisitor>(d)
+    {
+    }
+
+    void bvisit(const Derivative &x)
+    {
+        result_ = x.rcp_from_this();
     }
 };
 
