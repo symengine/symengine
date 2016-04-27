@@ -41,6 +41,11 @@ inline bool is_a_sub(const Basic &b)
     return dynamic_cast<const T *>(&b) != nullptr;
 }
 
+inline bool is_same_type(const Basic &a, const Basic &b)
+{
+    return a.get_type_code() == b.get_type_code();
+}
+
 //! `<<` Operator
 inline std::ostream &operator<<(std::ostream &out, const SymEngine::Basic &p)
 {

@@ -234,6 +234,9 @@ bool is_a(const Basic &b);
 template <class T>
 bool is_a_sub(const Basic &b);
 
+//! Returns true if `a` and `b` are exactly the same type `T`.
+bool is_same_type(const Basic &a, const Basic &b);
+
 //! Expands `self`
 RCP<const Basic> expand(const RCP<const Basic> &self);
 void as_numer_denom(const RCP<const Basic> &x,
