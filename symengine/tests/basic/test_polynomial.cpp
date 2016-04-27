@@ -693,8 +693,8 @@ TEST_CASE("Testing MultivariateIntPolynomial::__eq__(const Basic &o)",
     REQUIRE(p1->__eq__(*p1));
     REQUIRE(!(p2->__eq__(*p1)));
     REQUIRE(p3->__eq__(*add_mult_poly(*p1, *p2)));
-    //REQUIRE(p4->__eq__(*p5));
-    //REQUIRE(p6->__eq__(*p7));
+    // REQUIRE(p4->__eq__(*p5));
+    // REQUIRE(p6->__eq__(*p7));
     REQUIRE(!p5->__eq__(*p6));
 }
 
