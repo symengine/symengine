@@ -52,28 +52,33 @@ inline RCP<const Symbol> symbol(const std::string &name)
     return make_rcp<const Symbol>(name);
 }
 
-//for use in STL containers
-struct RCPSymbolHash{
+// for use in STL containers
+struct RCPSymbolHash {
 public:
-    size_t operator()(const RCP<const Symbol> &s) const{
+    size_t operator()(const RCP<const Symbol> &s) const
+    {
         return s->__hash__();
     }
 };
 
-struct RCPSymbolCompare{
+struct RCPSymbolCompare {
 public:
-    bool operator()(const RCP<const Symbol> &a, const RCP<const Symbol> &b) const{
+    bool operator()(const RCP<const Symbol> &a,
+                    const RCP<const Symbol> &b) const
+    {
         return (a->compare(*b) == -1);
     }
 };
 
-struct RCPSymbolEq{
+struct RCPSymbolEq {
 public:
-    bool operator()(const RCP<const Symbol> &a, const RCP<const Symbol> &b) const{
+    bool operator()(const RCP<const Symbol> &a,
+                    const RCP<const Symbol> &b) const
+    {
         return a->__eq__(*b);
     }
-}; 
- 
+};
+
 } // SymEngine
 
 #endif
