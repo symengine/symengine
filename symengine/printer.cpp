@@ -586,7 +586,7 @@ void StrPrinter::bvisit(const MultivariatePolynomial &x)
             for (auto it : x.vars_) {
                 if (x.dict_.find(exps)->first[i] != 0) {
                     expr << it->get_name();
-                    if (x.dict_.find(exps)->first[i] > 1)
+                    if (x.dict_.find(exps)->first[i] > 1 || x.dict_.find(exps)->first[i] < 0)
                         expr << "**" << x.dict_.find(exps)->first[i];
                     expr << " ";
                 }
