@@ -520,12 +520,14 @@ void StrPrinter::bvisit(const NumberWrapper &x)
     str_ = x.__str__();
 }
 
-void StrPrinter::bvisit(const MultivariateIntPolynomial &x) {
+void StrPrinter::bvisit(const MultivariateIntPolynomial &x)
+{
     std::ostringstream s;
-    bool first = true; //is this the first term being printed out?
-    //To change the ordering in which the terms will print out, change
-    //vec_uint_compare in dict.h
-    std::vector<vec_uint> v = order_umap<vec_uint, umap_uvec_mpz, vec_uint_compare>(x.dict_);
+    bool first = true; // is this the first term being printed out?
+    // To change the ordering in which the terms will print out, change
+    // vec_uint_compare in dict.h
+    std::vector<vec_uint> v
+        = order_umap<vec_uint, umap_uvec_mpz, vec_uint_compare>(x.dict_);
 
     for (vec_uint exps : v) {
         integer_class c = x.dict_.find(exps)->second;
@@ -560,12 +562,14 @@ void StrPrinter::bvisit(const MultivariateIntPolynomial &x) {
     str_ = final;
 }
 
-void StrPrinter::bvisit(const MultivariatePolynomial &x){
+void StrPrinter::bvisit(const MultivariatePolynomial &x)
+{
     std::ostringstream s;
-    bool first = true; //is this the first term being printed out?
-    //To change the ordering in which the terms will print out, change
-    //vec_uint_compare in dict.h
-    std::vector<vec_uint> v = order_umap<vec_uint, umap_uvec_expr, vec_uint_compare>(x.dict_);
+    bool first = true; // is this the first term being printed out?
+    // To change the ordering in which the terms will print out, change
+    // vec_uint_compare in dict.h
+    std::vector<vec_uint> v
+        = order_umap<vec_uint, umap_uvec_expr, vec_uint_compare>(x.dict_);
 
     for (vec_uint exps : v) {
         Expression c = x.dict_.find(exps)->second;
@@ -574,7 +578,7 @@ void StrPrinter::bvisit(const MultivariatePolynomial &x){
             if ('-' == t[0]) {
                 s << "- ";
                 t = t.substr(1);
-            } else if (!first){
+            } else if (!first) {
                 s << "+ ";
             }
             unsigned int i = 0;
@@ -588,7 +592,9 @@ void StrPrinter::bvisit(const MultivariatePolynomial &x){
                 }
                 i++;
             }
-            if ( ( neq(*c.get_basic(), Integer(1)) && neq(*c.get_basic(), Integer(-1)) )  || expr.str().empty())
+            if ((neq(*c.get_basic(), Integer(integer_class(1)))
+                 && neq(*c.get_basic(), Integer(integer_class(-1))))
+                || expr.str().empty())
                 s << t << "*";
             s << expr.str();
             first = false;
