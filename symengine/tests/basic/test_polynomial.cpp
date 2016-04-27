@@ -1160,9 +1160,7 @@ TEST_CASE("Testing MultivariatePolynomial::eval", "[MultivariatePolynomial]")
                                                         {{0, 0, 1}, expr3},
                                                         {{0, 0, 0}, expr4}});
     std::map<RCP<const Symbol>, Expression, RCPSymbolCompare> m1
-        = {{x, Expression(0)},
-           {y, Expression(0)},
-           {z, Expression(0)}};
+        = {{x, Expression(0)}, {y, Expression(0)}, {z, Expression(0)}};
     std::map<RCP<const Symbol>, Expression, RCPSymbolCompare> m2
         = {{x, ex}, {y, why}, {z, zee}};
     REQUIRE(p->eval(m1) == expr4);
