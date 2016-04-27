@@ -1149,8 +1149,7 @@ TEST_CASE("Testing MultivariatePolynomial::eval", "[MultivariatePolynomial]")
     Expression zee(div(a, b));
 
     RCP<const MultivariatePolynomial> p
-        = MultivariatePolynomial::from_dict({x, y, z}, {{{2, 0, 0}, ex\
-pr1},
+        = MultivariatePolynomial::from_dict({x, y, z}, {{{2, 0, 0}, expr1},
                                                         {{0, 2, 0}, expr2},
                                                         {{0, 0, 2}, expr3},
                                                         {{1, 1, 1}, expr4},
@@ -1162,8 +1161,7 @@ pr1},
                                                         {{0, 0, 0}, expr4}});
     std::map<RCP<const Symbol>, Expression, RCPSymbolCompare> m1
         = {{x, Expression(0)},
-           {y, Expressio\
-n(0)},
+           {y, Expression(0)},
            {z, Expression(0)}};
     std::map<RCP<const Symbol>, Expression, RCPSymbolCompare> m2
         = {{x, ex}, {y, why}, {z, zee}};
@@ -1324,8 +1322,7 @@ TEST_CASE("Testing addition, subtraction, multiplication of "
                  {{1, 1}, a},
                  {{1, 0}, (-1 * comp1) + negB},
                  {{0, 1}, negNum},
-                 {{0, 0}, comp4 * -1\
-}});
+                 {{0, 0}, comp4 * -1}});
     RCP<const MultivariatePolynomial> q3 = MultivariatePolynomial::from_dict(
         {x, y}, {{{3, 1}, 2 * comp1},
                  {{
