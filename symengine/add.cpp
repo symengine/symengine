@@ -324,43 +324,6 @@ void Add::as_two_terms(const Ptr<RCP<const Basic>> &a,
     *b = Add::from_dict(coef_, std::move(d));
 }
 
-RCP<const Basic> Add::subs(const map_basic_basic &subs_dict) const
-{
-    RCP<const Add> self = rcp_from_this_cast<const Add>();
-    auto it = subs_dict.find(self);
-    if (it != subs_dict.end())
-        return it->second;
-
-    SymEngine::umap_basic_num d;
-    RCP<const Number> coef;
-
-    it = subs_dict.find(coef_);
-    if (it != subs_dict.end()) {
-        coef = zero;
-        coef_dict_add_term(outArg(coef), d, one, it->second);
-    } else {
-        coef = coef_;
-    }
-
-    for (const auto &p : dict_) {
-        auto it = subs_dict.find(Add::from_dict(zero, {{p.first, p.second}}));
-        if (it != subs_dict.end()) {
-            coef_dict_add_term(outArg(coef), d, one, it->second);
-        } else {
-            it = subs_dict.find(p.second);
-            if (it != subs_dict.end()) {
-                coef_dict_add_term(outArg(coef), d, one,
-                                   mul(it->second, p.first->subs(subs_dict)));
-            } else {
-                coef_dict_add_term(outArg(coef), d, p.second,
-                                   p.first->subs(subs_dict));
-            }
-        }
-    }
-
-    return Add::from_dict(coef, std::move(d));
-}
-
 vec_basic Add::get_args() const
 {
     vec_basic args;

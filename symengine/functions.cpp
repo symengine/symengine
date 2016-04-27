@@ -1255,18 +1255,6 @@ RCP<const Basic> FunctionSymbol::create(const vec_basic &x) const
     return make_rcp<const FunctionSymbol>(name_, x);
 }
 
-RCP<const Basic> FunctionSymbol::subs(const map_basic_basic &subs_dict) const
-{
-    auto it = subs_dict.find(rcp_from_this());
-    if (it != subs_dict.end())
-        return it->second;
-    vec_basic v = arg_;
-    for (auto &elem : v) {
-        elem = elem->subs(subs_dict);
-    }
-    return create(v);
-}
-
 RCP<const Basic> function_symbol(std::string name, const vec_basic &arg)
 {
     return make_rcp<const FunctionSymbol>(name, arg);
@@ -1385,57 +1373,6 @@ int Derivative::compare(const Basic &o) const
     return cmp;
 }
 
-RCP<const Basic> Derivative::subs(const map_basic_basic &subs_dict) const
-{
-    RCP<const Symbol> s;
-    map_basic_basic m, n;
-    bool subs;
-    auto it = subs_dict.find(rcp_from_this());
-    if (it != subs_dict.end())
-        return it->second;
-    for (const auto &p : subs_dict) {
-        subs = true;
-        if (eq(*arg_->subs({{p.first, p.second}}), *arg_))
-            continue;
-        // If p.first and p.second are symbols and arg_ is
-        // independent of p.second, p.first can be replaced
-        if (is_a<Symbol>(*p.first) and is_a<Symbol>(*p.second)
-            and eq(*arg_->diff(rcp_static_cast<const Symbol>(p.second)),
-                   *zero)) {
-            insert(n, p.first, p.second);
-            continue;
-        }
-        for (const auto &d : x_) {
-            if (is_a<Symbol>(*d)) {
-                s = rcp_static_cast<const Symbol>(d);
-                // If p.first or p.second has non zero derivates wrt to s
-                // p.first cannot be replaced
-                if (neq(*zero, *(p.first->diff(s)))
-                    || neq(*zero, *(p.second->diff(s)))) {
-                    subs = false;
-                    break;
-                }
-            } else {
-                return make_rcp<const Subs>(rcp_from_this(), subs_dict);
-            }
-        }
-        if (subs) {
-            insert(n, p.first, p.second);
-        } else {
-            insert(m, p.first, p.second);
-        }
-    }
-    multiset_basic sym;
-    for (auto &p : x_) {
-        sym.insert(p->subs(n));
-    }
-    if (m.empty()) {
-        return Derivative::create(arg_->subs(n), sym);
-    } else {
-        return make_rcp<const Subs>(Derivative::create(arg_->subs(n), sym), m);
-    }
-}
-
 // Subs class
 Subs::Subs(const RCP<const Basic> &arg, const map_basic_basic &dict)
     : arg_{arg}, dict_{dict}
@@ -1510,40 +1447,6 @@ vec_basic Subs::get_args() const
         v.push_back(p.second);
     }
     return v;
-}
-
-RCP<const Basic> Subs::subs(const map_basic_basic &subs_dict) const
-{
-    auto it = subs_dict.find(rcp_from_this());
-    if (it != subs_dict.end())
-        return it->second;
-    map_basic_basic m, n;
-    for (const auto &p : subs_dict) {
-        bool found = false;
-        for (const auto &s : dict_) {
-            if (neq(*(s.first->subs({{p.first, p.second}})), *(s.first))) {
-                found = true;
-                break;
-            }
-        }
-        // If p.first is not replaced in arg_ by dict_,
-        // store p.first in n to replace in arg_
-        if (not found) {
-            insert(n, p.first, p.second);
-        }
-    }
-    for (const auto &s : dict_) {
-        insert(m, s.first, s.second->subs(subs_dict));
-    }
-    RCP<const Basic> presub = arg_->subs(n);
-    if (is_a<Subs>(*presub)) {
-        for (auto &q : static_cast<const Subs &>(*presub).dict_) {
-            insert(m, q.first, q.second);
-        }
-        return make_rcp<const Subs>(static_cast<const Subs &>(*presub).arg_, m);
-    } else {
-        return make_rcp<const Subs>(presub, m);
-    }
 }
 
 Sinh::Sinh(const RCP<const Basic> &arg) : HyperbolicFunction(arg)
