@@ -574,6 +574,8 @@ void StrPrinter::bvisit(const MultivariatePolynomial &x)
     for (vec_int exps : v) {
         Expression c = x.dict_.find(exps)->second;
         if (c != Expression(0)) {
+            if (!first)
+                s << " ";
             std::string t = parenthesizeLT(c.get_basic(), PrecedenceEnum::Mul);
             if ('-' == t[0]) {
                 s << "- ";
@@ -586,26 +588,29 @@ void StrPrinter::bvisit(const MultivariatePolynomial &x)
             for (auto it : x.vars_) {
                 if (x.dict_.find(exps)->first[i] != 0) {
                     expr << it->get_name();
-                    if (x.dict_.find(exps)->first[i] > 1 || x.dict_.find(exps)->first[i] < 0)
+                    if (x.dict_.find(exps)->first[i] > 1
+                        || x.dict_.find(exps)->first[i] < 0)
                         expr << "**" << x.dict_.find(exps)->first[i];
                     expr << " ";
                 }
                 i++;
             }
             if ((neq(*c.get_basic(), Integer(integer_class(1)))
-                 && neq(*c.get_basic(), Integer(integer_class(-1))))
-                || expr.str().empty())
-                s << t << "*";
-            s << expr.str();
+                 && neq(*c.get_basic(), Integer(integer_class(-1)))
+                 && !expr.str().empty())) {
+                std::string final(expr.str());
+                final.pop_back();
+                s << t << "*" << final;
+            } else if (expr.str().empty()) {
+                s << t;
+            }
             first = false;
         }
     }
 
     if (s.str().empty())
-        s << "0 ";
-    std::string final(s.str());
-    final.pop_back();
-    str_ = final;
+        s << "0";
+    str_ = s.str();
 }
 
 std::string StrPrinter::parenthesizeLT(const RCP<const Basic> &x,
