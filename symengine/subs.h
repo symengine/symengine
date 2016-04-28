@@ -140,7 +140,6 @@ public:
 
     void bvisit(const Derivative &x)
     {
-
         RCP<const Symbol> s;
         map_basic_basic m, n;
         bool subs;
@@ -255,6 +254,22 @@ public:
         result_ = x.rcp_from_this();
     }
 };
+
+//! Mappings in the `subs_dict` are applied to the expression tree of `x`
+inline RCP<const Basic> subs(const RCP<const Basic> &x,
+                             const map_basic_basic &subs_dict)
+{
+    SubsVisitor s(subs_dict);
+    return s.apply(x);
+}
+
+//! Subs which treat f(t) and Derivative(f(t), t) as separate variables
+inline RCP<const Basic> msubs(const RCP<const Basic> &x,
+                              const map_basic_basic &subs_dict)
+{
+    MSubsVisitor s(subs_dict);
+    return s.apply(x);
+}
 
 } // namespace SymEngine
 

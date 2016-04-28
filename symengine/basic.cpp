@@ -38,8 +38,7 @@ std::string Basic::__str__() const
 
 RCP<const Basic> Basic::subs(const map_basic_basic &subs_dict) const
 {
-    SubsVisitor s(subs_dict);
-    return s.apply(*this);
+    return SymEngine::subs(this->rcp_from_this(), subs_dict);
 }
 
 RCP<const Basic> Basic::diff(const RCP<const Symbol> &x) const
