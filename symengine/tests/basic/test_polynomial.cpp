@@ -1175,14 +1175,13 @@ TEST_CASE("Testing MultivariatePolynomial::eval", "[MultivariatePolynomial]")
         = {{x, ex}, {y, why}, {z, zee}};
     REQUIRE(p->eval(m1) == expr4);
     REQUIRE(p->eval(m2)
-            == ex * ex * expr1 + why * why * expr2 + zee * zee * expr3
-                   + ex * why * zee * expr4 + ex * why * expr1
-                   + why * zee * expr2 + ex * expr1 + why * expr2 + zee * expr3
-                   + expr4 + (1 / ex) * (1 / why) * (1 / zee) * expr1
-                   + expr2 * (1 / ex) * (1 / ex) * (1 / why) * (1 / why)
-                         * (1 / zee) * (1 / zee)
-                   + expr3 * (1 / ex) * (1 / ex) * why * why * (1 / zee)
-                         * (1 / zee));
+            == expr1 * pow_ex(ex, 2) + expr2 * pow_ex(why, 2)
+                   + expr3 * pow_ex(zee, 2) + expr4 * ex * why * zee
+                   + expr1 * ex * why + expr2 * why * zee + expr1 * ex
+                   + expr2 * why + expr3 * zee + expr4
+                   + expr1 * pow_ex(ex, -1) * pow_ex(why, -1) * pow_ex(zee, -1)
+                   + expr2 * pow_ex(ex, -2) * pow_ex(why, -2) * pow_ex(zee, -2)
+                   + expr3 * pow_ex(ex, -2) * pow_ex(why, 2) * pow_ex(zee, -2));
 }
 
 TEST_CASE("Testing derivative of MultivariatePolynomial",
