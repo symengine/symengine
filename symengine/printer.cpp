@@ -427,6 +427,20 @@ void StrPrinter::bvisit(const UnivariateSeries &x)
     str_ = o.str();
 }
 
+void StrPrinter::bvisit(const MultivariateSeries &x)
+{
+    std::ostringstream s;
+    s << x.get_poly().get_basic()->__str__();
+    s << " + O(";
+    for(auto bucket : x.precs_) {
+        s << "|" << bucket.first->__str__() << "|**" << bucket.second;
+        if (bucket != *x.precs_.end()--)
+            s << " + ";
+    }
+    s << ")";
+    str_ = s.str();
+}
+
 #ifdef HAVE_SYMENGINE_PIRANHA
 void StrPrinter::bvisit(const URatPSeriesPiranha &x)
 {

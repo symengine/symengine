@@ -93,6 +93,7 @@ univariate_series(RCP<const Symbol> i, unsigned int prec,
 class MultivariateSeries : public SeriesBase<MultivariateExprPolynomial,
                                              Expression, MultivariateSeries>
 {
+public:
     unsigned int
         whichvar_; // index of the variable we are expanding around in the set.
     map_sym_uint precs_;
@@ -120,11 +121,6 @@ public:
     bool is_canonical(const MultivariateExprPolynomial p, const std::string var,
                       const long degree, const unsigned int whichvar,
                       const map_sym_uint precs_);
-
-    std::string to_string() const
-    {
-        return p_.get_basic()->__str__();
-    }
 
     static RCP<const MultivariateSeries>
     create(const RCP<const Symbol> &var, const unsigned int &prec,
