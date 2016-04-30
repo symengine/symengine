@@ -11,6 +11,7 @@
 #include <symengine/mul.h>
 #include <symengine/pow.h>
 #include <symengine/polynomial.h>
+#include <symengine/polynomial_multivariate.h>
 #include <symengine/functions.h>
 #include <symengine/symbol.h>
 #include <symengine/integer.h>
