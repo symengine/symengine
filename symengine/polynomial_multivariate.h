@@ -58,6 +58,7 @@ public:
     // dict: dictionary for sparse represntation of polynomial, x**1 * y**2 + 3
     // * x**4 * y ** 5
     // is represented as {(1,2):1,(4,5):3}
+<<<<<<< b0cb5f71bf9f3839f1f5391bea23f54f683fda68
     set_basic vars_;
     umap_basic_uint degrees_;
     Dict dict_;
@@ -391,3 +392,4 @@ RCP<const MultivariateIntPolynomial> sub_mult_poly(const T &a, const U &b)
 } // SymEngine
 
 #endif
+
