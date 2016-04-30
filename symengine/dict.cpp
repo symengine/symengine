@@ -218,15 +218,6 @@ int umap_uvec_mpz_compare(const umap_uvec_mpz &a, const umap_uvec_mpz &b)
     std::vector<vec_uint> vb
         = order_umap<vec_uint, umap_uvec_mpz, vec_uint_compare>(b);
 
-    if (va.empty())
-        if (!vb.empty())
-            return -1;
-    if (vb.empty())
-        if (!va.empty())
-            return 1;
-    if (va.empty() && vb.empty())
-        return 0;
-
     for (unsigned int i = 0; i < va.size() && i < vb.size(); i++) {
         if (vec_uint_compare()(va[i], vb[i])) {
             return -1;
