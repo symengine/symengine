@@ -191,7 +191,7 @@ public:
     bool operator()(const vec_uint &a, const vec_uint &b) const
     {
         if (a.size() != b.size())
-            return a.size() < b.size();
+            return a.size() > b.size();
         unsigned int sum1 = 0;
         unsigned int sum2 = 0;
         for (unsigned int x : a) {
@@ -201,8 +201,8 @@ public:
             sum2 += x;
         }
         if (sum1 != sum2)
-            return sum1 < sum2;
-        return a < b;
+            return sum1 > sum2;
+        return a > b;
     }
 };
 
@@ -217,14 +217,12 @@ typedef std::unordered_map<vec_uint, integer_class, vec_uint_hash, vec_uint_eq>
 template <class K, class M, class C>
 std::vector<K> order_umap(const M &d)
 {
+    std::set<K, C> s;
     std::vector<K> v;
     for (auto bucket : d) {
-        auto iter = v.begin();
-        while (iter != v.end() && C()(bucket.first, *iter)) {
-            iter++;
-        }
-        v.insert(iter, bucket.first);
+        s.insert(bucket.first);
     }
+    v.insert(v.begin(), s.begin(), s.end());
     return v;
 }
 
