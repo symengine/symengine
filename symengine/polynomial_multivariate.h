@@ -4,7 +4,8 @@
 #include <symengine/expression.h>
 #include <symengine/monomials.h>
 
-namespace SymEngine{
+namespace SymEngine
+{
 
 class MultivariateIntPolynomial : public Basic
 {

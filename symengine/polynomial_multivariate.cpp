@@ -5,7 +5,8 @@
 #include <symengine/polynomial_multivariate.h>
 #include <symengine/pow.h>
 
-namespace SymEngine{
+namespace SymEngine
+{
 
 MultivariateIntPolynomial::MultivariateIntPolynomial(const set_sym &vars,
                                                      umap_sym_uint &degrees,
@@ -581,4 +582,4 @@ mul_mult_poly(const UnivariateIntPolynomial &a,
     return MultivariateIntPolynomial::from_dict(s, std::move(dict));
 }
 
-} //SymEngine
+} // SymEngine
