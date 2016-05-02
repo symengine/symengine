@@ -39,8 +39,8 @@ bool UnivariateIntPolynomial::is_canonical(const unsigned int &degree_,
             return false;
 
     if (dict.size() != 0) {
-        unsigned int prev_degree = (--dict.end())->first;
-        if (prev_degree != degree_) {
+        unsigned int actual_degree = (--dict.end())->first;
+        if (actual_degree != degree_) {
             return false;
         }
     } else if (degree_ != 0)
@@ -48,7 +48,7 @@ bool UnivariateIntPolynomial::is_canonical(const unsigned int &degree_,
 
     // Check if dictionary contains terms with coeffienct 0
     for (auto iter : dict)
-        if (iter.second == 0)
+        if (iter.first != 0 and iter.second == 0)
             return false;
     return true;
 }
@@ -382,8 +382,8 @@ bool UnivariatePolynomial::is_canonical(const int &degree_,
             return false;
 
     if (dict.size() != 0) {
-        int prev_degree = (--dict.end())->first;
-        if (prev_degree != degree_) {
+        int actual_degree = (--dict.end())->first;
+        if (actual_degree != degree_) {
             return false;
         }
     } else if (degree_ != 0)
