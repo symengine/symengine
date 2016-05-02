@@ -94,14 +94,10 @@ RCP<const UnivariateIntPolynomial>
 UnivariateIntPolynomial::from_dict(const RCP<const Symbol> &var,
                                    map_uint_mpz &&d)
 {
-    auto itter = d.begin();
-    while (itter != d.end()) {
-        if (integer_class(0) == itter->second) {
-            auto toErase = itter;
-            itter++;
+    for (auto iter = d.begin(); iter != d.end(); iter++) {
+        if (iter->second == 0) {
+            auto toErase = iter;
             d.erase(toErase);
-        } else {
-            itter++;
         }
     }
     unsigned int degree = 0;
@@ -443,14 +439,11 @@ UnivariatePolynomial::from_vec(const RCP<const Symbol> &var,
 RCP<const UnivariatePolynomial>
 UnivariatePolynomial::from_dict(const RCP<const Symbol> &var, map_int_Expr &&d)
 {
-    auto iter = d.begin();
-    while (iter != d.end()) {
-        if (Expression(0) == iter->second) {
+    for (auto iter = d.begin(); iter != d.end(); iter++) {
+        if (iter->second == 0) {
             auto toErase = iter;
-            iter++;
             d.erase(toErase);
-        } else
-            iter++;
+        }
     }
     int degree = 0;
     if (!d.empty())
