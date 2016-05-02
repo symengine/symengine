@@ -329,22 +329,30 @@ RCP<const UnivariateIntPolynomial> mul_poly(const UnivariateIntPolynomial &a,
 
     std::vector<integer_class> v;
     integer_class carry(0);
+    unsigned int deg = 0;
+    map_uint_mpz dict;
 
     while (r != 0 or carry != 0) {
         mp_and(b1, r, mask);
         if (b1 < a2) {
-            v.push_back(b1 + carry);
+            res = b1 + carry;
+            if (res != 0)
+                dict[deg] = res;
             carry = 0;
         } else {
-            v.push_back(b1 - a1 + carry);
+            res = b1 - a1 + carry;
+            if (res != 0)
+                dict[deg] = res;
             carry = 1;
         }
         r >>= N;
+        deg++;
     }
     if (neg)
-        return neg_poly(*UnivariateIntPolynomial::from_vec(var, v));
+        return neg_poly(
+            *UnivariateIntPolynomial::from_dict(var, std::move(dict)));
     else
-        return UnivariateIntPolynomial::from_vec(var, v);
+        return UnivariateIntPolynomial::from_dict(var, std::move(dict));
 }
 
 UnivariatePolynomial::UnivariatePolynomial(const RCP<const Symbol> &var,
