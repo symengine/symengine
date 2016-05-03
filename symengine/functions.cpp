@@ -1413,7 +1413,7 @@ bool LambertW::is_canonical(const RCP<const Basic> &arg) const
         return false;
     if (eq(*arg, *E))
         return false;
-    if (eq(*arg, *div(one, E)))
+    if (eq(*arg, *div(neg(one), E)))
         return false;
     if (eq(*arg, *div(log(i2), im2)))
         return false;
