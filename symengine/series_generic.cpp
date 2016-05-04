@@ -259,34 +259,36 @@ bool MultivariateSeries::is_canonical(const MultivariateExprPolynomial p,
                                       const std::string var, const long degree,
                                       const unsigned int whichvar,
                                       const map_sym_uint precs)
-{
-    // check that p is a polynomial in terms of symbol(var)
-    if (p.get_poly()->vars_.find(symbol(var)) == p.get_poly()->vars_.end())
-        return false;
-    // chekc that whichvar is the index of that symbol in the set
-    unsigned int i = 0;
-    auto iter = p.get_poly()->vars_.begin();
-    while (!((*iter)->__eq__(*symbol(var)))) {
-        iter++;
-        i++;
-    }
-    if (i != whichvar)
-        return false;
+{ /*
+     // if the polynomial is a constant, don't worry about symbols.  Actually,
+     don't worry about symbols at all.
+     // check that p is a polynomial in terms of symbol(var)
+     if (p.get_poly()->vars_.find(symbol(var)) == p.get_poly()->vars_.end())
+         return false;
+     // chekc that whichvar is the index of that symbol in the set
+     unsigned int i = 0;
+     auto iter = p.get_poly()->vars_.begin();
+     while (!((*iter)->__eq__(*symbol(var)))) {
+         iter++;
+         i++;
+     }
+     if (i != whichvar)
+         return false;
 
-    // check that the precision in precs define precisions for all of the
-    // symbols of p and that these precisions are less than the degree of those
-    // variables in p
-    for (RCP<const Symbol> s : p.get_poly()->vars_) {
-        if (precs.find(s) == precs.end())
-            return false;
-        if (precs.find(s)->second < p.get_poly()->degrees_.find(s)->second)
-            return false;
-    }
+     // check that degree is equal to the precision for whichvar
+     if (precs.find(symbol(var))->second != degree_)
+         return false;
 
-    // check that degree is equal to the precision for whichvar
-    if (precs.find(symbol(var))->second != degree_)
-        return false;
-
+     // check that the precision in precs define precisions for all of the
+     // symbols of p and that these precisions are less than the degree of those
+     // variables in p
+     for (RCP<const Symbol> s : p.get_poly()->vars_) {
+         if (precs.find(s) == precs.end())
+             return false;
+         if (precs.find(s)->second < p.get_poly()->degrees_.find(s)->second)
+             return false;
+     }
+ */
     return true;
 }
 
@@ -376,9 +378,9 @@ MultivariateSeries::mul(const MultivariateExprPolynomial &a,
             // empty variable sets, then they are both constant,
             // so prec gives no restriction, i.e. restrictor = 0.
             unsigned int restrictor = 0;
-            if (translator1.size() > 0) {
+            if (translator1.size() > 0 && target[translator1[0]] > 0) {
                 restrictor = target[translator1[0]];
-            } else if (translator2.size() > 0) {
+            } else if (translator2.size() > 0 && target[translator2[0]] > 0) {
                 restrictor = target[translator2[0]];
             }
             if (restrictor < prec) {
@@ -400,12 +402,27 @@ MultivariateExprPolynomial
 MultivariateSeries::pow(const MultivariateExprPolynomial &base, int exp,
                         unsigned prec)
 {
-    if (exp < 0)
+    if (base.get_dict().size() == 1) {
+        vec_int v = base.get_dict().begin()->first;
+        for (unsigned int i = 0; i < v.size(); i++)
+            v[i] *= exp;
+        return MultivariateExprPolynomial(MultivariatePolynomial::from_dict(
+            base.get_vars(),
+            {{v, pow_ex(base.get_dict().begin()->second, exp)}}));
+    }
+    if (exp < 0) {
+        if (base.get_vars().empty()) {
+            if (base.get_dict().empty())
+                throw std::runtime_error("Error: Division by zero");
+            return MultivariateExprPolynomial(
+                pow_ex(base.get_dict().begin()->second, exp));
+        }
         return pow(MultivariateSeries::series_invert(
                        base,
                        MultivariateSeries::var(base.get_var()->get_name()),
                        prec),
                    -exp, prec);
+    }
     if (exp == 0) {
         if (base == 0) {
             throw std::runtime_error("Error: 0**0 is undefined.");

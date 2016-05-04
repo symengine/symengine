@@ -227,7 +227,8 @@ public:
 #else
     template <typename T>
 #endif
-    UnivariateExprPolynomial(T &&o) : poly_(std::forward<T>(o))
+    UnivariateExprPolynomial(T &&o)
+        : poly_(std::forward<T>(o))
     {
     }
     UnivariateExprPolynomial()
@@ -626,7 +627,7 @@ public:
         return *this;
     }
 
-    MultivariateExprPolynomial & operator=(const Expression &other)
+    MultivariateExprPolynomial &operator=(const Expression &other)
     {
         return *this = MultivariateExprPolynomial(other);
     }
@@ -645,12 +646,14 @@ public:
         return MultivariateExprPolynomial(add_mult_poly(*a.poly_, *b.poly_));
     }
 
-    friend MultivariateExprPolynomial operator+(const MultivariateExprPolynomial &a, const Expression &b)
+    friend MultivariateExprPolynomial
+    operator+(const MultivariateExprPolynomial &a, const Expression &b)
     {
         return a + MultivariateExprPolynomial(b);
     }
 
-    friend MultivariateExprPolynomial operator+(const Expression &a, const MultivariateExprPolynomial &b)
+    friend MultivariateExprPolynomial
+    operator+(const Expression &a, const MultivariateExprPolynomial &b)
     {
         return MultivariateExprPolynomial(a) + b;
     }
@@ -662,8 +665,7 @@ public:
         return *this;
     }
 
-    MultivariateExprPolynomial &
-    operator+=(const Expression &other)
+    MultivariateExprPolynomial &operator+=(const Expression &other)
     {
         *this += MultivariateExprPolynomial(other);
         return *this;
@@ -676,22 +678,21 @@ public:
         return MultivariateExprPolynomial(sub_mult_poly(*a.poly_, *b.poly_));
     }
 
-    friend MultivariateExprPolynomial operator-(const Expression &a, const MultivariateExprPolynomial &b)
+    friend MultivariateExprPolynomial
+    operator-(const Expression &a, const MultivariateExprPolynomial &b)
     {
         return MultivariateExprPolynomial(a) - b;
     }
 
-    friend MultivariateExprPolynomial operator-(const MultivariateExprPolynomial &a, const Expression &b)
+    friend MultivariateExprPolynomial
+    operator-(const MultivariateExprPolynomial &a, const Expression &b)
     {
         return a - MultivariateExprPolynomial(b);
     }
 
-
     MultivariateExprPolynomial operator-() const
     {
-        MultivariateExprPolynomial retval(*this);
-        neg_mult_poly(*(retval.poly_.ptr()));
-        return retval;
+        return MultivariateExprPolynomial(neg_mult_poly(*poly_));
     }
 
     MultivariateExprPolynomial &
@@ -701,7 +702,8 @@ public:
         return *this;
     }
 
-    MultivariateExprPolynomial & operator-=(const Expression &other){
+    MultivariateExprPolynomial &operator-=(const Expression &other)
+    {
         *this -= MultivariateExprPolynomial(other);
         return *this;
     }
@@ -715,23 +717,27 @@ public:
     }
 
     friend MultivariateExprPolynomial
-    operator*(const MultivariateExprPolynomial &a,
-              const Expression &b)
+    operator*(const MultivariateExprPolynomial &a, const Expression &b)
     {
         return a * MultivariateExprPolynomial(b);
     }
 
     friend MultivariateExprPolynomial
-    operator*(const Expression &a,
-              const MultivariateExprPolynomial &b)
+    operator*(const Expression &a, const MultivariateExprPolynomial &b)
     {
         return MultivariateExprPolynomial(a) * b;
     }
-    
 
-    friend MultivariateExprPolynomial operator/(const MultivariateExprPolynomial &a, const Expression &b)
+    friend MultivariateExprPolynomial
+    operator/(const MultivariateExprPolynomial &a, const Expression &b)
     {
-        return a * (1/b);
+        return a * (1 / b);
+    }
+
+    MultivariateExprPolynomial operator/=(const Expression &b)
+    {
+        *this = *this / b;
+        return *this;
     }
 
     MultivariateExprPolynomial &
@@ -748,16 +754,7 @@ public:
 
     bool operator==(const Expression &other) const
     {
-        if (poly_->dict_.size() > 1)
-            return false;
-        if (poly_->dict_.size() == 0) {
-            if (other == Expression(0)) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-        return poly_->dict_.begin()->second == other;
+        return (*this == MultivariateExprPolynomial(other));
     }
 
     bool operator!=(const MultivariateExprPolynomial &other) const
@@ -765,7 +762,8 @@ public:
         return not(*this == other);
     }
 
-    const RCP<const MultivariatePolynomial> get_poly() const {
+    const RCP<const MultivariatePolynomial> get_poly() const
+    {
         return poly_;
     }
 

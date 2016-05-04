@@ -435,7 +435,7 @@ void StrPrinter::bvisit(const MultivariateSeries &x)
     auto bucket = x.precs_.begin();
     while (bucket != x.precs_.end()) {
         s << "|" << bucket->first->__str__() << "|**" << bucket->second;
-	bucket++;
+        bucket++;
         if (bucket != x.precs_.end())
             s << " + ";
     }
@@ -602,7 +602,8 @@ void StrPrinter::bvisit(const MultivariatePolynomial &x)
             for (auto it : x.vars_) {
                 if (x.dict_.find(exps)->first[i] != 0) {
                     expr << it->get_name();
-                    if (x.dict_.find(exps)->first[i] > 1)
+                    if (x.dict_.find(exps)->first[i] > 1
+                        || x.dict_.find(exps)->first[i] < 0)
                         expr << "**" << x.dict_.find(exps)->first[i];
                     expr << " ";
                 }
