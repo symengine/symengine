@@ -76,6 +76,7 @@ symengine/tests/eval/test_lambda_double
 symengine/tests/expression/test_expression
 symengine/tests/basic/test_series_expansion_UP
 symengine/tests/basic/test_series_expansion_URatP
+symengine/tests/basic/test_polynomial_multivariate
 
 # Benchmarks executables
 benchmarks/add1
