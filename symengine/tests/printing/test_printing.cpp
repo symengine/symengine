@@ -6,6 +6,7 @@
 #include <symengine/complex.h>
 #include <symengine/complex_double.h>
 #include <symengine/complex_mpc.h>
+#include <symengine/infinity.h>
 #include <symengine/integer.h>
 #include <symengine/matrix.h>
 #include <symengine/mul.h>
@@ -48,6 +49,8 @@ using SymEngine::StrPrinter;
 using SymEngine::Sin;
 using SymEngine::integer_class;
 using SymEngine::map_uint_mpz;
+using SymEngine::Infinit;
+using SymEngine::infinit;
 
 using namespace SymEngine::literals;
 
@@ -337,6 +340,18 @@ TEST_CASE("test_univariate_polynomial(): printing", "[printing]")
 
     p = univariate_polynomial(x, {{-2, d}, {-1, c}, {0, b}, {1, a}});
     REQUIRE(p->__str__() == "a*x + b + c*x**(-1) + d*x**(-2)");
+}
+
+TEST_CASE("test_infinity(): printing", "[printing]")
+{
+    RCP<const Basic> a;
+
+    a = infinit(1);
+    REQUIRE(a->__str__() == "+oo");
+    a = infinit(-1);
+    REQUIRE(a->__str__() == "-oo");
+    a = infinit(0);
+    REQUIRE(a->__str__() == "zoo");
 }
 
 TEST_CASE("test_floats(): printing", "[printing]")

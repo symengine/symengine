@@ -6,26 +6,27 @@
 #ifndef SYMENGINE_VISITOR_H
 #define SYMENGINE_VISITOR_H
 
-#include <symengine/basic.h>
 #include <symengine/add.h>
-#include <symengine/mul.h>
-#include <symengine/pow.h>
-#include <symengine/polynomial.h>
-#include <symengine/functions.h>
-#include <symengine/symbol.h>
-#include <symengine/integer.h>
-#include <symengine/rational.h>
+#include <symengine/basic.h>
 #include <symengine/complex.h>
-#include <symengine/constants.h>
-#include <symengine/real_double.h>
 #include <symengine/complex_double.h>
-#include <symengine/real_mpfr.h>
 #include <symengine/complex_mpc.h>
-#include <symengine/series_generic.h>
+#include <symengine/constants.h>
+#include <symengine/functions.h>
+#include <symengine/infinity.h>
+#include <symengine/integer.h>
+#include <symengine/mul.h>
+#include <symengine/polynomial.h>
+#include <symengine/pow.h>
+#include <symengine/rational.h>
+#include <symengine/real_double.h>
+#include <symengine/real_mpfr.h>
 #include <symengine/series.h>
-#include <symengine/series_piranha.h>
 #include <symengine/series_flint.h>
+#include <symengine/series_generic.h>
+#include <symengine/series_piranha.h>
 #include <symengine/sets.h>
+#include <symengine/symbol.h>
 
 namespace SymEngine
 {

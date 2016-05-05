@@ -36,6 +36,9 @@ symengine/symengine_config.h
 symengine/utilities/teuchos/Teuchos_config.h
 symengine/python/symengine/lib/config.pxi
 
+# Folder Customisation in Mac
+*.DS_Store
+ 
 # Python build files
 build*
 *__pycache__*
@@ -76,6 +79,7 @@ symengine/tests/eval/test_lambda_double
 symengine/tests/expression/test_expression
 symengine/tests/basic/test_series_expansion_UP
 symengine/tests/basic/test_series_expansion_URatP
+symengine/tests/basic/test_infinity
 
 # Benchmarks executables
 benchmarks/add1

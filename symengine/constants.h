@@ -8,8 +8,9 @@
 #define SYMENGINE_CONSTANTS_H
 
 #include <symengine/basic.h>
-#include <symengine/number.h>
+#include <symengine/infinity.h>
 #include <symengine/integer.h>
+#include <symengine/number.h>
 #include <symengine/symbol.h>
 
 namespace SymEngine
@@ -66,6 +67,10 @@ extern RCP<const Constant> pi;
 extern RCP<const Constant> E;
 extern RCP<const Constant> EulerGamma;
 
+// Infinity
+extern RCP<const Infinit> Inf;
+extern RCP<const Infinit> NegInf;
+extern RCP<const Infinit> ComplexInf;
 } // SymEngine
 
 #endif

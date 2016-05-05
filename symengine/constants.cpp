@@ -1,8 +1,9 @@
-#include <symengine/constants.h>
-#include <symengine/complex.h>
-#include <symengine/functions.h>
-#include <symengine/mul.h>
 #include <symengine/add.h>
+#include <symengine/complex.h>
+#include <symengine/constants.h>
+#include <symengine/functions.h>
+#include <symengine/infinity.h>
+#include <symengine/mul.h>
 #include <symengine/pow.h>
 
 namespace SymEngine
@@ -43,6 +44,10 @@ RCP<const Number> I = Complex::from_two_nums(*zero, *one);
 RCP<const Constant> pi = constant("pi");
 RCP<const Constant> E = constant("E");
 RCP<const Constant> EulerGamma = constant("EulerGamma");
+
+RCP<const Infinit> Inf = Infinit::from_int(1);
+RCP<const Infinit> NegInf = Infinit::from_int(-1);
+RCP<const Infinit> ComplexInf = Infinit::from_int(0);
 
 // Global variables declared in functions.cpp
 // Look over https://github.com/sympy/symengine/issues/272
