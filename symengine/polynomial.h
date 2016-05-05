@@ -107,9 +107,13 @@ RCP<const UnivariateIntPolynomial> neg_poly(const UnivariateIntPolynomial &a);
 //! Subtracting two UnivariateIntPolynomial a and b
 RCP<const UnivariateIntPolynomial> sub_poly(const UnivariateIntPolynomial &a,
                                             const UnivariateIntPolynomial &b);
-//! Multiplying two UnivariateIntPolynomial a and b
+//! Multiplying two UnivariateIntPolynomial a and b using ks1
 RCP<const UnivariateIntPolynomial> mul_poly(const UnivariateIntPolynomial &a,
                                             const UnivariateIntPolynomial &b);
+//! Multiplying two UnivariateIntPolynomial a and b using ks2
+RCP<const UnivariateIntPolynomial>
+mul_poly_ks2(const UnivariateIntPolynomial &a,
+             const UnivariateIntPolynomial &b);
 
 inline RCP<const UnivariateIntPolynomial>
 univariate_int_polynomial(RCP<const Symbol> i, map_uint_mpz &&dict)

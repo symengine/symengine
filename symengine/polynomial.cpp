@@ -362,6 +362,93 @@ RCP<const UnivariateIntPolynomial> mul_poly(const UnivariateIntPolynomial &a,
         return UnivariateIntPolynomial::from_dict(var, std::move(dict));
 }
 
+RCP<const UnivariateIntPolynomial>
+mul_poly_ks2(const UnivariateIntPolynomial &a, const UnivariateIntPolynomial &b)
+{
+    RCP<const Symbol> var = symbol("");
+    if (a.get_var()->get_name() == "") {
+        var = b.get_var();
+    } else if (b.get_var()->get_name() == "") {
+        var = a.get_var();
+    } else if (!(a.get_var()->__eq__(*b.get_var()))) {
+        throw std::runtime_error("Error: variables must agree.");
+    } else {
+        var = a.get_var();
+    }
+
+    bool neg = false, parity = true;
+    int mul_o = 1, mul_e = 1;
+
+    if ((--(a.get_dict().end()))->second < 0)
+        neg = not neg;
+    if ((--(b.get_dict().end()))->second < 0)
+        neg = not neg;
+
+    unsigned int N
+        = (bit_length(std::min(a.get_degree() + 1, b.get_degree() + 1))
+           + bit_length(a.max_abs_coef()) + bit_length(b.max_abs_coef()) + 1)
+          / 2;
+
+    integer_class full(1), temp, r_e, r_o;
+    full <<= (2 * N);
+    integer_class thresh = full / 2;
+    integer_class mask = full - 1;
+    integer_class s_val_p = a.eval_bit(N) * b.eval_bit(N);
+    integer_class s_val_n = a.eval_bit(N, true) * b.eval_bit(N, true);
+
+    integer_class he = s_val_p + s_val_n;
+    if (he < 0)
+        mul_e = -1;
+    he = mp_abs(he);
+    he = he / 2;
+    integer_class ho = s_val_p - s_val_n;
+    if (ho < 0)
+        mul_o = -1;
+    ho = mp_abs(ho);
+    ho = ho / 2;
+    ho = ho >> N;
+
+    std::cout << N << std::endl;
+    std::cout << s_val_n << std::endl;
+    std::cout << s_val_p << std::endl;
+    std::cout << he << std::endl;
+    std::cout << ho << std::endl;
+
+    std::vector<integer_class> v;
+    unsigned int carrye = 0, carryo = 0, deg = 0;
+
+    while (he != 0 or carrye != 0 or ho != 0 or carryo != 0) {
+
+        if (parity) {
+
+            mp_and(temp, he, mask);
+            if (temp < thresh) {
+                v.push_back(mul_e * (temp + carrye));
+                carrye = 0;
+            } else {
+                v.push_back(mul_e * (temp - full + carrye));
+                carrye = 1;
+            }
+            he >>= (2 * N);
+
+        } else {
+
+            mp_and(temp, ho, mask);
+            if (temp < thresh) {
+                v.push_back(mul_o * (temp + carryo));
+                carryo = 0;
+            } else {
+                v.push_back(mul_o * (temp - full + carryo));
+                carryo = 1;
+            }
+            ho >>= (2 * N);
+        }
+        deg++;
+        parity = not parity;
+    }
+    return UnivariateIntPolynomial::from_vec(var, v);
+}
+
 UnivariatePolynomial::UnivariatePolynomial(const RCP<const Symbol> &var,
                                            const int &degree,
                                            const map_int_Expr &&dict)
