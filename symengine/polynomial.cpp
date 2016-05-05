@@ -315,51 +315,42 @@ RCP<const UnivariateIntPolynomial> mul_poly(const UnivariateIntPolynomial &a,
         var = a.get_var();
     }
 
-    bool neg = false;
-
-    if ((--(a.get_dict().end()))->second < 0)
-        neg = not neg;
-    if ((--(b.get_dict().end()))->second < 0)
-        neg = not neg;
+    int mul = 1;
 
     unsigned int N
         = bit_length(std::min(a.get_degree() + 1, b.get_degree() + 1))
           + bit_length(a.max_abs_coef()) + bit_length(b.max_abs_coef());
 
-    integer_class a1(1), b1, res;
-    a1 <<= N;
-    integer_class a2 = a1 / 2;
-    integer_class mask = a1 - 1;
-    integer_class a_val(a.eval_bit(N)), b_val(b.eval_bit(N));
-    integer_class s_val(a_val * b_val);
-    integer_class r = mp_abs(s_val);
+    integer_class full = integer_class(1), temp, res;
+    full <<= N;
+    integer_class thresh = full / 2;
+    integer_class mask = full - 1;
+    integer_class s_val = a.eval_bit(N) * b.eval_bit(N);
+    if (s_val < 0)
+        mul = -1;
+    s_val = mp_abs(s_val);
 
-    std::vector<integer_class> v;
-    integer_class carry(0);
-    unsigned int deg = 0;
+    unsigned int deg = 0, carry = 0;
     map_uint_mpz dict;
 
-    while (r != 0 or carry != 0) {
-        mp_and(b1, r, mask);
-        if (b1 < a2) {
-            res = b1 + carry;
+    while (s_val != 0 or carry != 0) {
+        mp_and(temp, s_val, mask);
+        if (temp < thresh) {
+            res = mul * (temp + carry);
             if (res != 0)
                 dict[deg] = res;
             carry = 0;
         } else {
-            res = b1 - a1 + carry;
+            res = mul * (temp - full + carry);
             if (res != 0)
                 dict[deg] = res;
             carry = 1;
         }
-        r >>= N;
+        s_val >>= N;
         deg++;
     }
-    if (neg)
-        return neg_poly(
-            *UnivariateIntPolynomial::from_dict(var, std::move(dict)));
-    else
-        return UnivariateIntPolynomial::from_dict(var, std::move(dict));
+
+    return UnivariateIntPolynomial::from_dict(var, std::move(dict));
 }
 
 RCP<const UnivariateIntPolynomial>
@@ -376,20 +367,15 @@ mul_poly_ks2(const UnivariateIntPolynomial &a, const UnivariateIntPolynomial &b)
         var = a.get_var();
     }
 
-    bool neg = false, parity = true;
+    bool parity = true;
     int mul_o = 1, mul_e = 1;
-
-    if ((--(a.get_dict().end()))->second < 0)
-        neg = not neg;
-    if ((--(b.get_dict().end()))->second < 0)
-        neg = not neg;
 
     unsigned int N
         = (bit_length(std::min(a.get_degree() + 1, b.get_degree() + 1))
            + bit_length(a.max_abs_coef()) + bit_length(b.max_abs_coef()) + 1)
           / 2;
 
-    integer_class full(1), temp, r_e, r_o;
+    integer_class full = integer_class(1), temp, res;
     full <<= (2 * N);
     integer_class thresh = full / 2;
     integer_class mask = full - 1;
@@ -408,14 +394,8 @@ mul_poly_ks2(const UnivariateIntPolynomial &a, const UnivariateIntPolynomial &b)
     ho = ho / 2;
     ho = ho >> N;
 
-    std::cout << N << std::endl;
-    std::cout << s_val_n << std::endl;
-    std::cout << s_val_p << std::endl;
-    std::cout << he << std::endl;
-    std::cout << ho << std::endl;
-
-    std::vector<integer_class> v;
     unsigned int carrye = 0, carryo = 0, deg = 0;
+    map_uint_mpz dict;
 
     while (he != 0 or carrye != 0 or ho != 0 or carryo != 0) {
 
@@ -423,10 +403,14 @@ mul_poly_ks2(const UnivariateIntPolynomial &a, const UnivariateIntPolynomial &b)
 
             mp_and(temp, he, mask);
             if (temp < thresh) {
-                v.push_back(mul_e * (temp + carrye));
+                res = mul_e * (temp + carrye);
+                if (res != 0)
+                    dict[deg] = res;
                 carrye = 0;
             } else {
-                v.push_back(mul_e * (temp - full + carrye));
+                res = mul_e * (temp - full + carrye);
+                if (res != 0)
+                    dict[deg] = res;
                 carrye = 1;
             }
             he >>= (2 * N);
@@ -435,10 +419,14 @@ mul_poly_ks2(const UnivariateIntPolynomial &a, const UnivariateIntPolynomial &b)
 
             mp_and(temp, ho, mask);
             if (temp < thresh) {
-                v.push_back(mul_o * (temp + carryo));
+                res = mul_o * (temp + carryo);
+                if (res != 0)
+                    dict[deg] = res;
                 carryo = 0;
             } else {
-                v.push_back(mul_o * (temp - full + carryo));
+                res = mul_o * (temp - full + carryo);
+                if (res != 0)
+                    dict[deg] = res;
                 carryo = 1;
             }
             ho >>= (2 * N);
@@ -446,7 +434,7 @@ mul_poly_ks2(const UnivariateIntPolynomial &a, const UnivariateIntPolynomial &b)
         deg++;
         parity = not parity;
     }
-    return UnivariateIntPolynomial::from_vec(var, v);
+    return UnivariateIntPolynomial::from_dict(var, std::move(dict));
 }
 
 UnivariatePolynomial::UnivariatePolynomial(const RCP<const Symbol> &var,
