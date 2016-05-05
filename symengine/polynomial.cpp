@@ -21,14 +21,15 @@ UnivariateIntPolynomial::UnivariateIntPolynomial(
     : var_{var}
 {
     dict_ = {};
-    unsigned int deg = 0;
     for (unsigned int i = 0; i < v.size(); i++) {
         if (v[i] != 0) {
             dict_[i] = v[i];
-            deg = i;
         }
     }
-    degree_ = deg;
+    if (dict_.empty())
+        degree_ = 0;
+    else
+        degree_ = (--dict_.end())->first;
 }
 
 bool UnivariateIntPolynomial::is_canonical(const unsigned int &degree_,
@@ -48,7 +49,7 @@ bool UnivariateIntPolynomial::is_canonical(const unsigned int &degree_,
 
     // Check if dictionary contains terms with coeffienct 0
     for (auto iter : dict)
-        if (iter.first != 0 and iter.second == 0)
+        if (iter.second == 0)
             return false;
     return true;
 }
@@ -94,10 +95,14 @@ RCP<const UnivariateIntPolynomial>
 UnivariateIntPolynomial::from_dict(const RCP<const Symbol> &var,
                                    map_uint_mpz &&d)
 {
-    for (auto iter = d.begin(); iter != d.end(); iter++) {
+    auto iter = d.begin();
+    while (iter != d.end()) {
         if (iter->second == 0) {
             auto toErase = iter;
+            iter++;
             d.erase(toErase);
+        } else {
+            iter++;
         }
     }
     unsigned int degree = 0;
@@ -395,7 +400,7 @@ bool UnivariatePolynomial::is_canonical(const int &degree_,
 
     // Check if dictionary contains terms with coeffienct 0
     for (auto iter : dict)
-        if (iter.first != 0 and iter.second == 0)
+        if (iter.second == 0)
             return false;
     return true;
 }
@@ -447,10 +452,14 @@ UnivariatePolynomial::from_vec(const RCP<const Symbol> &var,
 RCP<const UnivariatePolynomial>
 UnivariatePolynomial::from_dict(const RCP<const Symbol> &var, map_int_Expr &&d)
 {
-    for (auto iter = d.begin(); iter != d.end(); iter++) {
-        if (iter->second == 0) {
+    auto iter = d.begin();
+    while (iter != d.end()) {
+        if (iter->second == Expression(0)) {
             auto toErase = iter;
+            iter++;
             d.erase(toErase);
+        } else {
+            iter++;
         }
     }
     int degree = 0;
