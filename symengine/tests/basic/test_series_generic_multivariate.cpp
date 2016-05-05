@@ -147,7 +147,7 @@ TEST_CASE("Adding two UnivariateSeries", "[UnivariateSeries]")
     precisions = {{x, 5}, {y, 2}};
     RCP<const MultivariateSeries> msq3 = make_rcp<const MultivariateSeries>(q3, "x", 5, 0, std::move(precisions));
 
-    REQUIRE(add(ms1, ms2)->__cmp__(*msq1));
+/*    REQUIRE(add(ms1, ms2)->__cmp__(*msq1));
     REQUIRE(add(ms2, ms1)->__cmp__(*msq1));
     REQUIRE(add(ms1, ms3)->__cmp__(*ms1));
     REQUIRE(sub(ms1, ms2)->__cmp__(*msq2));
@@ -157,34 +157,47 @@ TEST_CASE("Adding two UnivariateSeries", "[UnivariateSeries]")
     REQUIRE(mul(ms1, ms2)->__cmp__(*msq3));
     REQUIRE(mul(ms2, ms1)->__cmp__(*msq3));
     REQUIRE(mul(ms1, ms3)->__cmp__(*ms3));
-    REQUIRE(mul(ms3, ms1)->__cmp__(*ms3));
+    REQUIRE(mul(ms3, ms1)->__cmp__(*ms3));*/
+    std::cout << add(ms1, ms2)->__str__() << std::endl;
+    std::cout << msq1->__str__() << std::endl;
+    REQUIRE(eq(*add(ms1, ms2), *msq1));
+    REQUIRE(eq(*add(ms2, ms1), *msq1));
+    REQUIRE(eq(*add(ms1, ms3), *ms1));
+    REQUIRE(eq(*sub(ms1, ms2), *msq2));
+    REQUIRE(eq(*sub(ms2, ms1), *neg(msq2))); //not working
+    REQUIRE(eq(*sub(ms1, ms3), *ms1));
+
+    REQUIRE(eq(*mul(ms1, ms2), *msq3));
+    REQUIRE(eq(*mul(ms2, ms1), *msq3));
+    REQUIRE(eq(*mul(ms1, ms3), *ms3));
+    REQUIRE(eq(*mul(ms3, ms1), *ms3));
 }
 
-// TEST_CASE("Negative of a UnivariateSeries", "[UnivariateSeries]")
-// {
-//     RCP<const Symbol> x = symbol("x");
-//     map_int_Expr adict_ = {{0, 1}, {1, 2}, {2, 1}};
-//     UnivariateExprPolynomial apoly_(
-//         univariate_polynomial(x, std::move(adict_)));
-//     map_int_Expr bdict_ = {{0, -1}, {1, -2}, {2, -1}};
-//     UnivariateExprPolynomial bpoly_(
-//         univariate_polynomial(x, std::move(bdict_)));
-//     map_int_Expr cdict_ = {{0, 1}, {1, symbol("a")}};
-//     UnivariateExprPolynomial cpoly_(
-//         univariate_polynomial(x, std::move(adict_)));
-//     map_int_Expr ddict_ = {{0, -1}, {1, mul(integer(-1), symbol("a"))}};
-//     UnivariateExprPolynomial dpoly_(
-//         univariate_polynomial(x, std::move(bdict_)));
+/*TEST_CASE("Negative of a UnivariateSeries", "[UnivariateSeries]")
+{
+    RCP<const Symbol> x = symbol("x");
+    map_int_Expr adict_ = {{0, 1}, {1, 2}, {2, 1}};
+    UnivariateExprPolynomial apoly_(
+        univariate_polynomial(x, std::move(adict_)));
+    map_int_Expr bdict_ = {{0, -1}, {1, -2}, {2, -1}};
+    UnivariateExprPolynomial bpoly_(
+        univariate_polynomial(x, std::move(bdict_)));
+    map_int_Expr cdict_ = {{0, 1}, {1, symbol("a")}};
+    UnivariateExprPolynomial cpoly_(
+        univariate_polynomial(x, std::move(adict_)));
+    map_int_Expr ddict_ = {{0, -1}, {1, mul(integer(-1), symbol("a"))}};
+    UnivariateExprPolynomial dpoly_(
+        univariate_polynomial(x, std::move(bdict_)));
 
-//     RCP<const UnivariateSeries> a = UnivariateSeries::create(x, 5, apoly_);
-//     RCP<const Basic> b = neg(a);
-//     RCP<const UnivariateSeries> c = UnivariateSeries::create(x, 5, bpoly_);
-//     RCP<const UnivariateSeries> d = UnivariateSeries::create(x, 5, cpoly_);
-//     RCP<const Basic> e = neg(d);
-//     RCP<const UnivariateSeries> f = UnivariateSeries::create(x, 5, dpoly_);
-//     REQUIRE(b->__cmp__(*c));
-//     REQUIRE(e->__cmp__(*f));
-// }
+    RCP<const UnivariateSeries> a = UnivariateSeries::create(x, 5, apoly_);
+    RCP<const Basic> b = neg(a);
+    RCP<const UnivariateSeries> c = UnivariateSeries::create(x, 5, bpoly_);
+    RCP<const UnivariateSeries> d = UnivariateSeries::create(x, 5, cpoly_);
+    RCP<const Basic> e = neg(d);
+    RCP<const UnivariateSeries> f = UnivariateSeries::create(x, 5, dpoly_);
+    REQUIRE(b->__cmp__(*c));
+    REQUIRE(e->__cmp__(*f));
+}*/
 
 // TEST_CASE("Subtracting two UnivariateSeries", "[UnivariateSeries]")
 // {
