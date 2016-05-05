@@ -67,7 +67,7 @@ public:
     //! Evaluates the UnivariateIntPolynomial at value x
     integer_class eval(const integer_class &x) const;
     //! Evaluates the UnivariateIntPolynomial at value 2**x
-    integer_class eval_bit(const int &x) const;
+    integer_class eval_bit(const int &x, bool neg = false) const;
 
     //! \return `true` if `0`
     bool is_zero() const;
