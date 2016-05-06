@@ -437,6 +437,43 @@ mul_poly_ks2(const UnivariateIntPolynomial &a, const UnivariateIntPolynomial &b)
     return UnivariateIntPolynomial::from_dict(var, std::move(dict));
 }
 
+RCP<const UnivariateIntPolynomial>
+mul_poly_naive(const UnivariateIntPolynomial &a,
+               const UnivariateIntPolynomial &b)
+{
+    RCP<const Symbol> var = symbol("");
+    if (a.get_var()->get_name() == "") {
+        var = b.get_var();
+    } else if (b.get_var()->get_name() == "") {
+        var = a.get_var();
+    } else if (!(a.get_var()->__eq__(*b.get_var()))) {
+        throw std::runtime_error("Error: variables must agree.");
+    } else {
+        var = a.get_var();
+    }
+
+    integer_class mul;
+    int deg;
+
+    map_uint_mpz dict;
+    for (auto a_iter : a.get_dict()) {
+        for (auto b_iter : b.get_dict()) {
+
+            deg = a_iter.first + b_iter.first;
+            mul = a_iter.second * b_iter.second;
+            auto ite = dict.find(deg);
+
+            if (ite == dict.end()) {
+                dict[deg] = mul;
+            } else {
+                dict[deg] += mul;
+            }
+        }
+    }
+
+    return UnivariateIntPolynomial::from_dict(var, std::move(dict));
+}
+
 UnivariatePolynomial::UnivariatePolynomial(const RCP<const Symbol> &var,
                                            const int &degree,
                                            const map_int_Expr &&dict)

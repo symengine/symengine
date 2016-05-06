@@ -110,6 +110,10 @@ RCP<const UnivariateIntPolynomial> sub_poly(const UnivariateIntPolynomial &a,
 //! Multiplying two UnivariateIntPolynomial a and b using ks1
 RCP<const UnivariateIntPolynomial> mul_poly(const UnivariateIntPolynomial &a,
                                             const UnivariateIntPolynomial &b);
+//! Multiplying two UnivariateIntPolynomial a and b using naive algorithm
+RCP<const UnivariateIntPolynomial>
+mul_poly_naive(const UnivariateIntPolynomial &a,
+               const UnivariateIntPolynomial &b);
 //! Multiplying two UnivariateIntPolynomial a and b using ks2
 RCP<const UnivariateIntPolynomial>
 mul_poly_ks2(const UnivariateIntPolynomial &a,
