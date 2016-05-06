@@ -176,6 +176,23 @@ public:
     static Expression atanh(const Expression &c);
     static Expression exp(const Expression &c);
     static Expression log(const Expression &c);
+/*
+    RCP<const Number> add(const Number &other) const
+    {
+        if (is_a<Series>(other)) {
+            const Series &o = static_cast<const Series &>(other);
+            long deg = std::min(degree_, o.degree_);
+            if (var_ != o.var_) {
+                throw std::runtime_error("Multivariate Series not implemented");
+            }
+            return make_rcp<Series>(Poly(p_ + o.p_), var_, deg);
+        } else if (other.get_type_code() < Series::type_code_id) {
+            Poly p = Series::series(other.rcp_from_this(), var_, degree_)->p_;
+            return make_rcp<Series>(Poly(p_ + p), var_, degree_);
+        } else {
+            return other.add(*this);
+        }
+    }*/
 };
 
 inline RCP<const MultivariateSeries>
