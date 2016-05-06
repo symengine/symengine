@@ -540,7 +540,10 @@ public:
             return MultivariateIntPolynomial::from_dict(self.vars_,
                                                         std::move(dict));
         } else {
-            return zero;
+            vec_uint v;
+            v.resize(self.vars_.size());
+            return MultivariateIntPolynomial::from_dict(
+                self.vars_, {{v, integer_class(0)}});
         }
     }
 
