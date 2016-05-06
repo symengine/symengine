@@ -20,11 +20,16 @@ UnivariateIntPolynomial::UnivariateIntPolynomial(
     const RCP<const Symbol> &var, const std::vector<integer_class> &v)
     : var_{var}
 {
-    for (unsigned int i = 0; i < v.size(); i++)
-        if (v[i] != 0)
-            dict_add_term(dict_, v[i], i);
-    degree_ = v.size() - 1;
-    SYMENGINE_ASSERT(is_canonical(degree_, dict_))
+    dict_ = {};
+    for (unsigned int i = 0; i < v.size(); i++) {
+        if (v[i] != 0) {
+            dict_[i] = v[i];
+        }
+    }
+    if (dict_.empty())
+        degree_ = 0;
+    else
+        degree_ = (--dict_.end())->first;
 }
 
 bool UnivariateIntPolynomial::is_canonical(const unsigned int &degree_,
@@ -35,8 +40,8 @@ bool UnivariateIntPolynomial::is_canonical(const unsigned int &degree_,
             return false;
 
     if (dict.size() != 0) {
-        unsigned int prev_degree = (--dict.end())->first;
-        if (prev_degree != degree_) {
+        unsigned int actual_degree = (--dict.end())->first;
+        if (actual_degree != degree_) {
             return false;
         }
     } else if (degree_ != 0)
@@ -92,7 +97,7 @@ UnivariateIntPolynomial::from_dict(const RCP<const Symbol> &var,
 {
     auto iter = d.begin();
     while (iter != d.end()) {
-        if (integer_class(0) == iter->second) {
+        if (iter->second == 0) {
             auto toErase = iter;
             iter++;
             d.erase(toErase);
@@ -111,15 +116,6 @@ UnivariateIntPolynomial::from_vec(const RCP<const Symbol> &var,
                                   const std::vector<integer_class> &v)
 {
     return make_rcp<const UnivariateIntPolynomial>(var, std::move(v));
-}
-
-void UnivariateIntPolynomial::dict_add_term(map_uint_mpz &d,
-                                            const integer_class &coef,
-                                            const unsigned int &n)
-{
-    auto it = d.find(n);
-    if (it == d.end())
-        d[n] = coef;
 }
 
 vec_basic UnivariateIntPolynomial::get_args() const
@@ -328,7 +324,7 @@ RCP<const UnivariateIntPolynomial> mul_poly(const UnivariateIntPolynomial &a,
         = bit_length(std::min(a.get_degree() + 1, b.get_degree() + 1))
           + bit_length(a.max_abs_coef()) + bit_length(b.max_abs_coef());
 
-    integer_class a1(1), b1;
+    integer_class a1(1), b1, res;
     a1 <<= N;
     integer_class a2 = a1 / 2;
     integer_class mask = a1 - 1;
@@ -338,22 +334,30 @@ RCP<const UnivariateIntPolynomial> mul_poly(const UnivariateIntPolynomial &a,
 
     std::vector<integer_class> v;
     integer_class carry(0);
+    unsigned int deg = 0;
+    map_uint_mpz dict;
 
     while (r != 0 or carry != 0) {
         mp_and(b1, r, mask);
         if (b1 < a2) {
-            v.push_back(b1 + carry);
+            res = b1 + carry;
+            if (res != 0)
+                dict[deg] = res;
             carry = 0;
         } else {
-            v.push_back(b1 - a1 + carry);
+            res = b1 - a1 + carry;
+            if (res != 0)
+                dict[deg] = res;
             carry = 1;
         }
         r >>= N;
+        deg++;
     }
     if (neg)
-        return neg_poly(*UnivariateIntPolynomial::from_vec(var, v));
+        return neg_poly(
+            *UnivariateIntPolynomial::from_dict(var, std::move(dict)));
     else
-        return UnivariateIntPolynomial::from_vec(var, v);
+        return UnivariateIntPolynomial::from_dict(var, std::move(dict));
 }
 
 UnivariatePolynomial::UnivariatePolynomial(const RCP<const Symbol> &var,
@@ -368,11 +372,15 @@ UnivariatePolynomial::UnivariatePolynomial(const RCP<const Symbol> &var,
                                            const std::vector<Expression> &v)
     : var_{var}
 {
-    for (unsigned int i = 0; i < v.size(); i++)
-        if (v[i] != 0)
-            dict_add_term(dict_, v[i], i);
-    degree_ = v.size() - 1;
-    SYMENGINE_ASSERT(is_canonical(degree_, dict_))
+    dict_ = {};
+    unsigned int deg = 0;
+    for (unsigned int i = 0; i < v.size(); i++) {
+        if (v[i] != 0) {
+            dict_[i] = v[i];
+            deg = i;
+        }
+    }
+    degree_ = deg;
 }
 
 bool UnivariatePolynomial::is_canonical(const int &degree_,
@@ -383,8 +391,8 @@ bool UnivariatePolynomial::is_canonical(const int &degree_,
             return false;
 
     if (dict.size() != 0) {
-        int prev_degree = (--dict.end())->first;
-        if (prev_degree != degree_) {
+        int actual_degree = (--dict.end())->first;
+        if (actual_degree != degree_) {
             return false;
         }
     } else if (degree_ != 0)
@@ -392,7 +400,7 @@ bool UnivariatePolynomial::is_canonical(const int &degree_,
 
     // Check if dictionary contains terms with coeffienct 0
     for (auto iter : dict)
-        if (iter.first != 0 and iter.second == 0)
+        if (iter.second == 0)
             return false;
     return true;
 }
@@ -446,25 +454,18 @@ UnivariatePolynomial::from_dict(const RCP<const Symbol> &var, map_int_Expr &&d)
 {
     auto iter = d.begin();
     while (iter != d.end()) {
-        if (Expression(0) == iter->second) {
+        if (iter->second == Expression(0)) {
             auto toErase = iter;
             iter++;
             d.erase(toErase);
-        } else
+        } else {
             iter++;
+        }
     }
     int degree = 0;
     if (!d.empty())
         degree = (--(d.end()))->first;
     return make_rcp<const UnivariatePolynomial>(var, degree, std::move(d));
-}
-
-void UnivariatePolynomial::dict_add_term(map_int_Expr &d,
-                                         const Expression &coef, const int &n)
-{
-    auto it = d.find(n);
-    if (it == d.end())
-        d[n] = coef;
 }
 
 vec_basic UnivariatePolynomial::get_args() const

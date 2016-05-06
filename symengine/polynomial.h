@@ -63,8 +63,6 @@ public:
     /*!
     * Adds coef*var_**n to the dict_
     */
-    static void dict_add_term(map_uint_mpz &d, const integer_class &coef,
-                              const unsigned int &n);
     integer_class max_abs_coef() const;
     //! Evaluates the UnivariateIntPolynomial at value x
     integer_class eval(const integer_class &x) const;
@@ -156,8 +154,6 @@ public:
     /*!
     * Adds coef*var_**n to the dict_
     */
-    static void dict_add_term(map_int_Expr &d, const Expression &coef,
-                              const int &n);
     Expression max_coef() const;
     //! Evaluates the UnivariatePolynomial at value x
     Expression eval(const Expression &x) const;
