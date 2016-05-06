@@ -21,6 +21,7 @@ RCP<const MultivariateIntPolynomial>
 MultivariateIntPolynomial::from_dict(const set_sym &s, umap_uvec_mpz &&d)
 {
     umap_sym_uint degs;
+    // Remove entries in d corresponding to terms with coefficient 0
     auto iter = d.begin();
     while (iter != d.end()) {
         if (integer_class(0) == iter->second) {
@@ -32,6 +33,7 @@ MultivariateIntPolynomial::from_dict(const set_sym &s, umap_uvec_mpz &&d)
         }
     }
 
+    // Calculate the degrees of the polynomial
     int whichvar = 0;
     for (auto sym : s) {
         degs.insert(std::pair<RCP<const Symbol>, unsigned int>(sym, 0));
