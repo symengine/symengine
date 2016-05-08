@@ -42,19 +42,6 @@ public:
     }
     //! Method to construct classes with canonicalization
     virtual RCP<const Basic> create(const RCP<const Basic> &arg) const = 0;
-    //! Substitute with `subs_dict`
-    virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const
-    {
-        auto it = subs_dict.find(rcp_from_this());
-        if (it != subs_dict.end())
-            return it->second;
-        RCP<const Basic> t = get_arg()->subs(subs_dict);
-        if (t == get_arg()) {
-            return rcp_from_this();
-        } else {
-            return create(t);
-        }
-    }
     /*! Equality comparator
      * \param o - Object to be compared with
      * \return whether the 2 objects are equal
@@ -108,20 +95,6 @@ public:
     //! Method to construct classes with canonicalization
     virtual RCP<const Basic> create(const RCP<const Basic> &a,
                                     const RCP<const Basic> &b) const = 0;
-    //! Substitute with `subs_dict`
-    virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const
-    {
-        auto it = subs_dict.find(rcp_from_this());
-        if (it != subs_dict.end())
-            return it->second;
-        RCP<const Basic> t = a_->subs(subs_dict);
-        RCP<const Basic> s = b_->subs(subs_dict);
-        if (t == a_ and s == b_) {
-            return rcp_from_this();
-        } else {
-            return create(t, s);
-        }
-    }
     /*! Equality comparator
      * \param o - Object to be compared with
      * \return whether the 2 objects are equal
@@ -175,18 +148,6 @@ public:
     }
     //! Method to construct classes with canonicalization
     virtual RCP<const Basic> create(const vec_basic &v) const = 0;
-    //! Substitute with `subs_dict`
-    virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const
-    {
-        auto it = subs_dict.find(rcp_from_this());
-        if (it != subs_dict.end())
-            return it->second;
-        vec_basic v = arg_;
-        for (auto &elem : v) {
-            elem = elem->subs(subs_dict);
-        }
-        return create(v);
-    }
     /*! Equality comparator
      * \param o - Object to be compared with
      * \return whether the 2 objects are equal
@@ -571,7 +532,6 @@ public:
     }
     //! \return `true` if canonical
     bool is_canonical(const vec_basic &arg) const;
-    virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
     virtual RCP<const Basic> create(const vec_basic &x) const;
 };
 
@@ -644,7 +604,6 @@ public:
     }
     bool is_canonical(const RCP<const Basic> &arg,
                       const multiset_basic &x) const;
-    virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
 };
 
 /*! Subs operator
@@ -684,7 +643,6 @@ public:
 
     bool is_canonical(const RCP<const Basic> &arg,
                       const map_basic_basic &x) const;
-    virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
 };
 
 class HyperbolicFunction : public OneArgFunction
