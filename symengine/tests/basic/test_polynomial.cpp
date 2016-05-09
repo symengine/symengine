@@ -1127,6 +1127,7 @@ TEST_CASE("Testing MultivariatePolynomial::__eq__(), __hash__, and compare",
     REQUIRE(p3->__hash__() != p4->__hash__());
 
     // Same for compare.
+    REQUIRE(0 == p3->compare(*p3));
     REQUIRE(0 == p3->compare(*add_mult_poly(*p1, *p2)));
     REQUIRE(0 != p1->compare(*p2));
     REQUIRE(0 != p3->compare(*p4));

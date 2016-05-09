@@ -139,6 +139,7 @@ int multiset_basic_compare(const multiset_basic &a, const multiset_basic &b);
 //! \return -1, 0, 1 for a < b, a == b, a > b
 int map_uint_mpz_compare(const map_uint_mpz &a, const map_uint_mpz &b);
 int map_int_Expr_compare(const map_int_Expr &a, const map_int_Expr &b);
+int map_sym_uint_compare(const map_sym_uint &A, const map_sym_uint &b);
 
 //! Part of umap_vec_mpz:
 typedef struct {

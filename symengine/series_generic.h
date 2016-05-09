@@ -94,29 +94,18 @@ class MultivariateSeries : public SeriesBase<MultivariateExprPolynomial,
                                              Expression, MultivariateSeries>
 {
 public:
-    unsigned int
-        whichvar_; // index of the variable we are expanding around in the set.
+    // index of the variable we are expanding around in the set.
+    unsigned int whichvar_;
     map_sym_uint precs_;
 
 public:
     IMPLEMENT_TYPEID(MULTIVARIATESERIES)
     MultivariateSeries(const MultivariateExprPolynomial &sp,
-                       const std::string varname, const unsigned degree)
-        : SeriesBase(std::move(sp), varname, degree), whichvar_(0)
-    {
-        precs_.insert(std::pair<RCP<const Symbol>, unsigned int>(
-            symbol(varname), degree));
-        SYMENGINE_ASSERT(is_canonical(p_, var_, degree_, whichvar_, precs_))
-    }
+                       const std::string varname, const unsigned degree);
 
     MultivariateSeries(const MultivariateExprPolynomial &sp,
                        const std::string varname, const unsigned degree,
-                       const unsigned int whichvar, const map_sym_uint &&precs)
-        : SeriesBase(std::move(sp), varname, degree), whichvar_(whichvar),
-          precs_(precs)
-    {
-        SYMENGINE_ASSERT(is_canonical(p_, var_, degree_, whichvar_, precs));
-    }
+                       const unsigned int whichvar, const map_sym_uint &precs);
 
     bool is_canonical(const MultivariateExprPolynomial p, const std::string var,
                       const long degree, const unsigned int whichvar,
@@ -134,9 +123,14 @@ public:
     series(const RCP<const Basic> &t, const std::string &x, unsigned int prec);
     virtual std::size_t __hash__() const;
     virtual int compare(const Basic &o) const;
-    bool operator==(const MultivariateSeries &u) const;
     virtual RCP<const Basic> as_basic() const;
     umap_int_basic as_dict() const;
+
+    bool __eq__(const Basic &o) const;
+    // RCP<const Number> add(const Number &other) const;
+    // RCP<const Number> mul(const Number &other) const;
+    // RCP<const Number> pow(const Number &other) const;
+
     RCP<const Basic> get_coeff(int) const;
     static MultivariateExprPolynomial var(const std::string &s);
 
@@ -176,23 +170,22 @@ public:
     static Expression atanh(const Expression &c);
     static Expression exp(const Expression &c);
     static Expression log(const Expression &c);
-/*
-    RCP<const Number> add(const Number &other) const
-    {
-        if (is_a<Series>(other)) {
-            const Series &o = static_cast<const Series &>(other);
-            long deg = std::min(degree_, o.degree_);
-            if (var_ != o.var_) {
-                throw std::runtime_error("Multivariate Series not implemented");
+    /*
+        RCP<const Number> add(const Number &other) const
+        {
+            if (is_a<MultivariateSeries>(other)) {
+                const Series &o = static_cast<const Series &>(other);
+                long deg = std::min(degree_, o.degree_);
+
+                return make_rcp<Series>(Poly(p_ + o.p_), var_, deg);
+            } else if (other.get_type_code() < Series::type_code_id) {
+                Poly p = Series::series(other.rcp_from_this(), var_,
+       degree_)->p_;
+                return make_rcp<Series>(Poly(p_ + p), var_, degree_);
+            } else {
+                return other.add(*this);
             }
-            return make_rcp<Series>(Poly(p_ + o.p_), var_, deg);
-        } else if (other.get_type_code() < Series::type_code_id) {
-            Poly p = Series::series(other.rcp_from_this(), var_, degree_)->p_;
-            return make_rcp<Series>(Poly(p_ + p), var_, degree_);
-        } else {
-            return other.add(*this);
-        }
-    }*/
+        }*/
 };
 
 inline RCP<const MultivariateSeries>
