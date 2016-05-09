@@ -3,6 +3,8 @@
 #include <iterator>
 #include <symengine/series_generic.h>
 #include <symengine/series_visitor.h>
+#include <valarray>
+#include <typeinfo>
 
 using SymEngine::RCP;
 using SymEngine::make_rcp;
@@ -71,27 +73,108 @@ int UnivariateSeries::ldegree(const UnivariateExprPolynomial &s)
     return s.get_univariate_poly()->get_dict().begin()->first;
 }
 
+typedef std::complex<Expression> base;
+
+base operator*(const base &a, const base &b)
+{
+    return base(a.real() * b.real() - a.imag() * b.imag(),
+                a.imag() * b.real() + a.real() * b.imag());
+}
+
+typedef std::vector<base> CArray;
+
+// Optimized Cooley-Tukey FFT (in-place, breadth-first, decimation-in-frequency)
+void fft(CArray &x)
+{
+    // DFT
+    unsigned int N = x.size(), k = N, n;
+    double thetaT = M_PI / N;
+    base phiT(std::cos(thetaT), std::sin(thetaT)), T;
+    while (k > 1) {
+        n = k;
+        k >>= 1;
+        phiT *= phiT;
+        T = 1.0L;
+        for (unsigned int l = 0; l < k; l++) {
+            for (unsigned int a = l; a < N; a += n) {
+                unsigned int b = a + k;
+                base t = x[a] - x[b];
+                x[a] += x[b];
+                x[b] = t * T;
+            }
+            T *= phiT;
+        }
+    }
+    for (const auto& it : x)
+        std::cout << it << " " << typeid(*it.real().get_basic()).name() << std::endl;
+    // Decimate
+    unsigned int m = (unsigned int)log2(N);
+    for (unsigned int a = 0; a < N; a++) {
+        unsigned int b = a;
+        // Reverse bits
+        b = (((b & 0xaaaaaaaa) >> 1) | ((b & 0x55555555) << 1));
+        b = (((b & 0xcccccccc) >> 2) | ((b & 0x33333333) << 2));
+        b = (((b & 0xf0f0f0f0) >> 4) | ((b & 0x0f0f0f0f) << 4));
+        b = (((b & 0xff00ff00) >> 8) | ((b & 0x00ff00ff) << 8));
+        b = ((b >> 16) | (b << 16)) >> (32 - m);
+        if (b > a) {
+            base t = x[a];
+            x[a] = x[b];
+            x[b] = t;
+        }
+    }
+}
+
+// Inverse fft (in-place)
+void ifft(CArray &x)
+{
+    // Conjugate the complex numbers
+    for_each(x.begin(), x.end(), [](base &c) { c = std::conj(c); });
+    // forward fft
+    fft(x);
+
+    // Conjugate the complex numbers again
+    for_each(x.begin(), x.end(), [](base &c) { c = std::conj(c); });
+
+    // Scale the numbers
+    for (size_t i = 0; i < x.size(); i++)
+        x[i] /= x.size();
+}
+
 UnivariateExprPolynomial
 UnivariateSeries::mul(const UnivariateExprPolynomial &a,
                       const UnivariateExprPolynomial &b, unsigned prec)
 {
-    map_int_Expr p;
-    for (auto &it1 : a.get_univariate_poly()->get_dict()) {
-        for (auto &it2 : b.get_univariate_poly()->get_dict()) {
-            int exp = it1.first + it2.first;
-            if (exp < (int)prec) {
-                p[exp] += it1.second * it2.second;
-            } else {
-                break;
-            }
-        }
+    unsigned long n = 1, t = a.get_univariate_poly()->get_degree()
+                             + b.get_univariate_poly()->get_degree() + 1;
+    while (n <= t)
+        n <<= 1;
+
+    CArray fa(n), fb(n);
+
+    for (int i = 0;
+         i <= std::max(a.get_univariate_poly()->get_degree(),
+                       b.get_univariate_poly()->get_degree());
+         i++) {
+        fa[i] = base(a.find_cf(i));
+        fb[i] = base(b.find_cf(i));
+    }
+
+    fft(fa), fft(fb);
+    for (unsigned long i = 0; i < n; ++i)
+        fa[i] *= fb[i];
+    ifft(fa);
+
+    std::vector<Expression> res(n);
+    for (unsigned long i = 0; i < prec && i <= t; ++i) {
+        res[i] = fa[i].real();
     }
     if (a.get_univariate_poly()->get_var()->get_name() == "")
-        return UnivariateExprPolynomial(UnivariatePolynomial::from_dict(
-            b.get_univariate_poly()->get_var(), std::move(p)));
+        return UnivariateExprPolynomial(UnivariatePolynomial::create(
+            b.get_univariate_poly()->get_var(), std::move(res)));
     else
-        return UnivariateExprPolynomial(UnivariatePolynomial::from_dict(
-            a.get_univariate_poly()->get_var(), std::move(p)));
+        return UnivariateExprPolynomial(UnivariatePolynomial::create(
+            a.get_univariate_poly()->get_var(), std::move(res)));
 }
 
 UnivariateExprPolynomial
