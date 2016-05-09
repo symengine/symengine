@@ -5,6 +5,7 @@
 #include <symengine/polynomial.h>
 #include <symengine/dict.h>
 #include <random>
+#include <algorithm>
 #include <ctime>
 
 using SymEngine::Basic;

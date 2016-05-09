@@ -301,6 +301,7 @@ unsigned int bit_length(T t)
     return count;
 }
 
+// Reference for the KS algorithms : http://arxiv.org/pdf/0712.4046v1.pdf
 RCP<const UnivariateIntPolynomial> mul_poly(const UnivariateIntPolynomial &a,
                                             const UnivariateIntPolynomial &b)
 {
