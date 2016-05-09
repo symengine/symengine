@@ -94,8 +94,6 @@ class MultivariateSeries : public SeriesBase<MultivariateExprPolynomial,
                                              Expression, MultivariateSeries>
 {
 public:
-    // index of the variable we are expanding around in the set.
-    unsigned int whichvar_;
     map_sym_uint precs_;
 
 public:
@@ -105,11 +103,10 @@ public:
 
     MultivariateSeries(const MultivariateExprPolynomial &sp,
                        const std::string varname, const unsigned degree,
-                       const unsigned int whichvar, const map_sym_uint &precs);
+                       const map_sym_uint &precs);
 
     bool is_canonical(const MultivariateExprPolynomial p, const std::string var,
-                      const long degree, const unsigned int whichvar,
-                      const map_sym_uint precs_);
+                      const long degree, const map_sym_uint precs_);
 
     static RCP<const MultivariateSeries>
     create(const RCP<const Symbol> &var, const unsigned int &prec,
@@ -132,6 +129,11 @@ public:
     // RCP<const Number> pow(const Number &other) const;
 
     RCP<const Basic> get_coeff(int) const;
+    
+    static MultivariateExprPolynomial add (const MultivariateExprPolynomial &s, const MultivariateExprPolynomial &r, map_sym_uint prec);
+    static MultivariateExprPolynomial mul (const MultivariateExprPolynomial &s, const MultivariateExprPolynomial &r, map_sym_uint prec);
+    //static MultivariateExprPolynomial pow (const MultivariateExprPolynomial &s, int n, map_sym_uint prec);
+    
     static MultivariateExprPolynomial var(const std::string &s);
 
     static Expression convert(const Basic &x);
@@ -170,22 +172,7 @@ public:
     static Expression atanh(const Expression &c);
     static Expression exp(const Expression &c);
     static Expression log(const Expression &c);
-    /*
-        RCP<const Number> add(const Number &other) const
-        {
-            if (is_a<MultivariateSeries>(other)) {
-                const Series &o = static_cast<const Series &>(other);
-                long deg = std::min(degree_, o.degree_);
 
-                return make_rcp<Series>(Poly(p_ + o.p_), var_, deg);
-            } else if (other.get_type_code() < Series::type_code_id) {
-                Poly p = Series::series(other.rcp_from_this(), var_,
-       degree_)->p_;
-                return make_rcp<Series>(Poly(p_ + p), var_, degree_);
-            } else {
-                return other.add(*this);
-            }
-        }*/
 };
 
 inline RCP<const MultivariateSeries>

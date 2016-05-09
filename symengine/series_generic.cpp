@@ -258,34 +258,28 @@ Expression UnivariateSeries::log(const Expression &c)
 MultivariateSeries::MultivariateSeries(const MultivariateExprPolynomial &sp,
                                        const std::string varname,
                                        const unsigned degree)
-    : SeriesBase(std::move(sp), varname, degree), whichvar_(0)
+    : SeriesBase(std::move(sp), varname, degree)
 {
     precs_.insert(
         std::pair<RCP<const Symbol>, unsigned int>(symbol(varname), degree));
-    SYMENGINE_ASSERT(is_canonical(p_, var_, degree_, whichvar_, precs_))
+    SYMENGINE_ASSERT(is_canonical(p_, var_, degree_, precs_))
 }
 
 MultivariateSeries::MultivariateSeries(const MultivariateExprPolynomial &sp,
                                        const std::string varname,
                                        const unsigned degree,
-                                       const unsigned int whichvar,
                                        const map_sym_uint &precs)
-    : SeriesBase(std::move(sp), varname, degree), whichvar_(whichvar),
-      precs_(precs)
+    : SeriesBase(std::move(sp), varname, degree), precs_(precs)
 {
-    SYMENGINE_ASSERT(is_canonical(p_, var_, degree_, whichvar_, precs));
+    SYMENGINE_ASSERT(is_canonical(p_, var_, degree_, precs));
 }
 
 bool MultivariateSeries::is_canonical(const MultivariateExprPolynomial p,
                                       const std::string var, const long degree,
-                                      const unsigned int whichvar,
                                       const map_sym_uint precs)
 {
-    // If the series only has a constant term, then whichvar = 0, degree = 0,
-    // var = "",
+    // If the series only has a constant term, then var = "", degree = 0.
     if (p.get_poly()->vars_.empty()) {
-        if (whichvar != 0)
-            return false;
         if (degree != 0)
             return false;
         if (var != "")
@@ -296,19 +290,7 @@ bool MultivariateSeries::is_canonical(const MultivariateExprPolynomial p,
             == p.get_poly()->vars_.end()) {
             return false;
         }
-        // check that whichvar is the index of that symbol in the set
-        unsigned int i = 0;
-        auto iter = p.get_poly()->vars_.begin();
-        while (!((*iter)->__eq__(*symbol(var)))) {
-            iter++;
-            i++;
-        }
-        if (i != whichvar)
-            return false;
 
-        // check that degree is equal to the precision for whichvar
-        if (precs.find(symbol(var))->second != degree)
-            return false;
     }
     // check that the precision in precs define precisions for all of the
     // symbols of p and that these precisions are less than the degree of those
@@ -378,35 +360,35 @@ bool MultivariateSeries::__eq__(const Basic &o) const
             and p_ == static_cast<const MultivariateSeries &>(o).p_
             and precs_ == static_cast<const MultivariateSeries &>(o).precs_);
 }
-
-/*RCP<const Number> MultivariateSeries::add(const Number &other) const
+/*
+RCP<const Number> MultivariateSeries::add(const Number &other) const
 {
     if (is_a<MultivariateSeries>(other)) {
         const MultivariateSeries &o = static_cast<const MultivariateSeries
 &>(other);
 
-        map_sym_uint precs;
+        map_sym_uint precs = precs_;
         unsigned int deg;
-        unsigned int whichvar = 0;
         //minimise degrees in precs
-        //find whichvar --keep variable from first
 
-        auto a = precs_.begin();
-        auto b = o.precs_.begin();
-
-        while (a != precs.end() || b != o.precs_.end()) {
-
+        for (auto prec : o.precs_) {
+            if (precs.find(prec.first) != precs.end()) {
+                if (precs.find(prec.first)->second > prec.second)
+                    precs.find(prec.first)->second = prec.second;
+            } else {
+                precs.insert(prec);
+            }
         }
 
+        
+        
 
 
-        return make_rcp<MultivariateSeries>(MultivariateExprPolynomial(p_ +
-o.p_), var_, deg, whichvar, precs);
+        return make_rcp<MultivariateSeries>(MultivariateSeries::mul(p_,o.p_,precs), var_, deg, precs);
     } else if (other.get_type_code() < MultivariateSeries::type_code_id) {
-        MultivariateExprPolynomial p =
-MultivariateSeries::series(other.rcp_from_this(), var_, degree_)->p_;
+        MultivariateExprPolynomial p = MultivariateSeries::series(other.rcp_from_this(), var_, degree_)->p_;
         MultivariateSeries s(p,var_,degree_);
-        return this->add(p);
+        return this->add(s);
     } else {
         return other.add(*this);
     }
@@ -476,6 +458,20 @@ RCP<const Basic> MultivariateSeries::get_coeff(int deg) const
     return find_cf(p_, MultivariateSeries::var(var_), deg).get_basic();
 }
 
+MultivariateExprPolynomial MultivariateSeries::add (const MultivariateExprPolynomial &s, const MultivariateExprPolynomial &r, map_sym_uint prec)
+{
+    return (s + r).truncate(prec);
+}
+
+MultivariateExprPolynomial MultivariateSeries::mul (const MultivariateExprPolynomial &s, const MultivariateExprPolynomial &r, map_sym_uint prec)
+{
+    return (s * r).truncate(prec);
+}
+/*
+MultivariateExprPolynomial MultivariateSeries::pow(const MultivariateExprPolynomial &s, int n, map_sym_uint prec){
+    
+}
+*/
 MultivariateExprPolynomial MultivariateSeries::var(const std::string &s)
 {
     return MultivariateExprPolynomial(

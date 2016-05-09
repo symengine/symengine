@@ -37,6 +37,7 @@ using SymEngine::PrecedenceEnum;
 using SymEngine::set_sym;
 using SymEngine::vec_uint;
 using SymEngine::vec_int;
+using SymEngine::map_sym_uint;
 
 using namespace SymEngine::literals;
 
@@ -1759,4 +1760,28 @@ TEST_CASE("Testing equality of MultivariateExprPolynomials with Expressions",
         MultivariatePolynomial::from_dict({x, y}, {{{0, 0}, expr1}}));
     REQUIRE(p1 == 0);
     REQUIRE(p2 == expr1);
+}
+
+TEST_CASE("Testing truncation of MultivariateExprPolynomial","[MultivariateExprPolynomial]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    RCP<const Symbol> z = symbol("z");
+    RCP<const Symbol> a = symbol("a");
+    RCP<const Symbol> b = symbol("b");
+    RCP<const Symbol> c = symbol("c");
+    RCP<const Integer> two = make_rcp<const Integer>(integer_class(2));
+    Expression expr1(add(a, b));
+    Expression expr2(sub(mul(two, a), b));
+    Expression expr3(mul(a, c));
+    Expression expr4(pow(b, a));
+    
+    map_sym_uint m = {{x,1}, {y,2}, {z,3}};
+    
+    MultivariateExprPolynomial p1(MultivariatePolynomial::from_dict({x,y,z}, {{{0,0,0}, expr1}, {{1,0,0}, expr2}, {{0,1,0}, expr3}, {{0,0,1}, expr4}, {{2,0,0}, expr1}, {{0,3,0}, expr2}, {{0,0,4}, expr3}, {{1,2,3}, expr4}} ));
+    
+    MultivariateExprPolynomial q1(MultivariatePolynomial::from_dict({x,y,z}, {{{0,0,0}, expr1}, {{1,0,0}, expr2}, {{0,1,0}, expr3}, {{0,0,1}, expr4}, {{1,2,3}, expr4}} ));
+
+    REQUIRE(q1 == p1.truncate(m));
+    
 }

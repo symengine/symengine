@@ -74,19 +74,19 @@ TEST_CASE("Create MultivariateSeries", "[MultivariateSeries]")
     // REQUIRE(p5->__str__() == "(1 + c)");
     // RCP<const MultivariateSeries> ms1 = make_rcp<const MultivariateSeries>(
     // p1, "x", 5, 0, {{x, 5}, {y, 3}});
-    MultivariateSeries ms1(p1, "x", 5, 0, {{x, 5}, {y, 3}});
+    MultivariateSeries ms1(p1, "x", 5, {{x, 5}, {y, 3}});
     // RCP<const MultivariateSeries> ms2 = make_rcp<const MultivariateSeries>({
     // p2, "x", 5, 0, {{x, 5}, {y, 3}} });
-    MultivariateSeries ms2(p2, "x", 4, 0, {{x, 4}, {y, 4}});
+    MultivariateSeries ms2(p2, "x", 4, {{x, 4}, {y, 4}});
     // RCP<const MultivariateSeries> ms3 = make_rcp<const MultivariateSeries>({
     // p3, "x", 5, 0, {{x, 5}, {y, 3}} });
-    MultivariateSeries ms3(p3, "x", 3, 0, {{x, 3}, {y, 5}});
+    MultivariateSeries ms3(p3, "x", 3, {{x, 3}, {y, 5}});
     // RCP<const MultivariateSeries> ms4 = make_rcp<const MultivariateSeries>({
     // p4, "", 0, 0, {{x, 5}, {y, 3}} });
-    MultivariateSeries ms4(p4, "", 0, 0, {{x, 2}, {y, 4}});
+    MultivariateSeries ms4(p4, "", 0, {{x, 2}, {y, 4}});
     // RCP<const MultivariateSeries> ms5 = make_rcp<const MultivariateSeries>({
     // p5, "", 0, 0, {{x, 5}, {y, 3}} });
-    MultivariateSeries ms5(p5, "", 0, 0, {{x, 1}, {y, 1}});
+    MultivariateSeries ms5(p5, "", 0, {{x, 1}, {y, 1}});
 
     REQUIRE(ms1.__str__()
             == "2*x**2 y - b*x y**2 + a*x y - 3*y + O(|x|**5 + |y|**3)");
@@ -203,11 +203,11 @@ TEST_CASE("Testing MultivariateSeries::__eq__(), __hash__, compare",
     map_sym_uint m3 = {{x, 3}, {y, 2}, {z, 4}};
 
     RCP<const MultivariateSeries> s1
-        = make_rcp<const MultivariateSeries>(p1, "x", 2, 0, m1);
+        = make_rcp<const MultivariateSeries>(p1, "x", 2, m1);
     RCP<const MultivariateSeries> s2
-        = make_rcp<const MultivariateSeries>(p1, "x", 2, 0, m2);
+        = make_rcp<const MultivariateSeries>(p1, "x", 2, m2);
     RCP<const MultivariateSeries> s3
-        = make_rcp<const MultivariateSeries>(p2, "z", 4, 2, m3);
+        = make_rcp<const MultivariateSeries>(p2, "z", 4, m3);
 
     REQUIRE(s1->__eq__(*s1));
     REQUIRE(!s1->__eq__(*s2));
