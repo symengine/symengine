@@ -101,7 +101,6 @@ bool vec_basic_eq(const vec_basic &a, const vec_basic &b);
 //! Otherwise false.
 bool vec_basic_eq_perm(const vec_basic &a, const vec_basic &b);
 //! \return true if the two dictionaries `a` and `b` are equal. Otherwise false.
-bool map_uint_mpz_eq(const map_uint_mpz &a, const map_uint_mpz &b);
 bool map_int_Expr_eq(const map_int_Expr &a, const map_int_Expr &b);
 //! \return true if the two multisets `a` and `b` are equal. Otherwise false.
 bool multiset_basic_eq(const multiset_basic &a, const multiset_basic &b);

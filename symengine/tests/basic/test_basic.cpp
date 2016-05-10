@@ -26,7 +26,6 @@ using SymEngine::map_basic_num;
 using SymEngine::map_basic_basic;
 using SymEngine::umap_basic_basic;
 using SymEngine::map_uint_mpz;
-using SymEngine::map_uint_mpz_eq;
 using SymEngine::map_uint_mpz_compare;
 using SymEngine::map_int_Expr;
 using SymEngine::map_int_Expr_eq;
@@ -190,19 +189,14 @@ TEST_CASE("Symbol dict: Basic", "[basic]")
 
     map_uint_mpz a = {{0, 1_z}, {1, 2_z}, {2, 1_z}};
     map_uint_mpz b = {{0, 1_z}, {2, 1_z}, {1, 2_z}};
-    REQUIRE(map_uint_mpz_eq(a, b) == true);
     REQUIRE(map_uint_mpz_compare(a, b) == 0);
     b = {{0, 1_z}, {2, 1_z}};
-    REQUIRE(map_uint_mpz_eq(a, b) == false);
     REQUIRE(map_uint_mpz_compare(a, b) == 1);
     b = {{0, 1_z}, {3, 1_z}, {1, 2_z}};
-    REQUIRE(map_uint_mpz_eq(a, b) == false);
     REQUIRE(map_uint_mpz_compare(a, b) == -1);
     b = {{0, 1_z}, {3, 1_z}, {1, 2_z}};
-    REQUIRE(map_uint_mpz_eq(a, b) == false);
     REQUIRE(map_uint_mpz_compare(a, b) == -1);
     b = {{0, 1_z}, {1, 1_z}, {2, 3_z}};
-    REQUIRE(map_uint_mpz_eq(a, b) == false);
     REQUIRE(map_uint_mpz_compare(a, b) == 1);
 
     map_int_Expr adict = {{0, 1}, {1, 2}, {2, x}};

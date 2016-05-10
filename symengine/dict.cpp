@@ -143,17 +143,6 @@ int vec_basic_compare(const vec_basic &A, const vec_basic &B)
     return 0;
 }
 
-bool map_uint_mpz_eq(const map_uint_mpz &a, const map_uint_mpz &b)
-{
-    return a.size() == b.size()
-           and std::equal(a.begin(), a.end(), b.begin(),
-                          [](const std::pair<unsigned, integer_class> &u,
-                             const std::pair<unsigned, integer_class> &v) {
-                              return u.first == v.first
-                                     and u.second == v.second;
-                          });
-}
-
 int map_uint_mpz_compare(const map_uint_mpz &A, const map_uint_mpz &B)
 {
     if (A.size() != B.size())
