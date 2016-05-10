@@ -95,22 +95,22 @@ std::ostream &operator<<(std::ostream &out, const SymEngine::set_basic &d)
 //! derivatives of base functions
 bool vec_basic_eq(const vec_basic &a, const vec_basic &b)
 {
-    return vec_eq<vec_basic>(a, b);
+    return vec_set_eq<vec_basic>(a, b);
 }
 
 int vec_basic_compare(const vec_basic &a, const vec_basic &b)
 {
-    return vec_compare<vec_basic>(a, b);
+    return vec_set_compare<vec_basic>(a, b);
 }
 
 bool multiset_basic_eq(const multiset_basic &a, const multiset_basic &b)
 {
-    return set_eq<multiset_basic>(a, b);
+    return vec_set_eq<multiset_basic>(a, b);
 }
 
 int multiset_basic_compare(const multiset_basic &a, const multiset_basic &b)
 {
-    return set_compare<multiset_basic>(a, b);
+    return vec_set_compare<multiset_basic>(a, b);
 }
 
 //! non-derivable functions

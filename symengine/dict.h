@@ -90,22 +90,6 @@ bool umap_eq(const T &a, const T &b)
 }
 
 template <class T>
-bool set_eq(const T &A, const T &B)
-{
-    // Can't be equal if # of entries differ:
-    if (A.size() != B.size())
-        return false;
-    // Loop over elements in "a" and "b":
-    auto a = A.begin();
-    auto b = B.begin();
-    for (; a != A.end(); ++a, ++b) {
-        if (neq(**a, **b))
-            return false; // values not equal
-    }
-    return true;
-}
-
-template <class T>
 bool map_eq(const T &A, const T &B)
 {
     // Can't be equal if # of entries differ:
@@ -124,14 +108,16 @@ bool map_eq(const T &A, const T &B)
 }
 
 template <class T>
-bool vec_eq(const T &A, const T &B)
+bool vec_set_eq(const T &A, const T &B)
 {
     // Can't be equal if # of entries differ:
     if (A.size() != B.size())
         return false;
     // Loop over elements in "a" and "b":
-    for (size_t i = 0; i < A.size(); i++) {
-        if (neq(*A[i], *B[i]))
+    auto a = A.begin();
+    auto b = B.begin();
+    for (; a != A.end(); ++a, ++b) {
+        if (neq(**a, **b))
             return false; // values not equal
     }
     return true;
@@ -140,23 +126,7 @@ bool vec_eq(const T &A, const T &B)
 //! compare functions base (might also need umap_compare in the future)
 //! \return -1, 0, 1 for a < b, a == b, a > b
 template <class T>
-int set_compare(const T &A, const T &B)
-{
-    if (A.size() != B.size())
-        return (A.size() < B.size()) ? -1 : 1;
-    auto a = A.begin();
-    auto b = B.begin();
-    int cmp;
-    for (; a != A.end(); ++a, ++b) {
-        cmp = (*a)->__cmp__(**b);
-        if (cmp != 0)
-            return cmp;
-    }
-    return 0;
-}
-
-template <class T>
-int vec_compare(const T &A, const T &B)
+int vec_set_compare(const T &A, const T &B)
 {
     if (A.size() != B.size())
         return (A.size() < B.size()) ? -1 : 1;
