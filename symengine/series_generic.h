@@ -124,16 +124,21 @@ public:
     umap_int_basic as_dict() const;
 
     bool __eq__(const Basic &o) const;
-    // RCP<const Number> add(const Number &other) const;
-    // RCP<const Number> mul(const Number &other) const;
+    RCP<const Number> add(const Number &other) const;
+    RCP<const Number> mul(const Number &other) const;
     // RCP<const Number> pow(const Number &other) const;
 
     RCP<const Basic> get_coeff(int) const;
-    
-    static MultivariateExprPolynomial add (const MultivariateExprPolynomial &s, const MultivariateExprPolynomial &r, map_sym_uint prec);
-    static MultivariateExprPolynomial mul (const MultivariateExprPolynomial &s, const MultivariateExprPolynomial &r, map_sym_uint prec);
-    //static MultivariateExprPolynomial pow (const MultivariateExprPolynomial &s, int n, map_sym_uint prec);
-    
+
+    static MultivariateExprPolynomial add(const MultivariateExprPolynomial &s,
+                                          const MultivariateExprPolynomial &r,
+                                          map_sym_uint prec);
+    static MultivariateExprPolynomial mul(const MultivariateExprPolynomial &s,
+                                          const MultivariateExprPolynomial &r,
+                                          map_sym_uint prec);
+    // static MultivariateExprPolynomial pow (const MultivariateExprPolynomial
+    // &s, int n, map_sym_uint prec);
+
     static MultivariateExprPolynomial var(const std::string &s);
 
     static Expression convert(const Basic &x);
@@ -172,7 +177,6 @@ public:
     static Expression atanh(const Expression &c);
     static Expression exp(const Expression &c);
     static Expression log(const Expression &c);
-
 };
 
 inline RCP<const MultivariateSeries>

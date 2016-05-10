@@ -97,17 +97,11 @@ TEST_CASE("Create MultivariateSeries", "[MultivariateSeries]")
     REQUIRE(ms5.__str__() == "(1 + c) + O(|x|**1 + |y|**1)");
 }
 
-/*TEST_CASE("Adding two MultivariateSeries", "[MultivariateSeries]")
+TEST_CASE("Adding two MultivariateSeries", "[MultivariateSeries]")
 {
     RCP<const Symbol> x = symbol("x");
     RCP<const Symbol> y = symbol("y");
     RCP<const Symbol> z = symbol("z");
-    MultivariateExprPolynomial ex(MultivariatePolynomial::from_dict({x}, {{{1},
-Expression(1)}} ));
-    MultivariateExprPolynomial why(MultivariatePolynomial::from_dict({y}, {{{1},
-Expression(1)}} ));
-    MultivariateExprPolynomial zee(MultivariatePolynomial::from_dict({z}, {{{1},
-Expression(1)}} ));
     RCP<const Symbol> a = symbol("a");
     RCP<const Symbol> b = symbol("b");
     RCP<const Symbol> c = symbol("c");
@@ -117,13 +111,36 @@ Expression(1)}} ));
     Expression expr3(mul(a, c));
     Expression expr4(div(b, a));
 
-    MultivariateExprPolynomial p1(MultivariatePolynomial::from_dict());
-    MultivariateExprPolynomial p2(MultivariatePolynomial::from_dict());
-    MultivariateExprPolynomial p3(MultivariatePolynomial::from_dict());
+    map_sym_uint m1 = {{x, 2}, {y, 3}};
+    map_sym_uint m2 = {{y, 4}, {z, 2}};
+    map_sym_uint m3 = {{x, 2}, {y, 3}, {z, 2}};
 
-    MultivariateExprPolynomial q1(MultivariatePolynomial::from_dict());
-    MultivariateExprPolynomial q2(MultivariatePolynomial::from_dict());
+    MultivariateExprPolynomial p1(MultivariatePolynomial::from_dict(
+        {x, y}, {{{0, 0}, expr1}, {{0, 1}, expr2}, {{2, 3}, expr1}}));
+    MultivariateExprPolynomial p2(MultivariatePolynomial::from_dict(
+        {y, z}, {{{0, 0}, expr4}, {{4, 2}, expr1}}));
 
+    MultivariateExprPolynomial q1(MultivariatePolynomial::from_dict(
+        {x, y, z},
+        {{{0, 0, 0}, expr1 + expr4}, {{0, 1, 0}, expr2}, {{2, 3, 0}, expr1}}));
+    MultivariateExprPolynomial q2(MultivariatePolynomial::from_dict(
+        {x, y}, {{{0, 0}, expr1 + 3}, {{0, 1}, expr2}, {{2, 3}, expr1}}));
+
+    RCP<const MultivariateSeries> s1
+        = make_rcp<const MultivariateSeries>(p1, "x", 2, m1);
+    RCP<const MultivariateSeries> s2
+        = make_rcp<const MultivariateSeries>(p2, "y", 4, m2);
+
+    RCP<const MultivariateSeries> r1
+        = make_rcp<const MultivariateSeries>(q1, "x", 2, m3);
+
+    RCP<const Number> n = integer(3);
+
+    RCP<const MultivariateSeries> r2
+        = make_rcp<const MultivariateSeries>(q2, "x", 2, m1);
+
+    REQUIRE(eq(*s1->add(*s2), *r1));
+    REQUIRE(eq(*s1->add(*n), *r2));
 }
 
 TEST_CASE("Multiplying two MultivariateSeries", "[MultivariateSeries]")
@@ -131,12 +148,6 @@ TEST_CASE("Multiplying two MultivariateSeries", "[MultivariateSeries]")
     RCP<const Symbol> x = symbol("x");
     RCP<const Symbol> y = symbol("y");
     RCP<const Symbol> z = symbol("z");
-    MultivariateExprPolynomial ex(MultivariatePolynomial::from_dict({x}, {{{1},
-Expression(1)}} ));
-    MultivariateExprPolynomial why(MultivariatePolynomial::from_dict({y}, {{{1},
-Expression(1)}} ));
-    MultivariateExprPolynomial zee(MultivariatePolynomial::from_dict({z}, {{{1},
-Expression(1)}} ));
     RCP<const Symbol> a = symbol("a");
     RCP<const Symbol> b = symbol("b");
     RCP<const Symbol> c = symbol("c");
@@ -146,32 +157,43 @@ Expression(1)}} ));
     Expression expr3(mul(a, c));
     Expression expr4(div(b, a));
 
+    map_sym_uint m1 = {{x, 2}, {y, 3}};
+    map_sym_uint m2 = {{y, 4}, {z, 2}};
+    map_sym_uint m3 = {{x, 2}, {y, 3}, {z, 2}};
 
+    MultivariateExprPolynomial p1(MultivariatePolynomial::from_dict(
+        {x, y}, {{{0, 0}, expr1}, {{0, 1}, expr2}, {{2, 3}, expr1}}));
+    MultivariateExprPolynomial p2(MultivariatePolynomial::from_dict(
+        {y, z}, {{{0, 0}, expr4}, {{4, 2}, expr1}}));
+
+    MultivariateExprPolynomial q1(MultivariatePolynomial::from_dict(
+        {x, y, z}, {
+                       {{0, 0, 0}, expr1 * expr4},
+                       {{0, 1, 0}, expr2 * expr4},
+                       {{2, 3, 0}, expr1 * expr4},
+                   }));
+
+    MultivariateExprPolynomial q2(MultivariatePolynomial::from_dict(
+        {x, y},
+        {{{0, 0}, expr1 * 3}, {{0, 1}, expr2 * 3}, {{2, 3}, expr1 * 3}}));
+
+    RCP<const MultivariateSeries> s1
+        = make_rcp<const MultivariateSeries>(p1, "x", 2, m1);
+    RCP<const MultivariateSeries> s2
+        = make_rcp<const MultivariateSeries>(p2, "y", 4, m2);
+
+    RCP<const MultivariateSeries> r1
+        = make_rcp<const MultivariateSeries>(q1, "x", 2, m3);
+
+    RCP<const Number> n = integer(3);
+
+    RCP<const MultivariateSeries> r2
+        = make_rcp<const MultivariateSeries>(q2, "x", 2, m1);
+
+    REQUIRE(eq(*s1->mul(*s2), *r1));
+    REQUIRE(eq(*s1->mul(*n), *r2));
 }
 
-TEST_CASE("Power of a MultivariateSeries", "[MultivariateSeries]")
-{
-    RCP<const Symbol> x = symbol("x");
-    RCP<const Symbol> y = symbol("y");
-    RCP<const Symbol> z = symbol("z");
-    MultivariateExprPolynomial ex(MultivariatePolynomial::from_dict({x}, {{{1},
-Expression(1)}} ));
-    MultivariateExprPolynomial why(MultivariatePolynomial::from_dict({y}, {{{1},
-Expression(1)}} ));
-    MultivariateExprPolynomial zee(MultivariatePolynomial::from_dict({z}, {{{1},
-Expression(1)}} ));
-    RCP<const Symbol> a = symbol("a");
-    RCP<const Symbol> b = symbol("b");
-    RCP<const Symbol> c = symbol("c");
-    RCP<const Integer> two = make_rcp<const Integer>(integer_class(2));
-    Expression expr1(add(a, b));
-    Expression expr2(sub(mul(two, a), b));
-    Expression expr3(mul(a, c));
-    Expression expr4(div(b, a));
-
-
-}
-*/
 TEST_CASE("Testing MultivariateSeries::__eq__(), __hash__, compare",
           "[MultivariateSeries]")
 {
