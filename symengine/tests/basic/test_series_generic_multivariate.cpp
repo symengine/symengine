@@ -2,12 +2,8 @@
 #include <chrono>
 #include <iostream>
 
-#include <symengine/series_generic.h>
+#include <symengine/series_generic_multivariate.h>
 
-using SymEngine::UnivariatePolynomial;
-using SymEngine::UnivariateExprPolynomial;
-using SymEngine::UnivariateSeries;
-using SymEngine::univariate_series;
 using SymEngine::Symbol;
 using SymEngine::symbol;
 using SymEngine::Pow;
@@ -316,7 +312,7 @@ static bool expand_check_pairs(const RCP<const Basic> &ex,
                                const RCP<const Symbol> &x, int prec,
                                const umap_short_basic &pairs)
 {
-    auto ser = SymEngine::UnivariateSeries::series(ex, x->get_name(), prec);
+    auto ser = SymEngine::MultivariateSeries::series(ex, x->get_name(), prec);
     for (auto it : pairs) {
         if (not it.second->__eq__(*(ser->get_coeff(it.first))))
             return false;
@@ -480,7 +476,7 @@ TEST_CASE("Expression series expansion: atan, tan, asin, cot, sec, csc",
     auto ex9 = sec(x);
     auto ex10 = csc(x);
 
-    auto s = UnivariateSeries::series(ex8, "x", 10);
+    auto s = MultivariateSeries::series(ex8, "x", 10);
 
     REQUIRE(series_coeff(ex1, x, 20, 19)->__eq__(*rational(-1, 19)));
     REQUIRE(series_coeff(ex2, x, 40, 33)->__eq__(*rational(65536, 33)));
