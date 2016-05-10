@@ -100,8 +100,6 @@ bool vec_basic_eq(const vec_basic &a, const vec_basic &b);
 //! \return true if the two vectors `a` and `b` are equal up to a permutation.
 //! Otherwise false.
 bool vec_basic_eq_perm(const vec_basic &a, const vec_basic &b);
-//! \return true if the two dictionaries `a` and `b` are equal. Otherwise false.
-bool map_int_Expr_eq(const map_int_Expr &a, const map_int_Expr &b);
 //! \return true if the two multisets `a` and `b` are equal. Otherwise false.
 bool multiset_basic_eq(const multiset_basic &a, const multiset_basic &b);
 

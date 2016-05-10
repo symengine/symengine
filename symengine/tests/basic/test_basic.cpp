@@ -28,7 +28,6 @@ using SymEngine::umap_basic_basic;
 using SymEngine::map_uint_mpz;
 using SymEngine::map_uint_mpz_compare;
 using SymEngine::map_int_Expr;
-using SymEngine::map_int_Expr_eq;
 using SymEngine::map_int_Expr_compare;
 using SymEngine::multiset_basic;
 using SymEngine::multiset_basic_eq;
@@ -201,16 +200,12 @@ TEST_CASE("Symbol dict: Basic", "[basic]")
 
     map_int_Expr adict = {{0, 1}, {1, 2}, {2, x}};
     map_int_Expr bdict = {{0, 1}, {1, 2}, {2, x}};
-    REQUIRE(map_int_Expr_eq(adict, bdict) == true);
     REQUIRE(map_int_Expr_compare(adict, bdict) == 0);
     bdict = {{0, 1}, {1, 1}, {2, x}};
-    REQUIRE(map_int_Expr_eq(adict, bdict) == false);
     REQUIRE(map_int_Expr_compare(adict, bdict) == -1);
     adict = {{0, 1}, {1, 1}, {3, x}};
-    REQUIRE(map_int_Expr_eq(adict, bdict) == false);
     REQUIRE(map_int_Expr_compare(adict, bdict) == 1);
     bdict = {{0, 1}, {1, 3}};
-    REQUIRE(map_int_Expr_eq(adict, bdict) == false);
     REQUIRE(map_int_Expr_compare(adict, bdict) == 1);
 
     multiset_basic msba, msbb;
