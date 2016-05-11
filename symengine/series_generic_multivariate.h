@@ -2,7 +2,7 @@
 #define SERIES_GENERIC_MULTIVARIATE_H
 
 #include <list>
-#include <symengine/polynomial.h>
+#include <symengine/polynomial_multivariate.h>
 #include <symengine/rational.h>
 #include <symengine/series.h>
 
