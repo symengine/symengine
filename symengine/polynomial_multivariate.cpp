@@ -63,8 +63,10 @@ MultivariateIntPolynomial::multivariate_int_polynomial(const vec_sym &v,
     // vec_uint translator represents the permutation of the exponents
     vec_uint translator;
     translator.resize(s.size());
+    auto mptr = m.begin();
     for (unsigned int i = 0; i < s.size(); i++) {
-        translator[i] = m.find(v[i])->second;
+        translator[i] = mptr->second;
+        mptr++;
     }
 
     umap_uvec_mpz dict;

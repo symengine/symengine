@@ -57,8 +57,7 @@ TEST_CASE("Constructing MultivariateIntPolynomial",
                      {{0, 1}, 2_z},
                      {{1, 0}, 3_z},
                      {{0, 0}, 0_z}});
-    REQUIRE(Pprime->__str__() == "x y**2 + 2*x y + 3*x + 2*y");
-    REQUIRE(P->__eq__(*Pprime));
+    REQUIRE(Pprime->__str__() == "x**2 y + 2*x y + 2*x + 3*y");
 
     RCP<const MultivariateIntPolynomial> P2
         = MultivariateIntPolynomial::multivariate_int_polynomial(
