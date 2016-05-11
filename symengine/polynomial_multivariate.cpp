@@ -8,15 +8,6 @@
 namespace SymEngine
 {
 
-MultivariateIntPolynomial::MultivariateIntPolynomial(const set_sym &vars,
-                                                     umap_sym_uint &degrees,
-                                                     umap_uvec_mpz &dict)
-    : vars_{std::move(vars)}, degrees_{std::move(degrees)},
-      dict_{std::move(dict)}
-{
-    SYMENGINE_ASSERT(is_canonical(vars_, degrees_, dict_))
-}
-
 RCP<const MultivariateIntPolynomial>
 MultivariateIntPolynomial::from_dict(const set_sym &s, umap_uvec_mpz &&d)
 {
@@ -44,6 +35,47 @@ MultivariateIntPolynomial::from_dict(const set_sym &s, umap_uvec_mpz &&d)
         whichvar++;
     }
     return make_rcp<const MultivariateIntPolynomial>(s, degs, d);
+}
+
+MultivariateIntPolynomial::MultivariateIntPolynomial(const set_sym &vars,
+                                                     umap_sym_uint &degrees,
+                                                     umap_uvec_mpz &dict)
+    : vars_{std::move(vars)}, degrees_{std::move(degrees)},
+      dict_{std::move(dict)}
+{
+    SYMENGINE_ASSERT(is_canonical(vars_, degrees_, dict_))
+}
+
+RCP<const MultivariateIntPolynomial>
+MultivariateIntPolynomial::multivariate_int_polynomial(const vec_sym &v,
+                                                       umap_uvec_mpz &&d)
+{
+    set_sym s;
+    // Symbols in the vector are sorted by placeing them in an std::map.
+    // The image of the symbols in the map is their original location in the
+    // vector.
+    std::map<RCP<const Symbol>, unsigned int, RCPSymbolCompare> m;
+    for (unsigned int i = 0; i < v.size(); i++) {
+        s.insert(v[i]);
+        m.insert(std::pair<RCP<const Symbol>, unsigned int>(v[i], i));
+    }
+
+    // vec_uint translator represents the permutation of the exponents
+    vec_uint translator;
+    translator.resize(s.size());
+    for (unsigned int i = 0; i < s.size(); i++) {
+        translator[i] = m.find(v[i])->second;
+    }
+
+    umap_uvec_mpz dict;
+
+    // Permute the exponents
+    for (auto &bucket : d) {
+        dict.insert(std::pair<vec_uint, integer_class>(
+            translate(bucket.first, translator, s.size()), bucket.second));
+    }
+
+    return MultivariateIntPolynomial::from_dict(s, std::move(dict));
 }
 
 vec_basic MultivariateIntPolynomial::get_args() const
@@ -207,6 +239,9 @@ unsigned int reconcile(vec_uint &v1, vec_uint &v2, set_sym &s,
     auto a1 = s1.begin();
     auto a2 = s2.begin();
     unsigned int poscount = 0;
+    // Performs a merge sort of s1 and s2, and builds up v1 and v2 as
+    // translators:
+    // v[i] is the position of the ith symbol in the new set.
     while (a1 != s1.end() && a2 != s2.end()) {
         if (0 == (*a1)->compare(**a2) && (a1 != s1.end() && a2 != s2.end())) {
             v1.insert(v1.end(), poscount);
@@ -327,8 +362,6 @@ add_mult_poly(const MultivariateIntPolynomial &a,
     return MultivariateIntPolynomial::from_dict(s, std::move(dict));
 }
 
-// translates two vec_uints to the desired format and adds them together
-// componentwise
 vec_uint uint_vec_translate_and_add(const vec_uint &v1, const vec_uint &v2,
                                     const vec_uint &translator1,
                                     const vec_uint &translator2,
@@ -386,6 +419,7 @@ RCP<const MultivariateIntPolynomial>
 mul_mult_poly(const MultivariateIntPolynomial &a,
               const MultivariateIntPolynomial &b)
 {
+    // Naive algorithm
     vec_uint v1;
     vec_uint v2;
     set_sym s;
@@ -456,6 +490,7 @@ RCP<const MultivariateIntPolynomial>
 mul_mult_poly(const MultivariateIntPolynomial &a,
               const UnivariateIntPolynomial &b)
 {
+    // Naive algorithm
     vec_uint v1;
     unsigned int v2;
     set_sym s;
@@ -492,6 +527,7 @@ add_mult_poly(const UnivariateIntPolynomial &a,
     set_sym s;
     umap_uvec_mpz dict;
     bool same = false; // are the variables of a and b the same?
+    // Here we preform the same sort of thing done in the reconcile functions.
     if (0 == a.get_var()->compare(*b.get_var())) {
         v1 = 0;
         v2 = 0;

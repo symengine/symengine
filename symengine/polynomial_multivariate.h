@@ -20,14 +20,25 @@ public:
     umap_uvec_mpz dict_;
 
 public:
+    // Creates a MultivariateIntPolynomial in cannonical form based on
+    // dictionary d.
+    static RCP<const MultivariateIntPolynomial> from_dict(const set_sym &s,
+                                                          umap_uvec_mpz &&d);
+
+public:
     IMPLEMENT_TYPEID(MULTIVARIATEINTPOLYNOMIAL)
     // constructor from components
     MultivariateIntPolynomial(const set_sym &var, umap_sym_uint &degrees,
                               umap_uvec_mpz &dict);
-    // creates a MultivariateIntPolynomial in cannonical form based on
-    // dictionary d.
-    static RCP<const MultivariateIntPolynomial> from_dict(const set_sym &s,
-                                                          umap_uvec_mpz &&d);
+    // Public function for creating MultivariateIntPolynomial:
+    // vec_sym can contain symbols for the polynomial in any order, but the
+    // symbols
+    // will be sorted in the set_sym of the actual object.
+    // The order of the exponenents in the vectors in the dictionary will also
+    // be permuted accordingly.
+    static RCP<const MultivariateIntPolynomial>
+    multivariate_int_polynomial(const vec_sym &v, umap_uvec_mpz &&d);
+
     vec_basic get_args() const;
     bool is_canonical(const set_sym &vars, const umap_sym_uint &degrees,
                       const umap_uvec_mpz &dict);
@@ -57,6 +68,8 @@ vec_uint translate(vec_uint original, vec_uint translator, unsigned int size);
 // translates terms of UnivariateIntPolynomial into vectors
 vec_uint translate(unsigned int original, unsigned int translator,
                    unsigned int size);
+// translates two vec_uints to the desired format and adds them together
+// componentwise
 vec_uint uint_vec_translate_and_add(const vec_uint &v1, const vec_uint &v2,
                                     const vec_uint &translator1,
                                     const vec_uint &translator2,
