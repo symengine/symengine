@@ -28,7 +28,7 @@ int main(int argc, char *argv[])
     SymEngine::print_stack_on_segfault();
 
     RCP<const Symbol> x = symbol("x");
-    int N = 1000;
+    int N = 200;
     auto arg = add(x, pow(x, integer(2)));
     auto ex = mul(sin(arg), cos(arg));
 

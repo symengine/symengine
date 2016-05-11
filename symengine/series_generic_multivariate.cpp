@@ -128,7 +128,7 @@ bool MultivariateSeries::__eq__(const Basic &o) const
     // p_.vars_ and precs_
     return (is_a<MultivariateSeries>(o)
             and p_ == static_cast<const MultivariateSeries &>(o).p_
-            and precs_ == static_cast<const MultivariateSeries &>(o).precs_);
+            and map_sym_uint_eq(precs_, static_cast<const MultivariateSeries &>(o).precs_));
 }
 
 RCP<const Number> MultivariateSeries::add(const Number &other) const

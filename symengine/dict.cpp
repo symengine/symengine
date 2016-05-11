@@ -213,6 +213,22 @@ int map_sym_uint_compare(const map_sym_uint &A, const map_sym_uint &B)
     return 0;
 }
 
+bool map_sym_uint_eq(const map_sym_uint &A, const map_sym_uint &B){
+    // Can't be equal if # of entries differ:
+    if (A.size() != B.size())
+        return false;
+    // Loop over keys in "a":
+    auto a = A.begin();
+    auto b = B.begin();
+    for (; a != A.end(); ++a, ++b) {
+        if (neq(*a->first, *b->first))
+            return false; // keys not equal
+        if (a->second != b->second)
+            return false; // values not equal
+    }
+    return true;
+}
+
 bool multiset_basic_eq(const multiset_basic &a, const multiset_basic &b)
 {
     return set_eq<multiset_basic>(a, b);

@@ -71,7 +71,7 @@ bool umap_eq(const T &a, const T &b)
     if (a.size() != b.size())
         return false;
     // Loop over keys in "a":
-    for (const auto &p : a) {
+   for (const auto &p : a) {
         // O(1) lookup of the key in "b":
         auto f = b.find(p.first);
         if (f == b.end())
@@ -140,6 +140,7 @@ int multiset_basic_compare(const multiset_basic &a, const multiset_basic &b);
 int map_uint_mpz_compare(const map_uint_mpz &a, const map_uint_mpz &b);
 int map_int_Expr_compare(const map_int_Expr &a, const map_int_Expr &b);
 int map_sym_uint_compare(const map_sym_uint &A, const map_sym_uint &b);
+bool map_sym_uint_eq(const map_sym_uint &a, const map_sym_uint &b);
 
 //! Part of umap_vec_mpz:
 typedef struct {

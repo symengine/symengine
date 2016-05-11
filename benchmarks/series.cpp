@@ -45,7 +45,7 @@ int main(int argc, char *argv[])
     std::cout << "Expanding: " << *ex << std::endl;
 
     t1 = std::chrono::high_resolution_clock::now();
-    auto res = SymEngine::UnivariateSeries::series(ex, "x", N);
+    auto res = SymEngine::UnivariateSeries::series(ex, "x", 200);
     t2 = std::chrono::high_resolution_clock::now();
     // std::cout << *res[N-1] << std::endl;
     std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1)
