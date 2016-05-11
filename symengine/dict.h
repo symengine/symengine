@@ -35,6 +35,7 @@ typedef std::unordered_map<RCP<const Basic>, RCP<const Basic>, RCPBasicHash,
 typedef std::vector<int> vec_int;
 typedef std::vector<RCP<const Basic>> vec_basic;
 typedef std::vector<RCP<const Integer>> vec_integer;
+typedef std::vector<RCP<const Symbol>> vec_sym;
 typedef std::set<RCP<const Basic>, RCPBasicKeyLess> set_basic;
 typedef std::multiset<RCP<const Basic>, RCPBasicKeyLess> multiset_basic;
 typedef std::map<vec_int, long long int> map_vec_int;
