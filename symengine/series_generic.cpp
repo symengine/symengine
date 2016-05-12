@@ -3,8 +3,8 @@
 #include <iterator>
 #include <symengine/series_generic.h>
 #include <symengine/series_visitor.h>
-#include <valarray>
 #include <typeinfo>
+#include <valarray>
 
 using SymEngine::RCP;
 using SymEngine::make_rcp;
@@ -105,8 +105,9 @@ void fft(CArray &x)
             T *= phiT;
         }
     }
-    for (const auto& it : x)
-        std::cout << it << " " << typeid(*it.real().get_basic()).name() << std::endl;
+    // for (const auto& it : x)
+    // std::cout << it << " " << typeid(*it.real().get_basic()).name() <<
+    // std::endl;
     // Decimate
     unsigned int m = (unsigned int)log2(N);
     for (unsigned int a = 0; a < N; a++) {
@@ -147,15 +148,21 @@ UnivariateSeries::mul(const UnivariateExprPolynomial &a,
 {
     unsigned long n = 1, t = a.get_univariate_poly()->get_degree()
                              + b.get_univariate_poly()->get_degree() + 1;
+    bool all_int = true;
+
     while (n <= t)
         n <<= 1;
 
     CArray fa(n), fb(n);
 
-    for (int i = 0;
-         i <= std::max(a.get_univariate_poly()->get_degree(),
-                       b.get_univariate_poly()->get_degree());
+    for (int i = 0; i <= std::max(a.get_univariate_poly()->get_degree(),
+                                  b.get_univariate_poly()->get_degree());
          i++) {
+        Expression ai = a.find_cf(i);
+        Expression bi = b.find_cf(i);
+        if ((not is_a<Integer>(*ai.get_basic()))
+            or (not is_a<Integer>(*bi.get_basic())))
+            all_int = false;
         fa[i] = base(a.find_cf(i));
         fb[i] = base(b.find_cf(i));
     }
@@ -168,6 +175,10 @@ UnivariateSeries::mul(const UnivariateExprPolynomial &a,
     std::vector<Expression> res(n);
     for (unsigned long i = 0; i < prec && i <= t; ++i) {
         res[i] = fa[i].real();
+        if (all_int == true && is_a<RealDouble>(*res[i].get_basic()))
+            res[i] = Expression(
+               std::lround((rcp_static_cast<const RealDouble>(res[i].get_basic())
+                           ->as_double())));
     }
     if (a.get_univariate_poly()->get_var()->get_name() == "")
         return UnivariateExprPolynomial(UnivariatePolynomial::create(
