@@ -71,9 +71,7 @@ std::size_t UnivariateIntPolynomial::__hash__() const
 bool UnivariateIntPolynomial::__eq__(const Basic &o) const
 {
     return eq(*var_, *(static_cast<const UnivariateIntPolynomial &>(o).var_))
-           and map_uint_mpz_eq(
-                   dict_,
-                   static_cast<const UnivariateIntPolynomial &>(o).dict_);
+           and dict_ == static_cast<const UnivariateIntPolynomial &>(o).dict_;
 }
 
 int UnivariateIntPolynomial::compare(const Basic &o) const
@@ -423,8 +421,7 @@ std::size_t UnivariatePolynomial::__hash__() const
 bool UnivariatePolynomial::__eq__(const Basic &o) const
 {
     return eq(*var_, *(static_cast<const UnivariatePolynomial &>(o).var_))
-           and map_int_Expr_eq(
-                   dict_, static_cast<const UnivariatePolynomial &>(o).dict_);
+           and dict_ == static_cast<const UnivariatePolynomial &>(o).dict_;
 }
 
 int UnivariatePolynomial::compare(const Basic &o) const
