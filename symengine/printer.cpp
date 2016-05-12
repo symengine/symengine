@@ -130,6 +130,13 @@ void StrPrinter::bvisit(const EmptySet &x)
     str_ = s.str();
 }
 
+void StrPrinter::bvisit(const UniversalSet &x)
+{
+    std::ostringstream s;
+    s << "UniversalSet";
+    str_ = s.str();
+}
+
 #ifdef HAVE_SYMENGINE_MPFR
 void StrPrinter::bvisit(const RealMPFR &x)
 {
