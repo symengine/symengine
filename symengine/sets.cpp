@@ -245,7 +245,7 @@ bool EmptySet::is_superset(const RCP<const Set> &o) const
     return false;
 }
 
-const RCP<const EmptySet> EmptySet::getInstance()
+const RCP<const EmptySet> &EmptySet::getInstance()
 {
     const static auto a = make_rcp<const EmptySet>();
     return a;
@@ -296,7 +296,7 @@ bool UniversalSet::is_proper_superset(const RCP<const Set> &o) const
     return true;
 }
 
-const RCP<const UniversalSet> UniversalSet::getInstance()
+const RCP<const UniversalSet> &UniversalSet::getInstance()
 {
     const static auto a = make_rcp<const UniversalSet>();
     return a;

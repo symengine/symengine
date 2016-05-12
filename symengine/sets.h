@@ -33,7 +33,7 @@ public:
     IMPLEMENT_TYPEID(EMPTYSET)
     // EmptySet(EmptySet const&) = delete;
     void operator=(EmptySet const &) = delete;
-    const static RCP<const EmptySet> getInstance();
+    const static RCP<const EmptySet> &getInstance();
     virtual std::size_t __hash__() const;
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
@@ -74,7 +74,7 @@ public:
     IMPLEMENT_TYPEID(UNIVERSALSET)
     // UniversalSet(UniversalSet const&) = delete;
     void operator=(UniversalSet const &) = delete;
-    const static RCP<const UniversalSet> getInstance();
+    const static RCP<const UniversalSet> &getInstance();
     virtual std::size_t __hash__() const;
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
