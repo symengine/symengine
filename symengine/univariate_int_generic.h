@@ -32,7 +32,7 @@ public:
                       const map_uint_mpz &dict) const;
     //! \return size of the hash
     std::size_t __hash__() const;
-    
+
     int compare(const Basic &o) const;
 
     //! \return the number terms in the polynomial
@@ -44,7 +44,7 @@ public:
 
     //????
     virtual vec_basic get_args() const;
-    
+
     //! \return `true` if `0`
     bool is_zero() const;
     //! \return `true` if `1`
@@ -62,9 +62,9 @@ public:
 };
 
 // TODODO not able to move them to the .h file :(
-inline RCP<const UnivariateInt>
-univariate_int(RCP<const Symbol> var, map_uint_mpz &&d)
-{   
+inline RCP<const UnivariateInt> univariate_int(RCP<const Symbol> var,
+                                               map_uint_mpz &&d)
+{
     auto iter = d.begin();
     while (iter != d.end()) {
         if (iter->second == 0) {
@@ -84,7 +84,7 @@ univariate_int(RCP<const Symbol> var, map_uint_mpz &&d)
 
 inline RCP<const UnivariateInt>
 univariate_int(RCP<const Symbol> var, const std::vector<integer_class> &v)
-{   
+{
     return make_rcp<const UnivariateInt>(var, std::move(v));
 }
 } // SymEngine

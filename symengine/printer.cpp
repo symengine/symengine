@@ -357,7 +357,8 @@ void StrPrinter::bvisit(const UnivariateInt &x)
     bool first = true;
     // we iterate over the map in reverse order so that highest degree gets
     // printed first
-    for (auto it = x.get_container().rbegin(); it != x.get_container().rend(); ++it) {
+    for (auto it = x.get_container().rbegin(); it != x.get_container().rend();
+         ++it) {
         // if exponent is 0, then print only coefficient
         if (it->first == 0) {
             if (first) {
