@@ -8,6 +8,7 @@
 
 #include <symengine/basic.h>
 #include <symengine/dict.h>
+#include <symengine/symbol.h>
 #include <symengine/univariate_int.h>
 
 namespace SymEngine
@@ -61,10 +62,23 @@ public:
     bool is_pow() const;
 };
 
+//! Adding two UnivariateInt a and b
+RCP<const UnivariateInt> add_poly(const UnivariateInt &a,
+                                  const UnivariateInt &b);
+//! Negative of a UnivariateInt
+RCP<const UnivariateInt> neg_poly(const UnivariateInt &a);
+//! Subtracting two UnivariateInt a and b
+RCP<const UnivariateInt> sub_poly(const UnivariateInt &a,
+                                  const UnivariateInt &b);
+
 // TODODO not able to move them to the .h file :(
 inline RCP<const UnivariateInt> univariate_int(RCP<const Symbol> var,
                                                map_uint_mpz &&d)
 {
+    if (var->get_name() == "")
+        if (d.size() > 1 or (d.size() == 1 and d.begin()->first != 0))
+            throw std::runtime_error("Error: empty variable cannot be used");
+
     auto iter = d.begin();
     while (iter != d.end()) {
         if (iter->second == 0) {

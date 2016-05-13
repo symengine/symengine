@@ -195,4 +195,53 @@ integer_class UnivariateInt::eval_bit(const unsigned int &x) const
     return result;
 }
 
+RCP<const UnivariateInt> add_poly(const UnivariateInt &a,
+                                  const UnivariateInt &b)
+{
+    map_uint_mpz dict;
+    RCP<const Symbol> var = symbol("");
+    if (a.get_var()->get_name() == "") {
+        var = b.get_var();
+    } else if (b.get_var()->get_name() == "") {
+        var = a.get_var();
+    } else if (!(a.get_var()->__eq__(*b.get_var()))) {
+        throw std::runtime_error("Error: variables must agree.");
+    } else {
+        var = a.get_var();
+    }
+    for (const auto &it : a.get_container())
+        dict[it.first] = it.second;
+    for (const auto &it : b.get_container())
+        dict[it.first] += it.second;
+    return univariate_int(var, std::move(dict));
+}
+
+RCP<const UnivariateInt> neg_poly(const UnivariateInt &a)
+{
+    map_uint_mpz dict;
+    for (const auto &it : a.get_container())
+        dict[it.first] = -1 * it.second;
+    return univariate_int(a.get_var(), std::move(dict));
+}
+
+RCP<const UnivariateInt> sub_poly(const UnivariateInt &a,
+                                  const UnivariateInt &b)
+{
+    map_uint_mpz dict;
+    RCP<const Symbol> var = symbol("");
+    if (a.get_var()->get_name() == "") {
+        var = b.get_var();
+    } else if (b.get_var()->get_name() == "") {
+        var = a.get_var();
+    } else if (!(a.get_var()->__eq__(*b.get_var()))) {
+        throw std::runtime_error("Error: variables must agree.");
+    } else {
+        var = a.get_var();
+    }
+    for (const auto &it : a.get_container())
+        dict[it.first] = it.second;
+    for (const auto &it : b.get_container())
+        dict[it.first] -= it.second;
+    return univariate_int(var, std::move(dict));
+}
 } // SymEngine
