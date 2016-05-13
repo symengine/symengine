@@ -50,6 +50,26 @@ public:
         }
     }
 
+    void bvisit(const UnivariateInt &x)
+    {
+        if (x.get_container().size() == 1) {
+            auto it = x.get_container().begin();
+            if (it->second == 1) {
+                if (it->first == 1) {
+                    precedence = PrecedenceEnum::Atom;
+                } else {
+                    precedence = PrecedenceEnum::Pow;
+                }
+            } else {
+                precedence = PrecedenceEnum::Mul;
+            }
+        } else if (x.get_container().size() == 0) {
+            precedence = PrecedenceEnum::Atom;
+        } else {
+            precedence = PrecedenceEnum::Add;
+        }
+    }
+
     void bvisit(const UnivariatePolynomial &x)
     {
         if (x.get_dict().size() == 1) {
@@ -172,6 +192,7 @@ public:
     void bvisit(const Mul &x);
     void bvisit(const Pow &x);
     void bvisit(const UnivariateIntPolynomial &x);
+    void bvisit(const UnivariateInt &x);
     void bvisit(const UnivariatePolynomial &x);
     void bvisit(const UnivariateSeries &x);
 #ifdef HAVE_SYMENGINE_PIRANHA

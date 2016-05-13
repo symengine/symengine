@@ -8,6 +8,8 @@
 #include <symengine/integer.h>
 #include <symengine/mul.h>
 #include <symengine/polynomial.h>
+#include <symengine/univariate_int.h>
+#include <symengine/univariate_int_generic.h>
 #include <symengine/pow.h>
 #include <symengine/rational.h>
 #include <symengine/sets.h>
@@ -45,6 +47,8 @@ public:
     }
 
     DIFF0(UnivariateSeries)
+    // TODODO Add a derivative implementation
+    DIFF0(UnivariateInt)
     DIFF0(Dirichlet_eta)
     DIFF0(UpperGamma)
     DIFF0(LowerGamma)
