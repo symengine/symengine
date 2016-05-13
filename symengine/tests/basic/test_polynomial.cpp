@@ -404,8 +404,8 @@ TEST_CASE("Multiplication of two UnivariatePolynomial",
     RCP<const UnivariatePolynomial> b = univariate_polynomial(
         x, {{0, -1}, {1, -2}, {2, mul(integer(-1), symbol("a"))}});
 
-    RCP<const UnivariatePolynomial> c = mul_uni_poly(a, a);
-    RCP<const UnivariatePolynomial> d = mul_uni_poly(a, b);
+    RCP<const UnivariatePolynomial> c = mul_uni_poly(*a, *a);
+    RCP<const UnivariatePolynomial> d = mul_uni_poly(*a, *b);
 
     REQUIRE(c->__str__()
             == "a**2*x**4 + 2*a*b*x**3 + (2*a + b**2)*x**2 + 2*b*x + 1");
@@ -413,18 +413,18 @@ TEST_CASE("Multiplication of two UnivariatePolynomial",
                             "2*b)*x**2 + (-2 - b)*x - 1");
 
     RCP<const UnivariatePolynomial> f = univariate_polynomial(x, {{0, 2}});
-    REQUIRE(mul_uni_poly(a, f)->__str__() == "2*a*x**2 + 2*b*x + 2");
-    REQUIRE(mul_uni_poly(f, a)->__str__() == "2*a*x**2 + 2*b*x + 2");
+    REQUIRE(mul_uni_poly(*a, *f)->__str__() == "2*a*x**2 + 2*b*x + 2");
+    REQUIRE(mul_uni_poly(*f, *a)->__str__() == "2*a*x**2 + 2*b*x + 2");
 
     f = univariate_polynomial(y, {{0, 2}, {1, 4}});
-    CHECK_THROWS_AS(mul_uni_poly(a, f), std::runtime_error);
+    CHECK_THROWS_AS(mul_uni_poly(*a, *f), std::runtime_error);
 
     f = univariate_polynomial(x, std::map<int, Expression>{});
-    REQUIRE(mul_uni_poly(a, f)->__str__() == "0");
+    REQUIRE(mul_uni_poly(*a, *f)->__str__() == "0");
 
     a = univariate_polynomial(x, {{-2, 5}, {-1, 3}, {0, 1}, {1, 2}});
 
-    c = mul_uni_poly(a, b);
+    c = mul_uni_poly(*a, *b);
     REQUIRE(c->__str__() == "-2*a*x**3 + (-4 - a)*x**2 + (-4 - 3*a)*x + (-7 - "
                             "5*a) - 13*x**(-1) - 5*x**(-2)");
 }

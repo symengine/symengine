@@ -425,8 +425,70 @@ void StrPrinter::bvisit(const UnivariatePolynomial &x)
 void StrPrinter::bvisit(const UnivariateSeries &x)
 {
     std::ostringstream o;
-    o << x.get_poly() << " + O(" << x.get_var() << "**" << x.get_degree()
-      << ")";
+    bool first = true;
+    for (auto it = x.get_poly().get_dict().rbegin();
+         it != x.get_poly().get_dict().rend(); ++it) {
+        std::string t;
+        // if exponent is 0, then print only coefficient
+        if (it->first == 0) {
+            if (first) {
+                o << it->second;
+            } else {
+                t = parenthesizeLT(it->second.get_basic(), PrecedenceEnum::Mul);
+                if (t[0] == '-') {
+                    o << " - " << t.substr(1);
+                } else {
+                    o << " + " << t;
+                }
+            }
+            first = false;
+            continue;
+        }
+        // if the coefficient of a term is +1 or -1
+        if (it->second == 1 or it->second == -1) {
+            // in cases of -x, print -x
+            // in cases of x**2 - x, print - x
+            if (first) {
+                if (it->second == -1)
+                    o << "-";
+            } else {
+                o << " " << _print_sign(static_cast<const Integer &>(
+                                            *it->second.get_basic())
+                                            .as_mpz())
+                  << " ";
+            }
+        }
+        // if the coefficient of a term is 0, skip
+        else if (it->second == 0)
+            continue;
+        // same logic is followed as above
+        else {
+            // in cases of -2*x, print -2*x
+            // in cases of x**2 - 2*x, print - 2*x
+            if (first) {
+                o << parenthesizeLT(it->second.get_basic(), PrecedenceEnum::Mul)
+                  << "*";
+            } else {
+                t = parenthesizeLT(it->second.get_basic(), PrecedenceEnum::Mul);
+                if (t[0] == '-') {
+                    o << " - " << t.substr(1);
+                } else {
+                    o << " + " << t;
+                }
+                o << "*";
+            }
+        }
+        o << x.get_var();
+        // if exponent is not 1, print the exponent;
+        if (it->first > 1) {
+            o << "**" << it->first;
+        } else if (it->first < 0) {
+            o << "**(" << it->first << ")";
+        }
+        // corner cases of only first term handled successfully, switch the bool
+        first = false;
+    }
+    o << " + O(" << x.get_var() << "**" << x.get_degree() << ")";
     str_ = o.str();
 }
 
