@@ -245,9 +245,60 @@ bool EmptySet::is_superset(const RCP<const Set> &o) const
     return false;
 }
 
-RCP<const EmptySet> EmptySet::getInstance()
+const RCP<const EmptySet> &EmptySet::getInstance()
 {
-    static auto a = make_rcp<const EmptySet>();
+    const static auto a = make_rcp<const EmptySet>();
+    return a;
+}
+
+RCP<const Set> UniversalSet::set_intersection(const RCP<const Set> &o) const
+{
+    return o;
+}
+
+RCP<const Set> UniversalSet::set_union(const RCP<const Set> &o) const
+{
+    return universalset();
+}
+
+std::size_t UniversalSet::__hash__() const
+{
+    std::size_t seed = UNIVERSALSET;
+    return seed;
+}
+
+bool UniversalSet::__eq__(const Basic &o) const
+{
+    if (is_a<UniversalSet>(o))
+        return true;
+    return false;
+}
+
+int UniversalSet::compare(const Basic &o) const
+{
+    SYMENGINE_ASSERT(is_a<UniversalSet>(o))
+    return 0;
+}
+
+bool UniversalSet::is_subset(const RCP<const Set> &o) const
+{
+    if (is_a<UniversalSet>(*o)) {
+        return true;
+    }
+    return false;
+}
+
+bool UniversalSet::is_proper_superset(const RCP<const Set> &o) const
+{
+    if (is_a<UniversalSet>(*o)) {
+        return false;
+    }
+    return true;
+}
+
+const RCP<const UniversalSet> &UniversalSet::getInstance()
+{
+    const static auto a = make_rcp<const UniversalSet>();
     return a;
 }
 } // SymEngine
