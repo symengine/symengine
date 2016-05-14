@@ -8,6 +8,7 @@
 #include <symengine/basic.h>
 #include <symengine/functions.h>
 #include <symengine/complex.h>
+using SymEngine::RCPBasicKeyLess;
 
 namespace SymEngine
 {
@@ -106,6 +107,37 @@ public:
     virtual bool is_proper_superset(const RCP<const Set> &o) const;
 };
 
+class FiniteSet : public Set
+{
+public:
+    std::set<RCP<const Number>, RCPBasicKeyLess> container_;
+
+public:
+    IMPLEMENT_TYPEID(FINITESET)
+    virtual std::size_t __hash__() const;
+    virtual bool __eq__(const Basic &o) const;
+    virtual int compare(const Basic &o) const;
+    virtual vec_basic get_args() const
+    {
+        return {};
+    }
+
+    inline virtual bool is_FiniteSet() const
+    {
+        return true;
+    }
+
+    FiniteSet(const std::set<RCP<const Number>, RCPBasicKeyLess> container);
+    static bool is_canonical(const std::set<RCP<const Number>, RCPBasicKeyLess> container);
+
+    virtual RCP<const Set> set_union(const RCP<const Set> &o) const;
+    virtual RCP<const Set> set_intersection(const RCP<const Set> &o) const;
+    virtual bool is_subset(const RCP<const Set> &o) const;
+    virtual bool is_proper_subset(const RCP<const Set> &o) const;
+    virtual bool is_superset(const RCP<const Set> &o) const;
+    virtual bool is_proper_superset(const RCP<const Set> &o) const;
+};
+
 class Interval : public Set
 {
 public:
@@ -171,5 +203,14 @@ inline RCP<const Set> interval(const RCP<const Number> &start,
     }
     return emptyset();
 }
+
+inline RCP<const Set> finiteset(const std::set<RCP<const Number>, RCPBasicKeyLess> &container)
+{
+    if (FiniteSet::is_canonical(container)) {
+        return make_rcp<const FiniteSet>(container);
+    }
+    return emptyset();
+}
+
 }
 #endif

@@ -15,6 +15,8 @@ using SymEngine::Number;
 using SymEngine::RCP;
 using SymEngine::Interval;
 using SymEngine::interval;
+using SymEngine::FiniteSet;
+using SymEngine::finiteset;
 using SymEngine::Set;
 using SymEngine::EmptySet;
 using SymEngine::emptyset;
@@ -177,4 +179,24 @@ TEST_CASE("UniversalSet : Basic", "[basic]")
     REQUIRE(not r1->__eq__(*r2));
     REQUIRE(r1->compare(*universalset()) == 0);
     CHECK_THROWS_AS(r1->diff(symbol("x")), std::runtime_error);
+}
+
+
+TEST_CASE("FiniteSet : Basic", "[basic]")
+{
+    std::set<RCP<const Number>, RCPBasicKeyLess> a, b;
+    a.insert(zero);
+    a.insert(one);
+    RCP<const Set> r1 = finiteset(a);
+    b.insert(zero);
+    b.insert(one);
+    b.insert(integer(2));
+    RCP<const Set> r2 = finiteset(b);
+    RCP<const Set> r3 = r1->set_union(r2);
+    RCP<const FiniteSet> r5 = rcp_dynamic_cast<const FiniteSet>(r3);
+    for (const auto &aa : r5->container_)
+    {
+        std::cout<<*aa<<"-";
+    }
+    std::cout<<"\n";
 }
