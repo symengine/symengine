@@ -31,11 +31,11 @@ TEST_CASE("Constructors of UnivariateInt", "[UnivariateInt]")
     P = univariate_int(x, {{0, 1_z}, {1, 2_z}, {2, 1_z}});
     REQUIRE(P->__str__() == "x**2 + 2*x + 1");
 
-    Q = univariate_int(x, {1_z, 0_z, 2_z, 1_z, 0_z});
+    Q = univariate_int(x, {{1_z, 0_z, 2_z, 1_z, 0_z}});
     REQUIRE(Q->__str__() == "x**3 + 2*x**2 + 1");
 
     // constructors
-    UnivariateInt R(x, {1_z, 0_z, 2_z, 1_z});
+    UnivariateInt R(x, {{1_z, 0_z, 2_z, 1_z}});
     REQUIRE(R.__str__() == "x**3 + 2*x**2 + 1");
 
     UnivariateInt S(x, 2, {{0, 1_z}, {1, 2_z}, {2, 1_z}});
@@ -46,7 +46,7 @@ TEST_CASE("Constructors of UnivariateInt", "[UnivariateInt]")
     T = univariate_int(x, map_uint_mpz{{0, 2_z}});
     REQUIRE(T->__str__() == "2");
 
-    U = univariate_int(x, std::vector<integer_class>{{0, 2_z}});
+    U = univariate_int(x, std::vector<integer_class>{{0_z, 2_z}});
     REQUIRE(U->__str__() == "2*x");
 
     CHECK_THROWS_AS(V = univariate_int(none, {{0, 1_z}, {1, 2_z}}),
