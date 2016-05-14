@@ -182,12 +182,9 @@ public:
     friend UnivariateExprPolynomial operator+(const UnivariateExprPolynomial &a,
                                               const UnivariateExprPolynomial &b)
     {
-        map_int_Expr dict;
-        for (const auto &it : a.dict_)
-            dict[it.first] = it.second;
-        for (const auto &it : b.dict_)
-            dict[it.first] += it.second;
-        return UnivariateExprPolynomial(dict);
+        UnivariateExprPolynomial c = a;
+        c += b;
+        return UnivariateExprPolynomial(std::move(c));
     }
 
     UnivariateExprPolynomial &operator+=(const UnivariateExprPolynomial &other)
@@ -200,12 +197,9 @@ public:
     friend UnivariateExprPolynomial operator-(const UnivariateExprPolynomial &a,
                                               const UnivariateExprPolynomial &b)
     {
-        map_int_Expr dict;
-        for (const auto &it : a.dict_)
-            dict[it.first] = it.second;
-        for (const auto &it : b.dict_)
-            dict[it.first] -= it.second;
-        return UnivariateExprPolynomial(dict);
+        UnivariateExprPolynomial c = a;
+        c -= b;
+        return UnivariateExprPolynomial(std::move(c));
     }
 
     UnivariateExprPolynomial operator-() const
@@ -226,15 +220,9 @@ public:
     friend UnivariateExprPolynomial operator*(const UnivariateExprPolynomial &a,
                                               const UnivariateExprPolynomial &b)
     {
-        if (a.dict_.empty() or b.dict_.empty())
-            return UnivariateExprPolynomial({{0, Expression(0)}});
-
-        map_int_Expr dict;
-        for (const auto &i1 : a.dict_)
-            for (const auto &i2 : b.dict_)
-                dict[i1.first + i2.first] += i1.second * i2.second;
-
-        return UnivariateExprPolynomial(dict);
+        UnivariateExprPolynomial c = a;
+        c *= b;
+        return UnivariateExprPolynomial(std::move(c));
     }
 
     friend UnivariateExprPolynomial operator/(const UnivariateExprPolynomial &a,
@@ -362,7 +350,7 @@ public:
     IMPLEMENT_TYPEID(UNIVARIATEPOLYNOMIAL)
     //! Constructor of UnivariatePolynomial class
     UnivariatePolynomial(const RCP<const Symbol> &var, const int &degree,
-                         const map_int_Expr &&dict);
+                         const UnivariateExprPolynomial &&dict);
     //! Constructor using a dense vector of Expression
     UnivariatePolynomial(const RCP<const Symbol> &var,
                          const std::vector<Expression> &v);
@@ -383,7 +371,7 @@ public:
     * Mul, Pow, UnivariatePolynomial) depending on the size of dictionary `d`.
     */
     static RCP<const UnivariatePolynomial>
-    from_dict(const RCP<const Symbol> &var, map_int_Expr &&d);
+    from_dict(const RCP<const Symbol> &var, UnivariateExprPolynomial &&d);
     static RCP<const UnivariatePolynomial>
     from_vec(const RCP<const Symbol> &var, const std::vector<Expression> &v);
 
@@ -440,7 +428,7 @@ RCP<const UnivariatePolynomial> mul_uni_poly(const UnivariatePolynomial &a,
                                              const UnivariatePolynomial &b);
 
 inline RCP<const UnivariatePolynomial>
-univariate_polynomial(RCP<const Symbol> i, map_int_Expr &&dict)
+univariate_polynomial(RCP<const Symbol> i, UnivariateExprPolynomial &&dict)
 {
     return UnivariatePolynomial::from_dict(i, std::move(dict));
 }

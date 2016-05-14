@@ -358,9 +358,9 @@ RCP<const UnivariateIntPolynomial> mul_poly(const UnivariateIntPolynomial &a,
         return UnivariateIntPolynomial::from_dict(var, std::move(dict));
 }
 
-UnivariatePolynomial::UnivariatePolynomial(const RCP<const Symbol> &var,
-                                           const int &degree,
-                                           const map_int_Expr &&dict)
+UnivariatePolynomial::UnivariatePolynomial(
+    const RCP<const Symbol> &var, const int &degree,
+    const UnivariateExprPolynomial &&dict)
     : degree_{degree}, var_{var}, dict_{std::move(dict)}
 {
     SYMENGINE_ASSERT(is_canonical(degree_, dict_))
@@ -417,9 +417,9 @@ std::size_t UnivariatePolynomial::__hash__() const
 bool UnivariatePolynomial::__eq__(const Basic &o) const
 {
     return eq(*var_, *(static_cast<const UnivariatePolynomial &>(o).var_))
-           and (dict_.get_dict() ==
-                               static_cast<const UnivariatePolynomial &>(o)
-                                   .dict_.get_dict());
+           and (dict_.get_dict()
+                == static_cast<const UnivariatePolynomial &>(o)
+                       .dict_.get_dict());
 }
 
 int UnivariatePolynomial::compare(const Basic &o) const
@@ -445,11 +445,12 @@ UnivariatePolynomial::from_vec(const RCP<const Symbol> &var,
 }
 
 RCP<const UnivariatePolynomial>
-UnivariatePolynomial::from_dict(const RCP<const Symbol> &var, map_int_Expr &&d)
+UnivariatePolynomial::from_dict(const RCP<const Symbol> &var,
+                                UnivariateExprPolynomial &&d)
 {
     int degree = 0;
-    if (!d.empty())
-        degree = (--(d.end()))->first;
+    if (!d.get_dict().empty())
+        degree = (--(d.get_dict().end()))->first;
     return make_rcp<const UnivariatePolynomial>(var, degree, std::move(d));
 }
 
@@ -555,15 +556,14 @@ RCP<const UnivariatePolynomial> add_uni_poly(const UnivariatePolynomial &a,
     } else {
         var = a.get_var();
     }
-    map_int_Expr dict;
-    dict = (a.get_dict2() + b.get_dict2()).get_dict();
+    UnivariateExprPolynomial dict = a.get_dict2();
+    dict += b.get_dict2();
     return univariate_polynomial(var, std::move(dict));
 }
 
 RCP<const UnivariatePolynomial> neg_uni_poly(const UnivariatePolynomial &a)
 {
-    map_int_Expr dict;
-    dict = (-a.get_dict2()).get_dict();
+    UnivariateExprPolynomial dict = -(a.get_dict2());
     return univariate_polynomial(a.get_var(), std::move(dict));
 }
 
@@ -580,8 +580,8 @@ RCP<const UnivariatePolynomial> sub_uni_poly(const UnivariatePolynomial &a,
     } else {
         var = a.get_var();
     }
-    map_int_Expr dict;
-    dict = (a.get_dict2() - b.get_dict2()).get_dict();
+    UnivariateExprPolynomial dict = a.get_dict2();
+    dict -= b.get_dict2();
     return univariate_polynomial(var, std::move(dict));
 }
 
@@ -598,8 +598,8 @@ RCP<const UnivariatePolynomial> mul_uni_poly(const UnivariatePolynomial &a,
     } else {
         var = a.get_var();
     }
-    map_int_Expr dict;
-    dict = (a.get_dict2() * b.get_dict2()).get_dict();
+    UnivariateExprPolynomial dict = a.get_dict2();
+    dict *= b.get_dict2();
     return univariate_polynomial(var, std::move(dict));
 }
 
