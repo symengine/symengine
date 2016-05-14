@@ -33,12 +33,6 @@ public:
     UnivariateIntPolynomial(const RCP<const Symbol> &var,
                             const std::vector<integer_class> &v);
 
-    static RCP<const UnivariateIntPolynomial>
-    create(const RCP<const Symbol> &var, const std::vector<integer_class> &v)
-    {
-        return UnivariateIntPolynomial::from_vec(var, v);
-    }
-
     //! \return true if canonical
     bool is_canonical(const unsigned int &degree,
                       const map_uint_mpz &dict) const;
@@ -132,12 +126,6 @@ public:
     //! Constructor using a dense vector of Expression
     UnivariatePolynomial(const RCP<const Symbol> &var,
                          const std::vector<Expression> &v);
-
-    static RCP<const UnivariatePolynomial>
-    create(const RCP<const Symbol> &var, const std::vector<Expression> &v)
-    {
-        return UnivariatePolynomial::from_vec(var, v);
-    }
 
     bool is_canonical(const int &degree, const map_int_Expr &dict) const;
     std::size_t __hash__() const;
@@ -239,11 +227,11 @@ public:
     {
     }
     UnivariateExprPolynomial(int i)
-        : poly_(UnivariatePolynomial::create(symbol(""), {Expression(i)}))
+        : poly_(UnivariatePolynomial::from_vec(symbol(""), {Expression(i)}))
     {
     }
     UnivariateExprPolynomial(std::string varname)
-        : poly_(UnivariatePolynomial::create(symbol(varname), {0, 1}))
+        : poly_(UnivariatePolynomial::from_vec(symbol(varname), {0, 1}))
     {
     }
     UnivariateExprPolynomial(RCP<const UnivariatePolynomial> p)
@@ -251,7 +239,7 @@ public:
     {
     }
     UnivariateExprPolynomial(Expression expr)
-        : poly_(UnivariatePolynomial::create(symbol(""), {expr}))
+        : poly_(UnivariatePolynomial::from_vec(symbol(""), {expr}))
     {
     }
     UnivariateExprPolynomial &operator=(const UnivariateExprPolynomial &)

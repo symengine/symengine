@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
         v.push_back(coef);
     }
 
-    UnivariateExprPolynomial c, p(UnivariatePolynomial::create(x, v));
+    UnivariateExprPolynomial c, p(UnivariatePolynomial::from_vec(x, v));
     auto t1 = std::chrono::high_resolution_clock::now();
     c = UnivariateSeries::mul(p, p, 1000);
     auto t2 = std::chrono::high_resolution_clock::now();

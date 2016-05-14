@@ -14,7 +14,8 @@ RCP<const UnivariateSeries> UnivariateSeries::series(const RCP<const Basic> &t,
                                                      const std::string &x,
                                                      unsigned int prec)
 {
-    UnivariateExprPolynomial p(UnivariatePolynomial::create(symbol(x), {0, 1}));
+    UnivariateExprPolynomial p(
+        UnivariatePolynomial::from_vec(symbol(x), {0, 1}));
     SeriesVisitor<UnivariateExprPolynomial, Expression, UnivariateSeries>
         visitor(std::move(p), x, prec);
     return visitor.series(t);
@@ -58,7 +59,7 @@ RCP<const Basic> UnivariateSeries::get_coeff(int deg) const
 UnivariateExprPolynomial UnivariateSeries::var(const std::string &s)
 {
     return UnivariateExprPolynomial(
-        UnivariatePolynomial::create(symbol(s), {0, 1}));
+        UnivariatePolynomial::from_vec(symbol(s), {0, 1}));
 }
 
 Expression UnivariateSeries::convert(const Basic &x)
