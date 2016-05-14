@@ -8,7 +8,7 @@
 #include <symengine/basic.h>
 #include <symengine/functions.h>
 #include <symengine/complex.h>
-using SymEngine::RCPBasicKeyLess;
+#include <symengine/dict.h>
 
 namespace SymEngine
 {
@@ -110,7 +110,7 @@ public:
 class FiniteSet : public Set
 {
 public:
-    std::set<RCP<const Number>, RCPBasicKeyLess> container_;
+    set_number container_;
 
 public:
     IMPLEMENT_TYPEID(FINITESET)
@@ -127,8 +127,9 @@ public:
         return true;
     }
 
-    FiniteSet(const std::set<RCP<const Number>, RCPBasicKeyLess> container);
-    static bool is_canonical(const std::set<RCP<const Number>, RCPBasicKeyLess> container);
+    FiniteSet(const set_number container);
+    static bool is_canonical(const set_number container);
+    bool contains(const RCP<const Number> &a) const;
 
     virtual RCP<const Set> set_union(const RCP<const Set> &o) const;
     virtual RCP<const Set> set_intersection(const RCP<const Set> &o) const;
@@ -204,13 +205,12 @@ inline RCP<const Set> interval(const RCP<const Number> &start,
     return emptyset();
 }
 
-inline RCP<const Set> finiteset(const std::set<RCP<const Number>, RCPBasicKeyLess> &container)
+inline RCP<const Set> finiteset(const set_number &container)
 {
     if (FiniteSet::is_canonical(container)) {
         return make_rcp<const FiniteSet>(container);
     }
     return emptyset();
 }
-
 }
 #endif

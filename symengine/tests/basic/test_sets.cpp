@@ -26,6 +26,7 @@ using SymEngine::rcp_dynamic_cast;
 using SymEngine::Complex;
 using SymEngine::symbol;
 using SymEngine::is_a;
+using SymEngine::set_number;
 
 TEST_CASE("Interval : Basic", "[basic]")
 {
@@ -181,22 +182,23 @@ TEST_CASE("UniversalSet : Basic", "[basic]")
     CHECK_THROWS_AS(r1->diff(symbol("x")), std::runtime_error);
 }
 
-
 TEST_CASE("FiniteSet : Basic", "[basic]")
 {
-    std::set<RCP<const Number>, RCPBasicKeyLess> a, b;
+    set_number a, b;
     a.insert(zero);
     a.insert(one);
     RCP<const Set> r1 = finiteset(a);
     b.insert(zero);
-    b.insert(one);
     b.insert(integer(2));
+    b.insert(one);
     RCP<const Set> r2 = finiteset(b);
     RCP<const Set> r3 = r1->set_union(r2);
+    REQUIRE(r3->__str__() == "[0, 1, 2]"); // [0, 1, 2]
+    r3 = r1->set_intersection(r2);
+    REQUIRE(r3->__str__() == "[0, 1]"); // [0, 1]
     RCP<const FiniteSet> r5 = rcp_dynamic_cast<const FiniteSet>(r3);
-    for (const auto &aa : r5->container_)
-    {
-        std::cout<<*aa<<"-";
-    }
-    std::cout<<"\n";
+    REQUIRE(r5->contains(zero));
+    REQUIRE(not r5->contains(integer(3)));
+    REQUIRE(r1->is_subset(r2));
+    REQUIRE(r1->is_proper_subset(r2));
 }

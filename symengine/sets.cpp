@@ -133,8 +133,12 @@ RCP<const Set> Interval::set_intersection(const RCP<const Set> &o) const
         } else {
             return emptyset();
         }
-    } else
-        return (*o).set_intersection(rcp_from_this_cast<const Set>());
+    }
+    if (is_a<FiniteSet>(*o)) {
+        // TODO
+        return o;
+    }
+    return (*o).set_intersection(rcp_from_this_cast<const Set>());
 }
 
 RCP<const Set> Interval::set_union(const RCP<const Set> &o) const
@@ -167,17 +171,24 @@ RCP<const Set> Interval::set_union(const RCP<const Set> &o) const
                           and (neq(*other.end_, *end) or other.right_open_));
             return interval(start, end, left_open, right_open);
         }
-    } else
-        return (*o).set_union(rcp_from_this_cast<const Set>());
+    }
+    if (is_a<FiniteSet>(*o)) {
+        // TODO
+        return o;
+    }
+    return (*o).set_union(rcp_from_this_cast<const Set>());
 }
 
 bool Interval::is_subset(const RCP<const Set> &o) const
 {
     if (is_a<Interval>(*o)) {
         return this->__eq__(*this->set_intersection(o));
-    } else {
-        return (*o).is_superset(rcp_from_this_cast<const Set>());
     }
+    if (is_a<FiniteSet>(*o)) {
+        // TODO
+        return true;
+    }
+    return (*o).is_superset(rcp_from_this_cast<const Set>());
 }
 
 bool Interval::is_proper_subset(const RCP<const Set> &o) const
@@ -192,11 +203,19 @@ bool Interval::is_proper_subset(const RCP<const Set> &o) const
 
 bool Interval::is_superset(const RCP<const Set> &o) const
 {
+    if (is_a<FiniteSet>(*o)) {
+        // TODO
+        return true;
+    }
     return (*o).is_subset(rcp_from_this_cast<const Set>());
 }
 
 bool Interval::is_proper_superset(const RCP<const Set> &o) const
 {
+    if (is_a<FiniteSet>(*o)) {
+        // TODO
+        return true;
+    }
     return (*o).is_subset(rcp_from_this_cast<const Set>()) and (not __eq__(*o));
 }
 
@@ -302,13 +321,12 @@ const RCP<const UniversalSet> &UniversalSet::getInstance()
     return a;
 }
 
-FiniteSet::FiniteSet(const std::set<RCP<const Number>, RCPBasicKeyLess> container)
-    : container_(container)
+FiniteSet::FiniteSet(const set_number container) : container_(container)
 {
     SYMENGINE_ASSERT(FiniteSet::is_canonical(container_));
 }
 
-bool FiniteSet::is_canonical(const std::set<RCP<const Number>, RCPBasicKeyLess> container)
+bool FiniteSet::is_canonical(const set_number container)
 {
     return container.size() != 0;
 }
@@ -324,7 +342,14 @@ std::size_t FiniteSet::__hash__() const
 bool FiniteSet::__eq__(const Basic &o) const
 {
     if (is_a<FiniteSet>(o)) {
-        return true; //TODO
+        const FiniteSet &other = static_cast<const FiniteSet &>(o);
+        if (container_.size() != other.container_.size())
+            return false;
+        for (const auto &a : container_) {
+            if (not other.contains(a))
+                return false;
+        }
+        return true;
     }
     return false;
 }
@@ -339,51 +364,79 @@ int FiniteSet::compare(const Basic &s) const
     return container_.size() < o.container_.size() ? -1 : 1;
 }
 
+bool FiniteSet::contains(const RCP<const Number> &a) const
+{
+    return container_.find(a) != container_.end();
+}
+
 RCP<const Set> FiniteSet::set_union(const RCP<const Set> &o) const
 {
-    if (is_a<FiniteSet>(*o))
-    {
+    if (is_a<FiniteSet>(*o)) {
         const FiniteSet &other = static_cast<const FiniteSet &>(*o);
-        std::set<RCP<const Number>, RCPBasicKeyLess> container;
-        for (const auto &a : container_)
-        {
+        set_number container;
+        for (const auto &a : container_) {
             container.insert(a);
         }
-        for (const auto &a : other.container_)
-        {
+        for (const auto &a : other.container_) {
             container.insert(a);
         }
         return finiteset(container);
-    }
-    else if (is_a<Interval>(*o))
-    {
-        //TODO
-        return o; //
     }
     return (*o).set_union(rcp_from_this_cast<const Set>());
 }
 
 RCP<const Set> FiniteSet::set_intersection(const RCP<const Set> &o) const
 {
-    return (*o).set_intersection(rcp_from_this_cast<const Set>());    
+    if (is_a<FiniteSet>(*o))
+    {
+        const FiniteSet &other = static_cast<const FiniteSet &>(*o);
+        set_number container;
+        if (container_.size() < other.container_.size()) {
+            for (const auto &a : container_) {
+                if (other.contains(a))
+                    container.insert(a);
+            }
+        } else {
+            for (const auto &a : other.container_) {
+                if (this->contains(a))
+                    container.insert(a);
+            }
+        }
+        return finiteset(container);
+    }
+    return (*o).set_intersection(rcp_from_this_cast<const Set>());
 }
 
 bool FiniteSet::is_subset(const RCP<const Set> &o) const
 {
-    if (is_a<Interval>(*o)) {
-        return true; //
-    } else {
-        return (*o).is_superset(rcp_from_this_cast<const Set>());
+    if (is_a<FiniteSet>(*o)) {
+        const FiniteSet &other = static_cast<const FiniteSet &>(*o);
+        if (container_.size() > other.container_.size()) {   
+            return false;
+        }
+        for (const auto &a : container_) {
+            if (not other.contains(a)) {
+                return false;
+            }
+        }
+        return true;
     }
+    return (*o).is_superset(rcp_from_this_cast<const Set>());
 }
 
 bool FiniteSet::is_proper_subset(const RCP<const Set> &o) const
 {
-    if (is_a<Interval>(*o)) {
-        return true; //
-    } else {
-        return (*o).is_proper_superset(rcp_from_this_cast<const Set>());
+    if (is_a<FiniteSet>(*o)) {
+        const FiniteSet &other = static_cast<const FiniteSet &>(*o);
+        if (container_.size() >= other.container_.size())
+            return false;
+        for (const auto &a : container_) {
+            if (not other.contains(a))
+                return false;
+        }
+        return true;
     }
+    return (*o).is_proper_superset(rcp_from_this_cast<const Set>());
 }
 
 bool FiniteSet::is_superset(const RCP<const Set> &o) const
