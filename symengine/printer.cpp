@@ -350,6 +350,62 @@ void StrPrinter::bvisit(const UnivariateIntPolynomial &x)
     str_ = s.str();
 }
 
+void StrPrinter::bvisit(const UnivariateInt &x)
+{
+    std::ostringstream s;
+    // bool variable needed to take care of cases like -5, -x, -3*x etc.
+    bool first = true;
+    // we iterate over the map in reverse order so that highest degree gets
+    // printed first
+    for (auto it = x.get_container().rbegin(); it != x.get_container().rend();
+         ++it) {
+        // if exponent is 0, then print only coefficient
+        if (it->first == 0) {
+            if (first) {
+                s << it->second;
+            } else {
+                s << " " << _print_sign(it->second) << " "
+                  << mp_abs(it->second);
+            }
+            first = false;
+            continue;
+        }
+        // if the coefficient of a term is +1 or -1
+        if (mp_abs(it->second) == 1) {
+            // in cases of -x, print -x
+            // in cases of x**2 - x, print - x
+            if (first) {
+                if (it->second == -1)
+                    s << "-";
+                s << x.get_var()->get_name();
+            } else {
+                s << " " << _print_sign(it->second) << " "
+                  << x.get_var()->get_name();
+            }
+        }
+        // same logic is followed as above
+        else {
+            // in cases of -2*x, print -2*x
+            // in cases of x**2 - 2*x, print - 2*x
+            if (first) {
+                s << it->second << "*" << x.get_var()->get_name();
+            } else {
+                s << " " << _print_sign(it->second) << " " << mp_abs(it->second)
+                  << "*" << x.get_var()->get_name();
+            }
+        }
+        // if exponent is not 1, print the exponent;
+        if (it->first != 1) {
+            s << "**" << it->first;
+        }
+        // corner cases of only first term handled successfully, switch the bool
+        first = false;
+    }
+    if (x.get_container().size() == 0)
+        s << "0";
+    str_ = s.str();
+}
+
 // UnivariatePolynomial printing, tests taken from SymPy and printing ensures
 // that there is compatibility
 void StrPrinter::bvisit(const UnivariatePolynomial &x)

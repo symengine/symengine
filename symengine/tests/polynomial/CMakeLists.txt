@@ -1,0 +1,5 @@
+project(test_polynomial)
+
+add_executable(test_univariate_int_generic test_univariate_int_generic.cpp)
+target_link_libraries(test_univariate_int_generic symengine catch)
+add_test(test_univariate_int_generic ${PROJECT_BINARY_DIR}/test_univariate_int_generic)

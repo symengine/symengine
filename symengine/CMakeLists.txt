@@ -22,6 +22,7 @@ set(SRC
     functions.cpp
     monomials.cpp
     polynomial.cpp
+    univariate_int_generic.cpp
     series.cpp
     series_generic.cpp
     rings.cpp
@@ -75,6 +76,7 @@ set(HEADERS
     eval_mpfr.h  eval_arb.h       eval_mpc.h     complex_double.h         series_visitor.h
     real_mpfr.h  complex_mpc.h    type_codes.inc lambda_double.h series.h series_piranha.h
     basic-methods.inc   series_flint.h  series_generic.h sets.h  derivative.h   subs.h
+    univariate_int.h    univariate_int_generic.h
 )
 
 # Configure SymEngine using our CMake options:
