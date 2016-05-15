@@ -379,7 +379,9 @@ UnivariatePolynomial::UnivariatePolynomial(const RCP<const Symbol> &var,
         }
     }
     if (var->get_name() == "")
-        if (!(expr_dict_.dict_.empty() or (expr_dict_.dict_.size() == 1 and expr_dict_.dict_.begin()->first == 0)))
+        if (!(expr_dict_.dict_.empty()
+              or (expr_dict_.dict_.size() == 1
+                  and expr_dict_.dict_.begin()->first == 0)))
             throw std::runtime_error("Should only have a constant term");
     degree_ = deg;
 }
@@ -515,7 +517,8 @@ bool UnivariatePolynomial::is_one() const
 
 bool UnivariatePolynomial::is_minus_one() const
 {
-    return expr_dict_.size() == 1 and expr_dict_.get_dict().begin()->second == -1
+    return expr_dict_.size() == 1
+           and expr_dict_.get_dict().begin()->second == -1
            and expr_dict_.get_dict().begin()->first == 0;
 }
 

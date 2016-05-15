@@ -184,7 +184,7 @@ public:
     UnivariateExprPolynomial &operator+=(const UnivariateExprPolynomial &other)
     {
         for (auto &it : other.dict_) {
-            if(dict_[it.first] + it.second != 0) {
+            if (dict_[it.first] + it.second != 0) {
                 dict_[it.first] += it.second;
             } else {
                 auto toErase = dict_.find(it.first);
@@ -213,7 +213,7 @@ public:
     UnivariateExprPolynomial &operator-=(const UnivariateExprPolynomial &other)
     {
         for (auto &it : other.dict_) {
-            if(dict_[it.first] - it.second != 0) {
+            if (dict_[it.first] - it.second != 0) {
                 dict_[it.first] -= it.second;
             } else {
                 auto toErase = dict_.find(it.first);
@@ -242,7 +242,7 @@ public:
         if (dict_.empty())
             return *this;
 
-        if(other.dict_.empty()) {
+        if (other.dict_.empty()) {
             *this = other;
             return *this;
         }
@@ -316,7 +316,8 @@ public:
         return seed;
     }
 
-    std::string __str__(const std::string name) const {
+    std::string __str__(const std::string name) const
+    {
         std::ostringstream o;
         bool first = true;
         for (auto it = dict_.rbegin(); it != dict_.rend(); ++it) {
@@ -344,10 +345,16 @@ public:
                     if (it->second == -1)
                         o << "-";
                 } else {
-                    if (static_cast<const Integer &>(*it->second.get_basic()).as_mpz() < 0) {
-                        o << " " << "-" << " ";
+                    if (static_cast<const Integer &>(*it->second.get_basic())
+                            .as_mpz()
+                        < 0) {
+                        o << " "
+                          << "-"
+                          << " ";
                     } else {
-                        o << " " << "+" << " ";
+                        o << " "
+                          << "+"
+                          << " ";
                     }
                 }
             }
@@ -377,7 +384,8 @@ public:
             } else if (it->first < 0) {
                 o << "**(" << it->first << ")";
             }
-            // corner cases of only first term handled successfully, switch the bool
+            // corner cases of only first term handled successfully, switch the
+            // bool
             first = false;
         }
         return o.str();
@@ -413,8 +421,9 @@ public:
             if (p->first != o->first)
                 return (p->first < o->first) ? -1 : 1;
             if (p->second != o->second)
-                return (p->second.get_basic()->__cmp__(*o->second.get_basic())) ? -1
-                                                                                : 1;
+                return (p->second.get_basic()->__cmp__(*o->second.get_basic()))
+                           ? -1
+                           : 1;
         }
         return 0;
     }
