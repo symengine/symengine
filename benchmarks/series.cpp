@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
     SymEngine::print_stack_on_segfault();
 
     RCP<const Symbol> x = symbol("x");
-    // std::vector<Expression> v, v2;
+    std::vector<Expression> v, v2;
     map_int_Expr p, q;
     int N = 100000;
     int N2 = 1000;
@@ -39,6 +39,19 @@ int main(int argc, char *argv[])
         // v2.push_back(coef);
         q[j] = coef;
     }
+
+    // int N = 200;
+    // auto arg = add(x, pow(x, integer(2)));
+    // auto ex = mul(sin(arg), cos(arg));
+
+    // auto t1 = std::chrono::high_resolution_clock::now();
+    // auto res = SymEngine::UnivariateSeries::series(ex, "x", N);
+    // auto t2 = std::chrono::high_resolution_clock::now();
+    // // std::cout << *res[N-1] << std::endl;
+    // std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(t2 -
+    // t1)
+    //                  .count()
+    //           << "ms" << std::endl;
 
     // UnivariateExprPolynomial c, p(UnivariatePolynomial::create(x, v));
     UnivariateExprPolynomial c, d, a, b, f, g, s, r, t, u, n, ep(p), epq(q);

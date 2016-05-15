@@ -183,8 +183,14 @@ public:
 
     UnivariateExprPolynomial &operator+=(const UnivariateExprPolynomial &other)
     {
-        for (auto &it : other.dict_)
-            dict_[it.first] += it.second;
+        for (auto &it : other.dict_) {
+            if(dict_[it.first] + it.second != 0) {
+                dict_[it.first] += it.second;
+            } else {
+                auto toErase = dict_.find(it.first);
+                dict_.erase(toErase);
+            }
+        }
         return *this;
     }
 
@@ -206,8 +212,14 @@ public:
 
     UnivariateExprPolynomial &operator-=(const UnivariateExprPolynomial &other)
     {
-        for (auto &it : other.dict_)
-            dict_[it.first] -= it.second;
+        for (auto &it : other.dict_) {
+            if(dict_[it.first] - it.second != 0) {
+                dict_[it.first] -= it.second;
+            } else {
+                auto toErase = dict_.find(it.first);
+                dict_.erase(toErase);
+            }
+        }
         return *this;
     }
 
@@ -229,6 +241,11 @@ public:
     {
         if (dict_.empty())
             return *this;
+
+        if(other.dict_.empty()) {
+            *this = other;
+            return *this;
+        }
 
         //! other is a just constant term
         if (other.dict_.size() == 1
@@ -268,18 +285,7 @@ public:
 
     bool operator!=(const UnivariateExprPolynomial &other) const
     {
-        return not(*this == other) != 0;
-    }
-
-    /*!
-    * Adds coef*var_**n to the dict_
-    */
-    void dict_add_term(const Expression &coef, const int &n)
-    {
-        auto it = dict_.find(n);
-        if (it == dict_.end())
-            dict_[n] = coef;
-        // return *this;
+        return not(*this == other);
     }
 
     //! Method to get UnivariatePolynomial's dictionary
@@ -310,18 +316,107 @@ public:
         return seed;
     }
 
-    const umap_int_basic get_basic() const
-    {
-        umap_int_basic p;
-        for (const auto &it : dict_)
-            if (it.second != 0)
-                p[it.first] = it.second.get_basic();
-        return p;
+    std::string __str__(const std::string name) const {
+        std::ostringstream o;
+        bool first = true;
+        for (auto it = dict_.rbegin(); it != dict_.rend(); ++it) {
+            std::string t;
+            // if exponent is 0, then print only coefficient
+            if (it->first == 0) {
+                if (first) {
+                    o << it->second;
+                } else {
+                    t = detail::poly_print(it->second);
+                    if (t[0] == '-') {
+                        o << " - " << t.substr(1);
+                    } else {
+                        o << " + " << t;
+                    }
+                }
+                first = false;
+                continue;
+            }
+            // if the coefficient of a term is +1 or -1
+            if (it->second == 1 or it->second == -1) {
+                // in cases of -x, print -x
+                // in cases of x**2 - x, print - x
+                if (first) {
+                    if (it->second == -1)
+                        o << "-";
+                } else {
+                    if (static_cast<const Integer &>(*it->second.get_basic()).as_mpz() < 0) {
+                        o << " " << "-" << " ";
+                    } else {
+                        o << " " << "+" << " ";
+                    }
+                }
+            }
+            // if the coefficient of a term is 0, skip
+            else if (it->second == 0)
+                continue;
+            // same logic is followed as above
+            else {
+                // in cases of -2*x, print -2*x
+                // in cases of x**2 - 2*x, print - 2*x
+                if (first) {
+                    o << detail::poly_print(it->second) << "*";
+                } else {
+                    t = detail::poly_print(it->second);
+                    if (t[0] == '-') {
+                        o << " - " << t.substr(1);
+                    } else {
+                        o << " + " << t;
+                    }
+                    o << "*";
+                }
+            }
+            o << name;
+            // if exponent is not 1, print the exponent;
+            if (it->first > 1) {
+                o << "**" << it->first;
+            } else if (it->first < 0) {
+                o << "**(" << it->first << ")";
+            }
+            // corner cases of only first term handled successfully, switch the bool
+            first = false;
+        }
+        return o.str();
     }
 
-    int compare(const UnivariateExprPolynomial &other)
+    // const umap_int_basic get_basic() const
+    const RCP<const Basic> get_basic(std::string var) const
     {
-        return map_int_Expr_compare(dict_, other.dict_);
+        RCP<const Symbol> x = symbol(var);
+        umap_basic_num dict;
+        RCP<const Number> coeff;
+        for (const auto &it : dict_) {
+            if (it.first != 0) {
+                auto term = SymEngine::mul(
+                    it.second.get_basic(),
+                    pow_ex(Expression(x), Expression(it.first)).get_basic());
+                RCP<const Number> coef;
+                coef = zero;
+                Add::coef_dict_add_term(outArg((coef)), dict, one, term);
+            } else
+                coeff = rcp_static_cast<const Number>(it.second.get_basic());
+        }
+        return Add::from_dict(coeff, std::move(dict));
+    }
+
+    int compare(const UnivariateExprPolynomial &other) const
+    {
+        if (dict_.size() != other.dict_.size())
+            return (dict_.size() < other.dict_.size()) ? -1 : 1;
+        auto p = dict_.begin();
+        auto o = other.dict_.begin();
+        for (; p != dict_.end(); ++p, ++o) {
+            if (p->first != o->first)
+                return (p->first < o->first) ? -1 : 1;
+            if (p->second != o->second)
+                return (p->second.get_basic()->__cmp__(*o->second.get_basic())) ? -1
+                                                                                : 1;
+        }
+        return 0;
     }
 
     Expression find_cf(int deg) const
@@ -338,7 +433,7 @@ class UnivariatePolynomial : public Basic
 private:
     int degree_;
     RCP<const Symbol> var_;
-    UnivariateExprPolynomial dict_;
+    UnivariateExprPolynomial expr_dict_;
 
 public:
     IMPLEMENT_TYPEID(UNIVARIATEPOLYNOMIAL)
@@ -394,11 +489,11 @@ public:
     }
     inline const map_int_Expr &get_dict() const
     {
-        return dict_.get_dict();
+        return expr_dict_.get_dict();
     }
-    const UnivariateExprPolynomial &get_dict2() const
+    const UnivariateExprPolynomial &get_expr_dict() const
     {
-        return dict_;
+        return expr_dict_;
     }
 
 }; // UnivariatePolynomial

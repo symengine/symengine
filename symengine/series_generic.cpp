@@ -29,37 +29,12 @@ int UnivariateSeries::compare(const Basic &other) const
 {
     SYMENGINE_ASSERT(is_a<UnivariateSeries>(other))
     const UnivariateSeries &o_ = static_cast<const UnivariateSeries &>(other);
-    if (p_.size() != o_.p_.size())
-        return (p_.size() < o_.p_.size()) ? -1 : 1;
-    auto p = p_.get_dict().begin();
-    auto o = o_.p_.get_dict().begin();
-    for (; p != p_.get_dict().end(); ++p, ++o) {
-        if (p->first != o->first)
-            return (p->first < o->first) ? -1 : 1;
-        if (p->second != o->second)
-            return (p->second.get_basic()->__cmp__(*o->second.get_basic())) ? -1
-                                                                            : 1;
-    }
-    return 0;
+    return p_.compare(o_.get_poly());
 }
 
 RCP<const Basic> UnivariateSeries::as_basic() const
 {
-    RCP<const Symbol> x = symbol(var_);
-    umap_basic_num dict_;
-    RCP<const Number> coeff;
-    for (const auto &it : p_.get_dict()) {
-        if (it.first != 0) {
-            auto term = SymEngine::mul(
-                it.second.get_basic(),
-                pow_ex(Expression(x), Expression(it.first)).get_basic());
-            RCP<const Number> coef;
-            coef = zero;
-            Add::coef_dict_add_term(outArg((coef)), dict_, one, term);
-        } else
-            coeff = rcp_static_cast<const Number>(it.second.get_basic());
-    }
-    return Add::from_dict(coeff, std::move(dict_));
+    return p_.get_basic(var_);
 }
 
 umap_int_basic UnivariateSeries::as_dict() const

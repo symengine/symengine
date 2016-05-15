@@ -355,140 +355,17 @@ void StrPrinter::bvisit(const UnivariateIntPolynomial &x)
 void StrPrinter::bvisit(const UnivariatePolynomial &x)
 {
     std::ostringstream s;
-    // bool variable needed to take care of cases like -5, -x, -3*x etc.
-    bool first = true;
-    // we iterate over the map in reverse order so that highest degree gets
-    // printed first
-    for (auto it = x.get_dict().rbegin(); it != x.get_dict().rend(); ++it) {
-        std::string t;
-        // if exponent is 0, then print only coefficient
-        if (it->first == 0) {
-            if (first) {
-                s << it->second;
-            } else {
-                t = parenthesizeLT(it->second.get_basic(), PrecedenceEnum::Mul);
-                if (t[0] == '-') {
-                    s << " - " << t.substr(1);
-                } else {
-                    s << " + " << t;
-                }
-            }
-            first = false;
-            continue;
-        }
-        // if the coefficient of a term is +1 or -1
-        if (it->second == 1 or it->second == -1) {
-            // in cases of -x, print -x
-            // in cases of x**2 - x, print - x
-            if (first) {
-                if (it->second == -1)
-                    s << "-";
-            } else {
-                s << " " << _print_sign(static_cast<const Integer &>(
-                                            *it->second.get_basic())
-                                            .as_mpz())
-                  << " ";
-            }
-        }
-        // same logic is followed as above
-        else {
-            // in cases of -2*x, print -2*x
-            // in cases of x**2 - 2*x, print - 2*x
-            if (first) {
-                s << parenthesizeLT(it->second.get_basic(), PrecedenceEnum::Mul)
-                  << "*";
-            } else {
-                t = parenthesizeLT(it->second.get_basic(), PrecedenceEnum::Mul);
-                if (t[0] == '-') {
-                    s << " - " << t.substr(1);
-                } else {
-                    s << " + " << t;
-                }
-                s << "*";
-            }
-        }
-        s << x.get_var()->get_name();
-        // if exponent is not 1, print the exponent;
-        if (it->first > 1) {
-            s << "**" << it->first;
-        } else if (it->first < 0) {
-            s << "**(" << it->first << ")";
-        }
-        // corner cases of only first term handled successfully, switch the bool
-        first = false;
-    }
     if (x.get_dict().size() == 0)
         s << "0";
+    else
+        s << x.get_expr_dict().__str__(x.get_var()->get_name());
     str_ = s.str();
 }
 
 void StrPrinter::bvisit(const UnivariateSeries &x)
 {
     std::ostringstream o;
-    bool first = true;
-    for (auto it = x.get_poly().get_dict().rbegin();
-         it != x.get_poly().get_dict().rend(); ++it) {
-        std::string t;
-        // if exponent is 0, then print only coefficient
-        if (it->first == 0) {
-            if (first) {
-                o << it->second;
-            } else {
-                t = parenthesizeLT(it->second.get_basic(), PrecedenceEnum::Mul);
-                if (t[0] == '-') {
-                    o << " - " << t.substr(1);
-                } else {
-                    o << " + " << t;
-                }
-            }
-            first = false;
-            continue;
-        }
-        // if the coefficient of a term is +1 or -1
-        if (it->second == 1 or it->second == -1) {
-            // in cases of -x, print -x
-            // in cases of x**2 - x, print - x
-            if (first) {
-                if (it->second == -1)
-                    o << "-";
-            } else {
-                o << " " << _print_sign(static_cast<const Integer &>(
-                                            *it->second.get_basic())
-                                            .as_mpz())
-                  << " ";
-            }
-        }
-        // if the coefficient of a term is 0, skip
-        else if (it->second == 0)
-            continue;
-        // same logic is followed as above
-        else {
-            // in cases of -2*x, print -2*x
-            // in cases of x**2 - 2*x, print - 2*x
-            if (first) {
-                o << parenthesizeLT(it->second.get_basic(), PrecedenceEnum::Mul)
-                  << "*";
-            } else {
-                t = parenthesizeLT(it->second.get_basic(), PrecedenceEnum::Mul);
-                if (t[0] == '-') {
-                    o << " - " << t.substr(1);
-                } else {
-                    o << " + " << t;
-                }
-                o << "*";
-            }
-        }
-        o << x.get_var();
-        // if exponent is not 1, print the exponent;
-        if (it->first > 1) {
-            o << "**" << it->first;
-        } else if (it->first < 0) {
-            o << "**(" << it->first << ")";
-        }
-        // corner cases of only first term handled successfully, switch the bool
-        first = false;
-    }
-    o << " + O(" << x.get_var() << "**" << x.get_degree() << ")";
+    o << x.get_poly().__str__(x.get_var()) << " + O(" << x.get_var() << "**" << x.get_degree() << ")";
     str_ = o.str();
 }
 
