@@ -178,17 +178,20 @@ public:
     {
         UnivariateExprPolynomial c = a;
         c += b;
-        return UnivariateExprPolynomial(std::move(c));
+        return c;
     }
 
     UnivariateExprPolynomial &operator+=(const UnivariateExprPolynomial &other)
     {
         for (auto &it : other.dict_) {
-            if (dict_[it.first] + it.second != 0) {
-                dict_[it.first] += it.second;
+            auto t = dict_.lower_bound(it.first);
+            if (t != dict_.end() and t->first == it.first) {
+                t->second += it.second;
+                if (t->second == 0) {
+                    dict_.erase(t);
+                }
             } else {
-                auto toErase = dict_.find(it.first);
-                dict_.erase(toErase);
+                dict_.insert(t, {it.first, it.second});
             }
         }
         return *this;
@@ -199,25 +202,28 @@ public:
     {
         UnivariateExprPolynomial c = a;
         c -= b;
-        return UnivariateExprPolynomial(std::move(c));
+        return c;
     }
 
     UnivariateExprPolynomial operator-() const
     {
-        map_int_Expr dict;
-        for (auto &it : dict_)
-            dict[it.first] = -it.second;
-        return UnivariateExprPolynomial(dict);
+        UnivariateExprPolynomial c = *this;
+        for (auto &it : c.dict_)
+            it.second *= -1;
+        return c;
     }
 
     UnivariateExprPolynomial &operator-=(const UnivariateExprPolynomial &other)
     {
         for (auto &it : other.dict_) {
-            if (dict_[it.first] - it.second != 0) {
-                dict_[it.first] -= it.second;
+            auto t = dict_.lower_bound(it.first);
+            if (t != dict_.end() and t->first == it.first) {
+                t->second -= it.second;
+                if (t->second == 0) {
+                    dict_.erase(t);
+                }
             } else {
-                auto toErase = dict_.find(it.first);
-                dict_.erase(toErase);
+                dict_.insert(t, {it.first, -it.second});
             }
         }
         return *this;
@@ -228,13 +234,13 @@ public:
     {
         UnivariateExprPolynomial c = a;
         c *= b;
-        return UnivariateExprPolynomial(std::move(c));
+        return c;
     }
 
     friend UnivariateExprPolynomial operator/(const UnivariateExprPolynomial &a,
                                               const Expression &b)
     {
-        return UnivariateExprPolynomial(a * (1 / b));
+        return a * (1 / b);
     }
 
     UnivariateExprPolynomial &operator*=(const UnivariateExprPolynomial &other)
@@ -266,21 +272,13 @@ public:
 
     UnivariateExprPolynomial &operator/=(const Expression &other)
     {
-        dict_ = (UnivariateExprPolynomial(dict_)
-                 * UnivariateExprPolynomial(1 / other))
-                    .dict_;
+        *this *= (1 / other);
         return *this;
     }
 
     bool operator==(const UnivariateExprPolynomial &other) const
     {
-        return map_int_Expr_compare(dict_, other.dict_) == 0;
-    }
-
-    bool operator==(int i) const
-    {
-        return map_int_Expr_compare(dict_, UnivariateExprPolynomial(i).dict_)
-               == 0;
+        return dict_ == other.dict_;
     }
 
     bool operator!=(const UnivariateExprPolynomial &other) const
