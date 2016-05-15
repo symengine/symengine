@@ -90,6 +90,20 @@ RCP<const Set> Interval::close() const
     return interval(start_, end_, false, false);
 }
 
+bool Interval::contains(const RCP<const Number> &a) const
+{
+    RCP<const Basic> left_min, right_max;
+    if (eq(*start_, *a) and left_open_)
+        return false;
+    if (eq(*end_, *a) and right_open_)
+        return false;
+    if (eq(*min({end_, a}), *end_))
+        return false;
+    if (eq(*max({start_, a}), *start_))
+        return false;
+    return true;
+}
+
 RCP<const Set> Interval::set_intersection(const RCP<const Set> &o) const
 {
     if (is_a<Interval>(*o)) {
@@ -387,8 +401,7 @@ RCP<const Set> FiniteSet::set_union(const RCP<const Set> &o) const
 
 RCP<const Set> FiniteSet::set_intersection(const RCP<const Set> &o) const
 {
-    if (is_a<FiniteSet>(*o))
-    {
+    if (is_a<FiniteSet>(*o)) {
         const FiniteSet &other = static_cast<const FiniteSet &>(*o);
         set_number container;
         if (container_.size() < other.container_.size()) {
@@ -411,7 +424,7 @@ bool FiniteSet::is_subset(const RCP<const Set> &o) const
 {
     if (is_a<FiniteSet>(*o)) {
         const FiniteSet &other = static_cast<const FiniteSet &>(*o);
-        if (container_.size() > other.container_.size()) {   
+        if (container_.size() > other.container_.size()) {
             return false;
         }
         for (const auto &a : container_) {

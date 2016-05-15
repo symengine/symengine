@@ -47,9 +47,14 @@ TEST_CASE("Interval : Basic", "[basic]")
     REQUIRE(not r1->is_FiniteSet());
 
     r3 = r1->set_intersection(r2); // [0, 2]
-    r4 = interval(zero, i2);       // [0, 2]
+    REQUIRE(r1->contains(one));
+    r4 = interval(zero, i2); // [0, 2]
     REQUIRE(eq(*r3, *r4));
     r3 = interval(im5, i2, true, true); // (-5, 2)
+    REQUIRE(not r3->contains(i2));
+    REQUIRE(not r3->contains(im5));
+    REQUIRE(not r3->contains(rat2));
+    REQUIRE(not r3->contains(integer(-7)));
     r4 = r3->set_intersection(r2);
     REQUIRE(eq(*r3, *r4));
     r3 = r1->set_union(r2); // [-5, 20]
@@ -146,6 +151,7 @@ TEST_CASE("EmptySet : Basic", "[basic]")
     REQUIRE(not r1->is_proper_subset(r1));
     REQUIRE(not r1->__eq__(*r2));
     REQUIRE(r1->compare(*emptyset()) == 0);
+    REQUIRE(not r1->contains(zero));
     CHECK_THROWS_AS(r1->diff(symbol("x")), std::runtime_error);
 }
 
@@ -175,6 +181,7 @@ TEST_CASE("UniversalSet : Basic", "[basic]")
     REQUIRE(eq(*r1, *r1->set_union(e)));
     REQUIRE(eq(*r2, *r1->set_intersection(r2)));
     REQUIRE(eq(*e, *r1->set_intersection(e)));
+    REQUIRE(r1->contains(zero));
     REQUIRE(r1->__str__() == "UniversalSet");
     REQUIRE(r1->__hash__() == universalset()->__hash__());
     REQUIRE(not r1->__eq__(*r2));
