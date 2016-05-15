@@ -39,7 +39,7 @@ TEST_CASE("Constructor of UnivariateIntPolynomial", "[UnivariateIntPolynomial]")
     REQUIRE(P->__str__() == "x**2 + 2*x + 1");
 
     RCP<const UnivariateIntPolynomial> Q
-        = UnivariateIntPolynomial::create(x, {1_z, 0_z, 2_z, 1_z});
+        = UnivariateIntPolynomial::from_vec(x, {1_z, 0_z, 2_z, 1_z});
     REQUIRE(Q->__str__() == "x**3 + 2*x**2 + 1");
 
     UnivariateIntPolynomial R(x, {1_z, 0_z, 2_z, 1_z});
@@ -312,7 +312,7 @@ TEST_CASE("Constructor of UnivariatePolynomial", "[UnivariatePolynomial]")
     REQUIRE(P->__str__() == "x**2 + 2*x + 1");
 
     RCP<const UnivariatePolynomial> Q
-        = UnivariatePolynomial::create(x, {1, 0, 2, 1});
+        = UnivariatePolynomial::from_vec(x, {1, 0, 2, 1});
     REQUIRE(Q->__str__() == "x**3 + 2*x**2 + 1");
 
     RCP<const UnivariatePolynomial> R = univariate_polynomial(

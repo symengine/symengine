@@ -33,12 +33,6 @@ public:
     UnivariateIntPolynomial(const RCP<const Symbol> &var,
                             const std::vector<integer_class> &v);
 
-    static RCP<const UnivariateIntPolynomial>
-    create(const RCP<const Symbol> &var, const std::vector<integer_class> &v)
-    {
-        return UnivariateIntPolynomial::from_vec(var, v);
-    }
-
     //! \return true if canonical
     bool is_canonical(const unsigned int &degree,
                       const map_uint_mpz &dict) const;
@@ -354,12 +348,6 @@ public:
     //! Constructor using a dense vector of Expression
     UnivariatePolynomial(const RCP<const Symbol> &var,
                          const std::vector<Expression> &v);
-
-    static RCP<const UnivariatePolynomial>
-    create(const RCP<const Symbol> &var, const std::vector<Expression> &v)
-    {
-        return UnivariatePolynomial::from_vec(var, v);
-    }
 
     bool is_canonical(const int &degree,
                       const UnivariateExprPolynomial &dict) const;
