@@ -40,6 +40,6 @@ int main(int argc, char *argv[])
     std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1)
                      .count()
               << "ms" << std::endl;
-    
+
     return 0;
 }
