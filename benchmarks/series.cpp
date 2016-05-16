@@ -15,6 +15,8 @@ using SymEngine::rcp_dynamic_cast;
 using SymEngine::Expression;
 using SymEngine::UnivariatePolynomial;
 using SymEngine::UnivariateExprPolynomial;
+using SymEngine::map_int_Expr;
+using SymEngine::pow;
 
 int main(int argc, char *argv[])
 {
