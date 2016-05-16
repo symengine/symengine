@@ -16,7 +16,6 @@ namespace SymEngine
 class Set : public Basic
 {
 public:
-    virtual bool is_FiniteSet() const = 0;
     virtual RCP<const Set> set_intersection(const RCP<const Set> &o) const = 0;
     virtual RCP<const Set> set_union(const RCP<const Set> &o) const = 0;
     virtual bool contains(const RCP<const Number> &a) const = 0;
@@ -46,11 +45,6 @@ public:
 
     template <typename T_, typename... Args>
     friend inline RCP<T_> make_rcp(Args &&... args);
-
-    inline virtual bool is_FiniteSet() const
-    {
-        return true;
-    }
 
     virtual RCP<const Set> set_intersection(const RCP<const Set> &o) const;
     virtual RCP<const Set> set_union(const RCP<const Set> &o) const;
@@ -91,11 +85,6 @@ public:
     template <typename T_, typename... Args>
     friend inline RCP<T_> make_rcp(Args &&... args);
 
-    inline virtual bool is_FiniteSet() const
-    {
-        return false;
-    }
-
     virtual RCP<const Set> set_intersection(const RCP<const Set> &o) const;
     virtual RCP<const Set> set_union(const RCP<const Set> &o) const;
     virtual bool contains(const RCP<const Number> &a) const
@@ -129,11 +118,6 @@ public:
         return {};
     }
 
-    inline virtual bool is_FiniteSet() const
-    {
-        return true;
-    }
-
     FiniteSet(const set_number container);
     static bool is_canonical(const set_number container);
 
@@ -161,11 +145,6 @@ public:
     virtual vec_basic get_args() const
     {
         return {start_, end_};
-    }
-
-    inline virtual bool is_FiniteSet() const
-    {
-        return (eq(*start_, *end_) and not(left_open_ or right_open_));
     }
 
     Interval(const RCP<const Number> &start, const RCP<const Number> &end,
