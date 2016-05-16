@@ -92,68 +92,22 @@ std::ostream &operator<<(std::ostream &out, const SymEngine::set_basic &d)
     return SymEngine::print_vec_rcp(out, d);
 }
 
+std::ostream &operator<<(std::ostream &out, const SymEngine::map_int_Expr &d)
+{
+    return SymEngine::print_map(out, d);
+}
+
 bool vec_basic_eq(const vec_basic &a, const vec_basic &b)
 {
-    // Can't be equal if # of entries differ:
-    if (a.size() != b.size())
-        return false;
-    // Loop over elements in "a" and "b":
-    for (size_t i = 0; i < a.size(); i++) {
-        if (neq(*a[i], *b[i]))
-            return false; // values not equal
-    }
-    return true;
+    return vec_set_eq<vec_basic>(a, b);
 }
 
-bool vec_basic_eq_perm(const vec_basic &a, const vec_basic &b)
+int vec_basic_compare(const vec_basic &a, const vec_basic &b)
 {
-    // Can't be equal if # of entries differ:
-    if (a.size() != b.size())
-        return false;
-    // Loop over elements in "a"
-    for (size_t i = 0; i < a.size(); i++) {
-        // Find the element a[i] in "b"
-        bool found = false;
-        for (size_t j = 0; j < a.size(); j++) {
-            if (eq(*a[i], *b[j])) {
-                found = true;
-                break;
-            }
-        }
-        // If not found, then a != b
-        if (not found)
-            return false;
-    }
-    // If all elements were found, then a == b
-    return true;
+    return vec_set_compare<vec_basic>(a, b);
 }
 
-int vec_basic_compare(const vec_basic &A, const vec_basic &B)
-{
-    if (A.size() != B.size())
-        return (A.size() < B.size()) ? -1 : 1;
-    auto a = A.begin();
-    auto b = B.begin();
-    int cmp;
-    for (; a != A.end(); ++a, ++b) {
-        cmp = (*a)->__cmp__(**b);
-        if (cmp != 0)
-            return cmp;
-    }
-    return 0;
-}
-
-bool map_uint_mpz_eq(const map_uint_mpz &a, const map_uint_mpz &b)
-{
-    return a.size() == b.size()
-           and std::equal(a.begin(), a.end(), b.begin(),
-                          [](const std::pair<unsigned, integer_class> &u,
-                             const std::pair<unsigned, integer_class> &v) {
-                              return u.first == v.first
-                                     and u.second == v.second;
-                          });
-}
-
+//! non-derivable functions
 int map_uint_mpz_compare(const map_uint_mpz &A, const map_uint_mpz &B)
 {
     if (A.size() != B.size())
@@ -167,17 +121,7 @@ int map_uint_mpz_compare(const map_uint_mpz &A, const map_uint_mpz &B)
             return (a->second < b->second) ? -1 : 1;
     }
     return 0;
-}
-
-bool map_int_Expr_eq(const map_int_Expr &a, const map_int_Expr &b)
-{
-    return a.size() == b.size()
-           and std::equal(a.begin(), a.end(), b.begin(),
-                          [](const std::pair<unsigned, Expression> &u,
-                             const std::pair<unsigned, Expression> &v) {
-                              return u.first == v.first
-                                     and u.second == v.second;
-                          });
+    // return map_compare<map_uint_mpz>(a, b);
 }
 
 int map_int_Expr_compare(const map_int_Expr &A, const map_int_Expr &B)
@@ -259,6 +203,29 @@ bool umap_uvec_mpz_eq(const umap_uvec_mpz &a, const umap_uvec_mpz &b)
         if (p.second != f->second)
             return false; // values not equal
     }
+    return true;
+}
+
+bool vec_basic_eq_perm(const vec_basic &a, const vec_basic &b)
+{
+    // Can't be equal if # of entries differ:
+    if (a.size() != b.size())
+        return false;
+    // Loop over elements in "a"
+    for (size_t i = 0; i < a.size(); i++) {
+        // Find the element a[i] in "b"
+        bool found = false;
+        for (size_t j = 0; j < a.size(); j++) {
+            if (eq(*a[i], *b[j])) {
+                found = true;
+                break;
+            }
+        }
+        // If not found, then a != b
+        if (not found)
+            return false;
+    }
+    // If all elements were found, then a == b
     return true;
 }
 }

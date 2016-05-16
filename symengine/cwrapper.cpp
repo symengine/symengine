@@ -1,4 +1,5 @@
-#include <stdlib.h>
+#include <cstdlib>
+#include <cstring>
 
 #include <symengine/basic.h>
 #include <symengine/symbol.h>

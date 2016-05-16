@@ -19,7 +19,7 @@ public:
     umap_sym_uint degrees_;
     umap_uvec_mpz dict_;
 
-public:
+private:
     // Creates a MultivariateIntPolynomial in cannonical form based on
     // dictionary d.
     static RCP<const MultivariateIntPolynomial> from_dict(const set_sym &s,
@@ -48,6 +48,47 @@ public:
     integer_class eval(std::map<RCP<const Symbol>, integer_class,
                                 RCPSymbolCompare> &vals) const;
     std::string toString() const;
+
+    friend RCP<const MultivariateIntPolynomial>
+    add_mult_poly(const MultivariateIntPolynomial &a,
+                  const MultivariateIntPolynomial &b);
+    friend RCP<const MultivariateIntPolynomial>
+    neg_mult_poly(const MultivariateIntPolynomial &a);
+    friend RCP<const MultivariateIntPolynomial>
+    sub_mult_poly(const MultivariateIntPolynomial &a,
+                  const MultivariateIntPolynomial &b);
+    friend RCP<const MultivariateIntPolynomial>
+    mul_mult_poly(const MultivariateIntPolynomial &a,
+                  const MultivariateIntPolynomial &b);
+
+    friend RCP<const MultivariateIntPolynomial>
+    add_mult_poly(const MultivariateIntPolynomial &a,
+                  const UnivariateIntPolynomial &b);
+    friend RCP<const MultivariateIntPolynomial>
+    add_mult_poly(const UnivariateIntPolynomial &a,
+                  const MultivariateIntPolynomial &b);
+    friend RCP<const MultivariateIntPolynomial>
+    sub_mult_poly(const MultivariateIntPolynomial &a,
+                  const UnivariateIntPolynomial &b);
+    friend RCP<const MultivariateIntPolynomial>
+    sub_mult_poly(const UnivariateIntPolynomial &a,
+                  const MultivariateIntPolynomial &b);
+    friend RCP<const MultivariateIntPolynomial>
+    mul_mult_poly(const MultivariateIntPolynomial &a,
+                  const UnivariateIntPolynomial &b);
+    friend RCP<const MultivariateIntPolynomial>
+    mul_mult_poly(const UnivariateIntPolynomial &a,
+                  const MultivariateIntPolynomial &b);
+
+    friend RCP<const MultivariateIntPolynomial>
+    add_mult_poly(const UnivariateIntPolynomial &a,
+                  const UnivariateIntPolynomial &b);
+    friend RCP<const MultivariateIntPolynomial>
+    sub_mult_poly(const UnivariateIntPolynomial &a,
+                  const UnivariateIntPolynomial &b);
+    friend RCP<const MultivariateIntPolynomial>
+    mul_mult_poly(const UnivariateIntPolynomial &a,
+                  const UnivariateIntPolynomial &b);
 };
 
 // reconciles the positioning of the exponents in the vectors in the
@@ -119,7 +160,6 @@ sub_mult_poly(const UnivariateIntPolynomial &a,
 RCP<const MultivariateIntPolynomial>
 mul_mult_poly(const UnivariateIntPolynomial &a,
               const UnivariateIntPolynomial &b);
-
 } // SymEngine
 
 #endif

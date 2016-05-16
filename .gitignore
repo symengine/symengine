@@ -76,6 +76,7 @@ symengine/tests/eval/test_lambda_double
 symengine/tests/expression/test_expression
 symengine/tests/basic/test_series_expansion_UP
 symengine/tests/basic/test_series_expansion_URatP
+symengine/tests/basic/test_series_expansion_URatF
 
 # Benchmarks executables
 benchmarks/add1
@@ -104,6 +105,7 @@ benchmarks/expand7
 benchmarks/expand7_ginac
 benchmarks/series_expansion_sincos_piranha
 benchmarks/series_expansion_sinp
+benchmarks/series_expansion_sincos_flint
 
 #rubygem
 symengine/ruby/Gemfile.lock
