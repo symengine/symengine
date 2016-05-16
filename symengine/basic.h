@@ -155,7 +155,7 @@ public:
     std::string __str__() const;
 
     //! Substitutes 'subs_dict' into 'self'.
-    virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
+    RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
 
     //! expands the special function in terms of exp function
     virtual RCP<const Basic> expand_as_exp() const
@@ -233,6 +233,9 @@ bool is_a(const Basic &b);
 */
 template <class T>
 bool is_a_sub(const Basic &b);
+
+//! Returns true if `a` and `b` are exactly the same type `T`.
+bool is_same_type(const Basic &a, const Basic &b);
 
 //! Expands `self`
 RCP<const Basic> expand(const RCP<const Basic> &self);
