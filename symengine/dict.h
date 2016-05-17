@@ -183,6 +183,7 @@ std::ostream &operator<<(std::ostream &out,
                          const SymEngine::umap_basic_basic &d);
 std::ostream &operator<<(std::ostream &out, const SymEngine::vec_basic &d);
 std::ostream &operator<<(std::ostream &out, const SymEngine::set_basic &d);
+std::ostream &operator<<(std::ostream &out, const SymEngine::map_int_Expr &d);
 
 } // SymEngine
 

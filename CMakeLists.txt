@@ -364,6 +364,11 @@ if (WITH_OPENMP)
             "${CMAKE_CXX_FLAGS_RELEASE} ${OpenMP_CXX_FLAGS}")
         set(WITH_SYMENGINE_THREAD_SAFE yes)
     endif()
+elseif (CMAKE_CXX_COMPILER_ID MATCHES Clang|GNU)
+    set(CMAKE_CXX_FLAGS_DEBUG
+        "${CMAKE_CXX_FLAGS_DEBUG} -Wno-unknown-pragmas")
+    set(CMAKE_CXX_FLAGS_RELEASE
+        "${CMAKE_CXX_FLAGS_RELEASE} -Wno-unknown-pragmas")
 endif()
 
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
