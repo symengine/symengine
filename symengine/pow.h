@@ -46,7 +46,6 @@ public:
     {
         return exp_;
     }
-    virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
 
     virtual vec_basic get_args() const;
 };
@@ -67,38 +66,19 @@ inline RCP<const Basic> sqrt(const RCP<const Basic> &x)
     return pow(x, div(one, integer(2)));
 }
 
-class Log : public Function
+class Log : public OneArgFunction
 {
     // Logarithms are taken with the natural base, `e`. To get
     // a logarithm of a different base `b`, use `log(x, b)`,
     // which is essentially short-hand for `log(x)/log(b)`.
-private:
-    RCP<const Basic> arg_; //! The `arg` in `log(arg)`
-
 public:
     IMPLEMENT_TYPEID(LOG)
     //! Log Constructor
     Log(const RCP<const Basic> &arg);
-    //! \return Size of the hash
-    virtual std::size_t __hash__() const;
-    /*! Equality comparator
-     * \param o - Object to be compared with
-     * \return whether the 2 objects are equal
-     * */
-    virtual bool __eq__(const Basic &o) const;
-    virtual int compare(const Basic &o) const;
     //! \return `true` if canonical
     bool is_canonical(const Basic &arg) const;
-    //! \return `arg` of `log(arg)`
-    inline RCP<const Basic> get_arg() const
-    {
-        return arg_;
-    }
-    virtual vec_basic get_args() const
-    {
-        return {arg_};
-    }
-    virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
+    //! \return canonicalized `log`
+    virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
 };
 
 //! Returns the Natural Logarithm from argument `arg`

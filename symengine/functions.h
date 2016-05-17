@@ -17,29 +17,162 @@ class Function : public Basic
 {
 };
 
-class TrigFunction : public Function
+class OneArgFunction : public Function
 {
-
 private:
-    RCP<const Basic> arg_; //! The `arg` in `trigclass(arg)`
+    RCP<const Basic> arg_; //! The `arg` in `OneArgFunction(arg)`
 public:
     //! Constructor
-    TrigFunction(RCP<const Basic> arg) : arg_{arg} {};
-    //! \return Size of the hash
-    virtual std::size_t __hash__() const;
+    OneArgFunction(const RCP<const Basic> &arg) : arg_{arg} {};
+    //! \return the hash
+    inline std::size_t __hash__() const
+    {
+        std::size_t seed = this->get_type_code();
+        hash_combine<Basic>(seed, *arg_);
+        return seed;
+    }
     //! \return `arg_`
-    inline RCP<const Basic> get_arg() const
+    inline const RCP<const Basic> &get_arg() const
     {
         return arg_;
     }
-    virtual vec_basic get_args() const
+    virtual inline vec_basic get_args() const
     {
         return {arg_};
     }
     //! Method to construct classes with canonicalization
-    virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
-    //! Substitute with `subs_dict`
-    virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
+    virtual RCP<const Basic> create(const RCP<const Basic> &arg) const = 0;
+    /*! Equality comparator
+     * \param o - Object to be compared with
+     * \return whether the 2 objects are equal
+     * */
+    virtual inline bool __eq__(const Basic &o) const
+    {
+        return is_same_type(*this, o)
+               and eq(*get_arg(),
+                      *static_cast<const OneArgFunction &>(o).get_arg());
+    }
+    //! Structural equality comparator
+    virtual inline int compare(const Basic &o) const
+    {
+        SYMENGINE_ASSERT(is_same_type(*this, o))
+        return get_arg()->__cmp__(
+            *(static_cast<const OneArgFunction &>(o).get_arg()));
+    }
+};
+
+class TwoArgFunction : public Function
+{
+private:
+    RCP<const Basic> a_; //! `a` in `TwoArgFunction(a, b)`
+    RCP<const Basic> b_; //! `b` in `TwoArgFunction(a, b)`
+public:
+    //! Constructor
+    TwoArgFunction(const RCP<const Basic> &a, const RCP<const Basic> &b)
+        : a_{a}, b_{b} {};
+    //! \return the hash
+    inline std::size_t __hash__() const
+    {
+        std::size_t seed = this->get_type_code();
+        hash_combine<Basic>(seed, *a_);
+        hash_combine<Basic>(seed, *b_);
+        return seed;
+    }
+    //! \return `arg_`
+    inline const RCP<const Basic> &get_arg1() const
+    {
+        return a_;
+    }
+    //! \return `arg_`
+    inline const RCP<const Basic> &get_arg2() const
+    {
+        return b_;
+    }
+    virtual inline vec_basic get_args() const
+    {
+        return {a_, b_};
+    }
+    //! Method to construct classes with canonicalization
+    virtual RCP<const Basic> create(const RCP<const Basic> &a,
+                                    const RCP<const Basic> &b) const = 0;
+    /*! Equality comparator
+     * \param o - Object to be compared with
+     * \return whether the 2 objects are equal
+     * */
+    virtual inline bool __eq__(const Basic &o) const
+    {
+        return is_same_type(*this, o)
+               and eq(*get_arg1(),
+                      *static_cast<const TwoArgFunction &>(o).get_arg1())
+               and eq(*get_arg2(),
+                      *static_cast<const TwoArgFunction &>(o).get_arg2());
+    }
+    //! Structural equality comparator
+    virtual inline int compare(const Basic &o) const
+    {
+        SYMENGINE_ASSERT(is_same_type(*this, o))
+        const TwoArgFunction &t = static_cast<const TwoArgFunction &>(o);
+        if (neq(*get_arg1(), *(t.get_arg1()))) {
+            return get_arg1()->__cmp__(
+                *(static_cast<const TwoArgFunction &>(o).get_arg1()));
+        } else {
+            return get_arg2()->__cmp__(
+                *(static_cast<const TwoArgFunction &>(o).get_arg2()));
+        }
+    }
+};
+
+class MultiArgFunction : public Function
+{
+private:
+    vec_basic arg_;
+
+public:
+    //! Constructor
+    MultiArgFunction(const vec_basic &arg) : arg_{arg} {};
+    //! \return the hash
+    inline std::size_t __hash__() const
+    {
+        std::size_t seed = this->get_type_code();
+        for (const auto &a : arg_)
+            hash_combine<Basic>(seed, *a);
+        return seed;
+    }
+    virtual inline vec_basic get_args() const
+    {
+        return arg_;
+    }
+    inline const vec_basic &get_vec() const
+    {
+        return arg_;
+    }
+    //! Method to construct classes with canonicalization
+    virtual RCP<const Basic> create(const vec_basic &v) const = 0;
+    /*! Equality comparator
+     * \param o - Object to be compared with
+     * \return whether the 2 objects are equal
+     * */
+    virtual inline bool __eq__(const Basic &o) const
+    {
+        return is_same_type(*this, o)
+               and vec_basic_eq(
+                       get_vec(),
+                       static_cast<const MultiArgFunction &>(o).get_vec());
+    }
+    //! Structural equality comparator
+    virtual inline int compare(const Basic &o) const
+    {
+        SYMENGINE_ASSERT(is_same_type(*this, o))
+        return vec_basic_compare(
+            get_vec(), static_cast<const MultiArgFunction &>(o).get_vec());
+    }
+};
+
+class TrigFunction : public OneArgFunction
+{
+public:
+    //! Constructor
+    TrigFunction(RCP<const Basic> arg) : OneArgFunction(arg){};
 };
 
 /*! \return `true` if `arg` is of form `theta + n*pi/12`
@@ -75,13 +208,6 @@ public:
     IMPLEMENT_TYPEID(SIN)
     //! Sin Constructor
     Sin(const RCP<const Basic> &arg);
-    /*! Equality comparator
-     * \param o - Object to be compared with
-     * \return whether the 2 objects are equal
-     * */
-    virtual bool __eq__(const Basic &o) const;
-
-    virtual int compare(const Basic &o) const;
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &arg) const;
     //! \return Canonicalized sin
@@ -98,12 +224,6 @@ public:
     IMPLEMENT_TYPEID(COS)
     //! Cos Constructor
     Cos(const RCP<const Basic> &arg);
-    /*! Equality comparator
-     * \param o  Object to be compared with
-     * \return whether the 2 objects are equal
-     * */
-    virtual bool __eq__(const Basic &o) const;
-    virtual int compare(const Basic &o) const;
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &arg) const;
     //! \return Canonicalized cos
@@ -120,13 +240,6 @@ public:
     IMPLEMENT_TYPEID(TAN)
     //! Tan Constructor
     Tan(const RCP<const Basic> &arg);
-    /*! Equality comparator
-     * \param o - Object to be compared with
-     * \return whether the 2 objects are equal
-     * */
-    virtual bool __eq__(const Basic &o) const;
-
-    virtual int compare(const Basic &o) const;
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &arg) const;
     //! \return Canonicalized tan
@@ -142,13 +255,6 @@ public:
     IMPLEMENT_TYPEID(COT)
     //! Cot Constructor
     Cot(const RCP<const Basic> &arg);
-    /*! Equality comparator
-     * \param o - Object to be compared with
-     * \return whether the 2 objects are equal
-     * */
-    virtual bool __eq__(const Basic &o) const;
-
-    virtual int compare(const Basic &o) const;
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &arg) const;
     //! \return Canonicalized cot
@@ -164,13 +270,6 @@ public:
     IMPLEMENT_TYPEID(CSC)
     //! Csc Constructor
     Csc(const RCP<const Basic> &arg);
-    /*! Equality comparator
-     * \param o - Object to be compared with
-     * \return whether the 2 objects are equal
-     * */
-    virtual bool __eq__(const Basic &o) const;
-
-    virtual int compare(const Basic &o) const;
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &arg) const;
     //! \return Canonicalized csc
@@ -186,13 +285,6 @@ public:
     IMPLEMENT_TYPEID(SEC)
     //! Sec Constructor
     Sec(const RCP<const Basic> &arg);
-    /*! Equality comparator
-     * \param o - Object to be compared with
-     * \return whether the 2 objects are equal
-     * */
-    virtual bool __eq__(const Basic &o) const;
-
-    virtual int compare(const Basic &o) const;
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &arg) const;
     //! \return Canonicalized sec
@@ -208,12 +300,6 @@ public:
     IMPLEMENT_TYPEID(ASIN)
     //! ASin Constructor
     ASin(const RCP<const Basic> &arg);
-    /*! Equality comparator
-     * \param o - Object to be compared with
-     * \return whether the 2 objects are equal
-     * */
-    virtual bool __eq__(const Basic &o) const;
-    virtual int compare(const Basic &o) const;
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &arg) const;
     //! \return Canonicalized asin
@@ -230,12 +316,6 @@ public:
     IMPLEMENT_TYPEID(ACOS)
     //! ACos Constructor
     ACos(const RCP<const Basic> &arg);
-    /*! Equality comparator
-     * \param o - Object to be compared with
-     * \return whether the 2 objects are equal
-     * */
-    virtual bool __eq__(const Basic &o) const;
-    virtual int compare(const Basic &o) const;
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &arg) const;
     //! \return Canonicalized acos
@@ -252,12 +332,6 @@ public:
     IMPLEMENT_TYPEID(ASEC)
     //! ASec Constructor
     ASec(const RCP<const Basic> &arg);
-    /*! Equality comparator
-     * \param o - Object to be compared with
-     * \return whether the 2 objects are equal
-     * */
-    virtual bool __eq__(const Basic &o) const;
-    virtual int compare(const Basic &o) const;
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &arg) const;
     //! \return Canonicalized asec
@@ -274,12 +348,6 @@ public:
     IMPLEMENT_TYPEID(ACSC)
     //! ACsc Constructor
     ACsc(const RCP<const Basic> &arg);
-    /*! Equality comparator
-     * \param o - Object to be compared with
-     * \return whether the 2 objects are equal
-     * */
-    virtual bool __eq__(const Basic &o) const;
-    virtual int compare(const Basic &o) const;
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &arg) const;
     //! \return Canonicalized acsc
@@ -296,12 +364,6 @@ public:
     IMPLEMENT_TYPEID(ATAN)
     //! ATan Constructor
     ATan(const RCP<const Basic> &arg);
-    /*! Equality comparator
-     * \param o - Object to be compared with
-     * \return whether the 2 objects are equal
-     * */
-    virtual bool __eq__(const Basic &o) const;
-    virtual int compare(const Basic &o) const;
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &arg) const;
     //! \return Canonicalized atan
@@ -318,12 +380,6 @@ public:
     IMPLEMENT_TYPEID(ACOT)
     //! ACot Constructor
     ACot(const RCP<const Basic> &arg);
-    /*! Equality comparator
-     * \param o - Object to be compared with
-     * \return whether the 2 objects are equal
-     * */
-    virtual bool __eq__(const Basic &o) const;
-    virtual int compare(const Basic &o) const;
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &arg) const;
     //! \return Canonicalized acot
@@ -333,86 +389,55 @@ public:
 //! Canonicalize ACot:
 RCP<const Basic> acot(const RCP<const Basic> &arg);
 
-class ATan2 : public Function
+class ATan2 : public TwoArgFunction
 {
-private:
-    RCP<const Basic> num_; //! The `y` in `atan2(y, x)`
-    RCP<const Basic> den_; //! The `x` in `atan2(y, x)`
 public:
     IMPLEMENT_TYPEID(ATAN2)
     //! ATan2 Constructor
     ATan2(const RCP<const Basic> &num, const RCP<const Basic> &den);
-    /*! Equality comparator
-     * \param o - Object to be compared with
-     * \return whether the 2 objects are equal
-     * */
-    virtual bool __eq__(const Basic &o) const;
-    virtual int compare(const Basic &o) const;
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &num,
                       const RCP<const Basic> &den) const;
-    //! \return Size of the hash
-    virtual std::size_t __hash__() const;
     //! \return `y` in `atan2(y, x)`
     inline RCP<const Basic> get_num() const
     {
-        return num_;
+        return get_arg1();
     }
     //! \return `x` in `atan2(y, x)`
     inline RCP<const Basic> get_den() const
     {
-        return den_;
+        return get_arg2();
     }
-
-    virtual vec_basic get_args() const
-    {
-        return {num_, den_};
-    }
+    //! \return canonicalized `atan2`
+    virtual RCP<const Basic> create(const RCP<const Basic> &a,
+                                    const RCP<const Basic> &b) const;
 };
 
 //! Canonicalize ATan2:
 RCP<const Basic> atan2(const RCP<const Basic> &num,
                        const RCP<const Basic> &den);
 
-class LambertW : public Function
+class LambertW : public OneArgFunction
 {
     // Lambert W function, defined as the inverse function of
     // x*exp(x). This function represents the principal branch
     // of this inverse function, which is multivalued.
     // For more information, see:
     // http://en.wikipedia.org/wiki/Lambert_W_function
-private:
-    RCP<const Basic> arg_;
-
 public:
     IMPLEMENT_TYPEID(LAMBERTW)
     //! LambertW Constructor
     LambertW(const RCP<const Basic> &arg);
-    //! \return Size of the hash
-    virtual std::size_t __hash__() const;
-    /*! Equality comparator
-     * \param o  Object to be compared with
-     * \return whether the 2 objects are equal
-     * */
-    virtual bool __eq__(const Basic &o) const;
-    virtual int compare(const Basic &o) const;
-    //! \return `arg_`
-    inline RCP<const Basic> get_arg() const
-    {
-        return arg_;
-    }
-    virtual vec_basic get_args() const
-    {
-        return {arg_};
-    }
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &arg) const;
+    //! \return canonicalized lambertw
+    virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
 };
 
 //! Create a new LambertW instance:
 RCP<const Basic> lambertw(const RCP<const Basic> &arg);
 
-class Zeta : public Function
+class Zeta : public TwoArgFunction
 {
     // Hurwitz zeta function (or Riemann zeta function).
     //
@@ -425,80 +450,52 @@ class Zeta : public Function
     // If no value is passed for :math:`a`, by this function assumes a default
     // value
     // of :math:`a = 1`, yielding the Riemann zeta function.
-
-private:
-    RCP<const Basic> s_;
-    RCP<const Basic> a_;
-
 public:
     IMPLEMENT_TYPEID(ZETA)
     //! Zeta Constructor
     Zeta(const RCP<const Basic> &s, const RCP<const Basic> &a);
     //! Zeta Constructor
     Zeta(const RCP<const Basic> &s);
-    //! \return Size of the hash
-    virtual std::size_t __hash__() const;
-    /*! Equality comparator
-     * \param o  Object to be compared with
-     * \return whether the 2 objects are equal
-     * */
-    virtual bool __eq__(const Basic &o) const;
-    virtual int compare(const Basic &o) const;
     //! \return `s_`
     inline RCP<const Basic> get_s() const
     {
-        return s_;
+        return get_arg1();
     }
     //! \return `a_`
     inline RCP<const Basic> get_a() const
     {
-        return a_;
-    }
-    virtual vec_basic get_args() const
-    {
-        return {s_, a_};
+        return get_arg2();
     }
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &s,
                       const RCP<const Basic> &a) const;
+    //! \return canonicalized `zeta`
+    virtual RCP<const Basic> create(const RCP<const Basic> &a,
+                                    const RCP<const Basic> &b) const;
 };
 
 //! Create a new Zeta instance:
 RCP<const Basic> zeta(const RCP<const Basic> &s, const RCP<const Basic> &a);
 RCP<const Basic> zeta(const RCP<const Basic> &s);
 
-class Dirichlet_eta : public Function
+class Dirichlet_eta : public OneArgFunction
 {
     // See http://en.wikipedia.org/wiki/Dirichlet_eta_function
-
-private:
-    RCP<const Basic> s_;
-
 public:
     IMPLEMENT_TYPEID(DIRICHLET_ETA)
     //! Dirichlet_eta Constructor
     Dirichlet_eta(const RCP<const Basic> &s);
-    //! \return Size of the hash
-    virtual std::size_t __hash__() const;
-    /*! Equality comparator
-     * \param o  Object to be compared with
-     * \return whether the 2 objects are equal
-     * */
-    virtual bool __eq__(const Basic &o) const;
-    virtual int compare(const Basic &o) const;
-    //! \return `s_`
+    //! \return `s`
     inline RCP<const Basic> get_s() const
     {
-        return s_;
-    }
-    virtual vec_basic get_args() const
-    {
-        return {s_};
+        return get_arg();
     }
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &s) const;
     //! Rewrites in the form of zeta
     RCP<const Basic> rewrite_as_zeta() const;
+    //! \return Canonicalized zeta
+    virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
 };
 
 //! Create a new Dirichlet_eta instance:
@@ -535,7 +532,6 @@ public:
     }
     //! \return `true` if canonical
     bool is_canonical(const vec_basic &arg) const;
-    virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
     virtual RCP<const Basic> create(const vec_basic &x) const;
 };
 
@@ -608,7 +604,6 @@ public:
     }
     bool is_canonical(const RCP<const Basic> &arg,
                       const multiset_basic &x) const;
-    virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
 };
 
 /*! Subs operator
@@ -648,32 +643,13 @@ public:
 
     bool is_canonical(const RCP<const Basic> &arg,
                       const map_basic_basic &x) const;
-    virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
 };
 
-class HyperbolicFunction : public Function
+class HyperbolicFunction : public OneArgFunction
 {
-
-private:
-    RCP<const Basic> arg_; //! The `arg` in `hyperbolicclass(arg)`
 public:
     //! Constructor
-    HyperbolicFunction(RCP<const Basic> arg) : arg_{arg} {};
-    //! \return Size of the hash
-    virtual std::size_t __hash__() const;
-    //! \return `arg_`
-    inline RCP<const Basic> get_arg() const
-    {
-        return arg_;
-    }
-    virtual vec_basic get_args() const
-    {
-        return {arg_};
-    }
-    //! Method to construct classes with canonicalization
-    virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
-    //! Substitute with `subs_dict`
-    virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
+    HyperbolicFunction(RCP<const Basic> arg) : OneArgFunction{arg} {};
 };
 
 class Sinh : public HyperbolicFunction
@@ -683,12 +659,6 @@ public:
     IMPLEMENT_TYPEID(SINH)
     //! Sinh Constructor
     Sinh(const RCP<const Basic> &arg);
-    /*! Equality comparator
-     * \param o - Object to be compared with
-     * \return whether the 2 objects are equal
-     * */
-    virtual bool __eq__(const Basic &o) const;
-    virtual int compare(const Basic &o) const;
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &arg) const;
     //! \return Canonicalized sinh
@@ -707,13 +677,6 @@ public:
     IMPLEMENT_TYPEID(CSCH)
     //! Csch Constructor
     Csch(const RCP<const Basic> &arg);
-    /*! Equality comparator
-     * \param o - Object to be compared with
-     * \return whether the 2 objects are equal
-     * */
-    virtual bool __eq__(const Basic &o) const;
-    //! Compares `arg` with `o` returns greater than, equal or less than
-    virtual int compare(const Basic &o) const;
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &arg) const;
     //! \return Canonicalized csch
@@ -732,12 +695,6 @@ public:
     IMPLEMENT_TYPEID(COSH)
     //! Cosh Constructor
     Cosh(const RCP<const Basic> &arg);
-    /*! Equality comparator
-     * \param o - Object to be compared with
-     * \return whether the 2 objects are equal
-     * */
-    virtual bool __eq__(const Basic &o) const;
-    virtual int compare(const Basic &o) const;
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &arg) const;
     //! \return Canonicalized cosh
@@ -756,13 +713,6 @@ public:
     IMPLEMENT_TYPEID(SECH)
     //! Sech Constructor
     Sech(const RCP<const Basic> &arg);
-    /*! Equality comparator
-     * \param o - Object to be compared with
-     * \return whether the 2 objects are equal
-     * */
-    virtual bool __eq__(const Basic &o) const;
-    //! Compares `arg` with `o` returns greater than, equal or less than
-    virtual int compare(const Basic &o) const;
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &arg) const;
     //! \return Canonicalized sech
@@ -781,12 +731,6 @@ public:
     IMPLEMENT_TYPEID(TANH)
     //! Tanh Constructor
     Tanh(const RCP<const Basic> &arg);
-    /*! Equality comparator
-     * \param o - Object to be compared with
-     * \return whether the 2 objects are equal
-     * */
-    virtual bool __eq__(const Basic &o) const;
-    virtual int compare(const Basic &o) const;
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &arg) const;
     //! \return Canonicalized tanh
@@ -805,12 +749,6 @@ public:
     IMPLEMENT_TYPEID(COTH)
     //! Coth Constructor
     Coth(const RCP<const Basic> &arg);
-    /*! Equality comparator
-     * \param o - Object to be compared with
-     * \return whether the 2 objects are equal
-     * */
-    virtual bool __eq__(const Basic &o) const;
-    virtual int compare(const Basic &o) const;
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &arg) const;
     //! \return Canonicalized coth
@@ -829,12 +767,6 @@ public:
     IMPLEMENT_TYPEID(ASINH)
     //! ASinh Constructor
     ASinh(const RCP<const Basic> &arg);
-    /*! Equality comparator
-     * \param o - Object to be compared with
-     * \return whether the 2 objects are equal
-     * */
-    virtual bool __eq__(const Basic &o) const;
-    virtual int compare(const Basic &o) const;
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &arg) const;
     //! \return Canonicalized asinh
@@ -851,12 +783,6 @@ public:
     IMPLEMENT_TYPEID(ACSCH)
     //! ACsch Constructor
     ACsch(const RCP<const Basic> &arg);
-    /*! Equality comparator
-     * \param o - Object to be compared with
-     * \return whether the 2 objects are equal
-     * */
-    virtual bool __eq__(const Basic &o) const;
-    virtual int compare(const Basic &o) const;
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &arg) const;
     //! \return Canonicalized acsch
@@ -873,12 +799,6 @@ public:
     IMPLEMENT_TYPEID(ACOSH)
     //! ACosh Constructor
     ACosh(const RCP<const Basic> &arg);
-    /*! Equality comparator
-     * \param o - Object to be compared with
-     * \return whether the 2 objects are equal
-     * */
-    virtual bool __eq__(const Basic &o) const;
-    virtual int compare(const Basic &o) const;
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &arg) const;
     //! \return Canonicalized acosh
@@ -895,12 +815,6 @@ public:
     IMPLEMENT_TYPEID(ATANH)
     //! ATanh Constructor
     ATanh(const RCP<const Basic> &arg);
-    /*! Equality comparator
-     * \param o - Object to be compared with
-     * \return whether the 2 objects are equal
-     * */
-    virtual bool __eq__(const Basic &o) const;
-    virtual int compare(const Basic &o) const;
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &arg) const;
     //! \return Canonicalized atanh
@@ -917,12 +831,6 @@ public:
     IMPLEMENT_TYPEID(ACOTH)
     //! ACoth Constructor
     ACoth(const RCP<const Basic> &arg);
-    /*! Equality comparator
-     * \param o - Object to be compared with
-     * \return whether the 2 objects are equal
-     * */
-    virtual bool __eq__(const Basic &o) const;
-    virtual int compare(const Basic &o) const;
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &arg) const;
     //! \return Canonicalized acoth
@@ -939,12 +847,6 @@ public:
     IMPLEMENT_TYPEID(ASECH)
     //! ASech Constructor
     ASech(const RCP<const Basic> &arg);
-    /*! Equality comparator
-     * \param o - Object to be compared with
-     * \return whether the 2 objects are equal
-     * */
-    virtual bool __eq__(const Basic &o) const;
-    virtual int compare(const Basic &o) const;
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &arg) const;
     //! \return Canonicalized asech
@@ -954,7 +856,7 @@ public:
 //! Canonicalize ASech:
 RCP<const Basic> asech(const RCP<const Basic> &arg);
 
-class KroneckerDelta : public Function
+class KroneckerDelta : public TwoArgFunction
 {
     /*! The discrete, or Kronecker, delta function.
      * A function that takes in two integers `i` and `j`. It returns `0` if `i`
@@ -962,37 +864,23 @@ class KroneckerDelta : public Function
      * not equal or it returns `1` if `i` and `j` are equal.
      * http://en.wikipedia.org/wiki/Kronecker_delta
      **/
-private:
-    RCP<const Basic> i_;
-    RCP<const Basic> j_;
-
 public:
     IMPLEMENT_TYPEID(KRONECKERDELTA)
     //! KroneckerDelta Constructor
     KroneckerDelta(const RCP<const Basic> &i, const RCP<const Basic> &j);
-    /*! Equality comparator
-     * \param o - Object to be compared with
-     * \return whether the 2 objects are equal
-     * */
-    virtual bool __eq__(const Basic &o) const;
-    virtual int compare(const Basic &o) const;
-    //! \return Size of the hash
-    virtual std::size_t __hash__() const;
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &i,
                       const RCP<const Basic> &j) const;
-    virtual vec_basic get_args() const
-    {
-        return {i_, j_};
-    }
-    RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
+    //! \return canonicalized `KroneckerDelta`
+    virtual RCP<const Basic> create(const RCP<const Basic> &a,
+                                    const RCP<const Basic> &b) const;
 };
 
 //! Canonicalize KroneckerDelta:
 RCP<const Basic> kronecker_delta(const RCP<const Basic> &i,
                                  const RCP<const Basic> &j);
 
-class LeviCivita : public Function
+class LeviCivita : public MultiArgFunction
 {
     /*! Represent the Levi-Civita symbol.
      *  For even permutations of indices it returns 1, for odd permutations -1,
@@ -1001,33 +889,20 @@ class LeviCivita : public Function
      *
      *  Thus it represents an alternating pseudotensor.
      **/
-private:
-    vec_basic arg_;
-
 public:
     IMPLEMENT_TYPEID(LEVICIVITA)
     //! LeviCivita Constructor
     LeviCivita(const vec_basic &&arg);
-    /*! Equality comparator
-     * \param o - Object to be compared with
-     * \return whether the 2 objects are equal
-     * */
-    virtual bool __eq__(const Basic &o) const;
-    virtual int compare(const Basic &o) const;
-    //! \return Size of the hash
-    virtual std::size_t __hash__() const;
     //! \return `true` if canonical
     bool is_canonical(const vec_basic &arg) const;
-    virtual vec_basic get_args() const
-    {
-        return arg_;
-    }
+    //! \return canonicalized Max
+    virtual RCP<const Basic> create(const vec_basic &arg) const;
 };
 
 //! Canonicalize LeviCivita:
 RCP<const Basic> levi_civita(const vec_basic &arg);
 
-class Erf : public Function
+class Erf : public OneArgFunction
 {
     /*   The Gauss error function. This function is defined as:
      *
@@ -1035,37 +910,23 @@ class Erf : public Function
      *      \mathrm{erf}(x) = \frac{2}{\sqrt{\pi}} \int_0^x e^{-t^2}
      *\mathrm{d}t.
      **/
-private:
-    RCP<const Basic> arg_;
-
 public:
     IMPLEMENT_TYPEID(ERF)
     //! Erf Constructor
-    Erf(const RCP<const Basic> &arg) : arg_{arg}
+    Erf(const RCP<const Basic> &arg) : OneArgFunction(arg)
     {
-        SYMENGINE_ASSERT(is_canonical(arg_))
+        SYMENGINE_ASSERT(is_canonical(arg))
     }
-    /*! Equality comparator
-     * \param o - Object to be compared with
-     * \return whether the 2 objects are equal
-     * */
-    virtual bool __eq__(const Basic &o) const;
-    virtual int compare(const Basic &o) const;
-    //! \return Size of the hash
-    virtual std::size_t __hash__() const;
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &arg) const;
-    virtual vec_basic get_args() const
-    {
-        return {arg_};
-    }
-    RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
+    //! \return Canonicalized erf
+    virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
 };
 
 //! Canonicalize Erf:
 RCP<const Basic> erf(const RCP<const Basic> &arg);
 
-class Gamma : public Function
+class Gamma : public OneArgFunction
 {
     /*!    The gamma function
      *
@@ -1077,138 +938,81 @@ class Gamma : public Function
      *  an integer. More general, `\Gamma(z)` is defined in the whole complex
      *  plane except at the negative integers where there are simple poles.
      **/
-private:
-    RCP<const Basic> arg_;
-
 public:
     IMPLEMENT_TYPEID(GAMMA)
     //! Gamma Constructor
     Gamma(const RCP<const Basic> &arg);
-    /*! Equality comparator
-     * \param o - Object to be compared with
-     * \return whether the 2 objects are equal
-     * */
-    virtual bool __eq__(const Basic &o) const;
-    virtual int compare(const Basic &o) const;
-    //! \return Size of the hash
-    virtual std::size_t __hash__() const;
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &arg) const;
-    virtual vec_basic get_args() const
-    {
-        return {arg_};
-    }
-    //! Substitute with `subs_dict`
-    virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
+    //! \return Canonicalized gamma
+    virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
 };
 
 //! Canonicalize Gamma:
 RCP<const Basic> gamma(const RCP<const Basic> &arg);
 
-class LowerGamma : public Function
+class LowerGamma : public TwoArgFunction
 {
     //! The lower incomplete gamma function.
-private:
-    RCP<const Basic> s_;
-    RCP<const Basic> x_;
-
 public:
     IMPLEMENT_TYPEID(LOWERGAMMA)
     //! LowerGamma Constructor
     LowerGamma(const RCP<const Basic> &s, const RCP<const Basic> &x);
-    /*! Equality comparator
-     * \param o - Object to be compared with
-     * \return whether the 2 objects are equal
-     * */
-    virtual bool __eq__(const Basic &o) const;
-    virtual int compare(const Basic &o) const;
-    //! \return Size of the hash
-    virtual std::size_t __hash__() const;
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &s,
                       const RCP<const Basic> &x) const;
-    virtual vec_basic get_args() const
-    {
-        return {s_, x_};
-    }
-    RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
+    //! \return canonicalized `LowerGamma`
+    virtual RCP<const Basic> create(const RCP<const Basic> &a,
+                                    const RCP<const Basic> &b) const;
 };
 
 //! Canonicalize LowerGamma:
 RCP<const Basic> lowergamma(const RCP<const Basic> &s,
                             const RCP<const Basic> &x);
 
-class UpperGamma : public Function
+class UpperGamma : public TwoArgFunction
 {
     //! The upper incomplete gamma function.
-private:
-    RCP<const Basic> s_;
-    RCP<const Basic> x_;
-
 public:
     IMPLEMENT_TYPEID(UPPERGAMMA)
     //! UpperGamma Constructor
     UpperGamma(const RCP<const Basic> &s, const RCP<const Basic> &x);
-    /*! Equality comparator
-     * \param o - Object to be compared with
-     * \return whether the 2 objects are equal
-     * */
-    virtual bool __eq__(const Basic &o) const;
-    virtual int compare(const Basic &o) const;
-    //! \return Size of the hash
-    virtual std::size_t __hash__() const;
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &s,
                       const RCP<const Basic> &x) const;
-    virtual vec_basic get_args() const
-    {
-        return {s_, x_};
-    }
-    RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
+    //! \return canonicalized `UpperGamma`
+    virtual RCP<const Basic> create(const RCP<const Basic> &a,
+                                    const RCP<const Basic> &b) const;
 };
 
 //! Canonicalize UpperGamma:
 RCP<const Basic> uppergamma(const RCP<const Basic> &s,
                             const RCP<const Basic> &x);
 
-class LogGamma : public Function
+class LogGamma : public OneArgFunction
 {
     /*!    The loggamma function
         The `loggamma` function implements the logarithm of the
         gamma function i.e, `\log\Gamma(x)`.
      **/
-private:
-    RCP<const Basic> arg_;
-
 public:
     IMPLEMENT_TYPEID(LOGGAMMA)
     //! LogGamma Constructor
-    LogGamma(const RCP<const Basic> &arg) : arg_{arg}
+    LogGamma(const RCP<const Basic> &arg) : OneArgFunction(arg)
     {
-        SYMENGINE_ASSERT(is_canonical(arg_))
+        SYMENGINE_ASSERT(is_canonical(arg))
     }
-    /*! Equality comparator
-     * \param o - Object to be compared with
-     * \return whether the 2 objects are equal
-     * */
-    virtual bool __eq__(const Basic &o) const;
-    virtual int compare(const Basic &o) const;
-    //! \return Size of the hash
-    virtual std::size_t __hash__() const;
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &arg) const;
-    virtual vec_basic get_args() const
-    {
-        return {arg_};
-    }
-    RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
     RCP<const Basic> rewrite_as_gamma() const;
+    //! \return canonicalized loggamma
+    virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
 };
 
 //! Canonicalize LogGamma:
 RCP<const Basic> loggamma(const RCP<const Basic> &arg);
 
-class Beta : public Function
+class Beta : public TwoArgFunction
 {
     /*!    The beta function, also called the Euler integral
      *     of the first kind, is a special function defined by
@@ -1216,42 +1020,29 @@ class Beta : public Function
      *   .. math::
      *      \Beta(x, y) := \int^{1}_{0} t^{x-1} (1-t)^{y-1} \mathrm{d}t.
      **/
-private:
-    RCP<const Basic> x_;
-    RCP<const Basic> y_;
-
 public:
     IMPLEMENT_TYPEID(BETA)
     //! Beta Constructor
-    Beta(const RCP<const Basic> &x, const RCP<const Basic> &y) : x_{x}, y_{y}
+    Beta(const RCP<const Basic> &x, const RCP<const Basic> &y)
+        : TwoArgFunction(x, y)
     {
-        SYMENGINE_ASSERT(is_canonical(x_, y_))
+        SYMENGINE_ASSERT(is_canonical(x, y))
     }
     //! return `Beta` with ordered arguments
     static RCP<const Beta> from_two_basic(const RCP<const Basic> &x,
                                           const RCP<const Basic> &y);
-    /*! Equality comparator
-     * \param o - Object to be compared with
-     * \return whether the 2 objects are equal
-     * */
-    virtual bool __eq__(const Basic &o) const;
-    virtual int compare(const Basic &o) const;
-    //! \return Size of the hash
-    virtual std::size_t __hash__() const;
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &s, const RCP<const Basic> &x);
-    virtual vec_basic get_args() const
-    {
-        return {x_, y_};
-    }
     RCP<const Basic> rewrite_as_gamma() const;
-    RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
+    //! \return canonicalized `Beta`
+    virtual RCP<const Basic> create(const RCP<const Basic> &a,
+                                    const RCP<const Basic> &b) const;
 };
 
 //! Canonicalize Beta:
 RCP<const Basic> beta(const RCP<const Basic> &x, const RCP<const Basic> &y);
 
-class PolyGamma : public Function
+class PolyGamma : public TwoArgFunction
 {
     /*!    The polygamma function
      *
@@ -1263,122 +1054,68 @@ class PolyGamma : public Function
      *  \psi^{(n)} (z) := \frac{\mathrm{d}^{n+1}}{\mathrm{d} z^{n+1}}
      *\log\Gamma(z).
      **/
-private:
-    RCP<const Basic> n_;
-    RCP<const Basic> x_;
-
 public:
     IMPLEMENT_TYPEID(POLYGAMMA)
     //! PolyGamma Constructor
     PolyGamma(const RCP<const Basic> &n, const RCP<const Basic> &x)
-        : n_{n}, x_{x}
+        : TwoArgFunction(n, x)
     {
-        SYMENGINE_ASSERT(is_canonical(n_, x_))
+        SYMENGINE_ASSERT(is_canonical(n, x))
     }
-    /*! Equality comparator
-     * \param o - Object to be compared with
-     * \return whether the 2 objects are equal
-     * */
-    virtual bool __eq__(const Basic &o) const;
-    virtual int compare(const Basic &o) const;
-    //! \return Size of the hash
-    virtual std::size_t __hash__() const;
     bool is_canonical(const RCP<const Basic> &n, const RCP<const Basic> &x);
-    virtual vec_basic get_args() const
-    {
-        return {n_, x_};
-    }
     RCP<const Basic> rewrite_as_zeta() const;
-    //! Substitute with `subs_dict`
-    virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
+    //! \return canonicalized `PolyGamma`
+    virtual RCP<const Basic> create(const RCP<const Basic> &a,
+                                    const RCP<const Basic> &b) const;
 };
 
 //! Canonicalize PolyGamma
 RCP<const Basic> polygamma(const RCP<const Basic> &n,
                            const RCP<const Basic> &x);
 
-class Abs : public Function
+class Abs : public OneArgFunction
 {
     /*!    The absolute value function
      **/
-private:
-    RCP<const Basic> arg_;
-
 public:
     IMPLEMENT_TYPEID(ABS)
     //! Abs Constructor
     Abs(const RCP<const Basic> &arg);
-    /*! Equality comparator
-     * \param o - Object to be compared with
-     * \return whether the 2 objects are equal
-     * */
-    virtual bool __eq__(const Basic &o) const;
-    virtual int compare(const Basic &o) const;
-    //! \return Size of the hash
-    virtual std::size_t __hash__() const;
     //! \return `true` if canonical
     bool is_canonical(const RCP<const Basic> &arg) const;
-    inline RCP<const Basic> get_arg() const
-    {
-        return arg_;
-    }
-    virtual vec_basic get_args() const
-    {
-        return {arg_};
-    }
+    //! \return canonicalized abs
+    virtual RCP<const Basic> create(const RCP<const Basic> &arg) const;
 };
 
 //! Canonicalize Abs:
 RCP<const Basic> abs(const RCP<const Basic> &arg);
 
-class Max : public Function
+class Max : public MultiArgFunction
 {
-
-private:
-    vec_basic arg_;
-
 public:
     IMPLEMENT_TYPEID(MAX)
     //! Max Constructor
     Max(const vec_basic &&arg);
-
-    virtual bool __eq__(const Basic &o) const;
-    virtual int compare(const Basic &o) const;
-    //! \return Size of the hash
-    virtual std::size_t __hash__() const;
     //! \return `true` if canonical
     bool is_canonical(const vec_basic &arg) const;
-    inline vec_basic get_args() const
-    {
-        return arg_;
-    }
+    //! \return canonicalized Max
+    virtual RCP<const Basic> create(const vec_basic &arg) const;
 };
 
 //! Canonicalize Max:
 RCP<const Basic> max(const vec_basic &arg);
 
-class Min : public Function
+class Min : public MultiArgFunction
 {
-
-private:
-    vec_basic arg_;
-
 public:
     IMPLEMENT_TYPEID(MIN)
     //! Min Constructor
     Min(const vec_basic &&arg);
     Min(const RCP<const Basic> &arg, ...);
-
-    virtual bool __eq__(const Basic &o) const;
-    virtual int compare(const Basic &o) const;
-    //! \return Size of the hash
-    virtual std::size_t __hash__() const;
     //! \return `true` if canonical
     bool is_canonical(const vec_basic &arg) const;
-    inline vec_basic get_args() const
-    {
-        return arg_;
-    }
+    //! \return canonicalized Max
+    virtual RCP<const Basic> create(const vec_basic &arg) const;
 };
 
 //! Canonicalize Min:

@@ -255,20 +255,6 @@ void multinomial_coefficients_mpz(int m, int n, map_vec_mpz &r)
     }
 }
 
-RCP<const Basic> Pow::subs(const map_basic_basic &subs_dict) const
-{
-    RCP<const Pow> self = rcp_from_this_cast<const Pow>();
-    auto it = subs_dict.find(self);
-    if (it != subs_dict.end())
-        return it->second;
-    RCP<const Basic> base_new = base_->subs(subs_dict);
-    RCP<const Basic> exp_new = exp_->subs(subs_dict);
-    if (base_new == base_ and exp_new == exp_)
-        return self;
-    else
-        return pow(base_new, exp_new);
-}
-
 vec_basic Pow::get_args() const
 {
     return {base_, exp_};
@@ -279,7 +265,7 @@ RCP<const Basic> exp(const RCP<const Basic> &x)
     return pow(E, x);
 }
 
-Log::Log(const RCP<const Basic> &arg) : arg_{arg}
+Log::Log(const RCP<const Basic> &arg) : OneArgFunction(arg)
 {
     SYMENGINE_ASSERT(is_canonical(*arg))
 }
@@ -307,40 +293,9 @@ bool Log::is_canonical(const Basic &arg) const
     return true;
 }
 
-std::size_t Log::__hash__() const
+RCP<const Basic> Log::create(const RCP<const Basic> &a) const
 {
-    std::size_t seed = LOG;
-    hash_combine<Basic>(seed, *arg_);
-    return seed;
-}
-
-bool Log::__eq__(const Basic &o) const
-{
-    if (is_a<Log>(o) and eq(*arg_, *(static_cast<const Log &>(o).get_arg())))
-        return true;
-
-    return false;
-}
-
-int Log::compare(const Basic &o) const
-{
-    SYMENGINE_ASSERT(is_a<Log>(o))
-    const Log &s = static_cast<const Log &>(o);
-    return arg_->__cmp__(*s.get_arg());
-}
-
-RCP<const Basic> Log::subs(const map_basic_basic &subs_dict) const
-{
-    RCP<const Log> self = rcp_from_this_cast<const Log>();
-    auto it = subs_dict.find(self);
-    if (it != subs_dict.end())
-        return it->second;
-    RCP<const Basic> arg_new = arg_->subs(subs_dict);
-    if (arg_new == arg_) {
-        return self;
-    } else {
-        return log(arg_new);
-    }
+    return log(a);
 }
 
 RCP<const Basic> log(const RCP<const Basic> &arg)
