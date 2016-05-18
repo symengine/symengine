@@ -32,7 +32,6 @@ typedef std::vector<int> vec_int;
 typedef std::vector<RCP<const Basic>> vec_basic;
 typedef std::vector<RCP<const Integer>> vec_integer;
 typedef std::set<RCP<const Basic>, RCPBasicKeyLess> set_basic;
-typedef std::set<RCP<const Number>, RCPBasicKeyLess> set_number;
 typedef std::multiset<RCP<const Basic>, RCPBasicKeyLess> multiset_basic;
 typedef std::map<vec_int, long long int> map_vec_int;
 typedef std::map<vec_int, integer_class> map_vec_mpz;
@@ -184,7 +183,6 @@ std::ostream &operator<<(std::ostream &out,
                          const SymEngine::umap_basic_basic &d);
 std::ostream &operator<<(std::ostream &out, const SymEngine::vec_basic &d);
 std::ostream &operator<<(std::ostream &out, const SymEngine::set_basic &d);
-std::ostream &operator<<(std::ostream &out, const SymEngine::set_number &d);
 
 } // SymEngine
 

@@ -26,7 +26,7 @@ using SymEngine::rcp_dynamic_cast;
 using SymEngine::Complex;
 using SymEngine::symbol;
 using SymEngine::is_a;
-using SymEngine::set_number;
+using SymEngine::symbol;
 
 TEST_CASE("Interval : Basic", "[basic]")
 {
@@ -188,13 +188,12 @@ TEST_CASE("UniversalSet : Basic", "[basic]")
 
 TEST_CASE("FiniteSet : Basic", "[basic]")
 {
-    RCP<const Set> r1 = finiteset({zero, one});
+    RCP<const Set> r1 = finiteset({zero, one, symbol("x")});
     RCP<const Set> r2 = finiteset({zero, one, integer(2)});
     RCP<const Set> r3 = r1->set_union(r2);
-    REQUIRE(r3->__str__() == "[0, 1, 2]"); // [0, 1, 2]
+    REQUIRE(r3->__str__() == "[0, 1, 2, x]"); // [0, 1, 2]
     r3 = r1->set_intersection(r2);
     REQUIRE(r3->__str__() == "[0, 1]"); // [0, 1]
-    REQUIRE(r3->__eq__(*r1));
     REQUIRE(r3->contains(zero));
     REQUIRE(not r3->contains(integer(3)));
     REQUIRE(r3->is_subset(r2));

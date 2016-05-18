@@ -18,7 +18,7 @@ class Set : public Basic
 public:
     virtual RCP<const Set> set_intersection(const RCP<const Set> &o) const = 0;
     virtual RCP<const Set> set_union(const RCP<const Set> &o) const = 0;
-    virtual bool contains(const RCP<const Number> &a) const = 0;
+    virtual bool contains(const RCP<const Basic> &a) const = 0;
     virtual bool is_subset(const RCP<const Set> &o) const = 0;
     virtual bool is_proper_subset(const RCP<const Set> &o) const = 0;
     virtual bool is_superset(const RCP<const Set> &o) const = 0;
@@ -48,7 +48,7 @@ public:
 
     virtual RCP<const Set> set_intersection(const RCP<const Set> &o) const;
     virtual RCP<const Set> set_union(const RCP<const Set> &o) const;
-    virtual bool contains(const RCP<const Number> &a) const
+    virtual bool contains(const RCP<const Basic> &a) const
     {
         return false;
     };
@@ -87,7 +87,7 @@ public:
 
     virtual RCP<const Set> set_intersection(const RCP<const Set> &o) const;
     virtual RCP<const Set> set_union(const RCP<const Set> &o) const;
-    virtual bool contains(const RCP<const Number> &a) const
+    virtual bool contains(const RCP<const Basic> &a) const
     {
         return true;
     };
@@ -106,7 +106,7 @@ public:
 class FiniteSet : public Set
 {
 public:
-    set_number container_;
+    set_basic container_;
 
 public:
     IMPLEMENT_TYPEID(FINITESET)
@@ -118,12 +118,12 @@ public:
         return {};
     }
 
-    FiniteSet(const set_number container);
-    static bool is_canonical(const set_number container);
+    FiniteSet(const set_basic container);
+    static bool is_canonical(const set_basic container);
 
     virtual RCP<const Set> set_union(const RCP<const Set> &o) const;
     virtual RCP<const Set> set_intersection(const RCP<const Set> &o) const;
-    virtual bool contains(const RCP<const Number> &a) const;
+    virtual bool contains(const RCP<const Basic> &a) const;
     virtual bool is_subset(const RCP<const Set> &o) const;
     virtual bool is_proper_subset(const RCP<const Set> &o) const;
     virtual bool is_superset(const RCP<const Set> &o) const;
@@ -161,7 +161,7 @@ public:
 
     virtual RCP<const Set> set_union(const RCP<const Set> &o) const;
     virtual RCP<const Set> set_intersection(const RCP<const Set> &o) const;
-    virtual bool contains(const RCP<const Number> &a) const;
+    virtual bool contains(const RCP<const Basic> &a) const;
     virtual bool is_subset(const RCP<const Set> &o) const;
     virtual bool is_proper_subset(const RCP<const Set> &o) const;
     virtual bool is_superset(const RCP<const Set> &o) const;
@@ -193,7 +193,7 @@ inline RCP<const Set> interval(const RCP<const Number> &start,
 }
 
 //! \return RCP<const Set>
-inline RCP<const Set> finiteset(const set_number &container)
+inline RCP<const Set> finiteset(const set_basic &container)
 {
     if (FiniteSet::is_canonical(container)) {
         return make_rcp<const FiniteSet>(container);

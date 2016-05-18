@@ -93,7 +93,7 @@ RCP<const Set> Interval::close() const
     return interval(start_, end_, false, false);
 }
 
-bool Interval::contains(const RCP<const Number> &a) const
+bool Interval::contains(const RCP<const Basic> &a) const
 {
     if ((eq(*start_, *a) and left_open_) or (eq(*end_, *a) and right_open_))
         return false;
@@ -329,12 +329,12 @@ const RCP<const UniversalSet> &UniversalSet::getInstance()
     return a;
 }
 
-FiniteSet::FiniteSet(const set_number container) : container_(container)
+FiniteSet::FiniteSet(const set_basic container) : container_(container)
 {
     SYMENGINE_ASSERT(FiniteSet::is_canonical(container_));
 }
 
-bool FiniteSet::is_canonical(const set_number container)
+bool FiniteSet::is_canonical(const set_basic container)
 {
     return container.size() != 0;
 }
@@ -357,6 +357,7 @@ bool FiniteSet::__eq__(const Basic &o) const
             if (not other.contains(a))
                 return false;
         }
+        // TODO : earch for a std function
         return true;
     }
     if (is_a<Interval>(o)) {
@@ -382,7 +383,7 @@ int FiniteSet::compare(const Basic &s) const
     return container_.size() < o.container_.size() ? -1 : 1;
 }
 
-bool FiniteSet::contains(const RCP<const Number> &a) const
+bool FiniteSet::contains(const RCP<const Basic> &a) const
 {
     return container_.find(a) != container_.end();
 }
@@ -391,7 +392,7 @@ RCP<const Set> FiniteSet::set_union(const RCP<const Set> &o) const
 {
     if (is_a<FiniteSet>(*o)) {
         const FiniteSet &other = static_cast<const FiniteSet &>(*o);
-        set_number container;
+        set_basic container;
         std::set_union(container_.begin(), container_.end(),
                        other.container_.begin(), other.container_.end(),
                        std::inserter(container, container.begin()),
@@ -409,7 +410,7 @@ RCP<const Set> FiniteSet::set_intersection(const RCP<const Set> &o) const
 {
     if (is_a<FiniteSet>(*o)) {
         const FiniteSet &other = static_cast<const FiniteSet &>(*o);
-        set_number container;
+        set_basic container;
         std::set_intersection(container_.begin(), container_.end(),
                               other.container_.begin(), other.container_.end(),
                               std::inserter(container, container.begin()),
@@ -417,7 +418,7 @@ RCP<const Set> FiniteSet::set_intersection(const RCP<const Set> &o) const
         return finiteset(container);
     }
     if (is_a<Interval>(*o)) {
-        set_number container;
+        set_basic container;
         for (const auto &a : container_) {
             if (o->contains(a))
                 container.insert(a);

@@ -92,11 +92,6 @@ std::ostream &operator<<(std::ostream &out, const SymEngine::set_basic &d)
     return SymEngine::print_vec_rcp(out, d);
 }
 
-std::ostream &operator<<(std::ostream &out, const SymEngine::set_number &d)
-{
-    return SymEngine::print_vec_rcp(out, d);
-}
-
 //! derivatives of base functions
 bool vec_basic_eq(const vec_basic &a, const vec_basic &b)
 {
