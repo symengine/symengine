@@ -166,12 +166,6 @@ public:
         return not(*this == other);
     }
 
-    //! Method to get UnivariatePolynomial's dictionary
-    const map_uint_mpz &get_dict() const
-    {
-        return dict_;
-    }
-
     int size() const
     {
         return dict_.size();
@@ -212,21 +206,20 @@ private:
     // 1}} with var_ = "x"
     unsigned int degree_;
     RCP<const Symbol> var_;
-    map_uint_mpz dict_;
+    UIntDict int_dict_;
 
 public:
     IMPLEMENT_TYPEID(UNIVARIATEINTPOLYNOMIAL)
     //! Constructor of UnivariateIntPolynomial class
     UnivariateIntPolynomial(const RCP<const Symbol> &var,
-                            const unsigned int &degree, map_uint_mpz &&dict);
+                            const unsigned int &degree, UIntDict &&dict);
     //! Constructor using a dense vector of integer_class coefficients
 
     UnivariateIntPolynomial(const RCP<const Symbol> &var,
                             const std::vector<integer_class> &v);
 
     //! \return true if canonical
-    bool is_canonical(const unsigned int &degree,
-                      const map_uint_mpz &dict) const;
+    bool is_canonical(const unsigned int &degree, const UIntDict &dict) const;
     //! \return size of the hash
     std::size_t __hash__() const;
     /*! Equality comparator
@@ -239,7 +232,7 @@ public:
     // creates a UnivariateIntPolynomial in cannonical form based on the
     // dictionary.
     static RCP<const UnivariateIntPolynomial>
-    from_dict(const RCP<const Symbol> &var, map_uint_mpz &&d);
+    from_dict(const RCP<const Symbol> &var, UIntDict &&d);
     // create a UnivariateIntPolynomial from a dense vector of integer_class
     // coefficients
     static RCP<const UnivariateIntPolynomial>
@@ -280,7 +273,11 @@ public:
     }
     inline const map_uint_mpz &get_dict() const
     {
-        return dict_;
+        return int_dict_.dict_;
+    }
+    inline const UIntDict &get_int_dict() const
+    {
+        return int_dict_;
     }
 }; // UnivariateIntPolynomial
 
