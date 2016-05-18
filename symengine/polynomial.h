@@ -11,6 +11,197 @@
 namespace SymEngine
 {
 
+class UIntDict
+{
+public:
+    //! Holds the dictionary for a UnivariateIntPolynomial
+    map_uint_mpz dict_;
+
+public:
+    UIntDict()
+    {
+    }
+
+    ~UIntDict() SYMENGINE_NOEXCEPT
+    {
+    }
+
+    UIntDict(const UIntDict &) = default;
+
+    UIntDict(UIntDict &&other) SYMENGINE_NOEXCEPT
+        : dict_(std::move(other.dict_))
+    {
+    }
+
+    UIntDict(const int &i)
+    {
+        if (i != 0)
+            dict_ = {{0, integer_class(i)}};
+    }
+
+    UIntDict(const map_uint_mpz &p)
+    {
+        dict_ = p;
+        auto iter = dict_.begin();
+        while (iter != dict_.end()) {
+            if (iter->second == integer_class(0)) {
+                auto toErase = iter;
+                iter++;
+                dict_.erase(toErase);
+            } else
+                iter++;
+        }
+    }
+
+    UIntDict(const integer_class &expr)
+    {
+        if (expr != integer_class(0))
+            dict_ = {{0, std::move(expr)}};
+    }
+
+    UIntDict &operator=(const UIntDict &) = default;
+
+    UIntDict &operator=(UIntDict &&other) SYMENGINE_NOEXCEPT
+    {
+        if (this != &other)
+            this->dict_ = std::move(other.dict_);
+        return *this;
+    }
+
+    friend UIntDict operator+(const UIntDict &a, const UIntDict &b)
+    {
+        UIntDict c = a;
+        c += b;
+        return c;
+    }
+
+    UIntDict &operator+=(const UIntDict &other)
+    {
+        for (auto &it : other.dict_) {
+            auto t = dict_.lower_bound(it.first);
+            if (t != dict_.end() and t->first == it.first) {
+                t->second += it.second;
+                if (t->second == 0) {
+                    dict_.erase(t);
+                }
+            } else {
+                dict_.insert(t, {it.first, it.second});
+            }
+        }
+        return *this;
+    }
+
+    friend UIntDict operator-(const UIntDict &a, const UIntDict &b)
+    {
+        UIntDict c = a;
+        c -= b;
+        return c;
+    }
+
+    UIntDict operator-() const
+    {
+        UIntDict c = *this;
+        for (auto &it : c.dict_)
+            it.second *= -1;
+        return c;
+    }
+
+    UIntDict &operator-=(const UIntDict &other)
+    {
+        for (auto &it : other.dict_) {
+            auto t = dict_.lower_bound(it.first);
+            if (t != dict_.end() and t->first == it.first) {
+                t->second -= it.second;
+                if (t->second == 0) {
+                    dict_.erase(t);
+                }
+            } else {
+                dict_.insert(t, {it.first, -it.second});
+            }
+        }
+        return *this;
+    }
+
+    friend UIntDict operator*(const UIntDict &a, const UIntDict &b)
+    {
+        UIntDict c = a;
+        c *= b;
+        return c;
+    }
+
+    UIntDict &operator*=(const UIntDict &other)
+    {
+        if (dict_.empty())
+            return *this;
+
+        if (other.dict_.empty()) {
+            *this = other;
+            return *this;
+        }
+
+        //! other is a just constant term
+        if (other.dict_.size() == 1
+            and other.dict_.find(0) != other.dict_.end()) {
+            for (const auto &i1 : dict_)
+                for (const auto &i2 : other.dict_)
+                    dict_[i1.first + i2.first] = i1.second * i2.second;
+            return *this;
+        }
+
+        map_uint_mpz p;
+        for (const auto &i1 : dict_)
+            for (const auto &i2 : other.dict_)
+                p[i1.first + i2.first] += i1.second * i2.second;
+        *this = UIntDict(p);
+        return *this;
+    }
+
+    bool operator==(const UIntDict &other) const
+    {
+        return dict_ == other.dict_;
+    }
+
+    bool operator!=(const UIntDict &other) const
+    {
+        return not(*this == other);
+    }
+
+    //! Method to get UnivariatePolynomial's dictionary
+    const map_uint_mpz &get_dict() const
+    {
+        return dict_;
+    }
+
+    int size() const
+    {
+        return dict_.size();
+    }
+
+    bool empty() const
+    {
+        return dict_.empty();
+    }
+
+    std::size_t __hash__() const
+    {
+        std::size_t seed = UNIVARIATEINTPOLYNOMIAL;
+        for (const auto &it : this->dict_) {
+            std::size_t temp = UNIVARIATEINTPOLYNOMIAL;
+            hash_combine<unsigned int>(temp, it.first);
+            hash_combine<long long int>(temp, mp_get_si(it.second));
+            seed += temp;
+        }
+        return seed;
+    }
+
+    int compare(const UIntDict &other) const
+    {
+        if (dict_.size() != other.dict_.size())
+            return (dict_.size() < other.dict_.size()) ? -1 : 1;
+        return map_uint_mpz_compare(dict_, other.dict_);
+    }
+}; // UIntDict
+
 class UnivariateIntPolynomial : public Basic
 {
 private:
