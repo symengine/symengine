@@ -1,4 +1,5 @@
 #include <symengine/sets.h>
+#include <algorithm>
 
 namespace SymEngine
 {
@@ -192,10 +193,6 @@ bool Interval::is_subset(const RCP<const Set> &o) const
     if (is_a<Interval>(*o)) {
         return this->__eq__(*this->set_intersection(o));
     }
-    if (is_a<FiniteSet>(*o)) {
-        // TODO
-        return true;
-    }
     return (*o).is_superset(rcp_from_this_cast<const Set>());
 }
 
@@ -211,19 +208,11 @@ bool Interval::is_proper_subset(const RCP<const Set> &o) const
 
 bool Interval::is_superset(const RCP<const Set> &o) const
 {
-    if (is_a<FiniteSet>(*o)) {
-        // TODO
-        return true;
-    }
     return (*o).is_subset(rcp_from_this_cast<const Set>());
 }
 
 bool Interval::is_proper_superset(const RCP<const Set> &o) const
 {
-    if (is_a<FiniteSet>(*o)) {
-        // TODO
-        return true;
-    }
     return (*o).is_subset(rcp_from_this_cast<const Set>()) and (not __eq__(*o));
 }
 
@@ -400,7 +389,17 @@ RCP<const Set> FiniteSet::set_union(const RCP<const Set> &o) const
         return finiteset(container);
     }
     if (is_a<Interval>(*o)) {
-        // TODO
+        set_basic container;
+        if (__eq__(*o))
+            return o;
+        for (const auto &a : container_) {
+            if (not o->contains(a))
+                container.insert(a);
+        }
+        if (not container.empty())
+            throw std::runtime_error("not implemented");
+        else
+            return o;
         return o;
     }
     return (*o).set_union(rcp_from_this_cast<const Set>());
@@ -451,10 +450,9 @@ bool FiniteSet::is_proper_subset(const RCP<const Set> &o) const
     if (is_a<FiniteSet>(*o)) {
         const FiniteSet &other = static_cast<const FiniteSet &>(*o);
         return (container_.size() < other.container_.size())
-                and std::includes(other.container_.begin(),
-                                  other.container_.end(), container_.begin(),
-                                  container_.end(), RCPBasicKeyLess{}); 
-        
+               and std::includes(other.container_.begin(),
+                                 other.container_.end(), container_.begin(),
+                                 container_.end(), RCPBasicKeyLess{});
     }
     if (is_a<Interval>(*o)) {
         return not __eq__(*o) and is_subset(o);

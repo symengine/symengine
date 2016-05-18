@@ -191,16 +191,19 @@ TEST_CASE("FiniteSet : Basic", "[basic]")
     RCP<const Set> r1 = finiteset({zero, one, symbol("x")});
     RCP<const Set> r2 = finiteset({zero, one, integer(2)});
     RCP<const Set> r3 = r1->set_union(r2);
-    REQUIRE(r3->__str__() == "[0, 1, 2, x]"); // [0, 1, 2]
+    REQUIRE(r3->__str__() == "{0, 1, 2, x}"); // [0, 1, 2]
     r3 = r1->set_intersection(r2);
-    REQUIRE(r3->__str__() == "[0, 1]"); // [0, 1]
+    REQUIRE(r3->__str__() == "{0, 1}"); // [0, 1]
     REQUIRE(r3->contains(zero));
     REQUIRE(not r3->contains(integer(3)));
     REQUIRE(r3->is_subset(r2));
     REQUIRE(r3->is_proper_subset(r2));
     RCP<const Set> r4 = interval(zero, one);
     r3 = r2->set_intersection(r4);
-    REQUIRE(r3->__str__() == "[0, 1]"); // [0, 1]
+    REQUIRE(r3->__str__() == "{0, 1}"); // [0, 1]
+    r2 = finiteset({zero, one});
+    r3 = r2->set_union(r4);
+    REQUIRE(r3->__str__() == "[0, 1]");
     REQUIRE(r1->is_subset(r4));
     REQUIRE(r1->is_proper_subset(r4));
     r4 = interval(zero, zero);
