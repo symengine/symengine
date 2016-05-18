@@ -495,46 +495,6 @@ void Mul::power_num(const Ptr<RCP<const Number>> &coef, map_basic_basic &d,
     }
 }
 
-RCP<const Basic> Mul::subs(const map_basic_basic &subs_dict) const
-{
-    RCP<const Mul> self = rcp_from_this_cast<const Mul>();
-    auto it = subs_dict.find(self);
-    if (it != subs_dict.end())
-        return it->second;
-
-    RCP<const Number> coef = coef_;
-    map_basic_basic d;
-    for (const auto &p : dict_) {
-        RCP<const Basic> factor_old;
-        if (eq(*p.second, *one)) {
-            factor_old = p.first;
-        } else {
-            factor_old = make_rcp<Pow>(p.first, p.second);
-        }
-        RCP<const Basic> factor = factor_old->subs(subs_dict);
-        if (factor == factor_old) {
-            // TODO: Check if Mul::dict_add_term is enough
-            Mul::dict_add_term_new(outArg(coef), d, p.second, p.first);
-        } else if (is_a_Number(*factor)) {
-            if (rcp_static_cast<const Number>(factor)->is_zero()) {
-                return factor;
-            }
-            imulnum(outArg(coef), rcp_static_cast<const Number>(factor));
-        } else if (is_a<Mul>(*factor)) {
-            RCP<const Mul> tmp = rcp_static_cast<const Mul>(factor);
-            imulnum(outArg(coef), tmp->coef_);
-            for (const auto &q : tmp->dict_) {
-                Mul::dict_add_term_new(outArg(coef), d, q.second, q.first);
-            }
-        } else {
-            RCP<const Basic> exp, t;
-            Mul::as_base_exp(factor, outArg(exp), outArg(t));
-            Mul::dict_add_term_new(outArg(coef), d, exp, t);
-        }
-    }
-    return Mul::from_dict(coef, std::move(d));
-}
-
 vec_basic Mul::get_args() const
 {
     vec_basic args;
