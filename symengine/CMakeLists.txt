@@ -45,6 +45,7 @@ set(SRC
     mp_wrapper.cpp
     sets.cpp
     polynomial_multivariate.cpp
+    fields.cpp
 )
 
 if (WITH_MPFR)
@@ -72,7 +73,7 @@ endif()
 # Needed for "make install"
 set(HEADERS
     add.h        symengine_assert.h  functions.h  monomials.h  polys/uintpoly.h polys/uexprpoly.h 
-    polynomial_multivariate.h number.h    rings.h     subs.h
+    polynomial_multivariate.h number.h    rings.h     subs.h    fields.h
     basic.h      symengine_rcp.h     integer.h    mul.h        pow.h       constants.h
     symbol.h     expression.h        parser.h     mp_class.h   mp_wrapper.h
     basic-inl.h  dict.h           matrix.h     ntheory.h    rational.h complex.h
