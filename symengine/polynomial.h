@@ -294,7 +294,7 @@ RCP<const UnivariateIntPolynomial> mul_poly(const UnivariateIntPolynomial &a,
                                             const UnivariateIntPolynomial &b);
 
 inline RCP<const UnivariateIntPolynomial>
-univariate_int_polynomial(RCP<const Symbol> i, map_uint_mpz &&dict)
+univariate_int_polynomial(RCP<const Symbol> i, UIntDict &&dict)
 {
     return UnivariateIntPolynomial::from_dict(i, std::move(dict));
 }

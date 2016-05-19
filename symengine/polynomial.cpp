@@ -240,7 +240,6 @@ bool UnivariateIntPolynomial::is_pow() const
 RCP<const UnivariateIntPolynomial> add_poly(const UnivariateIntPolynomial &a,
                                             const UnivariateIntPolynomial &b)
 {
-    map_uint_mpz dict;
     RCP<const Symbol> var = symbol("");
     if (a.get_var()->get_name() == "") {
         var = b.get_var();
@@ -251,25 +250,20 @@ RCP<const UnivariateIntPolynomial> add_poly(const UnivariateIntPolynomial &a,
     } else {
         var = a.get_var();
     }
-    for (const auto &it : a.get_dict())
-        dict[it.first] = it.second;
-    for (const auto &it : b.get_dict())
-        dict[it.first] += it.second;
+    UIntDict dict = a.get_int_dict();
+    dict += b.get_int_dict();
     return UnivariateIntPolynomial::from_dict(var, std::move(dict));
 }
 
 RCP<const UnivariateIntPolynomial> neg_poly(const UnivariateIntPolynomial &a)
 {
-    map_uint_mpz dict;
-    for (const auto &it : a.get_dict())
-        dict[it.first] = -1 * it.second;
+    UIntDict dict = -(a.get_int_dict());
     return UnivariateIntPolynomial::from_dict(a.get_var(), std::move(dict));
 }
 
 RCP<const UnivariateIntPolynomial> sub_poly(const UnivariateIntPolynomial &a,
                                             const UnivariateIntPolynomial &b)
 {
-    map_uint_mpz dict;
     RCP<const Symbol> var = symbol("");
     if (a.get_var()->get_name() == "") {
         var = b.get_var();
@@ -280,10 +274,8 @@ RCP<const UnivariateIntPolynomial> sub_poly(const UnivariateIntPolynomial &a,
     } else {
         var = a.get_var();
     }
-    for (const auto &it : a.get_dict())
-        dict[it.first] = it.second;
-    for (const auto &it : b.get_dict())
-        dict[it.first] -= it.second;
+    UIntDict dict = a.get_int_dict();
+    dict -= b.get_int_dict();
     return UnivariateIntPolynomial::from_dict(var, std::move(dict));
 }
 

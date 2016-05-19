@@ -298,8 +298,8 @@ public:
 
     void pow_expand(RCP<const UnivariateIntPolynomial> &x, unsigned long &i)
     {
-        RCP<const UnivariateIntPolynomial> r
-            = univariate_int_polynomial(x->get_var(), {{0, integer_class(1)}});
+        RCP<const UnivariateIntPolynomial> r = univariate_int_polynomial(
+            x->get_var(), UIntDict({{0, integer_class(1)}}));
         while (i != 0) {
             if (i % 2 == 1) {
                 r = mul_poly(*r, *x);
