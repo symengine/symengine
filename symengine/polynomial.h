@@ -521,12 +521,17 @@ RCP<const UnivariatePolynomial> sub_uni_poly(const UnivariatePolynomial &a,
 //! Multiplying two UnivariatePolynomial a and b
 RCP<const UnivariatePolynomial> mul_uni_poly(const UnivariatePolynomial &a,
                                              const UnivariatePolynomial &b);
+//! For FFT operations
+void fft(bvector &x);
+void ifft(bvector &x);
+base operator*(const base &a, const base &b);
 
 inline RCP<const UnivariatePolynomial>
 univariate_polynomial(RCP<const Symbol> i, UnivariateExprPolynomial &&dict)
 {
     return UnivariatePolynomial::from_dict(i, std::move(dict));
 }
+
 
 } // SymEngine
 

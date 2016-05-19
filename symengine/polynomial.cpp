@@ -591,7 +591,126 @@ RCP<const UnivariatePolynomial> sub_uni_poly(const UnivariatePolynomial &a,
     return univariate_polynomial(var, std::move(dict));
 }
 
+base operator*(const base &a, const base &b) {
+    return base(a.real() * b.real() - a.imag() * b.imag(),
+                a.imag() * b.real() + a.real() * b.imag());
+}
+
+// Optimized Cooley-Tukey FFT (in-place, breadth-first, decimation-in-frequency)
+void fft(bvector &x)
+{
+    // DFT
+    unsigned int N = x.size(), k = N, n, m = (unsigned int)log2(N);
+
+    //Uses half-angle formula to evaluate sine and cosine values
+    Expression sin_val = 0, cos_val = -1;
+    for (unsigned int i = 1; i <= m; i++) {
+        sin_val = sqrt(((1 - cos_val) / 2).get_basic());
+        cos_val = sqrt(((1 + cos_val) / 2).get_basic());
+    }
+    //Expression thetaT = Expression(M_PI) / N;
+    //base phiT(SymEngine::cos(thetaT.get_basic()), SymEngine::sin(thetaT.get_basic())), T;
+    base phiT(cos_val, sin_val), T;
+
+    while (k > 1) {
+        n = k;
+        k >>= 1;
+        phiT *= phiT;
+        T = 1L;
+        for (unsigned int l = 0; l < k; l++) {
+            for (unsigned int a = l; a < N; a += n) {
+                unsigned int b = a + k;
+                base t = x[a] - x[b];
+                x[a] += x[b];
+                x[b] = t * T;
+            }
+            T *= phiT;
+        }
+    }
+
+    // Decimate
+    for (unsigned int a = 0; a < N; a++) {
+        unsigned int b = a;
+        // Reverse bits
+        b = (((b & 0xaaaaaaaa) >> 1) | ((b & 0x55555555) << 1));
+        b = (((b & 0xcccccccc) >> 2) | ((b & 0x33333333) << 2));
+        b = (((b & 0xf0f0f0f0) >> 4) | ((b & 0x0f0f0f0f) << 4));
+        b = (((b & 0xff00ff00) >> 8) | ((b & 0x00ff00ff) << 8));
+        b = ((b >> 16) | (b << 16)) >> (32 - m);
+        if (b > a) {
+            base t = x[a];
+            x[a] = x[b];
+            x[b] = t;
+        }
+    }
+}
+
+// Inverse fft (in-place)
+void ifft(bvector &x)
+{
+    // Conjugate the complex numbers
+    for_each(x.begin(), x.end(), [](base &c) { c = std::conj(c); });
+    // forward fft
+    fft(x);
+
+    // Conjugate the complex numbers again
+    for_each(x.begin(), x.end(), [](base &c) { c = std::conj(c); });
+
+    // Scale the numbers
+    for (size_t i = 0; i < x.size(); i++)
+        x[i] /= x.size();
+}
+
 RCP<const UnivariatePolynomial> mul_uni_poly(const UnivariatePolynomial &a,
+                                             const UnivariatePolynomial &b)
+{
+    RCP<const Symbol> var = symbol("");
+    if (a.get_var()->get_name() == "") {
+        var = b.get_var();
+    } else if (b.get_var()->get_name() == "") {
+        var = a.get_var();
+    } else if (!(a.get_var()->__eq__(*b.get_var()))) {
+        throw std::runtime_error("Error: variables must agree.");
+    } else {
+        var = a.get_var();
+    }
+
+    unsigned long n = 1, t = a.get_degree() + b.get_degree() + 1;
+    bool all_int = true;
+
+    while (n <= t)
+        n <<= 1;
+
+    bvector fa(n), fb(n);
+
+    for (int i = 0; i <= std::max(a.get_degree(), b.get_degree()); i++) {
+        Expression ai = a.get_expr_dict().find_cf(i);
+        Expression bi = b.get_expr_dict().find_cf(i);
+        if ((not is_a<Integer>(*ai.get_basic()))
+            or (not is_a<Integer>(*bi.get_basic())))
+            all_int = false;
+        fa[i] = base(ai);
+        fb[i] = base(bi);
+    }
+
+    fft(fa);
+    fft(fb);
+    for (unsigned long i = 0; i < n; ++i)
+        fa[i] *= fb[i];
+    ifft(fa);
+
+    std::vector<Expression> res(n);
+    for (unsigned long i = 0; i < n && i <= t; ++i) {
+        res[i] = expand(expand(fa[i].real()));
+        if (all_int == true && is_a<RealDouble>(*res[i].get_basic()))
+            res[i] = Expression(std::lround(
+                (rcp_static_cast<const RealDouble>(res[i].get_basic())
+                     ->as_double())));
+    }
+    return UnivariatePolynomial::from_vec(var, std::move(res));
+}
+
+/*RCP<const UnivariatePolynomial> mul_uni_poly2(const UnivariatePolynomial &a,
                                              const UnivariatePolynomial &b)
 {
     RCP<const Symbol> var = symbol("");
@@ -607,6 +726,6 @@ RCP<const UnivariatePolynomial> mul_uni_poly(const UnivariatePolynomial &a,
     UnivariateExprPolynomial dict = a.get_expr_dict();
     dict *= b.get_expr_dict();
     return univariate_polynomial(var, std::move(dict));
-}
+}*/
 
 } // SymEngine
