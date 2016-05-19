@@ -650,7 +650,8 @@ void ifft(bvector &x)
 {
     // Conjugate the complex numbers
     for_each(x.begin(), x.end(), [](base &c) { c = std::conj(c); });
-    // forward fft
+
+    // Forward fft
     fft(x);
 
     // Conjugate the complex numbers again
@@ -675,6 +676,13 @@ RCP<const UnivariatePolynomial> mul_uni_poly(const UnivariatePolynomial &a,
         var = a.get_var();
     }
 
+    // Uses naive multiplication if negative degree exists
+    if (a.get_dict().begin()->first < 0 || b.get_dict().begin()->first < 0) {
+        UnivariateExprPolynomial dict = a.get_expr_dict();
+        dict *= b.get_expr_dict();
+        return univariate_polynomial(var, std::move(dict));
+    }
+
     unsigned long n = 1, t = a.get_degree() + b.get_degree() + 1;
     bool all_int = true;
 
@@ -697,6 +705,7 @@ RCP<const UnivariatePolynomial> mul_uni_poly(const UnivariatePolynomial &a,
     fft(fb);
     for (unsigned long i = 0; i < n; ++i)
         fa[i] *= fb[i];
+
     ifft(fa);
 
     std::vector<Expression> res(n);
@@ -709,23 +718,5 @@ RCP<const UnivariatePolynomial> mul_uni_poly(const UnivariatePolynomial &a,
     }
     return UnivariatePolynomial::from_vec(var, std::move(res));
 }
-
-/*RCP<const UnivariatePolynomial> mul_uni_poly2(const UnivariatePolynomial &a,
-                                             const UnivariatePolynomial &b)
-{
-    RCP<const Symbol> var = symbol("");
-    if (a.get_var()->get_name() == "") {
-        var = b.get_var();
-    } else if (b.get_var()->get_name() == "") {
-        var = a.get_var();
-    } else if (!(a.get_var()->__eq__(*b.get_var()))) {
-        throw std::runtime_error("Error: variables must agree.");
-    } else {
-        var = a.get_var();
-    }
-    UnivariateExprPolynomial dict = a.get_expr_dict();
-    dict *= b.get_expr_dict();
-    return univariate_polynomial(var, std::move(dict));
-}*/
 
 } // SymEngine

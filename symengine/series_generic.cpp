@@ -87,14 +87,15 @@ UnivariateSeries::mul(const UnivariateExprPolynomial &a,
         if ((not is_a<Integer>(*ai.get_basic()))
             or (not is_a<Integer>(*bi.get_basic())))
             all_int = false;
-        fa[i] = base(a.find_cf(i));
-        fb[i] = base(b.find_cf(i));
+        fa[i] = base(ai);
+        fb[i] = base(bi);
     }
 
     fft(fa);
     fft(fb);
     for (unsigned long i = 0; i < n; ++i)
         fa[i] *= fb[i];
+
     ifft(fa);
 
     // std::vector<Expression> res(n);
@@ -105,9 +106,8 @@ UnivariateSeries::mul(const UnivariateExprPolynomial &a,
             res[i] = Expression(std::lround(
                 (rcp_static_cast<const RealDouble>(res[i].get_basic())
                      ->as_double())));
-        //std::cout << res[i] << std::endl;
     }
-    return UnivariateExprPolynomial(res);
+    return UnivariateExprPolynomial(std::move(res));
 }
 
 UnivariateExprPolynomial
