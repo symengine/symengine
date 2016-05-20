@@ -8,6 +8,18 @@
 #include <symengine/expression.h>
 #include <symengine/monomials.h>
 
+// Calculates bit length of number, used in UIntDict*= only
+template <typename T>
+unsigned int bit_length(T t)
+{
+    unsigned int count = 0;
+    while (t > 0) {
+        count++;
+        t = t >> 1;
+    }
+    return count;
+}
+
 namespace SymEngine
 {
 
@@ -129,30 +141,59 @@ public:
         return c;
     }
 
+    //! Evaluates the dict_ at value 2**x
+    integer_class eval_bit(const unsigned int &x) const
+    {
+        unsigned int last_deg = dict_.rbegin()->first;
+        integer_class result(0);
+
+        for (auto it = dict_.rbegin(); it != dict_.rend(); ++it) {
+            result = (*it).second + (result << x * (last_deg - (*it).first));
+            last_deg = (*it).first;
+        }
+        result = result << x * last_deg;
+
+        return result;
+    }
+
     UIntDict &operator*=(const UIntDict &other)
     {
-        if (dict_.empty())
-            return *this;
+        int mul = 1;
 
-        if (other.dict_.empty()) {
-            *this = other;
-            return *this;
+        unsigned int N = bit_length(std::min(degree() + 1, other.degree() + 1))
+                         + bit_length(max_abs_coef())
+                         + bit_length(other.max_abs_coef());
+
+        integer_class full = integer_class(1), temp, res;
+        full <<= N;
+        integer_class thresh = full / 2;
+        integer_class mask = full - 1;
+        integer_class s_val = eval_bit(N) * other.eval_bit(N);
+        if (s_val < 0)
+            mul = -1;
+        s_val = mp_abs(s_val);
+
+        unsigned int deg = 0, carry = 0;
+        map_uint_mpz dict;
+
+        while (s_val != 0 or carry != 0) {
+            mp_and(temp, s_val, mask);
+            if (temp < thresh) {
+                res = mul * (temp + carry);
+                if (res != 0)
+                    dict[deg] = res;
+                carry = 0;
+            } else {
+                res = mul * (temp - full + carry);
+                if (res != 0)
+                    dict[deg] = res;
+                carry = 1;
+            }
+            s_val >>= N;
+            deg++;
         }
 
-        //! other is a just constant term
-        if (other.dict_.size() == 1
-            and other.dict_.find(0) != other.dict_.end()) {
-            for (const auto &i1 : dict_)
-                for (const auto &i2 : other.dict_)
-                    dict_[i1.first + i2.first] = i1.second * i2.second;
-            return *this;
-        }
-
-        map_uint_mpz p;
-        for (const auto &i1 : dict_)
-            for (const auto &i2 : other.dict_)
-                p[i1.first + i2.first] += i1.second * i2.second;
-        *this = UIntDict(p);
+        dict_ = dict;
         return *this;
     }
 
@@ -194,6 +235,24 @@ public:
             return (dict_.size() < other.dict_.size()) ? -1 : 1;
         return map_uint_mpz_compare(dict_, other.dict_);
     }
+
+    inline unsigned int degree() const
+    {
+        if (dict_.empty())
+            return 0;
+        return dict_.rbegin()->first;
+    }
+
+    integer_class max_abs_coef() const
+    {
+        integer_class curr(mp_abs(dict_.begin()->second));
+        for (const auto &it : dict_) {
+            if (mp_abs(it.second) > curr)
+                curr = mp_abs(it.second);
+        }
+        return curr;
+    }
+
 }; // UIntDict
 
 class UnivariateIntPolynomial : public Basic
@@ -244,8 +303,6 @@ public:
     integer_class max_abs_coef() const;
     //! Evaluates the UnivariateIntPolynomial at value x
     integer_class eval(const integer_class &x) const;
-    //! Evaluates the UnivariateIntPolynomial at value 2**x
-    integer_class eval_bit(const int &x) const;
 
     //! \return `true` if `0`
     bool is_zero() const;

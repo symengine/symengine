@@ -143,12 +143,7 @@ vec_basic UnivariateIntPolynomial::get_args() const
 
 integer_class UnivariateIntPolynomial::max_abs_coef() const
 {
-    integer_class curr(mp_abs(int_dict_.dict_.begin()->second));
-    for (const auto &it : int_dict_.dict_) {
-        if (mp_abs(it.second) > curr)
-            curr = mp_abs(it.second);
-    }
-    return curr;
+    return int_dict_.max_abs_coef();
 }
 
 integer_class UnivariateIntPolynomial::eval(const integer_class &x) const
@@ -165,22 +160,6 @@ integer_class UnivariateIntPolynomial::eval(const integer_class &x) const
     }
     mp_pow_ui(x_pow, x, last_deg);
     result *= x_pow;
-
-    return result;
-}
-
-integer_class UnivariateIntPolynomial::eval_bit(const int &x) const
-{
-    unsigned int last_deg = int_dict_.dict_.rbegin()->first;
-    integer_class result(0);
-
-    for (auto it = int_dict_.dict_.rbegin(); it != int_dict_.dict_.rend();
-         ++it) {
-
-        result = (*it).second + (result << x * (last_deg - (*it).first));
-        last_deg = (*it).first;
-    }
-    result = result << x * last_deg;
 
     return result;
 }
@@ -279,18 +258,6 @@ RCP<const UnivariateIntPolynomial> sub_poly(const UnivariateIntPolynomial &a,
     return UnivariateIntPolynomial::from_dict(var, std::move(dict));
 }
 
-// Calculates bit length of number, used in mul_poly() only
-template <typename T>
-unsigned int bit_length(T t)
-{
-    unsigned int count = 0;
-    while (t > 0) {
-        count++;
-        t = t >> 1;
-    }
-    return count;
-}
-
 RCP<const UnivariateIntPolynomial> mul_poly(const UnivariateIntPolynomial &a,
                                             const UnivariateIntPolynomial &b)
 {
@@ -305,51 +272,9 @@ RCP<const UnivariateIntPolynomial> mul_poly(const UnivariateIntPolynomial &a,
         var = a.get_var();
     }
 
-    bool neg = false;
-
-    if ((--(a.get_dict().end()))->second < 0)
-        neg = not neg;
-    if ((--(b.get_dict().end()))->second < 0)
-        neg = not neg;
-
-    unsigned int N
-        = bit_length(std::min(a.get_degree() + 1, b.get_degree() + 1))
-          + bit_length(a.max_abs_coef()) + bit_length(b.max_abs_coef());
-
-    integer_class a1(1), b1, res;
-    a1 <<= N;
-    integer_class a2 = a1 / 2;
-    integer_class mask = a1 - 1;
-    integer_class a_val(a.eval_bit(N)), b_val(b.eval_bit(N));
-    integer_class s_val(a_val * b_val);
-    integer_class r = mp_abs(s_val);
-
-    std::vector<integer_class> v;
-    integer_class carry(0);
-    unsigned int deg = 0;
-    map_uint_mpz dict;
-
-    while (r != 0 or carry != 0) {
-        mp_and(b1, r, mask);
-        if (b1 < a2) {
-            res = b1 + carry;
-            if (res != 0)
-                dict[deg] = res;
-            carry = 0;
-        } else {
-            res = b1 - a1 + carry;
-            if (res != 0)
-                dict[deg] = res;
-            carry = 1;
-        }
-        r >>= N;
-        deg++;
-    }
-    if (neg)
-        return neg_poly(
-            *UnivariateIntPolynomial::from_dict(var, std::move(dict)));
-    else
-        return UnivariateIntPolynomial::from_dict(var, std::move(dict));
+    UIntDict dict = a.get_int_dict();
+    dict *= b.get_int_dict();
+    return UnivariateIntPolynomial::from_dict(var, std::move(dict));
 }
 
 UnivariatePolynomial::UnivariatePolynomial(

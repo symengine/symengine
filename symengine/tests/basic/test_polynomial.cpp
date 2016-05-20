@@ -208,7 +208,6 @@ TEST_CASE("Evaluation of UnivariateIntPolynomial", "[UnivariateIntPolynomial]")
         x, UIntDict({{0, 1_z}, {1, 2_z}, {2, 1_z}}));
 
     REQUIRE(a->eval(2_z) == 9);
-    REQUIRE(a->eval_bit(3) == 81);
 }
 
 TEST_CASE("Derivative of UnivariateIntPolynomial", "[UnivariateIntPolynomial]")
