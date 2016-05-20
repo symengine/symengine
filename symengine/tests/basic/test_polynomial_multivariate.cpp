@@ -563,16 +563,17 @@ TEST_CASE("Testing MultivariatePolynomial::__eq__(), __hash__, and compare",
     Expression difference(sub(mul(two, i), j));
     RCP<const MultivariatePolynomial> p1
         = MultivariatePolynomial::multivariate_polynomial(
-            {x, y}, {{{2, 0}, sum}, {{1, 1}, difference}, {{0, 2}, sum}});
+            {x, y}, {{{2, 0}, sum}, {{1, 1}, Expression(a)}, {{0, 2}, sum}});
     RCP<const MultivariatePolynomial> p2
         = MultivariatePolynomial::multivariate_polynomial(
-            {x, y}, {{{2, 0}, sum}, {{1, 1}, difference * -1}, {{0, 2}, sum}});
+            {x, y},
+            {{{2, 0}, sum}, {{1, 1}, Expression(a) * -1}, {{0, 2}, sum}});
     RCP<const MultivariatePolynomial> p3
         = MultivariatePolynomial::multivariate_polynomial(
-            {x, y}, {{{2, 0}, sum * 2}, {{0, 2}, sum * 2}});
+            {x, y}, {{{2, 0}, sum + sum}, {{0, 2}, sum + sum}});
     RCP<const MultivariatePolynomial> p4
         = MultivariatePolynomial::multivariate_polynomial(
-            {a, b}, {{{2, 0}, sum * 2}, {{0, 2}, sum * 2}});
+            {a, b}, {{{2, 0}, sum + sum}, {{0, 2}, sum + sum}});
     vec_sym s;
     vec_uint v;
     RCP<const MultivariatePolynomial> p5
@@ -820,6 +821,13 @@ TEST_CASE("Testing addition, subtraction, multiplication of "
                      {{1, 0}, (-1 * comp1) + negB},
                      {{0, 1}, negNum},
                      {{0, 0}, comp4 * -1}});
+    RCP<const MultivariatePolynomial> q22
+        = MultivariatePolynomial::multivariate_polynomial(
+            {x, y}, {{{2, 1}, -1 * num1},
+                     {{1, 1}, -1 * a},
+                     {{1, 0}, (comp1)-negB},
+                     {{0, 1}, -1 * negNum},
+                     {{0, 0}, comp4}});
     RCP<const MultivariatePolynomial> q3
         = MultivariatePolynomial::multivariate_polynomial(
             {x, y}, {{{3, 1}, 2 * comp1},
@@ -839,7 +847,7 @@ TEST_CASE("Testing addition, subtraction, multiplication of "
     REQUIRE(eq(*add_mult_poly(*p2, *p1), *q1));
     REQUIRE(eq(*add_mult_poly(*p1, *p3), *p1));
     REQUIRE(eq(*sub_mult_poly(*p1, *p2), *q2));
-    REQUIRE(eq(*sub_mult_poly(*p2, *p1), *neg_mult_poly(*q2)));
+    REQUIRE(eq(*sub_mult_poly(*p2, *p1), *q22));
     REQUIRE(eq(*sub_mult_poly(*p1, *p3), *p1));
 
     REQUIRE(eq(*mul_mult_poly(*p1, *p2), *q3));
@@ -988,13 +996,14 @@ TEST_CASE("Testing addition, subtraction, multiplication of "
 
     RCP<const MultivariatePolynomial> q1
         = MultivariatePolynomial::multivariate_polynomial(
-            {x}, {{{1}, 2 * expr1}, {{0}, expr4 + expr3}, {{2}, expr2}});
+            {x}, {{{1}, expr1 + expr1}, {{0}, expr4 + expr3}, {{2}, expr2}});
     RCP<const MultivariatePolynomial> q2
         = MultivariatePolynomial::multivariate_polynomial(
-            {x}, {{{0}, expr3 - expr4}, {{2}, expr2}});
+            {x}, {{{0}, expr3 - expr4}, {{1}, expr1 - expr1}, {{2}, expr2}});
     RCP<const MultivariatePolynomial> q3
         = MultivariatePolynomial::multivariate_polynomial(
-            {x}, {{{0}, expr4 - expr3}, {{2}, expr2 * -1}});
+            {x},
+            {{{0}, expr4 - expr3}, {{1}, expr1 - expr1}, {{2}, expr2 * -1}});
     RCP<const MultivariatePolynomial> q4
         = MultivariatePolynomial::multivariate_polynomial(
             {x}, {{{3}, expr2 * expr1},
