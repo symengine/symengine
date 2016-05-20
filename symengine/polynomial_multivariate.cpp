@@ -628,7 +628,6 @@ MultivariatePolynomial::from_dict(const set_sym &s, umap_uvec_expr &&d)
     umap_sym_uint degs;
     auto iter = d.begin();
     while (iter != d.end()) {
-        iter->second = expand(iter->second);
         if (Expression(0) == iter->second) {
             auto toErase = iter;
             iter++;
