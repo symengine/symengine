@@ -154,6 +154,12 @@ bool map_uint_mpz_eq(const map_uint_mpz &a, const map_uint_mpz &b)
                           });
 }
 
+std::ostream &operator<<(std::ostream &out, const SymEngine::map_int_Expr &d)
+{
+    return SymEngine::print_map(out, d);
+}
+
+//! non-derivable functions
 int map_uint_mpz_compare(const map_uint_mpz &A, const map_uint_mpz &B)
 {
     if (A.size() != B.size())
@@ -167,17 +173,7 @@ int map_uint_mpz_compare(const map_uint_mpz &A, const map_uint_mpz &B)
             return (a->second < b->second) ? -1 : 1;
     }
     return 0;
-}
-
-bool map_int_Expr_eq(const map_int_Expr &a, const map_int_Expr &b)
-{
-    return a.size() == b.size()
-           and std::equal(a.begin(), a.end(), b.begin(),
-                          [](const std::pair<unsigned, Expression> &u,
-                             const std::pair<unsigned, Expression> &v) {
-                              return u.first == v.first
-                                     and u.second == v.second;
-                          });
+    // return map_compare<map_uint_mpz>(a, b);
 }
 
 int map_int_Expr_compare(const map_int_Expr &A, const map_int_Expr &B)
@@ -213,7 +209,8 @@ int map_sym_uint_compare(const map_sym_uint &A, const map_sym_uint &B)
     return 0;
 }
 
-bool map_sym_uint_eq(const map_sym_uint &A, const map_sym_uint &B){
+bool map_sym_uint_eq(const map_sym_uint &A, const map_sym_uint &B)
+{
     // Can't be equal if # of entries differ:
     if (A.size() != B.size())
         return false;
@@ -250,15 +247,6 @@ int umap_uvec_mpz_compare(const umap_uvec_mpz &a, const umap_uvec_mpz &b)
         = order_umap<vec_uint, umap_uvec_mpz, vec_uint_compare>(a);
     std::vector<vec_uint> vb
         = order_umap<vec_uint, umap_uvec_mpz, vec_uint_compare>(b);
-
-    if (va.empty())
-        if (!vb.empty())
-            return -1;
-    if (vb.empty())
-        if (!va.empty())
-            return 1;
-    if (va.empty() && vb.empty())
-        return 0;
 
     for (unsigned int i = 0; i < va.size() && i < vb.size(); i++) {
         if (vec_uint_compare()(va[i], vb[i])) {

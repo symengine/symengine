@@ -1,4 +1,5 @@
-#include <stdlib.h>
+#include <cstdlib>
+#include <cstring>
 
 #include <symengine/basic.h>
 #include <symengine/symbol.h>
@@ -160,7 +161,7 @@ TypeID basic_get_type(const basic s)
     return static_cast<TypeID>(s->m->get_type_code());
 }
 
-void symbol_set(basic s, char *c)
+void symbol_set(basic s, const char *c)
 {
     s->m = SymEngine::symbol(std::string(c));
 }

@@ -15,8 +15,6 @@ namespace SymEngine
 class Set : public Basic
 {
 public:
-    virtual bool is_Interval() const = 0;
-    virtual bool is_EmptySet() const = 0;
     virtual bool is_FiniteSet() const = 0;
     virtual RCP<const Set> set_intersection(const RCP<const Set> &o) const = 0;
     virtual RCP<const Set> set_union(const RCP<const Set> &o) const = 0;
@@ -35,7 +33,7 @@ public:
     IMPLEMENT_TYPEID(EMPTYSET)
     // EmptySet(EmptySet const&) = delete;
     void operator=(EmptySet const &) = delete;
-    static RCP<const EmptySet> getInstance();
+    const static RCP<const EmptySet> &getInstance();
     virtual std::size_t __hash__() const;
     virtual bool __eq__(const Basic &o) const;
     virtual int compare(const Basic &o) const;
@@ -47,14 +45,6 @@ public:
     template <typename T_, typename... Args>
     friend inline RCP<T_> make_rcp(Args &&... args);
 
-    inline virtual bool is_Interval() const
-    {
-        return false;
-    }
-    inline virtual bool is_EmptySet() const
-    {
-        return true;
-    }
     inline virtual bool is_FiniteSet() const
     {
         return true;
@@ -75,6 +65,47 @@ public:
     };
 };
 
+class UniversalSet : public Set
+{
+private:
+    UniversalSet(){};
+
+public:
+    IMPLEMENT_TYPEID(UNIVERSALSET)
+    // UniversalSet(UniversalSet const&) = delete;
+    void operator=(UniversalSet const &) = delete;
+    const static RCP<const UniversalSet> &getInstance();
+    virtual std::size_t __hash__() const;
+    virtual bool __eq__(const Basic &o) const;
+    virtual int compare(const Basic &o) const;
+    virtual vec_basic get_args() const
+    {
+        return {};
+    }
+
+    template <typename T_, typename... Args>
+    friend inline RCP<T_> make_rcp(Args &&... args);
+
+    inline virtual bool is_FiniteSet() const
+    {
+        return false;
+    }
+
+    virtual RCP<const Set> set_intersection(const RCP<const Set> &o) const;
+    virtual RCP<const Set> set_union(const RCP<const Set> &o) const;
+
+    virtual bool is_subset(const RCP<const Set> &o) const;
+    virtual bool is_proper_subset(const RCP<const Set> &o) const
+    {
+        return false;
+    };
+    virtual bool is_superset(const RCP<const Set> &o) const
+    {
+        return true;
+    };
+    virtual bool is_proper_superset(const RCP<const Set> &o) const;
+};
+
 class Interval : public Set
 {
 public:
@@ -92,14 +123,6 @@ public:
         return {start_, end_};
     }
 
-    inline virtual bool is_Interval() const
-    {
-        return true;
-    }
-    inline virtual bool is_EmptySet() const
-    {
-        return false;
-    }
     inline virtual bool is_FiniteSet() const
     {
         return (eq(*start_, *end_) and not(left_open_ or right_open_));
@@ -125,10 +148,16 @@ public:
     virtual bool is_proper_superset(const RCP<const Set> &o) const;
 };
 
-//! \return RCP<const Set>
+//! \return RCP<const EmptySet>
 inline RCP<const EmptySet> emptyset()
 {
     return EmptySet::getInstance();
+}
+
+//! \return RCP<const UniversalSet>
+inline RCP<const UniversalSet> universalset()
+{
+    return UniversalSet::getInstance();
 }
 
 //! \return RCP<const Set>

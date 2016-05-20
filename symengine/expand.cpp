@@ -282,14 +282,15 @@ public:
 
     void pow_expand(RCP<const UnivariatePolynomial> &x, unsigned long &i)
     {
+        UnivariateExprPolynomial e({{0, Expression(1)}});
         RCP<const UnivariatePolynomial> r
-            = univariate_polynomial(x->get_var(), {{0, 1}});
+            = univariate_polynomial(x->get_var(), std::move(e));
         while (i != 0) {
             if (i % 2 == 1) {
-                r = mul_uni_poly(r, x);
+                r = mul_uni_poly(*r, *x);
                 i--;
             }
-            x = mul_uni_poly(x, x);
+            x = mul_uni_poly(*x, *x);
             i /= 2;
         }
         _coef_dict_add_term(multiply, r);

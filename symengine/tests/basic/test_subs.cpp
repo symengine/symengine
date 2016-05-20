@@ -12,6 +12,7 @@
 #include <symengine/functions.h>
 #include <symengine/constants.h>
 #include <symengine/real_double.h>
+#include <symengine/subs.h>
 
 using SymEngine::Basic;
 using SymEngine::Add;
@@ -35,6 +36,8 @@ using SymEngine::print_stack_on_segfault;
 using SymEngine::real_double;
 using SymEngine::kronecker_delta;
 using SymEngine::levi_civita;
+using SymEngine::msubs;
+using SymEngine::function_symbol;
 
 TEST_CASE("Symbol: subs", "[subs]")
 {
@@ -436,4 +439,17 @@ TEST_CASE("Beta: subs", "[subs]")
     d[z] = i2;
     d[y] = i2;
     REQUIRE(eq(*r1->subs(d), *beta(i2, add(i2, x))));
+}
+
+TEST_CASE("MSubs: subs", "[subs]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Basic> y = symbol("y");
+    RCP<const Basic> f = function_symbol("f", x);
+
+    auto t = msubs(f->diff(x), {{f, y}});
+    REQUIRE(eq(*t, *f->diff(x)));
+
+    t = msubs(f->diff(x), {{f->diff(x), y}});
+    REQUIRE(eq(*t, *y));
 }

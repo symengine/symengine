@@ -67,8 +67,6 @@ public:
     //! \return `true` if it is in canonical form
     bool is_canonical(const RCP<const Number> &coef,
                       const umap_basic_num &dict) const;
-    //! Substitutes the dict
-    virtual RCP<const Basic> subs(const map_basic_basic &subs_dict) const;
 
     virtual vec_basic get_args() const;
 };
