@@ -592,8 +592,8 @@ RCP<const UnivariatePolynomial> sub_uni_poly(const UnivariatePolynomial &a,
 }
 
 base operator*(const base &a, const base &b) {
-    return base(a.real() * b.real() - a.imag() * b.imag(),
-                a.imag() * b.real() + a.real() * b.imag());
+    return base(expand(a.real() * b.real() - a.imag() * b.imag()),
+                expand(a.imag() * b.real() + a.real() * b.imag()));
 }
 
 // Optimized Cooley-Tukey FFT (in-place, breadth-first, decimation-in-frequency)
