@@ -238,8 +238,6 @@ typedef std::unordered_map<RCP<const Symbol>, unsigned int, RCPSymbolHash,
                            RCPSymbolEq> umap_sym_uint;
 typedef std::unordered_map<vec_uint, integer_class, vec_uint_hash, vec_uint_eq>
     umap_uvec_mpz;
-typedef std::unordered_map<vec_uint, Expression, vec_uint_hash, vec_uint_eq>
-    umap_uvec_expr;
 
 typedef std::vector<int> vec_int;
 
@@ -302,9 +300,6 @@ int umap_uvec_mpz_compare(const umap_uvec_mpz &a, const umap_uvec_mpz &b);
 
 // copied from umap_eq, with derefrencing of image in map removed.
 bool umap_uvec_mpz_eq(const umap_uvec_mpz &a, const umap_uvec_mpz &b);
-
-int umap_uvec_expr_compare(const umap_uvec_expr &a, const umap_uvec_expr &b);
-bool umap_uvec_expr_eq(const umap_uvec_expr &a, const umap_uvec_expr &b);
 
 int umap_vec_expr_compare(const umap_vec_expr &a, const umap_vec_expr &b);
 bool umap_vec_expr_eq(const umap_vec_expr &a, const umap_vec_expr &b);

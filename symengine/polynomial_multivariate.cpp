@@ -833,7 +833,6 @@ MultivariatePolynomial::multivariate_polynomial(const vec_sym &v,
 vec_basic MultivariatePolynomial::get_args() const
 {
     vec_basic args;
-    umap_uvec_expr d;
     // To change the ordering in which the terms appear in the vector, change
     // vec_uint_compare in dict.h
     std::vector<vec_int> v
