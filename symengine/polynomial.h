@@ -357,10 +357,8 @@ univariate_int_polynomial(RCP<const Symbol> i, UIntDict &&dict)
 }
 
 class UnivariateExprPolynomial
+    : public ODictWrapper<int, Expression, UnivariateExprPolynomial>
 {
-public:
-    //! Holds the dictionary for a UnivariatePolynomial
-    map_int_Expr dict_;
 
 public:
     UnivariateExprPolynomial()
@@ -369,47 +367,29 @@ public:
     ~UnivariateExprPolynomial() SYMENGINE_NOEXCEPT
     {
     }
-    UnivariateExprPolynomial(const UnivariateExprPolynomial &) = default;
+
     UnivariateExprPolynomial(UnivariateExprPolynomial &&other)
-        SYMENGINE_NOEXCEPT : dict_(std::move(other.dict_))
+        SYMENGINE_NOEXCEPT : ODictWrapper(std::move(other))
     {
     }
-    UnivariateExprPolynomial(const int &i)
-    {
-        if (i != 0)
-            dict_ = {{0, Expression(i)}};
-    }
-    UnivariateExprPolynomial(const std::string &s) : dict_({{1, Expression(1)}})
+    UnivariateExprPolynomial(const int &i) : ODictWrapper(i)
     {
     }
-    UnivariateExprPolynomial(const map_int_Expr &p)
+    UnivariateExprPolynomial(const map_int_Expr &p) : ODictWrapper(p)
     {
-        dict_ = p;
-        auto iter = dict_.begin();
-        while (iter != dict_.end()) {
-            if (Expression(0) == iter->second) {
-                auto toErase = iter;
-                iter++;
-                dict_.erase(toErase);
-            } else
-                iter++;
-        }
     }
-    UnivariateExprPolynomial(const Expression &expr)
+    UnivariateExprPolynomial(const Expression &expr) : ODictWrapper(expr)
     {
-        if (expr != Expression(0))
-            dict_ = {{0, std::move(expr)}};
     }
 
+    // this should not be needed. what purpose does this serve?
+    UnivariateExprPolynomial(const std::string &s) : ODictWrapper(s)
+    {
+    }
+
+    UnivariateExprPolynomial(const UnivariateExprPolynomial &) = default;
     UnivariateExprPolynomial &operator=(const UnivariateExprPolynomial &)
         = default;
-    UnivariateExprPolynomial &
-    operator=(UnivariateExprPolynomial &&other) SYMENGINE_NOEXCEPT
-    {
-        if (this != &other)
-            this->dict_ = std::move(other.dict_);
-        return *this;
-    }
 
     friend std::ostream &operator<<(std::ostream &os,
                                     const UnivariateExprPolynomial &expr)
@@ -418,133 +398,16 @@ public:
         return os;
     }
 
-    friend UnivariateExprPolynomial operator+(const UnivariateExprPolynomial &a,
-                                              const UnivariateExprPolynomial &b)
-    {
-        UnivariateExprPolynomial c = a;
-        c += b;
-        return c;
-    }
-
-    UnivariateExprPolynomial &operator+=(const UnivariateExprPolynomial &other)
-    {
-        for (auto &it : other.dict_) {
-            auto t = dict_.lower_bound(it.first);
-            if (t != dict_.end() and t->first == it.first) {
-                t->second += it.second;
-                if (t->second == 0) {
-                    dict_.erase(t);
-                }
-            } else {
-                dict_.insert(t, {it.first, it.second});
-            }
-        }
-        return *this;
-    }
-
-    friend UnivariateExprPolynomial operator-(const UnivariateExprPolynomial &a,
-                                              const UnivariateExprPolynomial &b)
-    {
-        UnivariateExprPolynomial c = a;
-        c -= b;
-        return c;
-    }
-
-    UnivariateExprPolynomial operator-() const
-    {
-        UnivariateExprPolynomial c = *this;
-        for (auto &it : c.dict_)
-            it.second *= -1;
-        return c;
-    }
-
-    UnivariateExprPolynomial &operator-=(const UnivariateExprPolynomial &other)
-    {
-        for (auto &it : other.dict_) {
-            auto t = dict_.lower_bound(it.first);
-            if (t != dict_.end() and t->first == it.first) {
-                t->second -= it.second;
-                if (t->second == 0) {
-                    dict_.erase(t);
-                }
-            } else {
-                dict_.insert(t, {it.first, -it.second});
-            }
-        }
-        return *this;
-    }
-
-    friend UnivariateExprPolynomial operator*(const UnivariateExprPolynomial &a,
-                                              const UnivariateExprPolynomial &b)
-    {
-        UnivariateExprPolynomial c = a;
-        c *= b;
-        return c;
-    }
-
     friend UnivariateExprPolynomial operator/(const UnivariateExprPolynomial &a,
                                               const Expression &b)
     {
         return a * (1 / b);
     }
 
-    UnivariateExprPolynomial &operator*=(const UnivariateExprPolynomial &other)
-    {
-        if (dict_.empty())
-            return *this;
-
-        if (other.dict_.empty()) {
-            *this = other;
-            return *this;
-        }
-
-        //! other is a just constant term
-        if (other.dict_.size() == 1
-            and other.dict_.find(0) != other.dict_.end()) {
-            for (const auto &i1 : dict_)
-                for (const auto &i2 : other.dict_)
-                    dict_[i1.first + i2.first] = i1.second * i2.second;
-            return *this;
-        }
-
-        map_int_Expr p;
-        for (const auto &i1 : dict_)
-            for (const auto &i2 : other.dict_)
-                p[i1.first + i2.first] += i1.second * i2.second;
-        *this = UnivariateExprPolynomial(p);
-        return *this;
-    }
-
     UnivariateExprPolynomial &operator/=(const Expression &other)
     {
         *this *= (1 / other);
         return *this;
-    }
-
-    bool operator==(const UnivariateExprPolynomial &other) const
-    {
-        return dict_ == other.dict_;
-    }
-
-    bool operator!=(const UnivariateExprPolynomial &other) const
-    {
-        return not(*this == other);
-    }
-
-    //! Method to get UnivariatePolynomial's dictionary
-    const map_int_Expr &get_dict() const
-    {
-        return dict_;
-    }
-
-    int size() const
-    {
-        return dict_.size();
-    }
-
-    bool empty() const
-    {
-        return dict_.empty();
     }
 
     std::size_t __hash__() const
