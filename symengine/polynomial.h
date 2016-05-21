@@ -57,10 +57,11 @@ public:
         integer_class result(0);
 
         for (auto it = dict_.rbegin(); it != dict_.rend(); ++it) {
-            result = (*it).second + (result << x * (last_deg - (*it).first));
+            result <<= x * (last_deg - (*it).first);
+            result += (*it).second;
             last_deg = (*it).first;
         }
-        result = result << x * last_deg;
+        result <<= x * last_deg;
 
         return result;
     }
