@@ -519,11 +519,13 @@ public:
         }
     }
 
-    static RCP<const Basic> diff(const MultivariateIntPolynomial &self,
-                                 const RCP<const Symbol> &x)
+    template <typename Poly, typename Dict, class Maker, typename Exponents,
+              typename Coeff>
+    static RCP<const Basic> diff_mulpoly(const Poly &self,
+                                         const RCP<const Symbol> &x)
     {
         if (self.vars_.find(x) != self.vars_.end()) {
-            umap_uvec_mpz dict;
+            Dict dict;
             auto i = self.vars_.begin();
             unsigned int index = 0;
             while (!(*i)->__eq__(*x)) {
@@ -532,57 +534,41 @@ public:
             } // find the index of the variable we are differentiating WRT.
             for (auto bucket : self.dict_) {
                 if (bucket.first[index] != 0) {
-                    vec_uint v = bucket.first;
+                    Exponents v = bucket.first;
                     v[index]--;
-                    dict.insert(std::pair<vec_uint, integer_class>(
+                    dict.insert(std::pair<Exponents, Coeff>(
                         v, bucket.second * bucket.first[index]));
                 }
             }
             vec_sym v;
             v.insert(v.begin(), self.vars_.begin(), self.vars_.end());
-            return MultivariateIntPolynomial::multivariate_int_polynomial(
-                v, std::move(dict));
+            return Maker()(v, std::move(dict));
         } else {
-            vec_uint v;
+            Exponents v;
             v.resize(self.vars_.size(), 0);
             vec_sym vs;
             vs.insert(vs.begin(), self.vars_.begin(), self.vars_.end());
-            return MultivariateIntPolynomial::multivariate_int_polynomial(
-                vs, {{v, integer_class(0)}});
+            return Maker()(vs, {{v, Coeff(0)}});
         }
+    }
+
+    static RCP<const Basic> diff(const MultivariateIntPolynomial &self,
+                                 const RCP<const Symbol> &x)
+    {
+        return DiffImplementation::diff_mulpoly<MultivariateIntPolynomial,
+                                                umap_uvec_mpz,
+                                                Multivariate_Int_Polynomial,
+                                                vec_uint, integer_class>(self,
+                                                                         x);
     }
 
     static RCP<const Basic> diff(const MultivariatePolynomial &self,
                                  const RCP<const Symbol> &x)
     {
-        if (self.vars_.find(x) != self.vars_.end()) {
-            umap_vec_expr dict;
-            auto i = self.vars_.begin();
-            unsigned int index = 0;
-            while (!(*i)->__eq__(*x)) {
-                i++;
-                index++;
-            } // find the index of the variable we are differentiating WRT.
-            for (auto bucket : self.dict_) {
-                if (bucket.first[index] != 0) {
-                    vec_int v = bucket.first;
-                    v[index]--;
-                    dict.insert(std::pair<vec_int, Expression>(
-                        v, bucket.second * bucket.first[index]));
-                }
-            }
-            vec_sym v;
-            v.insert(v.begin(), self.vars_.begin(), self.vars_.end());
-            return MultivariatePolynomial::multivariate_polynomial(
-                v, std::move(dict));
-        } else {
-            vec_int v;
-            v.resize(self.vars_.size(), 0);
-            vec_sym vs;
-            vs.insert(vs.begin(), self.vars_.begin(), self.vars_.end());
-            return MultivariatePolynomial::multivariate_polynomial(
-                vs, {{v, Expression(0)}});
-        }
+        return DiffImplementation::diff_mulpoly<MultivariatePolynomial,
+                                                umap_vec_expr,
+                                                Multivariate_Polynomial,
+                                                vec_int, Expression>(self, x);
     }
 
     static RCP<const Basic> diff(const FunctionWrapper &self,

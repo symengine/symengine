@@ -437,6 +437,29 @@ public:
 
 }; // MultivariateExprPolynomial
 
+// For template substitution
+
+class Multivariate_Int_Polynomial
+{
+public:
+    RCP<const MultivariateIntPolynomial> operator()(const vec_sym &v,
+                                                    umap_uvec_mpz &&d)
+    {
+        return MultivariateIntPolynomial::multivariate_int_polynomial(
+            v, std::move(d));
+    }
+};
+
+class Multivariate_Polynomial
+{
+public:
+    RCP<const MultivariatePolynomial> operator()(const vec_sym &v,
+                                                 umap_vec_expr &&d)
+    {
+        return MultivariatePolynomial::multivariate_polynomial(v, std::move(d));
+    }
+};
+
 } // SymEngine
 
 #endif
