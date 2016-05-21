@@ -61,7 +61,12 @@ std::size_t UnivariateIntPolynomial::__hash__() const
     std::size_t seed = UNIVARIATEINTPOLYNOMIAL;
 
     seed += hash_string(this->var_->get_name());
-    seed += int_dict_.__hash__();
+    for (const auto &it : int_dict_.dict_) {
+        std::size_t temp = UNIVARIATEPOLYNOMIAL;
+        hash_combine<unsigned int>(temp, it.first);
+        hash_combine<long long int>(temp, mp_get_si(it.second));
+        seed += temp;
+    }
     return seed;
 }
 
@@ -334,7 +339,12 @@ std::size_t UnivariatePolynomial::__hash__() const
     std::size_t seed = UNIVARIATEPOLYNOMIAL;
 
     seed += hash_string(this->var_->get_name());
-    seed += expr_dict_.__hash__();
+    for (const auto &it : expr_dict_.dict_) {
+        std::size_t temp = UNIVARIATEPOLYNOMIAL;
+        hash_combine<unsigned int>(temp, it.first);
+        hash_combine<Basic>(temp, *(it.second.get_basic()));
+        seed += temp;
+    }
     return seed;
 }
 

@@ -23,123 +23,32 @@ unsigned int bit_length(T t)
 namespace SymEngine
 {
 
-class UIntDict
+class UIntDict : public ODictWrapper<unsigned int, integer_class, UIntDict>
 {
-public:
-    //! Holds the dictionary for a UnivariateIntPolynomial
-    map_uint_mpz dict_;
 
 public:
-    UIntDict()
+    UIntDict() SYMENGINE_NOEXCEPT
     {
     }
-
     ~UIntDict() SYMENGINE_NOEXCEPT
+    {
+    }
+    UIntDict(UIntDict &&other) SYMENGINE_NOEXCEPT
+        : ODictWrapper(std::move(other))
+    {
+    }
+    UIntDict(const int &i) : ODictWrapper(i)
+    {
+    }
+    UIntDict(const map_uint_mpz &p) : ODictWrapper(p)
+    {
+    }
+    UIntDict(const integer_class &i) : ODictWrapper(i)
     {
     }
 
     UIntDict(const UIntDict &) = default;
-
-    UIntDict(UIntDict &&other) SYMENGINE_NOEXCEPT
-        : dict_(std::move(other.dict_))
-    {
-    }
-
-    UIntDict(const int &i)
-    {
-        if (i != 0)
-            dict_ = {{0, integer_class(i)}};
-    }
-
-    UIntDict(const map_uint_mpz &p)
-    {
-        dict_ = p;
-        auto iter = dict_.begin();
-        while (iter != dict_.end()) {
-            if (iter->second == integer_class(0)) {
-                auto toErase = iter;
-                iter++;
-                dict_.erase(toErase);
-            } else
-                iter++;
-        }
-    }
-
-    UIntDict(const integer_class &expr)
-    {
-        if (expr != integer_class(0))
-            dict_ = {{0, std::move(expr)}};
-    }
-
     UIntDict &operator=(const UIntDict &) = default;
-
-    UIntDict &operator=(UIntDict &&other) SYMENGINE_NOEXCEPT
-    {
-        if (this != &other)
-            this->dict_ = std::move(other.dict_);
-        return *this;
-    }
-
-    friend UIntDict operator+(const UIntDict &a, const UIntDict &b)
-    {
-        UIntDict c = a;
-        c += b;
-        return c;
-    }
-
-    UIntDict &operator+=(const UIntDict &other)
-    {
-        for (auto &it : other.dict_) {
-            auto t = dict_.lower_bound(it.first);
-            if (t != dict_.end() and t->first == it.first) {
-                t->second += it.second;
-                if (t->second == 0) {
-                    dict_.erase(t);
-                }
-            } else {
-                dict_.insert(t, {it.first, it.second});
-            }
-        }
-        return *this;
-    }
-
-    friend UIntDict operator-(const UIntDict &a, const UIntDict &b)
-    {
-        UIntDict c = a;
-        c -= b;
-        return c;
-    }
-
-    UIntDict operator-() const
-    {
-        UIntDict c = *this;
-        for (auto &it : c.dict_)
-            it.second *= -1;
-        return c;
-    }
-
-    UIntDict &operator-=(const UIntDict &other)
-    {
-        for (auto &it : other.dict_) {
-            auto t = dict_.lower_bound(it.first);
-            if (t != dict_.end() and t->first == it.first) {
-                t->second -= it.second;
-                if (t->second == 0) {
-                    dict_.erase(t);
-                }
-            } else {
-                dict_.insert(t, {it.first, -it.second});
-            }
-        }
-        return *this;
-    }
-
-    friend UIntDict operator*(const UIntDict &a, const UIntDict &b)
-    {
-        UIntDict c = a;
-        c *= b;
-        return c;
-    }
 
     //! Evaluates the dict_ at value 2**x
     integer_class eval_bit(const unsigned int &x) const
@@ -195,38 +104,6 @@ public:
 
         dict_ = dict;
         return *this;
-    }
-
-    bool operator==(const UIntDict &other) const
-    {
-        return dict_ == other.dict_;
-    }
-
-    bool operator!=(const UIntDict &other) const
-    {
-        return not(*this == other);
-    }
-
-    int size() const
-    {
-        return dict_.size();
-    }
-
-    bool empty() const
-    {
-        return dict_.empty();
-    }
-
-    std::size_t __hash__() const
-    {
-        std::size_t seed = UNIVARIATEINTPOLYNOMIAL;
-        for (const auto &it : this->dict_) {
-            std::size_t temp = UNIVARIATEINTPOLYNOMIAL;
-            hash_combine<unsigned int>(temp, it.first);
-            hash_combine<long long int>(temp, mp_get_si(it.second));
-            seed += temp;
-        }
-        return seed;
     }
 
     int compare(const UIntDict &other) const
@@ -361,13 +238,12 @@ class UnivariateExprPolynomial
 {
 
 public:
-    UnivariateExprPolynomial()
+    UnivariateExprPolynomial() SYMENGINE_NOEXCEPT
     {
     }
     ~UnivariateExprPolynomial() SYMENGINE_NOEXCEPT
     {
     }
-
     UnivariateExprPolynomial(UnivariateExprPolynomial &&other)
         SYMENGINE_NOEXCEPT : ODictWrapper(std::move(other))
     {
@@ -408,18 +284,6 @@ public:
     {
         *this *= (1 / other);
         return *this;
-    }
-
-    std::size_t __hash__() const
-    {
-        std::size_t seed = UNIVARIATEPOLYNOMIAL;
-        for (const auto &it : dict_) {
-            std::size_t temp = UNIVARIATEPOLYNOMIAL;
-            hash_combine<unsigned int>(temp, it.first);
-            hash_combine<Basic>(temp, *(it.second.get_basic()));
-            seed += temp;
-        }
-        return seed;
     }
 
     std::string __str__(const std::string name) const
