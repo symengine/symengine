@@ -181,22 +181,24 @@ inline RCP<const UniversalSet> universalset()
 }
 
 //! \return RCP<const Set>
+inline RCP<const Set> finiteset(const set_basic &container)
+{
+    if (FiniteSet::is_canonical(container)) {
+        return make_rcp<const FiniteSet>(container);
+    }
+    return emptyset();
+}
+
+//! \return RCP<const Set>
 inline RCP<const Set> interval(const RCP<const Number> &start,
                                const RCP<const Number> &end,
                                const bool left_open = false,
                                const bool right_open = false)
 {
     if (Interval::is_canonical(start, end, left_open, right_open)) {
+        if (eq(*start, *end) and not(left_open or right_open))
+            return finiteset({start});
         return make_rcp<const Interval>(start, end, left_open, right_open);
-    }
-    return emptyset();
-}
-
-//! \return RCP<const Set>
-inline RCP<const Set> finiteset(const set_basic &container)
-{
-    if (FiniteSet::is_canonical(container)) {
-        return make_rcp<const FiniteSet>(container);
     }
     return emptyset();
 }

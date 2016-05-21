@@ -198,6 +198,7 @@ TEST_CASE("FiniteSet : Basic", "[basic]")
     REQUIRE(not r3->contains(integer(3)));
     REQUIRE(r3->is_subset(r2));
     REQUIRE(r3->is_proper_subset(r2));
+
     RCP<const Set> r4 = interval(zero, one);
     r3 = r2->set_intersection(r4);
     REQUIRE(r3->__str__() == "{0, 1}"); // [0, 1]
@@ -212,6 +213,11 @@ TEST_CASE("FiniteSet : Basic", "[basic]")
     REQUIRE(not r1->is_proper_subset(r4));
     REQUIRE(r1->__eq__(*r4));
     REQUIRE(r4->__eq__(*r1));
+    r4 = interval(zero, one, true, false); // (0, 1]
+    r3 = r1->set_union(r4);
+    r2 = interval(zero, one); // [0, 1]
+    REQUIRE(eq(*r2, *r3));
+
     r4 = emptyset();
     r3 = r2->set_intersection(r4);
     REQUIRE(eq(*r3, *emptyset()));
@@ -219,6 +225,7 @@ TEST_CASE("FiniteSet : Basic", "[basic]")
     REQUIRE(eq(*r3, *r2));
     REQUIRE(r1->is_superset(r4));
     REQUIRE(not r1->is_proper_subset(r4));
+
     r4 = universalset();
     r3 = r2->set_intersection(r4);
     REQUIRE(eq(*r3, *r2));

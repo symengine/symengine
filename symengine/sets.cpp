@@ -1,5 +1,6 @@
 #include <symengine/sets.h>
 #include <algorithm>
+#include <iterator>
 
 namespace SymEngine
 {
@@ -44,9 +45,6 @@ bool Interval::__eq__(const Basic &o) const
         return ((this->left_open_ == s.left_open_)
                 and (this->right_open_ == s.right_open_)
                 and eq(*this->start_, *s.start_) and eq(*this->end_, *s.end_));
-    }
-    if (is_a<FiniteSet>(o)) {
-        return o.__eq__(*this);
     }
     return false;
 }
@@ -346,18 +344,8 @@ bool FiniteSet::__eq__(const Basic &o) const
             if (not other.contains(a))
                 return false;
         }
-        // TODO : earch for a std function
+        // TODO : search for a std function
         return true;
-    }
-    if (is_a<Interval>(o)) {
-        // Interval and FiniteSet can be equal if Interval is only a point
-        const Interval &other = static_cast<const Interval &>(o);
-        if (not(eq(*other.start_, *other.end_)
-                and not(other.left_open_ or other.right_open_)))
-            return false;
-        if (not container_.size() == 1)
-            return false;
-        return other.contains(*container_.begin());
     }
     return false;
 }
@@ -390,17 +378,31 @@ RCP<const Set> FiniteSet::set_union(const RCP<const Set> &o) const
     }
     if (is_a<Interval>(*o)) {
         set_basic container;
-        if (__eq__(*o))
-            return o;
+        const Interval &other = static_cast<const Interval &>(*o);
+        bool left = other.left_open_, right = other.right_open_;
         for (const auto &a : container_) {
-            if (not o->contains(a))
+            if (not o->contains(a)) {
+                if (left)
+                    if (eq(*other.start_, *a)) {
+                        left = false;
+                        continue;
+                    }
+                if (right)
+                    if (eq(*other.end_, *a)) {
+                        right = false;
+                        continue;
+                    }
                 container.insert(a);
+            }
         }
-        if (not container.empty())
+        if (not container.empty()) {
             throw std::runtime_error("not implemented");
-        else
-            return o;
-        return o;
+        } else {
+            if (left == other.left_open_ and right == other.right_open_)
+                return o;
+            else
+                return interval(other.start_, other.end_, left, right);
+        }
     }
     return (*o).set_union(rcp_from_this_cast<const Set>());
 }
@@ -455,7 +457,7 @@ bool FiniteSet::is_proper_subset(const RCP<const Set> &o) const
                                  container_.end(), RCPBasicKeyLess{});
     }
     if (is_a<Interval>(*o)) {
-        return not __eq__(*o) and is_subset(o);
+        return is_subset(o);
     }
     return (*o).is_proper_superset(rcp_from_this_cast<const Set>());
 }
@@ -463,7 +465,7 @@ bool FiniteSet::is_proper_subset(const RCP<const Set> &o) const
 bool FiniteSet::is_superset(const RCP<const Set> &o) const
 {
     if (is_a<Interval>(*o)) {
-        return __eq__(*o);
+        return false;
     }
     return (*o).is_subset(rcp_from_this_cast<const Set>());
 }
