@@ -157,15 +157,18 @@ long mpz_hash(const integer_class z)
 
 int umap_uvec_mpz_compare(const umap_uvec_mpz &a, const umap_uvec_mpz &b)
 {
-    std::vector<vec_uint> va
-        = order_umap<vec_uint, umap_uvec_mpz, vec_uint_compare>(a);
-    std::vector<vec_uint> vb
-        = order_umap<vec_uint, umap_uvec_mpz, vec_uint_compare>(b);
+    std::vector<vec_uint> va = order_umap<vec_uint, umap_uvec_mpz>(a);
+    std::vector<vec_uint> vb = order_umap<vec_uint, umap_uvec_mpz>(b);
+
+    if (va.size() < vb.size())
+        return -1;
+    if (vb.size() < va.size())
+        return 1;
 
     for (unsigned int i = 0; i < va.size() && i < vb.size(); i++) {
-        if (vec_uint_compare()(va[i], vb[i])) {
+        if (va[i] < vb[i]) {
             return -1;
-        } else if (!vec_uint_compare()(va[i], vb[i]) && va[i] != vb[i]) {
+        } else if (va[i] > vb[i]) {
             return 1;
         } else {
             if (a.find(va[i])->second != b.find(vb[i])->second) {
@@ -177,10 +180,6 @@ int umap_uvec_mpz_compare(const umap_uvec_mpz &a, const umap_uvec_mpz &b)
             }
         }
     }
-    if (va.size() < vb.size())
-        return -1;
-    if (vb.size() < va.size())
-        return 1;
     return 0;
 }
 
@@ -208,10 +207,8 @@ bool umap_uvec_mpz_eq(const umap_uvec_mpz &a, const umap_uvec_mpz &b)
 
 int umap_uvec_expr_compare(const umap_uvec_expr &a, const umap_uvec_expr &b)
 {
-    std::vector<vec_uint> va
-        = order_umap<vec_uint, umap_uvec_expr, vec_uint_compare>(a);
-    std::vector<vec_uint> vb
-        = order_umap<vec_uint, umap_uvec_expr, vec_uint_compare>(b);
+    std::vector<vec_uint> va = order_umap<vec_uint, umap_uvec_expr>(a);
+    std::vector<vec_uint> vb = order_umap<vec_uint, umap_uvec_expr>(b);
 
     if (va.empty())
         if (!vb.empty())
@@ -222,10 +219,15 @@ int umap_uvec_expr_compare(const umap_uvec_expr &a, const umap_uvec_expr &b)
     if (va.empty() && vb.empty())
         return 0;
 
+    if (va.size() < vb.size())
+        return -1;
+    if (vb.size() < va.size())
+        return 1;
+
     for (unsigned int i = 0; i < va.size() && i < vb.size(); i++) {
-        if (vec_uint_compare()(va[i], vb[i])) {
+        if (va[i] < vb[i]) {
             return -1;
-        } else if (!vec_uint_compare()(va[i], vb[i]) && va[i] != vb[i]) {
+        } else if (va[i] > vb[i]) {
             return 1;
         } else {
             if (a.find(va[i])->second != b.find(vb[i])->second) {
@@ -243,10 +245,6 @@ int umap_uvec_expr_compare(const umap_uvec_expr &a, const umap_uvec_expr &b)
             }
         }
     }
-    if (va.size() < vb.size())
-        return -1;
-    if (vb.size() < va.size())
-        return 1;
     return 0;
 }
 

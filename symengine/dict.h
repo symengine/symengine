@@ -21,9 +21,6 @@ struct RCPBasicHash;
 struct RCPBasicKeyEq;
 struct RCPBasicKeyLess;
 struct RCPIntegerKeyLess;
-struct RCPSymbolHash;
-struct RCPSymbolCompare;
-struct RCPSymbolEq;
 
 typedef std::unordered_map<RCP<const Basic>, RCP<const Number>, RCPBasicHash,
                            RCPBasicKeyEq> umap_basic_num;
@@ -197,53 +194,15 @@ public:
     }
 };
 
-class vec_uint_eq
-{
-public:
-    bool operator()(const vec_uint &a, const vec_uint &b) const
-    {
-        if (a.size() != b.size())
-            return false;
-        for (unsigned int i = 0; i < a.size(); i++) {
-            if (a[i] != b[i])
-                return false;
-        }
-        return true;
-    }
-};
-
-class vec_uint_compare
-{
-public:
-    bool operator()(const vec_uint &a, const vec_uint &b) const
-    {
-        if (a.size() != b.size())
-            return a.size() > b.size();
-        unsigned int sum1 = 0;
-        unsigned int sum2 = 0;
-        for (unsigned int x : a) {
-            sum1 += x;
-        }
-        for (unsigned int x : b) {
-            sum2 += x;
-        }
-        if (sum1 != sum2)
-            return sum1 > sum2;
-        return a > b;
-    }
-};
-
-typedef std::set<RCP<const Symbol>, RCPSymbolCompare> set_sym;
-typedef std::unordered_map<RCP<const Symbol>, unsigned int, RCPSymbolHash,
-                           RCPSymbolEq> umap_sym_uint;
-typedef std::unordered_map<vec_uint, integer_class, vec_uint_hash, vec_uint_eq>
+typedef std::unordered_map<RCP<const Basic>, unsigned int, RCPBasicHash,
+                           RCPBasicKeyEq> umap_basic_uint;
+typedef std::unordered_map<vec_uint, integer_class, vec_uint_hash>
     umap_uvec_mpz;
-typedef std::unordered_map<vec_uint, Expression, vec_uint_hash, vec_uint_eq>
-    umap_uvec_expr;
+typedef std::unordered_map<vec_uint, Expression, vec_uint_hash> umap_uvec_expr;
 
 // Takes an unordered map of type M with key type K and returns a vector of K
 // ordered by C.
-template <class K, class M, class C>
+template <class K, class M, class C = std::less<K>>
 std::vector<K> order_umap(const M &d)
 {
     std::set<K, C> s;
@@ -256,12 +215,26 @@ std::vector<K> order_umap(const M &d)
 }
 
 int umap_uvec_mpz_compare(const umap_uvec_mpz &a, const umap_uvec_mpz &b);
+int umap_uvec_expr_compare(const umap_uvec_expr &a, const umap_uvec_expr &b);
 
 // copied from umap_eq, with derefrencing of image in map removed.
-bool umap_uvec_mpz_eq(const umap_uvec_mpz &a, const umap_uvec_mpz &b);
-
-int umap_uvec_expr_compare(const umap_uvec_expr &a, const umap_uvec_expr &b);
-bool umap_uvec_expr_eq(const umap_uvec_expr &a, const umap_uvec_expr &b);
+template <class T>
+bool umap_eq2(const T &a, const T &b)
+{
+    // Can't be equal if # of entries differ:
+    if (a.size() != b.size())
+        return false;
+    // Loop over keys in "a":
+    for (const auto &p : a) {
+        // O(1) lookup of the key in "b":
+        auto f = b.find(p.first);
+        if (f == b.end())
+            return false; // no such element in "b"
+        if (p.second != f->second)
+            return false; // values not equal
+    }
+    return true;
+}
 
 template <class T>
 bool set_eq(const T &A, const T &B)
@@ -305,6 +278,9 @@ std::ostream &operator<<(std::ostream &out,
 std::ostream &operator<<(std::ostream &out, const SymEngine::vec_basic &d);
 std::ostream &operator<<(std::ostream &out, const SymEngine::set_basic &d);
 std::ostream &operator<<(std::ostream &out, const SymEngine::map_int_Expr &d);
+
+template <bool B, class T = void>
+using enable_if_t = typename std::enable_if<B, T>::type;
 
 } // SymEngine
 
