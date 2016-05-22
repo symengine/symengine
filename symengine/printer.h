@@ -30,27 +30,8 @@ public:
         precedence = PrecedenceEnum::Pow;
     }
 
-    void bvisit(const UnivariateIntPolynomial &x)
-    {
-        if (x.get_dict().size() == 1) {
-            auto it = x.get_dict().begin();
-            if (it->second == 1) {
-                if (it->first == 1) {
-                    precedence = PrecedenceEnum::Atom;
-                } else {
-                    precedence = PrecedenceEnum::Pow;
-                }
-            } else {
-                precedence = PrecedenceEnum::Mul;
-            }
-        } else if (x.get_dict().size() == 0) {
-            precedence = PrecedenceEnum::Atom;
-        } else {
-            precedence = PrecedenceEnum::Add;
-        }
-    }
-
-    void bvisit(const UnivariatePolynomial &x)
+    template <typename Poly>
+    void bvisit_upoly(const Poly &x)
     {
         if (x.get_dict().size() == 1) {
             auto it = x.get_dict().begin();
@@ -63,14 +44,26 @@ public:
                 }
             } else {
                 if (it->first == 0) {
-                    it->second.get_basic()->accept(*this);
+                    Expression(it->second).get_basic()->accept(*this);
                 } else {
                     precedence = PrecedenceEnum::Mul;
                 }
             }
+        } else if (x.get_dict().size() == 0) {
+            precedence = PrecedenceEnum::Atom;
         } else {
             precedence = PrecedenceEnum::Add;
         }
+    }
+
+    void bvisit(const UnivariateIntPolynomial &x)
+    {
+        bvisit_upoly(x);
+    }
+
+    void bvisit(const UnivariatePolynomial &x)
+    {
+        bvisit_upoly(x);
     }
 
     void bvisit(const MultivariateIntPolynomial &x)
