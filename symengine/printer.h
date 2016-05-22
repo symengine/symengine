@@ -30,27 +30,8 @@ public:
         precedence = PrecedenceEnum::Pow;
     }
 
-    void bvisit(const UnivariateIntPolynomial &x)
-    {
-        if (x.get_dict().size() == 1) {
-            auto it = x.get_dict().begin();
-            if (it->second == 1) {
-                if (it->first == 1) {
-                    precedence = PrecedenceEnum::Atom;
-                } else {
-                    precedence = PrecedenceEnum::Pow;
-                }
-            } else {
-                precedence = PrecedenceEnum::Mul;
-            }
-        } else if (x.get_dict().size() == 0) {
-            precedence = PrecedenceEnum::Atom;
-        } else {
-            precedence = PrecedenceEnum::Add;
-        }
-    }
-
-    void bvisit(const UnivariatePolynomial &x)
+    template <typename Poly>
+    void bvisit_upoly(const Poly &x)
     {
         if (x.get_dict().size() == 1) {
             auto it = x.get_dict().begin();
@@ -63,70 +44,26 @@ public:
                 }
             } else {
                 if (it->first == 0) {
-                    it->second.get_basic()->accept(*this);
+                    Expression(it->second).get_basic()->accept(*this);
                 } else {
                     precedence = PrecedenceEnum::Mul;
                 }
             }
+        } else if (x.get_dict().size() == 0) {
+            precedence = PrecedenceEnum::Atom;
         } else {
             precedence = PrecedenceEnum::Add;
         }
     }
 
-    void bvisit(const MultivariateIntPolynomial &x)
+    void bvisit(const UnivariateIntPolynomial &x)
     {
-        if (0 == x.dict_.size()) {
-            precedence = PrecedenceEnum::Atom;
-        } else if (1 == x.dict_.size()) {
-            auto iter = x.dict_.begin();
-            precedence = PrecedenceEnum::Atom;
-            bool first = true; // true if there are no nonzero exponents, false
-                               // otherwise
-            for (unsigned int exp : iter->first) {
-                if (exp > 0) {
-                    if (first && exp > 1)
-                        precedence = PrecedenceEnum::Pow;
-                    if (!first)
-                        precedence = PrecedenceEnum::Mul;
-                    first = false;
-                }
-            }
-            if (!first) {
-                if (iter->second != 1)
-                    precedence = PrecedenceEnum::Mul;
-            }
-        } else {
-            precedence = PrecedenceEnum::Add;
-        }
+        bvisit_upoly(x);
     }
 
-    void bvisit(const MultivariatePolynomial &x)
+    void bvisit(const UnivariatePolynomial &x)
     {
-        if (0 == x.dict_.size()) {
-            precedence = PrecedenceEnum::Atom;
-        } else if (1 == x.dict_.size()) {
-            auto iter = x.dict_.begin();
-            precedence = PrecedenceEnum::Atom;
-            bool first = true; // true if there are no nonzero exponents, false
-                               // otherwise
-            for (unsigned int exp : iter->first) {
-                if (exp > 0) {
-                    if (first && exp > 1)
-                        precedence = PrecedenceEnum::Pow;
-                    if (!first)
-                        precedence = PrecedenceEnum::Mul;
-                    first = false;
-                }
-            }
-            if (first) {
-                iter->second.get_basic()->accept(*this);
-            } else {
-                if (iter->second != 1)
-                    precedence = PrecedenceEnum::Mul;
-            }
-        } else {
-            precedence = PrecedenceEnum::Add;
-        }
+        bvisit_upoly(x);
     }
 
     void bvisit(const Rational &x)

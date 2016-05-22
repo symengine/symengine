@@ -477,11 +477,12 @@ public:
         return mul(polygamma(zero, arg), arg->diff(x));
     }
 
-    static RCP<const Basic> diff(const UnivariateIntPolynomial &self,
-                                 const RCP<const Symbol> &x)
+    template <typename Poly, typename Dict>
+    static RCP<const Basic> diff_upoly(const Poly &self,
+                                       const RCP<const Symbol> &x)
     {
         if (self.get_var()->__eq__(*x)) {
-            map_uint_mpz d;
+            Dict d;
             for (const auto &p : self.get_dict()) {
                 if (p.first != 0)
                     d[p.first - 1] = p.second * p.first;
@@ -489,34 +490,23 @@ public:
             int degree = 0;
             if (!d.empty())
                 degree = (--(d.end()))->first;
-            return make_rcp<const UnivariateIntPolynomial>(
-                self.get_var(), degree, std::move(d));
+            return make_rcp<const Poly>(self.get_var(), degree, std::move(d));
         } else {
-            map_uint_mpz d;
-            return make_rcp<const UnivariateIntPolynomial>(self.get_var(), 0,
-                                                           std::move(d));
+            Dict d;
+            return make_rcp<const Poly>(self.get_var(), 0, std::move(d));
         }
+    }
+
+    static RCP<const Basic> diff(const UnivariateIntPolynomial &self,
+                                 const RCP<const Symbol> &x)
+    {
+        return diff_upoly<UnivariateIntPolynomial, map_uint_mpz>(self, x);
     }
 
     static RCP<const Basic> diff(const UnivariatePolynomial &self,
                                  const RCP<const Symbol> &x)
     {
-        if (self.get_var()->__eq__(*x)) {
-            map_int_Expr d;
-            for (const auto &p : self.get_dict()) {
-                if (p.first != 0)
-                    d[p.first - 1] = p.second * p.first;
-            }
-            int degree = 0;
-            if (!d.empty())
-                degree = (--(d.end()))->first;
-            return make_rcp<const UnivariatePolynomial>(self.get_var(), degree,
-                                                        std::move(d));
-        } else {
-            map_int_Expr d;
-            return make_rcp<const UnivariatePolynomial>(self.get_var(), 0,
-                                                        std::move(d));
-        }
+        return diff_upoly<UnivariatePolynomial, map_int_Expr>(self, x);
     }
 
     template <typename MPoly, typename Dict, typename Coeff>
