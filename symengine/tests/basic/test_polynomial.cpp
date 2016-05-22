@@ -30,7 +30,6 @@ using SymEngine::integer_class;
 using SymEngine::RCPSymbolCompare;
 using SymEngine::Precedence;
 using SymEngine::PrecedenceEnum;
-using SymEngine::set_sym;
 using SymEngine::vec_uint;
 
 using namespace SymEngine::literals;
