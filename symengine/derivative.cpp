@@ -13,6 +13,7 @@
 #include <symengine/sets.h>
 #include <symengine/symbol.h>
 #include <symengine/visitor.h>
+#include <symengine/polynomial_multivariate.h>
 
 namespace SymEngine
 {
@@ -518,11 +519,12 @@ public:
         }
     }
 
-    static RCP<const Basic> diff(const MultivariateIntPolynomial &self,
+    template <typename MPoly, typename Dict, typename Coeff>
+    static RCP<const Basic> diff(const MPolyBase<MPoly, Dict, Coeff> &self,
                                  const RCP<const Symbol> &x)
     {
+        Dict dict;
         if (self.vars_.find(x) != self.vars_.end()) {
-            umap_uvec_mpz dict;
             auto i = self.vars_.begin();
             unsigned int index = 0;
             while (!(*i)->__eq__(*x)) {
@@ -533,54 +535,19 @@ public:
                 if (bucket.first[index] != 0) {
                     vec_uint v = bucket.first;
                     v[index]--;
-                    dict.insert(std::pair<vec_uint, integer_class>(
+                    dict.insert(std::pair<vec_uint, Coeff>(
                         v, bucket.second * bucket.first[index]));
                 }
             }
-            vec_sym v;
+            vec_basic v;
             v.insert(v.begin(), self.vars_.begin(), self.vars_.end());
-            return MultivariateIntPolynomial::multivariate_int_polynomial(
-                v, std::move(dict));
+            return MPoly::create(v, std::move(dict));
         } else {
             vec_uint v;
             v.resize(self.vars_.size(), 0);
-            vec_sym vs;
+            vec_basic vs;
             vs.insert(vs.begin(), self.vars_.begin(), self.vars_.end());
-            return MultivariateIntPolynomial::multivariate_int_polynomial(
-                vs, {{v, integer_class(0)}});
-        }
-    }
-
-    static RCP<const Basic> diff(const MultivariatePolynomial &self,
-                                 const RCP<const Symbol> &x)
-    {
-        if (self.vars_.find(x) != self.vars_.end()) {
-            umap_uvec_expr dict;
-            auto i = self.vars_.begin();
-            unsigned int index = 0;
-            while (!(*i)->__eq__(*x)) {
-                i++;
-                index++;
-            } // find the index of the variable we are differentiating WRT.
-            for (auto bucket : self.dict_) {
-                if (bucket.first[index] != 0) {
-                    vec_uint v = bucket.first;
-                    v[index]--;
-                    dict.insert(std::pair<vec_uint, Expression>(
-                        v, bucket.second * bucket.first[index]));
-                }
-            }
-            vec_sym v;
-            v.insert(v.begin(), self.vars_.begin(), self.vars_.end());
-            return MultivariatePolynomial::multivariate_polynomial(
-                v, std::move(dict));
-        } else {
-            vec_uint v;
-            v.resize(self.vars_.size(), 0);
-            vec_sym vs;
-            vs.insert(vs.begin(), self.vars_.begin(), self.vars_.end());
-            return MultivariatePolynomial::multivariate_polynomial(
-                vs, {{v, Expression(0)}});
+            return MPoly::create(vs, {{v, Coeff(0)}});
         }
     }
 
