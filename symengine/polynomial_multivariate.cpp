@@ -106,17 +106,17 @@ unsigned int reconcile(vec_uint &v1, vec_uint &v2, set_basic &s,
     // translators:
     // v[i] is the position of the ith symbol in the new set.
     while (a1 != s1.end() && a2 != s2.end()) {
-        if (0 == (*a1)->compare(**a2) && (a1 != s1.end() && a2 != s2.end())) {
+        if ((*a1)->__eq__(**a2) && (a1 != s1.end() && a2 != s2.end())) {
             v1.insert(v1.end(), poscount);
             v2.insert(v2.end(), poscount);
             s.insert(*a1);
             a1++;
             a2++;
-        } else if (-1 == (*a1)->compare(**a2)) {
+        } else if (RCPBasicKeyLess()(*a1,*a2)) {
             v1.insert(v1.end(), poscount);
             s.insert(*a1);
             a1++;
-        } else if (1 == (*a1)->compare(**a2)) {
+        } else {
             v2.insert(v2.end(), poscount);
             s.insert(*a2);
             a2++;

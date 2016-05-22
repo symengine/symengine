@@ -103,7 +103,7 @@ public:
         translator.resize(s.size());
         auto mptr = m.begin();
         for (unsigned int i = 0; i < s.size(); i++) {
-            translator[i] = mptr->second;
+            translator[mptr->second] = i;
             mptr++;
         }
 
@@ -140,6 +140,7 @@ public:
                 return false;
             whichvar++;
         }
+        return true;
     }
 
     bool __eq__(const Basic &o) const
