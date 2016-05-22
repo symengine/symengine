@@ -256,44 +256,43 @@ TEST_CASE("test_univariate_int_polynomial(): printing", "[printing]")
     RCP<const Basic> p;
     RCP<const Symbol> x = symbol("x");
 
-    p = univariate_int_polynomial(x, UIntDict({{0, 0_z}}));
+    p = univariate_int_polynomial(x, {{0, 0_z}});
     REQUIRE(p->__str__() == "0");
 
-    p = univariate_int_polynomial(x, UIntDict({{0, 1_z}}));
+    p = univariate_int_polynomial(x, {{0, 1_z}});
     REQUIRE(p->__str__() == "1");
 
-    p = univariate_int_polynomial(x, UIntDict({{1, 1_z}}));
+    p = univariate_int_polynomial(x, {{1, 1_z}});
     REQUIRE(p->__str__() == "x");
 
-    p = univariate_int_polynomial(x, UIntDict({{0, 1_z}, {1, 2_z}}));
+    p = univariate_int_polynomial(x, {{0, 1_z}, {1, 2_z}});
     REQUIRE(p->__str__() == "2*x + 1");
 
-    p = univariate_int_polynomial(x, UIntDict({{0, -1_z}, {1, 2_z}}));
+    p = univariate_int_polynomial(x, {{0, -1_z}, {1, 2_z}});
     REQUIRE(p->__str__() == "2*x - 1");
 
-    p = univariate_int_polynomial(x, UIntDict({{0, -1_z}}));
+    p = univariate_int_polynomial(x, {{0, -1_z}});
     REQUIRE(p->__str__() == "-1");
 
-    p = univariate_int_polynomial(x, UIntDict({{1, -1_z}}));
+    p = univariate_int_polynomial(x, {{1, -1_z}});
     REQUIRE(p->__str__() == "-x");
 
-    p = univariate_int_polynomial(x, UIntDict({{0, -1_z}, {1, 1_z}}));
+    p = univariate_int_polynomial(x, {{0, -1_z}, {1, 1_z}});
     REQUIRE(p->__str__() == "x - 1");
 
-    p = univariate_int_polynomial(x, UIntDict({{0, 1_z}, {1, 1_z}, {2, 1_z}}));
+    p = univariate_int_polynomial(x, {{0, 1_z}, {1, 1_z}, {2, 1_z}});
     REQUIRE(p->__str__() == "x**2 + x + 1");
 
-    p = univariate_int_polynomial(x, UIntDict({{0, 1_z}, {1, -1_z}, {2, 1_z}}));
+    p = univariate_int_polynomial(x, {{0, 1_z}, {1, -1_z}, {2, 1_z}});
     REQUIRE(p->__str__() == "x**2 - x + 1");
 
-    p = univariate_int_polynomial(x, UIntDict({{0, 1_z}, {1, 2_z}, {2, 1_z}}));
+    p = univariate_int_polynomial(x, {{0, 1_z}, {1, 2_z}, {2, 1_z}});
     REQUIRE(p->__str__() == "x**2 + 2*x + 1");
 
-    p = univariate_int_polynomial(x, UIntDict({{1, 2_z}, {2, 1_z}}));
+    p = univariate_int_polynomial(x, {{1, 2_z}, {2, 1_z}});
     REQUIRE(p->__str__() == "x**2 + 2*x");
 
-    p = univariate_int_polynomial(x,
-                                  UIntDict({{0, -1_z}, {1, -2_z}, {2, -1_z}}));
+    p = univariate_int_polynomial(x, {{0, -1_z}, {1, -2_z}, {2, -1_z}});
 
     REQUIRE(p->__str__() == "-x**2 - 2*x - 1");
 }
@@ -307,48 +306,38 @@ TEST_CASE("test_univariate_polynomial(): printing", "[printing]")
     Expression c(symbol("c"));
     Expression d(symbol("d"));
 
-    p = univariate_polynomial(x,
-                              UnivariateExprPolynomial({{0, Expression(0)}}));
+    p = univariate_polynomial(x, {{0, Expression(0)}});
     REQUIRE(p->__str__() == "0");
-    p = univariate_polynomial(x,
-                              UnivariateExprPolynomial({{0, Expression(1)}}));
+    p = univariate_polynomial(x, {{0, Expression(1)}});
     REQUIRE(p->__str__() == "1");
-    p = univariate_polynomial(x,
-                              UnivariateExprPolynomial({{1, Expression(1)}}));
+    p = univariate_polynomial(x, {{1, Expression(1)}});
     REQUIRE(p->__str__() == "x");
-    p = univariate_polynomial(x, UnivariateExprPolynomial({{0, 1}, {1, 2}}));
+    p = univariate_polynomial(x, {{0, 1}, {1, 2}});
     REQUIRE(p->__str__() == "2*x + 1");
-    p = univariate_polynomial(x, UnivariateExprPolynomial({{0, -1}, {1, 2}}));
+    p = univariate_polynomial(x, {{0, -1}, {1, 2}});
     REQUIRE(p->__str__() == "2*x - 1");
-    p = univariate_polynomial(x,
-                              UnivariateExprPolynomial({{0, Expression(-1)}}));
+    p = univariate_polynomial(x, {{0, Expression(-1)}});
     REQUIRE(p->__str__() == "-1");
-    p = univariate_polynomial(x,
-                              UnivariateExprPolynomial({{1, Expression(-1)}}));
+    p = univariate_polynomial(x, {{1, Expression(-1)}});
     REQUIRE(p->__str__() == "-x");
-    p = univariate_polynomial(x, UnivariateExprPolynomial({{0, -1}, {1, 1}}));
+    p = univariate_polynomial(x, {{0, -1}, {1, 1}});
     REQUIRE(p->__str__() == "x - 1");
-    p = univariate_polynomial(
-        x, UnivariateExprPolynomial({{0, 1}, {1, 1}, {2, 1}}));
+    p = univariate_polynomial(x, {{0, 1}, {1, 1}, {2, 1}});
     REQUIRE(p->__str__() == "x**2 + x + 1");
-    p = univariate_polynomial(
-        x, UnivariateExprPolynomial({{0, 1}, {1, -1}, {2, 1}}));
+    p = univariate_polynomial(x, {{0, 1}, {1, -1}, {2, 1}});
     REQUIRE(p->__str__() == "x**2 - x + 1");
-    p = univariate_polynomial(
-        x, UnivariateExprPolynomial({{0, 1}, {1, 2}, {2, 1}}));
+    p = univariate_polynomial(x, {{0, 1}, {1, 2}, {2, 1}});
     REQUIRE(p->__str__() == "x**2 + 2*x + 1");
-    p = univariate_polynomial(x, UnivariateExprPolynomial({{1, 2}, {2, 1}}));
+    p = univariate_polynomial(x, {{1, 2}, {2, 1}});
     REQUIRE(p->__str__() == "x**2 + 2*x");
-    p = univariate_polynomial(
-        x, UnivariateExprPolynomial({{0, -1}, {1, -2}, {2, -1}}));
+    p = univariate_polynomial(x, {{0, -1}, {1, -2}, {2, -1}});
     REQUIRE(p->__str__() == "-x**2 - 2*x - 1");
-    p = univariate_polynomial(x, UnivariateExprPolynomial({{-1, d}}));
+    p = univariate_polynomial(x, {{-1, d}});
 
     REQUIRE(p->__str__() == "d*x**(-1)");
     REQUIRE(not(p->__str__() == "d*x**-1"));
 
-    p = univariate_polynomial(
-        x, UnivariateExprPolynomial({{-2, d}, {-1, c}, {0, b}, {1, a}}));
+    p = univariate_polynomial(x, {{-2, d}, {-1, c}, {0, b}, {1, a}});
     REQUIRE(p->__str__() == "a*x + b + c*x**(-1) + d*x**(-2)");
 }
 

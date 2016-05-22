@@ -233,6 +233,13 @@ univariate_int_polynomial(RCP<const Symbol> i, UIntDict &&dict)
     return UnivariateIntPolynomial::from_dict(i, std::move(dict));
 }
 
+inline RCP<const UnivariateIntPolynomial>
+univariate_int_polynomial(RCP<const Symbol> i, map_uint_mpz &&dict)
+{
+    UIntDict wrapper(dict);
+    return UnivariateIntPolynomial::from_dict(i, std::move(wrapper));
+}
+
 class UnivariateExprPolynomial
     : public ODictWrapper<int, Expression, UnivariateExprPolynomial>
 {
@@ -258,9 +265,8 @@ public:
     {
     }
 
-    UnivariateExprPolynomial(const std::string &s)
+    UnivariateExprPolynomial(const std::string &s) : ODictWrapper(s)
     {
-        dict_[1] = Expression(1);
     }
 
     UnivariateExprPolynomial(const UnivariateExprPolynomial &) = default;
@@ -493,6 +499,13 @@ inline RCP<const UnivariatePolynomial>
 univariate_polynomial(RCP<const Symbol> i, UnivariateExprPolynomial &&dict)
 {
     return UnivariatePolynomial::from_dict(i, std::move(dict));
+}
+
+inline RCP<const UnivariatePolynomial>
+univariate_polynomial(RCP<const Symbol> i, map_int_Expr &&dict)
+{
+    UnivariateExprPolynomial wrapper(dict);
+    return UnivariatePolynomial::from_dict(i, std::move(wrapper));
 }
 
 } // SymEngine

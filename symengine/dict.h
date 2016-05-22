@@ -220,6 +220,11 @@ public:
             dict_[0] = p;
     }
 
+    ODictWrapper(std::string s)
+    {
+        dict_[1] = Value(1);
+    }
+
     Wrapper &operator=(Wrapper &&other) SYMENGINE_NOEXCEPT
     {
         if (this != &other)
@@ -290,32 +295,16 @@ public:
 
     Wrapper &operator*=(const Wrapper &other)
     {
-        // are these checks really needed? they'll be handled
-        // automatically
-
-        // if (dict_.empty())
-        //     return static_cast<Wrapper &>(*this);
-
-        // if (other.dict_.empty()) {
-        //     *this = other;
-        //     return static_cast<Wrapper &>(*this);
-        // }
-
-        // //! other is a just constant term
-        // if (other.dict_.size() == 1
-        //     and other.dict_.find(0) != other.dict_.end()) {
-        //     for (const auto &i1 : dict_)
-        //         for (const auto &i2 : other.dict_)
-        //             dict_[i1.first + i2.first] = i1.second * i2.second;
-        //     return static_cast<Wrapper &>(*this);
-        // }
-
         std::map<Key, Value> p;
         for (const auto &i1 : dict_)
             for (const auto &i2 : other.dict_)
                 p[i1.first + i2.first] += i1.second * i2.second;
 
-        *this = Wrapper(p);
+        dict_ = {};
+        for (const auto &ite : p)
+            if (ite.second != Value(0))
+                dict_[ite.first] = ite.second;
+
         return static_cast<Wrapper &>(*this);
     }
 
