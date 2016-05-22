@@ -57,9 +57,10 @@ TEST_CASE("Constructing MultivariateIntPolynomial",
                      {{0, 1}, 2_z},
                      {{1, 0}, 3_z},
                      {{0, 0}, 0_z}});
-    // RCPBasicKeyLess is not consistent across platforms.  This causes errors
-    // when testing against string output.
-    // REQUIRE(P->__str__() == "x y**2 + 2*x y + 3*x + 2*y");
+
+    REQUIRE(vec_basic_eq_perm(
+        P->get_args(), {mul(x, pow(y, integer(2))), mul(integer(2), mul(x, y)),
+                        mul(integer(3), x), mul(integer(2), y)}));
 
     RCP<const MultivariateIntPolynomial> Pprime
         = MultivariateIntPolynomial::multivariate_int_polynomial(
@@ -68,22 +69,27 @@ TEST_CASE("Constructing MultivariateIntPolynomial",
                      {{0, 1}, 2_z},
                      {{1, 0}, 3_z},
                      {{0, 0}, 0_z}});
-    // REQUIRE(Pprime->__str__() == "x**2 y + 2*x y + 2*x + 3*y");
+
+    REQUIRE(vec_basic_eq_perm(Pprime->get_args(),
+                              {mul(pow(x, integer(2)), y),
+                               mul(integer(2), mul(x, y)), mul(integer(2), x),
+                               mul(integer(3), y)}));
 
     RCP<const MultivariateIntPolynomial> P2
         = MultivariateIntPolynomial::multivariate_int_polynomial(
             {x, y}, {{{0, 0}, 0_z}});
-    // REQUIRE(P2->__str__() == "0");
 
     vec_basic s;
     vec_uint v;
     RCP<const MultivariateIntPolynomial> P3
         = MultivariateIntPolynomial::multivariate_int_polynomial(s, {{v, 0_z}});
-    // REQUIRE(P3->__str__() == "0");
+
+    REQUIRE(vec_basic_eq_perm(P2->get_args(), s));
+    REQUIRE(vec_basic_eq_perm(P3->get_args(), s));
 
     RCP<const MultivariateIntPolynomial> P4
         = MultivariateIntPolynomial::multivariate_int_polynomial(s, {{v, 5_z}});
-    // REQUIRE(P4->__str__() == "5");
+    REQUIRE(vec_basic_eq_perm(P4->get_args(), {integer(5)}));
 }
 
 TEST_CASE("Testing MultivariateIntPolynomial::__hash__() and compare",
@@ -763,17 +769,30 @@ TEST_CASE("Constructing MultivariatePolynomial", "[MultivariatePolynomial]")
                                                            {{-2, 2}, comp3},
                                                            {{-3, -3}, comp4}});
 
-    // REQUIRE(p1->__str__() == "2*x**2 y - b*x y**2 + a*x y - 3*y");
-    // REQUIRE(pprime->__str__() == "- b*x**2 y + 2*x y**2 + a*x y - 3*x");
-    // REQUIRE(p2->__str__()
-    //        == "(-4 - f)*x**3 y**4 + (-3 + e)*x**2 y**2 + (1 + c)*x + (2 -
-    //        d)");
-    // REQUIRE(p3->__str__() == "0");
-    // REQUIRE(p4->__str__() == "0");
-    // REQUIRE(p5->__str__() == "(1 + c)");
-    // REQUIRE(p6->__str__() == "(1 + c) + (-3 + e)*x**-2 y**2 + (2 - d)*y**-1 +
-    // "
-    //                         "(-4 - f)*x**-3 y**-3");
+    REQUIRE(vec_basic_eq_perm(
+        p1->get_args(), {mul(integer(2), mul(pow(x, integer(2)), y)),
+                         mul(negB.get_basic(), mul(x, pow(y, integer(2)))),
+                         mul(symbol("a"), mul(x, y)), mul(integer(-3), y)}));
+    REQUIRE(
+        vec_basic_eq_perm(pprime->get_args(),
+                          {mul(negB.get_basic(), mul(pow(x, integer(2)), y)),
+                           mul(integer(2), mul(x, pow(y, integer(2)))),
+                           mul(symbol("a"), mul(x, y)), mul(integer(-3), x)}));
+    REQUIRE(vec_basic_eq_perm(
+        p2->get_args(),
+        {mul(comp4.get_basic(), mul(pow(x, integer(3)), pow(y, integer(4)))),
+         mul(comp3.get_basic(), mul(pow(x, integer(2)), pow(y, integer(2)))),
+         mul(comp1.get_basic(), x), comp2.get_basic()}));
+    REQUIRE(vec_basic_eq_perm(p3->get_args(), s));
+    REQUIRE(vec_basic_eq_perm(p4->get_args(), s));
+    REQUIRE(vec_basic_eq_perm(p5->get_args(), {comp1.get_basic()}));
+    REQUIRE(vec_basic_eq_perm(
+        p6->get_args(),
+        {comp1.get_basic(),
+         mul(comp3.get_basic(), mul(pow(x, integer(-2)), pow(y, integer(2)))),
+         mul(comp2.get_basic(), pow(y, integer(-1))),
+         mul(comp4.get_basic(),
+             mul(pow(x, integer(-3)), pow(y, integer(-3))))}));
 }
 
 TEST_CASE("Testing MultivariatePolynomial::__eq__(), __hash__, and compare",
