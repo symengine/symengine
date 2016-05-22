@@ -65,7 +65,7 @@ MultivariateIntPolynomial::multivariate_int_polynomial(const vec_sym &v,
     translator.resize(s.size());
     auto mptr = m.begin();
     for (unsigned int i = 0; i < s.size(); i++) {
-        translator[i] = mptr->second;
+        translator[mptr->second] = i;
         mptr++;
     }
 
@@ -668,7 +668,7 @@ MultivariatePolynomial::multivariate_polynomial(const vec_sym &v,
     translator.resize(s.size());
     auto mptr = m.begin();
     for (unsigned int i = 0; i < s.size(); i++) {
-        translator[i] = mptr->second;
+        translator[mptr->second] = i;
         mptr++;
     }
 
