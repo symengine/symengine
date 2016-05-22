@@ -411,7 +411,10 @@ public:
 
     inline int get_degree() const
     {
-        return (--(dict_.end()))->first;
+        if (dict_.size() != 0)
+            return (--(dict_.end()))->first;
+        else
+            return 0;
     }
 
     int compare(const UnivariateExprPolynomial &other) const
@@ -524,6 +527,8 @@ RCP<const UnivariatePolynomial> mul_uni_poly(const UnivariatePolynomial &a,
 //! For FFT operations
 void fft(bvector &x);
 void ifft(bvector &x);
+base operator+(const base &a, const base &b);
+base operator-(const base &a, const base &b);
 base operator*(const base &a, const base &b);
 
 inline RCP<const UnivariatePolynomial>
@@ -531,7 +536,6 @@ univariate_polynomial(RCP<const Symbol> i, UnivariateExprPolynomial &&dict)
 {
     return UnivariatePolynomial::from_dict(i, std::move(dict));
 }
-
 
 } // SymEngine
 

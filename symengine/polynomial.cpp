@@ -591,7 +591,18 @@ RCP<const UnivariatePolynomial> sub_uni_poly(const UnivariatePolynomial &a,
     return univariate_polynomial(var, std::move(dict));
 }
 
-base operator*(const base &a, const base &b) {
+base operator+(const base &a, const base &b)
+{
+    return base(expand(a.real() + b.real()), expand(a.imag() + b.imag()));
+}
+
+base operator-(const base &a, const base &b)
+{
+    return base(expand(a.real() - b.real()), expand(a.imag() - b.imag()));
+}
+
+base operator*(const base &a, const base &b)
+{
     return base(expand(a.real() * b.real() - a.imag() * b.imag()),
                 expand(a.imag() * b.real() + a.real() * b.imag()));
 }
@@ -602,14 +613,15 @@ void fft(bvector &x)
     // DFT
     unsigned int N = x.size(), k = N, n, m = (unsigned int)log2(N);
 
-    //Uses half-angle formula to evaluate sine and cosine values
+    // Uses half-angle formula to evaluate sine and cosine values
     Expression sin_val = 0, cos_val = -1;
     for (unsigned int i = 1; i <= m; i++) {
         sin_val = sqrt(((1 - cos_val) / 2).get_basic());
         cos_val = sqrt(((1 + cos_val) / 2).get_basic());
     }
-    //Expression thetaT = Expression(M_PI) / N;
-    //base phiT(SymEngine::cos(thetaT.get_basic()), SymEngine::sin(thetaT.get_basic())), T;
+    // Expression thetaT = Expression(M_PI) / N;
+    // base phiT(SymEngine::cos(thetaT.get_basic()),
+    // SymEngine::sin(thetaT.get_basic())), T;
     base phiT(cos_val, sin_val), T;
 
     while (k > 1) {
@@ -621,7 +633,7 @@ void fft(bvector &x)
             for (unsigned int a = l; a < N; a += n) {
                 unsigned int b = a + k;
                 base t = x[a] - x[b];
-                x[a] += x[b];
+                x[a] = x[a] + x[b];
                 x[b] = t * T;
             }
             T *= phiT;
