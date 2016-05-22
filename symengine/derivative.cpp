@@ -540,13 +540,13 @@ public:
                         v, bucket.second * bucket.first[index]));
                 }
             }
-            vec_sym v;
+            vec_basic v;
             v.insert(v.begin(), self.vars_.begin(), self.vars_.end());
             return Maker()(v, std::move(dict));
         } else {
             Exponents v;
             v.resize(self.vars_.size(), 0);
-            vec_sym vs;
+            vec_basic vs;
             vs.insert(vs.begin(), self.vars_.begin(), self.vars_.end());
             return Maker()(vs, {{v, Coeff(0)}});
         }

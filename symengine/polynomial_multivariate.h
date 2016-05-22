@@ -15,40 +15,40 @@ public:
     // dict: dictionary for sparse represntation of polynomial, x**1 * y**2 + 3
     // * x**4 * y ** 5
     // is represented as {(1,2):1,(4,5):3}
-    set_sym vars_;
-    umap_sym_uint degrees_;
+    set_basic vars_;
+    umap_basic_uint degrees_;
     umap_uvec_mpz dict_;
 
 private:
     // Creates a MultivariateIntPolynomial in cannonical form based on
     // dictionary d.
-    static RCP<const MultivariateIntPolynomial> from_dict(const set_sym &s,
+    static RCP<const MultivariateIntPolynomial> from_dict(const set_basic &s,
                                                           umap_uvec_mpz &&d);
 
 public:
     IMPLEMENT_TYPEID(MULTIVARIATEINTPOLYNOMIAL)
     // constructor from components
-    MultivariateIntPolynomial(const set_sym &var, umap_sym_uint &degrees,
+    MultivariateIntPolynomial(const set_basic &var, umap_basic_uint &degrees,
                               umap_uvec_mpz &dict);
     // constructor from UnivariateIntPolynomial
     MultivariateIntPolynomial(const UnivariateIntPolynomial &other);
     // Public function for creating MultivariateIntPolynomial:
-    // vec_sym can contain symbols for the polynomial in any order, but the
+    // vec_basic can contain symbols for the polynomial in any order, but the
     // symbols
-    // will be sorted in the set_sym of the actual object.
+    // will be sorted in the set_basic of the actual object.
     // The order of the exponenents in the vectors in the dictionary will also
     // be permuted accordingly.
     static RCP<const MultivariateIntPolynomial>
-    multivariate_int_polynomial(const vec_sym &v, umap_uvec_mpz &&d);
+    multivariate_int_polynomial(const vec_basic &v, umap_uvec_mpz &&d);
 
     vec_basic get_args() const;
-    bool is_canonical(const set_sym &vars, const umap_sym_uint &degrees,
+    bool is_canonical(const set_basic &vars, const umap_basic_uint &degrees,
                       const umap_uvec_mpz &dict);
     std::size_t __hash__() const;
     bool __eq__(const Basic &o) const;
     int compare(const Basic &o) const;
-    integer_class eval(std::map<RCP<const Symbol>, integer_class,
-                                RCPSymbolCompare> &vals) const;
+    integer_class eval(
+        std::map<RCP<const Basic>, integer_class, RCPBasicKeyLess> &vals) const;
 
     friend RCP<const MultivariateIntPolynomial>
     add_mult_poly(const MultivariateIntPolynomial &a,
@@ -69,11 +69,12 @@ public:
 // output of the function.
 // v1 and v2 are vectors whose indices are the positions in the arguments and
 // whose values are the
-// positions in the output.  set_sym s is the set of symbols of the output, and
+// positions in the output.  set_basic s is the set of symbols of the output,
+// and
 // s1 and s2 are the sets of the symbols of the inputs.
 
-unsigned int reconcile(vec_uint &v1, vec_uint &v2, set_sym &s,
-                       const set_sym &s1, const set_sym &s2);
+unsigned int reconcile(vec_uint &v1, vec_uint &v2, set_basic &s,
+                       const set_basic &s1, const set_basic &s2);
 
 // translates vectors of exponents from one polynomial into vectors of exponents
 // for another.
@@ -155,39 +156,39 @@ public:
     // dict: dictionary for sparse represntation of polynomial, x**1 * y**2 + 3
     // * x**4 * y ** 5
     // is represented as {(1,2):1,(4,5):3}
-    set_sym vars_;
-    umap_sym_int degrees_;
+    set_basic vars_;
+    umap_basic_int degrees_;
     umap_vec_expr dict_;
 
 private:
     // creates a MultivariatePolynomial in cannonical form based on dictionary
     // d.
-    static RCP<const MultivariatePolynomial> from_dict(const set_sym &s,
+    static RCP<const MultivariatePolynomial> from_dict(const set_basic &s,
                                                        umap_vec_expr &&d);
 
 public:
     IMPLEMENT_TYPEID(MULTIVARIATEPOLYNOMIAL);
     // constructor from components
-    MultivariatePolynomial(const set_sym &var, umap_sym_int &degrees,
+    MultivariatePolynomial(const set_basic &var, umap_basic_int &degrees,
                            umap_vec_expr &dict);
     MultivariatePolynomial(const UnivariatePolynomial &other);
     // Public function for creating MultivariatePolynomial:
-    // vec_sym can contain symbols for the polynomial in any order, but the
+    // vec_basic can contain symbols for the polynomial in any order, but the
     // symbols
-    // will be sorted in the set_sym of the actual object.
+    // will be sorted in the set_basic of the actual object.
     // The order of the exponenents in the vectors in the dictionary will also
     // be permuted accordingly.
     static RCP<const MultivariatePolynomial>
-    multivariate_polynomial(const vec_sym &v, umap_vec_expr &&d);
+    multivariate_polynomial(const vec_basic &v, umap_vec_expr &&d);
 
     vec_basic get_args() const;
-    bool is_canonical(const set_sym &vars, const umap_sym_int &degrees,
+    bool is_canonical(const set_basic &vars, const umap_basic_int &degrees,
                       const umap_vec_expr &dict);
     std::size_t __hash__() const;
     bool __eq__(const Basic &o) const;
     int compare(const Basic &o) const;
     Expression
-    eval(std::map<RCP<const Symbol>, Expression, RCPSymbolCompare> &vals) const;
+    eval(std::map<RCP<const Basic>, Expression, RCPBasicKeyLess> &vals) const;
 
     friend RCP<const MultivariatePolynomial>
     add_mult_poly(const MultivariatePolynomial &a,
@@ -234,7 +235,7 @@ public:
     }
     explicit MultivariateExprPolynomial(int i)
     {
-        vec_sym s;
+        vec_basic s;
         vec_int v;
         poly_ = MultivariatePolynomial::multivariate_polynomial(
             s, {{v, Expression(i)}});
@@ -242,13 +243,13 @@ public:
 
     explicit MultivariateExprPolynomial(Expression e)
     {
-        vec_sym s;
+        vec_basic s;
         vec_int v;
         poly_ = MultivariatePolynomial::multivariate_polynomial(s, {{v, e}});
     }
     explicit MultivariateExprPolynomial(RCP<const Symbol> sym)
     {
-        vec_sym s;
+        vec_basic s;
         vec_int v;
         poly_ = MultivariatePolynomial::multivariate_polynomial(
             s, {{v, Expression(sym)}});
@@ -356,7 +357,7 @@ public:
 class Multivariate_Int_Polynomial
 {
 public:
-    RCP<const MultivariateIntPolynomial> operator()(const vec_sym &v,
+    RCP<const MultivariateIntPolynomial> operator()(const vec_basic &v,
                                                     umap_uvec_mpz &&d)
     {
         return MultivariateIntPolynomial::multivariate_int_polynomial(
@@ -367,7 +368,7 @@ public:
 class Multivariate_Polynomial
 {
 public:
-    RCP<const MultivariatePolynomial> operator()(const vec_sym &v,
+    RCP<const MultivariatePolynomial> operator()(const vec_basic &v,
                                                  umap_vec_expr &&d)
     {
         return MultivariatePolynomial::multivariate_polynomial(v, std::move(d));

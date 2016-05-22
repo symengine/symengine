@@ -31,6 +31,10 @@ typedef std::unordered_map<short, RCP<const Basic>> umap_short_basic;
 typedef std::unordered_map<int, RCP<const Basic>> umap_int_basic;
 typedef std::unordered_map<RCP<const Basic>, RCP<const Basic>, RCPBasicHash,
                            RCPBasicKeyEq> umap_basic_basic;
+typedef std::unordered_map<RCP<const Basic>, unsigned int, RCPBasicHash,
+                           RCPBasicKeyEq> umap_basic_uint;
+typedef std::unordered_map<RCP<const Basic>, int, RCPBasicHash, RCPBasicKeyEq>
+    umap_basic_int;
 
 typedef std::vector<int> vec_int;
 typedef std::vector<RCP<const Basic>> vec_basic;

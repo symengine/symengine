@@ -484,7 +484,7 @@ void StrPrinter::bvisit(const MultivariateIntPolynomial &x)
             std::ostringstream expr;
             for (auto it : x.vars_) {
                 if (x.dict_.find(exps)->first[i] != 0) {
-                    expr << it->get_name();
+                    expr << it->__str__();
                     if (x.dict_.find(exps)->first[i] > 1)
                         expr << "**" << x.dict_.find(exps)->first[i];
                     expr << " ";
@@ -530,7 +530,7 @@ void StrPrinter::bvisit(const MultivariatePolynomial &x)
             std::ostringstream expr;
             for (auto it : x.vars_) {
                 if (x.dict_.find(exps)->first[i] != 0) {
-                    expr << it->get_name();
+                    expr << it->__str__();
                     if (x.dict_.find(exps)->first[i] > 1
                         || x.dict_.find(exps)->first[i] < 0)
                         expr << "**" << x.dict_.find(exps)->first[i];

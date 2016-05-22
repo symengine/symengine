@@ -38,8 +38,9 @@ using SymEngine::PrecedenceEnum;
 using SymEngine::set_sym;
 using SymEngine::vec_uint;
 using SymEngine::vec_int;
-using SymEngine::vec_sym;
+using SymEngine::vec_basic;
 using SymEngine::vec_uint;
+using SymEngine::RCPBasicKeyLess;
 
 using namespace SymEngine::literals;
 
@@ -72,7 +73,7 @@ TEST_CASE("Constructing MultivariateIntPolynomial",
             {x, y}, {{{0, 0}, 0_z}});
     REQUIRE(P2->__str__() == "0");
 
-    vec_sym s;
+    vec_basic s;
     vec_uint v;
     RCP<const MultivariateIntPolynomial> P3
         = MultivariateIntPolynomial::multivariate_int_polynomial(s, {{v, 0_z}});
@@ -174,11 +175,11 @@ TEST_CASE("Testing MultivariateIntPolynomial::eval((std::map<RCP<const "
                         {{0, 1, 0}, 2_z},
                         {{0, 0, 1}, 3_z},
                         {{0, 0, 0}, 5_z}});
-    std::map<RCP<const Symbol>, integer_class, RCPSymbolCompare> m1
+    std::map<RCP<const Basic>, integer_class, RCPBasicKeyLess> m1
         = {{x, 1_z}, {y, 2_z}, {z, 5_z}};
-    std::map<RCP<const Symbol>, integer_class, RCPSymbolCompare> m2
+    std::map<RCP<const Basic>, integer_class, RCPBasicKeyLess> m2
         = {{x, 0_z}, {y, 0_z}, {z, 0_z}};
-    std::map<RCP<const Symbol>, integer_class, RCPSymbolCompare> m3
+    std::map<RCP<const Basic>, integer_class, RCPBasicKeyLess> m3
         = {{x, -1_z}, {y, -2_z}, {z, -5_z}};
 
     REQUIRE(171_z == p->eval(m1));
@@ -196,7 +197,7 @@ TEST_CASE("Testing MultivariateIntPolynomial neg_mult_poly",
         = MultivariateIntPolynomial::multivariate_int_polynomial(
             {x, y, z}, {{{1, 0, 0}, 1_z}, {{0, 1, 0}, -2_z}, {{0, 0, 1}, 3_z}});
     RCP<const MultivariateIntPolynomial> p2 = neg_mult_poly(*p);
-    REQUIRE(p2->__str__() == "- x + 2*y - 3*z");
+    REQUIRE(p2->__str__() == "- x - 3*z + 2*y");
 }
 
 TEST_CASE("Testing addition, subtraction, multiplication of "
@@ -220,19 +221,19 @@ TEST_CASE("Testing addition, subtraction, multiplication of "
                         {{0, 0, 0}, 3_z}});
 
     REQUIRE(add_mult_poly(*p1, *p2)->__str__()
-            == "2*x y**2 z**3 + 3*x**4 y + y z**2 + 7");
+            == "2*x z**3 y**2 + 3*x**4 y + z**2 y + 7");
     REQUIRE(add_mult_poly(*p2, *p1)->__str__()
-            == "2*x y**2 z**3 + 3*x**4 y + y z**2 + 7");
+            == "2*x z**3 y**2 + 3*x**4 y + z**2 y + 7");
     REQUIRE(sub_mult_poly(*p1, *p2)->__str__()
-            == "4*x**3 y**2 z + 3*x**4 y - y z**2 + 1");
+            == "4*x**3 z y**2 + 3*x**4 y - z**2 y + 1");
     REQUIRE(mul_mult_poly(*p1, *p2)->__str__()
-            == "- 4*x**6 y**4 z**2 + x**2 y**4 z**6 - 6*x**7 y**3 z + 3*x**5 "
-               "y**3 z**3 + 2*x**3 y**3 z**3 + x y**3 z**5 + 3*x**4 y**2 z**2 "
-               "- 2*x**3 y**2 z + 7*x y**2 z**3 + 9*x**4 y + 4*y z**2 + 12");
+            == "- 4*x**6 z**2 y**4 + x**2 z**6 y**4 - 6*x**7 z y**3 + 3*x**5 "
+               "z**3 y**3 + 2*x**3 z**3 y**3 + x z**5 y**3 + 3*x**4 z**2 y**2 "
+               "- 2*x**3 z y**2 + 7*x z**3 y**2 + 9*x**4 y + 4*z**2 y + 12");
     REQUIRE(mul_mult_poly(*p2, *p1)->__str__()
-            == "- 4*x**6 y**4 z**2 + x**2 y**4 z**6 - 6*x**7 y**3 z + 3*x**5 "
-               "y**3 z**3 + 2*x**3 y**3 z**3 + x y**3 z**5 + 3*x**4 y**2 z**2 "
-               "- 2*x**3 y**2 z + 7*x y**2 z**3 + 9*x**4 y + 4*y z**2 + 12");
+            == "- 4*x**6 z**2 y**4 + x**2 z**6 y**4 - 6*x**7 z y**3 + 3*x**5 "
+               "z**3 y**3 + 2*x**3 z**3 y**3 + x z**5 y**3 + 3*x**4 z**2 y**2 "
+               "- 2*x**3 z y**2 + 7*x z**3 y**2 + 9*x**4 y + 4*z**2 y + 12");
 }
 
 TEST_CASE("Testing addition, subtraction, multiplication of "
@@ -259,30 +260,30 @@ TEST_CASE("Testing addition, subtraction, multiplication of "
                         {{0, 0, 0}, 3_z}});
 
     REQUIRE(add_mult_poly(*p1, *p2)->__str__()
-            == "2*a**3 b**2 c + a b**2 c**3 - 2*x**3 y**2 z + x y**2 z**3 + "
-               "3*a**4 b + y z**2 + 7");
+            == "- 2*x**3 z y**2 + x z**3 y**2 + 2*b**2 a**3 c + b**2 a c**3 + "
+               "3*b a**4 + z**2 y + 7");
     REQUIRE(add_mult_poly(*p2, *p1)->__str__()
-            == "2*a**3 b**2 c + a b**2 c**3 - 2*x**3 y**2 z + x y**2 z**3 + "
-               "3*a**4 b + y z**2 + 7");
+            == "- 2*x**3 z y**2 + x z**3 y**2 + 2*b**2 a**3 c + b**2 a c**3 + "
+               "3*b a**4 + z**2 y + 7");
     REQUIRE(sub_mult_poly(*p1, *p2)->__str__()
-            == "2*a**3 b**2 c + a b**2 c**3 + 2*x**3 y**2 z - x y**2 z**3 + "
-               "3*a**4 b - y z**2 + 1");
+            == "2*x**3 z y**2 - x z**3 y**2 + 2*b**2 a**3 c + b**2 a c**3 + "
+               "3*b a**4 - z**2 y + 1");
     REQUIRE(sub_mult_poly(*p2, *p1)->__str__()
-            == "- 2*a**3 b**2 c - a b**2 c**3 - 2*x**3 y**2 z + x y**2 z**3 - "
-               "3*a**4 b + y z**2 - 1");
+            == "- 2*x**3 z y**2 + x z**3 y**2 - 2*b**2 a**3 c - b**2 a c**3 - "
+               "3*b a**4 + z**2 y - 1");
     REQUIRE(mul_mult_poly(*p1, *p2)->__str__()
-            == "- 4*a**3 b**2 c x**3 y**2 z + 2*a**3 b**2 c x y**2 z**3 - 2*a "
-               "b**2 c**3 x**3 y**2 z + a b**2 c**3 x y**2 z**3 - 6*a**4 b "
-               "x**3 y**2 z + 3*a**4 b x y**2 z**3 + 2*a**3 b**2 c y z**2 + a "
-               "b**2 c**3 y z**2 + 3*a**4 b y z**2 + 6*a**3 b**2 c + 3*a b**2 "
-               "c**3 - 8*x**3 y**2 z + 4*x y**2 z**3 + 9*a**4 b + 4*y z**2 + "
+            == "- 4*x**3 b**2 z a**3 c y**2 - 2*x**3 b**2 z a c**3 y**2 + 2*x "
+               "b**2 z**3 a**3 c y**2 + x b**2 z**3 a c**3 y**2 - 6*x**3 b z "
+               "a**4 y**2 + 3*x b z**3 a**4 y**2 + 2*b**2 z**2 a**3 c y + b**2 "
+               "z**2 a c**3 y + 3*b z**2 a**4 y - 8*x**3 z y**2 + 4*x z**3 "
+               "y**2 + 6*b**2 a**3 c + 3*b**2 a c**3 + 9*b a**4 + 4*z**2 y + "
                "12");
     REQUIRE(mul_mult_poly(*p2, *p1)->__str__()
-            == "- 4*a**3 b**2 c x**3 y**2 z + 2*a**3 b**2 c x y**2 z**3 - 2*a "
-               "b**2 c**3 x**3 y**2 z + a b**2 c**3 x y**2 z**3 - 6*a**4 b "
-               "x**3 y**2 z + 3*a**4 b x y**2 z**3 + 2*a**3 b**2 c y z**2 + a "
-               "b**2 c**3 y z**2 + 3*a**4 b y z**2 + 6*a**3 b**2 c + 3*a b**2 "
-               "c**3 - 8*x**3 y**2 z + 4*x y**2 z**3 + 9*a**4 b + 4*y z**2 + "
+            == "- 4*x**3 b**2 z a**3 c y**2 - 2*x**3 b**2 z a c**3 y**2 + 2*x "
+               "b**2 z**3 a**3 c y**2 + x b**2 z**3 a c**3 y**2 - 6*x**3 b z "
+               "a**4 y**2 + 3*x b z**3 a**4 y**2 + 2*b**2 z**2 a**3 c y + b**2 "
+               "z**2 a c**3 y + 3*b z**2 a**4 y - 8*x**3 z y**2 + 4*x z**3 "
+               "y**2 + 6*b**2 a**3 c + 3*b**2 a c**3 + 9*b a**4 + 4*z**2 y + "
                "12");
 }
 
@@ -301,19 +302,19 @@ TEST_CASE("Testing addition, subtraction, multiplication of "
             {y, z}, {{{2, 1}, -2_z}, {{0, 2}, 1_z}, {{1, 0}, 3_z}});
 
     REQUIRE(add_mult_poly(*p1, *p2)->__str__()
-            == "3*x**4 + x y**2 + 4*y**3 - 2*y**2 z + z**2 + 3*y");
+            == "3*x**4 + x y**2 - 2*z y**2 + 4*y**3 + z**2 + 3*y");
     REQUIRE(add_mult_poly(*p2, *p1)->__str__()
-            == "3*x**4 + x y**2 + 4*y**3 - 2*y**2 z + z**2 + 3*y");
+            == "3*x**4 + x y**2 - 2*z y**2 + 4*y**3 + z**2 + 3*y");
     REQUIRE(sub_mult_poly(*p1, *p2)->__str__()
-            == "3*x**4 + x y**2 + 4*y**3 + 2*y**2 z - z**2 - 3*y");
+            == "3*x**4 + x y**2 + 2*z y**2 + 4*y**3 - z**2 - 3*y");
     REQUIRE(sub_mult_poly(*p2, *p1)->__str__()
-            == "- 3*x**4 - x y**2 - 4*y**3 - 2*y**2 z + z**2 + 3*y");
+            == "- 3*x**4 - x y**2 - 2*z y**2 - 4*y**3 + z**2 + 3*y");
     REQUIRE(mul_mult_poly(*p1, *p2)->__str__()
-            == "- 6*x**4 y**2 z + 3*x**4 z**2 - 2*x y**4 z - 8*y**5 z + 9*x**4 "
-               "y + x y**2 z**2 + 4*y**3 z**2 + 3*x y**3 + 12*y**4");
+            == "- 6*x**4 z y**2 + 3*x**4 z**2 - 2*x z y**4 - 8*z y**5 + 9*x**4 "
+               "y + x z**2 y**2 + 4*z**2 y**3 + 3*x y**3 + 12*y**4");
     REQUIRE(mul_mult_poly(*p2, *p1)->__str__()
-            == "- 6*x**4 y**2 z + 3*x**4 z**2 - 2*x y**4 z - 8*y**5 z + 9*x**4 "
-               "y + x y**2 z**2 + 4*y**3 z**2 + 3*x y**3 + 12*y**4");
+            == "- 6*x**4 z y**2 + 3*x**4 z**2 - 2*x z y**4 - 8*z y**5 + 9*x**4 "
+               "y + x z**2 y**2 + 4*z**2 y**3 + 3*x y**3 + 12*y**4");
 }
 
 TEST_CASE("Testing derivative of MultivariateIntPolynomial",
@@ -357,24 +358,24 @@ TEST_CASE("Testing addition, subtraction, multiplication of "
     RCP<const UnivariateIntPolynomial> p3
         = univariate_int_polynomial(y, {{1, 1_z}, {2, 1_z}});
     REQUIRE(add_mult_poly(*p1, *p2)->__str__()
-            == "- 2*x**3 y**2 z + x y**2 z**3 + y z**2 + 3*x**2 + 2*x + 3");
+            == "- 2*x**3 z y**2 + x z**3 y**2 + z**2 y + 3*x**2 + 2*x + 3");
     REQUIRE(add_mult_poly(*p2, *p1)->__str__()
-            == "- 2*x**3 y**2 z + x y**2 z**3 + y z**2 + 3*x**2 + 2*x + 3");
+            == "- 2*x**3 z y**2 + x z**3 y**2 + z**2 y + 3*x**2 + 2*x + 3");
     REQUIRE(sub_mult_poly(*p1, *p2)->__str__()
-            == "- 2*x**3 y**2 z + x y**2 z**3 + y z**2 + x**2 + 3");
+            == "- 2*x**3 z y**2 + x z**3 y**2 + z**2 y + x**2 + 3");
     REQUIRE(sub_mult_poly(*p2, *p1)->__str__()
-            == "2*x**3 y**2 z - x y**2 z**3 - y z**2 - x**2 - 3");
+            == "2*x**3 z y**2 - x z**3 y**2 - z**2 y - x**2 - 3");
     REQUIRE(mul_mult_poly(*p1, *p2)->__str__()
-            == "- 2*x**5 y**2 z + x**3 y**2 z**3 - 2*x**4 y**2 z + x**2 y**2 "
-               "z**3 + x**2 y z**2 + 2*x**4 + x y z**2 + 3*x**3 + 4*x**2 + "
+            == "- 2*x**5 z y**2 + x**3 z**3 y**2 - 2*x**4 z y**2 + x**2 z**3 "
+               "y**2 + x**2 z**2 y + 2*x**4 + x z**2 y + 3*x**3 + 4*x**2 + "
                "3*x");
     REQUIRE(mul_mult_poly(*p2, *p1)->__str__()
-            == "- 2*x**5 y**2 z + x**3 y**2 z**3 - 2*x**4 y**2 z + x**2 y**2 "
-               "z**3 + x**2 y z**2 + 2*x**4 + x y z**2 + 3*x**3 + 4*x**2 + "
+            == "- 2*x**5 z y**2 + x**3 z**3 y**2 - 2*x**4 z y**2 + x**2 z**3 "
+               "y**2 + x**2 z**2 y + 2*x**4 + x z**2 y + 3*x**3 + 4*x**2 + "
                "3*x");
 
-    REQUIRE(add_mult_poly(*p1, *p3)->__str__() == "- 2*x**3 y**2 z + x y**2 "
-                                                  "z**3 + y z**2 + 2*x**2 + "
+    REQUIRE(add_mult_poly(*p1, *p3)->__str__() == "- 2*x**3 z y**2 + x z**3 "
+                                                  "y**2 + z**2 y + 2*x**2 + "
                                                   "y**2 + x + y + 3");
 }
 
@@ -393,14 +394,14 @@ TEST_CASE("Testing addition, subtraction, multiplication of "
     RCP<const UnivariateIntPolynomial> p2
         = univariate_int_polynomial(z, {{1, 1_z}, {2, 1_z}});
     REQUIRE(add_mult_poly(*p1, *p2)->__str__()
-            == "- 2*x**2 y + x y**2 + z**2 + y + z + 3");
+            == "- 2*x**2 y + x y**2 + z**2 + z + y + 3");
     REQUIRE(sub_mult_poly(*p1, *p2)->__str__()
-            == "- 2*x**2 y + x y**2 - z**2 + y - z + 3");
+            == "- 2*x**2 y + x y**2 - z**2 - z + y + 3");
     REQUIRE(sub_mult_poly(*p2, *p1)->__str__()
-            == "2*x**2 y - x y**2 + z**2 - y + z - 3");
+            == "2*x**2 y - x y**2 + z**2 + z - y - 3");
     REQUIRE(mul_mult_poly(*p1, *p2)->__str__()
-            == "- 2*x**2 y z**2 + x y**2 z**2 - 2*x**2 y z + x y**2 z + y z**2 "
-               "+ y z + 3*z**2 + 3*z");
+            == "- 2*x**2 z**2 y + x z**2 y**2 - 2*x**2 z y + x z y**2 + z**2 y "
+               "+ 3*z**2 + z y + 3*z");
 }
 
 TEST_CASE("Testing addition, subtraction, multiplication of two "
@@ -443,7 +444,7 @@ TEST_CASE("Testing addition, subtraction, and multiplication of "
 {
     RCP<const Symbol> x = symbol("x");
     RCP<const Symbol> y = symbol("y");
-    vec_sym s;
+    vec_basic s;
     vec_uint v;
     RCP<const MultivariateIntPolynomial> p1
         = MultivariateIntPolynomial::multivariate_int_polynomial(s, {{v, 2_z}});
@@ -517,7 +518,7 @@ TEST_CASE("Constructing MultivariatePolynomial", "[MultivariatePolynomial]")
     Expression comp2(integer(2) - Expression(symbol("d")));  //(2 - d)
     Expression comp3(integer(-3) + Expression(symbol("e"))); //(-3 + e)
     Expression comp4(integer(-4) - Expression(symbol("f"))); //(-4 - f)
-    vec_sym s;
+    vec_basic s;
     vec_int v;
 
     RCP<const MultivariatePolynomial> p1
@@ -585,7 +586,7 @@ TEST_CASE("Testing MultivariatePolynomial::__eq__(), __hash__, and compare",
     RCP<const MultivariatePolynomial> p4
         = MultivariatePolynomial::multivariate_polynomial(
             {a, b}, {{{2, 0}, sum * 2}, {{0, 2}, sum * 2}});
-    vec_sym s;
+    vec_basic s;
     vec_int v;
     RCP<const MultivariatePolynomial> p5
         = MultivariatePolynomial::multivariate_polynomial(s,
@@ -654,9 +655,9 @@ TEST_CASE("Testing MultivariatePolynomial::eval", "[MultivariatePolynomial]")
                         {{-1, -1, -1}, expr1},
                         {{-2, -2, -2}, expr2},
                         {{-2, 2, -2}, expr3}});
-    std::map<RCP<const Symbol>, Expression, RCPSymbolCompare> m1
+    std::map<RCP<const Basic>, Expression, RCPBasicKeyLess> m1
         = {{x, Expression(0)}, {y, Expression(0)}, {z, Expression(0)}};
-    std::map<RCP<const Symbol>, Expression, RCPSymbolCompare> m2
+    std::map<RCP<const Basic>, Expression, RCPBasicKeyLess> m2
         = {{x, ex}, {y, why}, {z, zee}};
     REQUIRE(p->eval(m1) == expr4);
     REQUIRE(p->eval(m2)
@@ -1236,7 +1237,7 @@ TEST_CASE("Testing addition, subtraction, multiplication of "
     Expression expr3(mul(a, c));
     Expression expr4(pow(b, a));
 
-    vec_sym s;
+    vec_basic s;
     vec_int v;
     RCP<const MultivariatePolynomial> p1
         = MultivariatePolynomial::multivariate_polynomial(s, {{v, expr1}});
