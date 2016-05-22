@@ -63,7 +63,8 @@ TEST_CASE("Negative of a UnivariateIntPolynomial", "[UnivariateIntPolynomial]")
     const UnivariateIntPolynomial a(x, 2, std::move(adict_));
 
     RCP<const UnivariateIntPolynomial> b = neg_poly(a);
-    REQUIRE(b->__str__() == "-x**2 - 2*x - 1");
+    UnivariateIntPolynomial q(x, 2, {{2, -1_z}, {1, -2_z}, {0, -1_z}});
+    REQUIRE(eq(*b, q));
 }
 
 TEST_CASE("Subtracting two UnivariateIntPolynomial", "[UnivariateIntPolynomial]")
@@ -79,7 +80,8 @@ TEST_CASE("Subtracting two UnivariateIntPolynomial", "[UnivariateIntPolynomial]"
     const UnivariateIntPolynomial c(none, 0, std::move(cdict_));
 
     RCP<const Basic> d = sub_poly(b, a);
-    REQUIRE(d->__str__() == "3*x**2 + x + 1");
+    UnivariateIntPolynomial q1(x, 2, {{2, 3_z}, {1, 1_z}, {0, 1_z}});
+    REQUIRE(eq(*d, q1));
     d = sub_poly(c, a);
     REQUIRE(d->__str__() == "-x**2 - 2*x + 1");
 }
