@@ -8,6 +8,8 @@
 #include <symengine/expression.h>
 #include <symengine/monomials.h>
 
+namespace SymEngine
+{
 // Calculates bit length of number, used in UIntDict*= only
 template <typename T>
 unsigned int bit_length(T t)
@@ -19,9 +21,6 @@ unsigned int bit_length(T t)
     }
     return count;
 }
-
-namespace SymEngine
-{
 
 class UIntDict : public ODictWrapper<unsigned int, integer_class, UIntDict>
 {
@@ -259,9 +258,9 @@ public:
     {
     }
 
-    // this should not be needed. what purpose does this serve?
-    UnivariateExprPolynomial(const std::string &s) : ODictWrapper(s)
+    UnivariateExprPolynomial(const std::string &s)
     {
+        dict_[1] = Expression(1);
     }
 
     UnivariateExprPolynomial(const UnivariateExprPolynomial &) = default;

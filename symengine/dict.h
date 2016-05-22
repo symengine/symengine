@@ -185,7 +185,7 @@ std::ostream &operator<<(std::ostream &out, const SymEngine::vec_basic &d);
 std::ostream &operator<<(std::ostream &out, const SymEngine::set_basic &d);
 std::ostream &operator<<(std::ostream &out, const SymEngine::map_int_Expr &d);
 
-// dict wrappers
+// dict wrapper
 template <typename Key, typename Value, typename Wrapper>
 class ODictWrapper
 {
@@ -197,11 +197,6 @@ public:
     {
     }
     ~ODictWrapper() SYMENGINE_NOEXCEPT
-    {
-    }
-
-    // should not be needed?
-    ODictWrapper(const std::string s) : dict_{{1, Expression(1)}}
     {
     }
 
@@ -349,7 +344,6 @@ public:
         return dict_.empty();
     }
 };
-
 } // SymEngine
 
 #endif
