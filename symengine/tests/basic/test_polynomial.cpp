@@ -5,7 +5,7 @@
 #include <symengine/mul.h>
 #include <symengine/polynomial.h>
 #include <symengine/pow.h>
-#include <symengine/dict.h>
+#include <symengine/printer.h>
 
 using SymEngine::Expression;
 using SymEngine::UnivariateIntPolynomial;
@@ -27,6 +27,11 @@ using SymEngine::zero;
 using SymEngine::integer;
 using SymEngine::vec_basic_eq_perm;
 using SymEngine::integer_class;
+using SymEngine::RCPSymbolCompare;
+using SymEngine::Precedence;
+using SymEngine::PrecedenceEnum;
+using SymEngine::set_sym;
+using SymEngine::vec_uint;
 
 using namespace SymEngine::literals;
 

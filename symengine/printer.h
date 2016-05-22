@@ -165,6 +165,7 @@ public:
     void bvisit(const Mul &x);
     void bvisit(const Pow &x);
     void bvisit(const UnivariateIntPolynomial &x);
+    void bvisit(const MultivariateIntPolynomial &x);
     void bvisit(const UnivariatePolynomial &x);
     void bvisit(const UnivariateSeries &x);
 #ifdef HAVE_SYMENGINE_PIRANHA
