@@ -61,7 +61,7 @@ public:
     //! Evaluates the UnivariateIntPolynomial at value x
     integer_class eval(const integer_class &x) const;
     //! Evaluates the UnivariateIntPolynomial at value 2**x
-    integer_class eval_bit(const int &x) const;
+    integer_class eval_bit(const int &x, bool neg = false) const;
 
     //! \return `true` if `0`
     bool is_zero() const;
@@ -101,9 +101,17 @@ RCP<const UnivariateIntPolynomial> neg_poly(const UnivariateIntPolynomial &a);
 //! Subtracting two UnivariateIntPolynomial a and b
 RCP<const UnivariateIntPolynomial> sub_poly(const UnivariateIntPolynomial &a,
                                             const UnivariateIntPolynomial &b);
-//! Multiplying two UnivariateIntPolynomial a and b
+//! Multiplying two UnivariateIntPolynomial a and b using ks1
 RCP<const UnivariateIntPolynomial> mul_poly(const UnivariateIntPolynomial &a,
                                             const UnivariateIntPolynomial &b);
+//! Multiplying two UnivariateIntPolynomial a and b using naive algorithm
+RCP<const UnivariateIntPolynomial>
+mul_poly_naive(const UnivariateIntPolynomial &a,
+               const UnivariateIntPolynomial &b);
+//! Multiplying two UnivariateIntPolynomial a and b using ks2
+RCP<const UnivariateIntPolynomial>
+mul_poly_ks2(const UnivariateIntPolynomial &a,
+             const UnivariateIntPolynomial &b);
 
 inline RCP<const UnivariateIntPolynomial>
 univariate_int_polynomial(RCP<const Symbol> i, map_uint_mpz &&dict)

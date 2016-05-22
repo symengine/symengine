@@ -53,6 +53,9 @@ target_link_libraries(expand7 symengine)
 add_executable(series series.cpp)
 target_link_libraries(series symengine)
 
+add_executable(polynomial polynomial.cpp)
+target_link_libraries(polynomial symengine)
+
 if (WITH_FLINT)
     add_executable(series_expansion_sincos_flint series_expansion_sincos_flint.cpp)
     target_link_libraries(series_expansion_sincos_flint symengine)

@@ -170,14 +170,16 @@ integer_class UnivariateIntPolynomial::eval(const integer_class &x) const
     return result;
 }
 
-integer_class UnivariateIntPolynomial::eval_bit(const int &x) const
+integer_class UnivariateIntPolynomial::eval_bit(const int &x, bool neg) const
 {
     unsigned int last_deg = dict_.rbegin()->first;
     integer_class result(0);
+    int mul;
 
     for (auto it = dict_.rbegin(); it != dict_.rend(); ++it) {
 
-        result = (*it).second + (result << x * (last_deg - (*it).first));
+        mul = ((*it).first % 2 == 0 or not neg) ? 1 : -1;
+        result = (*it).second * mul + (result << x * (last_deg - (*it).first));
         last_deg = (*it).first;
     }
     result = result << x * last_deg;
@@ -297,6 +299,7 @@ unsigned int bit_length(T t)
     return count;
 }
 
+// Reference for the KS algorithms : http://arxiv.org/pdf/0712.4046v1.pdf
 RCP<const UnivariateIntPolynomial> mul_poly(const UnivariateIntPolynomial &a,
                                             const UnivariateIntPolynomial &b)
 {
@@ -311,51 +314,163 @@ RCP<const UnivariateIntPolynomial> mul_poly(const UnivariateIntPolynomial &a,
         var = a.get_var();
     }
 
-    bool neg = false;
-
-    if ((--(a.get_dict().end()))->second < 0)
-        neg = not neg;
-    if ((--(b.get_dict().end()))->second < 0)
-        neg = not neg;
+    int mul = 1;
 
     unsigned int N
         = bit_length(std::min(a.get_degree() + 1, b.get_degree() + 1))
           + bit_length(a.max_abs_coef()) + bit_length(b.max_abs_coef());
 
-    integer_class a1(1), b1, res;
-    a1 <<= N;
-    integer_class a2 = a1 / 2;
-    integer_class mask = a1 - 1;
-    integer_class a_val(a.eval_bit(N)), b_val(b.eval_bit(N));
-    integer_class s_val(a_val * b_val);
-    integer_class r = mp_abs(s_val);
+    integer_class full = integer_class(1), temp, res;
+    full <<= N;
+    integer_class thresh = full / 2;
+    integer_class mask = full - 1;
+    integer_class s_val = a.eval_bit(N) * b.eval_bit(N);
+    if (s_val < 0)
+        mul = -1;
+    s_val = mp_abs(s_val);
 
-    std::vector<integer_class> v;
-    integer_class carry(0);
-    unsigned int deg = 0;
+    unsigned int deg = 0, carry = 0;
     map_uint_mpz dict;
 
-    while (r != 0 or carry != 0) {
-        mp_and(b1, r, mask);
-        if (b1 < a2) {
-            res = b1 + carry;
+    while (s_val != 0 or carry != 0) {
+        mp_and(temp, s_val, mask);
+        if (temp < thresh) {
+            res = mul * (temp + carry);
             if (res != 0)
                 dict[deg] = res;
             carry = 0;
         } else {
-            res = b1 - a1 + carry;
+            res = mul * (temp - full + carry);
             if (res != 0)
                 dict[deg] = res;
             carry = 1;
         }
-        r >>= N;
+        s_val >>= N;
         deg++;
     }
-    if (neg)
-        return neg_poly(
-            *UnivariateIntPolynomial::from_dict(var, std::move(dict)));
-    else
-        return UnivariateIntPolynomial::from_dict(var, std::move(dict));
+
+    return UnivariateIntPolynomial::from_dict(var, std::move(dict));
+}
+
+RCP<const UnivariateIntPolynomial>
+mul_poly_ks2(const UnivariateIntPolynomial &a, const UnivariateIntPolynomial &b)
+{
+    RCP<const Symbol> var = symbol("");
+    if (a.get_var()->get_name() == "") {
+        var = b.get_var();
+    } else if (b.get_var()->get_name() == "") {
+        var = a.get_var();
+    } else if (!(a.get_var()->__eq__(*b.get_var()))) {
+        throw std::runtime_error("Error: variables must agree.");
+    } else {
+        var = a.get_var();
+    }
+
+    bool parity = true;
+    int mul_o = 1, mul_e = 1;
+
+    unsigned int N
+        = (bit_length(std::min(a.get_degree() + 1, b.get_degree() + 1))
+           + bit_length(a.max_abs_coef()) + bit_length(b.max_abs_coef()) + 1)
+          / 2;
+
+    integer_class full = integer_class(1), temp, res;
+    full <<= (2 * N);
+    integer_class thresh = full / 2;
+    integer_class mask = full - 1;
+    integer_class s_val_p = a.eval_bit(N) * b.eval_bit(N);
+    integer_class s_val_n = a.eval_bit(N, true) * b.eval_bit(N, true);
+
+    integer_class he = s_val_p + s_val_n;
+    if (he < 0)
+        mul_e = -1;
+    he = mp_abs(he);
+    he = he / 2;
+    integer_class ho = s_val_p - s_val_n;
+    if (ho < 0)
+        mul_o = -1;
+    ho = mp_abs(ho);
+    ho = ho / 2;
+    ho = ho >> N;
+
+    unsigned int carrye = 0, carryo = 0, deg = 0;
+    map_uint_mpz dict;
+
+    while (he != 0 or carrye != 0 or ho != 0 or carryo != 0) {
+
+        if (parity) {
+
+            mp_and(temp, he, mask);
+            if (temp < thresh) {
+                res = mul_e * (temp + carrye);
+                if (res != 0)
+                    dict[deg] = res;
+                carrye = 0;
+            } else {
+                res = mul_e * (temp - full + carrye);
+                if (res != 0)
+                    dict[deg] = res;
+                carrye = 1;
+            }
+            he >>= (2 * N);
+
+        } else {
+
+            mp_and(temp, ho, mask);
+            if (temp < thresh) {
+                res = mul_o * (temp + carryo);
+                if (res != 0)
+                    dict[deg] = res;
+                carryo = 0;
+            } else {
+                res = mul_o * (temp - full + carryo);
+                if (res != 0)
+                    dict[deg] = res;
+                carryo = 1;
+            }
+            ho >>= (2 * N);
+        }
+        deg++;
+        parity = not parity;
+    }
+    return UnivariateIntPolynomial::from_dict(var, std::move(dict));
+}
+
+RCP<const UnivariateIntPolynomial>
+mul_poly_naive(const UnivariateIntPolynomial &a,
+               const UnivariateIntPolynomial &b)
+{
+    RCP<const Symbol> var = symbol("");
+    if (a.get_var()->get_name() == "") {
+        var = b.get_var();
+    } else if (b.get_var()->get_name() == "") {
+        var = a.get_var();
+    } else if (!(a.get_var()->__eq__(*b.get_var()))) {
+        throw std::runtime_error("Error: variables must agree.");
+    } else {
+        var = a.get_var();
+    }
+
+    integer_class mul;
+    int deg;
+
+    map_uint_mpz dict;
+    for (auto a_iter : a.get_dict()) {
+        for (auto b_iter : b.get_dict()) {
+
+            deg = a_iter.first + b_iter.first;
+            mul = a_iter.second * b_iter.second;
+            auto ite = dict.find(deg);
+
+            if (ite == dict.end()) {
+                dict[deg] = mul;
+            } else {
+                dict[deg] += mul;
+            }
+        }
+    }
+
+    return UnivariateIntPolynomial::from_dict(var, std::move(dict));
 }
 
 UnivariatePolynomial::UnivariatePolynomial(

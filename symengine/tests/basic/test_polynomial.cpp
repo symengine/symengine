@@ -114,7 +114,7 @@ TEST_CASE("Subtracting two UnivariateIntPolynomial",
     CHECK_THROWS_AS(sub_poly(a, f), std::runtime_error);
 }
 
-TEST_CASE("Multiplication of two UnivariateIntPolynomial",
+TEST_CASE("Multiplication of two UnivariateIntPolynomial using ks1",
           "[UnivariateIntPolynomial]")
 {
     RCP<const Symbol> x = symbol("x");
@@ -155,6 +155,78 @@ TEST_CASE("Multiplication of two UnivariateIntPolynomial",
 
     c = univariate_int_polynomial(y, {{0, -1_z}});
     CHECK_THROWS_AS(mul_poly(a, *c), std::runtime_error);
+}
+
+TEST_CASE("Multiplication of two UnivariateIntPolynomial using ks2",
+          "[UnivariateIntPolynomial]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    RCP<const Symbol> none = symbol("");
+
+    map_uint_mpz adict_ = {{0, 1_z}, {1, 2_z}, {2, 1_z}};
+    map_uint_mpz bdict_ = {{0, -1_z}, {1, -2_z}, {2, -1_z}};
+    map_uint_mpz edict_ = {{0, 5_z}, {1, -2_z}, {2, -1_z}};
+    map_uint_mpz fdict_ = {{0, 6_z}, {1, -2_z}, {2, 3_z}};
+    map_uint_mpz kdict_ = {{0, -1_z}, {1, -2_z}, {2, -100_z}};
+
+    const UnivariateIntPolynomial a(x, 2, std::move(adict_));
+    const UnivariateIntPolynomial b(x, 2, std::move(bdict_));
+    const UnivariateIntPolynomial e(x, 2, std::move(edict_));
+    const UnivariateIntPolynomial f(x, 2, std::move(fdict_));
+    const UnivariateIntPolynomial k(x, 2, std::move(kdict_));
+
+    RCP<const UnivariateIntPolynomial> c = mul_poly_ks2(a, a);
+    RCP<const UnivariateIntPolynomial> d = mul_poly_ks2(a, b);
+    RCP<const UnivariateIntPolynomial> g = mul_poly_ks2(e, e);
+    RCP<const UnivariateIntPolynomial> h = mul_poly_ks2(e, f);
+    RCP<const UnivariateIntPolynomial> i = mul_poly_ks2(f, f);
+    RCP<const UnivariateIntPolynomial> l = mul_poly_ks2(k, f);
+    RCP<const UnivariateIntPolynomial> m = mul_poly_ks2(k, k);
+
+    REQUIRE(c->__str__() == "x**4 + 4*x**3 + 6*x**2 + 4*x + 1");
+    REQUIRE(d->__str__() == "-x**4 - 4*x**3 - 6*x**2 - 4*x - 1");
+    REQUIRE(g->__str__() == "x**4 + 4*x**3 - 6*x**2 - 20*x + 25");
+    REQUIRE(h->__str__() == "-3*x**4 - 4*x**3 + 13*x**2 - 22*x + 30");
+    REQUIRE(i->__str__() == "9*x**4 - 12*x**3 + 40*x**2 - 24*x + 36");
+    REQUIRE(l->__str__() == "-300*x**4 + 194*x**3 - 599*x**2 - 10*x - 6");
+    REQUIRE(m->__str__() == "10000*x**4 + 400*x**3 + 204*x**2 + 4*x + 1");
+}
+
+TEST_CASE("Multiplication of two UnivariateIntPolynomial using naive",
+          "[UnivariateIntPolynomial]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    RCP<const Symbol> none = symbol("");
+
+    map_uint_mpz adict_ = {{0, 1_z}, {1, 2_z}, {2, 1_z}};
+    map_uint_mpz bdict_ = {{0, -1_z}, {1, -2_z}, {2, -1_z}};
+    map_uint_mpz edict_ = {{0, 5_z}, {1, -2_z}, {2, -1_z}};
+    map_uint_mpz fdict_ = {{0, 6_z}, {1, -2_z}, {2, 3_z}};
+    map_uint_mpz kdict_ = {{0, -1_z}, {1, -2_z}, {2, -100_z}};
+
+    const UnivariateIntPolynomial a(x, 2, std::move(adict_));
+    const UnivariateIntPolynomial b(x, 2, std::move(bdict_));
+    const UnivariateIntPolynomial e(x, 2, std::move(edict_));
+    const UnivariateIntPolynomial f(x, 2, std::move(fdict_));
+    const UnivariateIntPolynomial k(x, 2, std::move(kdict_));
+
+    RCP<const UnivariateIntPolynomial> c = mul_poly_naive(a, a);
+    RCP<const UnivariateIntPolynomial> d = mul_poly_naive(a, b);
+    RCP<const UnivariateIntPolynomial> g = mul_poly_naive(e, e);
+    RCP<const UnivariateIntPolynomial> h = mul_poly_naive(e, f);
+    RCP<const UnivariateIntPolynomial> i = mul_poly_naive(f, f);
+    RCP<const UnivariateIntPolynomial> l = mul_poly_naive(k, f);
+    RCP<const UnivariateIntPolynomial> m = mul_poly_naive(k, k);
+
+    REQUIRE(c->__str__() == "x**4 + 4*x**3 + 6*x**2 + 4*x + 1");
+    REQUIRE(d->__str__() == "-x**4 - 4*x**3 - 6*x**2 - 4*x - 1");
+    REQUIRE(g->__str__() == "x**4 + 4*x**3 - 6*x**2 - 20*x + 25");
+    REQUIRE(h->__str__() == "-3*x**4 - 4*x**3 + 13*x**2 - 22*x + 30");
+    REQUIRE(i->__str__() == "9*x**4 - 12*x**3 + 40*x**2 - 24*x + 36");
+    REQUIRE(l->__str__() == "-300*x**4 + 194*x**3 - 599*x**2 - 10*x - 6");
+    REQUIRE(m->__str__() == "10000*x**4 + 400*x**3 + 204*x**2 + 4*x + 1");
 }
 
 TEST_CASE("Comparing two UnivariateIntPolynomial", "[UnivariateIntPolynomial]")
