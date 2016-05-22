@@ -661,13 +661,13 @@ void fft(bvector &x)
 void ifft(bvector &x)
 {
     // Conjugate the complex numbers
-    for_each(x.begin(), x.end(), [](base &c) { c = std::conj(c); });
+    std::for_each(x.begin(), x.end(), [](base &c) { c = std::conj(c); });
 
     // Forward fft
     fft(x);
 
     // Conjugate the complex numbers again
-    for_each(x.begin(), x.end(), [](base &c) { c = std::conj(c); });
+    std::for_each(x.begin(), x.end(), [](base &c) { c = std::conj(c); });
 
     // Scale the numbers
     for (size_t i = 0; i < x.size(); i++)
@@ -722,7 +722,7 @@ RCP<const UnivariatePolynomial> mul_uni_poly(const UnivariatePolynomial &a,
 
     std::vector<Expression> res(n);
     for (unsigned long i = 0; i < n && i <= t; ++i) {
-        res[i] = expand(expand(fa[i].real()));
+        res[i] = expand(fa[i].real());
         if (all_int == true && is_a<RealDouble>(*res[i].get_basic()))
             res[i] = Expression(std::lround(
                 (rcp_static_cast<const RealDouble>(res[i].get_basic())

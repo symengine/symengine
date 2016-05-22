@@ -73,15 +73,16 @@ UnivariateExprPolynomial
 UnivariateSeries::mul(const UnivariateExprPolynomial &a,
                       const UnivariateExprPolynomial &b, unsigned prec)
 {
-    unsigned long n = 1, t = a.get_degree() + b.get_degree() + 1;
+    unsigned long n = 1, t = std::min(a.get_degree() + b.get_degree(), (int)prec);
     bool all_int = true;
 
+    t++;
     while (n <= t)
         n <<= 1;
 
     bvector fa(n), fb(n);
 
-    for (int i = 0; i <= std::max(a.get_degree(), b.get_degree()); i++) {
+    for (int i = 0; i <= std::max(a.get_degree(), b.get_degree()) && i <(int)prec; i++) {
         Expression ai = a.find_cf(i);
         Expression bi = b.find_cf(i);
         if ((not is_a<Integer>(*ai.get_basic()))
@@ -101,7 +102,7 @@ UnivariateSeries::mul(const UnivariateExprPolynomial &a,
     // std::vector<Expression> res(n);
     map_int_Expr res;
     for (unsigned long i = 0; i < prec && i <= t; ++i) {
-        res[i] = expand(expand(fa[i].real()));
+        res[i] = expand(fa[i].real());
         if (all_int == true && is_a<RealDouble>(*res[i].get_basic()))
             res[i] = Expression(std::lround(
                 (rcp_static_cast<const RealDouble>(res[i].get_basic())
