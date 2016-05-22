@@ -142,7 +142,7 @@ private:
     // 1}} with var_ = "x"
     unsigned int degree_;
     RCP<const Symbol> var_;
-    UIntDict int_dict_;
+    UIntDict poly_;
 
 public:
     IMPLEMENT_TYPEID(UNIVARIATEINTPOLYNOMIAL)
@@ -207,11 +207,11 @@ public:
     }
     inline const map_uint_mpz &get_dict() const
     {
-        return int_dict_.dict_;
+        return poly_.dict_;
     }
     inline const UIntDict &get_int_dict() const
     {
-        return int_dict_;
+        return poly_;
     }
 }; // UnivariateIntPolynomial
 
@@ -418,7 +418,7 @@ class UnivariatePolynomial : public Basic
 private:
     int degree_;
     RCP<const Symbol> var_;
-    UnivariateExprPolynomial expr_dict_;
+    UnivariateExprPolynomial poly_;
 
 public:
     IMPLEMENT_TYPEID(UNIVARIATEPOLYNOMIAL)
@@ -474,11 +474,11 @@ public:
     }
     inline const map_int_Expr &get_dict() const
     {
-        return expr_dict_.get_dict();
+        return poly_.get_dict();
     }
     const UnivariateExprPolynomial &get_expr_dict() const
     {
-        return expr_dict_;
+        return poly_;
     }
 
 }; // UnivariatePolynomial
