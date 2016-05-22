@@ -469,15 +469,12 @@ vec_basic UnivariatePolynomial::get_args() const
             if (p.second == Expression(1))
                 args.push_back(var_);
             else
-                args.push_back(Mul::from_dict(
-                    rcp_static_cast<const Integer>(p.second.get_basic()),
-                    {{var_, one}}));
+                args.push_back(mul(p.second.get_basic(), var_));
         } else if (p.second == 1)
             args.push_back(pow(var_, integer(p.first)));
         else
-            args.push_back(Mul::from_dict(
-                rcp_static_cast<const Integer>(p.second.get_basic()),
-                {{var_, integer(p.first)}}));
+            args.push_back(
+                mul(p.second.get_basic(), pow(var_, integer(p.first))));
     }
     if (expr_dict_.empty())
         args.push_back(Expression(0).get_basic());
