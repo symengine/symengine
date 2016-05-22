@@ -463,6 +463,99 @@ void StrPrinter::bvisit(const NumberWrapper &x)
     str_ = x.__str__();
 }
 
+void StrPrinter::bvisit(const MultivariateIntPolynomial &x)
+{
+    std::ostringstream s;
+    bool first = true; // is this the first term being printed out?
+    // To change the ordering in which the terms will print out, change
+    // vec_uint_compare in dict.h
+    std::vector<vec_uint> v
+        = order_umap<vec_uint, umap_uvec_mpz, vec_uint_compare>(x.dict_);
+
+    for (vec_uint exps : v) {
+        integer_class c = x.dict_.find(exps)->second;
+        if (c != 0) {
+            if (c > 0 && !first) {
+                s << "+ ";
+            } else if (c < 0) {
+                s << "- ";
+            }
+            unsigned int i = 0;
+            std::ostringstream expr;
+            for (auto it : x.vars_) {
+                if (x.dict_.find(exps)->first[i] != 0) {
+                    expr << it->__str__();
+                    if (x.dict_.find(exps)->first[i] > 1)
+                        expr << "**" << x.dict_.find(exps)->first[i];
+                    expr << " ";
+                }
+                i++;
+            }
+            if (mp_abs(c) != 1 || expr.str().empty())
+                s << mp_abs(c) << "*";
+            s << expr.str();
+            first = false;
+        }
+    }
+
+    if (s.str().empty())
+        s << "0 ";
+    std::string final(s.str());
+    final.pop_back();
+    str_ = final;
+}
+
+void StrPrinter::bvisit(const MultivariatePolynomial &x)
+{
+    std::ostringstream s;
+    bool first = true; // is this the first term being printed out?
+    // To change the ordering in which the terms will print out, change
+    // vec_uint_compare in dict.h
+    std::vector<vec_int> v
+        = order_umap<vec_int, umap_vec_expr, vec_int_compare>(x.dict_);
+
+    for (vec_int exps : v) {
+        Expression c = x.dict_.find(exps)->second;
+        if (c != Expression(0)) {
+            if (!first)
+                s << " ";
+            std::string t = parenthesizeLT(c.get_basic(), PrecedenceEnum::Mul);
+            if ('-' == t[0]) {
+                s << "- ";
+                t = t.substr(1);
+            } else if (!first) {
+                s << "+ ";
+            }
+            unsigned int i = 0;
+            std::ostringstream expr;
+            for (auto it : x.vars_) {
+                if (x.dict_.find(exps)->first[i] != 0) {
+                    expr << it->__str__();
+                    if (x.dict_.find(exps)->first[i] > 1
+                        || x.dict_.find(exps)->first[i] < 0)
+                        expr << "**" << x.dict_.find(exps)->first[i];
+                    expr << " ";
+                }
+                i++;
+            }
+            if ((neq(*c.get_basic(), Integer(integer_class(1)))
+                 && neq(*c.get_basic(), Integer(integer_class(-1)))
+                 && !expr.str().empty())) {
+                std::string final(expr.str());
+                final.pop_back();
+                s << t << "*" << final;
+            } else if (expr.str().empty()) {
+                s << t;
+            }
+            first = false;
+        }
+    }
+
+    if (s.str().empty())
+        s << "0";
+    str_ = s.str();
+}
+
 std::string StrPrinter::parenthesizeLT(const RCP<const Basic> &x,
                                        PrecedenceEnum precedenceEnum)
 {
