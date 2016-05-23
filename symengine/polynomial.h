@@ -22,6 +22,155 @@ unsigned int bit_length(T t)
     return count;
 }
 
+// dict wrapper
+template <typename Key, typename Value, typename Wrapper>
+class ODictWrapper
+{
+public:
+    std::map<Key, Value> dict_;
+
+public:
+    ODictWrapper() SYMENGINE_NOEXCEPT
+    {
+    }
+    ~ODictWrapper() SYMENGINE_NOEXCEPT
+    {
+    }
+
+    ODictWrapper(const int &i)
+    {
+        if (i != 0)
+            dict_ = {{0, Value(i)}};
+    }
+
+    ODictWrapper(const std::map<Key, Value> &p)
+    {
+        for (auto &iter : p) {
+            if (iter.second != Value(0))
+                dict_[iter.first] = iter.second;
+        }
+    }
+
+    ODictWrapper(const Value &p)
+    {
+        if (p != Value(0))
+            dict_[0] = p;
+    }
+
+    ODictWrapper(std::string s)
+    {
+        dict_[1] = Value(1);
+    }
+
+    Wrapper &operator=(Wrapper &&other) SYMENGINE_NOEXCEPT
+    {
+        if (this != &other)
+            dict_ = std::move(other.dict_);
+        return static_cast<Wrapper &>(*this);
+    }
+
+    friend Wrapper operator+(const Wrapper &a, const Wrapper &b)
+    {
+        Wrapper c = a;
+        c += b;
+        return c;
+    }
+
+    Wrapper &operator+=(const Wrapper &other)
+    {
+        for (auto &iter : other.dict_) {
+            auto t = dict_.lower_bound(iter.first);
+            if (t != dict_.end() and t->first == iter.first) {
+                t->second += iter.second;
+                if (t->second == 0) {
+                    dict_.erase(t);
+                }
+            } else {
+                dict_.insert(t, {iter.first, iter.second});
+            }
+        }
+        return static_cast<Wrapper &>(*this);
+    }
+
+    friend Wrapper operator-(const Wrapper &a, const Wrapper &b)
+    {
+        Wrapper c = a;
+        c -= b;
+        return c;
+    }
+
+    Wrapper operator-() const
+    {
+        ODictWrapper c = *this;
+        for (auto &iter : c.dict_)
+            iter.second *= -1;
+        return static_cast<Wrapper &>(c);
+    }
+
+    Wrapper &operator-=(const Wrapper &other)
+    {
+        for (auto &iter : other.dict_) {
+            auto t = dict_.lower_bound(iter.first);
+            if (t != dict_.end() and t->first == iter.first) {
+                t->second -= iter.second;
+                if (t->second == 0) {
+                    dict_.erase(t);
+                }
+            } else {
+                dict_.insert(t, {iter.first, -iter.second});
+            }
+        }
+        return static_cast<Wrapper &>(*this);
+    }
+
+    friend Wrapper operator*(const Wrapper &a, const Wrapper &b)
+    {
+        Wrapper c = a;
+        c *= b;
+        return c;
+    }
+
+    Wrapper &operator*=(const Wrapper &other)
+    {
+        std::map<Key, Value> p;
+        for (const auto &i1 : dict_)
+            for (const auto &i2 : other.dict_)
+                p[i1.first + i2.first] += i1.second * i2.second;
+
+        dict_ = {};
+        for (const auto &ite : p)
+            if (ite.second != Value(0))
+                dict_[ite.first] = ite.second;
+
+        return static_cast<Wrapper &>(*this);
+    }
+
+    bool operator==(const Wrapper &other) const
+    {
+        return dict_ == other.dict_;
+    }
+
+    bool operator!=(const Wrapper &other) const
+    {
+        return not(*this == other);
+    }
+
+    const std::map<Key, Value> &get_dict() const
+    {
+        return dict_;
+    }
+
+    unsigned int size() const
+    {
+        return dict_.size();
+    }
+
+    bool empty() const
+    {
+        return dict_.empty();
+    }
+};
+
 class UIntDict : public ODictWrapper<unsigned int, integer_class, UIntDict>
 {
 

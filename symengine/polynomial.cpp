@@ -156,8 +156,7 @@ integer_class UnivariateIntPolynomial::eval(const integer_class &x) const
     unsigned int last_deg = poly_.dict_.rbegin()->first;
     integer_class result(0), x_pow;
 
-    for (auto it = poly_.dict_.rbegin(); it != poly_.dict_.rend();
-         ++it) {
+    for (auto it = poly_.dict_.rbegin(); it != poly_.dict_.rend(); ++it) {
 
         mp_pow_ui(x_pow, x, last_deg - (*it).first);
         last_deg = (*it).first;
@@ -215,8 +214,7 @@ bool UnivariateIntPolynomial::is_mul() const
 bool UnivariateIntPolynomial::is_pow() const
 {
     if (poly_.size() == 1 and poly_.dict_.begin()->second == 1
-        and poly_.dict_.begin()->first != 1
-        and poly_.dict_.begin()->first != 0)
+        and poly_.dict_.begin()->first != 1 and poly_.dict_.begin()->first != 0)
         return true;
     return false;
 }
@@ -304,8 +302,7 @@ UnivariatePolynomial::UnivariatePolynomial(const RCP<const Symbol> &var,
     }
     if (var->get_name() == "")
         if (!(poly_.dict_.empty()
-              or (poly_.dict_.size() == 1
-                  and poly_.dict_.begin()->first == 0)))
+              or (poly_.dict_.size() == 1 and poly_.dict_.begin()->first == 0)))
             throw std::runtime_error("Should only have a constant term");
     degree_ = deg;
 }
@@ -446,8 +443,7 @@ bool UnivariatePolynomial::is_one() const
 
 bool UnivariatePolynomial::is_minus_one() const
 {
-    return poly_.size() == 1
-           and poly_.get_dict().begin()->second == -1
+    return poly_.size() == 1 and poly_.get_dict().begin()->second == -1
            and poly_.get_dict().begin()->first == 0;
 }
 
