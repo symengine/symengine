@@ -93,6 +93,8 @@ RCP<const Set> Interval::close() const
 
 bool Interval::contains(const RCP<const Basic> &a) const
 {
+    if (not is_a_Number(*a))
+        throw std::runtime_error("Not implemented");
     if ((eq(*start_, *a) and left_open_) or (eq(*end_, *a) and right_open_))
         return false;
     if (eq(*start_, *a) or eq(*end_, *a))

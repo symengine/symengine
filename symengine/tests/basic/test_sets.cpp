@@ -69,8 +69,8 @@ TEST_CASE("Interval : Basic", "[basic]")
     REQUIRE(r3->compare(*r4) == -1);
     CHECK_THROWS_AS(r3->set_union(r4), std::runtime_error);
     CHECK_THROWS_AS(r4->set_union(r3), std::runtime_error);
-    r3 = interval(im5, integer(5), true, true); // (-5, 5)
-    REQUIRE(r3->contains(sqrt(i2)));
+    r3 = interval(zero, i2, true, true); // (0, 2)
+    CHECK_THROWS_AS(r3->contains(sqrt(i2)), std::runtime_error);
 
     r3 = interval(im5, i2, false, false); // [-5, 2]
     REQUIRE(r3->is_subset(r2));
@@ -203,6 +203,7 @@ TEST_CASE("FiniteSet : Basic", "[basic]")
     REQUIRE(r3->is_subset(r2));
     REQUIRE(r3->is_proper_subset(r2));
 
+    r1 = finiteset({zero, one});
     RCP<const Set> r4 = interval(zero, one);
     r3 = r2->set_intersection(r4);
     REQUIRE(r3->contains(one));
