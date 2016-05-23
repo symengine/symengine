@@ -1,7 +1,10 @@
+#include <climits>
+#include <exception>
 #include <algorithm>
 #include <exception>
 #include <iterator>
 #include <symengine/series_generic.h>
+#include <symengine/dict.h>
 #include <symengine/series_visitor.h>
 
 using SymEngine::RCP;

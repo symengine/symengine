@@ -16,6 +16,10 @@ add_executable(test_polynomial test_polynomial.cpp)
 target_link_libraries(test_polynomial symengine catch)
 add_test(test_polynomial ${PROJECT_BINARY_DIR}/test_polynomial)
 
+add_executable(test_polynomial_multivariate test_polynomial_multivariate.cpp)
+target_link_libraries(test_polynomial_multivariate symengine catch)
+add_test(test_polynomial_multivariate ${PROJECT_BINARY_DIR}/test_polynomial_multivariate)
+
 add_executable(test_series test_series.cpp)
 target_link_libraries(test_series symengine catch)
 add_test(test_series ${PROJECT_BINARY_DIR}/test_series)
@@ -23,6 +27,10 @@ add_test(test_series ${PROJECT_BINARY_DIR}/test_series)
 add_executable(test_series_generic test_series_generic.cpp)
 target_link_libraries(test_series_generic symengine catch)
 add_test(test_series_generic ${PROJECT_BINARY_DIR}/test_series_generic)
+
+add_executable(test_series_generic_multivariate test_series_generic_multivariate.cpp)
+target_link_libraries(test_series_generic_multivariate symengine catch)
+add_test(test_series_generic_multivariate ${PROJECT_BINARY_DIR}/test_series_generic_multivariate)
 
 if (WITH_PIRANHA)
     add_executable(test_series_expansion_UP test_series_expansion_UP.cpp)

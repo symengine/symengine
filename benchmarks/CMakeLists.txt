@@ -58,6 +58,9 @@ if (WITH_FLINT)
     target_link_libraries(series_expansion_sincos_flint symengine)
 endif()
 
+add_executable(series_expansion_sincos_MultivariateSeries series_expansion_sincos_MultivariateSeries.cpp)
+target_link_libraries(series_expansion_sincos_MultivariateSeries symengine)
+
 if (WITH_PIRANHA)
     add_executable(series_expansion_sincos_piranha series_expansion_sincos_piranha.cpp)
     target_link_libraries(series_expansion_sincos_piranha symengine)

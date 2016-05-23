@@ -11,6 +11,7 @@
 #include <symengine/mul.h>
 #include <symengine/pow.h>
 #include <symengine/polynomial.h>
+#include <symengine/polynomial_multivariate.h>
 #include <symengine/functions.h>
 #include <symengine/symbol.h>
 #include <symengine/integer.h>
@@ -22,6 +23,7 @@
 #include <symengine/real_mpfr.h>
 #include <symengine/complex_mpc.h>
 #include <symengine/series_generic.h>
+#include <symengine/series_generic_multivariate.h>
 #include <symengine/series.h>
 #include <symengine/series_piranha.h>
 #include <symengine/series_flint.h>
