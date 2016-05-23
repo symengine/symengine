@@ -183,28 +183,6 @@ int umap_uvec_mpz_compare(const umap_uvec_mpz &a, const umap_uvec_mpz &b)
     return 0;
 }
 
-// Copied from umap_eq, with derefrencing of image in map removed.
-bool umap_uvec_mpz_eq(const umap_uvec_mpz &a, const umap_uvec_mpz &b)
-{
-    // This follows the same algorithm as Python's dictionary comparison
-    // (a==b), which is implemented by "dict_equal" function in
-    // Objects/dictobject.c.
-
-    // Can't be equal if # of entries differ:
-    if (a.size() != b.size())
-        return false;
-    // Loop over keys in "a":
-    for (const auto &p : a) {
-        // O(1) lookup of the key in "b":
-        auto f = b.find(p.first);
-        if (f == b.end())
-            return false; // no such element in "b"
-        if (p.second != f->second)
-            return false; // values not equal
-    }
-    return true;
-}
-
 int umap_vec_expr_compare(const umap_vec_expr &a, const umap_vec_expr &b)
 {
     std::vector<vec_int> va = order_umap<vec_int, umap_vec_expr>(a);
@@ -229,28 +207,6 @@ int umap_vec_expr_compare(const umap_vec_expr &a, const umap_vec_expr &b)
         }
     }
     return 0;
-}
-
-// Copied from umap_eq, with derefrencing of image in map removed.
-bool umap_uvec_expr_eq(const umap_uvec_expr &a, const umap_uvec_expr &b)
-{
-    // This follows the same algorithm as Python's dictionary comparison
-    // (a==b), which is implemented by "dict_equal" function in
-    // Objects/dictobject.c.
-
-    // Can't be equal if # of entries differ:
-    if (a.size() != b.size())
-        return false;
-    // Loop over keys in "a":
-    for (const auto &p : a) {
-        // O(1) lookup of the key in "b":
-        auto f = b.find(p.first);
-        if (f == b.end())
-            return false; // no such element in "b"
-        if (p.second != f->second)
-            return false; // values not equal
-    }
-    return true;
 }
 
 bool vec_basic_eq_perm(const vec_basic &a, const vec_basic &b)
