@@ -491,14 +491,19 @@ static RCP<const Basic> diff(const CLASS &self, \
             } //find the index of the variable we are differentiating WRT.
             for (auto bucket : self.dict_) {
                 if (bucket.first[index] != 0) {
-                    vec_uint v = bucket.first;
+                    Vec v = bucket.first;
                     v[index]--;
-                    dict.insert(std::pair<vec_uint, integer_class>(v, bucket.second * bucket.first[index]));
+                    dict.insert(std::pair<Vec, Coeff>(
+                        v, bucket.second * bucket.first[index]));
                 }
             }
             return MultivariateIntPolynomial::from_dict(self.vars_, std::move(dict));
         } else {
-            return zero;
+            Vec v;
+            v.resize(self.vars_.size(), 0);
+            vec_basic vs;
+            vs.insert(vs.begin(), self.vars_.begin(), self.vars_.end());
+            return MPoly::create(vs, {{v, Coeff(0)}});
         }
     }
 
