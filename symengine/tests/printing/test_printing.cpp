@@ -317,7 +317,7 @@ TEST_CASE("test_univariate_polynomial(): printing", "[printing]")
     p = univariate_polynomial(x, UnivariateExprPolynomial({{0, 1}, {1, 2}}));
     REQUIRE(p->__str__() == "2*x + 1");
     p = univariate_polynomial(x, UnivariateExprPolynomial({{0, -1}, {1, 2}}));
-    REQUIRE(p->__str__() == "2*x - 1");
+    REQUIRE(p->__str__() == "2*x + (-1)");
     p = univariate_polynomial(x,
                               UnivariateExprPolynomial({{0, Expression(-1)}}));
     REQUIRE(p->__str__() == "-1");
@@ -325,7 +325,7 @@ TEST_CASE("test_univariate_polynomial(): printing", "[printing]")
                               UnivariateExprPolynomial({{1, Expression(-1)}}));
     REQUIRE(p->__str__() == "-x");
     p = univariate_polynomial(x, UnivariateExprPolynomial({{0, -1}, {1, 1}}));
-    REQUIRE(p->__str__() == "x - 1");
+    REQUIRE(p->__str__() == "x + (-1)");
     p = univariate_polynomial(
         x, UnivariateExprPolynomial({{0, 1}, {1, 1}, {2, 1}}));
     REQUIRE(p->__str__() == "x**2 + x + 1");
@@ -339,7 +339,7 @@ TEST_CASE("test_univariate_polynomial(): printing", "[printing]")
     REQUIRE(p->__str__() == "x**2 + 2*x");
     p = univariate_polynomial(
         x, UnivariateExprPolynomial({{0, -1}, {1, -2}, {2, -1}}));
-    REQUIRE(p->__str__() == "-x**2 - 2*x - 1");
+    REQUIRE(p->__str__() == "-x**2 + (-2)*x + (-1)");
     p = univariate_polynomial(x, UnivariateExprPolynomial({{-1, d}}));
 
     REQUIRE(p->__str__() == "d*x**(-1)");
