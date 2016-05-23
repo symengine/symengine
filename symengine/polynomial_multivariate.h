@@ -19,15 +19,37 @@ namespace SymEngine
 unsigned int reconcile(vec_uint &v1, vec_uint &v2, set_basic &s,
                        const set_basic &s1, const set_basic &s2);
 // translates vectors from one polynomial into vectors for another.
-vec_uint translate(vec_uint original, vec_uint translator, unsigned int size);
+template <typename Vec>
+Vec translate(Vec original, vec_uint translator, unsigned int size)
+{
+    Vec changed;
+    changed.resize(size, 0);
+    for (unsigned int i = 0; i < original.size(); i++) {
+        changed[translator[i]] = original[i];
+    }
+    return changed;
+}
+
 // translates two vec_uints to the desired format and adds them together
 // componentwise
-vec_uint uint_vec_translate_and_add(const vec_uint &v1, const vec_uint &v2,
-                                    const vec_uint &translator1,
-                                    const vec_uint &translator2,
-                                    const unsigned int size);
+template <typename Vec>
+Vec translate_and_add(const Vec &v1, const Vec &v2, const vec_uint &translator1,
+                      const vec_uint &translator2, const unsigned int size)
+{
+    Vec result;
+    for (unsigned int i = 0; i < size; i++) {
+        result.insert(result.end(), 0);
+    }
+    for (unsigned int i = 0; i < translator1.size(); i++) {
+        result[translator1[i]] += v1[i];
+    }
+    for (unsigned int i = 0; i < translator2.size(); i++) {
+        result[translator2[i]] += v2[i];
+    }
+    return result;
+}
 
-template <typename MPoly, typename Dict, typename Coeff>
+template <typename MPoly, typename Dict, typename Coeff, typename Vec>
 class MPolyBase : public Basic
 {
 public:
@@ -63,7 +85,9 @@ protected:
         for (auto sym : s) {
             degs.insert(std::pair<RCP<const Basic>, unsigned int>(sym, 0));
             for (auto bucket : d) {
-                if (bucket.first[whichvar] > degs.find(sym)->second)
+                if (bucket.first[whichvar] > 0
+                    && static_cast<unsigned int>(bucket.first[whichvar])
+                           > degs.find(sym)->second)
                     degs.find(sym)->second = bucket.first[whichvar];
             }
             whichvar++;
@@ -110,8 +134,9 @@ public:
         Dict dict;
         // Permute the exponents
         for (auto &bucket : d) {
-            dict.insert(std::pair<vec_uint, Coeff>(
-                translate(bucket.first, translator, s.size()), bucket.second));
+            dict.insert(std::pair<Vec, Coeff>(
+                translate<Vec>(bucket.first, translator, s.size()),
+                bucket.second));
         }
         return MPoly::from_dict(s, std::move(dict));
     }
@@ -126,14 +151,18 @@ public:
         // checks that the maximum degree of any variable is correct according
         // to
         // the dictionary
-        unsigned int whichvar
-            = 0; // keeps track of the index of the variable we are checking
+        // keeps track of the index of the variable we are checking
+        unsigned int whichvar = 0;
         for (auto var : vars) {
             unsigned int maxdegree = 0;
             for (auto bucket : dict) {
-                if (bucket.first[whichvar] > degrees.find(var)->second)
+                if (bucket.first[whichvar] > 0
+                    && static_cast<unsigned int>(bucket.first[whichvar])
+                           > degrees.find(var)->second)
                     return false;
-                else if (maxdegree < bucket.first[whichvar])
+                else if (bucket.first[whichvar] > 0
+                         && maxdegree < static_cast<unsigned int>(
+                                            bucket.first[whichvar]))
                     maxdegree = bucket.first[whichvar];
             }
             if (maxdegree != degrees.find(var)->second)
@@ -153,7 +182,10 @@ public:
         if (1 == dict_.size() && 1 == o_.dict_.size()) {
             if (dict_.begin()->second != o_.dict_.begin()->second)
                 return false;
-            vec_uint v1, v2;
+            if (dict_.begin()->first == o_.dict_.begin()->first
+                && vars_ == o_.vars_)
+                return true;
+            Vec v1, v2;
             v1.resize(vars_.size(), 0);
             v2.resize(o_.vars_.size(), 0);
             if (dict_.begin()->first == v1 || o_.dict_.begin()->first == v2)
@@ -176,16 +208,16 @@ public:
         umap_basic_uint degs;
         unsigned int size = reconcile(v1, v2, s, vars_, b.vars_);
         for (auto bucket : dict_) {
-            dict.insert(std::pair<vec_uint, Coeff>(
-                translate(bucket.first, v1, size), bucket.second));
+            dict.insert(std::pair<Vec, Coeff>(
+                translate<Vec>(bucket.first, v1, size), bucket.second));
         }
         for (auto bucket : b.dict_) {
-            auto target = dict.find(translate(bucket.first, v2, size));
+            auto target = dict.find(translate<Vec>(bucket.first, v2, size));
             if (target != dict.end()) {
                 target->second += bucket.second;
             } else {
-                dict.insert(std::pair<vec_uint, Coeff>(
-                    translate(bucket.first, v2, size), bucket.second));
+                dict.insert(std::pair<Vec, Coeff>(
+                    translate<Vec>(bucket.first, v2, size), bucket.second));
             }
         }
         return MPoly::from_dict(s, std::move(dict));
@@ -195,8 +227,7 @@ public:
         Dict dict;
         set_basic s = vars_;
         for (auto bucket : dict_) {
-            dict.insert(
-                std::pair<vec_uint, Coeff>(bucket.first, -bucket.second));
+            dict.insert(std::pair<Vec, Coeff>(bucket.first, -bucket.second));
         }
         return MPoly::from_dict(s, std::move(dict));
     }
@@ -214,10 +245,10 @@ public:
         unsigned int size = reconcile(v1, v2, s, vars_, b.vars_);
         for (auto a_bucket : dict_) {
             for (auto b_bucket : b.dict_) {
-                vec_uint target = uint_vec_translate_and_add(
+                Vec target = translate_and_add<Vec>(
                     a_bucket.first, b_bucket.first, v1, v2, size);
                 if (dict.find(target) == dict.end()) {
-                    dict.insert(std::pair<vec_uint, Coeff>(
+                    dict.insert(std::pair<Vec, Coeff>(
                         target, a_bucket.second * b_bucket.second));
                 } else {
                     dict.find(target)->second
@@ -231,7 +262,8 @@ public:
 
 // MultivariateIntPolynomial
 class MultivariateIntPolynomial
-    : public MPolyBase<MultivariateIntPolynomial, umap_uvec_mpz, integer_class>
+    : public MPolyBase<MultivariateIntPolynomial, umap_uvec_mpz, integer_class,
+                       vec_uint>
 {
 public:
     MultivariateIntPolynomial(const set_basic &vars, umap_basic_uint &&degrees,
@@ -256,11 +288,12 @@ public:
 
 // MultivariatePolynomial
 class MultivariatePolynomial
-    : public MPolyBase<MultivariatePolynomial, umap_uvec_expr, Expression>
+    : public MPolyBase<MultivariatePolynomial, umap_vec_expr, Expression,
+                       vec_int>
 {
 public:
     MultivariatePolynomial(const set_basic &vars, umap_basic_uint &&degrees,
-                           umap_uvec_expr &&dict)
+                           umap_vec_expr &&dict)
         : MPolyBase(std::move(vars), std::move(degrees), std::move(dict))
     {
     }

@@ -205,19 +205,10 @@ bool umap_uvec_mpz_eq(const umap_uvec_mpz &a, const umap_uvec_mpz &b)
     return true;
 }
 
-int umap_uvec_expr_compare(const umap_uvec_expr &a, const umap_uvec_expr &b)
+int umap_vec_expr_compare(const umap_vec_expr &a, const umap_vec_expr &b)
 {
-    std::vector<vec_uint> va = order_umap<vec_uint, umap_uvec_expr>(a);
-    std::vector<vec_uint> vb = order_umap<vec_uint, umap_uvec_expr>(b);
-
-    if (va.empty())
-        if (!vb.empty())
-            return -1;
-    if (vb.empty())
-        if (!va.empty())
-            return 1;
-    if (va.empty() && vb.empty())
-        return 0;
+    std::vector<vec_int> va = order_umap<vec_int, umap_vec_expr>(a);
+    std::vector<vec_int> vb = order_umap<vec_int, umap_vec_expr>(b);
 
     if (va.size() < vb.size())
         return -1;
@@ -234,14 +225,6 @@ int umap_uvec_expr_compare(const umap_uvec_expr &a, const umap_uvec_expr &b)
                 return (a.find(va[i])->second)
                     .get_basic()
                     ->__cmp__(*((b.find(vb[i])->second).get_basic()));
-                /*
-                                if (a.find(va[i])->second <
-                   b.find(vb[i])->second) { //probably will want to replace this
-                   with compare
-                                    return -1;
-                                } else {
-                                    return 1;
-                                }*/
             }
         }
     }

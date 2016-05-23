@@ -57,6 +57,7 @@ typedef struct {
     }
 } vec_int_hash;
 typedef std::unordered_map<vec_int, integer_class, vec_int_hash> umap_vec_mpz;
+typedef std::unordered_map<vec_int, Expression, vec_int_hash> umap_vec_expr;
 
 //! `insert(m, first, second)` is equivalent to `m[first] = second`, just
 //! faster,
@@ -215,7 +216,7 @@ std::vector<K> order_umap(const M &d)
 }
 
 int umap_uvec_mpz_compare(const umap_uvec_mpz &a, const umap_uvec_mpz &b);
-int umap_uvec_expr_compare(const umap_uvec_expr &a, const umap_uvec_expr &b);
+int umap_vec_expr_compare(const umap_vec_expr &a, const umap_vec_expr &b);
 
 // copied from umap_eq, with derefrencing of image in map removed.
 template <class T>
