@@ -69,6 +69,8 @@ TEST_CASE("Interval : Basic", "[basic]")
     REQUIRE(r3->compare(*r4) == -1);
     CHECK_THROWS_AS(r3->set_union(r4), std::runtime_error);
     CHECK_THROWS_AS(r4->set_union(r3), std::runtime_error);
+    r3 = interval(im5, integer(5), true, true); // (-5, 5)
+    REQUIRE(r3->contains(sqrt(i2)));
 
     r3 = interval(im5, i2, false, false); // [-5, 2]
     REQUIRE(r3->is_subset(r2));
@@ -190,8 +192,11 @@ TEST_CASE("FiniteSet : Basic", "[basic]")
 {
     RCP<const Set> r1 = finiteset({zero, one, symbol("x")});
     RCP<const Set> r2 = finiteset({zero, one, integer(2)});
-    RCP<const Set> r3 = r1->set_union(r2); // [0, 1, 2, x]
-    r3 = r1->set_intersection(r2); // [0, 1]
+    RCP<const Set> r3 = r1->set_union(r2); // {0, 1, 2, x}
+    r3 = r1->set_intersection(r2);         // {0, 1}
+    REQUIRE(eq(*r3, *finiteset({zero, one})));
+    REQUIRE(r3->__hash__() == finiteset({zero, one})->__hash__());
+    REQUIRE(r3->compare(*r2) == -1);
     REQUIRE(r3->contains(one));
     REQUIRE(r3->contains(zero));
     REQUIRE(not r3->contains(integer(3)));
@@ -213,7 +218,8 @@ TEST_CASE("FiniteSet : Basic", "[basic]")
     REQUIRE(not r1->is_proper_subset(r4));
     REQUIRE(r1->__eq__(*r4));
     REQUIRE(r4->__eq__(*r1));
-    r4 = interval(zero, one, true, false); // (0, 1]
+    r1 = finiteset({zero, one});
+    r4 = interval(zero, one, true, true); // (0, 1)
     r3 = r1->set_union(r4);
     r2 = interval(zero, one); // [0, 1]
     REQUIRE(eq(*r2, *r3));

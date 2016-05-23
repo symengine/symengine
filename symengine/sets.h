@@ -195,11 +195,10 @@ inline RCP<const Set> interval(const RCP<const Number> &start,
                                const bool left_open = false,
                                const bool right_open = false)
 {
-    if (Interval::is_canonical(start, end, left_open, right_open)) {
-        if (eq(*start, *end) and not(left_open or right_open))
-            return finiteset({start});
+    if (Interval::is_canonical(start, end, left_open, right_open))
         return make_rcp<const Interval>(start, end, left_open, right_open);
-    }
+    if (eq(*start, *end) and not(left_open or right_open))
+        return finiteset({start});
     return emptyset();
 }
 }

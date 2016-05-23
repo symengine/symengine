@@ -20,8 +20,7 @@ bool Interval::is_canonical(const RCP<const Number> &s,
     if (is_a<Complex>(*s) or is_a<Complex>(*e))
         throw std::runtime_error("Complex set not implemented");
     if (eq(*e, *s)) {
-        if (left_open or right_open)
-            return false;
+        return false;
     } else if (eq(*min({s, e}), *e)) {
         return false;
     }
@@ -338,26 +337,17 @@ bool FiniteSet::__eq__(const Basic &o) const
 {
     if (is_a<FiniteSet>(o)) {
         const FiniteSet &other = static_cast<const FiniteSet &>(o);
-        if (container_.size() != other.container_.size())
-            return false;
-        for (const auto &a : container_) {
-            if (not other.contains(a))
-                return false;
-        }
-        // TODO : search for a std function
-        return true;
+        return vec_set_eq(container_, other.container_);
     }
     return false;
 }
 
-int FiniteSet::compare(const Basic &s) const
+int FiniteSet::compare(const Basic &o) const
 {
     // compares two FiniteSet based on their length
-    SYMENGINE_ASSERT(is_a<FiniteSet>(s))
-    const FiniteSet &o = static_cast<const FiniteSet &>(s);
-    if (container_.size() == o.container_.size())
-        return 0;
-    return container_.size() < o.container_.size() ? -1 : 1;
+    SYMENGINE_ASSERT(is_a<FiniteSet>(o))
+    const FiniteSet &other = static_cast<const FiniteSet &>(o);
+    return vec_set_compare(container_, other.container_);
 }
 
 bool FiniteSet::contains(const RCP<const Basic> &a) const
