@@ -141,43 +141,13 @@ unsigned int reconcile(vec_uint &v1, vec_uint &v2, set_basic &s,
     return poscount; // return size of the new vectors
 }
 
-vec_uint translate(vec_uint original, vec_uint translator, unsigned int size)
-{
-    vec_uint changed;
-    changed.resize(size, 0);
-    for (unsigned int i = 0; i < original.size(); i++) {
-        changed[translator[i]] = original[i];
-    }
-    return changed;
-}
-
-// translates two vec_uints to the desired format and adds them together
-// componentwise
-vec_uint uint_vec_translate_and_add(const vec_uint &v1, const vec_uint &v2,
-                                    const vec_uint &translator1,
-                                    const vec_uint &translator2,
-                                    const unsigned int size)
-{
-    vec_uint result;
-    for (unsigned int i = 0; i < size; i++) {
-        result.insert(result.end(), 0);
-    }
-    for (unsigned int i = 0; i < translator1.size(); i++) {
-        result[translator1[i]] += v1[i];
-    }
-    for (unsigned int i = 0; i < translator2.size(); i++) {
-        result[translator2[i]] += v2[i];
-    }
-    return result;
-}
-
 vec_basic MultivariatePolynomial::get_args() const
 {
     vec_basic args;
     umap_uvec_expr d;
     // To change the ordering in which the terms appear in the vector, use
     // a different comparator for order_umap
-    std::vector<vec_uint> v = order_umap<vec_uint, umap_uvec_expr>(dict_);
+    std::vector<vec_int> v = order_umap<vec_int, umap_vec_expr>(dict_);
     for (const auto &p : v) {
         RCP<const Basic> res = ((dict_.find(p)->second).get_basic());
         int whichvar = 0;
@@ -202,11 +172,11 @@ std::size_t MultivariatePolynomial::__hash__() const
         seed ^= hash_string(var->__str__()) + 0x9e3779b + (seed << 6)
                 + (seed >> 2);
 
-    std::vector<vec_uint> v = order_umap<vec_uint, umap_uvec_expr>(dict_);
+    std::vector<vec_int> v = order_umap<vec_int, umap_vec_expr>(dict_);
 
     for (auto vec : v) {
-        seed ^= vec_uint_hash()(dict_.find(vec)->first) + 0x9e3779b
-                + (seed << 6) + (seed >> 2);
+        seed ^= vec_int_hash()(dict_.find(vec)->first) + 0x9e3779b + (seed << 6)
+                + (seed >> 2);
         seed ^= (dict_.find(vec)->second).get_basic()->__hash__() + 0x9e3779b
                 + (seed << 6) + (seed >> 2);
     }
@@ -223,7 +193,7 @@ int MultivariatePolynomial::compare(const Basic &o) const
     if (cmp != 0)
         return cmp;
 
-    return umap_uvec_expr_compare(dict_, s.dict_);
+    return umap_vec_expr_compare(dict_, s.dict_);
 }
 
 Expression MultivariatePolynomial::eval(
@@ -248,9 +218,9 @@ MultivariatePolynomial::convert(const UnivariatePolynomial &o)
     vec_basic s;
     s.push_back(o.get_var());
 
-    umap_uvec_expr d;
+    umap_vec_expr d;
     for (auto &p : o.get_dict()) {
-        vec_uint v;
+        vec_int v;
         v.push_back(p.first);
         d[v] = p.second;
     }

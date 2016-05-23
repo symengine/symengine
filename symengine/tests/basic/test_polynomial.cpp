@@ -27,7 +27,6 @@ using SymEngine::zero;
 using SymEngine::integer;
 using SymEngine::vec_basic_eq_perm;
 using SymEngine::integer_class;
-using SymEngine::RCPSymbolCompare;
 using SymEngine::Precedence;
 using SymEngine::PrecedenceEnum;
 using SymEngine::vec_uint;

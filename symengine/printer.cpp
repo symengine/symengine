@@ -517,9 +517,9 @@ void StrPrinter::bvisit(const MultivariatePolynomial &x)
     bool first = true; // is this the first term being printed out?
     // To change the ordering in which the terms will print out, change
     // vec_uint_compare in dict.h
-    std::vector<vec_uint> v = order_umap<vec_uint, umap_uvec_expr>(x.dict_);
+    std::vector<vec_int> v = order_umap<vec_int, umap_vec_expr>(x.dict_);
 
-    for (vec_uint exps : v) {
+    for (vec_int exps : v) {
         Expression c = x.dict_.find(exps)->second;
         std::string t = parenthesizeLT(c.get_basic(), PrecedenceEnum::Mul);
         if ('-' == t[0] && !first) {

@@ -509,8 +509,8 @@ public:
         return diff_upoly<UnivariatePolynomial, map_int_Expr>(self, x);
     }
 
-    template <typename MPoly, typename Dict, typename Coeff>
-    static RCP<const Basic> diff(const MPolyBase<MPoly, Dict, Coeff> &self,
+    template <typename MPoly, typename Dict, typename Coeff, typename Vec>
+    static RCP<const Basic> diff(const MPolyBase<MPoly, Dict, Coeff, Vec> &self,
                                  const RCP<const Symbol> &x)
     {
         Dict dict;
@@ -523,9 +523,9 @@ public:
             } // find the index of the variable we are differentiating WRT.
             for (auto bucket : self.dict_) {
                 if (bucket.first[index] != 0) {
-                    vec_uint v = bucket.first;
+                    Vec v = bucket.first;
                     v[index]--;
-                    dict.insert(std::pair<vec_uint, Coeff>(
+                    dict.insert(std::pair<Vec, Coeff>(
                         v, bucket.second * bucket.first[index]));
                 }
             }
@@ -533,7 +533,7 @@ public:
             v.insert(v.begin(), self.vars_.begin(), self.vars_.end());
             return MPoly::create(v, std::move(dict));
         } else {
-            vec_uint v;
+            Vec v;
             v.resize(self.vars_.size(), 0);
             vec_basic vs;
             vs.insert(vs.begin(), self.vars_.begin(), self.vars_.end());
