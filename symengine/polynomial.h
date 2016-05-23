@@ -10,6 +10,276 @@
 
 namespace SymEngine
 {
+// Calculates bit length of number, used in UIntDict*= only
+template <typename T>
+unsigned int bit_length(T t)
+{
+    unsigned int count = 0;
+    while (t > 0) {
+        count++;
+        t = t >> 1;
+    }
+    return count;
+}
+
+// dict wrapper
+template <typename Key, typename Value, typename Wrapper>
+class ODictWrapper
+{
+public:
+    std::map<Key, Value> dict_;
+
+public:
+    ODictWrapper() SYMENGINE_NOEXCEPT
+    {
+    }
+    ~ODictWrapper() SYMENGINE_NOEXCEPT
+    {
+    }
+
+    ODictWrapper(const int &i)
+    {
+        if (i != 0)
+            dict_ = {{0, Value(i)}};
+    }
+
+    ODictWrapper(const std::map<Key, Value> &p)
+    {
+        for (auto &iter : p) {
+            if (iter.second != Value(0))
+                dict_[iter.first] = iter.second;
+        }
+    }
+
+    ODictWrapper(const Value &p)
+    {
+        if (p != Value(0))
+            dict_[0] = p;
+    }
+
+    ODictWrapper(std::string s)
+    {
+        dict_[1] = Value(1);
+    }
+
+    Wrapper &operator=(Wrapper &&other) SYMENGINE_NOEXCEPT
+    {
+        if (this != &other)
+            dict_ = std::move(other.dict_);
+        return static_cast<Wrapper &>(*this);
+    }
+
+    friend Wrapper operator+(const Wrapper &a, const Wrapper &b)
+    {
+        Wrapper c = a;
+        c += b;
+        return c;
+    }
+
+    Wrapper &operator+=(const Wrapper &other)
+    {
+        for (auto &iter : other.dict_) {
+            auto t = dict_.lower_bound(iter.first);
+            if (t != dict_.end() and t->first == iter.first) {
+                t->second += iter.second;
+                if (t->second == 0) {
+                    dict_.erase(t);
+                }
+            } else {
+                dict_.insert(t, {iter.first, iter.second});
+            }
+        }
+        return static_cast<Wrapper &>(*this);
+    }
+
+    friend Wrapper operator-(const Wrapper &a, const Wrapper &b)
+    {
+        Wrapper c = a;
+        c -= b;
+        return c;
+    }
+
+    Wrapper operator-() const
+    {
+        ODictWrapper c = *this;
+        for (auto &iter : c.dict_)
+            iter.second *= -1;
+        return static_cast<Wrapper &>(c);
+    }
+
+    Wrapper &operator-=(const Wrapper &other)
+    {
+        for (auto &iter : other.dict_) {
+            auto t = dict_.lower_bound(iter.first);
+            if (t != dict_.end() and t->first == iter.first) {
+                t->second -= iter.second;
+                if (t->second == 0) {
+                    dict_.erase(t);
+                }
+            } else {
+                dict_.insert(t, {iter.first, -iter.second});
+            }
+        }
+        return static_cast<Wrapper &>(*this);
+    }
+
+    friend Wrapper operator*(const Wrapper &a, const Wrapper &b)
+    {
+        Wrapper c = a;
+        c *= b;
+        return c;
+    }
+
+    Wrapper &operator*=(const Wrapper &other)
+    {
+        std::map<Key, Value> p;
+        for (const auto &i1 : dict_)
+            for (const auto &i2 : other.dict_)
+                p[i1.first + i2.first] += i1.second * i2.second;
+
+        dict_ = {};
+        for (const auto &ite : p)
+            if (ite.second != Value(0))
+                dict_[ite.first] = ite.second;
+
+        return static_cast<Wrapper &>(*this);
+    }
+
+    bool operator==(const Wrapper &other) const
+    {
+        return dict_ == other.dict_;
+    }
+
+    bool operator!=(const Wrapper &other) const
+    {
+        return not(*this == other);
+    }
+
+    const std::map<Key, Value> &get_dict() const
+    {
+        return dict_;
+    }
+
+    unsigned int size() const
+    {
+        return dict_.size();
+    }
+
+    bool empty() const
+    {
+        return dict_.empty();
+    }
+};
+
+class UIntDict : public ODictWrapper<unsigned int, integer_class, UIntDict>
+{
+
+public:
+    UIntDict() SYMENGINE_NOEXCEPT
+    {
+    }
+    ~UIntDict() SYMENGINE_NOEXCEPT
+    {
+    }
+    UIntDict(UIntDict &&other) SYMENGINE_NOEXCEPT
+        : ODictWrapper(std::move(other))
+    {
+    }
+    UIntDict(const int &i) : ODictWrapper(i)
+    {
+    }
+    UIntDict(const map_uint_mpz &p) : ODictWrapper(p)
+    {
+    }
+    UIntDict(const integer_class &i) : ODictWrapper(i)
+    {
+    }
+
+    UIntDict(const UIntDict &) = default;
+    UIntDict &operator=(const UIntDict &) = default;
+
+    //! Evaluates the dict_ at value 2**x
+    integer_class eval_bit(const unsigned int &x) const
+    {
+        unsigned int last_deg = dict_.rbegin()->first;
+        integer_class result(0);
+
+        for (auto it = dict_.rbegin(); it != dict_.rend(); ++it) {
+            result <<= x * (last_deg - (*it).first);
+            result += (*it).second;
+            last_deg = (*it).first;
+        }
+        result <<= x * last_deg;
+
+        return result;
+    }
+
+    UIntDict &operator*=(const UIntDict &other)
+    {
+        int mul = 1;
+
+        unsigned int N = bit_length(std::min(degree() + 1, other.degree() + 1))
+                         + bit_length(max_abs_coef())
+                         + bit_length(other.max_abs_coef());
+
+        integer_class full = integer_class(1), temp, res;
+        full <<= N;
+        integer_class thresh = full / 2;
+        integer_class mask = full - 1;
+        integer_class s_val = eval_bit(N) * other.eval_bit(N);
+        if (s_val < 0)
+            mul = -1;
+        s_val = mp_abs(s_val);
+
+        unsigned int deg = 0, carry = 0;
+        map_uint_mpz dict;
+
+        while (s_val != 0 or carry != 0) {
+            mp_and(temp, s_val, mask);
+            if (temp < thresh) {
+                res = mul * (temp + carry);
+                if (res != 0)
+                    dict[deg] = res;
+                carry = 0;
+            } else {
+                res = mul * (temp - full + carry);
+                if (res != 0)
+                    dict[deg] = res;
+                carry = 1;
+            }
+            s_val >>= N;
+            deg++;
+        }
+
+        dict_ = dict;
+        return *this;
+    }
+
+    int compare(const UIntDict &other) const
+    {
+        if (dict_.size() != other.dict_.size())
+            return (dict_.size() < other.dict_.size()) ? -1 : 1;
+        return map_uint_mpz_compare(dict_, other.dict_);
+    }
+
+    inline unsigned int degree() const
+    {
+        if (dict_.empty())
+            return 0;
+        return dict_.rbegin()->first;
+    }
+
+    integer_class max_abs_coef() const
+    {
+        integer_class curr(mp_abs(dict_.begin()->second));
+        for (const auto &it : dict_) {
+            if (mp_abs(it.second) > curr)
+                curr = mp_abs(it.second);
+        }
+        return curr;
+    }
+
+}; // UIntDict
 
 class UnivariateIntPolynomial : public Basic
 {
@@ -21,21 +291,20 @@ private:
     // 1}} with var_ = "x"
     unsigned int degree_;
     RCP<const Symbol> var_;
-    map_uint_mpz dict_;
+    UIntDict poly_;
 
 public:
     IMPLEMENT_TYPEID(UNIVARIATEINTPOLYNOMIAL)
     //! Constructor of UnivariateIntPolynomial class
     UnivariateIntPolynomial(const RCP<const Symbol> &var,
-                            const unsigned int &degree, map_uint_mpz &&dict);
+                            const unsigned int &degree, UIntDict &&dict);
     //! Constructor using a dense vector of integer_class coefficients
 
     UnivariateIntPolynomial(const RCP<const Symbol> &var,
                             const std::vector<integer_class> &v);
 
     //! \return true if canonical
-    bool is_canonical(const unsigned int &degree,
-                      const map_uint_mpz &dict) const;
+    bool is_canonical(const unsigned int &degree, const UIntDict &dict) const;
     //! \return size of the hash
     std::size_t __hash__() const;
     /*! Equality comparator
@@ -48,7 +317,7 @@ public:
     // creates a UnivariateIntPolynomial in cannonical form based on the
     // dictionary.
     static RCP<const UnivariateIntPolynomial>
-    from_dict(const RCP<const Symbol> &var, map_uint_mpz &&d);
+    from_dict(const RCP<const Symbol> &var, UIntDict &&d);
     // create a UnivariateIntPolynomial from a dense vector of integer_class
     // coefficients
     static RCP<const UnivariateIntPolynomial>
@@ -60,8 +329,6 @@ public:
     integer_class max_abs_coef() const;
     //! Evaluates the UnivariateIntPolynomial at value x
     integer_class eval(const integer_class &x) const;
-    //! Evaluates the UnivariateIntPolynomial at value 2**x
-    integer_class eval_bit(const int &x) const;
 
     //! \return `true` if `0`
     bool is_zero() const;
@@ -89,7 +356,11 @@ public:
     }
     inline const map_uint_mpz &get_dict() const
     {
-        return dict_;
+        return poly_.dict_;
+    }
+    inline const UIntDict &get_int_dict() const
+    {
+        return poly_;
     }
 }; // UnivariateIntPolynomial
 
@@ -106,65 +377,50 @@ RCP<const UnivariateIntPolynomial> mul_poly(const UnivariateIntPolynomial &a,
                                             const UnivariateIntPolynomial &b);
 
 inline RCP<const UnivariateIntPolynomial>
-univariate_int_polynomial(RCP<const Symbol> i, map_uint_mpz &&dict)
+univariate_int_polynomial(RCP<const Symbol> i, UIntDict &&dict)
 {
     return UnivariateIntPolynomial::from_dict(i, std::move(dict));
 }
 
-class UnivariateExprPolynomial
+inline RCP<const UnivariateIntPolynomial>
+univariate_int_polynomial(RCP<const Symbol> i, map_uint_mpz &&dict)
 {
-public:
-    //! Holds the dictionary for a UnivariatePolynomial
-    map_int_Expr dict_;
+    UIntDict wrapper(dict);
+    return UnivariateIntPolynomial::from_dict(i, std::move(wrapper));
+}
+
+class UnivariateExprPolynomial
+    : public ODictWrapper<int, Expression, UnivariateExprPolynomial>
+{
 
 public:
-    UnivariateExprPolynomial()
+    UnivariateExprPolynomial() SYMENGINE_NOEXCEPT
     {
     }
     ~UnivariateExprPolynomial() SYMENGINE_NOEXCEPT
     {
     }
-    UnivariateExprPolynomial(const UnivariateExprPolynomial &) = default;
     UnivariateExprPolynomial(UnivariateExprPolynomial &&other)
-        SYMENGINE_NOEXCEPT : dict_(std::move(other.dict_))
+        SYMENGINE_NOEXCEPT : ODictWrapper(std::move(other))
     {
     }
-    UnivariateExprPolynomial(const int &i)
-    {
-        if (i != 0)
-            dict_ = {{0, Expression(i)}};
-    }
-    UnivariateExprPolynomial(const std::string &s) : dict_({{1, Expression(1)}})
+    UnivariateExprPolynomial(const int &i) : ODictWrapper(i)
     {
     }
-    UnivariateExprPolynomial(const map_int_Expr &p)
+    UnivariateExprPolynomial(const map_int_Expr &p) : ODictWrapper(p)
     {
-        dict_ = p;
-        auto iter = dict_.begin();
-        while (iter != dict_.end()) {
-            if (Expression(0) == iter->second) {
-                auto toErase = iter;
-                iter++;
-                dict_.erase(toErase);
-            } else
-                iter++;
-        }
     }
-    UnivariateExprPolynomial(const Expression &expr)
+    UnivariateExprPolynomial(const Expression &expr) : ODictWrapper(expr)
     {
-        if (expr != Expression(0))
-            dict_ = {{0, std::move(expr)}};
     }
 
+    UnivariateExprPolynomial(const std::string &s) : ODictWrapper(s)
+    {
+    }
+
+    UnivariateExprPolynomial(const UnivariateExprPolynomial &) = default;
     UnivariateExprPolynomial &operator=(const UnivariateExprPolynomial &)
         = default;
-    UnivariateExprPolynomial &
-    operator=(UnivariateExprPolynomial &&other) SYMENGINE_NOEXCEPT
-    {
-        if (this != &other)
-            this->dict_ = std::move(other.dict_);
-        return *this;
-    }
 
     friend std::ostream &operator<<(std::ostream &os,
                                     const UnivariateExprPolynomial &expr)
@@ -173,145 +429,16 @@ public:
         return os;
     }
 
-    friend UnivariateExprPolynomial operator+(const UnivariateExprPolynomial &a,
-                                              const UnivariateExprPolynomial &b)
-    {
-        UnivariateExprPolynomial c = a;
-        c += b;
-        return c;
-    }
-
-    UnivariateExprPolynomial &operator+=(const UnivariateExprPolynomial &other)
-    {
-        for (auto &it : other.dict_) {
-            auto t = dict_.lower_bound(it.first);
-            if (t != dict_.end() and t->first == it.first) {
-                t->second += it.second;
-                if (t->second == 0) {
-                    dict_.erase(t);
-                }
-            } else {
-                dict_.insert(t, {it.first, it.second});
-            }
-        }
-        return *this;
-    }
-
-    friend UnivariateExprPolynomial operator-(const UnivariateExprPolynomial &a,
-                                              const UnivariateExprPolynomial &b)
-    {
-        UnivariateExprPolynomial c = a;
-        c -= b;
-        return c;
-    }
-
-    UnivariateExprPolynomial operator-() const
-    {
-        UnivariateExprPolynomial c = *this;
-        for (auto &it : c.dict_)
-            it.second *= -1;
-        return c;
-    }
-
-    UnivariateExprPolynomial &operator-=(const UnivariateExprPolynomial &other)
-    {
-        for (auto &it : other.dict_) {
-            auto t = dict_.lower_bound(it.first);
-            if (t != dict_.end() and t->first == it.first) {
-                t->second -= it.second;
-                if (t->second == 0) {
-                    dict_.erase(t);
-                }
-            } else {
-                dict_.insert(t, {it.first, -it.second});
-            }
-        }
-        return *this;
-    }
-
-    friend UnivariateExprPolynomial operator*(const UnivariateExprPolynomial &a,
-                                              const UnivariateExprPolynomial &b)
-    {
-        UnivariateExprPolynomial c = a;
-        c *= b;
-        return c;
-    }
-
     friend UnivariateExprPolynomial operator/(const UnivariateExprPolynomial &a,
                                               const Expression &b)
     {
         return a * (1 / b);
     }
 
-    UnivariateExprPolynomial &operator*=(const UnivariateExprPolynomial &other)
-    {
-        if (dict_.empty())
-            return *this;
-
-        if (other.dict_.empty()) {
-            *this = other;
-            return *this;
-        }
-
-        //! other is a just constant term
-        if (other.dict_.size() == 1
-            and other.dict_.find(0) != other.dict_.end()) {
-            for (const auto &i1 : dict_)
-                for (const auto &i2 : other.dict_)
-                    dict_[i1.first + i2.first] = i1.second * i2.second;
-            return *this;
-        }
-
-        map_int_Expr p;
-        for (const auto &i1 : dict_)
-            for (const auto &i2 : other.dict_)
-                p[i1.first + i2.first] += i1.second * i2.second;
-        *this = UnivariateExprPolynomial(p);
-        return *this;
-    }
-
     UnivariateExprPolynomial &operator/=(const Expression &other)
     {
         *this *= (1 / other);
         return *this;
-    }
-
-    bool operator==(const UnivariateExprPolynomial &other) const
-    {
-        return dict_ == other.dict_;
-    }
-
-    bool operator!=(const UnivariateExprPolynomial &other) const
-    {
-        return not(*this == other);
-    }
-
-    //! Method to get UnivariatePolynomial's dictionary
-    const map_int_Expr &get_dict() const
-    {
-        return dict_;
-    }
-
-    int size() const
-    {
-        return dict_.size();
-    }
-
-    bool empty() const
-    {
-        return dict_.empty();
-    }
-
-    std::size_t __hash__() const
-    {
-        std::size_t seed = UNIVARIATEPOLYNOMIAL;
-        for (const auto &it : dict_) {
-            std::size_t temp = UNIVARIATEPOLYNOMIAL;
-            hash_combine<unsigned int>(temp, it.first);
-            hash_combine<Basic>(temp, *(it.second.get_basic()));
-            seed += temp;
-        }
-        return seed;
     }
 
     std::string __str__(const std::string name) const
@@ -440,7 +567,7 @@ class UnivariatePolynomial : public Basic
 private:
     int degree_;
     RCP<const Symbol> var_;
-    UnivariateExprPolynomial expr_dict_;
+    UnivariateExprPolynomial poly_;
 
 public:
     IMPLEMENT_TYPEID(UNIVARIATEPOLYNOMIAL)
@@ -496,11 +623,11 @@ public:
     }
     inline const map_int_Expr &get_dict() const
     {
-        return expr_dict_.get_dict();
+        return poly_.get_dict();
     }
     const UnivariateExprPolynomial &get_expr_dict() const
     {
-        return expr_dict_;
+        return poly_;
     }
 
 }; // UnivariatePolynomial
@@ -521,6 +648,13 @@ inline RCP<const UnivariatePolynomial>
 univariate_polynomial(RCP<const Symbol> i, UnivariateExprPolynomial &&dict)
 {
     return UnivariatePolynomial::from_dict(i, std::move(dict));
+}
+
+inline RCP<const UnivariatePolynomial>
+univariate_polynomial(RCP<const Symbol> i, map_int_Expr &&dict)
+{
+    UnivariateExprPolynomial wrapper(dict);
+    return UnivariatePolynomial::from_dict(i, std::move(wrapper));
 }
 
 } // SymEngine

@@ -22,7 +22,14 @@ RCP<const UnivariateSeries> UnivariateSeries::series(const RCP<const Basic> &t,
 
 std::size_t UnivariateSeries::__hash__() const
 {
-    return p_.__hash__() + std::size_t(get_degree() * 84728863L);
+    std::size_t seed = UNIVARIATEPOLYNOMIAL;
+    for (const auto &it : p_.dict_) {
+        std::size_t temp = UNIVARIATEPOLYNOMIAL;
+        hash_combine<unsigned int>(temp, it.first);
+        hash_combine<Basic>(temp, *(it.second.get_basic()));
+        seed += temp;
+    }
+    return seed + std::size_t(get_degree() * 84728863L);
 }
 
 int UnivariateSeries::compare(const Basic &other) const
