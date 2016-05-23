@@ -183,7 +183,7 @@ public:
             if (dict_.begin()->second != o_.dict_.begin()->second)
                 return false;
             if (dict_.begin()->first == o_.dict_.begin()->first
-                && vars_ == o_.vars_)
+                && vec_set_eq(vars_, o_.vars_))
                 return true;
             Vec v1, v2;
             v1.resize(vars_.size(), 0);
