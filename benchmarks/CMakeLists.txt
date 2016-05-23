@@ -44,6 +44,9 @@ target_link_libraries(lwbench symengine)
 add_executable(expand6 expand6.cpp)
 target_link_libraries(expand6 symengine)
 
+add_executable(expand6b expand6b.cpp)
+target_link_libraries(expand6b symengine)
+
 add_executable(expand7 expand7.cpp)
 target_link_libraries(expand7 symengine)
 
