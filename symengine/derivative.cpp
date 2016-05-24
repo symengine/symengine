@@ -537,13 +537,17 @@ public:
                         v, bucket.second * bucket.first[index]));
                 }
             }
-            return MultivariateIntPolynomial::from_dict(self.vars_,
-                                                        std::move(dict));
+            vec_sym v;
+            v.insert(v.begin(), self.vars_.begin(), self.vars_.end());
+            return MultivariateIntPolynomial::multivariate_int_polynomial(
+                v, std::move(dict));
         } else {
             vec_uint v;
             v.resize(self.vars_.size(), 0);
-            return MultivariateIntPolynomial::from_dict(
-                self.vars_, {{v, integer_class(0)}});
+            vec_sym vs;
+            vs.insert(vs.begin(), self.vars_.begin(), self.vars_.end());
+            return MultivariateIntPolynomial::multivariate_int_polynomial(
+                vs, {{v, integer_class(0)}});
         }
     }
 
@@ -566,13 +570,17 @@ public:
                         v, bucket.second * bucket.first[index]));
                 }
             }
-            return MultivariatePolynomial::from_dict(self.vars_,
-                                                     std::move(dict));
+            vec_sym v;
+            v.insert(v.begin(), self.vars_.begin(), self.vars_.end());
+            return MultivariatePolynomial::multivariate_polynomial(
+                v, std::move(dict));
         } else {
             vec_uint v;
             v.resize(self.vars_.size(), 0);
-            return MultivariatePolynomial::from_dict(self.vars_,
-                                                     {{v, Expression(0)}});
+            vec_sym vs;
+            vs.insert(vs.begin(), self.vars_.begin(), self.vars_.end());
+            return MultivariatePolynomial::multivariate_polynomial(
+                vs, {{v, Expression(0)}});
         }
     }
 

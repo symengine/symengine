@@ -257,30 +257,6 @@ bool inverse_lookup(umap_basic_basic &d, const RCP<const Basic> &t,
     }
 }
 
-std::size_t TrigFunction::__hash__() const
-{
-    std::size_t seed = this->get_type_code();
-    hash_combine<Basic>(seed, *arg_);
-    return seed;
-}
-
-RCP<const Basic> TrigFunction::create(const RCP<const Basic> &arg) const
-{
-    throw std::runtime_error("Should be implemented by the inherited class");
-}
-
-RCP<const Basic> TrigFunction::subs(const map_basic_basic &subs_dict) const
-{
-    auto it = subs_dict.find(rcp_from_this());
-    if (it != subs_dict.end())
-        return it->second;
-    RCP<const Basic> arg = arg_->subs(subs_dict);
-    if (arg == arg_)
-        return rcp_from_this();
-    else
-        return this->create(arg);
-}
-
 Sin::Sin(const RCP<const Basic> &arg) : TrigFunction(arg)
 {
     SYMENGINE_ASSERT(is_canonical(arg))
@@ -302,21 +278,6 @@ bool Sin::is_canonical(const RCP<const Basic> &arg) const
         return false;
     }
     return true;
-}
-
-bool Sin::__eq__(const Basic &o) const
-{
-    if (is_a<Sin>(o)
-        and eq(*get_arg(), *(static_cast<const Sin &>(o).get_arg())))
-        return true;
-    return false;
-}
-
-int Sin::compare(const Basic &o) const
-{
-    SYMENGINE_ASSERT(is_a<Sin>(o))
-    const Sin &s = static_cast<const Sin &>(o);
-    return get_arg()->__cmp__(*(s.get_arg()));
 }
 
 RCP<const Basic> sin(const RCP<const Basic> &arg)
@@ -390,21 +351,6 @@ bool Cos::is_canonical(const RCP<const Basic> &arg) const
     return true;
 }
 
-bool Cos::__eq__(const Basic &o) const
-{
-    if (is_a<Cos>(o)
-        and eq(*get_arg(), *(static_cast<const Cos &>(o).get_arg())))
-        return true;
-    return false;
-}
-
-int Cos::compare(const Basic &o) const
-{
-    SYMENGINE_ASSERT(is_a<Cos>(o))
-    const Cos &s = static_cast<const Cos &>(o);
-    return get_arg()->__cmp__(*(s.get_arg()));
-}
-
 RCP<const Basic> cos(const RCP<const Basic> &arg)
 {
     if (eq(*arg, *zero))
@@ -472,22 +418,6 @@ bool Tan::is_canonical(const RCP<const Basic> &arg) const
         return false;
     }
     return true;
-}
-
-bool Tan::__eq__(const Basic &o) const
-{
-    if (is_a<Tan>(o)
-        and eq(*get_arg(), *(static_cast<const Tan &>(o).get_arg())))
-        return true;
-    else
-        return false;
-}
-
-int Tan::compare(const Basic &o) const
-{
-    SYMENGINE_ASSERT(is_a<Tan>(o))
-    const Tan &s = static_cast<const Tan &>(o);
-    return get_arg()->__cmp__(*(s.get_arg()));
 }
 
 RCP<const Basic> tan(const RCP<const Basic> &arg)
@@ -560,22 +490,6 @@ bool Cot::is_canonical(const RCP<const Basic> &arg) const
     return true;
 }
 
-bool Cot::__eq__(const Basic &o) const
-{
-    if (is_a<Cot>(o)
-        and eq(*get_arg(), *(static_cast<const Cot &>(o).get_arg())))
-        return true;
-    else
-        return false;
-}
-
-int Cot::compare(const Basic &o) const
-{
-    SYMENGINE_ASSERT(is_a<Cot>(o))
-    const Cot &s = static_cast<const Cot &>(o);
-    return get_arg()->__cmp__(*(s.get_arg()));
-}
-
 RCP<const Basic> cot(const RCP<const Basic> &arg)
 {
     if (is_a_Number(*arg)
@@ -645,21 +559,6 @@ bool Csc::is_canonical(const RCP<const Basic> &arg) const
     return true;
 }
 
-bool Csc::__eq__(const Basic &o) const
-{
-    if (is_a<Csc>(o)
-        and eq(*get_arg(), *(static_cast<const Csc &>(o).get_arg())))
-        return true;
-    return false;
-}
-
-int Csc::compare(const Basic &o) const
-{
-    SYMENGINE_ASSERT(is_a<Csc>(o))
-    const Csc &s = static_cast<const Csc &>(o);
-    return get_arg()->__cmp__(*(s.get_arg()));
-}
-
 RCP<const Basic> csc(const RCP<const Basic> &arg)
 {
     if (is_a_Number(*arg)
@@ -726,21 +625,6 @@ bool Sec::is_canonical(const RCP<const Basic> &arg) const
         return false;
     }
     return true;
-}
-
-bool Sec::__eq__(const Basic &o) const
-{
-    if (is_a<Sec>(o)
-        and eq(*get_arg(), *(static_cast<const Sec &>(o).get_arg())))
-        return true;
-    return false;
-}
-
-int Sec::compare(const Basic &o) const
-{
-    SYMENGINE_ASSERT(is_a<Sec>(o))
-    const Sec &s = static_cast<const Sec &>(o);
-    return get_arg()->__cmp__(*(s.get_arg()));
 }
 
 RCP<const Basic> sec(const RCP<const Basic> &arg)
@@ -903,22 +787,6 @@ bool ASin::is_canonical(const RCP<const Basic> &arg) const
     return true;
 }
 
-bool ASin::__eq__(const Basic &o) const
-{
-    if (is_a<ASin>(o)
-        and eq(*get_arg(), *(static_cast<const ASin &>(o).get_arg())))
-        return true;
-    else
-        return false;
-}
-
-int ASin::compare(const Basic &o) const
-{
-    SYMENGINE_ASSERT(is_a<ASin>(o))
-    const ASin &s = static_cast<const ASin &>(o);
-    return get_arg()->__cmp__(*(s.get_arg()));
-}
-
 RCP<const Basic> asin(const RCP<const Basic> &arg)
 {
     if (eq(*arg, *zero))
@@ -960,22 +828,6 @@ bool ACos::is_canonical(const RCP<const Basic> &arg) const
         return false;
     }
     return true;
-}
-
-bool ACos::__eq__(const Basic &o) const
-{
-    if (is_a<ACos>(o)
-        and eq(*get_arg(), *(static_cast<const ACos &>(o).get_arg())))
-        return true;
-    else
-        return false;
-}
-
-int ACos::compare(const Basic &o) const
-{
-    SYMENGINE_ASSERT(is_a<ACos>(o))
-    const ACos &s = static_cast<const ACos &>(o);
-    return get_arg()->__cmp__(*(s.get_arg()));
 }
 
 RCP<const Basic> acos(const RCP<const Basic> &arg)
@@ -1020,22 +872,6 @@ bool ASec::is_canonical(const RCP<const Basic> &arg) const
     return true;
 }
 
-bool ASec::__eq__(const Basic &o) const
-{
-    if (is_a<ASec>(o)
-        and eq(*get_arg(), *(static_cast<const ASec &>(o).get_arg())))
-        return true;
-    else
-        return false;
-}
-
-int ASec::compare(const Basic &o) const
-{
-    SYMENGINE_ASSERT(is_a<ASec>(o))
-    const ASec &s = static_cast<const ASec &>(o);
-    return get_arg()->__cmp__(*(s.get_arg()));
-}
-
 RCP<const Basic> asec(const RCP<const Basic> &arg)
 {
     if (eq(*arg, *one))
@@ -1077,22 +913,6 @@ bool ACsc::is_canonical(const RCP<const Basic> &arg) const
     return true;
 }
 
-bool ACsc::__eq__(const Basic &o) const
-{
-    if (is_a<ACsc>(o)
-        and eq(*get_arg(), *(static_cast<const ASec &>(o).get_arg())))
-        return true;
-    else
-        return false;
-}
-
-int ACsc::compare(const Basic &o) const
-{
-    SYMENGINE_ASSERT(is_a<ACsc>(o))
-    const ACsc &s = static_cast<const ACsc &>(o);
-    return get_arg()->__cmp__(*(s.get_arg()));
-}
-
 RCP<const Basic> acsc(const RCP<const Basic> &arg)
 {
     if (eq(*arg, *one))
@@ -1132,22 +952,6 @@ bool ATan::is_canonical(const RCP<const Basic> &arg) const
         return false;
     }
     return true;
-}
-
-bool ATan::__eq__(const Basic &o) const
-{
-    if (is_a<ATan>(o)
-        and eq(*get_arg(), *(static_cast<const ATan &>(o).get_arg())))
-        return true;
-    else
-        return false;
-}
-
-int ATan::compare(const Basic &o) const
-{
-    SYMENGINE_ASSERT(is_a<ATan>(o))
-    const ATan &s = static_cast<const ATan &>(o);
-    return get_arg()->__cmp__(*(s.get_arg()));
 }
 
 RCP<const Basic> atan(const RCP<const Basic> &arg)
@@ -1193,22 +997,6 @@ bool ACot::is_canonical(const RCP<const Basic> &arg) const
     return true;
 }
 
-bool ACot::__eq__(const Basic &o) const
-{
-    if (is_a<ACot>(o)
-        and eq(*get_arg(), *(static_cast<const ACot &>(o).get_arg())))
-        return true;
-    else
-        return false;
-}
-
-int ACot::compare(const Basic &o) const
-{
-    SYMENGINE_ASSERT(is_a<ACot>(o))
-    const ACot &s = static_cast<const ACot &>(o);
-    return get_arg()->__cmp__(*(s.get_arg()));
-}
-
 RCP<const Basic> acot(const RCP<const Basic> &arg)
 {
     if (eq(*arg, *zero))
@@ -1232,7 +1020,7 @@ RCP<const Basic> acot(const RCP<const Basic> &arg)
 }
 
 ATan2::ATan2(const RCP<const Basic> &num, const RCP<const Basic> &den)
-    : num_{num}, den_{den}
+    : TwoArgFunction(num, den)
 {
     SYMENGINE_ASSERT(is_canonical(num, den))
 }
@@ -1250,31 +1038,10 @@ bool ATan2::is_canonical(const RCP<const Basic> &num,
         return true;
 }
 
-bool ATan2::__eq__(const Basic &o) const
+RCP<const Basic> ATan2::create(const RCP<const Basic> &a,
+                               const RCP<const Basic> &b) const
 {
-    if (is_a<ATan2>(o)) {
-        const ATan2 &s = static_cast<const ATan2 &>(o);
-        if (eq(*num_, *(s.get_num())) and eq(*den_, *(s.get_den())))
-            return true;
-        else
-            return false;
-    } else
-        return false;
-}
-
-int ATan2::compare(const Basic &o) const
-{
-    SYMENGINE_ASSERT(is_a<ATan2>(o))
-    const ATan2 &s = static_cast<const ATan2 &>(o);
-    return div(num_, den_)->__cmp__(*div(s.num_, s.den_));
-}
-
-std::size_t ATan2::__hash__() const
-{
-    std::size_t seed = ATAN2;
-    hash_combine<Basic>(seed, *num_);
-    hash_combine<Basic>(seed, *den_);
-    return seed;
+    return atan2(a, b);
 }
 
 RCP<const Basic> atan2(const RCP<const Basic> &num, const RCP<const Basic> &den)
@@ -1402,7 +1169,7 @@ RCP<const Basic> ACsc::create(const RCP<const Basic> &arg) const
 }
 
 /* ---------------------------- */
-LambertW::LambertW(const RCP<const Basic> &arg) : arg_{arg}
+LambertW::LambertW(const RCP<const Basic> &arg) : OneArgFunction{arg}
 {
     SYMENGINE_ASSERT(is_canonical(arg))
 }
@@ -1413,32 +1180,16 @@ bool LambertW::is_canonical(const RCP<const Basic> &arg) const
         return false;
     if (eq(*arg, *E))
         return false;
-    if (eq(*arg, *div(one, E)))
+    if (eq(*arg, *div(neg(one), E)))
         return false;
     if (eq(*arg, *div(log(i2), im2)))
         return false;
     return true;
 }
 
-std::size_t LambertW::__hash__() const
+RCP<const Basic> LambertW::create(const RCP<const Basic> &arg) const
 {
-    std::size_t seed = LAMBERTW;
-    hash_combine<Basic>(seed, *arg_);
-    return seed;
-}
-
-bool LambertW::__eq__(const Basic &o) const
-{
-    if (is_a<LambertW>(o)
-        and eq(*arg_, *(static_cast<const LambertW &>(o).arg_)))
-        return true;
-    return false;
-}
-
-int LambertW::compare(const Basic &o) const
-{
-    SYMENGINE_ASSERT(is_a<LambertW>(o))
-    return arg_->__cmp__(*(static_cast<const LambertW &>(o).arg_));
+    return lambertw(arg);
 }
 
 RCP<const Basic> lambertw(const RCP<const Basic> &arg)
@@ -1502,18 +1253,6 @@ int FunctionSymbol::compare(const Basic &o) const
 RCP<const Basic> FunctionSymbol::create(const vec_basic &x) const
 {
     return make_rcp<const FunctionSymbol>(name_, x);
-}
-
-RCP<const Basic> FunctionSymbol::subs(const map_basic_basic &subs_dict) const
-{
-    auto it = subs_dict.find(rcp_from_this());
-    if (it != subs_dict.end())
-        return it->second;
-    vec_basic v = arg_;
-    for (auto &elem : v) {
-        elem = elem->subs(subs_dict);
-    }
-    return create(v);
 }
 
 RCP<const Basic> function_symbol(std::string name, const vec_basic &arg)
@@ -1634,57 +1373,6 @@ int Derivative::compare(const Basic &o) const
     return cmp;
 }
 
-RCP<const Basic> Derivative::subs(const map_basic_basic &subs_dict) const
-{
-    RCP<const Symbol> s;
-    map_basic_basic m, n;
-    bool subs;
-    auto it = subs_dict.find(rcp_from_this());
-    if (it != subs_dict.end())
-        return it->second;
-    for (const auto &p : subs_dict) {
-        subs = true;
-        if (eq(*arg_->subs({{p.first, p.second}}), *arg_))
-            continue;
-        // If p.first and p.second are symbols and arg_ is
-        // independent of p.second, p.first can be replaced
-        if (is_a<Symbol>(*p.first) and is_a<Symbol>(*p.second)
-            and eq(*arg_->diff(rcp_static_cast<const Symbol>(p.second)),
-                   *zero)) {
-            insert(n, p.first, p.second);
-            continue;
-        }
-        for (const auto &d : x_) {
-            if (is_a<Symbol>(*d)) {
-                s = rcp_static_cast<const Symbol>(d);
-                // If p.first or p.second has non zero derivates wrt to s
-                // p.first cannot be replaced
-                if (neq(*zero, *(p.first->diff(s)))
-                    || neq(*zero, *(p.second->diff(s)))) {
-                    subs = false;
-                    break;
-                }
-            } else {
-                return make_rcp<const Subs>(rcp_from_this(), subs_dict);
-            }
-        }
-        if (subs) {
-            insert(n, p.first, p.second);
-        } else {
-            insert(m, p.first, p.second);
-        }
-    }
-    multiset_basic sym;
-    for (auto &p : x_) {
-        sym.insert(p->subs(n));
-    }
-    if (m.empty()) {
-        return Derivative::create(arg_->subs(n), sym);
-    } else {
-        return make_rcp<const Subs>(Derivative::create(arg_->subs(n), sym), m);
-    }
-}
-
 // Subs class
 Subs::Subs(const RCP<const Basic> &arg, const map_basic_basic &dict)
     : arg_{arg}, dict_{dict}
@@ -1761,65 +1449,6 @@ vec_basic Subs::get_args() const
     return v;
 }
 
-RCP<const Basic> Subs::subs(const map_basic_basic &subs_dict) const
-{
-    auto it = subs_dict.find(rcp_from_this());
-    if (it != subs_dict.end())
-        return it->second;
-    map_basic_basic m, n;
-    for (const auto &p : subs_dict) {
-        bool found = false;
-        for (const auto &s : dict_) {
-            if (neq(*(s.first->subs({{p.first, p.second}})), *(s.first))) {
-                found = true;
-                break;
-            }
-        }
-        // If p.first is not replaced in arg_ by dict_,
-        // store p.first in n to replace in arg_
-        if (not found) {
-            insert(n, p.first, p.second);
-        }
-    }
-    for (const auto &s : dict_) {
-        insert(m, s.first, s.second->subs(subs_dict));
-    }
-    RCP<const Basic> presub = arg_->subs(n);
-    if (is_a<Subs>(*presub)) {
-        for (auto &q : static_cast<const Subs &>(*presub).dict_) {
-            insert(m, q.first, q.second);
-        }
-        return make_rcp<const Subs>(static_cast<const Subs &>(*presub).arg_, m);
-    } else {
-        return make_rcp<const Subs>(presub, m);
-    }
-}
-
-std::size_t HyperbolicFunction::__hash__() const
-{
-    std::size_t seed = this->get_type_code();
-    hash_combine<Basic>(seed, *arg_);
-    return seed;
-}
-
-RCP<const Basic> HyperbolicFunction::create(const RCP<const Basic> &arg) const
-{
-    throw std::runtime_error("Should be implemented by the inherited class");
-}
-
-RCP<const Basic>
-HyperbolicFunction::subs(const map_basic_basic &subs_dict) const
-{
-    auto it = subs_dict.find(rcp_from_this());
-    if (it != subs_dict.end())
-        return it->second;
-    RCP<const Basic> arg = arg_->subs(subs_dict);
-    if (arg == arg_)
-        return rcp_from_this();
-    else
-        return this->create(arg);
-}
-
 Sinh::Sinh(const RCP<const Basic> &arg) : HyperbolicFunction(arg)
 {
     SYMENGINE_ASSERT(is_canonical(arg))
@@ -1840,22 +1469,6 @@ bool Sinh::is_canonical(const RCP<const Basic> &arg) const
     if (could_extract_minus(*arg))
         return false;
     return true;
-}
-
-bool Sinh::__eq__(const Basic &o) const
-{
-    if (is_a<Sinh>(o)
-        and eq(*get_arg(), *(static_cast<const Sinh &>(o).get_arg())))
-        return true;
-    else
-        return false;
-}
-
-int Sinh::compare(const Basic &o) const
-{
-    SYMENGINE_ASSERT(is_a<Sinh>(o))
-    const Sinh &s = static_cast<const Sinh &>(o);
-    return get_arg()->__cmp__(*(s.get_arg()));
 }
 
 RCP<const Basic> sinh(const RCP<const Basic> &arg)
@@ -1901,22 +1514,6 @@ bool Csch::is_canonical(const RCP<const Basic> &arg) const
     if (could_extract_minus(*arg))
         return false;
     return true;
-}
-
-bool Csch::__eq__(const Basic &o) const
-{
-    if (is_a<Csch>(o)
-        and eq(*get_arg(), *(static_cast<const Csch &>(o).get_arg())))
-        return true;
-    else
-        return false;
-}
-
-int Csch::compare(const Basic &o) const
-{
-    SYMENGINE_ASSERT(is_a<Csch>(o))
-    const Csch &s = static_cast<const Csch &>(o);
-    return get_arg()->__cmp__(*(s.get_arg()));
 }
 
 RCP<const Basic> csch(const RCP<const Basic> &arg)
@@ -1968,22 +1565,6 @@ bool Cosh::is_canonical(const RCP<const Basic> &arg) const
     return true;
 }
 
-bool Cosh::__eq__(const Basic &o) const
-{
-    if (is_a<Cosh>(o)
-        and eq(*get_arg(), *(static_cast<const Cosh &>(o).get_arg())))
-        return true;
-    else
-        return false;
-}
-
-int Cosh::compare(const Basic &o) const
-{
-    SYMENGINE_ASSERT(is_a<Cosh>(o))
-    const Cosh &s = static_cast<const Cosh &>(o);
-    return get_arg()->__cmp__(*(s.get_arg()));
-}
-
 RCP<const Basic> cosh(const RCP<const Basic> &arg)
 {
     if (eq(*arg, *zero))
@@ -2027,22 +1608,6 @@ bool Sech::is_canonical(const RCP<const Basic> &arg) const
     if (could_extract_minus(*arg))
         return false;
     return true;
-}
-
-bool Sech::__eq__(const Basic &o) const
-{
-    if (is_a<Sech>(o)
-        and eq(*get_arg(), *(static_cast<const Sech &>(o).get_arg())))
-        return true;
-    else
-        return false;
-}
-
-int Sech::compare(const Basic &o) const
-{
-    SYMENGINE_ASSERT(is_a<Sech>(o))
-    const Sech &s = static_cast<const Sech &>(o);
-    return get_arg()->__cmp__(*(s.get_arg()));
 }
 
 RCP<const Basic> sech(const RCP<const Basic> &arg)
@@ -2092,22 +1657,6 @@ bool Tanh::is_canonical(const RCP<const Basic> &arg) const
     return true;
 }
 
-bool Tanh::__eq__(const Basic &o) const
-{
-    if (is_a<Tanh>(o)
-        and eq(*get_arg(), *(static_cast<const Tanh &>(o).get_arg())))
-        return true;
-    else
-        return false;
-}
-
-int Tanh::compare(const Basic &o) const
-{
-    SYMENGINE_ASSERT(is_a<Tanh>(o))
-    const Tanh &s = static_cast<const Tanh &>(o);
-    return get_arg()->__cmp__(*(s.get_arg()));
-}
-
 RCP<const Basic> tanh(const RCP<const Basic> &arg)
 {
     if (eq(*arg, *zero))
@@ -2153,22 +1702,6 @@ bool Coth::is_canonical(const RCP<const Basic> &arg) const
     if (could_extract_minus(*arg))
         return false;
     return true;
-}
-
-bool Coth::__eq__(const Basic &o) const
-{
-    if (is_a<Coth>(o)
-        and eq(*get_arg(), *(static_cast<const Coth &>(o).get_arg())))
-        return true;
-    else
-        return false;
-}
-
-int Coth::compare(const Basic &o) const
-{
-    SYMENGINE_ASSERT(is_a<Coth>(o))
-    const Coth &s = static_cast<const Coth &>(o);
-    return get_arg()->__cmp__(*(s.get_arg()));
 }
 
 RCP<const Basic> coth(const RCP<const Basic> &arg)
@@ -2220,22 +1753,6 @@ bool ASinh::is_canonical(const RCP<const Basic> &arg) const
     return true;
 }
 
-bool ASinh::__eq__(const Basic &o) const
-{
-    if (is_a<ASinh>(o)
-        and eq(*get_arg(), *(static_cast<const ASinh &>(o).get_arg())))
-        return true;
-    else
-        return false;
-}
-
-int ASinh::compare(const Basic &o) const
-{
-    SYMENGINE_ASSERT(is_a<ASinh>(o))
-    const ASinh &s = static_cast<const ASinh &>(o);
-    return get_arg()->__cmp__(*(s.get_arg()));
-}
-
 RCP<const Basic> asinh(const RCP<const Basic> &arg)
 {
     if (eq(*arg, *zero))
@@ -2280,22 +1797,6 @@ bool ACsch::is_canonical(const RCP<const Basic> &arg) const
     return true;
 }
 
-bool ACsch::__eq__(const Basic &o) const
-{
-    if (is_a<ACsch>(o)
-        and eq(*get_arg(), *(static_cast<const ACsch &>(o).get_arg())))
-        return true;
-    else
-        return false;
-}
-
-int ACsch::compare(const Basic &o) const
-{
-    SYMENGINE_ASSERT(is_a<ACsch>(o))
-    const ACsch &s = static_cast<const ACsch &>(o);
-    return get_arg()->__cmp__(*(s.get_arg()));
-}
-
 RCP<const Basic> acsch(const RCP<const Basic> &arg)
 {
     if (eq(*arg, *one))
@@ -2324,22 +1825,6 @@ bool ACosh::is_canonical(const RCP<const Basic> &arg) const
         return false;
     }
     return true;
-}
-
-bool ACosh::__eq__(const Basic &o) const
-{
-    if (is_a<ACosh>(o)
-        and eq(*get_arg(), *(static_cast<const ACosh &>(o).get_arg())))
-        return true;
-    else
-        return false;
-}
-
-int ACosh::compare(const Basic &o) const
-{
-    SYMENGINE_ASSERT(is_a<ACosh>(o))
-    const ACosh &s = static_cast<const ACosh &>(o);
-    return get_arg()->__cmp__(*(s.get_arg()));
 }
 
 RCP<const Basic> acosh(const RCP<const Basic> &arg)
@@ -2374,22 +1859,6 @@ bool ATanh::is_canonical(const RCP<const Basic> &arg) const
     if (could_extract_minus(*arg))
         return false;
     return true;
-}
-
-bool ATanh::__eq__(const Basic &o) const
-{
-    if (is_a<ATanh>(o)
-        and eq(*get_arg(), *(static_cast<const ATanh &>(o).get_arg())))
-        return true;
-    else
-        return false;
-}
-
-int ATanh::compare(const Basic &o) const
-{
-    SYMENGINE_ASSERT(is_a<ATanh>(o))
-    const ATanh &s = static_cast<const ATanh &>(o);
-    return get_arg()->__cmp__(*(s.get_arg()));
 }
 
 RCP<const Basic> atanh(const RCP<const Basic> &arg)
@@ -2430,22 +1899,6 @@ bool ACoth::is_canonical(const RCP<const Basic> &arg) const
     return true;
 }
 
-bool ACoth::__eq__(const Basic &o) const
-{
-    if (is_a<ACoth>(o)
-        and eq(*get_arg(), *(static_cast<const ACoth &>(o).get_arg())))
-        return true;
-    else
-        return false;
-}
-
-int ACoth::compare(const Basic &o) const
-{
-    SYMENGINE_ASSERT(is_a<ACoth>(o))
-    const ACoth &s = static_cast<const ACoth &>(o);
-    return get_arg()->__cmp__(*(s.get_arg()));
-}
-
 RCP<const Basic> acoth(const RCP<const Basic> &arg)
 {
     if (is_a_Number(*arg)) {
@@ -2474,22 +1927,6 @@ bool ASech::is_canonical(const RCP<const Basic> &arg) const
     if (eq(*arg, *one))
         return false;
     return true;
-}
-
-bool ASech::__eq__(const Basic &o) const
-{
-    if (is_a<ASech>(o)
-        and eq(*get_arg(), *(static_cast<const ASech &>(o).get_arg())))
-        return true;
-    else
-        return false;
-}
-
-int ASech::compare(const Basic &o) const
-{
-    SYMENGINE_ASSERT(is_a<ASech>(o))
-    const ASech &s = static_cast<const ASech &>(o);
-    return get_arg()->__cmp__(*(s.get_arg()));
 }
 
 RCP<const Basic> asech(const RCP<const Basic> &arg)
@@ -2562,9 +1999,9 @@ RCP<const Basic> ASech::create(const RCP<const Basic> &arg) const
 
 KroneckerDelta::KroneckerDelta(const RCP<const Basic> &i,
                                const RCP<const Basic> &j)
-    : i_{i}, j_{j}
+    : TwoArgFunction(i, j)
 {
-    SYMENGINE_ASSERT(is_canonical(i_, j_))
+    SYMENGINE_ASSERT(is_canonical(i, j))
 }
 
 bool KroneckerDelta::is_canonical(const RCP<const Basic> &i,
@@ -2581,43 +2018,10 @@ bool KroneckerDelta::is_canonical(const RCP<const Basic> &i,
     }
 }
 
-bool KroneckerDelta::__eq__(const Basic &o) const
+RCP<const Basic> KroneckerDelta::create(const RCP<const Basic> &a,
+                                        const RCP<const Basic> &b) const
 {
-    if (is_a<KroneckerDelta>(o)
-        and eq(*i_, *(static_cast<const KroneckerDelta &>(o).i_))
-        and eq(*j_, *(static_cast<const KroneckerDelta &>(o).j_)))
-        return true;
-    else
-        return false;
-}
-
-int KroneckerDelta::compare(const Basic &o) const
-{
-    SYMENGINE_ASSERT(is_a<KroneckerDelta>(o))
-    const KroneckerDelta &s = static_cast<const KroneckerDelta &>(o);
-    return i_->__cmp__(*(s.i_));
-}
-
-std::size_t KroneckerDelta::__hash__() const
-{
-    std::size_t seed = KRONECKERDELTA;
-    hash_combine<Basic>(seed, *i_);
-    hash_combine<Basic>(seed, *j_);
-    return seed;
-}
-
-RCP<const Basic> KroneckerDelta::subs(const map_basic_basic &subs_dict) const
-{
-    auto it = subs_dict.find(rcp_from_this());
-    if (it != subs_dict.end())
-        return it->second;
-    RCP<const Basic> i = i_->subs(subs_dict);
-    RCP<const Basic> j = j_->subs(subs_dict);
-    if (i == i_ and j == j_) {
-        return rcp_from_this();
-    } else {
-        return kronecker_delta(i, j);
-    }
+    return kronecker_delta(a, b);
 }
 
 RCP<const Basic> kronecker_delta(const RCP<const Basic> &i,
@@ -2650,9 +2054,9 @@ bool has_dup(const vec_basic &arg)
     return false;
 }
 
-LeviCivita::LeviCivita(const vec_basic &&arg) : arg_{std::move(arg)}
+LeviCivita::LeviCivita(const vec_basic &&arg) : MultiArgFunction(std::move(arg))
 {
-    SYMENGINE_ASSERT(is_canonical(arg_))
+    SYMENGINE_ASSERT(is_canonical(get_vec()))
 }
 
 bool LeviCivita::is_canonical(const vec_basic &arg) const
@@ -2673,29 +2077,9 @@ bool LeviCivita::is_canonical(const vec_basic &arg) const
     }
 }
 
-bool LeviCivita::__eq__(const Basic &o) const
+RCP<const Basic> LeviCivita::create(const vec_basic &a) const
 {
-    if (is_a<LeviCivita>(o)
-        and vec_basic_eq(arg_, static_cast<const LeviCivita &>(o).arg_))
-        return true;
-    else
-        return false;
-}
-
-int LeviCivita::compare(const Basic &o) const
-{
-    SYMENGINE_ASSERT(is_a<LeviCivita>(o))
-    const LeviCivita &s = static_cast<const LeviCivita &>(o);
-    return vec_basic_compare(arg_, s.arg_);
-}
-
-std::size_t LeviCivita::__hash__() const
-{
-    std::size_t seed = LEVICIVITA;
-    for (const auto &p : arg_) {
-        hash_combine<Basic>(seed, *p);
-    }
-    return seed;
+    return levi_civita(a);
 }
 
 RCP<const Basic> eval_levicivita(const vec_basic &arg, int len)
@@ -2732,14 +2116,15 @@ RCP<const Basic> levi_civita(const vec_basic &arg)
     }
 }
 
-Zeta::Zeta(const RCP<const Basic> &s, const RCP<const Basic> &a) : s_{s}, a_{a}
+Zeta::Zeta(const RCP<const Basic> &s, const RCP<const Basic> &a)
+    : TwoArgFunction(s, a)
 {
-    SYMENGINE_ASSERT(is_canonical(s_, a_))
+    SYMENGINE_ASSERT(is_canonical(s, a))
 }
 
-Zeta::Zeta(const RCP<const Basic> &s) : s_{s}, a_{one}
+Zeta::Zeta(const RCP<const Basic> &s) : TwoArgFunction(s, one)
 {
-    SYMENGINE_ASSERT(is_canonical(s_, a_))
+    SYMENGINE_ASSERT(is_canonical(s, one))
 }
 
 bool Zeta::is_canonical(const RCP<const Basic> &s,
@@ -2757,26 +2142,10 @@ bool Zeta::is_canonical(const RCP<const Basic> &s,
     return true;
 }
 
-std::size_t Zeta::__hash__() const
+RCP<const Basic> Zeta::create(const RCP<const Basic> &a,
+                              const RCP<const Basic> &b) const
 {
-    std::size_t seed = ZETA;
-    hash_combine<Basic>(seed, *s_);
-    hash_combine<Basic>(seed, *a_);
-    return seed;
-}
-
-bool Zeta::__eq__(const Basic &o) const
-{
-    if (is_a<Zeta>(o) and eq(*s_, *(static_cast<const Zeta &>(o).s_))
-        and eq(*a_, *(static_cast<const Zeta &>(o).a_)))
-        return true;
-    return false;
-}
-
-int Zeta::compare(const Basic &o) const
-{
-    SYMENGINE_ASSERT(is_a<Zeta>(o))
-    return s_->__cmp__(*(static_cast<const Zeta &>(o).s_));
+    return zeta(a, b);
 }
 
 RCP<const Basic> zeta(const RCP<const Basic> &s, const RCP<const Basic> &a)
@@ -2815,9 +2184,9 @@ RCP<const Basic> zeta(const RCP<const Basic> &s)
     return zeta(s, one);
 }
 
-Dirichlet_eta::Dirichlet_eta(const RCP<const Basic> &s) : s_{s}
+Dirichlet_eta::Dirichlet_eta(const RCP<const Basic> &s) : OneArgFunction(s)
 {
-    SYMENGINE_ASSERT(is_canonical(s_))
+    SYMENGINE_ASSERT(is_canonical(s))
 }
 
 bool Dirichlet_eta::is_canonical(const RCP<const Basic> &s) const
@@ -2829,30 +2198,14 @@ bool Dirichlet_eta::is_canonical(const RCP<const Basic> &s) const
     return true;
 }
 
-std::size_t Dirichlet_eta::__hash__() const
-{
-    std::size_t seed = DIRICHLET_ETA;
-    hash_combine<Basic>(seed, *s_);
-    return seed;
-}
-
-bool Dirichlet_eta::__eq__(const Basic &o) const
-{
-    if (is_a<Dirichlet_eta>(o)
-        and eq(*s_, *(static_cast<const Dirichlet_eta &>(o).s_)))
-        return true;
-    return false;
-}
-
-int Dirichlet_eta::compare(const Basic &o) const
-{
-    SYMENGINE_ASSERT(is_a<Dirichlet_eta>(o))
-    return s_->__cmp__(*(static_cast<const Dirichlet_eta &>(o).s_));
-}
-
 RCP<const Basic> Dirichlet_eta::rewrite_as_zeta() const
 {
-    return mul(sub(one, pow(i2, sub(one, s_))), zeta(s_));
+    return mul(sub(one, pow(i2, sub(one, get_arg()))), zeta(get_arg()));
+}
+
+RCP<const Basic> Dirichlet_eta::create(const RCP<const Basic> &arg) const
+{
+    return dirichlet_eta(arg);
 }
 
 RCP<const Basic> dirichlet_eta(const RCP<const Basic> &s)
@@ -2877,24 +2230,9 @@ bool Erf::is_canonical(const RCP<const Basic> &arg) const
     return true;
 }
 
-std::size_t Erf::__hash__() const
+RCP<const Basic> Erf::create(const RCP<const Basic> &arg) const
 {
-    std::size_t seed = ERF;
-    hash_combine<Basic>(seed, *arg_);
-    return seed;
-}
-
-bool Erf::__eq__(const Basic &o) const
-{
-    if (is_a<Erf>(o) and eq(*arg_, *(static_cast<const Erf &>(o).arg_)))
-        return true;
-    return false;
-}
-
-int Erf::compare(const Basic &o) const
-{
-    SYMENGINE_ASSERT(is_a<Erf>(o))
-    return arg_->__cmp__(*(static_cast<const Erf &>(o).arg_));
+    return erf(arg);
 }
 
 RCP<const Basic> erf(const RCP<const Basic> &arg)
@@ -2909,21 +2247,9 @@ RCP<const Basic> erf(const RCP<const Basic> &arg)
     return make_rcp<Erf>(arg);
 }
 
-RCP<const Basic> Erf::subs(const map_basic_basic &subs_dict) const
+Gamma::Gamma(const RCP<const Basic> &arg) : OneArgFunction{arg}
 {
-    auto it = subs_dict.find(rcp_from_this());
-    if (it != subs_dict.end())
-        return it->second;
-    RCP<const Basic> arg = arg_->subs(subs_dict);
-    if (arg == arg_)
-        return rcp_from_this();
-    else
-        return erf(arg);
-}
-
-Gamma::Gamma(const RCP<const Basic> &arg) : arg_{arg}
-{
-    SYMENGINE_ASSERT(is_canonical(arg_))
+    SYMENGINE_ASSERT(is_canonical(arg))
 }
 
 bool Gamma::is_canonical(const RCP<const Basic> &arg) const
@@ -2941,36 +2267,9 @@ bool Gamma::is_canonical(const RCP<const Basic> &arg) const
     return true;
 }
 
-std::size_t Gamma::__hash__() const
+RCP<const Basic> Gamma::create(const RCP<const Basic> &arg) const
 {
-    std::size_t seed = GAMMA;
-    hash_combine<Basic>(seed, *arg_);
-    return seed;
-}
-
-bool Gamma::__eq__(const Basic &o) const
-{
-    if (is_a<Gamma>(o) and eq(*arg_, *(static_cast<const Gamma &>(o).arg_)))
-        return true;
-    return false;
-}
-
-int Gamma::compare(const Basic &o) const
-{
-    SYMENGINE_ASSERT(is_a<Gamma>(o))
-    return arg_->__cmp__(*(static_cast<const Gamma &>(o).arg_));
-}
-
-RCP<const Basic> Gamma::subs(const map_basic_basic &subs_dict) const
-{
-    auto it = subs_dict.find(rcp_from_this());
-    if (it != subs_dict.end())
-        return it->second;
-    RCP<const Basic> arg = arg_->subs(subs_dict);
-    if (arg == arg_)
-        return rcp_from_this();
-    else
-        return gamma(arg);
+    return gamma(arg);
 }
 
 RCP<const Basic> gamma_positive_int(const RCP<const Basic> &arg)
@@ -3038,9 +2337,9 @@ RCP<const Basic> gamma(const RCP<const Basic> &arg)
 }
 
 LowerGamma::LowerGamma(const RCP<const Basic> &s, const RCP<const Basic> &x)
-    : s_{s}, x_{x}
+    : TwoArgFunction(s, x)
 {
-    SYMENGINE_ASSERT(is_canonical(s_, x_))
+    SYMENGINE_ASSERT(is_canonical(s, x))
 }
 
 bool LowerGamma::is_canonical(const RCP<const Basic> &s,
@@ -3056,46 +2355,10 @@ bool LowerGamma::is_canonical(const RCP<const Basic> &s,
     return true;
 }
 
-std::size_t LowerGamma::__hash__() const
+RCP<const Basic> LowerGamma::create(const RCP<const Basic> &a,
+                                    const RCP<const Basic> &b) const
 {
-    std::size_t seed = LOWERGAMMA;
-    hash_combine<Basic>(seed, *s_);
-    hash_combine<Basic>(seed, *x_);
-    return seed;
-}
-
-bool LowerGamma::__eq__(const Basic &o) const
-{
-    if (is_a<LowerGamma>(o)
-        and eq(*s_, *(static_cast<const LowerGamma &>(o).s_))
-        and eq(*x_, *(static_cast<const LowerGamma &>(o).x_)))
-        return true;
-    return false;
-}
-
-int LowerGamma::compare(const Basic &o) const
-{
-    SYMENGINE_ASSERT(is_a<LowerGamma>(o))
-    const LowerGamma &lg = static_cast<const LowerGamma &>(o);
-    if (neq(*s_, *(lg.s_))) {
-        return s_->__cmp__(*(static_cast<const LowerGamma &>(o).s_));
-    } else {
-        return x_->__cmp__(*(static_cast<const LowerGamma &>(o).x_));
-    }
-}
-
-RCP<const Basic> LowerGamma::subs(const map_basic_basic &subs_dict) const
-{
-    auto it = subs_dict.find(rcp_from_this());
-    if (it != subs_dict.end())
-        return it->second;
-    RCP<const Basic> s = s_->subs(subs_dict);
-    RCP<const Basic> x = x_->subs(subs_dict);
-    if (x == x_ and s == s_) {
-        return rcp_from_this();
-    } else {
-        return lowergamma(s, x);
-    }
+    return lowergamma(a, b);
 }
 
 RCP<const Basic> lowergamma(const RCP<const Basic> &s,
@@ -3131,9 +2394,9 @@ RCP<const Basic> lowergamma(const RCP<const Basic> &s,
 }
 
 UpperGamma::UpperGamma(const RCP<const Basic> &s, const RCP<const Basic> &x)
-    : s_{s}, x_{x}
+    : TwoArgFunction(s, x)
 {
-    SYMENGINE_ASSERT(is_canonical(s_, x_))
+    SYMENGINE_ASSERT(is_canonical(s, x))
 }
 
 bool UpperGamma::is_canonical(const RCP<const Basic> &s,
@@ -3149,46 +2412,10 @@ bool UpperGamma::is_canonical(const RCP<const Basic> &s,
     return true;
 }
 
-std::size_t UpperGamma::__hash__() const
+RCP<const Basic> UpperGamma::create(const RCP<const Basic> &a,
+                                    const RCP<const Basic> &b) const
 {
-    std::size_t seed = UPPERGAMMA;
-    hash_combine<Basic>(seed, *s_);
-    hash_combine<Basic>(seed, *x_);
-    return seed;
-}
-
-bool UpperGamma::__eq__(const Basic &o) const
-{
-    if (is_a<UpperGamma>(o)
-        and eq(*s_, *(static_cast<const UpperGamma &>(o).s_))
-        and eq(*x_, *(static_cast<const UpperGamma &>(o).x_)))
-        return true;
-    return false;
-}
-
-int UpperGamma::compare(const Basic &o) const
-{
-    SYMENGINE_ASSERT(is_a<UpperGamma>(o))
-    const UpperGamma &ug = static_cast<const UpperGamma &>(o);
-    if (neq(*s_, *(ug.s_))) {
-        return s_->__cmp__(*(static_cast<const UpperGamma &>(o).s_));
-    } else {
-        return x_->__cmp__(*(static_cast<const UpperGamma &>(o).x_));
-    }
-}
-
-RCP<const Basic> UpperGamma::subs(const map_basic_basic &subs_dict) const
-{
-    auto it = subs_dict.find(rcp_from_this());
-    if (it != subs_dict.end())
-        return it->second;
-    RCP<const Basic> s = s_->subs(subs_dict);
-    RCP<const Basic> x = x_->subs(subs_dict);
-    if (s == s_ and x == x_) {
-        return rcp_from_this();
-    } else {
-        return uppergamma(s, x);
-    }
+    return uppergamma(a, b);
 }
 
 RCP<const Basic> uppergamma(const RCP<const Basic> &s,
@@ -3239,42 +2466,14 @@ bool LogGamma::is_canonical(const RCP<const Basic> &arg) const
     return true;
 }
 
-std::size_t LogGamma::__hash__() const
-{
-    std::size_t seed = LOGGAMMA;
-    hash_combine<Basic>(seed, *arg_);
-    return seed;
-}
-
-bool LogGamma::__eq__(const Basic &o) const
-{
-    if (is_a<LogGamma>(o)
-        and eq(*arg_, *(static_cast<const LogGamma &>(o).arg_)))
-        return true;
-    return false;
-}
-
-int LogGamma::compare(const Basic &o) const
-{
-    SYMENGINE_ASSERT(is_a<LogGamma>(o))
-    return arg_->__cmp__(*(static_cast<const LogGamma &>(o).arg_));
-}
-
 RCP<const Basic> LogGamma::rewrite_as_gamma() const
 {
-    return log(gamma(arg_));
+    return log(gamma(get_arg()));
 }
 
-RCP<const Basic> LogGamma::subs(const map_basic_basic &subs_dict) const
+RCP<const Basic> LogGamma::create(const RCP<const Basic> &arg) const
 {
-    auto it = subs_dict.find(rcp_from_this());
-    if (it != subs_dict.end())
-        return it->second;
-    RCP<const Basic> arg = arg_->subs(subs_dict);
-    if (arg == arg_)
-        return rcp_from_this();
-    else
-        return loggamma(arg);
+    return loggamma(arg);
 }
 
 RCP<const Basic> loggamma(const RCP<const Basic> &arg)
@@ -3319,52 +2518,16 @@ bool Beta::is_canonical(const RCP<const Basic> &x, const RCP<const Basic> &y)
     return true;
 }
 
-std::size_t Beta::__hash__() const
-{
-    std::size_t seed = BETA;
-    hash_combine<Basic>(seed, *x_);
-    hash_combine<Basic>(seed, *y_);
-    return seed;
-}
-
-bool Beta::__eq__(const Basic &o) const
-{
-    if (is_a<Beta>(o)) {
-        if (eq(*x_, *(static_cast<const Beta &>(o).x_))
-            and eq(*y_, *(static_cast<const Beta &>(o).y_))) {
-            return true;
-        }
-    }
-    return false;
-}
-
-int Beta::compare(const Basic &o) const
-{
-    SYMENGINE_ASSERT(is_a<Beta>(o))
-    const Beta &b = static_cast<const Beta &>(o);
-    if (eq(*x_, *(b.x_))) {
-        return y_->__cmp__(*(static_cast<const Beta &>(o).y_));
-    }
-    return x_->__cmp__(*(static_cast<const Beta &>(o).x_));
-}
-
 RCP<const Basic> Beta::rewrite_as_gamma() const
 {
-    return div(mul(gamma(x_), gamma(y_)), add(x_, y_));
+    return div(mul(gamma(get_arg1()), gamma(get_arg2())),
+               add(get_arg1(), get_arg2()));
 }
 
-RCP<const Basic> Beta::subs(const map_basic_basic &subs_dict) const
+RCP<const Basic> Beta::create(const RCP<const Basic> &a,
+                              const RCP<const Basic> &b) const
 {
-    auto it = subs_dict.find(rcp_from_this());
-    if (it != subs_dict.end())
-        return it->second;
-    RCP<const Basic> x = x_->subs(subs_dict);
-    RCP<const Basic> y = y_->subs(subs_dict);
-    if ((x == x_ and y == y_) or (x == y_ and y == x_)) {
-        return rcp_from_this();
-    } else {
-        return beta(x, y);
-    }
+    return beta(a, b);
 }
 
 RCP<const Basic> beta(const RCP<const Basic> &x, const RCP<const Basic> &y)
@@ -3461,61 +2624,26 @@ bool PolyGamma::is_canonical(const RCP<const Basic> &n,
     return true;
 }
 
-std::size_t PolyGamma::__hash__() const
-{
-    std::size_t seed = POLYGAMMA;
-    hash_combine<Basic>(seed, *n_);
-    hash_combine<Basic>(seed, *x_);
-    return seed;
-}
-
-bool PolyGamma::__eq__(const Basic &o) const
-{
-    if (is_a<PolyGamma>(o) and eq(*x_, *(static_cast<const PolyGamma &>(o).x_))
-        and eq(*n_, *(static_cast<const PolyGamma &>(o).n_)))
-        return true;
-    return false;
-}
-
-int PolyGamma::compare(const Basic &o) const
-{
-    SYMENGINE_ASSERT(is_a<PolyGamma>(o))
-    const PolyGamma &pg = static_cast<const PolyGamma &>(o);
-    if (neq(*n_, *(pg.n_))) {
-        return n_->__cmp__(*(pg.n_));
-    } else {
-        return x_->__cmp__(*(pg.x_));
-    }
-}
-
 RCP<const Basic> PolyGamma::rewrite_as_zeta() const
 {
-    if (not is_a<Integer>(*n_)) {
+    if (not is_a<Integer>(*get_arg1())) {
         return rcp_from_this();
     }
-    RCP<const Integer> n = rcp_static_cast<const Integer>(n_);
+    RCP<const Integer> n = rcp_static_cast<const Integer>(get_arg1());
     if (not(n->is_positive())) {
         return rcp_from_this();
     }
     if ((n->as_int() & 1) == 0) {
-        return neg(mul(factorial(n->as_int()), zeta(add(n_, one), x_)));
+        return neg(mul(factorial(n->as_int()), zeta(add(n, one), get_arg2())));
     } else {
-        return mul(factorial(n->as_int()), zeta(add(n_, one), x_));
+        return mul(factorial(n->as_int()), zeta(add(n, one), get_arg2()));
     }
 }
 
-RCP<const Basic> PolyGamma::subs(const map_basic_basic &subs_dict) const
+RCP<const Basic> PolyGamma::create(const RCP<const Basic> &a,
+                                   const RCP<const Basic> &b) const
 {
-    auto it = subs_dict.find(rcp_from_this());
-    if (it != subs_dict.end())
-        return it->second;
-    RCP<const Basic> n1 = n_->subs(subs_dict);
-    RCP<const Basic> x1 = x_->subs(subs_dict);
-    if (n1 == n_ and x1 == x_) {
-        return rcp_from_this();
-    } else {
-        return polygamma(n1, x1);
-    }
+    return polygamma(a, b);
 }
 
 RCP<const Basic> polygamma(const RCP<const Basic> &n_,
@@ -3574,9 +2702,9 @@ RCP<const Basic> polygamma(const RCP<const Basic> &n_,
     return make_rcp<const PolyGamma>(n_, x_);
 }
 
-Abs::Abs(const RCP<const Basic> &arg) : arg_{arg}
+Abs::Abs(const RCP<const Basic> &arg) : OneArgFunction(arg)
 {
-    SYMENGINE_ASSERT(is_canonical(arg_))
+    SYMENGINE_ASSERT(is_canonical(arg))
 }
 
 bool Abs::is_canonical(const RCP<const Basic> &arg) const
@@ -3595,24 +2723,9 @@ bool Abs::is_canonical(const RCP<const Basic> &arg) const
     return true;
 }
 
-std::size_t Abs::__hash__() const
+RCP<const Basic> Abs::create(const RCP<const Basic> &arg) const
 {
-    std::size_t seed = ABS;
-    hash_combine<Basic>(seed, *arg_);
-    return seed;
-}
-
-bool Abs::__eq__(const Basic &o) const
-{
-    if (is_a<Abs>(o) and eq(*arg_, *(static_cast<const Abs &>(o).arg_)))
-        return true;
-    return false;
-}
-
-int Abs::compare(const Basic &o) const
-{
-    SYMENGINE_ASSERT(is_a<Abs>(o))
-    return arg_->__cmp__(*(static_cast<const Abs &>(o).arg_));
+    return abs(arg);
 }
 
 RCP<const Basic> abs(const RCP<const Basic> &arg)
@@ -3647,9 +2760,9 @@ RCP<const Basic> abs(const RCP<const Basic> &arg)
     return make_rcp<const Abs>(arg);
 }
 
-Max::Max(const vec_basic &&arg) : arg_{std::move(arg)}
+Max::Max(const vec_basic &&arg) : MultiArgFunction(std::move(arg))
 {
-    SYMENGINE_ASSERT(is_canonical(arg_))
+    SYMENGINE_ASSERT(is_canonical(get_vec()))
 }
 
 bool Max::is_canonical(const vec_basic &arg) const
@@ -3671,29 +2784,9 @@ bool Max::is_canonical(const vec_basic &arg) const
     return non_number_exists; // all arguments cant be numbers
 }
 
-bool Max::__eq__(const Basic &o) const
+RCP<const Basic> Max::create(const vec_basic &a) const
 {
-    if (is_a<Max>(o)
-        and vec_basic_eq_perm(arg_, static_cast<const Max &>(o).arg_))
-        return true;
-    else
-        return false;
-}
-
-int Max::compare(const Basic &o) const
-{
-    SYMENGINE_ASSERT(is_a<Max>(o))
-    const Max &s = static_cast<const Max &>(o);
-    return vec_basic_compare(arg_, s.arg_);
-}
-
-std::size_t Max::__hash__() const
-{
-    std::size_t seed = MAX;
-    for (const auto &p : arg_) {
-        hash_combine<Basic>(seed, *p);
-    }
-    return seed;
+    return max(a);
 }
 
 RCP<const Basic> max(const vec_basic &arg)
@@ -3765,9 +2858,9 @@ RCP<const Basic> max(const vec_basic &arg)
     }
 }
 
-Min::Min(const vec_basic &&arg) : arg_{std::move(arg)}
+Min::Min(const vec_basic &&arg) : MultiArgFunction(std::move(arg))
 {
-    SYMENGINE_ASSERT(is_canonical(arg_))
+    SYMENGINE_ASSERT(is_canonical(get_vec()))
 }
 
 bool Min::is_canonical(const vec_basic &arg) const
@@ -3789,29 +2882,9 @@ bool Min::is_canonical(const vec_basic &arg) const
     return non_number_exists; // all arguments cant be numbers
 }
 
-bool Min::__eq__(const Basic &o) const
+RCP<const Basic> Min::create(const vec_basic &a) const
 {
-    if (is_a<Min>(o)
-        and vec_basic_eq_perm(arg_, static_cast<const Min &>(o).arg_))
-        return true;
-    else
-        return false;
-}
-
-int Min::compare(const Basic &o) const
-{
-    SYMENGINE_ASSERT(is_a<Min>(o))
-    const Min &s = static_cast<const Min &>(o);
-    return vec_basic_compare(arg_, s.arg_);
-}
-
-std::size_t Min::__hash__() const
-{
-    std::size_t seed = MIN;
-    for (const auto &p : arg_) {
-        hash_combine<Basic>(seed, *p);
-    }
-    return seed;
+    return min(a);
 }
 
 RCP<const Basic> min(const vec_basic &arg)

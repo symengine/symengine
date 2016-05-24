@@ -18,9 +18,12 @@ using SymEngine::interval;
 using SymEngine::Set;
 using SymEngine::EmptySet;
 using SymEngine::emptyset;
+using SymEngine::UniversalSet;
+using SymEngine::universalset;
 using SymEngine::rcp_dynamic_cast;
 using SymEngine::Complex;
 using SymEngine::symbol;
+using SymEngine::is_a;
 
 TEST_CASE("Interval : Basic", "[basic]")
 {
@@ -35,8 +38,9 @@ TEST_CASE("Interval : Basic", "[basic]")
     r1 = interval(zero, i20); // [0, 20]
     r2 = interval(im5, i2);   // [-5, 2]
 
-    REQUIRE(r1->is_Interval());
-    REQUIRE(not r1->is_EmptySet());
+    REQUIRE(is_a<Interval>(*r1));
+    REQUIRE(not is_a<EmptySet>(*r1));
+    REQUIRE(not is_a<UniversalSet>(*r1));
     REQUIRE(not r1->is_FiniteSet());
 
     r3 = r1->set_intersection(r2); // [0, 2]
@@ -123,8 +127,9 @@ TEST_CASE("EmptySet : Basic", "[basic]")
     RCP<const Set> r1 = emptyset();
     RCP<const Set> r2 = interval(zero, one);
 
-    REQUIRE(r1->is_EmptySet());
-    REQUIRE(not r1->is_Interval());
+    REQUIRE(not is_a<Interval>(*r1));
+    REQUIRE(is_a<EmptySet>(*r1));
+    REQUIRE(not is_a<UniversalSet>(*r1));
     REQUIRE(r1->is_FiniteSet());
     REQUIRE(r1->is_subset(r2));
     REQUIRE(r1->is_proper_subset(r2));
@@ -138,5 +143,38 @@ TEST_CASE("EmptySet : Basic", "[basic]")
     REQUIRE(not r1->is_proper_subset(r1));
     REQUIRE(not r1->__eq__(*r2));
     REQUIRE(r1->compare(*emptyset()) == 0);
+    CHECK_THROWS_AS(r1->diff(symbol("x")), std::runtime_error);
+}
+
+TEST_CASE("UniversalSet : Basic", "[basic]")
+{
+    RCP<const Set> r1 = universalset();
+    RCP<const Set> r2 = interval(zero, one);
+    RCP<const Set> e = emptyset();
+
+    REQUIRE(not is_a<Interval>(*r1));
+    REQUIRE(not is_a<EmptySet>(*r1));
+    REQUIRE(is_a<UniversalSet>(*r1));
+    REQUIRE(not r1->is_FiniteSet());
+    REQUIRE(not r1->is_subset(r2));
+    REQUIRE(not r1->is_subset(e));
+    REQUIRE(not r1->is_proper_subset(r2));
+    REQUIRE(not r1->is_proper_subset(e));
+    REQUIRE(r1->is_proper_superset(r2));
+    REQUIRE(r1->is_proper_superset(e));
+    REQUIRE(r1->is_superset(r2));
+    REQUIRE(r1->is_superset(e));
+    REQUIRE(r1->is_subset(r1));
+    REQUIRE(not r1->is_proper_subset(r1));
+    REQUIRE(r1->is_superset(r1));
+    REQUIRE(not r1->is_proper_superset(r1));
+    REQUIRE(eq(*r1, *r1->set_union(r2)));
+    REQUIRE(eq(*r1, *r1->set_union(e)));
+    REQUIRE(eq(*r2, *r1->set_intersection(r2)));
+    REQUIRE(eq(*e, *r1->set_intersection(e)));
+    REQUIRE(r1->__str__() == "UniversalSet");
+    REQUIRE(r1->__hash__() == universalset()->__hash__());
+    REQUIRE(not r1->__eq__(*r2));
+    REQUIRE(r1->compare(*universalset()) == 0);
     CHECK_THROWS_AS(r1->diff(symbol("x")), std::runtime_error);
 }

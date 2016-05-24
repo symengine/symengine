@@ -7,21 +7,12 @@
 
 namespace SymEngine
 {
-/// Multivariate Polynomial///
-
-MultivariateIntPolynomial::MultivariateIntPolynomial(const set_sym &vars,
-                                                     umap_sym_uint &degrees,
-                                                     umap_uvec_mpz &dict)
-    : vars_{std::move(vars)}, degrees_{std::move(degrees)},
-      dict_{std::move(dict)}
-{
-    SYMENGINE_ASSERT(is_canonical(vars_, degrees_, dict_))
-}
 
 RCP<const MultivariateIntPolynomial>
 MultivariateIntPolynomial::from_dict(const set_sym &s, umap_uvec_mpz &&d)
 {
     umap_sym_uint degs;
+    // Remove entries in d corresponding to terms with coefficient 0
     auto iter = d.begin();
     while (iter != d.end()) {
         if (integer_class(0) == iter->second) {
@@ -33,6 +24,7 @@ MultivariateIntPolynomial::from_dict(const set_sym &s, umap_uvec_mpz &&d)
         }
     }
 
+    // Calculate the degrees of the polynomial
     int whichvar = 0;
     for (auto sym : s) {
         degs.insert(std::pair<RCP<const Symbol>, unsigned int>(sym, 0));
@@ -43,6 +35,49 @@ MultivariateIntPolynomial::from_dict(const set_sym &s, umap_uvec_mpz &&d)
         whichvar++;
     }
     return make_rcp<const MultivariateIntPolynomial>(s, degs, d);
+}
+
+MultivariateIntPolynomial::MultivariateIntPolynomial(const set_sym &vars,
+                                                     umap_sym_uint &degrees,
+                                                     umap_uvec_mpz &dict)
+    : vars_{std::move(vars)}, degrees_{std::move(degrees)},
+      dict_{std::move(dict)}
+{
+    SYMENGINE_ASSERT(is_canonical(vars_, degrees_, dict_))
+}
+
+RCP<const MultivariateIntPolynomial>
+MultivariateIntPolynomial::multivariate_int_polynomial(const vec_sym &v,
+                                                       umap_uvec_mpz &&d)
+{
+    set_sym s;
+    // Symbols in the vector are sorted by placeing them in an std::map.
+    // The image of the symbols in the map is their original location in the
+    // vector.
+    std::map<RCP<const Symbol>, unsigned int, RCPSymbolCompare> m;
+    for (unsigned int i = 0; i < v.size(); i++) {
+        s.insert(v[i]);
+        m.insert(std::pair<RCP<const Symbol>, unsigned int>(v[i], i));
+    }
+
+    // vec_uint translator represents the permutation of the exponents
+    vec_uint translator;
+    translator.resize(s.size());
+    auto mptr = m.begin();
+    for (unsigned int i = 0; i < s.size(); i++) {
+        translator[i] = mptr->second;
+        mptr++;
+    }
+
+    umap_uvec_mpz dict;
+
+    // Permute the exponents
+    for (auto &bucket : d) {
+        dict.insert(std::pair<vec_uint, integer_class>(
+            translate(bucket.first, translator, s.size()), bucket.second));
+    }
+
+    return MultivariateIntPolynomial::from_dict(s, std::move(dict));
 }
 
 vec_basic MultivariateIntPolynomial::get_args() const
@@ -120,11 +155,41 @@ std::size_t MultivariateIntPolynomial::__hash__() const
 
 bool MultivariateIntPolynomial::__eq__(const Basic &o) const
 {
-    return (
-        set_eq<set_sym>(vars_,
-                        static_cast<const MultivariateIntPolynomial &>(o).vars_)
-        && umap_uvec_mpz_eq(
-               dict_, static_cast<const MultivariateIntPolynomial &>(o).dict_));
+    // compare constants without regards to vars
+    if (1 == dict_.size()
+        && 1
+               == static_cast<const MultivariateIntPolynomial &>(o)
+                      .dict_.size()) {
+        if (dict_.begin()->second
+            != static_cast<const MultivariateIntPolynomial &>(o)
+                   .dict_.begin()
+                   ->second)
+            return false;
+        vec_uint v1;
+        v1.resize(vars_.size(), 0);
+        vec_uint v2;
+        v2.resize(
+            static_cast<const MultivariateIntPolynomial &>(o).vars_.size(), 0);
+        if (dict_.begin()->first == v1
+            || static_cast<const MultivariateIntPolynomial &>(o)
+                       .dict_.begin()
+                       ->first
+                   == v2)
+            return true;
+        return false;
+    } else if (0 == dict_.size()
+               && 0
+                      == static_cast<const MultivariateIntPolynomial &>(o)
+                             .dict_.size()) {
+        return true;
+    } else {
+        return (
+            set_eq<set_sym>(
+                vars_, static_cast<const MultivariateIntPolynomial &>(o).vars_)
+            && umap_uvec_mpz_eq(
+                   dict_,
+                   static_cast<const MultivariateIntPolynomial &>(o).dict_));
+    }
 }
 
 int MultivariateIntPolynomial::compare(const Basic &o) const
@@ -164,6 +229,9 @@ unsigned int reconcile(vec_uint &v1, vec_uint &v2, set_sym &s,
     auto a1 = s1.begin();
     auto a2 = s2.begin();
     unsigned int poscount = 0;
+    // Performs a merge sort of s1 and s2, and builds up v1 and v2 as
+    // translators:
+    // v[i] is the position of the ith symbol in the new set.
     while (a1 != s1.end() && a2 != s2.end()) {
         if (0 == (*a1)->compare(**a2) && (a1 != s1.end() && a2 != s2.end())) {
             v1.insert(v1.end(), poscount);
@@ -343,6 +411,7 @@ RCP<const MultivariateIntPolynomial>
 mul_mult_poly(const MultivariateIntPolynomial &a,
               const MultivariateIntPolynomial &b)
 {
+    // Naive algorithm
     vec_uint v1;
     vec_uint v2;
     set_sym s;
@@ -413,6 +482,7 @@ RCP<const MultivariateIntPolynomial>
 mul_mult_poly(const MultivariateIntPolynomial &a,
               const UnivariateIntPolynomial &b)
 {
+    // Naive algorithm
     vec_uint v1;
     unsigned int v2;
     set_sym s;
@@ -449,6 +519,7 @@ add_mult_poly(const UnivariateIntPolynomial &a,
     set_sym s;
     umap_uvec_mpz dict;
     bool same = false; // are the variables of a and b the same?
+    // Here we preform the same sort of thing done in the reconcile functions.
     if (0 == a.get_var()->compare(*b.get_var())) {
         v1 = 0;
         v2 = 0;
@@ -579,6 +650,40 @@ MultivariatePolynomial::from_dict(const set_sym &s, umap_uvec_expr &&d)
     return make_rcp<const MultivariatePolynomial>(s, degs, d);
 }
 
+RCP<const MultivariatePolynomial>
+MultivariatePolynomial::multivariate_polynomial(const vec_sym &v,
+                                                umap_uvec_expr &&d)
+{
+    set_sym s;
+    // Symbols in the vector are sorted by placeing them in an std::map.
+    // The image of the symbols in the map is their original location in the
+    // vector.
+    std::map<RCP<const Symbol>, unsigned int, RCPSymbolCompare> m;
+    for (unsigned int i = 0; i < v.size(); i++) {
+        s.insert(v[i]);
+        m.insert(std::pair<RCP<const Symbol>, unsigned int>(v[i], i));
+    }
+
+    // vec_uint translator represents the permutation of the exponents
+    vec_uint translator;
+    translator.resize(s.size());
+    auto mptr = m.begin();
+    for (unsigned int i = 0; i < s.size(); i++) {
+        translator[i] = mptr->second;
+        mptr++;
+    }
+
+    umap_uvec_expr dict;
+
+    // Permute the exponents
+    for (auto &bucket : d) {
+        dict.insert(std::pair<vec_uint, Expression>(
+            translate(bucket.first, translator, s.size()), bucket.second));
+    }
+
+    return MultivariatePolynomial::from_dict(s, std::move(dict));
+}
+
 vec_basic MultivariatePolynomial::get_args() const
 {
     vec_basic args;
@@ -653,11 +758,37 @@ std::size_t MultivariatePolynomial::__hash__() const
 
 bool MultivariatePolynomial::__eq__(const Basic &o) const
 {
-    return (
-        set_eq<set_sym>(vars_,
-                        static_cast<const MultivariatePolynomial &>(o).vars_)
-        && umap_uvec_expr_eq(
-               dict_, static_cast<const MultivariatePolynomial &>(o).dict_));
+    // compare constants without regard to vars
+    if (1 == dict_.size()
+        && 1 == static_cast<const MultivariatePolynomial &>(o).dict_.size()) {
+        if (dict_.begin()->second
+            != static_cast<const MultivariatePolynomial &>(o)
+                   .dict_.begin()
+                   ->second)
+            return false;
+        vec_uint v1;
+        v1.resize(vars_.size(), 0);
+        vec_uint v2;
+        v2.resize(static_cast<const MultivariatePolynomial &>(o).vars_.size(),
+                  0);
+        if (dict_.begin()->first == v1
+            && static_cast<const MultivariatePolynomial &>(o)
+                       .dict_.begin()
+                       ->first
+                   == v2)
+            return true;
+        return false;
+    } else if (dict_.size() == 0
+               && static_cast<const MultivariatePolynomial &>(o).dict_.size()
+                      == 0) {
+        return true;
+    } else {
+        return (set_eq<set_sym>(
+                    vars_, static_cast<const MultivariatePolynomial &>(o).vars_)
+                && umap_uvec_expr_eq(
+                       dict_,
+                       static_cast<const MultivariatePolynomial &>(o).dict_));
+    }
 }
 
 int MultivariatePolynomial::compare(const Basic &o) const
@@ -922,6 +1053,5 @@ RCP<const MultivariatePolynomial> mul_mult_poly(const UnivariatePolynomial &a,
     }
     return MultivariatePolynomial::from_dict(s, std::move(dict));
 }
-
 
 } // SymEngine
