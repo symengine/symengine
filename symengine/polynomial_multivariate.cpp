@@ -112,7 +112,7 @@ unsigned int reconcile(vec_uint &v1, vec_uint &v2, set_basic &s,
             s.insert(*a1);
             a1++;
             a2++;
-        } else if (RCPBasicKeyLess()(*a1,*a2)) {
+        } else if (RCPBasicKeyLess()(*a1, *a2)) {
             v1.insert(v1.end(), poscount);
             s.insert(*a1);
             a1++;

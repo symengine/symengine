@@ -55,6 +55,10 @@ public:
     {
     }
 
+    Expression(const integer_class &n) : m_basic(integer(n))
+    {
+    }
+
 #if defined(HAVE_SYMENGINE_IS_CONSTRUCTIBLE)
     template <
         typename T,
