@@ -7,6 +7,7 @@
 
 #include <symengine/expression.h>
 #include <symengine/monomials.h>
+#include <symengine/uint_base.h>
 
 namespace SymEngine
 {
@@ -281,18 +282,9 @@ public:
 
 }; // UIntDict
 
-class UnivariateIntPolynomial : public Basic
+class UnivariateIntPolynomial
+    : public UIntPolyBase<UIntDict, UnivariateIntPolynomial>
 {
-private:
-    //! `degree` : Degree of UnivariateIntPolynomial
-    //! `var_` : Variable of the uni-variate UnivariateIntPolynomial
-    //! `dict_` : holds the UnivariateIntPolynomial
-    // UnivariateIntPolynomial x**2 + 2*x + 1 has dict_ = {{0, 1}, {1, 2}, {2,
-    // 1}} with var_ = "x"
-    unsigned int degree_;
-    RCP<const Symbol> var_;
-    UIntDict poly_;
-
 public:
     IMPLEMENT_TYPEID(UNIVARIATEINTPOLYNOMIAL)
     //! Constructor of UnivariateIntPolynomial class
@@ -307,11 +299,6 @@ public:
     bool is_canonical(const unsigned int &degree, const UIntDict &dict) const;
     //! \return size of the hash
     std::size_t __hash__() const;
-    /*! Equality comparator
-     * \param o - Object to be compared with
-     * \return whether the 2 objects are equal
-     * */
-    bool __eq__(const Basic &o) const;
     int compare(const Basic &o) const;
 
     // creates a UnivariateIntPolynomial in cannonical form based on the
@@ -346,21 +333,9 @@ public:
     bool is_pow() const;
 
     virtual vec_basic get_args() const;
-    inline unsigned int get_degree() const
-    {
-        return degree_;
-    }
-    inline RCP<const Symbol> get_var() const
-    {
-        return var_;
-    }
     inline const map_uint_mpz &get_dict() const
     {
         return poly_.dict_;
-    }
-    inline const UIntDict &get_int_dict() const
-    {
-        return poly_;
     }
 }; // UnivariateIntPolynomial
 

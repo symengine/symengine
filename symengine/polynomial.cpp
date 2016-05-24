@@ -10,7 +10,7 @@ namespace SymEngine
 UnivariateIntPolynomial::UnivariateIntPolynomial(const RCP<const Symbol> &var,
                                                  const unsigned int &degree,
                                                  UIntDict &&dict)
-    : degree_{degree}, var_{var}, poly_{std::move(dict)}
+    : UIntPolyBase(var, degree, std::move(dict))
 {
 
     SYMENGINE_ASSERT(is_canonical(degree_, poly_))
@@ -18,7 +18,7 @@ UnivariateIntPolynomial::UnivariateIntPolynomial(const RCP<const Symbol> &var,
 
 UnivariateIntPolynomial::UnivariateIntPolynomial(
     const RCP<const Symbol> &var, const std::vector<integer_class> &v)
-    : var_{var}
+    : UIntPolyBase(var, std::move(v))
 {
     poly_.dict_ = {};
     for (unsigned int i = 0; i < v.size(); i++) {
@@ -68,14 +68,6 @@ std::size_t UnivariateIntPolynomial::__hash__() const
         seed += temp;
     }
     return seed;
-}
-
-bool UnivariateIntPolynomial::__eq__(const Basic &o) const
-{
-    return eq(*var_, *(static_cast<const UnivariateIntPolynomial &>(o).var_))
-           and poly_.dict_
-                   == static_cast<const UnivariateIntPolynomial &>(o)
-                          .poly_.dict_;
 }
 
 int UnivariateIntPolynomial::compare(const Basic &o) const
@@ -232,14 +224,14 @@ RCP<const UnivariateIntPolynomial> add_poly(const UnivariateIntPolynomial &a,
     } else {
         var = a.get_var();
     }
-    UIntDict dict = a.get_int_dict();
-    dict += b.get_int_dict();
+    UIntDict dict = a.get_poly();
+    dict += b.get_poly();
     return UnivariateIntPolynomial::from_dict(var, std::move(dict));
 }
 
 RCP<const UnivariateIntPolynomial> neg_poly(const UnivariateIntPolynomial &a)
 {
-    UIntDict dict = -(a.get_int_dict());
+    UIntDict dict = -(a.get_poly());
     return UnivariateIntPolynomial::from_dict(a.get_var(), std::move(dict));
 }
 
@@ -256,8 +248,8 @@ RCP<const UnivariateIntPolynomial> sub_poly(const UnivariateIntPolynomial &a,
     } else {
         var = a.get_var();
     }
-    UIntDict dict = a.get_int_dict();
-    dict -= b.get_int_dict();
+    UIntDict dict = a.get_poly();
+    dict -= b.get_poly();
     return UnivariateIntPolynomial::from_dict(var, std::move(dict));
 }
 
@@ -275,8 +267,8 @@ RCP<const UnivariateIntPolynomial> mul_poly(const UnivariateIntPolynomial &a,
         var = a.get_var();
     }
 
-    UIntDict dict = a.get_int_dict();
-    dict *= b.get_int_dict();
+    UIntDict dict = a.get_poly();
+    dict *= b.get_poly();
     return UnivariateIntPolynomial::from_dict(var, std::move(dict));
 }
 
