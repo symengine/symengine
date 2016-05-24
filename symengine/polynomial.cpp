@@ -9,38 +9,39 @@ namespace SymEngine
 
 UnivariateIntPolynomial::UnivariateIntPolynomial(const RCP<const Symbol> &var,
                                                  const unsigned int &degree,
-                                                 map_uint_mpz &&dict)
-    : degree_{degree}, var_{var}, dict_{std::move(dict)}
+                                                 UIntDict &&dict)
+    : degree_{degree}, var_{var}, poly_{std::move(dict)}
 {
 
-    SYMENGINE_ASSERT(is_canonical(degree_, dict_))
+    SYMENGINE_ASSERT(is_canonical(degree_, poly_))
 }
 
 UnivariateIntPolynomial::UnivariateIntPolynomial(
     const RCP<const Symbol> &var, const std::vector<integer_class> &v)
     : var_{var}
 {
-    dict_ = {};
+    poly_.dict_ = {};
     for (unsigned int i = 0; i < v.size(); i++) {
         if (v[i] != 0) {
-            dict_[i] = v[i];
+            poly_.dict_[i] = v[i];
         }
     }
-    if (dict_.empty())
+    if (poly_.dict_.empty())
         degree_ = 0;
     else
-        degree_ = (--dict_.end())->first;
+        degree_ = (--poly_.dict_.end())->first;
 }
 
 bool UnivariateIntPolynomial::is_canonical(const unsigned int &degree_,
-                                           const map_uint_mpz &dict) const
+                                           const UIntDict &dict) const
 {
     if (var_->get_name() == "")
-        if (!(dict.empty() or (dict.size() == 1 and dict.begin()->first == 0)))
+        if (!(dict.empty()
+              or (dict.size() == 1 and dict.dict_.begin()->first == 0)))
             return false;
 
     if (dict.size() != 0) {
-        unsigned int actual_degree = (--dict.end())->first;
+        unsigned int actual_degree = (--dict.dict_.end())->first;
         if (actual_degree != degree_) {
             return false;
         }
@@ -48,7 +49,7 @@ bool UnivariateIntPolynomial::is_canonical(const unsigned int &degree_,
         return false;
 
     // Check if dictionary contains terms with coeffienct 0
-    for (auto iter : dict)
+    for (auto iter : dict.dict_)
         if (iter.second == 0)
             return false;
     return true;
@@ -58,9 +59,10 @@ std::size_t UnivariateIntPolynomial::__hash__() const
 {
     std::hash<std::string> hash_string;
     std::size_t seed = UNIVARIATEINTPOLYNOMIAL;
+
     seed += hash_string(this->var_->get_name());
-    for (const auto &it : this->dict_) {
-        std::size_t temp = UNIVARIATEINTPOLYNOMIAL;
+    for (const auto &it : poly_.dict_) {
+        std::size_t temp = UNIVARIATEPOLYNOMIAL;
         hash_combine<unsigned int>(temp, it.first);
         hash_combine<long long int>(temp, mp_get_si(it.second));
         seed += temp;
@@ -71,7 +73,9 @@ std::size_t UnivariateIntPolynomial::__hash__() const
 bool UnivariateIntPolynomial::__eq__(const Basic &o) const
 {
     return eq(*var_, *(static_cast<const UnivariateIntPolynomial &>(o).var_))
-           and dict_ == static_cast<const UnivariateIntPolynomial &>(o).dict_;
+           and poly_.dict_
+                   == static_cast<const UnivariateIntPolynomial &>(o)
+                          .poly_.dict_;
 }
 
 int UnivariateIntPolynomial::compare(const Basic &o) const
@@ -79,33 +83,32 @@ int UnivariateIntPolynomial::compare(const Basic &o) const
     const UnivariateIntPolynomial &s
         = static_cast<const UnivariateIntPolynomial &>(o);
 
-    if (dict_.size() != s.dict_.size())
-        return (dict_.size() < s.dict_.size()) ? -1 : 1;
+    if (poly_.size() != s.poly_.size())
+        return (poly_.size() < s.poly_.size()) ? -1 : 1;
 
     int cmp = var_->compare(*s.var_);
     if (cmp != 0)
         return cmp;
 
-    return map_uint_mpz_compare(dict_, s.dict_);
+    return map_uint_mpz_compare(poly_.dict_, s.poly_.dict_);
 }
 
 RCP<const UnivariateIntPolynomial>
-UnivariateIntPolynomial::from_dict(const RCP<const Symbol> &var,
-                                   map_uint_mpz &&d)
+UnivariateIntPolynomial::from_dict(const RCP<const Symbol> &var, UIntDict &&d)
 {
-    auto iter = d.begin();
-    while (iter != d.end()) {
+    auto iter = d.dict_.begin();
+    while (iter != d.dict_.end()) {
         if (iter->second == 0) {
             auto toErase = iter;
             iter++;
-            d.erase(toErase);
+            d.dict_.erase(toErase);
         } else {
             iter++;
         }
     }
     unsigned int degree = 0;
-    if (!d.empty())
-        degree = (--(d.end()))->first;
+    if (!d.dict_.empty())
+        degree = (--(d.dict_.end()))->first;
     return make_rcp<const UnivariateIntPolynomial>(var, degree, std::move(d));
 }
 
@@ -119,7 +122,7 @@ UnivariateIntPolynomial::from_vec(const RCP<const Symbol> &var,
 vec_basic UnivariateIntPolynomial::get_args() const
 {
     vec_basic args;
-    for (const auto &p : dict_) {
+    for (const auto &p : poly_.dict_) {
         if (p.first == 0) {
             args.push_back(integer(p.second));
         } else if (p.first == 1) {
@@ -138,27 +141,22 @@ vec_basic UnivariateIntPolynomial::get_args() const
             }
         }
     }
-    if (dict_.empty())
+    if (poly_.dict_.empty())
         args.push_back(zero);
     return args;
 }
 
 integer_class UnivariateIntPolynomial::max_abs_coef() const
 {
-    integer_class curr(mp_abs(dict_.begin()->second));
-    for (const auto &it : dict_) {
-        if (mp_abs(it.second) > curr)
-            curr = mp_abs(it.second);
-    }
-    return curr;
+    return poly_.max_abs_coef();
 }
 
 integer_class UnivariateIntPolynomial::eval(const integer_class &x) const
 {
-    unsigned int last_deg = dict_.rbegin()->first;
+    unsigned int last_deg = poly_.dict_.rbegin()->first;
     integer_class result(0), x_pow;
 
-    for (auto it = dict_.rbegin(); it != dict_.rend(); ++it) {
+    for (auto it = poly_.dict_.rbegin(); it != poly_.dict_.rend(); ++it) {
 
         mp_pow_ui(x_pow, x, last_deg - (*it).first);
         last_deg = (*it).first;
@@ -170,67 +168,53 @@ integer_class UnivariateIntPolynomial::eval(const integer_class &x) const
     return result;
 }
 
-integer_class UnivariateIntPolynomial::eval_bit(const int &x) const
-{
-    unsigned int last_deg = dict_.rbegin()->first;
-    integer_class result(0);
-
-    for (auto it = dict_.rbegin(); it != dict_.rend(); ++it) {
-
-        result = (*it).second + (result << x * (last_deg - (*it).first));
-        last_deg = (*it).first;
-    }
-    result = result << x * last_deg;
-
-    return result;
-}
-
 bool UnivariateIntPolynomial::is_zero() const
 {
-    return dict_.empty();
+    return poly_.empty();
 }
 
 bool UnivariateIntPolynomial::is_one() const
 {
-    return dict_.size() == 1 and dict_.begin()->second == 1
-           and dict_.begin()->first == 0;
+    return poly_.size() == 1 and poly_.dict_.begin()->second == 1
+           and poly_.dict_.begin()->first == 0;
 }
 
 bool UnivariateIntPolynomial::is_minus_one() const
 {
-    return dict_.size() == 1 and dict_.begin()->second == -1
-           and dict_.begin()->first == 0;
+    return poly_.size() == 1 and poly_.dict_.begin()->second == -1
+           and poly_.dict_.begin()->first == 0;
 }
 
 bool UnivariateIntPolynomial::is_integer() const
 {
-    if (dict_.empty())
+    if (poly_.empty())
         return true;
-    if (dict_.size() == 1 and dict_.begin()->first == 0)
+    if (poly_.size() == 1 and poly_.dict_.begin()->first == 0)
         return true;
     return false;
 }
 
 bool UnivariateIntPolynomial::is_symbol() const
 {
-    if (dict_.size() == 1 and dict_.begin()->first == 1
-        and dict_.begin()->second == 1)
+    if (poly_.size() == 1 and poly_.dict_.begin()->first == 1
+        and poly_.dict_.begin()->second == 1)
         return true;
     return false;
 }
 
 bool UnivariateIntPolynomial::is_mul() const
 {
-    if (dict_.size() == 1 and dict_.begin()->first != 0
-        and dict_.begin()->second != 1 and dict_.begin()->second != 0)
+    if (poly_.size() == 1 and poly_.dict_.begin()->first != 0
+        and poly_.dict_.begin()->second != 1
+        and poly_.dict_.begin()->second != 0)
         return true;
     return false;
 }
 
 bool UnivariateIntPolynomial::is_pow() const
 {
-    if (dict_.size() == 1 and dict_.begin()->second == 1
-        and dict_.begin()->first != 1 and dict_.begin()->first != 0)
+    if (poly_.size() == 1 and poly_.dict_.begin()->second == 1
+        and poly_.dict_.begin()->first != 1 and poly_.dict_.begin()->first != 0)
         return true;
     return false;
 }
@@ -238,7 +222,6 @@ bool UnivariateIntPolynomial::is_pow() const
 RCP<const UnivariateIntPolynomial> add_poly(const UnivariateIntPolynomial &a,
                                             const UnivariateIntPolynomial &b)
 {
-    map_uint_mpz dict;
     RCP<const Symbol> var = symbol("");
     if (a.get_var()->get_name() == "") {
         var = b.get_var();
@@ -249,25 +232,20 @@ RCP<const UnivariateIntPolynomial> add_poly(const UnivariateIntPolynomial &a,
     } else {
         var = a.get_var();
     }
-    for (const auto &it : a.get_dict())
-        dict[it.first] = it.second;
-    for (const auto &it : b.get_dict())
-        dict[it.first] += it.second;
+    UIntDict dict = a.get_int_dict();
+    dict += b.get_int_dict();
     return UnivariateIntPolynomial::from_dict(var, std::move(dict));
 }
 
 RCP<const UnivariateIntPolynomial> neg_poly(const UnivariateIntPolynomial &a)
 {
-    map_uint_mpz dict;
-    for (const auto &it : a.get_dict())
-        dict[it.first] = -1 * it.second;
+    UIntDict dict = -(a.get_int_dict());
     return UnivariateIntPolynomial::from_dict(a.get_var(), std::move(dict));
 }
 
 RCP<const UnivariateIntPolynomial> sub_poly(const UnivariateIntPolynomial &a,
                                             const UnivariateIntPolynomial &b)
 {
-    map_uint_mpz dict;
     RCP<const Symbol> var = symbol("");
     if (a.get_var()->get_name() == "") {
         var = b.get_var();
@@ -278,23 +256,9 @@ RCP<const UnivariateIntPolynomial> sub_poly(const UnivariateIntPolynomial &a,
     } else {
         var = a.get_var();
     }
-    for (const auto &it : a.get_dict())
-        dict[it.first] = it.second;
-    for (const auto &it : b.get_dict())
-        dict[it.first] -= it.second;
+    UIntDict dict = a.get_int_dict();
+    dict -= b.get_int_dict();
     return UnivariateIntPolynomial::from_dict(var, std::move(dict));
-}
-
-// Calculates bit length of number, used in mul_poly() only
-template <typename T>
-unsigned int bit_length(T t)
-{
-    unsigned int count = 0;
-    while (t > 0) {
-        count++;
-        t = t >> 1;
-    }
-    return count;
 }
 
 RCP<const UnivariateIntPolynomial> mul_poly(const UnivariateIntPolynomial &a,
@@ -311,77 +275,34 @@ RCP<const UnivariateIntPolynomial> mul_poly(const UnivariateIntPolynomial &a,
         var = a.get_var();
     }
 
-    bool neg = false;
-
-    if ((--(a.get_dict().end()))->second < 0)
-        neg = not neg;
-    if ((--(b.get_dict().end()))->second < 0)
-        neg = not neg;
-
-    unsigned int N
-        = bit_length(std::min(a.get_degree() + 1, b.get_degree() + 1))
-          + bit_length(a.max_abs_coef()) + bit_length(b.max_abs_coef());
-
-    integer_class a1(1), b1, res;
-    a1 <<= N;
-    integer_class a2 = a1 / 2;
-    integer_class mask = a1 - 1;
-    integer_class a_val(a.eval_bit(N)), b_val(b.eval_bit(N));
-    integer_class s_val(a_val * b_val);
-    integer_class r = mp_abs(s_val);
-
-    std::vector<integer_class> v;
-    integer_class carry(0);
-    unsigned int deg = 0;
-    map_uint_mpz dict;
-
-    while (r != 0 or carry != 0) {
-        mp_and(b1, r, mask);
-        if (b1 < a2) {
-            res = b1 + carry;
-            if (res != 0)
-                dict[deg] = res;
-            carry = 0;
-        } else {
-            res = b1 - a1 + carry;
-            if (res != 0)
-                dict[deg] = res;
-            carry = 1;
-        }
-        r >>= N;
-        deg++;
-    }
-    if (neg)
-        return neg_poly(
-            *UnivariateIntPolynomial::from_dict(var, std::move(dict)));
-    else
-        return UnivariateIntPolynomial::from_dict(var, std::move(dict));
+    UIntDict dict = a.get_int_dict();
+    dict *= b.get_int_dict();
+    return UnivariateIntPolynomial::from_dict(var, std::move(dict));
 }
 
 UnivariatePolynomial::UnivariatePolynomial(
     const RCP<const Symbol> &var, const int &degree,
     const UnivariateExprPolynomial &&dict)
-    : degree_{degree}, var_{var}, expr_dict_{std::move(dict)}
+    : degree_{degree}, var_{var}, poly_{std::move(dict)}
 {
-    SYMENGINE_ASSERT(is_canonical(degree_, expr_dict_))
+    SYMENGINE_ASSERT(is_canonical(degree_, poly_))
 }
 
 UnivariatePolynomial::UnivariatePolynomial(const RCP<const Symbol> &var,
                                            const std::vector<Expression> &v)
     : var_{var}
 {
-    expr_dict_.dict_ = {};
+    poly_.dict_ = {};
     unsigned int deg = 0;
     for (unsigned int i = 0; i < v.size(); i++) {
         if (v[i] != 0) {
-            expr_dict_.dict_[i] = v[i];
+            poly_.dict_[i] = v[i];
             deg = i;
         }
     }
     if (var->get_name() == "")
-        if (!(expr_dict_.dict_.empty()
-              or (expr_dict_.dict_.size() == 1
-                  and expr_dict_.dict_.begin()->first == 0)))
+        if (!(poly_.dict_.empty()
+              or (poly_.dict_.size() == 1 and poly_.dict_.begin()->first == 0)))
             throw std::runtime_error("Should only have a constant term");
     degree_ = deg;
 }
@@ -415,16 +336,21 @@ std::size_t UnivariatePolynomial::__hash__() const
     std::size_t seed = UNIVARIATEPOLYNOMIAL;
 
     seed += hash_string(this->var_->get_name());
-    seed += expr_dict_.__hash__();
+    for (const auto &it : poly_.dict_) {
+        std::size_t temp = UNIVARIATEPOLYNOMIAL;
+        hash_combine<unsigned int>(temp, it.first);
+        hash_combine<Basic>(temp, *(it.second.get_basic()));
+        seed += temp;
+    }
     return seed;
 }
 
 bool UnivariatePolynomial::__eq__(const Basic &o) const
 {
     return eq(*var_, *(static_cast<const UnivariatePolynomial &>(o).var_))
-           and (expr_dict_.get_dict()
+           and (poly_.get_dict()
                 == static_cast<const UnivariatePolynomial &>(o)
-                       .expr_dict_.get_dict());
+                       .poly_.get_dict());
 }
 
 int UnivariatePolynomial::compare(const Basic &o) const
@@ -432,14 +358,14 @@ int UnivariatePolynomial::compare(const Basic &o) const
     const UnivariatePolynomial &s
         = static_cast<const UnivariatePolynomial &>(o);
 
-    if (expr_dict_.size() != s.expr_dict_.size())
-        return (expr_dict_.size() < s.expr_dict_.size()) ? -1 : 1;
+    if (poly_.size() != s.poly_.size())
+        return (poly_.size() < s.poly_.size()) ? -1 : 1;
 
     int cmp = var_->compare(*s.var_);
     if (cmp != 0)
         return cmp;
 
-    return map_int_Expr_compare(expr_dict_.get_dict(), s.expr_dict_.get_dict());
+    return map_int_Expr_compare(poly_.get_dict(), s.poly_.get_dict());
 }
 
 RCP<const UnivariatePolynomial>
@@ -462,7 +388,7 @@ UnivariatePolynomial::from_dict(const RCP<const Symbol> &var,
 vec_basic UnivariatePolynomial::get_args() const
 {
     vec_basic args;
-    for (const auto &p : expr_dict_.get_dict()) {
+    for (const auto &p : poly_.get_dict()) {
         if (p.first == 0)
             args.push_back(p.second.get_basic());
         else if (p.first == 1) {
@@ -476,15 +402,15 @@ vec_basic UnivariatePolynomial::get_args() const
             args.push_back(
                 mul(p.second.get_basic(), pow(var_, integer(p.first))));
     }
-    if (expr_dict_.empty())
+    if (poly_.empty())
         args.push_back(Expression(0).get_basic());
     return args;
 }
 
 Expression UnivariatePolynomial::max_coef() const
 {
-    Expression curr = expr_dict_.get_dict().begin()->second;
-    for (const auto &it : expr_dict_.get_dict())
+    Expression curr = poly_.get_dict().begin()->second;
+    for (const auto &it : poly_.get_dict())
         if (curr.get_basic()->__cmp__(*it.second.get_basic()))
             curr = it.second;
     return curr;
@@ -493,7 +419,7 @@ Expression UnivariatePolynomial::max_coef() const
 Expression UnivariatePolynomial::eval(const Expression &x) const
 {
     Expression ans = 0;
-    for (const auto &p : expr_dict_.get_dict()) {
+    for (const auto &p : poly_.get_dict()) {
         Expression temp;
         temp = pow_ex(x, Expression(p.first));
         ans += p.second * temp;
@@ -503,47 +429,46 @@ Expression UnivariatePolynomial::eval(const Expression &x) const
 
 bool UnivariatePolynomial::is_zero() const
 {
-    return expr_dict_.empty();
+    return poly_.empty();
 }
 
 bool UnivariatePolynomial::is_one() const
 {
-    return expr_dict_.size() == 1 and expr_dict_.get_dict().begin()->second == 1
-           and expr_dict_.get_dict().begin()->first == 0;
+    return poly_.size() == 1 and poly_.get_dict().begin()->second == 1
+           and poly_.get_dict().begin()->first == 0;
 }
 
 bool UnivariatePolynomial::is_minus_one() const
 {
-    return expr_dict_.size() == 1
-           and expr_dict_.get_dict().begin()->second == -1
-           and expr_dict_.get_dict().begin()->first == 0;
+    return poly_.size() == 1 and poly_.get_dict().begin()->second == -1
+           and poly_.get_dict().begin()->first == 0;
 }
 
 bool UnivariatePolynomial::is_integer() const
 {
-    if (expr_dict_.empty())
+    if (poly_.empty())
         return true;
-    return expr_dict_.size() == 1 and expr_dict_.get_dict().begin()->first == 0;
+    return poly_.size() == 1 and poly_.get_dict().begin()->first == 0;
 }
 
 bool UnivariatePolynomial::is_symbol() const
 {
-    return expr_dict_.size() == 1 and expr_dict_.get_dict().begin()->first == 1
-           and expr_dict_.get_dict().begin()->second == 1;
+    return poly_.size() == 1 and poly_.get_dict().begin()->first == 1
+           and poly_.get_dict().begin()->second == 1;
 }
 
 bool UnivariatePolynomial::is_mul() const
 {
-    return expr_dict_.size() == 1 and expr_dict_.get_dict().begin()->first != 0
-           and expr_dict_.get_dict().begin()->second != 1
-           and expr_dict_.get_dict().begin()->second != 0;
+    return poly_.size() == 1 and poly_.get_dict().begin()->first != 0
+           and poly_.get_dict().begin()->second != 1
+           and poly_.get_dict().begin()->second != 0;
 }
 
 bool UnivariatePolynomial::is_pow() const
 {
-    return expr_dict_.size() == 1 and expr_dict_.get_dict().begin()->second == 1
-           and expr_dict_.get_dict().begin()->first != 1
-           and expr_dict_.get_dict().begin()->first != 0;
+    return poly_.size() == 1 and poly_.get_dict().begin()->second == 1
+           and poly_.get_dict().begin()->first != 1
+           and poly_.get_dict().begin()->first != 0;
 }
 
 RCP<const UnivariatePolynomial> add_uni_poly(const UnivariatePolynomial &a,

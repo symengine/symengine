@@ -101,7 +101,9 @@ benchmarks/symbench_ginac
 benchmarks/lwbench
 benchmarks/lwbench_ginac
 benchmarks/expand6
+benchmarks/expand6b
 benchmarks/expand6_ginac
+benchmarks/expand6b_ginac
 benchmarks/expand7
 benchmarks/expand7_ginac
 benchmarks/series_expansion_sincos_piranha
