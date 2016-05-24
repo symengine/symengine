@@ -1057,7 +1057,6 @@ RCP<const MultivariatePolynomial> MultivariatePolynomial::from_dict(const set_sy
     umap_sym_uint degs;
     auto iter = d.begin();
     while (iter != d.end()) {
-        iter->second = expand(iter->second);
         if (Expression(0) == iter->second) {
             auto toErase = iter;
             iter++;
@@ -1086,14 +1085,17 @@ vec_basic  MultivariatePolynomial::get_args() const {
     //vec_uint_compare in dict.h
     std::vector<vec_uint> v = order_umap<vec_uint, umap_uvec_expr, vec_uint_compare>(dict_);
     for(const auto &p : v){
-	RCP<const Basic> res = ( (dict_.find(p)->second).get_basic() );
+        map_basic_basic b;
+	b.insert(std::pair<RCP<const Basic>, RCP<const Basic>>( (dict_.find(p)->second).get_basic(),
+            make_rcp<const Integer>(integer_class(1)) ) );
         int whichvar = 0;
         for (auto sym : vars_) {
-            if (0 != p[whichvar])
-                res = mul(res, pow(sym, make_rcp<Integer>(integer_class(p[whichvar])) ) );
+            if (Expression(0) != p[whichvar])
+                b.insert(std::pair<RCP<const Basic>, RCP<const Basic>>(sym,
+                    make_rcp<Integer>(integer_class(p[whichvar]))));
             whichvar++;
         }
-        args.push_back(res);
+        args.push_back(Mul::from_dict(make_rcp<const Integer>(integer_class(1)), std::move(b)));
     }
     return args;
 }
