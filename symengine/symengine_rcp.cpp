@@ -7,7 +7,8 @@
 #include <symengine/utilities/teuchos/Teuchos_RCP.hpp>
 #endif
 
-namespace SymEngine {
+namespace SymEngine
+{
 
 #ifdef WITH_SYMENGINE_RCP
 

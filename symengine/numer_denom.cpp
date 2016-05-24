@@ -10,26 +10,34 @@
 #include <symengine/constants.h>
 #include <symengine/visitor.h>
 
-namespace SymEngine {
+namespace SymEngine
+{
 
-class NumerDenomVisitor : public BaseVisitor<NumerDenomVisitor> {
+class NumerDenomVisitor : public BaseVisitor<NumerDenomVisitor>
+{
 private:
     Ptr<RCP<const Basic>> numer_, denom_;
-public:
-    NumerDenomVisitor(const Ptr<RCP<const Basic>> &numer, const Ptr<RCP<const Basic>> &denom)
-        : numer_{numer}, denom_{denom} { }
 
-    void apply(const Basic &b) {
+public:
+    NumerDenomVisitor(const Ptr<RCP<const Basic>> &numer,
+                      const Ptr<RCP<const Basic>> &denom)
+        : numer_{numer}, denom_{denom}
+    {
+    }
+
+    void apply(const Basic &b)
+    {
         b.accept(*this);
     }
 
-    void bvisit(const Mul &x) {
+    void bvisit(const Mul &x)
+    {
 
         RCP<const Basic> curr_num = one;
         RCP<const Basic> curr_den = one;
         RCP<const Basic> arg_num, arg_den;
 
-        for (const auto &arg: x.get_args()) {
+        for (const auto &arg : x.get_args()) {
             as_numer_denom(arg, outArg(arg_num), outArg(arg_den));
             curr_num = mul(curr_num, arg_num);
             curr_den = mul(curr_den, arg_den);
@@ -39,14 +47,15 @@ public:
         *denom_ = curr_den;
     }
 
-    void bvisit(const Add &x) {
+    void bvisit(const Add &x)
+    {
 
         RCP<const Basic> curr_num = zero;
         RCP<const Basic> curr_den = one;
         RCP<const Basic> arg_num, arg_den, den_mul, divx;
         RCP<const Basic> divx_num, divx_den;
 
-        for (const auto &arg: x.get_args()) {
+        for (const auto &arg : x.get_args()) {
             as_numer_denom(arg, outArg(arg_num), outArg(arg_den));
 
             divx = div(arg_den, curr_den);
@@ -70,7 +79,8 @@ public:
         *denom_ = curr_den;
     }
 
-    void bvisit(const Pow &x) {
+    void bvisit(const Pow &x)
+    {
 
         RCP<const Basic> base_, exp_, num, den;
         base_ = x.get_base();
@@ -78,8 +88,7 @@ public:
         as_numer_denom(base_, outArg(num), outArg(den));
 
         // if the exp is a negative numer, or is intuitively 'negative'
-        if ((is_a_Number(*exp_) and rcp_static_cast<const Number>(exp_)->is_negative()) or (could_extract_minus(exp_))) {
-            exp_ = mul(integer(-1), exp_);
+        if (handle_minus(exp_, outArg(exp_))) {
             *numer_ = pow(den, exp_);
             *denom_ = pow(num, exp_);
         } else {
@@ -88,7 +97,8 @@ public:
         }
     }
 
-    void bvisit(const Complex &x) {
+    void bvisit(const Complex &x)
+    {
 
         RCP<const Integer> den, den1, den2;
         RCP<const Integer> num1, num2;
@@ -107,18 +117,22 @@ public:
         *denom_ = den;
     }
 
-    void bvisit(const Rational &x) {
+    void bvisit(const Rational &x)
+    {
         *numer_ = x.get_num();
         *denom_ = x.get_den();
     }
 
-    void bvisit(const Basic &x) {
+    void bvisit(const Basic &x)
+    {
         *numer_ = x.rcp_from_this();
         *denom_ = one;
     }
 };
 
-void as_numer_denom(const RCP<const Basic> &x, const Ptr<RCP<const Basic>> &numer, const Ptr<RCP<const Basic>> &denom)
+void as_numer_denom(const RCP<const Basic> &x,
+                    const Ptr<RCP<const Basic>> &numer,
+                    const Ptr<RCP<const Basic>> &denom)
 {
     NumerDenomVisitor v(numer, denom);
     v.apply(*x);
