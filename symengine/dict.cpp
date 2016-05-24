@@ -2,85 +2,92 @@
 #include <symengine/integer.h>
 #include <symengine/expression.h>
 
-namespace SymEngine {
+namespace SymEngine
+{
 
-namespace {
-template<class T>
-    inline std::ostream& print_map(std::ostream& out, T& d)
-    {
-        out << "{";
-        for (auto p = d.begin(); p != d.end(); p++) {
-            if (p != d.begin()) out << ", ";
-            out << (p->first) << ": " << (p->second);
-        }
-        out << "}";
-        return out;
+namespace
+{
+template <class T>
+inline std::ostream &print_map(std::ostream &out, T &d)
+{
+    out << "{";
+    for (auto p = d.begin(); p != d.end(); p++) {
+        if (p != d.begin())
+            out << ", ";
+        out << (p->first) << ": " << (p->second);
     }
+    out << "}";
+    return out;
+}
 
-template<class T>
-    inline std::ostream& print_map_rcp(std::ostream& out, T& d)
-    {
-        out << "{";
-        for (auto p = d.begin(); p != d.end(); p++) {
-            if (p != d.begin()) out << ", ";
-            out << *(p->first) << ": " << *(p->second);
-        }
-        out << "}";
-        return out;
+template <class T>
+inline std::ostream &print_map_rcp(std::ostream &out, T &d)
+{
+    out << "{";
+    for (auto p = d.begin(); p != d.end(); p++) {
+        if (p != d.begin())
+            out << ", ";
+        out << *(p->first) << ": " << *(p->second);
     }
+    out << "}";
+    return out;
+}
 
-template<class T>
-    inline std::ostream& print_vec(std::ostream& out, T& d)
-    {
-        out << "[";
-        for (auto p = d.begin(); p != d.end(); p++) {
-            if (p != d.begin()) out << ", ";
-            out << *p;
-        }
-        out << "]";
-        return out;
+template <class T>
+inline std::ostream &print_vec(std::ostream &out, T &d)
+{
+    out << "[";
+    for (auto p = d.begin(); p != d.end(); p++) {
+        if (p != d.begin())
+            out << ", ";
+        out << *p;
     }
+    out << "]";
+    return out;
+}
 
-template<class T>
-    inline std::ostream& print_vec_rcp(std::ostream& out, T& d)
-    {
-        out << "[";
-        for (auto p = d.begin(); p != d.end(); p++) {
-            if (p != d.begin()) out << ", ";
-            out << **p;
-        }
-        out << "]";
-        return out;
+template <class T>
+inline std::ostream &print_vec_rcp(std::ostream &out, T &d)
+{
+    out << "[";
+    for (auto p = d.begin(); p != d.end(); p++) {
+        if (p != d.begin())
+            out << ", ";
+        out << **p;
     }
+    out << "]";
+    return out;
+}
 
-} //anonymous namespace
+} // anonymous namespace
 
-std::ostream& operator<<(std::ostream& out, const SymEngine::umap_basic_num& d)
+std::ostream &operator<<(std::ostream &out, const SymEngine::umap_basic_num &d)
 {
     return SymEngine::print_map_rcp(out, d);
 }
 
-std::ostream& operator<<(std::ostream& out, const SymEngine::map_basic_num& d)
+std::ostream &operator<<(std::ostream &out, const SymEngine::map_basic_num &d)
 {
     return SymEngine::print_map_rcp(out, d);
 }
 
-std::ostream& operator<<(std::ostream& out, const SymEngine::map_basic_basic& d)
+std::ostream &operator<<(std::ostream &out, const SymEngine::map_basic_basic &d)
 {
     return SymEngine::print_map_rcp(out, d);
 }
 
-std::ostream& operator<<(std::ostream& out, const SymEngine::umap_basic_basic& d)
+std::ostream &operator<<(std::ostream &out,
+                         const SymEngine::umap_basic_basic &d)
 {
     return SymEngine::print_map_rcp(out, d);
 }
 
-std::ostream& operator<<(std::ostream& out, const SymEngine::vec_basic& d)
+std::ostream &operator<<(std::ostream &out, const SymEngine::vec_basic &d)
 {
     return SymEngine::print_vec_rcp(out, d);
 }
 
-std::ostream& operator<<(std::ostream& out, const SymEngine::set_basic& d)
+std::ostream &operator<<(std::ostream &out, const SymEngine::set_basic &d)
 {
     return SymEngine::print_vec_rcp(out, d);
 }
@@ -88,10 +95,12 @@ std::ostream& operator<<(std::ostream& out, const SymEngine::set_basic& d)
 bool vec_basic_eq(const vec_basic &a, const vec_basic &b)
 {
     // Can't be equal if # of entries differ:
-    if (a.size() != b.size()) return false;
+    if (a.size() != b.size())
+        return false;
     // Loop over elements in "a" and "b":
     for (size_t i = 0; i < a.size(); i++) {
-        if (neq(*a[i], *b[i])) return false; // values not equal
+        if (neq(*a[i], *b[i]))
+            return false; // values not equal
     }
     return true;
 }
@@ -99,7 +108,8 @@ bool vec_basic_eq(const vec_basic &a, const vec_basic &b)
 bool vec_basic_eq_perm(const vec_basic &a, const vec_basic &b)
 {
     // Can't be equal if # of entries differ:
-    if (a.size() != b.size()) return false;
+    if (a.size() != b.size())
+        return false;
     // Loop over elements in "a"
     for (size_t i = 0; i < a.size(); i++) {
         // Find the element a[i] in "b"
@@ -111,7 +121,8 @@ bool vec_basic_eq_perm(const vec_basic &a, const vec_basic &b)
             }
         }
         // If not found, then a != b
-        if (not found) return false;
+        if (not found)
+            return false;
     }
     // If all elements were found, then a == b
     return true;
@@ -126,23 +137,21 @@ int vec_basic_compare(const vec_basic &A, const vec_basic &B)
     int cmp;
     for (; a != A.end(); ++a, ++b) {
         cmp = (*a)->__cmp__(**b);
-        if (cmp != 0) return cmp;
+        if (cmp != 0)
+            return cmp;
     }
     return 0;
 }
 
-bool map_uint_mpz_eq(const map_uint_mpz &a,
-        const map_uint_mpz &b)
+bool map_uint_mpz_eq(const map_uint_mpz &a, const map_uint_mpz &b)
 {
-    // Can't be equal if # of entries differ:
-    if (a.size() != b.size()) return false;
-    // Loop over keys in "a":
-    for (const auto &p: a) {
-        auto f = b.find(p.first);
-        if (f == b.end()) return false; // no such element in "b"
-        if (p.second != f->second) return false; // values not equal
-    }
-    return true;
+    return a.size() == b.size()
+           and std::equal(a.begin(), a.end(), b.begin(),
+                          [](const std::pair<unsigned, integer_class> &u,
+                             const std::pair<unsigned, integer_class> &v) {
+                              return u.first == v.first
+                                     and u.second == v.second;
+                          });
 }
 
 int map_uint_mpz_compare(const map_uint_mpz &A, const map_uint_mpz &B)
@@ -160,20 +169,16 @@ int map_uint_mpz_compare(const map_uint_mpz &A, const map_uint_mpz &B)
     return 0;
 }
 
-bool map_int_Expr_eq(const map_int_Expr &a,
-        const map_int_Expr &b)
+bool map_int_Expr_eq(const map_int_Expr &a, const map_int_Expr &b)
 {
-    // Can't be equal if # of entries differ:
-    if (a.size() != b.size()) return false;
-    // Loop over keys in "a":
-    for (const auto &p: a) {
-        auto f = b.find(p.first);
-        if (f == b.end()) return false; // no such element in "b"
-        if (p.second != f->second) return false; // values not equal
-    }
-    return true;
+    return a.size() == b.size()
+           and std::equal(a.begin(), a.end(), b.begin(),
+                          [](const std::pair<unsigned, Expression> &u,
+                             const std::pair<unsigned, Expression> &v) {
+                              return u.first == v.first
+                                     and u.second == v.second;
+                          });
 }
-
 
 int map_int_Expr_compare(const map_int_Expr &A, const map_int_Expr &B)
 {
@@ -185,7 +190,8 @@ int map_int_Expr_compare(const map_int_Expr &A, const map_int_Expr &B)
         if (a->first != b->first)
             return (a->first < b->first) ? -1 : 1;
         if (a->second != b->second)
-            return (a->second.get_basic()->__cmp__(*b->second.get_basic())) ? -1 : 1;
+            return (a->second.get_basic()->__cmp__(*b->second.get_basic())) ? -1
+                                                                            : 1;
     }
     return 0;
 }
@@ -313,6 +319,5 @@ bool umap_uvec_expr_eq(const umap_uvec_expr &a, const umap_uvec_expr &b){
     return true;
 
 }
-
 
 }
