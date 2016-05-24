@@ -16,6 +16,7 @@ class Basic;
 class Number;
 class Integer;
 class Expression;
+class Symbol;
 struct RCPBasicHash;
 struct RCPBasicKeyEq;
 struct RCPBasicKeyLess;
@@ -31,6 +32,7 @@ typedef std::unordered_map<RCP<const Basic>, RCP<const Basic>, RCPBasicHash,
 typedef std::vector<int> vec_int;
 typedef std::vector<RCP<const Basic>> vec_basic;
 typedef std::vector<RCP<const Integer>> vec_integer;
+typedef std::vector<RCP<const Symbol>> vec_sym;
 typedef std::set<RCP<const Basic>, RCPBasicKeyLess> set_basic;
 typedef std::multiset<RCP<const Basic>, RCPBasicKeyLess> multiset_basic;
 typedef std::map<vec_int, long long int> map_vec_int;
@@ -55,6 +57,7 @@ typedef struct {
     }
 } vec_int_hash;
 typedef std::unordered_map<vec_int, integer_class, vec_int_hash> umap_vec_mpz;
+typedef std::unordered_map<vec_int, Expression, vec_int_hash> umap_vec_expr;
 
 //! `insert(m, first, second)` is equivalent to `m[first] = second`, just
 //! faster,
@@ -174,6 +177,98 @@ int map_int_Expr_compare(const map_int_Expr &a, const map_int_Expr &b);
 //! misc functions
 bool vec_basic_eq_perm(const vec_basic &a, const vec_basic &b);
 
+int umap_vec_mpz_compare(const umap_vec_mpz &a, const umap_vec_mpz &b);
+long mpz_hash(const integer_class z);
+
+typedef std::vector<unsigned int> vec_uint;
+
+class vec_uint_hash
+{
+public:
+    std::size_t operator()(const vec_uint &v) const
+    {
+        std::size_t h = 0;
+        for (unsigned int i : v) {
+            h ^= i + 0x9e3779b + (h << 6) + (h >> 2);
+        }
+        return h;
+    }
+};
+
+typedef std::unordered_map<RCP<const Basic>, unsigned int, RCPBasicHash,
+                           RCPBasicKeyEq> umap_basic_uint;
+typedef std::unordered_map<vec_uint, integer_class, vec_uint_hash>
+    umap_uvec_mpz;
+typedef std::unordered_map<vec_uint, Expression, vec_uint_hash> umap_uvec_expr;
+
+// Takes an unordered map of type M with key type K and returns a vector of K
+// ordered by C.
+template <class K, class M, class C = std::less<K>>
+std::vector<K> order_umap(const M &d)
+{
+    std::set<K, C> s;
+    std::vector<K> v;
+    for (auto bucket : d) {
+        s.insert(bucket.first);
+    }
+    v.insert(v.begin(), s.begin(), s.end());
+    return v;
+}
+
+int umap_uvec_mpz_compare(const umap_uvec_mpz &a, const umap_uvec_mpz &b);
+int umap_vec_expr_compare(const umap_vec_expr &a, const umap_vec_expr &b);
+
+// copied from umap_eq, with derefrencing of image in map removed.
+template <class T>
+bool umap_eq2(const T &a, const T &b)
+{
+    // Can't be equal if # of entries differ:
+    if (a.size() != b.size())
+        return false;
+    // Loop over keys in "a":
+    for (const auto &p : a) {
+        // O(1) lookup of the key in "b":
+        auto f = b.find(p.first);
+        if (f == b.end())
+            return false; // no such element in "b"
+        if (p.second != f->second)
+            return false; // values not equal
+    }
+    return true;
+}
+
+template <class T>
+bool set_eq(const T &A, const T &B)
+{
+    // Can't be equal if # of entries differ:
+    if (A.size() != B.size())
+        return false;
+    // Loop over elements in "a" and "b":
+    auto a = A.begin();
+    auto b = B.begin();
+    for (; a != A.end(); ++a, ++b) {
+        if (neq(**a, **b))
+            return false; // values not equal
+    }
+    return true;
+}
+
+template <class T>
+int set_compare(const T &A, const T &B)
+{
+    if (A.size() != B.size())
+        return (A.size() < B.size()) ? -1 : 1;
+    auto a = A.begin();
+    auto b = B.begin();
+    int cmp;
+    for (; a != A.end(); ++a, ++b) {
+        cmp = (*a)->__cmp__(**b);
+        if (cmp != 0)
+            return cmp;
+    }
+    return 0;
+}
+
 //! print functions
 std::ostream &operator<<(std::ostream &out, const SymEngine::umap_basic_num &d);
 std::ostream &operator<<(std::ostream &out, const SymEngine::map_basic_num &d);
@@ -184,6 +279,9 @@ std::ostream &operator<<(std::ostream &out,
 std::ostream &operator<<(std::ostream &out, const SymEngine::vec_basic &d);
 std::ostream &operator<<(std::ostream &out, const SymEngine::set_basic &d);
 std::ostream &operator<<(std::ostream &out, const SymEngine::map_int_Expr &d);
+
+template <bool B, class T = void>
+using enable_if_t = typename std::enable_if<B, T>::type;
 
 } // SymEngine
 

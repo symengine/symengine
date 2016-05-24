@@ -11,6 +11,7 @@
 #include <symengine/mul.h>
 #include <symengine/pow.h>
 #include <symengine/polynomial.h>
+#include <symengine/polynomial_multivariate.h>
 #include <symengine/functions.h>
 #include <symengine/symbol.h>
 #include <symengine/integer.h>
@@ -40,9 +41,6 @@ public:
 
 void preorder_traversal(const Basic &b, Visitor &v);
 void postorder_traversal(const Basic &b, Visitor &v);
-
-template <bool B, class T = void>
-using enable_if_t = typename std::enable_if<B, T>::type;
 
 template <class Derived, class Base = Visitor>
 class BaseVisitor : public Base
