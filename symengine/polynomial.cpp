@@ -300,9 +300,6 @@ RCP<const UnivariatePolynomial>
 UnivariatePolynomial::from_dict(const RCP<const Symbol> &var,
                                 UnivariateExprPolynomial &&d)
 {
-    // int degree = 0;
-    // if (!d.get_dict().empty())
-    //     degree = (--(d.get_dict().end()))->first;
     return make_rcp<const UnivariatePolynomial>(var, std::move(d));
 }
 

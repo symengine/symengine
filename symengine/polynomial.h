@@ -270,13 +270,6 @@ public:
         return map_uint_mpz_compare(dict_, other.dict_);
     }
 
-    // inline unsigned int degree() const
-    // {
-    //     if (dict_.empty())
-    //         return 0;
-    //     return dict_.rbegin()->first;
-    // }
-
     integer_class max_abs_coef() const
     {
         integer_class curr(mp_abs(dict_.begin()->second));
