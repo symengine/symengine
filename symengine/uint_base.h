@@ -30,7 +30,7 @@ public:
     {
     }
 
-    // //! \returns `-1`,`0` or `1` after comparing
+    //! \returns `-1`,`0` or `1` after comparing
     virtual int compare(const Basic &o) const = 0;
 
     //! \returns `true` if two objects are equal
@@ -53,6 +53,48 @@ public:
     inline const Container &get_poly() const
     {
         return poly_;
+    }
+
+    friend RCP<const Poly> add_poly(const Poly &a, const Poly &b)
+    {
+        RCP<const Symbol> var = symbol("");
+        if (a.var_->get_name() == "") {
+            var = b.var_;
+        } else if (b.var_->get_name() == "") {
+            var = a.var_;
+        } else if (!(a.var_->__eq__(*b.var_))) {
+            throw std::runtime_error("Error: variables must agree.");
+        } else {
+            var = a.var_;
+        }
+
+        Container dict = a.poly_;
+        dict += b.poly_;
+        return Poly::from_dict(var, std::move(dict));
+    }
+
+    friend RCP<const Poly> neg_poly(const Poly &a)
+    {
+        Container dict = -(a.poly_);
+        return Poly::from_dict(a.var_, std::move(dict));
+    }
+
+    friend RCP<const Poly> sub_poly(const Poly &a, const Poly &b)
+    {
+        RCP<const Symbol> var = symbol("");
+        if (a.var_->get_name() == "") {
+            var = b.var_;
+        } else if (b.var_->get_name() == "") {
+            var = a.var_;
+        } else if (!(a.var_->__eq__(*b.var_))) {
+            throw std::runtime_error("Error: variables must agree.");
+        } else {
+            var = a.var_;
+        }
+
+        Container dict = a.poly_;
+        dict -= b.poly_;
+        return Poly::from_dict(var, std::move(dict));
     }
 };
 }
