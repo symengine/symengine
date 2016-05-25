@@ -142,7 +142,15 @@ void StrPrinter::bvisit(const FiniteSet &x)
 
 void StrPrinter::bvisit(const GaloisField &x)
 {
-    str_ = "TODO";
+    std::ostringstream s;
+    s << "{";
+    for (auto p = x.dict_.begin(); p != x.dict_.end(); p++) {
+        if (p != x.dict_.begin())
+            s << ", ";
+        s << (p->first) << ": " << (p->second);
+    }
+    s << "}";
+    str_ = s.str();
 }
 
 #ifdef HAVE_SYMENGINE_MPFR
