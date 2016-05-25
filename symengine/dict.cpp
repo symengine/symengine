@@ -107,16 +107,6 @@ int vec_basic_compare(const vec_basic &a, const vec_basic &b)
     return vec_set_compare<vec_basic>(a, b);
 }
 
-bool multiset_basic_eq(const multiset_basic &a, const multiset_basic &b)
-{
-    return vec_set_eq<multiset_basic>(a, b);
-}
-
-int multiset_basic_compare(const multiset_basic &a, const multiset_basic &b)
-{
-    return vec_set_compare<multiset_basic>(a, b);
-}
-
 //! non-derivable functions
 int map_uint_mpz_compare(const map_uint_mpz &A, const map_uint_mpz &B)
 {
@@ -146,6 +136,75 @@ int map_int_Expr_compare(const map_int_Expr &A, const map_int_Expr &B)
         if (a->second != b->second)
             return (a->second.get_basic()->__cmp__(*b->second.get_basic())) ? -1
                                                                             : 1;
+    }
+    return 0;
+}
+
+bool multiset_basic_eq(const multiset_basic &a, const multiset_basic &b)
+{
+    return set_eq<multiset_basic>(a, b);
+}
+
+int multiset_basic_compare(const multiset_basic &a, const multiset_basic &b)
+{
+    return set_compare<multiset_basic>(a, b);
+}
+
+long mpz_hash(const integer_class z)
+{
+    return mp_get_si(z);
+}
+
+int umap_uvec_mpz_compare(const umap_uvec_mpz &a, const umap_uvec_mpz &b)
+{
+    std::vector<vec_uint> va = order_umap<vec_uint, umap_uvec_mpz>(a);
+    std::vector<vec_uint> vb = order_umap<vec_uint, umap_uvec_mpz>(b);
+
+    if (va.size() < vb.size())
+        return -1;
+    if (vb.size() < va.size())
+        return 1;
+
+    for (unsigned int i = 0; i < va.size() && i < vb.size(); i++) {
+        if (va[i] < vb[i]) {
+            return -1;
+        } else if (va[i] > vb[i]) {
+            return 1;
+        } else {
+            if (a.find(va[i])->second != b.find(vb[i])->second) {
+                if (a.find(va[i])->second < b.find(vb[i])->second) {
+                    return -1;
+                } else {
+                    return 1;
+                }
+            }
+        }
+    }
+    return 0;
+}
+
+int umap_vec_expr_compare(const umap_vec_expr &a, const umap_vec_expr &b)
+{
+    std::vector<vec_int> va = order_umap<vec_int, umap_vec_expr>(a);
+    std::vector<vec_int> vb = order_umap<vec_int, umap_vec_expr>(b);
+
+    if (va.size() < vb.size())
+        return -1;
+    if (vb.size() < va.size())
+        return 1;
+
+    for (unsigned int i = 0; i < va.size() && i < vb.size(); i++) {
+        if (va[i] < vb[i]) {
+            return -1;
+        } else if (va[i] > vb[i]) {
+            return 1;
+        } else {
+            if (a.find(va[i])->second != b.find(vb[i])->second) {
+                return (a.find(va[i])->second)
+                    .get_basic()
+                    ->__cmp__(*((b.find(vb[i])->second).get_basic()));
+            }
+        }
     }
     return 0;
 }
