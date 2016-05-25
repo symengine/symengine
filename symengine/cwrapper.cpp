@@ -29,6 +29,7 @@ using SymEngine::integer_class;
 using SymEngine::rational_class;
 using SymEngine::Number;
 using SymEngine::Complex;
+using SymEngine::RealDouble;
 using SymEngine::rcp_static_cast;
 using SymEngine::is_a;
 using SymEngine::RCPBasicKeyLess;
@@ -184,6 +185,11 @@ void integer_set_mpz(basic s, const mpz_t i)
 void integer_set_str(basic s, char *c)
 {
     s->m = SymEngine::integer(integer_class(c));
+}
+
+void real_double_set_str(basic s, char *c)
+{
+    s->m = SymEngine::real_double(strtod(c, NULL));
 }
 
 signed long integer_get_si(const basic s)

@@ -105,6 +105,21 @@ void test_complex() {
     basic_free_stack(f);
 }
 
+void test_real_double()
+{
+    basic d;
+    char *s = "123.456";
+    basic_new_stack(d);
+    char *s2;
+    s2 = basic_str(d);
+    
+    real_double_set_str(d, s);
+    SYMENGINE_C_ASSERT(basic_get_type(d) == SYMENGINE_REAL_DOUBLE);
+    SYMENGINE_C_ASSERT(strcmp(s2, "123.456") == 0);
+    
+    basic_free_stack(d);
+}
+
 void test_CVectorInt1()
 {
     // Allocate on heap
@@ -675,5 +690,6 @@ int main(int argc, char* argv[])
     test_ascii_art();
     test_functions();
     test_ntheory();
+    test_real_double();
     return 0;
 }

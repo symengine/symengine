@@ -124,6 +124,8 @@ void integer_set_ui(basic s, unsigned long i);
 void integer_set_mpz(basic s, const mpz_t i);
 //! Assign to s, an integer that has base 10 representation c.
 void integer_set_str(basic s, char *c);
+//! Assing to s, a real_double that has base 10 representation c.
+void real_double_set_str(basic s, char *c);
 
 //! Returns signed long value of s.
 signed long integer_get_si(const basic s);
