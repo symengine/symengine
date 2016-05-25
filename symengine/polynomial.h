@@ -170,6 +170,13 @@ public:
     {
         return dict_.empty();
     }
+
+    Key degree() const
+    {
+        if (dict_.empty())
+            return Key(0);
+        return dict_.rbegin()->first;
+    }
 };
 
 class UIntDict : public ODictWrapper<unsigned int, integer_class, UIntDict>
@@ -263,12 +270,12 @@ public:
         return map_uint_mpz_compare(dict_, other.dict_);
     }
 
-    inline unsigned int degree() const
-    {
-        if (dict_.empty())
-            return 0;
-        return dict_.rbegin()->first;
-    }
+    // inline unsigned int degree() const
+    // {
+    //     if (dict_.empty())
+    //         return 0;
+    //     return dict_.rbegin()->first;
+    // }
 
     integer_class max_abs_coef() const
     {
@@ -288,15 +295,14 @@ class UnivariateIntPolynomial
 public:
     IMPLEMENT_TYPEID(UNIVARIATEINTPOLYNOMIAL)
     //! Constructor of UnivariateIntPolynomial class
-    UnivariateIntPolynomial(const RCP<const Symbol> &var,
-                            const unsigned int &degree, UIntDict &&dict);
+    UnivariateIntPolynomial(const RCP<const Symbol> &var, UIntDict &&dict);
     //! Constructor using a dense vector of integer_class coefficients
 
     UnivariateIntPolynomial(const RCP<const Symbol> &var,
                             const std::vector<integer_class> &v);
 
     //! \return true if canonical
-    bool is_canonical(const unsigned int &degree, const UIntDict &dict) const;
+    bool is_canonical(const UIntDict &dict) const;
     //! \return size of the hash
     std::size_t __hash__() const;
     int compare(const Basic &o) const;
@@ -337,6 +343,12 @@ public:
     {
         return poly_.dict_;
     }
+
+    inline unsigned int get_degree() const
+    {
+        return poly_.degree();
+    }
+
 }; // UnivariateIntPolynomial
 
 //! Multiplying two UnivariateIntPolynomial a and b
@@ -532,21 +544,19 @@ public:
 class UnivariatePolynomial : public Basic
 {
 private:
-    int degree_;
     RCP<const Symbol> var_;
     UnivariateExprPolynomial poly_;
 
 public:
     IMPLEMENT_TYPEID(UNIVARIATEPOLYNOMIAL)
     //! Constructor of UnivariatePolynomial class
-    UnivariatePolynomial(const RCP<const Symbol> &var, const int &degree,
+    UnivariatePolynomial(const RCP<const Symbol> &var,
                          const UnivariateExprPolynomial &&dict);
     //! Constructor using a dense vector of Expression
     UnivariatePolynomial(const RCP<const Symbol> &var,
                          const std::vector<Expression> &v);
 
-    bool is_canonical(const int &degree,
-                      const UnivariateExprPolynomial &dict) const;
+    bool is_canonical(const UnivariateExprPolynomial &dict) const;
     std::size_t __hash__() const;
     bool __eq__(const Basic &o) const;
     int compare(const Basic &o) const;
@@ -582,7 +592,7 @@ public:
 
     inline int get_degree() const
     {
-        return degree_;
+        return poly_.degree();
     }
     inline RCP<const Symbol> get_var() const
     {

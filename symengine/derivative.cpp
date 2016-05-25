@@ -486,13 +486,10 @@ public:
                 if (p.first != 0)
                     d[p.first - 1] = p.second * p.first;
             }
-            int degree = 0;
-            if (!d.empty())
-                degree = (--(d.end()))->first;
-            return make_rcp<const Poly>(self.get_var(), degree, std::move(d));
+            return make_rcp<const Poly>(self.get_var(), std::move(d));
         } else {
             Dict d;
-            return make_rcp<const Poly>(self.get_var(), 0, std::move(d));
+            return make_rcp<const Poly>(self.get_var(), std::move(d));
         }
     }
 

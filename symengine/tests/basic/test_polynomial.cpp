@@ -63,8 +63,8 @@ TEST_CASE("Adding two UnivariateIntPolynomial", "[UnivariateIntPolynomial]")
     UIntDict adict_({{0, 1_z}, {1, 2_z}, {2, 1_z}});
     UIntDict bdict_({{0, 2_z}, {1, 3_z}, {2, 4_z}});
     UIntDict gdict_({{0, 2_z}, {1, 3_z}, {2, 4_z}});
-    const UnivariateIntPolynomial a(x, 2, std::move(adict_));
-    const UnivariateIntPolynomial b(x, 2, std::move(bdict_));
+    const UnivariateIntPolynomial a(x, std::move(adict_));
+    const UnivariateIntPolynomial b(x, std::move(bdict_));
 
     RCP<const Basic> c = add_poly(a, b);
     REQUIRE(c->__str__() == "5*x**2 + 5*x + 3");
@@ -76,7 +76,7 @@ TEST_CASE("Adding two UnivariateIntPolynomial", "[UnivariateIntPolynomial]")
     REQUIRE(e->__str__() == "x**2 + 2*x + 2");
     REQUIRE(f->__str__() == "x**2 + 2*x + 2");
 
-    const UnivariateIntPolynomial g(y, 2, std::move(gdict_));
+    const UnivariateIntPolynomial g(y, std::move(gdict_));
     CHECK_THROWS_AS(add_poly(a, g), std::runtime_error);
 }
 
@@ -84,7 +84,7 @@ TEST_CASE("Negative of a UnivariateIntPolynomial", "[UnivariateIntPolynomial]")
 {
     RCP<const Symbol> x = symbol("x");
     UIntDict adict_({{0, 1_z}, {1, 2_z}, {2, 1_z}});
-    const UnivariateIntPolynomial a(x, 2, std::move(adict_));
+    const UnivariateIntPolynomial a(x, std::move(adict_));
 
     RCP<const UnivariateIntPolynomial> b = neg_poly(a);
     REQUIRE(b->__str__() == "-x**2 - 2*x - 1");
@@ -101,10 +101,10 @@ TEST_CASE("Subtracting two UnivariateIntPolynomial",
     UIntDict cdict_({{0, 2_z}});
     UIntDict fdict_({{0, 2_z}});
 
-    const UnivariateIntPolynomial a(x, 2, std::move(adict_));
-    const UnivariateIntPolynomial b(x, 2, std::move(bdict_));
-    const UnivariateIntPolynomial c(none, 0, std::move(cdict_));
-    const UnivariateIntPolynomial f(y, 0, std::move(fdict_));
+    const UnivariateIntPolynomial a(x, std::move(adict_));
+    const UnivariateIntPolynomial b(x, std::move(bdict_));
+    const UnivariateIntPolynomial c(none, std::move(cdict_));
+    const UnivariateIntPolynomial f(y, std::move(fdict_));
 
     RCP<const Basic> d = sub_poly(b, a);
     REQUIRE(d->__str__() == "3*x**2 + x + 1");
@@ -128,11 +128,11 @@ TEST_CASE("Multiplication of two UnivariateIntPolynomial",
     UIntDict fdict_({{0, 6_z}, {1, -2_z}, {2, 3_z}});
     UIntDict kdict_({{0, -1_z}, {1, -2_z}, {2, -100_z}});
 
-    const UnivariateIntPolynomial a(x, 2, std::move(adict_));
-    const UnivariateIntPolynomial b(x, 2, std::move(bdict_));
-    const UnivariateIntPolynomial e(x, 2, std::move(edict_));
-    const UnivariateIntPolynomial f(x, 2, std::move(fdict_));
-    const UnivariateIntPolynomial k(x, 2, std::move(kdict_));
+    const UnivariateIntPolynomial a(x, std::move(adict_));
+    const UnivariateIntPolynomial b(x, std::move(bdict_));
+    const UnivariateIntPolynomial e(x, std::move(edict_));
+    const UnivariateIntPolynomial f(x, std::move(fdict_));
+    const UnivariateIntPolynomial k(x, std::move(kdict_));
 
     RCP<const UnivariateIntPolynomial> c = mul_poly(a, a);
     RCP<const UnivariateIntPolynomial> d = mul_poly(a, b);
@@ -340,8 +340,8 @@ TEST_CASE("Adding two UnivariatePolynomial", "[UnivariatePolynomial]")
     RCP<const Symbol> none = symbol("");
     UnivariateExprPolynomial adict_({{0, 1}, {1, 2}, {2, symbol("a")}});
     UnivariateExprPolynomial bdict_({{0, 2}, {1, 3}, {2, symbol("b")}});
-    const UnivariatePolynomial a(x, 2, std::move(adict_));
-    const UnivariatePolynomial b(x, 2, std::move(bdict_));
+    const UnivariatePolynomial a(x, std::move(adict_));
+    const UnivariatePolynomial b(x, std::move(bdict_));
 
     RCP<const Basic> c = add_uni_poly(a, b);
     REQUIRE(c->__str__() == "(a + b)*x**2 + 5*x + 3");
@@ -360,7 +360,7 @@ TEST_CASE("Negative of a UnivariatePolynomial", "[UnivariatePolynomial]")
     RCP<const Symbol> x = symbol("x");
     UnivariateExprPolynomial adict_(
         {{0, 1}, {1, symbol("a")}, {2, symbol("c")}});
-    const UnivariatePolynomial a(x, 2, std::move(adict_));
+    const UnivariatePolynomial a(x, std::move(adict_));
 
     RCP<const UnivariatePolynomial> b = neg_uni_poly(a);
     REQUIRE(b->__str__() == "-c*x**2 - a*x - 1");
@@ -381,8 +381,8 @@ TEST_CASE("Subtracting two UnivariatePolynomial", "[UnivariatePolynomial]")
     UnivariateExprPolynomial adict_({{0, 1}, {1, 2}, {2, 1}});
     UnivariateExprPolynomial bdict_(
         {{0, 2}, {1, symbol("b")}, {2, symbol("a")}});
-    const UnivariatePolynomial a(x, 2, std::move(adict_));
-    const UnivariatePolynomial b(x, 2, std::move(bdict_));
+    const UnivariatePolynomial a(x, std::move(adict_));
+    const UnivariatePolynomial b(x, std::move(bdict_));
 
     RCP<const Basic> c = sub_uni_poly(b, a);
     REQUIRE(c->__str__() == "(-1 + a)*x**2 + (-2 + b)*x + 1");
