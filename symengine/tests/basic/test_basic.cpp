@@ -130,12 +130,12 @@ TEST_CASE("Symbol dict: Basic", "[basic]")
     insert(ubb, y, i3);
     buffer.str("");
     buffer << vb;
-    REQUIRE(buffer.str() == "[]");
+    REQUIRE(buffer.str() == "{}");
     vb.push_back(x);
     vb.push_back(i3);
     buffer.str("");
     buffer << vb;
-    REQUIRE(buffer.str() == "[x, 3]");
+    REQUIRE(buffer.str() == "{x, 3}");
     REQUIRE(vec_basic_eq(vb, {x, i3}));
     REQUIRE(vec_basic_compare(vb, {x, i3}) == 0);
     REQUIRE(not vec_basic_eq(vb, {i3, x}));
@@ -145,7 +145,7 @@ TEST_CASE("Symbol dict: Basic", "[basic]")
     REQUIRE(vec_basic_compare(vb, {i3}) == 1);
     buffer.str("");
     buffer << sb;
-    REQUIRE(buffer.str() == "[]");
+    REQUIRE(buffer.str() == "{}");
     sb.insert(i2);
     sb.insert(y);
 
@@ -179,11 +179,11 @@ TEST_CASE("Symbol dict: Basic", "[basic]")
     buffer.str("");
     buffer << vb;
     bool check_vec_str;
-    check_vec_str = buffer.str() == "[x, 3]" or buffer.str() == "[3, x]";
+    check_vec_str = buffer.str() == "{x, 3}" or buffer.str() == "{3, x}";
     REQUIRE(check_vec_str);
     buffer.str("");
     buffer << sb;
-    check_vec_str = buffer.str() == "[2, y]" or buffer.str() == "[y, 2]";
+    check_vec_str = buffer.str() == "{2, y}" or buffer.str() == "{y, 2}";
     REQUIRE(check_vec_str);
 
     map_uint_mpz a = {{0, 1_z}, {1, 2_z}, {2, 1_z}};
