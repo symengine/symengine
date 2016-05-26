@@ -513,18 +513,6 @@ RCP<const UnivariatePolynomial> sub_uni_poly(const UnivariatePolynomial &a,
     return univariate_polynomial(var, std::move(dict));
 }
 
-void gradeSchool(Expression *a, Expression *b, Expression *res, int d)
-{
-    int i, j;
-    for (i = 0; i < 2 * d; i++)
-        res[i] = 0;
-    for (i = 0; i < d; i++) {
-        for (j = 0; j < d; j++) {
-            res[i + j] += a[i] * b[j];
-        }
-    }
-}
-
 void karatsuba(Expression *a, Expression *b, Expression *res, int d)
 {
     Expression *ar = &a[0];                 // low-order half of a
@@ -538,8 +526,13 @@ void karatsuba(Expression *a, Expression *b, Expression *res, int d)
     Expression *x3 = &res[d * 2];           // asum*bsum's location
 
     if (d <= 6) {
-        //*res = (*a) * (*b);
-        gradeSchool(a, b, res, d);
+        for (int i = 0; i < 2 * d; i++)
+            res[i] = 0;
+        for (int i = 0; i < d; i++) {
+            for (int j = 0; j < d; j++) {
+                res[i + j] += a[i] * b[j];
+            }
+        }
         return;
     }
 
