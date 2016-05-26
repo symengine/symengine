@@ -513,6 +513,41 @@ RCP<const UnivariatePolynomial> sub_uni_poly(const UnivariatePolynomial &a,
     return univariate_polynomial(var, std::move(dict));
 }
 
+void karatsuba(Expression *a, Expression *b, Expression *res, int d)
+{
+    Expression *ar = &a[0];                 // low-order half of a
+    Expression *al = &a[d / 2];             // high-order half of a
+    Expression *br = &b[0];                 // low-order half of b
+    Expression *bl = &b[d / 2];             // high-order half of b
+    Expression *asum = &res[d * 5];         // sum of a's halves
+    Expression *bsum = &res[d * 5 + d / 2]; // sum of b's halves
+    Expression *x1 = &res[d * 0];           // ar*br's location
+    Expression *x2 = &res[d * 1];           // al*bl's location
+    Expression *x3 = &res[d * 2];           // asum*bsum's location
+
+    if (d == 6) {
+        *res = (*a) * (*b);
+        //gradeSchool(a, b, res, d);
+        return;
+    }
+
+    // compute asum and bsum
+    for (int i = 0; i < d / 2; i++) {
+        asum[i] = al[i] + ar[i];
+        bsum[i] = bl[i] + br[i];
+    }
+
+    karatsuba(ar, br, x1, d / 2);
+    karatsuba(al, bl, x2, d / 2);
+    karatsuba(asum, bsum, x3, d / 2);
+
+    // combine recursive steps
+    for (int i = 0; i < d; i++)
+        x3[i] = x3[i] - x1[i] - x2[i];
+    for (int i = 0; i < d; i++)
+        res[i + d / 2] += x3[i];
+}
+
 RCP<const UnivariatePolynomial> mul_uni_poly(const UnivariatePolynomial &a,
                                              const UnivariatePolynomial &b)
 {
@@ -526,9 +561,21 @@ RCP<const UnivariatePolynomial> mul_uni_poly(const UnivariatePolynomial &a,
     } else {
         var = a.get_var();
     }
-    UnivariateExprPolynomial dict = a.get_expr_dict();
-    dict *= b.get_expr_dict();
-    return univariate_polynomial(var, std::move(dict));
+
+    unsigned long n = 1, t = a.get_degree() + b.get_degree() + 1;
+
+    while (n <= t)
+        n <<= 1;
+
+    std::vector<Expression> fa(n), fb(n), res(n);
+
+    for (int i = 0; i <= std::max(a.get_degree(), b.get_degree()); i++) {
+        fa[i] = a.get_expr_dict().find_cf(i);
+        fb[i] = b.get_expr_dict().find_cf(i);
+    }
+
+    karatsuba(&fa[0], &fb[0], &res[0], n);
+    return UnivariatePolynomial::from_vec(var, res);
 }
 
 } // SymEngine
