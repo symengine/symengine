@@ -513,6 +513,17 @@ RCP<const UnivariatePolynomial> sub_uni_poly(const UnivariatePolynomial &a,
     return univariate_polynomial(var, std::move(dict));
 }
 
+void gradeSchool(Expression *a, Expression *b, Expression *res, int d)
+{
+    int i, j;
+    // // for(i = 0; i < 2 * d; i++) res[i] = 0;
+    for(i = 0; i < d; i++) {
+        for(j = 0; j < d; j++) {
+            res[i + j] += a[i] * b[j];
+        }
+    }
+}
+
 void karatsuba(Expression *a, Expression *b, Expression *res, int d)
 {
     Expression *ar = &a[0];                 // low-order half of a
@@ -525,9 +536,9 @@ void karatsuba(Expression *a, Expression *b, Expression *res, int d)
     Expression *x2 = &res[d * 1];           // al*bl's location
     Expression *x3 = &res[d * 2];           // asum*bsum's location
 
-    if (d == 6) {
-        *res = (*a) * (*b);
-        //gradeSchool(a, b, res, d);
+    if (d <= 6) {
+        // *res = (*a) * (*b);
+        gradeSchool(a, b, res, d);
         return;
     }
 
@@ -567,14 +578,15 @@ RCP<const UnivariatePolynomial> mul_uni_poly(const UnivariatePolynomial &a,
     while (n <= t)
         n <<= 1;
 
-    std::vector<Expression> fa(n), fb(n), res(n);
+    std::vector<Expression> fa, fb, res(6 * n);
 
-    for (int i = 0; i <= std::max(a.get_degree(), b.get_degree()); i++) {
-        fa[i] = a.get_expr_dict().find_cf(i);
-        fb[i] = b.get_expr_dict().find_cf(i);
+    for (int i = 0; i < (int)n; i++) {
+        fa.push_back(a.get_expr_dict().find_cf(i));
+        fb.push_back(b.get_expr_dict().find_cf(i));
     }
 
     karatsuba(&fa[0], &fb[0], &res[0], n);
+    res.resize(t);
     return UnivariatePolynomial::from_vec(var, res);
 }
 
