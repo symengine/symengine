@@ -515,7 +515,12 @@ public:
         }
         return o.str();
     }
-
+    int get_degree() const {
+        if (dict_.empty())
+            return 0;
+        else
+            return (--(dict_.end()))->first;
+    }
     // const umap_int_basic get_basic() const
     const RCP<const Basic> get_basic(std::string var) const
     {
