@@ -50,7 +50,7 @@ public:
                and poly_ == static_cast<const Poly &>(o).poly_;
     }
 
-    inline RCP<const Symbol> get_var() const
+    inline const RCP<const Symbol> &get_var() const
     {
         return var_;
     }
