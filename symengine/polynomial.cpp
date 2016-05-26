@@ -213,16 +213,16 @@ RCP<const UnivariateIntPolynomial> mul_poly(const UnivariateIntPolynomial &a,
     return UnivariateIntPolynomial::from_dict(var, std::move(dict));
 }
 
-UnivariatePolynomial::UnivariatePolynomial(
-    const RCP<const Symbol> &var, const UnivariateExprPolynomial &&dict)
-    : var_{var}, poly_{std::move(dict)}
+UnivariatePolynomial::UnivariatePolynomial(const RCP<const Symbol> &var,
+                                           UnivariateExprPolynomial &&dict)
+    : UIntPolyBase(var, std::move(dict))
 {
     SYMENGINE_ASSERT(is_canonical(poly_))
 }
 
 UnivariatePolynomial::UnivariatePolynomial(const RCP<const Symbol> &var,
                                            const std::vector<Expression> &v)
-    : var_{var}
+    : UIntPolyBase(var, std::move(v))
 {
     poly_.dict_ = {};
     for (unsigned int i = 0; i < v.size(); i++) {
@@ -264,14 +264,6 @@ std::size_t UnivariatePolynomial::__hash__() const
         seed += temp;
     }
     return seed;
-}
-
-bool UnivariatePolynomial::__eq__(const Basic &o) const
-{
-    return eq(*var_, *(static_cast<const UnivariatePolynomial &>(o).var_))
-           and (poly_.get_dict()
-                == static_cast<const UnivariatePolynomial &>(o)
-                       .poly_.get_dict());
 }
 
 int UnivariatePolynomial::compare(const Basic &o) const
@@ -389,48 +381,6 @@ bool UnivariatePolynomial::is_pow() const
            and poly_.get_dict().begin()->first != 0;
 }
 
-RCP<const UnivariatePolynomial> add_uni_poly(const UnivariatePolynomial &a,
-                                             const UnivariatePolynomial &b)
-{
-    RCP<const Symbol> var = symbol("");
-    if (a.get_var()->get_name() == "") {
-        var = b.get_var();
-    } else if (b.get_var()->get_name() == "") {
-        var = a.get_var();
-    } else if (!(a.get_var()->__eq__(*b.get_var()))) {
-        throw std::runtime_error("Error: variables must agree.");
-    } else {
-        var = a.get_var();
-    }
-    UnivariateExprPolynomial dict = a.get_expr_dict();
-    dict += b.get_expr_dict();
-    return univariate_polynomial(var, std::move(dict));
-}
-
-RCP<const UnivariatePolynomial> neg_uni_poly(const UnivariatePolynomial &a)
-{
-    UnivariateExprPolynomial dict = -(a.get_expr_dict());
-    return univariate_polynomial(a.get_var(), std::move(dict));
-}
-
-RCP<const UnivariatePolynomial> sub_uni_poly(const UnivariatePolynomial &a,
-                                             const UnivariatePolynomial &b)
-{
-    RCP<const Symbol> var = symbol("");
-    if (a.get_var()->get_name() == "") {
-        var = b.get_var();
-    } else if (b.get_var()->get_name() == "") {
-        var = a.get_var();
-    } else if (!(a.get_var()->__eq__(*b.get_var()))) {
-        throw std::runtime_error("Error: variables must agree.");
-    } else {
-        var = a.get_var();
-    }
-    UnivariateExprPolynomial dict = a.get_expr_dict();
-    dict -= b.get_expr_dict();
-    return univariate_polynomial(var, std::move(dict));
-}
-
 RCP<const UnivariatePolynomial> mul_uni_poly(const UnivariatePolynomial &a,
                                              const UnivariatePolynomial &b)
 {
@@ -444,8 +394,8 @@ RCP<const UnivariatePolynomial> mul_uni_poly(const UnivariatePolynomial &a,
     } else {
         var = a.get_var();
     }
-    UnivariateExprPolynomial dict = a.get_expr_dict();
-    dict *= b.get_expr_dict();
+    UnivariateExprPolynomial dict = a.get_poly();
+    dict *= b.get_poly();
     return univariate_polynomial(var, std::move(dict));
 }
 

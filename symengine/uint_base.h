@@ -22,14 +22,23 @@ public:
     {
     }
 
+    // unify these two constructor? another template would be required
+    // may solve some more problems, like `get_degree` virtualization
     UIntPolyBase(const RCP<const Symbol> &var,
                  const std::vector<integer_class> &v)
         : var_{var}
     {
     }
 
+    UIntPolyBase(const RCP<const Symbol> &var, const std::vector<Expression> &v)
+        : var_{var}
+    {
+    }
+
+    // TODO think of something to make this purely virtual
     //! \returns the degree of the polynomial
-    virtual unsigned int get_degree() const = 0;
+    // virtual unsigned int get_degree() const = 0;
+
     //! \returns `-1`,`0` or `1` after comparing
     virtual int compare(const Basic &o) const = 0;
 

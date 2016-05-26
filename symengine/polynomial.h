@@ -534,24 +534,20 @@ public:
     }
 }; // UnivariateExprPolynomial
 
-class UnivariatePolynomial : public Basic
+class UnivariatePolynomial
+    : public UIntPolyBase<UnivariateExprPolynomial, UnivariatePolynomial>
 {
-private:
-    RCP<const Symbol> var_;
-    UnivariateExprPolynomial poly_;
-
 public:
     IMPLEMENT_TYPEID(UNIVARIATEPOLYNOMIAL)
     //! Constructor of UnivariatePolynomial class
     UnivariatePolynomial(const RCP<const Symbol> &var,
-                         const UnivariateExprPolynomial &&dict);
+                         UnivariateExprPolynomial &&dict);
     //! Constructor using a dense vector of Expression
     UnivariatePolynomial(const RCP<const Symbol> &var,
                          const std::vector<Expression> &v);
 
     bool is_canonical(const UnivariateExprPolynomial &dict) const;
     std::size_t __hash__() const;
-    bool __eq__(const Basic &o) const;
     int compare(const Basic &o) const;
 
     /*! Creates appropriate instance (i.e Symbol, Integer,
@@ -587,29 +583,11 @@ public:
     {
         return poly_.degree();
     }
-    inline RCP<const Symbol> get_var() const
-    {
-        return var_;
-    }
     inline const map_int_Expr &get_dict() const
     {
         return poly_.get_dict();
     }
-    const UnivariateExprPolynomial &get_expr_dict() const
-    {
-        return poly_;
-    }
-
 }; // UnivariatePolynomial
-
-//! Adding two UnivariatePolynomial a and b
-RCP<const UnivariatePolynomial> add_uni_poly(const UnivariatePolynomial &a,
-                                             const UnivariatePolynomial &b);
-//! Negative of a UnivariatePolynomial
-RCP<const UnivariatePolynomial> neg_uni_poly(const UnivariatePolynomial &a);
-//! Subtracting two UnivariatePolynomial a and b
-RCP<const UnivariatePolynomial> sub_uni_poly(const UnivariatePolynomial &a,
-                                             const UnivariatePolynomial &b);
 //! Multiplying two UnivariatePolynomial a and b
 RCP<const UnivariatePolynomial> mul_uni_poly(const UnivariatePolynomial &a,
                                              const UnivariatePolynomial &b);
