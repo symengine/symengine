@@ -123,12 +123,12 @@ void test_complex() {
 void test_real_double()
 {
     basic d;
-    char *s = "123.456";
+    double s = 123.456;
     basic_new_stack(d);
     char *s2;
     s2 = basic_str(d);
     
-    real_double_set_str(d, s);
+    real_double_set_d(d, s);
     SYMENGINE_C_ASSERT(basic_get_type(d) == SYMENGINE_REAL_DOUBLE);
     SYMENGINE_C_ASSERT(strcmp(s2, "123.456") == 0);
     

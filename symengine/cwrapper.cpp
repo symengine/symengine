@@ -187,9 +187,9 @@ void integer_set_str(basic s, char *c)
     s->m = SymEngine::integer(integer_class(c));
 }
 
-void real_double_set_str(basic s, char *c)
+void real_double_set_d(basic s, double d)
 {
-    s->m = SymEngine::real_double(strtod(c, NULL));
+    s->m = SymEngine::real_double(d);
 }
 
 signed long integer_get_si(const basic s)
