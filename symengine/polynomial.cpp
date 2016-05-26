@@ -29,11 +29,6 @@ UnivariateIntPolynomial::UnivariateIntPolynomial(
 
 bool UnivariateIntPolynomial::is_canonical(const UIntDict &dict) const
 {
-    if (var_->get_name() == "")
-        if (!(dict.empty()
-              or (dict.size() == 1 and dict.dict_.begin()->first == 0)))
-            return false;
-
     // Check if dictionary contains terms with coeffienct 0
     for (auto iter : dict.dict_)
         if (iter.second == 0)
@@ -197,20 +192,12 @@ bool UnivariateIntPolynomial::is_pow() const
 RCP<const UnivariateIntPolynomial> mul_poly(const UnivariateIntPolynomial &a,
                                             const UnivariateIntPolynomial &b)
 {
-    RCP<const Symbol> var = symbol("");
-    if (a.get_var()->get_name() == "") {
-        var = b.get_var();
-    } else if (b.get_var()->get_name() == "") {
-        var = a.get_var();
-    } else if (!(a.get_var()->__eq__(*b.get_var()))) {
+    if (!(a.get_var()->__eq__(*b.get_var())))
         throw std::runtime_error("Error: variables must agree.");
-    } else {
-        var = a.get_var();
-    }
 
     UIntDict dict = a.get_poly();
     dict *= b.get_poly();
-    return UnivariateIntPolynomial::from_dict(var, std::move(dict));
+    return UnivariateIntPolynomial::from_dict(a.get_var(), std::move(dict));
 }
 
 UnivariatePolynomial::UnivariatePolynomial(const RCP<const Symbol> &var,
@@ -230,20 +217,11 @@ UnivariatePolynomial::UnivariatePolynomial(const RCP<const Symbol> &var,
             poly_.dict_[i] = v[i];
         }
     }
-    if (var->get_name() == "")
-        if (!(poly_.dict_.empty()
-              or (poly_.dict_.size() == 1 and poly_.dict_.begin()->first == 0)))
-            throw std::runtime_error("Should only have a constant term");
 }
 
 bool UnivariatePolynomial::is_canonical(
     const UnivariateExprPolynomial &dict) const
 {
-    if (var_->get_name() == "")
-        if (!(dict.empty()
-              or (dict.size() == 1 and dict.get_dict().begin()->first == 0)))
-            return false;
-
     // Check if dictionary contains terms with coeffienct 0
     for (auto iter : dict.get_dict())
         if (iter.second == 0)
@@ -384,19 +362,12 @@ bool UnivariatePolynomial::is_pow() const
 RCP<const UnivariatePolynomial> mul_uni_poly(const UnivariatePolynomial &a,
                                              const UnivariatePolynomial &b)
 {
-    RCP<const Symbol> var = symbol("");
-    if (a.get_var()->get_name() == "") {
-        var = b.get_var();
-    } else if (b.get_var()->get_name() == "") {
-        var = a.get_var();
-    } else if (!(a.get_var()->__eq__(*b.get_var()))) {
+    if (!(a.get_var()->__eq__(*b.get_var())))
         throw std::runtime_error("Error: variables must agree.");
-    } else {
-        var = a.get_var();
-    }
+
     UnivariateExprPolynomial dict = a.get_poly();
     dict *= b.get_poly();
-    return univariate_polynomial(var, std::move(dict));
+    return univariate_polynomial(a.get_var(), std::move(dict));
 }
 
 } // SymEngine

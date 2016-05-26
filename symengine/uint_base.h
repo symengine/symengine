@@ -13,10 +13,11 @@ namespace SymEngine
 template <typename Container, typename Poly>
 class UIntPolyBase : public Basic
 {
-public:
+protected:
     RCP<const Symbol> var_;
     Container poly_;
 
+public:
     UIntPolyBase(const RCP<const Symbol> &var, Container &&container)
         : var_{var}, poly_{container}
     {
@@ -61,20 +62,12 @@ public:
 
     friend RCP<const Poly> add_poly(const Poly &a, const Poly &b)
     {
-        RCP<const Symbol> var = symbol("");
-        if (a.var_->get_name() == "") {
-            var = b.var_;
-        } else if (b.var_->get_name() == "") {
-            var = a.var_;
-        } else if (!(a.var_->__eq__(*b.var_))) {
+        if (!(a.var_->__eq__(*b.var_)))
             throw std::runtime_error("Error: variables must agree.");
-        } else {
-            var = a.var_;
-        }
 
         Container dict = a.poly_;
         dict += b.poly_;
-        return Poly::from_dict(var, std::move(dict));
+        return Poly::from_dict(a.var_, std::move(dict));
     }
 
     friend RCP<const Poly> neg_poly(const Poly &a)
@@ -85,20 +78,12 @@ public:
 
     friend RCP<const Poly> sub_poly(const Poly &a, const Poly &b)
     {
-        RCP<const Symbol> var = symbol("");
-        if (a.var_->get_name() == "") {
-            var = b.var_;
-        } else if (b.var_->get_name() == "") {
-            var = a.var_;
-        } else if (!(a.var_->__eq__(*b.var_))) {
+        if (!(a.var_->__eq__(*b.var_)))
             throw std::runtime_error("Error: variables must agree.");
-        } else {
-            var = a.var_;
-        }
 
         Container dict = a.poly_;
         dict -= b.poly_;
-        return Poly::from_dict(var, std::move(dict));
+        return Poly::from_dict(a.var_, std::move(dict));
     }
 };
 }
