@@ -100,6 +100,8 @@ void test_complex() {
     SYMENGINE_C_ASSERT(!is_a_Integer(e));
     SYMENGINE_C_ASSERT(is_a_Complex(e));
 
+    basic_str_free(s);
+
     complex_real_part(f, e);
     s = basic_str(f);
 
@@ -109,6 +111,8 @@ void test_complex() {
     SYMENGINE_C_ASSERT(!is_a_Integer(f));
     SYMENGINE_C_ASSERT(!is_a_Complex(f));
 
+    basic_str_free(s);
+
     complex_imaginary_part(f, e);
     s = basic_str(f);
 
@@ -117,7 +121,9 @@ void test_complex() {
     SYMENGINE_C_ASSERT(is_a_Rational(f));
     SYMENGINE_C_ASSERT(!is_a_Integer(f));
     SYMENGINE_C_ASSERT(!is_a_Complex(f));
-    
+        
+    basic_str_free(s);
+
     basic_free_stack(e);
     basic_free_stack(f);
 }
@@ -133,6 +139,7 @@ void test_real_double()
 
     SYMENGINE_C_ASSERT(basic_get_type(d) == SYMENGINE_REAL_DOUBLE);
     SYMENGINE_C_ASSERT(strcmp(s2, "123.456") == 0);
+    basic_str_free(s2);
     
     basic_free_stack(d);
 }
