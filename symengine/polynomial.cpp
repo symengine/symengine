@@ -531,14 +531,14 @@ void karatsuba(Expression *a, Expression *b, Expression *res, int d)
     Expression *al = &a[d / 2];             // high-order half of a
     Expression *br = &b[0];                 // low-order half of b
     Expression *bl = &b[d / 2];             // high-order half of b
-    Expression *asum = &res[d * 3];         // sum of a's halves
-    Expression *bsum = &res[d * 3 + d / 2]; // sum of b's halves
+    Expression *asum = &res[d * 5];         // sum of a's halves
+    Expression *bsum = &res[d * 5 + d / 2]; // sum of b's halves
     Expression *x1 = &res[d * 0];           // ar*br's location
     Expression *x2 = &res[d * 1];           // al*bl's location
     Expression *x3 = &res[d * 2];           // asum*bsum's location
 
     if (d <= 6) {
-        // *res = (*a) * (*b);
+        //*res = (*a) * (*b);
         gradeSchool(a, b, res, d);
         return;
     }
@@ -574,7 +574,7 @@ RCP<const UnivariatePolynomial> mul_uni_poly(const UnivariatePolynomial &a,
         var = a.get_var();
     }
 
-    if(a.get_degree() < (int)a.get_expr_dict().size() or b.get_degree() < (int)b.get_expr_dict().size()) {
+    if (a.get_dict().begin()->first < 0 || b.get_dict().begin()->first < 0) {
         UnivariateExprPolynomial dict = a.get_expr_dict();
         dict *= b.get_expr_dict();
         return univariate_polynomial(var, std::move(dict));
@@ -585,7 +585,7 @@ RCP<const UnivariatePolynomial> mul_uni_poly(const UnivariatePolynomial &a,
     while (n <= t)
         n <<= 1;
 
-    std::vector<Expression> fa, fb, res(4 * n);
+    std::vector<Expression> fa, fb, res(6 * n);
 
     for (int i = 0; i < (int)n; i++) {
         fa.push_back(a.get_expr_dict().find_cf(i));
