@@ -574,6 +574,12 @@ RCP<const UnivariatePolynomial> mul_uni_poly(const UnivariatePolynomial &a,
         var = a.get_var();
     }
 
+    if(a.get_degree() < (int)a.get_expr_dict().size() or b.get_degree() < (int)b.get_expr_dict().size()) {
+        UnivariateExprPolynomial dict = a.get_expr_dict();
+        dict *= b.get_expr_dict();
+        return univariate_polynomial(var, std::move(dict));
+    }
+
     unsigned long n = 1, t = a.get_degree() + b.get_degree() + 1;
 
     while (n <= t)
