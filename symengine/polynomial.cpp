@@ -516,9 +516,10 @@ RCP<const UnivariatePolynomial> sub_uni_poly(const UnivariatePolynomial &a,
 void gradeSchool(Expression *a, Expression *b, Expression *res, int d)
 {
     int i, j;
-    // // for(i = 0; i < 2 * d; i++) res[i] = 0;
-    for(i = 0; i < d; i++) {
-        for(j = 0; j < d; j++) {
+    for (i = 0; i < 2 * d; i++)
+        res[i] = 0;
+    for (i = 0; i < d; i++) {
+        for (j = 0; j < d; j++) {
             res[i + j] += a[i] * b[j];
         }
     }
@@ -530,8 +531,8 @@ void karatsuba(Expression *a, Expression *b, Expression *res, int d)
     Expression *al = &a[d / 2];             // high-order half of a
     Expression *br = &b[0];                 // low-order half of b
     Expression *bl = &b[d / 2];             // high-order half of b
-    Expression *asum = &res[d * 5];         // sum of a's halves
-    Expression *bsum = &res[d * 5 + d / 2]; // sum of b's halves
+    Expression *asum = &res[d * 3];         // sum of a's halves
+    Expression *bsum = &res[d * 3 + d / 2]; // sum of b's halves
     Expression *x1 = &res[d * 0];           // ar*br's location
     Expression *x2 = &res[d * 1];           // al*bl's location
     Expression *x3 = &res[d * 2];           // asum*bsum's location
@@ -554,7 +555,7 @@ void karatsuba(Expression *a, Expression *b, Expression *res, int d)
 
     // combine recursive steps
     for (int i = 0; i < d; i++)
-        x3[i] = x3[i] - x1[i] - x2[i];
+        x3[i] = expand(x3[i] - x1[i] - x2[i]);
     for (int i = 0; i < d; i++)
         res[i + d / 2] += x3[i];
 }
@@ -578,7 +579,7 @@ RCP<const UnivariatePolynomial> mul_uni_poly(const UnivariatePolynomial &a,
     while (n <= t)
         n <<= 1;
 
-    std::vector<Expression> fa, fb, res(6 * n);
+    std::vector<Expression> fa, fb, res(4 * n);
 
     for (int i = 0; i < (int)n; i++) {
         fa.push_back(a.get_expr_dict().find_cf(i));
