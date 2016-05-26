@@ -85,11 +85,11 @@ UnivariateSeries::mul(const UnivariateExprPolynomial &a,
     while (n <= t)
         n <<= 1;
 
-    std::vector<Expression> fa, fb, res(6 * n);
+    std::vector<Expression> fa(n), fb(n), res(6 * n);
 
     for (int i = 0; i < (int)n; i++) {
-        fa.push_back(a.find_cf(i));
-        fb.push_back(b.find_cf(i));
+        fa[i] = a.find_cf(i);
+        fb[i] = b.find_cf(i);
     }
     karatsuba(&fa[0], &fb[0], &res[0], n);
     res.resize(t);

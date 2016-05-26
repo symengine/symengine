@@ -578,11 +578,11 @@ RCP<const UnivariatePolynomial> mul_uni_poly(const UnivariatePolynomial &a,
     while (n <= t)
         n <<= 1;
 
-    std::vector<Expression> fa, fb, res(6 * n);
+    std::vector<Expression> fa(n), fb(n), res(6 * n);
 
-    for (int i = 0; i < (int)n; i++) {
-        fa.push_back(a.get_expr_dict().find_cf(i));
-        fb.push_back(b.get_expr_dict().find_cf(i));
+    for (unsigned long i = 0; i < n; i++) {
+        fa[i] = a.get_expr_dict().find_cf(i);
+        fb[i] = b.get_expr_dict().find_cf(i);
     }
 
     karatsuba(&fa[0], &fb[0], &res[0], n);
