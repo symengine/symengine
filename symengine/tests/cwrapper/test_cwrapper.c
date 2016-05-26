@@ -101,6 +101,7 @@ void test_complex() {
     SYMENGINE_C_ASSERT(is_a_Complex(e));
 
     complex_real_part(f, e);
+    s = basic_str(f);
 
     SYMENGINE_C_ASSERT(strcmp(s, "100/47") == 0);
     SYMENGINE_C_ASSERT(!is_a_Symbol(f));
@@ -109,6 +110,7 @@ void test_complex() {
     SYMENGINE_C_ASSERT(!is_a_Complex(f));
 
     complex_imaginary_part(f, e);
+    s = basic_str(f);
 
     SYMENGINE_C_ASSERT(strcmp(s, "76/59") == 0);
     SYMENGINE_C_ASSERT(!is_a_Symbol(f));
@@ -123,12 +125,12 @@ void test_complex() {
 void test_real_double()
 {
     basic d;
-    double s = 123.456;
     basic_new_stack(d);
+    real_double_set_d(d, 123.456);
+
     char *s2;
     s2 = basic_str(d);
-    
-    real_double_set_d(d, s);
+
     SYMENGINE_C_ASSERT(basic_get_type(d) == SYMENGINE_REAL_DOUBLE);
     SYMENGINE_C_ASSERT(strcmp(s2, "123.456") == 0);
     

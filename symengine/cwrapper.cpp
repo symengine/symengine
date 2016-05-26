@@ -257,14 +257,14 @@ void complex_set_mpq(basic s, const mpq_t re, const mpq_t im)
 
 void complex_real_part(basic s, basic com)
 {
-    SYMENGINE_ASSERT(is_a<Integer>(*(com->m)));
-    s->m = (rcp_static_cast<const Complex>(s->m))->real_part();
+    SYMENGINE_ASSERT(is_a<Complex>(*(com->m)));
+    s->m = (rcp_static_cast<const Complex>(com->m))->real_part();
 }
 
 void complex_imaginary_part(basic s, basic com)
 {
-    SYMENGINE_ASSERT(is_a<Integer>(*(com->m)));
-    s->m = (rcp_static_cast<const Complex>(s->m))->imaginary_part();
+    SYMENGINE_ASSERT(is_a<Complex>(*(com->m)));
+    s->m = (rcp_static_cast<const Complex>(com->m))->imaginary_part();
 }
 
 int basic_diff(basic s, const basic expr, basic const symbol)
