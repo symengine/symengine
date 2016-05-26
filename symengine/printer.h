@@ -216,6 +216,7 @@ public:
     void bvisit(const Complex &x);
     void bvisit(const Interval &x);
     void bvisit(const EmptySet &x);
+    void bvisit(const FiniteSet &x);
     void bvisit(const UniversalSet &x);
     void bvisit(const Add &x);
     void bvisit(const Mul &x);

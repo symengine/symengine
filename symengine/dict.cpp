@@ -36,26 +36,26 @@ inline std::ostream &print_map_rcp(std::ostream &out, T &d)
 template <class T>
 inline std::ostream &print_vec(std::ostream &out, T &d)
 {
-    out << "[";
+    out << "{";
     for (auto p = d.begin(); p != d.end(); p++) {
         if (p != d.begin())
             out << ", ";
         out << *p;
     }
-    out << "]";
+    out << "}";
     return out;
 }
 
 template <class T>
 inline std::ostream &print_vec_rcp(std::ostream &out, T &d)
 {
-    out << "[";
+    out << "{";
     for (auto p = d.begin(); p != d.end(); p++) {
         if (p != d.begin())
             out << ", ";
         out << **p;
     }
-    out << "]";
+    out << "}";
     return out;
 }
 
