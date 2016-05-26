@@ -536,6 +536,14 @@ public:
         return Add::from_dict(coeff, std::move(dict));
     }
 
+    inline int get_degree() const
+    {
+        if (dict_.size() != 0)
+            return (--(dict_.end()))->first;
+        else
+            return 0;
+    }
+
     int compare(const UnivariateExprPolynomial &other) const
     {
         if (dict_.size() != other.dict_.size())
@@ -643,6 +651,12 @@ RCP<const UnivariatePolynomial> sub_uni_poly(const UnivariatePolynomial &a,
 //! Multiplying two UnivariatePolynomial a and b
 RCP<const UnivariatePolynomial> mul_uni_poly(const UnivariatePolynomial &a,
                                              const UnivariatePolynomial &b);
+//! For FFT operations
+void fft(bvector &x);
+void ifft(bvector &x);
+base operator+(const base &a, const base &b);
+base operator-(const base &a, const base &b);
+base operator*(const base &a, const base &b);
 
 inline RCP<const UnivariatePolynomial>
 univariate_polynomial(RCP<const Symbol> i, UnivariateExprPolynomial &&dict)

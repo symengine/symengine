@@ -80,18 +80,42 @@ UnivariateExprPolynomial
 UnivariateSeries::mul(const UnivariateExprPolynomial &a,
                       const UnivariateExprPolynomial &b, unsigned prec)
 {
-    map_int_Expr p;
-    for (auto &it1 : a.get_dict()) {
-        for (auto &it2 : b.get_dict()) {
-            int exp = it1.first + it2.first;
-            if (exp < (int)prec) {
-                p[exp] += it1.second * it2.second;
-            } else {
-                break;
-            }
-        }
+    unsigned long n = 1, t = std::min(a.get_degree() + b.get_degree(), (int)prec);
+    bool all_int = true;
+
+    t++;
+    while (n <= t)
+        n <<= 1;
+
+    bvector fa(n), fb(n);
+
+    for (int i = 0; i <= std::max(a.get_degree(), b.get_degree()) && i <(int)prec; i++) {
+        Expression ai = a.find_cf(i);
+        Expression bi = b.find_cf(i);
+        if ((not is_a<Integer>(*ai.get_basic()))
+            or (not is_a<Integer>(*bi.get_basic())))
+            all_int = false;
+        fa[i] = base(ai);
+        fb[i] = base(bi);
     }
-    return UnivariateExprPolynomial(p);
+
+    fft(fa);
+    fft(fb);
+    for (unsigned long i = 0; i < n; ++i)
+        fa[i] *= fb[i];
+
+    ifft(fa);
+
+    // std::vector<Expression> res(n);
+    map_int_Expr res;
+    for (unsigned long i = 0; i < prec && i <= t; ++i) {
+        res[i] = expand(fa[i].real());
+        if (all_int == true && is_a<RealDouble>(*res[i].get_basic()))
+            res[i] = Expression(std::lround(
+                (rcp_static_cast<const RealDouble>(res[i].get_basic())
+                     ->as_double())));
+    }
+    return UnivariateExprPolynomial(std::move(res));
 }
 
 UnivariateExprPolynomial
