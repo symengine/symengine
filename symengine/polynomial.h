@@ -637,6 +637,9 @@ public:
 
 }; // UnivariatePolynomial
 
+void gradeSchool(Expression *a, Expression *b, Expression *res, int d);
+void karatsuba(Expression *a, Expression *b, Expression *res, int d);
+
 //! Adding two UnivariatePolynomial a and b
 RCP<const UnivariatePolynomial> add_uni_poly(const UnivariatePolynomial &a,
                                              const UnivariatePolynomial &b);

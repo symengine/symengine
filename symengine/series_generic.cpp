@@ -80,18 +80,20 @@ UnivariateExprPolynomial
 UnivariateSeries::mul(const UnivariateExprPolynomial &a,
                       const UnivariateExprPolynomial &b, unsigned prec)
 {
-    map_int_Expr p;
-    for (auto &it1 : a.get_dict()) {
-        for (auto &it2 : b.get_dict()) {
-            int exp = it1.first + it2.first;
-            if (exp < (int)prec) {
-                p[exp] += it1.second * it2.second;
-            } else {
-                break;
-            }
-        }
+    unsigned long n = 1, t = std::min(a.get_degree() + b.get_degree() + 1, (int)prec);
+
+    while (n <= t)
+        n <<= 1;
+
+    std::vector<Expression> fa, fb, res(6 * n);
+
+    for (int i = 0; i < (int)n; i++) {
+        fa.push_back(a.find_cf(i));
+        fb.push_back(b.find_cf(i));
     }
-    return UnivariateExprPolynomial(p);
+    karatsuba(&fa[0], &fb[0], &res[0], n);
+    res.resize(t);
+    return UnivariateExprPolynomial(UnivariatePolynomial::from_vec(symbol("x"), res)->get_dict());
 }
 
 UnivariateExprPolynomial
