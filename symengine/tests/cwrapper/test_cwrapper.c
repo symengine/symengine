@@ -95,12 +95,27 @@ void test_complex() {
     s = basic_str(e);
 
     SYMENGINE_C_ASSERT(strcmp(s, "100/47 + 76/59*I") == 0);
-
     SYMENGINE_C_ASSERT(!is_a_Symbol(e));
     SYMENGINE_C_ASSERT(!is_a_Rational(e));
     SYMENGINE_C_ASSERT(!is_a_Integer(e));
     SYMENGINE_C_ASSERT(is_a_Complex(e));
 
+    complex_real_part(f, e);
+
+    SYMENGINE_C_ASSERT(strcmp(s, "100/47") == 0);
+    SYMENGINE_C_ASSERT(!is_a_Symbol(f));
+    SYMENGINE_C_ASSERT(is_a_Rational(f));
+    SYMENGINE_C_ASSERT(!is_a_Integer(f));
+    SYMENGINE_C_ASSERT(!is_a_Complex(f));
+
+    complex_imaginary_part(f, e);
+
+    SYMENGINE_C_ASSERT(strcmp(s, "76/59") == 0);
+    SYMENGINE_C_ASSERT(!is_a_Symbol(f));
+    SYMENGINE_C_ASSERT(is_a_Rational(f));
+    SYMENGINE_C_ASSERT(!is_a_Integer(f));
+    SYMENGINE_C_ASSERT(!is_a_Complex(f));
+    
     basic_free_stack(e);
     basic_free_stack(f);
 }
