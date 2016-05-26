@@ -189,17 +189,6 @@ bool UnivariateIntPolynomial::is_pow() const
     return false;
 }
 
-RCP<const UnivariateIntPolynomial> mul_poly(const UnivariateIntPolynomial &a,
-                                            const UnivariateIntPolynomial &b)
-{
-    if (!(a.get_var()->__eq__(*b.get_var())))
-        throw std::runtime_error("Error: variables must agree.");
-
-    UIntDict dict = a.get_poly();
-    dict *= b.get_poly();
-    return UnivariateIntPolynomial::from_dict(a.get_var(), std::move(dict));
-}
-
 UnivariatePolynomial::UnivariatePolynomial(const RCP<const Symbol> &var,
                                            UnivariateExprPolynomial &&dict)
     : UIntPolyBase(var, std::move(dict))
@@ -357,17 +346,6 @@ bool UnivariatePolynomial::is_pow() const
     return poly_.size() == 1 and poly_.get_dict().begin()->second == 1
            and poly_.get_dict().begin()->first != 1
            and poly_.get_dict().begin()->first != 0;
-}
-
-RCP<const UnivariatePolynomial> mul_uni_poly(const UnivariatePolynomial &a,
-                                             const UnivariatePolynomial &b)
-{
-    if (!(a.get_var()->__eq__(*b.get_var())))
-        throw std::runtime_error("Error: variables must agree.");
-
-    UnivariateExprPolynomial dict = a.get_poly();
-    dict *= b.get_poly();
-    return univariate_polynomial(a.get_var(), std::move(dict));
 }
 
 } // SymEngine

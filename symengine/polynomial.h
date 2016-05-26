@@ -344,10 +344,6 @@ public:
 
 }; // UnivariateIntPolynomial
 
-//! Multiplying two UnivariateIntPolynomial a and b
-RCP<const UnivariateIntPolynomial> mul_poly(const UnivariateIntPolynomial &a,
-                                            const UnivariateIntPolynomial &b);
-
 inline RCP<const UnivariateIntPolynomial>
 univariate_int_polynomial(RCP<const Symbol> i, UIntDict &&dict)
 {
@@ -588,9 +584,6 @@ public:
         return poly_.get_dict();
     }
 }; // UnivariatePolynomial
-//! Multiplying two UnivariatePolynomial a and b
-RCP<const UnivariatePolynomial> mul_uni_poly(const UnivariatePolynomial &a,
-                                             const UnivariatePolynomial &b);
 
 inline RCP<const UnivariatePolynomial>
 univariate_polynomial(RCP<const Symbol> i, UnivariateExprPolynomial &&dict)
