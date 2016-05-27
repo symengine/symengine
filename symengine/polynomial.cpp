@@ -567,38 +567,38 @@ RCP<const UnivariatePolynomial> mul_uni_poly(const UnivariatePolynomial &a,
         var = a.get_var();
     }
 
-    map_int_Expr dict;
-    if (a.get_dict().size() == 0 || b.get_expr_dict().size() == 0)
-        return univariate_polynomial(var, dict);
+    int start = 0;
+    if(!(a.get_dict().empty()) and a.get_dict().begin()->first < start) {
+        start = a.get_dict().begin()->first;
+    }
+    if(!(b.get_dict().empty()) and b.get_dict().begin()->first < start) {
+        start = b.get_dict().begin()->first;
+    }
 
-    unsigned long n = 1;
-    unsigned long l = a.ldegree() + b.ldegree();
-    unsigned long h = a.get_degree() + b.get_degree();
-    unsigned long t = h - l + 1;
+    unsigned long n = 1, t = a.get_degree() + b.get_degree() + 1;
 
     while (n <= t)
         n <<= 1;
 
     std::vector<Expression> fa(n), fb(n), res(6 * n);
-    for (int i = std::min(a.ldegree(), b.ldegree()), j = 0; i <= std::max(a.get_degree(), b.get_degree()); i++, j++) {
-        fa[j] = a.get_expr_dict().find_cf(i);
-        fb[j] = b.get_expr_dict().find_cf(i);
+    for (unsigned long i = 0; i < n; i++) {
+        fa[i] = a.get_expr_dict().find_cf((int)i + start);
+        fb[i] = b.get_expr_dict().find_cf((int)i + start);
     }
 
-    for (auto i : fa)
-        std::cout << i << std::endl;
-    std::cout << std::endl;
-    for (auto i : fb)
-        std::cout << i << std::endl;
-    karatsuba(&fa[l], &fb[l], &res[l], n);
+    karatsuba(&fa[0], &fb[0], &res[0], n);
 
-    for (auto i : res)
-        std::cout << i << std::endl;
-    for (unsigned long i = l, j = 0; i <= h; i++, j++)
-       dict[i] = res[j];
-    //res.resize(t);
-    //return UnivariatePolynomial::from_vec(var, res);
-    return univariate_polynomial(var, std::move(dict));
+    if(start < 0)
+    {
+        map_int_Expr dict;
+        for(unsigned long j = 0; j < (t - start); j++)
+            dict[(int)j + start] = res[(int)j - start];
+        return UnivariatePolynomial::from_dict(var, dict);
+    }
+    else {
+        res.resize(t);
+        return UnivariatePolynomial::from_vec(var, res);
+    }
 }
 
 } // SymEngine

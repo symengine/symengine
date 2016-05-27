@@ -634,8 +634,8 @@ public:
     }
     inline int ldegree() const
     {
-        if (not get_dict().empty())
-            return get_dict().begin()->first;
+        if (not poly_.get_dict().empty())
+            return poly_.get_dict().begin()->first;
         else
             return 0;
     }
