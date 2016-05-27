@@ -567,27 +567,38 @@ RCP<const UnivariatePolynomial> mul_uni_poly(const UnivariatePolynomial &a,
         var = a.get_var();
     }
 
-    if (a.get_dict().begin()->first < 0 || b.get_dict().begin()->first < 0) {
-        UnivariateExprPolynomial dict = a.get_expr_dict();
-        dict *= b.get_expr_dict();
-        return univariate_polynomial(var, std::move(dict));
-    }
+    map_int_Expr dict;
+    if (a.get_dict().size() == 0 || b.get_expr_dict().size() == 0)
+        return univariate_polynomial(var, dict);
 
-    unsigned long n = 1, t = a.get_degree() + b.get_degree() + 1;
+    unsigned long n = 1;
+    unsigned long l = a.ldegree() + b.ldegree();
+    unsigned long h = a.get_degree() + b.get_degree();
+    unsigned long t = h - l + 1;
 
     while (n <= t)
         n <<= 1;
 
     std::vector<Expression> fa(n), fb(n), res(6 * n);
-
-    for (unsigned long i = 0; i < n; i++) {
-        fa[i] = a.get_expr_dict().find_cf(i);
-        fb[i] = b.get_expr_dict().find_cf(i);
+    for (int i = std::min(a.ldegree(), b.ldegree()), j = 0; i <= std::max(a.get_degree(), b.get_degree()); i++, j++) {
+        fa[j] = a.get_expr_dict().find_cf(i);
+        fb[j] = b.get_expr_dict().find_cf(i);
     }
 
-    karatsuba(&fa[0], &fb[0], &res[0], n);
-    res.resize(t);
-    return UnivariatePolynomial::from_vec(var, res);
+    for (auto i : fa)
+        std::cout << i << std::endl;
+    std::cout << std::endl;
+    for (auto i : fb)
+        std::cout << i << std::endl;
+    karatsuba(&fa[l], &fb[l], &res[l], n);
+
+    for (auto i : res)
+        std::cout << i << std::endl;
+    for (unsigned long i = l, j = 0; i <= h; i++, j++)
+       dict[i] = res[j];
+    //res.resize(t);
+    //return UnivariatePolynomial::from_vec(var, res);
+    return univariate_polynomial(var, std::move(dict));
 }
 
 } // SymEngine
