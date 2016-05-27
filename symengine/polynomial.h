@@ -566,6 +566,15 @@ public:
         else
             return Expression(0);
     }
+
+    static UnivariateExprPolynomial from_vec(const std::vector<Expression> &p)
+    {
+        map_int_Expr dict;
+        for(unsigned int i = 0; i < p.size(); i++)
+            if(p[i] != Expression(0))
+                dict[i] = p[i];
+        return UnivariateExprPolynomial(std::move(dict));
+    }
 }; // UnivariateExprPolynomial
 
 class UnivariatePolynomial : public Basic

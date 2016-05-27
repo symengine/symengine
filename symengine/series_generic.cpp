@@ -109,8 +109,7 @@ UnivariateSeries::mul(const UnivariateExprPolynomial &a,
     }
     karatsuba(&fa[0], &fb[0], &res[0], n);
     res.resize(t);
-    return UnivariateExprPolynomial(
-        UnivariatePolynomial::from_vec(symbol("x"), res)->get_dict());
+    return UnivariateExprPolynomial::from_vec(res);
 }
 
 UnivariateExprPolynomial
