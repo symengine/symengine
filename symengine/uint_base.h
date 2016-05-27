@@ -59,43 +59,47 @@ public:
     {
         return poly_;
     }
-
-    friend RCP<const Poly> add_poly(const Poly &a, const Poly &b)
-    {
-        if (!(a.var_->__eq__(*b.var_)))
-            throw std::runtime_error("Error: variables must agree.");
-
-        Container dict = a.poly_;
-        dict += b.poly_;
-        return Poly::from_dict(a.var_, std::move(dict));
-    }
-
-    friend RCP<const Poly> neg_poly(const Poly &a)
-    {
-        Container dict = -(a.poly_);
-        return Poly::from_dict(a.var_, std::move(dict));
-    }
-
-    friend RCP<const Poly> sub_poly(const Poly &a, const Poly &b)
-    {
-        if (!(a.var_->__eq__(*b.var_)))
-            throw std::runtime_error("Error: variables must agree.");
-
-        Container dict = a.poly_;
-        dict -= b.poly_;
-        return Poly::from_dict(a.var_, std::move(dict));
-    }
-
-    friend RCP<const Poly> mul_poly(const Poly &a, const Poly &b)
-    {
-        if (!(a.var_->__eq__(*b.var_)))
-            throw std::runtime_error("Error: variables must agree.");
-
-        Container dict = a.get_poly();
-        dict *= b.get_poly();
-        return Poly::from_dict(a.var_, std::move(dict));
-    }
 };
+
+template <typename Poly>
+RCP<const Poly> add_poly(const Poly &a, const Poly &b)
+{
+    if (!(a.get_var()->__eq__(*b.get_var())))
+        throw std::runtime_error("Error: variables must agree.");
+
+    auto dict = a.get_poly();
+    dict += b.get_poly();
+    return Poly::from_dict(a.get_var(), std::move(dict));
+}
+
+template <typename Poly>
+RCP<const Poly> neg_poly(const Poly &a)
+{
+    auto dict = -(a.get_poly());
+    return Poly::from_dict(a.get_var(), std::move(dict));
+}
+
+template <typename Poly>
+RCP<const Poly> sub_poly(const Poly &a, const Poly &b)
+{
+    if (!(a.get_var()->__eq__(*b.get_var())))
+        throw std::runtime_error("Error: variables must agree.");
+
+    auto dict = a.get_poly();
+    dict -= b.get_poly();
+    return Poly::from_dict(a.get_var(), std::move(dict));
+}
+
+template <typename Poly>
+RCP<const Poly> mul_poly(const Poly &a, const Poly &b)
+{
+    if (!(a.get_var()->__eq__(*b.get_var())))
+        throw std::runtime_error("Error: variables must agree.");
+
+    auto dict = a.get_poly();
+    dict *= b.get_poly();
+    return Poly::from_dict(a.get_var(), std::move(dict));
+}
 }
 
 #endif
