@@ -515,7 +515,8 @@ public:
         }
         return o.str();
     }
-    int get_degree() const {
+    int get_degree() const
+    {
         if (dict_.empty())
             return 0;
         else

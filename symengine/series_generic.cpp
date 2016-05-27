@@ -95,7 +95,8 @@ UnivariateSeries::mul(const UnivariateExprPolynomial &a,
         return UnivariateExprPolynomial(p);
     }
 
-    unsigned long n = 1, t = std::min(a.get_degree() + b.get_degree() + 1, (int)prec);
+    unsigned long n = 1,
+                  t = std::min(a.get_degree() + b.get_degree() + 1, (int)prec);
 
     while (n <= t)
         n <<= 1;
@@ -108,7 +109,8 @@ UnivariateSeries::mul(const UnivariateExprPolynomial &a,
     }
     karatsuba(&fa[0], &fb[0], &res[0], n);
     res.resize(t);
-    return UnivariateExprPolynomial(UnivariatePolynomial::from_vec(symbol("x"), res)->get_dict());
+    return UnivariateExprPolynomial(
+        UnivariatePolynomial::from_vec(symbol("x"), res)->get_dict());
 }
 
 UnivariateExprPolynomial
