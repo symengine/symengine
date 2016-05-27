@@ -632,6 +632,13 @@ public:
     {
         return degree_;
     }
+    inline int ldegree() const
+    {
+        if (not get_dict().empty())
+            return get_dict().begin()->first;
+        else
+            return 0;
+    }
     inline RCP<const Symbol> get_var() const
     {
         return var_;
