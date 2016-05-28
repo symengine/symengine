@@ -515,7 +515,13 @@ public:
         }
         return o.str();
     }
-
+    int get_degree() const
+    {
+        if (dict_.empty())
+            return 0;
+        else
+            return (--(dict_.end()))->first;
+    }
     // const umap_int_basic get_basic() const
     const RCP<const Basic> get_basic(std::string var) const
     {
@@ -559,6 +565,15 @@ public:
             return dict_.at(deg);
         else
             return Expression(0);
+    }
+
+    static UnivariateExprPolynomial from_vec(const std::vector<Expression> &p)
+    {
+        map_int_Expr dict;
+        for(unsigned int i = 0; i < p.size(); i++)
+            if(p[i] != Expression(0))
+                dict[i] = p[i];
+        return UnivariateExprPolynomial(std::move(dict));
     }
 }; // UnivariateExprPolynomial
 
@@ -617,6 +632,13 @@ public:
     {
         return degree_;
     }
+    inline int ldegree() const
+    {
+        if (not poly_.get_dict().empty())
+            return poly_.get_dict().begin()->first;
+        else
+            return 0;
+    }
     inline RCP<const Symbol> get_var() const
     {
         return var_;
@@ -631,6 +653,8 @@ public:
     }
 
 }; // UnivariatePolynomial
+
+void karatsuba(Expression *a, Expression *b, Expression *res, int d);
 
 //! Adding two UnivariatePolynomial a and b
 RCP<const UnivariatePolynomial> add_uni_poly(const UnivariatePolynomial &a,
