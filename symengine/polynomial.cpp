@@ -59,22 +59,6 @@ int UnivariateIntPolynomial::compare(const Basic &o) const
     return map_uint_mpz_compare(poly_.dict_, s.poly_.dict_);
 }
 
-RCP<const UnivariateIntPolynomial>
-UnivariateIntPolynomial::from_dict(const RCP<const Symbol> &var, UIntDict &&d)
-{
-    auto iter = d.dict_.begin();
-    while (iter != d.dict_.end()) {
-        if (iter->second == 0) {
-            auto toErase = iter;
-            iter++;
-            d.dict_.erase(toErase);
-        } else {
-            iter++;
-        }
-    }
-    return make_rcp<const UnivariateIntPolynomial>(var, std::move(d));
-}
-
 vec_basic UnivariateIntPolynomial::get_args() const
 {
     vec_basic args;
@@ -226,13 +210,6 @@ int UnivariatePolynomial::compare(const Basic &o) const
         return cmp;
 
     return map_int_Expr_compare(poly_.get_dict(), s.poly_.get_dict());
-}
-
-RCP<const UnivariatePolynomial>
-UnivariatePolynomial::from_dict(const RCP<const Symbol> &var,
-                                UnivariateExprPolynomial &&d)
-{
-    return make_rcp<const UnivariatePolynomial>(var, std::move(d));
 }
 
 vec_basic UnivariatePolynomial::get_args() const

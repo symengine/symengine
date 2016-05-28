@@ -300,14 +300,6 @@ public:
     std::size_t __hash__() const;
     int compare(const Basic &o) const;
 
-    // creates a UnivariateIntPolynomial in cannonical form based on the
-    // dictionary.
-    static RCP<const UnivariateIntPolynomial>
-    from_dict(const RCP<const Symbol> &var, UIntDict &&d);
-
-    /*!
-    * Adds coef*var_**n to the dict_
-    */
     integer_class max_abs_coef() const;
     //! Evaluates the UnivariateIntPolynomial at value x
     integer_class eval(const integer_class &x) const;
@@ -542,12 +534,6 @@ public:
     bool is_canonical(const UnivariateExprPolynomial &dict) const;
     std::size_t __hash__() const;
     int compare(const Basic &o) const;
-
-    /*! Creates appropriate instance (i.e Symbol, Integer,
-    * Mul, Pow, UnivariatePolynomial) depending on the size of dictionary `d`.
-    */
-    static RCP<const UnivariatePolynomial>
-    from_dict(const RCP<const Symbol> &var, UnivariateExprPolynomial &&d);
 
     Expression max_coef() const;
     //! Evaluates the UnivariatePolynomial at value x

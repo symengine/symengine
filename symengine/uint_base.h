@@ -34,6 +34,23 @@ public:
         }
     }
 
+    // creates a Poly in cannonical form based on the dictionary.
+    static RCP<const Poly> from_dict(const RCP<const Symbol> &var,
+                                     Container &&d)
+    {
+        auto iter = d.dict_.begin();
+        while (iter != d.dict_.end()) {
+            if (iter->second == Coeff(0)) {
+                auto toErase = iter;
+                iter++;
+                d.dict_.erase(toErase);
+            } else {
+                iter++;
+            }
+        }
+        return make_rcp<const Poly>(var, std::move(d));
+    }
+    // create a Poly from a dense vector of Coeff coefficients
     static RCP<const Poly> from_vec(const RCP<const Symbol> &var,
                                     const std::vector<Coeff> v)
     {
