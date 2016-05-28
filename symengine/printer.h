@@ -56,12 +56,12 @@ public:
         }
     }
 
-    void bvisit(const UnivariateIntPolynomial &x)
+    void bvisit(const UIntPolyO &x)
     {
         bvisit_upoly(x);
     }
 
-    void bvisit(const UnivariatePolynomial &x)
+    void bvisit(const UExprPolyO &x)
     {
         bvisit_upoly(x);
     }
@@ -221,10 +221,10 @@ public:
     void bvisit(const Add &x);
     void bvisit(const Mul &x);
     void bvisit(const Pow &x);
-    void bvisit(const UnivariateIntPolynomial &x);
+    void bvisit(const UIntPolyO &x);
     void bvisit(const MultivariateIntPolynomial &x);
     void bvisit(const MultivariatePolynomial &x);
-    void bvisit(const UnivariatePolynomial &x);
+    void bvisit(const UExprPolyO &x);
     void bvisit(const UnivariateSeries &x);
 #ifdef HAVE_SYMENGINE_PIRANHA
     void bvisit(const URatPSeriesPiranha &x);

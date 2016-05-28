@@ -282,8 +282,7 @@ public:
     {
         return o.rcp_from_this_cast<MultivariateIntPolynomial>();
     }
-    static RCP<const MultivariateIntPolynomial>
-    convert(const UnivariateIntPolynomial &o);
+    static RCP<const MultivariateIntPolynomial> convert(const UIntPolyO &o);
 };
 
 // MultivariatePolynomial
@@ -308,8 +307,7 @@ public:
     {
         return o.rcp_from_this_cast<MultivariatePolynomial>();
     }
-    static RCP<const MultivariatePolynomial>
-    convert(const UnivariatePolynomial &o);
+    static RCP<const MultivariatePolynomial> convert(const UExprPolyO &o);
 };
 
 template <class T>
@@ -317,7 +315,7 @@ struct is_mpoly_expr : std::false_type {
 };
 
 template <>
-struct is_mpoly_expr<UnivariatePolynomial> : std::true_type {
+struct is_mpoly_expr<UExprPolyO> : std::true_type {
 };
 
 template <>
@@ -356,7 +354,7 @@ struct is_mpoly_int : std::false_type {
 };
 
 template <>
-struct is_mpoly_int<UnivariateIntPolynomial> : std::true_type {
+struct is_mpoly_int<UIntPolyO> : std::true_type {
 };
 
 template <>

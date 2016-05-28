@@ -300,9 +300,9 @@ char _print_sign(const integer_class &i)
     }
 }
 
-// UnivariateIntPolynomial printing, tests taken from SymPy and printing ensures
+// UIntPolyO printing, tests taken from SymPy and printing ensures
 // that there is compatibility
-void StrPrinter::bvisit(const UnivariateIntPolynomial &x)
+void StrPrinter::bvisit(const UIntPolyO &x)
 {
     std::ostringstream s;
     // bool variable needed to take care of cases like -5, -x, -3*x etc.
@@ -357,9 +357,9 @@ void StrPrinter::bvisit(const UnivariateIntPolynomial &x)
     str_ = s.str();
 }
 
-// UnivariatePolynomial printing, tests taken from SymPy and printing ensures
+// UExprPolyO printing, tests taken from SymPy and printing ensures
 // that there is compatibility
-void StrPrinter::bvisit(const UnivariatePolynomial &x)
+void StrPrinter::bvisit(const UExprPolyO &x)
 {
     std::ostringstream s;
     if (x.get_dict().size() == 0)

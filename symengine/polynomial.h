@@ -1,6 +1,6 @@
 /**
  *  \file polynomial.h
- *  Class for sparse Polynomial: UnivariateIntPolynomial and Polynomial
+ *  Class for sparse Polynomial: UIntPolyO and Polynomial
  **/
 #ifndef SYMENGINE_POLYNOMIALS_H
 #define SYMENGINE_POLYNOMIALS_H
@@ -11,7 +11,7 @@
 
 namespace SymEngine
 {
-// Calculates bit length of number, used in UIntDict*= only
+// Calculates bit length of number, used in UIntODict*= only
 template <typename T>
 unsigned int bit_length(T t)
 {
@@ -179,32 +179,32 @@ public:
     }
 };
 
-class UIntDict : public ODictWrapper<unsigned int, integer_class, UIntDict>
+class UIntODict : public ODictWrapper<unsigned int, integer_class, UIntODict>
 {
 
 public:
-    UIntDict() SYMENGINE_NOEXCEPT
+    UIntODict() SYMENGINE_NOEXCEPT
     {
     }
-    ~UIntDict() SYMENGINE_NOEXCEPT
+    ~UIntODict() SYMENGINE_NOEXCEPT
     {
     }
-    UIntDict(UIntDict &&other) SYMENGINE_NOEXCEPT
+    UIntODict(UIntODict &&other) SYMENGINE_NOEXCEPT
         : ODictWrapper(std::move(other))
     {
     }
-    UIntDict(const int &i) : ODictWrapper(i)
+    UIntODict(const int &i) : ODictWrapper(i)
     {
     }
-    UIntDict(const map_uint_mpz &p) : ODictWrapper(p)
+    UIntODict(const map_uint_mpz &p) : ODictWrapper(p)
     {
     }
-    UIntDict(const integer_class &i) : ODictWrapper(i)
+    UIntODict(const integer_class &i) : ODictWrapper(i)
     {
     }
 
-    UIntDict(const UIntDict &) = default;
-    UIntDict &operator=(const UIntDict &) = default;
+    UIntODict(const UIntODict &) = default;
+    UIntODict &operator=(const UIntODict &) = default;
 
     //! Evaluates the dict_ at value 2**x
     integer_class eval_bit(const unsigned int &x) const
@@ -222,7 +222,7 @@ public:
         return result;
     }
 
-    UIntDict &operator*=(const UIntDict &other)
+    UIntODict &operator*=(const UIntODict &other)
     {
         int mul = 1;
 
@@ -263,7 +263,7 @@ public:
         return *this;
     }
 
-    int compare(const UIntDict &other) const
+    int compare(const UIntODict &other) const
     {
         if (dict_.size() != other.dict_.size())
             return (dict_.size() < other.dict_.size()) ? -1 : 1;
@@ -280,40 +280,39 @@ public:
         return curr;
     }
 
-}; // UIntDict
+}; // UIntODict
 
-class UnivariateIntPolynomial
-    : public UIntPolyBase<UIntDict, UnivariateIntPolynomial>
+class UIntPolyO : public UPolyBase<UIntODict, UIntPolyO>
 {
 public:
-    IMPLEMENT_TYPEID(UNIVARIATEINTPOLYNOMIAL)
-    //! Constructor of UnivariateIntPolynomial class
-    UnivariateIntPolynomial(const RCP<const Symbol> &var, UIntDict &&dict);
+    IMPLEMENT_TYPEID(UINTPOLYO)
+    //! Constructor of UIntPolyO class
+    UIntPolyO(const RCP<const Symbol> &var, UIntODict &&dict);
     //! Constructor using a dense vector of integer_class coefficients
 
-    UnivariateIntPolynomial(const RCP<const Symbol> &var,
-                            const std::vector<integer_class> &v);
+    UIntPolyO(const RCP<const Symbol> &var,
+              const std::vector<integer_class> &v);
 
     //! \return true if canonical
-    bool is_canonical(const UIntDict &dict) const;
+    bool is_canonical(const UIntODict &dict) const;
     //! \return size of the hash
     std::size_t __hash__() const;
     int compare(const Basic &o) const;
 
-    // creates a UnivariateIntPolynomial in cannonical form based on the
+    // creates a UIntPolyO in cannonical form based on the
     // dictionary.
-    static RCP<const UnivariateIntPolynomial>
-    from_dict(const RCP<const Symbol> &var, UIntDict &&d);
-    // create a UnivariateIntPolynomial from a dense vector of integer_class
+    static RCP<const UIntPolyO> from_dict(const RCP<const Symbol> &var,
+                                          UIntODict &&d);
+    // create a UIntPolyO from a dense vector of integer_class
     // coefficients
-    static RCP<const UnivariateIntPolynomial>
-    from_vec(const RCP<const Symbol> &var, const std::vector<integer_class> &v);
+    static RCP<const UIntPolyO> from_vec(const RCP<const Symbol> &var,
+                                         const std::vector<integer_class> &v);
 
     /*!
     * Adds coef*var_**n to the dict_
     */
     integer_class max_abs_coef() const;
-    //! Evaluates the UnivariateIntPolynomial at value x
+    //! Evaluates the UIntPolyO at value x
     integer_class eval(const integer_class &x) const;
 
     //! \return `true` if `0`
@@ -342,68 +341,62 @@ public:
         return poly_.degree();
     }
 
-}; // UnivariateIntPolynomial
+}; // UIntPolyO
 
-inline RCP<const UnivariateIntPolynomial>
-univariate_int_polynomial(RCP<const Symbol> i, UIntDict &&dict)
+inline RCP<const UIntPolyO> uint_poly(RCP<const Symbol> i, UIntODict &&dict)
 {
-    return UnivariateIntPolynomial::from_dict(i, std::move(dict));
+    return UIntPolyO::from_dict(i, std::move(dict));
 }
 
-inline RCP<const UnivariateIntPolynomial>
-univariate_int_polynomial(RCP<const Symbol> i, map_uint_mpz &&dict)
+inline RCP<const UIntPolyO> uint_poly(RCP<const Symbol> i, map_uint_mpz &&dict)
 {
-    UIntDict wrapper(dict);
-    return UnivariateIntPolynomial::from_dict(i, std::move(wrapper));
+    UIntODict wrapper(dict);
+    return UIntPolyO::from_dict(i, std::move(wrapper));
 }
 
-class UnivariateExprPolynomial
-    : public ODictWrapper<int, Expression, UnivariateExprPolynomial>
+class UExprODict : public ODictWrapper<int, Expression, UExprODict>
 {
 
 public:
-    UnivariateExprPolynomial() SYMENGINE_NOEXCEPT
+    UExprODict() SYMENGINE_NOEXCEPT
     {
     }
-    ~UnivariateExprPolynomial() SYMENGINE_NOEXCEPT
+    ~UExprODict() SYMENGINE_NOEXCEPT
     {
     }
-    UnivariateExprPolynomial(UnivariateExprPolynomial &&other)
-        SYMENGINE_NOEXCEPT : ODictWrapper(std::move(other))
+    UExprODict(UExprODict &&other) SYMENGINE_NOEXCEPT
+        : ODictWrapper(std::move(other))
     {
     }
-    UnivariateExprPolynomial(const int &i) : ODictWrapper(i)
+    UExprODict(const int &i) : ODictWrapper(i)
     {
     }
-    UnivariateExprPolynomial(const map_int_Expr &p) : ODictWrapper(p)
+    UExprODict(const map_int_Expr &p) : ODictWrapper(p)
     {
     }
-    UnivariateExprPolynomial(const Expression &expr) : ODictWrapper(expr)
-    {
-    }
-
-    UnivariateExprPolynomial(const std::string &s) : ODictWrapper(s)
+    UExprODict(const Expression &expr) : ODictWrapper(expr)
     {
     }
 
-    UnivariateExprPolynomial(const UnivariateExprPolynomial &) = default;
-    UnivariateExprPolynomial &operator=(const UnivariateExprPolynomial &)
-        = default;
+    UExprODict(const std::string &s) : ODictWrapper(s)
+    {
+    }
 
-    friend std::ostream &operator<<(std::ostream &os,
-                                    const UnivariateExprPolynomial &expr)
+    UExprODict(const UExprODict &) = default;
+    UExprODict &operator=(const UExprODict &) = default;
+
+    friend std::ostream &operator<<(std::ostream &os, const UExprODict &expr)
     {
         os << expr.dict_;
         return os;
     }
 
-    friend UnivariateExprPolynomial operator/(const UnivariateExprPolynomial &a,
-                                              const Expression &b)
+    friend UExprODict operator/(const UExprODict &a, const Expression &b)
     {
         return a * (1 / b);
     }
 
-    UnivariateExprPolynomial &operator/=(const Expression &other)
+    UExprODict &operator/=(const Expression &other)
     {
         *this *= (1 / other);
         return *this;
@@ -504,7 +497,7 @@ public:
         return Add::from_dict(coeff, std::move(dict));
     }
 
-    int compare(const UnivariateExprPolynomial &other) const
+    int compare(const UExprODict &other) const
     {
         if (dict_.size() != other.dict_.size())
             return (dict_.size() < other.dict_.size()) ? -1 : 1;
@@ -528,34 +521,31 @@ public:
         else
             return Expression(0);
     }
-}; // UnivariateExprPolynomial
+}; // UExprODict
 
-class UnivariatePolynomial
-    : public UIntPolyBase<UnivariateExprPolynomial, UnivariatePolynomial>
+class UExprPolyO : public UPolyBase<UExprODict, UExprPolyO>
 {
 public:
-    IMPLEMENT_TYPEID(UNIVARIATEPOLYNOMIAL)
-    //! Constructor of UnivariatePolynomial class
-    UnivariatePolynomial(const RCP<const Symbol> &var,
-                         UnivariateExprPolynomial &&dict);
+    IMPLEMENT_TYPEID(UEXPRPOLYO)
+    //! Constructor of UExprPolyO class
+    UExprPolyO(const RCP<const Symbol> &var, UExprODict &&dict);
     //! Constructor using a dense vector of Expression
-    UnivariatePolynomial(const RCP<const Symbol> &var,
-                         const std::vector<Expression> &v);
+    UExprPolyO(const RCP<const Symbol> &var, const std::vector<Expression> &v);
 
-    bool is_canonical(const UnivariateExprPolynomial &dict) const;
+    bool is_canonical(const UExprODict &dict) const;
     std::size_t __hash__() const;
     int compare(const Basic &o) const;
 
     /*! Creates appropriate instance (i.e Symbol, Integer,
-    * Mul, Pow, UnivariatePolynomial) depending on the size of dictionary `d`.
+    * Mul, Pow, UExprPolyO) depending on the size of dictionary `d`.
     */
-    static RCP<const UnivariatePolynomial>
-    from_dict(const RCP<const Symbol> &var, UnivariateExprPolynomial &&d);
-    static RCP<const UnivariatePolynomial>
-    from_vec(const RCP<const Symbol> &var, const std::vector<Expression> &v);
+    static RCP<const UExprPolyO> from_dict(const RCP<const Symbol> &var,
+                                           UExprODict &&d);
+    static RCP<const UExprPolyO> from_vec(const RCP<const Symbol> &var,
+                                          const std::vector<Expression> &v);
 
     Expression max_coef() const;
-    //! Evaluates the UnivariatePolynomial at value x
+    //! Evaluates the UExprPolyO at value x
     Expression eval(const Expression &x) const;
 
     //! \return `true` if `0`
@@ -583,19 +573,18 @@ public:
     {
         return poly_.get_dict();
     }
-}; // UnivariatePolynomial
+}; // UExprPolyO
 
-inline RCP<const UnivariatePolynomial>
-univariate_polynomial(RCP<const Symbol> i, UnivariateExprPolynomial &&dict)
+inline RCP<const UExprPolyO> uexpr_poly(RCP<const Symbol> i, UExprODict &&dict)
 {
-    return UnivariatePolynomial::from_dict(i, std::move(dict));
+    return UExprPolyO::from_dict(i, std::move(dict));
 }
 
-inline RCP<const UnivariatePolynomial>
-univariate_polynomial(RCP<const Symbol> i, map_int_Expr &&dict)
+inline RCP<const UExprPolyO> uexpr_poly(RCP<const Symbol> i,
+                                        map_int_Expr &&dict)
 {
-    UnivariateExprPolynomial wrapper(dict);
-    return UnivariatePolynomial::from_dict(i, std::move(wrapper));
+    UExprODict wrapper(dict);
+    return UExprPolyO::from_dict(i, std::move(wrapper));
 }
 
 } // SymEngine

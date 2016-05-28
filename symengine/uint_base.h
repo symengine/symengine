@@ -11,27 +11,26 @@ namespace SymEngine
 {
 
 template <typename Container, typename Poly>
-class UIntPolyBase : public Basic
+class UPolyBase : public Basic
 {
 protected:
     RCP<const Symbol> var_;
     Container poly_;
 
 public:
-    UIntPolyBase(const RCP<const Symbol> &var, Container &&container)
+    UPolyBase(const RCP<const Symbol> &var, Container &&container)
         : var_{var}, poly_{container}
     {
     }
 
     // unify these two constructor? another template would be required
     // may solve some more problems, like `get_degree` virtualization
-    UIntPolyBase(const RCP<const Symbol> &var,
-                 const std::vector<integer_class> &v)
+    UPolyBase(const RCP<const Symbol> &var, const std::vector<integer_class> &v)
         : var_{var}
     {
     }
 
-    UIntPolyBase(const RCP<const Symbol> &var, const std::vector<Expression> &v)
+    UPolyBase(const RCP<const Symbol> &var, const std::vector<Expression> &v)
         : var_{var}
     {
     }
@@ -62,7 +61,7 @@ public:
 };
 
 template <typename Poly>
-RCP<const Poly> add_poly(const Poly &a, const Poly &b)
+RCP<const Poly> add_upoly(const Poly &a, const Poly &b)
 {
     if (!(a.get_var()->__eq__(*b.get_var())))
         throw std::runtime_error("Error: variables must agree.");
@@ -73,14 +72,14 @@ RCP<const Poly> add_poly(const Poly &a, const Poly &b)
 }
 
 template <typename Poly>
-RCP<const Poly> neg_poly(const Poly &a)
+RCP<const Poly> neg_upoly(const Poly &a)
 {
     auto dict = -(a.get_poly());
     return Poly::from_dict(a.get_var(), std::move(dict));
 }
 
 template <typename Poly>
-RCP<const Poly> sub_poly(const Poly &a, const Poly &b)
+RCP<const Poly> sub_upoly(const Poly &a, const Poly &b)
 {
     if (!(a.get_var()->__eq__(*b.get_var())))
         throw std::runtime_error("Error: variables must agree.");
@@ -91,7 +90,7 @@ RCP<const Poly> sub_poly(const Poly &a, const Poly &b)
 }
 
 template <typename Poly>
-RCP<const Poly> mul_poly(const Poly &a, const Poly &b)
+RCP<const Poly> mul_upoly(const Poly &a, const Poly &b)
 {
     if (!(a.get_var()->__eq__(*b.get_var())))
         throw std::runtime_error("Error: variables must agree.");
