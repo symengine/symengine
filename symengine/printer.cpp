@@ -365,7 +365,7 @@ void StrPrinter::bvisit(const UnivariatePolynomial &x)
     if (x.get_dict().size() == 0)
         s << "0";
     else
-        s << x.get_expr_dict().__str__(x.get_var()->get_name());
+        s << x.get_poly().__str__(x.get_var()->get_name());
     str_ = s.str();
 }
 

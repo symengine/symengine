@@ -7,6 +7,7 @@
 
 #include <symengine/expression.h>
 #include <symengine/monomials.h>
+#include <symengine/uint_base.h>
 
 namespace SymEngine
 {
@@ -169,6 +170,13 @@ public:
     {
         return dict_.empty();
     }
+
+    Key degree() const
+    {
+        if (dict_.empty())
+            return Key(0);
+        return dict_.rbegin()->first;
+    }
 };
 
 class UIntDict : public ODictWrapper<unsigned int, integer_class, UIntDict>
@@ -262,13 +270,6 @@ public:
         return map_uint_mpz_compare(dict_, other.dict_);
     }
 
-    inline unsigned int degree() const
-    {
-        if (dict_.empty())
-            return 0;
-        return dict_.rbegin()->first;
-    }
-
     integer_class max_abs_coef() const
     {
         integer_class curr(mp_abs(dict_.begin()->second));
@@ -281,37 +282,22 @@ public:
 
 }; // UIntDict
 
-class UnivariateIntPolynomial : public Basic
+class UnivariateIntPolynomial
+    : public UIntPolyBase<UIntDict, UnivariateIntPolynomial>
 {
-private:
-    //! `degree` : Degree of UnivariateIntPolynomial
-    //! `var_` : Variable of the uni-variate UnivariateIntPolynomial
-    //! `dict_` : holds the UnivariateIntPolynomial
-    // UnivariateIntPolynomial x**2 + 2*x + 1 has dict_ = {{0, 1}, {1, 2}, {2,
-    // 1}} with var_ = "x"
-    unsigned int degree_;
-    RCP<const Symbol> var_;
-    UIntDict poly_;
-
 public:
     IMPLEMENT_TYPEID(UNIVARIATEINTPOLYNOMIAL)
     //! Constructor of UnivariateIntPolynomial class
-    UnivariateIntPolynomial(const RCP<const Symbol> &var,
-                            const unsigned int &degree, UIntDict &&dict);
+    UnivariateIntPolynomial(const RCP<const Symbol> &var, UIntDict &&dict);
     //! Constructor using a dense vector of integer_class coefficients
 
     UnivariateIntPolynomial(const RCP<const Symbol> &var,
                             const std::vector<integer_class> &v);
 
     //! \return true if canonical
-    bool is_canonical(const unsigned int &degree, const UIntDict &dict) const;
+    bool is_canonical(const UIntDict &dict) const;
     //! \return size of the hash
     std::size_t __hash__() const;
-    /*! Equality comparator
-     * \param o - Object to be compared with
-     * \return whether the 2 objects are equal
-     * */
-    bool __eq__(const Basic &o) const;
     int compare(const Basic &o) const;
 
     // creates a UnivariateIntPolynomial in cannonical form based on the
@@ -346,35 +332,17 @@ public:
     bool is_pow() const;
 
     virtual vec_basic get_args() const;
-    inline unsigned int get_degree() const
-    {
-        return degree_;
-    }
-    inline RCP<const Symbol> get_var() const
-    {
-        return var_;
-    }
     inline const map_uint_mpz &get_dict() const
     {
         return poly_.dict_;
     }
-    inline const UIntDict &get_int_dict() const
-    {
-        return poly_;
-    }
-}; // UnivariateIntPolynomial
 
-//! Adding two UnivariateIntPolynomial a and b
-RCP<const UnivariateIntPolynomial> add_poly(const UnivariateIntPolynomial &a,
-                                            const UnivariateIntPolynomial &b);
-//! Negative of a UnivariateIntPolynomial
-RCP<const UnivariateIntPolynomial> neg_poly(const UnivariateIntPolynomial &a);
-//! Subtracting two UnivariateIntPolynomial a and b
-RCP<const UnivariateIntPolynomial> sub_poly(const UnivariateIntPolynomial &a,
-                                            const UnivariateIntPolynomial &b);
-//! Multiplying two UnivariateIntPolynomial a and b
-RCP<const UnivariateIntPolynomial> mul_poly(const UnivariateIntPolynomial &a,
-                                            const UnivariateIntPolynomial &b);
+    inline unsigned int get_degree() const
+    {
+        return poly_.degree();
+    }
+
+}; // UnivariateIntPolynomial
 
 inline RCP<const UnivariateIntPolynomial>
 univariate_int_polynomial(RCP<const Symbol> i, UIntDict &&dict)
@@ -562,26 +530,20 @@ public:
     }
 }; // UnivariateExprPolynomial
 
-class UnivariatePolynomial : public Basic
+class UnivariatePolynomial
+    : public UIntPolyBase<UnivariateExprPolynomial, UnivariatePolynomial>
 {
-private:
-    int degree_;
-    RCP<const Symbol> var_;
-    UnivariateExprPolynomial poly_;
-
 public:
     IMPLEMENT_TYPEID(UNIVARIATEPOLYNOMIAL)
     //! Constructor of UnivariatePolynomial class
-    UnivariatePolynomial(const RCP<const Symbol> &var, const int &degree,
-                         const UnivariateExprPolynomial &&dict);
+    UnivariatePolynomial(const RCP<const Symbol> &var,
+                         UnivariateExprPolynomial &&dict);
     //! Constructor using a dense vector of Expression
     UnivariatePolynomial(const RCP<const Symbol> &var,
                          const std::vector<Expression> &v);
 
-    bool is_canonical(const int &degree,
-                      const UnivariateExprPolynomial &dict) const;
+    bool is_canonical(const UnivariateExprPolynomial &dict) const;
     std::size_t __hash__() const;
-    bool __eq__(const Basic &o) const;
     int compare(const Basic &o) const;
 
     /*! Creates appropriate instance (i.e Symbol, Integer,
@@ -615,34 +577,13 @@ public:
 
     inline int get_degree() const
     {
-        return degree_;
-    }
-    inline RCP<const Symbol> get_var() const
-    {
-        return var_;
+        return poly_.degree();
     }
     inline const map_int_Expr &get_dict() const
     {
         return poly_.get_dict();
     }
-    const UnivariateExprPolynomial &get_expr_dict() const
-    {
-        return poly_;
-    }
-
 }; // UnivariatePolynomial
-
-//! Adding two UnivariatePolynomial a and b
-RCP<const UnivariatePolynomial> add_uni_poly(const UnivariatePolynomial &a,
-                                             const UnivariatePolynomial &b);
-//! Negative of a UnivariatePolynomial
-RCP<const UnivariatePolynomial> neg_uni_poly(const UnivariatePolynomial &a);
-//! Subtracting two UnivariatePolynomial a and b
-RCP<const UnivariatePolynomial> sub_uni_poly(const UnivariatePolynomial &a,
-                                             const UnivariatePolynomial &b);
-//! Multiplying two UnivariatePolynomial a and b
-RCP<const UnivariatePolynomial> mul_uni_poly(const UnivariatePolynomial &a,
-                                             const UnivariatePolynomial &b);
 
 inline RCP<const UnivariatePolynomial>
 univariate_polynomial(RCP<const Symbol> i, UnivariateExprPolynomial &&dict)
