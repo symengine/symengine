@@ -1,6 +1,6 @@
 #include <symengine/basic.h>
 #include <symengine/symbol.h>
-#include <symengine/polynomial.h>
+#include <symengine/uintpoly.h>
 #include <symengine/add.h>
 #include <symengine/integer.h>
 #include <symengine/rational.h>
@@ -142,7 +142,7 @@ public:
         throw std::runtime_error("Symbol cannot be evaluated as an arb type.");
     }
 
-    void bvisit(const UnivariateIntPolynomial &x)
+    void bvisit(const UIntPolyO &x)
     {
         throw std::runtime_error("Not implemented.");
     }
