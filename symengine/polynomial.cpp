@@ -11,7 +11,6 @@ UnivariateIntPolynomial::UnivariateIntPolynomial(const RCP<const Symbol> &var,
                                                  UIntDict &&dict)
     : UIntPolyBase(var, std::move(dict))
 {
-
     SYMENGINE_ASSERT(is_canonical(poly_))
 }
 
@@ -19,12 +18,6 @@ UnivariateIntPolynomial::UnivariateIntPolynomial(
     const RCP<const Symbol> &var, const std::vector<integer_class> &v)
     : UIntPolyBase(var, std::move(v))
 {
-    poly_.dict_ = {};
-    for (unsigned int i = 0; i < v.size(); i++) {
-        if (v[i] != 0) {
-            poly_.dict_[i] = v[i];
-        }
-    }
 }
 
 bool UnivariateIntPolynomial::is_canonical(const UIntDict &dict) const
@@ -80,13 +73,6 @@ UnivariateIntPolynomial::from_dict(const RCP<const Symbol> &var, UIntDict &&d)
         }
     }
     return make_rcp<const UnivariateIntPolynomial>(var, std::move(d));
-}
-
-RCP<const UnivariateIntPolynomial>
-UnivariateIntPolynomial::from_vec(const RCP<const Symbol> &var,
-                                  const std::vector<integer_class> &v)
-{
-    return make_rcp<const UnivariateIntPolynomial>(var, std::move(v));
 }
 
 vec_basic UnivariateIntPolynomial::get_args() const
@@ -200,12 +186,6 @@ UnivariatePolynomial::UnivariatePolynomial(const RCP<const Symbol> &var,
                                            const std::vector<Expression> &v)
     : UIntPolyBase(var, std::move(v))
 {
-    poly_.dict_ = {};
-    for (unsigned int i = 0; i < v.size(); i++) {
-        if (v[i] != 0) {
-            poly_.dict_[i] = v[i];
-        }
-    }
 }
 
 bool UnivariatePolynomial::is_canonical(
@@ -246,13 +226,6 @@ int UnivariatePolynomial::compare(const Basic &o) const
         return cmp;
 
     return map_int_Expr_compare(poly_.get_dict(), s.poly_.get_dict());
-}
-
-RCP<const UnivariatePolynomial>
-UnivariatePolynomial::from_vec(const RCP<const Symbol> &var,
-                               const std::vector<Expression> &v)
-{
-    return make_rcp<const UnivariatePolynomial>(var, std::move(v));
 }
 
 RCP<const UnivariatePolynomial>

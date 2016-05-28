@@ -283,7 +283,7 @@ public:
 }; // UIntDict
 
 class UnivariateIntPolynomial
-    : public UIntPolyBase<UIntDict, UnivariateIntPolynomial>
+    : public UIntPolyBase<UIntDict, UnivariateIntPolynomial, integer_class>
 {
 public:
     IMPLEMENT_TYPEID(UNIVARIATEINTPOLYNOMIAL)
@@ -304,10 +304,6 @@ public:
     // dictionary.
     static RCP<const UnivariateIntPolynomial>
     from_dict(const RCP<const Symbol> &var, UIntDict &&d);
-    // create a UnivariateIntPolynomial from a dense vector of integer_class
-    // coefficients
-    static RCP<const UnivariateIntPolynomial>
-    from_vec(const RCP<const Symbol> &var, const std::vector<integer_class> &v);
 
     /*!
     * Adds coef*var_**n to the dict_
@@ -531,7 +527,8 @@ public:
 }; // UnivariateExprPolynomial
 
 class UnivariatePolynomial
-    : public UIntPolyBase<UnivariateExprPolynomial, UnivariatePolynomial>
+    : public UIntPolyBase<UnivariateExprPolynomial, UnivariatePolynomial,
+                          Expression>
 {
 public:
     IMPLEMENT_TYPEID(UNIVARIATEPOLYNOMIAL)
@@ -551,8 +548,6 @@ public:
     */
     static RCP<const UnivariatePolynomial>
     from_dict(const RCP<const Symbol> &var, UnivariateExprPolynomial &&d);
-    static RCP<const UnivariatePolynomial>
-    from_vec(const RCP<const Symbol> &var, const std::vector<Expression> &v);
 
     Expression max_coef() const;
     //! Evaluates the UnivariatePolynomial at value x
