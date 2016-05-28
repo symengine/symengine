@@ -95,14 +95,53 @@ void test_complex() {
     s = basic_str(e);
 
     SYMENGINE_C_ASSERT(strcmp(s, "100/47 + 76/59*I") == 0);
-
     SYMENGINE_C_ASSERT(!is_a_Symbol(e));
     SYMENGINE_C_ASSERT(!is_a_Rational(e));
     SYMENGINE_C_ASSERT(!is_a_Integer(e));
     SYMENGINE_C_ASSERT(is_a_Complex(e));
 
+    basic_str_free(s);
+
+    complex_real_part(f, e);
+    s = basic_str(f);
+
+    SYMENGINE_C_ASSERT(strcmp(s, "100/47") == 0);
+    SYMENGINE_C_ASSERT(!is_a_Symbol(f));
+    SYMENGINE_C_ASSERT(is_a_Rational(f));
+    SYMENGINE_C_ASSERT(!is_a_Integer(f));
+    SYMENGINE_C_ASSERT(!is_a_Complex(f));
+
+    basic_str_free(s);
+
+    complex_imaginary_part(f, e);
+    s = basic_str(f);
+
+    SYMENGINE_C_ASSERT(strcmp(s, "76/59") == 0);
+    SYMENGINE_C_ASSERT(!is_a_Symbol(f));
+    SYMENGINE_C_ASSERT(is_a_Rational(f));
+    SYMENGINE_C_ASSERT(!is_a_Integer(f));
+    SYMENGINE_C_ASSERT(!is_a_Complex(f));
+        
+    basic_str_free(s);
+
     basic_free_stack(e);
     basic_free_stack(f);
+}
+
+void test_real_double()
+{
+    basic d;
+    basic_new_stack(d);
+    real_double_set_d(d, 123.456);
+
+    char *s2;
+    s2 = basic_str(d);
+
+    SYMENGINE_C_ASSERT(basic_get_type(d) == SYMENGINE_REAL_DOUBLE);
+    SYMENGINE_C_ASSERT(strcmp(s2, "123.456") == 0);
+    basic_str_free(s2);
+    
+    basic_free_stack(d);
 }
 
 void test_CVectorInt1()
@@ -675,5 +714,6 @@ int main(int argc, char* argv[])
     test_ascii_art();
     test_functions();
     test_ntheory();
+    test_real_double();
     return 0;
 }

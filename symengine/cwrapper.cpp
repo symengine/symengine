@@ -29,6 +29,7 @@ using SymEngine::integer_class;
 using SymEngine::rational_class;
 using SymEngine::Number;
 using SymEngine::Complex;
+using SymEngine::RealDouble;
 using SymEngine::rcp_static_cast;
 using SymEngine::is_a;
 using SymEngine::RCPBasicKeyLess;
@@ -186,6 +187,11 @@ void integer_set_str(basic s, char *c)
     s->m = SymEngine::integer(integer_class(c));
 }
 
+void real_double_set_d(basic s, double d)
+{
+    s->m = SymEngine::real_double(d);
+}
+
 signed long integer_get_si(const basic s)
 {
     SYMENGINE_ASSERT(is_a<Integer>(*(s->m)));
@@ -247,6 +253,18 @@ void complex_set_rat(basic s, const basic re, const basic im)
 void complex_set_mpq(basic s, const mpq_t re, const mpq_t im)
 {
     s->m = SymEngine::Complex::from_mpq(rational_class(re), rational_class(im));
+}
+
+void complex_real_part(basic s, basic com)
+{
+    SYMENGINE_ASSERT(is_a<Complex>(*(com->m)));
+    s->m = (rcp_static_cast<const Complex>(com->m))->real_part();
+}
+
+void complex_imaginary_part(basic s, basic com)
+{
+    SYMENGINE_ASSERT(is_a<Complex>(*(com->m)));
+    s->m = (rcp_static_cast<const Complex>(com->m))->imaginary_part();
 }
 
 int basic_diff(basic s, const basic expr, basic const symbol)

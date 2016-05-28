@@ -124,6 +124,8 @@ void integer_set_ui(basic s, unsigned long i);
 void integer_set_mpz(basic s, const mpz_t i);
 //! Assign to s, an integer that has base 10 representation c.
 void integer_set_str(basic s, char *c);
+//! Assing to s, a real_double that has base 10 representation c.
+void real_double_set_d(basic s, double d);
 
 //! Returns signed long value of s.
 signed long integer_get_si(const basic s);
@@ -147,6 +149,10 @@ void complex_set(basic s, const basic re, const basic im);
 void complex_set_rat(basic s, const basic re, const basic im);
 //! Assign to s, a complex re + i*im, where re and im are of type mpq.
 void complex_set_mpq(basic s, const mpq_t re, const mpq_t im);
+//! Assign to s, a real where com is a complex
+void complex_real_part(basic s, basic com);
+//! Assign to s, an imaginary where com is a complex
+void complex_imaginary_part(basic s, basic com);
 
 //! Assigns s = a + b.
 void basic_add(basic s, const basic a, const basic b);
