@@ -3,7 +3,8 @@
 #include <iostream>
 
 #include <symengine/mul.h>
-#include <symengine/polynomial.h>
+#include <symengine/uintpoly.h>
+#include <symengine/uexprpoly.h>
 #include <symengine/pow.h>
 #include <symengine/dict.h>
 

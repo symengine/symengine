@@ -10,7 +10,8 @@
 #include <symengine/add.h>
 #include <symengine/mul.h>
 #include <symengine/pow.h>
-#include <symengine/polynomial.h>
+#include <symengine/uintpoly.h>
+#include <symengine/uexprpoly.h>
 #include <symengine/polynomial_multivariate.h>
 #include <symengine/functions.h>
 #include <symengine/symbol.h>

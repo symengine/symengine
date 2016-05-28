@@ -9,7 +9,8 @@
 #include <symengine/integer.h>
 #include <symengine/matrix.h>
 #include <symengine/mul.h>
-#include <symengine/polynomial.h>
+#include <symengine/uintpoly.h>
+#include <symengine/uexprpoly.h>
 #include <symengine/pow.h>
 #include <symengine/printer.h>
 #include <symengine/rational.h>

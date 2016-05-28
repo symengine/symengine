@@ -9,7 +9,8 @@
 #include <symengine/functions.h>
 #include <symengine/constants.h>
 #include <symengine/visitor.h>
-#include <symengine/polynomial.h>
+#include <symengine/uintpoly.h>
+#include <symengine/uexprpoly.h>
 #include <symengine/complex_double.h>
 #include <symengine/complex_mpc.h>
 
