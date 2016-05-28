@@ -133,6 +133,23 @@ public:
 
     Wrapper &operator*=(const Wrapper &other)
     {
+        if (dict_.empty())
+            return static_cast<Wrapper &>(*this);
+
+        if (other.dict_.empty()) {
+            *this = other;
+            return static_cast<Wrapper &>(*this);
+        }
+
+        // ! other is a just constant term
+        if (other.dict_.size() == 1
+            and other.dict_.find(0) != other.dict_.end()) {
+            for (const auto &i1 : dict_)
+                for (const auto &i2 : other.dict_)
+                    dict_[i1.first] = i1.second * i2.second;
+            return static_cast<Wrapper &>(*this);
+        }
+
         std::map<Key, Value> p;
         for (const auto &i1 : dict_)
             for (const auto &i2 : other.dict_)
@@ -283,7 +300,7 @@ public:
 }; // UIntDict
 
 class UnivariateIntPolynomial
-    : public UIntPolyBase<UIntDict, UnivariateIntPolynomial>
+    : public UIntPolyBase<UIntDict, UnivariateIntPolynomial, integer_class>
 {
 public:
     IMPLEMENT_TYPEID(UNIVARIATEINTPOLYNOMIAL)
@@ -294,25 +311,10 @@ public:
     UnivariateIntPolynomial(const RCP<const Symbol> &var,
                             const std::vector<integer_class> &v);
 
-    //! \return true if canonical
-    bool is_canonical(const UIntDict &dict) const;
     //! \return size of the hash
     std::size_t __hash__() const;
     int compare(const Basic &o) const;
 
-    // creates a UnivariateIntPolynomial in cannonical form based on the
-    // dictionary.
-    static RCP<const UnivariateIntPolynomial>
-    from_dict(const RCP<const Symbol> &var, UIntDict &&d);
-    // create a UnivariateIntPolynomial from a dense vector of integer_class
-    // coefficients
-    static RCP<const UnivariateIntPolynomial>
-    from_vec(const RCP<const Symbol> &var, const std::vector<integer_class> &v);
-
-    /*!
-    * Adds coef*var_**n to the dict_
-    */
-    integer_class max_abs_coef() const;
     //! Evaluates the UnivariateIntPolynomial at value x
     integer_class eval(const integer_class &x) const;
 
@@ -484,7 +486,6 @@ public:
         return o.str();
     }
 
-    // const umap_int_basic get_basic() const
     const RCP<const Basic> get_basic(std::string var) const
     {
         RCP<const Symbol> x = symbol(var);
@@ -531,7 +532,8 @@ public:
 }; // UnivariateExprPolynomial
 
 class UnivariatePolynomial
-    : public UIntPolyBase<UnivariateExprPolynomial, UnivariatePolynomial>
+    : public UIntPolyBase<UnivariateExprPolynomial, UnivariatePolynomial,
+                          Expression>
 {
 public:
     IMPLEMENT_TYPEID(UNIVARIATEPOLYNOMIAL)
@@ -542,17 +544,8 @@ public:
     UnivariatePolynomial(const RCP<const Symbol> &var,
                          const std::vector<Expression> &v);
 
-    bool is_canonical(const UnivariateExprPolynomial &dict) const;
     std::size_t __hash__() const;
     int compare(const Basic &o) const;
-
-    /*! Creates appropriate instance (i.e Symbol, Integer,
-    * Mul, Pow, UnivariatePolynomial) depending on the size of dictionary `d`.
-    */
-    static RCP<const UnivariatePolynomial>
-    from_dict(const RCP<const Symbol> &var, UnivariateExprPolynomial &&d);
-    static RCP<const UnivariatePolynomial>
-    from_vec(const RCP<const Symbol> &var, const std::vector<Expression> &v);
 
     Expression max_coef() const;
     //! Evaluates the UnivariatePolynomial at value x

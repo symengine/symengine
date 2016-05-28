@@ -10,7 +10,7 @@
 namespace SymEngine
 {
 
-template <typename Container, typename Poly>
+template <typename Container, typename Poly, typename Coeff>
 class UIntPolyBase : public Basic
 {
 protected:
@@ -18,22 +18,27 @@ protected:
     Container poly_;
 
 public:
-    UIntPolyBase(const RCP<const Symbol> &var, Container &&container)
-        : var_{var}, poly_{container}
+    UIntPolyBase(const RCP<const Symbol> &var, Container &&d)
+        : var_{var}, poly_{d}
     {
     }
 
-    // unify these two constructor? another template would be required
-    // may solve some more problems, like `get_degree` virtualization
-    UIntPolyBase(const RCP<const Symbol> &var,
-                 const std::vector<integer_class> &v)
+    UIntPolyBase(const RCP<const Symbol> &var, const std::vector<Coeff> &v)
         : var_{var}
     {
     }
 
-    UIntPolyBase(const RCP<const Symbol> &var, const std::vector<Expression> &v)
-        : var_{var}
+    // creates a Poly in cannonical form based on the dictionary.
+    static RCP<const Poly> from_dict(const RCP<const Symbol> &var,
+                                     Container &&d)
     {
+        return make_rcp<const Poly>(var, std::move(d));
+    }
+    // create a Poly from a dense vector of Coeff coefficients
+    static RCP<const Poly> from_vec(const RCP<const Symbol> &var,
+                                    const std::vector<Coeff> v)
+    {
+        return make_rcp<const Poly>(var, std::move(v));
     }
 
     // TODO think of something to make this purely virtual

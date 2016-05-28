@@ -11,8 +11,16 @@ UnivariateIntPolynomial::UnivariateIntPolynomial(const RCP<const Symbol> &var,
                                                  UIntDict &&dict)
     : UIntPolyBase(var, std::move(dict))
 {
-
-    SYMENGINE_ASSERT(is_canonical(poly_))
+    auto iter = dict.dict_.begin();
+    while (iter != dict.dict_.end()) {
+        if (iter->second == integer_class(0)) {
+            auto toErase = iter;
+            iter++;
+            dict.dict_.erase(toErase);
+        } else {
+            iter++;
+        }
+    }
 }
 
 UnivariateIntPolynomial::UnivariateIntPolynomial(
@@ -21,19 +29,10 @@ UnivariateIntPolynomial::UnivariateIntPolynomial(
 {
     poly_.dict_ = {};
     for (unsigned int i = 0; i < v.size(); i++) {
-        if (v[i] != 0) {
+        if (v[i] != integer_class(0)) {
             poly_.dict_[i] = v[i];
         }
     }
-}
-
-bool UnivariateIntPolynomial::is_canonical(const UIntDict &dict) const
-{
-    // Check if dictionary contains terms with coeffienct 0
-    for (auto iter : dict.dict_)
-        if (iter.second == 0)
-            return false;
-    return true;
 }
 
 std::size_t UnivariateIntPolynomial::__hash__() const
@@ -66,29 +65,6 @@ int UnivariateIntPolynomial::compare(const Basic &o) const
     return map_uint_mpz_compare(poly_.dict_, s.poly_.dict_);
 }
 
-RCP<const UnivariateIntPolynomial>
-UnivariateIntPolynomial::from_dict(const RCP<const Symbol> &var, UIntDict &&d)
-{
-    auto iter = d.dict_.begin();
-    while (iter != d.dict_.end()) {
-        if (iter->second == 0) {
-            auto toErase = iter;
-            iter++;
-            d.dict_.erase(toErase);
-        } else {
-            iter++;
-        }
-    }
-    return make_rcp<const UnivariateIntPolynomial>(var, std::move(d));
-}
-
-RCP<const UnivariateIntPolynomial>
-UnivariateIntPolynomial::from_vec(const RCP<const Symbol> &var,
-                                  const std::vector<integer_class> &v)
-{
-    return make_rcp<const UnivariateIntPolynomial>(var, std::move(v));
-}
-
 vec_basic UnivariateIntPolynomial::get_args() const
 {
     vec_basic args;
@@ -114,11 +90,6 @@ vec_basic UnivariateIntPolynomial::get_args() const
     if (poly_.dict_.empty())
         args.push_back(zero);
     return args;
-}
-
-integer_class UnivariateIntPolynomial::max_abs_coef() const
-{
-    return poly_.max_abs_coef();
 }
 
 integer_class UnivariateIntPolynomial::eval(const integer_class &x) const
@@ -193,7 +164,16 @@ UnivariatePolynomial::UnivariatePolynomial(const RCP<const Symbol> &var,
                                            UnivariateExprPolynomial &&dict)
     : UIntPolyBase(var, std::move(dict))
 {
-    SYMENGINE_ASSERT(is_canonical(poly_))
+    auto iter = dict.dict_.begin();
+    while (iter != dict.dict_.end()) {
+        if (iter->second == Expression(0)) {
+            auto toErase = iter;
+            iter++;
+            dict.dict_.erase(toErase);
+        } else {
+            iter++;
+        }
+    }
 }
 
 UnivariatePolynomial::UnivariatePolynomial(const RCP<const Symbol> &var,
@@ -202,20 +182,10 @@ UnivariatePolynomial::UnivariatePolynomial(const RCP<const Symbol> &var,
 {
     poly_.dict_ = {};
     for (unsigned int i = 0; i < v.size(); i++) {
-        if (v[i] != 0) {
+        if (v[i] != Expression(0)) {
             poly_.dict_[i] = v[i];
         }
     }
-}
-
-bool UnivariatePolynomial::is_canonical(
-    const UnivariateExprPolynomial &dict) const
-{
-    // Check if dictionary contains terms with coeffienct 0
-    for (auto iter : dict.get_dict())
-        if (iter.second == 0)
-            return false;
-    return true;
 }
 
 std::size_t UnivariatePolynomial::__hash__() const
@@ -246,20 +216,6 @@ int UnivariatePolynomial::compare(const Basic &o) const
         return cmp;
 
     return map_int_Expr_compare(poly_.get_dict(), s.poly_.get_dict());
-}
-
-RCP<const UnivariatePolynomial>
-UnivariatePolynomial::from_vec(const RCP<const Symbol> &var,
-                               const std::vector<Expression> &v)
-{
-    return make_rcp<const UnivariatePolynomial>(var, std::move(v));
-}
-
-RCP<const UnivariatePolynomial>
-UnivariatePolynomial::from_dict(const RCP<const Symbol> &var,
-                                UnivariateExprPolynomial &&d)
-{
-    return make_rcp<const UnivariatePolynomial>(var, std::move(d));
 }
 
 vec_basic UnivariatePolynomial::get_args() const
