@@ -525,7 +525,8 @@ void StrPrinter::bvisit(const NumberWrapper &x)
     str_ = x.__str__();
 }
 
-void StrPrinter::bvisit(const MultivariateIntPolynomial &x) {
+/*void StrPrinter::bvisit(const MultivariateIntPolynomialExpr &x)
+{
     std::ostringstream s;
     bool first = true; //is this the first term being printed out?
     //To change the ordering in which the terms will print out, change
@@ -607,7 +608,7 @@ void StrPrinter::bvisit(const MultivariatePolynomial &x){
     str_ = final;
 }
 
-void StrPrinter::bvisit(const MultivariatePolynomial &x)
+void StrPrinter::bvisit(const MultivariatePolynomialExpr &x)
 {
     std::ostringstream s;
     bool first = true; // is this the first term being printed out?
@@ -655,7 +656,7 @@ void StrPrinter::bvisit(const MultivariatePolynomial &x)
         s << "0";
     str_ = s.str();
 }
-
+*/
 std::string StrPrinter::parenthesizeLT(const RCP<const Basic> &x,
                                        PrecedenceEnum precedenceEnum)
 {

@@ -9,7 +9,7 @@
 namespace SymEngine
 {
 
-vec_basic MultivariateIntPolynomial::get_args() const
+vec_basic MultivariateIntPolynomialExpr::get_args() const
 {
     vec_basic args;
     umap_uvec_mpz d;
@@ -31,10 +31,10 @@ vec_basic MultivariateIntPolynomial::get_args() const
     return args;
 }
 
-std::size_t MultivariateIntPolynomial::__hash__() const
+std::size_t MultivariateIntPolynomialExpr::__hash__() const
 {
     std::hash<std::string> hash_string;
-    std::size_t seed = MULTIVARIATEINTPOLYNOMIAL;
+    std::size_t seed = 0;//MULTIVARIATEINTPOLYNOMIALEXPR;
     for (auto var : vars_)
         // boost's method for combining hashes
         seed ^= hash_string(var->__str__()) + 0x9e3779b + (seed << 6)
@@ -51,20 +51,20 @@ std::size_t MultivariateIntPolynomial::__hash__() const
     return seed;
 }
 
-int MultivariateIntPolynomial::compare(const Basic &o) const
-{
-    // copied from UIntPoly::compare and then modified.
-    const MultivariateIntPolynomial &s
-        = static_cast<const MultivariateIntPolynomial &>(o);
+// int MultivariateIntPolynomialExpr::compare(const Basic &o) const
+// {
+//     // copied from UnivariateIntPolynomial::compare and then modified.
+//     const MultivariateIntPolynomialExpr &s
+//         = static_cast<const MultivariateIntPolynomialExpr &>(o);
 
-    int cmp = set_compare(vars_, s.vars_);
-    if (cmp != 0)
-        return cmp;
+//     int cmp = set_compare(vars_, s.vars_);
+//     if (cmp != 0)
+//         return cmp;
 
-    return umap_uvec_mpz_compare(dict_, s.dict_);
-}
+//     return umap_uvec_mpz_compare(dict_, s.dict_);
+// }
 
-integer_class MultivariateIntPolynomial::eval(
+integer_class MultivariateIntPolynomialExpr::eval(
     std::map<RCP<const Basic>, integer_class, RCPBasicKeyLess> &vals) const
 {
     integer_class ans(0);
@@ -94,7 +94,7 @@ MultivariateIntPolynomial::convert(const UIntPoly &o)
         v.push_back(p.first);
         d[v] = p.second;
     }
-    return MultivariateIntPolynomial::create(s, std::move(d));
+    return MultivariateIntPolynomialExpr::create(s, std::move(d));
 }
 
 unsigned int reconcile(vec_uint &v1, vec_uint &v2, set_basic &s,
@@ -142,7 +142,7 @@ unsigned int reconcile(vec_uint &v1, vec_uint &v2, set_basic &s,
     return poscount; // return size of the new vectors
 }
 
-vec_basic MultivariatePolynomial::get_args() const
+vec_basic MultivariatePolynomialExpr::get_args() const
 {
     vec_basic args;
     umap_uvec_expr d;
@@ -164,10 +164,10 @@ vec_basic MultivariatePolynomial::get_args() const
     return args;
 }
 
-std::size_t MultivariatePolynomial::__hash__() const
+std::size_t MultivariatePolynomialExpr::__hash__() const
 {
     std::hash<std::string> hash_string;
-    std::size_t seed = MULTIVARIATEPOLYNOMIAL;
+    std::size_t seed = 0;//MULTIVARIATEPOLYNOMIALEXPR;
     for (auto var : vars_)
         // boost's method for combining hashes
         seed ^= hash_string(var->__str__()) + 0x9e3779b + (seed << 6)
@@ -184,20 +184,20 @@ std::size_t MultivariatePolynomial::__hash__() const
     return seed;
 }
 
-int MultivariatePolynomial::compare(const Basic &o) const
+/*int MultivariatePolynomialExpr::compare(const Basic &o) const
 {
-    // copied from UIntPoly::compare and then modified.
-    const MultivariatePolynomial &s
-        = static_cast<const MultivariatePolynomial &>(o);
+    // copied from UnivariateIntPolynomial::compare and then modified.
+    const MultivariatePolynomialExpr &s
+        = static_cast<const MultivariatePolynomialExpr &>(o);
 
     int cmp = set_compare<set_basic>(vars_, s.vars_);
     if (cmp != 0)
         return cmp;
 
     return umap_vec_expr_compare(dict_, s.dict_);
-}
+}*/
 
-Expression MultivariatePolynomial::eval(
+Expression MultivariatePolynomialExpr::eval(
     std::map<RCP<const Basic>, Expression, RCPBasicKeyLess> &vals) const
 {
     Expression ans(0);
@@ -225,7 +225,7 @@ MultivariatePolynomial::convert(const UExprPoly &o)
         v.push_back(p.first);
         d[v] = p.second;
     }
-    return MultivariatePolynomial::create(s, std::move(d));
+    return MultivariatePolynomialExpr::create(s, std::move(d));
 }
 
 } // SymEngine

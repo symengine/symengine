@@ -50,7 +50,7 @@ Vec translate_and_add(const Vec &v1, const Vec &v2, const vec_uint &translator1,
 }
 
 template <typename MPoly, typename Dict, typename Coeff, typename Vec>
-class MPolyBase : public Basic
+class MPolyBase
 {
 public:
     // vars: set of variables for the polynomial
@@ -66,7 +66,7 @@ public:
 protected:
     // Creates a MPoly in cannonical form based on
     // dictionary d.
-    inline static RCP<const MPoly> from_dict(const set_basic &s, Dict &&d)
+    inline static MPoly & from_dict(const set_basic &s, Dict &&d)
     {
         // Remove entries in d corresponding to terms with coefficient 0
         auto iter = d.begin();
@@ -93,7 +93,7 @@ protected:
             }
             whichvar++;
         }
-        return make_rcp<const MPoly>(s, std::move(degs), std::move(d));
+        return MPoly(s, std::move(degs), std::move(d));
     }
 
 public:
@@ -111,7 +111,7 @@ public:
     // will be sorted in the set_basic of the actual object.
     // The order of the exponenents in the vectors in the dictionary will also
     // be permuted accordingly.
-    static RCP<const MPoly> create(const vec_basic &v, Dict &&d)
+    static MPoly & create(const vec_basic &v, Dict &&d)
     {
         set_basic s;
         // Symbols in the vector are sorted by placeing them in an std::map.
@@ -200,7 +200,7 @@ public:
         }
     }
 
-    RCP<const MPoly> add(const MPoly &b) const
+    MPoly &add(const MPoly &b) const
     {
         vec_uint v1;
         vec_uint v2;
@@ -223,7 +223,7 @@ public:
         }
         return MPoly::from_dict(s, std::move(dict));
     }
-    RCP<const MPoly> neg() const
+    MPoly & neg() const
     {
         Dict dict;
         set_basic s = vars_;
@@ -232,11 +232,11 @@ public:
         }
         return MPoly::from_dict(s, std::move(dict));
     }
-    RCP<const MPoly> sub(const MPoly &b) const
+    MPoly & sub(const MPoly &b) const
     {
         return this->add(*b.neg());
     }
-    RCP<const MPoly> mul(const MPoly &b) const
+    MPoly & mul(const MPoly &b) const
     {
         // Naive algorithm
         vec_uint v1;
@@ -261,54 +261,65 @@ public:
     }
 };
 
-// MultivariateIntPolynomial
-class MultivariateIntPolynomial
-    : public MPolyBase<MultivariateIntPolynomial, umap_uvec_mpz, integer_class,
+// MultivariateIntPolynomialExpr
+class MultivariateIntPolynomialExpr
+    : public MPolyBase<MultivariateIntPolynomialExpr, umap_uvec_mpz, integer_class,
                        vec_uint>
 {
 public:
-    MultivariateIntPolynomial(const set_basic &vars, umap_basic_uint &&degrees,
+    MultivariateIntPolynomialExpr(const set_basic &vars, umap_basic_uint &&degrees,
                               umap_uvec_mpz &&dict)
         : MPolyBase(std::move(vars), std::move(degrees), std::move(dict))
     {
     }
-    IMPLEMENT_TYPEID(MULTIVARIATEINTPOLYNOMIAL);
+    // IMPLEMENT_TYPEID(MULTIVARIATEINTPOLYNOMIALEXPR);
     vec_basic get_args() const;
     std::size_t __hash__() const;
-    int compare(const Basic &o) const;
+    // int compare(const Basic &o) const;
     integer_class eval(
         std::map<RCP<const Basic>, integer_class, RCPBasicKeyLess> &vals) const;
-    static inline RCP<const MultivariateIntPolynomial>
-    convert(const MultivariateIntPolynomial &o)
+    
+    //Since this cannot do RCP things anymore, no point in converting from the object to rcp.
+    /*
+    static inline RCP<const MultivariateIntPolynomialExpr>
+    convert(const MultivariateIntPolynomialExpr &o)
     {
-        return o.rcp_from_this_cast<MultivariateIntPolynomial>();
+        return o.rcp_from_this_cast<MultivariateIntPolynomialExpr>();
     }
-    static RCP<const MultivariateIntPolynomial> convert(const UIntPoly &o);
+
+    */
+
+    static MultivariateIntPolynomialExpr &
+    convert(const UnivariateIntPolynomial &o);
+
 };
 
-// MultivariatePolynomial
-class MultivariatePolynomial
-    : public MPolyBase<MultivariatePolynomial, umap_vec_expr, Expression,
+// MultivariatePolynomialExpr
+class MultivariatePolynomialExpr
+    : public MPolyBase<MultivariatePolynomialExpr, umap_vec_expr, Expression,
                        vec_int>
 {
 public:
-    MultivariatePolynomial(const set_basic &vars, umap_basic_uint &&degrees,
+    MultivariatePolynomialExpr(const set_basic &vars, umap_basic_uint &&degrees,
                            umap_vec_expr &&dict)
         : MPolyBase(std::move(vars), std::move(degrees), std::move(dict))
     {
     }
-    IMPLEMENT_TYPEID(MULTIVARIATEPOLYNOMIAL);
+    // IMPLEMENT_TYPEID(MULTIVARIATEPOLYNOMIALEXPR);
     vec_basic get_args() const;
     std::size_t __hash__() const;
-    int compare(const Basic &o) const;
+    // int compare(const Basic &o) const;
     Expression
     eval(std::map<RCP<const Basic>, Expression, RCPBasicKeyLess> &vals) const;
-    static inline RCP<const MultivariatePolynomial>
-    convert(const MultivariatePolynomial &o)
+    /*
+    static inline RCP<const MultivariatePolynomialExpr>
+    convert(const MultivariatePolynomialExpr &o)
     {
-        return o.rcp_from_this_cast<MultivariatePolynomial>();
+        return o.rcp_from_this_cast<MultivariatePolynomialExpr>();
     }
-    static RCP<const MultivariatePolynomial> convert(const UExprPoly &o);
+    */
+    static MultivariatePolynomialExpr &
+    convert(const UnivariatePolynomial &o);
 };
 
 template <class T>
@@ -320,34 +331,34 @@ struct is_mpoly_expr<UExprPoly> : std::true_type {
 };
 
 template <>
-struct is_mpoly_expr<MultivariatePolynomial> : std::true_type {
+struct is_mpoly_expr<MultivariatePolynomialExpr> : std::true_type {
 };
 
 template <typename T, typename U,
           typename
           = enable_if_t<is_mpoly_expr<T>::value and is_mpoly_expr<U>::value>>
-RCP<const MultivariatePolynomial> add_mult_poly(const T &a, const U &b)
+MultivariatePolynomialExpr & add_mult_poly(const T &a, const U &b)
 {
-    return MultivariatePolynomial::convert(a)
-        ->add(*MultivariatePolynomial::convert(b));
+    return MultivariatePolynomialExpr::convert(a)
+        ->add(*MultivariatePolynomialExpr::convert(b));
 }
 
 template <typename T, typename U,
           typename
           = enable_if_t<is_mpoly_expr<T>::value and is_mpoly_expr<U>::value>>
-RCP<const MultivariatePolynomial> mul_mult_poly(const T &a, const U &b)
+MultivariatePolynomialExpr & mul_mult_poly(const T &a, const U &b)
 {
-    return MultivariatePolynomial::convert(a)
-        ->mul(*MultivariatePolynomial::convert(b));
+    return MultivariatePolynomialExpr::convert(a)
+        ->mul(*MultivariatePolynomialExpr::convert(b));
 }
 
 template <typename T, typename U,
           typename
           = enable_if_t<is_mpoly_expr<T>::value and is_mpoly_expr<U>::value>>
-RCP<const MultivariatePolynomial> sub_mult_poly(const T &a, const U &b)
+MultivariatePolynomialExpr & sub_mult_poly(const T &a, const U &b)
 {
-    return MultivariatePolynomial::convert(a)
-        ->sub(*MultivariatePolynomial::convert(b));
+    return MultivariatePolynomialExpr::convert(a)
+        ->sub(*MultivariatePolynomialExpr::convert(b));
 }
 
 template <class T>
@@ -359,34 +370,34 @@ struct is_mpoly_int<UIntPoly> : std::true_type {
 };
 
 template <>
-struct is_mpoly_int<MultivariateIntPolynomial> : std::true_type {
+struct is_mpoly_int<MultivariateIntPolynomialExpr> : std::true_type {
 };
 
 template <typename T, typename U,
           typename
           = enable_if_t<is_mpoly_int<T>::value and is_mpoly_int<U>::value>>
-RCP<const MultivariateIntPolynomial> add_mult_poly(const T &a, const U &b)
+MultivariateIntPolynomialExpr & add_mult_poly(const T &a, const U &b)
 {
-    return MultivariateIntPolynomial::convert(a)
-        ->add(*MultivariateIntPolynomial::convert(b));
+    return MultivariateIntPolynomialExpr::convert(a)
+        ->add(*MultivariateIntPolynomialExpr::convert(b));
 }
 
 template <typename T, typename U,
           typename
           = enable_if_t<is_mpoly_int<T>::value and is_mpoly_int<U>::value>>
-RCP<const MultivariateIntPolynomial> mul_mult_poly(const T &a, const U &b)
+MultivariateIntPolynomialExpr & mul_mult_poly(const T &a, const U &b)
 {
-    return MultivariateIntPolynomial::convert(a)
-        ->mul(*MultivariateIntPolynomial::convert(b));
+    return MultivariateIntPolynomialExpr::convert(a)
+        ->mul(*MultivariateIntPolynomialExpr::convert(b));
 }
 
 template <typename T, typename U,
           typename
           = enable_if_t<is_mpoly_int<T>::value and is_mpoly_int<U>::value>>
-RCP<const MultivariateIntPolynomial> sub_mult_poly(const T &a, const U &b)
+MultivariateIntPolynomialExpr & sub_mult_poly(const T &a, const U &b)
 {
-    return MultivariateIntPolynomial::convert(a)
-        ->sub(*MultivariateIntPolynomial::convert(b));
+    return MultivariateIntPolynomialExpr::convert(a)
+        ->sub(*MultivariateIntPolynomialExpr::convert(b));
 }
 
 } // SymEngine

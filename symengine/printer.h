@@ -65,8 +65,8 @@ public:
     {
         bvisit_upoly(x);
     }
-
-    void bvisit(const MultivariateIntPolynomial &x)
+/*
+    void bvisit(const MultivariateIntPolynomialExpr &x)
     {
         if (0 == x.dict_.size()) {
             precedence = PrecedenceEnum::Atom;
@@ -93,7 +93,7 @@ public:
         }
     }
 
-    void bvisit(const MultivariatePolynomial &x)
+    void bvisit(const MultivariatePolynomialExpr &x)
     {
         if (0 == x.dict_.size()) {
             precedence = PrecedenceEnum::Atom;
@@ -120,7 +120,7 @@ public:
         } else {
             precedence = PrecedenceEnum::Add;
         }
-    }
+    }*/
 
     void bvisit(const Rational &x)
     {
@@ -218,8 +218,6 @@ public:
     void bvisit(const Mul &x);
     void bvisit(const Pow &x);
     void bvisit(const UIntPoly &x);
-    void bvisit(const MultivariateIntPolynomial &x);
-    void bvisit(const MultivariatePolynomial &x);
     void bvisit(const UnivariatePolynomial &x);
 #ifdef HAVE_SYMENGINE_PIRANHA
     void bvisit(const URatPSeriesPiranha &x);
