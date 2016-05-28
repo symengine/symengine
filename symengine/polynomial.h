@@ -311,8 +311,6 @@ public:
     UnivariateIntPolynomial(const RCP<const Symbol> &var,
                             const std::vector<integer_class> &v);
 
-    //! \return true if canonical
-    bool is_canonical(const UIntDict &dict) const;
     //! \return size of the hash
     std::size_t __hash__() const;
     int compare(const Basic &o) const;
@@ -546,7 +544,6 @@ public:
     UnivariatePolynomial(const RCP<const Symbol> &var,
                          const std::vector<Expression> &v);
 
-    bool is_canonical(const UnivariateExprPolynomial &dict) const;
     std::size_t __hash__() const;
     int compare(const Basic &o) const;
 

@@ -11,22 +11,28 @@ UnivariateIntPolynomial::UnivariateIntPolynomial(const RCP<const Symbol> &var,
                                                  UIntDict &&dict)
     : UIntPolyBase(var, std::move(dict))
 {
-    SYMENGINE_ASSERT(is_canonical(poly_))
+    auto iter = dict.dict_.begin();
+    while (iter != dict.dict_.end()) {
+        if (iter->second == integer_class(0)) {
+            auto toErase = iter;
+            iter++;
+            dict.dict_.erase(toErase);
+        } else {
+            iter++;
+        }
+    }
 }
 
 UnivariateIntPolynomial::UnivariateIntPolynomial(
     const RCP<const Symbol> &var, const std::vector<integer_class> &v)
     : UIntPolyBase(var, std::move(v))
 {
-}
-
-bool UnivariateIntPolynomial::is_canonical(const UIntDict &dict) const
-{
-    // Check if dictionary contains terms with coeffienct 0
-    for (auto iter : dict.dict_)
-        if (iter.second == 0)
-            return false;
-    return true;
+    poly_.dict_ = {};
+    for (unsigned int i = 0; i < v.size(); i++) {
+        if (v[i] != integer_class(0)) {
+            poly_.dict_[i] = v[i];
+        }
+    }
 }
 
 std::size_t UnivariateIntPolynomial::__hash__() const
@@ -158,23 +164,28 @@ UnivariatePolynomial::UnivariatePolynomial(const RCP<const Symbol> &var,
                                            UnivariateExprPolynomial &&dict)
     : UIntPolyBase(var, std::move(dict))
 {
-    SYMENGINE_ASSERT(is_canonical(poly_))
+    auto iter = dict.dict_.begin();
+    while (iter != dict.dict_.end()) {
+        if (iter->second == Expression(0)) {
+            auto toErase = iter;
+            iter++;
+            dict.dict_.erase(toErase);
+        } else {
+            iter++;
+        }
+    }
 }
 
 UnivariatePolynomial::UnivariatePolynomial(const RCP<const Symbol> &var,
                                            const std::vector<Expression> &v)
     : UIntPolyBase(var, std::move(v))
 {
-}
-
-bool UnivariatePolynomial::is_canonical(
-    const UnivariateExprPolynomial &dict) const
-{
-    // Check if dictionary contains terms with coeffienct 0
-    for (auto iter : dict.get_dict())
-        if (iter.second == 0)
-            return false;
-    return true;
+    poly_.dict_ = {};
+    for (unsigned int i = 0; i < v.size(); i++) {
+        if (v[i] != Expression(0)) {
+            poly_.dict_[i] = v[i];
+        }
+    }
 }
 
 std::size_t UnivariatePolynomial::__hash__() const
