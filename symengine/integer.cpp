@@ -78,9 +78,13 @@ RCP<const Number> Integer::pow_negint(const Integer &other) const
 {
     RCP<const Number> tmp = powint(*other.neg());
     if (is_a<Integer>(*tmp)) {
-        rational_class q(mp_sign(static_cast<const Integer &>(*tmp).i),
-                         mp_abs(static_cast<const Integer &>(*tmp).i));
-        return make_rcp<const Rational>(std::move(q));
+        if (mp_abs(static_cast<const Integer &>(*tmp).i) != 1) {
+            rational_class q(mp_sign(static_cast<const Integer &>(*tmp).i),
+                             mp_abs(static_cast<const Integer &>(*tmp).i));
+            return make_rcp<const Rational>(std::move(q));
+        }
+        return make_rcp<const Integer>(static_cast<const Integer &>(*tmp).i);
+
     } else {
         throw std::runtime_error("powint returned non-integer");
     }
