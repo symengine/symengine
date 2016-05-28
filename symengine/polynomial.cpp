@@ -86,11 +86,6 @@ vec_basic UnivariateIntPolynomial::get_args() const
     return args;
 }
 
-integer_class UnivariateIntPolynomial::max_abs_coef() const
-{
-    return poly_.max_abs_coef();
-}
-
 integer_class UnivariateIntPolynomial::eval(const integer_class &x) const
 {
     unsigned int last_deg = poly_.dict_.rbegin()->first;

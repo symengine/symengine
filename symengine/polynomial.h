@@ -300,7 +300,6 @@ public:
     std::size_t __hash__() const;
     int compare(const Basic &o) const;
 
-    integer_class max_abs_coef() const;
     //! Evaluates the UnivariateIntPolynomial at value x
     integer_class eval(const integer_class &x) const;
 
