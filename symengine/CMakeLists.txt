@@ -69,7 +69,7 @@ endif()
 
 # Needed for "make install"
 set(HEADERS
-    add.h        symengine_assert.h  functions.h  monomials.h  polys/uintpoly.h polys/uexprpoly.h 
+    add.h        symengine_assert.h  functions.h  monomials.h polys/uintpoly.h polys/uexprpoly.h
     polynomial_multivariate.h number.h    rings.h     subs.h
     basic.h      symengine_rcp.h     integer.h    mul.h        pow.h       constants.h
     symbol.h     expression.h        parser.h     mp_class.h   mp_wrapper.h
@@ -77,8 +77,8 @@ set(HEADERS
     visitor.h    eval_double.h    diophantine.h cwrapper.h  printer.h  real_double.h
     eval_mpfr.h  eval_arb.h       eval_mpc.h     complex_double.h         series_visitor.h
     real_mpfr.h  complex_mpc.h    type_codes.inc lambda_double.h series.h series_piranha.h
-    basic-methods.inc   series_flint.h  series_generic.h sets.h  derivative.h  polys/upolybase.h
-)
+    basic-methods.inc   series_flint.h  series_generic.h sets.h  derivative.h polys/upolybase.h
+) 
 
 # Configure SymEngine using our CMake options:
 configure_file(symengine_config.h.in symengine_config.h)
@@ -99,8 +99,21 @@ install(TARGETS symengine
             ARCHIVE DESTINATION lib
             LIBRARY DESTINATION lib
         )
-install(FILES ${HEADERS} "${symengine_BINARY_DIR}/symengine/symengine_config.h"
+
+# make install
+macro(INSTALL_HEADERS_WITH_DIRECTORY HEADER_LIST)
+    install(FILES ${HEADERS} "${symengine_BINARY_DIR}/symengine/symengine_config.h"
     DESTINATION include/symengine)
+
+    FOREACH(HEADER ${${HEADER_LIST}})
+        STRING(REGEX MATCH "(.*)[/\\]" DIR ${HEADER})
+        install(FILES ${HEADER} DESTINATION include/symengine/${DIR})
+    ENDFOREACH(HEADER HEADER_LIST)
+
+endmacro(INSTALL_HEADERS_WITH_DIRECTORY)
+
+INSTALL_HEADERS_WITH_DIRECTORY(HEADERS)
+
 
 if (BUILD_TESTS)
     add_subdirectory(utilities/catch)
