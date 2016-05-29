@@ -4,7 +4,7 @@
 
 #include <symengine/series_generic.h>
 
-using SymEngine::UExprODict;
+using SymEngine::UExprDict;
 using SymEngine::UnivariateSeries;
 using SymEngine::univariate_series;
 using SymEngine::Symbol;
@@ -34,18 +34,18 @@ TEST_CASE("Create UnivariateSeries", "[UnivariateSeries]")
 {
     RCP<const Symbol> x = symbol("x");
     map_int_Expr adict_ = {{0, 1}, {1, 2}, {2, 1}};
-    UExprODict apoly_(adict_);
+    UExprDict apoly_(adict_);
     RCP<const UnivariateSeries> P = univariate_series(x, 2, apoly_);
     REQUIRE(P->__str__() == "x**2 + 2*x + 1 + O(x**2)");
 
     map_int_Expr bdict_ = {{0, 1}, {1, 0}, {2, 2}, {3, 1}};
-    UExprODict bpoly_(bdict_);
+    UExprDict bpoly_(bdict_);
     RCP<const UnivariateSeries> Q = UnivariateSeries::create(x, 5, bpoly_);
     REQUIRE(Q->__str__() == "x**3 + 2*x**2 + 1 + O(x**5)");
 
     map_int_Expr cdict_
         = {{0, symbol("c")}, {1, symbol("b")}, {2, symbol("a")}};
-    UExprODict cpoly_(cdict_);
+    UExprDict cpoly_(cdict_);
     RCP<const UnivariateSeries> R = UnivariateSeries::create(x, 3, cpoly_);
     REQUIRE(R->__str__() == "a*x**2 + b*x + c + O(x**3)");
 }
@@ -54,11 +54,11 @@ TEST_CASE("Adding two UnivariateSeries", "[UnivariateSeries]")
 {
     RCP<const Symbol> x = symbol("x");
     map_int_Expr adict_ = {{0, 1}, {1, 2}, {2, 1}};
-    UExprODict apoly_(adict_);
+    UExprDict apoly_(adict_);
     map_int_Expr bdict_ = {{0, 2}, {1, 3}, {2, 4}};
-    UExprODict bpoly_(bdict_);
+    UExprDict bpoly_(bdict_);
     map_int_Expr ddict_ = {{0, 3}, {1, 5}, {2, 5}};
-    UExprODict dpoly_(ddict_);
+    UExprDict dpoly_(ddict_);
 
     RCP<const UnivariateSeries> a = UnivariateSeries::create(x, 5, apoly_);
     RCP<const UnivariateSeries> b = UnivariateSeries::create(x, 4, bpoly_);
@@ -76,13 +76,13 @@ TEST_CASE("Negative of a UnivariateSeries", "[UnivariateSeries]")
 {
     RCP<const Symbol> x = symbol("x");
     map_int_Expr adict_ = {{0, 1}, {1, 2}, {2, 1}};
-    UExprODict apoly_(adict_);
+    UExprDict apoly_(adict_);
     map_int_Expr bdict_ = {{0, -1}, {1, -2}, {2, -1}};
-    UExprODict bpoly_(bdict_);
+    UExprDict bpoly_(bdict_);
     map_int_Expr cdict_ = {{0, 1}, {1, symbol("a")}};
-    UExprODict cpoly_(cdict_);
+    UExprDict cpoly_(cdict_);
     map_int_Expr ddict_ = {{0, -1}, {1, mul(integer(-1), symbol("a"))}};
-    UExprODict dpoly_(ddict_);
+    UExprDict dpoly_(ddict_);
 
     RCP<const UnivariateSeries> a = UnivariateSeries::create(x, 5, apoly_);
     RCP<const Basic> b = neg(a);
@@ -98,13 +98,13 @@ TEST_CASE("Subtracting two UnivariateSeries", "[UnivariateSeries]")
 {
     RCP<const Symbol> x = symbol("x");
     map_int_Expr adict_ = {{0, 1}, {1, 2}, {2, 1}};
-    UExprODict apoly_(adict_);
+    UExprDict apoly_(adict_);
     map_int_Expr bdict_ = {{0, 2}, {1, 3}, {2, 4}};
-    UExprODict bpoly_(bdict_);
+    UExprDict bpoly_(bdict_);
     map_int_Expr fdict_ = {{0, -1}, {1, -1}, {2, -3}};
-    UExprODict fpoly_(fdict_);
+    UExprDict fpoly_(fdict_);
     map_int_Expr gdict_ = {{0, -1}, {1, -1}};
-    UExprODict gpoly_(gdict_);
+    UExprDict gpoly_(gdict_);
 
     RCP<const UnivariateSeries> a = UnivariateSeries::create(x, 3, apoly_);
     RCP<const UnivariateSeries> b = UnivariateSeries::create(x, 4, bpoly_);
@@ -118,35 +118,35 @@ TEST_CASE("Subtracting two UnivariateSeries", "[UnivariateSeries]")
     REQUIRE(e->__cmp__(*f));
 }
 
-TEST_CASE("Multiplication of two UExprODict with precision",
+TEST_CASE("Multiplication of two UExprDict with precision",
           "[UnivariateSeries]")
 {
     RCP<const Symbol> x = symbol("x");
-    UExprODict a({{0, 1}, {1, 2}, {2, 1}});
-    UExprODict b({{0, -1}, {1, -2}, {2, -1}});
-    UExprODict c({{0, 1}, {1, 4}, {2, 6}, {3, 4}});
-    UExprODict d({{0, -1}, {1, -4}, {2, -6}, {3, -4}, {4, -1}});
+    UExprDict a({{0, 1}, {1, 2}, {2, 1}});
+    UExprDict b({{0, -1}, {1, -2}, {2, -1}});
+    UExprDict c({{0, 1}, {1, 4}, {2, 6}, {3, 4}});
+    UExprDict d({{0, -1}, {1, -4}, {2, -6}, {3, -4}, {4, -1}});
 
-    UExprODict e = UnivariateSeries::mul(a, a, 4);
-    UExprODict f = UnivariateSeries::mul(a, b, 5);
+    UExprDict e = UnivariateSeries::mul(a, a, 4);
+    UExprDict f = UnivariateSeries::mul(a, b, 5);
 
     REQUIRE(e == c);
     REQUIRE(f == d);
 }
 
-TEST_CASE("Exponentiation of UExprODict with precision", "[UnivariateSeries]")
+TEST_CASE("Exponentiation of UExprDict with precision", "[UnivariateSeries]")
 {
     RCP<const Symbol> x = symbol("x");
-    UExprODict zero({{0, Expression(0)}});
-    UExprODict one({{0, Expression(1)}});
-    UExprODict a({{0, 1}, {1, 2}, {2, 1}});
-    UExprODict b({{0, -1}, {1, -2}, {2, -1}});
-    UExprODict c({{0, 1}, {1, 4}, {2, 6}, {3, 4}});
-    UExprODict d({{0, -1}, {1, -6}, {2, -15}, {3, -20}, {4, -15}});
+    UExprDict zero({{0, Expression(0)}});
+    UExprDict one({{0, Expression(1)}});
+    UExprDict a({{0, 1}, {1, 2}, {2, 1}});
+    UExprDict b({{0, -1}, {1, -2}, {2, -1}});
+    UExprDict c({{0, 1}, {1, 4}, {2, 6}, {3, 4}});
+    UExprDict d({{0, -1}, {1, -6}, {2, -15}, {3, -20}, {4, -15}});
 
-    UExprODict e = UnivariateSeries::pow(a, 2, 4);
-    UExprODict f = UnivariateSeries::pow(b, 3, 5);
-    UExprODict g = UnivariateSeries::pow(a, 0, 2);
+    UExprDict e = UnivariateSeries::pow(a, 2, 4);
+    UExprDict f = UnivariateSeries::pow(b, 3, 5);
+    UExprDict g = UnivariateSeries::pow(a, 0, 2);
 
     REQUIRE(e == c);
     REQUIRE(f == d);
@@ -157,17 +157,17 @@ TEST_CASE("Exponentiation of UExprODict with precision", "[UnivariateSeries]")
 TEST_CASE("Differentiation of UnivariateSeries", "[UnivariateSeries]")
 {
     RCP<const Symbol> x = symbol("x");
-    UExprODict a({{0, 1}, {1, 2}, {2, 1}});
-    UExprODict b({{0, 2}, {1, 2}});
+    UExprDict a({{0, 1}, {1, 2}, {2, 1}});
+    UExprDict b({{0, 2}, {1, 2}});
     REQUIRE(UnivariateSeries::diff(a, UnivariateSeries::var("x")) == b);
 }
 
 TEST_CASE("Integration of UnivariateSeries", "[UnivariateSeries]")
 {
     RCP<const Symbol> x = symbol("x");
-    UExprODict a({{-1, Expression(1)}});
-    UExprODict b({{0, 1}, {1, 2}, {2, 3}});
-    UExprODict c({{1, 1}, {2, 1}, {3, 1}});
+    UExprDict a({{-1, Expression(1)}});
+    UExprDict b({{0, 1}, {1, 2}, {2, 3}});
+    UExprDict c({{1, 1}, {2, 1}, {3, 1}});
     REQUIRE_THROWS_AS(
         UnivariateSeries::integrate(a, UnivariateSeries::var("x")),
         std::runtime_error);
@@ -177,8 +177,8 @@ TEST_CASE("Integration of UnivariateSeries", "[UnivariateSeries]")
 TEST_CASE("UnivariateSeries: compare, as_basic, as_dict", "[UnivariateSeries]")
 {
     RCP<const Symbol> x = symbol("x");
-    UExprODict P({{0, 1}, {1, 2}});
-    UExprODict Q({{0, 1}, {1, symbol("b")}, {2, 1}});
+    UExprDict P({{0, 1}, {1, 2}});
+    UExprDict Q({{0, 1}, {1, symbol("b")}, {2, 1}});
     RCP<const UnivariateSeries> R = univariate_series(x, 4, P);
     RCP<const UnivariateSeries> S = univariate_series(x, 5, Q);
     umap_int_basic m = {{0, integer(1)}, {1, integer(2)}};
@@ -194,7 +194,7 @@ TEST_CASE("UnivariateSeries: compare, as_basic, as_dict", "[UnivariateSeries]")
 #define invseries_coeff(EX, SYM, PREC, COEFF)                                  \
     UnivariateSeries::series_reverse(                                          \
         UnivariateSeries::series(EX, SYM->get_name(), PREC)->get_poly(),       \
-        UExprODict(SYM->get_name()), PREC)                                     \
+        UExprDict(SYM->get_name()), PREC)                                      \
         .find_cf(COEFF)                                                        \
         .get_basic()
 

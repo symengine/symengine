@@ -53,7 +53,7 @@ std::size_t MultivariateIntPolynomial::__hash__() const
 
 int MultivariateIntPolynomial::compare(const Basic &o) const
 {
-    // copied from UIntPolyO::compare and then modified.
+    // copied from UIntPoly::compare and then modified.
     const MultivariateIntPolynomial &s
         = static_cast<const MultivariateIntPolynomial &>(o);
 
@@ -83,7 +83,7 @@ integer_class MultivariateIntPolynomial::eval(
 }
 
 RCP<const MultivariateIntPolynomial>
-MultivariateIntPolynomial::convert(const UIntPolyO &o)
+MultivariateIntPolynomial::convert(const UIntPoly &o)
 {
     vec_basic s;
     s.push_back(o.get_var());
@@ -186,7 +186,7 @@ std::size_t MultivariatePolynomial::__hash__() const
 
 int MultivariatePolynomial::compare(const Basic &o) const
 {
-    // copied from UIntPolyO::compare and then modified.
+    // copied from UIntPoly::compare and then modified.
     const MultivariatePolynomial &s
         = static_cast<const MultivariatePolynomial &>(o);
 
@@ -214,7 +214,7 @@ Expression MultivariatePolynomial::eval(
 }
 
 RCP<const MultivariatePolynomial>
-MultivariatePolynomial::convert(const UExprPolyO &o)
+MultivariatePolynomial::convert(const UExprPoly &o)
 {
     vec_basic s;
     s.push_back(o.get_var());

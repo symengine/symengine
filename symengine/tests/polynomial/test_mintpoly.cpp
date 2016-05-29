@@ -10,7 +10,7 @@
 #include <symengine/printer.h>
 
 using SymEngine::Expression;
-using SymEngine::UIntPolyO;
+using SymEngine::UIntPoly;
 using SymEngine::uint_poly;
 using SymEngine::Symbol;
 using SymEngine::symbol;
@@ -400,9 +400,9 @@ TEST_CASE("Testing derivative of MultivariateIntPolynomial",
 }
 
 TEST_CASE("Testing addition, subtraction, multiplication of "
-          "MultivariateIntPolynomials with a UIntPolyO whose "
+          "MultivariateIntPolynomials with a UIntPoly whose "
           "variable are in the variable set",
-          "[MultivariateIntPolynomial][UIntPolyO]")
+          "[MultivariateIntPolynomial][UIntPoly]")
 {
     RCP<const Symbol> x = symbol("x");
     RCP<const Symbol> y = symbol("y");
@@ -414,8 +414,8 @@ TEST_CASE("Testing addition, subtraction, multiplication of "
                                                         {{0, 0, 0}, 3_z},
                                                         {{2, 0, 0}, 2_z},
                                                         {{1, 0, 0}, 1_z}});
-    RCP<const UIntPolyO> p2 = uint_poly(x, {{1, 1_z}, {2, 1_z}});
-    RCP<const UIntPolyO> p3 = uint_poly(y, {{1, 1_z}, {2, 1_z}});
+    RCP<const UIntPoly> p2 = uint_poly(x, {{1, 1_z}, {2, 1_z}});
+    RCP<const UIntPoly> p3 = uint_poly(y, {{1, 1_z}, {2, 1_z}});
 
     RCP<const MultivariateIntPolynomial> q1
         = MultivariateIntPolynomial::create({x, y, z}, {{{1, 2, 3}, 1_z},
@@ -469,16 +469,16 @@ TEST_CASE("Testing addition, subtraction, multiplication of "
 }
 
 TEST_CASE("Testing addition, subtraction, multiplication of "
-          "MultivariateIntPolynomials with a UIntPolyO whose "
+          "MultivariateIntPolynomials with a UIntPoly whose "
           "variables are not in the variable set",
-          "[MultivariateIntPolynomial][UIntPolyO]")
+          "[MultivariateIntPolynomial][UIntPoly]")
 {
     RCP<const Symbol> x = symbol("x");
     RCP<const Symbol> y = symbol("y");
     RCP<const Symbol> z = symbol("z");
     RCP<const MultivariateIntPolynomial> p1 = MultivariateIntPolynomial::create(
         {x, y}, {{{1, 2}, 1_z}, {{2, 1}, -2_z}, {{0, 1}, 1_z}, {{0, 0}, 3_z}});
-    RCP<const UIntPolyO> p2 = uint_poly(z, {{1, 1_z}, {2, 1_z}});
+    RCP<const UIntPoly> p2 = uint_poly(z, {{1, 1_z}, {2, 1_z}});
 
     RCP<const MultivariateIntPolynomial> q1
         = MultivariateIntPolynomial::create({x, y, z}, {{{1, 2, 0}, 1_z},
@@ -519,13 +519,13 @@ TEST_CASE("Testing addition, subtraction, multiplication of "
 }
 
 TEST_CASE("Testing addition, subtraction, multiplication of two "
-          "UIntPolyOs with different variables",
-          "[MultivariateIntPolynomial][UIntPolyO]")
+          "UIntPolys with different variables",
+          "[MultivariateIntPolynomial][UIntPoly]")
 {
     RCP<const Symbol> x = symbol("x");
     RCP<const Symbol> y = symbol("y");
-    RCP<const UIntPolyO> p1 = uint_poly(x, {{1, -1_z}, {2, 3_z}, {0, 0_z}});
-    RCP<const UIntPolyO> p2 = uint_poly(y, {{0, 1_z}, {1, 1_z}});
+    RCP<const UIntPoly> p1 = uint_poly(x, {{1, -1_z}, {2, 3_z}, {0, 0_z}});
+    RCP<const UIntPoly> p2 = uint_poly(y, {{0, 1_z}, {1, 1_z}});
 
     RCP<const MultivariateIntPolynomial> q1 = MultivariateIntPolynomial::create(
         {x, y}, {{{1, 0}, -1_z}, {{2, 0}, 3_z}, {{0, 0}, 1_z}, {{0, 1}, 1_z}});
@@ -545,12 +545,12 @@ TEST_CASE("Testing addition, subtraction, multiplication of two "
 }
 
 TEST_CASE("Testing addition, subtraction, multiplication of two "
-          "UIntPolyOs with the same variables",
-          "[MultivariateIntPolynomial][UIntPolyO]")
+          "UIntPolys with the same variables",
+          "[MultivariateIntPolynomial][UIntPoly]")
 {
     RCP<const Symbol> x = symbol("x");
-    RCP<const UIntPolyO> p1 = uint_poly(x, {{1, -1_z}, {2, 3_z}, {0, 0_z}});
-    RCP<const UIntPolyO> p2 = uint_poly(x, {{0, 1_z}, {1, 1_z}});
+    RCP<const UIntPoly> p1 = uint_poly(x, {{1, -1_z}, {2, 3_z}, {0, 0_z}});
+    RCP<const UIntPoly> p2 = uint_poly(x, {{0, 1_z}, {1, 1_z}});
 
     RCP<const MultivariateIntPolynomial> q1
         = MultivariateIntPolynomial::create({x}, {{{0}, 1_z}, {{2}, 3_z}});

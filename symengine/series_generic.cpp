@@ -14,17 +14,17 @@ RCP<const UnivariateSeries> UnivariateSeries::series(const RCP<const Basic> &t,
                                                      const std::string &x,
                                                      unsigned int prec)
 {
-    UExprODict p({{1, Expression(1)}});
-    SeriesVisitor<UExprODict, Expression, UnivariateSeries> visitor(
-        std::move(p), x, prec);
+    UExprDict p({{1, Expression(1)}});
+    SeriesVisitor<UExprDict, Expression, UnivariateSeries> visitor(std::move(p),
+                                                                   x, prec);
     return visitor.series(t);
 }
 
 std::size_t UnivariateSeries::__hash__() const
 {
-    std::size_t seed = UEXPRPOLYO;
+    std::size_t seed = UEXPRPOLY;
     for (const auto &it : p_.dict_) {
-        std::size_t temp = UEXPRPOLYO;
+        std::size_t temp = UEXPRPOLY;
         hash_combine<unsigned int>(temp, it.first);
         hash_combine<Basic>(temp, *(it.second.get_basic()));
         seed += temp;
@@ -61,9 +61,9 @@ RCP<const Basic> UnivariateSeries::get_coeff(int deg) const
         return p_.get_dict().at(deg).get_basic();
 }
 
-UExprODict UnivariateSeries::var(const std::string &s)
+UExprDict UnivariateSeries::var(const std::string &s)
 {
-    return UExprODict({{1, Expression(1)}});
+    return UExprDict({{1, Expression(1)}});
 }
 
 Expression UnivariateSeries::convert(const Basic &x)
@@ -71,13 +71,13 @@ Expression UnivariateSeries::convert(const Basic &x)
     return Expression(x.rcp_from_this());
 }
 
-int UnivariateSeries::ldegree(const UExprODict &s)
+int UnivariateSeries::ldegree(const UExprDict &s)
 {
     return s.get_dict().begin()->first;
 }
 
-UExprODict UnivariateSeries::mul(const UExprODict &a, const UExprODict &b,
-                                 unsigned prec)
+UExprDict UnivariateSeries::mul(const UExprDict &a, const UExprDict &b,
+                                unsigned prec)
 {
     map_int_Expr p;
     for (auto &it1 : a.get_dict()) {
@@ -90,28 +90,28 @@ UExprODict UnivariateSeries::mul(const UExprODict &a, const UExprODict &b,
             }
         }
     }
-    return UExprODict(p);
+    return UExprDict(p);
 }
 
-UExprODict UnivariateSeries::pow(const UExprODict &base, int exp, unsigned prec)
+UExprDict UnivariateSeries::pow(const UExprDict &base, int exp, unsigned prec)
 {
     if (exp < 0) {
         SYMENGINE_ASSERT(base.size() == 1)
         map_int_Expr dict;
         dict[-(base.get_dict().begin()->first)]
             = 1 / base.get_dict().begin()->second;
-        return pow(UExprODict(dict), -exp, prec);
+        return pow(UExprDict(dict), -exp, prec);
     }
     if (exp == 0) {
         if (base == 0 or base.get_dict().size() == 0) {
             throw std::runtime_error("Error: 0**0 is undefined.");
         } else {
-            return UExprODict(1);
+            return UExprDict(1);
         }
     }
 
-    UExprODict x(base);
-    UExprODict y(1);
+    UExprDict x(base);
+    UExprDict y(1);
     while (exp > 1) {
         if (exp % 2 == 0) {
             x = mul(x, x, prec);
@@ -125,7 +125,7 @@ UExprODict UnivariateSeries::pow(const UExprODict &base, int exp, unsigned prec)
     return mul(x, y, prec);
 }
 
-Expression UnivariateSeries::find_cf(const UExprODict &s, const UExprODict &var,
+Expression UnivariateSeries::find_cf(const UExprDict &s, const UExprDict &var,
                                      int deg)
 {
     if (s.get_dict().count(deg) == 0)
@@ -139,7 +139,7 @@ Expression UnivariateSeries::root(Expression &c, unsigned n)
     return pow_ex(c, 1 / Expression(n));
 }
 
-UExprODict UnivariateSeries::diff(const UExprODict &s, const UExprODict &var)
+UExprDict UnivariateSeries::diff(const UExprDict &s, const UExprDict &var)
 {
     if (var.get_dict().size() == 1 and var.get_dict().at(1) == Expression(1)) {
         map_int_Expr d;
@@ -147,14 +147,13 @@ UExprODict UnivariateSeries::diff(const UExprODict &s, const UExprODict &var)
             if (p.first != 0)
                 d[p.first - 1] = p.second * p.first;
         }
-        return UExprODict(d);
+        return UExprDict(d);
     } else {
-        return UExprODict({{0, Expression(0)}});
+        return UExprDict({{0, Expression(0)}});
     }
 }
 
-UExprODict UnivariateSeries::integrate(const UExprODict &s,
-                                       const UExprODict &var)
+UExprDict UnivariateSeries::integrate(const UExprDict &s, const UExprDict &var)
 {
     map_int_Expr dict;
     for (auto &it : s.get_dict()) {
@@ -166,13 +165,13 @@ UExprODict UnivariateSeries::integrate(const UExprODict &s,
         }
     }
 
-    return UExprODict(dict);
+    return UExprDict(dict);
 }
 
-UExprODict UnivariateSeries::subs(const UExprODict &s, const UExprODict &var,
-                                  const UExprODict &r, unsigned prec)
+UExprDict UnivariateSeries::subs(const UExprDict &s, const UExprDict &var,
+                                 const UExprDict &r, unsigned prec)
 {
-    UExprODict result({{1, Expression(1)}});
+    UExprDict result({{1, Expression(1)}});
 
     for (auto &i : s.get_dict())
         result += i.second * pow(r, i.first, prec);

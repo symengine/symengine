@@ -12,49 +12,49 @@
 namespace SymEngine
 {
 
-class UExprODict : public ODictWrapper<int, Expression, UExprODict>
+class UExprDict : public ODictWrapper<int, Expression, UExprDict>
 {
 
 public:
-    UExprODict() SYMENGINE_NOEXCEPT
+    UExprDict() SYMENGINE_NOEXCEPT
     {
     }
-    ~UExprODict() SYMENGINE_NOEXCEPT
+    ~UExprDict() SYMENGINE_NOEXCEPT
     {
     }
-    UExprODict(UExprODict &&other) SYMENGINE_NOEXCEPT
+    UExprDict(UExprDict &&other) SYMENGINE_NOEXCEPT
         : ODictWrapper(std::move(other))
     {
     }
-    UExprODict(const int &i) : ODictWrapper(i)
+    UExprDict(const int &i) : ODictWrapper(i)
     {
     }
-    UExprODict(const map_int_Expr &p) : ODictWrapper(p)
+    UExprDict(const map_int_Expr &p) : ODictWrapper(p)
     {
     }
-    UExprODict(const Expression &expr) : ODictWrapper(expr)
-    {
-    }
-
-    UExprODict(const std::string &s) : ODictWrapper(s)
+    UExprDict(const Expression &expr) : ODictWrapper(expr)
     {
     }
 
-    UExprODict(const UExprODict &) = default;
-    UExprODict &operator=(const UExprODict &) = default;
+    UExprDict(const std::string &s) : ODictWrapper(s)
+    {
+    }
 
-    friend std::ostream &operator<<(std::ostream &os, const UExprODict &expr)
+    UExprDict(const UExprDict &) = default;
+    UExprDict &operator=(const UExprDict &) = default;
+
+    friend std::ostream &operator<<(std::ostream &os, const UExprDict &expr)
     {
         os << expr.dict_;
         return os;
     }
 
-    friend UExprODict operator/(const UExprODict &a, const Expression &b)
+    friend UExprDict operator/(const UExprDict &a, const Expression &b)
     {
         return a * (1 / b);
     }
 
-    UExprODict &operator/=(const Expression &other)
+    UExprDict &operator/=(const Expression &other)
     {
         *this *= (1 / other);
         return *this;
@@ -155,7 +155,7 @@ public:
         return Add::from_dict(coeff, std::move(dict));
     }
 
-    int compare(const UExprODict &other) const
+    int compare(const UExprDict &other) const
     {
         if (dict_.size() != other.dict_.size())
             return (dict_.size() < other.dict_.size()) ? -1 : 1;
@@ -179,31 +179,31 @@ public:
         else
             return Expression(0);
     }
-}; // UExprODict
+}; // UExprDict
 
-class UExprPolyO : public UPolyBase<UExprODict, UExprPolyO>
+class UExprPoly : public UPolyBase<UExprDict, UExprPoly>
 {
 public:
-    IMPLEMENT_TYPEID(UEXPRPOLYO)
-    //! Constructor of UExprPolyO class
-    UExprPolyO(const RCP<const Symbol> &var, UExprODict &&dict);
+    IMPLEMENT_TYPEID(UEXPRPOLY)
+    //! Constructor of UExprPoly class
+    UExprPoly(const RCP<const Symbol> &var, UExprDict &&dict);
     //! Constructor using a dense vector of Expression
-    UExprPolyO(const RCP<const Symbol> &var, const std::vector<Expression> &v);
+    UExprPoly(const RCP<const Symbol> &var, const std::vector<Expression> &v);
 
-    bool is_canonical(const UExprODict &dict) const;
+    bool is_canonical(const UExprDict &dict) const;
     std::size_t __hash__() const;
     int compare(const Basic &o) const;
 
     /*! Creates appropriate instance (i.e Symbol, Integer,
-    * Mul, Pow, UExprPolyO) depending on the size of dictionary `d`.
+    * Mul, Pow, UExprPoly) depending on the size of dictionary `d`.
     */
-    static RCP<const UExprPolyO> from_dict(const RCP<const Symbol> &var,
-                                           UExprODict &&d);
-    static RCP<const UExprPolyO> from_vec(const RCP<const Symbol> &var,
-                                          const std::vector<Expression> &v);
+    static RCP<const UExprPoly> from_dict(const RCP<const Symbol> &var,
+                                          UExprDict &&d);
+    static RCP<const UExprPoly> from_vec(const RCP<const Symbol> &var,
+                                         const std::vector<Expression> &v);
 
     Expression max_coef() const;
-    //! Evaluates the UExprPolyO at value x
+    //! Evaluates the UExprPoly at value x
     Expression eval(const Expression &x) const;
 
     //! \return `true` if `0`
@@ -231,18 +231,17 @@ public:
     {
         return poly_.get_dict();
     }
-}; // UExprPolyO
+}; // UExprPoly
 
-inline RCP<const UExprPolyO> uexpr_poly(RCP<const Symbol> i, UExprODict &&dict)
+inline RCP<const UExprPoly> uexpr_poly(RCP<const Symbol> i, UExprDict &&dict)
 {
-    return UExprPolyO::from_dict(i, std::move(dict));
+    return UExprPoly::from_dict(i, std::move(dict));
 }
 
-inline RCP<const UExprPolyO> uexpr_poly(RCP<const Symbol> i,
-                                        map_int_Expr &&dict)
+inline RCP<const UExprPoly> uexpr_poly(RCP<const Symbol> i, map_int_Expr &&dict)
 {
-    UExprODict wrapper(dict);
-    return UExprPolyO::from_dict(i, std::move(wrapper));
+    UExprDict wrapper(dict);
+    return UExprPoly::from_dict(i, std::move(wrapper));
 }
 
 } // SymEngine

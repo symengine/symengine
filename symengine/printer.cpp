@@ -300,9 +300,9 @@ char _print_sign(const integer_class &i)
     }
 }
 
-// UIntPolyO printing, tests taken from SymPy and printing ensures
+// UIntPoly printing, tests taken from SymPy and printing ensures
 // that there is compatibility
-void StrPrinter::bvisit(const UIntPolyO &x)
+void StrPrinter::bvisit(const UIntPoly &x)
 {
     std::ostringstream s;
     // bool variable needed to take care of cases like -5, -x, -3*x etc.
@@ -357,9 +357,9 @@ void StrPrinter::bvisit(const UIntPolyO &x)
     str_ = s.str();
 }
 
-// UExprPolyO printing, tests taken from SymPy and printing ensures
+// UExprPoly printing, tests taken from SymPy and printing ensures
 // that there is compatibility
-void StrPrinter::bvisit(const UExprPolyO &x)
+void StrPrinter::bvisit(const UExprPoly &x)
 {
     std::ostringstream s;
     if (x.get_dict().size() == 0)

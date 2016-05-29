@@ -10,9 +10,9 @@
 #include <symengine/printer.h>
 
 using SymEngine::Expression;
-using SymEngine::UExprPolyO;
+using SymEngine::UExprPoly;
 using SymEngine::uexpr_poly;
-using SymEngine::UExprODict;
+using SymEngine::UExprDict;
 using SymEngine::Symbol;
 using SymEngine::symbol;
 using SymEngine::Pow;
@@ -511,8 +511,8 @@ TEST_CASE("Testing addition, subtraction, multiplication of "
 }
 
 TEST_CASE("Testing addition, subtraction, multiplication of "
-          "UExprPolyOs with the same variable",
-          "[MultivariatePolynomial][UExprPolyO]")
+          "UExprPolys with the same variable",
+          "[MultivariatePolynomial][UExprPoly]")
 {
     RCP<const Symbol> x = symbol("x");
     RCP<const Symbol> a = symbol("a");
@@ -526,10 +526,10 @@ TEST_CASE("Testing addition, subtraction, multiplication of "
     Expression expr5(add(b, c));
     Expression expr6(mul(a, b));
     Expression expr7(div(a, b));
-    RCP<const UExprPolyO> p1
-        = uexpr_poly(x, UExprODict({{1, expr1}, {2, expr2}, {0, expr3}}));
-    RCP<const UExprPolyO> p2
-        = uexpr_poly(x, UExprODict({{0, expr4}, {1, expr1}}));
+    RCP<const UExprPoly> p1
+        = uexpr_poly(x, UExprDict({{1, expr1}, {2, expr2}, {0, expr3}}));
+    RCP<const UExprPoly> p2
+        = uexpr_poly(x, UExprDict({{0, expr4}, {1, expr1}}));
 
     RCP<const MultivariatePolynomial> q1 = MultivariatePolynomial::create(
         {x}, {{{1}, expr1 + expr1}, {{0}, expr4 + expr3}, {{2}, expr2}});
@@ -552,8 +552,8 @@ TEST_CASE("Testing addition, subtraction, multiplication of "
 }
 
 TEST_CASE("Testing addition, subtraction, multiplication of "
-          "UExprPolyOs with the different variables",
-          "[MultivariatePolynomial][UExprPolyO]")
+          "UExprPolys with the different variables",
+          "[MultivariatePolynomial][UExprPoly]")
 {
     RCP<const Symbol> x = symbol("x");
     RCP<const Symbol> y = symbol("y");
@@ -566,10 +566,10 @@ TEST_CASE("Testing addition, subtraction, multiplication of "
     Expression expr3(mul(a, c));
     Expression expr4(div(b, a));
     Expression expr5(add(b, c));
-    RCP<const UExprPolyO> p1
-        = uexpr_poly(x, UExprODict({{1, expr1}, {2, expr2}, {0, expr3}}));
-    RCP<const UExprPolyO> p2
-        = uexpr_poly(y, UExprODict({{0, expr4}, {1, expr5}}));
+    RCP<const UExprPoly> p1
+        = uexpr_poly(x, UExprDict({{1, expr1}, {2, expr2}, {0, expr3}}));
+    RCP<const UExprPoly> p2
+        = uexpr_poly(y, UExprDict({{0, expr4}, {1, expr5}}));
 
     RCP<const MultivariatePolynomial> q1
         = MultivariatePolynomial::create({x, y}, {{{1, 0}, expr1},
@@ -604,9 +604,9 @@ TEST_CASE("Testing addition, subtraction, multiplication of "
 }
 
 TEST_CASE("Testing addition, subtraction, multiplication of "
-          "MultivariatePolynomials with a UExprPolyO whose variable "
+          "MultivariatePolynomials with a UExprPoly whose variable "
           "are in the variable set",
-          "[MultivariatePolynomial][UExprPolyO]")
+          "[MultivariatePolynomial][UExprPoly]")
 {
     RCP<const Symbol> x = symbol("x");
     RCP<const Symbol> y = symbol("y");
@@ -618,8 +618,8 @@ TEST_CASE("Testing addition, subtraction, multiplication of "
 
     RCP<const MultivariatePolynomial> p1 = MultivariatePolynomial::create(
         {x, y}, {{{1, 1}, a}, {{1, 0}, negB}, {{0, 0}, negNum}});
-    RCP<const UExprPolyO> p2 = uexpr_poly(
-        y, UExprODict({{0, comp4}, {1, Expression(integer(2))}, {2, comp1}}));
+    RCP<const UExprPoly> p2 = uexpr_poly(
+        y, UExprDict({{0, comp4}, {1, Expression(integer(2))}, {2, comp1}}));
 
     RCP<const MultivariatePolynomial> q1
         = MultivariatePolynomial::create({x, y}, {{{1, 1}, a},
@@ -657,9 +657,9 @@ TEST_CASE("Testing addition, subtraction, multiplication of "
 }
 
 TEST_CASE("Testing addition, subtraction, multiplication of "
-          "MultivariatePolynomials with a UExprPolyO whose variables "
+          "MultivariatePolynomials with a UExprPoly whose variables "
           "are not in the variable set",
-          "[MultivariatePolynomial][UExprPolyO]")
+          "[MultivariatePolynomial][UExprPoly]")
 {
     RCP<const Symbol> x = symbol("x");
     RCP<const Symbol> y = symbol("y");
@@ -672,8 +672,8 @@ TEST_CASE("Testing addition, subtraction, multiplication of "
 
     RCP<const MultivariatePolynomial> p1 = MultivariatePolynomial::create(
         {x, y}, {{{1, 1}, a}, {{1, 0}, negB}, {{0, 0}, negNum}});
-    RCP<const UExprPolyO> p2 = uexpr_poly(
-        z, UExprODict({{0, comp4}, {1, Expression(integer(2))}, {2, comp1}}));
+    RCP<const UExprPoly> p2 = uexpr_poly(
+        z, UExprDict({{0, comp4}, {1, Expression(integer(2))}, {2, comp1}}));
 
     RCP<const MultivariatePolynomial> q1 = MultivariatePolynomial::create(
         {x, y, z}, {{{1, 1, 0}, a},

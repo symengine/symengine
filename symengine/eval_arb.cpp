@@ -142,7 +142,7 @@ public:
         throw std::runtime_error("Symbol cannot be evaluated as an arb type.");
     }
 
-    void bvisit(const UIntPolyO &x)
+    void bvisit(const UIntPoly &x)
     {
         throw std::runtime_error("Not implemented.");
     }

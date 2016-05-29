@@ -11,7 +11,7 @@
 
 namespace SymEngine
 {
-// Calculates bit length of number, used in UIntODict*= only
+// Calculates bit length of number, used in UIntDict*= only
 template <typename T>
 unsigned int bit_length(T t)
 {
@@ -23,32 +23,32 @@ unsigned int bit_length(T t)
     return count;
 }
 
-class UIntODict : public ODictWrapper<unsigned int, integer_class, UIntODict>
+class UIntDict : public ODictWrapper<unsigned int, integer_class, UIntDict>
 {
 
 public:
-    UIntODict() SYMENGINE_NOEXCEPT
+    UIntDict() SYMENGINE_NOEXCEPT
     {
     }
-    ~UIntODict() SYMENGINE_NOEXCEPT
+    ~UIntDict() SYMENGINE_NOEXCEPT
     {
     }
-    UIntODict(UIntODict &&other) SYMENGINE_NOEXCEPT
+    UIntDict(UIntDict &&other) SYMENGINE_NOEXCEPT
         : ODictWrapper(std::move(other))
     {
     }
-    UIntODict(const int &i) : ODictWrapper(i)
+    UIntDict(const int &i) : ODictWrapper(i)
     {
     }
-    UIntODict(const map_uint_mpz &p) : ODictWrapper(p)
+    UIntDict(const map_uint_mpz &p) : ODictWrapper(p)
     {
     }
-    UIntODict(const integer_class &i) : ODictWrapper(i)
+    UIntDict(const integer_class &i) : ODictWrapper(i)
     {
     }
 
-    UIntODict(const UIntODict &) = default;
-    UIntODict &operator=(const UIntODict &) = default;
+    UIntDict(const UIntDict &) = default;
+    UIntDict &operator=(const UIntDict &) = default;
 
     //! Evaluates the dict_ at value 2**x
     integer_class eval_bit(const unsigned int &x) const
@@ -66,7 +66,7 @@ public:
         return result;
     }
 
-    UIntODict &operator*=(const UIntODict &other)
+    UIntDict &operator*=(const UIntDict &other)
     {
         int mul = 1;
 
@@ -107,7 +107,7 @@ public:
         return *this;
     }
 
-    int compare(const UIntODict &other) const
+    int compare(const UIntDict &other) const
     {
         if (dict_.size() != other.dict_.size())
             return (dict_.size() < other.dict_.size()) ? -1 : 1;
@@ -124,39 +124,38 @@ public:
         return curr;
     }
 
-}; // UIntODict
+}; // UIntDict
 
-class UIntPolyO : public UPolyBase<UIntODict, UIntPolyO>
+class UIntPoly : public UPolyBase<UIntDict, UIntPoly>
 {
 public:
-    IMPLEMENT_TYPEID(UINTPOLYO)
-    //! Constructor of UIntPolyO class
-    UIntPolyO(const RCP<const Symbol> &var, UIntODict &&dict);
+    IMPLEMENT_TYPEID(UINTPOLY)
+    //! Constructor of UIntPoly class
+    UIntPoly(const RCP<const Symbol> &var, UIntDict &&dict);
     //! Constructor using a dense vector of integer_class coefficients
 
-    UIntPolyO(const RCP<const Symbol> &var,
-              const std::vector<integer_class> &v);
+    UIntPoly(const RCP<const Symbol> &var, const std::vector<integer_class> &v);
 
     //! \return true if canonical
-    bool is_canonical(const UIntODict &dict) const;
+    bool is_canonical(const UIntDict &dict) const;
     //! \return size of the hash
     std::size_t __hash__() const;
     int compare(const Basic &o) const;
 
-    // creates a UIntPolyO in cannonical form based on the
+    // creates a UIntPoly in cannonical form based on the
     // dictionary.
-    static RCP<const UIntPolyO> from_dict(const RCP<const Symbol> &var,
-                                          UIntODict &&d);
-    // create a UIntPolyO from a dense vector of integer_class
+    static RCP<const UIntPoly> from_dict(const RCP<const Symbol> &var,
+                                         UIntDict &&d);
+    // create a UIntPoly from a dense vector of integer_class
     // coefficients
-    static RCP<const UIntPolyO> from_vec(const RCP<const Symbol> &var,
-                                         const std::vector<integer_class> &v);
+    static RCP<const UIntPoly> from_vec(const RCP<const Symbol> &var,
+                                        const std::vector<integer_class> &v);
 
     /*!
     * Adds coef*var_**n to the dict_
     */
     integer_class max_abs_coef() const;
-    //! Evaluates the UIntPolyO at value x
+    //! Evaluates the UIntPoly at value x
     integer_class eval(const integer_class &x) const;
 
     //! \return `true` if `0`
@@ -185,17 +184,17 @@ public:
         return poly_.degree();
     }
 
-}; // UIntPolyO
+}; // UIntPoly
 
-inline RCP<const UIntPolyO> uint_poly(RCP<const Symbol> i, UIntODict &&dict)
+inline RCP<const UIntPoly> uint_poly(RCP<const Symbol> i, UIntDict &&dict)
 {
-    return UIntPolyO::from_dict(i, std::move(dict));
+    return UIntPoly::from_dict(i, std::move(dict));
 }
 
-inline RCP<const UIntPolyO> uint_poly(RCP<const Symbol> i, map_uint_mpz &&dict)
+inline RCP<const UIntPoly> uint_poly(RCP<const Symbol> i, map_uint_mpz &&dict)
 {
-    UIntODict wrapper(dict);
-    return UIntPolyO::from_dict(i, std::move(wrapper));
+    UIntDict wrapper(dict);
+    return UIntPoly::from_dict(i, std::move(wrapper));
 }
 
 } // SymEngine

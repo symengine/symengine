@@ -7,15 +7,15 @@
 namespace SymEngine
 {
 
-UIntPolyO::UIntPolyO(const RCP<const Symbol> &var, UIntODict &&dict)
+UIntPoly::UIntPoly(const RCP<const Symbol> &var, UIntDict &&dict)
     : UPolyBase(var, std::move(dict))
 {
 
     SYMENGINE_ASSERT(is_canonical(poly_))
 }
 
-UIntPolyO::UIntPolyO(const RCP<const Symbol> &var,
-                     const std::vector<integer_class> &v)
+UIntPoly::UIntPoly(const RCP<const Symbol> &var,
+                   const std::vector<integer_class> &v)
     : UPolyBase(var, std::move(v))
 {
     poly_.dict_ = {};
@@ -26,7 +26,7 @@ UIntPolyO::UIntPolyO(const RCP<const Symbol> &var,
     }
 }
 
-bool UIntPolyO::is_canonical(const UIntODict &dict) const
+bool UIntPoly::is_canonical(const UIntDict &dict) const
 {
     // Check if dictionary contains terms with coeffienct 0
     for (auto iter : dict.dict_)
@@ -35,14 +35,14 @@ bool UIntPolyO::is_canonical(const UIntODict &dict) const
     return true;
 }
 
-std::size_t UIntPolyO::__hash__() const
+std::size_t UIntPoly::__hash__() const
 {
     std::hash<std::string> hash_string;
-    std::size_t seed = UINTPOLYO;
+    std::size_t seed = UINTPOLY;
 
     seed += hash_string(this->var_->get_name());
     for (const auto &it : poly_.dict_) {
-        std::size_t temp = UINTPOLYO;
+        std::size_t temp = UINTPOLY;
         hash_combine<unsigned int>(temp, it.first);
         hash_combine<long long int>(temp, mp_get_si(it.second));
         seed += temp;
@@ -50,9 +50,9 @@ std::size_t UIntPolyO::__hash__() const
     return seed;
 }
 
-int UIntPolyO::compare(const Basic &o) const
+int UIntPoly::compare(const Basic &o) const
 {
-    const UIntPolyO &s = static_cast<const UIntPolyO &>(o);
+    const UIntPoly &s = static_cast<const UIntPoly &>(o);
 
     if (poly_.size() != s.poly_.size())
         return (poly_.size() < s.poly_.size()) ? -1 : 1;
@@ -64,8 +64,8 @@ int UIntPolyO::compare(const Basic &o) const
     return map_uint_mpz_compare(poly_.dict_, s.poly_.dict_);
 }
 
-RCP<const UIntPolyO> UIntPolyO::from_dict(const RCP<const Symbol> &var,
-                                          UIntODict &&d)
+RCP<const UIntPoly> UIntPoly::from_dict(const RCP<const Symbol> &var,
+                                        UIntDict &&d)
 {
     auto iter = d.dict_.begin();
     while (iter != d.dict_.end()) {
@@ -77,16 +77,16 @@ RCP<const UIntPolyO> UIntPolyO::from_dict(const RCP<const Symbol> &var,
             iter++;
         }
     }
-    return make_rcp<const UIntPolyO>(var, std::move(d));
+    return make_rcp<const UIntPoly>(var, std::move(d));
 }
 
-RCP<const UIntPolyO> UIntPolyO::from_vec(const RCP<const Symbol> &var,
-                                         const std::vector<integer_class> &v)
+RCP<const UIntPoly> UIntPoly::from_vec(const RCP<const Symbol> &var,
+                                       const std::vector<integer_class> &v)
 {
-    return make_rcp<const UIntPolyO>(var, std::move(v));
+    return make_rcp<const UIntPoly>(var, std::move(v));
 }
 
-vec_basic UIntPolyO::get_args() const
+vec_basic UIntPoly::get_args() const
 {
     vec_basic args;
     for (const auto &p : poly_.dict_) {
@@ -113,12 +113,12 @@ vec_basic UIntPolyO::get_args() const
     return args;
 }
 
-integer_class UIntPolyO::max_abs_coef() const
+integer_class UIntPoly::max_abs_coef() const
 {
     return poly_.max_abs_coef();
 }
 
-integer_class UIntPolyO::eval(const integer_class &x) const
+integer_class UIntPoly::eval(const integer_class &x) const
 {
     unsigned int last_deg = poly_.dict_.rbegin()->first;
     integer_class result(0), x_pow;
@@ -135,24 +135,24 @@ integer_class UIntPolyO::eval(const integer_class &x) const
     return result;
 }
 
-bool UIntPolyO::is_zero() const
+bool UIntPoly::is_zero() const
 {
     return poly_.empty();
 }
 
-bool UIntPolyO::is_one() const
+bool UIntPoly::is_one() const
 {
     return poly_.size() == 1 and poly_.dict_.begin()->second == 1
            and poly_.dict_.begin()->first == 0;
 }
 
-bool UIntPolyO::is_minus_one() const
+bool UIntPoly::is_minus_one() const
 {
     return poly_.size() == 1 and poly_.dict_.begin()->second == -1
            and poly_.dict_.begin()->first == 0;
 }
 
-bool UIntPolyO::is_integer() const
+bool UIntPoly::is_integer() const
 {
     if (poly_.empty())
         return true;
@@ -161,7 +161,7 @@ bool UIntPolyO::is_integer() const
     return false;
 }
 
-bool UIntPolyO::is_symbol() const
+bool UIntPoly::is_symbol() const
 {
     if (poly_.size() == 1 and poly_.dict_.begin()->first == 1
         and poly_.dict_.begin()->second == 1)
@@ -169,7 +169,7 @@ bool UIntPolyO::is_symbol() const
     return false;
 }
 
-bool UIntPolyO::is_mul() const
+bool UIntPoly::is_mul() const
 {
     if (poly_.size() == 1 and poly_.dict_.begin()->first != 0
         and poly_.dict_.begin()->second != 1
@@ -178,7 +178,7 @@ bool UIntPolyO::is_mul() const
     return false;
 }
 
-bool UIntPolyO::is_pow() const
+bool UIntPoly::is_pow() const
 {
     if (poly_.size() == 1 and poly_.dict_.begin()->second == 1
         and poly_.dict_.begin()->first != 1 and poly_.dict_.begin()->first != 0)

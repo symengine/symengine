@@ -16,13 +16,13 @@ namespace SymEngine
 {
 //! UnivariateSeries Class
 class UnivariateSeries
-    : public SeriesBase<UExprODict, Expression, UnivariateSeries>
+    : public SeriesBase<UExprDict, Expression, UnivariateSeries>
 {
     // UnivariateSeries 1 + 2*x + x**2 + O(x**5) has dict_ = {{0, 1}, {1, 2},
     // {2, 1}} with var_ = "x" and prec_ = 5
 public:
     IMPLEMENT_TYPEID(UNIVARIATESERIES)
-    UnivariateSeries(const UExprODict &sp, const std::string varname,
+    UnivariateSeries(const UExprDict &sp, const std::string varname,
                      const unsigned degree)
         : SeriesBase(std::move(sp), varname, degree)
     {
@@ -30,7 +30,7 @@ public:
 
     static RCP<const UnivariateSeries> create(const RCP<const Symbol> &var,
                                               const unsigned int &prec,
-                                              const UExprODict &s)
+                                              const UExprDict &s)
     {
         return make_rcp<const UnivariateSeries>(std::move(s), var->get_name(),
                                                 prec);
@@ -44,21 +44,20 @@ public:
     virtual RCP<const Basic> as_basic() const;
     virtual umap_int_basic as_dict() const;
     virtual RCP<const Basic> get_coeff(int) const;
-    static UExprODict var(const std::string &s);
+    static UExprDict var(const std::string &s);
 
     static Expression convert(const Basic &x);
 
-    static int ldegree(const UExprODict &s);
-    static UExprODict mul(const UExprODict &s, const UExprODict &r,
-                          unsigned prec);
-    static UExprODict pow(const UExprODict &s, int n, unsigned prec);
-    static Expression find_cf(const UExprODict &s, const UExprODict &var,
+    static int ldegree(const UExprDict &s);
+    static UExprDict mul(const UExprDict &s, const UExprDict &r, unsigned prec);
+    static UExprDict pow(const UExprDict &s, int n, unsigned prec);
+    static Expression find_cf(const UExprDict &s, const UExprDict &var,
                               int deg);
     static Expression root(Expression &c, unsigned n);
-    static UExprODict diff(const UExprODict &s, const UExprODict &var);
-    static UExprODict integrate(const UExprODict &s, const UExprODict &var);
-    static UExprODict subs(const UExprODict &s, const UExprODict &var,
-                           const UExprODict &r, unsigned prec);
+    static UExprDict diff(const UExprDict &s, const UExprDict &var);
+    static UExprDict integrate(const UExprDict &s, const UExprDict &var);
+    static UExprDict subs(const UExprDict &s, const UExprDict &var,
+                          const UExprDict &r, unsigned prec);
 
     static Expression sin(const Expression &c);
     static Expression cos(const Expression &c);
@@ -77,7 +76,7 @@ public:
 };
 
 inline RCP<const UnivariateSeries>
-univariate_series(RCP<const Symbol> i, unsigned int prec, const UExprODict &s)
+univariate_series(RCP<const Symbol> i, unsigned int prec, const UExprDict &s)
 {
     return make_rcp<const UnivariateSeries>(std::move(s), i->get_name(), prec);
 }

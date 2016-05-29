@@ -495,16 +495,16 @@ public:
         }
     }
 
-    static RCP<const Basic> diff(const UIntPolyO &self,
+    static RCP<const Basic> diff(const UIntPoly &self,
                                  const RCP<const Symbol> &x)
     {
-        return diff_upoly<UIntPolyO, map_uint_mpz>(self, x);
+        return diff_upoly<UIntPoly, map_uint_mpz>(self, x);
     }
 
-    static RCP<const Basic> diff(const UExprPolyO &self,
+    static RCP<const Basic> diff(const UExprPoly &self,
                                  const RCP<const Symbol> &x)
     {
-        return diff_upoly<UExprPolyO, map_int_Expr>(self, x);
+        return diff_upoly<UExprPoly, map_int_Expr>(self, x);
     }
 
     template <typename MPoly, typename Dict, typename Coeff, typename Vec>
