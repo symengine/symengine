@@ -9,7 +9,8 @@
 #include <symengine/integer.h>
 #include <symengine/matrix.h>
 #include <symengine/mul.h>
-#include <symengine/polynomial.h>
+#include <symengine/polys/uintpoly.h>
+#include <symengine/polys/uexprpoly.h>
 #include <symengine/pow.h>
 #include <symengine/printer.h>
 #include <symengine/rational.h>
@@ -22,9 +23,8 @@ using SymEngine::Basic;
 using SymEngine::div;
 using SymEngine::Expression;
 using SymEngine::pow;
-using SymEngine::univariate_int_polynomial;
-using SymEngine::univariate_polynomial;
-using SymEngine::UnivariateExprPolynomial;
+using SymEngine::uint_poly;
+using SymEngine::uexpr_poly;
 using SymEngine::mul;
 using SymEngine::integer;
 using SymEngine::print_stack_on_segfault;
@@ -49,7 +49,6 @@ using SymEngine::StrPrinter;
 using SymEngine::Sin;
 using SymEngine::integer_class;
 using SymEngine::map_uint_mpz;
-using SymEngine::UIntDict;
 
 using namespace SymEngine::literals;
 
@@ -251,53 +250,53 @@ TEST_CASE("test_matrix(): printing", "[printing]")
     REQUIRE(A.__str__() == "[1, 0]\n[0, 1]\n");
 }
 
-TEST_CASE("test_univariate_int_polynomial(): printing", "[printing]")
+TEST_CASE("test_uint_poly(): printing", "[printing]")
 {
     RCP<const Basic> p;
     RCP<const Symbol> x = symbol("x");
 
-    p = univariate_int_polynomial(x, {{0, 0_z}});
+    p = uint_poly(x, {{0, 0_z}});
     REQUIRE(p->__str__() == "0");
 
-    p = univariate_int_polynomial(x, {{0, 1_z}});
+    p = uint_poly(x, {{0, 1_z}});
     REQUIRE(p->__str__() == "1");
 
-    p = univariate_int_polynomial(x, {{1, 1_z}});
+    p = uint_poly(x, {{1, 1_z}});
     REQUIRE(p->__str__() == "x");
 
-    p = univariate_int_polynomial(x, {{0, 1_z}, {1, 2_z}});
+    p = uint_poly(x, {{0, 1_z}, {1, 2_z}});
     REQUIRE(p->__str__() == "2*x + 1");
 
-    p = univariate_int_polynomial(x, {{0, -1_z}, {1, 2_z}});
+    p = uint_poly(x, {{0, -1_z}, {1, 2_z}});
     REQUIRE(p->__str__() == "2*x - 1");
 
-    p = univariate_int_polynomial(x, {{0, -1_z}});
+    p = uint_poly(x, {{0, -1_z}});
     REQUIRE(p->__str__() == "-1");
 
-    p = univariate_int_polynomial(x, {{1, -1_z}});
+    p = uint_poly(x, {{1, -1_z}});
     REQUIRE(p->__str__() == "-x");
 
-    p = univariate_int_polynomial(x, {{0, -1_z}, {1, 1_z}});
+    p = uint_poly(x, {{0, -1_z}, {1, 1_z}});
     REQUIRE(p->__str__() == "x - 1");
 
-    p = univariate_int_polynomial(x, {{0, 1_z}, {1, 1_z}, {2, 1_z}});
+    p = uint_poly(x, {{0, 1_z}, {1, 1_z}, {2, 1_z}});
     REQUIRE(p->__str__() == "x**2 + x + 1");
 
-    p = univariate_int_polynomial(x, {{0, 1_z}, {1, -1_z}, {2, 1_z}});
+    p = uint_poly(x, {{0, 1_z}, {1, -1_z}, {2, 1_z}});
     REQUIRE(p->__str__() == "x**2 - x + 1");
 
-    p = univariate_int_polynomial(x, {{0, 1_z}, {1, 2_z}, {2, 1_z}});
+    p = uint_poly(x, {{0, 1_z}, {1, 2_z}, {2, 1_z}});
     REQUIRE(p->__str__() == "x**2 + 2*x + 1");
 
-    p = univariate_int_polynomial(x, {{1, 2_z}, {2, 1_z}});
+    p = uint_poly(x, {{1, 2_z}, {2, 1_z}});
     REQUIRE(p->__str__() == "x**2 + 2*x");
 
-    p = univariate_int_polynomial(x, {{0, -1_z}, {1, -2_z}, {2, -1_z}});
+    p = uint_poly(x, {{0, -1_z}, {1, -2_z}, {2, -1_z}});
 
     REQUIRE(p->__str__() == "-x**2 - 2*x - 1");
 }
 
-TEST_CASE("test_univariate_polynomial(): printing", "[printing]")
+TEST_CASE("test_uexpr_poly(): printing", "[printing]")
 {
     RCP<const Basic> p;
     RCP<const Symbol> x = symbol("x");
@@ -306,38 +305,38 @@ TEST_CASE("test_univariate_polynomial(): printing", "[printing]")
     Expression c(symbol("c"));
     Expression d(symbol("d"));
 
-    p = univariate_polynomial(x, {{0, Expression(0)}});
+    p = uexpr_poly(x, {{0, Expression(0)}});
     REQUIRE(p->__str__() == "0");
-    p = univariate_polynomial(x, {{0, Expression(1)}});
+    p = uexpr_poly(x, {{0, Expression(1)}});
     REQUIRE(p->__str__() == "1");
-    p = univariate_polynomial(x, {{1, Expression(1)}});
+    p = uexpr_poly(x, {{1, Expression(1)}});
     REQUIRE(p->__str__() == "x");
-    p = univariate_polynomial(x, {{0, 1}, {1, 2}});
+    p = uexpr_poly(x, {{0, 1}, {1, 2}});
     REQUIRE(p->__str__() == "2*x + 1");
-    p = univariate_polynomial(x, {{0, -1}, {1, 2}});
+    p = uexpr_poly(x, {{0, -1}, {1, 2}});
     REQUIRE(p->__str__() == "2*x - 1");
-    p = univariate_polynomial(x, {{0, Expression(-1)}});
+    p = uexpr_poly(x, {{0, Expression(-1)}});
     REQUIRE(p->__str__() == "-1");
-    p = univariate_polynomial(x, {{1, Expression(-1)}});
+    p = uexpr_poly(x, {{1, Expression(-1)}});
     REQUIRE(p->__str__() == "-x");
-    p = univariate_polynomial(x, {{0, -1}, {1, 1}});
+    p = uexpr_poly(x, {{0, -1}, {1, 1}});
     REQUIRE(p->__str__() == "x - 1");
-    p = univariate_polynomial(x, {{0, 1}, {1, 1}, {2, 1}});
+    p = uexpr_poly(x, {{0, 1}, {1, 1}, {2, 1}});
     REQUIRE(p->__str__() == "x**2 + x + 1");
-    p = univariate_polynomial(x, {{0, 1}, {1, -1}, {2, 1}});
+    p = uexpr_poly(x, {{0, 1}, {1, -1}, {2, 1}});
     REQUIRE(p->__str__() == "x**2 - x + 1");
-    p = univariate_polynomial(x, {{0, 1}, {1, 2}, {2, 1}});
+    p = uexpr_poly(x, {{0, 1}, {1, 2}, {2, 1}});
     REQUIRE(p->__str__() == "x**2 + 2*x + 1");
-    p = univariate_polynomial(x, {{1, 2}, {2, 1}});
+    p = uexpr_poly(x, {{1, 2}, {2, 1}});
     REQUIRE(p->__str__() == "x**2 + 2*x");
-    p = univariate_polynomial(x, {{0, -1}, {1, -2}, {2, -1}});
+    p = uexpr_poly(x, {{0, -1}, {1, -2}, {2, -1}});
     REQUIRE(p->__str__() == "-x**2 - 2*x - 1");
-    p = univariate_polynomial(x, {{-1, d}});
+    p = uexpr_poly(x, {{-1, d}});
 
     REQUIRE(p->__str__() == "d*x**(-1)");
     REQUIRE(not(p->__str__() == "d*x**-1"));
 
-    p = univariate_polynomial(x, {{-2, d}, {-1, c}, {0, b}, {1, a}});
+    p = uexpr_poly(x, {{-2, d}, {-1, c}, {0, b}, {1, a}});
     REQUIRE(p->__str__() == "a*x + b + c*x**(-1) + d*x**(-2)");
 }
 

@@ -280,32 +280,31 @@ public:
         }
     }
 
-    void pow_expand(RCP<const UnivariatePolynomial> &x, unsigned long &i)
+    void pow_expand(RCP<const UExprPoly> &x, unsigned long &i)
     {
-        UnivariateExprPolynomial e({{0, Expression(1)}});
-        RCP<const UnivariatePolynomial> r
-            = univariate_polynomial(x->get_var(), std::move(e));
+        UExprDict e({{0, Expression(1)}});
+        RCP<const UExprPoly> r = uexpr_poly(x->get_var(), std::move(e));
         while (i != 0) {
             if (i % 2 == 1) {
-                r = mul_poly(*r, *x);
+                r = mul_upoly(*r, *x);
                 i--;
             }
-            x = mul_poly(*x, *x);
+            x = mul_upoly(*x, *x);
             i /= 2;
         }
         _coef_dict_add_term(multiply, r);
     }
 
-    void pow_expand(RCP<const UnivariateIntPolynomial> &x, unsigned long &i)
+    void pow_expand(RCP<const UIntPoly> &x, unsigned long &i)
     {
-        RCP<const UnivariateIntPolynomial> r = univariate_int_polynomial(
-            x->get_var(), UIntDict({{0, integer_class(1)}}));
+        RCP<const UIntPoly> r
+            = uint_poly(x->get_var(), UIntDict({{0, integer_class(1)}}));
         while (i != 0) {
             if (i % 2 == 1) {
-                r = mul_poly(*r, *x);
+                r = mul_upoly(*r, *x);
                 i--;
             }
-            x = mul_poly(*x, *x);
+            x = mul_upoly(*x, *x);
             i /= 2;
         }
         _coef_dict_add_term(multiply, r);
@@ -314,21 +313,17 @@ public:
     void bvisit(const Pow &self)
     {
         RCP<const Basic> _base = expand(self.get_base());
-        if (is_a<Integer>(*self.get_exp())
-            && is_a<UnivariatePolynomial>(*_base)) {
+        if (is_a<Integer>(*self.get_exp()) && is_a<UExprPoly>(*_base)) {
             unsigned long q
                 = rcp_static_cast<const Integer>(self.get_exp())->as_int();
-            RCP<const UnivariatePolynomial> p
-                = rcp_static_cast<const UnivariatePolynomial>(_base);
+            RCP<const UExprPoly> p = rcp_static_cast<const UExprPoly>(_base);
             pow_expand(p, q);
             return;
         }
-        if (is_a<Integer>(*self.get_exp())
-            && is_a<UnivariateIntPolynomial>(*_base)) {
+        if (is_a<Integer>(*self.get_exp()) && is_a<UIntPoly>(*_base)) {
             unsigned long q
                 = rcp_static_cast<const Integer>(self.get_exp())->as_int();
-            RCP<const UnivariateIntPolynomial> p
-                = rcp_static_cast<const UnivariateIntPolynomial>(_base);
+            RCP<const UIntPoly> p = rcp_static_cast<const UIntPoly>(_base);
             pow_expand(p, q);
             return;
         }

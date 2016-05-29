@@ -8,7 +8,6 @@
 #include <symengine/pow.h>
 #include <symengine/constants.h>
 #include <symengine/functions.h>
-#include <symengine/polynomial.h>
 #include <symengine/printer.h>
 #include <symengine/subs.h>
 

@@ -78,6 +78,10 @@ symengine/tests/basic/test_series_expansion_UP
 symengine/tests/basic/test_series_expansion_URatP
 symengine/tests/basic/test_series_expansion_URatF
 symengine/tests/basic/test_polynomial_multivariate
+symengine/tests/polynomial/test_mexprpoly
+symengine/tests/polynomial/test_mintpoly
+symengine/tests/polynomial/test_uexprpoly
+symengine/tests/polynomial/test_uintpoly
 
 # Benchmarks executables
 benchmarks/add1

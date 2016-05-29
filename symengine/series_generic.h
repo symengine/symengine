@@ -7,7 +7,8 @@
 #define SYMENGINE_SERIES_GENERIC_H
 
 #include <list>
-#include <symengine/polynomial.h>
+#include <symengine/polys/uintpoly.h>
+#include <symengine/polys/uexprpoly.h>
 #include <symengine/rational.h>
 #include <symengine/series.h>
 
@@ -15,21 +16,21 @@ namespace SymEngine
 {
 //! UnivariateSeries Class
 class UnivariateSeries
-    : public SeriesBase<UnivariateExprPolynomial, Expression, UnivariateSeries>
+    : public SeriesBase<UExprDict, Expression, UnivariateSeries>
 {
     // UnivariateSeries 1 + 2*x + x**2 + O(x**5) has dict_ = {{0, 1}, {1, 2},
     // {2, 1}} with var_ = "x" and prec_ = 5
 public:
     IMPLEMENT_TYPEID(UNIVARIATESERIES)
-    UnivariateSeries(const UnivariateExprPolynomial &sp,
-                     const std::string varname, const unsigned degree)
+    UnivariateSeries(const UExprDict &sp, const std::string varname,
+                     const unsigned degree)
         : SeriesBase(std::move(sp), varname, degree)
     {
     }
 
     static RCP<const UnivariateSeries> create(const RCP<const Symbol> &var,
                                               const unsigned int &prec,
-                                              const UnivariateExprPolynomial &s)
+                                              const UExprDict &s)
     {
         return make_rcp<const UnivariateSeries>(std::move(s), var->get_name(),
                                                 prec);
@@ -43,28 +44,20 @@ public:
     virtual RCP<const Basic> as_basic() const;
     virtual umap_int_basic as_dict() const;
     virtual RCP<const Basic> get_coeff(int) const;
-    static UnivariateExprPolynomial var(const std::string &s);
+    static UExprDict var(const std::string &s);
 
     static Expression convert(const Basic &x);
 
-    static int ldegree(const UnivariateExprPolynomial &s);
-    static UnivariateExprPolynomial mul(const UnivariateExprPolynomial &s,
-                                        const UnivariateExprPolynomial &r,
-                                        unsigned prec);
-    static UnivariateExprPolynomial pow(const UnivariateExprPolynomial &s,
-                                        int n, unsigned prec);
-    static Expression find_cf(const UnivariateExprPolynomial &s,
-                              const UnivariateExprPolynomial &var, int deg);
+    static int ldegree(const UExprDict &s);
+    static UExprDict mul(const UExprDict &s, const UExprDict &r, unsigned prec);
+    static UExprDict pow(const UExprDict &s, int n, unsigned prec);
+    static Expression find_cf(const UExprDict &s, const UExprDict &var,
+                              int deg);
     static Expression root(Expression &c, unsigned n);
-    static UnivariateExprPolynomial diff(const UnivariateExprPolynomial &s,
-                                         const UnivariateExprPolynomial &var);
-    static UnivariateExprPolynomial
-    integrate(const UnivariateExprPolynomial &s,
-              const UnivariateExprPolynomial &var);
-    static UnivariateExprPolynomial subs(const UnivariateExprPolynomial &s,
-                                         const UnivariateExprPolynomial &var,
-                                         const UnivariateExprPolynomial &r,
-                                         unsigned prec);
+    static UExprDict diff(const UExprDict &s, const UExprDict &var);
+    static UExprDict integrate(const UExprDict &s, const UExprDict &var);
+    static UExprDict subs(const UExprDict &s, const UExprDict &var,
+                          const UExprDict &r, unsigned prec);
 
     static Expression sin(const Expression &c);
     static Expression cos(const Expression &c);
@@ -83,8 +76,7 @@ public:
 };
 
 inline RCP<const UnivariateSeries>
-univariate_series(RCP<const Symbol> i, unsigned int prec,
-                  const UnivariateExprPolynomial &s)
+univariate_series(RCP<const Symbol> i, unsigned int prec, const UExprDict &s)
 {
     return make_rcp<const UnivariateSeries>(std::move(s), i->get_name(), prec);
 }

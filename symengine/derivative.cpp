@@ -7,7 +7,8 @@
 #include <symengine/functions.h>
 #include <symengine/integer.h>
 #include <symengine/mul.h>
-#include <symengine/polynomial.h>
+#include <symengine/polys/uintpoly.h>
+#include <symengine/polys/uexprpoly.h>
 #include <symengine/pow.h>
 #include <symengine/rational.h>
 #include <symengine/sets.h>
@@ -494,16 +495,16 @@ public:
         }
     }
 
-    static RCP<const Basic> diff(const UnivariateIntPolynomial &self,
+    static RCP<const Basic> diff(const UIntPoly &self,
                                  const RCP<const Symbol> &x)
     {
-        return diff_upoly<UnivariateIntPolynomial, map_uint_mpz>(self, x);
+        return diff_upoly<UIntPoly, map_uint_mpz>(self, x);
     }
 
-    static RCP<const Basic> diff(const UnivariatePolynomial &self,
+    static RCP<const Basic> diff(const UExprPoly &self,
                                  const RCP<const Symbol> &x)
     {
-        return diff_upoly<UnivariatePolynomial, map_int_Expr>(self, x);
+        return diff_upoly<UExprPoly, map_int_Expr>(self, x);
     }
 
     template <typename MPoly, typename Dict, typename Coeff, typename Vec>

@@ -7,7 +7,6 @@
 #include <symengine/rational.h>
 #include <symengine/complex.h>
 #include <symengine/constants.h>
-#include <symengine/polynomial.h>
 
 namespace SymEngine
 {

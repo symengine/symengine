@@ -14,17 +14,17 @@ RCP<const UnivariateSeries> UnivariateSeries::series(const RCP<const Basic> &t,
                                                      const std::string &x,
                                                      unsigned int prec)
 {
-    UnivariateExprPolynomial p({{1, Expression(1)}});
-    SeriesVisitor<UnivariateExprPolynomial, Expression, UnivariateSeries>
-        visitor(std::move(p), x, prec);
+    UExprDict p({{1, Expression(1)}});
+    SeriesVisitor<UExprDict, Expression, UnivariateSeries> visitor(std::move(p),
+                                                                   x, prec);
     return visitor.series(t);
 }
 
 std::size_t UnivariateSeries::__hash__() const
 {
-    std::size_t seed = UNIVARIATEPOLYNOMIAL;
+    std::size_t seed = UEXPRPOLY;
     for (const auto &it : p_.dict_) {
-        std::size_t temp = UNIVARIATEPOLYNOMIAL;
+        std::size_t temp = UEXPRPOLY;
         hash_combine<unsigned int>(temp, it.first);
         hash_combine<Basic>(temp, *(it.second.get_basic()));
         seed += temp;
@@ -61,9 +61,9 @@ RCP<const Basic> UnivariateSeries::get_coeff(int deg) const
         return p_.get_dict().at(deg).get_basic();
 }
 
-UnivariateExprPolynomial UnivariateSeries::var(const std::string &s)
+UExprDict UnivariateSeries::var(const std::string &s)
 {
-    return UnivariateExprPolynomial({{1, Expression(1)}});
+    return UExprDict({{1, Expression(1)}});
 }
 
 Expression UnivariateSeries::convert(const Basic &x)
@@ -71,14 +71,13 @@ Expression UnivariateSeries::convert(const Basic &x)
     return Expression(x.rcp_from_this());
 }
 
-int UnivariateSeries::ldegree(const UnivariateExprPolynomial &s)
+int UnivariateSeries::ldegree(const UExprDict &s)
 {
     return s.get_dict().begin()->first;
 }
 
-UnivariateExprPolynomial
-UnivariateSeries::mul(const UnivariateExprPolynomial &a,
-                      const UnivariateExprPolynomial &b, unsigned prec)
+UExprDict UnivariateSeries::mul(const UExprDict &a, const UExprDict &b,
+                                unsigned prec)
 {
     map_int_Expr p;
     for (auto &it1 : a.get_dict()) {
@@ -91,30 +90,28 @@ UnivariateSeries::mul(const UnivariateExprPolynomial &a,
             }
         }
     }
-    return UnivariateExprPolynomial(p);
+    return UExprDict(p);
 }
 
-UnivariateExprPolynomial
-UnivariateSeries::pow(const UnivariateExprPolynomial &base, int exp,
-                      unsigned prec)
+UExprDict UnivariateSeries::pow(const UExprDict &base, int exp, unsigned prec)
 {
     if (exp < 0) {
         SYMENGINE_ASSERT(base.size() == 1)
         map_int_Expr dict;
         dict[-(base.get_dict().begin()->first)]
             = 1 / base.get_dict().begin()->second;
-        return pow(UnivariateExprPolynomial(dict), -exp, prec);
+        return pow(UExprDict(dict), -exp, prec);
     }
     if (exp == 0) {
         if (base == 0 or base.get_dict().size() == 0) {
             throw std::runtime_error("Error: 0**0 is undefined.");
         } else {
-            return UnivariateExprPolynomial(1);
+            return UExprDict(1);
         }
     }
 
-    UnivariateExprPolynomial x(base);
-    UnivariateExprPolynomial y(1);
+    UExprDict x(base);
+    UExprDict y(1);
     while (exp > 1) {
         if (exp % 2 == 0) {
             x = mul(x, x, prec);
@@ -128,8 +125,7 @@ UnivariateSeries::pow(const UnivariateExprPolynomial &base, int exp,
     return mul(x, y, prec);
 }
 
-Expression UnivariateSeries::find_cf(const UnivariateExprPolynomial &s,
-                                     const UnivariateExprPolynomial &var,
+Expression UnivariateSeries::find_cf(const UExprDict &s, const UExprDict &var,
                                      int deg)
 {
     if (s.get_dict().count(deg) == 0)
@@ -143,9 +139,7 @@ Expression UnivariateSeries::root(Expression &c, unsigned n)
     return pow_ex(c, 1 / Expression(n));
 }
 
-UnivariateExprPolynomial
-UnivariateSeries::diff(const UnivariateExprPolynomial &s,
-                       const UnivariateExprPolynomial &var)
+UExprDict UnivariateSeries::diff(const UExprDict &s, const UExprDict &var)
 {
     if (var.get_dict().size() == 1 and var.get_dict().at(1) == Expression(1)) {
         map_int_Expr d;
@@ -153,15 +147,13 @@ UnivariateSeries::diff(const UnivariateExprPolynomial &s,
             if (p.first != 0)
                 d[p.first - 1] = p.second * p.first;
         }
-        return UnivariateExprPolynomial(d);
+        return UExprDict(d);
     } else {
-        return UnivariateExprPolynomial({{0, Expression(0)}});
+        return UExprDict({{0, Expression(0)}});
     }
 }
 
-UnivariateExprPolynomial
-UnivariateSeries::integrate(const UnivariateExprPolynomial &s,
-                            const UnivariateExprPolynomial &var)
+UExprDict UnivariateSeries::integrate(const UExprDict &s, const UExprDict &var)
 {
     map_int_Expr dict;
     for (auto &it : s.get_dict()) {
@@ -173,15 +165,13 @@ UnivariateSeries::integrate(const UnivariateExprPolynomial &s,
         }
     }
 
-    return UnivariateExprPolynomial(dict);
+    return UExprDict(dict);
 }
 
-UnivariateExprPolynomial
-UnivariateSeries::subs(const UnivariateExprPolynomial &s,
-                       const UnivariateExprPolynomial &var,
-                       const UnivariateExprPolynomial &r, unsigned prec)
+UExprDict UnivariateSeries::subs(const UExprDict &s, const UExprDict &var,
+                                 const UExprDict &r, unsigned prec)
 {
-    UnivariateExprPolynomial result({{1, Expression(1)}});
+    UExprDict result({{1, Expression(1)}});
 
     for (auto &i : s.get_dict())
         result += i.second * pow(r, i.first, prec);
