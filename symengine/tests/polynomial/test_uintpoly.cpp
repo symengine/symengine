@@ -3,7 +3,7 @@
 #include <iostream>
 
 #include <symengine/mul.h>
-#include <symengine/uintpoly.h>
+#include <symengine/polys/uintpoly.h>
 #include <symengine/pow.h>
 #include <symengine/dict.h>
 

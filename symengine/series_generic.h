@@ -7,8 +7,8 @@
 #define SYMENGINE_SERIES_GENERIC_H
 
 #include <list>
-#include <symengine/uintpoly.h>
-#include <symengine/uexprpoly.h>
+#include <symengine/polys/uintpoly.h>
+#include <symengine/polys/uexprpoly.h>
 #include <symengine/rational.h>
 #include <symengine/series.h>
 

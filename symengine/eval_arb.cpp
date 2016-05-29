@@ -1,6 +1,6 @@
 #include <symengine/basic.h>
 #include <symengine/symbol.h>
-#include <symengine/uintpoly.h>
+#include <symengine/polys/uintpoly.h>
 #include <symengine/add.h>
 #include <symengine/integer.h>
 #include <symengine/rational.h>

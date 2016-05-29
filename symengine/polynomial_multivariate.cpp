@@ -1,8 +1,8 @@
 #include <symengine/add.h>
 #include <symengine/constants.h>
 #include <symengine/mul.h>
-#include <symengine/uintpoly.h>
-#include <symengine/uexprpoly.h>
+#include <symengine/polys/uintpoly.h>
+#include <symengine/polys/uexprpoly.h>
 #include <symengine/polynomial_multivariate.h>
 #include <symengine/pow.h>
 

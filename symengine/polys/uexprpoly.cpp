@@ -1,7 +1,7 @@
 #include <symengine/add.h>
 #include <symengine/constants.h>
 #include <symengine/mul.h>
-#include <symengine/uexprpoly.h>
+#include <symengine/polys/uexprpoly.h>
 #include <symengine/pow.h>
 
 namespace SymEngine
