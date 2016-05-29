@@ -448,7 +448,6 @@ install(FILES "${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/SymEngineConfig.cma
               cmake/FindBFD.cmake
               cmake/FindECM.cmake
               cmake/FindEXECINFO.cmake
-              cmake/FindFLINT.cmake
               cmake/FindGMP.cmake
               cmake/FindLINKH.cmake
               cmake/FindMPC.cmake
