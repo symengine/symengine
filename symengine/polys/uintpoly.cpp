@@ -54,16 +54,6 @@ int UIntPoly::compare(const Basic &o) const
 RCP<const UIntPoly> UIntPoly::from_dict(const RCP<const Symbol> &var,
                                         UIntDict &&d)
 {
-    auto iter = d.dict_.begin();
-    while (iter != d.dict_.end()) {
-        if (iter->second == 0) {
-            auto toErase = iter;
-            iter++;
-            d.dict_.erase(toErase);
-        } else {
-            iter++;
-        }
-    }
     return make_rcp<const UIntPoly>(var, std::move(d));
 }
 

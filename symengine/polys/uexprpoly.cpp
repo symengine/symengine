@@ -54,16 +54,6 @@ int UExprPoly::compare(const Basic &o) const
 RCP<const UExprPoly> UExprPoly::from_dict(const RCP<const Symbol> &var,
                                           UExprDict &&d)
 {
-    auto iter = d.dict_.begin();
-    while (iter != d.dict_.end()) {
-        if (iter->second == Expression(0)) {
-            auto toErase = iter;
-            iter++;
-            d.dict_.erase(toErase);
-        } else {
-            iter++;
-        }
-    }
     return make_rcp<const UExprPoly>(var, std::move(d));
 }
 

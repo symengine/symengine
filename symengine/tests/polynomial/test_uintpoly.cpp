@@ -43,6 +43,9 @@ TEST_CASE("Constructor of UIntPoly", "[UIntPoly]")
 
     RCP<const UIntPoly> T = uint_poly(x, map_uint_mpz{});
     REQUIRE(T->__str__() == "0");
+
+    RCP<const UIntPoly> U = uint_poly(x, {{0, 2_z}, {1, 0_z}, {2, 0_z}});
+    REQUIRE(U->__str__() == "2");
 }
 
 TEST_CASE("Adding two UIntPoly", "[UIntPoly]")
