@@ -39,6 +39,10 @@ public:
     RCP<const GaloisField> gf_add(const RCP<const GaloisField> &o) const;
     RCP<const GaloisField> gf_sub(const RCP<const GaloisField> &o) const;
     RCP<const GaloisField> gf_mul(const RCP<const GaloisField> &o) const;
+    RCP<const GaloisField> gf_quo(const RCP<const GaloisField> &o) const;
+    void gf_div(const RCP<const GaloisField> &o,
+                const Ptr<RCP<const GaloisField>> &quo,
+                const Ptr<RCP<const GaloisField>> &rem) const;
 };
 
 //! \return RCP<const GaloisField>

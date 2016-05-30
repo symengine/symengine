@@ -12,9 +12,9 @@ using SymEngine::gf;
 using SymEngine::integer_class;
 using SymEngine::map_uint_mpz;
 
-TEST_CASE("Interval : Basic", "[basic]")
+TEST_CASE("GaloisField : Basic", "[basic]")
 {
-    RCP<const GaloisField> r1, r2, r3;
+    RCP<const GaloisField> r1, r2, r3, r4;
     std::vector<integer_class> a = {2, 3, 4};
     std::vector<integer_class> b = {3, 3, 6, 6};
     r1 = gf(a, 5);
@@ -165,4 +165,43 @@ TEST_CASE("Interval : Basic", "[basic]")
     REQUIRE(mp[6] == 1);
     REQUIRE(mp[7] == 2);
     REQUIRE(mp[8] == 0);
+
+    a = {0, 1, 2, 3, 4, 5};
+    b = {0, 3, 2, 1};
+    r1 = gf(a, 7);
+    r2 = gf(b, 7);
+    r1->gf_div(r2, outArg(r3), outArg(r4));
+    mp = r3->dict_;
+    REQUIRE(mp[0] == 0);
+    REQUIRE(mp[1] == 1);
+    REQUIRE(mp[2] == 5);
+    mp = r4->dict_;
+    REQUIRE(mp[0] == 0);
+    REQUIRE(mp[1] == 1);
+    REQUIRE(mp[2] == 6);
+    REQUIRE(eq(*r3, *(r1->gf_quo(r2))));
+
+    a = {0, 1, 2, 3, 4, 5};
+    b = {3, 2, 1};
+    r1 = gf(a, 7);
+    r2 = gf(b, 7);
+    r1->gf_div(r2, outArg(r3), outArg(r4));
+    mp = r3->dict_;
+    REQUIRE(mp[0] == 6);
+    REQUIRE(mp[1] == 0);
+    REQUIRE(mp[2] == 1);
+    REQUIRE(mp[3] == 5);
+    mp = r4->dict_;
+    REQUIRE(mp[0] == 3);
+    REQUIRE(mp[1] == 3);
+    REQUIRE(eq(*r3, *(r1->gf_quo(r2))));
+
+    a = {1};
+    b = {3, 2, 1};
+    r1 = gf(a, 7);
+    r2 = gf(b, 7);
+    r1->gf_div(r2, outArg(r3), outArg(r4));
+    REQUIRE(r3->dict_.empty());
+    mp = r4->dict_;
+    REQUIRE(mp[0] == 1);
 }
