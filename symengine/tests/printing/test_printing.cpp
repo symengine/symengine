@@ -329,10 +329,9 @@ TEST_CASE("test_uexpr_poly(): printing", "[printing]")
     REQUIRE(p->__str__() == "x**2 + 2*x + 1");
     p = uexpr_poly(x, {{1, 2}, {2, 1}});
     REQUIRE(p->__str__() == "x**2 + 2*x");
-    p = univariate_polynomial(
-        x, UnivariateExprPolynomial({{0, -1}, {1, -2}, {2, -1}}));
-    REQUIRE(p->__str__() == "-x**2 + (-2)*x + (-1)");
-    p = univariate_polynomial(x, UnivariateExprPolynomial({{-1, d}}));f
+    p = uexpr_poly(x, {{0, -1}, {1, -2}, {2, -1}});
+    REQUIRE(p->__str__() == "-x**2 - 2*x - 1");
+    p = uexpr_poly(x, {{-1, d}});
 
     REQUIRE(p->__str__() == "d*x**(-1)");
     REQUIRE(not(p->__str__() == "d*x**-1"));

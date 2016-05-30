@@ -45,7 +45,8 @@ typedef std::map<RCP<const Integer>, unsigned, RCPIntegerKeyLess>
     map_integer_uint;
 typedef std::map<unsigned, integer_class> map_uint_mpz;
 typedef std::map<int, Expression> map_int_Expr;
-typedef std::map<RCP<const Symbol>, unsigned int, RCPBasicKeyLess> map_basic_uint;
+typedef std::map<RCP<const Symbol>, unsigned int, RCPBasicKeyLess>
+    map_basic_uint;
 
 //! Part of umap_vec_mpz:
 typedef struct {
@@ -104,8 +105,10 @@ bool map_eq(const T &A, const T &B)
     auto a = A.begin();
     auto b = B.begin();
     for (; a != A.end(); ++a, ++b) {
-        if (neq(*a->first, *b->first)) return false; // keys not equal
-        if (neq(*a->second, *b->second)) return false; // values not equal
+        if (neq(*a->first, *b->first))
+            return false; // keys not equal
+        if (neq(*a->second, *b->second))
+            return false; // values not equal
     }
     return true;
 }
@@ -154,9 +157,11 @@ int map_compare(const T &A, const T &B)
     int cmp;
     for (; a != A.end(); ++a, ++b) {
         cmp = a->first->__cmp__(*b->first);
-        if (cmp != 0) return cmp;
+        if (cmp != 0)
+            return cmp;
         cmp = a->second->__cmp__(*b->second);
-        if (cmp != 0) return cmp;
+        if (cmp != 0)
+            return cmp;
     }
     return 0;
 }
@@ -172,20 +177,8 @@ int multiset_basic_compare(const multiset_basic &a, const multiset_basic &b);
 int map_uint_mpz_compare(const map_uint_mpz &a, const map_uint_mpz &b);
 int map_int_Expr_compare(const map_int_Expr &a, const map_int_Expr &b);
 
-//! Part of umap_vec_mpz:
-typedef struct
-{
-    inline std::size_t operator() (const vec_int &k) const {
-        std::size_t h = 0;
-        for (const auto &p: k) {
-            h = (h << 4) + p;
-        }
-        return h;
-    }
-} vec_int_hash;
-
-typedef std::unordered_map<vec_int, integer_class,
-        vec_int_hash> umap_vec_mpz;
+//! misc functions
+bool vec_basic_eq_perm(const vec_basic &a, const vec_basic &b);
 
 int umap_vec_mpz_compare(const umap_vec_mpz &a, const umap_vec_mpz &b);
 long mpz_hash(const integer_class z);
@@ -205,54 +198,21 @@ public:
     }
 };
 
-class vec_uint_eq{
-public:
-    bool operator()(const vec_uint &a, const vec_uint &b) const{
-        if (a.size() != b.size())
-            return false;
-        for (unsigned int i = 0; i < a.size(); i++) {
-            if(a[i] != b[i])
-              return false;
-        }
-        return true;
-    }
-};
+typedef std::unordered_map<RCP<const Basic>, unsigned int, RCPBasicHash,
+                           RCPBasicKeyEq> umap_basic_uint;
+typedef std::unordered_map<vec_uint, integer_class, vec_uint_hash>
+    umap_uvec_mpz;
+typedef std::unordered_map<vec_uint, Expression, vec_uint_hash> umap_uvec_expr;
 
-class vec_uint_compare{
-public:
-    bool operator()(const vec_uint &a, const vec_uint &b) const{
-        if (a.size() != b.size())
-            return a.size() < b.size();
-        unsigned int sum1 = 0;
-        unsigned int sum2 = 0;
-        for (unsigned int x : a) {
-            sum1 += x;
-        }
-        for (unsigned int x : b) {
-            sum2 += x;
-        }
-        if (sum1 != sum2)
-            return sum1 < sum2;
-        return a < b;
-    }
-};
-
-typedef std::set< RCP<const Symbol>, RCPSymbolCompare> set_sym;
-typedef std::unordered_map<RCP<const Symbol>, unsigned int, RCPSymbolHash, RCPSymbolEq>
-    umap_sym_uint;
-typedef std::unordered_map<vec_uint, integer_class, vec_uint_hash, vec_uint_eq> umap_uvec_mpz;
-typedef std::unordered_map<vec_uint,Expression, vec_uint_hash, vec_uint_eq> umap_uvec_expr;
-
-//Takes an unordered map of type M with key type K and returns a vector of K ordered by C.
-template<class K, class M, class C>
-std::vector<K> order_umap(const M &d) {
+// Takes an unordered map of type M with key type K and returns a vector of K
+// ordered by C.
+template <class K, class M, class C = std::less<K>>
+std::vector<K> order_umap(const M &d)
+{
+    std::set<K, C> s;
     std::vector<K> v;
     for (auto bucket : d) {
-        auto iter = v.begin();
-        while(iter != v.end() && C()(bucket.first,*iter)){
-            iter++;
-        }
-        v.insert(iter, bucket.first);
+        s.insert(bucket.first);
     }
     v.insert(v.begin(), s.begin(), s.end());
     return v;
@@ -306,7 +266,8 @@ int set_compare(const T &A, const T &B)
     int cmp;
     for (; a != A.end(); ++a, ++b) {
         cmp = (*a)->__cmp__(**b);
-        if (cmp != 0) return cmp;
+        if (cmp != 0)
+            return cmp;
     }
     return 0;
 }

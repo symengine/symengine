@@ -58,7 +58,6 @@ public:
     // dict: dictionary for sparse represntation of polynomial, x**1 * y**2 + 3
     // * x**4 * y ** 5
     // is represented as {(1,2):1,(4,5):3}
-<<<<<<< b0cb5f71bf9f3839f1f5391bea23f54f683fda68
     set_basic vars_;
     umap_basic_uint degrees_;
     Dict dict_;
@@ -257,7 +256,7 @@ public:
         return MPoly::from_dict(s, std::move(dict));
     }
     static MPoly diff(const MPolyBase<MPoly, Dict, Coeff, Vec> &self,
-                                 const RCP<const Symbol> &x)
+                      const RCP<const Symbol> &x)
     {
         Dict dict;
         if (self.vars_.find(x) != self.vars_.end()) {
@@ -290,12 +289,13 @@ public:
 
 // MultivariateIntPolynomialExpr
 class MultivariateIntPolynomialExpr
-    : public MPolyBase<MultivariateIntPolynomialExpr, umap_uvec_mpz, integer_class,
-                       vec_uint>
+    : public MPolyBase<MultivariateIntPolynomialExpr, umap_uvec_mpz,
+                       integer_class, vec_uint>
 {
 public:
-    MultivariateIntPolynomialExpr(const set_basic &vars, umap_basic_uint &&degrees,
-                              umap_uvec_mpz &&dict)
+    MultivariateIntPolynomialExpr(const set_basic &vars,
+                                  umap_basic_uint &&degrees,
+                                  umap_uvec_mpz &&dict)
         : MPolyBase(std::move(vars), std::move(degrees), std::move(dict))
     {
     }
@@ -305,18 +305,17 @@ public:
     int compare(const MultivariateIntPolynomialExpr &o) const;
     integer_class eval(
         std::map<RCP<const Basic>, integer_class, RCPBasicKeyLess> &vals) const;
-    
+
     std::string toString();
 
-    static inline const MultivariateIntPolynomialExpr&
+    static inline const MultivariateIntPolynomialExpr &
     convert(const MultivariateIntPolynomialExpr &o)
     {
         return o;
     }
 
     static MultivariateIntPolynomialExpr
-    convert(const UnivariateIntPolynomial &o);
-
+    convert(const UIntPoly &o);
 };
 
 // MultivariatePolynomialExpr
@@ -326,7 +325,7 @@ class MultivariatePolynomialExpr
 {
 public:
     MultivariatePolynomialExpr(const set_basic &vars, umap_basic_uint &&degrees,
-                           umap_vec_expr &&dict)
+                               umap_vec_expr &&dict)
         : MPolyBase(std::move(vars), std::move(degrees), std::move(dict))
     {
     }
@@ -336,17 +335,16 @@ public:
     int compare(const MultivariatePolynomialExpr &o) const;
     Expression
     eval(std::map<RCP<const Basic>, Expression, RCPBasicKeyLess> &vals) const;
-    
+
     std::string toString();
 
-    static inline const MultivariatePolynomialExpr&
+    static inline const MultivariatePolynomialExpr &
     convert(const MultivariatePolynomialExpr &o)
     {
         return o;
     }
-    
-    static MultivariatePolynomialExpr 
-    convert(const UnivariatePolynomial &o);
+
+    static MultivariatePolynomialExpr convert(const UExprPoly &o);
 
     static MultivariatePolynomialExpr convert(const int i);
     static MultivariatePolynomialExpr convert(const Expression &o);
@@ -361,7 +359,9 @@ public:
             unsigned int whichvar = 0;
             while (var != vars_.end() && prec != precs.end()) {
                 if ((*var)->__eq__(*prec->first)) {
-                    if ( bucket.first[whichvar] > 0 && static_cast<unsigned int>(bucket.first[whichvar]) > prec->second)
+                    if (bucket.first[whichvar] > 0
+                        && static_cast<unsigned int>(bucket.first[whichvar])
+                               > prec->second)
                         accept = false;
                     prec++;
                 }
@@ -375,30 +375,35 @@ public:
         return MultivariatePolynomialExpr::from_dict(vars_, std::move(d));
     }
 
-    MultivariatePolynomialExpr& operator=(const MultivariatePolynomialExpr& o) = default;
+    MultivariatePolynomialExpr &operator=(const MultivariatePolynomialExpr &o)
+        = default;
 
-    MultivariatePolynomialExpr& operator=(const Expression& o)
+    MultivariatePolynomialExpr &operator=(const Expression &o)
     {
         return *this = convert(o);
     }
 
-    friend MultivariatePolynomialExpr operator+(const MultivariatePolynomialExpr& a,const MultivariatePolynomialExpr& b)
+    friend MultivariatePolynomialExpr
+    operator+(const MultivariatePolynomialExpr &a,
+              const MultivariatePolynomialExpr &b)
     {
         return a.add(b);
     }
 
-    friend MultivariatePolynomialExpr operator+(const MultivariatePolynomialExpr& a, const Expression& b)
+    friend MultivariatePolynomialExpr
+    operator+(const MultivariatePolynomialExpr &a, const Expression &b)
     {
         return a.add(convert(b));
     }
-    friend MultivariatePolynomialExpr operator+(const Expression& a,const MultivariatePolynomialExpr& b)
+    friend MultivariatePolynomialExpr
+    operator+(const Expression &a, const MultivariatePolynomialExpr &b)
     {
         return convert(a).add(b);
     }
 
-    MultivariatePolynomialExpr& operator+=(const MultivariatePolynomialExpr&a)
+    MultivariatePolynomialExpr &operator+=(const MultivariatePolynomialExpr &a)
     {
-        if (!vec_set_eq(vars_,a.vars_)) {
+        if (!vec_set_eq(vars_, a.vars_)) {
             return *this = this->add(a);
         } else {
             for (auto bucket : a.dict_) {
@@ -409,46 +414,52 @@ public:
                         dict_.erase(target);
                     }
                 } else {
-                    dict_.insert(std::pair<vec_int, Expression>(bucket.first, bucket.second));
+                    dict_.insert(std::pair<vec_int, Expression>(bucket.first,
+                                                                bucket.second));
                 }
             }
             return *this;
         }
     }
 
-    MultivariatePolynomialExpr& operator+=(const Expression& a){
+    MultivariatePolynomialExpr &operator+=(const Expression &a)
+    {
         vec_int v;
-        v.resize(vars_.size(),0);
+        v.resize(vars_.size(), 0);
         auto target = dict_.find(v);
         if (target != dict_.end()) {
             target->second += a;
             if (target->second == 0) {
                 dict_.erase(target);
             }
-        } else if (a != 0){
+        } else if (a != 0) {
             dict_.insert(std::pair<vec_int, Expression>(v, a));
         }
         return *this;
     }
 
-    friend MultivariatePolynomialExpr operator-(const MultivariatePolynomialExpr& a,const MultivariatePolynomialExpr& b)
+    friend MultivariatePolynomialExpr
+    operator-(const MultivariatePolynomialExpr &a,
+              const MultivariatePolynomialExpr &b)
     {
         return a.sub(b);
     }
 
-    friend MultivariatePolynomialExpr operator-(const MultivariatePolynomialExpr& a, const Expression& b)
+    friend MultivariatePolynomialExpr
+    operator-(const MultivariatePolynomialExpr &a, const Expression &b)
     {
         return a.sub(convert(b));
     }
 
-    friend MultivariatePolynomialExpr operator-(const Expression& a,const MultivariatePolynomialExpr& b)
+    friend MultivariatePolynomialExpr
+    operator-(const Expression &a, const MultivariatePolynomialExpr &b)
     {
         return convert(a).sub(b);
-    } 
+    }
 
-    MultivariatePolynomialExpr& operator-=(const MultivariatePolynomialExpr& a)
+    MultivariatePolynomialExpr &operator-=(const MultivariatePolynomialExpr &a)
     {
-        if (!vec_set_eq(vars_,a.vars_)) {
+        if (!vec_set_eq(vars_, a.vars_)) {
             return *this = this->sub(a);
         } else {
             for (auto bucket : a.dict_) {
@@ -459,25 +470,25 @@ public:
                         dict_.erase(target);
                     }
                 } else {
-                    dict_.insert(std::pair<vec_int, Expression>(bucket.first, -bucket.second));
+                    dict_.insert(std::pair<vec_int, Expression>(
+                        bucket.first, -bucket.second));
                 }
             }
             return *this;
         }
-
     }
 
-    MultivariatePolynomialExpr& operator-=(const Expression& a)
+    MultivariatePolynomialExpr &operator-=(const Expression &a)
     {
         vec_int v;
-        v.resize(vars_.size(),0);
+        v.resize(vars_.size(), 0);
         auto target = dict_.find(v);
         if (target != dict_.end()) {
             target->second -= a;
             if (target->second == 0) {
                 dict_.erase(target);
             }
-        } else if (a != 0){
+        } else if (a != 0) {
             dict_.insert(std::pair<vec_int, Expression>(v, -a));
         }
         return *this;
@@ -488,28 +499,32 @@ public:
         return this->neg();
     }
 
-    friend MultivariatePolynomialExpr operator*(const MultivariatePolynomialExpr& a,const MultivariatePolynomialExpr& b)
+    friend MultivariatePolynomialExpr
+    operator*(const MultivariatePolynomialExpr &a,
+              const MultivariatePolynomialExpr &b)
     {
         return a.mul(b);
     }
 
-    friend MultivariatePolynomialExpr operator*(const MultivariatePolynomialExpr& a, const Expression& b)
+    friend MultivariatePolynomialExpr
+    operator*(const MultivariatePolynomialExpr &a, const Expression &b)
     {
         return a.mul(convert(b));
     }
 
-    friend MultivariatePolynomialExpr operator*(const Expression& a,const MultivariatePolynomialExpr& b)
+    friend MultivariatePolynomialExpr
+    operator*(const Expression &a, const MultivariatePolynomialExpr &b)
     {
         return convert(a).mul(b);
     }
 
-    MultivariatePolynomialExpr& operator*=(const MultivariatePolynomialExpr& b)
+    MultivariatePolynomialExpr &operator*=(const MultivariatePolynomialExpr &b)
     {
         if (b.dict_.size() == 0) {
             dict_.clear();
         } else if (b.dict_.size() == 1) {
             vec_int v;
-            v.resize(b.vars_.size(),0);
+            v.resize(b.vars_.size(), 0);
             if (b.dict_.begin()->first == v) {
                 *this *= b.dict_.begin()->second;
             } else {
@@ -521,7 +536,7 @@ public:
         return *this;
     }
 
-    MultivariatePolynomialExpr& operator*=(const Expression& a)
+    MultivariatePolynomialExpr &operator*=(const Expression &a)
     {
         if (a == 0) {
             dict_.clear();
@@ -533,38 +548,38 @@ public:
         return *this;
     }
 
-    friend MultivariatePolynomialExpr operator/(const MultivariatePolynomialExpr& a, const Expression& b)
+    friend MultivariatePolynomialExpr
+    operator/(const MultivariatePolynomialExpr &a, const Expression &b)
     {
-        return a * (1/b);
+        return a * (1 / b);
     }
 
-    MultivariatePolynomialExpr& operator/=(const Expression &b)
+    MultivariatePolynomialExpr &operator/=(const Expression &b)
     {
-        for (auto & bucket : dict_)
+        for (auto &bucket : dict_)
             bucket.second /= b;
         return *this;
     }
 
-    bool operator==(const MultivariatePolynomialExpr& o)
+    bool operator==(const MultivariatePolynomialExpr &o)
     {
         return this->__eq__(o);
     }
 
-    bool operator==(const Expression& o)
+    bool operator==(const Expression &o)
     {
         return this->__eq__(convert(o));
     }
 
-    bool operator!=(const MultivariatePolynomialExpr& o)
+    bool operator!=(const MultivariatePolynomialExpr &o)
     {
         return !(this->__eq__(o));
     }
 
-    bool operator!=(const Expression&o)
+    bool operator!=(const Expression &o)
     {
         return !(this->__eq__(convert(o)));
     }
-
 };
 
 template <class T>
@@ -584,7 +599,8 @@ template <typename T, typename U,
           = enable_if_t<is_mpoly_expr<T>::value and is_mpoly_expr<U>::value>>
 MultivariatePolynomialExpr add_mult_poly(const T &a, const U &b)
 {
-    return MultivariatePolynomialExpr::convert(a).add(MultivariatePolynomialExpr::convert(b));
+    return MultivariatePolynomialExpr::convert(a)
+        .add(MultivariatePolynomialExpr::convert(b));
 }
 
 template <typename T, typename U,
@@ -592,7 +608,8 @@ template <typename T, typename U,
           = enable_if_t<is_mpoly_expr<T>::value and is_mpoly_expr<U>::value>>
 MultivariatePolynomialExpr mul_mult_poly(const T &a, const U &b)
 {
-    return MultivariatePolynomialExpr::convert(a).mul(MultivariatePolynomialExpr::convert(b));
+    return MultivariatePolynomialExpr::convert(a)
+        .mul(MultivariatePolynomialExpr::convert(b));
 }
 
 template <typename T, typename U,
@@ -600,7 +617,8 @@ template <typename T, typename U,
           = enable_if_t<is_mpoly_expr<T>::value and is_mpoly_expr<U>::value>>
 MultivariatePolynomialExpr sub_mult_poly(const T &a, const U &b)
 {
-    return MultivariatePolynomialExpr::convert(a).sub(MultivariatePolynomialExpr::convert(b));
+    return MultivariatePolynomialExpr::convert(a)
+        .sub(MultivariatePolynomialExpr::convert(b));
 }
 
 template <class T>
@@ -620,7 +638,8 @@ template <typename T, typename U,
           = enable_if_t<is_mpoly_int<T>::value and is_mpoly_int<U>::value>>
 MultivariateIntPolynomialExpr add_mult_poly(const T &a, const U &b)
 {
-    return MultivariateIntPolynomialExpr::convert(a).add(MultivariateIntPolynomialExpr::convert(b));
+    return MultivariateIntPolynomialExpr::convert(a)
+        .add(MultivariateIntPolynomialExpr::convert(b));
 }
 
 template <typename T, typename U,
@@ -628,7 +647,8 @@ template <typename T, typename U,
           = enable_if_t<is_mpoly_int<T>::value and is_mpoly_int<U>::value>>
 MultivariateIntPolynomialExpr mul_mult_poly(const T &a, const U &b)
 {
-    return MultivariateIntPolynomialExpr::convert(a).mul(MultivariateIntPolynomialExpr::convert(b));
+    return MultivariateIntPolynomialExpr::convert(a)
+        .mul(MultivariateIntPolynomialExpr::convert(b));
 }
 
 template <typename T, typename U,
@@ -636,7 +656,8 @@ template <typename T, typename U,
           = enable_if_t<is_mpoly_int<T>::value and is_mpoly_int<U>::value>>
 MultivariateIntPolynomialExpr sub_mult_poly(const T &a, const U &b)
 {
-    return MultivariateIntPolynomialExpr::convert(a).sub(MultivariateIntPolynomialExpr::convert(b));
+    return MultivariateIntPolynomialExpr::convert(a)
+        .sub(MultivariateIntPolynomialExpr::convert(b));
 }
 
 } // SymEngine

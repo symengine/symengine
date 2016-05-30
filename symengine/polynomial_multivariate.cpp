@@ -35,7 +35,7 @@ vec_basic MultivariateIntPolynomialExpr::get_args() const
 std::size_t MultivariateIntPolynomialExpr::__hash__() const
 {
     std::hash<std::string> hash_string;
-    std::size_t seed = 0;//MULTIVARIATEINTPOLYNOMIALEXPR;
+    std::size_t seed = 0; // MULTIVARIATEINTPOLYNOMIALEXPR;
     for (auto var : vars_)
         // boost's method for combining hashes
         seed ^= hash_string(var->__str__()) + 0x9e3779b + (seed << 6)
@@ -52,10 +52,11 @@ std::size_t MultivariateIntPolynomialExpr::__hash__() const
     return seed;
 }
 
-int MultivariateIntPolynomialExpr::compare(const MultivariateIntPolynomialExpr &s) const
+int MultivariateIntPolynomialExpr::compare(
+    const MultivariateIntPolynomialExpr &s) const
 {
     // copied from UnivariateIntPolynomial::compare and then modified.
-         int cmp = set_compare(vars_, s.vars_);
+    int cmp = set_compare(vars_, s.vars_);
     if (cmp != 0)
         return cmp;
 
@@ -217,7 +218,7 @@ vec_basic MultivariatePolynomialExpr::get_args() const
 std::size_t MultivariatePolynomialExpr::__hash__() const
 {
     std::hash<std::string> hash_string;
-    std::size_t seed = 0;//MULTIVARIATEPOLYNOMIALEXPR;
+    std::size_t seed = 0; // MULTIVARIATEPOLYNOMIALEXPR;
     for (auto var : vars_)
         // boost's method for combining hashes
         seed ^= hash_string(var->__str__()) + 0x9e3779b + (seed << 6)
@@ -234,7 +235,8 @@ std::size_t MultivariatePolynomialExpr::__hash__() const
     return seed;
 }
 
-int MultivariatePolynomialExpr::compare(const MultivariatePolynomialExpr &s) const
+int MultivariatePolynomialExpr::compare(
+    const MultivariatePolynomialExpr &s) const
 {
     // copied from UnivariateIntPolynomial::compare and then modified.
     int cmp = set_compare<set_basic>(vars_, s.vars_);
@@ -332,12 +334,12 @@ MultivariatePolynomialExpr MultivariatePolynomialExpr::convert(const int i)
     return MultivariatePolynomialExpr::from_dict(s, {{v, Expression(i)}});
 }
 
-MultivariatePolynomialExpr MultivariatePolynomialExpr::convert(const Expression &o)
+MultivariatePolynomialExpr
+MultivariatePolynomialExpr::convert(const Expression &o)
 {
     set_basic s;
     vec_int v;
     return MultivariatePolynomialExpr::from_dict(s, {{v, o}});
 }
-
 
 } // SymEngine
