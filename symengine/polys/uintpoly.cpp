@@ -106,11 +106,6 @@ vec_basic UIntPoly::get_args() const
     return args;
 }
 
-integer_class UIntPoly::max_abs_coef() const
-{
-    return poly_.max_abs_coef();
-}
-
 integer_class UIntPoly::eval(const integer_class &x) const
 {
     unsigned int last_deg = poly_.dict_.rbegin()->first;

@@ -146,11 +146,6 @@ public:
     // dictionary.
     static RCP<const UIntPoly> from_dict(const RCP<const Symbol> &var,
                                          UIntDict &&d);
-
-    /*!
-    * Adds coef*var_**n to the dict_
-    */
-    integer_class max_abs_coef() const;
     //! Evaluates the UIntPoly at value x
     integer_class eval(const integer_class &x) const;
 
