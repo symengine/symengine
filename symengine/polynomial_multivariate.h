@@ -398,11 +398,37 @@ public:
 
     MultivariatePolynomialExpr& operator+=(const MultivariatePolynomialExpr&a)
     {
-        return *this = this->add(a);
+        if (!vec_set_eq(vars_,a.vars_)) {
+            return *this = this->add(a);
+        } else {
+            for (auto bucket : a.dict_) {
+                auto target = dict_.find(bucket.first);
+                if (target != dict_.end()) {
+                    target->second += bucket.second;
+                    if (target->second == 0) {
+                        dict_.erase(target);
+                    }
+                } else {
+                    dict_.insert(std::pair<vec_int, Expression>(bucket.first, bucket.second));
+                }
+            }
+            return *this;
+        }
     }
 
     MultivariatePolynomialExpr& operator+=(const Expression& a){
-        return *this = this->add(convert(a));
+        vec_int v;
+        v.resize(vars_.size(),0);
+        auto target = dict_.find(v);
+        if (target != dict_.end()) {
+            target->second += a;
+            if (target->second == 0) {
+                dict_.erase(target);
+            }
+        } else if (a != 0){
+            dict_.insert(std::pair<vec_int, Expression>(v, a));
+        }
+        return *this;
     }
 
     friend MultivariatePolynomialExpr operator-(const MultivariatePolynomialExpr& a,const MultivariatePolynomialExpr& b)
@@ -422,12 +448,39 @@ public:
 
     MultivariatePolynomialExpr& operator-=(const MultivariatePolynomialExpr& a)
     {
-        return *this = this->sub(a);
+        if (!vec_set_eq(vars_,a.vars_)) {
+            return *this = this->sub(a);
+        } else {
+            for (auto bucket : a.dict_) {
+                auto target = dict_.find(bucket.first);
+                if (target != dict_.end()) {
+                    target->second -= bucket.second;
+                    if (target->second == 0) {
+                        dict_.erase(target);
+                    }
+                } else {
+                    dict_.insert(std::pair<vec_int, Expression>(bucket.first, -bucket.second));
+                }
+            }
+            return *this;
+        }
+
     }
 
     MultivariatePolynomialExpr& operator-=(const Expression& a)
     {
-        return *this = this->sub(convert(a));
+        vec_int v;
+        v.resize(vars_.size(),0);
+        auto target = dict_.find(v);
+        if (target != dict_.end()) {
+            target->second -= a;
+            if (target->second == 0) {
+                dict_.erase(target);
+            }
+        } else if (a != 0){
+            dict_.insert(std::pair<vec_int, Expression>(v, -a));
+        }
+        return *this;
     }
 
     MultivariatePolynomialExpr operator-() const
@@ -450,24 +503,46 @@ public:
         return convert(a).mul(b);
     }
 
-    MultivariatePolynomialExpr& operator*=(const MultivariatePolynomialExpr& a)
+    MultivariatePolynomialExpr& operator*=(const MultivariatePolynomialExpr& b)
     {
-        return *this = this->mul(a);
+        if (b.dict_.size() == 0) {
+            dict_.clear();
+        } else if (b.dict_.size() == 1) {
+            vec_int v;
+            v.resize(b.vars_.size(),0);
+            if (b.dict_.begin()->first == v) {
+                *this *= b.dict_.begin()->second;
+            } else {
+                *this = this->mul(b);
+            }
+        } else {
+            *this = this->mul(b);
+        }
+        return *this;
     }
 
     MultivariatePolynomialExpr& operator*=(const Expression& a)
     {
-        return *this = this->mul(convert(a));
+        if (a == 0) {
+            dict_.clear();
+        } else {
+            for (auto &bucket : dict_) {
+                bucket.second *= a;
+            }
+        }
+        return *this;
     }
 
     friend MultivariatePolynomialExpr operator/(const MultivariatePolynomialExpr& a, const Expression& b)
     {
-        return a.mul(convert(1/b));
+        return a * (1/b);
     }
 
     MultivariatePolynomialExpr& operator/=(const Expression &b)
     {
-        return *this = *this / b;
+        for (auto & bucket : dict_)
+            bucket.second /= b;
+        return *this;
     }
 
     bool operator==(const MultivariatePolynomialExpr& o)

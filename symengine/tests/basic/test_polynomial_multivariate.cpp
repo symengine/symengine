@@ -1455,6 +1455,7 @@ TEST_CASE("Testing operator==, operator!=", "[MultivariatePolynomialExpr],[Expre
 
 TEST_CASE("Testing operator+, operator+=", "[MultivariatePolynomialExpr],[Expression]")
 {
+    RCP<const Symbol> w = symbol("w");
     RCP<const Symbol> x = symbol("x");
     RCP<const Symbol> y = symbol("y");
     RCP<const Symbol> z = symbol("z");
@@ -1468,11 +1469,11 @@ TEST_CASE("Testing operator+, operator+=", "[MultivariatePolynomialExpr],[Expres
     Expression expr4(pow(b, a));
 
     MultivariatePolynomialExpr p1 = MultivariatePolynomialExpr::create(
-        {x, y, z}, {{{0, 0, 0}, expr1},
+        {x, y, z}, {{{0, 0, 0}, Expression(10)},
                     {{1, 1, 1}, expr2},
                     {{0, 0, 4}, expr3}});
     MultivariatePolynomialExpr p2
-        = MultivariatePolynomialExpr::create({x, y, z}, {{{0, 0, 0}, expr1},
+        = MultivariatePolynomialExpr::create({x, y, z}, {{{0, 0, 0}, Expression(-10)},
                                                          {{1, 1, 1}, expr2},
                                                          {{0, 0, 2}, expr3},
                                                          {{0, 2, 0}, expr4},
@@ -1480,37 +1481,57 @@ TEST_CASE("Testing operator+, operator+=", "[MultivariatePolynomialExpr],[Expres
                                                          {{0, 0, -2}, expr3},
                                                          {{0, -2, 0}, expr4}});
 
+    MultivariatePolynomialExpr p3 = MultivariatePolynomialExpr::create({w,y}, {{{1,1}, expr1}});
+
     MultivariatePolynomialExpr q1 = MultivariatePolynomialExpr::create({x,y,z},
-                                                        {{{0, 0, 0}, expr1 + expr1},
-                                                         {{1, 1, 1}, expr2 + expr2},
+                                                        {{{1, 1, 1}, expr2 + expr2},
                                                          {{0,0,4}, expr3},
                                                          {{0, 0, 2}, expr3},
                                                          {{0, 2, 0}, expr4},
                                                          {{-1, -1, -1}, expr2},
                                                          {{0, 0, -2}, expr3},
                                                          {{0, -2, 0}, expr4}});
-    MultivariatePolynomialExpr q2 = MultivariatePolynomialExpr::create({x, y, z}, {{{0, 0, 0}, expr1 + expr1},
+    MultivariatePolynomialExpr q2 = MultivariatePolynomialExpr::create({x, y, z}, {{{0, 0, 0}, expr1 + Expression(-10)},
                                                          {{1, 1, 1}, expr2},
                                                          {{0, 0, 2}, expr3},
                                                          {{0, 2, 0}, expr4},
                                                          {{-1, -1, -1}, expr2},
                                                          {{0, 0, -2}, expr3},
                                                          {{0, -2, 0}, expr4}});
+    MultivariatePolynomialExpr q3 = MultivariatePolynomialExpr::create(
+        {w, x, y, z}, {{{0, 0, 0, 0}, Expression(10)},
+                       {{0, 1, 1, 1}, expr2},
+                       {{0, 0, 0, 4}, expr3},
+                       {{1, 0, 1, 0}, expr1}});
+    MultivariatePolynomialExpr q4 = MultivariatePolynomialExpr::create(
+        {x, y, z}, {{{1, 1, 1}, expr2},
+                    {{0, 0, 4}, expr3}});
+
 
     REQUIRE(q1 == p1 + p2);
+    REQUIRE(q3 == p1 + p3);
     REQUIRE(q2 == p2 + expr1);
     REQUIRE(q2 == expr1 + p2);
+    REQUIRE(q4 == Expression(-10) + p1);
+
+    MultivariatePolynomialExpr p4 = p1;
+    MultivariatePolynomialExpr p5 = p1;
 
     p1 += p2;
     p2 += expr1;
+    p4 += Expression(-10);
+    p5 += p3;
 
     REQUIRE(q1 == p1);
     REQUIRE(q2 == p2);
+    REQUIRE(q4 == p4);
+    REQUIRE(p5 == q3);
 
 }
 
 TEST_CASE("Testing operator-, operator-=", "[MultivariatePolynomialExpr],[Expression]")
 {
+    RCP<const Symbol> w = symbol("w");
     RCP<const Symbol> x = symbol("x");
     RCP<const Symbol> y = symbol("y");
     RCP<const Symbol> z = symbol("z");
@@ -1524,57 +1545,74 @@ TEST_CASE("Testing operator-, operator-=", "[MultivariatePolynomialExpr],[Expres
     Expression expr4(pow(b, a));
 
     MultivariatePolynomialExpr p1 = MultivariatePolynomialExpr::create(
-        {x, y, z}, {{{0, 0, 0}, expr1},
+        {x, y, z}, {{{0, 0, 0}, Expression(10)},
                     {{1, 1, 1}, expr2},
                     {{0, 0, 4}, expr3}});
     MultivariatePolynomialExpr p2
-        = MultivariatePolynomialExpr::create({x, y, z}, {{{0, 0, 0}, expr1},
+        = MultivariatePolynomialExpr::create({x, y, z}, {{{0, 0, 0}, Expression(10)},
                                                          {{1, 1, 1}, expr2},
                                                          {{0, 0, 2}, expr3},
                                                          {{0, 2, 0}, expr4},
                                                          {{-1, -1, -1}, expr2},
                                                          {{0, 0, -2}, expr3},
                                                          {{0, -2, 0}, expr4}});
+    MultivariatePolynomialExpr p3 = MultivariatePolynomialExpr::create({w,y}, {{{1,1}, expr1}});
 
     MultivariatePolynomialExpr q1 = MultivariatePolynomialExpr::create({x,y,z},
-                                                        {{{0, 0, 0}, expr1 - expr1},
-                                                         {{1, 1, 1}, expr2 - expr2},
+                                                        {{{1, 1, 1}, expr2 - expr2},
                                                          {{0,0,4}, expr3},
                                                          {{0, 0, 2}, expr3 * - 1},
                                                          {{0, 2, 0}, expr4 * -1},
                                                          {{-1, -1, -1}, expr2 * -1},
                                                          {{0, 0, -2}, expr3 * -1},
                                                          {{0, -2, 0}, expr4 * -1}});
-    MultivariatePolynomialExpr q2 = MultivariatePolynomialExpr::create({x, y, z}, {{{0, 0, 0}, expr1 - expr1},
+    MultivariatePolynomialExpr q2 = MultivariatePolynomialExpr::create({x, y, z}, {{{0, 0, 0}, Expression(10) - expr1},
                                                          {{1, 1, 1}, expr2},
                                                          {{0, 0, 2}, expr3},
                                                          {{0, 2, 0}, expr4},
                                                          {{-1, -1, -1}, expr2},
                                                          {{0, 0, -2}, expr3},
                                                          {{0, -2, 0}, expr4}});
-    MultivariatePolynomialExpr q3 = MultivariatePolynomialExpr::create({x, y, z}, {{{0, 0, 0}, expr1 - expr1},
+    MultivariatePolynomialExpr q3 = MultivariatePolynomialExpr::create({x, y, z}, {{{0, 0, 0},  expr1 - Expression(10)},
                                                          {{1, 1, 1}, expr2 * -1},
                                                          {{0, 0, 2}, expr3 * -1},
                                                          {{0, 2, 0}, expr4 * -1},
                                                          {{-1, -1, -1}, expr2 * -1},
                                                          {{0, 0, -2}, expr3 * -1},
                                                          {{0, -2, 0}, expr4 * -1}});
-
+    MultivariatePolynomialExpr q4 = MultivariatePolynomialExpr::create(
+        {x, y, z}, {{{1, 1, 1}, expr2},
+                    {{0, 0, 4}, expr3}});
+    MultivariatePolynomialExpr q5 = MultivariatePolynomialExpr::create(
+        {w, x, y, z}, {{{0, 0, 0, 0}, Expression(10)},
+                       {{0, 1, 1, 1}, expr2},
+                       {{0, 0, 0, 4}, expr3},
+                       {{1, 0, 1, 0}, expr1 * -1}});
 
     REQUIRE(q1 == p1 - p2);
     REQUIRE(q2 == p2 - expr1);
+    REQUIRE(q4 == p1 - Expression(10));
     REQUIRE(q3 == expr1 - p2);
+    REQUIRE(q5 == p1 - p3);
+
+    MultivariatePolynomialExpr p4 = p1;
+    MultivariatePolynomialExpr p5 = p1;
 
     p1 -= p2;
     p2 -= expr1;
+    p4 -= Expression(10);
+    p5 -= p3;
 
     REQUIRE(q1 == p1);
     REQUIRE(q2 == p2);
+    REQUIRE(q4 == p4);
+    REQUIRE(q5 == p5);
 
 }
 
 TEST_CASE("Testing operator*, operator*=", "[MultivariatePolynomialExpr],[Expression]")
 {
+    RCP<const Symbol> w = symbol("w");
     RCP<const Symbol> x = symbol("x");
     RCP<const Symbol> y = symbol("y");
     RCP<const Symbol> z = symbol("z");
@@ -1599,6 +1637,9 @@ TEST_CASE("Testing operator*, operator*=", "[MultivariatePolynomialExpr],[Expres
                                                          {{-1, -1, -1}, expr2},
                                                          {{0, 0, -2}, expr3},
                                                          {{0, -2, 0}, expr4}});
+    MultivariatePolynomialExpr p3 = MultivariatePolynomialExpr::create({w,y}, {{{1,1}, expr1}});
+    MultivariatePolynomialExpr p5 = MultivariatePolynomialExpr::create({x,y}, {{{0,0},Expression(1)}, {{1,0},Expression(1)}, {{0,1},Expression(1)} });
+    MultivariatePolynomialExpr p6 = MultivariatePolynomialExpr::create({x,y}, {{{1,1},Expression(1)}, {{0,1},Expression(-1)}, {{0,0},Expression(1)}});
 
     MultivariatePolynomialExpr q1 = MultivariatePolynomialExpr::create({x,y,z},
 						        {{{0, 0, 0}, expr1 * expr1 +  expr2 * expr2},
@@ -1629,15 +1670,34 @@ TEST_CASE("Testing operator*, operator*=", "[MultivariatePolynomialExpr],[Expres
                                                          {{-1, -1, -1}, expr2 * expr1},
                                                          {{0, 0, -2}, expr3 * expr1},
                                                          {{0, -2, 0}, expr4 * expr1}});
+    MultivariatePolynomialExpr q3 = MultivariatePolynomialExpr::create(
+        {w, x, y, z}, {{{1, 0, 1, 0}, expr1 * expr1},
+                       {{1, 1, 2, 1}, expr2 * expr1},
+                       {{1, 0, 1, 4}, expr3 * expr1}});
+    MultivariatePolynomialExpr q4 = MultivariatePolynomialExpr::create({x,y}, {{{0,0},Expression(1)}, {{1,0},Expression(1)}, {{0,2},Expression(-1)}, {{2,1},Expression(1)}, {{1,2},Expression(1)} });
+
     REQUIRE(q1 == p1 * p2);
     REQUIRE(q2 == p2 * expr1);
     REQUIRE(q2 == expr1 * p2);
+    REQUIRE(q3 == p3 * p1);
+
+    MultivariatePolynomialExpr p4 = p1;
+    MultivariatePolynomialExpr p7 = p1;
+    MultivariatePolynomialExpr p8 = p1;
 
     p1 *= p2;
     p2 *= expr1;
+    p4 *= p3;
+    p5 *= p6;
+    p7 *= 0;
+    p8 *= MultivariatePolynomialExpr::create({x,y,z}, {{{0,0,0},Expression(0)}});
 
     REQUIRE(q1 == p1);
     REQUIRE(q2 == p2);
+    REQUIRE(q3 == p4);
+    REQUIRE(p5 == q4);
+    REQUIRE(p7 == 0);
+    REQUIRE(p8 == 0);
 
 }
 
