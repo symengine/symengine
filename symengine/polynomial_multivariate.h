@@ -66,7 +66,7 @@ public:
 protected:
     // Creates a MPoly in cannonical form based on
     // dictionary d.
-    inline static MPoly & from_dict(const set_basic &s, Dict &&d)
+    inline static MPoly from_dict(const set_basic &s, Dict &&d)
     {
         // Remove entries in d corresponding to terms with coefficient 0
         auto iter = d.begin();
@@ -111,7 +111,7 @@ public:
     // will be sorted in the set_basic of the actual object.
     // The order of the exponenents in the vectors in the dictionary will also
     // be permuted accordingly.
-    static MPoly & create(const vec_basic &v, Dict &&d)
+    static MPoly create(const vec_basic &v, Dict &&d)
     {
         set_basic s;
         // Symbols in the vector are sorted by placeing them in an std::map.
@@ -173,12 +173,9 @@ public:
         return true;
     }
 
-    bool __eq__(const Basic &o) const
+    bool __eq__(const MPoly &o_) const
     {
         // TODO : fix for when vars are different, but there is an intersection
-        if (not is_a<MPoly>(o))
-            return false;
-        const MPoly &o_ = static_cast<const MPoly &>(o);
         // compare constants without regards to vars
         if (1 == dict_.size() && 1 == o_.dict_.size()) {
             if (dict_.begin()->second != o_.dict_.begin()->second)
@@ -200,7 +197,7 @@ public:
         }
     }
 
-    MPoly &add(const MPoly &b) const
+    MPoly add(const MPoly &b) const
     {
         vec_uint v1;
         vec_uint v2;
@@ -223,7 +220,7 @@ public:
         }
         return MPoly::from_dict(s, std::move(dict));
     }
-    MPoly & neg() const
+    MPoly neg() const
     {
         Dict dict;
         set_basic s = vars_;
@@ -232,11 +229,11 @@ public:
         }
         return MPoly::from_dict(s, std::move(dict));
     }
-    MPoly & sub(const MPoly &b) const
+    MPoly sub(const MPoly &b) const
     {
-        return this->add(*b.neg());
+        return this->add(b.neg());
     }
-    MPoly & mul(const MPoly &b) const
+    MPoly mul(const MPoly &b) const
     {
         // Naive algorithm
         vec_uint v1;
@@ -259,6 +256,36 @@ public:
         }
         return MPoly::from_dict(s, std::move(dict));
     }
+    static MPoly diff(const MPolyBase<MPoly, Dict, Coeff, Vec> &self,
+                                 const RCP<const Symbol> &x)
+    {
+        Dict dict;
+        if (self.vars_.find(x) != self.vars_.end()) {
+            auto i = self.vars_.begin();
+            unsigned int index = 0;
+            while (!(*i)->__eq__(*x)) {
+                i++;
+                index++;
+            } // find the index of the variable we are differentiating WRT.
+            for (auto bucket : self.dict_) {
+                if (bucket.first[index] != 0) {
+                    Vec v = bucket.first;
+                    v[index]--;
+                    dict.insert(std::pair<Vec, Coeff>(
+                        v, bucket.second * bucket.first[index]));
+                }
+            }
+            vec_basic v;
+            v.insert(v.begin(), self.vars_.begin(), self.vars_.end());
+            return MPoly::create(v, std::move(dict));
+        } else {
+            Vec v;
+            v.resize(self.vars_.size(), 0);
+            vec_basic vs;
+            vs.insert(vs.begin(), self.vars_.begin(), self.vars_.end());
+            return MPoly::create(vs, {{v, Coeff(0)}});
+        }
+    }
 };
 
 // MultivariateIntPolynomialExpr
@@ -275,21 +302,19 @@ public:
     // IMPLEMENT_TYPEID(MULTIVARIATEINTPOLYNOMIALEXPR);
     vec_basic get_args() const;
     std::size_t __hash__() const;
-    // int compare(const Basic &o) const;
+    int compare(const MultivariateIntPolynomialExpr &o) const;
     integer_class eval(
         std::map<RCP<const Basic>, integer_class, RCPBasicKeyLess> &vals) const;
     
-    //Since this cannot do RCP things anymore, no point in converting from the object to rcp.
-    /*
-    static inline RCP<const MultivariateIntPolynomialExpr>
+    std::string toString();
+
+    static inline const MultivariateIntPolynomialExpr&
     convert(const MultivariateIntPolynomialExpr &o)
     {
-        return o.rcp_from_this_cast<MultivariateIntPolynomialExpr>();
+        return o;
     }
 
-    */
-
-    static MultivariateIntPolynomialExpr &
+    static MultivariateIntPolynomialExpr
     convert(const UnivariateIntPolynomial &o);
 
 };
@@ -308,17 +333,19 @@ public:
     // IMPLEMENT_TYPEID(MULTIVARIATEPOLYNOMIALEXPR);
     vec_basic get_args() const;
     std::size_t __hash__() const;
-    // int compare(const Basic &o) const;
+    int compare(const MultivariatePolynomialExpr &o) const;
     Expression
     eval(std::map<RCP<const Basic>, Expression, RCPBasicKeyLess> &vals) const;
-    /*
-    static inline RCP<const MultivariatePolynomialExpr>
+    
+    std::string toString();
+
+    static inline const MultivariatePolynomialExpr&
     convert(const MultivariatePolynomialExpr &o)
     {
-        return o.rcp_from_this_cast<MultivariatePolynomialExpr>();
+        return o;
     }
-    */
-    static MultivariatePolynomialExpr &
+    
+    static MultivariatePolynomialExpr 
     convert(const UnivariatePolynomial &o);
 };
 
@@ -337,28 +364,25 @@ struct is_mpoly_expr<MultivariatePolynomialExpr> : std::true_type {
 template <typename T, typename U,
           typename
           = enable_if_t<is_mpoly_expr<T>::value and is_mpoly_expr<U>::value>>
-MultivariatePolynomialExpr & add_mult_poly(const T &a, const U &b)
+MultivariatePolynomialExpr add_mult_poly(const T &a, const U &b)
 {
-    return MultivariatePolynomialExpr::convert(a)
-        ->add(*MultivariatePolynomialExpr::convert(b));
+    return MultivariatePolynomialExpr::convert(a).add(MultivariatePolynomialExpr::convert(b));
 }
 
 template <typename T, typename U,
           typename
           = enable_if_t<is_mpoly_expr<T>::value and is_mpoly_expr<U>::value>>
-MultivariatePolynomialExpr & mul_mult_poly(const T &a, const U &b)
+MultivariatePolynomialExpr mul_mult_poly(const T &a, const U &b)
 {
-    return MultivariatePolynomialExpr::convert(a)
-        ->mul(*MultivariatePolynomialExpr::convert(b));
+    return MultivariatePolynomialExpr::convert(a).mul(MultivariatePolynomialExpr::convert(b));
 }
 
 template <typename T, typename U,
           typename
           = enable_if_t<is_mpoly_expr<T>::value and is_mpoly_expr<U>::value>>
-MultivariatePolynomialExpr & sub_mult_poly(const T &a, const U &b)
+MultivariatePolynomialExpr sub_mult_poly(const T &a, const U &b)
 {
-    return MultivariatePolynomialExpr::convert(a)
-        ->sub(*MultivariatePolynomialExpr::convert(b));
+    return MultivariatePolynomialExpr::convert(a).sub(MultivariatePolynomialExpr::convert(b));
 }
 
 template <class T>
@@ -376,28 +400,25 @@ struct is_mpoly_int<MultivariateIntPolynomialExpr> : std::true_type {
 template <typename T, typename U,
           typename
           = enable_if_t<is_mpoly_int<T>::value and is_mpoly_int<U>::value>>
-MultivariateIntPolynomialExpr & add_mult_poly(const T &a, const U &b)
+MultivariateIntPolynomialExpr add_mult_poly(const T &a, const U &b)
 {
-    return MultivariateIntPolynomialExpr::convert(a)
-        ->add(*MultivariateIntPolynomialExpr::convert(b));
+    return MultivariateIntPolynomialExpr::convert(a).add(MultivariateIntPolynomialExpr::convert(b));
 }
 
 template <typename T, typename U,
           typename
           = enable_if_t<is_mpoly_int<T>::value and is_mpoly_int<U>::value>>
-MultivariateIntPolynomialExpr & mul_mult_poly(const T &a, const U &b)
+MultivariateIntPolynomialExpr mul_mult_poly(const T &a, const U &b)
 {
-    return MultivariateIntPolynomialExpr::convert(a)
-        ->mul(*MultivariateIntPolynomialExpr::convert(b));
+    return MultivariateIntPolynomialExpr::convert(a).mul(MultivariateIntPolynomialExpr::convert(b));
 }
 
 template <typename T, typename U,
           typename
           = enable_if_t<is_mpoly_int<T>::value and is_mpoly_int<U>::value>>
-MultivariateIntPolynomialExpr & sub_mult_poly(const T &a, const U &b)
+MultivariateIntPolynomialExpr sub_mult_poly(const T &a, const U &b)
 {
-    return MultivariateIntPolynomialExpr::convert(a)
-        ->sub(*MultivariateIntPolynomialExpr::convert(b));
+    return MultivariateIntPolynomialExpr::convert(a).sub(MultivariateIntPolynomialExpr::convert(b));
 }
 
 } // SymEngine

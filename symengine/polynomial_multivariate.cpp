@@ -5,6 +5,7 @@
 #include <symengine/polys/uexprpoly.h>
 #include <symengine/polynomial_multivariate.h>
 #include <symengine/pow.h>
+#include <symengine/printer.h>
 
 namespace SymEngine
 {
@@ -51,18 +52,15 @@ std::size_t MultivariateIntPolynomialExpr::__hash__() const
     return seed;
 }
 
-// int MultivariateIntPolynomialExpr::compare(const Basic &o) const
-// {
-//     // copied from UnivariateIntPolynomial::compare and then modified.
-//     const MultivariateIntPolynomialExpr &s
-//         = static_cast<const MultivariateIntPolynomialExpr &>(o);
+int MultivariateIntPolynomialExpr::compare(const MultivariateIntPolynomialExpr &s) const
+{
+    // copied from UnivariateIntPolynomial::compare and then modified.
+         int cmp = set_compare(vars_, s.vars_);
+    if (cmp != 0)
+        return cmp;
 
-//     int cmp = set_compare(vars_, s.vars_);
-//     if (cmp != 0)
-//         return cmp;
-
-//     return umap_uvec_mpz_compare(dict_, s.dict_);
-// }
+    return umap_uvec_mpz_compare(dict_, s.dict_);
+}
 
 integer_class MultivariateIntPolynomialExpr::eval(
     std::map<RCP<const Basic>, integer_class, RCPBasicKeyLess> &vals) const
@@ -82,8 +80,60 @@ integer_class MultivariateIntPolynomialExpr::eval(
     return ans;
 }
 
-RCP<const MultivariateIntPolynomial>
-MultivariateIntPolynomial::convert(const UIntPoly &o)
+std::string MultivariateIntPolynomialExpr::toString()
+{
+    std::ostringstream s;
+    bool first = true; // is this the first term being printed out?
+    // To change the ordering in which the terms will print out, change
+    // vec_uint_compare in dict.h
+    std::vector<vec_uint> v = order_umap<vec_uint, umap_uvec_mpz>(dict_);
+
+    for (vec_uint exps : v) {
+        integer_class c = dict_.find(exps)->second;
+        if (!first) {
+            if (c < 0) {
+                s << " - ";
+            } else {
+                s << " + ";
+            }
+        } else if (c < 0) {
+            s << "-";
+        }
+
+        unsigned int i = 0;
+        std::ostringstream expr;
+        bool first_var = true;
+        for (auto it : vars_) {
+            if (exps[i] != 0) {
+                if (!first_var) {
+                    expr << "*";
+                }
+                expr << it->__str__();
+                if (exps[i] > 1)
+                    expr << "**" << exps[i];
+                first_var = false;
+            }
+            i++;
+        }
+        if (mp_abs(c) != 1) {
+            s << mp_abs(c);
+            if (!expr.str().empty()) {
+                s << "*";
+            }
+        } else if (expr.str().empty()) {
+            s << "1";
+        }
+        s << expr.str();
+        first = false;
+    }
+
+    if (s.str().empty())
+        s << "0";
+    return s.str();
+}
+
+MultivariateIntPolynomialExpr 
+MultivariateIntPolynomialExpr::convert(const UIntPoly &o)
 {
     vec_basic s;
     s.push_back(o.get_var());
@@ -184,18 +234,15 @@ std::size_t MultivariatePolynomialExpr::__hash__() const
     return seed;
 }
 
-/*int MultivariatePolynomialExpr::compare(const Basic &o) const
+int MultivariatePolynomialExpr::compare(const MultivariatePolynomialExpr &s) const
 {
     // copied from UnivariateIntPolynomial::compare and then modified.
-    const MultivariatePolynomialExpr &s
-        = static_cast<const MultivariatePolynomialExpr &>(o);
-
     int cmp = set_compare<set_basic>(vars_, s.vars_);
     if (cmp != 0)
         return cmp;
 
     return umap_vec_expr_compare(dict_, s.dict_);
-}*/
+}
 
 Expression MultivariatePolynomialExpr::eval(
     std::map<RCP<const Basic>, Expression, RCPBasicKeyLess> &vals) const
@@ -213,8 +260,58 @@ Expression MultivariatePolynomialExpr::eval(
     return ans;
 }
 
-RCP<const MultivariatePolynomial>
-MultivariatePolynomial::convert(const UExprPoly &o)
+std::string MultivariatePolynomialExpr::toString()
+{
+    std::ostringstream s;
+    StrPrinter s_;
+    bool first = true; // is this the first term being printed out?
+    // To change the ordering in which the terms will print out, change
+    // vec_uint_compare in dict.h
+    std::vector<vec_int> v = order_umap<vec_int, umap_vec_expr>(dict_);
+
+    for (vec_int exps : v) {
+        Expression c = dict_.find(exps)->second;
+        std::string t = s_.parenthesizeLT(c.get_basic(), PrecedenceEnum::Mul);
+        if ('-' == t[0] && !first) {
+            s << " - ";
+            t = t.substr(1);
+        } else if (!first) {
+            s << " + ";
+        }
+        unsigned int i = 0;
+        std::ostringstream expr;
+        bool first_var = true;
+        for (auto it : vars_) {
+            if (exps[i] != 0) {
+                if (!first_var) {
+                    expr << "*";
+                }
+                expr << it->__str__();
+                if (exps[i] > 1)
+                    expr << "**" << exps[i];
+                first_var = false;
+            }
+            i++;
+        }
+        if (c != 1 && c != -1) {
+            s << t;
+            if (!expr.str().empty()) {
+                s << "*";
+            }
+        } else if (expr.str().empty()) {
+            s << "1";
+        }
+        s << expr.str();
+        first = false;
+    }
+
+    if (s.str().empty())
+        s << "0";
+    return s.str();
+}
+
+MultivariatePolynomialExpr 
+MultivariatePolynomialExpr::convert(const UExprPoly &o)
 {
     vec_basic s;
     s.push_back(o.get_var());
