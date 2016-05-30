@@ -126,7 +126,7 @@ public:
 
 }; // UIntDict
 
-class UIntPoly : public UPolyBase<UIntDict, UIntPoly>
+class UIntPoly : public UPolyBase<UIntDict, UIntPoly, integer_class>
 {
 public:
     IMPLEMENT_TYPEID(UINTPOLY)
@@ -146,10 +146,6 @@ public:
     // dictionary.
     static RCP<const UIntPoly> from_dict(const RCP<const Symbol> &var,
                                          UIntDict &&d);
-    // create a UIntPoly from a dense vector of integer_class
-    // coefficients
-    static RCP<const UIntPoly> from_vec(const RCP<const Symbol> &var,
-                                        const std::vector<integer_class> &v);
 
     /*!
     * Adds coef*var_**n to the dict_

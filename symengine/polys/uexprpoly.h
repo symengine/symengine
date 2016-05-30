@@ -181,7 +181,7 @@ public:
     }
 }; // UExprDict
 
-class UExprPoly : public UPolyBase<UExprDict, UExprPoly>
+class UExprPoly : public UPolyBase<UExprDict, UExprPoly, Expression>
 {
 public:
     IMPLEMENT_TYPEID(UEXPRPOLY)
@@ -194,13 +194,8 @@ public:
     std::size_t __hash__() const;
     int compare(const Basic &o) const;
 
-    /*! Creates appropriate instance (i.e Symbol, Integer,
-    * Mul, Pow, UExprPoly) depending on the size of dictionary `d`.
-    */
     static RCP<const UExprPoly> from_dict(const RCP<const Symbol> &var,
                                           UExprDict &&d);
-    static RCP<const UExprPoly> from_vec(const RCP<const Symbol> &var,
-                                         const std::vector<Expression> &v);
 
     Expression max_coef() const;
     //! Evaluates the UExprPoly at value x

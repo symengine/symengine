@@ -166,7 +166,7 @@ public:
     }
 };
 
-template <typename Container, typename Poly>
+template <typename Container, typename Poly, typename Coeff>
 class UPolyBase : public Basic
 {
 protected:
@@ -181,14 +181,16 @@ public:
 
     // unify these two constructor? another template would be required
     // may solve some more problems, like `get_degree` virtualization
-    UPolyBase(const RCP<const Symbol> &var, const std::vector<integer_class> &v)
+    UPolyBase(const RCP<const Symbol> &var, const std::vector<Coeff> &v)
         : var_{var}
     {
     }
 
-    UPolyBase(const RCP<const Symbol> &var, const std::vector<Expression> &v)
-        : var_{var}
+    // create a Poly from a vector of Coeff coefficients
+    static RCP<const Poly> from_vec(const RCP<const Symbol> &var,
+                                        const std::vector<Coeff> &v)
     {
+        return make_rcp<const Poly>(var, std::move(v));
     }
 
     // TODO think of something to make this purely virtual

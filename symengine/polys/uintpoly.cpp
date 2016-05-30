@@ -10,7 +10,6 @@ namespace SymEngine
 UIntPoly::UIntPoly(const RCP<const Symbol> &var, UIntDict &&dict)
     : UPolyBase(var, std::move(dict))
 {
-
     SYMENGINE_ASSERT(is_canonical(poly_))
 }
 
@@ -78,12 +77,6 @@ RCP<const UIntPoly> UIntPoly::from_dict(const RCP<const Symbol> &var,
         }
     }
     return make_rcp<const UIntPoly>(var, std::move(d));
-}
-
-RCP<const UIntPoly> UIntPoly::from_vec(const RCP<const Symbol> &var,
-                                       const std::vector<integer_class> &v)
-{
-    return make_rcp<const UIntPoly>(var, std::move(v));
 }
 
 vec_basic UIntPoly::get_args() const

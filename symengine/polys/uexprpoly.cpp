@@ -19,7 +19,7 @@ UExprPoly::UExprPoly(const RCP<const Symbol> &var,
 {
     poly_.dict_ = {};
     for (unsigned int i = 0; i < v.size(); i++) {
-        if (v[i] != 0) {
+        if (v[i] != Expression(0)) {
             poly_.dict_[i] = v[i];
         }
     }
@@ -61,12 +61,6 @@ int UExprPoly::compare(const Basic &o) const
         return cmp;
 
     return map_int_Expr_compare(poly_.get_dict(), s.poly_.get_dict());
-}
-
-RCP<const UExprPoly> UExprPoly::from_vec(const RCP<const Symbol> &var,
-                                         const std::vector<Expression> &v)
-{
-    return make_rcp<const UExprPoly>(var, std::move(v));
 }
 
 RCP<const UExprPoly> UExprPoly::from_dict(const RCP<const Symbol> &var,
