@@ -3,6 +3,7 @@ CMakeCache.txt
 CMakeFiles
 Makefile
 cmake_install.cmake
+cmake_uninstall.cmake
 install_manifest.txt
 CTestTestfile.cmake
 cython_test.cpp
