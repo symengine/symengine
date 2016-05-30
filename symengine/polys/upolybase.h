@@ -120,6 +120,23 @@ public:
 
     Wrapper &operator*=(const Wrapper &other)
     {
+        if (dict_.empty())
+            return static_cast<Wrapper &>(*this);
+
+        if (other.dict_.empty()) {
+            *this = other;
+            return static_cast<Wrapper &>(*this);
+        }
+
+        // ! other is a just constant term
+        if (other.dict_.size() == 1
+            and other.dict_.find(0) != other.dict_.end()) {
+            for (const auto &i1 : dict_)
+                for (const auto &i2 : other.dict_)
+                    dict_[i1.first] = i1.second * i2.second;
+            return static_cast<Wrapper &>(*this);
+        }
+
         std::map<Key, Value> p;
         for (const auto &i1 : dict_)
             for (const auto &i2 : other.dict_)
