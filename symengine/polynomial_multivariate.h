@@ -347,6 +347,149 @@ public:
     
     static MultivariatePolynomialExpr 
     convert(const UnivariatePolynomial &o);
+
+    static MultivariatePolynomialExpr convert(const int i);
+    static MultivariatePolynomialExpr convert(const Expression &o);
+
+    MultivariatePolynomialExpr truncate(map_basic_uint precs)
+    {
+        umap_vec_expr d;
+        for (auto bucket : dict_) {
+            bool accept = true;
+            auto var = vars_.begin();
+            auto prec = precs.begin();
+            unsigned int whichvar = 0;
+            while (var != vars_.end() && prec != precs.end()) {
+                if ((*var)->__eq__(*prec->first)) {
+                    if ( bucket.first[whichvar] > 0 && static_cast<unsigned int>(bucket.first[whichvar]) > prec->second)
+                        accept = false;
+                    prec++;
+                }
+                var++;
+                whichvar++;
+            }
+            if (accept)
+                d.insert(std::pair<vec_int, Expression>(bucket.first,
+                                                        bucket.second));
+        }
+        return MultivariatePolynomialExpr::from_dict(vars_, std::move(d));
+    }
+
+    MultivariatePolynomialExpr& operator=(const MultivariatePolynomialExpr& o) = default;
+
+    MultivariatePolynomialExpr& operator=(const Expression& o)
+    {
+        return *this = convert(o);
+    }
+
+    friend MultivariatePolynomialExpr operator+(const MultivariatePolynomialExpr& a,const MultivariatePolynomialExpr& b)
+    {
+        return a.add(b);
+    }
+
+    friend MultivariatePolynomialExpr operator+(const MultivariatePolynomialExpr& a, const Expression& b)
+    {
+        return a.add(convert(b));
+    }
+    friend MultivariatePolynomialExpr operator+(const Expression& a,const MultivariatePolynomialExpr& b)
+    {
+        return convert(a).add(b);
+    }
+
+    MultivariatePolynomialExpr& operator+=(const MultivariatePolynomialExpr&a)
+    {
+        return *this = this->add(a);
+    }
+
+    MultivariatePolynomialExpr& operator+=(const Expression& a){
+        return *this = this->add(convert(a));
+    }
+
+    friend MultivariatePolynomialExpr operator-(const MultivariatePolynomialExpr& a,const MultivariatePolynomialExpr& b)
+    {
+        return a.sub(b);
+    }
+
+    friend MultivariatePolynomialExpr operator-(const MultivariatePolynomialExpr& a, const Expression& b)
+    {
+        return a.sub(convert(b));
+    }
+
+    friend MultivariatePolynomialExpr operator-(const Expression& a,const MultivariatePolynomialExpr& b)
+    {
+        return convert(a).sub(b);
+    } 
+
+    MultivariatePolynomialExpr& operator-=(const MultivariatePolynomialExpr& a)
+    {
+        return *this = this->sub(a);
+    }
+
+    MultivariatePolynomialExpr& operator-=(const Expression& a)
+    {
+        return *this = this->sub(convert(a));
+    }
+
+    MultivariatePolynomialExpr operator-() const
+    {
+        return this->neg();
+    }
+
+    friend MultivariatePolynomialExpr operator*(const MultivariatePolynomialExpr& a,const MultivariatePolynomialExpr& b)
+    {
+        return a.mul(b);
+    }
+
+    friend MultivariatePolynomialExpr operator*(const MultivariatePolynomialExpr& a, const Expression& b)
+    {
+        return a.mul(convert(b));
+    }
+
+    friend MultivariatePolynomialExpr operator*(const Expression& a,const MultivariatePolynomialExpr& b)
+    {
+        return convert(a).mul(b);
+    }
+
+    MultivariatePolynomialExpr& operator*=(const MultivariatePolynomialExpr& a)
+    {
+        return *this = this->mul(a);
+    }
+
+    MultivariatePolynomialExpr& operator*=(const Expression& a)
+    {
+        return *this = this->mul(convert(a));
+    }
+
+    friend MultivariatePolynomialExpr operator/(const MultivariatePolynomialExpr& a, const Expression& b)
+    {
+        return a.mul(convert(1/b));
+    }
+
+    MultivariatePolynomialExpr& operator/=(const Expression &b)
+    {
+        return *this = *this / b;
+    }
+
+    bool operator==(const MultivariatePolynomialExpr& o)
+    {
+        return this->__eq__(o);
+    }
+
+    bool operator==(const Expression& o)
+    {
+        return this->__eq__(convert(o));
+    }
+
+    bool operator!=(const MultivariatePolynomialExpr& o)
+    {
+        return !(this->__eq__(o));
+    }
+
+    bool operator!=(const Expression&o)
+    {
+        return !(this->__eq__(convert(o)));
+    }
+
 };
 
 template <class T>

@@ -325,4 +325,19 @@ MultivariatePolynomialExpr::convert(const UExprPoly &o)
     return MultivariatePolynomialExpr::create(s, std::move(d));
 }
 
+MultivariatePolynomialExpr MultivariatePolynomialExpr::convert(const int i)
+{
+    set_basic s;
+    vec_int v;
+    return MultivariatePolynomialExpr::from_dict(s, {{v, Expression(i)}});
+}
+
+MultivariatePolynomialExpr MultivariatePolynomialExpr::convert(const Expression &o)
+{
+    set_basic s;
+    vec_int v;
+    return MultivariatePolynomialExpr::from_dict(s, {{v, o}});
+}
+
+
 } // SymEngine

@@ -45,6 +45,8 @@ typedef std::map<RCP<const Integer>, unsigned, RCPIntegerKeyLess>
     map_integer_uint;
 typedef std::map<unsigned, integer_class> map_uint_mpz;
 typedef std::map<int, Expression> map_int_Expr;
+typedef std::map<RCP<const Symbol>, unsigned int, RCPBasicKeyLess> map_basic_uint;
+
 //! Part of umap_vec_mpz:
 typedef struct {
     inline std::size_t operator()(const vec_int &k) const
