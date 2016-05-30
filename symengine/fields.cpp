@@ -64,7 +64,7 @@ int GaloisField::compare(const Basic &o) const
 
 RCP<const GaloisField> GaloisField::gf_neg() const
 {
-    return gf_mul_ground(-1);
+    return gf_mul_ground(integer_class(-1));
 }
 
 RCP<const GaloisField> GaloisField::gf_add_ground(const integer_class a) const
@@ -145,8 +145,8 @@ void GaloisField::gf_div(const RCP<const GaloisField> &o,
         throw std::runtime_error("ZeroDivisionError");
     map_uint_mpz dict_divisor = o->dict_;
     map_uint_mpz dict_out;
-    integer_class deg_dividend = (--dict_.end())->first;
-    integer_class deg_divisor = (--dict_divisor.end())->first;
+    integer_class deg_dividend = integer_class((--dict_.end())->first);
+    integer_class deg_divisor = integer_class((--dict_divisor.end())->first);
     if (deg_dividend < deg_divisor) {
         *quo = gf(dict_out, modulo_);
         *rem = gf(dict_, modulo_);
@@ -188,8 +188,8 @@ GaloisField::gf_quo(const RCP<const GaloisField> &o) const
         throw std::runtime_error("ZeroDivisionError");
     map_uint_mpz dict_divisor = o->dict_;
     map_uint_mpz dict_out;
-    integer_class deg_dividend = (--dict_.end())->first;
-    integer_class deg_divisor = (--dict_divisor.end())->first;
+    integer_class deg_dividend = integer_class((--dict_.end())->first);
+    integer_class deg_divisor = integer_class((--dict_divisor.end())->first);
     if (deg_dividend < deg_divisor) {
         return gf(dict_out, modulo_);
     }
