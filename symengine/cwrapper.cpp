@@ -29,6 +29,7 @@ using SymEngine::integer_class;
 using SymEngine::rational_class;
 using SymEngine::Number;
 using SymEngine::Complex;
+using SymEngine::ComplexDouble;
 using SymEngine::RealDouble;
 using SymEngine::rcp_static_cast;
 using SymEngine::is_a;
@@ -273,6 +274,19 @@ void complex_imaginary_part(basic s, basic com)
     s->m = (rcp_static_cast<const Complex>(com->m))->imaginary_part();
 }
 
+void complex_double_real_part(basic s, basic com)
+{
+    SYMENGINE_ASSERT(is_a<ComplexDouble>(*(com->m)));
+    s->m = (rcp_static_cast<const ComplexDouble>(com->m))->real_part();
+}
+
+void complex_double_imaginary_part(basic s, basic com)
+{
+    SYMENGINE_ASSERT(is_a<ComplexDouble>(*(com->m)));
+    s->m = (rcp_static_cast<const ComplexDouble>(com->m))->imaginary_part();
+}
+
+
 int basic_diff(basic s, const basic expr, basic const symbol)
 {
     if (not is_a_Symbol(symbol))
@@ -387,6 +401,14 @@ int is_a_Symbol(const basic c)
 int is_a_Complex(const basic c)
 {
     return is_a<Complex>(*(c->m));
+}
+int is_a_RealDouble(const basic c)
+{
+    return is_a<RealDouble>(*(c->m));
+}
+int is_a_ComplexDouble(const basic c)
+{
+    return is_a<ComplexDouble>(*(c->m));
 }
 
 // C wrapper for std::vector<int>

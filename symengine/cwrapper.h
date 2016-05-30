@@ -155,6 +155,10 @@ void complex_set_mpq(basic s, const mpq_t re, const mpq_t im);
 void complex_real_part(basic s, basic com);
 //! Assign to s, an imaginary where com is a complex
 void complex_imaginary_part(basic s, basic com);
+//! Assign to s, a real double where com is a complex double
+void complex_double_real_part(basic s, basic com);
+//! Assign to s, an imaginary double where com is a complex double
+void complex_doube_imaginary_part(basic s, basic com);
 
 //! Assigns s = a + b.
 void basic_add(basic s, const basic a, const basic b);
