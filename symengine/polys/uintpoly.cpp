@@ -57,11 +57,11 @@ int UIntPoly::compare(const Basic &o) const
     if (poly_.size() != s.poly_.size())
         return (poly_.size() < s.poly_.size()) ? -1 : 1;
 
-    int cmp = var_->compare(*s.var_);
+    int cmp = unified_compare(var_, s.var_);
     if (cmp != 0)
         return cmp;
 
-    return map_uint_mpz_compare(poly_.dict_, s.poly_.dict_);
+    return unified_compare(poly_.dict_, s.poly_.dict_);
 }
 
 RCP<const UIntPoly> UIntPoly::from_dict(const RCP<const Symbol> &var,

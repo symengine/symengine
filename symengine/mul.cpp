@@ -91,7 +91,7 @@ std::size_t Mul::__hash__() const
 bool Mul::__eq__(const Basic &o) const
 {
     if (is_a<Mul>(o) and eq(*coef_, *(static_cast<const Mul &>(o).coef_))
-        and map_eq(dict_, static_cast<const Mul &>(o).dict_))
+        and unified_eq(dict_, static_cast<const Mul &>(o).dict_))
         return true;
 
     return false;
@@ -111,7 +111,7 @@ int Mul::compare(const Basic &o) const
         return cmp;
 
     // Compare dictionaries:
-    return map_compare(dict_, s.dict_);
+    return unified_compare(dict_, s.dict_);
 }
 
 RCP<const SymEngine::Basic> Mul::from_dict(const RCP<const Number> &coef,

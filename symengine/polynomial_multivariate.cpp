@@ -15,53 +15,51 @@ vec_basic MultivariateIntPolynomial::get_args() const
     umap_uvec_mpz d;
     // To change the ordering in which the terms appear in the vector, use
     // a different comparator for order_umap
-    std::vector<vec_uint> v = order_umap<vec_uint, umap_uvec_mpz>(dict_);
+    auto v = sorted_keys(dict_);
     for (const auto &p : v) {
         map_basic_basic b;
         int whichvar = 0;
         for (auto sym : vars_) {
             if (integer_class(0) != p[whichvar])
-                b.insert(std::pair<RCP<const Basic>, RCP<const Basic>>(
-                    sym, make_rcp<Integer>(integer_class(p[whichvar]))));
+                insert(b, sym, integer(p[whichvar]));
             whichvar++;
         }
-        args.push_back(Mul::from_dict(
-            make_rcp<const Integer>(dict_.find(p)->second), std::move(b)));
+        args.push_back(
+            Mul::from_dict(integer(dict_.find(p)->second), std::move(b)));
     }
     return args;
 }
 
 std::size_t MultivariateIntPolynomial::__hash__() const
 {
-    std::hash<std::string> hash_string;
     std::size_t seed = MULTIVARIATEINTPOLYNOMIAL;
     for (auto var : vars_)
-        // boost's method for combining hashes
-        seed ^= hash_string(var->__str__()) + 0x9e3779b + (seed << 6)
-                + (seed >> 2);
+        hash_combine<std::string>(seed, var->__str__());
 
-    std::vector<vec_uint> v = order_umap<vec_uint, umap_uvec_mpz>(dict_);
-
-    for (auto vec : v) {
-        seed ^= vec_uint_hash()(dict_.find(vec)->first) + 0x9e3779b
-                + (seed << 6) + (seed >> 2);
-        seed ^= mpz_hash(dict_.find(vec)->second) + 0x9e3779b + (seed << 6)
-                + (seed >> 2);
+    for (auto &p : dict_) {
+        std::size_t t = vec_uint_hash()(p.first);
+        hash_combine<std::size_t>(t, mp_get_si(p.second));
+        seed ^= t;
     }
     return seed;
 }
 
 int MultivariateIntPolynomial::compare(const Basic &o) const
 {
-    // copied from UIntPoly::compare and then modified.
+    // copied from UnivariateIntPolynomial::compare and then modified.
     const MultivariateIntPolynomial &s
         = static_cast<const MultivariateIntPolynomial &>(o);
 
-    int cmp = set_compare(vars_, s.vars_);
+    if (vars_.size() != s.vars_.size())
+        return vars_.size() < s.vars_.size() ? -1 : 1;
+    if (dict_.size() != s.dict_.size())
+        return dict_.size() < s.dict_.size() ? -1 : 1;
+
+    int cmp = unified_compare(vars_, s.vars_);
     if (cmp != 0)
         return cmp;
 
-    return umap_uvec_mpz_compare(dict_, s.dict_);
+    return unified_compare(dict_, s.dict_);
 }
 
 integer_class MultivariateIntPolynomial::eval(
@@ -148,15 +146,13 @@ vec_basic MultivariatePolynomial::get_args() const
     umap_uvec_expr d;
     // To change the ordering in which the terms appear in the vector, use
     // a different comparator for order_umap
-    std::vector<vec_int> v = order_umap<vec_int, umap_vec_expr>(dict_);
+    std::vector<vec_int> v = sorted_keys(dict_);
     for (const auto &p : v) {
         RCP<const Basic> res = ((dict_.find(p)->second).get_basic());
         int whichvar = 0;
         for (auto sym : vars_) {
             if (0 != p[whichvar])
-                res = SymEngine::mul(
-                    res,
-                    pow(sym, make_rcp<Integer>(integer_class(p[whichvar]))));
+                res = SymEngine::mul(res, pow(sym, integer(p[whichvar])));
             whichvar++;
         }
         args.push_back(res);
@@ -166,35 +162,34 @@ vec_basic MultivariatePolynomial::get_args() const
 
 std::size_t MultivariatePolynomial::__hash__() const
 {
-    std::hash<std::string> hash_string;
     std::size_t seed = MULTIVARIATEPOLYNOMIAL;
     for (auto var : vars_)
-        // boost's method for combining hashes
-        seed ^= hash_string(var->__str__()) + 0x9e3779b + (seed << 6)
-                + (seed >> 2);
+        hash_combine<std::string>(seed, var->__str__());
 
-    std::vector<vec_int> v = order_umap<vec_int, umap_vec_expr>(dict_);
-
-    for (auto vec : v) {
-        seed ^= vec_int_hash()(dict_.find(vec)->first) + 0x9e3779b + (seed << 6)
-                + (seed >> 2);
-        seed ^= (dict_.find(vec)->second).get_basic()->__hash__() + 0x9e3779b
-                + (seed << 6) + (seed >> 2);
+    for (auto &p : dict_) {
+        std::size_t t = vec_int_hash()(p.first);
+        hash_combine<Basic>(t, *(p.second.get_basic()));
+        seed ^= t;
     }
     return seed;
 }
 
 int MultivariatePolynomial::compare(const Basic &o) const
 {
-    // copied from UIntPoly::compare and then modified.
+    // copied from UnivariateIntPolynomial::compare and then modified.
     const MultivariatePolynomial &s
         = static_cast<const MultivariatePolynomial &>(o);
 
-    int cmp = set_compare<set_basic>(vars_, s.vars_);
+    if (vars_.size() != s.vars_.size())
+        return vars_.size() < s.vars_.size() ? -1 : 1;
+    if (dict_.size() != s.dict_.size())
+        return dict_.size() < s.dict_.size() ? -1 : 1;
+
+    int cmp = unified_compare(vars_, s.vars_);
     if (cmp != 0)
         return cmp;
 
-    return umap_vec_expr_compare(dict_, s.dict_);
+    return unified_compare(dict_, s.dict_);
 }
 
 Expression MultivariatePolynomial::eval(

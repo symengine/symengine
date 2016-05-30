@@ -26,12 +26,9 @@ using SymEngine::map_basic_num;
 using SymEngine::map_basic_basic;
 using SymEngine::umap_basic_basic;
 using SymEngine::map_uint_mpz;
-using SymEngine::map_uint_mpz_compare;
+using SymEngine::unified_compare;
 using SymEngine::map_int_Expr;
-using SymEngine::map_int_Expr_compare;
 using SymEngine::multiset_basic;
-using SymEngine::multiset_basic_eq;
-using SymEngine::multiset_basic_compare;
 using SymEngine::vec_basic;
 using SymEngine::set_basic;
 using SymEngine::Integer;
@@ -136,13 +133,13 @@ TEST_CASE("Symbol dict: Basic", "[basic]")
     buffer.str("");
     buffer << vb;
     REQUIRE(buffer.str() == "{x, 3}");
-    REQUIRE(vec_basic_eq(vb, {x, i3}));
-    REQUIRE(vec_basic_compare(vb, {x, i3}) == 0);
-    REQUIRE(not vec_basic_eq(vb, {i3, x}));
+    REQUIRE(unified_eq(vb, {x, i3}));
+    REQUIRE(unified_compare(vb, {x, i3}) == 0);
+    REQUIRE(not unified_eq(vb, {i3, x}));
     REQUIRE(vec_basic_eq_perm(vb, {i3, x}));
-    REQUIRE(not vec_basic_eq(vb, {i3}));
+    REQUIRE(not unified_eq(vb, {i3}));
     REQUIRE(not vec_basic_eq_perm(vb, {i3}));
-    REQUIRE(vec_basic_compare(vb, {i3}) == 1);
+    REQUIRE(unified_compare(vb, {i3}) == 1);
     buffer.str("");
     buffer << sb;
     REQUIRE(buffer.str() == "{}");
@@ -188,25 +185,27 @@ TEST_CASE("Symbol dict: Basic", "[basic]")
 
     map_uint_mpz a = {{0, 1_z}, {1, 2_z}, {2, 1_z}};
     map_uint_mpz b = {{0, 1_z}, {2, 1_z}, {1, 2_z}};
-    REQUIRE(map_uint_mpz_compare(a, b) == 0);
+    REQUIRE(unified_compare(a, b) == 0);
     b = {{0, 1_z}, {2, 1_z}};
-    REQUIRE(map_uint_mpz_compare(a, b) == 1);
+    REQUIRE(unified_compare(a, b) == 1);
     b = {{0, 1_z}, {3, 1_z}, {1, 2_z}};
-    REQUIRE(map_uint_mpz_compare(a, b) == -1);
+    REQUIRE(unified_compare(a, b) == -1);
     b = {{0, 1_z}, {3, 1_z}, {1, 2_z}};
-    REQUIRE(map_uint_mpz_compare(a, b) == -1);
+    REQUIRE(unified_compare(a, b) == -1);
     b = {{0, 1_z}, {1, 1_z}, {2, 3_z}};
-    REQUIRE(map_uint_mpz_compare(a, b) == 1);
+    REQUIRE(unified_compare(a, b) == 1);
 
     map_int_Expr adict = {{0, 1}, {1, 2}, {2, x}};
     map_int_Expr bdict = {{0, 1}, {1, 2}, {2, x}};
-    REQUIRE(map_int_Expr_compare(adict, bdict) == 0);
+    REQUIRE(unified_compare(adict, bdict) == 0);
     bdict = {{0, 1}, {1, 1}, {2, x}};
-    REQUIRE(map_int_Expr_compare(adict, bdict) == -1);
+    REQUIRE(unified_compare(adict, bdict) != 0);
+    REQUIRE(unified_compare(adict, bdict) == -unified_compare(bdict, adict));
     adict = {{0, 1}, {1, 1}, {3, x}};
-    REQUIRE(map_int_Expr_compare(adict, bdict) == 1);
+    REQUIRE(unified_compare(adict, bdict) != 0);
+    REQUIRE(unified_compare(adict, bdict) == -unified_compare(bdict, adict));
     bdict = {{0, 1}, {1, 3}};
-    REQUIRE(map_int_Expr_compare(adict, bdict) == 1);
+    REQUIRE(unified_compare(adict, bdict) == 1);
 
     multiset_basic msba, msbb;
     msba.insert(x);
@@ -214,16 +213,16 @@ TEST_CASE("Symbol dict: Basic", "[basic]")
     msba.insert(i2);
     msbb.insert(y);
     msbb.insert(i2);
-    REQUIRE(not multiset_basic_eq(msba, msbb));
-    REQUIRE(multiset_basic_compare(msba, msbb) == 1);
+    REQUIRE(not unified_eq(msba, msbb));
+    REQUIRE(unified_compare(msba, msbb) == 1);
     msbb.insert(x);
-    REQUIRE(multiset_basic_eq(msba, msbb));
-    REQUIRE(multiset_basic_compare(msba, msbb) == 0);
+    REQUIRE(unified_eq(msba, msbb));
+    REQUIRE(unified_compare(msba, msbb) == 0);
     msbb.insert(i3);
-    REQUIRE(not multiset_basic_eq(msba, msbb));
-    REQUIRE(multiset_basic_compare(msba, msbb) == -1);
-    REQUIRE(not multiset_basic_eq(msba, {x, y, i3}));
-    REQUIRE(multiset_basic_compare(msba, {x, y, i3}) == -1);
+    REQUIRE(not unified_eq(msba, msbb));
+    REQUIRE(unified_compare(msba, msbb) == -1);
+    REQUIRE(not unified_eq(msba, {x, y, i3}));
+    REQUIRE(unified_compare(msba, {x, y, i3}) == -1);
 }
 
 TEST_CASE("Add: basic", "[basic]")
@@ -451,13 +450,13 @@ TEST_CASE("Mul: Basic", "[basic]")
     REQUIRE(vec_basic_eq_perm(r->get_args(), {x, integer(2)}));
 
     r = sub(x, x);
-    REQUIRE(vec_basic_eq(r->get_args(), {}));
+    REQUIRE(unified_eq(r->get_args(), {}));
 
     r = mul(x, x);
-    REQUIRE(vec_basic_eq(r->get_args(), {x, integer(2)}));
+    REQUIRE(unified_eq(r->get_args(), {x, integer(2)}));
 
     r = div(x, x);
-    REQUIRE(vec_basic_eq(r->get_args(), {}));
+    REQUIRE(unified_eq(r->get_args(), {}));
 
     CHECK_THROWS_AS(div(integer(1), zero), std::runtime_error);
 }

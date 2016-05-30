@@ -68,7 +68,7 @@ std::size_t Add::__hash__() const
 bool Add::__eq__(const Basic &o) const
 {
     if (is_a<Add>(o) and eq(*coef_, *(static_cast<const Add &>(o).coef_))
-        and umap_eq(dict_, static_cast<const Add &>(o).dict_))
+        and unified_eq(dict_, static_cast<const Add &>(o).dict_))
         return true;
 
     return false;
@@ -92,7 +92,7 @@ int Add::compare(const Basic &o) const
     // once it is computed.
     map_basic_num adict(dict_.begin(), dict_.end());
     map_basic_num bdict(s.dict_.begin(), s.dict_.end());
-    return map_compare(adict, bdict);
+    return unified_compare(adict, bdict);
 }
 
 // Very quickly (!) creates the appropriate instance (i.e. Add, Symbol,

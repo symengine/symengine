@@ -111,7 +111,7 @@ public:
     {
         if (dict_.size() != other.dict_.size())
             return (dict_.size() < other.dict_.size()) ? -1 : 1;
-        return map_uint_mpz_compare(dict_, other.dict_);
+        return unified_compare(dict_, other.dict_);
     }
 
     integer_class max_abs_coef() const

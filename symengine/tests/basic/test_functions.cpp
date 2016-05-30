@@ -881,12 +881,12 @@ TEST_CASE("Derivative: functions", "[functions]")
     REQUIRE(eq(*r1, *r2));
     REQUIRE(neq(*r1, *r3));
     REQUIRE(neq(*r2, *r3));
-    REQUIRE(vec_basic_eq(r1->get_args(), {f, x}));
+    REQUIRE(unified_eq(r1->get_args(), {f, x}));
 
     r1 = f->diff(x)->diff(x);
     r2 = Derivative::create(f, {x, x});
     REQUIRE(eq(*r1, *r2));
-    REQUIRE(vec_basic_eq(r1->get_args(), {f, x, x}));
+    REQUIRE(unified_eq(r1->get_args(), {f, x, x}));
 
     f = function_symbol("f", {x, y});
     r1 = f->diff(x)->diff(y);
@@ -1774,7 +1774,7 @@ TEST_CASE("Atan2: functions", "[functions]")
     REQUIRE(eq(*r1, *r2));
 
     r1 = atan2(y, x);
-    REQUIRE(vec_basic_eq(r1->get_args(), {y, x}));
+    REQUIRE(unified_eq(r1->get_args(), {y, x}));
 }
 
 TEST_CASE("Lambertw: functions", "[functions]")
