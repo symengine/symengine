@@ -192,6 +192,12 @@ void real_double_set_d(basic s, double d)
     s->m = SymEngine::real_double(d);
 }
 
+double real_double_get_d(const basic s)
+{
+    SYMENGINE_ASSERT(is_a<RealDouble>(*(s->m)));
+    return (rcp_static_cast<const RealDouble>(s->m))->as_double();
+}
+
 signed long integer_get_si(const basic s)
 {
     SYMENGINE_ASSERT(is_a<Integer>(*(s->m)));

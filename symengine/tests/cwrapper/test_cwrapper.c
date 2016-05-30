@@ -133,6 +133,7 @@ void test_real_double()
     basic d;
     basic_new_stack(d);
     real_double_set_d(d, 123.456);
+    SYMENGINE_C_ASSERT(real_double_get_d(d) == 123.456);
 
     char *s2;
     s2 = basic_str(d);
