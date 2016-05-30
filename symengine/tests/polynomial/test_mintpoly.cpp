@@ -414,10 +414,8 @@ TEST_CASE("Testing addition, subtraction, multiplication of "
                                                             {{0, 0, 0}, 3_z},
                                                             {{2, 0, 0}, 2_z},
                                                             {{1, 0, 0}, 1_z}});
-    RCP<const UIntPoly> p2
-        = uint_poly(x, {{1, 1_z}, {2, 1_z}});
-    RCP<const UIntPoly> p3
-        = uint_poly(y, {{1, 1_z}, {2, 1_z}});
+    RCP<const UIntPoly> p2 = uint_poly(x, {{1, 1_z}, {2, 1_z}});
+    RCP<const UIntPoly> p3 = uint_poly(y, {{1, 1_z}, {2, 1_z}});
 
     MultivariateIntPolynomialExpr q1
         = MultivariateIntPolynomialExpr::create({x, y, z}, {{{1, 2, 3}, 1_z},
@@ -480,8 +478,7 @@ TEST_CASE("Testing addition, subtraction, multiplication of "
     RCP<const Symbol> z = symbol("z");
     MultivariateIntPolynomialExpr p1 = MultivariateIntPolynomialExpr::create(
         {x, y}, {{{1, 2}, 1_z}, {{2, 1}, -2_z}, {{0, 1}, 1_z}, {{0, 0}, 3_z}});
-    RCP<const UIntPoly> p2
-        = uint_poly(z, {{1, 1_z}, {2, 1_z}});
+    RCP<const UIntPoly> p2 = uint_poly(z, {{1, 1_z}, {2, 1_z}});
 
     MultivariateIntPolynomialExpr q1
         = MultivariateIntPolynomialExpr::create({x, y, z}, {{{1, 2, 0}, 1_z},
@@ -527,10 +524,8 @@ TEST_CASE("Testing addition, subtraction, multiplication of two "
 {
     RCP<const Symbol> x = symbol("x");
     RCP<const Symbol> y = symbol("y");
-    RCP<const UIntPoly> p1
-        = uint_poly(x, {{1, -1_z}, {2, 3_z}, {0, 0_z}});
-    RCP<const UIntPoly> p2
-        = uint_poly(y, {{0, 1_z}, {1, 1_z}});
+    RCP<const UIntPoly> p1 = uint_poly(x, {{1, -1_z}, {2, 3_z}, {0, 0_z}});
+    RCP<const UIntPoly> p2 = uint_poly(y, {{0, 1_z}, {1, 1_z}});
 
     MultivariateIntPolynomialExpr q1 = MultivariateIntPolynomialExpr::create(
         {x, y}, {{{1, 0}, -1_z}, {{2, 0}, 3_z}, {{0, 0}, 1_z}, {{0, 1}, 1_z}});
@@ -554,10 +549,8 @@ TEST_CASE("Testing addition, subtraction, multiplication of two "
           "[MultivariateIntPolynomialExpr][UIntPoly]")
 {
     RCP<const Symbol> x = symbol("x");
-    RCP<const UIntPoly> p1
-        = uint_poly(x, {{1, -1_z}, {2, 3_z}, {0, 0_z}});
-    RCP<const UIntPoly> p2
-        = uint_poly(x, {{0, 1_z}, {1, 1_z}});
+    RCP<const UIntPoly> p1 = uint_poly(x, {{1, -1_z}, {2, 3_z}, {0, 0_z}});
+    RCP<const UIntPoly> p2 = uint_poly(x, {{0, 1_z}, {1, 1_z}});
 
     MultivariateIntPolynomialExpr q1
         = MultivariateIntPolynomialExpr::create({x}, {{{0}, 1_z}, {{2}, 3_z}});

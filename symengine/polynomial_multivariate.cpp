@@ -133,7 +133,7 @@ std::string MultivariateIntPolynomialExpr::toString()
     return s.str();
 }
 
-MultivariateIntPolynomialExpr 
+MultivariateIntPolynomialExpr
 MultivariateIntPolynomialExpr::convert(const UIntPoly &o)
 {
     vec_basic s;
@@ -312,7 +312,7 @@ std::string MultivariatePolynomialExpr::toString()
     return s.str();
 }
 
-MultivariatePolynomialExpr 
+MultivariatePolynomialExpr
 MultivariatePolynomialExpr::convert(const UExprPoly &o)
 {
     vec_basic s;

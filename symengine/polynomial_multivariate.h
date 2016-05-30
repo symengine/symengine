@@ -314,8 +314,7 @@ public:
         return o;
     }
 
-    static MultivariateIntPolynomialExpr
-    convert(const UIntPoly &o);
+    static MultivariateIntPolynomialExpr convert(const UIntPoly &o);
 };
 
 // MultivariatePolynomialExpr
@@ -663,4 +662,3 @@ MultivariateIntPolynomialExpr sub_mult_poly(const T &a, const U &b)
 } // SymEngine
 
 #endif
-
