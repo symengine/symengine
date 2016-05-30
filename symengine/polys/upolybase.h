@@ -50,6 +50,18 @@ public:
         dict_[1] = Value(1);
     }
 
+    static Wrapper from_vec(const std::vector<Value> &v)
+    {
+        Wrapper x;
+        x.dict_ = {};
+        for (unsigned int i = 0; i < v.size(); i++) {
+            if (v[i] != Value(0)) {
+                x.dict_[i] = v[i];
+            }
+        }
+        return static_cast<Wrapper &>(x);
+    }
+
     Wrapper &operator=(Wrapper &&other) SYMENGINE_NOEXCEPT
     {
         if (this != &other)
@@ -195,21 +207,6 @@ public:
         : var_{var}, poly_{container}
     {
     }
-
-    // unify these two constructor? another template would be required
-    // may solve some more problems, like `get_degree` virtualization
-    UPolyBase(const RCP<const Symbol> &var, const std::vector<Coeff> &v)
-        : var_{var}
-    {
-    }
-
-    // create a Poly from a vector of Coeff coefficients
-    static RCP<const Poly> from_vec(const RCP<const Symbol> &var,
-                                    const std::vector<Coeff> &v)
-    {
-        return make_rcp<const Poly>(var, std::move(v));
-    }
-
     // TODO think of something to make this purely virtual
     //! \returns the degree of the polynomial
     // virtual unsigned int get_degree() const = 0;

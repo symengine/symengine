@@ -187,8 +187,6 @@ public:
     IMPLEMENT_TYPEID(UEXPRPOLY)
     //! Constructor of UExprPoly class
     UExprPoly(const RCP<const Symbol> &var, UExprDict &&dict);
-    //! Constructor using a dense vector of Expression
-    UExprPoly(const RCP<const Symbol> &var, const std::vector<Expression> &v);
 
     bool is_canonical(const UExprDict &dict) const;
     std::size_t __hash__() const;
@@ -196,6 +194,8 @@ public:
 
     static RCP<const UExprPoly> from_dict(const RCP<const Symbol> &var,
                                           UExprDict &&d);
+    static RCP<const UExprPoly> from_vec(const RCP<const Symbol> &var,
+                                         const std::vector<Expression> &v);
 
     Expression max_coef() const;
     //! Evaluates the UExprPoly at value x

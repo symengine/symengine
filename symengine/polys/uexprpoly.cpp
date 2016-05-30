@@ -13,18 +13,6 @@ UExprPoly::UExprPoly(const RCP<const Symbol> &var, UExprDict &&dict)
     SYMENGINE_ASSERT(is_canonical(poly_))
 }
 
-UExprPoly::UExprPoly(const RCP<const Symbol> &var,
-                     const std::vector<Expression> &v)
-    : UPolyBase(var, std::move(v))
-{
-    poly_.dict_ = {};
-    for (unsigned int i = 0; i < v.size(); i++) {
-        if (v[i] != Expression(0)) {
-            poly_.dict_[i] = v[i];
-        }
-    }
-}
-
 bool UExprPoly::is_canonical(const UExprDict &dict) const
 {
     // Check if dictionary contains terms with coeffienct 0
@@ -77,6 +65,12 @@ RCP<const UExprPoly> UExprPoly::from_dict(const RCP<const Symbol> &var,
         }
     }
     return make_rcp<const UExprPoly>(var, std::move(d));
+}
+
+RCP<const UExprPoly> UExprPoly::from_vec(const RCP<const Symbol> &var,
+                                         const std::vector<Expression> &v)
+{
+    return make_rcp<const UExprPoly>(var, UExprDict::from_vec(v));
 }
 
 vec_basic UExprPoly::get_args() const

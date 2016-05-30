@@ -35,8 +35,8 @@ TEST_CASE("Constructor of UIntPoly", "[UIntPoly]")
     RCP<const UIntPoly> Q = UIntPoly::from_vec(x, {1_z, 0_z, 2_z, 1_z});
     REQUIRE(Q->__str__() == "x**3 + 2*x**2 + 1");
 
-    UIntPoly R(x, {1_z, 0_z, 2_z, 1_z});
-    REQUIRE(R.__str__() == "x**3 + 2*x**2 + 1");
+    RCP<const UIntPoly> R = UIntPoly::from_vec(x, {1_z, 0_z, 2_z, 1_z});
+    REQUIRE(R->__str__() == "x**3 + 2*x**2 + 1");
 
     RCP<const UIntPoly> S = uint_poly(x, {{0, 2_z}});
     REQUIRE(S->__str__() == "2");

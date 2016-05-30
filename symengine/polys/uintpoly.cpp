@@ -13,18 +13,6 @@ UIntPoly::UIntPoly(const RCP<const Symbol> &var, UIntDict &&dict)
     SYMENGINE_ASSERT(is_canonical(poly_))
 }
 
-UIntPoly::UIntPoly(const RCP<const Symbol> &var,
-                   const std::vector<integer_class> &v)
-    : UPolyBase(var, std::move(v))
-{
-    poly_.dict_ = {};
-    for (unsigned int i = 0; i < v.size(); i++) {
-        if (v[i] != 0) {
-            poly_.dict_[i] = v[i];
-        }
-    }
-}
-
 bool UIntPoly::is_canonical(const UIntDict &dict) const
 {
     // Check if dictionary contains terms with coeffienct 0
@@ -77,6 +65,12 @@ RCP<const UIntPoly> UIntPoly::from_dict(const RCP<const Symbol> &var,
         }
     }
     return make_rcp<const UIntPoly>(var, std::move(d));
+}
+
+RCP<const UIntPoly> UIntPoly::from_vec(const RCP<const Symbol> &var,
+                                       const std::vector<integer_class> &v)
+{
+    return make_rcp<const UIntPoly>(var, UIntDict::from_vec(v));
 }
 
 vec_basic UIntPoly::get_args() const
