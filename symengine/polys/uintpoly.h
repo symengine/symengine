@@ -126,7 +126,7 @@ public:
 
 }; // UIntDict
 
-class UIntPoly : public UPolyBase<UIntDict, UIntPoly, integer_class>
+class UIntPoly : public UPolyBase<UIntDict, UIntPoly>
 {
 public:
     IMPLEMENT_TYPEID(UINTPOLY)

@@ -195,7 +195,7 @@ public:
     }
 };
 
-template <typename Container, typename Poly, typename Coeff>
+template <typename Container, typename Poly>
 class UPolyBase : public Basic
 {
 protected:

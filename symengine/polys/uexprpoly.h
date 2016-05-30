@@ -181,7 +181,7 @@ public:
     }
 }; // UExprDict
 
-class UExprPoly : public UPolyBase<UExprDict, UExprPoly, Expression>
+class UExprPoly : public UPolyBase<UExprDict, UExprPoly>
 {
 public:
     IMPLEMENT_TYPEID(UEXPRPOLY)
