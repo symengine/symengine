@@ -205,7 +205,7 @@ public:
 
     // create a Poly from a vector of Coeff coefficients
     static RCP<const Poly> from_vec(const RCP<const Symbol> &var,
-                                        const std::vector<Coeff> &v)
+                                    const std::vector<Coeff> &v)
     {
         return make_rcp<const Poly>(var, std::move(v));
     }
