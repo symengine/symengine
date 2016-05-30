@@ -99,8 +99,18 @@ install(TARGETS symengine
             ARCHIVE DESTINATION lib
             LIBRARY DESTINATION lib
         )
-install(FILES ${HEADERS} "${symengine_BINARY_DIR}/symengine/symengine_config.h"
+install(FILES "${symengine_BINARY_DIR}/symengine/symengine_config.h"
     DESTINATION include/symengine)
+
+# make install
+macro(INSTALL_HEADERS_WITH_DIRECTORY HEADER_LIST)
+    FOREACH(HEADER ${${HEADER_LIST}})
+        STRING(REGEX MATCH "(.*)[/\\]" DIR ${HEADER})
+        install(FILES ${HEADER} DESTINATION include/symengine/${DIR})
+    ENDFOREACH(HEADER HEADER_LIST)
+endmacro(INSTALL_HEADERS_WITH_DIRECTORY)
+
+INSTALL_HEADERS_WITH_DIRECTORY(HEADERS)
 
 if (BUILD_TESTS)
     add_subdirectory(utilities/catch)
