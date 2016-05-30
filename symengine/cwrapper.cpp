@@ -12,6 +12,7 @@
 #include <symengine/add.h>
 #include <symengine/number.h>
 #include <symengine/complex.h>
+#include <symengine/complex_double.h>
 #include <symengine/constants.h>
 #include <symengine/visitor.h>
 #include <symengine/printer.h>
