@@ -42,7 +42,7 @@ inline std::ostream &print_vec(std::ostream &out, T &d)
             out << ", ";
         out << *p;
     }
-    out << "]}";
+    out << "}";
     return out;
 }
 
