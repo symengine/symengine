@@ -48,6 +48,11 @@ typedef std::map<RCP<const Integer>, unsigned, RCPIntegerKeyLess>
 typedef std::map<unsigned, integer_class> map_uint_mpz;
 typedef std::map<int, Expression> map_int_Expr;
 typedef std::vector<integer_class> vec_integer_class;
+typedef std::map<RCP<const Basic>, unsigned int, RCPBasicKeyLess>
+    map_basic_uint;
+typedef std::map<RCP<const Symbol>, unsigned int, RCPBasicKeyLess>
+    map_sym_uint;
+
 //! Part of umap_vec_mpz:
 typedef struct {
     inline std::size_t operator()(const vec_int &k) const
@@ -95,12 +100,6 @@ inline bool unified_eq(const std::vector<T> &a, const std::vector<T> &b)
 }
 
 template <typename T, typename U>
-inline bool unified_eq(const std::pair<T, U> &a, const std::pair<T, U> &b)
-{
-    return unified_eq(a.first, b.first) and unified_eq(a.second, b.second);
-}
-
-template <typename T, typename U>
 inline bool unified_eq(const std::set<T, U> &a, const std::set<T, U> &b)
 {
     return ordered_eq(a, b);
@@ -137,6 +136,12 @@ template <typename T,
 inline bool unified_eq(const T &a, const T &b)
 {
     return a == b;
+}
+
+template <typename T, typename U>
+inline bool unified_eq(const std::pair<T, U> &a, const std::pair<T, U> &b)
+{
+    return unified_eq(a.first, b.first) and unified_eq(a.second, b.second);
 }
 
 //! eq function base
@@ -183,7 +188,8 @@ bool ordered_eq(const T &A, const T &B)
 //! \return -1, 0, 1 for a < b, a == b, a > b
 template <typename T,
           typename = enable_if_t<std::is_arithmetic<T>::value
-                                 or std::is_same<T, integer_class>::value>>
+                                 or std::is_same<T, integer_class>::value
+                                 or std::is_same<T, unsigned int>::value>>
 inline int unified_compare(const T &a, const T &b)
 {
     if (a == b)
@@ -312,6 +318,20 @@ typedef std::unordered_map<RCP<const Basic>, unsigned int, RCPBasicHash,
 typedef std::unordered_map<vec_uint, integer_class, vec_uint_hash>
     umap_uvec_mpz;
 typedef std::unordered_map<vec_uint, Expression, vec_uint_hash> umap_uvec_expr;
+
+// Takes an unordered map of type M with key type K and returns a vector of K
+// ordered by C.
+template <class K, class M, class C = std::less<K>>
+std::vector<K> order_umap(const M &d)
+{
+    std::set<K, C> s;
+    std::vector<K> v;
+    for (auto bucket : d) {
+        s.insert(bucket.first);
+    }
+    v.insert(v.begin(), s.begin(), s.end());
+    return v;
+}
 
 //! print functions
 std::ostream &operator<<(std::ostream &out, const SymEngine::umap_basic_num &d);
