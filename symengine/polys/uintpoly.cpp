@@ -1,6 +1,4 @@
-#include <symengine/add.h>
-#include <symengine/constants.h>
-#include <symengine/mul.h>
+#include <symengine/symbol.h>
 #include <symengine/polys/uintpoly.h>
 #include <symengine/pow.h>
 
@@ -27,7 +25,7 @@ std::size_t UIntPoly::__hash__() const
     std::hash<std::string> hash_string;
     std::size_t seed = UINTPOLY;
 
-    seed += hash_string(this->var_->get_name());
+    seed += hash_string(var_->get_name());
     for (const auto &it : poly_.dict_) {
         std::size_t temp = UINTPOLY;
         hash_combine<unsigned int>(temp, it.first);

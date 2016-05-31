@@ -27,7 +27,7 @@ std::size_t UExprPoly::__hash__() const
     std::hash<std::string> hash_string;
     std::size_t seed = UEXPRPOLY;
 
-    seed += hash_string(this->var_->get_name());
+    seed += hash_string(var_->get_name());
     for (const auto &it : poly_.dict_) {
         std::size_t temp = UEXPRPOLY;
         hash_combine<unsigned int>(temp, it.first);

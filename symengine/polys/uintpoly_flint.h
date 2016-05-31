@@ -7,10 +7,10 @@
 
 #include <symengine/polys/upolybase.h>
 
- #ifdef HAVE_SYMENGINE_FLINT
+#ifdef HAVE_SYMENGINE_FLINT
 
- #include <flint/flint.h>
- #include <flint/fmpz_polyxx.h>
+#include <flint/flint.h>
+#include <flint/fmpz_polyxx.h>
 
 namespace SymEngine
 {
@@ -19,9 +19,13 @@ class UIntPolyFlint : public UPolyBase<flint::fmpz_polyxx, UIntPolyFlint>
 {
 public:
     IMPLEMENT_TYPEID(UINTPOLYFLINT)
+    //! Constructor of UIntPolyFlint class
+    UIntPolyFlint(const RCP<const Symbol> &var, flint::fmpz_polyxx &&dict);
+    //! \return size of the hash
+    std::size_t __hash__() const;
+    int compare(const Basic &o) const;
 
 }; // UIntPolyFLint
-
 }
 
 #endif // HAVE_SYMENGINE_FLINT
