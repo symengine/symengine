@@ -46,8 +46,8 @@ TEST_CASE("Constructor of UExprPoly", "[UExprPoly]")
     RCP<const UExprPoly> R = uexpr_poly(x, {{0, d}, {1, c}, {2, b}, {3, a}});
     REQUIRE(R->__str__() == "a*x**3 + b*x**2 + c*x + d");
 
-    UExprPoly S(x, {1, 0, 2, 1});
-    REQUIRE(S.__str__() == "x**3 + 2*x**2 + 1");
+    RCP<const UExprPoly> S = UExprPoly::from_vec(x, {1, 0, 2, 1});
+    REQUIRE(S->__str__() == "x**3 + 2*x**2 + 1");
 
     R = uexpr_poly(x, {{-1, d}});
     REQUIRE(R->__str__() == "d*x**(-1)");
@@ -58,6 +58,9 @@ TEST_CASE("Constructor of UExprPoly", "[UExprPoly]")
 
     RCP<const UExprPoly> T = uexpr_poly(none, map_int_Expr{});
     REQUIRE(T->__str__() == "0");
+
+    RCP<const UExprPoly> U = uexpr_poly(x, {{0, c}, {1, 0_z}, {2, d}});
+    REQUIRE(U->__str__() == "d*x**2 + c");
 }
 
 TEST_CASE("Adding two UExprPoly", "[UExprPoly]")

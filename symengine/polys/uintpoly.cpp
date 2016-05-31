@@ -10,20 +10,7 @@ namespace SymEngine
 UIntPoly::UIntPoly(const RCP<const Symbol> &var, UIntDict &&dict)
     : UPolyBase(var, std::move(dict))
 {
-
     SYMENGINE_ASSERT(is_canonical(poly_))
-}
-
-UIntPoly::UIntPoly(const RCP<const Symbol> &var,
-                   const std::vector<integer_class> &v)
-    : UPolyBase(var, std::move(v))
-{
-    poly_.dict_ = {};
-    for (unsigned int i = 0; i < v.size(); i++) {
-        if (v[i] != 0) {
-            poly_.dict_[i] = v[i];
-        }
-    }
 }
 
 bool UIntPoly::is_canonical(const UIntDict &dict) const
@@ -67,23 +54,13 @@ int UIntPoly::compare(const Basic &o) const
 RCP<const UIntPoly> UIntPoly::from_dict(const RCP<const Symbol> &var,
                                         UIntDict &&d)
 {
-    auto iter = d.dict_.begin();
-    while (iter != d.dict_.end()) {
-        if (iter->second == 0) {
-            auto toErase = iter;
-            iter++;
-            d.dict_.erase(toErase);
-        } else {
-            iter++;
-        }
-    }
     return make_rcp<const UIntPoly>(var, std::move(d));
 }
 
 RCP<const UIntPoly> UIntPoly::from_vec(const RCP<const Symbol> &var,
                                        const std::vector<integer_class> &v)
 {
-    return make_rcp<const UIntPoly>(var, std::move(v));
+    return make_rcp<const UIntPoly>(var, UIntDict::from_vec(v));
 }
 
 vec_basic UIntPoly::get_args() const
@@ -111,11 +88,6 @@ vec_basic UIntPoly::get_args() const
     if (poly_.dict_.empty())
         args.push_back(zero);
     return args;
-}
-
-integer_class UIntPoly::max_abs_coef() const
-{
-    return poly_.max_abs_coef();
 }
 
 integer_class UIntPoly::eval(const integer_class &x) const

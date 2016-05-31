@@ -132,9 +132,6 @@ public:
     IMPLEMENT_TYPEID(UINTPOLY)
     //! Constructor of UIntPoly class
     UIntPoly(const RCP<const Symbol> &var, UIntDict &&dict);
-    //! Constructor using a dense vector of integer_class coefficients
-
-    UIntPoly(const RCP<const Symbol> &var, const std::vector<integer_class> &v);
 
     //! \return true if canonical
     bool is_canonical(const UIntDict &dict) const;
@@ -146,15 +143,8 @@ public:
     // dictionary.
     static RCP<const UIntPoly> from_dict(const RCP<const Symbol> &var,
                                          UIntDict &&d);
-    // create a UIntPoly from a dense vector of integer_class
-    // coefficients
     static RCP<const UIntPoly> from_vec(const RCP<const Symbol> &var,
                                         const std::vector<integer_class> &v);
-
-    /*!
-    * Adds coef*var_**n to the dict_
-    */
-    integer_class max_abs_coef() const;
     //! Evaluates the UIntPoly at value x
     integer_class eval(const integer_class &x) const;
 

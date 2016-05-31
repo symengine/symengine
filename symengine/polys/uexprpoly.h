@@ -187,16 +187,11 @@ public:
     IMPLEMENT_TYPEID(UEXPRPOLY)
     //! Constructor of UExprPoly class
     UExprPoly(const RCP<const Symbol> &var, UExprDict &&dict);
-    //! Constructor using a dense vector of Expression
-    UExprPoly(const RCP<const Symbol> &var, const std::vector<Expression> &v);
 
     bool is_canonical(const UExprDict &dict) const;
     std::size_t __hash__() const;
     int compare(const Basic &o) const;
 
-    /*! Creates appropriate instance (i.e Symbol, Integer,
-    * Mul, Pow, UExprPoly) depending on the size of dictionary `d`.
-    */
     static RCP<const UExprPoly> from_dict(const RCP<const Symbol> &var,
                                           UExprDict &&d);
     static RCP<const UExprPoly> from_vec(const RCP<const Symbol> &var,

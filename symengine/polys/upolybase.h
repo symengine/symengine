@@ -50,6 +50,18 @@ public:
         dict_[1] = Value(1);
     }
 
+    static Wrapper from_vec(const std::vector<Value> &v)
+    {
+        Wrapper x;
+        x.dict_ = {};
+        for (unsigned int i = 0; i < v.size(); i++) {
+            if (v[i] != Value(0)) {
+                x.dict_[i] = v[i];
+            }
+        }
+        return x;
+    }
+
     Wrapper &operator=(Wrapper &&other) SYMENGINE_NOEXCEPT
     {
         if (this != &other)
@@ -120,6 +132,23 @@ public:
 
     Wrapper &operator*=(const Wrapper &other)
     {
+        if (dict_.empty())
+            return static_cast<Wrapper &>(*this);
+
+        if (other.dict_.empty()) {
+            *this = other;
+            return static_cast<Wrapper &>(*this);
+        }
+
+        // ! other is a just constant term
+        if (other.dict_.size() == 1
+            and other.dict_.find(0) != other.dict_.end()) {
+            for (const auto &i1 : dict_)
+                for (const auto &i2 : other.dict_)
+                    dict_[i1.first] = i1.second * i2.second;
+            return static_cast<Wrapper &>(*this);
+        }
+
         std::map<Key, Value> p;
         for (const auto &i1 : dict_)
             for (const auto &i2 : other.dict_)
@@ -178,19 +207,6 @@ public:
         : var_{var}, poly_{container}
     {
     }
-
-    // unify these two constructor? another template would be required
-    // may solve some more problems, like `get_degree` virtualization
-    UPolyBase(const RCP<const Symbol> &var, const std::vector<integer_class> &v)
-        : var_{var}
-    {
-    }
-
-    UPolyBase(const RCP<const Symbol> &var, const std::vector<Expression> &v)
-        : var_{var}
-    {
-    }
-
     // TODO think of something to make this purely virtual
     //! \returns the degree of the polynomial
     // virtual unsigned int get_degree() const = 0;
