@@ -31,11 +31,53 @@ int UIntPolyFlint::compare(const Basic &o) const
     if (cmp != 0)
         return cmp;
 
-    for (unsigned int i = 0; i < poly_.degree(); ++i) {
+    for (unsigned int i = 0; i < poly_.length(); ++i) {
         if (poly_.get_coeff(i) != s.poly_.get_coeff(i))
             return (poly_.get_coeff(i) < s.poly_.get_coeff(i)) ? -1 : 1;
     }
     return 0;
 }
 
+RCP<const UIntPolyFlint> UIntPolyFlint::from_dict(const RCP<const Symbol> &var,
+                                                  map_uint_mpz &&d)
+{
+    // benchmark this against dict->str->fmpz_polyxx
+    unsigned int deg = 0;
+    if (not d.empty())
+        deg = d.rbegin()->first;
+
+    flint::fmpz_polyxx f(deg + 1);
+    flint::fmpzxx r;
+    for (auto const &p : d) {
+        fmpz_set_mpz(r._data().inner, get_mpz_t(p.second));
+        f.set_coeff(p.first, r);
+    }
+    return make_rcp<const UIntPolyFlint>(var, std::move(f));
+}
+
+RCP<const UIntPolyFlint>
+UIntPolyFlint::from_vec(const RCP<const Symbol> &var,
+                        const std::vector<integer_class> &v)
+{
+    // benchmark this against vec->str->fmpz_polyxx
+    unsigned int deg = v.size() - 1;
+    while (v[deg] == integer_class(0))
+        deg--;
+
+    flint::fmpz_polyxx f(deg + 1);
+    flint::fmpzxx r;
+    for (unsigned int i = 0; i <= deg; i++) {
+        if (v[i] != integer_class(0)) {
+            fmpz_set_mpz(r._data().inner, get_mpz_t(v[i]));
+            f.set_coeff(i, r);
+        }
+    }
+    return make_rcp<const UIntPolyFlint>(var, std::move(f));
+}
+
+vec_basic UIntPolyFlint::get_args() const
+{
+    vec_basic args;
+    return args;
+}
 }
