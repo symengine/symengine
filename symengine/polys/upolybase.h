@@ -59,7 +59,7 @@ public:
                 x.dict_[i] = v[i];
             }
         }
-        return static_cast<Wrapper &>(x);
+        return x;
     }
 
     Wrapper &operator=(Wrapper &&other) SYMENGINE_NOEXCEPT
