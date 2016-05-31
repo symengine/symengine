@@ -73,9 +73,9 @@ bool check_series_term_mult_series1(RCP<const Basic> f, vec_int v,
 TEST_CASE("Multivarable Expansion", "[MultivariateSeries][UnivariateSeries]")
 {
     RCP<const Basic> f[18];
-    RCP<const Integer> one = make_rcp<Integer>(1);
-    RCP<const Integer> two = make_rcp<Integer>(2);
-    RCP<const Integer> three = make_rcp<Integer>(3);
+    RCP<const Integer> one = integer(1);
+    RCP<const Integer> two = integer(2);
+    RCP<const Integer> three = integer(3);
     RCP<const Symbol> w = symbol("w");
     RCP<const Symbol> x = symbol("x");
     RCP<const Symbol> y = symbol("y");

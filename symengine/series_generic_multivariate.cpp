@@ -516,7 +516,7 @@ RCP<const MultivariateSeries> mult_series1(RCP<const Basic> func,
     map_basic_uint precs2;
     umap_vec_expr dict;
     map_basic_basic b;
-    RCP<const Integer> zero = make_rcp<Integer>(0);
+    RCP<const Integer> zero = integer(0);
     for (auto bucket : precs) {
         vars.push_back(bucket.first);
         vb.push_back(bucket.first);
@@ -553,7 +553,7 @@ RCP<const MultivariateSeries> mult_series1(RCP<const Basic> func,
             whichvar = 0;
             for (RCP<const Symbol> var : vars) {
                 for (int i = 0; i < v[whichvar]; i++)
-                    deriv = div(deriv->diff(var), make_rcp<Integer>(i + 1));
+                    deriv = div(deriv->diff(var), integer(i + 1));
                 whichvar++;
             }
         }
