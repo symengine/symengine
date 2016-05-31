@@ -27,6 +27,8 @@ using SymEngine::umap_short_basic;
 using SymEngine::EulerGamma;
 using SymEngine::Number;
 using SymEngine::umap_int_basic;
+using SymEngine::pi;
+using SymEngine::I;
 
 using namespace SymEngine::literals;
 
@@ -239,7 +241,9 @@ TEST_CASE("Expression series expansion: sin, cos", "[Expansion of sin, cos]")
     auto z3 = add(sin(x), cos(x));
     auto z4 = mul(sin(x), cos(x));
     auto z5 = sin(atan(x));
+    auto z5prime = sin(add(x, integer(5)));
     auto z6 = cos(div(x, sub(one, x)));
+    auto z6prime = cos(add(x, integer(5)));
     auto z7 = sin(mul(symbol("a"), x));
 
     REQUIRE(series_coeff(z1, x, 10, 9)->__eq__(*rational(1, 362880)));
@@ -248,7 +252,11 @@ TEST_CASE("Expression series expansion: sin, cos", "[Expansion of sin, cos]")
     REQUIRE(series_coeff(z3, x, 9, 8)->__eq__(*rational(1, 40320)));
     REQUIRE(series_coeff(z4, x, 12, 11)->__eq__(*rational(-4, 155925)));
     REQUIRE(series_coeff(z5, x, 30, 27)->__eq__(*rational(-1300075, 8388608)));
+    REQUIRE(series_coeff(z5prime, x, 11, 10)
+                ->__eq__(*mul(rational(-1, 3628800), sin(integer(5)))));
     REQUIRE(series_coeff(z6, x, 15, 11)->__eq__(*rational(-125929, 362880)));
+    REQUIRE(series_coeff(z6prime, x, 15, 11)
+                ->__eq__(*mul(rational(1, 39916800), sin(integer(5)))));
     REQUIRE(series_coeff(z7, x, 10, 9)
                 ->__eq__(
                     *mul((pow(symbol("a"), integer(9))), rational(1, 362880))));
@@ -315,6 +323,7 @@ TEST_CASE("Expression series expansion: log, exp ", "[Expansion of log, exp]")
     auto ex3 = log(div(one, sub(one, x)));
     auto ex4 = exp(x);
     auto ex5 = exp(log(add(x, one)));
+    auto ex5prime = exp(add(x, integer(5)));
     auto ex6 = log(exp(x));
     auto ex7 = exp(sin(x));
     auto ex8 = pow(cos(x), sin(x));
@@ -326,6 +335,8 @@ TEST_CASE("Expression series expansion: log, exp ", "[Expansion of log, exp]")
     auto res1 = umap_short_basic{{0, integer(1)}, {1, integer(1)}};
     auto res2 = umap_short_basic{{1, integer(1)}};
     REQUIRE(expand_check_pairs(ex5, x, 20, res1));
+    REQUIRE(series_coeff(ex5prime, x, 20, 11)
+                ->__eq__(*mul(exp(integer(5)), rational(1, 39916800))));
     REQUIRE(expand_check_pairs(ex6, x, 20, res2));
     REQUIRE(series_coeff(ex7, x, 20, 10)->__eq__(*rational(-2951, 3628800)));
     REQUIRE(series_coeff(ex8, x, 20, 16)->__eq__(*rational(1381, 2661120)));
@@ -356,8 +367,28 @@ TEST_CASE("Expression series expansion: atan, tan, asin, cot, sec, csc",
     auto ex2 = atan(div(x, sub(one, x)));
     auto ex3 = tan(x);
     auto ex4 = tan(div(x, sub(one, x)));
+    auto ex4prime = tan(add(x, integer(5)));
+    auto ans4 = add(
+        pow(tan(integer(5)), integer(13)), // tan(5)**13 +
+        add(mul(rational(13, 3),
+                pow(tan(integer(5)), integer(11))), // (13/3)*tan(5)**11 +
+            add(mul(rational(338, 45),
+                    pow(tan(integer(5)), integer(9))), // (338/45)*tan(5)**9 +
+                add(mul(rational(6214, 945),
+                        pow(tan(integer(5)),
+                            integer(7))), // (6214/945)*tan(5)**7
+                    add(mul(rational(6071, 2025),
+                            pow(tan(integer(5)),
+                                integer(5))), // + (6071/2025)*tan(5)**5
+                        add(mul(rational(1729, 2673),
+                                pow(tan(integer(5)),
+                                    integer(3))), // + (1729/2673)*tan(5)**3
+                            mul(rational(21844, 467775),
+                                tan(integer(
+                                    5))))))))); // + (21844/467775)*tan(5)
     auto ex5 = asin(x);
     auto ex6 = asin(div(x, sub(one, x)));
+    auto ex6prime = asin(add(x, integer(5)));
     auto ex7 = cot(x);
     auto ex8 = cot(sin(x));
     auto res1 = umap_short_basic{{-1, integer(1)}, {1, rational(-1, 3)}};
@@ -372,8 +403,12 @@ TEST_CASE("Expression series expansion: atan, tan, asin, cot, sec, csc",
     REQUIRE(series_coeff(ex2, x, 40, 33)->__eq__(*rational(65536, 33)));
     REQUIRE(series_coeff(ex3, x, 20, 13)->__eq__(*rational(21844, 6081075)));
     REQUIRE(series_coeff(ex4, x, 20, 12)->__eq__(*rational(1303712, 14175)));
+    REQUIRE(expand(series_coeff(ex4prime, x, 20, 12))->__eq__(*ans4));
     REQUIRE(series_coeff(ex5, x, 20, 15)->__eq__(*rational(143, 10240)));
     REQUIRE(series_coeff(ex6, x, 20, 16)->__eq__(*rational(1259743, 2048)));
+    REQUIRE(series_coeff(ex6prime, x, 10, 5)
+                ->__eq__(*mul(rational(-5603, 318504960),
+                              mul(I, sqrt(integer(24))))));
     REQUIRE(expand_check_pairs(ex7, x, 5, res1));
     REQUIRE(expand_check_pairs(ex8, x, 10, res2));
     REQUIRE(series_coeff(ex9, x, 20, 8)->__eq__(*rational(277, 8064)));
@@ -391,6 +426,29 @@ TEST_CASE("Expression series expansion: sinh, cosh, tanh, asinh, atanh",
     auto ex4 = cosh(div(x, sub(one, x)));
     auto ex5 = tanh(x);
     auto ex6 = tanh(div(x, sub(one, x)));
+    auto ex6prime = tanh(add(x, integer(5)));
+    auto ans6 = add(
+        mul(rational(-2141, 189),
+            pow(tanh(integer(5)), integer(9))), //-2141*tanh(5)**9/189
+        add(mul(integer(-5),
+                pow(tanh(integer(5)), integer(13))), //- 5*tanh(5)**13
+            add(mul(rational(-24779, 10395),
+                    pow(tanh(integer(5)),
+                        integer(5))), //- 24779*tanh(5)**5/10395
+                add(mul(rational(-929569, 42567525),
+                        tanh(integer(5))), //- 929569*tanh(5)/42567525
+                    add(mul(rational(16769029, 42567525),
+                            pow(tanh(integer(5)),
+                                integer(3))), //+ 16769029*tanh(5)**3/42567525
+                        add(pow(tanh(integer(5)), integer(15)), //+ tanh(5)**15
+                            add(mul(rational(2207, 315),
+                                    pow(tanh(integer(5)),
+                                        integer(7))), //+ 2207*tanh(5)**7/315
+                                mul(rational(31, 3),
+                                    pow(tanh(integer(5)),
+                                        integer(
+                                            11)))))))))); //+ 31*tanh(5)**11/3
+
     auto ex7 = atanh(x);
     auto ex8 = atanh(div(x, sub(one, x)));
     auto ex9 = asinh(x);
@@ -402,6 +460,7 @@ TEST_CASE("Expression series expansion: sinh, cosh, tanh, asinh, atanh",
     REQUIRE(series_coeff(ex4, x, 20, 11)->__eq__(*rational(3756889, 362880)));
     REQUIRE(series_coeff(ex5, x, 20, 13)->__eq__(*rational(21844, 6081075)));
     REQUIRE(series_coeff(ex6, x, 20, 14)->__eq__(*rational(225979, 66825)));
+    REQUIRE(expand(series_coeff(ex6prime, x, 20, 14))->__eq__(*ans6));
     REQUIRE(series_coeff(ex7, x, 100, 99)->__eq__(*rational(1, 99)));
     REQUIRE(series_coeff(ex8, x, 20, 16)->__eq__(*integer(2048)));
     REQUIRE(series_coeff(ex9, x, 20, 15)->__eq__(*rational(-143, 10240)));

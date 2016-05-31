@@ -80,7 +80,7 @@ RCP<const Number> Integer::pow_negint(const Integer &other) const
     if (is_a<Integer>(*tmp)) {
         rational_class q(mp_sign(static_cast<const Integer &>(*tmp).i),
                          mp_abs(static_cast<const Integer &>(*tmp).i));
-        return make_rcp<const Rational>(std::move(q));
+        return Rational::from_mpq(std::move(q));
     } else {
         throw std::runtime_error("powint returned non-integer");
     }
