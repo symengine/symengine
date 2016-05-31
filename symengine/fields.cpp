@@ -212,4 +212,29 @@ GaloisField::gf_quo(const RCP<const GaloisField> &o) const
     }
     return gf(dict_quo, modulo_);
 }
+
+RCP<const GaloisField> GaloisField::gf_lshift(const integer_class n) const
+{
+    map_uint_mpz dict_out;
+    for (auto iter : dict_) {
+        dict_out[mp_get_si(iter.first + n)] = iter.second;
+    }
+    return gf(dict_out, modulo_);
+}
+
+void GaloisField::gf_rshift(const integer_class n,
+                            const Ptr<RCP<const GaloisField>> &quo,
+                            const Ptr<RCP<const GaloisField>> &rem) const
+{
+    map_uint_mpz dict_quo, dict_rem;
+    for (auto iter : dict_) {
+        integer_class a = iter.first - n;
+        if (a >= 0)
+            dict_quo[mp_get_si(a)] = iter.second;
+        else
+            dict_rem[iter.first] = iter.second;
+    }
+    *quo = gf(dict_quo, modulo_);
+    *rem = gf(dict_rem, modulo_);
+}
 }

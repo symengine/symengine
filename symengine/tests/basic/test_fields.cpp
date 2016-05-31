@@ -17,11 +17,10 @@ using namespace SymEngine::literals;
 TEST_CASE("GaloisField : Basic", "[basic]")
 {
     RCP<const GaloisField> r1, r2, r3, r4;
-    std::vector<integer_class> a = {2, 3, 4};
-    std::vector<integer_class> b = {3, 3, 6, 6};
+    std::vector<integer_class> a = {2_z, 3_z, 4_z};
+    std::vector<integer_class> b = {3_z, 3_z, 6_z, 6_z};
     r1 = gf(a, 5_z);
     r2 = gf(b, 5_z);
-    unsigned int k = 0;
     // std::cout << *r1 << "\n";
     map_uint_mpz mp = r1->dict_;
     REQUIRE(mp[0] == 2);
@@ -80,7 +79,7 @@ TEST_CASE("GaloisField : Basic", "[basic]")
     r3 = r1->gf_sub(r2);
     mp = r3->dict_;
     REQUIRE(mp.empty());
-    a = {2};
+    a = {2_z};
     r2 = gf(a, 11_z);
     r3 = r1->gf_add(r2);
     mp = r3->dict_;
@@ -92,7 +91,7 @@ TEST_CASE("GaloisField : Basic", "[basic]")
     mp = r2->dict_;
     REQUIRE(mp.empty());
 
-    a = {1};
+    a = {1_z};
     r1 = gf(a, 11_z);
     r2 = r1->gf_neg();
     mp = r2->dict_;
@@ -119,7 +118,7 @@ TEST_CASE("GaloisField : Basic", "[basic]")
     mp = r2->dict_;
     REQUIRE(mp[0] == 4);
 
-    a = {1, 2, 3};
+    a = {1_z, 2_z, 3_z};
     r1 = gf(a, 11_z);
     r2 = r1->gf_neg();
     mp = r2->dict_;
@@ -145,16 +144,16 @@ TEST_CASE("GaloisField : Basic", "[basic]")
     REQUIRE(mp[1] == 3);
     REQUIRE(mp[2] == 10);
 
-    a = {3, 2, 1};
-    b = {8, 9, 10};
+    a = {3_z, 2_z, 1_z};
+    b = {8_z, 9_z, 10_z};
     r1 = gf(a, 11_z);
     r2 = gf(b, 11_z);
     mp = r1->gf_sub(r2)->dict_;
     REQUIRE(mp[0] == 6);
     REQUIRE(mp[1] == 4);
     REQUIRE(mp[2] == 2);
-    a = {3, 0, 0, 6, 1, 2};
-    b = {4, 0, 1, 0};
+    a = {3_z, 0_z, 0_z, 6_z, 1_z, 2_z};
+    b = {4_z, 0_z, 1_z, 0_z};
     r1 = gf(a, 11_z);
     r2 = gf(b, 11_z);
     mp = r1->gf_mul(r2)->dict_;
@@ -168,8 +167,8 @@ TEST_CASE("GaloisField : Basic", "[basic]")
     REQUIRE(mp[7] == 2);
     REQUIRE(mp[8] == 0);
 
-    a = {0, 1, 2, 3, 4, 5};
-    b = {0, 3, 2, 1};
+    a = {0_z, 1_z, 2_z, 3_z, 4_z, 5_z};
+    b = {0_z, 3_z, 2_z, 1_z};
     r1 = gf(a, 7_z);
     r2 = gf(b, 7_z);
     r1->gf_div(r2, outArg(r3), outArg(r4));
@@ -183,8 +182,8 @@ TEST_CASE("GaloisField : Basic", "[basic]")
     REQUIRE(mp[2] == 6);
     REQUIRE(eq(*r3, *(r1->gf_quo(r2))));
 
-    a = {0, 1, 2, 3, 4, 5};
-    b = {3, 2, 1};
+    a = {0_z, 1_z, 2_z, 3_z, 4_z, 5_z};
+    b = {3_z, 2_z, 1_z};
     r1 = gf(a, 7_z);
     r2 = gf(b, 7_z);
     r1->gf_div(r2, outArg(r3), outArg(r4));
@@ -198,12 +197,60 @@ TEST_CASE("GaloisField : Basic", "[basic]")
     REQUIRE(mp[1] == 3);
     REQUIRE(eq(*r3, *(r1->gf_quo(r2))));
 
-    a = {1};
-    b = {3, 2, 1};
+    a = {1_z};
+    b = {3_z, 2_z, 1_z};
     r1 = gf(a, 7_z);
     r2 = gf(b, 7_z);
     r1->gf_div(r2, outArg(r3), outArg(r4));
     REQUIRE(r3->dict_.empty());
     mp = r4->dict_;
     REQUIRE(mp[0] == 1);
+
+    a = {};
+    r1 = gf(a, 7_z);
+    r2 = r1->gf_lshift(5_z);
+    REQUIRE(r2->dict_.empty());
+    r1->gf_rshift(5_z, outArg(r2), outArg(r3));
+    REQUIRE(r2->dict_.empty());
+    REQUIRE(r2->dict_.empty());
+    a = {5_z, 4_z, 3_z, 2_z, 1_z};
+    r1 = gf(a, 7_z);
+    mp = r1->gf_lshift(1_z)->dict_;
+    REQUIRE(mp[0] == 0);
+    REQUIRE(mp[1] == 5);
+    REQUIRE(mp[2] == 4);
+    REQUIRE(mp[3] == 3);
+    REQUIRE(mp[4] == 2);
+    REQUIRE(mp[5] == 1);
+    mp = r1->gf_lshift(2_z)->dict_;
+    REQUIRE(mp[0] == 0);
+    REQUIRE(mp[1] == 0);
+    REQUIRE(mp[2] == 5);
+    REQUIRE(mp[3] == 4);
+    REQUIRE(mp[4] == 3);
+    REQUIRE(mp[5] == 2);
+    REQUIRE(mp[6] == 1);
+    r1->gf_rshift(0_z, outArg(r2), outArg(r3));
+    REQUIRE(eq(*r1, *r2));
+    REQUIRE(r3->dict_.empty());
+    r1->gf_rshift(5_z, outArg(r2), outArg(r3));
+    mp = r2->dict_;
+    r1->gf_rshift(1_z, outArg(r2), outArg(r3));
+    mp = r2->dict_;
+    REQUIRE(mp[0] == 4);
+    REQUIRE(mp[1] == 3);
+    REQUIRE(mp[2] == 2);
+    REQUIRE(mp[3] == 1);
+    REQUIRE(mp[4] == 0);
+    mp = r3->dict_;
+    REQUIRE(mp[0] == 5);
+    REQUIRE(mp[1] == 0);
+    r1->gf_rshift(3_z, outArg(r2), outArg(r3));
+    mp = r2->dict_;
+    REQUIRE(mp[0] == 2);
+    REQUIRE(mp[1] == 1);
+    mp = r3->dict_;
+    REQUIRE(mp[0] == 5);
+    REQUIRE(mp[1] == 4);
+    REQUIRE(mp[2] == 3);
 }

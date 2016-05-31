@@ -43,6 +43,11 @@ public:
     void gf_div(const RCP<const GaloisField> &o,
                 const Ptr<RCP<const GaloisField>> &quo,
                 const Ptr<RCP<const GaloisField>> &rem) const;
+
+    RCP<const GaloisField> gf_lshift(const integer_class n) const;
+    void gf_rshift(const integer_class n,
+                   const Ptr<RCP<const GaloisField>> &quo,
+                   const Ptr<RCP<const GaloisField>> &rem) const;
 };
 
 //! \return RCP<const GaloisField>
