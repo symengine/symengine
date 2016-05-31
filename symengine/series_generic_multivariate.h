@@ -114,7 +114,7 @@ multivariate_series(RCP<const Symbol> i, unsigned int prec,
 
 // Use repeated differentiation
 RCP<const MultivariateSeries> mult_series1(RCP<const Basic> func,
-                                           const map_basic_uint &&precs);
+                                           const map_sym_uint &&precs);
 
 template <typename Series>
 RCP<const MultivariateSeries> mult_series(RCP<const Basic> func, const map_basic_uint && precs)
@@ -128,11 +128,11 @@ RCP<const MultivariateSeries> mult_series(RCP<const Basic> func, const map_basic
         vars.push_back(bucket.first);
     }
     unsigned int whichvar = 0;
-    for (RCP<const Symbol> variable : vars) {
+    for (RCP<const Basic> variable : vars) {
         std::vector<std::pair<vec_int, Expression>> temp;
         for (auto &bucket : dict) {
             RCP<const Series> s = Series::series(
-                bucket.second.get_basic(), variable->get_name(),
+                bucket.second.get_basic(), variable->__str__(),
                 precs.find(variable)->second);
             bucket.second = s->get_coeff(0);
             for (int i = Series::ldegree(s->get_poly()); i < 0 ||  static_cast<unsigned int>(i) < precs.find(variable)->second; i++) {
@@ -148,22 +148,18 @@ RCP<const MultivariateSeries> mult_series(RCP<const Basic> func, const map_basic
             dict.insert(term);
         whichvar++;
     }
+    umap_vec_expr dict2;
+    for (auto bucket : dict)
+        dict2.insert(std::pair<vec_int,Expression>(bucket.first,expand(bucket.second)));
 
     vec_basic vb;
     vb.insert(vb.begin(),vars.begin(), vars.end());
     return make_rcp<const MultivariateSeries>(
-        MultivariatePolynomialExpr::create(vars, std::move(dict)),
+        MultivariatePolynomialExpr::create(vars, std::move(dict2)),
         (*vars.begin())->__str__(), precs.begin()->second, std::move(precs));
 
 }
-/*
-// Expand variable by variable using UnivariateSeries::series
-RCP<const MultivariateSeries> mult_series2(RCP<const Basic> func,
-                                           const map_basic_uint &&precs);
-// Expand variable by variable using MutlivariateSeries::series
-RCP<const MultivariateSeries> mult_series3(RCP<const Basic> func,
-                                           const map_basic_uint &&precs);
-*/
+
 } // SymEngine
 
 #endif

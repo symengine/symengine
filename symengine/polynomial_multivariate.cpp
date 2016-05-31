@@ -278,7 +278,7 @@ std::string MultivariatePolynomialExpr::toString() const
                     expr << "*";
                 }
                 expr << it->__str__();
-                if (exps[i] > 1)
+                if (exps[i] > 1 || exps[i] < 0)
                     expr << "**" << exps[i];
                 first_var = false;
             }

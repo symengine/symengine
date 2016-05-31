@@ -187,7 +187,7 @@ public:
             Vec v1, v2;
             v1.resize(vars_.size(), 0);
             v2.resize(o_.vars_.size(), 0);
-            if (dict_.begin()->first == v1 || o_.dict_.begin()->first == v2)
+            if (dict_.begin()->first == v1 && o_.dict_.begin()->first == v2)
                 return true;
             return false;
         } else if (0 == dict_.size() && 0 == o_.dict_.size()) {
