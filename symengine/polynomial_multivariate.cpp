@@ -73,7 +73,7 @@ integer_class MultivariateIntPolynomialExpr::eval(
     return ans;
 }
 
-std::string MultivariateIntPolynomialExpr::toString() const 
+std::string MultivariateIntPolynomialExpr::toString() const
 {
     std::ostringstream s;
     bool first = true; // is this the first term being printed out?

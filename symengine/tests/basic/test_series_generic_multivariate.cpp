@@ -57,10 +57,10 @@ TEST_CASE("Create MultivariateSeries", "[MultivariateSeries]")
         {{{1, 0}, comp1}, {{0, 0}, comp2}, {{2, 2}, comp3}, {{3, 4}, comp4}});
     MultivariatePolynomialExpr p3 = MultivariatePolynomialExpr::create(
         {x, y}, {{{0, 0}, Expression(integer(0))}});
-    MultivariatePolynomialExpr p4 = 
-        MultivariatePolynomialExpr::create(s, {{v, Expression(0)}});
-    MultivariatePolynomialExpr p5 = 
-        MultivariatePolynomialExpr::create(s, {{v, comp1}});
+    MultivariatePolynomialExpr p4
+        = MultivariatePolynomialExpr::create(s, {{v, Expression(0)}});
+    MultivariatePolynomialExpr p5
+        = MultivariatePolynomialExpr::create(s, {{v, comp1}});
 
     // REQUIRE(p1->__str__() == "2*x**2 y - b*x y**2 + a*x y - 3*y");
     // REQUIRE(p2->__str__()
@@ -87,7 +87,8 @@ TEST_CASE("Create MultivariateSeries", "[MultivariateSeries]")
 
     REQUIRE(ms1.__str__()
             == "-3*y + a*x*y - b*x*y**2 + 2*x**2*y + O(|x|**5 + |y|**3)");
-    REQUIRE(ms2.__str__() == "(2 - d) + (1 + c)*x + (-3 + e)*x**2*y**2 + (-4 - f)*x**3*y**4 + O(|x|**4 + |y|**4)");
+    REQUIRE(ms2.__str__() == "(2 - d) + (1 + c)*x + (-3 + e)*x**2*y**2 + (-4 - "
+                             "f)*x**3*y**4 + O(|x|**4 + |y|**4)");
     REQUIRE(ms3.__str__() == "0 + O(|x|**3 + |y|**5)");
     REQUIRE(ms4.__str__() == "0 + O(|x|**2 + |y|**4)");
     REQUIRE(ms5.__str__() == "(1 + c) + O(|x|**1 + |y|**1)");
@@ -205,16 +206,16 @@ TEST_CASE("Testing MultivariateSeries::__eq__(), __hash__, compare",
     Expression expr3(mul(a, c));
     Expression expr4(div(b, a));
 
-    MultivariatePolynomialExpr p1 = (
-        MultivariatePolynomialExpr::create({x, y, z}, {{{0, 0, 0}, expr1},
-                                                      {{1, 0, 0}, expr2},
-                                                      {{0, 1, 1}, expr3},
-                                                      {{0, 2, 0}, expr4}}));
-    MultivariatePolynomialExpr p2 = (
-        MultivariatePolynomialExpr::create({x, y, z}, {{{0, 1, 0}, expr1},
-                                                      {{2, 0, 0}, expr2},
-                                                      {{3, 1, 1}, expr3},
-                                                      {{1, 2, 4}, expr4}}));
+    MultivariatePolynomialExpr p1
+        = (MultivariatePolynomialExpr::create({x, y, z}, {{{0, 0, 0}, expr1},
+                                                          {{1, 0, 0}, expr2},
+                                                          {{0, 1, 1}, expr3},
+                                                          {{0, 2, 0}, expr4}}));
+    MultivariatePolynomialExpr p2
+        = (MultivariatePolynomialExpr::create({x, y, z}, {{{0, 1, 0}, expr1},
+                                                          {{2, 0, 0}, expr2},
+                                                          {{3, 1, 1}, expr3},
+                                                          {{1, 2, 4}, expr4}}));
 
     map_basic_uint m1 = {{x, 2}, {y, 2}, {z, 3}};
     map_basic_uint m2 = {{x, 2}, {y, 2}, {z, 10}};
@@ -245,12 +246,12 @@ TEST_CASE("Integration of MultivariateSeries", "[MultivariateSeries]")
     RCP<const Symbol> x = symbol("x");
     RCP<const Symbol> y = symbol("y");
     RCP<const Symbol> z = symbol("z");
-    MultivariatePolynomialExpr ex = (
-        MultivariatePolynomialExpr::create({x}, {{{1}, Expression(1)}}));
-    MultivariatePolynomialExpr why = (
-        MultivariatePolynomialExpr::create({y}, {{{1}, Expression(1)}}));
-    MultivariatePolynomialExpr zee = (
-        MultivariatePolynomialExpr::create({z}, {{{1}, Expression(1)}}));
+    MultivariatePolynomialExpr ex
+        = (MultivariatePolynomialExpr::create({x}, {{{1}, Expression(1)}}));
+    MultivariatePolynomialExpr why
+        = (MultivariatePolynomialExpr::create({y}, {{{1}, Expression(1)}}));
+    MultivariatePolynomialExpr zee
+        = (MultivariatePolynomialExpr::create({z}, {{{1}, Expression(1)}}));
     RCP<const Symbol> a = symbol("a");
     RCP<const Symbol> b = symbol("b");
     RCP<const Symbol> c = symbol("c");
@@ -259,39 +260,39 @@ TEST_CASE("Integration of MultivariateSeries", "[MultivariateSeries]")
     Expression expr2(sub(mul(two, a), b));
     Expression expr3(mul(a, c));
     Expression expr4(div(b, a));
-    MultivariatePolynomialExpr p = (
-        MultivariatePolynomialExpr::create({x, y}, {{{2, 1}, expr1},
-                                                   {{1, 2}, expr2},
-                                                   {{2, 0}, expr3},
-                                                   {{0, 2}, expr4},
-                                                   {{1, 0}, expr1},
-                                                   {{0, 1}, expr2},
-                                                   {{0, 0}, expr3}}));
+    MultivariatePolynomialExpr p
+        = (MultivariatePolynomialExpr::create({x, y}, {{{2, 1}, expr1},
+                                                       {{1, 2}, expr2},
+                                                       {{2, 0}, expr3},
+                                                       {{0, 2}, expr4},
+                                                       {{1, 0}, expr1},
+                                                       {{0, 1}, expr2},
+                                                       {{0, 0}, expr3}}));
 
-    MultivariatePolynomialExpr q1 = (
-        MultivariatePolynomialExpr::create({x, y}, {{{3, 1}, expr1 / 3},
-                                                   {{2, 2}, expr2 / 2},
-                                                   {{3, 0}, expr3 / 3},
-                                                   {{1, 2}, expr4},
-                                                   {{2, 0}, expr1 / 2},
-                                                   {{1, 1}, expr2},
-                                                   {{1, 0}, expr3}}));
-    MultivariatePolynomialExpr q2 = (
-        MultivariatePolynomialExpr::create({x, y}, {{{2, 2}, expr1 / 2},
-                                                   {{1, 3}, expr2 / 3},
-                                                   {{2, 1}, expr3},
-                                                   {{0, 3}, expr4 / 3},
-                                                   {{1, 1}, expr1},
-                                                   {{0, 2}, expr2 / 2},
-                                                   {{0, 1}, expr3}}));
-    MultivariatePolynomialExpr q3 = (
-        MultivariatePolynomialExpr::create({x, y, z}, {{{2, 1, 1}, expr1},
-                                                      {{1, 2, 1}, expr2},
-                                                      {{2, 0, 1}, expr3},
-                                                      {{0, 2, 1}, expr4},
-                                                      {{1, 0, 1}, expr1},
-                                                      {{0, 1, 1}, expr2},
-                                                      {{0, 0, 1}, expr3}}));
+    MultivariatePolynomialExpr q1
+        = (MultivariatePolynomialExpr::create({x, y}, {{{3, 1}, expr1 / 3},
+                                                       {{2, 2}, expr2 / 2},
+                                                       {{3, 0}, expr3 / 3},
+                                                       {{1, 2}, expr4},
+                                                       {{2, 0}, expr1 / 2},
+                                                       {{1, 1}, expr2},
+                                                       {{1, 0}, expr3}}));
+    MultivariatePolynomialExpr q2
+        = (MultivariatePolynomialExpr::create({x, y}, {{{2, 2}, expr1 / 2},
+                                                       {{1, 3}, expr2 / 3},
+                                                       {{2, 1}, expr3},
+                                                       {{0, 3}, expr4 / 3},
+                                                       {{1, 1}, expr1},
+                                                       {{0, 2}, expr2 / 2},
+                                                       {{0, 1}, expr3}}));
+    MultivariatePolynomialExpr q3
+        = (MultivariatePolynomialExpr::create({x, y, z}, {{{2, 1, 1}, expr1},
+                                                          {{1, 2, 1}, expr2},
+                                                          {{2, 0, 1}, expr3},
+                                                          {{0, 2, 1}, expr4},
+                                                          {{1, 0, 1}, expr1},
+                                                          {{0, 1, 1}, expr2},
+                                                          {{0, 0, 1}, expr3}}));
 
     REQUIRE(MultivariateSeries::integrate(p, ex) == q1);
     REQUIRE(MultivariateSeries::integrate(p, why) == q2);

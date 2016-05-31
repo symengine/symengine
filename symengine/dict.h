@@ -50,8 +50,7 @@ typedef std::map<int, Expression> map_int_Expr;
 typedef std::vector<integer_class> vec_integer_class;
 typedef std::map<RCP<const Basic>, unsigned int, RCPBasicKeyLess>
     map_basic_uint;
-typedef std::map<RCP<const Symbol>, unsigned int, RCPBasicKeyLess>
-    map_sym_uint;
+typedef std::map<RCP<const Symbol>, unsigned int, RCPBasicKeyLess> map_sym_uint;
 
 //! Part of umap_vec_mpz:
 typedef struct {

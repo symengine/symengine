@@ -135,8 +135,7 @@ TEST_CASE("Multiplication of two UExprDict with precision",
     REQUIRE(f == d);
 }
 
-TEST_CASE("Exponentiation of UExprDict with precision",
-          "[UnivariateSeries]")
+TEST_CASE("Exponentiation of UExprDict with precision", "[UnivariateSeries]")
 {
     RCP<const Symbol> x = symbol("x");
     UExprDict zero({{0, Expression(0)}});
@@ -144,8 +143,7 @@ TEST_CASE("Exponentiation of UExprDict with precision",
     UExprDict a({{0, 1}, {1, 2}, {2, 1}});
     UExprDict b({{0, -1}, {1, -2}, {2, -1}});
     UExprDict c({{0, 1}, {1, 4}, {2, 6}, {3, 4}});
-    UExprDict d(
-        {{0, -1}, {1, -6}, {2, -15}, {3, -20}, {4, -15}});
+    UExprDict d({{0, -1}, {1, -6}, {2, -15}, {3, -20}, {4, -15}});
 
     UExprDict e = UnivariateSeries::pow(a, 2, 4);
     UExprDict f = UnivariateSeries::pow(b, 3, 5);
@@ -197,7 +195,7 @@ TEST_CASE("UnivariateSeries: compare, as_basic, as_dict", "[UnivariateSeries]")
 #define invseries_coeff(EX, SYM, PREC, COEFF)                                  \
     UnivariateSeries::series_reverse(                                          \
         UnivariateSeries::series(EX, SYM->get_name(), PREC)->get_poly(),       \
-        UExprDict(SYM->get_name()), PREC)                       \
+        UExprDict(SYM->get_name()), PREC)                                      \
         .find_cf(COEFF)                                                        \
         .get_basic()
 

@@ -330,18 +330,18 @@ public:
         : MPolyBase(std::move(vars), std::move(degrees), std::move(dict))
     {
     }
-    explicit MultivariatePolynomialExpr(int i) 
+    explicit MultivariatePolynomialExpr(int i)
     {
-        if(i != 0) {
+        if (i != 0) {
             vec_int v;
-            dict_.insert(std::pair<vec_int,Expression>(v,Expression(i)));
+            dict_.insert(std::pair<vec_int, Expression>(v, Expression(i)));
         }
     }
-    explicit MultivariatePolynomialExpr(Expression i) 
+    explicit MultivariatePolynomialExpr(Expression i)
     {
-        if(i != 0) {
+        if (i != 0) {
             vec_int v;
-            dict_.insert(std::pair<vec_int,Expression>(v,i));
+            dict_.insert(std::pair<vec_int, Expression>(v, i));
         }
     }
     // IMPLEMENT_TYPEID(MULTIVARIATEPOLYNOMIALEXPR);
@@ -389,7 +389,7 @@ public:
         }
         return MultivariatePolynomialExpr::from_dict(vars_, std::move(d));
     }
-    
+
     RCP<const Basic> get_basic() const
     {
         return SymEngine::add(this->get_args());
@@ -586,7 +586,7 @@ public:
         return this->__eq__(o);
     }
 
-    bool operator==(const Expression &o) const 
+    bool operator==(const Expression &o) const
     {
         return this->__eq__(convert(o));
     }

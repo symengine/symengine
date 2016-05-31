@@ -44,8 +44,7 @@ bool MultivariateSeries::is_canonical(const MultivariatePolynomialExpr p,
               //return false;*/
     } else {
         // check that p is a polynomial in terms of symbol(var)
-        if (p.vars_.find(symbol(var))
-            == p.vars_.end()) {
+        if (p.vars_.find(symbol(var)) == p.vars_.end()) {
             return false;
         }
 
@@ -67,8 +66,7 @@ bool MultivariateSeries::is_canonical(const MultivariatePolynomialExpr p,
             return false;
         if (p.degrees_.find(s)->second > 0
             && precs.find(s)->second
-                   < static_cast<unsigned int>(
-                         p.degrees_.find(s)->second))
+                   < static_cast<unsigned int>(p.degrees_.find(s)->second))
             return false;
     }
 
@@ -79,8 +77,8 @@ RCP<const MultivariateSeries>
 MultivariateSeries::series(const RCP<const Basic> &t, const std::string &x,
                            unsigned int prec)
 {
-    MultivariatePolynomialExpr p =
-        MultivariatePolynomialExpr::create({symbol(x)}, {{{1}, 1}});
+    MultivariatePolynomialExpr p
+        = MultivariatePolynomialExpr::create({symbol(x)}, {{{1}, 1}});
     SeriesVisitor<MultivariatePolynomialExpr, Expression, MultivariateSeries>
         visitor(std::move(p), x, prec);
     return visitor.series(t);
@@ -208,14 +206,16 @@ RCP<const Basic> MultivariateSeries::get_coeff(int deg) const
 
 MultivariatePolynomialExpr
 MultivariateSeries::add(const MultivariatePolynomialExpr &s,
-                        const MultivariatePolynomialExpr &r, map_basic_uint prec)
+                        const MultivariatePolynomialExpr &r,
+                        map_basic_uint prec)
 {
     return (s + r).truncate(prec);
 }
 
 MultivariatePolynomialExpr
 MultivariateSeries::mul(const MultivariatePolynomialExpr &s,
-                        const MultivariatePolynomialExpr &r, map_basic_uint prec)
+                        const MultivariatePolynomialExpr &r,
+                        map_basic_uint prec)
 {
     return (s * r).truncate(prec);
 }
@@ -252,8 +252,8 @@ MultivariateSeries::mul(const MultivariatePolynomialExpr &a,
     set_basic s;
     vec_uint translator1;
     vec_uint translator2;
-    unsigned int size = reconcile(translator1, translator2, s,
-                                  a.vars_, b.vars_);
+    unsigned int size
+        = reconcile(translator1, translator2, s, a.vars_, b.vars_);
     for (auto bucket1 : a.dict_) {
         for (auto bucket2 : b.dict_) {
             vec_int target = translate_and_add<vec_int>(
@@ -280,7 +280,7 @@ MultivariateSeries::mul(const MultivariatePolynomialExpr &a,
     }
 
     vec_basic vb;
-    vb.insert(vb.begin(),s.begin(),s.end());
+    vb.insert(vb.begin(), s.begin(), s.end());
     return MultivariatePolynomialExpr::create(vb, std::move(d));
 }
 
@@ -297,8 +297,9 @@ MultivariateSeries::pow(const MultivariatePolynomialExpr &base, int exp,
             return MultivariatePolynomialExpr(0);
 
         vec_basic vb;
-        vb.insert(vb.begin(),base.vars_.begin(), base.vars_.end());
-        return MultivariatePolynomialExpr::create(vb, {{v, pow_ex(base.dict_.begin()->second, exp)}});
+        vb.insert(vb.begin(), base.vars_.begin(), base.vars_.end());
+        return MultivariatePolynomialExpr::create(
+            vb, {{v, pow_ex(base.dict_.begin()->second, exp)}});
     }
     if (exp < 0) {
         if (base.vars_.empty()) {
@@ -307,11 +308,11 @@ MultivariateSeries::pow(const MultivariatePolynomialExpr &base, int exp,
             return MultivariatePolynomialExpr(
                 pow_ex(base.dict_.begin()->second, exp));
         }
-        return pow(MultivariateSeries::series_invert(
-                       base,
-                       MultivariateSeries::var((*base.vars_.begin())->__str__()),
-                       prec),
-                   -exp, prec);
+        return pow(
+            MultivariateSeries::series_invert(
+                base, MultivariateSeries::var((*base.vars_.begin())->__str__()),
+                prec),
+            -exp, prec);
     }
     if (exp == 0) {
         if (base == 0) {
@@ -348,7 +349,7 @@ Expression MultivariateSeries::find_cf(const MultivariatePolynomialExpr &s,
         } else {
             return ptr->second;
         }
-        
+
     } else {
         // going to be very inefficient with unordered map
         unsigned int i = 0;
@@ -386,7 +387,7 @@ Expression MultivariateSeries::find_cf(const MultivariatePolynomialExpr &s,
                 exps[i] = 0;
                 Expression term(1);
                 for (auto var : s.vars_) {
-                    term *= Expression(SymEngine::pow(var,integer(exps[i])));
+                    term *= Expression(SymEngine::pow(var, integer(exps[i])));
                 }
                 ans += term * bucket.second;
             }
@@ -404,7 +405,7 @@ MultivariatePolynomialExpr
 MultivariateSeries::diff(const MultivariatePolynomialExpr &s,
                          const MultivariatePolynomialExpr &var)
 {
-    return MultivariatePolynomialExpr::diff(s,*var.vars_.begin());
+    return MultivariatePolynomialExpr::diff(s, *var.vars_.begin());
 }
 
 MultivariatePolynomialExpr
@@ -415,17 +416,18 @@ MultivariateSeries::integrate(const MultivariatePolynomialExpr &s,
     set_basic vars;
     vec_uint translator1;
     vec_uint translator2;
-    unsigned int size = reconcile(translator1, translator2, vars, s.vars_,
-                                  var.vars_);
+    unsigned int size
+        = reconcile(translator1, translator2, vars, s.vars_, var.vars_);
     for (auto &it : s.dict_) {
         vec_int v = translate(it.first, translator1, size);
         v[translator2[0]]++;
-        dict.insert(std::pair<vec_int, Expression>(v, it.second / (v[translator2[0]])));
+        dict.insert(
+            std::pair<vec_int, Expression>(v, it.second / (v[translator2[0]])));
     }
-    
+
     vec_basic vb;
-    vb.insert(vb.begin(),vars.begin(),vars.end());
-    
+    vb.insert(vb.begin(), vars.begin(), vars.end());
+
     return MultivariatePolynomialExpr::create(vb, std::move(dict));
 }
 
@@ -520,7 +522,8 @@ RCP<const MultivariateSeries> mult_series1(RCP<const Basic> func,
         vb.push_back(bucket.first);
         b.insert(
             std::pair<RCP<const Basic>, RCP<const Basic>>(bucket.first, zero));
-        precs2.insert(std::pair<RCP<const Basic>,unsigned int>(bucket.first,bucket.second));
+        precs2.insert(std::pair<RCP<const Basic>, unsigned int>(bucket.first,
+                                                                bucket.second));
     }
     vec_int v;
     bool done = false;
@@ -559,11 +562,12 @@ RCP<const MultivariateSeries> mult_series1(RCP<const Basic> func,
 
     umap_vec_expr dict2;
     for (auto bucket : dict)
-        dict2.insert(std::pair<vec_int,Expression>(bucket.first,expand(bucket.second)));
+        dict2.insert(std::pair<vec_int, Expression>(bucket.first,
+                                                    expand(bucket.second)));
 
     return make_rcp<const MultivariateSeries>(
-            MultivariatePolynomialExpr::create(vb, std::move(dict2)),
+        MultivariatePolynomialExpr::create(vb, std::move(dict2)),
         (*vars.begin())->__str__(), precs.begin()->second, std::move(precs2));
 };
-  
+
 } // SymEngine
