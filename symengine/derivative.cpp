@@ -8,6 +8,7 @@
 #include <symengine/integer.h>
 #include <symengine/mul.h>
 #include <symengine/polys/uintpoly.h>
+#include <symengine/polys/uintpoly_flint.h>
 #include <symengine/polys/uexprpoly.h>
 #include <symengine/pow.h>
 #include <symengine/rational.h>
@@ -53,6 +54,7 @@ public:
     DIFF0(LeviCivita)
     DIFF0(Max)
     DIFF0(Min)
+    DIFF0(UIntPolyFlint)
 
 #endif
 

@@ -212,7 +212,7 @@ public:
     // virtual unsigned int get_degree() const = 0;
 
     //! \returns `-1`,`0` or `1` after comparing
-    virtual int compare(const Basic &o) const = 0;
+    // virtual int compare(const Basic &o) const = 0;
 
     //! \returns `true` if two objects are equal
     inline bool __eq__(const Basic &o) const
