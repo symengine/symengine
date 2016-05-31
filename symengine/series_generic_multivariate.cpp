@@ -560,13 +560,8 @@ RCP<const MultivariateSeries> mult_series1(RCP<const Basic> func,
         deriv = deriv->subs(b);
     }
 
-    umap_vec_expr dict2;
-    for (auto bucket : dict)
-        dict2.insert(std::pair<vec_int, Expression>(bucket.first,
-                                                    expand(bucket.second)));
-
     return make_rcp<const MultivariateSeries>(
-        MultivariatePolynomialExpr::create(vb, std::move(dict2)),
+        MultivariatePolynomialExpr::create(vb, std::move(dict)),
         (*vars.begin())->__str__(), precs.begin()->second, std::move(precs2));
 };
 

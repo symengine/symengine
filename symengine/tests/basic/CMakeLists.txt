@@ -24,6 +24,10 @@ add_executable(test_series_generic_multivariate test_series_generic_multivariate
 target_link_libraries(test_series_generic_multivariate symengine catch)
 add_test(test_series_generic_multivariate ${PROJECT_BINARY_DIR}/test_series_generic_multivariate)
 
+add_executable(test_multivariable_expansion test_multivariable_expansion.cpp)
+target_link_libraries(test_multivariable_expansion symengine catch)
+add_test(test_multivariable_expansion ${PROJECT_BINARY_DIR}/test_multivariable_expansion)
+
 if (WITH_PIRANHA)
     add_executable(test_series_expansion_UP test_series_expansion_UP.cpp)
     target_link_libraries(test_series_expansion_UP symengine catch)

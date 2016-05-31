@@ -152,15 +152,11 @@ RCP<const MultivariateSeries> mult_series(RCP<const Basic> func,
             dict.insert(term);
         whichvar++;
     }
-    umap_vec_expr dict2;
-    for (auto bucket : dict)
-        dict2.insert(std::pair<vec_int, Expression>(bucket.first,
-                                                    expand(bucket.second)));
 
     vec_basic vb;
     vb.insert(vb.begin(), vars.begin(), vars.end());
     return make_rcp<const MultivariateSeries>(
-        MultivariatePolynomialExpr::create(vars, std::move(dict2)),
+        MultivariatePolynomialExpr::create(vars, std::move(dict)),
         (*vars.begin())->__str__(), precs.begin()->second, std::move(precs));
 }
 
