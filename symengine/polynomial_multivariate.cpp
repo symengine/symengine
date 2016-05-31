@@ -81,6 +81,14 @@ std::string MultivariateIntPolynomialExpr::toString() const
     // vec_uint_compare in dict.h
     std::vector<vec_uint> v = order_umap<vec_uint, umap_uvec_mpz>(dict_);
 
+    std::map<RCP<const Basic>, unsigned int, RCPBasicStrCmp> m;
+    auto ptr = vars_.begin();
+    for (unsigned int i = 0; i < vars_.size(); i++) {
+        m.insert(std::pair<RCP<const Basic>, unsigned int>(*ptr, i));
+        ptr++;
+        // i is the position in the original set;
+    }
+
     for (vec_uint exps : v) {
         integer_class c = dict_.find(exps)->second;
         if (!first) {
@@ -96,17 +104,16 @@ std::string MultivariateIntPolynomialExpr::toString() const
         unsigned int i = 0;
         std::ostringstream expr;
         bool first_var = true;
-        for (auto it : vars_) {
-            if (exps[i] != 0) {
+        for (auto bucket : m) {
+            if (exps[bucket.second] != 0) {
                 if (!first_var) {
                     expr << "*";
                 }
-                expr << it->__str__();
-                if (exps[i] > 1)
+                expr << bucket.first->__str__();
+                if (exps[bucket.second] > 1)
                     expr << "**" << exps[i];
                 first_var = false;
             }
-            i++;
         }
         if (mp_abs(c) != 1) {
             s << mp_abs(c);
@@ -256,9 +263,17 @@ std::string MultivariatePolynomialExpr::toString() const
     std::ostringstream s;
     StrPrinter s_;
     bool first = true; // is this the first term being printed out?
-    // To change the ordering in which the terms will print out, change
-    // vec_uint_compare in dict.h
+    // To change the ordering in which the terms appear in the vector, use
+    // a different comparator for order_umap
     std::vector<vec_int> v = order_umap<vec_int, umap_vec_expr>(dict_);
+
+    std::map<RCP<const Basic>, unsigned int, RCPBasicStrCmp> m;
+    auto ptr = vars_.begin();
+    for (unsigned int i = 0; i < vars_.size(); i++) {
+        m.insert(std::pair<RCP<const Basic>, unsigned int>(*ptr, i));
+        ptr++;
+        // i is the position in the original set;
+    }
 
     for (vec_int exps : v) {
         Expression c = dict_.find(exps)->second;
@@ -269,20 +284,18 @@ std::string MultivariatePolynomialExpr::toString() const
         } else if (!first) {
             s << " + ";
         }
-        unsigned int i = 0;
         std::ostringstream expr;
         bool first_var = true;
-        for (auto it : vars_) {
-            if (exps[i] != 0) {
+        for (auto &bucket : m) {
+            if (exps[bucket.second] != 0) {
                 if (!first_var) {
                     expr << "*";
                 }
-                expr << it->__str__();
-                if (exps[i] > 1 || exps[i] < 0)
-                    expr << "**" << exps[i];
+                expr << bucket.first->__str__();
+                if (exps[bucket.second] > 1 || exps[bucket.second] < 0)
+                    expr << "**" << exps[bucket.second];
                 first_var = false;
             }
-            i++;
         }
         if (c != 1 && c != -1) {
             s << t;
