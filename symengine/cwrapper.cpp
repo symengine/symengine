@@ -287,7 +287,6 @@ void complex_double_imaginary_part(basic s, basic com)
     s->m = (rcp_static_cast<const ComplexDouble>(com->m))->imaginary_part();
 }
 
-
 int basic_diff(basic s, const basic expr, basic const symbol)
 {
     if (not is_a_Symbol(symbol))
