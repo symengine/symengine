@@ -12,6 +12,7 @@
 #include <symengine/add.h>
 #include <symengine/number.h>
 #include <symengine/complex.h>
+#include <symengine/complex_double.h>
 #include <symengine/constants.h>
 #include <symengine/visitor.h>
 #include <symengine/printer.h>
@@ -29,6 +30,7 @@ using SymEngine::integer_class;
 using SymEngine::rational_class;
 using SymEngine::Number;
 using SymEngine::Complex;
+using SymEngine::ComplexDouble;
 using SymEngine::RealDouble;
 using SymEngine::rcp_static_cast;
 using SymEngine::is_a;
@@ -192,6 +194,12 @@ void real_double_set_d(basic s, double d)
     s->m = SymEngine::real_double(d);
 }
 
+double real_double_get_d(const basic s)
+{
+    SYMENGINE_ASSERT(is_a<RealDouble>(*(s->m)));
+    return (rcp_static_cast<const RealDouble>(s->m))->as_double();
+}
+
 signed long integer_get_si(const basic s)
 {
     SYMENGINE_ASSERT(is_a<Integer>(*(s->m)));
@@ -265,6 +273,18 @@ void complex_imaginary_part(basic s, basic com)
 {
     SYMENGINE_ASSERT(is_a<Complex>(*(com->m)));
     s->m = (rcp_static_cast<const Complex>(com->m))->imaginary_part();
+}
+
+void complex_double_real_part(basic s, basic com)
+{
+    SYMENGINE_ASSERT(is_a<ComplexDouble>(*(com->m)));
+    s->m = (rcp_static_cast<const ComplexDouble>(com->m))->real_part();
+}
+
+void complex_double_imaginary_part(basic s, basic com)
+{
+    SYMENGINE_ASSERT(is_a<ComplexDouble>(*(com->m)));
+    s->m = (rcp_static_cast<const ComplexDouble>(com->m))->imaginary_part();
 }
 
 int basic_diff(basic s, const basic expr, basic const symbol)
@@ -381,6 +401,14 @@ int is_a_Symbol(const basic c)
 int is_a_Complex(const basic c)
 {
     return is_a<Complex>(*(c->m));
+}
+int is_a_RealDouble(const basic c)
+{
+    return is_a<RealDouble>(*(c->m));
+}
+int is_a_ComplexDouble(const basic c)
+{
+    return is_a<ComplexDouble>(*(c->m));
 }
 
 // C wrapper for std::vector<int>

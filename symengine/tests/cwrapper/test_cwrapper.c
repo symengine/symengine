@@ -128,16 +128,68 @@ void test_complex() {
     basic_free_stack(f);
 }
 
+void test_complex_double() {
+    basic e;
+    basic f;
+    char* s;
+    basic_new_stack(e);
+    basic_new_stack(f);
+    
+    basic_const_I(e);
+    real_double_set_d(f, 76.59);
+    basic_mul(f, f, e);
+    real_double_set_d(e, 100.47);
+    basic_add(e, e, f);
+    s = basic_str(e);
+
+    SYMENGINE_C_ASSERT(strcmp(s, "100.47 + 76.59*I") == 0);
+    SYMENGINE_C_ASSERT(!is_a_Symbol(e));
+    SYMENGINE_C_ASSERT(!is_a_Rational(e));
+    SYMENGINE_C_ASSERT(!is_a_Integer(e));
+    SYMENGINE_C_ASSERT(!is_a_Complex(e));
+    SYMENGINE_C_ASSERT(is_a_ComplexDouble(e));
+
+    basic_str_free(s);
+
+    complex_double_real_part(f, e);
+    s = basic_str(f);
+
+    SYMENGINE_C_ASSERT(strcmp(s, "100.47") == 0);
+    SYMENGINE_C_ASSERT(!is_a_Symbol(f));
+    SYMENGINE_C_ASSERT(!is_a_Rational(f));
+    SYMENGINE_C_ASSERT(!is_a_Integer(f));
+    SYMENGINE_C_ASSERT(!is_a_Complex(f));
+    SYMENGINE_C_ASSERT(is_a_RealDouble(f));
+
+    basic_str_free(s);
+
+    complex_double_imaginary_part(f, e);
+    s = basic_str(f);
+
+    SYMENGINE_C_ASSERT(strcmp(s, "76.59") == 0);
+    SYMENGINE_C_ASSERT(!is_a_Symbol(f));
+    SYMENGINE_C_ASSERT(!is_a_Rational(f));
+    SYMENGINE_C_ASSERT(!is_a_Integer(f));
+    SYMENGINE_C_ASSERT(!is_a_Complex(f));
+    SYMENGINE_C_ASSERT(is_a_RealDouble(f));
+        
+    basic_str_free(s);
+
+    basic_free_stack(e);
+    basic_free_stack(f);
+}
+
 void test_real_double()
 {
     basic d;
     basic_new_stack(d);
     real_double_set_d(d, 123.456);
+    SYMENGINE_C_ASSERT(real_double_get_d(d) == 123.456);
 
     char *s2;
     s2 = basic_str(d);
 
-    SYMENGINE_C_ASSERT(basic_get_type(d) == SYMENGINE_REAL_DOUBLE);
+    SYMENGINE_C_ASSERT(is_a_RealDouble(d));
     SYMENGINE_C_ASSERT(strcmp(s2, "123.456") == 0);
     basic_str_free(s2);
     
@@ -698,6 +750,7 @@ int main(int argc, char* argv[])
 {
     test_cwrapper();
     test_complex();
+    test_complex_double();
     test_basic();
     test_CVectorInt1();
     test_CVectorInt2();
@@ -715,5 +768,6 @@ int main(int argc, char* argv[])
     test_functions();
     test_ntheory();
     test_real_double();
+
     return 0;
 }
