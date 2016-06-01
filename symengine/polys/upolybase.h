@@ -231,6 +231,12 @@ public:
     {
         return poly_;
     }
+
+    // TODO add as_symbolic()
+    inline vec_basic get_args() const
+    {
+        return {};
+    }
 };
 
 template <typename Poly>

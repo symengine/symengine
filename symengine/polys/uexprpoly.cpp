@@ -63,28 +63,6 @@ RCP<const UExprPoly> UExprPoly::from_vec(const RCP<const Symbol> &var,
     return make_rcp<const UExprPoly>(var, UExprDict::from_vec(v));
 }
 
-vec_basic UExprPoly::get_args() const
-{
-    vec_basic args;
-    for (const auto &p : poly_.get_dict()) {
-        if (p.first == 0)
-            args.push_back(p.second.get_basic());
-        else if (p.first == 1) {
-            if (p.second == Expression(1))
-                args.push_back(var_);
-            else
-                args.push_back(mul(p.second.get_basic(), var_));
-        } else if (p.second == 1)
-            args.push_back(pow(var_, integer(p.first)));
-        else
-            args.push_back(
-                mul(p.second.get_basic(), pow(var_, integer(p.first))));
-    }
-    if (poly_.empty())
-        args.push_back(Expression(0).get_basic());
-    return args;
-}
-
 Expression UExprPoly::max_coef() const
 {
     Expression curr = poly_.get_dict().begin()->second;

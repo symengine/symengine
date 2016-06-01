@@ -164,24 +164,6 @@ TEST_CASE("Comparing two UIntPoly", "[UIntPoly]")
     REQUIRE(P->compare(*Q) == 1);
 }
 
-TEST_CASE("UIntPoly get_args", "[UIntPoly]")
-{
-    RCP<const Symbol> x = symbol("x");
-    RCP<const UIntPoly> a = uint_poly(x, {{0, 1_z}, {1, 2_z}, {2, 1_z}});
-
-    REQUIRE(vec_basic_eq_perm(a->get_args(),
-                              {one, mul(integer(2), x), pow(x, integer(2))}));
-    REQUIRE(not vec_basic_eq_perm(
-        a->get_args(), {one, mul(integer(3), x), pow(x, integer(2))}));
-
-    RCP<const UIntPoly> b = uint_poly(x, {{0, 1_z}, {1, 1_z}, {2, 2_z}});
-    REQUIRE(vec_basic_eq_perm(b->get_args(),
-                              {one, x, mul(integer(2), pow(x, integer(2)))}));
-
-    RCP<const UIntPoly> c = uint_poly(x, map_uint_mpz{});
-    REQUIRE(vec_basic_eq_perm(c->get_args(), {zero}));
-}
-
 TEST_CASE("Evaluation of UIntPoly", "[UIntPoly]")
 {
     RCP<const Symbol> x = symbol("x");

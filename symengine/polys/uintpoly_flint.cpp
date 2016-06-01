@@ -76,11 +76,5 @@ UIntPolyFlint::from_vec(const RCP<const Symbol> &var,
     integer_class x = to_integer_class(r);
     return make_rcp<const UIntPolyFlint>(var, std::move(f));
 }
-
-vec_basic UIntPolyFlint::get_args() const
-{
-    vec_basic args;
-    return args;
-}
 }
 #endif

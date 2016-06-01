@@ -182,24 +182,6 @@ TEST_CASE("Comparing two UExprPoly", "[UExprPoly]")
     REQUIRE(P->__eq__(*Q) == false);
 }
 
-TEST_CASE("UExprPoly get_args", "[UExprPoly]")
-{
-    RCP<const Symbol> x = symbol("x");
-    RCP<const UExprPoly> a = uexpr_poly(x, {{0, 1}, {1, 2}, {2, 1}});
-
-    REQUIRE(vec_basic_eq_perm(a->get_args(),
-                              {one, mul(integer(2), x), pow(x, integer(2))}));
-    REQUIRE(not vec_basic_eq_perm(
-        a->get_args(), {one, mul(integer(3), x), pow(x, integer(2))}));
-
-    a = uexpr_poly(x, {{0, 1}, {1, 1}, {2, 2}});
-    REQUIRE(vec_basic_eq_perm(a->get_args(),
-                              {one, x, mul(integer(2), pow(x, integer(2)))}));
-
-    a = uexpr_poly(x, map_int_Expr{});
-    REQUIRE(vec_basic_eq_perm(a->get_args(), {zero}));
-}
-
 TEST_CASE("UExprPoly max_coef", "[UExprPoly]")
 {
     RCP<const Symbol> x = symbol("x");
