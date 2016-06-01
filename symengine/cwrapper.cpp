@@ -13,6 +13,8 @@
 #include <symengine/number.h>
 #include <symengine/complex.h>
 #include <symengine/complex_double.h>
+#include <symengine/real_mpfr.h>
+#include <symengine/complex_mpc.h>
 #include <symengine/constants.h>
 #include <symengine/visitor.h>
 #include <symengine/printer.h>
@@ -199,6 +201,34 @@ double real_double_get_d(const basic s)
     SYMENGINE_ASSERT(is_a<RealDouble>(*(s->m)));
     return (rcp_static_cast<const RealDouble>(s->m))->as_double();
 }
+
+#ifdef HAVE_SYMENGINE_MPFR
+
+void real_mpfr_set_d(basic s, double d, int prec)
+{
+    mpfr_t mp;
+    mpfr_init2 (t, prec);
+    mpfr_set_d (mp, d, 10, MPFR_RNDN);
+    s->m = SymEngine::real_mpfr(mpfr_class(mp));
+    mpfr_clear(mp);
+}
+
+void real_mpfr_set_str(basic s, char *c, int prec)
+{
+    mpfr_t mp;
+    mpfr_init2 (t, prec);
+    mpfr_set_str (mp, c, 10, MPFR_RNDN);
+    s->m = SymEngine::real_mpfr(mpfr_class(mp));
+    mpfr_clear(mp);
+}
+
+double real_mpfr_get_d(const basic s)
+{
+    SYMENGINE_ASSERT(is_a<RealMPFR>(*(s->m)));
+    return mpfr_get_d ( (rcp_static_cast<const RealMPFR>(s->m))->as_mpfr(), MPFR_RNDN);
+}
+
+#endif // HAVE_SYMENGINE_MPFR
 
 signed long integer_get_si(const basic s)
 {
@@ -410,6 +440,16 @@ int is_a_ComplexDouble(const basic c)
 {
     return is_a<ComplexDouble>(*(c->m));
 }
+#ifdef HAVE_SYMENGINE_MPFR
+int is_a_RealMPFR(const basic c)
+{
+    return is_a<RealMPFR>(*(c->m));
+}
+int is_a_ComplexMPC(const basic c)
+{
+    return is_a<ComplexMPC>(*(c->m));
+}
+#endif // HAVE_SYMENGINE_MPFR
 
 // C wrapper for std::vector<int>
 
