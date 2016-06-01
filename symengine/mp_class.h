@@ -4,14 +4,18 @@
 #include <symengine/symengine_config.h>
 #include <symengine/mp_wrapper.h>
 
-#if SYMENGINE_INTEGER_CLASS == SYMENGINE_PIRANHA
+#ifdef HAVE_SYMENGINE_PIRANHA
 #include <piranha/mp_integer.hpp>
 #include <piranha/mp_rational.hpp>
+#endif
 
-#elif SYMENGINE_INTEGER_CLASS == SYMENGINE_FLINT
+#ifdef HAVE_SYMENGINE_FLINT
 #include <flint/fmpz.h>
+#include <flint/fmpzxx.h>
 #include <flint/fmpq.h>
-#elif SYMENGINE_INTEGER_CLASS == SYMENGINE_GMP
+#endif
+
+#if SYMENGINE_INTEGER_CLASS == SYMENGINE_GMP
 #include <gmp.h>
 #else
 #define __GMPXX_USE_CXX11 1
@@ -71,6 +75,11 @@ inline integer_class operator"" _z(const char *str)
 }
 }
 
+inline integer_class to_integer_class(const integer_class &i)
+{
+    return i;
+}
+
 #if SYMENGINE_INTEGER_CLASS == SYMENGINE_GMPXX                                 \
     || SYMENGINE_INTEGER_CLASS == SYMENGINE_GMP
 // Helper functions for mpz_class
@@ -92,6 +101,24 @@ inline integer_class mp_sqrt(const integer_class &i)
     mpz_sqrt(res.get_mpz_t(), i.get_mpz_t());
     return res;
 }
+
+#ifdef HAVE_SYMENGINE_FLINT
+inline integer_class to_integer_class(const flint::fmpzxx &i)
+{
+    integer_class x;
+    fmpz_get_mpz(x.get_mpz_t(), i._data().inner);
+    return x;
+}
+#endif
+
+#ifdef HAVE_SYMENGINE_PIRANHA
+inline integer_class to_integer_class(const piranha::integer &i)
+{
+    integer_class x;
+    mpz_init_set(x.get_mpz_t(), i.get_mpz_view());
+    return x;
+}
+#endif
 
 inline double mp_get_d(const integer_class &i)
 {
@@ -270,6 +297,15 @@ inline piranha::integer mp_sqrt(const piranha::integer &i)
 {
     return i.sqrt();
 }
+
+#ifdef HAVE_SYMENGINE_FLINT
+inline integer_class to_integer_class(const fmpzxx &i)
+{
+    mpz_t x;
+    fmpz_get_mpz(x, i._data().inner);
+    return integer_class(x);
+}
+#endif
 
 inline void mp_demote(piranha::integer &i)
 {
@@ -451,6 +487,13 @@ inline int mp_sign(const piranha::rational &i)
     return i.num().sign();
 }
 #elif SYMENGINE_INTEGER_CLASS == SYMENGINE_FLINT
+
+#ifdef HAVE_SYMENGINE_PIRANHA
+inline integer_class to_integer_class(piranha::integer x)
+{
+    return integer_class(x.get_mpz_view());
+}
+#endif
 
 inline mpz_view_flint get_mpz_t(const fmpz_wrapper &i)
 {

@@ -1,5 +1,6 @@
 #include <symengine/symbol.h>
 #include <symengine/polys/uintpoly_flint.h>
+#ifdef HAVE_SYMENGINE_FLINT
 
 namespace SymEngine
 {
@@ -72,6 +73,7 @@ UIntPolyFlint::from_vec(const RCP<const Symbol> &var,
             f.set_coeff(i, r);
         }
     }
+    integer_class x = to_integer_class(r);
     return make_rcp<const UIntPolyFlint>(var, std::move(f));
 }
 
@@ -81,3 +83,4 @@ vec_basic UIntPolyFlint::get_args() const
     return args;
 }
 }
+#endif

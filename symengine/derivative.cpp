@@ -54,7 +54,11 @@ public:
     DIFF0(LeviCivita)
     DIFF0(Max)
     DIFF0(Min)
+
+#ifdef HAVE_SYMENGINE_FLINT
+    // will implement soon
     DIFF0(UIntPolyFlint)
+#endif
 
 #endif
 
