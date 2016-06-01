@@ -463,13 +463,21 @@ void StrPrinter::bvisit(const UnivariateSeries &x)
 void StrPrinter::bvisit(const MultivariateSeries &x)
 {
     std::ostringstream s;
+
+    std::map<RCP<const Basic>, unsigned int, RCPBasicStrCmp> m;
+
+    for (auto vars : x.precs_) {
+        m.insert(
+            std::pair<RCP<const Basic>, unsigned int>(vars.first, vars.second));
+    }
+
     s << x.get_poly().toString();
     s << " + O(";
-    auto bucket = x.precs_.begin();
-    while (bucket != x.precs_.end()) {
+    auto bucket = m.begin();
+    while (bucket != m.end()) {
         s << "|" << bucket->first->__str__() << "|**" << bucket->second;
         bucket++;
-        if (bucket != x.precs_.end())
+        if (bucket != m.end())
             s << " + ";
     }
     s << ")";

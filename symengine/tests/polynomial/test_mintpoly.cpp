@@ -51,6 +51,8 @@ TEST_CASE("Constructing MultivariateIntPolynomialExpr",
         P.get_args(), {mul(x, pow(y, integer(2))), mul(integer(2), mul(x, y)),
                        mul(integer(3), x), mul(integer(2), y)}));
 
+    REQUIRE(P.toString() == "2*y + 3*x + 2*x*y + x*y**2");
+
     MultivariateIntPolynomialExpr Pprime
         = MultivariateIntPolynomialExpr::create({y, x}, {{{1, 2}, 1_z},
                                                          {{1, 1}, 2_z},

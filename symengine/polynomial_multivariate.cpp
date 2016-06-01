@@ -77,9 +77,6 @@ std::string MultivariateIntPolynomialExpr::toString() const
 {
     std::ostringstream s;
     bool first = true; // is this the first term being printed out?
-    // To change the ordering in which the terms will print out, change
-    // vec_uint_compare in dict.h
-    std::vector<vec_uint> v = order_umap<vec_uint, umap_uvec_mpz>(dict_);
 
     std::map<RCP<const Basic>, unsigned int, RCPBasicStrCmp> m;
     auto ptr = vars_.begin();
@@ -89,8 +86,26 @@ std::string MultivariateIntPolynomialExpr::toString() const
         // i is the position in the original set;
     }
 
-    for (vec_uint exps : v) {
-        integer_class c = dict_.find(exps)->second;
+    vec_uint translator;
+    translator.resize(vars_.size());
+    unsigned int j = 0;
+    for (auto bucket : m) {
+        translator[bucket.second] = j;
+        // ptr->second is the position in the old exponent
+        // j is the position in the new ordering
+        j++;
+    }
+
+    std::map<vec_uint, integer_class> d;
+
+    for (auto bucket : dict_) {
+        d.insert(std::pair<vec_uint, integer_class>(
+            translate<vec_uint>(bucket.first, translator, vars_.size()),
+            bucket.second));
+    }
+
+    for (auto bucket : d) {
+        integer_class c = bucket.second;
         if (!first) {
             if (c < 0) {
                 s << " - ";
@@ -104,16 +119,17 @@ std::string MultivariateIntPolynomialExpr::toString() const
         unsigned int i = 0;
         std::ostringstream expr;
         bool first_var = true;
-        for (auto bucket : m) {
-            if (exps[bucket.second] != 0) {
+        for (auto var_bucket : m) {
+            if (bucket.first[i] != 0) {
                 if (!first_var) {
                     expr << "*";
                 }
-                expr << bucket.first->__str__();
-                if (exps[bucket.second] > 1)
-                    expr << "**" << exps[i];
+                expr << var_bucket.first->__str__();
+                if (bucket.first[i] > 1)
+                    expr << "**" << bucket.first[i];
                 first_var = false;
             }
+            i++;
         }
         if (mp_abs(c) != 1) {
             s << mp_abs(c);
@@ -263,11 +279,9 @@ std::string MultivariatePolynomialExpr::toString() const
     std::ostringstream s;
     StrPrinter s_;
     bool first = true; // is this the first term being printed out?
-    // To change the ordering in which the terms appear in the vector, use
-    // a different comparator for order_umap
-    std::vector<vec_int> v = order_umap<vec_int, umap_vec_expr>(dict_);
 
     std::map<RCP<const Basic>, unsigned int, RCPBasicStrCmp> m;
+
     auto ptr = vars_.begin();
     for (unsigned int i = 0; i < vars_.size(); i++) {
         m.insert(std::pair<RCP<const Basic>, unsigned int>(*ptr, i));
@@ -275,8 +289,26 @@ std::string MultivariatePolynomialExpr::toString() const
         // i is the position in the original set;
     }
 
-    for (vec_int exps : v) {
-        Expression c = dict_.find(exps)->second;
+    vec_uint translator;
+    translator.resize(vars_.size());
+    unsigned int j = 0;
+    for (auto bucket : m) {
+        translator[bucket.second] = j;
+        // ptr->second is the position in the old exponent
+        // j is the position in the new ordering
+        j++;
+    }
+
+    std::map<vec_int, Expression> d;
+
+    for (auto bucket : dict_) {
+        d.insert(std::pair<vec_int, Expression>(
+            translate<vec_int>(bucket.first, translator, vars_.size()),
+            bucket.second));
+    }
+
+    for (auto bucket : d) {
+        Expression c = bucket.second;
         std::string t = s_.parenthesizeLT(c.get_basic(), PrecedenceEnum::Mul);
         if ('-' == t[0] && !first) {
             s << " - ";
@@ -286,16 +318,18 @@ std::string MultivariatePolynomialExpr::toString() const
         }
         std::ostringstream expr;
         bool first_var = true;
-        for (auto &bucket : m) {
-            if (exps[bucket.second] != 0) {
+        unsigned int i = 0;
+        for (auto var_bucket : m) {
+            if (bucket.first[i] != 0) {
                 if (!first_var) {
                     expr << "*";
                 }
-                expr << bucket.first->__str__();
-                if (exps[bucket.second] > 1 || exps[bucket.second] < 0)
-                    expr << "**" << exps[bucket.second];
+                expr << var_bucket.first->__str__();
+                if (bucket.first[i] > 1 || bucket.first[i] < 0)
+                    expr << "**" << bucket.first[i];
                 first_var = false;
             }
+            i++;
         }
         if (c != 1 && c != -1) {
             s << t;

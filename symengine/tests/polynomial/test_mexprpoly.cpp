@@ -75,6 +75,8 @@ TEST_CASE("Constructing MultivariatePolynomialExpr",
         p1.get_args(), {mul(integer(2), mul(pow(x, integer(2)), y)),
                         mul(negB.get_basic(), mul(x, pow(y, integer(2)))),
                         mul(symbol("a"), mul(x, y)), mul(integer(-3), y)}));
+    REQUIRE(p1.toString() == "-3*y + a*x*y - b*x*y**2 + 2*x**2*y");
+
     REQUIRE(vec_basic_eq_perm(
         pprime.get_args(), {mul(negB.get_basic(), mul(pow(x, integer(2)), y)),
                             mul(integer(2), mul(x, pow(y, integer(2)))),
