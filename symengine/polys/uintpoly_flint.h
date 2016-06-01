@@ -31,6 +31,8 @@ public:
     static RCP<const UIntPolyFlint>
     from_vec(const RCP<const Symbol> &var, const std::vector<integer_class> &v);
 
+    integer_class eval(const integer_class &x) const;
+    
     inline unsigned int get_degree() const
     {
         return poly_.degree();

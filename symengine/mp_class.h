@@ -75,11 +75,6 @@ inline integer_class operator"" _z(const char *str)
 }
 }
 
-inline integer_class to_integer_class(const integer_class &i)
-{
-    return i;
-}
-
 #if SYMENGINE_INTEGER_CLASS == SYMENGINE_GMPXX                                 \
     || SYMENGINE_INTEGER_CLASS == SYMENGINE_GMP
 // Helper functions for mpz_class
@@ -489,11 +484,18 @@ inline int mp_sign(const piranha::rational &i)
 #elif SYMENGINE_INTEGER_CLASS == SYMENGINE_FLINT
 
 #ifdef HAVE_SYMENGINE_PIRANHA
-inline integer_class to_integer_class(piranha::integer x)
+inline integer_class to_integer_class(const piranha::integer &x)
 {
     return integer_class(x.get_mpz_view());
 }
 #endif
+
+inline integer_class to_integer_class(const fmpzxx &I)
+{ 
+    mpz_t x;
+    fmpz_get_mpz(x, i._data().inner);
+    return integer_class(x);
+}
 
 inline mpz_view_flint get_mpz_t(const fmpz_wrapper &i)
 {

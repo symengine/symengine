@@ -76,5 +76,22 @@ UIntPolyFlint::from_vec(const RCP<const Symbol> &var,
     integer_class x = to_integer_class(r);
     return make_rcp<const UIntPolyFlint>(var, std::move(f));
 }
+
+integer_class UIntPolyFlint::eval(const integer_class &x) const
+{
+    unsigned int last_deg = poly_.dict_.rbegin()->first;
+    integer_class result(0), x_pow;
+
+    for (auto it = poly_.dict_.rbegin(); it != poly_.dict_.rend(); ++it) {
+
+        mp_pow_ui(x_pow, x, last_deg - (*it).first);
+        last_deg = (*it).first;
+        result = (*it).second + x_pow * result;
+    }
+    mp_pow_ui(x_pow, x, last_deg);
+    result *= x_pow;
+
+    return result;
+}
 }
 #endif
