@@ -179,18 +179,12 @@ inline Expression expand(const Expression &arg)
     return expand(arg.get_basic());
 }
 
-template <typename T, typename U,
-          typename = enable_if_t<std::is_same<U, Expression>::value
-                                 and std::is_same<T, Expression>::value>>
-inline bool unified_eq(const T &a, const U &b)
+inline bool unified_eq(const Expression &a, const Expression &b)
 {
     return a == b;
 }
 
-template <typename T, typename U,
-          typename = enable_if_t<std::is_same<U, Expression>::value
-                                 and std::is_same<T, Expression>::value>>
-inline int unified_compare(const T &a, const U &b)
+inline int unified_compare(const Expression &a, const Expression &b)
 {
     return unified_compare(a.get_basic(), b.get_basic());
 }
