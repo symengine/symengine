@@ -490,7 +490,7 @@ inline integer_class to_integer_class(const piranha::integer &x)
 }
 #endif
 
-inline integer_class to_integer_class(const fmpzxx &i)
+inline integer_class to_integer_class(const flint::fmpzxx &i)
 {
     mpz_t x;
     fmpz_get_mpz(x, i._data().inner);
