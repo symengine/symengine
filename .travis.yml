@@ -55,21 +55,19 @@ matrix:
     - compiler: clang
     - os: osx
   include:
-    - env: BUILD_TYPE="Debug" WITH_BFD="yes" WITH_LATEST_GCC="yes" TEST_CLANG_FORMAT="yes" WITH_COVERAGE="yes" WITH_MPC="yes"
+    - env: BUILD_TYPE="Debug" WITH_BFD="yes" WITH_LATEST_GCC="yes" WITH_COVERAGE="yes" WITH_MPC="yes"
       compiler: gcc
       os: linux
       addons:
         apt:
           sources:
           - ubuntu-toolchain-r-test
-          - llvm-toolchain-precise-3.7
           packages:
           - libgmp-dev
           - libmpfr-dev
           - libmpc-dev
           - binutils-dev
           - g++-5
-          - clang-format-3.7
     - env: BUILD_TYPE="Debug" WITH_BFD="yes" WITH_PIRANHA="yes" WITH_BENCHMARKS_NONIUS="yes" WITH_COVERAGE="yes" TEST_IN_TREE="yes" WITH_FLINT="yes" WITH_MPC="yes"
       compiler: gcc
       os: linux
@@ -136,6 +134,31 @@ matrix:
     - env: BUILD_TYPE="Release"
       compiler: gcc
       os: osx
+    - env: BUILD_TYPE="Release" TEST_CLANG_FORMAT="yes"
+      compiler: gcc
+      os: linux
+      addons:
+        apt:
+          sources:
+          - ubuntu-toolchain-r-test
+          - llvm-toolchain-precise-3.7
+          packages:
+          - g++-4.7
+          - libgmp-dev
+          - clang-format-3.7
+  allow_failures:
+    - env: BUILD_TYPE="Release" TEST_CLANG_FORMAT="yes"
+      compiler: gcc
+      os: linux
+      addons:
+        apt:
+          sources:
+          - ubuntu-toolchain-r-test
+          - llvm-toolchain-precise-3.7
+          packages:
+          - g++-4.7
+          - libgmp-dev
+          - clang-format-3.7
 
 install:
   - source bin/install_travis.sh
