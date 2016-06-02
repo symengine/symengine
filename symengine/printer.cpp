@@ -367,13 +367,16 @@ void StrPrinter::bvisit(const UIntPolyFlint &x)
     // printed first
     auto p = x.get_poly();
     for (long i = p.length() - 1; i >= 0; i--) {
+        if (p.get_coeff(i) == 0)
+            continue;
         // if exponent is 0, then print only coefficient
         if (i == 0) {
             if (first) {
                 s << p.get_coeff(i);
             } else {
-                s << " " << _print_sign(to_integer_class(flint::fmpzxx(p.get_coeff(i)))) << " "
-                  << flint::abs(p.get_coeff(i));
+                s << " " << _print_sign(
+                                to_integer_class(flint::fmpzxx(p.get_coeff(i))))
+                  << " " << flint::abs(p.get_coeff(i));
             }
             first = false;
             continue;
@@ -387,8 +390,9 @@ void StrPrinter::bvisit(const UIntPolyFlint &x)
                     s << "-";
                 s << x.get_var()->get_name();
             } else {
-                s << " " << _print_sign(to_integer_class(flint::fmpzxx(p.get_coeff(i)))) << " "
-                  << x.get_var()->get_name();
+                s << " " << _print_sign(
+                                to_integer_class(flint::fmpzxx(p.get_coeff(i))))
+                  << " " << x.get_var()->get_name();
             }
         }
         // same logic is followed as above
@@ -398,8 +402,9 @@ void StrPrinter::bvisit(const UIntPolyFlint &x)
             if (first) {
                 s << p.get_coeff(i) << "*" << x.get_var()->get_name();
             } else {
-                s << " " << _print_sign(to_integer_class(flint::fmpzxx(p.get_coeff(i)))) << " "
-                  << flint::abs(p.get_coeff(i)) << "*"
+                s << " " << _print_sign(
+                                to_integer_class(flint::fmpzxx(p.get_coeff(i))))
+                  << " " << flint::abs(p.get_coeff(i)) << "*"
                   << x.get_var()->get_name();
             }
         }

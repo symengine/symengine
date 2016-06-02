@@ -259,7 +259,8 @@ RCP<const Poly> add_upoly(const Poly &a, const Poly &b)
 template <typename Poly>
 RCP<const Poly> neg_upoly(const Poly &a)
 {
-    auto dict = -(a.get_poly());
+    auto dict = a.get_poly();
+    dict = -dict;
     return Poly::from_container(a.get_var(), std::move(dict));
 }
 
