@@ -222,6 +222,9 @@ public:
     void bvisit(const Mul &x);
     void bvisit(const Pow &x);
     void bvisit(const UIntPoly &x);
+#ifdef HAVE_SYMENGINE_FLINT
+    void bvisit(const UIntPolyFlint &x);
+#endif
     void bvisit(const MultivariateIntPolynomial &x);
     void bvisit(const MultivariatePolynomial &x);
     void bvisit(const UExprPoly &x);
