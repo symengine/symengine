@@ -235,4 +235,33 @@ void GaloisField::gf_rshift(const integer_class n,
     *quo = gf(dict_quo, modulo_);
     *rem = gf(dict_rem, modulo_);
 }
+
+RCP<const GaloisField> GaloisField::gf_sqr() const
+{
+    return gf_mul(rcp_from_this_cast<const GaloisField>());
+}
+
+RCP<const GaloisField> GaloisField::gf_pow(const integer_class n) const
+{
+    if (n == 0) {
+        return gf({integer_class(1)}, modulo_);
+    }
+    if (n == 1)
+        return rcp_from_this_cast<const GaloisField>();
+    if (n == 2)
+        return gf_sqr();
+    long num = mp_get_si(n);
+    RCP<const GaloisField> to_sq = rcp_from_this_cast<const GaloisField>();
+    RCP<const GaloisField> to_ret = gf({integer_class(1)}, modulo_);
+    while (1) {
+        if (num & 1) {
+            to_ret = to_ret->gf_mul(to_sq);
+            num -= 1;
+        }
+        num >>= 1;
+        if (num == 0)
+            return to_ret;
+        to_sq = to_sq->gf_sqr();
+    }
+}
 }

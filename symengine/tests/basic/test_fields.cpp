@@ -253,4 +253,46 @@ TEST_CASE("GaloisField : Basic", "[basic]")
     REQUIRE(mp[0] == 5);
     REQUIRE(mp[1] == 4);
     REQUIRE(mp[2] == 3);
+
+    a = {8_z, 1_z, 0_z, 0_z, 1_z};
+    r1 = gf(a, 11);
+    r2 = r1->gf_pow(0_z);
+    mp = r2->dict_;
+    REQUIRE(mp[0] == 1);
+    REQUIRE(mp.size() == 1);
+    r2 = r1->gf_pow(1_z);
+    REQUIRE(eq (*r2, *r1));
+    r2 = r1->gf_pow(2_z);
+    mp = r2->dict_;
+    REQUIRE(mp[0] == 9);
+    REQUIRE(mp[1] == 5);
+    REQUIRE(mp[2] == 1);
+    REQUIRE(mp[4] == 5);
+    REQUIRE(mp[5] == 2);
+    REQUIRE(mp[8] == 1);
+    r2 = r1->gf_pow(5_z);
+    mp = r2->dict_;
+    REQUIRE(mp[0] == 10);
+    REQUIRE(mp[1] == 9);
+    REQUIRE(mp[2] == 5);
+    REQUIRE(mp[3] == 2);
+    REQUIRE(mp[4] == 5);
+    REQUIRE(mp[6] == 6);
+    REQUIRE(mp[7] == 6);
+    REQUIRE(mp[8] == 10);
+    REQUIRE(mp[9] == 6);
+    REQUIRE(mp[10] == 9);
+    REQUIRE(mp[11] == 10);
+    REQUIRE(mp[12] == 2);
+    REQUIRE(mp[13] == 6);
+    REQUIRE(mp[14] == 10);
+    REQUIRE(mp[16] == 7);
+    REQUIRE(mp[17] == 5);
+    REQUIRE(mp[20] == 1);
+    r2 = r1->gf_pow(8_z);
+    r3 = r1->gf_pow(4_z);
+    REQUIRE(eq(*r2 , *r3->gf_sqr()));
+    
+    
+    
 }

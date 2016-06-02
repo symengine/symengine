@@ -48,6 +48,8 @@ public:
     void gf_rshift(const integer_class n,
                    const Ptr<RCP<const GaloisField>> &quo,
                    const Ptr<RCP<const GaloisField>> &rem) const;
+    RCP<const GaloisField> gf_sqr() const;
+    RCP<const GaloisField> gf_pow(const integer_class n) const;
 };
 
 //! \return RCP<const GaloisField>
