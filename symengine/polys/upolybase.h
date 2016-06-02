@@ -237,6 +237,12 @@ public:
     {
         return {};
     }
+
+    static RCP<const Poly> from_container(const RCP<const Symbol> &var,
+                                          Container &&d)
+    {
+        return make_rcp<const Poly>(var, std::move(d));
+    }
 };
 
 template <typename Poly>
@@ -247,14 +253,14 @@ RCP<const Poly> add_upoly(const Poly &a, const Poly &b)
 
     auto dict = a.get_poly();
     dict += b.get_poly();
-    return Poly::from_dict(a.get_var(), std::move(dict));
+    return Poly::from_container(a.get_var(), std::move(dict));
 }
 
 template <typename Poly>
 RCP<const Poly> neg_upoly(const Poly &a)
 {
     auto dict = -(a.get_poly());
-    return Poly::from_dict(a.get_var(), std::move(dict));
+    return Poly::from_container(a.get_var(), std::move(dict));
 }
 
 template <typename Poly>
@@ -265,7 +271,7 @@ RCP<const Poly> sub_upoly(const Poly &a, const Poly &b)
 
     auto dict = a.get_poly();
     dict -= b.get_poly();
-    return Poly::from_dict(a.get_var(), std::move(dict));
+    return Poly::from_container(a.get_var(), std::move(dict));
 }
 
 template <typename Poly>
@@ -276,7 +282,7 @@ RCP<const Poly> mul_upoly(const Poly &a, const Poly &b)
 
     auto dict = a.get_poly();
     dict *= b.get_poly();
-    return Poly::from_dict(a.get_var(), std::move(dict));
+    return Poly::from_container(a.get_var(), std::move(dict));
 }
 }
 

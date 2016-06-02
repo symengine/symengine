@@ -140,7 +140,7 @@ public:
     // creates a UIntPoly in cannonical form based on the
     // dictionary.
     static RCP<const UIntPoly> from_dict(const RCP<const Symbol> &var,
-                                         UIntDict &&d);
+                                         map_uint_mpz &&d);
     static RCP<const UIntPoly> from_vec(const RCP<const Symbol> &var,
                                         const std::vector<integer_class> &v);
     //! Evaluates the UIntPoly at value x
@@ -175,13 +175,12 @@ public:
 
 inline RCP<const UIntPoly> uint_poly(RCP<const Symbol> i, UIntDict &&dict)
 {
-    return UIntPoly::from_dict(i, std::move(dict));
+    return UIntPoly::from_container(i, std::move(dict));
 }
 
 inline RCP<const UIntPoly> uint_poly(RCP<const Symbol> i, map_uint_mpz &&dict)
 {
-    UIntDict wrapper(dict);
-    return UIntPoly::from_dict(i, std::move(wrapper));
+    return UIntPoly::from_dict(i, std::move(dict));
 }
 
 } // SymEngine

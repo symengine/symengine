@@ -50,9 +50,10 @@ int UIntPoly::compare(const Basic &o) const
 }
 
 RCP<const UIntPoly> UIntPoly::from_dict(const RCP<const Symbol> &var,
-                                        UIntDict &&d)
+                                        map_uint_mpz &&d)
 {
-    return make_rcp<const UIntPoly>(var, std::move(d));
+    UIntDict x(d);
+    return make_rcp<const UIntPoly>(var, std::move(x));
 }
 
 RCP<const UIntPoly> UIntPoly::from_vec(const RCP<const Symbol> &var,

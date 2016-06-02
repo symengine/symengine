@@ -52,9 +52,10 @@ int UExprPoly::compare(const Basic &o) const
 }
 
 RCP<const UExprPoly> UExprPoly::from_dict(const RCP<const Symbol> &var,
-                                          UExprDict &&d)
+                                          map_int_Expr &&d)
 {
-    return make_rcp<const UExprPoly>(var, std::move(d));
+    UExprDict x(d);
+    return make_rcp<const UExprPoly>(var, std::move(x));
 }
 
 RCP<const UExprPoly> UExprPoly::from_vec(const RCP<const Symbol> &var,
