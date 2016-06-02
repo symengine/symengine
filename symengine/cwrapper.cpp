@@ -30,10 +30,13 @@ using SymEngine::Rational;
 using SymEngine::Integer;
 using SymEngine::integer_class;
 using SymEngine::rational_class;
+using SymEngine::mpfr_class;
 using SymEngine::Number;
 using SymEngine::Complex;
 using SymEngine::ComplexDouble;
 using SymEngine::RealDouble;
+using SymEngine::RealMPFR;
+using SymEngine::ComplexMPC;
 using SymEngine::rcp_static_cast;
 using SymEngine::is_a;
 using SymEngine::RCPBasicKeyLess;
@@ -207,8 +210,8 @@ double real_double_get_d(const basic s)
 void real_mpfr_set_d(basic s, double d, int prec)
 {
     mpfr_t mp;
-    mpfr_init2 (t, prec);
-    mpfr_set_d (mp, d, 10, MPFR_RNDN);
+    mpfr_init2 (mp, prec);
+    mpfr_set_d (mp, d, MPFR_RNDN);
     s->m = SymEngine::real_mpfr(mpfr_class(mp));
     mpfr_clear(mp);
 }
@@ -216,7 +219,7 @@ void real_mpfr_set_d(basic s, double d, int prec)
 void real_mpfr_set_str(basic s, char *c, int prec)
 {
     mpfr_t mp;
-    mpfr_init2 (t, prec);
+    mpfr_init2 (mp, prec);
     mpfr_set_str (mp, c, 10, MPFR_RNDN);
     s->m = SymEngine::real_mpfr(mpfr_class(mp));
     mpfr_clear(mp);
@@ -225,7 +228,7 @@ void real_mpfr_set_str(basic s, char *c, int prec)
 double real_mpfr_get_d(const basic s)
 {
     SYMENGINE_ASSERT(is_a<RealMPFR>(*(s->m)));
-    return mpfr_get_d ( (rcp_static_cast<const RealMPFR>(s->m))->as_mpfr(), MPFR_RNDN);
+    return mpfr_get_d ( ((rcp_static_cast<const RealMPFR>(s->m))->as_mpfr()).get_mpfr_t() , MPFR_RNDN);
 }
 
 #endif // HAVE_SYMENGINE_MPFR
