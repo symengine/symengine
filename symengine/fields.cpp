@@ -264,4 +264,19 @@ RCP<const GaloisField> GaloisField::gf_pow(const integer_class n) const
         to_sq = to_sq->gf_sqr();
     }
 }
+
+void GaloisField::gf_monic(integer_class &res,
+                           const Ptr<RCP<const GaloisField>> &monic) const
+{
+    if (dict_.empty()) {
+        res = integer_class(0);
+        *monic = rcp_from_this_cast<const GaloisField>();
+    } else {
+        res = (--dict_.end())->second;
+        if (res == integer_class(1)) 
+            *monic = rcp_from_this_cast<const GaloisField>();
+        else
+            *monic = gf_quo_ground(res);
+    }
+}
 }

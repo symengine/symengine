@@ -255,7 +255,7 @@ TEST_CASE("GaloisField : Basic", "[basic]")
     REQUIRE(mp[2] == 3);
 
     a = {8_z, 1_z, 0_z, 0_z, 1_z};
-    r1 = gf(a, 11);
+    r1 = gf(a, 11_z);
     r2 = r1->gf_pow(0_z);
     mp = r2->dict_;
     REQUIRE(mp[0] == 1);
@@ -291,8 +291,36 @@ TEST_CASE("GaloisField : Basic", "[basic]")
     REQUIRE(mp[20] == 1);
     r2 = r1->gf_pow(8_z);
     r3 = r1->gf_pow(4_z);
-    REQUIRE(eq(*r2 , *r3->gf_sqr()));
-    
-    
-    
+
+    integer_class LC;
+    a = {};
+    r1 = gf(a, 11_z);
+    r1->gf_monic(LC, outArg(r2));
+    REQUIRE(LC == 0_z);
+    REQUIRE(eq(*r2, *r1));
+    a = {1_z};
+    r1 = gf(a, 11_z);
+    r1->gf_monic(LC, outArg(r2));
+    REQUIRE(LC == 1_z);
+    REQUIRE(eq(*r2, *r1));
+    a = {2_z};
+    r1 = gf(a, 11_z);
+    r1->gf_monic(LC, outArg(r2));
+    REQUIRE(LC == 2_z);
+    mp = r2->dict_;
+    REQUIRE(mp[0] == 1_z);
+    a = {4_z, 3_z, 2_z, 1_z};
+    r1 = gf(a, 11_z);
+    r1->gf_monic(LC, outArg(r2));
+    REQUIRE(LC == 1_z);
+    REQUIRE(eq(*r2, *r1));
+    a = {5_z, 4_z, 3_z, 2_z};
+    r1 = gf(a, 11_z);
+    r1->gf_monic(LC, outArg(r2));
+    REQUIRE(LC == 2_z);
+    mp = r2->dict_;
+    REQUIRE(mp[0] == 8);
+    REQUIRE(mp[1] == 2);
+    REQUIRE(mp[2] == 7);
+    REQUIRE(mp[3] == 1);
 }

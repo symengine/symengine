@@ -50,6 +50,7 @@ public:
                    const Ptr<RCP<const GaloisField>> &rem) const;
     RCP<const GaloisField> gf_sqr() const;
     RCP<const GaloisField> gf_pow(const integer_class n) const;
+    void gf_monic(integer_class &res, const Ptr<RCP<const GaloisField>> &monic) const;
 };
 
 //! \return RCP<const GaloisField>
