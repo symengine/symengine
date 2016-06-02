@@ -145,27 +145,26 @@ void GaloisField::gf_div(const RCP<const GaloisField> &o,
         throw std::runtime_error("ZeroDivisionError");
     map_uint_mpz dict_divisor = o->dict_;
     map_uint_mpz dict_out;
-    integer_class deg_dividend = integer_class((--dict_.end())->first);
-    integer_class deg_divisor = integer_class((--dict_divisor.end())->first);
+    long deg_dividend = (--dict_.end())->first;
+    long deg_divisor = (--dict_divisor.end())->first;
     if (deg_dividend < deg_divisor) {
         *quo = gf(dict_out, modulo_);
         *rem = gf(dict_, modulo_);
         return;
     }
-    integer_class deg_quotient = deg_dividend - deg_divisor;
     dict_out = this->dict_;
     integer_class inv;
     mp_invert(inv, (--dict_divisor.end())->second, modulo_);
     integer_class coeff;
-    for (long it = mp_get_si(deg_dividend); it >= 0; it--) {
+    for (long it = deg_dividend; it >= 0; it--) {
         coeff = dict_out[it];
-        long lb = std::max(long(0), mp_get_si(deg_divisor - deg_dividend) + it);
-        long ub = std::min(it, mp_get_si(deg_divisor - 1)) + 1;
+        long lb = std::max(long(0), deg_divisor - deg_dividend + it);
+        long ub = std::min(it, deg_divisor - 1) + 1;
         for (long j = lb; j < ub; j++) {
             coeff
-                -= dict_out[it - j + mp_get_si(deg_divisor)] * dict_divisor[j];
+                -= dict_out[it - j + deg_divisor] * dict_divisor[j];
         }
-        if (it >= deg_dividend - deg_quotient)
+        if (it >= deg_divisor)
             coeff *= inv;
         dict_out[it] = coeff % modulo_;
     }
@@ -174,7 +173,7 @@ void GaloisField::gf_div(const RCP<const GaloisField> &o,
         if (it.first < deg_divisor)
             dict_rem[it.first] = it.second;
         else
-            dict_quo[it.first - mp_get_si(deg_divisor)] = it.second;
+            dict_quo[it.first - deg_divisor] = it.second;
     }
     *quo = gf(dict_quo, modulo_);
     *rem = gf(dict_rem, modulo_);
@@ -188,26 +187,25 @@ GaloisField::gf_quo(const RCP<const GaloisField> &o) const
         throw std::runtime_error("ZeroDivisionError");
     map_uint_mpz dict_divisor = o->dict_;
     map_uint_mpz dict_out;
-    integer_class deg_dividend = integer_class((--dict_.end())->first);
-    integer_class deg_divisor = integer_class((--dict_divisor.end())->first);
+    long deg_dividend = (--dict_.end())->first;
+    long deg_divisor = (--dict_divisor.end())->first;
     if (deg_dividend < deg_divisor) {
         return gf(dict_out, modulo_);
     }
-    integer_class deg_quotient = deg_dividend - deg_divisor;
     dict_out = this->dict_;
     integer_class inv;
     mp_invert(inv, (--dict_divisor.end())->second, modulo_);
     integer_class coeff;
     map_uint_mpz dict_quo;
-    for (long it = mp_get_si(deg_dividend); it >= deg_divisor; it--) {
+    for (long it = deg_dividend; it >= deg_divisor; it--) {
         coeff = dict_out[it];
-        long lb = std::max(long(0), mp_get_si(deg_divisor - deg_dividend) + it);
-        long ub = std::min(it, mp_get_si(deg_divisor - 1)) + 1;
+        long lb = std::max(long(0), deg_divisor - deg_dividend + it);
+        long ub = std::min(it, deg_divisor - 1) + 1;
         for (long j = lb; j < ub; j++) {
             coeff
-                -= dict_out[it - j + mp_get_si(deg_divisor)] * dict_divisor[j];
+                -= dict_out[it - j + deg_divisor] * dict_divisor[j];
         }
-        dict_out[it] = dict_quo[it - mp_get_si(deg_divisor)]
+        dict_out[it] = dict_quo[it - deg_divisor]
             = (coeff * inv) % modulo_;
     }
     return gf(dict_quo, modulo_);
