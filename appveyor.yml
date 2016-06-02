@@ -14,6 +14,8 @@ environment:
       PLATFORM: "Win32"
     - BUILD_TYPE: "Debug"
       COMPILER: MinGW
+      WITH_MPFR: yes
+      WITH_MPC: yes
     - BUILD_TYPE: "Debug"
       COMPILER: MSVC15
       PLATFORM: "x64"
@@ -24,6 +26,7 @@ environment:
       PLATFORM: "Win32"
     - BUILD_TYPE: "Release"
       COMPILER: MinGW
+      WITH_MPFR: yes
     - BUILD_TYPE: "Release"
       COMPILER: MSVC15
       PLATFORM: "x64"
@@ -44,6 +47,8 @@ install:
 - if [%COMPILER%]==[MinGW] set PATH=C:\MinGW\bin;%PATH%
 - if [%COMPILER%]==[MinGW] mingw-get update
 - if [%COMPILER%]==[MinGW] mingw-get install mingw32-gmp
+- if [%COMPILER%]==[MinGW] if [%WITH_MPFR%]==[yes] mingw-get install mingw32-mpfr
+- if [%COMPILER%]==[MinGW] if [%WITH_MPC%]==[yes] mingw-get install mingw32-mpc
 
 # Rename sh.exe as sh.exe in PATH interferes with MinGW
 - rename "C:\Program Files\Git\usr\bin\sh.exe" "sh2.exe"
@@ -68,6 +73,9 @@ build_script:
 
 - if [%COMPILER%]==[MinGW] cmake -G "MinGW Makefiles" -DCMAKE_PREFIX_PATH=C:\MinGW -DCMAKE_BUILD_TYPE=%BUILD_TYPE% ..
 - if [%COMPILER%]==[MinGW-w64] cmake -G "MinGW Makefiles" -DCMAKE_PREFIX_PATH=C:\mingw64 -DCMAKE_BUILD_TYPE=%BUILD_TYPE% ..
+
+- if [%WITH_MPFR%]==[yes] cmake -DWITH_MPFR=yes ..
+- if [%WITH_MPC%]==[yes] cmake -DWITH_MPC=yes ..
 
 - cmake --build . --config %BUILD_TYPE% --target install
 
