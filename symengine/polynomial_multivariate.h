@@ -275,15 +275,10 @@ public:
                         v, bucket.second * bucket.first[index]));
                 }
             }
-            vec_basic v;
-            v.insert(v.begin(), self.vars_.begin(), self.vars_.end());
-            return MPoly::create(v, std::move(dict));
+            return MPoly::from_dict(self.vars_, std::move(dict));
         } else {
-            Vec v;
-            v.resize(self.vars_.size(), 0);
-            vec_basic vs;
-            vs.insert(vs.begin(), self.vars_.begin(), self.vars_.end());
-            return MPoly::create(vs, {{v, Coeff(0)}});
+            Dict d;
+            return MPoly::from_dict(self.vars_, std::move(d));
         }
     }
 };
