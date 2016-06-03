@@ -138,6 +138,12 @@ void real_mpfr_set_d(basic s, double d, int prec);
 void real_mpfr_set_str(basic s, char *c, int prec);
 //! Returns double value of s.
 double real_mpfr_get_d(const basic s);
+//! Assign to s, a real mpfr that has value pointed by m.
+void real_mpfr_set(basic s, mpfr_srcptr m);
+//! Assign to m, the mpfr_t given in s. 
+void real_mpfr_get(mpfr_ptr m, const basic s);
+//! Returns the precision of the mpfr_t given by s.
+mpfr_prec_t real_mpfr_get_prec(const basic s);
 
 //! Returns signed long value of s.
 signed long integer_get_si(const basic s);

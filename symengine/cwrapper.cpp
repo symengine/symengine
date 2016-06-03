@@ -210,9 +210,8 @@ double real_double_get_d(const basic s)
 void real_mpfr_set_d(basic s, double d, int prec)
 {
     mpfr_class mc = mpfr_class(prec);
-    mpfr_ptr mp = mc.get_mpfr_t();
-    mpfr_set_d (mp, d, MPFR_RNDN);
-    s->m = SymEngine::real_mpfr(mpfr_class(mp));
+    mpfr_set_d (mc.get_mpfr_t(), d, MPFR_RNDN);
+    s->m = SymEngine::real_mpfr(std::move(mc));
 }
 
 void real_mpfr_set_str(basic s, char *c, int prec)
@@ -224,6 +223,23 @@ double real_mpfr_get_d(const basic s)
 {
     SYMENGINE_ASSERT(is_a<RealMPFR>(*(s->m)));
     return mpfr_get_d ( ((rcp_static_cast<const RealMPFR>(s->m))->as_mpfr()).get_mpfr_t() , MPFR_RNDN);
+}
+
+void real_mpfr_set(basic s, mpfr_srcptr m)
+{
+    s->m = SymEngine::real_mpfr(mpfr_class(m));
+}
+
+void real_mpfr_get(mpfr_ptr m, const basic s)
+{
+    SYMENGINE_ASSERT(is_a<RealMPFR>(*(s->m)));
+    m = ((rcp_static_cast<const RealMPFR>(s->m))->as_mpfr()).get_mpfr_t();
+}
+
+mpfr_prec_t real_mpfr_get_prec(const basic s)
+{
+    SYMENGINE_ASSERT(is_a<RealMPFR>(*(s->m)));
+    return ((rcp_static_cast<const RealMPFR>(s->m))->as_mpfr()).get_prec();
 }
 
 #endif // HAVE_SYMENGINE_MPFR
