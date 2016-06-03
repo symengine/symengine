@@ -42,10 +42,18 @@ endif()
 
 # Configure Teuchos using our CMake options:
 configure_file(Teuchos_config.h.in Teuchos_config.h)
-# Include the config file:
-include_directories(BEFORE ${teuchos_BINARY_DIR})
 
 add_library(teuchos STATIC ${SRC})
+
+# Include Teuchos headers
+# Include Teuchos config file (generated per build)
+set_property(TARGET teuchos PROPERTY INCLUDE_DIRECTORIES
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR};${CMAKE_CURRENT_BINARY_DIR}>
+)
+set_property(TARGET teuchos PROPERTY INTERFACE_INCLUDE_DIRECTORIES
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR};${CMAKE_CURRENT_BINARY_DIR}>
+  $<INSTALL_INTERFACE:include/symengine/utilities/teuchos>
+)
 
 install(TARGETS teuchos
             EXPORT SymEngineTargets

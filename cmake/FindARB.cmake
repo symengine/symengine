@@ -1,14 +1,5 @@
-include(LibFindMacros)
-
-libfind_include(fmprb.h arb)
-libfind_library(arb arb)
-
-set(ARB_LIBRARIES ${ARB_LIBRARY})
-set(ARB_INCLUDE_DIRS ${ARB_INCLUDE_DIR})
-set(ARB_TARGETS arb)
+find_path(ARB_INCLUDE_DIR fmprb.h)
+find_library(ARB_LIBRARY arb)
 
 include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(ARB DEFAULT_MSG ARB_LIBRARIES
-    ARB_INCLUDE_DIRS)
-
-mark_as_advanced(ARB_INCLUDE_DIR ARB_LIBRARY)
+find_package_handle_standard_args(ARB DEFAULT_MSG ARB_INCLUDE_DIR ARB_LIBRARY)

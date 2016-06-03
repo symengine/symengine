@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.5)
+cmake_minimum_required(VERSION 3.4)
 
 set(CMAKE_USER_MAKE_RULES_OVERRIDE ${CMAKE_SOURCE_DIR}/cmake/UserOverride.cmake)
 
@@ -117,23 +117,31 @@ endif()
 
 # GMP
 find_package(GMP REQUIRED)
-include_directories(${GMP_INCLUDE_DIRS})
-set(LIBS ${LIBS} ${GMP_TARGETS})
-set(PKGS ${PKGS} "GMP")
+add_library(p::gmp INTERFACE IMPORTED)
+set_property(TARGET p::gmp PROPERTY INTERFACE_INCLUDE_DIRECTORIES
+    ${GMP_INCLUDE_DIR})
+set_property(TARGET p::gmp PROPERTY INTERFACE_LINK_LIBRARIES
+    ${GMP_LIBRARY})
 
-# Check gmpxx
-if (NOT(MSVC) AND WITH_GMPXX)
-    try_compile(GMPXX "${CMAKE_CURRENT_BINARY_DIR}/cxx" "${CMAKE_SOURCE_DIR}/cmake/checkgmpxx.cpp"
-        CMAKE_FLAGS "-DCOMPILE_DEFINITIONS=${CMAKE_CXX_FLAGS_RELEASE}"
-        CMAKE_FLAGS "-DINCLUDE_DIRECTORIES=${GMP_INCLUDE_DIRS}"
-        CMAKE_FLAGS "-DLINK_LIBRARIES=${GMP_LIBRARIES}"
-        OUTPUT_VARIABLE GMPXX_ERROR_LOG)
-    if (NOT ${GMPXX})
-        message(FATAL_ERROR "GMP library being linked is not supported by CMAKE_CXX_COMPILER used. \n"
-            "Recompile GMP with C++ support using ${CMAKE_CXX_COMPILER}, remove CMakeCache.txt and try again.\n"
-            "Error Log : \n${GMPXX_ERROR_LOG}")
-    endif()
-endif()
+add_library(p::gmpxx INTERFACE IMPORTED)
+set_property(TARGET p::gmpxx PROPERTY INTERFACE_INCLUDE_DIRECTORIES
+    ${GMPXX_INCLUDE_DIR})
+set_property(TARGET p::gmpxx PROPERTY INTERFACE_LINK_LIBRARIES
+    ${GMPXX_LIBRARY} p::gmp)
+
+# TODO: get this working again
+#if (NOT(MSVC) AND WITH_GMPXX)
+#    try_compile(GMPXX "${CMAKE_CURRENT_BINARY_DIR}/cxx" "${CMAKE_SOURCE_DIR}/cmake/checkgmpxx.cpp"
+#        CMAKE_FLAGS "-DCOMPILE_DEFINITIONS=${CMAKE_CXX_FLAGS_RELEASE}"
+#        CMAKE_FLAGS "-DINCLUDE_DIRECTORIES=${GMP_INCLUDE_DIRS}"
+#        CMAKE_FLAGS "-DLINK_LIBRARIES=${GMP_LIBRARIES}"
+#        OUTPUT_VARIABLE GMPXX_ERROR_LOG)
+#    if (NOT ${GMPXX})
+#        message(FATAL_ERROR "GMP library being linked is not supported by CMAKE_CXX_COMPILER used. \n"
+#            "Recompile GMP with C++ support using ${CMAKE_CXX_COMPILER}, remove CMakeCache.txt and try again.\n"
+#            "Error Log : \n${GMPXX_ERROR_LOG}")
+#    endif()
+#endif()
 
 # ECM
 set(WITH_ECM no
@@ -141,10 +149,12 @@ set(WITH_ECM no
 
 if (WITH_ECM)
     find_package(ECM REQUIRED)
-    include_directories(${ECM_INCLUDE_DIRS})
-    set(LIBS ${LIBS} ${ECM_TARGETS})
+    add_library(p::ecm INTERFACE IMPORTED)
+    set_property(TARGET p::ecm PROPERTY INTERFACE_INCLUDE_DIRECTORIES
+        ${ECM_INCLUDE_DIR})
+    set_property(TARGET p::ecm PROPERTY INTERFACE_LINK_LIBRARIES
+        ${ECM_LIBRARY})
     set(HAVE_SYMENGINE_ECM yes)
-    set(PKGS ${PKGS} "ECM")
 endif()
 
 # PRIMESIEVE
@@ -153,10 +163,12 @@ set(WITH_PRIMESIEVE no
 
 if (WITH_PRIMESIEVE)
     find_package(PRIMESIEVE REQUIRED)
-    include_directories(${PRIMESIEVE_INCLUDE_DIRS})
-    set(LIBS ${LIBS} ${PRIMESIEVE_TARGETS})
+    add_library(p::primesieve INTERFACE IMPORTED)
+    set_property(TARGET p::primesieve PROPERTY INTERFACE_INCLUDE_DIRECTORIES
+        ${PRIMESIEVE_INCLUDE_DIR})
+    set_property(TARGET p::primesieve PROPERTY INTERFACE_LINK_LIBRARIES
+        ${PRIMESIEVE_LIBRARY})
     set(HAVE_SYMENGINE_PRIMESIEVE yes)
-    set(PKGS ${PKGS} "PRIMESIEVE")
 endif()
 
 # ARB
@@ -176,44 +188,43 @@ set(HAVE_SYMENGINE_MPC False)
 
 if (WITH_FLINT)
     find_package(FLINT REQUIRED)
-    include_directories(${FLINT_INCLUDE_DIRS})
-    set(LIBS ${LIBS} ${FLINT_TARGETS})
-    set(HAVE_SYMENGINE_FLINT True)
-    set(PKGS ${PKGS} "FLINT")
+    add_library(p::flint INTERFACE IMPORTED)
+    set_property(TARGET p::flint PROPERTY INTERFACE_INCLUDE_DIRECTORIES
+        ${FLINT_INCLUDE_DIR})
+    set_property(TARGET p::flint PROPERTY INTERFACE_LINK_LIBRARIES
+        ${FLINT_LIBRARY} p::gmp)
 
-    # Workaround for https://github.com/fredrik-johansson/arb/issues/24
-    include_directories(${FLINT_INCLUDE_DIRS}/flint)
+    set(HAVE_SYMENGINE_FLINT True)
 
     set(WITH_MPFR yes)
 endif()
 
 if (WITH_ARB)
-    find_package(FLINT REQUIRED)
-    include_directories(${FLINT_INCLUDE_DIRS})
-    set(LIBS ${LIBS} ${FLINT_TARGETS})
-    set(PKGS ${PKGS} "FLINT")
-
-    # Workaround for https://github.com/fredrik-johansson/arb/issues/24
-    include_directories(${FLINT_INCLUDE_DIRS}/flint)
-
     set(WITH_FLINT yes)
-    set(HAVE_SYMENGINE_FLINT True)
     set(WITH_MPFR yes)
 
     find_package(ARB REQUIRED)
-    include_directories(${ARB_INCLUDE_DIRS})
-    set(LIBS ${LIBS} ${ARB_TARGETS})
+    add_library(p::arb INTERFACE IMPORTED)
+    set_property(TARGET p::arb PROPERTY INTERFACE_INCLUDE_DIRECTORIES
+        ${ARB_INCLUDE_DIR})
+    set_property(TARGET p::arb PROPERTY INTERFACE_LINK_LIBRARIES
+        ${ARB_LIBRARY} p::flint p::mpfr)
     set(HAVE_SYMENGINE_ARB True)
-    set(PKGS ${PKGS} "ARB")
+
+    # Workaround for https://github.com/fredrik-johansson/arb/issues/24
+    set_property(TARGET p::arb APPEND PROPERTY INTERFACE_INCLUDE_DIRECTORIES
+        ${FLINT_INCLUDE_DIR}/flint)
 endif()
 
 if (WITH_MPC)
     find_package(MPC REQUIRED)
-    include_directories(${MPC_INCLUDE_DIRS})
-    set(LIBS ${LIBS} ${MPC_TARGETS})
+    add_library(p::mpc INTERFACE IMPORTED)
+    set_property(TARGET p::mpc PROPERTY INTERFACE_INCLUDE_DIRECTORIES
+        ${MPC_INCLUDE_DIR})
+    set_property(TARGET p::mpc PROPERTY INTERFACE_LINK_LIBRARIES
+        ${MPC_LIBRARY})
     set(HAVE_SYMENGINE_MPC True)
     set(WITH_MPFR yes)
-    set(PKGS ${PKGS} "MPC")
 endif()
 
 # Boost
@@ -231,9 +242,10 @@ if (WITH_PIRANHA)
         "${CMAKE_CXX_FLAGS_RELEASE} -DNDEBUG")
 
     find_package(PIRANHA REQUIRED)
-    include_directories(${PIRANHA_INCLUDE_DIRS})
+    add_library(p::piranha INTERFACE IMPORTED)
+    set_property(TARGET p::piranha PROPERTY INTERFACE_INCLUDE_DIRECTORIES
+        ${PIRANHA_INCLUDE_DIR})
     set(HAVE_SYMENGINE_PIRANHA yes)
-    set(PKGS ${PKGS} "PIRANHA")
     set(BOOST_COMPONENTS ${BOOST_COMPONENTS} serialization iostreams)
     set(WITH_BOOST yes)
 endif()
@@ -256,25 +268,33 @@ endif()
 
 if (WITH_PTHREAD)
     find_package(PTHREAD REQUIRED)
-    include_directories(${PTHREAD_INCLUDE_DIRS})
-    set(LIBS ${LIBS} ${PTHREAD_TARGETS})
+    add_library(p::pthread INTERFACE IMPORTED)
+    set_property(TARGET p::pthread PROPERTY INTERFACE_INCLUDE_DIRECTORIES
+        ${PTHREAD_INCLUDE_DIR})
+    set_property(TARGET p::pthread PROPERTY INTERFACE_LINK_LIBRARIES
+        ${PTHREAD_LIBRARY})
     set(HAVE_SYMENGINE_PTHREAD yes)
-    set(PKGS ${PKGS} "PTHREAD")
 endif()
 
 if (WITH_BOOST)
     find_package(Boost REQUIRED COMPONENTS ${BOOST_COMPONENTS})
-    include_directories(${Boost_INCLUDE_DIRS})
-    set(LIBS ${LIBS} ${Boost_LIBRARIES})
+    add_library(p::boost INTERFACE IMPORTED)
+    set_property(TARGET p::boost PROPERTY INTERFACE_INCLUDE_DIRECTORIES
+        ${BOOST_INCLUDE_DIRS})
+    set_property(TARGET p::boost PROPERTY INTERFACE_LINK_LIBRARIES
+        ${BOOST_LIBRARIES})
     set(HAVE_SYMENGINE_BOOST yes)
 endif()
 
 if (WITH_MPFR)
     find_package(MPFR REQUIRED)
-    include_directories(${MPFR_INCLUDE_DIRS})
-    set(LIBS ${LIBS} ${MPFR_TARGETS})
+    add_library(p::mpfr INTERFACE IMPORTED)
+    set_property(TARGET p::mpfr PROPERTY INTERFACE_INCLUDE_DIRECTORIES
+        ${MPFR_INCLUDE_DIR})
+    set_property(TARGET p::mpfr PROPERTY INTERFACE_LINK_LIBRARIES
+        ${MPFR_LIBRARY} p::gmp)
+
     set(HAVE_SYMENGINE_MPFR True)
-    set(PKGS ${PKGS} "MPFR")
 endif()
 
 # BFD
@@ -283,17 +303,33 @@ set(WITH_BFD no
 
 if (WITH_BFD)
     find_package(BFD REQUIRED)
+    add_library(p::bfd INTERFACE IMPORTED)
+    set_property(TARGET p::bfd PROPERTY INTERFACE_INCLUDE_DIRECTORIES
+        ${BFD_INCLUDE_DIR})
+    set_property(TARGET p::bfd PROPERTY INTERFACE_LINK_LIBRARIES
+        ${BFD_LIBRARY})
+
     find_package(LINKH REQUIRED)
-    include_directories(${BFD_INCLUDE_DIRS} ${LINKH_INCLUDE_DIRS})
-    set(LIBS ${LIBS} ${BFD_TARGETS})
+    add_library(p::linkh INTERFACE IMPORTED)
+    set_property(TARGET p::linkh PROPERTY INTERFACE_INCLUDE_DIRECTORIES
+        ${LINKH_INCLUDE_DIR})
+
     set(HAVE_TEUCHOS_BFD yes)
     set(HAVE_TEUCHOS_LINK yes)
 
     set(HAVE_TEUCHOS_EXECINFO yes)
+
     find_package(EXECINFO REQUIRED)
-    include_directories(${EXECINFO_INCLUDE_DIRS})
-    set(LIBS ${LIBS} ${EXECINFO_TARGETS})
-    set(PKGS ${PKGS} "BFD" "LINKH" "EXECINFO")
+    add_library(p::execinfo INTERFACE IMPORTED)
+    set_property(TARGET p::execinfo PROPERTY INTERFACE_INCLUDE_DIRECTORIES
+        ${EXECINFO_INCLUDE_DIR})
+    if (EXECINFO_LIBRARY)
+        set_property(TARGET p::execinfo PROPERTY INTERFACE_LINK_LIBRARIES
+            ${EXECINFO_LIBRARY})
+    endif()
+
+    set_property(TARGET p::bfd APPEND PROPERTY INTERFACE_LINK_LIBRARIES
+        p::linkh p::execinfo)
 endif()
 
 # TCMalloc
@@ -302,7 +338,9 @@ set(WITH_TCMALLOC no
 
 if (WITH_TCMALLOC)
     find_package(TCMALLOC REQUIRED)
-    set(LIBS ${LIBS} ${TCMALLOC_TARGETS})
+    add_library(p::tcmalloc INTERFACE IMPORTED)
+    set_property(TARGET p::tcmalloc PROPERTY INTERFACE_LINK_LIBRARIES
+        ${TCMALLOC_LIBRARY})
 
     if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
         set(CMAKE_CXX_FLAGS_DEBUG
@@ -310,8 +348,6 @@ if (WITH_TCMALLOC)
         set(CMAKE_CXX_FLAGS_RELEASE
             "${CMAKE_CXX_FLAGS_RELEASE} -fno-builtin-malloc -fno-builtin-calloc -fno-builtin-realloc -fno-builtin-free")
     endif()
-    set(PKGS ${PKGS} "TCMALLOC")
-
 endif()
 
 # Doxygen
@@ -457,7 +493,6 @@ install(FILES "${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/SymEngineConfig.cma
               cmake/FindPRIMESIEVE.cmake
               cmake/FindPTHREAD.cmake
               cmake/FindTCMALLOC.cmake
-              cmake/LibFindMacros.cmake
         DESTINATION ${INSTALL_CMAKE_DIR})
 install(EXPORT SymEngineTargets DESTINATION ${INSTALL_CMAKE_DIR})
 

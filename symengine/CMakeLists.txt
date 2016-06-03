@@ -1,9 +1,5 @@
 if (WITH_SYMENGINE_TEUCHOS)
     add_subdirectory(utilities/teuchos)
-    # Include Teuchos headers:
-    include_directories(BEFORE ${teuchos_SOURCE_DIR})
-    # Include Teuchos config file (generated per build):
-    include_directories(BEFORE ${teuchos_BINARY_DIR})
 endif()
 
 set(SRC
@@ -82,16 +78,78 @@ set(HEADERS
 
 # Configure SymEngine using our CMake options:
 configure_file(symengine_config.h.in symengine_config.h)
-# Include the config file:
-include_directories(BEFORE ${symengine_BINARY_DIR})
-# Include the source directory
-include_directories(BEFORE ${symengine_SOURCE_DIR})
 
 add_library(symengine ${SRC})
+target_link_libraries(symengine
+    PUBLIC p::gmpxx
+    )
 if (WITH_SYMENGINE_TEUCHOS)
-    target_link_libraries(symengine teuchos)
+    target_link_libraries(symengine
+        PUBLIC teuchos
+    )
 endif()
-target_link_libraries(symengine ${LIBS})
+if (WITH_MPFR)
+    target_link_libraries(symengine
+        PUBLIC p::mpfr
+        )
+endif()
+if (WITH_ARB)
+    target_link_libraries(symengine
+        PUBLIC p::arb
+        )
+endif()
+if (WITH_ECM)
+    target_link_libraries(symengine
+        PUBLIC p::ecm
+        )
+endif()
+if (WITH_MPC)
+    target_link_libraries(symengine
+        PUBLIC p::mpc
+        )
+endif()
+if (WITH_BOOST)
+    target_link_libraries(symengine
+        PUBLIC p::boost
+        )
+endif()
+if (WITH_PIRANHA)
+    target_link_libraries(symengine
+        PUBLIC p::piranha
+        )
+endif()
+if (WITH_PRIMESIEVE)
+    target_link_libraries(symengine
+        PUBLIC p::primesieve
+        )
+endif()
+if (WITH_PTHREAD)
+    target_link_libraries(symengine
+        PUBLIC p::pthread
+        )
+endif()
+if (WITH_TCMALLOC)
+    target_link_libraries(symengine
+        PUBLIC p::tcmalloc
+        )
+endif()
+if (WITH_BFD)
+    target_link_libraries(symengine
+        PUBLIC p::bfd
+        )
+endif()
+
+
+get_filename_component(CMAKE_CURRENT_SOURCE_DIR_PARENT ${CMAKE_CURRENT_SOURCE_DIR} DIRECTORY)
+get_filename_component(CMAKE_CURRENT_BINARY_DIR_PARENT ${CMAKE_CURRENT_BINARY_DIR} DIRECTORY)
+
+set_property(TARGET symengine APPEND PROPERTY INCLUDE_DIRECTORIES
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR_PARENT};${CMAKE_CURRENT_BINARY_DIR_PARENT}>
+)
+set_property(TARGET symengine APPEND PROPERTY INTERFACE_INCLUDE_DIRECTORIES
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR_PARENT};${CMAKE_CURRENT_BINARY_DIR_PARENT}>
+  $<INSTALL_INTERFACE:include/symengine>
+)
 
 install(TARGETS symengine
             EXPORT SymEngineTargets

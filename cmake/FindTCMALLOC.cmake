@@ -1,14 +1,8 @@
-include(LibFindMacros)
-
-libfind_library(tcmalloc tcmalloc)
-set(TCMALLOC_TARGETS tcmalloc)
+find_library(TCMALLOC_LIBRARY tcmalloc)
 if (NOT TCMALLOC_LIBRARY)
-    libfind_library(tcmalloc_minimal tcmalloc)
+    find_library(TCMALLOC_MINIMAL_LIBRARY tcmalloc_minimal)
     set(TCMALLOC_LIBRARY ${TCMALLOC_MINIMAL_LIBRARY})
-    set(TCMALLOC_TARGETS tcmalloc_minimal)
 endif()
-set(TCMALLOC_LIBRARIES ${TCMALLOC_LIBRARY})
-find_package_handle_standard_args(TCMALLOC DEFAULT_MSG
-    TCMALLOC_LIBRARIES)
 
-mark_as_advanced(TCMALLOC_LIBRARY TCMALLOC_MINIMAL_LIBRARY)
+include(FindPackageHandleStandardArgs)
+find_package_handle_standard_args(TCMALLOC DEFAULT_MSG TCMALLOC_LIBRARY)
