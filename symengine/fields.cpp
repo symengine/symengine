@@ -284,6 +284,7 @@ void GaloisField::gf_monic(integer_class &res,
 
 RCP<const GaloisField> GaloisField::gf_gcd(const RCP<const GaloisField> &o) const
 {
+    SYMENGINE_ASSERT(modulo_ == o->modulo_);
     RCP<const GaloisField> f = rcp_from_this_cast<const GaloisField>();
     RCP<const GaloisField> g = o;
     RCP<const GaloisField> temp_out, temp_ex;
@@ -292,8 +293,21 @@ RCP<const GaloisField> GaloisField::gf_gcd(const RCP<const GaloisField> &o) cons
         f->gf_div(temp_ex, outArg(temp_out), outArg(g)); // g = f % g
         f = temp_ex;
     }
-    integer_class temp_LC = 0_z;
+    integer_class temp_LC;
     f->gf_monic(temp_LC, outArg(temp_out));
     return temp_out;
+}
+
+RCP<const GaloisField> GaloisField::gf_lcm(const RCP<const GaloisField> &o) const
+{
+    SYMENGINE_ASSERT(modulo_ == o->modulo_);
+    map_uint_mpz dict_out;
+    if (dict_.empty() or o->dict_.empty())
+        return gf(dict_out, modulo_);
+    RCP<const GaloisField> out;
+    out = gf_mul(o)->gf_quo(gf_gcd(o));
+    integer_class temp_LC;
+    out->gf_monic(temp_LC, outArg(out));
+    return out;
 }
 }
