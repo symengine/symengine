@@ -209,20 +209,15 @@ double real_double_get_d(const basic s)
 
 void real_mpfr_set_d(basic s, double d, int prec)
 {
-    mpfr_t mp;
-    mpfr_init2 (mp, prec);
+    mpfr_class mc = mpfr_class(prec);
+    mpfr_ptr mp = mc.get_mpfr_t();
     mpfr_set_d (mp, d, MPFR_RNDN);
     s->m = SymEngine::real_mpfr(mpfr_class(mp));
-    mpfr_clear(mp);
 }
 
 void real_mpfr_set_str(basic s, char *c, int prec)
 {
-    mpfr_t mp;
-    mpfr_init2 (mp, prec);
-    mpfr_set_str (mp, c, 10, MPFR_RNDN);
-    s->m = SymEngine::real_mpfr(mpfr_class(mp));
-    mpfr_clear(mp);
+    s->m = SymEngine::real_mpfr(mpfr_class(c, prec, 10));
 }
 
 double real_mpfr_get_d(const basic s)
@@ -443,16 +438,20 @@ int is_a_ComplexDouble(const basic c)
 {
     return is_a<ComplexDouble>(*(c->m));
 }
-#ifdef HAVE_SYMENGINE_MPFR
 int is_a_RealMPFR(const basic c)
 {
+#ifdef HAVE_SYMENGINE_MPFR
     return is_a<RealMPFR>(*(c->m));
+#endif // HAVE_SYMENGINE_MPFR
+    return false;
 }
 int is_a_ComplexMPC(const basic c)
 {
+#ifdef HAVE_SYMENGINE_MPC
     return is_a<ComplexMPC>(*(c->m));
+#endif // HAVE_SYMENGINE_MPC
+    return false;
 }
-#endif // HAVE_SYMENGINE_MPFR
 
 // C wrapper for std::vector<int>
 
