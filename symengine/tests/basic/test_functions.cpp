@@ -102,6 +102,10 @@ using SymEngine::Min;
 using SymEngine::Rational;
 using SymEngine::rcp_static_cast;
 using SymEngine::I;
+using SymEngine::integer_class;
+using SymEngine::get_mpz_t;
+
+using namespace SymEngine::literals;
 
 #ifdef HAVE_SYMENGINE_MPFR
 using SymEngine::real_mpfr;
@@ -2660,7 +2664,8 @@ TEST_CASE("MPFR and MPC: functions", "[functions]")
 #ifdef HAVE_SYMENGINE_MPFR
     RCP<const Basic> r1, r2;
     RCP<const Basic> i2 = integer(2);
-    unsigned long p = 100000000000000000;
+    integer_class p = 100000000000000000_z;
+    integer_class q;
 
     mpfr_class a(60);
     mpfr_set_ui(a.get_mpfr_t(), 1, MPFR_RNDN);
@@ -2671,25 +2676,32 @@ TEST_CASE("MPFR and MPC: functions", "[functions]")
     REQUIRE(is_a<RealMPFR>(*r1));
     REQUIRE(is_a<RealMPFR>(*r2));
 
-    mpfr_mul_ui(a.get_mpfr_t(),
-                static_cast<const RealMPFR &>(*r1).i.get_mpfr_t(), p,
+    mpfr_mul_z(a.get_mpfr_t(),
+                static_cast<const RealMPFR &>(*r1).i.get_mpfr_t(), get_mpz_t(p),
                 MPFR_RNDN);
-    REQUIRE(mpfr_cmp_si(a.get_mpfr_t(), 84147098480789650) > 0);
-    REQUIRE(mpfr_cmp_si(a.get_mpfr_t(), 84147098480789651) < 0);
-    mpfr_mul_ui(a.get_mpfr_t(),
-                static_cast<const RealMPFR &>(*r2).i.get_mpfr_t(), p,
+    q = 84147098480789650_z;
+    REQUIRE(mpfr_cmp_z(a.get_mpfr_t(), get_mpz_t(q)) > 0);
+    q = 84147098480789651_z;
+    REQUIRE(mpfr_cmp_z(a.get_mpfr_t(), get_mpz_t(q)) < 0);
+
+    mpfr_mul_z(a.get_mpfr_t(),
+                static_cast<const RealMPFR &>(*r2).i.get_mpfr_t(), get_mpz_t(p),
                 MPFR_RNDN);
-    REQUIRE(mpfr_cmp_si(a.get_mpfr_t(), -41614683654714239) > 0);
-    REQUIRE(mpfr_cmp_si(a.get_mpfr_t(), -41614683654714238) < 0);
+    q = -41614683654714239_z;
+    REQUIRE(mpfr_cmp_z(a.get_mpfr_t(), get_mpz_t(q)) > 0);
+    q = -41614683654714238_z;
+    REQUIRE(mpfr_cmp_z(a.get_mpfr_t(), get_mpz_t(q)) < 0);
 
     mpfr_set_ui(a.get_mpfr_t(), 3, MPFR_RNDN);
     r1 = gamma(div(real_mpfr(a), i2));
     REQUIRE(is_a<RealMPFR>(*r1));
-    mpfr_mul_ui(a.get_mpfr_t(),
-                static_cast<const RealMPFR &>(*r1).i.get_mpfr_t(), p,
+    mpfr_mul_z(a.get_mpfr_t(),
+                static_cast<const RealMPFR &>(*r1).i.get_mpfr_t(), get_mpz_t(p),
                 MPFR_RNDN);
-    REQUIRE(mpfr_cmp_si(a.get_mpfr_t(), 88622692545275801) > 0);
-    REQUIRE(mpfr_cmp_si(a.get_mpfr_t(), 88622692545275802) < 0);
+    q = 88622692545275801_z;
+    REQUIRE(mpfr_cmp_z(a.get_mpfr_t(), get_mpz_t(q)) > 0);
+    q = 88622692545275802_z;
+    REQUIRE(mpfr_cmp_z(a.get_mpfr_t(), get_mpz_t(q)) < 0);
 
     mpfr_set_si(a.get_mpfr_t(), 0, MPFR_RNDN);
     r1 = asin(real_mpfr(a));
@@ -2702,13 +2714,17 @@ TEST_CASE("MPFR and MPC: functions", "[functions]")
     REQUIRE(is_a<ComplexMPC>(*r1));
     mpc_srcptr b = static_cast<const ComplexMPC &>(*r1).i.get_mpc_t();
     mpc_real(a.get_mpfr_t(), b, MPFR_RNDN);
-    mpfr_mul_ui(a.get_mpfr_t(), a.get_mpfr_t(), p, MPFR_RNDN);
-    REQUIRE(mpfr_cmp_si(a.get_mpfr_t(), 157079632679489661) > 0);
-    REQUIRE(mpfr_cmp_si(a.get_mpfr_t(), 157079632679489662) < 0);
+    mpfr_mul_z(a.get_mpfr_t(), a.get_mpfr_t(), get_mpz_t(p), MPFR_RNDN);
+    q = 157079632679489661_z;
+    REQUIRE(mpfr_cmp_z(a.get_mpfr_t(), get_mpz_t(q)) > 0);
+    q = 157079632679489662_z;
+    REQUIRE(mpfr_cmp_z(a.get_mpfr_t(), get_mpz_t(q)) < 0);
     mpc_imag(a.get_mpfr_t(), b, MPFR_RNDN);
-    mpfr_mul_ui(a.get_mpfr_t(), a.get_mpfr_t(), p, MPFR_RNDN);
-    REQUIRE(mpfr_cmp_si(a.get_mpfr_t(), 131695789692481670) > 0);
-    REQUIRE(mpfr_cmp_si(a.get_mpfr_t(), 131695789692481671) < 0);
+    mpfr_mul_z(a.get_mpfr_t(), a.get_mpfr_t(), get_mpz_t(p), MPFR_RNDN);
+    q = 131695789692481670_z;
+    REQUIRE(mpfr_cmp_z(a.get_mpfr_t(), get_mpz_t(q)) > 0);
+    q = 131695789692481671_z;
+    REQUIRE(mpfr_cmp_z(a.get_mpfr_t(), get_mpz_t(q)) < 0);
 
     // Check asin(1.0 + 1.0*I)
     mpc_class c(60);
@@ -2717,13 +2733,17 @@ TEST_CASE("MPFR and MPC: functions", "[functions]")
     REQUIRE(is_a<ComplexMPC>(*r1));
     b = static_cast<const ComplexMPC &>(*r1).i.get_mpc_t();
     mpc_real(a.get_mpfr_t(), b, MPFR_RNDN);
-    mpfr_mul_ui(a.get_mpfr_t(), a.get_mpfr_t(), p, MPFR_RNDN);
-    REQUIRE(mpfr_cmp_si(a.get_mpfr_t(), 66623943249251525) > 0);
-    REQUIRE(mpfr_cmp_si(a.get_mpfr_t(), 66623943249251526) < 0);
+    mpfr_mul_z(a.get_mpfr_t(), a.get_mpfr_t(), get_mpz_t(p), MPFR_RNDN);
+    q = 66623943249251525_z;
+    REQUIRE(mpfr_cmp_z(a.get_mpfr_t(), get_mpz_t(q)) > 0);
+    q = 66623943249251526_z;
+    REQUIRE(mpfr_cmp_z(a.get_mpfr_t(), get_mpz_t(q)) < 0);
     mpc_imag(a.get_mpfr_t(), b, MPFR_RNDN);
-    mpfr_mul_ui(a.get_mpfr_t(), a.get_mpfr_t(), p, MPFR_RNDN);
-    REQUIRE(mpfr_cmp_si(a.get_mpfr_t(), 106127506190503565) > 0);
-    REQUIRE(mpfr_cmp_si(a.get_mpfr_t(), 106127506190503566) < 0);
+    mpfr_mul_z(a.get_mpfr_t(), a.get_mpfr_t(), get_mpz_t(p), MPFR_RNDN);
+    q = 106127506190503565_z;
+    REQUIRE(mpfr_cmp_z(a.get_mpfr_t(), get_mpz_t(q)) > 0);
+    q = 106127506190503566_z;
+    REQUIRE(mpfr_cmp_z(a.get_mpfr_t(), get_mpz_t(q)) < 0);
 #else
     mpfr_set_si(a.get_mpfr_t(), 2, MPFR_RNDN);
     CHECK_THROWS_AS(asin(real_mpfr(a)), std::runtime_error);
