@@ -90,6 +90,8 @@ RCP<const GaloisField> GaloisField::gf_mul_ground(const integer_class a) const
 
 RCP<const GaloisField> GaloisField::gf_quo_ground(const integer_class a) const
 {
+    if (a == 0)
+        throw std::runtime_error("ZeroDivisionError");
     map_uint_mpz dict;
     integer_class inv;
     mp_invert(inv, a, modulo_);
@@ -145,38 +147,38 @@ void GaloisField::gf_div(const RCP<const GaloisField> &o,
         throw std::runtime_error("ZeroDivisionError");
     map_uint_mpz dict_divisor = o->dict_;
     map_uint_mpz dict_out;
-    long deg_dividend = (--dict_.end())->first;
+    long deg_dividend = dict_.empty() ? 0 : (--dict_.end())->first;
     long deg_divisor = (--dict_divisor.end())->first;
     if (deg_dividend < deg_divisor) {
         *quo = gf(dict_out, modulo_);
         *rem = gf(dict_, modulo_);
-        return;
-    }
-    dict_out = this->dict_;
-    integer_class inv;
-    mp_invert(inv, (--dict_divisor.end())->second, modulo_);
-    integer_class coeff;
-    for (long it = deg_dividend; it >= 0; it--) {
-        coeff = dict_out[it];
-        long lb = std::max(long(0), deg_divisor - deg_dividend + it);
-        long ub = std::min(it, deg_divisor - 1) + 1;
-        for (long j = lb; j < ub; j++) {
-            coeff
-                -= dict_out[it - j + deg_divisor] * dict_divisor[j];
+    } else {
+        dict_out = this->dict_;
+        integer_class inv;
+        mp_invert(inv, (--dict_divisor.end())->second, modulo_);
+        integer_class coeff;
+        for (long it = deg_dividend; it >= 0; it--) {
+            coeff = dict_out[it];
+            long lb = std::max(long(0), deg_divisor - deg_dividend + it);
+            long ub = std::min(it, deg_divisor - 1) + 1;
+            for (long j = lb; j < ub; j++) {
+                coeff
+                    -= dict_out[it - j + deg_divisor] * dict_divisor[j];
+            }
+            if (it >= deg_divisor)
+                coeff *= inv;
+            dict_out[it] = coeff % modulo_;
         }
-        if (it >= deg_divisor)
-            coeff *= inv;
-        dict_out[it] = coeff % modulo_;
+        map_uint_mpz dict_rem, dict_quo;
+        for (auto it : dict_out) {
+            if (it.first < deg_divisor)
+                dict_rem[it.first] = it.second;
+            else
+                dict_quo[it.first - deg_divisor] = it.second;
+        }
+        *quo = gf(dict_quo, modulo_);
+        *rem = gf(dict_rem, modulo_);
     }
-    map_uint_mpz dict_rem, dict_quo;
-    for (auto it : dict_out) {
-        if (it.first < deg_divisor)
-            dict_rem[it.first] = it.second;
-        else
-            dict_quo[it.first - deg_divisor] = it.second;
-    }
-    *quo = gf(dict_quo, modulo_);
-    *rem = gf(dict_rem, modulo_);
 }
 
 RCP<const GaloisField>
@@ -187,7 +189,7 @@ GaloisField::gf_quo(const RCP<const GaloisField> &o) const
         throw std::runtime_error("ZeroDivisionError");
     map_uint_mpz dict_divisor = o->dict_;
     map_uint_mpz dict_out;
-    long deg_dividend = (--dict_.end())->first;
+    long deg_dividend = dict_.empty() ? 0 : (--dict_.end())->first;
     long deg_divisor = (--dict_divisor.end())->first;
     if (deg_dividend < deg_divisor) {
         return gf(dict_out, modulo_);
@@ -278,5 +280,20 @@ void GaloisField::gf_monic(integer_class &res,
         else
             *monic = gf_quo_ground(res);
     }
+}
+
+RCP<const GaloisField> GaloisField::gf_gcd(const RCP<const GaloisField> &o) const
+{
+    RCP<const GaloisField> f = rcp_from_this_cast<const GaloisField>();
+    RCP<const GaloisField> g = o;
+    RCP<const GaloisField> temp_out, temp_ex;
+    while (not g->dict_.empty()) {
+        temp_ex = g;
+        f->gf_div(temp_ex, outArg(temp_out), outArg(g)); // g = f % g
+        f = temp_ex;
+    }
+    integer_class temp_LC = 0_z;
+    f->gf_monic(temp_LC, outArg(temp_out));
+    return temp_out;
 }
 }

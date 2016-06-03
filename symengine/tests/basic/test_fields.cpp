@@ -323,4 +323,35 @@ TEST_CASE("GaloisField : Basic", "[basic]")
     REQUIRE(mp[1] == 2);
     REQUIRE(mp[2] == 7);
     REQUIRE(mp[3] == 1);
+
+    a = {};
+    r1 = gf(a, 11_z);
+    r2 = gf(a, 11_z);
+    REQUIRE(r1->gf_gcd(r2)->dict_.empty());
+    a = {2_z};
+    r1 = gf(a, 11_z);
+    mp = r1->gf_gcd(r2)->dict_;
+    REQUIRE(mp[0] == 1);
+    REQUIRE(eq(*r1->gf_gcd(r2), *r2->gf_gcd(r1)));
+    a = {0_z, 1_z};
+    r1 = gf(a, 11_z);
+    r3 = r1->gf_gcd(r2);
+    REQUIRE(eq(*r1, *r3));
+    REQUIRE(eq(*r3, *r2->gf_gcd(r1)));
+
+    a = {0_z, 3_z};
+    r1 = gf(a, 11_z);
+    r2 = gf(a, 11_z);
+    REQUIRE(eq(*r1->gf_gcd(r2), *r2->gf_gcd(r1)));
+    mp = r1->gf_gcd(r2)->dict_;
+    REQUIRE(mp[1] == 1);
+
+    a = {7_z, 8_z, 1_z};
+    r1 = gf(a, 11_z);
+    a = {7_z, 1_z, 7_z, 1_z};
+    r2 = gf(a, 11_z);
+    REQUIRE(eq(*r1->gf_gcd(r2), *r2->gf_gcd(r1)));
+    mp = r1->gf_gcd(r2)->dict_;
+    REQUIRE(mp[0] == 7);
+    REQUIRE(mp[1] == 1);
 }
