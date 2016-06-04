@@ -224,6 +224,11 @@ public:
     {
         return poly_.get_dict();
     }
+
+    inline Expression get_coeff(int x) const
+    {
+        return poly_.get_coeff(x);
+    }
 }; // UExprPoly
 
 inline RCP<const UExprPoly> uexpr_poly(RCP<const Symbol> i, UExprDict &&dict)

@@ -202,6 +202,14 @@ public:
             return Key(0);
         return dict_.rbegin()->first;
     }
+
+    Value get_coeff(Key x) const
+    {
+        auto ite = dict_.find(x);
+        if (ite != dict_.end())
+            return ite->second;
+        return Value(0);
+    }
 };
 
 template <typename Container, typename Poly>
@@ -219,6 +227,7 @@ public:
     // TODO think of something to make this purely virtual
     //! \returns the degree of the polynomial
     // virtual unsigned int get_degree() const = 0;
+    // virtual integer_class get_coeff(int i) const = 0;
 
     //! \returns `-1`,`0` or `1` after comparing
     virtual int compare(const Basic &o) const = 0;

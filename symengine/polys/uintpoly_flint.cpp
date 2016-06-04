@@ -84,5 +84,11 @@ integer_class UIntPolyFlint::eval(const integer_class &x) const
     flint::fmpzxx ans(poly_(r));
     return to_integer_class(ans);
 }
+
+integer_class UIntPolyFlint::get_coeff(unsigned int x) const
+{
+    flint::fmpzxx ans(poly_.get_coeff(x));
+    return to_integer_class(ans);
+}
 }
 #endif

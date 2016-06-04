@@ -171,6 +171,11 @@ public:
         return poly_.degree();
     }
 
+    inline integer_class get_coeff(unsigned int x) const
+    {
+        return poly_.get_coeff(x);
+    }
+
 }; // UIntPoly
 
 inline RCP<const UIntPoly> uint_poly(RCP<const Symbol> i, UIntDict &&dict)
