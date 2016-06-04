@@ -9,12 +9,20 @@ environment:
     PLATFORMTOOLSET: "v140"
 
   matrix:
+    - BUILD_TYPE: Release
+      COMPILER: MSVC15
+      PLATFORM: x64
+      LIB_TYPE: dll
+    - BUILD_TYPE: Release
+      COMPILER: MinGW-w64
+      PLATFORM: x64
     - BUILD_TYPE: Debug
       COMPILER: MSVC15
       PLATFORM: Win32
       LIB_TYPE: lib
     - BUILD_TYPE: Debug
       COMPILER: MinGW
+      PLATFORM: Win32
       WITH_MPFR: yes
       WITH_MPC: yes
     - BUILD_TYPE: Debug
@@ -23,19 +31,15 @@ environment:
       LIB_TYPE: lib
     - BUILD_TYPE: Debug
       COMPILER: MinGW-w64
+      PLATFORM: x64
     - BUILD_TYPE: Release
       COMPILER: MSVC15
       PLATFORM: Win32
       LIB_TYPE: dll
     - BUILD_TYPE: Release
       COMPILER: MinGW
+      PLATFORM: Win32
       WITH_MPFR: yes
-    - BUILD_TYPE: Release
-      COMPILER: MSVC15
-      PLATFORM: x64
-      LIB_TYPE: dll
-    - BUILD_TYPE: Release
-      COMPILER: MinGW-w64
 
 install:
 # Download MPIR
@@ -91,7 +95,14 @@ build_script:
 - cmake --build . --config %BUILD_TYPE% --target install
 
 test_script:
+- if [%PLATFORM%]==[x64] set install="C:\Program Files (x86)"
+- if [%PLATFORM%]==[Win32] set install="C:\Program Files"
+- set PATH=%install%\symengine\bin\;%PATH%
 - ctest --output-on-failure
+
+after_build:
+- cd %install%
+- if [%BUILD_TYPE%]==[Release] 7z a symengine_%COMPILER%_%PLATFORM%.zip .\symengine\*
 
 # Enable this to be able to login to the build worker. You can use the
 # `remmina` program in Ubuntu, use the login information that the line below
