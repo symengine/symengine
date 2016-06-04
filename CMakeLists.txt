@@ -135,6 +135,14 @@ if (NOT(MSVC) AND WITH_GMPXX)
     endif()
 endif()
 
+set(USE_MT yes CACHE BOOL "Use MT flags when compiling in MSVC")
+
+if (MSVC AND USE_MT)
+	foreach(CompilerFlag CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE)
+	  string(REPLACE "/MD" "/MT" ${CompilerFlag} "${${CompilerFlag}}")
+	endforeach()
+endif()
+
 # ECM
 set(WITH_ECM no
     CACHE BOOL "Build with ECM (libecm-dev) support")
