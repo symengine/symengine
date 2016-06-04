@@ -90,7 +90,6 @@ build_script:
 
 - if [%WITH_MPFR%]==[yes] cmake -DWITH_MPFR=yes ..
 - if [%WITH_MPC%]==[yes] cmake -DWITH_MPC=yes ..
-- if not [%LIB_TYPE%]==[lib] cmake -DBUILD_SHARED_LIBS=yes ..
 
 - cmake --build . --config %BUILD_TYPE% --target install
 
