@@ -7,6 +7,15 @@
 
 #include <symengine/basic.h>
 
+#ifdef HAVE_SYMENGINE_FLINT
+#include <flint/flint.h>
+#include <flint/fmpzxx.h>
+#endif
+#ifdef HAVE_SYMENGINE_PIRANHA
+#include <piranha/mp_integer.hpp>
+#include <piranha/mp_rational.hpp>
+#endif
+
 namespace SymEngine
 {
 
@@ -285,6 +294,53 @@ RCP<const Poly> mul_upoly(const Poly &a, const Poly &b)
     dict *= b.get_poly();
     return Poly::from_container(a.get_var(), std::move(dict));
 }
+
+// misc methods
+#if SYMENGINE_INTEGER_CLASS == SYMENGINE_GMPXX                                 \
+    || SYMENGINE_INTEGER_CLASS == SYMENGINE_GMP
+#ifdef HAVE_SYMENGINE_FLINT
+inline integer_class to_integer_class(const flint::fmpzxx &i)
+{
+    integer_class x;
+    fmpz_get_mpz(x.get_mpz_t(), i._data().inner);
+    return x;
+}
+#endif
+
+#ifdef HAVE_SYMENGINE_PIRANHA
+inline integer_class to_integer_class(const piranha::integer &i)
+{
+    integer_class x;
+    mpz_init_set(x.get_mpz_t(), i.get_mpz_view());
+    return x;
+}
+#endif
+
+#elif SYMENGINE_INTEGER_CLASS == SYMENGINE_PIRANHA
+#ifdef HAVE_SYMENGINE_FLINT
+inline integer_class to_integer_class(const flint::fmpzxx &i)
+{
+    mpz_t x;
+    fmpz_get_mpz(x, i._data().inner);
+    return integer_class(x);
+}
+#endif
+
+#elif SYMENGINE_INTEGER_CLASS == SYMENGINE_FLINT
+#ifdef HAVE_SYMENGINE_PIRANHA
+inline integer_class to_integer_class(const piranha::integer &x)
+{
+    return integer_class(x.get_mpz_view());
+}
+#endif
+
+inline integer_class to_integer_class(const flint::fmpzxx &i)
+{
+    mpz_t x;
+    fmpz_get_mpz(x, i._data().inner);
+    return integer_class(x);
+}
+#endif
 }
 
-#endif
+#endif // SYMENGINE_UINT_BASE_H
