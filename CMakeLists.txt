@@ -135,12 +135,18 @@ if (NOT(MSVC) AND WITH_GMPXX)
     endif()
 endif()
 
-set(USE_MT yes CACHE BOOL "Use MT flags when compiling in MSVC")
+set(MSVC_USE_MT yes CACHE BOOL "Use MT flags when compiling in MSVC")
+set(MSVC_WARNING_LEVEL 1 CACHE STRING "MSVC warning level")
 
-if (MSVC AND USE_MT)
-	foreach(CompilerFlag CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE)
-	  string(REPLACE "/MD" "/MT" ${CompilerFlag} "${${CompilerFlag}}")
-	endforeach()
+if (MSVC)
+    if (MSVC_USE_MT)
+	    foreach(CompilerFlag CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE)
+	      string(REPLACE "/MD" "/MT" ${CompilerFlag} "${${CompilerFlag}}")
+	    endforeach()
+    endif()
+    foreach(CompilerFlag CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE)
+      set(${CompilerFlag} "${${CompilerFlag}} /W${MSVC_WARNING_LEVEL}")
+    endforeach()
 endif()
 
 # ECM
