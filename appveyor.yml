@@ -91,16 +91,15 @@ build_script:
 - if [%WITH_MPFR%]==[yes] cmake -DWITH_MPFR=yes ..
 - if [%WITH_MPC%]==[yes] cmake -DWITH_MPC=yes ..
 
+- cmake -DCMAKE_INSTALL_PREFIX=C:\symengine ..
 - cmake --build . --config %BUILD_TYPE% --target install
 
 test_script:
-- if [%PLATFORM%]==[x64] set install="C:\Program Files (x86)"
-- if [%PLATFORM%]==[Win32] set install="C:\Program Files"
-- set PATH=%install%\symengine\bin\;%PATH%
+- set PATH=C:\symengine\bin\;%PATH%
 - ctest --output-on-failure
 
 on_success:
-- cd "%install%"
+- cd C:\
 - if [%BUILD_TYPE%]==[Release] 7z a symengine_%COMPILER%_%PLATFORM%.zip .\symengine\*
 - if [%BUILD_TYPE%]==[Release] appveyor PushArtifact symengine_%COMPILER%_%PLATFORM%.zip
 
