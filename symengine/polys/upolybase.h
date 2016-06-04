@@ -85,38 +85,42 @@ public:
     {
     }
 
-    ODictWrapper(const int &i)
+    ODictWrapper(const int &i, const std::function<Value(const Value&)> &func = [&](Value x) {return x;})
     {
-        if (i != 0)
-            dict_ = {{0, Value(i)}};
+        Value val = func(Value(i));
+        if (val != Value(0))
+            dict_[0] = val;
     }
 
-    ODictWrapper(const std::map<Key, Value> &p)
+    ODictWrapper(const std::map<Key, Value> &p, const std::function<Value(const Value&)> &func = [&](Value x) {return x;})
     {
         for (auto &iter : p) {
-            if (iter.second != Value(0))
-                dict_[iter.first] = iter.second;
+            Value val = func(iter.second);
+            if (val != Value(0))
+                dict_[iter.first] = val;
         }
     }
 
-    ODictWrapper(const Value &p)
+    ODictWrapper(const Value &p, const std::function<Value(const Value&)> &func = [&](Value x) {return x;})
     {
-        if (p != Value(0))
-            dict_[0] = p;
+        Value val = func(p);
+        if (val != Value(0))
+            dict_[0] = val;
     }
 
-    ODictWrapper(std::string s)
+    ODictWrapper(std::string s, const std::function<Value(const Value&)> &func = [&](Value x) {return x;})
     {
-        dict_[1] = Value(1);
+        dict_[1] = func(Value(1));
     }
 
-    static Wrapper from_vec(const std::vector<Value> &v)
+    static Wrapper from_vec(const std::vector<Value> &v, const std::function<Value(const Value&)> &func = [&](Value x) {return x;})
     {
         Wrapper x;
         x.dict_ = {};
         for (unsigned int i = 0; i < v.size(); i++) {
-            if (v[i] != Value(0)) {
-                x.dict_[i] = v[i];
+            Value a = func(v[i]);
+            if (a != Value(0)) {
+                x.dict_[i] = a;
             }
         }
         return x;
