@@ -9,13 +9,6 @@ environment:
     PLATFORMTOOLSET: "v140"
 
   matrix:
-    - BUILD_TYPE: Release
-      COMPILER: MSVC15
-      PLATFORM: x64
-      LIB_TYPE: dll
-    - BUILD_TYPE: Release
-      COMPILER: MinGW-w64
-      PLATFORM: x64
     - BUILD_TYPE: Debug
       COMPILER: MSVC15
       PLATFORM: Win32
@@ -40,6 +33,13 @@ environment:
       COMPILER: MinGW
       PLATFORM: Win32
       WITH_MPFR: yes
+    - BUILD_TYPE: Release
+      COMPILER: MSVC15
+      PLATFORM: x64
+      LIB_TYPE: dll
+    - BUILD_TYPE: Release
+      COMPILER: MinGW-w64
+      PLATFORM: x64
 
 install:
 # Download MPIR
