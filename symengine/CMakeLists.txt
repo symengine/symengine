@@ -88,6 +88,11 @@ include_directories(BEFORE ${symengine_BINARY_DIR})
 include_directories(BEFORE ${symengine_SOURCE_DIR})
 
 add_library(symengine ${SRC})
+
+include(GenerateExportHeader)
+generate_export_header(symengine)
+set_target_properties(symengine PROPERTIES COMPILE_DEFINITIONS "symengine_EXPORTS")
+
 if (WITH_SYMENGINE_TEUCHOS)
     target_link_libraries(symengine teuchos)
 endif()
@@ -100,6 +105,7 @@ install(TARGETS symengine
             LIBRARY DESTINATION lib
         )
 install(FILES "${symengine_BINARY_DIR}/symengine/symengine_config.h"
+    "${symengine_BINARY_DIR}/symengine/symengine_export.h"
     DESTINATION include/symengine)
 
 # make install
