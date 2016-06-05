@@ -5,17 +5,41 @@
 #include <symengine/fields.h>
 #include <symengine/symengine_rcp.h>
 #include <symengine/dict.h>
+#include <symengine/symbol.h>
 
 using SymEngine::RCP;
-using SymEngine::GaloisField;
-// using SymEngine::gf;
+using SymEngine::Symbol;
+using SymEngine::symbol;
+using SymEngine::gf_poly;
 using SymEngine::integer_class;
 using SymEngine::map_uint_mpz;
+using SymEngine::GaloisField;
+using SymEngine::GaloisFieldDict;
 
 using namespace SymEngine::literals;
 
-TEST_CASE("GaloisField : Basic", "[basic]")
+TEST_CASE("Constructor of GaloisField : Basic", "[basic]")
 {
+    RCP<const Symbol> x = symbol("x");
+    RCP<const GaloisField> P = gf_poly(x, {{0, 1_z}, {1, 2_z}, {2, 1_z}}, 2_z);
+    REQUIRE(P->__str__() == "x**2 + 1");
+
+    RCP<const GaloisField> Q = GaloisField::from_vec(x, {1_z, 0_z, 2_z, 3_z}, 2_z);
+    REQUIRE(Q->__str__() == "x**3 + 1");
+
+    RCP<const GaloisField> R = GaloisField::from_vec(x, {17_z, 0_z, 7_z, 9_z}, 7_z);
+    REQUIRE(R->__str__() == "2*x**3 + 3");
+
+    RCP<const GaloisField> S = gf_poly(x, {{0, 2_z}}, 7_z);
+    REQUIRE(S->__str__() == "2");
+
+    RCP<const GaloisField> T = gf_poly(x, map_uint_mpz{}, 7_z);
+    REQUIRE(T->__str__() == "0");
+
+    RCP<const GaloisField> U = gf_poly(x, {{0, 2_z}, {1, 0_z}, {2, 0_z}}, 7_z);
+    REQUIRE(U->__str__() == "2");
+}
+
     // RCP<const GaloisField> r1, r2, r3, r4;
     // std::vector<integer_class> a = {2_z, 3_z, 4_z};
     // std::vector<integer_class> b = {3_z, 3_z, 6_z, 6_z};
@@ -390,4 +414,3 @@ TEST_CASE("GaloisField : Basic", "[basic]")
     // REQUIRE(mp[2] == 8);
     // REQUIRE(mp[3] == 8);
     // REQUIRE(mp[4] == 1);
-}
