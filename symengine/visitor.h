@@ -12,6 +12,7 @@
 #include <symengine/pow.h>
 #include <symengine/polys/uintpoly.h>
 #include <symengine/polys/uintpoly_flint.h>
+#include <symengine/polys/uintpoly_piranha.h>
 #include <symengine/polys/uexprpoly.h>
 #include <symengine/polynomial_multivariate.h>
 #include <symengine/functions.h>

@@ -9,6 +9,7 @@
 #include <symengine/mul.h>
 #include <symengine/polys/uintpoly.h>
 #include <symengine/polys/uintpoly_flint.h>
+#include <symengine/polys/uintpoly_piranha.h>
 #include <symengine/polys/uexprpoly.h>
 #include <symengine/pow.h>
 #include <symengine/rational.h>
@@ -58,6 +59,11 @@ public:
 #ifdef HAVE_SYMENGINE_FLINT
     // will implement soon
     DIFF0(UIntPolyFlint)
+#endif
+
+#ifdef HAVE_SYMENGINE_PIRANHA
+    // will implement soon
+    DIFF0(UIntPolyPiranha)
 #endif
 
 #endif
