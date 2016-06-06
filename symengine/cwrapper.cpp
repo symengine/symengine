@@ -30,13 +30,17 @@ using SymEngine::Rational;
 using SymEngine::Integer;
 using SymEngine::integer_class;
 using SymEngine::rational_class;
-using SymEngine::mpfr_class;
 using SymEngine::Number;
 using SymEngine::Complex;
 using SymEngine::ComplexDouble;
 using SymEngine::RealDouble;
+#ifdef HAVE_SYMENGINE_MPFR
 using SymEngine::RealMPFR;
+using SymEngine::mpfr_class;
+#endif //HAVE_SYMENGINE_MPFR
+#ifdef HAVE_SYMENGINE_MPC
 using SymEngine::ComplexMPC;
+#endif //HAVE_SYMENGINE_MPC
 using SymEngine::rcp_static_cast;
 using SymEngine::is_a;
 using SymEngine::RCPBasicKeyLess;
@@ -458,15 +462,17 @@ int is_a_RealMPFR(const basic c)
 {
 #ifdef HAVE_SYMENGINE_MPFR
     return is_a<RealMPFR>(*(c->m));
-#endif // HAVE_SYMENGINE_MPFR
+#else
     return false;
+#endif // HAVE_SYMENGINE_MPFR
 }
 int is_a_ComplexMPC(const basic c)
 {
 #ifdef HAVE_SYMENGINE_MPC
     return is_a<ComplexMPC>(*(c->m));
-#endif // HAVE_SYMENGINE_MPC
+#else
     return false;
+#endif // HAVE_SYMENGINE_MPC
 }
 
 // C wrapper for std::vector<int>
