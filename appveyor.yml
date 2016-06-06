@@ -67,15 +67,12 @@ install:
 - rename "C:\Program Files\Git\usr\bin\sh.exe" "sh2.exe"
 
 # Download MinGW-w64 toolchain
-- if [%COMPILER%]==[MinGW-w64] call bin\appveyor-download.cmd "https://raw.githubusercontent.com/symengine/dependencies/5cff7d1736877336cf9fb58267111beea4fa152f/x86_64-4.9.1-release-posix-seh-rt_v3-rev1.7z" -FileName mw64.7z
+- if [%COMPILER%]==[MinGW-w64] call bin\appveyor-download.cmd "https://raw.githubusercontent.com/symengine/dependencies/57834d6007065cdd71964c96b397505b2b4ce78a/x86_64-4.8.5-release-win32-seh-rt_v4-rev0.7z" -FileName mw64.7z
 - if [%COMPILER%]==[MinGW-w64] 7z x -oC:\ mw64.7z > NUL
 - if [%COMPILER%]==[MinGW-w64] set PATH=C:\mingw64\bin;%PATH%
 # Download pre-compiled gmp binaries
-- if [%COMPILER%]==[MinGW-w64] call bin\appveyor-download.cmd "https://raw.githubusercontent.com/symengine/dependencies/5cff7d1736877336cf9fb58267111beea4fa152f/gmp-6.0.0-x86_64-w64-mingw32.7z" -FileName gmp.7z
+- if [%COMPILER%]==[MinGW-w64] call bin\appveyor-download.cmd "https://raw.githubusercontent.com/symengine/dependencies/57834d6007065cdd71964c96b397505b2b4ce78a/gmp-6.0.0-x86_64-w64-mingw32.7z" -FileName gmp.7z
 - if [%COMPILER%]==[MinGW-w64] 7z x -oC:\mingw64 gmp.7z > NUL
-# Download patched libpythonXX.a
-- if [%COMPILER%]==[MinGW-w64] if [%WITH_PYTHON%]==[yes] call bin\appveyor-download.cmd "https://raw.githubusercontent.com/symengine/dependencies/5cff7d1736877336cf9fb58267111beea4fa152f/python-x86_64-w64-mingw32.7z" -FileName pyx64.7z
-- if [%COMPILER%]==[MinGW-w64] if [%WITH_PYTHON%]==[yes] 7z x -aoa -oC:\ pyx64.7z > NUL
 
 build_script:
 - mkdir build
