@@ -21,6 +21,7 @@
 
 #define xstr(s) str(s)
 #define str(s) #s
+#define MAX(X, Y) (((X) > (Y)) ? (X) : (Y))
 
 using SymEngine::Basic;
 using SymEngine::RCP;
@@ -40,6 +41,7 @@ using SymEngine::mpfr_class;
 #endif //HAVE_SYMENGINE_MPFR
 #ifdef HAVE_SYMENGINE_MPC
 using SymEngine::ComplexMPC;
+using SymEngine::mpc_class;
 #endif //HAVE_SYMENGINE_MPC
 using SymEngine::rcp_static_cast;
 using SymEngine::is_a;
@@ -247,6 +249,25 @@ mpfr_prec_t real_mpfr_get_prec(const basic s)
 }
 
 #endif // HAVE_SYMENGINE_MPFR
+
+#ifdef HAVE_SYMENGINE_MPC
+void complex_mpc_set_mpfr(basic s, const basic real, const basic imaginary)
+{
+    SYMENGINE_ASSERT(is_a<RealMPFR>(*(real->m)));
+    SYMENGINE_ASSERT(is_a<RealMPFR>(*(imaginary->m)));
+
+    mpfr_prec_t prec = MAX(real_mpfr_get_prec(real), real_mpfr_get_prec(imaginary));
+     
+    mpc_class mc = mpc_class(prec);
+
+    mpc_set_fr_fr( mc.get_mpc_t(),
+                   ((rcp_static_cast<const RealMPFR>(real->m))->as_mpfr()).get_mpfr_t(),
+                   ((rcp_static_cast<const RealMPFR>(imaginary->m))->as_mpfr()).get_mpfr_t(),
+                   MPC_RNDNN
+                 );
+    s->m = SymEngine::complex_mpc(std::move(mc));
+}
+#endif // HAVE_SYMENGINE_MPC
 
 signed long integer_get_si(const basic s)
 {
