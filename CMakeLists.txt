@@ -443,21 +443,21 @@ configure_file(cmake/SymEngineConfigVersion.cmake.in SymEngineConfigVersion.cmak
 
 install(FILES "${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/SymEngineConfig.cmake"
               ${PROJECT_BINARY_DIR}/SymEngineConfigVersion.cmake
-              cmake/FindFLINT.cmake
-              cmake/FindARB.cmake
-              cmake/FindBFD.cmake
-              cmake/FindECM.cmake
-              cmake/FindEXECINFO.cmake
-              cmake/FindFLINT.cmake
-              cmake/FindGMP.cmake
-              cmake/FindLINKH.cmake
-              cmake/FindMPC.cmake
-              cmake/FindMPFR.cmake
-              cmake/FindPIRANHA.cmake
-              cmake/FindPRIMESIEVE.cmake
-              cmake/FindPTHREAD.cmake
-              cmake/FindTCMALLOC.cmake
-              cmake/LibFindMacros.cmake
+              #cmake/FindFLINT.cmake
+              #cmake/FindARB.cmake
+              #cmake/FindBFD.cmake
+              #cmake/FindECM.cmake
+              #cmake/FindEXECINFO.cmake
+              #cmake/FindFLINT.cmake
+              #cmake/FindGMP.cmake
+              #cmake/FindLINKH.cmake
+              #cmake/FindMPC.cmake
+              #cmake/FindMPFR.cmake
+              #cmake/FindPIRANHA.cmake
+              #cmake/FindPRIMESIEVE.cmake
+              #cmake/FindPTHREAD.cmake
+              #cmake/FindTCMALLOC.cmake
+              #cmake/LibFindMacros.cmake
         DESTINATION ${INSTALL_CMAKE_DIR})
 install(EXPORT SymEngineTargets DESTINATION ${INSTALL_CMAKE_DIR})
 
