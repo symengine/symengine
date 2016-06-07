@@ -583,7 +583,7 @@ public:
     {
         mpz_init_set(mp, other.get_mpz_t());
     }
-    inline mpz_wrapper(mpz_wrapper &&other)
+    inline mpz_wrapper(mpz_wrapper &&other) SYMENGINE_NOEXCEPT
     {
         mp->_mp_d = nullptr;
         mpz_swap(mp, other.get_mpz_t());
@@ -597,7 +597,7 @@ public:
         }
         return *this;
     }
-    inline mpz_wrapper &operator=(mpz_wrapper &&other)
+    inline mpz_wrapper &operator=(mpz_wrapper &&other) SYMENGINE_NOEXCEPT
     {
         mpz_swap(mp, other.get_mpz_t());
         return *this;
@@ -630,7 +630,7 @@ public:
         }
         return *this;
     }
-    inline ~mpz_wrapper()
+    inline ~mpz_wrapper() SYMENGINE_NOEXCEPT
     {
         if (mp->_mp_d != nullptr) {
             mpz_clear(mp);
