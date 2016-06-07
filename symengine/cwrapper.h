@@ -148,11 +148,6 @@ void real_mpfr_get(mpfr_ptr m, const basic s);
 mpfr_prec_t real_mpfr_get_prec(const basic s);
 #endif // HAVE_SYMENGINE_MPFR
 
-#ifdef HAVE_SYMENGINE_MPC
-//! Assign to s, the CompleMPC equivalent to real + i*imaginary.
-void complex_mpc_set_mpfr(basic s, const basic real, const basic imaginary);
-#endif // HAVE_SYMENGINE_MPFR
-
 //! Returns signed long value of s.
 signed long integer_get_si(const basic s);
 //! Returns unsigned long value of s.
