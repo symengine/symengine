@@ -124,7 +124,7 @@ public:
 
 }; // UIntDict
 
-class UIntPoly : public UPolyBase<UIntDict, UIntPoly>
+class UIntPoly : public UIntPolyBase<UIntDict, UIntPoly>
 {
 public:
     IMPLEMENT_TYPEID(UINTPOLY)
@@ -164,11 +164,6 @@ public:
     inline const map_uint_mpz &get_dict() const
     {
         return poly_.dict_;
-    }
-
-    inline unsigned int get_degree() const
-    {
-        return poly_.degree();
     }
 
     inline integer_class get_coeff(unsigned int x) const

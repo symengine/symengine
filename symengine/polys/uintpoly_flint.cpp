@@ -7,7 +7,7 @@ namespace SymEngine
 
 UIntPolyFlint::UIntPolyFlint(const RCP<const Symbol> &var,
                              flint::fmpz_polyxx &&dict)
-    : UPolyBase(var, std::move(dict))
+    : UIntPolyBase(var, std::move(dict))
 {
 }
 

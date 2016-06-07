@@ -16,7 +16,7 @@
 namespace SymEngine
 {
 
-class UIntPolyFlint : public UPolyBase<flint::fmpz_polyxx, UIntPolyFlint>
+class UIntPolyFlint : public UIntPolyBase<flint::fmpz_polyxx, UIntPolyFlint>
 {
 public:
     IMPLEMENT_TYPEID(UINTPOLYFLINT)
@@ -33,11 +33,6 @@ public:
 
     integer_class eval(const integer_class &x) const;
     integer_class get_coeff(unsigned int x) const;
-
-    inline unsigned int get_degree() const
-    {
-        return poly_.degree();
-    }
 
 }; // UIntPolyFLint
 }

@@ -6,7 +6,7 @@ namespace SymEngine
 {
 
 UIntPoly::UIntPoly(const RCP<const Symbol> &var, UIntDict &&dict)
-    : UPolyBase(var, std::move(dict))
+    : UIntPolyBase(var, std::move(dict))
 {
     SYMENGINE_ASSERT(is_canonical(poly_))
 }

@@ -224,10 +224,6 @@ public:
         : var_{var}, poly_{container}
     {
     }
-    // TODO think of something to make this purely virtual
-    //! \returns the degree of the polynomial
-    // virtual unsigned int get_degree() const = 0;
-    // virtual integer_class get_coeff(int i) const = 0;
 
     //! \returns `-1`,`0` or `1` after comparing
     virtual int compare(const Basic &o) const = 0;
@@ -261,6 +257,24 @@ public:
     {
         return make_rcp<const Poly>(var, std::move(d));
     }
+};
+
+template <typename Container, typename Poly>
+class UIntPolyBase : public UPolyBase<Container, Poly>
+{
+public:
+    UIntPolyBase(const RCP<const Symbol> &var, Container &&container)
+        : UPolyBase<Container, Poly>(var, std::move(container))
+    {
+    }
+
+    inline unsigned int get_degree() const
+    {
+        return this->poly_.degree();
+    }
+
+    virtual integer_class get_coeff(unsigned int i) const = 0;
+    virtual integer_class eval(const integer_class &x) const = 0;
 };
 
 template <typename Poly>
