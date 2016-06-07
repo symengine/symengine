@@ -62,6 +62,33 @@ RCP<const UIntPoly> UIntPoly::from_vec(const RCP<const Symbol> &var,
     return make_rcp<const UIntPoly>(var, UIntDict::from_vec(v));
 }
 
+vec_basic UIntPoly::get_args() const
+{
+    vec_basic args;
+    for (const auto &p : poly_.dict_) {
+        if (p.first == 0) {
+            args.push_back(integer(p.second));
+        } else if (p.first == 1) {
+            if (p.second == 1) {
+                args.push_back(var_);
+            } else {
+                args.push_back(
+                    Mul::from_dict(integer(p.second), {{var_, one}}));
+            }
+        } else {
+            if (p.second == 1) {
+                args.push_back(pow(var_, integer(p.first)));
+            } else {
+                args.push_back(Mul::from_dict(integer(p.second),
+                                              {{var_, integer(p.first)}}));
+            }
+        }
+    }
+    if (poly_.dict_.empty())
+        args.push_back(zero);
+    return args;
+}
+
 integer_class UIntPoly::eval(const integer_class &x) const
 {
     unsigned int last_deg = poly_.dict_.rbegin()->first;

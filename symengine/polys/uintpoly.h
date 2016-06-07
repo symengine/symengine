@@ -161,6 +161,7 @@ public:
     //! \return `true` if pow
     bool is_pow() const;
 
+    virtual vec_basic get_args() const;
     inline const map_uint_mpz &get_dict() const
     {
         return poly_.dict_;

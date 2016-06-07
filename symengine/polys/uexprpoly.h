@@ -216,6 +216,8 @@ public:
     //! \return `true` if pow
     bool is_pow() const;
 
+    virtual vec_basic get_args() const;
+
     inline int get_degree() const
     {
         return poly_.degree();
