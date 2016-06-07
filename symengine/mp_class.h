@@ -765,27 +765,27 @@ inline void mp_urandomm(integer_class &a, gmp_randstate_t &t,
 
 } // SymEngine namespace
 
-#ifdef HAVE_SYMENGINE_PIRANHA
-#include <piranha/monomial.hpp>
-#include <piranha/polynomial.hpp>
-#include <piranha/mp_rational.hpp>
-#include <piranha/mp_integer.hpp>
-#include <piranha/math.hpp>
-#include <piranha/type_traits.hpp>
-namespace piranha
-{
-template <typename Cf, typename Key>
-struct enable_noexcept_checks<term<Cf,Key>,void>
-{
- static const bool value = false;
-};
+// #ifdef HAVE_SYMENGINE_PIRANHA
+// #include <piranha/monomial.hpp>
+// #include <piranha/polynomial.hpp>
+// #include <piranha/mp_rational.hpp>
+// #include <piranha/mp_integer.hpp>
+// #include <piranha/math.hpp>
+// #include <piranha/type_traits.hpp>
+// namespace piranha
+// {
+// template <typename Cf, typename Key>
+// struct enable_noexcept_checks<term<Cf,Key>,void>
+// {
+//  static const bool value = false;
+// };
 
-template <typename T>
-struct enable_noexcept_checks<T,typename std::enable_if<std::is_same<T, SymEngine::integer_class>::value>::type>
-{
- static const bool value = false;
-};
-}
-#endif
+// template <typename T>
+// struct enable_noexcept_checks<T,typename std::enable_if<std::is_same<T, SymEngine::integer_class>::value>::type>
+// {
+//  static const bool value = false;
+// };
+// }
+// #endif
 
 #endif // SYMENGINE_INTEGER_CLASS_H
