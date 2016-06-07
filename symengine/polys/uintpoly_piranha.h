@@ -17,29 +17,32 @@
 
 namespace SymEngine
 {
+using pmonomial = piranha::monomial<unsigned int>;
+using pintpoly = piranha::polynomial<integer_class, pmonomial>;
+using pterm = pintpoly::term_type;
 
-class UIntPolyPiranha : public UPolyBase<piranha::polynomial, UIntPolyPiranha>
+class UIntPolyPiranha : public UPolyBase<pintpoly, UIntPolyPiranha>
 {
 public:
     IMPLEMENT_TYPEID(UINTPOLYPIRANHA)
-    // //! Constructor of UIntPolyPiranha class
-    // UIntPolyPiranha(const RCP<const Symbol> &var, flint::fmpz_polyxx &&dict);
-    // //! \return size of the hash
-    // std::size_t __hash__() const;
-    // int compare(const Basic &o) const;
+    //! Constructor of UIntPolyPiranha class
+    UIntPolyPiranha(const RCP<const Symbol> &var, pintpoly &&dict);
+    //! \return size of the hash
+    std::size_t __hash__() const;
+    int compare(const Basic &o) const;
 
-    // static RCP<const UIntPolyPiranha> from_dict(const RCP<const Symbol> &var,
-    //                                           map_uint_mpz &&d);
-    // static RCP<const UIntPolyPiranha>
-    // from_vec(const RCP<const Symbol> &var, const std::vector<integer_class> &v);
+    static RCP<const UIntPolyPiranha> from_dict(const RCP<const Symbol> &var,
+                                              map_uint_mpz &&d);
+    static RCP<const UIntPolyPiranha>
+    from_vec(const RCP<const Symbol> &var, const std::vector<integer_class> &v);
 
     // integer_class eval(const integer_class &x) const;
     // integer_class get_coeff(unsigned int x) const;
 
-    // inline unsigned int get_degree() const
-    // {
-    //     return poly_.degree();
-    // }
+    inline unsigned int get_degree() const
+    {
+        return poly_.degree();
+    }
 
 }; // UIntPolyPiranha
 }
