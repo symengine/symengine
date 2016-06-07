@@ -14,6 +14,20 @@
 #include <piranha/mp_rational.hpp>
 #include <piranha/mp_integer.hpp>
 #include <piranha/math.hpp>
+#include <piranha/type_traits.hpp>
+
+// can be removed once mpz_class constructors have noexempt
+// they have been included in development, not yet released
+#if SYMENGINE_INTEGER_CLASS == SYMENGINE_GMPXX
+namespace piranha
+{
+template <typename T>
+struct enable_noexcept_checks<T,typename std::enable_if<std::is_same<T,SymEngine::integer_class>::value>::type>
+{
+    static const bool value = false;
+};
+}
+#endif
 
 namespace SymEngine
 {
