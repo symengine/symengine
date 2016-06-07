@@ -204,7 +204,8 @@ void GaloisFieldDict::gf_monic(integer_class &res,
             mp_invert(inv, res, modulo_);
             for (auto &iter : dict_) {
                 mp_fdiv_r(temp, inv * iter.second, modulo_);
-                monic->dict_.insert(monic->dict_.end(), {iter.first, temp});
+                if (temp != integer_class(0))
+                    monic->dict_[iter.first] = temp;
             }
         }
     }
