@@ -40,43 +40,29 @@ TEST_CASE("Constructor of GaloisField : Basic", "[basic]")
     REQUIRE(U->__str__() == "2");
 }
 
-    // RCP<const GaloisField> r1, r2, r3, r4;
-    // std::vector<integer_class> a = {2_z, 3_z, 4_z};
-    // std::vector<integer_class> b = {3_z, 3_z, 6_z, 6_z};
-    // r1 = gf(a, 5_z);
-    // r2 = gf(b, 5_z);
-    // // std::cout << *r1 << "\n";
-    // map_uint_mpz mp = r1->dict_;
-    // REQUIRE(mp[0] == 2);
-    // REQUIRE(mp[1] == 3);
-    // REQUIRE(mp[2] == 4);
-    // // std::cout << *r2 << "\n";
-    // mp = r2->dict_;
-    // REQUIRE(mp[0] == 3);
-    // REQUIRE(mp[1] == 3);
-    // REQUIRE(mp[2] == 1);
-    // REQUIRE(mp[3] == 1);
-    // r3 = r1->gf_add(r2);
-    // mp = r3->dict_;
-    // REQUIRE(mp[1] == 1);
-    // REQUIRE(mp[3] == 1);
-    // r3 = r1->gf_sub(r2);
-    // mp = r3->dict_;
-    // REQUIRE(mp[0] == 4);
-    // REQUIRE(mp[2] == 3);
-    // REQUIRE(mp[3] == 4);
-    // r3 = r1->gf_mul(r2);
-    // mp = r3->dict_;
-    // REQUIRE(mp[0] == 1);
-    // REQUIRE(mp[2] == 3);
-    // REQUIRE(mp[3] == 2);
-    // REQUIRE(mp[4] == 2);
-    // REQUIRE(mp[5] == 4);
+TEST_CASE("Constructor of GaloisField Arithmetics : Basic", "[basic]")
+{
+    RCP<const Symbol> x = symbol("x");
+    std::vector<integer_class> a = {2_z, 3_z, 4_z};
+    std::vector<integer_class> b = {3_z, 3_z, 6_z, 6_z};
+    RCP<const GaloisField> r1 = GaloisField::from_vec(x, a, 5_z);
+    RCP<const GaloisField> r2 = GaloisField::from_vec(x, b, 5_z);
+    RCP<const GaloisField> r3 = add_upoly(*r1, *r2);
+    REQUIRE(r3->__str__() == "x**3 + x");
+    r3 = sub_upoly(*r1, *r2);
+    REQUIRE(r3->__str__() == "4*x**3 + 3*x**2 + 4");
+    r3 = mul_upoly(*r1, *r2);
+    auto mp = r3->get_dict();
+    REQUIRE(mp[0] == 1);
+    REQUIRE(mp[2] == 3);
+    REQUIRE(mp[3] == 2);
+    REQUIRE(mp[4] == 2);
+    REQUIRE(mp[5] == 4);
 
-    // a = {};
-    // r1 = gf(a, 11_z);
-    // r2 = r1->gf_neg();
-    // mp = r2->dict_;
+    a = {};
+    r1 = GaloisField::from_vec(x, a, 11_z);
+    // r2 = GaloisField(x, r1->get_poly().gf_neg(), 11_z);
+    // mp = r2->get_dict();
     // REQUIRE(mp.empty());
     // r2 = r1->gf_add_ground(0_z);
     // mp = r2->dict_;
@@ -96,7 +82,7 @@ TEST_CASE("Constructor of GaloisField : Basic", "[basic]")
     // r2 = r1->gf_mul_ground(3_z);
     // mp = r2->dict_;
     // REQUIRE(mp.empty());
-    // r2 = gf(a, 11_z);
+    // r2 = GaloisField::from_vec(x, a, 11_z);
     // r3 = r1->gf_add(r2);
     // mp = r3->dict_;
     // REQUIRE(mp.empty());
@@ -104,7 +90,7 @@ TEST_CASE("Constructor of GaloisField : Basic", "[basic]")
     // mp = r3->dict_;
     // REQUIRE(mp.empty());
     // a = {2_z};
-    // r2 = gf(a, 11_z);
+    // r2 = GaloisField::from_vec(x, a, 11_z);
     // r3 = r1->gf_add(r2);
     // mp = r3->dict_;
     // REQUIRE(mp[0] == 2);
@@ -116,7 +102,7 @@ TEST_CASE("Constructor of GaloisField : Basic", "[basic]")
     // REQUIRE(mp.empty());
 
     // a = {1_z};
-    // r1 = gf(a, 11_z);
+    // r1 = GaloisField::from_vec(x, a, 11_z);
     // r2 = r1->gf_neg();
     // mp = r2->dict_;
     // REQUIRE(mp[0] == 10);
@@ -143,7 +129,7 @@ TEST_CASE("Constructor of GaloisField : Basic", "[basic]")
     // REQUIRE(mp[0] == 4);
 
     // a = {1_z, 2_z, 3_z};
-    // r1 = gf(a, 11_z);
+    // r1 = GaloisField::from_vec(x, a, 11_z);
     // r2 = r1->gf_neg();
     // mp = r2->dict_;
     // REQUIRE(mp[0] == 10);
@@ -170,16 +156,16 @@ TEST_CASE("Constructor of GaloisField : Basic", "[basic]")
 
     // a = {3_z, 2_z, 1_z};
     // b = {8_z, 9_z, 10_z};
-    // r1 = gf(a, 11_z);
-    // r2 = gf(b, 11_z);
+    // r1 = GaloisField::from_vec(x, a, 11_z);
+    // r2 = GaloisField::from_vec(x, b, 11_z);
     // mp = r1->gf_sub(r2)->dict_;
     // REQUIRE(mp[0] == 6);
     // REQUIRE(mp[1] == 4);
     // REQUIRE(mp[2] == 2);
     // a = {3_z, 0_z, 0_z, 6_z, 1_z, 2_z};
     // b = {4_z, 0_z, 1_z, 0_z};
-    // r1 = gf(a, 11_z);
-    // r2 = gf(b, 11_z);
+    // r1 = GaloisField::from_vec(x, a, 11_z);
+    // r2 = GaloisField::from_vec(x, b, 11_z);
     // mp = r1->gf_mul(r2)->dict_;
     // REQUIRE(mp[0] == 1);
     // REQUIRE(mp[1] == 0);
@@ -193,8 +179,8 @@ TEST_CASE("Constructor of GaloisField : Basic", "[basic]")
 
     // a = {0_z, 1_z, 2_z, 3_z, 4_z, 5_z};
     // b = {0_z, 3_z, 2_z, 1_z};
-    // r1 = gf(a, 7_z);
-    // r2 = gf(b, 7_z);
+    // r1 = GaloisField::from_vec(x, a, 7_z);
+    // r2 = GaloisField::from_vec(x, b, 7_z);
     // r1->gf_div(r2, outArg(r3), outArg(r4));
     // mp = r3->dict_;
     // REQUIRE(mp[0] == 0);
@@ -208,8 +194,8 @@ TEST_CASE("Constructor of GaloisField : Basic", "[basic]")
 
     // a = {0_z, 1_z, 2_z, 3_z, 4_z, 5_z};
     // b = {3_z, 2_z, 1_z};
-    // r1 = gf(a, 7_z);
-    // r2 = gf(b, 7_z);
+    // r1 = GaloisField::from_vec(x, a, 7_z);
+    // r2 = GaloisField::from_vec(x, b, 7_z);
     // r1->gf_div(r2, outArg(r3), outArg(r4));
     // mp = r3->dict_;
     // REQUIRE(mp[0] == 6);
@@ -223,22 +209,22 @@ TEST_CASE("Constructor of GaloisField : Basic", "[basic]")
 
     // a = {1_z};
     // b = {3_z, 2_z, 1_z};
-    // r1 = gf(a, 7_z);
-    // r2 = gf(b, 7_z);
+    // r1 = GaloisField::from_vec(x, a, 7_z);
+    // r2 = GaloisField::from_vec(x, b, 7_z);
     // r1->gf_div(r2, outArg(r3), outArg(r4));
     // REQUIRE(r3->dict_.empty());
     // mp = r4->dict_;
     // REQUIRE(mp[0] == 1);
 
     // a = {};
-    // r1 = gf(a, 7_z);
+    // r1 = GaloisField::from_vec(x, a, 7_z);
     // r2 = r1->gf_lshift(5_z);
     // REQUIRE(r2->dict_.empty());
     // r1->gf_rshift(5_z, outArg(r2), outArg(r3));
     // REQUIRE(r2->dict_.empty());
     // REQUIRE(r2->dict_.empty());
     // a = {5_z, 4_z, 3_z, 2_z, 1_z};
-    // r1 = gf(a, 7_z);
+    // r1 = GaloisField::from_vec(x, a, 7_z);
     // mp = r1->gf_lshift(1_z)->dict_;
     // REQUIRE(mp[0] == 0);
     // REQUIRE(mp[1] == 5);
@@ -279,7 +265,7 @@ TEST_CASE("Constructor of GaloisField : Basic", "[basic]")
     // REQUIRE(mp[2] == 3);
 
     // a = {8_z, 1_z, 0_z, 0_z, 1_z};
-    // r1 = gf(a, 11_z);
+    // r1 = GaloisField::from_vec(x, a, 11_z);
     // r2 = r1->gf_pow(0_z);
     // mp = r2->dict_;
     // REQUIRE(mp[0] == 1);
@@ -318,28 +304,28 @@ TEST_CASE("Constructor of GaloisField : Basic", "[basic]")
 
     // integer_class LC;
     // a = {};
-    // r1 = gf(a, 11_z);
+    // r1 = GaloisField::from_vec(x, a, 11_z);
     // r1->gf_monic(LC, outArg(r2));
     // REQUIRE(LC == 0_z);
     // REQUIRE(eq(*r2, *r1));
     // a = {1_z};
-    // r1 = gf(a, 11_z);
+    // r1 = GaloisField::from_vec(x, a, 11_z);
     // r1->gf_monic(LC, outArg(r2));
     // REQUIRE(LC == 1_z);
     // REQUIRE(eq(*r2, *r1));
     // a = {2_z};
-    // r1 = gf(a, 11_z);
+    // r1 = GaloisField::from_vec(x, a, 11_z);
     // r1->gf_monic(LC, outArg(r2));
     // REQUIRE(LC == 2_z);
     // mp = r2->dict_;
     // REQUIRE(mp[0] == 1_z);
     // a = {4_z, 3_z, 2_z, 1_z};
-    // r1 = gf(a, 11_z);
+    // r1 = GaloisField::from_vec(x, a, 11_z);
     // r1->gf_monic(LC, outArg(r2));
     // REQUIRE(LC == 1_z);
     // REQUIRE(eq(*r2, *r1));
     // a = {5_z, 4_z, 3_z, 2_z};
-    // r1 = gf(a, 11_z);
+    // r1 = GaloisField::from_vec(x, a, 11_z);
     // r1->gf_monic(LC, outArg(r2));
     // REQUIRE(LC == 2_z);
     // mp = r2->dict_;
@@ -349,64 +335,64 @@ TEST_CASE("Constructor of GaloisField : Basic", "[basic]")
     // REQUIRE(mp[3] == 1);
 
     // a = {};
-    // r1 = gf(a, 11_z);
-    // r2 = gf(a, 11_z);
+    // r1 = GaloisField::from_vec(x, a, 11_z);
+    // r2 = GaloisField::from_vec(x, a, 11_z);
     // REQUIRE(r1->gf_gcd(r2)->dict_.empty());
     // a = {2_z};
-    // r1 = gf(a, 11_z);
+    // r1 = GaloisField::from_vec(x, a, 11_z);
     // mp = r1->gf_gcd(r2)->dict_;
     // REQUIRE(mp[0] == 1);
     // REQUIRE(eq(*r1->gf_gcd(r2), *r2->gf_gcd(r1)));
     // a = {0_z, 1_z};
-    // r1 = gf(a, 11_z);
+    // r1 = GaloisField::from_vec(x, a, 11_z);
     // r3 = r1->gf_gcd(r2);
     // REQUIRE(eq(*r1, *r3));
     // REQUIRE(eq(*r3, *r2->gf_gcd(r1)));
 
     // a = {0_z, 3_z};
-    // r1 = gf(a, 11_z);
-    // r2 = gf(a, 11_z);
+    // r1 = GaloisField::from_vec(x, a, 11_z);
+    // r2 = GaloisField::from_vec(x, a, 11_z);
     // REQUIRE(eq(*r1->gf_gcd(r2), *r2->gf_gcd(r1)));
     // mp = r1->gf_gcd(r2)->dict_;
     // REQUIRE(mp[1] == 1);
 
     // a = {7_z, 8_z, 1_z};
-    // r1 = gf(a, 11_z);
+    // r1 = GaloisField::from_vec(x, a, 11_z);
     // a = {7_z, 1_z, 7_z, 1_z};
-    // r2 = gf(a, 11_z);
+    // r2 = GaloisField::from_vec(x, a, 11_z);
     // REQUIRE(eq(*r1->gf_gcd(r2), *r2->gf_gcd(r1)));
     // mp = r1->gf_gcd(r2)->dict_;
     // REQUIRE(mp[0] == 7);
     // REQUIRE(mp[1] == 1);
 
     // a = {};
-    // r1 = gf(a, 11_z);
-    // r2 = gf(a, 11_z);
+    // r1 = GaloisField::from_vec(x, a, 11_z);
+    // r2 = GaloisField::from_vec(x, a, 11_z);
     // REQUIRE(r1->gf_lcm(r2)->dict_.empty());
     // a = {2_z};
-    // r1 = gf(a, 11_z);
+    // r1 = GaloisField::from_vec(x, a, 11_z);
     // REQUIRE(r1->gf_lcm(r2)->dict_.empty());
     // REQUIRE(eq(*r1->gf_lcm(r2), *r2->gf_lcm(r1)));
-    // r2 = gf(a, 11_z);
+    // r2 = GaloisField::from_vec(x, a, 11_z);
     // mp = r1->gf_lcm(r2)->dict_;
     // REQUIRE(mp[0] == 1);
     // a = {0_z, 1_z};
-    // r1 = gf(a, 11_z);
+    // r1 = GaloisField::from_vec(x, a, 11_z);
     // a = {};
-    // r2 = gf(a, 11_z);
+    // r2 = GaloisField::from_vec(x, a, 11_z);
     // r3 = r1->gf_lcm(r2);
     // REQUIRE(r3->dict_.empty());
     // REQUIRE(eq(*r3, *r2->gf_lcm(r1)));
     // a = {0_z, 3_z};
-    // r1 = gf(a, 11_z);
-    // r2 = gf(a, 11_z);
+    // r1 = GaloisField::from_vec(x, a, 11_z);
+    // r2 = GaloisField::from_vec(x, a, 11_z);
     // REQUIRE(eq(*r1->gf_lcm(r2), *r2->gf_lcm(r1)));
     // mp = r1->gf_lcm(r2)->dict_;
     // REQUIRE(mp[1] == 1);
     // a = {7_z, 8_z, 1_z};
-    // r1 = gf(a, 11_z);
+    // r1 = GaloisField::from_vec(x, a, 11_z);
     // a = {7_z, 1_z, 7_z, 1_z};
-    // r2 = gf(a, 11_z);
+    // r2 = GaloisField::from_vec(x, a, 11_z);
     // REQUIRE(eq(*r1->gf_lcm(r2), *r2->gf_lcm(r1)));
     // mp = r1->gf_lcm(r2)->dict_;
     // REQUIRE(mp[0] == 7);
@@ -414,3 +400,4 @@ TEST_CASE("Constructor of GaloisField : Basic", "[basic]")
     // REQUIRE(mp[2] == 8);
     // REQUIRE(mp[3] == 8);
     // REQUIRE(mp[4] == 1);
+}

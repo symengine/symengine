@@ -96,18 +96,6 @@ GaloisFieldDict GaloisFieldDict::gf_neg() const
     return gf_mul_ground(integer_class(-1));
 }
 
-GaloisFieldDict GaloisFieldDict::gf_add_ground(const integer_class a) const
-{
-    map_uint_mpz dict = dict_;
-    dict[0] = dict[0] + a;
-    return GaloisFieldDict(dict, modulo_);
-}
-
-GaloisFieldDict GaloisFieldDict::gf_sub_ground(const integer_class a) const
-{
-    return gf_add_ground(-1 * a);
-}
-
 GaloisFieldDict GaloisFieldDict::gf_mul_ground(const integer_class a) const
 {
     map_uint_mpz dict;
@@ -115,6 +103,15 @@ GaloisFieldDict GaloisFieldDict::gf_mul_ground(const integer_class a) const
         dict[iter.first] = a * iter.second;
     }
     return GaloisFieldDict(dict, modulo_);
+}
+
+void GaloisFieldDict::gf_imul_ground(const integer_class a)
+{
+    integer_class temp;
+    for (auto &iter : dict_) {
+        temp = a * iter.second;
+        dict_add_val(iter.first, temp);
+    }
 }
 
 GaloisFieldDict GaloisFieldDict::gf_quo_ground(const integer_class a) const
@@ -130,42 +127,6 @@ GaloisFieldDict GaloisFieldDict::gf_quo_ground(const integer_class a) const
     return GaloisFieldDict(dict, modulo_);
 }
 
-GaloisFieldDict
-GaloisFieldDict::gf_add(const GaloisFieldDict &o) const
-{
-    SYMENGINE_ASSERT(modulo_ == o.modulo_);
-    auto dict_out = dict_;
-    for (auto iter : o.dict_) {
-        dict_out[iter.first] = dict_out[iter.first] + iter.second;
-    }
-    return GaloisFieldDict(dict_out, modulo_);
-}
-
-GaloisFieldDict
-GaloisFieldDict::gf_sub(const GaloisFieldDict &o) const
-{
-    SYMENGINE_ASSERT(modulo_ == o.modulo_);
-    auto dict_out = dict_;
-    for (auto iter : o.dict_) {
-        dict_out[iter.first] = dict_out[iter.first] - iter.second;
-    }
-    return GaloisFieldDict(dict_out, modulo_);
-}
-
-GaloisFieldDict
-GaloisFieldDict::gf_mul(const GaloisFieldDict &o) const
-{
-    SYMENGINE_ASSERT(modulo_ == o.modulo_);
-    map_uint_mpz dict_out;
-    for (auto iter : o.dict_) {
-        for (auto it : dict_) {
-            dict_out[iter.first + it.first]
-                = (dict_out[iter.first + it.first] + iter.second * it.second)
-                  % modulo_;
-        }
-    }
-    return GaloisFieldDict(dict_out, modulo_);
-}
 
 void GaloisFieldDict::gf_div(const GaloisFieldDict &o,
                          const Ptr<GaloisFieldDict> &quo,
@@ -245,8 +206,9 @@ GaloisFieldDict::gf_quo(const GaloisFieldDict &o) const
 GaloisFieldDict GaloisFieldDict::gf_lshift(const integer_class n) const
 {
     map_uint_mpz dict_out;
+    unsigned n_val = mp_get_si(n);
     for (auto iter : dict_) {
-        dict_out[mp_get_si(iter.first + n)] = iter.second;
+        dict_out.insert(dict_out.end(), {iter.first + n_val, iter.second});
     }
     return GaloisFieldDict(dict_out, modulo_);
 }
@@ -256,12 +218,12 @@ void GaloisFieldDict::gf_rshift(const integer_class n,
                             const Ptr<GaloisFieldDict> &rem) const
 {
     map_uint_mpz dict_quo, dict_rem;
+    unsigned n_val = mp_get_si(n);
     for (auto iter : dict_) {
-        integer_class a = iter.first - n;
-        if (a >= 0)
-            dict_quo[mp_get_si(a)] = iter.second;
+        if (iter.first >= n_val)
+            dict_quo.insert(dict_quo.end(), {iter.first - n_val, iter.second});
         else
-            dict_rem[iter.first] = iter.second;
+            dict_rem.insert(dict_rem.end(), iter);
     }
     *quo = GaloisFieldDict(dict_quo, modulo_);
     *rem = GaloisFieldDict(dict_rem, modulo_);
@@ -269,7 +231,7 @@ void GaloisFieldDict::gf_rshift(const integer_class n,
 
 GaloisFieldDict GaloisFieldDict::gf_sqr() const
 {
-    return gf_mul(static_cast<GaloisFieldDict>(*this));
+    return (*this * *this);
 }
 
 GaloisFieldDict GaloisFieldDict::gf_pow(const integer_class n) const
@@ -286,7 +248,7 @@ GaloisFieldDict GaloisFieldDict::gf_pow(const integer_class n) const
     GaloisFieldDict to_ret = GaloisFieldDict({integer_class(1)}, modulo_);
     while (1) {
         if (num & 1) {
-            to_ret = to_ret.gf_mul(to_sq);
+            to_ret = to_ret * to_sq;
             num -= 1;
         }
         num >>= 1;
@@ -334,7 +296,7 @@ GaloisFieldDict GaloisFieldDict::gf_lcm(const GaloisFieldDict &o) const
     if (dict_.empty() or o.dict_.empty())
         return GaloisFieldDict(dict_out, modulo_);
     GaloisFieldDict out;
-    out = gf_mul(o).gf_quo(gf_gcd(o));
+    out = o * gf_quo(gf_gcd(o));
     integer_class temp_LC;
     out.gf_monic(temp_LC, outArg(out));
     return out;
