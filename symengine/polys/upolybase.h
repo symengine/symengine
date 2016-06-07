@@ -487,6 +487,17 @@ RCP<const Poly> mul_upoly(const Poly &a, const Poly &b)
     dict *= b.get_poly();
     return Poly::from_container(a.get_var(), std::move(dict));
 }
+
+template <typename Poly>
+RCP<const Poly> quo_upoly(const Poly &a, const Poly &b)
+{
+    if (!(a.get_var()->__eq__(*b.get_var())))
+        throw std::runtime_error("Error: variables must agree.");
+
+    auto dict = a.get_poly();
+    dict /= b.get_poly();
+    return Poly::from_dict(a.get_var(), std::move(dict));
+}
 }
 
 #endif // SYMENGINE_UINT_BASE_H

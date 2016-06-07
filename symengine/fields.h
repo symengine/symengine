@@ -89,12 +89,6 @@ public:
 
     GaloisFieldDict(const GaloisFieldDict &) = default;
     GaloisFieldDict &operator=(const GaloisFieldDict &) = default;
-    GaloisFieldDict gf_neg() const;
-    GaloisFieldDict gf_mul_ground(const integer_class a) const;
-    void gf_imul_ground(const integer_class a);
-    GaloisFieldDict gf_quo_ground(const integer_class a) const;
-
-    GaloisFieldDict gf_quo(const GaloisFieldDict &o) const;
     void gf_div(const GaloisFieldDict &o,
                 const Ptr<GaloisFieldDict> &quo,
                 const Ptr<GaloisFieldDict> &rem) const;
@@ -139,7 +133,10 @@ public:
 
     GaloisFieldDict operator-() const
     {
-        return gf_neg();
+        GaloisFieldDict o(*this);
+        for (auto &a : o.dict_)
+            mp_fdiv_r(a.second, a.second * integer_class(-1), modulo_);
+        return o;
     }
 
     GaloisFieldDict &operator-=(const GaloisFieldDict &other)
@@ -177,7 +174,9 @@ public:
         auto a = o_dict.find(0);
         if (o_dict.size() == 1
             and a != o_dict.end()) {
-            gf_imul_ground(a->second);
+            for (auto &arg : dict_) {
+                mp_fdiv_r(arg.second, a->second * arg.second, modulo_);
+            }
             return static_cast<GaloisFieldDict &>(*this);
         }
 
@@ -197,25 +196,58 @@ public:
         return static_cast<GaloisFieldDict &>(*this);
     }
 
+    friend GaloisFieldDict operator/(const GaloisFieldDict &a, const GaloisFieldDict &b)
+    {
+        GaloisFieldDict c = a;
+        c /= b;
+        return c;
+    }
+
     GaloisFieldDict &operator/=(const GaloisFieldDict &other)
     {
         SYMENGINE_ASSERT(modulo_ == other.modulo_);
-        auto o_dict = other.get_dict();
-        if (o_dict.empty()) {
+        auto dict_divisor = other.get_dict();
+        if (dict_divisor.empty()) {
             throw std::runtime_error("ZeroDivisionError");
         }
         if (dict_.empty())
             return static_cast<GaloisFieldDict &>(*this);
 
         // ! other is a just constant term
-        auto a = o_dict.find(0);
-        if (o_dict.size() == 1
-            and a != o_dict.end()) {
-            *this = gf_quo_ground(a->second);
+        auto a = dict_divisor.find(0);
+        if (dict_divisor.size() == 1
+            and a != dict_divisor.end()) {
+            integer_class inv;
+            mp_invert(inv, a->second, modulo_);
+            for (auto &iter : dict_) {
+                mp_fdiv_r(iter.second, inv * iter.second, modulo_);
+            }
             return static_cast<GaloisFieldDict &>(*this);
         }
-
-        *this = gf_quo(other);
+        map_uint_mpz dict_out;
+        long deg_dividend = dict_.rbegin()->first;
+        long deg_divisor = dict_divisor.rbegin()->first;
+        if (deg_dividend < deg_divisor) {
+            dict_ = {};
+            return static_cast<GaloisFieldDict &>(*this);
+        }
+        dict_out = std::move(dict_);
+        dict_ = {};
+        integer_class inv;
+        mp_invert(inv, dict_divisor.rbegin()->second, modulo_);
+        integer_class coeff;
+        for (long it = deg_dividend; it >= deg_divisor; it--) {
+            coeff = dict_out[it];
+            long lb = std::max(long(0), deg_divisor - deg_dividend + it);
+            long ub = std::min(it, deg_divisor - 1) + 1;
+            for (long j = lb; j < ub; j++) {
+                coeff
+                    -= dict_out[it - j + deg_divisor] * dict_divisor[j];
+            }
+            mp_fdiv_r(dict_out[it], coeff * inv, modulo_);
+            if (dict_out[it] != integer_class(0))
+                dict_.insert({it - deg_divisor, dict_out[it]});
+        }
         return static_cast<GaloisFieldDict &>(*this);
     }
 

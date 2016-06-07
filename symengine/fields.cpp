@@ -91,43 +91,6 @@ vec_basic GaloisField::get_args() const
     return args;
 }
 
-GaloisFieldDict GaloisFieldDict::gf_neg() const
-{
-    return gf_mul_ground(integer_class(-1));
-}
-
-GaloisFieldDict GaloisFieldDict::gf_mul_ground(const integer_class a) const
-{
-    map_uint_mpz dict;
-    for (auto iter : dict_) {
-        dict[iter.first] = a * iter.second;
-    }
-    return GaloisFieldDict(dict, modulo_);
-}
-
-void GaloisFieldDict::gf_imul_ground(const integer_class a)
-{
-    integer_class temp;
-    for (auto &iter : dict_) {
-        temp = a * iter.second;
-        dict_add_val(iter.first, temp);
-    }
-}
-
-GaloisFieldDict GaloisFieldDict::gf_quo_ground(const integer_class a) const
-{
-    if (a == 0)
-        throw std::runtime_error("ZeroDivisionError");
-    map_uint_mpz dict;
-    integer_class inv;
-    mp_invert(inv, a, modulo_);
-    for (auto iter : dict_) {
-        dict[iter.first] = inv * iter.second;
-    }
-    return GaloisFieldDict(dict, modulo_);
-}
-
-
 void GaloisFieldDict::gf_div(const GaloisFieldDict &o,
                          const Ptr<GaloisFieldDict> &quo,
                          const Ptr<GaloisFieldDict> &rem) const
@@ -169,38 +132,6 @@ void GaloisFieldDict::gf_div(const GaloisFieldDict &o,
         *quo = GaloisFieldDict(dict_quo, modulo_);
         *rem = GaloisFieldDict(dict_rem, modulo_);
     }
-}
-
-GaloisFieldDict
-GaloisFieldDict::gf_quo(const GaloisFieldDict &o) const
-{
-    SYMENGINE_ASSERT(modulo_ == o.modulo_);
-    if (o.dict_.empty())
-        throw std::runtime_error("ZeroDivisionError");
-    map_uint_mpz dict_divisor = o.dict_;
-    map_uint_mpz dict_out;
-    long deg_dividend = dict_.empty() ? 0 : dict_.rbegin()->first;
-    long deg_divisor = dict_divisor.rbegin()->first;
-    if (deg_dividend < deg_divisor) {
-        return GaloisFieldDict(dict_out, modulo_);
-    }
-    dict_out = dict_;
-    integer_class inv;
-    mp_invert(inv, dict_divisor.rbegin()->second, modulo_);
-    integer_class coeff;
-    map_uint_mpz dict_quo;
-    for (long it = deg_dividend; it >= deg_divisor; it--) {
-        coeff = dict_out[it];
-        long lb = std::max(long(0), deg_divisor - deg_dividend + it);
-        long ub = std::min(it, deg_divisor - 1) + 1;
-        for (long j = lb; j < ub; j++) {
-            coeff
-                -= dict_out[it - j + deg_divisor] * dict_divisor[j];
-        }
-        dict_out[it] = dict_quo[it - deg_divisor]
-            = (coeff * inv) % modulo_;
-    }
-    return GaloisFieldDict(dict_quo, modulo_);
 }
 
 GaloisFieldDict GaloisFieldDict::gf_lshift(const integer_class n) const
@@ -268,8 +199,14 @@ void GaloisFieldDict::gf_monic(integer_class &res,
         res = dict_.rbegin()->second;
         if (res == integer_class(1)) 
             *monic = static_cast<GaloisFieldDict>(*this);
-        else
-            *monic = gf_quo_ground(res);
+        else {
+            integer_class inv, temp;
+            mp_invert(inv, res, modulo_);
+            for (auto &iter : dict_) {
+                mp_fdiv_r(temp, inv * iter.second, modulo_);
+                monic->dict_.insert(monic->dict_.end(), {iter.first, temp});
+            }
+        }
     }
 }
 
@@ -296,7 +233,7 @@ GaloisFieldDict GaloisFieldDict::gf_lcm(const GaloisFieldDict &o) const
     if (dict_.empty() or o.dict_.empty())
         return GaloisFieldDict(dict_out, modulo_);
     GaloisFieldDict out;
-    out = o * gf_quo(gf_gcd(o));
+    out = (o * (*this))/gf_gcd(o);
     integer_class temp_LC;
     out.gf_monic(temp_LC, outArg(out));
     return out;
