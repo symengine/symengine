@@ -1,9 +1,7 @@
-#include <algorithm>
 
 #include <symengine/matrix.h>
 #include <symengine/add.h>
 #include <symengine/mul.h>
-#include <symengine/integer.h>
 #include <symengine/constants.h>
 
 namespace SymEngine

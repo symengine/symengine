@@ -2,7 +2,6 @@
 #define SYMENGINE_PARSER_H
 
 #include <symengine/basic.h>
-#include <symengine/dict.h>
 
 namespace SymEngine
 {

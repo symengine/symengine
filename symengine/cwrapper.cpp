@@ -1,22 +1,8 @@
 #include <cstdlib>
 #include <cstring>
 
-#include <symengine/basic.h>
 #include <symengine/symbol.h>
 #include <symengine/cwrapper.h>
-#include <symengine/integer.h>
-#include <symengine/rational.h>
-#include <symengine/functions.h>
-#include <symengine/mul.h>
-#include <symengine/pow.h>
-#include <symengine/add.h>
-#include <symengine/number.h>
-#include <symengine/complex.h>
-#include <symengine/complex_double.h>
-#include <symengine/real_mpfr.h>
-#include <symengine/complex_mpc.h>
-#include <symengine/constants.h>
-#include <symengine/visitor.h>
 #include <symengine/printer.h>
 
 #define xstr(s) str(s)

@@ -1,7 +1,6 @@
 #include <valarray>
 #include <iterator>
 
-#include <symengine/basic.h>
 #include <symengine/ntheory.h>
 #include <symengine/rational.h>
 #include <symengine/mul.h>
@@ -16,7 +15,6 @@
 #include "bernoulli.h"
 #include "rational.h"
 #endif // HAVE_SYMENGINE_ARB
-#include <symengine/dict.h>
 
 namespace SymEngine
 {

@@ -7,7 +7,6 @@
 #ifndef SYMENGINE_EVAL_MPFR_H
 #define SYMENGINE_EVAL_MPFR_H
 
-#include <symengine/symengine_config.h>
 
 #ifdef HAVE_SYMENGINE_MPFR
 #include <symengine/basic.h>

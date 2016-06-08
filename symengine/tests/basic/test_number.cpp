@@ -1,11 +1,5 @@
 #include "catch.hpp"
-#include <symengine/integer.h>
-#include <symengine/real_mpfr.h>
 #include <symengine/complex_mpc.h>
-#include <symengine/real_double.h>
-#include <symengine/complex_double.h>
-#include <symengine/rational.h>
-#include <symengine/complex.h>
 #include <symengine/functions.h>
 #include <symengine/add.h>
 #include <symengine/eval_double.h>

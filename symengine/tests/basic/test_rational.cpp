@@ -1,8 +1,6 @@
 #include "catch.hpp"
 
-#include <symengine/integer.h>
 #include <symengine/rational.h>
-#include <symengine/number.h>
 
 using SymEngine::print_stack_on_segfault;
 using SymEngine::RCP;

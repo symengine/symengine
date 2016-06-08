@@ -6,10 +6,6 @@
 #ifndef SYMENGINE_REAL_DOUBLE_H
 #define SYMENGINE_REAL_DOUBLE_H
 
-#include <symengine/basic.h>
-#include <symengine/number.h>
-#include <symengine/integer.h>
-#include <symengine/rational.h>
 #include <symengine/complex.h>
 
 namespace SymEngine

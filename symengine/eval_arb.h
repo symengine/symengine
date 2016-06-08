@@ -7,7 +7,6 @@
 #ifndef SYMENGINE_EVAL_ARB_H
 #define SYMENGINE_EVAL_ARB_H
 
-#include <symengine/symengine_config.h>
 
 #ifdef HAVE_SYMENGINE_ARB
 #include <symengine/basic.h>

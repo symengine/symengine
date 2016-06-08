@@ -12,8 +12,6 @@
 #include <flint/fmpzxx.h>
 #endif
 #ifdef HAVE_SYMENGINE_PIRANHA
-#include <piranha/mp_integer.hpp>
-#include <piranha/mp_rational.hpp>
 #endif
 
 namespace SymEngine

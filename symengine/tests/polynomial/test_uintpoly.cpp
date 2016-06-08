@@ -1,11 +1,8 @@
 #include "catch.hpp"
 #include <chrono>
-#include <iostream>
 
-#include <symengine/mul.h>
 #include <symengine/polys/uintpoly.h>
 #include <symengine/pow.h>
-#include <symengine/dict.h>
 
 using SymEngine::UIntPoly;
 using SymEngine::uint_poly;

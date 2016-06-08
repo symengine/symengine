@@ -1,13 +1,3 @@
-#include <symengine/basic.h>
-#include <symengine/symbol.h>
-#include <symengine/add.h>
-#include <symengine/integer.h>
-#include <symengine/rational.h>
-#include <symengine/complex.h>
-#include <symengine/mul.h>
-#include <symengine/pow.h>
-#include <symengine/constants.h>
-#include <symengine/functions.h>
 #include <symengine/printer.h>
 #include <symengine/subs.h>
 

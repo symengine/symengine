@@ -7,8 +7,6 @@
 #ifndef SYMENGINE_CONSTANTS_H
 #define SYMENGINE_CONSTANTS_H
 
-#include <symengine/basic.h>
-#include <symengine/number.h>
 #include <symengine/integer.h>
 #include <symengine/symbol.h>
 

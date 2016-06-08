@@ -1,22 +1,8 @@
 #include "catch.hpp"
 #include <chrono>
 
-#include <symengine/add.h>
-#include <symengine/basic.h>
-#include <symengine/complex.h>
-#include <symengine/complex_double.h>
-#include <symengine/complex_mpc.h>
-#include <symengine/integer.h>
 #include <symengine/matrix.h>
-#include <symengine/mul.h>
-#include <symengine/polys/uintpoly.h>
-#include <symengine/polys/uexprpoly.h>
-#include <symengine/pow.h>
 #include <symengine/printer.h>
-#include <symengine/rational.h>
-#include <symengine/real_double.h>
-#include <symengine/real_mpfr.h>
-#include <symengine/symbol.h>
 
 using SymEngine::RCP;
 using SymEngine::Basic;

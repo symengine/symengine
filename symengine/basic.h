@@ -8,9 +8,6 @@
 #define SYMENGINE_BASIC_H
 
 // Include all C++ headers here:
-#include <cstddef>
-#include <stdexcept>
-#include <iostream>
 #include <sstream>
 #include <typeinfo>
 #include <map>
@@ -18,21 +15,15 @@
 #include <set>
 #include <unordered_map>
 #include <cassert>
-#include <ciso646>
 #include <cmath>
 #include <complex>
 #include <vector>
 #include <type_traits>
 #include <functional>
 
-#include <symengine/symengine_config.h>
-
 #ifdef WITH_SYMENGINE_THREAD_SAFE
-#include <atomic>
 #endif
 
-#include <symengine/symengine_assert.h>
-#include <symengine/symengine_rcp.h>
 #include <symengine/dict.h>
 
 namespace SymEngine

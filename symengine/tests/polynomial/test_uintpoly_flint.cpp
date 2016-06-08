@@ -1,11 +1,8 @@
 #include "catch.hpp"
 #include <chrono>
-#include <iostream>
 
-#include <symengine/mul.h>
 #include <symengine/polys/uintpoly_flint.h>
 #include <symengine/pow.h>
-#include <symengine/dict.h>
 
 using SymEngine::UIntPolyFlint;
 using SymEngine::Symbol;

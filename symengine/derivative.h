@@ -8,7 +8,6 @@
 #define SYMENGINE_DERIVATIVE_H
 
 #include <symengine/basic.h>
-#include <symengine/dict.h>
 
 namespace SymEngine
 {

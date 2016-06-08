@@ -3,10 +3,6 @@
  *  Class for RealMPFR built on top of Number class
  *
  **/
-#include <symengine/basic.h>
-#include <symengine/real_double.h>
-#include <symengine/complex_double.h>
-#include <symengine/real_mpfr.h>
 #include <symengine/complex_mpc.h>
 
 #ifdef HAVE_SYMENGINE_MPFR
