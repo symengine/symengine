@@ -6,8 +6,7 @@
 namespace SymEngine
 {
 
-UIntPolyPiranha::UIntPolyPiranha(const RCP<const Symbol> &var,
-                             pintpoly &&dict)
+UIntPolyPiranha::UIntPolyPiranha(const RCP<const Symbol> &var, pintpoly &&dict)
     : UIntPolyBase(var, std::move(dict))
 {
 }
@@ -33,21 +32,21 @@ int UIntPolyPiranha::compare(const Basic &o) const
     return (poly_.hash() < s.poly_.hash()) ? -1 : 1;
 }
 
-RCP<const UIntPolyPiranha> UIntPolyPiranha::from_dict(const RCP<const Symbol> &var,
-                                                  map_uint_mpz &&d)
+RCP<const UIntPolyPiranha>
+UIntPolyPiranha::from_dict(const RCP<const Symbol> &var, map_uint_mpz &&d)
 {
-	pintpoly p;
-	for (auto &it: d)
-		p.insert(pterm{it.second, pmonomial{it.first}});
+    pintpoly p;
+    for (auto &it : d)
+        p.insert(pterm{it.second, pmonomial{it.first}});
 
     return make_rcp<const UIntPolyPiranha>(var, std::move(p));
 }
 
 RCP<const UIntPolyPiranha>
 UIntPolyPiranha::from_vec(const RCP<const Symbol> &var,
-                        const std::vector<integer_class> &v)
+                          const std::vector<integer_class> &v)
 {
-	pintpoly p;
+    pintpoly p;
     for (unsigned int i = 0; i <= v.size(); i++) {
         if (v[i] != integer_class(0)) {
             p.insert(pterm{v[i], pmonomial{i}});
@@ -62,10 +61,10 @@ integer_class UIntPolyPiranha::get_coeff(unsigned int x) const
 }
 
 integer_class UIntPolyPiranha::eval(const integer_class &x) const
-{   
+{
     // return integer_class(0);
-    return piranha::math::evaluate<integer_class>(poly_, {{var_->get_name(), x}});
+    return piranha::math::evaluate<integer_class>(poly_,
+                                                  {{var_->get_name(), x}});
 }
-
 }
 #endif

@@ -16,8 +16,6 @@
 #include <piranha/mp_rational.hpp>
 #endif
 
-
- 
 namespace SymEngine
 {
 

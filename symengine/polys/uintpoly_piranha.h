@@ -16,7 +16,6 @@
 #include <piranha/math.hpp>
 #include <piranha/type_traits.hpp>
 
-
 namespace piranha
 {
 
@@ -24,18 +23,20 @@ namespace piranha
 namespace math
 {
 template <typename T, typename U>
-struct pow_impl<T,U, SymEngine::enable_if_t<std::is_same<T,SymEngine::integer_class>::value && std::is_integral<U>::value>>
-{
+struct pow_impl<T, U,
+                SymEngine::
+                    enable_if_t<std::is_same<T, SymEngine::integer_class>::value
+                                && std::is_integral<U>::value>> {
     template <typename T2>
-    SymEngine::integer_class operator()(const SymEngine::integer_class &r, const T2 &x) const
-    {   
+    SymEngine::integer_class operator()(const SymEngine::integer_class &r,
+                                        const T2 &x) const
+    {
         SymEngine::integer_class res;
         mp_pow_ui(res, r, x);
         return res;
     }
 };
 }
-
 }
 
 namespace SymEngine
@@ -55,7 +56,7 @@ public:
     int compare(const Basic &o) const;
 
     static RCP<const UIntPolyPiranha> from_dict(const RCP<const Symbol> &var,
-                                              map_uint_mpz &&d);
+                                                map_uint_mpz &&d);
     static RCP<const UIntPolyPiranha>
     from_vec(const RCP<const Symbol> &var, const std::vector<integer_class> &v);
 
