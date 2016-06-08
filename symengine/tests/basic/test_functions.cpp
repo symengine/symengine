@@ -2666,16 +2666,16 @@ TEST_CASE("MPFR and MPC: functions", "[functions]")
     REQUIRE(is_a<RealMPFR>(*r2));
 
     mpfr_mul_z(a.get_mpfr_t(),
-                static_cast<const RealMPFR &>(*r1).i.get_mpfr_t(), get_mpz_t(p),
-                MPFR_RNDN);
+               static_cast<const RealMPFR &>(*r1).i.get_mpfr_t(), get_mpz_t(p),
+               MPFR_RNDN);
     q = 84147098480789650_z;
     REQUIRE(mpfr_cmp_z(a.get_mpfr_t(), get_mpz_t(q)) > 0);
     q = 84147098480789651_z;
     REQUIRE(mpfr_cmp_z(a.get_mpfr_t(), get_mpz_t(q)) < 0);
 
     mpfr_mul_z(a.get_mpfr_t(),
-                static_cast<const RealMPFR &>(*r2).i.get_mpfr_t(), get_mpz_t(p),
-                MPFR_RNDN);
+               static_cast<const RealMPFR &>(*r2).i.get_mpfr_t(), get_mpz_t(p),
+               MPFR_RNDN);
     q = -41614683654714239_z;
     REQUIRE(mpfr_cmp_z(a.get_mpfr_t(), get_mpz_t(q)) > 0);
     q = -41614683654714238_z;
@@ -2685,8 +2685,8 @@ TEST_CASE("MPFR and MPC: functions", "[functions]")
     r1 = gamma(div(real_mpfr(a), i2));
     REQUIRE(is_a<RealMPFR>(*r1));
     mpfr_mul_z(a.get_mpfr_t(),
-                static_cast<const RealMPFR &>(*r1).i.get_mpfr_t(), get_mpz_t(p),
-                MPFR_RNDN);
+               static_cast<const RealMPFR &>(*r1).i.get_mpfr_t(), get_mpz_t(p),
+               MPFR_RNDN);
     q = 88622692545275801_z;
     REQUIRE(mpfr_cmp_z(a.get_mpfr_t(), get_mpz_t(q)) > 0);
     q = 88622692545275802_z;

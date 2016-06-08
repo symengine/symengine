@@ -1,4 +1,3 @@
-
 #include <symengine/matrix.h>
 #include <symengine/add.h>
 #include <symengine/mul.h>

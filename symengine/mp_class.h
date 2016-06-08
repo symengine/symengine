@@ -14,7 +14,6 @@
 #include <gmpxx.h>
 #endif
 
-
 namespace SymEngine
 {
 /*

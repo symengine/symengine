@@ -136,13 +136,14 @@ double real_double_get_d(const basic s);
 #ifdef HAVE_SYMENGINE_MPFR
 //! Assign to s, a real mpfr that has value d with precision prec.
 void real_mpfr_set_d(basic s, double d, int prec);
-//! Assign to s, a real mpfr that has base 10 representation c with precision prec.
+//! Assign to s, a real mpfr that has base 10 representation c with precision
+//! prec.
 void real_mpfr_set_str(basic s, char *c, int prec);
 //! Returns double value of s.
 double real_mpfr_get_d(const basic s);
 //! Assign to s, a real mpfr that has value pointed by m.
 void real_mpfr_set(basic s, mpfr_srcptr m);
-//! Assign to m, the mpfr_t given in s. 
+//! Assign to m, the mpfr_t given in s.
 void real_mpfr_get(mpfr_ptr m, const basic s);
 //! Returns the precision of the mpfr_t given by s.
 mpfr_prec_t real_mpfr_get_prec(const basic s);

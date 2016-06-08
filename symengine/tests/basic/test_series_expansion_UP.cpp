@@ -1,7 +1,6 @@
-
+#include <symengine/series_piranha.h>
 #include "catch.hpp"
 #include <chrono>
-
 
 using SymEngine::Basic;
 using SymEngine::Integer;
@@ -21,7 +20,6 @@ using SymEngine::EulerGamma;
 using SymEngine::one;
 
 #ifdef HAVE_SYMENGINE_PIRANHA
-#include <symengine/series_piranha.h>
 
 using SymEngine::UPSeriesPiranha;
 using SymEngine::p_expr;

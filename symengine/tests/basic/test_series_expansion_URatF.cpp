@@ -1,7 +1,6 @@
-
+#include <symengine/series_flint.h>
 #include "catch.hpp"
 #include <chrono>
-
 
 using SymEngine::Basic;
 using SymEngine::Integer;
@@ -21,8 +20,6 @@ using SymEngine::cos;
 using SymEngine::umap_short_basic;
 
 #ifdef HAVE_SYMENGINE_FLINT
-#include <symengine/series_flint.h>
-
 using SymEngine::URatPSeriesFlint;
 using SymEngine::fp_t;
 #define series_coeff(EX, SYM, PREC, COEFF)                                     \

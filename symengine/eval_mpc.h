@@ -7,7 +7,6 @@
 #ifndef SYMENGINE_EVAL_MPC_H
 #define SYMENGINE_EVAL_MPC_H
 
-
 #ifdef HAVE_SYMENGINE_MPC
 #include <symengine/basic.h>
 #include <mpc.h>

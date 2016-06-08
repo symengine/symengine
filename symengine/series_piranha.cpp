@@ -1,4 +1,3 @@
-
 #include <symengine/series_visitor.h>
 
 namespace SymEngine

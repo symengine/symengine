@@ -1,4 +1,3 @@
-
 #include <symengine/visitor.h>
 #include <symengine/eval_double.h>
 
