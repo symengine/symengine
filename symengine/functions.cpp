@@ -1235,7 +1235,7 @@ bool FunctionSymbol::__eq__(const Basic &o) const
 {
     if (is_a<FunctionSymbol>(o)
         and name_ == static_cast<const FunctionSymbol &>(o).name_
-        and vec_basic_eq(arg_, static_cast<const FunctionSymbol &>(o).arg_))
+        and unified_eq(arg_, static_cast<const FunctionSymbol &>(o).arg_))
         return true;
     return false;
 }
@@ -1245,7 +1245,7 @@ int FunctionSymbol::compare(const Basic &o) const
     SYMENGINE_ASSERT(is_a<FunctionSymbol>(o))
     const FunctionSymbol &s = static_cast<const FunctionSymbol &>(o);
     if (name_ == s.name_)
-        return vec_basic_compare(arg_, s.arg_);
+        return unified_compare(arg_, s.arg_);
     else
         return name_ < s.name_ ? -1 : 1;
 }
@@ -1357,7 +1357,7 @@ bool Derivative::__eq__(const Basic &o) const
 {
     if (is_a<Derivative>(o)
         and eq(*arg_, *(static_cast<const Derivative &>(o).arg_))
-        and multiset_basic_eq(x_, static_cast<const Derivative &>(o).x_))
+        and unified_eq(x_, static_cast<const Derivative &>(o).x_))
         return true;
     return false;
 }
@@ -1369,7 +1369,7 @@ int Derivative::compare(const Basic &o) const
     int cmp = arg_->__cmp__(*(s.arg_));
     if (cmp != 0)
         return cmp;
-    cmp = multiset_basic_compare(x_, s.x_);
+    cmp = unified_compare(x_, s.x_);
     return cmp;
 }
 
@@ -1403,7 +1403,7 @@ std::size_t Subs::__hash__() const
 bool Subs::__eq__(const Basic &o) const
 {
     if (is_a<Subs>(o) and eq(*arg_, *(static_cast<const Subs &>(o).arg_))
-        and map_eq(dict_, static_cast<const Subs &>(o).dict_))
+        and unified_eq(dict_, static_cast<const Subs &>(o).dict_))
         return true;
     return false;
 }
@@ -1415,7 +1415,7 @@ int Subs::compare(const Basic &o) const
     int cmp = arg_->__cmp__(*(s.arg_));
     if (cmp != 0)
         return cmp;
-    cmp = map_compare(dict_, s.dict_);
+    cmp = unified_compare(dict_, s.dict_);
     return cmp;
 }
 

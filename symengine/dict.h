@@ -8,6 +8,7 @@
 #define SYMENGINE_DICT_H
 #include <symengine/symengine_config.h>
 #include <symengine/mp_class.h>
+#include <algorithm>
 
 namespace SymEngine
 {
@@ -21,6 +22,8 @@ struct RCPBasicHash;
 struct RCPBasicKeyEq;
 struct RCPBasicKeyLess;
 struct RCPIntegerKeyLess;
+
+bool eq(const Basic &, const Basic &);
 
 typedef std::unordered_map<RCP<const Basic>, RCP<const Number>, RCPBasicHash,
                            RCPBasicKeyEq> umap_basic_num;
@@ -68,10 +71,78 @@ inline void insert(T1 &m, const T2 &first, const T3 &second)
     m.insert(std::pair<T2, T3>(first, second));
 }
 
+// Takes an unordered map of type M with key type K and returns a vector of K
+// ordered by C.
+template <class M, typename C = std::less<typename M::key_type>>
+std::vector<typename M::key_type> sorted_keys(const M &d)
+{
+    std::vector<typename M::key_type> v;
+    v.reserve(d.size());
+    for (auto &p : d) {
+        v.push_back(p.first);
+    }
+    std::sort(v.begin(), v.end(), C());
+    return v;
+}
+
+template <bool B, class T = void>
+using enable_if_t = typename std::enable_if<B, T>::type;
+
+template <typename T>
+inline bool unified_eq(const std::vector<T> &a, const std::vector<T> &b)
+{
+    return ordered_eq(a, b);
+}
+
+template <typename T, typename U>
+inline bool unified_eq(const std::pair<T, U> &a, const std::pair<T, U> &b)
+{
+    return unified_eq(a.first, b.first) and unified_eq(a.second, b.second);
+}
+
+template <typename T, typename U>
+inline bool unified_eq(const std::set<T, U> &a, const std::set<T, U> &b)
+{
+    return ordered_eq(a, b);
+}
+
+template <typename T, typename U>
+inline bool unified_eq(const std::multiset<T, U> &a,
+                       const std::multiset<T, U> &b)
+{
+    return ordered_eq(a, b);
+}
+
+template <typename K, typename V, typename C>
+inline bool unified_eq(const std::map<K, V, C> &a, const std::map<K, V, C> &b)
+{
+    return ordered_eq(a, b);
+}
+
+template <typename K, typename V, typename H, typename E>
+inline bool unified_eq(const std::unordered_map<K, V, H, E> &a,
+                       const std::unordered_map<K, V, H, E> &b)
+{
+    return unordered_eq(a, b);
+}
+
+inline bool unified_eq(const RCP<const Basic> &a, const RCP<const Basic> &b)
+{
+    return eq(*a, *b);
+}
+
+template <typename T,
+          typename = enable_if_t<std::is_arithmetic<T>::value
+                                 or std::is_same<T, integer_class>::value>>
+inline bool unified_eq(const T &a, const T &b)
+{
+    return a == b;
+}
+
 //! eq function base
 //! \return true if the two dictionaries `a` and `b` are equal. Otherwise false
 template <class T>
-bool umap_eq(const T &a, const T &b)
+bool unordered_eq(const T &a, const T &b)
 {
     // This follows the same algorithm as Python's dictionary comparison
     // (a==b), which is implemented by "dict_equal" function in
@@ -86,32 +157,14 @@ bool umap_eq(const T &a, const T &b)
         auto f = b.find(p.first);
         if (f == b.end())
             return false; // no such element in "b"
-        if (neq(*p.second, *f->second))
+        if (not unified_eq(p.second, f->second))
             return false; // values not equal
     }
     return true;
 }
 
 template <class T>
-bool map_eq(const T &A, const T &B)
-{
-    // Can't be equal if # of entries differ:
-    if (A.size() != B.size())
-        return false;
-    // Loop over keys in "a":
-    auto a = A.begin();
-    auto b = B.begin();
-    for (; a != A.end(); ++a, ++b) {
-        if (neq(*a->first, *b->first))
-            return false; // keys not equal
-        if (neq(*a->second, *b->second))
-            return false; // values not equal
-    }
-    return true;
-}
-
-template <class T>
-bool vec_set_eq(const T &A, const T &B)
+bool ordered_eq(const T &A, const T &B)
 {
     // Can't be equal if # of entries differ:
     if (A.size() != B.size())
@@ -120,65 +173,124 @@ bool vec_set_eq(const T &A, const T &B)
     auto a = A.begin();
     auto b = B.begin();
     for (; a != A.end(); ++a, ++b) {
-        if (neq(**a, **b))
+        if (not unified_eq(*a, *b))
             return false; // values not equal
     }
     return true;
 }
 
-//! compare functions base (might also need umap_compare in the future)
+//! compare functions base
 //! \return -1, 0, 1 for a < b, a == b, a > b
-template <class T>
-int vec_set_compare(const T &A, const T &B)
+template <typename T,
+          typename = enable_if_t<std::is_arithmetic<T>::value
+                                 or std::is_same<T, integer_class>::value>>
+inline int unified_compare(const T &a, const T &b)
 {
+    if (a == b)
+        return 0;
+    return a < b ? -1 : 1;
+}
+
+template <typename T, typename U,
+          typename = enable_if_t<std::is_base_of<Basic, T>::value
+                                 and std::is_base_of<Basic, U>::value>>
+inline int unified_compare(const RCP<const T> &a, const RCP<const U> &b)
+{
+    return a->__cmp__(*b);
+}
+
+template <class T>
+inline int ordered_compare(const T &A, const T &B);
+
+template <typename T>
+inline int unified_compare(const std::vector<T> &a, const std::vector<T> &b)
+{
+    return ordered_compare(a, b);
+}
+
+template <typename T, typename U>
+inline int unified_compare(const std::set<T, U> &a, const std::set<T, U> &b)
+{
+    return ordered_compare(a, b);
+}
+
+template <typename T, typename U>
+inline int unified_compare(const std::multiset<T, U> &a,
+                           const std::multiset<T, U> &b)
+{
+    return ordered_compare(a, b);
+}
+
+template <typename T, typename U>
+inline int unified_compare(const std::pair<T, U> &a, const std::pair<T, U> &b)
+{
+    auto t = unified_compare(a.first, b.first);
+    if (t == 0) {
+        return unified_compare(a.second, b.second);
+    } else {
+        return t;
+    }
+}
+
+template <typename K, typename V, typename C>
+inline int unified_compare(const std::map<K, V, C> &a,
+                           const std::map<K, V, C> &b)
+{
+    return ordered_compare(a, b);
+}
+
+template <typename K, typename V, typename H, typename E>
+inline int unified_compare(const std::unordered_map<K, V, H, E> &a,
+                           const std::unordered_map<K, V, H, E> &b)
+{
+    return unordered_compare(a, b);
+}
+
+template <class T>
+inline int ordered_compare(const T &A, const T &B)
+{
+    // Can't be equal if # of entries differ:
     if (A.size() != B.size())
-        return (A.size() < B.size()) ? -1 : 1;
+        return A.size() < B.size() ? -1 : 1;
+
+    // Loop over elements in "a" and "b":
     auto a = A.begin();
     auto b = B.begin();
-    int cmp;
     for (; a != A.end(); ++a, ++b) {
-        cmp = (*a)->__cmp__(**b);
-        if (cmp != 0)
-            return cmp;
+        auto t = unified_compare(*a, *b);
+        if (t != 0)
+            return t; // values not equal
     }
     return 0;
 }
 
-template <class T>
-int map_compare(const T &A, const T &B)
+template <class M, typename C = std::less<typename M::key_type>>
+inline int unordered_compare(const M &a, const M &b)
 {
-    if (A.size() != B.size())
-        return (A.size() < B.size()) ? -1 : 1;
-    auto a = A.begin();
-    auto b = B.begin();
-    int cmp;
-    for (; a != A.end(); ++a, ++b) {
-        cmp = a->first->__cmp__(*b->first);
-        if (cmp != 0)
-            return cmp;
-        cmp = a->second->__cmp__(*b->second);
-        if (cmp != 0)
-            return cmp;
+    // Can't be equal if # of entries differ:
+    if (a.size() != b.size())
+        return a.size() < b.size() ? -1 : 1;
+
+    std::vector<typename M::key_type> va = sorted_keys<M, C>(a);
+    std::vector<typename M::key_type> vb = sorted_keys<M, C>(b);
+
+    for (unsigned int i = 0; i < va.size() && i < vb.size(); i++) {
+        bool s = C()(va[i], vb[i]);
+        if (s)
+            return -1;
+        s = C()(vb[i], va[i]);
+        if (s)
+            return 1;
+
+        int t = unified_compare(a.find(va[i])->second, b.find(vb[i])->second);
+        if (t != 0)
+            return t;
     }
     return 0;
 }
-
-//! derived from bse functions
-bool vec_basic_eq(const vec_basic &a, const vec_basic &b);
-bool multiset_basic_eq(const multiset_basic &a, const multiset_basic &b);
-
-int vec_basic_compare(const vec_basic &a, const vec_basic &b);
-int multiset_basic_compare(const multiset_basic &a, const multiset_basic &b);
-
-//! map functions
-int map_uint_mpz_compare(const map_uint_mpz &a, const map_uint_mpz &b);
-int map_int_Expr_compare(const map_int_Expr &a, const map_int_Expr &b);
 
 //! misc functions
 bool vec_basic_eq_perm(const vec_basic &a, const vec_basic &b);
-
-int umap_vec_mpz_compare(const umap_vec_mpz &a, const umap_vec_mpz &b);
-long mpz_hash(const integer_class z);
 
 typedef std::vector<unsigned int> vec_uint;
 
@@ -201,74 +313,6 @@ typedef std::unordered_map<vec_uint, integer_class, vec_uint_hash>
     umap_uvec_mpz;
 typedef std::unordered_map<vec_uint, Expression, vec_uint_hash> umap_uvec_expr;
 
-// Takes an unordered map of type M with key type K and returns a vector of K
-// ordered by C.
-template <class K, class M, class C = std::less<K>>
-std::vector<K> order_umap(const M &d)
-{
-    std::set<K, C> s;
-    std::vector<K> v;
-    for (auto bucket : d) {
-        s.insert(bucket.first);
-    }
-    v.insert(v.begin(), s.begin(), s.end());
-    return v;
-}
-
-int umap_uvec_mpz_compare(const umap_uvec_mpz &a, const umap_uvec_mpz &b);
-int umap_vec_expr_compare(const umap_vec_expr &a, const umap_vec_expr &b);
-
-// copied from umap_eq, with derefrencing of image in map removed.
-template <class T>
-bool umap_eq2(const T &a, const T &b)
-{
-    // Can't be equal if # of entries differ:
-    if (a.size() != b.size())
-        return false;
-    // Loop over keys in "a":
-    for (const auto &p : a) {
-        // O(1) lookup of the key in "b":
-        auto f = b.find(p.first);
-        if (f == b.end())
-            return false; // no such element in "b"
-        if (p.second != f->second)
-            return false; // values not equal
-    }
-    return true;
-}
-
-template <class T>
-bool set_eq(const T &A, const T &B)
-{
-    // Can't be equal if # of entries differ:
-    if (A.size() != B.size())
-        return false;
-    // Loop over elements in "a" and "b":
-    auto a = A.begin();
-    auto b = B.begin();
-    for (; a != A.end(); ++a, ++b) {
-        if (neq(**a, **b))
-            return false; // values not equal
-    }
-    return true;
-}
-
-template <class T>
-int set_compare(const T &A, const T &B)
-{
-    if (A.size() != B.size())
-        return (A.size() < B.size()) ? -1 : 1;
-    auto a = A.begin();
-    auto b = B.begin();
-    int cmp;
-    for (; a != A.end(); ++a, ++b) {
-        cmp = (*a)->__cmp__(**b);
-        if (cmp != 0)
-            return cmp;
-    }
-    return 0;
-}
-
 //! print functions
 std::ostream &operator<<(std::ostream &out, const SymEngine::umap_basic_num &d);
 std::ostream &operator<<(std::ostream &out, const SymEngine::map_basic_num &d);
@@ -279,9 +323,6 @@ std::ostream &operator<<(std::ostream &out,
 std::ostream &operator<<(std::ostream &out, const SymEngine::vec_basic &d);
 std::ostream &operator<<(std::ostream &out, const SymEngine::set_basic &d);
 std::ostream &operator<<(std::ostream &out, const SymEngine::map_int_Expr &d);
-
-template <bool B, class T = void>
-using enable_if_t = typename std::enable_if<B, T>::type;
 
 } // SymEngine
 

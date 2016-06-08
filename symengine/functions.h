@@ -155,7 +155,7 @@ public:
     virtual inline bool __eq__(const Basic &o) const
     {
         return is_same_type(*this, o)
-               and vec_basic_eq(
+               and unified_eq(
                        get_vec(),
                        static_cast<const MultiArgFunction &>(o).get_vec());
     }
@@ -163,7 +163,7 @@ public:
     virtual inline int compare(const Basic &o) const
     {
         SYMENGINE_ASSERT(is_same_type(*this, o))
-        return vec_basic_compare(
+        return unified_compare(
             get_vec(), static_cast<const MultiArgFunction &>(o).get_vec());
     }
 };
@@ -567,7 +567,7 @@ private:
     // vector<RCP<Basic>>, see [1], [2]. The problem is that even though Symbol
     // inherits from Basic, vector<RCP<Symbol>> does not inherit from
     // vector<RCP<Basic>>, so the compiler can't cast the derived type to the
-    // base type when calling functions like vec_basic_eq() that are only
+    // base type when calling functions like unified_eq() that are only
     // defined for the base type vector<RCP<Basic>>.
     // [1]
     // http://stackoverflow.com/questions/14964909/how-to-cast-a-vector-of-shared-ptrs-of-a-derived-class-to-a-vector-of-share-ptrs

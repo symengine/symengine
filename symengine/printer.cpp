@@ -540,7 +540,7 @@ void StrPrinter::bvisit(const MultivariateIntPolynomial &x)
     bool first = true; // is this the first term being printed out?
     // To change the ordering in which the terms will print out, change
     // vec_uint_compare in dict.h
-    std::vector<vec_uint> v = order_umap<vec_uint, umap_uvec_mpz>(x.dict_);
+    std::vector<vec_uint> v = sorted_keys(x.dict_);
 
     for (vec_uint exps : v) {
         integer_class c = x.dict_.find(exps)->second;
@@ -588,7 +588,7 @@ void StrPrinter::bvisit(const MultivariatePolynomial &x)
     bool first = true; // is this the first term being printed out?
     // To change the ordering in which the terms will print out, change
     // vec_uint_compare in dict.h
-    std::vector<vec_int> v = order_umap<vec_int, umap_vec_expr>(x.dict_);
+    std::vector<vec_int> v = sorted_keys(x.dict_);
 
     for (vec_int exps : v) {
         Expression c = x.dict_.find(exps)->second;

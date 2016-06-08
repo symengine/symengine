@@ -157,19 +157,7 @@ public:
 
     int compare(const UExprDict &other) const
     {
-        if (dict_.size() != other.dict_.size())
-            return (dict_.size() < other.dict_.size()) ? -1 : 1;
-        auto p = dict_.begin();
-        auto o = other.dict_.begin();
-        for (; p != dict_.end(); ++p, ++o) {
-            if (p->first != o->first)
-                return (p->first < o->first) ? -1 : 1;
-            if (p->second != o->second)
-                return (p->second.get_basic()->__cmp__(*o->second.get_basic()))
-                           ? -1
-                           : 1;
-        }
-        return 0;
+        return unified_compare(dict_, other.dict_);
     }
 
     Expression find_cf(int deg) const

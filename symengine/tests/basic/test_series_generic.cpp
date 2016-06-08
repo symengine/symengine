@@ -188,7 +188,7 @@ TEST_CASE("UnivariateSeries: compare, as_basic, as_dict", "[UnivariateSeries]")
     REQUIRE(R->compare(*R) == 0);
     REQUIRE(R->compare(*S) == -1);
     REQUIRE(S->as_basic()->__eq__(*S->as_basic()) == true);
-    REQUIRE(umap_eq(R->as_dict(), m) == true);
+    REQUIRE(unified_eq(R->as_dict(), m) == true);
 }
 
 #define series_coeff(EX, SYM, PREC, COEFF)                                     \

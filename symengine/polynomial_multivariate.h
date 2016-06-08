@@ -149,9 +149,8 @@ public:
                 return false;
         }
         // checks that the maximum degree of any variable is correct according
-        // to
-        // the dictionary
-        // keeps track of the index of the variable we are checking
+        // to the dictionary keeps track of the index of the variable we are
+        // checking
         unsigned int whichvar = 0;
         for (auto var : vars) {
             unsigned int maxdegree = 0;
@@ -183,7 +182,7 @@ public:
             if (dict_.begin()->second != o_.dict_.begin()->second)
                 return false;
             if (dict_.begin()->first == o_.dict_.begin()->first
-                && vec_set_eq(vars_, o_.vars_))
+                && unified_eq(vars_, o_.vars_))
                 return true;
             Vec v1, v2;
             v1.resize(vars_.size(), 0);
@@ -194,8 +193,7 @@ public:
         } else if (0 == dict_.size() && 0 == o_.dict_.size()) {
             return true;
         } else {
-            return (set_eq<set_basic>(vars_, o_.vars_)
-                    && umap_eq2(dict_, o_.dict_));
+            return (unified_eq(vars_, o_.vars_) && unified_eq(dict_, o_.dict_));
         }
     }
 

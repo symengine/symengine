@@ -339,7 +339,7 @@ bool FiniteSet::__eq__(const Basic &o) const
 {
     if (is_a<FiniteSet>(o)) {
         const FiniteSet &other = static_cast<const FiniteSet &>(o);
-        return vec_set_eq(container_, other.container_);
+        return unified_eq(container_, other.container_);
     }
     return false;
 }
@@ -349,7 +349,7 @@ int FiniteSet::compare(const Basic &o) const
     // compares two FiniteSet based on their length
     SYMENGINE_ASSERT(is_a<FiniteSet>(o))
     const FiniteSet &other = static_cast<const FiniteSet &>(o);
-    return vec_set_compare(container_, other.container_);
+    return unified_compare(container_, other.container_);
 }
 
 bool FiniteSet::contains(const RCP<const Basic> &a) const

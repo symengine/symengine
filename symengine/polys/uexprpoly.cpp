@@ -44,11 +44,11 @@ int UExprPoly::compare(const Basic &o) const
     if (poly_.size() != s.poly_.size())
         return (poly_.size() < s.poly_.size()) ? -1 : 1;
 
-    int cmp = var_->compare(*s.var_);
+    int cmp = unified_compare(var_, s.var_);
     if (cmp != 0)
         return cmp;
 
-    return map_int_Expr_compare(poly_.get_dict(), s.poly_.get_dict());
+    return unified_compare(poly_.get_dict(), s.poly_.get_dict());
 }
 
 RCP<const UExprPoly> UExprPoly::from_dict(const RCP<const Symbol> &var,
