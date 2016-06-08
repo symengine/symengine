@@ -7,6 +7,10 @@
 #include <symengine/cwrapper.h>
 #include <string.h>
 
+#ifdef HAVE_SYMENGINE_MPFR
+#include <mpfr.h>
+#endif // HAVE_SYMENGINE_MPFR
+
 void test_cwrapper() {
     char* s;
     basic x, y, z;
@@ -195,6 +199,41 @@ void test_real_double()
     
     basic_free_stack(d);
 }
+
+#ifdef HAVE_SYMENGINE_MPFR
+void test_real_mpfr()
+{
+    basic d;
+    basic_new_stack(d);
+    real_mpfr_set_d(d, 123.456, 200);
+    SYMENGINE_C_ASSERT(is_a_RealMPFR(d));
+    SYMENGINE_C_ASSERT(real_mpfr_get_d(d) == 123.456);
+    basic_free_stack(d);
+
+    char *s2 = "456.123";
+
+    basic e;
+    basic_new_stack(e);
+    real_mpfr_set_str(e, s2, 200);
+    SYMENGINE_C_ASSERT(is_a_RealMPFR(e));
+    SYMENGINE_C_ASSERT(real_mpfr_get_d(e) == 456.123);
+    
+    
+    mpfr_ptr mp;
+    real_mpfr_get(mp, e);
+
+    basic_new_stack(d);
+    real_mpfr_set(d, mp);
+    SYMENGINE_C_ASSERT(is_a_RealMPFR(d));
+    SYMENGINE_C_ASSERT(real_mpfr_get_d(d) == 456.123);
+    
+    SYMENGINE_C_ASSERT(real_mpfr_get_prec(d) == 200);
+    
+    basic_free_stack(d);
+    basic_free_stack(e);
+    basic_str_free(s2);
+}
+#endif // HAVE_SYMENGINE_MPFR
 
 void test_CVectorInt1()
 {

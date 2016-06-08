@@ -34,7 +34,7 @@ public:
     {
         return mp;
     }
-    explicit mpfr_class(mpfr_t m)
+    explicit mpfr_class(mpfr_srcptr m)
     {
         mpfr_init2(mp, mpfr_get_prec(m));
         mpfr_set(mp, m, MPFR_RNDN);

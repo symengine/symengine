@@ -5,6 +5,10 @@
 #include <stdlib.h>
 #include <gmp.h>
 
+#ifdef HAVE_SYMENGINE_MPFR
+#include <mpfr.h>
+#endif // HAVE_SYMENGINE_MPFR
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -128,6 +132,21 @@ void integer_set_str(basic s, char *c);
 void real_double_set_d(basic s, double d);
 //! Returns double value of s.
 double real_double_get_d(const basic s);
+
+#ifdef HAVE_SYMENGINE_MPFR
+//! Assign to s, a real mpfr that has value d with precision prec.
+void real_mpfr_set_d(basic s, double d, int prec);
+//! Assign to s, a real mpfr that has base 10 representation c with precision prec.
+void real_mpfr_set_str(basic s, char *c, int prec);
+//! Returns double value of s.
+double real_mpfr_get_d(const basic s);
+//! Assign to s, a real mpfr that has value pointed by m.
+void real_mpfr_set(basic s, mpfr_srcptr m);
+//! Assign to m, the mpfr_t given in s. 
+void real_mpfr_get(mpfr_ptr m, const basic s);
+//! Returns the precision of the mpfr_t given by s.
+mpfr_prec_t real_mpfr_get_prec(const basic s);
+#endif // HAVE_SYMENGINE_MPFR
 
 //! Returns signed long value of s.
 signed long integer_get_si(const basic s);
@@ -264,6 +283,14 @@ int is_a_Rational(const basic s);
 int is_a_Symbol(const basic s);
 //! Return 1 if s is a Complex, 0 if not.
 int is_a_Complex(const basic s);
+//! Return 1 if s is a RealDouble, 0 if not.
+int is_a_RealDouble(const basic c);
+//! Return 1 if s is a ComplexDouble, 0 if not.
+int is_a_ComplexDouble(const basic c);
+//! Return 1 if s is a RealMPFR, 0 if not.
+int is_a_RealMPFR(const basic c);
+//! Return 1 if s is a ComplexMPC, 0 if not.
+int is_a_ComplexMPC(const basic c);
 
 //! Wrapper for std::vector<int>
 
