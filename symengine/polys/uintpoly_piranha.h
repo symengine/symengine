@@ -16,18 +16,27 @@
 #include <piranha/math.hpp>
 #include <piranha/type_traits.hpp>
 
-// can be removed once mpz_class constructors have noexempt
-// they have been included in development, not yet released
-#if SYMENGINE_INTEGER_CLASS == SYMENGINE_GMPXX
+
 namespace piranha
 {
-template <typename T>
-struct enable_noexcept_checks<T,typename std::enable_if<std::is_same<T,SymEngine::integer_class>::value>::type>
+
+// overloading pow for pirahna::math::evaluate
+namespace math
 {
-    static const bool value = false;
+template <typename T, typename U>
+struct pow_impl<T,U, SymEngine::enable_if_t<std::is_same<T,SymEngine::integer_class>::value && std::is_integral<U>::value>>
+{
+    template <typename T2>
+    SymEngine::integer_class operator()(const SymEngine::integer_class &r, const T2 &x) const
+    {   
+        SymEngine::integer_class res;
+        mp_pow_ui(res, r, x);
+        return res;
+    }
 };
 }
-#endif
+
+}
 
 namespace SymEngine
 {
@@ -35,7 +44,7 @@ using pmonomial = piranha::monomial<unsigned int>;
 using pintpoly = piranha::polynomial<integer_class, pmonomial>;
 using pterm = pintpoly::term_type;
 
-class UIntPolyPiranha : public UPolyBase<pintpoly, UIntPolyPiranha>
+class UIntPolyPiranha : public UIntPolyBase<pintpoly, UIntPolyPiranha>
 {
 public:
     IMPLEMENT_TYPEID(UINTPOLYPIRANHA)
@@ -50,8 +59,8 @@ public:
     static RCP<const UIntPolyPiranha>
     from_vec(const RCP<const Symbol> &var, const std::vector<integer_class> &v);
 
-    // integer_class eval(const integer_class &x) const;
-    // integer_class get_coeff(unsigned int x) const;
+    integer_class eval(const integer_class &x) const;
+    integer_class get_coeff(unsigned int x) const;
 
     inline unsigned int get_degree() const
     {

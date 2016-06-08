@@ -8,7 +8,7 @@ namespace SymEngine
 
 UIntPolyPiranha::UIntPolyPiranha(const RCP<const Symbol> &var,
                              pintpoly &&dict)
-    : UPolyBase(var, std::move(dict))
+    : UIntPolyBase(var, std::move(dict))
 {
 }
 
@@ -54,6 +54,17 @@ UIntPolyPiranha::from_vec(const RCP<const Symbol> &var,
         }
     }
     return make_rcp<const UIntPolyPiranha>(var, std::move(p));
+}
+
+integer_class UIntPolyPiranha::get_coeff(unsigned int x) const
+{
+    return poly_.find_cf(pmonomial{x});
+}
+
+integer_class UIntPolyPiranha::eval(const integer_class &x) const
+{   
+    // return integer_class(0);
+    return piranha::math::evaluate<integer_class>(poly_, {{var_->get_name(), x}});
 }
 
 }
