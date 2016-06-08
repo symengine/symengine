@@ -8,8 +8,8 @@ a1 = Symbol["a1"];
 e = a0 + a1;
 f = 0;
 
-Do[f = f + Symbol["a" <> ToString[i]], {i, 2, n - 1}];
-Do[e = e + Symbol["a" <> ToString[i]], {i, 2, n - 1}];
+Do[f = f + sin[Symbol["a" <> ToString[i]]], {i, 2, n - 1}];
+Do[e = e + sin[Symbol["a" <> ToString[i]]], {i, 2, n - 1}];
 
 f = -f;
 
