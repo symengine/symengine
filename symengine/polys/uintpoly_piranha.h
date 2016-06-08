@@ -16,6 +16,7 @@
 #include <piranha/math.hpp>
 #include <piranha/type_traits.hpp>
 
+#if SYMENGINE_INTEGER_CLASS != SYMENGINE_PIRANHA
 namespace piranha
 {
 
@@ -38,6 +39,7 @@ struct pow_impl<T, U,
 };
 }
 }
+#endif
 
 namespace SymEngine
 {
