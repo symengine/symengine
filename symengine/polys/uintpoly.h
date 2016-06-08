@@ -1,12 +1,10 @@
 /**
- *  \file polynomial.h
+ *  \file uintpoly.h
  *  Class for sparse Polynomial: UIntPoly
  **/
 #ifndef SYMENGINE_UINTPOLY_H
 #define SYMENGINE_UINTPOLY_H
 
-#include <symengine/expression.h>
-#include <symengine/monomials.h>
 #include <symengine/polys/upolybase.h>
 
 namespace SymEngine
@@ -126,7 +124,7 @@ public:
 
 }; // UIntDict
 
-class UIntPoly : public UPolyBase<UIntDict, UIntPoly>
+class UIntPoly : public UIntPolyBase<UIntDict, UIntPoly>
 {
 public:
     IMPLEMENT_TYPEID(UINTPOLY)
@@ -142,7 +140,7 @@ public:
     // creates a UIntPoly in cannonical form based on the
     // dictionary.
     static RCP<const UIntPoly> from_dict(const RCP<const Symbol> &var,
-                                         UIntDict &&d);
+                                         map_uint_mpz &&d);
     static RCP<const UIntPoly> from_vec(const RCP<const Symbol> &var,
                                         const std::vector<integer_class> &v);
     //! Evaluates the UIntPoly at value x
@@ -169,22 +167,21 @@ public:
         return poly_.dict_;
     }
 
-    inline unsigned int get_degree() const
+    inline integer_class get_coeff(unsigned int x) const
     {
-        return poly_.degree();
+        return poly_.get_coeff(x);
     }
 
 }; // UIntPoly
 
 inline RCP<const UIntPoly> uint_poly(RCP<const Symbol> i, UIntDict &&dict)
 {
-    return UIntPoly::from_dict(i, std::move(dict));
+    return UIntPoly::from_container(i, std::move(dict));
 }
 
 inline RCP<const UIntPoly> uint_poly(RCP<const Symbol> i, map_uint_mpz &&dict)
 {
-    UIntDict wrapper(dict);
-    return UIntPoly::from_dict(i, std::move(wrapper));
+    return UIntPoly::from_dict(i, std::move(dict));
 }
 
 } // SymEngine

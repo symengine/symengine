@@ -193,7 +193,7 @@ public:
     int compare(const Basic &o) const;
 
     static RCP<const UExprPoly> from_dict(const RCP<const Symbol> &var,
-                                          UExprDict &&d);
+                                          map_int_Expr &&d);
     static RCP<const UExprPoly> from_vec(const RCP<const Symbol> &var,
                                          const std::vector<Expression> &v);
 
@@ -226,17 +226,21 @@ public:
     {
         return poly_.get_dict();
     }
+
+    inline Expression get_coeff(int x) const
+    {
+        return poly_.get_coeff(x);
+    }
 }; // UExprPoly
 
 inline RCP<const UExprPoly> uexpr_poly(RCP<const Symbol> i, UExprDict &&dict)
 {
-    return UExprPoly::from_dict(i, std::move(dict));
+    return UExprPoly::from_container(i, std::move(dict));
 }
 
 inline RCP<const UExprPoly> uexpr_poly(RCP<const Symbol> i, map_int_Expr &&dict)
 {
-    UExprDict wrapper(dict);
-    return UExprPoly::from_dict(i, std::move(wrapper));
+    return UExprPoly::from_dict(i, std::move(dict));
 }
 
 } // SymEngine

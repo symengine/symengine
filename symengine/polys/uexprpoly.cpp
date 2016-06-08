@@ -27,7 +27,7 @@ std::size_t UExprPoly::__hash__() const
     std::hash<std::string> hash_string;
     std::size_t seed = UEXPRPOLY;
 
-    seed += hash_string(this->var_->get_name());
+    seed += hash_string(var_->get_name());
     for (const auto &it : poly_.dict_) {
         std::size_t temp = UEXPRPOLY;
         hash_combine<unsigned int>(temp, it.first);
@@ -52,9 +52,10 @@ int UExprPoly::compare(const Basic &o) const
 }
 
 RCP<const UExprPoly> UExprPoly::from_dict(const RCP<const Symbol> &var,
-                                          UExprDict &&d)
+                                          map_int_Expr &&d)
 {
-    return make_rcp<const UExprPoly>(var, std::move(d));
+    UExprDict x(d);
+    return make_rcp<const UExprPoly>(var, std::move(x));
 }
 
 RCP<const UExprPoly> UExprPoly::from_vec(const RCP<const Symbol> &var,

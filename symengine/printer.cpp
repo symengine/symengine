@@ -357,6 +357,70 @@ void StrPrinter::bvisit(const UIntPoly &x)
     str_ = s.str();
 }
 
+#ifdef HAVE_SYMENGINE_FLINT
+void StrPrinter::bvisit(const UIntPolyFlint &x)
+{
+    std::ostringstream s;
+    // bool variable needed to take care of cases like -5, -x, -3*x etc.
+    bool first = true;
+    // we iterate over the map in reverse order so that highest degree gets
+    // printed first
+    auto p = x.get_poly();
+    for (long i = p.length() - 1; i >= 0; i--) {
+        if (p.get_coeff(i) == 0)
+            continue;
+        // if exponent is 0, then print only coefficient
+        if (i == 0) {
+            if (first) {
+                s << p.get_coeff(i);
+            } else {
+                s << " " << _print_sign(
+                                to_integer_class(flint::fmpzxx(p.get_coeff(i))))
+                  << " " << flint::abs(p.get_coeff(i));
+            }
+            first = false;
+            continue;
+        }
+        // if the coefficient of a term is +1 or -1
+        if (flint::abs(p.get_coeff(i)) == 1) {
+            // in cases of -x, print -x
+            // in cases of x**2 - x, print - x
+            if (first) {
+                if (p.get_coeff(i) == -1)
+                    s << "-";
+                s << x.get_var()->get_name();
+            } else {
+                s << " " << _print_sign(
+                                to_integer_class(flint::fmpzxx(p.get_coeff(i))))
+                  << " " << x.get_var()->get_name();
+            }
+        }
+        // same logic is followed as above
+        else {
+            // in cases of -2*x, print -2*x
+            // in cases of x**2 - 2*x, print - 2*x
+            if (first) {
+                s << p.get_coeff(i) << "*" << x.get_var()->get_name();
+            } else {
+                s << " " << _print_sign(
+                                to_integer_class(flint::fmpzxx(p.get_coeff(i))))
+                  << " " << flint::abs(p.get_coeff(i)) << "*"
+                  << x.get_var()->get_name();
+            }
+        }
+        // if exponent is not 1, print the exponent;
+        if (i != 1) {
+            s << "**" << i;
+        }
+        // corner cases of only first term handled successfully, switch the bool
+        first = false;
+    }
+    if (p.length() == 0)
+        s << "0";
+    str_ = s.str();
+}
+#endif
+
 // UExprPoly printing, tests taken from SymPy and printing ensures
 // that there is compatibility
 void StrPrinter::bvisit(const UExprPoly &x)

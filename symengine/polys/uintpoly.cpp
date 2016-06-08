@@ -1,6 +1,4 @@
-#include <symengine/add.h>
-#include <symengine/constants.h>
-#include <symengine/mul.h>
+#include <symengine/symbol.h>
 #include <symengine/polys/uintpoly.h>
 #include <symengine/pow.h>
 
@@ -8,7 +6,7 @@ namespace SymEngine
 {
 
 UIntPoly::UIntPoly(const RCP<const Symbol> &var, UIntDict &&dict)
-    : UPolyBase(var, std::move(dict))
+    : UIntPolyBase(var, std::move(dict))
 {
     SYMENGINE_ASSERT(is_canonical(poly_))
 }
@@ -27,7 +25,7 @@ std::size_t UIntPoly::__hash__() const
     std::hash<std::string> hash_string;
     std::size_t seed = UINTPOLY;
 
-    seed += hash_string(this->var_->get_name());
+    seed += hash_string(var_->get_name());
     for (const auto &it : poly_.dict_) {
         std::size_t temp = UINTPOLY;
         hash_combine<unsigned int>(temp, it.first);
@@ -52,9 +50,10 @@ int UIntPoly::compare(const Basic &o) const
 }
 
 RCP<const UIntPoly> UIntPoly::from_dict(const RCP<const Symbol> &var,
-                                        UIntDict &&d)
+                                        map_uint_mpz &&d)
 {
-    return make_rcp<const UIntPoly>(var, std::move(d));
+    UIntDict x(d);
+    return make_rcp<const UIntPoly>(var, std::move(x));
 }
 
 RCP<const UIntPoly> UIntPoly::from_vec(const RCP<const Symbol> &var,

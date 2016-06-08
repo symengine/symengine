@@ -7,6 +7,15 @@
 
 #include <symengine/basic.h>
 
+#ifdef HAVE_SYMENGINE_FLINT
+#include <flint/flint.h>
+#include <flint/fmpzxx.h>
+#endif
+#ifdef HAVE_SYMENGINE_PIRANHA
+#include <piranha/mp_integer.hpp>
+#include <piranha/mp_rational.hpp>
+#endif
+
 namespace SymEngine
 {
 
@@ -193,6 +202,14 @@ public:
             return Key(0);
         return dict_.rbegin()->first;
     }
+
+    Value get_coeff(Key x) const
+    {
+        auto ite = dict_.find(x);
+        if (ite != dict_.end())
+            return ite->second;
+        return Value(0);
+    }
 };
 
 template <typename Container, typename Poly>
@@ -207,12 +224,10 @@ public:
         : var_{var}, poly_{container}
     {
     }
-    // TODO think of something to make this purely virtual
-    //! \returns the degree of the polynomial
-    // virtual unsigned int get_degree() const = 0;
 
     //! \returns `-1`,`0` or `1` after comparing
     virtual int compare(const Basic &o) const = 0;
+    virtual std::size_t __hash__() const = 0;
 
     //! \returns `true` if two objects are equal
     inline bool __eq__(const Basic &o) const
@@ -230,6 +245,36 @@ public:
     {
         return poly_;
     }
+
+    // TODO add as_symbolic()
+    inline vec_basic get_args() const
+    {
+        return {};
+    }
+
+    static RCP<const Poly> from_container(const RCP<const Symbol> &var,
+                                          Container &&d)
+    {
+        return make_rcp<const Poly>(var, std::move(d));
+    }
+};
+
+template <typename Container, typename Poly>
+class UIntPolyBase : public UPolyBase<Container, Poly>
+{
+public:
+    UIntPolyBase(const RCP<const Symbol> &var, Container &&container)
+        : UPolyBase<Container, Poly>(var, std::move(container))
+    {
+    }
+
+    inline unsigned int get_degree() const
+    {
+        return this->poly_.degree();
+    }
+
+    virtual integer_class get_coeff(unsigned int i) const = 0;
+    virtual integer_class eval(const integer_class &x) const = 0;
 };
 
 template <typename Poly>
@@ -240,14 +285,15 @@ RCP<const Poly> add_upoly(const Poly &a, const Poly &b)
 
     auto dict = a.get_poly();
     dict += b.get_poly();
-    return Poly::from_dict(a.get_var(), std::move(dict));
+    return Poly::from_container(a.get_var(), std::move(dict));
 }
 
 template <typename Poly>
 RCP<const Poly> neg_upoly(const Poly &a)
 {
-    auto dict = -(a.get_poly());
-    return Poly::from_dict(a.get_var(), std::move(dict));
+    auto dict = a.get_poly();
+    dict = -dict;
+    return Poly::from_container(a.get_var(), std::move(dict));
 }
 
 template <typename Poly>
@@ -258,7 +304,7 @@ RCP<const Poly> sub_upoly(const Poly &a, const Poly &b)
 
     auto dict = a.get_poly();
     dict -= b.get_poly();
-    return Poly::from_dict(a.get_var(), std::move(dict));
+    return Poly::from_container(a.get_var(), std::move(dict));
 }
 
 template <typename Poly>
@@ -269,8 +315,53 @@ RCP<const Poly> mul_upoly(const Poly &a, const Poly &b)
 
     auto dict = a.get_poly();
     dict *= b.get_poly();
-    return Poly::from_dict(a.get_var(), std::move(dict));
-}
+    return Poly::from_container(a.get_var(), std::move(dict));
 }
 
+// misc methods
+#if SYMENGINE_INTEGER_CLASS == SYMENGINE_GMPXX                                 \
+    || SYMENGINE_INTEGER_CLASS == SYMENGINE_GMP
+#ifdef HAVE_SYMENGINE_FLINT
+inline integer_class to_integer_class(const flint::fmpzxx &i)
+{
+    integer_class x;
+    fmpz_get_mpz(x.get_mpz_t(), i._data().inner);
+    return x;
+}
 #endif
+
+#ifdef HAVE_SYMENGINE_PIRANHA
+inline integer_class to_integer_class(const piranha::integer &i)
+{
+    integer_class x;
+    mpz_set(x.get_mpz_t(), i.get_mpz_view());
+    return x;
+}
+#endif
+
+#elif SYMENGINE_INTEGER_CLASS == SYMENGINE_PIRANHA
+#ifdef HAVE_SYMENGINE_FLINT
+inline integer_class to_integer_class(const flint::fmpzxx &i)
+{
+    integer_class x;
+    fmpz_get_mpz(x.get_mpz_t(), i._data().inner);
+    return x;
+}
+#endif
+
+#elif SYMENGINE_INTEGER_CLASS == SYMENGINE_FLINT
+#ifdef HAVE_SYMENGINE_PIRANHA
+inline integer_class to_integer_class(const piranha::integer &x)
+{
+    return integer_class(x.get_mpz_view());
+}
+#endif
+
+inline integer_class to_integer_class(const flint::fmpzxx &i)
+{
+    return integer_class(i._data().inner);
+}
+#endif
+}
+
+#endif // SYMENGINE_UINT_BASE_H

@@ -15,6 +15,7 @@ SYMENGINE_ENUM(UPSERIESPIRANHA, UPSeriesPiranha)
 #endif
 #if defined(HAVE_SYMENGINE_FLINT) || defined(SYMENGINE_INCLUDE_ALL)
 SYMENGINE_ENUM(URATPSERIESFLINT, URatPSeriesFlint)
+SYMENGINE_ENUM(UINTPOLYFLINT, UIntPolyFlint)
 #endif
 SYMENGINE_ENUM(NUMBER_WRAPPER, NumberWrapper)
 // 'NUMBER_WRAPPER' returns the number of subclasses of Number.
