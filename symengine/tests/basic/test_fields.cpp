@@ -196,6 +196,7 @@ TEST_CASE("Constructor of GaloisField Arithmetics : Basic", "[basic]")
     REQUIRE(d3.get_dict().empty());
     mp = d4.get_dict();
     REQUIRE(mp[0] == 1);
+    REQUIRE(d3 == d1/d2);
 
     a = {};
     d1 = GaloisFieldDict::from_vec(a, 7_z);
@@ -315,25 +316,32 @@ TEST_CASE("Constructor of GaloisField Arithmetics : Basic", "[basic]")
     REQUIRE(mp[2] == 7);
     REQUIRE(mp[3] == 1);
 
+    a = {7_z, 8_z, 1_z};
+    d1 = GaloisFieldDict::from_vec(a, 11_z);
+    a = {3_z, 2_z};
+    d2 = GaloisFieldDict::from_vec(a, 11_z);
+    d1.gf_div(d2, outArg(d3), outArg(d4));
+    REQUIRE(d3 == d1/d2);
+
     a = {};
     d1 = GaloisFieldDict::from_vec(a, 11_z);
     d2 = GaloisFieldDict::from_vec(a, 11_z);
     REQUIRE(d1.gf_gcd(d2).get_dict().empty());
     a = {2_z};
     d1 = GaloisFieldDict::from_vec(a, 11_z);
-    mp = d1.gf_gcd(d2).get_dict();
+    mp = d2.gf_gcd(d1).get_dict();
     REQUIRE(mp[0] == 1);
-    // REQUIRE(d1.gf_gcd(d2) == d2.gf_gcd(d1));
+    REQUIRE(d1.gf_gcd(d2).get_dict() == d2.gf_gcd(d1).get_dict());
     a = {0_z, 1_z};
     d1 = GaloisFieldDict::from_vec(a, 11_z);
     d3 = d1.gf_gcd(d2);
-    REQUIRE(d1 == d3);
-    REQUIRE(d3 == d2.gf_gcd(d1));
+    REQUIRE(d1.get_dict() == d3.get_dict());
+    REQUIRE(d3.get_dict() == d2.gf_gcd(d1).get_dict());
 
     a = {0_z, 3_z};
     d1 = GaloisFieldDict::from_vec(a, 11_z);
     d2 = GaloisFieldDict::from_vec(a, 11_z);
-    REQUIRE(d1.gf_gcd(d2) == d2.gf_gcd(d1));
+    REQUIRE(d1.gf_gcd(d2).get_dict() == d2.gf_gcd(d1).get_dict());
     mp = d1.gf_gcd(d2).get_dict();
     REQUIRE(mp[1] == 1);
 
@@ -341,7 +349,9 @@ TEST_CASE("Constructor of GaloisField Arithmetics : Basic", "[basic]")
     d1 = GaloisFieldDict::from_vec(a, 11_z);
     a = {7_z, 1_z, 7_z, 1_z};
     d2 = GaloisFieldDict::from_vec(a, 11_z);
-    REQUIRE(d1.gf_gcd(d2) == d2.gf_gcd(d1));
+    mp = d2.gf_gcd(d1).get_dict();
+    REQUIRE(mp[0] == 7);
+    REQUIRE(mp[1] == 1);
     mp = d1.gf_gcd(d2).get_dict();
     REQUIRE(mp[0] == 7);
     REQUIRE(mp[1] == 1);
@@ -353,9 +363,9 @@ TEST_CASE("Constructor of GaloisField Arithmetics : Basic", "[basic]")
     a = {2_z};
     d1 = GaloisFieldDict::from_vec(a, 11_z);
     REQUIRE(d1.gf_lcm(d2).get_dict().empty());
-    // REQUIRE(d1.gf_lcm(d2) == d2.gf_lcm(d1));
+    REQUIRE(d2.gf_lcm(d1).get_dict().empty());
     d2 = GaloisFieldDict::from_vec(a, 11_z);
-    mp = d1.gf_lcm(d2).get_dict();
+    mp = d1.gf_gcd(d2).get_dict();
     REQUIRE(mp[0] == 1);
     a = {0_z, 1_z};
     d1 = GaloisFieldDict::from_vec(a, 11_z);
@@ -363,18 +373,18 @@ TEST_CASE("Constructor of GaloisField Arithmetics : Basic", "[basic]")
     d2 = GaloisFieldDict::from_vec(a, 11_z);
     d3 = d1.gf_lcm(d2);
     REQUIRE(d3.get_dict().empty());
-    REQUIRE(d3 == d2.gf_lcm(d1));
+    REQUIRE(d3.get_dict() == d2.gf_lcm(d1).get_dict());
     a = {0_z, 3_z};
     d1 = GaloisFieldDict::from_vec(a, 11_z);
     d2 = GaloisFieldDict::from_vec(a, 11_z);
-    REQUIRE(d1.gf_lcm(d2) == d2.gf_lcm(d1));
+    REQUIRE(d1.gf_lcm(d2).get_dict() == d2.gf_lcm(d1).get_dict());
     mp = d1.gf_lcm(d2).get_dict();
     REQUIRE(mp[1] == 1);
     a = {7_z, 8_z, 1_z};
     d1 = GaloisFieldDict::from_vec(a, 11_z);
     a = {7_z, 1_z, 7_z, 1_z};
     d2 = GaloisFieldDict::from_vec(a, 11_z);
-    REQUIRE(d1.gf_lcm(d2) == d2.gf_lcm(d1));
+    REQUIRE(d1.gf_lcm(d2).get_dict() == d2.gf_lcm(d1).get_dict());
     mp = d1.gf_lcm(d2).get_dict();
     REQUIRE(mp[0] == 7);
     REQUIRE(mp[1] == 8);

@@ -41,10 +41,10 @@ public:
             }
         }
     }
-    // GaloisFieldDict(GaloisFieldDict &&other) SYMENGINE_NOEXCEPT
-    //     : ODictWrapper(std::move(other))
-    // {
-    // }
+    GaloisFieldDict(GaloisFieldDict &&other) SYMENGINE_NOEXCEPT
+        : ODictWrapper(std::move(other))
+    {
+    }
     GaloisFieldDict(const int &i, const integer_class &mod) : modulo_(mod)
     {
         integer_class temp;
@@ -75,12 +75,11 @@ public:
     static GaloisFieldDict from_vec(const std::vector<integer_class> &v, const integer_class &modulo)
     {
         GaloisFieldDict x;
-        x.dict_ = {};
-        for (unsigned int i = 0; i < v.size(); i++) {
+        for (unsigned int i = 0; i < v.size(); ++i) {
             integer_class a;
             mp_fdiv_r(a, v[i], modulo);
             if (a != integer_class(0)) {
-                x.dict_[i] = a;
+                x.dict_.insert({i, a});
             }
         }
         x.modulo_ = modulo;
@@ -155,9 +154,33 @@ public:
             } else {
                 integer_class temp;
                 temp = modulo_ - iter.second;
-                mp_fdiv_r(temp, temp, modulo_);
                 dict_.insert(t, {iter.first, temp});
             }
+        }
+        return static_cast<GaloisFieldDict &>(*this);
+    }
+
+    template <class T>
+    friend GaloisFieldDict operator*(const GaloisFieldDict &a, const T &b)
+    {
+        GaloisFieldDict c = a;
+        c *= b;
+        return c;
+    }
+
+    GaloisFieldDict &operator*=(const integer_class &other)
+    {
+        if (dict_.empty())
+            return static_cast<GaloisFieldDict &>(*this);
+
+        if (other == integer_class(0)) {
+            dict_.clear();
+            return static_cast<GaloisFieldDict &>(*this);
+        }
+
+        for (auto &arg : dict_) {
+            arg.second *= other;
+            mp_fdiv_r(arg.second, arg.second, modulo_);
         }
         return static_cast<GaloisFieldDict &>(*this);
     }
@@ -175,11 +198,9 @@ public:
         }
 
         // ! other is a just constant term
-        auto a = o_dict.find(0);
-        if (o_dict.size() == 1
-            and a != o_dict.end()) {
+        if (o_dict.rbegin()->first == 0) {
             for (auto &arg : dict_) {
-                arg.second *= a->second;
+                arg.second *= o_dict.rbegin()->second;
                 mp_fdiv_r(arg.second, arg.second, modulo_);
             }
             return static_cast<GaloisFieldDict &>(*this);
@@ -188,12 +209,12 @@ public:
         map_uint_mpz dict_out;
         for (auto &iter : o_dict) {
             for (auto &it : dict_) {
-                mp_addmul(dict_out[iter.first + it.first], iter.second, it.second);
-                mp_fdiv_r(dict_out[iter.first + it.first],
-                          dict_out[iter.first + it.first], modulo_);
+                auto t = dict_out[iter.first + it.first];
+                mp_addmul(t, iter.second, it.second);
+                mp_fdiv_r(dict_out[iter.first + it.first], t, modulo_);
             }
         }
-        dict_ = {};
+        dict_.clear();
         for (auto &iter : dict_out) {
             if (iter.second != integer_class(0))
                 dict_.insert(dict_.end(), {iter.first, iter.second});
@@ -201,11 +222,28 @@ public:
         return static_cast<GaloisFieldDict &>(*this);
     }
 
-    friend GaloisFieldDict operator/(const GaloisFieldDict &a, const GaloisFieldDict &b)
+    template <class T>
+    friend GaloisFieldDict operator/(const GaloisFieldDict &a, const T &b)
     {
         GaloisFieldDict c = a;
         c /= b;
         return c;
+    }
+
+    GaloisFieldDict &operator/=(const integer_class &other)
+    {
+        if (other == integer_class(0)) {
+            throw std::runtime_error("ZeroDivisionError");
+        }
+        if (dict_.empty())
+            return static_cast<GaloisFieldDict &>(*this);
+        integer_class inv;
+        mp_invert(inv, other, modulo_);
+        for (auto &arg : dict_) {
+            arg.second *= inv;
+            mp_fdiv_r(arg.second, arg.second, modulo_);
+        }
+        return static_cast<GaloisFieldDict &>(*this);
     }
 
     GaloisFieldDict &operator/=(const GaloisFieldDict &other)
@@ -217,13 +255,11 @@ public:
         }
         if (dict_.empty())
             return static_cast<GaloisFieldDict &>(*this);
+        integer_class inv;
+        mp_invert(inv, dict_divisor.rbegin()->second, modulo_);
 
         // ! other is a just constant term
-        auto a = dict_divisor.find(0);
-        if (dict_divisor.size() == 1
-            and a != dict_divisor.end()) {
-            integer_class inv;
-            mp_invert(inv, a->second, modulo_);
+        if (dict_divisor.rbegin()->first == 0) {
             for (auto &iter : dict_) {
                 iter.second *= inv;
                 mp_fdiv_r(iter.second, iter.second, modulo_);
@@ -234,20 +270,20 @@ public:
         size_t deg_dividend = dict_.rbegin()->first;
         size_t deg_divisor = dict_divisor.rbegin()->first;
         if (deg_dividend < deg_divisor) {
-            dict_ = {};
+            dict_.clear();
             return static_cast<GaloisFieldDict &>(*this);
         }
         dict_out = std::move(dict_);
-        dict_ = {};
-        integer_class inv;
-        mp_invert(inv, dict_divisor.rbegin()->second, modulo_);
+        dict_.clear();
         integer_class coeff;
-        for (size_t it = deg_dividend; it >= deg_divisor; it--) {
-            coeff = dict_out[it];
+        for (auto riter = dict_out.rbegin(); riter->first >= deg_divisor and
+                                             riter != dict_out.rend(); ++riter) {
+            size_t it = riter->first;
+            coeff = riter->second;
             size_t lb = deg_divisor + it > deg_dividend ? 
                         deg_divisor + it - deg_dividend : 0;
             size_t ub = std::min(it + 1, deg_divisor);
-            for (size_t j = lb; j < ub; j++) {
+            for (size_t j = lb; j < ub; ++j) {
                 mp_addmul(coeff, dict_out[it - j + deg_divisor], -dict_divisor[j]);
             }
             coeff *= inv;

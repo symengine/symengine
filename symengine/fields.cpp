@@ -15,6 +15,8 @@ GaloisField::GaloisField(const RCP<const Symbol> &var, GaloisFieldDict &&dict)
 bool GaloisField::is_canonical(const GaloisFieldDict &dict) const
 {
     // Check if dictionary contains terms with coeffienct 0
+    if (dict.modulo_ <= integer_class(0))
+        return false;
     for (auto iter : dict.dict_)
         if (iter.second == 0)
             return false;
@@ -43,10 +45,15 @@ int GaloisField::compare(const Basic &o) const
     if (poly_.size() != s.poly_.size())
         return (poly_.size() < s.poly_.size()) ? -1 : 1;
 
-    int cmp = var_->compare(*s.var_);
+    int cmp = unified_compare(var_, s.var_);
     if (cmp != 0)
         return cmp;
-    return 0; // TODO
+
+    cmp = unified_compare(poly_.modulo_, s.poly_.modulo_);
+    if (cmp != 0)
+        return cmp;
+
+    return unified_compare(poly_.dict_, s.poly_.dict_);
 }
 
 
@@ -97,9 +104,14 @@ void GaloisFieldDict::gf_div(const GaloisFieldDict &o,
     SYMENGINE_ASSERT(modulo_ == o.modulo_);
     if (o.dict_.empty())
         throw std::runtime_error("ZeroDivisionError");
-    map_uint_mpz dict_divisor = o.dict_;
     map_uint_mpz dict_out;
-    size_t deg_dividend = dict_.empty() ? 0 : dict_.rbegin()->first;
+    if (dict_.empty()) {
+        *quo = GaloisFieldDict(dict_out, modulo_);
+        *rem = GaloisFieldDict(dict_, modulo_);
+        return;
+    }
+    map_uint_mpz dict_divisor = o.dict_;
+    size_t deg_dividend = dict_.rbegin()->first;
     size_t deg_divisor = dict_divisor.rbegin()->first;
     if (deg_dividend < deg_divisor) {
         *quo = GaloisFieldDict(dict_out, modulo_);
@@ -109,24 +121,40 @@ void GaloisFieldDict::gf_div(const GaloisFieldDict &o,
         integer_class inv;
         mp_invert(inv, dict_divisor.rbegin()->second, modulo_);
         integer_class coeff;
-        for (size_t it = deg_dividend; it != size_t(-1); it--) {
+        size_t it, i = deg_divisor - 1;
+        for (auto iter = dict_out.rbegin(); ; ) {
+            bool chk = false;
+            if (iter->first >= deg_divisor and iter != dict_out.rend()) {
+                it = iter->first;
+                coeff = iter->second;
+                chk = true;
+            } else {
+                it = i;
+                coeff = dict_out[it];
+            }
             coeff = dict_out[it];
             size_t lb = deg_divisor + it > deg_dividend ? 
                         deg_divisor + it - deg_dividend : 0;
             size_t ub = std::min(it + 1, deg_divisor);
-            for (size_t j = lb; j < ub; j++) {
+            for (size_t j = lb; j < ub; ++j) {
                 mp_addmul(coeff, dict_out[it - j + deg_divisor], -dict_divisor[j]);
             }
-            if (it >= deg_divisor)
+            if (chk)
                 coeff *= inv;
             mp_fdiv_r(dict_out[it], coeff, modulo_);
+            if (it <= 0)
+                break;
+            if (chk)
+                ++iter;
+            else
+                i--;
         }
         map_uint_mpz dict_rem, dict_quo;
         for (auto it : dict_out) {
             if (it.first < deg_divisor)
-                dict_rem[it.first] = it.second;
+                dict_rem.insert(dict_rem.end(),{it.first, it.second});
             else
-                dict_quo[it.first - deg_divisor] = it.second;
+                dict_quo.insert(dict_quo.end(),{it.first - deg_divisor, it.second});
         }
         *quo = GaloisFieldDict(dict_quo, modulo_);
         *rem = GaloisFieldDict(dict_rem, modulo_);
@@ -179,7 +207,6 @@ GaloisFieldDict GaloisFieldDict::gf_pow(const integer_class n) const
     while (1) {
         if (num & 1) {
             to_ret = to_ret * to_sq;
-            num -= 1;
         }
         num >>= 1;
         if (num == 0)
