@@ -8,7 +8,6 @@
 #include <symengine/polys/upolybase.h>
 
 #ifdef HAVE_SYMENGINE_FLINT
-
 #include <flint/fmpz_polyxx.h>
 
 namespace SymEngine

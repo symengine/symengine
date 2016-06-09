@@ -1,5 +1,4 @@
 #include "catch.hpp"
-
 #include <symengine/visitor.h>
 #include <symengine/eval_double.h>
 #include <symengine/derivative.h>
