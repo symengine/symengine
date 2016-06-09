@@ -660,9 +660,9 @@ void basic_subs2(basic s, const basic e, const basic a, const basic b)
     s->m = e->m->subs({{a->m, b->m}});
 }
 
-void function_symbol_set(basic s, const char *c, const SymEngine::vec_basic &arg)
+void function_symbol_set(basic s, const char *c, const CVecBasic* arg)
 {
-    s->m = function_symbol(c, arg);
+    s->m = function_symbol(c, arg->m);
 }
 
 // ----------------------

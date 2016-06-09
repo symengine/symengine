@@ -365,7 +365,7 @@ void basic_subs(basic s, const basic e, const CMapBasicBasic *mapbb);
 void basic_subs2(basic s, const basic e, const basic a, const basic b);
 
 //! Assigns to s a FunctionSymbol with name described by c, with dependent symbols arg
-void function_symbol_set(basic s, const char *c, const SymEngine::vec_basic &arg);
+void function_symbol_set(basic s, const char *c, const CVecBasic * arg);
 
 //! Wrapper for ascii_art()
 
