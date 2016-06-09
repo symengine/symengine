@@ -64,45 +64,43 @@ public:
         return result;
     }
 
-    UIntDict &operator*=(const UIntDict &other)
+    static UIntDict mul(const UIntDict &a, const UIntDict &b)
     {
         int mul = 1;
 
-        unsigned int N = bit_length(std::min(degree() + 1, other.degree() + 1))
-                         + bit_length(max_abs_coef())
-                         + bit_length(other.max_abs_coef());
+        unsigned int N = bit_length(std::min(a.degree() + 1, b.degree() + 1))
+                         + bit_length(a.max_abs_coef())
+                         + bit_length(b.max_abs_coef());
 
         integer_class full = integer_class(1), temp, res;
         full <<= N;
         integer_class thresh = full / 2;
         integer_class mask = full - 1;
-        integer_class s_val = eval_bit(N) * other.eval_bit(N);
+        integer_class s_val = a.eval_bit(N) * b.eval_bit(N);
         if (s_val < 0)
             mul = -1;
         s_val = mp_abs(s_val);
 
         unsigned int deg = 0, carry = 0;
-        map_uint_mpz dict;
+        UIntDict r;
 
         while (s_val != 0 or carry != 0) {
             mp_and(temp, s_val, mask);
             if (temp < thresh) {
                 res = mul * (temp + carry);
                 if (res != 0)
-                    dict[deg] = res;
+                    r.dict_[deg] = res;
                 carry = 0;
             } else {
                 res = mul * (temp - full + carry);
                 if (res != 0)
-                    dict[deg] = res;
+                    r.dict_[deg] = res;
                 carry = 1;
             }
             s_val >>= N;
             deg++;
         }
-
-        dict_ = dict;
-        return *this;
+        return r;
     }
 
     int compare(const UIntDict &other) const

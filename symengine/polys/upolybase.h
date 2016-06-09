@@ -132,11 +132,31 @@ public:
         return static_cast<Wrapper &>(*this);
     }
 
+    static Wrapper mul(const Wrapper &a, const Wrapper &b)
+    {
+        if (a.get_dict().empty())
+            return a;
+        if (b.get_dict().empty())
+            return b;
+
+        Wrapper p;
+        for (const auto &i1 : a.dict_)
+            for (const auto &i2 : b.dict_)
+                p.dict_[i1.first + i2.first] += i1.second * i2.second;
+
+        for (auto it = p.dict_.cbegin(); it != p.dict_.cend();) {
+            if (it->second == 0) {
+                p.dict_.erase(it++);
+            } else {
+                ++it;
+            }
+        }
+        return p;
+    }
+
     friend Wrapper operator*(const Wrapper &a, const Wrapper &b)
     {
-        Wrapper c = a;
-        c *= b;
-        return c;
+        return Wrapper::mul(a, b);
     }
 
     Wrapper &operator*=(const Wrapper &other)
@@ -145,29 +165,21 @@ public:
             return static_cast<Wrapper &>(*this);
 
         if (other.dict_.empty()) {
-            *this = other;
+            dict_.clear();
             return static_cast<Wrapper &>(*this);
         }
 
         // ! other is a just constant term
         if (other.dict_.size() == 1
             and other.dict_.find(0) != other.dict_.end()) {
-            for (const auto &i1 : dict_)
-                for (const auto &i2 : other.dict_)
-                    dict_[i1.first] = i1.second * i2.second;
+            auto t = other.dict_.begin();
+            for (auto &i1 : dict_)
+                i1.second *= t->second;
             return static_cast<Wrapper &>(*this);
         }
 
-        std::map<Key, Value> p;
-        for (const auto &i1 : dict_)
-            for (const auto &i2 : other.dict_)
-                p[i1.first + i2.first] += i1.second * i2.second;
-
-        dict_ = {};
-        for (const auto &ite : p)
-            if (ite.second != Value(0))
-                dict_[ite.first] = ite.second;
-
+        Wrapper res = Wrapper::mul(static_cast<Wrapper &>(*this), other);
+        res.dict_.swap(this->dict_);
         return static_cast<Wrapper &>(*this);
     }
 
