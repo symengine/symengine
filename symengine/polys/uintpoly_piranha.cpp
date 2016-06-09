@@ -36,6 +36,8 @@ RCP<const UIntPolyPiranha>
 UIntPolyPiranha::from_dict(const RCP<const Symbol> &var, map_uint_mpz &&d)
 {
     pintpoly p;
+    piranha::symbol_set ss({{piranha::symbol(var->get_name())}});
+    p.set_symbol_set(ss);
     for (auto &it : d)
         p.insert(pterm{it.second, pmonomial{it.first}});
 
@@ -47,6 +49,8 @@ UIntPolyPiranha::from_vec(const RCP<const Symbol> &var,
                           const std::vector<integer_class> &v)
 {
     pintpoly p;
+    piranha::symbol_set ss({{piranha::symbol(var->get_name())}});
+    p.set_symbol_set(ss);
     for (unsigned int i = 0; i <= v.size(); i++) {
         if (v[i] != integer_class(0)) {
             p.insert(pterm{v[i], pmonomial{i}});
@@ -62,7 +66,6 @@ integer_class UIntPolyPiranha::get_coeff(unsigned int x) const
 
 integer_class UIntPolyPiranha::eval(const integer_class &x) const
 {
-    // return integer_class(0);
     return piranha::math::evaluate<integer_class>(poly_,
                                                   {{var_->get_name(), x}});
 }
