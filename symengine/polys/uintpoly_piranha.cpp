@@ -51,7 +51,7 @@ UIntPolyPiranha::from_vec(const RCP<const Symbol> &var,
     pintpoly p;
     piranha::symbol_set ss({{piranha::symbol(var->get_name())}});
     p.set_symbol_set(ss);
-    for (unsigned int i = 0; i <= v.size(); i++) {
+    for (unsigned int i = 0; i < v.size(); i++) {
         if (v[i] != integer_class(0)) {
             p.insert(pterm{v[i], pmonomial{i}});
         }
