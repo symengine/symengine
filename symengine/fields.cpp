@@ -46,8 +46,7 @@ int GaloisField::compare(const Basic &o) const
     int cmp = var_->compare(*s.var_);
     if (cmp != 0)
         return cmp;
-
-    return map_uint_mpz_compare(poly_.dict_, s.poly_.dict_);
+    return 0; // TODO
 }
 
 
@@ -100,8 +99,8 @@ void GaloisFieldDict::gf_div(const GaloisFieldDict &o,
         throw std::runtime_error("ZeroDivisionError");
     map_uint_mpz dict_divisor = o.dict_;
     map_uint_mpz dict_out;
-    long deg_dividend = dict_.empty() ? 0 : dict_.rbegin()->first;
-    long deg_divisor = dict_divisor.rbegin()->first;
+    size_t deg_dividend = dict_.empty() ? 0 : dict_.rbegin()->first;
+    size_t deg_divisor = dict_divisor.rbegin()->first;
     if (deg_dividend < deg_divisor) {
         *quo = GaloisFieldDict(dict_out, modulo_);
         *rem = GaloisFieldDict(dict_, modulo_);
@@ -110,17 +109,17 @@ void GaloisFieldDict::gf_div(const GaloisFieldDict &o,
         integer_class inv;
         mp_invert(inv, dict_divisor.rbegin()->second, modulo_);
         integer_class coeff;
-        for (long it = deg_dividend; it >= 0; it--) {
+        for (size_t it = deg_dividend; it != size_t(-1); it--) {
             coeff = dict_out[it];
-            long lb = std::max(long(0), deg_divisor - deg_dividend + it);
-            long ub = std::min(it, deg_divisor - 1) + 1;
-            for (long j = lb; j < ub; j++) {
-                coeff
-                    -= dict_out[it - j + deg_divisor] * dict_divisor[j];
+            size_t lb = deg_divisor + it > deg_dividend ? 
+                        deg_divisor + it - deg_dividend : 0;
+            size_t ub = std::min(it + 1, deg_divisor);
+            for (size_t j = lb; j < ub; j++) {
+                mp_addmul(coeff, dict_out[it - j + deg_divisor], -dict_divisor[j]);
             }
             if (it >= deg_divisor)
                 coeff *= inv;
-            dict_out[it] = coeff % modulo_;
+            mp_fdiv_r(dict_out[it], coeff, modulo_);
         }
         map_uint_mpz dict_rem, dict_quo;
         for (auto it : dict_out) {

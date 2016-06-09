@@ -118,7 +118,8 @@ public:
         for (auto &iter : other.dict_) {
             auto t = dict_.lower_bound(iter.first);
             if (t != dict_.end() and t->first == iter.first) {
-                mp_fdiv_r(t->second, t->second + iter.second, modulo_);
+                t->second += iter.second;
+                mp_fdiv_r(t->second, t->second, modulo_);
                 if (t->second == integer_class(0)) {
                     dict_.erase(t);
                 }
@@ -134,8 +135,10 @@ public:
     GaloisFieldDict operator-() const
     {
         GaloisFieldDict o(*this);
-        for (auto &a : o.dict_)
-            mp_fdiv_r(a.second, a.second * integer_class(-1), modulo_);
+        for (auto &a : o.dict_) {
+            a.second *= -1;
+            a.second += modulo_;
+        }
         return o;
     }
 
@@ -151,7 +154,8 @@ public:
                 }
             } else {
                 integer_class temp;
-                mp_fdiv_r(temp, -iter.second, modulo_);
+                temp = modulo_ - iter.second;
+                mp_fdiv_r(temp, temp, modulo_);
                 dict_.insert(t, {iter.first, temp});
             }
         }
@@ -175,7 +179,8 @@ public:
         if (o_dict.size() == 1
             and a != o_dict.end()) {
             for (auto &arg : dict_) {
-                mp_fdiv_r(arg.second, a->second * arg.second, modulo_);
+                arg.second *= a->second;
+                mp_fdiv_r(arg.second, arg.second, modulo_);
             }
             return static_cast<GaloisFieldDict &>(*this);
         }
@@ -183,9 +188,9 @@ public:
         map_uint_mpz dict_out;
         for (auto &iter : o_dict) {
             for (auto &it : dict_) {
+                mp_addmul(dict_out[iter.first + it.first], iter.second, it.second);
                 mp_fdiv_r(dict_out[iter.first + it.first],
-                          dict_out[iter.first + it.first] + iter.second * it.second,
-                          modulo_);
+                          dict_out[iter.first + it.first], modulo_);
             }
         }
         dict_ = {};
@@ -220,13 +225,14 @@ public:
             integer_class inv;
             mp_invert(inv, a->second, modulo_);
             for (auto &iter : dict_) {
-                mp_fdiv_r(iter.second, inv * iter.second, modulo_);
+                iter.second *= inv;
+                mp_fdiv_r(iter.second, iter.second, modulo_);
             }
             return static_cast<GaloisFieldDict &>(*this);
         }
         map_uint_mpz dict_out;
-        long deg_dividend = dict_.rbegin()->first;
-        long deg_divisor = dict_divisor.rbegin()->first;
+        size_t deg_dividend = dict_.rbegin()->first;
+        size_t deg_divisor = dict_divisor.rbegin()->first;
         if (deg_dividend < deg_divisor) {
             dict_ = {};
             return static_cast<GaloisFieldDict &>(*this);
@@ -236,15 +242,16 @@ public:
         integer_class inv;
         mp_invert(inv, dict_divisor.rbegin()->second, modulo_);
         integer_class coeff;
-        for (long it = deg_dividend; it >= deg_divisor; it--) {
+        for (size_t it = deg_dividend; it >= deg_divisor; it--) {
             coeff = dict_out[it];
-            long lb = std::max(long(0), deg_divisor - deg_dividend + it);
-            long ub = std::min(it, deg_divisor - 1) + 1;
-            for (long j = lb; j < ub; j++) {
-                coeff
-                    -= dict_out[it - j + deg_divisor] * dict_divisor[j];
+            size_t lb = deg_divisor + it > deg_dividend ? 
+                        deg_divisor + it - deg_dividend : 0;
+            size_t ub = std::min(it + 1, deg_divisor);
+            for (size_t j = lb; j < ub; j++) {
+                mp_addmul(coeff, dict_out[it - j + deg_divisor], -dict_divisor[j]);
             }
-            mp_fdiv_r(dict_out[it], coeff * inv, modulo_);
+            coeff *= inv;
+            mp_fdiv_r(dict_out[it], coeff, modulo_);
             if (dict_out[it] != integer_class(0))
                 dict_.insert({it - deg_divisor, dict_out[it]});
         }
