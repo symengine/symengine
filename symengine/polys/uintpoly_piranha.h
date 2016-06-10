@@ -70,6 +70,13 @@ public:
         return poly_.degree();
     }
 
+    unsigned int size() const
+    {   
+        if (poly_.size() == 0)
+            return 0;
+        return get_degree() + 1;
+    }
+
 }; // UIntPolyPiranha
 }
 

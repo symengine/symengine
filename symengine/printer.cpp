@@ -365,34 +365,29 @@ void StrPrinter::bvisit(const UIntPolyFlint &x)
     bool first = true;
     // we iterate over the map in reverse order so that highest degree gets
     // printed first
-    auto p = x.get_poly();
-    for (long i = p.length() - 1; i >= 0; i--) {
-        if (p.get_coeff(i) == 0)
-            continue;
+    for (auto it = x.rbegin(); it != x.rend(); ++it) {
         // if exponent is 0, then print only coefficient
-        if (i == 0) {
+        if (it->first == 0) {
             if (first) {
-                s << p.get_coeff(i);
+                s << it->second;
             } else {
-                s << " " << _print_sign(
-                                to_integer_class(flint::fmpzxx(p.get_coeff(i))))
-                  << " " << flint::abs(p.get_coeff(i));
+                s << " " << _print_sign(it->second) << " "
+                  << mp_abs(it->second);
             }
             first = false;
             continue;
         }
         // if the coefficient of a term is +1 or -1
-        if (flint::abs(p.get_coeff(i)) == 1) {
+        if (mp_abs(it->second) == 1) {
             // in cases of -x, print -x
             // in cases of x**2 - x, print - x
             if (first) {
-                if (p.get_coeff(i) == -1)
+                if (it->second == -1)
                     s << "-";
                 s << x.get_var()->get_name();
             } else {
-                s << " " << _print_sign(
-                                to_integer_class(flint::fmpzxx(p.get_coeff(i))))
-                  << " " << x.get_var()->get_name();
+                s << " " << _print_sign(it->second) << " "
+                  << x.get_var()->get_name();
             }
         }
         // same logic is followed as above
@@ -400,22 +395,20 @@ void StrPrinter::bvisit(const UIntPolyFlint &x)
             // in cases of -2*x, print -2*x
             // in cases of x**2 - 2*x, print - 2*x
             if (first) {
-                s << p.get_coeff(i) << "*" << x.get_var()->get_name();
+                s << it->second << "*" << x.get_var()->get_name();
             } else {
-                s << " " << _print_sign(
-                                to_integer_class(flint::fmpzxx(p.get_coeff(i))))
-                  << " " << flint::abs(p.get_coeff(i)) << "*"
-                  << x.get_var()->get_name();
+                s << " " << _print_sign(it->second) << " " << mp_abs(it->second)
+                  << "*" << x.get_var()->get_name();
             }
         }
         // if exponent is not 1, print the exponent;
-        if (i != 1) {
-            s << "**" << i;
+        if (it->first != 1) {
+            s << "**" << it->first;
         }
         // corner cases of only first term handled successfully, switch the bool
         first = false;
     }
-    if (p.length() == 0)
+    if (x.size() == 0)
         s << "0";
     str_ = s.str();
 }

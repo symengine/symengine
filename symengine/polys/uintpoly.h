@@ -192,8 +192,10 @@ public:
     }
 
     unsigned int size() const
-    {
-        return poly_.dict_.size();
+    {   
+        if (is_zero())
+            return 0;
+        return get_degree() + 1;
     }
 
 }; // UIntPoly
