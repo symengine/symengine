@@ -14,6 +14,7 @@
 void test_cwrapper() {
     char* s;
     basic x, y, z;
+    basic f;
     basic_new_stack(x);
     basic_new_stack(y);
     basic_new_stack(z);
@@ -24,9 +25,20 @@ void test_cwrapper() {
     s = basic_str(x);
     SYMENGINE_C_ASSERT(strcmp(s, "x") == 0);
     basic_str_free(s);
+
+    basic_new_stack(f);
+    CVecBasic *vec = vecbasic_new();
+    vecbasic_push_back(vec, x);
+    vecbasic_push_back(vec, y);
+    vecbasic_push_back(vec, z);
+    function_symbol_set(f, "f", vec);
+    s = basic_str(f);
+    SYMENGINE_C_ASSERT(strcmp(s, "f(x, y, z)") == 0);
+    vecbasic_free(vec);
+    basic_str_free(s);
+
     basic e;
     basic_new_stack(e);
-
     integer_set_ui(e, 123);
     s = basic_str(e);
     SYMENGINE_C_ASSERT(strcmp(s, "123") == 0);
@@ -66,6 +78,7 @@ void test_cwrapper() {
     SYMENGINE_C_ASSERT(mpz_get_ui(test) == 123);
 
     mpz_clear(test);
+    basic_free_stack(f);
     basic_free_stack(e);
     basic_free_stack(x);
     basic_free_stack(y);

@@ -26,6 +26,7 @@ using SymEngine::Basic;
 using SymEngine::RCP;
 using SymEngine::zero;
 using SymEngine::Symbol;
+using SymEngine::function_symbol;
 using SymEngine::Rational;
 using SymEngine::Integer;
 using SymEngine::integer_class;
@@ -660,6 +661,11 @@ void basic_subs(basic s, const basic e, const CMapBasicBasic *mapbb)
 void basic_subs2(basic s, const basic e, const basic a, const basic b)
 {
     s->m = e->m->subs({{a->m, b->m}});
+}
+
+void function_symbol_set(basic s, const char *c, const CVecBasic* arg)
+{
+    s->m = function_symbol(c, arg->m);
 }
 
 // ----------------------
