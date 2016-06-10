@@ -5,6 +5,8 @@
 #include <stdlib.h>
 #include <gmp.h>
 
+#include "symengine/symengine_config.h"
+
 #ifdef HAVE_SYMENGINE_MPFR
 #include <mpfr.h>
 #endif // HAVE_SYMENGINE_MPFR
@@ -365,8 +367,9 @@ void basic_subs(basic s, const basic e, const CMapBasicBasic *mapbb);
 //! in the given basic 'e' and returns it through basic 's'
 void basic_subs2(basic s, const basic e, const basic a, const basic b);
 
-//! Assigns to s a FunctionSymbol with name described by c, with dependent symbols arg
-void function_symbol_set(basic s, const char *c, const CVecBasic * arg);
+//! Assigns to s a FunctionSymbol with name described by c, with dependent
+//! symbols arg
+void function_symbol_set(basic s, const char *c, const CVecBasic *arg);
 
 //! Wrapper for ascii_art()
 
