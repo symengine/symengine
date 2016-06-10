@@ -26,7 +26,6 @@ using SymEngine::Basic;
 using SymEngine::RCP;
 using SymEngine::zero;
 using SymEngine::Symbol;
-using SymEngine::FunctionSymbol;
 using SymEngine::function_symbol;
 using SymEngine::Rational;
 using SymEngine::Integer;
