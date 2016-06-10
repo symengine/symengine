@@ -6,6 +6,8 @@
 #define SYMENGINE_UINT_BASE_H
 
 #include <symengine/basic.h>
+#include <symengine/pow.h>
+#include <symengine/add.h>
 
 #ifdef HAVE_SYMENGINE_FLINT
 #include <flint/flint.h>
@@ -246,7 +248,6 @@ public:
         return poly_;
     }
 
-    // TODO add as_symbolic()
     inline vec_basic get_args() const
     {
         return {};
@@ -279,6 +280,35 @@ public:
     virtual integer_class eval(const integer_class &x) const = 0;
     // return `degree` + 1. `0` returned for zero poly.
     virtual unsigned int size() const = 0;
+
+    RCP<const Basic> as_symbolic() const
+    {
+        auto it = (static_cast<const Poly &>(*this)).begin();
+        auto end = (static_cast<const Poly &>(*this)).end();
+
+        vec_basic args;
+        for (; it != end; ++it) {
+            if (it->first == 0) {
+                args.push_back(integer(it->second));
+            } else if (it->first == 1) {
+                if (it->second == 1) {
+                    args.push_back(this->var_);
+                } else {
+                    args.push_back(Mul::from_dict(integer(it->second),
+                                                  {{this->var_, one}}));
+                }
+            } else {
+                if (it->second == 1) {
+                    args.push_back(pow(this->var_, integer(it->first)));
+                } else {
+                    args.push_back(
+                        Mul::from_dict(integer(it->second),
+                                       {{this->var_, integer(it->first)}}));
+                }
+            }
+        }
+        return SymEngine::add(args);
+    }
 };
 
 template <typename T>
