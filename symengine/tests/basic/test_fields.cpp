@@ -40,7 +40,7 @@ TEST_CASE("Constructor of GaloisField : Basic", "[basic]")
     REQUIRE(U->__str__() == "2");
 }
 
-TEST_CASE("Constructor of GaloisField Arithmetics : Basic", "[basic]")
+TEST_CASE("GaloisField Addition, Subtraction, Multiplication : Basic", "[basic]")
 {
     RCP<const Symbol> x = symbol("x");
     std::vector<integer_class> a = {2_z, 3_z, 4_z};
@@ -156,7 +156,11 @@ TEST_CASE("Constructor of GaloisField Arithmetics : Basic", "[basic]")
     REQUIRE(mp[6] == 1);
     REQUIRE(mp[7] == 2);
     REQUIRE(mp[8] == 0);
-
+}
+TEST_CASE("GaloisFieldDict Division, GCD, LCM, Shifts : Basic", "[basic]")
+{
+    std::vector<integer_class> a, b;
+    map_uint_mpz mp;
     GaloisFieldDict d1, d2, d3, d4;
     a = {0_z, 1_z, 2_z, 3_z, 4_z, 5_z};
     b = {0_z, 3_z, 2_z, 1_z};
