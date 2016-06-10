@@ -70,6 +70,18 @@ public:
         return poly_.degree();
     }
 
+    // begin() and end() are unordered
+    // rbegin() and rend() are ordered
+    typedef ContainerRevIter<UIntPolyPiranha> reverse_iterator;
+    reverse_iterator rbegin() const
+    {
+        return reverse_iterator(rcp_static_cast<const UIntPolyPiranha>(rcp_from_this()), (long)size() -1); 
+    }
+    reverse_iterator rend() const
+    {
+        return reverse_iterator(rcp_static_cast<const UIntPolyPiranha>(rcp_from_this()), -1);
+    }
+
     unsigned int size() const
     {   
         if (poly_.size() == 0)
