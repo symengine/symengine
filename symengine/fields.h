@@ -160,12 +160,37 @@ public:
         return static_cast<GaloisFieldDict &>(*this);
     }
 
+    static GaloisFieldDict mul(const GaloisFieldDict &a, const GaloisFieldDict &b)
+    {
+        SYMENGINE_ASSERT(a.modulo_ == b.modulo_);
+        if (a.get_dict().empty())
+            return a;
+        if (b.get_dict().empty())
+            return b;
+
+        GaloisFieldDict p;
+        p.modulo_ = a.modulo_;
+        for (const auto &i1 : a.dict_)
+            for (const auto &i2 : b.dict_) {
+                auto t = p.dict_[i1.first + i2.first];
+                mp_addmul(t, i1.second, i2.second);
+                mp_fdiv_r(p.dict_[i1.first + i2.first], t, a.modulo_);
+            }
+
+        for (auto it = p.dict_.cbegin(); it != p.dict_.cend();) {
+            if (it->second == 0) {
+                p.dict_.erase(it++);
+            } else {
+                ++it;
+            }
+        }
+        return p;
+    }
+
     template <class T>
     friend GaloisFieldDict operator*(const GaloisFieldDict &a, const T &b)
     {
-        GaloisFieldDict c = a;
-        c *= b;
-        return c;
+        return GaloisFieldDict::mul(a, b);
     }
 
     GaloisFieldDict &operator*=(const integer_class &other)
@@ -193,7 +218,7 @@ public:
 
         auto o_dict = other.get_dict();
         if (o_dict.empty()) {
-            *this = other;
+            dict_.clear();
             return static_cast<GaloisFieldDict &>(*this);
         }
 
@@ -206,19 +231,9 @@ public:
             return static_cast<GaloisFieldDict &>(*this);
         }
 
-        map_uint_mpz dict_out;
-        for (auto &iter : o_dict) {
-            for (auto &it : dict_) {
-                auto t = dict_out[iter.first + it.first];
-                mp_addmul(t, iter.second, it.second);
-                mp_fdiv_r(dict_out[iter.first + it.first], t, modulo_);
-            }
-        }
-        dict_.clear();
-        for (auto &iter : dict_out) {
-            if (iter.second != integer_class(0))
-                dict_.insert(dict_.end(), {iter.first, iter.second});
-        }
+        GaloisFieldDict res = GaloisFieldDict::mul(static_cast<GaloisFieldDict &>(*this),
+                                                   other);
+        res.dict_.swap(this->dict_);
         return static_cast<GaloisFieldDict &>(*this);
     }
 

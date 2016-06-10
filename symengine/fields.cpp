@@ -139,15 +139,15 @@ void GaloisFieldDict::gf_div(const GaloisFieldDict &o,
             for (size_t j = lb; j < ub; ++j) {
                 mp_addmul(coeff, dict_out[it - j + deg_divisor], -dict_divisor[j]);
             }
-            if (chk)
+            if (chk) {
                 coeff *= inv;
+                ++iter;
+            } else {
+                i--;
+            }
             mp_fdiv_r(dict_out[it], coeff, modulo_);
             if (it <= 0)
                 break;
-            if (chk)
-                ++iter;
-            else
-                i--;
         }
         map_uint_mpz dict_rem, dict_quo;
         for (auto it : dict_out) {
@@ -206,7 +206,7 @@ GaloisFieldDict GaloisFieldDict::gf_pow(const integer_class n) const
     GaloisFieldDict to_ret = GaloisFieldDict({integer_class(1)}, modulo_);
     while (1) {
         if (num & 1) {
-            to_ret = to_ret * to_sq;
+            to_ret *= to_sq;
         }
         num >>= 1;
         if (num == 0)
