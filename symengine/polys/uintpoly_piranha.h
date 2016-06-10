@@ -77,9 +77,9 @@ public:
         return std::make_pair(*(ptr_->m_key.begin()), ptr_->m_cf);
     }
 
-    std::pair<unsigned int, integer_class> *operator->()
+    RCP<std::pair<unsigned int, integer_class>> operator->()
     {
-        return new std::pair<unsigned int, integer_class>(
+        return make_rcp<std::pair<unsigned int, integer_class>>(
             *(ptr_->m_key.begin()), ptr_->m_cf);
     }
 };

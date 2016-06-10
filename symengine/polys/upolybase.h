@@ -338,9 +338,10 @@ public:
         return std::make_pair(i_, ptr_->get_coeff(i_));
     }
 
-    std::pair<long, integer_class> *operator->()
+    RCP<std::pair<long, integer_class>> operator->()
     {
-        return new std::pair<long, integer_class>(i_, ptr_->get_coeff(i_));
+        return make_rcp<std::pair<long, integer_class>>(i_,
+                                                        ptr_->get_coeff(i_));
     }
 };
 
