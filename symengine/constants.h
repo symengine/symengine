@@ -7,6 +7,8 @@
 #ifndef SYMENGINE_CONSTANTS_H
 #define SYMENGINE_CONSTANTS_H
 
+#include <symengine/symengine_config.h>
+#include <symengine/symengine_export.h>
 #include <symengine/basic.h>
 #include <symengine/number.h>
 #include <symengine/integer.h>
@@ -56,15 +58,15 @@ inline RCP<const Constant> constant(const std::string &name)
 }
 
 // Constant Numbers
-extern RCP<const Integer> zero;
-extern RCP<const Integer> one;
-extern RCP<const Integer> minus_one;
-extern RCP<const Number> I;
+extern SYMENGINE_EXPORT RCP<const Integer> zero;
+extern SYMENGINE_EXPORT RCP<const Integer> one;
+extern SYMENGINE_EXPORT RCP<const Integer> minus_one;
+extern SYMENGINE_EXPORT RCP<const Number> I;
 
 // Symbolic Constants
-extern RCP<const Constant> pi;
-extern RCP<const Constant> E;
-extern RCP<const Constant> EulerGamma;
+extern SYMENGINE_EXPORT RCP<const Constant> pi;
+extern SYMENGINE_EXPORT RCP<const Constant> E;
+extern SYMENGINE_EXPORT RCP<const Constant> EulerGamma;
 
 } // SymEngine
 

@@ -140,6 +140,34 @@ if (NOT(MSVC) AND WITH_GMPXX)
     endif()
 endif()
 
+set(MSVC_USE_MT yes CACHE BOOL "Use MT flags when compiling in MSVC")
+set(MSVC_WARNING_LEVEL 1 CACHE STRING "MSVC warning level")
+
+if (MSVC)
+    if (MSVC_USE_MT)
+	    foreach(CompilerFlag CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE)
+	      string(REPLACE "/MD" "/MT" ${CompilerFlag} "${${CompilerFlag}}")
+	    endforeach()
+    endif()
+    foreach(CompilerFlag CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE)
+      set(${CompilerFlag} "${${CompilerFlag}} /W${MSVC_WARNING_LEVEL}")
+    endforeach()
+endif()
+
+if (BUILD_SHARED_LIBS)
+    if (WIN32)
+        if (MSVC)
+            # Use CMake 3.4 feature
+            set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS yes)
+        else()
+            set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--export-all-symbols")
+        endif()
+    endif()
+    set(SYMENGINE_STATIC_DEFINE no)
+else()
+    set(SYMENGINE_STATIC_DEFINE yes)
+endif()
+
 # ECM
 set(WITH_ECM no
     CACHE BOOL "Build with ECM (libecm-dev) support")
@@ -487,6 +515,7 @@ message("CMAKE_CONFIGURATION_TYPES: ${CMAKE_CONFIGURATION_TYPES}")
 message("CMAKE_CXX_FLAGS_DEBUG:   ${CMAKE_CXX_FLAGS_DEBUG}")
 message("CMAKE_CXX_FLAGS_RELEASE: ${CMAKE_CXX_FLAGS_RELEASE}")
 message("CMAKE_INSTALL_PREFIX: ${CMAKE_INSTALL_PREFIX}")
+message("BUILD_SHARED_LIBS: ${BUILD_SHARED_LIBS}")
 
 message("INTEGER_CLASS : ${SYMENGINE_INTEGER_CLASS}")
 message("WITH_SYMENGINE_ASSERT: ${WITH_SYMENGINE_ASSERT}")
