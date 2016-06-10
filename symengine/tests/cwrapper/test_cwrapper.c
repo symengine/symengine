@@ -33,7 +33,7 @@ void test_cwrapper() {
     vecbasic_push_back(vec, z);
     function_symbol_set(f, "f", vec);
     s = basic_str(f);
-    SYMENGINE_C_ASSERT(strcmp(s, "f(x, y, z)"));
+    SYMENGINE_C_ASSERT(strcmp(s, "f(x, y, z)") == 0);
     vecbasic_free(vec);
     basic_str_free(s);
 
