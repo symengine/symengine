@@ -37,20 +37,25 @@ public:
     typedef ContainerForIter<UIntPolyFlint> iterator;
     typedef ContainerRevIter<UIntPolyFlint> reverse_iterator;
     iterator begin() const
-    {   
-        return iterator(rcp_static_cast<const UIntPolyFlint>(rcp_from_this()), 0); 
+    {
+        return iterator(rcp_static_cast<const UIntPolyFlint>(rcp_from_this()),
+                        0);
     }
     iterator end() const
     {
-        return iterator(rcp_static_cast<const UIntPolyFlint>(rcp_from_this()), size());
+        return iterator(rcp_static_cast<const UIntPolyFlint>(rcp_from_this()),
+                        size());
     }
     reverse_iterator rbegin() const
     {
-        return reverse_iterator(rcp_static_cast<const UIntPolyFlint>(rcp_from_this()), (long)size() -1); 
+        return reverse_iterator(
+            rcp_static_cast<const UIntPolyFlint>(rcp_from_this()),
+            (long)size() - 1);
     }
     reverse_iterator rend() const
     {
-        return reverse_iterator(rcp_static_cast<const UIntPolyFlint>(rcp_from_this()), -1);
+        return reverse_iterator(
+            rcp_static_cast<const UIntPolyFlint>(rcp_from_this()), -1);
     }
 
     unsigned int size() const

@@ -47,6 +47,43 @@ using pmonomial = piranha::monomial<unsigned int>;
 using pintpoly = piranha::polynomial<integer_class, pmonomial>;
 using pterm = pintpoly::term_type;
 
+class PiranhaForIter
+{
+    pintpoly::container_type::const_iterator ptr_;
+
+public:
+    PiranhaForIter(pintpoly::container_type::const_iterator ptr) : ptr_{ptr}
+    {
+    }
+
+    bool operator==(const PiranhaForIter &rhs)
+    {
+        return (ptr_ == rhs.ptr_);
+    }
+
+    bool operator!=(const PiranhaForIter &rhs)
+    {
+        return (ptr_ != rhs.ptr_);
+    }
+
+    PiranhaForIter operator++()
+    {
+        ptr_++;
+        return *this;
+    }
+
+    std::pair<unsigned int, integer_class> operator*()
+    {
+        return std::make_pair(*(ptr_->m_key.begin()), ptr_->m_cf);
+    }
+
+    std::pair<unsigned int, integer_class> *operator->()
+    {
+        return new std::pair<unsigned int, integer_class>(
+            *(ptr_->m_key.begin()), ptr_->m_cf);
+    }
+};
+
 class UIntPolyPiranha : public UIntPolyBase<pintpoly, UIntPolyPiranha>
 {
 public:
@@ -72,18 +109,30 @@ public:
 
     // begin() and end() are unordered
     // rbegin() and rend() are ordered
+    typedef PiranhaForIter iterator;
     typedef ContainerRevIter<UIntPolyPiranha> reverse_iterator;
+    iterator begin() const
+    {
+        return iterator(poly_._container().begin());
+    }
+    iterator end() const
+    {
+        return iterator(poly_._container().end());
+    }
     reverse_iterator rbegin() const
     {
-        return reverse_iterator(rcp_static_cast<const UIntPolyPiranha>(rcp_from_this()), (long)size() -1); 
+        return reverse_iterator(
+            rcp_static_cast<const UIntPolyPiranha>(rcp_from_this()),
+            (long)size() - 1);
     }
     reverse_iterator rend() const
     {
-        return reverse_iterator(rcp_static_cast<const UIntPolyPiranha>(rcp_from_this()), -1);
+        return reverse_iterator(
+            rcp_static_cast<const UIntPolyPiranha>(rcp_from_this()), -1);
     }
 
     unsigned int size() const
-    {   
+    {
         if (poly_.size() == 0)
             return 0;
         return get_degree() + 1;

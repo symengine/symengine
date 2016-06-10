@@ -175,16 +175,16 @@ public:
     typedef map_uint_mpz::const_iterator iterator;
     typedef map_uint_mpz::const_reverse_iterator reverse_iterator;
     iterator begin() const
-    {   
-        return poly_.dict_.begin(); 
+    {
+        return poly_.dict_.begin();
     }
     iterator end() const
     {
         return poly_.dict_.end();
     }
     reverse_iterator rbegin() const
-    {   
-        return poly_.dict_.rbegin(); 
+    {
+        return poly_.dict_.rbegin();
     }
     reverse_iterator rend() const
     {
@@ -192,7 +192,7 @@ public:
     }
 
     unsigned int size() const
-    {   
+    {
         if (is_zero())
             return 0;
         return get_degree() + 1;

@@ -277,14 +277,14 @@ public:
     virtual integer_class get_coeff(unsigned int i) const = 0;
     // return value of poly when ealudated at `x`
     virtual integer_class eval(const integer_class &x) const = 0;
-    // return `degree` + 1. `0` returned for zero poly. 
+    // return `degree` + 1. `0` returned for zero poly.
     virtual unsigned int size() const = 0;
 };
 
 template <typename T>
 class ContainerBaseIter
 {
-protected: 
+protected:
     RCP<const T> ptr_;
     long i_;
 
@@ -293,24 +293,24 @@ public:
     {
     }
 
-    bool operator==(const ContainerBaseIter& rhs)
-    { 
-        return (ptr_ == rhs.ptr_) and (i_ == rhs.i_); 
+    bool operator==(const ContainerBaseIter &rhs)
+    {
+        return (ptr_ == rhs.ptr_) and (i_ == rhs.i_);
     }
 
-    bool operator!=(const ContainerBaseIter& rhs)
-    { 
-        return not(*this == rhs); 
+    bool operator!=(const ContainerBaseIter &rhs)
+    {
+        return not(*this == rhs);
     }
 
-    std::pair<const long, integer_class> operator*()
-    { 
-        return std::make_pair(i_, ptr_->get_coeff(i_)); 
+    std::pair<long, integer_class> operator*()
+    {
+        return std::make_pair(i_, ptr_->get_coeff(i_));
     }
 
-    std::pair<const long, integer_class>* operator->()
-    { 
-        return new std::pair<const long, integer_class>(i_, ptr_->get_coeff(i_)); 
+    std::pair<long, integer_class> *operator->()
+    {
+        return new std::pair<long, integer_class>(i_, ptr_->get_coeff(i_));
     }
 };
 
@@ -325,7 +325,7 @@ public:
     ContainerForIter operator++()
     {
         this->i_++;
-        while(this->i_ < this->ptr_->size()) {
+        while (this->i_ < this->ptr_->size()) {
             if (this->ptr_->get_coeff(this->i_) != 0)
                 break;
             this->i_++;
@@ -345,7 +345,7 @@ public:
     ContainerRevIter operator++()
     {
         this->i_--;
-        while(this->i_ >= 0) {
+        while (this->i_ >= 0) {
             if (this->ptr_->get_coeff(this->i_) != 0)
                 break;
             this->i_--;
