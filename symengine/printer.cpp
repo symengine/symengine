@@ -437,8 +437,8 @@ void StrPrinter::bvisit(const UIntPolyPiranha &x)
             if (first) {
                 s << x.get_coeff(i);
             } else {
-                s << " " << _print_sign(x.get_coeff(i))
-                  << " " << mp_abs(x.get_coeff(i));
+                s << " " << _print_sign(x.get_coeff(i)) << " "
+                  << mp_abs(x.get_coeff(i));
             }
             first = false;
             continue;
@@ -452,8 +452,8 @@ void StrPrinter::bvisit(const UIntPolyPiranha &x)
                     s << "-";
                 s << x.get_var()->get_name();
             } else {
-                s << " " << _print_sign(x.get_coeff(i))
-                  << " " << x.get_var()->get_name();
+                s << " " << _print_sign(x.get_coeff(i)) << " "
+                  << x.get_var()->get_name();
             }
         }
         // same logic is followed as above
@@ -463,9 +463,8 @@ void StrPrinter::bvisit(const UIntPolyPiranha &x)
             if (first) {
                 s << x.get_coeff(i) << "*" << x.get_var()->get_name();
             } else {
-                s << " " << _print_sign(x.get_coeff(i))
-                  << " " << mp_abs(x.get_coeff(i)) << "*"
-                  << x.get_var()->get_name();
+                s << " " << _print_sign(x.get_coeff(i)) << " "
+                  << mp_abs(x.get_coeff(i)) << "*" << x.get_var()->get_name();
             }
         }
         // if exponent is not 1, print the exponent;
