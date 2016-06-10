@@ -226,6 +226,8 @@ void GaloisFieldDict::gf_monic(integer_class &res,
         if (res == integer_class(1)) 
             *monic = static_cast<GaloisFieldDict>(*this);
         else {
+            monic->dict_.clear();
+            monic->modulo_ = modulo_;
             integer_class inv, temp;
             mp_invert(inv, res, modulo_);
             for (auto &iter : dict_) {
@@ -250,19 +252,21 @@ GaloisFieldDict GaloisFieldDict::gf_gcd(const GaloisFieldDict &o) const
     }
     integer_class temp_LC;
     f.gf_monic(temp_LC, outArg(temp_out));
-    return temp_out;
+    return std::move(temp_out);
 }
 
 GaloisFieldDict GaloisFieldDict::gf_lcm(const GaloisFieldDict &o) const
 {
     SYMENGINE_ASSERT(modulo_ == o.modulo_);
-    map_uint_mpz dict_out;
-    if (dict_.empty() or o.dict_.empty())
-        return GaloisFieldDict(dict_out, modulo_);
-    GaloisFieldDict out;
-    out = (o * (*this))/gf_gcd(o);
+    if (dict_.empty())
+        return static_cast<GaloisFieldDict>(*this);
+    if (o.dict_.empty())
+        return o;
+    GaloisFieldDict out, temp_out;
+    out = o * (*this);
+    out /= gf_gcd(o);
     integer_class temp_LC;
-    out.gf_monic(temp_LC, outArg(out));
-    return out;
+    out.gf_monic(temp_LC, outArg(temp_out));
+    return std::move(temp_out);
 }
 }

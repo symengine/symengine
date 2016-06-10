@@ -42,7 +42,7 @@ public:
         }
     }
     GaloisFieldDict(GaloisFieldDict &&other) SYMENGINE_NOEXCEPT
-        : ODictWrapper(std::move(other))
+        : ODictWrapper(std::move(other.dict_)), modulo_(std::move(other.modulo_))
     {
     }
     GaloisFieldDict(const int &i, const integer_class &mod) : modulo_(mod)
@@ -276,8 +276,9 @@ public:
         dict_out = std::move(dict_);
         dict_.clear();
         integer_class coeff;
-        for (auto riter = dict_out.rbegin(); riter->first >= deg_divisor and
-                                             riter != dict_out.rend(); ++riter) {
+        for (auto riter = dict_out.rbegin(); riter != dict_out.rend(); ++riter) {
+            if (riter->first < deg_divisor)
+                break;
             size_t it = riter->first;
             coeff = riter->second;
             size_t lb = deg_divisor + it > deg_dividend ? 
