@@ -232,6 +232,7 @@ public:
 #ifdef HAVE_SYMENGINE_PIRANHA
     void bvisit(const URatPSeriesPiranha &x);
     void bvisit(const UPSeriesPiranha &x);
+    void bvisit(const UIntPolyPiranha &x);
 #endif
     void bvisit(const Log &x);
     void bvisit(const Constant &x);
