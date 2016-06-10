@@ -309,7 +309,7 @@ void StrPrinter::bvisit(const UIntPoly &x)
     bool first = true;
     // we iterate over the map in reverse order so that highest degree gets
     // printed first
-    for (auto it = x.get_dict().rbegin(); it != x.get_dict().rend(); ++it) {
+    for (auto it = x.rbegin(); it != x.rend(); ++it) {
         // if exponent is 0, then print only coefficient
         if (it->first == 0) {
             if (first) {
@@ -352,7 +352,7 @@ void StrPrinter::bvisit(const UIntPoly &x)
         // corner cases of only first term handled successfully, switch the bool
         first = false;
     }
-    if (x.get_dict().size() == 0)
+    if (x.size() == 0)
         s << "0";
     str_ = s.str();
 }

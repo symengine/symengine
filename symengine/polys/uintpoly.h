@@ -172,6 +172,30 @@ public:
         return poly_.get_coeff(x);
     }
 
+    typedef map_uint_mpz::const_iterator iterator;
+    typedef map_uint_mpz::const_reverse_iterator reverse_iterator;
+    iterator begin() const
+    {   
+        return poly_.dict_.begin(); 
+    }
+    iterator end() const
+    {
+        return poly_.dict_.end();
+    }
+    reverse_iterator rbegin() const
+    {   
+        return poly_.dict_.rbegin(); 
+    }
+    reverse_iterator rend() const
+    {
+        return poly_.dict_.rend();
+    }
+
+    unsigned int size() const
+    {
+        return poly_.dict_.size();
+    }
+
 }; // UIntPoly
 
 inline RCP<const UIntPoly> uint_poly(RCP<const Symbol> i, UIntDict &&dict)
