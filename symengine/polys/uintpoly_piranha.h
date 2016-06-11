@@ -7,6 +7,7 @@
 
 #include <symengine/polys/upolybase.h>
 #include <symengine/dict.h>
+#include <memory>
 
 #ifdef HAVE_SYMENGINE_PIRANHA
 #include <piranha/monomial.hpp>
