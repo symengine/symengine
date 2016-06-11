@@ -131,6 +131,25 @@ public:
         return static_cast<GaloisFieldDict &>(*this);
     }
 
+    GaloisFieldDict &operator+=(const integer_class &other)
+    {
+        if (dict_.empty() or other == integer_class(0))
+            return static_cast<GaloisFieldDict &>(*this);
+        auto t = dict_.lower_bound(0);
+        if (t != dict_.end() and t->first == 0) {
+            t->second += other;
+            mp_fdiv_r(t->second, t->second, modulo_);
+            if (t->second == integer_class(0)) {
+                dict_.erase(t);
+            }
+        } else {
+            integer_class temp;
+            mp_fdiv_r(temp, other, modulo_);
+            dict_.insert(t, {0, temp});
+        }
+        return static_cast<GaloisFieldDict &>(*this);
+    }
+
     GaloisFieldDict operator-() const
     {
         GaloisFieldDict o(*this);
@@ -139,6 +158,20 @@ public:
             a.second += modulo_;
         }
         return o;
+    }
+
+    GaloisFieldDict &negate()
+    {
+        for (auto &a : dict_) {
+            a.second *= -1;
+            a.second += modulo_;
+        }
+        return static_cast<GaloisFieldDict &>(*this);
+    }
+
+    GaloisFieldDict &operator-=(const integer_class &other)
+    {
+        return *this += (-1 * other);
     }
 
     GaloisFieldDict &operator-=(const GaloisFieldDict &other)
@@ -174,7 +207,8 @@ public:
             for (const auto &i2 : b.dict_) {
                 auto t = p.dict_[i1.first + i2.first];
                 mp_addmul(t, i1.second, i2.second);
-                mp_fdiv_r(p.dict_[i1.first + i2.first], t, a.modulo_);
+                mp_fdiv_r(t, t, a.modulo_);
+                p.dict_[i1.first + i2.first] = t;
             }
 
         for (auto it = p.dict_.cbegin(); it != p.dict_.cend();) {
@@ -185,12 +219,6 @@ public:
             }
         }
         return p;
-    }
-
-    template <class T>
-    friend GaloisFieldDict operator*(const GaloisFieldDict &a, const T &b)
-    {
-        return GaloisFieldDict::mul(a, b);
     }
 
     GaloisFieldDict &operator*=(const integer_class &other)

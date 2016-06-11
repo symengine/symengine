@@ -218,22 +218,18 @@ GaloisFieldDict GaloisFieldDict::gf_pow(const integer_class n) const
 void GaloisFieldDict::gf_monic(integer_class &res,
                            const Ptr<GaloisFieldDict> &monic) const
 {
+    *monic = static_cast<GaloisFieldDict>(*this);
     if (dict_.empty()) {
         res = integer_class(0);
-        *monic = static_cast<GaloisFieldDict>(*this);
     } else {
         res = dict_.rbegin()->second;
-        if (res == integer_class(1)) 
-            *monic = static_cast<GaloisFieldDict>(*this);
-        else {
-            monic->dict_.clear();
-            monic->modulo_ = modulo_;
+        if (res != integer_class(1)) {
             integer_class inv, temp;
             mp_invert(inv, res, modulo_);
-            for (auto &iter : dict_) {
-                mp_fdiv_r(temp, inv * iter.second, modulo_);
-                if (temp != integer_class(0))
-                    monic->dict_[iter.first] = temp;
+            for (auto &iter : monic->dict_) {
+                temp = inv;
+                temp *= iter.second;
+                mp_fdiv_r(iter.second, temp, modulo_);
             }
         }
     }
@@ -244,15 +240,14 @@ GaloisFieldDict GaloisFieldDict::gf_gcd(const GaloisFieldDict &o) const
     SYMENGINE_ASSERT(modulo_ == o.modulo_);
     GaloisFieldDict f = static_cast<GaloisFieldDict>(*this);
     GaloisFieldDict g = o;
-    GaloisFieldDict temp_out, temp_ex;
+    GaloisFieldDict temp_out;
     while (not g.dict_.empty()) {
-        temp_ex = g;
-        f.gf_div(temp_ex, outArg(temp_out), outArg(g)); // g = f % g
-        f = temp_ex;
+        f.gf_div(g, outArg(temp_out), outArg(f)); // f, g = f % g, g
+        f.dict_.swap(g.dict_);
     }
     integer_class temp_LC;
-    f.gf_monic(temp_LC, outArg(temp_out));
-    return std::move(temp_out);
+    f.gf_monic(temp_LC, outArg(f));
+    return std::move(f);
 }
 
 GaloisFieldDict GaloisFieldDict::gf_lcm(const GaloisFieldDict &o) const
@@ -266,7 +261,7 @@ GaloisFieldDict GaloisFieldDict::gf_lcm(const GaloisFieldDict &o) const
     out = o * (*this);
     out /= gf_gcd(o);
     integer_class temp_LC;
-    out.gf_monic(temp_LC, outArg(temp_out));
-    return std::move(temp_out);
+    out.gf_monic(temp_LC, outArg(out));
+    return std::move(out);
 }
 }
