@@ -6,9 +6,11 @@
 #include <symengine/polys/uintpoly_flint.h>
 #include <symengine/pow.h>
 #include <symengine/dict.h>
+#include <symengine/add.h>
 
 using SymEngine::UIntPolyFlint;
 using SymEngine::Symbol;
+using SymEngine::add;
 using SymEngine::symbol;
 using SymEngine::Pow;
 using SymEngine::RCP;
@@ -160,4 +162,22 @@ TEST_CASE("Evaluation of UIntPolyFlint", "[UIntPolyFlint]")
     REQUIRE(a->eval(10_z) == 121);
     REQUIRE(b->eval(-1_z) == 0);
     REQUIRE(b->eval(0_z) == 1);
+}
+
+TEST_CASE("UIntPolyFlint as_symbolic", "[UIntPolyFlint]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const UIntPolyFlint> a = UIntPolyFlint::from_dict(x, {{0, 1_z}, {1, 2_z}, {2, 1_z}});
+
+    REQUIRE(eq(*a->as_symbolic(),
+               *add({one, mul(integer(2), x), pow(x, integer(2))})));
+    REQUIRE(not eq(*a->as_symbolic(),
+                   *add({one, mul(integer(3), x), pow(x, integer(2))})));
+
+    RCP<const UIntPolyFlint> b = UIntPolyFlint::from_dict(x, {{0, 1_z}, {1, 1_z}, {2, 2_z}});
+    REQUIRE(eq(*b->as_symbolic(),
+               *add({one, x, mul(integer(2), pow(x, integer(2)))})));
+
+    RCP<const UIntPolyFlint> c = UIntPolyFlint::from_dict(x, map_uint_mpz{});
+    REQUIRE(eq(*c->as_symbolic(), *zero));
 }

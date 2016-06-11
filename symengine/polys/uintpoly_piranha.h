@@ -77,9 +77,9 @@ public:
         return std::make_pair(*(ptr_->m_key.begin()), ptr_->m_cf);
     }
 
-    RCP<std::pair<unsigned int, integer_class>> operator->()
+    std::shared_ptr<std::pair<unsigned int, integer_class>> operator->()
     {
-        return make_rcp<std::pair<unsigned int, integer_class>>(
+        return std::make_shared<std::pair<unsigned int, integer_class>>(
             *(ptr_->m_key.begin()), ptr_->m_cf);
     }
 };
@@ -122,13 +122,12 @@ public:
     reverse_iterator rbegin() const
     {
         return reverse_iterator(
-            rcp_static_cast<const UIntPolyPiranha>(rcp_from_this()),
+            rcp_from_this_cast<UIntPolyPiranha>(),
             (long)size() - 1);
     }
     reverse_iterator rend() const
     {
-        return reverse_iterator(
-            rcp_static_cast<const UIntPolyPiranha>(rcp_from_this()), -1);
+        return reverse_iterator(rcp_from_this_cast<UIntPolyPiranha>(), -1);
     }
 
     unsigned int size() const
