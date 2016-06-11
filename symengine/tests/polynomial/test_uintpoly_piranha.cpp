@@ -151,8 +151,10 @@ TEST_CASE("Multiplication of two UIntPolyPiranha", "[UIntPolyPiranha]")
 TEST_CASE("Evaluation of UIntPolyPiranha", "[UIntPolyPiranha]")
 {
     RCP<const Symbol> x = symbol("x");
-    RCP<const UIntPolyPiranha> a = UIntPolyPiranha::from_dict(x, {{0, 1_z}, {1, 2_z}, {2, 1_z}});
-    RCP<const UIntPolyPiranha> b = UIntPolyPiranha::from_dict(x, {{0, 1_z}, {1, 0_z}, {2, -1_z}});
+    RCP<const UIntPolyPiranha> a
+        = UIntPolyPiranha::from_dict(x, {{0, 1_z}, {1, 2_z}, {2, 1_z}});
+    RCP<const UIntPolyPiranha> b
+        = UIntPolyPiranha::from_dict(x, {{0, 1_z}, {1, 0_z}, {2, -1_z}});
 
     REQUIRE(a->eval(2_z) == 9);
     REQUIRE(a->eval(10_z) == 121);
