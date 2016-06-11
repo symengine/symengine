@@ -247,7 +247,7 @@ GaloisFieldDict GaloisFieldDict::gf_gcd(const GaloisFieldDict &o) const
     }
     integer_class temp_LC;
     f.gf_monic(temp_LC, outArg(f));
-    return std::move(f);
+    return f;
 }
 
 GaloisFieldDict GaloisFieldDict::gf_lcm(const GaloisFieldDict &o) const
@@ -262,6 +262,6 @@ GaloisFieldDict GaloisFieldDict::gf_lcm(const GaloisFieldDict &o) const
     out /= gf_gcd(o);
     integer_class temp_LC;
     out.gf_monic(temp_LC, outArg(out));
-    return std::move(out);
+    return out;
 }
 }

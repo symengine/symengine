@@ -316,8 +316,7 @@ public:
             dict_.clear();
             return static_cast<GaloisFieldDict &>(*this);
         }
-        dict_out = std::move(dict_);
-        dict_.clear();
+        dict_out.swap(dict_);
         integer_class coeff;
         for (auto riter = dict_out.rbegin(); riter != dict_out.rend(); ++riter) {
             if (riter->first < deg_divisor)
@@ -331,9 +330,10 @@ public:
                 mp_addmul(coeff, dict_out[it - j + deg_divisor], -dict_divisor[j]);
             }
             coeff *= inv;
-            mp_fdiv_r(dict_out[it], coeff, modulo_);
-            if (dict_out[it] != integer_class(0))
-                dict_.insert({it - deg_divisor, dict_out[it]});
+            mp_fdiv_r(coeff, coeff, modulo_);
+            riter->second = coeff;
+            if (coeff != integer_class(0))
+                dict_.insert({it - deg_divisor, coeff});
         }
         return static_cast<GaloisFieldDict &>(*this);
     }

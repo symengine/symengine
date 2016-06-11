@@ -177,6 +177,23 @@ TEST_CASE("GaloisFieldDict Division, GCD, LCM, Shifts : Basic", "[basic]")
     REQUIRE(mp[2] == 6);
     REQUIRE(d3 == d1/d2);
 
+    d2 = d1;
+    d2 *= 2_z;
+    d1 += d1;
+    REQUIRE(d1 == d2);
+    d2 = d1;
+    d2 = d1.gf_sqr();
+    d1 *= d1;
+    REQUIRE(d1 == d2);
+    a = {};
+    d1 = GaloisFieldDict::from_vec(a, 7_z);
+    d2 -= d2;
+    REQUIRE(d1 == d2);
+    d1 = GaloisFieldDict::from_vec({1_z}, 7_z);
+    d2 = GaloisFieldDict::from_vec(b, 7_z);
+    d2 /= d2;
+    REQUIRE(d1 == d2);
+
     a = {0_z, 1_z, 2_z, 3_z, 4_z, 5_z};
     b = {3_z, 2_z, 1_z};
     d1 = GaloisFieldDict::from_vec(a, 7_z);
