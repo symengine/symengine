@@ -188,7 +188,7 @@ TEST_CASE("GaloisFieldDict Division, GCD, LCM, Shifts : Basic", "[basic]")
     a = {};
     d1 = GaloisFieldDict::from_vec(a, 7_z);
     d2 -= d2;
-    REQUIRE(d1 == d2);
+    REQUIRE(d2.dict_.empty());
     d1 = GaloisFieldDict::from_vec({1_z}, 7_z);
     d2 = GaloisFieldDict::from_vec(b, 7_z);
     d2 /= d2;

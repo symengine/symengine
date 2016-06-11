@@ -323,11 +323,12 @@ public:
                 break;
             size_t it = riter->first;
             coeff = riter->second;
-            size_t lb = deg_divisor + it > deg_dividend ? 
-                        deg_divisor + it - deg_dividend : 0;
-            size_t ub = std::min(it + 1, deg_divisor);
-            for (size_t j = lb; j < ub; ++j) {
-                mp_addmul(coeff, dict_out[it - j + deg_divisor], -dict_divisor[j]);
+            auto lb = deg_divisor + it > deg_dividend ? 
+                      dict_divisor.lower_bound(deg_divisor + it - deg_dividend) :
+                      dict_divisor.begin();
+            auto ub = dict_divisor.lower_bound(std::min(it + 1, deg_divisor));
+            for (map_uint_mpz::iterator j = lb; j != ub; ++j) {
+                mp_addmul(coeff, dict_out[it - j->first + deg_divisor], -j->second);
             }
             coeff *= inv;
             mp_fdiv_r(coeff, coeff, modulo_);

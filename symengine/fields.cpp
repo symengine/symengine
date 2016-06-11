@@ -133,11 +133,12 @@ void GaloisFieldDict::gf_div(const GaloisFieldDict &o,
                 coeff = dict_out[it];
             }
             coeff = dict_out[it];
-            size_t lb = deg_divisor + it > deg_dividend ? 
-                        deg_divisor + it - deg_dividend : 0;
-            size_t ub = std::min(it + 1, deg_divisor);
-            for (size_t j = lb; j < ub; ++j) {
-                mp_addmul(coeff, dict_out[it - j + deg_divisor], -dict_divisor[j]);
+            auto lb = deg_divisor + it > deg_dividend ? 
+                      dict_divisor.lower_bound(deg_divisor + it - deg_dividend) :
+                      dict_divisor.begin();
+            auto ub = dict_divisor.lower_bound(std::min(it + 1, deg_divisor));
+            for (map_uint_mpz::iterator j = lb; j != ub; ++j) {
+                mp_addmul(coeff, dict_out[it - j->first + deg_divisor], -j->second);
             }
             if (chk) {
                 coeff *= inv;
