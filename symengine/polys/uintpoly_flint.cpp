@@ -87,8 +87,12 @@ integer_class UIntPolyFlint::eval(const integer_class &x) const
 
 integer_class UIntPolyFlint::get_coeff(unsigned int x) const
 {
-    flint::fmpzxx ans(poly_.get_coeff(x));
-    return to_integer_class(ans);
+    return to_integer_class(static_cast<flint::fmpzxx>(poly_.get_coeff(x)));
+}
+
+flint::fmpzxx_srcref UIntPolyFlint::get_coeff_ref(unsigned int x) const
+{
+    return static_cast<flint::fmpzxx_srcref>(poly_.get_coeff(x));
 }
 }
 #endif
