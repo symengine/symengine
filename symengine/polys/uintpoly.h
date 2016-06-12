@@ -179,11 +179,11 @@ public:
     {
         return poly_.dict_.end();
     }
-    reverse_iterator rbegin() const
+    reverse_iterator obegin() const
     {
         return poly_.dict_.rbegin();
     }
-    reverse_iterator rend() const
+    reverse_iterator oend() const
     {
         return poly_.dict_.rend();
     }

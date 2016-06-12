@@ -309,7 +309,7 @@ void uintpoly_print(const T &x, std::ostringstream &s)
     bool first = true;
     // we iterate over the map in reverse order so that highest degree gets
     // printed first
-    for (auto it = x.rbegin(); it != x.rend(); ++it) {
+    for (auto it = x.obegin(); it != x.oend(); ++it) {
         // if exponent is 0, then print only coefficient
         if (it->first == 0) {
             if (first) {
