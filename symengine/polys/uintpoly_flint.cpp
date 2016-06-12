@@ -33,8 +33,8 @@ int UIntPolyFlint::compare(const Basic &o) const
         return cmp;
 
     for (unsigned int i = 0; i < poly_.length(); ++i) {
-        if (poly_.get_coeff(i) != s.poly_.get_coeff(i))
-            return (poly_.get_coeff(i) < s.poly_.get_coeff(i)) ? -1 : 1;
+        if (poly_.coeff(i) != s.poly_.coeff(i))
+            return (poly_.coeff(i) < s.poly_.coeff(i)) ? -1 : 1;
     }
     return 0;
 }
@@ -80,19 +80,17 @@ integer_class UIntPolyFlint::eval(const integer_class &x) const
 {
     flint::fmpzxx r;
     fmpz_set_mpz(r._data().inner, get_mpz_t(x));
-
-    flint::fmpzxx ans(poly_(r));
-    return to_integer_class(ans);
+    return to_integer_class(static_cast<flint::fmpzxx>(poly_(r)));
 }
 
 integer_class UIntPolyFlint::get_coeff(unsigned int x) const
 {
-    return to_integer_class(static_cast<flint::fmpzxx>(poly_.get_coeff(x)));
+    return to_integer_class(poly_.coeff(x));
 }
 
 flint::fmpzxx_srcref UIntPolyFlint::get_coeff_ref(unsigned int x) const
 {
-    return static_cast<flint::fmpzxx_srcref>(poly_.get_coeff(x));
+    return poly_.coeff(x);
 }
 }
 #endif

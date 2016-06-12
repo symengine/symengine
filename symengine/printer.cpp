@@ -310,27 +310,28 @@ void uintpoly_print(const T &x, std::ostringstream &s)
     // we iterate over the map in reverse order so that highest degree gets
     // printed first
     for (auto it = x.obegin(); it != x.oend(); ++it) {
+        integer_class m = to_integer_class(it->second);
         // if exponent is 0, then print only coefficient
         if (it->first == 0) {
             if (first) {
-                s << it->second;
+                s << m;
             } else {
-                s << " " << _print_sign(it->second) << " "
-                  << mp_abs(it->second);
+                s << " " << _print_sign(m) << " "
+                  << mp_abs(m);
             }
             first = false;
             continue;
         }
         // if the coefficient of a term is +1 or -1
-        if (mp_abs(it->second) == 1) {
+        if (mp_abs(m) == 1) {
             // in cases of -x, print -x
             // in cases of x**2 - x, print - x
             if (first) {
-                if (it->second == -1)
+                if (m == -1)
                     s << "-";
                 s << x.get_var()->get_name();
             } else {
-                s << " " << _print_sign(it->second) << " "
+                s << " " << _print_sign(m) << " "
                   << x.get_var()->get_name();
             }
         }
@@ -339,9 +340,9 @@ void uintpoly_print(const T &x, std::ostringstream &s)
             // in cases of -2*x, print -2*x
             // in cases of x**2 - 2*x, print - 2*x
             if (first) {
-                s << it->second << "*" << x.get_var()->get_name();
+                s << m << "*" << x.get_var()->get_name();
             } else {
-                s << " " << _print_sign(it->second) << " " << mp_abs(it->second)
+                s << " " << _print_sign(m) << " " << mp_abs(m)
                   << "*" << x.get_var()->get_name();
             }
         }

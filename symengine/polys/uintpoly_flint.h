@@ -35,8 +35,8 @@ public:
     integer_class get_coeff(unsigned int x) const;
     flint::fmpzxx_srcref get_coeff_ref(unsigned int x) const;
 
-    typedef ContainerForIter<UIntPolyFlint> iterator;
-    typedef ContainerRevIter<UIntPolyFlint> reverse_iterator;
+    typedef ContainerForIter<UIntPolyFlint, flint::fmpzxx_srcref> iterator;
+    typedef ContainerRevIter<UIntPolyFlint, flint::fmpzxx_srcref> reverse_iterator;
     iterator begin() const
     {
         return iterator(rcp_from_this_cast<UIntPolyFlint>(), 0);
