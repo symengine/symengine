@@ -144,3 +144,17 @@ TEST_CASE("Multiplication of two UIntPolyFlint", "[UIntPolyFlint]")
     c = UIntPolyFlint::from_dict(y, {{0, -1_z}});
     CHECK_THROWS_AS(mul_upoly(*a, *c), std::runtime_error);
 }
+
+TEST_CASE("Evaluation of UIntPolyFlint", "[UIntPolyFlint]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const UIntPolyFlint> a
+        = UIntPolyFlint::from_dict(x, {{0, 1_z}, {1, 2_z}, {2, 1_z}});
+    RCP<const UIntPolyFlint> b
+        = UIntPolyFlint::from_dict(x, {{0, 1_z}, {1, 0_z}, {2, -1_z}});
+
+    REQUIRE(a->eval(2_z) == 9);
+    REQUIRE(a->eval(10_z) == 121);
+    REQUIRE(b->eval(-1_z) == 0);
+    REQUIRE(b->eval(0_z) == 1);
+}

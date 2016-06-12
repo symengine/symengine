@@ -54,15 +54,15 @@ inline RCP<const Constant> constant(const std::string &name)
 }
 
 // Constant Numbers
-extern RCP<const Integer> zero;
-extern RCP<const Integer> one;
-extern RCP<const Integer> minus_one;
-extern RCP<const Number> I;
+extern SYMENGINE_EXPORT RCP<const Integer> zero;
+extern SYMENGINE_EXPORT RCP<const Integer> one;
+extern SYMENGINE_EXPORT RCP<const Integer> minus_one;
+extern SYMENGINE_EXPORT RCP<const Number> I;
 
 // Symbolic Constants
-extern RCP<const Constant> pi;
-extern RCP<const Constant> E;
-extern RCP<const Constant> EulerGamma;
+extern SYMENGINE_EXPORT RCP<const Constant> pi;
+extern SYMENGINE_EXPORT RCP<const Constant> E;
+extern SYMENGINE_EXPORT RCP<const Constant> EulerGamma;
 
 } // SymEngine
 

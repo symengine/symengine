@@ -43,6 +43,11 @@ public:
     DIFF0(UIntPolyFlint)
 #endif
 
+#ifdef HAVE_SYMENGINE_PIRANHA
+    // will implement soon
+    DIFF0(UIntPolyPiranha)
+#endif
+
 #endif
 
     static RCP<const Basic> diff(const Number &self, const RCP<const Symbol> &x)

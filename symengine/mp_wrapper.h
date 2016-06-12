@@ -146,7 +146,7 @@ public:
         fmpz_init(mp);
         fmpz_set(mp, other.get_fmpz_t());
     }
-    inline fmpz_wrapper(fmpz_wrapper &&other)
+    inline fmpz_wrapper(fmpz_wrapper &&other) SYMENGINE_NOEXCEPT
     {
         fmpz_init(mp);
         fmpz_swap(mp, other.get_fmpz_t());
@@ -156,12 +156,12 @@ public:
         fmpz_set(mp, other.get_fmpz_t());
         return *this;
     }
-    inline fmpz_wrapper &operator=(fmpz_wrapper &&other)
+    inline fmpz_wrapper &operator=(fmpz_wrapper &&other) SYMENGINE_NOEXCEPT
     {
         fmpz_swap(mp, other.get_fmpz_t());
         return *this;
     }
-    inline ~fmpz_wrapper()
+    inline ~fmpz_wrapper() SYMENGINE_NOEXCEPT
     {
         fmpz_clear(mp);
     }
@@ -583,7 +583,7 @@ public:
     {
         mpz_init_set(mp, other.get_mpz_t());
     }
-    inline mpz_wrapper(mpz_wrapper &&other)
+    inline mpz_wrapper(mpz_wrapper &&other) SYMENGINE_NOEXCEPT
     {
         mp->_mp_d = nullptr;
         mpz_swap(mp, other.get_mpz_t());
@@ -597,7 +597,7 @@ public:
         }
         return *this;
     }
-    inline mpz_wrapper &operator=(mpz_wrapper &&other)
+    inline mpz_wrapper &operator=(mpz_wrapper &&other) SYMENGINE_NOEXCEPT
     {
         mpz_swap(mp, other.get_mpz_t());
         return *this;
@@ -630,7 +630,7 @@ public:
         }
         return *this;
     }
-    inline ~mpz_wrapper()
+    inline ~mpz_wrapper() SYMENGINE_NOEXCEPT
     {
         if (mp->_mp_d != nullptr) {
             mpz_clear(mp);
