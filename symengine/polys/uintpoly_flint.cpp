@@ -90,6 +90,9 @@ integer_class UIntPolyFlint::get_coeff(unsigned int x) const
 
 flint::fmpzxx_srcref UIntPolyFlint::get_coeff_ref(unsigned int x) const
 {
+    static flint::fmpzxx FZERO(0);
+    if (x > poly_.degree())
+        return FZERO;
     return poly_.coeff(x);
 }
 }
