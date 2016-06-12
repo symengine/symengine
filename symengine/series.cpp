@@ -6,12 +6,6 @@
 
 #include <symengine/series_visitor.h>
 
-#ifdef HAVE_SYMENGINE_PIRANHA
-#endif
-
-#ifdef HAVE_SYMENGINE_FLINT
-#endif
-
 namespace SymEngine
 {
 
