@@ -11,9 +11,10 @@
 namespace SymEngine
 {
 
-class GaloisFieldDict : public ODictWrapper<unsigned int, integer_class, GaloisFieldDict>
+class GaloisFieldDict
 {
 public:
+    std::vector<integer_class> dict_;
     integer_class modulo_;
 public:
     GaloisFieldDict() SYMENGINE_NOEXCEPT
@@ -22,67 +23,48 @@ public:
     ~GaloisFieldDict() SYMENGINE_NOEXCEPT
     {
     }
-    inline integer_class mod_function (const integer_class &a)
-    {
-        integer_class temp;
-        mp_fdiv_r(temp, a, modulo_);
-        return std::move(temp);
-    }
-    inline void dict_add_val(const unsigned int &pos, const integer_class &a)
-    {
-        integer_class temp;
-        mp_fdiv_r(temp, a, modulo_);
-        if (temp != integer_class(0)) {
-            auto t = dict_.lower_bound(pos);
-            if (t != dict_.end() and t->first == pos) {
-                t->second = temp;
-            } else {
-                dict_.insert(t, {pos, temp});
-            }
-        }
-    }
     GaloisFieldDict(GaloisFieldDict &&other) SYMENGINE_NOEXCEPT
-        : ODictWrapper(std::move(other.dict_)), modulo_(std::move(other.modulo_))
+        : dict_(std::move(other.dict_)), modulo_(std::move(other.modulo_))
     {
     }
     GaloisFieldDict(const int &i, const integer_class &mod) : modulo_(mod)
     {
         integer_class temp;
         mp_fdiv_r(temp, integer_class(i), modulo_);
-        if (temp != integer_class(0)) {
-            dict_.insert({0, temp});
-        }
+        if (temp != integer_class(0))
+            dict_.insert(dict_.begin(), temp);
     }
     GaloisFieldDict(const map_uint_mpz &p, const integer_class &mod) : modulo_(mod)
     {
-        for (auto &iter : p) {
-            integer_class temp;
-            mp_fdiv_r(temp, iter.second, modulo_);
-            if (temp != integer_class(0)) {
-                dict_.insert(dict_.end(), {iter.first, temp});
+        if (p.size() != 0) {
+            dict_.resize(p.rbegin()->first + 1, integer_class(0));
+            for (auto &iter : p) {
+                integer_class temp;
+                mp_fdiv_r(temp, iter.second, modulo_);
+                dict_[iter.first] = temp;
             }
+            gf_istrip();
         }
     }
     GaloisFieldDict(const integer_class &i, const integer_class &mod) : modulo_(mod)
     {
         integer_class temp;
         mp_fdiv_r(temp, i, modulo_);
-        if (temp != integer_class(0)) {
-            dict_.insert({0, temp});
-        }
+        if (temp != integer_class(0))
+            dict_.insert(dict_.begin(), temp);
     }
 
     static GaloisFieldDict from_vec(const std::vector<integer_class> &v, const integer_class &modulo)
     {
         GaloisFieldDict x;
+        x.modulo_ = modulo;
+        x.dict_.resize(v.size());
         for (unsigned int i = 0; i < v.size(); ++i) {
             integer_class a;
             mp_fdiv_r(a, v[i], modulo);
-            if (a != integer_class(0)) {
-                x.dict_.insert({i, a});
-            }
+            x.dict_[i] = a;
         }
-        x.modulo_ = modulo;
+        x.gf_istrip();
         return x;
     }
 
@@ -111,22 +93,47 @@ public:
         return static_cast<GaloisFieldDict &>(*this);
     }
 
+    friend GaloisFieldDict operator+(const GaloisFieldDict &a, const GaloisFieldDict &b)
+    {
+        GaloisFieldDict c = a;
+        c += b;
+        return c;
+    }
+
     GaloisFieldDict &operator+=(const GaloisFieldDict &other)
     {
-        SYMENGINE_ASSERT(modulo_ == other.modulo_);
-        for (auto &iter : other.dict_) {
-            auto t = dict_.lower_bound(iter.first);
-            if (t != dict_.end() and t->first == iter.first) {
-                t->second += iter.second;
-                mp_fdiv_r(t->second, t->second, modulo_);
-                if (t->second == integer_class(0)) {
-                    dict_.erase(t);
-                }
-            } else {
+        if (modulo_ != other.modulo_)
+            throw std::runtime_error("Error: field must be same.");
+        if (other.dict_.size() == 0)
+            return static_cast<GaloisFieldDict &>(*this);
+        if (this->dict_.size() == 0) {
+            *this = other;
+            return static_cast<GaloisFieldDict &>(*this);
+        }
+        if (other.dict_.size() < this->dict_.size()) {
+            for (unsigned int i = 0; i < other.dict_.size(); i++) {
                 integer_class temp;
-                mp_fdiv_r(temp, iter.second, modulo_);
-                dict_.insert(t, {iter.first, temp});
+                temp += dict_[i];
+                temp += other.dict_[i];
+                if (temp != integer_class(0)) {
+                    mp_fdiv_r(temp, temp, modulo_);
+                }
+                dict_[i] = temp;
             }
+        } else {
+                for (unsigned int i = 0; i < dict_.size(); i++) {
+                integer_class temp;
+                temp += dict_[i];
+                temp += other.dict_[i];
+                if (temp != integer_class(0)) {
+                    mp_fdiv_r(temp, temp, modulo_);
+                }
+                dict_[i] = temp;
+            }
+            if (other.dict_.size() == this->dict_.size())
+                gf_istrip();
+            else
+                dict_.insert(dict_.end(), other.dict_.begin() + dict_.size(), other.dict_.end());
         }
         return static_cast<GaloisFieldDict &>(*this);
     }
@@ -135,27 +142,27 @@ public:
     {
         if (dict_.empty() or other == integer_class(0))
             return static_cast<GaloisFieldDict &>(*this);
-        auto t = dict_.lower_bound(0);
-        if (t != dict_.end() and t->first == 0) {
-            t->second += other;
-            mp_fdiv_r(t->second, t->second, modulo_);
-            if (t->second == integer_class(0)) {
-                dict_.erase(t);
-            }
-        } else {
-            integer_class temp;
-            mp_fdiv_r(temp, other, modulo_);
-            dict_.insert(t, {0, temp});
-        }
+        integer_class temp = dict_[0] + other;
+        mp_fdiv_r(temp, temp, modulo_);
+        dict_[0] = temp;
+        if (dict_.size() == 1)
+            gf_istrip();
         return static_cast<GaloisFieldDict &>(*this);
+    }
+
+    friend GaloisFieldDict operator-(const GaloisFieldDict &a, const GaloisFieldDict &b)
+    {
+        GaloisFieldDict c = a;
+        c -= b;
+        return c;
     }
 
     GaloisFieldDict operator-() const
     {
         GaloisFieldDict o(*this);
         for (auto &a : o.dict_) {
-            a.second *= -1;
-            a.second += modulo_;
+            a *= -1;
+            a += modulo_;
         }
         return o;
     }
@@ -163,8 +170,8 @@ public:
     GaloisFieldDict &negate()
     {
         for (auto &a : dict_) {
-            a.second *= -1;
-            a.second += modulo_;
+            a *= -1;
+            a += modulo_;
         }
         return static_cast<GaloisFieldDict &>(*this);
     }
@@ -176,18 +183,43 @@ public:
 
     GaloisFieldDict &operator-=(const GaloisFieldDict &other)
     {
-        SYMENGINE_ASSERT(modulo_ == other.modulo_);
-        for (auto &iter : other.get_dict()) {
-            auto t = dict_.lower_bound(iter.first);
-            if (t != dict_.end() and t->first == iter.first) {
-                mp_fdiv_r(t->second, t->second - iter.second, modulo_);
-                if (t->second == 0) {
-                    dict_.erase(t);
-                }
-            } else {
+        if (modulo_ != other.modulo_)
+            throw std::runtime_error("Error: field must be same.");
+        if (other.dict_.size() == 0)
+            return static_cast<GaloisFieldDict &>(*this);
+        if (this->dict_.size() == 0) {
+            *this = -other;
+            return static_cast<GaloisFieldDict &>(*this);
+        }
+        if (other.dict_.size() < this->dict_.size()) {
+            for (unsigned int i = 0; i < other.dict_.size(); i++) {
                 integer_class temp;
-                temp = modulo_ - iter.second;
-                dict_.insert(t, {iter.first, temp});
+                temp += dict_[i];
+                temp -= other.dict_[i];
+                if (temp != integer_class(0)) {
+                    mp_fdiv_r(temp, temp, modulo_);
+                }
+                dict_[i] = temp;
+            }
+        } else {
+            for (unsigned int i = 0; i < dict_.size(); i++) {
+                integer_class temp;
+                temp += dict_[i];
+                temp -= other.dict_[i];
+                if (temp != integer_class(0)) {
+                    mp_fdiv_r(temp, temp, modulo_);
+                }
+                dict_[i] = temp;
+            }
+            if (other.dict_.size() == this->dict_.size())
+                gf_istrip();
+            else {
+                unsigned int orig_size = dict_.size();
+                dict_.resize(other.dict_.size());
+                for (unsigned int i = orig_size; i < other.dict_.size(); i++) {
+                    dict_[i] = -other.dict_[i];
+                    dict_[i] += modulo_;
+                }
             }
         }
         return static_cast<GaloisFieldDict &>(*this);
@@ -195,30 +227,35 @@ public:
 
     static GaloisFieldDict mul(const GaloisFieldDict &a, const GaloisFieldDict &b)
     {
-        SYMENGINE_ASSERT(a.modulo_ == b.modulo_);
+        // TODO
+        if (a.modulo_ != b.modulo_)
+            throw std::runtime_error("Error: field must be same.");
         if (a.get_dict().empty())
             return a;
         if (b.get_dict().empty())
             return b;
 
         GaloisFieldDict p;
+        p.dict_.resize(a.degree() + b.degree() + 1, integer_class(0));
         p.modulo_ = a.modulo_;
-        for (const auto &i1 : a.dict_)
-            for (const auto &i2 : b.dict_) {
-                auto t = p.dict_[i1.first + i2.first];
-                mp_addmul(t, i1.second, i2.second);
-                mp_fdiv_r(t, t, a.modulo_);
-                p.dict_[i1.first + i2.first] = t;
+        for (unsigned int i = 0; i <= a.degree(); i++)
+            for (unsigned int j = 0; j <= b.degree(); j++) {
+                auto temp = a.dict_[i];
+                temp *= b.dict_[j];
+                if (temp != integer_class(0)) {
+                    auto t = p.dict_[i + j];
+                    t += temp;
+                    mp_fdiv_r(t, t, a.modulo_);
+                    p.dict_[i + j] = t;
+                }
             }
-
-        for (auto it = p.dict_.cbegin(); it != p.dict_.cend();) {
-            if (it->second == 0) {
-                p.dict_.erase(it++);
-            } else {
-                ++it;
-            }
-        }
+        p.gf_istrip();
         return p;
+    }
+
+    friend GaloisFieldDict operator*(const GaloisFieldDict &a, const GaloisFieldDict &b)
+    {
+        return GaloisFieldDict::mul(a, b);
     }
 
     GaloisFieldDict &operator*=(const integer_class &other)
@@ -232,33 +269,40 @@ public:
         }
 
         for (auto &arg : dict_) {
-            arg.second *= other;
-            mp_fdiv_r(arg.second, arg.second, modulo_);
+            if (arg != integer_class(0)) {
+                arg *= other;
+                mp_fdiv_r(arg, arg, modulo_);
+            }
         }
+        gf_istrip();
         return static_cast<GaloisFieldDict &>(*this);
     }
 
     GaloisFieldDict &operator*=(const GaloisFieldDict &other)
     {
-        SYMENGINE_ASSERT(modulo_ == other.modulo_);
+        if (modulo_ != other.modulo_)
+            throw std::runtime_error("Error: field must be same.");
         if (dict_.empty())
             return static_cast<GaloisFieldDict &>(*this);
 
-        auto o_dict = other.get_dict();
+        auto o_dict = other.dict_;
         if (o_dict.empty()) {
             dict_.clear();
             return static_cast<GaloisFieldDict &>(*this);
         }
 
         // ! other is a just constant term
-        if (o_dict.rbegin()->first == 0) {
+        if (o_dict.size() == 1) {
             for (auto &arg : dict_) {
-                arg.second *= o_dict.rbegin()->second;
-                mp_fdiv_r(arg.second, arg.second, modulo_);
+                if (arg != integer_class(0)) {
+                    arg *= o_dict[0];
+                    mp_fdiv_r(arg, arg, modulo_);
+                }
             }
+            gf_istrip();
             return static_cast<GaloisFieldDict &>(*this);
         }
-
+        // mul will return a stripped dict
         GaloisFieldDict res = GaloisFieldDict::mul(static_cast<GaloisFieldDict &>(*this),
                                                    other);
         res.dict_.swap(this->dict_);
@@ -283,70 +327,104 @@ public:
         integer_class inv;
         mp_invert(inv, other, modulo_);
         for (auto &arg : dict_) {
-            arg.second *= inv;
-            mp_fdiv_r(arg.second, arg.second, modulo_);
+            if (arg != integer_class(0)) {
+                arg *= inv;
+                mp_fdiv_r(arg, arg, modulo_);
+            }
         }
         return static_cast<GaloisFieldDict &>(*this);
     }
 
     GaloisFieldDict &operator/=(const GaloisFieldDict &other)
     {
-        SYMENGINE_ASSERT(modulo_ == other.modulo_);
-        auto dict_divisor = other.get_dict();
+        if (modulo_ != other.modulo_)
+            throw std::runtime_error("Error: field must be same.");
+        auto dict_divisor = other.dict_;
         if (dict_divisor.empty()) {
             throw std::runtime_error("ZeroDivisionError");
         }
         if (dict_.empty())
             return static_cast<GaloisFieldDict &>(*this);
         integer_class inv;
-        mp_invert(inv, dict_divisor.rbegin()->second, modulo_);
+        mp_invert(inv, *(dict_divisor.rbegin()), modulo_);
 
         // ! other is a just constant term
-        if (dict_divisor.rbegin()->first == 0) {
+        if (dict_divisor.size() == 1) {
             for (auto &iter : dict_) {
-                iter.second *= inv;
-                mp_fdiv_r(iter.second, iter.second, modulo_);
+                if (iter != 0) {
+                    iter *= inv;
+                    mp_fdiv_r(iter, iter, modulo_);
+                }
             }
             return static_cast<GaloisFieldDict &>(*this);
         }
-        map_uint_mpz dict_out;
-        size_t deg_dividend = dict_.rbegin()->first;
-        size_t deg_divisor = dict_divisor.rbegin()->first;
+        std::vector<integer_class> dict_out;
+        size_t deg_dividend = this->degree();
+        size_t deg_divisor = other.degree();
         if (deg_dividend < deg_divisor) {
             dict_.clear();
             return static_cast<GaloisFieldDict &>(*this);
         }
         dict_out.swap(dict_);
+        dict_.resize(deg_dividend - deg_divisor + 1);
         integer_class coeff;
-        for (auto riter = dict_out.rbegin(); riter != dict_out.rend(); ++riter) {
-            if (riter->first < deg_divisor)
-                break;
-            size_t it = riter->first;
-            coeff = riter->second;
-            auto lb = deg_divisor + it > deg_dividend ? 
-                      dict_divisor.lower_bound(deg_divisor + it - deg_dividend) :
-                      dict_divisor.begin();
-            auto ub = dict_divisor.lower_bound(std::min(it + 1, deg_divisor));
-            for (map_uint_mpz::iterator j = lb; j != ub; ++j) {
-                mp_addmul(coeff, dict_out[it - j->first + deg_divisor], -j->second);
+        for (auto riter = deg_dividend; riter >= deg_divisor; --riter) {
+            coeff = dict_out[riter];
+            if (coeff == integer_class(0))
+                continue;
+            auto lb = deg_divisor + riter > deg_dividend ?
+                      deg_divisor + riter - deg_dividend : 0;
+            auto ub = std::min(riter + 1, deg_divisor);
+            for (unsigned j = lb; j < ub; ++j) {
+                mp_addmul(coeff, dict_out[riter - j + deg_divisor], -dict_divisor[j]);
             }
             coeff *= inv;
             mp_fdiv_r(coeff, coeff, modulo_);
-            riter->second = coeff;
-            if (coeff != integer_class(0))
-                dict_.insert({it - deg_divisor, coeff});
+            dict_out[riter] = dict_[riter - deg_divisor] = coeff;
         }
         return static_cast<GaloisFieldDict &>(*this);
     }
 
     bool operator==(const GaloisFieldDict &other) const
     {
-        return dict_ == other.get_dict() and modulo_ == other.modulo_;
+        return dict_ == other.dict_ and modulo_ == other.modulo_;
     }
 
     bool operator!=(const GaloisFieldDict &other) const
     {
         return not(*this == other);
+    }
+
+    unsigned int size() const
+    {
+        return dict_.size();
+    }
+
+    bool empty() const
+    {
+        return dict_.empty();
+    }
+
+    unsigned degree() const
+    {
+        if (dict_.empty())
+            return 0;
+        return dict_.size() - 1;
+    }
+
+    const std::vector<integer_class> &get_dict() const
+    {
+        return dict_;
+    }
+
+    void gf_istrip()
+    {
+        for (auto i = dict_.rbegin(); i != dict_.rend(); ++i) {
+            if (*i == integer_class(0))
+                dict_.pop_back();
+            else
+                break;
+        }
     }
 };
 
@@ -374,7 +452,7 @@ public:
                                         const integer_class &modulo);
 
     virtual vec_basic get_args() const;
-    inline const map_uint_mpz &get_dict() const
+    inline const std::vector<integer_class> &get_dict() const
     {
         return poly_.dict_;
     }

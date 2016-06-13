@@ -307,51 +307,56 @@ void StrPrinter::bvisit(const GaloisField &x)
     bool first = true;
     // we iterate over the map in reverse order so that highest degree gets
     // printed first
-    for (auto it = x.get_dict().rbegin(); it != x.get_dict().rend(); ++it) {
-        // if exponent is 0, then print only coefficient
-        if (it->first == 0) {
-            if (first) {
-                s << it->second;
-            } else {
-                s << " " << _print_sign(it->second) << " "
-                  << mp_abs(it->second);
-            }
-            first = false;
-            continue;
-        }
-        // if the coefficient of a term is +1 or -1
-        if (mp_abs(it->second) == 1) {
-            // in cases of -x, print -x
-            // in cases of x**2 - x, print - x
-            if (first) {
-                if (it->second == -1)
-                    s << "-";
-                s << x.get_var()->get_name();
-            } else {
-                s << " " << _print_sign(it->second) << " "
-                  << x.get_var()->get_name();
-            }
-        }
-        // same logic is followed as above
-        else {
-            // in cases of -2*x, print -2*x
-            // in cases of x**2 - 2*x, print - 2*x
-            if (first) {
-                s << it->second << "*" << x.get_var()->get_name();
-            } else {
-                s << " " << _print_sign(it->second) << " " << mp_abs(it->second)
-                  << "*" << x.get_var()->get_name();
-            }
-        }
-        // if exponent is not 1, print the exponent;
-        if (it->first != 1) {
-            s << "**" << it->first;
-        }
-        // corner cases of only first term handled successfully, switch the bool
-        first = false;
-    }
+    auto dict = x.get_dict();
     if (x.get_dict().size() == 0)
         s << "0";
+    else {
+        for (auto it = dict.size(); it-- != 0 ;) {
+            if (dict[it] == 0)
+                continue;
+            // if exponent is 0, then print only coefficient
+            if (it == 0) {
+                if (first) {
+                    s << dict[it];
+                } else {
+                    s << " " << _print_sign(dict[it]) << " "
+                      << mp_abs(dict[it]);
+                }
+                first = false;
+                break;
+            }
+            // if the coefficient of a term is +1 or -1
+            if (mp_abs(dict[it]) == 1) {
+                // in cases of -x, print -x
+                // in cases of x**2 - x, print - x
+                if (first) {
+                    if (dict[it] == -1)
+                        s << "-";
+                    s << x.get_var()->get_name();
+                } else {
+                    s << " " << _print_sign(dict[it]) << " "
+                      << x.get_var()->get_name();
+                }
+            }
+            // same logic is followed as above
+            else {
+                // in cases of -2*x, print -2*x
+                // in cases of x**2 - 2*x, print - 2*x
+                if (first) {
+                    s << dict[it] << "*" << x.get_var()->get_name();
+                } else {
+                    s << " " << _print_sign(dict[it]) << " " << mp_abs(dict[it])
+                      << "*" << x.get_var()->get_name();
+                }
+            }
+            // if exponent is not 1, print the exponent;
+            if (it != 1) {
+                s << "**" << it;
+            }
+            // corner cases of only first term handled successfully, switch the bool
+            first = false;
+        }
+    }
     str_ = s.str();
 }
 

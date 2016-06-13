@@ -27,7 +27,7 @@ TEST_CASE("Constructor of GaloisField : Basic", "[basic]")
     RCP<const GaloisField> Q = GaloisField::from_vec(x, {1_z, 0_z, 2_z, 3_z}, 2_z);
     REQUIRE(Q->__str__() == "x**3 + 1");
 
-    RCP<const GaloisField> R = GaloisField::from_vec(x, {17_z, 0_z, 7_z, 9_z}, 7_z);
+    RCP<const GaloisField> R = GaloisField::from_vec(x, {17_z, 0_z, 7_z, 9_z, 7_z, 14_z}, 7_z);
     REQUIRE(R->__str__() == "2*x**3 + 3");
 
     RCP<const GaloisField> S = gf_poly(x, {{0, 2_z}}, 7_z);
@@ -43,7 +43,7 @@ TEST_CASE("Constructor of GaloisField : Basic", "[basic]")
 TEST_CASE("GaloisField Addition, Subtraction, Multiplication : Basic", "[basic]")
 {
     RCP<const Symbol> x = symbol("x");
-    std::vector<integer_class> a = {2_z, 3_z, 4_z};
+    std::vector<integer_class> mp, a = {2_z, 3_z, 4_z};
     std::vector<integer_class> b = {3_z, 3_z, 6_z, 6_z};
     RCP<const GaloisField> r1 = GaloisField::from_vec(x, a, 5_z);
     RCP<const GaloisField> r2 = GaloisField::from_vec(x, b, 5_z);
@@ -52,7 +52,7 @@ TEST_CASE("GaloisField Addition, Subtraction, Multiplication : Basic", "[basic]"
     r3 = sub_upoly(*r1, *r2);
     REQUIRE(r3->__str__() == "4*x**3 + 3*x**2 + 4");
     r3 = mul_upoly(*r1, *r2);
-    auto mp = r3->get_dict();
+    mp = r3->get_dict();
     REQUIRE(mp[0] == 1);
     REQUIRE(mp[2] == 3);
     REQUIRE(mp[3] == 2);
@@ -116,7 +116,6 @@ TEST_CASE("GaloisField Addition, Subtraction, Multiplication : Basic", "[basic]"
     r2 = mul_upoly(*r1, *GaloisField::from_vec(x, {3_z}, 11_z));
     REQUIRE(r2->__str__() == "3");
     r2 = add_upoly(*r1, *GaloisField::from_vec(x, {3_z}, 11_z));
-    mp = r2->get_dict();
     REQUIRE(r2->__str__() == "4");
 
     a = {1_z, 2_z, 3_z};
@@ -155,12 +154,10 @@ TEST_CASE("GaloisField Addition, Subtraction, Multiplication : Basic", "[basic]"
     REQUIRE(mp[5] == 3);
     REQUIRE(mp[6] == 1);
     REQUIRE(mp[7] == 2);
-    REQUIRE(mp[8] == 0);
 }
 TEST_CASE("GaloisFieldDict Division, GCD, LCM, Shifts : Basic", "[basic]")
 {
-    std::vector<integer_class> a, b;
-    map_uint_mpz mp;
+    std::vector<integer_class> a, b, mp;
     GaloisFieldDict d1, d2, d3, d4;
     a = {0_z, 1_z, 2_z, 3_z, 4_z, 5_z};
     b = {0_z, 3_z, 2_z, 1_z};
@@ -254,10 +251,8 @@ TEST_CASE("GaloisFieldDict Division, GCD, LCM, Shifts : Basic", "[basic]")
     REQUIRE(mp[1] == 3);
     REQUIRE(mp[2] == 2);
     REQUIRE(mp[3] == 1);
-    REQUIRE(mp[4] == 0);
     mp = d3.get_dict();
     REQUIRE(mp[0] == 5);
-    REQUIRE(mp[1] == 0);
     d1.gf_rshift(3_z, outArg(d2), outArg(d3));
     mp = d2.get_dict();
     REQUIRE(mp[0] == 2);
@@ -304,6 +299,7 @@ TEST_CASE("GaloisFieldDict Division, GCD, LCM, Shifts : Basic", "[basic]")
     REQUIRE(mp[20] == 1);
     d2 = d1.gf_pow(8_z);
     d3 = d1.gf_pow(4_z);
+    REQUIRE(d2 == d3.gf_sqr());
 
     integer_class LC;
     a = {};

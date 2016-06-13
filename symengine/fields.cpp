@@ -17,9 +17,9 @@ bool GaloisField::is_canonical(const GaloisFieldDict &dict) const
     // Check if dictionary contains terms with coeffienct 0
     if (dict.modulo_ <= integer_class(0))
         return false;
-    for (auto iter : dict.dict_)
-        if (iter.second == 0)
-            return false;
+    // for (auto iter : dict.dict_)
+    //     if (iter.second == 0)
+    //         return false;
     return true;
 }
 
@@ -31,8 +31,7 @@ std::size_t GaloisField::__hash__() const
     seed += hash_string(this->var_->get_name());
     for (const auto &it : poly_.dict_) {
         std::size_t temp = GALOISFIELD;
-        hash_combine<unsigned int>(temp, it.first);
-        hash_combine<long long int>(temp, mp_get_si(it.second));
+        hash_combine<long long int>(temp, mp_get_si(it));
         seed += temp;
     }
     return seed;
@@ -73,27 +72,27 @@ RCP<const GaloisField> GaloisField::from_vec(const RCP<const Symbol> &var,
 vec_basic GaloisField::get_args() const
 {
     vec_basic args;
-    for (const auto &p : poly_.dict_) {
-        if (p.first == 0) {
-            args.push_back(integer(p.second));
-        } else if (p.first == 1) {
-            if (p.second == 1) {
-                args.push_back(var_);
-            } else {
-                args.push_back(
-                    Mul::from_dict(integer(p.second), {{var_, one}}));
-            }
-        } else {
-            if (p.second == 1) {
-                args.push_back(pow(var_, integer(p.first)));
-            } else {
-                args.push_back(Mul::from_dict(integer(p.second),
-                                              {{var_, integer(p.first)}}));
-            }
-        }
-    }
-    if (poly_.dict_.empty())
-        args.push_back(zero);
+    // for (const auto &p : poly_.dict_) {
+    //     if (p.first == 0) {
+    //         args.push_back(integer(p.second));
+    //     } else if (p.first == 1) {
+    //         if (p.second == 1) {
+    //             args.push_back(var_);
+    //         } else {
+    //             args.push_back(
+    //                 Mul::from_dict(integer(p.second), {{var_, one}}));
+    //         }
+    //     } else {
+    //         if (p.second == 1) {
+    //             args.push_back(pow(var_, integer(p.first)));
+    //         } else {
+    //             args.push_back(Mul::from_dict(integer(p.second),
+    //                                           {{var_, integer(p.first)}}));
+    //         }
+    //     }
+    // }
+    // if (poly_.dict_.empty())
+    //     args.push_back(zero);
     return args;
 }
 
@@ -101,91 +100,81 @@ void GaloisFieldDict::gf_div(const GaloisFieldDict &o,
                          const Ptr<GaloisFieldDict> &quo,
                          const Ptr<GaloisFieldDict> &rem) const
 {
-    SYMENGINE_ASSERT(modulo_ == o.modulo_);
+    if (modulo_ != o.modulo_)
+        throw std::runtime_error("Error: field must be same.");
     if (o.dict_.empty())
         throw std::runtime_error("ZeroDivisionError");
-    map_uint_mpz dict_out;
+    std::vector<integer_class> dict_out;
     if (dict_.empty()) {
-        *quo = GaloisFieldDict(dict_out, modulo_);
-        *rem = GaloisFieldDict(dict_, modulo_);
+        *quo = GaloisFieldDict::from_vec(dict_out, modulo_);
+        *rem = GaloisFieldDict::from_vec(dict_, modulo_);
         return;
     }
-    map_uint_mpz dict_divisor = o.dict_;
-    size_t deg_dividend = dict_.rbegin()->first;
-    size_t deg_divisor = dict_divisor.rbegin()->first;
+    auto dict_divisor = o.dict_;
+    unsigned int deg_dividend = this->degree();
+    unsigned int deg_divisor = o.degree();
     if (deg_dividend < deg_divisor) {
-        *quo = GaloisFieldDict(dict_out, modulo_);
-        *rem = GaloisFieldDict(dict_, modulo_);
+        *quo = GaloisFieldDict::from_vec(dict_out, modulo_);
+        *rem = GaloisFieldDict::from_vec(dict_, modulo_);
     } else {
         dict_out = dict_;
         integer_class inv;
-        mp_invert(inv, dict_divisor.rbegin()->second, modulo_);
+        mp_invert(inv, *(dict_divisor.rbegin()), modulo_);
         integer_class coeff;
-        size_t it, i = deg_divisor - 1;
-        for (auto iter = dict_out.rbegin(); ; ) {
-            bool chk = false;
-            if (iter->first >= deg_divisor and iter != dict_out.rend()) {
-                it = iter->first;
-                coeff = iter->second;
-                chk = true;
-            } else {
-                it = i;
-                coeff = dict_out[it];
-            }
+        for (auto it = deg_dividend + 1; it-- != 0; ) {
             coeff = dict_out[it];
+            if (coeff == integer_class(0) && it >= deg_divisor)
+                continue;
             auto lb = deg_divisor + it > deg_dividend ? 
-                      dict_divisor.lower_bound(deg_divisor + it - deg_dividend) :
-                      dict_divisor.begin();
-            auto ub = dict_divisor.lower_bound(std::min(it + 1, deg_divisor));
-            for (map_uint_mpz::iterator j = lb; j != ub; ++j) {
-                mp_addmul(coeff, dict_out[it - j->first + deg_divisor], -j->second);
+                      deg_divisor + it - deg_dividend : 0;
+            auto ub = std::min(it + 1, deg_divisor);
+            for (long j = lb; j < ub; ++j) {
+                mp_addmul(coeff, dict_out[it - j + deg_divisor], -dict_divisor[j]);
             }
-            if (chk) {
+            if (it >= deg_divisor)
                 coeff *= inv;
-                ++iter;
-            } else {
-                i--;
-            }
-            mp_fdiv_r(dict_out[it], coeff, modulo_);
-            if (it <= 0)
-                break;
+            dict_out[it] = coeff % modulo_;
         }
-        map_uint_mpz dict_rem, dict_quo;
-        for (auto it : dict_out) {
-            if (it.first < deg_divisor)
-                dict_rem.insert(dict_rem.end(),{it.first, it.second});
+        std::vector<integer_class> dict_rem, dict_quo;
+        dict_rem.resize(deg_divisor);
+        dict_quo.resize(deg_dividend - deg_divisor + 1);
+        for (unsigned it = 0; it < dict_out.size(); it++) {
+            if (it < deg_divisor)
+                dict_rem[it] = dict_out[it];
             else
-                dict_quo.insert(dict_quo.end(),{it.first - deg_divisor, it.second});
+                dict_quo[it - deg_divisor] = dict_out[it];
         }
-        *quo = GaloisFieldDict(dict_quo, modulo_);
-        *rem = GaloisFieldDict(dict_rem, modulo_);
+        *quo = GaloisFieldDict::from_vec(dict_quo, modulo_);
+        *rem = GaloisFieldDict::from_vec(dict_rem, modulo_);
     }
 }
 
 GaloisFieldDict GaloisFieldDict::gf_lshift(const integer_class n) const
 {
-    map_uint_mpz dict_out;
-    unsigned n_val = mp_get_si(n);
-    for (auto iter : dict_) {
-        dict_out.insert(dict_out.end(), {iter.first + n_val, iter.second});
+    std::vector<integer_class> dict_out;
+    auto to_ret = GaloisFieldDict::from_vec(dict_out, modulo_);
+    if (!dict_.empty()) {
+        unsigned n_val = mp_get_si(n);
+        to_ret.dict_.resize(n_val, integer_class(0));
+        to_ret.dict_.insert(to_ret.dict_.end(), dict_.begin(), dict_.end());
     }
-    return GaloisFieldDict(dict_out, modulo_);
+    return to_ret;
 }
 
 void GaloisFieldDict::gf_rshift(const integer_class n,
                             const Ptr<GaloisFieldDict> &quo,
                             const Ptr<GaloisFieldDict> &rem) const
 {
-    map_uint_mpz dict_quo, dict_rem;
+    std::vector<integer_class> dict_quo;
+    *quo = GaloisFieldDict::from_vec(dict_quo, modulo_);
     unsigned n_val = mp_get_si(n);
-    for (auto iter : dict_) {
-        if (iter.first >= n_val)
-            dict_quo.insert(dict_quo.end(), {iter.first - n_val, iter.second});
-        else
-            dict_rem.insert(dict_rem.end(), iter);
+    if (n_val < dict_.size()) {
+        quo->dict_.insert(quo->dict_.end(), dict_.begin() + n_val, dict_.end());
+        std::vector<integer_class> dict_rem(dict_.begin(), dict_.begin() + n_val);
+        *rem = GaloisFieldDict::from_vec(dict_rem, modulo_);
+    } else {
+        *rem = static_cast<GaloisFieldDict>(*this);
     }
-    *quo = GaloisFieldDict(dict_quo, modulo_);
-    *rem = GaloisFieldDict(dict_rem, modulo_);
 }
 
 GaloisFieldDict GaloisFieldDict::gf_sqr() const
@@ -223,14 +212,14 @@ void GaloisFieldDict::gf_monic(integer_class &res,
     if (dict_.empty()) {
         res = integer_class(0);
     } else {
-        res = dict_.rbegin()->second;
+        res = *dict_.rbegin();
         if (res != integer_class(1)) {
             integer_class inv, temp;
             mp_invert(inv, res, modulo_);
             for (auto &iter : monic->dict_) {
                 temp = inv;
-                temp *= iter.second;
-                mp_fdiv_r(iter.second, temp, modulo_);
+                temp *= iter;
+                mp_fdiv_r(iter, temp, modulo_);
             }
         }
     }
