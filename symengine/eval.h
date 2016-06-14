@@ -9,6 +9,14 @@
 #include <symengine/dict.h>
 #include <symengine/symengine_rcp.h>
 
+#ifdef SYMENGINE_HAVE_MPFR
+#include <mpfr.h>
+#endif // SYMENGINE_HAVE_MPFR
+
+#ifdef SYMENGINE_HAVE_MPC
+#include <mpc.h>
+#endif // SYMENGINE_HAVE_MPC
+
 namespace SymEngine
 {
 
