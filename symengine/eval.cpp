@@ -3,23 +3,22 @@
 #include <symengine/real_double.h>
 #include <symengine/complex_double.h>
 #include <symengine/symengine_rcp.h>
-
-#ifdef SYMENGINE_HAVE_MPFR
+#ifdef HAVE_SYMENGINE_MPFR
 #include <mpfr.h>
 #include <symengine/real_mpfr.h>
 #include <symengine/eval_mpfr.h>
-#endif // SYMENGINE_HAVE_MPFR
+#endif // HAVE_SYMENGINE_MPFR
 
-#ifdef SYMENGINE_HAVE_MPC
+#ifdef HAVE_SYMENGINE_MPC
 #include <mpc.h>
 #include <symengine/complex_mpc.h>
 #include <symengine/eval_mpc.h>
-#endif // SYMENGINE_HAVE_MPC
+#endif // HAVE_SYMENGINE_MPC
 
 namespace SymEngine
 {
 
-RCP<const Number> eval(const Basic &b, unsigned long bits, bool real)
+RCP<const Number> eval2(const Basic &b, unsigned long bits, bool real)
 {
     if (bits <= 53 && real) { // double
         double d = eval_double(b);
@@ -43,4 +42,4 @@ RCP<const Number> eval(const Basic &b, unsigned long bits, bool real)
 #endif // HAVE_SYMENGINE_MPC
     }
 }
-}
+} // SymEngine

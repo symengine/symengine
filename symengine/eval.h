@@ -9,13 +9,13 @@
 #include <symengine/dict.h>
 #include <symengine/symengine_rcp.h>
 
-#ifdef SYMENGINE_HAVE_MPFR
+#ifdef HAVE_SYMENGINE_MPFR
 #include <mpfr.h>
-#endif // SYMENGINE_HAVE_MPFR
+#endif // HAVE_SYMENGINE_MPFR
 
 #ifdef SYMENGINE_HAVE_MPC
 #include <mpc.h>
-#endif // SYMENGINE_HAVE_MPC
+#endif // HAVE_SYMENGINE_MPC
 
 namespace SymEngine
 {
@@ -25,8 +25,7 @@ namespace SymEngine
  * complex / real nature of the number
  */
 
-RCP<const Number> eval(const Basic &b, unsigned long bits = 53,
-                       bool real = false);
+RCP<const Number> eval2(const Basic &b, unsigned long bits, bool real);
 
 } // SymEngine
 

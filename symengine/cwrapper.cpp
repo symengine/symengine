@@ -7,6 +7,7 @@
 #include <symengine/integer.h>
 #include <symengine/rational.h>
 #include <symengine/functions.h>
+//#include <symengine/eval.h>
 #include <symengine/mul.h>
 #include <symengine/pow.h>
 #include <symengine/add.h>
@@ -316,25 +317,25 @@ void complex_set_mpq(basic s, const mpq_t re, const mpq_t im)
     s->m = SymEngine::Complex::from_mpq(rational_class(re), rational_class(im));
 }
 
-void complex_real_part(basic s, basic com)
+void complex_real_part(basic s, const basic com)
 {
     SYMENGINE_ASSERT(is_a<Complex>(*(com->m)));
     s->m = (rcp_static_cast<const Complex>(com->m))->real_part();
 }
 
-void complex_imaginary_part(basic s, basic com)
+void complex_imaginary_part(basic s, const basic com)
 {
     SYMENGINE_ASSERT(is_a<Complex>(*(com->m)));
     s->m = (rcp_static_cast<const Complex>(com->m))->imaginary_part();
 }
 
-void complex_double_real_part(basic s, basic com)
+void complex_double_real_part(basic s, const basic com)
 {
     SYMENGINE_ASSERT(is_a<ComplexDouble>(*(com->m)));
     s->m = (rcp_static_cast<const ComplexDouble>(com->m))->real_part();
 }
 
-void complex_double_imaginary_part(basic s, basic com)
+void complex_double_imaginary_part(basic s, const basic com)
 {
     SYMENGINE_ASSERT(is_a<ComplexDouble>(*(com->m)));
     s->m = (rcp_static_cast<const ComplexDouble>(com->m))->imaginary_part();
@@ -732,6 +733,13 @@ void ntheory_binomial(basic s, const basic a, unsigned long b)
 {
     SYMENGINE_ASSERT(is_a<Integer>(*(a->m)));
     s->m = SymEngine::binomial(static_cast<const Integer &>(*(a->m)), b);
+}
+
+//! Wrapper for eval
+void basic_eval(basic s, const basic b, unsigned long bits, int real)
+{
+
+    s->m = eval2(*(b->m), bits, (bool)real);
 }
 
 //! Print stacktrace on segfault

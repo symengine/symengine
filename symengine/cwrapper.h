@@ -174,13 +174,13 @@ void complex_set_rat(basic s, const basic re, const basic im);
 //! Assign to s, a complex re + i*im, where re and im are of type mpq.
 void complex_set_mpq(basic s, const mpq_t re, const mpq_t im);
 //! Assign to s, a real where com is a complex
-void complex_real_part(basic s, basic com);
+void complex_real_part(basic s, const basic com);
 //! Assign to s, an imaginary where com is a complex
-void complex_imaginary_part(basic s, basic com);
+void complex_imaginary_part(basic s, const basic com);
 //! Assign to s, a real double where com is a complex double
-void complex_double_real_part(basic s, basic com);
+void complex_double_real_part(basic s, const basic com);
 //! Assign to s, an imaginary double where com is a complex double
-void complex_double_imaginary_part(basic s, basic com);
+void complex_double_imaginary_part(basic s, const basic com);
 
 //! Assigns s = a + b.
 void basic_add(basic s, const basic a, const basic b);
@@ -394,6 +394,8 @@ void ntheory_fibonacci(basic s, unsigned long a);
 void ntheory_lucas(basic s, unsigned long a);
 //! Binomial Coefficient
 void ntheory_binomial(basic s, const basic a, unsigned long b);
+//! Evaluate b and assign the value to s
+void basic_eval(basic s, const basic b, unsigned long bits, int real);
 
 //! Print stacktrace on segfault
 void symengine_print_stack_on_segfault();
