@@ -23,6 +23,10 @@ using SymEngine::zero;
 using SymEngine::integer;
 using SymEngine::vec_basic_eq_perm;
 using SymEngine::integer_class;
+using SymEngine::gcd_upoly;
+using SymEngine::lcm_upoly;
+using SymEngine::divides_upoly;
+using SymEngine::pow_upoly;
 
 using namespace SymEngine::literals;
 
@@ -162,6 +166,11 @@ TEST_CASE("Evaluation of UIntPolyFlint", "[UIntPolyFlint]")
     REQUIRE(a->eval(10_z) == 121);
     REQUIRE(b->eval(-1_z) == 0);
     REQUIRE(b->eval(0_z) == 1);
+
+    std::vector<integer_class> resa = {9_z, 121_z, 0_z, 1_z};
+    std::vector<integer_class> resb = {-3_z, -99_z, 0_z, 1_z};
+    REQUIRE(a->multieval({2_z, 10_z, -1_z, 0_z}) == resa);
+    REQUIRE(b->multieval({2_z, 10_z, -1_z, 0_z}) == resb);
 }
 
 TEST_CASE("UIntPolyFlint as_symbolic", "[UIntPolyFlint]")
@@ -181,3 +190,66 @@ TEST_CASE("UIntPolyFlint as_symbolic", "[UIntPolyFlint]")
     RCP<const UIntPolyFlint> c = UIntPolyFlint::from_dict(x, map_uint_mpz{});
     REQUIRE(eq(*c->as_symbolic(), *zero));
 }
+
+TEST_CASE("UIntPolyFlint gcd", "[UIntPolyFlint]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const UIntPolyFlint> a = UIntPolyFlint::from_dict(x, {{2, 2_z}});
+    RCP<const UIntPolyFlint> b = UIntPolyFlint::from_dict(x, {{1, 3_z}});
+    RCP<const UIntPolyFlint> c = UIntPolyFlint::from_dict(x, {{0, 6_z}, {1, 8_z}, {2, 2_z}});
+    RCP<const UIntPolyFlint> d = UIntPolyFlint::from_dict(x, {{1, 4_z}, {2, 4_z}});
+
+    RCP<const UIntPolyFlint> ab = gcd_upoly(*a, *b);   
+    RCP<const UIntPolyFlint> cd = gcd_upoly(*c, *d);   
+    RCP<const UIntPolyFlint> ad = gcd_upoly(*a, *d);   
+    RCP<const UIntPolyFlint> bc = gcd_upoly(*b, *c);
+
+    REQUIRE(ab->__str__() == "x");
+    REQUIRE(cd->__str__() == "2*x + 2");
+    REQUIRE(ad->__str__() == "2*x");
+    REQUIRE(bc->__str__() == "1");
+}
+
+TEST_CASE("UIntPolyFlint lcm", "[UIntPolyFlint]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const UIntPolyFlint> a = UIntPolyFlint::from_dict(x, {{2, 6_z}});
+    RCP<const UIntPolyFlint> b = UIntPolyFlint::from_dict(x, {{1, 8_z}});
+    RCP<const UIntPolyFlint> c = UIntPolyFlint::from_dict(x, {{0, 8_z}, {1, 8_z}});
+
+    RCP<const UIntPolyFlint> ab = lcm_upoly(*a, *b);   
+    RCP<const UIntPolyFlint> bc = lcm_upoly(*b, *c);
+    RCP<const UIntPolyFlint> ac = lcm_upoly(*a, *c);
+
+    REQUIRE(ab->__str__() == "24*x**2");
+    REQUIRE(bc->__str__() == "8*x**2 + 8*x");
+    REQUIRE(ac->__str__() == "24*x**3 + 24*x**2");
+}
+
+TEST_CASE("UIntPolyFlint divides", "[UIntPolyFlint]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const UIntPolyFlint> a = UIntPolyFlint::from_dict(x, {{0, 1_z}, {1, 1_z}});
+    RCP<const UIntPolyFlint> b = UIntPolyFlint::from_dict(x, {{0, 4_z}});
+    RCP<const UIntPolyFlint> c = UIntPolyFlint::from_dict(x, {{0, 8_z}, {1, 8_z}});
+
+    // seems like a flint BUG
+    REQUIRE(divides_upoly(*c, *a));
+    REQUIRE(divides_upoly(*c, *b));
+    REQUIRE(!divides_upoly(*a, *b));
+}
+
+TEST_CASE("UIntPolyFlint pow", "[UIntPolyFlint]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const UIntPolyFlint> a = UIntPolyFlint::from_dict(x, {{0, 1_z}, {1, 1_z}});
+    RCP<const UIntPolyFlint> b = UIntPolyFlint::from_dict(x, {{0, 3_z}, {2, 1_z}});
+
+    RCP<const UIntPolyFlint> aaa = pow_upoly(*a, 3);   
+    RCP<const UIntPolyFlint> bb = pow_upoly(*b, 2);
+
+    // seems like a flint BUG
+    REQUIRE(aaa->__str__() == "x**3 + 3*x**2 + 3*x + 1");
+    REQUIRE(bb->__str__() == "x**4 + 6*x**2 + 9");
+}
+
