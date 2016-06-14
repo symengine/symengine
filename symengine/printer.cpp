@@ -302,35 +302,36 @@ char _print_sign(const integer_class &i)
 
 // UIntPoly printing, tests taken from SymPy and printing ensures
 // that there is compatibility
-void StrPrinter::bvisit(const UIntPoly &x)
+template <typename T>
+void uintpoly_print(const T &x, std::ostringstream &s)
 {
-    std::ostringstream s;
     // bool variable needed to take care of cases like -5, -x, -3*x etc.
     bool first = true;
     // we iterate over the map in reverse order so that highest degree gets
     // printed first
-    for (auto it = x.get_dict().rbegin(); it != x.get_dict().rend(); ++it) {
+    for (auto it = x.obegin(); it != x.oend(); ++it) {
+        integer_class m = to_integer_class(it->second);
         // if exponent is 0, then print only coefficient
         if (it->first == 0) {
             if (first) {
-                s << it->second;
+                s << m;
             } else {
-                s << " " << _print_sign(it->second) << " "
-                  << mp_abs(it->second);
+                s << " " << _print_sign(m) << " "
+                  << mp_abs(m);
             }
             first = false;
             continue;
         }
         // if the coefficient of a term is +1 or -1
-        if (mp_abs(it->second) == 1) {
+        if (mp_abs(m) == 1) {
             // in cases of -x, print -x
             // in cases of x**2 - x, print - x
             if (first) {
-                if (it->second == -1)
+                if (m == -1)
                     s << "-";
                 s << x.get_var()->get_name();
             } else {
-                s << " " << _print_sign(it->second) << " "
+                s << " " << _print_sign(m) << " "
                   << x.get_var()->get_name();
             }
         }
@@ -339,9 +340,9 @@ void StrPrinter::bvisit(const UIntPoly &x)
             // in cases of -2*x, print -2*x
             // in cases of x**2 - 2*x, print - 2*x
             if (first) {
-                s << it->second << "*" << x.get_var()->get_name();
+                s << m << "*" << x.get_var()->get_name();
             } else {
-                s << " " << _print_sign(it->second) << " " << mp_abs(it->second)
+                s << " " << _print_sign(m) << " " << mp_abs(m)
                   << "*" << x.get_var()->get_name();
             }
         }
@@ -352,8 +353,14 @@ void StrPrinter::bvisit(const UIntPoly &x)
         // corner cases of only first term handled successfully, switch the bool
         first = false;
     }
-    if (x.get_dict().size() == 0)
+    if (x.size() == 0)
         s << "0";
+}
+
+void StrPrinter::bvisit(const UIntPoly &x)
+{
+    std::ostringstream s;
+    uintpoly_print(x, s);
     str_ = s.str();
 }
 
@@ -361,62 +368,7 @@ void StrPrinter::bvisit(const UIntPoly &x)
 void StrPrinter::bvisit(const UIntPolyFlint &x)
 {
     std::ostringstream s;
-    // bool variable needed to take care of cases like -5, -x, -3*x etc.
-    bool first = true;
-    // we iterate over the map in reverse order so that highest degree gets
-    // printed first
-    auto p = x.get_poly();
-    for (long i = p.length() - 1; i >= 0; i--) {
-        if (p.get_coeff(i) == 0)
-            continue;
-        // if exponent is 0, then print only coefficient
-        if (i == 0) {
-            if (first) {
-                s << p.get_coeff(i);
-            } else {
-                s << " " << _print_sign(
-                                to_integer_class(flint::fmpzxx(p.get_coeff(i))))
-                  << " " << flint::abs(p.get_coeff(i));
-            }
-            first = false;
-            continue;
-        }
-        // if the coefficient of a term is +1 or -1
-        if (flint::abs(p.get_coeff(i)) == 1) {
-            // in cases of -x, print -x
-            // in cases of x**2 - x, print - x
-            if (first) {
-                if (p.get_coeff(i) == -1)
-                    s << "-";
-                s << x.get_var()->get_name();
-            } else {
-                s << " " << _print_sign(
-                                to_integer_class(flint::fmpzxx(p.get_coeff(i))))
-                  << " " << x.get_var()->get_name();
-            }
-        }
-        // same logic is followed as above
-        else {
-            // in cases of -2*x, print -2*x
-            // in cases of x**2 - 2*x, print - 2*x
-            if (first) {
-                s << p.get_coeff(i) << "*" << x.get_var()->get_name();
-            } else {
-                s << " " << _print_sign(
-                                to_integer_class(flint::fmpzxx(p.get_coeff(i))))
-                  << " " << flint::abs(p.get_coeff(i)) << "*"
-                  << x.get_var()->get_name();
-            }
-        }
-        // if exponent is not 1, print the exponent;
-        if (i != 1) {
-            s << "**" << i;
-        }
-        // corner cases of only first term handled successfully, switch the bool
-        first = false;
-    }
-    if (p.length() == 0)
-        s << "0";
+    uintpoly_print(x, s);
     str_ = s.str();
 }
 #endif
@@ -425,57 +377,7 @@ void StrPrinter::bvisit(const UIntPolyFlint &x)
 void StrPrinter::bvisit(const UIntPolyPiranha &x)
 {
     std::ostringstream s;
-    // bool variable needed to take care of cases like -5, -x, -3*x etc.
-    bool first = true;
-    // we iterate over the map in reverse order so that highest degree gets
-    // printed first
-    for (int i = x.get_degree(); i >= 0; i--) {
-        if (x.get_coeff(i) == 0)
-            continue;
-        // if exponent is 0, then print only coefficient
-        if (i == 0) {
-            if (first) {
-                s << x.get_coeff(i);
-            } else {
-                s << " " << _print_sign(x.get_coeff(i)) << " "
-                  << mp_abs(x.get_coeff(i));
-            }
-            first = false;
-            continue;
-        }
-        // if the coefficient of a term is +1 or -1
-        if (mp_abs(x.get_coeff(i)) == 1) {
-            // in cases of -x, print -x
-            // in cases of x**2 - x, print - x
-            if (first) {
-                if (x.get_coeff(i) == -1)
-                    s << "-";
-                s << x.get_var()->get_name();
-            } else {
-                s << " " << _print_sign(x.get_coeff(i)) << " "
-                  << x.get_var()->get_name();
-            }
-        }
-        // same logic is followed as above
-        else {
-            // in cases of -2*x, print -2*x
-            // in cases of x**2 - 2*x, print - 2*x
-            if (first) {
-                s << x.get_coeff(i) << "*" << x.get_var()->get_name();
-            } else {
-                s << " " << _print_sign(x.get_coeff(i)) << " "
-                  << mp_abs(x.get_coeff(i)) << "*" << x.get_var()->get_name();
-            }
-        }
-        // if exponent is not 1, print the exponent;
-        if (i != 1) {
-            s << "**" << i;
-        }
-        // corner cases of only first term handled successfully, switch the bool
-        first = false;
-    }
-    if (x.get_poly().size() == 0)
-        s << "0";
+    uintpoly_print(x, s);
     str_ = s.str();
 }
 #endif
