@@ -7,7 +7,7 @@
 #include <symengine/integer.h>
 #include <symengine/rational.h>
 #include <symengine/functions.h>
-//#include <symengine/eval.h>
+#include <symengine/eval.h>
 #include <symengine/mul.h>
 #include <symengine/pow.h>
 #include <symengine/add.h>
@@ -739,7 +739,7 @@ void ntheory_binomial(basic s, const basic a, unsigned long b)
 void basic_eval(basic s, const basic b, unsigned long bits, int real)
 {
 
-    s->m = eval2(*(b->m), bits, (bool)real);
+    s->m = SymEngine::eval(*(b->m), bits, (bool)real);
 }
 
 //! Print stacktrace on segfault

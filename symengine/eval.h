@@ -25,7 +25,7 @@ namespace SymEngine
  * complex / real nature of the number
  */
 
-RCP<const Number> eval2(const Basic &b, unsigned long bits, bool real);
+RCP<const Number> eval(const Basic &b, unsigned long bits, bool real);
 
 } // SymEngine
 
