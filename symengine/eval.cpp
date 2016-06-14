@@ -1,3 +1,4 @@
+#include <exception>
 #include <symengine/eval.h>
 #include <symengine/eval_double.h>
 #include <symengine/real_double.h>
@@ -22,16 +23,19 @@ RCP<const Number> eval(const Basic &b, unsigned long bits, bool real)
 {
     if (bits <= 53 && real) { // double
         double d = eval_double(b);
-        return make_rcp<RealDouble>(std::move(d));
+        return real_double(d);
     } else if (bits <= 53 && !real) { // complex double
         std::complex<double> d = eval_complex_double(b);
-        return make_rcp<ComplexDouble>(std::move(d));
+        return complex_double(d);
     } else if (bits > 53 && real) { // mpfr
 #ifdef HAVE_SYMENGINE_MPFR
         mpfr_class mc = mpfr_class(bits);
         mpfr_ptr result = mc.get_mpfr_t();
         eval_mpfr(result, b, MPFR_RNDN);
         return make_rcp<RealMPFR>(std::move(mc));
+#else
+        throw std::invalid_argument(
+            "For multiple bit precision, MPFR is needed");
 #endif       // HAVE_SYMENGINE_MPFR
     } else { // mpc
 #ifdef HAVE_SYMENGINE_MPC
@@ -39,6 +43,9 @@ RCP<const Number> eval(const Basic &b, unsigned long bits, bool real)
         mpc_ptr result = mc.get_mpc_t();
         eval_mpc(result, b, MPFR_RNDN);
         return make_rcp<ComplexMPC>(std::move(mc));
+#else
+        throw std::invalid_argument(
+            "For multiple bit precision, MPC is needed");
 #endif // HAVE_SYMENGINE_MPC
     }
 }
